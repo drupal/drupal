@@ -1,6 +1,4 @@
 <?php
-include_once "includes/common.inc";
-
 /*
 ** USAGE:
 **
@@ -9,16 +7,21 @@ include_once "includes/common.inc";
 **
 ** NOTES:
 **
-** - If you upgrade from Drupal 3.00, you have to update your watchdog
-**   table manually before executing/starting this script.  Simply do:
+** - If you have any troubles running the updates you might have to run
+**   these queries manually:
 **
 **   ALTER TABLE watchdog CHANGE user uid int(10) DEFAULT '0' NOT NULL;
 **   ALTER TABLE watchdog CHANGE id wid int(5) DEFAULT '0' NOT NULL auto_increment;
 **   CREATE TABLE system (filename varchar(255) NOT NULL default '', name varchar(255) NOT NULL default '', type varchar(255) NOT NULL default '', description varchar(255) NOT NULL default '', status int(2) NOT NULL default '0', PRIMARY KEY (filename));
+**   CREATE TABLE permission (rid INT UNSIGNED NOT NULL, perm TEXT, tid INT UNSIGNED NOT NULL, KEY (rid));
+**   INSERT INTO permission (rid, perm) SELECT rid, perm FROM role;
+**   ALTER TABLE users ADD rid INT UNSIGNED NOT NULL;
 **
 **   You'll also have to by-pass the access check near the bottom such
 **   that you can gain access to the form: search for "user_access()".
 */
+
+include_once "includes/common.inc";
 
 if (!get_cfg_var("safe_mode")) {
   set_time_limit(180);
@@ -427,7 +430,7 @@ function update_29() {
 
   $result = db_query("SELECT rid, name FROM role");
   while ($role = db_fetch_object($result)) {
-    db_query("UPDATE users SET rid = ".$role->rid." WHERE role = '".$role->name."'");
+    update_sql("UPDATE users SET rid = ". $role->rid ." WHERE role = '". $role->name ."'");
   }
 
   update_sql("ALTER TABLE users DROP role");
@@ -440,7 +443,7 @@ function update_29() {
 
 function update_sql($sql) {
   global $edit;
-  print nl2br(check_output($sql)) ." ";
+  print nl2br(htmlentities($sql)) ." ";
   $result = db_query($sql);
   if ($result) {
     print "<font color=\"green\">OK</font>\n";
@@ -493,12 +496,11 @@ function update_page() {
 
       // make update form and output it.
       $form .= form_select("Perform updates since", "start", (isset($selected) ? $selected : -1), $dates);
-      $form .= form_select("Bail on errors", "bail", 0, array("Disabled", "Enabled"), "Don't forget to backup your database before performing an update.");
+      $form .= form_select("Stop on errors", "bail", 0, array("Disabled", "Enabled"), "Don't forget to backup your database before performing an update.");
       $form .= form_submit("Update");
       print form($form);
       break;
   }
-
 }
 
 print "<html><h1>Drupal update</h1>";
