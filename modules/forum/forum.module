@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.206 2004/10/19 18:02:24 dries Exp $
+// $Id: forum.module,v 1.207 2004/10/23 17:18:22 dries Exp $
 
 /**
  * @file
@@ -201,13 +201,6 @@ function forum_menu($may_cache) {
 }
 
 /**
- * Implementation of hook_content().
- */
-function forum_content($node, $teaser = FALSE) {
-  return node_prepare($node, $teaser);
-}
-
-/**
  * Implementation of hook_view().
  */
 function forum_view(&$node, $teaser = FALSE, $page = FALSE) {
@@ -227,7 +220,7 @@ function forum_view(&$node, $teaser = FALSE, $page = FALSE) {
     menu_set_location($breadcrumb);
   }
 
-  $node = forum_content($node, $teaser);
+  $node = node_prepare($node, $teaser);
 }
 
 /**

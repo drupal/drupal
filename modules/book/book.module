@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.264 2004/10/23 13:41:37 dries Exp $
+// $Id: book.module,v 1.265 2004/10/23 17:18:21 dries Exp $
 
 /**
  * @file
@@ -388,9 +388,6 @@ function book_next($node) {
   }
 }
 
-/**
- * Implementation of hook_content().
- */
 function book_content($node, $teaser = FALSE) {
   $op = $_POST['op'];
 

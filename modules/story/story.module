@@ -1,5 +1,5 @@
 <?php
-// $Id: story.module,v 1.159 2004/09/28 19:13:03 unconed Exp $
+// $Id: story.module,v 1.160 2004/10/23 17:18:23 dries Exp $
 
 /**
  * @file
@@ -128,10 +128,4 @@ function story_form(&$node) {
   return $output;
 }
 
-/**
- * Implementation of hook_content().
- */
-function story_content($node, $main = 0) {
-  return node_prepare($node, $main);
-}
 ?>
