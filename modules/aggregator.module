@@ -394,6 +394,43 @@ function aggregator_refresh($feed) {
   }
 }
 
+/**
+ * Parse the W3C date/time format, a subset of ISO 8601. PHP date parsing
+ * functions do not handle this format.
+ * See http://www.w3.org/TR/NOTE-datetime for more information.
+ * Origionally from MagpieRSS (http://magpierss.sourceforge.net/).
+ *
+ * @param $date_str A string with a potentially W3C DTF date.
+ * @return A timestamp if parsed sucessfully or -1 if not.
+ */
+function aggregator_parse_w3cdtf($date_str) {
+  if (preg_match('/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(:(\d{2}))?(?:([-+])(\d{2}):?(\d{2})|(Z))?/', $date_str, $match)) {
+    list($year, $month, $day, $hours, $minutes, $seconds) = array($match[1], $match[2], $match[3], $match[4], $match[5], $match[6]);
+    // calc epoch for current date assuming GMT
+    $epoch = gmmktime($hours, $minutes, $seconds, $month, $day, $year);
+    if ($match[10] != 'Z') { // Z is zulu time, aka GMT
+      list($tz_mod, $tz_hour, $tz_min) = array($match[8], $match[9], $match[10]);
+      // zero out the variables
+      if (!$tz_hour) {
+        $tz_hour = 0;
+      }
+      if (!$tz_min) {
+        $tz_min = 0;
+      }
+      $offset_secs = (($tz_hour * 60) + $tz_min) * 60;
+      // is timezone ahead of GMT?  then subtract offset
+      if ($tz_mod == '+') {
+        $offset_secs *= -1;
+      }
+      $epoch += $offset_secs;
+    }
+    return $epoch;
+  }
+  else {
+    return -1;
+  }
+}
+
 function aggregator_parse_feed(&$data, $feed) {
   global $items, $image, $channel;
 
@@ -475,20 +512,12 @@ function aggregator_parse_feed(&$data, $feed) {
     else if ($item['DCTERMS:MODIFIED']) $date = $item['DCTERMS:MODIFIED']; // Dublin core
     else $date = 'now';
 
-    $timestamp = strtotime($date);  // strtotime() returns -1 on failure
-
+    $timestamp = strtotime($date); // strtotime() returns -1 on failure
     if ($timestamp < 0) {
-      /*
-      ** The Dublin core's default data format uses ISO 8601 which can't
-      ** be parsed directly using PHP's strtotime().  It is not the only
-      ** valid format so this might fail nonetheless ...
-      */
-      list($year, $month, $day, $hour, $minute, $second) = sscanf($date, '%4d-%2d-%2dT%2d:%2d:%2d');
-      $timestamp = strtotime("$year-$month-$day $hour:$minute:$second");
-    }
-
-    if ($timestamp < 0) {
-      $timestamp = time();
+      $timestamp = aggregator_parse_w3cdtf($date); // also returns -1 on failure
+      if ($timestamp < 0) {
+        $timestamp = time(); // better than nothing
+      }
     }
 
     /*
@@ -533,19 +562,19 @@ function aggregator_parse_feed(&$data, $feed) {
 
 function aggregator_save_item($edit) {
   if ($edit['iid'] && $edit['title']) {
-    db_query("UPDATE {aggregator_item} SET title = '%s', link = '%s', author = '%s', description = '%s' WHERE iid = %d", $edit['title'], $edit['link'], $edit['author'], $edit['description'], $edit['iid']);
+    db_query('UPDATE {aggregator_item} SET title = \'%s\', link = \'%s\', author = \'%s\', description = \'%s\' WHERE iid = %d', $edit['title'], $edit['link'], $edit['author'], $edit['description'], $edit['iid']);
   }
   else if ($edit['iid']) {
     db_query('DELETE FROM {aggregator_item} WHERE iid = %d', $edit['iid']);
     db_query('DELETE FROM {aggregator_category_item} WHERE iid = %d', $edit['iid']);
   }
   else if ($edit['title'] && $edit['link']) {
-    $next_id = db_next_id('{aggregator_item}_iid');
-    db_query("INSERT INTO {aggregator_item} (iid, fid, title, link, author, description, timestamp) VALUES (%d, %d, '%s', '%s', '%s', '%s', %d)", $next_id, $edit['fid'], $edit['title'], $edit['link'], $edit['author'], $edit['description'], $edit['timestamp']);
+    $edit['iid'] = db_next_id('{aggregator_item}_iid');
+    db_query('INSERT INTO {aggregator_item} (iid, fid, title, link, author, description, timestamp) VALUES (%d, %d, \'%s\', \'%s\', \'%s\', \'%s\', %d)', $edit['iid'], $edit['fid'], $edit['title'], $edit['link'], $edit['author'], $edit['description'], $edit['timestamp']);
     // file the items in the categories indicated by the feed
     $categories = db_query('SELECT cid FROM {aggregator_category_feed} WHERE fid = %d', $edit['fid']);
     while ($category = db_fetch_object($categories)) {
-      db_query('INSERT INTO {aggregator_category_item} (cid, iid) VALUES (%d, %d)', $category->cid, $next_id);
+      db_query('INSERT INTO {aggregator_category_item} (cid, iid) VALUES (%d, %d)', $category->cid, $edit['iid']);
     }
   }
 }
