@@ -1,0 +1,78 @@
+<?php
+
+function title_system($field){
+  $system["description"] = t("Enables users to link to stories, articles or similar content by title.");
+  return $system[$field];
+}
+
+function title_page() {
+
+  if (user_access("access content")) {
+
+    $title = urldecode(arg(1));
+    $result = db_query("SELECT n.*, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.title = '%s' AND n.status = 1 ORDER BY created DESC", $title);
+    if (db_num_rows($result) == 0) {
+      // No node with exact title found, try substring.
+      $result = db_query("SELECT n.* FROM node n WHERE n.title LIKE '%". check_query($title). "%' AND n.status = 1 ORDER BY created DESC");
+    }  
+    if (db_num_rows($result) == 0 && module_exist("search")) { 
+      // still no matches ... return a full text search
+      search_view($title);
+    }
+    else if (db_num_rows($result) == 1) { 
+      $node = db_fetch_object($result);
+      
+      theme("header");
+      print node_show($node->nid, NULL);
+      theme("footer");
+    }  
+    else {
+      $header = array(t("Type"), t("Title"), t("Author"));
+      while ($node = db_fetch_object($result)) {
+        $type = ucfirst(module_invoke($node->type, "node", "name"));
+        $title = l($node->title, "node/view/$node->nid");
+        $author = format_name($node);
+        $rows[] = array(array("data" => $type, "class" => "type"), array("data" => $title, "class" => "content"), array("data" => $author, "class" => "author"));
+      }
+      
+      $output  = "<div id=\"title\">";      
+      $output .= table($header, $rows);
+      $output .= "</div>";
+
+      theme("header");
+      theme("box", t("Matching Posts"), $output);
+      theme("footer");
+    }
+  }
+  else {
+    theme("header");
+    theme("box", t("Access denied"), message_access());
+    theme("footer");
+  }
+}
+
+// filter [node title|description] links. '|description' is optional.
+function title_filter($text) {
+  if(variable_get("title_filter_link", 0)) {
+    $pattern = '\[([^\|\]]+)(?>\|?)(.*?)\]';  // $1 == title: matches at least 1 char up to the first '|' or ']'
+                                           // $2 == text: matches all after a following '|' (if there is) up to the next ']'. may include '|'s.
+    $replacement = 'l("$2" ? "$2" : "$1", "title/". urlencode("$1"))';
+    return preg_replace("/$pattern/e", $replacement, $text);
+  }
+  else {
+    return $text;
+  }
+}
+
+function title_conf_filters() {
+  $output = form_select(t("Enable node link tags"), "title_filter_link", variable_get("title_filter_link", 0), array(t("Disabled"), t("Enabled")), t("Enable Wiki-like [node title|text] links. This will generate a link labeled 'text' to the node with the title 'node title'. If you omit '|text', the label becomes 'node title'. You may use a substring of a node title if desired. When multiple matching titles are found, a list of matching nodes will be displayed. If no matching titles are found, a full-text search is returned."));
+  return $output;
+}
+
+function title_compose_tips() {
+  if (variable_get("title_filter_link", 0)) {
+    return array(t("You may quickly link to another node using this syntax: <i>[node title|text]</i>. This will generate a link labeled 'text' to the node with the title 'node title'. If you omit '|text', the label becomes 'node title'."));
+  }
+}  
+
+?>

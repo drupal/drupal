@@ -305,8 +305,8 @@ function search_save($edit) {
   variable_set("remove_short", $edit["remove_short"]);
 }
 
-function search_view() {
-  global $edit, $type, $keys;
+function search_view($keys = NULL) {
+  global $edit, $type;
 
   if (user_access("search content")) {
     // Construct the search form:
@@ -357,7 +357,7 @@ function search_view() {
 }
 
 function search_page() {
-
+  global $keys;
 
   switch (arg(1)) {
     case "help":
@@ -366,7 +366,7 @@ function search_page() {
       theme("footer");
       break;
     default:
-      search_view();
+      search_view($keys);
   }
 }
 
