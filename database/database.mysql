@@ -274,7 +274,7 @@ CREATE TABLE node (
   users text NOT NULL,
   attributes varchar(255) NOT NULL default '',
   teaser text NOT NULL,
-  body text NOT NULL,
+  body mediumtext NOT NULL,
   changed int(11) NOT NULL default '0',
   revisions text NOT NULL,
   static int(2) NOT NULL default '0',
