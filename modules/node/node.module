@@ -401,7 +401,9 @@ function node_save($node) {
     if (!$node->created) {
       $node->created = time();
     }
-    $node->changed = time();
+    if (!$node->changed) {
+      $node->changed = time();
+    }
     $node->nid = db_next_id('{node}_nid');
 
     // Prepare the query:
