@@ -24,6 +24,7 @@ function admin_page($mod) {
    </head>
    <body>
     <?php
+      // NOTE: we include a dummy "print.css" to remove the "flash of unstyled content" (FUOC) problems in IE.
 
       module_invoke_all("link", "admin");
 
