@@ -13,7 +13,10 @@
 
     function header() {
 
+    global $PHP_SELF;
     global $REQUEST_URI;
+
+    $true = 0;
 
     switch (rand(0,8)) {
       case 0: $color = "#c4a2a2"; break;
@@ -33,20 +36,21 @@
         <head>
           <title><?php echo variable_get(site_name, "drupal"); ?></title>
           <style type="text/css">
-            a { text-decoration: none; color: #24677f }
-            a.active { color: #24677f }
-            a.visited { color: #24677f }
-            a:hover { color: <?php echo $color; ?> }
-            td { font-family: Arial; font-size: 10pt }
-            .spacer1 { background-color: #000000 }
-            .small { font-family: Arial; font-size: 10pt }
-            .box { font-size: 12pt }
+            a { text-decoration: none; color: #24677f; }
+            a:active { color: #24677f; }
+            a:visited { color: #24677f; }
+            a:hover { color: <?php echo $color; ?>; }
+            td { font-family: Arial,Helvetica; font-size: 10pt; }
+            .spacer1 { background-color: #000000; }
+            .small { font-family: Arial; font-size: 10pt; }
+            .box { font-size: 12pt; }
           </style>
           <script language="JavaScript">
           <!--
             function do_nav() {
-              if (document.navform.navdrop.options[document.navform.navdrop.selectedIndex].value != "none") {
-                location = document.navform.navdrop.options[document.navform.navdrop.selectedIndex].value;
+              navdrop = document.navform.navdrop;
+              if (navdrop.options[navdrop.selectedIndex].value != "none") {
+                location = navdrop.options[navdrop.selectedIndex].value;
               }
             }
           -->
@@ -56,21 +60,24 @@
         <body bgcolor="#878787" topmargin="0" leftmargin="0" marginwidth="0" marginheight="0" link="#24677f" alink="#24677f" vlink="#24677f">
           <table border="0" cellpadding="0" cellspacing="0" width="100%">
             <tr>
-              <td align="left" valign="middle" width="20%" class="header">
-                <font face="Helvetica" size="+1">
-                &nbsp;<b><a href="http://drop.org/">drop.org</a></b>
+              <td align="left" valign="middle" width="20%">
+                <font size="+1">
+                &nbsp;<b><a href="<?php echo variable_get(site_url,
+"http://drupal/"); ?> "><?php echo variable_get(site_name, "drupal"); ?></a></b>
                 </font>
               </td>
-              <td class="spacer1"><img src="themes/jeroen2/images/pixel.gif" width="1" height="1" alt="" border="0" /></td>
+              <td class="spacer1" width="1" height="1"><img src="themes/jeroen2/images/pixel.gif" width="1" height="1" alt="" border="0" /></td>
               <form name="navform" action="" method="get">
               <td align="right" valign="top" width="80%">
                 <select name="navdrop" onChange="do_nav()" class="small">
-                  <option value="index.php" <?php if ($REQUEST_URI == "/index.php") echo "selected"; ?>>Main</option>
-                  <option value="account.php" <?php if ($REQUEST_URI == "/account.php") echo "selected"; ?>>Account</option>
-                  <option value="module.php?mod=diary" <?php if ($REQUEST_URI == "/module.php?mod=diary") echo "selected"; ?>>Diary</option>
-                  <option value="module.php?mod=book" <?php if ($REQUEST_URI == "/module.php?mod=book") echo "selected"; ?>>Handbook</option>
-                  <option value="submit.php" <?php if ($REQUEST_URI == "/submit.php") echo "selected"; ?>>Submit news</option>
-                  <option value="search.php" <?php if ($REQUEST_URI == "/search.php") echo "selected"; ?>>Search</option>
+                  <option value="index.php" <?php if ($PHP_SELF == "/index.php") { echo "selected"; $true = 1; } ?>>Main</option>
+                  <option value="account.php" <?php if ($PHP_SELF == "/account.php") { echo "selected"; $true = 1; } ?>>Account</option>
+                  <option value="module.php?mod=diary" <?php if (substr($REQUEST_URI,12,9) == "mod=diary") { echo "selected"; $true = 1; } ?>>Diary</option>
+                  <option value="module.php?mod=book" <?php if ($REQUEST_URI == "/module.php?mod=book") { echo "selected"; $true = 1; } ?>>Handbook</option>
+                  <option value="submit.php" <?php if ($PHP_SELF == "/submit.php") { echo "selected"; $true = 1; } ?>>Submit news</option>
+                  <option value="search.php" <?php if ($PHP_SELF == "/search.php") { echo "selected"; $true = 1; } ?>>Search</option>
+                  <?php if ($REQUEST_URI == "/module.php?mod=moderation")  echo "<option selected>Moderation</option>";
+                  if (!$true) { echo "<option selected>Node "; $id = substr($REQUEST_URI,strlen($REQUEST_URI) - 3); if (is_int((int) $id)) echo $id; echo"</option>"; } ?>
                 </select>
                 <noscript><input type="submit" value="Go!"></noscript>
               </td>
@@ -89,10 +96,12 @@
 ?>
 
               </td>
-
               <td class="spacer1"><img src="themes/jeroen2/images/pixel.gif" width="1" height="1" alt="" border="0" /></td>
               <td align="center" valign="top" bgcolor="#f4f4f4" width="80%" height="100%">
                 <br />
+                <table border="0" cellpadding="0" cellspacing="0" width="95%">
+                  <tr>
+                    <td>
 
 <?php
 
@@ -113,12 +122,11 @@
 
 ?>
 
-                <table border="0" cellpadding="0" cellspacing="1" width="95%" height="100%">
+                <table border="0" cellpadding="0" cellspacing="1" width="100%">
                   <tr>
                     <td>
-                      <a href="search.php?category=<?php echo urlencode($story->section); ?>"><img src="themes/jeroen2/images/<?php echo $img; ?>" border="0" /></a>&nbsp;<font face="Helvetica"><b style="font-size: 12pt"><?php echo check_output($story->title); ?></b>
+                      <a href="search.php?category=<?php echo urlencode($story->section); ?>"><img src="themes/jeroen2/images/<?php echo $img; ?>" border="0" /></a>&nbsp;<b style="font-size: 12pt"><?php echo check_output($story->title); ?></b>
                       <?php echo strtr(t("by %a on %b"), array("%a" => format_username($story->userid), "%b" => format_date($story->timestamp), "small")); ?>
-                      </font>
                     </td>
                   </tr>
                   <tr><td bgcolor="<?php echo $color; ?>"><img src="themes/jeroen2/images/pixel.gif" width="1" height="1" alt="" border="0" /></td></tr>
@@ -127,14 +135,14 @@
 
 <?php
 
-                      echo "<br /><font face=\"Helvetica\">". check_output($story->abstract, 1) ."<br />";
+                      echo "<br />". check_output($story->abstract, 1) ."<br />";
                       if ($reply && $story->body)
-                        echo "<br />". check_output($story->body, 1) ."</font><br />";
+                        echo "<br />". check_output($story->body, 1) ."<br />";
              echo"  </td>
                   </tr>
                   <tr>
                     <td align=\"right\">
-                      <font face=\"Helvetica\" color=\"". $color ."\">";
+                      <font color=\"". $color ."\">";
                       if (!$reply)
                         echo "". theme_morelink($this, $story) ."";
                       else
@@ -160,7 +168,7 @@
         <tr>
           <td class="box">
             <img src="themes/jeroen2/images/square.gif" />&nbsp;<b><?php echo check_output($comment->subject); ?></b>
-      <font face="Helvetica" size="-1"><?php echo strtr(t(" by %a on %b"), array("%a" => format_username($comment->userid), "%b" => format_date($comment->timestamp), "small")); ?></font>
+	    <font size="-1"><?php echo strtr(t(" by %a on %b"), array("%a" => format_username($comment->userid), "%b" => format_date($comment->timestamp), "small")); ?></font>
           </td>
           <td align="right"><?php echo comment_moderation($comment); ?></td>
         </tr>
@@ -201,15 +209,13 @@
 
       <table width="90%" border="0" cellpadding="0" cellspacing="1">
         <tr>
-    <td class="box"><img src="themes/jeroen2/images/square.gif" />&nbsp;<b><font face="Helvetica"><?php echo $subject; ?></font></b></td>
+	  <td class="box"><img src="themes/jeroen2/images/square.gif" />&nbsp;<b><?php echo $subject; ?></b></td>
         </tr>
         <tr><td class="spacer1"><img src="themes/jeroen2/images/pixel.gif" width="1" height="1" alt="" border="0" /><br></td></tr>
         <tr>
           <td>
             <br />
-            <font face="Helvetica">
             <?php echo $content; ?>
-            </font>
           </td>
         </tr>
         <tr><td align="right" class="box"><img src="themes/jeroen2/images/<?php echo $img; ?>" /><br />&nbsp;</td></tr>
@@ -223,22 +229,22 @@
 
 ?>
 
+                    </td>
+                  </tr>
+                </table>
                 &nbsp; <!-- I call this the super-space, withouth it, the comment section looks crappy at the bottom :) -->
               </td>
             </tr>
             <tr><td colspan="3" class="spacer1"><img src="themes/jeroen2/images/pixel.gif" width="1" height="1" alt="" border="0" /></td></tr>
             <tr>
               <td align="left">
-                  <font face="Helvetica">
-                  &nbsp;<a href="mailto:info@drop.org">info@drop.org</a>
+                  &nbsp;<a href="mailto:<?php echo variable_get(site_email,"root@localhost"); ?>"><?php echo variable_get(site_email,"root@localhost"); ?></a>
                   </font>
               </td>
 
               <td class="spacer1"><img src="themes/jeroen2/images/pixel.gif" width="1" height="1" alt="" border="0" /></td>
               <td align="right">
-                <font face="Helvetica">
-                The weblog for a dynamic community powered by Drupal&nbsp;
-                </font>
+                <?php echo variable_get(site_footer, ""); ?>
               </td>
             </tr>
           </table>
