@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.152 2003/05/18 20:21:34 dries Exp $
+// $Id: user.module,v 1.153 2003/05/19 09:07:42 dries Exp $
 
 session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
 session_start();
@@ -215,7 +215,7 @@ function user_access($string) {
   ** in a static variable.
   */
 
-  if (isset($perm)) {
+  if (!$perm) {
     if ($user->uid) {
       $perm = db_result(db_query("SELECT p.perm FROM role r, permission p WHERE r.rid = p.rid AND name = '%s'", $user->role), 0);
     }
