@@ -230,8 +230,8 @@ function blogapi_new_media_object($req_params) {
 
 function blogapi_get_category_list($req_params) {
   $vocabularies = module_invoke('taxonomy', 'get_vocabularies', 'blog', 'vid');
+  $categories = array();
   if ($vocabularies) {
-    $categories = array();
     foreach ($vocabularies as $vocabulary) {
       $terms = module_invoke('taxonomy', 'get_tree', $vocabulary->vid, 0, -1, 'tid');
       foreach ($terms as $term) {
@@ -244,11 +244,8 @@ function blogapi_get_category_list($req_params) {
                                       'struct');
       }
     }
-    return new xmlrpcresp(new xmlrpcval($categories, "array"));
   }
-  else {
-    return blogapi_error('no categories');
-  }
+  return new xmlrpcresp(new xmlrpcval($categories, "array"));
 }
 
 function blogapi_get_post_categories($req_params) {
