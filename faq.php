@@ -10,7 +10,7 @@ function defaultDisplay() {
 <H3>General</H3>
 
 Dries was here.
-
+Fingers crossed.
 * Mission statement:
 --------------------
 
