@@ -3,10 +3,10 @@
 
 // initialize modules:
 function module_init() {
-  require_once("modules/user.module");
-  require_once("modules/drupal.module");
-  require_once("modules/system.module");
-  require_once("modules/watchdog.module");
+  require_once "modules/user.module";
+  require_once "modules/drupal.module";
+  require_once "modules/system.module";
+  require_once "modules/watchdog.module";
   module_list();
 }
 
@@ -46,7 +46,7 @@ function module_list() {
     $result = db_query("SELECT name, filename FROM system WHERE type = 'module' AND status = '1' ORDER BY name");
     while ($module = db_fetch_object($result)) {
       $list[$module->name] = $module->name;
-      @include_once "modules/$module->filename";
+      include_once "modules/$module->filename";
     }
     asort($list);
   }
