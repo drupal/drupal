@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.4 2004/01/27 22:10:47 dries Exp $
+// $Id: filter.module,v 1.5 2004/01/31 10:18:51 dries Exp $
 
 function filter_help($section = "admin/help#filter") {
   switch ($section) {
@@ -7,7 +7,8 @@ function filter_help($section = "admin/help#filter") {
       return t("Framework for handling filtering of content.");
     case 'admin/system/filters':
       return t("Filters fit between the raw text in a node and the HTML output. They allow you to replace text selectively. Uses include automatic conversion of emoticons into graphics and filtering HTML content from users' submissions.");
-    case 'filter#tip':
+    case 'filter#long-tip':
+    case 'filter#short-tip':
       switch (variable_get("filter_html", 1)) {
         case 0:
           return t("All HTML tags allowed");
@@ -32,7 +33,7 @@ function filter_link($type) {
     if (user_access("administer site configuration")) {
       menu("admin/system/filters", t("filters"), "filter_admin", 5);
     }
-    menu("filter/tips", t("Compose tips"), "filter_tips_page", 0, MENU_HIDE);
+    menu("filter/tips", t("Compose tips"), "filter_tips_long", 0, MENU_HIDE);
   }
 }
 
@@ -179,19 +180,26 @@ function filter_old_urls($text) {
   return $text;
 }
 
-function filter_tips_page() {
-  $tips = module_invoke_all("help", "filter#tip");
-  foreach ($tips as $tip) {
-    if ($tip) {
-      $tiplist .= "<li>$tip</li>\n";
+function filter_tips_long() {
+  $tiplist = '';
+  foreach (module_list() as $name) {
+    if ($tip = module_invoke($name, 'help', 'filter#long-tip')) {
+      $tiplist .= "<li id=\"filter-$name\">$tip</li>\n";
     }
   }
   $output = "<ul class=\"compose-tips\">\n$tiplist\n</ul>\n";
-  print theme("page", $output, t("Compose Tips"));
+  print theme("page", $output, t('Compose Tips'));
 }
 
 function filter_tips_short() {
-  return filter_help("filter#tip") . "<br />" . l(t("More information on formatting options."), "filter/tips", array("target" => "_blank"));
+  $output = '';
+  foreach (module_list() as $name) {
+    if ($tip = module_invoke($name, 'help', 'filter#short-tip')) {
+      $output .= "$tip<br />";
+    }
+  }
+  $output .= l(t('More information on formatting options'), 'filter/tips');
+  return $output;
 }
 
 ?>
