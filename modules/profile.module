@@ -9,6 +9,7 @@ function _profile_init() {
   */
 
   $GLOBALS["profile_fields"] = array(
+    "realname"      => array("textfield", t("Name"), "", 64, 64, ""),
     "address"       => array("textfield", t("Address"), "", 64, 64, ""),
     "city"          => array("textfield", t("City"), "", 64, 64, ""),
     "state"         => array("textfield", t("State, province or region"), "", 64, 64, ""),

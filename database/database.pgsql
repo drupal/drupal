@@ -514,7 +514,6 @@ CREATE TABLE users (
   name varchar(60) NOT NULL default '',
   pass varchar(32) NOT NULL default '',
   mail varchar(64) default '',
-  homepage varchar(128) NOT NULL default '',
   mode smallint NOT NULL default '0',
   sort smallint default '0',
   threshold smallint default '0',

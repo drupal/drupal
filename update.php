@@ -55,7 +55,8 @@ $mysql_updates = array(
   "2003-09-09" => "update_63",
   "2003-09-10" => "update_64",
   "2003-09-29" => "update_65",
-  "2003-09-30" => "update_66"
+  "2003-09-30" => "update_66",
+  "2003-10-11" => "update_67"
 );
 
 function update_32() {
@@ -500,6 +501,10 @@ function update_66() {
 
     update_sql("ALTER TABLE {node} DROP path");
   }
+}
+
+function update_67() {
+  update_sql("ALTER TABLE users DROP homepage");
 }
 
 /*
