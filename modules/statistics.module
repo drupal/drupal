@@ -74,10 +74,9 @@ function statistics_exit() {
     // Statistical logs are enabled.
     $referrer = referer_uri();
     $hostname = $_SERVER['REMOTE_ADDR'];
-    $path = (drupal_get_path_alias($_GET['q'])) ? drupal_get_path_alias($_GET['q']) : $_GET['q'];
 
     // Log this page access.
-    db_query("INSERT INTO {accesslog} (title, path, url, hostname, uid, timestamp) values('%s', '%s', '%s', '%s', %d, %d)", drupal_get_title(), $path, $referrer, $hostname, $user->uid, time());
+    db_query("INSERT INTO {accesslog} (title, path, url, hostname, uid, timestamp) values('%s', '%s', '%s', '%s', %d, %d)", drupal_get_title(), $_GET['q'], $referrer, $hostname, $user->uid, time());
   }
 }
 
