@@ -388,7 +388,7 @@ function account_track_site() {
 
   $theme->header();
 
-  $nresult = db_query("SELECT n.nid, n.title, COUNT(c.cid) AS count FROM comments c LEFT JOIN node n ON n.nid = c.lid WHERE c.timestamp > ". (time() - $period) ." GROUP BY c.lid ORDER BY count DESC");
+  $nresult = db_query("SELECT n.nid, n.title, COUNT(c.cid) AS count FROM comments c LEFT JOIN node n ON n.nid = c.lid WHERE n.status = '". node_status("posted") ."' AND c.timestamp > ". (time() - $period) ." GROUP BY c.lid ORDER BY count DESC");
   while ($node = db_fetch_object($nresult)) {
     $output .= "<LI>". format_plural($node->count, "comment", "comments") ." ". t("attached to") ." '<A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A>':</LI>";
 
