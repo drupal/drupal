@@ -73,7 +73,6 @@ define('MENU_MODIFIABLE_BY_ADMIN', 0x0010);
 define('MENU_MODIFIED_BY_ADMIN', 0x0020);
 define('MENU_CREATED_BY_ADMIN', 0x0040);
 define('MENU_IS_LOCAL_TASK', 0x0080);
-define('MENU_IS_LOCAL_SUBTASK', 0x0100);
 define('MENU_LINKS_TO_PARENT', 0x0200);
 /**
  * @}
@@ -381,7 +380,7 @@ function menu_get_active_nontask_item() {
   $mid = menu_get_active_item();
 
   // Find the first non-task item:
-  while ($mid && (($menu['items'][$mid]['type'] & MENU_LOCAL_TASK) || ($menu['items'][$mid]['type'] & MENU_LOCAL_SUBTASK))) {
+  while ($mid && ($menu['items'][$mid]['type'] & MENU_IS_LOCAL_TASK)) {
     $mid = $menu['items'][$mid]['pid'];
   }
 
