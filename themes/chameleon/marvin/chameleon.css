@@ -78,7 +78,7 @@ table {
   padding: 0.5em;
 }
 .item-list ul li {
-  list-style-image: url(marvin/bullet.png);
+  list-style-image: url(bullet.png);
 }
 .path, .path a, .path a:visited {
   color: #888;
