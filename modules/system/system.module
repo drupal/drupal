@@ -137,126 +137,91 @@ function system_view($type) {
   return $output . form($form);
 }
 
-/**
-* Module configuration
-*
-* @author Kjartan Mannes
-* @group system.module
-* @return string module list
-*/
-function system_modules() {
-  $result = db_query("SELECT name, status FROM system WHERE type = 'module'");
-  $status = array();
-  while ($module = db_fetch_object($result)) {
-    $status[$module->name] = $module->status;
-  }
-
-  if ($handle = @opendir("modules")) {
-    $modules = array();
+function system_dirscan($dir, $mask, $nomask = array(".", "..", "CVS")) {
+  $files = array();
+  if (is_dir($dir) && $handle = opendir($dir)) {
     while ($file = readdir($handle)) {
-      if (".module" == substr($file, -7)) {
-        $name = substr($file, 0, -7);
-        $modules[$name] = array("filename" => "$file", "status" => $status[$name]);
-       include_once("modules/$file");
+      if (!in_array($file, $nomask)) {
+        if (is_dir("$dir/$file")) {
+          $files = array_merge($files, system_dirscan("$dir/$file", $mask, $nomask));
+        }
+        elseif (ereg($mask, $file)) {
+          $name = basename($file);
+          $files["$dir/$file"]->filename = "$dir/$file";
+          $files["$dir/$file"]->name = substr($name, 0, strrpos($name, '.'));
+        }
       }
     }
     closedir($handle);
-    asort($modules);
   }
+  return $files;
+}
 
-  db_query("DELETE FROM system WHERE type = 'module'");
+function system_listing($type, $directory, $required = array()) {
+  // Make sure we set $type correctly
+  $type = $type != 'theme' ? "module" : "theme";
 
-  $required = array("user", "system", "watchdog");
+  // Find files in the directory.
+  $files = system_dirscan($directory, "\.$type$");
 
-  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  $output .= "<tr><th>module</th><th>description</th><th>status</th><th colspan=\"2\">operations</th></tr>\n";
-  foreach ($modules as $name => $module) {
-    $output .= "<tr>";
-    $output .= "<td>$name</td>";
-    $output .= "<td>". check_output(module_invoke($name, "system", "description")) ."</td>";
-    $output .= "<td align=\"center\">". (in_array($name, $required) ? "required" : form_checkbox("", "status][$name", 1, $module["status"])) ."</td>";
-    $output .= "<td>". (module_hook($name, "page") ? $module["status"] || in_array($name, $required) ? lm(t("view"), array("mod" => $name)) : t("view") : "&nbsp;") ."</td>";
-    $output .= "<td>". (module_hook($name, "admin") ? $module["status"] || in_array($name, $required) ? la(t("admin"), array("mod" => $name)) : t("admin")  : "&nbsp;") ."</td>";
-//  $output .= "<td>". (module_hook($name, "help") ? $module["status"]   || in_array($name, $required) ? la(t("help"), array("mod" => $name, "op" => "help")) : t("help")  : "&nbsp;") ."</td>";
-    $output .= "</tr>\n";
-    if (!in_array($name, $required)) {
-      db_query("INSERT INTO system (name, type, filename, status) VALUES ('%s', 'module', '%s', '%s')", $name, $module["filename"], $module["status"]);
+  // Extract current files from database.
+  $result = db_query("SELECT filename, type, status FROM system WHERE type = '%s'", $type);
+  while ($file = db_fetch_object($result)) {
+    if (is_object($files[$file->filename])) {
+      foreach ($file as $key => $value) {
+        $files[$file->filename]->$key = $value;
+      }
     }
   }
+
+  ksort($files);
+
+  // Clean up database.
+  db_query("DELETE FROM system WHERE type = '%s'", $type);
+
+  $output = "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
+  $output .= "<tr><th>name</th><th>description</th><th>enabled</th></tr>\n";
+
+  foreach ($files as $filename => $file) {
+    include_once($filename);
+    if ($type == "module") {
+      $info->name = module_invoke($file->name, "system", "name") ? module_invoke($file->name, "system", "name") : $file->name;
+      $info->description = module_invoke($file->name, "system", "description");
+    }
+    elseif ($type == "theme") {
+      $class = "Theme_$file->name";
+      if (class_exists($class)) {
+        $theme =& new $class;
+        $info->name = $theme->system("name") ? $theme->system("name") : $file->name;
+        $info->description = $theme->system("description");
+      }
+      else {
+        unset($files[$filename]);
+      }
+    }
+
+    db_query("INSERT INTO system (name, description, type, filename, status) VALUES ('%s', '%s', '%s', '%s', %d)", $info->name, $info->description, $type, $filename, $file->status);
+
+    $output .= "<tr>";
+    $output .= "<td>$info->name</td>";
+    $output .= "<td>$info->description</td>";
+    $output .= "<td align=\"center\">". (in_array($filename, $required) ? form_hidden("status][$filename", 1) ."required" : form_checkbox("", "status][$filename", 1, $file->status)) ."</td>";
+    $output .= "</tr>\n";
+  }
   $output .= "</table><br />\n";
-  $output .= form_submit("Save module settings");
+  $output .= form_submit("Save $type settings");
 
   return form($output);
 }
 
 /**
-* Theme configuration
+* Module configuration
 *
-* This function handles the Drupal themes and lets the site administrator enable or disable them as they wish.
-*
-* @author Kjartan Mannes
-* @package system.module
-* @return string theme list
+* @group system.module
+* @return string module list
 */
-function system_themes() {
-  $result = db_query("SELECT * FROM system WHERE type = 'theme' ORDER BY filename");
-  $status = array();
-  while ($theme = db_fetch_object($result)) {
-    $_themes[$theme->name] = $theme;
-  }
-
-  if ($handle = @opendir("themes")) {
-    $themes = array();
-    while ($dir = readdir($handle)) {
-      if (!substr_count($dir, ".") && is_dir("themes/$dir")) {
-        if ($handle2 = @opendir("themes/$dir")) {
-          while ($file = readdir($handle2)) {
-            if (".theme" == substr($file, -6)) {
-              include_once("themes/$dir/$file");
-              $name = substr($file, 0, -6);
-              $_theme = "theme_$name";
-              if (class_exists($_theme)) {
-                $_theme =& new $_theme;
-                $_themes[$name]->filename = "themes/$dir/$file";
-                if (method_exists($_theme, "system")) {
-                  $_themes[$name]->displayname = $_theme->system("name");
-                  $_themes[$name]->author = $_theme->system("author");
-                  if (empty($_themes[$name]->description)) {
-                    $_themes[$name]->description = $_theme->system("description");
-                  }
-                }
-
-                $themes[$name] = $_themes[$name];
-                unset($_theme);
-              }
-            }
-          }
-          closedir($handle2);
-        }
-      }
-    }
-    closedir($handle);
-    asort($themes);
-  }
-
-  db_query("DELETE FROM system WHERE type = 'theme'");
-
-  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  $output .= "<tr><th>theme</th><th>name</th><th>description</th><th>author</th><th>enabled</th></tr>\n";
-  foreach ($themes as $name => $theme) {
-    $output .= "<tr>";
-    $output .= "<td>$name</td>";
-    $output .= "<td>$theme->displayname</td>";
-    $output .= "<td>". form_textfield("", "$name][description", $theme->description, 40, 255)."</td>";
-    $output .= "<td>$theme->author</td>";
-    $output .= "<td align=\"center\">". form_checkbox("", "$name][status", 1, $theme->status) ."</td>";
-    $output .= "</tr>\n";
-    db_query("INSERT INTO system (name, type, filename, status, description) VALUES ('%s', 'theme', '%s', '%s', '%s')", $name, $theme->filename, $theme->status, $theme->description);
-  }
-  $output .= "</table><br />\n";
-  $output .= form_submit("Save theme settings");
-
-  return form($output);
+function system_modules() {
+  // Config variables.
 }
 
 function system_admin() {
@@ -271,19 +236,21 @@ function system_admin() {
         break;
       case "Save module settings":
         db_query("UPDATE system SET status = '0' WHERE type = 'module'");
-        foreach ($edit["status"] as $name => $status) {
-          db_query("UPDATE system SET status = '$status' WHERE name = '$name'");
+        foreach ($edit["status"] as $filename => $status) {
+          db_query("UPDATE system SET status = %d WHERE filename = '$filename'", $status);
         }
       case "modules":
-        print system_modules();
+        // Note: changing this also requires changing module_init() @ includes/module.inc.
+        $required = array("modules/user.module", "modules/system.module", "modules/watchdog.module");
+        print system_listing("module", "modules", $required);
         break;
       case "Save theme settings":
         db_query("UPDATE system SET status = '0' WHERE type = 'theme'");
-        foreach ($edit as $name => $settings) {
-          db_query("UPDATE system SET status = '%s', description = '%s' WHERE name = '$name'", $settings["status"], $settings["description"]);
+        foreach ($edit["status"] as $filename => $status) {
+          db_query("UPDATE system SET status = %d WHERE filename = '$filename'", $status);
         }
       case "themes":
-        print system_themes();
+        print system_listing("theme", "themes");
         break;
       case "Reset to defaults":
         print status(system_default($edit));
