@@ -436,6 +436,9 @@ function node_show($node, $cid) {
 
     return $output;
   }
+  else {
+    drupal_set_message(message_access());
+  }
 }
 
 function node_access($op, $node = 0) {
@@ -1392,7 +1395,7 @@ function node_submit($node) {
     if (node_access("update", $node)) {
       $node->nid = node_save($node);
       watchdog("special", "$node->type: updated '$node->title'", l(t("view post"), "node/view/$node->nid"));
-      $output = t("The %name has been updated.", array ("%name" => module_invoke($node->type, "node", "name")));
+      $msg = t("the %name was updated.", array ("%name" => module_invoke($node->type, "node", "name")));
     }
   }
   else {
@@ -1413,32 +1416,14 @@ function node_submit($node) {
 
       $node->nid = node_save($node);
       watchdog("special", "$node->type: added '$node->title'", l(t("view post"), "node/view/$node->nid"));
-      $output = t("Thanks for your submission.");
+      $msg = t("your %name was created.", array ("%name" => module_invoke($node->type, "node", "name")));
     }
   }
 
-  /*
-  ** Reload the node from the database:
-  */
-
   $node = node_load(array("nid" => $node->nid));
-
-  /*
-  ** For usability's sake, make sure to present the user with some
-  ** useful links as where to go next.
-  */
-
-  if ($node->nid && node_access("view", $node)) {
-    $links[] = l(t("view"), "node/view/$node->nid");
-  }
-
-  if ($node->nid && node_access("update", $node)) {
-    $links[] = l(t("edit"), "node/edit/$node->nid");
-  }
-
-  $output .= "<p>". theme("links", $links) ."</p>";
-
-  return $output;
+  drupal_set_message($msg);
+  drupal_set_title($node->title);
+  return node_show($node, NULL);
 }
 
 function node_delete($edit) {
@@ -1532,7 +1517,8 @@ function node_page() {
         print theme("page", node_preview($edit, $error), t("Preview %name", array("%name" => $name)));
         break;
       case t("Submit"):
-        print theme("page", node_submit($edit), t("Submit %name", array("%name" => $name)));
+        drupal_set_title(t("Submit %name", array("%name" => $name)));
+        print theme("page", node_submit($edit));
         break;
       case t("Delete"):
         print theme("page", node_delete($edit), t("Delete %name", array("%name" => $name)));
