@@ -390,7 +390,7 @@ function block_user($type, $edit, &$user, $category = NULL) {
  *   "blocks" has no primary key defined (bad)!
  */
 function block_list($region) {
-  global $user, $base_url;
+  global $user;
   static $blocks = array();
 
   if (!isset($blocks[$region])) {
@@ -413,12 +413,9 @@ function block_list($region) {
 
       // Match path if necessary
       if ($block['pages']) {
-        $base = parse_url($base_url);
-        $session = session_name() .'='. session_id();
-        $url = str_replace(array($base['path'], '?'. $session), '', request_uri());
-        $url = ereg_replace('^/(\?q=)?', '', $url);
+        $path = drupal_get_path_alias($_GET['q']);
         $regexp = '/^('. preg_replace(array('/(\r\n?|\n)/', '/\\\\\*/', '/(^|\|)\\\\<front\\\\>($|\|)/'), array('|', '.*', '\1\2'), preg_quote($block['pages'], '/')) .')$/';
-        $matched = !($block['visibility'] xor preg_match($regexp, $url));
+        $matched = !($block['visibility'] xor preg_match($regexp, $path));
       }
       else {
         $matched = TRUE;
