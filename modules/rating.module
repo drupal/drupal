@@ -1,17 +1,27 @@
 <?php
 
+function rating_conf() {
+  $period = array(3600 => format_interval(3600), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600));
+  $output .= form_select(t("Update interval"), "rating_cron_time" , variable_get("rating_cron_time", 86400), $period, t("The update interval for the user ratings.  Requires crontab."));
+  return $output;
+}
+
 function rating_cron() {
-  $r1 = db_query("SELECT id FROM users ORDER BY rating DESC");
-  while ($account = db_fetch_object($r1)) {
-    db_query("UPDATE users SET rating = '". user_gravity($account->id) ."' WHERE id = '$account->id'");
-    $rating[$account->id] = ++$i;
-  }
+  if (time() - variable_get("rating_cron_last", 0) > variable_get("rating_cron_time", time())) {
+    variable_set("rating_cron_last", time());
 
-  db_query("DELETE FROM rating");
+    $r1 = db_query("SELECT id FROM users ORDER BY rating DESC");
+    while ($account = db_fetch_object($r1)) {
+      db_query("UPDATE users SET rating = '". user_gravity($account->id) ."' WHERE id = '$account->id'");
+      $rating[$account->id] = ++$i;
+    }
 
-  $r2 = db_query("SELECT id FROM users ORDER BY rating DESC");
-  while ($account = db_fetch_object($r2)) {
-    db_query("INSERT INTO rating (user, new, old) VALUES ('$account->id', '". ++$j ."', '". $rating[$account->id] ."')");
+    db_query("DELETE FROM rating");
+
+    $r2 = db_query("SELECT id FROM users ORDER BY rating DESC");
+    while ($account = db_fetch_object($r2)) {
+      db_query("INSERT INTO rating (user, new, old) VALUES ('$account->id', '". ++$j ."', '". $rating[$account->id] ."')");
+    }
   }
 }
 

@@ -53,18 +53,6 @@ function module_hook($name, $hook) {
   return function_exists($name ."_". $hook);
 }
 
-// rehash module-exported crons:
-function module_rehash_crons($name) {
-  if (module_hook($name, "cron")) {
-    if (!db_fetch_object(db_query("SELECT * FROM crons WHERE module = '$name'"))) {
-      db_query("INSERT INTO crons (module, scheduled, timestamp) VALUES ('$name', '172800', '0')");
-    }
-  }
-  else {
-    db_query("DELETE FROM crons WHERE module = '$name'");
-  }
-}
-
 // rehash module-exported blocks:
 function module_rehash_blocks($name) {
   db_query("UPDATE blocks SET remove = '1' WHERE module = '$name'");
@@ -93,9 +81,6 @@ function module_rehash($name) {
       db_query("INSERT INTO modules (name) VALUES ('$name')");
     }
 
-    // rehash module-exported crons (if necessary):
-    module_rehash_crons($name);
-
     // rehash module-exported blocks (if necessary):
     module_rehash_blocks($name);
   }
@@ -103,7 +88,6 @@ function module_rehash($name) {
     // remove all reference to module:
     db_query("DELETE FROM modules WHERE name = '$name'");
     db_query("DELETE FROM blocks WHERE module = '$name'");
-    db_query("DELETE FROM crons WHERE module = '$name'");
   }
 }
 

@@ -141,3 +141,6 @@ ALTER TABLE topic ADD moderate TEXT NOT NULL;
 ALTER TABLE node ADD users TEXT NOT NULL;
 ALTER TABLE comments ADD users TEXT NOT NULL;
 ALTER TABLE users DROP history;
+
+# 19/05/2001
+DROP TABLE crons;

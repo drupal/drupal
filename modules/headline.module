@@ -2,6 +2,33 @@
 
 include_once "modules/backend.class";
 
+function headline_help() {
+ ?>
+  <P>Drupal's headline module both imports and exports RDF/RSS headlines.</P>
+  <P>A lot of news-oriented websites are now publishing news (headlines) and making their content available through XML, RSS and RDF backend files.  They syndicate free content and allow retrieval and further transmission, aggregation, and online publication. In its current state, drupal's headline module supports RDF and RSS backends.</P>
+  <P>RSS was originally developed by Netscape to allow adding news channels to "My Netscape" sites, but it has since become adopted as the <I>de facto</I> net standard for distributing headlines and brief dynamic texts.</P>
+  <P>The headline module goes out to a list of configured news sites once an hour or so (driven by cron), downloads new RSS/RDF data and makes it available to your visitors.  In addition, your headlines are exported as well and can be retrieved by other sites from <CODE><?php echo path_uri(); ?>export/headlines.rdf</CODE>.</P>
+ <?php
+}
+
+function headline_conf() {
+  $period = array(900 => format_interval(900), 1800 => format_interval(1800), 3600 => format_interval(3600), 7200 => format_interval(7200), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 64800 => format_interval(64800), 86400 => format_interval(86400));
+  $output .= form_select(t("Update interval"), "headline_cron_time" , variable_get("headline_cron_time", 86400), $period, t("The update interval indicating how often you want to update your headline channels.  Requires crontab."));
+  return $output;
+}
+
+
+function headline_cron() {
+  if (time() - variable_get("headline_cron_last", 0) > variable_get("headline_cron_time", time())) {
+    variable_set("headline_cron_last", time());
+
+    $result = db_query("SELECT * FROM channel");
+    while ($channel = db_fetch_object($result)) {
+      $backend = new Backend($channel->id);
+    }
+  }
+}
+
 function headline_blocks() {
   global $theme;
 
@@ -52,21 +79,6 @@ function headline_page() {
   }
 }
 
-function headline_cron() {
-  $result = db_query("SELECT * FROM channel");
-  while ($channel = db_fetch_object($result)) {
-    $backend = new Backend($channel->id);
-  }
-}
-
-function headline_help() {
- ?>
-  <P>Drupal's headline module both imports and exports RDF/RSS headlines.</P>
-  <P>A lot of news-oriented websites are now publishing news (headlines) and making their content available through XML, RSS and RDF backend files.  They syndicate free content and allow retrieval and further transmission, aggregation, and online publication. In its current state, drupal's headline module supports RDF and RSS backends.</P>
-  <P>RSS was originally developed by Netscape to allow adding news channels to "My Netscape" sites, but it has since become adopted as the <I>de facto</I> net standard for distributing headlines and brief dynamic texts.</P>
-  <P>The headline module goes out to a list of configured news sites once an hour or so (driven by cron), downloads new RSS/RDF data and makes it available to your visitors.  In addition, your headlines are exported as well and can be retrieved by other sites from <CODE><?php echo path_uri(); ?>export/headlines.rdf</CODE>.</P>
- <?php
-}
 
 function headline_block() {
   $result = db_query("SELECT * FROM channel");

@@ -24,6 +24,7 @@ drupal x.xx, xx/xx/xxxx (CVS, unstable)
     * allows to display and mail CVS log messages as daily digests.
 - added book.module:
     * allows collaborative handbook writing: primary used for drupal documentation.
+- removed cron.module and integrated it into settings.module.
 - various updates:
     * introduced links/drupal tags: [[link]]
     * added preview functionality when submitting new content (such as a story) from the administration pages.
@@ -69,7 +70,6 @@ drupal 2.00, 15/03/2001
         + user accounts can be deleted.
         + added fine-grained permission support.
     * improved block module
-    * improved cron module
     * improved diary module:
         + diary entries can be deleted
     * improved headline module:
