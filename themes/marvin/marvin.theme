@@ -13,8 +13,7 @@
      </HEAD>
      <STYLE type="text/css">
       <!--
-       BODY,TD,P,UL,LI,DIV,FORM,EM,BLOCKQUOTE { font-size: 10pt; font-family: Lucida,Verdana,Helvetica,Arial; }
-       TH { font-size: 10pt; font-family: Lucida,Verdana,Helvetica,Arial; }
+       BODY, P, DIV, TH, TD, TR, FORM, OL, UL, LI, INPUT, TEXTAREA, SELECT, A { font-family: Verdana, Tahoma, Arial, Helvetica; }
       -->
      </STYLE>
      <BODY TEXT="#000000" BGCOLOR="#FFFFFF" ALINK="#CCCCCC" LINK="#665555" VLINK="#665555">
@@ -27,7 +26,7 @@
        <TR>
         <TD ALIGN="right" COLSPAN="2">
          <?php
-           print "<SMALL><A HREF=\"index.php\">". t("home") ."</A> | <A HREF=\"module.php?mod=faq\">". t("faq") ."</A> | <A HREF=\"module.php?mod=diary\">". t("diary") ."</A> | <A HREF=\"search.php\">". t("search") ."</A> | <A HREF=\"submit.php\">". t("submit news") ."</A> | <A HREF=\"account.php\">". t("user account") ."</A></SMALL>\n";
+           print "<SMALL><A HREF=\"index.php\">". t("home") ."</A> | <A HREF=\"module.php?mod=faq\">". t("faq") ."</A> | <A HREF=\"module.php?mod=diary\">". t("diary") ."</A> | <A HREF=\"search.php\">". t("search") ."</A> | <A HREF=\"submit.php\">". t("submit") ."</A> | <A HREF=\"module.php?mod=wiki\">". t("wiki") ."</A> | <A HREF=\"account.php\">". t("user account") ."</A></SMALL>\n";
          ?>
         </TD>
        </TR>
@@ -37,9 +36,9 @@
    }
 
    function story($story, $reply = 0) {
-       print "\n<!-- story: \"$story->subject\" -->\n";
+       print "\n<!-- story: \"$story->title\" -->\n";
        print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"2\" WIDTH=\"100%\">\n";
-       print " <TR><TD COLSPAN=\"2\"><IMG SRC=\"themes/marvin/images/drop.gif\" ALT=\"\"> &nbsp; <B>". check_output($story->subject) ."</B></TD></TR>\n";
+       print " <TR><TD COLSPAN=\"2\"><IMG SRC=\"themes/marvin/images/drop.gif\" ALT=\"\"> &nbsp; <B>". check_output($story->title) ."</B></TD></TR>\n";
        print " <TR VALIGN=\"bottom\"><TD COLSPAN=\"2\" BGCOLOR=\"#000000\" WIDTH=\"100%\"><IMG SRC=\"themes/marvin/images/pixel.gif\" WIDTH=\"1\" HEIGHT=\"0\" ALT=\"\"></TD></TR>\n";
        print " <TR>\n";
        print "  <TD>\n";
@@ -50,8 +49,7 @@
        print " <TR>\n";
        print "  <TD COLSPAN=\"2\">\n";
        if ($story->abstract) print "<P>". check_output($story->abstract, 1) ."</P>\n";
-       if ($story->updates) print "<P><FONT COLOR=\"#666699\">". t("Editor's note") .":</FONT> ". check_output($story->updates, 1) ."</P>\n";
-       if ($reply) if ($story->article) print "   <P>". check_output($story->article, 1) ."</P>\n";
+       if ($reply) if ($story->body) print "   <P>". check_output($story->body, 1) ."</P>\n";
        print "  </TD>\n";
        print " </TR>\n";
        print " <TR><TD COLSPAN=\"2\">&nbsp;</TD></TR>\n";
