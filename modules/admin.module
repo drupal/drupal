@@ -1,5 +1,5 @@
 <?php
-// $Id: admin.module,v 1.3 2003/01/14 20:58:14 dries Exp $
+// $Id: admin.module,v 1.4 2003/01/26 13:27:59 dries Exp $
 
 include_once "includes/common.inc";
 
@@ -9,7 +9,17 @@ function status($message) {
   }
 }
 
-function admin_page($mod) {
+function admin_link($type) {
+  if ($type == "admin") {
+    menu_add("sitemap", url("admin/admin/sitemap"), "Sitemap", NULL, NULL, 8);
+  }
+}
+
+function admin_admin() {
+  print menu_map();
+}
+
+function admin_page() {
   global $user;
 
   if (user_access("access administration pages")) {

@@ -129,6 +129,23 @@ function menu_tree($parent = "", $all = 1) {
   return $output;
 }
 
+function menu_map($parent = "") {
+
+  $result = db_query("SELECT * FROM menu WHERE parent = '%s' ORDER BY weight, name", $parent);
+
+  if (db_num_rows($result)) {
+    $output = "<ul>";
+    while ($item = db_fetch_object($result)) {
+      $output .= "<li>". menu_item($item) ."</li>";
+      $output .= menu_map($item->name);
+    }
+    $output .= "</ul>";
+  }
+
+  return $output;
+}
+
+
 function menu_add($name, $link, $title = NULL, $help = NULL, $parent = NULL, $weight = 1) {
   if (!db_result(db_query("SELECT name FROM menu WHERE link = '%s'", $link))) {
     db_query("INSERT INTO menu (name, link, title, help, parent, weight) VALUES ('%s', '%s', '%s', '%s', '%s', '%d')", $name, $link, $title, $help, $parent, $weight);
