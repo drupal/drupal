@@ -332,7 +332,7 @@ function form($form, $method = "post", $action = 0, $options = 0) {
 }
 
 function form_item($title, $value, $description = 0) {
-  return ($title ? "<b>$title:</b><br />" : "") . $value . ($description ? "<br /><small><i>$description</i></small>" : "") ."<p />\n";
+  return "<p>". ($title ? "<b>$title:</b><br />" : "") . $value . ($description ? "<br /><small><i>$description</i></small>" : "") ."</p>\n";
 }
 
 function form_checkbox($title, $name, $value = 1, $checked = 0, $description = 0) {
