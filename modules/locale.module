@@ -340,7 +340,7 @@ function locale($string) {
     $locale_t = unserialize($cache->data);
   }
 
-  if (array_key_exists($string, $locale_t)) {
+  if (is_array($locale_t) && array_key_exists($string, $locale_t)) {
     $string = $locale_t[$string];
   }
   else {
