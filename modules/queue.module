@@ -83,10 +83,14 @@ function queue_overview() {
   $output .= " <tr><th>". t("Subject") ."</th><th>". t("Author") ."</th><th>". t("Type") ."</TH><TH>". t("Score") ."</th></tr>";
   while ($node = db_fetch_object($result)) {
     if ($user->uid == $node->uid || field_get($node->users, $user->uid)) {
-      $output .= " <tr><td><a href=\"module.php?mod=queue&op=view&id=$node->nid\">". check_output($node->title) ."</a></td><td align=\"center\">". format_name($node) ."</td><td align=\"center\">". check_output($node->type) ."</td><td align=\"center\">". queue_score($node->nid) ."</td></tr>";
+      $output .= " <tr><td><a href=\"module.php?mod=queue&op=view&id=$node->nid\">". check_output($node->title) ."</a></td><td align=\"center\">". format_name($node) ."</td><td align=\"center\">". module_invoke($node->type, "node", "name") ."</td><td align=\"center\">". queue_score($node->nid) ."</td></tr>";
     }
     else {
-      $output .= " <tr><td><a href=\"module.php?mod=queue&op=view&id=$node->nid\">". check_output($node->title) ."</a></td><td align=\"center\">". format_name($node) ."</td><td align=\"center\">". check_output($node->type) ."</td><td align=\"center\"><a href=\"module.php?mod=queue&op=view&id=$node->nid\">". t("vote") ."</a></td></tr>";
+      $output .= " <tr><td><a href=\"module.php?mod=queue&op=view&id=$node->nid\">". check_output($node->title) ."</a></td><td align=\"center\">". format_name($node) ."</td><td align=\"center\">". module_invoke($node->type, "node", "name") ."</td><td align=\"center\"><a href=\"module.php?mod=queue&op=view&id=$node->nid\">". t("vote") ."</a></td></tr>";
+    }
+
+    if ($node->teaser) {
+      $output .= " <tr><td colspan=\"4\"><div style=\"margin-left: 40px; margin-bottom: 20px; font-size: 10px;\">$node->teaser</div></td></tr>";
     }
   }
   $output .= "</table>";
