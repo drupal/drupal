@@ -101,7 +101,7 @@ function request_uri() {
 }
 
 function message_access() {
-  return t("You are not authorized to access to this page.");
+  return t("You are not authorized to access this page.");
 }
 
 function message_na() {
