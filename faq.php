@@ -9,8 +9,6 @@ function defaultDisplay() {
     <FONT FACE="courier">
 <H3>General</H3>
 
-Jeroen was here.
-
 * Mission statement:
 --------------------
 
