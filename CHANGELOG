@@ -7,6 +7,8 @@ drupal x.xx, xx/xx/xxxx (CVS, unstable)
 - removed ban module and integrated it into account.module as "access control":
     * access control is based on much more powerful regular expressions (regex) now rather than on MySQL pattern matching.
 - rewrote watchdog and submission throttle
+- rewrote headline code and renamed it to import.module and export.module
+    * added a various new features compared with the old headline code.
 - rewrote section code and renamed it to structure.module:
     * supports both "categories" and "topics" (cfr. Scoop, SlashCode).  Topics can be nested to create a multi-level hierarchy.
     * added "auto-post new submissions" feature versus "moderate new submissions".
