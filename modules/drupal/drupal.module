@@ -1,5 +1,97 @@
 <?php
 
+function drupal_conf_options() {
+  $output .= form_textfield("Drupal server", "drupal_server", variable_get("drupal_server", "http://www.drupal.org/xmlrpc.php"), 55, 128, "The URL of your root Drupal XML-RPC server.");
+  $output .= form_select("Drupal directory", "drupal_directory", variable_get("drupal_directory", 0), array("Disabled", "Enabled"), "If enabled, your Drupal site will make itself know to the Drupal directory at the specified Drupal XML-RPC server.  For this to work properly, you have to set your site's name, e-mail addrress, slogan and mission statement.");
+
+  return $output;
+}
+
+function drupal_cron() {
+
+  /*
+  ** If this site acts as a Drupal XML-RPC server, delete the sites that
+  ** stopped sending "ping" messages.
+  */
+
+  db_query("DELETE FROM directory WHERE timestamp < '". (time() - 259200) ."'");
+
+  /*
+  ** If this site acts as a Drupal XML-RPC client, send a message to the
+  ** Drupal XML-RPC server.
+  */
+
+
+  if (variable_get("drupal_directory", 0) && variable_get("drupal_server", 0)) {
+    drupal_notify(variable_get("drupal_server", ""));
+  }
+}
+
+function drupal_directory_ping($arguments) {
+
+  /*
+  ** Parse our parameters:
+  */
+
+  $argument = $arguments->getparam(0);
+  $link = strip_tags($argument->scalarval());
+  $argument = $arguments->getparam(1);
+  $name = strip_tags($argument->scalarval());
+  $argument = $arguments->getparam(2);
+  $mail = strip_tags($argument->scalarval());
+  $argument = $arguments->getparam(3);
+  $slogan = strip_tags($argument->scalarval());
+  $argument = $arguments->getparam(4);
+  $mission = strip_tags($argument->scalarval());
+
+  /*
+  ** Update the data in our database and send back a reply:
+  */
+
+  if ($link && $name && $mail && $slogan && $mission) {
+    db_query("DELETE FROM directory WHERE link = '". check_query($link) ."'");
+    db_query("INSERT INTO directory (link, name, mail, slogan, mission, timestamp) VALUES ('". check_query($link) ."', '". check_query($name) ."', '". check_query($mail) ."', '". check_query($slogan) ."', '". check_query($mission) ."', '". time() ."')");
+
+    watchdog("message", "directory: ping from '$name' ($link)");
+
+    return new xmlrpcresp(new xmlrpcval(1, "int"));
+  }
+  else {
+    return new xmlrpcresp(new xmlrpcval(0, "int"));
+  }
+
+}
+
+function drupal_directory_page() {
+  $result = db_query("SELECT * FROM directory ORDER BY name");
+
+  while ($site = db_fetch_object($result)) {
+    $output .= "<a href=\"$site->link\">$site->name</a> - $site->slogan<div style=\"padding-left: 20px;\">$site->mission</div><br />";
+  }
+
+  return $output;
+}
+
+function drupal_xmlrpc() {
+  return array("drupal.site.ping" => array("function" => "drupal_directory_ping"));
+}
+
+function drupal_notify($server) {
+
+  $url = parse_url($server);
+
+  $client = new xmlrpc_client($url["path"], $url["host"], 80);
+
+  $message = new xmlrpcmsg("drupal.site.ping", array(new xmlrpcval(path_uri(), "string"), new xmlrpcval(variable_get("site_name", ""), "string"), new xmlrpcval(variable_get("site_mail", ""), "string"), new xmlrpcval(variable_get("site_slogan", ""), "string"), new xmlrpcval(variable_get("site_mission", ""), "string")));
+
+  $result = $client->send($message, 5);
+
+  if (!$result || $result->faultCode()) {
+    watchdog("error", "failed to notify '". $url["host"] ."' at '". $url["path"] ."': ". $result->faultString());
+  }
+
+}
+
 function drupal_info($field = 0) {
   $info["name"] = "Drupal";
   $info["protocol"] = "XML-RPC";

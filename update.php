@@ -20,6 +20,7 @@ $mysql_updates = array(
   "2001-12-01" => "update_11",
   "2001-12-06" => "update_12",
   "2001-12-09" => "update_13",
+  "2001-12-16" => "update_14",
 );
 
 // Update functions
@@ -248,11 +249,16 @@ function update_12() {
   update_sql("ALTER TABLE book ADD format tinyint(2) DEFAULT '0';");
 }
 
-function update_13() {
-  update_sql("ALTER TABLE referer RENAME AS referrer;");
-  update_sql("DROP TABLE blog;");
-  update_sql("DROP TABLE story;");
-  update_sql("DROP TABLE forum;");
+function update_14() {
+  update_sql("CREATE TABLE directory (
+    link varchar(255) DEFAULT '' NOT NULL,
+    name varchar(128) DEFAULT '' NOT NULL,
+    mail varchar(128) DEFAULT '' NOT NULL,
+    slogan text NOT NULL,
+    mission text NOT NULL,
+    timestamp int(11) DEFAULT '0' NOT NULL,
+    PRIMARY KEY (link)
+  );");
 }
 
 // System functions
