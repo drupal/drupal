@@ -625,7 +625,7 @@ function system_theme_settings() {
 
   if ($key) {
     // Template-specific settings
-    $function = function_exists($themes[$key]->prefix .'_settings');
+    $function = $themes[$key]->prefix .'_settings';
     if (function_exists($function)) {
       $group = $function();
       if (strpos($themes[$key]->description, '.theme')) {
