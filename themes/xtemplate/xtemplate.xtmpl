@@ -32,11 +32,16 @@
 </table>
 <table border="0" cellpadding="0" cellspacing="0" class="header">
   <tr>
+    <!-- BEGIN: blocks -->
+      <td valign="top" id="sidebar">
+        {blocks}
+      </td>
+    <!-- END: blocks -->
     <td valign="top">
       <!-- BEGIN: message -->
         <div id="message">{header_message}</div>
       <!-- END: message -->
-      <div id="main">
+     <div id="main">
 <!-- END: header -->
 
 <!-- BEGIN: node -->
