@@ -117,8 +117,8 @@ function account_makePassword($min_length=6) {
 switch ($op) {
   case "Login":
     session_start();
-    $user = new User($userid,$passwd);
-    if ($user && $user->valid()) { session_register("user"); }
+    $user = new User($userid, $passwd);
+    if ($user && $user->valid()) session_register("user");
     showUser($user->userid);
     break;
   case "new":
@@ -202,52 +202,59 @@ switch ($op) {
     }
     break;
   case "editpage":
-    ### Generate output/content:
-    $output .= "<FORM ACTION=\"account.php\" METHOD=post>\n";
-    $output .= "<B>Theme:</B><BR>\n";
+    if ($user && $user->valid()) {
+      ### Generate output/content:
+      $output .= "<FORM ACTION=\"account.php\" METHOD=post>\n";
+      $output .= "<B>Theme:</B><BR>\n";
 
-    ### Loop (dynamically) through all available themes:
-    $handle = opendir("themes");
-    while ($file = readdir($handle)) if(!ereg("^\.",$file) && file_exists("themes/$file/theme.class.php")) $options .= "<OPTION VALUE=\"$file\"". (((!empty($userinfo[theme])) && ($file == $cfg_theme)) || ($user->theme == $file) ? " SELECTED" : "") .">$file</OPTION>";
-    closedir($handle);
+      ### Loop (dynamically) through all available themes:
+      $handle = opendir("themes");
+      while ($file = readdir($handle)) if(!ereg("^\.",$file) && file_exists("themes/$file/theme.class.php")) $options .= "<OPTION VALUE=\"$file\"". (((!empty($userinfo[theme])) && ($file == $cfg_theme)) || ($user->theme == $file) ? " SELECTED" : "") .">$file</OPTION>";
+      closedir($handle);
 
-    if ($userinfo[theme]=="") $userinfo[theme] = $cfg_theme;
-    $output .= "<SELECT NAME=\"edit[theme]\">$options</SELECT><BR>\n";
-    $output .= "<I>Changes the look and feel of the site.</I><P>\n";
-    $output .= "<B>Maximum number of stories:</B><BR>\n";
-    $output .= "<INPUT NAME=\"edit[storynum]\" MAXLENGTH=3 SIZE=3 VALUE=\"$user->storynum\"><P>\n";
-    $options  = "<OPTION VALUE=\"nested\"". ($user->umode == 'nested' ? " SELECTED" : "") .">Nested</OPTION>";
-    $options .= "<OPTION VALUE=\"flat\"". ($user->umode == 'flat' ? " SELECTED" : "") .">Flat</OPTION>";
-    $options .= "<OPTION VALUE=\"threaded\"". ($user->umode == 'threaded' ? " SELECTED" : "") .">Threaded</OPTION>";
-    $output .= "<B>Display mode:</B><BR>\n";
-    $output .= "<SELECT NAME=\"edit[umode]\">$options</SELECT><P>\n";
-    $options  = "<OPTION VALUE=0". ($user->uorder == 0 ? " SELECTED" : "") .">Oldest first</OPTION>";
-    $options .= "<OPTION VALUE=1". ($user->uorder == 1 ? " SELECTED" : "") .">Newest first</OPTION>";
-    $options .= "<OPTION VALUE=2". ($user->uorder == 2 ? " SELECTED" : "") .">Highest scoring first</OPTION>";
-    $output .= "<B>Sort order:</B><BR>\n";
-    $output .= "<SELECT NAME=\"edit[uorder]\">$options</SELECT><P>\n";
-    $options  = "<OPTION VALUE=\"-1\"". ($user->thold == -1 ? " SELECTED" : "") .">-1: Display uncut and raw comments.</OPTION>";
-    $options .= "<OPTION VALUE=0". ($user->thold == 0 ? " SELECTED" : "") .">0: Display almost all comments.</OPTION>";
-    $options .= "<OPTION VALUE=1". ($user->thold == 1 ? " SELECTED" : "") .">1: Display almost no anonymous comments.</OPTION>";
-    $options .= "<OPTION VALUE=2". ($user->thold == 2 ? " SELECTED" : "") .">2: Display comments with score +2 only.</OPTION>";
-    $options .= "<OPTION VALUE=3". ($user->thold == 3 ? " SELECTED" : "") .">3: Display comments with score +3 only.</OPTION>";
-    $options .= "<OPTION VALUE=4". ($user->thold == 4 ? " SELECTED" : "") .">4: Display comments with score +4 only.</OPTION>";
-    $options .= "<OPTION VALUE=5". ($user->thold == 5 ? " SELECTED" : "") .">5: Display comments with score +5 only.</OPTION>";
-    $output .= "<B>Threshold:</B><BR>\n";
-    $output .= "<SELECT NAME=\"edit[thold]\">$options</SELECT><BR>\n";
-    $output .= "<I>Comments that scored less than this setting will be ignored. Anonymous comments start at 0, comments of people logged on start at 1 and moderators can add and subtract points.</I><P>\n";
-    $output .= "<B>Singature:</B> (255 char limit)<BR>\n";
-    $output .= "<TEXTAREA NAME=\"edit[signature]\" COLS=35 ROWS=5 WRAP=virtual>$user->signature</TEXTAREA><BR>\n";
-    $output .= "<I>Optional. This information will be publicly displayed at the end of your comments. </I><P>\n";
-    $output .= "<INPUT TYPE=submit NAME=op VALUE=\"Save page settings\"><BR>\n";
-    $output .= "</FORM>\n";
+      if ($userinfo[theme]=="") $userinfo[theme] = $cfg_theme;
+      $output .= "<SELECT NAME=\"edit[theme]\">$options</SELECT><BR>\n";
+      $output .= "<I>Changes the look and feel of the site.</I><P>\n";
+      $output .= "<B>Maximum number of stories:</B><BR>\n";
+      $output .= "<INPUT NAME=\"edit[storynum]\" MAXLENGTH=3 SIZE=3 VALUE=\"$user->storynum\"><P>\n";
+      $options  = "<OPTION VALUE=\"nested\"". ($user->umode == 'nested' ? " SELECTED" : "") .">Nested</OPTION>";
+      $options .= "<OPTION VALUE=\"flat\"". ($user->umode == 'flat' ? " SELECTED" : "") .">Flat</OPTION>";
+      $options .= "<OPTION VALUE=\"threaded\"". ($user->umode == 'threaded' ? " SELECTED" : "") .">Threaded</OPTION>";
+      $output .= "<B>Display mode:</B><BR>\n";
+      $output .= "<SELECT NAME=\"edit[umode]\">$options</SELECT><P>\n";
+      $options  = "<OPTION VALUE=0". ($user->uorder == 0 ? " SELECTED" : "") .">Oldest first</OPTION>";
+      $options .= "<OPTION VALUE=1". ($user->uorder == 1 ? " SELECTED" : "") .">Newest first</OPTION>";
+      $options .= "<OPTION VALUE=2". ($user->uorder == 2 ? " SELECTED" : "") .">Highest scoring first</OPTION>";
+      $output .= "<B>Sort order:</B><BR>\n";
+      $output .= "<SELECT NAME=\"edit[uorder]\">$options</SELECT><P>\n";
+      $options  = "<OPTION VALUE=\"-1\"". ($user->thold == -1 ? " SELECTED" : "") .">-1: Display uncut and raw comments.</OPTION>";
+      $options .= "<OPTION VALUE=0". ($user->thold == 0 ? " SELECTED" : "") .">0: Display almost all comments.</OPTION>";
+      $options .= "<OPTION VALUE=1". ($user->thold == 1 ? " SELECTED" : "") .">1: Display almost no anonymous comments.</OPTION>";
+      $options .= "<OPTION VALUE=2". ($user->thold == 2 ? " SELECTED" : "") .">2: Display comments with score +2 only.</OPTION>";
+      $options .= "<OPTION VALUE=3". ($user->thold == 3 ? " SELECTED" : "") .">3: Display comments with score +3 only.</OPTION>";
+      $options .= "<OPTION VALUE=4". ($user->thold == 4 ? " SELECTED" : "") .">4: Display comments with score +4 only.</OPTION>";
+      $options .= "<OPTION VALUE=5". ($user->thold == 5 ? " SELECTED" : "") .">5: Display comments with score +5 only.</OPTION>";
+      $output .= "<B>Threshold:</B><BR>\n";
+      $output .= "<SELECT NAME=\"edit[thold]\">$options</SELECT><BR>\n";
+      $output .= "<I>Comments that scored less than this setting will be ignored. Anonymous comments start at 0, comments of people logged on start at 1 and moderators can add and subtract points.</I><P>\n";
+      $output .= "<B>Singature:</B> (255 char limit)<BR>\n";
+      $output .= "<TEXTAREA NAME=\"edit[signature]\" COLS=35 ROWS=5 WRAP=virtual>$user->signature</TEXTAREA><BR>\n";
+      $output .= "<I>Optional. This information will be publicly displayed at the end of your comments. </I><P>\n";
+      $output .= "<INPUT TYPE=submit NAME=op VALUE=\"Save page settings\"><BR>\n";
+      $output .= "</FORM>\n";
 
-    ### Display output/content:
-    include "theme.inc";
-    $theme->header();
-    $theme->box("Customize page", $output);
-    $theme->footer();
-
+      ### Display output/content:
+      include "theme.inc";
+      $theme->header();
+      $theme->box("Customize page", $output);
+      $theme->footer();
+    }
+    else {
+      include "theme.inc";
+      $theme->header();
+      $theme->box("Login", showLogin($userid)); 
+      $theme->footer();
+    }
     break;
   case "Save user information":
     if ($user && $user->valid()) {
@@ -280,4 +287,5 @@ switch ($op) {
   default: 
     showUser($user->userid);
 }
+
 ?>
