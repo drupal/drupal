@@ -79,7 +79,7 @@ function watchdog_overview() {
     $_SESSION['watchdog_overview_filter'] = $_POST['edit']['filter'];
   }
 
-  $form  = form_select(t('Filter by type'), 'filter', $_SESSION['watchdog_overview_filter'], $names);
+  $form  = form_select(t('Filter by message type'), 'filter', $_SESSION['watchdog_overview_filter'], $names);
   $form .= form_submit(t('Filter'));
 
   $header = array(
