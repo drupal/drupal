@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.145 2003/06/30 19:18:45 dries Exp $
+// $Id: comment.module,v 1.146 2003/07/10 05:02:57 dries Exp $
 
 $GLOBALS["cmodes"] = array(1 => t("Flat list - collapsed"), 2 => t("Flat list - expanded"), 3 => t("Threaded list - collapsed"), 4 => t("Threaded list - expanded"));
 $GLOBALS["corder"] = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"));
@@ -1237,7 +1237,7 @@ function comment($comment, $links = 0) {
   $output .= "<div class=\"subject\">$comment->subject". ($comment->new ? " ". theme("theme_mark") : "") ."</div>";
   $output .= "<div class=\"moderation\">". $comment->moderation ."</div>";
   $output .= "<div class=\"credit\">". t("by %a on %b", array("%a" => format_name($comment), "%b" => format_date($comment->timestamp))) ."</div>";
-  $output .= "<div class=\"body\">". check_output($comment->comment) ."</div";
+  $output .= "<div class=\"body\">". check_output($comment->comment) ."</div>";
   $output .= "<div class=\"links\">$links</div>";
   $output .= "</div>";
   print $output;
