@@ -72,7 +72,7 @@ function jabber_recv($session, $timout = 50) {
 function jabber_auth($username, $password, $server) {
   global $jabber;
 
-  $session = fsockopen($server, 5222, &$errno, &$errstr, 5);
+  $session = fsockopen($server, 5222, $errno, $errstr, 5);
 
   if ($session) {
 
