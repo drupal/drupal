@@ -55,7 +55,7 @@ $mysql_updates = array(
   "2002-09-17" => "update_40",
   "2002-10-13" => "update_41",
   "2002-10-17" => "update_42",
-  "2002-10-17" => "update_43"
+  "2002-10-26" => "update_43"
 );
 
 // Update functions
