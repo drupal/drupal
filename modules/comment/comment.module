@@ -950,7 +950,7 @@ function _comment_delete_thread($comment) {
   // Delete the comment's replies:
   $result = db_query("SELECT cid, subject FROM {comments} WHERE pid = %d", $comment->cid);
   while ($comment = db_fetch_object($result)) {
-    comment_delete_thread($comment);
+    _comment_delete_thread($comment);
   }
 }
 
