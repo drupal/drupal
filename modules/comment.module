@@ -1414,7 +1414,7 @@ function comment_already_moderated($uid, $users) {
 function theme_comment_form($edit, $title) {
   global $user;
 
-  $form .= "<a id=\"comment\"></a>\n";
+  $form .= "<a id=\"comment-form\"></a>\n";
 
   // contact information:
   if ($user->uid) {
