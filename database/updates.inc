@@ -747,7 +747,7 @@ function update_78() {
     $ret[] = update_sql("CREATE TABLE {filters} (
       module varchar(64) NOT NULL default '',
       weight tinyint(2) DEFAULT '0' NOT NULL,
-      KEY weight (weight)
+      KEY module (module)
     )");
   }
   else {

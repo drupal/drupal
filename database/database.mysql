@@ -174,7 +174,7 @@ CREATE TABLE feed (
 CREATE TABLE filters (
   module varchar(64) NOT NULL default '',
   weight tinyint(2) DEFAULT '0' NOT NULL,
-  KEY weight (weight)
+  KEY module (module)
 ) TYPE=MyISAM;
 
 --
