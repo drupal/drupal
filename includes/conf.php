@@ -1,5 +1,5 @@
 <?php
-// $Id: conf.php,v 1.27 2003/07/10 17:46:41 dries Exp $
+// $Id: conf.php,v 1.28 2004/03/12 18:27:05 dries Exp $
 
 #
 # Database settings:
@@ -14,7 +14,6 @@
 
 # $db_url = "mysql://user:password@hostname/database";
 # $db_url = "pgsql://user:password@hostname/database";
-# $db_url = "mssql://user:password@hostname/database";
 $db_url = "mysql://drupal:drupal@localhost/drupal";
 
 #   If $db_prefix is specified all database table names will be
