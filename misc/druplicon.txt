@@ -1,5 +1,0 @@
-You can find the Druplicon (the Drupal-logo) in several formats here:
-- EPS: Encapsulated PostScript, GZipped (vector)
-- PDF: Adobe Acrobat (vector)
-- PSP: Paint Shop Pro (vector)
-- PNG: Portable Network Graphics (bitmap)
