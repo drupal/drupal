@@ -1433,7 +1433,7 @@ function user_admin_edit($edit = array()) {
         db_query("DELETE FROM {users} WHERE uid = %d", $account->uid);
         db_query("DELETE FROM {authmap} WHERE uid = %d", $account->uid);
         drupal_set_message(t("the account has been deleted."));
-        module_invoke_all('user', "delete", $account, $user);
+        module_invoke_all('user', 'delete', $edit, $account);
         return user_admin_account();
       }
       else {
