@@ -1,5 +1,6 @@
 <?php
 
+// applies function $function to every known module:
 function module_iterate($function, $argument = "") {
   global $repository;
   foreach ($repository as $name=>$module) {
@@ -7,11 +8,19 @@ function module_iterate($function, $argument = "") {
   }
 }
 
+// executes hook $hook of module $module with optional arguments:
 function module_execute($module, $hook, $argument = "") {
   global $repository;
   return ($repository[$module][$hook]) ? $repository[$module][$hook]($argument) : "";
 }
 
+// returns true if module $module supports hook $hook, and false otherwise:
+function module_hook($module, $hook) {
+  global $repository;
+  return $repository[$module][$hook];
+}
+
+// rehashes the crons:
 function module_rehash_crons($name, $module) {
   if ($module["cron"]) {
     if (!db_fetch_object(db_query("SELECT * FROM crons WHERE module = '$name'"))) {
@@ -23,6 +32,7 @@ function module_rehash_crons($name, $module) {
   }
 }
 
+// rehashes the blocks:
 function module_rehash_blocks($name, $module) {
   db_query("UPDATE blocks SET remove = '1' WHERE module = '$name'");
   if ($module["block"] && $blocks = $module["block"]()) {
@@ -38,6 +48,7 @@ function module_rehash_blocks($name, $module) {
   db_query("DELETE FROM blocks WHERE module = '$name' AND remove = '1'");
 }
 
+// rehashes a module:
 function module_rehash($name) {
   global $repository;
 
