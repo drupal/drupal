@@ -102,9 +102,9 @@ function format_tag($link, $text) {
 function format_text($text) {
 
   $src = array( // "/(<\/?)(\w+)([^>]*>)/e",             // convert HTML to lower case
-               "/\[(([^\|]*?)(\|([^\|]*?))?)\]/e");  // [link|description]
+               "/\[\[(([^\|]*?)(\|([^\|]*?))?)\]\]/e");  // [link|description]
   $dst = array( // "'\\1'. strtolower('\\2') .'\\3'",    // convert HTML to lower case
-               format_tag('\\2', '\\4'));            // [link|description]
+               format_tag('\\2', '\\4'));                // [link|description]
 
   return preg_replace($src, $dst, $text);
 }
