@@ -133,12 +133,12 @@ function book_update($node) {
   db_query("UPDATE book SET parent = '$node->parent', weight = '$node->weight' WHERE nid = '$node->nid'");
 }
 
-function book_delete($node) {
+function book_delete(&$node) {
   db_query("DELETE FROM book WHERE nid = '$node->nid'");
 }
 
 
-function book_form($node, $help, $error) {
+function book_form(&$node, &$help, &$error) {
   global $user;
 
   $output .= form_select(t("Parent"), "parent", $node->parent, book_toc(), t("The parent subject or category the page belongs in."));

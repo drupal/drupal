@@ -46,7 +46,7 @@ function forum_view($node) {
   $theme->box(t("Discussion forum"), $output);
 }
 
-function forum_form($node, $help, $error) {
+function forum_form(&$node, &$help, &$error) {
   $output .= form_textarea("Body", "body", $node->body, 60, 10);
 
   return $output;

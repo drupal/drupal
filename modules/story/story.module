@@ -55,7 +55,7 @@ function story_help() {
  <?php
 }
 
-function story_form($node, $help, $error) {
+function story_form(&$node, &$help, &$error) {
 
   if (isset($node->body)) {
 

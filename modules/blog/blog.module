@@ -225,7 +225,7 @@ function blog_page_last() {
   $theme->box(t("User blogs"), $output, "main");
 }
 
-function blog_form($node, $help, $error) {
+function blog_form(&$node, &$help, &$error) {
   global $nid, $iid;
 
 

@@ -464,7 +464,7 @@ function node_feed() {
 }
 
 
-function node_validate($node, $error = array()) {
+function node_validate($node, &$error) {
 
   global $user;
 
@@ -547,7 +547,7 @@ function node_form($edit) {
   ** Validate the node:
   */
 
-  $edit = node_validate($edit, &$error);
+  $edit = node_validate($edit, $error);
 
   /*
   ** Get the node specific bits:
@@ -555,7 +555,7 @@ function node_form($edit) {
 
   $function = $edit->type ."_form";
   if (function_exists($function)) {
-    $form .= $function(&$edit, &$help, &$error);
+    $form .= $function($edit, $help, $error);
   }
 
   /*
@@ -756,7 +756,7 @@ function node_submit($node) {
     ** Fixup the node when required:
     */
 
-    $node = node_validate($node);
+    $node = node_validate($node, $error);
 
     /*
     ** Apply the filters:
@@ -862,7 +862,7 @@ function node_delete($edit) {
       ** Call the node specific callback (if any):
       */
 
-      module_invoke($node->type, "delete", &$node);
+      module_invoke($node->type, "delete", $node);
 
       watchdog("special", "$node->type: deleted '$node->title'");
       $output = t("The node has been deleted.");

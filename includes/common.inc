@@ -135,6 +135,19 @@ function check_output($text, $nl2br = 0) {
   return ($text) ? ($nl2br ? nl2br(stripslashes($text)) : stripslashes($text)) : message_na();
 }
 
+function check_file($filename) {
+  if (is_uploaded_file($filename)) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
+function file_encode($filename) {
+  $edit[filedata] = base64_encode(fread($fd, filesize($edit[upload_file])));
+}
+
 function format_info($body, $block) {
   return "<table><tr><td><table align=\"right\" border=\"1\" width=\"180\"><tr><td>$block</td></tr></table>$body</td></tr></table>\n";
 }

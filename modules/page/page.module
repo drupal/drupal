@@ -42,7 +42,7 @@ function page_update($node) {
   db_query("UPDATE page SET format = '$node->format', link = '$node->link' WHERE nid = '$node->nid'");
 }
 
-function page_delete($node) {
+function page_delete(&$node) {
   db_query("DELETE FROM page WHERE nid = '$node->nid'");
 }
 
@@ -77,7 +77,7 @@ function page_view($node, $main = 0) {
   }
 }
 
-function page_form($node, $help, $error) {
+function page_form(&$node, &$help, &$error) {
   global $format, $op;
 
   if ($op != t("Preview") && $format[$node->format] == "PHP") {

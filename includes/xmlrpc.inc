@@ -407,10 +407,10 @@ class xmlrpc_client {
     if ($port==0) $port=80;
     if($timeout>0)
       $fp=fsockopen($server, $port,
-        &$this->errno, &$this->errstr, $timeout);
+        $this->errno, $this->errstr, $timeout);
     else
       $fp=fsockopen($server, $port,
-        &$this->errno, &$this->errstr);
+        $this->errno, $this->errstr);
     if (!$fp) {
       return 0;
     }
