@@ -1,5 +1,5 @@
 <?php
-// $Id: node.php,v 1.42 2002/05/26 22:06:03 dries Exp $
+// $Id: node.php,v 1.43 2002/06/02 15:29:21 kjartan Exp $
 
 include_once "includes/common.inc";
 
@@ -35,7 +35,7 @@ function node_failure() {
   $theme->footer();
 }
 
-$number = ($title ? db_num_rows(db_queryd("SELECT nid FROM node WHERE title = '%s' AND status = 1", $title)) : 1);
+$number = ($title ? db_num_rows(db_query("SELECT nid FROM node WHERE title = '%s' AND status = 1", $title)) : 1);
 
 if ($number > 1) {
   $result = db_query("SELECT n.*, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.title = '%s' AND n.status = 1 ORDER BY created DESC", $title);
