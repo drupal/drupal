@@ -161,9 +161,9 @@ function account_save($edit) {
   if ($edit[id]) {
     // Updating existing account
     foreach ($edit as $key=>$value) {
-        $query .= "$key = '". addslashes($value) ."', ";
+        $query[] = "$key = '". addslashes($value) ."'";
     }
-    db_query("UPDATE users SET $query WHERE id = $edit[id]");
+    db_query("UPDATE users SET ". implode(", ", $query) ." WHERE id = $edit[id]");
     watchdog("account", "account: modified user '$edit[userid]'");
     return $edit[userid];
   }

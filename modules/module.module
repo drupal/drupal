@@ -7,7 +7,7 @@ function module_help() {
 }
 
 function module_perm() {
-  return array("install and uninstall modules");
+  return array("edit modules");
 }
 
 function module_admin_rehash() {
@@ -39,7 +39,7 @@ function module_admin_overview() {
 function module_admin() {
   global $user, $op, $name;
 
-  if (user_access($user, "install and uninstall modules")) {
+  if (user_access($user, "edit modules")) {
 
     print "<SMALL><A HREF=\"admin.php?mod=module\">overview</A> | <A HREF=\"admin.php?mod=module&op=help\">help</A></SMALL><HR>\n";
 
