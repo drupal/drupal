@@ -1,5 +1,5 @@
 <?php
-/* $Id: aggregator.module,v 1.170 2004/04/27 20:10:08 dries Exp $ */
+/* $Id: aggregator.module,v 1.171 2004/04/29 21:09:00 kjartan Exp $ */
 
 function aggregator_help($section) {
   switch ($section) {
@@ -178,7 +178,7 @@ function aggregator_remove($feed) {
     db_query('DELETE FROM {aggregator_category_item} WHERE '. implode(' OR ', $items));
   }
   db_query('DELETE FROM {aggregator_item} WHERE fid = %d', $feed['fid']);
-  db_query('UPDATE {aggregator_feed} SET checked = 0 WHERE fid = %d', $feed['fid']);
+  db_query('UPDATE {aggregator_feed} SET checked = 0, etag = '', modified = 0 WHERE fid = %d', $feed['fid']);
   drupal_set_message(t('removed news items from \'%site\'.', array('%site' => $feed['title'])));
 }
 
@@ -332,7 +332,7 @@ function aggregator_parse_feed(&$data, $feed) {
   xml_parser_free($xml_parser);
 
   // initialize the translation table:
-  $tt = array_flip(get_html_translation_table(HTML_ENTITIES));
+  $tt = array_flip(get_html_translation_table(HTML_SPECIALCHARS));
   $tt["&apos;"] = "'";
 
   /*
