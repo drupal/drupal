@@ -129,7 +129,7 @@ function discussion_display($sid, $pid, $cid, $level = 0) {
     ### Dynamically compose the `reply'-link:
     if ($pid != 0) {
       list($pid) = db_fetch_row(db_query("SELECT pid FROM comments WHERE cid = $comment->pid"));
-      $link = "<A HREF=\"discussion.php?id=$comment->sid&pid=$pid\"><FONT COLOR=\"$theme->hlcolor2\">return to parent</FONT></A> | <A HREF=\"discussion.php?op=reply&sid=$comment->sid&pid=$comment->cid\"><FONT COLOR=\"$theme->hlcolor2\">reply to this comment</FONT></A>";
+      $link = "<A HREF=\"discussion.php?id=$comment->sid&pid=$pid#$pid\"><FONT COLOR=\"$theme->hlcolor2\">return to parent</FONT></A> | <A HREF=\"discussion.php?op=reply&sid=$comment->sid&pid=$comment->cid\"><FONT COLOR=\"$theme->hlcolor2\">reply to this comment</FONT></A>";
     }
     else {
       $link = "<A HREF=\"discussion.php?op=reply&sid=$comment->sid&pid=$comment->cid\"><FONT COLOR=\"$theme->hlcolor2\">reply to this comment</FONT></A> ";
