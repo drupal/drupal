@@ -21,7 +21,7 @@ function ping_help($section = "admin/help#ping") {
       break;
   }
 
-  return t($output);
+  return $output;
 }
 
 function ping_cron() {
