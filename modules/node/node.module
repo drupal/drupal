@@ -1567,12 +1567,15 @@ function node_update_index() {
     // chances of this happening are very small.
     variable_set('node_cron_last', max($last_comment, $node->changed, $node->created));
 
+    // Get node output (filtered and with module-specific fields).
     if (node_hook($node, 'view')) {
       node_invoke($node, 'view', false, false);
     }
     else {
       $node = node_prepare($node, false);
     }
+    // Allow modules to change $node->body before viewing.
+    node_invoke_nodeapi($node, 'view', false, false);
 
     $text = '<h1>'. drupal_specialchars($node->title) .'</h1>'. $node->body;
 
