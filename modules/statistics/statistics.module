@@ -359,7 +359,7 @@ function statistics_admin_accesslog_table($type, $id) {
   }
   else if ($type == 2) {
     /* retrieve recent access logs for node $id */
-    $sql = "SELECT a.nid, a.url, a.hostname, a.uid, a.timestamp, n.title FROM {accesslog} a LEFT JOIN {node} n ON a.nid = n.nid WHERE a.nid = ". check_query($id);
+    $sql = "SELECT a.nid, a.url, a.hostname, a.uid, a.timestamp, n.title FROM {accesslog} a INNER JOIN {node} n ON a.nid = n.nid WHERE a.nid = ". check_query($id);
   }
   else if ($type == 3) {
     /* retrieve recent access logs for hostname $id */
