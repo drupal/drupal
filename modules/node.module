@@ -775,7 +775,7 @@ function node_admin_nodes() {
   $header = array(NULL, t('title'), t('type'), t('author'), t('status'), array('data' => t('operations'), 'colspan' => 2));
 
   while ($node = db_fetch_object($result)) {
-    $rows[] = array(form_checkbox(NULL, 'status]['. $node->nid, 1, 0), l($node->title, 'node/'. $node->nid) .' '. (node_is_new($node->nid, $node->changed) ? theme_mark() : ''), node_invoke($node, 'node_name'), format_name($node), ($node->status ? t('published') : t('not published')), l(t('edit %post', array('%post' => t($node->type))), 'node/'. $node->nid .'/edit'), l(t('delete %post', array('%post' => t($node->type))), 'admin/node/delete/'. $node->nid));
+    $rows[] = array(form_checkbox(NULL, 'status]['. $node->nid, 1, 0), l($node->title, 'node/'. $node->nid) .' '. (node_is_new($node->nid, $node->changed) ? theme_mark() : ''), node_invoke($node, 'node_name'), format_name($node), ($node->status ? t('published') : t('not published')), l(t('edit'), 'node/'. $node->nid .'/edit'), l(t('delete'), 'admin/node/delete/'. $node->nid));
   }
 
   if ($pager = theme('pager', NULL, 50, 0)) {

@@ -224,6 +224,7 @@ function menu_edit_item($mid = 0) {
         $edit['pid'] = $item->pid;
         $edit['path'] = $item->path;
         $edit['title'] = $item->title;
+        $edit['description'] = $item->description;
         $edit['weight'] = $item->weight;
         $edit['type'] = $item->type;
       }
@@ -253,6 +254,8 @@ function menu_edit_item_form($edit) {
     $form .= form_hidden('weight', 0);
   }
   else {
+    $form .= form_textfield(t('Description'), 'description', $edit['description'], 60, 128, t('The description displayed when hovering over a menu item.'));
+
     if ($edit['type'] & MENU_CREATED_BY_ADMIN) {
       $form .= form_textfield(t('Path'), 'path', $edit['path'], 60, 128);
     }
@@ -287,12 +290,12 @@ function menu_edit_item_form($edit) {
  */
 function menu_edit_item_save($edit) {
   if ($edit['mid']) {
-    db_query("UPDATE {menu} SET pid = %d, path = '%s', title = '%s', weight = %d, type = %d WHERE mid = %d", $edit['pid'], $edit['path'], $edit['title'], $edit['weight'], $edit['type'] | MENU_MODIFIED_BY_ADMIN, $edit['mid']);
+    db_query("UPDATE {menu} SET pid = %d, path = '%s', title = '%s', description = '%s', weight = %d, type = %d WHERE mid = %d", $edit['pid'], $edit['path'], $edit['title'], $edit['description'], $edit['weight'], $edit['type'] | MENU_MODIFIED_BY_ADMIN, $edit['mid']);
     drupal_set_message(t('updated menu item "%title".', array('%title' => $edit['title'])));
   }
   else {
     $mid = db_next_id('{menu}_mid');
-    db_query("INSERT INTO {menu} (mid, pid, path, title, weight, type) VALUES (%d, %d, '%s', '%s', %d, %d)", $mid, $edit['pid'], $edit['path'], $edit['title'], $edit['weight'], $edit['type'] | MENU_MODIFIED_BY_ADMIN);
+    db_query("INSERT INTO {menu} (mid, pid, path, title, description, weight, type) VALUES (%d, %d, '%s', '%s', '%s', %d, %d)", $mid, $edit['pid'], $edit['path'], $edit['title'], $edit['description'], $edit['weight'], $edit['type'] | MENU_MODIFIED_BY_ADMIN);
     drupal_set_message(t('created new menu item "%title".', array('%title' => $edit['title'])));
   }
 

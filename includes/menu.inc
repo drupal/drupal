@@ -178,8 +178,11 @@ define('MENU_ACCESS_DENIED', 3);
  * with the following key-value pairs defined:
  * - 'title' - The displayed title of the menu or menu item. It will already
  *   have been translated by the locale system.
+ * - 'description' - The description (link title attribute) of the menu item.
+ *   It will already have been translated by the locale system.
  * - 'path' - The Drupal path to the menu item. A link to a particular item
- *   can thus be constructed with l($item['title'], $item['path']).
+ *   can thus be constructed with
+ *   l($item['title'], $item['path'], array('title' => $item['description'])).
  * - 'children' - A linear list of the menu ID's of this item's children.
  *
  * Menu ID 0 is the "root" of the menu. The children of this item are the
@@ -486,12 +489,12 @@ function menu_rebuild() {
         }
       }
 
-      $new_items[$mid] = array('mid' => $new_mid, 'pid' => $new_pid, 'path' => $item['path'], 'title' => $item['title'], 'weight' => $item['weight'], 'type' => $item['type']);
+      $new_items[$mid] = array('mid' => $new_mid, 'pid' => $new_pid, 'path' => $item['path'], 'title' => $item['title'], 'description' => $item['description'], 'weight' => $item['weight'], 'type' => $item['type']);
     }
   }
 
   foreach ($new_items as $item) {
-    db_query('INSERT INTO {menu} (mid, pid, path, title, weight, type) VALUES (%d, %d, \'%s\', \'%s\', %d, %d)', $item['mid'], $item['pid'], $item['path'], $item['title'], $item['weight'], $item['type']);
+    db_query('INSERT INTO {menu} (mid, pid, path, title, description, weight, type) VALUES (%d, %d, \'%s\', \'%s\', \'%s\', %d, %d)', $item['mid'], $item['pid'], $item['path'], $item['title'], $item['description'], $item['weight'], $item['type']);
   }
 
   // Rebuild the menu to account for any changes.
@@ -548,7 +551,7 @@ function theme_menu_item($mid) {
     $link_mid = $menu['items'][$link_mid]['pid'];
   }
 
-  return l($menu['items'][$mid]['title'], $menu['items'][$link_mid]['path']);
+  return l($menu['items'][$mid]['title'], $menu['items'][$link_mid]['path'], $menu['items'][$mid]['description'] ? array("title" => $menu['items'][$mid]['description']) : array());
 }
 
 /**
@@ -666,6 +669,9 @@ function _menu_build() {
     if (!array_key_exists('type', $item)) {
       $item['type'] = MENU_NORMAL_ITEM;
     }
+    if (!array_key_exists('description', $item)) {
+      $item['description'] = '';
+    }
     if (!array_key_exists('weight', $item)) {
       $item['weight'] = 0;
     }
@@ -696,6 +702,7 @@ function _menu_build() {
         // If administrator has changed item position, reflect the change.
         if ($item->type & MENU_MODIFIED_BY_ADMIN) {
           $_menu['items'][$item->mid]['title'] = $item->title;
+          $_menu['items'][$item->mid]['description'] = $item->description;
           $_menu['items'][$item->mid]['pid'] = $item->pid;
           $_menu['items'][$item->mid]['weight'] = $item->weight;
           $_menu['items'][$item->mid]['type'] = $item->type;
@@ -703,7 +710,7 @@ function _menu_build() {
       }
       // Next, add any custom items added by the administrator.
       else if ($item->type & MENU_CREATED_BY_ADMIN) {
-        $_menu['items'][$item->mid] = array('pid' => $item->pid, 'path' => $item->path, 'title' => $item->title, 'access' => TRUE, 'weight' => $item->weight, 'type' => $item->type, 'callback' => '', 'callback arguments' => array());
+        $_menu['items'][$item->mid] = array('pid' => $item->pid, 'path' => $item->path, 'title' => $item->title, 'description' => $item->description, 'access' => TRUE, 'weight' => $item->weight, 'type' => $item->type, 'callback' => '', 'callback arguments' => array());
 
         if (!empty($item->path)) {
           $_menu['path index'][$item->path] = $item->mid;

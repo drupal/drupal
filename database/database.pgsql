@@ -269,6 +269,7 @@ CREATE TABLE menu (
   pid integer NOT NULL default '0',
   path varchar(255) NOT NULL default '',
   title varchar(255) NOT NULL default '',
+  description varchar(255) NOT NULL default '',
   weight smallint NOT NULL default '0',
   type smallint NOT NULL default '0',
   PRIMARY KEY  (mid)
