@@ -204,8 +204,8 @@ function format_date($timestamp, $type = "medium", $format = "") {
   return $date;
 }
 
-function format_username($username) {
-  if ($username) return (user_access("administer users") ? "<A HREF=\"admin.php?mod=account&op=view&name=". urlencode($username) ."\">$username</A>" : "<A HREF=\"account.php?op=view&name=". urlencode($username) ."\">$username</A>");
+function format_username($username, $realname="") {
+  if ($username) return (user_access("administer users") ? "<A HREF=\"admin.php?mod=account&op=view&name=". urlencode($username) ."\">". check_output($realname ? $realname : $username) ."</A>" : "<A HREF=\"account.php?op=view&name=". urlencode($username) ."\">". check_output($realname ? $realname : $username) ."</A>");
   else return variable_get(anonymous, "Anonymous");
 }
 
