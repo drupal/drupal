@@ -1,1 +1,5 @@
-You can find the Druplicon (the Drupal-logo) in two formats here: Paint Shop Pro 7 (vector-format) and a high-resolution PNG. The PNG should enable people who don't have PSP to use it...
+You can find the Druplicon (the Drupal-logo) in several formats here:
+- EPS: Enhanced Postscript, GZipped (vector)
+- PDF: Adobe Acrobat (vector)
+- PSP: Paint Shop Pro (vector)
+- PNG: Portable Network Graphics (bitmap)
