@@ -437,8 +437,8 @@ function import_page_info() {
   global $theme;
 
   $links[] = "<a href=\"module.php?mod=import\">". t("latest news") ."</a>";
-  $links[] = "<a href=\"module.php?mod=import&op=bundles\">". t("news by source") ."</a>";
-  $links[] = "<a href=\"module.php?mod=import&op=feeds\">". t("news by topic") ."</a>";
+  $links[] = "<a href=\"module.php?mod=import&op=feeds\">". t("news by source") ."</a>";
+  $links[] = "<a href=\"module.php?mod=import&op=bundles\">". t("news by topic") ."</a>";
   $links[] = "<a href=\"module.php?mod=import&op=sources\">". t("news sources") ."</a>";
 
   return "<div align=\"center\">". $theme->links($links) ."</div>";
