@@ -4,6 +4,10 @@ class BaseTheme {
   function links($links, $delimiter = " | ") {
     return implode($delimiter, $links);
   }
+
+  function images($name) {
+    return $name;
+  }
 }
 
 function theme_init() {
