@@ -1054,7 +1054,7 @@ function user_page() {
       break;
     case "help":
       $theme->header();
-      $theme->box(t("Distributed Authentication"), user_help_users_da());
+      $theme->box(t("Distributed authentication"), user_help_users_da());
       $theme->footer();
       break;
     default:
@@ -1557,7 +1557,7 @@ function user_help_users_da() {
   $output .= ".  This capability is called <i>Distributed
     Authentication</i>, and is unique to <a href=\"http://www.drupal.org\">Drupal</a>,
     the software which powers %s.</p>
-   <p>Distributed Authentication enables a new user to input a username and password into the login box,
+   <p>Distributed authentication enables a new user to input a username and password into the login box,
     and immediately be recognized, even if that user never registered at %s. This
     works because Drupal knows how to communicate with external registration databases.
     For example, lets say that new user 'Joe' is already a registered member of
@@ -1608,8 +1608,8 @@ function user_help_admin() {
 <p>Registered users need to authenticate by supplying a username and password.
   Users may authenticate locally or via an external authentication source like
   <a href="http://www.jabber.org/">Jabber</a>, <a href="http://www.delphiforums.com/">Delphi</a>,
-  and other <a href="http://www.drupal.org/">Drupal</a> websites. See <a href="#da">Distributed
-  Authentication</a> for more information on this innovative feature. The username
+  and other <a href="http://www.drupal.org/">Drupal</a> websites. See <a href="#da">distributed
+  authentication</a> for more information on this innovative feature. The username
   and password are kept in your database, where the password is hashed so that
   no one can read nor use it. When a username and password needs to be checked
   the system goes down the list of registered users until it finds a matching
@@ -1742,7 +1742,7 @@ function user_help_admin_da() {
   authentication source. Once Drupal knows that the current user is definately
   joe@remote.delphiforums.com (because Delphi says so), he looks up Joe's UID
   and logs Joe into that account.</p>
-<p>To disable Distributed Authentication, simply disable or remove all DA modules. For a virgin
+<p>To disable distributed authentication, simply disable or remove all DA modules. For a virgin
 install, that means removing/disabling <i>jabber.module</i> and <i>drupal.module</i>
 </p>
 <p>Drupal is setup so that it is very easy to add support for any external authentication
@@ -1758,13 +1758,12 @@ install, that means removing/disabling <i>jabber.module</i> and <i>drupal.module
 
 function user_help_devel_da() {
   ?>
-  <h3>Writing Distributed Authentication Modules</h3>
+  <h3>Writing distributed authentication modules</h3>
 <p>Drupal is specifically architected to enable easy authoring of new authentication
   modules. I'll deconstruct the <a href="http://www.blogger.com">Blogger</a> authentication
   module here, and hopefully provide all the details you'll need to write a new
   auth module. If you want to download the full text of this module, visit the
-  <a href="http://cvs.drupal.org/viewcvs.cgi/contributions/modules/authentication/Blogger/?cvsroot=contrib">Drupal-Contrib
-  repository</a>. </p>
+  <a href="http://cvs.drupal.org/viewcvs.cgi/contributions/modules/authentication/Blogger/?cvsroot=contrib">Drupal contributions CVS repository</a>.</p>
 <h4>Code review</h4>
 <pre>&lt;?php</pre>
 <p>The first line of every authentication module is the same. It is the standard
@@ -1777,8 +1776,13 @@ function user_help_devel_da() {
   $info["link"] = "<a href=\"module.php?mod=user&op=da_help#blogger\">Blogger</a>";
   $info["maintainer"] = "Moshe Weitzman";
   $info["maintaineremail"] = "weitzman at tejasa.com";
-  if ($field) return $info[$field];
-  else return $info;
+
+  if ($field) {
+    return $info[$field];
+  }
+  else {
+    return $info;
+  }
 }</pre>
 <p>The <i>_info</i> function is always the first function defined in your module.
   This function populates an array called <i>$info</i> with various pieces of
@@ -1787,11 +1791,15 @@ function user_help_devel_da() {
   copy the b<i>logger_info</i> function in your module - but wherever it says
   <i>blogger</i> here, substitute your own module name.</p>
 <pre>function blogger_auth($name, $pass, $server) {
-  if ($server !== &quot;blogger.com&quot;) return 0; // user did not present a Blogger ID so don't bother trying.
+  if ($server !== &quot;blogger.com&quot;) {
+    return 0; // user did not present a Blogger ID so don't bother trying.
+  }
+
   $appkey = &quot;6D4A2D6811A6E1F75148DC1155D33C0C958107BC&quot;; //provided to Drupal by Ev@Blogger
   $message = new xmlrpcmsg(&quot;blogger.getUsersBlogs&quot;, array(new xmlrpcval($appkey, &quot;string&quot;), new xmlrpcval($name, &quot;string&quot;), new xmlrpcval($pass, &quot;string&quot;)));
   $client = new xmlrpc_client(&quot;/api/RPC2&quot;, &quot;plant.blogger.com&quot;);<br>  $result = $client-&gt;send($message, 5);
-  // since Blogger doesn't return properly formed FaultCode, we just search for the string 'fault'
+
+  // Since Blogger doesn't return a properly formed FaultCode, we just search for the string 'fault'.
   if ($result &amp;&amp; !stristr($result-&gt;serialize(), &quot;fault&quot;)) {
     // watchdog(&quot;user&quot;, &quot;Success Blogger Auth. Response: &quot; .
     $result-&gt;serialize());
@@ -1813,23 +1821,22 @@ function user_help_devel_da() {
   are passed by the user system (user.module). The user system parses the username
   as typed by the user into 2 substrings - $name and $server. The parsing rules
   are:</p>
-<p>&nbsp;</p>
-<table width="80%" border="0" cellspacing="0" cellpadding="0" align="center">
+<table width="80%" border="0" cellspacing="4" cellpadding="4" align="center">
   <tr>
-    <td colspan="2">
-      <div align="center"><b>_auth function parameters</b></div>
-    </td>
+    <th colspan="2" align="left">
+      _auth function parameters
+    </th>
   </tr>
   <tr>
-    <td><b>$name</b></td>
+    <th>$name</th>
     <td>The substring before the final <i>'@'</i> character in the username field</td>
   </tr>
   <tr>
-    <td><b>$pass</b></td>
+    <th>$pass</th>
     <td>The whole string submitted by the user in the password field</td>
   </tr>
   <tr>
-    <td><b>$server</b></td>
+    <th>$server</th>
     <td>The substring after the final <i>'@'</i> symbol in the username field</td>
   </tr>
 </table>
@@ -1838,7 +1845,7 @@ function user_help_devel_da() {
   Your module may authenticate using a different technique. Drupal doesn't reallly
   care how your module communicates with its registration source. It just <b>trusts</b>
   the module. </p>
-<p>The lines above illustrate a typical <a href="http://www.xmlrpc.com">XML-RPC</a>
+<p>The lines above illustrate a typical <a href="http://www.xmlrpc.com/">XML-RPC</a>
   method call. Here we build up a message and send it to Blogger, storing the
   response in a variable called <i>$response</i>. The message we pass conforms
   to the published <a href="http://plant.blogger.com/API">Blogger XML-RPC API</a>.
@@ -1884,17 +1891,17 @@ function user_help_devel_da() {
   now, just copy what you see here, substituting your module name for <i>blogger</i>.</p>
 <pre>function blogger_auth_help() {
   $site = variable_get(&quot;site_name&quot;, &quot;this web site&quot;);
-  $html_output = &quot;
-  &lt;p&gt;You may login to &lt;i&gt;%s&lt;/i&gt; using a &lt;b&gt;Blogger ID&lt;/b&gt;
-  and password. A Blogger ID consists of your Blogger username followed by &lt;i&gt;@blogger.com&lt;/i&gt;.
-  So a valid blogger ID is mwlily@blogger.com. If you are a Blogger member, go
-  ahead and login now.&lt;/p&gt;<br>
-  &lt;p&gt;Blogger offers you instant communication power by letting you post
-  your thoughts to the web whenever the urge strikes.
-  Blogger will publish to your current web site or help you create one. &lt;a
-  href=\&quot;http://www.blogger.com/about.pyra\&quot;&gt;Learn more about it&lt;/a&gt;.&quot;;
+  $output = &quot;
+    &lt;p&gt;You may login to &lt;i&gt;%s&lt;/i&gt; using a &lt;b&gt;Blogger ID&lt;/b&gt;
+    and password. A Blogger ID consists of your Blogger username followed by &lt;i&gt;@blogger.com&lt;/i&gt;.
+    So a valid blogger ID is mwlily@blogger.com. If you are a Blogger member, go
+    ahead and login now.&lt;/p&gt;<br>
+    &lt;p&gt;Blogger offers you instant communication power by letting you post
+    your thoughts to the web whenever the urge strikes.
+    Blogger will publish to your current web site or help you create one. &lt;a
+    href=\&quot;http://www.blogger.com/about.pyra\&quot;&gt;Learn more about it&lt;/a&gt;.&quot;;
 
-  return sprintf(t($html_output), $site);
+  return sprintf(t($output), $site);
 }
 </pre>
 <p>The <i>_auth_help</i> function is prominently linked within Drupal, so you'll
@@ -1906,8 +1913,8 @@ function user_help_devel_da() {
 <h4>Publishing your module</h4>
 <p>Once you've written and tested your authentication module, you'll have to usually
   want to share it with the world. The best way to do this is to add the module
-  to the <a href="http://cvs.drupal.org/viewcvs.cgi/contributions/modules/authentication/Blogger/?cvsroot=contrib">Drupal-Contrib
-  repository</a>. You'll need to request priveleges in this repository - see <a href="http://cvs.drupal.org/viewcvs.cgi/contributions/README?rev=HEAD&cvsroot=contrib&content-type=text/vnd.viewcvs-markup">README</a>
+  to the <a href="http://cvs.drupal.org/viewcvs.cgi/contributions/modules/authentication/Blogger/?cvsroot=contrib">Drupal
+  contributions CVS repository</a>. You'll need to request priveleges in this repository - see <a href="http://cvs.drupal.org/viewcvs.cgi/contributions/README?rev=HEAD&cvsroot=contrib&content-type=text/vnd.viewcvs-markup">README</a>
   for the details. Then you'll want to announce your contribution on the <a href="http://www.drop.org/node.php?title=mailing%2Blists">Drupal_devel
   and Drupal_support mailing lists</a>. You might also want to post a story on
   <a href="http://www.drop.org">Drop.org</a>.<br>
@@ -1918,7 +1925,7 @@ function user_help_devel_da() {
 function user_help_devel_userhook() {
   ?>
   <h3><a name="userhook">module_user()</a></h3>
-  <p>The <b>_user()</b> hook provides to Module Authors a mechanism for inserting text and form fields into the registration page, the user account view/edit pages, and the administer users page. This is useful if you want to add a custom field for your particular community. This is best illustrated by an example called <a href="http://cvs.drupal.org/viewcvs.cgi/contributions/modules/profile/?cvsroot=contrib">profile.module</a> in the Contrib repository. Profile.module is meant to be customized for your needs. Please download it and hack away until it does what you need.</p>
+  <p>The <b>_user()</b> hook provides to module authors a mechanism for inserting text and form fields into the registration page, the user account view/edit pages, and the administer users page. This is useful if you want to add a custom field for your particular community. This is best illustrated by an example called <a href="http://cvs.drupal.org/viewcvs.cgi/contributions/modules/profile/?cvsroot=contrib">profile.module</a> in the contributions CVS repository. Profile.module is meant to be customized for your needs. Please download it and hack away until it does what you need.</p>
 
 <p>Consider this simpler example from a fictional recipe community web site called Julia's Kitchen. Julia customizes her Drupal powered site by creating a new file called <i>julia.module</i>. That file does the following:
 - new members must agree to Julia's Privacy Policy on the reg page.
