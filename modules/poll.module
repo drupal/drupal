@@ -101,7 +101,7 @@ function poll_graph($val) {
 
 function poll_view($node, $main = 0, $block = 0) {
   global $theme, $op, $user, $chid, $REQUEST_URI;
-  
+
   $pollop = $op;
 
   if (($node->active) && (!field_get($node->voters, $user->userid))) $voting = 1;
