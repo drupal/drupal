@@ -61,9 +61,9 @@ function comment_help($section = "admin/help#comment") {
       <p>Finally, you may want to enter some <em>initial comment scores</em>. In <a href=\"%comment-initial\">administer &raquo; comments &raquo; configure &raquo; moderation roles</a> you can assign a beginning rating for all comments posted by a particular permission role. If you do not assign any initial scores, Drupal will assign a rating of <strong>0</strong> as the default.</p>", array('%comment-config' => url('admin/comment/configure'), '%user-permissions' => url('admin/user/configure/permission'), '%tracker' => url('tracker'), '%download-notify' => 'http://drupal.org/project/releases', '%comment-votes' => url('admin/comment/configure/votes'), '%comment-matrix' => url('admin/comment/configure/matrix'), '%comment-thresholds' => url('admin/comment/configure/thresholds'), '%slashdot' => ' http://slashdot.org', '%comment-initial' => url('admin/comment/configure/roles')));
     case 'admin/comment':
     case 'admin/comment/new':
-      return t("Below is a list of the latest comments posted your site. Click on a subject to see the comment, the author's name to edit the author's user information , \"edit comment\" to modify the text, and \"delete comment\" to remove their submission.");
+      return t("Below is a list of the latest comments posted your site. Click on a subject to see the comment, the author's name to edit the author's user information , \"edit\" to modify the text, and \"delete\" to remove their submission.");
     case 'admin/comment/approval':
-      return t("Below is a list of the comments posted to your site that need approval. To approve a comment, click on \"edit comment\" and then change its \"moderation status\" to Approved. Click on a subject to see the comment, the author's name to edit the author's user information, \"edit comment\" to modify the text, and \"delete comment\" to remove their submission.");
+      return t("Below is a list of the comments posted to your site that need approval. To approve a comment, click on \"edit\" and then change its \"moderation status\" to Approved. Click on a subject to see the comment, the author's name to edit the author's user information, \"edit\" to modify the text, and \"delete\" to remove their submission.");
     case 'admin/comment/configure':
     case 'admin/comment/configure/settings':
       return t("Comments can be attached to any node, and their settings are below. The display comes in two types: a \"flat list\" where everything is flush to the left side, and comments come in chronological order, and a \"threaded list\" where replies to other comments are placed immediately below and slightly indented, forming an outline. They also come in two styles: \"expanded\", where you see both the title and the contents, and \"collapsed\" where you only see the title. Preview comment forces a user to look at their comment by clicking on a \"Preview\" button before they can actually add the comment.");
@@ -268,7 +268,7 @@ function comment_node_link($node) {
 
     while ($comment = db_fetch_object($result)) {
       $comment->name = $comment->registered_name ? $comment->registered_name : $comment->name;
-      $rows[] = array(l($comment->subject, "node/$node->nid", NULL, NULL, "comment-$comment->cid"), format_name($comment), l(t('view comment'), "node/$node->nid", NULL, NULL, $comment->cid), l(t('edit comment'), "admin/comment/edit/$comment->cid"), l(t('delete comment'), "admin/comment/delete/$comment->cid"));
+      $rows[] = array(l($comment->subject, "node/$node->nid", NULL, NULL, "comment-$comment->cid"), format_name($comment), l(t('view'), "node/$node->nid", NULL, NULL, $comment->cid), l(t('edit'), "admin/comment/edit/$comment->cid"), l(t('delete'), "admin/comment/delete/$comment->cid"));
     }
 
     if ($rows) {
@@ -555,7 +555,7 @@ function comment_post($edit) {
         module_invoke_all('comment', 'update', $edit);
 
         // Add entry to the watchdog log.
-        watchdog('special', t('comment: updated "%comment-subject"', array('%comment-subject' => $edit['subject'])), l(t('view comment'), 'node/'. $edit['nid'], NULL, NULL, 'comment-'. $edit['cid']));
+        watchdog('special', t('comment: updated "%comment-subject"', array('%comment-subject' => $edit['subject'])), l(t('view'), 'node/'. $edit['nid'], NULL, NULL, 'comment-'. $edit['cid']));
       }
       else {
         // Add the comment to database.
@@ -664,7 +664,7 @@ function comment_post($edit) {
         module_invoke_all('comment', 'insert', $edit);
 
         // Add an entry to the watchdog log.
-        watchdog('special', t('comment: added "%comment-subject"', array('%comment-subject' => $edit['subject'])), l(t('view comment'), 'node/'. $edit['nid'], NULL, NULL, 'comment-'. $edit['cid']));
+        watchdog('special', t('comment: added "%comment-subject"', array('%comment-subject' => $edit['subject'])), l(t('view'), 'node/'. $edit['nid'], NULL, NULL, 'comment-'. $edit['cid']));
       }
 
       // Clear the cache so an anonymous user can see his comment being added.
@@ -701,15 +701,15 @@ function comment_links($comment, $return = 1) {
 
   if (node_comment_mode($comment->nid) == 2) {
     if (user_access('administer comments') && user_access('access administration pages')) {
-      $links[] = l(t('delete comment'), "admin/comment/delete/$comment->cid");
-      $links[] = l(t('edit comment'), "admin/comment/edit/$comment->cid");
-      $links[] = l(t('reply to this comment'), "comment/reply/$comment->nid/$comment->cid");
+      $links[] = l(t('delete'), "admin/comment/delete/$comment->cid");
+      $links[] = l(t('edit'), "admin/comment/edit/$comment->cid");
+      $links[] = l(t('reply'), "comment/reply/$comment->nid/$comment->cid");
     }
     else if (user_access('post comments')) {
       if (comment_access('edit', $comment)) {
-        $links[] = l(t('edit your comment'), "comment/edit/$comment->cid");
+        $links[] = l(t('edit'), "comment/edit/$comment->cid");
       }
-      $links[] = l(t('reply to this comment'), "comment/reply/$comment->nid/$comment->cid");
+      $links[] = l(t('reply'), "comment/reply/$comment->nid/$comment->cid");
     }
     else {
       $links[] = theme('comment_post_forbidden');
@@ -1028,8 +1028,8 @@ function comment_admin_overview($type = 'new') {
         format_name($comment),
         ($comment->status == 0 ? t('published') : t('not published')),
         format_date($comment->timestamp, 'small'),
-        l(t('edit comment'), "admin/comment/edit/$comment->cid"),
-        l(t('delete comment'), "admin/comment/delete/$comment->cid")
+        l(t('edit'), "admin/comment/edit/$comment->cid"),
+        l(t('delete'), "admin/comment/delete/$comment->cid")
       );
   }
 

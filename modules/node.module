@@ -1339,7 +1339,7 @@ function node_submit($node) {
     // perform this operation:
     if (node_access('update', $node)) {
       $node->nid = node_save($node);
-      watchdog('special', t('%node-type: updated "%node-title"', array('%node-type' => t($node->type), '%node-title' => $node->title)), l(t('view post'), 'node/'. $node->nid));
+      watchdog('special', t('%node-type: updated "%node-title"', array('%node-type' => t($node->type), '%node-title' => $node->title)), l(t('view'), 'node/'. $node->nid));
       $msg = t('the %name was updated.', array ('%name' => node_invoke($node, 'node_name')));
     }
   }
@@ -1348,7 +1348,7 @@ function node_submit($node) {
     // perform this operation:
     if (node_access('create', $node)) {
       $node->nid = node_save($node);
-      watchdog('special', t('%node-type: added "%node-title"', array('%node-type' => t("$node->type"), '%node-title' => $node->title)), l(t('view post'), "node/$node->nid"));
+      watchdog('special', t('%node-type: added "%node-title"', array('%node-type' => t("$node->type"), '%node-title' => $node->title)), l(t('view'), "node/$node->nid"));
       $msg = t('your %name was created.', array ('%name' => node_invoke($node, 'node_name')));
     }
   }

@@ -183,8 +183,8 @@ function block_admin_display() {
 
   foreach ($blocks as $block) {
     if ($block['module'] == 'block') {
-      $edit = l(t('edit block'), 'admin/block/edit/'. $block['delta']);
-      $delete = l(t('delete block'), 'admin/block/delete/'. $block['delta']);
+      $edit = l(t('edit'), 'admin/block/edit/'. $block['delta']);
+      $delete = l(t('delete'), 'admin/block/delete/'. $block['delta']);
     }
     else {
       $edit = '';

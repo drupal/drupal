@@ -691,7 +691,7 @@ function aggregator_view() {
   $header = array(t('title'), t('items'), t('last update'), t('next update'), array('data' => t('operations'), 'colspan' => 3));
   $rows = array();
   while ($feed = db_fetch_object($result)) {
-    $rows[] = array(l($feed->title, "aggregator/sources/$feed->fid"), format_plural($feed->items, '1 item', '%count items'), ($feed->checked ? t('%time ago', array('%time' => format_interval(time() - $feed->checked))) : t('never')), ($feed->checked ? t('%time left', array('%time' => format_interval($feed->checked + $feed->refresh - time()))) : t('never')), l(t('edit feed'), "admin/aggregator/edit/feed/$feed->fid"), l(t('remove items'), "admin/aggregator/remove/$feed->fid"), l(t('update items'), "admin/aggregator/update/$feed->fid"));
+    $rows[] = array(l($feed->title, "aggregator/sources/$feed->fid"), format_plural($feed->items, '1 item', '%count items'), ($feed->checked ? t('%time ago', array('%time' => format_interval(time() - $feed->checked))) : t('never')), ($feed->checked ? t('%time left', array('%time' => format_interval($feed->checked + $feed->refresh - time()))) : t('never')), l(t('edit'), "admin/aggregator/edit/feed/$feed->fid"), l(t('remove items'), "admin/aggregator/remove/$feed->fid"), l(t('update items'), "admin/aggregator/update/$feed->fid"));
   }
   $output .= theme('table', $header, $rows);
 
@@ -702,7 +702,7 @@ function aggregator_view() {
   $header = array(t('title'), t('items'), t('operations'));
   $rows = array();
   while ($category = db_fetch_object($result)) {
-    $rows[] = array(l($category->title, "aggregator/categories/$category->cid"), format_plural($category->items, '1 item', '%count items'), l(t('edit category'), "admin/aggregator/edit/category/$category->cid"));
+    $rows[] = array(l($category->title, "aggregator/categories/$category->cid"), format_plural($category->items, '1 item', '%count items'), l(t('edit'), "admin/aggregator/edit/category/$category->cid"));
   }
   $output .= theme('table', $header, $rows);
 

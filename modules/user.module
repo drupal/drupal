@@ -784,7 +784,7 @@ function user_login($edit = array(), $msg = '') {
               $account = user_load(array('name' => "$name@$server"));
               if (!$account->uid) { // Register this new user.
                 $user = user_save('', array('name' => "$name@$server", 'pass' => user_password(), 'init' => "$name@$server", 'status' => 1, "authname_$module" => "$name@$server", 'roles' => array(_user_authenticated_id())));
-                watchdog('user', "new user: $name@$server ($module ID)", l(t('edit user'), "user/$user->uid/edit"));
+                watchdog('user', "new user: $name@$server ($module ID)", l(t('edit'), "user/$user->uid/edit"));
                 break;
               }
             }
@@ -949,7 +949,7 @@ function user_register($edit = array()) {
       // TODO: Is this necessary? Won't session_write() replicate this?
       unset($edit['session']);
       $account = user_save('', array('name' => $edit['name'], 'pass' => $pass, 'init' => $edit['mail'], 'mail' => $edit['mail'], 'roles' => array(_user_authenticated_id()), 'status' => (variable_get('user_register', 1) == 1 ? 1 : 0)));
-      watchdog('user', 'new user: "'. $edit['name'] .'" &lt;'. $edit['mail'] .'&gt;', l(t('edit user'), "user/$account->uid/edit"));
+      watchdog('user', 'new user: "'. $edit['name'] .'" &lt;'. $edit['mail'] .'&gt;', l(t('edit'), "user/$account->uid/edit"));
 
       $variables = array('%username' => $edit['name'], '%site' => variable_get('site_name', 'drupal'), '%password' => $pass, '%uri' => $base_url, '%uri_brief' => substr($base_url, strlen('http://')), '%mailto' => $edit['mail'], '%date' => format_date(time()), '%login_uri' => url('user/login', NULL, NULL, TRUE), '%edit_uri' => url('user/edit', NULL, NULL, TRUE));
 
@@ -1323,12 +1323,12 @@ function user_admin_access($edit = array()) {
   $header = array(t('type'), t('mask'), t('operations'));
   $result = db_query("SELECT * FROM {access} WHERE type = '%s' AND status = 1 ORDER BY mask", $type);
   while ($rule = db_fetch_object($result)) {
-    $rows[] = array(t('Allow'), $rule->mask, array('data' => l(t('delete rule'), "admin/user/configure/access/$type/$rule->aid"), 'align' => 'center'));
+    $rows[] = array(t('Allow'), $rule->mask, array('data' => l(t('delete'), "admin/user/configure/access/$type/$rule->aid"), 'align' => 'center'));
   }
 
   $result = db_query("SELECT * FROM {access} WHERE type = '%s' AND status = 0 ORDER BY mask", $type);
   while ($rule = db_fetch_object($result)) {
-    $rows[] = array(t('Deny'), $rule->mask, l(t('delete rule'), "admin/user/configure/access/$type/$rule->aid"));
+    $rows[] = array(t('Deny'), $rule->mask, l(t('delete'), "admin/user/configure/access/$type/$rule->aid"));
   }
 
   $options = array('1' => t('Allow'), '0' => t('Deny'));
@@ -1459,7 +1459,7 @@ function user_admin_role($edit = array()) {
     $header = array(t('name'), t('operations'));
     while ($role = db_fetch_object($result)) {
       if ($role->name != 'anonymous user' && $role->name != 'authenticated user') {
-        $rows[] = array($role->name, array('data' => l(t('edit role'), "admin/user/configure/role/$role->rid"), 'align' => 'center'));
+        $rows[] = array($role->name, array('data' => l(t('edit'), "admin/user/configure/role/$role->rid"), 'align' => 'center'));
       }
       else {
         $rows[] = array($role->name, array('data' => '<span class="disabled">'. t('locked') .'</span>', 'align' => 'center'));
@@ -1496,7 +1496,7 @@ function user_admin_account() {
       $roles[] = $role->name;
     }
 
-    $rows[] = array($account->uid, format_name($account), $status[$account->status], implode(',<br />', $roles), format_date($account->changed, 'small'), l(t('edit account'), "user/$account->uid/edit"));
+    $rows[] = array($account->uid, format_name($account), $status[$account->status], implode(',<br />', $roles), format_date($account->changed, 'small'), l(t('edit'), "user/$account->uid/edit"));
   }
 
   $pager = theme('pager', NULL, 50, 0, tablesort_pager());
@@ -1576,14 +1576,14 @@ function user_help($section) {
     case 'admin/user/configure/access':
       return t('Access rules allow Drupal administrators to choose usernames and e-mail address that are prevented from using drupal. To enter the mask for e-mail addresses click on <a href="%e-mail">e-mail rules</a>, for the username mask click on <a href="%username">name rules</a>.', array('%e-mail' => url('admin/user/configure/access/mail'), '%username' => url('admin/user/configure/access/name')));
     case 'admin/user/configure/access/mail':
-      return t('Setup and test the e-mail access rules. The access function checks if you match a deny and not an allow. If you match <strong>only</strong> a deny then it is denied. Any other case, such as both a deny and an allow pattern matching, allows the pattern.<br />Notes: <ul><li>To delete a rule click on "delete rule".</li><li>The order of the rules does not matter.</li></ul>');
+      return t('Setup and test the e-mail access rules. The access function checks if you match a deny and not an allow. If you match <strong>only</strong> a deny then it is denied. Any other case, such as both a deny and an allow pattern matching, allows the pattern.');
     case 'admin/user/configure/access/name':
-      return t('Setup and test the username access rules. The access function checks if you match a deny and not an allow. If you do then it is denied. Any other case, such as a deny pattern and an allow pattern, allows the pattern.<br />Notes: <ul><li>To delete a rule click on "delete rule".</li><li>The order of the rules does not matter.</li></ul>');
+      return t('Setup and test the username access rules. The access function checks if you match a deny and not an allow. If you do then it is denied. Any other case, such as a deny pattern and an allow pattern, allows the pattern.');
     case 'admin/user/configure/permission':
       return t('In this area you will define the permissions for each user role (role names are defined on the <a href="%role">user roles page</a>). Each permission describes a fine-grained logical operation, such as being able to access the administration pages, or adding/modifying a user account. You could say a permission represents access granted to a user to perform a set of operations.', array('%role' => url('admin/user/configure/role')));
     case 'admin/user/configure/role':
       return t('
-      Roles allow you to fine tune the security and administration of drupal.  A role defines a group of users that have certain privileges as defined in <a href="%permission">user permissions</a>.  Examples of roles include: anonymous user, authenticated user, moderator, administrator and so on. In this area you will define the <em>role names</em> of the various roles. To delete a role choose "edit role".<br />By default, Drupal comes with two user roles:
+      Roles allow you to fine tune the security and administration of drupal.  A role defines a group of users that have certain privileges as defined in <a href="%permission">user permissions</a>.  Examples of roles include: anonymous user, authenticated user, moderator, administrator and so on. In this area you will define the <em>role names</em> of the various roles. To delete a role choose "edit".<br />By default, Drupal comes with two user roles:
       <ul>
       <li>Anonymous user: this role is used for users that don\'t have a user account or that are not authenticated.</li>
       <li>Authenticated user: this role is assigned automatically to authenticated users.  Most registered users will belong to this user role unless specified otherwise.</li>

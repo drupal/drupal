@@ -58,9 +58,6 @@ function book_link($type, $node = 0, $main = 0) {
   }
 
   if ($type == 'node' && $node->type == 'book') {
-    if (book_access('update', $node)) {
-      $links[] = l(t('edit this page'), 'node/'. $node->nid .'/edit', array('title' => t('Suggest an update for this book page.')));
-    }
     if (!$main) {
       $links[] = l(t('printer-friendly version'), 'book/print/'. $node->nid, array('title' => t('Show a printer-friendly version of this book page and its sub-pages.')));
     }
@@ -690,7 +687,7 @@ function book_print_recurse($parent = '', $depth = 1) {
 }
 
 function book_admin_view_line($node, $depth = 0) {
-  return array('<div style="padding-left: '. (25 * $depth) .'px;">'. form_textfield(NULL, $node->nid .'][title', $node->title, 64, 255) .'</div>', form_weight(NULL, $node->nid .'][weight', $node->weight), l(t('view node'), 'node/'. $node->nid), l(t('edit node'), 'node/'. $node->nid .'/edit'), l(t('delete node'), 'admin/node/delete/'. $node->nid));
+  return array('<div style="padding-left: '. (25 * $depth) .'px;">'. form_textfield(NULL, $node->nid .'][title', $node->title, 64, 255) .'</div>', form_weight(NULL, $node->nid .'][weight', $node->weight), l(t('view'), 'node/'. $node->nid), l(t('edit'), 'node/'. $node->nid .'/edit'), l(t('delete'), 'admin/node/delete/'. $node->nid));
 }
 
 function book_admin_view_book($nid, $depth = 1) {
