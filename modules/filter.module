@@ -904,6 +904,7 @@ function _filter_html_settings($format) {
   $group .= form_textfield(t('Allowed HTML tags'), "allowed_html_$format", variable_get("allowed_html_$format", '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>'), 64, 255, t('If "Strip tags" is selected, optionally specify tags which should not be stripped. Javascript event attributes are always stripped.'));
   $group .= form_checkbox(t('Display HTML help'), "filter_html_help_$format", 1, variable_get("filter_html_help_$format", 1), t('If enabled, Drupal will display some basic HTML help in the long filter tips.'));
   $group .= form_radios(t('HTML style attributes'), "filter_style_$format", variable_get("filter_style_$format", FILTER_STYLE_STRIP), array(FILTER_STYLE_ALLOW => t('Allowed'), FILTER_STYLE_STRIP => t('Removed')), t('If "Strip tags" is selected, you can choose whether "STYLE" attributes are allowed or removed from input.'));
+  $group .= form_checkbox(t('Add rel="nofollow" to links'), "filter_html_nofollow_$format", 1, variable_get("filter_html_nofollow_$format", FALSE), t('If enabled, Drupal will add rel="nofollow" to all links, as a measure to reduce the effectiveness of spam content.'));
   $output .= form_group(t('HTML filter'), $group);
 
   return $output;
@@ -925,6 +926,10 @@ function _filter_html($text, $format) {
   if (variable_get("filter_html_$format", FILTER_HTML_STRIP) == FILTER_HTML_ESCAPE) {
     // Escape HTML
     $text = drupal_specialchars($text);
+  }
+
+  if (variable_get("filter_html_nofollow_$format", 0)) {
+    $text = preg_replace('/<a([^>]+)>/i', '<a\\1 rel="nofollow">',$text);
   }
 
   return trim($text);
