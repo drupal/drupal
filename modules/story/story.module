@@ -165,7 +165,7 @@ function story_edit($id) {
 function story_edit_save($id, $edit) {
   if ($edit[status] == 3 && strtotime($edit[date]) > time()) db_query("UPDATE stories SET subject = '". check_input($edit[subject]) ."', abstract = '". check_input($edit[abstract]) ."', updates = '". check_input($edit[updates]) ."', article = '". check_input($edit[article]) ."', category = '". check_input($edit[category]) ."', status = '$edit[status]', timestamp = '". strtotime($edit[date]) ."' WHERE id = '$id'");
   else db_query("UPDATE stories SET subject = '". check_input($edit[subject]) ."', abstract = '". check_input($edit[abstract]) ."', updates = '". check_input($edit[updates]) ."', article = '". check_input($edit[article]) ."', category = '". check_input($edit[category]) ."', status = '$edit[status]' WHERE id = '$id'");
-  watchdog("message", "story: modified `$subject'");
+  watchdog("message", "story: modified `$edit[subject]'");
 }
 
 function story_display() {  
