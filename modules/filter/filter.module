@@ -45,7 +45,7 @@ function filter_help($section) {
 /**
  * Implementation of hook_filter_tips().
  */
-function filter_filter_tips($delta, $format, $type = false) {
+function filter_filter_tips($delta, $format, $long = false) {
   switch ($delta) {
     case 0:
       switch (variable_get("filter_html_$format", FILTER_HTML_STRIP)) {
@@ -850,10 +850,6 @@ function _filter_html($text, $format) {
   if (variable_get("filter_html_$format", FILTER_HTML_STRIP) == FILTER_HTML_ESCAPE) {
     // Escape HTML
     $text = htmlspecialchars($text);
-  }
-
-  if (variable_get("filter_nl2br_$format", true)) {
-    $text = _filter_autop($text, true);
   }
 
   return trim($text);
