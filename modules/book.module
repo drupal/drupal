@@ -23,11 +23,12 @@ function book_location($node, $nodes = array()) {
 }
 
 function book_view($node, $main = 0) {
-  global $theme;
+  global $status, $theme;
 
   if ($node->nid && $node->parent) {
-    $next = db_fetch_object(db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE b.parent = '$node->parent' AND b.weight > '$node->weight' ORDER BY b.weight ASC"));
-    $prev = db_fetch_object(db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE b.parent = '$node->parent' AND b.weight < '$node->weight' ORDER BY b.weight DESC"));
+    $list = book_parent_query($node->parent);
+    $next = db_fetch_object(db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE n.status = '$status[posted]' AND $list AND b.weight > '$node->weight' ORDER BY b.weight ASC"));
+    $prev = db_fetch_object(db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE n.status = '$status[posted]' AND $list AND b.weight < '$node->weight' ORDER BY b.weight DESC"));
   }
 
   $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"0\" WIDTH=\"100%\">\n";
@@ -47,7 +48,10 @@ function book_view($node, $main = 0) {
     $output .= " <TR><TD COLSPAN=\"3\"><BR>". check_output($node->body, 1) ."</TD></TR>";
   }
 
-  $output .= " <TR><TD COLSPAN=\"3\"><BR>". book_tree($node->nid) ."</TD></TR>";
+  if ($node->nid) {
+    $output .= " <TR><TD COLSPAN=\"3\"><BR>". book_tree($node->nid) ."</TD></TR>";
+  }
+
   $output .= " <TR><TD COLSPAN=\"3\"><HR></TD></TR>";
   $output .= " <TR><TD ALIGN=\"left\" WIDTH=\"33%\">". ($prev ? "<A HREF=\"node.php?id=$prev->nid\">". t("previous") ."</A>" : t("previous")) ."</TD><TD ALIGN=\"center\" WIDTH=\"34%\"><A HREF=\"module.php?mod=book\">index</A></TD><TD ALIGN=\"right\" WIDTH=\"33%\">". ($next ? "<A HREF=\"node.php?id=$next->nid\">". t("next") ."</A>" : t("next")) ."</TD></TR>\n";
   $output .= " <TR><TD ALIGN=\"left\" WIDTH=\"33%\">". ($prev ? "<SMALL>". check_output($prev->title) ."</SMALL>" : "&nbsp;") ."</TD><TD ALIGN=\"center\" WIDTH=\"34%\">". ($node->parent ? "<A HREF=\"node.php?id=$node->parent\">". t("up") ."</A>" : t("up")) ."</TD><TD ALIGN=\"right\" WIDTH=\"33%\">". ($next ? "<SMALL>". check_output($next->title) ."</SMALL>" : "&nbsp;") ."</TD></TR>\n";
@@ -66,14 +70,28 @@ function book_find($keys) {
   return $find;
 }
 
-function book_toc($parent = 0, $indent = "", $toc = array()) {
+function book_parent_query($parent) {
+  if ($parent != "") {
+    $list = array();
+    foreach (book_parent($parent) as $pid) array_push($list, "b.parent = $pid");
+  }
+  else {
+    $list = array("b.parent = ''");
+  }
+  return "(". implode(" OR ", $list) .")";
+}
+
+function book_toc($parent = "", $indent = "", $toc = array()) {
   global $status;
-  $result = db_query("SELECT n.*, b.* FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE n.type = 'book' AND n.status = '$status[posted]' AND b.parent = '$parent' ORDER BY b.weight");
+  // select all child nodes:
+  $result = db_query("SELECT n.*, b.* FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE n.type = 'book' AND n.status = '$status[posted]' AND ". book_parent_query($parent) ." ORDER BY b.weight");
+
+  // build table of contents:
   while ($node = db_fetch_object($result)) {
     $toc[$node->nid] = "$indent $node->title";
-    if ($node->pid) $toc = book_toc($node->pid, "$indent-", $toc);
     $toc = book_toc($node->nid, "$indent-", $toc);
   }
+
   return $toc;
 }
 
@@ -88,7 +106,7 @@ function book_form($edit = array()) {
   if ($edit[pid]) {
     $node = node_get_object("nid", $edit[pid]);
     $form .= form_item(t("Parent"), "<A HREF=\"node.php?id=$node->id\">". check_output($node->title) ."</A>", t("The parent subject or category the page belongs in."));
-    $form .= form_hidden("parent". $edit[parent]);
+    $form .= form_hidden("parent", $edit[parent]);
   }
   else {
     $form .= form_select(t("Parent"), "parent", $edit[parent], user_access($user, "book") ? array_merge(array(0 => "&nbsp;"), book_toc()) : book_toc(), t("The parent subject or category the page belongs in."));
@@ -123,11 +141,41 @@ function book_save($edit) {
   node_save(array_diff(array_merge($edit, array(nid => $edit[nid], type => "book")), array(userid => $edit[userid])));
 }
 
+function book_parent($nid) {
+  global $status;
+  if ($node = node_get_object("nid", $nid)) {
+    $list[$nid] = $nid;
+  }
+  if ($node->pid) {
+    $list = array_merge($list, book_parent($node->pid));
+  }
+  return $list ? $list : array();
+}
+
 function book_tree($parent = "", $depth = 0) {
   global $PHP_SELF, $status;
 
-  if (($depth < 3) || (strstr($PHP_SELF,"admin.php"))) {
-    $result = db_query("SELECT n.*, b.* FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE n.type = 'book' AND n.status = '$status[posted]' AND b.parent = '$parent' ORDER BY b.weight");
+  if ($depth < 3 || strstr($PHP_SELF,"admin.php")) {
+    // select all child nodes:
+    $result = db_query("SELECT n.*, b.* FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE n.type = 'book' AND n.status = '$status[posted]' AND ". book_parent_query($parent) ." ORDER BY b.weight");
+
+    // render output:
+    while ($node = db_fetch_object($result)) {
+      $output .= "<LI><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A>". ($PHP_SELF == "/admin.php" ? " <SMALL>(weight: $node->weight/$node->parent, status: $node->status) (<A HREF=\"admin.php?mod=book&op=edit&id=$node->nid\">edit</A>)</SMALL>" : "") ."</LI>\n";
+      $output .= book_tree($node->nid, $depth + 1);
+    }
+    $output = "<UL>$output</UL>";
+  }
+  return $output;
+}
+
+/*
+function book_tree($parent = 0, $depth = 0) {
+  global $PHP_SELF, $status;
+
+  // if (($parent > 0) && ($depth < 3 || strstr($PHP_SELF,"admin.php"))) {
+  if ($depth < 3 || strstr($PHP_SELF,"admin.php")) {
+    $result = db_query("SELECT n.*, b.* FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE n.type = 'book' AND n.status = '$status[posted]' AND b.parent = '$parent' ORDER BY b.weight", 1);
     $output .= "<UL>";
     while ($node = db_fetch_object($result)) {
       $output .= "<LI><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A>";
@@ -139,6 +187,7 @@ function book_tree($parent = "", $depth = 0) {
   }
   return $output;
 }
+*/
 
 function book_list($query = array()) {
   return node_overview($query);
