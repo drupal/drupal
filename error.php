@@ -35,8 +35,9 @@
     $message = "unknown error";
  }
 
+ include "includes/config.inc";
  include "includes/database.inc"; 
- include "includes/log.inc";
+ include "includes/watchdog.inc";
 
  watchdog(3, "message: `$message' - requested url: $REDIRECT_URL - referring url: $HTTP_REFERER");
 ?>
