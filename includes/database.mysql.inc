@@ -40,10 +40,18 @@ function _db_query($query, $debug = 0) {
   global $queries;
 
   if (variable_get("dev_query", 0)) {
-    $queries[] = $query;
+    list($usec, $sec) = explode(" ", microtime());
+    $timer = (float)$usec + (float)$sec;
   }
 
   $result = mysql_query($query);
+
+  if (variable_get("dev_query", 0)) {
+    list($usec, $sec) = explode(" ", microtime());
+    $stop = (float)$usec + (float)$sec;
+    $diff = $stop - $timer;
+    $queries[] = array($query, $diff);
+  }
 
   if ($debug) {
     print "<p>query: $query<br />error:". mysql_error() ."</p>";
