@@ -99,6 +99,34 @@ function drupal_goto($url) {
   exit();
 }
 
+/*
+** Stores the referer in a persistent variable:
+*/
+
+function referer_save() {
+  global $referer, $HTTP_REFERER, $REQUEST_URI;
+
+  if (!strstr($HTTP_REFERER, $REQUEST_URI)) {
+    $referer = $HTTP_REFERER;
+    session_register("referer");
+  }
+}
+
+/*
+** Restores the referer from a persistent variable:
+*/
+
+function referer_load() {
+  global $referer;
+
+  if (session_is_registered("referer")) {
+    return $referer;
+  }
+  else {
+    return 0;
+  }
+}
+
 function check_form($text) {
   return htmlspecialchars(stripslashes($text));
 }

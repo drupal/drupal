@@ -415,7 +415,6 @@ function node_admin() {
         break;
       case t("Submit"):
         print node_submit($edit);
-        print node_admin_nodes();
         break;
       case t("Delete"):
         print node_delete($edit);
@@ -542,6 +541,13 @@ function node_validate($node, &$error) {
 
 
 function node_form($edit) {
+
+  /*
+  ** Save the referer.  We record where the user came from such that we
+  ** can redirect him after having completed the node forms.
+  */
+
+  referer_save();
 
   /*
   ** Validate the node:
@@ -834,6 +840,10 @@ function node_submit($node) {
         watchdog("warning", "$node->type: not authorized to create node");
         $output = t("You are not authorized to create this node.");
       }
+    }
+
+    if ($referer = referer_load()) {
+      $output .= "<p><a href=\"$referer\">". t("return") ."</a></p>";
     }
   }
   else {
