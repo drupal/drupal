@@ -1374,9 +1374,16 @@ function node_preview($node) {
 }
 
 /**
- * Respond to a user's submission of new or changed node content.
+ * Accepts a submission of new or changed node content.
+ *
+ * @param $node
+ *   A node array or node object.
+ *
+ * @return
+ *   If the node is successfully saved the node ID is returned.  If the node
+ *   is not saved, 0 is returned.
  */
-function node_submit($node) {
+function node_submit(&$node) {
   global $user;
 
   // Fix up the node when required:
@@ -1384,7 +1391,7 @@ function node_submit($node) {
 
   // If something went wrong, go back to the preview form.
   if (form_get_errors()) {
-    return node_preview($node);
+    return false;
   }
 
   // Prepare the node's body:
@@ -1409,13 +1416,7 @@ function node_submit($node) {
 
   drupal_set_message($msg);
 
-  // Node was submitted successfully: redirect the user.
-  if (node_access('view', $node)) {
-    drupal_goto('node/'. $node->nid);
-  }
-  else {
-    drupal_goto();
-  }
+  return $node->nid;
 }
 
 /**
@@ -1533,8 +1534,18 @@ function node_page() {
       print theme('page', node_preview($edit));
       break;
     case t('Submit'):
-      drupal_set_title(t('Submit'));
-      print theme('page', node_submit($edit));
+      if (node_submit($edit)) {
+        if (node_access('view', $edit)) {
+          drupal_goto('node/'. $edit->nid);
+        }
+        else {
+          drupal_goto();
+        }
+      }
+      else {
+        drupal_set_title(t('Submit'));
+        print theme('page', node_preview($edit));
+      }
       break;
     case t('Delete'):
       drupal_set_title(t('Delete'));
