@@ -118,7 +118,7 @@ switch ($op) {
     }
     break;
   case "edituser":
-    if (!$user->valid()) { showLogin(); }
+    if ($user->valid() == 0) { showLogin(); }
     include('theme.inc');
     $theme->header();
     print("<FORM ACTION=\"account.php\" METHOD=post>\n");
