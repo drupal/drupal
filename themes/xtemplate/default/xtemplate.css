@@ -63,6 +63,9 @@ table {
 .links {
   margin-bottom: 2em;
 }
+.comment .links {
+  margin-bottom: 0em;
+}
 
 /*
 ** Page layout blocks / IDs
