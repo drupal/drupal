@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.92 2003/09/26 10:04:09 dries Exp $
+// $Id: page.module,v 1.93 2003/09/27 06:00:43 dries Exp $
 
 function page_help($section = "admin/page/help") {
   $output = "";
@@ -97,7 +97,7 @@ function page_link($type) {
 
   if ($type == "system") {
     if (user_access("maintain static pages")) {
-      menu("node/add/page", t("create static page"), NULL, NULL, 0);
+      menu("node/add/page", t("static page"), NULL, NULL, 0);
     }
   }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.216 2003/09/26 23:05:14 dries Exp $
+// $Id: user.module,v 1.217 2003/09/27 06:00:43 dries Exp $
 
 session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
 session_start();
@@ -1646,7 +1646,6 @@ function user_admin() {
         $output = user_admin_perm($edit);
         break;
       case t("Create account"):
-      case "create":
         $output = user_admin_create($edit);
         break;
       case t("Add role"):
@@ -1661,7 +1660,11 @@ function user_admin() {
         $output = user_admin_edit($edit);
         break;
       default:
-        $output = user_admin_account();
+        if ($op == "account" && arg(3) == "create") {
+          $output = user_admin_create($edit);
+        } else {
+          $output = user_admin_account();
+        }
     }
     return $output;
   }
@@ -1719,10 +1722,10 @@ function user_help($section = "admin/user/help") {
       return t($output);
     case "admin/user":
       return t("Drupal allows users to register, login, logout, maintain user profiles, etc.  No participant can use his own name to post content until he signs up for a user account.<br />Click on either the \"username\" or \"edit account\" to edit a user's information.");
-    case "admin/user/create":
-      return t("This web page allows the administrators to register a new users by hand.<br />Note:<ul><li>You cannot have a user where either the e-mail address or the username match another user in the system.</li></ul>");
     case "admin/user/account":
       return t("This page allows you to review and edit any user's profile. To edit a profile click on either the \"username\" or \"edit account\".");
+    case "admin/user/account/create":
+      return t("This web page allows the administrators to register a new users by hand.<br />Note:<ul><li>You cannot have a user where either the e-mail address or the username match another user in the system.</li></ul>");
     case "admin/user/account/0":
       return t("This page allows you to review and edit an active user's profile. To edit a profile click on either the \"username\" or \"edit account\".");
     case "admin/user/account/1":

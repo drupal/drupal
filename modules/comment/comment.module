@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.164 2003/09/26 10:04:09 dries Exp $
+// $Id: comment.module,v 1.165 2003/09/27 06:00:43 dries Exp $
 
 $GLOBALS["cmodes"] = array(1 => t("Flat list - collapsed"), 2 => t("Flat list - expanded"), 3 => t("Threaded list - collapsed"), 4 => t("Threaded list - expanded"));
 $GLOBALS["corder"] = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"));
@@ -816,21 +816,21 @@ function comment_link($type, $node = 0, $main = 0) {
   if ($type == "system") {
     if (user_access("administer comments")) {
 
-      menu("admin/comment", "comment management", "comment_admin", comment_help("admin/comment"), 2);
-      menu("admin/comment/comments", "comment overview",NULL, comment_help("admin/comment/comments"), 2);
-      menu("admin/comment/comments/0", "new or updated comments", "comment_admin", comment_help("admin/comment/comments/0"), 1);
-      menu("admin/comment/comments/1", "comment approval queue", "comment_admin", comment_help("admin/comment/comments/1"), 2);
-      menu("admin/comment/search", "search comments", "comment_admin", comment_help("admin/comment/search"), 8);
+      menu("admin/comment", "comments", "comment_admin", comment_help("admin/comment"), 1);
+      menu("admin/comment/comments", "overview",NULL, comment_help("admin/comment/comments"), 2);
+      menu("admin/comment/comments/0", "new/updated", "comment_admin", comment_help("admin/comment/comments/0"), 1);
+      menu("admin/comment/comments/1", "approval queue", "comment_admin", comment_help("admin/comment/comments/1"), 2);
+      menu("admin/comment/search", "search", "comment_admin", comment_help("admin/comment/search"), 8);
       menu("admin/comment/help", "help", "comment_help", NULL, 9);
       menu("admin/comment/edit", "edit comment", "comment_admin", NULL, 0, 1);
 
       // comment settings:
       if (user_access("administer moderation")) {
-        menu("admin/comment/moderation", "comment moderation", NULL, comment_help("admin/comment/moderation"), 3);
+        menu("admin/comment/moderation", "moderation", NULL, comment_help("admin/comment/moderation"), 3);
         menu("admin/comment/moderation/votes", "votes", "comment_admin", comment_help("admin/comment/moderation/votes"));
         menu("admin/comment/moderation/matrix", "matrix", "comment_admin", comment_help("admin/comment/moderation/matrix"));
         menu("admin/comment/moderation/filters", "thresholds", "comment_admin", comment_help("admin/comment/moderation/filters"));
-        menu("admin/comment/moderation/roles", "initial comment scores", "comment_admin", comment_help("admin/comment/roles"), 6);
+        menu("admin/comment/moderation/roles", "initial scores", "comment_admin", comment_help("admin/comment/roles"), 6);
       }
     }
   }
