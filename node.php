@@ -1,5 +1,5 @@
 <?php
-// $Id: node.php,v 1.45 2002/09/17 19:38:46 dries Exp $
+// $Id: node.php,v 1.46 2002/11/03 20:56:16 dries Exp $
 
 include_once "includes/common.inc";
 
@@ -51,7 +51,7 @@ if ($number > 1) {
   $theme->footer();
 }
 elseif ($number) {
-  $node = ($title ? node_load(array("title" => $title, "status" => 1)) : node_load(array("nid" => ($edit["id"] ? $edit["id"] : $id))));
+  $node = ($title ? node_load(array("title" => $title, "status" => 1)) : node_load(array("status" => 1, "nid" => ($edit["id"] ? $edit["id"] : $id))));
 
   if (node_access("view", $node)) {
     if (isset($revision)) {
