@@ -716,7 +716,7 @@ function book_admin() {
       case "orphan":
         print book_admin_orphan();
         break;
-      case t("Save book pages");
+      case t("Save book pages"):
         print status(book_admin_save(arg(3), $edit));
         // fall through:
       default:

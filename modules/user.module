@@ -1055,7 +1055,7 @@ function user_page() {
   }
 
   switch ($op) {
-    case t("E-mail new password");
+    case t("E-mail new password"):
     case "password":
       theme("header");
       theme("box", t("E-mail new password"), user_pass($edit));
@@ -1081,7 +1081,7 @@ function user_page() {
       theme("footer");
       break;
     case t("Delete account"):
-    case t("delete");
+    case t("delete"):
       $output = user_delete();
       theme("header");
       theme("box", t("User account"), user_menu());

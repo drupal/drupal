@@ -12,11 +12,11 @@ function db_connect($url) {
   mysql_connect($url["host"], $url["user"], $url["pass"]) or die(mysql_error());
   mysql_select_db(substr($url["path"], 1)) or die("unable to select database");
 
-  /* 
+  /*
   ** Note that you can change the 'mysql_connect' statement to 'mysql_pconnect'
-  ** if you want to use persistent connections.  This is not recommended on 
+  ** if you want to use persistent connections.  This is not recommended on
   ** shared hosts, might require additional database/webserver tuning but
-  ** increases performance when the overhead to connect to your database is 
+  ** increases performance when the overhead to connect to your database is
   ** high (eg. your database and webserver live on different machines).
   */
 }
