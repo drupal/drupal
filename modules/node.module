@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.345 2004/04/05 01:10:48 unconed Exp $
+// $Id: node.module,v 1.346 2004/04/15 14:07:08 unconed Exp $
 
 define('NODE_NEW_LIMIT', time() - 30 * 24 * 60 * 60);
 
@@ -213,7 +213,7 @@ function node_teaser($body) {
   ** Nevermind, we split it the hard way ...
   */
 
-  return substr($body, 0, $size);
+  return truncate_utf8($body, $size);
 }
 
 
