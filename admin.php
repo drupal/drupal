@@ -98,7 +98,7 @@ function account_view($name) {
     $output .= " <TR><TD ALIGN=\"right\"><B>Last access:</B></TD><TD>". format_date($account->last_access) ." from $account->last_host</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Bio information:</B></TD><TD>". format_availability($account->bio) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Signature:</B></TD><TD>". format_availability($account->signature) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Theme:</B></TD><TD>$account->theme</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Theme:</B></TD><TD>". format_availability($account->theme) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Submitted stories:</B></TD><TD>". format_availability(account_stories($account->id)) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Submitted comments:</B></TD><TD>". format_availability(account_comments($account->id)) ."</TD></TR>\n";
     $output .= "</TABLE>\n";
