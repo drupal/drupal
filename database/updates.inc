@@ -1192,7 +1192,7 @@ function update_94() {
 function update_95() {
  $ret = array();
 
- $ret[] = update_sql("CREATE TABLE node_access (
+ $ret[] = update_sql("CREATE TABLE {node_access} (
    nid int(10) unsigned NOT NULL default '0',
    gid int(10) unsigned NOT NULL default '0',
    realm varchar(255) NOT NULL default '',
@@ -1201,7 +1201,7 @@ function update_95() {
    grant_delete tinyint(1) unsigned NOT NULL default '0',
    PRIMARY KEY  (nid,gid,realm)
    )");
-  $ret[] = update_sql("INSERT INTO node_access VALUES (0, 0, 'all', 1, 0, 0);");
+  $ret[] = update_sql("INSERT INTO {node_access} VALUES (0, 0, 'all', 1, 0, 0);");
   return $ret;
 }
 
