@@ -215,7 +215,14 @@ if (isset($_GET["op"])) {
   }
   else {
     print update_page_header("Access denied");
-    print "Access denied.  You are not authorized to access to this page.  Please log in as the user with user ID #1. If you cannot log-in, you will have to edit <code>update.php</code> to by-pass this access check; in that case, open <code>update.php</code> in a text editor and follow the instructions at the top.";
+    print "<p>Access denied.  You are not authorized to access this page.  Please log in as the admin user (the first user you created). If you cannot log in, you will have to edit <code>update.php</code> to bypass this access check.  To do this:</p>";
+    print "<ol>";
+    print " <li>With a text editor find the update.php file on your system. It should be in the main Drupal directory that you installed all the files into.</li>";
+    print " <li>There is a line near top of update.php that says <code>\$access_check = TRUE;</code>. Change it to <code>\$access_check = FALSE;</code>.</li>";
+    print " <li>As soon as the script is done, you must change the update.php script back to its original form to <code>\$access_check = TRUE;</code>.</li>";
+    print " <li>To avoid having this problem in future, remember to log in to your website as the admin user (the user you first created) before you backup your database at the beginning of the update process.</li>";
+    print "</ol>";
+
     print update_page_footer();
   }
 }
