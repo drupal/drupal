@@ -161,7 +161,7 @@ function comment_block($op = 'list', $delta = 0) {
     $result = db_query_range('SELECT * FROM {comments} WHERE status = 0 ORDER BY timestamp DESC', 0, 10);
     $items = array();
     while ($comment = db_fetch_object($result)) {
-      $items[] = l($comment->subject, "node/$comment->nid", NULL, NULL, "comment-$comment->cid") .'<br />'. format_interval(time() - $comment->timestamp) .' '. t('ago');
+      $items[] = l($comment->subject, 'node/'. $comment->nid, NULL, NULL, 'comment-'. $comment->cid) .'<br />'. t('%time ago', array('%time' => format_interval(time() - $comment->timestamp)));
     }
 
     $block['subject'] = t('Recent comments');

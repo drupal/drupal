@@ -106,7 +106,7 @@ function taxonomy_block($op = 'list', $delta = 0) {
     $result = db_query("SELECT d.tid, d.name, MAX(n.created) AS updated, COUNT(*) AS count FROM {term_data} d INNER JOIN {term_node} USING (tid) INNER JOIN {node} n USING (nid) WHERE n.status = 1 GROUP BY d.tid, d.name ORDER BY updated DESC, d.name");
     $items = array();
     while ($category = db_fetch_object($result)) {
-      $items[] = l("$category->name ($category->count)", 'taxonomy/term/'. $category->tid) .'<br />'. format_interval(time() - $category->updated) .' '. t('ago');
+      $items[] = l($category->name .' ('. $category->count .')', 'taxonomy/term/'. $category->tid) .'<br />'. t('%time ago', array('%time' => format_interval(time() - $category->updated)));
     }
 
     $block['subject'] = t('Categories');
@@ -309,17 +309,17 @@ function taxonomy_del_term($tid) {
       }
 
       $term = taxonomy_get_term($tid);
-  
+
       db_query('DELETE FROM {term_data} WHERE tid = %d', $tid);
       db_query('DELETE FROM {term_hierarchy} WHERE tid = %d', $tid);
       db_query('DELETE FROM {term_relation} WHERE tid1 = %d OR tid2 = %d', $tid, $tid);
       db_query('DELETE FROM {term_synonym} WHERE tid = %d', $tid);
       db_query('DELETE FROM {term_node} WHERE tid = %d', $tid);
-    
+
       module_invoke_all('taxonomy', 'delete', 'term', $term);
       drupal_set_message(t('deleted term "%name".', array('%name' => $term->name)));
     }
-    
+
     $tids = $orphans;
   }
 

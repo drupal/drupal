@@ -90,7 +90,7 @@ function tracker_page($uid = 0) {
       l($node->title, "node/$node->nid") .' '. (node_is_new($node->nid, $node->changed) ? theme('mark') : ''),
       format_name($node),
       array('class' => 'replies', 'data' => $comments),
-      format_interval(time() - $node->last_post) .' '. t('ago')
+      t('%time ago', array('%time' => format_interval(time() - $node->last_post)))
     );
   }
 
