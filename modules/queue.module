@@ -174,7 +174,7 @@ function queue_page() {
 
   if ($user->uid && user_access("access submission queue")) {
     if (arg(1)) {
-      queue_view(check_input(arg(1)));
+      queue_view(arg(1));
     }
     else {
       queue_overview();
