@@ -443,7 +443,7 @@ function theme_menu_local_tasks() {
         // We add a default view-tab for the parent:
         $output  = "<ul class=\"tabs primary\">\n";
         $output .= theme('menu_local_task', $mid, $active_mid == $mid);
-        $output .= implode($tabs);
+        $output .= implode("", $tabs);
         $output .= "</ul>\n";
         $output .= theme('menu_local_subtasks', $active_mid);
       }
