@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.26 2002/05/02 19:55:22 kjartan Exp $
+// $Id: block.module,v 1.27 2002/05/02 20:21:51 kjartan Exp $
 
 function block_help() {
  ?>
@@ -253,11 +253,11 @@ function block_user($type, &$edit, &$user) {
 
       $form = '<table border="0" cellpadding="2" cellspacing="2">';
       while ($block = db_fetch_object($result)) {
-        $form .= "<tr><td>$block->name</td><td>". form_select(NULL, "block][$block->name", (isset($user->block[$block->name]) ? $user->block[$block->name] : $block->status), array(t("Disabled"), t("Enabled"))) ."</td></tr>\n";
+        $form .= "<tr><td>$block->name</td><td>". form_checkbox(NULL, "block][$block->name", 1, $user->block[$block->name]) ."</td></tr>\n";
       }
       $form .= '</table>';
 
-      return form_item(t("Block configuration"), $form);
+      return form_item(t("Block configuration"), $form, "Enable the blocks you would like to see displayed in the side bars.");
   }
 }
 
