@@ -162,13 +162,16 @@ function drupal_get_normal_path($path) {
  * @{
  */
 function drupal_set_header($header = NULL) {
-  static $stored_headers = '';
+  // We use an array to guarantee there are no leading or trailing delimiters.
+  // This can cause header("") to get called when serving the page later, which
+  // ends HTTP headers prematurely on some PHP versions.
+  static $stored_headers = array();
 
-  if (!is_null($header)) {
+  if (strlen($header)) {
     header($header);
-    $stored_headers .= $header ."\n";
+    $stored_headers[] = $header;
   }
-  return $stored_headers;
+  return implode("\n", $stored_headers);
 }
 
 function drupal_get_headers() {
