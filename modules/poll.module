@@ -161,8 +161,10 @@ function poll_insert($node) {
 function poll_link($type, $node = 0, $main) {
   $links = array();
 
-  if ($type == "menu.create" && user_access("create polls")) {
-    $links[] = l(t("create poll"), "node/add/poll", array("title" => t("Add a new poll.")));
+  if ($type == "system") {
+    if (user_access("create polls")) {
+      menu("node/add/poll",t("create poll"), NULL, NULL, 0);
+    }
   }
   else if ($type == "page" && user_access("access content")) {
     $links[] = l(t("polls"), "poll", array("title" => t("View the list of polls on this site.")));

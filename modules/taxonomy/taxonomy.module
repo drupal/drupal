@@ -27,10 +27,12 @@ function taxonomy_perm() {
 }
 
 function taxonomy_link($type, $node = NULL) {
-  if ($type == "admin" && user_access("administer taxonomy")) {
-    menu("admin/taxonomy", "taxonomy", "taxonomy_admin", taxonomy_help("admin/taxonomy"), 3);
-    menu("admin/taxonomy/add/vocabulary", "create new vocabulary", "taxonomy_admin", taxonomy_help("admin/taxonomy/add/vocabulary"));
-    menu("admin/taxonomy/help", "help", "taxonomy_admin", NULL, 9);
+  if ($type == "system") {
+    if (user_access("administer taxonomy")) {
+      menu("admin/taxonomy", "taxonomy", "taxonomy_admin", taxonomy_help("admin/taxonomy"), 3);
+      menu("admin/taxonomy/add/vocabulary", "create new vocabulary", "taxonomy_admin", taxonomy_help("admin/taxonomy/add/vocabulary"));
+      menu("admin/taxonomy/help", "help", "taxonomy_admin", NULL, 9);
+    }
   }
   else if ($type == "taxonomy terms" && $node != NULL) {
 

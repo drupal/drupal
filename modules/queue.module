@@ -42,8 +42,10 @@ function queue_perm() {
 }
 
 function queue_link($type) {
-  if ($type == "menu.view" && user_access("access submission queue")) {
-    $links[] = l(t("view submissions"), "queue", array("title" => t("Moderate the content in the submission queue."))) ." (<span class=\"queue-user-numeral\">". queue_count() ."</span>)";
+  if ($type == "system") {
+    if (user_access("access submission queue")) {
+      menu("queue", t("view submissions"), NULL, NULL, 1);
+    }
   }
 
   return $links ? $links : array();

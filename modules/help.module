@@ -7,7 +7,7 @@ function help_system($field){
 }
 
 function help_link($type) {
-  if ($type == "admin") {
+  if ($type == "system") {
     menu("admin/help/glossary", "glossary", "help_glossary", NULL, 8);
     menu("admin/help", "help", "help_admin", NULL, 9);
   }
@@ -48,7 +48,6 @@ function help_admin() {
       }
     }
   }
-
   $output = "<small>". implode(" &middot; ", $links) ."</small><hr />". $output;
   return $output;
 }
