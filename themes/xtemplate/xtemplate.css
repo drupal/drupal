@@ -1,4 +1,4 @@
-/* $Id: xtemplate.css,v 1.53 2004/02/11 19:11:59 dries Exp $ */
+/* $Id: xtemplate.css,v 1.54 2004/02/13 18:21:35 dries Exp $ */
 
 /*
 ** HTML elements
@@ -85,6 +85,9 @@ table {
   font-weight: bold;
   font-size: 1.9em;
   color: #fff;
+}
+#logo img {
+  display: block;
 }
 #menu {
   padding: 0.5em 0.5em 0 0.5em;
