@@ -1,4 +1,4 @@
-/* $Id: marvin.css,v 1.9 2003/12/13 17:37:02 dries Exp $ */
+/* $Id: marvin.css,v 1.10 2003/12/22 15:31:54 dries Exp $ */
 
 body {
   margin: 10px;
@@ -35,9 +35,6 @@ table {
 p {
   margin: 0 1em 1em 0;
   padding: 0;
-}
-img {
-  border-width: 0;
 }
 table {
   font-size: 1em;

@@ -1,4 +1,4 @@
-/* $Id: default.css,v 1.2 2003/12/16 07:41:40 dries Exp $ */
+/* $Id: default.css,v 1.3 2003/12/22 15:31:54 dries Exp $ */
 
 /* HTML tags */
 a, a:link, a:active {
@@ -33,9 +33,6 @@ pre {
 }
 li {
  padding-bottom: .3em;
-}
-img {
- border: 0;
 }
 h1, h2, h3, h4, h5, h6 {
   margin-bottom: .25em;

@@ -1,4 +1,4 @@
-/* $Id: xtemplate.css,v 1.43 2003/12/09 21:36:41 dries Exp $ */
+/* $Id: xtemplate.css,v 1.44 2003/12/22 15:31:54 dries Exp $ */
 
 /*
 ** HTML elements
@@ -51,9 +51,6 @@ fieldset {
 p {
   margin: 0 0 .5em 0;
   padding: 0;
-}
-img {
-  border-width: 0;
 }
 pre {
   background-color: #eee;

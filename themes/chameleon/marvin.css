@@ -1,4 +1,4 @@
-/* $Id: marvin.css,v 1.1 2003/12/15 20:47:18 dries Exp $ */
+/* $Id: marvin.css,v 1.2 2003/12/22 15:31:54 dries Exp $ */
 body {
   background: #fff url(images/druplicon-watermark.png) no-repeat top right;
 }
@@ -26,9 +26,6 @@ h2.title {
 p {
   margin: 0 1em 1em 0;
   padding: 0;
-}
-img {
-  border-width: 0;
 }
 table {
   font-size: 1em;
