@@ -104,7 +104,7 @@
           <?php
            echo "<P>". check_output($story->abstract, 1) ."</P>";
            if ($reply)
-             if ($story->article) print "<P>". check_output($story->article, 1) ."</P>\n";
+             if ($story->body) print "<P>". check_output($story->body, 1) ."</P>\n";
           ?>
           </TD>
          </TR>
