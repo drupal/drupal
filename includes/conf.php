@@ -17,17 +17,11 @@ $themes = array("UnConeD" => array(
                 "Marvin"  => array(
                   "themes/marvin/marvin.theme",
                   "Internet explorer, Netscape, Opera"),
-                "Jeroen"  => array(
-                  "themes/jeroen/jeroen.theme",
-                  "Internet explorer, Netscape"),
                 "Stone Age"  => array(
                   "themes/example/example.theme",
                   "Internet explorer, Netscape, Opera, Lynx"),
                 "Goofy"  => array(
                   "themes/goofy/goofy.theme",
-                  "Internet explorer, Netscape, Opera"),
-                "Yaroon" => array(
-                  "themes/yaroon/yaroon.theme",
                   "Internet explorer, Netscape, Opera"));
 
 #
