@@ -1,5 +1,5 @@
 <?php
-/* $Id: updates.inc,v 1.4 2004/03/20 19:41:42 dries Exp $ */
+/* $Id: updates.inc,v 1.5 2004/03/21 10:28:09 dries Exp $ */
 
 // Define the various updates in an array("date : comment" => "function");
 $sql_updates = array(
@@ -836,7 +836,7 @@ function update_80() {
     array("MSN messenger ID", "msn", "textfield", NULL, 0),
     array("Yahoo messenger ID", "yahoo", "textfield", NULL, 0),
     array("AIM messenger ID", "aim", "textfield", NULL, 0),
-    array("URL of homepage", "homepage", "textfield", NULL, 1),
+    array("URL of homepage", "homepage", "url", NULL, 1),
     array("Biography", "biography", "textarea", NULL, 0),
     array("Interests", "interests", "textarea", NULL, 0),
     array("Public key", "publickey", "textarea", NULL, 0)
@@ -880,16 +880,16 @@ function update_80() {
     // Save the update record:
     user_save($account, $edit);
   }
- 
+
   return $ret;
 }
 
 function update_81() {
   $ret[] = update_sql('ALTER TABLE {profile_fields} ADD page varchar(255) default NULL');
-
+  $ret[] = update_sql("UPDATE {profile_fields} SET type = 'url' WHERE name = 'homepage'");
   return $ret;
 }
- 
+
 function update_sql($sql) {
   $edit = $_POST["edit"];
   $result = db_query($sql);
