@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.219 2003/09/28 15:18:53 dries Exp $
+// $Id: user.module,v 1.220 2003/09/28 17:53:04 dries Exp $
 
 session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
 session_start();
@@ -466,8 +466,8 @@ function user_link($type) {
   if ($type == "system") {
     global $user;
     if ($user->uid) {
-      menu("user/edit", t("edit my account"), NULL, NULL, 8);
-      menu("user/logout", t("log out"), NULL, NULL, 10);
+      menu("user/edit", t("edit my account"), "user_page", NULL, 8);
+      menu("user/logout", t("log out"), "user_page", NULL, 10);
     }
     if (user_access("administer users")) {
       menu("admin/user", t("accounts"), "user_admin", user_help("admin/user"), 2);

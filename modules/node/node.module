@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.270 2003/09/28 15:18:53 dries Exp $
+// $Id: node.module,v 1.271 2003/09/28 17:52:58 dries Exp $
 
 function node_help($section = "admin/node/help") {
   global $mod;
@@ -551,17 +551,12 @@ function node_link($type, $node = 0, $main = 0) {
 
   $links = array();
 
-  if ($type == "page") {
-    $links[] = l(t("submit"), "node/add", array("title" => t("Submit or suggest new content.")));
-  }
-
   if ($type == "node") {
     if ($node->links) {
       $links = $node->links;
     }
 
-    if ($main == 1 && $node->teaser && strlen($node->teaser) != strlen($node->body))
- {
+    if ($main == 1 && $node->teaser && strlen($node->teaser) != strlen($node->body)) {
       $links[] = l(t("read more"), "node/view/$node->nid", array("title" => t("Read the rest of this posting."), "class" => "read-more"));
     }
 
@@ -572,6 +567,7 @@ function node_link($type, $node = 0, $main = 0) {
 
   if ($type == "system") {
     menu("node/add", t("create content"), NULL, NULL, 1);
+
     if (user_access("administer nodes")) {
       menu("admin/node", t("content"), "node_admin", node_help("admin/node"));
       menu("admin/node/search", t("search"), "node_admin", node_help("admin/node/search"), 8);

@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.138 2003/09/27 06:00:43 dries Exp $
+// $Id: blog.module,v 1.139 2003/09/28 17:52:55 dries Exp $
 
 function blog_system($field){
   $output = "";
@@ -261,10 +261,10 @@ function blog_link($type, $node = 0, $main) {
 
   if ($type == "system") {
     if (user_access("maintain personal blog")) {
-      menu("node/add/blog", t("blog entry"), NULL, NULL, 0);
+      menu("node/add/blog", t("blog entry"), "blog_page", NULL, 0);
     }
     if (user_access("maintain personal blog")) {
-      menu("blog/" . $user->uid,t("view my blog"), NULL, NULL, 1);
+      menu("blog/" . $user->uid,t("view my blog"), "user_page", NULL, 1);
     }
   }
 

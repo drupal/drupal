@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.182 2003/09/28 17:07:46 dries Exp $
+// $Id: book.module,v 1.183 2003/09/28 17:52:58 dries Exp $
 
 function book_system($field){
   $output = "";
@@ -79,7 +79,7 @@ function book_link($type, $node = 0, $main = 0) {
 
   if ($type == "system") {
     if (user_access("maintain books")) {
-      menu("node/add/book", t("book page"), NULL, NULL,0);
+      menu("node/add/book", t("book page"), "book_page", NULL,0);
       menu("admin/node/book", t("books"), NULL, NULL, 4);
       menu("admin/node/book/orphan", t("orphan pages"), NULL, NULL, 8);
       menu("admin/node/book/help", t("help"), NULL, NULL, 9);

@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.109 2003/09/28 14:11:49 dries Exp $
+// $Id: poll.module,v 1.110 2003/09/28 17:53:02 dries Exp $
 
 function poll_allowvotes(&$node) {
   /*
@@ -163,7 +163,7 @@ function poll_link($type, $node = 0, $main) {
 
   if ($type == "system") {
     if (user_access("create polls")) {
-      menu("node/add/poll",t("poll"), NULL, NULL, 0);
+      menu("node/add/poll",t("poll"), "poll_page", NULL, 0);
     }
   }
   else if ($type == "page" && user_access("access content")) {
