@@ -1,5 +1,5 @@
 <?php
-// $Id: goofy.theme,v 1.51 2002/11/16 18:06:31 kjartan Exp $
+// $Id: goofy.theme,v 1.52 2002/11/17 16:32:02 kjartan Exp $
 
   /*********************************************************************
 
@@ -16,10 +16,6 @@
     // General colorset that can be used for this theme
     var $foreground = "#000000";
     var $background = "#FFFFFF";
-
-    function Theme_goofy($filename) {
-      $this->path = dirname($filename);
-    }
 
     function system($field) {
       $system["name"] = "Goofy";
