@@ -9,7 +9,7 @@ my $db_pass = 'drupal';
 my $files = $ARGV[0];
 my @message = <STDIN>;
 my $message = join '' , @message;
-my $user = $ENV{USER};
+my $user = $ARGV[1];
 my $timestamp = time();
 
 my $db = DBI->connect("DBI:mysql:$db_name", "$db_user", "$db_pass") or die "Couldn't connect to database: " . DBI->errstr;
