@@ -99,12 +99,6 @@ function system_user($type, $edit, &$user) {
     }
     return $data;
   }
-  else if ($type == 'view') {
-    // do nothing
-  }
-  else {
-    return $edit;
-  }
 }
 
 function system_view_general() {
