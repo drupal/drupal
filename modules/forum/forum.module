@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.31 2001/12/05 18:46:24 dries Exp $
+// $Id: forum.module,v 1.32 2001/12/06 10:33:27 dries Exp $
 
 function forum_node($field) {
   $info["name"] = t("discussion forum");
@@ -43,6 +43,8 @@ function forum_link($type) {
 function forum_view($node) {
   global $theme;
   $output .= "<p><a href=\"module.php?mod=forum\">". t("Forum") ."</a> / <b><a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a></b>:</p><p>". check_output($node->body) ."</p>";
+  $output .= "<p>". $theme->links(link_node($node, $main)) ."</p>";
+
   $theme->box(t("Discussion forum"), $output);
 }
 
