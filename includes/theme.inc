@@ -44,11 +44,8 @@ function theme_account($theme) {
       $content .= "<P>\n";
     }
 
-    $content .= "<LI><A HREF=\"submission.php\">". t("submission queue") ."</A> (<FONT COLOR=\"red\">". submission_number() ."</FONT>)</LI>\n";
-    $content .= "<P>\n";
-
-    if ($menu && ksort($menu)) {
-      foreach ($menu as $link=>$url) $content .= "<LI><A HREF=\"$url\">". t($link) ."</A></LI>\n";
+    if ($menu) {
+      foreach ($menu as $link) $content .= "<LI>$link</LI>\n";
       $content .= "<P>\n";
     }
 

@@ -227,8 +227,7 @@ function diary_user($username, $section, $operation) {
 }
 
 function diary_menu() {
-  global $user;
-  return array("edit your diary" => "module.php?mod=diary&op=add", "view your diary" => "module.php?mod=diary&op=view");
+  return array("<A HREF=\"module.php?mod=diary&op=add\">". t("edit your diary") ."</A>", "<A HREF=\"module.php?mod=diary&op=view\">". t("view your diary") ."</A>");
 }
 
 function diary_block() {
