@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.64 2005/01/14 17:30:00 unconed Exp $
+// $Id: module.inc,v 1.65 2005/01/16 18:44:48 dries Exp $
 
 /**
  * @file
@@ -134,6 +134,30 @@ function module_exist($module) {
  */
 function module_hook($module, $hook) {
   return function_exists($module .'_'. $hook);
+}
+
+/**
+ * Determine which modules are implementing a hook.
+ *
+ * @param $hook
+ *   The name of the hook (e.g. "help" or "menu").
+ * @return
+ *   An array with the names of the modules which are implementing this hook.
+ */
+function module_implements($hook) {
+  static $implementations;
+
+  if (!isset($implementations[$hook])) {
+    $implementations[$hook] = array();
+    $list = module_list();
+    foreach ($list as $module) {
+      if (module_hook($module, $hook)) {
+        $implementations[$hook][] = $module;
+      }
+    }
+  }
+
+  return $implementations[$hook];
 }
 
 /**
