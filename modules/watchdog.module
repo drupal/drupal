@@ -74,7 +74,7 @@ function watchdog_perm() {
  * Remove expired log messages.
  */
 function watchdog_cron() {
-  db_query('DELETE FROM {watchdog} WHERE '. time() .' - timestamp > '. variable_get('watchdog_clear', 604800));
+  db_query('DELETE FROM {watchdog} WHERE timestamp < %d', time() - variable_get('watchdog_clear', 604800));
 }
 
 /**
