@@ -244,7 +244,7 @@ function book_form(&$node) {
   if (user_access('administer nodes')) {
     $output .= form_weight(t('Weight'), 'weight', $node->weight, 15, t('The heavier pages will sink and the lighter pages will be positioned nearer the top.'));
     if (user_access('create php content')) {
-      $output .= form_radios('Type', 'format', $node->format, array(0 => 'HTML / text', 1 => 'PHP'));
+      $output .= form_radios(t('Type'), 'format', $node->format, array(0 => 'HTML / text', 1 => 'PHP'));
     }
   }
   else {
@@ -877,7 +877,7 @@ function book_admin_orphan() {
   }
 
   if ($pages) {
-    $output .= "<h3>Orphan pages</h3>";
+    $output .= '<h3>'. t('Orphan pages') .'</h3>';
     $header = array(t("title"), t("weight"), array("data" => t("operations"), "colspan" => 3));
     foreach ($pages as $nid => $node) {
       if ($node->parent && empty($pages[$node->parent])) {
