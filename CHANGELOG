@@ -10,9 +10,8 @@ drupal x.xx, xx/xx/xxxx (CVS, unstable)
     * improved watchdog messages and added watchdog filter.
 - rewrote headline code and renamed it to import.module and export.module:
     * added various improvements, including a better parser, bundles and better control over individual feeds.
-- rewrote section code and renamed it to structure.module:
-    * supports both "categories" and "topics" (cfr. Scoop, SlashCode).  Topics can be nested to create a multi-level hierarchy.
-    * added "auto-post new submissions" feature versus "moderate new submissions".
+- rewrote section code and renamed it to meta.module:
+    * supports unlimeted amount of nested topics.  Topics can be nested to create a multi-level hierarchy.
 - rewrote configuration file resolving:
     * Drupal tries to locate a configuration file that matches your domainname or uses conf.php if the former failed.  Note also that the configuration files got renamed from .conf to .php for security's sake on mal-configured Drupal sites.
 - added caching support which makes Drupal extremely scalable.
@@ -38,6 +37,7 @@ drupal x.xx, xx/xx/xxxx (CVS, unstable)
 - removed cron.module and integrated it into conf.module.
 - removed module.module as it was no longer needed.
 - various updates:
+    * added "auto-post new submissions" feature versus "moderate new submissions".
     * introduced links/drupal tags: [[link]]
     * added preview functionality when submitting new content (such as a story) from the administration pages.
     * made the administration section only show those links a user has access to.
@@ -46,6 +46,8 @@ drupal x.xx, xx/xx/xxxx (CVS, unstable)
         + content can be scheduled to be 'posted', 'queued' and 'hidden'.
     * improved account module:
         + added "access control" to allow/deny certain usernames/e-mail addresses/hostnames.
+    * improved locale module:
+        + added new overview to easy the translation process.
     * improved comment module:
         + made it possible to permanently delete comments.
     * improved rating module
