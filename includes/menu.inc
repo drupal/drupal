@@ -1,7 +1,6 @@
 <?php
-/** @file
- * $Id: menu.inc,v 1.34 2003/12/18 21:13:17 dries Exp $
- */
+/* $Id: menu.inc,v 1.35 2003/12/27 21:29:20 kjartan Exp $ */
+
 /**
  * @defgroup menu Menu system
  * @{

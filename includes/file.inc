@@ -1,24 +1,10 @@
 <?php
-/** @file
- * $Id: file.inc,v 1.3 2003/12/27 19:21:48 kjartan Exp $
- *
- * Common file handling functions
- *
- * @par Example:
- *   @code
- *     function module_validate($node) {
- *       if (!$node->file = file_save_upload('file')) {
- *         $error['file'] = t('File required.');
- *       }
- *     }
- *
- *     function module_insert($node) {
- *       if ($node->file) {
- *         $file = file_save_upload($node->file);
- *       }
- *     }
- *   @endcode
- *
+/* $Id: file.inc,v 1.4 2003/12/27 21:29:20 kjartan Exp $ */
+
+/**
+ * @defgroup file File API
+ *   Common file handling functions.
+ * @{
  */
 
 define('FILE_DOWNLOADS_PUBLIC', 1);
