@@ -54,7 +54,7 @@ $themes = array("UnConeD" => array(
 #   maintenance capabilities.  If your site does not require
 #   translation support, disable it by commenting out the $language
 #   variable below.
-#$language = array();  // = language support disabled
+#$languages = array();  // = language support disabled
 $languages = array("en" => "English");
 
 # This line prevents users from accessing your settings file:
