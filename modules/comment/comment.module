@@ -313,7 +313,7 @@ function comment_links($comment, $return = 1) {
   */
 
   if ($return) {
-    $links[] = l("<span style=\"color: $theme->type;\">". t("return") ."</span>", array("id" => $comment->nid), "node", $comment->cid);
+    $links[] = l(t("return"), array("id" => $comment->nid), "node", $comment->cid);
   }
 
   /*
@@ -321,7 +321,7 @@ function comment_links($comment, $return = 1) {
   */
 
   if (user_access("administer comments")) {
-    $links[] = la("<span style=\"color: $theme->type;\">". t("administer") ."</span>", array("mod" => "comment", "op" => "edit", "id" => $comment->cid));
+    $links[] = la(t("administer"), array("mod" => "comment", "op" => "edit", "id" => $comment->cid));
     // $links[] = lm(t("unpublish"), array ("mod" => "comment", "op" => "Moderate comment", "moderation[$comment->cid]" => "offline", "edit[nid]" => $comment->nid), "", array ("title" => t("hide this comment by marking it non-published")));
   }
 
@@ -332,9 +332,9 @@ function comment_links($comment, $return = 1) {
   if (node_comment_mode($comment->nid) == 2) {
     if (user_access("post comments")) {
       if (comment_access("edit", $comment)) {
-        $links[] = lm("<span style=\"color: $theme->type\">". t("edit your comment") ."</span>", array("mod" => "comment", "op" => "edit", "id" => $comment->cid), "", array("title" => t("Make changes to your comment.")));
+        $links[] = lm(t("edit your comment"), array("mod" => "comment", "op" => "edit", "id" => $comment->cid), "", array("title" => t("Make changes to your comment.")));
       }
-      $links[] = lm("<span style=\"color: $theme->type;\">". t("reply to this comment") ."</span>", array("mod" => "comment", "op" => "reply", "id" => $comment->nid, "pid" => $comment->cid));
+      $links[] = lm(t("reply to this comment"), array("mod" => "comment", "op" => "reply", "id" => $comment->nid, "pid" => $comment->cid));
     }
     else {
       $links[] = theme_invoke("comment_post_forbidden");
@@ -588,7 +588,7 @@ function comment_render($node, $cid = 0) {
     */
 
     if (user_access("post comments") && node_comment_mode($nid) == 2 && variable_get("comment_new_form", 0)) {
-      $theme->box("Post new comment", comment_form(array("nid" => $nid)));
+      $theme->box(t("Post new comment"), comment_form(array("nid" => $nid)));
     }
 
     /*
@@ -1188,7 +1188,7 @@ function comment($comment, $link = 0) {
   $output .= "<a name=\"$comment->cid\"></a>";
   $output .= "<div style=\"border: 1px solid; padding: 10px;\">";
   $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">";
-  $output .= " <tr><td><div style=\"font-size: 110%; font-weight: bold;\">". check_output($comment->subject) . ($comment->new ?  " <span style=\"color: red;\">*</span>" : "") ."</div></td><td align=\"right\" rowspan=\"2\" valign=\"top\">". $comment->moderation ."</td></tr>";
+  $output .= " <tr><td><div style=\"font-size: 110%; font-weight: bold;\">". check_output($comment->subject) . ($comment->new ? theme_invoke("theme_mark") : "") ."</div></td><td align=\"right\" rowspan=\"2\" valign=\"top\">". $comment->moderation ."</td></tr>";
   $output .= " <tr><td><div style=\"margin-left: 10px; padding-bottom: 10px; font-size: 90%;\">". t("by %a on %b", array("%a" => format_name($comment), "%b" => format_date($comment->timestamp))) ."</div></td></tr>";
   $output .= " <tr><td colspan=\"2\">". check_output($comment->comment, 1) ."</td></tr>";
   $output .= " <tr><td align=\"right\" colspan=\"2\">$link</td></tr>";
