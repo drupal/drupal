@@ -391,7 +391,7 @@ function search_data($keys = NULL) {
 
   if (isset($keys)) {
     foreach (module_list() as $name) {
-      if (module_hook($name, "search") && (!$edit["type"] || $edit["type"][$name]) && ($result = module_invoke($name, "search", check_query($keys)))) {
+      if (module_hook($name, "search") && (!$edit["type"] || $edit["type"][$name]) && ($result = module_invoke($name, "search", $keys))) {
         if ($name == "node" || $name == "comment") {
           $output .= "<p><b>". t("Matching ". $name ."s ranked in order of relevance") .":</b></p>";
         }
