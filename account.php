@@ -24,7 +24,6 @@ function account_session_start($userid, $passwd) {
   global $user;
 
   $user = new User($userid, $passwd);
-
   if ($user->id) {
     session_start();
     session_register("user");
@@ -170,7 +169,7 @@ function account_page_save($edit) {
 
 function account_user($uname) {
   global $user, $theme;
-  
+
   if ($user->id && $user->userid == $uname) {
     $output .= "<P>Welcome $user->userid! This is <B>your</B> user info page. There are many more, but this one is yours. You are probably most interested in editing something, but if you need to kill some time, this place is as good as any other place.</P>\n";
     $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
@@ -275,7 +274,9 @@ function account_register_enter($user = "", $error = "") {
 }
 
 function account_register_submit($new) {
-  global $theme, $mail, $sitename;
+  global $theme, $mail, $sitename, $siteurl;
+  
+  $siteurl = "www.drop.org"; // temporary solution
 
   if ($rval = account_validate($new)) { 
     account_register_enter($new, "$rval");
@@ -287,7 +288,7 @@ function account_register_submit($new) {
 
     user_save($new);
 
-    $link = "http://". getenv("HOSTNAME") ."/account.php?op=confirm&name=$new[userid]&hash=$new[hash]";
+    $link = "http://$siteurl/account.php?op=confirm&name=$new[userid]&hash=$new[hash]";
     $message = "$new[userid],\n\n\nsomeone signed up for a user account on $sitename and supplied this email address as their contact.  If it wasn't you, don't get your panties in a knot and simply ignore this mail.\n\nIf this was you, you have to activate your account first before you can login.  You can do so simply by visiting the URL below:\n\n    $link\n\nVisiting this URL will automatically activate your account.  Once activated you can login using the following information:\n\n    username: $new[userid]\n    password: $new[passwd]\n\n\n-- $sitename crew\n";
 
     mail($new[real_email], "Account details for $sitename", $message, "From: noreply@$sitename");
