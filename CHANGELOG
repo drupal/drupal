@@ -6,16 +6,18 @@ Drupal x.x.x, xxxx-xx-xx (to be released)
 - database backend:
     * added support for database table prefxing.
 - performance improvements:
-    * optimized SQL queries.
+    * optimized many SQL queries for speed by converting left joins to inner joins.
 - comment module:
     * changed the comment module to use the standard pager and rewrote the
       comment housekeeping code to be much more efficient.
 - user module:
     * added support for multiple sessions per user.
+    * added support for anonymous user sessions.
 - forum module:
     * improved the forum views and the themability thereof.
 - usability improvements:
     * added support for "mass node operations" to ease repetitive tasks.
+    * added support for breadcrumb navigation to several modules' user pages.
 
 Drupal 4.2.0, 2003-08-01
 ------------------------
