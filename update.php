@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.107 2003/10/01 05:17:57 dries Exp $
+// $Id: update.php,v 1.108 2003/10/01 21:55:19 dries Exp $
 /*
 ** USAGE:
 **
@@ -529,7 +529,7 @@ function update_page_header($title) {
   $output .= <<<EOF
       <link rel="stylesheet" type="text/css" media="print" href="misc/print.css" />
       <style type="text/css" title="layout" media="Screen">
-        @import url("misc/admin.css");
+        @import url("misc/drupal.css");
       </style>
 EOF;
   $output .= "</head><body><a href=\"http://drupal.org/\">";
@@ -594,6 +594,18 @@ function update_info() {
   print "<li>Don't run this script twice as it may cause problems.</p></li>\n";
   print "<li><a href=\"update.php?op=update\">Upgrade to the latest version.</a></li>\n";
   print "<li>Go through the various administration pages to change the existing and new settings to your liking.</li>\n";
+  print "</ol>";
+  print "Notes:";
+  print "<ol>";
+  print " <li>If you upgrade from Drupal 4.2.0, you have to create the <code>sessions</code> table manually before upgrading.  After you created the table, you'll want to log in and immediately continue the upgrade.  To create the <code>sessions</code> table, issue the following SQL command:<pre>CREATE TABLE sessions (
+  uid int(10) unsigned NOT NULL,
+  sid varchar(32) NOT NULL default '',
+  hostname varchar(128) NOT NULL default '',
+  timestamp int(11) NOT NULL default '0',
+  session text,
+  KEY uid (uid),
+  KEY sid (sid(4)),
+  KEY timestamp (timestamp));</pre></li>";
   print "</ol>";
   print update_page_footer();
 }
