@@ -175,10 +175,6 @@ function poll_form($edit = array(), $nocheck = 0) {
 
   $admin = ($edit[nid] && user_access("administer nodes")) ? 1 : 0;
 
-  if ($edit[title]) {
-    $form .= poll_view(new Poll(node_preview($edit)));
-  }
-
   if ($admin && !is_array($edit[choices])) $edit = poll_get_choices_array($edit);
 
   /* Mini-form for number of choiceboxes */
