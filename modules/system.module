@@ -38,7 +38,7 @@ function system_link($type) {
      menu_add("module selector", url("admin/system/modules/selector"), "Module selector.", NULL, "site configuration", 1);
      menu_add("module settings", url("admin/system/modules/settings"), "Site settings.", NULL, "site configuration", 2);
      menu_add("theme selector", url("admin/system/themes/selector"), "Theme selector.", NULL, "site configuration", 3);
-     // menu_add("theme settings", url("admin/system/themes/settings"), "Theme selector.", NULL, "site configuration", 4);
+     menu_add("theme settings", url("admin/system/themes/settings"), "Theme selector.", NULL, "site configuration", 4);
      menu_add("content filters", url("admin/system/filters"), "Content filters.", NULL, "site configuration", 5);
      menu_add("help", url("admin/system/help"), "Help.", NULL, "site configuration", 9);
   }
@@ -49,12 +49,12 @@ function system_view_modules() {
 
   // general settings:
   $output .= "<h3>" . t("General settings") . "</h3>\n";
-  $output .= form_textfield(t("Name"), "site_name", variable_get("site_name", "drupal"), 55, 55, t("The name of this website."));
-  $output .= form_textfield(t("E-mail address"), "site_mail", variable_get("site_mail", ini_get("sendmail_from")), 55, 128, t("A valid e-mail address for this website, used by the auto-mailer during registration, new password requests, notifications, etc."));
-  $output .= form_textfield(t("Slogan"), "site_slogan", variable_get("site_slogan", ""), 55, 128, t("The slogan of this website. Some themes display a slogan when available."));
-  $output .= form_textarea(t("Mission"), "site_mission", variable_get("site_mission", ""), 55, 5, t("Your site's mission statement or focus."));
-  $output .= form_textarea(t("Footer message"), "site_footer", variable_get("site_footer", ""), 55, 5, t("This text will be displayed at the bottom of each page.  Useful for adding a copyright notice to your pages."));
-  $output .= form_textfield(t("Anonymous user"), "anonymous", variable_get("anonymous", "Anonymous"), 55, 55, t("The name used to indicate anonymous users."));
+  $output .= form_textfield(t("Name"), "site_name", variable_get("site_name", "drupal"), 70, 70, t("The name of this website."));
+  $output .= form_textfield(t("E-mail address"), "site_mail", variable_get("site_mail", ini_get("sendmail_from")), 70, 128, t("A valid e-mail address for this website, used by the auto-mailer during registration, new password requests, notifications, etc."));
+  $output .= form_textfield(t("Slogan"), "site_slogan", variable_get("site_slogan", ""), 70, 128, t("The slogan of this website. Some themes display a slogan when available."));
+  $output .= form_textarea(t("Mission"), "site_mission", variable_get("site_mission", ""), 70, 5, t("Your site's mission statement or focus."));
+  $output .= form_textarea(t("Footer message"), "site_footer", variable_get("site_footer", ""), 70, 5, t("This text will be displayed at the bottom of each page.  Useful for adding a copyright notice to your pages."));
+  $output .= form_textfield(t("Anonymous user"), "anonymous", variable_get("anonymous", "Anonymous"), 70, 70, t("The name used to indicate anonymous users."));
   foreach (module_list() as $name) { if (module_hook($name, "page")) $pages[$name] = $name; }
   $output .= form_select(t("Default front page"), "site_frontpage", variable_get("site_frontpage", "node"), $pages, t("The home page displays content from this module (usually node)."));
   $output .= form_select(t("Clean URLs"), "clean_url", variable_get("clean_url", 0), array(t("Disabled"), t("Enabled")), t("Enable or disable clean URLs.  If enabled, you'll need <code>ModRewrite</code> support.  See also the <code>.htaccess</code> file in Drupal's top-level directory."));
@@ -124,7 +124,7 @@ function system_view_modules() {
 function system_view_themes() {
   foreach (theme_list() as $theme) {
     include_once "$theme->filename";
-    $function = $theme->name ."_options";
+    $function = $theme->name ."_settings";
     if (function_exists($function)) {
       $output .= "<h3><a name=\"$theme->name\">". ucfirst(t("$theme->name")) ." " . t("settings") . "</a></h3>". $function() ."<hr />\n";
     }

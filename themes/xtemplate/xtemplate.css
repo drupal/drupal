@@ -49,11 +49,22 @@ img {
   font-weight: bold;
 }
 .menu #links #secondary {
-  font-size: 0.7em;
+  font-size: 0.9em;
+  margin-bottom: 12px;
 }
 .menu #links #secondary a {
   color: #9cf;
   font-weight: bold;
+}
+#secondary form {
+  display: inline;
+}
+#secondary form .keys {
+  width: 12em;
+  margin-left: 1em;
+}
+#secondary input {
+  font-size: 1.1em;
 }
 #message {
   background-color: #369;

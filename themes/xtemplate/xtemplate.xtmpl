@@ -19,21 +19,30 @@
   <tr>
     <td colspan="2" class="menu">
       <span id="links">
-        <div id="secondary">secondary links</div>
-        <div id="primary">primary links<br />{links}</div>
+        <div id="secondary">
+          {secondary_links}
+          <!-- BEGIN: search_box -->
+          <form action="{search_url}" method="post">
+            <input class="keys" type="text" size="50" value="" name="keys" />
+            <input type="submit" value="{search_button_text}" />
+          </form>
+          <!-- END: search_box -->
+        </div>
+        <div id="primary">{primary_links}</div>
       </span>
-      <span id="logo"><a href="index.php"><img src="themes/xtemplate/images/druplicon.gif" alt="" /></a></span>
+      <span id="logo">
+        <a href="./"><img src="themes/xtemplate/images/druplicon.gif" alt="" /></a>
+      </span>
     </td>
   </tr>
 
   <tr>
     <td valign="top" width="100%">
       <!-- BEGIN: message -->
-        <div id="message">Site description or mission statement - edit this text along with the primary and secondary links in the file 'themes/xtemplate/xtemplate.xtmpl'.</div>
+        <div id="message">{message}</div>
       <!-- END: message -->
       <div id="main">
 <!-- END: header -->
-
 
 <!-- BEGIN: node -->
   <div class="node">
@@ -64,7 +73,6 @@
   </div>
 <!-- END: comment_old -->
 
-
 <!-- BEGIN: box -->
   <div class="box">
     <div class="title">{subject}</div>
@@ -72,14 +80,12 @@
  </div>
 <!-- END: box -->
 
-
 <!-- BEGIN: block -->
   <div class="block">
     <div class="title">{subject}</div>
     <div class="content">{content}</div>
  </div>
 <!-- END: block -->
-
 
 <!-- BEGIN: footer -->
       </div><!-- main -->
