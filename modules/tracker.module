@@ -4,7 +4,7 @@
 function tracker_link($type) {
 
   if ($type == "menu") {
-    $links[] = "<a href=\"module.php?mod=tracker\">". t("recent comments") ."</a>";
+    $links[] = "<a href=\"module.php?mod=tracker\" title=\"". t("Display an overview of the recent comments.") ."\">". t("recent comments") ."</a>";
   }
 
   return $links ? $links : array();
@@ -45,8 +45,8 @@ function tracker_comments($id = 0) {
 function tracker_menu() {
   global $user;
 
-  $links[] = "<a href=\"module.php?mod=tracker&id=$user->uid\">your recent comments</a>";
-  $links[] = "<a href=\"module.php?mod=tracker\">all recent comments</a>";
+  $links[] = "<a href=\"module.php?mod=tracker&id=$user->uid\" title=\"". t("Display an overview of your recent comments.") ."\">your recent comments</a>";
+  $links[] = "<a href=\"module.php?mod=tracker\" title=\"". t("Display an overview of all the recent comments.") ."\">all recent comments</a>";
 
   return "<div align=\"center\">". implode(" &middot; ", $links) ."</div>";
 }

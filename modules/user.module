@@ -422,7 +422,7 @@ function user_search($keys) {
 
 function user_link($type) {
   if ($type == "page") {
-    $links[] = "<a href=\"module.php?mod=user\" title=\"". t("Create a user account, e-mail a new password or edit your account settings.") ."\">". t("user account") ."</a>";
+    $links[] = "<a href=\"module.php?mod=user\" title=\"". t("Create a user account, request a new password or edit your account settings.") ."\">". t("user account") ."</a>";
   }
 
   if ($type == "menu") {

@@ -103,7 +103,7 @@ function calendar_block() {
 
 function calendar_link($type) {
   if ($type == "page" && user_access("access content")) {
-    $links[] = "<a href=\"module.php?mod=calendar\" title=\"". t("Check the archives for older content.") ."\">archives</a>";
+    $links[] = "<a href=\"module.php?mod=calendar\" title=\"". t("Read the older content in our archive.") ."\">archives</a>";
   }
 
   return $links ? $links : array();

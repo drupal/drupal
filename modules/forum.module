@@ -35,7 +35,7 @@ function forum_save($op, $node) {
 
 function forum_link($type) {
   if ($type == "page" && user_access("access content")) {
-    $links[] = "<a href=\"module.php?mod=forum\">". t("forum") ."</a>";
+    $links[] = "<a href=\"module.php?mod=forum\" title=\"". t("Read and participate in the discussion forums.") ."\">". t("forum") ."</a>";
   }
 
   return $links ? $links : array();

@@ -82,9 +82,9 @@ function book_save($op, $node) {
       /*
       ** If a node administrator updates a book page, we don't create a
       ** new revision unless we are explicitly instructed to. If a node
-      ** administrator updates a book page using the "update this book
-      ** page"-link (like regular users do) then he'll be treated as a
-      ** regular user.
+      ** administrator updates a book page using the "edit this page"
+      ** link (like regular users do) then he'll be treated as a regular
+      **  user.
       */
 
       return array("format", "parent", "weight");
@@ -103,7 +103,7 @@ function book_link($type, $node = 0, $main = 0) {
   }
 
   if ($type == "node" && $node->type == "book" && book_access("update", $node)) {
-    $links[] = "<a href=\"module.php?mod=node&op=edit&id=$node->nid\" title=\"". t("Suggest an update for this book page.") ."\">". t("update this book page") ."</a>";
+    $links[] = "<a href=\"module.php?mod=node&op=edit&id=$node->nid\" title=\"". t("Suggest an update for this book page.") ."\">". t("edit this page") ."</a>";
   }
 
   return $links ? $links : array();
@@ -136,7 +136,7 @@ function book_load($node) {
   /*
   ** We set the revision field to indicate that we have to create
   ** a new revision when updating this book page.  We enable this
-  ** always such that the "update this book page"-links appear.
+  ** always such that the "edit this page"-links appear.
   */
 
   $book->revision = 1;
@@ -402,7 +402,7 @@ function book_view($node, $main = 0) {
 
     $output .= " <tr><td colspan=\"3\"><hr /></td></tr>";
     $output .= " <tr><td align=\"left\" width=\"33%\">". ($prev ? "<a href=\"node.php?id=$prev->nid\" title=\"". t("View the previous page in this book.") ."\">". t("previous") ."</a>" : t("previous")) ."</td><td align=\"center\" width=\"34%\"><a href=\"module.php?mod=book\" title=\"". t("View this book's table of contents.") ."\">index</a></td><td align=\"right\" width=\"33%\">". ($next ? "<a href=\"node.php?id=$next->nid\" title=\"". t("View the next page in this book.") ."\">". t("next") ."</a>" : t("next")) ."</td></tr>";
-    $output .= " <tr><td align=\"left\" width=\"33%\">". ($prev ? "<small>". check_output($prev->title) ."</small>" : "&nbsp;") ."</td><td align=\"center\" width=\"34%\">". ($node->parent ? "<a href=\"node.php?id=$node->parent\" title=\"". t("View the parent section.") ."\">". t("up") ."</a>" : t("up")) ."</td><td align=\"right\" width=\"33%\">". ($next ? "<small>". check_output($next->title) ."</small>" : "&nbsp;") ."</td></tr>";
+    $output .= " <tr><td align=\"left\" width=\"33%\">". ($prev ? "<small>". check_output($prev->title) ."</small>" : "&nbsp;") ."</td><td align=\"center\" width=\"34%\">". ($node->parent ? "<a href=\"node.php?id=$node->parent\" title=\"". t("View this page's parent section.") ."\">". t("up") ."</a>" : t("up")) ."</td><td align=\"right\" width=\"33%\">". ($next ? "<small>". check_output($next->title) ."</small>" : "&nbsp;") ."</td></tr>";
     $output .= " <tr><td colspan=\"3\"><hr /></td></tr>";
     $output .= " <tr><td colspan=\"3\" align=\"right\"><div style=\"margin: 10 10 10 10;\">". $theme->links(link_node($node, $main)) ."</div></td></tr>";
     $output .= "</table>";

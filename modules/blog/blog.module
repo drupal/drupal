@@ -179,7 +179,7 @@ function blog_page_user($uid = 0, $date = 0) {
     }
 
     if ($blog->comment) {
-      $links[] = "<a href=\"node.php?id=$blog->nid\" title=\"". t("View this posting and all of its comments.") ."\">". format_plural(comment_num_all($blog->nid), t("comment"), t("comments")) ."</a>";
+      $links[] = "<a href=\"node.php?id=$blog->nid\" title=\"". t("Read this posting and all of its comments.") ."\">". format_plural(comment_num_all($blog->nid), t("comment"), t("comments")) ."</a>";
     }
 
     $output .= "<tr><td><div style=\"margin-left: 20px;\"><b>". check_output($blog->title) ."</b></div></td><td align=\"right\">". $theme->links($links) ."</td></tr>";
@@ -188,7 +188,7 @@ function blog_page_user($uid = 0, $date = 0) {
   }
 
   $output .= "</table>";
-  $output .= "<a href=\"module.php?mod=blog&op=feed&id=$account->uid\" title=\"". t("View the XML version of this page.") ."\"><img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" /></a>\n";
+  $output .= "<a href=\"module.php?mod=blog&op=feed&id=$account->uid\" title=\"". t("Read the XML version of this page.") ."\"><img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" /></a>\n";
 
   $theme->box(sprintf(t("%s's blog"), $account->name), $output, "main");
 }
@@ -225,7 +225,7 @@ function blog_page_last() {
   }
 
   $output .= "</table>";
-  $output .= "<a href=\"module.php?mod=blog&op=feed\" title=\"". t("View the XML version of this page.") ."\"><img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" /></a>\n";
+  $output .= "<a href=\"module.php?mod=blog&op=feed\" title=\"". t("Read the XML version of this page.") ."\"><img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" /></a>\n";
 
   $theme->box(t("User blogs"), $output, "main");
 }
@@ -311,17 +311,17 @@ function blog_link($type, $node = 0) {
   global $user;
 
   if ($type == "page" && user_access("access content")) {
-    $links[] = "<a href=\"module.php?mod=blog\" title=\"". t("View the latest blog entries in chronological order.") ."\">". t("user blogs") ."</a>";
+    $links[] = "<a href=\"module.php?mod=blog\" title=\"". t("Read the latest blog entries.") ."\">". t("user blogs") ."</a>";
   }
 
   if ($type == "menu") {
     $links[] = "<a href=\"module.php?mod=node&op=add&type=blog\" title=\"". t("Post a new entry to your personal blog.") ."\">". t("add blog entry") ."</a>";
-    $links[] = "<a href=\"module.php?mod=blog&op=view&id=$user->uid\" title=\"". t("View your latest blog entries in chronological order.") ."\">". t("view your blog") ."</a>";
+    $links[] = "<a href=\"module.php?mod=blog&op=view&id=$user->uid\" title=\"". t("Read your latest blog entries.") ."\">". t("view your blog") ."</a>";
   }
 
   if ($type == "node" && $node->type == "blog") {
     if (blog_access("update", $node)) {
-      $links[] = "<a href=\"module.php?mod=node&op=edit&id=$node->nid\" title=\"". t("Update this blog entry.") ."\">". t("update this blog") ."</a>";
+      $links[] = "<a href=\"module.php?mod=node&op=edit&id=$node->nid\" title=\"". t("Edit this blog entry.") ."\">". t("edit this blog") ."</a>";
     }
     else {
       $links[] = "<a href=\"module.php?mod=blog&op=view&id=$node->uid\" title=\"". sprintf(t("Read %s's latest blog entries."), $node->name) ."\">". strtr(t("%a's blog"), array("%a" => $node->name)) ."</a>";
@@ -340,7 +340,7 @@ function blog_block() {
     $output .= "<a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a><br />\n";
   }
 
-  $output .= "<br /><div align=\"right\"><a href=\"module.php?mod=blog\" title=\"". t("View the latest blog entries in chronological order.") ."\">". t("more") ."</a></div>";
+  $output .= "<br /><div align=\"right\"><a href=\"module.php?mod=blog\" title=\"". t("Read the latest blog entries.") ."\">". t("more") ."</a></div>";
 
   $block[0]["subject"] = t("User blogs");
   $block[0]["content"] = $output;
