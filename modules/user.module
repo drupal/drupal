@@ -177,7 +177,7 @@ function user_validate_name($name) {
   // if (ereg("[^a-zA-Z0-9@-@]", $name)) return t("The username contains an illegal character.");
   if (ereg('@', $name) && !eregi('@([0-9a-z](-?[0-9a-z])*\.)+[a-z]{2}([zmuvtg]|fo|me)?$', $name)) return t("The username is not a valid authentication ID.");
   if (!eregi('^[[:print:]]+', $name)) return t("The name contains an illegal character.");
-  if (strlen($name) > 56) return t("The username '$name' is too long: it must be less than 56 characters.");
+  if (strlen($name) > 56) return t("The username '%name' is too long: it must be less than 56 characters.", array("%name" => $name));
 }
 
 function user_validate_mail($mail) {
@@ -198,7 +198,7 @@ function user_validate_mail($mail) {
 }
 
 function user_validate_authmap($account, $authname, $module) {
-  $result = db_query("SELECT COUNT(*) from authmap WHERE uid != '%d' && authname = '%s'", $account->uid, $authname);
+  $result = db_query("SELECT COUNT(*) from authmap WHERE uid != '%d' AND authname = '%s'", $account->uid, $authname);
   if (db_result($result) > 0) {
     $name = module_invoke($module, "info", "name");
     return t("The %u ID %s is already taken.", array("%u" => ucfirst($name), "%s" => "<i>$authname</i>"));
@@ -448,7 +448,7 @@ function user_get_authname($account, $module) {
   **  Called by authentication modules in order to edit/view their authmap information.
   */
 
-  $result = db_query("SELECT authname FROM authmap WHERE uid = '%d' && module = '%s'", $account->uid, $module);
+  $result = db_query("SELECT authname FROM authmap WHERE uid = '%d' AND module = '%s'", $account->uid, $module);
   return db_result($result);
 }
 
@@ -476,7 +476,7 @@ function user_set_authmaps($account, $authmaps) {
   foreach ($authmaps as $key => $value) {
     $module = explode("_", $key, 2);
     if ($value) {
-      $result = db_query("SELECT COUNT(*) from authmap WHERE uid = '%d' && module = '%s'", $account->uid, $module["1"]);
+      $result = db_query("SELECT COUNT(*) from authmap WHERE uid = '%d' AND module = '%s'", $account->uid, $module["1"]);
       if (db_result($result) == 0) {
         $result = db_query("INSERT INTO authmap (authname, uid, module) VALUES ('%s', '%d', '%s')", $value, $account->uid, $module[1]);
       }
@@ -709,7 +709,7 @@ function user_pass($edit = array()) {
 
       $variables = array("%username" => $account->name, "%site" => variable_get("site_name", "drupal"), "%password" => $pass, "%uri" => $base_url, "%uri_brief" => substr($base_url, strlen("http://")), "%mailto" => $account->mail, "%date" => format_date(time()));
       $subject = strtr(variable_get("user_mail_pass_subject", t("Replacement login information for %username at %site")), $variables);
-      $body = strtr(variable_get("user_mail_pass_body", t("%username,\n\nHere is your new password for %site.  You may now login to %uri". url("user/login") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %uri". url("user/edit") .".\n\nYour new %site membership also enables you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering.  Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n-- %site team")), $variables);
+      $body = strtr(variable_get("user_mail_pass_body", t("%username,\n\nHere is your new password for %site.  You may now login to ". url("user/login") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at ". url("user/edit") .".\n\nYour new %site membership also enables you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering.  Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n-- %site team")), $variables);
       $headers = "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from";
       user_mail($account->mail, $subject, $body, $headers);
 
@@ -810,7 +810,7 @@ function user_register($edit = array()) {
 
     //the first user may login immediately, and receives a customized welcome e-mail.
     if ($account->uid == 1) {
-      user_mail($edit["mail"], t("drupal user account details for %s", array("%s" => $edit["name"])), strtr(t("%username,\n\nYou may now login to %uri using the following username and password:\n\n  username: %username\n  password: %password\n\n%uri". url("user/edit") ."\n\n--drupal"), $variables), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+      user_mail($edit["mail"], t("drupal user account details for %s", array("%s" => $edit["name"])), strtr(t("%username,\n\nYou may now login to %uri using the following username and password:\n\n  username: %username\n  password: %password\n\n". url("user/edit") ."\n\n--drupal"), $variables), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
       // This should not be t()'ed. No point as its only shown once in the sites lifetime, and it would be bad to store the password
       $output .= "<p>Welcome to Drupal. You are user #1, which gives you full and immediate access.  All future registrants will receive their passwords via e-mail, so please configure your e-mail settings using the Administration pages.</p><p> Your password is <b>$pass</b>. You may change your password on the next page.</p><p>Please login below.</p>";
       $output .= form_hidden("name", $account->name);
@@ -825,7 +825,7 @@ function user_register($edit = array()) {
         */
 
         $subject = strtr(variable_get("user_mail_welcome_subject", t("User account details for %username at %site")), $variables);
-        $body = strtr(variable_get("user_mail_welcome_body", t("%username,\n\nThank you for registering at %site. You may now login to %uri". url("user/login") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %uri". url("user/edit") .".\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team")), $variables);
+        $body = strtr(variable_get("user_mail_welcome_body", t("%username,\n\nThank you for registering at %site. You may now login to ". url("user/login") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at ". url("user/edit") .".\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team")), $variables);
         user_mail($edit["mail"], $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
         return t("Your password and further instructions have been sent to your e-mail address.");
       }
@@ -834,7 +834,7 @@ function user_register($edit = array()) {
         ** Create new user account, administrator approval required:
         */
         $subject = strtr(variable_get("user_mail_welcome_subject", t("User account details for %username at %site")), $variables);
-        $body = strtr(variable_get("user_mail_welcome_body", t("%username,\n\nThank you for registering at %site. Your account will have to be approved by the site administrator. You may now login to %uri". url("user/login") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %uri". url("user/edit") .".\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team")), $variables);
+        $body = strtr(variable_get("user_mail_welcome_body", t("%username,\n\nThank you for registering at %site. Your account will have to be approved by the site administrator. You may now login to ". url("user/login") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at ". url("user/edit") .".\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team")), $variables);
         user_mail($edit["mail"], $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
         user_mail(variable_get("site_mail", ini_get("sendmail_from")), $subject, t("%u has applied for an account.\n\n%uri", array("%u" => $account->name, "%uri" => url("admin/user/edit/$account->uid"))), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
         return t("Your password and further instructions have been sent to your e-mail address.");
