@@ -1,0 +1,140 @@
+<?php
+
+class Theme_xtemplate extends BaseTheme {
+
+  var $primary_links = "edit me";
+  var $secundary_links = "edit me";
+  var $message = "edit me";
+
+  function system($field) {
+    $system["name"] = "xtemplate";
+
+    return $system[$field];
+  }
+
+  function Theme_xtemplate() {
+    include_once("themes/xtemplate/xtemplate.inc");
+
+    $this->template = new XTemplate("themes/xtemplate/xtemplate.xtmpl");
+    $this->template->SetNullBlock(" ");  // "" doesnt work!
+  }
+
+  function node($node, $main) {
+    $terms = array();
+    if (function_exists("taxonomy_node_get_terms")) {
+      foreach (taxonomy_node_get_terms($node->nid) as $term) {
+        $terms[] = l($term->name, array("or" => $term->tid), "index");
+      }
+    }
+
+    $this->template->assign(array (
+       "title"     => ucfirst($node->title),
+       "taxonomy"  => $this->links($terms),
+       "author"    => format_name($node),
+       "date"      => format_date($node->created),
+       "content"   => ($main && $node->teaser) ?
+                      check_output($node->teaser) :
+                      check_output($node->body)));
+
+     if ($links = link_node($node, $main)) {
+       $this->template->assign("links", $this->links($links));
+     }
+
+     $this->template->parse("node");
+     print $this->template->text("node");
+     $this->template->reset("node");
+  }
+
+  function comment($comment, $link = 0) {
+    $this->template->assign(array (
+        "title"     => ucfirst($comment->subject),
+        "author"    => format_name($comment),
+        "date"      => format_date($comment->timestamp),
+        "content"   => check_output($comment->comment),
+        "links"     => $link));
+
+    if ($comment->new) {
+      $this->template->parse("comment_new");
+      print $this->template->text("comment_new");
+      $this->template->reset("comment_new");
+    }
+    else {
+      $this->template->parse("comment_old");
+      print $this->template->text("comment_old");
+      $this->template->reset("comment_old");
+    }
+  }
+
+  function header() {
+    $this->template->assign(array(
+       "name" => variable_get("site_name", ""),
+       "slogan" => variable_get("site_slogan", "")));
+
+    $this->template->parse("header");
+    print $this->template->text("header");
+
+    ?>
+    <table border="0" cellpadding="0" cellspacing="0">
+      <tr>
+        <td colspan="2" id="menu">
+    <?php
+
+    $this->template->assign(array(
+       "primary" => $this->primary_links,
+       "secundary" => $this->secundary_links));
+
+    $this->template->parse("menu");
+    print $this->template->text("menu");
+
+    ?>
+        </td>
+      </tr>
+      <tr>
+        <td valign="top" width="100%">
+    <?php
+
+    // the description block is only shown on the main page
+    if (!arg(0)) {
+      $this->template->assign(array(
+         "message" => $this->message));
+
+      $this->template->parse("message");
+      print $this->template->text("message");
+    }
+
+    ?>
+      <div id="main">
+    <?php
+  }
+
+  function box($title, $content, $region = "main") {
+    if ($title && $content) {
+      $this->template->assign(array(
+        "title" => $title,
+        "content" => $content));
+
+       $this->template->parse("block");
+       print $this->template->text("block");
+       $this->template->reset("block");
+    }
+  }
+
+  function footer() {
+    global $user;
+
+    ?>
+        <td valign="top" rowspan="2" id="sidebar">
+    <?php
+      theme_blocks("all", $this);
+    ?>
+          </div>
+        </td>
+      </tr>
+    </table>
+    <?php
+
+    $this->template->parse("footer");
+    print $this->template->text("footer");
+  }
+}
+?>
