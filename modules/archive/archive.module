@@ -1,5 +1,5 @@
 <?php
-// $Id: archive.module,v 1.55 2004/05/11 20:10:14 dries Exp $
+// $Id: archive.module,v 1.56 2004/05/17 22:00:06 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -208,7 +208,7 @@ function archive_link($type) {
 }
 
 /**
- * Menu callback. Lists all nodes posted on a given date.
+ * Menu callback; lists all nodes posted on a given date.
  */
 function archive_page($year = 0, $month = 0, $day = 0) {
   global $user;

@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.175 2004/05/09 19:28:43 dries Exp $
+// $Id: forum.module,v 1.176 2004/05/17 22:00:06 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -443,7 +443,7 @@ function _forum_new($tid) {
 }
 
 /**
- * Menu callback. Prints a forum listing.
+ * Menu callback; prints a forum listing.
  */
 function forum_page($tid = 0, $display = 'all') {
   global $sortby, $forum_per_page, $from, $user;
