@@ -86,10 +86,10 @@ function forum_block($op = "list", $delta = 0) {
 
       if (empty($cache)) {
         unset($items);
-        $content = node_title_list(db_query_range("SELECT n.nid, n.title, u.uid, u.name, GREATEST(n.created, MAX(c.timestamp)) AS sort FROM {node} n INNER JOIN {forum} f ON n.nid = f.nid INNER JOIN {comments} c ON n.nid = c.nid INNER JOIN {users} u ON n.uid = u.uid WHERE n.type = 'forum' AND n.nid = f.nid AND n.status = 1 GROUP BY n.nid, n.title, n.created, u.uid, u.name ORDER BY sort DESC", 0, variable_get("forum_block_num", "5")), t("Active forum topics:"));
+        $content = node_title_list(db_query_range("SELECT n.nid, n.title, u.uid, u.name, GREATEST(n.created, MAX(c.timestamp)) AS sort FROM {node} n INNER JOIN {forum} f ON n.nid = f.nid INNER JOIN {comments} c ON n.nid = c.nid LEFT JOIN {users} u ON n.uid = u.uid WHERE n.type = 'forum' AND n.nid = f.nid AND n.status = 1 GROUP BY n.nid, n.title, n.created, u.uid, u.name ORDER BY sort DESC", 0, variable_get("forum_block_num", "5")), t("Active forum topics:"));
 
         unset ($items);
-        $content .= node_title_list(db_query_range("SELECT n.nid, n.title, u.uid, u.name FROM {node} n INNER JOIN {forum} f ON n.nid = f.nid INNER JOIN {users} u ON n.uid = u.uid WHERE n.type = 'forum' ORDER BY n.nid DESC", 0, variable_get("forum_block_num", "5")), t("New forum topics:"));
+        $content .= node_title_list(db_query_range("SELECT n.nid, n.title, u.uid, u.name FROM {node} n INNER JOIN {forum} f ON n.nid = f.nid LEFT JOIN {users} u ON n.uid = u.uid WHERE n.type = 'forum' ORDER BY n.nid DESC", 0, variable_get("forum_block_num", "5")), t("New forum topics:"));
 
         if ($content) {
           $content .= "<div id=\"forum_more\" style=\"text-align: right;\">". l(t("more"), "forum", array("title" => t("Read the latest forum topics."))) ."</div>";
@@ -280,7 +280,7 @@ function _forum_last_comment($nid) {
 }
 
 function _forum_last_reply($nid) {
-  $value = db_fetch_object(db_query_range("SELECT c.timestamp, u.name, u.uid FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.nid = %d AND c.status = 0 ORDER BY c.timestamp DESC", $nid, 0, 1));
+  $value = db_fetch_object(db_query_range("SELECT c.timestamp, u.name, u.uid FROM {comments} c LEFT JOIN {users} u ON c.uid = u.uid WHERE c.nid = %d AND c.status = 0 ORDER BY c.timestamp DESC", $nid, 0, 1));
   return $value;
 }
 
@@ -369,9 +369,9 @@ function _forum_topics_read($uid) {
 }
 
 function _forum_last_post($term) {
-  $topic = db_fetch_object(db_query_range("SELECT n.nid, n.created AS timestamp, u.name AS name, u.uid AS uid FROM {forum} f INNER JOIN {node} n ON n.nid = f.nid INNER JOIN {users} u ON n.uid = u.uid WHERE f.tid = %d AND n.nid = f.nid AND n.type = 'forum' AND n.status = 1 ORDER BY timestamp DESC", $term, 0, 1));
+  $topic = db_fetch_object(db_query_range("SELECT n.nid, n.created AS timestamp, u.name AS name, u.uid AS uid FROM {forum} f INNER JOIN {node} n ON n.nid = f.nid LEFT JOIN {users} u ON n.uid = u.uid WHERE f.tid = %d AND n.nid = f.nid AND n.type = 'forum' AND n.status = 1 ORDER BY timestamp DESC", $term, 0, 1));
 
-  $reply = db_fetch_object(db_query_range("SELECT n.nid, c.timestamp, u.name AS name, u.uid AS uid FROM {forum} f INNER JOIN {node} n ON n.nid = f.nid INNER JOIN {comments} c ON n.nid = c.nid INNER JOIN {users} u ON c.uid = u.uid WHERE f.tid = %d AND n.nid = f.nid AND n.type = 'forum' AND n.status = 1 AND c.status = 0 ORDER BY c.timestamp DESC", $term, 0, 1));
+  $reply = db_fetch_object(db_query_range("SELECT n.nid, c.timestamp, u.name AS name, u.uid AS uid FROM {forum} f INNER JOIN {node} n ON n.nid = f.nid INNER JOIN {comments} c ON n.nid = c.nid LEFT JOIN {users} u ON c.uid = u.uid WHERE f.tid = %d AND n.nid = f.nid AND n.type = 'forum' AND n.status = 1 AND c.status = 0 ORDER BY c.timestamp DESC", $term, 0, 1));
 
   $value = ($topic->timestamp > $reply->timestamp) ? $topic : $reply;
 
@@ -387,7 +387,7 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
   $sql_sortby = _forum_get_topic_order($sortby);
 
   // show topics with the correct tid, or in the forum but with shadow = 1
-  $sql = "SELECT n.nid, n.title, u.name AS name, u.uid AS uid, n.created AS timestamp, GREATEST(n.created, MAX(c.timestamp)) AS date_sort, COUNT(c.nid) AS num_comments, f.icon, n.comment AS comment_mode, f.tid FROM {node} n INNER JOIN {term_node} r ON n.nid = r.nid INNER JOIN {users} u ON n.uid = u.uid INNER JOIN {comments} c ON n.nid = c.nid INNER JOIN {forum} f ON n.nid = f.nid WHERE n.nid = r.nid AND ((r.tid = '".check_query($tid)."' AND f.shadow = 1) OR f.tid = '".check_query($tid)."') AND n.status = 1 AND n.type = 'forum' GROUP BY n.nid, n.title, u.name, u.uid, n.created, n.comment, f.tid, f.icon ORDER BY $sql_sortby";
+  $sql = "SELECT n.nid, n.title, u.name AS name, u.uid AS uid, n.created AS timestamp, GREATEST(n.created, MAX(c.timestamp)) AS date_sort, COUNT(c.nid) AS num_comments, f.icon, n.comment AS comment_mode, f.tid FROM {node} n INNER JOIN {term_node} r ON n.nid = r.nid LEFT JOIN {users} u ON n.uid = u.uid INNER JOIN {comments} c ON n.nid = c.nid INNER JOIN {forum} f ON n.nid = f.nid WHERE n.nid = r.nid AND ((r.tid = '".check_query($tid)."' AND f.shadow = 1) OR f.tid = '".check_query($tid)."') AND n.status = 1 AND n.type = 'forum' GROUP BY n.nid, n.title, u.name, u.uid, n.created, n.comment, f.tid, f.icon ORDER BY $sql_sortby";
 
   $sql_count = "SELECT COUNT(DISTINCT(n.nid)) FROM {node} n INNER JOIN {forum} f ON n.nid = f.nid INNER JOIN {term_node} r ON n.nid = r.nid WHERE n.nid = r.nid AND ( (r.tid = '".check_query($tid)."' AND f.shadow = 1) OR f.tid = '".check_query($tid)."') AND n.status = 1 AND n.type = 'forum'";
 

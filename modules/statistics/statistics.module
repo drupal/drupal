@@ -682,7 +682,7 @@ function statistics_display_online_block() {
 /* Display linked title based on field name */
 function statistics_title_list($dbfield, $dbrows) {
   /* valid dbfields: totalcount, daycount, timestamp */
-  return db_query_range("SELECT s.nid, n.title, u.uid, u.name FROM {statistics} s INNER JOIN {node} n ON s.nid = n.nid INNER JOIN {users} u ON n.uid = u.uid WHERE %s <> '0' AND n.status = 1 ORDER BY %s DESC", "s.". $dbfield, "s.". $dbfield, 0, $dbrows);
+  return db_query_range("SELECT s.nid, n.title, u.uid, u.name FROM {statistics} s INNER JOIN {node} n ON s.nid = n.nid LEFT JOIN {users} u ON n.uid = u.uid WHERE %s <> '0' AND n.status = 1 ORDER BY %s DESC", "s.". $dbfield, "s.". $dbfield, 0, $dbrows);
 }
 
 
