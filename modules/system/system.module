@@ -134,25 +134,25 @@ function system_view_general() {
   $output .= "<h3>". t("Character encoding settings") ."</h3>\n";
 
   // charset settings
-  $charsets = array("iso-8859-1",
-                    "iso-8859-2",
-                    "iso-8859-3",
-                    "iso-8859-4",
-                    "iso-8859-5",
-                    "iso-8859-6",
-                    "iso-8859-7",
-                    "iso-8859-8",
-                    "iso-8859-8-i",
-                    "iso-8859-9",
-                    "utf-8",
-                    "utf-16",
-                    "utf-16be",
-                    "euc-kr",
-                    "koi8-r",
-                    "ks_c_5601-1987",
-                    "tis-620",
-                    "iso-2022-kr",
-                    "us-ascii");
+  $charsets = array("iso-8859-1" => "iso-8859-1",
+                    "iso-8859-2" => "iso-8859-2",
+                    "iso-8859-3" => "iso-8859-3",
+                    "iso-8859-4" => "iso-8859-4",
+                    "iso-8859-5" => "iso-8859-5",
+                    "iso-8859-6" => "iso-8859-6",
+                    "iso-8859-7" => "iso-8859-7",
+                    "iso-8859-8" => "iso-8859-8",
+                    "iso-8859-8-i" => "iso-8859-8-i",
+                    "iso-8859-9" => "iso-8859-9",
+                    "utf-8" => "utf-8",
+                    "utf-16" => "utf-16",
+                    "utf-16be" => "utf-16be",
+                    "euc-kr" => "euc-kr",
+                    "koi8-r" => "koi8-r",
+                    "ks_c_5601-1987" => "ks_c_5601-1987",
+                    "tis-620" => "tis-620",
+                    "iso-2022-kr" => "iso-2022-kr",
+                    "us-ascii" => "us-ascii");
   $output .= form_select(t("Character set"), "site_charset", variable_get("site_charset", "iso-8859-1"), $charsets, t("Select the character set (charset) used across your site. This will affect the content-type tag in web pages and the XML declarations in RSS feeds, among other things. You probably only need to change this if you need support for languages with non-ASCII characters like Korean, Polish, etc."));
   return $output;
 }
