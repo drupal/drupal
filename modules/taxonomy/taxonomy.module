@@ -303,7 +303,7 @@ Synonyms<br />Enter synonyms for this term, one synonym per line. Synonyms can b
     while ($vocabulary = db_fetch_object($c)) {
       $result[] .= taxonomy_form($vocabulary->vid, $terms);
     }
-    return $result;
+    return $result ? $result : array();
   }
 
   // return 1 if node identified by $nid contains a taxonomy term identified by $tid in his body or title
