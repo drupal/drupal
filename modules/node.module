@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.297 2003/12/04 22:48:06 dries Exp $
+// $Id: node.module,v 1.298 2003/12/06 19:15:38 kjartan Exp $
 
 function node_help($section = "admin/help#node") {
   global $mod;
@@ -1103,7 +1103,7 @@ function node_form($edit, $error = NULL) {
   ** Validate the node:
   */
 
-  if (!$error) {
+  if ($error === NULL) {
     /* Only validate if we don't already know the errors. */
     $edit = node_validate($edit, $error);
   }
