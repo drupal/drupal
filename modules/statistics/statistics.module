@@ -757,7 +757,7 @@ function statistics_display_online_block() {
     }
 
     /* format the output with proper grammar */
-    $output .= t("There %verb currently %members and %visitors online.", array("%verb" => ($users == 1 ? "is" : "are"), "%members" => format_plural($users, "1 user", "%count users"), "%visitors" => format_plural($guests, "1 guest", "%count guests")));
+    $output .= t("There %verb currently %members and %visitors online.", array("%verb" => (($users == 1) && ($guests == 1) ? "is" : "are"), "%members" => format_plural($users, "1 user", "%count users"), "%visitors" => format_plural($guests, "1 guest", "%count guests")));
 
     if (user_access("access userlist") && $users) {
       /* Display a list of currently online users */
