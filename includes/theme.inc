@@ -73,9 +73,11 @@ function theme_blocks($region, $theme) {
 
   switch (strrchr($PHP_SELF, "/")) {
     case "/story.php":
-      if ($user->id) $story = db_fetch_object(db_query("SELECT * FROM stories WHERE id = '$id'"));
-      if ($story->status == 1) theme_moderation_results($theme, $story);
-      else theme_new_headlines($theme);
+      if ($region != "left") {
+        if ($user->id) $story = db_fetch_object(db_query("SELECT * FROM stories WHERE id = '$id'"));
+        if ($story->status == 1) theme_moderation_results($theme, $story);
+        else theme_new_headlines($theme);
+      }
       break;
     case "/index.php":
       if ($user->id) $result = db_query("SELECT * FROM blocks b LEFT JOIN layout l ON b.name = l.block WHERE (b.status = 2 OR (b.status = 1 AND l.user = '$user->id'))". (($region == "left" || $region == "right") ? ($region == "left" ? " AND b.region = 0" : " AND b.region = 1") : "") ." ORDER BY weight");
