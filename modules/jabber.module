@@ -1,9 +1,25 @@
 <?php
-// $Id: jabber.module,v 1.18 2003/06/04 18:24:28 dries Exp $
+// $Id: jabber.module,v 1.19 2003/10/07 18:16:41 dries Exp $
 
-function jabber_system($field){
-  $system["description"] = t("Enables login with Jabber ID and password.");
-  return $system[$field];
+function jabber_help($section) {
+  $output = "";
+
+  switch ($section) {
+    case 'admin/system/modules#description':
+      $output = t("Enables login with Jabber ID and password.");
+      break;
+
+    case 'user/help':
+      $site = variable_get("site_name", "this web site");
+
+      $output = "<p>%jabber is an %opensource instant messaging system designed to give the power of choice and freedom back to the users of instant messaging.  Not only does Jabber allow its users to use (and create) clients for numerous platforms, but it allows people to communicate to whomever they want in the way which is most convenient for them.</p>";
+      $output .= "<p>You may login to %site using a <b>Jabber ID</b>. The format of a Jabber ID is the same as an email address: <b>name</b>@<i>server</i> An example of valid Jabber ID is <b>mwlily</b>@<i>jabber.com</i>.  Note that you must be able to access port 111 on the Jabber server from your web server. For example, sourceforge.net blocks port 111 so Jabber authentication does not work.</p>";
+
+      $output = t($output, array("%jabber" => "a <href=\"http://www.jabber.org/\">Jabber</a>", "%opensource" => "<a href=\"http://www.opensouce.org\">". t("open source") ."</a>", "%site" => "<i>$site</i>"));
+      break;
+  }
+
+  return $output;
 }
 
 function jabber_info($field = 0) {
@@ -146,19 +162,9 @@ function jabber_auth($username, $password, $server) {
 
 function jabber_page() {
 
-
   theme("header");
-  theme("box", "Jabber", jabber_auth_help());
+  theme("box", "Jabber", jabber_help("user/help"));
   theme("footer");
-}
-
-function jabber_auth_help() {
-  $site = variable_get("site_name", "this web site");
-
-  $output = "<p><a href=\"http://www.jabber.org/\">Jabber</a> is an <a href=\"http://www.opensource.org\">open source</a> instant messaging system designed to give the power of choice and freedom back to the users of instant messaging.  Not only does Jabber allow its users to use (and create) clients for numerous platforms, but it allows people to communicate to whomever they want in the way which is most convenient for them.</p>";
-  $output .= "<p>You may login to %s using a <b>Jabber ID</b>. The format of a Jabber ID is the same as an email address: <b>name</b>@<i>server</i> An example of valid Jabber ID is <b>mwlily</b>@<i>jabber.com</i>.  Note that you must be able to access port 111 on the Jabber server from your web server. For example, sourceforge.net blocks port 111 so Jabber authentication does not work.</p>";
-
-  return t($output, array("%s" => "<i>$site</i>"));
 }
 
 function jabber_user($type, $edit, $user) {

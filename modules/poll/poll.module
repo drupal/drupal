@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.112 2003/10/06 12:21:34 dries Exp $
+// $Id: poll.module,v 1.113 2003/10/07 18:16:41 dries Exp $
 
 function poll_allowvotes(&$node) {
   /*
@@ -151,9 +151,9 @@ function poll_help($section = "admin/poll/help") {
       $output .= "<li>To administer polls you need the \"administer nodes\" permission.</li>";
       $output .= "</ul>";
       $output .= "<p>Creating a poll is much like creating any other node. Click \"create poll\" in your user box. The title of the poll should be the question, then enter the answers and the \"base\" vote counts. You can also choose the time period over which the vote will run.</p><p>The %poll item in the navigation links will take you to a page where you can see all the current polls, vote on them (if you haven't already) and view the results.</p>";
-      $output = t($output, array("%permissions" => l(t("permissions"), "admin/user/permission"), "%poll" => l(t("Poll"), "poll") ));
+      $output = t($output, array("%permissions" => l(t("permissions"), "admin/user/permission"), "%poll" => l(t("Poll"), "poll")));
       break;
-    case 'admin/system/modules':
+    case 'admin/system/modules#description':
       $output = t("Enables your site to capture votes on different topics in the form of multiple choice questions.");
       break;
   }
@@ -182,7 +182,7 @@ function poll_link($type, $node = 0, $main) {
 
   if ($type == "system") {
     if (user_access("create polls")) {
-      menu("node/add/poll",t("poll"), "poll_page", NULL, 0);
+      menu("node/add/poll", t("poll"), "poll_page", NULL, 0);
     }
   }
   else if ($type == "page" && user_access("access content")) {
@@ -260,14 +260,6 @@ function poll_page() {
 
 function poll_perm() {
   return array("create polls", "vote on polls");
-}
-
-function poll_system($field){
-  $output = "";
-
-  if ($field == "description") { $output = poll_help("admin/system/modules"); };
-
-  return $output;
 }
 
 function poll_teaser($node) {

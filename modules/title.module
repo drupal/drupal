@@ -1,18 +1,11 @@
 <?php
-// $Id: title.module,v 1.14 2003/10/03 14:55:27 dries Exp $
-
-function title_system($field){
-  $output = "";
-
-  if ($field == "description") {$output = title_help("admin/system/modules"); };
-  return $output;
-}
+// $Id: title.module,v 1.15 2003/10/07 18:16:41 dries Exp $
 
 function title_help($section) {
   $output = "";
 
   switch ($section) {
-    case 'admin/system/modules':
+    case 'admin/system/modules#description':
       $output = t("Enables users to link to stories, articles or similar content by title.");
       break;
   }
@@ -29,7 +22,7 @@ function title_page() {
 
     if (db_num_rows($result) == 0) {
       // No node with exact title found, try substring.
-      $result = db_query("SELECT n.*, u.name, u.uid FROM {node} n INNER JOIN {users} u ON n.uid = u.uid WHERE n.title LIKE '%". check_query($title). "%' AND n.status = 1 ORDER BY n.created DESC");
+      $result = db_query("SELECT n.*, u.name, u.uid FROM {node} n INNER JOIN {users} u ON n.uid = u.uid WHERE n.title LIKE '%". check_query($title) ."%' AND n.status = 1 ORDER BY n.created DESC");
     }
 
     if (db_num_rows($result) == 0 && module_exist("search")) {
@@ -70,7 +63,7 @@ function title_page() {
 
 // filter [node title|description] links. '|description' is optional.
 function title_filter($text) {
-  if(variable_get("title_filter_link", 0)) {
+  if (variable_get("title_filter_link", 0)) {
     $pattern = '\[([^\|\]]+)(?>\|?)(.*?)\]';  // $1 == title: matches at least 1 char up to the first '|' or ']'
                                            // $2 == text: matches all after a following '|' (if there is) up to the next ']'. may include '|'s.
     $replacement = 'l("$2" ? "$2" : "$1", "title/". urlencode("$1"))';

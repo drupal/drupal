@@ -1,5 +1,5 @@
 <?php
-// $Id: cloud.module,v 1.60 2003/10/04 07:45:47 dries Exp $
+// $Id: cloud.module,v 1.61 2003/10/07 18:16:40 dries Exp $
 
 function cloud_help($section = "admin/node/syndication/cloud/help") {
   $output = "";
@@ -10,32 +10,26 @@ function cloud_help($section = "admin/node/syndication/cloud/help") {
     case 'admin/node/syndication/cloud/help':
       $output .= "The cloud monitor tracks or crawls other interesting web sites and displays their last modification dates.  Visitors to the host site learn about relevant sites and can easily see if there is new content.  Here is how it works:";
       $output .= "<ul>";
-      $output .= strtr("<li>The site administrator enters names and URLs of the relevant pages on the %cloud-add page.</li>", array("%cloud-add" => l(t("content") ." &raquo; ". t("syndication") ." &raquo; ". t("site cloud") ." &raquo; ". t("add new site"), "admin/node/syndication/cloud/add") ));
+      $output .= "<li>The site administrator enters names and URLs of the relevant pages on the %cloud-add page.</li>";
       $output .= "<li>Drupal's cron function, triggers the cloud module to check all the registered web sites for recent changes or updates.  (A page is updated when there is an <i>x</i>-byte difference since the last time it checked, where <i>x</i> is a configuration option.)</li>";
       $output .= " <li>The module exports both a page and a block that display the registered sites ordered by their last modification date.</li>";
       $output .= "</ul>";
+      $output = t($output, array("%cloud-add" => l(t("content") ." &raquo; ". t("syndication") ." &raquo; ". t("site cloud") ." &raquo; ". t("add new site"), "admin/node/syndication/cloud/add")));
       break;
     case 'cloud':
-      $output .= "<p>The cloud monitor tracks or crawls other interesting web sites and displays their latest modification dates.  It acts as a link watcher such that you can keep an eye on the other sites in the cloud.</p>";
+      $output .= t("<p>The cloud monitor tracks or crawls other interesting web sites and displays their latest modification dates.  It acts as a link watcher such that you can keep an eye on the other sites in the cloud.</p>");
       break;
-    case 'admin/system/modules':
-      $output = "Tracks other sites and displays last date changed.";
+    case 'admin/system/modules#description':
+      $output = t("Tracks other sites and displays last date changed.");
       break;
     case 'admin/node/syndication/cloud':
-      $output = strtr("The cloud monitor tracks or crawls other interesting web sites and displays their last modification dates. Visitors to this site learn about other relevant sites and can easily see if there is new content. To get this working you <b>must</b> setup cron support. To get the site cloud block to display you must turn on the <i>site cloud</i> block in %block. To go to a monitored site, click on the site name, to immediately load and/or update the record for a site, click on \"update site\", to delete a site go to \"edit site\". ", array("%block" => l(t("administer") ." &raquo; ". t("configuration") ." &raquo; ". t("blocks"), "admin/block") ));
+      $output = t("The cloud monitor tracks or crawls other interesting web sites and displays their last modification dates. Visitors to this site learn about other relevant sites and can easily see if there is new content. To get this working you <b>must</b> setup cron support. To get the site cloud block to display you must turn on the <i>site cloud</i> block in %block. To go to a monitored site, click on the site name, to immediately load and/or update the record for a site, click on \"update site\", to delete a site go to \"edit site\". ", array("%block" => l(t("administer") ." &raquo; ". t("configuration") ." &raquo; ". t("blocks"), "admin/block")));
       break;
     case 'admin/node/syndication/cloud/add':
-      $output = "Add a site to the site cloud. Don't forget the \"http://\" for your URLs.";
+      $output = t("Add a site to the site cloud. Don't forget the \"http://\" for your URLs.");
       break;
   }
 
-  return t($output);
-}
-
-function cloud_system($field){
-  $output = "";
-
-  if ($field == "description") {$output = cloud_help("admin/system/modules");};
   return $output;
 }
 

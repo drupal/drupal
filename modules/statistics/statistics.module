@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.103 2003/10/04 16:44:54 dries Exp $
+// $Id: statistics.module,v 1.104 2003/10/07 18:16:41 dries Exp $
 
 function statistics_init() {
   global $recent_activity;
@@ -65,17 +65,6 @@ function statistics_exit() {
   }
 }
 
-/* System hook, sets description of module in admin page */
-function statistics_system($field) {
-  $output .= "";
-
-  if ($field == "description") {$output = statistics_help("admin/system/modules"); }
-  else if ($field == "admin_help") {$output = statistics_help("admin/system/modules/statistics"); };
-
-  return $output;
-}
-
-
 /* Permissions hook, defines module's permissions */
 function statistics_perm() {
   /*
@@ -118,10 +107,10 @@ function statistics_link($type, $node = 0, $main = 0) {
     if ((user_access("administer statistics module") || (user_access("administer statistics")))) {
 
       menu("admin/statistics", t("statistics"), "statistics_admin", statistics_help("admin/statistics"), 6);
-      menu("admin/statistics/referrers", t("referrer log"), "statistics_admin", statistics_help("admin/statistics/referrers") );
-      menu("admin/statistics/referrers/internal", t("internal referrers only"), "statistics_admin", statistics_help("admin/statistics/referrers/internal") );
-      menu("admin/statistics/referrers/external", t("external referrers only"), "statistics_admin", statistics_help("admin/statistics/referrers/external") );
-      menu("admin/statistics/log", t("access log"), "statistics_admin", statistics_help("admin/statistics/log") );
+      menu("admin/statistics/referrers", t("referrer log"), "statistics_admin", statistics_help("admin/statistics/referrers"));
+      menu("admin/statistics/referrers/internal", t("internal referrers only"), "statistics_admin", statistics_help("admin/statistics/referrers/internal"));
+      menu("admin/statistics/referrers/external", t("external referrers only"), "statistics_admin", statistics_help("admin/statistics/referrers/external"));
+      menu("admin/statistics/log", t("access log"), "statistics_admin", statistics_help("admin/statistics/log"));
       menu("admin/statistics/log/node", t("track node"), "statistics_admin", statistics_help("admin/statistics/log/node"), 0, 1); //hidden
       menu("admin/statistics/log/user", t("track user"), "statistics_admin", statistics_help("admin/statistics/log/user"), 0, 1); //hidden
       menu("admin/statistics/log/host", t("track host"), "statistics_admin", statistics_help("admin/statistics/log/host"), 0, 1); //hidden
@@ -213,13 +202,13 @@ function statistics_help($section = "admin/statistics/help") {
          // throttle limit not reached, execute normally
        }</pre></p>";
       $output .= "<p>Note: Even though the configuration for the throttle is handled by the 'throttle.module', the throttle logic itself is part of the 'statistics.module'.  The configuration has been separated in order to make things easier for the average site that will not be utilizing the throttling mechanism.  More information about how the throttle works can be found on the throttle.module help page.  (Find the throttle help page %here-help if you have enabled the throttle.module).</p>";
-      $output = t($output, array("%throttle" => l(t("throttle.module"), "admin/system/modules"), "%modules" => l(t("enabled"), "admin/system/modules"), "%permissions" => l(t("permissions section"), "admin/user/permission"), "%referers" => l(t("referrers log"), "admin.statistics/referrers"), "%access" => l(t("access log"), "admin.statistics/log"), "%configuration" => l(t("site configuration"), "admin/system/modules/statistics"), "%here-block" => l(t("here"), "admin/system/block"), "%here-help" => l(t("here"), "admin/help#throttle") ));
+      $output = t($output, array("%throttle" => l(t("throttle.module"), "admin/system/modules"), "%modules" => l(t("enabled"), "admin/system/modules"), "%permissions" => l(t("permissions section"), "admin/user/permission"), "%referers" => l(t("referrers log"), "admin.statistics/referrers"), "%access" => l(t("access log"), "admin.statistics/log"), "%configuration" => l(t("site configuration"), "admin/system/modules/statistics"), "%here-block" => l(t("here"), "admin/system/block"), "%here-help" => l(t("here"), "admin/help#throttle")));
       break;
-    case 'admin/system/modules':
+    case 'admin/system/modules#description':
       $output = t("Logs access statistics for your site.");
       break;
     case 'admin/system/modules/statistics':
-      $output = t("Settings for the statistical information that Drupal will keep about the site. See %statistics for the actual information.", array("%statistics" => l(t("site statistics"),"admin/statistics") ));
+      $output = t("Settings for the statistical information that Drupal will keep about the site. See %statistics for the actual information.", array("%statistics" => l(t("site statistics"), "admin/statistics")));
       break;
     case 'admin/statistics':
       $output = t("This page gives you an at-a-glance look at your top nodes.  It is useful for understanding what content on your site is the most popular.");
@@ -773,7 +762,7 @@ function statistics_block($op = "list", $delta = 0) {
     return $blocks;
   }
   else if (user_access("access content")) {
-    switch($delta) {
+    switch ($delta) {
       case 0:
         $block["subject"] = variable_get("statistics_block_top_title", t("Popular content"));
         $block["content"] = statistics_display_topnodes_block();
