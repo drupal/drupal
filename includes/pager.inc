@@ -106,7 +106,7 @@ function pager_first($text, $limit, $element = 0, $attributes = array()) {
   global $pager_from_array;
 
   if ($pager_from_array[$element]) {
-    return "<a href=\"". pager_link(pager_load_array(0, $element, $pager_from_array), $attributes) ."\">$text</a>";
+    return "<a href=\"". pager_link(pager_load_array(0, $element, $pager_from_array), $element, $attributes) ."\">$text</a>";
   }
   else {
     // we are already at the first page, return nothing
@@ -132,7 +132,7 @@ function pager_previous($text, $limit, $element = 0, $n = 1, $attributes = array
   if ($from_new[$element] < 1) {
     return pager_first($text, $limit, $element, $attributes);
   }
-  return "<a href=\"". pager_link($from_new, $attributes) ."\">$text</a>";
+  return "<a href=\"". pager_link($from_new, $element, $attributes) ."\">$text</a>";
 }
 
 /**
@@ -151,7 +151,7 @@ function pager_next($text, $limit, $element = 0, $n = 1, $attributes = array()) 
   global $pager_from_array, $pager_total;
   $from_new = pager_load_array(((int)$pager_from_array[$element] + ((int)$limit * (int)$n)), $element, $pager_from_array);
   if ($from_new[$element] < $pager_total[$element]) {
-    return "<a href=\"". pager_link($from_new, $attributes) ."\">$text</a>";
+    return "<a href=\"". pager_link($from_new, $element, $attributes) ."\">$text</a>";
   }
   return " ";
 }
@@ -175,7 +175,7 @@ function pager_last($text, $limit, $element = 0, $attributes = array()) {
     return pager_next($text, $limit, $element, 1, $attributes);
   }
   if (($from_new[$element] > $pager_from_array[$element]) && ($from_new[$element] > 0) && $from_new[$element] < $pager_total[$element]) {
-    return "<a href=\"". pager_link($from_new, $attributes) ."\">$text</a>";
+    return "<a href=\"". pager_link($from_new, $element, $attributes) ."\">$text</a>";
   }
   return " ";
 }
@@ -281,18 +281,20 @@ function pager_list($limit, $element = 0, $quantity = 5, $text = "", $attributes
 }
 /* @} End of member group pager pieces */
 
-function pager_link($from_new, $attributes = array()) {
+function pager_link($from_new, $element, $attributes = array()) {
   $q = $_GET["q"];
+  $from = $_GET["from"];
 
   foreach($attributes as $key => $value) {
     $query[] = "$key=$value";
   }
 
+  $from_new = pager_load_array($from_new[$element], $element, explode("," ,$from));
   if (count($attributes)) {
-    $url = url($q, "from=". $from_new[0] ."&amp;". implode("&amp;", $query));
+    $url = url($q, "from=". implode($from_new, ",") ."&amp;". implode("&amp;", $query));
   }
   else {
-    $url = url($q, "from=". $from_new[0]);
+    $url = url($q, "from=". implode($from_new, ","));
   }
 
   return $url;
