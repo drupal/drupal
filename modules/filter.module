@@ -295,19 +295,19 @@ function filter_tips_long() {
       $tiplist .= "<li id=\"filter-$name\">$tip</li>\n";
     }
   }
-  $output = "<ul class=\"compose-tips\">\n$tiplist\n</ul>\n";
+  $output = "<ul class=\"filter-tips-long\">\n$tiplist\n</ul>\n";
   print theme("page", $output, t('Compose Tips'));
 }
 
 function filter_tips_short() {
-  $output = '';
+  $tiplist = '';
   foreach (module_list() as $name) {
     if ($tip = module_invoke($name, 'help', 'filter#short-tip')) {
-      $output .= "$tip<br />";
+      $tiplist .= "<li>$tip</li>\n";
     }
   }
-  $output .= l(t('More information on formatting options'), 'filter/tips');
-  return $output;
+  $tiplist .= '<li class="more-tips">' . l(t('More information on formatting options'), 'filter/tips') . '</li>';
+  return "<ul class=\"filter-tips-short\">\n$tiplist\n</ul>\n";
 }
 
 ?>
