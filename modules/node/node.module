@@ -922,7 +922,7 @@ function node_admin_nodes() {
   $output .= '</div>';
 
   // Overview table:
-  $header = array(NULL, t('Title'), t('Type'), t('Author'), t('Status'), array('data' => t('Operations'), 'colspan' => '2'));
+  $header = array(NULL, t('Title'), t('Type'), t('Author'), t('Status'), t('Operations'));
 
   $destination = drupal_get_destination();
   while ($node = db_fetch_object($result)) {
