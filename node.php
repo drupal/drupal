@@ -5,9 +5,9 @@ include_once "includes/common.inc";
 page_header();
 
 function node_render($node) {
-  global $user, $id, $cid, $op, $moderate, $pid, $edit, $theme, $mode, $order, $threshold, $PHP_SELF;
+  global $id, $cid, $op, $moderate, $pid, $edit, $theme, $mode, $order, $threshold, $PHP_SELF;
 
-  if (user_access($user, "view content")) {
+  if (user_access("access content")) {
 
     if ($node->comment) {
       switch($op) {

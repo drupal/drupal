@@ -236,20 +236,11 @@ function node_index($node) {
 
 function node_visible($node) {
   global $user, $status;
-  return ($node->status == $status[posted]) || ($node->status == $status[queued] && $user->id) || user_access($user, $node->type) || user_access($user, "add and edit nodes");
+  return ($node->status == $status[posted]) || ($node->status == $status[queued] && $user->id) || user_access("administer nodes");
 }
 
 function node_access($account, $node) {
   return strstr($node->moderate, $account->userid);
-}
-
-function node_links(&$links, &$node, $main = 0) {
-  if ($main) {
-    if ($node->body) $_links[] = array("node.php?id=$node->nid", t("read more"));
-    if ($node->comment) $_links[] = array("node.php?id=$node->nid", format_plural(node_get_comments($node->nid), "comment", "comments"));
-  }
-  $links = ($links ? array_merge($_links, $links) : $_links);
-  return count($links) ? $links : 0;
 }
 
 ?>

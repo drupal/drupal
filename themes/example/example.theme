@@ -30,7 +30,7 @@
               <TD ALIGN="right" COLSPAN="2">
 
 <?php
-               print theme_link();
+               print $this->links(link_page());
 ?>
 
               </TD>
@@ -50,7 +50,7 @@
 
     } // close header function
 
-    function node($node, $main = 0, $links = 0) {
+    function node($node, $main = 0) {
 ?>
 
               <TABLE BORDER="1" CELLSPACING="0" CELLPADDING="3" WIDTH="100%">
@@ -83,7 +83,7 @@
                  <TR>
                    <TD COLSPAN="2">
 <?php
-                      if (node_links($links, $node, $main)) echo $this->links($links, $main);
+                      if ($main) echo $this->links(link_node($node));
 ?>
 
                    </TD>
@@ -178,7 +178,7 @@
           </TR>
           <TR>
             <TD ALIGN="center" COLSPAN="3">
-              <P><?php print theme_link(" | "); ?></P>
+              <P><?php print $this->links(link_page()); ?></P>
               <P><SMALL><?php print variable_get(site_footer, ""); ?></SMALL></P>
             </TD>
           </TR>

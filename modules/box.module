@@ -30,7 +30,15 @@ function box_help() {
 }
 
 function box_perm() {
-  return array("add and edit boxes");
+  return array("administer boxes");
+}
+
+function box_link($type) {
+  if ($type == "admin" && user_access("administer boxes")) {
+    $links[] = "<a href=\"admin.php?mod=box\">boxes</a>";
+  }
+
+  return $links ? $links : array();
 }
 
 function box_block() {
@@ -142,9 +150,9 @@ function box_admin_save($id, $subject, $content, $info, $link, $type) {
 }
 
 function box_admin() {
-  global $user, $op, $id, $subject, $content, $info, $link, $type;
+  global $op, $id, $subject, $content, $info, $link, $type;
 
-  if (user_access($user, "add and edit boxes")) {
+  if (user_access("administer boxes")) {
 
     print "<SMALL><A HREF=\"admin.php?mod=box&op=add\">add new box</A> | <A HREF=\"admin.php?mod=box\">overview</A> | <A HREF=\"admin.php?mod=box&op=help\">help</A></SMALL><HR>\n";
 

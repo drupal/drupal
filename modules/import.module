@@ -12,7 +12,15 @@ function import_help() {
 }
 
 function import_perm() {
-  return array("add and edit news feeds");
+  return array("administer news feeds");
+}
+
+function import_link($type) {
+  if ($type == "admin") {
+    $links[] = "<a href=\"admin.php?mod=import\">news feeds</a>";
+  }
+
+  return $links ? $links : array();
 }
 
 function import_cron() {
@@ -241,9 +249,9 @@ function import_view_item() {
 }
 
 function import_admin() {
-  global $user, $op, $id, $type, $edit;
+  global $op, $id, $type, $edit;
 
-  if (user_access($user, "add and edit news feeds")) {
+  if (user_access("administer news feeds")) {
 
     print "<SMALL><A HREF=\"admin.php?mod=import&type=bundle&op=add\">add new bundle</A> | <A HREF=\"admin.php?mod=import&type=feed&op=add\">add new feed</A> | <A HREF=\"admin.php?mod=import&type=bundle&op=view\">available bundles</A> | <A HREF=\"admin.php?mod=import&type=item&op=view\">available items</A> | <A HREF=\"admin.php?mod=import&op=view\">overview</A> | <A HREF=\"admin.php?mod=import&op=help\">help</A></SMALL><HR>";
 

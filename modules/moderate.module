@@ -4,6 +4,14 @@ function moderate_perm() {
   return array("access moderation pages");
 }
 
+function moderate_link($type) {
+  if ($type == "admin") {
+    $links[] = "<a href=\"admin.php?mod=moderate\">moderate content</a>";
+  }
+
+  return $links ? $links : array();
+}
+
 function moderate_comment_access($cid) {
   global $user;
   return db_fetch_object(db_query("SELECT n.moderate FROM comments c LEFT JOIN node n ON c.lid = n.nid WHERE c.cid = '". check_input($cid) ."' AND n.moderate LIKE '%$user->userid%'"));
@@ -72,9 +80,9 @@ function moderate_comment_save($id, $edit) {
 }
 
 function moderate_admin() {
-  global $user, $op, $id, $edit, $type;
+  global $op, $id, $edit, $type;
 
-  if (user_access($user, "access moderation pages")) {
+  if (user_access("access moderation pages")) {
 
     switch ($type) {
       case "comment":

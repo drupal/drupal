@@ -87,7 +87,7 @@ function comment_reply($pid, $id) {
     $pid = 0;
   }
 
-  if (user_access($user, "post comments")) {
+  if (user_access("post comments")) {
     $theme->box(t("Reply"), comment_form(array(pid=>$pid, id=>$id)));
   }
   else {
@@ -107,7 +107,7 @@ function comment_preview($edit) {
 function comment_post($edit) {
   global $theme, $user;
 
-  if (user_access($user, "post comments")) {
+  if (user_access("post comments")) {
     // check comment submission rate:
     throttle("post comment", variable_get(max_comment_rate, 60));
 
@@ -213,7 +213,7 @@ function comment_uri($args = 0) {
   else return ($mod) ? "module.php?mod=$mod" : "node.php";
 }
 
-function comment_link($comment, $return = 1) {
+function comment_links($comment, $return = 1) {
   global $theme;
   if ($return) return "<A HREF=\"". comment_uri("id=$comment->lid#$comment->cid") ."\"><FONT COLOR=\"$theme->type\">". t("return") ."</FONT></A> | <A HREF=\"". comment_uri("op=reply&id=$comment->lid&pid=$comment->cid") ."\"><FONT COLOR=\"$theme->type\">". t("reply to this comment") ."</FONT></A>";
   else return "<A HREF=\"". comment_uri("op=reply&id=$comment->lid&pid=$comment->cid") ."\"><FONT COLOR=\"$theme->type\">". t("reply to this comment") ."</FONT></A>";
@@ -250,7 +250,7 @@ function comment_thread_max($cid, $mode, $threshold, $level = 0, $dummy = 0) {
 
   while ($comment = db_fetch_object($result)) {
   print "<UL>";
-    comment_view($comment, (comment_visible($comment, $threshold) ? comment_link($comment, 0) : 0));
+    comment_view($comment, (comment_visible($comment, $threshold) ? comment_links($comment, 0) : 0));
     comment_thread_max($comment->cid, $mode, $threshold, $level + 1, $dummy + 1);
   print "</UL>";
   }
@@ -259,7 +259,7 @@ function comment_thread_max($cid, $mode, $threshold, $level = 0, $dummy = 0) {
 function comment_render($lid, $cid) {
   global $user, $theme, $REQUEST_URI;
 
-  if (user_access($user, "view comments")) {
+  if (user_access("access comments")) {
 
     // Pre-process variables:
     $lid = empty($lid) ? 0 : $lid;
@@ -279,7 +279,7 @@ function comment_render($lid, $cid) {
     if ($cid > 0) {
       $result = db_query("SELECT c.*, u.* FROM comments c LEFT JOIN users u ON c.author = u.id WHERE cid = '$cid'");
       if ($comment = db_fetch_object($result)) {
-        comment_view($comment, comment_link($comment));
+        comment_view($comment, comment_links($comment));
       }
     }
     else {
@@ -297,7 +297,7 @@ function comment_render($lid, $cid) {
       else if ($mode == 2) {
         $result = comment_query($lid, $order);
         while ($comment = db_fetch_object($result)) {
-          comment_view($comment, (comment_visible($comment, $threshold) ? comment_link($comment, 0) : 0));
+          comment_view($comment, (comment_visible($comment, $threshold) ? comment_links($comment, 0) : 0));
         }
       }
       else if ($mode == 3) {
@@ -310,7 +310,7 @@ function comment_render($lid, $cid) {
       else {
         $result = comment_query($lid, $order, 0);
         while ($comment = db_fetch_object($result)) {
-          comment_view($comment, (comment_visible($comment, $threshold) ? comment_link($comment, 0) : 0));
+          comment_view($comment, (comment_visible($comment, $threshold) ? comment_links($comment, 0) : 0));
           comment_thread_max($comment->cid, $mode, $threshold, $level + 1);
         }
       }

@@ -10,7 +10,15 @@ function block_help() {
 }
 
 function block_perm() {
-  return array("add and edit blocks");
+  return array("administer blocks");
+}
+
+function block_link($type) {
+  if ($type == "admin" && user_access("adminsiter blocks")) {
+    $links[] = "<a href=\"admin.php?mod=block\">blocks</a>";
+  }
+
+  return $links ? $links : array();
 }
 
 function block_admin_save($edit) {
@@ -114,9 +122,9 @@ function block_init() {
 }
 
 function block_admin() {
-  global $user, $op, $edit;
+  global $op, $edit;
 
-  if (user_access($user, "add and edit blocks")) {
+  if (user_access("administer blocks")) {
 
     print "<SMALL><A HREF=\"admin.php?mod=block\">configure</A> | <A HREF=\"admin.php?mod=block&op=preview\">preview</A> | <A HREF=\"admin.php?mod=block&op=help\">help</A></SMALL><HR>\n";
 

@@ -112,7 +112,7 @@
     } // close header function
 
 
-    function node($node, $main = 0, $links = 0) {
+    function node($node, $main = 0) {
 
       switch ($node->tid) {
         case 0: $color = "#c4a2a2"; $img = "square2.gif"; break;
@@ -145,8 +145,8 @@
                   <tr>
                     <td align=\"right\">
                       <font color=\"". $color ."\">";
-                      if (node_links($links, $node, $main))
-                        echo $this->links($links, $main);
+                      if ($main)
+                        echo $this->links(node_link($node));
                       echo"</font>";
 
 ?>

@@ -84,7 +84,7 @@
 
     } // close header function
 
-    function node($node, $main = 0, $links = 0) {
+    function node($node, $main = 0) {
 
 ?>
 
@@ -138,8 +138,8 @@
                               <tr>
                                 <td colspan="2" align="right">
 <?php
-                                  if (node_links($links, $node, $main))
-                                    echo $this->links($links, $main);
+                                  if ($main)
+                                    echo $this->links(node_link($node));
 ?>
 
                                 </td>
@@ -310,7 +310,7 @@
                   <tr>
                     <td align="left" width="20" height="20" background="themes/jeroen/images/footerleft.gif" nowrap>&nbsp;</td>
                     <td width="100%" background="themes/jeroen/images/footer.gif" align="center" valign="middle">
-                      <FONT COLOR="#E09226" SIZE="2">[ <?php print theme_link(); ?> ] </FONT>
+                      <FONT COLOR="#E09226" SIZE="2">[ <?php print $this->links(link_page()); ?> ] </FONT>
                     </td>
                     <td align="right" width="20" background="themes/jeroen/images/footerright.gif" nowrap>&nbsp;</td>
                   </tr>

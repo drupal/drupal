@@ -63,7 +63,7 @@
        </TR>
        <TR>
         <TD COLSPAN="2" ALIGN="CENTER">
-         <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0" BGCOLOR="<?php echo $this->brcolor1; ?>"><TR><TD ALIGN="CENTER"><TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="4"><TR><TD ALIGN="CENTER" BGCOLOR="<?php echo $this->bgcolor2; ?>"><BIG><?php print theme_link(); ?></BIG></TD></TR></TABLE></TD></TR></TABLE>
+         <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0" BGCOLOR="<?php echo $this->brcolor1; ?>"><TR><TD ALIGN="CENTER"><TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="4"><TR><TD ALIGN="CENTER" BGCOLOR="<?php echo $this->bgcolor2; ?>"><BIG><?php print $this->links(link_page()); ?></BIG></TD></TR></TABLE></TD></TR></TABLE>
         </TD>
        </TR>
        <TR><TD COLSPAN="2"><?php
@@ -79,7 +79,7 @@
     <?php
    }
 
-   function node($node, $main = 0, $links = 0) {
+   function node($node, $main = 0) {
 
         print "\n<!-- node: \"$node->title\" -->\n";
         ?>
@@ -101,8 +101,8 @@
           </TD>
          </TR>
          <?php
-           if (node_links($links, $node, $main))
-             echo "<TR BGCOLOR=\"". $this->bgcolor3 ."\"><TD BGCOLOR=\"". $this->bgcolor3 ."\" ALIGN=\"right\" COLSPAN=\"2\">[ ". $this->links($links, $main) ." ]</TD></TR>";
+           if ($main)
+             echo "<TR BGCOLOR=\"". $this->bgcolor3 ."\"><TD BGCOLOR=\"". $this->bgcolor3 ."\" ALIGN=\"right\" COLSPAN=\"2\">[ ". $this->links(link_node($node)) ." ]</TD></TR>";
          ?>
        </TABLE></TD></TR></TABLE><BR>
       <?php
@@ -202,7 +202,7 @@
        ?></TD></TR>
       <TR>
        <TD COLSPAN="2">
-        <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0" BGCOLOR="<?php echo $this->brcolor1; ?>"><TR><TD ALIGN="CENTER"><TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="4"><TR><TD ALIGN="CENTER" BGCOLOR="<?php echo $this->bgcolor2; ?>"><BIG><?php print theme_link(); ?></BIG></TD></TR></TABLE></TD></TR></TABLE>
+        <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0" BGCOLOR="<?php echo $this->brcolor1; ?>"><TR><TD ALIGN="CENTER"><TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="4"><TR><TD ALIGN="CENTER" BGCOLOR="<?php echo $this->bgcolor2; ?>"><BIG><?php print $this->links(link_page()); ?></BIG></TD></TR></TABLE></TD></TR></TABLE>
        </TD>
       </TR>
      </TABLE>
