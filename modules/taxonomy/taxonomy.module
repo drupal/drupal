@@ -206,8 +206,10 @@ function taxonomy_save_term($edit) {
   // synonyms (very cool idea indeed)
   db_query("DELETE FROM term_synonym WHERE tid = '%d'", $edit["tid"]);
   if ($edit["synonyms"]) {
-    foreach (explode ("\n", $edit["synonyms"]) as $synonym) {
-      db_query("INSERT INTO term_synonym (tid, name) VALUES ('%d', '%s')", $edit["tid"], chop($synonym));
+    foreach (explode ("\n", str_replace("\r", "", $edit["synonyms"])) as $synonym) {
+      if ($synonym) {
+        db_query("INSERT INTO term_synonym (tid, name) VALUES ('%d', '%s')", $edit["tid"], chop($synonym));
+      }
     }
   }
 
