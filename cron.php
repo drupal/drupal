@@ -1,5 +1,5 @@
 <?php
-// $Id: cron.php,v 1.19 2003/12/29 11:25:02 dries Exp $
+// $Id: cron.php,v 1.20 2004/01/02 16:28:45 dries Exp $
 
 include_once "includes/bootstrap.inc";
 include_once "includes/common.inc";
@@ -18,5 +18,5 @@ if (!ini_get("safe_mode")) {
 
 module_invoke_all("cron");
 
-watchdog("message", "cron run completed");
+watchdog("regular", "cron run completed");
 ?>

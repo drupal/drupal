@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.68 2003/12/22 21:34:55 dries Exp $
+// $Id: drupal.module,v 1.69 2004/01/02 16:28:45 dries Exp $
 
 function drupal_help($section = "admin/help#drupal") {
 
@@ -80,7 +80,7 @@ function drupal_directory_ping($arguments) {
     db_query("DELETE FROM {directory} WHERE link = '%s' OR mail = '%s'", $link, $mail);
     db_query("INSERT INTO {directory} (link, name, mail, slogan, mission, timestamp) VALUES ('%s', '%s', '%s', '%s', '%s', %d)", $link, $name, $mail, $slogan, $mission, time());
 
-    watchdog("message", "directory: ping from '$name' ($link)");
+    watchdog("regular", "directory: ping from '$name' ($link)");
 
     return new xmlrpcresp(new xmlrpcval(1, "int"));
   }
