@@ -115,16 +115,14 @@ function theme_init() {
 function theme_blocks($region, &$theme) {
   global $id, $PHP_SELF, $user;
 
-  if ($user->uid) {
-    $result = db_query("SELECT * FROM blocks b LEFT JOIN layout l ON b.name = l.block WHERE (b.status = 2 OR (b.status = 1 AND l.uid = '$user->uid'))". (($region == "left" OR $region == "right") ? ($region == "left" ? " AND b.region = 0" : " AND b.region = 1") : "") ." AND (b.path = '' OR '". strrchr(request_uri(), "/") ."' RLIKE b.path) ORDER BY weight");
-  }
-  else {
-    $result = db_query("SELECT * FROM blocks WHERE status = 2". (($region == "left" OR $region == "right") ? ($region == "left" ? " AND region = 0" : " AND region = 1") : "") ." ORDER BY weight");
-  }
+  $result = db_query("SELECT * FROM blocks WHERE (status = '1' OR custom = '1') ". ($region != "all" ? "AND region = '%s' " : "") ."ORDER BY weight, name", $region == "left" ? 0 : 1);
+  
   while ($result && ($block = db_fetch_object($result))) {
-    $blocks = module_invoke($block->module, "block");
-    if ($blocks[$block->delta]["content"]) {
-      $theme->box(t($blocks[$block->delta]["subject"]), $blocks[$block->delta]["content"], $region);
+    if (($block->status && (!$user->uid || !$block->custom)) || ($block->custom && $user->block[$block->name])) {
+      $blocks = module_invoke($block->module, "block");
+      if ($blocks[$block->delta]["content"]) {
+        $theme->box(t($blocks[$block->delta]["subject"]), $blocks[$block->delta]["content"], $region);
+      }
     }
   }
 }

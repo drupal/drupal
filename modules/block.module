@@ -9,6 +9,32 @@ function block_help() {
   <p>As mentioned, blocks may be arranged to fit in two regions: left and right.  For theme builders, each region is identified by a corresponding constant: "left" and "right".</p>
   <p>The path setting lets you define which pages you want the specific blocks to be shown. If you leave the path blank it will show on all pages. The path uses a regular expression syntax so remember to escape special characters!<br />Examples:
   <ul><li>Only show on node pages: ^/node\.php</li><li>Only show on the user page: ^/module\.php\?mod=user</li><li>Show in main page and blog page: ^/(index\.php|module\.php\?mod=blog)</li></ul>
+  <hr />
+  <p>The content of the site can be almost entirely altered through <I>boxes</I>.  Simply put, boxes are small bits of text, HTML or PHP code which will get plugged into the site just like any other block.  Boxes are typically used to add custom blocks to the site.</p>
+  <p>Each box consists of a title and an associated block of text, HTML or PHP code that can be as long as you wish and that will 'render' the content of the box.</p>
+  <h3>PHP boxes</h3>
+  <p>If you know how to script in PHP, PHP boxes are easy to create.  Don't worry if you're no PHP-wizard: simply use ASCII or HTML boxes instead.</p>
+  <p>You can use any piece of PHP code to make up the content of a PHP box: this implies that you can declare and use functions, consult the SQL database, access configuration settings and much more.  A PHP box's code is stored in the database and the engine will dynamically embed the PHP code just-in-time for execution.</p>
+  <p>There are however some factors to keep in mind when using and creating PHP boxes: PHP boxes can be extremely useful and flexible, yet they can be dangerous and insecure if not properly used.  If you are not familiar with PHP, SQL or with the site engine, avoid experimenting with PHP boxes because you can - and probably will - corrupt your database or render your site unusable!  If you don't plan to do fancy stuff with boxes then you're probably better off with ASCII or HTML boxes.</p>
+  <p>Remember that the code within each PHP box must be valid PHP code -- including things like correctly terminating statements with a semicolon so that the parser won't die.  It is highly recommended that you develop your boxes separately using a simple test script on top of a test database before migrating to your production environment.</p>
+  <p>Note that you can use global variables such as configuration parameters within the scope of a PHP box. Also keep in mind that variables which have been given values in a PHP box will retain these values in the engine or module afterwards.</p>
+  <p>You can use the <code>return</code> statement to return the actual content for your block as well.</p>
+  <p><u>A basic example:</u></p>
+  <p>Given the box with title "Welcome", used to create a "<i>Welcome</i>" box.  The content for this box could be created by using:</p>
+  <pre>
+   return "Welcome visitor, ... welcome message goes here ...";
+  </pre>
+  <p>If we are however dealing with a registered user, we can customize the message by using:</p>
+  <pre>
+   if ($user->uid) {
+     return "Welcome $user->name, ... welcome message goes here ...";
+   }
+   else {
+     return "Welcome visitor, ... welcome message goes here ...";
+   }
+  </pre>
+  <p>For more in-depth examples, we recommend that you check the existing boxes and use them as a starting point.</p>
+
  <?php
 }
 
@@ -24,9 +50,19 @@ function block_link($type) {
   return $links ? $links : array();
 }
 
+function block_block() {
+  $result = db_query("SELECT * FROM boxes ORDER BY title");
+  while ($block = db_fetch_object($result)) {
+    $blocks[$block->bid]["subject"] = check_output($block->title);
+    $blocks[$block->bid]["content"] = ($block->type == 2) ? eval($block->body) : $block->body;
+    $blocks[$block->bid]["info"] = check_output($block->info);
+  }
+  return $blocks;
+}
+
 function block_admin_save($edit) {
   foreach ($edit as $key=>$value) {
-    db_query("UPDATE blocks SET region = '%s', status = '%s', path = '%s', weight = '%s' WHERE name = '%s'", $value["region"], $value["status"], $value["path"], $value["weight"], $key);
+    db_query("UPDATE blocks SET region = '%s', status = '%d', custom = '%d', path = '%s', weight = '%d' WHERE name = '%s'", $value["region"], $value["status"], $value["custom"], $value["path"], $value["weight"], $key);
   }
 }
 
@@ -34,40 +70,34 @@ function block_admin_display() {
   $result = db_query("SELECT * FROM blocks ORDER BY module");
 
   // Generate output:
-  $output .= "<form action=\"". drupal_url(array("mod" => "block"), "admin") ."\" method=\"post\">\n";
-  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  $output .= " <tr><th>block</th><th>module</th><th>status</th><th>weight</th><th>region</th><th>path</th></tr>\n";
+  $output = "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
+  $output .= "<tr><th>block</th><th>module</th><th>status</th><th>custom</th><th>weight</th><th>region</th><th>path</th></tr>\n";
 
   while ($block = db_fetch_object($result)) {
-    $module = module_hook($block->module, "admin") ? la($block->module, array("mod" => $block->module)) : $block->module;
-
-    $status = "<select name=\"edit[$block->name][status]\">\n";
-    $status .= " <option value=\"2\"". (($block->status == 2) ? " selected" : "") .">enabled: always</option>\n";
-    $status .= " <option value=\"1\"". (($block->status == 1) ? " selected" : "") .">enabled: custom</option>\n";
-    $status .= " <option value=\"0\"". (($block->status == 0) ? " selected" : "") .">disabled</option>\n";
-    $status .= "</select>\n";
-
-    $weight = "<select name=\"edit[$block->name][weight]\">\n";
     for ($count = 0; $count < 10; $count++) {
-      $weight .= "<option value=\"$count\"". (($block->weight == $count) ? " selected" : "") .">$count</option>\n";
+      $weights[$count] = $count;
     }
-    $weight .= "</select>\n";
 
-    $region = "<select name=\"edit[$block->name][region]\">\n";
-    $region .= " <option value=\"0\"". (($block->region == 0) ? " selected" : "") .">left</option>\n";
-    $region .= " <option value=\"1\"". (($block->region == 1) ? " selected" : "") .">right</option>\n";
-    $region .= "</select>\n";
-
-    $path = "<input name=\"edit[$block->name][path]\" value=\"$block->path\">\n";
-
-    $output .= " <tr><td>". $block->name ."</td><td align=\"center\">$module</td><td>$status</td><td>$weight</td><td>$region</td><td>$path</td></tr>\n";
+    $output .= '<tr>';
+    //$output .= '<td>'. la($block->name, array("mod" => "block", "op" => "view", "id" => $block->delta), t("View the block details")) .'</td>';
+    $output .= "<td>$block->name</td>";
+    $output .= '<td>'. (module_hook($block->module, "admin") ? la($block->module, array("mod" => $block->module), "Administer module") : $block->module) .'</td>';
+    $output .= '<td>'. form_select(NULL, "$block->name][status", $block->status, array("disabled", "enabled")) .'</td>';
+    $output .= '<td>'. form_select(NULL, "$block->name][custom", $block->custom, array("disabled", "enabled")) .'</td>';
+    $output .= '<td>'. form_select(NULL, "$block->name][weight", $block->weight, $weights) .'</td>';
+    $output .= '<td>'. form_select(NULL, "$block->name][region", $block->region, array("left", "right")) .'</td>';
+    $output .= '<td>'. form_textfield(NULL, "$block->name][path", $block->path, 10, 255) .'</td>';
+    if ($block->module == 'block') {
+      $output .= '<td>'. la(t("edit"), array("mod" => "block", "op" => "edit", "id" => $block->delta)) .'</td>';
+      $output .= '<td>'. la(t("delete"), array("mod" => "block", "op" => "delete", "id" => $block->delta)) .'</td>';
+    }
+    $output .= "</tr>\n";
   }
 
   $output .= "</table>\n";
-  $output .= "<input name=\"op\" type=\"submit\" value=\"Save blocks\">\n";
-  $output .= "</form>\n";
+  $output .= form_submit("Save blocks");
 
-  print $output;
+  print form($output);
 }
 
 function block_admin_preview() {
@@ -123,12 +153,56 @@ function block_init() {
   }
 }
 
+function block_box_get($bid) {
+  return db_fetch_array(db_query("SELECT * FROM boxes WHERE bid = '%s'", $bid));
+}
+
+function block_box_form($edit = array()) {
+  $type = array(0 => "ASCII", 1 => "HTML", 2 => "PHP");
+
+  $form .= form_textfield("Title", "title", $edit["title"], 50, 64);
+  $form .= form_textfield("Description", "info", $edit["info"], 50, 64);
+  $form .= form_textarea("Body", "body", $edit["body"], 70, 10);
+  $form .= form_select("Type", "type", $edit["type"], $type);
+
+  if ($edit["bid"]) {
+    $form .= form_hidden("bid", $edit["bid"]);
+  }
+
+  $form .= form_submit("Save block");
+
+  print form($form);
+}
+
+function block_box_save($edit) {
+  if ($edit["bid"]) {
+    db_query("UPDATE boxes SET title = '%s', body = '%s', info = '%s', type = '%s' WHERE bid = '%s'", $edit["title"], $edit["body"], $edit["info"], $edit["type"], $edit["bid"]);
+    return "Block updated.";
+  }
+  else {
+    db_query("INSERT INTO boxes (title, body, info, type) VALUES  ('%s', '%s', '%s', '%s')", $edit["title"], $edit["body"], $edit["info"], $edit["type"]);
+    return "Block added.";
+  }
+}
+
+function block_box_delete($bid) {
+  if ($bid) {
+    db_query("DELETE FROM boxes WHERE bid = '%s'", $bid);
+    return "Block deleted.";
+  }
+}
+
 function block_admin() {
   global $op, $edit;
 
   if (user_access("administer blocks")) {
 
-    print "<small>". la(t("configure"), array("mod" => "block")) ." | ". la(t("preview"), array("mod" => "block", "op" => "preview")) ." | ". la(t("help"), array("mod" => "block", "op" => "help")) ."</small><hr>\n";
+    $links[] = la(t("configure"), array("mod" => "block"));
+    $links[] = la(t("add block"), array("mod" => "block", "op" => "add"));
+    $links[] = la(t("preview"), array("mod" => "block", "op" => "preview"));
+    $links[] = la(t("help"), array("mod" => "block", "op" => "help"));
+
+    print "<small>". implode(" &middot; ", $links) ."</small><hr />";
 
     block_init();
 
@@ -139,6 +213,24 @@ function block_admin() {
       case "preview":
         block_admin_preview();
         break;
+      case "add":
+        block_box_form();
+        break;
+      case "edit":
+        global $id;
+        block_box_form(block_box_get($id));
+        break;
+      case "delete":
+        global $id;
+        print status(block_box_delete($id));
+        block_init();
+        block_admin_display();
+        break;
+      case "Save block":
+        print status(block_box_save($edit));
+        block_init();
+        block_admin_display();
+        break;
       case "Save blocks":
         block_admin_save($edit);
         // fall through
@@ -148,6 +240,21 @@ function block_admin() {
   }
   else {
     print message_access();
+  }
+}
+
+function block_user($type, &$edit, &$user) {
+  switch ($type) {
+    case "edit_form":
+      $result = db_query("SELECT * FROM blocks WHERE custom = '%d' ORDER BY name", 1);
+
+      $form = '<table border="0" cellpadding="2" cellspacing="2">';
+      while ($block = db_fetch_object($result)) {
+        $form .= "<tr><td>$block->name</td><td>". form_select(NULL, "block][$block->name", (isset($user->block[$block->name]) ? $user->block[$block->name] : $block->status), array(t("Disabled"), t("Enabled"))) ."</td></tr>\n";
+      }
+      $form .= '</table>';
+
+      return form_item(t("Block configuration"), $form);
   }
 }
 

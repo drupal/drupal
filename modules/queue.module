@@ -84,7 +84,7 @@ function queue_overview() {
   $output .= " <tr><th>". t("Subject") ."</th><th>". t("Author") ."</th><th>". t("Type") ."</th><th>". t("Score") ."</th></tr>";
   while ($node = db_fetch_object($result)) {
     if ($user->uid == $node->uid || field_get($node->users, $user->uid)) {
-      $output .= " <tr><td>". la(check_output($node->title), array("mod" => "queue", "op" => "view", "id" => $node->nid)) ."</td><td align=\"center\">". format_name($node) ."</td><td align=\"center\">". module_invoke($node->type, "node", "name") ."</td><td align=\"center\">". queue_score($node->nid) ."</td></tr>";
+      $output .= " <tr><td>". lm(check_output($node->title), array("mod" => "queue", "op" => "view", "id" => $node->nid)) ."</td><td align=\"center\">". format_name($node) ."</td><td align=\"center\">". module_invoke($node->type, "node", "name") ."</td><td align=\"center\">". queue_score($node->nid) ."</td></tr>";
     }
     else {
       $output .= " <tr><td>". lm(check_output($node->title), array("mod" => "queue", "op" => "view", "id" => $node->nid)) ."</td><td align=\"center\">". format_name($node) ."</td><td align=\"center\">". module_invoke($node->type, "node", "name") ."</td><td align=\"center\">". lm(t("vote"), array("mod" => "queue", "op" => "view", "id" => $node->nid)) ."</td></tr>";
