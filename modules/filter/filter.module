@@ -43,7 +43,7 @@ function filter_help($section) {
 }
 
 /**
- * Implementation of hook_filter_tips.
+ * Implementation of hook_filter_tips().
  */
 function filter_filter_tips($delta, $format, $type = false) {
   switch ($delta) {
@@ -149,14 +149,14 @@ function filter_menu() {
 }
 
 /**
- * Implementation of hook_perm()
+ * Implementation of hook_perm().
  */
 function filter_perm() {
   return array('administer filters');
 }
 
 /**
- * Menu callback: allows administrators to setup input formats
+ * Menu callback; allows administrators to set up input formats.
  */
 function filter_admin_overview() {
   // Process form submission
@@ -169,7 +169,7 @@ function filter_admin_overview() {
       break;
   }
 
-  // Overview of all formats
+  // Overview of all formats.
   $formats = filter_formats();
   $roles = user_roles();
   $error = false;
@@ -209,7 +209,7 @@ function filter_admin_overview() {
   $group .= form_submit(t('Save input formats'));
   $output = '<h2>'. t('Permissions and settings') . '</h2>' . form($group);
 
-  // Form to add a new format
+  // Form to add a new format.
   $group = t("<p>To add a new input format, type its name here. After it has been added, you can configure its options.</p>");
   $form = form_textfield(t('Name'), 'name', '', 40, 255);
   $form .= form_submit(t('Add input format'));
@@ -220,7 +220,7 @@ function filter_admin_overview() {
 }
 
 /**
- * Save input formats on overview page
+ * Save input formats on the overview page.
  */
 function filter_admin_save() {
   $edit = $_POST['edit'];
@@ -256,7 +256,7 @@ function filter_admin_save() {
 }
 
 /**
- * Add new input format
+ * Add a new input format.
  */
 function filter_admin_add() {
   $edit = $_POST['edit'];
@@ -276,7 +276,7 @@ function filter_admin_add() {
 }
 
 /**
- * Menu callback: confirm deletion of a format
+ * Menu callback; confirm deletion of a format.
  */
 function filter_admin_delete() {
   $edit = $_POST['edit'];
@@ -308,7 +308,7 @@ function filter_admin_delete() {
 }
 
 /**
- * Ask for confirmation before deleting a format
+ * Ask for confirmation before deleting a format.
  */
 function filter_admin_confirm() {
   $edit = $_POST['edit']['format'];
@@ -318,12 +318,12 @@ function filter_admin_confirm() {
 }
 
 /**
- * Menu callback: configure the filters for a format.
+ * Menu callback; configure the filters for a format.
  */
 function filter_admin_filters() {
   $format = arg(2);
 
-  // Handle saving of weights
+  // Handle saving of weights.
   if ($_POST['op']) {
     filter_admin_filters_save($format, $_POST['edit']);
   }
@@ -331,9 +331,7 @@ function filter_admin_filters() {
   $all = filter_list_all();
   $enabled = filter_list_format($format);
 
-  /*
-  ** Table with filters
-  */
+  // Table with filters
   $header = array('enabled', 'name', 'description');
   $rows = array();
   foreach ($all as $id => $filter) {
@@ -351,9 +349,7 @@ function filter_admin_filters() {
 
   $output .= '<h2>'. t('Filters') .'</h2>'. form($form);
 
-  /*
-  ** Compose tips (guidelines)
-  */
+  // Composition tips (guidelines)
   $tips = _filter_tips($format, false);
   $extra = l(t('More information about formatting options'), 'filter/tips');
   $tiplist = theme('filter_tips', $tips, $extra);
@@ -398,7 +394,7 @@ function filter_admin_filters_save($format, $toggles) {
 }
 
 /**
- * Menu callback: display form for ordering filters for a format.
+ * Menu callback; display form for ordering filters for a format.
  */
 function filter_admin_order() {
   $format = arg(2);
@@ -439,7 +435,7 @@ function filter_admin_order_save($format, $weights) {
 }
 
 /**
- * Menu callback: display settings defined by filters.
+ * Menu callback; display settings defined by filters.
  */
 function filter_admin_configure() {
   $format = arg(2);
@@ -477,7 +473,7 @@ function filter_formats() {
 
     $query = array('SELECT * FROM {filter_formats}');
 
-    // Build query for selecting the format(s) based on the user's roles
+    // Build query for selecting the format(s) based on the user's roles.
     if (!$all) {
       $where = array();
       foreach ($user->roles as $rid => $role) {
@@ -573,20 +569,20 @@ function check_output($text, $format = FILTER_FORMAT_DEFAULT) {
       $format = variable_get('filter_default_format', 1);
     }
 
-    // Check for a cached version of this piece of text
+    // Check for a cached version of this piece of text.
     $id = 'filter:'. $format .':'. md5($text);
     if ($cached = cache_get($id)) {
       return $cached->data;
     }
 
-    // See if caching is allowed for this format
+    // See if caching is allowed for this format.
     $cache = filter_format_allowcache($format);
 
     // Convert all Windows and Mac newlines to a single newline,
-    // so filters only need to deal with this one
+    // so filters only need to deal with one possibility.
     $text = str_replace(array("\r\n", "\r"), "\n", $text);
 
-    // Get complete list of filters ordered properly
+    // Get a complete list of filters, ordered properly.
     $filters = filter_list_format($format);
 
     // Give filters the chance to escape HTML-like data such as code or formulas.
@@ -594,12 +590,12 @@ function check_output($text, $format = FILTER_FORMAT_DEFAULT) {
       $text = module_invoke($filter->module, 'filter', 'prepare', $filter->delta, $format, $text);
     }
 
-    // Perform filtering
+    // Perform filtering.
     foreach ($filters as $filter) {
       $text = module_invoke($filter->module, 'filter', 'process', $filter->delta, $format, $text);
     }
 
-    // Store in cache
+    // Store in cache.
     if ($cache) {
       cache_set($id, $text, 1);
     }
@@ -612,16 +608,14 @@ function check_output($text, $format = FILTER_FORMAT_DEFAULT) {
 }
 
 /**
- * Generate selector for choosing a format in a form.
+ * Generate a selector for choosing a format in a form.
  *
  * @param $name
- *   The internal name used to refer to the selector.
- *
+ *   The internal name used to refer to the form element.
  * @param $value
- *   The id of the format that is currently selected.
- *
+ *   The ID of the format that is currently selected.
  * @return
- *   HTML for the selector.
+ *   HTML for the form element.
  */
 function filter_form($name, $value = FILTER_FORMAT_DEFAULT) {
   if ($value == FILTER_FORMAT_DEFAULT) {
@@ -670,7 +664,7 @@ function filter_access($format) {
 /* @} */
 
 /**
- * Menu callback: show page with long filter tips
+ * Menu callback; show a page with long filter tips.
  */
 function filter_tips_long() {
   $format = arg(2);
@@ -769,19 +763,23 @@ function theme_filter_tips($tips, $long = false, $extra = '') {
  */
 
 /**
- * Implementation of hook_filter(). Contains a basic set of essential filters:
- * - HTML filter: transform/validate user-supplied HTML
- * - PHP evaluator: execute PHP code
- * - Legacy filter: handle URL upgrades from Drupal 4.1.
- * - Line break convertor: convert newlines into paragraph and break tags
+ * Implementation of hook_filter(). Contains a basic set of essential filters.
+ * - HTML filter:
+ *     Validates user-supplied HTML, transforming it as necessary.
+ * - PHP evaluator:
+ *     Executes PHP code.
+ * - Legacy filter:
+ *     Handles URL upgrades from Drupal 4.1.
+ * - Line break converter:
+ *     Converts newlines into paragraph and break tags.
  */
 function filter_filter($op, $delta = 0, $format = -1, $text = '') {
   switch ($op) {
     case 'list':
-      return array(0 => t('HTML filter'), 1 => t('PHP evaluator'), 2 => t('Legacy filter'), 3 => t('Line break convertor'));
+      return array(0 => t('HTML filter'), 1 => t('PHP evaluator'), 2 => t('Legacy filter'), 3 => t('Line break converter'));
 
     case 'no cache':
-      return $delta == 1; // No caching for the PHP evaluator
+      return $delta == 1; // No caching for the PHP evaluator.
 
     case 'description':
       switch ($delta) {
@@ -825,7 +823,7 @@ function filter_filter($op, $delta = 0, $format = -1, $text = '') {
 }
 
 /**
- * Settings for the HTML filter
+ * Settings for the HTML filter.
  */
 function _filter_html_settings($format) {
   $group = form_radios(t('Filter HTML tags'), "filter_html_$format", variable_get("filter_html_$format", FILTER_HTML_STRIP), array(FILTER_HTML_STRIP => t('Strip tags'), FILTER_HTML_ESCAPE => t('Escape tags')), t('How to deal with HTML tags in user-contributed content. If set to "Strip tags", dangerous tags are removed (see below).  If set to "Escape tags", all HTML is escaped and presented as it was typed.'));
@@ -837,7 +835,7 @@ function _filter_html_settings($format) {
 }
 
 /**
- * HTML filter: provides filtering of input into accepted HTML
+ * HTML filter. Provides filtering of input into accepted HTML.
  */
 function _filter_html($text, $format) {
   if (variable_get("filter_html_$format", FILTER_HTML_STRIP) == FILTER_HTML_STRIP) {
