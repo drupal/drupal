@@ -5,7 +5,7 @@ $status = array(dumped => 0, expired => 1, queued => 2, posted => 3, scheduled =
 function _node_get($field, $value) {
   $result = db_query("SELECT lid, type FROM nodes WHERE $field = '$value'");
   if ($node = db_fetch_object($result)) {
-    return db_query("SELECT n.*, l.*, u.userid FROM nodes n LEFT JOIN $node->type l ON n.lid = l.id LEFT JOIN users u ON n.author = u.id WHERE n.$field = '$value'");
+    return db_query("SELECT n.*, l.*, u.userid FROM nodes n LEFT JOIN $node->type l ON n.lid = l.id AND l.node = n.nid LEFT JOIN users u ON n.author = u.id WHERE n.$field = '$value' ORDER BY n.timestamp DESC");
   }
 }
 
@@ -23,7 +23,7 @@ function node_del($field, $value) {
     if ($node->status == $status[dumped]) {
       db_query("DELETE FROM nodes WHERE nid = '$node->nid'");
       db_query("DELETE FROM $node->type WHERE node = '$node->nid'");
-      watchdog("message", "deleted node '$node->title'");
+      watchdog("message", "node: deleted '$node->title'");
       return $node;
     }
   }
@@ -34,7 +34,6 @@ function node_save($node) {
 
   $rows = array(nid, pid, lid, log, type, title, score, votes, author, status, timestamp);
 
-  // insert or update node:
   if ($node[nid]) {
     $u1 = array();
     $u2 = array();
@@ -54,46 +53,53 @@ function node_save($node) {
     db_query("UPDATE nodes SET $u1 WHERE nid = '$node[nid]'");
     db_query("UPDATE $node[type] SET $u2 WHERE node = '$node[nid]'");
 
-    watchdog("message", "modified node '$node[title]'");
+    watchdog("message", "node: modified '$node[title]'");
   }
   else {
-    // setup default values:
-    $node = array_merge(array(title => "?", author => $user->id, type => "?", pid => 0, log => "node created", status => $status[queued], score => 0, votes => 0, timestamp => time()), $node);
+    $duplicate = node_get_object("title", $node[title]);
 
-    // prepare queries:
-    $f1 = array();
-    $v1 = array();
-    $f2 = array();
-    $v2 = array();
-
-    foreach ($node as $field=>$value) {
-      if (in_array($field, $rows)) {
-        array_push($f1, check_input($field));
-        array_push($v1, "'". check_input($value) ."'");
-      }
-      else {
-        array_push($f2, check_input($field));
-        array_push($v2, "'". check_input($value) ."'");
-      }
+    if ($duplicate && (time() - $duplicate->timestamp < 300)) {
+      watchdog("warning", "node: duplicate node '$node[title]'");
     }
+    else {
+      // setup default values:
+      $node = array_merge(array(title => "?", author => $user->id, type => "?", pid => 0, log => "node created", status => $status[queued], score => 0, votes => 0, timestamp => time()), $node);
 
-    $f1 = implode(", ", $f1);
-    $v1 = implode(", ", $v1);
-    $f2 = implode(", ", $f2);
-    $v2 = implode(", ", $v2);
+      // prepare queries:
+      $f1 = array();
+      $v1 = array();
+      $f2 = array();
+      $v2 = array();
 
-    db_query("INSERT INTO nodes ($f1) VALUES ($v1)");
-    if ($nid = db_insert_id()) {
-      $lid = db_query("INSERT INTO $node[type] ($f2, node) VALUES ($v2, $nid)");
-      if ($lid = db_insert_id()) {
-        db_query("UPDATE nodes SET lid = '$lid' WHERE nid = '$nid'");
+      foreach ($node as $field=>$value) {
+        if (in_array($field, $rows)) {
+          array_push($f1, check_input($field));
+          array_push($v1, "'". check_input($value) ."'");
+        }
+        else {
+          array_push($f2, check_input($field));
+          array_push($v2, "'". check_input($value) ."'");
+        }
       }
-      else {
-        db_query("DELETE FROM nodes WHERE nid = '$nid'");
+
+      $f1 = implode(", ", $f1);
+      $v1 = implode(", ", $v1);
+      $f2 = implode(", ", $f2);
+      $v2 = implode(", ", $v2);
+
+      db_query("INSERT INTO nodes ($f1) VALUES ($v1)");
+      if ($nid = db_insert_id()) {
+        $lid = db_query("INSERT INTO $node[type] ($f2, node) VALUES ($v2, $nid)");
+        if ($lid = db_insert_id()) {
+          db_query("UPDATE nodes SET lid = '$lid' WHERE nid = '$nid'");
+        }
+        else {
+          db_query("DELETE FROM nodes WHERE nid = '$nid'");
+        }
       }
+
+      watchdog("message", "node: added '$node[title]'");
     }
-
-    watchdog("message", "added node '$node[title]'");
   }
 
   if (($node[pid]) && ($node[status] == $status[posted])) {
