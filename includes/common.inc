@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.157 2003/01/15 05:56:50 dries Exp $
+// $Id: common.inc,v 1.158 2003/01/15 05:57:55 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST, $PHP_SELF;
@@ -882,7 +882,7 @@ $config = conf_init();
 
 include_once "includes/$config.php";
 include_once "includes/database.inc";
-//include_once "includes/xmlrpc.inc";
+include_once "includes/xmlrpc.inc";
 include_once "includes/module.inc";
 include_once "includes/theme.inc";
 include_once "includes/pager.inc";
