@@ -79,7 +79,7 @@ function theme_blocks($region, $theme) {
       break;
     case "/index.php":
       if ($user->id) $result = db_query("SELECT * FROM blocks b LEFT JOIN layout l ON b.name = l.block WHERE (b.status = 2 OR (b.status AND l.user = '$user->id'))". (($region == "left" || $region == "right") ? ($region == "left" ? " AND b.region = 0" : " AND b.region = 1") : "") ." ORDER BY weight");
-      else $result = db_query("SELECT * FROM blocks WHERE status = 2 ORDER BY weight");
+      else $result = db_query("SELECT * FROM blocks WHERE status = 2". (($region == "left" || $region == "right") ? ($region == "left" ? " AND region = 0" : " AND region = 1") : "") ." ORDER BY weight");
       while ($block = db_fetch_object($result)) {
         $blocks = module_execute($block->module, "block");
         $theme->box(t($blocks[$block->offset]["subject"]), $blocks[$block->offset]["content"]);
