@@ -22,13 +22,10 @@
    
         <HEAD>
           <TITLE><?PHP echo $site_name; ?> - Tears of technology</TITLE>
-          <META NAME="description" CONTENT="drop.org">
-          <META NAME="keywords" CONTENT="drop, weblog, portal, community, news, article, announcements, stories, story, computer, science, space, hype, cult, geek, nerd, foo, bar">
           <STYLE type="text/css">
             <!--
               BODY,P,DIV,LI,UL,TD,EM,FONT,BLOCKQUOTE,FORM{font-size: 10pt; font-family:Helvetica,Lucida,sans-serif;}
               SMALL {font-size: 8pt;}
-              TD img.pipe {display: block}
             -->
           </STYLE>
         </HEAD>
@@ -38,7 +35,7 @@
             <TR>
               <TD COLSPAN="2" WIDTH="80%">
                 <?PHP $img = (rand(0,150) == 75) ? "logo2.gif" : "logo.gif"; ?>
-                <IMG SRC="themes/jeroen/images/<?PHP echo $img; ?>" ALT="drop.org logo"><BR><BR>
+                <IMG SRC="themes/jeroen/images/<?PHP echo $img; ?>" ALT=""><BR><BR>
               </TD>
               <TD WIDTH="20%">
   
@@ -103,11 +100,11 @@
 <?PHP
 
                                   switch (rand(0,13)) {
-                                    case 0: $how = "Yelled at us"; break;   case 1: $how = "Whispered"; break;
+                                    case 0: $how = "Yelled"; break;         case 1: $how = "Whispered"; break;
                                     case 2: $how = "Reported"; break;       case 3: $how = "Posted"; break;
                                     case 4: $how = "Beamed through"; break; case 5: $how = "Faxed"; break;
-                                    case 6: $how = "Tossed at us"; break;   case 7: $how = "Morsed"; break;
-                                    case 8: $how = "Flagged"; break;        case 9: $how = "Written to us"; break;
+                                    case 6: $how = "Tossed"; break;         case 7: $how = "Morsed"; break;
+                                    case 8: $how = "Flagged"; break;        case 9: $how = "Written"; break;
                                     case 10: $how = "Made up"; break;       case 11: $how = "Uploaded"; break;
                                     case 12: $how = "Forged"; break;
                                     default: $how = "Sneaked through";
@@ -180,11 +177,11 @@
 <?PHP
 
                                   switch (rand(0,13)) {
-                                    case 0: $how = "Yelled at us"; break;   case 1: $how = "Whispered"; break;
+                                    case 0: $how = "Yelled"; break;         case 1: $how = "Whispered"; break;
                                     case 2: $how = "Reported"; break;       case 3: $how = "Posted"; break;
                                     case 4: $how = "Beamed through"; break; case 5: $how = "Faxed"; break;
-                                    case 6: $how = "Tossed at us"; break;   case 7: $how = "Morsed"; break;
-                                    case 8: $how = "Flagged"; break;        case 9: $how = "Written to us"; break;
+                                    case 6: $how = "Tossed"; break;         case 7: $how = "Morsed"; break;
+                                    case 8: $how = "Flagged"; break;        case 9: $how = "Written"; break;
                                     case 10: $how = "Made up"; break;       case 11: $how = "Uploaded"; break;
                                     case 12: $how = "Forged"; break;
                                     default: $how = "Sneaked through";
