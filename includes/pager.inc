@@ -340,7 +340,7 @@ function theme_pager_list($limit, $element = 0, $quantity = 5, $text = '', $attr
   if ($i != $pager_max) {
     $output .= $text;
     if ($i > 1) {
-      $output .= '<div class="pager-list-dots-left>... </div>';
+      $output .= '<div class="pager-list-dots-left">... </div>';
     }
 
     // Now generate the actual pager piece.
