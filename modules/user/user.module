@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.366 2004/08/07 19:49:46 unconed Exp $
+// $Id: user.module,v 1.367 2004/08/08 23:19:47 unconed Exp $
 
 /**
  * Invokes hook_user() in every module.
@@ -171,7 +171,7 @@ function user_validate_name($name) {
 
 function user_validate_mail($mail) {
   if (!$mail) return t('You must enter an e-mail address.');
-  if ($mail && !valid_email_address($mail)) {
+  if (!valid_email_address($mail)) {
     return t('The e-mail address "%mail" is not valid.', array('%mail' => $mail));
   }
 }
