@@ -103,7 +103,7 @@ function throttle_help($section) {
     case 'admin/modules#description':
       return t('Handles the auto-throttling mechanism, to control site congestion.');
     case 'admin/settings/throttle':
-      return t('If your site gets linked to by a popular website, or otherwise comes under a "Denial of Service" (DoS) attack, your webserver might become overwhelmed.  This module provides a congestion control throttling mechanism for automatically detecting a surge in incoming traffic.  This mechanism is utilized by other Drupal models to automatically optimize their performance by temporarily disabling CPU-intensive functionality.');
+      return t('If your site gets linked to by a popular website, or otherwise comes under a "Denial of Service" (DoS) attack, your webserver might become overwhelmed.  This module provides a congestion control throttling mechanism for automatically detecting a surge in incoming traffic.  This mechanism is utilized by other Drupal modules to automatically optimize their performance by temporarily disabling CPU-intensive functionality.');
   }
 }
 
