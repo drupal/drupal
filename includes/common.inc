@@ -1240,6 +1240,8 @@ function form_checkbox($title, $name, $value = 1, $checked = FALSE, $description
   if (!is_null($title)) {
     $element = '<label class="option">'. $element .' '. $title .'</label>';
   }
+  // Note: because unchecked boxes are not included in the POST data, we include
+  // a form_hidden() which will be overwritten for a checked box.
   return form_hidden($name, 0) . theme('form_element', NULL, $element, $description, $name, $required, _form_get_error($name));
 }
 
@@ -1273,6 +1275,9 @@ function form_checkboxes($title, $name, $values, $options, $description = NULL, 
     foreach ($options as $key => $choice) {
       $choices .= '<label class="option"><input type="checkbox" class="form-checkbox" name="edit['. $name .'][]" value="'. $key .'"'. (in_array($key, $values) ? ' checked="checked"' : ''). drupal_attributes($attributes). ' /> '. $choice .'</label><br />';
     }
+    // Note: because unchecked boxes are not included in the POST data, we
+    // include a form_hidden() which will be overwritten as soon as there is at
+    // least one checked box.
     return form_hidden($name, 0) . theme('form_element', $title, $choices, $description, NULL, $required, _form_get_error($name));
   }
 }
