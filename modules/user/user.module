@@ -469,6 +469,7 @@ function user_set_authmaps($account, $authmaps) {
 }
 
 function user_auth_help_links() {
+  $links = array();
   foreach (module_list() as $module) {
     if (module_hook($module, "auth_help")) {
       $links[] = lm(module_invoke($module, "info", "name"), array("mod" => "user", "op" => "help"), $module);

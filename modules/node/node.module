@@ -787,8 +787,8 @@ function node_form($edit, $error = NULL) {
   */
 
   if (!$error) {
-  /* Only validate if we don't already know the errors. */
-  $edit = node_validate($edit, $error);
+    /* Only validate if we don't already know the errors. */
+    $edit = node_validate($edit, $error);
   }
 
   /*
