@@ -133,9 +133,9 @@ function story_form($edit = array()) {
   if (user_access($user, "story")) {
     $output .= "<B>". t("Status") .":</B><BR>\n";
     $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"$status[scheduled]\"". ($edit[status] == $status[scheduled] ? " CHECKED" : "") ."> scheduled for <INPUT TYPE=\"text\" NAME=\"edit[timestamp]\" SIZE=\"30\" VALUE=\"". date("j F Y G:i", ($edit[timetsamp] ? $edit[timestamp] : time())) ."\"><BR>\n";
-    $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"$status[posted]\"". ($edit[status] == $status[posted] ? " CHECKED" : "") ."> posted<BR>\n";
-    $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"$status[queued]\"". ($edit[status] == $status[queued] ? " CHECKED" : "") ."> queued<BR>\n";
     $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"$status[dumped]\"". ($edit[status] == $status[dumped] ? " CHECKED" : "") ."> dumped<BR>\n";
+    $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"$status[queued]\"". ($edit[status] == $status[queued] ? " CHECKED" : "") ."> queued<BR>\n";
+    $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"$status[posted]\"". ($edit[status] == $status[posted] ? " CHECKED" : "") ."> posted<BR>\n";
     $output .= "<SMALL><I>The textfield for scheduled stories expects a string containing an English date format of when you want to have your story automatically published.  Example input: '". date("j F Y G:i") ."', '". date("m/d/y H:i") ."', '". date("F j, Y H:i") ."', ...</I></SMALL><P>\n";
 
     $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[timestamp]\" VALUE=\"$edit[timestamp]\">\n";
