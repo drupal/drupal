@@ -29,12 +29,6 @@ function story_find($keys) {
   return $find;
 }
 
-function story_search() {
-  global $keys, $mod;
-  print search_form($keys);
-  print search_data($keys, $mod);
-}
-
 function story_help() {
  ?>
   <P>Queued stories: user-contributed stories are automatically whisked away to a submission queue for moderators (i.e. registered user) to frown at.  Moderators vote whether or not a story should be posted to the front page for discussion.</P>
@@ -194,7 +188,7 @@ function story_overview() {
 }
 
 function story_admin() {
-  global $id, $edit, $op, $theme, $user;
+  global $id, $edit, $mod, $keys, $op, $theme, $user;
 
   print "<SMALL><A HREF=\"admin.php?mod=story&op=add\">add new story</A> | <A HREF=\"admin.php?mod=story\">overview</A> | <A HREF=\"admin.php?mod=story&op=search\">search story</A> | <A HREF=\"admin.php?mod=story&op=help\">help</A></SMALL><HR>\n";
 
@@ -213,7 +207,8 @@ function story_admin() {
       story_help();
       break;
     case "search":
-      story_search();
+      print search_form($keys);
+      print search_data($keys, $mod);
       break;
     case t("Preview"):
       story_view(new Story(($edit[userid] ? $edit[userid] : $user->userid), $edit[title], $edit[abstract], $edit[body], $edit[section], ($edit[timestamp] ? $edit[timestamp] : time())), 0);

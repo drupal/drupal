@@ -17,21 +17,6 @@ class Book {
   }
 }
 
-function book_navigation($node) {
-  if ($node->nid && $node->parent && $node->weight) {
-    $next = db_fetch_object(db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE b.parent = '$node->parent' AND b.weight > $node->weight ORDER BY b.weight ASC"));
-    $prev = db_fetch_object(db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE b.parent = '$node->parent' AND b.weight < $node->weight ORDER BY b.weight DESC"));
-  }
-
-  $output .= "<HR>";
-  $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"0\" WIDTH=\"100%\">\n";
-  $output .= " <TR><TD ALIGN=\"left\" WIDTH=\"33%\">". ($prev ? "<A HREF=\"node.php?id=$prev->nid\">". t("previous") ."</A>" : t("previous")) ."</TD><TD ALIGN=\"center\" WIDTH=\"34%\"><A HREF=\"module.php?mod=book\">index</A></TD><TD ALIGN=\"right\" WIDTH=\"33%\">". ($next ? "<A HREF=\"node.php?id=$next->nid\">". t("next") ."</A>" : t("next")) ."</TD></TR>\n";
-  $output .= " <TR><TD ALIGN=\"left\" WIDTH=\"33%\">". ($prev ? "<SMALL>". check_output($prev->title) ."</SMALL>" : "") ."</TD><TD ALIGN=\"center\" WIDTH=\"34%\">". ($node->parent ? "<A HREF=\"node.php?id=$node->parent\">". t("up") ."</A>" : t("up")) ."</TD><TD ALIGN=\"right\" WIDTH=\"33%\">". ($next ? "<SMALL>". check_output($next->title) ."</SMALL>" : "") ."</TD></TR>\n";
-  $output .= "</TABLE>\n";
-
-  return $output;
-}
-
 function book_location($node, $nodes = array()) {
   $parent = db_fetch_object(db_query("SELECT n.nid, n.title, b.parent FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE n.nid = '$node->parent'"));
   if ($parent->title) {
@@ -41,7 +26,7 @@ function book_location($node, $nodes = array()) {
   return $nodes;
 }
 
-function theme_book($node) {
+function book_view($node, $page = 1) {
   global $theme;
 
   if ($node->nid && $node->parent) {
@@ -72,19 +57,9 @@ function theme_book($node) {
   $output .= " <TR><TD ALIGN=\"left\" WIDTH=\"33%\">". ($prev ? "<SMALL>". check_output($prev->title) ."</SMALL>" : "&nbsp;") ."</TD><TD ALIGN=\"center\" WIDTH=\"34%\">". ($node->parent ? "<A HREF=\"node.php?id=$node->parent\">". t("up") ."</A>" : t("up")) ."</TD><TD ALIGN=\"right\" WIDTH=\"33%\">". ($next ? "<SMALL>". check_output($next->title) ."</SMALL>" : "&nbsp;") ."</TD></TR>\n";
   $output .= "</TABLE>\n";
 
+  if ($page) $theme->header();
   $theme->box(t("Handbook"), $output);
-}
-
-function book_view($node, $page = 1) {
-  if ($page) {
-    global $theme;
-    $theme->header();
-    theme_book($node);
-    $theme->footer();
-  }
-  else {
-    theme_book($node);
-  }
+  if ($page) $theme->footer();
 }
 
 function book_find($keys) {
@@ -95,12 +70,6 @@ function book_find($keys) {
     array_push($find, array("title" => check_output($node->title), "link" => (user_access($user, "book") ? "admin.php?mod=book&op=edit&id=$node->nid" : "node.php?id=$node->nid"), "user" => $node->userid, "date" => $node->timestamp));
   }
   return $find;
-}
-
-function book_search() {
-  global $keys, $mod;
-  print search_form($keys);
-  print search_data($keys, $mod);
 }
 
 function book_toc($parent = 0, $indent = "", $toc = array()) {
@@ -203,7 +172,7 @@ function book_list() {
 }
 
 function book_admin() {
-  global $op, $id, $edit, $user;
+  global $op, $id, $edit, $mod, $keys, $user;
 
   print "<SMALL><A HREF=\"admin.php?mod=book&op=add\">add new page</A> | <A HREF=\"admin.php?mod=book&op=search\">search book</A> | <A HREF=\"admin.php?mod=book&op=list\">list overview</A> | <A HREF=\"admin.php?mod=book\">tree overview</A></SMALL><HR>\n";
 
@@ -218,7 +187,8 @@ function book_admin() {
       print book_form(node_get_array(nid, $id));
       break;
     case "search":
-      book_search();
+      print search_form($keys);
+      print search_data($keys, $mod);
       break;
     case t("Preview"):
       book_view(new Book(($edit[nid] ? $edit[nid] : -1), ($edit[userid] ? $edit[userid] : $user->userid), $edit[title], $edit[body], $edit[parent], $edit[weight], ($edit[timestamp] ? $edit[timestamp] : time())), 0);
@@ -238,24 +208,41 @@ function book_page($id = 0) {
   book_view(node_get_object("nid", $nid));
 }
 
+function book_update($id) {
+  global $status;
+
+  if ($node = node_get_object("nid", $id)) {
+    if ($node->status != $status[posted]) {
+      return t("You can only update accepted pages: pages that are still queued or already expired can not be updated.");
+    }
+    else if (db_result(db_query("SELECT COUNT(nid) FROM node WHERE pid = '$node->nid' AND status = '$status[queued]'"))) {
+      return t("There is already an update for this node queued: we can only process one update at the time.");
+    }
+    else {
+      return book_form(array(nid => -1, pid => $id, title => $node->title, body => $node->body, parent => $node->parent));
+    }
+  }
+}
+
 function book_user() {
   global $edit, $id, $op, $theme, $user;
 
+  $title = t("Submit a book page");
+
   switch($op) {
     case "update":
-      $node = node_get_object("nid", $id);
-      $theme->box("Update a book page", book_form(array(nid => -1, pid => $id, title => $node->title, body => $node->body, parent => $node->parent)));
+      $theme->box($title, book_update($id));
       break;
     case t("Preview"):
       book_view(new Book(($edit[nid] ? $edit[nid] : -1), $user->userid, $edit[title], $edit[body], $edit[parent], $edit[weight], ($edit[timestamp] ? $edit[timestamp] : time())), 0);
-      $theme->box("Submit a book page", book_form($edit));
+      $theme->box($title, book_form($edit));
       break;
     case t("Submit"):
       book_save($edit);
-      $theme->box(t("Submit a book page"), t("Thank you for your submission."));
+      $theme->box($title, t("Thank you for your submission."));
       break;
     default:
-      $theme->box("Submit a book page", book_form());
+      $theme->box($title, book_form());
   }
 }
 

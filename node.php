@@ -5,7 +5,7 @@ include "includes/common.inc";
 function node_failure() {
   global $theme;
   $theme->header();
-  $theme->box(t("Warning: not found"), t("The content or data you requested does not exist or is not accessible."));
+  $theme->box(t("Not found"), t("The node you are looking for does not exist yet or is no longer accessible:") ."<UL><LI><A HREF=\"search.php\">". t("search node") ."</A></LI><LI><A HREF=\"submit.php\">". t("add node") ."</A></LI></UL>\n");
   $theme->footer();
 }
 
@@ -49,8 +49,12 @@ elseif ($number) {
         node_view($node, 1);
     }
   }
-  else node_failure();
+  else {
+    node_failure();
+  }
 }
-else node_failure();
+else {
+  node_failure();
+}
 
 ?>

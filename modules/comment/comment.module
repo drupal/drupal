@@ -13,12 +13,6 @@ function comment_find($keys) {
   return $find;
 }
 
-function comment_search() {
-  global $keys, $mod;
-  print search_form($keys);
-  print search_data($keys, $mod);
-}
-
 function comment_edit($id) {
   $result = db_query("SELECT c.*, u.userid FROM comments c LEFT JOIN users u ON c.author = u.id WHERE c.cid = '$id'");
 
@@ -84,7 +78,7 @@ function comment_display($order = "date") {
 }
 
 function comment_admin() {
-  global $op, $id, $subject, $comment, $order;
+  global $op, $id, $mod, $keys, $subject, $comment, $order;
 
   print "<SMALL><A HREF=\"admin.php?mod=comment\">overview</A> | <A HREF=\"admin.php?mod=comment&op=search\">search comment</A></SMALL><HR>\n";
 
@@ -93,7 +87,8 @@ function comment_admin() {
       comment_edit($id);
       break;
     case "search":
-      comment_search();
+      print search_form($keys);
+      print search_data($keys, $mod);
       break;
     case "Save comment":
       comment_save(check_input($id), check_input($subject), check_input($comment));

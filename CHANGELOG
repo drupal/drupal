@@ -16,6 +16,7 @@ drupal x.xx, xx/xx/xxxx
     * improved account module:
         + added "acess control" to allow/deny certain usernames/e-mail addresses/hostnames
     * improved comment module
+    * improved rating module
     * improved story module:
         + added preview functionality for administrators
         + made it possible to permanently delete stories

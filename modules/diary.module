@@ -21,12 +21,6 @@ function diary_find($keys) {
 
 }
 
-function diary_search() {
-  global $keys, $mod;
-  print search_form($keys);
-  print search_data($keys, $mod);
-}
-
 function diary_page_overview($num = 20) {
   global $theme, $user;
 
@@ -316,7 +310,7 @@ function diary_admin_display($order = "date") {
 
 
 function diary_admin() {
-  global $op, $id, $text, $order;
+  global $op, $id, $mod, $keys, $text, $order;
 
   print "<SMALL><A HREF=\"admin.php?mod=diary\">overview</A> | <A HREF=\"admin.php?mod=diary&op=search\">search diary</A> | <A HREF=\"admin.php?mod=diary&op=help\">help</A></SMALL><HR>\n";
 
@@ -332,7 +326,8 @@ function diary_admin() {
       diary_help();
       break;
     case "search":
-      diary_search();
+      print search_form($keys);
+      print search_data($keys, $mod);
       break;
     case "Save diary entry":
       diary_admin_save(check_input($id), check_input($text));
