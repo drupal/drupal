@@ -671,30 +671,37 @@ function node_block() {
   return $block;
 }
 
-function node_feed() {
+function node_feed($nodes = 0, $channel = array()) {
+  /*
+    a generic function for generating rss feeds from a set of nodes.
+    $nodes should be an object as returned by db_query() which contains the nid field
+    $channel is an associative array containing title, link, and description keys
+  */
 
-  $result = db_query("SELECT nid, type FROM node WHERE promote = '1' AND status = '1' ORDER BY created DESC LIMIT 15");
+  if (!$nodes) {
+    $nodes = db_query("SELECT nid FROM node WHERE promote = '1' AND status = '1' ORDER BY created DESC LIMIT 15");
+  }
 
-  while ($node = db_fetch_object($result)) {
-    $item = node_load(array("nid" => $node->nid, "type" => $node->type));
-
-    $link = path_uri() .drupal_url(array("id" => $item->nid), "node");
-
+  while ($node = db_fetch_object($nodes)) {
+    $item = node_load(array("nid" => $node->nid));
+    $link = path_uri(). drupal_url(array("id" => $item->nid), "node");
     $items .= format_rss_item($item->title, $link, $item->teaser);
   }
 
-  $output .= "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n";
+  $output .= "<?xml version=\"1.0\" ". t("encoding=\"ISO-8859-1\""). "?>\n";
   // $output .= "<!DOCTYPE rss [<!ENTITY % HTMLlat1 PUBLIC \"-//W3C//ENTITIES Latin 1 for XHTML//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml-lat1.ent\">\n";
-  $output .= "<rss version=\"0.91\">\n";
-  $output .= format_rss_channel(variable_get("site_name", "drupal") ." - ". variable_get("site_slogan", ""), path_uri(), variable_get("site_mission", ""), $items);
+  if (!$channel["version"]) $channel["version"] = "0.91";
+  if (!$channel["title"]) $channel["title"] = variable_get("site_name", "drupal") ." - ". variable_get("site_slogan", "");
+  if (!$channel["link"]) $channel["link"] = path_uri();
+  if (!$channel["description"]) $channel["description"] = variable_get("site_mission", "");
+  if (!$channel["language"]) $channel["language"] = "en";
+  $output .= "<rss version=\"". $channel["version"] . "\">\n";
+  $output .= format_rss_channel($channel["title"], $channel["link"], $channel["description"], $items, $channel["language"]);
   $output .= "</rss>\n";
 
   header("Content-Type: text/xml");
-
   print $output;
-
 }
-
 
 function node_validate($node, &$error) {
 

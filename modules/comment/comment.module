@@ -667,7 +667,7 @@ function comment_node_link($node) {
     $output .= " <tr><th>title</th><th>author</th><th colspan=\"3\">operations</th></tr>";
 
     while ($comment = db_fetch_object($result)) {
-      $output .= "<tr><td>". l($comment->subject, array("id" => $node->nid, "cid" => $comment->cid), "node", $comment->cid) ."</td><td>". format_name($comment) ."</td><td>". l(t("view comment"), array("id" => $node->nid, "cid" => $comment->cid ."#". $comment->cid)) ."</td><td>". la(t("edit comment"), array("mod" => "comment", "op" => "edit", "id" => $comment->cid)) ."</td><td>". la(t("delete comment"), array("mod" => "comment", "op" => "delete", "id" => $comment->cid)) ."</td></tr>";
+      $output .= "<tr><td>". l($comment->subject, array("id" => $node->nid, "cid" => $comment->cid), "node", $comment->cid) ."</td><td>". format_name($comment) ."</td><td>". l(t("view comment"), array("id" => $node->nid, "cid" => $comment->cid), $comment->cid) ."</td><td>". la(t("edit comment"), array("mod" => "comment", "op" => "edit", "id" => $comment->cid)) ."</td><td>". la(t("delete comment"), array("mod" => "comment", "op" => "delete", "id" => $comment->cid)) ."</td></tr>";
     }
 
     $output .= "</table>";
