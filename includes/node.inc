@@ -159,13 +159,6 @@ function node_save($node, $filter) {
   if (empty($node->nid)) {
 
     /*
-    ** Verify a user's submission rate and avoid duplicate nodes being
-    ** inserted:
-    */
-
-    throttle("node", variable_get("max_node_rate", 900));
-
-    /*
     ** Insert a new node:
     */
 

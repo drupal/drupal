@@ -681,8 +681,14 @@ function node_preview($edit) {
 }
 
 function node_submit($node) {
-
   global $user;
+
+  /*
+  ** Verify a user's submission rate and avoid duplicate nodes being
+  ** inserted:
+  */
+
+  throttle("node", variable_get("max_node_rate", 900));
 
   /*
   ** Fixup the node when required:
