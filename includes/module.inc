@@ -172,13 +172,15 @@ function module_implements($hook) {
  * @return
  *   The return value of the hook implementation.
  */
-function module_invoke($module, $hook, $a1 = NULL, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
+function module_invoke() {
+  $args = func_get_args();
+  $module = array_shift($args);
+  $hook = array_shift($args);
   $function = $module .'_'. $hook;
-  if (function_exists($function)) {
-    return $function($a1, $a2, $a3, $a4);
+  if (module_hook($module, $hook)) {
+    return call_user_func_array($function, $args);
   }
 }
-
 /**
  * Invoke a hook in all enabled modules that implement it.
  *
@@ -190,10 +192,13 @@ function module_invoke($module, $hook, $a1 = NULL, $a2 = NULL, $a3 = NULL, $a4 =
  *   An array of return values of the hook implementations. If modules return
  *   arrays from their implementations, those are merged into one array.
  */
-function module_invoke_all($hook, $a1 = NULL, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
+function module_invoke_all() {
+  $args = func_get_args();
+  $hook = array_shift($args);
   $return = array();
-  foreach (module_list() as $module) {
-    $result = module_invoke($module, $hook, $a1, $a2, $a3, $a4);
+  foreach (module_implements($hook) as $module) {
+    $function = $module .'_'. $hook;
+    $result = call_user_func_array($function, $args);
     if (is_array($result)) {
       $return = array_merge($return, $result);
     }
