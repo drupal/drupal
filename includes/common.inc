@@ -639,7 +639,7 @@ function form_submit($value) {
 function drupal_url($args = array(), $script = "node") {
   $t = array();
   foreach ($args as $key => $value) {
-    $t[] = "$key = $value";
+    $t[] = "$key=$value";
   }
   return "$script.php?". implode("&amp;", $t);
 }
