@@ -1,5 +1,5 @@
 <?php
-/* $Id: menu.inc,v 1.54 2004/07/10 18:10:36 dries Exp $ */
+/* $Id: menu.inc,v 1.55 2004/07/14 05:46:12 dries Exp $ */
 
 /**
  * @defgroup menu Menu system
@@ -696,7 +696,10 @@ function _menu_build() {
       // Next, add any custom items added by the administrator.
       else if ($item->type & MENU_CREATED_BY_ADMIN) {
         $_menu['items'][$item->mid] = array('pid' => $item->pid, 'path' => $item->path, 'title' => $item->title, 'access' => TRUE, 'weight' => $item->weight, 'type' => $item->type, 'callback' => '', 'callback arguments' => array());
-        $_menu['path index'][$item->path] = $item->mid;
+
+        if (!empty($item->path)) {
+          $_menu['path index'][$item->path] = $item->mid;
+        }
       }
     }
   }
