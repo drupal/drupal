@@ -34,6 +34,8 @@ Drupal x.x.x, xxxx-xx-xx
 - accessibility:
     * improved the accessibility of the archive module's calendar.
     * improved form handling and error reporting.
+    * added HTTP redirects to prevent submitting twice when refreshing right
+      after a form submission
 - refactored 403 (forbidden) handling and added support for custom 403 pages.
 - documentation:
     * added PHPDoc/Doxygen comments.
