@@ -160,9 +160,9 @@ function statistics_menu() {
   $items[] = array('path' => 'admin/logs/referrer', 'title' => t('referrer'),
     'callback' => 'statistics_top_refer', 'access' => $access,
     'weight' => 2);
-  $items[] = array('path' => 'admin/logs/referrer/internal', 'title' => t('internal referrers only'),
+  $items[] = array('path' => 'admin/logs/referrer/internal', 'title' => t('internal'),
     'access' => $access);
-  $items[] = array('path' => 'admin/logs/referrer/external', 'title' => t('external referrers only'),
+  $items[] = array('path' => 'admin/logs/referrer/external', 'title' => t('external'),
     'access' => $access);
   $items[] = array('path' => 'admin/logs/access', 'title' => t('access'),
     'callback' => 'statistics_admin_displaylog', 'access' => $access,
