@@ -1,7 +1,9 @@
 #!/bin/sh
 
-username="username"
-database="database"
-hostname="hostname"
+username=""
+database=""
+password=""
+hostname=""
+path=""
 
-mysqldump -h $hostname -u $username -p $database > mysql-backup
+mysqldump -h $hostname -u $username -p$password $database > $path/backup-`date +"%Y%m%d"`.sql
