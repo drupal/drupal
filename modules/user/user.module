@@ -604,7 +604,7 @@ function user_menu() {
 
   if (arg(0) == 'user' && is_numeric(arg(1))) {
     $items[] = array('path' => 'user/'. arg(1), 'title' => t('user'),
-      'callback' => 'user_page', 'access' => TRUE);
+      'type' => MENU_CALLBACK, 'callback' => 'user_page', 'access' => TRUE);
     $items[] = array('path' => 'user/'. arg(1) .'/view', 'title' => t('view'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
     $items[] = array('path' => 'user/'. arg(1) .'/edit', 'title' => t('edit'),
