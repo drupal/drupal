@@ -215,7 +215,7 @@ function user_access($string) {
   ** in a static variable.
   */
 
-  if (isset($perm)) {
+  if (!$perm) {
     if ($user->uid) {
       $perm = db_result(db_query("SELECT p.perm FROM role r, permission p WHERE r.rid = p.rid AND name = '%s'", $user->role), 0);
     }
