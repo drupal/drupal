@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.166 2003/11/26 16:17:13 dries Exp $ */
+/* $Id: theme.inc,v 1.167 2003/11/27 13:31:13 dries Exp $ */
 
 /**
  @file
@@ -117,10 +117,10 @@ function path_to_theme() {
 }
 
 /**
-  @defgroup themeable Themeable Functions
+  @defgroup themeable Themeable functions
   @{
 
-  Themeable Functions - functions that can be styled differently in themes.
+  Themeable functions - functions that can be styled differently in themes.
 
   @see  theme
   @see  theme.inc
@@ -272,7 +272,7 @@ function theme_node($node, $main = 0, $page = 0) {
 }
 
 /**
-  Returns themed table.
+  Returns themed form element.
 
   @param $title the form element's title
   @param $value the form element's data
