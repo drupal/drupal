@@ -129,9 +129,6 @@ function throttle($type, $rate) {
       watchdog("warning", "throttle: '". getenv("REMOTE_ADDR") ."' exceeded submission rate - $throttle->type");
       die(message_throttle());
     }
-    else {
-      watchdog($type, "throttle");
-    }
   }
 }
 

@@ -50,13 +50,19 @@ function module_list($refresh = 0, $bootstrap = 0) {
 
   if (!$list) {
     $list = array("admin" => "admin", "system" => "system", "user" => "user", "watchdog" => "watchdog");
-    $result = db_query("SELECT name, filename, bootstrap FROM {system} WHERE type = 'module' AND status = '1' ORDER BY name");
+    $result = db_query("SELECT name, filename, throttle, bootstrap FROM {system} WHERE type = 'module' AND status = '1' ORDER BY name");
     while ($module = db_fetch_object($result)) {
       if (file_exists($module->filename)) {
-        if ($bootstrap) {
+        /*
+        ** Determine the current throttle status and see if module should be
+        **  loaded based on server load.  We have to directly access the
+        **  throttle variables as the throttle.module may not be loaded yet.
+        */
+        $throttle = (variable_get("throttle_enable", 0) && $module->throttle && (variable_get("throttle_level", 0) >= 5));
+        if ($bootstrap && !$throttle) {
           $list[$module->name] = array("name"=> $module->name, "bootstrap" => $module->bootstrap, "filename" => $module->filename);
         }
-        else {
+        else if (!$throttle) {
           $list[$module->name] = $module->name;
           include_once $module->filename;
         }

@@ -423,6 +423,7 @@ CREATE TABLE system (
   type varchar(255) NOT NULL default '',
   description varchar(255) NOT NULL default '',
   status integer NOT NULL default '0',
+  throttle smallint NOT NULL default '0',
   bootstrap integer NOT NULL default '0',
   PRIMARY KEY  (filename)
 );
@@ -568,10 +569,10 @@ INSERT INTO system VALUES ('modules/node.module','node','module','',1,0);
 INSERT INTO system VALUES ('modules/page.module','page','module','',1,0);
 INSERT INTO system VALUES ('modules/story.module','story','module','',1,0);
 INSERT INTO system VALUES ('modules/taxonomy.module','taxonomy','module','',1,0);
-INSERT INTO system VALUES ('themes/marvin/marvin.theme','marvin','theme','Internet explorer, Netscape, Opera',1,0);
+INSERT INTO system VALUES ('themes/xtemplate/xtemplate.theme','xtemplate','theme','Internet explorer, Netscape, Opera',1,0);
 
 INSERT INTO variable(name,value) VALUES('update_start', 's:10:"2003-10-27";');
-INSERT INTO variable(name,value) VALUES('theme_default','s:6:"marvin";');
+INSERT INTO variable(name,value) VALUES('theme_default','s:9:"xtemplate";');
 INSERT INTO users(uid,name,mail,rid) VALUES(0,'','', '1');
 
 INSERT INTO blocks(module,delta,status) VALUES('user', '0', '1');

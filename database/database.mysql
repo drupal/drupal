@@ -427,6 +427,7 @@ CREATE TABLE system (
   type varchar(255) NOT NULL default '',
   description varchar(255) NOT NULL default '',
   status int(2) NOT NULL default '0',
+  throttle tinyint(1) DEFAULT '0' NOT NULL,
   bootstrap int(2) NOT NULL default '0',
   PRIMARY KEY  (filename)
 ) TYPE=MyISAM;
@@ -570,11 +571,11 @@ INSERT INTO system VALUES ('modules/node.module','node','module','',1,0);
 INSERT INTO system VALUES ('modules/page.module','page','module','',1,0);
 INSERT INTO system VALUES ('modules/story.module','story','module','',1,0);
 INSERT INTO system VALUES ('modules/taxonomy.module','taxonomy','module','',1,0);
-INSERT INTO system VALUES ('themes/marvin/marvin.theme','marvin','theme','Internet explorer, Netscape, Opera',1,0);
+INSERT INTO system VALUES ('themes/xtemplate/xtemplate.theme','xtemplate','theme','Internet explorer, Netscape, Opera',1,0);
 INSERT INTO users (uid, name, mail, rid) VALUES ('0', '', '', '1');
 
 REPLACE variable SET name='update_start', value='s:10:"2003-10-27;"';
-REPLACE variable SET name='theme_default', value='s:6:"marvin";';
+REPLACE variable SET name='theme_default', value='s:9:"xtemplate";';
 
 REPLACE blocks SET module = 'user', delta = '0', status = '1';
 REPLACE blocks SET module = 'user', delta = '1', status = '1';

@@ -62,7 +62,8 @@ $mysql_updates = array(
   "2003-10-27" => "update_70",
   "2003-11-17" => "update_71",
   "2003-11-27" => "update_72",
-  "2003-12-03" => "update_73"
+  "2003-12-03" => "update_73",
+  "2003-12-06" => "update_74"
 );
 
 function update_32() {
@@ -583,6 +584,10 @@ function update_73() {
     update_sql("ALTER TABLE {vocabulary} CHANGE nodes nodes longtext");
     update_sql("ALTER TABLE {watchdog} CHANGE message message longtext");
   }
+}
+
+function update_74() {
+  update_sql("ALTER TABLE {system} ADD throttle tinyint(1) NOT NULL DEFAULT '0'");
 }
 
 /*
