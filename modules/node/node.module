@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.459 2005/02/04 20:14:05 unconed Exp $
+// $Id: node.module,v 1.460 2005/02/04 20:48:37 unconed Exp $
 
 /**
  * @file
@@ -1677,9 +1677,9 @@ function node_page() {
       print theme('page', node_preview($edit));
       break;
     case t('Submit'):
-      if (node_submit($edit)) {
+      if ($nid = node_submit($edit)) {
         if (node_access('view', $edit)) {
-          drupal_goto('node/'. $edit->nid);
+          drupal_goto('node/'. $nid);
         }
         else {
           drupal_goto();
