@@ -885,6 +885,9 @@ function taxonomy_nodeapi($node, $op, $arg = 0) {
     case 'delete':
       taxonomy_node_delete($node->nid);
       break;
+    case 'rss item':
+      return taxonomy_rss_item($node);
+      break;
   }
 }
 
@@ -1012,6 +1015,20 @@ function taxonomy_admin() {
   }
 
   print theme('page', $output);
+}
+
+/**
+ * Provides category information for rss feeds
+ */
+function taxonomy_rss_item($node) {
+  $output = array();
+  $terms = taxonomy_node_get_terms($node->nid);
+  foreach ($terms as $term) {
+    $output[] = array('key'   => 'category',
+                      'value' => $term->name,
+                      'attributes' => array('domain' => url('taxonomy/term/'.$term->tid, NULL, NULL, TRUE)));
+  }
+  return $output;
 }
 
 /**

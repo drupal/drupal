@@ -1041,7 +1041,10 @@ function node_feed($nodes = 0, $channel = array()) {
     // Allow modules to change $node->body before viewing.
     node_invoke_nodeapi($item, 'view', false, false);
 
-    $items .= format_rss_item($item->title, $link, $item->teaser, array('pubDate' => date('r', $item->changed)));
+    // Allow modules to add additional item fields
+    $extra = node_invoke_nodeapi($item, 'rss item');
+    $extra = array_merge($extra, array(array('key' => 'pubDate', 'value' =>  date('r', $item->changed))));
+    $items .= format_rss_item($item->title, $link, $item->teaser, $extra);
   }
 
   $channel_defaults = array(

@@ -689,7 +689,24 @@ function format_rss_item($title, $link, $description, $args = array()) {
   $output .= ' <link>'. drupal_specialchars(strip_tags($link)) ."</link>\n";
   $output .= ' <description>'. drupal_specialchars($description) ."</description>\n";
   foreach ($args as $key => $value) {
-    $output .= ' <'. $key .'>'. drupal_specialchars(strip_tags($value)) ."</$key>\n";
+    if (is_array($value)) {
+      if ($value['key']) {
+        $output .= ' <'. $value['key'];
+        if (is_array($value['attributes'])) {
+          $output .= drupal_attributes($value['attributes']);
+        }
+
+        if ($value['value']) {
+          $output .= '>'. $value['value'] .'</'. $value['key'] .">\n";
+        }
+        else {
+          $output .= " />\n";
+        }
+      }
+    }
+    else {
+      $output .= ' <'. $key .'>'. drupal_specialchars(strip_tags($value)) ."</$key>\n";
+    }
   }
   $output .= "</item>\n";
 

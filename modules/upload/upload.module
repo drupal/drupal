@@ -265,6 +265,22 @@ function upload_nodeapi(&$node, $op, $arg) {
       break;
     case 'search result':
       return $node->files ? format_plural(count($node->files), '1 attachment', '%count attachments') : null;
+    case 'rss item':
+      $files = array();
+      foreach ($node->files as $file) {
+        if ($file->list) {
+          $files[] = $file;
+        }
+      }
+      if (count($files) > 0) {
+        // RSS only allows one enclosure per item
+        $file = array_shift($files);
+        return array(array('key' => 'enclosure',
+                           'attributes' => array('url' => file_create_url($file->filepath),
+                                                 'length' => $file->filesize,
+                                                 'type' => $file->filemime)));
+      }
+      break;
   }
 
   return $output;
@@ -332,14 +348,14 @@ function upload_form($node) {
   }
 
   if (count($node->files)) {
-    $output = form_item('', theme('table', $header, $rows), t('Note: changes made to the attachments are not permanent until you save this post.'));
+    $output = theme('table', $header, $rows);
   }
   if (user_access('upload files')) {
     $output .= form_file(t('Attach new file'), "upload", 40);
     $output .= form_button(t('Attach'), 'fileop');
   }
 
-  return '<div class="attachments">'. form_group(t('Attachments'), $output) . '</div>';
+  return '<div class="attachments">'. form_group(t('Attachments'), $output, t('Changes made to the attachments are not permanent until you save this post.  The first "listed" file will be included in RSS feeds.')) .'</div>';
 }
 
 function upload_load($node) {
