@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.172 2003/12/16 21:06:33 dries Exp $ */
+/* $Id: theme.inc,v 1.173 2003/12/16 21:18:51 kjartan Exp $ */
 
 /**
  * @file
@@ -338,7 +338,7 @@ function theme_table($header, $rows) {
 /**
  * Returns themed box.
  *
- * @param $subject the @a subject of the box.
+ * @param $title the @a subject of the box.
  * @param $content the @a content of the box.
  * @param $region the @a region of the box.
  *
