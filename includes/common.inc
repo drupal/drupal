@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.200 2003/05/23 17:59:24 dries Exp $
+// $Id: common.inc,v 1.201 2003/05/23 21:59:43 dries Exp $
 
 function conf_init() {
 
@@ -555,10 +555,6 @@ function rewrite_old_urls($text) {
 
 function check_output($text) {
   if (isset($text)) {
-
-    // temporary: for development purpose
-    $text = rewrite_old_urls($text);
-
     if (strip_tags($text, "<a><i><b><u><tt><code><cite><strong><img>") == $text) {
       $text = nl2br($text);
     }
@@ -858,7 +854,7 @@ function url($url = NULL, $query = NULL) {
     }
     else {
       if (isset($query)) {
-        return "$base_url/$index.php?$query";
+        return "$base_url/index.php?$query";
       }
       else {
         return "$base_url/";
