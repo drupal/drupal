@@ -75,7 +75,7 @@ function node_help_page() {
  * Gather a listing of links to nodes.
  *
  * @param $result
- *   A DB result object from a query to fetch node objects.  If your query joins the <code>node_comment_statistics</code> table so that the <code>comment_count</code> field is available, a title attribute will be added to show the number of comments.  
+ *   A DB result object from a query to fetch node objects.  If your query joins the <code>node_comment_statistics</code> table so that the <code>comment_count</code> field is available, a title attribute will be added to show the number of comments.
  * field to be set.
  * @param $title
  *   A heading for the resulting list.
@@ -1384,9 +1384,15 @@ function node_submit($node) {
     }
   }
 
-  // Node was submitted successfully. Redirect to the viewing page.
   drupal_set_message($msg);
-  drupal_goto('node/'. $node->nid);
+
+  // Node was submitted successfully: redirect the user.
+  if (node_access('view', $node)) {
+    drupal_goto('node/'. $node->nid);
+  }
+  else {
+    drupal_goto();
+  }
 }
 
 /**
