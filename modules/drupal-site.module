@@ -48,8 +48,8 @@ function drupal_block() {
   return $blocks;
 }
 
-function drupal_admin_add($name, $link, $contact) {
-  db_query("INSERT INTO drupals (name, link, contact) VALUES ('". check_input($name) ."', '". check_input($link) ."', '". check_input($contact) ."')");
+function drupal_admin_add($name, $url, $contact) {
+  db_query("INSERT INTO drupals (name, link, contact) VALUES ('". check_input($name) ."', '". check_input($url) ."', '". check_input($contact) ."')");
 }
 
 function drupal_admin_del($id) {
@@ -67,7 +67,7 @@ function drupal_admin_display() {
     $output .= " <TR><TD>$drupal->name</TD><TD>". format_url($drupal->link) ."</TD><TD>". format_email($drupal->contact) ."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=drupal-site&op=delete&id=$drupal->id\">delete</A></TD></TR>\n";
   }
 
-  $output .= " <TR><TD><INPUT TYPE=\"text\" NAME=\"name\"></TD><TD><INPUT TYPE=\"text\" NAME=\"link\"></TD><TD><INPUT TYPE=\"text\" NAME=\"contact\"></TD><TD><INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"Add drupal site\"></TD></TR>\n";
+  $output .= " <TR><TD><INPUT TYPE=\"text\" NAME=\"name\"></TD><TD><INPUT TYPE=\"text\" NAME=\"url\"></TD><TD><INPUT TYPE=\"text\" NAME=\"contact\"></TD><TD><INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"Add drupal site\"></TD></TR>\n";
   $output .= "</TABLE>\n";
   $output .= "</FORM>\n";
 
@@ -75,11 +75,11 @@ function drupal_admin_display() {
 }
 
 function drupal_admin() {
-  global $op, $id, $name, $link, $contact;
+  global $op, $id, $name, $url, $contact;
 
   switch($op) {
     case "Add drupal site":
-      drupal_admin_add($name, $link, $contact);
+      drupal_admin_add($name, $url, $contact);
       drupal_admin_display();
       break;
     case "delete":
