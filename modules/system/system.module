@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.36 2002/06/01 21:57:29 kjartan Exp $
+// $Id: system.module,v 1.37 2002/06/06 18:19:03 dries Exp $
 
 function system_help() {
   $output .= "<p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviors including visual and operational settings.</p>";
@@ -173,7 +173,7 @@ function system_modules() {
     asort($modules);
   }
 
-  $required = array("user", "drupal", "system", "watchdog");
+  $required = array("user", "system", "watchdog");
 
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
   $output .= "<tr><th>module</th><th>description</th><th>enabled</th><th colspan=\"2\">operations</th></tr>\n";
