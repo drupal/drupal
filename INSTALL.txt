@@ -5,7 +5,7 @@ REQUIREMENTS
 
 Drupal requires a web server, PHP4 (http://www.php.net/) and either
 MySQL, PostgreSQL or a database server supported by the PHP PEAR API
-(http://pear.php.net/).
+(http://pear.php.net/).  Drupal is not yet compatible with PHP5.
 
 NOTE: The Apache web server and MySQL database are strongly recommended;
 other web server and database combinations such as IIS and PostgreSQL
