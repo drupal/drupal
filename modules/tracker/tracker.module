@@ -1,10 +1,10 @@
 <?php
-// $Id: tracker.module,v 1.13 2002/01/30 18:15:02 dries Exp $
+// $Id: tracker.module,v 1.14 2002/01/31 20:23:44 dries Exp $
 
 function tracker_link($type) {
 
   if ($type == "menu.view") {
-    $links[] = "<a href=\"module.php?mod=tracker\" title=\"". t("Display an overview of the recent comments.") ."\">". t("recent comments") ."</a>";
+    $links[] = "<a href=\"module.php?mod=tracker\" title=\"". t("Display an overview of the recent comments.") ."\">". t("view new comments") ."</a>";
   }
 
   return $links ? $links : array();
