@@ -14,7 +14,7 @@ function node_render($node) {
 
     node_view($node);
 
-    if ($node->comment) {
+    if (function_exists("comment_render") && $node->comment) {
       comment_render($id, $cid);
     }
 
