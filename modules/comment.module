@@ -103,7 +103,7 @@ function comment_help($section = "admin/help#comment") {
       $output = t("Here you can setup the <strong>initial</strong> vote value of a comment posted by each user role. This value is used before any other users vote on the comment.<br />Note: Blank entries are valued at zero");
       break;
     case 'admin/comment/search':
-      $output = t("Enter a simple pattern ( '*' maybe used as a wildcard match) to search for a comment.  For example, one may search for 'br' and Drupal might return 'bread brakers', 'our daily bread' and 'brenda'.");
+      $output = t("Enter a simple pattern ('*' may be used as a wildcard match) to search for a comment.  For example, one may search for 'br' and Drupal might return 'bread breakers', 'our daily bread' and 'brenda'.");
       break;
   }
   return $output;
