@@ -103,7 +103,7 @@ function forum_block($op = 'list', $delta = 0) {
     if (user_access('access content')) {
       $content = node_title_list(db_query_range("SELECT n.nid, n.title, GREATEST(n.created, MAX(c.timestamp)) AS sort FROM {node} n LEFT JOIN {comments} c ON n.nid = c.nid WHERE n.type = 'forum' AND n.status = 1 GROUP BY n.nid, n.title, n.created ORDER BY sort DESC", 0, variable_get('forum_block_num', '5')), t('Active forum topics:'));
 
-      $content .= node_title_list(db_query_range("SELECT nid, title FROM {node} WHERE type = 'forum' AND n.status = 1 ORDER BY nid DESC", 0, variable_get('forum_block_num', '5')), t('New forum topics:'));
+      $content .= node_title_list(db_query_range("SELECT nid, title FROM {node} WHERE type = 'forum' AND status = 1 ORDER BY nid DESC", 0, variable_get('forum_block_num', '5')), t('New forum topics:'));
 
       if ($content) {
         $content .= "<div class=\"more-link\">". l(t('more'), 'forum', array('title' => t('Read the latest forum topics.'))) .'</div>';
