@@ -1,7 +1,7 @@
 <?php
 // by Edd Dumbill (C) 1999-2001
 // <edd@usefulinc.com>
-// $Id: xmlrpc.inc,v 1.12 2004/01/06 12:09:41 unconed Exp $
+// $Id: xmlrpc.inc,v 1.13 2004/10/19 18:02:22 dries Exp $
 
 
 // Copyright (c) 1999,2000,2001 Edd Dumbill.
@@ -1008,7 +1008,7 @@ function iso8601_decode($idate, $utc=0) {
 
 /*****************************************************************
  * _xmlrpc_decode takes a message in PHP xmlrpc object format and *
- * tranlates it into native PHP types.                            *
+ * translates it into native PHP types.                            *
  *                                                                *
  * author: Dan Libby (dan@libby.com)                              *
  *****************************************************************/

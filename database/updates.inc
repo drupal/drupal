@@ -1,5 +1,5 @@
 <?php
-/* $Id: updates.inc,v 1.66 2004/10/18 18:35:19 dries Exp $ */
+/* $Id: updates.inc,v 1.67 2004/10/19 18:02:21 dries Exp $ */
 
 /**
  * @file
@@ -975,7 +975,7 @@ function update_80() {
     user_save($account, $edit, 'Personal information');
   }
 
-  // This variable is needed to distinguish betweene 4.5-RC sites which ran a faulty
+  // This variable is needed to distinguish between 4.5-RC sites which ran a faulty
   // update_80() and 4.5-final sites. See update_108.
   variable_set('update_80_fix', true);
 

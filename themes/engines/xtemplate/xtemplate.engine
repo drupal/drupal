@@ -1,5 +1,5 @@
 <?php
-// $Id: xtemplate.engine,v 1.6 2004/09/09 13:36:01 unconed Exp $
+// $Id: xtemplate.engine,v 1.7 2004/10/19 18:02:31 dries Exp $
 
 /**
  * @file
@@ -14,7 +14,7 @@ function xtemplate_init($template) {
   }
   $GLOBALS["xtemplate"] = new StdClass();
   $GLOBALS['xtemplate']->template = new XTemplate(basename($template->filename), dirname($template->filename));
-  $GLOBALS['xtemplate']->template->SetNullBlock(' ');  // '' doesnt work!
+  $GLOBALS['xtemplate']->template->SetNullBlock(' ');  // '' doesn't work!
 }
 
 function xtemplate_templates($directory) {

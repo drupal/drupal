@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.90 2004/09/16 07:17:55 dries Exp $
+// $Id: drupal.module,v 1.91 2004/10/19 18:02:23 dries Exp $
 
 /**
  * @file
@@ -106,7 +106,7 @@ function drupal_directory_ping($arguments) {
 }
 
 /**
- * Formats a list of all sites indexed in the ddirectory.
+ * Formats a list of all sites indexed in the directory.
  *
  * This function may be called from a custom page on sites that are
  * Drupal directory servers.

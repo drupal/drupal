@@ -1,5 +1,5 @@
 <?php
-/* $Id: aggregator.module,v 1.213 2004/10/03 10:03:52 dries Exp $ */
+/* $Id: aggregator.module,v 1.214 2004/10/19 18:02:23 dries Exp $ */
 
 /**
  * @file
@@ -414,7 +414,7 @@ function aggregator_refresh($feed) {
  * Origionally from MagpieRSS (http://magpierss.sourceforge.net/).
  *
  * @param $date_str A string with a potentially W3C DTF date.
- * @return A timestamp if parsed sucessfully or -1 if not.
+ * @return A timestamp if parsed successfully or -1 if not.
  */
 function aggregator_parse_w3cdtf($date_str) {
   if (preg_match('/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(:(\d{2}))?(?:([-+])(\d{2}):?(\d{2})|(Z))?/', $date_str, $match)) {
