@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.304 2004/01/07 19:52:10 dries Exp $ */
+/* $Id: common.inc,v 1.305 2004/01/07 20:43:26 unconed Exp $ */
 
 /**
  * @defgroup common Core functions
@@ -231,9 +231,9 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
 
   // Create http request
   $defaults = array(
-    'host' => "Host: $uri[host]",
-    'user-agent' => 'User-Agent: Drupal (+http://www.drupal.org/)',
-    'content-length' => 'Content-Length: '. strlen($data)
+    'Host' => "Host: $uri[host]",
+    'User-Agent' => 'User-Agent: Drupal (+http://www.drupal.org/)',
+    'Content-Length' => 'Content-Length: '. strlen($data)
   );
 
   foreach ($headers as $header => $value) {
@@ -892,9 +892,6 @@ function drupal_get_path_alias($path) {
   }
   elseif (function_exists("conf_url_rewrite")) {
     return conf_url_rewrite($path, 'outgoing');
-  }
-  else {
-    return $path;
   }
 }
 
