@@ -228,10 +228,13 @@ function poll_save($edit) {
 }
 
 function poll_block() {
-  $poll = node_get_object(array("type" => "poll", "active" => 1));
-  if ($poll) {
-    $poll = poll_view($poll, 0, 1);
-    $output = "<b>" . $poll[title] . "</b><br>" . $poll[content];
+  $result = _node_get(array("type" => "poll"));
+  while ($poll = db_fetch_array($result)) {
+    if ($poll[active]) {
+      $poll = poll_view($poll, 0, 1);
+      $output = "<b>" . $poll[title] . "</b><br>" . $poll[content];
+      break;
+    }
   }
   $blocks[0][subject] = "Latest poll";
   $blocks[0][content] = $output ? $output : "No active polls.";
