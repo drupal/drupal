@@ -179,10 +179,10 @@ function form_textarea($title, $name, $value, $cols, $rows, $description = 0) {
   return form_item($title, "<textarea wrap=\"virtual\" cols=\"$cols\" rows=\"$rows\" name=\"edit[$name]\">". check_form($value) ."</textarea>", $description);
 }
 
-function form_select($title, $name, $value, $options, $description = 0) {
+function form_select($title, $name, $value, $options, $description = 0, $extra = 0) {
   if (count($options) > 0) {
-    foreach ($options as $key=>$choice) $select .= "<option value=\"$key\"". ($key == $value ? " selected" : "") .">". check_form($choice) ."</option>";
-    return form_item($title, "<select name=\"edit[$name]\">$select</select>", $description);
+    foreach ($options as $key=>$choice) $select .= "<option value=\"$key\"". (is_array($value) ? (in_array($key, $value) ? " selected" : "") : ($key == $value ? " selected" : "")) .">". check_form($choice) ."</option>";
+    return form_item($title, "<select name=\"edit[$name]\"". ($extra ? " $extra" : "") .">$select</select>", $description);
   }
 }
 
