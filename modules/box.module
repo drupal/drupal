@@ -35,7 +35,7 @@ function box_help() {
 }
 
 function box_block() {
-  $result = db_query("SELECT * FROM boxes");
+  $result = db_query("SELECT * FROM boxes ORDER BY subject");
   $i = 0;
   while ($block = db_fetch_object($result)) {
     $blocks[$i]["subject"] = check_output($block->subject);
@@ -44,7 +44,6 @@ function box_block() {
     $blocks[$i]["link"] = check_output($block->link);
     $i++;
   }
-
   return $blocks;
 }
 
