@@ -1,4 +1,5 @@
 <?php
+// $Id$
 
 function menu_add() {
   trigger_error(t("The 'menu_add()' function is deprecated."), E_USER_ERROR);
