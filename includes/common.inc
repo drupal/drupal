@@ -391,7 +391,7 @@ function check_output($text, $nl2br = 0) {
   if ($text) {
     $text = stripslashes($text);
 
-    if (strip_tags($text, "<a><i><b><u><tt><code><cite><strong>") == $text) {
+    if (strip_tags($text, "<a><i><b><u><tt><code><cite><strong><img>") == $text) {
       $text = nl2br($text);
     }
   }
