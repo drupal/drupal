@@ -540,6 +540,9 @@ function search_view() {
   // the search query URL clean as a whistle:
   // search/type/keyword+keyword
   if ($_POST['edit']['keys']) {
+    if ($type == '') {
+      $type = 'node';
+    }
     drupal_goto('search/'. $type .'/'. urlencode($_POST['edit']['keys']));
   }
   else if ($type == '') {
