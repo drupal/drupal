@@ -839,17 +839,27 @@ function statistics_get($nid) {
 
 
 /* Block hook */
-function statistics_block() {
+function statistics_block($op = "list", $delta = 0) {
+  if ($op == "list") {
+    $blocks[0]["info"] = t("Top nodes");
+    $blocks[1]["info"] = t("Who's online");
+    return $blocks;
+  }
+  else {
+    switch($op) {
+      case 0:
+        $block["subject"] = variable_get("statistics_block_top_title", "Popular content");
+        $block["content"] = statistics_display_topnodes_block();
+        break;
 
-  $block[0]["subject"] = variable_get("statistics_block_top_title", "Popular content");
-  $block[0]["content"] = statistics_display_topnodes_block();
-  $block[0]["info"] = "Top nodes";
+      case 1:
+        $block["subject"] = variable_get("statistics_block_online_title", "Who's online");
+        $block["content"] = statistics_display_online_block();
+        break;
+    }
 
-  $block[1]["subject"] = variable_get("statistics_block_online_title", "Who's online");
-  $block[1]["content"] = statistics_display_online_block();
-  $block[1]["info"] = "Who's online";
-
-  return $block;
+    return $block;
+  }
 }
 
 
