@@ -303,16 +303,10 @@ function poll_view_results(&$node, $main, $block, $links) {
         $width = round($node->chvotes[$key] * 100 / $votesmax);
         $percentage = round($node->chvotes[$key] * 100 / max($votestotal, 1));
 
-        $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"95%\" align=\"center\"><tr><td>$value</td><td><div align=\"right\"> $percentage%". (!$block ? " (". format_plural($node->chvotes[$key], "1 vote", "%count votes") .")" : "") ."</div></td></tr></table>";
-        if ($width == 0) {
-          $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"95%\" align=\"center\"><tr><td class=\"pollbg\" width=\"100%\">&nbsp;</td></tr></table>";
-        }
-        else if ($width == 100) {
-          $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"95%\" align=\"center\"><tr><td class=\"pollfg\" width=\"100%\">&nbsp;</td></tr></table>";
-        }
-        else {
-          $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"95%\" align=\"center\"><tr><td class=\"pollfg\" width=\"". $width ."%\">&nbsp;</td><td class=\"pollbg\" width=\"". (100 - $width) ."%\">&nbsp;</td></tr></table>";
-        }
+        $output .= "<div class=\"poll-text\">$value</div>";
+        $output .= "<div style=\"float:left; width:". $width ."%; height: 1em;\" class=\"poll-foreground\"></div>";
+        $output .= "<div style=\"float:left; width:". (100 - $width) ."%; height: 1em;\" class=\"poll-background\"></div>";
+        $output .= "<div align=\"right\"> $percentage%". (!$block ? " (". format_plural($node->chvotes[$key], "1 vote", "%count votes") .")" : "") ."</div>";
       }
     }
   }

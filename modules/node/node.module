@@ -75,7 +75,7 @@ function node_is_new($nid, $timestamp) {
   global $user;
   static $cache;
 
-  if (!$cache[$nid]) {
+  if (!isset($cache[$nid])) {
     if ($user->uid) {
       $history = db_fetch_object(db_query("SELECT timestamp FROM history WHERE uid = '%d' AND nid = '%d'", $user->uid, $nid));
       $cache[$nid] = $history->timestamp ? $history->timestamp : 0;
@@ -120,7 +120,7 @@ function node_teaser($body) {
   ** the allowed range but no more than a factor two.
   */
 
-  $delimiter = strpos($body, "---");
+  $delimiter = strpos($body, "<!--break-->");
   if ($delimiter > 0 && $delimiter < $size * 2) {
     return substr($body, 0, $delimiter);
   }
@@ -332,10 +332,10 @@ function node_view($node, $main = 0) {
 
   /*
   ** Remove the delimiter (if any) that seperates the teaser from the
-  ** body. TODO: this strips legitimate uses of --- also.
+  ** body. TODO: this strips legitimate uses of '<!--break-->' also.
   */
 
-  $node->body = str_replace("---", "", $node->body);
+  $node->body = str_replace("<!--break-->", "", $node->body);
 
   /*
   ** The "view" hook can be implemented to overwrite the default function
@@ -1203,7 +1203,7 @@ function node_preview($node, $error = NULL) {
     if ($view->teaser && $view->teaser != $view->body) {
       print "<h3>". t("Preview trimmed version") ."</h3>";
       node_view($view, 1);
-      print "<p><i>". t("The trimmed version of your post shows how your post looks like when promoted to the main page or when exported for syndication.  You can insert a delimiter '---' (without the quotes) to fine-tune where your post gets split.  However note that delimiter will be ignored when misplaced.") ."</i></p>";
+      print "<p><i>". t("The trimmed version of your post shows how your post looks like when promoted to the main page or when exported for syndication.  You can insert a delimiter '&lt;!--break--&gt' (without the quotes) to fine-tune where your post gets split.  However note that delimiter will be ignored when misplaced.") ."</i></p>";
       print "<h3>". t("Preview full version") ."</h3>";
       node_view($view, 0);
     }
@@ -1337,12 +1337,6 @@ function node_delete($edit) {
       */
 
       module_invoke("taxonomy", "node_delete", $node->nid);
-
-      /*
-      ** Delete related node statistics
-      */
-
-      module_invoke("statistics", "node_delete", $node->nid);
 
       /*
       ** Call the node specific callback (if any):
