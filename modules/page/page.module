@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.107 2004/01/23 18:42:43 dries Exp $
+// $Id: page.module,v 1.108 2004/01/27 18:47:07 dries Exp $
 
 function page_help($section = "admin/help#page") {
   $output = "";
@@ -13,7 +13,9 @@ function page_help($section = "admin/help#page") {
     case 'admin/system/modules#description':
       $output = t("Enables the creation of a static pages that can be added to the navigation system.");
       break;
-
+    case 'node/add#page':
+      $output = t("If you just want to add a page with a link in the menu to your site, this would be the best choice.  Unlike a story, a static page by-passes the submission queue.");
+      break;
   }
 
   return $output;
@@ -23,11 +25,8 @@ function page_perm() {
   return array("maintain static pages");
 }
 
-function page_node($field) {
-  $info["name"] = t("static page");
-  $info["description"] = t("If you just want to add a page with a link in the menu to your site, this would be the best choice.  Unlike a story, a static page by-passes the submission queue.");
-
-  return $info[$field];
+function page_node_name($node) {
+  return t("static page");
 }
 
 function page_access($op, $node) {

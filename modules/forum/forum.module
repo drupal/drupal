@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.157 2004/01/25 21:11:01 dries Exp $
+// $Id: forum.module,v 1.158 2004/01/27 18:47:07 dries Exp $
 
 function forum_help($section = "admin/help#forum") {
   $output = "";
@@ -23,16 +23,16 @@ function forum_help($section = "admin/help#forum") {
     case 'node/add/forum':
       $output = variable_get('forum_help', '');
       break;
+    case 'node/add#forum':
+      $output = t("A forum is a threaded discussion, enabling users to communicate about a particular topic.");
+      break;
   }
 
   return $output;
 }
 
-function forum_node($field) {
-  $info["name"] = t("forum topic");
-  $info["description"] = t("A forum is a threaded discussion, enabling users to communicate about a particular topic.");
-
-  return $info[$field];
+function forum_node_name($node) {
+  return t("forum topic");
 }
 
 function forum_access($op, $node) {

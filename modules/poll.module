@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.127 2004/01/23 18:42:43 dries Exp $
+// $Id: poll.module,v 1.128 2004/01/27 18:47:07 dries Exp $
 
 function poll_allowvotes(&$node) {
   /*
@@ -156,6 +156,9 @@ function poll_help($section = "admin/help#poll") {
     case 'admin/system/modules#description':
       $output = t("Enables your site to capture votes on different topics in the form of multiple choice questions.");
       break;
+    case 'node/add#poll':
+      $output = t("A poll is a multiple-choice question which visitors can vote on.");
+      break;
   }
 
   return $output;
@@ -242,10 +245,8 @@ function poll_load($node) {
   return $poll;
 }
 
-function poll_node($field) {
-  $info["name"] = t("poll");
-  $info["description"] = t("A poll is a multiple-choice question which visitors can vote on.");
-  return $info[$field];
+function poll_node_name($node) {
+  return t("poll");
 }
 
 function poll_page() {

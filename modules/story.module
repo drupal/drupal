@@ -1,5 +1,5 @@
 <?php
-// $Id: story.module,v 1.141 2004/01/23 18:42:43 dries Exp $
+// $Id: story.module,v 1.142 2004/01/27 18:47:07 dries Exp $
 
 function story_help($section = "admin/help#story") {
   $output = "";
@@ -19,6 +19,9 @@ function story_help($section = "admin/help#story") {
     case 'node/add/story':
       $output = variable_get('story_help', '');
       break;
+    case 'node/add#story':
+      $output = t("A story is a post that is submitted to the attention of other users and is queued in the submission queue.  Users and moderators vote on the posts they like or dislike, promoting or demoting them.  When a post gets above a certain threshold it automatically gets promoted to the front page.");
+      break;
   }
 
   return $output;
@@ -31,10 +34,8 @@ function story_settings() {
  return $output;
 }
 
-function story_node($field) {
-  $info["name"] = t("story");
-  $info["description"] = t("A story is a post that is submitted to the attention of other users and is queued in the submission queue.  Users and moderators vote on the posts they like or dislike, promoting or demoting them.  When a post gets above a certain threshold it automatically gets promoted to the front page.");
-  return $info[$field];
+function story_node_name($node) {
+  return t("story");
 }
 
 function story_perm() {

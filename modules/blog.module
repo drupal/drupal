@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.160 2004/01/23 18:42:43 dries Exp $
+// $Id: blog.module,v 1.161 2004/01/27 18:47:07 dries Exp $
 
 function blog_settings() {
   $output = form_textarea(t("Explanation or submission guidelines"), "blog_help", variable_get("blog_help", ""), 70, 4, t("This text is displayed at the top of the blog submission form.  It's useful for helping or instructing your users."));
@@ -8,13 +8,8 @@ function blog_settings() {
   return $output;
 }
 
-function blog_node($field) {
-  global $user;
-
-  $info["name"] = t("personal blog entry");
-  $info["description"] = t("A blog is a regularly updated journal made up of individual entries, often called posts, that are time stamped and typically arranged by the day, with the newest on top (a diary is the reverse).  They tend to be quite personal, often containing links to things you've seen, or to editorials that you find interesting.   Some blogs also contain original material written solely for the blog.  Since a Blog is personal, you and only you have full control over what you publish.  The most interesting blog entries or those blog entries that fit the site's topic well might get promoted to the front page by the community or by users with the access do this.");
-
-  return $info[$field];
+function blog_node_name($node) {
+  return t("personal blog entry");
 }
 
 function blog_perm() {
@@ -84,6 +79,9 @@ function blog_help($section) {
       break;
     case 'node/add/blog':
       $output = variable_get('blog_help', '');
+      break;
+    case 'node/add#blog':
+      $output = t("A blog is a regularly updated journal made up of individual entries, often called posts, that are time stamped and typically arranged by the day, with the newest on top (a diary is the reverse).  They tend to be quite personal, often containing links to things you've seen, or to editorials that you find interesting.   Some blogs also contain original material written solely for the blog.  Since a Blog is personal, you and only you have full control over what you publish.  The most interesting blog entries or those blog entries that fit the site's topic well might get promoted to the front page by the community or by users with the access do this.");
       break;
   }
 
