@@ -14,7 +14,7 @@ function xtemplate_init($template) {
   }
   $GLOBALS["xtemplate"] = new StdClass();
   $GLOBALS['xtemplate']->template = new XTemplate(basename($template->filename), dirname($template->filename));
-  $GLOBALS['xtemplate']->template->SetNullBlock(' ');  // '' doesnt work!
+  $GLOBALS['xtemplate']->template->SetNullBlock(' ');  // '' doesn't work!
 }
 
 function xtemplate_templates($directory) {

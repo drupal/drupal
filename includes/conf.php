@@ -45,7 +45,7 @@ $base_url = "http://localhost";
 #
 #   To see what PHP settings are known to work well, take a look at
 #   the .htaccesss file in Drupal's root directory.  If you get
-#   unexcepted warnings or errors, double-check your PHP settings.
+#   unexpected warnings or errors, double-check your PHP settings.
 
 # If required, update PHP's include path to include your PEAR directory:
 // ini_set("include_path", ".:/path/to/pear");

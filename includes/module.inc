@@ -117,12 +117,12 @@ function module_get_path($module) {
 }
 
 /**
- * Load a module into Drupal, but check first wether a module by the same name
+ * Load a module into Drupal, but check first whether a module by the same name
  * has been loaded, and that the filename being included exists.
  * @param $module
  *   The name of the module to be loaded.
  * @return
- *   TRUE if the load was successfull.
+ *   TRUE if the load was successful.
  */
 function module_load($module) {
   static $loaded = array();

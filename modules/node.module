@@ -65,7 +65,7 @@ function node_cron() {
 }
 
 /**
- * Menu callback; presents node-specific imformation from "admin/help".
+ * Menu callback; presents node-specific information from "admin/help".
  */
 function node_help_page() {
   print theme('page', node_help('admin/help#node'));
@@ -496,7 +496,7 @@ function node_save($node) {
 function node_view($node, $teaser = FALSE, $page = FALSE) {
   $node = array2object($node);
 
-  // Remove the delimiter (if any) that seperates the teaser from the body.
+  // Remove the delimiter (if any) that separates the teaser from the body.
   // TODO: this strips legitimate uses of '<!--break-->' also.
   $node->body = str_replace('<!--break-->', '', $node->body);
 
@@ -567,7 +567,7 @@ function node_perm() {
  *
  * "select"'s value is used to relate the data from the specific nodes
  * table to the data that the search_index table has in it, and the the
- * do_search functino will rank it.
+ * do_search function will rank it.
  *
  * The select must always provide the following fields: lno, title,
  * created, uid, name, and count.
@@ -860,7 +860,7 @@ function node_revision_load($node, $revision) {
 function node_revision_create($node) {
   global $user;
 
-  // "Revision" is the name of the field used to indicicate that we have to
+  // "Revision" is the name of the field used to indicate that we have to
   // create a new revision of a node.
   if ($node->nid && $node->revision) {
     $prev = node_load(array('nid' => $node->nid));
@@ -1068,7 +1068,7 @@ function node_validate($node) {
     if (empty($node->name)) {
       // The use of empty() is mandatory in the context of usernames
       // as the empty string denotes the anonymous user.  In case we
-      // are dealing with an anomymous user we set the user ID to 0.
+      // are dealing with an anonymous user we set the user ID to 0.
       $node->uid = 0;
     }
     else if ($account = user_load(array('name' => $node->name))) {
@@ -1083,7 +1083,7 @@ function node_validate($node) {
       $node->created = strtotime($node->date);
     }
     else {
-      form_set_error('date', t('You have to specifiy a valid date.'));
+      form_set_error('date', t('You have to specify a valid date.'));
     }
   }
   else {

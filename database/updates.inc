@@ -975,7 +975,7 @@ function update_80() {
     user_save($account, $edit, 'Personal information');
   }
 
-  // This variable is needed to distinguish betweene 4.5-RC sites which ran a faulty
+  // This variable is needed to distinguish between 4.5-RC sites which ran a faulty
   // update_80() and 4.5-final sites. See update_108.
   variable_set('update_80_fix', true);
 

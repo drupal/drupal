@@ -44,7 +44,7 @@ function file_create_url($path) {
  * file system directory, if it is not prepend the
  * file system directory.
  *
- * @param $dest Path to verifiy
+ * @param $dest Path to verify
  * @return Path to file with file system directory appended if necessary.
  */
 function file_create_path($dest = 0) {
