@@ -106,6 +106,7 @@ CREATE TABLE cache (
   data text default '',
   expire integer NOT NULL default '0',
   created integer NOT NULL default '0',
+  headers text default '',
   PRIMARY KEY  (cid)
 );
 

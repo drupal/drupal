@@ -108,6 +108,7 @@ CREATE TABLE cache (
   data longtext,
   expire int(11) NOT NULL default '0',
   created int(11) NOT NULL default '0',
+  headers text,
   PRIMARY KEY  (cid)
 ) TYPE=MyISAM;
 

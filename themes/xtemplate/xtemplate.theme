@@ -92,7 +92,7 @@ function xtemplate_header() {
   $xtemplate->template->assign(array(
         "head_title" => (drupal_get_title() ? drupal_get_title() ." | ". variable_get("site_name", "drupal") : variable_get("site_name", "drupal") ." | ". variable_get("site_slogan", "")),
         "site" => variable_get("site_name", "drupal"),
-        "head" => theme_head(),
+        "head" => drupal_get_html_head(),
         "stylesheet" => variable_get("xtemplate_stylesheet", "themes/xtemplate/xtemplate.css"),
         "onload_attributes" => theme_onload_attribute(),
         "logo" => variable_get("xtemplate_logo", "<img src=\"themes/xtemplate/images/druplicon.gif\" />"),

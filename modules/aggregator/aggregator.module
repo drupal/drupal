@@ -729,8 +729,7 @@ function aggregator_page_opml() {
   $output .= "</body>\n";
   $output .= "</opml>\n";
 
-  header("Content-Type: text/xml");
-
+  drupal_set_header("Content-Type: text/xml; charset=utf-8");
   print $output;
 }
 

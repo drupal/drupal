@@ -88,6 +88,36 @@ function drupal_get_breadcrumb() {
 /* @} */
 
 /**
+ * @name HTML head contents
+ * @ingroup common
+ *
+ * Set and get output that should be in the \<head\> tag.
+ * @{
+ */
+
+function drupal_set_html_head($data = NULL) {
+  static $stored_head;
+
+  if (!is_null($data)) {
+    $stored_head .= "$data\n";
+  }
+  return $stored_head;
+}
+
+function drupal_get_html_head() {
+  global $base_url;
+
+  $output = "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />";
+  $output .= "<base href=\"$base_url/\" />\n";
+  $output .= "<style type=\"text/css\">\n";
+  $output .= "@import url(misc/drupal.css);\n";
+  $output .= "</style>\n";
+
+  return $output . drupal_set_html_head();
+}
+/* @} */
+
+/**
  * @name URL path
  * @ingroup common
  *
@@ -122,6 +152,28 @@ function drupal_rebuild_path_map() {
  * Functions to properly handle HTTP responses.
  * @{
  */
+
+/**
+ * @name HTTP headers
+ * @ingroup common
+ *
+ * Functions to get and set the HTTP headers of the current page.
+ * @{
+ */
+function drupal_set_header($header = NULL) {
+  static $stored_headers;
+
+  if (!is_null($header)) {
+    header($header);
+    $stored_headers .= "$header\n";
+  }
+  return $stored_headers;
+}
+
+function drupal_get_headers() {
+  return drupal_set_header();
+}
+/* @} */
 
 /**
  * HTTP redirects. Makes sure the redirected url is formatted correctly and
@@ -915,8 +967,6 @@ function drupal_get_normal_path($path) {
 }
 
 function url($url = NULL, $query = NULL, $fragment = NULL) {
-  global $base_url;
-
   static $script;
 
   if (empty($script)) {
@@ -939,36 +989,36 @@ function url($url = NULL, $query = NULL, $fragment = NULL) {
   if (variable_get("clean_url", "0") == "0") {
     if (isset($url)) {
       if (isset($query)) {
-        return "$base_url/$script?q=$url&amp;$query$fragment";
+        return "$script?q=$url&amp;$query$fragment";
       }
       else {
-        return "$base_url/$script?q=$url$fragment";
+        return "$script?q=$url$fragment";
       }
     }
     else {
       if (isset($query)) {
-        return "$base_url/$script?$query$fragment";
+        return "$script?$query$fragment";
       }
       else {
-        return "$base_url/$fragment";
+        return "$fragment";
       }
     }
   }
   else {
     if (isset($url)) {
       if (isset($query)) {
-        return "$base_url/$url?$query$fragment";
+        return "$url?$query$fragment";
       }
       else {
-        return "$base_url/$url$fragment";
+        return "$url$fragment";
       }
     }
     else {
       if (isset($query)) {
-        return "$base_url/$script?$query$fragment";
+        return "$script?$query$fragment";
       }
       else {
-        return "$base_url/$fragment";
+        return "$fragment";
       }
     }
   }

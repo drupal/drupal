@@ -65,7 +65,8 @@ $mysql_updates = array(
   "2003-12-03" => "update_73",
   "2003-12-06" => "update_74",
   "2004-01-06" => "update_75",
-  "2004-01-11" => "update_76"
+  "2004-01-11" => "update_76",
+  "2004-01-13" => "update_77"
 );
 
 function update_32() {
@@ -602,6 +603,10 @@ function update_75() {
 
 function update_76() {
   update_sql("ALTER TABLE {feed} ADD image longtext");
+}
+
+function update_77() {
+  update_sql("ALTER TABLE {cache} ADD headers text");
 }
 
 /*

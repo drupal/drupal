@@ -964,7 +964,7 @@ function node_feed($nodes = 0, $channel = array()) {
   $output .= format_rss_channel($channel["title"], $channel["link"], $channel["description"], $items, $channel["language"]);
   $output .= "</rss>\n";
 
-  header("Content-Type: text/xml");
+  drupal_set_header("Content-Type: text/xml; charset=utf-8");
   print $output;
 }
 
@@ -1506,6 +1506,7 @@ function node_page() {
           $output .= node_view(node_load(array("nid" => $node->nid, "type" => $node->type)), 1);
         }
         $output .= theme('pager', NULL, variable_get("default_nodes_main", 10));
+        drupal_set_html_head('<link rel="alternate" type="application/rss+xml" title="RSS" href="'. url('node/feed') .'">');
         print theme("page", $output, "");
     }
   }
