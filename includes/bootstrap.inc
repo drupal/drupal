@@ -104,7 +104,7 @@ function variable_del($name) {
  */
 function cache_get($key) {
   $cache = db_fetch_object(db_query("SELECT data, created, headers FROM {cache} WHERE cid = '%s'", $key));
-  return $cache->data ? $cache : 0;
+  return isset($cache->data) ? $cache : 0;
 }
 
 /**
