@@ -450,10 +450,6 @@ function user_link($type) {
 
   $links = array();
 
-  if ($type == "page") {
-    $links[] = l(t("my account"), "user", array("title" => t("Create a user account, request a new password or edit your account settings.")));
-  }
-
   if ($type == "system") {
     global $user;
     if ($user->uid) {
