@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.74 2003/09/28 15:18:53 dries Exp $
+// $Id: locale.module,v 1.75 2003/09/30 21:48:32 dries Exp $
 
 function locale_help($section = "admin/locale/help") {
   $output = "";
@@ -85,6 +85,14 @@ function locale_link($type) {
       }
     }
   }
+}
+
+function locale_user($type, &$edit, &$user) {
+  global $languages;
+  if ($type == "edit_form" && count($languages) > 1) {
+    $output = form_select(t("Language"), "language", $user->language, $languages, t("Selecting a different language will change the language of the site."));
+  }
+  return $output;
 }
 
 function locale_delete($lid) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.225 2003/09/30 05:15:12 dries Exp $
+// $Id: user.module,v 1.226 2003/09/30 21:48:32 dries Exp $
 
 session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
 session_start();
@@ -454,8 +454,11 @@ function user_block($op = "list", $delta = 0) {
         }
         return $block;
       case 1:
-        $block["subject"] = $user->uid ? $user->name : t("Navigation");
-        $block["content"] = "<div id=\"menu\">". menu_tree() ."</div>";
+        if ($menu = menu_tree()) {
+           $block["subject"] = $user->uid ? $user->name : t("Navigation");
+           $block["content"] = "<div id=\"menu\">". $menu ."</div>";
+        }
+
         return $block;
       case 2:
         if (user_access("access content")) {
@@ -975,7 +978,7 @@ function user_delete() {
 }
 
 function user_edit($edit = array()) {
-  global $user, $languages;
+  global $user;
 
   if ($user->uid) {
     if ($edit["name"]) {
@@ -1065,15 +1068,6 @@ function user_edit($edit = array()) {
 
     $output .= implode("\n", module_invoke_all ("user", "edit_form", $edit, $user));
 
-    $options = "<option value=\"\"". (("" == $key) ? " selected=\"selected\"" : "") .">". t("Default theme") ."</option>\n";
-    foreach (theme_list() as $key => $value) {
-      $options .= "<option value=\"$key\"". (($edit["theme"] == $key) ? " selected=\"selected\"" : "") .">$key - $value->description</option>\n";
-    }
-
-    $output .= form_item(t("Theme"), "<select name=\"edit[theme]\">$options</select>", t("Selecting a different theme will change the look and feel of the site."));
-    for ($zone = -43200; $zone <= 46800; $zone += 3600) $zones[$zone] = date(variable_get("date_format_long", "l, F dS, Y - g:ia"), time() - date("Z") + $zone) ." (GMT ". $zone / 3600 .")";
-    $output .= form_select(t("Time zone"), "timezone", $edit["timezone"], $zones, t("Select what time you currently have and your time zone settings will be set appropriate."));
-    $output .= form_select(t("Language"), "language", $edit["language"], $languages, t("Selecting a different language will change the language of the site."));
     $output .= form_item(t("Password"), "<input type=\"password\" name=\"edit[pass1]\" size=\"12\" maxlength=\"24\" /> <input type=\"password\" name=\"edit[pass2]\" size=\"12\" maxlength=\"24\" />", t("Enter your new password twice if you want to change your current password or leave it blank if you are happy with your current password."));
     $output .= form_submit(t("Save user information"));
 
