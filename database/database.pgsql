@@ -1,3 +1,6 @@
+-- PostgreSQL include file 31/10/2002
+-- Maintainer: James Arthur, j_a_arthurATyahooDOTcom
+
 --
 -- Table structure for access
 --
@@ -9,6 +12,18 @@ CREATE TABLE access (
   status smallint NOT NULL default '0',
   PRIMARY KEY (aid),
   UNIQUE (mask)
+);
+
+--
+-- Table structure for accesslog
+--
+
+CREATE TABLE accesslog (
+  nid integer default '0',
+  url varchar(255) default NULL,
+  hostname varchar(128) default NULL,
+  uid integer default '0',
+  timestamp integer NOT NULL default '0'
 );
 
 --
@@ -50,7 +65,7 @@ CREATE TABLE book (
   parent integer NOT NULL default '0',
   weight smallint NOT NULL default '0',
   format smallint default '0',
-  log text,
+  log text default '',
   PRIMARY KEY (nid)
 );
 CREATE INDEX book_nid_idx ON book(nid);
@@ -62,7 +77,7 @@ CREATE INDEX book_nid_idx ON book(nid);
 CREATE TABLE boxes (
   bid SERIAL,
   title varchar(64) NOT NULL default '',
-  body text,
+  body text default '',
   info varchar(128) NOT NULL default '',
   type smallint NOT NULL default '0',
   PRIMARY KEY  (bid),
@@ -88,7 +103,7 @@ CREATE TABLE bundle (
 
 CREATE TABLE cache (
   cid varchar(255) NOT NULL default '',
-  data text,
+  data text default '',
   expire integer NOT NULL default '0',
   PRIMARY KEY  (cid)
 );
@@ -103,13 +118,16 @@ CREATE TABLE comments (
   nid integer NOT NULL default '0',
   uid integer NOT NULL default '0',
   subject varchar(64) NOT NULL default '',
-  comment text NOT NULL,
+  comment text NOT NULL default '',
   hostname varchar(128) NOT NULL default '',
   timestamp integer NOT NULL default '0',
   link varchar(16) NOT NULL default '',
+  score integer NOT NULL default '0',
+  status smallint  NOT NULL default '0',
+  users text default '',
   PRIMARY KEY  (cid)
 );
-CREATE INDEX comments_lid_idx ON comments(nid);
+CREATE INDEX comments_nid_idx ON comments(nid);
 
 --
 -- Table structure for directory
@@ -119,8 +137,8 @@ CREATE TABLE directory (
   link varchar(255) NOT NULL default '',
   name varchar(128) NOT NULL default '',
   mail varchar(128) NOT NULL default '',
-  slogan text NOT NULL,
-  mission text NOT NULL,
+  slogan text NOT NULL default '',
+  mission text NOT NULL default '',
   timestamp integer NOT NULL default '0',
   PRIMARY KEY  (link)
 );
@@ -133,14 +151,25 @@ CREATE TABLE feed (
   fid SERIAL,
   title varchar(255) NOT NULL default '',
   url varchar(255) NOT NULL default '',
-  refresh integer default NULL,
-  timestamp integer default NULL,
+  refresh integer NOT NULL default '0',
+  timestamp integer NOT NULL default '0',
   attributes varchar(255) NOT NULL default '',
   link varchar(255) NOT NULL default '',
-  description text NOT NULL,
+  description text NOT NULL default '',
   PRIMARY KEY  (fid),
   UNIQUE (title),
   UNIQUE (url)
+);
+
+--
+-- Table structure for table 'forum'
+--
+
+CREATE TABLE forum (
+  nid integer NOT NULL default '0',
+  icon varchar(255) NOT NULL default '',
+  shadow integer NOT NULL default '0',
+  PRIMARY KEY  (nid)
 );
 
 --
@@ -164,19 +193,10 @@ CREATE TABLE item (
   title varchar(255) NOT NULL default '',
   link varchar(255) NOT NULL default '',
   author varchar(255) NOT NULL default '',
-  description text NOT NULL,
-  timestamp integer default NULL,
+  description text NOT NULL default '',
+  timestamp integer default NULL default '',
   attributes varchar(255) NOT NULL default '',
   PRIMARY KEY  (iid)
-);
-
---
--- Table structure for layout
---
-
-CREATE TABLE layout (
-  uid integer NOT NULL default '0',
-  block varchar(64) NOT NULL default ''
 );
 
 --
@@ -199,18 +219,38 @@ CREATE TABLE locales (
 );
 
 --
--- Table structure for moderate
+-- Table structure for table 'moderation_filters'
 --
 
-CREATE TABLE moderate (
-  cid integer NOT NULL default '0',
-  nid integer NOT NULL default '0',
-  uid integer NOT NULL default '0',
-  score integer NOT NULL default '0',
-  timestamp integer NOT NULL default '0'
+CREATE TABLE moderation_filters (
+  fid SERIAL,
+  filter varchar(255) NOT NULL default '',
+  minimum smallint NOT NULL default '0',
+  PRIMARY KEY  (fid)
 );
-CREATE INDEX moderate_cid_idx ON moderate(cid);
-CREATE INDEX moderate_nid_idx ON moderate(nid);
+
+--
+-- Table structure for table 'moderation_roles'
+--
+
+CREATE TABLE moderation_roles (
+  rid integer NOT NULL default '0',
+  mid integer NOT NULL default '0',
+  value smallint NOT NULL default '0'
+);
+CREATE INDEX moderation_roles_rid_idx ON moderation_roles(rid);
+CREATE INDEX moderation_roles_mid_idx ON moderation_roles(mid);
+
+--
+-- Table structure for table 'moderation_votes'
+--
+
+CREATE TABLE moderation_votes (
+  mid SERIAL,
+  vote varchar(255) default NULL,
+  weight smallint NOT NULL default '0',
+  PRIMARY KEY  (mid)
+);
 
 --
 -- Table structure for modules
@@ -270,7 +310,7 @@ CREATE INDEX page_nid_idx ON page(nid);
 
 CREATE TABLE permission (
   rid integer NOT NULL default '0',
-  perm text,
+  perm text default '',
   tid integer NOT NULL default '0'
 );
 CREATE INDEX permission_rid_idx ON permission(rid);
@@ -282,7 +322,7 @@ CREATE INDEX permission_rid_idx ON permission(rid);
 CREATE TABLE poll (
   nid integer NOT NULL default '0',
   runtime integer NOT NULL default '0',
-  voters text NOT NULL,
+  voters text NOT NULL default '',
   active integer NOT NULL default '0',
   PRIMARY KEY  (nid)
 );
@@ -299,6 +339,7 @@ CREATE TABLE poll_choices (
   chorder integer NOT NULL default '0',
   PRIMARY KEY  (chid)
 );
+CREATE INDEX poll_choices_nid_idx ON poll_choices(nid);
 
 --
 -- Table structure for rating
@@ -309,15 +350,6 @@ CREATE TABLE rating (
   current integer NOT NULL default '0',
   previous integer NOT NULL default '0',
   PRIMARY KEY  (uid)
-);
-
---
--- Table structure for referrer
---
-
-CREATE TABLE referrer (
-  url varchar(255) NOT NULL default '',
-  timestamp integer NOT NULL default '0'
 );
 
 --
@@ -336,13 +368,24 @@ CREATE TABLE role (
 --
 
 CREATE TABLE search_index (
- word varchar(50) NOT NULL,
- lno integer NOT NULL,
- type varchar(16) default NULL,
- count integer default NULL
+  word varchar(50) NOT NULL default '',
+  lno integer NOT NULL default '0',
+  type varchar(16) default NULL,
+  count integer default NULL
 );
 CREATE INDEX search_index_lno_idx ON search_index(lno);
 CREATE INDEX search_index_word_idx ON search_index(word);
+
+--
+-- Table structure for sequences
+-- This is only used under MySQL, co commented out
+--
+--
+-- CREATE TABLE sequences (
+--   name varchar(255) NOT NULL,
+--   id integer NOT NULL,
+--   PRIMARY KEY (name)
+-- );
 
 --
 -- Table structure for site
@@ -352,7 +395,7 @@ CREATE TABLE site (
   sid SERIAL,
   name varchar(128) NOT NULL default '',
   link varchar(255) NOT NULL default '',
-  size text NOT NULL,
+  size text NOT NULL default '',
   timestamp integer NOT NULL default '0',
   feed varchar(255) NOT NULL default '',
   refresh integer NOT NULL default '0',
@@ -361,6 +404,21 @@ CREATE TABLE site (
   UNIQUE (name),
   UNIQUE (link)
 );
+
+--
+-- Table structure for table 'statistics'
+--
+
+CREATE TABLE statistics (
+  nid integer NOT NULL default '0',
+  totalcount integer NOT NULL default '0',
+  daycount integer NOT NULL default '0',
+  timestamp integer NOT NULL default '0',
+  PRIMARY KEY  (nid)
+);
+CREATE INDEX statistics_totalcount_idx ON statistics(totalcount);
+CREATE INDEX statistics_daycount_idx ON statistics(daycount);
+CREATE INDEX statistics_timestamp_idx ON statistics(timestamp);
 
 --
 -- Table structure for system
@@ -375,16 +433,7 @@ CREATE TABLE system (
   PRIMARY KEY  (filename)
 );
 
---
--- Table structure for sequences
--- This is only used under MySQL, co commented out
---
---
--- CREATE TABLE sequences (
---   name varchar(255) NOT NULL,
---   id integer NOT NULL,
---   PRIMARY KEY (name)
--- );
+
 
 --
 -- Table structure for term_data
@@ -394,7 +443,7 @@ CREATE TABLE term_data (
   tid SERIAL,
   vid integer NOT NULL default '0',
   name varchar(255) NOT NULL default '',
-  description text,
+  description text default '',
   weight smallint NOT NULL default '0',
   PRIMARY KEY  (tid)
 );
@@ -467,12 +516,14 @@ CREATE TABLE users (
   language char(2) NOT NULL default '',
   sid varchar(32) NOT NULL default '',
   init varchar(64) default '',
-  session text,
-  data text,
+  session text default '',
+  data text default '',
   rid integer NOT NULL default '0',
   PRIMARY KEY  (uid),
   UNIQUE (name)
 );
+CREATE INDEX users_sid_idx ON users(sid);
+CREATE INDEX users_timestamp_idx ON users(timestamp);
 
 --
 -- Table structure for variable
@@ -480,7 +531,7 @@ CREATE TABLE users (
 
 CREATE TABLE variable (
   name varchar(32) NOT NULL default '',
-  value text NOT NULL,
+  value text NOT NULL default '',
   PRIMARY KEY  (name)
 );
 
@@ -491,12 +542,12 @@ CREATE TABLE variable (
 CREATE TABLE vocabulary (
   vid SERIAL,
   name varchar(255) NOT NULL default '',
-  description text,
+  description text default '',
   relations smallint NOT NULL default '0',
   hierarchy smallint NOT NULL default '0',
   multiple smallint NOT NULL default '0',
   required smallint NOT NULL default '0',
-  types text,
+  types text default '',
   weight smallint NOT NULL default '0',
   PRIMARY KEY  (vid)
 );
@@ -520,7 +571,7 @@ CREATE TABLE watchdog (
 -- Insert some default values
 --
 
-INSERT INTO variable(name,value) VALUES('update_start', '2002-05-15');
+
 INSERT INTO system VALUES ('archive.module','archive','module','',1);
 INSERT INTO system VALUES ('block.module','block','module','',1);
 INSERT INTO system VALUES ('blog.module','blog','module','',1);
@@ -545,8 +596,11 @@ INSERT INTO system VALUES ('themes/marvin/marvin.theme','marvin','theme','Intern
 INSERT INTO system VALUES ('themes/unconed/unconed.theme','unconed','theme','Internet explorer, Netscape, Opera',1);
 INSERT INTO system VALUES ('tracker.module','tracker','module','',1);
 
+DELETE FROM variable WHERE name='update_start';
+INSERT INTO variable(name,value) VALUES('update_start', '2002-05-15');
+
 DELETE FROM variable WHERE name='theme_default';
-INSERT INTO variable(value,name) VALUES('marvin', 'theme_default');
+INSERT INTO variable(name,value) VALUES('theme_default','s:6:"marvin";');
 
 DELETE FROM blocks WHERE name='User information';
 INSERT INTO blocks(name,module,delta,status) VALUES('User information', 'user', '0', '1');
