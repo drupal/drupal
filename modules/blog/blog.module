@@ -2,24 +2,23 @@
 // $Id$
 
 function blog_system($field){
-  $system["description"] = t("Enables users to keep a blog or online journal.");
+  $system["description"] = t("Enables keeping a blog or easily and regularly updated web page.");
   return $system[$field];
 }
 
 
 function blog_conf_options() {
- $output .= form_textarea("Explanation or submission guidelines", "blog_help", variable_get("blog_help", ""), 55, 4, "This text will be displayed at the top of the blog submission form.  Useful for helping or instructing your users.");
- $output .= form_select(t("Minimum number of words in a node"), "minimum_blog_size", variable_get("minimum_blog_size", 0), array(0 => "0 words", 10 => "10 words", 25 => "25 words",  50 => "50 words", 75 => "75 words", 100 => "100 words", 125 => "125 words",  150 => "150 words", 175 => "175 words", 200 => "200 words"), t("The minimum number of words a personal blog entry should consist of.  This can be useful to rule out submissions that do not meet the site's standards, such as short test posts."));
+  $output = form_textarea("Explanation or submission guidelines", "blog_help", variable_get("blog_help", ""), 55, 4, "This text is displayed at the top of the blog submission form.  It's useful for helping or instructing your users.");
+  $output .= form_select(t("Minimum number of words in a blog entry"), "minimum_blog_size", variable_get("minimum_blog_size", 0), array(0 => "0 words", 10 => "10 words", 25 => "25 words",  50 => "50 words", 75 => "75 words", 100 => "100 words", 125 => "125 words",  150 => "150 words", 175 => "175 words", 200 => "200 words"), t("The minimum number of words a personal blog entry should contain.  This is useful to rule out submissions that do not meet the site's standards, such as short test posts."));
 
- return $output;
-
+  return $output;
 }
 
 function blog_node($field) {
   global $user;
 
   $info["name"] = t("personal blog entry");
-  $info["description"] = t("A blog is your personal diary or journal.  It is made up of individual entries that are time stamped and are typically arranged by the day, as normal a diary. Blogs often contain links to things you've seen, or on which you agree/disagree.  Since a Blog is personal, you and only you have full control on what you publish.  The most interesting blogs, or those blogs that fit the site's topic might get promoted to the front page.");
+  $info["description"] = t("A blog is a regularly updated web page that is similar to a diary -- that (generally) anyone in the world can see.  It is made up of individual entries, often called posts, that are time stamped and typically arranged by the day, with the newest on top (a diary is the reverse).  Blogs often contain links to things you've seen, or on which you agree/disagree.   Some blogs also contain original material written solely for the blog.  Since a Blog is personal, you and only you have full control on what you publish.  The most interesting blog entries or those blog entries that fit the site's topic well might get promoted to the front page by the community or the people with access to do this.");
 
   return $info[$field];
 }
