@@ -86,23 +86,34 @@ function profile_save_profile($edit, $user) {
   }
 }
 
+function profile_view_field($user, $field) {
+  if ($value = $user->{$field->name}) {
+    switch ($field->type) {
+      case 'textfield':
+      case 'textarea':
+        return check_output($value);
+      case 'selection':
+        return l($value, "profile/$field->name/$value");
+      case 'checkbox':
+        return l($field->title, "profile/$field->name/");
+      case 'url':
+        return "<a href=\"". check_url(strip_tags($value)) ."\">". strip_tags($value) ."</a>";
+    }
+  }
+}
+
 function profile_view_profile($user) {
 
   profile_load_profile(&$user);
 
   $result = db_query('SELECT * FROM {profile_fields} ORDER BY category, weight');
   while ($field = db_fetch_object($result)) {
-    if ($value = $user->{$field->name}) {
-      switch ($field->type) {
-        case 'textfield':
-        case 'textarea':
-          $output .= form_item($field->title, check_output($value));
-          break;
-        case 'selection':
-          $output .= form_item($field->title, l($value, "profile/$field->name/$value"));
-          break;
-        case 'checkbox':
-          $output .= '<p>'. l($field->title, "profile/$field->name/") .'</p>';
+    if ($value = profile_view_field($user, $field)) {
+      if ($field->type == 'checkbox') {
+        $output .= "<p>$value</p>";
+      }
+      else {
+        $output .= form_item($field->title, check_output($value));
       }
     }
   }
@@ -117,6 +128,7 @@ function profile_edit_profile($edit, $user) {
   while ($field = db_fetch_object($result)) {
     switch ($field->type) {
       case 'textfield':
+      case 'url':
         $fields[$field->category] .= form_textfield($field->title, $field->name, $edit[$field->name], 70, 255, $field->explanation);
         break;
       case 'textarea':
@@ -142,6 +154,20 @@ function profile_edit_profile($edit, $user) {
   return $fields;
 }
 
+function profile_validate_profile($edit) {
+  $result = db_query('SELECT * FROM {profile_fields} ORDER BY category, weight');
+
+  while ($field = db_fetch_object($result)) {
+    if ($field->type == 'url') {
+      if ($edit[$field->name] && !valid_url($edit[$field->name], true)) {
+        return t("The value provided for '%field' is not a valid URL.", array('%field' => $field->title));
+      }
+    }
+  }
+
+  return $edit;
+}
+
 function profile_user($type, $edit, &$user) {
   switch ($type) {
     case 'load':
@@ -153,7 +179,7 @@ function profile_user($type, $edit, &$user) {
     case 'edit':
       return profile_edit_profile($edit, $user);
     case 'validate':
-      return $edit;
+      return profile_validate_profile($edit);
   }
 }
 
@@ -176,7 +202,6 @@ function profile_validate_form($edit) {
   }
 
   // Validate the category:
-
   if (!$edit['category']) {
     return t('You must enter a category.');
   }
@@ -288,13 +313,8 @@ function theme_profile_profile($user, $fields = array()) {
   $output .= " <div class=\"name\">". format_name($user) ."</div>\n";
 
   foreach ($fields as $field) {
-    if ($user->{$field->name}) {
-      if ($field->type == 'checkbox') {
-        $output .= " <div class=\"field\">". $field->title ."</div>\n";
-      }
-      else {
-        $output .= " <div class=\"field\">". $user->{$field->name} ."</div>\n";
-      }
+    if ($value = profile_view_field($user, $field)) {
+      $output .= " <div class=\"field\">$value</div>\n";
     }
   }
 
@@ -304,7 +324,7 @@ function theme_profile_profile($user, $fields = array()) {
 }
 
 function _profile_field_types($type = NULL) {
-  $types = array('textfield', 'textarea', 'checkbox', 'selection');
+  $types = array('textfield', 'textarea', 'checkbox', 'selection', 'url');
   return isset($type) ? $types[$type] : $types;
 }
 

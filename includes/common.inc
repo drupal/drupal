@@ -561,8 +561,13 @@ function valid_email_address($mail) {
  *
  * @param $url an URL
  */
-function valid_url($url) {
-  return preg_match("/^[a-zA-z0-9\/:_\-_\.,]+$/", $url);
+function valid_url($url, $absolute = false) {
+  if ($absolute) {
+    return preg_match("/^http:\/\/[a-zA-z0-9\/:_\-_\.,]+$/", $url);
+  }
+  else {
+    return preg_match("/^[a-zA-z0-9\/:_\-_\.,]+$/", $url);
+  }
 }
 
 function valid_input_data($data) {
