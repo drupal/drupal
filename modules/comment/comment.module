@@ -500,10 +500,6 @@ function comment_render($node, $cid = 0) {
 
       $query .= "SELECT c.cid as cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.nid = '". check_query($nid) ."' AND c.status = 0";
 
-      if ($cid) {
-        $query .= " AND pid = '". check_query($cid) ."'";
-      }
-
       $query .= " GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users";
 
       if ($order == 1) {
