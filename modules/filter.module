@@ -205,7 +205,7 @@ function filter_admin_overview() {
       $row[] = form_checkbox('', "roles][$id][$rid", 1, $default || $checked, NULL, $default ? array('disabled' => 'disabled') : NULL);
     }
 
-    $row[] = l('configure', 'admin/filters/'. $id);
+    $row[] = l(t('configure'), 'admin/filters/'. $id);
     $row[] = $default ? '' : l('delete', 'admin/filters/delete/'. $id);
 
     $rows[] = $row;
