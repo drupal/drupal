@@ -119,8 +119,8 @@ function statistics_link($type, $node = 0, $main = 0) {
      menu_add("help", "admin.php?mod=statistics&op=help", "More information about the statistics.", NULL, "site monitoring", 6);
 
      // block configuration:
-     menu_add("configure 'top nodes' block", "admin.php?mod=statistics&op=top+nodes+block", "Configure the 'top nodes block'", $help["top nodes block"], "block management");
-     menu_add("configure 'who is online' block", "admin.php?mod=statistics&op=whos+online+block", "Configure the 'top nodes block'", $help["who is online block"], "block management");
+     menu_add("configure 'top nodes' block", "admin.php?mod=statistics&op=top+nodes+block", "Configure the 'top nodes block'", $help["top nodes block"], "block management", 2);
+     menu_add("configure 'who is online' block", "admin.php?mod=statistics&op=whos+online+block", "Configure the 'top nodes block'", $help["who is online block"], "block management", 2);
   }
 
   return $links ? $links : array();
@@ -324,20 +324,18 @@ function statistics_admin() {
 function statistics_admin_count_table($dbfield, $dbrows) {
   $result = db_query("SELECT statistics.nid, statistics.daycount, statistics.totalcount, statistics.timestamp, node.title FROM statistics LEFT JOIN node USING (nid) WHERE statistics.%s <> '0' ORDER BY statistics.%s DESC LIMIT %s", $dbfield, $dbfield, $dbrows);
 
-  $output = "<table border=\"1\" cellpadding=\"3\" cellspacing =\"0\"><tr><th>". t("title") ."</th><th>". t("today") ."</th><th>". t("all time") ."</th><th>". t("last hit") ."</th><th>". t("referrers") ."</th></tr>\n";
+  $header = array(t("title"), t("today"), t("all time"), t("last hit"), t("operations"));
 
   while ($nid = db_fetch_array($result)) {
-    $output .= "<tr><td>". l($nid["title"], array("id" => $nid["nid"]), "node", "", array("title" => t("View this posting."))) ."</td><td>". $nid["daycount"] ."</td><td>". $nid["totalcount"] ."</td><td>". format_date($nid["timestamp"], "small") ."</td><td><center>";
-    $output .= la("view", array("mod" => "statistics", "op" => "referrers", "nid" => $nid["nid"], "title" => "$nid[title]"));
-    $output .= "</center></td></tr>";
+    $rows[] = array(l($nid["title"], array("id" => $nid["nid"]), "node", "", array("title" => t("View this posting."))), $nid["daycount"], $nid["totalcount"], format_date($nid["timestamp"], "small"), la("view referrers", array("mod" => "statistics", "op" => "referrers", "nid" => $nid["nid"], "title" => "$nid[title]")));
   }
-  $output .= "</table>\n";
 
-  return $output;
+  return table($header, $rows);
 }
 
 
 function statistics_admin_accesslog_table($type, $id) {
+
   /* overview limit */
   $limit0 = 50;
   /* detail limit */
@@ -357,38 +355,35 @@ function statistics_admin_accesslog_table($type, $id) {
   else if ($type == 2) {
     /* retrieve recent access logs for node $id */
     $result = db_query("SELECT nid, url, hostname, uid, timestamp FROM accesslog WHERE nid = '%s' ORDER BY timestamp DESC LIMIT %s", $id, $limit1);
-
   }
   else if ($type == 3) {
     /* retrieve recent access logs for hostname $id */
     $result = db_query("SELECT nid, url, hostname, uid, timestamp FROM accesslog WHERE hostname = '%s' ORDER BY timestamp DESC LIMIT %s", $id, $limit1);
-
   }
   else {
     /* retrieve all recent access logs */
     $result = db_query("SELECT nid, url, hostname, uid, timestamp FROM accesslog ORDER BY timestamp DESC LIMIT %s", $limit0);
   }
 
-  $output = "<table border=\"1\" cellpadding=\"3\" cellspacing =\"0\"><tr><th>". t("timestamp") ."</th><th>". t("title") ."</th><th>". t("user") ."</th><th>". t("hostname") ."</th><th>". t("referrer") ."</th></tr>\n";
+  $header = array(t("timestamp"), t("title"), t("user"), t("hostname"), t("referrer"));
 
   while ($log = db_fetch_array($result)) {
     if (!$node = node_load(array("nid" => $log["nid"]))) {
       $node->nid = 0;
     }
     $user = user_load(array("uid" => $log["uid"]));
-    $output .= "<tr><td>". format_date($log["timestamp"], "small") ."</td><td>". ($node->nid ? la($node->title, array("mod" => "statistics", "op" => "log", "nid" => $node->nid), "") : "n/a") ."</td><td>". ($user->name ? la((strlen($user->name) > 18 ? substr($user->name, 0, 18) . '...' : $user->name), array("mod" => "statistics", "op" => "log", "uid" => $user->uid), "") : "n/a") ."</td><td>". ($log["hostname"] ? la($log["hostname"], array("mod" => "statistics", "op" => "log", "hostname" => $log["hostname"]), "") : "n/a") ."</td><td>";
+
     if ($log["url"]) {
-      $output .= "<a href=\"$log[url]\" title=\"$log[url]\">". (strlen($log["url"]) > 28 ? substr($log["url"], 0, 28) . '...' : $log["url"]) ."</a></td></tr>";
+      $url = "<a href=\"$log[url]\" title=\"$log[url]\">". (strlen($log["url"]) > 28 ? substr($log["url"], 0, 28) . '...' : $log["url"]) ."</a>";
     }
     else {
-      $output .= "n/a</td></tr>";
+      $url = message_na();
     }
 
+    $rows[] = array(array("data" => format_date($log["timestamp"], "small"), "nowrap" => "nowrap"), ($node->nid ? la($node->title, array("mod" => "statistics", "op" => "log", "nid" => $node->nid), "") : message_na()), ($user->name ? la((strlen($user->name) > 18 ? substr($user->name, 0, 18) . '...' : $user->name), array("mod" => "statistics", "op" => "log", "uid" => $user->uid), "") : message_na()), ($log["hostname"] ? la($log["hostname"], array("mod" => "statistics", "op" => "log", "hostname" => $log["hostname"]), "") : message_na()), $url);
   }
 
-  $output .= "</table>";
-
-  return $output;
+  return table($header, $rows);
 }
 
 
@@ -431,15 +426,14 @@ function statistics_recent_refer($nid = 0) {
     $output = "<h3>". t("Most recent %describe referrers", array("%describe" => $describe)) ."</h3>";
   }
 
-  $output .= "<table border=\"1\" cellpadding=\"3\" cellspacing=\"0\">\n";
-  $output .= " <tr><th>URL</th><th>date</th></tr>\n";
+  $header = array(t("URL"), t("date"));
   while ($referrer = db_fetch_array($result)) {
-    $output .= "<tr><td><a href=\"". check_output($referrer["url"]) ."\">". substr(check_output($referrer["url"]), 0, 100) ."</a></td><td>". format_date($referrer["timestamp"], "small") ."</td></tr>";
+    $rows[] = array("<a href=\"". check_output($referrer["url"]) ."\">". substr(check_output($referrer["url"]), 0, 100) ."</a>", format_date($referrer["timestamp"], "small"));
   }
-  $output .= "</table>\n";
+
+  $output .= table($header, $rows);
 
   return $output;
-
 }
 
 
@@ -484,12 +478,12 @@ function statistics_top_refer($nid = 0) {
 
   $result = db_query($query);
 
-  $output .= "<table border=\"1\" cellpadding=\"3\" cellspacing=\"0\">\n";
-  $output .= " <tr><th>". t("URL") ."</th><th>". t("count") ."</th></tr>\n";
+  $header = array(t("URL"), t("count"));
   while ($referrer = db_fetch_array($result)) {
-    $output .= "<tr><td><a href=\"". check_output($referrer["url"]) ."\">". substr(check_output($referrer["url"]), 0, 100) ."</a></td><td>". $referrer["count"] ."</td></tr>";
+    $rows[] = array("<a href=\"". $referrer["url"] ."\">". substr(check_output($referrer["url"]), 0, 100) ."</a>", $referrer["count"]);
   }
-  $output .= "</table>\n";
+
+  $output .= table($header, $rows);
 
   return $output;
 
@@ -901,7 +895,6 @@ function statistics_summary($dbfield, $dbrows) {
   }
 
   return $output;
-
 }
 
 // clean up statistics table when node is deleted
