@@ -115,7 +115,7 @@ function story_edit($id) {
 
   $output .= "<P>\n";
   $output .= " <B>Subject:</B><BR>\n";
-  $output .= " <INPUT TYPE=\"text\" NAME=\"edit[subject]\" SIZE=\"50\" VALUE=\"". check_output(check_field($story->subject)) ."\"><BR>\n";
+  $output .= " <INPUT TYPE=\"text\" NAME=\"edit[subject]\" SIZE=\"50\" VALUE=\"". check_textfield($story->subject) ."\"><BR>\n";
   $output .= "</P>\n";
 
   $output .= "<P>\n";
@@ -129,19 +129,19 @@ function story_edit($id) {
 
   $output .= "<P>\n";
   $output .= " <B>Abstract:</B><BR>\n";
-  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"edit[abstract]\">". check_output($story->abstract) ."</TEXTAREA><BR>\n";
+  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"edit[abstract]\">". check_textarea($story->abstract) ."</TEXTAREA><BR>\n";
   $output .= " <SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL>\n";
   $output .= "</P>\n";
 
   $output .= "<P>\n";
   $output .= " <B>Editor's note/updates:</B><BR>\n";
-  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"edit[updates]\">". check_output($story->updates) ."</TEXTAREA><BR>\n";
+  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"edit[updates]\">". check_textarea($story->updates) ."</TEXTAREA><BR>\n";
   $output .= " <SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL>\n";
   $output .= "</P>\n";
 
   $output .= "<P>\n";
   $output .= " <B>Extended story:</B><BR>\n";
-  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"edit[article]\">". check_output($story->article) ."</TEXTAREA><BR>\n";
+  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"edit[article]\">". check_textarea($story->article) ."</TEXTAREA><BR>\n";
   $output .= " <SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL>\n";
   $output .= "</P>\n";
 

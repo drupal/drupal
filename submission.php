@@ -4,7 +4,7 @@ include "includes/submission.inc";
 include "includes/common.inc";
 
 function submission_display_main() {
-  global $PHP_SELF, $theme, $user;
+  global $theme, $user;
 
   // Perform query:
   $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON s.author = u.id WHERE s.status = 1 ORDER BY s.id");
@@ -13,8 +13,8 @@ function submission_display_main() {
   $content .= "<TABLE BORDER=\"0\" CELLSPACING=\"4\" CELLPADDING=\"4\">\n";
   $content .= " <TR BGCOLOR=\"$bgcolor1\"><TH>Subject</TH><TH>Category</TH><TH>Date</TH><TH>Author</TH><TH>Score</TH></TR>\n";
   while ($submission = db_fetch_object($result)) {
-    if (user_getHistory($user->history, "s$submission->id")) $content .= " <TR><TD WIDTH=\"100%\"><A HREF=\"$PHP_SELF?op=view&id=$submission->id\">". stripslashes($submission->subject) ."</A></TD><TD>$submission->category</TD><TD ALIGN=\"center\">". date("Y-m-d", $submission->timestamp) ."<BR>". date("H:m:s", $submission->timestamp) ."</TD><TD ALIGN=\"center\">". format_username($submission->userid) ."</TD><TD ALIGN=\"center\">". submission_score($submission->id) ."</TD></TR>\n";
-    else $content .= " <TR><TD WIDTH=\"100%\"><A HREF=\"$PHP_SELF?op=view&id=$submission->id\">". stripslashes($submission->subject) ."</A></TD><TD>$submission->category</TD><TD ALIGN=\"center\">". date("Y-m-d", $submission->timestamp) ."<BR>". date("H:m:s", $submission->timestamp) ."</TD><TD ALIGN=\"center\">". format_username($submission->userid) ."</TD><TD ALIGN=\"center\"><A HREF=\"$PHP_SELF?op=view&id=$submission->id\">vote</A></TD></TR>\n";
+    if ($user->id == $submission->author || user_getHistory($user->history, "s$submission->id")) $content .= " <TR><TD WIDTH=\"100%\"><A HREF=\"submission.php?op=view&id=$submission->id\">". stripslashes($submission->subject) ."</A></TD><TD>$submission->category</TD><TD ALIGN=\"center\">". date("Y-m-d", $submission->timestamp) ."<BR>". date("H:m:s", $submission->timestamp) ."</TD><TD ALIGN=\"center\">". format_username($submission->userid) ."</TD><TD ALIGN=\"center\">". submission_score($submission->id) ."</TD></TR>\n";
+    else $content .= " <TR><TD WIDTH=\"100%\"><A HREF=\"submission.php?op=view&id=$submission->id\">". stripslashes($submission->subject) ."</A></TD><TD>$submission->category</TD><TD ALIGN=\"center\">". date("Y-m-d", $submission->timestamp) ."<BR>". date("H:m:s", $submission->timestamp) ."</TD><TD ALIGN=\"center\">". format_username($submission->userid) ."</TD><TD ALIGN=\"center\"><A HREF=\"submission.php?op=view&id=$submission->id\">vote</A></TD></TR>\n";
   }
   $content .= "</TABLE>\n";
 
@@ -24,19 +24,19 @@ function submission_display_main() {
 }
 
 function submission_display_item($id) {
-  global $PHP_SELF, $theme, $user, $submission_votes;
+  global $theme, $user, $submission_votes;
 
-  if ($vote = user_getHistory($user->history, "s$id")) {
+  $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON s.author = u.id WHERE s.id = $id");
+  $submission = db_fetch_object($result);
+
+  if ($user->id == $submission->author || user_getHistory($user->history, "s$id")) {
     header("Location: discussion.php?id=$id");
   }
   else {
-    $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON s.author = u.id WHERE s.id = $id");
-    $submission = db_fetch_object($result);
-
     $theme->header();
-    $theme->article($submission, "[ <A HREF=\"$PHP_SELF\"><FONT COLOR=\"$theme->hlcolor2\">back</FONT></A> ]");
+    $theme->article($submission, "[ <A HREF=\"submission.php\"><FONT COLOR=\"$theme->hlcolor2\">back</FONT></A> ]");
    
-    print "<FORM ACTION=\"$PHP_SELF\" METHOD=\"post\">\n";
+    print "<FORM ACTION=\"submission.php\" METHOD=\"post\">\n";
 
     print "<P>\n";
     print " <B>Vote:</B><BR>\n";

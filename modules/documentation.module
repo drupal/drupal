@@ -38,7 +38,7 @@ function documentation() {
   <P>Make sure to consult the MySQL documentation on how to setup the correct access rights and permissions in your MySQL grant tables.</P>
   <P>4. Once you have a proper database, dump the required tables into your database:</P>
   <BLOCKQUOTE>$ mysql -h <I>&lt;hostname&gt;</I> -u <I>&lt;username&gt;</I> -p<I>&lt;password&gt; &lt;database&gt;</I> < database/database.mysql</BLOCKQUOTE>
-  <P>5. Copy the file <CODE>includes/hostname.conf</CODE> to match your server's hostname:</P>
+  <P>5. Rename the configuration file <CODE>includes/hostname.conf</CODE> to match your server's hostname:</P>
   <BLOCKQUOTE>$ cp includes/hostname.conf includes/www.yourdomain.com.conf</BLOCKQUOTE>
   <P>6. Edit your configuration file to set the required settings such as the database options and to customize your site to your likings.</P>
   <P>7. Launch your browser and point it to http://yourdomain.com/, create an account, log in and head on to http://yourdomain.com/admin.php.  The first user will automatically have administrator permissions.  Play with it for a bit and spend some time getting used to the administration interfaces.</P>
