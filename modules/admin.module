@@ -1,5 +1,5 @@
 <?php
-// $Id: admin.module,v 1.9 2003/04/01 06:05:15 dries Exp $
+// $Id: admin.module,v 1.10 2003/04/21 13:56:08 dries Exp $
 
 include_once "includes/common.inc";
 
@@ -40,8 +40,9 @@ function admin_page() {
       <style type="text/css" title="layout" media="Screen">
         @import url("misc/admin.css");
       </style>
+      <?php print theme_head(); ?>
      </head>
-     <body>
+     <body<?php print theme_onload_attribute(); ?>>
       <?php
         // NOTE: we include a dummy "print.css" to remove the "flash of unstyled content" (FUOC) problems in IE.
 
@@ -87,6 +88,7 @@ function admin_page() {
         echo "<h1><a href=\"index.php\">". variable_get("site_name", "drupal") ."</a></h1>";
         print menu_tree("admin") ;
         print "</div>";
+  print theme_footer();
       ?>
     </body>
    </html>
