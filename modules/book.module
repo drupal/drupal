@@ -61,8 +61,8 @@ function book_view($node, $main = 0) {
     $output .= " <TR><TD COLSPAN=\"3\"><BR>". check_output($node->body, 1) ."</TD></TR>";
   }
 
-  $output .= " <TR><TD COLSPAN=\"3\"><BR>". book_tree($node->nid) ."</TD</TR>";
-  $output .= " <TR><TD COLSPAN=\"3\"><HR></TD</TR>";
+  $output .= " <TR><TD COLSPAN=\"3\"><BR>". book_tree($node->nid) ."</TD></TR>";
+  $output .= " <TR><TD COLSPAN=\"3\"><HR></TD></TR>";
   $output .= " <TR><TD ALIGN=\"left\" WIDTH=\"33%\">". ($prev ? "<A HREF=\"node.php?id=$prev->nid\">". t("previous") ."</A>" : t("previous")) ."</TD><TD ALIGN=\"center\" WIDTH=\"34%\"><A HREF=\"module.php?mod=book\">index</A></TD><TD ALIGN=\"right\" WIDTH=\"33%\">". ($next ? "<A HREF=\"node.php?id=$next->nid\">". t("next") ."</A>" : t("next")) ."</TD></TR>\n";
   $output .= " <TR><TD ALIGN=\"left\" WIDTH=\"33%\">". ($prev ? "<SMALL>". check_output($prev->title) ."</SMALL>" : "&nbsp;") ."</TD><TD ALIGN=\"center\" WIDTH=\"34%\">". ($node->parent ? "<A HREF=\"node.php?id=$node->parent\">". t("up") ."</A>" : t("up")) ."</TD><TD ALIGN=\"right\" WIDTH=\"33%\">". ($next ? "<SMALL>". check_output($next->title) ."</SMALL>" : "&nbsp;") ."</TD></TR>\n";
   $output .= "</TABLE>\n";
