@@ -122,3 +122,11 @@ CREATE TABLE cvs (
   message text,
   timestamp int(11) DEFAULT '0' NOT NULL
 );
+
+# 27/04/2001:
+CREATE TABLE forum (
+  lid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
+  nid int(10) unsigned DEFAULT '0' NOT NULL,
+  body text NOT NULL,
+  PRIMARY KEY (lid)
+);

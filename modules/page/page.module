@@ -1,7 +1,6 @@
 <?php
 
 $module = array("type" => "page_type",
-                "page" => "page_page",
                 "admin" => "page_admin");
 
 $format = array(0 => HTML, 1 => PHP, 2 => text);

@@ -177,7 +177,7 @@ function node_control($node) {
   </SCRIPT>
  <?php
 
-  if ($user->id) 
+  if ($user->id)
     $choices = array("node.php?id=$node->nid" => t("view node"), "submit.php?mod=$node->type" => t("add node"), "submit.php?mod=$node->type&op=update&id=$node->nid" => t("update node"),  "node.php?op=history&id=$node->nid" => t("view history"));
   else
     $choices = array("node.php?id=$node->nid" => t("view node"), "node.php?op=history&id=$node->nid" => t("view history"));

@@ -14,14 +14,14 @@ function theme_init() {
 
 function theme_link($separator = " | ") {
   global $repository;
-  $links = array("<A HREF=\"index.php\">". t("home") ."</A>",
-                 "<A HREF=\"search.php\">". t("search") ."</A>",
-                 "<A HREF=\"submit.php\">". t("submit") ."</A>");
-  if (is_array($repository[diary]))
-    $links[] = "<A HREF=\"module.php?mod=diary\">". t("diary") ."</A>";
+  $links[] = "<A HREF=\"index.php\">". t("home") ."</A>";
+  $links[] = "<A HREF=\"search.php\">". t("search") ."</A>";
+  $links[] = "<A HREF=\"submit.php\">". t("submit") ."</A>";
+  if ($repository[forum]) $links[] = "<A HREF=\"module.php?mod=forum\">".t("forum") ."</A>";
+  if ($repository[diary]) $links[] = "<A HREF=\"module.php?mod=diary\">". t("diary") ."</A>";
   $links[] = "<A HREF=\"account.php\">". t("account") ."</A>";
-  if (is_array($repository[diary]))
-    $links[] = "<A HREF=\"module.php?mod=book\">". t("handbook") ."</A>";
+  if ($repository[book]) $links[] = "<A HREF=\"module.php?mod=book\">". t("handbook") ."</A>";
+
   return implode($separator, $links);
 }
 
