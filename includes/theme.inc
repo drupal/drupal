@@ -98,17 +98,13 @@ function theme_morelink($theme, $story) {
 function theme_moderation_results($theme, $story) {
   global $user;
 
-  if ($user->id && $story->id && $vote = user_getHistory($user->history, "s$story->id")) {
-    $output .= "<P><B>You voted `$vote'.</B></P>\n";
-    $output .= "<P>\n";
-    $output .= "<B>Other people voted:</B><BR>\n";
-
-    $result = db_query("SELECT * FROM users WHERE id != $user->id AND history LIKE '%s$story->id%'");
+  if ($user->id && $story->id && ($user->id == $story->author || user_getHistory($user->history, "s$story->id"))) {
+    $result = db_query("SELECT * FROM users WHERE history LIKE '%s$story->id%'");
     while ($account = db_fetch_object($result)) {
-      $output .= "". format_username($account->userid) ." voted `". user_getHistory($account->history, "s$story->id") ."'.<BR>";
+      $output .= format_username($account->userid) ." voted `". user_getHistory($account->history, "s$story->id") ."'.<BR>";
     }
     
-    $theme->box("Moderation results", $output);
+    $theme->box("Moderation results", ($output ? $output : "This story has not been moderated yet."));
   }
 }
 

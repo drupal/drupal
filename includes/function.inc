@@ -17,8 +17,14 @@ function discussion_score($comment) {
   return (strpos($value, ".")) ? substr($value ."00", 0, 4) : $value .".00";
 }
 
-function check_field($message) {
-  return str_replace("\"", "&quot;", stripslashes($message));
+function check_textfield($message) {
+  global $allowed_html;
+  return strip_tags(str_replace("\"", "&quot;", stripslashes($message)), $allowed_html);
+}
+
+function check_textarea($message) {
+  global $allowed_html;
+  return htmlspecialchars(strip_tags(stripslashes($message), $allowed_html));
 }
 
 function check_input($message) {

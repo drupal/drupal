@@ -70,7 +70,7 @@
      print "<BR><BR>\n\n";
    }
 
-   function article($story, $reply) {
+   function article($story, $reply = "") {
      print "\n<!-- story: \"$story->subject\" -->\n";
      print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"2\" WIDTH=\"100%\">\n";
      print " <TR><TD COLSPAN=\"2\"><IMG SRC=\"themes/marvin/images/drop.gif\" ALT=\"\"> &nbsp; <B>". check_output($story->subject) ."</B></TD></TR>\n";
