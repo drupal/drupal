@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.133 2002/11/29 05:45:57 dries Exp $
+// $Id: common.inc,v 1.134 2002/12/11 20:21:04 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST;
@@ -101,7 +101,7 @@ function request_uri() {
 }
 
 function message_access() {
-  return t("You are not authorized to access to this page.");
+  return t("You are not authorized to access this page.");
 }
 
 function message_na() {
