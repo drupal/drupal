@@ -1,5 +1,5 @@
 <?php
-// $Id: import.module,v 1.106 2003/06/27 17:48:20 dries Exp $
+// $Id: import.module,v 1.107 2003/06/28 22:48:18 dries Exp $
 
 
 function import_help() {
@@ -394,6 +394,7 @@ function import_refresh($feed) {
       db_query("DELETE FROM item WHERE ". implode(" OR ", array_slice($items, 0, - 50)));
     }
 
+    cache_clear_all();
   }
   else {
     return t("failed to parse RSS feed '%site': no data.", array("%site" => $feed["tite"]));
