@@ -10,15 +10,15 @@
 function xtemplate_init($template) {
   // We cannot use the theme() or path_to_theme() functions here
   if (!class_exists('XTemplate')) {
-    include_once('themes/engines/xtemplate/xtemplate.inc');
+    include_once(dirname(__FILE__) . '/xtemplate.inc');
   }
   $GLOBALS["xtemplate"] = new StdClass();
   $GLOBALS['xtemplate']->template = new XTemplate(basename($template->filename), dirname($template->filename));
   $GLOBALS['xtemplate']->template->SetNullBlock(' ');  // '' doesn't work!
 }
 
-function xtemplate_templates($directory) {
-  return file_scan_directory($directory, 'xtemplate.xtmpl$');
+function xtemplate_templates() {
+  return system_listing('^xtemplate\.xtmpl$', 'themes', 'filename');
 }
 
 function xtemplate_features() {

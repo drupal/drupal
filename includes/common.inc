@@ -1836,6 +1836,100 @@ function drupal_eval($code) {
   return $output;
 }
 
+/**
+ * Returns and optionally sets the filename for a system item (module,
+ * theme, etc.).  The filename, whether provided, cached, or retrieved
+ * from the database, is only returned if the file exists.
+ *
+ * @param $type
+ *   The type of the item (i.e. theme, theme_engine, module).
+ * @param $name
+ *   The name of the item for which the filename is requested.
+ * @param $filename
+ *   The filename of the item if it is to be set explicitly rather
+ *   than by consulting the database.
+ *
+ * @return
+ *   The filename of the requested item.
+ */
+function drupal_get_filename($type, $name, $filename = NULL) {
+  static $files = array();
+
+  if (!$files[$type]) {
+    $files[$type] = array();
+  }
+
+  if ($filename && file_exists($filename)) {
+    $files[$type][$name] = $filename;
+  }
+  elseif ($files[$type][$name]) {
+    // nothing
+  }
+  elseif (($file = db_result(db_query("SELECT filename FROM {system} WHERE name = '%s' AND type = '%s'", $name, $type))) && file_exists($file)) {
+    $files[$type][$name] = $file;
+  }
+  else {
+    $config = conf_init();
+    $dir = (($type == 'theme_engine') ? 'themes/engines' : "${type}s");
+    $file = "$name.$type";
+
+    foreach (array("$config/$dir/$file", "$config/$dir/$name/$file", "$dir/$file", "$dir/$name/$file") as $file) {
+      if (file_exists($file)) {
+        $files[$type][$name] = $file;
+        break;
+      }
+    }
+  }
+
+  return $files[$type][$name];
+}
+
+/**
+ * Returns the path to a system item (module, theme, etc.).
+ *
+ * @param $type
+ *   The type of the item (i.e. theme, theme_engine, module).
+ * @param $name
+ *   The name of the item for which the path is requested.
+ *
+ * @return
+ *   The path to the requested item.
+ */
+function drupal_get_path($type, $name) {
+  return dirname(drupal_get_filename($type, $name));
+}
+
+/**
+ * Includes a file with the provided type and name.  This prevents
+ * including a theme, engine, module, etc., more than once.
+ *
+ * @param $type
+ *   The type of item to load (i.e. theme, theme_engine, module).
+ * @param $name
+ *   The name of the item to load.
+ *
+ * @return
+ *   TRUE if the item is loaded or has already been loaded.
+ */
+function drupal_load($type, $name) {
+  static $files = array();
+
+  if ($files[$type][$name]) {
+    return TRUE;
+  }
+
+  $filename = drupal_get_filename($type, $name);
+
+  if ($filename) {
+    include_once($filename);
+    $files[$type][$name] = TRUE;
+
+    return TRUE;
+  }
+
+  return FALSE;
+}
+
 include_once 'includes/theme.inc';
 include_once 'includes/pager.inc';
 include_once 'includes/menu.inc';

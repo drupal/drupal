@@ -271,177 +271,148 @@ function system_view_general() {
 }
 
 /**
- * Inventory theme engines and insert entries for them into the system table
- */
-function system_theme_engine_inventory($directory) {
-  $engines = array();
-
-  // Remove all theme engines from the system table
-  db_query('DELETE FROM {system} WHERE type = \'%s\'', 'theme_engine');
-
-  // Find theme engines in the directory and insert into database
-  $files = file_scan_directory($directory. '/engines', '\.engine$');
-
-  foreach ($files as $filename => $file) {
-    module_set_filename($file->name, $filename);
-    module_load($file->name);
-
-    $info = new StdClass();
-    $info->name = $file->name;
-    $info->filename = $file->filename;
-    $engines[$info->name] = $info;
-
-    db_query('INSERT INTO {system} (name, type, filename, status, throttle, bootstrap) VALUES (\'%s\', \'%s\', \'%s\', %d, %d, %d)', $info->name, 'theme_engine', $filename, 1, 0, 0);
-  }
-  return $engines;
-}
-
-/**
- * Retrieves an array of a particular type of files (specified by $type) in a particular $directory
- * and their current status in the system table.
- */
-function system_get_files($search, $type, $directory) {
-  // Find files in the directory.
-  $files = file_scan_directory($directory, $search);
-
-  return $files;
-}
-
-/**
  * Retrieves the current status of an array of files in the system table.
  */
 function system_get_files_database(&$files, $type) {
   // Extract current files from database.
-  $result = db_query('SELECT filename, type, status, throttle FROM {system} WHERE type = \'%s\'', $type);
+  $result = db_query("SELECT name, type, status, throttle FROM {system} WHERE type = '%s'", $type);
   while ($file = db_fetch_object($result)) {
-    if (is_object($files[$file->filename])) {
+    if (is_object($files[$file->name])) {
       foreach ($file as $key => $value) {
-        $files[$file->filename]->$key = $value;
+        if (!$files[$file->name]->$key) {
+          $files[$file->name]->$key = $value;
+        }
       }
     }
   }
-}
-
-/**
- * Obtains information about each theme in the $files array
- * Also updates the system table
- */
-function system_obtain_theme_info($files, $directory) {
-  foreach ($files as $filename => $file) {
-    $info = new StdClass();
-    if ($file->theme) {
-      // file is a style
-      $info->description = $file->theme;
-      $info->style = TRUE;
-    }
-
-    if (strpos($filename, '.theme')) {
-      // file is a theme
-      module_set_filename($file->name, $filename);
-      module_load($file->name);
-      $info->description = '';
-      $info->prefix = basename($filename, '.theme');
-    }
-    elseif ($info->style && !$file->engine) {
-      $info->prefix = $info->description;
-    }
-    else {
-      // file is a template
-      $info->description = $info->style ? $info->description : $file->engine;
-      $info->template = TRUE;
-      $info->prefix = basename($file->engine, '.engine');
-    }
-
-    $info->filename = $filename;
-    $info->path = pathinfo($info->filename);
-    $info->name = str_replace(array($directory .'/'), '', $info->path['dirname']);
-    $info->shortname = basename($info->name);
-    $info->screenshot = dirname($info->filename) .'/screenshot.png';
-
-    $info->status = $file->status;
-
-    $themes[$info->name] = $info;
-
-    // Update the contents of the system table:
-    db_query('DELETE FROM {system} WHERE filename = \'%s\' AND type = \'%s\'', $info->filename, 'theme');
-    db_query('INSERT INTO {system} (name, description, type, filename, status, throttle, bootstrap) VALUES (\'%s\', \'%s\', \'%s\', \'%s\', %d, %d, %d)', $info->name, $info->description, 'theme', $info->filename, $info->status, 0, 0);
-  }
-  return $themes;
 }
 
 /**
  * Collect data about all currently available themes
  */
-function system_theme_data($directory) {
-  // Find theme engines
-  $engines = system_theme_engine_inventory($directory);
+function system_theme_data() {
+  // Find themes
+  $themes = system_listing('\.theme$', 'themes');
 
-  // Get current list of themes and their present status in the system table.
-  $files = system_get_files('\.theme$', 'theme', $directory);
+  // Find theme engines
+  $engines = system_listing('\.engine$', 'themes/engines');
+
+  // can't iterate over array itself as it uses a copy of the array items
+  foreach (array_keys($themes) as $key) {
+    drupal_get_filename('theme', $themes[$key]->name, $themes[$key]->filename);
+    drupal_load('theme', $themes[$key]->name);
+    $themes[$key]->description = dirname($themes[$key]->filename);
+    $themes[$key]->owner = $themes[$key]->filename;
+    $themes[$key]->prefix = $key;
+  }
+
+  // Remove all theme engines from the system table
+  db_query("DELETE FROM {system} WHERE type = 'theme_engine'");
 
   // Add templates to the site listing
   foreach ($engines as $engine) {
-    foreach (call_user_func($engine->name .'_templates', $directory) as $template) {
-      $template_files[$template->filename] = $template;
-      $template_files[$template->filename]->engine = $engine->filename;
-      foreach ($files as $file) {
-        // do not double-insert templates with theme files in their directory
-        if (dirname($template->filename) == dirname($file->filename)) {
-          unset($template_files[$template->filename]);
-        }
-      }
+    drupal_get_filename('theme_engine', $engine->name, $engine->filename);
+    drupal_load('theme_engine', $engine->name);
+    db_query("INSERT INTO {system} (name, type, filename, status, throttle, bootstrap) VALUES ('%s', '%s', '%s', %d, %d, %d)", $engine->name, 'theme_engine', $engine->filename, 1, 0, 0);
+
+    foreach (call_user_func($engine->name . '_templates') as $template) {
+      $template->template = TRUE;
+      $template->name = basename(dirname($template->filename));
+      $template->basename = $template->name;
+      $template->description = dirname($template->filename);
+      $template->owner = $engine->filename;
+      $template->prefix = $engine->name;
+      $themes[$template->name] = $template;
     }
   }
-  $files = array_merge($files, $template_files);
 
   // Find styles in each theme's directory.
-  foreach ($files as $file) {
-    foreach (system_get_files("style.css$", 'theme', dirname($file->filename)) as $style) {
+  foreach ($themes as $theme) {
+    foreach (file_scan_directory(dirname($theme->filename), 'style.css$') as $style) {
       // do not double-insert themes with css files in their directory
-      if (dirname($style->filename) != dirname($file->filename)) {
-        $style_files[$style->filename] = $style;
-        $path = pathinfo($file->filename);
-        $style_files[$style->filename]->theme = str_replace(array($directory .'/'), '', $path['dirname']);
-        if ($file->engine) {
-          $style_files[$style->filename]->engine = $file->engine;
-        }
+      if (dirname($style->filename) != dirname($theme->filename)) {
+        $style->style = TRUE;
+        $style->name = basename(dirname($style->filename));
+        $style->description = dirname($style->filename);
+        $style->owner = $theme->filename;
+        $style->prefix = $theme->name;
+        $themes[$style->name] = $style;
       }
     }
   }
-  $files = array_merge($files, $style_files);
 
   // Extract current files from database.
-  system_get_files_database($files, 'theme');
+  system_get_files_database($themes, 'theme');
 
-  // Build an array of information about each theme for use in displaying the selection table.
-  return system_obtain_theme_info($files, $directory);
+  db_query("DELETE FROM {system} WHERE type = 'theme'");
+
+  foreach ($themes as $theme) {
+    db_query("INSERT INTO {system} (name, description, type, filename, status, throttle, bootstrap) VALUES ('%s', '%s', '%s', '%s', %d, %d, %d)", $theme->name, $theme->owner, 'theme', $theme->filename, $theme->status, 0, 0);
+  }
+
+  return $themes;
+}
+
+/**
+ * Returns an array of files objects of the given type from both the
+ * site-wide directory (i.e. modules/) and site-specific directory
+ * (i.e. sites/somesite/modules/).  The returned array will be keyed
+ * using the key specified (name, basename, filename).  Using name or
+ * basename will cause site-specific files to shadow files in the
+ * default directories.  That is, if a file with the same name appears
+ * in both location, only the site-specific version will be included.
+ *
+ * @param $mask
+ *   The regular expression of the files to find.
+ * @param $directory
+ *   The subdirectory name in which the files are found.  For example,
+ *   'modules' will search in both modules/ and
+ *   sites/somesite/modules/.
+ * @param $key
+ *   The key to be passed to file_scan_directory().
+ *
+ * @return
+ *   An array of file objects of the specified type.
+ */
+function system_listing($mask, $directory, $key = 'name') {
+  $config = conf_init();
+  $searchdir = array($directory);
+  $files = array();
+
+  if (file_exists("$config/$directory")) {
+    $searchdir[] = "$config/$directory";
+  }
+
+  // Get current list of items
+  foreach ($searchdir as $dir) {
+    $files = array_merge($files, file_scan_directory($dir, $mask, array('.', '..', 'CVS'), 0, TRUE, $key));
+  }
+
+  return $files;
 }
 
 /**
  * Generate a list of all the available theme/style combinations.
  */
 function system_theme_listing() {
-  $directory = 'themes';
-
-  $themes = system_theme_data($directory);
+  $themes = system_theme_data();
   ksort($themes);
 
-  foreach ($themes as $key => $info) {
+  foreach ($themes as $name => $info) {
+    $info->screenshot = dirname($info->filename) . '/screenshot.png';
     $row = array();
 
     // Screenshot column.
-    $row[] = file_exists($info->screenshot) ? theme('image', $info->screenshot, t('Screenshot for %theme theme', array('%theme' => $info->shortname)), '', 'class="screenshot"', false) : t('no screenshot');
+    $row[] = file_exists($info->screenshot) ? theme('image', $info->screenshot, t('Screenshot for %theme theme', array('%theme' => $info->name)), '', 'class="screenshot"', false) : t('no screenshot');
 
     // Information field.
-    $field = '<strong>'. $info->shortname .'</strong>';
-    $field .= '<br /><em>themes/'. $key .'</em>';
-    $row[] = $field;
+    $row[] = "<strong>$info->name</strong><br /><em>$info->description</em>";
 
     // enabled, default, and operations columns
-    $row[] = array('data' => form_checkbox('', 'status]['. $info->filename, 1, $info->status), 'align' => 'center');
-    $row[] = array('data' => form_radio('', 'theme_default', $info->filename, (variable_get('theme_default', 'bluemarine') == $key) ? 1 : 0), 'align' => 'center');
-    if (function_exists($info->prefix .'_settings') || function_exists($info->prefix .'_features')) {
-      $row[] = array('data' => l(t('configure'), 'admin/themes/settings/'. str_replace('/', '.', $key)), 'align' => 'center');
+    $row[] = array('data' => form_checkbox('', 'status]['. $info->name, 1, $info->status), 'align' => 'center');
+    $row[] = array('data' => form_radio('', 'theme_default', $info->name, (variable_get('theme_default', 'bluemarine') == $name) ? 1 : 0), 'align' => 'center');
+    if (function_exists($info->prefix . '_settings') || function_exists($info->prefix . '_features')) {
+      $row[] = array('data' => l(t('configure'), 'admin/themes/settings/' . str_replace('/', '.', preg_replace('<^.*themes/(.*)$>', '$1', $info->description))), 'align' => 'center');
     }
     else {
       $row[] = '';
@@ -459,18 +430,16 @@ function system_theme_listing() {
  * Generate a list of all the available modules, as well as update the system list.
  */
 function system_module_listing() {
-  $directory = 'modules';
-
   // Get current list of modules
-  $files = system_get_files('\.module$', 'module', $directory);
+  $files = system_listing('\.module$', 'modules');
 
   // Extract current files from database.
   system_get_files_database($files, 'module');
 
   ksort($files);
 
-  $required = array('modules/admin.module', 'modules/block.module', 'modules/filter.module', 'modules/system.module', 'modules/user.module', 'modules/watchdog.module');
-  $throttle_required = array_merge($required, array('modules/throttle.module'));
+  $required = array('admin', 'block', 'filter', 'system', 'user', 'watchdog');
+  $throttle_required = array_merge($required, array('throttle'));
 
   $header = array(t('Name'), t('Description'), t('Enabled'));
   if (module_exist('throttle')) {
@@ -478,12 +447,11 @@ function system_module_listing() {
   }
 
   foreach ($files as $filename => $file) {
-    module_set_filename($file->name, $filename);
-    module_load($file->name);
+    drupal_get_filename('module', $file->name, $file->filename);
+    drupal_load('module', $file->name);
 
-    $info = new StdClass();
-    $info->name = module_invoke($file->name, 'help', 'admin/modules#name') ? module_invoke($file->name, 'help', 'admin/modules#name') : $file->name;
-    $info->description = module_invoke($file->name, 'help', 'admin/modules#description');
+    $file->description = module_invoke($file->name, 'help', 'admin/modules#description');
+
     // log the critical hooks implemented by this module
     $bootstrap = 0;
     foreach (bootstrap_hooks() as $hook) {
@@ -494,12 +462,12 @@ function system_module_listing() {
     }
 
     // Update the contents of the system table:
-    db_query('DELETE FROM {system} WHERE filename = \'%s\' AND type = \'%s\'', $filename, 'module');
-    db_query('INSERT INTO {system} (name, description, type, filename, status, throttle, bootstrap) VALUES (\'%s\', \'%s\', \'%s\', \'%s\', %d, %d, %d)', $info->name, $info->description, 'module', $filename, $file->status, $file->throttle, $bootstrap);
+    db_query("DELETE FROM {system} WHERE name = '%s' AND type = '%s'", $file->name, 'module');
+    db_query("INSERT INTO {system} (name, description, type, filename, status, throttle, bootstrap) VALUES ('%s', '%s', '%s', '%s', %d, %d, %d)", $file->name, $file->description, 'module', $file->filename, $file->status, $file->throttle, $bootstrap);
 
-    $row = array($info->name, $info->description, array('data' => (in_array($filename, $required) ? form_hidden('status]['. $filename, 1) . t('required') : form_checkbox('', 'status]['. $filename, 1, $file->status)), 'align' => 'center'));
+    $row = array($file->name, $file->description, array('data' => (in_array($file->name, $required) ? form_hidden("status][$file->name", 1) . t('required') : form_checkbox('', "status][$file->name", 1, $file->status)), 'align' => 'center'));
     if (module_exist('throttle')) {
-      $row[] = array('data' => (in_array($filename, $throttle_required) ? form_hidden('throttle]['. $filename, 0) . t('required') : form_checkbox(NULL, 'throttle]['. $filename, 1, $file->throttle, NULL)), 'align' => 'center');
+      $row[] = array('data' => (in_array($file->name, $throttle_required) ? form_hidden("throttle][$file->name", 0) . t('required') : form_checkbox(NULL, "throttle][$file->name", 1, $file->throttle, NULL)), 'align' => 'center');
     }
     $rows[] = $row;
   }
@@ -516,18 +484,17 @@ function system_listing_save($edit = array()) {
 
   if ($op == t('Save configuration')) {
     db_query("UPDATE {system} SET status = 0 WHERE type = '%s'", $edit['type']);
-    foreach ($edit['status'] as $filename => $status) {
+    foreach ($edit['status'] as $name => $status) {
       // Make certain that the default theme is enabled to avoid user error
-      if (($edit['type'] == 'theme') && ($edit['theme_default'] == $filename)) {
+      if (($edit['type'] == 'theme') && ($edit['theme_default'] == $name)) {
         $status = 1;
       }
 
-      db_query("UPDATE {system} SET status = %d, throttle = %d WHERE filename = '%s'", $status, $edit['throttle'][$filename], $filename);
+      db_query("UPDATE {system} SET status = %d, throttle = %d WHERE type = '%s' AND name = '%s'", $status, $edit['throttle'][$name], $edit['type'], $name);
     }
+
     if ($edit['type'] == 'theme') {
-      $path = pathinfo($edit['theme_default']);
-      $name = str_replace(array('themes/'), '', $path['dirname']);
-      variable_set('theme_default', $name);
+      variable_set('theme_default', $edit['theme_default']);
     }
 
     cache_clear_all();
@@ -620,8 +587,8 @@ function system_theme_settings() {
   if ($key) {
     $settings = theme_get_settings($key);
     $var = str_replace('/', '_', 'theme_'. $key .'_settings');
-    $themes = system_theme_data('themes');
-    $features = function_exists($themes[$key]->prefix .'_features') ? call_user_func($themes[$key]->prefix .'_features') : array();
+    $themes = system_theme_data();
+    $features = function_exists($themes[$key]->prefix . '_features') ? call_user_func($themes[$key]->prefix . '_features') : array();
   }
   else {
     $settings = theme_get_settings('');

@@ -61,8 +61,8 @@ function module_list($refresh = FALSE, $bootstrap = FALSE) {
         // variables, since throttle.module may not be loaded yet.
         $throttle = ($module->throttle && variable_get('throttle_level', 0) > 0);
         if (!$throttle) {
+          drupal_get_filename('module', $module->name, $module->filename);
           $list[$module->name] = $module->name;
-          module_set_filename($module->name, $module->filename);
         }
       }
     }
@@ -72,85 +72,19 @@ function module_list($refresh = FALSE, $bootstrap = FALSE) {
 }
 
 /**
- * Set the filename of a module, for future loading through module_load()
- *
- * @param $module
- *   Name of the module which to specify the filename of.
- * @param $pa
- *   Filename of the module named $module.
- * @return
- *   Filename of module, if no $path has been specified.
- */
-function module_set_filename($module, $path = null) {
-  static $list;
-
-  if ($path) {
-    $list[$module] = $path;
-  }
-  else {
-    return $list[$module] ? $list[$module] : "modules/$module.module";
-  }
-}
-
-/**
- * Retrieve the filename of a module
- *
- * @param $module
- *   Name of the module which to retrieve the filename of.
- * @return
- *   Filename of module.
- */
-function module_get_filename($module) {
-  return module_set_filename($module);
-}
-
-/**
- * Retrieve the path of a module
- *
- * @param $module
- *   Name of the module which to retrieve the path of.
- * @return
- *   Path of module.
- */
-function module_get_path($module) {
-  return dirname(module_get_filename($module));
-}
-
-/**
- * Load a module into Drupal, but check first whether a module by the same name
- * has been loaded, and that the filename being included exists.
- * @param $module
- *   The name of the module to be loaded.
- * @return
- *   TRUE if the load was successful.
- */
-function module_load($module) {
-  static $loaded = array();
-
-  if (!$loaded[$module]) {
-    $filename = module_get_filename($module);
-    if (file_exists($filename)) {
-      include_once($filename);
-      $loaded[$module] = $filename;
-      return true;
-    }
-  }
-  return false;
-}
-
-
-/**
  * Load all the modules that have been enabled in the system table.
  *
  * @return
- *   TRUE if all modules were loaded successfully
+ *   TRUE if all modules were loaded successfully.
  */
 function module_load_all() {
   $list = module_list();
-  $status = true;
+  $status = TRUE;
+
   foreach ($list as $module) {
-    $status &= module_load($module);
+    $status = (drupal_load('module', $module) && $status);
   }
+
   return $status;
 }
 

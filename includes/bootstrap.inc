@@ -12,25 +12,41 @@ define('CACHE_TEMPORARY', -1);
 /**
  * Locate the appropriate configuration file.
  *
- * Try finding a matching configuration file by stripping the website's
- * URI from left to right.  If no configuration file is found, return the
- * default value, "conf".
+ * Try finding a matching configuration directory by stripping the
+ * website's hostname from left to right and pathname from right to
+ * left.  If no configuration file is found, return a default value
+ * '$confdir/default'.  Example for a ficticious site installed at
+ * http://www.drupal.org/test:
+ *
+ * 1. www.drupal.org.test
+ * 2. drupal.org.test
+ * 3. www.drupal.org
+ * 4. drupal.org
+ * 5. default
  */
 function conf_init() {
-  $uri = $_SERVER['PHP_SELF'];
+  static $conf = '';
 
-  $file = strtolower(strtr($_SERVER['HTTP_HOST'] . substr($uri, 0, strrpos($uri, '/')), '/:', '..'));
+  if ($conf) {
+    return $conf;
+  }
 
-  while (strlen($file) > 4) {
-    if (file_exists('includes/'. $file .'.php')) {
-      return $file;
-    }
-    else {
-      $file = substr($file, strpos($file, '.') + 1);
+  $uri = explode('/', $_SERVER['PHP_SELF']);
+  $server = explode('.', $_SERVER['HTTP_HOST']);
+  $confdir = 'sites';
+  for ($i = count($uri) - 1; $i > 0; $i--) {
+    for ($j = count($server); $j > 0; $j--) {
+      $dir = implode('.', array_slice($server, -$j)) . implode('.', array_slice($uri, 0, $i));
+      if (file_exists("$confdir/$dir/settings.php")) {
+        $conf = "$confdir/$dir";
+        return $conf;
+      }
     }
   }
 
-  return 'conf';
+print "$confdir/default/settings.php<br />";
+  $conf = "$confdir/default";
+  return $conf;
 }
 
 /**
@@ -442,7 +458,7 @@ function drupal_get_messages() {
 unset($conf);
 $config = conf_init();
 
-include_once "includes/$config.php";
+include_once "$config/settings.php";
 include_once 'includes/database.inc';
 include_once 'includes/session.inc';
 include_once 'includes/module.inc';

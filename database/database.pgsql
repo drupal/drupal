@@ -751,11 +751,15 @@ CREATE TABLE watchdog (
 INSERT INTO system VALUES ('modules/admin.module','admin','module','',1,0,0);
 INSERT INTO system VALUES ('modules/block.module','block','module','',1,0,0);
 INSERT INTO system VALUES ('modules/comment.module','comment','module','',1,0,0);
+INSERT INTO system VALUES ('modules/filter.module','filter','module','',1,0,0);
 INSERT INTO system VALUES ('modules/help.module','help','module','',1,0,0);
 INSERT INTO system VALUES ('modules/node.module','node','module','',1,0,0);
 INSERT INTO system VALUES ('modules/page.module','page','module','',1,0,0);
 INSERT INTO system VALUES ('modules/story.module','story','module','',1,0,0);
+INSERT INTO system VALUES ('modules/system.module','system','module','',1,0,0);
 INSERT INTO system VALUES ('modules/taxonomy.module','taxonomy','module','',1,0,0);
+INSERT INTO system VALUES ('modules/user.module','user','module','',1,0,0);
+INSERT INTO system VALUES ('modules/watchdog.module','watchdog','module','',1,0,0);
 INSERT INTO system VALUES ('themes/bluemarine/xtemplate.xtmpl','bluemarine','theme','themes/engines/xtemplate/xtemplate.engine',1,0,0);
 INSERT INTO system VALUES ('themes/engines/xtemplate/xtemplate.engine','xtemplate','theme_engine','',1,0,0);
 

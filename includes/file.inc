@@ -469,39 +469,59 @@ function file_download() {
 }
 
 /**
- * Finds all files that match a given mask in a given directory.
+ * Finds all files that match a given mask in a given
+ * directory.
  *
- * @param $dir Directory to scan
- * @param $mask Regular expression to filter out files.  Only filenames that
- *              match the mask will be returned.
- * @param $nomask Array of filenames which should never be returned regardless
- *                if they match the $mask
- * @param $callback Function to call for qualifying file.
- *                  Set to 0 or false if you do not want callbacks.
- * @param $recurse When true directory scan will recurse the entire tree starting at $dir
- * @return Array of qualifying files
+ * @param $dir
+ *   The base directory for the scan.
+ * @param $mask
+ *   The regular expression of the files to find.
+ * @param $nomask
+ *   An array of files/directories to ignore.
+ * @param $callback
+ *   The callback function to call for each match.
+ * @param $recurse
+ *   When TRUE, the directory scan will recurse the entire tree
+ *   starting at the provided directory.
+ * @param $key
+ *   The key to be used for the returned array of files.  Possible
+ *   values are "filename", for the path starting with $dir,
+ *   "basename", for the basename of the file, and "name" for the name
+ *   of the file without an extension.
+ *
+ * @return
+ *   An associative array (keyed on the provided key) of objects with
+ *   "path", "basename", and "name" members corresponding to the
+ *   matching files.
  */
-function file_scan_directory($dir, $mask, $nomask = array('.', '..', 'CVS'), $callback = 0, $recurse = TRUE) {
+function file_scan_directory($dir, $mask, $nomask = array('.', '..', 'CVS'), $callback = 0, $recurse = TRUE, $key = 'filename') {
+  $key = (in_array($key, array('filename', 'basename', 'name')) ? $key : 'filename');
   $files = array();
+
   if (is_dir($dir) && $handle = opendir($dir)) {
     while ($file = readdir($handle)) {
       if (!in_array($file, $nomask)) {
         if (is_dir("$dir/$file") && $recurse) {
-          $files = array_merge($files, file_scan_directory("$dir/$file", $mask, $nomask, $callback));
+          $files = array_merge($files, file_scan_directory("$dir/$file", $mask, $nomask, $callback, $recurse, $key));
         }
         elseif (ereg($mask, $file)) {
-          $name = basename($file);
-          $files["$dir/$file"] = new stdClass();
-          $files["$dir/$file"]->filename = "$dir/$file";
-          $files["$dir/$file"]->name = substr($name, 0, strrpos($name, '.'));
+          $filename = "$dir/$file";
+          $basename = basename($file);
+          $name = substr($basename, 0, strrpos($basename, '.'));
+          $files[$$key] = new stdClass();
+          $files[$$key]->filename = $filename;
+          $files[$$key]->basename = $basename;
+          $files[$$key]->name = $name;
           if ($callback) {
-            $callback("$dir/$file");
+            $callback($filename);
           }
         }
       }
     }
+
     closedir($handle);
   }
+
   return $files;
 }
 
