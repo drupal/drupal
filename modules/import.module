@@ -167,10 +167,16 @@ function import_remove($feed) {
 
 // Call-back function used by XML parser:
 function import_element_start($parser, $name, $attributes) {
-  global $item, $tag;
+  global $item, $element, $tag;
 
-  if ($name == "ITEM") {
-    $item += 1;
+  switch ($name) {
+    case "IMAGE":
+    case "TEXTINPUT":
+      $element = $name;
+      break;
+    case "ITEM":
+      $element = $name;
+      $item += 1;
   }
 
   $tag = $name;
@@ -178,17 +184,34 @@ function import_element_start($parser, $name, $attributes) {
 
 // Call-back function used by XML parser:
 function import_element_end($parser, $name) {
+  global $element;
+
+   switch ($name) {
+    case "IMAGE":
+    case "TEXTINPUT":
+    case "ITEM":
+      $element = "";
+  }
 }
 
 // Call-back function used by XML parser:
 function import_element_data($parser, $data) {
-  global $channel, $items, $item, $tag;
+  global $channel, $element, $items, $item, $tag;
 
-  if ($item) {
-    $items[$item][$tag] .= $data;
-  }
-  else {
-    $channel[$tag] .= $data;
+  switch ($element) {
+    case "ITEM":
+      $items[$item][$tag] .= $data;
+      break;
+    case "IMAGE":
+    case "TEXTINPUT":
+      /*
+      ** The sub-elements "image" and "textinput" are not supported
+      ** but we have recognize them or their content will end up in
+      ** the items-array.
+      */
+      break;
+    default:
+      $channel[$tag] .= $data;
   }
 }
 
@@ -216,6 +239,10 @@ function import_refresh($feed) {
     }
     fclose($fp);
 
+    // unset the global variables:
+    unset($GLOBALS["channel"], $GLOBAL["element"], $GLOBALS["item"], $GLOBAL["items"]);
+
+    // parse the data:
     $xml_parser = xml_parser_create();
     xml_set_element_handler($xml_parser, "import_element_start", "import_element_end");
     xml_set_character_data_handler($xml_parser, "import_element_data");
