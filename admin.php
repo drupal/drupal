@@ -1,5 +1,9 @@
 <?
 
+// TEMPORARY SECURITY PATCH:
+if ($user->userid != "Dries") exit();
+
+
 /*
  * Account administration:
  */

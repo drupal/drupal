@@ -31,7 +31,7 @@ function FixQuotes ($what = "") {
 
 function check($message) {
   include "config.inc";
-  return strip_tags(nl2br($message), $allowed_html);
+  return nl2br(strip_tags($message, $allowed_html));
 }
 
 function discussion_num_replies($id, $count = 0) {

@@ -23,7 +23,7 @@ function submission_vote($id, $vote, $comment) {
     if ($comment) db_query("INSERT INTO comments (sid, author, subject, comment, hostname, timestamp) VALUES($id, $user->id, '". addslashes(substr($comment, 0, 29)) ." ...', '". addslashes($comment) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."')");
 
     ### Update user's history record:
-    user_setHistory($user, "s$id", "$vote");  // s = submission
+    user_setHistory($user, "s$id", $vote);  // s = submission
   
     ### Update story table (if required):
     $result = db_query("SELECT * FROM stories WHERE id = $id");  
