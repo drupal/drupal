@@ -223,7 +223,7 @@ function table_cell($cell, $header = 0) {
 
 function table($header, $rows) {
 
-  $output .= "<table>";
+  $output .= "<table>\n";
 
   /*
   ** Emit the table header:
@@ -234,7 +234,7 @@ function table($header, $rows) {
     foreach ($header as $cell) {
       $output .= table_cell($cell, 1);
     }
-    $output .= " </tr>";
+    $output .= " </tr>\n";
   }
 
   /*
@@ -253,11 +253,11 @@ function table($header, $rows) {
       foreach ($row as $cell) {
         $output .= table_cell($cell, 0);
       }
-      $output .= " </tr>";
+      $output .= " </tr>\n";
     }
   }
 
-  $output .= "</table>";
+  $output .= "</table>\n";
 
   return $output;
 }
