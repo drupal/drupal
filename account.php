@@ -453,7 +453,7 @@ function account_track_nodes() {
 }
 
 function account_track_site() {
-  global $nstatus, $status, $theme, $user;
+  global $rstatus, $status, $theme, $user;
 
   $period = 259200; // 3 days
 
@@ -480,7 +480,7 @@ function account_track_site() {
   $output .= "<TABLE BORDER=\"0\" CELLSPACING=\"4\" CELLPADDING=\"4\">\n";
   $output .= " <TR><TH>". t("Subject") ."</TH><TH>". t("Author") ."</TH><TH>". t("Type") ."</TH><TH>". t("Status") ."</TH></TR>\n";
   while ($node = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">". format_username($node->userid) ."</TD><TD ALIGN=\"center\">$node->type</TD><TD>". $nstatus[$node->status] ."</TD></TR>";
+    $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">". format_username($node->userid) ."</TD><TD ALIGN=\"center\">$node->type</TD><TD>". $rstatus[$node->status] ."</TD></TR>";
   }
   $output .= "</TABLE>";
 
