@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.222 2003/09/28 20:32:59 dries Exp $
+// $Id: user.module,v 1.223 2003/09/28 21:14:46 dries Exp $
 
 session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
 session_start();
@@ -426,7 +426,7 @@ function user_block($op = "list", $delta = 0) {
         return $block;
       case 1:
         $block["subject"] = $user->uid ? $user->name : t("Navigation");
-        $block["content"] = "<div class=\"menu\">". menu_tree() ."</div>";
+        $block["content"] = "<div id=\"menu\">". menu_tree() ."</div>";
         return $block;
       case 2:
         if (user_access("access content")) {
