@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.184 2004/06/27 18:10:39 unconed Exp $
+// $Id: forum.module,v 1.185 2004/06/29 20:35:58 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -316,7 +316,7 @@ function _forum_last_reply($nid) {
 }
 
 function _forum_format($topic) {
-  if ($topic) {
+  if ($topic && $topic->timestamp) {
     return t('%time ago<br />by %author', array('%time' => format_interval(time() - $topic->timestamp), '%author' => format_name($topic)));
   }
   else {
