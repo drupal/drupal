@@ -1,0 +1,164 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Provides legacy handlers for upgrades from older Drupal installations.
+ */
+
+/**
+ * Implementation of hook_help().
+ */
+function legacy_help($section) {
+  switch ($section) {
+    case 'admin/modules#description':
+      return t('Provides legacy handlers for upgrades from older Drupal installations.');
+  }
+}
+
+/**
+ * Implementation of hook_menu().
+ *
+ * Registers menu paths used in earlier Drupal versions.
+ */
+function legacy_menu() {
+  $items = array();
+
+  // Map "node/view/52" to "node/52".
+  $items[] = array('path' => 'node/view', 'title' => t('view'),
+    'callback' => 'drupal_goto',
+    'callback arguments' => array('node/'. arg(2), NULL, NULL),
+    'access' => TRUE, 'type' => MENU_CALLBACK);
+
+  // Map "book/view/52" to "node/52".
+  $items[] = array('path' => 'book/view', 'title' => t('view'),
+    'callback' => 'drupal_goto',
+    'callback arguments' => array('node/'. arg(2), NULL, NULL),
+    'access' => TRUE, 'type' => MENU_CALLBACK);
+
+  // Map "user/view/52" to "user/52".
+  $items[] = array('path' => 'user/view', 'title' => t('view'),
+    'callback' => 'drupal_goto',
+    'callback arguments' => array('user/'. arg(2), NULL, NULL),
+    'access' => TRUE, 'type' => MENU_CALLBACK);
+
+  // Map "taxonomy/page/or/52,97" to "taxonomy/term/52+97".
+  $items[] = array('path' => 'taxonomy/page', 'title' => t('taxonomy'),
+    'callback' => 'legacy_taxonomy_page',
+    'access' => TRUE, 'type' => MENU_CALLBACK);
+
+  // Map "taxonomy/feed/or/52,97" to "taxonomy/term/52+97/0/feed".
+  $items[] = array('path' => 'taxonomy/feed', 'title' => t('taxonomy'),
+    'callback' => 'legacy_taxonomy_feed',
+    'access' => TRUE, 'type' => MENU_CALLBACK);
+
+  return $items;
+}
+
+/**
+ * Menu callback; redirects users to new taxonomy page paths.
+ */
+function legacy_taxonomy_page($operation = 'or', $str_tids = '') {
+  if ($operation == 'or') {
+    $str_tids = str_replace(',', '+', $str_tids);
+  }
+  drupal_goto('taxonomy/term/'. $str_tids);
+}
+
+/**
+ * Menu callback; redirects users to new taxonomy feed paths.
+ */
+function legacy_taxonomy_feed($operation = 'or', $str_tids = '') {
+  if ($operation == 'or') {
+    $str_tids = str_replace(',', '+', $str_tids);
+  }
+  drupal_goto('taxonomy/term/'. $str_tids .'/0/feed');
+}
+
+/**
+ * Implementation of hook_filter(). Handles URL upgrades from Drupal 4.1.
+ */
+function legacy_filter($op, $delta = 0, $format = -1, $text = '') {
+  switch ($op) {
+    case 'list':
+      return array(t('Legacy filter'));
+
+    case 'description':
+      return t('Replaces URLs from Drupal 4.1 (and lower) with updated equivalents.');
+
+    case 'process':
+      return _legacy_filter_old_urls($text, $format);
+
+    case 'settings':
+      return;
+
+    default:
+      return $text;
+  }
+}
+
+/**
+ * Rewrite legacy URLs.
+ *
+ * This is a *temporary* filter to rewrite old-style URLs to new-style
+ * URLs (clean URLs).  Currently, URLs are being rewritten dynamically
+ * (ie. "on output"), however when these rewrite rules have been tested
+ * enough, we will use them to permanently rewrite the links in node
+ * and comment bodies.
+ */
+function _legacy_filter_old_urls($text) {
+  if (!variable_get('rewrite_old_urls', 0)) {
+    return $text;
+  }
+
+  global $base_url;
+
+  $end = substr($base_url, 12);
+
+  if (variable_get('clean_url', '0') == '0') {
+    // Relative URLs:
+
+    // rewrite 'node.php?id=<number>[&cid=<number>]' style URLs:
+    $text = eregi_replace("\"(node)\.php\?id=([[:digit:]]+)(&cid=)?([[:digit:]]*)", "\"?q=\\1/view/\\2/\\4", $text);
+
+    // rewrite 'module.php?mod=<name>{&<op>=<value>}' style URLs:
+    $text = ereg_replace("\"module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "\"?q=\\2/\\4/\\6" , $text);
+    $text = ereg_replace("\"module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "\"?q=\\2/\\4", $text);
+    $text = ereg_replace("\"module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))", "\"?q=\\2", $text);
+
+    // Absolute URLs:
+
+    // rewrite 'node.php?id=<number>[&cid=<number>]' style URLs:
+    $text = eregi_replace("$end/(node)\.php\?id=([[:digit:]]+)(&cid=)?([[:digit:]]*)", "$end/?q=\\1/view/\\2/\\4", $text);
+
+    // rewrite 'module.php?mod=<name>{&<op>=<value>}' style URLs:
+    $text = ereg_replace("$end/module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "$end/?q=\\2/\\4/\\6" , $text);
+    $text = ereg_replace("$end/module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "$end/?q=\\2/\\4", $text);
+    $text = ereg_replace("$end/module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))", "\"$end/?q=\\2", $text);
+  }
+  else {
+    // Relative URLs:
+
+    // Rewrite 'node.php?id=<number>[&cid=<number>]' style URLs:
+    $text = eregi_replace("\"(node)\.php\?id=([[:digit:]]+)(&cid=)?([[:digit:]]*)", "\"\\1/view/\\2/\\4", $text);
+
+    // Rewrite 'module.php?mod=<name>{&<op>=<value>}' style URLs:
+    $text = ereg_replace("\"module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "\"\\2/\\4/\\6", $text);
+    $text = ereg_replace("\"module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "\"\\2/\\4", $text);
+    $text = ereg_replace("\"module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))", "\"\\2", $text);
+
+    // Absolute URLs:
+
+    // Rewrite 'node.php?id=<number>[&cid=<number>]' style URLs:
+    $text = eregi_replace("$end/(node)\.php\?id=([[:digit:]]+)(&cid=)?([[:digit:]]*)", "$end/\\1/view/\\2/\\4", $text);
+
+    // Rewrite 'module.php?mod=<name>{&<op>=<value>}' style URLs:
+    $text = ereg_replace("$end/module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "$end/\\2/\\4/\\6", $text);
+    $text = ereg_replace("$end/module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "$end/\\2/\\4", $text);
+    $text = ereg_replace("$end/module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))", "$end/\\2", $text);
+  }
+
+  return $text;
+}
+
+?>

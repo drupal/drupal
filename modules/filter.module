@@ -768,15 +768,13 @@ function theme_filter_tips($tips, $long = false, $extra = '') {
  *     Validates user-supplied HTML, transforming it as necessary.
  * - PHP evaluator:
  *     Executes PHP code.
- * - Legacy filter:
- *     Handles URL upgrades from Drupal 4.1.
  * - Line break converter:
  *     Converts newlines into paragraph and break tags.
  */
 function filter_filter($op, $delta = 0, $format = -1, $text = '') {
   switch ($op) {
     case 'list':
-      return array(0 => t('HTML filter'), 1 => t('PHP evaluator'), 2 => t('Legacy filter'), 3 => t('Line break converter'));
+      return array(0 => t('HTML filter'), 1 => t('PHP evaluator'), 3 => t('Line break converter'));
 
     case 'no cache':
       return $delta == 1; // No caching for the PHP evaluator.
@@ -787,8 +785,6 @@ function filter_filter($op, $delta = 0, $format = -1, $text = '') {
           return t('Allows you to restrict if users can post HTML and which tags to filter out.');
         case 1:
           return t('Runs a piece of PHP code. The usage of this filter should be restricted to administrators only!');
-        case 2:
-          return t('Replaces URLs from Drupal 4.1 (and lower) with updated equivalents.');
         case 3:
           return t('Converts line breaks into HTML (i.e. &lt;br&gt; and &lt;p&gt; tags).');
         default:
@@ -801,8 +797,6 @@ function filter_filter($op, $delta = 0, $format = -1, $text = '') {
           return _filter_html($text, $format);
         case 1:
           return drupal_eval($text);
-        case 2:
-          return _filter_old_urls($text, $format);
         case 3:
           return _filter_autop($text);
         default:
@@ -853,70 +847,6 @@ function _filter_html($text, $format) {
   }
 
   return trim($text);
-}
-
-/**
- * Rewrite legacy URLs.
- *
- * This is a *temporary* filter to rewrite old-style URLs to new-style
- * URLs (clean URLs).  Currently, URLs are being rewritten dynamically
- * (ie. "on output"), however when these rewrite rules have been tested
- * enough, we will use them to permanently rewrite the links in node
- * and comment bodies.
- */
-function _filter_old_urls($text) {
-  if (!variable_get('rewrite_old_urls', 0)) {
-    return $text;
-  }
-
-  global $base_url;
-
-  $end = substr($base_url, 12);
-
-  if (variable_get('clean_url', '0') == '0') {
-    // Relative URLs:
-
-    // rewrite 'node.php?id=<number>[&cid=<number>]' style URLs:
-    $text = eregi_replace("\"(node)\.php\?id=([[:digit:]]+)(&cid=)?([[:digit:]]*)", "\"?q=\\1/view/\\2/\\4", $text);
-
-    // rewrite 'module.php?mod=<name>{&<op>=<value>}' style URLs:
-    $text = ereg_replace("\"module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "\"?q=\\2/\\4/\\6" , $text);
-    $text = ereg_replace("\"module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "\"?q=\\2/\\4", $text);
-    $text = ereg_replace("\"module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))", "\"?q=\\2", $text);
-
-    // Absolute URLs:
-
-    // rewrite 'node.php?id=<number>[&cid=<number>]' style URLs:
-    $text = eregi_replace("$end/(node)\.php\?id=([[:digit:]]+)(&cid=)?([[:digit:]]*)", "$end/?q=\\1/view/\\2/\\4", $text);
-
-    // rewrite 'module.php?mod=<name>{&<op>=<value>}' style URLs:
-    $text = ereg_replace("$end/module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "$end/?q=\\2/\\4/\\6" , $text);
-    $text = ereg_replace("$end/module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "$end/?q=\\2/\\4", $text);
-    $text = ereg_replace("$end/module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))", "\"$end/?q=\\2", $text);
-  }
-  else {
-    // Relative URLs:
-
-    // rewrite 'node.php?id=<number>[&cid=<number>]' style URLs:
-    $text = eregi_replace("\"(node)\.php\?id=([[:digit:]]+)(&cid=)?([[:digit:]]*)", "\"\\1/view/\\2/\\4", $text);
-
-    // rewrite 'module.php?mod=<name>{&<op>=<value>}' style URLs:
-    $text = ereg_replace("\"module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "\"\\2/\\4/\\6", $text);
-    $text = ereg_replace("\"module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "\"\\2/\\4", $text);
-    $text = ereg_replace("\"module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))", "\"\\2", $text);
-
-    // Absolute URLs:
-
-    // rewrite 'node.php?id=<number>[&cid=<number>]' style URLs:
-    $text = eregi_replace("$end/(node)\.php\?id=([[:digit:]]+)(&cid=)?([[:digit:]]*)", "$end/\\1/view/\\2/\\4", $text);
-
-    // rewrite 'module.php?mod=<name>{&<op>=<value>}' style URLs:
-    $text = ereg_replace("$end/module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "$end/\\2/\\4/\\6", $text);
-    $text = ereg_replace("$end/module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "$end/\\2/\\4", $text);
-    $text = ereg_replace("$end/module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))", "$end/\\2", $text);
-  }
-
-  return $text;
 }
 
 /**
