@@ -879,12 +879,11 @@ function node_feed($nodes = 0, $channel = array()) {
   while ($node = db_fetch_object($nodes)) {
     $item = node_load(array("nid" => $node->nid));
     $link = url("node/view/$item->nid");
-    $items .= format_rss_item($item->title, $link, $item->teaser);
+    $items .= format_rss_item($item->title, $link, ($item->teaser ? $item->teaser : $item->body));
   }
 
-  $output .= "<?xml version=\"1.0\" encoding=\"". variable_get("site_charset", "iso-8859-1") ."\"?>\n";
+  $output .= "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
   $output .= "<!DOCTYPE rss [<!ENTITY % HTMLlat1 PUBLIC \"-//W3C//ENTITIES Latin 1 for XHTML//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml-lat1.ent\">]>\n";
-    // NOTE: &eacute; - for example - is the correct ISO-8859-1 translation of  (e acute) but apparently XML parsers don't (have to) understand it.  To solve this problem, we use a DTD that defines commonly used entity such as &eacute;.
   if (!$channel["version"]) $channel["version"] = "0.91";
   if (!$channel["title"]) $channel["title"] = variable_get("site_name", "drupal") ." - ". variable_get("site_slogan", "");
   if (!$channel["link"]) $channel["link"] = $base_url;

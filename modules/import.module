@@ -706,7 +706,7 @@ function import_page_fd() {
 
   $result = db_query("SELECT * FROM feed ORDER BY title");
 
-  $output .= "<?xml version=\"1.0\" encoding=\"". variable_get("site_charset", "iso-8859-1") ."\"?>\n\n";
+  $output .= "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n\n";
   $output .= "<rssfeeds version=\"0.1\">\n\n";
 
   while ($feed = db_fetch_object($result)) {

@@ -203,7 +203,7 @@ function variable_del($name) {
 }
 
 function drupal_specialchars($input) {
-  return htmlspecialchars($input, ENT_NOQUOTES, variable_get("site_charset", "iso-8859-1"));
+  return htmlspecialchars($input, ENT_NOQUOTES, "utf-8");
 }
 
 function table_cell($cell, $header = 0) {
@@ -1025,7 +1025,7 @@ $conf = variable_init(isset($conf) ? $conf : array());
 set_error_handler("error_handler");
 
 // spit out the correct charset http header
-header("Content-Type: text/html; charset=". variable_get("site_charset", "iso-8859-1"));
+header("Content-Type: text/html; charset=utf-8");
 
 // initialize installed modules:
 module_init();

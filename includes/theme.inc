@@ -144,7 +144,7 @@ function theme_list($refresh = 0) {
 
 function theme_head($main = 0) {
   global $base_url;
-  $output .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=". variable_get("site_charset", "iso-8859-1") ."\" />";
+  $output .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />";
   $output .= "<base href=\"$base_url/\" />\n";
   $output .= "<style type=\"text/css\">\n";
   $output .= "@import url(misc/drupal.css);\n";
