@@ -203,6 +203,7 @@ function account_user($uname) {
   elseif ($uname && $account = account_get_user($uname)) {
     $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>". t("Username") .":</B></TD><TD>". check_output($account->userid) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>". t("Real name") .":</B></TD><TD>". check_output($user->name) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>". t("E-mail") .":</B></TD><TD>". format_email($account->fake_email) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>". t("Homepage") .":</B></TD><TD>". format_url($account->url) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>". t("Bio") .":</B></TD><TD>". check_output($account->bio) ."</TD></TR>\n";
