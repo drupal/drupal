@@ -123,9 +123,9 @@ function cache_get($key) {
 function cache_set($cid, $data, $expire = 0, $headers = NULL) {
   $data = db_encode_blob($data);
 
-  db_query("UPDATE {cache} SET data = '$data', created = " . time() . ", expire = $expire, headers = '$headers' WHERE cid = '$cid'");
+  db_query("UPDATE {cache} SET data = '%s', created = %d, expire = %d, headers = '%s' WHERE cid = '%s'", $data, time(), $expire, $headers, $cid);
   if (!db_affected_rows()) {
-   db_query("INSERT INTO {cache} (cid, data, created, expire, headers) VALUES('$cid', '$data', " . time() . ", $expire, '$headers')");
+   db_query("INSERT INTO {cache} (cid, data, created, expire, headers) VALUES('%s', '%s', %d, %d, '%s')", $cid, $data, time(), $expire, $headers);
  }
 }
 
