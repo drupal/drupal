@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.187 2003/03/29 18:08:56 kjartan Exp $
+// $Id: common.inc,v 1.188 2003/04/01 06:05:13 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST, $PHP_SELF;
@@ -147,7 +147,7 @@ function t($string, $args = 0) {
   **           => url("user/register")));
   */
 
-  $string = ($languages && function_exists("locale") ? locale($string) : $string);
+  $string = ($languages && module_exist("locale") ? locale($string) : $string);
 
   if (!$args) {
     return $string;

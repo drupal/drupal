@@ -18,7 +18,7 @@ h1 {
   color: #006;
 }
 h2 {
-  font-size: 1.3em;
+  font-size: 1.2em;
   font-weight: bold;
   color: #006;
   margin: 0;
@@ -91,6 +91,9 @@ hr {
   width: 100%;
   color: #fff;
   text-decoration: none;
+}
+#menu li a.current {
+  color: #000;
 }
 #menu li a:hover {
   color: #009;
