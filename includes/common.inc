@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.162 2003/01/27 19:37:07 dries Exp $
+// $Id: common.inc,v 1.163 2003/01/31 08:32:41 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST, $PHP_SELF;
@@ -842,8 +842,12 @@ function page_header() {
       $date = gmdate("D, d M Y H:i:s", $cache->created) ." GMT";
       header("Last-Modified: $date");
       header("ETag: \"$date\"");
-      if ($headers = getallheaders()) {
-        // NOTE: the above is an Apache-ism so for the time being we don't send 304 headers to IIS servers.
+      if (function_exists("getallheaders") && $headers = getallheaders()) {
+        /*
+        ** Notice that the above is an optional Apache-ism so for the
+        ** time being we don't send 304 headers when "getallheaders()"
+        ** is not supported (eg. on IIS webservers).
+        */
         if ($headers["If-Modified-Since"] == $date && $headers["If-None-Match"] == "\"$date\"") {
           header("HTTP/1.0 304 Not Modified");
           exit();
