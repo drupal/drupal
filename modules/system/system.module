@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.43 2002/08/14 17:53:44 dries Exp $
+// $Id: system.module,v 1.44 2002/08/15 10:26:32 dries Exp $
 
 function system_help() {
   $output .= "<p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviors including visual and operational settings.</p>";
@@ -263,7 +263,7 @@ function system_admin() {
   global $edit, $op, $type;
   if (user_access("administer site configuration")) {
 
-    print "<small>".la(t("site settings"), array("mod" => "system", "type" => "options"))." | ".la(t("content filters"), array("mod" => "system", "type" => "filter"))." | ".la(t("modules"), array("mod" => "system", "op" => "modules"))." | ".la(t("themes"), array("mod" => "system", "op" => "themes"))." | ".la(t("help"), array("mod" => "system", "op" => "help"))."</small><hr />\n";
+    print "<small>". la(t("site settings"), array("mod" => "system", "type" => "options")) ." - ". la(t("content filters"), array("mod" => "system", "type" => "filter")) ." - ". la(t("modules"), array("mod" => "system", "op" => "modules")) ." - ". la(t("themes"), array("mod" => "system", "op" => "themes")) ." - ". la(t("help"), array("mod" => "system", "op" => "help")) ."</small><hr />\n";
 
     switch ($op) {
       case "help":
