@@ -1,18 +1,20 @@
 Drupal x.x.x, xxxx-xx-xx
 ------------------------
 
-- profile module:
-    * made it possible to administer profile fields.
-    * made it possible to browse the profiles by field.
 - navigation:
     * made it possible to add, delete, rename and move menu items.
     * introduced tabs and subtabs for local tasks.
     * reorganized the navigation menus.
 - user management:
     * added support for multiple roles per user.
+    * made it possible to add custom profile fields.
+    * made it possible to browse the profiles by field.
 - refactored 403 (forbidden) handling and added support for custom 403 pages.
 - comment module:
     * made it possible for anonymous users to leave their name, e-mail address and the URL of their homepage.
+- forum module:
+    * added support for sticky forum topics.
+    * made it possible to track forum topics.
 - syndication:
     * added support for RSS ping-notifications of http://technorati.com/.
     * refactored the categorization of syndicated news items.
