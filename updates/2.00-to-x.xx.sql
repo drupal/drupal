@@ -292,3 +292,10 @@ CREATE TABLE referer (
 ALTER TABLE boxes CHANGE subject title varchar(64) DEFAULT '' NOT NULL;
 ALTER TABLE boxes CHANGE content body TEXT;
 ALTER TABLE boxes CHANGE id bid tinyint(4) DEFAULT '0' NOT NULL auto_increment;
+
+CREATE TABLE cache (
+  url varchar(255) DEFAULT '' NOT NULL,
+  data text NOT NULL,
+  timestamp int(11) NOT NULL,
+  PRIMARY KEY (url)
+);

@@ -126,6 +126,9 @@ function comment_post($edit) {
 
       // add comment to database:
       db_query("INSERT INTO comments (lid, pid, author, subject, comment, hostname, timestamp, score) VALUES ('". check_input($edit[id]) ."', '". check_input($edit[pid]) ."', '$user->id', '". check_input($edit[subject]) ."', '". check_input($edit[comment]) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."', '". ($user->userid ? 1 : 0) ."')");
+
+      // clear cache:
+      cache_clear();
     }
   }
 }

@@ -13,12 +13,12 @@ function system_help() {
 }
 
 function system_perm() {
-  return array("administer site options");
+  return array("administer system settings");
 }
 
 function system_link($type) {
-  if ($type == "admin" && user_access("administer site options")) {
-    $links[] = "<a href=\"admin.php?mod=system\">configuration options</a>";
+  if ($type == "admin" && user_access("administer system settings")) {
+    $links[] = "<a href=\"admin.php?mod=system\">system settings</a>";
   }
 
   return $links ? $links : array();
@@ -34,6 +34,13 @@ function system_view_options() {
   $output .= form_textfield(t("E-mail address"), "site_mail", variable_get("site_mail", "root@localhost"), 30, 55, t("A valid e-mail address for this website, used by the auto-mailer to create new user accounts."));
   $output .= form_textarea(t("Footer message"), "site_footer", variable_get("site_footer", ""), 55, 3, t("This text will be displayed at the bottom of each page.  Useful for adding a copyright notice to your pages."));
   $output .= form_textfield(t("Anonymous user"), "anonymous", variable_get("anonymous", "Anonymous"), 30, 55, t("The name used to indicate anonymous users."));
+  $output .= "<HR>\n";
+
+  // caching:
+  $output .= "<H3>Cache settings</H3>\n";
+  $period = array(10 => format_interval(10), 20 => format_interval(20), 30 => format_interval(30), 40 => format_interval(40), 50 => format_interval(50), 50 => format_interval(50), 60 => format_interval(60), 90 => format_interval(90), 120 => format_interval(120), 150 => format_interval(150), 180 => format_interval(180), 210 => format_interval(210), 240 => format_interval(240), 270 => format_interval(270), 300 => format_interval(300), 360 => format_interval(360), 420 => format_interval(420), 480 => format_interval(480), 540 => format_interval(540), 600 => format_interval(600), 1800 => format_interval(1800), 3600 => format_interval(3600), 7200 => format_interval(7200));
+  $output .= form_select(t("Cache support"), "cache", variable_get("cache", 0), array("Disabled", "Enabled"), t("Enable or disable the caching of pages."));
+  $output .= form_select(t("Discard cached pages older than"), "cache_clear", variable_get("cache_clear", 30), $period, t("The time cached pages should be kept.  Older pages are automatically refreshed."));
   $output .= "<HR>\n";
 
   // submission settings:
@@ -122,7 +129,7 @@ function system_modules() {
 function system_admin() {
   global $edit, $op, $type;
 
-  if (user_access("administer site options")) {
+  if (user_access("administer system settings")) {
 
     print "<SMALL><A HREF=\"admin.php?mod=system&type=options\">site settings</A> | <A HREF=\"admin.php?mod=system&type=filter\">content filters</A> | <A HREF=\"admin.php?mod=system&op=modules\">modules</A> | <A HREF=\"admin.php?mod=system&op=help\">help</A></SMALL><HR>\n";
 
