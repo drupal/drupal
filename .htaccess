@@ -20,7 +20,7 @@ ErrorDocument 500 /error.php
 
 # Overload PHP variables:
 <IfModule mod_php4.c>
-   php_value php_register_globals    1
+   php_value register_globals    1
    php_value track_vars              1
    php_value magic_quotes_gpc        1
    php_value magic_quotes_runtime    0
@@ -38,4 +38,4 @@ ErrorDocument 500 /error.php
   RewriteRule ^blog/(.*) /module.php?mod=blog\&name=$1 [R]
 </IfModule>
 
-# $Id: .htaccess,v 1.36 2002/05/02 19:55:21 kjartan Exp $
+# $Id: .htaccess,v 1.37 2002/06/10 12:10:55 kjartan Exp $
