@@ -250,7 +250,7 @@ function blog_form(&$node, &$help, &$error) {
 
 
 function blog_page() {
-  global $theme, $id, $op, $date, $all;
+  global $theme, $id, $op, $date, $all, $name;
 
   if (user_access("access content")) {
     switch ($op) {
@@ -264,6 +264,10 @@ function blog_page() {
         break;
       default:
         $theme->header();
+        if ($name) {
+          $user = user_load(array("name" => $name));
+          $id = $user->uid;
+        }
         if ($id) {
           blog_page_user($id, $date, $all);
         }
