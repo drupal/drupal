@@ -104,7 +104,7 @@ function search_menu($may_cache) {
  */
 function search_admin() {
   if ($_POST) {
-    if (variable_get('minimum_word_size', 3) != $_POST['edit']['minimum_word_size'] || 
+    if (variable_get('minimum_word_size', 3) != $_POST['edit']['minimum_word_size'] ||
         variable_get('remove_short', 3) != $_POST['edit']['remove_short']) {
       // Note: ensure logical order of messages
       system_settings_save();
@@ -125,7 +125,7 @@ function search_admin() {
       $remaining += $status['remaining'];
       $total += $status['total'];
     }
-  } 
+  }
   $percentage = ((int)min(100, 100 * ($total - $remaining) / max(1, $total))) . '%';
   $status = '<p><strong>'. t('%percentage of the site has been indexed. There are %count items left to index.', array('%percentage' => $percentage, '%count' => $remaining)) .'</strong></p>';
   $output = form_group('Indexing status', $status);
@@ -561,7 +561,7 @@ function search_view() {
  *   HTML indexing mechanism for searching full text efficiently.
  *
  * If your module needs to provide a more complicated search form, then you need
- * to implement it yourself without hook_search(). In that case, you should 
+ * to implement it yourself without hook_search(). In that case, you should
  * define it as a local task (tab) under the /search page (e.g. /search/mymodule)
  * so that users can easily find it.
  */
