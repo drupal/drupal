@@ -1,11 +1,10 @@
-// $Id: INSTALL.txt,v 1.7 2004/12/07 16:55:38 dries Exp $
+// $Id: INSTALL.txt,v 1.8 2004/12/30 13:13:22 dries Exp $
 
 REQUIREMENTS
 ------------
 
 Drupal requires a web server, PHP4 (http://www.php.net/) and either
-MySQL, PostgreSQL or a database server supported by the PHP PEAR API
-(http://pear.php.net/).  Drupal requires PHP 4.1.0 or greater on Unix
+MySQL or PostgreSQL.  Drupal requires PHP 4.1.0 or greater on Linux
 and PHP 4.2.3 or greater on Windows.  PHP5 is not yet supported.
 
 NOTE: The Apache web server and MySQL database are strongly recommended;

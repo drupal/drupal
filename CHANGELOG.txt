@@ -18,6 +18,8 @@ Drupal x.x.x, xxxx-xx-xx
     * added a simple contact module that allows users to contact each other using e-mail.
 - multi-site configuration:
     * made it possible to run multiple sites from a single code base.
+- database backend:
+    * the PEAR database backend is no longer supported.
 - performance:
     * improved performance of the forum topics block.
     * improved performance of the tracker module.
