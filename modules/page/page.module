@@ -8,7 +8,7 @@ function page_help($section) {
   switch ($section) {
     case 'admin/help#page':
       return t("
-      <p>The page module is used when you want to create content that optionally inserts a link into your navigation system. You can also, however, create pages that that don't have this link by skipping the link text field in the page form. At this time, not all themes support the link insertion behavior. Some themes, like xtemplate, provide alternative mechanisms for link creation. Pages are also unique in that they shortcut the typical lifecycle of user generated content (i.e. submit -&gt; moderate -&gt; post -&gt; comment). </p>
+      <p>The page module is used when you want to create content that optionally inserts a link into your navigation system. You can also, however, create pages that don't have this link by skipping the link text field in the page form. At this time, not all themes support the link insertion behavior. Some themes, like xtemplate, provide alternative mechanisms for link creation. Pages are also unique in that they shortcut the typical lifecycle of user generated content (i.e. submit -&gt; moderate -&gt; post -&gt; comment). </p>
       <p>If you enable the <strong>create PHP content</strong> permission for a role, pages may consist of PHP code in addition to HTML and text.</p>
       <h3>User access permissions for pages</h3>
       <p><strong>create pages:</strong> Allows a role to create pages. They cannot edit or delete pages, even if they are the authors. You must enable this permission to in order for a role to create a page.</p>
