@@ -595,8 +595,12 @@ function user_login($edit = array(), $msg = "") {
   if ($msg) {
     $output .= "<p>$msg</p>";
   }
-  //TODO: alter text if there are not affiliates
-  $output .= form_textfield(t("Username"), "name", $edit["name"], 20, 64, t("Enter your %s username, or an ID from one of our affiliates: %a.", array("%s" => variable_get("site_name", "local"), "%a" => implode(", ", user_auth_help_links()))));
+  if (count(user_auth_help_links()) > 0) {
+    $output .= form_textfield(t("Username"), "name", $edit["name"], 20, 64, t("Enter your %s username, or an ID from one of our affiliates: %a.", array("%s" => variable_get("site_name", "local"), "%a" => implode(", ", user_auth_help_links()))));
+  }
+  else {
+    $output .= form_textfield(t("Username"), "name", $edit["name"], 20, 64, t("Enter your %s username.", array("%s" => variable_get("site_name", "local"))));
+  }
   $output .= form_password(t("Password"), "pass", $pass, 20, 64, t("Enter the password that accompanies your username."));
   $output .= form_checkbox(t("Remember me"), "remember_me", 1, 0, 0);
   $output .= form_submit(t("Log in"));
@@ -802,7 +806,7 @@ function user_register($edit = array()) {
 
   // display the registration form
   $affiliates = user_auth_help_links();
-  if (array_count_values($affiliates) > 1) {
+  if (count($affiliates) > 0) {
     $affiliates = implode(", ", $affiliates);
     $output .= "<p>" . t("Note: If you have an account with one of our affiliates (%s), you may ". lm("login now", array("mod" => "user", "op" => "login")) ." instead of registering.", array("%s" => $affiliates)) ."</p>";
   }
