@@ -29,7 +29,7 @@ function account_email() {
 function account_create($user = "", $error = "") {
   global $theme;
 
-  if ($error) $output .= "<B><FONT COLOR=\"red\">Failed to register.</FONT>$error</B>\n";
+  if ($error) $output .= "<B><FONT COLOR=\"red\">Failed to create account:</FONT>$error</B>\n";
   else $output .= "<P>Registering allows you to comment on stories, to moderate comments and pending stories, to customize the look and feel of the site and generally helps you interact with the site more efficiently.</P><P>To create an account, simply fill out this form an click the `Create account' button below.  An e-mail will then be sent to you with instructions on how to validate your account.</P>\n";
 
   $output .= "<FORM ACTION=\"account.php\" METHOD=\"post\">\n";
@@ -108,7 +108,7 @@ function account_user_edit() {
 
     // Display output/content:
     $theme->header();
-    $theme->box("Edit user settings", $output);
+    $theme->box("Edit user information", $output);
     $theme->footer();
   }
   else {
@@ -191,7 +191,7 @@ function account_site_edit() {
     $output .= "</FORM>\n";
 
     $theme->header();
-    $theme->box("Edit site settings", $output);
+    $theme->box("Edit your preferences", $output);
     $theme->footer();
   }
   else {
@@ -242,7 +242,7 @@ function account_content_edit() {
     $output .= "</FORM>\n";
 
     $theme->header();
-    $theme->box("Edit content settings", $output);
+    $theme->box("Edit site content", $output);
     $theme->footer();
   }
   else {
@@ -282,35 +282,35 @@ function account_user($uname) {
     $theme->footer();
   }
   elseif ($uname && $account = account_get_user($uname)) {
-    $box1 .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
-    $box1 .= " <TR><TD ALIGN=\"right\"><B>Username:</B></TD><TD>$account->userid</TD></TR>\n";
-    $box1 .= " <TR><TD ALIGN=\"right\"><B>E-mail:</B></TD><TD>". format_email($account->fake_email) ."</TD></TR>\n";
-    $box1 .= " <TR><TD ALIGN=\"right\"><B>URL:</B></TD><TD>". format_url($account->url) ."</TD></TR>\n";
-    $box1 .= " <TR><TD ALIGN=\"right\"><B>Bio:</B></TD><TD>". format_data($account->bio) ."</TD></TR>\n";
-    $box1 .= "</TABLE>\n";
+    $block1 .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
+    $block1 .= " <TR><TD ALIGN=\"right\"><B>Username:</B></TD><TD>$account->userid</TD></TR>\n";
+    $block1 .= " <TR><TD ALIGN=\"right\"><B>E-mail:</B></TD><TD>". format_email($account->fake_email) ."</TD></TR>\n";
+    $block1 .= " <TR><TD ALIGN=\"right\"><B>URL:</B></TD><TD>". format_url($account->url) ."</TD></TR>\n";
+    $block1 .= " <TR><TD ALIGN=\"right\"><B>Bio:</B></TD><TD>". format_data($account->bio) ."</TD></TR>\n";
+    $block1 .= "</TABLE>\n";
 
     $result = db_query("SELECT c.cid, c.pid, c.sid, c.subject, c.timestamp, s.subject AS story FROM comments c LEFT JOIN users u ON u.id = c.author LEFT JOIN stories s ON s.id = c.sid WHERE u.userid = '$uname' AND s.status = 2 AND s.timestamp > ". (time() - 1209600) ." ORDER BY cid DESC LIMIT 10");
     while ($comment = db_fetch_object($result)) {
-      $box2 .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
-      $box2 .= " <TR><TD ALIGN=\"right\"><B>Comment:</B></TD><TD><A HREF=\"discussion.php?id=$comment->sid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A></TD></TR>\n";
-      $box2 .= " <TR><TD ALIGN=\"right\"><B>Date:</B></TD><TD>". format_date($comment->timestamp) ."</TD></TR>\n";
-      $box2 .= " <TR><TD ALIGN=\"right\"><B>Story:</B></TD><TD><A HREF=\"discussion.php?id=$comment->sid\">". check_output($comment->story) ."</A></TD></TR>\n";
-      $box2 .= "</TABLE>\n";
-      $box2 .= "<P>\n";
+      $block2 .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
+      $block2 .= " <TR><TD ALIGN=\"right\"><B>Comment:</B></TD><TD><A HREF=\"discussion.php?id=$comment->sid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A></TD></TR>\n";
+      $block2 .= " <TR><TD ALIGN=\"right\"><B>Date:</B></TD><TD>". format_date($comment->timestamp) ."</TD></TR>\n";
+      $block2 .= " <TR><TD ALIGN=\"right\"><B>Story:</B></TD><TD><A HREF=\"discussion.php?id=$comment->sid\">". check_output($comment->story) ."</A></TD></TR>\n";
+      $block2 .= "</TABLE>\n";
+      $block2 .= "<P>\n";
       $comments++;
     }
 
     $result = db_query("SELECT d.* FROM diaries d LEFT JOIN users u ON u.id = d.author WHERE u.userid = '$uname' AND d.timestamp > ". (time() - 1209600) ."  ORDER BY id DESC LIMIT 2");
     while ($diary = db_fetch_object($result)) {
-      $box3 .= "<DL><DT><B>". date("l, F jS", $diary->timestamp) .":</B></DT><DD><P>". check_output($diary->text) ."</P><P>[ <A HREF=\"module.php?mod=diary&op=view&name=$uname\">more</A> ]</P></DD></DL>\n";
+      $block3 .= "<DL><DT><B>". date("l, F jS", $diary->timestamp) .":</B></DT><DD><P>". check_output($diary->text) ."</P><P>[ <A HREF=\"module.php?mod=diary&op=view&name=$uname\">more</A> ]</P></DD></DL>\n";
       $diaries++;
     }
     
     // Display account information:
     $theme->header();
-    if ($box1) $theme->box("User information for $uname", $box1);
-    if ($box2) $theme->box("$uname has posted ". format_plural($comments, "comment", "comments") ." recently", $box2);
-    if ($box3) $theme->box("$uname has posted ". format_plural($diaries, "diary entry", "diary entries") ." recently", $box3);
+    if ($block1) $theme->box("User information for $uname", $block1);
+    if ($block2) $theme->box("$uname has posted ". format_plural($comments, "comment", "comments") ." recently", $block2);
+    if ($block3) $theme->box("$uname has posted ". format_plural($diaries, "diary entry", "diary entries") ." recently", $block3);
     $theme->footer();
   }
   else { 
@@ -375,12 +375,12 @@ function account_email_submit($userid, $email) {
 function account_create_submit($userid, $email) {
   global $theme, $site_name, $site_url;
   
-  $new[userid] = $userid;
-  $new[real_email] = $email;
+  $new[userid] = trim($userid);
+  $new[real_email] = trim($email);
   
-  if ($rval = account_validate($new)) { 
+  if ($error = account_validate($new)) { 
     $theme->header();
-    $theme->box("Create user account", account_create($new, $rval));
+    $theme->box("Create user account", account_create($new, $error));
     $theme->footer();
   }
   else {
@@ -496,12 +496,12 @@ function account_track_site() {
   $result1 = db_query("SELECT c.cid, c.pid, c.sid, c.subject, u.userid, s.subject AS story FROM comments c LEFT JOIN users u ON u.id = c.author LEFT JOIN stories s ON s.id = c.sid WHERE s.status = 2 ORDER BY cid DESC LIMIT 10");
 
   while ($comment = db_fetch_object($result1)) {
-    $box1 .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
-    $box1 .= " <TR><TD ALIGN=\"right\"><B>Comment:</B></TD><TD><A HREF=\"discussion.php?id=$comment->sid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A></TD></TR>\n";
-    $box1 .= " <TR><TD ALIGN=\"right\"><B>Author:</B></TD><TD>". format_username($comment->userid) ."</TD></TR>\n";
-    $box1 .= " <TR><TD ALIGN=\"right\"><B>Story:</B></TD><TD><A HREF=\"discussion.php?id=$comment->sid\">". check_output($comment->story) ."</A></TD></TR>\n";
-    $box1 .= "</TABLE>\n";
-    $box1 .= "<P>\n";
+    $block1 .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
+    $block1 .= " <TR><TD ALIGN=\"right\"><B>Comment:</B></TD><TD><A HREF=\"discussion.php?id=$comment->sid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A></TD></TR>\n";
+    $block1 .= " <TR><TD ALIGN=\"right\"><B>Author:</B></TD><TD>". format_username($comment->userid) ."</TD></TR>\n";
+    $block1 .= " <TR><TD ALIGN=\"right\"><B>Story:</B></TD><TD><A HREF=\"discussion.php?id=$comment->sid\">". check_output($comment->story) ."</A></TD></TR>\n";
+    $block1 .= "</TABLE>\n";
+    $block1 .= "<P>\n";
   }
 
   $users_total = db_result(db_query("SELECT COUNT(id) FROM users"));
@@ -524,16 +524,16 @@ function account_track_site() {
   $result = db_query("SELECT u.userid, COUNT(d.author) AS count FROM diaries d LEFT JOIN users u ON d.author = u.id GROUP BY d.author ORDER BY count DESC LIMIT 10");
   while ($poster = db_fetch_object($result)) $diaries_posters .= format_username($poster->userid) .", ";
   
-  $box2 .= "<TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"1\">\n";
-  $box2 .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Users:</B></TD><TD>$users_total users</TD></TR>\n";
-  $box2 .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Stories:</B></TD><TD>$stories_posted posted, $stories_queued queued, $stories_dumped dumped<BR><I>[most frequent posters: $stories_posters ...]</I></TD></TR>\n";
-  $box2 .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Comments:</B></TD><TD>$comments_total comments with an average score of $comments_score<BR><I>[most frequent posters: $comments_posters ...]</I></TD></TR>\n";
-  $box2 .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Diaries:</B></TD><TD>$diaries_total diary entries<BR><I>[most frequent posters: $diaries_posters ...]</I></TD></TR>\n";
-  $box2 .= "</TABLE>\n";
+  $block2 .= "<TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"1\">\n";
+  $block2 .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Users:</B></TD><TD>$users_total users</TD></TR>\n";
+  $block2 .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Stories:</B></TD><TD>$stories_posted posted, $stories_queued queued, $stories_dumped dumped<BR><I>[most frequent posters: $stories_posters ...]</I></TD></TR>\n";
+  $block2 .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Comments:</B></TD><TD>$comments_total comments with an average score of $comments_score<BR><I>[most frequent posters: $comments_posters ...]</I></TD></TR>\n";
+  $block2 .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Diaries:</B></TD><TD>$diaries_total diary entries<BR><I>[most frequent posters: $diaries_posters ...]</I></TD></TR>\n";
+  $block2 .= "</TABLE>\n";
 
   $theme->header();
-  $theme->box("Recent comments", $box1);
-  $theme->box("Site statistics", $box2);
+  $theme->box("Recent comments", $block1);
+  $theme->box("Site statistics", $block2);
   $theme->footer();
 }
 

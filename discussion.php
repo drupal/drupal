@@ -49,7 +49,7 @@ function discussion_kids($cid, $mode, $threshold, $level = 0, $dummy = 0) {
   if ($level && $comments) print "</UL>";
 }
 
-function discussion_childs($cid, $threshold, $level = 0, $thread) {
+function discussion_childs($cid, $threshold, $level = 0, $thread = "") {
   global $theme, $user;
 
   // Perform SQL query:
