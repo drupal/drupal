@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.81 2003/12/01 13:45:32 dries Exp $
+// $Id: taxonomy.module,v 1.82 2003/12/05 06:32:48 dries Exp $
 
 function taxonomy_feed($taxonomy) {
   global $id, $type;
@@ -240,7 +240,7 @@ function taxonomy_save_term($edit) {
 
   cache_clear_all();
 
-  drupal_set_message($status);
+  drupal_set_message($message);
   return $edit;
 }
 
