@@ -1,5 +1,5 @@
 <?php
-// $Id: archive.module,v 1.15 2003/03/16 07:02:18 dries Exp $
+// $Id: archive.module,v 1.16 2003/04/21 14:55:02 dries Exp $
 
 function archive_system($field){
   $system["description"] = t("Displays a calendar to navigation old content.");
@@ -129,11 +129,14 @@ function archive_block($op = "list", $delta = 0) {
 }
 
 function archive_link($type) {
+
+  $links = array();
+
   if ($type == "page" && user_access("access content")) {
     $links[] = l(t("archives"), "archive", array("title" => t("Read the older content in our archive.")));
   }
 
-  return $links ? $links : array();
+  return $links;
 }
 
 function archive_page() {

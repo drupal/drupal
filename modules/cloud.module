@@ -1,5 +1,5 @@
 <?php
-// $Id: cloud.module,v 1.43 2003/03/29 16:30:40 dries Exp $
+// $Id: cloud.module,v 1.44 2003/04/21 14:55:03 dries Exp $
 
 function cloud_help($type = "administrator") {
   if ($type == "user") {
@@ -35,6 +35,8 @@ function cloud_perm() {
 }
 
 function cloud_link($type) {
+  $links = array();
+
   if ($type == "page" && user_access("access site cloud")) {
     $links[] = l(t("site cloud"), "cloud", array("title" => t("Monitor other sites in the cloud.")));
   }
@@ -48,7 +50,7 @@ function cloud_link($type) {
     menu("admin/syndication/cloud/help", "help", "cloud_help", NULL, 9);
   }
 
-  return $links ? $links : array();
+  return $links;
 }
 
 function cloud_update($site) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: index.php,v 1.59 2003/03/04 06:19:38 dries Exp $
+// $Id: index.php,v 1.60 2003/04/21 14:54:59 dries Exp $
 
 include_once "includes/common.inc";
 
@@ -7,7 +7,7 @@ if (isset($q)) {
   $mod = arg(0);
 }
 
-if ($mod && module_hook($mod, "page")) {
+if (isset($mod) && module_hook($mod, "page")) {
   if ($mod != "admin") {
     page_header();
   }

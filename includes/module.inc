@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.43 2003/03/12 21:46:14 dries Exp $
+// $Id: module.inc,v 1.44 2003/04/21 14:55:00 dries Exp $
 
 // initialize modules:
 function module_init() {
@@ -66,7 +66,7 @@ function module_list($refresh = 0) {
 // return 1 if module $name exists, 0 otherwise:
 function module_exist($name) {
   $list = module_list();
-  return ($list[$name]) ? 1 : 0;
+  return isset($list[$name]) ? 1 : 0;
 }
 
 // return 1 if module $name implements hook $hook, 0 otherwise:

@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.37 2003/03/06 22:03:36 dries Exp $
+// $Id: search.module,v 1.38 2003/04/21 14:55:03 dries Exp $
 
 function search_help() {
   $output = "<b>". t("Search guidelines") ."</b>";
@@ -28,11 +28,13 @@ function search_perm() {
  *
  */
 function search_link($type) {
+  $links = array();
+
   if ($type == "page" && user_access("search content")) {
     $links[] = l(t("search"), "search", array("title" => t("Search for older content.")));
   }
 
-  return $links ? $links : array();
+  return $links;
 }
 
 function search_settings() {

@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.39 2003/03/16 07:38:39 dries Exp $
+// $Id: tracker.module,v 1.40 2003/04/21 14:55:03 dries Exp $
 
 function tracker_help() {
   $output .= "<p>The tracker module is a handy module for displaying the most recent posts.  By following the <i>view recent posts</i> link in the user block, a user may quickly review all recent postings.</p>";
@@ -13,11 +13,13 @@ function tracker_system($field) {
 
 function tracker_link($type) {
 
+  $links = array();
+
   if ($type == "menu.view" && user_access("access content")) {
     $links[] = l(t("view recent posts"), "tracker", array("title" => t("Display an overview of the recent posts.")));
   }
 
-  return $links ? $links : array();
+  return $links;
 }
 
 function tracker_posts($id = 0) {
