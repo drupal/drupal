@@ -70,7 +70,6 @@
    }
 
    function story($story, $reply = 0) {
-     if (!$reply) {
        $timestamp = format_date($story->timestamp);
 
         print "\n<!-- story: \"$story->subject\" -->\n";
@@ -94,50 +93,22 @@
          <TR BGCOLOR="<? echo $this->bgcolor2; ?>">
           <TD BGCOLOR="<? echo $this->bgcolor2 ?>" COLSPAN="2">
           <?
-           echo "<P>" . check_output($story->abstract, 1) ."</P>";
-           if ($story->updates) {
+           echo "<P>". check_output($story->abstract, 1) ."</P>";
+           if ($story->updates)
              echo "<P><FONT COLOR=\"$this->fgcolor3\">Editor's note by " . format_username($editor) . ":</FONT> ". check_output($story->updates, 1) ."</P>";
-           }
+           if ($reply)
+             if ($story->article) print "<P>". check_output($story->article, 1) ."</P>\n";
           ?>
           </TD>
          </TR>
-        <TR BGCOLOR="<? echo $this->bgcolor3; ?>"><TD BGCOLOR="<? echo $this->bgcolor3 ?>" ALIGN="right" COLSPAN="2"><? echo theme_morelink($this, $story) ?></TD></TR>
-       </TABLE></TD></TR></TABLE><BR>
-      <?
-     }
-     else {
-       $timestamp = format_date($story->timestamp);
-
+         <?php
+           if (!$reply)
+             echo "<TR BGCOLOR=\"". $this->bgcolor3 ."\"><TD BGCOLOR=\"". $this->bgcolor3 ."\" ALIGN=\"right\" COLSPAN=\"2\">". theme_morelink($this, $story) ."</TD></TR>";
+           else
+             echo "<TR BGCOLOR=\"". $this->bgcolor3 ."\"><TD COLSPAN=\"2\" BGCOLOR=\"". $this->bgcolor3 ."\" ALIGN=\"right\">". $reply ."</TD></TR>";
          ?>
-        <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" BGCOLOR="<? echo $this->brcolor1; ?>" WIDTH="100%">
-        <TR><TD>
-         <TABLE BORDER="0" CELLPADDING="4" CELLSPACING="1" WIDTH="100%">
-         <TR><TD COLSPAN="2" BGCOLOR="<? echo $this->bgcolor1; ?>"><FONT COLOR="<? echo $this->fgcolor1; ?>"><B><? echo check_output($story->subject, 1); ?></B></FONT></TD></TR>
-         <TR BGCOLOR="<? echo $this->bgcolor3; ?>">
-           <?
-            if ($story->section) { print "<TD BGCOLOR=\"$this->bgcolor3\">"; }
-            else { print "<TD COLSPAN=\"2\" BGCOLOR=\"$this->bgcolor3\">"; }
-            if ($story->userid) { print "<SMALL>Posted by " . format_username($story->userid) . " on $timestamp"; }
-            else { print "<SMALL>Posted by $anonymous on $timestamp"; }
-            if ($story->department) { print " - from the $story->department dept."; }
-            print "</SMALL>";
-            if ($story->section) { print "</TD><TD BGCOLOR=\"$this->bgcolor3\" ALIGN=\"center\"><B><A HREF=\"index.php?section=" . urlencode($story->section) . "\"><FONT COLOR=\"$this->sectioncolor\">$story->section</FONT></A></B>"; }
-           ?>
-          </TD>
-         </TR>
-         <TR BGCOLOR="<? echo $this->bgcolor2; ?>">
-          <TD COLSPAN="2" BGCOLOR="<? echo $this->bgcolor2 ?>" >
-           <?
-            if ($story->abstract) print "<P>". check_output($story->abstract, 1) ."</P>\n";
-            if ($story->updates) print "<P><FONT COLOR=\"$this->bgcolor2\">Editor's note:</FONT> ". check_output($story->updates, 1) ."</P>\n";
-            if ($story->article) print "<P>". check_output($story->article, 1) ."</P>\n";
-           ?>
-          </TD>
-         </TR>
-        <TR BGCOLOR="<? echo $this->bgcolor3; ?>"><TD COLSPAN="2" BGCOLOR="<? echo $this->bgcolor3 ?>" ALIGN="right"><? echo "$reply"; ?></TD></TR>
        </TABLE></TD></TR></TABLE><BR>
       <?
-     }
    }
 
    function controls() {
@@ -152,9 +123,9 @@
      print "\n<!-- Comment: \"$comment->subject\" by $comment->userid -->\n";
 
      ?>
-      <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" BGCOLOR="<? echo $this->brcolor1; ?>" WIDTH="100%">
+      <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" BGCOLOR="<?php echo $this->brcolor1; ?>" WIDTH="100%">
       <TR><TD>
-     <?
+     <?php
 
      // Create comment header:
      echo "<TABLE BORDER=\"0\" CELLPADDING=\"4\" CELLSPACING=\"1\" WIDTH=\"100%\">";
@@ -199,14 +170,14 @@
      // Print bottom link(s):
      echo " <TR><TD ALIGN=\"right\" BGCOLOR=\"$this->bgcolor3\">[ $link ]</TD></TR>";
      echo " </TABLE>";
-     ?></TD></TR></TABLE><BR><?
+     ?></TD></TR></TABLE><BR><?php
    }
 
    function box($subject, $content) {
      ?>
-      <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" BGCOLOR="<? echo $this->brcolor1; ?>" WIDTH="100%">
+      <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" BGCOLOR="<?php echo $this->brcolor1; ?>" WIDTH="100%">
       <TR><TD>
-     <?
+     <?php
 
      print "<TABLE BORDER=\"0\" CELLPADDING=\"3\" CELLSPACING=\"1\" WIDTH=\"100%\">";
      print " <TR><TD ALIGN=\"center\" BGCOLOR=\"$this->bgcolor1\" NOWRAP><FONT COLOR=\"$this->fgcolor1\"><B>$subject</B></FONT></TD></TR>";
@@ -216,7 +187,7 @@
      ?>
       </TD></TR>
       </TABLE><BR>
-     <?
+     <?php
 
    }
 
@@ -224,13 +195,13 @@
     ?>
        </TD>
        <TD VALIGN="top" WIDTH="185">
-        <?
+        <?php
           theme_account($this);
     theme_blocks("all", $this);
         ?>
        </TD>
       </TR>
-       <TR><TD COLSPAN="2"><?
+       <TR><TD COLSPAN="2"><?php
             print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"0\" BGCOLOR=\"$this->brcolor1;\" WIDTH=\"100%\">";
             print "<TR><TD>";
             print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"1\" WIDTH=\"100%\">";
@@ -240,15 +211,15 @@
        ?></TD></TR>
       <TR>
        <TD COLSPAN="2">
-        <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0" BGCOLOR="<? echo $this->brcolor1; ?>"><TR><TD ALIGN="CENTER"><TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="4"><TR><TD ALIGN="CENTER" BGCOLOR="<? echo $this->bgcolor2; ?>"><BIG><A HREF="index.php">home</A> | <A HREF="module.php?mod=faq">faq</A> | <A HREF="module.php?mod=diary">diary</A> | <A HREF="search.php">search</A> | <A HREF="submit.php">submit news</A> | <A HREF="account.php">user account</A></BIG></TD></TR></TABLE></TD></TR></TABLE>
+        <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0" BGCOLOR="<?php echo $this->brcolor1; ?>"><TR><TD ALIGN="CENTER"><TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="4"><TR><TD ALIGN="CENTER" BGCOLOR="<?php echo $this->bgcolor2; ?>"><BIG><A HREF="index.php">home</A> | <A HREF="module.php?mod=faq">faq</A> | <A HREF="module.php?mod=diary">diary</A> | <A HREF="search.php">search</A> | <A HREF="submit.php">submit news</A> | <A HREF="account.php">user account</A></BIG></TD></TR></TABLE></TD></TR></TABLE>
        </TD>
       </TR>
      </TABLE>
-    </TD><TD BGCOLOR="<? print $this->clc0; ?>"><IMG SRC="themes/<? print $this->themename; ?>/images/null.gif" WIDTH="4"></TD><TD BGCOLOR="<? print $this->cl00; ?>"><IMG SRC="themes/<? print $this->themename; ?>/images/null.gif" WIDTH="10"></TD></TR>
+    </TD><TD BGCOLOR="<?php print $this->clc0; ?>"><IMG SRC="themes/<?php print $this->themename; ?>/images/null.gif" WIDTH="4"></TD><TD BGCOLOR="<?php print $this->cl00; ?>"><IMG SRC="themes/<?php print $this->themename; ?>/images/null.gif" WIDTH="10"></TD></TR>
     </TABLE>
     </BODY>
     </HTML>
-    <?
+    <?php
    }
  }
 
