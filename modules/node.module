@@ -724,6 +724,11 @@ function node_menu($may_cache) {
   return $items;
 }
 
+function node_last_changed($nid) {
+  $node = db_fetch_object(db_query('SELECT changed FROM {node} WHERE nid = %d', $nid));
+  return ($node->changed);
+}
+
 /**
  * Generate the content administration overview.
  */
@@ -1083,6 +1088,10 @@ function node_validate($node) {
     $node->teaser = node_teaser($node->body);
   }
 
+  if (node_last_changed($node->nid) > $node->changed) {
+    form_set_error('changed', t('This content has been modified by another user, unable to save changes.'));
+  }
+
   // Create a new revision when required.
   $node = node_revision_create($node);
 
@@ -1221,6 +1230,10 @@ function node_form($edit) {
     $output .= form_hidden('created', $edit->created);
   }
 
+  if ($edit->changed) {
+    $output .= form_hidden('changed', $edit->changed);
+  }
+
   $output .= form_hidden('type', $edit->type);
 
   // Add the buttons.
@@ -1353,7 +1366,6 @@ function node_preview($node) {
     if (empty($node->created)) {
       $node->created = time();
     }
-    $node->changed = time();
 
     // Extract a teaser, if it hasn't been set (e.g. by a module-provided
     // 'teaser' form item).
