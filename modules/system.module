@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.64 2003/02/20 22:44:51 dries Exp $
+// $Id: system.module,v 1.65 2003/02/24 19:19:12 dries Exp $
 
 function system_help() {
   $output .= "<p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviors including visual and operational settings.</p>";
@@ -194,7 +194,7 @@ function system_view($type) {
     default:
       foreach (module_list() as $name) {
         if (module_hook($name, "settings")) {
-          $links[] = "<a href=\"#$name\">". t("$name") ."</a>";
+          $links[] = l($name, "admin/system/modules/settings#$name");
         }
       }
       $form = system_view_modules();
