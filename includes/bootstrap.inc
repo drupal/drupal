@@ -1,20 +1,26 @@
 <?php
 /* $Id$ */
 
+/**
+ * @file
+ *
+ * Functions that need to be loaded on every Drupal request.
+ */
+
+/**
+ * Locate the appropriate configuration file.
+ *
+ * Try finding a matching configuration file by stripping the website's
+ * URI from left to right.  If no configuration file is found, return the
+ * default value, "conf".
+ */
 function conf_init() {
-
-  /*
-  ** Try finding a matching configuration file by stripping the website's
-  ** URI from left to right.  If no configuration file is found, return a
-  ** default value 'conf'.
-  */
-
   $uri = $_SERVER['PHP_SELF'];
 
   $file = strtolower(strtr($_SERVER['HTTP_HOST'] . substr($uri, 0, strrpos($uri, '/')), '/:', '..'));
 
   while (strlen($file) > 4) {
-    if (file_exists("includes/$file.php")) {
+    if (file_exists('includes/'. $file .'.php')) {
       return $file;
     }
     else {
@@ -25,6 +31,13 @@ function conf_init() {
   return 'conf';
 }
 
+/**
+ * Load the persistent variable table.
+ *
+ * The variable table is composed of values that have been saved in the table
+ * with variable_set() as well as those explicitly specified in the configuration
+ * file.
+ */
 function variable_init($conf = array()) {
   $result = db_query('SELECT * FROM {variable} ');
   while ($variable = db_fetch_object($result)) {
@@ -36,12 +49,31 @@ function variable_init($conf = array()) {
   return $conf;
 }
 
+/**
+ * Return a persistent variable.
+ *
+ * @param $name
+ *   The name of the variable to return.
+ * @param $default
+ *   The default value to use if this variable has never been set.
+ * @return
+ *   The value of the variable.
+ */
 function variable_get($name, $default) {
   global $conf;
 
   return isset($conf[$name]) ? $conf[$name] : $default;
 }
 
+/**
+ * Set a persistent variable.
+ *
+ * @param $name
+ *   The name of the variable to set.
+ * @param $value
+ *   The value to set. This can be any PHP data type; these functions take care
+ *   of serialization as necessary.
+ */
 function variable_set($name, $value) {
   global $conf;
 
@@ -51,6 +83,12 @@ function variable_set($name, $value) {
   $conf[$name] = $value;
 }
 
+/**
+ * Unset a persistent variable.
+ *
+ * @param $name
+ *   The name of the variable to undefine.
+ */
 function variable_del($name) {
   global $conf;
 
@@ -59,11 +97,30 @@ function variable_del($name) {
   unset($conf[$name]);
 }
 
+/**
+ * Return data from the persistent cache.
+ *
+ * @param $key
+ *   The cache ID of the data to retrieve.
+ */
 function cache_get($key) {
   $cache = db_fetch_object(db_query("SELECT data, created, headers FROM {cache} WHERE cid = '%s'", $key));
   return $cache->data ? $cache : 0;
 }
 
+/**
+ * Store data in the persistent cache.
+ *
+ * @param $cid
+ *   The cache ID of the data to store.
+ * @param $data
+ *   The data to store in the cache. Complex data types must be serialized first.
+ * @param $expire
+ *   Whether the data should be removed from the cache when a cache expiration
+ *   is triggered.
+ * @param $headers
+ *   A string containing HTTP header information for cached pages.
+ */
 function cache_set($cid, $data, $expire = 0, $headers = NULL) {
   db_query("UPDATE {cache} SET data = '%s', created = %d, expire = %d, headers = '%s' WHERE cid = '%s'", $data, time(), $expire, $headers, $cid);
   if (!db_affected_rows()) {
@@ -71,6 +128,13 @@ function cache_set($cid, $data, $expire = 0, $headers = NULL) {
   }
 }
 
+/**
+ * Expire data from the cache.
+ *
+ * @param $cid
+ *   If set, the cache ID to delete. Otherwise, all cache entries that can expire
+ *   are deleted.
+ */
 function cache_clear_all($cid = NULL) {
   if (empty($cid)) {
     db_query("DELETE FROM {cache} WHERE expire <> 0");
@@ -80,6 +144,9 @@ function cache_clear_all($cid = NULL) {
   }
 }
 
+/**
+ * Store the current page in the cache.
+ */
 function page_set_cache() {
   global $user;
 
@@ -99,17 +166,19 @@ function page_set_cache() {
   }
 }
 
+/**
+ * Retrieve the current page from the cache.
+ *
+ * Note, we do not serve cached pages when status messages are waiting (from
+ * a redirected form submission which was completed).
+ * Because the output handler is not activated, the resulting page will not
+ * get cached either.
+ */
 function page_get_cache() {
   global $user;
 
   $cache = NULL;
 
-  /*
-   * Note, we do not serve cached pages when status messages are waiting (from
-   * a redirected form submission which was completed).
-   * Because the output handler is not activated, the resulting page will not
-   * get cached either.
-   */
   if (!$user->uid && $_SERVER['REQUEST_METHOD'] == 'GET' && count(drupal_set_message()) == 0) {
     $cache = cache_get(request_uri());
 
@@ -121,6 +190,9 @@ function page_get_cache() {
   return $cache;
 }
 
+/**
+ * Set HTTP headers in preparation for a page response.
+ */
 function drupal_page_header() {
   if (variable_get('dev_timer', 0)) {
     timer_start();
@@ -153,21 +225,18 @@ function drupal_page_header() {
       header("Last-Modified: $date");
       header("ETag: $etag");
 
-      // Determine if the browser accepts gzipped data
+      // Determine if the browser accepts gzipped data.
       if (@strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') === false && function_exists('gzencode')) {
-        // strip the gzip header and run uncompress
+        // Strip the gzip header and run uncompress.
         $cache->data = gzinflate(substr(substr($cache->data, 10), 0, -8));
       }
       elseif (function_exists('gzencode')) {
         header('Content-Encoding: gzip');
       }
 
-      /*
-      ** Send the original request's headers.  We send them one after
-      ** another so PHP's header() function can deal with duplicate
-      ** headers.
-      */
-
+      // Send the original request's headers.  We send them one after
+      // another so PHP's header() function can deal with duplicate
+      // headers.
       $headers = explode("\n", $cache->headers);
       foreach ($headers as $header) {
         header($header);
@@ -175,10 +244,8 @@ function drupal_page_header() {
 
       print $cache->data;
 
-      /*
-      ** call all init() and exit() hooks without including all modules
-      ** only use those hooks for critical operations
-      */
+      // Call all init() and exit() hooks without including all modules.
+      // Only use those hooks for critical operations.
       foreach (bootstrap_hooks() as $hook) {
         module_invoke_all($hook);
       }
@@ -187,16 +254,21 @@ function drupal_page_header() {
   }
 }
 
-// critical hooks called even when serving a cached page
+/**
+ * Define the critical hooks that force modules to always be loaded.
+ */
 function bootstrap_hooks() {
   return array('init', 'exit');
 }
 
-/*
-** Unserializes and appends elements from a serialized string
-** $obj is the object to which we shall append
-** $field is the element whose value is a serialized string
-*/
+/**
+ * Unserializes and appends elements from a serialized string.
+ *
+ * @param $obj
+ *   The object to which the elements are appended.
+ * @param $field
+ *   The attribute of $obj whose value should be unserialized.
+ */
 function drupal_unpack($obj, $field = 'data') {
   if ($obj->$field && $data = unserialize($obj->$field)) {
     foreach ($data as $key => $value) {
@@ -208,12 +280,26 @@ function drupal_unpack($obj, $field = 'data') {
   return $obj;
 }
 
+/**
+ * Return the URI of the referring page.
+ */
 function referer_uri() {
   if (isset($_SERVER['HTTP_REFERER'])) {
     return check_url($_SERVER['HTTP_REFERER']);
   }
 }
 
+/**
+ * Return a component of the current Drupal path.
+ *
+ * When viewing a page at the path "admin/node/configure", for example, arg(0)
+ * would return "admin", arg(1) would return "node", and arg(2) would return
+ * "configure".
+ *
+ * Avoid use of this function where possible, as resulting code is hard to read.
+ * Instead, attempt to use named arguments in menu callback functions. See the
+ * explanation in menu.inc for how to construct callbacks that take arguments.
+ */
 function arg($index) {
   static $arguments, $q;
 
@@ -226,28 +312,31 @@ function arg($index) {
   }
 }
 
+/**
+ * Prepare user input for use in a database query, preventing SQL injection attacks.
+ */
 function check_query($text) {
   return addslashes($text);
 }
 
+/**
+ * Prepare user input for use in a URI.
+ *
+ * We replace ( and ) with their entity equivalents to prevent XSS attacks.
+ */
 function check_url($uri) {
   $uri = htmlspecialchars($uri, ENT_QUOTES);
-
-  /*
-  ** We replace ( and ) with their entity equivalents to prevent XSS
-  ** attacks.
-  */
 
   $uri = strtr($uri, array('(' => '&040;', ')' => '&041;'));
 
   return $uri;
 }
 
+/**
+ * Since request_uri() is only available on Apache, we generate an
+ * equivalent using other environment vars.
+ */
 function request_uri() {
-  /*
-  ** Since request_uri() is only available on Apache, we generate
-  ** equivalent using other environment vars.
-  */
 
   if (isset($_SERVER['REQUEST_URI'])) {
     $uri = $_SERVER['REQUEST_URI'];
@@ -259,12 +348,25 @@ function request_uri() {
   return check_url($uri);
 }
 
+/**
+ * Begin a global timer, for benchmarking of page execution time.
+ */
 function timer_start() {
   global $timer;
-  list($usec, $sec) = explode(" ", microtime());
+  list($usec, $sec) = explode(' ', microtime());
   $timer = (float)$usec + (float)$sec;
 }
 
+/**
+ * Log a system message.
+ *
+ * @param $type
+ *   The category to which this message belongs.
+ * @param $message
+ *   The message to store in the log.
+ * @param $link
+ *   A link to associate with the message.
+ */
 function watchdog($type, $message, $link = NULL) {
   global $user;
   db_query("INSERT INTO {watchdog} (uid, type, message, link, location, hostname, timestamp) VALUES (%d, '%s', '%s', '%s', '%s', '%s', %d)", $user->uid, $type, $message, $link, request_uri(), $_SERVER['REMOTE_ADDR'], time());
@@ -272,12 +374,20 @@ function watchdog($type, $message, $link = NULL) {
 
 /**
  * @name Page messages
- * @ingroup common
  *
  * Functions to get and set the message of the current page.
  * @{
  */
-function drupal_set_message($message = NULL, $type = "status") {
+
+/**
+ * Set a message for the user to see.
+ *
+ * The message is stored in the session so that it can persist through a redirect.
+ *
+ * If called with no arguments, this function returns all set messages without
+ * clearing them.
+ */
+function drupal_set_message($message = NULL, $type = 'status') {
   if (isset($message)) {
     if (!isset($_SESSION['messages'])) {
       $_SESSION['messages'] = array();
@@ -293,6 +403,11 @@ function drupal_set_message($message = NULL, $type = "status") {
   return $_SESSION['messages'];
 }
 
+/**
+ * Return all messages that have been set.
+ *
+ * As a side effect, this function clears the message queue.
+ */
 function drupal_get_messages() {
   $messages = drupal_set_message();
   $_SESSION['messages'] = array();
@@ -310,6 +425,6 @@ include_once 'includes/database.inc';
 include_once 'includes/session.inc';
 include_once 'includes/module.inc';
 
-// initialize configuration variables, using values from conf.php if available:
+// Initialize configuration variables, using values from conf.php if available.
 $conf = variable_init(isset($conf) ? $conf : array());
 ?>
