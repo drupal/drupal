@@ -256,7 +256,7 @@ function book_node_link($node = 0) {
       $output .= status(t("removed the node form the book."));
     }
 
-    $output .= "<h3>". t("Edit book outline") ."</h3>";
+    $output .= "<h3>". t("Edit book outline for node <i>") . "$node->title</i></h3>";
 
     if ($edit["nid"]) {
       $page = db_fetch_object(db_query("SELECT * FROM book WHERE nid = '%d'", $node->nid));
@@ -279,7 +279,7 @@ function book_node_link($node = 0) {
 
     $output .= form_hidden("nid", $node->nid);
 
-    return form($output, "post", url("admin/book/outline"));
+    return form($output, "post", url("admin/node/book"));
   }
 }
 
