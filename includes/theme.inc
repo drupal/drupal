@@ -8,13 +8,13 @@ class BaseTheme {
     $output .= "<table border=\"0\" cellspacing=\"4\" cellpadding=\"4\"><tr><td valign=\"top\" width=\"170\">";
 
     print $output;
-    $this->box(t("Navigation"), implode("<br />", link_page())); theme_blocks("all", $this);
+    $this->box(t("Navigation"), @implode("<br />", link_page())); theme_blocks("all", $this);
     print "</td><td valign=\"top\">";
 
   }
 
   function links($links, $delimiter = " | ") {
-    return implode($delimiter, $links);
+    return @implode($delimiter, $links);
   }
 
   function image($name) {
