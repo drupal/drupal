@@ -100,7 +100,7 @@ function locale_admin() {
 
 function locale($string) {
   global $locale;
-  if ($locale) {
+  if (variable_get("locale", 0)) {
     $result = db_query("SELECT id, $locale FROM locales WHERE STRCMP(string, '". addslashes($string) ."') = 0");
     if ($translation = db_fetch_object($result)) $string = ($translation->$locale) ? check_output($translation->$locale) : $string;
     else db_query("INSERT INTO locales (string, location) VALUES ('". addslashes($string) ."', '". check_input(getenv("REQUEST_URI")) ."')");
