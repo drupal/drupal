@@ -48,7 +48,8 @@ $mysql_updates = array(
   "2002-07-07" => "update_33",
   "2002-07-31" => "update_34",
   "2002-08-10" => "update_35",
-  "2002-08-16" => "update_36"
+  "2002-08-16" => "update_36",
+  "2002-08-19" => "update_37"
 );
 
 // Update functions
@@ -506,6 +507,29 @@ function update_35() {
 function update_36() {
   update_sql("ALTER TABLE rating CHANGE old previous int(6) NOT NULL default '0';");
   update_sql("ALTER TABLE rating CHANGE new current int(6) NOT NULL default '0';");
+}
+
+function update_37() {
+
+  update_sql("DROP TABLE IF EXISTS sequences;");
+
+  update_sql("CREATE TABLE sequences (
+    name VARCHAR(255) NOT NULL PRIMARY KEY, 
+    id INT UNSIGNED NOT NULL
+  ) TYPE=MyISAM;");
+
+  if ($max = db_result(db_query("SELECT MAX(nid) FROM node;"))) {
+    update_sql("REPLACE INTO sequences VALUES ('node', $max);");
+  }
+
+  if ($max = db_result(db_query("SELECT MAX(cid) FROM comments;"))) {
+    update_sql("REPLACE INTO sequences VALUES ('comments', $max);");
+  }
+  // NOTE: move the comments bit down as soon as we switched to use the new comment module!
+
+  if ($max = db_result(db_query("SELECT MAX(tid) FROM term_data;"))) {
+    update_sql("REPLACE INTO sequences VALUES ('term_data', $max);");
+  }
 }
 
 function update_upgrade3() {

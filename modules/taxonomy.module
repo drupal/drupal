@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.17 2002/08/18 12:14:26 dries Exp $
+// $Id: taxonomy.module,v 1.18 2002/08/20 19:29:16 dries Exp $
 
 function taxonomy_system($field){
   $system["description"] = t("Enables the organization of content into categories.");
@@ -153,11 +153,7 @@ function taxonomy_save_term($edit) {
     taxonomy_del_term($edit["tid"]);
   }
   else {
-    $edit["tid"] = db_result(db_query("SELECT MAX(tid) + 1 FROM term_data"));
-    if (!$edit["tid"]) {
-      // first term
-      $edit["tid"] = 1;
-    }
+    $edit["tid"] = db_next_id("term_data");
     $data = array("tid" => $edit["tid"], "name" => $edit["name"], "description" => $edit["description"], "vid" => $edit["vid"], "weight" => $edit["weight"]);
     db_query("INSERT INTO term_data ". _prepare_insert($data, 1) ." VALUES ". _prepare_insert($data, 2));
   }

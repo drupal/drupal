@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.5 2002/06/23 13:40:01 dries Exp $
+// $Id: database.mysql.inc,v 1.6 2002/08/20 19:29:15 dries Exp $
 
 function db_connect($url) {
   $url = parse_url($url);
@@ -91,6 +91,21 @@ function db_result($result, $row = 0) {
 
 function db_error() {
   return mysql_errno();
+}
+
+function db_next_id($name) {
+
+  /*
+  ** Note that REPLACE query below correctly creates a new sequence
+  ** when needed
+  */
+
+  db_query("LOCK TABLES sequences WRITE");
+  $id = db_result(db_query("SELECT id FROM sequences WHERE name = '%s'", $name)) + 1;
+  db_query("REPLACE INTO sequences VALUES ('%s', '%d')", $name, $id);
+  db_query("UNLOCK TABLES");
+
+  return $id;
 }
 
 ?>
