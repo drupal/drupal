@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.230 2003/07/10 17:46:41 dries Exp $
+// $Id: common.inc,v 1.231 2003/07/16 20:14:25 dries Exp $
 
 function conf_init() {
 
@@ -291,6 +291,21 @@ function valid_email_address($mail) {
   $ipv6 = '[0-9a-fA-F]{1,4}(\:[0-9a-fA-F]{1,4}){7}';
 
   if (preg_match("/^$user@($domain|(\[($ipv4|$ipv6)\]))$/", $mail)) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
+/**
+ * Verify the syntax of the given URL.
+ *
+ * @param $url  an URL
+ */
+function valid_url($url) {
+
+  if (preg_match("/^[a-zA-z0-9\/:_\-_\.]+$/", $url)) {
     return 1;
   }
   else {

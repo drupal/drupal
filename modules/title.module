@@ -32,7 +32,7 @@ function title_page() {
       $header = array(t("Type"), t("Title"), t("Author"));
       while ($node = db_fetch_object($result)) {
         $type = ucfirst(module_invoke($node->type, "node", "name"));
-        $title = l($node->title, "node/view/$node->nid");
+        $title = l($node->title, node_url($node));
         $author = format_name($node);
         $rows[] = array(array("data" => $type, "class" => "type"), array("data" => $title, "class" => "content"), array("data" => $author, "class" => "author"));
       }

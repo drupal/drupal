@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.49 2003/07/16 07:58:02 dries Exp $
+// $Id: tracker.module,v 1.50 2003/07/16 20:14:26 dries Exp $
 
 function tracker_help() {
   $output .= "<p>The tracker module is a handy module for displaying the most recent posts.  By following the <i>view recent posts</i> link in the user block, a user may quickly review all recent postings.</p>";
@@ -42,7 +42,7 @@ function tracker_posts($id = 0) {
     }
 
     $type = ucfirst(module_invoke($node->type, "node", "name"));
-    $title = l($node->title, "node/view/$node->nid") ." ". (node_is_new($node->nid, $node->changed) ? theme("theme_mark") : "");
+    $title = l($node->title, node_url($node)) ." ". (node_is_new($node->nid, $node->changed) ? theme("theme_mark") : "");
     $author = format_name($node);
 
     $comments = array();
