@@ -12,7 +12,7 @@ include_once "modules/backend.class";
 function headlineRSS10_export($uri) {
   global $status, $HTTP_REFERER, $HTTP_USER_AGENT;
 
-  if ($uri[1] == "headlinesRSS10.rdf") {
+  if ($uri[2] == "headlinesRSS10.rdf") {
     watchdog("message", "grabbed 'headlinesRSS10.rdf' - referring url: $HTTP_REFERER - user agent: $HTTP_USER_AGENT");
 
     header("Content-Type: text/plain");

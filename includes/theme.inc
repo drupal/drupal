@@ -7,7 +7,7 @@ function theme_init() {
     include_once $themes[$user->theme][0];
   }
   else {
-    include_once $themes[key($themes)][0];
+    include_once $themes[variable_get(default_theme, key($themes))][0];
   }
   return new Theme();
 }

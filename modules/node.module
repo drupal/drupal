@@ -11,7 +11,7 @@ function node_overview($query = array()) {
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR><TH>title</TH><TH>type</TH><TH>status</TH><TH>author</TH><TH>date</TH><TH COLSPAN=\"3\">operations</TH></TR>\n";
   while ($node = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">$node->type</TD><TD>". $rstatus[$node->status] ."</TD><TD>". format_username($node->userid) ."</TD><TD>". format_date($node->timestamp) ."</TD><TD>". (user_access($user, "node") ? "<A HREF=\"admin.php?mod=node&op=view&id=$node->nid\">view node</A></TD>" : "view node") ."</TD><TD>". (user_access($user, "node") ? "<A HREF=\"admin.php?mod=node&op=edit&id=$node->nid\">edit node</A></TD>" : "edit node") ."</TD><TD>". (user_access($user, $node->type) ? "<A HREF=\"admin.php?mod=$node->type&op=edit&id=$node->nid\">edit $node->type</A></TD>" : "edit $node->type") ."</TD></TR>\n";
+    $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">$node->type</TD><TD>". $rstatus[$node->status] ."</TD><TD>". format_username($node->userid) ."</TD><TD>". format_date($node->timestamp, "small") ."</TD><TD>". (user_access($user, "node") ? "<A HREF=\"admin.php?mod=node&op=view&id=$node->nid\">view node</A></TD>" : "view node") ."</TD><TD>". (user_access($user, "node") ? "<A HREF=\"admin.php?mod=node&op=edit&id=$node->nid\">edit node</A></TD>" : "edit node") ."</TD><TD>". (user_access($user, $node->type) ? "<A HREF=\"admin.php?mod=$node->type&op=edit&id=$node->nid\">edit $node->type</A></TD>" : "edit $node->type") ."</TD></TR>\n";
   }
   $output .= "</TABLE>\n";
 
@@ -63,13 +63,14 @@ function node_delete($id) {
 
 function node_query($type = "") {
   global $status;
-  $queries =  array(0 => array("active nodes", "ORDER BY n.timestamp DESC"), 1 => array("posted nodes", "WHERE n.status = '$status[posted]' ORDER BY n.timestamp DESC"), 2 => array("queued nodes", "WHERE n.status = '$status[queued]' ORDER BY n.timestamp DESC"), 3 => array("dumped nodes", "WHERE n.status = '$status[dumped]' ORDER BY n.timestamp DESC"));
+  $queries =  array(array("recent nodes", "ORDER BY n.timestamp DESC"), array("posted nodes", "WHERE n.status = '$status[posted]' ORDER BY n.timestamp DESC"), array("queued nodes", "WHERE n.status = '$status[queued]' ORDER BY n.timestamp DESC"), array("dumped nodes", "WHERE n.status = '$status[dumped]' ORDER BY n.timestamp DESC"));
   return ($queries[$type] ? $queries[$type] : $queries);
 }
 
-function node_listing() {
-  foreach (node_query() as $key=>$array) {
-    $output .= "<LI><A HREF=\"admin.php?mod=node&type=$key\">$array[0]</A></LI>\n";
+function node_listing($queries) {
+  global $mod;
+  foreach ($queries as $key=>$array) {
+    $output .= "<LI><A HREF=\"admin.php?mod=$mod&type=$key\">$array[0]</A></LI>\n";
   }
   return "<OL>$output</OL>\n";
 }
@@ -92,7 +93,7 @@ function node_admin() {
       print node_overview();
       break;
     case "listing":
-      print node_listing();
+      print node_listing(node_query());
       break;
     case "Save node":
       print status(node_save($edit));
