@@ -641,7 +641,7 @@ function drupal_url($args = array(), $script = "node") {
   foreach ($args as $key => $value) {
     $t[] = "$key=". urlencode($value);
   }
-  return "$script.php?". implode("&amp;", $t);
+  return htmlentities("$script.php?". implode("&", $t));
 }
 
 /**

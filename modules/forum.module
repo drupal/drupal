@@ -21,7 +21,7 @@ function forum_save($op, $node) {
   }
 
   if ($op == "create") {
-    return array("teaser" => $node->body);
+    return array("body" => filter($node->body), "teaser" => filter($node->teaser));
   }
 
   if ($op == "decline") {
@@ -29,7 +29,7 @@ function forum_save($op, $node) {
   }
 
   if ($op == "update") {
-    return array("teaser" => $node->body);
+    return array("body" => filter($node->body), "teaser" => filter($node->teaser));
   }
 }
 

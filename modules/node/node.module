@@ -307,9 +307,9 @@ function node_filter_html($text) {
 }
 
 function node_filter_link($text) {
-  $src = '\[{2}([^\|]+)(\|([^\|]+)?)?\]{2}';                   // [link|description]
+  $pat = '\[{2}([^\|]+)(\|([^\|]+)?)?\]{2}';                   // [link|description]
   $dst = str_replace('%5C1', '\\1', format_tag('\\1', '\\3')); // [link|description]
-  return ereg_replace($src, $dst, $text);
+  return ereg_replace($pat, $dst, $text);
 }
 
 function node_filter_line($text) {

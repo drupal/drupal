@@ -27,7 +27,7 @@ function page_save($op, $node) {
   }
 
   if ($op == "create") {
-    return array("format", "link");
+    return array("body" => filter($node->body), "teaser" => filter($node->teaser), "format", "link");
   }
 
   if ($op == "decline") {
@@ -35,7 +35,7 @@ function page_save($op, $node) {
   }
 
   if ($op == "update") {
-    return array("format", "link");
+    return array("body" => filter($node->body), "teaser" => filter($node->teaser), "format", "link");
   }
 }
 

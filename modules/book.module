@@ -57,10 +57,10 @@ function book_save($op, $node) {
 
   if ($op == "create") {
     if (user_access("administer nodes")) {
-      return array("format", "parent", "weight", "log");
+      return array("body" => filter($node->body), "teaser" => filter($node->teaser), "format", "parent", "weight", "log");
     }
     else {
-      return array("format", "moderate" => 1, "parent", "promote" => 0, "status" => 1, "weight", "log");
+      return array("body" => filter($node->body), "teaser" => filter($node->teaser), "format", "moderate" => 1, "parent", "promote" => 0, "status" => 1, "weight", "log");
     }
   }
 
@@ -75,7 +75,7 @@ function book_save($op, $node) {
       ** new revision unless we are explicitly instructed to.
       */
 
-      return array("format", "parent", "weight", "log");
+      return array("body" => filter($node->body), "teaser" => filter($node->teaser), "format", "parent", "weight", "log");
     }
     else {
       /*
@@ -84,7 +84,7 @@ function book_save($op, $node) {
       ** and are not promoted by default.  See also: book_load().
       */
 
-      return array("created" => time(), "format", "moderate" => 1, "parent", "promote" => 0, "score" => 0, "status" => 1, "users" => "", "revisions", "votes" => 0, "weight", "log");
+      return array("body" => filter($node->body), "teaser" => filter($node->teaser), "created" => time(), "format", "moderate" => 1, "parent", "promote" => 0, "score" => 0, "status" => 1, "users" => "", "revisions", "votes" => 0, "weight", "log");
     }
   }
 
