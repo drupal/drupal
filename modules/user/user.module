@@ -1244,7 +1244,7 @@ function user_admin_access($edit = array()) {
 
   $options = array ("1" => t("Allow"), "0" => t("Deny"));
   $rows[] = array(form_radios(NUll, "status", $edit["status"], $options), form_textfield(NULL, "mask", $edit["mask"], 32, 64), form_submit(t("Add rule")));
-  $output .= table($header, $rows);
+  $output .= theme("table", $header, $rows);
 
   $output .= "<p><small>%: ". t("Matches any number of characters, even zero characters") .".<br />_: ". t("Matches exactly one character.") ."</small></p>";
 
@@ -1326,7 +1326,7 @@ function user_admin_perm($edit = array()) {
     unset($row);
   }
 
-  $output = table($header, $rows);
+  $output = theme("table", $header, $rows);
   $output .= form_submit(t("Save permissions"));
 
   return form($output);
@@ -1378,7 +1378,7 @@ function user_admin_role($edit = array()) {
     }
     $rows[] = array("<input type=\"text\" size=\"32\" maxlength=\"64\" name=\"edit[name]\" />", "<input type=\"submit\" name=\"op\" value=\"". t("Add role") ."\" />");
 
-    $output = table($header, $rows);
+    $output = theme("table", $header, $rows);
     $output = form($output);
   }
 
@@ -1506,7 +1506,7 @@ function user_admin_account() {
   if (!empty($pager)) {
     $rows[] = array(array("data" => $pager, "colspan" => 6));
   }
-  return table($header, $rows);
+  return theme("table", $header, $rows);
 }
 
 function user_role_init() {

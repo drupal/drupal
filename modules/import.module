@@ -522,7 +522,7 @@ function import_view() {
   while ($feed = db_fetch_object($result)) {
     $rows[] = array($feed->title, $feed->attributes, format_plural($feed->items, "1 item", "%count items"), ($feed->timestamp ? format_interval(time() - $feed->timestamp) ." ago" : "never"), ($feed->timestamp ? format_interval($feed->timestamp + $feed->refresh - time()) ." left" : "never"), l(t("edit feed"), "admin/node/syndication/news/edit/feed/$feed->fid"), l(t("remove items"), "admin/node/syndication/news/remove/$feed->fid"), l(t("update items"), "admin/node/syndication/news/update/$feed->fid"));
   }
-  $output .= table($header, $rows);
+  $output .= theme("table", $header, $rows);
 
   $result = db_query("SELECT * FROM {bundle} ORDER BY title");
 
@@ -533,7 +533,7 @@ function import_view() {
   while ($bundle = db_fetch_object($result)) {
     $rows[] = array($bundle->title, $bundle->attributes, l(t("edit bundle"), "admin/node/syndication/news/edit/bundle/$bundle->bid"));
   }
-  $output .= table($header, $rows);
+  $output .= theme("table", $header, $rows);
 
   return $output;
 }
@@ -547,7 +547,7 @@ function import_tag() {
     $rows[] = array(array("data" => format_date($item->timestamp, "small"), "nowrap" => "nowrap", "valign" => "top"), array("data" => l($item->feed, "admin/node/syndication/news/edit/feed/$item->fid"), "valign" => "top"), "<a href=\"$item->link\">$item->title</a>". ($item->description ? "<br /><small><i>$item->description</i></small>" : "") ."<br /><input type=\"text\" name=\"edit[$item->iid]\" value=\"". check_form($item->attributes) ."\" size=\"50\" />");
   }
 
-  $output .= table($header, $rows);
+  $output .= theme("table", $header, $rows);
   $output .= "<input type=\"submit\" name=\"op\" value=\"". t("Save attributes") ."\" />\n";
 
   return form($output);

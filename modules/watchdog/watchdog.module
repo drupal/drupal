@@ -105,7 +105,7 @@ function watchdog_overview($type) {
   if (!empty($pager)) {
     $rows[] = array(array("data" => $pager, "colspan" => "5"));
   }
-  return table($header, $rows);
+  return theme("table", $header, $rows);
 }
 
 function watchdog_view($id) {

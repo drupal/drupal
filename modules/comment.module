@@ -939,7 +939,7 @@ function comment_node_link($node) {
 
     if ($rows) {
       $output  = "<h3>". t("Edit comments") ."</h3>";
-      $output .= table($header, $rows);
+      $output .= theme("table", $header, $rows);
     }
 
     return $output;
@@ -1011,7 +1011,7 @@ function comment_admin_overview($status = 0) {
     $rows[] = array(array("data" => $pager, "colspan" => 6));
   }
 
-  return table($header, $rows);
+  return theme("table", $header, $rows);
 }
 
 function comment_mod_matrix($edit) {
@@ -1050,7 +1050,7 @@ function comment_mod_matrix($edit) {
     }
     $rows[] = $row;
   }
-  $output .= table($header, $rows);
+  $output .= theme("table", $header, $rows);
   $output .= "<br />". form_submit(t("Submit votes"));
 
   return form($output);
@@ -1075,7 +1075,7 @@ function comment_mod_roles($edit) {
     $rows[] = array($role->name, array("data" => form_textfield(NULL, $role->rid, $start_values[$role->rid], 4, 3), "align" => "center"));
   }
 
-  $output .= table($header, $rows);
+  $output .= theme("table", $header, $rows);
   $output .= "<br />". form_submit(t("Save scores"));
 
   return form($output);
@@ -1110,7 +1110,7 @@ function comment_mod_votes($edit) {
   while ($vote = db_fetch_object($result)) {
     $rows[] = array($vote->vote, array("data" => $vote->weight, "align" => "center"), array("data" => l(t("edit"), "admin/comment/moderation/votes/$vote->mid"), "align" => "center"));
   }
-  $output .= table($header, $rows);
+  $output .= theme("table", $header, $rows);
 
   if ($mid) {
     $vote = db_fetch_object(db_query("SELECT vote, weight FROM {moderation_votes} WHERE mid = %d", $mid));
@@ -1161,7 +1161,7 @@ function comment_mod_filters($edit) {
   while ($filter = db_fetch_object($result)) {
     $rows[] = array($filter->filter, array("data" => $filter->minimum, "align" => "center"), array("data" => l(t("edit"), "admin/comment/moderation/filters/$filter->fid"), "align" => "center"));
   }
-  $output .= table($header, $rows);
+  $output .= theme("table", $header, $rows);
 
   if ($fid) {
     $filter = db_fetch_object(db_query("SELECT filter, fid, minimum FROM {moderation_filters} WHERE fid = %d", $fid));

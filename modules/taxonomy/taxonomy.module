@@ -289,7 +289,7 @@ function taxonomy_overview() {
     }
   }
 
-  return table($header, $rows);
+  return theme("table", $header, $rows);
 }
 
 function taxonomy_form($vocabulary_id, $value = 0) {

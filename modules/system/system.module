@@ -313,7 +313,7 @@ function system_listing($type, $directory, $required = array()) {
     $rows[] = array($info->name, $info->description, array("data" => (in_array($filename, $required) ? form_hidden("status][$filename", 1) . t("required") : form_checkbox("", "status][$filename", 1, $file->status)), "align" => "center"));
   }
 
-  $output = table($header, $rows);
+  $output = theme("table", $header, $rows);
 
   // If we're doing themes, stick the default one here...
   if ($type == "theme") {

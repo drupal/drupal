@@ -46,7 +46,7 @@ function title_page() {
       }
 
       $output  = "<div id=\"title\">";
-      $output .= table($header, $rows);
+      $output .= theme("table", $header, $rows);
       $output .= "</div>";
 
       print theme("header");

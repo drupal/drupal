@@ -229,7 +229,7 @@ function locale_seek() {
       $rows[] = array(array("data" => "$pager", "colspan" => "5"));
     }
 
-    $output .= table($header, $rows);
+    $output .= theme("table", $header, $rows);
 
   }
 

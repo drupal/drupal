@@ -574,7 +574,7 @@ function theme_forum_list($forums, $parents, $tid) {
     }
   }
 
-  return table($header, $rows);
+  return theme("table", $header, $rows);
 }
 
 /**
@@ -623,7 +623,7 @@ function theme_forum_topic_list($tid, $topics, $sortby, $forum_per_page, $offset
     $output = l(t("create new forum topic"), "node/add/forum/$tid") ."<br /><br />";
   }
 
-  $output .= table($forum_topic_list_header, $rows);
+  $output .= theme("table", $forum_topic_list_header, $rows);
 
   return $output;
 }

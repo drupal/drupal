@@ -84,7 +84,7 @@ function tracker_posts($id = 0) {
   }
 
   $output  = "<div id=\"tracker\">";
-  $output .= table($header, $rows);
+  $output .= theme("table", $header, $rows);
   $output .= "</div>";
 
   return $output;
