@@ -2,11 +2,13 @@
 // $Id$
 
 function rating_help() {
-  $output .= "Drupal uses <i>gravity</i> as an indication for each user's contributed value.  The system can be compared with <a href=\"http://www.slashcode.com/\">SlashCode</a>'s Karma and is - in fact - even more similar to <a href=\"http://scoop.kuro5hin.org/\">Scoop</a>'s Mojo.";
-  $output .= "Gravity is calculated based on the moderation done to a user's nodes: you gain or loose points based on the fact your nodes got approved/promoted or rejected/declined.  The sampling period could be an arbitrary number of days (by default set to 60 days) or an arbitrary number of nodes (by default set to 30), whatever comes first.  Thus, you lose one point for each node being rejected during the past 60 days and you gain one point for each node being approved.  You don't gain nor loose points for nodes that have been replaced or expired.";
-  $output .= "By default, Drupal does not use gravity but it can be used by module builders to automatically assign access rights or editorial priveledges to users or to limit or eliminate potential abuse by limiting the rate of posting or the ability to post at all.  Aside from that, it can be used to play point games but that is, needless to say, not the goal gravity aspires to.";
+  $output .= "<p>Drupal uses <i>gravity</i> as an indication for each user's contributed value.  The system can be compared with <a href=\"http://www.slashcode.com/\">SlashCode</a>'s Karma and is - in fact - even more similar to <a href=\"http://scoop.kuro5hin.org/\">Scoop</a>'s Mojo.</p>";
+  $output .= "<p>Gravity is calculated based on the moderation done to a user's nodes: you gain or loose points based on the fact your nodes got approved/promoted or rejected/declined.  The sampling period could be an arbitrary number of days (by default set to 60 days) or an arbitrary number of nodes (by default set to 30), whatever comes first.  Thus, you lose one point for each node being rejected during the past 60 days and you gain one point for each node being approved.  You don't gain nor loose points for nodes that have been replaced or expired.  Cron will periodically re-calculate each user's gravity.</p>";
+  $output .= "<p>By default, Drupal does not use gravity but it can be used by module builders to automatically assign access rights or editorial priveledges to users or to limit or eliminate potential abuse by limiting the rate of posting or the ability to post at all.  Aside from that, it can be used to play point games but that is, needless to say, not the goal gravity aspires to.</p>";
   return $output;
 }
+
+print rating_help();
 
 function rating_perm() {
   return array("access user ratings");
@@ -50,12 +52,6 @@ function rating_cron() {
       db_query("INSERT INTO rating (uid, new, old) VALUES ('$account->uid', '". ++$j ."', '". $rating[$account->uid] ."')");
     }
   }
-}
-
-function rating_help() {
- ?>
-  <p>The rating cron will periodically calculate each user's gravity, the overall time-weighted rating of each user's contributions.</p>
- <?
 }
 
 function rating_gravity($uid) {
