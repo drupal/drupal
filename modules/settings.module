@@ -1,5 +1,17 @@
 <?php
 
+function settings_help() {
+ ?>
+  <P>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviors including visual and operational settings.</P>
+  <H3>Cron</H3>
+  <P>Some settings require a <I>cron</I> or <I>crontab</I>.  Cron (which stands for chronograph) is a periodic command scheduler: it executes commands at intervals specified in seconds.  It can be used to control the execution of daily, weekly and monthly jobs (or anything with a period of <i>n</i> seconds).   Automating tasks is one of the best ways to keep a system running smoothly, and if most of your administration does not require your direct involvement, cron is an ideal solution.</P>
+  <P>Whenever <A HREF="<?php echo path_uri(); ?>cron.php"><?php echo path_uri(); ?>cron.php</A> is accessed, cron will run: it checks for the jobs cron controls, and their periods in seconds.  If a certain task wasn't executed in the last n seconds, where n is the period of that job, it will be executed.  When all the executed commands terminate, cron is done.</P>
+  <P>The recommended way to setup your cron system is to setup a Unix/Linux crontab that frequently visits <A HREF="<?php echo path_uri(); ?>cron.php"><?php echo path_uri(); ?>cron.php</A>. Note that cron does not guarantee the commands will be executed at the specified interval.  However, Drupal will try his best and run the crons as close to the specified intervals as possible.  The more you visit cron.php, the more accurate cron will be.</P>
+  <P>If your hosting company does not allow you to setup crontabs, you can always ask someone else to setup a crontab for you. After all, virtually any Unix/Linux machine with access to the internet can setup a crontab to frequently visit <A HREF="<?php echo path_uri(); ?>cron.php"><?php echo path_uri(); ?>cron.php</A>.</P>
+  <P>For the Unix/Linux crontab itself, use a browser like <I>lynx</I> or <I>wget</I> but make sure the process terminates: either use <CODE>/usr/bin/lynx -source <?php echo path_uri(); ?>cron.php</CODE> or <CODE>/usr/bin/wget -O /dev/null <?php echo path_uri(); ?>cron.php</CODE>.  Take a look at the example scripts in the <CODE>scripts</CODE>-directory and make sure to adjust them to your needs.  A good crontab-line to run the cron-script once every hour would be: <CODE>00 * * * * /home/www/drupal/scripts/cron-lynx</CODE>.</P>
+ <?php
+}
+
 function settings_conf() {
   global $conf, $cmodes, $corder, $themes;
 
@@ -41,7 +53,7 @@ function settings_conf() {
 
   // development settings:
   $output .= "<H3>Development settings</H3>\n";
-  $output .= form_select(t("Display timings"), "dev_timing", variable_get(dev_timing, 0), array("Disabled", "Enabled"), t("Display the time it took to generate a page: for drupal development only."));
+  $output .= form_select(t("Display timings"), "dev_timing", variable_get(dev_timing, 0), array("Disabled", "Enabled"), t("Display the time it took to generate a page: for Drupal development only."));
 
   return $output;
 }
@@ -57,17 +69,9 @@ function setting_modules() {
   return $output;
 }
 
-function settings_save($edit) {
-  global $conf;
-
-  // save all variables:
-  if ($edit) {
-    db_query("DELETE FROM variable");
-    foreach ($edit as $name=>$value) db_query("INSERT INTO variable (name, value) VALUES ('". check_input($name) ."', '". check_input($value) ."')");
-  }
-
-  // update context:
-  $conf = variable_init();
+function settings_save($edit = array()) {
+  // save variables:
+  foreach ($edit as $name=>$value) variable_set($name, $value);
 
   return "all settings have been saved.";
 }
@@ -90,15 +94,23 @@ function settings_overview() {
 function settings_admin() {
   global $edit, $op;
 
+  print "<SMALL><A HREF=\"admin.php?mod=settings\">overview</A> | <A HREF=\"admin.php?mod=settings&op=help\">help</A></SMALL><HR>\n";
+
   switch ($op) {
+    case "help":
+      settings_help();
+      break;
     case "Reset to defaults":
       print status(settings_default($edit));
+      print settings_overview();
       break;
     case "Save settings":
       print status(settings_save($edit));
+      print settings_overview();
       break;
+    default:
+      print settings_overview();
   }
-  print settings_overview();
 }
 
 ?>

@@ -36,4 +36,13 @@ function variable_get($name, $default, $object = 0) {
   }
 }
 
+function variable_set($name, $value) {
+  global $conf;
+
+  db_query("DELETE FROM variable WHERE name = '". check_input($name) ."'");
+  db_query("INSERT INTO variable (name, value) VALUES ('". check_input($name) ."', '". check_input($value) ."')");
+
+  $conf[$name] = $value;
+}
+
 ?>

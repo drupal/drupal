@@ -3,12 +3,18 @@
 function watchdog_help() {
  ?>
   <P>The watchdog module monitors your website, captures system events in a log and records them to be reviewed by an authorized individual at a later time.  The watchdog log is simply a list of events recorded during operation and contains usage data, performance data, errors, warnings and operational information.  It is vital to check the watchdog report on a regular basis as it is often the only way to tell what is going on.</P>
-  <P>To ease administration, the watchdog will automatically remove old logs.</P>
+  <P>To ease administration, the watchdog will automatically discard old log entries.</P>
  <?php
 }
 
+function watchdog_conf() {
+  $period = array(3600 => format_interval(3600), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200));
+  $output .= form_select(t("Discard entries older than"), "watchdog_clear", variable_get("watchdog_clear", 604800), $period, t("The time watchdog entries should be kept.  Older entries will be automatically discarded.  Requires crontab."));
+  return $output;
+}
+
 function watchdog_cron() {
-  db_query("DELETE FROM watchdog WHERE ". time() ." - timestamp > ". variable_get(watchdog_clear, "302400"));
+  db_query("DELETE FROM watchdog WHERE ". time() ." - timestamp > ". variable_get("watchdog_clear", 604800));
 }
 
 function watchdog_overview() {

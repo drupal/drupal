@@ -1,19 +1,27 @@
 <?php
 
 function cvs_cron() {
-  $result = db_query("SELECT * FROM cvs WHERE status = '0' ORDER BY timestamp DESC LIMIT 50");
+  if (time() - variable_get("cvs_cron_last", 0) > variable_get("cvs_cron_time", time())) {
 
-  while ($cvs = db_fetch_object($result)) {
-    $body .= "File: $cvs->files\nDate: ". format_date($cvs->timestamp) ."\nUser: $cvs->user\n\n$cvs->message\n----------------------------------------------------------------------\n";
+    print "cvs cron ran";
+
+    variable_set("cvs_cron_last", time());
+
+    $result = db_query("SELECT * FROM cvs WHERE status = '0' ORDER BY timestamp DESC LIMIT 50");
+    while ($cvs = db_fetch_object($result)) {
+      $body .= "File: $cvs->files\nDate: ". format_date($cvs->timestamp) ."\nUser: $cvs->user\n\n$cvs->message\n----------------------------------------------------------------------\n";
+    }
+    $result = db_query("UPDATE cvs SET status = '1'");
+
+    if ($body) mail(variable_get(cvs_mail, "root@localhost"), "CVS log messages", $body, "From: no-reply");
   }
-
-  $result = db_query("UPDATE cvs SET status = '1'");
-
-  if ($body) mail(variable_get(cvs_mail, "root@localhost"), "CVS log messages", $body, "From: no-reply");
 }
 
 function cvs_conf() {
-  return form_textfield(t("CVS digest recepient"), "cvs_mail", variable_get(cvs_mail, "root@localhost"), 30, 55, t("The e-mail address to mail the CVS log messages to.  Multiple recipients can be specified by putting a comma between each address."));
+  $period = array(43200 => format_interval(43200), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600));
+  $output .= form_textfield(t("Digest recepients"), "cvs_mail", variable_get("cvs_mail", "root@localhost"), 30, 55, t("The e-mail address to mail the CVS log messages to.  Multiple recipients can be specified by putting a comma between each address."));
+  $output .= form_select(t("Digest interval"), "cvs_cron_time" , variable_get("cvs_cron_time", 86400), $period, t("The time interval at which batched CVS digests are dispatched.  Requires crontab."));
+  return $output;
 }
 
 function cvs_page() {
