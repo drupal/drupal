@@ -236,8 +236,8 @@ function account_user($uname) {
     $output .= " <TR><TD ALIGN=\"right\"><B>". t("Username") .":</B></TD><TD>$user->userid</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>". t("E-mail") .":</B></TD><TD>". format_email($user->fake_email) ."</A></TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>". t("Homepage") .":</B></TD><TD>". format_url($user->url) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>". t("Bio") .":</B></TD><TD>". check_output($user->bio) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>". t("Signature") .":</B></TD><TD>". check_output($user->signature) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>". t("Bio") .":</B></TD><TD>". check_output($user->bio, 1) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>". t("Signature") .":</B></TD><TD>". check_output($user->signature, 1) ."</TD></TR>\n";
     $output .= "</TABLE>\n";
 
     // Display account information:
