@@ -69,8 +69,6 @@ function node_tag_new($nid) {
   global $user;
 
   if ($user->uid) {
-    $nid = check_query($nid);
-
     $result = db_query("SELECT timestamp FROM history WHERE uid = %d AND nid = %d", $user->uid, $nid);
     if (db_fetch_object($result)) {
       db_query("UPDATE history SET timestamp = %d WHERE uid = %d AND nid = %d", time(), $user->uid, $nid);
@@ -1154,7 +1152,7 @@ function node_add($type) {
     */
     foreach (array("title", "teaser", "body") as $field) {
       if ($_GET["edit"][$field]) {
-        $node[$field] = check_input($_GET["edit"][$field]);
+        $node[$field] = $_GET["edit"][$field];
       }
     }
     $output = node_form($node);
