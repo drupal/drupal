@@ -501,7 +501,7 @@ function import_get_bundle($bid) {
 }
 
 function import_view() {
-  $result = db_query("SELECT f.*, COUNT(i.iid) AS items FROM {feed} f INNER JOIN {item} i ON f.fid = i.fid GROUP BY f.fid, f.title, f.url, f.refresh, f.timestamp, f.attributes, f.link, f.description ORDER BY f.title");
+  $result = db_query("SELECT f.*, COUNT(i.iid) AS items FROM {feed} f LEFT JOIN {item} i ON f.fid = i.fid GROUP BY f.fid, f.title, f.url, f.refresh, f.timestamp, f.attributes, f.link, f.description ORDER BY f.title");
 
   $output .= "<h3>Feed overview</h3>";
 
