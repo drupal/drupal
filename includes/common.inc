@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.431 2005/03/21 19:26:47 dries Exp $ */
+/* $Id: common.inc,v 1.432 2005/03/29 21:01:47 dries Exp $ */
 
 /**
  * @file
@@ -1904,8 +1904,5 @@ if (!user_access('bypass input data check')) {
 
 // Initialize the localization system.
 $locale = locale_initialize();
-
-// Initialize the enabled theme.
-$theme = init_theme();
 
 ?>

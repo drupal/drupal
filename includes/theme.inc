@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.225 2005/03/16 19:41:12 dries Exp $ */
+/* $Id: theme.inc,v 1.226 2005/03/29 21:01:47 dries Exp $ */
 
 /**
  * @file
@@ -171,8 +171,12 @@ function list_theme_engines($refresh = FALSE) {
  *   An HTML string that generates the themed output.
  */
 function theme() {
-  global $theme;
-  global $theme_engine;
+  global $theme, $theme_engine;
+
+  if (!$theme) {
+    // Initialize the enabled theme.
+    $theme = init_theme();
+  }
 
   $args = func_get_args();
   $function = array_shift($args);
