@@ -341,10 +341,10 @@ function comment_configure() {
   $group .= form_radios(t('Comment controls'), 'comment_controls', variable_get('comment_controls', 0), array(t('Display above the comments'), t('Display below the comments'), t('Display above and below the comments'), t('Do not display')), t('Position of the comment controls box.  The comment controls let the user change the default display mode and display order of comments.'));
   $output = form_group(t('Comment viewing options'), $group);
 
-  $group  = form_radios(t('Anonymous poster settings'), 'comment_anonymous', variable_get('comment_anonymous', 0), array(t('Anonymous posters may not enter their contact information'), t('Anonymous posters may leave their contact information'), t('Anonymous posters must leave their contact information')), t('This feature is only useful if you allow anonymous users to post comments.  See the <a href="%url">permissions page</a>.', array('%url' => url('user/admin/permission'))));
+  $group  = form_radios(t('Anonymous poster settings'), 'comment_anonymous', variable_get('comment_anonymous', 0), array(t('Anonymous posters may not enter their contact information'), t('Anonymous posters may leave their contact information'), t('Anonymous posters must leave their contact information')), t('This feature is only useful if you allow anonymous users to post comments.  See the <a href="%url">permissions page</a>.', array('%url' => url('admin/user/permission'))));
   $group .= form_radios(t('Comment subject field'), 'comment_subject_field', variable_get('comment_subject_field', 1), array(t('Disabled'), t('Enabled')), t('Must users provide a subject for their comments?'));
-  $group .= form_radios(t('Preview comment'), 'comment_preview', variable_get('comment_preview', 1), array(t('Optional'), t('Required')), t('Must users preview comments before submitting?'));
-  $group .= form_radios(t('Location of comment submission form'), 'comment_form_location', variable_get('comment_form_location', 0), array(t('Display on separate page'), t('Display below post or comments')), t('The location of the comment submission form.'));
+  $group .= form_radios(t('Preview comment'), 'comment_preview', variable_get('comment_preview', 1), array(t('Optional'), t('Required')));
+  $group .= form_radios(t('Location of comment submission form'), 'comment_form_location', variable_get('comment_form_location', 0), array(t('Display on separate page'), t('Display below post or comments')));
   $output .= form_group(t('Comment posting settings'), $group);
 
   $result = db_query('SELECT fid, filter FROM {moderation_filters} ');
