@@ -263,6 +263,7 @@ function system_admin() {
         system_help();
         break;
       case "Save module settings":
+        db_query("UPDATE system SET status = '0' WHERE type = 'module'");
         foreach ($edit["status"] as $name => $status) {
           db_query("UPDATE system SET status = '$status' WHERE name = '$name'");
         }
@@ -270,6 +271,7 @@ function system_admin() {
         print system_modules();
         break;
       case "Save theme settings":
+        db_query("UPDATE system SET status = '0' WHERE type = 'theme'");
         foreach ($edit as $name => $settings) {
           db_query("UPDATE system SET status = '%s', description = '%s' WHERE name = '$name'", $settings["status"], $settings["description"]);
         }
