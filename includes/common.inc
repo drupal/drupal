@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.87 2001/11/26 18:27:33 kjartan Exp $
+// $Id: common.inc,v 1.88 2001/12/01 15:20:48 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST, $REQUEST_URI;
@@ -97,6 +97,34 @@ function drupal_goto($url) {
   */
 
   exit();
+}
+
+/*
+** Stores the referer in a persistent variable:
+*/
+
+function referer_save() {
+  global $referer, $HTTP_REFERER, $REQUEST_URI;
+
+  if (!strstr($HTTP_REFERER, $REQUEST_URI)) {
+    $referer = $HTTP_REFERER;
+    session_register("referer");
+  }
+}
+
+/*
+** Restores the referer from a persistent variable:
+*/
+
+function referer_load() {
+  global $referer;
+
+  if (session_is_registered("referer")) {
+    return $referer;
+  }
+  else {
+    return 0;
+  }
 }
 
 function check_form($text) {
