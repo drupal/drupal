@@ -47,11 +47,11 @@ function cloud_update($site) {
   ** Check whether the site is properly configured:
   */
 
-  if (!ereg("^http://|ftp://", $site[link])) {
+  if (!ereg("^http://|https://|ftp://", $site[link])) {
     watchdog("warning", "cloud: invalid or missing URL for '". $site["name"] ."'");
   }
 
-  if (!ereg("^http://|ftp://", $site[feed])) {
+  if (!ereg("^http://|https://|ftp://", $site[feed])) {
     watchdog("warning", "cloud: invalid or missing URL to monitor for '". $site["name"] ."'");
   }
 
@@ -135,7 +135,11 @@ function cloud_list($limit = 10) {
     if ($hour != floor((time() - $site->timestamp) / 3600)) {
       $hour = floor((time() - $site->timestamp) / 3600);
       if ($hour < 12) {
-        $output .= "<br />". strtr(t("Updated %a ago:"), array("%a" => format_plural($hour, "hour", "hours")));
+        if ($hour == 0) {
+          $output .= "<br />". t("Updated < 1 hours ago:");
+      } else {
+          $output .= "<br />". strtr(t("Updated %a ago:"), array("%a" => format_plural($hour, "hour", "hours")));
+        }
       }
       else if ($list) {
         $output .= "<br />". strtr(t("Updated more than %a ago:"), array("%a" => format_plural($hour, "hour", "hours")));
