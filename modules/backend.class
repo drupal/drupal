@@ -51,23 +51,16 @@ class backend {
     if ($this->file) {
       // Decode URL:
       $url = parse_url($this->file);
-      $host = $url[host];
-      $port = $url[port] ? $url[port] : 80;
-      $path = $url[path];
-
-      // print "<PRE><B>Debug:</B> $url - $host - $port - $path</PRE>";
 
       // Retrieve data from website:
-      $fp = fsockopen($host, $port, &$errno, &$errstr, $timout);
+      $fp = fsockopen($url[host], ($url[port] ? $url[port] : 80), &$errno, &$errstr, $timout);
 
       if ($fp) {
         // Request data via URL:
-        fputs($fp, "GET $path HTTP/1.0\nUser-Agent: $site_name\nHost: $host\nAccept: */*\n\n");
+        fputs($fp, "GET $url[path]?$url[query] HTTP/1.0\nUser-Agent: $site_name\nHost: $url[host]\nAccept: */*\n\n");
 
         // Read data from socket:
         while(!feof($fp)) $data .= fgets($fp, 128);
-
-        // print "<PRE>$data</PRE><HR>";
 
         if (strstr($data, "200 OK")) {
 

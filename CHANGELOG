@@ -24,7 +24,7 @@ drupal 1.xx, xx/xx/2001
     * improved diary module:
         + diary can be deleted
     * improved headline module:
-        + improved parser to support RDF/RSS/XML backend
+        + improved parser to support more "generic" RDF/RSS/XML backend
     * improved module module
     * improved watchdog module
     * added CREDITS file

@@ -83,11 +83,11 @@
                 <TR>
                   <TD></TD>
                   <TD>
-        	    <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0" BGCOLOR="#000000" WIDTH="100%">
-        	      <TR>
-        	        <TD>
-        	          <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
-        	           <TR>
+              <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0" BGCOLOR="#000000" WIDTH="100%">
+                <TR>
+                  <TD>
+                    <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" WIDTH="100%">
+                     <TR>
                             <TD ALIGN="left" BACKGROUND="themes/jeroen/images/menutitle.gif" NOWRAP>
                     &nbsp;
                     <FONT COLOR="<? echo $this->fgc2; ?>">
@@ -137,10 +137,10 @@
                 </TR>
               </TABLE>
                 </TD>
-  			</TR>  
-  			</TABLE> 
-  			</TD>
-  		</TR>
+        </TR>
+        </TABLE>
+        </TD>
+      </TR>
               </TABLE>
              <BR>
 <?
@@ -250,10 +250,10 @@
      echo "     <TR>";
      echo "       <TD>";
      echo "         <TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"0\" BGCOLOR=\"#000000\" WIDTH=\"100%\">";
-     echo "   	      <TR>";
-     echo "   	        <TD>";
-     echo "   	          <TABLE BACKGROUND=\"themes/jeroen/images/menutitle.gif\" BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"0\" WIDTH=\"100%\">";
-     echo "	            <TR>";
+     echo "           <TR>";
+     echo "             <TD>";
+     echo "               <TABLE BACKGROUND=\"themes/jeroen/images/menutitle.gif\" BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"0\" WIDTH=\"100%\">";
+     echo "              <TR>";
      echo "       </TR>";
      echo "       <TD>";
      echo "         <TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"2\"WIDTH=\"100%\">";
