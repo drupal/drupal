@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.11 2004/06/04 18:00:48 kjartan Exp $
+// $Id: blogapi.module,v 1.12 2004/06/04 18:50:29 kjartan Exp $
 
 /**
  * Implementation of hook_help().
@@ -262,11 +262,11 @@ function blogapi_new_media_object($req_params) {
   if (!$data) {
     return blogapi_error(t('No file sent'));
   }
-  
+
   if (!$file = file_save_data($data, $name)) {
     return blogapi_error(t('Error storing file'));
   }
-  
+
   // Return the successful result.
   $result = new xmlrpcval(array('url' => new xmlrpcval(file_create_url($file), 'string')), 'struct');
   return new xmlrpcresp($result);
