@@ -195,7 +195,7 @@ function comment_reply($pid, $nid) {
       $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name, u.data FROM {comments} c LEFT JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0", $pid));
       comment_view($comment);
     }
-    else {
+    else if (user_access("access content")) {
       node_view(node_load(array("nid" => $nid)));
       $pid = 0;
     }
@@ -204,10 +204,10 @@ function comment_reply($pid, $nid) {
     ** If possible, show reply form
     */
 
-    if (node_comment_mode($nid) == 1) {
+    if (node_comment_mode($nid) != 2) {
       theme("box", t("Reply"), t("This discussion is closed: you can't post new comments."));
     }
-    else if (user_access("post comments", $context)) {
+    else if (user_access("post comments")) {
       theme("box", t("Reply"), comment_form(array("pid" => $pid, "nid" => $nid)));
     }
     else {
