@@ -130,26 +130,37 @@ function upload_nodeapi(&$node, $op, $arg) {
           break;
         }
 
-        // Validate file against all users roles. Only denies an upload when
-        // all roles prevent it.
-        foreach ($user->roles as $rid => $name) {
-          $extensions = variable_get("upload_extensions_$rid", 'jpg jpeg gif png txt html doc xls pdf ppt pps');
-          $uploadsize = variable_get("upload_uploadsize_$rid", 1);
-          $usersize = variable_get("upload_usersize_$rid", 1);
+        // Don't do any checks for uid #1.
+        if ($user->uid != 1) {
+          // Validate file against all users roles. Only denies an upload when
+          // all roles prevent it.
+          foreach ($user->roles as $rid => $name) {
+            $extensions = variable_get("upload_extensions_$rid", 'jpg jpeg gif png txt html doc xls pdf ppt pps');
+            $uploadsize = variable_get("upload_uploadsize_$rid", 1);
+            $usersize = variable_get("upload_usersize_$rid", 1);
 
-          $regex = '/\.('. ereg_replace(' +', '|', preg_quote($extensions)) .')$/i';
+            $regex = '/\.('. ereg_replace(' +', '|', preg_quote($extensions)) .')$/i';
 
-          if (!preg_match($regex, $file->filename)) {
-            $error['extension']++;
+            if (!preg_match($regex, $file->filename)) {
+              $error['extension']++;
+            }
+
+            if ($file->filesize > $uploadsize * 1024 * 1024) {
+              $error['uploadsize']++;
+            }
+
+            if ($total_usersize + $file->filesize > $usersize * 1024 * 1024) {
+              $error['usersize']++;
+            }
           }
+        }
 
-          if ($file->filesize > $uploadsize * 1024 * 1024) {
-            $error['uploadsize']++;
-          }
-
-          if ($total_usersize + $file->filesize > $usersize * 1024 * 1024) {
-            $error['usersize']++;
-          }
+        // Rename possibly executable scripts to prevent accidental execution.
+        // Uploaded files are attachments and should be shown in their original
+        // form, rather than run.
+        if (preg_match('/\.(php|pl|py|cgi|asp)$/i', $file->filename)) {
+          $file->filename .= '.txt';
+          $file->filemime = 'text/plain';
         }
 
         if ($error['extension'] == count($user->roles) && $user->uid != 1) {
