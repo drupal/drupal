@@ -1,5 +1,5 @@
 <?php
-// $Id: tablesort.inc,v 1.20 2004/06/02 05:35:50 dries Exp $
+// $Id: tablesort.inc,v 1.21 2004/06/02 13:53:44 kjartan Exp $
 
 function tablesort_init($header) {
   $ts = tablesort_get_order($header);
@@ -16,7 +16,7 @@ function tablesort_pager() {
 
 function tablesort_sql($header) {
   $ts = tablesort_init($header);
-  if ($ts['field']) {
+  if ($ts['sql']) {
     $sql = check_query($ts['sql']);
     $sort = strtoupper(check_query($ts['sort']));
     return " ORDER BY $sql $sort";
