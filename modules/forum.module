@@ -235,9 +235,11 @@ function forum_overview() {
        }
 
     }
-
-    return theme('table', $header, $rows);
   }
+  else {
+    $rows[] = array(array('data' => '<em>' . t('There are no existing containers or forums. You may add some on the <a href="%container">add container</a> or <a href="%forum">add forum</a> pages.', array('%container' => url('admin/forum/add/container'), '%forum' => url('admin/forum/add/forum'))) . '</em>', 'colspan' => 2));
+  }
+  return theme('table', $header, $rows);
 }
 
 /**
