@@ -18,7 +18,7 @@ function showLogin($userid = "") {
   print("<TR><TH>User ID:</TH><TD><INPUT NAME=userid VALUE=\"$userid\"></TD></TR>\n");
   print("<TR><TH>Password:</TH><TD><INPUT NAME=passwd TYPE=password></TD></TR>\n");
   print("<TR><TD ALIGN=center><INPUT NAME=act TYPE=submit VALUE=\"Login\"></TD></TR>\n");
-  print("<TR><TD ALIGN=center><A HREF=\"account.php\">Register</A> as new user.</A></TD></TR>\n");
+  print("<TR><TD ALIGN=center><A HREF=\"account.php&act=new\">Register</A> as new user.</A></TD></TR>\n");
   print("<TR><TD COLSPAN=2>$user->ublock</TD></TR>\n");
   print("</TABLE>\n");
   print("</FORM>\n");
