@@ -160,7 +160,7 @@ function blog_page_last() {
 
   $output = '';
 
-  $result = pager_query('SELECT DISTINCT(n.nid), n.created FROM {node} n '. node_access_join_sql() ." WHERE n.type = 'blog' AND n.status = 1 AND ". node_access_where_sql() .' ORDER BY n.created DESC', variable_get('default_nodes_main', 10));
+  $result = pager_query('SELECT DISTINCT(n.nid), n.created FROM {node} n '. node_access_join_sql() ." WHERE n.type = 'blog' AND n.status = 1 AND ". node_access_where_sql() .' ORDER BY n.sticky DESC, n.created DESC', variable_get('default_nodes_main', 10));
 
   while ($node = db_fetch_object($result)) {
     $output .= node_view(node_load(array('nid' => $node->nid)), 1);
