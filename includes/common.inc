@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.136 2002/12/14 11:55:52 dries Exp $
+// $Id: common.inc,v 1.137 2002/12/15 23:05:25 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST;
@@ -391,7 +391,7 @@ function check_output($text, $nl2br = 0) {
   if ($text) {
     $text = stripslashes($text);
 
-    if (strip_tags($text, "<a><i><b><u><tt><code><cite><strong>") == $text) {
+    if (strip_tags($text, "<a><i><b><u><tt><code><cite><strong><img>") == $text) {
       $text = nl2br($text);
     }
   }
