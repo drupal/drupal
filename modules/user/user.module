@@ -805,7 +805,7 @@ function user_page() {
 function user_conf_options() {
   $output .= form_select("Allow authentication with Drupal IDs", "user_drupal", variable_get("user_drupal", 1), array("Disabled", "Enabled"), "Allow people to authenticate with their Drupal ID and password from other Drupal sites.");
   $output .= form_select("Allow authentication with Jabber IDs", "user_jabber", variable_get("user_jabber", 1), array("Disabled", "Enabled"), "Allow people to authenticate with their Jabber ID.");
-  $output .= form_select("Public registrations", "user_register", variable_get("user_register", 1), array("Only site administrators can create new user accounts.", "Visitors can create accounts but administrator approval is required.", "Visitors can create accounts and no administrator approval is required."));
+  $output .= form_select("Public registrations", "user_register", variable_get("user_register", 1), array("Only site administrators can create new user accounts.", "Visitors can create accounts and no administrator approval is required.", "Visitors can create accounts but administrator approval is required."));
   $output .= form_textfield("Password words", "user_password", variable_get("user_password", "foo,bar,guy,neo,tux,moo,sun,asm,dot,god,axe,geek,nerd,fish,hack,star,mice,warp,moon,hero,cola,girl,fish,java,perl,boss,dark,sith,jedi,drop,mojo"), 55, 256, "A comma separated list of short words that can be concatenated to generate human-readable passwords.");
 
   return $output;
