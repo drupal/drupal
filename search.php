@@ -4,24 +4,35 @@ include_once "includes/common.inc";
 
 page_header();
 
-function find_module($name) {
-  global $options, $type;
-  if (module_hook($name, "search")) $options .= "<OPTION VALUE=\"$name\"". ($name == $type ? " SELECTED" : "") .">$name</OPTION>\n";
+// verify input:
+$type = check_input($type);
+$keys = check_input($keys);
+
+// build options list:
+foreach (module_list() as $name) {
+  if (module_hook($name, "search")) {
+    $options .= "<OPTION VALUE=\"$name\"". ($name == $type ? " SELECTED" : "") .">$name</OPTION>\n";
+  }
 }
 
-module_iterate("find_module");
+// build form:
+$form .= "<FORM ACTION=\"search.php\" METHOD=\"POST\">\n";
+$form .= " <INPUT SIZE=\"50\" VALUE=\"". check_form($keys) ."\" NAME=\"keys\" TYPE=\"text\">\n";
+$form .= " <SELECT NAME=\"type\">$options</SELECT>\n";
+$form .= " <INPUT TYPE=\"submit\" VALUE=\"". t("Search") ."\">\n";
+$form .= "</FORM>\n";
 
-$search .= "<FORM ACTION=\"search.php\" METHOD=\"POST\">\n";
-$search .= " <INPUT SIZE=\"50\" VALUE=\"". check_form($keys) ."\" NAME=\"keys\" TYPE=\"text\">\n";
-$search .= " <SELECT NAME=\"type\">$options</SELECT>\n";
-$search .= " <INPUT TYPE=\"submit\" VALUE=\"". t("Search") ."\">\n";
-$search .= "</FORM>\n";
-
-$output = search_data($keys, $type);
-
+// visualize form:
 $theme->header();
-$theme->box(t("Search"), $search);
-$theme->box(t("Result"), $output);
+
+if ($form) {
+  $theme->box(t("Search"), $form);
+}
+
+if ($keys) {
+  $theme->box(t("Result"), search_data($keys, $type));
+}
+
 $theme->footer();
 
 page_footer();
