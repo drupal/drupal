@@ -1,5 +1,5 @@
 <?php
-/* $Id: aggregator.module,v 1.158 2004/01/19 22:23:37 dries Exp $ */
+/* $Id: aggregator.module,v 1.159 2004/01/23 18:21:45 dries Exp $ */
 
 function aggregator_help($section) {
   switch ($section) {
@@ -567,7 +567,7 @@ function aggregator_get_bundle($bid) {
 }
 
 function aggregator_view() {
-  $result = db_query("SELECT f.*, COUNT(i.iid) AS items FROM {feed} f LEFT JOIN {item} i ON f.fid = i.fid GROUP BY f.fid, f.title, f.url, f.refresh, f.checked, f.attributes, f.link, f.description ORDER BY f.title");
+  $result = db_query("SELECT f.*, COUNT(i.iid) AS items FROM {feed} f LEFT JOIN {item} i ON f.fid = i.fid GROUP BY f.fid, f.title, f.url, f.refresh, f.checked, f.attributes, f.link, f.description, f.etag, f.modified, f.image ORDER BY f.title");
 
   $output .= "<h3>". t("Feed overview") ."</h3>";
 
