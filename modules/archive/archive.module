@@ -203,8 +203,6 @@ function archive_page() {
   $op = $_POST["op"];
   $edit = $_POST["edit"];
 
-  $output = "";
-
   if (user_access("access content")) {
     if ($op == t("Show")) {
       $year = $edit["year"];
@@ -218,6 +216,7 @@ function archive_page() {
     }
 
     $date = mktime(0, 0, 0, $month, $day, $year) - $user->timezone;
+    $date_end = mktime(0, 0, 0, $month, $day + 1, $year) - $user->timezone;
 
     /*
     ** Prepare the values of the form fields:
@@ -238,7 +237,7 @@ function archive_page() {
     */
 
     if ($year && $month && $day) {
-      $result = db_query_range("SELECT nid FROM {node} WHERE status = '1' AND created > %d ORDER BY created", $date, 0, 20);
+      $result = db_query_range("SELECT nid FROM {node} WHERE status = '1' AND created > %d AND created < %d ORDER BY created", $date, $date_end, 0, 20);
 
       while ($nid = db_fetch_object($result)) {
         $output .= node_view(node_load(array("nid" => $nid->nid)), 1);
