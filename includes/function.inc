@@ -19,17 +19,28 @@ function load_theme() {
   return new Theme();
 }
 
-function check_input($message) {
+function check_field($message) {
   return str_replace("\"", "&quot;", stripslashes($message));
+}
+
+function check_input($message) {
+  return strip_tags($message);
 }
 
 function check_output($message) {
   global $allowed_html;
-  return nl2br(strip_tags(stripslashes($message), $allowed_html));
+  return strip_tags(stripslashes($message), $allowed_html);
 }
 
 function discussion_num_replies($id, $count = 0) {
   $result = db_query("SELECT COUNT(cid) FROM comments WHERE pid = $id");
+  return ($result) ? db_result($result, 0) : 0;
+}
+
+function discussion_num_filtered($sid, $pid) {
+  global $user;
+  $threshold = ($user->id) ? $user->threshold  : "0"; 
+  $result = db_query("SELECT COUNT(cid) FROM comments WHERE sid = $sid AND pid = $pid AND (votes != 0 AND score / votes < $threshold)");
   return ($result) ? db_result($result, 0) : 0;
 }
 

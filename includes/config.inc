@@ -57,9 +57,9 @@ $categories = array("Announcements",
                     "Computers & Internet",
                     "Drop.org",
                     "Entertainment",
-                    "Freedom",
-                    "Government",
                     "News & Media",
+                    "Politics & Freedom",
+                    "Reviews",
                     "Science", 
                     "Society & Culture");
 
@@ -76,6 +76,8 @@ $anonymous = "Anonymous Chicken";
 
 #
 # Themes:
+#   the first theme listed in the associative array `$themes' will 
+#   automatically become the default theme.
 #
 $themes = array("Marvin" => array(
                    "themes/marvin/marvin.theme", 

@@ -8,7 +8,7 @@ function admin_icon($name) {
 }
 
 function admin_header() {
-  global $sitename, $section, $status;
+  global $sitename, $section;
 
  ?>
   <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
@@ -42,14 +42,6 @@ function admin_header() {
     </TR>
     <TR><TD BGCOLOR="#000000" COLSPAN="10" WIDTH="100%"><IMG SRC="images/pixel.gif" WIDTH="1" HEIGHT="0" ALT=""></TD></TR>
     <TR><TD COLSPAN="10">&nbsp;</TD></TR>
-     <?  
-       if ($status) {
-      ?>
-    <TR><TD COLSPAN="10"><BIG><B>status:</B> <? echo $status; ?></BIG></TD></TR>
-    <TR><TD COLSPAN="10">&nbsp;</TD></TR>
-     <?
-       }
-     ?>
     <TR>
      <TD COLSPAN="10">
      <?

@@ -37,7 +37,7 @@ function account_session_start($userid, $passwd) {
 
 function account_session_close() {
   global $user;  
-  watchdog(1, "$user->userid: sucessful attempt to logout");
+  watchdog(1, "session closed for user `$user->userid'");
   session_unset();
   session_destroy();
   unset($user);
@@ -257,7 +257,7 @@ function account_register_enter($user = "", $error = "") {
   $output .= "<P>\n";
   $output .= " <B>Username:</B><BR>\n";
   $output .= " <INPUT NAME=\"new[userid]\" VALUE=\"$new[userid]\"><BR>\n";
-  $output .= " <SMALL><I>Enter your desired username: only letters, numbers and some special characters are allowed.</I></SMALL><BR>\n";
+  $output .= " <SMALL><I>Enter your desired username: only letters, numbers and common special characters are allowed.</I></SMALL><BR>\n";
   $output .= "</P>\n";
   $output .= "<P>\n";
   $output .= " <B>E-mail address:</B><BR>\n";
