@@ -40,6 +40,9 @@ tr.light {
 tr.dark td, tr.light td {
   padding: 0.1em 0.6em;
 }
+th.active img {
+  display: inline;
+}
 
 /*
 ** Menu styles

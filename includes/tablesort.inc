@@ -5,12 +5,10 @@ function tablesort_init($header) {
   static $ts;
 
   if (empty($ts)) {
-    $ts['order'] = tablesort_get_order($header);
-    $ts['order_sql'] = tablesort_get_order_sql($header, $ts['order']);
+    $ts = tablesort_get_order($header);
     $ts['sort'] = tablesort_get_sort($header);
     $ts['query_string'] = tablesort_get_querystring();
   }
-
   return $ts;
 }
 
@@ -22,7 +20,9 @@ function tablesort_pager() {
 
 function tablesort_sql($header) {
   $ts = tablesort_init($header);
-  return " ORDER BY ". $ts['order_sql']. " ". strtoupper($ts['sort']);
+  $sql = check_query($ts['sql']);
+  $sort = strtoupper(check_query($ts['sort']));
+  return " ORDER BY $sql $sort";
 }
 
 function tablesort($cell, $header) {
@@ -30,21 +30,20 @@ function tablesort($cell, $header) {
   $title = t("sort by %s", array("%s" => $cell['data']));
 
   // special formatting for the currently sorted column header
-  if ($cell['data'] == $ts['order']) {
+  if ($cell['data'] == $ts['name']) {
     $ts['sort'] = (($ts['sort'] == 'asc') ? 'desc' : 'asc');
-    $cell['class'] = 'cell-highlight';
+    $cell['class'] = 'active';
     $image = '&nbsp;<img src="' . theme('image', 'arrow-' . $ts['sort'] . '.gif') . '" alt="'. t('sort icon') .'" />';
     $title = ($ts['sort'] == 'asc' ? t("sort ascending") : t("sort descending"));
-  } else {
+  }
+  else {
     // If the user clicks a different header, we want to sort ascending initially.
     $ts['sort'] = "asc";
   }
 
   $cell['data'] = l($cell['data'] . $image, $_GET['q'], array("title" => $title), "sort=". $ts['sort']. "&amp;order=". urlencode($cell['data']). $ts['query_string']);
 
-  unset($cell['field']);
-  unset($cell['sort']);
-
+  unset($cell['field'], $cell['sort']);
   return $cell;
 }
 
@@ -62,11 +61,11 @@ function tablesort_get_order($headers) {
   $order = $_GET['order'];
   foreach ($headers as $header) {
     if ($order == $header['data']) {
-      return $header['data'];
+      return array('name' => $header['data'], 'sql' => $header['field']);
     }
 
     if ($header['sort'] == 'asc' || $header['sort'] == 'desc') {
-      $default = $header['data'];
+      $default = array('name' => $header['data'], 'sql' => $header['field']);
     }
   }
 
@@ -75,15 +74,11 @@ function tablesort_get_order($headers) {
   }
   else {
     // The first column specified is initial 'order by' field unless otherwise specified
-    $first = reset($headers);
-    return $first['data'];
-  }
-}
-
-function tablesort_get_order_sql($header, $order) {
-  foreach ($header as $cell) {
-    if ($cell['data'] == $order) {
-      return $cell['field'];
+    if (is_array($headers[0])) {
+      return array('name' => $headers[0]['name'], 'sql' => $headers[0]['field']);
+    }
+    else {
+      return array('name' => $headers[0]);
     }
   }
 }

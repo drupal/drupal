@@ -318,6 +318,7 @@ function theme_table($header, $rows, $attributes = NULL) {
   */
 
   if (is_array($header)) {
+    $ts = tablesort_init($header);
     $output .= " <tr>";
     foreach ($header as $cell) {
       if (is_array($cell) && $cell['field']) {
@@ -343,16 +344,12 @@ function theme_table($header, $rows, $attributes = NULL) {
       }
 
       foreach ($row as $cell) {
-        // highlight the currently sorted column. only applies to tables with headers.
-        if (is_array($header)) {
-          $ts = tablesort_init($header);
-          if ($i === $ts['index']) {
-            if (is_array($cell)) {
-              $cell['class'] = 'active';
-            }
-            else {
-              $cell = array('data' => $cell, 'class' => 'active');
-            }
+        if  ($header[$i]['data'] == $ts['name'] && $header[$i]['field']) {
+          if (is_array($cell)) {
+            $cell['class'] .= ' active';
+          }
+          else {
+            $cell = array('data' => $cell, 'class' => 'active');
           }
         }
         $output .= _theme_table_cell($cell, 0);
@@ -364,7 +361,6 @@ function theme_table($header, $rows, $attributes = NULL) {
   }
 
   $output .= "</table>\n";
-
   return $output;
 }
 
