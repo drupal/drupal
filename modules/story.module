@@ -1,5 +1,5 @@
 <?php
-// $Id: story.module,v 1.120 2003/06/05 18:09:39 dries Exp $
+// $Id: story.module,v 1.121 2003/06/19 17:26:27 dries Exp $
 
 function story_help() {
   $output .= "<p>The story module lets your users submit articles for consideration by the rest of the community, who can vote on them if moderation is enabled.  Stories usually follow a publishing flow of <b>submit -&gt; moderate -&gt; post to the main page -&gt; comments</b>.  Administrators are able to shortcut this flow as desired.</p>";
@@ -76,8 +76,7 @@ function story_form(&$node, &$help, &$error) {
   if (function_exists("taxonomy_node_form")) {
     $output .= implode("", taxonomy_node_form("story", $node));
   }
-
-  $output .= form_textarea(t("Body"), "body", $node->body, 60, 15, $error["body"] ? $error["body"] : t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
+  $output .= form_textarea(t("Body"), "body", $node->body, 60, 15, $error["body"] ? $error["body"] : form_allowed_tags_text());
 
   return $output;
 }

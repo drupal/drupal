@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.217 2003/06/15 19:06:16 dries Exp $
+// $Id: common.inc,v 1.218 2003/06/19 17:26:27 dries Exp $
 
 function conf_init() {
 
@@ -203,7 +203,15 @@ function variable_del($name) {
 }
 
 function drupal_specialchars($input, $quotes = ENT_NOQUOTES) {
-  return htmlspecialchars($input, $quotes, "utf-8");
+
+  /*
+  ** Note that we'd like to go 'htmlspecialchars($input, $quotes, "utf-8")'
+  ** like the PHP manual tells us to, but we can't because there's a bug in
+  ** PHP <4.3 that makes it mess up multibyte charsets if we specify the
+  ** charset.  Change this later once we make PHP 4.3 a requirement.
+  */
+
+  return htmlspecialchars($input, $quotes);
 }
 
 function table_cell($cell, $header = 0) {
@@ -875,6 +883,10 @@ function form_weight($title = NULL, $name = "weight", $value = 0, $delta = 10, $
   }
 
   return form_select($title, $name, $value, $weights, $description, $extra);
+}
+
+function form_allowed_tags_text() {
+  return variable_get("allowed_html", "") ? (t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", ""))) : "";
 }
 
 function url($url = NULL, $query = NULL) {

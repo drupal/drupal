@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.142 2003/06/16 17:09:15 dries Exp $
+// $Id: comment.module,v 1.143 2003/06/19 17:26:27 dries Exp $
 
 $GLOBALS["cmodes"] = array(1 => t("Flat list - collapsed"), 2 => t("Flat list - expanded"), 3 => t("Threaded list - collapsed"), 4 => t("Threaded list - expanded"));
 $GLOBALS["corder"] = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"));
@@ -112,7 +112,7 @@ function comment_user($type, $edit, &$user) {
       break;
     case "edit_form":
       // when user tries to edit his own data
-      return form_textarea(t("Signature"), "signature", $edit["signature"], 70, 3, t("Your signature will be publicly displayed at the end of your comments.") ."<br />". t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "<a> <b> <dd> <dl> <dt> <i> <li> <ol> <u> <ul>")));
+      return form_textarea(t("Signature"), "signature", $edit["signature"], 70, 3, t("Your signature will be publicly displayed at the end of your comments.") ."<br />". form_allowed_tags_text());
     case "edit_validate":
       // validate user data editing
       return array("signature" => $edit["signature"]);
@@ -149,7 +149,7 @@ function comment_form($edit) {
   $form .= form_textfield(t("Subject"), "subject", $edit["subject"], 50, 64);
 
   // comment field:
-  $form .= form_textarea(t("Comment"), "comment", $edit["comment"] ? $edit["comment"] : $user->signature, 70, 10, t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "<a> <b> <dd> <dl> <dt> <i> <li> <ol> <u> <ul>")));
+  $form .= form_textarea(t("Comment"), "comment", $edit["comment"] ? $edit["comment"] : $user->signature, 70, 10, form_allowed_tags_text());
 
   // preview button:
   $form .= form_hidden("cid", $edit["cid"]);
