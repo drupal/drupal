@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.67 2003/09/09 18:18:43 dries Exp $
+// $Id: watchdog.module,v 1.68 2003/09/16 07:31:17 dries Exp $
 
 function watchdog_help($section = "admin/help") {
 
@@ -36,7 +36,7 @@ function watchdog_help($section = "admin/help") {
 
 function watchdog_system($field){
   $system["description"] = t("Logs and records system events.");
-  $system["admin_help"] = t("Watchdog logs your system events. Too see these logs go to <a href=\"%watchdog\">Site monitoring</a>. Since these logs can grow out of control if kept around forever, below set how long an item should be kept in the log.<br />Note:<ul><li>To discard entries as set below you must run \"cron.php\" regularly.</li></ul>", array("%watchdog" => url("admin/watchdog")));
+  $system["admin_help"] = t("Watchdog logs your system events. To see these logs go to <a href=\"%watchdog\">Site monitoring</a>. Since these logs can grow out of control if kept around forever, below set how long an item should be kept in the log.<br />Note:<ul><li>To discard entries as set below you must run \"cron.php\" regularly.</li></ul>", array("%watchdog" => url("admin/watchdog")));
   return $system[$field];
 }
 
