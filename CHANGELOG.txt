@@ -20,6 +20,7 @@ Drupal x.x.x, xxxx-xx-xx
     * slightly reorganized navigation menus.
 - accessibility:
     * improved the accessibility of the archive module's calendar.
+    * improved form handling.
 
 Drupal 4.4.1, 2004-04-01
 ------------------------

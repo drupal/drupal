@@ -225,7 +225,7 @@ function comment_reply($pid, $nid) {
 
 function comment_validate_form($edit) {
   global $user;
-  
+
   /*
   ** Validate the comment's body.
   */

@@ -303,7 +303,7 @@ function path_save($edit) {
     }
 
     drupal_set_message(t('the alias has been saved.'));
-   
+
     return  path_overview();
   }
 }
