@@ -150,7 +150,7 @@ function comment_user($type, $edit, &$user) {
       break;
     case "edit_form":
       // when user tries to edit his own data
-      return form_textarea(t("Signature"), "signature", $user->signature, 70, 3, t("Your signature will be publicly displayed at the end of your comments.") ."<br />". form_allowed_tags_text());
+      return form_textarea(t("Signature"), "signature", $user->signature, 70, 3, t("Your signature will be publicly displayed at the end of your comments.") ."<br />". filter_tips_short());
     case "edit_validate":
       // validate user data editing
       return array("signature" => $edit["signature"]);
@@ -1259,7 +1259,7 @@ function theme_comment_form($edit, $title) {
   $form .= form_textfield(t("Subject"), "subject", $edit["subject"], 50, 64);
 
   // comment field:
-  $form .= form_textarea(t("Comment"), "comment", $edit["comment"] ? $edit["comment"] : $user->signature, 70, 10, form_allowed_tags_text());
+  $form .= form_textarea(t("Comment"), "comment", $edit["comment"] ? $edit["comment"] : $user->signature, 70, 10, filter_tips_short());
 
   // preview button:
   $form .= form_hidden("cid", $edit["cid"]);

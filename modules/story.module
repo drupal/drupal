@@ -83,7 +83,7 @@ function story_form(&$node, &$error) {
     $output .= implode("", taxonomy_node_form("story", $node));
   }
 
-  $output .= form_textarea(t("Body"), "body", $node->body, 60, 15, $error["body"] ? $error["body"] : form_allowed_tags_text());
+  $output .= form_textarea(t("Body"), "body", $node->body, 60, 15, $error["body"] ? $error["body"] : filter_tips_short());
 
   return $output;
 }

@@ -934,10 +934,6 @@ function form_weight($title = NULL, $name = "weight", $value = 0, $delta = 10, $
 
   return form_select($title, $name, $value, $weights, $description, $extra);
 }
-
-function form_allowed_tags_text() {
-  return variable_get("allowed_html", "") ? (t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", ""))) : "";
-}
 /* @} */
 
 /**
