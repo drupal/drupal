@@ -372,7 +372,13 @@ function comment_view($comment, $links = "", $visible = 1) {
 }
 
 function comment_render($node, $cid = 0) {
-  global $user, $mode, $order, $threshold, $comment_page;
+  global $user;
+
+  $mode = $_GET["mode"];
+  $order = $_GET["order"];
+  $threshold = $_GET["threshold"];
+  $comments_per_page = $_GET["comments_per_page"];
+  $comment_page = $_GET["comment_page"];
 
   if (user_access("access comments")) {
 
@@ -402,7 +408,9 @@ function comment_render($node, $cid = 0) {
       $comment_page = 1;
     }
 
-    $comments_per_page = $user->comments_per_page ? $user->comments_per_page : variable_get("comment_default_per_page", "50");
+    if (empty($comments_per_page)) {
+      $comments_per_page = $user->comments_per_page ? $user->comments_per_page : variable_get("comment_default_per_page", "50");
+    }
 
     print "<a name=\"comment\"></a>\n";
 
@@ -725,9 +733,13 @@ function comment_page() {
       }
       break;
     case t("Save settings"):
-      global $mode, $order, $threshold, $comments_per_page;
+      $mode = $_POST["mode"];
+      $order = $_POST["order"];
+      $threshold = $_POST["threshold"];
+      $comments_per_page = $_POST["comments_per_page"];
+
       comment_save_settings(check_query($mode), check_query($order), check_query($threshold), check_query($comments_per_page));
-      drupal_goto(url("node/view/". $edit["nid"], "mode=$mode&amp;order=$order&amp;threshold=$threshold&amp;comments_per_page=$comments_per_page"));
+      drupal_goto(url("node/view/". $edit["nid"], "mode=$mode&order=$order&threshold=$threshold&comments_per_page=$comments_per_page"));
       break;
   }
 }
@@ -1123,14 +1135,16 @@ function comment_controls($threshold = 1, $mode = 3, $order = 1, $nid, $page = 0
     $output = form_item(t("Comment viewing options"), $output, t("Select your preferred way to display the comments and click 'Save settings' to submit your changes."));
 
     if (($mode == 2 || $mode == 4) && $comment_num > $comments_per_page) {
+      $query = "mode=$mode&order=$order&threshold=$threshold&comments_per_page=$comments_per_page";
+
       if ($page > 1) {
-        $p[] = l(t("previous"), "node/view/$nid&amp;comment_page=". ($page - 1));
+        $p[] = l(t("previous"), "node/view/$nid&amp;comment_page=". ($page - 1), array(), $query);
       }
       for ($n = 1; $n <= ceil($comment_num / $comments_per_page); $n++) {
-        $p[] = ($n == $page) ? "<b>&raquo;$n&laquo;</b>" : l($n, "node/view/$nid&amp;comment_page=$n");
+        $p[] = ($n == $page) ? "<b>&raquo;$n&laquo;</b>" : l($n, "node/view/$nid&amp;comment_page=$n", array(), $query);
       }
       if ($page < ceil($comment_num / $comments_per_page)) {
-        $p[] = l(t("next"), "node/view/$nid&amp;comment_page=". ($page + 1));
+        $p[] = l(t("next"), "node/view/$nid&amp;comment_page=". ($page + 1), array(), $query);
       }
       $output .= form_item(t("Browse %a comments", array("%a" => $comment_num)), implode("&nbsp;&#149;&nbsp;", $p), t("There are more than %a comments in this node. Use these links to navigate through them.", array("%a" => $comments_per_page)));
     }
