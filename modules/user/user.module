@@ -88,30 +88,29 @@ function user_save($account, $array = array()) {
         $query .= "$key = '". addslashes($value) ."', ";
       }
     }
+
     db_query("UPDATE users SET $query timestamp = '". time() ."' WHERE uid = '$account->uid'");
+
+    $user = user_load(array("uid" => $account->uid));
   }
   else {
-    $fields = "(";
-    $values = "(";
-    $num = 0;
+    $array["timestamp"] = time();
 
     foreach ($array as $key => $value) {
-      if (substr($key, 0, 4) !== "auth") {
-        $fields .= ($num ? ", " : "") . $key;
-        $values .= ($num ? ", " : "") . (($key == "pass") ? "'" . md5($value) . "'" : "'" . addslashes($value) . "'");
-        $num = 1;
+      if ($key == "pass") {
+        $fields[] = check_query($key);
+        $values[] = "'". md5($value) ."'";
+      }
+      else if (substr($key, 0, 4) !== "auth") {
+        $fields[] = check_query($key);
+        $values[] = "'". check_query($value) ."'";
       }
     }
 
-    $fields .= ($num ? ", " : "") . "timestamp";
-    $values .= ($num ? ", " : "") . "'" . time() ."'";
-    $fields .= ")";
-    $values .= ")";
+    db_query("INSERT INTO users (". implode(", ", $fields) .") VALUES (". implode(", ", $values) .")");
 
-    db_query("INSERT INTO users $fields VALUES $values");
+    $user = user_load(array("name" => $array["name"]));
   }
-
-  $user = user_load(array("name" => $array["name"]));
 
   foreach ($array as $key => $value) {
     if (substr($key, 0, 4) == "auth") {
@@ -1245,6 +1244,7 @@ function user_admin_edit($edit = array()) {
   global $op, $id, $HTTP_HOST;
 
   if ($account = user_load(array("uid" => $id))) {
+
     if ($op == "Save account") {
       $account = user_save($account, $edit);
     }
