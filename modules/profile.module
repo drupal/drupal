@@ -202,7 +202,7 @@ function profile_user($type, $edit, &$user) {
       return profile_save_profile($edit, $user);
     case 'view':
       return profile_view_profile($user);
-    case 'edit':
+    case 'form':
       return profile_edit_profile($edit, $user);
     case 'validate':
       return profile_validate_profile($edit);
