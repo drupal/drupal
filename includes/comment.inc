@@ -54,7 +54,10 @@ function comment_reply($pid, $id) {
     $item = db_fetch_object(db_query("SELECT comments.*, users.userid FROM comments LEFT JOIN users ON comments.author = users.id WHERE comments.cid = '$pid'"));
     comment_view(new Comment($item->userid, $item->subject, $item->comment, $item->timestamp, $item->url, $item->fake_email, comment_score($comment), $comment->votes, $item->cid, $item->lid), t("reply to this comment"));
   }
-  else $pid = 0;
+  else {
+    node_view(node_get_object(array("nid" => $id)));
+    $pid = 0;
+  }
 
   // Build reply form:
   $output .= "<FORM ACTION=\"$REQUEST_URI\" METHOD=\"post\">\n";

@@ -10,7 +10,7 @@
   *********************************************************************/
 
   class Theme extends BaseTheme {
-    // General colorset that can be used for this theme 
+    // General colorset that can be used for this theme
     var $foreground = "#000000";
     var $background = "#FFFFFF";
 
@@ -69,7 +69,7 @@
                    </TD>
                    <TD ALIGN="right">
 <?php
-                     echo category_name($node->cid) ." / ". topic_name($node->tid);
+                     echo node_index($node->attribute);
 ?>
                    </TD>
                  </TR>

@@ -108,10 +108,13 @@ function book_toc($parent = "", $indent = "", $toc = array()) {
 function book_form($edit = array()) {
   global $REQUEST_URI, $user;
 
+  if ($edit[title]) {
+    $form .= book_view(new Book(node_preview($edit)));
+  }
+
   $form .= form_item(t("Author"), format_username(($edit[userid] ? $edit[userid] : $user->userid)));
   $form .= form_hidden(userid, $edit[userid]);
   $form .= form_textfield(t("Subject"), "title", $edit[title], 50, 64);
-  $form .= form_item(t("Category"), category_form_select("book", $edit));
 
   if ($edit[pid]) {
     $node = node_get_object(array("nid" => $edit[pid]));
@@ -122,8 +125,8 @@ function book_form($edit = array()) {
     $form .= form_select(t("Parent"), "parent", $edit[parent], book_toc(), t("The parent subject or category the page belongs in."));
   }
 
-  $form .= form_textarea(t("Content"), "body", $edit[body], 50, 10, t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
-  $form .= form_textarea(t("Log message"), "log", $edit[log], 50, 5, t("An explanation of the additions or updates being made to help the group understand your motivations."));
+  $form .= form_textarea(t("Content"), "body", $edit[body], 70, 20, t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
+  $form .= form_textarea(t("Log message"), "log", $edit[log], 70, 5, t("An explanation of the additions or updates being made to help the group understand your motivations."));
 
   if (user_access($user, "book")) {
     $form .= form_select(t("Weight"), "weight", $edit[weight], array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30), t("The heavier nodes will sink and the lighter nodes will be positioned nearer the top."));
@@ -134,10 +137,7 @@ function book_form($edit = array()) {
     $form .= form_hidden("nid", $edit[nid]);
   }
 
-  if (!$edit) {
-    $form .= form_submit(t("Preview"));
-  }
-  else if (!$edit[title]) {
+  if (!$edit[title]) {
     $form .= "<FONT COLOR=\"red\">". t("Warning: you did not supply a title.") ."</FONT><P>\n";
     $form .= form_submit(t("Preview"));
   }
@@ -153,10 +153,10 @@ function book_save($edit) {
   global $status, $user;
 
   if (!$edit[nid]) {
-    node_save($edit, array(author => $user->id, body, cid, comment => variable_get("book_comment", 0), log, moderate => variable_get("book_moderate", ""), parent, promote => variable_get("book_promote", 0), score => 0, status => variable_get("book_status", $status[queued]), tid, timestamp => time(), title, type => "book", votes => 0, weight));
+    node_save($edit, array(author => $user->id, body, comment => variable_get("book_comment", 0), log, moderate => variable_get("book_moderate", ""), parent, promote => variable_get("book_promote", 0), score => 0, status => variable_get("book_status", $status[queued]), timestamp => time(), title, type => "book", votes => 0, weight));
   }
   else if (user_access($user)) {
-    node_save($edit, array(body, cid, log, parent, tid, title, type => "book", weight));
+    node_save($edit, array(body, log, parent, title, type => "book", weight));
   }
 }
 
@@ -232,7 +232,6 @@ function book_user() {
       $theme->box($title, book_update($id));
       break;
     case t("Preview"):
-      book_view(new Book(node_preview($edit)));
       $theme->box($title, book_form($edit));
       break;
     case t("Submit"):

@@ -38,21 +38,22 @@ function story_view($node, $main = 0) {
 function story_form($edit = array()) {
   global $REQUEST_URI, $user;
 
+  if ($edit[title]) {
+    story_view(new Story(node_preview($edit)));
+  }
+
   $form .= form_item(t("Your name"), format_username(($edit[userid] ? $edit[userid] : $user->userid)));
   $form .= form_hidden("userid", $edit[userid]);
   $form .= form_textfield(t("Subject"), "title", $edit[title], 50, 64);
-  $form .= structure_form("story", $edit);
-  $form .= form_textarea(t("Abstract"), "abstract", $edit[abstract], 50, 10, t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
-  $form .= form_textarea(t("Body"), "body", $edit[body], 50, 15, t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
+  $form .= node_attributes_edit($edit);
+  $form .= form_textarea(t("Abstract"), "abstract", $edit[abstract], 70, 10, t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
+  $form .= form_textarea(t("Body"), "body", $edit[body], 70, 20, t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
 
   if ($edit[nid] > 0) {
     $form .= form_hidden("nid", $edit[nid]);
   }
 
-  if (!$edit) {
-    $form .= form_submit(t("Preview"));
-  }
-  else if (!$edit[title]) {
+  if (!$edit[title]) {
     $form .= "<FONT COLOR=\"red\">". t("Warning: you did not supply a subject.") ."</FONT><P>\n";
     $form .= form_submit(t("Preview"));
   }
@@ -72,10 +73,10 @@ function story_save($edit) {
   global $status, $user;
 
   if (!$edit[nid]) {
-    node_save($edit, array(abstract, author => $user->id, body, cid, comment => variable_get("story_comment", 0), moderate => variable_get("story_moderate", ""), promote => variable_get("story_promote", 0), score => 0, status => variable_get("story_status", $status[queued]), tid, timestamp => time(), title, type => "story", votes => 0));
+    node_save($edit, array(abstract, attribute => node_attributes_save($edit), author => $user->id, body, comment => variable_get("story_comment", 0), moderate => variable_get("story_moderate", ""), promote => variable_get("story_promote", 0), score => 0, status => variable_get("story_status", $status[queued]), timestamp => time(), title, type => "story", votes => 0));
   }
   else if (user_access($user)) {
-    node_save($edit, array(abstract, body, cid, tid, title, type => "story"));
+    node_save($edit, array(abstract, attribute => node_attributes_save($edit), body, title, type => "story"));
   }
 }
 
@@ -84,7 +85,6 @@ function story_user() {
 
   switch($op) {
     case t("Preview"):
-      story_view(new Story(node_preview($edit)));
       $theme->box(t("Submit"), story_form($edit));
       break;
     case t("Submit"):

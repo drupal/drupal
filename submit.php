@@ -9,13 +9,11 @@ if ($user->id) {
     module_invoke($mod, "user");
   }
   else {
-    $result = db_query("SELECT * FROM category");
-
-    while ($category = db_fetch_object($result)) {
-      if (module_hook($category->type, "user")) $options .= "<OPTION VALUE=\"$category->type\">$category->name</OPTION>";
+    foreach (module_list() as $name) {
+      if (module_hook($name, "user")) $options .= "<OPTION VALUE=\"$name\">$name</OPTION>";
     }
 
-    $form .= form_item(t("Category"), "<SELECT NAME=\"mod\">$options</SELECT>");
+    $form .= form_item(t("Type"), "<SELECT NAME=\"mod\">$options</SELECT>");
     $form .= form_submit(t("Next step"));
 
     $output .= "<P>". t("If you have written something or if you have some news or thoughts that you would like to share, then this is the place where you can submit new content.  Fill out this form and your contribution will automatically get whisked away to our submission queue where our moderators will frown at it, poke at it and hopefully post it.") ."</P>";

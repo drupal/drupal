@@ -5,9 +5,8 @@ class Node {
     global $user;
     $this->userid = $node[userid] ? $node[userid] : $user->userid;
     $this->title = $node[title];
+    $this->timestamp = $node[attribute];
     $this->timestamp = $node[timestamp] ? $node[timestamp] : time();
-    $this->cid = $node[cid];
-    $this->tid = $node[tid];
   }
 }
 
@@ -67,7 +66,7 @@ function node_overview($query) {
   $color = array("#ffdc9b", "#dedec4");
   $query = node_query($query ? $query : 0);
 
-  $result = db_query("SELECT n.*, u.userid, c.name AS category FROM node n LEFT JOIN users u ON n.author = u.id LEFT JOIN category c ON n.cid = c.cid $query[1] LIMIT 50");
+  $result = db_query("SELECT n.*, u.userid FROM node n LEFT JOIN users u ON n.author = u.id $query[1] LIMIT 50");
 
   $output .= status($query[0]);
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";

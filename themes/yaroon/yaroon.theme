@@ -12,7 +12,7 @@
   class Theme extends BaseTheme {
     var $foreground = "#000000";
     var $background = "#F0F0F0";
-   
+
     function header() {
 
     global $PHP_SELF, $REQUEST_URI, $cid, $id;
@@ -110,7 +110,7 @@
 <?php
 
     } // close header function
-    
+
 
     function node($node, $main = 0, $links = 0) {
 

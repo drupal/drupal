@@ -2,8 +2,16 @@
 
 $GLOBALS[format] = array(0 => "HTML", 1 => "PHP", 2 => "text");
 
+class Page {
+  function Page($page) {
+    $this = new Node($page);
+    $this->body = $page[body];
+    $this->format = $page[format];
+  }
+}
+
 function page_view($node, $main = 0) {
-  global $format, $theme;
+  global $format;
 
   switch ($format[$node->format]) {
     case "PHP":
@@ -24,13 +32,24 @@ function page_status() {
 }
 
 function page_form($edit = array()) {
-  global $format, $REQUEST_URI;
+  global $REQUEST_URI, $format;
+
+  if ($edit[title]) {
+    $form = page_view(new Page(node_preview($edit)));
+  }
 
   $form .= form_textfield("Subject", "title", $edit[title], 50, 64);
-  $form .= form_textarea("Body", "body", $edit[body], 80, 30);
+  $form .= form_textarea("Body", "body", $edit[body], 70, 30);
   $form .= form_select("Type", "format", $edit[format], $format);
   $form .= form_hidden("nid", $edit[nid]);
-  $form .= form_submit("Submit");
+
+  if ($edit[title]) {
+    $form .= form_submit(t("Preview"));
+    $form .= form_submit("Submit");
+  }
+  else {
+    $form .= form_submit(t("Preview"));
+  }
 
   return form($REQUEST_URI, $form);
 }

@@ -215,3 +215,7 @@ ALTER TABLE node ADD timestamp_posted int(11) NOT NULL;
 ALTER TABLE node ADD timestamp_queued int(11) NOT NULL;
 ALTER TABLE node ADD timestamp_hidden int(11) NOT NULL;
 ALTER TABLE node ADD attribute varchar(255) DEFAULT '' NOT NULL;
+
+# 10/06/01
+ALTER TABLE node DROP cid;
+ALTER TABLE node DROP tid;

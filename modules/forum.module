@@ -14,8 +14,7 @@ function forum_form($edit = array()) {
   global $REQUEST_URI;
 
   $form .= form_textfield("Subject", "title", $edit[title], 50, 64);
-  $form .= structure_form("forum", $edit);
-  $form .= form_textarea("Body", "body", $edit[body], 50, 10);
+  $form .= form_textarea("Body", "body", $edit[body], 70, 10);
   $form .= form_hidden("nid", $edit[nid]);
   $form .= form_submit("Submit");
 
@@ -26,7 +25,7 @@ function forum_save($edit) {
   global $user, $status;
 
   if (user_access($user)) {
-    node_save($edit, array(author => $user->id, body, cid, comment => variable_get("forum_comment", 0), moderate => variable_get("forum_moderate", ""), promote => variable_get("forum_promote", 0), score => 0, status => $status[posted], tid, timestamp => time(), title, type => "forum", votes => 0));
+    node_save($edit, array(author => $user->id, body, comment => variable_get("forum_comment", 0), moderate => variable_get("forum_moderate", ""), promote => variable_get("forum_promote", 0), score => 0, status => $status[posted], timestamp => time(), title, type => "forum", votes => 0));
   }
 }
 

@@ -10,10 +10,10 @@
   *********************************************************************/
 
   class Theme extends BaseTheme {
-    // General colorset that can be used for this theme 
+    // General colorset that can be used for this theme
     var $foreground = "#000000";
     var $background = "#E7E7E7";
-    
+
     /*
       I am going to use some colors throughout this theme:
       #000000 : black used for all links and the table in every box you'll see, I use it to create the thin black border around each.
@@ -122,7 +122,7 @@
                                   </FONT>
                                 </td>
 <?php
-                                echo "<td align=\"right\" background=\"themes/jeroen/images/menutitle.gif\" nowrap><b>". category_name($node->cid) ." / ". topic_name($node->tid) ."</b>";
+                                echo "<td align=\"right\" background=\"themes/jeroen/images/menutitle.gif\" nowrap><b>". node_index($node->attribute) ."</b>";
 ?>
                                 </td>
                               </tr>

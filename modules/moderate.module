@@ -12,11 +12,11 @@ function moderate_overview($query = array()) {
 
   $output .= status($query[0]);
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR><TH>node</TH><TH>category / topic</TH><TH>status</TH><TH>author</TH><TH>date</TH><TH>operations</TH></TR>\n";
+  $output .= " <TR><TH>node</TH><TH>type</TH><TH>status</TH><TH>author</TH><TH>date</TH><TH>operations</TH></TR>\n";
 
   $r1 = db_query("SELECT n.*, u.userid FROM node n LEFT JOIN users u ON n.author = u.id WHERE n.moderate LIKE '%$user->userid%' ORDER BY n.timestamp DESC LIMIT 30");
   while ($node = db_fetch_object($r1)) {
-    $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD>". category_name($node->cid) ." / ". topic_name($node->tid) ."</TD><TD>". node_status($node->status) ."</TD><TD>". format_username($node->userid) ."</TD><TD>". format_date($node->timestamp, "small") ."</TD><TD><A HREF=\"admin.php?mod=moderate&type=node&op=edit&id=$node->nid\">edit $node->type</A></TD></TR>\n";
+    $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD>$node->type</TD><TD>". node_status($node->status) ."</TD><TD>". format_username($node->userid) ."</TD><TD>". format_date($node->timestamp, "small") ."</TD><TD><A HREF=\"admin.php?mod=moderate&type=node&op=edit&id=$node->nid\">edit $node->type</A></TD></TR>\n";
 
     $r2 = db_query("SELECT c.*, u.userid FROM comments c LEFT JOIN users u ON c.author = u.id WHERE c.lid = '$node->nid' ORDER BY c.timestamp DESC");
     while ($comment = db_fetch_object($r2)) {
