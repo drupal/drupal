@@ -86,7 +86,7 @@ function node_history($node) {
   return $output;
 }
 
-$number = ($title ? db_num_row(db_query("SELECT nid FROM node WHERE title = '$title' AND status = $status[posted]")) : 1);
+$number = ($title ? db_num_rows(db_query("SELECT nid FROM node WHERE title = '$title' AND status = $status[posted]")) : 1);
 
 if ($number > 1) {
   $result = db_query("SELECT n.*, u.name, u.uid FROM node n LEFT JOIN user u ON n.author = u.uid WHERE n.title = '$title' AND n.status = $status[posted] ORDER BY timestamp DESC");
