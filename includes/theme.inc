@@ -30,7 +30,7 @@ function theme_account($theme) {
     $content .= "<P>\n";
 
     if (($user->id) && ($user->permissions == 1 || $user->id == 1)) {
-      $content .= "<LI><A HREF=\"admin.php\">administrate ". $site_name ."</A></LI>\n";
+      $content .= "<LI><A HREF=\"admin.php\">administer ". $site_name ."</A></LI>\n";
       $content .= "<P>\n";
     }
 
