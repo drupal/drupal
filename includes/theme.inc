@@ -90,12 +90,14 @@ function theme_item_list($items = array(), $title = 0) {
   ** Return a formatted array of items.
   */
 
-  if ($title) {
+  if (isset($title)) {
     $output .= "<b>$title</b><br />";
   }
 
-  foreach ($items as $item) {
-    $output .= "- $item<br />";
+  if (isset($items)) {
+    foreach ($items as $item) {
+      $output .= "- $item<br />";
+    }
   }
 
   return $output;
