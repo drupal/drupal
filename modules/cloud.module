@@ -1,5 +1,5 @@
 <?php
-// $Id: cloud.module,v 1.57 2003/09/28 17:07:46 dries Exp $
+// $Id: cloud.module,v 1.58 2003/09/30 05:31:52 dries Exp $
 
 function cloud_help($section = "admin/syndication/cloud/help") {
   $output = "";
@@ -22,7 +22,7 @@ function cloud_help($section = "admin/syndication/cloud/help") {
       $output = "Tracks other sites and displays last date changed.";
       break;
     case 'admin/syndication/cloud':
-      $output = strtr("The cloud monitor tracks or crawls other interesting web sites and displays their last modification dates. Visitors to this site learn about other relevant sites and can easily see if there is new content. To get this working you <b>must</b> setup cron support. To get the site cloud block to display you must turn on the <B>Site bloud block</b> in %block. To go to a monitored site, click on the site name, to immediately load and/or update the record for a site, click on \"update site\", to delete a site go to \"edit site\". ", array("%block" => l(t("block management"), "admin/block") ));
+      $output = strtr("The cloud monitor tracks or crawls other interesting web sites and displays their last modification dates. Visitors to this site learn about other relevant sites and can easily see if there is new content. To get this working you <b>must</b> setup cron support. To get the site cloud block to display you must turn on the <i>site cloud</i> block in %block. To go to a monitored site, click on the site name, to immediately load and/or update the record for a site, click on \"update site\", to delete a site go to \"edit site\". ", array("%block" => l(t("block management"), "admin/block") ));
       break;
     case 'admin/syndication/cloud/add':
       $output = "Add a site to the site cloud. Don't forget the \"http://\" for your URLs.";
