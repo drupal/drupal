@@ -1,5 +1,5 @@
 <?php
-/* $Id: file.inc,v 1.7 2004/01/13 10:33:02 kjartan Exp $ */
+/* $Id: file.inc,v 1.8 2004/01/29 11:39:22 kjartan Exp $ */
 
 /**
  * @defgroup file File interface
@@ -115,6 +115,7 @@ function file_check_upload($source) {
  */
 function file_check_location($source, $directory = 0) {
   $source = realpath($source);
+  $directory = realpath($directory);
   if ($directory && strpos($source, $directory) !== 0) {
     return 0;
   }
@@ -172,8 +173,9 @@ function file_copy(&$source, $dest = 0, $replace = 0) {
   if (file_exists($dest) && !$replace) {
     // Destination file already exists and we can't replace is so we try and
     // and find a new filename.
-    list($name, $ext) = explode('.', $basename, 2);
-    $ext = $ext ? ".$ext" : '';
+    $pos = strrpos($basename, '.');
+    $name = substr($basename, 0, $pos);
+    $ext = substr($basename, $pos);
     $counter = 0;
     do {
       $dest = $directory . FILE_SEPARATOR . $name .'_'. $counter++ . $ext;
