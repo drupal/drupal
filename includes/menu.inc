@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.30 2003/12/04 20:53:19 dries Exp $
+// $Id: menu.inc,v 1.31 2003/12/08 06:32:18 dries Exp $
 
 /**
  * Register a menu item with the menu system.
@@ -49,8 +49,8 @@ function menu_get_active_item() {
 }
 
 /**
-* Returns the title of the active menu item.
-*/
+ * Returns the title of the active menu item.
+ */
 function menu_get_active_title() {
   global $_list;
 
@@ -60,8 +60,8 @@ function menu_get_active_title() {
 }
 
 /**
-* Returns the help associated with the active menu item.
-*/
+ * Returns the help associated with the active menu item.
+ */
 function menu_get_active_help() {
   $path = $_GET["q"];
   $output = "";

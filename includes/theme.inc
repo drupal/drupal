@@ -1,25 +1,25 @@
 <?php
-/* $Id: theme.inc,v 1.168 2003/12/04 20:53:19 dries Exp $ */
+/* $Id: theme.inc,v 1.169 2003/12/08 06:32:18 dries Exp $ */
 
 /**
- @file
-
- Theme System - controls the output of Drupal.
-
- The theme system allows for nearly all output of the Drupal system to be
- customized by user themes.
-
- @see <a href="http://drupal.org/node/view/253">Theme system</a>
- @see themeable
-**/
+ * @file
+ *
+ * Theme System - controls the output of Drupal.
+ *
+ * The theme system allows for nearly all output of the Drupal system to be
+ * customized by user themes.
+ *
+ * @see <a href="http://drupal.org/node/view/253">Theme system</a>
+ * @see themeable
+ */
 
 /**
-  Hook Help - returns theme specific help and information.
-
-  @param section defines the \a section of the help to be returned.
-
-  @return a string containing the help output.
-**/
+ * Hook Help - returns theme specific help and information.
+ *
+ * @param section defines the @a section of the help to be returned.
+ *
+ * @return a string containing the help output.
+ */
 function theme_help($section) {
   $ouptout = "";
 
@@ -32,10 +32,10 @@ function theme_help($section) {
 }
 
 /**
-  Initialized the theme system.
-
-  @return the name of the currently selected theme.
-**/
+ * Initialized the theme system.
+ *
+ * @return the name of the currently selected theme.
+ */
 function init_theme() {
   global $user;
 
@@ -55,12 +55,12 @@ function init_theme() {
 }
 
 /**
-  Provides a list of currently available themes.
-
-  @param $refresh
-
-  @return an array of the currently available themes.
-**/
+ * Provides a list of currently available themes.
+ *
+ * @param $refresh
+ *
+ * @return an array of the currently available themes.
+ */
 function list_themes($refresh = 0) {
   static $list;
 
@@ -82,16 +82,15 @@ function list_themes($refresh = 0) {
 }
 
 /**
-  External interface of the theme system to all other modules, and core files.
-
-  All requests for themed functions must go through this function. It examines
-  the request and routes it to the appropriate theme function. If the current
-  theme does not implement the requested function, then the base theme function
-  is called.
-  Example: \verbatim $header_text = theme("header"); \endverbatim
-
-  @return themed output.
-**/
+ * External interface of the theme system to all other modules, and core files.
+ *
+ * All requests for themed functions must go through this function. It examines
+ * the request and routes it to the appropriate theme function. If the current
+ * theme does not implement the requested function, then the base theme function
+ * is called. Example: @verbatim $header_text = theme("header"); @endverbatim
+ *
+ * @return themed output.
+ */
 function theme() {
   global $theme;
 
@@ -107,30 +106,30 @@ function theme() {
 }
 
 /**
-  Returns the path to the currently selected theme.
-
-  @return the path to the the currently selected theme.
-**/
+ * Returns the path to the currently selected theme.
+ *
+ * @return the path to the the currently selected theme.
+ */
 function path_to_theme() {
   global $theme;
   return $theme->path;
 }
 
 /**
-  @defgroup themeable Themeable functions
-  @{
-
-  Themeable functions - functions that can be styled differently in themes.
-
-  @see  theme
-  @see  theme.inc
-**/
+ * @defgroup themeable Themeable functions
+ * @{
+ *
+ * Themeable functions - functions that can be styled differently in themes.
+ *
+ * @see theme
+ * @see theme.inc
+ */
 
 /**
-  Returns the theme header.
-
-  @return a string containing the \a header output.
-**/
+ * Returns the theme header.
+ *
+ * @return a string containing the @a header output.
+ */
 function theme_header() {
   global $base_url;
 
@@ -163,14 +162,14 @@ function theme_header() {
 /**
  * Returns an entire Drupal page displaying the supplied content.
  *
- * @param $content    a string containing the content to display
- * @param $title      (optional) page title (\<head>\<title>)
+ * @param $content a string containing the content to display
+ * @param $title (optional) page title (\<head>\<title>)
  * @param $breadcrumb (optional) page breadcrumb
  *
- * @see   drupal_breadcrumb
+ * @see drupal_breadcrumb
  *
- * @return a string containing the \a page output.
-**/
+ * @return a string containing the @a page output.
+ */
 function theme_page($content, $title = NULL, $breadcrumb = NULL) {
   if (isset($title)) {
     drupal_set_title($title);
@@ -187,59 +186,60 @@ function theme_page($content, $title = NULL, $breadcrumb = NULL) {
 }
 
 /**
-  Returns themed set of links.
-
-  @param $links an array of \a links to be themed.
-  @param $delimiter (optional) \a delimiter used to separate the links.
-
-  @return a string containing the \a links output.
-**/
+ * Returns themed set of links.
+ *
+ * @param $links an array of @a links to be themed.
+ * @param $delimiter (optional) @a delimiter used to separate the links.
+ *
+ * @return a string containing the @a links output.
+ */
 function theme_links($links, $delimiter = " | ") {
   return implode($delimiter, $links);
 }
 
 /**
-  Returns themed image.
-
-  @param $name the \a name of the image file.
-
-  @return a string containing the \a image output.
-**/
+ * Returns themed image.
+ *
+ * @param $name the @a name of the image file.
+ *
+ * @return a string containing the @a image output.
+ */
 function theme_image($name) {
   return "misc/$name";
 }
 
 /**
-  Returns a themed breadcrumb menu.
-
-  @param $breadcrumb an array containing the breadcrumb links.
-
-  @return a string containing the \a breadcrumb output.
-**/
+ * Returns a themed breadcrumb menu.
+ *
+ * @param $breadcrumb an array containing the breadcrumb links.
+ *
+ * @return a string containing the @a breadcrumb output.
+ */
 function theme_breadcrumb($breadcrumb) {
   return "<div class=\"breadcrumb\">". implode($breadcrumb, " &raquo; ") ."</div>";
 }
 
 /**
-  Returns themed node.
-
-  The passed $node object provides a all relevant information for displaying a node:
-  \li \c $node->nid
-  \li \c $node->type i.e. story, blog, forum.
-  \li \c $node->title
-  \li \c $node->created a unix timestamp.
-  \li \c $node->teaser
-  \li \c $node->body
-  \li \c $node->changed a unix timestamp.
-  \li \c $node->uid the id of the poster.
-  \li \c $node->username the username of the poster.
-
-  @param $node the \a node to be themed.
-  @param $main Display teaser only, as on main page?
-  @param $page Display node as standalone page (no title)?
-
-  @return a string containing the \a node output.
-**/
+ * Returns themed node.
+ *
+ * The passed $node object provides a all relevant information for displaying a
+ * node:
+ * @li @c $node->nid
+ * @li @c $node->type i.e. story, blog, forum.
+ * @li @c $node->title
+ * @li @c $node->created a unix timestamp.
+ * @li @c $node->teaser
+ * @li @c $node->body
+ * @li @c $node->changed a unix timestamp.
+ * @li @c $node->uid the id of the poster.
+ * @li @c $node->username the username of the poster.
+ *
+ * @param $node the @a node to be themed.
+ * @param $main Display teaser only, as on main page?
+ * @param $page Display node as standalone page (no title)?
+ *
+ * @return a string containing the @a node output.
+ */
 function theme_node($node, $main = 0, $page = 0) {
   if (module_exist("taxonomy")) {
     $terms = taxonomy_link("taxonomy terms", $node);
@@ -272,27 +272,27 @@ function theme_node($node, $main = 0, $page = 0) {
 }
 
 /**
-  Returns themed form element.
-
-  @param $title the form element's title
-  @param $value the form element's data
-  @param $description the form element's description or explanation
-
-  @return a string contraining the \a node output.
-**/
+ * Returns themed form element.
+ *
+ * @param $title the form element's title
+ * @param $value the form element's data
+ * @param $description the form element's description or explanation
+ *
+ * @return a string containing the @a node output.
+ */
 
 function theme_form_element($title, $value, $description = 0) {
   return "<div class=\"form-item\">". ($title ? "<label>$title:</label><br />" : "") . $value . ($description ? "<div class=\"description\">$description</div>" : "") ."</div>\n";
 }
 
 /**
-  Returns themed table.
-
-  @param $header
-  @param $rows
-
-  @return a string contraining the \a node output.
-**/
+ * Returns themed table.
+ *
+ * @param $header
+ * @param $rows
+ *
+ * @return a string containing the @a node output.
+ */
 
 function theme_table($header, $rows) {
 
@@ -339,32 +339,33 @@ function theme_table($header, $rows) {
 }
 
 /**
-  Returns themed box.
-
-  @param $subject the \a subject of the box.
-  @param $content the \a content of the box.
-  @param $region the \a region of the box.
-
-  @return a string containing the \a box output.
-**/
+ * Returns themed box.
+ *
+ * @param $subject the @a subject of the box.
+ * @param $content the @a content of the box.
+ * @param $region the @a region of the box.
+ *
+ * @return a string containing the @a box output.
+ */
 function theme_box($subject, $content, $region = "main") {
   $output = "<h2>$subject</h2><p>$content</p>";
   return $output;
 }
 
 /**
-  Returns a themed block.
-
-  You can style your blocks by defining .block (all blocks),
-  .block-<i>module</i> (all blocks of module <i>module</i>),
-  and \#block-<i>module</i>-<i>delta</i> (specific block of
-  module <i>module</i> with delta <i>delta</i>) in your
-  theme's CSS.
-
-  @param $block object "indexed with" fields from database table 'blocks' ($block->module, $block->delta, $block->region, ...) and fields returned by <i>module</i>_block("view") ($block->subject, $block->content, ...).
-
-  @return a string containing the \a box output.
-**/
+ * Returns a themed block.
+ *
+ * You can style your blocks by defining .block (all blocks),
+ * .block-<i>module</i> (all blocks of module <i>module</i>), and
+ * \#block-<i>module</i>-<i>delta</i> (specific block of module <i>module</i>
+ * with delta <i>delta</i>) in your theme's CSS.
+ *
+ * @param $block object "indexed with" fields from database table 'blocks'
+ *   ($block->module, $block->delta, $block->region, ...) and fields returned by
+ *   <i>module</i>_block("view") ($block->subject, $block->content, ...).
+ *
+ * @return a string containing the @a box output.
+ */
 function theme_block($block) {
   $output  = "<div class=\"block block-$block->module\" id=\"block-$block->module-$block->delta\">";
   $output .= " <h3>$block->subject</h3>";
@@ -374,10 +375,10 @@ function theme_block($block) {
 }
 
 /**
-  Returns themed page footer.
-
-  @return a string containing the \a footer output.
-**/
+ * Returns themed page footer.
+ *
+ * @return a string containing the @a footer output.
+ */
 function theme_footer() {
   $output = "</td></tr></table>";
   $output .= theme_closure();
@@ -386,22 +387,23 @@ function theme_footer() {
 }
 
 /**
-  Returns themed marker, useful for marking new comments or required form elements.
-
-  @return a string containing the \a mark output.
-**/
+ * Returns themed marker, useful for marking new comments or required form
+ * elements.
+ *
+ * @return a string containing the @a mark output.
+ */
 function theme_mark() {
   return "<span class=\"marker\">*</span>";
 }
 
 /**
-  Returns themed list of items.
-
-  @param $items (optional) an array of the items to be displayed in a list.
-  @param $title (optional) the title of the list.
-
-  @return a string containing the \a list output.
-**/
+ * Returns themed list of items.
+ *
+ * @param $items (optional) an array of the items to be displayed in a list.
+ * @param $title (optional) the title of the list.
+ *
+ * @return a string containing the @a list output.
+ */
 function theme_item_list($items = array(), $title = NULL) {
   $output = "<div class=\"item-list\">";
   if (isset($title)) {
@@ -420,23 +422,24 @@ function theme_item_list($items = array(), $title = NULL) {
 }
 
 /**
-  Returns themed error message.
-
-  @param $message the error message to be themed.
-
-  @return a string containing the \a error output.
-**/
+ * Returns themed error message.
+ *
+ * @param $message the error message to be themed.
+ *
+ * @return a string containing the @a error output.
+ */
 function theme_error($message) {
   return "<div class=\"error\">$message</div>";
 }
 
 /**
-  Execute hook _head which is run at the start of the page, and output should be in the head tags.
-
-  @param $main (optional)
-
-  @return a string containing the \a error output.
-**/
+ * Execute hook _head which is run at the start of the page, and output should
+ * be in the head tags.
+ *
+ * @param $main (optional)
+ *
+ * @return a string containing the @a error output.
+ */
 function theme_head($main = 0) {
   global $base_url;
   $output .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />";
@@ -450,26 +453,26 @@ function theme_head($main = 0) {
 }
 
 /**
-  Execute hook _footer() which is run at the end of the page right
-  before the \</body> tag.
-
-  @param $main (optional)
-
-  @return a string containing the \a closure output.
-**/
+ * Execute hook _footer() which is run at the end of the page right before the
+ * \</body> tag.
+ *
+ * @param $main (optional)
+ *
+ * @return a string containing the @a closure output.
+ */
 function theme_closure($main = 0) {
   $footer = module_invoke_all("footer", $main);
   return implode($footer, "\n");
 }
 
 /**
-  Call _onload hook in all modules to enable modules to insert javascript
-  that will get run once the page has been loaded by the browser.
-
-  @param $theme_onloads (optional) addition onload directives.
-
-  @return a string containing the \a onload output.
-**/
+ * Call _onload hook in all modules to enable modules to insert javascript that
+ * will get run once the page has been loaded by the browser.
+ *
+ * @param $theme_onloads (optional) addition onload directives.
+ *
+ * @return a string containing the @a onload output.
+ */
 function theme_onload_attribute($theme_onloads = array()) {
   if (!is_array($theme_onloads)) {
     $theme_onloads = array($theme_onloads);
@@ -486,9 +489,9 @@ function theme_onload_attribute($theme_onloads = array()) {
 /**
  * Returns themed blocks available for current $user at $region.
  *
- * @param       $region   main|left|right
+ * @param $region main|left|right
  *
- * @return      a string containing the \a blocks output.
+ * @return a string containing the @a blocks output.
  */
 function theme_blocks($region) {
   $output = "";

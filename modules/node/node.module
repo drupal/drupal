@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.298 2003/12/06 19:15:38 kjartan Exp $
+// $Id: node.module,v 1.299 2003/12/08 06:32:19 dries Exp $
 
 function node_help($section = "admin/help#node") {
   global $mod;
@@ -112,11 +112,13 @@ function node_last_viewed($nid) {
 }
 
 /**
- * Determines whether the supplied timestamp is newer than the user's last view of a given node
+ * Determines whether the supplied timestamp is newer than the user's last view
+ * of a given node
  *
- * @param $nid       node-id twhose history supplies the 'last viewed' timestamp
- * @param $timestamp time which is compared against node's 'last veiwed' timestamp
-*/
+ * @param $nid node-id twhose history supplies the 'last viewed' timestamp
+ * @param $timestamp time which is compared against node's 'last veiwed'
+ *   timestamp
+ */
 function node_is_new($nid, $timestamp) {
   global $user;
   static $cache;
