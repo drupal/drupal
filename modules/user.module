@@ -1648,11 +1648,11 @@ function _user_categories() {
 
   foreach (module_list() as $module) {
     if ($data = module_invoke($module, 'user', 'categories')) {
-      foreach ($data as $category) {
-        $categories[$category['weight']] = $category;
-      }
+      $categories = array_merge($data, $categories);
     }
   }
+
+  usort($categories, '_user_sort');
 
   return $categories;
 }
