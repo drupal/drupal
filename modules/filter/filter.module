@@ -72,7 +72,7 @@ function filter_filter_tips($delta, $format, $long = false) {
       break;
 
     case 1:
-      switch ($type) {
+      switch ($long) {
         case 0:
           return t('You may post PHP code. You should include &lt;?php ?&gt; tags.');
         case 1:
@@ -742,7 +742,7 @@ function theme_filter_tips($tips, $long = false, $extra = '') {
       if ($tips) {
       $output .= "<ul class=\"tips\">$tips</ul>";
       }
-      
+
       if ($multiple) {
         $output .= '</li>';
       }
