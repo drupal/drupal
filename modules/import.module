@@ -71,8 +71,7 @@ function import_format_item($item, $feed = 0) {
   global $user;
 
   if ($user->uid && user_access("maintain personal blog")) {
-//    $output .= "&nbsp;". l("<img src=\"". theme("image", "blog.gif") ."\" border=\"0\" width=\"12\" height=\"16\" alt=\"". t("Blog this item") ."\" />", "node/add/blog&amp;iid=$item->iid", array("title" => t("Comment on this news item in your personal blog.")));
-    $output .= "<div class=\"icon\">(". l("b", "node/add/blog&amp;iid=$item->iid", array("title" => t("Comment on this news item in your personal blog."))) .")</div>";
+    $output .= "<div class=\"icon\">". l("<img src=\"". theme("image", "blog.gif") ."\" border=\"0\" width=\"12\" height=\"12\" alt=\"". t("blog it") ."\" />", "node/add/blog&amp;iid=$item->iid", array("title" => t("Comment on this news item in your personal blog."), "class" => "blog-it")) ."</div>";
   }
 
   // external link
