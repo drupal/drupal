@@ -45,7 +45,7 @@ function submission_displayItem($id) {
 
     $result = db_query("SELECT * FROM users WHERE history LIKE '%s$submission->id%'");
     while ($account = db_fetch_object($result)) {
-      print "<A HREF=\"account.php?op=userinfo&$uname=$account->userid\">$account->userid</A> voted `". getHistory($account->history, "s$submission->id") ."'.<BR>";
+      print "<A HREF=\"account.php?op=userinfo&uname=$account->userid\">$account->userid</A> voted `". getHistory($account->history, "s$submission->id") ."'.<BR>";
     }
   }
   else {
