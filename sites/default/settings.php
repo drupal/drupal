@@ -55,8 +55,8 @@
  *   prefixes are desired, set to empty string "".
  *
  *   Database URL format:
- *   $db_url = 'mysql://user:password@hostname/database';
- *   $db_url = 'pgsql://user:password@hostname/database';
+ *   $db_url = 'mysql://db_user:db_password@db_hostname/database_name';
+ *   $db_url = 'pgsql://db_user:db_password@db_hostname/database_name';
  */
 $db_url = 'mysql://drupal:drupal@localhost/drupal';
 $db_prefix = '';
