@@ -1,5 +1,5 @@
 <?php
-/* $Id: upload.module,v 1.17 2004/12/29 23:03:05 dries Exp $ */
+/* $Id: upload.module,v 1.18 2004/12/31 09:30:12 dries Exp $ */
 
 /**
  * @file
@@ -257,6 +257,8 @@ function upload_nodeapi(&$node, $op, $arg) {
     case 'delete':
       upload_delete($node);
       break;
+    case 'search result':
+      return $node->files ? format_plural(count($node->files), '1 attachment', '%count attachments') : null;
   }
 
   return $output;
