@@ -282,6 +282,8 @@ function menu_edit_item_form($edit) {
       $form .= form_hidden('path', $edit['path']);
     }
 
+    $form .= form_checkbox(t('Expanded'), 'expanded', 1, ($edit['type'] & MENU_EXPANDED), t('If selected and this menu item has children, the menu will always appear expanded.'));
+
     // Generate a list of possible parents (not including this item or descendants).
     $options = menu_parent_options($edit['mid']);
     $form .= form_select(t('Parent item'), 'pid', $edit['pid'], $options);
@@ -324,6 +326,13 @@ function menu_edit_item_validate($edit) {
 function menu_edit_item_save($edit) {
   $menu = menu_get_menu();
 
+  if ($edit['expanded']) {
+    $edit['type'] |= MENU_EXPANDED;
+  }
+  else {
+    $edit['type'] &= ~MENU_EXPANDED;
+  }
+
   if ($edit['mid']) {
     db_query("UPDATE {menu} SET pid = %d, path = '%s', title = '%s', description = '%s', weight = %d, type = %d WHERE mid = %d", $edit['pid'], $edit['path'], $edit['title'], $edit['description'], $edit['weight'], $edit['type'] | MENU_MODIFIED_BY_ADMIN, $edit['mid']);
     drupal_set_message(t('Updated menu item %title.', array('%title' => '<em>'. $edit['title'] .'</em>')));
@@ -345,7 +354,7 @@ function menu_edit_item_save($edit) {
  */
 function menu_overview_tree() {
   $menu = menu_get_menu();
-  $header = array(t('Menu item'), array('data' => t('Operations'), 'colspan' => 3));
+  $header = array(t('Menu item'), t('Expanded'), array('data' => t('Operations'), 'colspan' => 3));
   $output = '';
 
   foreach ($menu['items'][0]['children'] as $mid) {
@@ -430,7 +439,7 @@ function menu_overview_tree_rows($pid = 0, $depth = 0) {
       }
 
       if ($menu['items'][$mid]['type'] & (MENU_MODIFIABLE_BY_ADMIN | MENU_VISIBLE_IN_TREE)) {
-        $row = array(array('data' => $title, 'class' => $class));
+        $row = array(array('data' => $title, 'class' => $class), array('data' => ($menu['items'][$mid]['children'] ? (($menu['items'][$mid]['type'] & MENU_EXPANDED) ? t('Yes') : t('No')) : ''), 'class' => $class));
         foreach ($operations as $operation) {
           $operation['class'] = $class;
           $row[] = $operation;

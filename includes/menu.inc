@@ -80,6 +80,7 @@ define('MENU_MODIFIABLE_BY_ADMIN', 0x0010);
 define('MENU_MODIFIED_BY_ADMIN', 0x0020);
 define('MENU_CREATED_BY_ADMIN', 0x0040);
 define('MENU_IS_LOCAL_TASK', 0x0080);
+define('MENU_EXPANDED', 0x0100);
 define('MENU_LINKS_TO_PARENT', 0x0200);
 
 /**
@@ -554,10 +555,10 @@ function theme_menu_tree($pid = 1, $all = FALSE) {
   if (isset($menu['visible'][$pid]) && $menu['visible'][$pid]['children']) {
 
     foreach ($menu['visible'][$pid]['children'] as $mid) {
-      $style = (count($menu['visible'][$mid]['children']) ? (menu_in_active_trail($mid)  ? 'expanded' : 'collapsed') : 'leaf');
+      $style = (count($menu['visible'][$mid]['children']) ? ((menu_in_active_trail($mid) || ($menu['visible'][$mid]['type'] & MENU_EXPANDED))  ? 'expanded' : 'collapsed') : 'leaf');
       $output .= "<li class=\"$style\">";
       $output .= theme('menu_item', $mid);
-      if ($all || menu_in_active_trail($mid)) {
+      if ($all || menu_in_active_trail($mid) || ($menu['visible'][$mid]['type'] & MENU_EXPANDED)) {
         $output .= theme('menu_tree', $mid);
       }
       $output .= "</li>\n";
@@ -820,7 +821,7 @@ function _menu_build_visible_tree($pid = 0) {
     $allowed = _menu_item_is_accessible($pid);
 
     if (($parent['type'] & MENU_IS_ROOT) || ($visible && $allowed)) {
-      $_menu['visible'][$pid] = array('title' => $parent['title'], 'path' => $parent['path'], 'children' => $children);
+      $_menu['visible'][$pid] = array('title' => $parent['title'], 'path' => $parent['path'], 'children' => $children, 'type' => $parent['type']);
       foreach ($children as $mid) {
         $_menu['visible'][$mid]['pid'] = $pid;
       }
