@@ -48,6 +48,6 @@ function db_result($qid, $field = 0) {
 #
 # Automatically connect to database:
 #
-db_connect($db_host, $db_name, $db_pass, $db_name);
+db_connect($db_host, $db_name, $db_pass, $db_base);
 
 ?>
