@@ -43,6 +43,7 @@ $mysql_updates = array(
   "2001-12-30" => "update_16",
   "2001-12-31" => "update_17",
   "2002-01-05" => "update_18",
+  "2002-01-17" => "update_19",
 );
 
 // Update functions
@@ -310,6 +311,10 @@ function update_17() {
 function update_18() {
   update_sql("ALTER TABLE cache CHANGE timestamp expire int(11) DEFAULT '0' NOT NULL;");
   update_sql("ALTER TABLE cache CHANGE url cid varchar(255) DEFAULT '' NOT NULL;");
+}
+
+function update_19() {
+  update_sql("ALTER TABLE users ADD data TEXT;");
 }
 
 /*
