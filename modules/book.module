@@ -25,39 +25,44 @@ function book_location($node, $nodes = array()) {
 function book_view($node, $main = 0) {
   global $status, $theme;
 
-  if ($node->nid && $node->parent) {
-    $list = book_parent_query($node->parent);
-    $next = db_fetch_object(db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE n.status = '$status[posted]' AND $list AND b.weight > '$node->weight' ORDER BY b.weight ASC"));
-    $prev = db_fetch_object(db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE n.status = '$status[posted]' AND $list AND b.weight < '$node->weight' ORDER BY b.weight DESC"));
+  if ($main) {
+    $theme->node($node, $main);
   }
-
-  $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"0\" WIDTH=\"100%\">\n";
-
-  if ($node->title) {
-    foreach (book_location($node) as $level) {
-      $location .= "$indent <A HREF=\"node.php?id=$level->nid\">$level->title</A><BR>";
-      $indent .= "-";
+  else {
+    if ($node->nid && $node->parent) {
+      $list = book_parent_query($node->parent);
+      $next = db_fetch_object(db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE n.status = '$status[posted]' AND $list AND b.weight > '$node->weight' ORDER BY b.weight ASC"));
+      $prev = db_fetch_object(db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE n.status = '$status[posted]' AND $list AND b.weight < '$node->weight' ORDER BY b.weight DESC"));
     }
 
-    $output .= " <TR><TD COLSPAN=\"2\">$location</TD><TD ALIGN=\"right\">". node_control($node) ."</TD></TR>\n";
+    $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"0\" WIDTH=\"100%\">\n";
+
+    if ($node->title) {
+      foreach (book_location($node) as $level) {
+        $location .= "$indent <A HREF=\"node.php?id=$level->nid\">$level->title</A><BR>";
+        $indent .= "-";
+      }
+
+      $output .= " <TR><TD COLSPAN=\"2\">$location</TD><TD ALIGN=\"right\">". node_control($node) ."</TD></TR>\n";
+      $output .= " <TR><TD COLSPAN=\"3\"><HR></TD></TR>";
+      $output .= " <TR><TD COLSPAN=\"3\"><B><BIG>". check_output($node->title) ."</BIG></B>". ($node->body ? "<BR><SMALL><I>Last updated by ". format_username($node->userid) ." on ". format_date($node->timestamp) ."</I></SMALL> " : "") ."</TD></TR>\n";
+    }
+
+    if ($node->body) {
+      $output .= " <TR><TD COLSPAN=\"3\"><BR>". check_output($node->body, 1) ."</TD></TR>";
+    }
+
+    if ($node->nid) {
+      $output .= " <TR><TD COLSPAN=\"3\"><BR>". book_tree($node->nid) ."</TD></TR>";
+    }
+
     $output .= " <TR><TD COLSPAN=\"3\"><HR></TD></TR>";
-    $output .= " <TR><TD COLSPAN=\"3\"><B><BIG>". check_output($node->title) ."</BIG></B>". ($node->body ? "<BR><SMALL><I>Last updated by ". format_username($node->userid) ." on ". format_date($node->timestamp) ."</I></SMALL> " : "") ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"left\" WIDTH=\"33%\">". ($prev ? "<A HREF=\"node.php?id=$prev->nid\">". t("previous") ."</A>" : t("previous")) ."</TD><TD ALIGN=\"center\" WIDTH=\"34%\"><A HREF=\"module.php?mod=book\">index</A></TD><TD ALIGN=\"right\" WIDTH=\"33%\">". ($next ? "<A HREF=\"node.php?id=$next->nid\">". t("next") ."</A>" : t("next")) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"left\" WIDTH=\"33%\">". ($prev ? "<SMALL>". check_output($prev->title) ."</SMALL>" : "&nbsp;") ."</TD><TD ALIGN=\"center\" WIDTH=\"34%\">". ($node->parent ? "<A HREF=\"node.php?id=$node->parent\">". t("up") ."</A>" : t("up")) ."</TD><TD ALIGN=\"right\" WIDTH=\"33%\">". ($next ? "<SMALL>". check_output($next->title) ."</SMALL>" : "&nbsp;") ."</TD></TR>\n";
+    $output .= "</TABLE>\n";
+
+    $theme->box(t("Handbook"), $output);
   }
-
-  if ($node->body) {
-    $output .= " <TR><TD COLSPAN=\"3\"><BR>". check_output($node->body, 1) ."</TD></TR>";
-  }
-
-  if ($node->nid) {
-    $output .= " <TR><TD COLSPAN=\"3\"><BR>". book_tree($node->nid) ."</TD></TR>";
-  }
-
-  $output .= " <TR><TD COLSPAN=\"3\"><HR></TD></TR>";
-  $output .= " <TR><TD ALIGN=\"left\" WIDTH=\"33%\">". ($prev ? "<A HREF=\"node.php?id=$prev->nid\">". t("previous") ."</A>" : t("previous")) ."</TD><TD ALIGN=\"center\" WIDTH=\"34%\"><A HREF=\"module.php?mod=book\">index</A></TD><TD ALIGN=\"right\" WIDTH=\"33%\">". ($next ? "<A HREF=\"node.php?id=$next->nid\">". t("next") ."</A>" : t("next")) ."</TD></TR>\n";
-  $output .= " <TR><TD ALIGN=\"left\" WIDTH=\"33%\">". ($prev ? "<SMALL>". check_output($prev->title) ."</SMALL>" : "&nbsp;") ."</TD><TD ALIGN=\"center\" WIDTH=\"34%\">". ($node->parent ? "<A HREF=\"node.php?id=$node->parent\">". t("up") ."</A>" : t("up")) ."</TD><TD ALIGN=\"right\" WIDTH=\"33%\">". ($next ? "<SMALL>". check_output($next->title) ."</SMALL>" : "&nbsp;") ."</TD></TR>\n";
-  $output .= "</TABLE>\n";
-
-  $theme->box(t("Handbook"), $output);
 }
 
 function book_search($keys) {
