@@ -86,7 +86,7 @@ function locale_edit($lid) {
   if ($translation = db_fetch_object($result)) {
     $form .= form_item(t("Original text"), "<pre>". wordwrap(check_output($translation->string)) ."</pre>");
     foreach ($languages as $code=>$language) $form .= (strlen($translation->string) > 30) ? form_textarea($language, $code, $translation->$code, 50, 10) : form_textfield($language, $code, $translation->$code, 50, 128);
-    $form .= form_submit("Save translations");
+    $form .= form_submit(t("Save translations"));
 
     return form($form);
   }
@@ -107,10 +107,10 @@ function locale_links($translation) {
 
   foreach ($languages as $key=>$value) {
     if ($translation) {
-      $output .= la(t("translated '%langcode' strings", array("%langcode" => $key)), array("mod" => "locale", "op" => "translated", "language" => $key)) ." | ";
+      $output .= la(t("translated '%langcode' strings", array("%langcode" => $key)), array("mod" => "locale", "op" => "translated", "language" => $key)) ." &middot; ";
     }
     else {
-      $output .= la(t("untranslated '%langcode' strings", array("%langcode" => $key)), array("mod" => "locale", "op" => "untranslated", "language" => $key)) ." | ";
+      $output .= la(t("untranslated '%langcode' strings", array("%langcode" => $key)), array("mod" => "locale", "op" => "untranslated", "language" => $key)) ." &middot; ";
     }
   }
 
@@ -199,11 +199,11 @@ function locale_seek() {
 
   reset($languages);
 
-  $form .= form_textfield("String", "string", $edit["string"], 30, 30, "Leave blank to show all strings. This is treated as a regular expression.");
-  $form .= form_select("Language", "language", ($edit["language"] ? $edit["language"] : key($languages)), array_merge(array("any" => "Any language", "all" => "All languages"), $languages), "In which language must the string be translated/untranslated (see status)?");
-  $form .= form_select("Status", "status", $edit["status"], array(2 => "Untranslated", 1 => "Translated", 0 => "All"));
-  $form .= form_select("Module", "module", $edit["module"], array_merge(array("0" => "All modules + pages", "all" => "All modules"), module_list()));
-  $form .= form_submit("Search");
+  $form .= form_textfield(t("String"), "string", $edit["string"], 30, 30, t("Leave blank to show all strings. This is treated as a regular expression."));
+  $form .= form_select(t("Language"), "language", ($edit["language"] ? $edit["language"] : key($languages)), array_merge(array("any" => t("Any language"), "all" => t("All languages")), $languages), t("In which language must the string be translated/untranslated (see status)?"));
+  $form .= form_select(t("Status"), "status", $edit["status"], array(2 => t("Untranslated"), 1 => t("Translated"), 0 => t("All")));
+  $form .= form_select(t("Module"), "module", $edit["module"], array_merge(array("0" => t("All modules + pages"), "all" => t("All modules")), module_list()));
+  $form .= form_submit(t("Search"));
 
   $output .= form($form);
 
@@ -216,7 +216,7 @@ function locale_admin() {
   if (user_access("administer locales")) {
     locale_admin_initialize();
 
-    print "<small>". locale_links(1) . locale_links(0) . la(t("search"), array("mod" => "locale", "op" => "search")) ." | ". la(t("overview"), array("mod" => "locale", "op" => "overview")) ." | ". la(t("help"), array("mod" => "locale", "op" => "help")) ."</small><hr />\n";
+    print "<small>". locale_links(1) . locale_links(0) . la(t("search"), array("mod" => "locale", "op" => "search")) ." &middot; ". la(t("overview"), array("mod" => "locale", "op" => "overview")) ." &middot; ". la(t("help"), array("mod" => "locale", "op" => "help")) ."</small><hr />\n";
 
     switch ($op) {
       case "delete":
@@ -230,7 +230,7 @@ function locale_admin() {
         print locale_edit(check_query($id));
         break;
       case "search":
-      case "Search":
+      case t("Search"):
         print locale_seek();
         break;
       case "translated":
@@ -243,7 +243,7 @@ function locale_admin() {
         $edit["language"] = $language;
         print locale_seek();
         break;
-      case "Save translations":
+      case t("Save translations"):
         print locale_save(check_query($id));
       default:
         print locale_seek();
