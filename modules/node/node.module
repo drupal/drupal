@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.304 2003/12/17 22:27:23 dries Exp $
+// $Id: node.module,v 1.305 2003/12/22 11:55:49 dries Exp $
 
 function node_help($section = "admin/help#node") {
   global $mod;
@@ -1248,6 +1248,7 @@ function node_add($type) {
       }
     }
     $output = node_form($node);
+    drupal_set_breadcrumb(array(l(t("Home"), NULL), l(t("create content"), "node/add")));
   }
   else {
 
@@ -1265,7 +1266,7 @@ function node_add($type) {
     }
 
     $output = t("Choose the appropriate item from the list:") ."<ul>$output</ul>";
-
+    drupal_set_breadcrumb(array(l(t("Home"), NULL)));
   }
 
   return $output;
@@ -1360,6 +1361,10 @@ function node_preview($node, $error = NULL) {
     }
 
     $output .= node_form($node, $error);
+
+    $name = module_invoke($node->type, "node", "name");
+    drupal_set_breadcrumb(array(l(t("Home"), NULL), l(t("create content"), "node/add"), l(t("Submit %name", array("%name" => $name)), "node/add/$node->type")));
+
     return $output;
   }
 }
@@ -1493,7 +1498,7 @@ function node_page() {
 
     switch ($op) {
       case "add":
-        print theme("page", node_add(arg(2)), t("Submit %name", array("%name" => $name)));
+        print theme("page", node_add(arg(2)), arg(2) ? t("Submit %name", array("%name" => $name)) : t("create content"));
         break;
       case "edit":
         print theme("page", node_edit(arg(2)), t("Edit %name", array("%name" => $name)));
