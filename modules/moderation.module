@@ -99,8 +99,6 @@ function moderation_page() {
   global $id, $op, $user, $vote;
 
   if ($user->id) {
-    $user = user_load($user->userid);
-
     switch($op) {
       case "Vote";
         moderation_vote(check_input($id), check_input($vote));

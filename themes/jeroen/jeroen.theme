@@ -1,14 +1,14 @@
 <?php
 
   /*********************************************************************
-  
+
    Theme: Jeroen
    Author: Jeroen Bensch (Jeroen)
    Email: jeroen@drop.org
    Description: Very graphical theme using a cool pipe-design.
-   
+
   *********************************************************************/
-  
+
   class Theme {
 
     /*

@@ -116,12 +116,12 @@ function account_edit($name) {
     $output .= "<B>Username:</B><BR>". check_output($account->userid) ."<P>\n";
     $output .= "<B>Status:</B><BR><SELECT NAME=\"edit[status]\">\n$stat</SELECT><P>\n";
     $output .= "<B>Administrator access:</B><BR><SELECT NAME=\"edit[access][]\" MULTIPLE=\"true\" SIZE=\"10\">$access</SELECT><P>\n";
-    $output .= "<B>Real name:</B><BR><INPUT NAME=\"edit[name]\" SIZE=\"55\" VALUE=\"$account->name\"><P>\n";
-    $output .= "<B>Real e-mail address:</B><BR><INPUT NAME=\"edit[real_email]\" SIZE=\"55\" VALUE=\"$account->real_email\"><P>\n";
-    $output .= "<B>Fake e-mail address:</B><BR><INPUT NAME=\"edit[fake_email]\" SIZE=\"55\" VALUE=\"$account->fake_email\"><P>\n";
-    $output .= "<B>URL of homepage:</B><BR><INPUT NAME=\"edit[url]\" SIZE=\"55\" VALUE=\"$account->url\"><P>\n";
-    $output .= "<B>Bio information:</B><BR><TEXTAREA NAME=\"edit[bio]\" COLS=\"35\" ROWS=\"5\" WRAP=\"virtual\">$account->bio</TEXTAREA><P>\n";
-    $output .= "<B>Signature:</B><BR><TEXTAREA NAME=\"edit[signature]\" COLS=\"35\" ROWS=\"5\" WRAP=\"virtual\">$account->signature</TEXTAREA><P>\n";
+    $output .= "<B>Real name:</B><BR><INPUT NAME=\"edit[name]\" SIZE=\"55\" VALUE=\"". check_textfield($account->name). "\"><P>\n";
+    $output .= "<B>Real e-mail address:</B><BR><INPUT NAME=\"edit[real_email]\" SIZE=\"55\" VALUE=\"". check_textfield($account->real_email) ."\"><P>\n";
+    $output .= "<B>Fake e-mail address:</B><BR><INPUT NAME=\"edit[fake_email]\" SIZE=\"55\" VALUE=\"". check_textfield($account->fake_email) ."\"><P>\n";
+    $output .= "<B>URL of homepage:</B><BR><INPUT NAME=\"edit[url]\" SIZE=\"55\" VALUE=\"". check_textfield($account->url) ."\"><P>\n";
+    $output .= "<B>Bio information:</B><BR><TEXTAREA NAME=\"edit[bio]\" COLS=\"35\" ROWS=\"5\" WRAP=\"virtual\">". check_textarea($account->bio) ."</TEXTAREA><P>\n";
+    $output .= "<B>Signature:</B><BR><TEXTAREA NAME=\"edit[signature]\" COLS=\"35\" ROWS=\"5\" WRAP=\"virtual\">". check_textarea($account->signature) ."</TEXTAREA><P>\n";
     $output .= "<INPUT TYPE=\"hidden\" NAME=\"name\" VALUE=\"$account->userid\">\n";
     $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"View account\">\n";
     $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save account\">\n";

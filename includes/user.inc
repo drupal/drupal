@@ -29,6 +29,14 @@ function user_load($username) {
   return new User($username);
 }
 
+function user_rehash() {
+  global $user;
+  if ($user->id) {
+    $user = new User($user->userid);
+    session_register("user");
+  }
+}
+
 function user_save($account, $array) {
   // dynamically compose query:
   foreach ($array as $key=>$value) {
@@ -82,7 +90,7 @@ function user_set($account, $column, $name, $value) {
 }
 
 function user_access($account, $section = 0) {
-//  print $account->userid ." ". $account->access ."<P>";
+  global $user;
   if ($section) return (user_get($account, "access", $section) || $account->id == 1);
   else return ($account->access || $account->id == 1);
 }
