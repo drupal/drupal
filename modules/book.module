@@ -95,7 +95,6 @@ function book_form($edit = array()) {
   $output .= format_username(($edit[userid] ? $edit[userid] : $user->userid)) ."<P>\n";
 
   if ($edit[pid]) {
-    print "parent: $edit[parent]<BR>";
     $node = node_get_object("nid", $edit[pid]);
     $output .= "<B>". t("Parent") .":</B><BR>\n";
     $output .= "<A HREF=\"node.php?id=$node->id\">". check_output($node->title) ."</A><P>\n";
@@ -157,7 +156,7 @@ function book_form($edit = array()) {
 }
 
 function book_save($edit) {
-  $id = node_save(array_diff(array_merge($edit, array(nid => $edit[nid], type => "book")), array(userid => $edit[userid])));
+  node_save(array_diff(array_merge($edit, array(nid => $edit[nid], type => "book")), array(userid => $edit[userid])));
 }
 
 function book_delete($id) {
@@ -167,16 +166,25 @@ function book_delete($id) {
 function book_overview($parent = "", $offset = "") {
   global $PHP_SELF, $status;
 
-  $result = db_query("SELECT n.*, b.* FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE n.type = 'book' AND n.status = '$status[posted]' AND b.parent = '$parent' ORDER BY b.weight");
+  $result = db_query("SELECT n.*, b.* FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE n.type = 'book' AND (n.status = '$status[posted]' OR n.status = '$status[expired]') AND b.parent = '$parent' ORDER BY b.weight");
 
   $output .= "<DL>";
+
+  $nodes = array();
   while ($node = db_fetch_object($result)) {
-    $number++;
-    if ($offset) $output .= "<DT>$offset$number. <A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A>\n";
-    else $output .= "<DT><P>$number. <B><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></B>\n";
-    if ($PHP_SELF == "/admin.php") $output .= " <SMALL>(weight: $node->weight, status: $node->status) (<A HREF=\"admin.php?mod=book&op=edit&id=$node->nid\">edit</A>, <A HREF=\"admin.php?mod=book&op=delete&id=$node->nid\">delete</A>)</SMALL>";
+   if ($node->status == $status[posted]) {
+      $number++;
+      if ($offset) $output .= "<DT>$offset$number. <A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A>\n";
+      else $output .= "<DT><P>$number. <B><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></B>\n";
+      if ($PHP_SELF == "/admin.php") $output .= " <SMALL>(weight: $node->weight, status: $node->status) (<A HREF=\"admin.php?mod=book&op=edit&id=$node->nid\">edit</A>, <A HREF=\"admin.php?mod=book&op=delete&id=$node->nid\">delete</A>)</SMALL>";
+    }
+    array_push($nodes, $node);
+  }
+
+  foreach ($nodes as $node) {
     $output .= book_overview($node->nid, "$offset$number.");
   }
+
   $output .= "</DL>";
   return $output;
 }

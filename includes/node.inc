@@ -54,6 +54,10 @@ function node_save($node) {
     db_query("UPDATE node SET $u1 WHERE nid = '$node[nid]'");
     db_query("UPDATE $node[type] SET $u2 WHERE nid = '$node[nid]'");
 
+    if (($node[pid]) && ($node[status] == $status[posted])) {
+      db_query("UPDATE node SET status = '$status[expired]' WHERE nid = '$node[pid]'");
+    }
+
     watchdog("message", "node: modified '$node[title]'");
   }
   else {
@@ -95,8 +99,10 @@ function node_save($node) {
         if ($result && $lid = db_insert_id()) {
           $result = db_query("UPDATE node SET lid = '$lid' WHERE nid = '$nid'");
           if ($result) {
+            if (($node[pid]) && ($node[status] == $status[posted])) {
+              db_query("UPDATE node SET status = '$status[expired]' WHERE nid = '$node[pid]'");
+            }
             watchdog("message", "node: added '$node[title]'");
-            return db_insert_id();
           }
           else {
             watchdog("warning", "node: added '$node[title]' - failed");
@@ -113,9 +119,6 @@ function node_save($node) {
     }
   }
 
-  if (($node[pid]) && ($node[status] == $status[posted])) {
-    db_query("UPDATE node SET status = '$status[expired]' WHERE nid = '$node[pid]'");
-  }
 }
 
 function node_view($node, $page) {
