@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.35 2002/09/26 16:10:35 dries Exp $
+// $Id: block.module,v 1.36 2002/09/30 09:19:50 kjartan Exp $
 
 function block_help() {
  ?>
@@ -274,7 +274,13 @@ function block_user($type, &$edit, &$user) {
       if (isset($form)) {
         return form_item(t("Block configuration"), '<table border="0" cellpadding="2" cellspacing="2">'. $form .'</table>', t("Enable the blocks you would like to see displayed in the side bars."));
       }
-
+      break;
+    case "edit_validate":
+      if (!$edit["block"]) {
+        $edit["block"] = array();
+      }
+      return $edit;
+      break;
   }
 }
 
