@@ -134,7 +134,7 @@ function menu_in_active_trail($path) {
 /**
  * Returns a rendered menu tree.
  */
-function menu_tree($parent = "") {
+function menu_tree($parent = "", $hidden = 0) {
   global $_list;
   static $trail;
 
@@ -161,9 +161,12 @@ function menu_tree($parent = "") {
         }
         $output .= "</li>\n";
       }
+      else if ($_list[$item]["hidden"] == 1 && $_list[$item]["children"]) {
+        $output .= menu_tree($item, 1);
+      }
     }
 
-    if ($output != '') {
+    if ($output != '' && $hidden != 1) {
       $output  = "\n<ul>\n$output\n</ul>\n";
     }
   }
