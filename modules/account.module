@@ -147,14 +147,20 @@ function account_form($account = 0) {
 
   function access($name) {
     global $access, $account;
-    if (module_hook($name, "admin")) $access .= "<OPTION VALUE=\"$name\"". (user_access($account, $name) ? " SELECTED" : "") .">$name</OPTION>";
+    if (module_hook($name, "admin")) $access[$name] = $name;
   }
   module_iterate("access");
+  
+  $account->access = explode(",", $account->access);
+  foreach ($account->access as $key=>$value) {
+    $account->access[$key] = substr($value, 0, -2);
+  }
   
   $form .= $account->id ? form_item("ID", $account->id) . form_hidden("id", $account->id) : "";
   $form .= $account->userid ? form_item(t("Username"), check_output($account->userid)) . form_hidden("userid", $account->userid) : form_textfield(t("Username"), "userid", $account->userid, 15, 15);
   $form .= form_select(t("Status"), "status", ($account->status ? $account->status : 1), array("blocked", "not confirmed", "open"));
-  $form .= form_item(t("Administrator access"), "<SELECT NAME=\"edit[access][]\" MULTIPLE=\"true\" SIZE=\"10\">$access</SELECT>");
+  $form .= form_select(t("Administrator access"), "access", $account->access, $access, 0, "multiple=\"true\" size=\"10\"");
+//  $form .= form_item(t("Administrator access"), "<SELECT NAME=\"edit[access][]\" MULTIPLE=\"true\" SIZE=\"10\">$access</SELECT>");
   $form .= form_textfield(t("Real name"), "name", $account->name, 30, 55);
   $form .= form_textfield(t("Real e-mail address"), "real_email", $account->real_email, 30, 55);
   $form .= form_textfield(t("Fake e-mail address"), "fake_email", $account->fake_email, 30, 55);
