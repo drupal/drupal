@@ -10,7 +10,8 @@ function archive_system($field){
 function archive_calendar($original = 0) {
 
   // Extract today's date:
-  $today = mktime(23, 59, 59, date("n", time()), date("d", time()), date("Y", time()));
+  $start_of_today = mktime(0, 0, 0, date("n", time()), date("d", time()), date("Y", time()));
+  $end_of_today = mktime(23, 59, 59, date("n", time()), date("d", time()), date("Y", time()));
 
   // Extract the requested date:
   if (arg(0) == "archive" && arg(3)) {
@@ -18,14 +19,14 @@ function archive_calendar($original = 0) {
     $month = arg(2);
     $day = arg(3);
 
-    $requested = mktime(23, 59, 59, $month, $day, $year);
+    $requested = mktime(0, 0, 0, $month, $day, $year);
   }
   else {
     $year = date("Y", time());
     $month  = date("n", time());
     $day = date("d", time());
 
-    $requested = $today;
+    $requested = $end_of_today;
   }
 
   // Extract first day of the month:
@@ -42,8 +43,9 @@ function archive_calendar($original = 0) {
 
   // Generate calendar header:
   $output .= "\n<!-- calendar -->\n";
-  $output .= "<table width=\"100%\" border=\"1\" cellspacing=\"0\" cellpadding=\"1\">\n";
-  $output .= " <tr><td align=\"center\" colspan=\"7\"><small>". l("&lt;", "archive/". date("Y/m/d", $prev)) ." ". date("F Y", $requested) ." ". ($nextmonth <= time() ? l("&gt;", "archive/". date("Y/m/d", $next)) : "&gt;") ."</small></td></tr>\n";
+  $output .= "<div class=\"calendar\">";
+  $output .= "<table width=\"100%\">\n";
+  $output .= " <tr><td colspan=\"7\" class=\"header-month\">". l("&lt;", "archive/". date("Y/m/d", $prev)) ." ". date("F Y", $requested) ." ". ($nextmonth <= time() ? l("&gt;", "archive/". date("Y/m/d", $next)) : "&gt;") ."</td></tr>\n";
 
   // First day of week (0 => Sunday, 1 => Monday, ...)
   $weekstart = variable_get("default_firstday", 0);
@@ -54,9 +56,9 @@ function archive_calendar($original = 0) {
   // Generate the days of the week:
   $firstcolumn = mktime(0, 0, 0, 3, 20 + $weekstart, 1994);
 
-  $output .= " <tr>";
+  $output .= " <tr class=\"header-week\">";
   for ($i = 0; $i < 7; $i++) {
-    $output .= "<td align=\"center\"><small>". substr(ucfirst(t(date("l", $firstcolumn + $i * 86400))), 0, 1) ."</small></td>";
+    $output .= "<td>". substr(ucfirst(t(date("l", $firstcolumn + $i * 86400))), 0, 1) ."</td>";
   }
   $output .= "</tr>\n";
 
@@ -69,26 +71,27 @@ function archive_calendar($original = 0) {
     // Set up blank days for first week of the month:
     if ($first != $weekstart) {
       $blankdays = ($first - $weekstart + 7) % 7;
-      $output .= " <tr><td colspan=\"$blankdays\">&nbsp;</td>\n";
+      $output .= " <tr class=\"row-week\"><td class=\"day-blank\" colspan=\"$blankdays\">&nbsp;</td>\n";
       $first = $weekstart;
     }
-
     // Start every week on a new line:
     if ($sday == $weekstart) {
-      $output .=  " <tr>\n";
+      $output .=  " <tr class=\"row-week\">\n";
     }
 
     // Print one cell:
     $date = mktime(0, 0, 0, $month, $nday, $year);
-
     if ($date == $requested) {
-      $output .= "  <td align=\"center\"><small><b>$nday</b></small></td>\n";
+      $output .= "  <td class=\"day-selected\">$nday</td>\n";
     }
-    else if ($date > $today) {
-      $output .= "  <td align=\"center\"><small>$nday</small></td>\n";
+    else if ($date == $start_of_today) {
+      $output .= "  <td class=\"day-today\">". l($nday, "archive/$year/$month/$nday") ."</td>\n";
+    }
+    else if ($date > $end_of_today) {
+      $output .= "  <td class=\"day-future\">$nday</td>\n";
     }
     else {
-      $output .= "  <td align=\"center\"><small>". l($nday, "archive/$year/$month/$nday", array("style" => "text-decoration: none;")) ."</small></td>\n";
+      $output .= "  <td class=\"day-link\">". l($nday, "archive/$year/$month/$nday") ."</td>\n";
     }
 
     // Start every week on a new line:
@@ -105,10 +108,10 @@ function archive_calendar($original = 0) {
   // Complete the calendar:
   if ($sday != $weekstart) {
     $end = (7 - $sday + $weekstart) % 7;
-    $output .= "  <td colspan=\"$end\">&nbsp;</td>\n </tr>\n";
+    $output .= "  <td class=\"day-blank\" colspan=\"$end\">&nbsp;</td>\n </tr>\n";
   }
 
-  $output .= "</table>\n\n";
+  $output .= "</table></div>\n\n";
 
   return $output;
 }
