@@ -269,19 +269,21 @@ function upload_nodeapi(&$node, $op, $arg) {
     case 'search result':
       return $node->files ? format_plural(count($node->files), '1 attachment', '%count attachments') : null;
     case 'rss item':
-      $files = array();
-      foreach ($node->files as $file) {
-        if ($file->list) {
-          $files[] = $file;
+      if ($node->files) {
+        $files = array();
+        foreach ($node->files as $file) {
+          if ($file->list) {
+            $files[] = $file;
+          }
         }
-      }
-      if (count($files) > 0) {
-        // RSS only allows one enclosure per item
-        $file = array_shift($files);
-        return array(array('key' => 'enclosure',
-                           'attributes' => array('url' => file_create_url($file->filepath),
-                                                 'length' => $file->filesize,
-                                                 'type' => $file->filemime)));
+        if (count($files) > 0) {
+          // RSS only allows one enclosure per item
+          $file = array_shift($files);
+          return array(array('key' => 'enclosure',
+                'attributes' => array('url' => file_create_url($file->filepath),
+                  'length' => $file->filesize,
+                  'type' => $file->filemime)));
+        }
       }
       break;
   }
