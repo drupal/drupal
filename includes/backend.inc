@@ -104,7 +104,7 @@ class backend {
             $title = ereg_replace("</title>.*", "", $title); 
 
             ### Clean headlines:
-            $title = stripslashes(fixquotes($title));
+            $title = stripslashes(check_input($title));
            
             ### Count the number of stories:
             $number += 1;
