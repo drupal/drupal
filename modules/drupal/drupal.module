@@ -111,8 +111,8 @@ function drupal_directory_ping($arguments) {
  * This function may be called from a custom page on sites that are
  * Drupal directory servers.
  */
-function drupal_directory_page() {
-  $result = db_query('SELECT * FROM {directory} ORDER BY name');
+function drupal_directory_page($sort = 'name') {
+  $result = db_query('SELECT * FROM {directory} ORDER BY '. $sort);
 
   while ($site = db_fetch_object($result)) {
     $output .= "<a href=\"$site->link\">$site->name</a> - $site->slogan<div style=\"padding-left: 20px;\">$site->mission</div><br />";
