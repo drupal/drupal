@@ -1019,7 +1019,7 @@ function user_view($uid = 0) {
 
   if ($user->uid && $user->uid == $uid) {
     $output = form_item(t("Name"), "$user->name ($user->init)");
-    $output .= form_item(t("E-mail address"), $user->mail);
+    $output .= form_item(t("E-mail address"), $user->mail, "Please note that only you can see your own e-mail address - it is not publicly visible.");
 
     foreach (module_list() as $module) {
       if (module_hook($module, "user")) {
