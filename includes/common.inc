@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.117 2002/05/13 18:59:53 kjartan Exp $
+// $Id: common.inc,v 1.118 2002/05/21 16:00:39 unconed Exp $
 
 function conf_init() {
   global $HTTP_HOST;
@@ -567,7 +567,7 @@ function format_tag($link, $text) {
 }
 
 function form($form, $method = "post", $action = 0, $options = 0) {
-  return "<form action=\"". ($action ? $action : request_uri()) ."\" method=\"$method\"". ($options ? " $options" : "") .">\n$form</form>\n";
+  return "<form action=\"". ($action ? $action : htmlentities(request_uri())) ."\" method=\"$method\"". ($options ? " $options" : "") .">\n$form</form>\n";
 }
 
 function form_item($title, $value, $description = 0) {
