@@ -1,6 +1,8 @@
 # 14/04/2001:
 ALTER TABLE node ADD cid int(10) unsigned DEFAULT '0' NOT NULL;
 ALTER TABLE node ADD tid int(10) unsigned DEFAULT '0' NOT NULL;
+ALTER TABLE story DROP section;
+ALTER TABLE comments ADD KEY(lid);
 
 CREATE TABLE category (
   cid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,

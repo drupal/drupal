@@ -97,7 +97,7 @@ function theme_blocks($region, $theme) {
 }
 
 function theme_morelink($theme, $node) {
-  return ($node->body) ? "[ <A HREF=\"node.php?id=$node->nid\"><FONT COLOR=\"$theme->link\"><B>". t("read more") ."</B></FONT></A> | ". sizeof(explode(" ", $node->body)) ." ". t("words") ." | <A HREF=\"node.php?id=$node->nid\"><FONT COLOR=\"$theme->link\">". format_plural($node->comments, "comment", "comments") ."</FONT></A> ]" : "[ <A HREF=\"node.php?id=$node->nid\"><FONT COLOR=\"$theme->link\">". format_plural($node->comments, "comment", "comments") ."</FONT></A> ]";
+  return ($node->body) ? "[ <A HREF=\"node.php?id=$node->nid\"><FONT COLOR=\"$theme->link\">". t("read more") ."</FONT></A> | ". sizeof(explode(" ", $node->body)) ." ". t("words") ." | <A HREF=\"node.php?id=$node->nid\"><FONT COLOR=\"$theme->link\">". format_plural(node_get_comments($node->nid), "comment", "comments") ."</FONT></A> ]" : "[ <A HREF=\"node.php?id=$node->nid\"><FONT COLOR=\"$theme->link\">". format_plural(node_get_comments($node->nid), "comment", "comments") ."</FONT></A> ]";
 }
 
 function theme_moderation_results($theme, $node) {

@@ -47,7 +47,7 @@ function moderation_vote($id, $vote) {
         node_save(array(nid => $id, status => $status[dumped]));
         watchdog("message", "node: dumped '$node->title' - moderation");
       }
-      else if (variable_get("timout_threshold", 8, $node) <= $node->votes) {
+      else if (variable_get("expire_threshold", 8, $node) <= $node->votes) {
         node_save(array(nid => $id, status => $status[expired]));
         watchdog("message", "node: expired '$node->title' - moderation");
       }
