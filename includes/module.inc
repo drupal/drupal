@@ -1,12 +1,12 @@
 <?php
-// $Id: module.inc,v 1.28 2002/04/14 19:34:02 kjartan Exp $
+// $Id: module.inc,v 1.29 2002/05/23 19:01:49 kjartan Exp $
 
 // initialize modules:
 function module_init() {
-  require_once("modules/user.module");
-  require_once("modules/drupal.module");
-  require_once("modules/system.module");
-  require_once("modules/watchdog.module");
+  require_once "modules/user.module";
+  require_once "modules/drupal.module";
+  require_once "modules/system.module";
+  require_once "modules/watchdog.module";
   module_list();
 }
 
@@ -46,7 +46,7 @@ function module_list() {
     $result = db_query("SELECT name, filename FROM system WHERE type = 'module' AND status = '1' ORDER BY name");
     while ($module = db_fetch_object($result)) {
       $list[$module->name] = $module->name;
-      @include_once "modules/$module->filename";
+      include_once "modules/$module->filename";
     }
     asort($list);
   }
