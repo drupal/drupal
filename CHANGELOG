@@ -1,7 +1,9 @@
 Drupal x.x.x, xxxx-xx-xx (to be released)
 ------------------------
 
-- restructured all admininstration pages
+- reorganized the administration pages
+- search module:
+    * changed the search module to use implicit AND'ing instead of implicit OR'ing.
 - node system improvements:
     * replaced the "post content" permission by more fine-grained permissions.
     * improved content submission:
@@ -74,7 +76,7 @@ Drupal 4.0.0, 2002-06-15
 - improved comment module to mark new comments.
 - added a general outliner which will let any node type be linked to a book.
 - added an update script that lets you upgrade from previous releases or on a day to day basis when using the development tree.
-- search:
+- search module:
     * improved the search system by making it context sensitive.
     * added indexing.
 - various updates:
