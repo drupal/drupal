@@ -11,6 +11,7 @@ drupal x.xx, xx/xx/xxxx
 - removed ban module and integrated it in account.module as "access control":
     * access control is based on much more powerful regular expressions (regex) now rather than on MySQL pattern matching.
 - rewrote watchdog and submission throttle
+- rewrote section code
 - added settings.module:
     * moved most configuration options to the administration section
 - added page.module:
