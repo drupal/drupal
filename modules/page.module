@@ -27,7 +27,7 @@ function page_save($op, $node) {
   }
 
   if ($op == "create") {
-    return array("format", "link", "promote" => 0, "moderate" => 0, "status" => 1);
+    return array("format", "link");
   }
 
   if ($op == "decline") {
