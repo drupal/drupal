@@ -18,13 +18,6 @@ function node_get_array($field, $value) {
   return db_fetch_array(_node_get($field, $value));
 }
 
-function node_get_category($nid) {
-  db_fetch_array(db_query("SELECT FROM"));
-}
-
-function node_get_topic($nid) {
-}
-
 function node_del($field, $value) {
   global $status;
   if ($node = node_get_object($field, $value)) {

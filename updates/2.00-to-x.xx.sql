@@ -1,4 +1,7 @@
 # 14/04/2001:
+ALTER TABLE node ADD cid int(10) unsigned DEFAULT '0' NOT NULL;
+ALTER TABLE node ADD tid int(10) unsigned DEFAULT '0' NOT NULL;
+
 CREATE TABLE category (
   cid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   name varchar(32) DEFAULT '' NOT NULL,
@@ -18,40 +21,6 @@ CREATE TABLE topic (
   name varchar(32) DEFAULT '' NOT NULL,
   UNIQUE (name),
   PRIMARY KEY (tid)
-);
-
-CREATE TABLE node_category (
-  cid int(10) unsigned DEFAULT '0' NOT NULL,
-  nid int(10) unsigned DEFAULT '0' NOT NULL,
-  PRIMARY KEY (cid, nid)
-);
-
-CREATE TABLE node_topic (
-  tid int(10) unsigned DEFAULT '0' NOT NULL,
-  nid int(10) unsigned DEFAULT '0' NOT NULL,
-  PRIMARY KEY (tid, nid)
-);
-
-///// revise
-
-CREATE TABLE section (
-  sid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
-  pid int(10) unsigned DEFAULT '0' NOT NULL,
-  name varchar(32) DEFAULT '' NOT NULL,
-  UNIQUE (name),
-  PRIMARY KEY (sid)
-);
-
-CREATE TABLE section_type (
-  sid int(10) unsigned DEFAULT '0' NOT NULL,
-  type varchar(16) DEFAULT '' NOT NULL,
-  PRIMARY KEY (sid, type)
-);
-
-CREATE TABLE section_node (
-  sid int(10) unsigned DEFAULT '0' NOT NULL,
-  nid int(10) unsigned DEFAULT '0' NOT NULL,
-  PRIMARY KEY (sid, nid)
 );
 
 # 07/04/2001:
