@@ -69,8 +69,8 @@
 
      print " <tr><td colspan=\"2\">&nbsp;</td></tr>\n";
 
-     if ($main) {
-       print " <tr><td colspan=\"2\">". $this->links(link_node($node)) ."</td></tr>\n";
+     if ($links = link_node($node, $main)) {
+       print " <tr><td colspan=\"2\">". $this->links($links) ."</td></tr>\n";
      }
 
      print "</table>\n";

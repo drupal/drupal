@@ -350,10 +350,10 @@ function link_page() {
   return $links;
 }
 
-function link_node($node) {
+function link_node($node, $main = 0) {
   foreach (module_list() as $name) {
     if (module_hook($name, "link")) {
-      $links = array_merge($links, module_invoke($name, "link", "node", $node));
+      $links = array_merge($links, module_invoke($name, "link", "node", $node, $main));
     }
   }
 

@@ -110,8 +110,8 @@
           </TD>
          </TR>
          <?php
-           if ($main) {
-             echo "<TR BGCOLOR=\"". $this->bgcolor3 ."\"><TD BGCOLOR=\"". $this->bgcolor3 ."\" ALIGN=\"right\" COLSPAN=\"2\">[ ". $this->links(link_node($node)) ." ]</TD></TR>";
+           if ($links = link_node($node, $main)) {
+             echo "<TR BGCOLOR=\"". $this->bgcolor3 ."\"><TD BGCOLOR=\"". $this->bgcolor3 ."\" ALIGN=\"right\" COLSPAN=\"2\">[ ". $this->links($links) ." ]</TD></TR>";
            }
          ?>
        </TABLE></TD></TR></TABLE><BR>

@@ -88,7 +88,6 @@ function node_filter_link($text) {
 }
 
 function node_filter_line($text) {
-
   /*
   ** If HTML mark-up is being used, strip regular mark-up:
   */
@@ -129,7 +128,7 @@ function node_filter($text) {
   return node_filter_line($text);
 }
 
-function node_link($type, $node = 0) {
+function node_link($type, $node = 0, $main = 0) {
 
   if ($type == "admin" && user_access("administer nodes")) {
     $links[] = "<a href=\"admin.php?mod=node\">content management</a>";
@@ -140,12 +139,11 @@ function node_link($type, $node = 0) {
   }
 
   if ($type == "node") {
-
     if ($node->links) {
       $links = $node->links;
     }
 
-    if ($node->teaser != $node->body) {
+    if ($node->teaser != $node->body && $main) {
       $links[] = "<a href=\"node.php?id=". $node->nid ."\">". t("read more") ."</a>";
     }
 
