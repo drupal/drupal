@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.184 2003/03/19 22:01:38 dries Exp $
+// $Id: common.inc,v 1.185 2003/03/28 10:55:26 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST, $PHP_SELF;
@@ -253,6 +253,26 @@ function table($header, $rows) {
   $output .= "</table>\n";
 
   return $output;
+}
+
+/**
+ * Verify the syntax of the given e-mail address.  Empty e-mail addresses
+ * are allowed.  See RFC 2822 for details.
+ *
+ * @param $mail  a email address
+ */
+function validate_email_address($mail) {
+  $user = '[a-zA-Z0-9_\-\.\+\^!#\$%&*+\/\=\?\`\|\{\}~\']+';
+  $domain = '(?:[a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9]\.?)+';
+  $ipv4 = '[0-9]{1,3}(\.[0-9]{1,3}){3}';
+  $ipv6 = '[0-9a-fA-F]{1,4}(\:[0-9a-fA-F]{1,4}){7}';
+
+  if (preg_match("/^$user@($domain|(\[($ipv4|$ipv6)\]))$/", $mail)) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
 }
 
 /**
