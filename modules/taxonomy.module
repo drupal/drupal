@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.22 2002/12/10 20:35:20 dries Exp $
+// $Id: taxonomy.module,v 1.23 2002/12/11 20:22:59 dries Exp $
 
 function taxonomy_system($field){
   $system["description"] = t("Enables the organization of content into categories.");
@@ -206,8 +206,10 @@ function taxonomy_save_term($edit) {
   // synonyms (very cool idea indeed)
   db_query("DELETE FROM term_synonym WHERE tid = '%d'", $edit["tid"]);
   if ($edit["synonyms"]) {
-    foreach (explode ("\n", $edit["synonyms"]) as $synonym) {
-      db_query("INSERT INTO term_synonym (tid, name) VALUES ('%d', '%s')", $edit["tid"], chop($synonym));
+    foreach (explode ("\n", str_replace("\r", "", $edit["synonyms"])) as $synonym) {
+      if ($synonym) {
+        db_query("INSERT INTO term_synonym (tid, name) VALUES ('%d', '%s')", $edit["tid"], chop($synonym));
+      }
     }
   }
 
