@@ -2,6 +2,7 @@
 
 $module = array("page"  => "diary_page",
                 "block" => "diary_block",
+                "help" => "diary_help",
                 "admin" => "diary_admin",
                 "export" => "diary_export");
 
@@ -190,6 +191,12 @@ function diary_page() {
     default:
       diary_page_overview();
   }
+}
+
+function diary_help() {
+ ?>
+  <P>drupal's diary module allows registered users to maintain an online diary.</P>
+ <?
 }
 
 function diary_block() {

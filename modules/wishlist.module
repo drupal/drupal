@@ -75,7 +75,7 @@ function wishlist_page() {
 }
 
 function wishlist_help() {
-  print "Check the <A HREF=\"module.php?mod=wishlist\">feature wishlist</A>.";
+  print "See <A HREF=\"module.php?mod=wishlist\">feature wishlist</A>.";
 }
 
 ?>

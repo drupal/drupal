@@ -15,8 +15,8 @@ function documentation() {
   
   <H1>Chapter 1: introduction</H1>
 
-  <P>Drupal (which is the English pronounciation of the dutch word 'druppel' that stands for 'drop') is a full-featured content management/discussion engine suitable to setup a news-driven community or portal site.  Drupal aims towards easy installation, exessive configuration and fine-grained maintainance capabilities.</P>
-  <P>Drupal build after Slash (<A HREF="http://slashcode.com/">http://slashcode.com/</A>) and Scoop (<A HREF="http://scoop.kuro5hin.org/">http://scoop.kuro5hin.org/</A>).</P>
+  <P>Drupal (is the English pronounciation for the dutch word 'druppel' which stands for 'drop') is a full-featured content management/discussion engine suitable to setup a news-driven community or portal site.  Drupal aims towards easy installation, exessive configuration and fine-grained maintainance capabilities.</P>
+  <P>Drupal is written by Dries Buytaert (dries_at_drop.org) and build after Slash (<A HREF="http://slashcode.com/">http://slashcode.com/</A>) and Scoop (<A HREF="http://scoop.kuro5hin.org/">http://scoop.kuro5hin.org/</A>).</P>
 
   <H1>Chapter 2: installation</H1>
 
@@ -85,15 +85,19 @@ function documentation() {
 
   <H1>Chapter 3: drupal engine</H1>
 
-  <H2>Block</H2>
+  <P>While we in no way consider the design and implementation of the drupal engine to be finished, we feel that it is evolution and our own accompanying intensive experience has given us a fairly stable and well-proven design. The following provides a brief over-view of the different aspects of drupal's core engine and features.</P> 
+
+  <H2>Blocks</H2>
   
+  <P>Still under construction.</P>
+
   <H2>Cron</H2>
  
   <P>Cron (wich stands for chronograph) is a periodic command scheduler: it executes commands at intervals specified in seconds.  It can be used to control the execution of daily, weekly and monthly jobs (or anything with a period of n seconds).   Automating tasks is one of the best ways to keep a system running smoothly, and if most of your administration does not require your direct involvement, cron is an ideal solution.</P>
   <P>Note that cron does not guarantee that the commands will be executed at the specified interval.  However, the engine will make sure that the commands are run at the specified intervals as closely as possible.</P>
   <P>Whenever <CODE>http://yourdomain.com/cron.php</CODE> is accessed, cron will run: it queries the database for the jobs cron controls, and their periods in seconds.  If a certain task wasn't executed in the last n seconds, where n is the period of that job, it will be executed.  It then records the date in the database so it can know when to run it again.  When all the executed commands terminate, cron is done.</P>
   <P>Cron is handy to run daily, weekly and monthly tasks that take care of various "housekeeping chores" such as database maintainance, recalculating settings, periodic mailings, scheduled backups and so on.</P>
-  <P>The recommended way to setup drupal's cron system is to setup a  Unix/Linux <CODE>crontab</CODE> that frequently visits <CODE>http://yourdomain.com/cron.php</CODE>: the more you visit <CODE>cron.php</CODE>, the more accurate cron can and will be.  If your hosting company does not allow you to setup <CODE>crontabs</CODE>, you can always ask someone else to setup a <CODE>crontab</CODE> for you.  Afterall, virtually any host machine with access to the internet can setup a <CODE>crontab</CODE> to frequently visit <CODE>http://yourdomain.com/cron.php</CODE> for you.<P>
+  <P>The recommended way to setup drupal's cron system is to setup a  Unix/Linux <CODE>crontab</CODE> that frequently visits <CODE>http://yourdomain.com/cron.php</CODE>: the more you visit <CODE>cron.php</CODE>, the more accurate cron will be.  If your hosting company does not allow you to setup <CODE>crontabs</CODE>, you can always ask someone else to setup a <CODE>crontab</CODE> for you.  Afterall, virtually any Unix/Linux machine with access to the internet can setup a <CODE>crontab</CODE> to frequently visit <CODE>http://yourdomain.com/cron.php</CODE> for you.<P>
   <P>For the <CODE>crontab</CODE> itself, use a browser like <CODE>lynx</CODE> or <CODE>wget</CODE> but make sure the process terminates: either use <CODE>/usr/bin/lynx -source http://yourdomain.com/cron.php</CODE> or <CODE>/usr/bin/wget -O /dev/null http://yourdomain.com/cron.php</CODE>.  Take a look at the example scripts in the <CODE>scripts</CODE>-directory and make sure to adjust them to your needs.</P>
   <P>A good <CODE>crontab</CODE>-line to run the <CODE>cron</CODE>-script once every hour would be:</P>
   <PRE>
@@ -102,7 +106,7 @@ function documentation() {
 
   <H2>Database abstraction</H2>
 
-  <P>Drupal uses a database abstraction layer so I can easily run on top of different databases like MySQL, Oracle, Postgres and so on.  However, the only supported database is MySQL for the time being.  In fact, we haven't even bothered or tried to migrate to another database so our database abstraction layer might even contain undiscovered flaws.  Nevertless, moving to another database shouldn't be much of a problem.</P>
+  <P>The maintenance of all databases is handled by surprisingly simple code.  Access to to the database is done by facilities of drupal's database abstraction layer.  The purpose of drupal's database abstraction layer is to make it possible to run a drupal site on top of different databases like MySQL, Oracle, Postgres and so on.  However, the only supported database is MySQL for the time being.  In fact, we haven't even bothered or tried to migrate to another database so our database abstraction layer might even contain undiscovered flaws.  Nevertless, moving to another database shouldn't be much of a problem.</P>
   <P>Take a look at <CODE>includes/database.inc</CODE> to see what database functions are supported.</P>
 
   <H2>Modules</H2>
@@ -146,7 +150,8 @@ function documentation() {
 
   <H2>Theme system</H2>
   
-  <P>Drupal's theme system is simple, elegant, flexible and powerful.  It let you control all aspect of your drupal site in terms of colors, markup, layout and even the position of most boxes.  You can leave boxes out, move them from right to left, up and down until it fit your needs.  Therefore, drupal uses a theme class that has a handful of functions. The drupal engine dynamically loads the correct theme class, instantiates it and then calls these class' functions where approriate.</P>
+  <P>Drupal's theme system is simple, elegant, flexible and powerful.  You can accommodate rather major changes in overall appearance and significant structural changes.  Moreover, you control all aspects of your drupal site in terms of colors, markup, layout and even the position of most blocks (or boxes).  You can leave blocks out, move them from right to left, up and down until it fit your needs.</P>
+  <P>In order to accomplish this, drupal uses a theme class that has a handful of functions. The drupal engine dynamically loads the correct theme class, instantiates it and then calls these class' functions where approriate.</P>
   <P>Let's illustrate this with an easy example. Say, to generate the main page, the drupal engine would use something like:</P>
   <PRE>
    $theme = new Theme(); 
@@ -160,10 +165,17 @@ function documentation() {
      // displays the footer of a page
   </PRE>
   <P>We have similar functions for things like comments (i.e. <CODE>$theme->comment($comment)</CODE>), generic boxes (i.e. <CODE>$theme->box($topic, $body)</CODE>) and so on.  To create your own theme, you simply need to provide a new implementation of these functions.</P>
-  <P>This simple and straight-forward approach has proven to be both flexible and fast.  If you want to learn more about the theme system, we recommand you to look athe code of the existing themes.  It is pretty straight-forward and doesn't require any knowledge about the engine itself.</P>
+  <P>This simple and straight-forward approach has proven to be both flexible and fast.  If you want to learn more about the theme system, we recommand you to look athe code of the existing themes.  It is pretty straight-forward and doesn't require any further on in-depth knowledge about the engine itself.</P>
 
   <H2>User management</H2>
-  
+
+  <P>drupal's user management system is capable of handling registrations, confirmation emails, account updates, authentication, access rights and user-based permissions among various other things.</P>
+  <P>Registered users need to authenticate by supplying a username and password.  The username and password are kept in your database, where the password is hashed so that no one can read nor use it.  When a username and password need to be checked the system goes down the list of registered users till it finds a matching username, and then hashes the password that was supplied and compares it to the listed value.  If they match then that means the username and password supplied were correct.</P>
+  <P>Once a user authenticated a session is started and until that session is over they won't have to re-authenticate.  To keep track of individual session, drupal relies on PHP's session support.  A visitor accessing your web site is assigned an unique id, the so-called session id which is stored in a cookie.  The cookie does not contain personal information but acts as a key to retrieve the information stored on the server side.  When a visitor accesses your site, drupal will check whether a specific session id has been sent with the request.  If this is the case, the prior saved environment is recreated.</P>
+  <P>Drupal allows you to control who is allowed to get authenticated and who is not.  To accomplish this, you can ban certain hostnames, IPs, IP-ranges, e-mail address and usernames.  Any user that matches any of the given ban criteria will not be able to authenticate or to register as a new user.</P>
+  <P>Authenticated users can themselves select entirely different appearances for the site, utilizing their own preferences for how the pages are structured, how navigation lists and other page components are presented and much more.</P>
+  <P>An important feature of drupal is that any user can be granted administrator rights.  The ability to share maintainance responsibility with volunteers from across the globe can be considered valuable for most community-based projects.</P> 
+   
   <H1>Chapter 4: drupal modules</H1>
 
   <?
@@ -172,7 +184,7 @@ function documentation() {
 
   <H1>Chapter 5: development</H1>
 
-  <P>The drupal engine is open source.  It is possible for each and every user to become a contributor.  The fact remains that most drupal users, even those skilled in programming arts, have never contributed to the code even though most of us had days where we thought to ourselves: "I wish drupal could do this or that ...".  Through this page, I hope I can make drupal programming more accessible to at least a small percentage of people.</P>
+  <P>The drupal engine is open source.  It is possible for each and every user to become a contributor.  The fact remains that most drupal users, even those skilled in programming arts, have never contributed to the code even though most of us had days where we thought to ourselves: "I wish drupal could do this or that ...".  Through this page, we hope to make drupal programming more accessible to at least a small percentage of people.</P>
   <P>We use diff and patch for content control even though we distribute our code via CVS.  Why?  Because diff and patch provide an immense amount of control.  Patches can be submitted via e-mail and in plain text; maintainers can read and judge the patch before it ever gets near a tree.  It allows maintainers to look at changes easily without blindly integrating them.</P>
 
   <H2>CVS</H2>
@@ -181,28 +193,27 @@ function documentation() {
  
   <P>CVS is a tool to manage software revisions and release control in a multi-developer, multi-directory, multi-group environment.  It comes in very handy to maintain local modificiations.</P>
   <P>Thus, CVS helps you if you are part of a group of people working on the same project.  In large software development projects, it's usually necessary for more then one software developer to be modifying modules of the code at the same time.  Without CVS, it is all too easy to overwrite each others' changes unless you are extremely careful.</P>
-  <P>We can hand out CVS accounts rather then full-features shell accounts or ftp accounts, and having to mess with groups to give everyone access to the sources.  We could create a public read-only CVS account so beta testers could checkout the latest snapshot of the code.</P>
   <P>In addition, CVS helps to keep track of all changes.  Therefore, the CVS server has been setup to mail all CVS commits to all maintainers.  Thus, it does not require any effort to inform the other people about the work you have done, and by reading the mails everyone is kept up to date.</P>
 
   <H3>Linux</H3>
 
   <P>To gain access via (anonymous) cvs use the following steps.  For this example it is assumed that you want a copy of the drupal source code.</P>
-  <P>1. Install a recent copy of cvs. All you really need is a copy of the CVS client binary.  Or you can download the latest CVS source code from <A HREF="http://www.cyclic.com">Cyclic Software</A>.  Don't get your panties in a nod; CVS is free software under the GNU GPL.</P>
+  <P>1. Install a recent copy of CVS. All you really need is a copy of the CVS client binary.  Or you can download the latest CVS source code from <A HREF="http://www.cyclic.com">Cyclic Software</A>.  Don't get your panties in a knot; CVS is free software under the GNU GPL.</P>
   <P>2. Set CVSROOT in your environment:</P>
-  <BLOCKQUOTE>export CVSROOT=":pserver:anonymous@drop.org:/home/dries/cvs"</BLOCKQUOTE>
+  <BLOCKQUOTE>$ export CVSROOT=":pserver:anonymous@drop.org:/home/dries/cvs"</BLOCKQUOTE>
   <P>3. Login by running the command:</P>
-  <BLOCKQUOTE>cvs login</BLOCKQUOTE>
+  <BLOCKQUOTE>$ cvs login</BLOCKQUOTE>
   <P>4. To check out the latest drupal sources, run the command:</P>
-  <BLOCKQUOTE>cvs co drupal</BLOCKQUOTE>
+  <BLOCKQUOTE>$ cvs co drupal</BLOCKQUOTE>
   <P>This will create a directory called <CODE>drupal</CODE> containing the latest drupal source tree.  For the other source code repositories on this system just substitute the correct package name.</P>
   <P>5. Whenever you want to merge in the latest code changes, use the following command from within the <CODE>drupal</CODE> directory:</P>
-  <BLOCKQUOTE>cvs ci file1 file2 file3</BLOCKQUOTE>
+  <BLOCKQUOTE>$ cvs ci file1 file2 file3</BLOCKQUOTE>
   <P>6. To add binary files like gifs you have to use:</P>
-  <BLOCKQUOTE>cvs add <B>-kb</B> file1 file2 file3</BLOCKQUOTE>
+  <BLOCKQUOTE>$ cvs add <B>-kb</B> file1 file2 file3</BLOCKQUOTE>
   <P>If a binary file accidentically gets added without `-kb', one can use the <I>cvs admin</I> command to recover.  For example:</P>
-  <BLOCKQUOTE>cvs admin -kb file1 file2 file3<BR>cvs commit file1 file2 file3</BLOCKQUOTE>
+  <BLOCKQUOTE>$ cvs admin -kb file1 file2 file3<BR>cvs commit file1 file2 file3</BLOCKQUOTE>
   <P>After you did, make sure to check out a fresh copy of the files (if they were broken):</P>
-  <BLOCKQUOTE>cvs update -A file1 file2 file3</BLOCKQUOTE>
+  <BLOCKQUOTE>$ cvs update -A file1 file2 file3</BLOCKQUOTE>
 
   <H3>Windows</H3>
 
@@ -222,13 +233,13 @@ function documentation() {
   <P>Patch is diff's complement and takes a patch file generated by diff and applies it against a file or a group of files.</P>
   <P>The actual usage of diff and patch is not complicated.</P>
   <P>At its simplest, a diff command for comparing two files would be:</P>
-  <BLOCKQUOTE>diff old.txt new.txt > oldnew.patch</BLOCKQUOTE>
+  <BLOCKQUOTE>$ diff old.txt new.txt > oldnew.patch</BLOCKQUOTE>
   <P>For drupal, we prefer patches in unified format, so we add -u to the command line:</P>
-  <BLOCKQUOTE>diff -u old.txt new.txt > oldnew.patch</BLOCKQUOTE>
+  <BLOCKQUOTE>$ diff -u old.txt new.txt > oldnew.patch</BLOCKQUOTE>
   <P>Generally, however, a comparison of two source trees is often desired.  A possible command to do so is:</P>
-  <BLOCKQUOTE>diff -ruN old new > oldnew.patch</BLOCKQUOTE>
+  <BLOCKQUOTE>$ diff -ruN old new > oldnew.patch</BLOCKQUOTE>
   <P>Once a patch is generated, the process of patching the file is even simpler.  Based on our examples above, we could do:</P>
-  <BLOCKQUOTE>patch < oldnew.patch</BLOCKQUOTE>
+  <BLOCKQUOTE>$ patch < oldnew.patch</BLOCKQUOTE>
 
   <H2>Creating and sending your patches</H2>
 
