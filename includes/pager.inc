@@ -384,19 +384,19 @@ function pager_link($from_new, $element, $attributes = array()) {
   $q = $_GET['q'];
   $from = array_key_exists('from', $_GET) ? $_GET['from'] : '';
 
-  foreach($attributes as $key => $value) {
+  foreach ($attributes as $key => $value) {
     $query[] = $key .'='. $value;
   }
 
   $from_new = pager_load_array($from_new[$element], $element, explode(',', $from));
   if (count($attributes)) {
-    $url = url($q, 'from='. implode($from_new, ',') .'&amp;'. implode('&amp;', $query));
+    $url = url($q, 'from='. implode($from_new, ',') .'&'. implode('&', $query));
   }
   else {
     $url = url($q, 'from='. implode($from_new, ','));
   }
 
-  return $url;
+  return check_url($url);
 }
 
 function pager_load_array($value, $element, $old_array) {

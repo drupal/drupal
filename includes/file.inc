@@ -76,11 +76,11 @@ function file_check_directory(&$directory, $mode = 0, $form_item = NULL) {
   // Check if directory exists.
   if (!is_dir($directory)) {
     if (($mode & FILE_CREATE_DIRECTORY) && @mkdir($directory, 0760)) {
-      drupal_set_message(t('Created directory %directory.', array('%directory' => "<em>$directory</em>")));
+      drupal_set_message(t('Created directory %directory.', array('%directory' => theme('placeholder', $directory))));
     }
     else {
       if ($form_item) {
-        form_set_error($form_item, t('The directory %directory does not exist.', array('%directory' => "<em>$directory</em>")));
+        form_set_error($form_item, t('The directory %directory does not exist.', array('%directory' => theme('placeholder', $directory))));
       }
       return false;
     }
@@ -89,10 +89,10 @@ function file_check_directory(&$directory, $mode = 0, $form_item = NULL) {
   // Check to see if the directory is writable.
   if (!is_writable($directory)) {
     if (($mode & FILE_MODIFY_PERMISSIONS) && @chmod($directory, 0760)) {
-      drupal_set_message(t('Modified permissions on directory %directory.', array('%directory' => "<em>$directory</em>")));
+      drupal_set_message(t('Modified permissions on directory %directory.', array('%directory' => theme('placeholder', $directory))));
     }
     else {
-      form_set_error($form_item, t('The directory %directory is not writable.', array('%directory' => "<em>$directory</em>")));
+      form_set_error($form_item, t('The directory %directory is not writable.', array('%directory' => theme('placeholder', $directory))));
       return false;
     }
   }

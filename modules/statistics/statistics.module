@@ -183,7 +183,7 @@ function statistics_node_tracker() {
       $rows[] = array(array('data' => $pager, 'colspan' => '4'));
     }
 
-    drupal_set_title($node->title);
+    drupal_set_title(check_plain($node->title));
     print theme('page', theme('table', $header, $rows));
   }
   else {

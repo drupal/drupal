@@ -86,7 +86,7 @@ function block_block($op = 'list', $delta = 0, $edit = array()) {
     case 'list':
       $result = db_query('SELECT bid, title, info FROM {boxes} ORDER BY title');
       while ($block = db_fetch_object($result)) {
-        $blocks[$block->bid]['info'] = $block->info ? $block->info : $block->title;
+        $blocks[$block->bid]['info'] = $block->info ? check_plain($block->info) : check_plain($block->title);
       }
       return $blocks;
 
@@ -103,7 +103,7 @@ function block_block($op = 'list', $delta = 0, $edit = array()) {
 
     case 'view':
       $block = db_fetch_object(db_query('SELECT * FROM {boxes} WHERE bid = %d', $delta));
-      $data['subject'] = $block->title;
+      $data['subject'] = check_plain($block->title);
       $data['content'] = check_output($block->body, $block->format);
       return $data;
   }
@@ -335,13 +335,13 @@ function block_box_delete($bid = 0) {
 
   if ($_POST['edit']['confirm']) {
     db_query('DELETE FROM {boxes} WHERE bid = %d', $bid);
-    drupal_set_message(t('The block %name has been deleted.', array('%name' => '<em>'. $info .'</em>')));
+    drupal_set_message(t('The block %name has been deleted.', array('%name' => theme('placeholder', $info))));
     cache_clear_all();
     drupal_goto('admin/block');
   }
   else {
     $output = theme('confirm',
-                    t('Are you sure you want to delete the block %name?', array('%name' => '<em>'. $info .'</em>')),
+                    t('Are you sure you want to delete the block %name?', array('%name' => theme('placeholder', $info))),
                     'admin/block',
                     NULL,
                     t('Delete'));

@@ -87,7 +87,7 @@ function tablesort_header($cell, $header, $ts) {
       $ts['sort'] = 'asc';
       $image = '';
     }
-    $cell['data'] = l($cell['data'] . $image, $_GET['q'], array('title' => $title), 'sort='. $ts['sort'] .'&amp;order='. urlencode($cell['data']). $ts['query_string']);
+    $cell['data'] = l($cell['data'] . $image, $_GET['q'], array('title' => $title), 'sort='. $ts['sort'] .'&order='. urlencode($cell['data']). $ts['query_string'], NULL, FALSE, TRUE);
 
     unset($cell['field'], $cell['sort']);
   }
@@ -139,7 +139,7 @@ function tablesort_get_querystring() {
   $query_string = '';
   foreach ($cgi as $key => $val) {
     if ($key != 'order' && $key != 'sort' && $key != 'q') {
-      $query_string .= '&amp;'. $key .'='. $val;
+      $query_string .= '&'. $key .'='. $val;
     }
   }
   return $query_string;

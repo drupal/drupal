@@ -198,11 +198,11 @@ function aggregator_block($op, $delta = 0, $edit = array()) {
     if ($op == 'list') {
       $result = db_query('SELECT cid, title FROM {aggregator_category} ORDER BY title');
       while ($category = db_fetch_object($result)) {
-        $block['category:'. $category->cid]['info'] = t('%title category latest items', array('%title' => $category->title));
+        $block['category:'. $category->cid]['info'] = t('%title category latest items', array('%title' => theme('placeholder', $category->title)));
       }
       $result = db_query('SELECT fid, title FROM {aggregator_feed} ORDER BY fid');
       while ($feed = db_fetch_object($result)) {
-        $block['feed:'. $feed->fid]['info'] = t('%title feed latest items', array('%title' => $feed->title));
+        $block['feed:'. $feed->fid]['info'] = t('%title feed latest items', array('%title' => theme('placeholder', $feed->title)));
       }
     }
     else if ($op == 'configure') {
@@ -231,7 +231,7 @@ function aggregator_block($op, $delta = 0, $edit = array()) {
       switch ($type) {
         case 'feed':
           if ($feed = db_fetch_object(db_query('SELECT fid, title, block FROM {aggregator_feed} WHERE fid = %d', $id))) {
-            $block['subject'] = $feed->title;
+            $block['subject'] = check_plain($feed->title);
             $result = db_query_range('SELECT * FROM {aggregator_item} WHERE fid = %d ORDER BY timestamp DESC, iid DESC', $feed->fid, 0, $feed->block);
             $block['content'] = '<div class="more-link">'. l(t('more'), 'aggregator/sources/'. $feed->fid, array('title' => t('View this feed\'s recent news.'))) .'</div>';
           }
@@ -239,7 +239,7 @@ function aggregator_block($op, $delta = 0, $edit = array()) {
 
         case 'category':
           if ($category = db_fetch_object(db_query('SELECT cid, title, block FROM {aggregator_category} WHERE cid = %d', $id))) {
-            $block['subject'] = $category->title;
+            $block['subject'] = check_plain($category->title);
             $result = db_query_range('SELECT i.* FROM {aggregator_category_item} ci LEFT JOIN {aggregator_item} i ON ci.iid = i.iid WHERE ci.cid = %d ORDER BY i.timestamp DESC, i.iid DESC', $category->cid, 0, $category->block);
             $block['content'] = '<div class="more-link">'. l(t('more'), 'aggregator/categories/'. $category->cid, array('title' => t('View this category\'s recent news.'))) .'</div>';
           }
@@ -265,7 +265,7 @@ function aggregator_remove($feed) {
   }
   db_query('DELETE FROM {aggregator_item} WHERE fid = %d', $feed['fid']);
   db_query("UPDATE {aggregator_feed} SET checked = 0, etag = '', modified = 0 WHERE fid = %d", $feed['fid']);
-  drupal_set_message(t('Removed news items from %site.', array('%site' => '<em>'. $feed['title'] .'</em>')));
+  drupal_set_message(t('Removed news items from %site.', array('%site' => theme('placeholder', $feed['title']))));
 }
 
 /**
@@ -345,11 +345,11 @@ function aggregator_refresh($feed) {
   switch ($result->code) {
     case 304:
       db_query('UPDATE {aggregator_feed} SET checked = %d WHERE fid = %d', time(), $feed['fid']);
-      drupal_set_message(t('No new syndicated content from %site.', array('%site' => '<em>'. $feed['title'] .'</em>')));
+      drupal_set_message(t('No new syndicated content from %site.', array('%site' => theme('placeholder', $feed['title']))));
       break;
     case 301:
       $feed['url'] = $result->redirect_url;
-      watchdog('aggregator', t('Updated URL for feed %title to %url.', array('%title' => '<em>'. $feed['title'] .'</em>', '%url' => '<em>'. $feed['url'] .'</em>')));
+      watchdog('aggregator', t('Updated URL for feed %title to %url.', array('%title' => theme('placeholder', $feed['title']), '%url' => theme('placeholder', $feed['url']))));
       break;
 
     case 200:
@@ -397,13 +397,13 @@ function aggregator_refresh($feed) {
 
         cache_clear_all();
 
-        $message = t('Syndicated content from %site.', array('%site' => '<em>'. $feed[title] .'</em>'));
+        $message = t('Syndicated content from %site.', array('%site' => theme('placeholder', $feed[title])));
         watchdog('aggregator', $message);
         drupal_set_message($message);
       }
       break;
     default:
-      $message = t('Failed to parse RSS feed %site: %error.', array('%site' => '<em>'. $feed['title'] .'</em>', '%error' => "<em>$result->code $result->error</em>"));
+      $message = t('Failed to parse RSS feed %site: %error.', array('%site' => theme('placeholder', $feed['title']), '%error' => theme('placeholder', $result->code .' '. $result->error)));
       watchdog('aggregator', $message, WATCHDOG_WARNING);
       drupal_set_message($message);
   }
@@ -461,7 +461,7 @@ function aggregator_parse_feed(&$data, $feed) {
   xml_set_character_data_handler($xml_parser, 'aggregator_element_data');
 
   if (!xml_parse($xml_parser, $data, 1)) {
-    $message = t('Failed to parse RSS feed %site: %error at line %line.', array('%site' => '<em>'. $feed['title'] .'</em>', '%error' => xml_error_string(xml_get_error_code($xml_parser)), '%line' => xml_get_current_line_number($xml_parser)));
+    $message = t('Failed to parse RSS feed %site: %error at line %line.', array('%site' => theme('placeholder', $feed['title']), '%error' => xml_error_string(xml_get_error_code($xml_parser)), '%line' => xml_get_current_line_number($xml_parser)));
     watchdog('aggregator', $message, WATCHDOG_WARNING);
     drupal_set_message($message, 'error');
     return 0;
@@ -554,7 +554,7 @@ function aggregator_parse_feed(&$data, $feed) {
     }
 
     if (!valid_input_data($item['DESCRIPTION'])) {
-      drupal_set_message(t('Failed to parse entry from %site feed: suspicious input data.', array('%site' => '<em>'. $feed['title'] .'</em>')), 'error');
+      drupal_set_message(t('Failed to parse entry from %site feed: suspicious input data.', array('%site' => theme('placeholder', $feed['title']))), 'error');
     }
     else {
       aggregator_save_item(array('iid' => $entry->iid, 'fid' => $feed['fid'], 'timestamp' => $timestamp, 'title' => $title, 'link' => $link, 'author' => $item['AUTHOR'], 'description' => $item['DESCRIPTION']));
@@ -643,7 +643,7 @@ function aggregator_form_feed($edit = array()) {
   $categories = db_query('SELECT c.cid, c.title, f.fid FROM {aggregator_category} c LEFT JOIN {aggregator_category_feed} f ON c.cid = f.cid AND f.fid = %d ORDER BY title', $edit['fid']);
   while ($category = db_fetch_object($categories)) {
     $options[$category->cid] = $category->title;
-    if ($category->fid) $values[] = $category->cid;
+    if ($category->fid) $values[] = check_plain($category->cid);
   }
   if ($options) {
     $form .= form_checkboxes(t('Categorize news items'), 'category', $values, $options, t('New items in this feed will be automatically filed in the the checked categories as they are received.'));
@@ -920,7 +920,7 @@ function _aggregator_page_list($sql, $op, $header = '') {
         $selected = array();
         while ($category = db_fetch_object($categories_result)) {
           if (!$done) {
-            $categories[$category->cid] = check_form($category->title);
+            $categories[$category->cid] = check_plain($category->title);
           }
           if ($category->iid) {
             $selected[] = $category->cid;
@@ -932,7 +932,7 @@ function _aggregator_page_list($sql, $op, $header = '') {
       else {
         $form = '';
         while ($category = db_fetch_object($categories_result)) {
-          $form .= form_checkbox(check_form($category->title), 'categories]['. $item->iid .'][', $category->cid, !is_null($category->iid));
+          $form .= form_checkbox(check_plain($category->title), 'categories]['. $item->iid .'][', $category->cid, !is_null($category->iid));
         }
       }
       $rows[] = array(theme('aggregator_page_item', $item), array('data' => $form, 'class' => 'categorize-item'));
@@ -960,7 +960,7 @@ function aggregator_page_sources() {
   $result = db_query('SELECT f.fid, f.title, f.description, f.image, MAX(i.timestamp) AS last FROM {aggregator_feed} f LEFT JOIN {aggregator_item} i ON f.fid = i.fid GROUP BY f.fid');
   $output = "<div id=\"aggregator\">\n";
   while ($feed = db_fetch_object($result)) {
-    $output .= "<h2>$feed->title</h2>\n";
+    $output .= '<h2>'. check_plain($feed->title) ."</h2>\n";
 
     // Most recent items:
     $list = array();
@@ -987,13 +987,13 @@ function aggregator_page_opml() {
   $output = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
   $output .= "<opml version=\"1.1\">\n";
   $output .= "<head>\n";
-  $output .= '<title>'. drupal_specialchars(variable_get('site_name', 'Drupal')) ."</title>\n";
+  $output .= '<title>'. check_plain(variable_get('site_name', 'Drupal')) ."</title>\n";
   $output .= '<dateModified>'. gmdate('r') ."</dateModified>\n";
   $output .= "</head>\n";
   $output .= "<body>\n";
 
   while ($feed = db_fetch_object($result)) {
-    $output .= '<outline text="'. drupal_specialchars($feed->title) .'" xmlUrl="'. drupal_specialchars($feed->url) ."\" />\n";
+    $output .= '<outline text="'. check_plain($feed->title) .'" xmlUrl="'. check_url($feed->url) ."\" />\n";
   }
 
   $output .= "</body>\n";
@@ -1011,7 +1011,7 @@ function aggregator_page_categories() {
   $output = "<div id=\"aggregator\">\n";
 
   while ($category = db_fetch_object($result)) {
-    $output .= "<h2>$category->title</h2>\n";
+    $output .= '<h2>'. check_plain($category->title) ."</h2>\n";
     if (variable_get('aggregator_summary_items', 3)) {
       $list = array();
       $items = db_query_range('SELECT i.title, i.timestamp, i.link, f.title as feed_title, f.link as feed_link FROM {aggregator_category_item} ci LEFT JOIN {aggregator_item} i ON i.iid = ci.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE ci.cid = %d ORDER BY i.timestamp DESC', $category->cid, 0, variable_get('aggregator_summary_items', 3));
@@ -1042,7 +1042,7 @@ function theme_aggregator_feed($feed) {
   $output .= $feed->description;
   $output .= '<h3>'. t('URL') ."</h3>\n";
   $output .= theme('xml_icon', $feed->url);
-  $output .= "<a href=\"$feed->link\">$feed->link</a>\n";
+  $output .= '<a href="'. check_url($feed->link) .'">'. check_plain($feed->link) ."</a>\n";
   $output .= '<h3>'. t('Last update') ."</h3>\n";
   $updated = t('%time ago', array('%time' => format_interval(time() - $feed->checked)));
 
@@ -1066,12 +1066,12 @@ function theme_aggregator_block_item($item, $feed = 0) {
 
   if ($user->uid && module_exist('blog') && user_access('edit own blog')) {
     if ($image = theme('image', 'misc/blog.png', t('blog it'), t('blog it'))) {
-      $output .= '<div class="icon">'. l($image, 'node/add/blog', array('title' => t('Comment on this news item in your personal blog.'), 'class' => 'blog-it'), "iid=$item->iid") .'</div>';
+      $output .= '<div class="icon">'. l($image, 'node/add/blog', array('title' => t('Comment on this news item in your personal blog.'), 'class' => 'blog-it'), "iid=$item->iid", NULL, FALSE, TRUE) .'</div>';
     }
   }
 
   // Display the external link to the item.
-  $output .= "<a href=\"$item->link\">$item->title</a>\n";
+  $output .= '<a href="'. check_url($item->link) .'">'. check_plain($item->title) ."</a>\n";
 
   return $output;
 }
@@ -1086,7 +1086,7 @@ function theme_aggregator_block_item($item, $feed = 0) {
  * @ingroup themeable
  */
 function theme_aggregator_summary_item($item) {
-  $output = '<a href="'. check_url($item->link) .'">'. $item->title .'</a> <span class="age">'. t('%age old', array('%age' => format_interval(time() - $item->timestamp))) .'</span>';
+  $output = '<a href="'. check_url($item->link) .'">'. check_plain($item->title) .'</a> <span class="age">'. t('%age old', array('%age' => format_interval(time() - $item->timestamp))) .'</span>';
   if ($item->feed_link) {
     $output .= ', <span class="source"><a href="'. $item->feed_link .'">'. $item->feed_title .'</a></span>';
   }
@@ -1110,9 +1110,9 @@ function theme_aggregator_page_item($item) {
   $output .= "<div class=\"news-item\">\n";
   $output .= ' <div class="date">'. date('H:i', $item->timestamp) ."</div>\n";
   $output .= " <div class=\"body\">\n";
-  $output .= "  <div class=\"title\"><a href=\"$item->link\">$item->title</a></div>\n";
+  $output .= '  <div class="title"><a href="'. check_url($item->link) .'">'. check_plain($item->title) ."</a></div>\n";
   if ($item->description) {
-    $output .= "  <div class=\"description\">$item->description</div>\n";
+    $output .= '  <div class="description">'. check_plain($item->description) ."</div>\n";
   }
   if ($item->ftitle && $item->fid) {
     $output .= '  <div class="source">'. t('Source') .': '. l($item->ftitle, "aggregator/sources/$item->fid") ."</div>\n";

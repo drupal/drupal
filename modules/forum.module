@@ -228,10 +228,10 @@ function forum_overview() {
   if ($tree) {
     foreach ($tree as $term) {
       if (in_array($term->tid, variable_get('forum_containers', array()))) {
-        $rows[] = array(_forum_depth($term->depth) .' '. $term->name, l(t('edit container'), "admin/forum/edit/container/$term->tid"));
+        $rows[] = array(_forum_depth($term->depth) .' '. check_plain($term->name), l(t('edit container'), "admin/forum/edit/container/$term->tid"));
       }
       else {
-        $rows[] = array(_forum_depth($term->depth) .' '. $term->name, l(t('edit forum'), "admin/forum/edit/forum/$term->tid"));
+        $rows[] = array(_forum_depth($term->depth) .' '. check_plain($term->name), l(t('edit forum'), "admin/forum/edit/forum/$term->tid"));
        }
 
     }
@@ -381,11 +381,11 @@ function forum_link($type, $node = 0, $main = 0) {
     }
 
     if ($prev) {
-      $links[] = l(t('previous forum topic'), "node/$prev->nid", array('title' => $prev->title));
+      $links[] = l(t('previous forum topic'), "node/$prev->nid", array('title' => check_plain($prev->title)));
     }
 
     if ($next) {
-      $links[] = l(t('next forum topic'), "node/$next->nid", array('title' => $next->title));
+      $links[] = l(t('next forum topic'), "node/$next->nid", array('title' => check_plain($next->title)));
     }
   }
 
@@ -478,7 +478,7 @@ function forum_validate(&$node) {
       if (db_result(db_query('SELECT COUNT(*) FROM {term_data} WHERE tid = %d AND vid = %d', $term, $vocabulary))) {
         if (in_array($term, $containers)) {
           $term = taxonomy_get_term($term);
-          form_set_error('taxonomy', t('The item %forum is only a container for forums. Please select one of the forums below it.', array('%forum' => "<em>$term->name</em>")));
+          form_set_error('taxonomy', t('The item %forum is only a container for forums. Please select one of the forums below it.', array('%forum' => theme('placeholder', $term->name))));
         }
         else {
           $node->tid = $term;
@@ -878,7 +878,7 @@ function theme_forum_topic_list($tid, $topics, $sortby, $forum_per_page) {
       if ($topic->tid != $tid) {
         $rows[] = array(
           array('data' => _forum_icon($topic->new, $topic->num_comments, $topic->comment_mode, $topic->sticky), 'class' => 'icon'),
-          array('data' => $topic->title, 'class' => 'title'),
+          array('data' => check_plain($topic->title), 'class' => 'title'),
           array('data' => l(t('This topic has been moved'), "forum/$topic->tid"), 'colspan' => '3')
         );
       }

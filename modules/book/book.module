@@ -148,7 +148,7 @@ function book_block($op = 'list', $delta = 0) {
           $expand[] = $node->nid;
         }
 
-        $block['subject'] = $path[0]->title;
+        $block['subject'] = check_plain($path[0]->title);
         $block['content'] = book_tree($expand[0], 5, $expand);
       }
     }
@@ -287,7 +287,7 @@ function book_outline() {
           $output .= form_submit(t('Add to book outline'));
         }
 
-        drupal_set_title($node->title);
+        drupal_set_title(check_plain($node->title));
         print theme('page', form($output));
     }
   }
@@ -477,7 +477,7 @@ function theme_book_navigation($node) {
       $links .= '<div class="prev">';
       $links .= l(t('previous'), 'node/'. $prev->nid, array('title' => t('View the previous page.')));
       $links .= '</div>';
-      $titles .= '<div class="prev">'. $prev->title .'</div>';
+      $titles .= '<div class="prev">'. check_plain($prev->title) .'</div>';
     }
     else {
       $links .= '<div class="prev">&nbsp;</div>'; // Make an empty div to fill the space.
@@ -486,7 +486,7 @@ function theme_book_navigation($node) {
       $links .= '<div class="next">';
       $links .= l(t('next'), 'node/'. $next->nid, array('title' => t('View the next page.')));
       $links .= '</div>';
-      $titles .= '<div class="next">'. $next->title .'</div>';
+      $titles .= '<div class="next">'. check_plain($next->title) .'</div>';
     }
     else {
       $links .= '<div class="next">&nbsp;</div>'; // Make an empty div to fill the space.
@@ -633,7 +633,7 @@ function book_print($nid = 0, $depth = 1) {
       // Allow modules to change $node->body before viewing.
       node_invoke_nodeapi($node, 'view', $node->body, false);
 
-      $output .= '<h1 id="'. $node->nid .'" name="'. $node->nid .'" class="book-h'. $depth .'">'. $node->title .'</h1>';
+      $output .= '<h1 id="'. $node->nid .'" name="'. $node->nid .'" class="book-h'. $depth .'">'. check_plain($node->title) .'</h1>';
 
       if ($node->body) {
         $output .= $node->body;
@@ -643,7 +643,7 @@ function book_print($nid = 0, $depth = 1) {
 
   $output .= book_print_recurse($nid, $depth);
 
-  $html = '<html><head><title>'. $node->title .'</title>';
+  $html = '<html><head><title>'. check_plain($node->title) .'</title>';
   $html .= '<base href="'. $base_url .'/" />';
   $html .= "<style type=\"text/css\">\n@import url(misc/print.css);\n</style>";
   $html .= '</head><body>'. $output .'</body></html>';
@@ -671,7 +671,7 @@ function book_print_recurse($parent = '', $depth = 1) {
       // Allow modules to change $node->body before viewing.
       node_invoke_nodeapi($node, 'view', $node->body, false);
 
-      $output .= '<h1 id="'. $node->nid .'" name="'. $node->nid .'" class="book-h'. $depth .'">'. $node->title .'</h1>';
+      $output .= '<h1 id="'. $node->nid .'" name="'. $node->nid .'" class="book-h'. $depth .'">'. check_plain($node->title) .'</h1>';
 
       if ($node->body) {
         $output .= '<ul>'. $node->body .'</ul>';
@@ -707,7 +707,7 @@ function book_admin_view($nid, $depth = 0) {
   if ($nid) {
     $node = node_load(array('nid' => $nid));
 
-    $output .= '<h3>'. $node->title .'</h3>';
+    $output .= '<h3>'. check_plain($node->title) .'</h3>';
 
     $header = array(t('Title'), t('Weight'), array('data' => t('Operations'), 'colspan' => '3'));
     $rows[] = book_admin_view_line($node);
@@ -738,7 +738,7 @@ function book_admin_save($nid, $edit = array()) {
       }
     }
 
-    $message = t('Updated book %title.', array('%title' => "<em>$book->title</em>"));
+    $message = t('Updated book %title.', array('%title' => theme('placeholder', $book->title)));
     watchdog('content', $message);
 
     return $message;

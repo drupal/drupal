@@ -107,6 +107,7 @@ function locale_user($type, $edit, &$user, $category = NULL) {
     if ($user->language == '') {
       $user->language = key($languages['name']);
     }
+    $languages['name'] = array_map('check_plain', $languages['name']);
     return array(array('title' => t('Interface language settings'), 'data' => form_radios(t("Language"), 'language', $user->language, $languages['name'], t("Selecting a different locale will change the interface language of the site."))));
   }
 }
@@ -299,7 +300,7 @@ function locale_admin_manage_delete_screen() {
     if (isset($languages['name'][$edit['langcode']])) {
       db_query("DELETE FROM {locales_meta} WHERE locale = '%s'", $edit['langcode']);
       db_query("DELETE FROM {locales_target} WHERE locale = '%s'", $edit['langcode']);
-      $message = t('%locale language removed.', array('%locale' => '<em>'. t($languages['name'][$edit['langcode']]) .'</em>'));
+      $message = t('%locale language removed.', array('%locale' => theme('placeholder', t($languages['name'][$edit['langcode']]))));
       drupal_set_message($message);
       watchdog('locale', $message);
     }
@@ -320,7 +321,7 @@ function locale_admin_manage_delete_screen() {
 
   $extra = form_hidden('langcode', $langcode);
   $output = theme('confirm',
-                  t('Are you sure you want to delete the language %name?', array('%name' => '<em>'. t($languages['name'][$langcode]) .'</em>')),
+                  t('Are you sure you want to delete the language %name?', array('%name' => theme('placeholder', t($languages['name'][$langcode])))),
                   'admin/locale/language/overview',
                   t('Deleting a language will remove all data associated with it. This action cannot be undone.'),
                   t('Delete'),
@@ -359,7 +360,7 @@ function locale_admin_manage_add() {
         drupal_set_message(t('You need to specify both the language code and the English name of the new language.'), 'error');
       }
       else {
-        drupal_set_message(t('The language %language (%code) is already set up.', array('%language' => '<em>'. $edit['langname'] .'</em>', '%code' => '<em>'. $edit['langcode'] .'</em>')), 'error');
+        drupal_set_message(t('The language %language (%code) is already set up.', array('%language' => '<em>'. check_plain($edit['langname']) .'</em>', '%code' => theme('placeholder', $edit['langcode']))), 'error');
       }
       break;
   }
@@ -388,7 +389,7 @@ function locale_admin_import() {
       // Now import strings into the language
       $file = file_check_upload('file');
       if ($ret = _locale_import_po($file, $edit['langcode'], $edit['mode']) == FALSE) {
-        $message = t('Translation import of %filename failed.', array('%filename' => "<em>$file->filename</em>"));
+        $message = t('Translation import of %filename failed.', array('%filename' => theme('placeholder', $file->filename)));
         drupal_set_message($message, 'error');
         watchdog('locale', $message, WATCHDOG_ERROR);
       }

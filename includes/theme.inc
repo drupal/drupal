@@ -225,8 +225,8 @@ function path_to_theme() {
  */
 function theme_get_settings($key = NULL) {
   $defaults = array(
-    'primary_links'                 =>  l('edit primary links', 'admin/themes/settings'),
-    'secondary_links'               =>  l('edit secondary links', 'admin/themes/settings'),
+    'primary_links'                 =>  l(t('edit primary links'), 'admin/themes/settings'),
+    'secondary_links'               =>  l(t('edit secondary links'), 'admin/themes/settings'),
     'mission'                       =>  '',
     'default_logo'                  =>  1,
     'logo_path'                     =>  '',
@@ -348,6 +348,20 @@ function theme_get_styles() {
  *
  * The theme system is described and defined in theme.inc.
  */
+ 
+/**
+ * Format a dynamic text string for emphasised display in a placeholder.
+ *
+ * E.g. t('Added term %term', array('%term' => theme('placeholder', $term)))
+ *
+ * @param $text
+ *   The text to format (plain-text).
+ * @return
+ *   The formatted text (html).
+ */
+function theme_placeholder($text) {
+  return '<em>'. check_plain($text) .'</em>';
+}
 
 /**
  * Return an entire Drupal page displaying the supplied content.
@@ -361,7 +375,7 @@ function theme_page($content) {
   $output = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
   $output .= '<html xmlns="http://www.w3.org/1999/xhtml">';
   $output .= '<head>';
-  $output .= ' <title>'. (drupal_get_title() ? drupal_get_title() : variable_get('site_name', 'drupal')) .'</title>';
+  $output .= ' <title>'. (drupal_get_title() ? strip_tags(drupal_get_title()) : variable_get('site_name', 'drupal')) .'</title>';
   $output .= drupal_get_html_head();
   $output .= theme_get_styles();
 
@@ -500,7 +514,7 @@ function theme_node($node, $teaser = FALSE, $page = FALSE) {
   }
 
   if ($page == 0) {
-    $output = '<h2 class="title">'. $node->title .'</h2> by '. format_name($node);
+    $output = '<h2 class="title">'. check_plain($node->title) .'</h2> by '. format_name($node);
   }
   else {
     $output = 'by '. format_name($node);

@@ -169,7 +169,7 @@ function upload_nodeapi(&$node, $op, $arg) {
         $total_usersize = upload_count_size($user->uid) + $filesize;
 
         if ($maxsize && $total_size > $maxsize) {
-          form_set_error('upload', t('Error attaching file %name: total file size exceeded', array('%name' => "<em>$file->filename</em>")));
+          form_set_error('upload', t('Error attaching file %name: total file size exceeded', array('%name' => theme('placeholder', $file->filename))));
           break;
         }
 
@@ -207,13 +207,13 @@ function upload_nodeapi(&$node, $op, $arg) {
         }
 
         if ($error['extension'] == count($user->roles) && $user->uid != 1) {
-          form_set_error('upload', t('Error attaching file %name: invalid extension', array('%name' => "<em>$file->filename</em>")));
+          form_set_error('upload', t('Error attaching file %name: invalid extension', array('%name' => theme('placeholder', $file->filename))));
         }
         elseif ($error['uploadsize'] == count($user->roles) && $user->uid != 1) {
-          form_set_error('upload', t('Error attaching file %name: exceeds maximum file size', array('%name' => "<em>$file->filename</em>")));
+          form_set_error('upload', t('Error attaching file %name: exceeds maximum file size', array('%name' => theme('placeholder', $file->filename))));
         }
         elseif ($error['usersize'] == count($user->roles) && $user->uid != 1) {
-          form_set_error('upload', t('Error attaching file %name: exceeds maximum file size', array('%name' => "<em>$file->filename</em>")));
+          form_set_error('upload', t('Error attaching file %name: exceeds maximum file size', array('%name' => theme('placeholder', $file->filename))));
         }
         else {
           $key = 'upload_'. count($_SESSION['file_uploads']);

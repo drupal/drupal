@@ -107,7 +107,7 @@ function profile_browse() {
     $output .= theme('pager', NULL, 20);
 
     if ($field->type == 'selection' || $field->type == 'list') {
-      $title = strtr($field->page, array('%value' => $value));
+      $title = strtr($field->page, array('%value' => theme('placeholder', $value)));
     }
     else {
       $title = $field->page;
@@ -178,15 +178,15 @@ function profile_view_field($user, $field) {
   if ($value = $user->{$field->name}) {
     switch ($field->type) {
       case 'textfield':
-        return drupal_specialchars($value);
+        return check_plain($value);
       case 'textarea':
         return check_output($value);
       case 'selection':
-        return $browse ? l(drupal_specialchars($value), "profile/$field->name/". check_url($value)) : drupal_specialchars($value);
+        return $browse ? l($value, "profile/$field->name/$value") : check_plain($value);
       case 'checkbox':
-        return $browse ? l(strip_tags($field->title), "profile/$field->name") : drupal_specialchars($field->title);
+        return $browse ? l($field->title, "profile/$field->name") : check_plain($field->title);
       case 'url':
-        return '<a href="'. check_url($value) .'">'. drupal_specialchars($value) .'</a>';
+        return '<a href="'. check_url($value) .'">'. check_plain($value) .'</a>';
       case 'date':
         list($format) = explode(' - ', variable_get('date_format_short', 'm/d/Y - H:i'), 2);
         // Note: we avoid PHP's date() because it does not handle dates before
@@ -203,7 +203,7 @@ function profile_view_field($user, $field) {
         $fields = array();
         foreach ($values as $value) {
           if ($value = trim($value)) {
-            $fields[] = $browse ? l(drupal_specialchars($value), "profile/$field->name/". check_url($value)) : drupal_specialchars($value);
+            $fields[] = $browse ? l($value, "profile/$field->name/$value") : check_plain($value);
           }
         }
         return implode(', ', $fields);
@@ -226,7 +226,7 @@ function profile_view_profile($user) {
   while ($field = db_fetch_object($result)) {
     if ($value = profile_view_field($user, $field)) {
       $description = ($field->visibility == PROFILE_PRIVATE) ? t('The content of this field is private and only visible to yourself.') : '';
-      $title = ($field->type != 'checkbox') ? $field->title : '';
+      $title = ($field->type != 'checkbox') ? check_plain($field->title) : '';
       $fields[$field->category] .= form_item($title, $value, $description);
     }
   }
@@ -264,16 +264,16 @@ function profile_form_profile($edit, $user, $category) {
     switch ($field->type) {
       case 'textfield':
       case 'url':
-        $fields[$category] .= form_textfield($field->title, $field->name, $edit[$field->name], 70, 255, _profile_form_explanation($field), NULL, $field->required);
+        $fields[$category] .= form_textfield(check_plain($field->title), $field->name, $edit[$field->name], 70, 255, _profile_form_explanation($field), NULL, $field->required);
         break;
       case 'textarea':
-        $fields[$category] .= form_textarea($field->title, $field->name, $edit[$field->name], 70, 5, _profile_form_explanation($field), NULL, $field->required);
+        $fields[$category] .= form_textarea(check_plain($field->title), $field->name, $edit[$field->name], 70, 5, _profile_form_explanation($field), NULL, $field->required);
         break;
       case 'list':
-        $fields[$category] .= form_textarea($field->title, $field->name, $edit[$field->name], 70, 5, _profile_form_explanation($field), NULL, $field->required);
+        $fields[$category] .= form_textarea(check_plain($field->title), $field->name, $edit[$field->name], 70, 5, _profile_form_explanation($field), NULL, $field->required);
         break;
       case 'checkbox':
-        $fields[$category] .= form_checkbox($field->title, $field->name, 1, $edit[$field->name], _profile_form_explanation($field), NULL, $field->required);
+        $fields[$category] .= form_checkbox(check_plain($field->title), $field->name, 1, $edit[$field->name], _profile_form_explanation($field), NULL, $field->required);
         break;
       case 'selection':
         $options = array('--');
@@ -284,7 +284,7 @@ function profile_form_profile($edit, $user, $category) {
           }
         }
 
-        $fields[$category] .= form_select($field->title, $field->name, $edit[$field->name], $options, _profile_form_explanation($field), 0, 0, $field->required);
+        $fields[$category] .= form_select(check_plain($field->title), $field->name, $edit[$field->name], $options, _profile_form_explanation($field), 0, 0, $field->required);
         break;
       case 'date':
         $fields[$category] .= _profile_date_field($field, $edit);
@@ -338,7 +338,7 @@ function _profile_date_field($field, $edit) {
   }
   $output .= '</div>';
 
-  return form_item($field->title, $output, _profile_form_explanation($field), NULL, $field->required);
+  return form_item(check_plain($field->title), $output, _profile_form_explanation($field), NULL, $field->required);
 }
 
 /**
@@ -362,12 +362,12 @@ function profile_validate_profile($edit, $category) {
     if ($edit[$field->name]) {
       if ($field->type == 'url') {
         if (!valid_url($edit[$field->name], true)) {
-          form_set_error($field->name, t('The value provided for %field is not a valid URL.', array('%field' => "<em>$field->title</em>")));
-         }
+          form_set_error($field->name, t('The value provided for %field is not a valid URL.', array('%field' => theme('placeholder', $field->title))));
+        }
       }
     }
     else if ($field->required && !user_access('administer users')) {
-      form_set_error($field->name, t('The field %field is required.', array('%field' => "<em>$field->title</em>")));
+      form_set_error($field->name, t('The field %field is required.', array('%field' => theme('placeholder', $field->title))));
     }
   }
 
@@ -377,7 +377,7 @@ function profile_validate_profile($edit, $category) {
 function profile_categories() {
   $result = db_query("SELECT DISTINCT(category) FROM {profile_fields}");
   while ($category = db_fetch_object($result)) {
-    $data[] = array('name' => drupal_specialchars($category->category), 'title' => $category->category, 'weight' => 3);
+    $data[] = array('name' => check_plain($category->category), 'title' => $category->category, 'weight' => 3);
   }
   return $data;
 }
@@ -539,7 +539,7 @@ function profile_admin_overview() {
   $result = db_query('SELECT * FROM {profile_fields} ORDER BY category, weight');
   $rows = array();
   while ($field = db_fetch_object($result)) {
-    $rows[] = array($field->title, $field->name, _profile_field_types($field->type), $field->category, l(t('edit'), "admin/settings/profile/edit/$field->fid"), l(t('delete'), "admin/settings/profile/delete/$field->fid"));
+    $rows[] = array(check_plain($field->title), $field->name, _profile_field_types($field->type), $field->category, l(t('edit'), "admin/settings/profile/edit/$field->fid"), l(t('delete'), "admin/settings/profile/delete/$field->fid"));
   }
   if (count($rows) == 0) {
     $rows[] = array(array('data' => t('No fields defined.'), 'colspan' => '6'));

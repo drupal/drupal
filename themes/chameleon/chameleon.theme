@@ -18,10 +18,12 @@ function chameleon_features() {
 function chameleon_page($content) {
   $language = $GLOBALS['locale'];
 
+  $title = drupal_get_title();
+
   $output  = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n";
   $output .= "<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"$language\" xml:lang=\"$language\">\n";
   $output .= "<head>\n";
-  $output .= " <title>". ($title ? $title ." | ". variable_get("site_name", "drupal") : variable_get("site_name", "drupal") ." | ". variable_get("site_slogan", "")) ."</title>\n";
+  $output .= " <title>". ($title ? strip_tags($title) ." | ". variable_get("site_name", "drupal") : variable_get("site_name", "drupal") ." | ". variable_get("site_slogan", "")) ."</title>\n";
   $output .= drupal_get_html_head();
   $output .= " <link rel=\"stylesheet\" type=\"text/css\" href=\"themes/chameleon/common.css\" />\n";
   $output .= theme_get_styles();
@@ -63,7 +65,7 @@ function chameleon_page($content) {
 
   $output .= "   <td id=\"main\">\n";
 
-  if ($title = drupal_get_title()) {
+  if ($title) {
     $output .= theme("breadcrumb", drupal_get_breadcrumb());
     $output .= "<h2>$title</h2>";
   }
@@ -107,7 +109,7 @@ function chameleon_node($node, $main = 0, $page = 0) {
   $output  = "<div class=\"node\">\n";
 
   if (!$page) {
-    $output .= " <h2 class=\"title\">". ($main ? l($node->title, "node/$node->nid") : $node->title) ."</h2>\n";
+    $output .= " <h2 class=\"title\">". ($main ? l($node->title, "node/$node->nid") : check_plain($node->title)) ."</h2>\n";
   }
 
   $output .= " <div class=\"content\">\n";

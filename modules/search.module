@@ -503,7 +503,7 @@ function do_search($keywords, $type, $join = '', $where = '1', $variation = true
     $message = format_plural(count($refused),
                              'The word %words was not included because it is too short.',
                              'The words %words were not included because they were too short.');
-    drupal_set_message(strtr($message, array('%words' => '<em>'. drupal_specialchars(implode(', ', $refused)) .'</em>')));
+    drupal_set_message(strtr($message, array('%words' => theme('placeholder', implode(', ', $refused)))));
   }
 
   if (count($words) == 0) {
@@ -559,7 +559,7 @@ function search_view() {
     if ($type == '') {
       $type = 'node';
     }
-    drupal_goto('search/'. $type .'/'. urlencode($_POST['edit']['keys']));
+    drupal_goto('search/'. urlencode($type) .'/'. urlencode($_POST['edit']['keys']));
   }
   else if ($type == '') {
     // Note: search/node can not be a default tab because it would take on the
@@ -574,9 +574,9 @@ function search_view() {
     if (trim($keys)) {
       // Log the search keys:
       watchdog('search',
-        t('Search: %keys (%type).', array('%keys' => "<em>$keys</em>", '%type' => module_invoke($type, 'search', 'name'))),
+        t('Search: %keys (%type).', array('%keys' => theme('placeholder', $keys), '%type' => module_invoke($type, 'search', 'name'))),
         WATCHDOG_NOTICE,
-        l(t('results'), 'search', NULL, 'keys='. urlencode($keys) . '&type='. urlencode($type))
+        l(t('results'), 'search/'. urlencode($type) .'/'. urlencode($keys))
         );
 
       // Collect the search results:
@@ -833,7 +833,7 @@ function theme_search_item($item, $type) {
     $output = module_invoke($type, 'search_item', $item);
   }
   else {
-    $output = ' <dt class="title"><a href="'. $item['link'] .'">'. $item['title'] .'</a></dt>';
+    $output = ' <dt class="title"><a href="'. check_url($item['link']) .'">'. check_plain($item['title']) .'</a></dt>';
     $info = array();
     if ($item['type']) {
       $info[] = $item['type'];

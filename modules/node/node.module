@@ -990,7 +990,7 @@ function node_revision_overview($nid) {
   if (user_access('administer nodes')) {
     $node = node_load(array('nid' => $nid));
 
-    drupal_set_title($node->title);
+    drupal_set_title(check_plain($node->title));
 
     if ($node->revisions) {
       $header = array(t('Older revisions'), array('colspan' => '3', 'data' => t('Operations')));
@@ -1059,7 +1059,7 @@ function node_revision_rollback($nid, $revision) {
 
     node_save($rev, $filter);
 
-    drupal_set_message(t('Rolled back to revision %revision of %title', array('%revision' => "<em>#$revision</em>", '%title' => "<em>$node->title</em>")));
+    drupal_set_message(t('Rolled back to revision %revision of %title', array('%revision' => "<em>#$revision</em>", '%title' => theme('placeholder', $node->title))));
     drupal_goto('node/'. $nid .'/revisions');
   }
 }
@@ -1075,7 +1075,7 @@ function node_revision_delete($nid, $revision) {
 
     node_save($node, array('nid', 'revisions'));
 
-    drupal_set_message(t('Deleted revision %revision of %title', array('%revision' => "<em>#$revision</em>", '%title' => "<em>$node->title</em>")));
+    drupal_set_message(t('Deleted revision %revision of %title', array('%revision' => "<em>#$revision</em>", '%title' => theme('placeholder', $node->title))));
     drupal_goto('node/'. $nid . (count($node->revisions) ? '/revisions' : ''));
   }
 }
@@ -1199,9 +1199,8 @@ function node_validate($node) {
 
   // Validate the title field.
   if (isset($node->title)) {
-    $node->title = strip_tags($node->title);
-    if (!$node->title) {
-      form_set_error('title', t('You have to specify a valid title.'));
+    if (trim($node->title) == '') {
+      form_set_error('title', t('You have to specify a title.'));
     }
   }
 
@@ -1242,7 +1241,7 @@ function node_validate($node) {
       $node->uid = $account->uid;
     }
     else {
-      form_set_error('name', t('The name %name does not exist.', array ('%name' => "<em>$node->name</em>")));
+      form_set_error('name', t('The username %name does not exist.', array ('%name' => theme('placeholder', $node->name))));
     }
 
     // Validate the "authored on" field.
@@ -1309,7 +1308,7 @@ function node_form($edit) {
   $output .= '<div class="node-form">';
 
   // Add hidden 'op' variable, which specifies the default operation (Preview).
-  $output .= '<input type="hidden" name="op" value="'. check_form(t('Preview')) ."\" />\n";
+  $output .= '<input type="hidden" name="op" value="'. check_plain(t('Preview')) ."\" />\n";
 
   // Add the admin-specific parts.
   if (user_access('administer nodes')) {
@@ -1455,7 +1454,7 @@ function node_edit($id) {
 
   $node = node_load(array('nid' => $id));
 
-  drupal_set_title($node->title);
+  drupal_set_title(check_plain($node->title));
 
   $output = node_form($node);
 
@@ -1560,7 +1559,7 @@ function node_submit(&$node) {
     // perform this operation:
     if (node_access('update', $node)) {
       $node->nid = node_save($node);
-      watchdog('content', t('%type: updated %title.', array('%type' => '<em>'. t($node->type) .'</em>', '%title' => "<em>$node->title</em>")), WATCHDOG_NOTICE, l(t('view'), 'node/'. $node->nid));
+      watchdog('content', t('%type: updated %title.', array('%type' => theme('placeholder', t($node->type)), '%title' => theme('placeholder', $node->title))), WATCHDOG_NOTICE, l(t('view'), 'node/'. $node->nid));
       $msg = t('The %post was updated.', array ('%post' => node_invoke($node, 'node_name')));
     }
   }
@@ -1569,7 +1568,7 @@ function node_submit(&$node) {
     // perform this operation:
     if (node_access('create', $node)) {
       $node->nid = node_save($node);
-      watchdog('content', t('%type: added %title.', array('%type' => '<em>'. t($node->type) .'</em>', '%title' => "<em>$node->title</em>")), WATCHDOG_NOTICE, l(t('view'), "node/$node->nid"));
+      watchdog('content', t('%type: added %title.', array('%type' => theme('placeholder', t($node->type)), '%title' => theme('placeholder', $node->title))), WATCHDOG_NOTICE, l(t('view'), "node/$node->nid"));
       $msg = t('Your %post was created.', array ('%post' => node_invoke($node, 'node_name')));
     }
   }
@@ -1603,12 +1602,12 @@ function node_delete($edit) {
         search_wipe($node->nid, 'node');
       }
 
-      watchdog('content', t('%type: deleted %title.', array('%type' => '<em>'. t($node->type) .'</em>', '%title' => "<em>$node->title</em>")));
+      watchdog('content', t('%type: deleted %title.', array('%type' => theme('placeholder', t($node->type)), '%title' => theme('placeholder', $node->title))));
     }
     else {
       $extra = form_hidden('nid', $node->nid);
       $output = theme('confirm',
-                      t('Are you sure you want to delete %title?', array('%title' => '<em>'. $node->title .'</em>')),
+                      t('Are you sure you want to delete %title?', array('%title' => theme('placeholder', $node->title))),
                       $_GET['destination'] ? $_GET['destination'] : 'node/'. $node->nid,
                       t('This action cannot be undone.'),
                       t('Delete'),
@@ -1681,7 +1680,7 @@ function node_page() {
       if (is_numeric(arg(1))) {
         $node = node_load(array('nid' => arg(1)), $_GET['revision']);
         if ($node->nid) {
-          drupal_set_title($node->title);
+          drupal_set_title(check_plain($node->title));
           print theme('page', node_show($node, arg(2)));
         }
         else {
@@ -1758,7 +1757,7 @@ function node_update_index() {
     // Allow modules to change $node->body before viewing.
     node_invoke_nodeapi($node, 'view', false, false);
 
-    $text = '<h1>'. drupal_specialchars($node->title) .'</h1>'. $node->body;
+    $text = '<h1>'. check_plain($node->title) .'</h1>'. $node->body;
 
     // Fetch extra data normally not visible
     $extra = node_invoke_nodeapi($node, 'update index');

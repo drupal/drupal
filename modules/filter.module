@@ -60,9 +60,9 @@ function filter_filter_tips($delta, $format, $long = false) {
           if ($allowed_html = variable_get("allowed_html_$format", '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>')) {
             switch ($long) {
               case 0:
-                return t('Allowed HTML tags') .': '. drupal_specialchars($allowed_html);
+                return t('Allowed HTML tags') .': '. check_plain($allowed_html);
               case 1:
-                $output = '<p>'. t('Allowed HTML tags') .': '. drupal_specialchars($allowed_html) .'</p>';
+                $output = '<p>'. t('Allowed HTML tags') .': '. check_plain($allowed_html) .'</p>';
                 if (!variable_get("filter_html_help_$format", 1)) {
                   return $output;
                 }
@@ -111,14 +111,14 @@ function filter_filter_tips($delta, $format, $long = false) {
                     if ($tips[$tag]) {
                       $rows[] = array(
                         array('data' => $tips[$tag][0], 'class' => 'description'),
-                        array('data' => '<code>'. drupal_specialchars($tips[$tag][1]) .'</code>', 'class' => 'type'),
+                        array('data' => '<code>'. check_plain($tips[$tag][1]) .'</code>', 'class' => 'type'),
                         array('data' => $tips[$tag][1], 'class' => 'get')
                       );
                     }
                   }
                   else {
                     $rows[] = array(
-                      array('data' => t('No help provided for tag %tag.', array('%tag' => drupal_specialchars($tag))), 'class' => 'description', 'colspan' => 3),
+                      array('data' => t('No help provided for tag %tag.', array('%tag' => check_plain($tag))), 'class' => 'description', 'colspan' => 3),
                     );
                   }
                 }
@@ -137,7 +137,7 @@ function filter_filter_tips($delta, $format, $long = false) {
                 foreach ($entities as $entity) {
                   $rows[] = array(
                     array('data' => $entity[0], 'class' => 'description'),
-                    array('data' => '<code>'. drupal_specialchars($entity[1]) .'</code>', 'class' => 'type'),
+                    array('data' => '<code>'. check_plain($entity[1]) .'</code>', 'class' => 'type'),
                     array('data' => $entity[1], 'class' => 'get')
                   );
                 }
@@ -365,7 +365,7 @@ function filter_admin_add() {
     db_query("INSERT INTO {filter_formats} (name) VALUES ('%s')", $name);
   }
 
-  drupal_set_message(t('Added input format %format.', array('%format' => '<em>'. $edit['name'] .'</em>')));
+  drupal_set_message(t('Added input format %format.', array('%format' => theme('placeholder', $edit['name']))));
   drupal_goto('admin/filters');
 }
 
@@ -386,7 +386,7 @@ function filter_admin_delete() {
 
       cache_clear_all('filter:'. $edit['format'], true);
 
-      drupal_set_message(t('Deleted input format %format.', array('%format' => '<em>'. $edit['name'] .'</em>')));
+      drupal_set_message(t('Deleted input format %format.', array('%format' => theme('placeholder', $edit['name']))));
     }
     drupal_goto('admin/filters');
   }
@@ -397,7 +397,7 @@ function filter_admin_delete() {
   $extra  = form_hidden('format', $format->format);
   $extra .= form_hidden('name', $format->name);
   $output = theme('confirm',
-                  t('Are you sure you want to delete the input format %format?', array('%format' => '<em>'. $format->name .'</em>')),
+                  t('Are you sure you want to delete the input format %format?', array('%format' => theme('placeholder', $format->name))),
                   'admin/filters',
                   t('If you have any content left in this input format, it will be switched to the default input format. This action cannot be undone.'),
                   t('Delete'),
@@ -927,7 +927,7 @@ function _filter_html($text, $format) {
 
   if (variable_get("filter_html_$format", FILTER_HTML_STRIP) == FILTER_HTML_ESCAPE) {
     // Escape HTML
-    $text = drupal_specialchars($text);
+    $text = check_plain($text);
   }
 
   if (variable_get("filter_html_nofollow_$format", FALSE)) {

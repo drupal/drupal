@@ -393,7 +393,7 @@ function drupal_get_title() {
   if (!isset($title)) {
     // during a bootstrap, menu.inc is not included and thus we cannot provide a title
     if (function_exists('menu_get_active_title')) {
-      $title = menu_get_active_title();
+      $title = check_plain(menu_get_active_title());
     }
   }
 
@@ -509,7 +509,7 @@ function drupal_unpack($obj, $field = 'data') {
  */
 function referer_uri() {
   if (isset($_SERVER['HTTP_REFERER'])) {
-    return check_url($_SERVER['HTTP_REFERER']);
+    return $_SERVER['HTTP_REFERER'];
   }
 }
 
@@ -537,14 +537,14 @@ function arg($index) {
 }
 
 /**
- * Prepare user input for use in a URI.
+ * Prepare a URL for use in an HTML attribute.
  *
- * We replace ( and ) with their entity equivalents to prevent XSS attacks.
+ * We replace ( and ) with their url-encoded equivalents to prevent XSS attacks.
  */
 function check_url($uri) {
   $uri = htmlspecialchars($uri, ENT_QUOTES);
 
-  $uri = strtr($uri, array('(' => '&040;', ')' => '&041;'));
+  $uri = strtr($uri, array('(' => '%28', ')' => '%29'));
 
   return $uri;
 }
@@ -567,7 +567,7 @@ function request_uri() {
     }
   }
 
-  return check_url($uri);
+  return $uri;
 }
 
 /**

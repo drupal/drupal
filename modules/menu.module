@@ -120,7 +120,7 @@ function menu_reset() {
       break;
     default:
       $output = theme('confirm',
-                      t('Are you sure you want to reset all menu items to their default settings?', array('%item' => '<em>'. $title .'</em>')),
+                      t('Are you sure you want to reset all menu items to their default settings?'),
                       'admin/menu',
                       t('Any custom additions or changes to the menu will be lost.'),
                       t('Reset all'));
@@ -167,7 +167,7 @@ function menu_reset_item($mid) {
     default:
       $title = db_result(db_query('SELECT title FROM {menu} WHERE mid = %d', $mid));
       $output = theme('confirm',
-                      t('Are you sure you want to reset the item %item to its default values?', array('%item' => '<em>'. $title .'</em>')),
+                      t('Are you sure you want to reset the item %item to its default values?', array('%item' => theme('placeholder', $title))),
                       'admin/menu',
                       t('Any customizations will be lost. This action cannot be undone.'),
                       t('Reset'));
@@ -198,10 +198,10 @@ function menu_delete_item($mid) {
       break;
     default:
       if ($menu->type & MENU_IS_ROOT) {
-        $message = t('Are you sure you want to delete the menu %item?', array('%item' => '<em>'. $menu->title .'</em>'));
+        $message = t('Are you sure you want to delete the menu %item?', array('%item' => theme('placeholder', $menu->title)));
       }
       else {
-        $message = t('Are you sure you want to delete the custom menu item %item?', array('%item' => '<em>'. $menu->title .'</em>'));
+        $message = t('Are you sure you want to delete the custom menu item %item?', array('%item' => theme('placeholder', $menu->title)));
       }     
       $output = theme('confirm', $message, 'admin/menu', t('This action cannot be undone.'), t('Delete'));
       print theme('page', $output);
@@ -348,16 +348,16 @@ function menu_edit_item_save($edit) {
 
   if ($edit['mid']) {
     db_query("UPDATE {menu} SET pid = %d, path = '%s', title = '%s', description = '%s', weight = %d, type = %d WHERE mid = %d", $edit['pid'], $edit['path'], $edit['title'], $edit['description'], $edit['weight'], $edit['type'] | MENU_MODIFIED_BY_ADMIN, $edit['mid']);
-    drupal_set_message(t('Updated menu item %title.', array('%title' => '<em>'. $edit['title'] .'</em>')));
+    drupal_set_message(t('Updated menu item %title.', array('%title' => theme('placeholder', $edit['title']))));
   }
   else {
     $mid = db_next_id('{menu}_mid');
     db_query("INSERT INTO {menu} (mid, pid, path, title, description, weight, type) VALUES (%d, %d, '%s', '%s', '%s', %d, %d)", $mid, $edit['pid'], $edit['path'], $edit['title'], $edit['description'], $edit['weight'], $edit['type'] | MENU_MODIFIED_BY_ADMIN);
-    drupal_set_message(t('Created new menu item %title.', array('%title' => '<em>'. $edit['title'] .'</em>')));
+    drupal_set_message(t('Created new menu item %title.', array('%title' => theme('placeholder', $edit['title']))));
     if (array_key_exists($edit['path'], $menu['path index'])) {
       $old_mid = $menu['path index'][$edit['path']];
       $old_item = $menu['items'][$old_mid];
-      drupal_set_message(t('Since a menu item %old already exists for %path, this new menu item was created as a shortcut to that location.', array('%old' => l('<em>'. $old_item['title'] .'</em>', 'admin/menu/item/edit/'. $old_mid), '%path' => '<em>'. $edit['path'] .'</em>')));
+      drupal_set_message(t('Since a menu item %old already exists for %path, this new menu item was created as a shortcut to that location.', array('%old' => l(theme('placeholder', $old_item['title']), 'admin/menu/item/edit/'. $old_mid, array(), NULL, NULL, FALSE, TRUE), '%path' => theme('placeholder', $edit['path']))));
     }
   }
 }

@@ -130,7 +130,7 @@ function taxonomy_save_vocabulary($edit) {
       db_query("INSERT INTO {vocabulary_node_types} (vid, type) VALUES (%d, '%s')", $edit['vid'], $type);
     }
     module_invoke_all('taxonomy', 'update', 'vocabulary', $edit);
-    $message = t('Updated vocabulary %name.', array('%name' => '<em>'. $edit['name'] .'</em>'));
+    $message = t('Updated vocabulary %name.', array('%name' => theme('placeholder', $edit['name'])));
   }
   else if ($edit['vid']) {
     $message = taxonomy_del_vocabulary($edit['vid']);
@@ -142,7 +142,7 @@ function taxonomy_save_vocabulary($edit) {
       db_query("INSERT INTO {vocabulary_node_types} (vid, type) VALUES (%d, '%s')", $edit['vid'], $type);
     }
     module_invoke_all('taxonomy', 'insert', 'vocabulary', $edit);
-    $message = t('Created new vocabulary %name.', array('%name' => '<em>'. $edit['name'] .'</em>'));
+    $message = t('Created new vocabulary %name.', array('%name' => theme('placeholder', $edit['name'])));
   }
 
   cache_clear_all();
@@ -236,7 +236,7 @@ function taxonomy_save_term($edit) {
 
     db_query('UPDATE {term_data} SET '. _taxonomy_prepare_update($data) .' WHERE tid = %d', $edit['tid']);
     module_invoke_all('taxonomy', 'update', 'term', $edit);
-    $message = t('The term %term has been updated.', array('%term' => '<em>'. $edit['name'] .'</em>'));
+    $message = t('The term %term has been updated.', array('%term' => theme('placeholder', $edit['name'])));
   }
   else if ($edit['tid']) {
     return taxonomy_del_term($edit['tid']);
@@ -246,7 +246,7 @@ function taxonomy_save_term($edit) {
     $data = array('tid' => $edit['tid'], 'name' => $edit['name'], 'description' => $edit['description'], 'vid' => $edit['vid'], 'weight' => $edit['weight']);
     db_query('INSERT INTO {term_data} '. _taxonomy_prepare_insert($data, 1) .' VALUES '. _taxonomy_prepare_insert($data, 2));
     module_invoke_all('taxonomy', 'insert', 'term', $edit);
-    $message = t('Created new term %term.', array('%term' => '<em>'. $edit['name'] .'</em>'));
+    $message = t('Created new term %term.', array('%term' => theme('placeholder', $edit['name'])));
   }
 
   db_query('DELETE FROM {term_relation} WHERE tid1 = %d OR tid2 = %d', $edit['tid'], $edit['tid']);
@@ -315,7 +315,7 @@ function taxonomy_del_term($tid) {
       db_query('DELETE FROM {term_node} WHERE tid = %d', $tid);
 
       module_invoke_all('taxonomy', 'delete', 'term', $term);
-      drupal_set_message(t('Deleted term %name.', array('%name' => '<em>'. $term->name .'</em>')));
+      drupal_set_message(t('Deleted term %name.', array('%name' => theme('placeholder', $term->name))));
     }
 
     $tids = $orphans;
@@ -331,7 +331,7 @@ function _taxonomy_confirm_del_term($tid) {
   $extra .= form_hidden('tid', $tid);
 
   $output = theme('confirm',
-                  t('Are you sure you want to delete the term %title?', array('%title' => '<em>'. $term->name .'</em>')),
+                  t('Are you sure you want to delete the term %title?', array('%title' => theme('placeholder', $term->name))),
                   'admin/taxonomy',
                   t('Deleting a term will delete all its children if there are any. This action cannot be undone.'),
                   t('Delete'),
@@ -357,13 +357,13 @@ function taxonomy_overview() {
         $types[] = $node_type ? $node_type : $type;
       }
 
-      $rows[] = array($vocabulary->name, implode(', ', $types), l(t('edit vocabulary'), "admin/taxonomy/edit/vocabulary/$vocabulary->vid"), l(t('add term'), "admin/taxonomy/add/term/$vocabulary->vid"), l(t('preview form'), "admin/taxonomy/preview/vocabulary/$vocabulary->vid"));
+      $rows[] = array(check_plain($vocabulary->name), implode(', ', $types), l(t('edit vocabulary'), "admin/taxonomy/edit/vocabulary/$vocabulary->vid"), l(t('add term'), "admin/taxonomy/add/term/$vocabulary->vid"), l(t('preview form'), "admin/taxonomy/preview/vocabulary/$vocabulary->vid"));
 
       $tree = taxonomy_get_tree($vocabulary->vid);
       if ($tree) {
         unset($data);
       foreach ($tree as $term) {
-        $data .= _taxonomy_depth($term->depth) .' '. $term->name .' ('. l(t('edit term'), "admin/taxonomy/edit/term/$term->tid") .')<br />';
+        $data .= _taxonomy_depth($term->depth) .' '. check_plain($term->name) .' ('. l(t('edit term'), "admin/taxonomy/edit/term/$term->tid") .')<br />';
       }
       $rows[] = array(array('data' => $data, 'colspan' => '5'));
       }
@@ -390,7 +390,7 @@ function taxonomy_form($vid, $value = 0, $help = NULL, $name = 'taxonomy') {
     $blank = '<'. t('none') .'>';
   }
 
-  return _taxonomy_term_select($vocabulary->name, $name, $value, $vid, $help, intval($vocabulary->multiple), $blank);
+  return _taxonomy_term_select(check_plain($vocabulary->name), $name, $value, $vid, $help, intval($vocabulary->multiple), $blank);
 }
 
 /**
