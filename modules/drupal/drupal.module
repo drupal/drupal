@@ -9,13 +9,11 @@ function drupal_page() {
 
   $output  = " <P>Drupal is the English pronunciation for the Dutch word 'druppel' which stands for 'drop'.  Drupal is a full-featured content management/discussion engine suitable to setup a news-driven community or portal site.  Drupal aims towards easy installation, excessive configuration and fine-grained maintenance capabilities.  Due to its modular design drupal is flexible and easy to adapt or extend.</P>\n";
   $output .= " <P>Drupal is primarily written by Dries Buytaert (dries_at_drop.org) and build after Slash (<A HREF=\"http://slashcode.com/\">http://slashcode.com/</A>) and Scoop (<A HREF=\"http://scoop.kuro5hin.org/\">http://scoop.kuro5hin.org/</A>).  The source code is available under terms of GNU General Public License (GPL).</P>\n";
-  $output .= " <P>We don't have a real demo site yet but drupal is used by (and created for) <A HREF=\"http://drop.org/\">http://drop.org/</A>.  Create an account, play with it for a bit, read the <A HREF=\"module.php?mod=documentation\">documentation</A> and spend some time getting used to it.</P>\n";
+  $output .= " <P>We don't have a real demo site yet but drupal is used by (and created for) <A HREF=\"http://drop.org/\">http://drop.org/</A>.  Create an account, play with it for a bit, read the <A HREF=\"module.php?mod=book\">documentation</A> and spend some time getting used to it.</P>\n";
   $theme->box("Introduction", $output);
 
   $output  = "<LI><A HREF=\"drupal/drupal-2.00.tgz\">drupal 2.00</A> (2001/03/15 - latest version)</LI>\n";
-  $output .= "<LI><A HREF=\"drupal/drupal-1.00.tgz\">drupal 1.00</A> (2001/01/15)</LI>\n";
-  $output .= "<LI><A HREF=\"drupal/drupal-1.00-rc2.tgz\">drupal 1.00-rc2</A> (2001/01/08)</LI>\n";
-  $output .= "<LI><A HREF=\"drupal/drupal-1.00-rc1.tgz\">drupal 1.00-rc1</A> (2001/01/01)</LI>\n";
+  $output .= "<LI>drupal 1.00 (2001/01/15)</LI>\n";
   $theme->box("Download", $output);
 
   unset($output);
@@ -25,7 +23,7 @@ function drupal_page() {
   $theme->box("Screenshots", $output);
 
   $output  = "<H3>Documentation</H3>\n";
-  $output .= " <LI><A HREF=\"module.php?mod=documentation\">documentation</A></LI>\n";
+  $output .= " <LI><A HREF=\"module.php?mod=book\">documentation</A></LI>\n";
   $output .= " <LI><A HREF=\"module.php?mod=wishlist\">wishlist</A></LI>\n";
   $output .= "<H3>Mailing list</H3>\n";
   $output .= " <P>The <CODE>drupal-support@drop.org</CODE> list discusses drupal development. All submissions relevant to that, such as bug reports, enhancement ideas, patches or reports that a patch fixed a bug are appropriate.</P>\n";
