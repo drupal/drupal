@@ -921,7 +921,7 @@ function update_80() {
       db_query("ALTER TABLE {users} ALTER COLUMN picture SET DEFAULT ''");
     }
 
-    $result = db_query("SELECT uid FROM {users}");
+    $result = db_query("SELECT uid FROM {users} WHERE uid > 0");
     while ($account = db_fetch_object($result)) {
       // Load the user record:
       $account = user_load(array('uid' => $account->uid));
@@ -929,12 +929,12 @@ function update_80() {
 
       // Modify the user record:
       foreach ($fields as $field) {
-  $old = "profile_". $field[1];
-  $new = $field[1];
-  if ($account->$old) {
-    $edit[$new] = $account->$old;
-  }
-  unset($account->$old);
+        $old = "profile_". $field[1];
+        $new = $field[1];
+        if ($account->$old) {
+          $edit[$new] = $account->$old;
+        }
+        unset($account->$old);
       }
 
       // Gender specific changes:
@@ -943,12 +943,12 @@ function update_80() {
 
       // Avatar specific changes:
       if ($account->profile_avatar) {
-  $edit['picture'] = $account->profile_avatar;
+        $edit['picture'] = $account->profile_avatar;
       }
       unset($account->profile_avatar);
 
       // Save the update record:
-      user_save($account, $edit);
+      user_save($account, $edit, 'Personal information');
     }
 
   return $ret;
