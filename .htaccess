@@ -11,7 +11,7 @@
 #  .inc files can be read from the web so make sure we keep it 
 #  away from the casual prying eyes.  Especially `config.inc'.
 <Files *.inc>
-  order deny, allow
+  order deny,allow
   deny from all
 </Files>
 
