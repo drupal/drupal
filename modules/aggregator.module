@@ -424,6 +424,7 @@ function aggregator_parse_feed(&$data, $feed) {
     else if ($item['DCTERMS:ISSUED']) $date = $item['DCTERMS:ISSUED'];     // Dublin core
     else if ($item['DCTERMS:CREATED']) $date = $item['DCTERMS:CREATED'];   // Dublin core
     else if ($item['DCTERMS:MODIFIED']) $date = $item['DCTERMS:MODIFIED']; // Dublin core
+    else $date = 'now';
 
     $timestamp = strtotime($date);  // strtotime() returns -1 on failure
 
