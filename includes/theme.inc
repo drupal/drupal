@@ -32,7 +32,7 @@ function theme_account($region, $theme) {
     $content .= "<a href=\"account.php?op=edit&type=settings\">". t("your settings") ."</a><BR>\n";
     $content .= "<a href=\"account.php?op=edit&type=blocks\">". t("your blocks") ."</a><BR>\n";
     $content .= "<a href=\"account.php?op=view&type=comments\">". t("your comments") ."</a><BR>\n";
-    $content .= "<a href=\"account.php?op=view&type=contributions\">". t("your contributions") ."</a><BR>\n";
+    $content .= "<a href=\"account.php?op=view&type=contributions\">". t("your submissions") ."</a><BR>\n";
     $content .= "<a href=\"account.php?op=view&type=site\">". strtr(t("your %a"), array("%a" => variable_get("site_name", "drupal"))) ."</a><BR>\n";
     $content .= "<p />\n";
 

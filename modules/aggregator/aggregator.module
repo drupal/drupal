@@ -433,6 +433,17 @@ function import_admin() {
   }
 }
 
+function import_page_info() {
+  global $theme;
+
+  $links[] = "<a href=\"module.php?mod=import\">". t("latest news") ."</a>";
+  $links[] = "<a href=\"module.php?mod=import&op=bundles\">". t("news by source") ."</a>";
+  $links[] = "<a href=\"module.php?mod=import&op=feeds\">". t("news by topic") ."</a>";
+  $links[] = "<a href=\"module.php?mod=import&op=sources\">". t("news sources") ."</a>";
+
+  return "<div align=\"center\">". $theme->links($links) ."</div>";
+}
+
 function import_page_last() {
   global $theme;
 
@@ -442,11 +453,9 @@ function import_page_last() {
   while ($item = db_fetch_object($result)) {
     $links[] = "<a href=\"submit.php?mod=blog&type=import&id=$item->iid\">". t("blog") ."</a>";
     $links[] = "<a href=\"module.php?mod=import&op=feed&id=$item->fid\">". t("feed") ."</a>";
-    $links[] = "<a href=\"module.php?mod=import&op=bundles\">". t("by topic") ."</a>";
-    $links[] = "<a href=\"module.php?mod=import&op=feeds\">". t("by source") ."</a>";
 
     if ($item->link) {
-      $output .= "<tr><td>". format_url($item->link, $item->title) ." &middot; <a href=\"module.php?mod=import&op=feed&id=$item->fid\">$item->ftitle</a></td><td align=\"right\" nowrap=\"nowrap\">". $theme->links($links) ."</td></tr>\n";
+      $output .= "<tr><td>". format_url($item->link, $item->title) ." &middot; <a href=\"module.php?mod=import&op=feed&id=$item->fid\">$item->ftitle</a></td><td align=\"right\" nowrap=\"nowrap\" valign=\"top\">". $theme->links($links) ."</td></tr>\n";
     }
     if ($item->description) {
       $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 20px;\">". check_output($item->description) ."</div><br /></td></tr>";
@@ -457,6 +466,7 @@ function import_page_last() {
   $output .= "</table>\n";
 
   $theme->header();
+  $theme->box(t("News feeds"), import_page_info());
   $theme->box(t("Latest news"), $output);
   $theme->footer();
 }
@@ -478,7 +488,7 @@ function import_page_feed($fid) {
     $links[] = "<a href=\"$item->link\">". t("visit") ."</a>";
 
     if ($item->link) {
-      $output .= "<tr><td>". format_url($item->link, $item->title) ."</td><td align=\"right\" nowrap=\"nowrap\">". $theme->links($links) ."</td></tr>\n";
+      $output .= "<tr><td>". format_url($item->link, $item->title) ."</td><td align=\"right\" nowrap=\"nowrap\" valign=\"top\">". $theme->links($links) ."</td></tr>\n";
     }
     if ($item->description) {
       $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 20px;\">". check_output($item->description) ."</div><br /></td></tr>";
@@ -514,7 +524,7 @@ function import_page_bundle($bid) {
     $links[] = "<a href=\"$item->link\">". t("visit") ."</a>";
 
     if ($item->link) {
-      $output .= "<tr><td>". format_url($item->link, $item->title) ." &middot; <a href=\"module.php?mod=import&op=feed&id=$item->fid\">$item->ftitle</a></td><td align=\"right\" nowrap=\"nowrap\">". $theme->links($links) ."</td></tr>\n";
+      $output .= "<tr><td>". format_url($item->link, $item->title) ." &middot; <a href=\"module.php?mod=import&op=feed&id=$item->fid\">$item->ftitle</a></td><td align=\"right\" nowrap=\"nowrap\" valign=\"top\">". $theme->links($links) ."</td></tr>\n";
     }
     if ($item->description) {
       $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 20px;\">". check_output($item->description) ."</div><br /></td></tr>";
@@ -529,6 +539,23 @@ function import_page_bundle($bid) {
   $theme->box(t("Latest news"), $output);
   $theme->footer();
 
+}
+
+function import_page_sources() {
+  global $theme;
+
+  $result = db_query("SELECT * FROM feed ORDER BY title");
+
+  while ($feed = db_fetch_object($result)) {
+    $output .= "<a href=\"$feed->url\"><img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" /></a>\n";
+    $output .= format_url("module.php?mod=import&op=feed&id=$feed->fid", $feed->title);
+    $output .= "<p><div style=\"margin-left: 20px;\">". check_output($feed->description) ."</div></p>";
+  }
+
+  $theme->header();
+  $theme->box(t("News feeds"), import_page_info());
+  $theme->box(t("News sources"), $output);
+  $theme->footer();
 }
 
 function import_page_bundles() {
@@ -550,6 +577,7 @@ function import_page_blocks($blocks) {
   $i = 0;
 
   $theme->header();
+  $theme->box(t("News feeds"), import_page_info());
   print "<table cellpadding=\"0\" cellspacing=\"5\" border=\"0\" width=\"100%\">\n";
   print " <tr>\n";
   print "  <td width=\"33%\" valign=\"top\">\n";
@@ -571,20 +599,20 @@ function import_page() {
 
   if (user_access("access news feeds")) {
     switch($op) {
-      case "all":
-        import_page_last();
-        break;
       case "feed":
         import_page_feed($id);
         break;
       case "bundle":
         import_page_bundle($id);
         break;
+      case "feeds":
+        import_page_feeds();
+        break;
       case "bundles":
         import_page_bundles();
         break;
-      case "feeds":
-        import_page_feeds();
+      case "sources":
+        import_page_sources();
         break;
       default:
         import_page_last();
