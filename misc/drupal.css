@@ -10,7 +10,7 @@ th {
   border-bottom: 1px solid #ccc;
 }
 fieldset {
-  display: inline;
+  margin-bottom: 1em;
 }
 #tracker table {
   border-collapse: collapse;

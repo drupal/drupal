@@ -2,6 +2,8 @@ Drupal x.x.x, xxxx-xx-xx
 ------------------------
 
 - added support for the MetaWeblog API and MoveableType extensions.
+- performance:
+    * improved module loading when serving cached pages.
 - theme system:
     * made all theme functions start with 'theme_'.
     * made all theme functions return their output.

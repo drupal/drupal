@@ -37,6 +37,9 @@ a:hover {
   color: #39c;
   text-decoration: underline;
 }
+fieldset {
+  border: 1px solid #ccc;
+}
 p {
   margin: 0 0 1em 0;
   padding: 0;
