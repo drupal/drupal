@@ -1,5 +1,5 @@
 <?php
-/* $Id: file.inc,v 1.31 2004/11/08 22:31:18 dries Exp $ */
+/* $Id: file.inc,v 1.32 2004/11/15 12:04:44 dries Exp $ */
 
 /**
  * @file
@@ -12,11 +12,12 @@
  * Common file handling functions.
  */
 
+define('IS_WINDOWS', substr(PHP_OS, 0, 3) == 'WIN');
 define('FILE_DOWNLOADS_PUBLIC', 1);
 define('FILE_DOWNLOADS_PRIVATE', 2);
 define('FILE_CREATE_DIRECTORY', 1);
 define('FILE_MODIFY_PERMISSIONS', 2);
-define('FILE_DIRECTORY_TEMP', PHP_OS == 'WINNT' ? 'c:\\windows\\temp' : '/tmp');
+define('FILE_DIRECTORY_TEMP', IS_WINDOWS ? 'c:\\windows\\temp' : '/tmp');
 define('FILE_EXISTS_RENAME', 0);
 define('FILE_EXISTS_REPLACE', 1);
 define('FILE_EXISTS_ERROR', 2);
@@ -52,7 +53,7 @@ function file_create_path($dest = 0) {
     return variable_get('file_directory_path', 'files');
   }
 
-  $regex = (PHP_OS == 'WINNT' ? '.?:\\\\' : '/');
+  $regex = (IS_WINDOWS ? '.?:\\\\' : '/');
   if (!file_check_location($dest, variable_get('file_directory_path', 'files')) && !preg_match("|^$regex|", $dest)) {
     return variable_get('file_directory_path', 'files') .'/'. trim($dest, '\\/');
   }
