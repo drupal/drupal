@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.180 2003/03/08 21:15:10 dries Exp $
+// $Id: common.inc,v 1.181 2003/03/09 16:55:07 kjartan Exp $
 
 function conf_init() {
   global $HTTP_HOST, $PHP_SELF;
@@ -709,7 +709,7 @@ function format_date($timestamp, $type = "medium", $format = "") {
         if (strstr("DFlMSw", $c)) {
           $date = t(date($c, $timestamp)) . $date;
         }
-        else if (strstr("AaBdgGhHiIjLmnrstTUWYyZz", $c)) {
+        else if (strstr("AaBdgGhHiIjLmnOrstTUWYyZz", $c)) {
           $date = date($c, $timestamp) . $date;
         }
         else {
