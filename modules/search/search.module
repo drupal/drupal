@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.114 2005/02/27 02:46:37 unconed Exp $
+// $Id: search.module,v 1.115 2005/02/27 18:39:18 unconed Exp $
 
 /**
  * @file
@@ -540,6 +540,9 @@ function search_view() {
   // the search query URL clean as a whistle:
   // search/type/keyword+keyword
   if ($_POST['edit']['keys']) {
+    if ($type == '') {
+      $type = 'node';
+    }
     drupal_goto('search/'. $type .'/'. urlencode($_POST['edit']['keys']));
   }
   else if ($type == '') {
