@@ -325,3 +325,10 @@ CREATE TABLE blog (
    body text NOT NULL,
    PRIMARY KEY (lid)
 );
+
+#13/06/01
+ALTER TABLE site CHANGE title name varchar(128) DEFAULT '' NOT NULL;
+ALTER TABLE site CHANGE url link varchar(255) DEFAULT '' NOT NULL;
+ALTER TABLE site ADD feed varchar(255) DEFAULT '' NOT NULL;
+
+
