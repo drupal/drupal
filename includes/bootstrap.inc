@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.30 2004/10/04 22:04:07 dries Exp $
+// $Id: bootstrap.inc,v 1.31 2004/10/12 19:50:12 dries Exp $
 
 /**
  * @file
@@ -375,9 +375,14 @@ function request_uri() {
     $uri = $_SERVER['REQUEST_URI'];
   }
   else {
-    $uri = $_SERVER['PHP_SELF'] .'?'. $_SERVER['argv'][0];
+    if (isset($_SERVER['argv'])) {
+      $uri = $_SERVER['PHP_SELF'] .'?'. $_SERVER['argv'][0];
+    }
+    else {
+      $uri = $_SERVER['PHP_SELF'] .'?'. $_SERVER['QUERY_STRING'];
+    }
   }
-
+  
   return check_url($uri);
 }
 
