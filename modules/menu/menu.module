@@ -136,7 +136,7 @@ function menu_add_menu() {
       break;
     default:
       $edit['pid'] = 0;
-      $edit['type'] = MENU_CUSTOM_ITEM;
+      $edit['type'] = MENU_CUSTOM_MENU;
       $output .= menu_edit_item_form($edit);
   }
 
@@ -275,8 +275,13 @@ function menu_edit_item_form($edit) {
   $form .= form_submit(t('Submit'));
 
   $form .= form_hidden('mid', $edit['mid']);
-  // Always enable menu items when editing them.
-  $form .= form_hidden('type', $edit['type'] | MENU_VISIBLE_IN_TREE | MENU_VISIBLE_IN_BREADCRUMB);
+
+  // Always enable menu items (but not menus) when editing them.
+  if (!($edit['type'] & MENU_IS_ROOT)) {
+    $edit['type'] |= MENU_VISIBLE_IN_TREE | MENU_VISIBLE_IN_BREADCRUMB;
+  }
+
+  $form .= form_hidden('type', $edit['type']);
 
   return form($form);
 }
