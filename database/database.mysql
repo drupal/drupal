@@ -30,6 +30,75 @@ CREATE TABLE accesslog (
 ) TYPE=MyISAM;
 
 --
+-- Table structure for table 'aggregator_category'
+--
+
+CREATE TABLE aggregator_category (
+  cid int(10) NOT NULL auto_increment,
+  title varchar(255) NOT NULL default '',
+  description longtext NOT NULL,
+  block tinyint(2) NOT NULL default '0',
+  PRIMARY KEY  (cid),
+  UNIQUE KEY title (title)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table 'aggregator_category_feed'
+--
+
+CREATE TABLE aggregator_category_feed (
+  fid int(10) NOT NULL default '0',
+  cid int(10) NOT NULL default '0',
+  PRIMARY KEY  (fid,cid)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table 'aggregator_category_item'
+--
+
+CREATE TABLE aggregator_category_item (
+  iid int(10) NOT NULL default '0',
+  cid int(10) NOT NULL default '0',
+  PRIMARY KEY  (iid,cid)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table 'aggregator_feed'
+--
+
+CREATE TABLE aggregator_feed (
+  fid int(10) NOT NULL auto_increment,
+  title varchar(255) NOT NULL default '',
+  url varchar(255) NOT NULL default '',
+  refresh int(10) NOT NULL default '0',
+  checked int(10) NOT NULL default '0',
+  link varchar(255) NOT NULL default '',
+  description longtext NOT NULL,
+  image longtext NOT NULL,
+  etag varchar(255) NOT NULL default '',
+  modified int(10) NOT NULL default '0',
+  block tinyint(2) NOT NULL default '0',
+  PRIMARY KEY  (fid),
+  UNIQUE KEY link (url),
+  UNIQUE KEY title (title)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table 'aggregator_item'
+--
+
+CREATE TABLE aggregator_item (
+  iid int(10) NOT NULL auto_increment,
+  fid int(10) NOT NULL default '0',
+  title varchar(255) NOT NULL default '',
+  link varchar(255) NOT NULL default '',
+  author varchar(255) NOT NULL default '',
+  description longtext NOT NULL,
+  timestamp int(11) default NULL,
+  PRIMARY KEY  (iid)
+) TYPE=MyISAM;
+
+--
 -- Table structure for table 'authmap'
 --
 
@@ -87,18 +156,6 @@ CREATE TABLE boxes (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'bundle'
---
-
-CREATE TABLE bundle (
-  bid int(10) NOT NULL auto_increment,
-  title varchar(255) NOT NULL default '',
-  attributes varchar(255) NOT NULL default '',
-  PRIMARY KEY  (bid),
-  UNIQUE KEY title (title)
-) TYPE=MyISAM;
-
---
 -- Table structure for table 'cache'
 --
 
@@ -147,27 +204,6 @@ CREATE TABLE directory (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'feed'
---
-
-CREATE TABLE feed (
-  fid int(10) NOT NULL auto_increment,
-  title varchar(255) NOT NULL default '',
-  url varchar(255) NOT NULL default '',
-  refresh int(10) NOT NULL default '0',
-  checked int(10) NOT NULL default '0',
-  attributes varchar(255) NOT NULL default '',
-  link varchar(255) NOT NULL default '',
-  description longtext NOT NULL,
-  image longtext NOT NULL default '',
-  etag varchar(255) NOT NULL default '',
-  modified int(10) NOT NULL default '0',
-  PRIMARY KEY  (fid),
-  UNIQUE KEY link (url),
-  UNIQUE KEY title (title)
-) TYPE=MyISAM;
-
---
 -- Table structure for table 'filters'
 --
 
@@ -198,22 +234,6 @@ CREATE TABLE history (
   nid int(10) NOT NULL default '0',
   timestamp int(11) NOT NULL default '0',
   PRIMARY KEY  (uid,nid)
-) TYPE=MyISAM;
-
---
--- Table structure for table 'item'
---
-
-CREATE TABLE item (
-  iid int(10) NOT NULL auto_increment,
-  fid int(10) NOT NULL default '0',
-  title varchar(255) NOT NULL default '',
-  link varchar(255) NOT NULL default '',
-  author varchar(255) NOT NULL default '',
-  description longtext NOT NULL,
-  timestamp int(11) default NULL,
-  attributes varchar(255) NOT NULL default '',
-  PRIMARY KEY  (iid)
 ) TYPE=MyISAM;
 
 --
