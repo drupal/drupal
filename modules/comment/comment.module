@@ -301,7 +301,7 @@ function comment_links($comment, $return = 1) {
   global $user, $theme;
 
   $links = array();
-  
+
   /*
   ** If we are viewing just this comment, we link back to the node
   */

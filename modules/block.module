@@ -272,7 +272,7 @@ function block_admin() {
     $links[] = la(t("preview"), array("mod" => "block", "op" => "preview"));
     $links[] = la(t("help"), array("mod" => "block", "op" => "help"));
 
-    print "<small>". $theme->links($links) ."</small><hr />";
+    print "<small>". implode(" | ", $links) ."</small><hr />";
 
     switch ($op) {
       case "help":

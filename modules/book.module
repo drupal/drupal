@@ -729,7 +729,7 @@ function book_admin() {
 
     $links = book_admin_links();
 
-    print "<small>". implode(" &middot; ", $links) ."</small><hr />";
+    print "<small>". implode(" | ", $links) ."</small><hr />";
 
     switch ($op) {
       case t("Edit book outline"):

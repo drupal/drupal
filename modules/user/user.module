@@ -1514,7 +1514,7 @@ function user_admin() {
     $links[] = la(t("settings"), array("mod" => "user", "op" => "settings"));
     $links[] = la(t("help"), array("mod" => "user", "op" => "help"));
 
-    print "<small>". implode(" &middot; ", $links) ."</small><hr />";
+    print "<small>". implode(" | ", $links) ."</small><hr />";
 
     switch ($op) {
       case "help":

@@ -69,7 +69,7 @@ function taxonomy_form_vocabulary($edit = array()) {
   $form .= form_select(t("Hierarchy"), "hierarchy", $edit["hierarchy"], array(t("Disabled"), t("Single"), t("Multiple")), t("Optional") . ". ". t("Allows ". la("a tree-like hierarchy", array("mod" => "taxonomy", "op" => "help"), "hierarchy") ." between terms of this vocabulary."), "", 0);
   $form .= form_checkbox(t("Multiple select"), "multiple", 1, $edit["multiple"], t("Optional") . ". " . t("Allows nodes to have more than one term in this vocabulary."));
   $form .= form_checkbox(t("Required"), "required", 1, $edit["required"], t("If enabled every node <b>must</b> have at least one term in this vocabulary"));
-  $form .= form_textfield(t("Weight"), "weight", $edit["weight"], 3, 3, t("Optional") . ". " . t("In listings, the heavier vocabularies will sink and the lighter vocabularies will be positioned nearer the top."));
+  $form .= form_weight(t("Weight"), "weight", $edit["weight"], 10, t("Optional. In listings, the heavier vocabularies will sink and the lighter vocabularies will be positioned nearer the top."));
   $form .= form_submit(t("Submit"));
 
   if ($edit["vid"]) {
@@ -85,21 +85,39 @@ function taxonomy_save_vocabulary($edit) {
 
   if ($edit["vid"] && $edit["name"]) {
     db_query("UPDATE vocabulary SET ". _prepare_update($data) ." WHERE vid = '". check_query($edit["vid"]) ."'");
+    return t("update vocabulary '%name'.", array("%name" => $edit["name"]));
   }
   else if ($edit["vid"]) {
-    taxonomy_del_vocabulary($edit["vid"]);
+    return taxonomy_del_vocabulary($edit["vid"]);
   }
   else {
     db_query("INSERT INTO vocabulary ". _prepare_insert($data, 1) ." VALUES ". _prepare_insert($data, 2));
+    return t("created new vocabulary '%name'.", array("%name" => $edit["name"]));
   }
 }
 
 function taxonomy_del_vocabulary($vid) {
+  $vocabulary = taxonomy_get_vocabulary($vid);
+
   db_query("DELETE FROM vocabulary WHERE vid = '%d'", $vid);
   $result = db_query("SELECT tid FROM term_data WHERE vid = '%d'", $vid);
   while ($term = db_fetch_object($result)) {
     taxonomy_del_term($term->tid);
   }
+
+  return t("deleted vocabulary '%name'.", array("%name" => $vocabulary->name));
+}
+
+function _taxonomy_confirm_del_vocabulary($vid) {
+  $vocabulary = taxonomy_get_vocabulary($vid);
+
+  $form .= form_hidden("confirm", 1);
+  $form .= form_hidden("type", "vocabulary");
+  $form .= form_hidden("vid", $vid);
+  $form .= form_submit(t("Delete"));
+  $form .= form_submit(t("Cancel"));
+
+  return form(form_item(t("Delete vocabulary '%name'", array("%name" => $vocabulary->name)), $form, t("Are you sure you want to delete the vocabulary and all its terms?")));
 }
 
 function taxonomy_form_term($edit = array()) {
@@ -108,30 +126,30 @@ function taxonomy_form_term($edit = array()) {
     $vocabulary_id = $edit["vid"];
   }
   $vocabulary = taxonomy_get_vocabulary($vocabulary_id);
-  $form = form_textfield(t("Term name"), "name", $edit["name"], 50, 64, t("Required") . "." . t("The name for this term.  Example: 'Linux'."));
-  $form .= form_textarea(t("Description"), "description", $edit["description"], 60, 5, t("Optional") . "." . t("A description of the term."));
+  $form = form_textfield(t("Term name"), "name", $edit["name"], 50, 64, t("Required") . ". " . t("The name for this term.  Example: 'Linux'."));
+  $form .= form_textarea(t("Description"), "description", $edit["description"], 60, 5, t("Optional") . ". " . t("A description of the term."));
 
   if ($vocabulary->relations) {
-    $form .= _taxonomy_term_select(t("Related terms"), "relations", array_keys(taxonomy_get_related($edit["tid"])), $vocabulary_id, t("Optional") . ".", 1, "<" . t("none") . ">", array($edit["tid"]));
+    $form .= _taxonomy_term_select(t("Related terms"), "relations", array_keys(taxonomy_get_related($edit["tid"])), $vocabulary_id, t("Optional") . ". ", 1, "<" . t("none") . ">", array($edit["tid"]));
   }
 
 
   if ($vocabulary->hierarchy) {
     $parent = array_keys(taxonomy_get_parents($edit["tid"]));
-    taxonomy_get_tree($vocabulary_id, $children, $edit["tid"]);
+    $children = taxonomy_get_tree($vocabulary_id, $edit["tid"]);
     // you can't be son of yourself or your children
     $exclude = array_keys($children);
     $exclude[] = $edit["tid"];
     if ($vocabulary->hierarchy == 1) {
-      $form .= _taxonomy_term_select(t("Parent"), "parent", $parent, $vocabulary_id, t("Required") . "." . " " . la(t("Parent term"), array("mod" => "taxonomy", "op" => "help"), "parent") .".", 0, "<" . t("root") . ">", $exclude);
+      $form .= _taxonomy_term_select(t("Parent"), "parent", $parent, $vocabulary_id, t("Required") . ". " . la(t("Parent term"), array("mod" => "taxonomy", "op" => "help"), "parent") .".", 0, "<" . t("root") . ">", $exclude);
     }
     elseif ($vocabulary->hierarchy == 2) {
-      $form .= _taxonomy_term_select(t("Parents"), "parent", $parent, $vocabulary_id, t("Required") . "." . " ". la(t("Parent terms"), array("mod" => "taxonomy", "op" => "help"), "parent") .".", 1, "<" . t("root") . ">", $exclude);
+      $form .= _taxonomy_term_select(t("Parents"), "parent", $parent, $vocabulary_id, t("Required") . ". ". la(t("Parent terms"), array("mod" => "taxonomy", "op" => "help"), "parent") .".", 1, "<" . t("root") . ">", $exclude);
     }
   }
 
-  $form .= form_textarea(t("Synonyms"), "synonyms", implode("\n", taxonomy_get_synonyms($edit["tid"])), 30, 5, t("Optional") . "." . " ". la(t("Synonyms", array("mod" => "taxonomy", "op" => "help"), "synonyms") ." of this term, one synonym per line."));
-  $form .= form_textfield(t("Weight"), "weight", $edit["weight"], 3, 3, t("Optional") . "." . " " . t("In listings, the heavier terms will sink and the lighter terms will be positioned nearer the top."));
+  $form .= form_textarea(t("Synonyms"), "synonyms", implode("\n", taxonomy_get_synonyms($edit["tid"])), 30, 5, t("Optional") . ". ". t(la("Synonyms", array("mod" => "taxonomy", "op" => "help"), "synonyms") ." of this term, one synonym per line."));
+  $form .= form_weight(t("Weight"), "weight", $edit["weight"], 10, t("Optional. In listings, the heavier terms will sink and the lighter terms will be positioned nearer the top."));
   $form .= form_hidden("vid", $vocabulary->vid);
   $form .= form_submit(t("Submit"));
 
@@ -148,14 +166,17 @@ function taxonomy_save_term($edit) {
     $data = array("name" => $edit["name"], "description" => $edit["description"], "weight" => $edit["weight"]);
 
     db_query("UPDATE term_data SET ". _prepare_update($data) ." WHERE tid = '%d'", $edit["tid"]);
+    $message = t("Term <b>%a</b> updated.", array("%a" => $edit["name"]));
   }
   else if ($edit["tid"]) {
-    taxonomy_del_term($edit["tid"]);
+    return taxonomy_del_term($edit["tid"]);
   }
   else {
     $edit["tid"] = db_next_id("term_data");
     $data = array("tid" => $edit["tid"], "name" => $edit["name"], "description" => $edit["description"], "vid" => $edit["vid"], "weight" => $edit["weight"]);
     db_query("INSERT INTO term_data ". _prepare_insert($data, 1) ." VALUES ". _prepare_insert($data, 2));
+
+    $message = t("created new term '%name'.", array("%name" => $edit["name"]));
   }
 
   // relations (seem very powerful, but I have to understand it completely)
@@ -189,14 +210,32 @@ function taxonomy_save_term($edit) {
       db_query("INSERT INTO term_synonym (tid, name) VALUES ('%d', '%s')", $edit["tid"], chop($synonym));
     }
   }
+
+  return $message;
 }
 
 function taxonomy_del_term($tid) {
+  $term = taxonomy_get_term($tid);
+
   db_query("DELETE FROM term_data WHERE tid = '%d'", $tid);
   db_query("DELETE FROM term_hierarchy WHERE tid = '%d'", $tid);
   db_query("DELETE FROM term_relation WHERE tid1 = '%d' OR tid2 = '%d'", $tid, $tid);
   db_query("DELETE FROM term_synonym WHERE tid = '%d'", $tid);
   db_query("DELETE FROM term_node WHERE tid = '%d'", $tid);
+
+  return t("deleted term '%name'.", array("%name" => $term->name));
+}
+
+function _taxonomy_confirm_del_term($tid) {
+  $term = taxonomy_get_term($tid);
+
+  $form .= form_hidden("confirm", 1);
+  $form .= form_hidden("type", "term");
+  $form .= form_hidden("tid", $tid);
+  $form .= form_submit(t("Delete"));
+  $form .= form_submit(t("Cancel"));
+
+  return form(form_item(t("Delete term '%name'", array("%name" => $term->name)), $form, t("Are you sure you want to delete the term?")));
 }
 
 function taxonomy_overview() {
@@ -215,8 +254,7 @@ function taxonomy_overview() {
 
     $output .= " <tr><td>". check_output($vocabulary->name) ."</td><td align=\"center\">". check_output($vocabulary->types) ."</td><td>". implode(" | ", $links) ."</td></tr>\n";
 
-    unset($tree);
-    taxonomy_get_tree($vocabulary->vid, $tree);
+    $tree = taxonomy_get_tree($vocabulary->vid);
     if ($tree) {
       $output .= "<tr><td colspan=\"3\"><table><tr><td>";
       foreach ($tree as $term) {
@@ -313,7 +351,7 @@ function taxonomy_node_get_terms_by_vocabulary($nid, $vid, $key = "tid") {
 function taxonomy_node_get_terms($nid, $key = "tid") {
   static $terms;
 
-  if (!$terms[$nid]) {
+  if (!isset($terms[$nid])) {
     $result = db_query("SELECT t.* FROM term_data t, term_node r WHERE r.tid = t.tid AND r.nid = '%d' ORDER BY weight", $nid);
     $terms[$nid] = array();
     while ($term = db_fetch_object($result)) {
@@ -385,33 +423,38 @@ function taxonomy_get_children($tid, $vid = 0, $key = "tid") {
 }
 
 // hierarchy: get whole family, with tid, parent and depth; useful to show
-function taxonomy_get_tree($vocabulary_id, &$tree, $parent = 0, $depth = -1, $key = "tid") {
-  static $children, $terms;
+function taxonomy_get_tree($vocabulary_id, $parent = 0, $depth = -1, $key = "tid") {
+  static $children, $parents, $terms, $tree;
   if ($depth == -1) {
     $children = array();
+    $parents = array();
+    $terms = array();
     $tree = array();
-    // $terms = array();   // we should be able to safely do this
   }
+
   $depth++;
-  if ($vocabulary_id) {
-    if (!$children) {
-      $result = db_query("SELECT t.*, parent FROM term_data t, term_hierarchy h WHERE t.tid = h.tid AND t.vid = '%d' ORDER BY weight, name", $vocabulary_id);
-      while ($term = db_fetch_object($result)) {
-        $children[$term->parent][] = $term->tid;
-        $terms[$term->tid] = $term;
-      }
-    }
-    if ($children[$parent]) {
-      foreach ($children[$parent] as $child) {
-        $terms[$child]->depth = $depth;
-        $tree[] = $terms[$child];
-        taxonomy_get_tree($vocabulary_id, $tree, $child, $depth, $key);
-      }
+
+  if (!count($children)) {
+    $result = db_query("SELECT t.*, parent FROM term_data t, term_hierarchy h WHERE t.tid = h.tid AND t.vid = '%d' ORDER BY weight, name", $vocabulary_id);
+    while ($term = db_fetch_object($result)) {
+      $children[$term->parent][] = $term->tid;
+      $parents[$term->tid][] = $term->parent;
+      $terms[$term->tid] = $term;
     }
   }
-  else {
-    return 0;
+
+  if ($children[$parent]) {
+    foreach ($children[$parent] as $child) {
+      $terms[$child]->depth = $depth;
+      unset($terms[$child]->parent); // this would show just one parent
+      $terms[$child]->parents = $parents[$child];
+      $tree[] = $terms[$child];
+
+      taxonomy_get_tree($vocabulary_id, $child, $depth, $key);
+    }
   }
+
+  return $tree;
 }
 
 // synonyms: return array of synonyms
@@ -434,27 +477,33 @@ function taxonomy_get_synonym_root($term) {
 }
 
 // given a term id, count number of nodes in it
-function taxonomy_term_count_nodes($tid) {
+function taxonomy_term_count_nodes($tid, $type = 0) {
   static $count;
 
-  if (!$count) {
-    $result = db_query("SELECT tid, COUNT(*) AS c FROM term_node GROUP BY tid");
+  if (!isset($count[$type])) {
+    // $type == 0 always evaluates true is $type is a string
+    if (is_numeric($type)) {
+      $result = db_queryd("SELECT t.tid, COUNT(*) AS c FROM term_node t GROUP BY t.tid");
+    }
+    else {
+      $result = db_queryd("SELECT t.tid, COUNT(*) AS c FROM term_node t, node n WHERE t.nid = n.nid AND n.type = '%s' GROUP BY t.tid", $type);
+    }
     while ($term = db_fetch_object($result)) {
-      $count[$term->tid] = $term->c;
+      $count[$type][$term->tid] = $term->c;
     }
   }
 
   foreach (_taxonomy_term_children($tid) as $c) {
-    $children_count += taxonomy_term_count_nodes($c);
+    $children_count += taxonomy_term_count_nodes($c, $type);
   }
-  return $count[$tid] + $children_count;
+  return $count[$type][$tid] + $children_count;
 }
 
 // helper for above function
 function _taxonomy_term_children($tid) {
   static $children;
 
-  if (!$children) {
+  if (!isset($children)) {
     $result = db_query("SELECT tid, parent FROM term_hierarchy");
     while ($term = db_fetch_object($result)) {
       $children[$term->parent][] = $term->tid;
@@ -478,7 +527,7 @@ function taxonomy_get_term($tid) {
 */
 
 function _taxonomy_term_select($title, $name, $value, $vocabulary_id, $description, $multiple, $blank, $exclude = array()) {
-  taxonomy_get_tree($vocabulary_id, $tree);
+  $tree = taxonomy_get_tree($vocabulary_id);
 
   if ($blank) {
     $options[0] = $blank;
@@ -552,7 +601,7 @@ function taxonomy_page() {
 */
 
 function taxonomy_admin() {
-  global $edit, $type, $op, $id, $tree;
+  global $edit, $type, $op, $id, $theme;
 
   if (user_access("administer taxonomy")) {
     $links[] = la(t("add new vocabulary"), array("mod" => "taxonomy", "op" => "add", "type" => "vocabulary"));
@@ -585,14 +634,31 @@ function taxonomy_admin() {
         print taxonomy_help();
         break;
       case t("Delete"):
-        $edit["name"] = 0;
-        // fall through:
+        if (!$edit["confirm"]) {
+          if ($type == "vocabulary") {
+            echo _taxonomy_confirm_del_vocabulary($edit["vid"]);
+          }
+          else {
+            echo _taxonomy_confirm_del_term($edit["tid"]);
+          }
+          break;
+        }
+        else {
+          $edit["name"] = 0;
+          // fall through:
+        }
       case t("Submit"):
         if ($type == "vocabulary") {
           print status(taxonomy_save_vocabulary($edit));
         }
         else {
           print status(taxonomy_save_term($edit));
+          if (!$edit["tid"]) {
+            // if INSERT show form again
+            print taxonomy_form_term();
+            break;
+          }
+          // else (UPDATE or DELETE) fall through
         }
         // fall through:
       default:
