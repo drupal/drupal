@@ -1,5 +1,5 @@
 <?php
-// $Id: admin.module,v 1.25 2003/09/26 10:04:09 dries Exp $
+// $Id: admin.module,v 1.26 2003/09/26 23:05:14 dries Exp $
 
 include_once "includes/common.inc";
 
@@ -36,7 +36,7 @@ function admin_system($field){
 }
 
 function admin_link($type) {
-  if ($type == "system") {
+  if ($type == "system" && user_access("access administration pages")) {
     menu("admin", t("administer %a", array("%a" => variable_get("site_name", "drupal"))) , NULL, NULL, 9);
     menu("admin/overview", "sitemap", "overview_callback", admin_help("admin/overview"), 8);
   }
