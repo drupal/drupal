@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.95 2004/11/29 13:13:29 dries Exp $
+// $Id: search.module,v 1.96 2004/12/02 06:45:18 unconed Exp $
 
 /**
  * @file
@@ -134,7 +134,7 @@ function search_admin() {
  *  (optional) The type of item to wipe.
  *
  */
-function search_wipe($type = NULL, $sid = NULL) {
+function search_wipe($sid = NULL, $type = NULL) {
   if ($type == NULL && $sid == NULL) {
     db_query('DELETE FROM {search_index}');
     db_query('DELETE FROM {search_total}');
