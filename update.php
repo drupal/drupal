@@ -198,7 +198,8 @@ function update_7() {
     unset($body);
   }
 
-  update_sql("ALTER TABLE story DROP abstract");
+  update_sql("UPDATE node SET changed = created;");
+  update_sql("ALTER TABLE story DROP abstract;");
   update_sql("ALTER TABLE book DROP section;");
 }
 
