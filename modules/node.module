@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.277 2003/10/09 18:53:21 dries Exp $
+// $Id: node.module,v 1.278 2003/10/13 19:18:37 dries Exp $
 
 function node_help($section = "admin/help#node") {
   global $mod;
@@ -689,7 +689,7 @@ function node_admin_nodes() {
   }
 
   if ($pager = pager_display(NULL, 50, 0, "admin")) {
-    $rows[] = array(array("data" => $pager, "colspan" => 6));
+    $rows[] = array(array("data" => $pager, "colspan" => 7));
   }
 
   $output .= "<h3>". $filters[$filter][0] ."</h3>";
