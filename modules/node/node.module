@@ -45,10 +45,11 @@ function node_cron() {
   db_query("UPDATE node SET status = '". node_status("dumped") ."', timestamp_posted = '' WHERE timestamp_hidden > 0 AND timestamp_hidden < ". time());
 }
 
-function node_overview($query = array()) {
+function node_overview($query) {
   global $user;
 
-  $colors = array("#ffdc9b", "#dedec4");
+  $color = array("#ffdc9b", "#dedec4");
+  $query = node_query($query ? $query : 0);
 
   $result = db_query("SELECT n.*, u.userid, c.name AS category FROM node n LEFT JOIN users u ON n.author = u.id LEFT JOIN category c ON n.cid = c.cid $query[1] LIMIT 50");
 
@@ -65,10 +66,10 @@ function node_overview($query = array()) {
     $link[] = user_access($user, "node") ? "<A HREF=\"admin.php?mod=node&op=attribute&id=$node->nid\">edit attributes</A>" : "edit attributes";
     $link[] = user_access($user, "node") ? "<A HREF=\"admin.php?mod=node&op=delete&id=$node->nid\">delete node</A>" : "delete node";
 
-    $color = $colors[$i++ % sizeof($colors)];
+    $bg = $color[$i++ % sizeof($color)];
 
-    $output .= " <TR BGCOLOR=\"$color\"><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">$node->type</TD><TD>". node_status($node->status) ."</TD><TD>". check_output($node->attribute) ."</TD><TD>". format_username($node->userid) ."</TD><TD>". format_date($node->timestamp, "small") ."</TD></TR>\n";
-    $output .= " <TR BGCOLOR=\"$color\"><TD ALIGN=\"right\" COLSPAN=\"6\"><SMALL>". implode(", ", $link) ."</SMALL></TD>\n";
+    $output .= " <TR BGCOLOR=\"$bg\"><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">$node->type</TD><TD>". node_status($node->status) ."</TD><TD>". check_output($node->attribute) ."</TD><TD>". format_username($node->userid) ."</TD><TD>". format_date($node->timestamp, "small") ."</TD></TR>\n";
+    $output .= " <TR BGCOLOR=\"$bg\"><TD ALIGN=\"right\" COLSPAN=\"6\"><SMALL>". implode(", ", $link) ."</SMALL></TD>\n";
   }
   $output .= "</TABLE>\n";
 
@@ -150,7 +151,7 @@ function node_query($type = "") {
 function node_listing($queries) {
   global $mod;
   foreach ($queries as $key=>$array) {
-    $output .= "<LI><A HREF=\"admin.php?mod=$mod&type=$key\">$array[0]</A></LI>\n";
+    $output .= "<LI><A HREF=\"admin.php?mod=$mod&query=$key\">$array[0]</A></LI>\n";
   }
   return "<OL>$output</OL>\n";
 }
@@ -259,7 +260,7 @@ function node_admin() {
       break;
     case "delete":
       print status(node_delete($id));
-      print node_overview();
+      print node_overview($query);
       break;
     case "listing":
       print node_listing(node_query());
@@ -274,7 +275,7 @@ function node_admin() {
       break;
     case "Save node":
       print node_admin_save($edit);
-      print node_overview();
+      print node_overview($query);
       break;
     case "edit":
       print node_module_edit(node_get_array(array("nid" => $id)), $type);
@@ -286,7 +287,7 @@ function node_admin() {
       print status(node_module_save($edit, $type));
       // fall through:
     default:
-      print node_overview(node_query($query ? $query : 0));
+      print node_overview($query);
   }
 }
 
