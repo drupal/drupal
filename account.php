@@ -133,7 +133,7 @@ function account_site_edit() {
   }
   else {
     $theme->header();
-    if (variable_get("account_reg_allow", 1)) $theme->box(t("Create user account"), account_create());
+    if (variable_get("account_register", 1)) $theme->box(t("Create user account"), account_create());
     $theme->box(t("E-mail new password"), account_email());
     $theme->footer();
   }
@@ -202,7 +202,7 @@ function account_user($uname) {
   }
   elseif ($uname && $account = account_get_user($uname)) {
     $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>". t("Username") .":</B></TD><TD>$account->userid</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>". t("Username") .":</B></TD><TD>". check_output($account->userid) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>". t("E-mail") .":</B></TD><TD>". format_email($account->fake_email) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>". t("Homepage") .":</B></TD><TD>". format_url($account->url) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>". t("Bio") .":</B></TD><TD>". check_output($account->bio) ."</TD></TR>\n";
@@ -216,7 +216,7 @@ function account_user($uname) {
   else {
     // Display login form:
     $theme->header();
-    if (variable_get("account_reg_allow", 1)) $theme->box(t("Create user account"), account_create());
+    if (variable_get("account_register", 1)) $theme->box(t("Create user account"), account_create());
     $theme->box(t("E-mail new password"), account_email());
     $theme->footer();
   }
@@ -405,7 +405,7 @@ switch ($op) {
     account_email_submit(check_input($userid), check_input($email));
     break;
   case t("Create account"):
-    if (variable_get("account_reg_allow", 1)) account_create_submit(check_input($userid), check_input($email));
+    if (variable_get("account_register", 1)) account_create_submit(check_input($userid), check_input($email));
     break;
   case t("Save user information"):
     account_user_save($edit);

@@ -250,11 +250,17 @@ function timer_print() {
 }
 
 function page_header() {
-  if (variable_get("dev_timer", 0)) timer_start();
+  global $user;
+
+  if (variable_get("dev_timer", 0)) {
+    timer_start();
+  }
 }
 
 function page_footer() {
-  if (variable_get("dev_timer", 0)) timer_print();
+  if (variable_get("dev_timer", 0)) {
+    timer_print();
+  }
 }
 
 $conf = conf_init();

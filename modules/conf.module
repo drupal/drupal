@@ -12,7 +12,7 @@ function conf_help() {
  <?php
 }
 
-function conf_view_system() {
+function conf_view_options() {
   global $conf, $cmodes, $corder, $themes;
 
   // general settings:
@@ -24,14 +24,13 @@ function conf_view_system() {
   $output .= form_textfield(t("Anonymous user"), "anonymous", variable_get("anonymous", "Anonymous"), 30, 55, t("The name used to indicate anonymous users."));
   $output .= "<HR>\n";
 
-  // account settings:
-  $output .= "<H3>Account settings</H3>\n";
-  $output .= form_select(t("Allow registrations"), "account_reg_allow", variable_get("account_reg_allow", 1), array("Disabled", "Enabled"));
-  $output .= "<HR>\n";
-
-  // node settings:
-  $output .= "<H3>Node settings</H3>\n";
-  $output .= form_select(t("Default number of nodes to display"), "default_nodes_main", variable_get("default_nodes_main", 10), array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 =>  5, 6 => 6, 7 => 7, 8 => 8, 9 => 9, 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30), t("The default maximum number of nodes to display on the main page."));
+  // submission settings:
+  $output .= "<H3>Submission settings</H3>\n";
+  $size = array(1000 => "1.000 characters", 5000 => "5.000 characters", 10000 => "10.000 characters", 15000 => "15.000 characters", 30.000 => "30.000 characters", 50000 => "50.000 characters", 100000 => "100.000 characters");
+  $output .= form_select(t("Maximum submission size"), "max_input_size", variable_get("max_input_size", 10000), $size, t("The maximum number of characters someone can enter in a form."));
+  $rate = array(1 => "Maximum 1 every second", 5 => "Maximum 1 every 5 seconds", 15 => "Maximum 1 every 15 seconds", 30 => "Maximum 1 every 30 seconds", 60 => "Maximum 1 every minute", 300 => "Maximum 1 every 5 minutes", 900 => "Maximum 1 every 15 minutes", 1800 => "Maximum 1 every 30 minutes", 3600 => "Maximum 1 every hour", 21600 => "Maximum 1 every 6 hour", 43200 => "Maximum 1 every 12 hour");
+  $output .= form_select(t("Maximum node rate"), "max_node_rate", variable_get("max_node_rate", 900), $rate, t("The maximum submission rate for nodes.  Its purpose is to stop potential abuse or denial of service attacks."));
+  $output .= form_select(t("Maximum comment rate"), "max_comment_rate", variable_get("max_comment_rate", 120), $rate, t("The maximum submission rate for comments.  Its purpose is to stop potential abuse or denial of service attacks."));
   $output .= "<HR>\n";
 
   // comment settings:
@@ -42,17 +41,8 @@ function conf_view_system() {
   $output .= form_select(t("Default filter threshold"), "default_comment_threshold", $conf[default_comment_threshold], $threshold, t("The default threshold used to filter comments."));
   $output .= "<HR>\n";
 
-  // submission settings:
-  $output .= "<H3>Submission settings</H3>\n";
-  $size = array(1000 => "1.000 characters", 5000 => "5.000 characters", 10000 => "10.000 characters", 15000 => "15.000 characters", 30.000 => "30.000 characters", 50000 => "50.000 characters", 100000 => "100.000 characters");
-  $output .= form_select(t("Maximum submission size"), "max_input_size", variable_get("max_input_size", 10000), $size, t("The maximum number of characters someone can enter in a form."));
-  $rate = array(1 => "Maximum 1 every second", 5 => "Maximum 1 every 5 seconds", 15 => "Maximum 1 every 15 seconds", 30 => "Maximum 1 every 30 seconds", 60 => "Maximum 1 every minute", 300 => "Maximum 1 every 5 minutes", 900 => "Maximum 1 every 15 minutes", 1800 => "Maximum 1 every 30 minutes", 3600 => "Maximum 1 every hour", 21600 => "Maximum 1 every 6 hour", 43200 => "Maximum 1 every 12 hour");
-  $output .= form_select(t("Maximum node rate"), "max_node_rate", variable_get("max_node_rate", 900), $rate, t("The maximum submission rate for nodes.  Its purpose is to stop potential abuse or denial of service attacks."));
-  $output .= form_select(t("Maximum comment rate"), "max_comment_rate", variable_get("max_comment_rate", 120), $rate, t("The maximum submission rate for comments.  Its purpose is to stop potential abuse or denial of service attacks."));
-  $output .= "<HR>\n";
-
-  // theme settings:
-  $output .= "<H3>Theme settings</H3>\n";
+  // layout settings:
+  $output .= "<H3>Layout settings</H3>\n";
   foreach ($themes as $key=>$value) $options .= "<OPTION VALUE=\"$key\"". (variable_get("theme_default", key($themes)) == $key ? " SELECTED" : "") .">$key</OPTION>\n";
   $output .= form_item(t("Default theme"), "<SELECT NAME=\"edit[theme_default]\">$options</SELECT>", t("The default theme as seen by new visitors and anonymous users."));
   $output .= "<HR>\n";
@@ -62,10 +52,6 @@ function conf_view_system() {
   $output .= form_select(t("Display timer information"), "dev_timer", variable_get("dev_timer", 0), array("Disabled", "Enabled"), t("Display the time it took to generate a page.  For Drupal development only."));
   $output .= "<HR>\n";
 
-  return $output;
-}
-
-function conf_view_module() {
   foreach (module_list() as $name) {
     if (module_hook($name, "conf_options")) {
       $output .= "<H3>". ucfirst($name) ." settings</H3>". module_invoke($name, "conf_options") ."<HR>\n";
@@ -74,7 +60,7 @@ function conf_view_module() {
   return $output;
 }
 
-function conf_view_filter() {
+function conf_view_filters() {
   foreach (module_list() as $name) {
     if (module_hook($name, "conf_filters")) {
       $output .= module_invoke($name, "conf_filters");
@@ -98,13 +84,10 @@ function conf_view($type) {
 
   switch ($type) {
     case "filter":
-      $form = conf_view_filter();
-      break;
-    case "module":
-      $form = conf_view_module();
+      $form = conf_view_filters();
       break;
     default:
-      $form = conf_view_system();
+      $form = conf_view_options();
   }
 
   $form .= form_submit("Save configuration");
@@ -116,7 +99,7 @@ function conf_view($type) {
 function conf_admin() {
   global $edit, $op, $type;
 
-  print "<SMALL><A HREF=\"admin.php?mod=conf&type=system\">system settings</A> | <A HREF=\"admin.php?mod=conf&type=module\">module settings</A> | <A HREF=\"admin.php?mod=conf&type=filter\">content filters</A> | <A HREF=\"admin.php?mod=conf&op=help\">help</A></SMALL><HR>\n";
+  print "<SMALL><A HREF=\"admin.php?mod=conf&type=options\">site settings</A> | <A HREF=\"admin.php?mod=conf&type=filter\">content filters</A> | <A HREF=\"admin.php?mod=conf&op=help\">help</A></SMALL><HR>\n";
 
   switch ($op) {
     case "help":

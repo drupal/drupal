@@ -2,6 +2,8 @@
 
 include_once "includes/common.inc";
 
+page_header();
+
 function find_module($name) {
   global $options, $type;
   if (module_hook($name, "search")) $options .= "<OPTION VALUE=\"$name\"". ($name == $type ? " SELECTED" : "") .">$name</OPTION>\n";
@@ -21,5 +23,7 @@ $theme->header();
 $theme->box(t("Search"), $search);
 $theme->box(t("Result"), $output);
 $theme->footer();
+
+page_footer();
 
 ?>

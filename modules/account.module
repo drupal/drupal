@@ -32,6 +32,11 @@ function account_help() {
  <?php
 }
 
+function account_conf_options() {
+  $output .= form_select(t("Public accounts"), "account_register", variable_get("account_register", 1), array("Disabled", "Enabled"), "If enabled, everyone can create a new user account.  If disabled, new user accounts can only be created by site administrators.");
+  return $output;
+}
+
 function account_password($min_length=6) {
   mt_srand((double)microtime() * 1000000);
   $words = array("foo","bar","guy","neo","tux","moo","sun","asm","dot","god","axe","geek","nerd","fish","hack","star","mice","warp","moon","hero","cola","girl","fish","java","perl","boss","dark","sith","jedi","drop","mojo");
@@ -291,7 +296,7 @@ function account_query($type = "") {
 function account_admin() {
   global $op, $edit, $id, $mod, $keys, $order, $name, $query;
 
-  print "<SMALL><A HREF=\"admin.php?mod=account&op=access\">access control</A> | <A HREF=\"admin.php?mod=account&op=listing\">account listings</A> | <A HREF=\"admin.php?mod=account&op=search\">search account</A> | <A HREF=\"admin.php?mod=account&op=add\">add account</A> | <A HREF=\"admin.php?mod=account\">overview</A> | <A HREF=\"admin.php?mod=account&op=help\">help</A></SMALL><HR>";
+  print "<SMALL><A HREF=\"admin.php?mod=account&op=access\">access control</A> | <A HREF=\"admin.php?mod=account&op=add\">add new account</A> | <A HREF=\"admin.php?mod=account&op=listing\">account listings</A> | <A HREF=\"admin.php?mod=account&op=search\">search account</A> | <A HREF=\"admin.php?mod=account\">overview</A> | <A HREF=\"admin.php?mod=account&op=help\">help</A></SMALL><HR>";
 
   $query = $query ? $query : 0;
   $name = $name ? $name : $edit[name];

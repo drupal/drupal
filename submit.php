@@ -2,6 +2,8 @@
 
 include_once "includes/common.inc";
 
+page_header();
+
 $theme->header();
 
 if ($user->id) {
@@ -27,5 +29,7 @@ else {
 }
 
 $theme->footer();
+
+page_footer();
 
 ?>
