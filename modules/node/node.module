@@ -32,9 +32,9 @@ function node_help($section = "admin/help#node") {
       <p>Now that you know what is in a node, here are some of the types of nodes available.</p>", array("%teaser" => url("admin/system/modules/node")));
 
       if ($mod == "admin") {
-        foreach (node_list() as $type => $module) {
-          $output .= "<h3>". t("Node type: %module", array("%module" => module_invoke($module, "node", "name", $type))). "</h3>";
-          $output .= module_invoke($module, "node", "description", $type);
+        foreach (node_list() as $type) {
+          $output .= "<h3>". t("Node type: %module", array("%module" => node_invoke($type, "node_name"))). "</h3>";
+          $output .= implode("\n", module_invoke_all("help", "node/add#". $type));
         }
       }
       break;
@@ -227,51 +227,50 @@ function node_teaser($body) {
  */
 function node_get_module_name($node) {
   if (is_array($node)) {
-    if ($pos = strpos($node["type"], ".")) {
+    if ($pos = strpos($node["type"], "/")) {
       return substr($node["type"], 0, $pos);
     } else {
       return $node["type"];
     }
   }
   else if (is_object($node)) {
-    if ($pos = strpos($node->type, ".")) {
+    if ($pos = strpos($node->type, "/")) {
       return substr($node->type, 0, $pos);
     } else {
       return $node->type;
     }
   }
   else if (is_string($node)) {
-    if ($pos = strpos($node, ".")) {
+    if ($pos = strpos($node, "/")) {
       return substr($node, 0, $pos);
     } else {
       return $node;
     }
   }
-} // node_get_module_name
+}
 
 /*
  * Get a list of all the defined node types.
  *
  * @return
- *   An associative list in which the keys are node types and the values
- *   are the names of the modules that define them.
+ *   An list of all node types.
  */
 function node_list() {
   $types = array();
   foreach (module_list() as $module) {
-    if (module_hook($module, "node")) {
-      $module_types = module_invoke($module, "node", "types");
+    if (module_hook($module, "node_name")) {
+      $module_types = module_invoke($module, "node_types");
       if ($module_types) {
         foreach ($module_types as $type) {
-          $types[$type] = $module;
+          $types[] = $type;
         }
       } else {
-        $types[$module] = $module;
+        $types[] = $module;
       }
     }
   }
   return $types;
-} // node_list
+}
 
 /*
  * Determine whether a node hook exists.
@@ -724,7 +723,7 @@ function node_admin_nodes() {
   $header = array(NULL, t("title"), t("type"), t("author"), t("status"), array("data" => t("operations"), "colspan" => 2));
 
   while ($node = db_fetch_object($result)) {
-    $rows[] = array(form_checkbox(NULL, "status][$node->nid", 1, 0), l($node->title, "node/view/$node->nid") ." ". (node_is_new($node->nid, $node->changed) ? theme_mark() : ""), module_invoke(node_get_module_name($node), "node", "name", $node->type), format_name($node), ($node->status ? t("published") : t("not published")), l(t("edit node"), "admin/node/edit/$node->nid"), l(t("delete node"), "admin/node/delete/$node->nid"));
+    $rows[] = array(form_checkbox(NULL, "status][$node->nid", 1, 0), l($node->title, "node/view/$node->nid") ." ". (node_is_new($node->nid, $node->changed) ? theme_mark() : ""), node_invoke($node, "node_name"), format_name($node), ($node->status ? t("published") : t("not published")), l(t("edit node"), "admin/node/edit/$node->nid"), l(t("delete node"), "admin/node/delete/$node->nid"));
   }
 
   if ($pager = theme("pager", NULL, 50, 0)) {
@@ -762,19 +761,19 @@ function node_admin_settings($edit) {
   }
 
   $header = array_merge(array(t("type")), array_keys(node_invoke_nodeapi($node, "settings")));
-  foreach (node_list() as $type => $module) {
+  foreach (node_list() as $type) {
     $node->type = $type;
     $cols = array();
     foreach (node_invoke_nodeapi($node, "settings") as $setting) {
       $cols[] = array("data" => $setting, "align" => "center", "width" => 55);
     }
-    $rows[] = array_merge(array(module_invoke($module, "node", "name", $type)), $cols);
+    $rows[] = array_merge(array(node_invoke($node, "node_name")), $cols);
   }
 
   $output .= theme("table", $header, $rows);
 
   /* This is an idea for the future.
-  foreach (node_list() as $type => $module) {
+  foreach (node_list() as $type) {
     $node->type = $type;
 
       // Create theme("table", ) data:
@@ -784,7 +783,7 @@ function node_admin_settings($edit) {
         $cols[] = array("data" => $setting, "align" => "center", "width" => 75);
       }
 
-      $output .= "<h2>". module_invoke($module, "node", "name", $type) ."</h2>";
+      $output .= "<h2>". node_invoke($node, "node_name") ."</h2>";
       $output .= theme("table", $header, array($cols));
       $output .= "<br /><br />";
     }
@@ -1278,11 +1277,11 @@ function node_add($type) {
     ** Compile a list with the different node types and their explanation:
     */
 
-    foreach (node_list() as $type => $module) {
+    foreach (node_list() as $type) {
       if (node_access("create", $type)) {
         $output .= "<li>";
-        $output .= " ". l(module_invoke($module, "node", "name", $type), "node/add/$type", array("title" => t("Add a new %s.", array("%s" => module_invoke($module, "node", "name", $type)))));
-        $output .= " <div style=\"margin-left: 20px;\">". module_invoke($module, "node", "description", $type) ."</div>";
+        $output .= " ". l(node_invoke($type, "node_name"), "node/add/$type", array("title" => t("Add a new %s.", array("%s" => node_invoke($type, "node_name")))));
+        $output .= " <div style=\"margin-left: 20px;\">". implode("\n", module_invoke_all("help", "node/add#". $type)) ."</div>";
         $output .= "</li>";
       }
     }
@@ -1373,7 +1372,7 @@ function node_preview($node, $error = NULL) {
 
     $output .= node_form($node, $error);
 
-    $name = module_invoke($node->type, "node", "name");
+    $name = node_invoke($node, "node_name");
     drupal_set_breadcrumb(array(l(t("Home"), NULL), l(t("create content"), "node/add"), l(t("Submit %name", array("%name" => $name)), "node/add/$node->type")));
 
     return $output;
@@ -1411,7 +1410,7 @@ function node_submit($node) {
     if (node_access("update", $node)) {
       $node->nid = node_save($node);
       watchdog("special", "$node->type: updated '$node->title'", l(t("view post"), "node/view/$node->nid"));
-      $msg = t("the %name was updated.", array ("%name" => module_invoke(node_get_module_name($node), "node", "name", $node->type)));
+      $msg = t("the %name was updated.", array ("%name" => node_invoke($node, "node_name")));
     }
   }
   else {
@@ -1432,7 +1431,7 @@ function node_submit($node) {
 
       $node->nid = node_save($node);
       watchdog("special", "$node->type: added '$node->title'", l(t("view post"), "node/view/$node->nid"));
-      $msg = t("your %name was created.", array ("%name" => module_invoke($node->type, "node", "name")));
+      $msg = t("your %name was created.", array ("%name" => node_invoke($node, "node_name")));
     }
   }
 
@@ -1486,8 +1485,6 @@ function node_delete($edit) {
 }
 
 function node_page() {
-  global $id, $user, $or, $and;
-
   $op = $_POST["op"];
   $edit = $_POST["edit"];
 
@@ -1505,11 +1502,17 @@ function node_page() {
       $node = node_load(array("nid" => arg(2), "status" => 1), $_GET["revision"]);
     }
 
-    $name = module_invoke(node_get_module_name(arg(2)), "node", "name", arg(2));
+    if ($op == "add" && arg(3)) {
+      $type = arg(2) . "/" . arg(3);
+    }
+    else {
+      $type = arg(2);
+    }
+    $name = node_invoke($type, "node_name");
 
     switch ($op) {
       case "add":
-        print theme("page", node_add(arg(2)), arg(2) ? t("Submit %name", array("%name" => $name)) : t("create content"));
+        print theme("page", node_add($type), arg(2) ? t("Submit %name", array("%name" => $name)) : t("create content"));
         break;
       case "edit":
         print theme("page", node_edit(arg(2)), t("Edit %name", array("%name" => $name)));

@@ -156,6 +156,9 @@ function poll_help($section = "admin/help#poll") {
     case 'admin/system/modules#description':
       $output = t("Enables your site to capture votes on different topics in the form of multiple choice questions.");
       break;
+    case 'node/add#poll':
+      $output = t("A poll is a multiple-choice question which visitors can vote on.");
+      break;
   }
 
   return $output;
@@ -242,10 +245,8 @@ function poll_load($node) {
   return $poll;
 }
 
-function poll_node($field) {
-  $info["name"] = t("poll");
-  $info["description"] = t("A poll is a multiple-choice question which visitors can vote on.");
-  return $info[$field];
+function poll_node_name($node) {
+  return t("poll");
 }
 
 function poll_page() {

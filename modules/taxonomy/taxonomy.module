@@ -65,8 +65,8 @@ function taxonomy_link($type, $node = NULL) {
 */
 
 function taxonomy_form_vocabulary($edit = array()) {
-  foreach (node_list() as $type => $module) {
-    $nodetypes[$type] = module_invoke($module, "node", "name", $type);
+  foreach (node_list() as $type) {
+    $nodetypes[$type] = node_invoke($type, "node_name");
   }
 
   $form .= form_textfield(t("Vocabulary name"), "name", $edit["name"], 50, 64, t("Required") .". ". t("The name for this vocabulary.  Example: 'Topic'") .".");
@@ -282,7 +282,7 @@ function taxonomy_overview() {
     $links = array();
     $types = array();
     foreach(explode(",", $vocabulary->nodes) as $type) {
-      $types[] = module_invoke(node_get_module_name($type), "node", "name", $type);
+      $types[] = node_invoke($type, "node_name");
     }
     $rows[] = array($vocabulary->name, array("data" => implode(", ", $types), "align" => "center"), l(t("edit vocabulary"), "admin/taxonomy/edit/vocabulary/$vocabulary->vid"), l(t("add term"), "admin/taxonomy/add/term/$vocabulary->vid"), l(t("preview form"), "admin/taxonomy/preview/vocabulary/$vocabulary->vid"));
 
