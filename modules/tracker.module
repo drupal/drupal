@@ -77,7 +77,6 @@ function tracker_page() {
 function tracker_user($type, &$edit, &$user) {
   if ($type == 'view' && user_access("access content")) {
     return array(t('History') => form_item(t("Recent posts"), l(t("recent posts"), "tracker/$user->uid")));
-    return $fields;
   }
 }
 
