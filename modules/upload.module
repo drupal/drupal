@@ -247,7 +247,7 @@ function upload_count_size($uid = 0) {
 }
 
 function upload_save($node) {
-  foreach ($node->files as $key => $file) {
+  foreach ((array)$node->files as $key => $file) {
     if ($file->source && !$file->remove) {
       // Insert new files:
       $fid = db_next_id('{files}_fid');
