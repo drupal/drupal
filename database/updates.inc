@@ -1,5 +1,5 @@
 <?php
-/* $Id: updates.inc,v 1.87 2005/01/26 23:09:29 dries Exp $ */
+/* $Id: updates.inc,v 1.88 2005/01/27 19:41:00 dries Exp $ */
 
 /**
  * @file
@@ -97,7 +97,8 @@ $sql_updates = array(
   "2005-01-19" => "update_118",
   "2005-01-20" => "update_119",
   "2005-01-25" => "update_120",
-  "2005-01-26" => "update_121"
+  "2005-01-26" => "update_121",
+  "2005-01-27" => "update_122"
 );
 
 function update_32() {
@@ -2167,6 +2168,14 @@ function update_121() {
   $ret[] = update_sql('DROP TABLE {page}');
 
   return $ret;
+}
+
+function update_122() {
+
+  $ret = array();
+  $ret[] = update_sql("ALTER TABLE {blocks} ADD type text");
+  return $ret;
+
 }
 
 function update_sql($sql) {
