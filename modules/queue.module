@@ -175,13 +175,12 @@ function queue_page() {
 }
 
 function queue_block() {
-  global $PHP_SELF;
-  if (strrchr($PHP_SELF, "/") == "/node.php") {
+  if (user_access("access submission queue") && (substr_count(request_uri(), drupal_url(array("mod" => "queue"), "module")) || substr_count(request_uri(), drupal_url()))) {
     global $user, $id;
     if ($user->uid) {
-      $node = db_fetch_object(db_query("SELECT * FROM node WHERE nid = '$id'"));
+      $node = node_load(array("nid" => $id));
     }
-    if ($node->moderate == 1) {
+    if (substr_count($node->users, "$user->uid=") && $node->moderate == 1) {
       foreach (explode(",", $node->users) as $vote) {
         if ($vote) {
           $data = explode("=", $vote);
@@ -195,7 +194,7 @@ function queue_block() {
       $block[0]["info"] = t("Moderation results");
     }
   }
-  elseif (strrchr($PHP_SELF, "/") == "/admin.php") {
+  elseif ((user_access("access submission queue") || user_access("administer blocks")) && (substr_count(request_uri(), drupal_url(array("mod" => "user"), "module")) || substr_count(request_uri(), drupal_url(array(), "admin")))) {
     $block[0]["subject"] = t("Moderation results");
     $block[0]["info"] = t("Moderation results");
   }
