@@ -16,12 +16,15 @@ function db_query($sql, $debug = 0) {
   global $db_handle;
 
   $result = $db_handle->query($sql);
+
+  if ($debug) {
+    print "<p>query: $sql<br />"; // error:". $result->getMessage() ."</p>";
+  }
+
   if (DB::isError($result)) {
-    //if ($debug) {
-      print "<p>query: $sql<br />error:". $result->getMessage() ."</p>";
-    //}
     watchdog("error", "database: ". $result->getMessage() ."\nquery: ". htmlspecialchars($sql));
   }
+
   return $result;
 }
 
