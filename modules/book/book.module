@@ -96,60 +96,41 @@ function book_form($edit = array()) {
 
   $output .= "<FORM ACTION=\"$REQUEST_URI\" METHOD=\"post\">\n";
 
-  $output .= "<B>". t("Author") .":</B><BR>\n";
-  $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[userid]\" VALUE=\"$edit[userid]\">\n";
-  $output .= format_username(($edit[userid] ? $edit[userid] : $user->userid)) ."<P>\n";
-
-  $output .= "<B>". t("Subject") .":</B><BR>\n";
-  $output .= "<INPUT TYPE=\"text\" NAME=\"edit[title]\" SIZE=\"50\" MAXLENGTH=\"128\" VALUE=\"". check_textfield($edit[title]) ."\"><P>\n";
-
-  $output .= "<B>". t("Category") .":</B><BR>\n";
-  $output .= category_form_select("book", $edit) ."<P>";
+  $output .= form_item(t("Author"), format_username(($edit[userid] ? $edit[userid] : $user->userid)));
+  $output .= form_hidden(userid, $edit[userid]);
+  $output .= form_textfield(t("Subject"), "title", $edit[title], 50, 128);
+  $output .= form_item(t("Category"), category_form_select("book", $edit));
 
   if ($edit[pid]) {
     $node = node_get_object("nid", $edit[pid]);
-    $output .= "<B>". t("Parent") .":</B><BR>\n";
-    $output .= "<A HREF=\"node.php?id=$node->id\">". check_output($node->title) ."</A><P>\n";
-    $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[parent]\" VALUE=\"$edit[parent]\">\n";
-    $output .= "<SMALL><I>". t("The parent subject or category the page belongs in.") ."</I></SMALL><P>\n";
+    $output .= form_item(t("Parent"), "<A HREF=\"node.php?id=$node->id\">". check_output($node->title) ."</A>", t("The parent subject or category the page belongs in."));
+    $output .= form_hidden("parent". $edit[parent]);
   }
   else {
-    $output .= "<B>". t("Parent") .":</B><BR>\n";
-    foreach (book_toc() as $key=>$value) $options2 .= "<OPTION VALUE=\"$key\"". ($edit[parent] == $key ? " SELECTED" : "") .">". check_select($value) ."</OPTION>";
-    if (user_access($user, "book")) $options2 .= "<OPTION VALUE=\"0\"". ($edit[parent] == 0 ? " SELECTED" : "") .">&nbsp;</OPTION>";
-    $output .= "<SELECT NAME=\"edit[parent]\">$options2</SELECT><BR>\n";
-    $output .= "<SMALL><I>". t("The parent subject or category the page belongs in.") ."</I></SMALL><P>\n";
+    $output .= form_select(t("Parent"), "parent", user_access($user, "book") ? array_merge(array(0 => "&nbsp;"), book_toc()) : book_toc(), $edit[parent], t("The parent subject or category the page belongs in."));
   }
 
-  $output .= "<B>". t("Content") .":</B><BR>\n";
-  $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"edit[body]\" MAXLENGTH=\"20\">". check_textarea($edit[body]) ."</TEXTAREA><BR>\n";
-  $output .= "<SMALL><I>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</I></SMALL><P>\n";
-
-  $output .= "<B>". t("Log message") .":</B><BR>\n";
-  $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"5\" NAME=\"edit[log]\" MAXLENGTH=\"20\">". check_textarea($edit[log]) ."</TEXTAREA><BR>\n";
-  $output .= "<SMALL><I>". t("An explanation of the additions or updates being made to help the group understand your motivations.") ."</I></SMALL><P>\n";
+  $output .= form_textarea(t("Content"), "body", $edit[body], 50, 10, t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html));
+  $output .= form_textarea(t("Log message"), "log", $edit[log], 50, 5, t("An explanation of the additions or updates being made to help the group understand your motivations."));
 
   if (user_access($user, "book")) {
-    $output .= "<B>". t("Weight") .":</B><BR>\n";
-    for ($count = 0; $count < 25; $count++) $options3 .= "<OPTION VALUE=\"$count\"". ($edit[weight] == $count ? " SELECTED" : "") .">$count</OPTION>";
-    $output .= "<SELECT NAME=\"edit[weight]\">$options3</SELECT><BR>\n";
-    $output .= "<SMALL><I>". t("The heavier nodes will sink and the lighter nodes will be positioned nearer the top.") ."</I></SMALL><P>\n";
+    $output .= form_select(t("Weight"), "weight", array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30), $edit[weight], t("The heavier nodes will sink and the lighter nodes will be positioned nearer the top."));
   }
 
   if (!$edit) {
-    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview") ."\">\n";
+    $output .= form_submit(t("Preview"));
   }
   else if (!$edit[title]) {
     $output .= "<FONT COLOR=\"red\">". t("Warning: you did not supply a title.") ."</FONT><P>\n";
-    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview") ."\">\n";
+    $output .= form_submit(t("Preview"));
   }
   else {
-    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview") ."\">\n";
-    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Submit") ."\">\n";
+    $output .= form_submit(t("Preview"));
+    $output .= form_submit(t("Submit"));
   }
 
-  $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[pid]\" VALUE=\"$edit[pid]\">\n";
-  $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[nid]\" VALUE=\"$edit[nid]\">\n";
+  $output .= form_hidden("pid", $edit[pid]);
+  $output .= form_hidden("nid", $edit[nid]);
 
   $output .= "</FORM>\n";
 
