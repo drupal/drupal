@@ -56,7 +56,12 @@ function book_save($op, $node) {
   }
 
   if ($op == "create") {
-    return array("format", "moderate" => 1, "parent", "promote" => 0, "status" => 1, "weight");
+    if (user_access("adminster nodes")) {
+      return array("format", "parent", "weight");
+    }
+    else {
+      return array("format", "moderate" => 1, "parent", "promote" => 0, "status" => 1, "weight");
+    }
   }
 
   if ($op == "decline") {

@@ -38,6 +38,10 @@ function story_save($op, $node) {
   if ($op == "decline") {
     return array("status" => 0, "promote" => 0);
   }
+
+  if ($op == "update") {
+    return array();
+  }
 }
 
 function story_help() {

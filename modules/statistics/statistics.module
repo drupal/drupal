@@ -10,7 +10,7 @@ function statistics_help() {
   $output .= "<p>1. The external referrer log indicates which other sites are linking your website and how many visitors they refer. Each link made to your site - when a user on another site clicks on a link to your site - generates a referral entry in the log.</p>";
   $output .= "<p>2. The internal referrer log indicates the referrals within the domain of your site.  This log is useful for assessing and evaluating the structure of your website, to learn which pages are being accessed, and to gain insight into the way users are navigating your site.</p>";
   $output .= "<p>Drupal automatically rotates the referrer logs after a set period of time. The life-time of the accumulated data can be configured via the settings and filters option under site administration.</p>";
-  $output .= "<p>Warning: Drupal gets the referrer information from the HTTP_REFERER environment variable. This not always set properly by web browsers.</p>";
+  $output .= "<p>Warning: Drupal gets the referrer information from the HTTP_REFERER environment variable. This is not always set properly by web browsers.</p>";
   return $output;
 }
 

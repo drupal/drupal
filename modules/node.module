@@ -708,7 +708,6 @@ function node_validate($node, &$error) {
 
   $node = node_object($node);
 
-
   /*
   ** Validate the title field:
   */
@@ -870,8 +869,9 @@ function node_form($edit) {
     $output .= form_textfield(t("Authored on"), "date", $edit->date, 20, 25, $error["date"]);
     $output .= "<br />";
     $output .= form_select(t("Set public/published"), "status", $edit->status, array("Disabled", "Enabled"));
-    $output .= form_select(t("Allow users comments"), "comment", $edit->comment, array("Disabled", "Enabled"));
+    $output .= form_select(t("Queue for moderation"), "moderate", $edit->moderate, array("Disabled", "Enabled"));
     $output .= form_select(t("Promote to front page"), "promote", $edit->promote, array("Disabled", "Enabled"));
+    $output .= form_select(t("Allow users comments"), "comment", $edit->comment, array("Disabled", "Enabled"));
     $output .= form_select(t("Create new revision"), "revision", $edit->revision, array("Disabled", "Enabled"));
   }
 
@@ -973,17 +973,17 @@ function node_preview($node) {
   */
 
   if ($node->nid) {
-    $node = array_merge($node, module_invoke($node->type, "save", "update", $node));
+    $view = array_merge($node, module_invoke($node->type, "save", "update", $node));
   }
   else {
-    $node = array_merge($node, module_invoke($node->type, "save", "create", $node));
+    $view = array_merge($node, module_invoke($node->type, "save", "create", $node));
   }
 
   /*
   ** Display a preview of the node:
   */
 
-  node_view($node);
+  node_view($view);
 
   return node_form($node);
 }
