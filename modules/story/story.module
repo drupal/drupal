@@ -13,6 +13,8 @@ function story_block() {
   $blocks[0]["content"] = $content;
   $blocks[0]["info"] = "Top 10: all stories";
 
+  unset($content);
+
   $result = db_query("select s.id, COUNT(s.id) as comments, s.subject from stories s left join comments c on s.id = c.sid WHERE s.status = 2 AND ". time() ." - s.timestamp < 2419200 GROUP BY s.id ORDER BY comments DESC LIMIT 10");
   while ($story = db_fetch_object($result)) {
     $content .= "<LI><A HREF=\"discussion.php?id=$story->id\">$story->subject</A><BR><SMALL>(". format_plural($story->comments, "comment", "comments") .")</SMALL></LI>\n";
