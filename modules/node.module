@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.479 2005/03/24 22:09:31 unconed Exp $
+// $Id: node.module,v 1.480 2005/03/27 15:54:44 unconed Exp $
 
 /**
  * @file
@@ -890,7 +890,7 @@ function node_admin_nodes() {
     $buttons .= form_submit(t('Undo')) . form_submit(t('Reset'));
   }
   $form .= '<div class="container-inline" id="node-admin-buttons">'. $buttons .'</div>';
-  $form .= '</li></ul>';
+  $form .= '</li></ul><br class="clear" />';
   $output .= form_group(t('Show only items where'), $form);
 
   // Build query

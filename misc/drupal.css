@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.98 2005/03/05 09:09:07 dries Exp $ */
+/* $Id: drupal.css,v 1.99 2005/03/27 15:54:44 unconed Exp $ */
 
 /*
 ** HTML elements
@@ -90,6 +90,10 @@ td.menu-disabled {
 .block ul {
   margin: 0;
   padding: 0 0 0.25em 1em;
+}
+br.clear {
+  clear: both;
+  height: 0px;
 }
 .container-inline div {
   display: inline;
@@ -330,9 +334,7 @@ tr.light .form-item, tr.dark .form-item {
 #forum td.posts, #forum td.topics, #forum td.replies, #forum td.pager {
   text-align: center;
 }
-#node-admin-filter fieldset {
-  clear: both;
-}
+
 #node-admin-filter ul {
   list-style-type: none;
   padding: 0px;
