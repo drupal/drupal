@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.167 2005/01/17 19:00:03 unconed Exp $
+// $Id: taxonomy.module,v 1.168 2005/01/19 01:46:25 unconed Exp $
 
 /**
  * @file
@@ -834,7 +834,7 @@ function taxonomy_select_nodes($tids = array(), $operator = 'or', $depth = 0, $p
         $wheres .= ' AND tn'. $index .'.tid IN ('. implode(',', $tids) .')';
       }
       $sql = 'SELECT n.nid, n.sticky, n.created FROM {node} n '. $joins .' WHERE n.status = 1 '. $wheres .' ORDER BY n.sticky DESC, n.created DESC';
-      $sql_count = 'SELECT COUNT(n.nid) FROM {node} n ' . $joins .' WHERE n.status = 1 ' . $wheres;
+      $sql_count = 'SELECT COUNT(n.nid) FROM {node} n '. $joins .' WHERE n.status = 1 ' . $wheres;
     }
     $sql = node_rewrite_sql($sql);
     $sql_count = node_rewrite_sql($sql_count);
