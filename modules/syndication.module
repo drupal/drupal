@@ -19,26 +19,26 @@ function syndication_cron() {
   }
 }
 
-function syndication_bundle($feed) {
-  if ($feed->attribute) {
+function syndication_bundle($attribute) {
+  if ($attribute) {
     // compose query:
-    $keys = explode(",", $feed->attribute);
+    $keys = explode(",", $attribute);
     foreach ($keys as $key) $where[] = "attribute LIKE '%". trim($key) ."%'";
 
-    $result = db_query("SELECT * FROM item WHERE ". implode(" OR ", $where));
+    $result = db_query("SELECT * FROM item WHERE ". implode(" OR ", $where) ." ORDER BY timestamp DESC");
 
     while ($item = db_fetch_object($result)) {
       $output .= "<LI><A HREF=\"". check_output($item->link) ."\">". check_output($item->title) ."</A></LI>";
     }
 
-    return "<B>$feed->title</B><UL>$output</UL>";
+    return "$output";
   }
 }
 
-function syndication_view_block() {
-  $result = db_query("SELECT * FROM bundle");
+function syndication_view_bundle() {
+  $result = db_query("SELECT * FROM bundle ORDER BY title");
   while ($bundle = db_fetch_object($result)) {
-    $output .= syndication_bundle($bundle);
+    $output .= "<B>$bundle->title</B><UL>". syndication_bundle($bundle->attribute) ."</UL>";
   }
   return $output;
 }
@@ -172,6 +172,7 @@ function syndication_get_bundle($bid) {
 function syndication_view_feed() {
   $result = db_query("SELECT f.*, COUNT(i.iid) AS items FROM feed f LEFT JOIN item i ON f.fid = i.fid GROUP BY f.fid ORDER BY f.title");
 
+  $output .= "<H3>Feed overview</H3>";
   $output .= "<TABLE BORDER=\"1\" CELLSPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR><TH>title</TH><TH>attributes</TH><TH>items</TH><TH>last update</TH><TH>next update</TH><TH COLSPAN=\"2\">operations</TH></TR>\n";
   while ($feed = db_fetch_object($result)) {
@@ -179,12 +180,9 @@ function syndication_view_feed() {
   }
   $output .= "</TABLE>\n";
 
-  return $output;
-}
-
-function syndication_view_bundle() {
   $result = db_query("SELECT * FROM bundle ORDER BY title");
 
+  $output .= "<H3>Bundle overview</H3>";
   $output .= "<TABLE BORDER=\"1\" CELLSPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR><TH>title</TH><TH>attributes</TH><TH>operations</TH></TR>\n";
   while ($bundle = db_fetch_object($result)) {
@@ -204,7 +202,7 @@ function syndication_view_item() {
   $output .= "<TABLE BORDER=\"1\" CELLSPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR><TH>time</TH><TH>feed</TH><TH>item</TH></TR>\n";
   while ($item = db_fetch_object($result)) {
-    $output .= " <TR><TD VALIGN=\"top\" NOWRAP>". format_date($item->timestamp, "custom", "H:i") ."</TD><TD VALIGN=\"top\" NOWRAP><A HREF=\"admin.php?mod=syndication&type=feed&op=edit&id=$item->fid\">". check_output($item->feed) ."</A></TD><TD><A HREF=\"". check_output($item->link) ."\">". check_output($item->title) ."</A>". ($item->description ? "<BR><SMALL><I>". check_output($item->description) ."</I></SMALL>" : "") ."<BR><INPUT TYPE=\"text\" NAME=\"edit[$item->iid]\" VALUE=\"". check_form($item->attribute) ."\" SIZE=\"50\"></TD></TR>\n";
+    $output .= " <TR><TD VALIGN=\"top\" NOWRAP>". format_date($item->timestamp, "custom", "m/d/y") ."<BR>".format_date($item->timestamp, "custom", "H:i") ."</TD><TD ALIGN=\"center\" VALIGN=\"top\" NOWRAP><A HREF=\"admin.php?mod=syndication&type=feed&op=edit&id=$item->fid\">". check_output($item->feed) ."</A></TD><TD><A HREF=\"". check_output($item->link) ."\">". check_output($item->title) ."</A>". ($item->description ? "<BR><SMALL><I>". check_output($item->description) ."</I></SMALL>" : "") ."<BR><INPUT TYPE=\"text\" NAME=\"edit[$item->iid]\" VALUE=\"". check_form($item->attribute) ."\" SIZE=\"50\"></TD></TR>\n";
   }
   $output .= "</TABLE>\n";
   $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save attributes\">\n";
@@ -216,7 +214,7 @@ function syndication_view_item() {
 function syndication_admin() {
   global $op, $id, $type, $edit;
 
-  print "<SMALL><A HREF=\"admin.php?mod=syndication&type=bundle&op=add\">add new bundle</A> | <A HREF=\"admin.php?mod=syndication&type=feed&op=add\">add new feed</A> | <A HREF=\"admin.php?mod=syndication&op=block\">available blocks</A> | <A HREF=\"admin.php?mod=syndication&type=bundle&op=view\">bundle overview</A> | <A HREF=\"admin.php?mod=syndication&type=feed&op=view\">feed overview</A> | <A HREF=\"admin.php?mod=syndication&type=item&op=view\">item overview</A> | <A HREF=\"admin.php?mod=syndication&op=help\">help</A></SMALL><HR>";
+  print "<SMALL><A HREF=\"admin.php?mod=syndication&type=bundle&op=add\">add new bundle</A> | <A HREF=\"admin.php?mod=syndication&type=feed&op=add\">add new feed</A> | <A HREF=\"admin.php?mod=syndication&type=bundle&op=view\">available bundles</A> | <A HREF=\"admin.php?mod=syndication&type=item&op=view\">available items</A> | <A HREF=\"admin.php?mod=syndication&op=view\">overview</A> | <A HREF=\"admin.php?mod=syndication&op=help\">help</A></SMALL><HR>";
 
   switch($op) {
     case "help":
@@ -227,9 +225,6 @@ function syndication_admin() {
         print syndication_form_bundle();
       else
         print syndication_form_feed();
-      break;
-    case "block":
-      print syndication_view_block();
       break;
     case "edit":
       if ($type == "bundle")
