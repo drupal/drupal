@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.448 2005/03/03 20:51:27 unconed Exp $
+// $Id: user.module,v 1.449 2005/03/04 03:43:41 unconed Exp $
 
 /**
  * @file
@@ -138,7 +138,7 @@ function user_save($account, $array = array(), $category = 'account') {
     }
 
     // Delete a blocked user's sessions to kick them if they are online.
-    if ($array['status'] == 0) {
+    if (isset($array['status']) && $array['status'] == 0) {
       db_query('DELETE FROM {sessions} WHERE uid = %d', $account->uid);
     }
 
