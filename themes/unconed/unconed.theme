@@ -1,0 +1,441 @@
+<?
+
+ class Theme {
+   var $themename = "unconed";
+
+	 var $cl80 = "#8B8E95";
+	 var $clc0 = "#c8c8d0";
+	 var $cl00 = "#000000";
+	 
+   ### color set #1:
+   var $brcolor1 = "#000000";   // border color
+   var $bgcolor1 = "#B5BECE";
+   var $fgcolor1 = "#000000";   // table body color
+   var $hlcolor1 = "#000000";   // high-light color
+   var $categorycolor = "#202020";
+
+   ### color set #2:
+   var $bgcolor2 = "#EEEEEE";
+   var $fgcolor2 = "#000000";
+   var $hlcolor2 = "#000000";
+
+   ### color set #3:
+   var $bgcolor3 = "#D7D7D7";
+   var $fgcolor3 = "#000000";
+   var $hlcolor3 = "yellow";
+
+   var $posted = array("Posted by: ","Added by: ","Typed by: ","Dropped by: ");
+
+
+   ######
+   # Syntax.......: header($title);
+   # Description..: a function to draw the page header.
+   function header($title) {
+     global $sitename;
+     srand((double)microtime()*1000000);
+    ?>
+     <HTML>
+     <HEAD>
+      <TITLE><? echo $sitename; ?></TITLE>
+      <META NAME="description" CONTENT="drop.org">
+      <META NAME="keywords" CONTENT="drop, weblog, portal, community, news, article, announcements, stories, story, computer, science, space, hype, cult, geek, nerd, foo, bar">
+     </HEAD>
+     <STYLE type="text/css"> 
+      <!-- 
+			 TABLE { border-width: 0; }
+       TD { border-width: 0; font-size: 8pt; font-family: verdana,helvetica,arial; }
+			 P,UL,LI,DIV,FORM,EM,BLOCKQUOTE { font-size: 8pt; font-family: verdana,helvetica,arial; }
+       BODY { margin: 10px; font-size: 9pt; font-family: verdana,helvetica,arial; }
+       SMALL { font-size: 8pt; }
+       BIG { font-size: 10pt; }
+      -->
+     </STYLE>
+     <BODY TEXT="#000000" BGCOLOR="<? print $this->clc0; ?>" ALINK="#000000" LINK="#404040" VLINK="#404040" MARGINHEIGHT="10" MARGINWIDTH="10">
+     <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" ALIGN=CENTER>
+     <TR><TD BGCOLOR="<? print $this->cl00; ?>"><IMG SRC="themes/<? print $this->themename; ?>/images/null.gif" WIDTH="10"></TD><TD BGCOLOR="<? print $this->clc0; ?>"><IMG SRC="themes/<? print $this->themename; ?>/images/null.gif" WIDTH="4"></TD>
+     <TD BGCOLOR="<? print $this->clc0; ?>">
+      <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="9" BGCOLOR="<? print $this->cl80; ?>">
+       <TR>
+        <TD COLSPAN="2"><IMG SRC="themes/<? print $this->themename; ?>/images/logo.gif" ALT="drop.org logo"></TD>
+       </TR>
+       <TR>
+        <TD COLSPAN="2" ALIGN="CENTER">
+         <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0" BGCOLOR="<? echo $this->brcolor1; ?>"><TR><TD ALIGN="CENTER"><TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="4"><TR><TD ALIGN="CENTER" BGCOLOR="<? echo $this->bgcolor2; ?>"><BIG><A HREF="index.php">home</A> | <A HREF="faq.php">faq</A> | <A HREF="diary.php">diary</A> | <A HREF="search.php">search</A> | <A HREF="submit.php">submit news</A> | <A HREF="account.php">user account</A></BIG></TD></TR></TABLE></TD></TR></TABLE>
+        </TD>
+       </TR>
+       <TR><TD COLSPAN="2"><?
+            print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"0\" BGCOLOR=\"$this->brcolor1;\" WIDTH=\"100%\">";
+            print "<TR><TD>";
+            print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"1\" WIDTH=\"100%\">";
+            print "<TR><TD ALIGN=\"center\" BGCOLOR=\"$this->bgcolor2\"><FONT COLOR=\"$this->fgcolor1\"><IMG SRC=\"themes/" . $this->themename . "/images/null.gif\" WIDTH=\"2\" HEIGHT=\"2\"></FONT></TD></TR>";
+            print "</TABLE>";
+            print "</TR></TD></TABLE>";
+       ?></TD></TR>
+       <TR>
+       <TD VALIGN="top" WIDTH="560">
+    <?
+   }
+
+   ######
+   # Syntax.......: abstract(...);
+   # Description..: a function to draw an abstract story box, that is the
+   #                boxes displayed on the main page.
+   function abstract($story) {
+     $timestamp = format_date($story->timestamp);
+
+      print "\n<!-- story: \"$story->subject\" -->\n";     
+      ?>
+      <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" BGCOLOR="<? echo $this->brcolor1; ?>" WIDTH="100%">
+      <TR><TD>
+       <TABLE BORDER="0" CELLPADDING="4" CELLSPACING="1" WIDTH="100%">
+        <TR><TD BGCOLOR="<? echo $this->bgcolor1; ?>" COLSPAN="2"><FONT COLOR="<? echo $this->fgcolor1; ?>"><B><? echo $story->subject; ?></B></FONT></TD></TR>
+        <TR BGCOLOR="<? echo $this->bgcolor2; ?>">
+         <?
+				  if ($story->category) { print "<TD BGCOLOR=\"$this->bgcolor2\">"; }
+					else { print "<TD COLSPAN=\"2\" BGCOLOR=\"$this->bgcolor2\">"; }
+          if ($story->userid) { print "<SMALL>Posted by " . format_username($story->userid) . " on $timestamp"; }
+					else { print "<SMALL>Posted by $anonymous on $timestamp"; }
+					if ($story->department) { print " - from the $story->department dept."; }
+					print "</SMALL>";
+					if ($story->category) { print "</TD><TD BGCOLOR=\"$this->bgcolor2\" ALIGN=\"center\"><B><A HREF=\"search.php?category=$story->category\"><FONT COLOR=\"$this->categorycolor\">$story->category</FONT></A></B>"; }
+         ?>
+        </TD>
+       </TR>
+       <TR BGCOLOR="<? echo $this->bgcolor2; ?>">
+        <TD BGCOLOR="<? echo $this->bgcolor2 ?>" COLSPAN="2">
+        <?
+         echo "<P>" . $story->abstract . "</P>";
+         if ($story->updates) {
+           echo "<P><FONT COLOR=\"$this->fgcolor3\">Editor's note by " . format_username($editor) . ":</FONT> ". $story->updates . "</P>";
+         }
+        ?>
+        </TD>
+       </TR>
+      <TR BGCOLOR="<? echo $this->bgcolor3; ?>"><TD BGCOLOR="<? echo $this->bgcolor3 ?>" ALIGN="right" COLSPAN="2"><? echo display_morelink($this, $story) ?></TD></TR>
+     </TABLE></TD></TR></TABLE><BR>
+    <?	
+   }
+
+   ######
+   # Syntax.......: article(...);
+   # Description..: a function to dispay a complete article (without user 
+   #                comments).  It's what you get when you followed for
+   #                instance one of read-more links on the main page.
+   function article($story, $reply) {
+     $timestamp = format_date($story->timestamp);
+
+       ?>
+      <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" BGCOLOR="<? echo $this->brcolor1; ?>" WIDTH="100%">
+      <TR><TD>
+       <TABLE BORDER="0" CELLPADDING="4" CELLSPACING="1" WIDTH="100%">
+       <TR><TD COLSPAN="2" BGCOLOR="<? echo $this->bgcolor1; ?>"><FONT COLOR="<? echo $this->fgcolor1; ?>"><B><? echo $story->subject; ?></B></FONT></TD></TR>
+       <TR BGCOLOR="<? echo $this->bgcolor3; ?>">
+         <?
+				  if ($story->category) { print "<TD BGCOLOR=\"$this->bgcolor3\">"; }
+					else { print "<TD COLSPAN=\"2\" BGCOLOR=\"$this->bgcolor3\">"; }
+          if ($story->userid) { print "<SMALL>Posted by " . format_username($story->userid) . " on $timestamp"; }
+					else { print "<SMALL>Posted by $anonymous on $timestamp"; }
+					if ($story->department) { print " - from the $story->department dept."; }
+					print "</SMALL>";
+					if ($story->category) { print "</TD><TD BGCOLOR=\"$this->bgcolor3\" ALIGN=\"center\"><B><A HREF=\"search.php?category=$story->category\"><FONT COLOR=\"$this->categorycolor\">$story->category</FONT></A></B>"; }
+         ?>
+        </TD>
+       </TR>
+       <TR BGCOLOR="<? echo $this->bgcolor2; ?>">
+        <TD COLSPAN="2" BGCOLOR="<? echo $this->bgcolor2 ?>" >
+         <? 
+          if ($story->abstract) print "<P>$story->abstract</P>\n";
+          if ($story->updates) print "<P><FONT COLOR=\"$this->bgcolor2\">Editor's note:</FONT> $story->updates</P>\n";
+          if ($story->article) print "<P>$story->article</P>\n";
+         ?>
+        </TD>
+       </TR>
+      <TR BGCOLOR="<? echo $this->bgcolor3; ?>"><TD COLSPAN="2" BGCOLOR="<? echo $this->bgcolor3 ?>" ALIGN="right"><? echo "$reply"; ?></TD></TR>
+     </TABLE></TD></TR></TABLE><BR>
+    <? 
+   }
+
+   ######
+   # Syntax.......: commentControl(...);
+   # Description..: this function is used to theme the comment control box.
+   function commentControl($sid, $title, $thold, $mode, $order) {
+     global $user;
+     $query = mysql_query("SELECT sid FROM comments WHERE sid = $sid");
+
+     if (!$query) $count = 0; else $count = mysql_num_rows($query);
+     if (!isset($thold)) $thold = 0; 
+
+     ?>
+      <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" BGCOLOR="<? echo $this->brcolor1; ?>" WIDTH="100%">
+      <TR><TD>
+     <?
+
+     print "<TABLE BORDER=\"0\" CELLPADDING=\"3\" CELLSPACING=\"1\" WIDTH=\"100%\">";
+     print " <TR><TD ALIGN=\"center\" BGCOLOR=\"$this->bgcolor1\"><FONT COLOR=\"$this->fgcolor1\"><B>Comment Control</B></FONT></TD></TR>";
+     print " <TR><TD BGCOLOR=\"$this->bgcolor2\">";
+
+     ?> 
+            <FORM METHOD="get" ACTION="discussion.php">
+            <FONT SIZE="2"> 
+            <SELECT NAME="thold">
+             <OPTION VALUE="-1" <? if ($thold == -1) { echo "SELECTED"; } ?>>Threshold: -1
+             <OPTION VALUE="0" <? if ($thold == 0) { echo "SELECTED"; } ?>>Threshold: 0
+             <OPTION VALUE="1" <? if ($thold == 1) { echo "SELECTED"; } ?>>Threshold: 1
+             <OPTION VALUE="2" <? if ($thold == 2) { echo "SELECTED"; } ?>>Threshold: 2
+             <OPTION VALUE="3" <? if ($thold == 3) { echo "SELECTED"; } ?>>Threshold: 3
+             <OPTION VALUE="4" <? if ($thold == 4) { echo "SELECTED"; } ?>>Threshold: 4
+             <OPTION VALUE="5" <? if ($thold == 5) { echo "SELECTED"; } ?>>Threshold: 5
+            </SELECT> 
+            <SELECT NAME="mode">
+             <OPTION VALUE="nocomments" <? if ($mode == 'nocomments') { echo "SELECTED"; } ?>>No comments
+             <OPTION VALUE="nested" <? if ($mode == 'nested') { echo "SELECTED"; } ?>>Nested
+             <OPTION VALUE="flat" <? if ($mode == 'flat') { echo "SELECTED"; } ?>>Flat
+             <OPTION VALUE="threaded" <? if (!isset($mode) || $mode=='threaded' || $mode=="") { echo "SELECTED"; } ?>>Threaded
+            </SELECT> 
+            <SELECT NAME="order">
+             <OPTION VALUE="0" <? if (!$order) { echo "SELECTED"; } ?>>Oldest first
+             <OPTION VALUE="1" <? if ($order==1) { echo "SELECTED"; } ?>>Newest first
+             <OPTION VALUE="2" <? if ($order==2) { echo "SELECTED"; } ?>>Highest scoring first
+            </SELECT> 
+            <INPUT TYPE="hidden" NAME="sid" VALUE="<? echo "$sid"; ?>"> <INPUT TYPE="submit" VALUE="Refresh">
+            <?
+             if (isset($user)) echo "<BR><CENTER><INPUT TYPE=\"checkbox\" NAME=\"save\"> Save preferences</CENTER>"; 
+            ?>
+            </FONT>
+           </FORM>
+      <?
+       $result = mysql_query("SELECT COUNT(tid) FROM comments WHERE sid = $sid AND score < $thold");
+       if ($result && $number = mysql_result($result, 0)) {
+        ?>    <SMALL><FONT COLOR="<? echo "$this->fgcolor2"; ?>">There are at least <? echo $number; ?> comments below your threshold.</FONT></SMALL> <?
+       }
+
+       print "</TD></TR>";
+       print "</TABLE>";
+     ?>
+      </TD></TR>
+      </TABLE><BR>
+     <?
+   }
+
+   ######
+   # Syntax.......: comment(...);
+   # Description..: this function is used to theme user comments.
+   function comment($poster, $subject, $comment, $timestamp, $url, $email, $score, $votes, $cid, $link, $thread = "") {
+
+     if (empty($poster)) $poster = $anonymous;
+     $timestamp = format_date($timestamp);     
+
+     print "\n<!-- Comment: \"$subject\" by $poster -->\n";
+     print "<A NAME=\"$cid\">\n";
+
+     ?>
+      <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" BGCOLOR="<? echo $this->brcolor1; ?>" WIDTH="100%">
+      <TR><TD>
+     <?
+
+     ### Create comment header:
+     echo "<TABLE BORDER=\"0\" CELLPADDING=\"4\" CELLSPACING=\"1\" WIDTH=\"100%\">";
+     echo " <TR BGCOLOR=\"$this->bgcolor1\">";
+     echo "  <TD BGCOLOR=\"$this->bgcolor1\">";
+     echo "   <TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"1\"WIDTH=\"100%\">";
+
+     ### Subject:
+     echo "    <TR>";
+     echo "     <TD ALIGN=\"right\" VALIGN=\"top\" WIDTH=\"5%\"><FONT COLOR=\"$this->hlcolor1\"><B>Subject:</B></FONT></TD><TD WIDTH=\"80%\">";
+     echo "      <B><FONT COLOR=\"$this->fgcolor1\">$subject</FONT></B>";
+     echo "     </TD>";
+
+     ### Moderation:
+     echo "     <TD ALIGN=\"right\" ROWSPAN=\"3\" VALIGN=\"middle\" WIDTH=\"15%\">";
+     display_comment_moderation($cid, $poster, $score, $votes);
+     echo "     </TD>";
+     echo "    </TR>";
+
+     ### Author:
+     echo "    <TR>";
+     echo "     <TD ALIGN=\"right\" VALIGN=\"top\">Author:</TD><TD><B>" . format_username($poster) . "</B> ";
+     if ($poster != $anonymous) {
+       ### Display extra information line:
+       if ($email) $info .= format_email_address($email);
+       if (eregi("http://",$url)) $info .= " | " . format_url($url);
+       echo "<BR>[ $info ]";
+     }
+     echo "     </TD>";
+     echo "    </TR>";
+
+     ### Date
+     echo "    <TR><TD ALIGN=\"right\">Date:</TD><TD>". $timestamp ."</TD></TR>";
+
+     echo "   </TABLE>";
+     echo "  </TD>";
+     echo " </TR>";
+
+     ### Print body of comment:
+     if ($comment) echo " <TR><TD BGCOLOR=\"$this->bgcolor2\">" . nl2br($comment) . "</TD></TR>";
+
+     ### Print thread (if any):
+     if ($thread) echo " <TR><TD BGCOLOR=\"$this->bgcolor3\">$thread</TD></TR>";
+
+     ### Print bottom link(s):
+     echo " <TR><TD ALIGN=\"right\" BGCOLOR=\"$this->bgcolor3\">[ $link ]</TD></TR>";
+     echo " </TABLE>";
+     ?></TD></TR></TABLE><BR><?
+   }
+
+   ######
+   # Syntax.......: preview(...);
+   # Description..: this function is used to preview a story and is used at
+   #                different parts of the homepage: when a visitors sumbits
+   #                news, when an editor wants to post news, when people
+   #                check the entries in the sumbission queue, etc.
+   function preview($author, $subject, $abstract, $updates, $article, $timestamp, $category, $department) {
+
+     ?>
+      <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" BGCOLOR="<? echo $this->brcolor1; ?>" WIDTH="100%">
+      <TR><TD>
+      <TABLE BORDER="0" CELLPADDING="4" CELLSPACING="1" WIDTH="100%">
+       <TR BGCOLOR="<? echo $this->bgcolor1; ?>"><TD COLSPAN="2"><FONT COLOR="<? echo $this->fgcolor1; ?>"><B><? echo $subject; ?></B></FONT></TD></TR>
+       <TR BGCOLOR="<? echo $this->bgcolor3; ?>">
+         <?
+				  if ($category) { print "<TD BGCOLOR=\"$this->bgcolor2\">"; }
+					else { print "<TD COLSPAN=\"2\" BGCOLOR=\"$this->bgcolor2\">"; }
+          print "<SMALL>Posted by <A HREF=\"account.php?op=info&uname=" . $author . "\">" . $author . "</A> on " . format_date($timestamp);
+					if ($department) { print " - from the $department dept."; }
+					print "</SMALL>";
+					if ($category) { print "</TD><TD BGCOLOR=\"$this->bgcolor2\" ALIGN=\"center\"><B><A HREF=\"search.php?category=$category\"><FONT COLOR=\"$this->categorycolor\">$category</FONT></A></B>"; }
+         ?>
+        </TD>
+       </TR>
+       <TR BGCOLOR="<? echo $this->bgcolor2; ?>">
+        <TD COLSPAN="2">
+         <? 
+          if ($abstract) echo "<P>$abstract<P>";
+          if ($comments) echo "<P><FONT COLOR=\"$this->fgcolor1\">Editor's note:</FONT> $comments</P>";
+          if ($article) echo "<P>$article</P>";
+        ?>
+       </TD>
+      </TR>
+      <TR BGCOLOR="<? echo $this->bgcolor3; ?>"><TD COLSPAN="2" BGCOLOR="<? echo $this->bgcolor3 ?>" ALIGN="right"><? echo $link; ?></TD></TR>
+     </TABLE></TD></TR></TABLE><BR>
+    <?
+   }
+ 
+   ######
+   # Syntax.......: box($title, $body);
+   # Description..: a function to draw a box/block.
+   function box($subject, $content) { 
+
+     ?>
+      <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" BGCOLOR="<? echo $this->brcolor1; ?>" WIDTH="100%">
+      <TR><TD>
+     <?
+
+     print "<TABLE BORDER=\"0\" CELLPADDING=\"3\" CELLSPACING=\"1\" WIDTH=\"100%\">";
+     print " <TR><TD ALIGN=\"center\" BGCOLOR=\"$this->bgcolor1\"><FONT COLOR=\"$this->fgcolor1\"><B>$subject</B></FONT></TD></TR>";
+     print " <TR><TD BGCOLOR=\"$this->bgcolor2\">$content</TD></TR>";
+     print "</TABLE>";
+
+     ?>
+      </TD></TR>
+      </TABLE><BR>
+     <?
+    
+   }
+
+   ######
+   # Syntax.......: footer();
+   # Description..: a function to draw the page footer.
+   function footer() {
+    ?>
+       </TD>
+       <TD VALIGN="top" WIDTH="150">
+         <?
+         global $PHP_SELF, $user;  
+
+         if (strstr($PHP_SELF, "index.php")) {
+           global $user, $date;
+
+           ### Display account:
+           display_account($this);
+
+           ### Display calendar:
+           display_calendar($this, $date);
+
+           ### Display calendar:
+           display_old_headlines($this);
+         }
+         elseif (strstr($PHP_SELF, "account.php")) {
+           ### Display account:
+           display_account($this);
+         }
+         elseif (strstr($PHP_SELF, "submission.php")) {
+           ### Display account:
+           display_account($this);
+         }
+         elseif (strstr($PHP_SELF, "submit.php")) {
+           ### Display account:
+           display_account($this);
+
+           ### Display new headlines:
+           display_new_headlines($this);
+         }
+         elseif (strstr($PHP_SELF, "discussion.php")) {
+           global $id;
+           
+           if ($id && $story = id2story($id)) {
+             if ($story->status == 2) {
+               ### Display account:
+               display_account($this);
+      
+               ### Display related links:
+               display_related_links($this, $story);
+
+               ### Display new headlines:
+               display_new_headlines($this);
+             }
+             else {
+               ### Display results of moderation:
+               display_moderation_results($this, $story);
+             }
+           }
+           else {
+             ### Display account:
+             display_account($this);
+
+             ### Display new headlines:
+             display_new_headlines($this);
+           }
+         }
+         else {
+           ### Display account:
+           display_account($this);
+
+           ### Display new headlines:
+           display_new_headlines($this);
+         }
+        ?>
+       </TD>
+      </TR>
+       <TR><TD COLSPAN="2"><?
+            print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"0\" BGCOLOR=\"$this->brcolor1;\" WIDTH=\"100%\">";
+            print "<TR><TD>";
+            print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"1\" WIDTH=\"100%\">";
+            print "<TR><TD ALIGN=\"center\" BGCOLOR=\"$this->bgcolor2\"><FONT COLOR=\"$this->fgcolor1\"><IMG SRC=\"themes/" . $this->themename . "/images/null.gif\" WIDTH=\"2\" HEIGHT=\"2\"></FONT></TD></TR>";
+            print "</TABLE>";
+            print "</TR></TD></TABLE>";
+       ?></TD></TR>
+      <TR>
+       <TD COLSPAN="2">
+        <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0" BGCOLOR="<? echo $this->brcolor1; ?>"><TR><TD ALIGN="CENTER"><TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="4"><TR><TD ALIGN="CENTER" BGCOLOR="<? echo $this->bgcolor2; ?>"><BIG><A HREF="index.php">home</A> | <A HREF="faq.php">faq</A> | <A HREF="diary.php">diary</A> | <A HREF="search.php">search</A> | <A HREF="submit.php">submit news</A> | <A HREF="account.php">user account</A></BIG></TD></TR></TABLE></TD></TR></TABLE>
+       </TD>
+      </TR>
+     </TABLE>
+    </TD><TD BGCOLOR="<? print $this->clc0; ?>"><IMG SRC="themes/<? print $this->themename; ?>/images/null.gif" WIDTH="4"></TD><TD BGCOLOR="<? print $this->cl00; ?>"><IMG SRC="themes/<? print $this->themename; ?>/images/null.gif" WIDTH="10"></TD></TR>
+    </TABLE>
+    </BODY> 
+    </HTML>
+    <?
+   }
+ }
+
+?>
