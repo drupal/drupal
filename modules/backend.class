@@ -121,12 +121,17 @@ class backend {
       // Display box:
       $theme->box($this->site, $content);
     }
-    else print "<P>Warning: something whiched happened: specified channel could not be found in database.</P>";
+    else print "<P>Warning: something funky happened: specified channel could not be found in database.</P>";
   }
 
   function add() {
     // Add channel:
     $result = db_query("INSERT INTO channel (site, file, url, contact, timestamp) VALUES ('". check_input($this->site) ."', '". check_input($this->file) ."', '". check_input($this->url) ."', '". check_input($this->contact) ."', 1)");
+  }
+
+  function save() {
+    // Save channel:
+    $result = db_query("UPDATE channel SET site='". check_input($this->site) ."', file='". check_input($this->file) ."', url='". check_input($this->url) ."', contact='". check_input($this->contact) ."' WHERE id='". check_input($this->id) ."'");
   }
 
   function delete() {
