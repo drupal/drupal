@@ -183,7 +183,7 @@ function do_search($search_array) {
         $find[$i++] = array("count" => $count, "title" => $title, "link" => (strstr(request_uri(), "admin") ? url("admin/node/edit/$lno") : url("node/view/$lno")), "user" => $name, "date" => $created, "keywords" => implode("|", $words));
         break;
       case "comment":
-        $find[$i++] = array("count" => $count, "title" => $title, "link" => (strstr(request_uri(), "admin") ? url("admin/comment/edit/$lno") : url("node/view/$nid", NULL, $lno)), "user" => $name, "date" => $created, "keywords" => implode("|", $words));
+        $find[$i++] = array("count" => $count, "title" => $title, "link" => (strstr(request_uri(), "admin") ? url("admin/comment/edit/$lno") : url("node/view/$nid", NULL, "comment-$lno")), "user" => $name, "date" => $created, "keywords" => implode("|", $words));
         break;
       }
     }
