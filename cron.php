@@ -1,6 +1,6 @@
 <?
 
-include "includes/theme.inc";
+include "includes/common.inc";
 
 function cron_run($cron) {
   global $repository;

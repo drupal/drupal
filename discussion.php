@@ -272,7 +272,7 @@ function comment_post($pid, $sid, $subject, $comment) {
   }
 }
 
-include "includes/theme.inc";
+include "includes/common.inc";
 include "includes/comment.inc";
 
 ### Security check:

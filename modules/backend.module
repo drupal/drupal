@@ -5,7 +5,7 @@ $module = array("page"  => "backend_page",
                 "block" => "backend_block",
                 "admin" => "backend_admin");
 
-include "includes/theme.inc";
+include "includes/common.inc";
 include "modules/backend.class";
 
 function backend_page() {

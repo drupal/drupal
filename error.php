@@ -39,7 +39,7 @@ function error_httpd() {
   print "</PRE>\n";
 }
 
-include "includes/theme.inc";
+include "includes/common.inc";
 
 switch ($op) {
   case "flood":
