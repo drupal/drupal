@@ -182,18 +182,18 @@ function archive_block($op = "list", $delta = 0) {
   }
 }
 
+/**
+ * Implementation of hook_link().
+ */
 function archive_link($type) {
-
   $links = array();
 
-  if ($type == "page" && user_access("access content")) {
-    $links[] = l(t("archives"), "archive", array("title" => t("Read the older content in our archive.")));
+  if ($type == 'page' && user_access('access content')) {
+    $links[] = l(t('archives'), 'archive', array('title' => t('Read the older content in our archive.')));
   }
 
-  if ($type == "system") {
-    if (user_access("access content")) {
-      menu("archive", t("archives"), "archive_page", 0, MENU_HIDE);
-    }
+  if ($type == 'system') {
+    menu('archive', t('archives'), user_access('access content') ? 'archive_page' : MENU_DENIED, 0, MENU_HIDE);
   }
 
   return $links;

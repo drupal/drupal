@@ -4,6 +4,11 @@ Drupal x.x.x, xxxx-xx-xx
 - profile module:
     * made it possible to administer profile fields.
     * made it possible to browse the profiles by field.
+- menu module:
+    * made it possible to customize menus.
+- refactored 403 (forbidden) handling and added support for custom 403 pages.
+- usability:
+    * slightly reorganized navigation menus.
 
 Drupal 4.4.0, 2004-04-01 (release candidate)
 --------------------------------------------
@@ -40,7 +45,7 @@ Drupal 4.4.0, 2004-04-01 (release candidate)
     * made themes degrade gracefully in absence of CSS.
     * grouped form elements using '<fieldset>' and '<legend>' tags.
     * added '<label>' tags to form elements.
-- refactored 404 (file not found) handling to support custom 404 pages.
+- refactored 404 (file not found) handling and added support for custom 404 pages.
 - documentation:
     * added PHPDoc/Doxygen comments.
 - improved the filter system to prevent conflicts between filters:

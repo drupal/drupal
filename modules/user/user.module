@@ -532,34 +532,36 @@ function theme_user_list($items, $title = NULL) {
   return theme("item_list", $items, $title);
 }
 
+/**
+ * Implementation of hook_link().
+ */
 function user_link($type) {
   global $user;
 
-  if ($type == "system") {
-    if ($user->uid) {
-      menu('user', t("my account"), "user_page", 8);
-      menu("user/edit", t("edit account"), "user_page", 0);
-      menu("logout", t("log out"), "user_logout", 10);
-    }
-    else {
-      menu("user/login", t("log in"), "user_page", 0, MENU_HIDE);
-    }
-    menu("user/password", t("e-mail new password"), "user_page", 0, MENU_HIDE);
-    menu("user/register", t("create new account"), "user_page", 0, MENU_HIDE);
+  if ($type == 'system') {
+    $access = $user->uid;
+    menu('user', t('my account'), $access ? 'user_page' : MENU_DENIED, 8);
+    menu('user/edit', t('edit account'), $access ? 'user_page' : MENU_DENIED, 0);
+    menu('logout', t('log out'), $access ? 'user_logout' : MENU_DENIED, 10);
 
-    if (user_access("administer users")) {
-      menu("admin/user", t("accounts"), "user_admin", 2);
-      menu("admin/user/create", t("new user"), "user_admin", 1);
-      menu("admin/user/access", t("access rules"), "user_admin", 3);
-      menu("admin/user/access/mail", t("e-mail rules"), "user_admin");
-      menu("admin/user/access/user", t("name rules"), "user_admin");
-      menu("admin/user/role", t("roles"), "user_admin", 4);
-      menu("admin/user/permission", t("permissions"), "user_admin", 5);
-      menu("admin/user/help", t("help"), "user_help_page", 9);
-      menu("admin/user/edit", t("edit user account"), "user_admin", 0, MENU_HIDE, MENU_LOCKED);
-      if (module_exist('search')) {
-        menu("admin/user/search", t("search"), "user_admin", 8);
-      }
+    if (!$user->uid) {
+      menu('user/login', t('log in'), 'user_page', 0, MENU_HIDE);
+      menu('user/password', t('e-mail new password'), 'user_page', 0, MENU_HIDE);
+      menu('user/register', t('create new account'), 'user_page', 0, MENU_HIDE);
+    }
+
+    $access = user_access('administer users');
+    menu('admin/user', t('accounts'), $access ? 'user_admin' : MENU_DENIED, 2);
+    menu('admin/user/create', t('new user'), $access ? 'user_admin' : MENU_DENIED, 1);
+    menu('admin/user/access', t('access rules'), $access ? 'user_admin' : MENU_DENIED, 3);
+    menu('admin/user/access/mail', t('e-mail rules'), $access ? 'user_admin' : MENU_DENIED);
+    menu('admin/user/access/user', t('name rules'), $access ? 'user_admin' : MENU_DENIED);
+    menu('admin/user/role', t('roles'), $access ? 'user_admin' : MENU_DENIED, 4);
+    menu('admin/user/permission', t('permissions'), $access ? 'user_admin' : MENU_DENIED, 5);
+    menu('admin/user/help', t('help'), $access ? 'user_help_page' : MENU_DENIED, 9);
+    menu('admin/user/edit', t('edit user account'), $access ? 'user_admin' : MENU_DENIED, 0, MENU_HIDE, MENU_LOCKED);
+    if (module_exist('search')) {
+      menu('admin/user/search', t('search'), $access ? 'user_admin' : MENU_DENIED, 8);
     }
   }
 }
@@ -1175,7 +1177,7 @@ function user_page() {
         print theme('page', $output, t("Create new account"));
       }
       else {
-        print theme('page', message_access());
+        drupal_access_denied();
       }
       break;
     case t("Log in"):

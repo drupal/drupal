@@ -31,13 +31,14 @@ function queue_perm() {
   return array("access submission queue");
 }
 
+/**
+ * Implementation of hook_link().
+ */
 function queue_link($type) {
   $links = array();
 
-  if ($type == "system") {
-    if (user_access("access submission queue")) {
-      menu("queue", t("submission queue"), "queue_page", 1);
-    }
+  if ($type == 'system') {
+    menu('queue', t('submission queue'), user_access('access submission queue') ? 'queue_page' : MENU_DENIED, 1);
   }
 
   return $links;

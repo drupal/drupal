@@ -51,23 +51,24 @@ function locale_perm() {
   return array('administer locales');
 }
 
+/**
+ * Implementation of hook_link().
+ */
 function locale_link($type) {
   global $languages;
 
-  if ($type == "system") {
-    if (user_access('administer locales')) {
+  if ($type == 'system') {
+    $access = user_access('administer locales');
+    menu('admin/locale', t('localization'), $access ? 'locale_admin' : MENU_DENIED, 5);
+    menu('admin/locale/search', t('search string'), $access ? 'locale_admin' : MENU_DENIED, 8);
+    menu('admin/locale/help', t('help'), $access ? 'locale_help_page' : MENU_DENIED, 9);
+    menu('admin/locale/edit', t('edit string'), $access ? 'locale_admin' : MENU_DENIED, 0, MENU_HIDE, MENU_LOCKED);
+    menu('admin/locale/delete', t('delete string'), $access ? 'locale_admin' : MENU_DENIED, 0, MENU_HIDE, MENU_LOCKED);
 
-      menu("admin/locale", t("localization"), "locale_admin", 5);
-      menu("admin/locale/search", t("search string"), "locale_admin", 8);
-      menu("admin/locale/help", t("help"), "locale_help_page", 9);
-      menu("admin/locale/edit", t("edit string"), "locale_admin", 0, MENU_HIDE, MENU_LOCKED);
-      menu("admin/locale/delete", t("delete string"), "locale_admin", 0, MENU_HIDE, MENU_LOCKED);
-
-      foreach ($languages as $key => $value) {
-        menu("admin/locale/$key", "$value", "locale_admin");
-        menu("admin/locale/$key/translated", t("translated strings"), "locale_admin");
-        menu("admin/locale/$key/untranslated", t("untranslated strings"), "locale_admin");
-      }
+    foreach ($languages as $key => $value) {
+      menu("admin/locale/$key", "$value", $access ? 'locale_admin' : MENU_DENIED);
+      menu("admin/locale/$key/translated", t('translated strings'), $access ? 'locale_admin' : MENU_DENIED);
+      menu("admin/locale/$key/untranslated", t('untranslated strings'), $access ? 'locale_admin' : MENU_DENIED);
     }
   }
 }

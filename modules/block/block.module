@@ -61,13 +61,15 @@ function block_perm() {
   return array("administer blocks");
 }
 
+/**
+ * Implementation of hook_link().
+ */
 function block_link($type) {
-  if ($type == "system" && user_access("administer blocks")) {
-
-    menu("admin/system/block", t("blocks"), "block_admin", 3);
-    menu("admin/system/block/add", t("new block"), "block_admin", 2);
-    menu("admin/system/block/preview", t("preview placement"), "block_admin", 3);
-    menu("admin/system/block/help", t("help"), "block_help_page", 9);
+  if ($type == 'system') {
+    menu('admin/system/block', t('blocks'), user_access('administer blocks') ? 'block_admin' : MENU_DENIED, 3);
+    menu('admin/system/block/add', t('new block'), user_access('administer blocks') ? 'block_admin' : MENU_DENIED, 2);
+    menu('admin/system/block/preview', t('preview placement'), user_access('administer blocks') ? 'block_admin' : MENU_DENIED, 3);
+    menu('admin/system/block/help', t('help'), user_access('administer blocks') ? 'block_help_page' : MENU_DENIED, 9);
   }
 }
 

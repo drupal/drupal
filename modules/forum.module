@@ -119,6 +119,9 @@ function forum_block($op = 'list', $delta = 0) {
   return $blocks;
 }
 
+/**
+ * Implementation of hook_link().
+ */
 function forum_link($type, $node = 0, $main = 0) {
   global $user;
 
@@ -129,12 +132,8 @@ function forum_link($type, $node = 0, $main = 0) {
   }
 
   if ($type == 'system') {
-    if (user_access('create forum topics')) {
-      menu('node/add/forum', t('forum topic'), 'node_page');
-    }
-    if (user_access('access content')) {
-      menu('forum', t('forums'), 'forum_page', 0, MENU_HIDE);
-    }
+    menu('node/add/forum', t('forum topic'), user_access('create forum topics') ? 'node_page' : MENU_DENIED);
+    menu('forum', t('forums'), user_access('access content') ? 'forum_page' : MENU_DENIED, 0, MENU_HIDE);
   }
 
   if (!$main && $type == 'node' && $node->type == 'forum') {

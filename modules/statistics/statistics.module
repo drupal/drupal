@@ -119,46 +119,44 @@ function statistics_perm() {
   return array("administer statistics module", "administer statistics", "access statistics");
 }
 
-/* Link hook, defines module's links */
+/**
+ * Implementation of hook_link().
+ */
 function statistics_link($type, $node = 0, $main = 0) {
   global $id;
 
   $links = array();
 
-  if ($type == "node" && user_access("access statistics") && variable_get("statistics_display_counter", 0)) {
+  if ($type == 'node' && user_access('access statistics') && variable_get('statistics_display_counter', 0)) {
     $statistics = statistics_get($node->nid);
     if ($statistics) {
-      if (user_access("administer statistics")) {
-        $links[] = l(format_plural($statistics["totalcount"], "1 read", "%count reads"), "admin/logs/access/node/$node->nid");
+      if (user_access('administer statistics')) {
+        $links[] = l(format_plural($statistics['totalcount'], '1 read', '%count reads'), "admin/logs/access/node/$node->nid");
       }
       else {
-        $links[] = format_plural($statistics["totalcount"], "1 read", "%count reads");
+        $links[] = format_plural($statistics['totalcount'], '1 read', '%count reads');
       }
     }
   }
 
-  if ($type == "page" && user_access("access content")) {
-    $userlink = variable_get("statistics_userpage_link", "");
+  if ($type == 'page' && user_access('access content')) {
+    $userlink = variable_get('statistics_userpage_link', '');
     if ($userlink) {
-      $links[] = l(t($userlink), "statistics", array("title" => t("View this site's most popular content.")));
+      $links[] = l(t($userlink), 'statistics', array('title' => t("View this site's most popular content.")));
     }
   }
 
-  if ($type == "system") {
-    if ((user_access("administer statistics module") || (user_access("administer statistics")))) {
-      menu("admin/logs/topnodes", t("top nodes"), "statistics_admin", 1);
-      menu("admin/logs/referrer", t("referrer"), "statistics_admin", 2);
-      menu("admin/logs/referrer/internal", t("internal referrers only"), "statistics_admin");
-      menu("admin/logs/referrer/external", t("external referrers only"), "statistics_admin");
-      menu("admin/logs/access", t("access"), "statistics_admin", 3);
-      menu("admin/logs/access/node", t("track node"), "statistics_admin", 0, MENU_HIDE);
-      menu("admin/logs/access/user", t("track user"), "statistics_admin", 0, MENU_HIDE);
-      menu("admin/logs/access/host", t("track host"), "statistics_admin", 0, MENU_HIDE);
-    }
+  if ($type == 'system') {
+    $access = user_access('administer statistics module') || user_access('administer statistics');
 
-    if (user_access("access content")) {
-      menu("statistics", t("view most popular content"), "statistics_page", 0, MENU_HIDE);
-    }
+    menu('admin/logs/topnodes', t('top nodes'), $access ? 'statistics_admin' : MENU_DENIED, 1);
+    menu('admin/logs/referrer', t('referrer'), $access ? 'statistics_admin' : MENU_DENIED, 2);
+    menu('admin/logs/referrer/internal', t('internal referrers only'), $access ? 'statistics_admin' : MENU_DENIED);
+    menu('admin/logs/referrer/external', t('external referrers only'), $access ? 'statistics_admin' : MENU_DENIED);
+    menu('admin/logs/access', t('access'), $access ? 'statistics_admin' : MENU_DENIED, 3);
+    menu('admin/logs/access/node', t('track node'), $access ? 'statistics_admin' : MENU_DENIED, 0, MENU_HIDE);
+    menu('admin/logs/access/user', t('track user'), $access ? 'statistics_admin' : MENU_DENIED, 0, MENU_HIDE);
+    menu('admin/logs/access/host', t('track host'), $access ? 'statistics_admin' : MENU_DENIED, 0, MENU_HIDE);
   }
 
   return $links;

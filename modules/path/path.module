@@ -143,11 +143,14 @@ function conf_url_rewrite(\$path, \$mode = 'incoming') {
   return $output;
 }
 
+/**
+ * Implementation of hook_link().
+ */
 function path_link($type, $node = NULL) {
-  if ($type == "system" && user_access("administer url aliases")) {
-    menu("admin/path", t("url aliasing"), "path_admin", 4);
-    menu("admin/path/add", t("new alias"), "path_admin");
-    menu("admin/path/help", t("help"), "path_admin", 9);
+  if ($type == 'system') {
+    menu('admin/path', t('url aliasing'), user_access('administer url aliases') ? 'path_admin' : MENU_DENIED, 4);
+    menu('admin/path/add', t('new alias'), user_access('administer url aliases') ? 'path_admin' : MENU_DENIED);
+    menu('admin/path/help', t('help'), user_access('administer url aliases') ? 'path_admin' : MENU_DENIED, 9);
   }
 }
 

@@ -13,11 +13,12 @@ function title_help($section) {
   return $output;
 }
 
+/**
+ * Implementation of hook_link().
+ */
 function title_link($type) {
-  if ($type == "system") {
-    if (user_access("access content")) {
-      menu("title", t("search"), "title_page", 0, MENU_HIDE, MENU_LOCKED);
-    }
+  if ($type == 'system') {
+    menu('title', t('search'), user_access('access content') ? 'title_page' : MENU_DENIED, 0, MENU_HIDE, MENU_LOCKED);
   }
 }
 

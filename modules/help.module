@@ -1,10 +1,13 @@
 <?php
 // $Id$
 
+/**
+ * Implementation of hook_link().
+ */
 function help_link($type) {
-  if ($type == "system" && user_access("access administration pages")) {
-    menu("admin/help/glossary", t("glossary"), "help_glossary", 8);
-    menu("admin/help", t("help"), "help_help_page", 9);
+  if ($type == 'system') {
+    menu('admin/help/glossary', t('glossary'), user_access('access administration pages') ? 'help_glossary' : MENU_DENIED, 8);
+    menu('admin/help', t('help'), user_access('access administration pages') ? 'help_help_page' : MENU_DENIED, 9);
   }
 }
 

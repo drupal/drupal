@@ -47,40 +47,38 @@ function book_access($op, $node) {
   }
 }
 
+/**
+ * Implementation of hook_link().
+ */
 function book_link($type, $node = 0, $main = 0) {
 
   $links = array();
 
-  if ($type == "page" && user_access("access content")) {
-    $links[] = l(t("books"), "book", array("title" => t("Read and contribute to the collaborative books.")));
+  if ($type == 'page' && user_access('access content')) {
+    $links[] = l(t('books'), 'book', array('title' => t('Read and contribute to the collaborative books.')));
   }
 
-  if ($type == "node" && $node->type == "book") {
-    if (book_access("update", $node)) {
-      $links[] = l(t("edit this page"), "node/edit/$node->nid", array("title" => t("Suggest an update for this book page.")));
+  if ($type == 'node' && $node->type == 'book') {
+    if (book_access('update', $node)) {
+      $links[] = l(t('edit this page'), "node/edit/$node->nid", array('title' => t('Suggest an update for this book page.')));
     }
     if (!$main) {
-      $links[] = l(t("printer-friendly version"), "book/print/$node->nid", array("title" => t("Show a printer-friendly version of this book page and its sub-pages.")));
+      $links[] = l(t('printer-friendly version'), "book/print/$node->nid", array('title' => t('Show a printer-friendly version of this book page and its sub-pages.')));
     }
   }
 
-  if ($type == "system") {
-    if (user_access("maintain books")) {
-      menu("node/add/book", t("book page"), "node_page", 0);
-    }
-    if (user_access("administer nodes")) {
-      menu("admin/node/book", t("books"), "book_admin", 4);
-      menu("admin/node/book/orphan", t("orphan pages"), "book_admin_orphan", 8);
-      menu("admin/node/book/help", t("help"), "book_help_page", 9);
+  if ($type == 'system') {
+    menu('node/add/book', t('book page'), user_access('maintain books') ? 'node_page' : MENU_DENIED, 0);
 
-      $result = db_query("SELECT n.nid, n.title FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = 0 ORDER BY b.weight, n.title");
-      while ($book = db_fetch_object($result)) {
-        menu("admin/node/book/$book->nid", t("'%title' book", array("%title" => $book->title)), "book_admin");
-      }
+    menu('admin/node/book', t('books'), user_access('administer nodes') ? 'book_admin' : MENU_DENIED, 4);
+    menu('admin/node/book/orphan', t('orphan pages'), user_access('administer nodes') ? 'book_admin_orphan' : MENU_DENIED, 8);
+    menu('admin/node/book/help', t('help'), user_access('administer nodes') ? 'book_help_page' : MENU_DENIED, 9);
+
+    $result = db_query("SELECT n.nid, n.title FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = 0 ORDER BY b.weight, n.title");
+    while ($book = db_fetch_object($result)) {
+      menu("admin/node/book/$book->nid", t('"%title" book', array('%title' => $book->title)), user_access('administer nodes') ? 'book_admin' : MENU_DENIED);
     }
-    if (user_access("access content")) {
-      menu("book", t("books"), "book_page", 0, MENU_HIDE);
-    }
+    menu('book', t('books'), user_access('access content') ? 'book_page' : MENU_DENIED, 0, MENU_HIDE);
   }
 
   return $links;
@@ -677,7 +675,7 @@ function book_page() {
     }
   }
   else {
-    print theme("page", message_access());
+    drupal_access_denied();
   }
 }
 

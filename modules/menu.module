@@ -5,15 +5,15 @@
  * Implementation of hook_link().
  */
 function menu_link($type, $node = 0, $main) {
-  if ($type == 'system' && user_access('administer menu')) {
-    menu('admin/menu', t('menus'), 'menu_overview', 0, MENU_SHOW);
-    menu('admin/menu/reset', t('reset all menus'), 'menu_reset', 0, MENU_SHOW);
-    menu('admin/menu/menu/add', t('add menu'), 'menu_add_menu', 0, MENU_SHOW);
-    menu('admin/menu/item/add', t('add menu item'), 'menu_edit_item', 0, MENU_SHOW);
-    menu('admin/menu/item/edit', t('edit menu item'), 'menu_edit_item', 0, MENU_HIDE, MENU_LOCKED);
-    menu('admin/menu/item/reset', t('reset menu item'), 'menu_reset_item', 0, MENU_HIDE, MENU_LOCKED);
-    menu('admin/menu/item/disable', t('disable menu item'), 'menu_disable_item', 0, MENU_HIDE, MENU_LOCKED);
-    menu('admin/menu/item/delete', t('delete menu item'), 'menu_delete_item', 0, MENU_HIDE, MENU_LOCKED);
+  if ($type == 'system') {
+    menu('admin/menu', t('menus'), user_access('administer menu') ? 'menu_overview' : MENU_DENIED, 0, MENU_SHOW);
+    menu('admin/menu/reset', t('reset all menus'), user_access('administer menu') ? 'menu_reset' : MENU_DENIED, 0, MENU_SHOW);
+    menu('admin/menu/menu/add', t('add menu'), user_access('administer menu') ? 'menu_add_menu' : MENU_DENIED, 0, MENU_SHOW);
+    menu('admin/menu/item/add', t('add menu item'), user_access('administer menu') ? 'menu_edit_item' : MENU_DENIED, 0, MENU_SHOW);
+    menu('admin/menu/item/edit', t('edit menu item'), user_access('administer menu') ? 'menu_edit_item' : MENU_DENIED, 0, MENU_HIDE, MENU_LOCKED);
+    menu('admin/menu/item/reset', t('reset menu item'), user_access('administer menu') ? 'menu_reset_item' : MENU_DENIED, 0, MENU_HIDE, MENU_LOCKED);
+    menu('admin/menu/item/disable', t('disable menu item'), user_access('administer menu') ? 'menu_disable_item' : MENU_DENIED, 0, MENU_HIDE, MENU_LOCKED);
+    menu('admin/menu/item/delete', t('delete menu item'), user_access('administer menu') ? 'menu_delete_item' : MENU_DENIED, 0, MENU_HIDE, MENU_LOCKED);
   }
 }
 

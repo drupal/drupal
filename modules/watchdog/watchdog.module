@@ -49,14 +49,16 @@ function watchdog_perm() {
   return array("administer watchdog");
 }
 
+/**
+ * Implementation of hook_link().
+ */
 function watchdog_link($type) {
-  if ($type == "system") {
-    if (user_access("administer watchdog")) {
-      menu("admin/logs", t("logs"), "watchdog_admin", 7);
-      menu("admin/logs/view", t("view details"), "watchdog_admin", 0, MENU_HIDE, MENU_LOCKED);
-      foreach (_watchdog_get_message_types() as $type) {
-        menu("admin/logs/$type", t($type), "watchdog_admin");
-      }
+  if ($type == 'system') {
+    menu('admin/logs', t('logs'), user_access('administer watchdog') ? 'watchdog_admin' : MENU_DENIED, 7);
+    menu('admin/logs/view', t('view details'), user_access('administer watchdog') ? 'watchdog_admin' : MENU_DENIED, 0, MENU_HIDE, MENU_LOCKED);
+
+    foreach (_watchdog_get_message_types() as $type) {
+      menu("admin/logs/$type", t($type), user_access('administer watchdog') ? 'watchdog_admin' : MENU_DENIED);
     }
   }
 }

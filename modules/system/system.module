@@ -45,34 +45,36 @@ function system_perm() {
   return array("administer site configuration", "access administration pages", "bypass input data check", "create php content");
 }
 
+/**
+ * Implementation of hook_link().
+ */
 function system_link($type) {
-  if ($type == "system") {
-    menu("system/files", t("file download"), "file_download", 0, MENU_HIDE);
-    if (user_access("administer site configuration")) {
+  if ($type == 'system') {
+    menu('system/files', t('file download'), 'file_download', 0, MENU_HIDE, MENU_LOCKED);
+    $access = user_access('administer site configuration');
 
-      menu("admin/system", t("configuration"), "system_admin", 3);
-      menu("admin/system/themes", t("themes"), "system_admin", 2);
+    menu('admin/system', t('configuration'), $access ? 'system_admin' : MENU_DENIED, 3);
+    menu('admin/system/themes', t('themes'), $access ? 'system_admin' : MENU_DENIED, 2);
 
-      foreach (list_themes() as $theme) {
-        // TODO: reenable 'forced refresh' once we move the menu_build() later in the request. it added overhead with no benefit
-        // NOTE: refresh the list because some themes might have been enabled/disabled.
-        include_once "$theme->filename";
-        $function = $theme->name ."_settings";
-        if (function_exists($function)) {
-          menu("admin/system/themes/$theme->name", $theme->name, "system_admin");
-        }
+    foreach (list_themes() as $theme) {
+      // TODO: reenable 'forced refresh' once we move the menu_build() later in the request. it added overhead with no benefit
+      // NOTE: refresh the list because some themes might have been enabled/disabled.
+      include_once "$theme->filename";
+      $function = $theme->name .'_settings';
+      if (function_exists($function)) {
+        menu("admin/system/themes/$theme->name", $theme->name, $access ? 'system_admin' : MENU_DENIED);
       }
-
-      menu("admin/system/modules", t("modules"), "system_admin", 3);
-      foreach (module_list() as $name) {
-        // TODO: reenable 'forced refresh' once we move the menu_build() later in the request.  it added overhead with no benefit
-        // NOTE: refresh the list because some modules might have been enabled/disabled.
-        if (module_hook($name, "settings")) {
-          menu("admin/system/modules/$name", t($name), "system_admin");
-        }
-      }
-      menu("admin/system/help", t("help"), "system_help_page", 9);
     }
+
+    menu('admin/system/modules', t('modules'), $access ? 'system_admin' : MENU_DENIED, 3);
+    foreach (module_list() as $name) {
+      // TODO: reenable 'forced refresh' once we move the menu_build() later in the request.  it added overhead with no benefit
+      // NOTE: refresh the list because some modules might have been enabled/disabled.
+      if (module_hook($name, 'settings')) {
+        menu("admin/system/modules/$name", t($name), $access ? 'system_admin' : MENU_DENIED);
+      }
+    }
+    menu('admin/system/help', t('help'), $access ? 'system_help_page' : MENU_DENIED, 9);
   }
 }
 
@@ -114,6 +116,7 @@ function system_view_general() {
   $group .= form_textarea(t("Footer message"), "site_footer", variable_get("site_footer", ""), 70, 5, t("This text will be displayed at the bottom of each page.  Useful for adding a copyright notice to your pages."));
   $group .= form_textfield(t("Anonymous user"), "anonymous", variable_get("anonymous", "Anonymous"), 70, 70, t("The name used to indicate anonymous users."));
   $group .= form_textfield(t("Default front page"), "site_frontpage", variable_get("site_frontpage", "node"), 70, 70, t("The home page displays content from this relative URL.  If you are not using clean URLs, specify the part after '?q='.  If unsure, specify 'node'."));
+  $group .= form_textfield(t("Default 403 (access denied) page"), "site_403", variable_get("site_403", ""), 70, 70, t("This page is displayed when the requested document is denied to the current user.  If you are not using clean URLs, specify the part after '?q='.  If unsure, specify nothing."));
   $group .= form_textfield(t("Default 404 (not found) page"), "site_404", variable_get("site_404", ""), 70, 70, t("This page is displayed when no other content matches the requested document.  If you are not using clean URLs, specify the part after '?q='.  If unsure, specify nothing."));
   $group .= form_radios(t("Clean URLs"), "clean_url", variable_get("clean_url", 0), array(t("Disabled"), t("Enabled")), t("Enable or disable clean URLs.  If enabled, you'll need <code>ModRewrite</code> support.  See also the <code>.htaccess</code> file in Drupal's top-level directory."));
 

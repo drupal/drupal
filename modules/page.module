@@ -94,21 +94,19 @@ function page_load($node) {
 }
 
 /**
- * Define internal Drupal links.
+ * Implementation of hook_link().
  */
 function page_link($type, $node = 0, $main) {
 
   $links = array();
 
   if ($type == 'system') {
-    if (page_access('create', $node)) {
-      menu("node/add/page", t("page"), "node_page", 0);
-    }
+    menu('node/add/page', t('page'), page_access('create', $node) ? 'node_page' : MENU_DENIED, 0);
   }
 
   if ($type == 'node' && $node->type == 'page') {
     /* Don't display a redundant edit link if they are node administrators */
-    if (page_access("update", $node) && !user_access('administer nodes')) {
+    if (page_access('update', $node) && !user_access('administer nodes')) {
       $links[] = l(t('edit this page'), "node/edit/$node->nid");
     }
   }

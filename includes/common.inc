@@ -80,7 +80,6 @@ function drupal_get_breadcrumb() {
 
   if (!isset($breadcrumb)) {
     $breadcrumb = menu_get_active_breadcrumb();
-    array_pop($breadcrumb);
   }
 
   return $breadcrumb;
@@ -253,20 +252,36 @@ function drupal_goto($url = NULL, $query = NULL, $fragment = NULL) {
  * Generates a 404 error if the request can not be handled.
  */
 function drupal_not_found() {
-  header("HTTP/1.0 404 Not Found");
-  watchdog("httpd", "404 error: '". check_query($_GET["q"]) ."' not found");
+  header('HTTP/1.0 404 Not Found');
+  watchdog('httpd', '404 error: "'. check_query($_GET['q']) .'" not found');
 
   $path = drupal_get_normal_path(variable_get('site_404', ''));
-
+  $status = MENU_FALLTHROUGH;
   if ($path) {
     menu_set_active_item($path);
+    $status = menu_execute_active_handler();
   }
 
-  if ($path && menu_active_handler_exists()) {
-    menu_execute_active_handler();
-  }
-  else {
+  if ($status != MENU_FOUND) {
     print theme('page', '', t('Page not found'));
+  }
+}
+
+/**
+ * Generates a 403 error if the request is not allowed.
+ */
+function drupal_access_denied() {
+  header('HTTP/1.0 403 Forbidden');
+
+  $path = drupal_get_normal_path(variable_get('site_403', ''));
+  $status = MENU_FALLTHROUGH;
+  if ($path) {
+    menu_set_active_item($path);
+    $status = menu_execute_active_handler();
+  }
+
+  if ($status != MENU_FOUND) {
+    print theme('page', message_access(), t('Access denied'));
   }
 }
 

@@ -307,7 +307,7 @@ function file_transfer($source, $headers) {
   // Transfer file in 1024 byte chunks to save memory usage.
   $fd = fopen($source, 'rb');
   while (!feof($fd)) {
-    print fgets($fd, 1024);
+    print fread($fd, 1024);
   }
   fclose($fd);
   exit();
@@ -323,7 +323,7 @@ function file_download() {
     foreach ($list as $module) {
       $headers = module_invoke($module, 'file_download', $file);
       if ($headers === -1) {
-        print theme('page', message_access());
+        drupal_access_denied();
       }
       elseif (is_array($headers)) {
         file_transfer($file, $headers);

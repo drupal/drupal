@@ -7,11 +7,15 @@ include_once "includes/common.inc";
 
 fix_gpc_magic();
 
-if (menu_active_handler_exists()) {
-  menu_execute_active_handler();
-}
-else {
-  drupal_not_found();
+$status = menu_execute_active_handler();
+switch ($status) {
+  case MENU_FOUND:
+    break;
+  case MENU_DENIED:
+    drupal_access_denied();
+    break;
+  default:
+    drupal_not_found();
 }
 
 drupal_page_footer();

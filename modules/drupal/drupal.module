@@ -160,9 +160,12 @@ function drupal_auth($username, $password, $server) {
   return $login;
 }
 
+/**
+ * Implementation of hook_link().
+ */
 function drupal_link($type) {
-  if ($type == "system") {
-    menu("drupal", t("Drupal"), "drupal_page", 0, MENU_HIDE);
+  if ($type == 'system') {
+    menu('drupal', t('Drupal'), 'drupal_page', 0, MENU_HIDE);
   }
 }
 

@@ -85,27 +85,28 @@ function aggregator_perm() {
   return array('administer news feeds', 'access news feeds');
 }
 
+/**
+ * Implementation of hook_link().
+ */
 function aggregator_link($type) {
   if ($type == 'page' && user_access('access news feeds')) {
     return array(l(t('news feeds'), 'aggregator', array('title' => t('Read the latest news from syndicated web sites.'))));
   }
 
   if ($type == 'system') {
-    if (user_access('administer news feeds')) {
-      menu('admin/syndication', t('syndication'), 'aggregator_help_page', 5);
-      menu('admin/syndication/news', t('RSS/RDF'), 'aggregator_admin');
-      menu('admin/syndication/news/add/feed', t('new feed'), 'aggregator_admin', 2);
-      menu('admin/syndication/news/add/bundle', t('new bundle'), 'aggregator_admin', 3);
-      menu('admin/syndication/news/tag', t('tag items'), 'aggregator_admin', 4);
-      menu('admin/syndication/news/help', t('help'), 'aggregator_help_page', 9);
-    }
+    $access = user_access('administer news feeds');
+    menu('admin/syndication', t('syndication'), $access ? 'aggregator_help_page' : MENU_DENIED, 5);
+    menu('admin/syndication/news', t('RSS/RDF'), $access ? 'aggregator_admin' : MENU_DENIED);
+    menu('admin/syndication/news/add/feed', t('new feed'), $access ? 'aggregator_admin' : MENU_DENIED, 2);
+    menu('admin/syndication/news/add/bundle', t('new bundle'), $access ? 'aggregator_admin' : MENU_DENIED, 3);
+    menu('admin/syndication/news/tag', t('tag items'), $access ? 'aggregator_admin' : MENU_DENIED, 4);
+    menu('admin/syndication/news/help', t('help'), $access ? 'aggregator_help_page' : MENU_DENIED, 9);
 
-    if (user_access('access news feeds')) {
-      menu('aggregator', t('news aggregator'), 'aggregator_page', 5);
-      menu('aggregator/feeds', t('news by source'), 'aggregator_page');
-      menu('aggregator/bundles', t('news by topic'), 'aggregator_page');
-      menu('aggregator/sources', t('news sources'), 'aggregator_page');
-    }
+    $access = user_access('access news feeds');
+    menu('aggregator', t('news aggregator'), $access ? 'aggregator_page' : MENU_DENIED, 5);
+    menu('aggregator/feeds', t('news by source'), $access ? 'aggregator_page' : MENU_DENIED);
+    menu('aggregator/bundles', t('news by topic'), $access ? 'aggregator_page' : MENU_DENIED);
+    menu('aggregator/sources', t('news sources'), $access ? 'aggregator_page' : MENU_DENIED);
   }
 }
 

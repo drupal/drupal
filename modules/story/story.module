@@ -82,20 +82,18 @@ function story_access($op, $node) {
 }
 
 /**
- * Define internal Drupal links.
+ * Implementation of hook_link().
  */
 function story_link($type, $node = 0, $main) {
   $links = array();
 
-  if ($type == "system") {
-    if (story_access('create', $node)) {
-      menu("node/add/story", t("story"), "node_page", 0);
-    }
+  if ($type == 'system') {
+    menu('node/add/story', t('story'), story_access('create', $node) ? 'node_page' : MENU_DENIED, 0);
   }
 
   if ($type == 'node' && $node->type == 'story') {
     /* Don't display a redundant edit link if they are node administrators */
-    if (story_access("update", $node) && !user_access('administer nodes')) {
+    if (story_access('update', $node) && !user_access('administer nodes')) {
       $links[] = l(t('edit this story'), "node/edit/$node->nid");
     }
   }

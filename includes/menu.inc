@@ -15,6 +15,10 @@ define('MENU_MODIFIED', 1);
 define('MENU_LOCKED', 2);
 define('MENU_CUSTOM', 3);
 
+define('MENU_FALLTHROUGH', 0);
+define('MENU_DENIED', 1);
+define('MENU_FOUND', 2);
+
 /** @} */
 
 /**
@@ -23,7 +27,10 @@ define('MENU_CUSTOM', 3);
  * @ingroup menu
  * @param $path Location then menu item refers to.
  * @param $title The title of the menu item to show in the rendered menu.
- * @param $callback The function to call when this is the active menu item.
+ * @param $callback
+ * - string - The function to call when this is the active menu item.
+ * - MENU_FALLTHROUGH - Use the callback defined by the menu item's parent.
+ * - MENU_DENIED - Deny access to this menu item by this user.
  * @param $weight Heavier menu items sink down the menu.
  * @param $visibility
  * - MENU_SHOW - Show the menu item (default).
@@ -31,11 +38,9 @@ define('MENU_CUSTOM', 3);
  * - MENU_HIDE_NOCHILD - Hide the menu item when it has no children.
  * @param $status
  * - MENU_NORMAL - The menu item can be moved (default).
- * - MENU_MODIFIED - The administrator has moved or otherwise changed the menu item.
  * - MENU_LOCKED - The administrator may not modify the item.
- * - MENU_CUSTOM - The menu item was created by the administrator.
  */
-function menu($path, $title, $callback = NULL, $weight = 0, $visibility = MENU_SHOW, $status = MENU_NORMAL) {
+function menu($path, $title, $callback = MENU_FALLTHROUGH, $weight = 0, $visibility = MENU_SHOW, $status = MENU_NORMAL) {
   global $_menu;
 
   // add the menu to the flat list of menu items:
@@ -90,7 +95,13 @@ function menu_get_trail($path) {
 
   $trail = array();
 
-  $mid = menu_get_active_item();
+  // Find the ID of the given path.
+  while ($path && !$menu['path index'][$path]) {
+    $path = substr($path, 0, strrpos($path, '/'));
+  }
+  $mid = $menu['path index'][$path];
+
+  // Follow the parents up the chain to get the trail.
   while ($mid && $menu['items'][$mid]) {
     array_unshift($trail, $mid);
     $mid = $menu['items'][$mid]['pid'];
@@ -171,9 +182,13 @@ function menu_get_active_breadcrumb() {
   $links[] = l(t('Home'), '');
 
   $trail = menu_get_trail($_GET['q']);
+
+  // The last item in the trail is the page title; don't display it here.
+  array_pop($trail);
+
   foreach ($trail as $mid) {
-    // Don't show menu items without valid link targets.
-    if ($menu['items'][$mid]['path'] != '') {
+    // Don't show hidden menu items or items without valid link targets.
+    if (isset($menu['visible'][$mid]) && $menu['items'][$mid]['path'] != '') {
       $links[] = _menu_render_item($mid);
     }
   }
@@ -188,20 +203,26 @@ function menu_execute_active_handler() {
   $menu = menu_get_menu();
 
   $path = $_GET['q'];
-  while ($path && (!$menu['path index'][$path] || !$menu['items'][$menu['path index'][$path]]['callback'])) {
+  while ($path && (!$menu['path index'][$path] || $menu['items'][$menu['path index'][$path]]['callback'] === MENU_FALLTHROUGH)) {
     $path = substr($path, 0, strrpos($path, '/'));
   }
   $mid = $menu['path index'][$path];
+  if ($menu['items'][$mid]['callback'] === MENU_DENIED) {
+    return MENU_DENIED;
+  }
 
-  if ($menu['items'][$mid]['callback']) {
+  if (is_string($menu['items'][$mid]['callback'])) {
     $arg = substr($_GET['q'], strlen($menu['items'][$mid]['path']) + 1);
     if (isset($arg)) {
-      return call_user_func_array($menu['items'][$mid]['callback'], explode('/', $arg));
+      call_user_func_array($menu['items'][$mid]['callback'], explode('/', $arg));
     }
     else {
-      return call_user_func($menu['items'][$mid]['callback']);
+      call_user_func($menu['items'][$mid]['callback']);
     }
+    return MENU_FOUND;
   }
+
+  return MENU_FALLTHROUGH;
 }
 
 /**
@@ -211,10 +232,17 @@ function menu_active_handler_exists() {
   $menu = menu_get_menu();
 
   $path = $_GET['q'];
-  while ($path && (!$menu['path index'][$path] || !$menu['items'][$menu['path index'][$path]]['callback'])) {
+  while ($path && (!$menu['path index'][$path] || $menu['items'][$menu['path index'][$path]]['callback'] === MENU_FALLTHROUGH)) {
     $path = substr($path, 0, strrpos($path, '/'));
   }
   $mid = $menu['path index'][$path];
+
+  if ($menu['items'][$mid]['callback'] === MENU_FALLTHROUGH) {
+    return FALSE;
+  }
+  if ($menu['items'][$mid]['callback'] === MENU_DENIED) {
+    return FALSE;
+  }
 
   return function_exists($menu['items'][$mid]['callback']);
 }
@@ -298,7 +326,7 @@ function menu_build() {
     while ($item = db_fetch_object($result)) {
       // First, add any custom items added by the administrator.
       if ($item->status == MENU_CUSTOM) {
-        $_menu['items'][$item->mid] = array('pid' => $item->pid, 'path' => $item->path, 'title' => $item->title, 'callback' => NULL, 'weight' => $item->weight, 'visibility' => MENU_SHOW, 'status' => MENU_CUSTOM);
+        $_menu['items'][$item->mid] = array('pid' => $item->pid, 'path' => $item->path, 'title' => $item->title, 'callback' => MENU_FALLTHROUGH, 'weight' => $item->weight, 'visibility' => MENU_SHOW, 'status' => MENU_CUSTOM);
         $_menu['path index'][$item->path] = $item->mid;
       }
       // Don't display non-custom menu items if no module declared them.
@@ -371,9 +399,12 @@ function menu_build_visible_tree($pid = 0) {
         $children = array_merge($children, menu_build_visible_tree($mid));
       }
     }
-    if (($parent['visibility'] == MENU_SHOW) ||
-        ($parent['visibility'] == MENU_HIDE_NOCHILD && count($children) > 1)) {
+    if ((($parent['visibility'] == MENU_SHOW) ||
+        ($parent['visibility'] == MENU_HIDE_NOCHILD && count($children) > 1)) && $parent['callback'] !== MENU_DENIED) {
       $_menu['visible'][$pid] = array('title' => $parent['title'], 'path' => $parent['path'], 'children' => $children);
+      foreach ($children as $mid) {
+        $_menu['visible'][$mid]['pid'] = $pid;
+      }
       return array($pid);
     }
     else {

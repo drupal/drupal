@@ -30,20 +30,17 @@ function search_perm() {
 }
 
 /**
- * Return an array of links to be displayed
- *
- * @param $type The type of page requesting the link
- *
+ * Implementation of hook_link().
  */
 function search_link($type) {
   $links = array();
 
-  if ($type == "page" && user_access("search content")) {
-    $links[] = l(t("search"), "search", array("title" => t("Search for older content.")));
+  if ($type == 'page' && user_access('search content')) {
+    $links[] = l(t('search'), 'search', array('title' => t('Search for older content.')));
   }
 
-  if ($type == "system" && user_access("search content")) {
-    menu("search", t("search"), "search_page", 0, MENU_HIDE);
+  if ($type == 'system') {
+    menu('search', t('search'), user_access('search content') ? 'search_page' : MENU_DENIED, 0, MENU_HIDE);
   }
 
   return $links;
@@ -360,7 +357,7 @@ function search_view($keys) {
     print theme("page", $output, t("Search"));
   }
   else {
-    print theme("page", message_access());
+    drupal_access_denied();
   }
 
 }
