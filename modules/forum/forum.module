@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.158 2004/01/27 18:47:07 dries Exp $
+// $Id: forum.module,v 1.159 2004/01/28 22:10:34 dries Exp $
 
 function forum_help($section = "admin/help#forum") {
   $output = "";
@@ -554,14 +554,6 @@ function theme_forum_list($forums, $parents, $tid) {
 
         $links = array();
 
-        if ($new_topics) {
-          $links[] = l(t("newest topic"), "forum/$forum->tid/new");
-        }
-
-        if ($forum->last_post) {
-          $links[] = l(t("active topic"), "node/view/". $forum->last_post->nid);
-        }
-
         $description  = "<div style=\"margin-left: ". ($forum->depth * 30) ."px;\">\n";
         $description .= " <div class=\"name\">". l($forum->name, "forum/$forum->tid") ."</div>\n";
 
@@ -575,7 +567,7 @@ function theme_forum_list($forums, $parents, $tid) {
 
         $rows[] = array(
           array("data" => $description, "class" => "forum"),
-          array("data" => $forum->num_topics . ($new_topics ? "<br />(". t("%a new", array("%a" => $new_topics)) .")" : ""), "class" => "topics"),
+          array("data" => $forum->num_topics . ($new_topics ? "<br />(". l(t("%a new", array("%a" => $new_topics)), "forum/$forum->tid", NULL, NULL, 'new') .")" : ""), "class" => "topics"),
           array("data" => $forum->num_posts, "class" => "posts"),
           array("data" => _forum_format($forum->last_post), "class" => "last-reply"));
       }
@@ -614,7 +606,7 @@ function theme_forum_topic_list($tid, $topics, $sortby, $forum_per_page, $offset
         $rows[] = array(
           array("data" => _forum_icon($topic->new, $topic->num_comments, $topic->comment_mode), "class" => "icon"),
           array("data" => l($topic->title, "node/view/$topic->nid"), "class" => "topic"),
-          array("data" => $topic->num_comments . ($topic->new_replies ? "<br />(". t("%a new", array("%a" => $topic->new_replies)) .")" : ""), "class" => "replies"),
+          array("data" => $topic->num_comments . ($topic->new_replies ? "<br />(". l(t("%a new", array("%a" => $topic->new_replies)), "node/view/$topic->nid", NULL, NULL, 'new') .")" : ""), "class" => "replies"),
           array("data" => _forum_format($topic), "class" => "created"),
           array("data" => _forum_format($topic->last_reply), "class" => "last-reply")
         );
@@ -656,11 +648,17 @@ function _forum_icon($new_posts, $num_posts = 0, $comment_mode = 0) {
     // default
     $file = $base_path ."/forum-$icon.gif";
 
-    return "<img src=\"$file\" alt=\"\" title=\"\" />";
+    $output = "<img src=\"$file\" alt=\"\" title=\"\" />";
   }
   else {
-    return "&nbsp;";
+    $output = "&nbsp;";
   }
+
+  if ($new_posts) {
+    $output = "<a name=\"new\">$output</a>";
+  }
+
+  return $output;
 }
 
 function _forum_user_last_visit($nid) {
