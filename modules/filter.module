@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.8 2004/02/15 20:09:46 dries Exp $
+// $Id: filter.module,v 1.9 2004/02/17 05:57:13 dries Exp $
 
 define('FILTER_HTML_DONOTHING', 0);
 define('FILTER_HTML_STRIP', 1);
@@ -165,7 +165,7 @@ function check_output($text) {
     ** If only inline elements are used and no block level elements, we
     ** replace all newlines with HTML line breaks.
     */
-    if (strip_tags($text, '<a><br><span><bdo><map><object><img><tt><i><b><big><small><em><strong><dfn><code><q><samp><kbd><var><cite><abbr><acronym><sub><sup><input><select><textarea><label><button><ins><del><script>') == $text) {
+    if (strip_tags($text, '<a><br><span><bdo><map><object><img><tt><i><b><u><big><small><em><strong><dfn><code><q><samp><kbd><var><cite><abbr><acronym><sub><sup><input><select><textarea><label><button><ins><del><script>') == $text) {
       $text = nl2br($text);
     }
   }
