@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.122 2002/07/05 18:28:02 dries Exp $
+// $Id: common.inc,v 1.123 2002/07/06 13:30:26 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST;
@@ -146,7 +146,7 @@ function variable_init($conf = array()) {
   $result = db_query("SELECT * FROM variable");
   while ($variable = db_fetch_object($result)) {
     if (!isset($conf[$variable->name])) {
-      $conf[$variable->name] = $variable->value;
+      $conf[$variable->name] = unserialize($variable->value);
     }
   }
 
@@ -163,7 +163,7 @@ function variable_set($name, $value) {
   global $conf;
 
   db_query("DELETE FROM variable WHERE name = '%s'", $name);
-  db_query("INSERT INTO variable (name, value) VALUES ('%s', '%s')", $name, $value);
+  db_query("INSERT INTO variable (name, value) VALUES ('%s', '%s')", $name, serialize($value));
 
   $conf[$name] = $value;
 }
