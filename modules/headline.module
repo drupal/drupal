@@ -64,7 +64,7 @@ function headline_help() {
   <P>Drupal's headline module both imports and exports RDF/RSS headlines.</P>
   <P>A lot of news-oriented websites are now publishing news (headlines) and making their content available through XML, RSS and RDF backend files.  They syndicate free content and allow retrieval and further transmission, aggregation, and online publication. In its current state, drupal's headline module supports RDF and RSS backends.</P>
   <P>RSS was originally developed by Netscape to allow adding news channels to "My Netscape" sites, but it has since become adopted as the <I>de facto</I> net standard for distributing headlines and brief dynamic texts.</P>
-  <P>The headline module goes out to a list of configured news sites once an hour or so (driven by cron), downloads new RSS/RDF data and makes it available to your visitors.  In addition, your headlines are exported as well and can be retrieved by other sites from <CODE>http://yourdomain.com/export/headlines.rdf</CODE>.</P>
+  <P>The headline module goes out to a list of configured news sites once an hour or so (driven by cron), downloads new RSS/RDF data and makes it available to your visitors.  In addition, your headlines are exported as well and can be retrieved by other sites from <CODE><?php echo variable_get(site_url, "http://yourdomain.com/"); ?>export/headlines.rdf</CODE>.</P>
  <?php
 }
 
@@ -98,7 +98,7 @@ function headline_admin_display() {
   $result = db_query("SELECT * FROM channel ORDER BY id");
 
   $output .= "<TABLE BORDER=\"1\" CELLSPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TH>site</TH><TH>contact</TH><TH>last update</TH><TH COLSPAN=\"2\">operations</TH></TR>\n";
+  $output .= " <TH>site</TH><TH>contact</TH><TH>last update</TH><TH COLSPAN=\"3\">operations</TH></TR>\n";
 
   while ($channel = db_fetch_object($result)) {
     // Load backend from database:
@@ -109,6 +109,7 @@ function headline_admin_display() {
     $output .= " <TD>". format_email($backend->contact) ."</TD>\n";
     $output .= " <TD ALIGN=\"center\">". ($backend->timestamp == 1 ? "failed" : format_interval(time() - $backend->timestamp) ." ago") ."</TD>\n";
     $output .= " <TD ALIGN=\"center\"><A HREF=\"admin.php?mod=headline&op=refresh&id=$backend->id\">refresh</A></TD>\n";
+    $output .= " <TD ALIGN=\"center\"><A HREF=\"admin.php?mod=headline&op=edit&id=$backend->id\">edit</A></TD>\n";
     $output .= " <TD ALIGN=\"center\"><A HREF=\"admin.php?mod=headline&op=delete&id=$backend->id\">delete</A></TD>\n";
     $output .= "</TR>\n";
   }
@@ -118,7 +119,7 @@ function headline_admin_display() {
   print $output;
 }
 
-function headline_admin_add() {
+function headline_admin_add($id) {
   $output .= " <FORM ACTION=\"admin.php?mod=headline\" METHOD=\"post\">\n";
   $output .= "  <P>\n";
   $output .= "   <B>Site name:</B><BR>\n";
@@ -142,6 +143,36 @@ function headline_admin_add() {
   print $output;
 }
 
+function headline_admin_edit($id) {
+  $result = db_query("SELECT * FROM channel WHERE id='$id' ORDER BY id");
+
+  if ($channel = db_fetch_object($result)) {    
+    $output .= " <FORM ACTION=\"admin.php?mod=headline\" METHOD=\"post\">\n";
+    $output .= "  <INPUT TYPE=\"hidden\" NAME=\"id\" VALUE=\"$id\">\n";
+    $output .= "  <P>\n";
+    $output .= "   <B>Site name:</B><BR>\n";
+    $output .= "   <INPUT TYPE=\"text\" NAME=\"site\" SIZE=\"50\" VALUE=\"$channel->site\">\n";
+    $output .= "  </P>\n";
+    $output .= "  <P>\n";
+    $output .= "   <B>URL:</B><BR>\n";
+    $output .= "   <INPUT TYPE=\"text\" NAME=\"url\" SIZE=\"50\" VALUE=\"$channel->url\">\n";
+    $output .= "  </P>\n";
+    $output .= "  <P>\n";
+    $output .= "   <B>Backend file:</B><BR>\n";
+    $output .= "   <INPUT TYPE=\"text\" NAME=\"backend\" SIZE=\"50\" VALUE=\"$channel->file\">\n";
+    $output .= "  </P>\n";
+    $output .= "  <P>\n";
+    $output .= "   <B>Contact information:</B><BR>\n";
+    $output .= "   <INPUT TYPE=\"text\" NAME=\"contact\" SIZE=\"50\" VALUE=\"$channel->contact\">\n";
+    $output .= "  </P>\n";
+    $output .= "  <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save backend\">\n";
+    $output .= " </FORM>\n";
+  } else {
+    $output .= "Invalid Channel ID.\n";
+  }
+  print $output;
+}
+
 function headline_admin_rehash() {
   module_rehash_blocks("headline");
 }
@@ -155,9 +186,12 @@ function headline_admin() {
     case "add":
       headline_admin_add();
       break;
+    case "edit":
+      headline_admin_edit(check_input($id));
+      break;
     case "delete":
-      $backend = new backend($id);
-      $backend->delete();
+      $channel = new backend($id);
+      $channel->delete();
       headline_admin_rehash();
       headline_admin_display();
       break;
@@ -165,13 +199,23 @@ function headline_admin() {
       headline_help();
       break;
     case "refresh":
-      $backend = new backend($id);
-      $backend->refresh();
+      $channel = new backend($id);
+      $channel->refresh();
       headline_admin_display();
       break;
     case "Add backend":
-      $backend = new backend($id, $site, $url, $backend, $contact);
-      $backend->add();
+      $channel = new backend(check_input($id), check_input($site), check_input($url), check_input($backend), check_input($contact));
+      $channel->add();
+      headline_admin_rehash();
+      headline_admin_display();
+      break;
+    case "Save backend":
+      $channel = new backend(check_input($id));
+      $channel->site = $site;
+      $channel->url = $url;
+      $channel->file = $backend;
+      $channel->contact = $contact;
+      $channel->save();
       headline_admin_rehash();
       // fall through:
     default:
