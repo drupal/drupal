@@ -1,5 +1,5 @@
 <?php
-// $Id: marvin.theme,v 1.81 2002/04/14 19:34:04 kjartan Exp $
+// $Id: marvin.theme,v 1.82 2002/04/14 19:59:39 kjartan Exp $
 
   /*********************************************************************
 
@@ -20,7 +20,7 @@
 
    function system($field) {
      $system["name"] = "Marvin";
-     $system["author"] = "Dries Buytaerts";
+     $system["author"] = "Dries";
      $system["description"] = "Internet explorer, Netscape, Opera";
 
      return $system[$field];

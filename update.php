@@ -352,6 +352,7 @@ function update_25() {
   update_sql("REPLACE system SET name = 'system', type = 'module', filename = 'system.module', status = '1';");
   update_sql("REPLACE system SET name = 'user', type = 'module', filename = 'user.module', status = '1';");
   update_sql("REPLACE system SET name = 'watchdog', type = 'module', filename = 'watchdog.module', status = '1';");
+  update_sql("UPDATE users SET theme = LOWER(theme);');
 }
 
 /*
