@@ -1178,7 +1178,12 @@ if (!empty($_GET["q"])) {
   }
 }
 else {
-  $_GET["q"] = variable_get("site_frontpage", "node");
+  if ($path = drupal_get_normal_path(variable_get("site_frontpage", "node"))) {
+    $_GET["q"] = $path;
+  }
+  else {
+    $_GET["q"] = variable_get("site_frontpage", "node");
+  }
 }
 
 // initialize installed modules:
