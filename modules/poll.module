@@ -159,7 +159,7 @@ function poll_view($node, $main = 0, $block = 0) {
 
    if (!$block) {
      $node->body = $output;
-     $theme->node($node, 1);
+     $theme->node($node, $main);
    }
    return array("title" => $title, "content" => $output);
 }
