@@ -183,11 +183,18 @@ function node_control($node) {
   }
 
   $output .= "<FORM METHOD=\"get\" ACTION=\"\">\n";
-  foreach ($choices as $key => $value) $options .= "<OPTION VALUE=\"$key\"". (strstr($REQUEST_URI,"/$key") ? " SELECTED" : "") .">". check_select($value) ."</OPTION>\n";
+  foreach ($choices as $key => $value) $options .= "<OPTION VALUE=\"$key\"". (strstr($REQUEST_URI,"/$key") ? " SELECTED" : "") .">". check_form($value) ."</OPTION>\n";
   $output .= " <SELECT NAME=\"op\" ONCHANGE=\"visit(this.options[this.selectedIndex].value)\">$options</SELECT>\n";
   $output .= "</FORM>\n";
 
   return $output;
+}
+
+function node_preview($node) {
+  foreach ($node as $key=>$value) {
+    if ($node[$key]) $node[$key] = check_preview($value);
+  }
+  return $node;
 }
 
 function node_visible($node) {

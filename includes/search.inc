@@ -3,7 +3,7 @@
 function search_form($keys) {
   global $REQUEST_URI;
   $output .= "<FORM ACTION=\"$REQUEST_URI\" METHOD=\"POST\">\n";
-  $output .= " <INPUT SIZE=\"50\" VALUE=\"". check_textfield($keys) ."\" NAME=\"keys\">";
+  $output .= " <INPUT SIZE=\"50\" VALUE=\"". check_form($keys) ."\" NAME=\"keys\">";
   $output .= " <INPUT TYPE=\"submit\" VALUE=\"". t("Search") ."\">\n";
   $output .= "</FORM>\n";
   return $output;

@@ -2,7 +2,7 @@
 
 include_once "includes/common.inc";
 
-if (variable_get(dev_timing, 0)) timer_start();
+page_header();
 
 function account_get_user($uname) {
   $result = db_query("SELECT * FROM users WHERE userid = '$uname'");
@@ -74,7 +74,7 @@ function account_session_close() {
 }
 
 function account_user_edit() {
-  global $allowed_html, $theme, $user;
+  global $theme, $user;
 
   if ($user->id) {
     // construct form:
@@ -83,8 +83,8 @@ function account_user_edit() {
     $form .= form_item(t("Real e-mail address"), $user->real_email, t("Required, unique, can not be changed.") ." ". t("Your real e-mail address is never displayed publicly: only needed in case you lose your password."));
     $form .= form_textfield(t("Fake e-mail address"), "fake_email", $user->fake_email, 30, 55, t("Optional") .". ". t("Displayed publicly so you may spam proof your real e-mail address if you want."));
     $form .= form_textfield(t("Homepage"), "url", $user->url, 30, 55, t("Optional") .". ". t("Make sure you enter fully qualified URLs only.  That is, remember to include \"http://\"."));
-    $form .= form_textarea(t("Bio"), "bio", $user->bio, 35, 5, t("Optional") .". ". t("Maximal 255 characters.") ." ". t("This biographical information is publicly displayed on your user page.") ."<BR>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html));
-    $form .= form_textarea(t("Signature"), "signature", $user->signature, 35, 5, t("Optional") .". ". t("Maximal 255 characters.") ." ". t("This information will be publicly displayed at the end of your comments.") ."<BR>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html));
+    $form .= form_textarea(t("Bio"), "bio", $user->bio, 35, 5, t("Optional") .". ". t("Maximal 255 characters.") ." ". t("This biographical information is publicly displayed on your user page.") ."<BR>". t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
+    $form .= form_textarea(t("Signature"), "signature", $user->signature, 35, 5, t("Optional") .". ". t("Maximal 255 characters.") ." ". t("This information will be publicly displayed at the end of your comments.") ."<BR>". t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
     $form .= form_item(t("Password"), "<INPUT TYPE=\"password\" NAME=\"edit[pass1]\" SIZE=\"10\" MAXLENGTH=\"20\"> <INPUT TYPE=\"password\" NAME=\"edit[pass2]\" SIZE=\"10\" MAXLENGTH=\"20\">", t("Enter your new password twice if you want to change your current password or leave it blank if you are happy with your current password."));
     $form .= form_submit(t("Save user information"));
 
@@ -491,6 +491,6 @@ switch ($op) {
     account_user($user->userid);
 }
 
-if (variable_get(dev_timing, 0)) timer_print();
+page_footer();
 
 ?>

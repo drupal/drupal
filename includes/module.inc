@@ -13,7 +13,7 @@ function module_iterate($function, $argument = "") {
 // invoke hook $hook of module $name with optional arguments:
 function module_invoke($name, $hook, $argument = "") {
   $function = $name ."_". $hook;
-  if (function_exists($function)) return $function($argument);
+  return function_exists($function) ? $function($argument) : $argument;
 }
 
 // return true if module $name supports hook $hook, and false otherwise:

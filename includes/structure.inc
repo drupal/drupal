@@ -74,7 +74,7 @@ function category_name($cid) {
 function category_form_select($type, $edit = array(), $size = 1) {
   $result = db_query("SELECT * FROM category WHERE type = '$type'");
   while ($category = db_fetch_object($result)) {
-    $options .= "<OPTION VALUE=\"$category->cid\"". ($edit[cid] == $category->cid ? "SELECTED" : "") .">". check_select($category->name) ."</OPTION>";
+    $options .= "<OPTION VALUE=\"$category->cid\"". ($edit[cid] == $category->cid ? "SELECTED" : "") .">". check_form($category->name) ."</OPTION>";
   }
   return "<SELECT NAME=\"edit[cid]\" SIZE=\"$size\"". ($size > 1 ? "MULTIPLE" : "") .">$options</SELECT>\n";
 }
@@ -133,7 +133,7 @@ function topic_moderate($tid) {
 // renders a HTML form to select one or more topics:
 function topic_form_select($edit = array(), $size = 1) {
   foreach (topic_tree() as $tid=>$name) {
-    $options .= "<OPTION VALUE=\"$tid\"". ($edit[tid] == $tid ? "SELECTED" : "") .">". check_select($name) ."</OPTION>";
+    $options .= "<OPTION VALUE=\"$tid\"". ($edit[tid] == $tid ? "SELECTED" : "") .">". check_form($name) ."</OPTION>";
   }
   return "<SELECT NAME=\"edit[tid]\" SIZE=\"$size\"". ($size > 1 ? "MULTIPLE" : "") .">$options</SELECT>\n";
 }

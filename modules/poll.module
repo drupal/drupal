@@ -152,7 +152,7 @@ function poll_view($node, $main = 0, $block = 0) {
 }
 
 function poll_form($edit = array(), $nocheck = 0) {
-  global $allowed_html, $REQUEST_URI, $user;
+  global $REQUEST_URI, $user;
 
   $duration = array(0 => t("Unlimited"), 86400 => t("1 day"), 172800 => t("2 days"), 345600 => t("4 days"),
                     604800 => t("1 week"), 1209600 => t("2 weeks"), 2678400 => t("1 month"), 5356800 => t("2 months"),
@@ -281,7 +281,7 @@ function poll_admin() {
     case t("Refresh"):
       $refresh = 1;
     case t("Preview"):
-      poll_view(new Poll($edit));
+      poll_view(new Poll(node_preview($edit)));
     case "add":
       print poll_form($edit, $refresh);
       break;
@@ -301,7 +301,7 @@ function poll_user() {
     case t("Refresh"):
       $refresh = 1;
     case t("Preview"):
-      poll_view(new Poll($edit));
+      poll_view(new Poll(node_preview($edit)));
       $theme->box(t("Submit"), poll_form($edit, $refresh));
       break;
     case t("Submit"):

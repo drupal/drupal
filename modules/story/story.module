@@ -35,14 +35,14 @@ function story_view($node, $main = 0) {
 }
 
 function story_form($edit = array()) {
-  global $allowed_html, $REQUEST_URI, $user;
+  global $REQUEST_URI, $user;
 
   $form .= form_item(t("Your name"), format_username(($edit[userid] ? $edit[userid] : $user->userid)));
   $form .= form_hidden("userid", $edit[userid]);
   $form .= form_textfield(t("Subject"), "title", $edit[title], 50, 64);
   $form .= structure_form("story", $edit);
-  $form .= form_textarea(t("Abstract"), "abstract", $edit[abstract], 50, 10, t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html));
-  $form .= form_textarea(t("Body"), "body", $edit[body], 50, 15, t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html));
+  $form .= form_textarea(t("Abstract"), "abstract", $edit[abstract], 50, 10, t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
+  $form .= form_textarea(t("Body"), "body", $edit[body], 50, 15, t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
 
   // hidden fields:
   if ($edit[nid] > 0) {
@@ -148,7 +148,7 @@ function story_admin() {
       print search_data($keys, $mod);
       break;
     case t("Preview"):
-      story_view(new Story($edit));
+      story_view(new Story(node_preview($edit)));
       print story_form($edit);
       break;
     case t("Submit"):
@@ -165,7 +165,7 @@ function story_user() {
 
   switch($op) {
     case t("Preview"):
-      story_view(new Story($edit));
+      story_view(new Story(node_preview($edit)));
       $theme->box(t("Submit"), story_form($edit));
       break;
     case t("Submit"):

@@ -2,9 +2,7 @@
 
 include_once "includes/common.inc";
 
-if (variable_get("dev_timing", 0)) {
-  timer_start();
-}
+page_header();
 
 if ($category) {
   $c = "AND cid = '". check_input($category) ."'";
@@ -23,8 +21,6 @@ while ($node = db_fetch_object($result)) {
 }
 $theme->footer();
 
-if (variable_get("dev_timing", 0)) {
-  timer_print();
-}
+page_footer();
 
 ?>

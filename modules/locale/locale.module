@@ -3,7 +3,7 @@
 function locale_help() {
  ?>
   <P>Normally programs are written and documented in English, and use English to interact with users.  This is true for a great deal of websites.  However, most people are less comfortable with English than with their own native language, and would prefer to use their mother tongue as much as possible.  Many people love see their website showing a lot less of English, and far more of their own language.</P>
-  <P>Therefore drupal provides a framework to setup a multi-lingual website, or to overwrite the default texts in English.  We explored the various alternatives to support internationalization and decided to design the framework in such a way that the impact of internationalization on drupal's sources is minimized, modular and that it doesn't require a HTML or PHP wizard to maintain translations.  Maintaining translations had to be simple so it became as easy as filling out forms on the administration page.  A side effect is that translation support adds significant overhead to the dynamic generation of your website.  If you don't need translation support, consider to turn it off.</P>
+  <P>Therefore drupal provides a framework to setup a multi-lingual website, or to overwrite the default texts in English.  We explored the various alternatives to support internationalization and decided to design the framework in such a way that the impact of internationalization on drupal's sources is minimized, modular and that it doesn't require a HTML or PHP wizard to maintain translations.  Maintaining translations had to be simple so it became as easy as filling out forms on the administration page.  A side effect is that translation support adds significant overhead to the dynamic generation of your website.  If you don't need translation support, consider to turning it off from the "conf" section.</P>
 
   <H3>Adding a new language</H3>
 
@@ -22,6 +22,10 @@ function locale_help() {
     mysql> ALTER TABLE locales ADD fr TEXT DEFAULT '' NOT NULL;
   </PRE>
  <?php
+}
+
+function locale_conf_options() {
+  return form_select(t("Locale support"), "locale", variable_get("locale", 1), array("Disabled", "Enabled"), t("Disable locale support if your site does not require translation or internationalization support."));
 }
 
 function locale_delete($id) {

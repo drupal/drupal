@@ -17,7 +17,7 @@ function cvs_cron() {
   }
 }
 
-function cvs_conf() {
+function cvs_conf_options() {
   $period = array(43200 => format_interval(43200), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600));
   $output .= form_textfield(t("Digest recepients"), "cvs_mail", variable_get("cvs_mail", "root@localhost"), 30, 55, t("The e-mail address to mail the CVS log messages to.  Multiple recipients can be specified by putting a comma between each address."));
   $output .= form_select(t("Digest interval"), "cvs_cron_time" , variable_get("cvs_cron_time", 86400), $period, t("The time interval at which batched CVS digests are dispatched.  Requires crontab."));

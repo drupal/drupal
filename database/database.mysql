@@ -119,17 +119,6 @@ CREATE TABLE comments (
 );
 
 #
-# Table structure for table 'crons'
-#
-DROP TABLE IF EXISTS crons;
-CREATE TABLE crons (
-  module varchar(64) DEFAULT '' NOT NULL,
-  scheduled int(11),
-  timestamp int(11),
-  PRIMARY KEY (module)
-);
-
-#
 # Table structure for table 'cvs'
 #
 DROP TABLE IF EXISTS cvs;

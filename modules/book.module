@@ -101,7 +101,7 @@ function book_toc($parent = "", $indent = "", $toc = array()) {
 }
 
 function book_form($edit = array()) {
-  global $allowed_html, $REQUEST_URI, $user;
+  global $REQUEST_URI, $user;
 
   $form .= form_item(t("Author"), format_username(($edit[userid] ? $edit[userid] : $user->userid)));
   $form .= form_hidden(userid, $edit[userid]);
@@ -117,7 +117,7 @@ function book_form($edit = array()) {
     $form .= form_select(t("Parent"), "parent", $edit[parent], book_toc(), t("The parent subject or category the page belongs in."));
   }
 
-  $form .= form_textarea(t("Content"), "body", $edit[body], 50, 10, t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html));
+  $form .= form_textarea(t("Content"), "body", $edit[body], 50, 10, t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
   $form .= form_textarea(t("Log message"), "log", $edit[log], 50, 5, t("An explanation of the additions or updates being made to help the group understand your motivations."));
 
   if (user_access($user, "book")) {
@@ -218,7 +218,7 @@ function book_admin() {
       print book_tree();
       break;
     case t("Preview"):
-      book_view(new Book($edit));
+      book_view(new Book(node_preview($edit)));
       print book_form($edit);
       break;
     case t("Submit"):
@@ -269,7 +269,7 @@ function book_user() {
       $theme->box($title, book_update($id));
       break;
     case t("Preview"):
-      book_view(new Book($edit));
+      book_view(new Book(node_preview($edit)));
       $theme->box($title, book_form($edit));
       break;
     case t("Submit"):

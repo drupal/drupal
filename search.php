@@ -10,7 +10,7 @@ function find_module($name) {
 module_iterate("find_module");
 
 $search .= "<FORM ACTION=\"search.php\" METHOD=\"POST\">\n";
-$search .= " <INPUT SIZE=\"50\" VALUE=\"". check_textfield($keys) ."\" NAME=\"keys\" TYPE=\"text\">\n";
+$search .= " <INPUT SIZE=\"50\" VALUE=\"". check_form($keys) ."\" NAME=\"keys\" TYPE=\"text\">\n";
 $search .= " <SELECT NAME=\"type\">$options</SELECT>\n";
 $search .= " <INPUT TYPE=\"submit\" VALUE=\"". t("Search") ."\">\n";
 $search .= "</FORM>\n";

@@ -6,7 +6,7 @@ function conf_init() {
   global $HTTP_HOST, $REQUEST_URI;
   $file = strtolower(strtr($HTTP_HOST ."". substr($REQUEST_URI, 0, strrpos($REQUEST_URI, "/")), "/:", ".."));
   while ($file && !file_exists("includes/$file.php")) $file = substr($file, 0, strrpos($file, "."));
-  return $file ? $file : "setting";
+  return $file ? $file : "conf";
 }
 
 function error_handler($errno, $message, $filename, $line, $variables) {
@@ -52,30 +52,16 @@ function notice_account() {
   return t("This page requires a valid user account.  Please <A HREF=\"account.php\">create a user account</A> and <A HREF=\"account.php\">login</A> prior to accessing it.");
 }
 
-function check_textfield($message) {
-  return strip_tags(str_replace("\"", "&quot;", stripslashes($message)));
+function check_form($text) {
+  return htmlspecialchars(stripslashes($text));
 }
 
-function check_select($message) {
-  return check_textfield($message);
+function check_export($text) {
+  return htmlspecialchars(stripslashes($text));
 }
 
-function check_export($message) {
-  return check_textfield($message);
-}
-
-function check_textarea($message) {
-  global $allowed_html;
-  return htmlspecialchars(strip_tags(stripslashes($message), $allowed_html));
-}
-
-function check_input($message) {
-  global $allowed_html;
-  return strip_tags(addslashes(stripslashes(substr($message, 0, variable_get(max_input_size, 10000)))), $allowed_html);
-}
-
-function check_code($message) {
-  return $message;
+function check_code($text) {
+  return $text;
 }
 
 function check_mail($mail) {
@@ -86,10 +72,18 @@ function check_name($name) {
   return ereg("[^a-zA-Z0-9_-]", $name) ? 0 : 1;
 }
 
-function check_output($message, $nl2br = 0) {
-  global $allowed_html, $na;
-  $var = strip_tags(stripslashes(node_macro($message)), $allowed_html);
-  return ($var) ? (($nl2br) ? nl2br($var) : $var) : $na;
+function check_preview($text) {
+  return check_output(check_input($text), 1);
+}
+
+function check_input($text) {
+  foreach (module_list() as $module) $text = module_invoke($module, "filter", $text);
+  return addslashes(stripslashes(substr($text, 0, variable_get("max_input_size", 10000))));
+}
+
+function check_output($text, $nl2br = 0) {
+  global $na;
+  return ($text) ? (($nl2br) ? nl2br(stripslashes($text)) : stripslashes($text)) : $na;
 }
 
 function format_plural($count, $singular, $plural) {
@@ -172,15 +166,15 @@ function form_item($title, $value, $description = 0) {
 }
 
 function form_textfield($title, $name, $value, $size, $maxlength, $description = 0) {
-  return form_item($title, "<INPUT MAXLENGTH=\"$maxlength\" NAME=\"edit[$name]\" SIZE=\"$size\" VALUE=\"". check_textfield($value) ."\">", $description);
+  return form_item($title, "<INPUT MAXLENGTH=\"$maxlength\" NAME=\"edit[$name]\" SIZE=\"$size\" VALUE=\"". check_form($value) ."\">", $description);
 }
 
 function form_textarea($title, $name, $value, $cols, $rows, $description = 0) {
-  return form_item($title, "<TEXTAREA WRAP=\"virtual\" COLS=\"$cols\" ROWS=\"$rows\" NAME=\"edit[$name]\">". check_textarea($value) ."</TEXTAREA>", $description);
+  return form_item($title, "<TEXTAREA WRAP=\"virtual\" COLS=\"$cols\" ROWS=\"$rows\" NAME=\"edit[$name]\">". check_form($value) ."</TEXTAREA>", $description);
 }
 
 function form_select($title, $name, $value, $options, $description = 0) {
-  foreach ($options as $key=>$choice) $select .= "<OPTION VALUE=\"$key\"". ($key == $value ? " SELECTED" : "") .">". check_select($choice) ."</OPTION>";
+  foreach ($options as $key=>$choice) $select .= "<OPTION VALUE=\"$key\"". ($key == $value ? " SELECTED" : "") .">". check_form($choice) ."</OPTION>";
   return form_item($title, "<SELECT NAME=\"edit[$name]\">$select</SELECT>", $description);
 }
 
@@ -189,11 +183,11 @@ function form_file($title, $name, $size, $description = 0) {
 }
 
 function form_hidden($name, $value) {
-  return "<INPUT TYPE=\"hidden\" NAME=\"edit[$name]\" VALUE=\"". check_textfield($value) ."\">\n";
+  return "<INPUT TYPE=\"hidden\" NAME=\"edit[$name]\" VALUE=\"". check_form($value) ."\">\n";
 }
 
 function form_submit($value) {
-  return "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". check_textfield($value) ."\">\n";
+  return "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". check_form($value) ."\">\n";
 }
 
 function field_get($string, $name) {
@@ -227,6 +221,26 @@ function field_set($string, $name, $value) {
   return $rval;
 }
 
+function timer_start() {
+  global $timer;
+  $timer = explode(" ", microtime());
+}
+
+function timer_print() {
+  global $timer;
+  $stop = explode(" ", microtime());
+  $diff = $stop[0] - $timer[0];
+  print "<PRE>execution time: $diff ms</PRE>";
+}
+
+function page_header() {
+  if (variable_get("dev_timer", 0)) timer_start();
+}
+
+function page_footer() {
+  if (variable_get("dev_timer", 0)) timer_print();
+}
+
 $conf = conf_init();
 
 include_once "includes/$conf.php";
@@ -237,7 +251,6 @@ include_once "includes/comment.inc";
 include_once "includes/module.inc";
 include_once "includes/locale.inc";
 include_once "includes/search.inc";
-include_once "includes/timer.inc";
 include_once "includes/theme.inc";
 include_once "includes/user.inc";
 include_once "includes/node.inc";
