@@ -46,6 +46,12 @@ function system_help($section = "admin/help#system") {
   return $output;
 }
 
+function system_help_page() {
+  print theme("header");
+  print system_help();
+  print theme("footer");
+}
+
 function system_perm() {
   return array("administer site configuration", "access administration pages", "bypass input data check", "create php content");
 }
@@ -76,7 +82,7 @@ function system_link($type) {
         }
       }
       menu("admin/system/filters", t("filters"), "system_admin", 4);
-      menu("admin/system/help", t("help"), "system_help", 9);
+      menu("admin/system/help", t("help"), "system_help_page", 9);
     }
   }
 }
@@ -346,10 +352,14 @@ function system_admin() {
     }
 
     $output .= system_view(arg(2), arg(3));
-    return $output;
+    print theme("header");
+    print $output;
+    print theme("footer");
   }
   else {
-    return message_access();
+    print theme("header");
+    print message_access();
+    print theme("footer");
   }
 }
 

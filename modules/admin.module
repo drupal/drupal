@@ -26,7 +26,14 @@ function admin_link($type) {
 
 function admin_admin() {
   if (user_access("access administration pages")) {
-    return watchdog_overview("actions");
+    print theme("header");
+    print watchdog_overview("actions");
+    print theme("footer");
+  }
+  else {
+    print theme("header");
+    print message_access();
+    print theme("footer");
   }
 }
 

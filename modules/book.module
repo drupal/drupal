@@ -76,14 +76,16 @@ function book_link($type, $node = 0, $main = 0) {
     if (user_access("administer nodes")) {
       menu("admin/node/book", t("books"), "book_admin", 4);
       menu("admin/node/book/orphan", t("orphan pages"), "book_admin_orphan", 8);
-      menu("admin/node/book/help", t("help"), "book_help", 9);
+      menu("admin/node/book/help", t("help"), "book_help_page", 9);
 
       $result = db_query("SELECT n.nid, n.title FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = 0 ORDER BY b.weight, n.title");
       while ($book = db_fetch_object($result)) {
         menu("admin/node/book/$book->nid", t("'%title' book", array("%title" => $book->title)), "book_admin");
       }
     }
-
+    if (user_access("access content")) {
+      menu("book", t("books"), "book_page", 0, 1);
+    }
   }
 
   return $links;
@@ -800,7 +802,9 @@ function book_admin_orphan() {
     $output .= theme("table", $header, $rows);
   }
 
-  return $output;
+  print theme("header");
+  print $output;
+  print theme("footer");
 }
 
 function book_admin_links() {
@@ -832,7 +836,14 @@ function book_admin() {
         $output .= book_admin_view(arg(3));
         break;
     }
-    return $output;
+    print theme("header");
+    print $output;
+    print theme("footer");
+  }
+  else {
+    print theme("header");
+    print message_access();
+    print theme("footer");
   }
 }
 
@@ -866,5 +877,11 @@ function book_help($section = "admin/help#book") {
   }
 
   return $output;
+}
+
+function book_help_page() {
+  print theme("header");
+  print book_help();
+  print theme("footer");
 }
 ?>

@@ -42,6 +42,10 @@ function search_link($type) {
     $links[] = l(t("search"), "search", array("title" => t("Search for older content.")));
   }
 
+  if ($type == "system" && user_access("search content")) {
+    menu("search", t("search"), "search_page", 0, 1);
+  }
+
   return $links;
 }
 
@@ -68,8 +72,15 @@ function search_admin() {
       $output = t("index invalidated") ."<br />\n";
       search_cron();
       $output .= t("index recreated") ."<br /><hr />\n";
-      return $output;
+      print theme("header");
+      print $output;
+      print theme("footer");
     }
+  }
+  else {
+    print theme("header");
+    print message_access();
+    print theme("footer");
   }
 }
 

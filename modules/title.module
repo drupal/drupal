@@ -13,6 +13,14 @@ function title_help($section) {
   return $output;
 }
 
+function title_link($type) {
+  if ($type == "system") {
+    if (user_access("access content")) {
+      menu("title", t("search"), "title_page", 0, 1);
+    }
+  }
+}
+
 function title_page() {
 
   if (user_access("access content")) {

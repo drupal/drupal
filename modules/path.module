@@ -38,10 +38,14 @@ function path_admin() {
         $output .= path_overview();
     }
 
-    return $output;
+    print theme("header");
+    print $output;
+    print theme("footer");
   }
   else {
-    return message_access();
+    print theme("header");
+    print message_access();
+    print theme("footer");
   }
 }
 

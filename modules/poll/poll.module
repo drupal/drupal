@@ -182,7 +182,10 @@ function poll_link($type, $node = 0, $main) {
 
   if ($type == "system") {
     if (user_access("create polls")) {
-      menu("node/add/poll", t("poll"), "page", 0);
+      menu("node/add/poll", t("poll"), "node_page", 0);
+    }
+    if (user_access("access content")) {
+      menu("poll", t("polls"), "poll_page", 0, 1);
     }
   }
   else if ($type == "page" && user_access("access content")) {

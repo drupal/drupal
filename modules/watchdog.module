@@ -139,10 +139,14 @@ function watchdog_admin() {
       default:
         $output = watchdog_overview(arg(2));
     }
-    return $output;
+    print theme("header");
+    print $output;
+    print theme("footer");
   }
   else {
-    return message_access();
+    print theme("header");
+    print message_access();
+    print theme("footer");
   }
 }
 

@@ -252,10 +252,13 @@ function blog_link($type, $node = 0, $main) {
 
   if ($type == "system") {
     if (user_access("maintain personal blog")) {
-      menu("node/add/blog", t("blog entry"), "page", 0);
+      menu("node/add/blog", t("blog entry"), "node_page", 0);
     }
     if (user_access("maintain personal blog")) {
-      menu("blog/" . $user->uid, t("my blog"), "page", 1);
+      menu("blog/" . $user->uid, t("my blog"), "blog_page", 1);
+    }
+    if (user_access("access content")) {
+      menu("blog", t("blog"), "blog_page", 0, 1);
     }
   }
 

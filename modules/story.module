@@ -53,7 +53,7 @@ function story_link($type) {
 
   if ($type == "system") {
     if (user_access("create stories")) {
-      menu("node/add/story", t("story"), "page", 0);
+      menu("node/add/story", t("story"), "node_page", 0);
     }
   }
 

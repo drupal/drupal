@@ -115,11 +115,15 @@ function statistics_link($type, $node = 0, $main = 0) {
       menu("admin/statistics/log/user", t("track user"), "statistics_admin", 0, 1); //hidden
       menu("admin/statistics/log/host", t("track host"), "statistics_admin", 0, 1); //hidden
       menu("admin/statistics/top nodes page", t("configure 'top nodes' page"), "statistics_admin", 5);
-      menu("admin/statistics/help", t("help"), "statistics_help", 9);
+      menu("admin/statistics/help", t("help"), "statistics_help_page", 9);
 
       // block configuration:
       menu("admin/system/block/top nodes block", t("configure 'top nodes' block"), "statistics_admin", 5);
       menu("admin/system/block/whos online block", t("configure 'who is online' block"), "statistics_admin", 5);
+    }
+
+    if (user_access("access content")) {
+      menu("statistics", t("view top nodes"), statistics_page, 0, 1);
     }
   }
 
@@ -240,6 +244,12 @@ function statistics_help($section = "admin/help#statistics") {
   return $output;
 }
 
+function statistics_help_page() {
+  print theme("header");
+  print statistics_help();
+  print theme("footer");
+}
+
 
 /* Administration hook, defines module's administrative page */
 function statistics_admin() {
@@ -315,7 +325,14 @@ function statistics_admin() {
           $output .= statistics_admin_topnodes();
       }
     }
-    return $output;
+    print theme("header");
+    print $output;
+    print theme("footer");
+  }
+  else {
+    print theme("header");
+    print message_access();
+    print theme("footer");
   }
 }
 

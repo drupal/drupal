@@ -398,9 +398,9 @@ function user_link($type) {
   if ($type == "system") {
     global $user;
     if ($user->uid) {
-      menu("user", t("my account"), "page", 8);
-      menu("user/edit", t("edit account"), "page", 0);
-      menu("user/logout", t("log out"), "page", 10);
+      menu("user", t("my account"), "user_page", 8);
+      menu("user/edit", t("edit account"), "user_page", 0);
+      menu("user/logout", t("log out"), "user_page", 10);
     }
 
     if (user_access("administer users")) {
@@ -412,7 +412,7 @@ function user_link($type) {
       menu("admin/user/role", t("roles"), "user_admin", 4);
       menu("admin/user/permission", t("permissions"), "user_admin", 5);
       menu("admin/user/search", t("search"), "user_admin", 8);
-      menu("admin/user/help", t("help"), "user_help", 9);
+      menu("admin/user/help", t("help"), "user_help_page", 9);
       menu("admin/user/edit", t("edit user account"), "user_admin", 0, 1); // hidden menu
     }
   }
@@ -1205,7 +1205,6 @@ function user_roles($membersonly = 0) {
 
 function user_admin_perm($edit = array()) {
   if ($edit) {
-
     /*
     ** Save permissions:
     */
@@ -1219,9 +1218,13 @@ function user_admin_perm($edit = array()) {
       if ($perm) {
         db_query("INSERT INTO {permission} (rid, perm) VALUES (%d, '%s')", $role->rid, $perm);
       }
-      // clear the cache, we might have changed the anonymous user's permissions
-      cache_clear_all();
     }
+
+    /*
+    ** Clear the cache, we might have changed the anonymous user's
+    ** permissions.
+    */
+    cache_clear_all();
   }
 
   /*
@@ -1510,7 +1513,14 @@ function user_admin() {
           $output = user_admin_account();
         }
     }
-    return $output;
+    print theme("header");
+    print $output;
+    print theme("footer");
+  }
+  else {
+    print theme("header");
+    print message_access();
+    print theme("footer");
   }
 }
 // the following functions comprise help for admins and developers
@@ -1729,6 +1739,12 @@ function julia_user(\$type, \$edit, &\$user) {
   }
 
   return $output;
+}
+
+function user_help_page() {
+  print theme("header");
+  print user_help();
+  print theme("footer");
 }
 
 ?>

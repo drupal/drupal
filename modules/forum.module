@@ -93,8 +93,13 @@ function forum_link($type, $node = 0, $main = 0) {
     $links[] = l(t("forums"), "forum");
   }
 
-  if ($type == "system" && user_access("create forum topics")) {
-      menu("node/add/forum",t("forum topic"), "page");
+  if ($type == "system") {
+    if (user_access("create forum topics")) {
+      menu("node/add/forum", t("forum topic"), "node_page");
+    }
+    if (user_access("access content")) {
+      menu("forum", t("forums"), "forum_page", 0, 1);
+    }
   }
 
   if (!$main && $type == "node" && $node->type == "forum") {
