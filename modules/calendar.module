@@ -4,7 +4,9 @@ class Calendar {
   var $date;
 
   function calendar($date = 0) {
-    $this->date = ($date ? $date : time());
+    // Prevent future dates
+    $today = mktime(23, 59, 59, date("n", time()), date("d", time()), date("Y", time()));
+    $this->date = (($date && $date <= $today) ? $date : $today);
   }
 
   function display() {
@@ -15,6 +17,9 @@ class Calendar {
 
     // Extract today's date:
     $today = mktime(23, 59, 59, date("n", time()), date("d", time()), date("Y", time()));
+    
+    // Extract the timestamp of the last day of today's month:
+    $thislast = mktime(23, 59, 59, date("n", time()), date("t", time()), date("Y", time()));
 
     // Extract first day of the month:
     $first = date("w", mktime(0, 0, 0, $month, 1, $year));
@@ -22,15 +27,24 @@ class Calendar {
     // Extract last day of the month:
     $last = date("t", mktime(0, 0, 0, $month, 1, $year));
 
-    // Calculate previous and next months dates:
-    $prev = mktime(0, 0, 0, $month - 1, $day, $year);
-    $next = mktime(0, 0, 0, $month + 1, $day, $year);
-
-    // Generate calendar header:
+    // Calculate previous and next months dates and check for shorter months (28/30 days)
+    $prevmonth = mktime(23, 59, 59, $month - 1, 1, $year);
+    $prev = mktime(23, 59, 59, $month - 1, min(date("t", $prevmonth), $day), $year);
+    $nextmonth = mktime(23, 59, 59, $month + 1, 31, $year);
+    $next = mktime(23, 59, 59, $month + 1, min(date("t", $nextmonth), $day), $year);
+    
+    // Generate calendar header:    
     $output .= "\n<!-- calendar -->\n";
     $output .= "<TABLE WIDTH=\"100%\" BORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"1\">\n";
-    $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"7\"><SMALL><A HREF=\"index.php?date=$prev\">&lt;</A> &nbsp; ". date("F Y", $this->date) ." &nbsp; <A HREF=\"index.php?date=$next\">&gt;</A></SMALL></TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"center\"><SMALL>S</SMALL></TD><TD ALIGN=\"center\"><SMALL>M</SMALL></TD><TD ALIGN=\"center\"><SMALL>T</SMALL></TD><TD ALIGN=\"center\"><SMALL>W</SMALL></TD><TD ALIGN=\"center\"><SMALL>T</SMALL></TD><TD ALIGN=\"center\"><SMALL>F</SMALL></TD><TD ALIGN=\"center\"><SMALL>S</SMALL></TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"7\"><SMALL><A HREF=\"index.php?date=$prev\">&lt;</A> &nbsp; ". date("F Y", $this->date) ." &nbsp; " . ($next <= $thislast ? "<A HREF=\"index.php?date=$next\">&gt;</A>" : "&gt;") . "</SMALL></TD></TR>\n";
+    
+    // Generate the days of the week:
+    $output .= " <TR>";
+    $somesunday = mktime(0, 0, 0, 3, 20, 1994);
+    for ($i = 0; $i < 7; $i++) {
+      $output .= "<TD ALIGN=\"center\"><SMALL>" . substr(ucfirst(t(date("l", $somesunday + $i * 86400))), 0, 1) . "</SMALL></TD>";
+    }
+    $output .= "</TR>\n";
 
     // Initialize temporary variables:
     $nday = 1;
@@ -49,7 +63,7 @@ class Calendar {
 
       // Print one cell:
       $date = mktime(23, 59, 59, $month, $nday, $year);
-      if ($nday == $day) $output .= "  <TD ALIGN=\"center\"><SMALL><B>$nday</B></SMALL></TD>\n";
+      if ($date == $this->date) $output .= "  <TD ALIGN=\"center\"><SMALL><B>$nday</B></SMALL></TD>\n";
       else if ($date > $today) $output .= "  <TD ALIGN=\"center\"><SMALL>$nday</SMALL></TD>\n";
       else $output .= "  <TD ALIGN=\"center\"><SMALL><A HREF=\"index.php?date=$date\" STYLE=\"text-decoration: none;\">$nday</A></SMALL></TD>\n";
 
