@@ -11,7 +11,7 @@ function submission_score($id) {
 }
 
 function submission_vote($id, $vote, $comment) {
-  global $submission_post_threshold, $submission_dump_threshold, $user;
+  global $user;
   
   if (!user_getHistory($user->history, "s$id")) {
     // Update submission's score- and votes-field:
@@ -19,24 +19,27 @@ function submission_vote($id, $vote, $comment) {
 
     // Update the comments (if required):
     if ($comment) {
-      watchdog("comment", "moderation: added comment with subject '$subject'");
-
       db_query("INSERT INTO comments (lid, link, author, subject, comment, hostname, timestamp, score) VALUES($id, 'story', $user->id, '". check_input(substr($comment, 0, 29)) ." ...', '". check_input($comment) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."', '1')");
+      watchdog("comment", "moderation: added comment with subject '$subject'");
     }
 
     // Update user's history record:
-    user_setHistory($user, "s$id", $vote);  // s = submission
+    user_setHistory($user, "s$id", $vote);
   
     // Update story table (if required):
     $result = db_query("SELECT * FROM stories WHERE id = $id");  
     if ($submission = db_fetch_object($result)) {
-      if ($submission->score >= $submission_post_threshold) {
+      if ($submission->score >= section_post_threshold($submission->section)) {
         db_query("UPDATE stories SET status = 2, timestamp = '". time() ."' WHERE id = $id");
-        watchdog("message", "posted story `$submission->subject'");
+        watchdog("message", "posted story '$submission->subject'");
       }
-      if ($submission->score <= $submission_dump_threshold) {
+      else if ($submission->score <= section_dump_threshold($submission->section)) {
         db_query("UPDATE stories SET status = 0, timestamp = '". time() ."' WHERE id = $id");
-        watchdog("message", "dumped story `$submission->subject'");
+        watchdog("message", "dumped story '$submission->subject'");
+      }
+      else if ($submission->votes >= section_timout_threshold($submission->section)) {
+        db_query("UPDATE stories SET status = 0, timestamp = '". time() ."' WHERE id = $id");
+        watchdog("message", "expired story '$submission->subject'");
       }
     }
   }

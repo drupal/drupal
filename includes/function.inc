@@ -1,17 +1,5 @@
 <?
 
-function load_theme() {
-  global $user, $themes;
-
-  if ($user->theme && file_exists($themes[$user->theme][0])) {
-    include_once $themes[$user->theme][0];     
-  }
-  else {
-    include_once $themes[key($themes)][0];
-  }
-  return new Theme();
-}
-
 function check_textfield($message) {
   global $allowed_html;
   return strip_tags(str_replace("\"", "&quot;", stripslashes($message)), $allowed_html);

@@ -10,6 +10,6 @@ include_once "includes/user.inc";
 
 session_start();
 
-$theme = load_theme();
+$theme = theme_load();
 
 ?>

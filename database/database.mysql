@@ -8,11 +8,19 @@ CREATE TABLE affiliates (
   PRIMARY KEY (id)
 );
 
+CREATE TABLE sections (
+  name varchar(64) DEFAULT '' NOT NULL,
+  post tinyint(3) DEFAULT '0' NOT NULL,
+  dump tinyint(3) DEFAULT '0' NOT NULL,
+  timout tinyint(3) DEFAULT '0' NOT NULL,
+  status tinyint(2) DEFAULT '0' NOT NULL,
+  PRIMARY KEY (name)
+);
+
 CREATE TABLE blocks (
   name varchar(64) DEFAULT '' NOT NULL,
   module varchar(64) DEFAULT '' NOT NULL,
   offset tinyint(2) DEFAULT '0' NOT NULL,
-  status tinyint(2) DEFAULT '0' NOT NULL,
   weight tinyint(1) DEFAULT '0' NOT NULL,
   region tinyint(1) DEFAULT '0' NOT NULL,
   PRIMARY KEY (name)
@@ -119,8 +127,7 @@ CREATE TABLE stories (
   abstract text NOT NULL,
   updates text NOT NULL,
   article text NOT NULL,
-  category varchar(128) DEFAULT '' NOT NULL,
-  department varchar(128) DEFAULT '' NOT NULL,
+  section varchar(64) DEFAULT '' NOT NULL,
   timestamp int(11) DEFAULT '0' NOT NULL,
   score int(11) DEFAULT '0' NOT NULL,
   votes int(11) DEFAULT '0' NOT NULL,

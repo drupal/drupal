@@ -1,7 +1,7 @@
 <?
 
 function submit_enter() {
-  global $anonymous, $categories, $allowed_html, $theme, $user;
+  global $anonymous, $allowed_html, $theme, $user;
   
   // Guidlines:
   $output .= "<P>Got some news or some thoughts you would like to share? Fill out this form and they will automatically get whisked away to our submission queue where our moderators will frown at it, poke at it and hopefully post it. Every registered user is automatically a moderator and can vote whether or not your sumbission should be carried to the front page for discussion.</P>\n"; 
@@ -21,13 +21,9 @@ function submit_enter() {
   $output .= " <SMALL><I>Bad subjects are 'Check this out!' or 'An article'.  Be descriptive, clear and simple!</I></SMALL>\n";
   $output .= "</P>\n";
 
-  $output .= "<P><B>Category:</B><BR>\n";
-  $output .= " <SELECT NAME=\"category\">\n";
-    
-  for ($i = 0; $i < sizeof($categories); $i++) {
-    $output .= "  <OPTION VALUE=\"$categories[$i]\">$categories[$i]</OPTION>\n";
-  }
-  
+  $output .= "<P><B>Section:</B><BR>\n";
+  $output .= " <SELECT NAME=\"section\">\n";  
+  foreach ($sections = section_get() as $value) $output .= "  <OPTION VALUE=\"$value\">$value</OPTION>\n";
   $output .= " </SELECT>\n";
   $output .= "</P>\n";
 
@@ -55,8 +51,8 @@ function submit_enter() {
   $theme->footer();
 }
 
-function submit_preview($subject, $abstract, $article, $category) {
-  global $categories, $allowed_html, $theme, $user;
+function submit_preview($subject, $abstract, $article, $section) {
+  global $allowed_html, $theme, $user;
 
   include "includes/story.inc";
 
@@ -73,13 +69,9 @@ function submit_preview($subject, $abstract, $article, $category) {
   $output .= " <SMALL><I>Bad subjects are 'Check this out!' or 'An article'.  Be descriptive, clear and simple!</I></SMALL>\n";
   $output .= "</P>\n";
 
-  $output .= "<P><B>Category:</B><BR>\n";
-  $output .= " <SELECT NAME=\"category\">\n";
-  for ($i = 0; $i < sizeof($categories); $i++) {
-    $output .= "  <OPTION VALUE=\"$categories[$i]\" ";
-    if ($category == $categories[$i]) $output .= "SELECTED";
-    $output .= ">$categories[$i]</OPTION>\n";
-  }
+  $output .= "<P><B>Section:</B><BR>\n";
+  $output .= " <SELECT NAME=\"section\">\n";
+  foreach ($sections = section_get() as $value) $output .= "  <OPTION VALUE=\"$value\"". ($section == $value ? " SELECTED" : "") .">$value</OPTION>\n";
   $output .= "</SELECT>\n";
   $output .= "</P>\n";
 
@@ -111,29 +103,28 @@ function submit_preview($subject, $abstract, $article, $category) {
     $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Preview submission\">\n";
     $output .= "</P>\n";
   }
-  else { 
+  else {
     $output .= "<P>\n";
     $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Preview submission\">\n";
     $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Submit submission\">\n";
     $output .= "</P>\n";
   }
-
   $output .= "</FORM>\n";
   
   $theme->header();
-  $theme->article(new Story($user->userid, $subject, $abstract, $article, $category, time()));
+  $theme->article(new Story($user->userid, $subject, $abstract, $article, $section, time()));
   $theme->box("Submit a story", $output);
   $theme->footer();
 }
 
-function submit_submit($subject, $abstract, $article, $category) {
+function submit_submit($subject, $abstract, $article, $section) {
   global $user, $theme;
 
   // Add log entry:
   watchdog("story", "story: added '$subject'");
   
   // Add submission to SQL table:
-  db_query("INSERT INTO stories (author, subject, abstract, article, category, timestamp) VALUES ('$user->id', '". check_input($subject) ."', '". check_input($abstract) ."', '". check_input($article) ."', '". check_input($category) ."', '". time() ."')");
+  db_query("INSERT INTO stories (author, subject, abstract, article, section, timestamp) VALUES ('$user->id', '". check_input($subject) ."', '". check_input($abstract) ."', '". check_input($article) ."', '". check_input($section) ."', '". time() ."')");
   
   // Display confirmation message:
   $theme->header(); 
@@ -145,10 +136,10 @@ include "includes/common.inc";
 
 switch($op) {
   case "Preview submission":
-    submit_preview($subject, $abstract, $article, $category);
+    submit_preview($subject, $abstract, $article, $section);
     break;
   case "Submit submission":
-    submit_submit($subject, $abstract, $article, $category);
+    submit_submit($subject, $abstract, $article, $section);
     break;
   default:
     submit_enter();

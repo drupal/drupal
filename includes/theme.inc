@@ -1,5 +1,17 @@
 <?
 
+function theme_load() {
+  global $user, $themes;
+
+  if ($user->theme && file_exists($themes[$user->theme][0])) {
+    include_once $themes[$user->theme][0];     
+  }
+  else {
+    include_once $themes[key($themes)][0];
+  }
+  return new Theme();
+}
+
 function theme_account($theme) {
   global $user, $site_name, $links, $menu;
   
@@ -104,8 +116,8 @@ function theme_related_links($theme, $story) {
     if (!stristr($link, "mailto:")) $content .= "<LI>$link</LI>";
   }
 
-  // Stories in the same category: 
-  $content .= " <LI>More about <A HREF=\"search.php?category=". urlencode($story->category) ."\">$story->category</A>.</LI>";
+  // Stories in the same section: 
+  $content .= " <LI>More about <A HREF=\"index.php?section=". urlencode($story->section) ."\">$story->section</A>.</LI>";
 
   // Stories from the same author:
   if ($story->userid) $content .= " <LI>Also by <A HREF=\"search.php?author=". urlencode($story->userid) ."\">$story->userid</A>.</LI>";

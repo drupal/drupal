@@ -1,5 +1,6 @@
 <?
  include "includes/common.inc";
+ include "includes/section.inc";
 
  $theme->header();
 
@@ -11,24 +12,21 @@
  $output .= "   <FORM ACTION=\"search.php\" METHOD=\"POST\">\n";
  $output .= "    <INPUT SIZE=\"50\" VALUE=\"$terms\" NAME=\"terms\" TYPE=\"text\"><BR>\n";
 
- // category:
- $output .= "<SELECT NAME=\"category\">\n";
- if ($category) $output .= " <OPTION VALUE=\"$category\">$category</OPTION>\n";
- $output .= " <OPTION VALUE=\"\">All categories</OPTION>\n";
- for ($i = 0; $i < sizeof($categories); $i++) {
-   $output .= " <OPTION VALUE=\"$categories[$i]\">$categories[$i]</OPTION>\n";
- }
+ // section:
+ $output .= "<SELECT NAME=\"section\">\n";
+ $output .= " <OPTION VALUE=\"\">All sections</OPTION>\n";
+ foreach ($sections = section_get() as $value) $output .= " <OPTION VALUE=\"$value\"". ($section == $value ? " SELECTED" : "") .">$value</OPTION>\n";
  $output .= "</SELECT>\n";
 
  // order:
  $output .= "<SELECT NAME=\"order\">\n";
- if ($order == "Oldest first") {
-   $output .= " <OPTION VALUE=\"Oldest first\">Oldest first</OPTION>\n";
-   $output .= " <OPTION VALUE=\"Newest first\">Newest first</OPTION>\n";
+ if ($order == 1) {
+   $output .= " <OPTION VALUE=\"1\">Oldest first</OPTION>\n";
+   $output .= " <OPTION VALUE=\"2\">Newest first</OPTION>\n";
  }
  else {
-   $output .= " <OPTION VALUE=\"Newest first\">Newest first</OPTION>\n";
-   $output .= " <OPTION VALUE=\"Oldest first\">Oldest first</OPTION>\n";
+   $output .= " <OPTION VALUE=\"1\">Newest first</OPTION>\n";
+   $output .= " <OPTION VALUE=\"2\">Oldest first</OPTION>\n";
  }
  $output .= "</SELECT>\n";
 
@@ -42,9 +40,9 @@
  $query = "SELECT s.id, s.subject, u.userid, s.timestamp, COUNT(c.cid) AS comments FROM stories s LEFT JOIN users u ON s.author = u.id LEFT JOIN comments c ON s.id = c.lid WHERE s.status = 2 ";
  $query .= ($author) ? "AND u.userid = '$author' " : "";
  $query .= ($terms) ? "AND (s.subject LIKE '%$terms%' OR s.abstract LIKE '%$terms%' OR s.updates LIKE '%$terms%') " : "";
- $query .= ($category) ? "AND s.category = '$category' GROUP BY s.id " : "GROUP BY s.id ";
- $query .= ($order == "Oldest first") ? "ORDER BY s.timestamp ASC" : "ORDER BY s.timestamp DESC";
- $result = db_query("$query");
+ $query .= ($section) ? "AND s.section = '$section' GROUP BY s.id " : "GROUP BY s.id ";
+ $query .= ($order == 1) ? "ORDER BY s.timestamp ASC" : "ORDER BY s.timestamp DESC";
+ $result = db_query($query);
  
  // Display search results:
  $output .= "<HR>\n";
@@ -63,4 +61,5 @@
 
  $theme->box("Search", $output);
  $theme->footer();
+
 ?>
