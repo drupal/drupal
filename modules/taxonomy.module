@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.71 2003/10/09 18:53:22 dries Exp $
+// $Id: taxonomy.module,v 1.72 2003/10/15 15:07:47 dries Exp $
 
 function taxonomy_feed($taxonomy) {
   global $id, $type;
@@ -834,7 +834,7 @@ function taxonomy_help($section = "admin/help#taxonomy") {
       $output .= "</ul></p>";
       $output .= "<h3><a id=\"taxonomyURL\"></a>Displaying nodes organized by term(s)</h3><p>In order to view the nodes associated with a term or a collection of terms, you should browse to a properly formed Taxonomy URL. For example, %taxo-example.  Taxonomy URLs always contain one or more term IDs (tid) at the end of the URL (a.k.a the <i>querystring</i>). You may learn the term ID for a given term by hovering over that term in the %taxo-overview page and noting the number at the end or the URL.  To build a Taxonomy URL start with \"taxonomy/page\". Now add the querystring parameter, either <i>or</i>, which chooses nodes tagged with <b>any</b> of the given term IDs, or <i>and</i>, which chooses nodes tagged with <b>all</b> of the given Term IDs. Thus <i>or</i> is less specific than <i>and</i>. Finally add a comma seperated list of term IDs.</p>";
       $output .= "<h3>RSS feeds</h3><p>Every term, or collection of terms, provides an %userland-rss feed to which interested users may subscribe. The URL format for a sample RSS feed is %sample-rss. Built like a Taxonomy URL, %taxo-help it starts with \"node/feed\", then has the querystring parameter, and finally the Term IDs.</p>";
-      $output = t($output, array("%classification-types" => "<a href=\"http://www.eleganthack.com/archives/002165.html#002165\">classification types</a>", "%drupal-dis" => "<a href=\"http://www.drupal.org/node/view/55\">drupal.org discussion</a>", "%slashdot" => "<a href=\"http://www.slashdot.com/\">Slashdot</a>", "%taxo-example" => l("taxonomy/page/or/1,2", "taxonomy/page/or/1,2"), "%taxo-overview" => l(t("taxonomy overview"), "admin/taxonomy"), "%userland-rss" => "<a href=\"http://backend.userland.com/stories/rss\">RSS</a>", "%sample-rss" => l("node/feed/or/1,2", "node/feed/or/1,2"), "%taxo-help" => l(t("see above"), "admin/taxonomy/help#yaxonomyURL") ));
+      $output = t($output, array("%classification-types" => "<a href=\"http://www.eleganthack.com/archives/002165.html#002165\">classification types</a>", "%drupal-dis" => "<a href=\"http://www.drupal.org/node/view/55\">drupal.org discussion</a>", "%slashdot" => "<a href=\"http://www.slashdot.com/\">Slashdot</a>", "%taxo-example" => l("taxonomy/page/or/1,2", "taxonomy/page/or/1,2"), "%taxo-overview" => l(t("taxonomy overview"), "admin/taxonomy"), "%userland-rss" => "<a href=\"http://backend.userland.com/stories/rss\">RSS</a>", "%sample-rss" => l("node/feed/or/1,2", "node/feed/or/1,2"), "%taxo-help" => l(t("see above"), "admin/taxonomy/help#taxonomyURL") ));
       break;
   }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.126 2003/10/09 18:53:21 dries Exp $
+// $Id: aggregator.module,v 1.127 2003/10/15 15:07:47 dries Exp $
 
 
 function import_help($section = "admin/help#import") {
@@ -50,7 +50,7 @@ function import_help($section = "admin/help#import") {
       $output .= "</ul>";
       $output .= "<h3>RSS feed blocks</h3>";
       $output .= "<p>In addition to providing subscribed content through the news aggregator, Drupal automatically creates a block for each subscribed feed and every bundle created.  Beside each headline in each block, Drupal includes an icon which acts a blog it link. Enable any or all of the blocks using block management.</p>";
-      $output = t($output, array("%amphetadesk" => "<a href=\"http://www.disobey.com/amphetadesk/\">AmphetaDesk</a>", "%rss" => "<a href=\"http://groups.yahoo.com/group/rss-dev/files/specification.html\">Rich Site Summary</a>", "%slashdot-rss" => "<a href=\"http://slashdot.org/slashdot.rdf\">http://slashdot.org/slashdot.rfd</a>", "%syndic8" => "<a href=\"http://www.syndic8.com/\">Syndic8</a>", "%rss-what" => "<a href=\"http://www.xml.com/pub/a/2002/12/18/dive-into-xml.html\">What is RSS</a>", "%rss-evolution" => "<a href=\"http://www.webreference.com/authoring/languages/xml/rss/1/\">The Evolution of RSS</a>", "%admin-news" => l(t("RSS/RDF"), "admin/node/syndication/news"), "%new-feed" => l(t("new feed"), "admin/node/syndication/news/add/feed"), "%update-items" => l(t("update items"), "admin/node/syndication/news")));
+      $output = t($output, array("%amphetadesk" => "<a href=\"http://www.disobey.com/amphetadesk/\">AmphetaDesk</a>", "%rss" => "<a href=\"http://groups.yahoo.com/group/rss-dev/files/specification.html\">Rich Site Summary</a>", "%slashdot-rss" => "<a href=\"http://slashdot.org/slashdot.rdf\">http://slashdot.org/slashdot.rdf</a>", "%syndic8" => "<a href=\"http://www.syndic8.com/\">Syndic8</a>", "%rss-what" => "<a href=\"http://www.xml.com/pub/a/2002/12/18/dive-into-xml.html\">What is RSS</a>", "%rss-evolution" => "<a href=\"http://www.webreference.com/authoring/languages/xml/rss/1/\">The Evolution of RSS</a>", "%admin-news" => l(t("RSS/RDF"), "admin/node/syndication/news"), "%new-feed" => l(t("new feed"), "admin/node/syndication/news/add/feed"), "%update-items" => l(t("update items"), "admin/node/syndication/news")));
       break;
     case 'admin/system/modules#description':
       $output = t("Used to aggregate syndicated content (RSS and RDF).");
