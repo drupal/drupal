@@ -453,9 +453,11 @@ function user_link($type) {
       menu("admin/user/access/user", t("name rules"), "user_admin");
       menu("admin/user/role", t("roles"), "user_admin", 4);
       menu("admin/user/permission", t("permissions"), "user_admin", 5);
-      menu("admin/user/search", t("search"), "user_admin", 8);
       menu("admin/user/help", t("help"), "user_help_page", 9);
       menu("admin/user/edit", t("edit user account"), "user_admin", 0, MENU_HIDE);
+      if (module_exist('search')) {
+        menu("admin/user/search", t("search"), "user_admin", 8);
+      }
     }
   }
 }

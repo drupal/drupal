@@ -615,10 +615,12 @@ function node_link($type, $node = 0, $main = 0) {
 
     if (user_access('administer nodes')) {
       menu('admin/node', t('content'), 'node_admin');
-      menu('admin/node/search', t('search'), 'node_admin', 8);
       menu('admin/node/help', t('help'), 'node_help_page', 9);
       menu('admin/node/edit', t('edit post'), 'node_admin', 0, MENU_HIDE);
       menu('admin/node/settings', t('settings'), 'node_admin', 8);
+      if (module_exist('search')) {
+        menu('admin/node/search', t('search'), 'node_admin', 8);
+      }
     }
 
     if (user_access('access content')) {
