@@ -29,8 +29,7 @@ function db_prefix_tables($sql) {
 * @param $name The named connection specified in the $db_url variable.
 */
 function db_set_active($name = 'default') {
-  global $db_url;
-  global $active_db;
+  global $db_url, $db_type, $active_db;
   static $db_conns;
 
   if (!isset($db_conns[$name])) {
