@@ -709,7 +709,7 @@ function format_date($timestamp, $type = "medium", $format = "") {
         if (strstr("DFlMSw", $c)) {
           $date = t(date($c, $timestamp)) . $date;
         }
-        else if (strstr("AaBdgGhHiIjLmnrstTUWYyZz", $c)) {
+        else if (strstr("AaBdgGhHiIjLmnOrstTUWYyZz", $c)) {
           $date = date($c, $timestamp) . $date;
         }
         else {
