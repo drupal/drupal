@@ -1,8 +1,6 @@
 Drupal x.x.x, xxxx-xx-xx
 ------------------------
 
-- blocks:
-    * reorganized the block configuration page.
 - search:
     * added UTF-8 support to make it work with all languages.
     * improved search indexing.
@@ -12,6 +10,7 @@ Drupal x.x.x, xxxx-xx-xx
 - flood control mechanism:
     * added a mechanism to throttle certain operations.
 - usability:
+    * refactored the block configuration pages.
     * refactored the statistics and log pages.
     * refactored the throttle module configuration.
     * added a 'add child page' link to book pages.

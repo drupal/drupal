@@ -1169,7 +1169,8 @@ function user_edit($category = 'account') {
   }
   $output = form($output, 'post', 0, array('enctype' => 'multipart/form-data'));
 
-  print theme('page', $output, $account->name);
+  drupal_set_title($account->name);
+  print theme('page', $output);
 }
 
 function user_view($uid = 0) {
@@ -1186,7 +1187,8 @@ function user_view($uid = 0) {
       }
     }
 
-    print theme('page', theme('user_profile', $account, $fields), $account->name);
+    drupal_set_title($account->name);
+    print theme('page', theme('user_profile', $account, $fields));
   }
   else {
     drupal_not_found();

@@ -15,15 +15,7 @@ function chameleon_features() {
        'toggle_secondary_links');
 }
 
-function chameleon_page($content, $title = NULL, $breadcrumb = NULL) {
-  if (isset($title)) {
-    drupal_set_title($title);
-  }
-
-  if (isset($breadcrumb)) {
-    drupal_set_breadcrumb($breadcrumb);
-  }
-
+function chameleon_page($content) {
   $language = $GLOBALS['locale'];
 
   $output  = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n";

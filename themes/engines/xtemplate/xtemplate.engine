@@ -109,14 +109,7 @@ function xtemplate_comment($comment, $links = 0) {
   return $output;
 }
 
-function xtemplate_page($content, $title = NULL, $breadcrumb = NULL) {
-  if (isset($title)) {
-    drupal_set_title($title);
-  }
-  if (isset($breadcrumb)) {
-    drupal_set_breadcrumb($breadcrumb);
-  }
-
+function xtemplate_page($content) {
   global $xtemplate;
 
   $xtemplate->template->assign(array(

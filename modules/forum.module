@@ -487,7 +487,8 @@ function forum_page($tid = 0) {
     print theme('forum_display', $forums, $topics, $parents, $tid, $sortby, $forum_per_page);
   }
   else {
-    print theme('page', forum_help('admin/settings/forum'), t('Warning'));
+    drupal_set_title(t('Warning'));
+    print theme('page', forum_help('admin/settings/forum'));
   }
 }
 
@@ -501,7 +502,7 @@ function theme_forum_display($forums, $topics, $parents, $tid, $sortby, $forum_p
   // forum list, topics list, topic browser and 'add new topic' link
 
   $vocabulary = taxonomy_get_vocabulary(variable_get('forum_nav_vocabulary', ''));
-  $title = $vocabulary->name;
+  drupal_set_title($title = $vocabulary->name);
 
   // Breadcrumb navigation:
   $breadcrumb = array();
@@ -554,11 +555,11 @@ function theme_forum_display($forums, $topics, $parents, $tid, $sortby, $forum_p
     $output .= '</div>';
   }
   else {
-    $title = t('No forums defined');
+    drupal_set_title(t('No forums defined'));
     $output = '';
   }
 
-  print theme('page', $output, $title);
+  print theme('page', $output);
 }
 
 /**

@@ -357,7 +357,8 @@ function poll_view_results(&$node, $main, $page, $block) {
  */
 function poll_results() {
   if ($node = node_load(array('nid' => arg(1)))) {
-    print theme('page', node_show($node, 0), $node->title);
+    drupal_set_title($node->title);
+    print theme('page', node_show($node, 0));
   }
   else {
     drupal_not_found();

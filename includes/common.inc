@@ -176,7 +176,8 @@ function drupal_not_found() {
   }
 
   if ($status != MENU_FOUND) {
-    print theme('page', '', t('Page not found'));
+    drupal_set_title(t('Page not found'));
+    print theme('page', '');
   }
 }
 
@@ -195,7 +196,8 @@ function drupal_access_denied() {
   }
 
   if ($status != MENU_FOUND) {
-    print theme('page', message_access(), t('Access denied'));
+    drupal_set_title(t('Access denied'));
+    print theme('page', message_access());
   }
 }
 

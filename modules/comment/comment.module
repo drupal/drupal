@@ -124,7 +124,7 @@ function comment_menu($may_cache) {
     $access = user_access('post comments');
     $items[] = array('path' => 'comment/reply', 'title' => t('reply to comment'),
       'callback' => 'comment_reply', 'access' => $access, 'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'comment/edit', 'title' => t('edit your comment'),
+    $items[] = array('path' => 'comment/edit', 'title' => t('edit comment'),
       'callback' => 'comment_edit', 'access' => $access, 'type' => MENU_CALLBACK);
 
     $items[] = array('path' => 'comment', 'title' => t('reply to comment'),
@@ -341,7 +341,10 @@ function comment_edit($cid) {
   $comment = drupal_unpack($comment);
   $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
   if (comment_access('edit', $comment)) {
-    print theme('page', comment_preview(object2array($comment)), t('Edit comment'));
+    print theme('page', comment_preview(object2array($comment)));
+  }
+  else {
+    drupal_access_denied();
   }
 }
 
@@ -356,13 +359,15 @@ function comment_reply($nid, $pid = NULL) {
   if ($_POST['op'] == t('Post comment')) {
     $edit = $_POST['edit'];
     comment_validate_form($edit);
-    print theme('page', comment_post($edit), t('Post comment'));
+    drupal_set_title(t('Post comment'));
+    print theme('page', comment_post($edit));
     return;
   }
   else if ($_POST['op'] == t('Preview comment')) {
     $edit = $_POST['edit'];
     comment_validate_form($edit);
-    print theme('page', comment_preview($edit), t('Preview comment'));
+    drupal_set_title(t('Preview comment'));
+    print theme('page', comment_preview($edit));
     return;
   }
 
@@ -397,7 +402,8 @@ function comment_reply($nid, $pid = NULL) {
     $output .= theme('box', t('Reply'), t('You are not authorized to view comments.'));
   }
 
-  print theme('page', $output, t('Add new comment'));
+  drupal_set_title(t('Add new comment'));
+  print theme('page', $output);
 }
 
 function comment_validate_form($edit) {

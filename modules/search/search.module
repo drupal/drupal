@@ -496,7 +496,7 @@ function search_view() {
 
     $output .= $results;
 
-    print theme('page', $output, t('Search'));
+    print theme('page', $output);
   }
   else {
     drupal_access_denied();

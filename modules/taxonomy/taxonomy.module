@@ -906,7 +906,7 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
     while ($term = db_fetch_object($result)) {
       $names[] = $term->name;
     }
-    $title = implode(', ', $names);
+    drupal_set_title($title = implode(', ', $names));
 
     switch ($op) {
       case 'page':
@@ -924,7 +924,7 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
 
         $output = taxonomy_render_nodes(taxonomy_select_nodes($tids, $operator, $depth, TRUE));
         $output .= theme('xml_icon', url("taxonomy/term/$str_tids/$depth/feed"));
-        print theme('page', $output, $title);
+        print theme('page', $output);
         break;
 
       case 'feed':

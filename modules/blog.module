@@ -141,7 +141,7 @@ function blog_page_user($uid) {
   $account = user_load(array((is_numeric($uid) ? 'uid' : 'name') => $uid, 'status' => 1));
 
   if ($account->uid) {
-    $title = t("%name's blog", array('%name' => $account->name));
+    drupal_set_title($title = t("%name's blog", array('%name' => $account->name)));
 
     if (($account->uid == $user->uid) && user_access('edit own blog')) {
       $output = '<li>'. l(t('Post new blog entry.'), "node/add/blog") .'</li>';
@@ -165,7 +165,7 @@ function blog_page_user($uid) {
     $output .= theme('xml_icon', url("blog/feed/$account->uid"));
 
     drupal_set_html_head('<link rel="alternate" type="application/rss+xml" title="RSS - '. $title .'" href="'. url("blog/feed/$account->uid") .'" />');
-    print theme('page', $output, $title);
+    print theme('page', $output);
   }
   else {
     drupal_not_found();

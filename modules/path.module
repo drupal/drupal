@@ -107,14 +107,14 @@ function path_admin_edit($pid = 0) {
   }
   elseif ($pid) {
     $alias = path_load($pid);
-    $title = $alias['dst'];
+    drupal_set_title($alias['dst']);
     $output = path_form(path_load($pid));
   }
   else {
     $output = path_form();
   }
 
-  print theme('page', $output, $title);
+  print theme('page', $output);
 }
 
 /**

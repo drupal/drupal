@@ -1514,7 +1514,8 @@ function node_page() {
       if (is_numeric(arg(1))) {
         $node = node_load(array('nid' => arg(1)), $_GET['revision']);
         if ($node->nid) {
-          print theme('page', node_show($node, arg(2)), $node->title);
+          drupal_set_title($node->title);
+          print theme('page', node_show($node, arg(2)));
         }
         else {
           drupal_not_found();
@@ -1523,17 +1524,20 @@ function node_page() {
       break;
     case t('Preview'):
       $edit = node_validate($edit);
-      print theme('page', node_preview($edit), t('Preview'));
+      drupal_set_title(t('Preview'));
+      print theme('page', node_preview($edit));
       break;
     case t('Submit'):
       drupal_set_title(t('Submit'));
       print theme('page', node_submit($edit));
       break;
     case t('Delete'):
-      print theme('page', node_delete($edit), t('Delete'));
+      drupal_set_title(t('Delete'));
+      print theme('page', node_delete($edit));
       break;
     default:
-      print theme('page', node_page_default(), '');
+      drupal_set_title('');
+      print theme('page', node_page_default());
   }
 }
 

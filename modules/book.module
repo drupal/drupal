@@ -291,7 +291,8 @@ function book_outline() {
           $output .= form_submit(t('Add to book outline'));
         }
 
-        print theme('page', form($output), $node->title);
+        drupal_set_title($node->title);
+        print theme('page', form($output));
     }
   }
 }
