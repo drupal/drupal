@@ -1,7 +1,6 @@
 <?
 include "config.inc";
 include "functions.inc";
-include "database.inc";
 
 function dbsave($dbase, $data, $id=0) {
   foreach ($data as $key=>$value) {
@@ -61,7 +60,7 @@ function newUser($user = "", $error="") {
   $theme->footer();
 }
 function validateUser($user) {
-  include "ban.class.php";
+  include "ban.inc";
 
   ### Verify username and e-mail address:
   $user[userid] = trim($user[userid]);
@@ -75,8 +74,8 @@ function validateUser($user) {
 
   ### Verify whether username and e-mail address are unique:
   dbconnect();
-  if (mysql_num_rows(mysql_query("SELECT userid FROM testusers WHERE LOWER(userid)=LOWER('$user[userid]')")) > 0) $rval = "the specified username is already taken.";
-  if (mysql_num_rows(mysql_query("SELECT email FROM testusers WHERE LOWER(email)=LOWER('$user[email]')")) > 0) $rval = "the specified e-mail address is already registered.";
+  if (mysql_num_rows(mysql_query("SELECT userid FROM users WHERE LOWER(userid)=LOWER('$user[userid]')")) > 0) $rval = "the specified username is already taken.";
+  if (mysql_num_rows(mysql_query("SELECT email FROM users WHERE LOWER(email)=LOWER('$user[email]')")) > 0) $rval = "the specified e-mail address is already registered.";
   return($rval);
 }
 function makePassword($min_length=6) {
@@ -107,7 +106,7 @@ switch ($op) {
     else {
       include('theme.inc');
       $new[passwd] = makePassword();
-      dbsave("testusers", $new);
+      dbsave("users", $new);
       $theme->header();
       if ($system == 1) {
         print("Your password is: <B>$new[passwd]</B><BR>");
@@ -211,7 +210,7 @@ switch ($op) {
       $data[ublock] = $edit[ublock];
       $data[ublockon] = $edit[ublockon];
       if ($edit[pass1] == $edit[pass2] && !empty($edit[pass1])) { $data[passwd] = $edit[pass1]; }
-      dbsave("testusers", $data, $user->id);
+      dbsave("users", $data, $user->id);
       $user->update();
     }
     showUser();
@@ -224,7 +223,7 @@ switch ($op) {
       $data[uorder] = $edit[uorder];
       $data[thold] = $edit[thold];
       $data[signature] = $edit[signature];
-      dbsave("testusers", $data, $user->id);
+      dbsave("users", $data, $user->id);
       $user->update();
     }
     showUser();
