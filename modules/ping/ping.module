@@ -1,5 +1,5 @@
 <?php
-// $Id: ping.module,v 1.6 2003/07/10 17:46:44 dries Exp $
+// $Id: ping.module,v 1.7 2003/08/05 18:33:39 dries Exp $
 
 function ping_help() {
   $output = "<p>Drupal can pings sites automatically to notify them that your site has changed. It can ping the following sites :</p>";
@@ -9,7 +9,7 @@ function ping_help() {
   // for optional modules that ping other sites
   // $output .= module_invoke_all("ping_help");
   $output .= "<p>The ping feature requires crontab.</p>";
-  print $output;
+  return t($output);
 }
 
 function ping_system($field){
