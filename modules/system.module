@@ -104,7 +104,7 @@ function system_user($type, $edit, &$user, $category = NULL) {
       $data[] = array('title' => t('Theme settings'), 'data' => form_item(t('Theme'), "<select name=\"edit[theme]\">$options</select>", t('Selecting a different theme will change the look and feel of the site.')), 'weight' => 2);
     }
 
-    if (!variable_get('configurable_timezones', 1)) {
+    if (variable_get('configurable_timezones', 1)) {
       $timestamp = time();
       $zonelist = array(-11, -10, -9.5, -9, -8, -7, -6, -5, -4, -3.5, -3, -2, -1, 0, 1, 2, 3, 3.5, 4, 5, 5.5, 5.75, 6, 6.5, 7, 8, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.75, 13, 14);
       foreach ($zonelist as $offset) {
