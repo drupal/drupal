@@ -1,9 +1,9 @@
 <?php
-// $Id: theme.inc,v 1.90 2001/11/24 12:14:31 dries Exp $
+// $Id: theme.inc,v 1.91 2001/12/15 16:22:28 unconed Exp $
 
 class BaseTheme {
 
-  function header() {
+  function header($title = "") {
     $output .= "<html><head><title>". variable_get(site_name, "drupal") ."</title></head><body>";
     $output .= "<table border=\"0\" cellspacing=\"4\" cellpadding=\"4\"><tr><td valign=\"top\" width=\"170\">";
 

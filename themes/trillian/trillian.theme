@@ -1,18 +1,18 @@
 <?php
-// $Id: trillian.theme,v 1.5 2001/11/23 17:10:45 natrak Exp $
+// $Id: trillian.theme,v 1.6 2001/12/15 16:22:30 unconed Exp $
 
   class Theme extends BaseTheme {
     // General colorset that can be used for this theme
     var $foreground = "#000000";
     var $background = "#FFFFFF";
 
-    function header() {
+    function header($title = "") {
       global $user;
 ?>
       <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">
       <html>
        <head>
-        <title><? echo variable_get(site_name, "drupal"); ?></title>
+        <title><? echo ($title ? ($title . " - ") : "") . variable_get(site_name, "drupal"); ?></title>
          <style type="text/css">
           <!--
            body, td, p { margin: 10px; font-size: 12pt; font-family: Verdana, Helvetica; }
