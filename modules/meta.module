@@ -1,5 +1,5 @@
 <?php
-// $Id: meta.module,v 1.15 2001/11/01 11:00:48 dries Exp $
+// $Id: meta.module,v 1.16 2001/11/10 01:43:34 unconed Exp $
 
 function meta_help() {
   ?>
@@ -61,9 +61,14 @@ function meta_get_tag($tid) {
 }
 
 function meta_form_collection($edit = array()) {
+  foreach (module_list() as $name) {
+    if (module_hook($name, "node")) {
+      $nodetypes[] = $name;
+    }
+  }
 
   $form .= form_textfield("Collection name", "name", $edit[name], 50, 64, "Required.  The name for this group or collection of meta-tags.  Example: 'Software'.");
-  $form .= form_textfield("Types", "types", $edit[types], 50, 64, "Required.  A comma-seperated list of node types you want to associate this collection with.  Example: 'story, book'.");
+  $form .= form_textfield("Types", "types", $edit[types], 50, 64, "Required.  A comma-seperated list of node types you want to associate this collection with.  Available types: " . implode(", ", $nodetypes) . ".");
   $form .= form_submit("Submit");
 
   if ($edit[cid]) {
