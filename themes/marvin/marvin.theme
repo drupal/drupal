@@ -115,7 +115,7 @@
      print "<br />\n\n";
    }
 
-   function box($subject, $content, $options = "") {
+   function box($subject, $content) {
      print "\n<!-- box: \"$subject\" -->\n";
      print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" bgcolor=\"#000000\" width=\"100%\">\n";
      print " <tr>\n";
