@@ -351,9 +351,23 @@ function block_list($region) {
       if ($block['custom'] && $user->uid && !isset($user->block[$block['module']][$block['delta']])) {
         $user->block[$block['module']][$block['delta']] = $block['status'];
       }
-      $base = parse_url($base_url);
-      if ((($block['status'] && (!$user->uid || !$block['custom'])) || ($block['custom'] && $user->block[$block['module']][$block['delta']])) && (!$block['path'] || preg_match($block['path'], ereg_replace('^/(\?q=)?', '', str_replace($base['path'], '', request_uri()))))) {
 
+      // Determine block visibility
+      $enabled = $block['status'] && (!$user->uid || !$block['custom']);
+      $custom = $block['custom'] && $user->block[$block['module']][$block['delta']];
+
+      // Match path if necessary
+      if ($block['path']) {
+        $base = parse_url($base_url);
+        $session = session_name() .'='. session_id();
+        $url = str_replace(array($base['path'], '?'. $session), '', request_uri());      
+        $matched = preg_match($block['path'], ereg_replace('^/(\?q=)?', '', $path);
+      }
+      else {
+        $matched = true;
+      }
+
+      if (($enabled || $custom) && $matched) {
         /*
         ** Check the current throttle status and see if block should be displayed
         ** based on server load.
