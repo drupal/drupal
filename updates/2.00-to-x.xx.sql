@@ -332,3 +332,5 @@ ALTER TABLE site CHANGE url link varchar(255) DEFAULT '' NOT NULL;
 ALTER TABLE site ADD feed varchar(255) DEFAULT '' NOT NULL;
 
 
+#17/06/01
+ALTER TABLE page ADD link varchar(128) DEFAULT '' NOT NULL AFTER nid;
