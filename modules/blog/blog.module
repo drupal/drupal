@@ -126,7 +126,7 @@ function blog_page_user($uid) {
   $output .= theme('pager', NULL, variable_get("default_nodes_main", 10));
   $output .= theme('xml_icon', url("blog/feed/$account->uid"));
 
-  drupal_set_html_head('<link rel="alternate" type="application/rss+xml" title="RSS - '. $title .'" href="'. url("blog/feed/$account->uid") .'">');
+  drupal_set_html_head('<link rel="alternate" type="application/rss+xml" title="RSS - '. $title .'" href="'. url("blog/feed/$account->uid") .'" />');
   print theme("page", $output, $title);
 }
 
@@ -143,7 +143,7 @@ function blog_page_last() {
   $output .= theme('pager', NULL, variable_get("default_nodes_main", 10));
   $output .= theme('xml_icon', url('blog/feed'));
 
-  drupal_set_html_head('<link rel="alternate" type="application/rss+xml" title="RSS - blogs" href="'. url('blog/feed') .'">');
+  drupal_set_html_head('<link rel="alternate" type="application/rss+xml" title="RSS - blogs" href="'. url('blog/feed') .'" />');
   print theme("page", $output);
 }
 
