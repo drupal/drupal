@@ -1,12 +1,21 @@
 <?php
 // $Id$
 
-if (variable_get("referer", 0) && $referer = getenv("HTTP_REFERER")) {
-  db_query("INSERT INTO referer (URL, timestamp) values ('". check_input($referer) ."', '". time() ."')");
+if (variable_get("referrer", 0) && $referrer = getenv("HTTP_REFERER")) {
+  db_query("INSERT INTO referrer (URL, timestamp) values ('". check_input($referrer) ."', '". time() ."')");
+}
+
+function statistics_help() {
+  $output .= "<p>The statistics module gathers and presents useful log information from your Drupal site. Currently, the statistics module is limited to internal and external referrals display, but other analysis capabilities might be added in future.</p>";
+  $output .= "<p>1. The external referrer log indicates which other sites are linking your website and how many visitors they refer. Each link made to your site - when a user on another site clicks on a link to your site - generates a referral entry in the log.</p>";
+  $output .= "<p>2. The internal referrer log indicates the referrals within the domain of your site.  This log is useful for assessing and evaluating the structure of your website, to learn which pages are being accessed, and to gain insight into the way users are navigating your site.</p>";
+  $output .= "<p>Drupal automatically rotates the referrer logs after a set period of time. The life-time of the accumulated data can be configured via the settings and filters option under site administration.</p>";
+  $output .= "<p>Warning: Drupal gets the referrer information from the HTTP_REFERER environment variable. This not always set properly by web browsers.</p>";
+  return $output;
 }
 
 function statistics_cron() {
-  db_query("DELETE FROM referer WHERE ". time() ." - timestamp > ". variable_get("referer_clear", 604800));
+  db_query("DELETE FROM referrer WHERE ". time() ." - timestamp > ". variable_get("referrer_clear", 604800));
 }
 
 function statistics_perm() {
@@ -23,8 +32,8 @@ function statistics_link($type) {
 
 function statistics_conf_options() {
   $period = array(3600 => format_interval(3600), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200), 4838400 => format_interval(4838400), 9676800 => format_interval(9676800));
-  $output .= form_select("Track referers", "referer", variable_get("referer", 0), array("Disabled", "Enabled"), "If enabled, Drupal will count how many times your website is referred to by other websites.");
-  $output .= form_select("Discard referers older than", "referer_clear", variable_get("referer_clear", 604800), $period, "The time referer entries should be kept.  Older entries will be automatically discarded.  Requires crontab.");
+  $output .= form_select("Track referrers", "referrer", variable_get("referrer", 0), array("Disabled", "Enabled"), "If enabled, Drupal will count how many times your website is referred to by other websites.");
+  $output .= form_select("Discard referrers older than", "referrer_clear", variable_get("referrer_clear", 604800), $period, "The time referrer entries should be kept.  Older entries will be automatically discarded.  Requires crontab.");
   return $output;
 }
 
@@ -33,8 +42,8 @@ function statistics_table_1($query) {
 
   $output .= "<table border=\"1\" cellpadding=\"3\" cellspacing=\"0\">\n";
   $output .= " <tr><th>URL</th><th>date</th></tr>\n";
-  while ($referer = db_fetch_object($result)) {
-    $output .= "<tr><td><a href=\"". check_output($referer->url) ."\">". substr(check_output($referer->url), 0, 100) ."</a></td><td>". format_date($referer->timestamp, "small") ."</td></tr>";
+  while ($referrer = db_fetch_object($result)) {
+    $output .= "<tr><td><a href=\"". check_output($referrer->url) ."\">". substr(check_output($referrer->url), 0, 100) ."</a></td><td>". format_date($referrer->timestamp, "small") ."</td></tr>";
   }
   $output .= "</table>\n";
 
@@ -46,53 +55,59 @@ function statistics_table_2($query) {
 
   $output .= "<table border=\"1\" cellpadding=\"3\" cellspacing=\"0\">\n";
   $output .= " <tr><th>URL</th><th>number</th></tr>\n";
-  while ($referer = db_fetch_object($result)) {
-    $output .= "<tr><td><a href=\"". check_output($referer->url) ."\">". substr(check_output($referer->url), 0, 100) ."</a></td><td>". check_output($referer->count) ."</td></tr>";
+  while ($referrer = db_fetch_object($result)) {
+    $output .= "<tr><td><a href=\"". check_output($referrer->url) ."\">". substr(check_output($referrer->url), 0, 100) ."</a></td><td>". check_output($referrer->count) ."</td></tr>";
   }
   $output .= "</table>\n";
 
   return $output;
 }
 
-function statistics_referer_internal() {
+function statistics_referrer_internal() {
   global $HTTP_HOST;
 
-  $output .= "<h3>Most recent internal referers</h3>\n";
-  $output .= statistics_table_1("SELECT url, timestamp FROM referer WHERE url LIKE '%". check_input($HTTP_HOST) ."%' ORDER BY timestamp DESC LIMIT 15");
+  $output .= "<h3>Most recent internal referrers</h3>\n";
+  $output .= statistics_table_1("SELECT url, timestamp FROM referrer WHERE url LIKE '%". check_input($HTTP_HOST) ."%' ORDER BY timestamp DESC LIMIT 15");
 
-  $output .= "<h3>Internal referers of the last ". format_interval(variable_get("referer_clear", 604800)) ."</h3>\n";
-  $output .= statistics_table_2("SELECT url, COUNT(url) AS count FROM referer WHERE url LIKE '%". check_input($HTTP_HOST) ."%' GROUP BY url ORDER BY count DESC, timestamp");
+  $output .= "<h3>Internal referrers of the last ". format_interval(variable_get("referrer_clear", 604800)) ."</h3>\n";
+  $output .= statistics_table_2("SELECT url, COUNT(url) AS count FROM referrer WHERE url LIKE '%". check_input($HTTP_HOST) ."%' GROUP BY url ORDER BY count DESC, timestamp");
 
   return $output;
 }
 
-function statistics_referer_external() {
+function statistics_referrer_external() {
   global $HTTP_HOST;
 
-  $output .= "<h3>Most recent external referers</h3>\n";
-  $output .= statistics_table_1("SELECT url, timestamp FROM referer WHERE url NOT LIKE '%". check_input($HTTP_HOST) ."%' ORDER BY timestamp DESC LIMIT 15");
+  $output .= "<h3>Most recent external referrers</h3>\n";
+  $output .= statistics_table_1("SELECT url, timestamp FROM referrer WHERE url NOT LIKE '%". check_input($HTTP_HOST) ."%' ORDER BY timestamp DESC LIMIT 15");
 
-  $output .= "<h3>External referers of the last ". format_interval(variable_get("referer_clear", 604800)) ."</h3>\n";
-  $output .= statistics_table_2("SELECT url, COUNT(url) AS count FROM referer WHERE url NOT LIKE '%". check_input($HTTP_HOST) ."%' GROUP BY url ORDER BY count DESC, timestamp");
+  $output .= "<h3>External referrers of the last ". format_interval(variable_get("referrer_clear", 604800)) ."</h3>\n";
+  $output .= statistics_table_2("SELECT url, COUNT(url) AS count FROM referrer WHERE url NOT LIKE '%". check_input($HTTP_HOST) ."%' GROUP BY url ORDER BY count DESC, timestamp");
 
   return $output;
 }
 
 function statistics_admin() {
-  global $type;
+  global $op, $type;
 
   if (user_access("administer statistics")) {
 
-    print "<small><a href=\"admin.php?mod=statistics&type=internal+referer\">internal referers</a> | <a href=\"admin.php?mod=statistics&type=external+referer\">external referers</a></small><hr />\n";
+    print "<small><a href=\"admin.php?mod=statistics&type=internal+referrer\">internal referrers</a> | <a href=\"admin.php?mod=statistics&type=external+referrer\">external referrers</a> | <a href=\"admin.php?mod=statistics&op=help\">help</a></small><hr />\n";
 
-    switch ($type) {
-      case "internal referer":
-        print statistics_referer_internal();
+    switch ($op) {
+      case "help":
+        print statistics_help();
         break;
-      case "external referer":
-        // fall through:
       default:
-        print statistics_referer_external();
+        switch ($type) {
+          case "internal referrer":
+            print statistics_referrer_internal();
+            break;
+          case "external referrer":
+            // fall through:
+          default:
+            print statistics_referrer_external();
+        }
     }
   }
 }

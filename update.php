@@ -19,6 +19,7 @@ $mysql_updates = array(
   "2001-11-17: distributed authentication" => "update_10",
   "2001-12-01" => "update_11",
   "2001-12-06" => "update_12",
+  "2001-12-09" => "update_13",
 );
 
 // Update functions
@@ -245,6 +246,10 @@ function update_11() {
 function update_12() {
   update_sql("ALTER TABLE book DROP revision;");
   update_sql("ALTER TABLE book ADD format tinyint(2) DEFAULT '0';");
+}
+
+function update_13() {
+  update_sql("ALTER TABLE referer RENAME AS referrer;");
 }
 
 // System functions
