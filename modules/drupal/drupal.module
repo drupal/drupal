@@ -73,7 +73,7 @@ function drupal_page() {
       break;
     default:
       $theme->header();
-      drupal_render(0, $cid);
+      drupal_render($id, $cid);
       $theme->footer();
   }
 }

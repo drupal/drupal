@@ -325,6 +325,7 @@ function comment_render($lid, $cid) {
   global $link, $theme, $REQUEST_URI, $user;
 
   // Pre-process variables:
+  $lid = empty($lid) ? 0 : $lid;
   $cid = empty($cid) ? 0 : $cid;
   $mode  = ($user->id) ? $user->mode : 4;
   $order = ($user->id) ? $user->sort : 1;
