@@ -200,11 +200,15 @@
             <INPUT TYPE="submit" NAME="op" VALUE="Save">
             </FONT>
 
-      <?
-       $result = mysql_query("SELECT COUNT(tid) FROM comments WHERE sid = $sid AND score < $threshold");
-       if ($result && $number = mysql_result($result, 0)) {
-        ?>    <BR><SMALL><FONT COLOR="<? echo "$this->fgcolor2"; ?>">There are at least <? echo $number; ?> comments below your threshold.</FONT></SMALL> <?
-       }
+          <?
+
+          $number=discussion_num_filtered($sid, $pid);					
+					if ($number>0)
+					{					
+           ?>
+           <BR><SMALL>There are at least <? echo format_plural($number, "comment", "comments"); ?> comments below your threshold.</SMALL>
+           <?
+          }
 
        print "</TD></TR>";
        print "</TABLE>";
