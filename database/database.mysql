@@ -73,6 +73,7 @@ CREATE TABLE category (
   post int(3) DEFAULT '0' NOT NULL,
   dump int(3) DEFAULT '0' NOT NULL,
   expire int(3) DEFAULT '0' NOT NULL,
+  promote int(2) unsigned DEFAULT '0' NOT NULL,
   comment int(2) unsigned DEFAULT '0' NOT NULL,
   submission int(2) unsigned DEFAULT '0' NOT NULL,
   UNIQUE name (name),
