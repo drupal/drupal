@@ -1054,7 +1054,7 @@ function l($text, $url, $attributes = array(), $query = NULL, $fragment = NULL) 
 }
 
 function field_get($string, $name) {
-  ereg(",?$name=([^,]+)", ", $string", $regs);
+  ereg(",$name=([^,]+)", ",$string", $regs);
   return $regs[1];
 }
 
