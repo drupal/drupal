@@ -89,7 +89,7 @@ function displayRelatedLinks($theme, $sid = 0) {
     ### parse story for A HREF-tags:
     $text = "$story->abstract $story->comments $story->article";
     while ($text = stristr($text, "<A HREF=")) {
-      $link = substr($text, 0, strpos($text, "</a>") + 4);
+      $link = substr($text, 0, strpos(strtolower($text), "</a>") + 4);
       $text = stristr($text, "</A>");
       if (!stristr($link, "mailto:")) $content .= "<LI>$link</LI>";
     }
