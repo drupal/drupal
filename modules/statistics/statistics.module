@@ -14,7 +14,7 @@ function statistics_help($section) {
     case 'admin/help#statistics':
       return t("
       <h3>Introduction</h3>
-      <p>The statistics module keeps track of numerous statistics for your site but be warned, statistical collection does cause a little overhead, thus everything comes <strong>disabled</strong> by default.<p>
+      <p>The statistics module keeps track of numerous statistics for your site but be warned, statistical collection does cause a little overhead, thus everything comes <strong>disabled</strong> by default.</p>
       <p>The module counts how many times, and from where -- using HTTP referrer -- each of your posts is viewed. Once we have that count the module can do the following with it:
       <ul>
       <li>The count can be displayed in the node's link section next to \"# comments\".</li>
