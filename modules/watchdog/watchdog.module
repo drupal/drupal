@@ -45,7 +45,7 @@ function watchdog_overview($type) {
   $output .= " <tr><th>" . t("date") . "</th><th>" . t("message") . "</th><th>" . t("user") . "</th><th>" . t("operations") . "</th></tr>";
   while ($watchdog = db_fetch_object($result)) {
     if ($background = $color[$watchdog->type]) {
-      $output .= " <tr bgcolor=\"$background\"><td>". format_date($watchdog->timestamp, "small") ."</td><td>". substr(check_output($watchdog->message), 0, 64) ."</td><td align=\"center\">". format_name($watchdog) ."</a></td><td align=\"center\">". la(t("details"), array("mod" => "watchdog", "op" => "view", "id" => $watchdog->wid)) ."</td></tr>";
+      $output .= " <tr bgcolor=\"$background\"><td>". format_date($watchdog->timestamp, "small") ."</td><td>". substr(strip_tags($watchdog->message), 0, 64) ."</td><td align=\"center\">". format_name($watchdog) ."</a></td><td align=\"center\">". la(t("details"), array("mod" => "watchdog", "op" => "view", "id" => $watchdog->wid)) ."</td></tr>";
     }
   }
   $output .= "</table>";
