@@ -496,6 +496,8 @@ function menu_rebuild() {
   // Also clear the menu cache.
   cache_clear_all('menu:', TRUE);
 
+  _menu_build();
+
   if (module_exist('menu')) {
     $menu = menu_get_menu();
 
@@ -523,13 +525,15 @@ function menu_rebuild() {
       }
     }
 
-    foreach ($new_items as $item) {
-      db_query('INSERT INTO {menu} (mid, pid, path, title, description, weight, type) VALUES (%d, %d, \'%s\', \'%s\', \'%s\', %d, %d)', $item['mid'], $item['pid'], $item['path'], $item['title'], $item['description'], $item['weight'], $item['type']);
+    if (count($new_items) > 1) {
+      foreach ($new_items as $item) {
+        db_query('INSERT INTO {menu} (mid, pid, path, title, description, weight, type) VALUES (%d, %d, \'%s\', \'%s\', \'%s\', %d, %d)', $item['mid'], $item['pid'], $item['path'], $item['title'], $item['description'], $item['weight'], $item['type']);
+      }
+
+      // Rebuild the menu to account for the changes.
+      _menu_build();
     }
   }
-
-  // Rebuild the menu to account for any changes.
-  _menu_build();
 }
 
 /**
