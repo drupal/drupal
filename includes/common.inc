@@ -76,6 +76,10 @@ function check_preview($text) {
   return check_output(check_input($text), 1);
 }
 
+function check_query($text) {
+  return addslashes(stripslashes($text));
+}
+
 function check_input($text) {
   foreach (module_list() as $module) $text = module_invoke($module, "filter", $text);
   return addslashes(stripslashes(substr($text, 0, variable_get("max_input_size", 10000))));

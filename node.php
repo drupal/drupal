@@ -93,7 +93,7 @@ if ($number > 1) {
   $theme->footer();
 }
 elseif ($number) {
-  $node = ($title ? node_get_object(array("title" => check_input($title))) : node_get_object(nid, check_input($id)));
+  $node = ($title ? node_get_object(array("title" => $title)) : node_get_object(array("nid" => $id)));
   if ($node && node_visible($node)) {
     switch ($op) {
       case "history":

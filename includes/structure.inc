@@ -18,32 +18,32 @@ function category_get_array($field, $value) {
 
 // save a category:
 function category_save($edit) {
-  if (!$edit[cid]) $edit[cid] = db_insert_id(db_query("INSERT INTO category (name) VALUES ('". check_input($edit[name])."')"));
-  foreach ($edit as $key=>$value) db_query("UPDATE category SET $key = '". check_input($value) ."' WHERE cid = '$edit[cid]'");
+  if (!$edit[cid]) $edit[cid] = db_insert_id(db_query("INSERT INTO category (name) VALUES ('". check_query($edit[name])."')"));
+  foreach ($edit as $key=>$value) db_query("UPDATE category SET $key = '". check_query($value) ."' WHERE cid = '$edit[cid]'");
 }
 
 
 // delete category $cid:
 function category_del($cid) {
-  db_query("DELETE FROM category WHERE cid = '". check_input($cid) ."'");
-  db_query("UPDATE node SET cid = 0 WHERE cid = '". check_input($cid) ."'");
+  db_query("DELETE FROM category WHERE cid = '". check_query($cid) ."'");
+  db_query("UPDATE node SET cid = 0 WHERE cid = '". check_query($cid) ."'");
 }
 
 // return post threshold:
 function category_post_threshold($cid) {
-  $category = db_fetch_object(db_query("SELECT post AS threshold FROM category WHERE cid = '". check_input($cid) ."'"));
+  $category = db_fetch_object(db_query("SELECT post AS threshold FROM category WHERE cid = '". check_query($cid) ."'"));
   return $category->threshold;
 }
 
 // return dump threshold:
 function category_dump_threshold($cid) {
-  $category = db_fetch_object(db_query("SELECT dump AS threshold FROM category WHERE cid = '". check_input($cid) ."'"));
+  $category = db_fetch_object(db_query("SELECT dump AS threshold FROM category WHERE cid = '". check_query($cid) ."'"));
   return $category->threshold;
 }
 
 // return expiration threshold:
 function category_expire_threshold($cid) {
-  $category = db_fetch_object(db_query("SELECT expire AS threshold FROM category WHERE cid = '". check_input($cid) ."'"));
+  $category = db_fetch_object(db_query("SELECT expire AS threshold FROM category WHERE cid = '". check_query($cid) ."'"));
   return $category->threshold;
 }
 
@@ -97,8 +97,8 @@ function topic_get_array($field, $value) {
 
 // save a topic:
 function topic_save($edit) {
-  if (!$edit[tid]) $edit[tid] = db_insert_id(db_query("INSERT INTO topic (name) VALUES ('". check_input($edit[name])."')"));
-  foreach ($edit as $key=>$value) db_query("UPDATE topic SET $key = '". check_input($value) ."' WHERE tid = '$edit[tid]'");
+  if (!$edit[tid]) $edit[tid] = db_insert_id(db_query("INSERT INTO topic (name) VALUES ('". check_query($edit[name])."')"));
+  foreach ($edit as $key=>$value) db_query("UPDATE topic SET $key = '". check_query($value) ."' WHERE tid = '$edit[tid]'");
 }
 
 // returns a sorted tree-representation of all topics:
@@ -113,8 +113,8 @@ function topic_tree($parent = 0, $name = "", $tree = array()) {
 
 // delete topic $tid:
 function topic_del($tid) {
-  db_query("DELETE FROM topic WHERE tid = '". check_input($tid) ."'");
-  db_query("UPDATE node SET tid = 0 WHERE tid = '". check_input($tid) ."'");
+  db_query("DELETE FROM topic WHERE tid = '". check_query($tid) ."'");
+  db_query("UPDATE node SET tid = 0 WHERE tid = '". check_query($tid) ."'");
 }
 
 // return linked string with name of topic $tid:

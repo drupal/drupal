@@ -4,7 +4,7 @@ $status = array(dumped => 0, expired => 1, queued => 2, posted => 3);
 $rstatus = array(0 => dumped, 1 => expired, 2 => queued, 3 => posted);
 
 function _node_get($conditions) {
-  foreach ($conditions as $key=>$value) $cond[] = "n.$key = '$value'";
+  foreach ($conditions as $key=>$value) $cond[] = "n.". check_query($key) ." = '". check_query($value) ."'";
   $where = implode(" AND ", $cond);
 
   if ($conditions[type]) {
