@@ -75,7 +75,7 @@ function drupal_directory_ping($arguments) {
   $argument = $arguments->getparam(0);
   $link = strip_tags($argument->scalarval());
   $argument = $arguments->getparam(1);
-  $name = strip_tags($argument->scalarval());
+  $name = trim(strip_tags($argument->scalarval()));
   $argument = $arguments->getparam(2);
   $mail = strip_tags($argument->scalarval());
   $argument = $arguments->getparam(3);
