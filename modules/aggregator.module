@@ -32,7 +32,7 @@ function import_link($type) {
   }
 
   if ($type == "page" && user_access("access news feeds")) {
-    $links[] = "<a href=\"module.php?mod=import\">". t("latest news") ."</a>";
+    $links[] = "<a href=\"module.php?mod=import\">". t("news feeds") ."</a>";
   }
 
   return $links ? $links : array();
@@ -451,15 +451,23 @@ function import_admin() {
 function import_page_all() {
   global $theme;
 
+  // Display mode 1:
+  // $output .= t("This page displays the latest news syndicated from external news feeds.") ."<p /><a href=\"module.php?mod=import&op=bundles\">". t("view news by topic") ."</a><br /><a href=\"module.php?mod=import&op=feeds\">". t("view news by source") ."</a><hr />";
+ 
+  // Display mode 2:
+  //$output .= "<div align=\"right\"><a href=\"module.php?mod=import&op=bundles\">". t("view news by topic") ."</a></div> ";
+  //$output .= "<div align=\"right\"><a href=\"module.php?mod=import&op=feeds\">". t("view news by source") ."</a></div> ";
+
+  // Display mode 3:
+  $output .= "<table align=\"right\" border=\"0\" cellpadding=\"3\" cellspacing=\"0\"><tr><td>[ <a href=\"module.php?mod=import&op=bundles\">". t("view news by topic") ."</a> | <a href=\"module.php?mod=import&op=feeds\">". t("view news by source") ."</a> ]</td></tr></table>";
+
   $result = db_query("SELECT i.*, f.title AS ftitle, f.link AS flink FROM item i LEFT JOIN feed f ON i.fid = f.fid ORDER BY i.iid DESC LIMIT ". variable_get("import_page_limit", 75));
   while ($item = db_fetch_object($result)) {
     $output .= import_format_item($item, 0, 1);
   }
 
-  $header = t("Latest news for all bundles") ." (<a href=\"module.php?mod=import&op=bundles\">by bundle</A>) (<a href=\"module.php?mod=import&op=feeds\">by feed</a>) ";
-
   $theme->header();
-  $theme->box($header, $output);
+  $theme->box(t("Latest news"), $output);
   $theme->footer();
 }
 
