@@ -9,7 +9,7 @@ function search_help() {
   $output .= "<p>". t("You can also use wildcards, so 'walk*' will match 'walk', 'walking', 'walker', 'walkable' and 'walkability'... Alright you got me, I made the last ones up.") ."</p>";
   $output .= "<p>". t("Searches are not case sensitive, regardless of how you type them all letters will be searched for in lower case") ."</p>";
   $output .= "<b>". t("Words excluded from the search") ."</b>";
-  $output .= "<p>". t("Some words which commonly occur are filtered out by the searching process, these are commonly called 'noisewords'. Examples are 'a, at, and, are, as, ask', and the list goes on. Words shorter than ". variable_get("minimum_word_size", 2) ." letters are also filtered from the search index.");
+  $output .= "<p>". t("Some words which commonly occur are filtered out by the searching process, these are commonly called 'noise words'.  Examples are 'a, at, and, are, as, ask', and the list goes on.  Words shorter than %number letters are also filtered from the search index.", array("number" => variable_get("minimum_word_size", 2)));
   $output .= "<p>". t("These words will never be matched when specified, even if they appear in the node you are searching for.");
   return $output;
 }
@@ -63,7 +63,6 @@ function search_admin() {
       search_cron();
       print t("index recreated") ."<br /><hr />\n";
       break;
-    default:
     }
     print search_display(array("noisewords" => variable_get("noisewords", ""), "minimum_word_size" => variable_get("minimum_word_size", 2), "help_pos" => variable_get("help_pos", 1), "remove_short" => variable_get("remove_short", "0")));
   }
@@ -313,10 +312,10 @@ function update_index($search_array) {
  *               form_textarea etc
  */
 function search_display($edit) {
-  $form = form_textfield(t("Minimum word size to index"), "minimum_word_size", $edit["minimum_word_size"], 10, 10);
-  $form .= form_textfield(t("Minimum word length to try and search for"), "remove_short", $edit["remove_short"], 10, 10);
-  $form .= form_textarea(t("Noisewords"), "noisewords", $edit["noisewords"], 70, 10);
-  $form .= form_select(t("Help text position"), "help_pos", $edit["help_pos"], array("1" => t("Above search form"), "2" => t("Below search form"), "3" => t("Link from above search form"), "4" => t("Link from below search form")));
+  $form = form_textfield(t("Minimum word length to index"), "minimum_word_size", $edit["minimum_word_size"], 10, 10, t("The number of characters a word has to be to be indexed.  Words shorter than this will not be searchable."));
+  $form .= form_textfield(t("Minimum word length to search for"), "remove_short", $edit["remove_short"], 10, 10, t("The number of charachters a word has to be to be searched for."));
+  $form .= form_textarea(t("Noise words"), "noisewords", $edit["noisewords"], 70, 10, t("These words will not be indexed, enter one word per line.  Example: and, or, not, a, to, I, it, ..."));
+  $form .= form_select(t("Help text position"), "help_pos", $edit["help_pos"], array("1" => t("Above search form"), "2" => t("Below search form"), "3" => t("Link from above search form"), "4" => t("Link from below search form")), t("Where to show the help text for users on the search page."));
   $form .= form_submit("Submit");
 
   $links[] = la(t("reindex all"), array("mod" => "search", "op" => "reindex"));
