@@ -3,6 +3,7 @@
 include "functions.inc";
 include "theme.inc";
 
+
 class rdf {
   // Contains the raw rdf file:
   var $data;
