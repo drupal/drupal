@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.118 2003/09/09 18:18:43 dries Exp $
+// $Id: forum.module,v 1.119 2003/09/12 18:13:20 dries Exp $
 
 function forum_system($field){
   $output = "";
@@ -157,7 +157,7 @@ function forum_view($node, $main = 0) {
     $trail[] = l(t("Forums"), "forum");
     $trail[] = l($term_data->name, "forum/$term_data->tid");
 
-    print "<div class=\"path\">". implode($trail, " &raquo; ") ."</div>";
+    theme("path", $trail);
   }
 
   $node->teaser = check_output($node->teaser);
@@ -490,7 +490,7 @@ function forum_theme_display($forums, $topics, $parents, $tid, $sortby, $forum_p
   $output .= "</div>";
 
   theme("header");
-  print "<div class=\"path\">". implode($trail, " &raquo; ") ."</div>";
+  theme("path", $trail);
   theme("box", $title, $output);
   theme("footer");
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: xtemplate.theme,v 1.26 2003/09/11 21:57:39 dries Exp $
+// $Id: xtemplate.theme,v 1.27 2003/09/12 18:13:22 dries Exp $
 
 function xtemplate_settings() {
   $output  = form_select(t("Sidebar placement"), "xtemplate_sidebar", variable_get("xtemplate_sidebar", "right"), array("none" => t("No sidebars"), "left" => t("Sidebar on the left"), "right" => t("Sidebar on the right"), "both" => t("Sidebar on the left and the right")));
@@ -35,7 +35,7 @@ class Theme_xtemplate extends BaseTheme {
   function node($node, $main = 0) {
 
     $this->template->assign(array(
-       "link"      => node_url($node),
+       "link"      => url(node_url($node)),
        "title"     => ucfirst($node->title),
        "author"    => format_name($node),
        "date"      => format_date($node->created),
