@@ -422,6 +422,13 @@ function forum_menu($may_cache) {
       'callback' => 'forum_admin_configure',
       'access' => user_access('administer forums'),
       'type' => MENU_LOCAL_TASK);
+
+    $items[] = array('path' => 'admin/forum/edit/container', 'title' => t('edit container'),
+      'access' => user_access('administer forums'),
+      'type' => MENU_CALLBACK);
+    $items[] = array('path' => 'admin/forum/edit/forum', 'title' => t('edit forum'),
+      'access' => user_access('administer forums'),
+      'type' => MENU_CALLBACK);
   }
 
   return $items;
