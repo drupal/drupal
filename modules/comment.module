@@ -160,6 +160,10 @@ function comment_reply($pid, $nid) {
 function comment_preview($edit) {
   global $user;
 
+  foreach ($edit as $key => $value) {
+    $comment->$key = $value;
+  }
+
   /*
   ** Attach the user and time information:
   */
@@ -359,7 +363,7 @@ function comment_view($comment, $links = "", $visible = 1) {
   print "<a name=\"$comment->cid\"></a>\n";
 
   if ($visible) {
-    $comment->comment = check_output($comment);
+    $comment->comment = check_output($comment->comment);
     theme("comment", $comment, $links);
   }
   else {
