@@ -611,7 +611,7 @@ function system_theme_settings() {
     // Toggle node display.
     $group = '';
     foreach (node_list() as $type) {
-      $group .= form_checkbox($type, "$var][toggle_node_info_$type", 1, $settings["toggle_node_info_$type"]);
+      $group .= form_checkbox(node_invoke($type, 'node_name'), "$var][toggle_node_info_$type", 1, $settings["toggle_node_info_$type"]);
     }
     $form .= form_group(t('Display post information on'), $group, t('Enable or disable the "submitted by Username on date" text when displaying posts of the above type'));
   }
