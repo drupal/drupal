@@ -138,9 +138,20 @@ function account_delete($name) {
 }
 
 function account_edit_save($name, $edit) {
-  foreach ($edit as $key=>$value) if ($key != "access") $query .= "$key = '". addslashes($value) ."', ";
+  foreach ($edit as $key=>$value) {
+    if ($key != "access") {
+      $query .= "$key = '". addslashes($value) ."', ";
+    }
+  }
   db_query("UPDATE users SET $query access = '' WHERE userid = '$name'");
-  if ($edit[access]) foreach ($edit[access] as $key=>$value) db_query("UPDATE users SET access = '". field_set(user_load($name), "access", $value, 1) ."'");
+
+  if ($edit[access]) {
+    foreach ($edit[access] as $key=>$value) {
+      $account = user_load($name);
+      db_query("UPDATE users SET access = '". field_set($account->access, $value, 1) ."' WHERE id = $account->id");
+    }
+  }
+
   watchdog("message", "account: modified user '$name'");
 }
 
@@ -169,7 +180,7 @@ function account_edit($name) {
     $form .= form_textfield(t("Homepage"), "url", $account->url, 30, 55);
     $form .= form_textarea(t("Bio"), "bio", $account->bio, 35, 5);
     $form .= form_textarea(t("Signature"), "signature", $account->signature, 35, 5);
-    $form .= form_hidden("userid", $account->userid);
+    $form .= form_hidden("name", $account->userid);
     $form .= form_submit("View account");
     $form .= form_submit("Save account");
 
@@ -183,7 +194,7 @@ function account_view($name) {
   $result = db_query("SELECT * FROM users WHERE userid = '$name'");
 
   if ($account = db_fetch_object($result)) {
-    $form .= form_hidden("userid", $account->userid);
+    $form .= form_hidden("name", $account->userid);
     $form .= form_submit("Edit account");
     $form .= form_submit("Delete account");
 
@@ -222,7 +233,8 @@ function account_admin() {
 
   print "<SMALL><A HREF=\"admin.php?mod=account&op=access\">access control</A> | <A HREF=\"admin.php?mod=account&op=listing\">account listings</A> | <A HREF=\"admin.php?mod=account&op=search\">search account</A> | <A HREF=\"admin.php?mod=account\">overview</A> | <A HREF=\"admin.php?mod=account&op=help\">help</A></SMALL><HR>";
 
-  $type = ($type ? $type : 0);
+  $type = $type ? $type : 0;
+  $name = $name ? $name : $edit[name];
 
   switch ($op) {
     case "access":
@@ -241,12 +253,12 @@ function account_admin() {
       print account_ac();
       break;
     case "Delete account":
-      print status(account_delete($edit[userid]));
+      print status(account_delete($name));
       print account_overview(account_query($type));
       break;
     case "Edit account":
     case "edit":
-      print account_edit(check_input($name));
+      print account_edit($name);
       break;
     case "help":
       print account_help();
@@ -259,8 +271,8 @@ function account_admin() {
       print search_data($keys, $mod);
       break;
     case "Save account":
-      print status(account_edit_save(check_input($edit[userid]), $edit));
-      print account_view(check_input($edit[userid]));
+      print status(account_edit_save($name, $edit));
+      print account_view($name);
       break;
     case "View account":
     case "view":

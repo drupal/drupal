@@ -97,9 +97,9 @@ function format_plural($count, $singular, $plural) {
 }
 
 function format_interval($timestamp) {
-  $units = array("year|years"=>31536000, "week|weeks"=>604800, "day|days"=>86400, "hour|hours"=>3600, "min|min"=>60, "sec|sec"=>1);
+  $units = array("year|years" => 31536000, "week|weeks" => 604800, "day|days" => 86400, "hour|hours" => 3600, "min|min" => 60, "sec|sec" => 1);
   foreach ($units as $key=>$value) {
-    $key=explode("|", $key);
+    $key = explode("|", $key);
     if ($timestamp >= $value) {
       $output .= ($output ? " " : "") . format_plural(floor($timestamp / $value), $key[0], $key[1]);
       $timestamp %= $value;
@@ -124,12 +124,16 @@ function format_date($timestamp, $type = "medium", $format = "") {
       $date = t(date("l", $timestamp)) .", ". t(date("F", $timestamp)) ." ". date("d, Y - H:i", $timestamp);
       break;
     case "custom":
-      for ($i=strlen($format);$i>=0;$c=$format[--$i]) {
-        if (strstr("DFlMSw",$c))
-          $date=t(date($c,$timestamp)).$date;
-        else if (strstr("AaBdgGhHiIjLmnrstTUYyZz",$c))
-          $date=date($c,$timestamp).$date;
-        else $date=$c.$date;
+      for ($i = strlen($format); $i >= 0; $c = $format[--$i]) {
+        if (strstr("DFlMSw", $c)) {
+          $date=t(date($c, $timestamp)).$date;
+        }
+        else if (strstr("AaBdgGhHiIjLmnrstTUYyZz", $c)) {
+          $date = date($c, $timestamp).$date;
+        }
+        else {
+          $date = $c.$date;
+        }
       }
       break;
     default:
@@ -169,8 +173,8 @@ function format_text($text) {
   return preg_replace($src, $dst, $text);
 }
 
-function form($action, $form, $method = "post", $options="") {
-  return "<FORM ACTION=\"$action\" METHOD=\"$method\"". (!empty($options) ? " $options" : "") .">\n$form</FORM>\n";
+function form($action, $form, $method = "post", $options = 0) {
+  return "<FORM ACTION=\"$action\" METHOD=\"$method\"". ($options ? " $options" : "") .">\n$form</FORM>\n";
 }
 
 function form_item($title, $value, $description = 0) {
@@ -211,9 +215,7 @@ function field_get($object, $variable, $field) {
   return $rval;
 }
 
-function field_set($object, $variable, $name, $value) {
-  $field = $object->$variable;
-
+function field_set($field, $name, $value) {
   if (!$value) {
     // remove entry:
     $data = explode(";", $field);
