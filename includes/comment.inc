@@ -187,6 +187,7 @@ function comment_moderation($comment) {
 
 function comment_controls($threshold = 1, $mode = 3, $order = 1) {
   global $REQUEST_URI, $user;
+  $output .= "<DIV ALIGN=\"CENTER\">\n";
   $output .= "<FORM METHOD=\"post\" ACTION=\"$REQUEST_URI\">\n";
   $output .= comment_mode(($user->id ? $user->mode : $mode));
   $output .= comment_order(($user->id ? $user->sort : $order));
@@ -194,6 +195,7 @@ function comment_controls($threshold = 1, $mode = 3, $order = 1) {
   $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Update settings") ."\">\n";
   $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Add comment") ."\">\n";
   $output .= "</FORM>\n";
+  $output .= "</DIV>\n";
   return $output;
 }
 
