@@ -294,19 +294,37 @@ function taxonomy_save_term($edit) {
 }
 
 function taxonomy_del_term($tid) {
-  $term = taxonomy_get_term($tid);
+  $tids = array($tid);
+  while ($tids) {
+    $children_tids = $orphans = array();
+    foreach ($tids as $tid) {
+      // See if any of the term's children are about to be become orphans:
+      if ($children = taxonomy_get_children($tid)) {
+        foreach ($children as $child) {
+          // If the term has multiple parents, we don't delete it.
+          $parents = taxonomy_get_parents($child->tid);
+          if (count($parents) == 1) {
+            $orphans[] = $child->tid;
+          }
+        }
+      }
 
-  db_query('DELETE FROM {term_data} WHERE tid = %d', $tid);
-  db_query('DELETE FROM {term_hierarchy} WHERE tid = %d', $tid);
-  db_query('DELETE FROM {term_relation} WHERE tid1 = %d OR tid2 = %d', $tid, $tid);
-  db_query('DELETE FROM {term_synonym} WHERE tid = %d', $tid);
-  db_query('DELETE FROM {term_node} WHERE tid = %d', $tid);
-
-  module_invoke_all('taxonomy', 'delete', 'term', $term);
+      $term = taxonomy_get_term($tid);
+  
+      db_query('DELETE FROM {term_data} WHERE tid = %d', $tid);
+      db_query('DELETE FROM {term_hierarchy} WHERE tid = %d', $tid);
+      db_query('DELETE FROM {term_relation} WHERE tid1 = %d OR tid2 = %d', $tid, $tid);
+      db_query('DELETE FROM {term_synonym} WHERE tid = %d', $tid);
+      db_query('DELETE FROM {term_node} WHERE tid = %d', $tid);
+    
+      module_invoke_all('taxonomy', 'delete', 'term', $term);
+      drupal_set_message(t('deleted term "%name".', array('%name' => $term->name)));
+    }
+    
+    $tids = $orphans;
+  }
 
   cache_clear_all();
-
-  return t('deleted term "%name".', array('%name' => $term->name));
 }
 
 function _taxonomy_confirm_del_term($tid) {
@@ -318,7 +336,9 @@ function _taxonomy_confirm_del_term($tid) {
   $form .= form_submit(t('Delete'));
   $form .= form_submit(t('Cancel'));
 
-  return form(form_item(t('Delete term "%name"', array('%name' => $term->name)), $form, t('Are you sure you want to delete the term?')));
+  $output = form(form_item(t('Delete term "%name" and all its children', array('%name' => $term->name)), $form, t('Are you sure you want to delete the term and all its children (if any)?')));
+
+  return $output;
 }
 
 /**
