@@ -248,8 +248,6 @@ function blog_link($type, $node = 0, $main) {
   if ($type == "system") {
     if (user_access("maintain personal blog")) {
       menu("node/add/blog", t("blog entry"), "node_page", 0);
-    }
-    if (user_access("maintain personal blog")) {
       menu("blog/". $user->uid, t("my blog"), "blog_page", 1);
     }
     if (user_access("access content")) {
@@ -262,12 +260,10 @@ function blog_link($type, $node = 0, $main) {
   }
 
   if ($type == "node" && $node->type == "blog") {
-    global $mod, $op, $id;
-
     if (blog_access("update", $node)) {
       $links[] = l(t("edit this blog entry"), "node/edit/$node->nid", array("title" => t("Edit this blog entry.")));
     }
-    elseif (empty($id)) {
+    elseif (arg(0) != 'blog' && arg(1) != $node->uid) {
       $links[] = l(t("%username's blog", array("%username" => $node->name)), "blog/$node->uid", array("title" => t("Read %username's latest blog entries.", array("%username" => $node->name))));
     }
   }
