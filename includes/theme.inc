@@ -361,7 +361,7 @@ function theme_table($header, $rows, $attributes = NULL) {
  * @return a string containing the @a box output.
  */
 function theme_box($title, $content, $region = 'main') {
-  $output = "<h2 class=\"title\">$title</h2><p>$content</p>";
+  $output = "<h2 class=\"title\">$title</h2><div>$content</div>";
   return $output;
 }
 
