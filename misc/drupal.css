@@ -245,12 +245,6 @@ img {
 .user-login-block {
   text-align: center;
 }
-.user-page-menu {
-  text-align: center;
-}
-.user-login-block, .user-information-block {
-  white-space: nowrap;
-}
 tr.dark {
   background-color: #ddd;
 }
@@ -270,10 +264,6 @@ pre {
 pre, code {
   font-size: 11px;
 }
-.queue-user-numeral {
-  color: red;
-}
-
 .menu {
   padding: 0 0 0 0.5em;
 }
