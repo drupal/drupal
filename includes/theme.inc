@@ -172,6 +172,8 @@ function theme_page($content, $title = NULL, $breadcrumb = NULL) {
     $output .= "<small>$help</small><hr />";
   }
 
+  $output .= theme_status_messages();
+
   $output .= "\n<!-- begin content -->\n";
   $output .= $content;
   $output .= "\n<!-- end content -->\n";
