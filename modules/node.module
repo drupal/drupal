@@ -879,11 +879,11 @@ function node_validate($node, &$error) {
     // Validate for normal users:
     $node->uid = $user->uid ? $user->uid : 0;
     // Force defaults in case people modify the form:
-    $node->status = variable_get("node_status_$edit->type", 1);
-    $node->promote = variable_get("node_promote_$edit->type", 1);
-    $node->moderate = variable_get("node_moderate_$edit->type", 0);
-    $node->static = variable_get("node_static_$edit->type", 0);
-    $node->revision = variable_get("node_revision_$edit->type", 0);
+    $node->status = variable_get("node_status_$node->type", 1);
+    $node->promote = variable_get("node_promote_$node->type", 1);
+    $node->moderate = variable_get("node_moderate_$node->type", 0);
+    $node->static = variable_get("node_static_$node->type", 0);
+    $node->revision = variable_get("node_revision_$node->type", 0);
     unset($node->created);
   }
 
