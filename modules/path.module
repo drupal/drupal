@@ -1,5 +1,5 @@
 <?php
-/* $Id: path.module,v 1.9 2003/10/09 18:53:21 dries Exp $ */
+/* $Id: path.module,v 1.10 2003/10/17 16:00:44 dries Exp $ */
 
 function path_admin() {
   $op = $_POST["op"];
@@ -137,7 +137,7 @@ function path_link($type, $node = NULL) {
    }
 }
 
-function path_nodeapi($node, $op, $arg) {
+function path_nodeapi(&$node, $op, $arg) {
   if (user_access("create url aliases") || user_access("administer url aliases")) {
 
     switch ($op) {
@@ -165,6 +165,14 @@ function path_nodeapi($node, $op, $arg) {
         return form_textfield(t("Path alias"), "path", $node->path, 60, 250, t("Optionally specify an alternative URL by which this node can be accessed.  For example, type 'about' when writing an about page.  Use a relative path and don't add a trailing slash or the URL alias won't work.") . theme_error($arg["path"]));
 
       case "insert":
+        /*
+        ** Don't try to insert if path is NULL.  We may have already set
+        ** the alias ahead of time.
+        */
+        if ($node->path) {
+          path_set_alias("node/view/$node->nid", $node->path);
+        }
+        break;
       case "update":
         path_set_alias("node/view/$node->nid", $node->path);
         break;
