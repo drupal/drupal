@@ -229,11 +229,11 @@ function account_query($type = "") {
 }
 
 function account_admin() {
-  global $op, $edit, $id, $mod, $keys, $order, $name, $type;
+  global $op, $edit, $id, $mod, $keys, $order, $name, $query;
 
   print "<SMALL><A HREF=\"admin.php?mod=account&op=access\">access control</A> | <A HREF=\"admin.php?mod=account&op=listing\">account listings</A> | <A HREF=\"admin.php?mod=account&op=search\">search account</A> | <A HREF=\"admin.php?mod=account\">overview</A> | <A HREF=\"admin.php?mod=account&op=help\">help</A></SMALL><HR>";
 
-  $type = $type ? $type : 0;
+  $query = $query ? $query : 0;
   $name = $name ? $name : $edit[name];
 
   switch ($op) {
@@ -254,7 +254,7 @@ function account_admin() {
       break;
     case "Delete account":
       print status(account_delete($name));
-      print account_overview(account_query($type));
+      print account_overview(account_query($query));
       break;
     case "Edit account":
     case "edit":
@@ -279,7 +279,7 @@ function account_admin() {
       print account_view($name);
       break;
     default:
-      print account_overview(account_query($type));
+      print account_overview(account_query($query));
   }
 }
 
