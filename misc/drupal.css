@@ -444,7 +444,6 @@ ul.primary li a {
   margin-right: 0.5em;
   padding: 0em 1em;
   text-decoration: none;
-  text-transform: lowercase;
 }
 ul.primary li.active a {
   background-color: #fff;
