@@ -70,8 +70,7 @@ function comment_admin() {
         print comment_edit($id);
         break;
       case "search":
-        print search_form($keys);
-        print search_data($keys, $mod);
+        print search_type("comment", "admin.php?mod=comment&op=search");
         break;
       case "delete":
         print comment_delete(check_input($id));

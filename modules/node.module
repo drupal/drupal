@@ -274,21 +274,6 @@ function node_admin_save($edit) {
   }
 }
 
-function node_module_find() {
-
-  foreach (module_list() as $name) {
-    if (module_hook($name, "user")) {
-      $options .= "<OPTION VALUE=\"$name\">$name</OPTION>\n";
-    }
-  }
-
-  $output .= " <input size=\"50\" value=\"". check_form($keys) ."\" name=\"keys\" type=\"text\">\n";
-  $output .= " <select name=\"type\">$options</select>\n";
-  $output .= " <input type=\"submit\" value=\"Search\">\n";
-
-  return form($output);
-}
-
 function node_edit($node) {
   $output .= form_item("Title", $node->title);
   $output .= form_item("Operations", implode("<br />", node_links($node->nid, $node->type)));
@@ -318,8 +303,7 @@ function node_admin() {
         print node_help();
         break;
       case "search":
-        print node_module_find($id);
-        print search_data($keys, $type);
+        print search_type($type, "admin.php?mod=node&op=search", $keys, 1);
         break;
       case "status":
         print node_edit_status($id);

@@ -12,6 +12,7 @@ function search_link($type) {
   return $links ? $links : array();
 }
 
+/*
 function search_item($item, $type) {
   $output .= "<p>";
   $output .= " <b><u><a href=\"". $item["link"] ."\">". $item["title"] ."</a></u></b><br />";
@@ -20,18 +21,12 @@ function search_item($item, $type) {
 
   return $output;
 }
+*/
 
 function search_page() {
   global $theme, $edit, $type, $keys;
 
   if (user_access("search content")) {
-
-    /*
-    ** Verify the user input:
-    */
-
-    $type = check_input($type);
-    $keys = check_input($keys);
 
     /*
     ** Construct the search form:

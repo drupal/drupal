@@ -109,6 +109,7 @@ function user_validate_name($name) {
   if (eregi("  ", $name)) return t("The name can not contain multiple spaces in a row.");
   if (eregi("[^a-zA-Z0-9 ]", $name)) return t("The name contains an illegal character.");
   if (strlen($name) > 32) return t("The name '$name' is too long: it must be less than 32 characters.");
+
 }
 
 function user_validate_mail($mail) {
@@ -1136,7 +1137,7 @@ function admin_access_init() {
 
 
 function user_admin() {
-  global $edit, $id, $keys, $op, $user;
+  global $edit, $id, $op, $user;
 
   if (user_access("administer users")) {
 
@@ -1166,8 +1167,7 @@ function user_admin() {
         print user_help();
         break;
       case "search":
-        print search_form($keys);
-        print search_data($keys, "user");
+        print search_type("user", "admin.php?mod=user&op=search");
         break;
       case "Save configuration":
       case "Reset to defaults":
