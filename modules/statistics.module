@@ -4,7 +4,7 @@ global $id, $mod, $nid, $user, $recent_activity;
 
 if (variable_get("statistics_enable_node_counter", 0)) {
   /* node view counters are enabled */
-  if (isset($id) && empty($mod) && empty($op)) {
+  if (isset($id) && empty($mod)) {
     /* a node has been viewed, so updated the node's counters */
     db_query("UPDATE statistics SET daycount = daycount + 1, totalcount = totalcount + 1, timestamp = '%s' WHERE nid = '%s'", time(), $id);
     /* if we affected 0 rows, this is the first time viewing the node */
