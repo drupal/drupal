@@ -200,7 +200,11 @@ function comment_post($edit) {
     ** one from the comment's body.
     */
 
-    $edit["subject"] = strip_tags(($edit["subject"] ? $edit["subject"] : substr($edit["comment"], 0, 29)));
+    $edit["subject"] = strip_tags($edit["subject"]);
+   
+    if ($edit["subject"] == "") {
+      $edit["subject"] = substr(strip_tags($edit["comment"]), 0, 29);
+    }
 
     /*
     ** Validate the comment's body.
