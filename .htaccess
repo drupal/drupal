@@ -13,6 +13,11 @@
   deny from all
 </Files>
 
+# Syndicate content:
+<Files ~ "(syndicate.rdf|syndicate.rss|syndicate.xml)">
+  ForceType application/x-httpd-php
+</Files>
+
 # Customized server error messages:
 ErrorDocument 400 /error.php
 ErrorDocument 402 /error.php
