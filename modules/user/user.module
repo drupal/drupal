@@ -137,6 +137,11 @@ function user_save($account, $array = array(), $category = 'account') {
       }
     }
 
+    // Delete a blocked user's sessions to kick them if they are online.
+    if ($user->status == 0) {
+      db_query('DELETE FROM {sessions} WHERE uid = %d', $user->uid);
+    }
+
     // Refresh user object
     $user = user_load(array('uid' => $account->uid));
   }
