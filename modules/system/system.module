@@ -34,24 +34,34 @@ function system_perm() {
 
 function system_link($type) {
   if ($type == "admin" && user_access("administer site configuration")) {
-    $help["general"] = "General configuration help: to be written.  Anyone?";
-    $help["themes"] = "Theme help: to be written.  Anyone?";
-    $help["modules"] = "Module help: to be written.  Anyone?";
-    $help["filters"] = "Filter help: to be written.  Anyone?";
+    $help["general"] = t("General configuration options for your site. Set up the name of the site, e-mail address used in mail-outs, clean URL options, caching, etc.");
+    $help["themes"] = t("Select which themes are available to your users and specify the default theme.");
+    $help["modules"] = t("Modules are plugins for Drupal that extend its core functionality. Here you can select which modules are enabled.");
+    $help["filters"] = t("Filters fit between the raw text in a node and the HTML output. They allow you to replace text selectively. Uses include automatic conversion of emoticons into graphics and filtering HTML content from users' submissions.");
 
-    menu("admin/system", "site configuration", NULL, $help["general"], 3);
-    menu("admin/system/themes", "themes", NULL, $help["themes"], 1);
-    menu("admin/system/themes/selector", "theme selector", "system_admin", $help["themes"]);
-    menu("admin/system/themes/settings", "theme settings", "system_admin", $help["themes"]);
-    menu("admin/system/modules", "modules", NULL, $help["modules"], 2);
-    menu("admin/system/modules/selector", "module selector", "system_admin", $help["modules"], -1);
-    menu("admin/system/modules/settings", "module settings", "system_admin", $help["modules"], -1);
-    menu("admin/system/filters", "filters", "system_admin", $help["filters"], 3);
+    menu("admin/system", "site configuration", "system_admin", $help["general"], 3);
+    menu("admin/system/themes", "themes", "system_admin", $help["themes"], 2);
+
+    foreach (theme_list() as $theme) {
+      include_once "$theme->filename";
+      $function = $theme->name ."_settings";
+      if (function_exists($function)) {
+        menu("admin/system/themes/$theme->name", $theme->name, "system_admin", $theme->description);
+      }
+    }
+
+    menu("admin/system/modules", "modules", "system_admin", $help["modules"], 3);
+    foreach (module_list() as $name) {
+      if (module_hook($name, "settings")) {
+        menu("admin/system/modules/$name", $name, "system_admin", module_invoke($name, "system", "description"));
+      }
+    }
+    menu("admin/system/filters", "filters", "system_admin", $help["filters"], 4);
     menu("admin/system/help", "help", "system_help", NULL, 9);
   }
 }
 
-function system_view_modules() {
+function system_view_general() {
   global $conf, $cmodes, $corder;
 
   // general settings:
@@ -65,7 +75,6 @@ function system_view_modules() {
   foreach (module_list() as $name) { if (module_hook($name, "page")) $pages[$name] = $name; }
   $output .= form_select(t("Default front page"), "site_frontpage", variable_get("site_frontpage", "node"), $pages, t("The home page displays content from this module (usually node)."));
   $output .= form_select(t("Clean URLs"), "clean_url", variable_get("clean_url", 0), array(t("Disabled"), t("Enabled")), t("Enable or disable clean URLs.  If enabled, you'll need <code>ModRewrite</code> support.  See also the <code>.htaccess</code> file in Drupal's top-level directory."));
-
   $output .= "<hr />\n";
 
   // caching:
@@ -111,32 +120,30 @@ function system_view_modules() {
   $output .= form_select(t("Date format (short)"), "date_format_short", variable_get("date_format_short", $dateshort[0]), $dateshortchoices, t("The short format of date display."));
   $output .= form_select(t("Date format (medium)"), "date_format_medium", variable_get("date_format_medium", $datemedium[0]), $datemediumchoices,t("The medium sized date display."));
   $output .= form_select(t("Date format (long)"), "date_format_long", variable_get("date_format_long", $datelong[0]), $datelongchoices, t("Longer date format used for detailed display."));
-  $output .= "<hr />\n";
-
-  // layout settings:
-  $output .= "<h3>" . t("Layout settings") . "</h3>\n";
-  foreach (theme_list() as $key => $value) $options .= "<option value=\"$key\"". (variable_get("theme_default", 0) == $key ? " selected=\"selected\"" : "") .">$key</option>\n";
-  $output .= form_item(t("Default theme"), "<select name=\"edit[theme_default]\">$options</select>", t("The default theme as seen by visitors or anonymous users."));
-  $output .= "<hr />\n";
-
-  foreach (module_list() as $name) {
-    if (module_hook($name, "settings")) {
-      $output .= "<h3><a name=\"$name\">". ucfirst(t("$name")) ." " . t("settings") . "</a></h3>". module_invoke($name, "settings") ."<hr />\n";
-    }
-  }
-
   return $output;
 }
 
-function system_view_themes() {
-  foreach (theme_list() as $theme) {
+function system_view_module($name) {
+  if (module_hook($name, "settings")) {
+      $output .= "<h3><a name=\"$name\">". ucfirst(t("$name")) ." " . t("settings") . "</a></h3>". module_invoke($name, "settings") ."<hr />\n";
+  }
+  return $output;
+}
+
+function system_view_theme($name) {
+  $themes = $theme_list();
+  $theme = $themes[$name];
+  if ($theme) {
     include_once "$theme->filename";
+
     $function = $theme->name ."_settings";
     if (function_exists($function)) {
-      $output .= "<h3><a name=\"$theme->name\">". ucfirst(t("$theme->name")) ." " . t("settings") . "</a></h3>". $function() ."<hr />\n";
+      $output .= $function();
     }
   }
-
+  else {
+    $output = "Invalid theme specified";
+  }
   return $output;
 }
 
@@ -150,21 +157,20 @@ function system_view_filters() {
 }
 
 function system_save_settings($edit = array()) {
-  foreach ($edit as $name => $value) {
-    variable_set($name, $value);
+
+  if ($edit['type']) {
+    db_query("UPDATE system SET status = '0' WHERE type = '%s'", $edit['type']);
+    foreach ($edit["status"] as $filename => $status) {
+      db_query("UPDATE system SET status = '%d' WHERE filename = '$filename'", $status);
+    }
+    if ($edit['type'] == "theme")
+      variable_set("theme_default", $edit['theme_default']);
   }
-
-  cache_clear_all();
-
-  return t("the configuration options have been saved.");
-}
-
-function system_save_selector($type, $edit = array()) {
-  db_query("UPDATE system SET status = '0' WHERE type = '%s'", $type);
-  foreach ($edit["status"] as $filename => $status) {
-    db_query("UPDATE system SET status = '%d' WHERE filename = '$filename'", $status);
+  else {
+    foreach ($edit as $name => $value) {
+      variable_set($name, $value);
+    }
   }
-
   cache_clear_all();
 
   return t("the configuration options have been saved.");
@@ -180,30 +186,34 @@ function system_reset_default($edit = array()) {
   return t("the configuration options have been reset to their default values.");
 }
 
-function system_view($type) {
-
+function system_view($type, $arg = "") {
+  $required = array("modules/admin.module", "modules/user.module", "modules/system.module", "modules/watchdog.module");
   $links = array();
-
   switch ($type) {
     case "filters":
       $form = system_view_filters();
       break;
+    case "modules":
+      if ($arg)
+        $form = system_view_module($arg);
+      else
+        $form = system_listing("module", "modules", $required);
+      break;
     case "themes":
-     $form = system_view_themes();
+      if ($arg)
+        $form = system_view_theme($arg);
+      else
+        $form = system_listing("theme", "themes", $required);
       break;
     default:
-      foreach (module_list() as $name) {
-        if (module_hook($name, "settings")) {
-          $links[] = l($name, "admin/system/modules/settings#$name");
-        }
-      }
-      $form = system_view_modules();
+      $form = system_view_general();
+      break;
   }
 
   $form .= form_submit(t("Save configuration"));
   $form .= form_submit(t("Reset to defaults"));
 
-  print implode(" &middot; ", $links) ."<br />". form($form);
+  print form($form);
 }
 
 function system_dirscan($dir, $mask, $nomask = array(".", "..", "CVS")) {
@@ -259,6 +269,7 @@ function system_listing($type, $directory, $required = array()) {
         $theme =& new $class;
         $info->name = $theme->system("name") ? $theme->system("name") : $file->name;
         $info->description = $theme->system("description");
+        $themes[] = $info->name;
       }
       else {
         unset($files[$filename]);
@@ -272,61 +283,42 @@ function system_listing($type, $directory, $required = array()) {
     $rows[] = array($info->name, $info->description, array("data" => (in_array($filename, $required) ? form_hidden("status][$filename", 1) . t("required") : form_checkbox("", "status][$filename", 1, $file->status)), "align" => "center"));
   }
 
-  $output = table($header, $rows) . form_submit(t("Save $type settings"));
+  $output = table($header, $rows);
 
-  print form($output);
+  // If we're doing themes, stick the default one here...
+  if ($type == "theme") {
+    $output .= "<hr />\n";
+    foreach ($themes as $theme)
+      $options .= "<option value=\"$theme\"". (variable_get("theme_default", 0) == $theme ? " selected=\"selected\"" : "") .">$theme</option>\n";
+    $output .= form_item(t("Default theme"), "<select name=\"edit[theme_default]\">$options</select>", t("The default theme as seen by visitors or anonymous users. Make sure a valid theme is selected here (i.e. one that has its box checked above.)"));
+  }
+  $output .= form_hidden("type", $type);
 
-  return $message;
+  return $output;
 }
-
-function system_admin() {
-  global $op, $edit;
-
+function system_init() {
+  global $HTTP_POST_VARS, $REQUEST_URI, $system_init_status;
+  session_register("system_init_status");
   if (user_access("administer site configuration")) {
 
-    // NOTE: changing this also requires changing module_init() @ "includes/module.inc".
-    $required = array("modules/admin.module", "modules/user.module", "modules/system.module", "modules/watchdog.module");
+    if ($HTTP_POST_VARS['op'] == t("Reset to defaults"))
+      $system_init_status = status(system_reset_default($HTTP_POST_VARS['edit']));
 
-    if (empty($op)) {
-      $op = arg(2);
-    }
+    else if ($HTTP_POST_VARS['op'] == t("Save configuration"))
+      $system_init_status = status(system_save_settings($HTTP_POST_VARS['edit']));
 
-    switch ($op) {
-      case "modules":
-        if (arg(3) == "settings") {
-          print system_view("modules");
-        }
-        else {
-          print system_listing("module", "modules", $required);
-        }
-        break;
-      case "themes":
-        if (arg(3) == "settings") {
-          print system_view("themes");
-        }
-        else {
-          print system_listing("theme", "themes");
-        }
-        break;
-      case t("Save module settings"):
-        print status(system_save_selector("module", $edit));
-        print system_listing("module", "modules", $required);
-        break;
-      case t("Save theme settings"):
-        print status(system_save_selector("theme", $edit));
-        print system_listing("theme", "themes");
-        break;
-      case t("Reset to defaults"):
-        print status(system_reset_default($edit));
-        print system_view(arg(2));
-        break;
-      case t("Save configuration"):
-        print status(system_save_settings($edit));
-        print system_view(arg(2));
-        break;
-      default:
-        print system_view(arg(2));
-    }
+    else
+      return;
+    drupal_goto("$REQUEST_URI");
+  }
+}
+function system_admin() {
+  global $HTTP_POST_VARS, $system_init_status;
+  if (user_access("administer site configuration")) {
+    session_register("system_init_status");
+    print $system_init_status;
+    session_unregister("system_init_status");
+    print system_view(arg(2), arg(3));
   }
   else {
     print message_access();
