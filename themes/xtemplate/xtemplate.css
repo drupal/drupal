@@ -14,6 +14,9 @@ tr.dark {
 tr.light {
   background-color: #eee;
 }
+td {
+  padding: 0.2em;
+}
 h1 {
   font-size: 1.2em;
 }
