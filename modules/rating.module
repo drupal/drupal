@@ -14,7 +14,7 @@ function rating_perm() {
 
 function rating_link($type) {
   if ($type == "page" && user_access("access user ratings")) {
-    $links[] = "<a href=\"module.php/mod/rating\">". t("user ratings") ."</a>";
+    $links[] = "<a href=\"module.php?mod=rating\">". t("user ratings") ."</a>";
   }
 
   return $links ? $links : array();
