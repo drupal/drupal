@@ -96,7 +96,7 @@ function drupal_get_breadcrumb() {
  */
 
 function drupal_set_html_head($data = NULL) {
-  static $stored_head;
+  static $stored_head = '';
 
   if (!is_null($data)) {
     $stored_head .= "$data\n";
@@ -181,7 +181,7 @@ function drupal_get_normal_path($path) {
  * @{
  */
 function drupal_set_header($header = NULL) {
-  static $stored_headers;
+  static $stored_headers = '';
 
   if (!is_null($header)) {
     header($header);
@@ -559,9 +559,14 @@ function valid_email_address($mail) {
 /**
  * Verify the syntax of the given URL.
  *
- * @param $url an URL
+ * @param $url
+ *   an URL
+ * @param $absolute
+ *   is the URL to be verified absolute, ie. of the form \<scheme\>://\<hostname\>/...?
+ * @return
+ *   valid syntax: TRUE; FALSE otherwise
  */
-function valid_url($url, $absolute = false) {
+function valid_url($url, $absolute = FALSE) {
   if ($absolute) {
     return preg_match("/^(http|https|ftp):\/\/[a-z0-9\/:_\-_\.\?,~=#&]+$/i", $url);
   }
@@ -673,8 +678,6 @@ function search_form($action = NULL, $keys = NULL, $options = NULL) {
     $output .= "</div>";
   }
 
-  $form .= "<br />";
-
   return form($output, "post", $action);
 }
 
@@ -683,6 +686,7 @@ function search_form($action = NULL, $keys = NULL, $options = NULL) {
  */
 function search_data($keys = NULL) {
   $edit = $_POST["edit"];
+  $output = '';
 
   if (isset($keys)) {
     foreach (module_list() as $name) {
@@ -814,6 +818,7 @@ function format_size($size) {
  */
 function format_interval($timestamp, $granularity = 2) {
   $units = array("1 year|%count years" => 31536000, "1 week|%count weeks" => 604800, "1 day|%count days" => 86400, "1 hour|%count hours" => 3600, "1 min|%count min" => 60, "1 sec|%count sec" => 1);
+  $output = '';
   foreach ($units as $key => $value) {
     $key = explode("|", $key);
     if ($timestamp >= $value) {
@@ -826,7 +831,7 @@ function format_interval($timestamp, $granularity = 2) {
       break;
     }
   }
-  return ($output) ? $output : t("0 sec");
+  return $output ? $output : t("0 sec");
 }
 
 /**
@@ -869,6 +874,7 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
   }
 
   $max = strlen($format);
+  $date = '';
   for ($i = 0; $i <= $max; $c = $format{$i++}) {
     if (strpos('AaDFlM', $c)) {
       $date .= t(gmdate($c, $timestamp));
@@ -970,6 +976,7 @@ function form_radio($title, $name, $value = 1, $checked = 0, $description = NULL
 
 function form_radios($title, $name, $value, $options, $description = NULL) {
   if (count($options) > 0) {
+    $choices = '';
     foreach ($options as $key => $choice) {
       $choices .= "<label class=\"option\"><input type=\"radio\" class=\"form-radio\" name=\"edit[$name]\" value=\"$key\"". ($key == $value ? " checked=\"checked\"" : "") ." /> $choice</label><br />";
     }
@@ -1002,6 +1009,7 @@ function form_textarea($title, $name, $value, $cols, $rows, $description = NULL,
 }
 
 function form_select($title, $name, $value, $options, $description = NULL, $extra = 0, $multiple = 0) {
+  $select = '';
   foreach ($options as $key => $choice) {
     $select .= "<option value=\"$key\"". (is_array($value) ? (in_array($key, $value) ? " selected=\"selected\"" : "") : ($value == $key ? " selected=\"selected\"" : "")) .">". check_form($choice) ."</option>";
   }
