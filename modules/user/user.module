@@ -49,7 +49,7 @@ function user_load($array = array()) {
   $params = array();
   foreach ($array as $key => $value) {
     if ($key == 'pass') {
-      $query .= "u.$key = '%s' AND ";
+      $query .= "u.pass = '%s' AND ";
       $params[] = md5($value);
     }
     else if ($key == 'uid') {
@@ -1156,7 +1156,7 @@ function user_edit($category = 'account') {
                       t('Delete'));
       print theme('page', $output);
       return;
-    }    
+    }
   }
   else if ($_POST['op'] == t('Delete')) {
     // Note: we redirect from user/uid/edit to user/uid/delete to make the tabs disappear.
