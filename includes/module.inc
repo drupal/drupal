@@ -4,7 +4,6 @@
 // initialize modules:
 function module_init() {
   require_once "modules/user.module";
-  require_once "modules/drupal.module";
   require_once "modules/system.module";
   require_once "modules/watchdog.module";
   module_list();
