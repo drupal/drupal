@@ -1595,10 +1595,12 @@ function node_nodeapi(&$node, $op, $arg = 0) {
  *   - "delete"
  * @param $node
  *   The node object (or node array) on which the operation is to be performed.
+ * @param $uid
+ *   The user ID on which the operation is to be performed.
  * @return
  *   TRUE if the operation may be performed.
  */
-function node_access($op, $node = NULL) {
+function node_access($op, $node = NULL, $uid = NULL) {
   // Convert the node to an object if necessary:
   $node = array2object($node);
 
@@ -1672,7 +1674,7 @@ function node_access_join_sql($node_alias = 'n', $node_access_alias = 'na') {
  * @return
  *   An SQL where clause.
  */
-function node_access_where_sql($op = 'view', $node_access_alias = 'na') {
+function node_access_where_sql($op = 'view', $node_access_alias = 'na', $uid = NULL) {
   if (user_access('administer nodes')) {
     // This number is being used in a SQL query as a boolean.
     // It is "'1'" instead of "1" for database compatibility, as both
@@ -1682,7 +1684,7 @@ function node_access_where_sql($op = 'view', $node_access_alias = 'na') {
 
   $sql = $node_access_alias .'.grant_'. $op .' = 1 AND CONCAT('. $node_access_alias .'.realm, '. $node_access_alias .'.gid) IN (';
   $grants = array();
-  foreach (node_access_grants($op) as $realm => $gids) {
+  foreach (node_access_grants($op, $uid) as $realm => $gids) {
     foreach ($gids as $gid) {
       $grants[] = "'". $realm . $gid ."'";
     }
