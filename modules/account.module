@@ -4,6 +4,12 @@ $module = array("help" => "account_help",
                 "find" => "account_find",
                 "admin" => "account_admin");
 
+$queries = array(0 => array("users recently visiting", "ORDER BY last_access DESC"),
+                 1 => array("users recently joining", "ORDER BY id DESC"),
+                 2 => array("users with access rights", "WHERE access != '' ORDER BY last_access DESC"),
+                 3 => array("users with pending accounts", "WHERE status = 1 ORDER BY last_access DESC"),
+                 4 => array("users with blocked accounts", "WHERE status = 0 ORDER BY last_access DESC"));
+
 function account_help() {
  ?>
   <P>The account-module is responsible for maintaining the user database. It automatically handles tasks like registration, authentication, access control, password retrieval, user settings and much more.</P>
@@ -84,9 +90,12 @@ function account_ac() {
   return $output;
 }
 
-function account_overview() {
-  $result = db_query("SELECT id, userid, last_access FROM users ORDER BY last_access DESC LIMIT 50");
+function account_overview($query = 0) {
+  global $queries;
 
+  $result = db_query("SELECT id, userid, last_access FROM users ". $queries[$query][1] ." LIMIT 50");
+
+  $output .= status($queries[$query][0]);
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR><TH>username</TH><TH>last access</TH><TH COLSPAN=\"2\">operations</TH></TR>\n";
   while ($account = db_fetch_object($result)) {
@@ -218,10 +227,18 @@ function account_view($name) {
   }
 }
 
-function account_admin() {
-  global $op, $edit, $id, $mod, $keys, $order, $name;
+function account_query() {
+  global $queries;
+  foreach ($queries as $key=>$array) {
+    $output .= "<LI><A HREF=\"admin.php?mod=account&query=$key\">$array[0]</A></LI>\n";
+  }
+  return "<OL>$output</OL>\n";
+}
 
-  print "<SMALL> <A HREF=\"admin.php?mod=account&op=access\">access control</A> | <A HREF=\"admin.php?mod=account&op=search\">search account</A> | <A HREF=\"admin.php?mod=account\">overview</A> | <A HREF=\"admin.php?mod=account&op=help\">help</A></SMALL><HR>\n";
+function account_admin() {
+  global $op, $edit, $id, $mod, $keys, $order, $name, $query;
+
+  print "<SMALL><A HREF=\"admin.php?mod=account&op=access\">access control</A> | <A HREF=\"admin.php?mod=account&op=query\">account queries</A> | <A HREF=\"admin.php?mod=account&op=search\">search account</A> | <A HREF=\"admin.php?mod=account\">overview</A> | <A HREF=\"admin.php?mod=account&op=help\">help</A></SMALL><HR>";
 
   switch ($op) {
     case "access":
@@ -255,16 +272,19 @@ function account_admin() {
       print search_form($keys);
       print search_data($keys, $mod);
       break;
-    case "View account":
-    case "view":
-      print account_view($name);
-      break;
     case "Save account":
       print status(account_edit_save(check_input($name), $edit));
       print account_view(check_input($name));
       break;
+    case "View account":
+    case "view":
+      print account_view($name);
+      break;
+    case "query":
+      print account_query();
+      break;
     default:
-      print account_overview();
+      print account_overview($query);
   }
 }
 
