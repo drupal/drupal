@@ -25,11 +25,11 @@ function cvs_page() {
     $output .= "<b>File:</b> $cvs->files<br />";
     $output .= "<b>Date:</b> ". format_date($cvs->timestamp) ."<br />";
     $output .= "<b>User:</b> $cvs->user<br />";
-    $output .= "\n". htmlentities($cvs->message) ."<hr />";
+    $output .= "\n". nl2br(htmlentities($cvs->message)) ."<hr />";
   }
 
   $theme->header();
-  $theme->box("CVS commit messages", "<pre>$output</pre>");
+  $theme->box("CVS commit messages", "<div style=\"font-family: monospace;\">$output</div>");
   $theme->footer();
 }
 
