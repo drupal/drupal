@@ -267,7 +267,7 @@ function bloggerapi_node_recent($num) {
   global $user;
 
   if (($num == 0) or ($num > 100)) $num = 50;
-  $result = db_query_range("SELECT n.*, u.name FROM {node} n LEFT JOIN {users} u ON n.uid = u.uid WHERE n.uid = %d ORDER BY n.nid DESC", $user->uid, 0, $num);
+  $result = db_query_range("SELECT n.*, u.name FROM {node} n INNER JOIN {users} u ON n.uid = u.uid WHERE n.uid = %d ORDER BY n.nid DESC", $user->uid, 0, $num);
   if ($result) {
     while ($blog = db_fetch_object($result)) {
       $body = "<title>$blog->title</title>\n". $blog->body;
