@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.120 2003/11/25 19:26:21 dries Exp $
+// $Id: statistics.module,v 1.121 2003/11/25 19:54:00 dries Exp $
 
 function statistics_init() {
   global $recent_activity;
@@ -72,9 +72,8 @@ function statistics_perm() {
   **   administer statistics module - full administrative control of module
   **   administer statistics        - view statistics / referrer log
   **   access statistics            - see counts per node (if enabled)
-  **   access userlist              - see list of online users
   */
-  return array("administer statistics module", "administer statistics", "access statistics", "access userlist");
+  return array("administer statistics module", "administer statistics", "access statistics");
 }
 
 
@@ -119,7 +118,6 @@ function statistics_link($type, $node = 0, $main = 0) {
 
       // block configuration:
       menu("admin/system/block/top nodes block", t("configure 'top nodes' block"), "statistics_admin", 5);
-      menu("admin/system/block/whos online block", t("configure 'who is online' block"), "statistics_admin", 5);
     }
 
     if (user_access("access content")) {
@@ -156,7 +154,7 @@ function statistics_help($section = "admin/help#statistics") {
       $output .= "<h3>%access</h3><p>This admin page gives you an at-a-glance look at your top nodes.  It is useful for understanding what content on your Drupal site is the most popular.  Also on this page are links to the referrer statistics for each listed node.</p>";
       $output .= "<h3>Configuring the statistics module</h3><p>There are some configuration options added to the main %configuration section:</p>";
       $output .= "<ul>";
-      $output .= "<li><i>enable access log</i> -- allows you to turn the access log on and off.  This log is used to store things like referrers and who's online.  Enabling the log adds one database call per page displayed by Drupal.</li>";
+      $output .= "<li><i>enable access log</i> -- allows you to turn the access log on and off.  This log is used to store data about every page accessed, such as the remote host's IP address, where they came from (referrer), what node theyve viewed, and their user name.  Enabling the log adds one database call per page displayed by Drupal.</li>";
       $output .= "<li><i>discard access logs older than</i> -- allows you to configure how long an access log entry is saved, after which time it is deleted from the database table. To use this you need to run \"cron.php\"</li>";
       $output .= "<li><i>enable node view counter</i> -- allows you to turn on and off the node-counting functionality of this module.  If it is turned on, an extra database query is added for each node displayed, which increments a counter.</li>";
       $output .= "<li><i>display node view counters</i> -- allows you to globally disable the displaying of node view counters.  Additionally, a user group must have 'access statistics' permissions to view the counters.</li>";
@@ -169,12 +167,9 @@ function statistics_help($section = "admin/help#statistics") {
       $output .= "<h3>Top nodes page</h3>";
       $output .= "<p>This module creates a user page that can display summaries of the day's top viewed nodes, the all time top nodes and the last nodes viewed.  Each of these summaries can be enabled or disabled individually, and the number of nodes displayed for each can be configured with a drop down menu.</p>";
       $output .= "<p>The administrative \"top nodes page\" screen also allows you to assign a name for the automatically generated link to the user page.  If no name is set, the link will not be displayed.</p>";
-      $output .= "<h3>Who's online block</h3><p>This module creates a block that can display how many user's and guests are currently online.  You are able to configure the name of the block, the name of a sub-block for displaying names of user's currently online, how recently a user must have been active to be considered online, the maximum characters to display from a user's name and the maximum number of user names to display.</p>";
-      $output .= "<p>Don't forget to enable the block %here-block.</p>";
       $output .= "<h3>Permissions</h3><p>This module has four permissions that need to be configured in %permissions.</p>";
       $output .= "<ul>";
       $output .= "<li><i>access statistics</i> - enable for user roles that get to see individual node counts.  (This does not define access to the block)</li>";
-      $output .= "<li><i>access userlist</i> - enable for user roles that get to see the list of user's that are currently online within the \"Who's online\" block.</li>";
       $output .= "<li><i>administer statistics module</i> - enable for user roles that get to configure the statistics module.</li><li><i>administer statistics</i> - enable for user roles that get to view the referrer statistics.</li>";
       $output .= "</ul>";
       $output .= "<p>If '<i>administer statistics</i>' and '<i>access statistics</i>' are both enabled, the user will see a link from each node to that node's referrer statistics (if enabled).</p>";
@@ -237,9 +232,6 @@ function statistics_help($section = "admin/help#statistics") {
     case 'admin/system/block/top nodes block':
       $output = t("The statistics module exports a block that can display the top viewed nodes of the day, the all time top viewed nodes and the last nodes viewed.  Each of these links can be enabled or disabled individually, and the number of nodes displayed for each can be configured with a drop down menu. If you disable all sections of this block, it will not appear.");
       break;
-    case 'admin/system/block/whos online block':
-      $output = t("The statistics module exports a block that can display how many user's and guests are currently online.  You can configure the name of the block, the name of a sub-block for displaying names of user's currently online, how recently a user must have been active to be considered online, the maximum characters to display from a user's name and the maximum number of user names to display.");
-      break;
   }
   return $output;
 }
@@ -278,10 +270,6 @@ function statistics_admin() {
           statistics_save_topnodes_block($edit);
           $output .= status(t("saved 'top nodes' block changes."));
           break;
-        case t("Submit \"who's online\" block changes"):
-          statistics_save_online_block($edit);
-          $output .= status(t("saved 'who's online' block changes."));
-          break;
         case t("Submit \"top nodes\" page changes"):
           statistics_save_userconfig($edit);
           $output .= status(t("saved 'top nodes' page changes."));
@@ -307,15 +295,6 @@ function statistics_admin() {
                 "statistics_block_top_all_num" => variable_get("statistics_block_top_all_num", 0),
                 "statistics_block_top_last_head" => variable_get("statistics_block_top_last_head" ,"<b>Last:</b>"),
                 "statistics_block_top_last_num" => variable_get("statistics_block_top_last_num", 0)
-              ));
-           }
-           elseif (arg(3) == "whos online block") {
-              $output .= statistics_config_online_block(array(
-                "statistics_block_online_title" => variable_get("statistics_block_online_title", "Who's online"),
-                "statistics_block_online_subtitle" => variable_get("statistics_block_online_subtitle", "Online users:"),
-                "statistics_block_online_time" => variable_get("statistics_block_online_time", 2700),
-                "statistics_block_online_max_len" => variable_get("statistics_block_online_max_len", 15),
-                "statistics_block_online_max_cnt" => variable_get("statistics_block_online_max_cnt", 10)
               ));
            }
            break;
@@ -524,23 +503,6 @@ function statistics_config_topnodes_block($edit) {
 }
 
 
-/* Displays the block configuration administration form */
-function statistics_config_online_block($edit) {
-
-  $form = form_textfield(t("Block name"), "statistics_block_online_title", $edit["statistics_block_online_title"], 20, 40, t("This module generates a block displaying how many users/guests are online.  You may assign a name for this block."));
-  $form .= form_textfield(t("Sub-block name"), "statistics_block_online_subtitle", $edit["statistics_block_online_subtitle"], 20, 40, t("This module generates a sub-block listing the names of currently online users.  You may assign a name for this block."));
-
-  $period = array(30 => format_interval(30), 60 => format_interval(60), 120 => format_interval(120), 180 => format_interval(180), 300 => format_interval(300), 600 => format_interval(600), 900 => format_interval(900), 1800 => format_interval(1800), 2700 => format_interval(2700), 3600 => format_interval(3600), 5400 => format_interval(5400), 7200 => format_interval(7200), 10800 => format_interval(10800), 21600 => format_interval(21600), 43200 => format_interval(43200), 86400 => format_interval(86400));
-  $form .= form_select(t("Activity threshold"), "statistics_block_online_time", $edit["statistics_block_online_time"], $period, "How long ago a user (or guest) must have been active to be considered online.");
-  $form .= form_select(t("Maximum characters of user's name to display"), "statistics_block_online_max_len", $edit["statistics_block_online_max_len"], array("1" => "1", "5" => "5", "10" => "10", "15" => "15", "20" => "20", "25" => "25", "30" => "30", "35" => "35", "40" => "40", "45" => "45", "50" => "50", "55" => "55", "60" => "60"), t("What is the maximum characters of a user's name to to display in the sub-block."));
-  $form .= form_select(t("How many online users to list"), "statistics_block_online_max_cnt", $edit["statistics_block_online_max_cnt"], array("0" => "0", "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "50" => "50", "100" => "100"), t("How many online user's names to display in the sub-block."));
-
-  $form .= form_submit(t("Submit \"who's online\" block changes"));
-
-  return form($form);
-}
-
-
 /* Displays the user page configuration administration form */
 function statistics_admin_userpage_config($edit) {
 
@@ -588,16 +550,6 @@ function statistics_save_topnodes_block($edit) {
   variable_set("statistics_block_top_all_num", $edit["statistics_block_top_all_num"]);
   variable_set("statistics_block_top_last_head", $edit["statistics_block_top_last_head"]);
   variable_set("statistics_block_top_last_num", $edit["statistics_block_top_last_num"]);
-}
-
-
-/* Saves the values entered in the "blockconfig" administration form */
-function statistics_save_online_block($edit) {
-  variable_set("statistics_block_online_title", $edit["statistics_block_online_title"]);
-  variable_set("statistics_block_online_subtitle", $edit["statistics_block_online_subtitle"]);
-  variable_set("statistics_block_online_time", $edit["statistics_block_online_time"]);
-  variable_set("statistics_block_online_max_len", $edit["statistics_block_online_max_len"]);
-  variable_set("statistics_block_online_max_cnt", $edit["statistics_block_online_max_cnt"]);
 }
 
 
@@ -669,56 +621,6 @@ function statistics_display_topnodes_block() {
 }
 
 
-/* This displays the "Who's online" block */
-function statistics_display_online_block() {
-  global $id, $recent_activity;
-
-  if (user_access("access content")) {
-    $throttle = throttle_status();
-    $multiplier = variable_get("statistics_throttle_multiplier", 60);
-
-    /* don't do any database lookups if on maximum throttle */
-    if ($throttle < 5) {
-      /* count users with activity in the past defined period */
-      $time_period = variable_get("statistics_block_online_time", 2700);
-
-      $guests = db_fetch_object(db_query("SELECT COUNT(DISTINCT sid) AS count FROM {sessions} WHERE timestamp >= %d AND uid = 0", time() - $time_period));
-      $users = db_query("SELECT DISTINCT uid, MAX(timestamp) AS max_timestamp FROM {sessions} WHERE timestamp >= %d AND uid != 0 GROUP BY uid ORDER BY max_timestamp DESC", time() - $time_period );
-      $total_users = db_affected_rows();
-
-      /* format the output with proper grammar */
-      if ($total_users == 1 && $guests->count == 1) {
-        $output .= t("There is currently %members and %visitors online.", array("%members" => format_plural($total_users, "1 user", "%count users"), "%visitors" => format_plural($guests->count, "1 guest", "%count guests")));
-      }
-      else {
-        $output .= t("There are currently %members and %visitors online.", array("%members" => format_plural($total_users, "1 user", "%count users"), "%visitors" => format_plural($guests->count, "1 guest", "%count guests")));
-      }
-
-      if (user_access("access userlist") && $total_users) {
-        /* Display a list of currently online users */
-        $max_users = variable_get("statistics_block_online_max_cnt", 10);
-        $items = array();
-        while ($uid = db_fetch_object($users)) {
-          $user = user_load(array("uid" => $uid->uid));
-          /* Display only max_length characters of username */
-          $items[] = format_name($user);
-        }
-
-  if ($items) {
-          $output .= "<br /><br />";
-          $output .= theme("item_list", $items, variable_get("statistics_block_online_subtitle", "Online users:"));
-        }
-      }
-    }
-    else {
-      /* default message when fully throttled */
-      $output = t("This site is currently sustaining more than %total page views a minute.", array("%total" => ($throttle * $multiplier)));
-    }
-    return $output;
-  }
-}
-
-
 /* Display linked title based on field name */
 function statistics_title_list($dbfield, $dbrows) {
   /* valid dbfields: totalcount, daycount, timestamp */
@@ -745,9 +647,6 @@ function statistics_block($op = "list", $delta = 0) {
     if (variable_get("statistics_enable_node_counter", 0)) {
       $blocks[0]["info"] = t("Top nodes");
     }
-    if (variable_get("statistics_enable_access_log", 0)) {
-      $blocks[1]["info"] = t("Who's online");
-    }
     return $blocks;
   }
   else if (user_access("access content")) {
@@ -755,11 +654,6 @@ function statistics_block($op = "list", $delta = 0) {
       case 0:
         $block["subject"] = variable_get("statistics_block_top_title", t("Popular content"));
         $block["content"] = statistics_display_topnodes_block();
-        break;
-
-      case 1:
-        $block["subject"] = variable_get("statistics_block_online_title", t("Who's online"));
-        $block["content"] = statistics_display_online_block();
         break;
     }
 
