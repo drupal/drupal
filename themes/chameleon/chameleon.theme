@@ -1,0 +1,140 @@
+<?php
+
+// $Id: chameleon.theme,v 1.1 2003/12/15 20:47:18 dries Exp $
+
+function chameleon_help($section) {
+
+  $output = '';
+
+  switch ($section) {
+    case 'admin/system/themes#description':
+      $output = t('A fast PHP theme with different stylesheets.');
+      break;
+  }
+
+  return $output;
+}
+
+function chameleon_settings() {
+
+  /*
+  ** Compile a list of the available style sheets:
+  */
+
+  $fd = opendir('themes/chameleon');
+  while ($file = readdir($fd)) {
+    if (strstr($file, 'css') && $file != 'default.css') {
+      $files["themes/chameleon/$file"] = "themes/chameleon/$file";
+    }
+  }
+
+  $output = form_select(t('CSS stylesheet'), 'chameleon_stylesheet', variable_get('chameleon_stylesheet', 'themes/chameleon/default.css'), $files, t('Selecting a different stylesheet will change the look and feel of your site.'));
+
+  return $output;
+}
+
+function chameleon_header($title = "") {
+
+  $output  = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Strict//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd\">\n";
+  $output .= "<html xmlns=\"http://www.w3.org/1999/xhtml\" lang=\"en\" xml:lang=\"en\">\n";
+  $output .= "<head>\n";
+  $output .= " <title>". ($title ? $title ." | ". variable_get("site_name", "drupal") : variable_get("site_name", "drupal") ." | ". variable_get("site_slogan", "")) ."</title>\n";
+  $output .= theme_head();
+  $output .= " <link rel=\"stylesheet\" type=\"text/css\" href=\"themes/chameleon/default.css\" />\n";
+  $output .= " <link rel=\"stylesheet\" type=\"text/css\" href=\"". variable_get("chameleon_stylesheet", "themes/chameleon/default.css") ."\" />\n";
+  $output .= "</head>";
+  $output .= "<body ". theme_onload_attribute() .">\n";
+  $output .= " <div id=\"header\">";
+  $output .= "  <h1 class=\"title\">". l(variable_get("site_name", "drupal"), ""). "</h1>";
+  $output .= " </div>\n";
+
+  $output .= " <table>\n";
+  $output .= "  <tr>\n";
+
+  if ($blocks = theme_blocks("left")) {
+    $output .= "   <td id=\"sidebar-left\">$blocks</td>\n";
+  }
+
+  $output .= "   <td id=\"main\">\n";
+
+  if ($title = drupal_get_title()) {
+    $output .= theme("breadcrumb", drupal_get_breadcrumb());
+    $output .= "<h2>$title</h2>";
+  }
+
+  if ($help = menu_get_active_help()) {
+    $output .= "<small>$help</small><hr />";
+  }
+
+  if ($message = drupal_get_message()) {
+    $output .= "<b>". t("Status") ."</b>: ". $message->message ."<hr />";
+  }
+
+  return $output;
+}
+
+function chameleon_node($node, $main = 0, $page = 0) {
+
+  $output  = "<div class=\"node\">\n";
+
+  if (!$page) {
+    $output .= " <h2 class=\"title\">". ($main ? l($node->title, "node/view/$node->nid") : $node->title) ."</h2>\n";
+  }
+
+  $output .= " <div class=\"content\">\n";
+
+  if ($main && $node->teaser) {
+    $output .= $node->teaser;
+  }
+  else {
+    $output .= $node->body;
+  }
+
+  $output .= " </div>\n";
+
+  $submitted = array(t("By %author at %date", array('%author' => format_name($node), '%date' => format_date($node->created, 'small'))));
+
+  if (module_exist('taxonomy')) {
+    $terms = taxonomy_link("taxonomy terms", $node);
+  }
+
+  if ($links = link_node($node, $main)) {
+    $output .= " <div class=\"links\">". theme('links', array_merge($submitted, $terms, $links)) ."</div>\n";
+  }
+
+  $output .= "</div>\n";
+
+  return $output;
+}
+
+function chameleon_comment($comment, $link = "") {
+
+  $date = array(format_date($comment->timestamp, 'small'));
+  $links = array($link);
+
+  $output  = "<div class=\"comment\">\n";
+  $output .= " <h3 class=\"title\">". $comment->subject ."</h3>\n";
+  $output .= " <div class=\"content\">". $comment->comment ."</div>\n";
+  $output .= " <div class=\"links\">". theme('links', array_merge($date, $links)) ."</div>\n";
+  $output .= "</div>\n";
+
+  return $output;
+}
+
+function chameleon_footer() {
+
+  $output  = "   </td>\n";
+
+  if ($blocks = theme_blocks("right")) {
+    $output .= "   <td id=\"sidebar-right\">$blocks</td>\n";
+  }
+
+  $output .= "  </tr>\n";
+  $output .= " </table>\n";
+  $output .=  theme_closure();
+  $output .= " </body>\n";
+  $output .= "</html>\n";
+
+  return $output;
+}
+?>

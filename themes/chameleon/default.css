@@ -1,0 +1,100 @@
+/* $Id: default.css,v 1.1 2003/12/15 20:47:18 dries Exp $ */
+
+/* HTML tags */
+a, a:link, a:active {
+  font-weight: bold;
+  text-decoration: none;
+}
+a:hover {
+  text-decoration: underline;
+}
+body {
+  margin: 0;
+  padding: 3em;
+  font-family: arial, helvetica, sans-serif;
+  font-size: .9em;
+  line-height: 1.3em;
+}
+blockquote {
+  font-style: italic;
+}
+table {
+  margin: 0;
+  padding: .5em;
+  border-collapse: collapse;
+}
+hr {
+  height: 1px;
+  border: 1px solid gray;
+}
+code, pre {
+ font-size: 1em;
+}
+pre {
+ font-size: 0.8em;
+ padding: 1em;
+ background: #eee;
+}
+li {
+ padding-bottom: .3em;
+}
+img {
+ border: 0;
+}
+h1, h2, h3, h4, h5, h6 {
+  margin-bottom: .25em;
+}
+h1 {
+  font-size: 1.3em;
+}
+h2 {
+  font-size: 1.2em;
+}
+h3 {
+  font-size: 1.1em;
+}
+h4, h5, h6 {
+  font-size: 1em;
+}
+p {
+  margin: 0 0 .5em 0;
+}
+br {
+  line-height: 0.6em;
+}
+
+/* regions */
+#header {
+  margin-bottom: 2em;
+}
+#sidebar-left, #sidebar-right {
+  vertical-align: top;
+  padding: 10px;
+}
+#main {
+  padding-left: 1em;
+  padding-right: 1em;
+  vertical-align: top;
+  width: 60%;
+}
+
+/* region-specific tags */
+.title {
+  margin: 0 0 .25em 0;
+}
+.content {
+  margin: 0 0 .5em 0;
+}
+.links {
+  font-size: 0.8em;
+  line-height: 1.25em;
+}
+.block {
+  width: 180px;
+}
+
+/* modules definitions */
+.form-item textarea {
+  font-size: 1em;
+}
+
