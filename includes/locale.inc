@@ -55,7 +55,7 @@ function _locale_admin_manage_screen() {
 
       $ratio = ($original->strings > 0 && $translation->translation > 0) ? round(($translation->translation/$original->strings)*100., 2) : 0;
 
-      $rows[] = array($key, ($key != 'en' ? form_textfield('', 'name]['. $key, $lang, 15, 64) : $lang), form_checkbox('', 'enabled]['. $key, 1, $status->enabled), form_radio('', 'sitedefault', $key, $status->isdefault), "$translation->translation/$original->strings ($ratio%)", ($key != 'en' ? l(t('delete locale'), 'admin/locale/language/delete/'. urlencode($key)) : ''));
+      $rows[] = array($key, ($key != 'en' ? form_textfield('', 'name]['. $key, $lang, 15, 64) : $lang), form_checkbox('', 'enabled]['. $key, 1, $status->enabled), form_radio('', 'sitedefault', $key, $status->isdefault), "$translation->translation/$original->strings ($ratio%)", ($key != 'en' ? l(t('delete'), 'admin/locale/language/delete/'. urlencode($key)) : ''));
     }
   }
 
