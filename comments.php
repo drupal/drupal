@@ -241,7 +241,7 @@ function comment_post($pid, $sid, $subject, $comment, $mode, $order, $thold) {
   $fake = db_result(db_query("SELECT COUNT(*) FROM stories WHERE id = $sid"), 0);
 
   ### Check for duplicate comments:
-  $duplicate = db_result(db_query("SELECT COUNT(*) FROM comments WHERE pid = '$pid' AND sid = '$sid' AND subject = '$subject' AND comment = '$comment'"), 0);
+  $duplicate = db_result(db_query("SELECT COUNT(*) FROM comments WHERE pid = '$pid' AND sid = '$sid' AND subject = '". addslashes($subject) ."' AND comment = '". addslashes($comment) ."'"), 0);
 
   if ($fake != 1) {
     $theme->box("fake comment", "fake comment: $fake");
@@ -252,7 +252,7 @@ function comment_post($pid, $sid, $subject, $comment, $mode, $order, $thold) {
   else { 
     if ($user) {
       ### Add comment to database:
-      db_query("INSERT INTO comments (pid, sid, author, subject, comment, hostname, timestamp) VALUES ($pid, $sid, $user->id, '$subject', '$comment', '". getenv("REMOTE_ADDR") ."', '". time() ."')");
+      db_query("INSERT INTO comments (pid, sid, author, subject, comment, hostname, timestamp) VALUES ($pid, $sid, $user->id, '". addslashes($subject) ."', '". addslashes($comment) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."')");
 
       ### Compose header:
       $header = "article.php?id=$sid";
@@ -262,7 +262,7 @@ function comment_post($pid, $sid, $subject, $comment, $mode, $order, $thold) {
     }
     else {
       ### Add comment to database:
-      db_query("INSERT INTO comments (pid, sid, subject, comment, hostname, timestamp) VALUES ($pid, $sid, '$subject', '$comment', '". getenv("REMOTE_ADDR") ."', '". time() ."')");
+      db_query("INSERT INTO comments (pid, sid, subject, comment, hostname, timestamp) VALUES ($pid, $sid, '". addslashes($subject) ."', '". addslashes($comment) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."')");
 
       ### Compose header:
       $header .= "article.php?id=$sid&mode=threaded&order=1&thold=0";
