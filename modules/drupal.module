@@ -95,7 +95,7 @@ function drupal_directory_ping($arguments) {
     db_query("DELETE FROM {directory} WHERE link = '%s' OR mail = '%s'", $link, $mail);
     db_query("INSERT INTO {directory} (link, name, mail, slogan, mission, timestamp) VALUES ('%s', '%s', '%s', '%s', '%s', %d)", $link, $name, $mail, $slogan, $mission, time());
 
-    watchdog('directory ping', t('Ping from %name (%link).', array('%name' => "<em>$name</em>", '%link' => "<em>$link</em>")));
+    watchdog('directory ping', t('Ping from %name (%link).', array('%name' => "<em>$name</em>", '%link' => "<em>$link</em>")), WATCHDOG_NOTICE, "<a href=\"$link\">visit</a>");
 
     return new xmlrpcresp(new xmlrpcval(1, 'int'));
   }
