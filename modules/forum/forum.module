@@ -288,35 +288,26 @@ function forum_get_forums($tid = 0) {
   else {
     $forums = unserialize($cache->data);
   }
-
-  if ($user->uid && $forums) {
-    foreach (_forum_topics_read($user->uid) as $tid => $old) {
-      if ($forums[$tid]) {
-        $forums[$tid]->old_topics = $old;
-      }
-    }
-  }
+  
   return $forums;
 }
 
 function _forum_num_topics($term) {
-  $value = db_fetch_object(db_query("SELECT COUNT(n.nid) AS count FROM {node} n INNER JOIN {forum} f ON n.nid = f.nid WHERE f.tid = %d AND n.nid = f.nid AND n.status = 1 AND n.type = 'forum'", $term));
-  return ($value) ? $value->count : 0;
+  return db_result(db_query("SELECT COUNT(*) FROM {forum} f INNER JOIN {node} n ON n.nid = f.nid WHERE f.tid = %d AND n.status = 1 AND f.shadow = 0", $term));
 }
 
 function _forum_num_replies($term) {
-  $value = db_fetch_object(db_query("SELECT COUNT(*) AS count FROM {comments} c INNER JOIN {node} n ON n.nid = c.nid INNER JOIN {forum} f ON n.nid = f.nid WHERE f.tid = %d AND n.nid = f.nid AND n.nid = c.nid AND n.status = 1 AND c.status = 0 AND n.type = 'forum'", $term));
-  return ($value) ? $value->count : 0;
+  return db_result(db_query("SELECT COUNT(*) AS count FROM {comments} c INNER JOIN {node} n ON n.nid = c.nid INNER JOIN {forum} f ON n.nid = f.nid WHERE f.tid = %d AND n.nid = f.nid AND n.nid = c.nid AND n.status = 1 AND c.status = 0 AND n.type = 'forum'", $term));
 }
 
-function _forum_topics_read($uid) {
-  $result = db_query("SELECT tid, count(*) AS c FROM {history} h INNER JOIN {node} n ON n.nid = h.nid INNER JOIN {forum} f ON n.nid = f.nid WHERE f.nid = n.nid AND n.nid = h.nid AND n.type = 'forum' AND n.status = 1 AND h.uid = %d GROUP BY tid", $uid);
+function _forum_topics_read($term, $uid) {
+  // Calculate the number of topics the user has read. Assume all entries older
+  // than NODE_NEW_LIMIT are read, and include the recent posts that user has
+  // read.
+  $ancient = db_result(db_query("SELECT COUNT(*) FROM {forum} f INNER JOIN {node} n ON f.nid = n.nid WHERE f.tid = %d AND n.status = 1 AND n.created <= %d AND f.shadow = 0", $term, NODE_NEW_LIMIT));
+  $recent = db_result(db_query("SELECT COUNT(*) FROM {forum} f INNER JOIN {node} n ON f.nid = n.nid INNER JOIN {history} h ON n.nid = h.nid WHERE n.status = 1 AND f.tid = %d AND h.uid = %d AND n.created > %d AND f.shadow = 0", $term, $uid, NODE_NEW_LIMIT));
 
-  while ($obj = db_fetch_object($result)) {
-    $topics_read[$obj->tid] = $obj->c;
-  }
-
-  return $topics_read ? $topics_read : array();
+  return $ancient + $recent;
 }
 
 function _forum_last_post($term) {
@@ -333,11 +324,11 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
   global $user, $forum_topic_list_header;
 
   $forum_topic_list_header = array(
-      array("data" => "&nbsp;"),
-      array("data" => t("Topic"), "field" => "n.title"),
-      array("data" => t("Replies"), "field" => "num_comments"),
-      array("data" => t("Created"), "field" => "n.created"),
-      array("data" => t("Last reply"), "field" => "date_sort", "sort" => "desc"),
+    array("data" => "&nbsp;"),
+    array("data" => t("Topic"), "field" => "n.title"),
+    array("data" => t("Replies"), "field" => "num_comments"),
+    array("data" => t("Created"), "field" => "n.created"),
+    array("data" => t("Last reply"), "field" => "date_sort", "sort" => "desc"),
   );
 
   $sql_sortby = _forum_get_topic_order($sortby);
@@ -371,28 +362,15 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
         $topic->new = 0;
       }
       else {
-        if (!$history && $user->uid) {
-          $topic->new_replies = 0;
-          $topic->new = 1;
-        }
-        else {
-          $comments = db_result(db_query("SELECT COUNT(c.nid) FROM {node} n INNER JOIN {comments} c ON n.nid = c.nid WHERE n.nid = '$topic->nid' AND n.status = 1 AND c.status = 0 AND timestamp > '$history' GROUP BY n.nid"));
-
-          $topic->new_replies = $comments ? $comments : 0;
-          if ($topic->new_replies) {
-            $topic->new = 1;
-          }
-          else {
-            $topic->new = 0;
-          }
-        }
+        $topic->new_replies = db_result(db_query("SELECT COUNT(c.nid) FROM {node} n INNER JOIN {comments} c ON n.nid = c.nid WHERE n.nid = %d AND n.status = 1 AND c.status = 0 AND c.timestamp > %d", $topic->nid, $history));
+        $topic->new = $topic->new_replies || ($topic->timestamp > $history);
       }
-     }
-     else {
+    }
+    else {
       // you're not logged in eh?
       $topic->new_replies = 0;
       $topic->new = 0;
-     }
+    }
 
     $topic->last_reply = _forum_last_reply($topic->nid);
     $topics[] = $topic;
@@ -545,6 +523,7 @@ function theme_forum_list($forums, $parents, $tid) {
         $rows[] = array(array("data" => $description, "class" => "container", "colspan" => 4));
       }
       else {
+        $forum->old_topics = _forum_topics_read($forum->tid, $user->uid);
         if ($user->uid) {
           $new_topics = $forum->num_topics - $forum->old_topics;
         }
@@ -663,14 +642,15 @@ function _forum_icon($new_posts, $num_posts = 0, $comment_mode = 0) {
 
 function _forum_user_last_visit($nid) {
   global $user;
-  static $history;
-  if (!$history) {
+  static $history = array();
+
+  if (empty($history)) {
     $result = db_query("SELECT nid, timestamp FROM {history} WHERE uid = %d", $user->uid);
     while ($t = db_fetch_object($result)) {
-      $history[$t->nid] = $t->timestamp;
+      $history[$t->nid] = $t->timestamp > NODE_NEW_LIMIT ? $t->timestamp : NODE_NEW_LIMIT;
     }
   }
-  return $history[$nid] ? $history[$nid] : 0;
+  return $history[$nid] ? $history[$nid] : NODE_NEW_LIMIT;
 }
 
 function _forum_get_topic_order($sortby) {
