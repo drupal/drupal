@@ -49,6 +49,10 @@ function headlineRSS10_export($uri) {
       print "<item rdf:about=\"".$site_url ."story.php?id=$story->id\">\n";
       print "	<title>". check_export($story->subject) ."</title>\n";
       print "	<link>". $site_url ."story.php?id=$story->id</link>\n";
+      
+      if ($story->abstract)
+      print "	<description>". check_output($story->abstract, 1) ."</description>\n";	
+      
       print "</item>\n";
     }
 
