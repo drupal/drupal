@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.183 2003/09/28 17:52:58 dries Exp $
+// $Id: book.module,v 1.184 2003/10/02 17:58:47 dries Exp $
 
 function book_system($field){
   $output = "";
@@ -643,7 +643,7 @@ function book_page() {
         theme("footer");
         break;
       case "print":
-        return book_print(arg(2), $depth = 1);
+        print book_print(arg(2), $depth = 1);
         break;
       default:
         book_render();
