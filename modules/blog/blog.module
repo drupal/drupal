@@ -71,22 +71,36 @@ function blog_page_user($name = 0, $date = 0) {
   $name = check_input($name ? $name : $user->userid);
   $date = check_input($date ? $date : time());
 
-  $result = db_query("SELECT n.nid, n.timestamp, b.body FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.id WHERE u.userid = '$name' AND n.timestamp > '". ($date - 2592000) ."' ORDER BY b.lid DESC LIMIT 20");
+  $result = db_query("SELECT n.nid, n.title, n.comment, n.timestamp, b.body FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.id WHERE u.userid = '$name' AND n.timestamp < '$date' AND n.timestamp > '". ($date - 2592000) ."' ORDER BY b.lid DESC LIMIT 20");
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\">";
+
   while ($blog = db_fetch_object($result)) {
+
     if ($date != date("dny", $blog->timestamp)) {
       $date = date("dny", $blog->timestamp);
-      if ($user->id && $user->userid == $name) {
-        $links = array("<a href=\"submit.php?mod=blog&op=edit&id=$blog->nid\">". t("edit") ."</a>");
-        $output .= "<tr><td><b>". format_date($blog->timestamp, custom, "d M Y") .":</b></td><td align=\"right\">". $theme->links($links) ."</td></tr>";
-      }
-      else {
-        $output .= "<tr><td colspan=\"2\"><b>". format_date($blog->timestamp, custom, "d M Y") .":</b></td></tr>";
-      }
+      $output .= "<tr><td colspan=\"2\"><b><a href=\"module.php?mod=blog&name=$name&date=". mktime(23, 59, 59, date("n", $blog->timestamp), date("d", $blog->timestamp), date("Y", $blog->timestamp)) ."\">". format_date($blog->timestamp, custom, "d M Y") .":</a></b></td></tr>";
     }
-    $output .= "<tr><td colspan=\"2\" style=\"margin-left: 20px;\">". check_output($blog->body, 1) ."</td></tr>";
+
+    if ($user->id && $user->userid == $name) {
+      $links[] = "<a href=\"submit.php?mod=blog&op=edit&id=$blog->nid\">". t("edit") ."</a>";
+    }
+
+    if ($user->id && user_access("post blogs")) {
+      $links[] = "<a href=\"submit.php?mod=blog&type=blog&id=$blog->nid\">". t("blog") ."</a>";
+    }
+
+    if ($blog->comment) {
+      $links[] = "<a href=\"node.php?id=$blog->nid\">". t("discuss") ."</a>";
+    }
+
+    $output .= "<tr><td><div style=\"margin-left: 20px;\"><b>". check_output($blog->title) ."</b></div></td><td align=\"right\">". $theme->links($links) ."</td></tr>";
+    $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 40px;\">". check_output($blog->body, 1) ."</div><br /></td></tr>";
+
+    unset($links);
+
   }
+
   $output .= "</table>";
   $output .= "<a href=\"module.php?mod=blog&op=feed&name=". urlencode($name) ."\"><img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" /></a>\n";
 
@@ -94,20 +108,34 @@ function blog_page_user($name = 0, $date = 0) {
 }
 
 function blog_page_last() {
-  global $theme;
+  global $theme, $user;
 
-  $result = db_query("SELECT n.nid, n.title, n.timestamp, b.body, u.userid FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.id ORDER BY b.lid DESC LIMIT 20");
+  $result = db_query("SELECT n.author, n.nid, n.title, n.comment, n.timestamp, b.body, u.userid FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.id ORDER BY b.lid DESC LIMIT 20");
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\">";
+
   while ($blog = db_fetch_object($result)) {
+
     $links[] = "<a href=\"module.php?mod=blog&op=view&name=". urlencode($blog->userid) ."\">". strtr(t("%a's blog"), array("%a" => $blog->userid)) ."</a>";
-    $links[] = "<a href=\"submit.php?mod=blog&type=blog&id=$blog->nid\">". t("blog") ."</a>";
-    $links[] = "<a href=\"node.php?id=$blog->nid\">". t("discuss") ."</a>";
+
+    if ($blog->author == $user->id) {
+      $links[] = "<a href=\"submit.php?mod=blog&op=edit&id=$blog->nid\">". t("edit") ."</a>";
+    }
+
+    if ($user->id && user_access("post blogs")) {
+      $links[] = "<a href=\"submit.php?mod=blog&type=blog&id=$blog->nid\">". t("blog") ."</a>";
+    }
+
+    if ($blog->comment) {
+      $links[] = "<a href=\"node.php?id=$blog->nid\">". t("discuss") ."</a>";
+    }
 
     $output .= "<tr><td><b>". check_output($blog->title) ."</b></td><td align=\"right\">". $theme->links($links) ."</td></tr>";
     $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 20px;\">". check_output($blog->body, 1) ."</div><br /></td></tr>";
+
     unset($links);
   }
+
   $output .= "</table>";
   $output .= "<a href=\"module.php?mod=blog&op=feed\"><img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" /></a>\n";
 
@@ -214,7 +242,6 @@ function blog_edit_history($nid) {
 
 function blog_page() {
   global $theme, $op, $name, $date;
-
 
   if (user_access("access blogs")) {
     switch ($op) {

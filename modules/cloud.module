@@ -50,7 +50,7 @@ function cloud_update($site) {
   ** Grab the page and update the database if required:
   */
 
-  if ($fp = fopen($site[feed], "r")) {
+  if ($fp = @fopen($site[feed], "r")) {
     while(!feof($fp)) {
       $data .= fgets($fp, 128);
     }

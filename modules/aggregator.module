@@ -2,7 +2,6 @@
 
 function import_help() {
  ?>
-  <P><I>TODO: introduction on syndication and a few pointers to more information.</I></P>
   <P>In Drupal you have <I>feeds</I> and <I>bundles</I>.   Feeds define news sources and bundles categoriz syndicated content by source, topic or any other heuristic.   Bundles provide a generalized way of creating composite feeds.  They allow you, for example, to combine various sport-related feeds into one bundle called "Sport".</P>
   <P>You can have several providers of news feeds.  You can add a feed by clicking the "add feed" link on the import administration pages.  Give the feed a name, supply the URI and a comma-separated list of attributes that you want to associate the feed with.  The update interval defines how often Drupal should go out to try and grab fresh content.  The expiration time defines how long syndicated content is kept in the database.  So set the update and expiration time and save your settings.  You have just defined your first feed.  If you have more feeds repeat as necessary.</P>
   <P>To verify whether your feed works, press "update items" at the overview page.  The number of items that have been sucessfully fetched, should then become visible in the third column of the feed overview.</P>
@@ -139,7 +138,7 @@ function import_refresh($feed) {
   ** Grab the headlines:
   */
 
-  if ($fp = fopen($feed[url], "r")) {
+  if ($fp = @fopen($feed[url], "r")) {
     // fetch data:
     while (!feof($fp)) {
       $data .= fgets($fp, 128);
@@ -212,7 +211,7 @@ function import_refresh($feed) {
     }
   }
   else {
-    watchdog("warning", "failed to syndicate from '$feed[title]'". ($errstr ? ": $errstr" : ""));
+    watchdog("warning", "import: failed to syndicate from '$feed[title]'". ($errstr ? ": $errstr" : ""));
   }
 
   return "feed '$feed[title]' updated.";
@@ -353,7 +352,7 @@ function import_fd_collect($edit) {
 
   set_time_limit(180);
 
-  if ($fp = fopen($edit[url], "r")) {
+  if ($fp = @fopen($edit[url], "r")) {
     // fetch data:
     while (!feof($fp)) {
       $data .= fgets($fp, 128);
