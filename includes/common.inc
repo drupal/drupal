@@ -2,9 +2,25 @@
 
 function conf_init() {
   global $HTTP_HOST, $REQUEST_URI;
+
+  /*
+  ** Try finding a matching configuration file by stripping the website's
+  ** URI from left to right.  If no configuration file is found, return a
+  ** default value 'conf'.
+  */
+
   $file = strtolower(strtr($HTTP_HOST ."". substr($REQUEST_URI, 0, strrpos($REQUEST_URI, "/")), "/:", ".."));
-  while (strpos($file, '.') && !file_exists("includes/$file.php")) $file = substr($file, strpos($file, ".") + 1);
-  return $file ? $file : "conf";
+
+  while (strlen($file) > 4) {
+    if (file_exists("includes/$file.php")) {
+      return $file;
+    }
+    else {
+      $file = substr($file, strpos($file, ".") + 1);
+    }
+  }
+
+  return "conf";
 }
 
 function error_handler($errno, $message, $filename, $line, $variables) {
