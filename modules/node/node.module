@@ -825,20 +825,34 @@ function node_page() {
     return;
   }
 
+  /*
+  ** Try to find a good title:
+  */
+
+  if ($type) {
+    $title = ucfirst(module_invoke($type, "node", "name"));
+  }
+  else if ($edit["type"]) {
+    $title = ucfirst(module_invoke($edit["type"], "node", "name"));
+  }
+  else {
+    $title = t("Submission form");
+  }
+
   $theme->header();
 
   switch ($op) {
     case "add":
-      $theme->box(t("Node"), node_add($type));
+      $theme->box($title, node_add($type));
       break;
     case "edit":
-      $theme->box(t("Node"), node_edit($id));
+      $theme->box($title, node_edit($id));
       break;
     case t("Preview"):
-      $theme->box(t("Node"), node_preview($edit));
+      $theme->box($title, node_preview($edit));
       break;
     case t("Submit"):
-      $theme->box(t("Node"), node_submit($edit));
+      $theme->box($title, node_submit($edit));
       break;
     case t("Delete"):
       print node_delete($edit);
