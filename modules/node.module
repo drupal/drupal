@@ -491,7 +491,7 @@ function node_admin_nodes() {
 
   $queries = array(array("ORDER BY n.created DESC", "new nodes"), array("ORDER BY n.changed DESC", "updated nodes"), array("WHERE n.status = 1 AND n.moderate = 0 ORDER BY n.nid DESC", "published nodes"), array("WHERE n.status = 0 AND n.moderate = 0 ORDER BY n.nid DESC", "non-published nodes"), array("WHERE n.status = 1 AND n.moderate = 1 ORDER BY n.nid DESC", "pending nodes"), array("WHERE n.status = 1 AND n.promote = 1 ORDER BY n.nid DESC", "promoted nodes"));
 
-  $result = db_query("SELECT n.*, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid ". $queries[$query ? $query : 1][0] ." LIMIT 50");
+  $result = db_query_pager("SELECT n.*, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid ". $queries[$query ? $query : 1][0], 50);
 
   foreach ($queries as $key => $value) {
     $links[] = la($value[1], array("mod" => "node", "op" => "nodes", "query" => $key));
@@ -504,7 +504,8 @@ function node_admin_nodes() {
   while ($node = db_fetch_object($result)) {
     $output .= "<tr><td>". l(check_output($node->title), array("id" => $node->nid)) ."</td><td>". module_invoke($node->type, "node", "name") ."</td><td nowrap=\"nowrap\">". format_name($node) ."</td><td>". ($node->status ? t("published") : t("not published")) ."</td><td nowrap=\"nowrap\">". la(t("edit node"), array("mod" => "node", "op" => "edit", "id" => $node->nid)) ."</td><td nowrap=\"nowrap\">". la(t("delete node"), array("mod" => "node", "op" => "delete", "id" => $node->nid)) ."</td></tr>";
   }
-  $output .= "</table>";
+  $output .= "<tr><td colspan=\"6\">". pager_display(NULL, 50, 0, "admin") ."</td></tr></table>";
+
 
   return $output;
 }
@@ -1296,19 +1297,21 @@ function node_page() {
 
         if ($or) {
           // this is an OR of terms
-          $result = db_query("SELECT DISTINCT(n.nid), type FROM node n LEFT JOIN term_node r ON n.nid = r.nid WHERE tid IN (".implode(",", $terms).") AND ". ($id ? "nid = '$id' AND " : "") ."status = '1' ORDER BY static DESC, created DESC LIMIT ". ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
+          $result = db_query_pager("SELECT DISTINCT(n.nid), type FROM node n LEFT JOIN term_node r ON n.nid = r.nid WHERE tid IN (".implode(",", $terms).") AND ". ($id ? "nid = '$id' AND " : "") ."status = '1' ORDER BY static DESC, created DESC", ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
         }
         else if ($and) {
           // this is an AND
-          $result = db_query("SELECT n.nid, type, count(*) AS c FROM node n LEFT JOIN term_node r ON n.nid = r.nid WHERE tid IN (".implode(",", $terms).") AND ". ($id ? "nid = '$id' AND " : "") ."status = '1' GROUP BY n.nid HAVING c = ".count($terms)." ORDER BY static DESC, created DESC LIMIT ". ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
+          $result = db_query_pager("SELECT n.nid, type, count(*) AS c FROM node n LEFT JOIN term_node r ON n.nid = r.nid WHERE tid IN (".implode(",", $terms).") AND ". ($id ? "nid = '$id' AND " : "") ."status = '1' GROUP BY n.nid HAVING c = ".count($terms)." ORDER BY static DESC, created DESC", ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
         }
         else {
-          $result = db_query("SELECT nid, type FROM node WHERE ". ($id ? "nid = '$id'" : "promote = '1'") ." AND status = '1' ORDER BY static DESC, created DESC LIMIT ". ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
+          $result = db_query_pager("SELECT nid, type FROM node WHERE ". ($id ? "nid = '$id'" : "promote = '1'") ." AND status = '1' ORDER BY static DESC, created DESC", ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
+
         }
 
         while ($node = db_fetch_object($result)) {
           node_view(node_load(array("nid" => $node->nid, "type" => $node->type)), 1);
         }
+        print pager_display(NULL, ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
       }
     }
 

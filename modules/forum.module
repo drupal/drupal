@@ -96,18 +96,21 @@ function forum_block($op = "list", $delta = 0) {
       }
 
       if (!$content) {
-        $content = "<b>". t("Active forum topics:") ."</b><br />";
+        unset($items);
         $result = db_query("SELECT n.nid, n.title, n.body, GREATEST(n.created, MAX(c.timestamp)) AS sort FROM node n, forum f LEFT JOIN comments c ON c.nid = n.nid WHERE n.type = 'forum' AND n.nid = f.nid AND f.shadow = 0 AND n.status = 1 GROUP BY n.nid ORDER BY sort DESC LIMIT ". variable_get("forum_block_num", "5"));
         while ($node = db_fetch_object($result)) {
-          $content .= "- ". l(check_output($node->title), array("id" => $node->nid), "node", "", array("title" => substr(strip_tags($node->body), 0, 100)."...")) ."<br />";
+          $items[] = l(check_output($node->title), array("id" => $node->nid), "node", "", array("title" => substr(strip_tags($node->body), 0, 100)."..."));
         }
+        $content .= theme_invoke("theme_item_list", $items, t("Active forum topics:"));
 
         $content .= "<br />";
-        $content .= "<b>". t("New forum topics:") ."</b><br />";
+
+        unset ($items);
         $result = db_query("SELECT n.nid, n.title, n.body FROM node n LEFT JOIN forum f ON n.nid = f.nid WHERE n.type = 'forum' ORDER BY n.nid DESC LIMIT ". variable_get("forum_block_num", "5"));
         while ($node = db_fetch_object($result)) {
-          $content .= "- ". l(check_output($node->title), array("id" => $node->nid), "node", "", array("title" => substr(strip_tags($node->body), 0, 100)."...")) ."<br />";
+          $items[] = l(check_output($node->title), array("id" => $node->nid), "node", "", array("title" => substr(strip_tags($node->body), 0, 100)."..."));
         }
+        $content .= theme_invoke("theme_item_list", $items, t("New forum topics:"));
 
         if ($content) {
           $content .= "<div align=\"right\">". lm(t("more"), array("mod" => "forum")) ."</div>";
@@ -182,7 +185,7 @@ function forum_view($node, $main = 0) {
   $voc = taxonomy_get_vocabulary($term_data->vid);
 
   /* TODO: find out what this code was ment to do and either use it or not.
-  
+
   $output .= "<p>"._forum_get_icon($node)." ".lm(check_output($voc->name), array("mod" => "forum"))." : ".lm(check_output($term_data->name), array("mod" => "forum", "tid" => $term_data->tid));
 
   $output .= " / <b>". check_output($node->title) ."</b><br>".t("%a by %b", array("%a" => format_date($node->created), "%b" => format_name($node)))."</p><p>". check_output($node->body, 1) ."</p>";

@@ -314,8 +314,6 @@ function user_block($op = "list", $delta = 0) {
     switch ($delta) {
       case 0:
         if (!$user->uid) {
-          $block["subject"] = t("Log in");
-
           $output = "<div align=\"center\">\n";
           $output .= "<form action=\"". drupal_url(array("mod" => "user", "op" => "login"), "module") ."\" method=\"post\">\n";
           // Save the referer.  We record where the user came from such that we
@@ -334,44 +332,47 @@ function user_block($op = "list", $delta = 0) {
 
           $output .= "<br />\n<input name=\"edit[op]\" type=\"submit\" value=\"". t("Log in") ."\" /><br />\n";
           $output .= "</form></div>\n";
-          if (variable_get("user_register", 1)) {
-            $output .= "&raquo; ". lm(t("Register"), array("mod" => "user", "op" => "register"), "", array("title" => t("Create a new user account."))) ."<br />\n";
-          }
-          $output .= "&raquo; ". lm(t("New password"), array("mod" => "user", "op" => "password"), "", array("title" => t("Request new password via e-mail.")));
 
-          $block["content"] = $output;
+          if (variable_get("user_register", 1)) {
+            $items[] = lm(t("Create new account"), array("mod" => "user", "op" => "register"), "", array("title" => t("Create a new user account.")));
+          }
+          $items[] = lm(t("Request new password"), array("mod" => "user", "op" => "password"), "", array("title" => t("Request new password via e-mail.")));
+
+          $output .= theme_invoke("theme_item_list", $items);
+
+          $block["subject"] = t("Log in");
+          $block["content"] = "<div style=\"{ width: 155; }\">$output</div>";
           return $block;
         }
         break;
       case 1:
         if ($user->uid) {
-          // Display account settings:
+          $content[] = theme_invoke("theme_item_list", module_invoke_all("link", "menu.create"));
+          $content[] = theme_invoke("theme_item_list", module_invoke_all("link", "menu.view"));
+          $content[] = theme_invoke("theme_item_list", module_invoke_all("link", "menu.settings"));
+          $content[] = theme_invoke("theme_item_list", module_invoke_all("link", "menu.misc"));
+
+          $output = implode($content, "<br />");
+
           $block["subject"] = $user->name;
-
-          $output = "<div style=\"{ width: 155; }\">\n";
-
-          $links = array_merge(module_invoke_all("link", "menu.create"), array(""), module_invoke_all("link", "menu.view"), array(""), module_invoke_all("link", "menu.settings"), array(""), module_invoke_all("link", "menu.misc"));
-          $output .= @implode("<br />\n", $links);
-
-          $output .= "</div>";
-          $block["content"] = $output;
+          $block["content"] = "<div style=\"{ width: 155; }\">$output</div>";
           return $block;
         }
         break;
       case 2:
+
+        $result = db_query("SELECT uid, name FROM users WHERE status != '0' ORDER BY uid DESC LIMIT 5");
+        while ($account = db_fetch_object($result)) {
+          $items[] = lm((strlen($account->name) > 15 ? substr($account->name, 0, 15) . '...' : $account->name), array("mod" =>user, "op" => "view", "id" => $account->uid));
+        }
+
+        $output = theme_invoke("theme_item_list", $items);
+
         $block["subject"] = t("Who's new");
-        $block["content"] = user_new_users();
+        $block["content"] = $output;
         return $block;
     }
   }
-}
-
-function user_new_users() {
-  $result = db_query("SELECT uid, name FROM users WHERE status != '0' ORDER BY uid DESC LIMIT 5");
-  while ($account = db_fetch_object($result)) {
-    $output .= lm((strlen($account->name) > 15 ? substr($account->name, 0, 15) . '...' : $account->name), array("mod" =>user, "op" => "view", "id" => $account->uid)) ."<br />";
-  }
-  return $output;
 }
 
 function user_link($type) {
@@ -619,7 +620,7 @@ function user_login($edit = array(), $msg = "") {
   $output .= form_password(t("Password"), "pass", $pass, 20, 64, t("Enter the password that accompanies your username."));
   $output .= form_checkbox(t("Remember me"), "remember_me", 1, 0, 0);
   $output .= form_submit(t("Log in"));
-  $output .= "<p>&raquo; ". lm(t("E-mail new password"), array("mod" => "user", "op" => "password")). "<br />";
+  $output .= "<p>&raquo; ". lm(t("Request new password"), array("mod" => "user", "op" => "password")). "<br />";
   if (variable_get("user_register", 1)) {
     $output .= "&raquo; ". lm(t("Create new account"), array("mod" => "user", "op" => "register"));
   }

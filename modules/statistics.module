@@ -192,14 +192,14 @@ If '<i>administer statistics</i>' and '<i>access statistics</i>' are both enable
 <p>The module automatically adds '# reads' to each node's link section (if enabled).</p>
 
 <h3>Top stories</h3>
-<p>The statistics.module provides a function '<i>statistics_display_linked_title($type)</i>' to return a linked title of any of the following:  the top viewed node of all time, the top viewed node of today, the last viewed node.  You can pass in:
+<p>The statistics.module provides a function '<i>statistics_title_list($type)</i>' to return an array of links to any of the following: the top viewed nodes of all time, the top viewed nodes of today, the last viewed nodes.  You can pass in:
 <ul>
-  <li><i>totalcount</i> - This will return a link to the top viewed node of all time.<br />
-  Example:  <code>statistics_display_linked_title("totalcount");</code><br /><br /></li>
-  <li><i>daycount</i> - This will return a link to the top viewed node for today.<br />
-  Example:  <code>statistics_display_linked_title("daycount");</code><br /><br /></li>
-  <li><i>timestamp</i> - This will return a link to the last viewed node.<br />
-  Example:  <code>statistics_display_linked_title("timestamp");</code></li>
+  <li><i>totalcount</i> - This will return an array with links to the top viewed nodes of all time.<br />
+  Example:  <code>statistics_title_list("totalcount");</code><br /><br /></li>
+  <li><i>daycount</i> - This will return an array with links to the top viewed nodes for today.<br />
+  Example:  <code>statistics_title_list("daycount");</code><br /><br /></li>
+  <li><i>timestamp</i> - This will return a array with links to the last viewed node.<br />
+  Example:  <code>statistics_title_list("timestamp");</code></li>
 </ul>
 
 <h3>Throttle</h3>
@@ -260,17 +260,10 @@ function statistics_admin() {
 
     /* configuration admin pages */
     if (user_access("administer statistics module")) {
-      $op = stripslashes($op);
-      switch ($op) {
+      switch (stripslashes($op)) {
         case "Submit \"top nodes\" block changes":
-          print status(statistics_save_topnodes_block($edit));
-          break;
-        case "Submit \"who's online\" block changes":
-          print status(statistics_save_online_block($edit));
-          break;
-        case "Submit \"top nodes\" page changes":
-          print status(statistics_save_userconfig($edit));
-          break;
+          statistics_save_topnodes_block($edit);
+          print status(t("Saved top nodes block changes"));
         case "top nodes block":
           print statistics_config_topnodes_block(array(
             "statistics_block_top_title" => variable_get("statistics_block_top_title", "Top nodes"),
@@ -282,6 +275,9 @@ function statistics_admin() {
             "statistics_block_top_last_num" => variable_get("statistics_block_top_last_num", 0)
          ));
           break;
+        case "Submit \"who's online\" block changes":
+          statistics_save_online_block($edit);
+          print status(t("Saved who's online block changes"));
         case "whos online block":
           print statistics_config_online_block(array(
             "statistics_block_online_title" => variable_get("statistics_block_online_title", "Whos online"),
@@ -291,6 +287,9 @@ function statistics_admin() {
             "statistics_block_online_max_cnt" => variable_get("statistics_block_online_max_cnt", 10)
          ));
           break;
+        case "Submit \"top nodes\" page changes":
+          statistics_save_userconfig($edit);
+          print status(t("Saved top nodes page changes"));
         case "top nodes page":
           print statistics_admin_userpage_config(array(
             "statistics_userpage_link" => variable_get("statistics_userpage_link", ""),
@@ -301,14 +300,6 @@ function statistics_admin() {
             "statistics_userpage_last_head" => variable_get("statistics_userpage_last_head", "Last read"),
             "statistics_userpage_last_cnt" => variable_get("statistics_userpage_last_cnt", 0)
          ));
-          break;
-        case "submit statistics config":
-          print status(statistics_save_statistics($edit));
-          break;
-        break;
-        case "reset day counter":
-          db_query("UPDATE statistics SET daycount='0'");
-          variable_set("statistics_day_timestamp", time());
           break;
         default:
           print statistics_admin_displaycounts();
@@ -321,7 +312,7 @@ function statistics_admin() {
 
 /* Displays the various admin tables */
 function statistics_admin_count_table($dbfield, $dbrows) {
-  $result = db_query("SELECT statistics.nid, statistics.daycount, statistics.totalcount, statistics.timestamp, node.title FROM statistics LEFT JOIN node USING (nid) ORDER BY statistics.%s DESC LIMIT %s", $dbfield, $dbrows);
+  $result = db_query("SELECT statistics.nid, statistics.daycount, statistics.totalcount, statistics.timestamp, node.title FROM statistics LEFT JOIN node USING (nid) WHERE statistics.%s <> '0' ORDER BY statistics.%s DESC LIMIT %s", $dbfield, $dbfield, $dbrows);
 
   $output = "<table border=\"1\" cellpadding=\"3\" cellspacing =\"0\"><tr><th>title</th><th>today</th><th>all time</th><th>last hit</th><th>referrers</th></tr>\n";
 
@@ -350,7 +341,7 @@ function statistics_admin_accesslog_table($type, $id) {
     }
     else {
       /* retrieve recent access logs for all users */
-      $result = db_query("SELECT nid, url, hostname, uid, MAX(timestamp) AS timestamp FROM accesslog WHERE uid != '0' GROUP BY uid ORDER BY timestamp DESC LIMIT %s", $limit1);
+      $result = db_query("SELECT nid, url, hostname, uid, MAX(timestamp) AS max_timestamp FROM accesslog WHERE uid <> '0' GROUP BY uid ORDER BY max_timestamp DESC LIMIT %s", $limit1);
     }
   }
   else if ($type == 2) {
@@ -404,7 +395,7 @@ function statistics_recent_refer($nid = 0) {
 
   if ($nid > 0) {
     if ($view == "all") {
-      $query = "SELECT url,timestamp FROM accesslog WHERE nid='$nid' AND url != '' ORDER BY timestamp DESC LIMIT 15";
+      $query = "SELECT url,timestamp FROM accesslog WHERE nid='$nid' AND url <> '' ORDER BY timestamp DESC LIMIT 15";
     }
     elseif ($view == "internal") {
       $query = "SELECT url,timestamp FROM accesslog WHERE nid='$nid' AND url LIKE '%". check_input($HTTP_HOST) ."%' ORDER BY timestamp DESC LIMIT 15";
@@ -412,7 +403,7 @@ function statistics_recent_refer($nid = 0) {
     }
     else {
       /* default to external referrers */
-      $query = "SELECT url,timestamp FROM accesslog WHERE nid='$nid' AND url NOT LIKE '%". check_input($HTTP_HOST) ."%' AND url != '' ORDER BY timestamp DESC LIMIT 15";
+      $query = "SELECT url,timestamp FROM accesslog WHERE nid='$nid' AND url NOT LIKE '%". check_input($HTTP_HOST) ."%' AND url <> '' ORDER BY timestamp DESC LIMIT 15";
       $describe = "external ";
     }
 
@@ -421,14 +412,14 @@ function statistics_recent_refer($nid = 0) {
   }
   else {
     if ($view == "all") {
-      $query = "SELECT url,timestamp FROM accesslog WHERE url != '' ORDER BY timestamp DESC LIMIT 15";
+      $query = "SELECT url,timestamp FROM accesslog WHERE url <> '' ORDER BY timestamp DESC LIMIT 15";
     }
     elseif ($view == "internal") {
       $query = "SELECT url,timestamp FROM accesslog WHERE url LIKE '%". check_input($HTTP_HOST) ."%' ORDER BY timestamp DESC LIMIT 15";
       $describe = "internal ";
     }
     else {
-      $query = "SELECT url,timestamp FROM accesslog WHERE url NOT LIKE '%". check_input($HTTP_HOST) ."%' AND url != '' ORDER BY timestamp DESC LIMIT 15";
+      $query = "SELECT url,timestamp FROM accesslog WHERE url NOT LIKE '%". check_input($HTTP_HOST) ."%' AND url <> '' ORDER BY timestamp DESC LIMIT 15";
       $describe = "external ";
     }
 
@@ -455,7 +446,7 @@ function statistics_top_refer($nid = 0) {
 
   if ($nid > 0) {
     if ($view == "all") {
-      $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE nid = '$nid' AND url != '' GROUP BY url ORDER BY count DESC";
+      $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE nid = '$nid' AND url <> '' GROUP BY url ORDER BY count DESC";
     }
     elseif ($view == "internal") {
       $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE nid = '$nid' AND url LIKE '%". check_input($HTTP_HOST) ."%' GROUP BY url ORDER BY count DESC";
@@ -463,7 +454,7 @@ function statistics_top_refer($nid = 0) {
     }
     else {
       /* default to external */
-      $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE nid = '$nid' AND url NOT LIKE '%". check_input($HTTP_HOST) ."%' AND url != '' GROUP BY url ORDER BY count DESC";
+      $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE nid = '$nid' AND url NOT LIKE '%". check_input($HTTP_HOST) ."%' AND url <> '' GROUP BY url ORDER BY count DESC";
       $describe = "external ";
     }
 
@@ -471,7 +462,7 @@ function statistics_top_refer($nid = 0) {
   }
   else {
     if ($view == "all") {
-      $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE url != '' GROUP BY url ORDER BY count DESC";
+      $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE url <> '' GROUP BY url ORDER BY count DESC";
     }
     elseif ($view == "internal") {
       $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE url LIKE '%". check_input($HTTP_HOST) ."%' GROUP BY url ORDER BY count DESC";
@@ -479,7 +470,7 @@ function statistics_top_refer($nid = 0) {
     }
     else {
       /* default to external */
-      $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE url NOT LIKE '%". check_input($HTTP_HOST) ."%' AND url != '' GROUP BY url ORDER BY count DESC";
+      $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE url NOT LIKE '%". check_input($HTTP_HOST) ."%' AND url <> '' GROUP BY url ORDER BY count DESC";
       $describe = "external ";
     }
 
@@ -694,42 +685,31 @@ function statistics_cron() {
     /* If throttle is on, back off one notch to test server load */
     variable_set("statistics_throttle_level", $throttle - 1);
     variable_set("statistics_throttle_cron_timestamp", time());
-    if (function_exists("watchdog")) {
-      watchdog("warning", "cron: decreasing throttle to level '". ($throttle - 1) ."' to test server load.");
-    }
+    watchdog("warning", "cron: decreasing throttle to level '". ($throttle - 1) ."' to test server load.");
   }
 }
 
 
 /* Displays the "Top nodes" block */
 function statistics_display_topnodes_block() {
-  global $id;
 
-  $output = "";
   $daytop = variable_get("statistics_block_top_day_num", "");
   if ($daytop) {
-    $dayheading = variable_get("statistics_block_top_day_head", "");
-    if ($dayheading) {
-      $output .= $dayheading ."<br />";
-    }
-    $output .= statistics_display_linked_title("daycount", $daytop) ."<br />";
+    $content[] = theme_invoke("theme_item_list", statistics_title_list("daycount", $daytop), variable_get("statistics_block_top_day_head", ""));
   }
+
   $alltimetop = variable_get("statistics_block_top_all_num", "");
   if ($alltimetop) {
-    $alltimeheading = variable_get("statistics_block_top_all_head", "");
-    if ($alltimeheading) {
-      $output .= $alltimeheading ."<br />";
-    }
-    $output .= statistics_display_linked_title("totalcount", $alltimetop) ."<br />";
+    $content[] = theme_invoke("theme_item_list", statistics_title_list("totalcount", $alltimetop), variable_get("statistics_block_top_all_head", ""));
   }
+
   $lasttop = variable_get("statistics_block_top_last_num", "");
   if ($lasttop) {
-    $lastheading = variable_get("statistics_block_top_last_head", "");
-    if ($lastheading) {
-      $output .= $lastheading ."<br />";
-    }
-    $output .= statistics_display_linked_title("timestamp", $lasttop);
+    $content[] = theme_invoke("theme_item_list", statistics_title_list("timestamp", $lasttop), variable_get("statistics_block_top_last_head", ""));
   }
+
+  $output = implode($content, "<br />");
+
   return $output;
 }
 
@@ -750,7 +730,7 @@ function statistics_display_online_block() {
     ** This call gathers all the info we need on users/guests in a single
     ** database call, thus is quite efficient.
     */
-    $result = db_query("SELECT COUNT(DISTINCT hostname) AS count, uid, MAX(timestamp) as timestamp FROM accesslog WHERE timestamp >= '%s' GROUP BY uid ORDER BY timestamp DESC", (time() - $time_period));
+    $result = db_query("SELECT COUNT(DISTINCT hostname) AS count, uid, MAX(timestamp) AS max_timestamp FROM accesslog WHERE timestamp >= '%s' GROUP BY uid ORDER BY max_timestamp DESC", (time() - $time_period));
 
     $users = $guests = 0;
     /* Count number of users & guests currently online based on db query */
@@ -769,6 +749,7 @@ function statistics_display_online_block() {
         $guests = $users_online["count"];
       }
     }
+
     /* format the output with proper grammar */
     if ($users == 1) {
       $output = "There is currently ";
@@ -785,12 +766,11 @@ function statistics_display_online_block() {
       /* Display a list of currently online users */
       $max_users = variable_get("statistics_block_online_max_cnt", 10);
       $max_name_len = variable_get("statistics_block_online_max_len", 15);
-      $output .= "<br /><br />\n<b>". variable_get("statistics_block_online_subtitle", "Online users:") ."</b><br />\n";
       $uid = reset($user_list);
       while (($uid) && ($max_users)) {
         $user = user_load(array("uid" => $uid));
         /* When displaying name, be sure it's not more than defined max length */
-        $output .= " - ". lm((strlen($user->name) > $max_name_len ? substr($user->name, 0, $max_name_len) . '...' : $user->name), array("mod" => "user", "op" => "view", "id" => $user->uid)) ."<br />";
+        $items[] = lm((strlen($user->name) > $max_name_len ? substr($user->name, 0, $max_name_len) . '...' : $user->name), array("mod" => "user", "op" => "view", "id" => $user->uid));
         $uid = next($user_list);
         /*
         ** When $max_users reaches zero, we break out even if there are
@@ -798,6 +778,9 @@ function statistics_display_online_block() {
         */
         $max_users--;
       }
+
+      $output .= "<br /><br />";
+      $output .= theme_invoke("theme_item_list", $items, variable_get("statistics_block_online_subtitle", "Online users:"));
     }
   }
   else {
@@ -809,16 +792,15 @@ function statistics_display_online_block() {
 
 
 /* Display linked title based on field name */
-function statistics_display_linked_title($dbfield, $dbrows) {
+function statistics_title_list($dbfield, $dbrows) {
   /* valid dbfields: totalcount, daycount, timestamp */
 
-  $output = "";
-  $result = db_query("SELECT statistics.nid, node.title FROM statistics LEFT JOIN node ON statistics.nid = node.nid ORDER BY %s DESC LIMIT %s", $dbfield, $dbrows);
+  $result = db_query("SELECT statistics.nid, node.title FROM statistics LEFT JOIN node ON statistics.nid = node.nid WHERE %s <> '0' ORDER BY %s DESC LIMIT %s", $dbfield, $dbfield, $dbrows);
   while ($nid = db_fetch_array($result)) {
-    $output .= " - ". l($nid["title"], array("id" => $nid["nid"]), "node", "", array("title" => t("View this posting."))) ."<br />";
+    $items[] = l($nid["title"], array("id" => $nid["nid"]), "node", "", array("title" => t("View this posting.")));
   }
 
-  return $output;
+  return $items;
 }
 
 
@@ -956,13 +938,11 @@ function throttle_update($recent_activity) {
       */
       variable_set("statistics_throttle_cron_timestamp", time());
       /* log the change */
-      if (function_exists(watchdog)) {
-        if ($throttle_new < $throttle) {
-          watchdog("message", "message: '". $recent_activity ."' hits in past minute; throttle decreased to level ". $throttle_new);
-        }
-        else {
-          watchdog("warning", "warning: '". $recent_activity ."' hits in past minute; throttle increased to level ". $throttle_new);
-        }
+      if ($throttle_new < $throttle) {
+        watchdog("message", "message: '". $recent_activity ."' hits in past minute; throttle decreased to level ". $throttle_new);
+      }
+      else {
+        watchdog("warning", "warning: '". $recent_activity ."' hits in past minute; throttle increased to level ". $throttle_new);
       }
     }
   }

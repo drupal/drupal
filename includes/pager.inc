@@ -1,0 +1,310 @@
+<?php
+
+/*****************************************************
+ *            external functions (API)               *
+ *****************************************************/
+
+/*
+** PAGER DISPLAY:
+**   Use this function in your module or theme to display a pager.
+** $tags:    an array that defines your buttons; text or <img>.
+** $limit:   how many nodes are displayed per page
+** $element: support for multiple pagers per page (specify which
+**           this is)
+** $type:    allows for distinction between pagers on main page and
+**           admin page, etc. Supported types are "default", "admin"
+**           and "simple".
+*/
+function pager_display($tags = "", $limit = 10, $element = 0, $type = "default") {
+  return theme_invoke("pager_display_". $type, $tags, $limit, $element);
+}
+
+/*
+** DEFAULT PAGER:
+**  When writing themes, you can rewrite this pager function in your
+**  theme.  This is the most common pager type, and thus the main one
+**  to re-write in your theme.
+*/
+function pager_display_default($tags = "", $limit = 10, $element = 0) {
+  $output .= "<center><table cellpadding=\"10\"><tbody><tr>";
+  $output .= "<td align=\"center\">". pager_first(($tags[0] ? $tags[0] : t("first page")), $limit, $element) ."</td>";
+  $output .= "<td align=\"center\">". pager_previous(($tags[1] ? $tags[1] : t("previous page")), $limit, $element) ."</td>";
+  $output .= "<td align=\"center\">". pager_list($limit, $element, ($tags[2] ? $tags[2] : 9 )) ."</td>";
+  $output .= "<td align=\"center\">". pager_next(($tags[3] ? $tags[3] : t("next page")), $limit, $element) ."</td>";
+  $output .= "<td align=\"center\">". pager_last(($tags[4] ? $tags[4] : t("last page")), $limit, $element) ."</td>";
+  $output .= "</tr></tbody></table></center>";
+
+  return "$output";
+}
+
+/*
+** SIMPLE PAGER:
+**   When writing themes, if you rewrite this pager function in your
+**   theme, keep in mind that the pager it defines is intended to have
+**   a "simple" look, possibly located in a table or block.
+*/
+function pager_display_simple($tags = "", $limit = 10, $element = 0) {
+  /*
+  ** It's left as an exercise to theme writers to create an alternative
+  ** pager for pager_display_simple().  if your theme does not offer a
+  ** replacement, the theme.inc pager_display_default() is used.
+  */
+  return pager_display_default($tags, $limit, $element);
+}
+
+/*
+** ADMIN PAGER:
+**   When writing themes, you can rewrite this pager function in your
+**   theme.  Most themes will probably NOT re-write this function, as
+**   admin pages are not normally themed.
+*/
+function pager_display_admin($tags = "", $limit = 10, $element = 0) {
+  /*
+  ** It's left as an exercise to theme writers to create an alternative
+  ** pager for pager_display_admin().  if your theme does not offer a
+  ** replacement, the pager.inc pager_display_default() is used.
+  */
+  return pager_display_default($tags, $limit, $element);
+}
+
+/*********************************************************************
+* PAGER PIECES:
+*  Use these pieces to construct your own custom pagers (i.e. in
+*  themes).  Note that you should NOT modify this file to customize
+*  your pager)
+********************************************************************/
+
+/*
+** pager_first: displays a "first-page" link
+**   $text:    defines the name (or image) of the link
+**   $limit:   how many nodes are displayed per page
+**   $element: distinguish between multiple pagers on one page
+*/
+function pager_first($text, $limit, $element = 0) {
+  global $from_array;
+
+  if ($from_array[$element]) {
+    return "<a href=\"". pager_link(pager_load_array(0, $element, $from_array)) ."\">$text</a>";
+  }
+  else {
+    // we are already at the first page, return nothing
+    return " ";
+  }
+}
+
+/*
+** pager_previous: displays a "previous-page" link
+**   $text:    defines the name (or image) of the link
+**   $limit:   how many nodes are displayed per page
+**   $element: distinguish between multiple pagers on one page
+**   $n:       how many pages we move back (defaults to 1)
+*/
+function pager_previous($text, $limit, $element = 0, $n = 1) {
+  global $from_array;
+  $from_new = pager_load_array(((int)$from_array[$element] - ((int)$limit * (int)$n)), $element, $from_array);
+  if ($from_new[$element] < 1) {
+    return pager_first($text, $limit, $element);
+  }
+  return "<a href=\"". pager_link($from_new) ."\">$text</a>";
+}
+
+/*
+** pager_next: displays a "next-page" link
+**   $text:    defines the name (or image) of the link
+**   $limit:   how many nodes are displayed per page
+**   $element: distinguish between multiple pagers on one page
+**   $n:       how many pages we move forward (defaults to 1)
+*/
+function pager_next($text, $limit, $element = 0, $n = 1) {
+  global $from_array, $pager_total;
+  $from_new = pager_load_array(((int)$from_array[$element] + ((int)$limit * (int)$n)), $element, $from_array);
+  if ($from_new[$element] < $pager_total[$element]) {
+    return "<a href=\"". pager_link($from_new) ."\">$text</a>";
+  }
+  return " ";
+}
+
+/*
+** pager_last: displays a "last-page" link
+**   $text:    defines the name (or image) of the link
+**   $limit:   how many nodes are displayed per page
+**   $element: distinguish between multiple pagers on one page
+*/
+function pager_last($text, $limit, $element = 0) {
+  global $from_array, $pager_total;
+
+  $from_new = pager_load_array(($pager_total[$element] - $limit), $element, $from_array);
+  if ($from_new[$element] < ($from_array[$element] + $limit)) {
+    return pager_next($text, $limit, $element);
+  }
+  if (($from_new[$element] > $from_array[$element]) && ($from_new[$element] > 0) && $from_new[$element] < $pager_total[$element]) {
+    return "<a href=\"". pager_link($from_new) ."\">$text</a>";
+  }
+  return " ";
+}
+
+/*
+** pager_detail: displays "%d through %d of $d" type detail about the cur page
+**   $limit:     how many nodes are displayed per page
+**   $element:   distinguish between multiple pagers on one page
+**   $format:    allows you to reword the format string
+*/
+function pager_detail($limit, $element = 0, $format = "%d through %d of %d.") {
+  global $from_array, $pager_total;
+
+  if ($pager_total[$element] > (int)$from_array[$element] + 1) {
+    $output = sprintf($format, (int)$from_array[$element] + 1, ((int)$from_array[$element] + $limit <= $pager_total[$element] ? (int)$from_array[$element] + $limit : $pager_total[$element]), $pager_total[$element]);
+  }
+
+  return $output;
+}
+
+/*
+** pager_list:  displays a list of nearby pages with additional nodes
+**   $limit:    how many nodes are displayed per page
+**   $element:  distinguish between multiple pagers on one page
+**   $quantity: defines the length of the page list
+**   $text:     optional text to display before the page list
+*/
+function pager_list($limit, $element = 0, $quantity = 5, $text = "") {
+  global $from_array, $pager_total;
+
+// calculate various markers within this pager piece:
+  // middle used to "center" pages around current page
+  $pager_middle = ceil((int)$quantity / 2);
+  // offset adds "offset" second page
+  $pager_offset = (int)$from_array[$element] % (int)$limit;
+  // current is the page we are currently paged to
+  if (($pager_current = (ceil(($from_array[$element] + 1) / $limit))) < 1) {
+    $pager_current = 1;
+  }
+  // first is the first page listed by this pager piece (re quantity)
+  $pager_first = (int)$pager_current - (int)$pager_middle + 1;
+  // last is the last page listed by this pager piece (re quantity)
+  $pager_last = (int)$pager_current + (int)$quantity - (int)$pager_middle;
+  // max is the maximum number of pages content can is devided into
+  if (!$pager_max = (ceil($pager_total[$element] / $limit))) {
+    $pager_max = 1;
+  }
+  if ((int)$pager_offset) {
+    // adjust for offset second page
+    $pager_max++;
+    $pager_current++;
+  }
+// end of various marker calculations
+
+// prepare for generation loop
+  $i = (int)$pager_first;
+  if ($pager_last > $pager_max) {
+    // adjust "center" if at end of query
+    $i = $i + (int)($pager_max - $pager_last);
+    $pager_last = $pager_max;
+  }
+  if ($i <= 0) {
+    // adjust "center" if at start of query
+    $pager_last = $pager_last + (1 - $i);
+    $i = 1;
+  }
+// end of generation loop preparation
+
+  $output = "$text";
+  if ($i > 1) {
+    $output .= "... ";
+  }
+
+  // finally we're ready to generate the actual pager piece
+  for (; $i <= $pager_last && $i <= $pager_max; $i++) {
+    if ($i < $pager_current) {
+      $output .= pager_previous($i, $limit, $element, ($pager_current - $i)) ." ";
+    }
+    if ($i == $pager_current) {
+      $output .= "<b>$i</b> ";
+    }
+    if ($i > $pager_current) {
+      $output .= pager_next($i, $limit, $element, ($i - $pager_current)) ." ";
+    }
+  }
+
+  if ($i < $pager_max) {
+    $output .= "...";
+  }
+
+  return $output;
+}
+
+
+/*********************************************************************
+ * QUERIES - call this instead of db_query() if you want your query to
+ * support a pager.
+ *********************************************************************/
+
+/*
+** Use this function when doing select queries you wish to be able to page
+** $query, the database query *without* "LIMIT" in it
+**       examples :  "SELECT * FROM table"
+**                :  "SELECT field1,field2 FROM table WHERE nid = '1'"
+** $limit, how many rows to return (per page) [OPTIONAL]
+** $element, adds support for multiple paged tables on one page [OPTIONAL]
+*/
+function db_query_pager($query, $limit = 10, $element = 0) {
+  global $from, $from_array, $db_type, $pager_total;
+
+  // count the total number of records in this query:
+  $pager_total[$element] = array_pop(db_fetch_array(db_query(preg_replace("/SELECT.*FROM/i", "SELECT COUNT(*) as count FROM", $query))));
+
+  // convert comma separated $from to an array, used by other functions:
+  $from_array = explode(",", $from);
+
+  if ((int)$from_array[$element]) {
+    if ($db_type == "mysql") {
+      // MySQL formatted limit query with offset:
+      $limit_query = $query . " LIMIT " . (int)$from_array[$element] . ", $limit";
+    }
+    else {
+      // pear formatted limit query with offset:
+      $limit_query = $query . " LIMIT $limit OFFSET " . (int)$from_array[$element];
+    }
+  }
+  else {
+    // standard limit query without offset:
+    $limit_query = $query . " LIMIT $limit";
+  }
+  return db_query($limit_query);
+}
+
+function pager_link($from_new) {
+  $from_list = @implode(",", $from_new);
+  if ("$from_list" == "0") {
+    // single pager at zero, so remove the $from
+    return preg_replace(array("/from=*[^&]*/", "/[&]$/", "/[?]$/"), "", request_uri());
+  }
+  if (preg_match("/from=/", request_uri())) {
+    // replace existing from=
+    return preg_replace("/from=*[^&]*/", "from=$from_list", request_uri());
+  }
+  if (preg_match("/[?]/", request_uri())) {
+    // append &from=
+    $href = request_uri() . "&from=$from_list";
+  }
+  else {
+    // append ?from=
+    $href = request_uri() . "?from=$from_list";
+  }
+  return $href;
+}
+
+function pager_load_array($value, $element, $old_array) {
+  $new_array = $old_array;
+  // look for empty elements
+  for ($i = 0; $i < $element; $i++) {
+    if (!$new_array[$i]) {
+      // load found empty element with 0
+      $new_array[$i] = 0;
+    }
+  }
+  // update the changed element
+  $new_array[$element] = (int)$value;
+  return $new_array;
+}
+
+?>

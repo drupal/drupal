@@ -49,7 +49,7 @@ class BaseTheme {
       $output .= "<small>(". $this->links($terms) .")</small><br />";
     }
     if ($main && $node->teaser) {
-      $output .= strip_tags(check_output($node->teaser, 1));
+      $output .= check_output($node->teaser, 1);
     }
     else {
       $output .= check_output($node->body, 1);
@@ -81,6 +81,22 @@ function theme_mark() {
   ** fields.
   */
   return "<span style=\"color: red;\">*</span>";
+}
+
+function theme_item_list($items = array(), $title = 0) {
+  /*
+  ** Return a formatted array of items.
+  */
+
+  if ($title) {
+    $output .= "<b>$title</b><br />";
+  }
+
+  foreach ($items as $item) {
+    $output .= "- $item<br />";
+  }
+
+  return $output;
 }
 
 function theme_error($message) {

@@ -343,10 +343,10 @@ function blog_block($op = "list", $delta = 0) {
     if (user_access("access content")) {
       $result = db_query("SELECT u.uid, u.name, n.created, n.title, n.nid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'blog' ORDER BY n.nid DESC LIMIT 10");
       while ($node = db_fetch_object($result)) {
-        $output .= l(check_output($node->title), array("id" => $node->nid)) ."<br />\n";
+        $items[] = l(check_output($node->title), array("id" => $node->nid));
       }
-      $output .= "<br /><div align=\"right\">". lm(t("more"), array("mod" => "blog"), "", array("title" => t("Read the latest blog entries."))) ."</div>";
-      $block["content"] = $output;
+
+      $block["content"] = theme_invoke("theme_item_list", $items) ."<br /><div align=\"right\">". lm(t("more"), array("mod" => "blog"), "", array("title" => t("Read the latest blog entries."))) ."</div>";
       $block["subject"] = t("User blogs");
     }
     return $block;
