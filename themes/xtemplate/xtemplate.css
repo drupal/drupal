@@ -1,4 +1,4 @@
-/* $Id: xtemplate.css,v 1.40 2003/12/06 16:49:32 dries Exp $ */
+/* $Id: xtemplate.css,v 1.41 2003/12/06 16:55:08 dries Exp $ */
 
 body {
   margin: 0;
@@ -14,8 +14,8 @@ tr.dark {
 tr.light {
   background-color: #eee;
 }
-td {
-  padding: 0.2em;
+tr.dark td, tr.light td {
+  padding: 0.3em;
 }
 h1 {
   font-size: 1.2em;
