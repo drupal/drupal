@@ -26,8 +26,6 @@ $comment_votes = array("none" => "none",
 
 #
 # Themes:
-#   The first theme listed in this associative array will automatically
-#   become the default theme.
 #
 $themes = array("UnConeD" => array(
                   "themes/unconed/unconed.theme",
