@@ -1,6 +1,10 @@
 drupal x.xx, xx/xx/xxxx
 -----------------------
-- rewrote the user system
+- rewrote the user system:
+    * added support for Drupal authentication through XML-RPC and through
+      a Jabber server.
+- various updates:
+    * improved the search system by making it context sensitive.
 
 drupal 3.00, 15/09/2001
 -----------------------
