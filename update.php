@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.144 2005/01/13 19:24:27 dries Exp $
+// $Id: update.php,v 1.145 2005/01/16 23:16:19 unconed Exp $
 
 /**
  * @file
@@ -36,6 +36,7 @@ function update_data($start) {
     variable_set("update_start", $date);
     print "</pre>\n";
   }
+  db_query('DELETE FROM {cache}');
 }
 
 function update_page_header($title) {
