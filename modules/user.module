@@ -276,12 +276,10 @@ function user_fields() {
   static $fields;
 
   if (!$fields) {
-    // is this ANSI? perhaps this should go in the database include...
-    $result = db_query("SHOW FIELDS FROM users");
-    while ($data = db_fetch_object($result)) {
-      $fields[] = $data->Field;
-    }
+    $result = db_query("SELECT * FROM users WHERE uid < 0");
+    $fields = array_keys(db_fetch_array($result));
   }
+
   return $fields;
 }
 
@@ -1965,8 +1963,6 @@ function julia_user($type, $edit, &$user) {
     }
   }
 </pre>
-
-<p>Extra credit: use the <a href="http://cvs.drupal.org/viewcvs.cgi/contributions/modules/hotlist/?cvsroot=contrib">hotlist.module</a> to provide Julia users a mechanism for bookmarking their favorite recipes.</p>
   <?
 }
 ?>
