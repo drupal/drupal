@@ -6,7 +6,7 @@ Drupal x.x.x, xxxx-xx-xx
     * improved search indexing.
     * improved search output.
 - syndication:
-    * added support for RSS ping-notifications of http://yahoo.com/.
+    * made the ping module ping pingomatic.com which, in turn, will ping all the major ping services.
 - flood control mechanism:
     * added a mechanism to throttle certain operations.
 - usability:
