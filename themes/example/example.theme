@@ -83,7 +83,7 @@
                  <TR>
                    <TD COLSPAN="2">
 <?php
-                      if ($main || $links) echo $this->links($links, $main, $node);
+                      if (node_links($links, $node, $main)) echo $this->links($links, $main);
 ?>
 
                    </TD>

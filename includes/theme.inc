@@ -1,16 +1,16 @@
 <?php
 
 class BaseTheme {
-  function links($links = array(), $status = 0, $node = 0) {
-    if ($status == 1)
-      $links = array_merge(theme_morelink($node), $links);
-
+  function links(&$links, $state = 0) {
+    // $state = 0 : default behaviour
+    // $state = 1 : main page
+    // $state = 2 : theme_link()
+    // Subject to change coz its messy
     foreach ($links as $link) {
-      $_links[] = count($link) == 2 ? "<A HREF=\"$link[0]\"><FONT COLOR=\"$theme->link\">". t($link[1]) ."</FONT></A>" : t($link[0]);
+      if ($link[0]) $_links[] = count($link) == 2 ? "<A HREF=\"$link[0]\"><FONT COLOR=\"$theme->link\">". t($link[1]) ."</FONT></A>" : t($link[0]);
     }
 
-    if ($status == 2) return ($_links ? implode(" | ", $_links) : "");
-    else return ($_links ? "[ ". implode(" | ", $_links) ." ]" : "");
+    return ($_links ? implode(" | ", $_links) : "");
   }
 }
 
@@ -110,17 +110,6 @@ function theme_blocks($region, $theme) {
       }
       break;
   }
-}
-
-function theme_morelink(&$node) {
-  if ($node->body) {
-    $links[] = array("node.php?id=$node->nid", t("read more"));
-  }
-  if ($node->comment) {
-    $links[] = array("node.php?id=$node->nid", format_plural(node_get_comments($node->nid), "comment", "comments"));
-  }
-
-  return $links;
 }
 
 function theme_moderation_results($theme, $node) {
