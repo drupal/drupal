@@ -306,9 +306,9 @@ function theme_form_element($title, $value, $description = NULL, $id = NULL) {
  * @return a string containing the @a node output.
  */
 
-function theme_table($header, $rows) {
+function theme_table($header, $rows, $attributes = NULL) {
 
-  $output = "<table>\n";
+  $output = "<table ". drupal_attributes($attributes) .">\n";
 
   /*
   ** Emit the table header:
