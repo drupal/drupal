@@ -180,6 +180,7 @@ function adminDisplayAll() {
 function adminDisplayInfo() {
   ?>
   <H1>Headlines</H1>
+   Dries was here.
    <H3>Concept</H3>
    <P>
     RDF support can change a portal in a significant way: third party websites
