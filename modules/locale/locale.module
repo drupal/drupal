@@ -89,7 +89,12 @@ function locale_refresh_cache() {
   foreach (array_keys($languages) as $locale) {
     $result = db_query("SELECT string, %s FROM locales", $locale);
     while ($data = db_fetch_object($result)) {
-      $t[$data->string] = $data->$locale;
+      if (empty($data->$locale)) {
+        $t[$data->string] = $data->string;
+      }
+      else {
+        $t[$data->string] = $data->$locale;
+      }
     }
     cache_set("locale:$locale", serialize($t));
   }
@@ -266,9 +271,11 @@ function locale($string) {
 
   if (!isset($locale_t)) {
     $cache = cache_get("locale:$locale");
-    if ($cache) {
-      $locale_t = unserialize($cache->data);
+    if ($cache == 0) {
+      locale_refresh_cache();
+      $cache = cache_get("locale:$locale");
     }
+    $locale_t = unserialize($cache->data);
   }
 
   if ($locale_t[$string] != "") {
@@ -278,6 +285,7 @@ function locale($string) {
     $result = db_query("SELECT lid, $locale FROM locales WHERE string = '%s'", $string);
     if (!db_fetch_object($result)) {
       db_query("INSERT INTO locales (string, location) VALUES ('%s', '%s')", $string, request_uri());
+      cache_clear_all("locale:$locale");
     }
   }
 
