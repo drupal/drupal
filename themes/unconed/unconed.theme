@@ -97,10 +97,10 @@
           <td bgcolor="<?php echo $this->bgcolor2 ?>" colspan="2">
           <?php
            if ($main && $node->teaser) {
-             echo "<p>". check_output($node->teaser) ."</p>";
+             echo "<p>$node->teaser</p>";
            }
            else {
-             echo "<p>". check_output($node->body) ."</p>";
+             echo "<p>$node->body</p>";
            }
           ?>
           </td>
@@ -149,7 +149,7 @@
      echo " </tr>";
 
      // print body of comment:
-     if ($comment) echo " <tr><td bgcolor=\"$this->bgcolor2\">". check_output($comment->comment) ."</td></tr>";
+     if ($comment) echo " <tr><td bgcolor=\"$this->bgcolor2\">$comment->comment</td></tr>";
 
      // print bottom link(s):
      echo " <tr><td align=\"right\" bgcolor=\"$this->bgcolor3\">[ $link ]</td></tr>";
