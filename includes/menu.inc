@@ -125,7 +125,7 @@ function menu_tree($parent = "") {
   global $_list;
   static $trail;
 
-  if (empty($tail)) {
+  if (empty($trail)) {
     $trail = menu_get_trail($_GET["q"]);
   }
 
