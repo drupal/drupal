@@ -137,9 +137,28 @@ function poll_form(&$node, &$help, &$error) {
   return $output;
 }
 
-function poll_help() {
-  $output .= "<p>Users with the correct ". l("permissions","admin/user/permission") ." can create and/or vote on polls.</p><ul><li> To create a poll a user needs the \"create polls\" permission.</li><li>To vote on a poll question a user must have the \"vote on polls\" permission.</li><li>To view the results one needs the \"access content\" permission.</li><li>To administer polls you need the \"administer nodes\" permission.</li></ul><p>Creating a poll is much like creating any other node. Click \"create poll\" in your user box. The title of the poll should be the question, then enter the answers and the \"base\" vote counts. You can also choose the time period over which the vote will run.</p><p>The ". l("Poll", "poll") ." item in the navigation links will take you to a page where you can see all the current polls, vote on them (if you haven't already) and view the results.</p>";
-  return t($output);
+function poll_help($section = "admin/poll/help") {
+  $output = "";
+
+  switch ($section) {
+
+    case 'admin/poll/help':
+      $output .= "<p>Users with the correct %permissions can create and/or vote on polls.</p>";
+      $output .= "<ul>";
+      $output .= "<li> To create a poll a user needs the \"create polls\" permission.</li>";
+      $output .= "<li>To vote on a poll question a user must have the \"vote on polls\" permission.</li>";
+      $output .= "<li>To view the results one needs the \"access content\" permission.</li>";
+      $output .= "<li>To administer polls you need the \"administer nodes\" permission.</li>";
+      $output .= "</ul>";
+      $output .= "<p>Creating a poll is much like creating any other node. Click \"create poll\" in your user box. The title of the poll should be the question, then enter the answers and the \"base\" vote counts. You can also choose the time period over which the vote will run.</p><p>The %poll item in the navigation links will take you to a page where you can see all the current polls, vote on them (if you haven't already) and view the results.</p>";
+      $output = t($output, array("%permissions" => l(t("permissions"), "admin/user/permission"), "%poll" => l(t("Poll"), "poll") ));
+      break;
+    case 'admin/system/modules':
+      $output = t("Enables your site to capture votes on different topics in the form of multiple choice questions.");
+      break;
+  }
+
+  return $output;
 }
 
 function poll_insert($node) {
@@ -244,8 +263,11 @@ function poll_perm() {
 }
 
 function poll_system($field){
-  $system["description"] = t("Enables your site to capture votes on different topics in the form of multiple choice questions.");
-  return $system[$field];
+  $output = "";
+
+  if ($field == "description") { $output = poll_help("admin/system/modules"); };
+
+  return $output;
 }
 
 function poll_teaser($node) {

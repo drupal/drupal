@@ -145,24 +145,24 @@ function statistics_help($section = "admin/statistics/help") {
     case 'admin/help':
     case 'admin/statistics/help':
       $output .= "<h3>Introduction</h3>";
-      $output .= "<p>The statistics.module keeps track of numerous statistics for your site but be warned, statistical collection does cause a little overhead, thus everything comes disabled by default.<p>";
+      $output .= "<p>The statistics.module keeps track of numerous statistics for your site but be warned, statistical collection does cause a little overhead, thus everything comes <b>disabled</b> by default.<p>";
       $output .= "<p>The module counts how many times, and from where -- using HTTP referrer -- each of your nodes is viewed. Once we have that count the module can do the following with it:";
       $output .= "<ul>";
       $output .= "<li>The count can be displayed in the node's link section next to \"# comments\".</li>";
       $output .= "<li>A configurable block can be added which can display the day's top stories, the all time top stories, and the last stories read. Each section in the block has a title, which you can change, as well as being able to change how many node titles will be displayed</li>";
       $output .= "<li>A configurable user page can be added, which can display the day's top stories, the all time top stories, and the last stories read.  Each section in the page has a title, which you can change, as well as being able to change the number of stories to be displayed.</li>";
       $output .= "<li>A configurable block can be added that displays the count of how many users, as well as a list of their names, and guests are currently accessing your site.</li>";
-      $output .= strtr("<li>An auto-throttle, congestion controling mechanism can be used on your site if you have enabled the %throttle.</li>",array("%throttle" => l(t("throttle.module"), "admin/system/modules") ));
+      $output .= "<li>An auto-throttle, congestion controling mechanism can be used on your site if you have enabled the %throttle.</li>";
       $output .= "</ul>";
       $output .= "<p>Notes on using the statistics:</p>";
       $output .= "<ul>";
       $output .= "<li>If you enable the node view counters, this adds 1 database query for each node that is viewed (2 queries if it's the first time the node has ever been viewed).</li>";
       $output .= "<li>If you enable the access log, this adds 1 database query for each page that Drupal displays.  Logged information includes:  HTTP referrer (if any), node being accessed (if any), user ID (if any), the IP address of the user, and the time the page was viewed.</li>";
       $output .= "</ul>";
-      $output .= strtr("<p>As with any new module, the <i>statistics.module</i> needs to be %modules before you can use it.  Also refer to the %permissions, as this module supports four separate permissions.</p>", array("%modules" => l(t("enabled"), "admin/system/modules"), "%permissions" => l(t("permissions section"), "admin/user/permission") ));
-      $output .= strtr("<h3>%referers</h3><p>This admin page shows you site-wide referrer statistics.  You can see '<i>all</i>' statistics, '<i>external</i>' statistics or '<i>internal</i>' statistics.  Default is 'external'.</p>",array("%referers" => l(t("referrers log"), "admin.statistics/referrers") ));
-      $output .= strtr("<h3>%access</h3><p>This admin page gives you an at-a-glance look at your top nodes.  It is useful for understanding what content on your Drupal site is the most popular.  Also on this page are links to the referrer statistics for each listed node.</p>",array("%access" => l(t("access log"), "admin.statistics/log") ));
-      $output .= strtr("<h3>Configuring the statistics module</h3><p>There are some configuration options added to the main %configuration section:</p>", array("%configuration" => l(t("site configuration"), "admin/system/modules/statistics") ));
+      $output .= "<p>As with any new module, the <i>statistics.module</i> needs to be %modules before you can use it.  Also refer to the %permissions, as this module supports four separate permissions.</p>";
+      $output .= "<h3>%referers</h3><p>This admin page shows you site-wide referrer statistics.  You can see '<i>all</i>' statistics, '<i>external</i>' statistics or '<i>internal</i>' statistics.  Default is 'external'.</p>";
+      $output .= "<h3>%access</h3><p>This admin page gives you an at-a-glance look at your top nodes.  It is useful for understanding what content on your Drupal site is the most popular.  Also on this page are links to the referrer statistics for each listed node.</p>";
+      $output .= "<h3>Configuring the statistics module</h3><p>There are some configuration options added to the main %configuration section:</p>";
       $output .= "<ul>";
       $output .= "<li><i>enable access log</i> -- allows you to turn the access log on and off.  This log is used to store things like referrers and who's online.  Enabling the log adds one database call per page displayed by Drupal.</li>";
       $output .= "<li><i>discard access logs older than</i> -- allows you to configure how long an access log entry is saved, after which time it is deleted from the database table. To use this you need to run \"cron.php\"</li>";
@@ -172,14 +172,14 @@ function statistics_help($section = "admin/statistics/help") {
       $output .= "<h3>Top nodes block</h3>";
       $output .= "<p>This module creates a block that can display the day's top viewed nodes, the all time top viewed nodes and the last nodes viewed.  Each of these links can be enabled or disabled individually, and the number of nodes displayed for each can be configured with a drop down menu.  If you disable all sections of this block, it will not appear.</p>";
       $output .= "<p>The administrative \"top nodes block\" screen also allows you to assign a name to the block.</p>";
-      $output .= strtr("<p>Don't forget to enable the block %here.</p>",array("%here" => l(t("here"), "admin/system/block") ));
+      $output .= "<p>Don't forget to enable the block %here-block.</p>";
 
       $output .= "<h3>Top nodes page</h3>";
       $output .= "<p>This module creates a user page that can display summaries of the day's top viewed nodes, the all time top nodes and the last nodes viewed.  Each of these summaries can be enabled or disabled individually, and the number of nodes displayed for each can be configured with a drop down menu.</p>";
       $output .= "<p>The administrative \"top nodes page\" screen also allows you to assign a name for the automatically generated link to the user page.  If no name is set, the link will not be displayed.</p>";
       $output .= "<h3>Who's online block</h3><p>This module creates a block that can display how many user's and guests are currently online.  You are able to configure the name of the block, the name of a sub-block for displaying names of user's currently online, how recently a user must have been active to be considered online, the maximum characters to display from a user's name and the maximum number of user names to display.</p>";
-      $output .= strtr("<p>Don't forget to enable the block %here.</p>",array("%here" => l(t("here"), "admin/system/block") ));
-      $output .= strtr("<h3>Permissions</h3><p>This module has four permissions that need to be configured in %permissions.</p>",array("%permissions" => l(t("user permissions"), "admin/user/permission") ));
+      $output .= "<p>Don't forget to enable the block %here-block.</p>";
+      $output .= "<h3>Permissions</h3><p>This module has four permissions that need to be configured in %permissions.</p>";
       $output .= "<ul>";
       $output .= "<li><i>access statistics</i> - enable for user roles that get to see individual node counts.  (This does not define access to the block)</li>";
       $output .= "<li><i>access userlist</i> - enable for user roles that get to see the list of user's that are currently online within the \"Who's online\" block.</li>";
@@ -212,43 +212,44 @@ function statistics_help($section = "admin/statistics/help") {
        else {
          // throttle limit not reached, execute normally
        }</pre></p>";
-      $output .= strtr("<p>Note:  Even though the configuration for the throttle is handled by the 'throttle.module', the throttle logic itself is part of the 'statistics.module'.  The configuration has been separated in order to make things easier for the average site that will not be utilizing the throttling mechanism.  More information about how the throttle works can be found on the throttle.module help page.  (Find the throttle help page %here if you have enabled the throttle.module).</p>",array ("%here" => l(t("here"), "admin/help#throttle") ));
+      $output .= "<p>Note: Even though the configuration for the throttle is handled by the 'throttle.module', the throttle logic itself is part of the 'statistics.module'.  The configuration has been separated in order to make things easier for the average site that will not be utilizing the throttling mechanism.  More information about how the throttle works can be found on the throttle.module help page.  (Find the throttle help page %here-help if you have enabled the throttle.module).</p>";
+      $output = t($output, array("%throttle" => l(t("throttle.module"), "admin/system/modules"), "%modules" => l(t("enabled"), "admin/system/modules"), "%permissions" => l(t("permissions section"), "admin/user/permission"), "%referers" => l(t("referrers log"), "admin.statistics/referrers"), "%access" => l(t("access log"), "admin.statistics/log"), "%configuration" => l(t("site configuration"), "admin/system/modules/statistics"), "%here-block" => l(t("here"), "admin/system/block"), "%here-help" => l(t("here"), "admin/help#throttle") ));
       break;
     case 'admin/system/modules':
-      $output = "Logs access statistics for your site.";
+      $output = t("Logs access statistics for your site.");
       break;
     case 'admin/system/modules/statistics':
-      $output = strtr("Settings for the statistical information that Drupal will keep about the site. See %statistics for the actual information.", array("%statistics" => l(t("site statistics"),"admin/statistics") ));
+      $output = t("Settings for the statistical information that Drupal will keep about the site. See %statistics for the actual information.", array("%statistics" => l(t("site statistics"),"admin/statistics") ));
       break;
     case 'admin/statistics':
-      $output = "This page gives you an at-a-glance look at your top nodes.  It is useful for understanding what content on your site is the most popular.";
+      $output = t("This page gives you an at-a-glance look at your top nodes.  It is useful for understanding what content on your site is the most popular.");
       break;
     case 'admin/statistics/referrers':
-      $output = "This page shows you site-wide referrer statistics.  You can see 'all referrers', 'external referrers' or 'internal referrers'. Referrers are web sites, both your site, and other peoples, that point to your web site.";
+      $output = t("This page shows you site-wide referrer statistics.  You can see 'all referrers', 'external referrers' or 'internal referrers'. Referrers are web sites, both your site, and other peoples, that point to your web site.");
       break;
     case 'admin/statistics/referrers/internal':
-      $output = "This page shows you only 'internal referrers'. Links pointing to your web site, from within your web site.";
+      $output = t("This page shows you only 'internal referrers'. Links pointing to your web site, from within your web site.");
       break;
     case 'admin/statistics/referrers/external':
-      $output = "This page shows you only 'external referrers'. Links pointing to your web site from outside your web site.";
+      $output = t("This page shows you only 'external referrers'. Links pointing to your web site from outside your web site.");
       break;
     case 'admin/statistics/log':
     case 'admin/statistics/log/node':
     case 'admin/statistics/log/user':
     case 'admin/statistics/log/host':
-      $output = "This pages shows you who is accessing your web site.  You can see the hostnames, referrers.  In particular, it is easy to inspect a user's navigation history/trail by clicking on <i>track user</i>.";
+      $output = t("This pages shows you who is accessing your web site.  You can see the hostnames, referrers.  In particular, it is easy to inspect a user's navigation history/trail by clicking on <i>track user</i>.");
       break;
     case 'admin/statistics/top nodes page':
-      $output = "The statistics module creates a user page that can display summaries of the day's top viewed nodes, the all time top nodes and the last nodes viewed.  Each of these summaries can be enabled or disabled individually, and the number of nodes displayed for each can be configured with a drop down menu.";
+      $output = t("The statistics module creates a user page that can display summaries of the day's top viewed nodes, the all time top nodes and the last nodes viewed.  Each of these summaries can be enabled or disabled individually, and the number of nodes displayed for each can be configured with a drop down menu.");
       break;
     case 'admin/system/block/top nodes block':
-      $output = "The statistics module exports a block that can display the top viewed nodes of the day, the all time top viewed nodes and the last nodes viewed.  Each of these links can be enabled or disabled individually, and the number of nodes displayed for each can be configured with a drop down menu. If you disable all sections of this block, it will not appear.";
+      $output = t("The statistics module exports a block that can display the top viewed nodes of the day, the all time top viewed nodes and the last nodes viewed.  Each of these links can be enabled or disabled individually, and the number of nodes displayed for each can be configured with a drop down menu. If you disable all sections of this block, it will not appear.");
       break;
     case 'admin/system/block/whos online block':
-      $output = "The statistics module exports a block that can display how many user's and guests are currently online.  You can configure the name of the block, the name of a sub-block for displaying names of user's currently online, how recently a user must have been active to be considered online, the maximum characters to display from a user's name and the maximum number of user names to display.";
+      $output = t("The statistics module exports a block that can display how many user's and guests are currently online.  You can configure the name of the block, the name of a sub-block for displaying names of user's currently online, how recently a user must have been active to be considered online, the maximum characters to display from a user's name and the maximum number of user names to display.");
       break;
   }
-  return t($output);
+  return $output;
 }
 
 

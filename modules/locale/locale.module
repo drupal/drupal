@@ -10,7 +10,7 @@ function locale_help($section = "admin/locale/help") {
       $output .= "<p>Most programs are written and documented in English, and use English to interact with users.  This is also true for a great deal of web sites.  However, most people are less comfortable with English than with their native language, and would prefer to use their mother tongue as much as possible.  Many people love see their web site showing a lot less English, and far more of their own language.</p>";
       $output .= "<p>Therefore Drupal provides a framework to setup a multi-lingual web site, or to overwrite the default English texts.  We explored the various alternatives to support internationalization (I18N) and decided to design the framework in such a way that the impact of internationalization on drupal's sources is minimized, modular and doesn't require a HTML or PHP wizard to maintain translations.  Maintaining translations had to be simple so it became as easy as filling out forms on the administration page.</p>";
       $output .= "<h3>How to translate texts</h3>";
-      $output .= strtr("<p>The actual translation starts at the %overview page of the locale section in the administration pages. In the menu on the left under \"localization\" you will see a list of the languages you have configured. Click on the name of the language to start translating. Looking at a page full of all the strings in the site can be a bit overwhelming, so Drupal allows you to limit the strings you are working on. If you want to limit based on translated strings click \"translated strings\", if you want to limit the string based on the untranslated strings click \"untranslated strings\". Both will take you to the same page. Once there enter the string pattern to limit on, choose the language to search for, and the status, weather translated, untranslated or both, finally where you want to look, modules, specific modules, or pages.</p>", array("%overview" => l(t("overview"), "admin/locale") ));
+      $output .= "<p>The actual translation starts at the %overview page of the locale section in the administration pages. In the menu on the left under \"localization\" you will see a list of the languages you have configured. Click on the name of the language to start translating. Looking at a page full of all the strings in the site can be a bit overwhelming, so Drupal allows you to limit the strings you are working on. If you want to limit based on translated strings click \"translated strings\", if you want to limit the string based on the untranslated strings click \"untranslated strings\". Both will take you to the same page. Once there enter the string pattern to limit on, choose the language to search for, and the status, weather translated, untranslated or both, finally where you want to look, modules, specific modules, or pages.</p>";
       $output .= "<p>At the locale page, users with the proper access rights will see the various texts that need translation on the left column of the table.</p>";
       $output .= "<p>Below the text you can see an example URI where this text shows up one your site.  Chances are most of these texts will be used and displayed on more than one page, though only one example URI is presented.</p>";
       $output .= "<p>The second column displays the supported languages as defined in the configuration file.  See below for more information on how to support new languages.  If the symbol for a language is seen like <strike>this</strike>, it means that this entry still needs to be translated into that language.  If not, it has been translated already.</p>";
@@ -33,25 +33,26 @@ function locale_help($section = "admin/locale/help") {
     mysql> ALTER TABLE {locales} ADD nl TEXT DEFAULT '' NOT NULL;
     mysql> ALTER TABLE {locales} ADD fr TEXT DEFAULT '' NOT NULL;
   </pre>";
+      $output = t($output,  array("%overview" => l(t("overview"), "admin/locale") ));
       break;
     case 'admin/system/modules':
-      $output = "Enables the translation of the user interface to languages other than English.";
+      $output = t("Enables the translation of the user interface to languages other than English.");
       break;
     case 'admin/locale':
-      $output = "The locale module handles translations into new languages.  It also enables you to add jargon, slang or other special language as fits the web site.  For each language you want to support, a line needs to be added to your configuration file.";
+      $output = t("The locale module handles translations into new languages.  It also enables you to add jargon, slang or other special language as fits the web site.  For each language you want to support, a line needs to be added to your configuration file.");
       break;
     case 'admin/locale/search':
-      $output = "Search the localization database. ('*' can be used as a wildcard)";
+      $output = t("Search the localization database. ('*' can be used as a wildcard)");
       break;
     case 'admin/locale/translated':
-      $output = "Start by searching the translated strings.";
+      $output = t("Start by searching the translated strings.");
       break;
     case 'admin/locale/untranslated':
-      $output = "Start by searching the untranslated strings.";
+      $output = t("Start by searching the untranslated strings.");
       break;
   }
 
-  return t($output);
+  return $output;
 }
 
 function locale_system($field){
@@ -338,8 +339,11 @@ function locale($string) {
   global $locale;
   static $locale_t;
 
+  return ($string); // Need to patch this for a while.
+
   if (!isset($locale_t)) {
     $cache = cache_get("locale:$locale");
+
     if ($cache == 0) {
       locale_refresh_cache();
       $cache = cache_get("locale:$locale");

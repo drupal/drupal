@@ -8,20 +8,21 @@ function drupal_help($section = "admin/drupal/help") {
     case 'admin/help':
     case 'admin/drupal/help':
       $output .= "<p>The \"Drupal\" module features a capability whereby other drupal sites  may <i>call home</i> to report their existence.  In turn, this enables a pod of Drupal sites to find, cooperate and advertise each other.</p>";
-      $output .= strtr("<p>Currently, the main application of this feature is the %drupal-sites.  By default, fresh Drupal installations can use %Drupal as their <i>directory server</i> and report their existence.  This reporting occurs via scheduled %xml-rpc pings.</p>", array("%drupal-sites" => "<a href=\"http://www.drupal.org/node/view/3\">". t("Drupal sites page") ."</a>", "%Drupal" => "<a href=\"http://www.drupal.org\">". t("drupal.org") ."</a>", "%xml-rpc" => "<a href=\"http://www.xmlrpc.com/\">". t("XLM-RPC") ."</a>" ));
-      $output .= strtr("<p>Drupal administrators should simply enable this feature to get listed on the %drupal-sites; just set your site's name, e-mail address, slogan and mission statement.  Then make sure that the field called <i>Drupal XML-RPC server</i> on the %drupal-settings page is set to http://www.drupal.org/xmlrpc.php, and enable this feature using the dropdown directly below.</p>", array("%drupal-sites" => "<a href=\"http://www.drupal.org/node/view/3\">". t("Drupal sites page") ."</a>", "%drupal-settings" => l(t("Administration &raquo; site configuration &raquo; modules &raquo; drupal"), "admin/system/modules/drupal") ));
-      $output .= strtr("<p>The listing of your site will occur shortly after your site's next %cron. Note that cron.php should be called using the domain name which you want to have listed at %Drupal.  For example, don't kick off cron by requesting http://127.0.0.1/cron.php.  Instead, use a publicly accessible domain name such as http://www.mydomain.org/cron.php.</p>", array("%cron" => l(t("cron run"), "admin/system/help#cron"), "%Drupal" => "<a href=\"http://www.drupal.org/\">". t("drupal.org") ."</a>" ));
+      $output .= "<p>Currently, the main application of this feature is the %drupal-sites.  By default, fresh Drupal installations can use %Drupal as their <i>directory server</i> and report their existence.  This reporting occurs via scheduled %xml-rpc pings.</p>";
+      $output .= "<p>Drupal administrators should simply enable this feature to get listed on the %drupal-sites; just set your site's name, e-mail address, slogan and mission statement.  Then make sure that the field called <i>Drupal XML-RPC server</i> on the %drupal-settings page is set to http://www.drupal.org/xmlrpc.php, and enable this feature using the dropdown directly below.</p>";
+      $output .= "<p>The listing of your site will occur shortly after your site's next %cron. Note that cron.php should be called using the domain name which you want to have listed at %Drupal.  For example, don't kick off cron by requesting http://127.0.0.1/cron.php.  Instead, use a publicly accessible domain name such as http://www.mydomain.org/cron.php.</p>";
       $output .= "<p>Also note that your installation need not use drupal.org as its directory server.  For example, this feature is perfectly capable of aggregating pings from all of your departmental drupal installations sites within an enterprise.</p>";
+      $output .= t($output,  array("%drupal-sites" => "<a href=\"http://www.drupal.org/node/view/3\">". t("Drupal sites page") ."</a>", "%Drupal" => "<a href=\"http://www.drupal.org\">drupal.org</a>", "%xml-rpc" => "<a href=\"http://www.xmlrpc.com/\">XLM-RPC</a>", "%drupal-settings" => l(t("Administration &raquo; site configuration &raquo; modules &raquo; drupal"), "admin/system/modules/drupal"), "%cron" => l(t("cron run"), "admin/system/help#cron") ));
       break;
     case 'admin/system/modules':
-      $output = "Lets users log in using a Drupal ID and can notify drupal.org about your site.";
+      $output = t("Lets users log in using a Drupal ID and can notify drupal.org about your site.");
       break;
     case 'admin/system/modules/drupal':
-      $output = strtr("Using this your Drupal site can \"call home\" and add itself to the Drupal directory. If you want it to add itself to a different directory server you can change the %Drupal-setting setting -- but the directory server has to be able to handle Drupal XML. To get a full site listing go to the %general and set:<ul><li>The site name,</li><li>The site E-Mail address,</li><li>The site slogan, and</li><li>The site mission statement.</li></ul>", array("%Drupal-setting" => l(t("Drupal XML-RPC server"), "admin/system/modules/drupal"), "%general" => l(t("site configuration"), "admin/system") ));
+      $output = t("Using this your Drupal site can \"call home\" and add itself to the Drupal directory. If you want it to add itself to a different directory server you can change the %Drupal-setting setting -- but the directory server has to be able to handle Drupal XML. To get a full site listing go to the %general and set:<ul><li>The site name,</li><li>The site E-Mail address,</li><li>The site slogan, and</li><li>The site mission statement.</li></ul>", array("%Drupal-setting" => l(t("Drupal XML-RPC server"), "admin/system/modules/drupal"), "%general" => l(t("site configuration"), "admin/system") ));
       break;
   }
 
-  return t($output);
+  return $output;
 }
 
 function drupal_system($field) {

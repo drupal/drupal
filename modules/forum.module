@@ -646,21 +646,22 @@ function forum_help($section = "admin/forum/help") {
     case 'admin/help':
     case 'admin/forum/help':
       $output .= "<h3>Creating a forum</h3>";
-      $output .= strtr("<p>The forum module uses taxonomy to organize itself. To create a forum you first have to create a %taxonomy. When doing this, choose a sensible name for it (such as \"fora\") and make sure under \"Types\" that \"forum\" is selected. Once you have done this, %taxo-terms to it. Each term will become a forum. If you fill in the description field, users will be given additonal information about the forum on the main forum page. For example: \"troubleshooting\" - \"Please ask your questions here.\"</p>", array("%taxonomy" => l(t("taxonomy vocabulary"), "admin/taxonomy/add/vocabulary"), "%taxo-terms" => l(t("add some terms"), "admin/taxonomy" ) ));
-      $output .= strtr("<p>When you are happy with your vocabulary, go to ". l("site configuration &raquo; modules &raquo; forum","admin/system/modules/forum") ." and set <b>Forum vocabulary</b> to the one you have just created. There will now be fora active on the site. For users to access them they must have the \"access content\" %permission and to create a topic they must have the \"create forum topics\" %permission. These permissions can be set in the %permission pages.</p>", array("%forums" => l(t("site configutation &raquo; modules &raquo; forum"), "admin/system/modules/forum"), "%permission" => l(t("permission"), "admin/user/permission") ));
+      $output .= "<p>The forum module uses taxonomy to organize itself. To create a forum you first have to create a %taxonomy. When doing this, choose a sensible name for it (such as \"fora\") and make sure under \"Types\" that \"forum\" is selected. Once you have done this, %taxo-terms to it. Each term will become a forum. If you fill in the description field, users will be given additonal information about the forum on the main forum page. For example: \"troubleshooting\" - \"Please ask your questions here.\"</p>";
+      $output .= "<p>When you are happy with your vocabulary, go to ". l("site configuration &raquo; modules &raquo; forum","admin/system/modules/forum") ." and set <b>Forum vocabulary</b> to the one you have just created. There will now be fora active on the site. For users to access them they must have the \"access content\" %permission and to create a topic they must have the \"create forum topics\" %permission. These permissions can be set in the %permission pages.</p>";
       $output .= "<h4>Icons</h4>";
-      $output .= strtr("<p>To disable icons, set the icon path as blank in %forums-icon.</p>", array("%forums-icon" => l(t("site configuration &raquo; modules &raquo; forums"), "admin/system/module/forum") ));
+      $output .= "<p>To disable icons, set the icon path as blank in %forums.</p>";
       $output .= "<p>All files in the icon directory are assumed to be images. You may use images of whatever size you wish, but it is recommended to use 15x15 or 16x16.</p>";
+      $output = t($output, array("%taxonomy" => l(t("taxonomy vocabulary"), "admin/taxonomy/add/vocabulary"), "%taxo-terms" => l(t("add some terms"), "admin/taxonomy"), "%forums" => l(t("site configutation &raquo; modules &raquo; forum"), "admin/system/modules/forum"), "%permission" => l(t("permission"), "admin/user/permission") ));
       break;
     case 'admin/system/modules':
-      $output = "Enable threaded discussions about general topics.";
+      $output = t("Enable threaded discussions about general topics.");
       break;
     case 'admin/system/modules/forum':
-      $output = strtr("Forums are threaded discussions based on the taxonomy system so you must first %taxonomy-create of type \"forum\" to place the forum tree in. Then %taxonomy-add to this taxonomy. Each term becomes the name of a forum. If you define a term as a \"Container\" (See below) the term is not a forum itself, but rather holds forms. This lets you group your forums.", array("%taxonomy-create" => l(t("create a taxonomy"), "admin/taxonomy/add/vocabulary"), "%taxonomy" => l(t("add terms"), "admin/taxonomy") ));
+      $output = t("Forums are threaded discussions based on the taxonomy system so you must first %taxonomy-create of type \"forum\" to place the forum tree in. Then %taxonomy-add to this taxonomy. Each term becomes the name of a forum. If you define a term as a \"Container\" (See below) the term is not a forum itself, but rather holds forms. This lets you group your forums.", array("%taxonomy-create" => l(t("create a taxonomy"), "admin/taxonomy/add/vocabulary"), "%taxonomy" => l(t("add terms"), "admin/taxonomy") ));
       break;
   }
 
-  return t($output);
+  return $output;
 }
 
 ?>

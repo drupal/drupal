@@ -2,27 +2,30 @@
 // $Id$
 
 function system_help($section = "admin/system/help") {
+  $output = "";
+
   switch ($section) {
     case "admin/system":
-      $output = "General configuration options for your site. Set up the name of the site, e-mail address used in mail-outs, clean URL options, caching, etc.";
+      $output = t("General configuration options for your site. Set up the name of the site, e-mail address used in mail-outs, clean URL options, caching, etc.");
       break;
     case "admin/system/themes":
-      $output = "Select which themes are available to your users and specify the default theme.";
+      $output = t("Select which themes are available to your users and specify the default theme.");
       break;
     case "admin/system/modules":
-      $output = "Modules are plugins for Drupal that extend its core functionality.  Here you can select which modules are enabled. On the left hand side click on the name of the module for their individual configurations.  Once a module is enabled, you will need to grant permissions to users in user management.";
+      $output = t("Modules are plugins for Drupal that extend its core functionality.  Here you can select which modules are enabled. On the left hand side click on the name of the module for their individual configurations.  Once a module is enabled, you will need to grant permissions to users in user management.");
       break;
     case "admin/system/filters":
-      $output = "Filters fit between the raw text in a node and the HTML output. They allow you to replace text selectively. Uses include automatic conversion of emoticons into graphics and filtering HTML content from users' submissions.";
+      $output = t("Filters fit between the raw text in a node and the HTML output. They allow you to replace text selectively. Uses include automatic conversion of emoticons into graphics and filtering HTML content from users' submissions.");
       break;
     case "admin/system/help":
       $output .= "<p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviours including visual and operational settings.</p>";
       $output .= "<h3><a id=\"cron\">Cron</a></h3>". system_help_cron();
       $output .= "<h3><a id=\"cache\">Cache</a></h3>". system_help_cache();
+      $output = t($output);
       break;
   }
 
-  return t("$output");
+  return $output;
 }
 
 function system_system($field) {

@@ -15,13 +15,13 @@ function queue_help($section) {
 
   switch ($section) {
     case 'admin/system/modules':
-      $output = "Enables content to be moderated by the community.";
+      $output = t("Enables content to be moderated by the community.");
       break;
     case 'admin/system/modules/queue':
-      $output = "The queue provides a way for your users to vote on submitted content. This is called <b>moderation</b>. Users can moderate a post up (give it a point), or down (subtract a point). The settings below give you control over how many points are required for the status of a post to be automatically changed. See individual items for details.";
+      $output = t("The queue provides a way for your users to vote on submitted content. This is called <b>moderation</b>. Users can moderate a post up (give it a point), or down (subtract a point). The settings below give you control over how many points are required for the status of a post to be automatically changed. See individual items for details.");
       break;
   }
-  return t($output);
+  return $output;
 }
 
 function queue_settings() {

@@ -6,14 +6,14 @@ function archive_help($section) {
 
   switch ($section) {
     case 'admin/system/modules':
-      $output = "Displays a calendar to navigate old content.";
+      $output = t("Displays a calendar to navigate old content.");
       break;
     case 'admin/system/modules/archive':
-      $output = "Choose the starting \"day of the week\" for the displayed calendar block.";
+      $output = t("Choose the starting \"day of the week\" for the displayed calendar block.");
       break;
   }
 
-  return t($output);
+  return $output;
 }
 function archive_system($field){
   $output = "";
