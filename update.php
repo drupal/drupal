@@ -492,7 +492,7 @@ function update_page() {
 
 print "<html><h1>Drupal update</h1>";
 // Security check:
-if (!user_access(NULL)) {
+if (user_access(NULL)) {
   update_page();
 }
 else {
