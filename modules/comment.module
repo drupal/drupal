@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.138 2003/06/11 18:16:32 dries Exp $
+// $Id: comment.module,v 1.139 2003/06/12 19:13:50 dries Exp $
 
 $GLOBALS["cmodes"] = array(1 => t("Flat list - collapsed"), 2 => t("Flat list - expanded"), 3 => t("Threaded list - collapsed"), 4 => t("Threaded list - expanded"));
 $GLOBALS["corder"] = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"));
@@ -176,7 +176,7 @@ function comment_preview($edit) {
   ** Preview the comment:
   */
 
-  comment_view($comment);
+  comment_view($comment, t("reply to this comment"));
 
   theme("box", t("Reply"), comment_form($edit));
 
