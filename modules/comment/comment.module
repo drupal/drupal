@@ -846,7 +846,7 @@ function comment_render($node, $cid = 0) {
       }
 
       // Start a form, for use with comment control and moderation.
-      $result = pager_query($query, $comments_per_page, 0, "SELECT COUNT(*) FROM {comments} WHERE c.status = 0 AND nid = '". db_escape_string($nid) ."'");
+      $result = pager_query($query, $comments_per_page, 0, "SELECT COUNT(*) FROM {comments} WHERE status = 0 AND nid = '". db_escape_string($nid) ."'");
       if (db_num_rows($result) && (variable_get('comment_controls', 0) == 0 || variable_get('comment_controls', 0) == 2)) {
         $output .= '<form method="post" action="'. url('comment') ."\"><div>\n";
         $output .= theme('comment_controls', $threshold, $mode, $order, $comments_per_page);
