@@ -161,7 +161,7 @@ function locale_search() {
     }
     if ($edit[module]) $query[] = "location LIKE '%mod=". (check_input($edit[module]) != "all" ? check_input($edit[module]) : "") ."%'";
     if ($edit[string]) $query[] = "string RLIKE '". check_input($edit[string]) ."'";
-    
+
     $result = db_query("SELECT * FROM locales". (count($query) ? " WHERE ". implode(" && ", $query) : ""));
 
     $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
@@ -178,7 +178,7 @@ function locale_search() {
   $form .= form_textfield("String", "string", $edit[string], 30, 30, "Leave blank to show all strings. This is treated as a regular expression.");
 
   $form .= form_submit("Search");
-  
+
   $output .= form($REQUEST_URI, $form);
 
   return $output;
