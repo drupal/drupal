@@ -31,7 +31,7 @@ function story_help() {
 
 function story_view($node, $main = 0) {
   global $theme;
-  $node->body = ($main ? $node->abstract : "$node->abstract<HR>$node->body");
+  $node->body = ((!$main) && ($node->body)) ? "$node->abstract<HR>$node->body" : $node->abstract;
   $theme->node($node, $main);
 }
 
