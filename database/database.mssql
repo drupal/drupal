@@ -20,7 +20,7 @@ CREATE TABLE [dbo].[accesslog] (
 GO
 
 CREATE TABLE [dbo].[authmap] (
-  [aid] [numeric](10, 0) NULL ,
+  [aid] [numeric](10, 0) IDENTITY NULL ,
   [uid] [int] NOT NULL ,
   [authname] [varchar] (128) NOT NULL ,
   [module] [varchar] (128) NOT NULL

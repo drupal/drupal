@@ -549,6 +549,7 @@ function user_get_authmaps($authname = NULL) {
 }
 
 function user_set_authmaps($account, $authmaps) {
+
   foreach ($authmaps as $key => $value) {
     $module = explode("_", $key, 2);
     if ($value) {
@@ -1535,10 +1536,11 @@ function user_admin_edit($edit = array()) {
       if ($edit["status"] == 0) {
         db_query("DELETE FROM {users} WHERE uid = %d", $account->uid);
         db_query("DELETE FROM {authmap} WHERE uid = %d", $account->uid);
-        $output .= t("The account has been deleted.");
+        $output .= status(t("the account has been deleted."));
       }
       else {
-        $output .= t("Failed to delete account: the account has to be blocked first.");
+        $error = t("Failed to delete account: the account has to be blocked first.");
+        $output .= theme("theme_error", $error);
       }
     }
 

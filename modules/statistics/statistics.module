@@ -668,56 +668,32 @@ function statistics_display_online_block() {
       /* count users with activity in the past defined period */
       $time_period = variable_get("statistics_block_online_time", 2700);
 
-      /*
-      ** This call gathers all the info we need on users/guests in a single
-      ** database call, thus is quite efficient.
-      */
-      $result = db_query("SELECT COUNT(DISTINCT hostname) AS count, uid, MAX(timestamp) AS max_timestamp FROM {accesslog} WHERE timestamp >= %d GROUP BY uid ORDER BY max_timestamp DESC", (time() - $time_period));
-
-      $users = $guests = 0;
-      /* Count number of users & guests currently online based on db query */
-      while ($users_online = db_fetch_array($result)) {
-        if ($users_online["uid"]) {
-          /* Has uid, so is a registered user */
-          $user_list[$users] = $users_online[uid];
-          $users++;
-        }
-        else {
-          /*
-          ** There's only going to be one return with a uid of 0, and that's
-          ** the guest(s). Hence, the count of this field is the total number
-          ** of guests currently online.
-          */
-          $guests = $users_online["count"];
-        }
-      }
+      $guests = db_fetch_object(db_query("SELECT COUNT(DISTINCT sid) AS count FROM {sessions} WHERE timestamp >= %d AND uid = 0", time() - $time_period));
+      $users = db_query("SELECT DISTINCT uid, MAX(timestamp) AS max_timestamp FROM {sessions} WHERE timestamp >= %d AND uid != 0 GROUP BY uid ORDER BY max_timestamp DESC", time() - $time_period );
+      $total_users = db_affected_rows();
 
       /* format the output with proper grammar */
-      if ($users == 1 && $guests == 1) {
-        $output .= t("There is currently %members and %visitors online.", array("%members" => format_plural($users, "1 user", "%count users"), "%visitors" => format_plural($guests, "1 guest", "%count guests")));
+      if ($total_users == 1 && $guests->count == 1) {
+        $output .= t("There is currently %members and %visitors online.", array("%members" => format_plural($total_users, "1 user", "%count users"), "%visitors" => format_plural($guests->count, "1 guest", "%count guests")));
       }
       else {
-        $output .= t("There are currently %members and %visitors online.", array("%members" => format_plural($users, "1 user", "%count users"), "%visitors" => format_plural($guests, "1 guest", "%count guests")));
+        $output .= t("There are currently %members and %visitors online.", array("%members" => format_plural($total_users, "1 user", "%count users"), "%visitors" => format_plural($guests->count, "1 guest", "%count guests")));
       }
 
-      if (user_access("access userlist") && $users) {
+      if (user_access("access userlist") && $total_users) {
         /* Display a list of currently online users */
         $max_users = variable_get("statistics_block_online_max_cnt", 10);
-        $uid = reset($user_list);
-        while (($uid) && ($max_users)) {
-          $user = user_load(array("uid" => $uid));
-          /* When displaying name, be sure it's not more than defined max length */
+        $items = array();
+        while ($uid = db_fetch_object($users)) {
+          $user = user_load(array("uid" => $uid->uid));
+          /* Display only max_length characters of username */
           $items[] = format_name($user);
-          $uid = next($user_list);
-          /*
-          ** When $max_users reaches zero, we break out even if there are
-          ** more online (as defined by the admin)
-          */
-          $max_users--;
         }
 
-        $output .= "<br /><br />";
-        $output .= theme("theme_item_list", $items, variable_get("statistics_block_online_subtitle", "Online users:"));
+  if ($items) {
+          $output .= "<br /><br />";
+          $output .= theme("theme_item_list", $items, variable_get("statistics_block_online_subtitle", "Online users:"));
+        }
       }
     }
     else {
