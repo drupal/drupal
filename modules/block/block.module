@@ -56,7 +56,7 @@ function block_help($section = "admin/block/help") {
 function block_system($field){
   $output = "";
 
-  if ($field == "description") { $output = admin_help("admin/system/modules"); };
+  if ($field == "description") { $output = block_help("admin/system/modules"); }
 
   return $output;
 }
