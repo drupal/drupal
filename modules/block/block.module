@@ -414,7 +414,7 @@ function block_list($region) {
       // Match path if necessary
       if ($block['pages']) {
         $path = drupal_get_path_alias($_GET['q']);
-        $regexp = '/^('. preg_replace(array('/(\r\n?|\n)/', '/\\\\\*/', '/(^|\|)\\\\<front\\\\>($|\|)/'), array('|', '.*', '\1\2'), preg_quote($block['pages'], '/')) .')$/';
+        $regexp = '/^('. preg_replace(array('/(\r\n?|\n)/', '/\\\\\*/', '/(^|\|)\\\\<front\\\\>($|\|)/'), array('|', '.*', '\1'. variable_get('site_frontpage', 'node') .'\2'), preg_quote($block['pages'], '/')) .')$/';
         $matched = !($block['visibility'] xor preg_match($regexp, $path));
       }
       else {
