@@ -980,9 +980,28 @@ function node_feed($nodes = 0, $channel = array()) {
   }
 
   while ($node = db_fetch_object($nodes)) {
+    /*
+    ** Load the specified node:
+    */
+    
     $item = node_load(array("nid" => $node->nid));
-    $link = url(node_url($node));
-    $items .= format_rss_item($item->title, $link, ($item->teaser ? $item->teaser : $item->body));
+    
+    /*
+    ** Transform the node information into an RSS item:
+    */
+    
+    $items .= format_rss_item($item->title, url(node_url($node)), ($item->teaser ? $item->teaser : $item->body));
+
+    /*
+    ** Determine the publication date:
+    */
+    
+    if ($item->updated > $pubdate) {
+      $pubdate = $item->updated;
+    }
+    if ($item->created > $pubdate) {
+      $pubdate = $item->created;
+    }
   }
 
   $output .= "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
@@ -994,7 +1013,7 @@ function node_feed($nodes = 0, $channel = array()) {
   foreach ($languages as $key => $value) break;
   if (!$channel["language"]) $channel["language"] = $key ? $key : "en";
   $output .= "<rss version=\"". $channel["version"] . "\">\n";
-  $output .= format_rss_channel($channel["title"], $channel["link"], $channel["description"], $items, $channel["language"]);
+  $output .= format_rss_channel($channel["title"], $channel["link"], $channel["description"], $items, $channel["language"], array("pubdate" => date("r", $pubdate)));
   $output .= "</rss>\n";
 
   header("Content-Type: text/xml");
