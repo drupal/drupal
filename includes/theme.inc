@@ -61,7 +61,7 @@ function theme_main_blocks($theme) {
 function theme_user_blocks($theme) {
   global $PHP_SELF, $repository, $user; 
   if ($user->id && strstr($PHP_SELF, "index.php")) {
-    $result = db_query("SELECT * FROM layout l LEFT JOIN blocks b ON l.block = b.name WHERE l.user = '$user->id' AND l.weight > 0 AND b.status = '1' ORDER BY weight DESC");
+    $result = db_query("SELECT * FROM layout l LEFT JOIN blocks b ON l.block = b.name WHERE l.user = '$user->id' AND l.weight > 0 AND b.status = '1' ORDER BY weight");
     while ($block = db_fetch_object($result)) {
      $blocks = module_execute($block->module, "block");
      $theme->box($blocks[$block->offset]["subject"], $blocks[$block->offset]["content"]);
