@@ -54,9 +54,8 @@ function blog_head($main = 0) {
 
   $output = array();
 
-  if ($mod == "blog" && $id) {
-    $account = user_load(array("uid" => $id));
-    $output[] = "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"RSS - ". $account->name. "'s blog\" href=\"". url("blog/view/$id") ."\" />";
+  if ($mod == "blog") {
+    $output[] = "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"RSS feed\" href=\"". url("blog/feed/$id") ."\" />";
   }
 
   return $output;
