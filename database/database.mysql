@@ -35,11 +35,27 @@ CREATE TABLE comments (
   PRIMARY KEY (cid)
 );
 
+CREATE TABLE cron (
+  module varchar(255) DEFAULT '' NOT NULL,
+  scheduled int(11),
+  timestamp int(11),
+  PRIMARY KEY (module)
+);
+
 CREATE TABLE diaries (
   id int(5) DEFAULT '0' NOT NULL auto_increment,
   author int(6) DEFAULT '0' NOT NULL,
   text text,
   timestamp int(11) DEFAULT '0' NOT NULL,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE droplets (
+  id tinyint(4) DEFAULT '0' NOT NULL auto_increment,
+  name varchar(255) DEFAULT '' NOT NULL,
+  help text NOT NULL,
+  code text NOT NULL,
+  UNIQUE name (name),
   PRIMARY KEY (id)
 );
 
@@ -76,7 +92,6 @@ CREATE TABLE users (
   real_email varchar(60) DEFAULT '' NOT NULL,
   fake_email varchar(60) DEFAULT '' NOT NULL,
   url varchar(100) DEFAULT '' NOT NULL,
-  timezone varchar(8) DEFAULT '' NOT NULL,
   stories tinyint(2) DEFAULT '10',
   mode varchar(10) DEFAULT '',
   sort tinyint(1) DEFAULT '0',
@@ -90,6 +105,7 @@ CREATE TABLE users (
   status tinyint(4) DEFAULT '0' NOT NULL,
   history text NOT NULL,
   hash varchar(12) DEFAULT '' NOT NULL,
+  timezone varchar(8),
   PRIMARY KEY (id)
 );
 
@@ -103,3 +119,4 @@ CREATE TABLE watchdog (
   hostname varchar(128) DEFAULT '' NOT NULL,
   PRIMARY KEY (id)
 );
+

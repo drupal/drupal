@@ -43,26 +43,26 @@ function wishlist_page() {
   
    <H3>Modules</H3>
     <UL>
-     <LI>convert diary system to a module (?)</LI>
      <LI>RDF/XML/RSS syndication import/export</LI>
      <LI>messaging between administrators/users</LI>
      <LI>links/bookmarks manager</LI>
      <LI>public userlist</LI>
      <LI>visitor/referals statistics</LI>
      <LI>banner ad/rotation/tracking or affiliate program</LI>
-     <LI>messaging system between users</LI>
      <LI>voting polls</LI>
      <LI>daily/weekly e-mail digest - mailing list</LI>
-     <LI>story overview grouped by category</LI>
-     <LI>e-commerce/shop</LI> 
+     <LI>daily/weekly site rapports - mailing list</LI>
+     <LI>featured stories - story index grouped by category</LI>
+     <LI>e-commerce/shop extension</LI> 
     </UL>
  
    <H3>Public release</H3>
     <UL>
      <LI>write minimum amount of documentation like installation guidelines, administrator guide, and so on</LI>
      <LI>make (or find and install) a "task manager / todo list / progress meter / bug report"-tool so we can get ourselves and the project somewhat organized</LI>
+     <LI>setup a developers mailing list</LI>
      <LI>integration and testing with latest version of PHP (just to avoid bug reports that could have been easily avoided)</LI>
-     <LI>security revision</LI>
+     <LI>code revision to close possible security holes</LI>
     </UL>
  
    <H3>Themes</H3>

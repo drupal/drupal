@@ -49,6 +49,24 @@ function documentation_page() {
 
   <H2>Chapter 2: technical guide</H2>
 
+  <H3>Theme system</H3>
+  
+  <P>Drop's theme system is simple, elegant, flexible and powerful.  It let you control all aspect of your drop site in terms of colors, markup, layout and even the position of most boxes.  You can leave boxes out, move them from right to left, up and down until it fit your needs.  Therefore, drop uses a theme class that has a handful of functions. The drop.org engine dynamically loads the correct theme class, instantiates it and then calls these class' functions where approriate.</P>
+  <P>Let's illustrate this with an easy example. Say, to generate the main page, the drop.org engine would use something like:</P>
+  <PRE>
+   $theme = new Theme(); 
+   $theme->header();   
+     // displays the header of a page
+   for each $article to be displayed { 
+      $theme->article($article); 
+        // displays a themed article or story
+   } 
+   $theme->footer(); 
+     // displays the footer of a page
+  </PRE>
+  <P>We have similar functions for thinkgs like comments (i.e. <CODE>$theme->comment($comment)</CODE>), generic boxes (i.e. <CODE>$theme->box($topic, $body)</CODE>) and so on.</P>
+  <P>This simple and straight-forward approach has proven to be both flexible and fast.  If you want to learn more about the theme system, we recommand you to look athe code of the existing themes.  It is pretty straight-forward and doesn't require any knowledge about the engine itself.</P>
+
   <H3>Modules</H3>
     
   <P>When developing drop.org it became clear that we wanted to have a system which is as modular as possible. A modular design will provide flexibility, adaptability, and continuity which in turn allows people to customize the site to their needs and likings.</P>
@@ -56,7 +74,7 @@ function documentation_page() {
 
   <P>The idea is to be able to run random code at given places in the engine.  This random code should then be able to do whatever needed to enhance the functionality.  The places where code can be executed are called "hooks" and are defined by a fixed interface.</P>
   <P>Even though we aim towards modularity, a basic rule is to avoid defined interfaces.  We are exceptionally careful when it comes down to adding interfaces because once you give an interface to developers they will start coding to it and once somebody starts coding to it you are stuck with it.</P>
-  <P>In places where hooks are made available, the engine calls each module's exported functions.  This is done by iterating through the <CODE>./modules</CODE> directory where all modules must reside.  Say your module is named <CODE>foo</CODE> (i.e. <CODE>./modules/foo.module</CODE>) and if there was a hook called <CODE>bar</CODE>, the engine will call <CODE>foo_bar()</CODE> if this was exported by your module.</P>
+  <P>In places where hooks are made available, the engine calls each module's exported functions.  This is done by iterating through the <CODE>modules</CODE> directory where all modules must reside.  Say your module is named <CODE>foo</CODE> (i.e. <CODE>./modules/foo.module</CODE>) and if there was a hook called <CODE>bar</CODE>, the engine will call <CODE>foo_bar()</CODE> if this was exported by your module.</P>
   <P>Each module has to declare an associative array named <CODE>$module</CODE> that serves as the list of hooks that a module wants to export or carry out.  Each entry in the array contains the name of a hook followed by the name of the exported function.</P>
   <P>In our above example, our associative array <CODE>$module</CODE> would look like:</P>
   <PRE>
@@ -97,6 +115,7 @@ function documentation_page() {
     <TD VALIGN="top"></TD>
    </TR>
   </TABLE>
+
   <H3>Droplets</H3>
 
   <P>The site can be almost entirely configured through a web interface by using <I>droplets</I>.  Simply put, droplets are small bit of PHP code which will get plugged into the engine or modules powering the site.  Droplets are typically used to link modules with the mainstream engine or to customize various aspects of the engine itself.</P>
@@ -122,17 +141,21 @@ function documentation_page() {
   </PRE>
   <P>For more in depth example, we recommand you to check any of the available modules and to go from there.</P>
   <P>As said above, you can virtually use any piece of PHP code in a droplet: you can declare and use functions, consult the SQL database, access configuration settings and so on.</P>
+
+  <H3>Database abstraction</H3>
+
+  <P>Drop uses a database abstraction layer so I can easily run on top of different databases like MySQL, Oracle, Postgres and so on.  However, the only supported database is MySQL for the time being.  In fact, we haven't even bothered or tried to migrate to another database so our database abstraction layer might even contain undiscovered flaws.  Nevertless, moving to another database shouldn't be much of a problem.</P>
+  <P>Take a look at <CODE>includes/database.inc</CODE> to see what database functions are supported.</P>
   
-  <H3>cron</H3>
+  <H3>Cron</H3>
  
   <P>Cron (wich stands for chronograph) is a periodic command scheduler: it executes commands at intervals specified in seconds.  It can be used to control the execution of daily, weekly and monthly jobs (or anything with a period of n seconds).   Automating tasks is one of the best ways to keep a system running smoothly, and if most of your administration does not require your direct involvement, cron is an ideal solution.</P>
   <P>Note that cron does not guarantee that the commands will be executed at the specified interval.  However, the engine will make sure that the commands are run at the specified intervals as closely as possible.</P>
-  <P>When <CODE>http://www.yourdomain.com/cron.php</CODE> is accessed, cron will run: it queries the database for the jobs cron controls, and their periods in seconds.  If a certain task wasn't executed in the last n seconds, where n is the period of that job, it will be executed.  It then records the date in the database so it can know when to run it again.  When all the executed commands terminate, cron is done.</P>
-  <P>Cron is handy to run daily, weekly and monthly tasks that
-take care of various "housekeeping chores" such as database maintainance,
-recalculating settings, periodic mailings, scheduled backups and so on.</P>
-  <P>The recommanded way to setup drop.org's cron job is to setup a real UNIX <CODE>crontab</CODE> that frequently visits <CODE>http://www.yourdomain.com/cron.php</CODE>: the more you visit the <CODE>cron.php</CODE>, the more accurate cron can and will be.  If your hosting company does not allow you to use <CODE>crontab</CODE>, you can always ask someone else to setup a <CODE>crontab</CODE> for you.  Afterall, virtually any host machine with access to the internet can run the <CODE>crontab</CODE> for you.<P>
-  <P>For the <CODE>crontab</CODE>, use a browser like <CODE>lynx</CODE> or <CODE>wget</CODE> but make sure the process terminates: either use <CODE>/usr/bin/lynx -source http://www.yourdomain.com/cron.php</CODE> or <CODE>/usr/bin/wgeti -O /dev/null http://www.yourdomain.com/cron.php</CODE>.  Take a look at the example scripts in the <CODE>scripts</CODE>-directory and make sure to adjust them to your needs.</P>
+  <P>Whenever <CODE>http://www.yourdomain.com/cron.php</CODE> is accessed, cron will run: it queries the database for the jobs cron controls, and their periods in seconds.  If a certain task wasn't executed in the last n seconds, where n is the period of that job, it will be executed.  It then records the date in the database so it can know when to run it again.  When all the executed commands terminate, cron is done.</P>
+  <P>Cron is handy to run daily, weekly and monthly tasks that take care of various "housekeeping chores" such as database maintainance, recalculating settings, periodic mailings, scheduled backups and so on.</P>
+
+  <P>The recommanded way to setup drop.org's cron system is to setup a  Unix/Linux <CODE>crontab</CODE> that frequently visits <CODE>http://www.yourdomain.com/cron.php</CODE>: the more you visit <CODE>cron.php</CODE>, the more accurate cron can and will be.  If your hosting company does not allow you to setup <CODE>crontabs</CODE>, you can always ask someone else to setup a <CODE>crontab</CODE> for you.  Afterall, virtually any host machine with access to the internet can setup a <CODE>crontab</CODE> to frequently visit <CODE>http://www.yourdomain.com/cron.php</CODE> for you.<P>
+  <P>For the <CODE>crontab</CODE> itself, use a browser like <CODE>lynx</CODE> or <CODE>wget</CODE> but make sure the process terminates: either use <CODE>/usr/bin/lynx -source http://www.yourdomain.com/cron.php</CODE> or <CODE>/usr/bin/wget -O /dev/null http://www.yourdomain.com/cron.php</CODE>.  Take a look at the example scripts in the <CODE>scripts</CODE>-directory and make sure to adjust them to your needs.</P>
   <P>A good <CODE>crontab</CODE>-line to run the <CODE>cron</CODE>-script once every hour would be:</P>
   <PRE>
     00 * * * * /home/www/drop/scripts/cron-lynx
