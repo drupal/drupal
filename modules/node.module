@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.135 2002/05/26 09:23:46 dries Exp $
+// $Id: node.module,v 1.136 2002/05/29 17:16:27 kjartan Exp $
 
 function node_help() {
   global $mod;
@@ -1007,15 +1007,9 @@ function node_preview($node, $error = NULL) {
 }
 
 function node_submit($node) {
-  global $theme, $user, $tid;
-
-  if (!user_access("post content")) {
-    return message_access();
-  }
-
-  $context->tid = $tid;
-
-  if (user_access("post content", $context)) {
+  global $user, $theme;
+  
+  if (user_access("post content")) {
 
     /*
     ** Fixup the node when required:
