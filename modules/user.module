@@ -230,7 +230,7 @@ function user_link($type) {
   }
 
   if ($type == "menu") {
-    $links[] = "<a href=\"module.php?mod=user&op=view\">". t("your account") ."</a>";
+    $links[] = "<a href=\"module.php?mod=user&op=view\">". t("account settings") ."</a>";
   }
 
   if ($type == "admin") {

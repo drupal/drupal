@@ -1,0 +1,67 @@
+<?php
+
+function tracker_link($type) {
+  if ($type == "menu") {
+    $links[] = "<a href=\"module.php?mod=tracker\">". t("recent comments") ."</a>";
+  }
+
+  return $links ? $links : array();
+}
+
+function tracker_comments($id = 0) {
+  global $theme, $user;
+
+  if ($id) {
+    $sresult = db_query("SELECT n.nid, n.title, COUNT(n.nid) AS count FROM comments c LEFT JOIN node n ON c.lid = n.nid WHERE c.author = '". check_input($id) ."' GROUP BY n.nid DESC ORDER BY n.nid DESC LIMIT 5");
+  }
+  else {
+    $sresult = db_query("SELECT n.nid, n.title, COUNT(n.nid) AS count FROM comments c LEFT JOIN node n ON c.lid = n.nid GROUP BY n.nid DESC ORDER BY n.nid DESC LIMIT 5");
+  }
+
+  while ($node = db_fetch_object($sresult)) {
+    $output .= format_plural($node->count, "comment", "comments") ." ". t("attached to node") ." <a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a>:\n";
+
+    if ($id) {
+      $cresult = db_query("SELECT * FROM comments WHERE author = '". check_input($id) ."' AND lid = '$node->nid' ORDER BY cid DESC");
+    }
+    else {
+      $cresult = db_query("SELECT * FROM comments WHERE lid = '$node->nid' ORDER BY cid DESC");
+    }
+
+    $output .= "<ul>";
+    while ($comment = db_fetch_object($cresult)) {
+      $output .= "  <li><a href=\"node.php?id=$node->nid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</a> (". t("replies") .": ". comment_num_replies($comment->cid) .", ". t("votes") .": $comment->votes, ". t("score") .": ". comment_score($comment) .")</li>\n";
+    }
+    $output .= " </ul>\n";
+  }
+
+  return $output;
+}
+
+function tracker_menu() {
+  global $user;
+
+  $links[] = "<a href=\"module.php?mod=tracker&id=$user->uid\">your recent comments</a>";
+  $links[] = "<a href=\"module.php?mod=tracker\">all recent comments</a>";
+
+  return "<div align=\"center\">". implode(" &middot; ", $links) ."</div>";
+}
+
+
+function tracker_page() {
+  global $theme, $id;
+
+  $theme->header();
+  $theme->box(t("Tracker"), tracker_menu());
+
+  if ($id) {
+    $theme->box(t("Your recent comments"), tracker_comments($id));
+  }
+  else {
+    $theme->box(t("All recent comments"), tracker_comments());
+  }
+
+  $theme->footer();
+}
+
+?>
