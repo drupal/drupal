@@ -53,8 +53,8 @@ $base_url = "http://localhost";
 #   To override specific entries in the 'variable' table for this site,
 #   set them here.  You usually don't need to use this feature.  This is
 #   useful when used in a configuration file for a vhost or directory,
-#   rather than the default conf.php. Any configuration setting from the
-#   variable table can be given a new value.
+#   rather than the default settings.php. Any configuration setting from
+#   the variable table can be given a new value.
 #
 # $conf = array(
 #      'site_name' => 'My Drupal site',
