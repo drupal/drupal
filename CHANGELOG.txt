@@ -22,6 +22,8 @@ Drupal x.x.x, xxxx-xx-xx
     * added support for multiple database connections.
 - theme system:
     * changed all GIFs to PNGs.
+- blogger API:
+    * added support for auto-discovery of blogger API via RSD.
 - accessibility:
     * improved the accessibility of the archive module's calendar.
     * improved form handling.
