@@ -263,7 +263,7 @@ function blogapi_get_category_list($req_params) {
   $categories = array();
   if ($vocabularies) {
     foreach ($vocabularies as $vocabulary) {
-      $terms = module_invoke('taxonomy', 'get_tree', $vocabulary->vid, 0, -1, 'tid');
+      $terms = module_invoke('taxonomy', 'get_tree', $vocabulary->vid, 0, -1);
       foreach ($terms as $term) {
         $term_name = $term->name;
         foreach (module_invoke('taxonomy', 'get_parents', $term->tid, 'tid') as $parent) {
