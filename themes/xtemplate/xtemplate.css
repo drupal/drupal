@@ -179,11 +179,29 @@ table {
   padding: 10px 10px 10px 0;
   border-bottom: 1px solid #ddd;
 }
-.calendar td              { padding: 0; border-color: #888; }
-.calendar .row-week td a  { padding: 2px; }
-.calendar .day-today      { background-color: #69c; }
-.calendar .day-selected   { background-color: #369; color: #fff;}
-.calendar .header-month   { background-color: #bbb; }
-.calendar .header-week    { background-color: #ccc; }
-.calendar .day-blank      { background-color: #ccc; }
-.calendar .row-week td a:hover { background-color: #fff; color: #000; }
+.calendar td {
+  padding: 0;
+  border-color: #888;
+}
+.calendar .row-week td a {
+  padding: 2px;
+}
+.calendar .day-today {
+  background-color: #69c;
+}
+.calendar .day-selected {
+  background-color: #369;
+  color: #fff;
+}
+.calendar .header-month {
+  background-color: #bbb;
+}
+.calendar .header-week {
+  background-color: #ccc;
+}
+.calendar .day-blank {
+  background-color: #ccc;
+}
+.calendar .row-week td a:hover {
+  background-color: #fff; color: #000;
+}
