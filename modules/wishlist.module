@@ -11,10 +11,7 @@ function wishlist_page() {
    <H3>Users</H3>
     <UL>
      <LI>auto-set default theme according to popularity or date</LI>
-     <LI>enhance "track drop.org" functionality: should be made more complete and more comprehensive</LI>
-     <LI>translation/localization support: let's not add this too soon as it will turn out to be a pain to maintain</LI>
      <LI>allow users to change their e-mail address: this will require validation through our confirmation procedure</LI>
-     <LI>advanced search so people can search stories, comments, diaries, users, and so on by date</LI>
      <LI><I>see section "Modules" for more user oriented features</I></LI>
     </UL>
 
@@ -32,7 +29,6 @@ function wishlist_page() {
      <LI>caching</LI>
      <LI>more configuration options:</LI>
       <UL>
-       <LI>enable/disable open submission queue</LI>
        <LI>enable/disable anonymous users</LI>
        <LI>enable/disable comments - pending comments</LI>
       </UL>
@@ -49,8 +45,6 @@ function wishlist_page() {
      <LI>daily/weekly e-mail digest - mailing list</LI>
      <LI>daily/weekly site reports - mailing list</LI>
      <LI>featured stories - story index grouped by category</LI>
-     <LI>e-commerce/shop extension</LI>
-     <LI>automatically post scheduled stories</LI>
      <LI>review system</LI>
     </UL>
 
