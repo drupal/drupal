@@ -1578,7 +1578,7 @@ function user_admin_account() {
     array ("data" => t("last access"), "field"  => "u.timestamp", "sort" => "desc"),
     t("operations")
   );
-  $sql = "SELECT u.uid, u.name, u.status, u.timestamp, r.name AS rolename FROM {role} r INNER JOIN {users} u ON r.rid = u.rid ";
+  $sql = "SELECT u.uid, u.name, u.status, u.timestamp, r.name AS rolename FROM {role} r INNER JOIN {users} u ON r.rid = u.rid WHERE uid != 0";
   $sql .= tablesort_sql($header);
   $result = pager_query($sql, 50);
 
