@@ -18,5 +18,6 @@ alter table users add rating decimal(8,4) DEFAULT '0' NOT NULL;
 create table locales (
   id int(11) DEFAULT '0' NOT NULL auto_increment,
   english TEXT DEFAULT '' NOT NULL,
+  location varchar(128) DEFAULT '' NOT NULL,
   PRIMARY KEY (id)
 );

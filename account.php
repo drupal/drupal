@@ -38,7 +38,7 @@ function account_create($user = "", $error = "") {
   $output .= "<SMALL><I>". t("Enter your desired username: only letters, numbers and common special characters are allowed.") ."</I></SMALL><P>\n";
   $output .= "<B>". t("E-mail address") .":</B><BR>\n";
   $output .= "<INPUT NAME=\"email\"><BR>\n";
-  $output .= "<SMALL><I>". t("You will be sent instructions on how to validate your account via this e-mail address - please make sure it is accurate.") ."</I></SMALL><P>\n";
+  $output .= "<SMALL><I>". t("You will be sent instructions on how to validate your account via this e-mail address: make sure it is accurate.") ."</I></SMALL><P>\n";
   $output .= "<INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"Create account\">\n";
   $output .= "</FORM>\n";
 
@@ -267,7 +267,7 @@ function account_user($uname) {
 
     // Display account information:
     $theme->header();
-    if ($block1) $theme->box(strtr(t("%s's user information"), array("%s" => $uname)), $block1);
+    if ($block1) $theme->box(strtr(t("%a's user information"), array("%a" => $uname)), $block1);
     if ($block2) $theme->box(strtr(t("%a has posted %b recently"), array("%a" => $uname, "%b" => format_plural($comments, "comment", "comments"))), $block2);
     module_iterate("module", $uname);
     $theme->footer();
@@ -303,7 +303,7 @@ function account_validate($user) {
 function account_email_submit($userid, $email) {
   global $theme, $site_name, $site_url;
 
-  $result = db_query("SELECT id FROM users WHERE userid = '". check_output($userid) ."' AND real_email = '". check_output($email) ."'");
+  $result = db_query("SELECT id FROM users WHERE userid = '". check_input($userid) ."' AND real_email = '". check_input($email) ."'");
 
   if ($account = db_fetch_object($result)) {
     $passwd = account_password();
@@ -313,11 +313,14 @@ function account_email_submit($userid, $email) {
     db_query("UPDATE users SET passwd = PASSWORD('$passwd'), hash = '$hash', status = '$status' WHERE userid = '$userid'");
 
     $link = $site_url ."account.php?op=confirm&name=$userid&hash=$hash";
-    $message = "$userid,\n\n\nyou requested us to e-mail you a new password for your $site_name account.  Note that you will need to re-activate your account before you can login.  You can do so simply by visiting the URL below:\n\n    $link\n\nVisiting this URL will automatically re-activate your account.  Once activated you can login using the following information:\n\n    username: $userid\n    password: $passwd\n\n\n-- $site_name crew\n";
+    $subject = strtr(t("Account details for %a"), array("%a" => $site_name));
+    $message = strtr(t("%a,\n\n\nyou requested us to e-mail you a new password for your account at %b.  You will need to re-confirm your account or you will not be able to login.  To confirm your account updates visit the URL below:\n\n   %c\n\nOnce confirmed you can login using the following username and password:\n\n   username: %a\n   password: %d\n\n\n-- %b team"), array("%a" => $userid, "%b" => $site_name, "%c" => $link, "%d" => $passwd));
+
+    print "<PRE>$subject<BR>$message</PRE>";
 
     watchdog("message", "new password: `$userid' &lt;$email&gt;");
 
-    mail($email, "Account details for $site_name", $message, "From: noreply");
+    mail($email, $subject, $message, "From: noreply");
 
     $output = "Your password and further instructions have been sent to your e-mail address.";
   }
@@ -350,14 +353,15 @@ function account_create_submit($userid, $email) {
     user_save($new);
 
     $link = $site_url ."account.php?op=confirm&name=$new[userid]&hash=$new[hash]";
-    $message = "$new[userid],\n\n\nsomeone signed up for a user account on $site_name and supplied this email address as their contact.  If it wasn't you, don't get your panties in a knot and simply ignore this mail.\n\nIf this was you, you have to activate your account first before you can login.  You can do so simply by visiting the URL below:\n\n    $link\n\nVisiting this URL will automatically activate your account.  Once activated you can login using the following information:\n\n    username: $new[userid]\n    password: $new[passwd]\n\n\n-- $site_name crew\n";
+    $subject = strtr(t("Account details for %a"), array("%a" => $site_name));
+    $message = strtr(t("%a,\n\n\nsomeone signed up for a user account on %b and supplied this e-mail address as their contact.  If it wasn't you, don't get your panties in a knot and simply ignore this mail.  If this was you, you will have to confirm your account first or you will not be able to login.  To confirm your account visit the URL below:\n\n   %c\n\nOnce confirmed you can login using the following username and password:\n\n   username: %a\n   password: %d\n\n\n-- %b team\n"), array("%a" => $new[userid], "%b" => $site_name, "%c" => $link, "%d" => $new[passwd]));
 
     watchdog("message", "new account: `$new[userid]' &lt;$new[real_email]&gt;");
 
-    mail($new[real_email], "Account details for $site_name", $message, "From: noreply");
+    mail($new[real_email], $subject, $message, "From: noreply");
 
     $theme->header();
-    $theme->box(t("Create user account"), t("Congratulations!  Your member account has been successfully created and further instructions on how to activate your account have been sent to your e-mail address."));
+    $theme->box(t("Create user account"), t("Congratulations!  Your member account has been successfully created and further instructions on how to confirm your account have been sent to your e-mail address.  You have to confirm your account first or you will not be able to login."));
     $theme->footer();
   }
 }

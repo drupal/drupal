@@ -111,6 +111,7 @@ CREATE TABLE layout (
 CREATE TABLE locales (
   id int(11) DEFAULT '0' NOT NULL auto_increment,
   english TEXT DEFAULT '' NOT NULL,
+  location varchar(128) DEFAULT '' NOT NULL,
   PRIMARY KEY (id)
 );
 
@@ -176,7 +177,7 @@ CREATE TABLE watchdog (
   timestamp int(11) DEFAULT '0' NOT NULL,
   user int(6) DEFAULT '0' NOT NULL,
   message varchar(255) DEFAULT '' NOT NULL,
-  location varchar(255) DEFAULT '' NOT NULL,
+  location varchar(128) DEFAULT '' NOT NULL,
   hostname varchar(128) DEFAULT '' NOT NULL,
   PRIMARY KEY (id)
 );
