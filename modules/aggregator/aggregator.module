@@ -634,7 +634,7 @@ function import_page_sources() {
   $result = db_query("SELECT * FROM feed ORDER BY title");
 
   while ($feed = db_fetch_object($result)) {
-    $output .= lm("", array("mod" => "import", "op" => "feed", "id" => $feed->fid)));
+    $output .= lm("", array("mod" => "import", "op" => "feed", "id" => $feed->fid));
     $output .= "<div style=\"margin-left: 20px;\">". check_output($feed->description, 1) ."</div><br />";
   }
 
