@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.13 2004/04/21 13:56:37 dries Exp $
+// $Id: filter.module,v 1.14 2004/05/03 17:33:44 dries Exp $
 
 define('FILTER_HTML_DONOTHING', 0);
 define('FILTER_HTML_STRIP', 1);
@@ -65,7 +65,7 @@ function filter_admin_order() {
   filter_refresh();
   $filters = filter_list();
 
-  $header = array("name", "weight");
+  $header = array(t('name'), t('weight'));
   $rows = array();
 
   // Standard HTML filters are always run first, we add a dummy row to indicate this
