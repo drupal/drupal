@@ -1864,6 +1864,7 @@ function _node_rewrite_sql($query = '', $nid_alias = 'n', $args = array()) {
 function node_rewrite_sql($query, $nid_alias = 'n', $args = array()) {
   list($join, $where, $nid_to_select) = _node_rewrite_sql($query, $nid_alias, $args);
 
+  // (?<!text) is a negative look-behind (no need to rewrite queries that already use DISTINCT).
   $query = preg_replace('/(SELECT.*)('. $nid_alias .'\.)?(?<!DISTINCT\()(?<!DISTINCT\('. $nid_alias .'\.)nid(.*FROM)/AUsi', '\1'. $nid_to_select .'\3', $query);
 
   $query = preg_replace('|FROM[^[:upper:]/,]+|','\0 '. $join .' ', $query);
