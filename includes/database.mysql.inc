@@ -5,10 +5,10 @@ function db_connect($url) {
   $url = parse_url($url);
 
   // Allow for non-standard MySQL port.
-  if ($url["port"]) {
+  if (isset($url["port"])) {
      $url["host"] = $url["host"] . ":" . $url["port"];
   }
-  
+
   mysql_pconnect($url["host"], $url["user"], $url["pass"]) or die(mysql_error());
   mysql_select_db(substr($url["path"], 1)) or die("unable to select database");
 
