@@ -86,6 +86,14 @@ function page_set_cache() {
   if (!$user->uid && $_SERVER['REQUEST_METHOD'] == 'GET') {
     // This will fail in some cases, see page_get_cache() for the explanation.
     if ($data = ob_get_contents()) {
+      if (function_exists('gzencode')) {
+        if (version_compare(phpversion(), '4.2', '>=')) {
+          $data = gzencode($data, 9, FORCE_GZIP);
+        }
+        else {
+          $data = gzencode($data, FORCE_GZIP);
+        }
+      }
       cache_set(request_uri(), $data, 1, drupal_get_headers());
     }
   }
@@ -144,6 +152,15 @@ function drupal_page_header() {
       // Send appropriate response:
       header("Last-Modified: $date");
       header("ETag: $etag");
+
+      // Determine if the browser accepts gzipped data
+      if (@strpos($_SERVER['HTTP_ACCEPT_ENCODING'], 'gzip') === false && function_exists('gzencode')) {
+        // strip the gzip header and run uncompress
+        $cache->data = gzinflate(substr(substr($cache->data, 10), 0, -8));
+      }
+      elseif (function_exists('gzencode')) {
+        header('Content-Encoding: gzip');
+      }
 
       /*
       ** Send the original request's headers.  We send them one after

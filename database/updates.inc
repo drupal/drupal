@@ -62,7 +62,8 @@ $sql_updates = array(
   "2004-06-11" => "update_88",
   "2004-06-18" => "update_89",
   "2004-06-27" => "update_90",
-  "2004-06-30" => "update_91"
+  "2004-06-30" => "update_91",
+  "2004-07-07" => "update_92"
 );
 
 function update_32() {
@@ -1140,6 +1141,10 @@ function update_91() {
     $ret[] = update_sql("ALTER TABLE {node} ADD INDEX node_changed (changed)");
   }
   return $ret;
+}
+
+function update_92() {
+  $ret[] = update_sql("DELETE FROM {cache}");
 }
 
 function update_sql($sql) {
