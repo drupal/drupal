@@ -9,7 +9,7 @@
  * The theme system allows for nearly all output of the Drupal system to be
  * customized by user themes.
  *
- * @see <a href="http://drupal.org/node/view/253">Theme system</a>
+ * @see <a href="http://drupal.org/node/253">Theme system</a>
  * @see themeable
  */
 
@@ -24,7 +24,7 @@ function theme_help($section) {
   $output = '';
 
   switch ($section) {
-    case 'admin/system/themes#description':
+    case 'admin/themes#description':
       $output = t("The base theme");
       break;
   }
@@ -142,6 +142,7 @@ function theme_page($content, $title = NULL, $breadcrumb = NULL) {
   if (isset($title)) {
     drupal_set_title($title);
   }
+
   if (isset($breadcrumb)) {
     drupal_set_breadcrumb($breadcrumb);
   }
@@ -162,6 +163,11 @@ function theme_page($content, $title = NULL, $breadcrumb = NULL) {
 
   $output .= theme("breadcrumb", drupal_get_breadcrumb());
   $output .= "<h1>" . drupal_get_title() . "</h1>";
+
+  if ($tabs = theme('menu_local_tasks')) {
+   $output .= $tabs;
+  }
+
   if ($help = menu_get_active_help()) {
     $output .= "<small>$help</small><hr />";
   }
@@ -298,6 +304,17 @@ function theme_form_element($title, $value, $description = NULL, $id = NULL, $re
   $output .= "</div>\n";
 
   return $output;
+}
+
+
+/**
+ * Returns themed sub menu, typically displayed under the tabs.
+ *
+ * @param $menus an associative array of links.
+ */
+
+function theme_submenu($links) {
+  return "<div class=\"submenu\">". implode(' | ', $links) ."</div>";
 }
 
 /**

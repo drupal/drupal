@@ -58,7 +58,8 @@ $sql_updates = array(
   "2004-04-21" => "update_84",
   "2004-04-27" => "update_85",
   "2004-05-10" => "update_86",
-  "2004-05-18" => "update_87"
+  "2004-05-18" => "update_87",
+  "2004-06-11" => "update_88"
 );
 
 function update_32() {
@@ -1090,6 +1091,15 @@ function update_87() {
   $ret[] = update_sql("ALTER TABLE {comments} ADD name varchar(60) DEFAULT NULL");
   $ret[] = update_sql("ALTER TABLE {comments} ADD mail varchar(64) DEFAULT NULL");
   $ret[] = update_sql("ALTER TABLE {comments} ADD homepage varchar(255) DEFAULT NULL");
+  return $ret;
+}
+
+function update_88() {
+  $ret = array();
+  $ret[] = update_sql("ALTER TABLE {menu} DROP status");
+  $ret[] = update_sql("ALTER TABLE {menu} DROP visibility");
+  $ret[] = update_sql("ALTER TABLE {menu} ADD type INT(2) UNSIGNED DEFAULT '0' NOT NULL");
+  $ret[] = update_sql("DELETE FROM {menu}");
   return $ret;
 }
 

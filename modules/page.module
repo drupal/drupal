@@ -14,7 +14,7 @@ function page_help($section) {
       <p><strong>create pages:</strong> Allows a role to create pages. They cannot edit or delete pages, even if they are the authors. You must enable this permission to in order for a role to create a page.</p>
       <p><strong>maintain personal pages:</strong> Allows a role to add/edit pages if they own the page. Use this permission if you want users to be able to edit and maintain their own pages.</p>
       ");
-    case 'admin/system/modules#description':
+    case 'admin/modules#description':
       return t('Enables the creation of pages that can be added to the navigation system.');
     case 'node/add#page':
       return t('If you just want to add a page with a link in the menu to your site, this is the best choice.  Unlike a story, a static page bypasses the submission queue.');
@@ -87,24 +87,13 @@ function page_load($node) {
 }
 
 /**
- * Implementation of hook_link().
+ * Implementation of hook_menu().
  */
-function page_link($type, $node = 0, $main) {
-
-  $links = array();
-
-  if ($type == 'system') {
-    menu('node/add/page', t('page'), page_access('create', $node) ? MENU_FALLTHROUGH : MENU_DENIED, 0);
-  }
-
-  if ($type == 'node' && $node->type == 'page') {
-    /* Don't display a redundant edit link if they are node administrators */
-    if (page_access('update', $node) && !user_access('administer nodes')) {
-      $links[] = l(t('edit this page'), "node/edit/$node->nid");
-    }
-  }
-
-  return $links;
+function page_menu() {
+  $items = array();
+  $items[] = array('path' => 'node/add/page', 'title' => t('page'),
+    'access' => page_access('create', NULL));
+  return $items;
 }
 
 /**
@@ -112,7 +101,7 @@ function page_link($type, $node = 0, $main) {
  *
  * If body is dynamic (using PHP code), the body will be generated.
  */
-function page_content($node, $main = 0) {
+function page_content($node, $teaser = FALSE) {
   if ($node->format == 1) {
     // PHP type
     ob_start();
@@ -122,7 +111,7 @@ function page_content($node, $main = 0) {
   }
   else {
     // Assume HTML type by default
-    $node = node_prepare($node, $main);
+    $node = node_prepare($node, $teaser);
   }
   return $node;
 }
@@ -130,11 +119,11 @@ function page_content($node, $main = 0) {
 /**
  * Implementation of hook_view().
  */
-function page_view($node, $main = 0, $page = 0) {
+function page_view($node, $teaser = FALSE, $page = FALSE) {
   // prepare the node content
-  $node = page_content($node, $main);
+  $node = page_content($node, $teaser);
   // print the node
-  return theme('node', $node, $main, $page);
+  return theme('node', $node, $teaser, $page);
 }
 
 /**

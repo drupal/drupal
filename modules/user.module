@@ -410,7 +410,7 @@ function user_search($keys) {
 
   $result = db_query_range("SELECT * FROM {users} WHERE LOWER(name) LIKE '%%%s%%'", strtolower($keys), 0, 20);
   while ($account = db_fetch_object($result)) {
-    $find[] = array('title' => $account->name, 'link' => (strstr(request_uri(), 'admin') ? url("admin/user/edit/$account->uid") : url("user/view/$account->uid")), 'user' => $account->name);
+    $find[] = array('title' => $account->name, 'link' => url("user/$account->uid/view"), 'user' => $account->name);
   }
   return array(t('Matching users'), $find);
 }
@@ -484,7 +484,7 @@ function user_block($op = 'list', $delta = 0) {
         }
         return $block;
       case 1:
-        if ($menu = menu_tree()) {
+        if ($menu = theme('menu_tree')) {
            $block['subject'] = $user->uid ? $user->name : t('Navigation');
            $block['content'] = '<div class="menu">'. $menu .'</div>';
         }
@@ -573,11 +573,6 @@ function theme_user_profile($account, $fields) {
   foreach ($fields as $category => $value) {
     $output .= "<h2>$category</h2>$value";
   }
-
-  if (user_access('administer users')) {
-    $output .= form_item(t('Administration'), l(t('edit account'), "admin/user/edit/$account->uid"));
-  }
-
   $output .= "</div>\n";
 
   return $output;
@@ -588,37 +583,82 @@ function theme_user_list($items, $title = NULL) {
 }
 
 /**
- * Implementation of hook_link().
+ * Implementation of hook_menu().
  */
-function user_link($type) {
+function user_menu() {
   global $user;
 
-  if ($type == 'system') {
-    if ($user->uid) {
-      menu('user', t('my account'), 'user_page', 0);
-      menu('user/edit', t('edit account'), 'user_page', 0);
-      menu('logout', t('log out'), 'user_logout', 10);
-    }
-    else {
-      menu('user', t('user'), 'user_page', 0, MENU_HIDE);
-      menu('user/edit', t('edit account'), MENU_DENIED);
-      menu('logout', t('log out'), MENU_DENIED);
-    }
+  $items = array();
 
-    $access = user_access('administer users');
-    menu('admin/user', t('accounts'), $access ? 'user_admin' : MENU_DENIED, 2);
-    menu('admin/user/create', t('new user'), $access ? 'user_admin' : MENU_DENIED, 1);
-    menu('admin/user/access', t('access rules'), $access ? 'user_admin' : MENU_DENIED, 3);
-    menu('admin/user/access/mail', t('e-mail rules'), $access ? 'user_admin' : MENU_DENIED);
-    menu('admin/user/access/user', t('name rules'), $access ? 'user_admin' : MENU_DENIED);
-    menu('admin/user/role', t('roles'), $access ? 'user_admin' : MENU_DENIED, 4);
-    menu('admin/user/permission', t('permissions'), $access ? 'user_admin' : MENU_DENIED, 5);
-    menu('admin/user/help', t('help'), $access ? 'user_help_page' : MENU_DENIED, 9);
-    menu('admin/user/edit', t('edit user account'), $access ? 'user_admin' : MENU_DENIED, 0, MENU_HIDE, MENU_LOCKED);
-    if (module_exist('search')) {
-      menu('admin/user/search', t('search'), $access ? 'user_admin' : MENU_DENIED, 8);
-    }
+  $access = user_access('administer users');
+
+  if (arg(0) == 'user' && is_numeric(arg(1))) {
+    $items[] = array('path' => 'user/'. arg(1), 'title' => t('user'),
+      'callback' => 'user_page', 'access' => TRUE);
+    // Add the edit menu:
+    if ($access) $function = 'user_admin_edit';
+    else $function = 'user_edit';
+    $items[] = array('path' => 'user/'. arg(1) .'/edit', 'title' => t('edit'),
+      'callback' => $function, 'access' => $access || $user->uid == arg(1),
+      'type' => MENU_LOCAL_TASK);
   }
+
+  if ($user->uid) {
+    $items[] = array('path' => "user/$user->uid", 'title' => t('my account'),
+      'callback' => 'user_page', 'access' => TRUE);
+    $items[] = array('path' => 'logout', 'title' => t('log out'),
+      'access' => TRUE,
+      'callback' => 'user_logout',
+      'weight' => 10);
+  }
+  else {
+    $items[] = array('path' => 'logout', 'title' => t('log out'),
+      'callback' => 'user_logout', 'access' => FALSE);
+  }
+
+  $items[] = array('path' => 'user', 'title' => t('user'),
+    'callback' => 'user_page', 'access' => TRUE,
+    'type' => MENU_CALLBACK);
+  $items[] = array('path' => 'user/login', 'title' => t('log in'),
+    'type' => MENU_CALLBACK);
+
+  $items[] = array('path' => 'admin/user', 'title' => t('users'),
+    'callback' => 'user_admin', 'access' => $access);
+
+  // Tabs:
+  $items[] = array('path' => 'admin/user/create', 'title' => t('add user'),
+    'callback' => 'user_admin', 'access' => $access,
+    'type' => MENU_LOCAL_TASK);
+  $items[] = array('path' => 'admin/user/configure', 'title' => t('configure'),
+    'callback' => 'user_configure', 'access' => $access,
+    'type' => MENU_LOCAL_TASK);
+  if (module_exist('search')) {
+    $items[] = array('path' => 'admin/user/search', 'title' => t('search'),
+      'callback' => 'user_admin', 'access' => $access,
+      'type' => MENU_LOCAL_TASK);
+  }
+
+  // Sub-tabs:
+  $items[] = array('path' => 'admin/user/configure/settings', 'title' => t('settings'),
+    'callback' => 'user_configure', 'access' => $access,
+    'type' => MENU_LOCAL_SUBTASK);
+  $items[] = array('path' => 'admin/user/configure/access', 'title' => t('access rules'),
+    'callback' => 'user_configure', 'access' => $access,
+    'type' => MENU_LOCAL_SUBTASK);
+  $items[] = array('path' => 'admin/user/configure/access/mail', 'title' => t('e-mail rules'),
+    'callback' => 'user_configure', 'access' => $access,
+    'type' => MENU_LOCAL_SUBTASK);
+  $items[] = array('path' => 'admin/user/configure/access/user', 'title' => t('name rules'),
+    'callback' => 'user_configure', 'access' => $access,
+    'type' => MENU_LOCAL_SUBTASK);
+  $items[] = array('path' => 'admin/user/configure/role', 'title' => t('roles'),
+    'callback' => 'user_configure', 'access' => $access,
+    'type' => MENU_LOCAL_SUBTASK);
+  $items[] = array('path' => 'admin/user/configure/permission', 'title' => t('permissions'),
+    'callback' => 'user_configure', 'access' => $access,
+    'type' => MENU_LOCAL_SUBTASK);
+
+  return $items;
 }
 
 /**
@@ -720,7 +760,7 @@ function user_login($edit = array(), $msg = '') {
           if (module_invoke($module, 'auth', $name, $pass, $server)) {
             if (variable_get('user_register', 1) == 1 && !user_load(array('name' => "$name@$server"))) { // Register this new user.
               $user = user_save('', array('name' => "$name@$server", 'pass' => user_password(), 'init' => "$name@$server", 'status' => 1, "authname_$module" => "$name@$server", 'rid' => array(_user_authenticated_id())));
-              watchdog('user', "new user: $name@$server ($module ID)", l(t('edit user'), "admin/user/edit/$user->uid"));
+              watchdog('user', "new user: $name@$server ($module ID)", l(t('edit user'), "user/$user->uid/edit"));
               break;
             }
           }
@@ -1133,7 +1173,7 @@ function user_page() {
   $op = $_POST['op'];
 
   if (empty($op)) {
-    $op = arg(1);
+    $op = arg(2);
   }
 
   switch ($op) {
@@ -1160,17 +1200,14 @@ function user_page() {
     case 'edit':
       $output = user_edit($edit);
       $GLOBALS['theme'] = init_theme();
-      print theme('page', $output, t('Edit account'));
-      break;
-    case 'view':
-      user_view(arg(2));
+      print theme('page', $output);
       break;
     case t('Logout'):
     case 'logout':
       print user_logout();
       break;
     default:
-      print user_view();
+      print user_view(arg(1));
   }
 
 }
@@ -1202,10 +1239,7 @@ function _user_mail_text($messageid, $variables = array()) {
   }
 }
 
-/**
- * Implementation of hook_settings().
- */
-function user_settings() {
+function user_configure_settings() {
   // User registration settings.
   $group = form_radios(t('Public registrations'), 'user_register', variable_get('user_register', 1), array(t('Only site administrators can create new user accounts.'), t('Visitors can create accounts and no administrator approval is required.'), t('Visitors can create accounts but administrator approval is required.')));
   $group .= form_textarea(t('User registration guidelines'), 'user_registration_help', variable_get('user_registration_help', ''), 70, 4, t('This text is displayed at the top of the user registration form.  It\'s useful for helping or instructing your users.'));
@@ -1244,6 +1278,7 @@ function user_settings() {
 }
 
 function user_admin_create($edit = array()) {
+
   if ($edit['name'] || $edit['mail']) {
     if ($error = user_validate_name($edit['name'])) {
       form_set_error('name', $error);
@@ -1459,15 +1494,16 @@ function user_admin_role($edit = array()) {
   return $output;
 }
 
-function user_admin_edit($edit = array()) {
+function user_admin_edit() {
   $op = $_POST['op'];
-  $id = arg(3);
+  $edit = $_POST['edit'];
+  $id = arg(1);
 
   if ($account = user_load(array('uid' => $id))) {
-
     if ($op == t('Save account')) {
       // TODO: This display/edit/validate should be moved to a new profile
       // module implementing hook_user().
+
       if ($error = user_validate_name($edit['name'])) {
         form_set_error('name', $error);
       }
@@ -1523,7 +1559,8 @@ function user_admin_edit($edit = array()) {
         db_query('DELETE FROM {authmap} WHERE uid = %d', $account->uid);
         drupal_set_message(t('the account has been deleted.'));
         module_invoke_all('user', 'delete', $edit, $account);
-        return user_admin_account();
+        print theme('page', user_admin_account());
+        return;
       }
       else {
         drupal_set_message(t('Failed to delete account: the account has to be blocked first.'), 'error');
@@ -1559,12 +1596,12 @@ function user_admin_edit($edit = array()) {
     $output .= form_submit(t('Delete account'));
 
     $output = form($output, 'post', 0, array('enctype' => 'multipart/form-data'));
+
+    print theme('page', $output, $account->name);
   }
   else {
-    $output = t('No such user');
+    print theme('page', t('No such user'));
   }
-
-  return $output;
 }
 
 function user_admin_account() {
@@ -1589,7 +1626,7 @@ function user_admin_account() {
       $roles[] = $role->name;
     }
 
-    $rows[] = array($account->uid, format_name($account), $status[$account->status], implode(',<br />', $roles), format_date($account->changed, 'small'), l(t('edit account'), "admin/user/edit/$account->uid"));
+    $rows[] = array($account->uid, format_name($account), $status[$account->status], implode(',<br />', $roles), format_date($account->changed, 'small'), l(t('edit account'), "user/$account->uid/edit"));
   }
 
   $pager = theme('pager', NULL, 50, 0, tablesort_pager());
@@ -1597,6 +1634,40 @@ function user_admin_account() {
     $rows[] = array(array('data' => $pager, 'colspan' => 6));
   }
   return theme('table', $header, $rows);
+}
+
+function user_configure() {
+  $op = $_POST['op'];
+  $edit = $_POST['edit'];
+
+  if (empty($op)) {
+    $op = arg(3);
+  }
+
+  switch ($op) {
+    case t('Add rule'):
+    case t('Check'):
+    case 'access':
+      $output = user_admin_access($edit);
+      break;
+    case t('Save permissions'):
+      drupal_set_message(t('user permissions saved.'));
+    case 'permission':
+      $output = user_admin_perm($edit);
+      break;
+    case t('Add role'):
+    case t('Delete role'):
+    case t('Save role'):
+      drupal_set_message(t('your role changes were saved.'));
+    case 'role':
+      $output = user_admin_role($edit);
+      break;
+    default:
+      if ($_POST) system_settings_save();
+      $output = system_settings_form(user_configure_settings());
+  }
+
+  print theme('page', $output);
 }
 
 function user_admin() {
@@ -1611,31 +1682,9 @@ function user_admin() {
     case 'search':
       $output = search_type('user', url('admin/user/search'), $_POST['keys']);
       break;
-    case t('Add rule'):
-    case t('Check'):
-    case 'access':
-      $output .= user_admin_access($edit);
-      break;
-    case t('Save permissions'):
-      drupal_set_message(t('user permissions saved.'));
-    case 'permission':
-      $output .= user_admin_perm($edit);
-      break;
     case t('Create account'):
     case 'create':
       $output = user_admin_create($edit);
-      break;
-    case t('Add role'):
-    case t('Delete role'):
-    case t('Save role'):
-      drupal_set_message(t('your role changes were saved.'));
-    case 'role':
-      $output .= user_admin_role($edit);
-      break;
-    case t('Delete account'):
-    case t('Save account'):
-    case 'edit':
-      $output = user_admin_edit($edit);
       break;
     default:
       $output = user_admin_account();
@@ -1671,9 +1720,9 @@ function user_help($section) {
       </ul>', array('%permission' => url('admin/user/permission')));
     case 'admin/user/search':
       return t('Enter a simple pattern ("*" may be user as a wildcard match) to search for a username.  For example, one may search for "br" and Drupal might return "brian", "brad", and "brenda".');
-    case 'admin/system/modules#description':
+    case 'admin/modules#description':
       return t('Enables the user registration and login system.');
-    case 'admin/system/modules/user':
+    case 'admin/settings/user':
       return t('In order to use the full power of Drupal a visitor must sign up for an account. This page lets you setup how a user signs up, logs out, the guidelines from the system about user subscriptions, and the e-mails the system will send to the user.');
     case 'user/help#user':
       $site = variable_get('site_name', 'this website');
@@ -1706,8 +1755,7 @@ function user_help($section) {
       <p>One key element of DA is the 'authmap' table, which maps a user's authname (e.g. joe@remote.delphiforums.com) to his local UID (i.e. user identification number). This map is checked whenever a user successfully logs into an external authentication source. Once Drupal knows that the current user is definately joe@remote.delphiforums.com (because Delphi says so), he looks up Joe's UID and logs Joe into that account.</p>
       <p>To disable distributed authentication, simply <a href=\"%dis-module\">disable</a> or remove all DA modules. For a virgin install, that means removing/disabling the jabber module and the drupal module.</p>
       <p>Drupal is setup so that it is very easy to add support for any external authentication source. You currently have the following authentication modules installed ...</p>
-      %module-list
-", array('%user-role' => url('admin/user/role'), '%user-permission' => url('admin/user/permission'), '%jabber' => 'http://www.jabber.org', '%delphiforums' => 'http://www.delphiforums.com', '%drupal' => 'http://www.drupal.org', '%da-auth' => url('user/help', NULL, 'da'), '%php-sess' => 'http://www.php.net/manual/en/ref.session.php', '%user-prefs' => url('user/edit'), '%admin-user' => url('admin/user'), '%xml' => 'http://www.xmlrpc.org', '%http-post' => 'http://www.w3.org/Protocols/', '%soap' => 'http://www.soapware.org', '%dis-module' => url('admin/system/modules'), '%blogger' => 'http://www.blogger.com', '%blogger-api' => 'http://plant.blogger.com/API', '%drupal-lists' => 'http://drupal.org/mailing-lists', '%drupal-org' => 'http://www.drupal.org', '%registration' => url('user/register'), '%user-acct' => url('user'), '%user-admin' => url('admin/user')));
+      %module-list");
 
       foreach (module_list() as $module) {
         if (module_hook($module, 'auth')) {

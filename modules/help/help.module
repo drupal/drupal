@@ -2,13 +2,18 @@
 // $Id$
 
 /**
- * Implementation of hook_link().
+ * Implementation of hook_menu().
  */
-function help_link($type) {
-  if ($type == 'system') {
-    menu('admin/help/glossary', t('glossary'), user_access('access administration pages') ? 'help_glossary' : MENU_DENIED, 8);
-    menu('admin/help', t('help'), user_access('access administration pages') ? 'help_page' : MENU_DENIED, 9);
-  }
+function help_menu() {
+  $items = array();
+  $items[] = array('path' => 'admin/help/glossary', 'title' => t('glossary'),
+    'callback' => 'help_glossary',
+    'access' => user_access('access administration pages'));
+  $items[] = array('path' => 'admin/help', 'title' => t('help'),
+    'callback' => 'help_page',
+    'access' => user_access('access administration pages'),
+    'weight' => 9);
+  return $items;
 }
 
 /**
@@ -41,7 +46,7 @@ function help_glossary() {
  */
 function help_help($section) {
   switch ($section) {
-    case 'admin/system/modules#description':
+    case 'admin/modules#description':
       $output = t('Manages displaying online help.');
       break;
   }

@@ -268,8 +268,7 @@ CREATE TABLE menu (
   path varchar(255) NOT NULL default '',
   title varchar(255) NOT NULL default '',
   weight tinyint(4) NOT NULL default '0',
-  visibility int(1) unsigned NOT NULL default '0',
-  status int(1) unsigned NOT NULL default '0',
+  type int(2) unsigned NOT NULL default '0',
   PRIMARY KEY  (mid)
 ) TYPE=MyISAM;
 

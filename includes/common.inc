@@ -2,10 +2,6 @@
 /* $Id$ */
 
 /**
- * @defgroup common Core functions
- */
-
-/**
  * @name Page title
  * @ingroup common
  *
@@ -949,12 +945,7 @@ function format_name($object) {
       $name = $object->name;
     }
 
-    if (arg(0) == "admin" and user_access("administer users")) {
-      $output = l($name, "admin/user/edit/$object->uid", array("title" => t("Administer user profile.")));
-    }
-    else {
-      $output = l($name, "user/view/$object->uid", array("title" => t("View user profile.")));
-    }
+    $output = l($name, "user/$object->uid", array("title" => t("View user profile.")));
   }
   else if ($object->name) {
     /*

@@ -26,8 +26,8 @@ function xtemplate_settings() {
   $output = form_group(t('Template selection'), $group);
 
   $group = form_textarea(t('Logo'), 'xtemplate_logo', variable_get('xtemplate_logo', "<img src=\"themes/xtemplate/$template_directory/logo.gif\" alt=\"Logo\" />"), 70, 4, t('The HTML code for displaying the logo.'));
-  $group .= form_textarea(t('Primary links'), 'xtemplate_primary_links', variable_get('xtemplate_primary_links', l('edit primary links', 'admin/system/themes/xtemplate')), 70, 8, t('The HTML code for the primary links.'));
-  $group .= form_textarea(t('Secondary links'), 'xtemplate_secondary_links', variable_get('xtemplate_secondary_links', l('edit secondary links', 'admin/system/themes/xtemplate')), 70, 8, t('The HTML code for the secondary links.'));
+  $group .= form_textarea(t('Primary links'), 'xtemplate_primary_links', variable_get('xtemplate_primary_links', l('edit primary links', 'admin/themes/xtemplate')), 70, 8, t('The HTML code for the primary links.'));
+  $group .= form_textarea(t('Secondary links'), 'xtemplate_secondary_links', variable_get('xtemplate_secondary_links', l('edit secondary links', 'admin/themes/xtemplate')), 70, 8, t('The HTML code for the secondary links.'));
   $group .= form_textarea(t('Message on front page'), 'xtemplate_mission', variable_get('xtemplate_mission', 'edit mission'), 70, 6, t('This text will be displayed on the front page.  It can be used to display a mission statement, announcement or site description..'));
   $group .= form_radios(t('Search box'), 'xtemplate_search_box', variable_get('xtemplate_search_box', 0), array(t('Disabled'), t('Enabled')), t('Show a search box in the upper right corner.'));
   $output .= form_group(t('Header settings'), $group);
@@ -44,7 +44,7 @@ function xtemplate_help($section) {
   $output = '';
 
   switch ($section) {
-    case 'admin/system/themes#description':
+    case 'admin/themes#description':
       $output = t('A template driven theme');
       break;
   }
@@ -59,7 +59,7 @@ function xtemplate_node($node, $main = 0, $page = 0) {
         "submitted" => t("Submitted by %a on %b.",
                       array("%a" => format_name($node),
                             "%b" => format_date($node->created))),
-        "link"      => url("node/view/$node->nid"),
+        "link"      => url("node/$node->nid"),
         "title"     => $node->title,
         "author"    => format_name($node),
         "date"      => format_date($node->created),
@@ -144,9 +144,14 @@ function xtemplate_page($content, $title = NULL, $breadcrumb = NULL) {
     "directory" => "themes/xtemplate/$template_directory",
     "onload_attributes" => theme_onload_attribute(),
     "logo" => variable_get('xtemplate_logo', "<img src=\"themes/xtemplate/$template_directory/logo.gif\" alt=\"Logo\" />"),
-    "primary_links" => variable_get("xtemplate_primary_links", l("edit primary links", "admin/system/themes/xtemplate")),
-    "secondary_links" => variable_get("xtemplate_secondary_links", l("edit secondary links", "admin/system/themes/xtemplate"))
+    "primary_links" => variable_get("xtemplate_primary_links", l("edit primary links", "admin/themes/xtemplate")),
+    "secondary_links" => variable_get("xtemplate_secondary_links", l("edit secondary links", "admin/themes/xtemplate"))
    ));
+
+  if ($tabs = theme('menu_local_tasks')) {
+    $xtemplate->template->assign("tabs", $tabs);
+    $xtemplate->template->parse("header.title.tabs");
+  }
 
   if ($title = drupal_get_title()) {
     $xtemplate->template->assign("title", $title);

@@ -6,9 +6,9 @@
  */
 function story_help($section) {
   switch ($section) {
-    case 'admin/system/modules#description':
+    case 'admin/modules#description':
       return t('Enables users to submit stories, articles or similar content.');
-    case 'admin/system/modules/story':
+    case 'admin/settings/story':
       return t("Stories are like newspaper articles. They tend to follow a publishing flow of <strong>submit -&gt; moderate -&gt; post to the main page -&gt; comments</strong>. Below you may fix a minimum word count for stories and also write some submission or content guidelines for users wanting to post a story.");
     case 'admin/help#story':
       return t("
@@ -17,7 +17,7 @@ function story_help($section) {
       <h3>User access permissions for stories</h3>
       <p><strong>create stories:</strong> Allows a role to create stories. They cannot edit or delete stories, even if they are the authors. You must enable this permission to in order for a role to create a story.</p>
       <p><strong>maintain personal stories:</strong> Allows a role to add/edit stories if they own the story. Use this permission if you want users to be able to edit and maintain their own stories.</p>
-      ", array('%story-config' => url('admin/system/modules/story')));
+      ", array('%story-config' => url('admin/settings/story')));
     case 'node/add/story':
       return variable_get('story_help', '');
     case 'node/add#story':
@@ -78,18 +78,24 @@ function story_access($op, $node) {
 function story_link($type, $node = 0, $main) {
   $links = array();
 
-  if ($type == 'system') {
-    menu('node/add/story', t('story'), story_access('create', $node) ? MENU_FALLTHROUGH : MENU_DENIED, 0);
-  }
-
   if ($type == 'node' && $node->type == 'story') {
-    /* Don't display a redundant edit link if they are node administrators */
+    // Don't display a redundant edit link if they are node administrators.
     if (story_access('update', $node) && !user_access('administer nodes')) {
-      $links[] = l(t('edit this story'), "node/edit/$node->nid");
+      $links[] = l(t('edit this story'), "node/$node->nid/edit");
     }
   }
 
   return $links;
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function story_menu() {
+  $items = array();
+  $items[] = array('path' => 'node/add/story', 'title' => t('story'),
+    'access' => story_access('create', NULL));
+  return $items;
 }
 
 /**

@@ -11,10 +11,10 @@ function block_help($section) {
 <p>Blocks are the boxes visible in the sidebar(s) of your web site. These are usually generated automatically by modules (e.g. recent forum topics), but you can also create your own blocks using either static HTML or dynamic PHP content.</p>
 <p>The sidebar each block appears in depends on both which theme you're using (some are left-only, some right, some both), and on the settings in block management.</p><p>Whether a block is visible in the first place depends on four things:</p><ul><li>It must have its \"enabled\" box checked in block management.</li><li>If it has its \"custom\" box checked in block management, the user must have chosen to display it in their user preferences.</li><li>If the \"path\" field in block management is set, the visitor must be on a page that matches the path specification (more on this later).</li><li>If the block has its throttle box checked, the user will only see the block if the site throttle level is low.</li></ul>
 <p>The block management screen also lets you specify the vertical sort-order of the blocks within a sidebar. You do this by assigning a <strong>weight</strong> to each block. Lighter blocks (smaller weight) \"float up\" towards the top of the sidebar. Heavier ones \"sink down\" towards the bottom of it. Once you've positioned things just so, you can preview what the layout will look like in different types of themes by clicking the preview placement link in the menu to the left.</p>
-<p>The path setting lets you define the pages on which a specific block is visible. If you leave the path blank it will appear on all pages. The path uses a regular expression syntax so remember to escape special characters! The path expression is matched against the relative URL of a Drupal page, e.g. <code>book</code>, <code>node/view/12</code>, <code>admin</code>.</p>
+<p>The path setting lets you define the pages on which a specific block is visible. If you leave the path blank it will appear on all pages. The path uses a regular expression syntax so remember to escape special characters! The path expression is matched against the relative URL of a Drupal page, e.g. <code>book</code>, <code>node/12</code>, <code>admin</code>.</p>
 <p>In case you do not know what a regular expression is, you should read about them in the PHP manual. The chapter to look at is the one on <a href=\"%pcre\">Perl-Compatible Regular Expressions (PCRE)</a>.</p>
 <p>However, for basic tasks it is sufficient to look at the following examples:</p>
-<p>If the block should only show up on blog pages, use &lt;^blog&gt;.  To display on all node views use &lt;^node/view&gt;.  The angular brackets are used as delimiters of the regular expression.  To show up on either forum or book pages use &lt;^(forum|book)&gt;.  The round brackets form a group of expressions, divided by the | character. It matches if any of the expressions in it match.  A more complicated example is &lt;^node/add/(story|blog|image)&gt;. Blocks which have their paths set to this expression will show up on story, block, or image composition pages.  If you want to show a block an all pages, but not the search page, use &lt;^(?!search)&gt;.</p>
+<p>If the block should only show up on blog pages, use &lt;^blog&gt;.  To display on all node views use &lt;^node&gt;.  The angular brackets are used as delimiters of the regular expression.  To show up on either forum or book pages use &lt;^(forum|book)&gt;.  The round brackets form a group of expressions, divided by the | character. It matches if any of the expressions in it match.  A more complicated example is &lt;^node/add/(story|blog|image)&gt;. Blocks which have their paths set to this expression will show up on story, block, or image composition pages.  If you want to show a block an all pages, but not the search page, use &lt;^(?!search)&gt;.</p>
 <h3>Administrator Defined Blocks</h3>
 <p>An administrator defined block contains HTML, text or PHP content supplied by you (as opposed to being generated automatically by a module). Each admin-defined block consists of a title, a description, and a body containing text, HTML, or PHP code which can be as long as you wish. The Drupal engine will 'render' the content of the block.</p>
 <h4>PHP in admin-defined blocks</h4>
@@ -36,13 +36,13 @@ function block_help($section) {
   }
 </pre></blockquote>
 <p>For more in-depth examples, we recommend that you check the existing boxes and use them as a starting point.</p>", array('%pcre' => 'http://php.net/pcre/'));
-    case 'admin/system/modules#description':
+    case 'admin/modules#description':
       return t('Controls the boxes that are displayed around the main content.');
-    case 'admin/system/block':
-      return t("Blocks are the boxes in the left- and right- side bars of the web site, depending on the chosen theme.  They are created by <strong>active</strong> Drupal modules. The \"enabled\" checkbox sets the default status of the block. Only enabled blocks are shown. When the \"custom\" checkbox is checked, your users can show or hide the block using their account settings. In that case, the 'enabled' checkbox signifies the block's default status. You can assign the block's placement by giving it a region and a weight. The region specifies which side of the page the block is on, and the weight sorts blocks within a region. Lighter (smaller weight value) blocks \"float up\" towards the top of the page. The path setting lets you define which pages you want a block to be shown on. You can also create your own blocks, where you specify the content of the block rather than its being generated by a module (you can even use PHP in these). You can create one of these by clicking the <a href=\"%createblock\">new block</a> link in the menu to the left. Edit and delete links will become active below for these admin-defined blocks.  Blocks can automatically be temporarily disabled to reduce server load when your site becomes extremely busy by checking throttle.  The auto-throttle functionality must be enabled on the <a href=\"%throttle\">throttle configuration page</a> after having enabled the throttle module.", array('%createblock' => url('admin/system/block/add'), '%throttle' => url('admin/system/modules/throttle')));
-    case 'admin/system/block/add':
-      return t("Here you can create a new block. Once you have created this block you must make it active and give it a place on the page using <a href=\"%overview\">blocks</a>. The title is used when displaying the block. The description is used in the \"block\" column on the <a href=\"%overview\">blocks</a> page. If you are going to place PHP code in the block, and you have the <strong>create php content</strong> permission (see the <a href=\"%permission\">permissions</a> page), you <strong>must</strong> change the type to PHP to make your code active.", array('%overview' => url('admin/system/block'), '%permission' => url('admin/user/permission')));
-    case 'admin/system/block/preview':
+    case 'admin/block':
+      return t("Blocks are the boxes in the left- and right- side bars of the web site, depending on the chosen theme.  They are created by <strong>active</strong> Drupal modules. The \"enabled\" checkbox sets the default status of the block. Only enabled blocks are shown. When the \"custom\" checkbox is checked, your users can show or hide the block using their account settings. In that case, the 'enabled' checkbox signifies the block's default status. You can assign the block's placement by giving it a region and a weight. The region specifies which side of the page the block is on, and the weight sorts blocks within a region. Lighter (smaller weight value) blocks \"float up\" towards the top of the page. The path setting lets you define which pages you want a block to be shown on. You can also create your own blocks, where you specify the content of the block rather than its being generated by a module (you can even use PHP in these). You can create one of these by clicking the <a href=\"%createblock\">add block</a> tab in the menu to the left. Edit and delete links will become active below for these admin-defined blocks.  Blocks can automatically be temporarily disabled to reduce server load when your site becomes extremely busy by checking throttle.  The auto-throttle functionality must be enabled on the <a href=\"%throttle\">throttle configuration page</a> after having enabled the throttle module.", array('%createblock' => url('admin/block/add'), '%throttle' => url('admin/settings/throttle')));
+    case 'admin/block/add':
+      return t("Here you can create a new block. Once you have created this block you must make it active and give it a place on the page using <a href=\"%overview\">blocks</a>. The title is used when displaying the block. The description is used in the \"block\" column on the <a href=\"%overview\">blocks</a> page. If you are going to place PHP code in the block, and you have the <strong>create php content</strong> permission (see the <a href=\"%permission\">permissions</a> page), you <strong>must</strong> change the type to PHP to make your code active.", array('%overview' => url('admin/block'), '%permission' => url('admin/user/permission')));
+    case 'admin/block/preview':
       return t('This page shows you the placement of your blocks in different theme types. The numbers are the weights of each block, which are used to sort them within the sidebars.');
   }
 }
@@ -62,17 +62,31 @@ function block_perm() {
 }
 
 /**
- * Implementation of hook_link().
+ * Implementation of hook_menu().
  */
-function block_link($type) {
-  if ($type == 'system') {
-    menu('admin/system/block', t('blocks'), user_access('administer blocks') ? 'block_admin' : MENU_DENIED, 3);
-    menu('admin/system/block/add', t('new block'), user_access('administer blocks') ? 'block_box_edit' : MENU_DENIED, 2);
-    menu('admin/system/block/edit', t('edit block'), user_access('administer blocks') ? 'block_box_edit' : MENU_DENIED, 0, MENU_HIDE, MENU_LOCKED);
-    menu('admin/system/block/delete', t('delete block'), user_access('administer blocks') ? 'block_box_delete' : MENU_DENIED, 0, MENU_HIDE, MENU_LOCKED);
-    menu('admin/system/block/preview', t('preview placement'), user_access('administer blocks') ? 'block_admin_preview' : MENU_DENIED, 3);
-    menu('admin/system/block/help', t('help'), user_access('administer blocks') ? 'block_help_page' : MENU_DENIED, 9);
-  }
+function block_menu() {
+  $items = array();
+  $items[] = array('path' => 'admin/block', 'title' => t('blocks'),
+    'access' => user_access('administer blocks'),
+    'callback' => 'block_admin');
+  $items[] = array('path' => 'admin/block/edit', 'title' => t('edit block'),
+    'access' => user_access('administer blocks'),
+    'callback' => 'block_box_edit',
+    'type' => MENU_CALLBACK);
+  $items[] = array('path' => 'admin/block/delete', 'title' => t('delete block'),
+    'access' => user_access('administer blocks'),
+    'callback' => 'block_box_delete',
+    'type' => MENU_CALLBACK);
+  // Tabs:
+  $items[] = array('path' => 'admin/block/add', 'title' => t('add block'),
+    'access' => user_access('administer blocks'),
+    'callback' => 'block_box_edit',
+    'type' => MENU_LOCAL_TASK);
+  $items[] = array('path' => 'admin/block/preview', 'title' => t('preview'),
+    'access' => user_access('administer blocks'),
+    'callback' => 'block_admin_preview',
+    'type' => MENU_LOCAL_TASK);
+  return $items;
 }
 
 /**
@@ -173,8 +187,8 @@ function block_admin_display() {
 
   foreach ($blocks as $block) {
     if ($block['module'] == 'block') {
-      $edit = l(t('edit'), 'admin/system/block/edit/'. $block['delta']);
-      $delete = l(t('delete'), 'admin/system/block/delete/'. $block['delta']);
+      $edit = l(t('edit'), 'admin/block/edit/'. $block['delta']);
+      $delete = l(t('delete'), 'admin/block/delete/'. $block['delta']);
     }
     else {
       $edit = '';
@@ -188,7 +202,7 @@ function block_admin_display() {
   $output = theme('table', $header, $rows);
   $output .= form_submit(t('Save blocks'));
 
-  return form($output, 'post', url('admin/system/block'));
+  return form($output, 'post', url('admin/block'));
 }
 
 /**
@@ -374,7 +388,7 @@ function block_user($type, $edit, &$user) {
  *
  * @return array of block objects, indexed with <i>module</i>_<i>delta</i>
  *
- * @see <a href="http://drupal.org/node/view/1042" target="_top">[feature]
+ * @see <a href="http://drupal.org/node/1042" target="_top">[feature]
  *   Generic template design difficult w/o block region "look-ahead"</a>
  * @todo add a proper primary key (bid) to the blocks table so we don't have
  *   to mess around with this <i>module</i>_<i>delta</i> construct. currently,

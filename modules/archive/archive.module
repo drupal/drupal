@@ -6,15 +6,15 @@
  */
 function archive_help($section) {
   switch ($section) {
-    case 'admin/system/modules#description':
+    case 'admin/modules#description':
       return t('Displays a calendar to navigate old content.');
-    case 'admin/system/modules/archive':
+    case 'admin/settings/archive':
       return t('Choose the starting "day of the week" for the displayed calendar block.');
   }
 }
 
 /**
- * Generates a monthly claendar, for display in the archive block.
+ * Generates a monthly calendar, for display in the archive block.
  */
 function archive_calendar($original = 0) {
   global $user;
@@ -199,12 +199,23 @@ function archive_link($type) {
   if ($type == 'page' && user_access('access content')) {
     $links[] = l(t('archives'), 'archive', array('title' => t('Read the older content in our archive.')));
   }
-
-  if ($type == 'system') {
-    menu('archive', t('archives'), user_access('access content') ? 'archive_page' : MENU_DENIED, 0, MENU_HIDE);
-  }
-
   return $links;
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function archive_menu() {
+  $items = array();
+  $items[] = array('path' => 'archive', 'title' => t('archives'),
+    'access' => user_access('access content'),
+    'callback' => 'archive_page',
+    'type' => MENU_SUGGESTED_ITEM);
+  $items[] = array('path' => 'archive/configure', 'title' => t('configure'),
+    'access' => user_access('administer site configuration'),
+    'callback' => 'archive_configure',
+    'type' => MENU_LOCAL_TASK);
+  return $items;
 }
 
 /**
@@ -247,13 +258,14 @@ function archive_page($year = 0, $month = 0, $day = 0) {
   print theme('page', $output);
 }
 
-/**
- * Implementation of hook_settings().
- */
-function archive_settings() {
+function archive_configure() {
+  if ($_POST) {
+    system_settings_save();
+  }
+
   $output = form_select(t('First day of week'), 'default_firstday', variable_get('default_firstday', 0), array(0 => t('Sunday'), 1 => t('Monday'), 2 => t('Tuesday'), 3 => t('Wednesday'), 4 => t('Thursday'), 5 => t('Friday'), 6 => t('Saturday')), t('The first day of the week.  By changing this value you choose how the calendar block is rendered.'));
 
-  return $output;
+  print theme('page', system_settings_form($output));
 }
 
 ?>

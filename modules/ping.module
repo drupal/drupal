@@ -15,7 +15,7 @@ function ping_help($section) {
       <p>The ping feature requires crontab.</p>", array('%weblogs' => '<a href="http://www.weblogs.com/">Weblogs.com</a>', '%weblogs-XML' => '<a href="http://www.xmlrpc.com/weblogsCom/">'. t('XML-RPC interface of weblogs.com') .'</a>', '%weblogs-RSS' => '<a href="http://www.xmlrpc.com/weblogsComForRSS">'. t('Weblogs.Com for RSS') .'</a>', '%weblogs-RSS-changes' => '<a href="http://www.weblogs.com/rssUpdates/changes.xml">'. t('the weblogs.com for RSS') .'</a>', '%blo-gs' => '<a href="http://blo.gs/">blo.gs</a>', '%blogtracker' => '<a href="http://www.dansanderson.com/blogtracker">blogtracker</a>', '%blogrolling' => '<a href="http://www.blogrolling.com">blogrolling.com</a>', '%blo-gs-XML' => '<a href="http://blo.gs/ping.php">'. t('XML-RPC interface of blo.gs') .'</a>'));
       break;
 
-    case 'admin/system/modules#description':
+    case 'admin/modules#description':
       $output = t('Alerts other sites that your site has been updated.');
       break;
   }

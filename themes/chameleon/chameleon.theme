@@ -6,7 +6,7 @@ function chameleon_help($section) {
   $output = '';
 
   switch ($section) {
-    case 'admin/system/themes#description':
+    case 'admin/themes#description':
       $output = t('A fast PHP theme with different stylesheets.');
       break;
   }
@@ -37,6 +37,7 @@ function chameleon_page($content, $title = NULL, $breadcrumb = NULL) {
   if (isset($title)) {
     drupal_set_title($title);
   }
+
   if (isset($breadcrumb)) {
     drupal_set_breadcrumb($breadcrumb);
   }
@@ -66,6 +67,10 @@ function chameleon_page($content, $title = NULL, $breadcrumb = NULL) {
   if ($title = drupal_get_title()) {
     $output .= theme("breadcrumb", drupal_get_breadcrumb());
     $output .= "<h2>$title</h2>";
+  }
+
+  if ($tabs = theme('menu_local_tasks')) {
+    $output .= $tabs;
   }
 
   if ($help = menu_get_active_help()) {
@@ -106,7 +111,7 @@ function chameleon_node($node, $main = 0, $page = 0) {
   $output  = "<div class=\"node\">\n";
 
   if (!$page) {
-    $output .= " <h2 class=\"title\">". ($main ? l($node->title, "node/view/$node->nid") : $node->title) ."</h2>\n";
+    $output .= " <h2 class=\"title\">". ($main ? l($node->title, "node/$node->nid") : $node->title) ."</h2>\n";
   }
 
   $output .= " <div class=\"content\">\n";

@@ -13,13 +13,13 @@ define('FILTER_STYLE_STRIP', 1);
  */
 function filter_help($section) {
   switch ($section) {
-    case 'admin/system/modules#description':
+    case 'admin/modules#description':
       return t('Framework for handling filtering of content.');
-    case 'admin/system/filters':
+    case 'admin/filters':
       return t("
 <p>Filters fit between the raw text in a node and the HTML output. They allow you to replace text selectively. Uses include automatic conversion of emoticons into graphics and filtering HTML content from users' submissions.</p>
-<p>If you notice some filters are causing conflicts in the output, you can <a href=\"%url\">rearrange them</a>.</p>", array('%url' => url('admin/system/filters/order')));
-    case 'admin/system/filters/order':
+<p>If you notice some filters are causing conflicts in the output, you can <a href=\"%url\">rearrange them</a>.</p>", array('%url' => url('admin/filters/order')));
+    case 'admin/filters/order':
       return t("
 <p>Because of the flexible filtering system, you might encounter a situation where one filter prevents another from doing its job. For example: a word in an URL gets converted into a glossary term, before the URL can be converted in a clickable link. When this happens, you will need to rearrange the order in which filters get executed.</p>
 <p>Filters are executed from top-to-bottom. You can use the weight column to rearrange them: heavier filters 'sink' to the bottom. Standard HTML filtering is always run first.</p>");
@@ -45,14 +45,21 @@ function filter_help($section) {
 }
 
 /**
- * Implementation of hook_link().
+ * Implementation of hook_menu().
  */
-function filter_link($type) {
-  if ($type == 'system') {
-    menu('admin/system/filters', t('filters'), user_access('administer site configuration') ? 'filter_admin_settings' : MENU_DENIED, 5);
-    menu('admin/system/filters/order', t('ordering'), user_access('administer site configuration') ? 'filter_admin_order' : MENU_DENIED, 5);
-    menu('filter/tips', t('compose tips'), 'filter_tips_long', 0, MENU_HIDE);
-  }
+function filter_menu() {
+  $items = array();
+  $items[] = array('path' => 'admin/filters', 'title' => t('filters'),
+    'callback' => 'filter_admin_settings',
+    'access' => user_access('administer site configuration'));
+  $items[] = array('path' => 'admin/filters/order', 'title' => t('order filters'),
+    'callback' => 'filter_admin_order',
+    'access' => user_access('administer site configuration'),
+    'type' => MENU_LOCAL_TASK);
+  $items[] = array('path' => 'filter/tips', 'title' => t('compose tips'),
+    'callback' => 'filter_tips_long', 'access' => TRUE,
+    'type' => MENU_SUGGESTED_ITEM);
+  return $items;
 }
 
 /**

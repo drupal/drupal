@@ -1,8 +1,10 @@
 <?php
 // $Id$
 
-function locale_help($section = "admin/help#locale") {
-
+/**
+ * Implementation of hook_help().
+ */
+function locale_help($section) {
   switch ($section) {
     case 'admin/help#locale':
       return t("
@@ -31,64 +33,81 @@ function locale_help($section = "admin/help#locale") {
     mysql> ALTER TABLE {locales} ADD en TEXT DEFAULT '' NOT NULL;
     mysql> ALTER TABLE {locales} ADD nl TEXT DEFAULT '' NOT NULL;
     mysql> ALTER TABLE {locales} ADD fr TEXT DEFAULT '' NOT NULL;
-  </pre>", array("%overview" => url("admin/locale")));
+  </pre>", array('%overview' => url('admin/locale')));
       break;
-    case 'admin/system/modules#description':
+    case 'admin/modules#description':
       return t('Enables the translation of the user interface to languages other than English.');
     case 'admin/locale':
       return t('The locale module handles translations into new languages.  It also enables you to add jargon, slang or other special language as fits the web site.  For each language you want to support, a line needs to be added to your configuration file.');
     case 'admin/locale/search':
-      return t("Search the localization database. ('*' can be used as a wildcard)");
+      return t('Search the localization database. ("*" can be used as a wildcard)');
   }
 
 }
 
+/**
+ * Menu callback; prints locale-specific help text from admin/help.
+ */
 function locale_help_page() {
-  print theme('page', locale_help());
+  print theme('page', locale_help('admin/help#locale'));
 }
 
+/**
+ * Implementation of hook_perm().
+ */
 function locale_perm() {
   return array('administer locales');
 }
 
 /**
- * Implementation of hook_link().
+ * Implementation of hook_menu().
  */
-function locale_link($type) {
+function locale_menu() {
   global $languages;
 
-  if ($type == 'system') {
-    $access = user_access('administer locales');
-    menu('admin/locale', t('localization'), $access ? 'locale_admin' : MENU_DENIED, 5);
-    menu('admin/locale/search', t('search string'), $access ? 'locale_admin' : MENU_DENIED, 8);
-    menu('admin/locale/help', t('help'), $access ? 'locale_help_page' : MENU_DENIED, 9);
-    menu('admin/locale/edit', t('edit string'), $access ? 'locale_admin' : MENU_DENIED, 0, MENU_HIDE, MENU_LOCKED);
-    menu('admin/locale/delete', t('delete string'), $access ? 'locale_admin' : MENU_DENIED, 0, MENU_HIDE, MENU_LOCKED);
+  $items = array();
+  $access = user_access('administer locales');
 
-    foreach ($languages as $key => $value) {
-      menu("admin/locale/$key", "$value", $access ? 'locale_admin' : MENU_DENIED);
-      menu("admin/locale/$key/translated", t('translated strings'), $access ? 'locale_admin' : MENU_DENIED);
-      menu("admin/locale/$key/untranslated", t('untranslated strings'), $access ? 'locale_admin' : MENU_DENIED);
-    }
+  $items[] = array('path' => 'admin/locale', 'title' => t('localization'),
+    'callback' => 'locale_admin', 'access' => $access);
+  $items[] = array('path' => 'admin/locale/edit', 'title' => t('edit string'),
+    'callback' => 'locale_admin', 'access' => $access,
+    'type' => MENU_CALLBACK);
+  $items[] = array('path' => 'admin/locale/delete', 'title' => t('delete string'),
+    'callback' => 'locale_admin', 'access' => $access,
+    'type' => MENU_CALLBACK);
+
+  foreach ($languages as $key => $value) {
+    $items[] = array('path' => "admin/locale/$key", 'title' => $value,
+      'callback' => 'locale_admin', 'access' => $access);
+    $items[] = array('path' => "admin/locale/$key/translated", 'title' => t('translated strings'),
+      'callback' => 'locale_admin', 'access' => $access);
+    $items[] = array('path' => "admin/locale/$key/untranslated", 'title' => t('untranslated strings'),
+      'callback' => 'locale_admin', 'access' => $access);
   }
+
+  return $items;
 }
 
+/**
+ * Implementation of hook_user(). Allows each user to select an interface language.
+ */
 function locale_user($type, &$edit, &$user) {
   global $languages;
   if ($type == 'form' && count($languages) > 1) {
-    return array(t('Locale settings') => form_radios(t("Language"), 'language', $user->language, $languages, t("Selecting a different language will change the language of the site.")));
+    return array(t('Locale settings') => form_radios(t('Language'), 'language', $user->language, $languages, t('Selecting a different language will change the language of the site.')));
   }
 }
 
 function locale_delete($lid) {
-  db_query("DELETE FROM {locales} WHERE lid = %d", $lid);
+  db_query('DELETE FROM {locales} WHERE lid = %d', $lid);
   locale_refresh_cache();
 
-  drupal_set_message(t("deleted string"));
+  drupal_set_message(t('deleted string'));
 }
 
 function locale_save($lid) {
-  $edit =& $_POST["edit"];
+  $edit =& $_POST['edit'];
   foreach ($edit as $key => $value) {
     db_query("UPDATE {locales} SET $key = '%s' WHERE lid = %d", $value, $lid);
   }
@@ -96,7 +115,7 @@ function locale_save($lid) {
   // delete form data so it will remember where it came from
   $edit = '';
 
-  drupal_set_message(t("saved string"));
+  drupal_set_message(t('saved string'));
 }
 
 function locale_refresh_cache() {
@@ -107,7 +126,7 @@ function locale_refresh_cache() {
     ** We only load short strings into the cache to improve both performance
     ** and memory usages.
     */
-    $result = db_query("SELECT string, %s FROM {locales} WHERE LENGTH(string) < 75", $locale);
+    $result = db_query('SELECT string, %s FROM {locales} WHERE LENGTH(string) < 75', $locale);
     while ($data = db_fetch_object($result)) {
       if (empty($data->$locale)) {
         $t[$data->string] = $data->string;
@@ -126,7 +145,7 @@ function locale_edit($lid) {
   $result = db_query("SELECT * FROM {locales} WHERE lid = '$lid'");
   if ($translation = db_fetch_object($result)) {
 
-    $form .= form_item(t("Original text"), wordwrap(drupal_specialchars($translation->string, 0)));
+    $form .= form_item(t('Original text'), wordwrap(drupal_specialchars($translation->string, 0)));
 
     foreach ($languages as $code=>$language) {
       $form .= (strlen($translation->string) > 30) ? form_textarea($language, $code, $translation->$code, 50, 10) : form_textfield($language, $code, $translation->$code, 50, 128);
@@ -142,16 +161,16 @@ function locale_languages($translation) {
   global $languages;
 
   foreach ($languages as $key => $value) {
-    $output .= ($translation->$key) ? "<a href=\"#\" title=\"". $translation->$key ."\">$key</a> " : "<strike>$key</strike> ";
+    $output .= ($translation->$key) ? '<a href="#" title="'. $translation->$key ."\">$key</a> " : "<strike>$key</strike> ";
   }
 
   return $output;
 }
 
 function locale_seek_query() {
-  $fields = array("string", 'language', 'status');
-  if (is_array($_REQUEST["edit"])) {
-    foreach ($_REQUEST["edit"] as $key => $value) {
+  $fields = array('string', 'language', 'status');
+  if (is_array($_REQUEST['edit'])) {
+    foreach ($_REQUEST['edit'] as $key => $value) {
       if (!empty($value) && in_array($key, $fields)) {
         $query->$key = $value;
       }
@@ -160,7 +179,7 @@ function locale_seek_query() {
   else {
     foreach ($_REQUEST as $key => $value) {
       if (!empty($value) && in_array($key, $fields)) {
-        $query->$key = strpos(",", $value) ? explode(",", $value) : $value;
+        $query->$key = strpos(',', $value) ? explode(',', $value) : $value;
       }
     }
   }
@@ -169,27 +188,27 @@ function locale_seek_query() {
 
 function locale_seek() {
   global $id, $languages;
-  $op = $_POST["op"];
+  $op = $_POST['op'];
   $query = locale_seek_query();
 
   if ($query) {
 
     if ($query->status) {
       switch ($query->language) {
-        case "all":
+        case 'all':
           foreach ($languages as $key=>$value) {
-            $tmp[] = $key . (check_query($query->status) == 1 ? " !=" : " =") ." ''";
+            $tmp[] = $key . (check_query($query->status) == 1 ? ' !=' : ' =') ." ''";
           }
-          $sql[] = implode(" AND ", $tmp);
+          $sql[] = implode(' AND ', $tmp);
           break;
-        case "any":
+        case 'any':
           foreach ($languages as $key=>$value) {
-            $tmp[] = $key . (check_query($query->status) == 1 ? " !=" : " =") ." ''";
+            $tmp[] = $key . (check_query($query->status) == 1 ? ' !=' : ' =') ." ''";
           }
-          $sql[] = "(". implode(" OR ", $tmp) .")";
+          $sql[] = '('. implode(' OR ', $tmp) .')';
           break;
         default:
-          $sql[] = check_query($query->language) . (check_query($query->status) == 1 ? " !=" : " =") ." ''";
+          $sql[] = check_query($query->language) . (check_query($query->status) == 1 ? ' !=' : ' =') ." ''";
       }
     }
 
@@ -205,28 +224,28 @@ function locale_seek() {
           }
         }
       }
-      $sql[] = "(". implode(" OR ", $string_query) .")";
+      $sql[] = '('. implode(' OR ', $string_query) .')';
     }
 
-    $result = pager_query("SELECT * FROM {locales} ". (count($sql) ? " WHERE ". implode(" AND ", $sql) : "") ." ORDER BY string", 50);
+    $result = pager_query('SELECT * FROM {locales} '. (count($sql) ? ' WHERE '. implode(' AND ', $sql) : '') .' ORDER BY string', 50);
 
-    $header = array(t("string"), (($query->status != 2 && strlen($query->language) == 2) ? t("translated string") : t("languages")), array("data" => t("operations"), "colspan" => "2"));
+    $header = array(t('string'), (($query->status != 2 && strlen($query->language) == 2) ? t('translated string') : t('languages')), array('data' => t('operations'), 'colspan' => '2'));
     while ($locale = db_fetch_object($result)) {
-      $rows[] = array("$locale->string<br /><small><i>$locale->location</i></small>", array("data" => (($query->status != 2 && strlen($query->language) == 2) ? $locale->{$query->language} : locale_languages($locale)), "align" => "center"), array("data" => l(t("edit locale"), "admin/locale/edit/$locale->lid"), "nowrap" => "nowrap"), array("data" => l(t("delete locale"), "admin/locale/delete/$locale->lid"), "nowrap" => "nowrap"));
+      $rows[] = array("$locale->string<br /><small><i>$locale->location</i></small>", array('data' => (($query->status != 2 && strlen($query->language) == 2) ? $locale->{$query->language} : locale_languages($locale)), 'align' => 'center'), array('data' => l(t('edit locale'), "admin/locale/edit/$locale->lid"), 'nowrap' => 'nowrap'), array('data' => l(t('delete locale'), "admin/locale/delete/$locale->lid"), 'nowrap' => 'nowrap'));
     }
 
     $request = array();
     if (count($query)) {
       foreach ($query as $key => $value) {
-        $request[$key] = (is_array($value)) ? implode(",", $value) : $value;
+        $request[$key] = (is_array($value)) ? implode(',', $value) : $value;
       }
     }
 
-    if ($pager = theme("pager", NULL, 50, 0, $request)) {
-      $rows[] = array(array("data" => "$pager", "colspan" => "5"));
+    if ($pager = theme('pager', NULL, 50, 0, $request)) {
+      $rows[] = array(array('data' => "$pager", 'colspan' => '5'));
     }
 
-    $output .= theme("table", $header, $rows);
+    $output .= theme('table', $header, $rows);
 
   }
 
@@ -235,10 +254,10 @@ function locale_seek() {
 
 function locale_seek_form() {
   global $languages;
-  $edit =& $_POST["edit"];
-  $form .= form_textfield(t("Strings to search for"), "string", $edit["string"], 30, 30, t("Leave blank to show all strings."));
+  $edit =& $_POST['edit'];
+  $form .= form_textfield(t('Strings to search for'), 'string', $edit['string'], 30, 30, t('Leave blank to show all strings.'));
   if (count($languages) > 1) {
-    $form .= form_radios(t("Language"), 'language', ($edit['language'] ? $edit['language'] : "all"), array_merge(array("any" => t("Any language"), "all" => t("All languages")), $languages), t("In which language must the string be translated/untranslated (see status)?"));
+    $form .= form_radios(t('Language'), 'language', ($edit['language'] ? $edit['language'] : 'all'), array_merge(array('any' => t('Any language'), 'all' => t('All languages')), $languages), t('In which language must the string be translated/untranslated (see status)?'));
   }
   else {
     foreach ($languages as $key => $value) {
@@ -254,8 +273,8 @@ function locale_seek_form() {
 }
 
 function locale_admin() {
-  $op = $_POST["op"];
-  $edit =& $_POST["edit"];
+  $op = $_POST['op'];
+  $edit =& $_POST['edit'];
 
   if (empty($op)) {
     $op = arg(2);
@@ -299,6 +318,13 @@ function locale_admin() {
   print theme('page', $output);
 }
 
+/**
+ * Does the work of localizing a string of text.
+ *
+ * This function is called by the universally-used t() function each time
+ * an internationalized string is encountered. The string is then localized
+ * by this function if the locale module is enabled.
+ */
 function locale($string) {
   global $locale;
   static $locale_t;

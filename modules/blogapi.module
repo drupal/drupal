@@ -8,7 +8,7 @@ function blogapi_help($section) {
   switch ($section) {
     case 'admin/help#blogapi':
       return t('This module adds support for several XML-RPC based blogging APIs. Specifically, it currently implements the %bloggerAPI, %metaweblogAPI, and most of the %moveabletype extensions.  This allows users to contribute to drupal using external GUI applications, which can often offer richer functionality that online forms based editing', array('%bloggerAPI' => '<a href="http://www.blogger.com/developers/api/1_docs/">Blogger API</a>', '%metaweblogAPI' => '<a href="http://www.xmlrpc.com/metaWeblogApi">MetaWeblog API</a>', '%moveabletype' => '<a href="http://www.movabletype.org/docs/mtmanual_programmatic.html">Moveable Type API</a>'));
-    case 'admin/system/modules#description':
+    case 'admin/modules#description':
       return t('Enable users to post using applications that support XML-RPC blog APIs');
   }
 }
@@ -143,7 +143,7 @@ function blogapi_new_post($req_params) {
 
   $nid = node_save($node);
   if ($nid) {
-    watchdog('special', t('%node-type: added "%node-title" using blog API', array('%node-type' => t("$node->type"), '%node-title' => $node->title)), l(t('view post'), "node/view/$nid"));
+    watchdog('special', t('%node-type: added "%node-title" using blog API', array('%node-type' => t("$node->type"), '%node-title' => $node->title)), l(t('view post'), "node/$nid"));
     return new xmlrpcresp(new xmlrpcval($nid, 'string'));
   }
 
@@ -203,7 +203,7 @@ function blogapi_edit_post($req_params) {
   }
   $nid = node_save($node);
   if ($nid) {
-    watchdog('special', t('%node-type: updated "%node-title" using blog API', array('%node-type' => t("$node->type"), '%node-title' => $node->title)), l(t('view post'), "node/view/$nid"));
+    watchdog('special', t('%node-type: updated "%node-title" using blog API', array('%node-type' => t("$node->type"), '%node-title' => $node->title)), l(t('view post'), "node/$nid"));
     return new xmlrpcresp(new xmlrpcval(true, 'boolean'));
   }
 

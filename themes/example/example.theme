@@ -6,7 +6,7 @@ function example_help($section) {
   $output = "";
 
   switch ($section) {
-    case 'admin/system/themes#description':
+    case 'admin/themes#description':
       $output = t("Internet explorer, Netscape, Opera, Lynx");
       break;
   }

@@ -9,13 +9,12 @@ fix_gpc_magic();
 
 $status = menu_execute_active_handler();
 switch ($status) {
-  case MENU_FOUND:
+  case MENU_NOT_FOUND:
+    drupal_not_found();
     break;
-  case MENU_DENIED:
+  case MENU_ACCESS_DENIED:
     drupal_access_denied();
     break;
-  default:
-    drupal_not_found();
 }
 
 drupal_page_footer();

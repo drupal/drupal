@@ -8,18 +8,21 @@ function tracker_help($section) {
   switch ($section) {
     case 'admin/help#tracker':
       return t('<p>The tracker module is a handy module for displaying the most recent posts.  By following the <em>recent posts</em> link in the user block, a user may quickly review all recent postings.</p>');
-    case 'admin/system/modules#description':
+    case 'admin/modules#description':
       return t('Enables tracking of recent posts for users.');
   }
 }
 
 /**
- * Implementation of hook_link().
+ * Implementation of hook_menu().
  */
-function tracker_link($type) {
-  if ($type == 'system') {
-    menu('tracker', t('recent posts'), user_access('access content') ? 'tracker_page' : MENU_DENIED, 1);
-  }
+function tracker_menu() {
+  $items = array();
+  $items[] = array('path' => 'tracker', 'title' => t('recent posts'),
+    'callback' => 'tracker_page',
+    'access' => user_access('access content'),
+    'weight' => 1);
+  return $items;
 }
 
 /**
@@ -54,7 +57,7 @@ function tracker_page($uid = 0) {
 
       if ($new = comment_num_new($node->nid)) {
         $comments .= '<br />';
-        $comments .= l(t('%num new', array('%num' => $new)), "node/view/$node->nid", NULL, NULL, 'new');
+        $comments .= l(t('%num new', array('%num' => $new)), "node/$node->nid", NULL, NULL, 'new');
       }
     }
     else {
@@ -63,7 +66,7 @@ function tracker_page($uid = 0) {
 
     $rows[] = array(
       ucfirst(node_invoke($node->type, 'node_name')),
-      l($node->title, "node/view/$node->nid") .' '. (node_is_new($node->nid, $node->changed) ? theme('mark') : ''),
+      l($node->title, "node/$node->nid") .' '. (node_is_new($node->nid, $node->changed) ? theme('mark') : ''),
       format_name($node),
       array('class' => 'replies', 'data' => $comments),
       format_interval(time() - $node->last_post) .' '. t('ago')

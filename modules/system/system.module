@@ -1,22 +1,21 @@
 <?php
 // $Id$
 
-function system_help($section = "admin/help#system") {
+/**
+ * Implementation of hook_help().
+ */
+function system_help($section) {
   global $base_url;
-  $output = "";
 
   switch ($section) {
-    case 'admin/system':
-      $output = t("General configuration options for your site. Set up the name of the site, e-mail address used in mail-outs, clean URL options, caching, etc.");
-      break;
-    case 'admin/system/themes':
-      $output = t("Select which themes are available to your users and specify the default theme.");
-      break;
-    case 'admin/system/modules':
-      $output = t("Modules are plugins for Drupal that extend its core functionality.  Here you can select which modules are enabled.  Click on the name of the module in the navigation menu for their individual configuration pages.  Once a module is enabled, new <a href=\"%permissions\">permissions</a> might be made available.  Modules can automatically be temporarily disabled to reduce server load when your site becomes extremely busy by checking throttle.  The auto-throttle functionality must be enabled on the <a href=\"%throttle\">throttle configuration page</a> after having enabled the throttle module.", array("%permissions" => url("admin/user/permission"), "%throttle" => url("admin/system/modules/throttle")));
-      break;
+    case 'admin':
+      return t('General configuration options for your site. Set up the name of the site, e-mail address used in mail-outs, clean URL options, caching, etc.');
+    case 'admin/themes':
+      return t('Select which themes are available to your users and specify the default theme.');
+    case 'admin/modules':
+      return t("Modules are plugins for Drupal that extend its core functionality.  Here you can select which modules are enabled.  Click on the name of the module in the navigation menu for their individual configuration pages.  Once a module is enabled, new <a href=\"%permissions\">permissions</a> might be made available.  Modules can automatically be temporarily disabled to reduce server load when your site becomes extremely busy by checking throttle.  The auto-throttle functionality must be enabled on the <a href=\"%throttle\">throttle configuration page</a> after having enabled the throttle module.", array('%permissions' => url('admin/user/permission'), '%throttle' => url('admin/settings/throttle')));
     case 'admin/help#system':
-      $output .= t("
+      return t("
       <p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviours including visual and operational settings.</p>
       <h3><a id=\"cron\">Cron</a></h3>
       <p>Some modules require regularly scheduled actions, such as cleaning up logfiles.  Cron, which stands for chronograph, is a periodic command scheduler executing commands at intervals specified in seconds.  It can be used to control the execution of daily, weekly and monthly jobs (or anything with a period measured in seconds).   Automating tasks is one of the best ways to keep a system running smoothly, and if most of your administration does not require your direct involvement, cron is an ideal solution.</p>
@@ -27,75 +26,92 @@ function system_help($section = "admin/help#system") {
       <pre>     00 * * * * /home/www/drupal/scripts/cron-lynx.sh</pre>
       Note that it is essential to access <code>cron.php</code> using a browser on the web site's domain; do not run it using command line PHP and avoid using <code>localhost</code> or <code>127.0.0.1</code> or some of the environment varibles will not be set correctly and features may not work as expected.</p>
       <h3><a id=\"cache\">Cache</a></h3>
-      <p>Drupal has a caching mechanism which stores dynamically generated web pages in a database.  By caching a web page, Drupal does not have to create the page each time someone wants to view it, instead it takes only one SQL query to display it, reducing response time and the server's load.  Only pages requested by \"anonymous\" users are cached.</p>", array("%base_url" => $base_url, "%cron-link" => "<a href=\"$base_url/cron.php\">$base_url/cron.php</a>", "%lynx" => "http://lynx.browser.org", "%wget" => "http://www.gnu.org/software/wget/wget.html" ));
-      break;
-    case 'admin/system/modules#description':
-      $output = t("Configuration system that lets administrators modify the workings of the site.");
-      break;
+      <p>Drupal has a caching mechanism which stores dynamically generated web pages in a database.  By caching a web page, Drupal does not have to create the page each time someone wants to view it, instead it takes only one SQL query to display it, reducing response time and the server's load.  Only pages requested by \"anonymous\" users are cached.</p>", array('%base_url' => $base_url, '%cron-link' => "<a href=\"$base_url/cron.php\">$base_url/cron.php</a>", '%lynx' => 'http://lynx.browser.org', '%wget' => 'http://www.gnu.org/software/wget/wget.html' ));
+    case 'admin/modules#description':
+      return t('Configuration system that lets administrators modify the workings of the site.');
   }
-
-  return $output;
-}
-
-function system_help_page() {
-  print theme("page", system_help());
-}
-
-function system_perm() {
-  return array("administer site configuration", "access administration pages", "bypass input data check", "create php content");
 }
 
 /**
- * Implementation of hook_link().
+ * Menu callback; presents system-specific help text from admin/help.
  */
-function system_link($type) {
-  if ($type == 'system') {
-    menu('system/files', t('file download'), 'file_download', 0, MENU_HIDE, MENU_LOCKED);
-    $access = user_access('administer site configuration');
-
-    menu('admin/system', t('configuration'), $access ? 'system_admin' : MENU_DENIED, 3);
-    menu('admin/system/themes', t('themes'), $access ? 'system_admin' : MENU_DENIED, 2);
-
-    foreach (list_themes() as $theme) {
-      // TODO: reenable 'forced refresh' once we move the menu_build() later in the request. it added overhead with no benefit
-      // NOTE: refresh the list because some themes might have been enabled/disabled.
-      include_once "$theme->filename";
-      $function = $theme->name .'_settings';
-      if (function_exists($function)) {
-        menu("admin/system/themes/$theme->name", $theme->name, $access ? 'system_admin' : MENU_DENIED);
-      }
-    }
-
-    menu('admin/system/modules', t('modules'), $access ? 'system_admin' : MENU_DENIED, 3);
-    foreach (module_list() as $name) {
-      // TODO: reenable 'forced refresh' once we move the menu_build() later in the request.  it added overhead with no benefit
-      // NOTE: refresh the list because some modules might have been enabled/disabled.
-      if (module_hook($name, 'settings')) {
-        menu("admin/system/modules/$name", t($name), $access ? 'system_admin' : MENU_DENIED);
-      }
-    }
-    menu('admin/system/help', t('help'), $access ? 'system_help_page' : MENU_DENIED, 9);
-  }
+function system_help_page() {
+  print theme('page', system_help('admin/help#system'));
 }
 
+/**
+ * Implementation of hook_perm().
+ */
+function system_perm() {
+  return array('administer site configuration', 'access administration pages', 'bypass input data check', 'create php content');
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function system_menu() {
+  $items = array();
+  $items[] = array('path' => 'system/files', 'title' => t('file download'),
+    'callback' => 'file_download',
+    'access' => TRUE,
+    'type' => MENU_CALLBACK);
+
+  $access = user_access('administer site configuration');
+  // Themes:
+  $items[] = array('path' => 'admin/themes', 'title' => t('themes'),
+    'callback' => 'system_themes', 'access' => $access);
+  foreach (list_themes() as $theme) {
+    // TODO: reenable 'forced refresh' once we move the menu_build() later
+    //   in the request. It added overhead with no benefit.
+    // NOTE: refresh the list because some themes might have been enabled/disabled.
+    include_once $theme->filename;
+    $function = $theme->name .'_settings';
+    if (function_exists($function)) {
+      $items[] = array('path' => 'admin/themes/'. $theme->name, 'title' => $theme->name,
+        'callback' => 'system_configure_theme', 'access' => $access);
+    }
+  }
+
+  // Modules:
+  $items[] = array('path' => 'admin/settings', 'title' => t('settings'),
+    'callback' => 'system_site_settings', 'access' => $access);
+  foreach (module_list() as $name) {
+    // TODO: reenable 'forced refresh' once we move the menu_build() later
+    //   in the request. It added overhead with no benefit.
+    // NOTE: refresh the list because some modules might have been enabled/disabled.
+    if (module_hook($name, 'settings')) {
+      $items[] = array('path' => 'admin/settings/'. $name, 'title' => t($name));
+    }
+  }
+  $items[] = array('path' => 'admin/modules', 'title' => t('modules'),
+    'callback' => 'system_modules', 'access' => $access);
+
+  return $items;
+}
+
+/**
+ * Implementation of hook_user().
+ *
+ * Allows users to individually set their theme and time zone.
+ */
 function system_user($type, $edit, &$user) {
   if ($type == 'form') {
-    $options = "<option value=\"\">". t("Default theme") ."</option>\n";
+    $options = '<option value="">'. t('Default theme') ."</option>\n";
     if (count($themes = list_themes()) > 1) {
       foreach ($themes as $key => $value) {
-        $options .= "<option value=\"$key\"". (($edit["theme"] == $key) ? " selected=\"selected\"" : "") .">$key - $value->description</option>\n";
+        $options .= "<option value=\"$key\"". (($edit['theme'] == $key) ? ' selected="selected"' : '') .">$key - $value->description</option>\n";
       }
-      $data[t('Theme settings')] = form_item(t("Theme"), "<select name=\"edit[theme]\">$options</select>", t("Selecting a different theme will change the look and feel of the site."));
+      $data[t('Theme settings')] = form_item(t('Theme'), "<select name=\"edit[theme]\">$options</select>", t('Selecting a different theme will change the look and feel of the site.'));
     }
 
-    if (!variable_get("sitewide_timezone", 0)) {
+    if (!variable_get('sitewide_timezone', 0)) {
       $timestamp = time();
       $zonelist = array(-11, -10, -9.5, -9, -8, -7, -6, -5, -4, -3.5, -3, -2, -1, 0, 1, 2, 3, 3.5, 4, 5, 5.5, 5.75, 6, 6.5, 7, 8, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.75, 13, 14);
       foreach ($zonelist as $offset) {
         $zone = $offset * 3600;
         $zones[$zone] = format_date($timestamp, 'custom', variable_get('date_format_long', 'l, F j, Y - H:i') . ' O', $zone);
       }
-      $data[t('Locale settings')] = form_select(t("Time zone"), "timezone", $edit["timezone"], $zones, t("Select what time you currently have and your time zone settings will be set appropriate."));
+      $data[t('Locale settings')] = form_select(t('Time zone'), 'timezone', $edit['timezone'], $zones, t('Select what time you currently have and your time zone settings will be set appropriately.'));
     }
     return $data;
   }
@@ -105,23 +121,28 @@ function system_view_general() {
   global $conf;
 
   // general settings:
-  $group  = form_textfield(t("Name"), "site_name", variable_get("site_name", "drupal"), 70, 70, t("The name of this web site."));
-  $group .= form_textfield(t("E-mail address"), "site_mail", variable_get("site_mail", ini_get("sendmail_from")), 70, 128, t("A valid e-mail address for this website, used by the auto-mailer during registration, new password requests, notifications, etc."));
-  $group .= form_textfield(t("Slogan"), "site_slogan", variable_get("site_slogan", ""), 70, 128, t("The slogan of this website. Some themes display a slogan when available."));
-  $group .= form_textarea(t("Mission"), "site_mission", variable_get("site_mission", ""), 70, 5, t("Your site's mission statement or focus."));
-  $group .= form_textarea(t("Footer message"), "site_footer", variable_get("site_footer", ""), 70, 5, t("This text will be displayed at the bottom of each page.  Useful for adding a copyright notice to your pages."));
-  $group .= form_textfield(t("Anonymous user"), "anonymous", variable_get("anonymous", "Anonymous"), 70, 70, t("The name used to indicate anonymous users."));
-  $group .= form_textfield(t("Default front page"), "site_frontpage", variable_get("site_frontpage", "node"), 70, 70, t("The home page displays content from this relative URL.  If you are not using clean URLs, specify the part after '?q='.  If unsure, specify 'node'."));
-  $group .= form_textfield(t("Default 403 (access denied) page"), "site_403", variable_get("site_403", ""), 70, 70, t("This page is displayed when the requested document is denied to the current user.  If you are not using clean URLs, specify the part after '?q='.  If unsure, specify nothing."));
-  $group .= form_textfield(t("Default 404 (not found) page"), "site_404", variable_get("site_404", ""), 70, 70, t("This page is displayed when no other content matches the requested document.  If you are not using clean URLs, specify the part after '?q='.  If unsure, specify nothing."));
-  $group .= form_radios(t("Clean URLs"), "clean_url", variable_get("clean_url", 0), array(t("Disabled"), t("Enabled")), t("Enable or disable clean URLs.  If enabled, you'll need <code>ModRewrite</code> support.  See also the <code>.htaccess</code> file in Drupal's top-level directory."));
+  $group  = form_textfield(t('Name'), 'site_name', variable_get('site_name', 'drupal'), 70, 70, t('The name of this web site.'));
+  $group .= form_textfield(t('E-mail address'), 'site_mail', variable_get('site_mail', ini_get('sendmail_from')), 70, 128, t('A valid e-mail address for this website, used by the auto-mailer during registration, new password requests, notifications, etc.'));
+  $group .= form_textfield(t('Slogan'), 'site_slogan', variable_get('site_slogan', ''), 70, 128, t('The slogan of this website. Some themes display a slogan when available.'));
+  $group .= form_textarea(t('Mission'), 'site_mission', variable_get('site_mission', ''), 70, 5, t('Your site\'s mission statement or focus.'));
+  $group .= form_textarea(t('Footer message'), 'site_footer', variable_get('site_footer', ''), 70, 5, t('This text will be displayed at the bottom of each page.  Useful for adding a copyright notice to your pages.'));
+  $group .= form_textfield(t('Anonymous user'), 'anonymous', variable_get('anonymous', 'Anonymous'), 70, 70, t('The name used to indicate anonymous users.'));
+  $group .= form_textfield(t('Default front page'), 'site_frontpage', variable_get('site_frontpage', 'node'), 70, 70, t('The home page displays content from this relative URL.  If you are not using clean URLs, specify the part after "?q=".  If unsure, specify "node".'));
+  $group .= form_textfield(t('Default 403 (access denied) page'), 'site_403', variable_get('site_403', ''), 70, 70, t('This page is displayed when the requested document is denied to the current user.  If you are not using clean URLs, specify the part after "?q=". If unsure, specify nothing.'));
+  $group .= form_textfield(t('Default 404 (not found) page'), 'site_404', variable_get('site_404', ''), 70, 70, t('This page is displayed when no other content matches the requested document.  If you are not using clean URLs, specify the part after "?q=". If unsure, specify nothing.'));
+  $group .= form_radios(t('Clean URLs'), 'clean_url', variable_get('clean_url', 0), array(t('Disabled'), t('Enabled')), t('Enable or disable clean URLs.  If enabled, you\'ll need <code>ModRewrite</code> support.  See also the <code>.htaccess</code> file in Drupal\'s top-level directory.'));
 
-  $output = form_group(t("General settings"), $group);
+  // watchdog setting:
+  $period = drupal_map_assoc(array(3600, 10800, 21600, 32400, 43200, 86400, 172800, 259200, 604800, 1209600, 2419200), 'format_interval');
+  $period['1000000000'] = t('Never');
+  $group .= form_select(t('Discard log entries older than'), 'watchdog_clear', variable_get('watchdog_clear', 604800), $period, t('The time watchdog entries should be kept.  Older entries will be automatically discarded.  Requires crontab.'));
+
+  $output = form_group(t('General settings'), $group);
 
   // caching:
-  $group  = form_radios(t("Cache support"), "cache", variable_get("cache", 0), array(t("Disabled"), t("Enabled")), t("Enable or disable the caching of rendered pages.  When caching is enabled, Drupal will flush the cache when required to make sure updates take effect immediately.  Check the <a href=\"%documentation\">cache documentation</a> for information on Drupal's cache system.", array("%documentation" => url("admin/system/help", NULL, NULL, "cache"))));
+  $group  = form_radios(t('Cache support'), 'cache', variable_get('cache', 0), array(t('Disabled'), t('Enabled')), t('Enable or disable the caching of rendered pages.  When caching is enabled, Drupal will flush the cache when required to make sure updates take effect immediately.  Check the <a href="%documentation">cache documentation</a> for information on Drupal\'s cache system.', array('%documentation' => url('admin/help', NULL, NULL, 'cache'))));
 
-  $output .= form_group(t("Cache settings"), $group);
+  $output .= form_group(t('Cache settings'), $group);
 
   // file system:
   if (!file_check_directory(variable_get('file_directory_path', 'files'))) {
@@ -144,93 +165,50 @@ function system_view_general() {
   }
 
   // date settings: possible date formats
-  $dateshort = array("m/d/Y - H:i", "d/m/Y - H:i", "Y/m/d - H:i",
-           "m/d/Y - g:ia", "d/m/Y - g:ia", "Y/m/d - g:ia",
-           "M j Y - H:i", "j M Y - H:i", "Y M j - H:i",
-           "M j Y - g:ia", "j M Y - g:ia", "Y M j - g:ia");
-  $datemedium = array("D, m/d/Y - H:i", "D, d/m/Y - H:i", "D, Y/m/d - H:i",
-          "F j, Y - H:i", "j F, Y - H:i", "Y, F j - H:i",
-          "D, m/d/Y - g:ia", "D, d/m/Y - g:ia", "D, Y/m/d - g:ia",
-          "F j, Y - g:ia", "j F, Y - g:ia", "Y, F j - g:ia");
-  $datelong = array("l, F j, Y - H:i", "l, j F, Y - H:i", "l, Y,  F j - H:i",
-        "l, F j, Y - g:ia", "l, j F, Y - g:ia", "l, Y,  F j - g:ia");
+  $dateshort = array('m/d/Y - H:i', 'd/m/Y - H:i', 'Y/m/d - H:i',
+           'm/d/Y - g:ia', 'd/m/Y - g:ia', 'Y/m/d - g:ia',
+           'M j Y - H:i', 'j M Y - H:i', 'Y M j - H:i',
+           'M j Y - g:ia', 'j M Y - g:ia', 'Y M j - g:ia');
+  $datemedium = array('D, m/d/Y - H:i', 'D, d/m/Y - H:i', 'D, Y/m/d - H:i',
+          'F j, Y - H:i', 'j F, Y - H:i', 'Y, F j - H:i',
+          'D, m/d/Y - g:ia', 'D, d/m/Y - g:ia', 'D, Y/m/d - g:ia',
+          'F j, Y - g:ia', 'j F, Y - g:ia', 'Y, F j - g:ia');
+  $datelong = array('l, F j, Y - H:i', 'l, j F, Y - H:i', 'l, Y,  F j - H:i',
+        'l, F j, Y - g:ia', 'l, j F, Y - g:ia', 'l, Y,  F j - g:ia');
 
   // date settings: construct choices for user
   foreach ($dateshort as $f) {
-    $dateshortchoices[$f] = format_date(time(), "custom", $f);
+    $dateshortchoices[$f] = format_date(time(), 'custom', $f);
   }
   foreach ($datemedium as $f) {
-    $datemediumchoices[$f] = format_date(time(), "custom", $f);
+    $datemediumchoices[$f] = format_date(time(), 'custom', $f);
   }
   foreach ($datelong as $f) {
-    $datelongchoices[$f] = format_date(time(), "custom", $f);
+    $datelongchoices[$f] = format_date(time(), 'custom', $f);
   }
 
-  $group  = form_select(t("Time zone"), "date_default_timezone", variable_get('date_default_timezone', 0), $zones, t("Select the default site timezone."));
-  $group .= form_radios(t("Use sitewide timezone"), "sitewide_timezone", variable_get("sitewide_timezone", 0), array(t("Disabled"), t("Enabled")), t("Enable or disable the sidewide timezone feature. Disabled means that users could choose their own timezone."));
-  $group .= form_select(t("Date format (short)"), "date_format_short", variable_get("date_format_short", $dateshort[0]), $dateshortchoices, t("The short format of date display."));
-  $group .= form_select(t("Date format (medium)"), "date_format_medium", variable_get("date_format_medium", $datemedium[0]), $datemediumchoices, t("The medium sized date display."));
-  $group .= form_select(t("Date format (long)"), "date_format_long", variable_get("date_format_long", $datelong[0]), $datelongchoices, t("Longer date format used for detailed display."));
+  $group  = form_select(t('Time zone'), 'date_default_timezone', variable_get('date_default_timezone', 0), $zones, t('Select the default site timezone.'));
+  $group .= form_radios(t('Use sitewide timezone'), 'sitewide_timezone', variable_get('sitewide_timezone', 0), array(t('Disabled'), t('Enabled')), t('Enable or disable the sidewide timezone feature. Disabled means that users could choose their own timezone.'));
+  $group .= form_select(t('Date format (short)'), 'date_format_short', variable_get('date_format_short', $dateshort[0]), $dateshortchoices, t('The short format of date display.'));
+  $group .= form_select(t('Date format (medium)'), 'date_format_medium', variable_get('date_format_medium', $datemedium[0]), $datemediumchoices, t('The medium sized date display.'));
+  $group .= form_select(t('Date format (long)'), 'date_format_long', variable_get('date_format_long', $datelong[0]), $datelongchoices, t('Longer date format used for detailed display.'));
 
-  $output .= form_group(t("Date format settings"), $group);
+  $output .= form_group(t('Date format settings'), $group);
 
   return $output;
-}
-
-function system_view_theme($name) {
-  $themes = list_themes();
-  $theme = $themes[$name];
-  if ($theme) {
-    include_once "$theme->filename";
-
-    $function = $theme->name ."_settings";
-    if (function_exists($function)) {
-      $output .= $function();
-    }
-  }
-  else {
-    $output = t("Invalid theme specified");
-  }
-  return $output;
-}
-
-function system_view($type, $arg = "") {
-  // The module/theme lists don't use the generic settings handler
-  if (($type == "modules" || $type == "themes") && $arg == "") {
-    system_listing_save();
-    $form = system_listing($type);
-    $form .= form_submit(t("Save configuration"));
-    return form($form);
-  }
-
-  system_settings_save();
-
-  switch ($type) {
-    case "modules":
-      $form = module_invoke($arg, "settings");
-      break;
-    case "themes":
-      $form = system_view_theme($arg);
-      break;
-    default:
-      $form = system_view_general();
-      break;
-  }
-
-  return system_settings_form($form);
 }
 
 function system_listing($type) {
   // Pick appropriate directory and filetype
   switch ($type) {
-    case "modules":
-      $directory = "modules";
-      $type = "module";
+    case 'modules':
+      $directory = 'modules';
+      $type = 'module';
       break;
-    case "themes":
+    case 'themes':
     default:
-      $directory = "themes";
-      $type = "theme";
+      $directory = 'themes';
+      $type = 'theme';
       break;
   }
 
@@ -249,23 +227,23 @@ function system_listing($type) {
 
   ksort($files);
 
-  if ($type == "module") {
-    $required = array("modules/admin.module", "modules/filter.module", "modules/system.module", "modules/user.module", "modules/watchdog.module");
+  if ($type == 'module') {
+    $required = array('modules/admin.module', 'modules/filter.module', 'modules/system.module', 'modules/user.module', 'modules/watchdog.module');
     // the throttle mechanism requires additional modules always be enabled
-    $throttle_required = array_merge($required, array("modules/statistics.module", "modules/throttle.module"));
+    $throttle_required = array_merge($required, array('modules/statistics.module', 'modules/throttle.module'));
 
-    $header = array(t("name"), t("description"), t("status"), t("throttle"));
+    $header = array(t('name'), t('description'), t('status'), t('throttle'));
   }
   else {
     $required = array();
-    $header = array(t("name"), t("description"), t("enable"), t("default"));
+    $header = array(t('name'), t('description'), t('enable'), t('default'));
   }
 
   foreach ($files as $filename => $file) {
     include_once($filename);
-    if ($type == "module") {
-      $info->name = module_invoke($file->name, "help", "admin/system/modules#name") ? module_invoke($file->name, "help", "admin/system/modules#name") : module_invoke($file->name, "system", "name") ? module_invoke($file->name, "system", "name") : $file->name;
-      $info->description = module_invoke($file->name, "help", "admin/system/modules#description") ? module_invoke($file->name, "help", "admin/system/modules#description") : module_invoke($file->name, "system", "description");
+    if ($type == 'module') {
+      $info->name = module_invoke($file->name, 'help', 'admin/modules#name') ? module_invoke($file->name, 'help', 'admin/modules#name') : module_invoke($file->name, 'system', 'name') ? module_invoke($file->name, 'system', 'name') : $file->name;
+      $info->description = module_invoke($file->name, 'help', 'admin/modules#description') ? module_invoke($file->name, 'help', 'admin/modules#description') : module_invoke($file->name, 'system', 'description');
       // log the critical hooks implemented by this module
       $bootstrap = 0;
       foreach (bootstrap_hooks() as $hook) {
@@ -275,13 +253,13 @@ function system_listing($type) {
         }
       }
     }
-    elseif ($type == "theme") {
+    elseif ($type == 'theme') {
       $info->name = $file->name;
-      $info->description = module_invoke($file->name, "help", "admin/system/themes#description");
+      $info->description = module_invoke($file->name, 'help', 'admin/themes#description');
       $themes[] = $info->name;
 
       // Enable the default theme:
-      if ($info->name == variable_get("theme_default", 0)) {
+      if ($info->name == variable_get('theme_default', 0)) {
         $file->status = 1;
       }
     }
@@ -290,63 +268,63 @@ function system_listing($type) {
     db_query("DELETE FROM {system} WHERE filename = '%s' AND type = '%s'", $filename, $type);
     db_query("INSERT INTO {system} (name, description, type, filename, status, throttle, bootstrap) VALUES ('%s', '%s', '%s', '%s', %d, %d, %d)", $info->name, $info->description, $type, $filename, $file->status, $file->throttle, $bootstrap);
 
-    $row = array($info->name, $info->description, array("data" => (in_array($filename, $required) ? form_hidden("status][$filename", 1) . t("required") : form_checkbox("", "status][$filename", 1, $file->status)), "align" => "center"));
-    if ($type == "module") {
-      $row[] = array("data" => (in_array($filename, $throttle_required) ? form_hidden("throttle][$filename", 0) . t("required") : form_checkbox(NULL, "throttle][$filename", 1, $file->throttle, NULL, module_exist('throttle') ? NULL : array("disabled" => "disabled"))), "align" => "center");
+    $row = array($info->name, $info->description, array('data' => (in_array($filename, $required) ? form_hidden("status][$filename", 1) . t('required') : form_checkbox('', "status][$filename", 1, $file->status)), 'align' => 'center'));
+    if ($type == 'module') {
+      $row[] = array('data' => (in_array($filename, $throttle_required) ? form_hidden("throttle][$filename", 0) . t('required') : form_checkbox(NULL, "throttle][$filename", 1, $file->throttle, NULL, module_exist('throttle') ? NULL : array('disabled' => 'disabled'))), 'align' => 'center');
     }
-    else if ($type == "theme") {
-      $row[] = array("data" => form_radio("", "theme_default", $info->name, (variable_get("theme_default",0) == $info->name) ? 1 : 0), "align" => "center");
+    else if ($type == 'theme') {
+      $row[] = array('data' => form_radio('', 'theme_default', $info->name, (variable_get('theme_default', 0) == $info->name) ? 1 : 0), 'align' => 'center');
     }
     $rows[] = $row;
   }
 
-  $output  = theme("table", $header, $rows);
-  $output .= form_hidden("type", $type);
+  $output  = theme('table', $header, $rows);
+  $output .= form_hidden('type', $type);
 
   return $output;
 }
 
 function system_listing_save($edit = array()) {
-  $op = $_POST["op"];
-  $edit = $_POST["edit"];
+  $op = $_POST['op'];
+  $edit = $_POST['edit'];
 
-  if ($op == t("Save configuration")) {
-    db_query("UPDATE {system} SET status = '0' WHERE type = '%s'", $edit["type"]);
-    foreach ($edit["status"] as $filename => $status) {
-      db_query("UPDATE {system} SET status = %d, throttle = %d WHERE filename = '$filename'", $status, $edit["throttle"]["$filename"]);
+  if ($op == t('Save configuration')) {
+    db_query("UPDATE {system} SET status = 0 WHERE type = '%s'", $edit['type']);
+    foreach ($edit['status'] as $filename => $status) {
+      db_query("UPDATE {system} SET status = %d, throttle = %d WHERE filename = '%s'", $status, $edit['throttle'][$filename], $filename);
     }
-    if ($edit["type"] == "theme") {
-      variable_set("theme_default", $edit["theme_default"]);
+    if ($edit['type'] == 'theme') {
+      variable_set('theme_default', $edit['theme_default']);
     }
 
     cache_clear_all();
 
-    drupal_set_message(t("the configuration options have been saved."));
+    drupal_set_message(t('the configuration options have been saved.'));
   }
 }
 
 function system_settings_form($form) {
-  $form .= form_submit(t("Save configuration"));
-  $form .= form_submit(t("Reset to defaults"));
+  $form .= form_submit(t('Save configuration'));
+  $form .= form_submit(t('Reset to defaults'));
 
   return form($form);
 }
 
 function system_settings_save() {
-  $op = $_POST["op"];
-  $edit = $_POST["edit"];
+  $op = $_POST['op'];
+  $edit = $_POST['edit'];
 
-  if ($op == t("Reset to defaults")) {
+  if ($op == t('Reset to defaults')) {
     foreach ($edit as $name => $value) {
       variable_del($name);
     }
-    drupal_set_message(t("the configuration options have been reset to their default values."));
+    drupal_set_message(t('the configuration options have been reset to their default values.'));
   }
-  if ($op == t("Save configuration")) {
+  if ($op == t('Save configuration')) {
     foreach ($edit as $name => $value) {
       variable_set($name, $value);
     }
-    drupal_set_message(t("the configuration options have been saved."));
+    drupal_set_message(t('the configuration options have been saved.'));
   }
   else {
     return;
@@ -355,9 +333,62 @@ function system_settings_save() {
   cache_clear_all();
 }
 
-function system_admin() {
-  $output = system_view(arg(2), arg(3));
-  print theme("page", $output);
+/**
+ * Menu callback; displays a listing of all themes.
+ */
+function system_themes() {
+  system_listing_save();
+  $form = system_listing('themes');
+  $form .= form_submit(t('Save configuration'));
+  print theme('page', form($form));
+}
+
+/**
+ * Menu callback; displays a listing of all modules.
+ */
+function system_modules() {
+  system_listing_save();
+  $form = system_listing('modules');
+  $form .= form_submit(t('Save configuration'));
+  print theme('page', form($form));
+}
+
+/**
+ * Menu callback; displays a theme's settings page.
+ */
+function system_configure_theme() {
+  system_settings_save();
+
+  $name = arg(2);
+  $themes = list_themes();
+  $theme = $themes[$name];
+
+  if ($theme) {
+    include_once "$theme->filename";
+
+    $function = $theme->name .'_settings';
+    if (function_exists($function)) {
+      $form .= $function();
+    }
+  }
+
+  print theme('page', system_settings_form($form));
+}
+
+/**
+ * Menu callback; displays a module's settings page.
+ */
+function system_site_settings($module = NULL) {
+  system_settings_save();
+
+  if ($module) {
+    $form = module_invoke($module, 'settings');
+  }
+  else {
+    $form = system_view_general();
+  }
+
+  print theme('page', system_settings_form($form));
 }
 
 ?>
