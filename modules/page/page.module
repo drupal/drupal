@@ -62,19 +62,19 @@ function page_save($op, $node) {
 }
 
 function page_insert($node) {
-  db_query("INSERT INTO page (nid, format, link, description) VALUES ('$node->nid', '$node->format', '$node->link', '$node->description')");
+  db_query("INSERT INTO page (nid, format, link, description) VALUES ('%d', '%d', '%s', '%s')", $node->nid, $node->format, $node->link, $node->description);
 }
 
 function page_update($node) {
-  db_query("UPDATE page SET format = '$node->format', link = '$node->link', description = '$node->description' WHERE nid = '$node->nid'");
-}
+db_query("UPDATE page SET format = '%d', link = '%s', description = '%s' WHERE nid = '%d'", $node->format, $node->link, $node->description, $node->nide);
+  }
 
 function page_delete(&$node) {
-  db_query("DELETE FROM page WHERE nid = '$node->nid'");
+  db_query("DELETE FROM page WHERE nid = '%d'", $node->nid);
 }
 
 function page_load($node) {
-  $page = db_fetch_object(db_query("SELECT format, link, description FROM page WHERE nid = '$node->nid'"));
+  $page = db_fetch_object(db_query("SELECT format, link, description FROM page WHERE nid = '%d'", $node->nid));
 
   return $page;
 }
@@ -129,9 +129,7 @@ function page_view($node, $main = 0) {
     ** Add the node specific links:
     */
 
-    $output .= "<div align=\"right\">". $theme->links(link_node($node, $main)) ."</div>";
-
-    $theme->box($node->title, $node->body);
+    $theme->box($node->title, "$node->body<div align=\"right\">". $theme->links(link_node($node, $main)) ."</div>");
   }
 }
 
