@@ -128,7 +128,7 @@ function theme_list() {
 
 function theme_head($main = 0) {
   $head = module_invoke_all("head", $main);
-  return "\n". implode($head, "\n"). "\n";
+  return implode($head, "\n");
 }
 
 function theme_init() {
