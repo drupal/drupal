@@ -42,6 +42,7 @@ $mysql_updates = array(
   "2001-12-24" => "update_15",
   "2001-12-30" => "update_16",
   "2001-12-31" => "update_17",
+  "2002-01-05" => "update_18",
 );
 
 // Update functions
@@ -306,7 +307,15 @@ function update_17() {
   );");
 }
 
-// System functions
+function update_18() {
+  update_sql("ALTER TABLE cache CHANGE timestamp expire int(11) DEFAULT '0' NOT NULL;");
+  update_sql("ALTER TABLE cache CHANGE url cid varchar(255) DEFAULT '' NOT NULL;");
+}
+
+/*
+** System functions
+*/
+
 function update_sql($sql) {
   global $edit;
   print nl2br(check_output($sql)) ." ";
