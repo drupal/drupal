@@ -50,8 +50,12 @@
         <!-- BEGIN: title -->
         {breadcrumb}
         <h1 class="title">{title}</h1>
+        <!-- BEGIN: tabs -->
+        <div class="tabs">{tabs}</div>
+        <!-- END: tabs -->
+
         <!-- END: title -->
-        <!-- BEGIN: help -->
+          <!-- BEGIN: help -->
         <div id="help">{help}</div>
         <!-- END: help -->
         <!-- BEGIN: message -->
