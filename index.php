@@ -1,6 +1,6 @@
-<?PHP
+<?
 
-include "functions.inc";
+include "function.inc";
 include "theme.inc";
 
 ### Initialize/pre-process variables:

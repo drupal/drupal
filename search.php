@@ -1,6 +1,6 @@
 <?
 
- include "functions.inc";
+ include "function.inc";
  include "theme.inc";
 
  $theme->header();
@@ -10,13 +10,13 @@
  $output .= "<TABLE WIDTH=\"100%\" BORDER=\"0\">\n";
  $output .= " <TR VALIGN=\"center\">\n";
  $output .= "  <TD COLSPAN=3>\n";
- $output .= "   <FORM ACTION=\"". basename($GLOBALS[PHP_SELF]) ."\" METHOD=\"POST\">\n";
+ $output .= "   <FORM ACTION=\"search.php\" METHOD=\"POST\">\n";
  $output .= "    <INPUT SIZE=\"50\" VALUE=\"$terms\" NAME=\"terms\" TYPE=\"text\"><BR>\n";
 
  ### category:
- $output .= "    <SELECT NAME=\"category\">\n";
- if ($category != "") $output .= " <OPTION VALUE=\"$category\">$category</OPTION>\n";
- $output .= "<OPTION VALUE=\"\">All categories</OPTION>\n";
+ $output .= "<SELECT NAME=\"category\">\n";
+ if ($category) $output .= " <OPTION VALUE=\"$category\">$category</OPTION>\n";
+ $output .= " <OPTION VALUE=\"\">All categories</OPTION>\n";
  for ($i = 0; $i < sizeof($categories); $i++) {
    $output .= " <OPTION VALUE=\"$categories[$i]\">$categories[$i]</OPTION>\n";
  }
@@ -40,34 +40,20 @@
  $output .= " <TR>\n";
  $output .= "  <TD>\n";
    
- ### Compose query:
- $query = "SELECT DISTINCT s.id, s.subject, u.userid, s.timestamp FROM stories s LEFT JOIN users u ON s.author = u.id WHERE s.status = 2 ";
- if ($terms != "") $query .= "AND (s.subject LIKE '%$terms%' OR s.abstract LIKE '%$terms%' OR s.updates LIKE '%$terms%') ";
- if ($category != "") $query .= "AND s.category = '$category' ";
- if ($author != "") $query .= "AND u.userid = '$author' ";
- if ($order == "Oldest first") $query .= " ORDER BY s.timestamp ASC";
- else $query .= " ORDER BY s.timestamp DESC";
-   
- ### Perform query:
+ ### Compose and perform query:
+ $query = "SELECT DISTINCT s.id, s.subject, u.userid, s.timestamp, COUNT(c.cid) AS comments FROM comments c, stories s LEFT JOIN users u ON s.author = u.id WHERE s.status = 2 AND s.id = c.sid ";
+ $query .= ($author) ? "AND u.userid = '$author' " : "";
+ $query .= ($terms) ? "AND (s.subject LIKE '%$terms%' OR s.abstract LIKE '%$terms%' OR s.updates LIKE '%$terms%') " : "";
+ $query .= ($category) ? "AND s.category = '$category' GROUP BY c.sid " : "GROUP BY c.sid ";
+ $query .= ($order == "Oldest first") ? "ORDER BY s.timestamp ASC" : "ORDER BY s.timestamp DESC";
  $result = db_query("$query");
  
  ### Display search results:
  $output .= "<HR>\n";
+
  while ($entry = db_fetch_object($result)) {
    $num++;
-
-   if ($user) {
-     $link = "<A HREF=\"discussion.php?id=$entry->id";
-     if (isset($user->umode)) { $link .= "&mode=$user->umode"; } else { $link .= "&mode=threaded"; }
-     if (isset($user->uorder)) { $link .= "&order=$user->uorder"; } else { $link .= "&order=0"; }
-     if (isset($user->thold)) { $link .= "&thold=$user->thold"; } else { $link .= "&thold=0"; }
-     $link .= "\">$entry->subject</A>";
-   }
-   else {
-     $link = "<A HREF=\"discussion.php?id=$entry->id&mode=threaded&order=1&thold=0\">$entry->subject</A>";
-   }
- 
-   $output .= "<P>$num) <B>$link</B><BR><SMALL>by <B><A HREF=\"account.php?op=info&uname=$entry->userid\">$entry->userid</A></B>, posted on ". date("l, F d, Y - H:i A", $entry->timestamp) .".</SMALL></P>\n";
+   $output .= "<P>$num) <B>". format_story_link($entry) ."</B> (". format_plural($entry->comments, "comment", comments) .")<BR><SMALL>by ". format_username($entry->userid) ."</B>, posted on ". format_date($entry->timestamp) .".</SMALL></P>\n";
  }
 
  if ($num == 0) $output .= "<P>Your search did <B>not</B> match any articles in our database: <UL><LI>Try using fewer words.</LI><LI>Try using more general keywords.</LI><LI>Try using different keywords.</LI></UL></P>\n";

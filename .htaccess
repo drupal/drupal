@@ -37,9 +37,12 @@ ErrorDocument 500 /error.php
 
 # Overload PHP variables:
 <IfModule mod_php4.c>
+   php_value track_vars              On
+   php_value php_register_globals    On
    php_value magic_quotes_gpc        On
    php_value magic_quotes_runtime    Off
    php_value magic_quotes_sybase     Off
+   php_value session.auto_start      1
    php_value session.cookie_lifetime 1728000
    php_value session.gc_maxlifetime  1728000
    php_value session.name            DROPID

@@ -18,7 +18,7 @@ function submit_enter() {
  
   $output .= "<P>\n";
   $output .= " <B>Subject:</B><BR>\n";
-  $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\"><BR>\n";
+  $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" MAXLENGTH=\"60\"><BR>\n";
   $output .= " <SMALL><I>Bad subjects are 'Check this out!' or 'An article'.  Be descriptive, clear and simple!</I></SMALL>\n";
   $output .= "</P>\n";
 
@@ -34,7 +34,7 @@ function submit_enter() {
 
   $output .= "<P>\n"; 
   $output .= " <B>Abstract:</B><BR>\n";
-  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"abstract\"></TEXTAREA><BR>\n";
+  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"abstract\" MAXLENGTH=\"20\"></TEXTAREA><BR>\n";
   $output .= " <SMALL><I>HTML is nice and dandy, but double check those URLs and HTML tags!</I></SMALL>\n";
   $output .= "</P>\n";
 
@@ -45,7 +45,8 @@ function submit_enter() {
   $output .= "</P>\n";
  
   $output .= "<P>\n";
-  $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Preview submission\"> (You must preview at least once before you can submit.)\n";
+  $output .= " You must preview at least once before you can submit:<BR>\n";
+  $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Preview submission\">\n";
   $output .= "</P>\n";
  
   $output .= "</FORM>\n";
@@ -68,7 +69,7 @@ function submit_preview($subject, $abstract, $article, $category) {
 
   $output .= "<P>\n";
   $output .= " <B>Subject:</B><BR>\n";
-  $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" VALUE=\"". stripslashes($subject) ."\"><BR>\n";
+  $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" MAXLENGTH=\"60\" VALUE=\"". stripslashes($subject) ."\"><BR>\n";
   $output .= " <SMALL><I>Bad subjects are 'Check this out!' or 'An article'.  Be descriptive, clear and simple!</I></SMALL>\n";
   $output .= "</P>\n";
 
@@ -145,7 +146,7 @@ function submit_submit($subject, $abstract, $article, $category) {
   watchdog(1, "added new submission with subject `$subject'.");
 }
 
-include "functions.inc";
+include "function.inc";
 include "theme.inc";
 
 switch($op) {

@@ -77,7 +77,7 @@ function comments_childs($cid, $mode, $order, $thold, $level = 0, $thread) {
   return $thread;
 }
 
-function comments_display ($sid, $pid, $cid, $mode, $order, $thold, $level = 0) {
+function comments_display($sid, $pid, $cid, $mode, $order, $thold, $level = 0) {
   global $user, $theme;
 
   ### Pre-process variables:
@@ -283,7 +283,7 @@ function comment_post($pid, $sid, $subject, $comment, $mode, $order, $thold) {
   }
 }
 
-include "functions.inc";
+include "function.inc";
 include "config.inc";
 include "theme.inc";
 

@@ -3,7 +3,7 @@
 ### Include global settings:
 include "config.inc";
 
-include "functions.inc";
+include "function.inc";
 include "authentication.inc";
 include "theme.inc";
 

@@ -1,6 +1,5 @@
 <?
-
-include "functions.inc";
+include "function.inc";
 include "theme.inc";
 
 $output = "

@@ -46,8 +46,6 @@
         <TR>
          <TD WIDTH="160" VALIGN="top" ALIGN="right">
           <?
-           dbconnect();
-
            ### Display admin blocks:
            displayAdminblock($this);
           ?>
@@ -256,7 +254,6 @@
    # Description..: this function is used to theme the comment control box.
    function commentControl($sid, $title, $thold, $mode, $order) {
      global $user;
-     dbconnect();
      $query = mysql_query("SELECT sid FROM comments WHERE sid = $sid");
 
      if (!$query) $count = 0; else $count = mysql_num_rows($query);

@@ -1,6 +1,8 @@
 <?
+
+include "function.inc";
 include "config.inc";
-include "functions.inc";
+include "theme.inc";
 
 function account_getUser($uname) {
   $result = db_query("SELECT * FROM users WHERE userid = '$uname'");
@@ -27,9 +29,7 @@ function showAccess() {
 }
 
 function showUser($uname) {
-  global $user;
-
-  include "theme.inc";
+  global $user, $theme;
   
   if ($user && $uname && $user->userid == $uname) {
     $output .= "<P>Welcome $user->userid! This is <B>your</B> user info page. There are many more, but this one is yours. You are probably most interested in editing something, but if you need to kill some time, this place is as good as any other place.</P>\n";
@@ -71,7 +71,6 @@ function showUser($uname) {
 }
 
 function newUser($user = "", $error="") {
-  include "theme.inc";
   $output .= "<FORM ACTION=\"account.php\" METHOD=post>\n";
   $output .= "<TABLE BORDER=0 CELLPADDING=2 CELLSPACING=2>\n";
   if (!empty($error)) $output .= "<TR><TD COLSPAN=2>$error</TD></TR>\n";
@@ -117,20 +116,18 @@ function account_makePassword($min_length=6) {
 function account_track_comments() {
   global $user;
 
-  include "function.inc";
-
-  $output .= "<P>This page is helpful in case you want to keep track of your most recent comments in any of the discussions.  It helps you to review the replies your comments got.\n<P>\n"; 
+  $output .= "<P>This page might be helpful in case you want to keep track of your most recent comments in any of the discussions.  You are given an overview of your comments in each of the stories you participates in along with the number of replies each comment got.\n<P>\n"; 
 
   ### Perform query:
   $sresult = db_query("SELECT s.id, s.subject, COUNT(s.id) as count FROM comments c LEFT JOIN stories s ON c.sid = s.id WHERE c.author = $user->id GROUP BY s.id DESC LIMIT 5");
   
   while ($story = db_fetch_object($sresult)) {
-    $output .= "<LI>". plural($story->count, comment, comments) ." in article `<A HREF=\"discussion.php?id=$story->id\">$story->subject</A>`:</LI>\n";
+    $output .= "<LI>". format_plural($story->count, comment, comments) ." in story `<A HREF=\"discussion.php?id=$story->id\">$story->subject</A>`:</LI>\n";
     $output .= " <UL>\n";
    
     $cresult = db_query("SELECT * FROM comments WHERE author = $user->id AND sid = $story->id");
     while ($comment = db_fetch_object($cresult)) {
-      $output .= "  <LI><A HREF=\"discussion.php?id=$story->id&cid=$comment->cid&pid=$comment->pid\">$comment->subject</A> (<B>". plural(discussion_num_replies($comment->cid), "reply", "replies") ."</B>)</LI>\n";
+      $output .= "  <LI><A HREF=\"discussion.php?id=$story->id&cid=$comment->cid&pid=$comment->pid\">$comment->subject</A> (<B>". format_plural(discussion_num_replies($comment->cid), "reply", "replies") ."</B>)</LI>\n";
     }
     $output .= " </UL>\n";
   }
@@ -142,7 +139,7 @@ switch ($op) {
   case "Login":
     session_start();
     $user = new User($userid, $passwd);
-    if ($user && $user->valid()) {
+    if ($user && user_valid()) {
       session_register("user");
       watchdog(1, "session opened for user `$user->userid'.");
     }
@@ -154,11 +151,10 @@ switch ($op) {
   case "new":
     newUser();
     break;
-  case "info":
-    showUser($uname);
+  case "view":
+    showUser($name);
     break;
   case "discussion":
-    include "theme.inc";
     $theme->header();
     $theme->box("Track your comments", account_track_comments());
     $theme->footer();
@@ -173,8 +169,6 @@ switch ($op) {
   case "Register":
     if ($rval = validateUser($new)) { newUser($new, "<B>Error: $rval</B>"); }
     else {
-      include"theme.inc";
-
       ### Generate new password:
       $new[passwd] = account_makePassword();
       dbsave("users", $new);
@@ -198,7 +192,7 @@ switch ($op) {
     }
     break;
   case "user":
-    if ($user && $user->valid()) {
+    if ($user->id && user_valid()) {
       ### Generate output/content:
       $output .= "<FORM ACTION=\"account.php\" METHOD=post>\n";
       $output .= "<B>Real name:</B><BR>\n";
@@ -213,10 +207,10 @@ switch ($op) {
       $output .= "<B>URL of homepage:</B><BR>\n";
       $output .= "<INPUT NAME=\"edit[url]\" MAXLENGTH=55 SIZE=30 VALUE=\"$user->url\"><BR>\n";
       $output .= "<I>Optional, but make sure you enter fully qualified URLs only. That is, remember to include \"http://\".</I><P>\n";
-      $output .= "<B>Bio:</B> (255 char limit)<BR>\n";
+      $output .= "<B>Bio:</B> (255 char. limit)<BR>\n";
       $output .= "<TEXTAREA NAME=\"edit[bio]\" COLS=35 ROWS=5 WRAP=virtual>$user->bio</TEXTAREA><BR>\n";
       $output .= "<I>Optional. This biographical information is publicly displayed on your user page.</I><P>\n";
-      $output .= "<B>User block:</B> (255 char limit)<BR>\n";
+      $output .= "<B>User block:</B> (255 char. limit)<BR>\n";
       $output .= "<TEXTAREA NAME=\"edit[ublock]\" COLS=35 ROWS=5 WRAP=virtual>$user->ublock</TEXTAREA><BR>\n";
       $output .= "<INPUT NAME=\"edit[ublockon]\" TYPE=checkbox". ($user->ublockon == 1 ? " CHECKED" : "") ."> Enable user block<BR>\n";
       $output .= "<I>Enable the checkbox and whatever you enter below will appear on your costum main page.</I><P>\n";
@@ -227,20 +221,18 @@ switch ($op) {
       $output .= "</FORM>\n";
 
       ### Display output/content:
-      include "theme.inc";
       $theme->header();
       $theme->box("Edit your information", $output);
       $theme->footer();
     }
     else {
-      include "theme.inc";
       $theme->header();
       $theme->box("Login", showLogin($userid)); 
       $theme->footer();
     }
     break;
   case "page":
-    if ($user && $user->valid()) {
+    if ($user && user_valid()) {
       ### Generate output/content:
       $output .= "<FORM ACTION=\"account.php\" METHOD=post>\n";
       $output .= "<B>Theme:</B><BR>\n";
@@ -252,18 +244,19 @@ switch ($op) {
 
       if ($userinfo[theme]=="") $userinfo[theme] = $cfg_theme;
       $output .= "<SELECT NAME=\"edit[theme]\">$options</SELECT><BR>\n";
-      $output .= "<I>Changes the look and feel of the site.</I><P>\n";
+      $output .= "<I>Selecting a different theme will change the look and feel of the site.</I><P>\n";
       $output .= "<B>Maximum number of stories:</B><BR>\n";
       $output .= "<INPUT NAME=\"edit[storynum]\" MAXLENGTH=3 SIZE=3 VALUE=\"$user->storynum\"><P>\n";
+      $output .= "<I>The maximum number of stories that will be displayed on the main page.</I><P>\n";
       $options  = "<OPTION VALUE=\"nested\"". ($user->umode == 'nested' ? " SELECTED" : "") .">Nested</OPTION>";
       $options .= "<OPTION VALUE=\"flat\"". ($user->umode == 'flat' ? " SELECTED" : "") .">Flat</OPTION>";
       $options .= "<OPTION VALUE=\"threaded\"". ($user->umode == 'threaded' ? " SELECTED" : "") .">Threaded</OPTION>";
-      $output .= "<B>Display mode:</B><BR>\n";
+      $output .= "<B>Comment display mode:</B><BR>\n";
       $output .= "<SELECT NAME=\"edit[umode]\">$options</SELECT><P>\n";
       $options  = "<OPTION VALUE=0". ($user->uorder == 0 ? " SELECTED" : "") .">Oldest first</OPTION>";
       $options .= "<OPTION VALUE=1". ($user->uorder == 1 ? " SELECTED" : "") .">Newest first</OPTION>";
       $options .= "<OPTION VALUE=2". ($user->uorder == 2 ? " SELECTED" : "") .">Highest scoring first</OPTION>";
-      $output .= "<B>Sort order:</B><BR>\n";
+      $output .= "<B>Comment sort order:</B><BR>\n";
       $output .= "<SELECT NAME=\"edit[uorder]\">$options</SELECT><P>\n";
       $options  = "<OPTION VALUE=\"-1\"". ($user->thold == -1 ? " SELECTED" : "") .">-1: Display uncut and raw comments.</OPTION>";
       $options .= "<OPTION VALUE=0". ($user->thold == 0 ? " SELECTED" : "") .">0: Display almost all comments.</OPTION>";
@@ -272,30 +265,28 @@ switch ($op) {
       $options .= "<OPTION VALUE=3". ($user->thold == 3 ? " SELECTED" : "") .">3: Display comments with score +3 only.</OPTION>";
       $options .= "<OPTION VALUE=4". ($user->thold == 4 ? " SELECTED" : "") .">4: Display comments with score +4 only.</OPTION>";
       $options .= "<OPTION VALUE=5". ($user->thold == 5 ? " SELECTED" : "") .">5: Display comments with score +5 only.</OPTION>";
-      $output .= "<B>Threshold:</B><BR>\n";
+      $output .= "<B>Comment threshold:</B><BR>\n";
       $output .= "<SELECT NAME=\"edit[thold]\">$options</SELECT><BR>\n";
       $output .= "<I>Comments that scored less than this setting will be ignored. Anonymous comments start at 0, comments of people logged on start at 1 and moderators can add and subtract points.</I><P>\n";
-      $output .= "<B>Singature:</B> (255 char limit)<BR>\n";
+      $output .= "<B>Singature:</B> (255 char. limit)<BR>\n";
       $output .= "<TEXTAREA NAME=\"edit[signature]\" COLS=35 ROWS=5 WRAP=virtual>$user->signature</TEXTAREA><BR>\n";
       $output .= "<I>Optional. This information will be publicly displayed at the end of your comments. </I><P>\n";
       $output .= "<INPUT TYPE=submit NAME=op VALUE=\"Save page settings\"><BR>\n";
       $output .= "</FORM>\n";
 
       ### Display output/content:
-      include "theme.inc";
       $theme->header();
       $theme->box("Customize your page", $output);
       $theme->footer();
     }
     else {
-      include "theme.inc";
       $theme->header();
       $theme->box("Login", showLogin($userid)); 
       $theme->footer();
     }
     break;
   case "Save user information":
-    if ($user && $user->valid()) {
+    if ($user && user_valid()) {
       $data[name] = $edit[name];
       $data[email] = $edit[email];
       $data[femail] = $edit[femail];
@@ -305,12 +296,12 @@ switch ($op) {
       $data[ublockon] = $edit[ublockon];
       if ($edit[pass1] == $edit[pass2] && !empty($edit[pass1])) { $data[passwd] = $edit[pass1]; }
       dbsave("users", $data, $user->id);
-      $user->rehash();
+      user_rehash();
     }
     showUser($user->userid);
     break;
   case "Save page settings":
-    if ($user && $user->valid()) {
+    if ($user && user_valid()) {
       $data[theme] = $edit[theme];
       $data[storynum] = $edit[storynum];
       $data[umode] = $edit[umode];
@@ -318,7 +309,7 @@ switch ($op) {
       $data[thold] = $edit[thold];
       $data[signature] = $edit[signature];
       dbsave("users", $data, $user->id);
-      $user->rehash();
+      user_rehash();
     }
     showUser($user->userid);
     break;

@@ -18,6 +18,14 @@ CREATE TABLE bans (
   PRIMARY KEY (id)
 );
 
+CREATE TABLE diaries (
+  id int DEFAULT '0' NOT NULL auto_increment;
+  author int DEFAULT '0' NOT NULL,
+  text text NOT NULL,
+  timestamp int(11),
+  PRIMARY KEY(id)
+);
+
 CREATE TABLE blocks (
   id tinyint(4) DEFAULT '0' NOT NULL auto_increment,
   author varchar(30),
