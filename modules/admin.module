@@ -34,6 +34,10 @@ function admin_link($type) {
 
 function admin_page() {
   if (user_access("access administration pages")) {
+    $title = menu_get_active_title();
+
+    theme("header", $title);
+
     $contents = "";
 
     if ($help = menu_get_active_help()) {
@@ -49,9 +53,7 @@ function admin_page() {
 
     $breadcrumb = menu_get_active_breadcrumb();
     array_pop($breadcrumb);
-    $title = menu_get_active_title();
 
-    theme("header", $title);
     theme("breadcrumb", $breadcrumb);
     theme("box", $title, $contents);
     theme("footer");
