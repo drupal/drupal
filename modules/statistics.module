@@ -153,7 +153,7 @@ function statistics_access_log($aid) {
     $output .= ' <tr><th>'. t('Referrer') ."</th><td>". ($access->url ? l($access->url, $access->url) : '') ."</td></tr>";
     $output .= ' <tr><th>'. t('Date') .'</th><td>'. format_date($access->timestamp, 'large') .'</td></tr>';
     $output .= ' <tr><th>'. t('User') .'</th><td>'. format_name($access) .'</td></tr>';
-    $output .= ' <tr><th>'. t('Hostname') ."</th><td>$watchdog->hostname</td></tr>";
+    $output .= ' <tr><th>'. t('Hostname') ."</th><td>$access->hostname</td></tr>";
     $output .= '</table>';
     print theme('page', $output);
   }
