@@ -85,7 +85,6 @@ function watchdog_overview($type = '') {
   foreach (_watchdog_get_message_types() as $key) {
     $query[$key] = "WHERE type = '". check_query($key) ."'";
   }
-  $query['actions'] = "WHERE link != ''";
 
   $header = array(
     array('data' => t('date'), 'field' => 'w.timestamp', 'sort' => 'desc'),
@@ -93,8 +92,7 @@ function watchdog_overview($type = '') {
     array('data' => t('user'), 'field' => 'u.name'),
     array('data' => t('operations'), 'colspan' => '2')
   );
-  $sql = 'SELECT w.*, u.name, u.uid FROM {watchdog} w INNER JOIN {users} u ON w.uid = u.uid '. ($type ? $query[$type] : '');
-  $sql .= tablesort_sql($header);
+  $sql = 'SELECT w.*, u.name, u.uid FROM {watchdog} w INNER JOIN {users} u ON w.uid = u.uid '. ($type ? $query[$type] : '') . tablesort_sql($header);
   $result = pager_query($sql, 50);
 
   while ($watchdog = db_fetch_object($result)) {
