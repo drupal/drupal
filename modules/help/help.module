@@ -10,7 +10,7 @@ function help_menu() {
     'callback' => 'help_main',
     'access' => user_access('access administration pages'),
     'weight' => 9);
-  
+
   foreach (module_list() as $name) {
     if (module_hook($name, 'help')) {
       if (module_invoke($name, 'help', "admin/help#$name")) {

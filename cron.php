@@ -1,11 +1,11 @@
 <?php
 // $Id$
 
-include_once "includes/bootstrap.inc";
-include_once "includes/common.inc";
+include_once 'includes/bootstrap.inc';
+include_once 'includes/common.inc' ;
 
 // If not in 'safe mode', increase the maximum execution time:
-if (!ini_get("safe_mode")) {
+if (!ini_get('safe_mode')) {
   set_time_limit(240);
 }
 

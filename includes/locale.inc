@@ -19,7 +19,7 @@ function _locale_add_language($code, $name, $onlylanguage = TRUE) {
   while ($string = db_fetch_object($result)) {
     db_query("INSERT INTO {locales_target} (lid, locale) VALUES (%d,'%s')", $string->lid, $code);
   }
-  
+
   // If only the language was added, and not a PO file import triggered
   // the language addition, we need to inform the user on how to start
   // a translation
@@ -29,7 +29,7 @@ function _locale_add_language($code, $name, $onlylanguage = TRUE) {
   else {
     $message = t("'%locale' language added.", array('%locale' => t($name)));
   }
-  
+
   drupal_set_message($message);
   watchdog('locale', t("'%locale' language added.", array('%locale' => $code)));
 }
@@ -46,20 +46,20 @@ function _locale_admin_manage_screen() {
   foreach ($languages['name'] as $key => $lang) {
 
     $status = db_fetch_object(db_query("SELECT isdefault, enabled FROM {locales_meta} WHERE locale = '%s'", $key));
-    
+
     if ($key == 'en') {
       $rows[] = array('en', $lang, form_checkbox('', 'enabled][en', 1, $status->enabled), form_radio('', 'sitedefault', $key, $status->isdefault), message_na(), '');
     }
     else {
       $original = db_fetch_object(db_query("SELECT COUNT(*) AS strings FROM {locales_source}"));
       $translation = db_fetch_object(db_query("SELECT COUNT(*) AS translation FROM {locales_target} WHERE locale = '%s' AND translation != ''", $key));
-    
+
       $ratio = ($original->strings > 0 && $translation->translation > 0) ? round(($translation->translation/$original->strings)*100., 2) : 0;
-    
+
       $rows[] = array($key, ($key != 'en' ? form_textfield('', 'name]['. $key, $lang, 15, 64) : $lang), form_checkbox('', 'enabled]['. $key, 1, $status->enabled), form_radio('', 'sitedefault', $key, $status->isdefault), "$translation->translation/$original->strings ($ratio%)", ($key != 'en' ? l(t('delete locale'), 'admin/locale/language/delete/'. urlencode($key)) : ''));
     }
   }
-  
+
   return form(theme('table', $header, $rows) . form_submit(t('Save configuration')), 'POST', url('admin/locale'));
 }
 
@@ -67,14 +67,14 @@ function _locale_admin_manage_screen() {
  * User interface for the language addition screen
  */
 function _locale_admin_manage_add_screen() {
-  
+
   $isocodes = _locale_prepare_iso_list();
-  
+
   $output = '<h2>'. t('From language list') .'</h2>';
   $form = form_select(t('Language name'), 'langcode', key($isocodes), $isocodes, t('Select your language here, or add it below, if you are unable to find it.'));
   $form .= form_submit(t('Add language'));
   $output .= form($form);
-  
+
   $edit = &$_POST['edit'];
   $output .= '<h2>'. t('Custom language') .'</h2>';
   $form = form_textfield(t('Language code'), 'langcode', $edit['langcode'], 70, 12, t("Commonly this is an <a href=\"%iso-codes\">ISO 639 language code</a> with an optional country code for regional variants. Examples include 'en', 'en-US' and 'zh-cn'.", array("%iso-codes" => "http://www.w3.org/WAI/ER/IG/ert/iso639.htm")));
@@ -93,7 +93,7 @@ function _locale_admin_import_screen() {
   $languages = locale_supported_languages(FALSE, TRUE);
   $languages = array_map("t", $languages['name']);
   unset($languages['en']);
-  
+
   if (!count($languages)) {
     drupal_set_message(t('You need to have at least one language set up to import translations.'), 'error');
   }
@@ -102,7 +102,7 @@ function _locale_admin_import_screen() {
       t('Already added languages') => $languages,
       t('Languages not yet added') => _locale_prepare_iso_list()
     );
-    
+
     $form = form_file(t('Language file'), 'file', 50, t('A gettext Portable Object (.po) file.'));
     $form .= form_select(t('Import into'), 'langcode', '', $languages, t('Choose the language you want to add strings into. If you choose a language which is not yet set up, then it will be added.'));
     $form .= form_radios(t('Mode'), 'mode', 'overwrite', array("overwrite" => t('Strings in the uploaded file replace existing ones, new ones are added'), "keep" => t('Existing strings are kept, only new strings are added')));
@@ -117,7 +117,7 @@ function _locale_admin_import_screen() {
  *
  * @param $file Name of local file to be imported
  * @param $edit Language code
- * @param $mode should existing translations be replaced? 
+ * @param $mode should existing translations be replaced?
  */
 function _locale_import_po($file, $lang, $mode) {
   // Check if we have the language already in the database
@@ -125,21 +125,21 @@ function _locale_import_po($file, $lang, $mode) {
     drupal_set_message(t("Unsupported language selected for import."), 'error');
     return FALSE;
   }
-  
+
   // Check if we can get the strings from the file
   if (!($strings = _locale_import_read_po($file))) {
     drupal_set_message(t("Translation file broken: Couldn't be read."), 'error');
     return FALSE;
   }
-    
+
   // Strip out header from the string pairs
   $header = $strings[""]["msgstr"];
   unset($strings[""]);
-    
+
   // Get information from the header into the database
   if ($header) {
     $hdr = _locale_import_parse_header($header);
-      
+
     // Get the plural formula
     if ($hdr["Plural-Forms"] && $p = _locale_import_parse_plural_forms($hdr["Plural-Forms"])) {
       list($nplurals, $plural) = $p;
@@ -157,7 +157,7 @@ function _locale_import_po($file, $lang, $mode) {
   $fullstr = 0;
   foreach ($strings as $value) {
     $comments = _locale_import_shorten_comments($value['#']);
- 
+
     // Handle a translation for some plural string
     if (strpos($value['msgid'], "\0")) {
       $english = explode("\0", $value['msgid'], 2);
@@ -192,7 +192,7 @@ function _locale_import_po($file, $lang, $mode) {
         }
       }
     }
-    
+
     // A simple translation
     else {
       $english = $value['msgid'];
@@ -218,7 +218,7 @@ function _locale_import_po($file, $lang, $mode) {
       }
     }
   }
-  
+
   // Successfull import
   cache_clear_all("locale:$lang");
   drupal_set_message(t("Translation successfully imported. %num translated strings added to language.", array('%num' => $fullstr)));
@@ -284,7 +284,7 @@ function _locale_import_read_po($path) {
         return FALSE;
       }
       $current["msgid"] = $current["msgid"] ."\0". $quoted;
-      $context = "MSGID_PLURAL";	
+      $context = "MSGID_PLURAL";
     }
     elseif (!strncmp("msgid", $line, 5)) {
       if ($context == "MSGSTR") {   // End current entry, start a new one
@@ -605,7 +605,7 @@ function _locale_import_tokenize_formula($formula) {
  * @param $key Index of the array element
  */
 function _locale_import_append_plural($entry, $key) {
-  // No modifications for 0, 1 
+  // No modifications for 0, 1
   if ($key == 0 || $key == 1) {
     return $entry;
   }
@@ -674,7 +674,7 @@ function _locale_admin_export_screen() {
   $form = t('<p>Generate a gettext Portable Object Template (.pot) file with all the interface strings from the Drupal locale database.</p>');
   $form .= form_submit(t('Export'));
   $output .= form($form);
-  
+
   return $output;
 }
 
@@ -685,7 +685,7 @@ function _locale_admin_export_screen() {
  */
 function _locale_export_po($language) {
   global $user;
-  
+
   // Get language specific strings, or all strings
   if ($language) {
     $meta = db_fetch_object(db_query("SELECT * FROM {locales_meta} WHERE locale = '%s'", $language));
@@ -694,7 +694,7 @@ function _locale_export_po($language) {
   else {
     $result = db_query("SELECT s.lid, s.source, s.location, t.plid, t.plural FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid GROUP BY s.lid ORDER BY t.plid, t.plural");
   }
-  
+
   // Build array out of the database results
   $parent = array();
   while ($child = db_fetch_object($result)) {
@@ -709,7 +709,7 @@ function _locale_export_po($language) {
       $parent[$child->lid]['translation'] = $child->translation;
     }
   }
-  
+
   // Generating Portable Object file for a language
   if ($language) {
     $filename = $language .'.po';
@@ -732,7 +732,7 @@ function _locale_export_po($language) {
     $header .= "\n";
     watchdog('locale', strtr("PO file for locale '%loc' downloaded.", array('%loc' => $meta->name)));
   }
-  
+
   // Generating Portable Object Template
   else {
     $filename = variable_get('site_name', 'drupal') .'.pot';
@@ -899,7 +899,7 @@ function _locale_string_save($lid) {
 function _locale_string_edit($lid) {
   $languages = locale_supported_languages(FALSE, TRUE);
   unset($languages['name']['en']);
-  
+
   $result = db_query("SELECT DISTINCT s.source, t.translation, t.locale FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid WHERE s.lid = %d", $lid);
   $form = '';
   while ($translation = db_fetch_object($result)) {
@@ -927,7 +927,7 @@ function _locale_string_language_list($translation) {
   foreach ($languages['name'] as $key => $value) {
     if (isset($translation[$key])) {
       $output .= ($translation[$key] != '') ? $key .' ' : "<strike>$key</strike> ";
-    } 
+    }
   }
 
   return $output;
@@ -996,7 +996,7 @@ function _locale_string_seek() {
         break;
       // Some different language
       default:
-        $sql = "$join $where AND t.locale = '". check_query($query->language) ."' $orderby"; 
+        $sql = "$join $where AND t.locale = '". check_query($query->language) ."' $orderby";
     }
 
     $result = pager_query($sql, 50);

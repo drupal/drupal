@@ -207,7 +207,7 @@ function user_validate_authmap($account, $authname, $module) {
   $result = db_query("SELECT COUNT(*) from {authmap} WHERE uid != %d AND authname = '%s'", $account->uid, $authname);
   if (db_result($result) > 0) {
     $name = module_invoke($module, 'info', 'name');
-    return t('The %u ID %s is already taken.', array('%u' => $name, '%s' => "<i>$authname</i>"));
+    return t('The %u ID %s is already taken.', array('%u' => $name, '%s' => "<em>$authname</em>"));
   }
 }
 
@@ -770,7 +770,7 @@ function user_login($edit = array(), $msg = '') {
         watchdog('user', t('external load by %user using module "%module".', array('%user' => $name .'@'. $server, '%module' => key($result))));
       }
       else {
-        $error = t('Invalid password for %s.', array('%s' => "<i>$name@$server</i>"));
+        $error = t('Invalid password for %s.', array('%s' => "<em>$name@$server</em>"));
       }
     }
 
@@ -879,11 +879,11 @@ function user_pass($edit = array()) {
 
   if ($edit['name']) {
     $account = user_load(array('name' => $edit['name'], 'status' => 1));
-    if (!$account) form_set_error('name', t('Sorry. The username "<i>%s</i>" is not recognized.', array('%s' => $edit['name'])));
+    if (!$account) form_set_error('name', t('Sorry. The username "<em>%s</em>" is not recognized.', array('%s' => $edit['name'])));
   }
   else if ($edit['mail']) {
     $account = user_load(array('mail' => $edit['mail'], 'status' => 1));
-    if (!$account) form_set_error('name', t('Sorry. The e-mail address "<i>%s</i>" is not recognized.', array('%s' => $edit['mail'])));
+    if (!$account) form_set_error('name', t('Sorry. The e-mail address "<em>%s</em>" is not recognized.', array('%s' => $edit['mail'])));
   }
   if ($account) {
 
@@ -1304,10 +1304,10 @@ function user_admin_access($edit = array()) {
   }
   else if ($op == t('Check')) {
     if (user_deny($type, $edit['test'])) {
-      drupal_set_message(t('<i>%test</i> is not allowed.', array('%test' => $edit['test'])));
+      drupal_set_message(t('<em>%test</em> is not allowed.', array('%test' => $edit['test'])));
     }
     else {
-      drupal_set_message(t('<i>%test</i> is allowed.', array('%test' => $edit['test'])));
+      drupal_set_message(t('<em>%test</em> is allowed.', array('%test' => $edit['test'])));
     }
   }
   else if ($id) {
@@ -1595,8 +1595,8 @@ function user_help($section) {
 
       $output = t("
       <h3>Distributed authentication<a id=\"da\"></a></h3>
-      <p>One of the more tedious moments in visiting a new website is filling out the registration form. Here at %site, you do not have to fill out a registration form if you are already a member of %help-links. This capability is called <i>distributed authentication</i>, and is unique to <a href=\"%drupal\">Drupal</a>, the software which powers %site.</p>
-      <p>Distributed authentication enables a new user to input a username and password into the login box, and immediately be recognized, even if that user never registered at %site. This works because Drupal knows how to communicate with external registration databases. For example, lets say that new user 'Joe' is already a registered member of <a href=\"%delphi-forums\">Delphi Forums</a>. Drupal informs Joe on registration and login screens that he may login with his Delphi ID instead of registering with %site. Joe likes that idea, and logs in with a username of joe@remote.delphiforums.com and his usual Delphi password. Drupal then contacts the <i>remote.delphiforums.com</i> server behind the scenes (usually using <a href=\"%xml\">XML-RPC</a>, <a href=\"%http-post\">HTTP POST</a>, or <a href=\"%soap\">SOAP</a>) and asks: \"Is the password for user Joe correct?\".  If Delphi replies yes, then we create a new %site account for Joe and log him into it.  Joe may keep on logging into %site in the same manner, and he will always be logged into the same account.</p>", array('%help-links' => (implode(', ', user_auth_help_links())), '%site' => "<i>$site</i>", '%drupal' => 'http://www.drupal.org', '%delphi-forums' => 'http://www.delphiforums.com', '%xml' => 'http://www.xmlrpc.com', '%http-post' => 'http://www.w3.org/Protocols/', '%soap' => 'http://www.soapware.org'));
+      <p>One of the more tedious moments in visiting a new website is filling out the registration form. Here at %site, you do not have to fill out a registration form if you are already a member of %help-links. This capability is called <em>distributed authentication</em>, and is unique to <a href=\"%drupal\">Drupal</a>, the software which powers %site.</p>
+      <p>Distributed authentication enables a new user to input a username and password into the login box, and immediately be recognized, even if that user never registered at %site. This works because Drupal knows how to communicate with external registration databases. For example, lets say that new user 'Joe' is already a registered member of <a href=\"%delphi-forums\">Delphi Forums</a>. Drupal informs Joe on registration and login screens that he may login with his Delphi ID instead of registering with %site. Joe likes that idea, and logs in with a username of joe@remote.delphiforums.com and his usual Delphi password. Drupal then contacts the <em>remote.delphiforums.com</em> server behind the scenes (usually using <a href=\"%xml\">XML-RPC</a>, <a href=\"%http-post\">HTTP POST</a>, or <a href=\"%soap\">SOAP</a>) and asks: \"Is the password for user Joe correct?\".  If Delphi replies yes, then we create a new %site account for Joe and log him into it.  Joe may keep on logging into %site in the same manner, and he will always be logged into the same account.</p>", array('%help-links' => (implode(', ', user_auth_help_links())), '%site' => "<em>$site</em>", '%drupal' => 'http://www.drupal.org', '%delphi-forums' => 'http://www.delphiforums.com', '%xml' => 'http://www.xmlrpc.com', '%http-post' => 'http://www.w3.org/Protocols/', '%soap' => 'http://www.soapware.org'));
 
         foreach (module_list() as $module) {
           if (module_hook($module, 'auth')) {

@@ -31,7 +31,7 @@ function aggregator_help($section) {
       <p>News items can be filed into categories. To create a category, start at the <a href="%admin-news">aggregation page</a>.</p>
       <p>Once there, select <a href="%new-category">new category</a> from the menu. Drupal will then ask for the following:</p>
       <ul>
-       <li><strong>Title</strong> -- The title will be used in the <i>news by topics</i> listing in your news aggregator and for the block created for the bundle.</li>
+       <li><strong>Title</strong> -- The title will be used in the <em>news by topics</em> listing in your news aggregator and for the block created for the bundle.</li>
        <li><strong>Description</strong> -- A short description of the category to tell users more details about what news items they might find in the category.</li>
        <li><strong>Latest items block</strong> -- The number of items selected here will determine how many of the latest items from the category will appear in a block which may be enabled and placed in the <a href="%block">blocks</a> administration page.</li>
       </ul>
@@ -61,7 +61,7 @@ function aggregator_help($section) {
     case 'admin/aggregator/add/feed':
       return t('Add a site that has an RSS/RDF feed. The URL is the full path to the RSS feed file. For the feed to update automatically you must run "cron.php" on a regular basis. If you already have a feed with the URL you are planning to use, the system will not accept another feed with the same URL.');
     case 'admin/aggregator/add/category':
-      return t('Categories provide a way to group items from different news feeds together. Each news category has its own feed page and block. For example, you could tag various sport-related feeds as belonging to a category called <i>Sports</i>. News items can be added to a category automatically by setting a feed to automatically place its item into that category, or by using the categorize items link in any listing of news items.');
+      return t('Categories provide a way to group items from different news feeds together. Each news category has its own feed page and block. For example, you could tag various sport-related feeds as belonging to a category called <em>Sports</em>. News items can be added to a category automatically by setting a feed to automatically place its item into that category, or by using the categorize items link in any listing of news items.');
     case 'admin/aggregator/configure':
       return t('These settings control the display of aggregated content.');
   }

@@ -13,7 +13,7 @@
 
 // ---------------------------------------------------------------------------------
 // Hook implementations (needed on all page loads)
- 
+
 /**
  * Implementation of hook_help().
  */
@@ -27,12 +27,12 @@ function locale_help($section = "admin/help#locale") {
     case 'admin/locale/language/add':
       return t("<p>You need to add all languages you would like to provide the site interface in. If you can't find the desired language in the quick add dropdown, then need to provide the proper language code yourself. The language code might be used to negotiate with browsers and present flags, so it is important to pick one that is standardised for the desired language. You can also add languages by <a href=\"%import\">importing translations</a> directly into a language not yet set up.</p>", array("%import" => url("admin/locale/language/import")));
     case 'admin/locale/language/import':
-      return t("<p>This page allows you to import a translation provided in the gettext Portable Object (.po) format.  The easiest way to get your site translated is to grab an existing Drupal translation and to import it.  You can obtain translations from the <a href=\"%url\">Drupal localization page</a>.</p>", array('%url' => 'http://drupal.org/localization')); 
+      return t("<p>This page allows you to import a translation provided in the gettext Portable Object (.po) format.  The easiest way to get your site translated is to grab an existing Drupal translation and to import it.  You can obtain translations from the <a href=\"%url\">Drupal localization page</a>.</p>", array('%url' => 'http://drupal.org/localization'));
     case 'admin/locale/language/export':
       return t("<p>This page allows you to export Drupal strings. The first option is to export a translation so it can be shared. The second option is to generate a translation template, which contains all Drupal strings, but without their translations. You can use this template to start a new translation using a specialized desktop application.</p>");
     case 'admin/locale/string/search':
       return t("<p>It is often more convinient to get the strings of your setup on the <a href=\"%export\">export page</a>, and start with a desktop Gettext translation editor though. Here you can search in the translated and untranslated strings, and the default English texts provided by Drupal.</p>", array("%export" => url("admin/locale/language/export")));
-    
+
     case 'admin/help#locale':
       return t("
       <p>Most programs are written and documented in English, and primarily use English to interact with users. This is also true for a great deal of web sites. However, most people are less comfortable with English than with their native language, and would prefer to use their mother tongue as much as possible. Many people love to see their web site showing a lot less English, and far more of their own language. Therefore Drupal provides a framework to setup a multi-lingual web site, or to overwrite the default English texts.</p>
@@ -40,7 +40,7 @@ function locale_help($section = "admin/help#locale") {
       <p>Whenever Drupal encounters an interface string which needs to be displayed, it tries to translate it into the currently selected language. If a translation is not available, then the string is remembered, so you can look up untranslated strings easily.</p>
       <p>Drupal provides two options to translate these strings. First is the integrated web interface, where you can search for untranslated strings, and specify their translations via simple web forms. An easier, and much less time consuming method is to import translations already done for your language. This is achieved by the use of GNU gettext Portable Object files. These are editable with quite convinient desktop editors specifically architected for supporting your work with GNU Gettext files. The import feature allows you to add strings from such files into the site database. The export functionality enables you to share your translations with others, generating Portable Object files from your site strings.");
       break;
-      
+
       // TODO: integrate a rewritten version of this help into the big help screen above
       /*
       "<p>To translate strings start at the <a href=\"%search\">search</a> page of the locale section in the administration pages. There you will see a list of the languages you have configured. Choose the appropriate settings and search for the strings you want to translate.</p>
@@ -57,7 +57,7 @@ function locale_help($section = "admin/help#locale") {
       <p>Once you got the appropriate PO file, all you have to do is to add the locale and upload it from the <a href=\"%addlocale\">manage locale</a> screen.</p>
       <p>Note that uploading and parsing the uploaded file can take quite some time, depending on the connection to the server and the server's power.</p>
        ", array("%search" => url("admin/locale/string/search"), "%addlocale" => url("admin/locale/languages/add"), "%translations" => 'http://www.Drupal.org/translations/', "%handbook" => 'http://www.Drupal.org/handbook/po-files', "%gettext" => 'http://www.gnu.org/software/gettext/gettext.html'));*/
-  }  
+  }
 }
 
 /**
@@ -71,14 +71,14 @@ function locale_menu() {
   // Main admin menu item
   $items[] = array('path' => 'admin/locale', 'title' => t('localization'),
     'callback' => 'locale_admin_manage', 'access' => $access);
-  
+
   // Top level tabs
   $items[] = array('path' => 'admin/locale/language', 'title' => t('manage languages'),
     'access' => $access, 'weight' => -10, 'type' => MENU_DEFAULT_LOCAL_TASK);
   $items[] = array('path' => 'admin/locale/string/search', 'title' => t('manage strings'),
     'callback' => 'locale_admin_string', 'access' => $access, 'weight' => 10,
     'type' => MENU_LOCAL_TASK);
-  
+
   // Manage languages subtabs
   $items[] = array('path' => 'admin/locale/language/overview', 'title' => t('list'),
     'callback' => 'locale_admin_manage', 'access' => $access, "weight" => 0,
@@ -92,12 +92,12 @@ function locale_menu() {
   $items[] = array('path' => 'admin/locale/language/export', 'title' => t('export'),
     'callback' => 'locale_admin_export', 'access' => $access, 'weight' => 20,
     'type' => MENU_LOCAL_TASK);
-  
+
   // Language related callbacks
   $items[] = array('path' => 'admin/locale/language/delete', 'title' => t('confirm'),
     'callback' => 'locale_admin_manage_delete_screen', 'access' => $access,
     'type' => MENU_CALLBACK);
-  
+
   // String related callbacks
   $items[] = array('path' => 'admin/locale/string/edit', 'title' => t('edit'),
     'callback' => 'locale_admin_string', 'access' => $access, 'type' => MENU_CALLBACK);
@@ -128,7 +128,7 @@ function locale_user($type, $edit, &$user, $category = NULL) {
 
 // ---------------------------------------------------------------------------------
 // Locale core functionality (needed on all page loads)
- 
+
 /**
  * Provides interface translation services
  *
@@ -154,7 +154,7 @@ function locale($string) {
   if (isset($locale_t[$string])) {
     $string = ($locale_t[$string] === TRUE ? $string : $locale_t[$string]);
   }
-  
+
   // We don't have this translation cached, so get it from the DB
   else {
     $result = db_query("SELECT s.lid, t.translation FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid WHERE s.source = '%s' AND t.locale = '%s'", $string, $locale);
@@ -165,7 +165,7 @@ function locale($string) {
         $string = $trans->translation;
       }
     }
-    
+
     // Either we have no such source string, or no translation
     else {
       $result = db_query("SELECT lid, source FROM {locales_source} WHERE source = '%s'", $string);
@@ -228,7 +228,7 @@ function locale_supported_languages($reset = FALSE, $getall = FALSE) {
     $result = db_query('SELECT locale, name, formula, enabled FROM {locales_meta} ORDER BY isdefault DESC, enabled DESC, name ASC');
     while ($row = db_fetch_object($result)) {
       $all['name'][$row->locale] = $row->name;
-      $all['formula'][$row->locale] = $row->formula; 
+      $all['formula'][$row->locale] = $row->formula;
       if ($row->enabled) {
         $enabled['name'][$row->locale] = $row->name;
         $enabled['formula'][$row->locale] = $row->formula;
@@ -292,7 +292,7 @@ function locale_admin_manage() {
         }
       }
       break;
-    
+
     // Remove existing language
     case t('Delete'):
       $languages = locale_supported_languages(FALSE, TRUE);
@@ -313,13 +313,13 @@ function locale_admin_manage() {
 function locale_admin_manage_delete_screen() {
   include_once 'includes/locale.inc';
   $langcode = arg(4);
-  
+
   // Do not allow deletion of English locale
   if ($langcode == 'en') {
     drupal_goto('admin/locale/language/overview');
     return;
   }
-  
+
   // For other locales, warn user that data loss is ahead
   $form = form_hidden('langcode', $langcode);
   $form .= form_submit(t('Delete'));
@@ -340,7 +340,7 @@ function locale_admin_manage_add() {
     // Try to add new language
     case t('Add language'):
       // Check for duplicates
-      if (db_num_rows(db_query("SELECT locale FROM {locales_meta} WHERE locale = '%s'", $edit['langcode'])) == 0) { 
+      if (db_num_rows(db_query("SELECT locale FROM {locales_meta} WHERE locale = '%s'", $edit['langcode'])) == 0) {
 
         // Set language name from the available list if needed
         if ($edit['langcode'] && !$edit['langname'] && isset($isocodes[$edit['langcode']])) {
@@ -376,14 +376,14 @@ function locale_admin_import() {
   $edit = &$_POST['edit'];
   switch ($_POST['op']) {
     case t('Import'):
-      
+
       // Add language, if not yet supported
       $languages = locale_supported_languages(TRUE, TRUE);
       if (!isset($languages['name'][$edit['langcode']])) {
         $isocodes = _locale_get_iso639_list();
         _locale_add_language($edit['langcode'], $isocodes[$edit['langcode']][0], FALSE);
       }
-      
+
       // Now import strings into the language
       $file = file_check_upload('file');
       if ($ret = _locale_import_po($file->path, $edit['langcode'], $edit['mode']) == FALSE) {

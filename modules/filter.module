@@ -22,13 +22,13 @@ function filter_help($section) {
 
     case 'admin/filters':
       return t('
-<p><i>Input formats</i> define a way of processing user-supplied text in Drupal. Every input format has its own settings of which <i>filters</i> to apply. Possible filters include stripping out malicious HTML and making URLs clickable.</p>
+<p><em>Input formats</em> define a way of processing user-supplied text in Drupal. Every input format has its own settings of which <em>filters</em> to apply. Possible filters include stripping out malicious HTML and making URLs clickable.</p>
 <p>Users can choose between the available input formats when submitting content.</p>
 <p>Below you can configure which input formats are available to which roles, as well as choose a default input format (used for imported content, for example).</p>');
 
     case 'admin/filters/#':
       return t('
-<p>Every <i>filter</i> performs one particular change on the user input, for example stripping out malicious HTML or making URLs clickable. Choose which filters you want to apply to text in this input format.</p>
+<p>Every <em>filter</em> performs one particular change on the user input, for example stripping out malicious HTML or making URLs clickable. Choose which filters you want to apply to text in this input format.</p>
 <p>If you notice some filters are causing conflicts in the output, you can <a href="%order">rearrange them</a>.', array('%configure' => url('admin/filters/'. arg(2) .'/configure'), '%order' => url('admin/filters/'. arg(2) .'/order')));
 
     case 'admin/filters/#/configure':

@@ -1507,7 +1507,7 @@ function update_101() {
 
     // but not the fixed fields
     unset($fields['lid'], $fields['location'], $fields['string']);
-  
+
     // insert locales
     $list = _locale_get_iso639_list();
     foreach ($fields as $key => $value) {
@@ -1524,7 +1524,7 @@ function update_101() {
         }
       }
     }
-  
+
     // get all strings
     $result = db_query('SELECT * FROM {locales}');
     while($entry = db_fetch_object($result)) {

@@ -1,9 +1,9 @@
 <?php
 // $Id$
 
-include_once "includes/bootstrap.inc";
+include_once 'includes/bootstrap.inc';
 drupal_page_header();
-include_once "includes/common.inc";
+include_once 'includes/common.inc';
 
 fix_gpc_magic();
 
