@@ -27,6 +27,11 @@ function theme_account($theme) {
     $content .= "<LI><A HREF=\"account.php?op=edit&topic=user\">edit your information</A></LI>\n";
     $content .= "<LI><A HREF=\"account.php?op=edit&topic=site\">edit your preferences</A></LI>\n";
     $content .= "<LI><A HREF=\"account.php?op=edit&topic=content\">edit site content</A></LI>\n";
+		if (($user->id) && ($user->permissions == 1 || $user->id == 1)) {
+      $content .= "<P>\n";
+      $content .= "<LI><A HREF=\"admin.php\">administrate " . $site_name . "</A></LI>\n";
+		}
+		$content .= "
     $content .= "<P>\n";
     if (ksort($menu)) {
       foreach ($menu as $link=>$url) $content .= "<LI><A HREF=\"$url\">$link</A></LI>\n";
