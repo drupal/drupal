@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.277 2004/08/22 17:03:41 unconed Exp $
+// $Id: comment.module,v 1.278 2004/09/05 10:29:38 unconed Exp $
 
 /**
  * @file
@@ -406,7 +406,7 @@ function comment_reply($nid, $pid = NULL) {
     $edit = $_POST['edit'];
     comment_validate_form($edit);
     print theme('page', comment_preview($edit), t('Preview comment'));
-
+    return;
   }
 
   // or are we merely showing the form?
