@@ -317,6 +317,9 @@ function aggregator_refresh($feed) {
         if ($image['LINK'] && $image['URL'] && $image['TITLE']) {
           $image = "<a href=\"". $image['LINK'] ."\"><img src=\"". $image['URL'] ."\" alt=\"". $image['TITLE'] ."\" /></a>";
         }
+        else {
+          $image = NULL;
+        }
 
         /*
         ** Update the feed data:
