@@ -207,11 +207,11 @@ function path_overview() {
   }
 
   if ($pager = pager_display(NULL, 50, 0, "admin", tablesort_pager())) {
-    $rows[] = array(array("data" => $pager, "colspan" => 3));
+    $rows[] = array(array("data" => $pager, "colspan" => "4"));
   }
 
   if (!$rows) {
-    $rows[] = array(array("data" => t("No URL aliases available."), "colspan" => "3"));
+    $rows[] = array(array("data" => t("No URL aliases available."), "colspan" => "4"));
   }
 
   return table($header, $rows);
