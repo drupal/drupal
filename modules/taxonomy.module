@@ -117,7 +117,7 @@ function taxonomy_save_vocabulary($edit) {
   if ($edit['vid'] && $edit['name']) {
     db_query('UPDATE {vocabulary} SET '. _taxonomy_prepare_update($data) .' WHERE vid = %d', $edit['vid']);
     module_invoke_all('taxonomy', 'update', 'vocabulary', $edit);
-    $message = t('Updated vocabulary "%name".', array('%name' => $edit['name']));
+    $message = t('Updated vocabulary %name.', array('%name' => '<em>'. $edit['name'] .'</em>'));
   }
   else if ($edit['vid']) {
     $message = taxonomy_del_vocabulary($edit['vid']);
@@ -126,7 +126,7 @@ function taxonomy_save_vocabulary($edit) {
     $data['vid'] = $edit['vid'] = db_next_id('{vocabulary}_vid');
     db_query('INSERT INTO {vocabulary} '. _taxonomy_prepare_insert($data, 1) .' VALUES '. _taxonomy_prepare_insert($data, 2));
     module_invoke_all('taxonomy', 'insert', 'vocabulary', $edit);
-    $message = t('Created new vocabulary "%name".', array('%name' => $edit['name']));
+    $message = t('Created new vocabulary %name.', array('%name' => '<em>'. $edit['name'] .'</em>'));
   }
 
   cache_clear_all();
@@ -212,7 +212,7 @@ function taxonomy_save_term($edit) {
 
     db_query('UPDATE {term_data} SET '. _taxonomy_prepare_update($data) .' WHERE tid = %d', $edit['tid']);
     module_invoke_all('taxonomy', 'update', 'term', $edit);
-    $message = t('The term "%a" has been updated.', array('%a' => $edit['name']));
+    $message = t('The term %term has been updated.', array('%term' => '<em>'. $edit['name'] .'</em>'));
   }
   else if ($edit['tid']) {
     return taxonomy_del_term($edit['tid']);
@@ -222,7 +222,7 @@ function taxonomy_save_term($edit) {
     $data = array('tid' => $edit['tid'], 'name' => $edit['name'], 'description' => $edit['description'], 'vid' => $edit['vid'], 'weight' => $edit['weight']);
     db_query('INSERT INTO {term_data} '. _taxonomy_prepare_insert($data, 1) .' VALUES '. _taxonomy_prepare_insert($data, 2));
     module_invoke_all('taxonomy', 'insert', 'term', $edit);
-    $message = t('Created new term "%name".', array('%name' => $edit['name']));
+    $message = t('Created new term %term.', array('%term' => '<em>'. $edit['name'] .'</em>'));
   }
 
   db_query('DELETE FROM {term_relation} WHERE tid1 = %d OR tid2 = %d', $edit['tid'], $edit['tid']);

@@ -64,7 +64,7 @@ function ping_ping($name = '', $url = '') {
   $result = $client->send($message);
 
   if (!$result || $result->faultCode()) {
-    watchdog('error', t('failed to notify "weblogs.com" (site)'));
+    watchdog('error', t('Failed to notify weblogs.com (site).'));
   }
 
   unset($client);
@@ -76,7 +76,7 @@ function ping_ping($name = '', $url = '') {
   $result = $client->send($message);
 
   if (!$result || $result->faultCode()) {
-    watchdog('error', t('failed to notify "weblogs.com" (RSS)'));
+    watchdog('error', t('Failed to notify weblogs.com (RSS).'));
   }
 
   unset($client);
@@ -88,7 +88,7 @@ function ping_ping($name = '', $url = '') {
   $result = $client->send($message);
 
   if (!$result || $result->faultCode()) {
-    watchdog('error', t('failed to notify "blo.gs"'));
+    watchdog('error', t('Failed to notify blo.gs.'));
   }
 
   unset($client);
@@ -100,7 +100,7 @@ function ping_ping($name = '', $url = '') {
   $result = $client->send($message);
 
   if (!$result || $result->faultCode()) {
-    watchdog('error', t('failed to notify "technorati.com"'));
+    watchdog('error', t('Failed to notify technorati.com.'));
   }
 }
 ?>

@@ -190,16 +190,16 @@ function user_validate_picture($file, &$edit, $user) {
     form_set_error('picture', t('The uploaded file was not an image.'));
   }
   else if ($file->size > (variable_get('user_picture_file_size', '30') * 1000)) {
-    form_set_error('picture', t('The uploaded image is too large; the maximum file size is %a kB.', array('%a' => variable_get('user_picture_file_size', '30'))));
+    form_set_error('picture', t('The uploaded image is too large; the maximum file size is %size kB.', array('%size' => variable_get('user_picture_file_size', '30'))));
   }
   else if ($size[0] > $maxwidth || $size[1] > $maxheight) {
-    form_set_error('picture', t('The uploaded image is too large; the maximum dimensions are %a pixels.', array('%a' => variable_get('user_picture_dimensions', '85x85'))));
+    form_set_error('picture', t('The uploaded image is too large; the maximum dimensions are %dimensions pixels.', array('%dimensions' => variable_get('user_picture_dimensions', '85x85'))));
   }
   else if ($file = file_save_upload('picture', variable_get('user_picture_path', 'pictures') . FILE_SEPARATOR .'picture-'. $user->uid . $extension, 1)) {
     $edit['picture'] = $file->path;
   }
   else {
-    form_set_error('picture', t('Failed to upload the picture image; the "%directory" directory doesn\'t exist.', array('%directory' => variable_get('user_picture_path', 'pictures'))));
+    form_set_error('picture', t("Failed to upload the picture image; the %directory directory doesn't exist.", array('%directory' => '<em>'. variable_get('user_picture_path', 'pictures') .'</em>')));
   }
 }
 
@@ -723,7 +723,7 @@ function user_login($edit = array(), $msg = '') {
   }
 
   if (user_deny('user', $edit['name'])) {
-    $error = t('The name "%s" has been denied access.', array('%s' => $edit['name']));
+    $error = t('The name %s has been denied access.', array('%s' => '<em>'. $edit['name'] .'</em>'));
   }
   else if ($edit['name'] && $edit['pass']) {
 
@@ -732,7 +732,7 @@ function user_login($edit = array(), $msg = '') {
     }
 
     if ($user->uid) {
-      watchdog('user', t('session opened for "%user".', array('%user' => $user->name)));
+      watchdog('user', t('Session opened for %name.', array('%name' => "<em>$user->name</em>")));
 
       // Update the user table timestamp noting user has logged in.
       db_query("UPDATE {users} SET changed = '%d' WHERE uid = '%s'", time(), $user->uid);
@@ -751,7 +751,7 @@ function user_login($edit = array(), $msg = '') {
       if (!$error) {
         $error = t('Sorry.  Unrecognized username or password.') .' '. l(t('Have you forgotten your password?'), 'user/password');
       }
-      watchdog('user', t('login attempt failed for %user: "%error"', array('%user' => $server ? ($name .'@'. $server) : $name, '%error' => $error)));
+      watchdog('user', t('Login attempt failed for %name: %error.', array('%user' => '<em>'. $server ? ($name .'@'. $server) : $name .'</em>', '%error' => "<em>$error</em>")));
     }
   }
 
@@ -807,7 +807,7 @@ function user_authenticate($name, $pass) {
   if (!$user->uid && $server && $result = user_get_authmaps("$name@$server")) {
     if (module_invoke(key($result), 'auth', $name, $pass, $server)) {
       $user = user_external_load("$name@$server");
-      watchdog('user', t('external load by %user using module "%module".', array('%user' => $name .'@'. $server, '%module' => key($result))));
+      watchdog('user', t('External load by %user using module %module.', array('%user' => "<em>$name@$server</em>", '%module' => '<em>'. key($result) .'</em>')));
     }
     else {
       $error = t('Invalid password for %s.', array('%s' => "<em>$name@$server</em>"));
@@ -825,7 +825,7 @@ function user_authenticate($name, $pass) {
             if (!$account->uid) { // Register this new user.
               print "gonna register using $module and $name";
               $user = user_save('', array('name' => "$name@$server", 'pass' => user_password(), 'init' => "$name@$server", 'status' => 1, "authname_$module" => "$name@$server", 'roles' => array(_user_authenticated_id())));
-              watchdog('user', t('new external user: %user using module "%module".', array('%user' => $name .'@'. $server, '%module' => $module)), l(t('edit'), 'user/'. $user->uid .'/edit'));
+              watchdog('user', t('New external user: %user using module %module.', array('%user' => "<em>$name@$server</em>", '%module' => "<em>$module</em>")), l(t('edit'), 'user/'. $user->uid .'/edit'));
               break;
             }
           }
@@ -847,7 +847,7 @@ function user_logout() {
   global $user;
 
   if ($user->uid) {
-    watchdog('user', t('session closed for "%user".', array('%user' => $user->name)));
+    watchdog('user', t('Session closed for %name.', array('%name' => "<em>$user->name</em>")));
 
     // Destroy the current session:
     session_destroy();
@@ -863,11 +863,11 @@ function user_pass($edit = array()) {
 
   if ($edit['name']) {
     $account = user_load(array('name' => $edit['name'], 'status' => 1));
-    if (!$account) form_set_error('name', t('Sorry. The username "<em>%s</em>" is not recognized.', array('%s' => $edit['name'])));
+    if (!$account) form_set_error('name', t('Sorry. The username %name is not recognized.', array('%name' => '<em>'. $edit['name'] .'</em>')));
   }
   else if ($edit['mail']) {
     $account = user_load(array('mail' => $edit['mail'], 'status' => 1));
-    if (!$account) form_set_error('name', t('Sorry. The e-mail address "<em>%s</em>" is not recognized.', array('%s' => $edit['mail'])));
+    if (!$account) form_set_error('name', t('Sorry. The e-mail address %e-mail is not recognized.', array('%e-mail' => '<em>'. $edit['mail'] .'</em>')));
   }
   if ($account) {
 
@@ -885,11 +885,11 @@ function user_pass($edit = array()) {
       $mail_success = user_mail($account->mail, $subject, $body, $headers);
 
       if ($mail_success) {
-        watchdog('user', t('password mailed to %user at %address.', array('%user' => $account->name, '%address' => $account->mail)));
+        watchdog('user', t('Password mailed to %name at %e-mail.', array('%name' => "<em>$account->name</em>" , '%e-mail' => "<em>$account->mail</em>")));
         return t('Your password and further instructions have been sent to your e-mail address.');
       }
       else {
-        watchdog('error', t('error mailing password to %user at %address.', array('%user' => $account->name, '%address' => $account->mail)));
+        watchdog('error', t('Error mailing password to %name at %e-mail.', array('%name' => "<em>$account->name</em>", '%e-mail' => "<em>$account->mail</em>")));
         return t('Unable to send mail. Please contact the site admin.');
       }
     }
@@ -928,7 +928,7 @@ function user_register($edit = array()) {
       // TODO: Is this necessary? Won't session_write() replicate this?
       unset($edit['session']);
       $account = user_save('', array('name' => $edit['name'], 'pass' => $pass, 'init' => $edit['mail'], 'mail' => $edit['mail'], 'roles' => array(_user_authenticated_id()), 'status' => (variable_get('user_register', 1) == 1 ? 1 : 0)));
-      watchdog('user', t('new user: "%user" &lt;%address&gt;.', array('%user' => $edit['name'], '%address' => $edit['mail'])), l(t('edit'), 'user/'. $account->uid .'/edit'));
+      watchdog('user', t('New user: %name %e-mail.', array('%name' => '<em>'. $edit['name'] .'</em>', '%e-mail' => '<em>&lt;'. $edit['mail'] .'&gt;</em>')), l(t('edit'), 'user/'. $account->uid .'/edit'));
 
       $variables = array('%username' => $edit['name'], '%site' => variable_get('site_name', 'drupal'), '%password' => $pass, '%uri' => $base_url, '%uri_brief' => substr($base_url, strlen('http://')), '%mailto' => $edit['mail'], '%date' => format_date(time()), '%login_uri' => url('user/login', NULL, NULL, TRUE), '%edit_uri' => url('user/edit', NULL, NULL, TRUE));
 
@@ -1014,10 +1014,10 @@ function user_edit_validate($uid, &$edit) {
     form_set_error('name', $error);
   }
   else if (db_num_rows(db_query("SELECT uid FROM {users} WHERE uid != %d AND LOWER(name) = LOWER('%s')", $uid, $edit['name'])) > 0) {
-    form_set_error('name', t('The name "%s" is already taken.', array('%s' => $edit['name'])));
+    form_set_error('name', t('The name %name is already taken.', array('%name' => '<em>'. $edit['name'] .'</em>')));
   }
   else if (user_deny('user', $edit['name'])) {
-    form_set_error('name', t('The name "%s" has been denied access.', array('%s' => $edit['name'])));
+    form_set_error('name', t('The name %name has been denied access.', array('%name' => '<em>'. $edit['name'] .'</em>')));
   }
 
   // Validate the e-mail address:
@@ -1025,10 +1025,10 @@ function user_edit_validate($uid, &$edit) {
     form_set_error('mail', $error);
   }
   else if (db_num_rows(db_query("SELECT uid FROM {users} WHERE uid != %d AND LOWER(mail) = LOWER('%s')", $uid, $edit['mail'])) > 0) {
-    form_set_error('mail', t('The e-mail address "%s" is already taken.', array('%s' => $edit['mail'])));
+    form_set_error('mail', t('The e-mail address %e-mail is already taken.', array('%e-mail' => '<em>'. $edit['mail'] .'</em>')));
   }
   else if (user_deny('mail', $edit['mail'])) {
-    form_set_error('mail', t('The e-mail address "%s" has been denied access.', array('%s' => $edit['mail'])));
+    form_set_error('mail', t('The e-mail address %e-mail has been denied access.', array('%e-mail' => '<em>'. $edit['mail'] .'</em>')));
   }
 
   // If required, validate the uploaded picture.
@@ -1063,7 +1063,7 @@ function user_edit($category = 'account') {
     if (!form_get_errors()) {
       // Validate input to ensure that non-privileged users can't alter protected data.
       if (!user_access('administer users') && array_intersect(array_keys($edit), array('uid', 'roles', 'init', 'session'))) {
-        watchdog('warning', t('detected malicious attempt to alter a protected database field.'));
+        watchdog('warning', t('Detected malicious attempt to alter a protected database field.'));
       }
       else {
         user_save($account, $edit, $category);
@@ -1249,7 +1249,7 @@ function user_admin_create($edit = array()) {
     user_module_invoke('validate', $edit, $edit, 'account');
 
     if (!form_get_errors()) {
-      watchdog('user', t('new user: "%user" &lt;%address&gt;.', array('%user' => $edit['name'], '%address' => $edit['mail'])));
+      watchdog('user', t('New user: %name %e-mail.', array('%name' => '<em>'. $edit['name'] .'</em>', '%e-mail' => '<em>&lt;'. $edit['mail'] .'&gt;</em>')));
 
       user_save('', array('name' => $edit['name'], 'pass' => $edit['pass'], 'init' => $edit['mail'], 'mail' => $edit['mail'], 'roles' => array(_user_authenticated_id()), 'status' => 1));
 
@@ -1286,10 +1286,10 @@ function user_admin_access($edit = array()) {
   }
   else if ($op == t('Check')) {
     if (user_deny($type, $edit['test'])) {
-      drupal_set_message(t('<em>%test</em> is not allowed.', array('%test' => ucfirst($edit['test']))));
+      drupal_set_message(t('%test is not allowed.', array('%test' => '<em>' .$edit['test'] .'</em>')));
     }
     else {
-      drupal_set_message(t('<em>%test</em> is allowed.', array('%test' => ucfirst($edit['test']))));
+      drupal_set_message(t('%test is allowed.', array('%test' => '<em>'. $edit['test'] .'</em>')));
     }
   }
   else if ($id) {

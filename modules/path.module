@@ -290,15 +290,15 @@ function path_save($edit) {
   $pid = $edit['pid'];
 
   if (!valid_url($src)) {
-    form_set_error('src', t('The system path "%src" is invalid.', array('%src' => $src)));
+    form_set_error('src', t('The system path %path is invalid.', array('%path' => "<em>$src</em>")));
   }
 
   if (!valid_url($dst)) {
-    form_set_error('dst', t('The alias "%dst" is invalid.', array('%dst' => $dst)));
+    form_set_error('dst', t('The alias %alias is invalid.', array('%alias' => "<em>$dst</em>")));
   }
 
   if (db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE pid != %d AND dst = '%s'", $pid, $dst))) {
-    form_set_error('dst', t('The alias "%dst" is already in use.', array('%dst' => $dst)));
+    form_set_error('dst', t('The alias %alias is already in use.', array('%alias' => "<em>$dst</em>")));
   }
 
   if (form_get_errors()) {

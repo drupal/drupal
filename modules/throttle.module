@@ -175,11 +175,11 @@ function _throttle_update($hits) {
   // log the change
   if ($throttle_new < $throttle) {
     variable_set('throttle_level', $throttle - 1);
-    watchdog($type, t('throttle: %hits hits in past minute; throttle decreased to level %level', array('%hits' => $hits, '%level' => ($throttle - 1))));
+    watchdog($type, t('Throttle: %hits hits in past minute; throttle decreased to level %level.', array('%hits' => "<em>$hits</em>", '%level' => '<em>'. ($throttle - 1) .'</em>')));
   }
   if ($throttle_new > $throttle) {
     variable_set('throttle_level', $throttle + 1);
-    watchdog($type, t('throttle: %hits hits in past minute; throttle increased to level %level', array('%hits' => $hits, '%level' => ($throttle + 1))));
+    watchdog($type, t('Throttle: %hits hits in past minute; throttle increased to level %level.', array('%hits' => "<em>$hits</em>", '%level' => '<em>'. ($throttle + 1) .'</em>')));
   }
 }
 

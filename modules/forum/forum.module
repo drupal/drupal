@@ -242,7 +242,7 @@ function forum_validate(&$node) {
       if (db_result(db_query('SELECT COUNT(*) FROM {term_data} WHERE tid = %d AND vid = %d', $term, $vocabulary))) {
         if (in_array($term, $containers)) {
           $term = taxonomy_get_term($term);
-          form_set_error('taxonomy', t('The item \'%forum\' is only a container for forums. Please select one of the forums below it.', array('%forum' => $term->name)));
+          form_set_error('taxonomy', t('The item %forum is only a container for forums. Please select one of the forums below it.', array('%forum' => "<em>$term->name</em>")));
         }
         else {
           $node->tid = $term;

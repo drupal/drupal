@@ -94,12 +94,12 @@ function poll_validate(&$node) {
       }
 
       if ($choice['chvotes'] < 0) {
-        form_set_error("choice][$i][chvotes", t("Negative values are not allowed."));
+        form_set_error("choice][$i][chvotes", t('Negative values are not allowed.'));
       }
     }
 
     if ($realchoices < 2) {
-      form_set_error("choice][$realchoices][chtext", t("You must fill in at least two choices."));
+      form_set_error("choice][$realchoices][chtext", t('You must fill in at least two choices.'));
     }
   }
 

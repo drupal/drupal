@@ -61,11 +61,11 @@ function file_check_directory(&$directory, $mode = 0, $form_item = NULL) {
   // Check if directory exists.
   if (!is_dir($directory)) {
     if (($mode & FILE_CREATE_DIRECTORY) && mkdir($directory, 0760)) {
-      drupal_set_message(t("Created directory '%name'.", array('%name' => $directory)));
+      drupal_set_message(t('Created directory %directory.', array('%directory' => "<em>$directory</em>")));
     }
     else {
       if ($form_item) {
-        form_set_error($form_item, t("The directory '%name' does not exist.", array('%name' => $directory)));
+        form_set_error($form_item, t('The directory %directory does not exist.', array('%directory' => "<em>$directory</em>")));
       }
       return false;
     }
@@ -74,10 +74,10 @@ function file_check_directory(&$directory, $mode = 0, $form_item = NULL) {
   // Check to see if the directory is writable.
   if (!is_writable($directory)) {
     if (($mode & FILE_MODIFY_PERMISSIONS) && chmod($directory, 0760)) {
-      drupal_set_message(t("Modified permissions on directory '%name'.", array('%name' => $directory)));
+      drupal_set_message(t('Modified permissions on directory %directory.', array('%directory' => "<em>$directory</em>")));
     }
     else {
-      form_set_error($form_item, t("The directory '%name' is not writable.", array('%name' => $directory)));
+      form_set_error($form_item, t('The directory %directory is not writable.', array('%directory' => "<em>$directory</em>")));
       return false;
     }
   }
@@ -314,7 +314,7 @@ function file_save_upload($source, $dest = 0, $replace = 0) {
 
     if (!valid_input_data($file)) {
       watchdog('error', t('Possible exploit abuse: invalid data.'));
-      drupal_set_message(t("File upload failed: invalid data."), 'error');
+      drupal_set_message(t('File upload failed: invalid data.'), 'error');
       return 0;
     }
 
@@ -324,14 +324,14 @@ function file_save_upload($source, $dest = 0, $replace = 0) {
         break;
       case 1: // UPLOAD_ERR_INI_SIZE
       case 2: // UPLOAD_ERR_FORM_SIZE
-        drupal_set_message(t("File upload failed: file size too big."), 'error');
+        drupal_set_message(t('File upload failed: file size too big.'), 'error');
         return 0;
       case 3: // UPLOAD_ERR_PARTIAL
       case 4: // UPLOAD_ERR_NO_FILE
-        drupal_set_message(t("File upload failed: incomplete upload."), 'error');
+        drupal_set_message(t('File upload failed: incomplete upload.'), 'error');
         return 0;
       default: // Unknown error
-        drupal_set_message(t("File upload failed: unknown error."), 'error');
+        drupal_set_message(t('File upload failed: unknown error.'), 'error');
         return 0;
     }
 
@@ -358,7 +358,7 @@ function file_save_upload($source, $dest = 0, $replace = 0) {
 function file_save_data($data, $dest, $replace = 0) {
   if (!valid_input_data($data)) {
     watchdog('error', t('Possible exploit abuse: invalid data.'));
-    drupal_set_message(t("File upload failed: invalid data."), 'error');
+    drupal_set_message(t('File upload failed: invalid data.'), 'error');
     return 0;
   }
 

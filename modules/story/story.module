@@ -99,7 +99,7 @@ function story_menu() {
  */
 function story_validate(&$node) {
   if (isset($node->body) && count(explode(' ', $node->body)) < variable_get('minimum_story_size', 0)) {
-    form_set_error('body', t('The body of your story is too short. You need at least %word_count words to submit your story.', array('%word_count' => variable_get('minimum_story_size', 0))));
+    form_set_error('body', t('The body of your story is too short. You need at least %words words to submit your story.', array('%words' => variable_get('minimum_story_size', 0))));
   }
 }
 

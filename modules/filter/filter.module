@@ -271,7 +271,7 @@ function filter_admin_add() {
     db_query("INSERT INTO {filter_formats} (name) VALUES ('%s')", $name);
   }
 
-  drupal_set_message(t("Added input format '%format'", array('%format' => $edit['name'])));
+  drupal_set_message(t('Added input format %format.', array('%format' => '<em>'. $edit['name'] .'</em>')));
   drupal_goto('admin/filters');
 }
 
@@ -292,7 +292,7 @@ function filter_admin_delete() {
 
       cache_clear_all('filter:'. $edit['format'], true);
 
-      drupal_set_message(t("Deleted input format '%format'", array('%format' => $edit['name'])));
+      drupal_set_message(t('Deleted input format %format.', array('%format' => '<em>'. $edit['name'] .'</em>')));
     }
     drupal_goto('admin/filters');
   }

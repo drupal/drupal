@@ -327,12 +327,12 @@ function profile_validate_profile($edit, $category) {
     if ($edit[$field->name]) {
       if ($field->type == 'url') {
         if (!valid_url($edit[$field->name], true)) {
-          form_set_error($field->name, t('The value provided for "%field" is not a valid URL.', array('%field' => $field->title)));
+          form_set_error($field->name, t('The value provided for %field is not a valid URL.', array('%field' => "<em>$field->title</em>")));
          }
       }
     }
     else if ($field->required && !user_access('administer users')) {
-      form_set_error($field->name, t('The field "%field" is required.', array('%field' => $field->title)));
+      form_set_error($field->name, t('The field %field is required.', array('%field' => "<em>$field->title</em>")));
     }
   }
 

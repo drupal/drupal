@@ -317,16 +317,16 @@ function menu_edit_item_save($edit) {
 
   if ($edit['mid']) {
     db_query("UPDATE {menu} SET pid = %d, path = '%s', title = '%s', description = '%s', weight = %d, type = %d WHERE mid = %d", $edit['pid'], $edit['path'], $edit['title'], $edit['description'], $edit['weight'], $edit['type'] | MENU_MODIFIED_BY_ADMIN, $edit['mid']);
-    drupal_set_message(t('Updated menu item "%title".', array('%title' => $edit['title'])));
+    drupal_set_message(t('Updated menu item %title.', array('%title' => '<em>'. $edit['title'] .'</em>')));
   }
   else {
     $mid = db_next_id('{menu}_mid');
     db_query("INSERT INTO {menu} (mid, pid, path, title, description, weight, type) VALUES (%d, %d, '%s', '%s', '%s', %d, %d)", $mid, $edit['pid'], $edit['path'], $edit['title'], $edit['description'], $edit['weight'], $edit['type'] | MENU_MODIFIED_BY_ADMIN);
-    drupal_set_message(t('Created new menu item "%title".', array('%title' => $edit['title'])));
+    drupal_set_message(t('Created new menu item %title.', array('%title' => '<em>'. $edit['title'] .'</em>')));
     if (array_key_exists($edit['path'], $menu['path index'])) {
       $old_mid = $menu['path index'][$edit['path']];
       $old_item = $menu['items'][$old_mid];
-      drupal_set_message(t('Since a menu item "%old" already exists for "%path", this new menu item was created as a shortcut to that location.', array('%old' => l($old_item['title'], 'admin/menu/item/edit/'. $old_mid), '%path' => $edit['path'])));
+      drupal_set_message(t('Since a menu item %old already exists for %path, this new menu item was created as a shortcut to that location.', array('%old' => l('<em>'. $old_item['title'] .'</em>', 'admin/menu/item/edit/'. $old_mid), '%path' => '<em>'. $edit['path'] .'</em>')));
     }
   }
 

@@ -901,7 +901,7 @@ function node_revision_rollback($nid, $revision) {
 
     node_save($rev, $filter);
 
-    drupal_set_message(t('Rolled back to revision #%revision of "%title"', array('%revision' => $revision, '%title' => $node->title)));
+    drupal_set_message(t('Rolled back to revision %revision of %title', array('%revision' => "<em>#$revision</em>", '%title' => "<em>$node->title</em>")));
     drupal_goto('node/'. $nid .'/revisions');
   }
 }
@@ -917,7 +917,7 @@ function node_revision_delete($nid, $revision) {
 
     node_save($node, array('nid', 'revisions'));
 
-    drupal_set_message(t('Deleted revision #%revision of "%title"', array('%revision' => $revision, '%title' => $node->title)));
+    drupal_set_message(t('Deleted revision %revision of %title', array('%revision' => "<em>#$revision</em>", '%title' => "<em>$node->title</em>")));
     drupal_goto('node/'. $nid . (count($node->revisions) ? '/revisions' : ''));
   }
 }
@@ -1066,7 +1066,7 @@ function node_validate($node) {
       $node->uid = $account->uid;
     }
     else {
-      form_set_error('name', t("The name '%u' does not exist.", array ('%u' => $node->name)));
+      form_set_error('name', t('The name %name does not exist.', array ('%name' => "<em>$node->name</em>")));
     }
 
     // Validate the "authored on" field.
@@ -1348,8 +1348,8 @@ function node_submit($node) {
     // perform this operation:
     if (node_access('update', $node)) {
       $node->nid = node_save($node);
-      watchdog('special', t('%node-type: updated "%node-title"', array('%node-type' => t($node->type), '%node-title' => $node->title)), l(t('view'), 'node/'. $node->nid));
-      $msg = t('The %name was updated.', array ('%name' => node_invoke($node, 'node_name')));
+      watchdog('special', t('%type: updated %title.', array('%type' => '<em>'. t($node->type) .'</em>', '%title' => "<em>$node->title</em>")), l(t('view'), 'node/'. $node->nid));
+      $msg = t('The %post was updated.', array ('%post' => node_invoke($node, 'node_name')));
     }
   }
   else {
@@ -1357,8 +1357,8 @@ function node_submit($node) {
     // perform this operation:
     if (node_access('create', $node)) {
       $node->nid = node_save($node);
-      watchdog('special', t('%node-type: added "%node-title"', array('%node-type' => t("$node->type"), '%node-title' => $node->title)), l(t('view'), "node/$node->nid"));
-      $msg = t('Your %name was created.', array ('%name' => node_invoke($node, 'node_name')));
+      watchdog('special', t('%type: added %title.', array('%type' => '<em>'. t($node->type) .'</em>', '%title' => "<em>$node->title</em>")), l(t('view'), "node/$node->nid"));
+      $msg = t('Your %post was created.', array ('%post' => node_invoke($node, 'node_name')));
     }
   }
 
@@ -1387,7 +1387,7 @@ function node_delete($edit) {
       // Clear the cache so an anonymous poster can see the node being deleted.
       cache_clear_all();
 
-      watchdog('special', t('%node-type: deleted "%node-title"', array('%node-type' => t($node->type), '%node-title' => $node->title)));
+      watchdog('special', t('%type: deleted %title.', array('%type' => '<em>'. t($node->type) .'</em>', '%title' => "<em>$node->title</em>")));
       $output = t('The node has been deleted.');
     }
     else {
