@@ -157,7 +157,6 @@ function tablesort_get_order($headers) {
     if ($header['sort'] == 'asc' || $header['sort'] == 'desc') {
       $default = array('name' => $header['data'], 'sql' => $header['field']);
     }
-    $i++;
   }
 
   if ($default) {
