@@ -314,7 +314,9 @@ function drupal_goto($url) {
   ** is compiled with "--enable-trans-sid".
   */
 
-  $sid = session_name() . "=" . session_id();
+  if (ini_get("session.use_trans_sid")) {
+    $sid = session_name() . "=" . session_id();
+  }
 
   if (!session_id() || strstr($url, $sid)) {
     header("Location: $url");
