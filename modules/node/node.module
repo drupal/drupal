@@ -101,7 +101,7 @@ function node_admin() {
       print node_listing(node_query());
       break;
     case "Save node":
-      node_save($edit);
+      node_save($edit, array(uthor, comment, moderate, promote, status, timestamp));
       print node_admin_view($id);
       break;
     case "View node":
