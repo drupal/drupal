@@ -3,7 +3,7 @@
 
 function marvin_help($section) {
 
-  $ouptout = "";
+  $output = "";
 
   switch ($section) {
     case 'admin/system/themes#description':
