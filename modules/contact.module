@@ -1,0 +1,129 @@
+<?php
+// $Id$
+
+/**
+ * @file
+ * Enables the use of personal contact forms.
+ */
+
+// Users are not allowed to send more than x mails/hour:
+define('CONTACT_HOURLY_THRESHOLD', 3);
+
+/**
+ * Implementation of hook_help().
+ */
+function contact_help($section) {
+  switch ($section) {
+    case 'admin/modules#description':
+      return t('Enables the use of personal contact forms.');
+  }
+}
+
+/**
+ * Implementation of hook_menu().
+ */
+function contact_menu($may_cache) {
+  global $user;
+  $items = array();
+
+  if (!$may_cache) {
+    if (arg(0) == 'user' && is_numeric(arg(1))) {
+      $items[] = array('path' => "user/". arg(1) ."/contact", 'title' => t('contact'),
+        'callback' => 'contact_mail_user', 'type' => MENU_LOCAL_TASK, 'weight' => 2);
+    }
+  }
+
+  return $items;
+}
+
+/**
+ * Implementation of hook_user().
+ *
+ * Provides signature customization for the user's comments.
+ */
+function contact_user($type, $edit, &$user, $category = NULL) {
+  if ($type == 'form' && $category == 'account') {
+    return array(array('title' => t('Contact settings'), 'data' => form_checkbox(t('Personal contact form'), 'contact', 1, $edit['contact'], t('Allow other users to contact you by e-mail via <a href="%url">your personal contact form</a>.  Note that your e-mail address is not made public and that privileged users such as site administrators are able to contact you even if you choose not to enable this feature.', array('%url' => "user/$user->uid/contact"))), 'weight' => 2));
+  }
+  if ($type == 'validate') {
+    return array('contact' => $edit['contact']);
+  }
+}
+
+function contact_mail_user() {
+  global $user;
+
+  if ($account = user_load(array('uid' => arg(1), 'status' => 1))) {
+    if (!$account->contact && !user_access('administer users')) {
+      $output = t('%name is not accepting e-mails.', array('%name' => $account->name));
+    }
+    else if (!$user->uid) {
+      $output = t('Please <a href="%login">login</a> or <a href="%register">register</a> to send %name a message.', array('%login' => url('user/login'), '%register' => url('user/register'), '%name' => $account->name));
+    }
+    else if (!valid_email_address($user->mail)) {
+      $output = t('You need to provide a valid e-mail address to contact other users.  Please edit your <a href="%url">user information</a>.', array('%url' => url("user/$user->uid/edit")));
+    }
+    else if (!flood_is_allowed('contact', CONTACT_HOURLY_THRESHOLD)) {
+      $output = t("You can't contact more than %number users per hour.  Please try again later.", array('%number' => CONTACT_HOURLY_THRESHOLD));
+    }
+    else {
+      $edit = $_POST['edit'];
+
+      if ($edit) {
+        // Validate the message:
+        if (!$edit['message']) {
+          form_set_error('message',  t('You must enter a message.'));
+        }
+
+        if (!form_get_errors()) {
+          // Compose the body:
+          $message[] = "$account->name,";
+          $message[] = t("%name (%name-url) has sent you a message via your contact form (%form-url) at %site.", array('%name' => $user->name, '%name-url' => url("user/$user->uid", NULL, NULL, TRUE), '%form-url' => url($_GET['q'], NULL, NULL, TRUE), '%site' => variable_get('site_name', 'drupal')));
+          $message[] = t("If you don't want to receive such e-mails, you can change your settings at %url.", array('%url' => url("user/$account->uid", NULL, NULL, TRUE)));
+          $message[] = t('Message:');
+          $message[] = $edit['message'];
+
+          // Tidy up the body:
+          foreach ($message as $key => $value) {
+            $message[$key] = wordwrap(strip_tags($value));
+          }
+
+          // Prepare all fields:
+          $to = $account->mail;
+          $from = $user->mail;
+          $subject = '['. variable_get('site_name', 'drupal') .'] '. t('message from %name', array('%name' => $user->name));
+          $body = implode("\n\n", $message);
+
+          // Send the e-mail:
+          user_mail($to, $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+
+          // Log the operation:
+          flood_register_event('contact');
+          watchdog('mail', t('%name-from sent %name-to an e-mail.', array('%name-from' => $user->name, '%name-to' => $account->name)));
+
+          // Set a status message:
+          drupal_set_message(t('Your message has been sent.'));
+
+          // Jump to the user's profile page:
+          drupal_goto("user/$account->uid");
+        }
+      }
+      else {
+        $edit['mail'] = $user->mail;
+      }
+
+      $output  = form_item(t('From'), $user->name .' &lt;'. $user->mail .'&gt;');
+      $output .= form_item(t('To'), $account->name);
+      $output .= form_textarea(t('Message'), 'message', $edit['message'], 70, 8, NULL, NULL, TRUE);
+      $output .= form_submit(t('Send e-mail'));
+      $output  = form($output);
+    }
+
+    print theme('page', $output, $account->name);
+  }
+  else {
+    drupal_not_found();
+  }
+}
+
+?>
