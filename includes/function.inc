@@ -71,7 +71,7 @@ function format_date($timestamp, $type = "medium") {
   return $date;
 }
 
-function format_data($field, $replacement = "<I>n/a</I>") {
+function format_data($field, $replacement = "<I>na</I>") {
   return ($field) ? $field : $replacement;
 }
 
