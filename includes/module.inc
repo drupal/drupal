@@ -87,7 +87,7 @@ function module_set_filename($module, $path = null) {
     $list[$module] = $path;
   }
   else {
-    return $list[$module] ? $list[$module] : "modules/$module.module";
+    return array_key_exists($module, $list) ? $list[$module] : "modules/$module.module";
   }
 }
 
@@ -126,7 +126,7 @@ function module_get_path($module) {
 function module_load($module) {
   static $loaded = array();
 
-  if (!$loaded[$module]) {
+  if (!array_key_exists($module, $loaded)) {
     $filename = module_get_filename($module);
     if (file_exists($filename)) {
       include_once($filename);
