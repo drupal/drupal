@@ -1532,8 +1532,8 @@ function update_104() {
   $ret = array();
   if (variable_get('theme_default', 'xtemplate') == 'chameleon') {
     $ret[] = update_sql("DELETE FROM {system} WHERE name = 'chameleon'");
-    $ret[] = update_sql("INSERT INTO system VALUES ('themes/chameleon/chameleon.theme','chameleon','theme','',1,0,0)");
-    $ret[] = update_sql("INSERT INTO system VALUES ('themes/chameleon/marvin/style.css','marvin','theme','themes/chameleon/chameleon.theme',1,0,0)");
+    $ret[] = update_sql("INSERT INTO {system} VALUES ('themes/chameleon/chameleon.theme','chameleon','theme','',1,0,0)");
+    $ret[] = update_sql("INSERT INTO {system} VALUES ('themes/chameleon/marvin/style.css','marvin','theme','themes/chameleon/chameleon.theme',1,0,0)");
     if (variable_get("chameleon_stylesheet", "themes/chameleon/pure/chameleon.css") == "themes/chameleon/marvin/chameleon.css") {
       variable_set('theme_default', 'chameleon/marvin');
     }
@@ -1543,9 +1543,9 @@ function update_104() {
   }
   elseif (variable_get('theme_default', 'xtemplate') == 'xtemplate') {
     $ret[] = update_sql("DELETE FROM {system} WHERE name = 'xtemplate'");
-    $ret[] = update_sql("INSERT INTO system VALUES ('themes/bluemarine/bluemarine.theme','bluemarine','theme','themes/engines/xtemplate/xtemplate.engine',1,0,0)");
-    $ret[] = update_sql("INSERT INTO system VALUES ('themes/pushbutton/pushbutton.theme','pushbutton','theme','themes/engines/xtemplate/xtemplate.engine',1,0,0)");
-    $ret[] = update_sql("INSERT INTO system VALUES ('themes/engines/xtemplate/xtemplate.engine','xtemplate','theme_engine','',1,0,0)");
+    $ret[] = update_sql("INSERT INTO {system} VALUES ('themes/bluemarine/bluemarine.theme','bluemarine','theme','themes/engines/xtemplate/xtemplate.engine',1,0,0)");
+    $ret[] = update_sql("INSERT INTO {system} VALUES ('themes/pushbutton/pushbutton.theme','pushbutton','theme','themes/engines/xtemplate/xtemplate.engine',1,0,0)");
+    $ret[] = update_sql("INSERT INTO {system} VALUES ('themes/engines/xtemplate/xtemplate.engine','xtemplate','theme_engine','',1,0,0)");
     if (variable_get('xtemplate_template', 'default') == 'pushbutton') {
       variable_set('theme_default', 'pushbutton');
     }
