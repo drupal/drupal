@@ -22,22 +22,6 @@ $db_url = "mysql://drupal:drupal@localhost/drupal";
 // ini_set("include_path", ".:/path/to/pear");
 
 #
-# Themes:
-#
-$themes = array("UnConeD" => array(
-                  "themes/unconed/unconed.theme",
-                  "Internet explorer, Netscape, Opera"),
-                "Marvin"  => array(
-                  "themes/marvin/marvin.theme",
-                  "Internet explorer, Netscape, Opera"),
-                "Stone Age"  => array(
-                  "themes/example/example.theme",
-                  "Internet explorer, Netscape, Opera, Lynx"),
-                "Goofy"  => array(
-                  "themes/goofy/goofy.theme",
-                  "Internet explorer, Netscape, Opera"));
-
-#
 # Languages / translation / internationalization:
 #   The first language listed in this associative array will
 #   automatically become the default language.  You can add a language

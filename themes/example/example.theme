@@ -1,8 +1,16 @@
 <?php
 // $Id$
 
-  class Theme_example extends BaseTheme {
+class Theme_example extends BaseTheme {
 
+  function system($field) {
+    $system["name"] = "Stone Age";
+    $system["author"] = "Dries Buytaerts";
+    $system["description"] = "Internet explorer, Netscape, Opera, Lynx";
+
+    return $system[$field];
   }
+
+}
 
 ?>

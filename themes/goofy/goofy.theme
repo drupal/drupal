@@ -17,6 +17,14 @@
     var $foreground = "#000000";
     var $background = "#FFFFFF";
 
+    function system($field) {
+      $system["name"] = "Goofy";
+      $system["author"] = "Steven Wittens";
+      $system["description"] = "Internet explorer, Netscape, Opera";
+
+      return $system[$field];
+    }
+
     function header($title = "") {
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">

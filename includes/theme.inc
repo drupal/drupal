@@ -1,7 +1,20 @@
 <?php
 // $Id$
 
+/**
+* Basic theme
+*
+* @package theme system
+*/
 class BaseTheme {
+
+  function system($field) {
+    $system["name"] = "I need a name o'wise one!";
+    $system["author"] = "What is your name master?";
+    $system["description"] = "What am I mighty one?";
+
+    return $system[$field];
+  }
 
   function header($title = "") {
     $output .= "<html><head><title>". variable_get(site_name, "drupal") ."</title></head><body>";
@@ -68,18 +81,35 @@ class BaseTheme {
 
 }
 
+function theme_list() {
+  static $list;
+
+  if (!$list) {
+    $list = array();
+    $result = db_query("SELECT * FROM system where type = 'theme' AND status = '1' ORDER BY name");
+    while ($theme = db_fetch_object($result)) {
+      $list[$theme->name] = $theme;
+    }
+  }
+
+  return $list;
+}
+
 function theme_init() {
-  global $user, $themes;
+  global $user;
 
-  if ($user->theme && file_exists($themes[$theme_name = $user->theme][0])) {
-    include_once $themes[$theme_name][0];
-  }
-  else {
-    include_once $themes[$theme_name = variable_get("theme_default", key($themes))][0];
+  $themes = theme_list();
+  $name = $user->theme ? $user->theme : variable_get("theme_default", 0);
+  if (is_object($themes[$name])) {
+    include_once($themes[$name]->filename);
+    $theme_class = "Theme_$user->theme";
+    @$obj =& new $theme_class;
+    return $obj;
   }
 
-  $theme_class = 'Theme_'. $theme_name;
-  return new $theme_class();
+  watchdog("warning", "No valid themes enabled.");
+  @$obj =& new BaseTheme;
+  return $obj;
 }
 
 function theme_blocks($region, &$theme) {

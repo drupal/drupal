@@ -37,6 +37,14 @@
    var $bgcolor3 = "#D7D7D7";
    var $fgcolor3 = "#000000";
 
+   function system($field) {
+     $system["name"] = "UnConeD";
+     $system["author"] = "Steven Wittens";
+     $system["description"] = "Internet explorer, Netscape, Opera";
+     
+     return $system[$field];
+   }
+
    function header($title = "") {
      srand((double)microtime()*1000000);
     ?>

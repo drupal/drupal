@@ -18,6 +18,14 @@
    var $foreground = "#000000";
    var $background = "#EAEAEA";
 
+   function system($field) {
+     $system["name"] = "Marvin";
+     $system["author"] = "Dries Buytaerts";
+     $system["description"] = "Internet explorer, Netscape, Opera";
+
+     return $system[$field];
+   }
+
    function header($title = "") {
      global $HTTP_USER_AGENT;
     ?>

@@ -178,7 +178,7 @@ function blog_page_user($uid = 0, $date = 0, $all = 0) {
     $output .= "<a href=\"module.php?mod=blog&op=view&id=$account->uid\" title=\"". t("Show recent blogs by this user") ."\">". t("show recent blogs") ."</a>";
   }
 
-  $theme->box(sprintf(t("%s's blog"), $account->name), $output);
+  $theme->box(strtr(t("%u's blog"), array("%u" => $account->name)), $output);
 }
 
 function blog_page_last() {
@@ -302,7 +302,7 @@ function blog_link($type, $node = 0, $main) {
       $links[] = "<a href=\"module.php?mod=node&op=edit&id=$node->nid\" title=\"". t("Edit this blog entry.") ."\">". t("edit this blog") ."</a>";
     }
     else {
-      $links[] = "<a href=\"module.php?mod=blog&op=view&id=$node->uid\" title=\"". sprintf(t("Read %s's latest blog entries."), $node->name) ."\">". sprintf(t("%s's blog"), $node->name) ."</a>";
+      $links[] = "<a href=\"module.php?mod=blog&op=view&id=$node->uid\" title=\"". strtr(t("Read %u's latest blog entries."), array("%u" => $node->name)) ."\">". strtr(t("%u's blog"), array("%u", $node->name)) ."</a>";
     }
   }
 

@@ -32,11 +32,15 @@ function system_link($type) {
     $links[] = "<a href=\"admin.php?mod=system\">settings and filters</a>";
   }
 
+  /*if ($type == "admin" && user_access("administer modules and themes")) {
+    $links[] = "<a href=\"admin.php?mod=system&op=modules\">modules and themes</a>";
+  }*/
+
   return $links ? $links : array();
 }
 
 function system_view_options() {
-  global $conf, $cmodes, $corder, $themes;
+  global $conf, $cmodes, $corder;
   // general settings:
   $output .= "<h3>General settings</h3>\n";
   $output .= form_textfield("Name", "site_name", variable_get("site_name", "drupal"), 55, 55, "The name of this website.");
@@ -66,14 +70,14 @@ function system_view_options() {
 
   // comment settings:
   $output .= "<h3>Comment settings</h3>\n";
-  $output .= form_select("Default display mode", "default_comment_mode", $conf[default_comment_mode], $cmodes, "The default mode in which comments are displayed.");
-  $output .= form_select("Default display order", "default_comment_order", $conf[default_comment_order], $corder, "The default order in which comments are displayed.");
+  $output .= form_select("Default display mode", "default_comment_mode", $conf["default_comment_mode"], $cmodes, "The default mode in which comments are displayed.");
+  $output .= form_select("Default display order", "default_comment_order", $conf["default_comment_order"], $corder, "The default order in which comments are displayed.");
   for ($count = -1; $count < 6; $count++) $threshold[$count] = "Filter - $count";
   $output .= "<hr />\n";
 
   // layout settings:
   $output .= "<h3>Layout settings</h3>\n";
-  foreach ($themes as $key=>$value) $options .= "<OPTION VALUE=\"$key\"". (variable_get("theme_default", key($themes)) == $key ? " SELECTED" : "") .">$key</OPTION>\n";
+  foreach (theme_list() as $key=>$value) $options .= "<OPTION VALUE=\"$key\"". (variable_get("theme_default", 0) == $key ? " SELECTED" : "") .">$key</OPTION>\n";
   $output .= form_item("Default theme", "<SELECT NAME=\"edit[theme_default]\">$options</SELECT>", "The default theme as seen by visitors or anonymous users.");
   $output .= "<hr />\n";
 
@@ -127,30 +131,137 @@ function system_view($type) {
   return form($form);
 }
 
+/**
+* Module configuration
+*
+* @author Kjartan Mannes
+* @group system.module
+* @return string module list
+*/
 function system_modules() {
-  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  $output .= " <tr><th>module</th><th colspan=\"2\">operations</th></tr>\n";
-  foreach (module_list() as $name) {
-    $output .= " <tr><td>$name</td><td>". (module_hook($name, "page") ? "<a href=\"module.php?mod=$name\">view</a>" : "&nbsp;") ."</td><td>". (module_hook($name, "admin") ? "<a href=\"admin.php?mod=$name\">admin</a>" : "&nbsp;") ."</td></tr>\n";
+  $result = db_query("SELECT name, status FROM system WHERE type = 'module'");
+  $status = array();
+  while ($module = db_fetch_object($result)) {
+    $status[$module->name] = $module->status;
   }
-  $output .= "</table>\n";
+  db_query("DELETE FROM system WHERE type = 'module'");
 
-  return $output;
+  if ($handle = @opendir("modules")) {
+    $modules = array();
+    while ($file = readdir($handle)) {
+      if (".module" == substr($file, -7)) {
+        $name = substr($file, 0, -7);
+        $modules[$name] = array("filename" => "$file", "status" => $status[$name]);
+       include_once("modules/$file");
+      }
+    }
+    closedir($handle);
+    asort($modules);
+  }
+
+  $required = array("user", "drupal", "system", "watchdog");
+
+  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
+  $output .= " <tr><th>module</th><th>description</th><th>status</th><th colspan=\"2\">operations</th></tr>\n";
+  foreach ($modules as $name => $module) {
+    $output .= " <tr><td>$name</td><td>". check_output(module_invoke($name, "system", "description")) ."</td><td>". (in_array($name, $required) ? "Enabled" : form_select("", "status][$name", $module["status"], array(t("Disabled"), t("Enabled")))) ."</td><td>". (module_hook($name, "page") ? "<a href=\"module.php?mod=$name\">view</a>" : "&nbsp;") ."</td><td>". (module_hook($name, "admin") ? "<a href=\"admin.php?mod=$name\">admin</a>" : "&nbsp;") ."</td></tr>\n";
+    if (!in_array($name, $required)) {
+      db_query("INSERT INTO system SET name = '$name', type = 'module', filename = '$module[filename]', status = '$module[status]'");
+    }
+  }
+  $output .= "</table><br />\n";
+  $output .= form_submit("Save module settings");
+
+  return form($output);
+}
+
+/**
+* Theme configuration
+*
+* This function handles the Drupal themes and lets the site administrator enable or disable them as they wish.
+*
+* @author Kjartan Mannes
+* @package system.module
+* @return string theme list
+*/
+function system_themes() {
+  $result = db_query("SELECT * FROM system WHERE type = 'theme' ORDER BY filename");
+  $status = array();
+  while ($theme = db_fetch_object($result)) {
+    $_themes[$theme->name] = $theme;
+  }
+
+  if ($handle = @opendir("themes")) {
+    $themes = array();
+    while ($dir = readdir($handle)) {
+      if (!substr_count($dir, ".") && is_dir("themes/$dir")) {
+        if ($handle2 = @opendir("themes/$dir")) {
+          while ($file = readdir($handle2)) {
+            if (".theme" == substr($file, -6)) {
+              include_once("themes/$dir/$file");
+              $name = substr($file, 0, -6);
+              $_theme = "theme_$name";
+              if (class_exists($_theme)) {
+                $_theme =& new $_theme;
+                $_themes[$name]->filename = "themes/$dir/$file";
+                if (method_exists($_theme, "system")) {
+                  $_themes[$name]->displayname = $_theme->system("name");
+                  $_themes[$name]->author = $_theme->system("author");
+                  if (empty($_themes[$name]->description)) {
+                    $_themes[$name]->description = $_theme->system("description");
+                  }
+                }
+
+                $themes[$name] = $_themes[$name];
+                unset($_theme);
+              }
+            }
+          }
+          closedir($handle2);
+        }
+      }
+    }
+    closedir($handle);
+    asort($themes);
+  }
+
+  db_query("DELETE FROM system WHERE type = 'theme'");
+
+  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
+  $output .= " <tr><th>theme</th><th>name</th><th>description</th><th>author</th><th>status</th></tr>\n";
+  foreach ($themes as $name => $theme) {
+    $output .= " <tr><td>$name</td><td>$theme->displayname</td><td>". form_textfield("", "$name][description", $theme->description, 40, 255)."</td><td>$theme->author</td><td>". form_select("", "$name][status", $theme->status, array(t("Disabled"), t("Enabled"))) ."</td></tr>\n";
+    db_query("INSERT INTO system SET name = '$name', type = 'theme', filename = '$theme->filename', status = '$theme->status', description = '$theme->description'");
+  }
+  $output .= "</table><br />\n";
+  $output .= form_submit("Save theme settings");
+
+  return form($output);
 }
 
 function system_admin() {
   global $edit, $op, $type;
-
   if (user_access("administer settings and filters")) {
 
-    print "<small><a href=\"admin.php?mod=system&type=options\">site settings</a> | <a href=\"admin.php?mod=system&type=filter\">content filters</a> | <a href=\"admin.php?mod=system&op=modules\">modules</a> | <a href=\"admin.php?mod=system&op=help\">help</a></small><hr />\n";
+    print "<small><a href=\"admin.php?mod=system&type=options\">site settings</a> | <a href=\"admin.php?mod=system&type=filter\">content filters</a> | <a href=\"admin.php?mod=system&op=modules\">modules</a> | <a href=\"admin.php?mod=system&op=themes\">themes</a> | <a href=\"admin.php?mod=system&op=help\">help</a></small><hr />\n";
 
     switch ($op) {
       case "help":
         system_help();
         break;
+      case "Save module settings":
+        foreach ($edit["status"] as $name => $status) {
+          db_query("UPDATE system SET status = '$status' WHERE name = '$name'");
+        }
       case "modules":
         print system_modules();
+        break;
+      case "Save theme settings":
+        foreach ($edit as $name => $settings) {
+          db_query("UPDATE system SET status = '". check_query($settings["status"]) ."', description = '". check_query($settings["description"]) ."' WHERE name = '$name'");
+        }
+      case "themes":
+        print system_themes();
         break;
       case "Reset to defaults":
         print status(system_default($edit));

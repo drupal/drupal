@@ -390,7 +390,7 @@ function book_view($node, $main = 0) {
 
       $output .= " <tr><td colspan=\"3\">$location</td></tr>";
       $output .= " <tr><td colspan=\"3\"><hr /></td></tr>";
-      $output .= " <tr><td colspan=\"3\"><b><big>". check_output($node->title) ."</big></b>". ($node->body ? "<br /><small><i>". sprintf(t("Last updated by %s on %s"), format_name($node), format_date($node->created)) ."</i></small> " : "") ."</td></tr>";
+      $output .= " <tr><td colspan=\"3\"><b><big>". check_output($node->title) ."</big></b>". ($node->body ? "<br /><small><i>". strtr(t("Last updated by %u on %d"), array("%u" => format_name($node), "%d" => format_date($node->created))) ."</i></small> " : "") ."</td></tr>";
     }
 
     if ($node->body) {
@@ -607,7 +607,7 @@ function book_admin_view_line($node, $depth = 0) {
   $output .= " <td><div style=\"padding-left: ". (25 * $depth) ."px;\"><a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a></div></td>";
   $output .= " <td align=\"center\">$revision</td>";
   $output .= " <td><a href=\"admin.php?mod=node&op=edit&id=$node->nid\">". t("edit node") ."</td>";
-  //TODO: get this link to work. Must pass $nid along so it is received by book_node_link()  
+  //TODO: get this link to work. Must pass $nid along so it is received by book_node_link()
   //$output .= " <td><a href=\"admin.php?mod=book&nid=$node->nid&op=Edit+book+outline\">". t("edit book outline") ."</td>";
   $output .= " <td><a href=\"admin.php?mod=node&op=delete&id=$node->nid\">". t("delete node") ."</td>";
   $output .= "</tr>";
@@ -635,7 +635,7 @@ function book_admin_view($nid, $depth = 0) {
 
   $output .= "<h3>". check_output($node->title) ."</h3>";
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
-  //TODO: change colspan below to 3 after adding new link in book_admin_view_line()   
+  //TODO: change colspan below to 3 after adding new link in book_admin_view_line()
   $output .= " <tr><th>title</th><th>rev</th><th colspan=\"2\">operations</th></tr>";
   $output .= book_admin_view_line($node);
   $output .= book_admin_view_book($nid);
@@ -686,7 +686,7 @@ function book_admin() {
     */
 
     $links = book_admin_links();
-    
+
     print "<small>". implode(" &middot; ", $links) ."</small><hr />";
 
     switch ($op) {
@@ -712,7 +712,7 @@ function book_admin() {
 
 function book_help() {
   ?>
-  
+
 <p>The Collaborative Book is a magnificient mechanism for organizing content authored by many users.
 You may use it to organize a Manual (e.g. <a href="http://www.drupal.org">Drupal Handbook</a>),
 to <a href="#faq">maintain an FAQ</a>, or to manage any outline-like content. Books can have
@@ -792,6 +792,6 @@ geeky possibilities there.</li>
 </ul>
 
   <?php
-  
-}  
+
+}
 ?>

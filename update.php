@@ -26,7 +26,7 @@ if (!get_cfg_var("safe_mode")) {
 // Define the various updates in an array("date : comment" => "function");
 $mysql_updates = array(
   "2001-10-10" => "update_1",
-  "2001-10-12 : Pearification" => "update_2",
+  "2001-10-12 : pearification" => "update_2",
   "2001-10-14" => "update_3",
   "2001-10-16" => "update_4",
   "2001-10-17" => "update_5",
@@ -34,7 +34,7 @@ $mysql_updates = array(
   "2001-11-01" => "update_7",
   "2001-11-02" => "update_8",
   "2001-11-04" => "update_9",
-  "2001-11-17: distributed authentication" => "update_10",
+  "2001-11-17 : distributed authentication" => "update_10",
   "2001-12-01" => "update_11",
   "2001-12-06" => "update_12",
   "2001-12-09" => "update_13",
@@ -48,7 +48,8 @@ $mysql_updates = array(
   "2002-01-30" => "update_21",
   "2002-02-19" => "update_22",
   "2002-03-05" => "update_23",
-  "2002-04-08" => "update_24"
+  "2002-04-08" => "update_24",
+  "2002-03-11 : modules/themes web config" => "update_25"
 );
 
 // Update functions
@@ -343,6 +344,14 @@ function update_24() {
   update_sql("ALTER TABLE site ADD threshold int(11) NOT NULL;");
   update_sql("UPDATE site SET refresh = '7200';");
   update_sql("UPDATE site SET threshold = '50';");
+}
+
+function update_25() {
+  update_sql("CREATE TABLE `system` (filename varchar(255) NOT NULL default '', name varchar(255) NOT NULL default '', type varchar(255) NOT NULL default '', description varchar(255) NOT NULL default '', status int(2) NOT NULL default '0', PRIMARY KEY  (filename));");
+  update_sql("REPLACE system SET name = 'drupal', type = 'module', filename = 'drupal.module', status = '1';");
+  update_sql("REPLACE system SET name = 'system', type = 'module', filename = 'system.module', status = '1';");
+  update_sql("REPLACE system SET name = 'user', type = 'module', filename = 'user.module', status = '1';");
+  update_sql("REPLACE system SET name = 'watchdog', type = 'module', filename = 'watchdog.module', status = '1';");
 }
 
 /*
