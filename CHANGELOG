@@ -13,7 +13,7 @@ drupal x.xx, xx/xx/xxxx
 - various updates:
     * improved the search system by making it context sensitive.
     * fixed various HTML/XHTML typos.
-  
+
 drupal 3.00, 15/09/2001
 -----------------------
 - major overhaul of the entire underlying design:

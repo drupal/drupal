@@ -100,7 +100,7 @@ function blog_page_user($uid = 0, $date = 0) {
       $output .= "<tr><td colspan=\"2\"><b><a href=\"module.php?mod=blog&id=$blog->uid&date=". mktime(23, 59, 59, date("n", $blog->timestamp), date("d", $blog->timestamp), date("Y", $blog->timestamp)) ."\">". format_date($blog->timestamp, custom, "d M Y") .":</a></b></td></tr>";
     }
 
-    if ($user->uid && $user->name == $name) {
+    if ($user->uid && $user->uid == $uid) {
       $links[] = "<a href=\"submit.php?mod=blog&op=edit&id=$blog->nid\">". t("edit") ."</a>";
     }
 
