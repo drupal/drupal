@@ -1,0 +1,311 @@
+<?php
+
+class Poll {
+  function Poll($poll) {
+    $this = new Node($poll);
+    $this->runtime = $poll[runtime];
+    $this->active = $poll[active];
+    $this->voters = $poll[voters];
+  }
+}
+
+function poll_cron() {
+  $result = _node_get("type", "poll");
+  while ($poll = db_fetch_array($result)) {
+    if ($poll[active]) {
+      if (($poll[timestamp] + $poll[runtime]) < time()) {
+        $poll[active] = 0;
+        node_save($poll,array(filter));
+      }
+    }
+  }
+}
+
+function poll_get_choices_array($poll) {
+  $result = db_query("SELECT * FROM poll_choices WHERE nid='" . $poll[nid] . "'");
+  if ($result) {
+    while ($choices = db_fetch_array($result)) {
+      $m = max($m,$choices[chvotes]);
+      $t += $choices[chvotes];
+      $poll[choice][$choices[chorder]]=$choices[chtext];
+      $poll[chvotes][$choices[chorder]]=$choices[chvotes];
+      $poll[chid][$choices[chorder]]=$choices[chid];
+    }
+    ksort($poll[choice]);
+    ksort($poll[votes]);
+    ksort($poll[chid]);
+  }
+  $poll[maxvotes]=max(1,$m);
+  $poll[totalvotes]=$t;
+  return $poll;
+}
+
+function poll_get_choices_obj($poll) {
+  $result = db_query("SELECT * FROM poll_choices WHERE nid='" . $poll->nid . "'");
+  if ($result) {
+    while ($choices = db_fetch_array($result)) {
+      $m = max($m,$choices[chvotes]);
+      $t += $choices[chvotes];
+
+      $poll->choice[$choices[chorder]] = $choices[chtext];
+      $poll->chvotes[$choices[chorder]] = $choices[chvotes];
+      $poll->chid[$choices[chorder]] = $choices[chid];
+    }
+    ksort($poll->choice);
+    ksort($poll->chvotes);
+    ksort($poll->chid);
+  }
+  $poll->maxvotes=max(1,$m);
+  $poll->totalvotes=$t;
+  return $poll;
+}
+
+function poll_status() {
+  return array(dumped, queued, posted);
+}
+
+function poll_search($keys) {
+  global $status, $user;
+  $result = db_query("SELECT n.*, p.* FROM poll p LEFT JOIN node n ON n.nid = p.nid AND n.lid = p.lid WHERE n.status = '$status[posted]' AND (n.title LIKE '%$keys%') LIMIT 20");
+  while ($poll = db_fetch_object($result)) {
+    $find[$i++] = array("title" => check_output($poll->title), "link" => (user_access($user, "poll") ? "admin.php?mod=poll&op=edit&id=$poll->nid" : "node.php?id=$poll->nid"), "user" => $poll->userid, "date" => $poll->timestamp);
+  }
+  return $find;
+}
+
+function poll_help() {
+ ?>
+   <i>No help available.</i>
+ <?php
+}
+
+function poll_graph($val) {
+  $p = round($val * 100);
+  return "<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\"><tr>" . ($p?"<td width=\"" . $p . "%\" style=\"background-color: #000000;\"><span style=\"font-size: 4pt;\">&nbsp;</span></td>":"") . ($p<100?"<td style=\"background-color: #ffffff;\" width=\"" . (100-$p) . "%\"><span style=\"font-size: 4pt;\">&nbsp;</span></td>":"") . "</tr></table>";
+}
+
+function poll_view($node, $main = 0, $block = 0) {
+  global $theme, $op, $user, $chid, $REQUEST_URI;
+
+  if (($node->active) && (!field_get($node->voters,$user->userid))) $voting = 1;
+  if ((!$voting) && ($op != "View")) $op = "View";
+  
+  switch ($op) {
+    case "Vote":
+      if (($node->active) && (!field_get($node->voters,$user->userid))) {
+        $result = db_query("UPDATE poll_choices SET chvotes=chvotes+1 WHERE nid='" . $node->nid . "' && chid='" . check_input($chid) . "'");
+        if (($result) && ($user)) {
+          $new = node_get_array("nid",$node->nid);
+          $new[voters] = field_set($node->voters,$user->userid,1);
+          node_save($new,array(voters));
+          $node = node_get_object("nid",$node->nid);            
+        }
+      }
+      
+    case "View":
+      $node = poll_get_choices_obj($node);
+      
+      $title = "<b>" . check_output($node->title) . "</b>";
+      $footer = "<small>(" . format_plural($node->totalvotes, "vote", "votes") . ")</small>";
+      
+      $node->totalvotes = max(1,$node->totalvotes);
+      
+      if (!$block) $output .= "<small>Posted by " . format_username($node->userid) . " on " . format_date($node->timestamp,large) . "</small><br>\r\n";
+      foreach ($node->choice as $key => $value) {
+        if ($main) {
+          $output .= "<table cellspacing=\"1\" cellpadding=\"0\" width=\"100%\"><tr><td width=\"20%\" valign=\"middle\" align=\"left\">" . check_output($value) . "</td><td width=\"70%\">" . poll_graph($node->chvotes[$key] / $node->maxvotes) . "</td><td width=\"10%\" align=\"right\">" . round(($node->chvotes[$key] / $node->totalvotes) * 100) . "%</td></tr></table>";
+        }
+        else {
+          $output .= (!$block ? "<br>" : "") . check_output($value) . "<br><table width=\"90%\" align=\"center\" cellspacing=\"1\" cellpadding=\"0\"><tr><td width=\"70%\" valign=\"middle\" align=\"left\">" . poll_graph($node->chvotes[$key] / $node->maxvotes) . "</td><td align=\"right\">" . round(($node->chvotes[$key] / $node->totalvotes) * 100) . "%</td></tr></table>\r\n";
+        }
+      }
+      $output .= "<div align=\"center\">" . $footer . "</div>";
+      break;
+
+    default:  
+      $node = poll_get_choices_obj($node);
+
+      $title = "<b>" . check_output($node->title) . "</b>";
+      $footer = "<small>(" . format_plural($node->totalvotes, "vote", "votes") . ")</small>";
+      
+      $node->totalvotes = max(1,$node->totalvotes);
+
+      if (!$block) $output .= "<small>Posted by " . format_username($node->userid) . " on " . format_date($node->timestamp,large) . "</small><br><br>\r\n";
+      $output .= "<table align=\"center\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\"><tr><td align=\"left\">"; 
+      foreach ($node->choice as $key => $value) {
+        $output .= "<input type=\"radio\" name=\"chid\" value=\"" . $node->chid[$key] . "\">&nbsp;" . check_output($value) . "<br>\r\n";
+      }
+      $output .= "</td></tr></table>";
+      $output .= "<br><div align=\"center\">" . form_submit("Vote") . "<br>" .$footer  . "</div>";
+      $output = form($REQUEST_URI, $output);
+   }
+
+   if (!$block) $theme->box($title,$output);
+   return array("title" => $title, "content" => $output);   
+}
+
+function poll_form($edit = array(), $nocheck = 0) {
+  global $allowed_html, $REQUEST_URI, $user;
+
+  $duration = array(0 => t("Unlimited"), 86400 => t("1 day"), 172800 => t("2 days"), 345600 => t("4 days"),
+                    604800 => t("1 week"), 1209600 => t("2 weeks"), 2678400 => t("1 month"), 5356800 => t("2 months"),
+                    10713600 => t("4 months"), 31536000 => t("1 year"));
+  
+  $active = array(0 => "Closed", 1 => "Active");
+                    
+  $admin = ($edit[nid] && user_access($user,"poll")) ? 1 : 0; 
+
+  /* Mini-form for number of choiceboxes */  
+  $choices = $edit[choices]?$edit[choices]:5;
+  for ($c = 2; $c <= 20; $c++) $opts[$c]=$c;
+  $form .= form_select(t("Number of choices"), "choices", $choices, $opts, t("This box specifies the number of choiceboxes in this form, it doesn't affect the actual amount of choices in the poll."));
+  $form .= form_submit(t("Refresh")) . "<br><br><br>";
+
+  /* Main form */
+  $form .= form_item(t("Your name"), format_username(($edit[userid] ? $edit[userid] : $user->userid)));
+  $form .= form_hidden("userid", $edit[userid]);
+  $form .= form_textfield(t("Question"), "title", $edit[title], 50, 127);
+  
+  for ($a = 0; $a < $choices; $a++) {
+    $form .= form_textfield(t("Choice")." ".($a+1), "choice][$a", $edit[choice][$a], 50, 127);
+    if ($admin) $form .= form_textfield(strtr(t("Votes for choice %n"), array("%n" => ($a+1))), "chvotes][$a", $edit[chvotes][$a] ? $edit[chvotes][$a] : 0, 7, 7);    
+  }
+  
+  $form .= form_select(t("Poll duration"), "runtime", $edit[runtime] ? $edit[runtime] : t("1 week"), $duration, t("After this period, the poll will automatically be closed."));
+  if ($admin) $form .= form_select(t("Poll status"), "active", $edit[active], $active);    
+  $form .= structure_form("poll", $edit);
+  
+
+  // hidden fields:
+  if ($edit[nid] > 0) {
+    $form .= form_hidden("nid", $edit[nid]);
+  }
+  
+  if ((!$edit) || ($nocheck)) {
+    $form .= form_submit(t("Preview"));
+  }
+  else if (!$edit[title]) {
+    $form .= "<FONT COLOR=\"red\">". t("Warning: you did not supply a question.") ."</FONT><P>\n";
+    $form .= form_submit(t("Preview"));
+  }
+  else if ((!$edit[choice][0]) && (!$edit[choice][1])) {
+    $form .= "<FONT COLOR=\"red\">". t("Warning: you must supply at least 2 choices.") ."</FONT><P>\n";
+    $form .= form_submit(t("Preview"));
+  }
+  else {
+    $form .= form_submit(t("Preview"));
+    $form .= form_submit(t("Submit"));
+  }
+
+  return form($REQUEST_URI, $form);
+}
+
+function poll_save($edit) {
+  global $status, $user;
+
+  if (!$edit[nid]) {
+    $nid = node_save($edit, array(active => 1, author => $user->id, cid, comment => category_comment($edit[cid]), moderate => topic_moderate($edit[tid]), promote => category_promote($edit[cid]), runtime, score => 0, status => (category_submission($edit[cid]) ? $status[queued] : $status[posted]), tid, timestamp => time(), title, type => "poll", votes => 0, voters => ""));
+  }
+  else if (user_access($user)) {
+    $nid = node_save($edit, array(active, cid, tid, runtime, title, type => "poll"));    
+    db_query("DELETE FROM poll_choices WHERE nid='" . $nid . "'"); 
+  }
+  if ($nid) {
+    foreach ($edit[choice] as $key => $value) {
+      if ($value) {
+        $v[] = "('" . $nid . "', '" . check_input($value) . "', '". check_input($edit[votes][$key]) ."', '". check_input($key) ."')";
+      } 
+    }
+    db_query("INSERT INTO poll_choices (nid, chtext, chvotes, chorder) VALUES " . implode(",",$v));
+  }
+}
+
+function poll_block() {  
+  $result = _node_get("type", "poll");
+  while ($poll = db_fetch_object($result)) {
+    if ($poll->active) break;
+  }
+  if ($poll) {
+    $poll = poll_view($poll, 0, 1);
+    $output = "<b>" . $poll[title] . "</b><br>" . $poll[content];
+  }
+  $blocks[0][subject] = "Latest poll";
+  $blocks[0][content] = $output ? $output : "No active polls.";
+  $blocks[0][info] = "Display the latest active poll.";
+  $blocks[0][link] = "index.php";
+  return $blocks;    
+}
+
+function poll_query($type = "") {
+  global $status;
+  $queries = array(array("recent polls", "WHERE n.type = 'poll' ORDER BY n.timestamp DESC"), array("active polls", "WHERE n.type = 'poll' AND n.status = '$status[posted]' ORDER BY n.timestamp DESC"), array("queued polls", "WHERE n.type = 'poll' AND n.status = '$status[queued]' ORDER BY n.timestamp DESC"), array("dumped polls", "WHERE n.type = 'poll' AND n.status = '$status[dumped]' ORDER BY n.timestamp DESC"), array("polls without category (integrity)", "WHERE n.type = 'poll' AND n.cid = '0' ORDER BY n.timestamp DESC"), array("polls without topic (integrity)", "WHERE n.type = 'poll' AND n.tid = '0' ORDER BY n.timestamp DESC"));
+  return ($queries[$type] ? $queries[$type] : $queries);
+}
+
+function poll_overview($query = array()) {
+  return node_overview($query);
+}
+
+function poll_admin() {
+  global $id, $edit, $mod, $keys, $op, $theme, $type, $user;
+
+  print "<SMALL><A HREF=\"admin.php?mod=poll&op=add\">add new poll</A> | <A HREF=\"admin.php?mod=poll&op=listing\">poll listing</A> | <A HREF=\"admin.php?mod=poll&op=search\">search poll</A> | <A HREF=\"admin.php?mod=poll\">overview</A> | <A HREF=\"admin.php?mod=poll&op=help\">help</A></SMALL><HR>\n";
+
+  $type = ($type ? $type : 0);
+
+  switch ($op) {
+    case "delete":
+      print poll_delete($id);
+      print poll_overview(poll_query($type));
+      break;
+    case "edit":
+      print poll_form(poll_get_choices_array(node_get_array("nid", check_input($id))));
+      break;
+    case "help":
+      poll_help();
+      break;
+    case "listing":
+      print node_listing(poll_query());
+      break;
+    case "search":
+      print search_form($keys);
+      print search_data($keys, $mod);
+      break;
+    case t("Preview"):
+      poll_view(new Poll($edit));
+    case "add":
+      print poll_form($edit);
+      break;
+    case t("Refresh"):
+      print poll_form($edit, 1);
+      break;
+    case t("Submit"):
+      poll_save($edit);
+      // fall through:
+    default:
+      print poll_overview(poll_query($type));
+  }
+}
+
+
+function poll_user() {
+  global $edit, $op, $theme, $user;
+
+  switch($op) {
+    case t("Refresh"):
+      $theme->box(t("Submit"), poll_form($edit, 1));
+      break;
+    case t("Preview"):
+      poll_view(new Poll($edit));
+      $theme->box(t("Submit"), poll_form($edit));
+      break;
+    case t("Submit"):
+      poll_save($edit);
+      $theme->box(t("Submit"), t("Thank you for your submission."));
+      break;
+    default:
+      $theme->box(t("Submit"), poll_form());
+  }
+}
+
+?>
