@@ -1,6 +1,27 @@
 <?
 
-$module = array("admin" => "block_admin");
+$module = array("page" => "block_page",
+                "admin" => "block_admin");
+
+function block_page() {
+  global $theme;
+
+  $result = db_query("SELECT * FROM blocks WHERE status = 1 ORDER BY module");
+  
+  $theme->header();
+  print "<TABLE BORDER=\"0\">\n";
+  while ($block = db_fetch_object($result)) {
+    if ($state % 3 == 0) print " <TR>\n";
+    print "  <TD ALIGN=\"center\" VALIGN=\"top\" WIDTH=\"33%\">\n"; 
+    $blocks = module_execute($block->module, "block");
+    $theme->box($blocks[$block->offset]["subject"], $blocks[$block->offset]["content"]);
+    print " </TD>\n";
+    if ($state % 3 == 2) print " </TR>\n";
+    $state += 1;
+  }  
+  print "</TABLE>\n";
+  $theme->footer();
+}
 
 function block_admin_save($edit) {
   foreach ($edit as $key=>$value) {
@@ -11,7 +32,7 @@ function block_admin_save($edit) {
 function block_admin_display() {
   global $repository;
 
-  $result = db_query("SELECT * FROM blocks");
+  $result = db_query("SELECT * FROM blocks ORDER BY module");
   
   // Generate output:
   $output .= "<FORM ACTION=\"admin.php?mod=block\" METHOD=\"post\">\n";
@@ -26,7 +47,7 @@ function block_admin_display() {
     $status .= " <OPTION VALUE=\"0\"". (($block->status == 0) ? " SELECTED" : "") .">disabled</OPTION>\n";
     $status .= "</SELECT>\n";
 
-    $output .= " <TR><TD>". $block->name ."</TD><TD>$module</TD><TD>$status</TD></TR>\n";
+    $output .= " <TR><TD>". $block->name ."</TD><TD ALIGN=\"center\">$module</TD><TD>$status</TD></TR>\n";
     
     unset($status);
   }
