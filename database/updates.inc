@@ -1144,7 +1144,9 @@ function update_91() {
 }
 
 function update_92() {
+  $ret = array();
   $ret[] = update_sql("DELETE FROM {cache}");
+  return $ret;
 }
 
 function update_sql($sql) {
