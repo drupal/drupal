@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.7 2004/06/20 19:49:14 dries Exp $
+// $Id: menu.module,v 1.8 2004/06/30 20:45:45 dries Exp $
 
 /**
  * Implementation of hook_menu().
@@ -194,6 +194,7 @@ function menu_disable_item($mid) {
   $type = $menu['items'][$mid]['type'];
   $type &= ~MENU_VISIBLE_IN_TREE;
   $type &= ~MENU_VISIBLE_IN_BREADCRUMB;
+  $type |= MENU_MODIFIED_BY_ADMIN;
   db_query('UPDATE {menu} SET type = %d WHERE mid = %d', $type, $mid);
   menu_rebuild();
   drupal_set_message(t('menu item disabled.'));
