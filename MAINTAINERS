@@ -20,8 +20,16 @@ BLOCK SYSTEM
 M: Kjartan Mannes <kjartan@drop.org>
 S: maintained
 
+BLOGGER API MODULE
+M: Greg Tyrelle <greg@nodalpoint.org>
+S: maintained
+
 CODING STYLE CHECKER
 M: Alexander Schwartz <alexander.schwartz@gmx.net>
+S: maintained
+
+DISTRIBUTED AUTHENTICATION MODULES
+P: Moshe Weitzman <weitzman@prospero.com>
 S: maintained
 
 POLL MODULE
@@ -30,15 +38,23 @@ S: maintained
 
 POSTGRES PORT
 M: J C Lawrence <claw@kanga.nu>
-S: fixes/patches
+S: orphan
+
+SEARCH MODULE
+M: Simon Lindsay <simon@iseek.ws>
+S: maintained
+
+TAXONOMY SYSTEM
+P: Marco Molinari <marco@porciletto.org>
+S: maintained
 
 THEME GOOFY, THEME UNCONED
 P: Steven Wittens <unconed@drop.org>
 S: maintained
 
-USER SYSTEM, DISTRIBUTED AUTHENTICATION
-P: Moshe Weitzman <weitzman@prospero.com>
+USER SYSTEM
+P: Moshe Weitzman <weitzman@tejasa.com>
 S: maintained
 
 THE REST:
-P: Dries Buytaert <dries@drop.org>
+P: Dries <dries@drupal.org>
