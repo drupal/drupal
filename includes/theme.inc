@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.201 2004/07/08 16:04:06 dries Exp $ */
+/* $Id: theme.inc,v 1.202 2004/07/08 16:08:21 dries Exp $ */
 
 /**
  * @file
@@ -171,6 +171,8 @@ function theme_page($content, $title = NULL, $breadcrumb = NULL) {
   if ($help = menu_get_active_help()) {
     $output .= "<small>$help</small><hr />";
   }
+
+  $output .= theme_status_messages();
 
   $output .= "\n<!-- begin content -->\n";
   $output .= $content;
