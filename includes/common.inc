@@ -838,9 +838,6 @@ function url($url = NULL, $query = NULL, $fragment = NULL) {
   if (isset($fragment)) {
     $fragment = "#$fragment";
   }
-  else {
-    $fragment = '';
-  }
 
   if (variable_get("clean_url", "0") == "0") {
     if (isset($url)) {
