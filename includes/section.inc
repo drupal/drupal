@@ -13,12 +13,13 @@ function section_get_array($field, $value) {
 }
 
 function section_save($edit) {
-  if ($edit["sid"]) { // ?
-    db_query("UPDATE section SET name = '". check_input($edit[name]) ."', pid = '". check_input($edit[pid]) ."' WHERE sid = $edit[sid]", 1);
-  }
-  else {
-    db_query("INSERT INTO section (name, pid) VALUES ('". check_input($edit[name])."', '". check_input($edit[pid]) ."')", 1);
-  }
+  if ($edit["sid"]) db_query("UPDATE section SET name = '". check_input($edit[name]) ."', pid = '". check_input($edit[pid]) ."' WHERE sid = $edit[sid]", 1);
+  else db_query("INSERT INTO section (name, pid) VALUES ('". check_input($edit[name])."', '". check_input($edit[pid]) ."')", 1);
+
+  $sid = ($edit[sid] ? $edit[sid] : db_insert_id());
+
+  db_query("DELETE FROM section_type WHERE sid = '$sid'", 1);
+  foreach ($edit[type] as $key=>$type) db_query("INSERT INTO section_type (sid, type) VALUES ('". check_input($sid) ."', '". check_input($type) ."')", 1);
 }
 
 function section_tree($parent = 0, $name = "", $tree = array()) {

@@ -2,6 +2,7 @@
 
 $module = array("help" => "story_help",
                 "find" => "story_find",
+                "type" => "story_type",
                 "user" => "story_user",
                 "queue" => "story_queue",
                 "admin" => "story_admin",
@@ -51,6 +52,10 @@ function story_help() {
   <P>Posted stories: published stories accessible to all visitors.</P>
   <P>Dumped stories: rejected stories that are no longer available to visitors.</P>
  <?php
+}
+
+function story_type() {
+  return array("story", t("story"));
 }
 
 function story_view($node, $page = 1) {

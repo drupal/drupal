@@ -6,8 +6,10 @@ function db_connect($host, $user, $pass, $name) {
   // NOTE: we are using a persistent connection!
 }
 
-function db_query($query) {
-  if ($result = mysql_query($query)) return $result;
+function db_query($query, $debug = 0) {
+  $result = mysql_query($query);
+  if ($debug) print "<P>query: $query<BR>error". mysql_error() ."</P>";
+  if ($result) return $result;
   else watchdog("error", "database: ". mysql_error() ."<BR>query: ". htmlspecialchars($query));
 }
 
