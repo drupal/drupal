@@ -238,7 +238,7 @@ function comment_visible($comment, $threshold = 0) {
 
 function comment_uri($args = 0) {
   global $link, $mod;
-  if ($args) return ($mod) ? "module.php?mod=$mod&$args" : $link .".php  ?$args";
+  if ($args) return ($mod) ? "module.php?mod=$mod&$args" : $link .".php?$args";
   else return ($mod) ? "module.php?mod=$mod" : $link .".php";
 }
 
