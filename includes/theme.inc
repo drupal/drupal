@@ -134,7 +134,7 @@ function theme_header() {
   $output = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
   $output .= "<html xmlns=\"http://www.w3.org/1999/xhtml\">";
   $output .= "<head>";
-  $output .= " <title>". drupal_get_title() ? drupal_get_title() : variable_get(site_name, "drupal") ."</title>";
+  $output .= " <title>". drupal_get_title() ? drupal_get_title() : variable_get('site_name', "drupal") ."</title>";
   $output .= theme_head();
   $output .= " <style type=\"text/css\" media=\"all\">";
   $output .= "  @import url(misc/drupal.css);";
@@ -291,7 +291,7 @@ function theme_form_element($title, $value, $description = NULL, $id = NULL) {
   }
   else {
     if ($id) {
-      $title = "<label for=\"$id\"></label>";
+      $title = "<label for=\"$id\" />";
       // TODO: does this make sense to do?
     }
   }
