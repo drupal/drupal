@@ -73,6 +73,12 @@ function blogapi_get_user_info($req_params) {
 
 function blogapi_new_post($req_params) {
   $params = blogapi_convert($req_params);
+
+  // Remove unused appkey from bloggerAPI.
+  if (count($params) == 6) {
+    $params = array_slice($params, 1);
+  }
+
   $user = blogapi_validate_user($params[1], $params[2]);
   if (!$user->uid) {
     return blogapi_error($user);
