@@ -1,5 +1,5 @@
 <?php
-/* $Id: updates.inc,v 1.69 2004/10/31 07:34:46 dries Exp $ */
+/* $Id: updates.inc,v 1.70 2004/11/03 16:46:57 dries Exp $ */
 
 /**
  * @file
@@ -1946,7 +1946,7 @@ function update_110() {
     $ret[] = update_sql("CREATE TABLE {search_total} (
       word varchar(50) NOT NULL default '',
       count int(10) unsigned default NULL,
-      KEY word (word)
+      PRIMARY KEY word (word)
       ) TYPE=MyISAM");
 
     $ret[] = update_sql("DELETE FROM {variable} WHERE name = 'node_cron_last'");

@@ -551,7 +551,7 @@ CREATE TABLE search_index (
 CREATE TABLE search_total (
   word varchar(50) NOT NULL default '',
   count int(10) unsigned default NULL,
-  KEY word (word)
+  PRIMARY KEY word (word)
 ) TYPE=MyISAM;
 
 --
