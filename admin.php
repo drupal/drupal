@@ -3,7 +3,7 @@
 include "includes/common.inc";
 
 // validate user permission:
-if (!$user->id || ($user->permissions != 1 && $user->id > 1)) exit();
+if (!($user->permissions == 1 || $user->id == 1)) exit();
 
 function admin_page($mod) {  
   global $repository, $menu, $modules;
@@ -17,7 +17,7 @@ function admin_page($mod) {
  ?>
   <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
   <HTML>
-   <HEAD><TITLE><? echo $site_name; ?> administration center</TITLE></HEAD>
+   <HEAD><TITLE>Administration</TITLE></HEAD>
    <STYLE>
     body { font-family: helvetica, arial; }
     h1   { font-size: 18pt; font-weight: bold; color: #990000; }
@@ -27,7 +27,7 @@ function admin_page($mod) {
     td	 { font-family: helvetica, arial; }
    </STYLE>
    <BODY BGCOLOR="#FFFFFF" LINK="#005599" VLINK="#004499" ALINK="#FF0000">
-    <H1>Administration center</H1>
+    <H1>Administration</H1>
  <?
 
   ksort($repository);  

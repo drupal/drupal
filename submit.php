@@ -130,7 +130,7 @@ function submit_submit($subject, $abstract, $article, $category) {
   global $user, $theme;
 
   // Add log entry:
-  watchdog("story", "added new story with subject `$subject'");
+  watchdog("story", "story: added '$subject'");
   
   // Add submission to SQL table:
   db_query("INSERT INTO stories (author, subject, abstract, article, category, timestamp) VALUES ('$user->id', '". check_input($subject) ."', '". check_input($abstract) ."', '". check_input($article) ."', '". check_input($category) ."', '". time() ."')");

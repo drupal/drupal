@@ -100,7 +100,7 @@ function headline_block() {
   return $blocks;
 }
 
-function headline_admin_main() {
+function headline_admin_display() {
   global $theme;
 
   // Get channel info:
@@ -123,8 +123,11 @@ function headline_admin_main() {
   }  
 
   $output .= "</TABLE>\n";
-  $output .= "<BR><BR>\n";
-  $output .= "<HR>\n";
+  
+  print $output;
+}
+
+function headline_admin_add() {
   $output .= " <FORM ACTION=\"admin.php?mod=headline\" METHOD=\"post\">\n";
   $output .= "  <P>\n";
   $output .= "   <B>Site name:</B><BR>\n";
@@ -151,23 +154,31 @@ function headline_admin_main() {
 function headline_admin() {
   global $op, $id, $site, $url, $backend, $contact;
   
+  print "<SMALL><A HREF=\"admin.php?mod=headline&op=add\">add new channel</A> | <A HREF=\"admin.php?mod=headline\">overview</A> | <A HREF=\"admin.php?mod=headline&op=help\">help</A></SMALL><HR>";
+
   switch($op) {
-    case "refresh":
-      $backend = new backend($id);
-      $backend->refresh();
-      headline_admin_main();
+    case "add":
+      headline_admin_add();
       break;
     case "delete":
       $backend = new backend($id);
       $backend->delete();
-      headline_admin_main();
+      headline_admin_display();
+      break;
+    case "help":
+      headline_help();
+      break;
+    case "refresh":
+      $backend = new backend($id);
+      $backend->refresh();
+      headline_admin_display();
       break;
     case "Add backend":
       $backend = new backend($id, $site, $url, $backend, $contact);
       $backend->add();
       // fall through:
     default:
-      headline_admin_main();
+      headline_admin_display();
   }
 }
 
