@@ -1,5 +1,5 @@
 <?php
-// $Id: tablesort.inc,v 1.4 2003/08/27 05:49:51 dries Exp $
+// $Id: tablesort.inc,v 1.5 2003/09/14 18:28:17 dries Exp $
 
 function tablesort_init($header) {
   static $ts;
@@ -25,15 +25,13 @@ function tablesort_sql($header) {
 }
 
 function tablesort($cell, $header) {
-  global $theme;
-
   $ts = tablesort_init($header);
   $title = t("sort by %s", array("%s" => $cell["data"]));
 
   // special formatting for the currently sorted column header
   if ($cell["data"] == $ts["order"]) {
     $cell["class"] = "cell-highlight";
-    $image = "&nbsp;<img border=\"0\" src=\"". $theme->image("arrow-". $ts["sort"]. ".gif"). "\"></img>";
+    $image = "&nbsp;<img border=\"0\" src=\"". theme("image", "arrow-". $ts["sort"]. ".gif"). "\"></img>";
     $dir = array("asc" => "ascending", "desc" => "descending");
     $title = t("sort ". $dir[$ts["sort"]]);
   }
