@@ -288,6 +288,21 @@ CREATE INDEX node_moderate_idx ON node (moderate);
 CREATE INDEX node_promote_status_idx ON node (promote, status);
 
 --
+-- Table structure for table 'node_counter'
+--
+
+CREATE TABLE node_counter (
+  nid integer NOT NULL default '0',
+  totalcount integer NOT NULL default '0',
+  daycount integer NOT NULL default '0',
+  timestamp integer NOT NULL default '0',
+  PRIMARY KEY  (nid)
+);
+CREATE INDEX node_counter_totalcount_idx ON node_counter(totalcount);
+CREATE INDEX node_counter_daycount_idx ON node_counter(daycount);
+CREATE INDEX node_counter_timestamp_idx ON node_counter(timestamp);
+
+--
 -- Table structure for page
 --
 
@@ -301,18 +316,17 @@ CREATE TABLE page (
 CREATE INDEX page_nid_idx ON page(nid);
 
 --
--- Table structure for table 'path'
+-- Table structure for table 'url_alias'
 --
 
-CREATE TABLE path (
-  pid integer NOT NULL default '0',
+CREATE TABLE url_alias (
+  pid serial,
   dst varchar(128) NOT NULL default '',
   src varchar(128) NOT NULL default '',
   PRIMARY KEY  (pid)
 );
-CREATE INDEX path_src_idx ON path(src);
-CREATE INDEX path_dst_idx ON path(dst);
-
+CREATE INDEX url_alias_src_idx ON url_alias(src);
+CREATE INDEX url_alias_dst_idx ON url_alias(dst);
 --
 -- Table structure for permission
 --
@@ -417,20 +431,6 @@ CREATE TABLE site (
   UNIQUE (link)
 );
 
---
--- Table structure for table 'statistics'
---
-
-CREATE TABLE statistics (
-  nid integer NOT NULL default '0',
-  totalcount integer NOT NULL default '0',
-  daycount integer NOT NULL default '0',
-  timestamp integer NOT NULL default '0',
-  PRIMARY KEY  (nid)
-);
-CREATE INDEX statistics_totalcount_idx ON statistics(totalcount);
-CREATE INDEX statistics_daycount_idx ON statistics(daycount);
-CREATE INDEX statistics_timestamp_idx ON statistics(timestamp);
 
 --
 -- Table structure for system
@@ -590,7 +590,7 @@ INSERT INTO system VALUES ('modules/story.module','story','module','',1);
 INSERT INTO system VALUES ('modules/taxonomy.module','taxonomy','module','',1);
 INSERT INTO system VALUES ('themes/marvin/marvin.theme','marvin','theme','Internet explorer, Netscape, Opera',1);
 
-INSERT INTO variable(name,value) VALUES('update_start', 's:10:"2003-09-29";');
+INSERT INTO variable(name,value) VALUES('update_start', 's:10:"2003-10-22";');
 INSERT INTO variable(name,value) VALUES('theme_default','s:6:"marvin";');
 INSERT INTO users(uid,name,mail,rid) VALUES(0,'Anonymous','root@localhost', '1');
 

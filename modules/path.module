@@ -47,28 +47,28 @@ function path_admin() {
 
 function path_set_alias($path = NULL, $alias = NULL) {
   if ($path && !$alias) {
-    db_query("DELETE FROM {path} WHERE src = '%s'", $path);
+    db_query("DELETE FROM {url_alias} WHERE src = '%s'", $path);
     drupal_rebuild_path_map();
   }
   else if (!$path && $alias) {
-    db_query("DELETE FROM {path} WHERE dst = '%s'", $alias);
+    db_query("DELETE FROM {url_alias} WHERE dst = '%s'", $alias);
     drupal_rebuild_path_map();
   }
   else if ($path && $alias) {
-    $path_count = db_result(db_query("SELECT COUNT(src) FROM {path} WHERE src = '%s'", $path));
-    $alias_count = db_result(db_query("SELECT COUNT(dst) FROM {path} WHERE dst = '%s'", $alias));
+    $path_count = db_result(db_query("SELECT COUNT(src) FROM {url_alias} WHERE src = '%s'", $path));
+    $alias_count = db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE dst = '%s'", $alias));
 
     // We have an insert:
     if ($path_count == 0 && $alias_count == 0) {
-      db_query("INSERT INTO {path} SET src = '%s', dst = '%s'", $path, $alias);
+      db_query("INSERT INTO {url_alias} SET src = '%s', dst = '%s'", $path, $alias);
       drupal_rebuild_path_map();
     }
     else if ($path_count == 1 && $alias_count == 0) {
-      db_query("UPDATE {path} SET dst = '%s' WHERE src = '%s'", $alias, $path);
+      db_query("UPDATE {url_alias} SET dst = '%s' WHERE src = '%s'", $alias, $path);
       drupal_rebuild_path_map();
     }
     else if ($path_count == 0 && $alias_count == 1) {
-      db_query("UPDATE {path} SET src = '%s' WHERE dst = '%s'", $path, $alias);
+      db_query("UPDATE {url_alias} SET src = '%s' WHERE dst = '%s'", $path, $alias);
       drupal_rebuild_path_map();
     }
     else if ($path_count == 1 && $alias_count == 1) {
@@ -154,7 +154,7 @@ function path_nodeapi(&$node, $op, $arg) {
             $error["path"] = t("The path is invalid.");
             return $error;
           }
-          else if (db_result(db_query("SELECT COUNT(dst) FROM {path} WHERE dst = '%s' AND src != '%s'", $node->path, "node/view/$node->nid"))) {
+          else if (db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE dst = '%s' AND src != '%s'", $node->path, "node/view/$node->nid"))) {
             $error["path"] = t("The path is already in use.");
             return $error;
           }
@@ -191,7 +191,7 @@ function path_perm() {
 }
 
 function path_overview() {
-  $sql = "SELECT * FROM {path}";
+  $sql = "SELECT * FROM {url_alias}";
   $header = array(
     array ("data" => t("alias"), "field" => "dst", "sort" => "asc"),
     array ("data" => t("normal"), "field" => "src"),
@@ -216,7 +216,7 @@ function path_overview() {
 }
 
 function path_load($pid) {
-  return db_fetch_array(db_query("SELECT * FROM {path} WHERE pid = '%d'", $pid));
+  return db_fetch_array(db_query("SELECT * FROM {url_alias} WHERE pid = '%d'", $pid));
 }
 
 function path_delete($pid) {
@@ -233,7 +233,7 @@ function path_save($edit) {
     $error[] = t("the normal path '%src' is invalid.", array("%src" => $src));
   }
 
-  if (db_result(db_query("SELECT COUNT(src) FROM {path} WHERE pid != '%d' AND src = '%s'", $pid, $src))) {
+  if (db_result(db_query("SELECT COUNT(src) FROM {url_alias} WHERE pid != '%d' AND src = '%s'", $pid, $src))) {
     $error[] = t("the normal path '%src' is already aliased.", array("%src" => $src));
   }
 
@@ -241,7 +241,7 @@ function path_save($edit) {
     $error[] = t("the alias '%dst' is invalid.", array("%dst" => $dst));
   }
 
-  if (db_result(db_query("SELECT COUNT(dst) FROM {path} WHERE pid != '%d' AND dst = '%s'", $pid, $dst))) {
+  if (db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE pid != '%d' AND dst = '%s'", $pid, $dst))) {
     $error[] = t("the alias '%dst' is already in use.", array("%dst" => $dst));
   }
 
@@ -256,7 +256,7 @@ function path_save($edit) {
     */
 
     if ($pid) {
-      db_query("UPDATE {path} SET src = '%s', dst = '%s' WHERE pid = '%d'", $src, $dst, $pid);
+      db_query("UPDATE {url_alias} SET src = '%s', dst = '%s' WHERE pid = '%d'", $src, $dst, $pid);
     }
     else {
       path_set_alias($src, $dst);
