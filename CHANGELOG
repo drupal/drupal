@@ -9,7 +9,10 @@ drupal x.xx, xx/xx/xxxx
     * merged access.module, user.inc, account.php and user.module.
 - rewrote the search module:
     * imrproved look and feel.
-- added new tracker module
+- added new tracker module:
+    * helps visitors to track the latests comments.
+- added new weblog module:
+    * notifies weblogs.com when an update occured.
 - various updates:
     * improved the search system by making it context sensitive.
     * fixed various HTML/XHTML typos.
