@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.133 2003/03/09 17:19:50 kjartan Exp $
+// $Id: user.module,v 1.134 2003/03/10 21:08:35 dries Exp $
 
 session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
 session_start();
@@ -1019,7 +1019,7 @@ function user_view($uid = 0) {
 
   if ($user->uid && $user->uid == $uid) {
     $output = form_item(t("Name"), "$user->name ($user->init)");
-    $output .= form_item(t("E-mail address"), $user->mail);
+    $output .= form_item(t("E-mail address"), $user->mail, "Please note that only you can see your own e-mail address - it is not publicly visible.");
 
     foreach (module_list() as $module) {
       if (module_hook($module, "user")) {
