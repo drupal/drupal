@@ -154,11 +154,6 @@
      echo "     <TD ALIGN=\"right\" VALIGN=\"top\" WIDTH=\"5%\"><FONT COLOR=\"$this->hlcolor1\"><B>" . t("Subject") . ":</B></FONT></TD><TD WIDTH=\"80%\">";
      echo "      <B><FONT COLOR=\"$this->fgcolor1\">$comment->subject</FONT></B>";
      echo "     </TD>";
-
-     // Moderation:
-     echo "     <TD ALIGN=\"right\" ROWSPAN=\"3\" VALIGN=\"middle\" WIDTH=\"15%\">";
-     print comment_moderation($comment);
-     echo "     </TD>";
      echo "    </TR>";
 
      // Author:

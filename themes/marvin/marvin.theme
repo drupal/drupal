@@ -131,10 +131,6 @@
      print "        <td align=\"right\" width=\"5%\"><b>". t("Subject") .":</b></td>\n";
      print "        <td width=\"80%\"><b><font color=\"#666699\">$comment->subject</font></b></td>\n";
 
-     // Moderation:
-     print "        <td align=\"right\" rowspan=\"3\" valign=\"middle\" width=\"15%\">\n";
-     print comment_moderation($comment);
-     print "        </td>\n";
      print "       </tr>\n";
 
      // Author:
