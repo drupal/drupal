@@ -388,19 +388,21 @@ function user_block($op = "list", $delta = 0) {
           $output .= theme("theme_item_list", $items);
 
           $block["subject"] = t("User login");
-          $block["content"] = "<div style=\"white-space: nowrap;\">$output</div>";
+          $block["content"] = $output;
           return $block;
         }
         break;
       case 1:
         if ($user->uid) {
+          $output = "<div class=\"user-information-block\">\n";
           $output .= theme("theme_menu_list", module_invoke_all("link", "menu.create"));
           $output .= theme("theme_menu_list", module_invoke_all("link", "menu.view"));
           $output .= theme("theme_menu_list", module_invoke_all("link", "menu.settings"));
           $output .= theme("theme_menu_list", module_invoke_all("link", "menu.misc"));
+          $output .= "</div>\n";
 
           $block["subject"] = $user->name;
-          $block["content"] = "<div style=\"white-space: nowrap;\">$output</div>";
+          $block["content"] = $output;
           return $block;
         }
         break;
