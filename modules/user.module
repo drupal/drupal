@@ -125,7 +125,7 @@ function user_save($account, $array = array()) {
         $values[] = "'". md5($value) ."'";
       }
       else if (substr($key, 0, 4) !== "auth") {
-        if (in_array($key, user_fields)) {
+        if (in_array($key, $user_fields)) {
           $fields[] = check_query($key);
           $values[] = "'". check_query($value) ."'";
         }
