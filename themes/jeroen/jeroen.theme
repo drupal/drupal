@@ -112,7 +112,7 @@ PHP?>
                                     case 12: $how = "Forged"; break;
                                     default: $how = "Sneaked through";
                                   }
-                                  echo "<FONT SIZE=\"-1\">$how by ". format_username($story->userid) ." on $timestamp
+                                  echo "<FONT SIZE=\"-1\">". strtr(t("$how by %a on %b"), array("%a" => format_username($story->userid), "%b" => $timestamp, "large")) .";
                                 </FONT>
                               </TD>
                               <TD ALIGN=\"right\" BACKGROUND=\"themes/jeroen/images/menutitle.gif\" NOWRAP>
@@ -129,9 +129,9 @@ PHP?>
                                     <TD>
 
 <?PHP
-
+ 
                                       if ($story->updates)
-                                        echo "<P><FONT COLOR=\"$this->hlc2\">Editor's note:</FONT>". check_output($story->updates, 1) ."</P>";
+                                        echo "<P><FONT COLOR=\"$this->hlc2\">". t("Editor's note") .":</FONT>". check_output($story->updates, 1) ."</P>";
                                       if ($story->abstract)
                                         echo "<P>". check_output($story->abstract, 1) ."</P>";
 
@@ -197,7 +197,8 @@ PHP?>
                                   }
 
                                   if ($story->userid) {
-                                    echo "<FONT SIZE=\"-1\">$how by ". format_username($story->userid) ." on $timestamp"; ?><? echo "</FONT>
+                                    echo "<FONT SIZE=\"-1\">". strtr(t("$how by %a on %b"), array("%a" => format_username($story->userid), "%b" => $timestamp, "large")) .";
+                                    </FONT>
                               </TD>
                               <TD ALIGN=\"right\" BACKGROUND=\"themes/jeroen/images/menutitle.gif\" NOWRAP>
                                 <B><A HREF=\"search.php?category=". urlencode($story->section) ."\"><FONT COLOR=\"<? $this->fgc3; ?>\">$story->section</FONT></A></B>";
@@ -224,7 +225,7 @@ PHP?>
 
                                       if ($story->updates)
                                         echo "<P>check_output($story->abstract, 1)</P><P><FONT COLOR=\"$this->hlc2\">Editor's note by <A HREF=\"account.php?op=userinfo&uname=$story->editor\">$story->editor</A>:</FONT>$story->updates</P>";
-                                      else
+                                      else 
                                         echo check_output($story->abstract, 1);
                                       if ($story->article)
                                         echo "<P>". check_output($story->article, 1) ."</P>";
@@ -255,7 +256,7 @@ PHP?>
     } // close article function
 
     function controls() {
-      print comment_controls();
+      echo comment_controls();
     }
 
     function comment($comment, $link = "", $thread = "") {
@@ -272,24 +273,26 @@ PHP?>
       echo "                <TR>";
       echo "                  <TD>";
       echo "                    <TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"0\"WIDTH=\"100%\">";
-
+ 
       // Subject:
       echo "                      <TR>";
       echo "                        <TD ALIGN=\"right\" WIDTH=\"5%\">";
-      echo "                          <FONT COLOR=\"#FEFEFE\"><B>Subject:</B></TD><TD WIDTH=\"80%\">";
-      echo "                            <B>". check_output($subject) ."</B>";
+      echo "                          <FONT COLOR=\"#FEFEFE\"><B>". t("Subject") .":</B></TD><TD WIDTH=\"80%\">";
+      echo "                            <B>". check_output($comment->$subject) ."</B>";
       echo "                          </FONT>";
       echo "                        </TD>";
-
+ 
       // Moderation:
-      echo "                        <TD BGCOLOR=\"#6C6C6C\" BACKGROUND=\"themes/jeroen/images/menutitle.gif\" ALIGN=\"right\"ROWSPAN=\"2\" VALIGN=\"middle\" WIDTH=\"15%\">";
-                                      echo comment_moderation($comment);
+      echo "                        <TD BGCOLOR=\"#6C6C6C\" BACKGROUND=\"themes/jeroen/images/menutitle.gif\" ALIGN=\"right\" ROWSPAN=\"2\" VALIGN=\"middle\" WIDTH=\"15%\">";
+      echo "                          <FONT COLOR=\"#000000\">";
+      echo                              comment_moderation($comment);
+      echo "                          </FONT>";
       echo "                        </TD>";
       echo "                      </TR>";
-
+ 
       // Author:
       echo "                      <TR>";
-      echo "                        <TD ALIGN=\"right\"><FONT COLOR=\"#FEFEFE\">Author:</FONT></TD><TD><B>" .format_username($comment->userid) . "</B> ";
+      echo "                        <TD ALIGN=\"right\"><FONT COLOR=\"#FEFEFE\">". t("Author") .":</FONT></TD><TD><B>" .format_username($comment->userid) . "</B> ";
                                       if ($comment->userid != $anonymous) {
       // Display extra information line:
                                         if ($comment->fake_email) $info .= format_email($comment->fake_email);
@@ -299,14 +302,14 @@ PHP?>
       echo "                          <FONT COLOR=\"#FEFEFE\">on ". format_date($comment->timestamp) ."</FONT>";
       echo "                        </TD>";
       echo "                      </TR>";
-
+ 
       echo "                    </TABLE>";
       echo "                  </TD>";
       echo "                </TR>";
-
+ 
       // Print body of comment:
                   if ($comment) echo " <TR><TD BGCOLOR=\"#E7E7E7\" BACKGROUND=\"themes/jeroen/images/sketch.gif\">" . check_output($comment->comment, 1) ."</TD></TR>";
-
+ 
       // Print thread (if any):
                   if ($thread) echo " <TR><TD BGCOLOR=\"#E7E7E7\" BACKGROUND=\"themes/jeroen/images/sketch.gif\">$thread</TD></TR>";
 
@@ -320,7 +323,7 @@ PHP?>
       echo "    </TR>";
       echo "  </TABLE>";
       echo "  <BR>";
-
+ 
     } // close comment function
 
     function box($subject, $content, $options = "") {
