@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.472 2005/03/03 20:51:27 unconed Exp $
+// $Id: node.module,v 1.473 2005/03/04 00:48:22 unconed Exp $
 
 /**
  * @file
@@ -1255,7 +1255,7 @@ function node_validate($node) {
     // Validate for normal users:
     $node->uid = $user->uid ? $user->uid : 0;
     // Force defaults in case people modify the form:
-    $node_options = variable_get('node_options_'. $edit->type, array('status', 'promote'));
+    $node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));
     $node->status = in_array('status', $node_options);
     $node->moderate = in_array('moderate', $node_options);
     $node->promote = in_array('promote', $node_options);
