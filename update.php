@@ -40,7 +40,8 @@ $mysql_updates = array(
   "2003-06-04" => "update_56",
   "2003-06-08" => "update_57",
   "2003-06-08: first update since Drupal 4.2.0 release" => "update_58",
-  "2003-08-05" => "update_59"
+  "2003-08-05" => "update_59",
+  "2003-08-15" => "update_60"
 );
 
 function update_32() {
@@ -324,6 +325,10 @@ function _update_thread_structure($comments, $pid, $depth, $structure) {
   }
 
   return $structure;
+}
+
+function update_60() {
+  update_sql("ALTER TABLE forum DROP icon");
 }
 
 function _update_next_thread($structure, $parent) {

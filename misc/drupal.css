@@ -127,7 +127,7 @@ th {
   font-size: 0.9em;
   margin: 0.5em;
 }
-#forum td.posts, #forum td.topics, #forum td.last-post, #forum td.posted, #forum td.replies, #forum td.statistics, #forum td.settings, #forum td.pager {
+#forum td.created, #forum td.posts, #forum td.topics, #forum td.last-reply, #forum td.replies, #forum td.statistics, #forum td.settings, #forum td.pager {
   text-align: center;
   white-space: nowrap;
 }
@@ -196,6 +196,9 @@ th {
   text-align: left;
   margin: 0 auto;
   display: table;
+}
+.more-link {
+  text-align: right;
 }
 .node-form .form-text {
   display: block;
