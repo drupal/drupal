@@ -567,7 +567,7 @@ CREATE TABLE sessions (
   timestamp int(11) NOT NULL default '0',
   session longtext,
   KEY uid (uid),
-  KEY sid (sid),
+  PRIMARY KEY sid (sid),
   KEY timestamp (timestamp)
 ) TYPE=MyISAM;
 
