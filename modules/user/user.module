@@ -781,7 +781,7 @@ function user_pass($edit = array()) {
   if ($edit["name"] && $edit["mail"]) {
     if ($account = db_fetch_object(db_query("SELECT uid FROM users WHERE name = '". check_input($edit["name"]) ."' AND mail = '". check_input($edit["mail"]) ."'"))) {
 
-      $from = variable_get("site_mail", "root@localhost");
+      $from = variable_get("site_mail", ini_get("sendmail_from"));
       $pass = user_password();
 
       /*
@@ -867,7 +867,7 @@ function user_register($edit = array()) {
 
     watchdog("user", "new user: '". $edit["name"] ."' &lt;". $edit["mail"] ."&gt;");
 
-    $from = variable_get("site_mail", "root@localhost");
+    $from = variable_get("site_mail", ini_get("sendmail_from"));
     $pass = user_password();
 
     if (variable_get("user_register", 1) == 1) {
