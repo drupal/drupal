@@ -765,7 +765,8 @@ function page_footer() {
   }
 }
 
-$config = conf_init();
+// Load configuration variables, overriding values set in conf.php
+$conf = variable_init(isset($conf) ? $conf : array());
 
 unset($conf);
 
