@@ -208,15 +208,15 @@ CREATE TABLE item (
 CREATE TABLE locales (
   lid int(10) NOT NULL auto_increment,
   location varchar(128) NOT NULL default '',
-  string text NOT NULL,
-  da text NOT NULL,
-  fi text NOT NULL,
-  fr text NOT NULL,
-  en text NOT NULL,
-  es text NOT NULL,
-  nl text NOT NULL,
-  no text NOT NULL,
-  sw text NOT NULL,
+  string blob NOT NULL,
+  da blob NOT NULL,
+  fi blob NOT NULL,
+  fr blob NOT NULL,
+  en blob NOT NULL,
+  es blob NOT NULL,
+  nl blob NOT NULL,
+  no blob NOT NULL,
+  sw blob NOT NULL,
   PRIMARY KEY  (lid)
 ) TYPE=MyISAM;
 
