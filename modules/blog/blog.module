@@ -165,7 +165,6 @@ function blog_remove($nid) {
   $blog = node_get_object(array(nid => $nid, type => "blog"));
 
   if ($blog && $blog->uid == $user->uid) {
-    node_save(array(nid => $nid), array(status => $status[dumped]));
     node_del(array(type => "blog", nid => $nid));
   }
 }
