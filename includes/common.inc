@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.219 2003/06/20 17:43:02 dries Exp $
+// $Id: common.inc,v 1.220 2003/06/23 07:24:56 dries Exp $
 
 function conf_init() {
 
@@ -503,7 +503,7 @@ function check_url($uri) {
 }
 
 function check_form($text) {
-  return drupal_specialchars($text, 0);
+  return drupal_specialchars($text, ENT_QUOTES);
 }
 
 function check_query($text) {
