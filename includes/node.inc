@@ -177,7 +177,10 @@ function node_control($node) {
   </SCRIPT>
  <?php
 
-  $choices = array("node.php?id=$node->nid" => t("view node"), "submit.php?mod=$node->type" => t("add node"), "submit.php?mod=$node->type&op=update&id=$node->nid" => t("update node"),  "node.php?op=history&id=$node->nid" => t("view history"));
+  if ($user->id) 
+    $choices = array("node.php?id=$node->nid" => t("view node"), "submit.php?mod=$node->type" => t("add node"), "submit.php?mod=$node->type&op=update&id=$node->nid" => t("update node"),  "node.php?op=history&id=$node->nid" => t("view history"));
+  else
+    $choices = array("node.php?id=$node->nid" => t("view node"), "node.php?op=history&id=$node->nid" => t("view history"));
 
   $output .= "<FORM METHOD=\"get\" ACTION=\"\">\n";
   foreach ($choices as $key => $value) $options .= "<OPTION VALUE=\"$key\"". ("/$key" == $REQUEST_URI ? " SELECTED" : "") .">". check_select($value) ."</OPTION>\n";
