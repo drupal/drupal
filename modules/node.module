@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.393 2004/08/25 16:41:30 unconed Exp $
+// $Id: node.module,v 1.394 2004/09/06 13:26:00 unconed Exp $
 
 /**
  * @file
@@ -1044,8 +1044,11 @@ function node_validate($node) {
     }
   }
 
-  // By default, auto-generate the teaser.
-  $node->teaser = node_teaser($node->body);
+  // Auto-generate the teaser, but only if it hasn't been set (e.g. by a
+  // module-provided 'teaser' form item).
+  if (!isset($node->teaser)) {
+    $node->teaser = node_teaser($node->body);
+  }
 
   // Create a new revision when required.
   $node = node_revision_create($node);
