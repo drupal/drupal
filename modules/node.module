@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.463 2005/02/11 19:10:28 dries Exp $
+// $Id: node.module,v 1.464 2005/02/14 21:28:08 dries Exp $
 
 /**
  * @file
@@ -939,7 +939,7 @@ function node_admin_nodes() {
   }
 
   if (!$rows) {
-    $rows[] = array(array('data' => t('No posts available.'), 'colspan' => '7'));
+    $rows[] = array(array('data' => t('No posts available.'), 'colspan' => '6'));
   }
 
   $output .= theme('table', $header, $rows);
