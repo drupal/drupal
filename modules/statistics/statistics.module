@@ -171,7 +171,7 @@ function statistics_node_tracker() {
         array('data' => t('User'), 'field' => 'u.name'),
         array('data' => t('Operations')));
 
-    $result = pager_query('SELECT a.aid, a.timestamp, a.url, a.uid, u.name FROM {accesslog} a LEFT JOIN {users} u ON a.uid = u.uid WHERE a.path LIKE \'node/'. db_escape_string($node->nid) ."%'" . tablesort_sql($header), 30);
+    $result = pager_query('SELECT a.aid, a.timestamp, a.url, a.uid, u.name FROM {accesslog} a LEFT JOIN {users} u ON a.uid = u.uid WHERE a.path LIKE \'node/%d%%'" . tablesort_sql($header), 30, 0, NULL, $node->nid);
     while ($log = db_fetch_object($result)) {
       $rows[] = array(
         array('data' => format_date($log->timestamp, 'small'), 'nowrap' => 'nowrap'),
@@ -200,7 +200,7 @@ function statistics_user_tracker() {
         array('data' => t('Page'), 'field' => 'path'),
         array('data' => t('Operations')));
 
-    $result = pager_query('SELECT aid, timestamp, path, title FROM {accesslog} WHERE uid = \''. db_escape_string($account->uid) ."'" . tablesort_sql($header), 30);
+    $result = pager_query('SELECT aid, timestamp, path, title FROM {accesslog} WHERE uid = %d' . tablesort_sql($header), 30, 0, NULL, $account->uid);
     while ($log = db_fetch_object($result)) {
       $rows[] = array(
         array('data' => format_date($log->timestamp, 'small'), 'nowrap' => 'nowrap'),
@@ -304,8 +304,8 @@ function statistics_top_users() {
  * Menu callback; presents the "Top referrers" page.
  */
 function statistics_top_referrers() {
-  $query = "SELECT url, COUNT(url) AS hits, MAX(timestamp) AS last FROM {accesslog} WHERE url NOT LIKE '%". db_escape_string($_SERVER['HTTP_HOST']) ."%' AND url <> '' GROUP BY url";
-  $query_cnt = "SELECT COUNT(DISTINCT(url)) FROM {accesslog} WHERE url <> '' AND url NOT LIKE '%". db_escape_string($_SERVER['HTTP_HOST']) ."%'";
+  $query = "SELECT url, COUNT(url) AS hits, MAX(timestamp) AS last FROM {accesslog} WHERE url NOT LIKE '%%%s%%' AND url <> '' GROUP BY url";
+  $query_cnt = "SELECT COUNT(DISTINCT(url)) FROM {accesslog} WHERE url <> '' AND url NOT LIKE '%%%s%%'";
   drupal_set_title(t('Top referrers in the past %interval', array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200)))));
 
   $header = array(
@@ -315,7 +315,7 @@ function statistics_top_referrers() {
   );
 
   $query .= tablesort_sql($header);
-  $result = pager_query($query, 30, 0, $query_cnt);
+  $result = pager_query($query, 30, 0, $query_cnt, $_SERVER['HTTP_HOST']);
 
   while ($referrer = db_fetch_object($result)) {
     $rows[] = array($referrer->hits, '<a href="'. $referrer->url .'">'. _statistics_column_width($referrer->url) .'</a>', t('%time ago', array('%time' => format_interval(time() - $referrer->last))));
