@@ -69,7 +69,7 @@ function message_na() {
 }
 
 function message_throttle() {
-  return t("You exceeded the submission rate exceeded.  Please wait a few minutes and try again.");
+  return t("You exceeded the maximum submission rate.  Please wait a few minutes and try again.");
 }
 
 function drupal_goto($url) {
