@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.20 2004/09/21 18:49:54 dries Exp $
+// $Id: menu.module,v 1.21 2004/10/14 21:35:12 dries Exp $
 
 /**
  * @file
@@ -225,7 +225,8 @@ function menu_edit_item($mid = 0) {
         menu_edit_item_save($edit);
         drupal_goto('admin/menu');
       }
-      // Fall through.
+      $output .= menu_edit_item_form($edit);
+      break;
     default:
       if ($mid > 0) {
         $item = db_fetch_object(db_query('SELECT * FROM {menu} WHERE mid = %d', $mid));
