@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.50 2002/11/18 22:19:17 dries Exp $
+// $Id: system.module,v 1.51 2002/11/20 21:56:03 kjartan Exp $
 
 function system_help() {
   $output .= "<p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviors including visual and operational settings.</p>";
@@ -223,16 +223,6 @@ function system_listing($type, $directory, $required = array()) {
   $output .= form_submit(t("Save $type settings"));
 
   return form($output);
-}
-
-/**
-* Module configuration
-*
-* @group system.module
-* @return string module list
-*/
-function system_modules() {
-  // Config variables.
 }
 
 function system_admin() {
