@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.339 2004/04/21 13:56:37 dries Exp $ */
+/* $Id: common.inc,v 1.340 2004/04/21 19:43:23 dries Exp $ */
 
 /**
  * @defgroup common Core functions
@@ -348,7 +348,7 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
   fwrite($fp, $request);
 
   // Fetch response.
-  while (!feof($fp) && $data = fgets($fp, 1024)) {
+  while (!feof($fp) && $data = fread($fp, 1024)) {
     $response[] = $data;
   }
   fclose($fp);
