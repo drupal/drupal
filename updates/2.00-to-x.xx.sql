@@ -259,7 +259,7 @@ CREATE TABLE collection (
   PRIMARY KEY (cid)
 );
 
-// test data:
+# test data:
 
 INSERT INTO collection (name, types) VALUES ('Software', 'story, book, poll');
 INSERT INTO collection (name, types) VALUES ('Hardware', 'story');
