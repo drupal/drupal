@@ -103,7 +103,8 @@ $sql_updates = array(
   "2005-02-11" => "update_124",
   "2005-02-23" => "update_125",
   "2005-03-03" => "update_126",
-  "2005-03-18" => "update_127"
+  "2005-03-18" => "update_127",
+  "2005-03-21" => "update_128"
 );
 
 function update_32() {
@@ -2334,6 +2335,19 @@ function update_sql($sql) {
   else {
     return array('0', nl2br(htmlentities($sql)) ." ", "<div style=\"color: red;\">FAILED</div>\n");
   }
+}
+
+function update_128() {
+  $ret = array();
+
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql('ALTER TABLE {term_node} ADD PRIMARY KEY (tid,nid)');
+  }
+  elseif ($GLOBALS['db_type'] == 'pgsql') {
+    $ret[] = update_sql('ALTER TABLE {term_node} ADD PRIMARY KEY (tid,nid)');
+  }
+
+  return $ret;
 }
 
 ?>

@@ -649,7 +649,8 @@ CREATE INDEX term_hierarchy_parent_idx ON term_hierarchy(parent);
 
 CREATE TABLE term_node (
   nid integer NOT NULL default '0',
-  tid integer NOT NULL default '0'
+  tid integer NOT NULL default '0',
+  PRIMARY KEY (tid,nid)
 );
 CREATE INDEX term_node_nid_idx ON term_node(nid);
 CREATE INDEX term_node_tid_idx ON term_node(tid);

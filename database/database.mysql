@@ -653,7 +653,8 @@ CREATE TABLE term_node (
   nid int(10) unsigned NOT NULL default '0',
   tid int(10) unsigned NOT NULL default '0',
   KEY nid (nid),
-  KEY tid (tid)
+  KEY tid (tid),
+  PRIMARY KEY (tid,nid)
 ) TYPE=MyISAM;
 
 --
