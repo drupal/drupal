@@ -132,7 +132,7 @@ function import_bundle_block($attributes) {
 
   $items = array();
   while ($item = db_fetch_object($result)) {
-    $items[] = import_format_item($item);
+    $items[] = theme("import_theme_format_item",$item);
   }
 
   $output = "<div class=\"import-block\"><div class=\"bundle\">";
@@ -147,7 +147,7 @@ function import_feed_block($feed) {
 
   $items = array();
   while ($item = db_fetch_object($result)) {
-    $items[] = import_format_item($item);
+    $items[] = theme("import_theme_format_item", $item);
   }
 
   $output = "<div class=\"import-block\"><div class=\"feed\">";
