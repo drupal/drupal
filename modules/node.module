@@ -312,7 +312,7 @@ function node_admin() {
         print node_listing(node_query());
         break;
       case "Save settings":
-        print status(conf_save($edit));
+        print status(system_save($edit));
         print node_setting();
         break;
       case "Reset to defaults":
