@@ -188,3 +188,24 @@ CREATE TABLE item (
   attribute varchar(255) DEFAULT '' NOT NULL,
   PRIMARY KEY (iid)
 );
+
+# 31/05/01 
+
+CREATE TABLE poll (
+  lid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
+  nid int(10) unsigned DEFAULT '0' NOT NULL,
+  runtime int(10) DEFAULT '0' NOT NULL,
+  voters text NOT NULL,
+  active int(2) unsigned DEFAULT '0' NOT NULL,
+  PRIMARY KEY (lid)
+);
+
+CREATE TABLE poll_choices (
+  chid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
+  nid int(10) unsigned DEFAULT '0' NOT NULL,
+  chtext varchar(128) DEFAULT '' NOT NULL,
+  chvotes int(6) DEFAULT '0' NOT NULL,
+  chorder int(2) DEFAULT '0' NOT NULL,
+  PRIMARY KEY (chid)
+);
+
