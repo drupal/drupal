@@ -779,10 +779,13 @@ function user_login($edit = array(), $msg = '') {
       foreach (module_list() as $module) {
         if (module_hook($module, 'auth')) {
           if (module_invoke($module, 'auth', $name, $pass, $server)) {
-            if (variable_get('user_register', 1) == 1 && !user_load(array('name' => "$name@$server"))) { // Register this new user.
-              $user = user_save('', array('name' => "$name@$server", 'pass' => user_password(), 'init' => "$name@$server", 'status' => 1, "authname_$module" => "$name@$server", 'roles' => array(_user_authenticated_id())));
-              watchdog('user', "new user: $name@$server ($module ID)", l(t('edit user'), "user/$user->uid/edit"));
-              break;
+            if (variable_get('user_register', 1) == 1) {
+              $account = user_load(array('name' => "$name@$server"));
+              if (!$account->uid) { // Register this new user.
+                $user = user_save('', array('name' => "$name@$server", 'pass' => user_password(), 'init' => "$name@$server", 'status' => 1, "authname_$module" => "$name@$server", 'roles' => array(_user_authenticated_id())));
+                watchdog('user', "new user: $name@$server ($module ID)", l(t('edit user'), "user/$user->uid/edit"));
+                break;
+              }
             }
           }
         }
