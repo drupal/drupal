@@ -75,13 +75,13 @@ function theme_account($theme) {
 
 
 function theme_blocks($region, $theme) {
-  global $id, $PHP_SELF, $user;
+  global $id, $PHP_SELF, $status, $user;
 
   switch (strrchr($PHP_SELF, "/")) {
     case "/node.php":
       if ($region != "left") {
         if ($user->id) $node = db_fetch_object(db_query("SELECT * FROM nodes WHERE nid = '$id'"));
-        if ($node->status == 1) theme_moderation_results($theme, $node);
+        if ($node->status == $status[queued]) theme_moderation_results($theme, $node);
         // else theme_new_headlines($theme);
       }
       break;
@@ -113,6 +113,10 @@ function theme_moderation_results($theme, $node) {
   }
 }
 
+/*
+//
+// depricated -> new block strategy
+//
 function theme_new_headlines($theme, $num = 10) {
   $result = db_query("SELECT nid, title FROM nodes WHERE status = 2 AND type = 'story' ORDER BY nid DESC LIMIT $num");
   while ($node = db_fetch_object($result)) $content .= "<LI><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></LI>\n";
@@ -132,5 +136,6 @@ function theme_old_headlines($theme, $num = 10) {
   }
   $theme->box(t("Older headlines"), $content);
 }
+*/
 
 ?>

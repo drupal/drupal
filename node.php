@@ -2,30 +2,32 @@
 
 include "includes/common.inc";
 
-function node_update($node) {
-}
-
 function node_history($node) {
+  global $status;
+  if ($node->status == $status[expired] || $node->status == $status[posted]) {
+    $output .= "<DT><B>". format_date($node->timestamp) ." by ". format_username($node->userid) .":</B></DT><DD>". check_output($node->log, 1) ."<P></DD>";
+  }
+  if ($node->pid) {
+    $output .= node_history(node_get_object("nid", $node->pid));
+  }
+  return $output;
 }
 
 function node_refers($node) {
+  print "under construction";
 }
 
 $node = ($title ? node_get_object(title, check_input($title)) : node_get_object(nid, check_input($id)));
 
 if ($node && node_visible($node)) {
   switch ($op) {
-    case "update":
-//      node_update($node);
-//      break;
     case "history":
-//      node_history($node);
-//      break;
-    case "referers":
-//      node_referers($node);
-//      break;
+      $theme->header();
+      $theme->box(t("History"), node_info($node) ."<DL>". node_history($node) ."</DL>");
+      $theme->footer();
+      break;
     default:
-      node_view($node);
+      node_view($node, 1);
   }
 }
 else {

@@ -15,7 +15,7 @@ function affiliate_block() {
 
   $result = db_query("SELECT * FROM affiliates ORDER BY name");
 
-  $content .= "<SCRIPT TYPE=\"\">\n";
+  $content .= "<SCRIPT>\n";
   $content .= "  <!--//\n";
   $content .= "    function gotosite(site) {\n";
   $content .= "      if (site != \"\") {\n";

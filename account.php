@@ -68,35 +68,35 @@ function account_user_edit() {
 
     $output .= "<B>". t("Username") .":</B><BR>\n";
     $output .= "$user->userid<P>\n";
-    $output .= "<I>". t("Required, unique, and can not be changed.") ."</I><P>\n";
+    $output .= "<I><SMALL>". t("Required, unique, and can not be changed.") ."</SMALL></I><P>\n";
 
     $output .= "<B>". t("Real name") .":</B><BR>\n";
     $output .= "<INPUT NAME=\"edit[name]\" MAXLENGTH=\"55\" SIZE=\"30\" VALUE=\"$user->name\"><BR>\n";
-    $output .= "<I>". t("Optional") .".</I><P>\n";
+    $output .= "<I><SMALL>". t("Optional") .".</SMALL></I><P>\n";
 
     $output .= "<B>". t("Real e-mail address") .":</B><BR>\n";
     $output .= "$user->real_email<P>\n";
-    $output .= "<I>". t("Required, unique, can not be changed.") ." ". t("Your real e-mail address is never displayed publicly: only needed in case you lose your password.") ."</I><P>\n";
+    $output .= "<I><SMALL>". t("Required, unique, can not be changed.") ." ". t("Your real e-mail address is never displayed publicly: only needed in case you lose your password.") ."</SMALL></I><P>\n";
 
     $output .= "<B>". t("Fake e-mail address") .":</B><BR>\n";
     $output .= "<INPUT NAME=\"edit[fake_email]\" MAXLENGTH=\"55\" SIZE=\"30\" VALUE=\"$user->fake_email\"><BR>\n";
-    $output .= "<I>". t("Optional") .". ". t("Displayed publicly so you may spam proof your real e-mail address if you want.") ."</I><P>\n";
+    $output .= "<I><SMALL>". t("Optional") .". ". t("Displayed publicly so you may spam proof your real e-mail address if you want.") ."</SMALL></I><P>\n";
 
     $output .= "<B>". t("Homepage") .":</B><BR>\n";
     $output .= "<INPUT NAME=\"edit[url]\" MAXLENGTH=\"55\" SIZE=\"30\" VALUE=\"$user->url\"><BR>\n";
-    $output .= "<I>". t("Optional") .". ". t("Make sure you enter fully qualified URLs only.  That is, remember to include \"http://\".") ."</I><P>\n";
+    $output .= "<I><SMALL>". t("Optional") .". ". t("Make sure you enter fully qualified URLs only.  That is, remember to include \"http://\".") ."</SMALL></I><P>\n";
 
     $output .= "<B>". t("Bio") .":</B> (". t("maximal 255 characters") .")<BR>\n";
     $output .= "<TEXTAREA NAME=\"edit[bio]\" COLS=\"35\" ROWS=\"5\" WRAP=\"virtual\">$user->bio</TEXTAREA><BR>\n";
-    $output .= "<I>". t("Optional") .". ". t("This biographical information is publicly displayed on your user page.") ."<BR>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</I><P>\n";
+    $output .= "<I><SMALL>". t("Optional") .". ". t("This biographical information is publicly displayed on your user page.") ."<BR>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</SMALL></I><P>\n";
 
     $output .= "<B>". t("Signature") .":</B> (". t("maximal 255 characters") .")<BR>\n";
     $output .= "<TEXTAREA NAME=\"edit[signature]\" COLS=\"35\" ROWS=\"5\" WRAP=\"virtual\">$user->signature</TEXTAREA><BR>\n";
-    $output .= "<I>". t("Optional") .". ". t("This information will be publicly displayed at the end of your comments.") ."<BR>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</I><P>\n";
+    $output .= "<I><SMALL>". t("Optional") .". ". t("This information will be publicly displayed at the end of your comments.") ."<BR>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</SMALL></I><P>\n";
 
     $output .= "<B>". t("Password") .":</B><BR>\n";
     $output .= "<INPUT TYPE=\"password\" NAME=\"edit[pass1]\" SIZE=\"10\" MAXLENGTH=\"20\"> <INPUT TYPE=\"password\" NAME=\"edit[pass2]\" SIZE=\"10\" MAXLENGTH=\"20\"><BR>\n";
-    $output .= "<I>". t("Enter your new password twice if you want to change your current password or leave it blank if you are happy with your current password.") ."</I><P>\n";
+    $output .= "<I><SMALL>". t("Enter your new password twice if you want to change your current password or leave it blank if you are happy with your current password.") ."</SMALL></I><P>\n";
 
     $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Save user information") ."\"><BR>\n";
     $output .= "</FORM>\n";
@@ -131,25 +131,23 @@ function account_site_edit() {
     $output .= "<B>". t("Theme") .":</B><BR>\n";
     foreach ($themes as $key=>$value) $options1 .= " <OPTION VALUE=\"$key\"". (($user->theme == $key) ? " SELECTED" : "") .">$key - $value[1]</OPTION>\n";
     $output .= "<SELECT NAME=\"edit[theme]\">\n$options1</SELECT><BR>\n";
-    $output .= "<I>". t("Selecting a different theme will change the look and feel of the site.") ."</I><P>\n";
+    $output .= "<I><SMALL>". t("Selecting a different theme will change the look and feel of the site.") ."</SMALL></I><P>\n";
 
     $output .= "<B>". t("Timezone") .":</B><BR>\n";
     $date = time() - date("Z");
     for ($zone = -43200; $zone <= 46800; $zone += 3600) $options2 .= " <OPTION VALUE=\"$zone\"". (($user->timezone == $zone) ? " SELECTED" : "") .">". date("l, F dS, Y - h:i A", $date + $zone) ." (GMT ". $zone / 3600 .")</OPTION>\n";
     $output .= "<SELECT NAME=\"edit[timezone]\">\n$options2</SELECT><BR>\n";
-    $output .= "<I>". t("Select what time you currently have and your timezone settings will be set appropriate.") ."</I><P>\n";
+    $output .= "<I><SMALL>". t("Select what time you currently have and your timezone settings will be set appropriate.") ."</SMALL></I><P>\n";
 
-    if ($languages) {
-      $output .= "<B>". t("Language" ) .":</B><BR>\n";
-      foreach ($languages as $key=>$value) $options3 .= " <OPTION VALUE=\"$key\"". (($user->language == $key) ? " SELECTED" : "") .">$value - $key</OPTION>\n";
-      $output .= "<SELECT NAME=\"edit[language]\">\n$options3</SELECT><BR>\n";
-      $output .= "<I>". t("Selecting a different language will change the language the site.") ."</I><P>\n";
-    }
+    $output .= "<B>". t("Language" ) .":</B><BR>\n";
+    foreach ($languages as $key=>$value) $options3 .= " <OPTION VALUE=\"$key\"". (($user->language == $key) ? " SELECTED" : "") .">$value - $key</OPTION>\n";
+    $output .= "<SELECT NAME=\"edit[language]\">\n$options3</SELECT><BR>\n";
+    $output .= "<I><SMALL>". t("Selecting a different language will change the language the site.") ."</SMALL></I><P>\n";
 
     $output .= "<B>". t("Maximum number of items to display") .":</B><BR>\n";
     for ($nodes = 10; $nodes <= 30; $nodes += 5) $options4 .= "<OPTION VALUE=\"$nodes\"". (($user->nodes == $nodes) ? " SELECTED" : "") .">$nodes</OPTION>\n";
     $output .= "<SELECT NAME=\"edit[nodes]\">\n$options4</SELECT><BR>\n";
-    $output .= "<I>". t("The maximum number of nodes that will be displayed on the main page.") ."</I><P>\n";
+    $output .= "<I><SMALL>". t("The maximum number of nodes that will be displayed on the main page.") ."</SMALL></I><P>\n";
 
     foreach ($cmodes as $key=>$value) $options5 .= "<OPTION VALUE=\"$key\"". ($user->mode == $key ? " SELECTED" : "") .">$value</OPTION>\n";
     $output .= "<B>". t("Comment display mode") .":</B><BR>\n";
@@ -162,7 +160,7 @@ function account_site_edit() {
     for ($i = -1; $i < 6; $i++) $options7 .= " <OPTION VALUE=\"$i\"". ($user->threshold == $i ? " SELECTED" : "") .">Filter - $i</OPTION>";
     $output .= "<B>". t("Comment filter") .":</B><BR>\n";
     $output .= "<SELECT NAME=\"edit[threshold]\">$options7</SELECT><BR>\n";
-    $output .= "<I>". t("Comments that scored less than this threshold setting will be ignored.  Anonymous comments start at 0, comments of people logged on start at 1 and moderators can add and subtract points.") ."</I><P>\n";
+    $output .= "<I><SMALL>". t("Comments that scored less than this threshold setting will be ignored.  Anonymous comments start at 0, comments of people logged on start at 1 and moderators can add and subtract points.") ."</SMALL></I><P>\n";
 
     $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Save site settings") ."\"><BR>\n";
     $output .= "</FORM>\n";
@@ -197,7 +195,7 @@ function account_content_edit() {
       $entry = db_fetch_object(db_query("SELECT * FROM layout WHERE block = '$block->name' AND user = '$user->id'"));
       $output .= "<INPUT TYPE=\"checkbox\" NAME=\"edit[$block->name]\"". ($entry->user ? " CHECKED" : "") ."> ". t($block->name) ."<BR>\n";
     }
-    $output .= "<P><I>". t("Enable the blocks you would like to see displayed in the side bars.") ."</I></P>\n";
+    $output .= "<P><I><SMALL>". t("Enable the blocks you would like to see displayed in the side bars.") ."</SMALL></I></P>\n";
     $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Save content settings") ."\">\n";
     $output .= "</FORM>\n";
 
@@ -224,7 +222,7 @@ function account_content_save($edit) {
 }
 
 function account_user($uname) {
-  global $user, $theme;
+  global $user, $status, $theme;
 
   function module($name, $module, $username) {
     global $theme;
@@ -256,7 +254,7 @@ function account_user($uname) {
     $block1 .= "</TABLE>\n";
 
 /*
-    $result = db_query("SELECT c.cid, c.pid, c.lid, c.subject, c.timestamp, n.title AS node FROM comments c LEFT JOIN users u ON u.id = c.author LEFT JOIN nodes ON n.id = c.lid WHERE u.userid = '$uname' AND n.status = 2 AND s.timestamp > ". (time() - 1209600) ." ORDER BY cid DESC LIMIT 10");
+    $result = db_query("SELECT c.cid, c.pid, c.lid, c.subject, c.timestamp, n.title AS node FROM comments c LEFT JOIN users u ON u.id = c.author LEFT JOIN nodes ON n.id = c.lid WHERE u.userid = '$uname' AND n.status = '$status[posted]' AND s.timestamp > ". (time() - 1209600) ." ORDER BY cid DESC LIMIT 10");
     while ($comment = db_fetch_object($result)) {
       $block2 .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
       $block2 .= " <TR><TD ALIGN=\"right\"><B>". t("Comment") .":</B></TD><TD><A HREF=\"node.php?id=$comment->lid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A></TD></TR>\n";
@@ -427,9 +425,9 @@ function account_track_comments() {
 }
 
 function account_track_nodes() {
-  global $theme, $user;
+  global $status, $theme, $user;
 
-  $result = db_query("SELECT n.nid, n.type, n.title, n.timestamp, COUNT(c.cid) AS count FROM nodes n LEFT JOIN comments c ON c.lid = n.nid WHERE n.status = '2' AND n.author = '$user->id' GROUP BY n.nid DESC");
+  $result = db_query("SELECT n.nid, n.type, n.title, n.timestamp, COUNT(c.cid) AS count FROM nodes n LEFT JOIN comments c ON c.lid = n.nid WHERE n.status = '$status[posted]' AND n.author = '$user->id' GROUP BY n.nid DESC");
 
   while ($node = db_fetch_object($result)) {
     $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
@@ -446,11 +444,11 @@ function account_track_nodes() {
 }
 
 function account_track_site() {
-  global $theme, $user, $site_name;
+  global $status, $theme, $user, $site_name;
 
   $period = 259200; // 3 days
 
-  $sresult = db_query("SELECT n.title, n.nid, COUNT(c.lid) AS count FROM comments c LEFT JOIN nodes n ON c.lid = n.nid WHERE n.status = 2 AND ". time() ." - n.timestamp < $period GROUP BY c.lid ORDER BY n.timestamp DESC LIMIT 10");
+  $sresult = db_query("SELECT n.title, n.nid, COUNT(c.lid) AS count FROM comments c LEFT JOIN nodes n ON c.lid = n.nid WHERE n.status = '$status[posted]' AND ". time() ." - n.timestamp < $period GROUP BY c.lid ORDER BY n.timestamp DESC LIMIT 10");
   while ($node = db_fetch_object($sresult)) {
     $output .= "<LI>". format_plural($node->count, "comment", "comments") ." ". t("attached to node") ." '<A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A>':</LI>";
 
