@@ -1,5 +1,5 @@
 <?php
-// $Id: session.inc,v 1.5 2004/01/13 19:25:36 dries Exp $
+// $Id: session.inc,v 1.6 2004/01/17 10:06:04 dries Exp $
 
 session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
 session_start();
@@ -17,7 +17,7 @@ function sess_close() {
 function sess_read($key) {
   global $user;
 
-  $result = db_query_range("SELECT u.*, s.*, r.name AS role FROM {users} u INNER JOIN {role} r ON u.rid = r.rid INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = '%s' AND u.status < 3", $key, 0, 1);
+  $result = db_query_range("SELECT u.*, s.*, r.name AS role FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid LEFT JOIN {role} r ON u.rid = r.rid WHERE s.sid = '%s' AND u.status < 3", $key, 0, 1);
 
   if (!db_num_rows($result)) {
     $result = db_query("SELECT u.*, r.name AS role FROM {users} u INNER JOIN {role} r ON u.rid = r.rid WHERE u.uid = 0");
