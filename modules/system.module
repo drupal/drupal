@@ -194,7 +194,7 @@ function system_view_general() {
   $period['1000000000'] = t('Never');
   $group = form_textfield(t('Default 403 (access denied) page'), 'site_403', variable_get('site_403', ''), 70, 70, t('This page is displayed when the requested document is denied to the current user.  If you are not using clean URLs, specify the part after "?q=". If unsure, specify nothing.'));
   $group .= form_textfield(t('Default 404 (not found) page'), 'site_404', variable_get('site_404', ''), 70, 70, t('This page is displayed when no other content matches the requested document.  If you are not using clean URLs, specify the part after "?q=". If unsure, specify nothing.'));
-  $group .= form_select(t('Error reporting'), 'error_level', variable_get('error_level', 1), array('Write errors to the log', 'Write errors to the log and to the screen'), t('Where Drupal, PHP and SQL errors are logged. On a production server it is recommended that errors are only written to the error log.  On a test server it can be helpful to write logs to the screen.'));
+  $group .= form_select(t('Error reporting'), 'error_level', variable_get('error_level', 1), array(t('Write errors to the log'), t('Write errors to the log and to the screen')), t('Where Drupal, PHP and SQL errors are logged. On a production server it is recommended that errors are only written to the error log. On a test server it can be helpful to write logs to the screen.'));
   $group .= form_select(t('Discard log entries older than'), 'watchdog_clear', variable_get('watchdog_clear', 604800), $period, t('The time log entries should be kept.  Older entries will be automatically discarded.  Requires crontab.'));
 
   $output .= form_group(t('Error handling'), $group);

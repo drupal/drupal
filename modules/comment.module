@@ -955,7 +955,7 @@ function comment_admin_edit($cid) {
     $form .= form_textfield(t('Subject'), 'subject', $comment->subject, 70, 128);
     $form .= form_textarea(t('Comment'), 'comment', $comment->comment, 70, 15, '');
     $form .= filter_form('format', $comment->format);
-    $form .= form_radios(t('Status'), 'status', $comment->status, array('published', 'not published'));
+    $form .= form_radios(t('Status'), 'status', $comment->status, array(t('published'), t('not published')));
     $form .= form_hidden('cid', $cid);
     $form .= form_submit(t('Submit'));
     print theme('page', form($form));
@@ -1164,7 +1164,7 @@ function comment_vote_settings($mid = 0) {
     $vote = db_fetch_object(db_query('SELECT vote, weight FROM {moderation_votes} WHERE mid = %d', $mid));
   }
 
-  $output .= '<br /><h3>'. (isset($mid) ? 'Edit' : 'Add new') .' moderation option</h3>';
+  $output .= '<br /><h3>'. (isset($mid) ? t('Edit') : t('Add new')) .' moderation option</h3>';
   $form .= form_textfield(t('Vote'), 'vote', $vote->vote, 32, 64, t('The name of this vote.  Example: "off topic", "excellent", "sucky".'));
   $form .= form_textfield(t('Weight'), 'weight', $vote->weight, 32, 64, t('Used to order votes in the comment control box; heavier sink.'));
   if ($mid) {
@@ -1201,7 +1201,7 @@ function comment_threshold_settings($fid = 0) {
     drupal_set_message(t('The threshold has been added.'));
   }
 
-  $output .= '<h3>Comment threshold overview</h3>';
+  $output .= '<h3>'. t('Comment threshold overview') .'</h3>';
 
   // load up and show any thresholds previously defined.
   $header = array(t('Name'), t('Minimum score'), t('Operations'));
@@ -1218,7 +1218,7 @@ function comment_threshold_settings($fid = 0) {
     $filter = db_fetch_object(db_query('SELECT filter, fid, minimum FROM {moderation_filters} WHERE fid = %d', $fid));
   }
 
-  $output .= '<br /><h3>'. (isset($fid) ? 'Edit' : 'Add new') .' threshold</h3>';
+  $output .= '<br /><h3>'. (isset($fid) ? t('Edit') : t('Add new')) .' threshold</h3>';
   $form .= form_textfield(t('Threshold name'), 'filter', $filter->filter, 32, 64, t('The name of this threshold. Example: "good comments", "+1 comments", "everything".'));
   $form .= form_textfield(t('Minimum score'), 'minimum', $filter->minimum, 32, 64, t('Show all comments whose score is larger or equal to the provided minimal score. Range: -127 +128'));
   if ($fid) {

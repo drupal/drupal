@@ -431,7 +431,7 @@ function statistics_admin_content() {
   $result = pager_query($sql, 20); // WHERE s.%s <> '0'
 
   while ($nid = db_fetch_object($result)) {
-    $rows[] = array(l($nid->title, 'node/'. $nid->nid, array('title' => t('View this posting.'))), $nid->daycount, $nid->totalcount, format_date($nid->timestamp, 'small'), l('track title', 'admin/logs/hits/page/'. urlencode($nid->title)));
+    $rows[] = array(l($nid->title, 'node/'. $nid->nid, array('title' => t('View this posting.'))), $nid->daycount, $nid->totalcount, format_date($nid->timestamp, 'small'), l(t('track title'), 'admin/logs/hits/page/'. urlencode($nid->title)));
   }
   if ($pager = theme('pager', NULL, 20, 0, tablesort_pager())) {
     $rows[] = array(array('data' => $pager, 'colspan' => 5));
