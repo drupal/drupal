@@ -394,6 +394,7 @@ function import_refresh($feed) {
       db_query("DELETE FROM item WHERE ". implode(" OR ", array_slice($items, 0, - 50)));
     }
 
+    cache_clear_all();
   }
   else {
     return t("failed to parse RSS feed '%site': no data.", array("%site" => $feed["tite"]));
