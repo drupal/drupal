@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.287 2003/11/07 19:03:35 dries Exp $
+// $Id: node.module,v 1.288 2003/11/07 19:26:10 dries Exp $
 
 function node_help($section = "admin/help#node") {
   global $mod;
@@ -1142,7 +1142,7 @@ function node_form($edit, $error = NULL) {
     $options .= form_checkbox(t("Create new revision"), "revision", 1, isset($edit->revision) ? $edit->revision : variable_get("node_revision_$edit->type", 0));
 
     $output .= "<div class=\"options\">";
-    $output .= form_group("Options", $options);
+    $output .= form_group(t("Options"), $options);
     $output .= "</div>\n";
 
     $extras .= implode("</div><div class=\"extra\">", node_invoke_nodeapi($edit, "form admin"));
