@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.264 2003/11/28 20:03:00 dries Exp $
+// $Id: user.module,v 1.265 2003/11/28 20:58:20 dries Exp $
 
 /*** Common functions ******************************************************/
 
@@ -372,7 +372,7 @@ function user_block($op = "list", $delta = 0) {
         if (user_access("access content")) {
           $result = db_query_range("SELECT uid, name FROM {users} WHERE status != '0' ORDER BY uid DESC", 0, 5);
           while ($account = db_fetch_object($result)) {
-            $items[] = l((strlen($account->name) > 15 ? substr($account->name, 0, 15) . '...' : $account->name), "user/view/$account->uid");
+            $items[] = format_name($account);
           }
 
           $output = theme("user_list", $items);
