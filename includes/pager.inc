@@ -60,20 +60,21 @@ function pager_query($query, $limit = 10, $element = 0, $count_query = NULL) {
     $args = $args[0];
   }
 
-  // Count the total number of records in this query.
+  // Construct a count query if none was given.
   if (!isset($count_query)) {
     $count_query = preg_replace(array('/SELECT.*?FROM/As', '/ORDER BY .*/'), array('SELECT COUNT(*) FROM', ''), $query);
   }
-  $pager_total[$element] = db_result(db_query($count_query, $args));
 
   // Convert comma-separated $from to an array, used by other functions.
   $pager_from_array = explode(',', $from);
 
-  if (count($args)) {  
-    return db_query_range($query, $args, (int)$pager_from_array[$element], (int)$limit);  
-  }  
-  else {  
-    return db_query_range($query, (int)$pager_from_array[$element], (int)$limit);  
+  if (count($args)) {
+    $pager_total[$element] = db_result(db_query($count_query, $args));
+    return db_query_range($query, $args, (int)$pager_from_array[$element], (int)$limit);
+  }
+  else {
+    $pager_total[$element] = db_result(db_query($count_query));
+    return db_query_range($query, (int)$pager_from_array[$element], (int)$limit);
   }
 }
 
