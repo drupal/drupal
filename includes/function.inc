@@ -16,8 +16,7 @@ function check_export($message) {
 
 function check_textarea($message) {
   global $allowed_html;
-  return strip_tags(stripslashes($message), $allowed_html);
-  // return htmlspecialchars(strip_tags(stripslashes($message), $allowed_html));
+  return htmlspecialchars(strip_tags(stripslashes($message), $allowed_html));
 }
 
 function check_input($message) {
