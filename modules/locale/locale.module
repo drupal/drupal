@@ -60,14 +60,14 @@ function locale_link($type) {
 }
 
 function locale_delete($lid) {
-  db_query("DELETE FROM locales WHERE lid = '$lid'");
+  db_query("DELETE FROM locales WHERE lid = '%d'", $lid);
   locale_refresh_cache();
 }
 
 function locale_save($lid) {
   global $edit;
   foreach ($edit as $key=>$value) {
-    db_query("UPDATE locales SET $key = '%s' WHERE lid = '$lid'", $value);
+    db_query("UPDATE locales SET $key = '%s' WHERE lid = '%d'", $value, $lid);
   }
   locale_refresh_cache();
   // delete form data so it will remember where it came from
