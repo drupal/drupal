@@ -619,12 +619,12 @@ function form_submit($value) {
  * @param $script  script to be invoked; optional, defaults to node
  * @param $anchor  optional, anchor name
  */
-function drupal_url($args = array(), $script = "node", $anchor = "") {
+function drupal_url($args = array(), $script = "node", $anchor = 0) {
   $t = array();
   foreach ($args as $key => $value) {
     $t[] = "$key=". urlencode($value);
   }
-  return "$script.php?". implode("&amp;", $t) . ($anchor != "" ? "#". $anchor : "");
+  return "$script.php?". implode("&amp;", $t) . ($anchor ? "#$anchor" : "");
 }
 
 /**
