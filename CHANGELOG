@@ -1,0 +1,28 @@
+drupal 1.xx, xx/xx/2001
+-----------------------
+- rewrote the comment/discussion code:
+    * comment navigation should be less confusing now additional/alternative
+      display and order methods have been added.
+    * modules can be extended with a "comment system" as they can embed the
+      existing comment code without having to write duplicate code.
+- added section manager:
+    * story sections can be maintained from the administration pages.
+    * makes the open submission more adaptive in that you can set individual
+      post, dump and expiration thresholds for each section according to the
+      story type and urgency level: some section do not really "expire" and
+      stay interesting and active as time passes by, whereas news-related
+      stories are only considered "hot" over a short period of time.
+- multiple vhosts + multiple directories:
+    * you can setup multiple drupal sites on top of the same physical source
+      tree either by using vhosts or sub-directories
+- added "user ratings" similar to SlashCode's karma or Scoop's mojo.
+- added search infractructure:
+    * better search page + search functionality in administration pages.
+- various updates:
+    * improved cron-module
+    * improved module-module
+    * revised documentation
+
+drupal 1.00, 15/01/2001
+-----------------------
+- initial release

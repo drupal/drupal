@@ -24,8 +24,8 @@ function diary_find($keys) {
 
 function diary_search() {
   global $keys, $mod;
-  search_form($keys);
-  search_data($keys, $mod);
+  print search_form($keys);
+  print search_data($keys, $mod);
 }
 
 function diary_page_overview($num = 20) {
