@@ -25,32 +25,32 @@ function help_glossary() {
   $output .= "<dt>Node</dt><dd>The basic data unit in Drupal. Everything is a node or an extention of a node.</dd>";
   $output .= "<dt>Public</dt><dd>See published.</dd>";
   $output .= "<dt>Published</dt><dd>A node that is viewable by everyone. (See unpublished.)</dd>";
-  $output .= "<dt>Role</dt><dd>You can classify users into roles, for the purpose of setting lots of users' permissions at once.</dd>";
-  $output .= "<dt>Taxonomy</dt><dd>A division of a collection of things into ordered, classified groups. (See ". l("taxonomy help","admin/taxonomy/help") .")</dd>";
+  $output .= "<dt>Role</dt><dd>A classification users are placed into for the purpose of setting users' permissions.</dd>";
+  $output .= strtr("<dt>Taxonomy</dt><dd>A division of a collection of things into ordered, classified groups. (See %taxonomy.)</dd>", array("%taxonomy" => l(t("taxonomy help"), "admin/taxonomy/help")));
   $output .= "<dt>Unpublished</dt><dd>A node that is only viewable by administrators and moderators.</dd>";
   $output .= "<dt>User</dt><dd>A person who has an account at your Drupal site, and is logged in with that account.</dd>";
-  $output .= "<dt>Visitor</dt><dd>A person who does not have an account at your Drupal site or a person who has an account at your Drupal bite but is <u>not</u> logged in with that account. Also termed \"anonymous user\".</dd>";
+  $output .= "<dt>Visitor</dt><dd>A person who does not have an account at your Drupal site or a person who has an account at your Drupal site but is <u>not</u> logged in with that account. Also termed \"anonymous user\".</dd>";
   $output .= "</dl>";
-  return t($output);
 
+  return t($output);
 }
 
 function help_admin() {
+  $output = "";
 
   foreach (module_list() as $name) {
     if (module_hook($name, "help")) {
-      $links[] = l($name, "admin/help#$name");
+      $temp = module_invoke($name, "help", "admin/".$name."/help");
+      if (!empty($temp)) {
+        $links[] = l($name, "admin/help#$name");
+  $output .= "<h2><a id=\"$name\">". ucfirst($name) ." module</a></h2>";
+        $output .= $temp;
+      }
     }
   }
 
   print "<small>". implode(" &middot; ", $links) ."</small><hr />";
-
-  foreach (module_list() as $name) {
-    if (module_hook($name, "help")) {
-      print "<h2><a id=\"$name\">". ucfirst($name) ." module</a></h2>";
-      print module_invoke($name, "help");
-    }
-  }
+  print $output;
 }
 
 ?>

@@ -1,10 +1,27 @@
 <?php
 // $Id$
 
+function archive_help($section) {
+  $output = "";
+
+  switch ($section) {
+    case 'admin/system/modules':
+      $output = "Displays a calendar to navigate old content.";
+      break;
+    case 'admin/system/modules/archive':
+      $output = "Choose the starting \"day of the week\" for the displayed calendar block.";
+      break;
+  }
+
+  return t($output);
+}
 function archive_system($field){
-  $system["description"] = t("Displays a calendar to navigate old content.");
-  $system["admin_help"] = t("Choose the starting \"day of the week\" for the displayed calendar block.");
-  return $system[$field];
+  $output = "";
+
+  if ($field == "description") { $output = archive_help("admin/system/modules"); }
+  else if ($field == "admin_help") { $output = archive_help("admin/system/modules/archive"); };
+
+  return $output;
 }
 
 function archive_calendar($original = 0) {

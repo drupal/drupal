@@ -9,17 +9,35 @@ function status($message) {
   }
 }
 
+function admin_help($section) {
+  $output = "";
+
+  switch ($section) {
+    case 'admin/system/modules':
+      $output .= "Handles the administration pages.";
+      break;
+    case 'admin':
+      $output .= "Welcome to the administration section. Below are the most recent system events.  To get started please choose an item in the left column. If there is an arrow it will expand into a submenu. To jump up a level use the link,bread crumbs, above this block of text. To return to the home page click on the site name, and to go to Drupal's home page click on Druplicon, the drop on to the right.";
+      break;
+    case 'admin':
+      $output = "This is a complete overview of the site administration page.";
+      break;
+  }
+
+  return t($output);
+}
 function admin_system($field){
-  $system["description"] = t("Handles the administration pages.");
-  return $system[$field];
+  $output = "";
+
+  if ($field == "description") { $output = admin_help("admin/system/modules"); }
+
+  return $output;
 }
 
 function admin_link($type) {
   if ($type == "admin") {
-    $help["admin"] = t("Welcome to the administration page. Below are the most recent system events.  To get started please choose an item in the left column. If there is an arrow it will expand into a submenu. To jump up a level use the link above this block of text. To return to the home page click on the site name, and to go to Drupal's home page click on Druplicon, the drop on to the right.", array("%sitemonitor" => url("admin/watchdog")));
-    $help["overview"] = t("This is a complete overview of the site administration page.");
-    menu("admin", "Administration", NULL, $help["admin"]);
-    menu("admin/overview", "sitemap", "overview_callback", $help["overview"], 8);
+    menu("admin", "Administration", NULL, admin_help("admin"));
+    menu("admin/overview", "sitemap", "overview_callback", admin_help("admin/overview"), 8);
   }
 }
 

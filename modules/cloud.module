@@ -1,25 +1,42 @@
 <?php
 // $Id$
 
-function cloud_help($type = "administrator") {
-  if ($type == "user") {
-    $output .= "<p>". t("The cloud monitor tracks or crawls other interesting web sites and displays their latest modification dates.  It acts as a link watcher such that you can keep an eye on the other sites in our cloud.") ."</p>";
-  }
-  else {
-    $output .= "The cloud monitor tracks or crawls other interesting web sites and displays their last modification dates.  Visitors to the host site learn about relevant sites and can easily see if there is new content.  Here is how it works:";
-    $output .= "<ul>";
-    $output .= " <li>The site administrator enters names and URLs of the relevant pages on the cloud monitor administration page.</li>";
-    $output .= " <li>Drupal's cron function, triggers the cloud module to check all the registered web sites for recent changes or updates.  (A page is updated when there is a <i>x</i>-byte difference since the last time it checked, where <i>x</i> is a configuration option.)</li>";
-    $output .= " <li>The module exports both a page and a block that display the registered sites ordered by their last modification date.</li>";
-    $output .= "</ul>";
+function cloud_help($section = "admin/syndication/cloud/help") {
+  $output = "";
+
+  switch ($section) {
+    case 'admin/help':
+    case 'admin/cloud/help':
+    case 'admin/syndication/cloud/help':
+      $output .= "The cloud monitor tracks or crawls other interesting web sites and displays their last modification dates.  Visitors to the host site learn about relevant sites and can easily see if there is new content.  Here is how it works:";
+      $output .= "<ul>";
+      $output .= strtr("<li>The site administrator enters names and URLs of the relevant pages on the %cloud-add page.</li>", array("%cloud-add" => l(t("content syndication &raquo; site cloud &raquo; add new site"), "admin/syndication/cloud/add") ));
+      $output .= "<li>Drupal's cron function, triggers the cloud module to check all the registered web sites for recent changes or updates.  (A page is updated when there is an <i>x</i>-byte difference since the last time it checked, where <i>x</i> is a configuration option.)</li>";
+      $output .= " <li>The module exports both a page and a block that display the registered sites ordered by their last modification date.</li>";
+      $output .= "</ul>";
+      break;
+    case 'cloud':
+      $output .= "<p>The cloud monitor tracks or crawls other interesting web sites and displays their latest modification dates.  It acts as a link watcher such that you can keep an eye on the other sites in the cloud.</p>";
+      break;
+    case 'admin/system/modules':
+      $output = "Tracks other sites and displays last date changed.";
+      break;
+    case 'admin/syndication/cloud':
+      $output = strtr("The cloud monitor tracks or crawls other interesting web sites and displays their last modification dates. Visitors to this site learn about other relevant sites and can easily see if there is new content. To get this working you <b>must</b> setup cron support. To get the site cloud block to display you must turn on the <B>Site bloud block</b> in %block. To go to a monitored site, click on the site name, to immediately load and/or update the record for a site, click on \"update site\", to delete a site go to \"edit site\". ", array("%block" => l(t("block management"), "admin/block") ));
+      break;
+    case 'admin/syndication/cloud/add':
+      $output = "Add a site to the site cloud. Don't forget the \"http://\" for your URLs.";
+      break;
   }
 
-  return $output;
+  return t($output);
 }
 
 function cloud_system($field){
-  $system["description"] = t("Tracks other sites and displays last date changed.");
-  return $system[$field];
+  $output = "";
+
+  if ($field == "description") {$output = cloud_help("admin/system/modules");};
+  return $output;
 }
 
 function cloud_cron() {
@@ -42,12 +59,9 @@ function cloud_link($type) {
   }
 
   if ($type == "admin" && user_access("administer site cloud")) {
-    $help["general"] = t("The cloud monitor tracks or crawls other interesting web sites and displays their last modification dates. Visitors to the host site learn about relevant sites and can easily see if there is new content. To get the blogroll to work you <b>must</b> setup cron support. To get the site cloud block to display you must turn on the <a href=\"%block\">Site cloud block</a>. To go to a monitored site, click on the site name, to load and/or update the record for that site immediately click on \"update site\", to delete the site go to \"edit site\". ", array("%block" => url("admin/block")));
-    $help["add"] = t("Add a site to the site cloud. Don't forget the \"http://\" for your URLs.");
-
     menu("admin/syndication", "content syndication", NULL, NULL, 5);
-    menu("admin/syndication/cloud", "site cloud", "cloud_admin", $help["general"]);
-    menu("admin/syndication/cloud/add", "add new site", "cloud_admin", $help["add"]);
+    menu("admin/syndication/cloud", "site cloud", "cloud_admin", cloud_help("admin/syndication/cloud"));
+    menu("admin/syndication/cloud/add", "add new site", "cloud_admin", cloud_help("admin/syndication/cloud/add"));
     menu("admin/syndication/cloud/help", "help", "cloud_help", NULL, 9);
   }
 
@@ -186,7 +200,7 @@ function cloud_page() {
 
   if (user_access("access site cloud")) {
     theme("header");
-    theme("box", t("Site cloud"), cloud_help("user") . cloud_list(100));
+    theme("box", t("Site cloud"), cloud_help("cloud") . cloud_list(100));
     theme("footer");
   }
 }

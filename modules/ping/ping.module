@@ -9,7 +9,7 @@ function ping_help() {
   // for optional modules that ping other sites
   // $output .= module_invoke_all("ping_help");
   $output .= "<p>The ping feature requires crontab.</p>";
-  print $output;
+  return t($output);
 }
 
 function ping_system($field){
