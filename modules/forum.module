@@ -588,7 +588,7 @@ function forum_forum_list($forums, $parents, $tid) {
         }
 
         if ($links) {
-          $output .= "<br />Jump to: ". implode(", ", $links);
+          $output .= "<br />". t("Jump to:") . " ". implode(", ", $links);
         }
 
         $output .= "</div></td></tr></table></td>";
