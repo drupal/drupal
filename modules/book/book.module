@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.166 2003/07/01 17:54:22 dries Exp $
+// $Id: book.module,v 1.167 2003/07/08 09:48:29 dries Exp $
 
 function book_system($field){
   $system["description"] = t("Allows users to collaboratively author a book.");
@@ -224,7 +224,7 @@ function book_node_link($node = 0) {
       $output .= status(t("removed the node form the book."));
     }
 
-    $output .= "<h3>". t("Edit book outline for node <i>") . "$node->title</i></h3>";
+    $output .= "<h3>". t("Edit book outline for node <i>%booktitle</i>", array("%booktitle" => $node->title)) ."</h3>";
 
     if ($edit["nid"]) {
       $page = db_fetch_object(db_query("SELECT * FROM book WHERE nid = %d", $node->nid));
