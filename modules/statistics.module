@@ -38,8 +38,8 @@ function statistics_init() {
 function statistics_exit() {
   global $user;
 
-  if (variable_get("statistics_enable_node_counter", 0)) {
-    // node view counters are enabled
+  if (variable_get("statistics_count_content_views", 0)) {
+    // we are counting content views
     if ((arg(0) == "node") && (arg(1) == "view") && arg(2)) {
       // a node has been viewed, so updated the node's counters
       db_query("UPDATE {node_counter} SET daycount = daycount + 1, totalcount = totalcount + 1, timestamp = %d WHERE nid = %d", time(), arg(2));
@@ -71,7 +71,8 @@ function statistics_perm() {
   ** statistics module defines the following permissions:
   **   administer statistics module - full administrative control of module
   **   administer statistics        - view statistics / referrer log
-  **   access statistics            - see counts per node (if enabled)
+  **   access statistics            - see how many times individual content has
+  **                                  been viewed (if enabled)
   */
   return array("administer statistics module", "administer statistics", "access statistics");
 }
@@ -98,7 +99,7 @@ function statistics_link($type, $node = 0, $main = 0) {
   if ($type == "page" && user_access("access content")) {
     $userlink = variable_get("statistics_userpage_link", "");
     if ($userlink) {
-      $links[] = l(t($userlink), "statistics", array("title" => t("View the top nodes for this site.")));
+      $links[] = l(t($userlink), "statistics", array("title" => t("View this site's top content.")));
     }
   }
 
@@ -143,7 +144,7 @@ function statistics_help($section = "admin/help#statistics") {
       $output .= "</ul>";
       $output .= "<p>Notes on using the statistics:</p>";
       $output .= "<ul>";
-      $output .= "<li>If you enable the node view counters, this adds 1 database query for each node that is viewed (2 queries if it's the first time the node has ever been viewed).</li>";
+      $output .= "<li>If you enable the view counters for content, this adds 1 database query for each node that is viewed (2 queries if it's the first time the node has ever been viewed).</li>";
       $output .= "<li>If you enable the access log, this adds 1 database query for each page that Drupal displays.  Logged information includes:  HTTP referrer (if any), node being accessed (if any), user ID (if any), the IP address of the user, and the time the page was viewed.</li>";
       $output .= "</ul>";
       $output .= "<p>As with any new module, the statistics module needs to be %modules before you can use it.  Also refer to the %permissions, as this module supports four separate permissions.</p>";
@@ -166,7 +167,7 @@ function statistics_help($section = "admin/help#statistics") {
       $output .= "<p>The administrative \"top nodes page\" screen also allows you to assign a name for the automatically generated link to the user page.  If no name is set, the link will not be displayed.</p>";
       $output .= "<h3>Permissions</h3><p>This module has four permissions that need to be configured in %permissions.</p>";
       $output .= "<ul>";
-      $output .= "<li><i>access statistics</i> - enable for user roles that get to see individual node counts.  (This does not define access to the block)</li>";
+      $output .= "<li><i>access statistics</i> - enable for user roles that get to see view counts for individual content.  (This does not define access to the block)</li>";
       $output .= "<li><i>administer statistics module</i> - enable for user roles that get to configure the statistics module.</li><li><i>administer statistics</i> - enable for user roles that get to view the referrer statistics.</li>";
       $output .= "</ul>";
       $output .= "<p>If '<i>administer statistics</i>' and '<i>access statistics</i>' are both enabled, the user will see a link from each node to that node's referrer statistics (if enabled).</p>";
@@ -206,7 +207,7 @@ function statistics_help($section = "admin/help#statistics") {
       $output = t("Settings for the statistical information that Drupal will keep about the site. See %statistics for the actual information.", array("%statistics" => l(t("site statistics"), "admin/statistics")));
       break;
     case 'admin/statistics':
-      $output = t("This page gives you an at-a-glance look at your top nodes.  It is useful for understanding what content on your site is the most popular.");
+      $output = t("This page gives you an at-a-glance look at your top content.  It is useful for understanding what content on your site is the most popular.");
       break;
     case 'admin/statistics/referrers':
       $output = t("This page shows you site-wide referrer statistics.  You can see 'all referrers', 'external referrers' or 'internal referrers'. Referrers are web sites, both your site, and other peoples, that point to your web site.");
@@ -476,19 +477,24 @@ function statistics_admin_userpage_config($edit) {
 }
 
 
-/* Adds configure option to the main configure site admin page */
+// settings for the statistics module
 function statistics_settings() {
-  /* access log options */
-  $output = form_radios(t("Enable access log"), "statistics_enable_access_log", variable_get("statistics_enable_access_log", 0), array("1" => t("Enabled"), "0" => t("Disabled")), t("Log each page access.  Required for referrer statistics."));
+  // access log settings:
+  $group = form_radios(t("Enable access log"), "statistics_enable_access_log", variable_get("statistics_enable_access_log", 0), array("1" => t("Enabled"), "0" => t("Disabled")), t("Log each page access.  Required for referrer statistics."));
   $period = array(3600 => format_interval(3600), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200), 4838400 => format_interval(4838400), 9676800 => format_interval(9676800));
-  $output .= form_select(t("Discard access logs older than"), "statistics_flush_accesslog_timer", variable_get("statistics_flush_accesslog_timer", 259200), $period, t("Older access log entries (including referrer statistics) will be automatically discarded.  Requires crontab."));
+  $group .= form_select(t("Discard access logs older than"), "statistics_flush_accesslog_timer", variable_get("statistics_flush_accesslog_timer", 259200), $period, t("Older access log entries (including referrer statistics) will be automatically discarded.  Requires crontab."));
+  $output = form_group(t("Access log settings"), $group);
 
-  $output .= form_radios(t("Enable node view counters"), "statistics_enable_node_counter", variable_get("statistics_enable_node_counter", 0), array("1" => t("Enabled"), "0" => t("Disabled")), t("Increment node view counter each time a node is viewed."));
-  $output .= form_radios(t("Display node view counters"), "statistics_display_counter", variable_get("statistics_display_counter", ""), array("1" => t("Enabled"), "0" => t("Disabled")), t("Display how many times each node has been viewed.  User must have the 'access statistics' permissions."));
+  // count content views settings
+  $group = form_radios(t("Count content views"), "statistics_count_content_views", variable_get("statistics_count_content_views", 0), array("1" => t("Enabled"), "0" => t("Disabled")), t("Increment a counter each time content is viewed."));
+  $group .= form_radios(t("Display content view counts"), "statistics_display_counter", variable_get("statistics_display_counter", ""), array("1" => t("Enabled"), "0" => t("Disabled")), t("Display how many times given content has been viewed.  User must have the \"access statistics\" permissions to be able to view these counts."));
+  $output .= form_group(t("Content viewing counter settings"), $group);
 
-  $output .= form_select(t("Number of day's top views to display"), "statistics_block_top_day_num", $edit["statistics_block_top_day_num"], array("0" => t("Disabled"), "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "25" => "25", "30" => "30", "40" => "40"), t("Affects \"Top nodes\" block.  How many nodes to display in \"day's\" list."));
-  $output .= form_select(t("Number of all time views to display"), "statistics_block_top_all_num", $edit["statistics_block_top_all_num"], array("0" => t("Disabled"), "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "25" => "25", "30" => "30", "40" => "40"), t("Affects \"Top nodes\" block.  How many nodes to display in \"all time\" list."));
-  $output .= form_select(t("Number of most recent views to display"), "statistics_block_top_last_num", $edit["statistics_block_top_last_num"], array("0" => t("Disabled"), "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "25" => "25", "30" => "30", "40" => "40"), t("Affects \"Top nodes\" block.  How many nodes to display in \"recently viewed\" list."));
+  // Top content block settings
+  $group = form_select(t("Number of day's top views to display"), "statistics_block_top_day_num", $edit["statistics_block_top_day_num"], array("0" => t("Disabled"), "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "25" => "25", "30" => "30", "40" => "40"), t("Affects \"Top content\" block.  How many content items to display in \"day\" list.  Requires content viewing counters."));
+  $group .= form_select(t("Number of all time views to display"), "statistics_block_top_all_num", $edit["statistics_block_top_all_num"], array("0" => t("Disabled"), "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "25" => "25", "30" => "30", "40" => "40"), t("Affects \"Top content\" block.  How many content items to display in \"all time\" list.  Requires content viewing counters."));
+  $group .= form_select(t("Number of most recent views to display"), "statistics_block_top_last_num", $edit["statistics_block_top_last_num"], array("0" => t("Disabled"), "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "25" => "25", "30" => "30", "40" => "40"), t("Affects \"Top content\" block.  How many content items to display in \"recently viewed\" list.  Requires content viewing counters."));
+  $output .= form_group(t("Top content block settings"), $group);
 
   return $output;
 }
@@ -561,8 +567,8 @@ function statistics_get($nid) {
 /* Block hook */
 function statistics_block($op = "list", $delta = 0) {
   if ($op == "list") {
-    if (variable_get("statistics_enable_node_counter", 0)) {
-      $blocks[0]["info"] = t("Top nodes");
+    if (variable_get("statistics_count_content_views", 0)) {
+      $blocks[0]["info"] = t("Top content");
     }
     return $blocks;
   }
