@@ -12,7 +12,7 @@ function image_get_available_toolkits() {
   $output = array();
   foreach ($toolkits as $file => $toolkit) {
     include_once($file);
-    $function = str_replace('.', '_', $toolkit->name) . '_info';
+    $function = str_replace('.', '_', $toolkit->name) .'_info';
     if (function_exists($function)) {
       $info = $function();
       $output[$info['name']] = $info['title'];
@@ -30,7 +30,7 @@ function image_get_available_toolkits() {
 function image_get_toolkit() {
   static $toolkit;
   if (!$toolkit) {
-    $toolkit = variable_get('image_toolkit', 'gd2');
+    $toolkit = variable_get('image_toolkit', 'gd');
     $toolkit_file = 'includes/image.'.$toolkit.'.inc';
     if ($toolkit != 'gd' && file_exists($toolkit_file)) {
       include_once $toolkit_file;
@@ -91,9 +91,9 @@ function image_get_info($file) {
     $extensions = array('1' => 'gif', '2' => 'jpg', '3' => 'png');
     $extension = array_key_exists($data[2], $extensions) ?  $extensions[$data[2]] : '';
     $details = array('width'     => $data[0],
-        'height'    => $data[1],
-        'extension' => $extension,
-        'mime_type' => $data['mime']);
+                     'height'    => $data[1],
+                     'extension' => $extension,
+                     'mime_type' => $data['mime']);
   }
 
   return $details;
@@ -169,18 +169,18 @@ function image_crop($source, $destination, $x, $y, $width, $height) {
 
 /**
  * GD2 toolkit functions
- * With the minimal requirements of PHP 4.3 for Drupal, we use the build-in version of GD.
+ * With the minimal requirements of PHP 4.3 for Drupal, we use the built-in version of GD.
  */
 
 /**
- * Retrieve settings for the GD toolkit (not used).
+ * Retrieve settings for the GD2 toolkit (not used).
  */
 function image_gd_settings() {
   if (image_gd_check_settings()) {
-    return t('The built-in GD toolkit is installed and working properly.');
+    return t('The built-in GD2 toolkit is installed and working properly.');
   }
   else {
-    form_set_error('image_toolkit', t("The built-in GD2 toolkit requires that the GD module for PHP be installed and configured properly. For more information see %url.", array('%url' => '<a href="http://php.net/image">http://php.net/image</a>')));
+    form_set_error('image_toolkit', t("The built-in GD image toolkit requires that the GD module for PHP be installed and configured properly. For more information see %url.", array('%url' => '<a href="http://php.net/image">http://php.net/image</a>')));
     return false;
   }
 }
