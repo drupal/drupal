@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.146 2003/11/09 23:27:16 dries Exp $
+// $Id: blog.module,v 1.147 2003/11/20 21:51:23 dries Exp $
 
 function blog_settings() {
   $output = form_textarea(t("Explanation or submission guidelines"), "blog_help", variable_get("blog_help", ""), 70, 4, t("This text is displayed at the top of the blog submission form.  It's useful for helping or instructing your users."));
@@ -252,10 +252,13 @@ function blog_link($type, $node = 0, $main) {
 
   if ($type == "system") {
     if (user_access("maintain personal blog")) {
-      menu("node/add/blog", t("blog entry"), "page", 0);
+      menu("node/add/blog", t("blog entry"), "node_page", 0);
     }
     if (user_access("maintain personal blog")) {
-      menu("blog/" . $user->uid, t("my blog"), "page", 1);
+      menu("blog/" . $user->uid, t("my blog"), "blog_page", 1);
+    }
+    if (user_access("access content")) {
+      menu("blog", t("blog"), "blog_page", 0, 1);
     }
   }
 

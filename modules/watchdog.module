@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.79 2003/11/13 19:52:54 dries Exp $
+// $Id: watchdog.module,v 1.80 2003/11/20 21:51:23 dries Exp $
 
 function watchdog_help($section = "admin/help#watchdog") {
   $output = "";
@@ -139,10 +139,14 @@ function watchdog_admin() {
       default:
         $output = watchdog_overview(arg(2));
     }
-    return $output;
+    print theme("header");
+    print $output;
+    print theme("footer");
   }
   else {
-    return message_access();
+    print theme("header");
+    print message_access();
+    print theme("footer");
   }
 }
 

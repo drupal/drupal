@@ -1,5 +1,5 @@
 <?php
-// $Id: queue.module,v 1.93 2003/11/09 23:27:16 dries Exp $
+// $Id: queue.module,v 1.94 2003/11/20 21:51:23 dries Exp $
 
 function queue_help($section) {
   $output = "";
@@ -35,7 +35,7 @@ function queue_perm() {
 function queue_link($type) {
   if ($type == "system") {
     if (user_access("access submission queue")) {
-      menu("queue", t("view submissions"), "page", 1);
+      menu("queue", t("view submissions"), "queue_page", 1);
     }
   }
 

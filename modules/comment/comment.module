@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.189 2003/11/15 10:03:31 dries Exp $
+// $Id: comment.module,v 1.190 2003/11/20 21:51:23 dries Exp $
 
 function comment_help($section = "admin/help#comment") {
   $output = "";
@@ -107,6 +107,12 @@ function comment_help($section = "admin/help#comment") {
       break;
   }
   return $output;
+}
+
+function comment_help_page() {
+  print theme("header");
+  print comment_help();
+  print theme("footer");
 }
 
 function comment_settings() {
@@ -827,7 +833,7 @@ function comment_link($type, $node = 0, $main = 0) {
       menu("admin/comment/comments/0", t("new/updated"), "comment_admin", 1);
       menu("admin/comment/comments/1", t("approval queue"), "comment_admin", 2);
       menu("admin/comment/search", t("search"), "comment_admin", 8);
-      menu("admin/comment/help", t("help"), "comment_help", 9);
+      menu("admin/comment/help", t("help"), "comment_help_page", 9);
       menu("admin/comment/edit", t("edit comment"), "comment_admin", 0, 1);
 
       // comment settings:
@@ -839,6 +845,7 @@ function comment_link($type, $node = 0, $main = 0) {
         menu("admin/comment/moderation/roles", t("initial scores"), "comment_admin", 6);
       }
     }
+    menu("comment", t("comments"), "comment_page", 0, 1);
   }
 
   return $links ? $links : array();
@@ -1231,10 +1238,14 @@ function comment_admin() {
           $output = comment_admin_overview(0);
         }
     }
-    return $output;
+    print theme("header");
+    print $output;
+    print theme("footer");
   }
   else {
-    return message_access();
+    print theme("header");
+    print message_access();
+    print theme("footer");
   }
 }
 

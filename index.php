@@ -1,5 +1,5 @@
 <?php
-// $Id: index.php,v 1.74 2003/11/20 19:55:04 dries Exp $
+// $Id: index.php,v 1.75 2003/11/20 21:51:22 dries Exp $
 
 include_once "includes/bootstrap.inc";
 drupal_page_header();
@@ -10,29 +10,11 @@ fix_gpc_magic();
 menu_build("system");
 
 if (menu_active_handler_exists()) {
-  $breadcrumb = menu_get_active_breadcrumb();
-  array_pop($breadcrumb);
-  $title = menu_get_active_title();
-
-  print theme("header");
-  print theme("breadcrumb", $breadcrumb);
-  if ($help = menu_get_active_help()) {
-    $contents = "<small>$help</small><hr />";
-  }
-  $contents .= menu_execute_active_handler();
-  print theme("box", $title, $contents);
-  print theme("footer");
+  menu_execute_active_handler();
 }
 else {
-  $mod = arg(0);
-
-  if (isset($mod) && module_hook($mod, "page")) {
-    module_invoke($mod, "page");
-  }
-  else {
-    print theme("header");
-    print theme("footer");
-  }
+  print theme("header");
+  print theme("footer");
 }
 
 drupal_page_footer();

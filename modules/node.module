@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.292 2003/11/13 19:52:54 dries Exp $
+// $Id: node.module,v 1.293 2003/11/20 21:51:23 dries Exp $
 
 function node_help($section = "admin/help#node") {
   global $mod;
@@ -62,6 +62,13 @@ function node_help($section = "admin/help#node") {
 
   return $output;
 }
+
+function node_help_page() {
+  print theme("header");
+  print node_help();
+  print theme("footer");
+}
+
 
 /*
 ** Accepts a DB result object which can be used to fetch node objects.
@@ -568,9 +575,13 @@ function node_link($type, $node = 0, $main = 0) {
     if (user_access("administer nodes")) {
       menu("admin/node", t("content"), "node_admin");
       menu("admin/node/search", t("search"), "node_admin", 8);
-      menu("admin/node/help", t("help"), "node_help", 9);
+      menu("admin/node/help", t("help"), "node_help_page", 9);
       menu("admin/node/edit", t("edit post"), "node_admin", 0, 1);
       menu("admin/node/settings", t("settings"), "node_admin", 8);
+    }
+
+    if (user_access("access content")) {
+      menu("node", t("content"), "node_page", 0, 1);
     }
   }
 
@@ -920,10 +931,14 @@ function node_admin() {
       default:
         $output = node_admin_nodes();
     }
-    return $output;
+    print theme("header");
+    print $output;
+    print theme("footer");
   }
   else {
-    return message_access();
+    print theme("header");
+    print message_access();
+    print theme("footer");
   }
 }
 

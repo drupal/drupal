@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.62 2003/11/09 23:27:16 dries Exp $
+// $Id: drupal.module,v 1.63 2003/11/20 21:51:23 dries Exp $
 
 function drupal_help($section = "admin/help#drupal") {
   $output = "";
@@ -153,6 +153,12 @@ function drupal_auth($username, $password, $server) {
   }
 
   return $login;
+}
+
+function drupal_link($type) {
+  if ($type == "system") {
+    menu("drupal", "Drupal", "drupal_page", 0, 1);
+  }
 }
 
 function drupal_page() {

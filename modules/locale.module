@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.84 2003/11/13 19:52:54 dries Exp $
+// $Id: locale.module,v 1.85 2003/11/20 21:51:23 dries Exp $
 
 function locale_help($section = "admin/help#locale") {
   $output = "";
@@ -54,6 +54,12 @@ function locale_help($section = "admin/help#locale") {
   return $output;
 }
 
+function locale_help_page() {
+  print theme("header");
+  print locale_help();
+  print theme("footer");
+}
+
 function locale_perm() {
   return array("administer locales");
 }
@@ -66,7 +72,7 @@ function locale_link($type) {
 
       menu("admin/locale", t("localization"), NULL, 5);
       menu("admin/locale/search", t("search string"), "locale_admin", 8);
-      menu("admin/locale/help", t("help"), "locale_help", 9);
+      menu("admin/locale/help", t("help"), "locale_help_page", 9);
       menu("admin/locale/edit", t("edit string"), "locale_admin", 0, 1); // hidden menu
       menu("admin/locale/delete", t("delete string"), "locale_admin", 0, 1); // hidden menu
 
@@ -294,10 +300,14 @@ function locale_admin() {
         $output = locale_seek();
         $output .= locale_seek_form();
     }
-    return $output;
+    print theme("header");
+    print $output;
+    print theme("footer");
   }
   else {
-    return message_access();
+    print theme("header");
+    print message_access();
+    print theme("footer");
   }
 }
 

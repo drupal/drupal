@@ -1,5 +1,5 @@
 <?php
-// $Id: title.module,v 1.18 2003/11/13 19:52:54 dries Exp $
+// $Id: title.module,v 1.19 2003/11/20 21:51:23 dries Exp $
 
 function title_help($section) {
   $output = "";
@@ -11,6 +11,14 @@ function title_help($section) {
   }
 
   return $output;
+}
+
+function title_link($type) {
+  if ($type == "system") {
+    if (user_access("access content")) {
+      menu("title", t("search"), "title_page", 0, 1);
+    }
+  }
 }
 
 function title_page() {

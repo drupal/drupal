@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.133 2003/11/14 20:31:21 dries Exp $
+// $Id: aggregator.module,v 1.134 2003/11/20 21:51:23 dries Exp $
 
 
 function import_help($section = "admin/help#import") {
@@ -75,6 +75,12 @@ function import_help($section = "admin/help#import") {
   return $output;
 }
 
+function import_help_page() {
+  print theme("header");
+  print import_help();
+  print theme("footer");
+}
+
 function import_settings() {
   $number = array(5 => 5, 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30, 35 => 35, 40 => 40, 45 => 45, 50 => 50, 55 => 55, 60 => 60, 65 => 65, 70 => 70, 75 => 75, 80 => 80, 85 => 85, 90 => 90, 95 => 95, 100 => 100);
   $output .= form_select(t("Items per block"), "import_block_limit", variable_get("import_block_limit", 15), $number, t("The maximum number of news items displayed in one block."));
@@ -103,7 +109,10 @@ function import_link($type) {
       menu("admin/node/syndication/news/add/feed", t("new feed"), "import_admin", 2);
       menu("admin/node/syndication/news/add/bundle", t("new bundle"), "import_admin", 3);
       menu("admin/node/syndication/news/tag", t("tag items"), "import_admin", 4);
-      menu("admin/node/syndication/news/help", t("help"), "import_help", 9);
+      menu("admin/node/syndication/news/help", t("help"), "import_help_page", 9);
+    }
+    if (user_access("access news feeds")) {
+      menu("import", t("news feeds"), "import_page", 0, 1);
     }
   }
 
@@ -609,11 +618,14 @@ function import_admin() {
       default:
         $output .=  import_view();
     }
-    return $output;
-
+    print theme("header");
+    print $output;
+    print theme("footer");
   }
   else {
-    return message_access();
+    print theme("header");
+    print message_access();
+    print theme("footer");
   }
 }
 

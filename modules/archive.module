@@ -1,5 +1,5 @@
 <?php
-// $Id: archive.module,v 1.38 2003/11/09 23:27:16 dries Exp $
+// $Id: archive.module,v 1.39 2003/11/20 21:51:23 dries Exp $
 
 function archive_help($section) {
   $output = "";
@@ -186,6 +186,12 @@ function archive_link($type) {
 
   if ($type == "page" && user_access("access content")) {
     $links[] = l(t("archives"), "archive", array("title" => t("Read the older content in our archive.")));
+  }
+
+  if ($type == "system") {
+    if (user_access("access content")) {
+      menu("archive", t("archives"), "archive_page", 0, 1);
+    }
   }
 
   return $links;

@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.77 2003/11/13 23:00:53 dries Exp $
+// $Id: taxonomy.module,v 1.78 2003/11/20 21:51:23 dries Exp $
 
 function taxonomy_feed($taxonomy) {
   global $id, $type;
@@ -27,6 +27,9 @@ function taxonomy_link($type, $node = NULL) {
       menu("admin/taxonomy", t("taxonomy"), "taxonomy_admin", 3);
       menu("admin/taxonomy/add/vocabulary", t("create new vocabulary"), "taxonomy_admin");
       menu("admin/taxonomy/help", t("help"), "taxonomy_admin", 9);
+    }
+    if (user_access("access content")) {
+      menu("taxonomy", t("taxonomy"), "taxonomy_page", 0, 1);
     }
   }
   else if ($type == "taxonomy terms" && $node != NULL) {
@@ -792,7 +795,9 @@ function taxonomy_admin() {
     $output .= message_access();
   }
 
-  return $output;
+  print theme("header");
+  print $output;
+  print theme("footer");
 }
 
 function taxonomy_help($section = "admin/help#taxonomy") {

@@ -1,5 +1,5 @@
 <?php
-// $Id: admin.module,v 1.39 2003/11/18 20:44:33 dries Exp $
+// $Id: admin.module,v 1.40 2003/11/20 21:51:23 dries Exp $
 
 function status($message) {
   if ($message) {
@@ -26,7 +26,14 @@ function admin_link($type) {
 
 function admin_admin() {
   if (user_access("access administration pages")) {
-    return watchdog_overview("actions");
+    print theme("header");
+    print watchdog_overview("actions");
+    print theme("footer");
+  }
+  else {
+    print theme("header");
+    print message_access();
+    print theme("footer");
   }
 }
 

@@ -1,10 +1,10 @@
 <?php
-// $Id: help.module,v 1.26 2003/10/09 18:53:21 dries Exp $
+// $Id: help.module,v 1.27 2003/11/20 21:51:23 dries Exp $
 
 function help_link($type) {
   if ($type == "system" && user_access("access administration pages")) {
     menu("admin/help/glossary", t("glossary"), "help_glossary", 8);
-    menu("admin/help", t("help"), "help_help", 9);
+    menu("admin/help", t("help"), "help_help_page", 9);
   }
 }
 
@@ -28,7 +28,9 @@ function help_glossary() {
   $output .= "</dl>";
   $output = t($output, array("%taxonomy" => l(t("taxonomy help"), "admin/taxonomy/help")));
 
-  return $output;
+  print theme("header");
+  print $output;
+  print theme("footer");
 }
 
 function help_help($section = "admin/help#help") {
@@ -57,6 +59,12 @@ function help_help($section = "admin/help#help") {
       break;
   }
   return $output;
+}
+
+function help_help_page() {
+  print theme("header");
+  print help_help();
+  print theme("footer");
 }
 
 ?>

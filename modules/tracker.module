@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.67 2003/11/13 19:52:54 dries Exp $
+// $Id: tracker.module,v 1.68 2003/11/20 21:51:23 dries Exp $
 
 function tracker_help($section = "admin/help#tracker") {
   $output = "";
@@ -22,7 +22,7 @@ function tracker_link($type) {
 
   if ($type == "system") {
     if (user_access("access content")) {
-      menu("tracker", t("recent posts"), "page", 1);
+      menu("tracker", t("recent posts"), "tracker_page", 1);
     }
   }
 
@@ -106,6 +106,11 @@ function tracker_page() {
   if (user_access("access content")) {
     print theme("header", t("Recent posts"));
     print theme("box", t("Recent posts"), tracker_posts(arg(1)));
+    print theme("footer");
+  }
+  else {
+    print theme("header");
+    print message_access();
     print theme("footer");
   }
 }

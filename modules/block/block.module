@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.85 2003/11/19 16:13:06 dries Exp $
+// $Id: block.module,v 1.86 2003/11/20 21:51:23 dries Exp $
 
 function block_help($section = "admin/help#block") {
   $output = "";
@@ -53,6 +53,12 @@ function block_help($section = "admin/help#block") {
   return $output;
 }
 
+function block_help_page() {
+  print theme("header");
+  print block_help();
+  print theme("footer");
+}
+
 function block_perm() {
   return array("administer blocks");
 }
@@ -63,7 +69,7 @@ function block_link($type) {
     menu("admin/system/block", t("blocks"), "block_admin", 3);
     menu("admin/system/block/add", t("new block"), "block_admin", 2);
     menu("admin/system/block/preview", t("preview placement"), "block_admin", 3);
-    menu("admin/system/block/help", t("help"), "block_help", 9);
+    menu("admin/system/block/help", t("help"), "block_help_page", 9);
   }
 }
 
@@ -306,10 +312,14 @@ function block_admin() {
         $output .= block_admin_display();
     }
 
-    return $output;
+    print theme("header");
+    print $output;
+    print theme("footer");
   }
   else {
-    return message_access();
+    print theme("header");
+    print message_access();
+    print theme("footer");
   }
 }
 
