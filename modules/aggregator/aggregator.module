@@ -1,7 +1,5 @@
 <?php
 
-include_once "modules/backend.class";
-
 function import_help() {
  ?>
   <P>TODO - anyone?</P>
