@@ -28,8 +28,7 @@ function aggregator_help($section) {
        <li><strong>Title</strong> -- The text entered here will be used in your news aggregator, within the administration configuration section, and as a title for the news feed block. As a general rule, use the web site name from which the feed originates.</li>
        <li><strong>URL</strong> -- Here you\'ll enter the fully-qualified web address for the feed you wish to subscribe to.</li>
        <li><strong>Update interval</strong> -- This is how often Drupal will scan the feed for new content. This defaults to every hour. Checking a feed more frequently that this is typically a waste of bandwidth and is considered somewhat impolite. For automatic updates to work, cron.php must be called regularly. If it is not, you\'ll have to manually update the feeds one at a time within the news aggregation administration page by using <a href="%update-items">update items</a>.</li>
-       <li><strong>Latest items block</strong> -- The number of items selected here will determine how many of the latest items from the feed will appear in a block which may be enabled and placed in the <a href="%block">blocks</a> administration page.</li>
-       <li><strong>Automatically file items</strong> -- As items are received from a feed they will be put in any categories you have selected here.</li>
+       <li><strong>Categorize news items</strong> -- As items are received from a feed they will be put in any categories you have selected here.</li>
       </ul>
       <p>Once you have submitted the new feed, check to make sure it is working properly by selecting <a href="%update-items">update items</a> on the <a href="%admin-news">aggregation page</a>. If you do not see any items listed for that feed, edit the feed and make sure that the URL was entered correctly.</p>
       <h3>Adding categories</h3>
@@ -38,7 +37,6 @@ function aggregator_help($section) {
       <ul>
        <li><strong>Title</strong> -- The title will be used in the <em>news by topics</em> listing in your news aggregator and for the block created for the bundle.</li>
        <li><strong>Description</strong> -- A short description of the category to tell users more details about what news items they might find in the category.</li>
-       <li><strong>Latest items block</strong> -- The number of items selected here will determine how many of the latest items from the category will appear in a block which may be enabled and placed in the <a href="%block">blocks</a> administration page.</li>
       </ul>
       <h3>Using the news aggregator</h3>
       <p>The news aggregator has a number of ways that it displays your subscribed content:</p>
@@ -210,16 +208,37 @@ function aggregator_cron() {
  *
  * Generates blocks for the latest news items in each category and feed.
  */
-function aggregator_block($op, $delta) {
+function aggregator_block($op, $delta, $edit = array()) {
   if (user_access('access news feeds')) {
     if ($op == 'list') {
-      $result = db_query('SELECT cid, title FROM {aggregator_category} WHERE block != 0 ORDER BY title');
+      $result = db_query('SELECT cid, title FROM {aggregator_category} ORDER BY title');
       while ($category = db_fetch_object($result)) {
         $block['category:'. $category->cid]['info'] = t('%title category latest items', array('%title' => $category->title));
       }
-      $result = db_query('SELECT fid, title FROM {aggregator_feed} WHERE block != 0 ORDER BY fid');
+      $result = db_query('SELECT fid, title FROM {aggregator_feed} ORDER BY fid');
       while ($feed = db_fetch_object($result)) {
         $block['feed:'. $feed->fid]['info'] = t('%title feed latest items', array('%title' => $feed->title));
+      }
+    }
+    else if ($op == 'configure') {
+      list($type, $id) = split(':', $delta);
+      if ($type == 'category') {
+        $value = db_result(db_query('SELECT block FROM {aggregator_category} WHERE cid = %d', $id));
+      }
+      else {
+        $value = db_result(db_query('SELECT block FROM {aggregator_feed} WHERE fid = %d', $id));
+      }
+
+      $output = form_select(t('Number of news items in block'), 'block', $value, drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)));
+      return $output;
+    }
+    else if ($op == 'save') {
+      list($type, $id) = split(':', $delta);
+      if ($type == 'category') {
+        $value = db_query('UPDATE {aggregator_category} SET block = %d WHERE cid = %d', $edit['block'], $id);
+      }
+      else {
+        $value = db_query('UPDATE {aggregator_feed} SET block = %d WHERE fid = %d', $edit['block'], $id);
       }
     }
     else if ($op == 'view') {
@@ -590,11 +609,8 @@ function aggregator_save_item($edit) {
 }
 
 function aggregator_form_category($edit = array()) {
-  $block_items = array(0 => t('no block'), 3 => t('3 items'), 5 => t('5 items'), 10 => t('10 items'), 15 => t('15 items'), 20 => t('20 items'), 25 => t('25 items'));
-
   $form = form_textfield(t('Title'), 'title', $edit['title'], 50, 64);
   $form .= form_textarea(t('Description'), 'description', $edit['description'], 60, 5);
-  $form .= form_select(t('Latest items block'), 'block', $edit['block'], $block_items, t('If enabled, a block containing the latest items in this category will be available for placement on the <a href="%url">block configuration</a> page.', array('%url' => url('admin/block'))));
   $form .= form_submit(t('Submit'));
 
   if ($edit['cid']) {
@@ -607,7 +623,7 @@ function aggregator_form_category($edit = array()) {
 
 function aggregator_save_category($edit) {
   if ($edit['cid'] && $edit['title']) {
-    db_query('UPDATE {aggregator_category} SET title = \'%s\', description = \'%s\', block = %d WHERE cid = %d', $edit['title'], $edit['description'], $edit['block'], $edit['cid']);
+    db_query('UPDATE {aggregator_category} SET title = \'%s\', description = \'%s\' WHERE cid = %d', $edit['title'], $edit['description'], $edit['cid']);
   }
   else if ($edit['cid']) {
     db_query('DELETE FROM {aggregator_category} WHERE cid = %d', $edit['cid']);
@@ -615,13 +631,12 @@ function aggregator_save_category($edit) {
   else if ($edit['title']) {
     // a single unique id for bundles and feeds, to use in blocks
     $next_id = db_next_id('{aggregator_category}_cid');
-    db_query('INSERT INTO {aggregator_category} (cid, title, description, block) VALUES (%d, \'%s\', \'%s\', %d)', $next_id, $edit['title'], $edit['description'], $edit['block']);
+    db_query('INSERT INTO {aggregator_category} (cid, title, description, block) VALUES (%d, \'%s\', \'%s\', 5)', $next_id, $edit['title'], $edit['description']);
   }
 }
 
 function aggregator_form_feed($edit = array()) {
   $period = drupal_map_assoc(array(900, 1800, 3600, 7200, 10800, 21600, 32400, 43200, 64800, 86400, 172800, 259200, 604800, 1209600, 2419200), 'format_interval');
-  $block_items = array(0 => t('no block'), 3 => t('3 items'), 5 => t('5 items'), 10 => t('10 items'), 15 => t('15 items'), 20 => t('20 items'), 25 => t('25 items'));
 
   if ($edit['refresh'] == '') {
     $edit['refresh'] = 3600;
@@ -630,17 +645,21 @@ function aggregator_form_feed($edit = array()) {
   $form .= form_textfield(t('Title'), 'title', $edit['title'], 50, 64, t('The name of the feed; typically the name of the web site you syndicate content from.'));
   $form .= form_textfield(t('URL'), 'url', $edit['url'], 50, 255, t('The fully-qualified URL of the feed.'));
   $form .= form_select(t('Update interval'), 'refresh', $edit['refresh'], $period, t('The refresh interval indicating how often you want to update this feed.  Requires crontab.'));
-  $form .= form_select(t('Latest items block'), 'block', $edit['block'], $block_items, t('If enabled, a block containing the latest items from this feed will be available for placement on the <a href="%url">block configuration</a> page.', array('%url' => url('admin/block'))));
+
+  // Handling of categories:
+  $options = array();
+  $values = array();
   $categories = db_query('SELECT c.cid, c.title, f.fid FROM {aggregator_category} c LEFT JOIN {aggregator_category_feed} f ON c.cid = f.cid AND f.fid = %d ORDER BY title', $edit['fid']);
   while ($category = db_fetch_object($categories)) {
-    $checkboxes .= form_checkbox($category->title, "category][$category->cid", 1, $category->fid ? 1 : 0);
+    $options[$category->cid] = $category->title;
+    if ($category->fid) $values[] = $category->cid;
   }
-  if ($checkboxes) {
-    $form .= form_group(t('Automatically file items'), $checkboxes, t('New items in this feed will be automatically filed in the the checked categories as they are received.'));
+  if ($options) {
+    $form .= form_checkboxes(t('Categorize news items'), 'category', $values, $options, t('New items in this feed will be automatically filed in the the checked categories as they are received.'));
   }
-
+ 
+  // Form buttons:
   $form .= form_submit(t('Submit'));
-
   if ($edit['fid']) {
     $form .= form_submit(t('Delete'));
     $form .= form_hidden('fid', $edit['fid']);
@@ -655,7 +674,7 @@ function aggregator_save_feed($edit) {
     db_query('DELETE FROM {aggregator_category_feed} WHERE fid = %d', $edit['fid']);
   }
   if ($edit['fid'] && $edit['title']) {
-    db_query('UPDATE {aggregator_feed} SET title = \'%s\', url = \'%s\', refresh = %d, block = %d WHERE fid = %d', $edit['title'], $edit['url'], $edit['refresh'], $edit['block'], $edit['fid']);
+    db_query('UPDATE {aggregator_feed} SET title = \'%s\', url = \'%s\', refresh = %d WHERE fid = %d', $edit['title'], $edit['url'], $edit['refresh'], $edit['fid']);
   }
   else if ($edit['fid']) {
     $result = db_query('SELECT iid FROM {aggregator_item} WHERE fid = %d', $edit['fid']);
@@ -671,15 +690,13 @@ function aggregator_save_feed($edit) {
   else if ($edit['title']) {
     // a single unique id for bundles and feeds, to use in blocks
     $edit['fid'] = db_next_id('{aggregator_feed}_fid');
-    db_query('INSERT INTO {aggregator_feed} (fid, title, url, refresh, block) VALUES (%d, \'%s\', \'%s\', %d, %d)', $edit['fid'], $edit['title'], $edit['url'], $edit['refresh'], $edit['block']);
+    db_query('INSERT INTO {aggregator_feed} (fid, title, url, refresh, block) VALUES (%d, \'%s\', \'%s\', %d, 5)', $edit['fid'], $edit['title'], $edit['url'], $edit['refresh']);
   }
   if ($edit['title']) {
     // the feed is being saved, save the categories as well
     if ($edit['category']) {
-      foreach ($edit['category'] as $cid => $checked) {
-        if ($checked) {
-          db_query('INSERT INTO {aggregator_category_feed} (fid, cid) VALUES (%d, %d)', $edit['fid'], $cid);
-        }
+      foreach ($edit['category'] as $cid) {
+        db_query('INSERT INTO {aggregator_category_feed} (fid, cid) VALUES (%d, %d)', $edit['fid'], $cid);
       }
     }
   }
