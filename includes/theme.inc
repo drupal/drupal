@@ -11,7 +11,7 @@
   @{
 **/
 
-/* $Id: theme.inc,v 1.159 2003/11/17 19:24:39 dries Exp $ */
+/* $Id: theme.inc,v 1.160 2003/11/19 16:13:06 dries Exp $ */
 
 /**
   Returns the theme header.
@@ -37,7 +37,7 @@ function theme_header($title = "") {
   $output .= "<table border=\"0\" cellspacing=\"4\" cellpadding=\"4\"><tr><td style=\"vertical-align: top; width: 170px;\">";
 
   $output .= theme("box", t("Navigation"), @implode("<br />", link_page()));
-  $output .= render_blocks("all");
+  $output .= theme("blocks", "all");
   $output .= "</td><td style=\"vertical-align: top;\">";
 
   return $output;
@@ -358,24 +358,19 @@ function theme_onload_attribute($theme_onloads = array()) {
 }
 
 /**
-  Render blocks available for (global) $user and $region calling $theme->block($block).
-
-  @param   $region   main|left|right
-
-  @return a string containing the \a blocks output.
- **/
-function render_blocks($region) {
-  global $user;
-
-  $result = db_query("SELECT * FROM {blocks} WHERE (status = '1' OR custom = '1') ". ($region != "all" ? "AND region = %d " : "") ."ORDER BY weight, module", $region == "left" ? 0 : 1);
-
+ * Returns themed blocks available for current $user at $region.
+ *
+ * @param       $region   main|left|right
+ *
+ * @return      a string containing the \a blocks output.
+ */
+function theme_blocks($region) {
   $output = "";
-  while ($result && ($block = db_fetch_array($result))) {
-    if ((($block['status'] && (!$user->uid || !$block['custom'])) || ($block['custom'] && $user->block[$block['module']][$block['delta']])) && (!$block['path'] || preg_match($block['path'], str_replace("?q=", "", request_uri())))) {
-      $block = array_merge($block, module_invoke($block['module'], 'block', 'view', $block['delta']));
-      if ($block['content']) {
-        $output .= theme('block', (object)$block);
-      }
+
+  if ($list = module_invoke('block', 'list', $region)) {
+    foreach ($list as $key => $block) {
+      // $key == <i>module</i>_<i>delta</i>
+      $output .= theme('block', $block);
     }
   }
   return $output;

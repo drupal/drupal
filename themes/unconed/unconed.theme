@@ -1,5 +1,5 @@
 <?php
-// $Id: unconed.theme,v 1.104 2003/11/09 23:27:18 dries Exp $
+// $Id: unconed.theme,v 1.105 2003/11/19 16:13:06 dries Exp $
 
 function unconed_help($section) {
 
@@ -274,7 +274,7 @@ function unconed_footer() {
     </td>
     <td valign="top" width="20%">
       <?php
-        print render_blocks("all", $this);
+        print theme("blocks", "all");
       ?>
     </td>
     </tr>
