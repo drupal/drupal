@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.253 2003/11/18 23:37:48 kjartan Exp $
+// $Id: user.module,v 1.254 2003/11/20 21:08:07 dries Exp $
 
 /*** Common functions ******************************************************/
 
@@ -1219,6 +1219,8 @@ function user_admin_perm($edit = array()) {
       if ($perm) {
         db_query("INSERT INTO {permission} (rid, perm) VALUES (%d, '%s')", $role->rid, $perm);
       }
+      // clear the cache, we might have changed the anonymous user's permissions
+      cache_clear_all();
     }
   }
 
