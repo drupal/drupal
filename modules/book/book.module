@@ -163,7 +163,7 @@ function book_save($edit) {
 function book_tree($parent = "", $depth = 0) {
   global $PHP_SELF, $status;
 
-  if (($depth < 3) || ($PHP_SELF == "/admin.php")) {
+  if (($depth < 3) || (strstr($PHP_SELF,"admin.php"))) {
     $result = db_query("SELECT n.*, b.* FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE n.type = 'book' AND n.status = '$status[posted]' AND b.parent = '$parent' ORDER BY b.weight");
     $output .= "<UL>";
     while ($node = db_fetch_object($result)) {
