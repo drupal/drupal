@@ -1,13 +1,10 @@
 <?php
-// $Id: menu.inc,v 1.15 2003/04/14 20:29:31 dries Exp $
+// $Id: menu.inc,v 1.16 2003/04/21 12:31:51 dries Exp $
 
 function menu($path, $title, $callback = NULL, $help = NULL, $weight = 0, $hidden = 0) {
   global $_gmenu;
 
-  if (isset($_gmenu[$path])) {
-    trigger_error("trying to add '$path' which already exists");
-  }
-  else {
+  if (empty($_gmenu[$path])) {
     // add the menu to the flat list of menu items:
     $_gmenu[$path] = array("title" => $title, "callback" => $callback, "help" => $help, "weight" => $weight, "hidden" => $hidden, "children" => array());
 
