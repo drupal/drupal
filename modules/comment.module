@@ -23,20 +23,20 @@ function comment_system($field) {
 function comment_conf_options() {
   global $cmodes, $corder;
 
-  $output .= form_select("Default display mode", "comment_default_mode", variable_get("comment_default_mode", 4), $cmodes, "The default view for comments. Expanded views display the body of the comment. Threaded views keep replies together.");
-  $output .= form_select("Default display order", "comment_default_order", variable_get("comment_default_order", 1), $corder, "The default sorting for new users and anonymous users while viewing comments. These users may change their view using the comment control panel. For registered users, this change is remembered as a persistent user preference.");
-  $output .= form_textfield("Default comments per page", "comment_default_per_page", variable_get("comment_default_per_page", "50"), 5, 5, "Default number of comments for each page; more comments are distributed in several pages.");
+  $output .= form_select(t("Default display mode"), "comment_default_mode", variable_get("comment_default_mode", 4), $cmodes, t("The default view for comments. Expanded views display the body of the comment. Threaded views keep replies together."));
+  $output .= form_select(t("Default display order"), "comment_default_order", variable_get("comment_default_order", 1), $corder, t("The default sorting for new users and anonymous users while viewing comments. These users may change their view using the comment control panel. For registered users, this change is remembered as a persistent user preference."));
+  $output .= form_textfield(t("Default comments per page"), "comment_default_per_page", variable_get("comment_default_per_page", "50"), 5, 5, t("Default number of comments for each page; more comments are distributed in several pages."));
 
   $result = db_query("SELECT fid, filter FROM moderation_filters");
   while ($filter = db_fetch_object($result)) {
     $thresholds[$filter->fid] = ($filter->filter);
   }
 
-  $output .= form_select("Default threshold", "comment_default_threshold", variable_get("comment_default_threshold", 0), $thresholds, "Thresholds are values below which comments are hidden. These threshholds are useful for busy sites which wan tto hide poor comments from most users.");
+  $output .= form_select(t("Default threshold"), "comment_default_threshold", variable_get("comment_default_threshold", 0), $thresholds, t("Thresholds are values below which comments are hidden. These threshholds are useful for busy sites which wan tto hide poor comments from most users."));
 
-  $output .= form_select("Preview comment", "comment_preview", variable_get("comment_preview", 1), array("optional", "required"), "Must users preview comments before submitting?");
-  $output .= form_select("New comment form", "comment_new_form", variable_get("comment_new_form", 0), array("disabled", "enabled"), "New comment form in the node page?");
-  $output .= form_select("Comment controls", "comment_controls", variable_get("comment_controls", 0), array("above comments", "below comments", "above and below"), "Position of the comment controls box.");
+  $output .= form_select(t("Preview comment"), "comment_preview", variable_get("comment_preview", 1), array(t("Optional"), t("Required")), t("Must users preview comments before submitting?"));
+  $output .= form_select(t("New comment form"), "comment_new_form", variable_get("comment_new_form", 0), array(t("Disabled"), t("Enabled")), t("New comment form in the node page?"));
+  $output .= form_select(t("Comment controls"), "comment_controls", variable_get("comment_controls", 0), array(t("Above comments"), t("Below comments"), t("Above and below")), t("Position of the comment controls box."));
 
   return $output;
 }
@@ -795,11 +795,11 @@ function comment_admin_overview($status = 0, $comment_page = 0) {
 
   $start = $comment_page * $comments_per_page;
 
-  $output .= $status ? "<h3>Non-published comments</h3>\n" : "<h3>Published comments</h3>";
+  $output .= $status ? "<h3>" . t("Non-published comments") . "</h3>\n" : "<h3>" . t("Published comments") . "</h3>";
   $result = db_query("SELECT c.*, u.name, u.uid FROM comments c LEFT JOIN users u ON u.uid = c.uid WHERE c.status = '%d' ORDER BY timestamp DESC LIMIT $start, $comments_per_page", $status);
 
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  $output .= " <tr><th>subject</th><th>author</th><th>date</th><th>published</th><th colspan=\"2\">operations</th></tr>\n";
+  $output .= " <tr><th>" . t("subject") . "</th><th>" . t("author") . "</th><th>" . t("date") . "</th><th>" . t("published") . "</th><th colspan=\"2\">" . t("operations") . "</th></tr>\n";
   while ($comment = db_fetch_object($result)) {
     $output .= " <tr><td>". l(check_output($comment->subject), array("id" => $comment->nid, "cid" => $comment->cid, "pid" => $comment->pid), "node", $comment->cid, array("title" => htmlentities($comment->comment))) ."</td><td>". format_name($comment) ."</td><td>". format_date($comment->timestamp, "small") ."</td><td>". ($comment->status == 0 ? "yes" : "no") ."</td><td>". la(t("edit comment"), array("mod" => "comment", "op" => "edit", "id" => $comment->cid)) ."</td><td>". la(t("delete comment"), array("mod" => "comment", "op" => "delete", "id" => $comment->cid)) ."</td></tr>\n";
   }
@@ -851,7 +851,7 @@ function comment_mod_matrix($edit) {
   }
 
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
-  $output .= " <tr><th>votes</th><th>". implode("</th><th>", array_values($role_names)) ."</th></tr>";
+  $output .= " <tr><th>" . t("votes") . "</th><th>". implode("</th><th>", array_values($role_names)) ."</th></tr>";
 
   $result = db_query("SELECT mid, vote FROM moderation_votes ORDER BY weight");
   while ($vote = db_fetch_object($result)) {
@@ -881,7 +881,7 @@ function comment_mod_roles($edit) {
   $result = db_query("SELECT r.rid, r.name FROM role r, permission p WHERE r.rid = p.rid AND p.perm LIKE '%post comments%'");
 
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
-  $output .= " <tr><th>user role</th><th>initial score</th></tr>";
+  $output .= " <tr><th>" . t("user role") . "</th><th>" . t("initial score") . "</th></tr>";
 
   while ($role = db_fetch_object($result)) {
     $output .= "<tr><td>$role->name</td>";
@@ -911,9 +911,9 @@ function comment_mod_votes($edit) {
     $mid = 0;
   }
 
-  $output .= "<h3>Moderation votes overview</h3>";
+  $output .= "<h3>" . t("Moderation votes overview") . "</h3>";
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
-  $output .= " <tr><th>votes</th><th>weight</th><th>operations</th></tr>";
+  $output .= " <tr><th>" . t("votes") . "</th><th>" . t("weight") . "</th><th>" . t("operations") . "</th></tr>";
 
   $result = db_query("SELECT mid, vote, weight FROM moderation_votes ORDER BY weight");
   while ($vote = db_fetch_object($result)) {
@@ -960,7 +960,7 @@ function comment_mod_filters($edit) {
   $output .= "<h3>Comment threshhold overview</h3>";
   $output .= "<p><i>Optional</i>. If your site gets lots of comments, you may offer your users threshholds, which are used to hide all comments whose moderation score is lower than the threshhold. This cuts down on clutter while your readers view the site. These threshholds appear in the Comment Control Panel.</p>";
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
-  $output .= " <tr><th>name</th><th>minimum score</th><th>operations</th></tr>";
+  $output .= " <tr><th>" . t("name") . "</th><th>" . t("minimum score") . "</th><th>" . t("operations") . "</th></tr>";
 
   $result = db_query("SELECT fid, filter, minimum FROM moderation_filters ORDER BY minimum");
   while ($filter = db_fetch_object($result)) {

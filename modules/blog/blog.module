@@ -8,8 +8,9 @@ function blog_system($field){
 
 
 function blog_conf_options() {
-  $output = form_textarea("Explanation or submission guidelines", "blog_help", variable_get("blog_help", ""), 55, 4, "This text is displayed at the top of the blog submission form.  It's useful for helping or instructing your users.");
-  $output .= form_select(t("Minimum number of words in a blog entry"), "minimum_blog_size", variable_get("minimum_blog_size", 0), array(0 => "0 words", 10 => "10 words", 25 => "25 words",  50 => "50 words", 75 => "75 words", 100 => "100 words", 125 => "125 words",  150 => "150 words", 175 => "175 words", 200 => "200 words"), t("The minimum number of words a personal blog entry should contain.  This is useful to rule out submissions that do not meet the site's standards, such as short test posts."));
+  $output = form_textarea(t("Explanation or submission guidelines"), "blog_help", variable_get("blog_help", ""), 55, 4, t("This text is displayed at the top of the blog submission form.  It's useful for helping or instructing your users."));
+  $words = t("words");
+  $output .= form_select(t("Minimum number of words in a blog entry"), "minimum_blog_size", variable_get("minimum_blog_size", 0), array(0 => "0 $words", 10 => "10 $words", 25 => "25 $words",  50 => "50 $words", 75 => "75 $words", 100 => "100 $words", 125 => "125 $words",  150 => "150 $words", 175 => "175 $words", 200 => "200 $words"), t("The minimum number of words a personal blog entry should contain.  This is useful to rule out submissions that do not meet the site's standards, such as short test posts."));
 
   return $output;
 }
@@ -193,7 +194,7 @@ function blog_page_user($uid = 0, $date = 0, $all = 0) {
     $output .= lm(t("show recent blogs"), array("mod" => "blog", "op" => "view", "id" => $account->uid), "", array("title" => t("Show recent blogs by this user.")));
   }
 
-  $theme->box(t("%u's blog", array("%u" => $account->name)), $output);
+  $theme->box(t("%username's blog", array("%username" => $account->name)), $output);
 }
 
 function blog_page_last() {
@@ -325,7 +326,7 @@ function blog_link($type, $node = 0, $main) {
       $links[] = lm(t("edit this blog"), array("mod" => "node", "op" => "edit", "id" => $node->nid), "", array("title" => t("Edit this blog entry.")));
     }
     elseif ($op != "view" && !$id) {
-      $links[] = lm(t("%u's blog", array("%u" => $node->name)), array("mod" => "blog", "op" => "view", "id" => $node->uid), "", array("title" => t("Read %u's latest blog entries.", array("%u" => $node->name))));
+      $links[] = lm(t("%username's blog", array("%username" => $node->name)), array("mod" => "blog", "op" => "view", "id" => $node->uid), "", array("title" => t("Read %username's latest blog entries.", array("%username" => $node->name))));
     }
   }
 

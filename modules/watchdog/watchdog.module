@@ -26,8 +26,8 @@ function watchdog_link($type) {
 }
 
 function watchdog_conf_options() {
-  $period = array(3600 => format_interval(3600), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200), 1000000000 => "Never");
-  $output .= form_select("Discard entries older than", "watchdog_clear", variable_get("watchdog_clear", 604800), $period, "The time watchdog entries should be kept.  Older entries will be automatically discarded.  Requires crontab.");
+  $period = array(3600 => format_interval(3600), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200), 1000000000 => t("Never"));
+  $output .= form_select(t("Discard entries older than"), "watchdog_clear", variable_get("watchdog_clear", 604800), $period, t("The time watchdog entries should be kept.  Older entries will be automatically discarded.  Requires crontab."));
   return $output;
 }
 
@@ -42,7 +42,7 @@ function watchdog_overview($type) {
   $result = db_query("SELECT w.*, u.name, u.uid FROM watchdog w LEFT JOIN users u ON w.uid = u.uid ". ($type ? $query[$type] : "") ." ORDER BY timestamp DESC LIMIT 1000");
 
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
-  $output .= " <tr><th>date</th><th>message</th><th>user</th><th>operations</th></tr>";
+  $output .= " <tr><th>" . t("date") . "</th><th>" . t("message") . "</th><th>" . t("user") . "</th><th>" . t("operations") . "</th></tr>";
   while ($watchdog = db_fetch_object($result)) {
     if ($background = $color[$watchdog->type]) {
       $output .= " <tr bgcolor=\"$background\"><td>". format_date($watchdog->timestamp, "small") ."</td><td>". substr(check_output($watchdog->message), 0, 64) ."</td><td align=\"center\">". format_name($watchdog) ."</a></td><td align=\"center\">". la(t("details"), array("mod" => "watchdog", "op" => "view", "id" => $watchdog->wid)) ."</td></tr>";
@@ -58,12 +58,12 @@ function watchdog_view($id) {
 
   if ($watchdog = db_fetch_object($result)) {
     $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
-    $output .= " <tr><th>Type:</th><td>". check_output($watchdog->type) ."</td></tr>";
-    $output .= " <tr><th>Date:</th><td>". format_date($watchdog->timestamp, "large") ."</td></tr>";
-    $output .= " <tr><th>User:</th><td>". format_name($watchdog) ."</td></tr>";
-    $output .= " <tr><th>Location:</th><td>". check_output($watchdog->location) ."</td></tr>";
-    $output .= " <tr><th>Message:</th><td>". check_output($watchdog->message) ."</td></tr>";
-    $output .= " <tr><th>Hostname:</th><td>". check_output($watchdog->hostname) ."</td></tr>";
+    $output .= " <tr><th>" . t("Type") . ":" . "</th><td>". check_output($watchdog->type) ."</td></tr>";
+    $output .= " <tr><th>" . t("Date") . ":" . "</th><td>". format_date($watchdog->timestamp, "large") ."</td></tr>";
+    $output .= " <tr><th>" . t("User") . ":" . "</th><td>". format_name($watchdog) ."</td></tr>";
+    $output .= " <tr><th>" . t("Location") . ":" . "</th><td>". check_output($watchdog->location) ."</td></tr>";
+    $output .= " <tr><th>" . t("Message") . ":" . "</th><td>". check_output($watchdog->message) ."</td></tr>";
+    $output .= " <tr><th>" . t("Hostname") . ":" . "</th><td>". check_output($watchdog->hostname) ."</td></tr>";
     $output .= "</table>";
 
     return $output;

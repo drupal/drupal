@@ -952,6 +952,7 @@ function user_edit($edit = array()) {
     foreach (theme_list() as $key => $value) {
       $options .= "<option value=\"$key\"". (($edit["theme"] == $key) ? " selected=\"selected\"" : "") .">$key - $value->description</option>\n";
     }
+
     $output .= form_item(t("Theme"), "<select name=\"edit[theme]\">$options</select>", t("Selecting a different theme will change the look and feel of the site."));
     for ($zone = -43200; $zone <= 46800; $zone += 3600) $zones[$zone] = date("l, F dS, Y - h:i A", time() - date("Z") + $zone) ." (GMT ". $zone / 3600 .")";
     $output .= form_select(t("Timezone"), "timezone", $edit["timezone"], $zones, t("Select what time you currently have and your timezone settings will be set appropriate."));
@@ -1096,13 +1097,14 @@ function user_conf_options() {
   $output .= form_textarea("Welcome e-mail body", "user_mail_welcome_body", variable_get("user_mail_welcome_body", t("%username,\n\nThank you for registering at %site. You may now login to %uri". drupal_url(array("mod" => "user", "op" => "login"), "module") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %uri". drupal_url(array("mod" => "user", "op" => "edit"), "module") ."\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team")), 70, 10, "Customize the body of the welcome e-mail, which is sent to new members upon registering.  Available variables are: %username, %site, %password, %uri, %uri_brief, %mailto");
   $output .= form_textfield("Forgotten password e-mail subject", "user_mail_pass_subject", variable_get("user_mail_pass_subject", t("Replacement login information for %username at %site")), 80, 180, "Customize the Subject of your forgotten password e-mail.  Available variables are: %username, %site, %password, %uri, %uri_brief, %mailto, %date");
   $output .= form_textarea("Forgotten password e-mail body", "user_mail_pass_body", variable_get("user_mail_pass_body", t("%username,\n\nHere is your new password for %site. You may now login to %uri". drupal_url(array("mod" => "user", "op" => "login"), "module") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %uri". drupal_url(array("mod" => "user", "op" => "edit"), "module") ."\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team")), 70, 10, "Customize the body of the forgotten password e-mail.  Available variables are: %username, %site, %password, %uri, %uri_brief, %mailto");
+
   return $output;
 }
 
 function user_admin_settings($edit = array()) {
   global $op;
 
-  if ($op == "Save configuration") {
+  if ($op == t("Save configuration")) {
     /*
     ** Save the configuration options:
     */
@@ -1110,7 +1112,7 @@ function user_admin_settings($edit = array()) {
     foreach ($edit as $name => $value) variable_set($name, $value);
   }
 
-  if ($op == "Reset to defaults") {
+  if ($op == t("Reset to defaults")) {
     /*
     ** Reset the configuration options to their default value:
     */
@@ -1119,8 +1121,8 @@ function user_admin_settings($edit = array()) {
   }
 
   $output .= user_conf_options();
-  $output .= form_submit("Save configuration");
-  $output .= form_submit("Reset to defaults");
+  $output .= form_submit(t("Save configuration"));
+  $output .= form_submit(t("Reset to defaults"));
 
   return form($output);
 
@@ -1160,10 +1162,10 @@ function user_admin_create($edit = array()) {
       $output .= theme_invoke("theme_error", check_output($error));
     }
 
-    $output .= form_textfield("Username", "name", $edit["name"], 30, 55);
-    $output .= form_textfield("E-mail address", "mail", $edit["mail"], 30, 55);
-    $output .= form_textfield("Password", "pass", $edit["pass"], 30, 55);
-    $output .= form_submit("Create account");
+    $output .= form_textfield(t("Username"), "name", $edit["name"], 30, 55, t("Provide the username of the new account."));
+    $output .= form_textfield(t("E-mail address"), "mail", $edit["mail"], 30, 55, t("Provide the e-mail address associated with the new account."));
+    $output .= form_textfield(t("Password"), "pass", $edit["pass"], 30, 55, t("Provide a password for the new account."));
+    $output .= form_submit(t("Create account"));
 
     return form($output);
   }
@@ -1175,17 +1177,17 @@ function user_admin_access($edit = array()) {
   $output .= "<small>". la(t("e-mail rules"), array("mod" => "user", "op" => "access", "type" => "mail")) ." :: ". la(t("username rules"), array("mod" => "user", "op" => "access", "type" => "user")) ."</small><hr />";  // irc rules, too!
 
   if ($type != "user") {
-    $output .= "<h3>E-mail rules</h3>";
+    $output .= "<h3>" . t("E-mail rules") . "</h3>";
     $type = "mail";
   }
   else {
-    $output .= "<h3>Username rules</h3>";
+    $output .= "<h3>" . t("Username rules") . "</h3>";
   }
 
-  if ($op == "Add rule") {
+  if ($op == t("Add rule")) {
     db_query("INSERT INTO access (mask, type, status) VALUES ('%s', '%s', '%s')", $edit["mask"], $type, $edit["status"]);
   }
-  else if ($op == "Check") {
+  else if ($op == t("Check")) {
     if (user_deny($type, $edit["test"])) {
       $message = "<b>'". $edit["test"] ."' is not allowed.</b><p />";
     }
@@ -1198,32 +1200,32 @@ function user_admin_access($edit = array()) {
   }
 
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
-  $output .= " <tr><th>type</th><th>mask</th><th>operations</th></tr>";
+  $output .= " <tr><th>" . t("type") . "</th><th>" . t("mask") . "</th><th>" . t("operations") . "</th></tr>";
 
   $result = db_query("SELECT * FROM access WHERE type = '%s' AND status = '1' ORDER BY mask", $type);
 
   while ($rule = db_fetch_object($result)) {
-    $output .= "<tr><td align=\"center\">allow</td><td>". check_output($rule->mask) ."</td><td>". la(t("delete rule"), array("mod" => "user", "op" => "access", "type" => $type, "id" => $rule->aid)) ."</td></tr>";
+    $output .= "<tr><td align=\"center\">" . t("Allow") . "</td><td>". check_output($rule->mask) ."</td><td>". la(t("delete rule"), array("mod" => "user", "op" => "access", "type" => $type, "id" => $rule->aid)) ."</td></tr>";
   }
 
   $result = db_query("SELECT * FROM access WHERE type = '%s' AND status = '0' ORDER BY mask", $type);
 
   while ($rule = db_fetch_object($result)) {
-    $output .= "<tr><td align=\"center\">deny</td><td>". check_output($rule->mask) ."</td><td>". la(t("delete rule"), array("mod" => "user", "op" => "access", "type" => $type, "id" => $rule->aid)). "</td></tr>";
+    $output .= "<tr><td align=\"center\">" . t("Deny") . "</td><td>". check_output($rule->mask) ."</td><td>". la(t("delete rule"), array("mod" => "user", "op" => "access", "type" => $type, "id" => $rule->aid)). "</td></tr>";
   }
 
-  $output .= " <tr><td><select name=\"edit[status]\"><option value=\"1\">allow</option><option value=\"0\">deny</option></select></td><td><input size=\"32\" maxlength=\"64\" name=\"edit[mask]\" /></td><td><input type=\"submit\" name=\"op\" value=\"Add rule\" /></td></tr>";
+  $output .= " <tr><td><select name=\"edit[status]\"><option value=\"1\">" . t("Allow") . "</option><option value=\"0\">" . t("Deny") . "</option></select></td><td><input size=\"32\" maxlength=\"64\" name=\"edit[mask]\" /></td><td><input type=\"submit\" name=\"op\" value=\"" . t("Add rule") . "\" /></td></tr>";
   $output .= "</table>";
-  $output .= "<p><small>%: matches any number of characters, even zero characters.<br />_: matches exactly one character.</small></p>";
+  $output .= "<p><small>%: " . t("Matches any number of characters, even zero characters") . ".<br />_: " . t("Matches exactly one character.") . "</small></p>";
 
   if ($type != "user") {
-    $output .= "<h3>Check e-mail address</h3>";
+    $output .= "<h3>" . t("Check e-mail address") . "</h3>";
   }
   else {
-    $output .= "<h3>Check username</h3>";
+    $output .= "<h3>" . t("Check username") . "</h3>";
   }
 
-  $output .= "$message<input size=\"32\" maxlength=\"64\" name=\"edit[test]\" value=\"". $edit["test"] ."\" /><input type=\"submit\" name=\"op\" value=\"Check\" />";
+  $output .= "$message<input size=\"32\" maxlength=\"64\" name=\"edit[test]\" value=\"". $edit["test"] ."\" /><input type=\"submit\" name=\"op\" value=\"" . t("Check") . "\" />";
 
   return form($output);
 }
@@ -1305,7 +1307,7 @@ function user_admin_perm($edit = array()) {
   }
   $output .= "</table>";
   $output .= form_hidden("tid", $tid);
-  $output .= form_submit("Save permissions");
+  $output .= form_submit(t("Save permissions"));
 
   return form($output);
 
@@ -1314,14 +1316,14 @@ function user_admin_perm($edit = array()) {
 function user_admin_role($edit = array()) {
   global $op, $id;
 
-  if ($op == "Save role") {
+  if ($op == t("Save role")) {
     db_query("UPDATE role SET name = '%s' WHERE rid = '%s'", $edit["name"], $id);
   }
-  else if ($op == "Delete role") {
+  else if ($op == t("Delete role")) {
     db_query("DELETE FROM role WHERE rid = '%s'", $id);
     db_query("DELETE FROM permission WHERE rid = '%s'", $id);
   }
-  else if ($op == "Add role") {
+  else if ($op == t("Add role")) {
     db_query("INSERT INTO role (name) VALUES ('%s')", $edit["name"]);
   }
   else if ($id) {
@@ -1331,9 +1333,9 @@ function user_admin_role($edit = array()) {
 
     $role = db_fetch_object(db_query("SELECT * FROM role WHERE rid = '%s'", $id));
 
-    $output .= form_textfield("Role name", "name", $role->name, 32, 64, "The name for this role.  Example: 'moderator', 'editorial board', 'site architect'.");
-    $output .= form_submit("Save role");
-    $output .= form_submit("Delete role");
+    $output .= form_textfield(t("Role name"), "name", $role->name, 32, 64, t("The name for this role.  Example: 'moderator', 'editorial board', 'site architect'."));
+    $output .= form_submit(t("Save role"));
+    $output .= form_submit(t("Delete role"));
 
     $output = form($output);
   }
@@ -1350,7 +1352,7 @@ function user_admin_role($edit = array()) {
     while ($role = db_fetch_object($result)) {
       $output .= "<tr><td>". check_output($role->name) ."</td><td>". la(t("edit role"), array("mod" => "user", "op" => "role", "id" => $role->rid)) ."</td></tr>";
     }
-    $output .= " <tr><td><input size=\"32\" maxlength=\"64\" name=\"edit[name]\" /></td><td><input type=\"submit\" name=\"op\" value=\"Add role\" /></td></tr>";
+    $output .= " <tr><td><input size=\"32\" maxlength=\"64\" name=\"edit[name]\" /></td><td><input type=\"submit\" name=\"op\" value=\"" . t("Add role") . "\" /></td></tr>";
     $output .= "</table>";
 
     $output = form($output);
@@ -1364,7 +1366,7 @@ function user_admin_edit($edit = array()) {
 
   if ($account = user_load(array("uid" => $id))) {
 
-    if ($op == "Save account") {
+    if ($op == t("Save account")) {
       foreach (module_list() as $module) {
         if (module_hook($module, "user")) {
           $result = module_invoke($module, "user", "edit_validate", $edit, $account);
@@ -1415,7 +1417,7 @@ function user_admin_edit($edit = array()) {
         $output .= theme_invoke("theme_error", check_output($error));
       }
     }
-    else if ($op == "Delete account") {
+    else if ($op == t("Delete account")) {
       if ($edit["status"] == 0) {
         db_query("DELETE FROM users WHERE uid = '$account->uid'");
         db_query("DELETE FROM authmap WHERE uid = '$account->uid'");
@@ -1430,7 +1432,7 @@ function user_admin_edit($edit = array()) {
   ** Display user form:
   */
 
-  $output .= form_item("User ID", check_output($account->uid));
+  $output .= form_item(t("User ID"), check_output($account->uid));
   $output .= form_textfield(t("Username"), "name", $account->name, 30, 55, t("Your full name or your prefered username: only letters, numbers and spaces are allowed."));
   $output .= form_textfield(t("E-mail address"), "mail", $account->mail, 30, 55, t("Insert a valid e-mail address.  All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail."));
 
@@ -1449,11 +1451,11 @@ function user_admin_edit($edit = array()) {
   $output .= form_select(t("Timezone"), "timezone", $account->timezone, $zones, t("Select what time you currently have and your timezone settings will be set appropriate."));
   $output .= form_select(t("Language"), "language", $account->language, $languages, t("Selecting a different language will change the language of the site."));
   $output .= form_item(t("Password"), "<input type=\"password\" name=\"edit[pass1]\" size=\"12\" maxlength=\"24\" /> <input type=\"password\" name=\"edit[pass2]\" size=\"12\" maxlength=\"24\" />", t("Enter a new password twice if you want to change the current password for this user or leave it blank if you are happy with the current password."));
-  $output .= form_select("Status", "status", $account->status, array("blocked", "active"));
-  $output .= form_select("Role", "rid", $account->rid, user_roles(1));
+  $output .= form_select(t("Status"), "status", $account->status, array("blocked", "active"));
+  $output .= form_select(t("Role"), "rid", $account->rid, user_roles(1));
 
-  $output .= form_submit("Save account");
-  $output .= form_submit("Delete account");
+  $output .= form_submit(t("Save account"));
+  $output .= form_submit(t("Delete account"));
 
   $output = form($output);
 
@@ -1482,7 +1484,7 @@ function user_admin_account() {
   $output .= "<small>". implode(" :: ", $links) ."</small><hr />";
 
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
-  $output .= " <tr><th>username</th><th>last access</th><th>operations</th></tr>";
+  $output .= " <tr><th>" . t("username") . "</th><th>" . t("last access") . "</th><th>" . t("operations") . "</th></tr>";
   while ($account = db_fetch_object($result)) {
     $output .= " <tr><td>". format_name($account) ."</td><td>". format_date($account->timestamp, "small") ."</td><td align=\"center\">". la(t("edit account"), array("mod" => "user", "op" => "edit", "id" => $account->uid)) ."</td></tr>";
   }
@@ -1536,32 +1538,32 @@ function user_admin() {
       case "search":
         print search_type("user", drupal_url(array("mod" => "user", "op" => "search"), "admin"));
         break;
-      case "Save configuration":
-      case "Reset to defaults":
+      case t("Save configuration"):
+      case t("Reset to defaults"):
       case "settings":
         print user_admin_settings($edit);
         break;
-      case "Add rule":
-      case "Check":
+      case t("Add rule"):
+      case t("Check"):
       case "access":
         print user_admin_access($edit);
         break;
-      case "Save permissions":
+      case t("Save permissions"):
       case "permission":
         print user_admin_perm($edit);
         break;
-      case "Create account":
+      case t("Create account"):
       case "create":
         print user_admin_create($edit);
         break;
-      case "Add role":
-      case "Delete role":
-      case "Save role":
+      case t("Add role"):
+      case t("Delete role"):
+      case t("Save role"):
       case "role":
         print user_admin_role($edit);
         break;
-      case "Delete account":
-      case "Save account":
+      case t("Delete account"):
+      case t("Save account"):
       case "edit":
         print user_admin_edit($edit);
         break;

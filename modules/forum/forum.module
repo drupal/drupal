@@ -94,7 +94,7 @@ function forum_block($op = "list", $delta = 0) {
       if (variable_get("forum_cache", 0)) {
         $content = cache_get("forum:block");
       }
-      
+
       if (!$content) {
         $content = "<b>". t("Active forum topics:") ."</b><br />";
         $result = db_query("SELECT n.nid, n.title, n.body, GREATEST(n.created, MAX(c.timestamp)) AS sort FROM node n, forum f LEFT JOIN comments c ON c.nid = n.nid WHERE n.type = 'forum' AND n.nid = f.nid AND f.shadow = 0 AND n.status = 1 GROUP BY n.nid ORDER BY sort DESC LIMIT ". variable_get("forum_block_num", "5"));
@@ -108,11 +108,11 @@ function forum_block($op = "list", $delta = 0) {
         while ($node = db_fetch_object($result)) {
           $content .= "- ". l(check_output($node->title), array("id" => $node->nid), "node", "", array("title" => substr(strip_tags($node->body), 0, 100)."...")) ."<br />";
         }
-        
+
         if ($content) {
           $content .= "<div align=\"right\">". lm(t("more"), array("mod" => "forum")) ."</div>";
         }
-        
+
         cache_set("forum:block", $content, time() + 60 * 3);
       }
 
