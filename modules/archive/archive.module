@@ -170,7 +170,7 @@ function archive_page() {
     $months = array(1 => t("January"), 2 => t("February"), 3 => t("March"), 4 => t("April"), 5 => t("May"), 6 => t("June"), 7 => t("July"), 8 => t("August"), 9 => t("September"), 10 => t("October"), 11 => t("November"), 12 => t("December"));
     for ($i = 1; $i <= 31; $i++) $days[$i] = $i;
 
-    $start = "<div class=\"inline-container\">";
+    $start = "<div class=\"container-inline\">";
     $start .= form_select("", "year", ($year ? $year : date("Y")), $years). form_select("", "month", ($month ? $month : date("m")), $months) . form_select("", "day", ($day ? $day : date("d")), $days) . form_submit(t("Show"));
     $start .= "</div>";
     theme("box", t("Archives"), form($start));

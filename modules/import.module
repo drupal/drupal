@@ -106,6 +106,7 @@ function import_feed_block($feed) {
     $output .= "<li>". import_format_item($item) ."</li>";
   }
   $output .= "</ul></div>";
+
   return $output;
 }
 

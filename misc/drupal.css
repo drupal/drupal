@@ -6,10 +6,10 @@
 .blog-it a         { color: #000; text-decoration: none; }
 .blog-it a:hover   { color: #000; text-decoration: none; }
 
-.poll-foreground   { background-color: #000; }
-.poll-background   { background-color: #ddd; }
+.poll-foreground   { background-color: #000; float: left; height: 1em; }
+.poll-background   { background-color: #ddd; float: left; height: 1em; }
 
 .form-item .title  { font-weight: bold; margin-top: 1.1em; margin-bottom: 1px; }
 .form-item .description { font-size: 0.85em; }
 
-.inline-container div { display: inline; }
+.container-inline div { display: inline; }
