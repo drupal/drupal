@@ -94,25 +94,26 @@ function cache_clear($interval = 0) {
 function cache_get() {
   global $user, $REQUEST_URI, $REQUEST_METHOD;
 
-  if ($user->id || $REQUEST_METHOD != "GET") {
-    return 0;
+  if (!$user->id && $REQUEST_METHOD == "GET") {
+    if ($cache = db_fetch_object(db_query("SELECT * FROM cache WHERE url = '". check_input($REQUEST_URI) ."'"))) {
+      cache_clear(variable_get("cache_clear", 30));
+    }
+    else {
+      ob_start();
+    }
   }
 
-  if ($cache = db_fetch_object(db_query("SELECT * FROM cache WHERE url = '". check_input($REQUEST_URI) ."'"))) {
-    cache_clear(variable_get("cache_clear", 30));
-
-    return $cache->data;
-  }
-
-  ob_start();
-
-  return 0;
+  return $cache->data ? $cache->data : 0;
 }
 
 function cache_set() {
-  global $REQUEST_URI;
+  global $user, $REQUEST_URI, $REQUEST_METHOD;
 
-  db_query("INSERT INTO cache (url, data, timestamp) VALUES('". check_input($REQUEST_URI) ."', '". check_code(ob_get_contents()) ."', '". time() ."')");
+  if (!$user->id && $REQUEST_METHOD == "GET") {
+    if ($data = ob_get_contents()) {
+      db_query("INSERT INTO cache (url, data, timestamp) VALUES('". addslashes($REQUEST_URI) ."', '". addslashes($data) ."', '". time() ."')");
+    }
+  }
 }
 
 function format_interval($timestamp) {
@@ -286,7 +287,7 @@ function page_footer() {
   if (variable_get("dev_timer", 0)) {
     timer_print();
   }
- 
+
   if (variable_get("cache", 0)) {
     cache_set();
   }
