@@ -617,7 +617,8 @@ class xmlrpcmsg {
     global $_xh,$xmlrpcerr,$xmlrpcstr;
 
 
-    $parser = drupal_xml_parser_create($data);
+    $xmlparser = drupal_xml_parser_create($data);
+    $parser = (int)$xmlparser;
 
     $_xh[$parser]=array();
 
@@ -629,10 +630,10 @@ class xmlrpcmsg {
     $_xh[$parser]['ha']="";
     $_xh[$parser]['ac']="";
 
-    xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, true);
-    xml_set_element_handler($parser, "xmlrpc_se", "xmlrpc_ee");
-    xml_set_character_data_handler($parser, "xmlrpc_cd");
-    xml_set_default_handler($parser, "xmlrpc_dh");
+    xml_parser_set_option($xmlparser, XML_OPTION_CASE_FOLDING, true);
+    xml_set_element_handler($xmlparser, "xmlrpc_se", "xmlrpc_ee");
+    xml_set_character_data_handler($xmlparser, "xmlrpc_cd");
+    xml_set_default_handler($xmlparser, "xmlrpc_dh");
     $xmlrpc_value=new xmlrpcval;
 
     if ($this->debug)
@@ -643,7 +644,7 @@ class xmlrpcmsg {
       error_log("No response received from server.");
       $r=new xmlrpcresp(0, $xmlrpcerr["no_data"],
           $xmlrpcstr["no_data"]);
-      xml_parser_free($parser);
+      xml_parser_free($xmlparser);
       return $r;
     }
     // see if we got an HTTP 200 OK, else bomb
@@ -654,7 +655,7 @@ class xmlrpcmsg {
       error_log("HTTP error, got response: " .$errstr);
       $r=new xmlrpcresp(0, $xmlrpcerr["http_error"],
           $xmlrpcstr["http_error"]. " (" . $errstr . ")");
-      xml_parser_free($parser);
+      xml_parser_free($xmlparser);
       return $r;
     }
 
@@ -678,21 +679,21 @@ class xmlrpcmsg {
       $data=$newdata;
     }
 
-    if (!xml_parse($parser, $data, sizeof($data))) {
+    if (!xml_parse($xmlparser, $data, sizeof($data))) {
       // thanks to Peter Kocks <peter.kocks@baygate.com>
-      if((xml_get_current_line_number($parser)) == 1)
+      if((xml_get_current_line_number($xmlparser)) == 1)
         $errstr = "XML error at line 1, check URL";
       else
         $errstr = sprintf("XML error: %s at line %d",
-            xml_error_string(xml_get_error_code($parser)),
-            xml_get_current_line_number($parser));
+            xml_error_string(xml_get_error_code($xmlparser)),
+            xml_get_current_line_number($xmlparser));
       error_log($errstr);
       $r=new xmlrpcresp(0, $xmlrpcerr["invalid_return"],
           $xmlrpcstr["invalid_return"]);
-      xml_parser_free($parser);
+      xml_parser_free($xmlparser);
       return $r;
     }
-    xml_parser_free($parser);
+    xml_parser_free($xmlparser);
     if ($this->debug) {
       print "<pre>---EVALING---[" .
         strlen($_xh[$parser]['st']) . " chars]---\n" .
