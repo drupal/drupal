@@ -98,7 +98,8 @@ $sql_updates = array(
   "2005-01-20" => "update_119",
   "2005-01-25" => "update_120",
   "2005-01-26" => "update_121",
-  "2005-01-27" => "update_122"
+  "2005-01-27" => "update_122",
+  "2005-01-28" => "update_123"
 );
 
 function update_32() {
@@ -2176,6 +2177,19 @@ function update_122() {
   $ret[] = update_sql("ALTER TABLE {blocks} ADD types text");
   return $ret;
 
+}
+
+function update_123() {
+  $ret = array();
+
+  $ret[] = update_sql("ALTER TABLE {vocabulary} ADD module varchar(255) NOT NULL default ''");
+  $ret[] = update_sql("UPDATE {vocabulary} SET module = 'taxonomy'");
+  $vid = variable_get('forum_nav_vocabulary', '');
+  if (!empty($vid)) {
+    $ret[] = update_sql("UPDATE {vocabulary} SET module = 'forum' WHERE vid = " . $vid);
+  }
+
+  return $ret;
 }
 
 function update_sql($sql) {

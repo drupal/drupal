@@ -145,7 +145,7 @@ function taxonomy_save_vocabulary($edit) {
     $edit['nodes'] = array();
   }
 
-  $data = array('name' => $edit['name'], 'description' => $edit['description'], 'help' => $edit['help'], 'multiple' => $edit['multiple'], 'required' => $edit['required'], 'hierarchy' => $edit['hierarchy'], 'relations' => $edit['relations'], 'weight' => $edit['weight']);
+  $data = array('name' => $edit['name'], 'description' => $edit['description'], 'help' => $edit['help'], 'multiple' => $edit['multiple'], 'required' => $edit['required'], 'hierarchy' => $edit['hierarchy'], 'relations' => $edit['relations'], 'weight' => $edit['weight'],  'module' => isset($edit['module']) ? $edit['module'] : 'taxonomy');
   if ($edit['vid'] && $edit['name']) {
     db_query('UPDATE {vocabulary} SET '. _taxonomy_prepare_update($data) .' WHERE vid = %d', $edit['vid']);
     db_query("DELETE FROM {vocabulary_node_types} WHERE vid = %d", $edit['vid']);
@@ -357,21 +357,23 @@ function taxonomy_overview() {
   $vocabularies = taxonomy_get_vocabularies();
 
   foreach ($vocabularies as $vocabulary) {
-    $types = array();
-    foreach($vocabulary->nodes as $type) {
-      $node_type = node_invoke($type, 'node_name');
-      $types[] = $node_type ? $node_type : $type;
-    }
+    if ($vocabulary->module == 'taxonomy') { // only show vocabularies that can be configured through the vocabulary module
+      $types = array();
+      foreach($vocabulary->nodes as $type) {
+        $node_type = node_invoke($type, 'node_name');
+        $types[] = $node_type ? $node_type : $type;
+      }
 
-    $rows[] = array($vocabulary->name, array('data' => implode(', ', $types), 'align' => 'center'), l(t('edit vocabulary'), "admin/taxonomy/edit/vocabulary/$vocabulary->vid"), l(t('add term'), "admin/taxonomy/add/term/$vocabulary->vid"), l(t('preview form'), "admin/taxonomy/preview/vocabulary/$vocabulary->vid"));
+      $rows[] = array($vocabulary->name, array('data' => implode(', ', $types), 'align' => 'center'), l(t('edit vocabulary'), "admin/taxonomy/edit/vocabulary/$vocabulary->vid"), l(t('add term'), "admin/taxonomy/add/term/$vocabulary->vid"), l(t('preview form'), "admin/taxonomy/preview/vocabulary/$vocabulary->vid"));
 
-    $tree = taxonomy_get_tree($vocabulary->vid);
-    if ($tree) {
-      unset($data);
+      $tree = taxonomy_get_tree($vocabulary->vid);
+      if ($tree) {
+        unset($data);
       foreach ($tree as $term) {
         $data .= _taxonomy_depth($term->depth) .' '. $term->name .' ('. l(t('edit term'), "admin/taxonomy/edit/term/$term->tid") .')<br />';
       }
       $rows[] = array(array('data' => $data, 'colspan' => '5'));
+      }
     }
   }
 

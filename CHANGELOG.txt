@@ -15,6 +15,7 @@ Drupal x.x.x, xxxx-xx-xx
     * refactored the watchdog pages.
     * refactored the throttle module configuration.
     * refactored the access rules page.
+    * introduced forum configuration pages.
     * added a 'add child page' link to book pages.
 - contact module:
     * added a simple contact module that allows users to contact each other using e-mail.

@@ -11,18 +11,14 @@
  */
 function forum_help($section) {
   switch ($section) {
-    case 'admin/help#forum':
-      return t("
-      <h3>Creating a forum</h3>
-      <p>The forum module uses taxonomy to organize itself. To create a forum you first have to create a <a href=\"%taxonomy\">taxonomy vocabulary</a>. When doing this, choose a sensible name for it (such as \"fora\") and make sure under \"Types\" that \"forum\" is selected. Once you have done this, <a href=\"%taxo-terms\">add some terms</a> to it. Each term will become a forum. If you fill in the description field, users will be given additional information about the forum on the main forum page. For example: \"troubleshooting\" - \"Please ask your questions here.\"</p>
-      <p>When you are happy with your vocabulary, go to <a href=\"%forums\">administer &raquo; settings &raquo; forum</a> and set <strong>Forum vocabulary</strong> to the one you have just created. There will now be fora active on the site. For users to access them they must have the \"access content\" <a href=\"%permission\">permission</a> and to create a topic they must have the \"create forum topics\" <a href=\"%permission\">permission</a>. These permissions can be set in the <a href=\"%permission\">permission</a> pages.</p>
-      <h4>Icons</h4>
-      <p>To disable icons, set the icon path as blank in <a href=\"%forums\">administer &raquo; settings &raquo; forum</a>.</p>
-      <p>All files in the icon directory are assumed to be images. You may use images of whatever size you wish, but it is recommended to use 15x15 or 16x16.</p>", array("%taxonomy" => url('admin/taxonomy/add/vocabulary'), '%taxo-terms' => url('admin/taxonomy'), '%forums' => url('admin/settings/forum'), '%permission' => url('admin/user/configure/permission')));
+    case 'admin/forum':
+      return t('Forums and containers are used to organize the threaded discussions.  Forums may be nested in each other.  A container is used to group like forums together with out allowing topics to be created in the container.  Containers can be nested just like forums.  To delete a forum or container choose the appropriate "edit" operation.');
+    case 'admin/forum/add/container':
+      return t('When creating a contianer you are creating a group to contain multiple forums.  Users are not able to create topic inside container.  You can nest containers inside forums or other containers.');
+    case 'admin/forum/add/forum':
+      return t('When creating a forum you are creating an area for user to create similar topics for discussion. Forums may be nested underneath other forums or in containers.');
     case 'admin/modules#description':
       return t('Enable threaded discussions about general topics.');
-    case 'admin/settings/forum':
-      return t("<p>Forums are threaded discussions based on the taxonomy system.  For the forums to work, the taxonomy module has to be installed and enabled.  When activated, a taxonomy vocabulary (eg. \"forums\") needs to be <a href=\"%created\">created</a> and bound to the node type \"forum topic\".</p>", array('%created' => url('admin/taxonomy/add/vocabulary')));
     case 'node/add#forum':
       return t('A forum is a threaded discussion, enabling users to communicate about a particular topic.');
   }
@@ -56,46 +52,235 @@ function forum_access($op, $node) {
  * Implementation of hook_perm().
  */
 function forum_perm() {
-  return array('create forum topics', 'edit own forum topics');
+  return array('create forum topics', 'edit own forum topics', 'administer forums');
 }
 
 /**
- * Implementation of hook_settings().
+ * Admiinstration page which allows maintaining forums
  */
-function forum_settings() {
+function forum_admin() {
+  $op = $_POST['op'];
+  $edit = $_POST['edit'];
 
-  if (module_exist('taxonomy')) {
-    $vocs[0] = '<'. t('none') .'>';
-    foreach (taxonomy_get_vocabularies('forum') as $vid => $voc) {
-      $vocs[$vid] = $voc->name;
-    }
-
-    if ($voc) {
-      $group  = form_select(t('Forum vocabulary'), 'forum_nav_vocabulary', variable_get('forum_nav_vocabulary', ''), $vocs, t("The taxonomy vocabulary that will be used as the navigation tree.  The vocabulary's terms define the forums."));
-      $group .= _taxonomy_term_select(t('Containers'), 'forum_containers', variable_get('forum_containers', array()), variable_get('forum_nav_vocabulary', ''), t('You can choose forums which will not have topics, but will be just containers for other forums.  This lets you both group and nest forums.'), 1, '<'. t('none') .'>');
-      $output = form_group(t('Forum structure settings'), $group);
-
-      $group .= form_textfield(t('Forum icon path'), 'forum_icon_path', variable_get('forum_icon_path', ''), 30, 255, t('The path to the forum icons.  Leave blank to disable icons.  Don\'t add a trailing slash.  Default icons are available in the "misc" directory.'));
-      $group .= form_select(t('Hot topic threshold'), 'forum_hot_topic', variable_get('forum_hot_topic', 15), drupal_map_assoc(array(5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 80, 100, 10000)), t('The number of posts a topic must have to be considered <strong>hot</strong>.'));
-      $group .= form_select(t('Topics per page'), 'forum_per_page', variable_get('forum_per_page', 25), drupal_map_assoc(array(10, 25, 50, 75, 100)), t('The default number of topics displayed per page; links to browse older messages are automatically being displayed.'));
-      $group .= form_radios(t('Default order'), 'forum_order', variable_get('forum_order', '1'), array(1 => t('Date - newest first'), 2 => t('Date - oldest first'), 3 => t('Posts - most active first'), 4=> t('Posts - least active first')), t('The default display order for topics.'));
-      $output .= form_group(t('Forum viewing options'), $group);
-    }
+  if (empty($op)) {
+    $op = arg(2);
   }
 
-  return $output;
+  switch ($op) {
+    case 'add':
+      if (arg(3) == 'forum') {
+        $output = forum_form_forum();
+      }
+      else if (arg(3) == 'container') {
+        $output = forum_form_container();
+      }
+      break;
+    case 'edit':
+      if (arg(3) == 'forum') {
+        $output = forum_form_forum(object2array(taxonomy_get_term(arg(4))));
+      }
+      else if (arg(3) == 'container') {
+         $output = forum_form_container(object2array(taxonomy_get_term(arg(4))));
+      }
+      break;
+    case t('Delete'):
+      if (!$edit['confirm']) {
+        $output = _forum_confirm_del($edit['tid']);
+        break;
+      }
+      else {
+        $edit['name'] = 0;
+      }
+    case t('Submit'):
+      $edit = taxonomy_save_term($edit);
+      if (arg(3) == 'container') {
+        $containers = variable_get('forum_containers', array());
+        $containers[] = $edit['tid'];
+        variable_set('forum_containers', $containers);
+       }
+      drupal_goto('admin/forum');
+    default:
+      $output = forum_overview();
+  }
+
+  print theme('page', $output);
 }
 
 /**
  * Implementation of hook_taxonomy().
  */
 function forum_taxonomy($op, $type, $object) {
-  if ($type == 'vocabulary' && ($op == 'insert' || $op == 'update')) {
-    if (variable_get('forum_nav_vocabulary', '') == '' && in_array('forum', $object['nodes'])) {
-      // since none is already set, silently set this vocabulary as the navigation vocabulary
-      variable_set('forum_nav_vocabulary', $object['vid']);
+  if ($op == 'delete' && $type == 'term' && $object->vid == _forum_get_vid())  {
+    $results = db_query('SELECT f.nid FROM forum f WHERE f.tid = %d', $object->tid);
+    while ($node = db_fetch_object($results)) {
+      $edit['nid'] = $node->nid;
+      $edit['confirm'] = TRUE;
+      node_delete($edit);
     }
   }
+}
+
+/**
+ * Returns a confirmation page for deleting a forum taxonomy term
+ *
+ * @param $tid ID of the term to be deleted
+ */
+function _forum_confirm_del($tid) {
+   $term = taxonomy_get_term($tid);
+
+   $form .= form_hidden('confirm', 1);
+   $form .= form_hidden('tid', $tid);
+   $form .= form_submit(t('Delete'));
+   $form .= form_submit(t('Cancel'));
+
+   return form(form_item(t('Delete "%name"', array('%name' => $term->name)), $form, t('Deleteing a forum or container will delete all sub-forums as well.  Are you sure you want to delete?')));
+}
+
+/**
+ * Returns a form for adding a container to the forum vocabulary
+ *
+ * @param $edit Associative array containing a container term to be added or edited.
+ */
+function forum_form_container($edit = array()) {
+  $form = form_textfield(t('Container name'), 'name', $edit['name'], 50, 64, t('The container name is used on the forum listing page to identify a group of forums.'), NULL, TRUE);
+  $form .= form_textarea(t('Description'), 'description', $edit['description'], 60, 5, t('The description can provide additional information about the forum grouping.'));
+
+  $form .= _forum_parent_select($edit['tid'], t('Parent'), 'parent][');
+  $form .= form_weight(t('Weight'), 'weight', $edit['weight'], 10, t('In listings, the heavier terms (with a larger weight) will sink and the lighter terms will be positioned nearer the top.'));
+
+  $form .= form_hidden('vid', _forum_get_vid());
+  $form .= form_submit(t('Submit'));
+  if ($edit['tid']) {
+    $form .= form_submit(t('Delete'));
+    $form .= form_hidden('tid', $edit['tid']);
+  }
+
+  return form($form);
+}
+
+/**
+ * Returns a form for adding a forum to the forum vocabulary
+ *
+ * @param $edit Associative array containing a forum term to be added or edited.
+ */
+function forum_form_forum($edit = array()) {
+  $form = form_textfield(t('Forum name'), 'name', $edit['name'], 50, 64, t('The name is used to identify the forum.'), NULL, TRUE);
+  $form .= form_textarea(t('Description'), 'description', $edit['description'], 60, 5, t('The description can be used to provide more information about the forum, or further details about the topic.'));
+
+  $form .= _forum_parent_select($edit['tid'], t('Parent'), 'parent][');
+  $form .= form_weight(t('Weight'), 'weight', $edit['weight'], 10, t('In listings, the heavier (with a higher weight value) terms will sink and the lighter terms will be positioned nearer the top.'));
+
+  $form .= form_hidden('vid', _forum_get_vid());
+  $form .= form_submit(t('Submit'));
+  if ($edit['tid']) {
+    $form .= form_submit(t('Delete'));
+    $form .= form_hidden('tid', $edit['tid']);
+  }
+
+  return form($form);
+}
+
+/**
+ * Returns a select box for available parent terms
+ *
+ * @param $tid ID of the term which is being added or edited
+ * @param $title Title to display the select box with
+ * @param $name Name to use in the forum
+ */
+function _forum_parent_select($tid, $title, $name) {
+
+  $parents = taxonomy_get_parents($tid);
+  $children = taxonomy_get_tree(_forum_get_vid, $tid);
+
+  // A term can't be the child of itself, nor of its children.
+  foreach ($children as $child) {
+    $exclude[] = $child->tid;
+  }
+  $exclude[] = $tid;
+
+  $tree = taxonomy_get_tree(_forum_get_vid());
+  $options[0] = '<'. t('root') .'>';
+  if ($tree) {
+    foreach ($tree as $term) {
+      if (!in_array($term->tid, $exclude)) {
+        $options[$term->tid] = _forum_depth($term->depth).$term->name;
+      }
+    }
+  }
+
+  if (!$parents) {
+    $parents = 0;
+  }
+
+  return form_select($title, $name, $parents, $options, NULL, 0, FALSE, TRUE);
+}
+
+/**
+ * Returns an overview list of existing forums and contianers
+ */
+function forum_overview() {
+  $header = array(t('Name'), t('Operations'));
+
+  $tree = taxonomy_get_tree(_forum_get_vid());
+  if ($tree) {
+    foreach ($tree as $term) {
+      if (in_array($term->tid, variable_get('forum_containers', array()))) {
+        $rows[] = array(_forum_depth($term->depth) .' '. $term->name, l(t('edit container'), "admin/forum/edit/container/$term->tid"));
+      }
+      else {
+        $rows[] = array(_forum_depth($term->depth) .' '. $term->name, l(t('edit forum'), "admin/forum/edit/forum/$term->tid"));
+       }
+
+    }
+
+    return theme('table', $header, $rows);
+  }
+}
+
+/**
+ * Helper function used to generate indentation for forum list
+ *
+ * @param $depth Depth of the indentation
+ * @param $graphic HTML text to be repeated for each stage of depth
+ */
+function _forum_depth($depth, $graphic = '--') {
+  for ($n = 0; $n < $depth; $n++) {
+    $result .= $graphic;
+  }
+  return $result;
+}
+
+/**
+ * Returns the vocabulary id for forum navigation.
+ */
+function _forum_get_vid() {
+  $vid = variable_get('forum_nav_vocabulary', '');
+  if (empty($vid)) {
+    // Check to see if a forum vocabulary exists
+    $vid = db_result(db_query("SELECT vid FROM {vocabulary} WHERE module='%s'", 'forum'));
+    if (!$vid) {
+      $vocabulary = taxonomy_save_vocabulary(array('name' => 'Forums', 'multiple' => '0', 'required' => '1', 'hierarchy' => '1', 'relations' => '0', 'module' => 'forum', 'nodes' => array('forum')));
+      $vid = $vocabulary['vid'];
+    }
+    variable_set('forum_nav_vocabulary', $vid);
+  }
+
+  return $vid;
+}
+
+/**
+ * Implementation of hook_settings
+ */
+function forum_settings() {
+  $output .= form_textfield(t('Forum icon path'), 'forum_icon_path', variable_get('forum_icon_path', ''), 30, 255, t('The path to the forum icons.  Leave blank to disable icons. Don\'t add a trailing slash.  Default icons are available in the "misc" directory. You may use images of whatever size you wish, but it is recommended to use 15x15 or 16x16. '));
+  $number = drupal_map_assoc(array(5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 80, 100, 10000));
+  $output .= form_select(t('Hot topic threshold'), 'forum_hot_topic', variable_get('forum_hot_topic', 15), $number, t('The number of posts a topic must have to be considered hot.'));
+  $number = drupal_map_assoc(array(10, 25, 50, 75, 100));
+  $output .= form_select(t('Topics per page'), 'forum_per_page', variable_get('forum_per_page', 25), $number, t('The default number of topics displayed per page; links to browse older messages are automatically being displayed.'));
+  $forder = array(1 => t('Date - newest first'), 2 => t('Date - oldest first'), 3 => t('Posts - most active first'), 4=> t('Posts - least active first'));
+  $output .= form_radios(t('Default order'), 'forum_order', variable_get('forum_order', '1'), $forder, t('The default display order for topics.'));
+
+  return $output;
 }
 
 /**
@@ -202,10 +387,27 @@ function forum_menu($may_cache) {
   if ($may_cache) {
     $items[] = array('path' => 'node/add/forum', 'title' => t('forum topic'),
       'access' => user_access('create forum topics'));
+
     $items[] = array('path' => 'forum', 'title' => t('forums'),
       'callback' => 'forum_page',
       'access' => user_access('access content'),
       'type' => MENU_SUGGESTED_ITEM);
+
+    $items[] = array('path' => 'admin/forum', 'title' => t('forums'),
+      'callback' => 'forum_admin',
+      'access' => user_access('administer forums'),
+      'type' => MENU_NORMAL_ITEM);
+
+    $items[] = array('path' => 'admin/forum/list', 'title' => t('list'),
+      'access' => user_access('administer forums'),
+      'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
+    $items[] = array('path' => 'admin/forum/add/container', 'title' => t('add container'),
+      'access' => user_access('administer forums'),
+      'type' => MENU_LOCAL_TASK);
+    $items[] = array('path' => 'admin/forum/add/forum', 'title' => t('add forum'),
+      'access' => user_access('administer forums'),
+      'type' => MENU_LOCAL_TASK);
+
   }
 
   return $items;
