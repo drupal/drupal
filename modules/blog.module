@@ -65,18 +65,6 @@ function blog_help($section) {
 }
 
 /**
- * Menu callback; displays an RSS feed containing recent blog entries.
- */
-function blog_feed($uid = 0) {
-  if ($uid) {
-    blog_feed_user($uid);
-  }
-  else {
-    blog_feed_last();
-  }
-}
-
-/**
  * Displays an RSS feed containing recent blog entries of a given user.
  */
 function blog_feed_user($uid = 0) {
@@ -110,9 +98,18 @@ function blog_feed_last() {
 /**
  * Menu callback; displays a Drupal page containing recent blog entries.
  */
-function blog_page($uid = 0) {
-  if ($uid) {
-    blog_page_user($uid);
+function blog_page($a = NULL, $b = NULL) {
+
+  if (is_numeric($a)) { // $a is a user ID
+    if ($b == 'feed') {
+      blog_feed_user($a);
+    }
+    else {
+      blog_page_user($a);
+    }
+  }
+  else if ($a == 'feed') {
+    blog_feed_last();
   }
   else {
     blog_page_last();
@@ -255,13 +252,6 @@ function blog_menu($may_cache) {
       'callback' => 'blog_page',
       'access' => user_access('access content'),
       'type' => MENU_SUGGESTED_ITEM);
-    $items[] = array('path' => 'blog/feed', 'title' => t('RSS feed'),
-      'callback' => 'blog_feed',
-      'access' => user_access('access content'),
-      'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'blog/'. $user->uid, 'title' => t('my blog'),
-      'access' => user_access('edit own blog'),
-      'type' => MENU_DYNAMIC_ITEM);
   }
 
   return $items;

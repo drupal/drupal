@@ -88,9 +88,12 @@ function legacy_taxonomy_feed($operation = 'or', $str_tids = '') {
  */
 function legacy_blog_feed($str_uid = '') {
   // if URL is of form blog/feed/52 redirect
-  // if URL is of form blog/feed no need to redirect
+  // if URL is of form blog/feed we have to call blog_feed_last().
   if (is_numeric($str_uid)) {
     drupal_goto('blog/'. $str_uid .'/feed');
+  }
+  else {
+    module_invoke('blog', 'feed_last');
   }
 }
 
