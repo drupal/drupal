@@ -26,9 +26,9 @@ class calendar {
     $next = mktime(0, 0, 0, $month + 1, $day, $year);
 
     ### Generate calendar header:
-    $output .= "<TABLE WIDTH=\"150\" BORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"2\">";
-    $output .= " <TR><TH COLSPAN=\"7\"><A HREF=\"$PHP_SELF?date=$prev\">&lt;&lt;</A> &nbsp; ". date("F Y", $this->date) ." &nbsp; <A HREF=\"$PHP_SELF?date=$next\">&gt;&gt;</A></TH></TR>";
-    $output .= " <TR><TH>S</TH><TH>M</TH><TH>T</TH><TH>W</TH><TH>T</TH><TH>F</TH><TH>S</TH></TR>\n";
+    $output .= "<TABLE WIDTH=\"100%\" BORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"1\">";
+    $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"7\"><A HREF=\"$PHP_SELF?date=$prev\">&lt;&lt;</A> &nbsp; ". date("F Y", $this->date) ." &nbsp; <A HREF=\"$PHP_SELF?date=$next\">&gt;&gt;</A></TH></TR>";
+    $output .= " <TR><TD>S</TD><TD>M</TD><TD>T</TD><TD>W</TD><TD>T</TD><TD>F</TD><TD>S</TD></TR>\n";
  
     ### Initialize temporary variables:
     $nday = 1;
