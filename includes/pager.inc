@@ -1,5 +1,5 @@
 <?php
-// $Id: pager.inc,v 1.13 2003/05/13 18:36:33 dries Exp $
+// $Id: pager.inc,v 1.14 2003/05/23 21:33:24 dries Exp $
 
 /* ***************************************************
  *            external functions (API)
@@ -282,7 +282,8 @@ function pager_list($limit, $element = 0, $quantity = 5, $text = "", $attributes
  */
 
 function pager_query($query, $limit = 10, $element = 0, $count_query = "") {
-  global $from, $pager_from_array, $db_type, $pager_total;
+  global $pager_from_array, $pager_total;
+  $from = $_GET["from"];
 
   // count the total number of records in this query:
   if ($count_query == "") {
