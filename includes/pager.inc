@@ -1,30 +1,41 @@
 <?php
+// $Id$
 
-/*****************************************************
- *            external functions (API)               *
- *****************************************************/
+function pager_help() {
+  ?>
+  <h3>Implementation note: making queries pagable</h3>
+  <p>The pager uses <code>LIMIT</code>-based queries to fetch only the records required to render a certain page.  However, it has to learn the total number of records returned by the query to (among others) compute the number of pages (= number of all records / number of records per page). This is done by inserting <code>COUNT(*)</code> in the original query, ie. by rewriting the original query <pre>SELECT nid, type FROM node WHERE status = '1' ORDER BY static DESC, created DESC</pre> to read <pre>SELECT COUNT(*) FROM node WHERE status = '1' ORDER BY static DESC, created DESC</pre>Rewriting the query is accomplished using a regular expression; <code>preg_replace("/SELECT.*FROM/i", "SELECT COUNT(*) FROM", $query)</code>.</p>
+  <p>Unfortunately, the call to <code>preg_replace()</code> does not work as intended for queries that already have a <code>COUNT()</code> clause; the original <code>COUNT()</code> will be removed from the query, possibly making the remainder of the query fail (eg. when the use of <code>HAVING</code> or <code>ORDER</code> depends on the value returned by <code>COUNT()</code>).  In practice, for queries to be <code>db_query_pager()</code>-able, they shold be reformulated not to use <code>COUNT()</code>.</p>
+ <?php
+}
 
-/*
-** PAGER DISPLAY:
-**   Use this function in your module or theme to display a pager.
-** $tags:    an array that defines your buttons; text or <img>.
-** $limit:   how many nodes are displayed per page
-** $element: support for multiple pagers per page (specify which
-**           this is)
-** $type:    allows for distinction between pagers on main page and
-**           admin page, etc. Supported types are "default", "admin"
-**           and "simple".
-*/
+/* ***************************************************
+ *            external functions (API)
+ * ***************************************************/
+
+/**
+ * Use this function in your module or theme to display a pager.
+ *
+ * @param   array   $tags     defines your buttons; text or img.
+ * @param   int     $limit    how many nodes are displayed per page
+ * @param   int     $element  support for multiple pagers per page (specify which this is)
+ * @param   string  $type     allows for distinction between pagers on main page and admin page, etc.
+ *   Supported types are "default", "admin" and "simple".
+ *
+ * @return  string  html of pager
+ */
 function pager_display($tags = "", $limit = 10, $element = 0, $type = "default") {
   return theme_invoke("pager_display_". $type, $tags, $limit, $element);
 }
 
-/*
-** DEFAULT PAGER:
-**  When writing themes, you can rewrite this pager function in your
-**  theme.  This is the most common pager type, and thus the main one
-**  to re-write in your theme.
-*/
+/**
+ * DEFAULT PAGER:
+ *  When writing themes, you can rewrite this pager function in your
+ *  theme.  This is the most common pager type, and thus the main one
+ *  to re-write in your theme.
+ *
+ * @see pager_display
+ */
 function pager_display_default($tags = "", $limit = 10, $element = 0) {
   $output .= "<center><table cellpadding=\"10\"><tbody><tr>";
   $output .= "<td align=\"center\">". pager_first(($tags[0] ? $tags[0] : t("first page")), $limit, $element) ."</td>";
@@ -37,12 +48,14 @@ function pager_display_default($tags = "", $limit = 10, $element = 0) {
   return "$output";
 }
 
-/*
-** SIMPLE PAGER:
-**   When writing themes, if you rewrite this pager function in your
-**   theme, keep in mind that the pager it defines is intended to have
-**   a "simple" look, possibly located in a table or block.
-*/
+/**
+ * SIMPLE PAGER:
+ *   When writing themes, you can rewrite this pager function in your
+ *   theme. Keep in mind that the pager it defines is intended to have
+ *   a "simple" look, possibly located in a table or block.
+ *
+ * @see pager_display
+ */
 function pager_display_simple($tags = "", $limit = 10, $element = 0) {
   /*
   ** It's left as an exercise to theme writers to create an alternative
@@ -52,12 +65,14 @@ function pager_display_simple($tags = "", $limit = 10, $element = 0) {
   return pager_display_default($tags, $limit, $element);
 }
 
-/*
-** ADMIN PAGER:
-**   When writing themes, you can rewrite this pager function in your
-**   theme.  Most themes will probably NOT re-write this function, as
-**   admin pages are not normally themed.
-*/
+/**
+ * ADMIN PAGER:
+ *   When writing themes, you can rewrite this pager function in your
+ *   theme.  Most themes will probably NOT re-write this function, as
+ *   admin pages are not normally themed.
+ *
+ * @see pager_display
+ */
 function pager_display_admin($tags = "", $limit = 10, $element = 0) {
   /*
   ** It's left as an exercise to theme writers to create an alternative
@@ -67,19 +82,18 @@ function pager_display_admin($tags = "", $limit = 10, $element = 0) {
   return pager_display_default($tags, $limit, $element);
 }
 
-/*********************************************************************
-* PAGER PIECES:
-*  Use these pieces to construct your own custom pagers (i.e. in
-*  themes).  Note that you should NOT modify this file to customize
-*  your pager)
-********************************************************************/
+/* *******************************************************************
+ * PAGER PIECES:
+ *  Use these pieces to construct your own custom pagers (i.e. in
+ *  themes).  Note that you should NOT modify this file to customize
+ *  your pager)
+ * *******************************************************************/
 
-/*
-** pager_first: displays a "first-page" link
-**   $text:    defines the name (or image) of the link
-**   $limit:   how many nodes are displayed per page
-**   $element: distinguish between multiple pagers on one page
-*/
+/**
+ * displays a "first-page" link
+ *
+ * @see pager_previous
+ */
 function pager_first($text, $limit, $element = 0) {
   global $from_array;
 
@@ -92,13 +106,16 @@ function pager_first($text, $limit, $element = 0) {
   }
 }
 
-/*
-** pager_previous: displays a "previous-page" link
-**   $text:    defines the name (or image) of the link
-**   $limit:   how many nodes are displayed per page
-**   $element: distinguish between multiple pagers on one page
-**   $n:       how many pages we move back (defaults to 1)
-*/
+/**
+ * displays a "previous-page" link
+ *
+ * @param   string  $text     defines the name (or image) of the link
+ * @param   int     $limit    how many nodes are displayed per page
+ * @param   int     $element  distinguish between multiple pagers on one page
+ * @param   int     $n        how many pages we move back (defaults to 1)
+ *
+ * @return  string  html of this pager piece
+ */
 function pager_previous($text, $limit, $element = 0, $n = 1) {
   global $from_array;
   $from_new = pager_load_array(((int)$from_array[$element] - ((int)$limit * (int)$n)), $element, $from_array);
@@ -108,13 +125,11 @@ function pager_previous($text, $limit, $element = 0, $n = 1) {
   return "<a href=\"". pager_link($from_new) ."\">$text</a>";
 }
 
-/*
-** pager_next: displays a "next-page" link
-**   $text:    defines the name (or image) of the link
-**   $limit:   how many nodes are displayed per page
-**   $element: distinguish between multiple pagers on one page
-**   $n:       how many pages we move forward (defaults to 1)
-*/
+/**
+ * displays a "next-page" link
+ *
+ * @see pager_previous
+ */
 function pager_next($text, $limit, $element = 0, $n = 1) {
   global $from_array, $pager_total;
   $from_new = pager_load_array(((int)$from_array[$element] + ((int)$limit * (int)$n)), $element, $from_array);
@@ -124,12 +139,11 @@ function pager_next($text, $limit, $element = 0, $n = 1) {
   return " ";
 }
 
-/*
-** pager_last: displays a "last-page" link
-**   $text:    defines the name (or image) of the link
-**   $limit:   how many nodes are displayed per page
-**   $element: distinguish between multiple pagers on one page
-*/
+/**
+ * displays a "last-page" link
+ *
+ * @see pager_previous
+ */
 function pager_last($text, $limit, $element = 0) {
   global $from_array, $pager_total;
 
@@ -143,12 +157,12 @@ function pager_last($text, $limit, $element = 0) {
   return " ";
 }
 
-/*
-** pager_detail: displays "%d through %d of $d" type detail about the cur page
-**   $limit:     how many nodes are displayed per page
-**   $element:   distinguish between multiple pagers on one page
-**   $format:    allows you to reword the format string
-*/
+/**
+ * displays "%d through %d of $d" type detail about the cur page
+ *
+ * @param   string  $format   allows you to reword the format string
+ * @see pager_previous
+ */
 function pager_detail($limit, $element = 0, $format = "%d through %d of %d.") {
   global $from_array, $pager_total;
 
@@ -159,17 +173,17 @@ function pager_detail($limit, $element = 0, $format = "%d through %d of %d.") {
   return $output;
 }
 
-/*
-** pager_list:  displays a list of nearby pages with additional nodes
-**   $limit:    how many nodes are displayed per page
-**   $element:  distinguish between multiple pagers on one page
-**   $quantity: defines the length of the page list
-**   $text:     optional text to display before the page list
-*/
+/**
+ * displays a list of nearby pages with additional nodes
+ *
+ * @param   int     $quantity   defines the length of the page list
+ * @param   string  $text       optional text to display before the page list
+ * @see pager_previous
+ */
 function pager_list($limit, $element = 0, $quantity = 5, $text = "") {
   global $from_array, $pager_total;
 
-// calculate various markers within this pager piece:
+  // calculate various markers within this pager piece:
   // middle used to "center" pages around current page
   $pager_middle = ceil((int)$quantity / 2);
   // offset adds "offset" second page
@@ -236,24 +250,39 @@ function pager_list($limit, $element = 0, $quantity = 5, $text = "") {
 }
 
 
-/*********************************************************************
+/* ********************************************************************
  * QUERIES - call this instead of db_query() if you want your query to
  * support a pager.
- *********************************************************************/
+ * ********************************************************************/
 
-/*
-** Use this function when doing select queries you wish to be able to page
-** $query, the database query *without* "LIMIT" in it
-**       examples :  "SELECT * FROM table"
-**                :  "SELECT field1,field2 FROM table WHERE nid = '1'"
-** $limit, how many rows to return (per page) [OPTIONAL]
-** $element, adds support for multiple paged tables on one page [OPTIONAL]
-*/
+/**
+ * Use this function when doing select queries you wish to be able to page.
+ *
+ * TODO:
+ * - remove database dependency ($db_type) piece
+ *   . use db_query_range from
+ *   . rename db_query_pager() to pager_query()
+ * - examine a better solution for the "no COUNT in $query" requirement (see (output of) {@link pager_help()})
+ *
+ * @param   string  $query    the database query *without* "LIMIT" in it. examples:<pre>
+ *   "SELECT * FROM table"
+ *   "SELECT field1,field2 FROM table WHERE nid = '1'"</pre>
+ * @param   int     $limit    how many rows to return (per page)
+ * @param   int     $element  adds support for multiple paged tables on one page
+ *
+ * @return  resource  MySQL query result
+ */
 function db_query_pager($query, $limit = 10, $element = 0) {
   global $from, $from_array, $db_type, $pager_total;
 
   // count the total number of records in this query:
-  $pager_total[$element] = array_pop(db_fetch_array(db_query(preg_replace("/SELECT.*FROM/i", "SELECT COUNT(*) as count FROM", $query))));
+  $array = db_fetch_array(db_query(preg_replace("/SELECT.*FROM/i", "SELECT COUNT(*) FROM", $query)));
+  if ($array) {
+    $pager_total[$element] = array_pop($array);
+  }
+  else {
+    $pager_total[$element] = 0;
+  }
 
   // convert comma separated $from to an array, used by other functions:
   $from_array = explode(",", $from);
