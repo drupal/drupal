@@ -54,7 +54,7 @@ function poll_block($op = "list", $delta = 0) {
         $poll = node_load(array("type" => "poll", "created" => $timestamp, "moderate" => "0", "status" => "1"));
         if ($poll->nid) {
           // Poll_view dumps the output into $poll->body
-          poll_view($poll, 1, 0, 1);
+          poll_view($poll, 1, 1);
         }
       }
       $block["subject"] = t("Poll: %t", array("%t" => $poll->title));
@@ -325,7 +325,7 @@ function poll_view_processvote(&$node) {
   }
 }
 
-function poll_view(&$node, $main = 0, $return = 0, $block = 0) {
+function poll_view(&$node, $main = 0, $block = 0) {
   global $user;
 
   /*
@@ -361,7 +361,7 @@ function poll_view(&$node, $main = 0, $return = 0, $block = 0) {
 
   // We also use poll_view() for the side-block
   if (!$block) {
-    return $node;
+    theme("node", $node, $main);
   }
 }
 

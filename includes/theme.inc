@@ -42,8 +42,8 @@ class BaseTheme {
     return "misc/$name";
   }
 
-  function breadcrumb($trail) {
-    print "<div class=\"breadcrumb\">". implode($trail, " &raquo; ") ."</div>";
+  function breadcrumb($breadcrumb) {
+    print "<div class=\"breadcrumb\">". implode($breadcrumb, " &raquo; ") ."</div>";
   }
 
   function node($node, $main) {

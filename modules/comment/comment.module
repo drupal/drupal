@@ -207,8 +207,7 @@ function comment_reply($pid, $nid) {
       comment_view($comment);
     }
     else if (user_access("access content")) {
-      $node = node_view(node_load(array("nid" => $nid)),0,1);
-      theme("box", $node->title, $node->body);
+      node_view(node_load(array("nid" => $nid)));
       $pid = 0;
     }
 
@@ -259,8 +258,7 @@ function comment_preview($edit) {
     comment_view($comment);
   }
   else {
-    $node = node_view(node_load(array("nid" => $edit["nid"])), 0, 1);
-    theme("box", $node->title, $node->body);
+    node_view(node_load(array("nid" => $edit["nid"])));
     $edit["pid"] = 0;
   }
 }

@@ -372,7 +372,7 @@ function node_save($node) {
 
 }
 
-function node_view($node, $main = 0, $return = 0) {
+function node_view($node, $main = 0) {
 
   $node = array2object($node);
 
@@ -389,7 +389,7 @@ function node_view($node, $main = 0, $return = 0) {
   */
 
   if (module_hook($node->type, "view")) {
-    $node = node_invoke($node, "view", $main, $return);
+    node_invoke($node, "view", $main);
   }
   else {
 
@@ -399,16 +399,8 @@ function node_view($node, $main = 0, $return = 0) {
 
     $node->teaser = check_output($node->teaser);
     $node->body = check_output($node->body);
-  }
 
-  if (!$return) {
-    if ($node->trail) {
-      theme("breadcrumb", $node->trail);
-    }
     theme("node", $node, $main);
-  }
-  else {
-    return $node;
   }
 }
 

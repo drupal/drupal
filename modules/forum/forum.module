@@ -143,6 +143,12 @@ function forum_link($type, $node = 0, $main = 0) {
   return $links;
 }
 
+function forum_content($node) {
+  $node->teaser = check_output($node->teaser);
+  $node->body = check_output($node->body);
+  return $node;
+}
+
 function forum_view($node, $main = 0) {
 
   if ($main == 0) {
@@ -152,16 +158,17 @@ function forum_view($node, $main = 0) {
       $term_data = taxonomy_get_term($node->taxonomy[0]);
     }
     $voc = taxonomy_get_vocabulary($term_data->vid);
-
-    $node->trail[] = l(t("Home"), NULL);
-    $node->trail[] = l(t("Forums"), "forum");
-    $node->trail[] = l($term_data->name, "forum/$term_data->tid");
+    // Breadcrumb navigation
+    $breadcrumb[] = l(t("Home"), NULL);
+    $breadcrumb[] = l(t("Forums"), "forum");
+    $breadcrumb[] = l($term_data->name, "forum/$term_data->tid");
+    // print the breadcrumb
+    theme("breadcrumb",$breadcrumb);
   }
-
-  $node->teaser = check_output($node->teaser);
-  $node->body = check_output($node->body);
-
-  return $node;
+  // prepair the node content
+  $node = forum_content($node);
+  // print the node
+  theme("node", $node, $main);
 }
 
 function forum_validate(&$node) {
@@ -463,8 +470,8 @@ function forum_theme_display($forums, $topics, $parents, $tid, $sortby, $forum_p
   ** Breadcrumb navigation:
   */
 
-  $trail[] = l(t("Home"), "");
-  $trail[] = l(t("Forums"), "forum");
+  $breadcrumb[] = l(t("Home"), "");
+  $breadcrumb[] = l(t("Forums"), "forum");
 
   if ($parents) {
     $parents = array_reverse($parents);
@@ -473,7 +480,7 @@ function forum_theme_display($forums, $topics, $parents, $tid, $sortby, $forum_p
         $title = $p->name;
       }
       else {
-        $trail[] = l($p->name, "forum/$p->tid");
+        $breadcrumb[] = l($p->name, "forum/$p->tid");
       }
     }
   }
@@ -488,7 +495,7 @@ function forum_theme_display($forums, $topics, $parents, $tid, $sortby, $forum_p
   $output .= "</div>";
 
   theme("header");
-  theme("breadcrumb", $trail);
+  theme("breadcrumb", $breadcrumb);
   theme("box", $title, $output);
   theme("footer");
 }

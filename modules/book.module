@@ -346,28 +346,8 @@ function book_next($node) {
   }
 }
 
-function book_body($node) {
+function book_content($node) {
   $op = $_POST["op"];
-
-  if ($node->format == 1) {
-    // Make sure only authorized users can preview PHP pages.
-    if ($op == t("Preview") && !user_access("create php content")) {
-      return;
-    }
-
-    ob_start();
-    eval($node->body);
-    $output = ob_get_contents();
-    ob_end_clean();
-  }
-  else {
-    $output = check_output($node->body);
-  }
-
-  return $output;
-}
-
-function book_view($node, $main = 0, $return = 0) {
 
   /*
   ** Always display the most recently approved revision of a node
@@ -388,8 +368,27 @@ function book_view($node, $main = 0, $return = 0) {
   ** will be generated.
   */
 
-  $node->body = book_body($node);
+  if ($node->format == 1) {
+    // Make sure only authorized users can preview PHP pages.
+    if ($op == t("Preview") && !user_access("create php content")) {
+      return;
+    }
 
+    ob_start();
+    eval($node->body);
+    $node->teaser = $node->body = ob_get_contents();
+    ob_end_clean();
+  }
+  else {
+    $node->teaser = check_output($node->teaser);
+    $node->body = check_output($node->body);
+  }
+
+  return $node;
+}
+
+function book_view($node, $main = 0) {
+  $node = book_content($node);
   /*
   ** Display the node.  If not displayed on the main page, we render
   ** the node as a page in the book with extra links to the previous
@@ -397,57 +396,69 @@ function book_view($node, $main = 0, $return = 0) {
   */
 
   if ($main) {
-    return $node;
+    theme("node", $node, $main);
   }
   else {
-    // build the tree from bottom to top to have the book index in $level for navigation later
-    $path = book_location($node);
-    $node->trail[] = l(t("Home"), "");
-    $node->trail[] = l(t("Books"), "book");
-    foreach ($path as $level) {
-      $node->trail[] = l($level->title, "book/view/$level->nid");
-    }
     if ($node->moderate) {
       $node->body = $node->body . "<div class=\"log\"><div class=\"title\">". t("Log") .":</div>$node->log</div>";
     }
-    if (!$return) { // Add the navigation when we have a node/view and the output is for theme("node")
+    // Add the navigation and the breadcrumb if we view a page
+    if (arg(1) == "view") {
       $node = book_navigation($node);
+      // Print the breadcrumb
+      theme("breadcrumb", $node->breadcrumb);
     }
-    return $node;
+    // Print the node
+    theme("node", $node, $main);
   }
 }
 
 function book_show($node, $cid) {
 
-  $node = node_view($node,0,1);
-
-  /*
-  ** Add the book navigation
-  */
-
-  $book = db_fetch_object(db_query("SELECT * FROM {book} WHERE nid = %d", $node->nid));
-
-  if ($book) {
-    foreach ($book as $key => $value) {
-      $node->$key = $value;
-    }
-    $node = book_navigation($node);
-  }
-
-  /*
-  ** make $node->type a book. This is for the links.
-  */
-
-  $node->type = "book";
-
-  /*
-  ** View the node
-  */
-
   if (node_access("view", $node)) {
-    theme("breadcrumb", $node->trail);
-    theme("node",$node, 0);
 
+    if ($node->type == "book") {
+      book_view($node,0);
+    }
+    else {
+
+      if (module_hook($node->type, "content")) {
+        $node = node_invoke($node, "content");
+
+        /*
+        ** Add the book navigation if the node is in the book.
+        */
+
+        $book = db_fetch_object(db_query("SELECT * FROM {book} WHERE nid = %d", $node->nid));
+
+        if ($book) {
+          foreach ($book as $key => $value) {
+            $node->$key = $value;
+          }
+          $node = book_navigation($node);
+        }
+
+        /*
+        ** make $node->type a book. This is for the links.
+        */
+
+        $node->type = "book";
+
+        /*
+        ** View the node
+        */
+        theme("breadcrumb", $node->breadcrumb);
+        theme("node",$node, 0);
+      }
+      else {
+
+        /*
+        ** We can't get the content of the node and just view the node.
+        ** We don't add breadcrums or links.
+        */
+        node_view($node, 0);
+      }
+    }
     if (function_exists("comment_render") && $node->comment) {
       comment_render($node, $cid);
     }
@@ -463,14 +474,17 @@ function book_navigation($node) {
 
     $path = book_location($node);
 
-    if ($node->type != "book") {
-      $node->trail = ""; // Overwrite the trail with a book trail.
-      $node->trail[] = l(t("Home"), "");
-      $node->trail[] = l(t("Books"), "book");
-      foreach ($path as $level) {
-        $node->trail[] = l($level->title, "book/view/$level->nid");
-      }
+    /*
+    ** Construct the breadcrumb:
+    */
+
+    $node->breadcrumb = ""; // Overwrite the trail with a book trail.
+    $node->breadcrumb[] = l(t("Home"), "");
+    $node->breadcrumb[] = l(t("Books"), "book");
+    foreach ($path as $level) {
+      $node->breadcrumb[] = l($level->title, "book/view/$level->nid");
     }
+
     /*
     ** Construct the "next" and "previous" links:
     */
@@ -501,6 +515,10 @@ function book_navigation($node) {
       if ($node->parent) {
         $links .= "<div class=\"up\">";
         $links .= l(t("up"), "book/view/$node->parent", array("title" => t("View this page's parent section.")));
+        //if ($node->parent != $path[0]->nid) {
+        //  $links .= " | ";
+        //  $links .= l(t("index"), "node/view/".$path[0]->nid."", array("title" => t("View this book's table of contents.")));
+        //}
         $links .= "</div>";
       }
       $output .= "<div class=\"nav\">";
@@ -511,7 +529,7 @@ function book_navigation($node) {
     }
     $node->body = $node->body.$output;
   return $node;
-  }
+}
 
 function book_toc_recurse($nid, $indent, $toc, $children) {
 
@@ -598,16 +616,13 @@ function book_render() {
     // load the node:
     $node = node_load(array("nid" => $page->nid));
 
-    // take the most recent approved revision:
-    if ($node->moderate) {
-      $node = book_revision_load($node, array("moderate" => 0, "status" => 1));
-    }
-
     if ($node) {
+      // take the most recent approved revision, extract the page and check output:
+      $node = book_content($node);
       // output the content:
       $output .= "<div class=\"book\">";
       $output .= "<div class=\"title\">". l($node->title, "book/view/$node->nid") ."</div>";
-      $output .= "<div class=\"body\">". book_body($node) ."</div>";
+      $output .= "<div class=\"body\">". $node->body ."</div>";
       $output .= "</div>";
     }
   }
@@ -649,15 +664,13 @@ function book_print($id = "", $depth = 1) {
     // load the node:
     $node = node_load(array("nid" => $page->nid));
 
-    // take the most recent approved revision:
-    if ($node->moderate) {
-      $node = book_revision_load($node, array("moderate" => 0, "status" => 1));
-    }
-
     if ($node) {
-      $node = node_view($node, 0, 1);
       // output the content:
+      if (module_hook($node->type, "content")) {
+        $node = node_invoke($node, "content");
+      }
       $output .= "<h1 id=\"$node->nid\" name=\"$node->nid\" class=\"book-h$depth\">$node->title</h1>";
+
       if ($node->body) {
         $output .= $node->body;
       }
@@ -688,8 +701,11 @@ function book_print_recurse($parent = "", $depth = 1) {
 
     if ($node) {
       // output the content:
+      if (module_hook($node->type, "content")) {
+        $node = node_invoke($node, "content");
+      }
       $output .= "<h1 id=\"$node->nid\" name=\"$node->nid\" class=\"book-h$depth\">$node->title</h1>";
-      $node = node_view($node, 0, 1);
+
       if ($node->body) {
         $output .= "<ul>". $node->body ."</ul>";
       }

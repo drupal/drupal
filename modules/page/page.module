@@ -102,7 +102,7 @@ function page_link($type) {
   return $links;
 }
 
-function page_view($node, $main = 0) {
+function page_content($node) {
   /*
   ** Extract the page body.  If body is dynamic (using PHP code), the body
   ** will be generated.
@@ -121,6 +121,13 @@ function page_view($node, $main = 0) {
     ob_end_clean();
   }
   return $node;
+}
+
+function page_view($node, $main) {
+  // prepair the node content
+  $node = page_content($node);
+  // print the node
+  theme("node", $node, $main);
 }
 
 function page_form(&$node, &$help, &$error) {
