@@ -453,9 +453,11 @@ function account_track_nodes() {
 }
 
 function account_track_site() {
-  global $status, $theme, $user, $site_name;
+  global $nstatus, $status, $theme, $user, $site_name;
 
   $period = 259200; // 3 days
+
+  $theme->header();
 
   $sresult = db_query("SELECT n.title, n.nid, COUNT(c.lid) AS count FROM comments c LEFT JOIN node n ON c.lid = n.nid WHERE n.status = '$status[posted]' AND ". time() ." - n.timestamp < $period GROUP BY c.lid ORDER BY n.timestamp DESC LIMIT 10");
   while ($node = db_fetch_object($sresult)) {
@@ -469,8 +471,21 @@ function account_track_site() {
     $output .= "</UL>\n";
   }
 
-  $theme->header();
-  $theme->box(strtr(t("Track %a"), array("%a" => $site_name)), ($output ? $output : t("No comments or nodes posted recently.")));
+  $theme->box(t("Recent comments"), ($output ? $output : t("No comments recently.")));
+
+  unset($output);
+
+  $result = db_query("SELECT n.title, n.nid, n.type, n.status, u.userid FROM node n LEFT JOIN users u ON n.author = u.id WHERE ". time() ." - n.timestamp < $period ORDER BY n.timestamp DESC LIMIT 10");
+
+  $output .= "<TABLE BORDER=\"0\" CELLSPACING=\"4\" CELLPADDING=\"4\">\n";
+  $output .= " <TR><TH>". t("Subject") ."</TH><TH>". t("Author") ."</TH><TH>". t("Type") ."</TH><TH>". t("Status") ."</TH></TR>\n";
+  while ($node = db_fetch_object($result)) {
+    $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">". format_username($node->userid) ."</TD><TD ALIGN=\"center\">$node->type</TD><TD>". $nstatus[$node->status] ."</TD></TR>";
+  }
+  $output .= "</TABLE>";
+
+  $theme->box(t("Recent nodes"), ($output ? $output : t("No nodes recently.")));
+
   $theme->footer();
 }
 

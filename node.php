@@ -41,7 +41,7 @@ elseif ($number) {
     switch ($op) {
       case "history":
         $theme->header();
-        $theme->box(t("History"), node_info($node) ."<DL>". node_history($node) ."</DL>");
+        $theme->box(t("History"), node_control($node) ."<DL>". node_history($node) ."</DL>");
         $theme->footer();
         break;
       default:

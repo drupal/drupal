@@ -131,7 +131,7 @@ function node_form($node) {
   }
 }
 
-function node_info($node) {
+function node_control($node) {
   global $REQUEST_URI;
 
  ?>
