@@ -821,8 +821,8 @@ function taxonomy_help($section = "admin/help#taxonomy") {
       $output .= "<li><a id=\"relatedterms\"></a><b>Related terms</b> -- Allows relationships between terms within this vocabulary. Think of these as <i>see also</i>-references.</li>";
       $output .= "<li><a id=\"hierarchy\"></a><b>Hierarchy</b> -- Allows a tree-like taxonomy, as in our <i>Foods</i> example above</li>";
       $output .= "<li><b>Multiple select</b> -- Allows nodes to be described using more than one term. Nodes may then appear on multiple taxonomy pages.</li>";
-      $output .= "<li><b>Required</b> -- Each node has to have a term in this vacabulary associated with it.</li>";
-      $output .= "<li><b>Weight</b> -- The over all weight for this vocaulary in listings with multiple vacabularies.</li>";
+      $output .= "<li><b>Required</b> -- Each node has to have a term in this vocabulary associated with it.</li>";
+      $output .= "<li><b>Weight</b> -- The over all weight for this vocabulary in listings with multiple vocabularies.</li>";
       $output .= "</ul></p>";
       $output .= "<h4>Adding terms to a vocabulary</h4><p>Once done defining the vocabulary, you have to add terms to it to make it useful. The options you see when adding a term to a vocabulary will depend on what you selected for <i>related terms</i>, <i>hierarchy </i>and <i>multiple select</i>. These options are:</p>";
       $output .= "<p><ul>";
