@@ -1076,10 +1076,6 @@ function node_validate($node) {
       $node->date = format_date($node->created, 'custom', 'Y-m-d H:i O');
     }
 
-    if (!is_numeric($node->status)) {
-      $node->status = 1;
-    }
-
     // Validate the "authored by" field.
     if (empty($node->name)) {
       // The use of empty() is mandatory in the context of usernames
