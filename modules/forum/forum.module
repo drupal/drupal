@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.163 2004/02/01 21:32:01 dries Exp $
+// $Id: forum.module,v 1.164 2004/02/10 22:50:04 dries Exp $
 
 function forum_help($section = 'admin/help#forum') {
   $output = '';
@@ -546,7 +546,7 @@ function theme_forum_list($forums, $parents, $tid) {
 
         $rows[] = array(
           array('data' => $description, 'class' => 'forum'),
-          array('data' => $forum->num_topics . ($new_topics ? "<br />(". l(t('%a new', array('%a' => $new_topics)), "forum/$forum->tid", NULL, NULL, 'new') .")" : ''), 'class' => 'topics'),
+          array('data' => $forum->num_topics . ($new_topics ? "<br />". l(t('%a new', array('%a' => $new_topics)), "forum/$forum->tid", NULL, NULL, 'new') : ''), 'class' => 'topics'),
           array('data' => $forum->num_posts, 'class' => 'posts'),
           array('data' => _forum_format($forum->last_post), 'class' => 'last-reply'));
       }
@@ -568,7 +568,7 @@ function theme_forum_list($forums, $parents, $tid) {
  * @return output for the topic list.
  */
 function theme_forum_topic_list($tid, $topics, $sortby, $forum_per_page, $offset) {
-  global $id, $status, $user, $pager_total, $forum_topic_list_header;
+  global $user, $id, $status, $user, $pager_total, $forum_topic_list_header;
 
   if ($topics) {
 
@@ -585,7 +585,7 @@ function theme_forum_topic_list($tid, $topics, $sortby, $forum_per_page, $offset
         $rows[] = array(
           array('data' => _forum_icon($topic->new, $topic->num_comments, $topic->comment_mode), 'class' => 'icon'),
           array('data' => l($topic->title, "node/view/$topic->nid"), 'class' => 'topic'),
-          array('data' => $topic->num_comments . ($topic->new_replies ? "<br />(". l(t('%a new', array('%a' => $topic->new_replies)), "node/view/$topic->nid", NULL, NULL, 'new') .")" : ''), 'class' => 'replies'),
+          array('data' => $topic->num_comments . ($topic->new_replies ? "<br />". l(t('%a new', array('%a' => $topic->new_replies)), "node/view/$topic->nid", NULL, NULL, 'new') : ''), 'class' => 'replies'),
           array('data' => _forum_format($topic), 'class' => 'created'),
           array('data' => _forum_format($topic->last_reply), 'class' => 'last-reply')
         );
@@ -597,9 +597,14 @@ function theme_forum_topic_list($tid, $topics, $sortby, $forum_per_page, $offset
     }
   }
 
-
   if (user_access('create forum topics')) {
-    $output = l(t('create new forum topic'), "node/add/forum/$tid") ."<br /><br />";
+    $output = '<p>'. t('You can <a href="%post">post</a> new forum topics.', array('%post' => url("node/add/forum/$tid"))) .'</p>';
+  }
+  else if ($user->uid) {
+    $output = '<p>'. t('You are not allowed to post new forum topics.') .'</p>';
+  }
+  else {
+    $output = '<p>'. t('You must <a href="%login">login</a> to post new forum topics.', array('%login' => url('user/login'))) .'</p>';
   }
 
   $output .= theme('table', $forum_topic_list_header, $rows);
