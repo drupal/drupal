@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.inc,v 1.66 2001/11/24 12:14:31 dries Exp $
+// $Id: comment.inc,v 1.67 2001/11/26 09:16:16 dries Exp $
 
 $cmodes = array(1 => "List - min", 2 => "List - max", 3 => "Threaded - min", 4 => "Threaded - max");
 $corder = array(1 => "Date - new", 2 => "Date - old", 3 => "Rate - high", 4 => "Rate - low");
@@ -242,7 +242,7 @@ function comment_thread_min($cid, $threshold) {
   }
 }
 
-function comment_thread_max($cid, $mode, $threshold, $level = 0, $dummy = 0) {
+function comment_thread_max($cid, $mode, $threshold, $level = 0) {
   global $user;
 
   /*
@@ -261,7 +261,7 @@ function comment_thread_max($cid, $mode, $threshold, $level = 0, $dummy = 0) {
     comment_view($comment, (comment_visible($comment, $threshold) ? comment_links($comment, 0) : 0));
     print "</td></tr></table>\n";
 
-    comment_thread_max($comment->cid, $mode, $threshold, $level + 1, $dummy + 1);
+    comment_thread_max($comment->cid, $mode, $threshold, $level + 1);
   }
 
 }
