@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.74 2002/10/26 15:17:25 dries Exp $
+// $Id: poll.module,v 1.75 2002/11/03 20:57:15 dries Exp $
 
 function poll_allowvotes(&$node) {
   /*
@@ -146,7 +146,7 @@ function poll_insert($node) {
 
   for ($i = 0; $i < $node->choices; $i++) {
     if ($node->choice[$i] != "") {
-      db_query("INSERT INTO poll_choices (nid, chtext, chvotes, chorder) VALUES ('%d', '%s', '%d', '%d')", $node->nid, $node->choice[$i], $node->chvotes[$i], $i);
+      db_query("INSERT INTO poll_choices (nid, chtext, chvotes, chorder) VALUES ('%d', '%s', '%d', '%d')", $node->nid, filter($node->choice[$i]), $node->chvotes[$i], $i);
     }
   }
 }
