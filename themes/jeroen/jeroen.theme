@@ -9,7 +9,7 @@
 
   *********************************************************************/
 
-  class Theme {
+  class Theme extends BaseTheme {
     // General colorset that can be used for this theme 
     var $foreground = "#000000";
     var $background = "#E7E7E7";
@@ -84,7 +84,7 @@
 
     } // close header function
 
-    function node($node, $main = 0) {
+    function node($node, $main = 0, $links = 0) {
 
 ?>
 
@@ -138,8 +138,7 @@
                               <tr>
                                 <td colspan="2" align="right">
 <?php
-                                  if ($main)
-                                    echo "<FONT COLOR=\"#E09226\">". theme_morelink($this, $node) ."</FONT>";
+                                  if ($main || $links) echo $this->links($links, $main, $node);
 
 ?>
 
@@ -311,7 +310,7 @@
                   <tr>
                     <td align="left" width="20" height="20" background="themes/jeroen/images/footerleft.gif" nowrap>&nbsp;</td>
                     <td width="100%" background="themes/jeroen/images/footer.gif" align="center" valign="middle">
-                      <FONT COLOR="#E09226" SIZE="2">[ <?php print theme_link(" | "); ?> ] </FONT>
+                      <FONT COLOR="#E09226" SIZE="2">[ <?php print theme_link(); ?> ] </FONT>
                     </td>
                     <td align="right" width="20" background="themes/jeroen/images/footerright.gif" nowrap>&nbsp;</td>
                   </tr>

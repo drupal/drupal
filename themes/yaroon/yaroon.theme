@@ -9,7 +9,7 @@
 
   *********************************************************************/
 
-  class Theme {
+  class Theme extends BaseTheme {
     var $foreground = "#000000";
     var $background = "#F0F0F0";
    
@@ -110,8 +110,9 @@
 <?php
 
     } // close header function
+    
 
-    function node($node, $main = 0) {
+    function node($node, $main = 0, $links = 0) {
 
       switch ($node->tid) {
         case 0: $color = "#c4a2a2"; $img = "square2.gif"; break;
@@ -144,8 +145,8 @@
                   <tr>
                     <td align=\"right\">
                       <font color=\"". $color ."\">";
-                      if ($main)
-                        echo "". theme_morelink($this, $node) ."";
+                      if ($main || $links)
+                        echo $this->links($links, $main, $node);
                       echo"</font>";
 
 ?>
