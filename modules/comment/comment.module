@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.215 2004/01/31 21:16:42 dries Exp $
+// $Id: comment.module,v 1.216 2004/02/07 10:57:27 dries Exp $
 
 function comment_help($section = "admin/help#comment") {
   $output = "";
@@ -327,7 +327,7 @@ function comment_post($edit) {
         ** Add entry to the watchdog log:
         */
 
-        watchdog("special", "comment: updated '". $edit["subject"] ."'", l(t("view comment"), "node/view/". $edit["nid"], NULL, NULL, $edit["cid"]));
+        watchdog("special", "comment: updated '". $edit["subject"] ."'", l(t("view comment"), "node/view/". $edit["nid"], NULL, NULL, "comment-". $edit["cid"]));
       }
       else {
         /*
@@ -447,7 +447,7 @@ function comment_post($edit) {
         ** Add entry to the watchdog log:
         */
 
-        watchdog("special", "comment: added '". $edit["subject"] ."'", l(t("view comment"), "node/view/". $edit["nid"], NULL, NULL, $edit["cid"]));
+        watchdog("special", "comment: added '". $edit["subject"] ."'", l(t("view comment"), "node/view/". $edit["nid"], NULL, NULL, "comment-". $edit["cid"]));
       }
 
       /*
@@ -482,7 +482,7 @@ function comment_links($comment, $return = 1) {
   */
 
   if ($return) {
-    $links[] = l(t("parent"), comment_referer_load(), NULL, NULL, $comment->cid);
+    $links[] = l(t("parent"), comment_referer_load(), NULL, NULL, "comment-$comment->cid");
   }
 
   if (node_comment_mode($comment->nid) == 2) {
@@ -884,7 +884,7 @@ function comment_node_link($node) {
     $header = array(t("title"), t("author"), array("data" => t("operations"), "colspan" => 3));
 
     while ($comment = db_fetch_object($result)) {
-      $rows[] = array(l($comment->subject, "node/view/$node->nid", NULL, NULL, $comment->cid), format_name($comment), l(t("view comment"), "node/view/$node->nid", NULL, NULL, $comment->cid), l(t("edit comment"), "admin/comment/edit/$comment->cid"), l(t("delete comment"), "admin/comment/delete/$comment->cid"));
+      $rows[] = array(l($comment->subject, "node/view/$node->nid", NULL, NULL, "comment-$comment->cid"), format_name($comment), l(t("view comment"), "node/view/$node->nid", NULL, NULL, $comment->cid), l(t("edit comment"), "admin/comment/edit/$comment->cid"), l(t("delete comment"), "admin/comment/delete/$comment->cid"));
     }
 
     if ($rows) {
@@ -985,7 +985,7 @@ function comment_admin_overview($status = 0) {
   $result = pager_query($sql,  50);
 
   while ($comment = db_fetch_object($result)) {
-    $rows[] = array(l($comment->subject, "node/view/$comment->nid/$comment->cid", array("title" => htmlspecialchars(substr($comment->comment, 0, 128))), NULL, $comment->cid) ." ". (node_is_new($comment->nid, $comment->timestamp) ? theme("mark") : ""), format_name($comment), ($comment->status == 0 ? t("published") : t("not published")) ."</td><td>". format_date($comment->timestamp, "small") ."</td><td>". l(t("edit comment"), "admin/comment/edit/$comment->cid"), l(t("delete comment"), "admin/comment/delete/$comment->cid"));
+    $rows[] = array(l($comment->subject, "node/view/$comment->nid/$comment->cid", array("title" => htmlspecialchars(substr($comment->comment, 0, 128))), NULL, "comment-$comment->cid") ." ". (node_is_new($comment->nid, $comment->timestamp) ? theme("mark") : ""), format_name($comment), ($comment->status == 0 ? t("published") : t("not published")) ."</td><td>". format_date($comment->timestamp, "small") ."</td><td>". l(t("edit comment"), "admin/comment/edit/$comment->cid"), l(t("delete comment"), "admin/comment/delete/$comment->cid"));
   }
 
   if ($pager = theme("pager", NULL, 50, 0, tablesort_pager())) {
@@ -1284,7 +1284,7 @@ function theme_comment_view($comment, $links = "", $visible = 1) {
     $output .= "<a id=\"new\"></a>\n";
   }
 
-  $output .= "<a id=\"$comment->cid\"></a>\n";
+  $output .= "<a id=\"comment-$comment->cid\"></a>\n";
 
   if ($visible) {
     $comment->comment = check_output($comment->comment);
@@ -1404,7 +1404,7 @@ function theme_comment($comment, $links = 0) {
 }
 
 function theme_comment_folded($comment) {
-  return "<div class=\"comment-folded\"><span class=\"subject\">". l($comment->subject, comment_referer_load() ."/$comment->cid", NULL, NULL, $comment->cid) ."</span> <span class=\"credit\">". t("by") ." ". format_name($comment) ."</span></div>";
+  return "<div class=\"comment-folded\"><span class=\"subject\">". l($comment->subject, comment_referer_load() ."/$comment->cid", NULL, NULL, "comment-$comment->cid") ."</span> <span class=\"credit\">". t("by") ." ". format_name($comment) ."</span></div>";
 }
 
 function theme_comment_flat_collapsed($comment, $threshold) {
