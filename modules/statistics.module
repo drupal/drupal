@@ -1,0 +1,45 @@
+<?php
+
+if (variable_get("referer", 0)) {
+  if ($referer = getenv("HTTP_REFERER")) {
+    db_query("INSERT INTO referer (URL, timestamp) values ('". check_input($referer) ."', '". time() ."')");
+  }
+}
+
+function statistics_cron() {
+  db_query("DELETE FROM referer WHERE ". time() ." - timestamp > ". variable_get("referer_clear", 604800));
+}
+
+function statistics_perm() {
+  return array("access statistics");
+}
+
+function statistics_conf_options() {
+  $period = array(3600 => format_interval(3600), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200), 1000000000 => t("Never"));
+  $output .= form_select(t("Track referers"), "referer", variable_get("referer", 0), array("Disabled", "Enabled"), "If enabled, Drupal will count how many times your website is referred to by other websites.");
+  $output .= form_select(t("Discard referers older than"), "referer_clear", variable_get("referer_clear", 604800), $period, "The time referer entries should be kept.  Older entries will be automatically discarded.  Requires crontab.");  return $output;
+}
+
+function statistics_referer() {
+  $result = db_query("SELECT url, COUNT(url) AS count FROM referer GROUP BY url ORDER BY count");
+  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
+  $output .= " <TR><TH>URL</TH><TH>number</TH></TR>\n";
+  while ($referer = db_fetch_object($result)) {
+    if (!ereg("^http://", $referer->url)) {
+      $output .= "<TR><TD><A HREF=\"". check_output($referer->url) ."\">". check_output($referer->url) ."</A></TD><TD>". check_output($referer->count) ."</TD></TR>";
+    }
+  }
+  $output .= "</TABLE>\n";
+
+  return $output;
+}
+
+function statistics_admin() {
+  global $user;
+
+  if (user_access($user, "access statistics")) {
+    print statistics_referer();
+  }
+}
+
+?>
