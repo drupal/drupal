@@ -1727,10 +1727,17 @@ function user_help_devel_da() {
 }</pre>";
   $output .= "<p>The <i>_info</i> function is always the first function defined in your module. This function populates an array called <i>\$info</i> with various pieces of data. Some of this data is used by Drupal (&quot;name&quot;, &quot;link&quot;), and some of it just informs the users of your module. Simply copy the <i>blogger_info</i> function in your module - but wherever it says <i>blogger</i> here, substitute your own module name.</p>";
   $output .= "<pre>function blogger_auth(\$name, \$pass, \$server) {
-  if (\$server !== &quot;blogger.com&quot;) return 0; // user did not present a Blogger ID so don't bother trying.
+  // user did not present a Blogger ID so don't bother trying.
+  if (\$server !== &quot;blogger.com&quot;) {
+    return 0;
+  }
+  //provided to Drupal by Ev@Blogger
+  \$appkey = &quot;6D4A2D6811A6E1F75148DC1155D33C0C958107BC&quot;
 
-  \$appkey = &quot;6D4A2D6811A6E1F75148DC1155D33C0C958107BC&quot;; //provided to Drupal by Ev@Blogger
-  \$message = new xmlrpcmsg(&quot;blogger.getUsersBlogs&quot;, array(new xmlrpcval(\$appkey, &quot;string&quot;), new xmlrpcval(\$name, &quot;string&quot;), new xmlrpcval(\$pass, &quot;string&quot;)));
+  \$message = new xmlrpcmsg(&quot;blogger.getUsersBlogs&quot;,
+                           array(new xmlrpcval(\$appkey, &quot;string&quot;),
+                           new xmlrpcval(\$name, &quot;string&quot;),
+                           new xmlrpcval(\$pass, &quot;string&quot;)));
   \$client = new xmlrpc_client(&quot;/api/RPC2&quot;, &quot;plant.blogger.com&quot;);
   // \$client->setDebug(1);
   \$result = \$client-&gt;send(\$message, 5);
@@ -1774,15 +1781,14 @@ function user_help_devel_da() {
   theme(&quot;footer&quot;);
 }</pre>";
   $output .= "<p>The _page function is not currently used, but it might be in the future. For now, just copy what you see here, substituting your module name for <i>blogger</i>.</p>";
-  $output .= "<pre>function blogger_auth_help() {
-  \$site = variable_get(&quot;site_name&quot;, &quot;this web site&quot;);
-  \$html_output = &quot;
+  $output .= "<code>function blogger_auth_help() {<br />
+  \$site = variable_get(&quot;site_name&quot;, &quot;this web site&quot;);<br />
+  \$html_output = &quot;<blockquote>
   &lt;p&gt;You may login to &lt;i&gt;%s&lt;/i&gt; using a &lt;b&gt;Blogger ID&lt;/b&gt; and password. A Blogger ID consists of your Blogger username followed by &lt;i&gt;@blogger.com&lt;/i&gt;. So a valid blogger ID is mwlily@blogger.com. If you are a Blogger member, go ahead and login now.&lt;/p&gt;
   &lt;p&gt;Blogger offers you instant communication power by letting you post your thoughts to the web whenever the urge strikes.
-  Blogger will publish to your current web site or help you create one. &lt;a href=\&quot;http://www.blogger.com/about.pyra\&quot;&gt;Learn more about it&lt;/a&gt;.&quot;;
-  return sprintf(t(\$html_output), \$site);
-}
-</pre>";
+  Blogger will publish to your current web site or help you create one. &lt;a href=\&quot;http://www.blogger.com/about.pyra\&quot;&gt;Learn more about it&lt;/a&gt;.&quot;;</blockquote>
+  return sprintf(t(\$html_output), \$site);<br />
+}</code>";
   $output .= "<p>The <i>_auth_help</i> function is prominently linked within Drupal, so you'll want to write the best possible user help here. You'll want to tell users what a proper username looks like and you may also want to advertise a bit about your service at the end. Note that your help text is passed through a t() function in the last line. This is Drupal's localization function. Translators may localize your help text just like any other text in Drupal.</p>";
   $output .= "<h4>Publishing your module</h4><p>Once you've written and tested your authentication module, you'll usually want to share it with the world. The best way to do this is to add the module to the ". l("Drupal contributions CVS repository", "cvs.drupal.org/viewcvs.cgi/contributions/modules/authentication?cvsroot=contrib") .". You'll need to request priveleges to this repository - see ". l("the README file", "cvs.drupal.org/viewcvs.cgi/contributions/README?rev=HEAD&amp;cvsroot=contrib&amp;content-type=text/vnd.viewcvs-markup") ." for the details. Then you should announce your contribution on the ". l("drupal-devel and drupal-support mailing lists", "drupal.org/node/view/322") .". You might also want to post a story on ". l("Drupal.org", "www.drupal.org") .".</p>";
   return $output;
@@ -1798,13 +1804,18 @@ function user_help_devel_userhook() {
 
   $output .= "<pre>
 function julia_user(\$type, \$edit, &\$user) {
-
-    switch (\$type) { // What type of registration action are we taking.
-      case t(\"register_form\"): // Add the two items below to the resigtration form.
-        \$output .= form_item(\"Privacy Policy\", \"Julia would never sell your user information. She is just nice old French chef who lives near me in Cambridge, Massachussetts USA.\");
-        \$output .= form_checkbox(\"Accept <i>Julia's Kitchen</i> privacy policy.\", julia_accept, 1, \$edit[\"julia_accept\"]);
+    // What type of registration action are we taking?
+    switch (\$type) {
+      case t(\"register_form\"):
+        // Add two items to the resigtration form.
+        \$output .= form_item(\"Privacy Policy\",
+                             \"Julia would never sell your user information. She is just a nice \".
+                             \"old French chef who lives near me in Cambridge, Massachussetts USA.\");
+        \$output .= form_checkbox(\"Accept <i>Julia's Kitchen</i> privacy policy.\",
+                                 julia_accept, 1, \$edit[\"julia_accept\"]);
         return \$output;
-      case t(\"register_validate\"): // Okay, the user has filled out the form, did they agree.
+      case t(\"register_validate\"):
+        // The user has filled out the form and checked the \"accept\" box.
         if (\$edit[\"julia_accept\"] == \"1\") {
           // on success return the values you want to store
           return array(\"julia_accept\" => 1);
@@ -1821,7 +1832,9 @@ function julia_user(\$type, \$edit, &\$user) {
         return form_item(\"Favorite Ingredient\", \$user->julia_favingredient);
       case t(\"edit_form\"):
         // when user tries to edit his own user page.
-        return form_textfield(\"Favorite Ingredient\", \"julia_favingredient\", \$user->julia_favingredient, 50, 65, \"Tell everyone your secret spice\");
+        return form_textfield(\"Favorite Ingredient\", \"julia_favingredient\",
+                             \$user->julia_favingredient, 50, 65,
+                             \"Tell everyone your secret spice\");
       case t(\"edit_validate\"): // Make sure the data they edited is \"valid\".
         return user_save(\$user, array(\"julia_favingredient\" => \$edit[\"julia_favingredient\"]));
     }
