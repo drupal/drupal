@@ -20,6 +20,7 @@ Drupal x.x.x, xxxx-xx-xx (to be released)
 - usability improvements:
     * added support for "mass node operations" to ease repetitive tasks.
     * added support for breadcrumb navigation to several modules' user pages.
+    * integrated the administration pages with the normal user pages.
 
 Drupal 4.2.0, 2003-08-01
 ------------------------
