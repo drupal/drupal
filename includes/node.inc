@@ -136,6 +136,7 @@ function node_save($node, $filter) {
       $result = db_query("BEGIN");
       if (db_error($result)) {
         watchdog("error", "database: ". $result->getMessage() ."\nquery: ". htmlspecialchars("BEGIN"));
+        $db_handle->rollback();
       }
       else {
 
@@ -145,16 +146,18 @@ function node_save($node, $filter) {
         $result = db_query("INSERT INTO node ($f1, nid, lid) VALUES ($v1, '$nid', '$lid')");
         if (db_error($result)) {
           watchdog("warning", "node: added $filter[type] '$node[title]' - failed");
+          $db_handle->rollback();
         }
         else {
           $result = db_query("INSERT INTO $filter[type] ($f2, nid, lid) VALUES ($v2, '$nid', '$lid')");
           if (db_error($result)) {
             watchdog("warning", "node: added $filter[type] '$node[title]' - failed");
+            $db_handle->rollback();
           }
           else {
             $result = db_query("COMMIT");
             if (db_error($result)) {
-              watchdog("error", "database: ". $result->getMessage() ."\nquery: ". htmlspecialchars("BEGIN"));
+              watchdog("error", "database: ". $result->getMessage() ."\nquery: ". htmlspecialchars("COMMIT"));
               $db_handle->rollback();
             }
             watchdog("special", "node: added $filter[type] '$node[title]'");
