@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.37 2002/11/08 13:19:11 dries Exp $
+// $Id: module.inc,v 1.38 2002/11/17 16:26:06 kjartan Exp $
 
 // initialize modules:
 function module_init() {
@@ -53,7 +53,7 @@ function module_list() {
         include_once $module->filename;
       }
     }
-    asort($list);
+    natcasesort($list);
   }
 
   return $list;
