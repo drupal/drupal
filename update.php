@@ -66,7 +66,8 @@ $mysql_updates = array(
   "2003-12-06" => "update_74",
   "2004-01-06" => "update_75",
   "2004-01-11" => "update_76",
-  "2004-01-13" => "update_77"
+  "2004-01-13" => "update_77",
+  "2004-02-03" => "update_78"
 );
 
 function update_32() {
@@ -650,6 +651,19 @@ function update_76() {
 
 function update_77() {
   update_sql("ALTER TABLE {cache} ADD headers text");
+}
+
+function update_78() {
+  if ($GLOBALS["db_type"] == "mysql") {
+    update_sql("CREATE TABLE filters (
+      module varchar(64) NOT NULL default '',
+      weight tinyint(2) DEFAULT '0' NOT NULL,
+      KEY weight (weight)
+    )");
+  }
+  else {
+    /* Needs PGSQL/MSSQL equivalent */
+  }
 }
 
 /*
