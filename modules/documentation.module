@@ -228,6 +228,7 @@ function documentation() {
   <BLOCKQUOTE>$ export CVSROOT=":pserver:anonymous@drop.org:/home/dries/cvs"</BLOCKQUOTE>
   <P>3. Login by running the command:</P>
   <BLOCKQUOTE>$ cvs login</BLOCKQUOTE>
+  <P>The required password is 'anonymous' (without the quotes).</P>
   <P>4. To check out the latest drupal sources, run the command:</P>
   <BLOCKQUOTE>$ cvs co drupal</BLOCKQUOTE>
   <P>This will create a directory called <CODE>drupal</CODE> containing the latest drupal source tree.  For the other source code repositories on this system just substitute the correct package name.</P>
