@@ -134,7 +134,7 @@ function theme_blocks($region, &$theme) {
     if (($block->status && (!$user->uid || !$block->custom)) || ($block->custom && $user->block[$block->name])) {
       $blocks = module_invoke($block->module, "block");
       if ($blocks[$block->delta]["content"]) {
-        $theme->box(t($blocks[$block->delta]["subject"]), $blocks[$block->delta]["content"], $region);
+        $theme->box($blocks[$block->delta]["subject"], $blocks[$block->delta]["content"], $region);
       }
     }
   }
