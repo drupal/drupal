@@ -213,6 +213,11 @@ function timer_start() {
   $timer = (float)$usec + (float)$sec;
 }
 
+function watchdog($type, $message, $link = NULL) {
+  global $user;
+  db_query("INSERT INTO {watchdog} (uid, type, message, link, location, hostname, timestamp) VALUES (%d, '%s', '%s', '%s', '%s', '%s', %d)", $user->uid, $type, $message, $link, request_uri(), getenv("REMOTE_ADDR"), time());
+}
+
 unset($conf);
 $config = conf_init();
 
