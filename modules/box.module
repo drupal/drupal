@@ -7,21 +7,21 @@ $module = array("help" => "box_help",
 
 function box_help() {
  ?>
-  <P>The content of the site can be almost entirely altered through boxes.  Simply put, <I>boxes</I> are small bits of text, HTML or PHP code which will get plugged into the site just like any other block.  Boxes are typically used to add custom blocks to the site.</P>
-  <P>Each box consists of a subject and an associated block of text, HTML or PHP code which can be as long as you want it to be and that will 'render' the content of the box.</P>
+  <P>The content of the site can be almost entirely altered through <I>boxes</I>.  Simply put, boxes are small bits of text, HTML or PHP code which will get plugged into the site just like any other block.  Boxes are typically used to add custom blocks to the site.</P>
+  <P>Each box consists of a subject and an associated block of text, HTML or PHP code that can be as long as you wish and that will 'render' the content of the box.</P>
   <H3>PHP boxes</H3>
-  <P>If you know how to script in PHP, PHP boxes are pretty easy to create.  Don't worry if you're no PHP-wizard: simply use ASCII or HTML boxes instead.</P>
+  <P>If you know how to script in PHP, PHP boxes are easy to create.  Don't worry if you're no PHP-wizard: simply use ASCII or HTML boxes instead.</P>
   <P>You can use any piece of PHP code to make up the content of a PHP box: this implies that you can declare and use functions, consult the SQL database, access configuration settings and much more.  A PHP box's code is stored in the database and the engine will dynamically embed the PHP code just-in-time for execution.</P>
-  <P>There are however some factors to keep in mind when using and creating PHP boxes: PHP boxes can be extremely useful and flexible, yet they can be dangerous and insecure if not properly used.  If you are not familiar with PHP, SQL or even with the site engine for that matter, avoid experimenting with PHP boxes because you can - and you probably will - corrupt your database or even render your site unusable!  If you don't plan to do fancy stuff with boxes then you're probably better off with ASCII or HTML boxes.</P>
-  <P>Remember that the code within each PHP box must be valid PHP code, including things like terminating statements with a semicolon so the parser won't die.  Therefore, it is highly recommended to test your boxes separately using a simple test script on top of a test database before migrating to your production environment running your real database.</P>
-  <P>Note that you can use global variables such as configuration parameters within the scope of a PHP box. Also keep in mind that variables that have been given values in a PHP box will retain these values in the engine or module afterwards.</P>
+  <P>There are however some factors to keep in mind when using and creating PHP boxes: PHP boxes can be extremely useful and flexible, yet they can be dangerous and insecure if not properly used.  If you are not familiar with PHP, SQL or with the site engine, avoid experimenting with PHP boxes because you can - and probably will - corrupt your database or render your site unusable!  If you don't plan to do fancy stuff with boxes then you're probably better off with ASCII or HTML boxes.</P>
+  <P>Remember that the code within each PHP box must be valid PHP code -- including things like correctly terminating statements with a semicolon so that the parser won't die.  It is highly recommended that you develop your boxes separately using a simple test script on top of a test database before migrating to your production environment.</P>
+  <P>Note that you can use global variables such as configuration parameters within the scope of a PHP box. Also keep in mind that variables which have been given values in a PHP box will retain these values in the engine or module afterwards.</P>
   <P>You can use the <CODE>return</CODE> statement to return the actual content for your block as well.</P>
   <P><U>A basic example:</U></P>
-  <P>Given the box with subject "Welcome", used to create a "<I>Welcome</I>"-box.  The content for this box could be created by using:</P>
+  <P>Given the box with subject "Welcome", used to create a "<I>Welcome</I>" box.  The content for this box could be created by using:</P>
   <PRE>
    return "Welcome visitor, ... welcome message goes here ...";
   </PRE>
-  <P>If we are however dealing with a registered user, we can customize the message by using:
+  <P>If we are however dealing with a registered user, we can customize the message by using:</P>
   <PRE>
    if ($user->userid) {
      return "Welcome $user->userid, ... welcome message goes here ...";
@@ -30,7 +30,7 @@ function box_help() {
      return "Welcome visitor, ... welcome message goes here ...";
    }
   </PRE>
-  <P>For a more in-depth example, we recommend you to check the existing boxes and to use them as a start.</P>
+  <P>For more in-depth examples, we recommend that you check the existing boxes and use them as a starting point.</P>
  <?
 }
 

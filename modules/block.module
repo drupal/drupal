@@ -6,10 +6,10 @@ $module = array("page" => "block_page",
 
 function block_help() {
  ?>
-  <P>Blocks are the boxes visible in the side bars on the left and the right-hand side of the website.  They are either exported by the engine or by any of the available modules.  To really get your teeth in a drupal website, you are going to have to deal with blocks and administrating blocks in a fairly sophisticated fashion.  This means you are going to have to be sensitive to the way the block placement strategy works.</P>
-  <P>The placement of blocks is delegated to the administrator but for most blocks, i.e. those called "custom blocks", the sole force behind enabling and disabling them is the user itself.</P>
-  <P>An administrator can lay out and arrange the available blocks to fit in two regions: "left" and "right".  Regions simply contain blocks.  In addition, an administrator can assign each block (within a region) a weight to sort them vertically.  The heavy blocks will sink down whereas the light blocks will be positioned at the top.</P>
-  <P>As mentioned above, blocks can be arranged to fit in two regions: left and right.  For theme builders, each region is identified by a corresponding constant: "left" and "right".</P>
+  <P>Blocks are the boxes visible in the side bars on the left- and right-hand side of the website.  They are either exported by the engine or by any of the active modules.  To really get your teeth into a drupal website, you are going to have to deal with blocks and administering blocks in a fairly sophisticated fashion.  This means you will need to understand how the block placement strategy works.</P>
+  <P>The placement of blocks is delegated to the administrator. In most cases (i.e., the "custom" blocks), the user has complete control -- using preferences -- over whether or not they are enabled.</P>
+  <P>An administrator can lay out and arrange the available blocks to fit in two regions: "left" and "right".  Regions simply contain blocks.  In addition, an administrator can assign each block (within a region) a weight to sort them vertically.  The heavier blocks will sink and the lighter blocks will be positioned nearer the top.</P>
+  <P>As mentioned, blocks may be arranged to fit in two regions: left and right.  For theme builders, each region is identified by a corresponding constant: "left" and "right".</P>
  <?
 }
 
