@@ -26,6 +26,7 @@ ErrorDocument 500 /error.php
    php_value magic_quotes_gpc        0
    php_value magic_quotes_runtime    0
    php_value magic_quotes_sybase     0
+   php_value arg_separator.output  "&amp;"  
    php_value session.cache_expire    200000
    php_value session.cookie_lifetime 2000000
    php_value session.auto_start      0
@@ -40,4 +41,4 @@ ErrorDocument 500 /error.php
   RewriteRule ^blog/(.*) /module.php?mod=blog\&name=$1 [R]
 </IfModule>
 
-# $Id: .htaccess,v 1.40 2002/12/08 08:19:29 dries Exp $
+# $Id: .htaccess,v 1.41 2003/01/14 19:44:16 dries Exp $
