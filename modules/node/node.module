@@ -1002,7 +1002,7 @@ function node_feed($nodes = 0, $channel = array()) {
   global $base_url, $locale;
 
   if (!$nodes) {
-    $nodes = db_query_range('SELECT nid FROM {node} WHERE promote = 1 AND status = 1 ORDER BY created DESC', 0, 15);
+    $nodes = db_query_range('SELECT n.nid FROM {node} n '. node_access_join_sql() .' WHERE '. node_access_where_sql() .' AND n.promote = 1 AND n.status = 1 ORDER BY n.created DESC', 0, 15);
   }
 
   while ($node = db_fetch_object($nodes)) {

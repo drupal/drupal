@@ -102,7 +102,7 @@ function blog_feed_user($uid = 0) {
     $account = $user;
   }
 
-  $result = db_query_range("SELECT n.nid, n.title, n.teaser, n.created, u.name, u.uid FROM {node} n INNER JOIN {users} u ON n.uid = u.uid WHERE n.type = 'blog' AND u.uid = %d AND n.status = 1 ORDER BY n.created DESC", $uid, 0, 15);
+  $result = db_query_range('SELECT n.nid, n.title, n.teaser, n.created, u.name, u.uid FROM {node} n '. node_access_join_sql() .' INNER JOIN {users} u ON n.uid = u.uid WHERE '. node_access_where_sql() ." AND n.type = 'blog' AND u.uid = %d AND n.status = 1 ORDER BY n.created DESC", $uid, 0, 15);
   $channel['title'] = $account->name ."'s blog";
   $channel['link'] = url("blog/$uid", NULL, NULL, TRUE);
   $channel['description'] = $term->description;
@@ -113,7 +113,7 @@ function blog_feed_user($uid = 0) {
  * Displays an RSS feed containing recent blog entries of all users.
  */
 function blog_feed_last() {
-  $result = db_query_range("SELECT n.nid, n.title, n.teaser, n.created, u.name, u.uid FROM {node} n INNER JOIN {users} u ON n.uid = u.uid WHERE n.type = 'blog' AND n.status = 1 ORDER BY n.created DESC", 0, 15);
+  $result = db_query_range('SELECT n.nid, n.title, n.teaser, n.created, u.name, u.uid FROM {node} n '. node_access_join_sql() .' INNER JOIN {users} u ON n.uid = u.uid WHERE '. node_access_where_sql() ." AND n.type = 'blog' AND n.status = 1 ORDER BY n.created DESC", 0, 15);
   $channel['title'] = variable_get('site_name', 'drupal') .' blogs';
   $channel['link'] = url('blog', NULL, NULL, TRUE);
   $channel['description'] = $term->description;
@@ -160,7 +160,7 @@ function blog_page_last() {
 
   $output = '';
 
-  $result = pager_query('SELECT DISTINCT(n.nid), n.created FROM {node} n '. node_access_join_sql() ." WHERE n.type = 'blog' AND n.status = 1 AND ". node_access_where_sql() .' ORDER BY n.created DESC', variable_get('default_nodes_main', 10));
+  $result = pager_query('SELECT DISTINCT(n.nid), n.created FROM {node} n '. node_access_join_sql() ." WHERE n.type = 'blog' AND n.status = 1 AND ". node_access_where_sql() .' ORDER BY n.sticky DESC, n.created DESC', variable_get('default_nodes_main', 10));
 
   while ($node = db_fetch_object($result)) {
     $output .= node_view(node_load(array('nid' => $node->nid)), 1);
