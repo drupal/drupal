@@ -144,7 +144,7 @@ function structure_save($nid, $cid, $tid) {
 function structure_form($type, $edit = array(), $size = 1) {
   $output .= "<B>Category and topic:</B><BR>\n";
   $output .= category_form_select($type, $edit, $size) ." ". topic_form_select($edit, $size) ."<BR>";
-  $output .= "<SMALL><I>". t("Select the category and the topic this sumbission belongs in.") ."</I></SMALL><P>";
+  $output .= "<SMALL><I>". t("Select the category and the topic this submission belongs in.") ."</I></SMALL><P>";
   return $output;
 }
 
