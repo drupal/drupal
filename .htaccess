@@ -15,13 +15,6 @@ Options FollowSymLinks
 # Set the default handler to index.php:
 DirectoryIndex index.php
 
-# Customized server error messages:
-ErrorDocument 400 /error.php
-ErrorDocument 402 /error.php
-ErrorDocument 403 /error.php
-ErrorDocument 404 /error.php
-ErrorDocument 500 /error.php
-
 # Overload PHP variables:
 <IfModule mod_php4.c>
    # If you are using Apache 2, you have to use <IfModule sapi_apache2.c>
@@ -68,4 +61,4 @@ ErrorDocument 500 /error.php
   RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
 </IfModule>
 
-# $Id: .htaccess,v 1.54 2003/12/15 23:37:54 dries Exp $
+# $Id: .htaccess,v 1.55 2003/12/16 21:06:33 dries Exp $

@@ -1,5 +1,5 @@
 <?php
-/* $Id: bootstrap.inc,v 1.4 2003/12/13 14:10:23 dries Exp $ */
+/* $Id: bootstrap.inc,v 1.5 2003/12/16 21:06:33 dries Exp $ */
 
 function conf_init() {
 
@@ -168,9 +168,9 @@ function referer_uri() {
 }
 
 function arg($index) {
-  static $arguments;
+  static $arguments, $q;
 
-  if (empty($arguments)) {
+  if (empty($arguments) || $q != $_GET["q"]) {
     $arguments = explode("/", $_GET["q"]);
   }
 

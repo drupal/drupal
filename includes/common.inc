@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.279 2003/12/15 19:58:53 dries Exp $ */
+/* $Id: common.inc,v 1.280 2003/12/16 21:06:33 dries Exp $ */
 
 /**
  * @name drupal_title
@@ -101,6 +101,24 @@ function drupal_get_path_map($action = "") {
 
 function drupal_rebuild_path_map() {
   drupal_get_path_map("rebuild");
+}
+
+function drupal_not_found() {
+  header("HTTP/1.0 404 Not Found");
+  watchdog("httpd", "404 error: ". $_GET['q'] ." not found");
+
+  $path = drupal_get_normal_path(variable_get('site_404', ''));
+
+  if ($path) {
+    menu_set_active_item($path);
+  }
+
+  if ($path && menu_active_handler_exists()) {
+    menu_execute_active_handler();
+  }
+  else {
+    print theme("page", '<h1>'. t('Page not found') .'</h1>');
+  }
 }
 
 function error_handler($errno, $message, $filename, $line, $variables) {

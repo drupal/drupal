@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.145 2003/12/09 18:57:05 dries Exp $
+// $Id: forum.module,v 1.146 2003/12/16 21:06:34 dries Exp $
 
 function forum_node($field) {
   $info["name"] = t("forum topic");
@@ -162,8 +162,10 @@ function forum_view($node, $main = 0, $page = 0) {
     // print the breadcrumb
     drupal_set_breadcrumb($breadcrumb);
   }
+
   // prepare the node content
   $node = forum_content($node);
+
   // print the node
   $output .= theme("node", $node, $main, $page);
 
