@@ -26,6 +26,7 @@ Drupal x.x.x, xxxx-xx-xx
     * made it possible to add context-sensitive help to all pages.
     * replaced drop-down menus by radio buttons where appropriate.
     * removed the 'magic_quotes_gpc = 0' requirement.
+    * added a 'book navigation' block.
 - accessibility:
     * made themes degrade gracefully in absence of CSS.
     * grouped form elements using '<fieldset>' and '<legend>' tags.
