@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.92 2001/12/30 16:16:38 dries Exp $
+// $Id: theme.inc,v 1.93 2002/01/11 21:19:54 dries Exp $
 
 class BaseTheme {
 
@@ -52,8 +52,9 @@ class BaseTheme {
       $output .= " <form action=\"module.php?mod=user&op=login\" method=\"post\">\n";
       $output .= "  <b>". t("Username") .":</b><br /><input name=\"edit[name]\" size=\"15\"><p />\n";
       $output .= "  <b>". t("Password") .":</b><br /><input name=\"edit[pass]\" size=\"15\" TYPE=\"password\"><br />\n";
+      $output .= form_checkbox(t("Remember me"), "remember_me", 1, 0);
       $output .= "  <input type=\"submit\" value=\"". t("Log in") ."\"><br />\n";
-      if (variable_get("account_register", 1)) $output .= "  <a href=\"module.php?mod=user\">". t("REGISTER") ."</a>\n";
+      if (variable_get("account_register", 1)) $output .= "  <a href=\"module.php?mod=user\" title=\"". t("Create a new user account.") ."\">". t("REGISTER") ."</a>\n";
       $output .= " </form>\n";
       $output .= "</div>\n";
 
