@@ -39,8 +39,8 @@ function import_link($type) {
     $help["bundles"] = "Bundles provide a generalized way of creating composite feeds. They allow you, for example, to combine various sport-related feeds into one bundle called <i>Sport</i>.";
     menu("admin/syndication", "content syndication", NULL, NULL, 5);
     menu("admin/syndication/news", "news aggregation", "import_admin", $help["general"]);
-    menu("admin/syndication/news/add feed", "add new feed", "import_admin", NULL, 2);
-    menu("admin/syndication/news/add bundle", "add new bundle", "import_admin", $help["bundles"], 3);
+    menu("admin/syndication/news/add/feed", "add new feed", "import_admin", NULL, 2);
+    menu("admin/syndication/news/add/bundle", "add new bundle", "import_admin", $help["bundles"], 3);
     menu("admin/syndication/news/tag", "tag news items", "import_admin", NULL, 4);
     menu("admin/syndication/news/help", "help", "import_help", NULL, 9);
   }
@@ -489,12 +489,13 @@ function import_admin() {
     }
 
     switch ($op) {
-      case "add feed":
-        print import_form_feed();
-        break;
-      case "add bundle":
-        print import_form_bundle();
-        break;
+      case "add":
+        if (arg(4) == "bundle") {
+          print import_form_bundle();
+        }
+        else {
+          print import_form_feed();
+        }
       case "edit":
         if (arg(4) == "bundle") {
           print import_form_bundle(import_get_bundle(arg(5)));
@@ -522,7 +523,7 @@ function import_admin() {
         $edit["title"] = 0;
         // fall through:
       case "Submit":
-        if (arg(3) == "add bundle") {
+        if (arg(4) == "bundle") {
           print status(import_save_bundle($edit));
         }
         else {

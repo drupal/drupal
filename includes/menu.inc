@@ -1,6 +1,9 @@
 <?php
 // $Id$
 
+// TODO:
+//   1. add 'access' flag.
+
 function menu_add() {
   trigger_error(t("The 'menu_add()' function is deprecated."), E_USER_ERROR);
   // Note that this function will be removed shortly.
@@ -10,27 +13,34 @@ function menu($path, $title, $callback = NULL, $help = NULL, $weight = 0, $hidde
   global $_gmenu;
 
   if (isset($_gmenu[$path])) {
-    if (empty($_gmenu[$path]["callback"])) { // dummy item -> fill in
-      $_gmenu[$path] = array("title" => $title, "callback" => $callback, "help" => $help, "weight" => $weight, "hidden" => $hidden, "children" => $_gmenu[$path]["children"]);
-      return true;
-    }
-    else { // real item found
-      trigger_error(t("While trying to add '%path' to menu, item already exists.", array("%path" => $path)), E_USER_ERROR);
-      return false;
-    }
+    trigger_error("trying to add '$path' which already exists");
   }
-  // if this is reached we need to create a new item
-  $_gmenu[$path] = array("title" => $title, "callback" => $callback, "help" => $help, "weight" => $weight, "hidden" => $hidden, "children" => array());
-  // does the item have an existing parent?
-  $parent = substr($path, 0, strrpos($path, "/"));
-  while (!isset($_gmenu[$parent])) {
-    $_gmenu[$parent] = array("children" => array($path));
-    $path = $parent;
-    $parent = substr($parent, 0, strrpos($parent, "/"));
-  }
-  $_gmenu[$parent]["children"][] = $path;
+  else {
+    // add the menu to the flat list of menu items:
+    $_gmenu[$path] = array("title" => $title, "callback" => $callback, "help" => $help, "weight" => $weight, "hidden" => $hidden, "children" => array());
 
-  return true;
+    // find the best matching parent item:
+    $parent = substr($path, 0, strrpos($path, "/"));
+    while ($parent && !$_gmenu[$parent]) {
+      $parent = substr($parent, 0, strrpos($parent, "/"));
+    }
+
+    // check if any items need to be lowered:
+    if ($parent) {
+      foreach ($_gmenu[$parent]["children"] as $key => $item) {
+        if (strstr($item, $path)) {
+          // remove the item from its parent:
+          unset($_gmenu[$parent]["children"][$key]);
+
+          // add the item to its new parent:
+          $_gmenu[$path]["children"][] = $item;
+        }
+      }
+    }
+
+    // add the menu to the best matching parent:
+    $_gmenu[$parent]["children"][] = $path;
+  }
 }
 
 function menu_item($in_path) {
@@ -40,38 +50,33 @@ function menu_item($in_path) {
   ** by an image, this would be the function to customize.
   */
   $trail = menu_trail();
-  if (end($trail) == $in_path)
-    return t($_gmenu[$in_path]["title"]);
-  else
-    return "<a href=\"".url($in_path)."\">". t($_gmenu[$in_path]["title"]) ."</a>";
-}
+  if (end($trail) == $in_path) {
+    $css = " class=\"current\"";
+  }
 
-function query_string() {
-  return $GLOBALS["q"];
+  return "<a href=\"". url($in_path) ."\"$css>". t($_gmenu[$in_path]["title"]) ."</a>";
 }
 
 function menu_trail() {
-  global $_gmenu;
-  static $_gmenu_trail; // cache
+  global $_gmenu, $q;
+  static $trail; // cache
 
-  if (!isset($_gmenu_trail)) {
-    $_gmenu_trail = array();
-    $cuqs = query_string();
+  if (empty($trail)) {
+    $trail = array();
+    $path = $q;
 
-    while (!empty($cuqs) && !isset($_gmenu[$cuqs])) {
-      $cuqs = substr($cuqs, 0, strrpos($cuqs, "/"));
+    while ($path) {
+      if ($_gmenu[$path]) {
+        $trail[] = $path;
+      }
+
+      $path = substr($path, 0, strrpos($path, "/"));
     }
 
-    if (!empty($cuqs)) {
-      do {
-        $_gmenu_trail[] = $cuqs;
-        $cuqs = substr($cuqs, 0, strrpos($cuqs, "/"));
-      } while (!empty($cuqs) && isset($_gmenu[$cuqs]));
-    }
-    $_gmenu_trail = array_reverse($_gmenu_trail);
+    $trail = array_reverse($trail);
   }
 
-  return $_gmenu_trail;
+  return $trail;
 }
 
 function menu_path() {
@@ -84,7 +89,7 @@ function menu_path() {
     $links[] = menu_item($item);
   }
 
-  return implode(" &gt; ", $links);
+  return implode(" &raquo; ", $links);
 }
 
 function menu_help() {
@@ -148,12 +153,12 @@ function menu_map($parent = "") {
 }
 
 function menu_execute_action() {
-  global $_gmenu;
+  global $_gmenu, $q;
   $trail = menu_trail();
   $selected_menu = array_pop($trail);
 
   if ($_gmenu[$selected_menu]["callback"]) {
-    $arg = substr(query_string(), strlen($selected_menu) + 1);
+    $arg = substr($q, strlen($selected_menu) + 1);
     if (empty($arg)) {
       return call_user_func($_gmenu[$selected_menu]["callback"]);
     }

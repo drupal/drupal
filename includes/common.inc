@@ -147,7 +147,7 @@ function t($string, $args = 0) {
   **           => url("user/register")));
   */
 
-  $string = ($languages && function_exists("locale") ? locale($string) : $string);
+  $string = ($languages && module_exist("locale") ? locale($string) : $string);
 
   if (!$args) {
     return $string;

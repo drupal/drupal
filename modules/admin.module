@@ -11,6 +11,7 @@ function status($message) {
 
 function admin_link($type) {
   if ($type == "admin") {
+    menu("admin", "Administration", NULL);
     menu("admin/sitemap", "sitemap", "sitemap_callback", NULL, 8);
   }
 }
@@ -54,10 +55,7 @@ function admin_page() {
         print "<div id=\"main\">";
 
         if ($path = menu_path()) {
-          print "<h2>". l(t("Administration"), "admin") ." $path</h2>";
-        }
-        else {
-          print "<h2>". t("Administration") ."</h2>";
+          print "<h2>$path</h2>";
         }
 
         if ($help = menu_help()) {

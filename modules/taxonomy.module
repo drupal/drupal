@@ -32,7 +32,7 @@ function taxonomy_link($type, $node = NULL) {
     $help["vocabulary"] = "When you create a controlled vocabulary you are creating a set of terms to use for describing content (known as descriptors in indexing lingo).  Drupal allows you to describe each node of content (blog, story, etc.) using one or many of these terms. For simple implementations, you might create a set of categories without subcategories, similar to Slashdot.org's or Kuro5hin.org's sections. For more complex implementations, you might create a hierarchical list of categories.";
 
     menu("admin/taxonomy", "taxonomy", "taxonomy_admin", $help["taxonomy"], 3);
-    menu("admin/taxonomy/addvocabulary", "create new vocabulary", "taxonomy_admin", $help["vocabulary"]);
+    menu("admin/taxonomy/add/vocabulary", "create new vocabulary", "taxonomy_admin", $help["vocabulary"]);
     menu("admin/taxonomy/help", "help", "taxonomy_admin", NULL, 9);
   }
   else if ($type == "taxonomy terms" && $node != NULL) {
@@ -134,7 +134,7 @@ function _taxonomy_confirm_del_vocabulary($vid) {
 }
 
 function taxonomy_form_term($edit = array()) {
-  $vocabulary_id = isset($edit["vid"]) ? $edit["vid"] : arg(3);
+  $vocabulary_id = isset($edit["vid"]) ? $edit["vid"] : arg(4);
   $vocabulary = taxonomy_get_vocabulary($vocabulary_id);
 
   $form = form_textfield(t("Term name"), "name", $edit["name"], 50, 64, t("Required") . ". " . t("The name for this term.  Example: 'Linux'."));
@@ -268,13 +268,13 @@ function taxonomy_overview() {
   $vocabularies = taxonomy_get_vocabularies();
   foreach ($vocabularies as $vocabulary) {
     $links = array();
-    $rows[] = array($vocabulary->name, array("data" => $vocabulary->types, "align" => "center"), l(t("edit vocabulary"), "admin/taxonomy/editvocabulary/$vocabulary->vid"), l(t("add term"), "admin/taxonomy/addterm/$vocabulary->vid"), l(t("preview form"), "admin/taxonomy/preview/vocabulary/$vocabulary->vid"));
+    $rows[] = array($vocabulary->name, array("data" => $vocabulary->types, "align" => "center"), l(t("edit vocabulary"), "admin/taxonomy/edit/vocabulary/$vocabulary->vid"), l(t("add term"), "admin/taxonomy/add/term/$vocabulary->vid"), l(t("preview form"), "admin/taxonomy/preview/vocabulary/$vocabulary->vid"));
 
     $tree = taxonomy_get_tree($vocabulary->vid);
     if ($tree) {
       unset($data);
       foreach ($tree as $term) {
-        $data .= _taxonomy_depth($term->depth) ." ". $term->name ." (". l(t("edit term"), "admin/taxonomy/editterm/$term->tid") .")<br />";
+        $data .= _taxonomy_depth($term->depth) ." ". $term->name ." (". l(t("edit term"), "admin/taxonomy/edit/term/$term->tid") .")<br />";
       }
       $rows[] = array(array("data" => $data, "colspan" => 5));
     }
@@ -710,31 +710,31 @@ function taxonomy_admin() {
     }
 
     switch ($op) {
-      case "addvocabulary":
-        print taxonomy_form_vocabulary();
+      case "add":
+        if (arg(3) == "vocabulary")
+          $output .= taxonomy_form_vocabulary();
+        else if (arg(3) == "term")
+          $output .= taxonomy_form_term();
         break;
-      case "addterm":
-        print taxonomy_form_term();
-        break;
-      case "editvocabulary":
-        print taxonomy_form_vocabulary(object2array(taxonomy_get_vocabulary(arg(3))));
-        break;
-      case "editterm":
-        print taxonomy_form_term(object2array(taxonomy_get_term(arg(3))));
+      case "edit":
+        if (arg(3) == "vocabulary")
+          $output .= taxonomy_form_vocabulary(object2array(taxonomy_get_vocabulary(arg(4))));
+        else if (arg(3) == "term")
+          $output .= taxonomy_form_term(object2array(taxonomy_get_term(arg(4))));
         break;
       case "preview":
-        print taxonomy_form(arg(4));
+        $output .= taxonomy_form(arg(4));
         break;
       case "help":
-        print taxonomy_help();
+        $output .= taxonomy_help();
         break;
       case t("Delete"):
         if (!$edit["confirm"]) {
           if (arg(3) == "vocabulary") {
-            echo _taxonomy_confirm_del_vocabulary($edit["vid"]);
+            $output .= _taxonomy_confirm_del_vocabulary($edit["vid"]);
           }
           else {
-            echo _taxonomy_confirm_del_term($edit["tid"]);
+            $output .= _taxonomy_confirm_del_term($edit["tid"]);
           }
           break;
         }
@@ -743,31 +743,31 @@ function taxonomy_admin() {
           // fall through:
         }
       case t("Submit"):
-        if (arg(2) == "addvocabulary" || arg(2) == "editvocabulary") {
-          print status(taxonomy_save_vocabulary($edit));
+        if (arg(3) == "vocabulary") {
+          $output .= status(taxonomy_save_vocabulary($edit));
         }
         else {
-          print status(taxonomy_save_term($edit));
+          return status(taxonomy_save_term($edit));
           if (!$edit["tid"]) {
             // if INSERT show form again
-            print taxonomy_form_term();
+            $output .= taxonomy_form_term();
             break;
           }
           // else (UPDATE or DELETE) fall through
         }
         // fall through:
       default:
-        print taxonomy_overview();
+        $output .= taxonomy_overview();
     }
   }
   else {
-    print message_access();
+    $output .= message_access();
   }
+  return $output;
 }
 
 function taxonomy_help() {
-  ?>
-
+?>
   <h3>Background</h3>
   <p>Classifying nodes allows for the organization of content into categories and subcategories of description. These categories can be used to organize and retrieve similarly described content. Drupal's <i>taxonomy.module</i> is an extremely flexible classification system that allows for multiple lists of categories for classification (controlled vocabularies) and offers the possibility of creating thesauri (controlled vocabularies that indicate the relationship of terms) and taxonomies (controlled vocabularies where relationships are indicated hierarchically). For details about <a href="http://www.eleganthack.com/archives/002165.html#002165">classification types</a> and insight into the development of <i>taxonomy.module</i>, see this <a href="http://www.drupal.org/node/view/55">drupal.org discussion</a>.</p>
 
@@ -818,7 +818,6 @@ function taxonomy_help() {
   <i><a name="parent"></a>Parent</i><br />Required. Select the term under which this term is a subset -- the branch of the hierarchy that this term belongs under. This is also known as the "Broader term" indicator used in thesauri.<br />
   <br />
   <i><a name="synonyms"></a>Synonyms</i><br />Optional. Enter synonyms for this term, one synonym per line. Synonyms can be used for variant spellings, acronyms, and other terms that have the same meaning as the added term, but which are not explicitly listed in this thesaurus (i.e. <i>unauthorized terms</i>).</p>
-
   <h3>Displaying nodes organized by term(s)</h3>
   <p>In order to view the nodes associated with a term or a collection of terms, you should browse to a properly formed URL. For example, see <a href="<?php print url("taxonomy/page/or/1,2"); ?>"><?php print url("taxonomy/page/or/1,2"); ?></a>.  Taxonomy URLs always contain  a term ID or list of term IDs at the end of the URL (aka <i>querystring</i>). You may learn the term ID for a given term by hovering over that term in the <?php echo l("taxonomy overview", "admin/taxonomy") ?> page in the Admin and noting the number after the querystring parameter called <i>tid</i>.  If you wish to see nodes from a collection of term IDs, separate each term ID with a comma.  Also, the name of the querystring parameter may be <i>or</i> or <i>and</i>: <i>or</i> shows nodes which appear in <b>any</b> of the term IDs while <i>and</i> shows nodes in <b>all</b> the specified term IDs.  Thus, <i>or</i> is less specific than <i>and</i>.</p>
 
