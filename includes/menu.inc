@@ -346,7 +346,7 @@ function menu_execute_active_handler() {
   $arguments = array_key_exists('callback arguments', $menu['items'][$mid]) ? $menu['items'][$mid]['callback arguments'] : array();
   $arg = substr($_GET['q'], strlen($menu['items'][$mid]['path']) + 1);
   if (strlen($arg)) {
-    $arguments = array_merge($arguments, explode('/', $arg));
+    $arguments = array_merge(array($arguments), explode('/', $arg));
   }
   call_user_func_array($menu['items'][$mid]['callback'], $arguments);
   return MENU_FOUND;
