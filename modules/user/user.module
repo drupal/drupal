@@ -86,11 +86,13 @@ function user_save($account, $array = array()) {
 
     db_query("UPDATE {users} SET $query changed = %d WHERE uid = %d", array_merge($v, array(time(), $account->uid)));
 
-    // reload user roles
-    db_query("DELETE FROM {users_roles} WHERE uid = %d", $account->uid);
+    // reload user roles if provided
+    if (is_array($array['rid'])) {
+      db_query("DELETE FROM {users_roles} WHERE uid = %d", $account->uid);
 
-    foreach ($array['rid'] as $rid) {
-      db_query("INSERT INTO {users_roles} (uid, rid) VALUES (%d, %d)", $account->uid, $rid);
+      foreach ($array['rid'] as $rid) {
+        db_query("INSERT INTO {users_roles} (uid, rid) VALUES (%d, %d)", $account->uid, $rid);
+      }
     }
 
     $user = user_load(array('uid' => $account->uid));

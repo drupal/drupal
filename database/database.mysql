@@ -594,7 +594,6 @@ CREATE TABLE users (
   picture varchar(255) NOT NULL DEFAULT '',
   init varchar(64) default '',
   data longtext,
-  rid int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (uid),
   UNIQUE KEY name (name),
   KEY changed (changed)
@@ -667,7 +666,8 @@ INSERT INTO system VALUES ('modules/page.module','page','module','',1,0,0);
 INSERT INTO system VALUES ('modules/story.module','story','module','',1,0,0);
 INSERT INTO system VALUES ('modules/taxonomy.module','taxonomy','module','',1,0,0);
 INSERT INTO system VALUES ('themes/xtemplate/xtemplate.theme','xtemplate','theme','Internet explorer, Netscape, Opera',1,0,0);
-INSERT INTO users (uid, name, mail, rid) VALUES ('0', '', '', '1');
+INSERT INTO users (uid, name, mail) VALUES ('0', '', '');
+INSERT INTO users_roles (uid, rid) VALUES (0, 1);
 
 INSERT INTO role (rid, name) VALUES (1, 'anonymous user');
 INSERT INTO permission VALUES (1,'access content',0);
