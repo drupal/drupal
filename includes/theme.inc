@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.115 2002/11/09 20:12:03 dries Exp $
+// $Id: theme.inc,v 1.116 2002/11/09 20:50:50 dries Exp $
 
 /**
 * Basic theme
@@ -85,7 +85,7 @@ function theme_mark() {
   return "<span style=\"color: red;\">*</span>";
 }
 
-function theme_item_list($items = array(), $title = 0) {
+function theme_item_list($items = array(), $title = NULL) {
   /*
   ** Return a formatted array of items.
   */
