@@ -1092,7 +1092,7 @@ function comment_role_settings() {
 
   $edit = $_POST['edit'];
 
-  $output .= '<h3>Initial comment scores</h3>';
+  $output .= '<h3>'. t('Initial comment scores') .'</h3>';
 
   if ($edit) {
     variable_set('comment_roles', $edit);
