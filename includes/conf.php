@@ -1,5 +1,5 @@
 <?php
-// $Id: conf.php,v 1.21 2002/12/20 22:08:17 dries Exp $
+// $Id: conf.php,v 1.22 2003/01/06 19:50:59 dries Exp $
 
 #
 # Database settings:
@@ -45,8 +45,7 @@ $languages = array("en" => "English");
 # top of every page.
 // $custom_links = array(
 //  "<a href=\"index.php\">home</a>",
-//  "<a href=\"module.php?mod=user\">school</a>",
-//  "<a href=\"module.php?mod=blog\">work</a>");
-
+//  "<a href=\"blog\">journal</a>",
+//  "<a href=\"story\">articles</a>");
 
 ?>

@@ -1,5 +1,5 @@
 <?php
-// $Id: pager.inc,v 1.4 2002/12/14 11:55:52 dries Exp $
+// $Id: pager.inc,v 1.5 2003/01/06 19:50:59 dries Exp $
 
 function pager_help() {
   ?>
@@ -295,7 +295,8 @@ function pager_link($from_new, $attributes = array()) {
     $url["query"] = array_merge($url["query"], $attributes);
   }
 
-  return drupal_url($url["query"], $url["script"]);
+  // TODO: should use 'url()':
+  // return drupal_url($url["query"], $url["script"]);
 }
 
 function pager_load_array($value, $element, $old_array) {

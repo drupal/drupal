@@ -2,7 +2,7 @@
 
 function menu_trail() {
 
-  global $REQUEST_URI;
+  global $QUERY_STRING;
   static $trail = NULL;
 
   /*
@@ -12,8 +12,7 @@ function menu_trail() {
   if (empty($trail)) {
 
     $path = array();
-    $link = substr($REQUEST_URI, strrpos($REQUEST_URI, "/") + 1, strlen($REQUEST_URI));
-    $item = db_fetch_object(db_query("SELECT * FROM menu WHERE link = '%s'", $link));
+    $item = db_fetch_object(db_query("SELECT * FROM menu WHERE link LIKE '%%%s'", $QUERY_STRING));
 
     /*
     ** Compile an array of menu objects that represent the path to
@@ -38,14 +37,13 @@ function menu_trail() {
 }
 
 function menu_item($item) {
-  global $REQUEST_URI;
 
   /*
   ** If you want to theme your links, or if you want to replace them
   ** by an image, this would be the function to customize.
   */
 
-  if (stristr($REQUEST_URI, $item->link) == $item->link) {
+  if (stristr(request_uri(), $item->link) == $item->link) {
     return t($item->name);
   }
   else if ($item->title) {

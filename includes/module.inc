@@ -1,9 +1,10 @@
 <?php
-// $Id: module.inc,v 1.40 2002/12/21 19:10:47 dries Exp $
+// $Id: module.inc,v 1.41 2003/01/06 19:50:59 dries Exp $
 
 // initialize modules:
 function module_init() {
   // Note: changing this also requires changing system_admin() @ modules/system.module.
+  require_once "modules/admin.module";
   require_once "modules/user.module";
   require_once "modules/system.module";
   require_once "modules/watchdog.module";

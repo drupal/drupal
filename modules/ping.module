@@ -1,5 +1,5 @@
 <?php
-// $Id: ping.module,v 1.1 2002/11/01 09:31:59 dries Exp $
+// $Id: ping.module,v 1.2 2003/01/06 19:51:00 dries Exp $
 
 function ping_help() {
   $output = "<p>Drupal can pings sites automatically to notify them that your site has changed. It can ping the following sites :</p>";
@@ -32,7 +32,7 @@ function _ping_notify($name, $url) {
 }
 
 function ping_ping($name = "", $url = "") {
-  $feed = $url . drupal_url(array("mod" => "node", "op" => "feed"), "module");
+  $feed = $url . url("node/feed");
 
   $client = new xmlrpc_client("/RPC2", "rpc.weblogs.com", 80);
 

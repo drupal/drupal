@@ -28,7 +28,7 @@ function throttle_help() {
 
   <p>The auto-throttle mechanism performs an extra database query in order to determine what the current throttle level should be.  Fortunately the throttle can be tuned so these database queries only occur on a fraction of all pages geenrated by your site, reducing the overhead to an insignificant amount.  Additionally, when the top-most throttle level is reached, all throttle queries are suspended for a configurable period of time.  More detail follows.
 
-  <p>As with any new module, <i>throttle.module</i> needs to be enabled <?php print l("here", array("mod" => "system", "op" => "modules"), "admin"); ?> before you can use it.  Also refer to the permissions section below if you wish to access the throttle statistics block.</p>
+  <p>As with any new module, <i>throttle.module</i> needs to be enabled <?php print l("here", "admin/system/modules"); ?> before you can use it.  Also refer to the permissions section below if you wish to access the throttle statistics block.</p>
 
   <h3>Configuring the throttle module</h3>
 
@@ -58,11 +58,11 @@ function throttle_help() {
 
   <p>This block displays some statistics regarding the current throttle and its configuration.  It is recommended that only site administrators receive the "access throttle block" permission bit required to view this block.  It does not display information that would interest a normal site end-user.</p>
 
-  <p>Don't forget to enable the block <?php print l("here", array("mod" => "block"), "admin"); ?>.</p>
+  <p>Don't forget to enable the block <?php print l("here", "admin/block"); ?>.</p>
 
 <h3>Permissions</h3>
 <p>This module has one permission that needs to be configured in
-<?php print l("user permissions", array("mod" => "user", "op" => "permission"), "admin"); ?>.</p>
+<?php print l("user permissions", "admin/user/permission"); ?>.</p>
 <ul>
   <li><i>access throttle block</i> - enable for user roles that get to view the throttle block.</li>
 </ul>
@@ -119,7 +119,7 @@ function throttle_display_throttle_block() {
       /* calculate probability limiter's odds of updating throttle */
       $probability = substr((($limiter / ($limiter + 1) * 100) - 100) * -1, 0, 4);
 
-      $output .= "Throttle: ". l("Enabled", array("mod" => "system"), "admin", "statistics") ."<br />\n";
+      $output .= "Throttle: ". l("Enabled", "admin/system#statistics") ."<br />\n";
       if ($throttle < 5) {
         $maximum = (($throttle + 1) * $multiplier) - 1;
         $output .= "Current Level: $throttle ($minimum - $maximum)<br />\n";
@@ -135,7 +135,7 @@ function throttle_display_throttle_block() {
       }
     }
     else {
-      $output .= "Throttle: ". l("Disabled", array("mod" => "system"), "admin", "statistics") ."<br />\n";
+      $output .= "Throttle: ". l("Disabled", "admin/system#statistics") ."<br />\n";
     }
   }
   return $output;
