@@ -40,7 +40,7 @@ function blog_access($op, $node) {
 }
 
 function blog_save($op, $node) {
-  global $user;
+  global $REQUEST_URI;
 
   if ($op == "approve") {
     return array("promote" => 1);
@@ -55,18 +55,24 @@ function blog_save($op, $node) {
   }
 
   if ($op == "update") {
-    if ($user->uid == $node->uid) {
+    if (strstr($REQUEST_URI, "module.php?mod=node&op=edit")) {
       /*
       ** Updating your own blog entry will demote it (if promoted),
       ** and will queue it in the moderation queue for promotion.
+      ** If a node administrator updates his own blog entry through
+      ** the blog update mechanism that regular users use, then he
+      ** will be treated as a regular user and his blog entry will
+      ** be demoted.  We use the $REQUEST_URI field to dectect this
+      ** as we don't want to interfer with the updating of blog
+      ** entries through the admin pages.
       */
 
       return array("promote" => 0, "moderate" => 1, "score" => 0, "votes" => 0, "users" => 0);
     }
-    else {
+    else if (user_access("adminster nodes")) {
       /*
-      ** When an administrator updates someone else' blog entry, it
-      ** will not be changed unless explicitly specified.
+      ** When an administrator updates blog entries through the admin
+      ** pages, they will not be changed unless explicitly specified.
       */
 
       return array();
