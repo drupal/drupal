@@ -96,6 +96,10 @@
   </tr>
 </table>
 
+<div id="footer">
+  {footer}
+</div>
+
 </body>
 </html>
 <!-- END: footer -->

@@ -123,7 +123,10 @@ class Theme_xtemplate extends BaseTheme {
     // so we need some output buffering
     ob_start();
     theme_blocks("all");
-    $this->template->assign("blocks", ob_get_contents());
+    $this->template->assign( array(
+      "blocks" => ob_get_contents(),
+      "footer" => variable_get("site_footer", "")
+    ));
     ob_end_clean();
 
     $this->template->parse("footer");
