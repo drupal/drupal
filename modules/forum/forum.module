@@ -26,7 +26,7 @@ function forum_perm() {
   return array("create forum topics");
 }
 
-function forum_conf_options() {
+function forum_settings() {
 
   if (module_exist("taxonomy")) {
     $vocs[0] = "<". t("none") .">";
@@ -490,7 +490,7 @@ function forum_page() {
         $topics = forum_get_topics($tid, $sortby, $forum_per_page);
       }
 
-      theme_invoke("forum_render", $forums, $topics, $parents, $tid, $sortby, $forum_per_page, $offset);
+      theme("forum_render", $forums, $topics, $parents, $tid, $sortby, $forum_per_page, $offset);
     }
     else {
       $theme->header();
@@ -513,15 +513,15 @@ function forum_render($forums, $topics, $parents, $tid, $sortby, $forum_per_page
   // forum list, topics list, topic browser and "add new topic" link
   global $theme;
 
-  $output .= theme_invoke("forum_forum_list", $forums, $parents, $tid);
+  $output .= theme("forum_forum_list", $forums, $parents, $tid);
   if ($tid && !in_array($tid, variable_get("forum_containers", array()))) {
-    $output .= theme_invoke("forum_topic_list", $tid, $topics, $sortby, $forum_per_page, $offset);
+    $output .= theme("forum_topic_list", $tid, $topics, $sortby, $forum_per_page, $offset);
   }
 
   $theme->header();
   $theme->box(t("Discussion forum"), $output);
   if ($tid && !in_array($tid, variable_get("forum_containers", array()))) {
-    $theme->box(t("Control panel"), theme_invoke("forum_topic_browser", $sortby, $forum_per_page, $offset));
+    $theme->box(t("Control panel"), theme("forum_topic_browser", $sortby, $forum_per_page, $offset));
   }
   $theme->footer();
 }

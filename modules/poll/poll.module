@@ -91,12 +91,12 @@ function poll_form(&$node, &$help, &$error) {
       }
 
       if ($node->chvotes[$i] < 0) {
-        $error["chvotes][$i"] = theme_invoke("theme_error", t("Negative values are not allowed."));
+        $error["chvotes][$i"] = theme("theme_error", t("Negative values are not allowed."));
       }
     }
 
     if ($actualchoices < 2) {
-      $error["choice][0"] = theme_invoke("theme_error", t("You must fill in at least two choices."));
+      $error["choice][0"] = theme("theme_error", t("You must fill in at least two choices."));
     }
   }
   else {

@@ -169,13 +169,13 @@ function theme_blocks($region) {
     if ((($block->status && (!$user->uid || !$block->custom)) || ($block->custom && $user->block[$block->module][$block->delta])) && (!$block->path || preg_match("|$block->path|", $PHP_SELF))) {
       $block_data = module_invoke($block->module, "block", "view", $block->delta);
       if ($block_data["content"]) {
-        theme_invoke("block", $block_data["subject"], $block_data["content"], $region);
+        theme("block", $block_data["subject"], $block_data["content"], $region);
       }
     }
   }
 }
 
-function theme_invoke() {
+function theme() {
   global $theme;
   $args = func_get_args();
 

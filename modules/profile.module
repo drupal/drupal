@@ -40,7 +40,7 @@ function profile_system($field){
   return $system[$field];
 }
 
-function profile_conf_options() {
+function profile_settings() {
   global $profile_fields;
   if (!$profile_fields) {
     _profile_init();
@@ -99,8 +99,8 @@ function profile_user($type, $edit, &$user) {
 }
 
 function profile_required($title) {
-  // this pleads "theme_invoke, theme_invoke" ;)
-  return $title ." ". theme_invoke("theme_mark");
+  // this pleads "theme, theme" ;)
+  return $title ." ". theme("theme_mark");
 }
 
 function _profile_form($edit, $mode) {

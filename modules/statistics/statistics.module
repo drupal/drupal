@@ -628,7 +628,7 @@ function statistics_admin_userpage_config($edit) {
 
 
 /* Adds configure option to the main configure site admin page */
-function statistics_conf_options() {
+function statistics_settings() {
   /* access log options */
   $output = form_select(t("Enable access log"), "statistics_enable_access_log", variable_get("statistics_enable_access_log", 0), array("1" => t("Enabled"), "0" => t("Disabled")), t("Log each page access.  Required for referrer statistics."));
   $period = array(3600 => format_interval(3600), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200), 4838400 => format_interval(4838400), 9676800 => format_interval(9676800));
@@ -788,7 +788,7 @@ function statistics_display_online_block() {
       }
 
       $output .= "<br /><br />";
-      $output .= theme_invoke("theme_item_list", $items, variable_get("statistics_block_online_subtitle", "Online users:"));
+      $output .= theme("theme_item_list", $items, variable_get("statistics_block_online_subtitle", "Online users:"));
     }
   }
   else {

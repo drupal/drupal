@@ -17,7 +17,7 @@
  * @return  string  html of pager
  */
 function pager_display($tags = "", $limit = 10, $element = 0, $type = "default", $attributes = array()) {
-  return theme_invoke("pager_display_". $type, $tags, $limit, $element, $attributes = array());
+  return theme("pager_display_". $type, $tags, $limit, $element, $attributes = array());
 }
 
 /**

@@ -111,8 +111,8 @@ function system_view_modules() {
   $output .= "<hr />\n";
 
   foreach (module_list() as $name) {
-    if (module_hook($name, "conf_options")) {
-      $output .= "<h3><a name=\"$name\">". ucfirst(t("$name")) ." " . t("settings") . "</a></h3>". module_invoke($name, "conf_options") ."<hr />\n";
+    if (module_hook($name, "settings")) {
+      $output .= "<h3><a name=\"$name\">". ucfirst(t("$name")) ." " . t("settings") . "</a></h3>". module_invoke($name, "settings") ."<hr />\n";
     }
   }
 
@@ -120,9 +120,11 @@ function system_view_modules() {
 }
 
 function system_view_themes() {
-  foreach (theme_list() as $name) {
-    if (module_hook($name, "conf_options")) {
-      $output .= "<h3><a name=\"$name\">". ucfirst(t("$name")) ." " . t("settings") . "</a></h3>". module_invoke($name, "conf_options") ."<hr />\n";
+  foreach (theme_list() as $theme) {
+    include_once "$theme->filename";
+    $function = $theme->name ."_options";
+    if (function_exists($function)) {
+      $output .= "<h3><a name=\"$theme->name\">". ucfirst(t("$theme->name")) ." " . t("settings") . "</a></h3>". $function() ."<hr />\n";
     }
   }
 
@@ -182,7 +184,7 @@ function system_view($type) {
       break;
     default:
       foreach (module_list() as $name) {
-        if (module_hook($name, "conf_options")) {
+        if (module_hook($name, "settings")) {
           $links[] = "<a href=\"#$name\">". t("$name") ."</a>";
         }
       }

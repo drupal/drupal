@@ -347,7 +347,7 @@ function user_block($op = "list", $delta = 0) {
           }
           $items[] = l(t("Request new password"), "user/password", array("title" => t("Request new password via e-mail.")));
 
-          $output .= theme_invoke("theme_item_list", $items);
+          $output .= theme("theme_item_list", $items);
 
           $block["subject"] = t("Log in");
           $block["content"] = "<div style=\"{ white-space: nowrap; }\">$output</div>";
@@ -356,10 +356,10 @@ function user_block($op = "list", $delta = 0) {
         break;
       case 1:
         if ($user->uid) {
-          $content[] = theme_invoke("theme_item_list", module_invoke_all("link", "menu.create"));
-          $content[] = theme_invoke("theme_item_list", module_invoke_all("link", "menu.view"));
-          $content[] = theme_invoke("theme_item_list", module_invoke_all("link", "menu.settings"));
-          $content[] = theme_invoke("theme_item_list", module_invoke_all("link", "menu.misc"));
+          $content[] = theme("theme_item_list", module_invoke_all("link", "menu.create"));
+          $content[] = theme("theme_item_list", module_invoke_all("link", "menu.view"));
+          $content[] = theme("theme_item_list", module_invoke_all("link", "menu.settings"));
+          $content[] = theme("theme_item_list", module_invoke_all("link", "menu.misc"));
 
           $output = implode($content, "<br />");
 
@@ -375,7 +375,7 @@ function user_block($op = "list", $delta = 0) {
           $items[] = l((strlen($account->name) > 15 ? substr($account->name, 0, 15) . '...' : $account->name), "user/view/$account->uid");
         }
 
-        $output = theme_invoke("theme_item_list", $items);
+        $output = theme("theme_item_list", $items);
 
         $block["subject"] = t("Who's new");
         $block["content"] = $output;
@@ -611,7 +611,7 @@ function user_login($edit = array(), $msg = "") {
   */
 
   if ($error) {
-    $output .= theme_invoke("theme_error", $error);
+    $output .= theme("theme_error", $error);
   }
 
   /*
@@ -714,7 +714,7 @@ function user_pass($edit = array()) {
 
     // Display error message if necessary.
     if ($error) {
-      $output .= theme_invoke("theme_error", $error);
+      $output .= theme("theme_error", $error);
     }
 
     /*
@@ -836,7 +836,7 @@ function user_register($edit = array()) {
   }
   else {
     if ($error) {
-      $output .= theme_invoke("theme_error", $error);
+      $output .= theme("theme_error", $error);
     }
   }
 
@@ -953,7 +953,7 @@ function user_edit($edit = array()) {
     }
 
     if ($error) {
-      $output .= theme_invoke("theme_error", $error);
+      $output .= theme("theme_error", $error);
     }
 
     if (!$edit) {
@@ -1114,7 +1114,7 @@ function user_page() {
 
 /*** Administrative features ***********************************************/
 
-function user_conf_options() {
+function user_settings() {
   $output .= form_select(t("Public registrations"), "user_register", variable_get("user_register", 1), array(t("Only site administrators can create new user accounts."), t("Visitors can create accounts and no administrator approval is required."), t("Visitors can create accounts but administrator approval is required.")));
   $output .= form_textfield(t("Password words"), "user_password", variable_get("user_password", "foo,bar,guy,neo,tux,moo,sun,asm,dot,god,axe,geek,nerd,fish,hack,star,mice,warp,moon,hero,cola,girl,fish,java,perl,boss,dark,sith,jedi,drop,mojo"), 55, 256, t("A comma separated list of short words that can be concatenated to generate human-readable passwords."));
   $output .= form_select(t("Remember authenticated users"), "user_remember", variable_get("user_remember", 0), array(t("Let the user decide whether he should be logged out when leaving the site."), t("Authenticated users are not logged out upon leaving the site."), t("Authenticated users are logged out upon leaving the site.")));
@@ -1156,7 +1156,7 @@ function user_admin_create($edit = array()) {
   else {
 
     if ($error) {
-      $output .= theme_invoke("theme_error", $error);
+      $output .= theme("theme_error", $error);
     }
 
     $output .= form_textfield(t("Username"), "name", $edit["name"], 30, 55, t("Provide the username of the new account."));
@@ -1420,7 +1420,7 @@ function user_admin_edit($edit = array()) {
         $output .= status(t("your user information changes have been saved."));
       }
       else {
-        $output .= theme_invoke("theme_error", $error);
+        $output .= theme("theme_error", $error);
       }
     }
     else if ($op == t("Delete account")) {

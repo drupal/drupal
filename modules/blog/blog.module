@@ -6,7 +6,7 @@ function blog_system($field){
   return $system[$field];
 }
 
-function blog_conf_options() {
+function blog_settings() {
   $output = form_textarea(t("Explanation or submission guidelines"), "blog_help", variable_get("blog_help", ""), 55, 4, t("This text is displayed at the top of the blog submission form.  It's useful for helping or instructing your users."));
   $words = t("words");
   $output .= form_select(t("Minimum number of words in a blog entry"), "minimum_blog_size", variable_get("minimum_blog_size", 0), array(0 => "0 $words", 10 => "10 $words", 25 => "25 $words",  50 => "50 $words", 75 => "75 $words", 100 => "100 $words", 125 => "125 $words",  150 => "150 $words", 175 => "175 $words", 200 => "200 $words"), t("The minimum number of words a personal blog entry should contain.  This is useful to rule out submissions that do not meet the site's standards, such as short test posts."));
@@ -185,7 +185,7 @@ function blog_form(&$node, &$help, &$error) {
     */
 
     if (count(explode(" ", $node->body)) < variable_get("minimum_blog_size", 0)) {
-      $error["body"] = theme_invoke("theme_error", t("The body of your blog is too short."));
+      $error["body"] = theme("theme_error", t("The body of your blog is too short."));
     }
   }
   else {

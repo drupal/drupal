@@ -35,7 +35,7 @@ function search_link($type) {
   return $links ? $links : array();
 }
 
-function search_conf_options() {
+function search_settings() {
   $output = form_textfield(t("Minimum word length to index"), "minimum_word_size", variable_get("minimum_word_size", 2), 10, 10, t("The number of characters a word has to be to be indexed.  Words shorter than this will not be searchable."));
   $output .= form_textfield(t("Minimum word length to search for"), "remove_short", variable_get("remove_short", 0), 10, 10, t("The number of characters a word has to be to be searched for."));
   $output .= form_textarea(t("Noise words"), "noisewords", variable_get("noisewords", ""), 70, 10, t("These words will not be indexed, enter comma separated list, linebreaks and whitespace do not matter.  Example: and, or, not, a, to, I, it, ..."));
