@@ -175,15 +175,15 @@ function db_queryd($query) {
  * Decides whether to select primary_key or DISTINCT(primary_key)
  *
  * @param $query
- *    query to be rewritten
+ *   Query to be rewritten.
  * @param $primary_table
- *   Name or alias of the table which has the primary key field for this query. Possible values are: comments, forum, node, taxonomy, vocabulary
+ *   Name or alias of the table which has the primary key field for this query. Possible values are: comments, forum, node, term_data, vocabulary.
  * @param $primary_key
- *   name of the primary key field.
+ *   Name of the primary key field.
  * @param $args
- *  array of additional args
+ *   Array of additional arguments.
  * @return
- *   An array: join statements, where statements, field or DISTINCT(field)
+ *   An array: join statements, where statements, field or DISTINCT(field).
  */
 function _db_rewrite_sql($query = '', $primary_table = 'n', $primary_key = 'nid', $args = array()) {
   $where = array();
@@ -218,13 +218,13 @@ function _db_rewrite_sql($query = '', $primary_table = 'n', $primary_key = 'nid'
  * Rewrites node queries.
  *
  * @param $query
- *    query to be rewritten
+ *   Query to be rewritten.
  * @param $primary_table
- *   Name or alias of the table which has the primary key field for this query. Possible values are: comments, forum, node, taxonomy, vocabulary
+ *   Name or alias of the table which has the primary key field for this query. Possible values are: comments, forum, node, term_data, vocabulary.
  * @param $primary_key
- *   name of the primary key field.
+ *   Name of the primary key field.
  * @param $args
- *  an array of arguments, passed to the implementations of hook_db_rewrite_sql
+ *   An array of arguments, passed to the implementations of hook_db_rewrite_sql.
  * @return
  *   The original query with JOIN and WHERE statements inserted from hook_db_rewrite_sql implementations. nid is rewritten if needed.
  */
