@@ -144,6 +144,7 @@ function import_refresh($feed) {
     while (!feof($fp)) {
       $data .= fgets($fp, 128);
     }
+    fclose($fp);
 
     // initialize the translation table:
     $tt = array_flip(get_html_translation_table(HTML_ENTITIES));
@@ -357,6 +358,7 @@ function import_fd_collect($edit) {
     while (!feof($fp)) {
       $data .= fgets($fp, 128);
     }
+    fclose($fp);
 
     // initialize the translation table:
     $tt = array_flip(get_html_translation_table(HTML_ENTITIES));

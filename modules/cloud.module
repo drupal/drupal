@@ -58,6 +58,8 @@ function cloud_update($site) {
     if (abs($site[size] - strlen($data)) > 50) {
       db_query("UPDATE site SET size = '". strlen($data) ."', timestamp = '". time() ."' WHERE link = '". check_input($site[link]) ."'");
     }
+
+    fclose($fp);
   }
   else {
     watchdog("warning", "cloud: failed to syndicate from '$site[name]'". ($errstr ? ": $errstr" : ""));
