@@ -76,6 +76,9 @@ function node_link($type, $node = 0) {
   }
 
   if ($type == "node") {
+    if ($node->links) {
+      $links = $node->links;
+    }
     if ($node->body) {
       $links[] = "<a href=\"node.php?id=". $node->nid ."\">". t("read more") ."</a>";
     }
