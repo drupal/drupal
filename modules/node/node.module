@@ -65,8 +65,8 @@ function node_filter($text) {
 
 function node_cron() {
   db_query("UPDATE node SET status = '". node_status("posted") ."', timestamp_posted = '' WHERE timestamp_posted > 0 AND timestamp_posted < ". time());
-  db_query("UPDATE node SET status = '". node_status("queued") ."', timestamp_posted = '' WHERE timestamp_queued > 0 AND timestamp_queued < ". time());
-  db_query("UPDATE node SET status = '". node_status("dumped") ."', timestamp_posted = '' WHERE timestamp_hidden > 0 AND timestamp_hidden < ". time());
+  db_query("UPDATE node SET status = '". node_status("queued") ."', timestamp_queued = '' WHERE timestamp_queued > 0 AND timestamp_queued < ". time());
+  db_query("UPDATE node SET status = '". node_status("dumped") ."', timestamp_hidden = '' WHERE timestamp_hidden > 0 AND timestamp_hidden < ". time());
 }
 
 function node_link($nid, $type) {

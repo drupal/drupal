@@ -32,7 +32,8 @@ function comment_moderate($moderate) {
 
     foreach ($moderate as $id=>$vote) {
       if ($vote != $comment_votes[$none]) {
-        $id = check_input($id); $vote = check_input($vote);
+        $id = check_output($id);
+        $vote = check_output($vote);
         $comment = db_fetch_object(db_query("SELECT * FROM comments WHERE cid = '$id'"));
         if ($comment && !field_get($comment->users, $user->userid)) {
           $result = db_query("UPDATE comments SET score = score $vote, votes = votes + 1, users = '". field_set($comment->users, $user->userid, $vote) ."' WHERE cid = '$id'");
@@ -54,14 +55,14 @@ function comment_form($edit) {
   $form .= form_item(t("Your name"), format_username($user->userid));
 
   // subject field:
-  $form .= form_textfield(t("Subject"), "subject", check_input($edit[subject]), 50, 60);
+  $form .= form_textfield(t("Subject"), "subject", check_output($edit[subject]), 50, 60);
 
   // comment field:
-  $form .= form_textarea(t("Comment"), "comment", check_input($edit[comment]), 50, 10, t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
+  $form .= form_textarea(t("Comment"), "comment", check_output($edit[comment] ? $edit[comment] : $user->signature), 50, 10, t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
 
   // preview button:
-  $form .= form_hidden("pid", check_input($edit[pid]));
-  $form .= form_hidden("id", check_input($edit[id]));
+  $form .= form_hidden("pid", check_output($edit[pid]));
+  $form .= form_hidden("id", check_output($edit[id]));
 
   if (!$edit[comment]) {
     $form .= form_submit(t("Preview comment"));
