@@ -1,5 +1,5 @@
 <?php
-// $Id: queue.module,v 1.51 2002/05/12 20:12:23 kjartan Exp $
+// $Id: queue.module,v 1.52 2002/05/16 09:32:01 kjartan Exp $
 
 function queue_conf_options() {
 
@@ -151,7 +151,7 @@ function queue_view($nid) {
     $theme->box(t("Moderate"), $output);
   }
   if ($node->comment && variable_get("queue_show_comments", 1)) {
-    comment_render($node->nid, 0);
+    comment_render($node->nid);
   }
   $theme->footer();
 }
