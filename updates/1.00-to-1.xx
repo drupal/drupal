@@ -13,3 +13,10 @@ alter table blocks add remove tinyint(1) DEFAULT '0' NOT NULL;
 
 # 07/02/2001: value calculation
 alter table users add rating decimal(8,4) DEFAULT '0' NOT NULL;
+
+# 12/02/2001: locale / internationalisation
+create table locales (
+  id int(11) DEFAULT '0' NOT NULL auto_increment,
+  english TEXT DEFAULT '' NOT NULL,
+  PRIMARY KEY (id)
+);

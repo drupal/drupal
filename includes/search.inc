@@ -21,7 +21,7 @@ function search_data($keys, $type) {
   }
 
   if (!$output) {
-    $output .= "<P><SMALL>Your search yielded no results:</P><UL><LI>try using fewer words.</LI><LI>try using more general keywords.</LI><LI>try using different keywords.</LI></UL></SMALL>\n";
+    $output .= t("Your search yielded no results.");
   }
 
   return $output;

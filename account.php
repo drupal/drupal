@@ -8,18 +8,18 @@ function account_get_user($uname) {
 }
 
 function account_email() {
-  $output .= "<P>Lost your password?  Fill out your username and e-mail address, and your password will be mailed to you.</P>\n";
+  $output .= "<P>". t("Lost your password?  Fill out your username and e-mail address, and your password will be mailed to you.") ."</P>\n";
   $output .= "<FORM ACTION=\"account.php\" METHOD=\"post\">\n";
   $output .= "<P>\n";
-  $output .= " <B>Username:</B><BR>\n";
+  $output .= " <B>". t("Username") .":</B><BR>\n";
   $output .= " <INPUT NAME=\"userid\"><BR>\n";
   $output .= "</P>\n";
   $output .= "<P>\n";
-  $output .= " <B>E-mail address:</B><BR>\n";
+  $output .= " <B>". t("E-mail address") .":</B><BR>\n";
   $output .= " <INPUT NAME=\"email\"><BR>\n";
   $output .= "</P>\n";
   $output .= "<P>\n";
-  $output .= " <INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"E-mail password\">\n";
+  $output .= " <INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"E-mail new password\">\n";
   $output .= "</P>\n";
   $output .= "</FORM>\n";
 
@@ -30,22 +30,16 @@ function account_create($user = "", $error = "") {
   global $theme;
 
   if ($error) $output .= "<B><FONT COLOR=\"red\">Failed to create account:</FONT>$error</B>\n";
-  else $output .= "<P>Registering allows you to comment on stories, to moderate comments and pending stories, to customize the look and feel of the site and generally helps you interact with the site more efficiently.</P><P>To create an account, simply fill out this form an click the `Create account' button below.  An e-mail will then be sent to you with instructions on how to validate your account.</P>\n";
+  else $output .= "<P>". t("Registering allows you to comment on stories, to moderate comments and pending stories, to customize the look and feel of the site and generally helps you interact with the site more efficiently.") ."</P><P>". t("To create an account, simply fill out this form an click the 'Create account' button below.  An e-mail will then be sent to you with instructions on how to validate your account.") ."</P>\n";
 
   $output .= "<FORM ACTION=\"account.php\" METHOD=\"post\">\n";
-  $output .= "<P>\n";
-  $output .= " <B>Username:</B><BR>\n";
-  $output .= " <INPUT NAME=\"userid\"><BR>\n";
-  $output .= " <SMALL><I>Enter your desired username: only letters, numbers and common special characters are allowed.</I></SMALL><BR>\n";
-  $output .= "</P>\n";
-  $output .= "<P>\n";
-  $output .= " <B>E-mail address:</B><BR>\n";
-  $output .= " <INPUT NAME=\"email\"><BR>\n";
-  $output .= " <SMALL><I>You will be sent instructions on how to validate your account via this e-mail address - please make sure it is accurate.</I></SMALL><BR>\n";
-  $output .= "</P>\n";
-  $output .= "<P>\n";
-  $output .= " <INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"Create account\">\n";
-  $output .= "</P>\n";
+  $output .= "<B>". t("Username") .":</B><BR>\n";
+  $output .= "<INPUT NAME=\"userid\"><BR>\n";
+  $output .= "<SMALL><I>". t("Enter your desired username: only letters, numbers and common special characters are allowed.") ."</I></SMALL><P>\n";
+  $output .= "<B>". t("E-mail address") .":</B><BR>\n";
+  $output .= "<INPUT NAME=\"email\"><BR>\n";
+  $output .= "<SMALL><I>". t("You will be sent instructions on how to validate your account via this e-mail address - please make sure it is accurate.") ."</I></SMALL><P>\n";
+  $output .= "<INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"Create account\">\n";
   $output .= "</FORM>\n";
 
   return $output;
@@ -78,42 +72,42 @@ function account_user_edit() {
   if ($user->id) {
     // Generate output/content:
     $output .= "<FORM ACTION=\"account.php\" METHOD=\"post\">\n";
-    $output .= "<B>Username:</B><BR>\n";
+    $output .= "<B>". t("Username") .":</B><BR>\n";
     $output .= "&nbsp; $user->userid<P>\n";
-    $output .= "<I>Required, unique, and can not be changed.</I><P>\n";
-    $output .= "<B>Real name:</B><BR>\n";
+    $output .= "<I>". t("Required, unique, and can not be changed.") ."</I><P>\n";
+    $output .= "<B>". t("Real name") .":</B><BR>\n";
     $output .= "<INPUT NAME=\"edit[name]\" MAXLENGTH=\"55\" SIZE=\"30\" VALUE=\"$user->name\"><BR>\n";
-    $output .= "<I>Optional.</I><P>\n";
-    $output .= "<B>Real e-mail address:</B><BR>\n";
+    $output .= "<I>". t("Optional.") ."</I><P>\n";
+    $output .= "<B>". t("Real e-mail address") .":</B><BR>\n";
     $output .= "&nbsp; $user->real_email<P>\n";
-    $output .= "<I>Required, unique, can not be changed and is never displayed publicly: only needed in case you lose your password.</I><P>\n";
-    $output .= "<B>Fake e-mail address:</B><BR>\n";
+    $output .= "<I>". t("Required, unique, can not be changed.") ." ". t("Your real e-mail address is never displayed publicly: only needed in case you lose your password.") ."</I><P>\n";
+    $output .= "<B>". t("Fake e-mail address") .":</B><BR>\n";
     $output .= "<INPUT NAME=\"edit[fake_email]\" MAXLENGTH=\"55\" SIZE=\"30\" VALUE=\"$user->fake_email\"><BR>\n";
-    $output .= "<I>Optional, and displayed publicly. You may spam proof your real e-mail address if you want.</I><P>\n";
-    $output .= "<B>URL of homepage:</B><BR>\n";
+    $output .= "<I>". t("Optional.") ." ". t("Displayed publicly so you may spam proof your real e-mail address if you want.") ."</I><P>\n";
+    $output .= "<B>". t("Homepage") .":</B><BR>\n";
     $output .= "<INPUT NAME=\"edit[url]\" MAXLENGTH=\"55\" SIZE=\"30\" VALUE=\"$user->url\"><BR>\n";
-    $output .= "<I>Optional, but make sure you enter fully qualified URLs only. That is, remember to include \"http://\".</I><P>\n";
-    $output .= "<B>Bio:</B> (255 char. limit)<BR>\n";
+    $output .= "<I>". t("Optional.") ." ". t("Make sure you enter fully qualified URLs only.  That is, remember to include \"http://\".") ."</I><P>\n";
+    $output .= "<B>". t("Bio") .":</B> (". t("maximal 255 characters") .")<BR>\n";
     $output .= "<TEXTAREA NAME=\"edit[bio]\" COLS=\"35\" ROWS=\"5\" WRAP=\"virtual\">$user->bio</TEXTAREA><BR>\n";
-    $output .= "<I>Optional. This biographical information is publicly displayed on your user page.<BR>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I><P>\n";
-    $output .= "<B>Signature:</B> (255 char. limit)<BR>\n";
+    $output .= "<I>". t("Optional.") ." ". t("This biographical information is publicly displayed on your user page.") ."<BR>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</I><P>\n";
+    $output .= "<B>". t("Signature") .":</B> (". t("maximal 255 characters") .")<BR>\n";
     $output .= "<TEXTAREA NAME=\"edit[signature]\" COLS=\"35\" ROWS=\"5\" WRAP=\"virtual\">$user->signature</TEXTAREA><BR>\n";
-    $output .= "<I>Optional. This information will be publicly displayed at the end of your comments.<BR>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I><P>\n";
-    $output .= "<B>Password:</B><BR>\n";
+    $output .= "<I>". t("Optional.") ." ". t("This information will be publicly displayed at the end of your comments.") ."<BR>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</I><P>\n";
+    $output .= "<B>". t("Password") .":</B><BR>\n";
     $output .= "<INPUT TYPE=\"password\" NAME=\"edit[pass1]\" SIZE=\"10\" MAXLENGTH=\"20\"> <INPUT TYPE=\"password\" NAME=\"edit[pass2]\" SIZE=\"10\" MAXLENGTH=\"20\"><BR>\n";
-    $output .= "<I>Enter your new password twice if you want to change your current password or leave it blank if you are happy with your current password.</I><P>\n";
+    $output .= "<I>". t("Enter your new password twice if you want to change your current password or leave it blank if you are happy with your current password.") ."</I><P>\n";
     $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save user information\"><BR>\n";
     $output .= "</FORM>\n";
 
     // Display output/content:
     $theme->header();
-    $theme->box("Edit user information", $output);
+    $theme->box(t("Edit user information"), $output);
     $theme->footer();
   }
   else {
     $theme->header();
-    $theme->box("Create user account", account_create());
-    $theme->box("E-mail password", account_email());
+    $theme->box(t("Create user account"), account_create());
+    $theme->box(t("E-mail new password"), account_email());
     $theme->footer();
   }
 }
@@ -139,52 +133,40 @@ function account_site_edit() {
 
   if ($user->id) {
     $output .= "<FORM ACTION=\"account.php\" METHOD=\"post\">\n";
-    $output .= "<B>Theme:</B><BR>\n";
-    foreach ($themes as $key=>$value) {
-      $options1 .= " <OPTION VALUE=\"$key\"". (($user->theme == $key) ? " SELECTED" : "") .">$key - $value[1]</OPTION>\n";
-    }
+    $output .= "<B>". t("Theme" ) .":</B><BR>\n";
+    foreach ($themes as $key=>$value) $options1 .= " <OPTION VALUE=\"$key\"". (($user->theme == $key) ? " SELECTED" : "") .">$key - $value[1]</OPTION>\n";
     $output .= "<SELECT NAME=\"edit[theme]\">\n$options1</SELECT><BR>\n";
-    $output .= "<I>Selecting a different theme will change the look and feel of the site.</I><P>\n";
-    $output .= "<B>Timezone:</B><BR>\n";
+    $output .= "<I>". t("Selecting a different theme will change the look and feel of the site.") ."</I><P>\n";
+    $output .= "<B>". t("Timezone") .":</B><BR>\n";
     $date = time() - date("Z");
-    for ($zone = -43200; $zone <= 46800; $zone += 3600) {
-      $options2 .= " <OPTION VALUE=\"$zone\"". (($user->timezone == $zone) ? " SELECTED" : "") .">". date("l, F dS, Y - h:i A", $date + $zone) ." (GMT ". $zone / 3600 .")</OPTION>\n";
-    }
+    for ($zone = -43200; $zone <= 46800; $zone += 3600) $options2 .= " <OPTION VALUE=\"$zone\"". (($user->timezone == $zone) ? " SELECTED" : "") .">". date("l, F dS, Y - h:i A", $date + $zone) ." (GMT ". $zone / 3600 .")</OPTION>\n";
     $output .= "<SELECT NAME=\"edit[timezone]\">\n$options2</SELECT><BR>\n";
-    $output .= "<I>Select what time you currently have and your timezone settings will be set appropriate.</I><P>\n";
-    $output .= "<B>Maximum number of stories:</B><BR>\n";
-    for ($stories = 10; $stories <= 30; $stories += 5) {
-      $options3 .= "<OPTION VALUE=\"$stories\"". (($user->stories == $stories) ? " SELECTED" : "") .">$stories</OPTION>\n";
-    }
+    $output .= "<I>". t("Select what time you currently have and your timezone settings will be set appropriate.") ."</I><P>\n";
+    $output .= "<B>". t("Maximum number of stories to display") .":</B><BR>\n";
+    for ($stories = 10; $stories <= 30; $stories += 5) $options3 .= "<OPTION VALUE=\"$stories\"". (($user->stories == $stories) ? " SELECTED" : "") .">$stories</OPTION>\n";
     $output .= "<SELECT NAME=\"edit[stories]\">\n$options3</SELECT><BR>\n";
-    $output .= "<I>The maximum number of stories that will be displayed on the main page.</I><P>\n";
-    foreach ($cmodes as $key=>$value) {
-      $options4 .= "<OPTION VALUE=\"$key\"". ($user->mode == $key ? " SELECTED" : "") .">$value</OPTION>\n";
-    }
-    $output .= "<B>Comment display mode:</B><BR>\n";
+    $output .= "<I>". t("The maximum number of stories that will be displayed on the main page.") ."</I><P>\n";
+    foreach ($cmodes as $key=>$value) $options4 .= "<OPTION VALUE=\"$key\"". ($user->mode == $key ? " SELECTED" : "") .">$value</OPTION>\n";
+    $output .= "<B>". t("Comment display mode") .":</B><BR>\n";
     $output .= "<SELECT NAME=\"edit[mode]\">$options4</SELECT><P>\n";
-    foreach ($corder as $key=>$value) {
-      $options5 .= "<OPTION VALUE=\"$key\"". ($user->sort == $key ? " SELECTED" : "") .">$value</OPTION>\n";
-    }
-    $output .= "<B>Comment sort order:</B><BR>\n";
+    foreach ($corder as $key=>$value) $options5 .= "<OPTION VALUE=\"$key\"". ($user->sort == $key ? " SELECTED" : "") .">$value</OPTION>\n";
+    $output .= "<B>". t("Comment sort order") .":</B><BR>\n";
     $output .= "<SELECT NAME=\"edit[sort]\">$options5</SELECT><P>\n";
-    for ($i = -1; $i < 6; $i++) {
-      $options6 .= " <OPTION VALUE=\"$i\"". ($user->threshold == $i ? " SELECTED" : "") .">Filter - $i</OPTION>";
-    }
-    $output .= "<B>Comment filter:</B><BR>\n";
+    for ($i = -1; $i < 6; $i++) $options6 .= " <OPTION VALUE=\"$i\"". ($user->threshold == $i ? " SELECTED" : "") .">Filter - $i</OPTION>";
+    $output .= "<B>". t("Comment filter") .":</B><BR>\n";
     $output .= "<SELECT NAME=\"edit[threshold]\">$options6</SELECT><BR>\n";
-    $output .= "<I>Comments that scored less than this threshold setting will be ignored.  Anonymous comments start at 0, comments of people logged on start at 1 and moderators can add and subtract points.</I><P>\n";
+    $output .= "<I>". t("Comments that scored less than this threshold setting will be ignored.  Anonymous comments start at 0, comments of people logged on start at 1 and moderators can add and subtract points.") ."</I><P>\n";
     $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save site settings\"><BR>\n";
     $output .= "</FORM>\n";
 
     $theme->header();
-    $theme->box("Edit your preferences", $output);
+    $theme->box(t("Edit your preferences"), $output);
     $theme->footer();
   }
   else {
     $theme->header();
-    $theme->box("Create user account", account_create());
-    $theme->box("E-mail password", account_email());
+    $theme->box(t("Create user account"), account_create());
+    $theme->box(t("E-mail new password"), account_email());
     $theme->footer();
   }
 }
@@ -208,27 +190,24 @@ function account_content_edit() {
 
   if ($user->id) {
     $output .= "<FORM ACTION=\"account.php\" METHOD=\"post\">\n";
-
-    $output .= "<B>Blocks in side bars:</B><BR>\n";
-
+    $output .= "<B>". t("Blocks in side bars") .":</B><BR>\n";
     $result = db_query("SELECT * FROM blocks WHERE status = 1 ORDER BY module");
     while ($block = db_fetch_object($result)) {
       $entry = db_fetch_object(db_query("SELECT * FROM layout WHERE block = '$block->name' AND user = '$user->id'"));
-      $output .= "<INPUT TYPE=\"checkbox\" NAME=\"edit[$block->name]\"". ($entry->user ? " CHECKED" : "") ."> $block->name<BR>\n";
+      $output .= "<INPUT TYPE=\"checkbox\" NAME=\"edit[$block->name]\"". ($entry->user ? " CHECKED" : "") ."> ". t($block->name) ."<BR>\n";
     }
-
-    $output .= "<P><I>Enable the blocks you would like to see displayed in the side bars.</I></P>\n";
+    $output .= "<P><I>". t("Enable the blocks you would like to see displayed in the side bars.") ."</I></P>\n";
     $output .= "<P><INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save content settings\"></P>\n";
     $output .= "</FORM>\n";
 
     $theme->header();
-    $theme->box("Edit your content", $output);
+    $theme->box(t("Edit your content"), $output);
     $theme->footer();
   }
   else {
     $theme->header();
-    $theme->box("Create user account", account_create());
-    $theme->box("E-mail password", account_email());
+    $theme->box(t("Create user account"), account_create());
+    $theme->box(t("E-mail new password"), account_email());
     $theme->footer();
   }
 }
@@ -255,11 +234,11 @@ function account_user($uname) {
 
   if ($user->id && $user->userid == $uname) {
     $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Username:</B></TD><TD>$user->userid</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>E-mail:</B></TD><TD>". format_email($user->fake_email) ."</A></TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Homepage:</B></TD><TD>". format_url($user->url) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Bio:</B></TD><TD>". format_data($user->bio) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Signature:</B></TD><TD>". format_data($user->signature) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>". t("Username") .":</B></TD><TD>$user->userid</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>". t("E-mail") .":</B></TD><TD>". format_email($user->fake_email) ."</A></TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>". t("Homepage") .":</B></TD><TD>". format_url($user->url) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>". t("Bio") .":</B></TD><TD>". check_output($user->bio) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>". t("Signature") .":</B></TD><TD>". check_output($user->signature) ."</TD></TR>\n";
     $output .= "</TABLE>\n";
 
     // Display account information:
@@ -269,18 +248,18 @@ function account_user($uname) {
   }
   elseif ($uname && $account = account_get_user($uname)) {
     $block1 .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
-    $block1 .= " <TR><TD ALIGN=\"right\"><B>Username:</B></TD><TD>$account->userid</TD></TR>\n";
-    $block1 .= " <TR><TD ALIGN=\"right\"><B>E-mail:</B></TD><TD>". format_email($account->fake_email) ."</TD></TR>\n";
-    $block1 .= " <TR><TD ALIGN=\"right\"><B>URL:</B></TD><TD>". format_url($account->url) ."</TD></TR>\n";
-    $block1 .= " <TR><TD ALIGN=\"right\"><B>Bio:</B></TD><TD>". format_data($account->bio) ."</TD></TR>\n";
+    $block1 .= " <TR><TD ALIGN=\"right\"><B>". t("Username") .":</B></TD><TD>$account->userid</TD></TR>\n";
+    $block1 .= " <TR><TD ALIGN=\"right\"><B>". t("E-mail") .":</B></TD><TD>". format_email($account->fake_email) ."</TD></TR>\n";
+    $block1 .= " <TR><TD ALIGN=\"right\"><B>". t("Homepage") .":</B></TD><TD>". format_url($account->url) ."</TD></TR>\n";
+    $block1 .= " <TR><TD ALIGN=\"right\"><B>". t("Bio") .":</B></TD><TD>". check_output($account->bio) ."</TD></TR>\n";
     $block1 .= "</TABLE>\n";
 
     $result = db_query("SELECT c.cid, c.pid, c.lid, c.subject, c.timestamp, s.subject AS story FROM comments c LEFT JOIN users u ON u.id = c.author LEFT JOIN stories s ON s.id = c.lid WHERE u.userid = '$uname' AND s.status = 2 AND c.link = 'story' AND s.timestamp > ". (time() - 1209600) ." ORDER BY cid DESC LIMIT 10");
     while ($comment = db_fetch_object($result)) {
       $block2 .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
-      $block2 .= " <TR><TD ALIGN=\"right\"><B>Comment:</B></TD><TD><A HREF=\"story.php?id=$comment->lid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A></TD></TR>\n";
-      $block2 .= " <TR><TD ALIGN=\"right\"><B>Date:</B></TD><TD>". format_date($comment->timestamp) ."</TD></TR>\n";
-      $block2 .= " <TR><TD ALIGN=\"right\"><B>Story:</B></TD><TD><A HREF=\"story.php?id=$comment->lid\">". check_output($comment->story) ."</A></TD></TR>\n";
+      $block2 .= " <TR><TD ALIGN=\"right\"><B>". t("Comment") .":</B></TD><TD><A HREF=\"story.php?id=$comment->lid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A></TD></TR>\n";
+      $block2 .= " <TR><TD ALIGN=\"right\"><B>". t("Date") .":</B></TD><TD>". format_date($comment->timestamp) ."</TD></TR>\n";
+      $block2 .= " <TR><TD ALIGN=\"right\"><B>". t("Story") .":</B></TD><TD><A HREF=\"story.php?id=$comment->lid\">". check_output($comment->story) ."</A></TD></TR>\n";
       $block2 .= "</TABLE>\n";
       $block2 .= "<P>\n";
       $comments++;
@@ -288,16 +267,16 @@ function account_user($uname) {
 
     // Display account information:
     $theme->header();
-    if ($block1) $theme->box("User information for $uname", $block1);
-    if ($block2) $theme->box("$uname has posted ". format_plural($comments, "comment", "comments") ." recently", $block2);
+    if ($block1) $theme->box(strtr(t("%s's user information"), array("%s" => $uname)), $block1);
+    if ($block2) $theme->box(strtr(t("%a has posted %b recently"), array("%a" => $uname, "%b" => format_plural($comments, "comment", "comments"))), $block2);
     module_iterate("module", $uname);
     $theme->footer();
   }
   else {
     // Display login form:
     $theme->header();
-    $theme->box("Create user account", account_create());
-    $theme->box("E-mail password", account_email());
+    $theme->box(t("Create user account"), account_create());
+    $theme->box(t("E-mail new password"), account_email());
     $theme->footer();
   }
 }
@@ -306,17 +285,17 @@ function account_validate($user) {
   global $type2index;
 
   // Verify username and e-mail address:
-  if (empty($user[real_email]) || (!eregi("^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3}$", $user[real_email]))) $error .= "<LI>the specified e-mail address is not valid.</LI>\n";
-  if (empty($user[userid]) || (ereg("[^a-zA-Z0-9_-]", $user[userid]))) $error .= "<LI>the specified username is not valid.</LI>\n";
-  if (strlen($user[userid]) > 15) $error .= "<LI>the specified username is too long: it must be less than 15 characters.</LI>\n";
+  if (empty($user[real_email]) || (!eregi("^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3}$", $user[real_email]))) $error .= "<LI>". t("the specified e-mail address is not valid") .".</LI>\n";
+  if (empty($user[userid]) || (ereg("[^a-zA-Z0-9_-]", $user[userid]))) $error .= "<LI>". t("the specified username is not valid") .".</LI>\n";
+  if (strlen($user[userid]) > 15) $error .= "<LI>". t("the specified username is too long: it must be less than 15 characters") .".</LI>\n";
 
   // Check to see whether the username or e-mail address are banned:
-  if ($ban = ban_match($user[userid], $type2index[usernames])) $error .= "<LI>the specified username is banned  for the following reason: <I>$ban->reason</I>.</LI>\n";
-  if ($ban = ban_match($user[real_email], $type2index[addresses])) $error .= "<LI>the specified e-mail address is banned for the following reason: <I>$ban->reason</I>.</LI>\n";
+  if ($ban = ban_match($user[userid], $type2index[usernames])) $error .= "<LI>". t("the specified username is banned  for the following reason") .": <I>$ban->reason</I>.</LI>\n";
+  if ($ban = ban_match($user[real_email], $type2index[addresses])) $error .= "<LI>". t("the specified e-mail address is banned for the following reason") .": <I>$ban->reason</I>.</LI>\n";
 
   // Verify whether username and e-mail address are unique:
-  if (db_num_rows(db_query("SELECT userid FROM users WHERE LOWER(userid) = LOWER('$user[userid]')")) > 0) $error .= "<LI>the specified username is already taken.</LI>\n";
-  if (db_num_rows(db_query("SELECT real_email FROM users WHERE LOWER(real_email)=LOWER('$user[real_email]')")) > 0) $error .= "<LI>the specified e-mail address is already registered.</LI>\n";
+  if (db_num_rows(db_query("SELECT userid FROM users WHERE LOWER(userid) = LOWER('$user[userid]')")) > 0) $error .= "<LI>". t("the specified username is already taken") .".</LI>\n";
+  if (db_num_rows(db_query("SELECT real_email FROM users WHERE LOWER(real_email)=LOWER('$user[real_email]')")) > 0) $error .= "<LI>". t("the specified e-mail address is already registered") .".</LI>\n";
 
   return $error;
 }
@@ -328,8 +307,8 @@ function account_email_submit($userid, $email) {
 
   if ($account = db_fetch_object($result)) {
     $passwd = account_password();
-    $status = 1;
     $hash = substr(md5("$userid. ". time() .""), 0, 12);
+    $status = 1;
 
     db_query("UPDATE users SET passwd = PASSWORD('$passwd'), hash = '$hash', status = '$status' WHERE userid = '$userid'");
 
@@ -344,11 +323,11 @@ function account_email_submit($userid, $email) {
   }
   else {
     watchdog("warning", "new password: '$userid' and &lt;$email&gt; do not match");
-    $output = "Could not sent password: no match for the specified username and e-mail address.";
+    $output = t("Could not sent password: no match for the specified username and e-mail address.");
   }
 
   $theme->header();
-  $theme->box("E-mail password", $output);
+  $theme->box(t("E-mail new password"), $output);
   $theme->footer();
 }
 
@@ -360,7 +339,7 @@ function account_create_submit($userid, $email) {
 
   if ($error = account_validate($new)) {
     $theme->header();
-    $theme->box("Create user account", account_create($new, $error));
+    $theme->box(t("Create user account"), account_create($new, $error));
     $theme->footer();
   }
   else {
@@ -378,7 +357,7 @@ function account_create_submit($userid, $email) {
     mail($new[real_email], "Account details for $site_name", $message, "From: noreply");
 
     $theme->header();
-    $theme->box("Create user account", "Congratulations!  Your member account has been successfully created and further instructions on how to activate your account have been sent to your e-mail address.");
+    $theme->box(t("Create user account"), t("Congratulations!  Your member account has been successfully created and further instructions on how to activate your account have been sent to your e-mail address."));
     $theme->footer();
   }
 }
@@ -411,7 +390,7 @@ function account_create_confirm($name, $hash) {
   }
 
   $theme->header();
-  $theme->box("Account confirmation", $output);
+  $theme->box(t("Create user account"), $output);
   $theme->footer();
 }
 
@@ -428,20 +407,18 @@ function account_track_comments() {
   $sresult = db_query("SELECT s.id, s.subject, COUNT(s.id) as count FROM comments c LEFT JOIN stories s ON c.lid = s.id WHERE c.author = $user->id GROUP BY s.id DESC LIMIT 5");
 
   while ($story = db_fetch_object($sresult)) {
-    $output .= "<LI>". format_plural($story->count, comment, comments) ." attached to story `<A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A>`:</LI>\n";
+    $output .= "<LI>". format_plural($story->count, "comment", "comments") ." ". t("attached to story") ." `<A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A>`:</LI>\n";
     $output .= " <UL>\n";
 
     $cresult = db_query("SELECT * FROM comments WHERE author = $user->id AND lid = $story->id");
     while ($comment = db_fetch_object($cresult)) {
-      $output .= "  <LI><A HREF=\"story.php?id=$story->id&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A> - replies: ". comment_num_replies($comment->cid) ." - score: ". comment_score($comment) ."</LI>\n";
+      $output .= "  <LI><A HREF=\"story.php?id=$story->id&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A> - ". t("replies") .": ". comment_num_replies($comment->cid) ." - ". t("score") .": ". comment_score($comment) ."</LI>\n";
     }
     $output .= " </UL>\n";
   }
 
-  $output = ($output) ? "$output" : "$info <CENTER>You have not posted any comments recently.</CENTER>\n";
-
   $theme->header();
-  $theme->box("Track your comments", $output);
+  $theme->box(t("Track your comments"), ($output ? $output : t("You have not posted any comments recently.")));
   $theme->footer();
 }
 
@@ -452,15 +429,15 @@ function account_track_stories() {
 
   while ($story = db_fetch_object($result)) {
     $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Subject:</B></TD><TD><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A> (". format_plural($story->count, "comment", "comments") .")</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Section:</B></TD><TD><A HREF=\"search.php?section=". urlencode($story->section) ."\">". check_output($story->section) ."</A></TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Date:</B></TD><TD>". format_date($story->timestamp) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>". t("Subject") .":</B></TD><TD><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A> (". format_plural($story->count, "comment", "comments") .")</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>". t("Section") .":</B></TD><TD><A HREF=\"search.php?section=". urlencode($story->section) ."\">". check_output($story->section) ."</A></TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>". t("Date") .":</B></TD><TD>". format_date($story->timestamp) ."</TD></TR>\n";
     $output .= "</TABLE>\n";
     $output .= "<P>\n";
   }
 
   $theme->header();
-  $theme->box("Track your stories", ($output ? "$output" : "You have not posted any stories.\n"));
+  $theme->box(t("Track your stories"), ($output ? $output : t("You have not posted any stories.")));
   $theme->footer();
 }
 
@@ -471,18 +448,18 @@ function account_track_site() {
 
   $sresult = db_query("SELECT s.subject, s.id, COUNT(c.lid) AS count FROM comments c LEFT JOIN stories s ON c.lid = s.id WHERE s.status = 2 AND c.link = 'story' AND ". time() ." - c.timestamp < $period GROUP BY c.lid ORDER BY count DESC LIMIT 10");
   while ($story = db_fetch_object($sresult)) {
-    $output .= "<LI>". format_plural($story->count, "new comment", "new comments") ." attached to story '<A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A>':</LI>";
+    $output .= "<LI>". format_plural($story->count, "comment", "comments") ." ". t("attached to story") ." '<A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A>':</LI>";
 
     $cresult = db_query("SELECT c.subject, c.cid, c.pid, u.userid FROM comments c LEFT JOIN users u ON u.id = c.author WHERE c.lid = $story->id AND c.link = 'story' ORDER BY timestamp DESC LIMIT $story->count");
     $output .= "<UL>\n";
     while ($comment = db_fetch_object($cresult)) {
-      $output .= " <LI>'<A HREF=\"story.php?id=$story->id&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A>' by ". format_username($comment->userid) ."</LI>\n";
+      $output .= " <LI>'<A HREF=\"story.php?id=$story->id&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A>' ". t("by") ." ". format_username($comment->userid) ."</LI>\n";
     }
     $output .= "</UL>\n";
   }
 
   $theme->header();
-  $theme->box("Track $site_name", $output);
+  $theme->box(t("Track $site_name"), $output);
   $theme->footer();
 }
 
@@ -497,7 +474,7 @@ switch ($op) {
     account_session_start($userid, $passwd);
     header("Location: account.php?op=info");
     break;
-  case "E-mail password":
+  case "E-mail new password":
     account_email_submit($userid, $email);
     break;
   case "Create account":

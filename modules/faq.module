@@ -83,7 +83,7 @@ function faq_page() {
   </DL>";
 
   $theme->header();
-  $theme->box("Frequently Asked Questions", $output);
+  $theme->box(t("Frequently Asked Questions"), $output);
   $theme->footer();
 }
 
