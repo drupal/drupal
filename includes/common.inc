@@ -1,8 +1,13 @@
 <?php
-/* $Id: common.inc,v 1.302 2004/01/06 12:09:41 unconed Exp $ */
+/* $Id: common.inc,v 1.303 2004/01/06 19:52:14 kjartan Exp $ */
 
 /**
- * @name drupal_title
+ * @defgroup common Core functions
+ */
+
+/**
+ * @name Page title
+ * @ingroup common
  *
  * Functions to get and set the title of the current page.
  * @{
@@ -25,10 +30,11 @@ function drupal_get_title() {
 
   return $title;
 }
-// @}
+/* @} */
 
 /**
- * @name drupal_message
+ * @name Page messages
+ * @ingroup common
  *
  * Functions to get and set the message of the current page.
  * @{
@@ -46,16 +52,19 @@ function drupal_set_message($message = NULL, $type = "status") {
 function drupal_get_messages() {
   return drupal_set_message();
 }
-// @}
+/* @} */
 
 /**
- * @name drupal_breadcrumb
+ * @name Page breadcrumbs
+ * @ingroup common
  *
  * Functions to get and set the breadcrumb trail of the current page.
- *
- * @param $breadcrumb array of links, starting with "home" and proceeding up
- *   to but not including the current page.
  * @{
+ */
+
+/**
+ * @param $breadcrumb Array of links, starting with "home" and proceeding up
+ *   to but not including the current page.
  */
 function drupal_set_breadcrumb($breadcrumb = NULL) {
   static $stored_breadcrumb;
@@ -76,10 +85,13 @@ function drupal_get_breadcrumb() {
 
   return $breadcrumb;
 }
-// @}
+/* @} */
 
 /**
- * Build the alias/path array
+ * @name URL path
+ * @ingroup common
+ *
+ * Function to handle path aliases.
  */
 function drupal_get_path_map($action = "") {
   static $map = NULL;
@@ -101,7 +113,63 @@ function drupal_get_path_map($action = "") {
 function drupal_rebuild_path_map() {
   drupal_get_path_map("rebuild");
 }
+/* @} */
 
+/**
+ * @name HTTP handling
+ * @ingroup common
+ *
+ * Functions to properly handle HTTP responses.
+ * @{
+ */
+
+/**
+ * HTTP redirects. Makes sure the redirected url is formatted correctly and
+ * includes the session ID.
+ *
+ * @note This function ends the request.
+ *
+ * @param $url A string containing a fully qualified URI.
+ */
+function drupal_goto($url) {
+
+  /*
+  ** Translate &amp; to simply &
+  */
+
+  $url = str_replace("&amp;", "&", $url);
+
+  /*
+  ** It is advised to use "drupal_goto()" instead of PHP's "header()" as
+  ** "drupal_goto()" will append the user's session ID to the URI when PHP
+  ** is compiled with "--enable-trans-sid".
+  */
+  if (!ini_get("session.use_trans_sid") || !session_id() || strstr($url, session_id())) {
+    header("Location: $url");
+  }
+  else {
+    $sid = session_name() . "=" . session_id();
+
+    if (strstr($url, "?") && !strstr($url, $sid)) {
+      header("Location: $url&". $sid);
+    }
+    else {
+      header("Location: $url?". $sid);
+    }
+  }
+
+  /*
+  ** The "Location" header sends a REDIRECT status code to the http
+  ** daemon.  In some cases this can go wrong, so we make sure none
+  ** of the code /below/ gets executed when we redirect.
+  */
+
+  exit();
+}
+
+/**
+ * Generates a 404 error if the request can not be handled.
+ */
 function drupal_not_found() {
   header("HTTP/1.0 404 Not Found");
   watchdog("httpd", "404 error: '". check_query($_GET["q"]) ."' not found");
@@ -119,6 +187,7 @@ function drupal_not_found() {
     print theme("page", '<h1>'. t('Page not found') .'</h1>');
   }
 }
+/* @} */
 
 function error_handler($errno, $message, $filename, $line, $variables) {
   $types = array(1 => "error", 2 => "warning", 4 => "parse error", 8 => "notice", 16 => "core error", 32 => "core warning", 64 => "compile error", 128 => "compile warning", 256 => "user error", 512 => "user warning", 1024 => "user notice");
@@ -161,6 +230,13 @@ function fix_gpc_magic() {
   }
 }
 
+/**
+ * @name Conversion
+ * @ingroup common
+ *
+ * Converts data structures to a different type.
+ * @{
+ */
 function array2object($array) {
   if (is_array($array)) {
     foreach ($array as $key => $value) {
@@ -186,7 +262,15 @@ function object2array($object) {
 
   return $array;
 }
+/* @} */
 
+/**
+ * @name Messages
+ * @ingroup common
+ *
+ * Frequently used messages.
+ * @{
+ */
 function message_access() {
   return t("You are not authorized to access this page.");
 }
@@ -198,6 +282,7 @@ function message_na() {
 function message_throttle() {
   return t("You exceeded the maximum submission rate.  Please wait a few minutes and try again.");
 }
+/* @} */
 
 function locale_init() {
   global $languages, $user;
@@ -209,19 +294,26 @@ function locale_init() {
   }
 }
 
+/**
+ * @ingroup common
+ *
+ * Translates strings to the current locale.
+ *
+ * We try to keep strings whole as much as possible and are unafraid of HTML
+ * markup within translation strings if necessary. The suggested syntax for
+ * a link embedded within a translation string is for example:
+ * @code
+ *   $msg = t("You must login below or \<a href=\"%url\"\>create a new
+ *             account\</a\> before viewing the next page.", array("%url"
+ *             => url("user/register")));
+ * @endcode
+ *
+ * @param $string A string containing the english string to translate.
+ * @param $args Array of values to replace in the string.
+ * @return Translated string.
+ */
 function t($string, $args = 0) {
   global $languages;
-
-  /*
-  ** About the usage of t().  We try to keep strings whole as much as
-  ** possible and are unafraid of HTML markup within translation strings
-  ** if necessary.  The suggested syntax for a link embedded within a
-  ** translation string is for example:
-  **
-  ** $msg = t("You must login below or <a href=\"%url\">create a new
-  **           account</a> before viewing the next page.", array("%url"
-  **           => url("user/register")));
-  */
 
   $string = ($languages && module_exist("locale") ? locale($string) : $string);
 
@@ -246,10 +338,18 @@ function drupal_specialchars($input, $quotes = ENT_NOQUOTES) {
 }
 
 /**
+ * @name Validation
+ * @ingroup common
+ *
+ * Functions to validate user input.
+ */
+
+/**
  * Verify the syntax of the given e-mail address. Empty e-mail addresses are
  * allowed. See RFC 2822 for details.
  *
- * @param $mail a email address
+ * @param $mail A string containing an email address.
+ * @return 
  */
 function valid_email_address($mail) {
   $user = '[a-zA-Z0-9_\-\.\+\^!#\$%&*+\/\=\?\`\|\{\}~\']+';
@@ -269,6 +369,48 @@ function valid_url($url) {
   return preg_match("/^[a-zA-z0-9\/:_\-_\.,]+$/", $url);
 }
 
+function valid_input_data($data) {
+  if (is_array($data) || is_object($data)) {
+    /*
+    ** Form data can contain a number of nested arrays.
+    */
+
+    foreach ($data as $key => $value) {
+      if (!valid_input_data($value)) {
+        return 0;
+      }
+    }
+  }
+  else {
+    /*
+    ** Detect evil input data.
+    */
+
+    // check strings:
+    $match  = preg_match("/\Wjavascript\s*:/i", $data);
+    $match += preg_match("/\Wexpression\s*\(/i", $data);
+    $match += preg_match("/\Walert\s*\(/i", $data);
+
+    // check attributes:
+    $match += preg_match("/\W(dynsrc|datasrc|data|lowsrc|on[a-z]+)\s*=[^>]+?>/i", $data);
+
+    // check tags:
+    $match += preg_match("/<\s*(applet|script|object|style|embed|form|blink|meta|html|frame|iframe|layer|ilayer|head|frameset|xml)/i", $data);
+
+    if ($match) {
+      watchdog("warning", "terminated request because of suspicious input data: ". drupal_specialchars($data));
+      return 0;
+    }
+  }
+
+  return 1;
+}
+/* @} */
+
+/**
+ * @defgroup search Search interface
+ * @{
+ */
 /**
  * Format a single result entry of a search query:
  *
@@ -375,80 +517,7 @@ function search_type($type, $action = NULL, $keys = NULL, $options = NULL) {
 
   return search_form($action, $keys, $options) . "<br />". search_data($keys);
 }
-
-
-function drupal_goto($url) {
-
-  /*
-  ** Translate &amp; to simply &
-  */
-
-  $url = str_replace("&amp;", "&", $url);
-
-  /*
-  ** It is advised to use "drupal_goto()" instead of PHP's "header()" as
-  ** "drupal_goto()" will append the user's session ID to the URI when PHP
-  ** is compiled with "--enable-trans-sid".
-  */
-  if (!ini_get("session.use_trans_sid") || !session_id() || strstr($url, session_id())) {
-    header("Location: $url");
-  }
-  else {
-    $sid = session_name() . "=" . session_id();
-
-    if (strstr($url, "?") && !strstr($url, $sid)) {
-      header("Location: $url&". $sid);
-    }
-    else {
-      header("Location: $url?". $sid);
-    }
-  }
-
-  /*
-  ** The "Location" header sends a REDIRECT status code to the http
-  ** daemon.  In some cases this can go wrong, so we make sure none
-  ** of the code /below/ gets executed when we redirect.
-  */
-
-  exit();
-}
-
-function valid_input_data($data) {
-  if (is_array($data) || is_object($data)) {
-    /*
-    ** Form data can contain a number of nested arrays.
-    */
-
-    foreach ($data as $key => $value) {
-      if (!valid_input_data($value)) {
-        return 0;
-      }
-    }
-  }
-  else {
-    /*
-    ** Detect evil input data.
-    */
-
-    // check strings:
-    $match  = preg_match("/\Wjavascript\s*:/i", $data);
-    $match += preg_match("/\Wexpression\s*\(/i", $data);
-    $match += preg_match("/\Walert\s*\(/i", $data);
-
-    // check attributes:
-    $match += preg_match("/\W(dynsrc|datasrc|data|lowsrc|on[a-z]+)\s*=[^>]+?>/i", $data);
-
-    // check tags:
-    $match += preg_match("/<\s*(applet|script|object|style|embed|form|blink|meta|html|frame|iframe|layer|ilayer|head|frameset|xml)/i", $data);
-
-    if ($match) {
-      watchdog("warning", "terminated request because of suspicious input data: ". drupal_specialchars($data));
-      return 0;
-    }
-  }
-
-  return 1;
-}
+/* @} */
 
 function check_form($text) {
   return drupal_specialchars($text, ENT_QUOTES);
@@ -499,7 +568,7 @@ function format_rss_item($title, $link, $description, $args = array()) {
  * @param $singular The string for the singular case. Please make sure it's
  *   clear this is singular, to ease translation. ("1 new comment" instead of "1
  *   new").
- * @param $plural The string for the plrual case. Please make sure it's clear
+ * @param $plural The string for the plural case. Please make sure it's clear
  *   this is plural, to ease translation. Use %count in places of the item
  *   count, as in "%count new comments".
  */
@@ -605,6 +674,10 @@ function format_name($object) {
   return $output;
 }
 
+/**
+ * @defgroup from Form generation
+ * @{
+ */
 function form($form, $method = "post", $action = 0, $options = 0) {
   if (!$action) {
     $action = request_uri();
@@ -687,6 +760,7 @@ function form_weight($title = NULL, $name = "weight", $value = 0, $delta = 10, $
 function form_allowed_tags_text() {
   return variable_get("allowed_html", "") ? (t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", ""))) : "";
 }
+/* @} */
 
 /**
  * Given an old url, return the alias.

@@ -1,8 +1,8 @@
 <?php
-/* $Id: file.inc,v 1.5 2004/01/02 23:12:44 kjartan Exp $ */
+/* $Id: file.inc,v 1.6 2004/01/06 19:52:14 kjartan Exp $ */
 
 /**
- * @defgroup file File API
+ * @defgroup file File interface
  *   Common file handling functions.
  * @{
  */

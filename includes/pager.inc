@@ -1,8 +1,8 @@
 <?php
-// $Id: pager.inc,v 1.21 2003/12/22 17:30:43 dries Exp $
+// $Id: pager.inc,v 1.22 2004/01/06 19:52:14 kjartan Exp $
 
 /**
- * @defgroup pager_api Pager API
+ * @defgroup pager Pager interface
  * @{
  *
  * Pager external functions (API).
@@ -85,9 +85,9 @@ function theme_pager($tags = "", $limit = 10, $element = 0, $attributes = array(
 /** @} End of addtogroup themeable */
 
 /**
- * @name pager pieces Use these pieces to construct your own custom pagers in
- *   your theme. Note that you should NOT modify this file to customize your
- *   pager.
+ * @name Pager pieces
+ *   Use these pieces to construct your own custom pagers in your theme. Note
+ *   that you should NOT modify this file to customize your pager.
  * @{
  */
 
