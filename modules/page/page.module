@@ -1,7 +1,6 @@
 <?php
 
-global $format;
-$format = array(0 => "HTML", 1 => "PHP", 2 => "text");
+$GLOBALS[format] = array(0 => HTML, 1 => PHP, 2 => text);
 
 function page_view($node, $main = 0) {
   global $format, $theme;

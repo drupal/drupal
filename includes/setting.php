@@ -1,21 +1,5 @@
 <?php
 
-# IMPORTANT!
-# Extract from the Drupal handbook:
-# "5.Rename the configuration file includes/hostname.conf to match your
-# server's hostname:
-#       $ cp includes/hostname.conf includes/www.yourdomain.com.conf
-# /'s and :'s are translated to .'s. So if the URI of your drupal site
-# would be http://www.yourdomain.com:80/foo/ your configuration file
-# should be named www.yourdomain.com.80.foo.conf."
-#
-# If you intend to support multiple domains or vhosts with different
-# configurations make sure you read:
-#   http://www.drop.org/node.php?id=173.
-#
-# If you are going to only use one domain/vhost, or the same
-# configuration for several domains you can still use the domain.conf
-# format, or simply rename this file to default.conf.
 
 #
 # Database settings:
@@ -72,5 +56,8 @@ $themes = array("UnConeD" => array(
 #   variable below.
 #$language = array();  // = language support disabled
 $languages = array("en" => "English");
+
+# This line prevents users from accessing your settings file:
+die();
 
 ?>
