@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.124 2002/08/08 18:24:53 dries Exp $
+// $Id: common.inc,v 1.125 2002/09/27 17:06:50 kjartan Exp $
 
 function conf_init() {
   global $HTTP_HOST;
@@ -29,7 +29,7 @@ function error_handler($errno, $message, $filename, $line, $variables) {
   $entry = $types[$errno] .": $message in $filename on line $line.";
   if (($errno == 1 || $errno == 2 || $errno == 4 || $errno == 256) && error_reporting()) {
     watchdog("error", $types[$errno] .": $message in $filename on line $line.");
-    print $entry;
+    print "<pre>$entry</pre>";
   }
 }
 
