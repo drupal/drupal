@@ -11,6 +11,22 @@ class Node {
   }
 }
 
+function node_help() {
+  global $mod;
+ ?>
+  <P>Todo.</P>
+ <?php
+
+  if ($mod == "node") {
+    foreach (module_list() as $name) {
+      if (module_hook($name, "status") && $name != "node") {
+        print "<H3>". ucfirst($name) ." type</H3>";
+        print module_invoke($name, "help");
+      }
+    }
+  }
+}
+
 function node_conf_filters() {
   $output .= form_select(t("Strip HTML tags"), "filter_html", variable_get("filter_html", 0), array("Disabled", "Enabled"), t("Strip HTML and PHP tags."));
   $output .= form_textfield(t("Allowed HTML tags"), "allowed_html", variable_get("allowed_html", "<A><B><BLOCKQUOTE><DD><DL><DT><I><LI><OL><U><UL>"), 64, 128, t("If enabled, optionally specify tags which should not be stripped.  'STYLE' attributes, 'ON' attributes and unclosed tags are always stripped."));
@@ -234,13 +250,16 @@ function node_admin() {
     }
   }
 
-  print "<SMALL>". implode(" | ", $link) ." | <A HREF=\"admin.php?mod=node&op=default\">node settings</A> | <A HREF=\"admin.php?mod=node&op=listing\">node listings</A> | <A HREF=\"admin.php?mod=node&op=search\">search node</A> | <A HREF=\"admin.php?mod=node\">overview</A></SMALL><HR>\n";
+  print "<SMALL>". implode(" | ", $link) ." | <A HREF=\"admin.php?mod=node&op=default\">node settings</A> | <A HREF=\"admin.php?mod=node&op=listing\">node listings</A> | <A HREF=\"admin.php?mod=node&op=search\">search node</A> | <A HREF=\"admin.php?mod=node\">overview</A> | <A HREF=\"admin.php?mod=node&op=help\">help</A></SMALL><HR>\n";
 
   $id = check_input($edit[nid] ? $edit[nid] : $id);
 
   switch ($op) {
     case "add":
       print module_invoke($type, "form");
+      break;
+    case "help":
+      print node_help();
       break;
     case "search":
       print node_search($id);

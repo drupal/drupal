@@ -1,14 +1,12 @@
 <?php
 
-function help_module($name) {
-  if (module_hook($name, "help")) {
-    print "<H2><A NAME=\"$name\">". ucfirst($name) ." module</A></H2>";
-    print module_invoke($name, "help");
-  }
-}
-
 function help_admin() {
-   module_iterate("help_module");
+  foreach (module_list() as $name) {
+    if (module_hook($name, "help")) {
+      print "<H2>". ucfirst($name) ." module</H2>";
+      print module_invoke($name, "help");
+    }
+  }
 }
 
 ?>
