@@ -3,12 +3,8 @@
 class Blog {
   function Blog($blog) {
     global $user;
-
     $this = new Node($blog);
-    $this->title = $blog[title];
     $this->body = $blog[body];
-    $this->userid = $blog[userid] ? $blog[userid] : $user->userid;
-    $this->timestamp = $blog[timestamp] ? $blog[timestamp] : time();
   }
 }
 
@@ -33,10 +29,10 @@ function blog_summary($node) {
 function blog_feed_user($name = 0, $date = 0) {
   global $user;
 
-  $name = check_input($name ? $name : $user->userid);
+  $name = check_input($name ? $name : $user->name);
   $date = check_input($date ? $date : time());
 
-  $result = db_query("SELECT n.nid, n.title, n.timestamp, b.body FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.id WHERE u.userid = '$name' AND n.timestamp > '". ($date - 2592000) ."' ORDER BY b.lid DESC LIMIT 15");
+  $result = db_query("SELECT n.nid, n.title, n.timestamp, b.body FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.id WHERE u.name = '$name' AND n.timestamp > '". ($date - 2592000) ."' ORDER BY b.lid DESC LIMIT 15");
   while ($blog = db_fetch_object($result)) {
     $items .= format_rss_item($blog->title, path_uri() ."node.php?id=$blog->nid", $blog->body);
   }
@@ -51,9 +47,9 @@ function blog_feed_user($name = 0, $date = 0) {
 }
 
 function blog_feed_last() {
-  $result = db_query("SELECT n.nid, n.title, n.timestamp, b.body, u.userid FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.id ORDER BY b.lid DESC LIMIT 15");
+  $result = db_query("SELECT n.nid, n.title, n.timestamp, b.body, u.name FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.id ORDER BY b.lid DESC LIMIT 15");
   while ($blog = db_fetch_object($result)) {
-    $items .= format_rss_item($blog->title, path_uri() ."module.php?mod=blog&op=view&name=". urlencode($blog->userid), $blog->body);
+    $items .= format_rss_item($blog->title, path_uri() ."module.php?mod=blog&op=view&name=". urlencode($blog->name), $blog->body);
   }
 
   $output .= "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n";
@@ -68,10 +64,10 @@ function blog_feed_last() {
 function blog_page_user($name = 0, $date = 0) {
   global $theme, $user;
 
-  $name = check_input($name ? $name : $user->userid);
+  $name = check_input($name ? $name : $user->name);
   $date = check_input($date ? $date : time());
 
-  $result = db_query("SELECT n.nid, n.title, n.comment, COUNT(c.cid) AS comments, n.timestamp, b.body FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.id LEFT JOIN comments c ON n.nid = c.lid WHERE u.userid = '$name' AND n.timestamp < '$date' AND n.timestamp > '". ($date - 2592000) ."' GROUP BY n.nid ORDER BY n.nid DESC LIMIT 20");
+  $result = db_query("SELECT n.nid, n.title, n.comment, COUNT(c.cid) AS comments, n.timestamp, b.body FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.id LEFT JOIN comments c ON n.nid = c.lid WHERE u.name = '$name' AND n.timestamp < '$date' AND n.timestamp > '". ($date - 2592000) ."' GROUP BY n.nid ORDER BY n.nid DESC LIMIT 20");
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\">";
 
@@ -84,7 +80,7 @@ function blog_page_user($name = 0, $date = 0) {
       $output .= "<tr><td colspan=\"2\"><b><a href=\"module.php?mod=blog&name=$name&date=". mktime(23, 59, 59, date("n", $blog->timestamp), date("d", $blog->timestamp), date("Y", $blog->timestamp)) ."\">". format_date($blog->timestamp, custom, "d M Y") .":</a></b></td></tr>";
     }
 
-    if ($user->id && $user->userid == $name) {
+    if ($user->id && $user->name == $name) {
       $links[] = "<a href=\"submit.php?mod=blog&op=edit&id=$blog->nid\">". t("edit") ."</a>";
     }
 
@@ -110,7 +106,7 @@ function blog_page_user($name = 0, $date = 0) {
 function blog_page_last() {
   global $theme, $user;
 
-  $result = db_query("SELECT n.author, n.nid, n.title, n.comment, COUNT(c.cid) AS comments, n.timestamp, b.body, u.userid FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.id LEFT JOIN comments c ON n.nid = c.lid GROUP BY n.nid ORDER BY n.nid DESC LIMIT 20");
+  $result = db_query("SELECT n.author, n.nid, n.title, n.comment, COUNT(c.cid) AS comments, n.timestamp, b.body, u.name FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.id LEFT JOIN comments c ON n.nid = c.lid GROUP BY n.nid ORDER BY n.nid DESC LIMIT 20");
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\">";
 
@@ -118,7 +114,7 @@ function blog_page_last() {
 
     $links = array();
 
-    $links[] = "<a href=\"module.php?mod=blog&op=view&name=". urlencode($blog->userid) ."\">". strtr(t("%a's blog"), array("%a" => $blog->userid)) ."</a>";
+    $links[] = "<a href=\"module.php?mod=blog&op=view&name=". urlencode($blog->name) ."\">". strtr(t("%a's blog"), array("%a" => $blog->name)) ."</a>";
 
     if ($blog->author == $user->id) {
       $links[] = "<a href=\"submit.php?mod=blog&op=edit&id=$blog->nid\">". t("edit") ."</a>";
@@ -170,7 +166,7 @@ function blog_form($edit = array()) {
     else if ($type == "blog") {
       $item = node_get_object(array(type => "blog", nid => $id));
       $edit["title"] = $item->title;
-      $edit["body"] = "<i>". $item->body ."</i> [<a href=\"module.php?mod=blog&name=". urlencode($item->userid) ."&date=$item->timestamp\">$item->userid</a>]";
+      $edit["body"] = "<i>". $item->body ."</i> [<a href=\"module.php?mod=blog&name=". urlencode($item->name) ."&date=$item->timestamp\">$item->name</a>]";
     }
     else if ($type == "import") {
       $item = db_fetch_object(db_query("SELECT i.*, f.title as ftitle, f.link as flink FROM item i, feed f WHERE i.iid = '". check_input($id) ."' AND i.fid = f.fid"));
@@ -280,7 +276,7 @@ function blog_user() {
     switch ($op) {
       case "delete":
         blog_remove($id);
-        blog_page_user($user->userid, time());
+        blog_page_user($user->name, time());
         break;
       case "edit":
         $theme->box(t("Submit a blog"), blog_form(node_get_array(array("nid" => $id, "type" => "blog"))), "main");
@@ -291,7 +287,7 @@ function blog_user() {
         break;
       case t("Submit"):
         blog_save($edit);
-        blog_page_user($user->userid, time());
+        blog_page_user($user->name, time());
         break;
       default:
         $theme->box(t("Submit a blog"), blog_form($edit), "main");
@@ -309,11 +305,11 @@ function blog_link($type, $node = 0) {
 
   if ($type == "menu" && user_access("post blogs")) {
     $links[] = "<a href=\"submit.php?mod=blog\">". t("add blog entry") ."</a>";
-    $links[] = "<a href=\"module.php?mod=blog&op=view&name=". urlencode($user->userid) ."\">". t("view your blog") ."</a>";
+    $links[] = "<a href=\"module.php?mod=blog&op=view&name=". urlencode($user->name) ."\">". t("view your blog") ."</a>";
   }
 
   if ($type == "node" && $node->type == "blog") {
-    $links[] = "<a href=\"module.php?mod=blog&op=view&name=". urlencode($node->userid) ."\">". strtr(t("%a's blog"), array("%a" => $node->userid)) ."</a>";
+    $links[] = "<a href=\"module.php?mod=blog&op=view&name=". urlencode($node->name) ."\">". strtr(t("%a's blog"), array("%a" => $node->name)) ."</a>";
   }
 
   return $links ? $links : array();
@@ -323,9 +319,9 @@ function blog_link($type, $node = 0) {
 function blog_block() {
   global $name, $date, $user, $mod;
 
-  $result = db_query("SELECT u.userid, n.timestamp, n.title, n.nid FROM node n LEFT JOIN users u ON n.author = u.id WHERE n.type = 'blog' ORDER BY n.nid DESC LIMIT 10");
+  $result = db_query("SELECT u.name, n.timestamp, n.title, n.nid FROM node n LEFT JOIN users u ON n.author = u.id WHERE n.type = 'blog' ORDER BY n.nid DESC LIMIT 10");
   while ($node = db_fetch_object($result)) {
-    $output .= "<a href=\"module.php?mod=blog&op=view&name=". urlencode($node->userid) ."\">". check_output($node->title) ."<br />\n";
+    $output .= "<a href=\"module.php?mod=blog&op=view&name=". urlencode($node->name) ."\">". check_output($node->title) ."<br />\n";
   }
 
   $block[0]["subject"] = "<a href=\"module.php?mod=blog\">". t("User blogs") ."</a>";
@@ -334,12 +330,12 @@ function blog_block() {
   $block[0]["link"] = "module.php?mod=blog";
 
   $date = $date ? $date : time();
-  $userid = $name ? $name : $user->userid;
+  $name = $name ? $name : $user->name;
 
   if (($mod == "blog") || ($mod == "block")) {
        // Only show this block on "blog pages" and in the admin block section.
-    $calendar = new BlogCalendar($userid, $date);
-    $block[1]["subject"] = "<a href=\"module.php?mod=blog&name=". urlencode($userid) ."\">" . t("Browse blog") . "</a>";
+    $calendar = new BlogCalendar($name, $date);
+    $block[1]["subject"] = "<a href=\"module.php?mod=blog&name=". urlencode($name) ."\">" . t("Browse blog") . "</a>";
     $block[1]["content"] = $calendar->display();
     $block[1]["info"] = t("Calendar to browse blogs");
   }
@@ -352,17 +348,17 @@ function blog_search($keys) {
   global $status, $user;
   $result = db_query("SELECT n.*, b.* FROM blog b LEFT JOIN node n ON n.nid = b.nid AND n.lid = b.lid WHERE (n.title LIKE '%$keys%' OR b.body LIKE '%$keys%') ORDER BY n.timestamp DESC LIMIT 20");
   while ($blog = db_fetch_object($result)) {
-    $find[$i++] = array("title" => check_output($blog->title), "link" => (user_access("administer nodes") ? "admin.php?mod=node&type=blog&op=edit&id=$blog->nid" : "node.php?id=$blog->nid"), "user" => $blog->userid, "date" => $blog->timestamp);
+    $find[$i++] = array("title" => check_output($blog->title), "link" => (user_access("administer nodes") ? "admin.php?mod=node&type=blog&op=edit&id=$blog->nid" : "node.php?id=$blog->nid"), "user" => $blog->name, "date" => $blog->timestamp);
   }
   return $find;
 }
 
 class BlogCalendar {
   var $date;
-  var $userid;
+  var $name;
 
-  function BlogCalendar($userid, $date) {
-    $this->userid = urlencode($userid);
+  function BlogCalendar($name, $date) {
+    $this->name = urlencode($name);
 
     // Prevent future dates:
     $today = mktime(23, 59, 59, date("n", time()), date("d", time()), date("Y", time()));
@@ -397,7 +393,7 @@ class BlogCalendar {
     // Generate calendar header:
     $output .= "\n<!-- calendar -->\n";
     $output .= "<TABLE WIDTH=\"100%\" BORDER=\"0\" CELLSPACING=\"0\" CELLPADDING=\"1\">\n";
-    $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"7\"><B><A HREF=\"module.php?mod=blog&name=$this->userid&date=$prev\" STYLE=\"text-decoration: none;\">&lt;&lt;</A> &nbsp; ". date("F Y", $this->date) ." &nbsp; " . ($next <= $thislast ? "<A HREF=\"module.php?mod=blog&name=$this->userid&date=$next\" STYLE=\"text-decoration: none;\">&gt;&gt;</A>" : "&gt;&gt;") . "<B></TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"7\"><B><A HREF=\"module.php?mod=blog&name=$this->name&date=$prev\" STYLE=\"text-decoration: none;\">&lt;&lt;</A> &nbsp; ". date("F Y", $this->date) ." &nbsp; " . ($next <= $thislast ? "<A HREF=\"module.php?mod=blog&name=$this->name&date=$next\" STYLE=\"text-decoration: none;\">&gt;&gt;</A>" : "&gt;&gt;") . "<B></TD></TR>\n";
 
     // Generate the days of the week:
     $output .= " <TR>";
@@ -426,7 +422,7 @@ class BlogCalendar {
       $date = mktime(23, 59, 59, $month, $nday, $year);
       if ($date == $this->date) $output .= "  <TD ALIGN=\"center\" BGCOLOR=\"#CCCCCC\"><B>$nday</B></TD>\n";
       else if ($date > $today) $output .= "  <TD ALIGN=\"center\">$nday</TD>\n";
-      else $output .= "  <TD ALIGN=\"center\"><A HREF=\"module.php?mod=blog&name=$this->userid&date=$date\" STYLE=\"text-decoration: none;\">$nday</A></TD>\n";
+      else $output .= "  <TD ALIGN=\"center\"><A HREF=\"module.php?mod=blog&name=$this->name&date=$date\" STYLE=\"text-decoration: none;\">$nday</A></TD>\n";
 
       // Start every week on a new line:
       if ($sday == 6) $output .=  " </TR>\n";

@@ -204,9 +204,17 @@ function format_date($timestamp, $type = "medium", $format = "") {
   return $date;
 }
 
-function format_username($username, $realname="") {
-  if ($username) return (user_access("administer users") ? "<A HREF=\"admin.php?mod=account&op=view&name=". urlencode($username) ."\">". check_output($realname ? $realname : $username) ."</A>" : "<A HREF=\"account.php?op=view&name=". urlencode($username) ."\">". check_output($realname ? $realname : $username) ."</A>");
-  else return variable_get(anonymous, "Anonymous");
+function format_name($username, $realname = "") {
+  if ($realname) {
+    watchdog("special", "format_name - FIX ME");
+    return "<font color=\"red\">FIX ME</font>\n";
+  }
+  else if ($username) {
+    return (user_access("administer users") ? "<a href=\"admin.php?mod=account&op=view&name=". urlencode($username) ."\">". $username ."</a>" : "<a href=\"account.php?op=view&name=". urlencode($username) ."\">$username</a>");
+  }
+  else {
+    return variable_get(anonymous, "Anonymous");
+  }
 }
 
 function format_email($address) {

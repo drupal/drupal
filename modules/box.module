@@ -18,8 +18,8 @@ function box_help() {
   </PRE>
   <P>If we are however dealing with a registered user, we can customize the message by using:</P>
   <PRE>
-   if ($user->userid) {
-     return "Welcome $user->userid, ... welcome message goes here ...";
+   if ($user->id) {
+     return "Welcome $user->name, ... welcome message goes here ...";
    }
    else {
      return "Welcome visitor, ... welcome message goes here ...";

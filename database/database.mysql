@@ -1,3 +1,12 @@
+# MySQL dump 7.1
+#
+# Host: localhost    Database: drop
+#--------------------------------------------------------
+# Server version  3.22.32
+
+#
+# Table structure for table 'access'
+#
 CREATE TABLE access (
   id tinyint(10) DEFAULT '0' NOT NULL auto_increment,
   mask varchar(255) DEFAULT '' NOT NULL,
@@ -7,6 +16,9 @@ CREATE TABLE access (
   PRIMARY KEY (id)
 );
 
+#
+# Table structure for table 'blocks'
+#
 CREATE TABLE blocks (
   name varchar(64) DEFAULT '' NOT NULL,
   module varchar(64) DEFAULT '' NOT NULL,
@@ -18,6 +30,9 @@ CREATE TABLE blocks (
   PRIMARY KEY (name)
 );
 
+#
+# Table structure for table 'blog'
+#
 CREATE TABLE blog (
   lid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   nid int(10) unsigned DEFAULT '0' NOT NULL,
@@ -25,6 +40,9 @@ CREATE TABLE blog (
   PRIMARY KEY (lid)
 );
 
+#
+# Table structure for table 'book'
+#
 CREATE TABLE book (
   lid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   nid int(10) unsigned DEFAULT '0' NOT NULL,
@@ -37,6 +55,9 @@ CREATE TABLE book (
   PRIMARY KEY (lid)
 );
 
+#
+# Table structure for table 'boxes'
+#
 CREATE TABLE boxes (
   bid tinyint(4) DEFAULT '0' NOT NULL auto_increment,
   title varchar(64) DEFAULT '' NOT NULL,
@@ -49,6 +70,9 @@ CREATE TABLE boxes (
   PRIMARY KEY (bid)
 );
 
+#
+# Table structure for table 'bundle'
+#
 CREATE TABLE bundle (
   bid int(11) DEFAULT '0' NOT NULL auto_increment,
   title varchar(255) DEFAULT '' NOT NULL,
@@ -57,6 +81,9 @@ CREATE TABLE bundle (
   PRIMARY KEY (bid)
 );
 
+#
+# Table structure for table 'cache'
+#
 CREATE TABLE cache (
   url varchar(255) DEFAULT '' NOT NULL,
   data text NOT NULL,
@@ -64,6 +91,9 @@ CREATE TABLE cache (
   PRIMARY KEY (url)
 );
 
+#
+# Table structure for table 'category'
+#
 CREATE TABLE category (
   cid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   name varchar(32) DEFAULT '' NOT NULL,
@@ -78,6 +108,9 @@ CREATE TABLE category (
   PRIMARY KEY (cid)
 );
 
+#
+# Table structure for table 'channel'
+#
 CREATE TABLE channel (
   id int(11) DEFAULT '0' NOT NULL auto_increment,
   site varchar(255) DEFAULT '' NOT NULL,
@@ -91,6 +124,9 @@ CREATE TABLE channel (
   PRIMARY KEY (id)
 );
 
+#
+# Table structure for table 'chatevents'
+#
 CREATE TABLE chatevents (
   id int(11) DEFAULT '0' NOT NULL auto_increment,
   body varchar(255) DEFAULT '' NOT NULL,
@@ -98,6 +134,9 @@ CREATE TABLE chatevents (
   PRIMARY KEY (id)
 );
 
+#
+# Table structure for table 'chatmembers'
+#
 CREATE TABLE chatmembers (
   id int(11) DEFAULT '0' NOT NULL auto_increment,
   nick varchar(32) DEFAULT '' NOT NULL,
@@ -105,6 +144,9 @@ CREATE TABLE chatmembers (
   PRIMARY KEY (id)
 );
 
+#
+# Table structure for table 'collection'
+#
 CREATE TABLE collection (
   cid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   name varchar(32) DEFAULT '' NOT NULL,
@@ -113,6 +155,9 @@ CREATE TABLE collection (
   PRIMARY KEY (cid)
 );
 
+#
+# Table structure for table 'comments'
+#
 CREATE TABLE comments (
   cid int(6) DEFAULT '0' NOT NULL auto_increment,
   pid int(6) DEFAULT '0' NOT NULL,
@@ -130,6 +175,9 @@ CREATE TABLE comments (
   KEY lid (lid)
 );
 
+#
+# Table structure for table 'cvs'
+#
 CREATE TABLE cvs (
   user varchar(32) DEFAULT '' NOT NULL,
   files text,
@@ -138,6 +186,9 @@ CREATE TABLE cvs (
   timestamp int(11) DEFAULT '0' NOT NULL
 );
 
+#
+# Table structure for table 'diaries'
+#
 CREATE TABLE diaries (
   id int(5) DEFAULT '0' NOT NULL auto_increment,
   author int(6) DEFAULT '0' NOT NULL,
@@ -146,6 +197,9 @@ CREATE TABLE diaries (
   PRIMARY KEY (id)
 );
 
+#
+# Table structure for table 'diary'
+#
 CREATE TABLE diary (
   lid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   nid int(10) unsigned DEFAULT '0' NOT NULL,
@@ -153,6 +207,9 @@ CREATE TABLE diary (
   PRIMARY KEY (lid)
 );
 
+#
+# Table structure for table 'entry'
+#
 CREATE TABLE entry (
   eid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   name varchar(32) DEFAULT '' NOT NULL,
@@ -162,6 +219,9 @@ CREATE TABLE entry (
   PRIMARY KEY (eid)
 );
 
+#
+# Table structure for table 'feed'
+#
 CREATE TABLE feed (
   fid int(11) DEFAULT '0' NOT NULL auto_increment,
   title varchar(255) DEFAULT '' NOT NULL,
@@ -177,6 +237,9 @@ CREATE TABLE feed (
   PRIMARY KEY (fid)
 );
 
+#
+# Table structure for table 'file'
+#
 CREATE TABLE file (
   lid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   nid int(10) unsigned DEFAULT '0' NOT NULL,
@@ -189,6 +252,9 @@ CREATE TABLE file (
   PRIMARY KEY (lid)
 );
 
+#
+# Table structure for table 'forum'
+#
 CREATE TABLE forum (
   lid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   nid int(10) unsigned DEFAULT '0' NOT NULL,
@@ -196,6 +262,9 @@ CREATE TABLE forum (
   PRIMARY KEY (lid)
 );
 
+#
+# Table structure for table 'item'
+#
 CREATE TABLE item (
   iid int(11) DEFAULT '0' NOT NULL auto_increment,
   fid int(11) DEFAULT '0' NOT NULL,
@@ -208,11 +277,17 @@ CREATE TABLE item (
   PRIMARY KEY (iid)
 );
 
+#
+# Table structure for table 'layout'
+#
 CREATE TABLE layout (
   user int(11) DEFAULT '0' NOT NULL,
   block varchar(64) DEFAULT '' NOT NULL
 );
 
+#
+# Table structure for table 'locales'
+#
 CREATE TABLE locales (
   id int(11) DEFAULT '0' NOT NULL auto_increment,
   location varchar(128) DEFAULT '' NOT NULL,
@@ -228,11 +303,17 @@ CREATE TABLE locales (
   PRIMARY KEY (id)
 );
 
+#
+# Table structure for table 'modules'
+#
 CREATE TABLE modules (
   name varchar(64) DEFAULT '' NOT NULL,
   PRIMARY KEY (name)
 );
 
+#
+# Table structure for table 'node'
+#
 CREATE TABLE node (
   nid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   lid int(10) DEFAULT '0' NOT NULL,
@@ -259,6 +340,9 @@ CREATE TABLE node (
   KEY status (status)
 );
 
+#
+# Table structure for table 'page'
+#
 CREATE TABLE page (
   lid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   nid int(10) unsigned DEFAULT '0' NOT NULL,
@@ -268,6 +352,9 @@ CREATE TABLE page (
   PRIMARY KEY (lid)
 );
 
+#
+# Table structure for table 'poll'
+#
 CREATE TABLE poll (
   lid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   nid int(10) unsigned DEFAULT '0' NOT NULL,
@@ -277,6 +364,9 @@ CREATE TABLE poll (
   PRIMARY KEY (lid)
 );
 
+#
+# Table structure for table 'poll_choices'
+#
 CREATE TABLE poll_choices (
   chid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   nid int(10) unsigned DEFAULT '0' NOT NULL,
@@ -286,6 +376,9 @@ CREATE TABLE poll_choices (
   PRIMARY KEY (chid)
 );
 
+#
+# Table structure for table 'rating'
+#
 CREATE TABLE rating (
   user int(6) DEFAULT '0' NOT NULL,
   new int(6) DEFAULT '0' NOT NULL,
@@ -293,11 +386,17 @@ CREATE TABLE rating (
   PRIMARY KEY (user)
 );
 
+#
+# Table structure for table 'referer'
+#
 CREATE TABLE referer (
   url varchar(255) DEFAULT '' NOT NULL,
   timestamp int(11) DEFAULT '0' NOT NULL
 );
 
+#
+# Table structure for table 'role'
+#
 CREATE TABLE role (
   rid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   name varchar(32) DEFAULT '' NOT NULL,
@@ -306,17 +405,24 @@ CREATE TABLE role (
   PRIMARY KEY (rid)
 );
 
+#
+# Table structure for table 'site'
+#
 CREATE TABLE site (
   sid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
-  title varchar(128) DEFAULT '' NOT NULL,
-  url varchar(255) DEFAULT '' NOT NULL,
+  name varchar(128) DEFAULT '' NOT NULL,
+  link varchar(255) DEFAULT '' NOT NULL,
   size text NOT NULL,
   timestamp int(11) DEFAULT '0' NOT NULL,
-  UNIQUE title (title),
-  UNIQUE url (url),
+  feed varchar(255) DEFAULT '' NOT NULL,
+  UNIQUE title (name),
+  UNIQUE url (link),
   PRIMARY KEY (sid)
 );
 
+#
+# Table structure for table 'story'
+#
 CREATE TABLE story (
   lid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   nid int(10) unsigned DEFAULT '0' NOT NULL,
@@ -325,6 +431,9 @@ CREATE TABLE story (
   PRIMARY KEY (lid)
 );
 
+#
+# Table structure for table 'tag'
+#
 CREATE TABLE tag (
   tid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   name varchar(32) DEFAULT '' NOT NULL,
@@ -334,6 +443,9 @@ CREATE TABLE tag (
   PRIMARY KEY (tid)
 );
 
+#
+# Table structure for table 'topic'
+#
 CREATE TABLE topic (
   tid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   pid int(10) unsigned DEFAULT '0' NOT NULL,
@@ -343,6 +455,9 @@ CREATE TABLE topic (
   PRIMARY KEY (tid)
 );
 
+#
+# Table structure for table 'users'
+#
 CREATE TABLE users (
   id int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   name varchar(60) DEFAULT '' NOT NULL,
@@ -366,15 +481,24 @@ CREATE TABLE users (
   rating decimal(8,2),
   language char(2) DEFAULT '' NOT NULL,
   role varchar(32) DEFAULT '' NOT NULL,
-  PRIMARY KEY (id)
+  PRIMARY KEY (id),
+  UNIQUE name (name),
+  UNIQUE userid (userid),
+  UNIQUE real_email (real_email)
 );
 
+#
+# Table structure for table 'variable'
+#
 CREATE TABLE variable (
   name varchar(32) DEFAULT '' NOT NULL,
   value text NOT NULL,
   PRIMARY KEY (name)
 );
 
+#
+# Table structure for table 'watchdog'
+#
 CREATE TABLE watchdog (
   id int(5) DEFAULT '0' NOT NULL auto_increment,
   user int(6) DEFAULT '0' NOT NULL,

@@ -63,7 +63,7 @@
                   <TD>
 
 <?php
-                     echo strtr(t("by %a on %b"), array("%a" => format_username($node->userid, $node->name), "%b" => format_date($node->timestamp, "small")));
+                     echo strtr(t("by %a on %b"), array("%a" => format_name($node->name), "%b" => format_date($node->timestamp, "small")));
 ?>
 
                    </TD>
@@ -120,7 +120,7 @@
       echo       t("Author") .":";
       echo "    </TD>";
       echo "    <TD COLSPAN=\"2\">";
-      echo        format_username($comment->userid, $comment->name) ." on ". format_date($comment->timestamp);
+      echo        format_name($comment->name) ." on ". format_date($comment->timestamp);
       echo "    </TD>";
       echo "  </TR>";
 

@@ -33,13 +33,13 @@ function watchdog_overview($type) {
   $color = array(account => "#FFEEAA", message => "#FFFFFF", special => "#A49FFF", warning => "#FFAA22", httpd => "#99DD99", error => "#EE4C4C");
   $query = array(account => "WHERE type = 'account'", regular => "WHERE type = 'message'", special => "WHERE type = 'special'", warning => "WHERE type = 'warning'", error => "WHERE type = 'error'", httpd => "WHERE type = 'httpd'");
 
-  $result = db_query("SELECT w.*, u.userid FROM watchdog w LEFT JOIN users u ON w.user = u.id ". ($type ? $query[$type] : "") ." ORDER BY timestamp DESC LIMIT 1000");
+  $result = db_query("SELECT w.*, u.name FROM watchdog w LEFT JOIN users u ON w.user = u.id ". ($type ? $query[$type] : "") ." ORDER BY timestamp DESC LIMIT 1000");
 
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR><TH>date</TH><TH>message</TH><TH>user</TH><TH>operations</TH></TR>\n";
   while ($watchdog = db_fetch_object($result)) {
     if ($background = $color[$watchdog->type]) {
-      $output .= " <TR BGCOLOR=\"$background\"><TD>". format_date($watchdog->timestamp, "small") ."</TD><TD>". substr(check_output($watchdog->message), 0, 64) ."</TD><TD ALIGN=\"center\">". format_username($watchdog->userid) ."</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=watchdog&op=view&id=$watchdog->id\">details</A></TD></TR>\n";
+      $output .= " <TR BGCOLOR=\"$background\"><TD>". format_date($watchdog->timestamp, "small") ."</TD><TD>". substr(check_output($watchdog->message), 0, 64) ."</TD><TD ALIGN=\"center\">". format_name($watchdog->name) ."</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=watchdog&op=view&id=$watchdog->id\">details</A></TD></TR>\n";
     }
   }
   $output .= "</TABLE>\n";
@@ -48,13 +48,13 @@ function watchdog_overview($type) {
 }
 
 function watchdog_view($id) {
-  $result = db_query("SELECT l.*, u.userid FROM watchdog l LEFT JOIN users u ON l.user = u.id WHERE l.id = '$id'");
+  $result = db_query("SELECT l.*, u.name FROM watchdog l LEFT JOIN users u ON l.user = u.id WHERE l.id = '$id'");
 
   if ($watchdog = db_fetch_object($result)) {
     $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
     $output .= " <TR><TH>Type:</TH><TD>". check_output($watchdog->type) ."</TD></TR>\n";
     $output .= " <TR><TH>Date:</TH><TD>". format_date($watchdog->timestamp, "large") ."</TD></TR>\n";
-    $output .= " <TR><TH>User:</TH><TD>". format_username($watchdog->userid) ."</TD></TR>\n";
+    $output .= " <TR><TH>User:</TH><TD>". format_name($watchdog->name) ."</TD></TR>\n";
     $output .= " <TR><TH>Location:</TH><TD>". check_output($watchdog->location). "</TD></TR>\n";
     $output .= " <TR><TH>Message:</TH><TD>". check_output($watchdog->message) ."</TD></TR>\n";
     $output .= " <TR><TH>Hostname:</TH><TD>". check_output($watchdog->hostname) ."</TD></TR>\n";

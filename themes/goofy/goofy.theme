@@ -102,7 +102,7 @@ function c(subject,mod,author,date,body) {document.writeln("<table border=\"0\" 
     function node($node, $main = 0) {
       echo "\n<!-- node: \"$node->title\" -->\n";
       $title = check_output($node->title);
-      $subleft = strtr(t("Submitted by %a on %b"), array("%a" => format_username($node->userid, $node->name), "%b" => format_date($node->timestamp, "large")));
+      $subleft = strtr(t("Submitted by %a on %b"), array("%a" => format_name($node->name), "%b" => format_date($node->timestamp, "large")));
       $subright = node_index($node);
       $body = check_output($node->body, 1) . ($main ? "<hr color=\"#404040\" size=\"1\"><div align=\"right\">[ " . $this->links(link_node($node)) . " ]</div>" : "");
       print "<script language=\"JavaScript\"><!--\ns(\"". $this->stripbreaks(addslashes($title)) ."\",\"". $this->stripbreaks(addslashes($subleft)) ."\",\"". $this->stripbreaks(addslashes($subright)) ."\",\"". $this->stripbreaks(addslashes($body)) ."\"); // -->\n</script>\n";
@@ -112,8 +112,8 @@ function c(subject,mod,author,date,body) {document.writeln("<table border=\"0\" 
     function comment($comment, $link = "") {
       echo "<A NAME=\"$comment->cid\"></A>\n";
 
-      $author = "<b>" . format_username($comment->userid, $comment->name) . "</b>";
-      if ($comment->userid) {
+      $author = "<b>" . format_name($comment->name) . "</b>";
+      if ($comment->name) {
         if ($comment->fake_email) $info[] = format_email($comment->fake_email);
         if (eregi("http://",$comment->url)) $info[] = format_url($comment->url);
         if ($info) $author .= "<br>[ ". implode(" | ",$info) . " ]";

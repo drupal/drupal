@@ -16,7 +16,7 @@ function _node_get($conditions) {
   }
 
   if ($type) {
-    return db_query("SELECT n.*, l.*, u.userid, u.name FROM node n LEFT JOIN $type l ON n.lid = l.lid AND n.nid = l.nid LEFT JOIN users u ON n.author = u.id WHERE $where ORDER BY n.timestamp DESC");
+    return db_query("SELECT n.*, l.*, u.name FROM node n LEFT JOIN $type l ON n.lid = l.lid AND n.nid = l.nid LEFT JOIN users u ON n.author = u.id WHERE $where ORDER BY n.timestamp DESC");
   }
 }
 
