@@ -263,7 +263,7 @@ function system_admin() {
   global $edit, $op, $type;
   if (user_access("administer site configuration")) {
 
-    print "<small>".la(t("site settings"), array("mod" => "system", "type" => "options"))." | ".la(t("content filters"), array("mod" => "system", "type" => "filter"))." | ".la(t("modules"), array("mod" => "system", "op" => "modules"))." | ".la(t("themes"), array("mod" => "system", "op" => "themes"))." | ".la(t("help"), array("mod" => "system", "op" => "help"))."</small><hr />\n";
+    print "<small>". la(t("site settings"), array("mod" => "system", "type" => "options")) ." - ". la(t("content filters"), array("mod" => "system", "type" => "filter")) ." - ". la(t("modules"), array("mod" => "system", "op" => "modules")) ." - ". la(t("themes"), array("mod" => "system", "op" => "themes")) ." - ". la(t("help"), array("mod" => "system", "op" => "help")) ."</small><hr />\n";
 
     switch ($op) {
       case "help":
