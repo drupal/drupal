@@ -32,6 +32,9 @@ drupal 2.00, 15/03/2001
     * added CREDITS file
     * added directory "misc"
     * added new scripts to directory "scripts"
+    * improved database abstraction layer
+        + added db_insert_id()
+
 - revised documentation
 
 drupal 1.00, 15/01/2001
