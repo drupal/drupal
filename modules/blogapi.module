@@ -603,6 +603,7 @@ function _blogapi_mt_extra(&$node, $struct) {
       foreach ($struct['mt_tb_ping_urls'] as $tb_ping_url) {
         $node->tb_url = $tb_ping_url->getVal();
         trackback_send($node);
+        unset($node->tb_url); // make sure we don't ping twice
       }
     }
     else {
@@ -645,8 +646,8 @@ function _blogapi_get_post($node, $bodies = true) {
     $xmlrpcval['content'] = new xmlrpcval("<title>$blog->title</title>$node->body", 'string');
     $xmlrpcval['description'] = new xmlrpcval($node->body, 'string');
     // Add MT specific fields
-    $xmlrpcval['mt_allow_comments'] = $comment;
-    $xmlrpcval['mt_convert_breaks'] = $node->format;
+    $xmlrpcval['mt_allow_comments'] = new xmlrpcval($comment, 'string');
+    $xmlrpcval['mt_convert_breaks'] = new xmlrpcval($node->format, 'string');
   }
 
   return new xmlrpcval($xmlrpcval, 'struct');
