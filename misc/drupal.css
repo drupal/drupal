@@ -1,11 +1,6 @@
 form                      { margin: 0; padding: 0;}
 
-th {
-  text-align: left;
-  padding-right: 1em;
-  border-bottom: 1px solid #ccc;
-}
-
+th                        { text-align: left; padding-right: 1em; border-bottom: 1px solid #ccc; }
 
 #tracker table            { border-collapse: collapse; }
 #tracker td               { vertical-align: top; padding: 1em; }
@@ -16,14 +11,26 @@ th {
 #pager                    { text-align: center; }
 #pager div                { padding: 0.5em; }
 
-.queue-user-numeral       { color: red; }
+.book                     { margin-bottom: 2em; }
+.book hr                  { clear: both; border: 0; height: 1px; background-color: #888; color: #888; }
+.book .title              { font-weight: bold; font-size: 1.3em; }
+.book .last-updated       { font-size: 0.8em; margin-top: 0.25em; }
+.book .body               { margin: 1em 0 3em 0; }
+.book .links              { clear: both; border-top: 1px solid #888; padding-top: 0.5em; }
+
+.book .nav                { margin: 1em 0; clear: both; }
+.book .nav .prev          { float: left; width: 45%; padding-bottom: 0.5em; }
+.book .nav .next          { float: right; text-align: right; width: 45%; padding-bottom: 0.5em; }
+.book .nav .up            { text-align: center; }
+.book .nav .titles        { clear: both; }
 
 .calendar .row-week td a  { display: block; }
 .calendar .row-week td a:hover { background-color: #888; color: #fff; }
 .calendar a               { text-decoration: none; }
 .calendar a:hover         { text-decoration: none; }
 .calendar table           { border-collapse: collapse; width: 100%; }
-.calendar td              { text-align: center; border: 1px solid #000; padding: 1px; margin: 0; font-size: 0.8em; }
+.calendar td              { text-align: center; border: 1px solid #000;
+                            padding: 1px; margin: 0; font-size: 0.8em; }
 
 .container-inline div     { display: inline; }
 
@@ -48,23 +55,17 @@ th {
 
 .poll .vote-form .choices { text-align: left; margin: 0 auto; display: table; }
 
-.node-form .form-text     { display: block; width: 95%; }
-.node-form textarea       { display: block; width: 95%; }
+.queue-user-numeral       { color: red; }
 
-.node-form .standard {
-  clear: both;
-}
-.node-form .admin .form-item .title {
-  margin-top: 0;
-}
-.node-form .admin .authored .form-item {
-  margin-bottom: 1.1em;
-}
-.node-form .admin .authored .form-text { width: auto; }
-
-.node-form .admin .authored, .node-form .admin .options, .node-form .admin .extra {
-  float: left; margin-right: 2em; margin-bottom: 1em;
-}
+.node-form .form-text                   { display: block; width: 95%; }
+.node-form textarea                     { display: block; width: 95%; }
+.node-form .standard                    { clear: both; }
+.node-form .admin .form-item .title     { margin-top: 0; }
+.node-form .admin .authored .form-item  { margin-bottom: 1.1em; }
+.node-form .admin .authored .form-text  { width: auto; }
+.node-form .admin .authored,
+.node-form .admin .options,
+.node-form .admin .extra                { float: left; margin-right: 2em; margin-bottom: 1em; }
 
 .marker                   { color: #f00; }
 .error                    { color: #f00; }

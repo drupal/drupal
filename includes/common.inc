@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.214 2003/06/11 18:16:31 dries Exp $
+// $Id: common.inc,v 1.215 2003/06/12 17:24:00 dries Exp $
 
 function conf_init() {
 
@@ -202,8 +202,8 @@ function variable_del($name) {
   unset($conf[$name]);
 }
 
-function drupal_specialchars($input) {
-  return htmlspecialchars($input, ENT_NOQUOTES, "utf-8");
+function drupal_specialchars($input, $quotes = ENT_NOQUOTES) {
+  return htmlspecialchars($input, $quotes, "utf-8");
 }
 
 function table_cell($cell, $header = 0) {
@@ -489,7 +489,7 @@ function check_url($uri) {
 }
 
 function check_form($text) {
-  return htmlspecialchars($text);
+  return drupal_specialchars($text, 0);
 }
 
 function check_query($text) {

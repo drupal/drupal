@@ -27,13 +27,15 @@ a {
   font-weight: normal;
 }
 a:link {
-  color: #378CE0;
+  color: #069;
+  text-decoration: underline;
 }
 a:visited {
-  color: #036;
+  color: #000;
+  text-decoration: underline;
 }
 a:hover {
-  text-decoration: underline;
+  color: #39C;
 }
 p {
   margin: 0 0 1em 0;
@@ -97,7 +99,7 @@ img {
 #main {
   padding: 1em;
 }
-#message, #main .node .content {
+#message, #main .node .content, .comment .content {
   line-height: 1.4;
 }
 #sidebar {
@@ -113,8 +115,11 @@ img {
 table {
   font-size: 1em;
 }
-.node, .block, .box {
+.block, .box {
   padding: 0 0 1.5em 0;
+}
+.node {
+  padding: 0 0 2.5em 0;
 }
 .comment {
   border: 1px solid #ccc;
@@ -149,7 +154,7 @@ table {
   padding-top: 0.5em;
 }
 .node .links, .comment .links {
-  padding-top: 1em;
+  padding-top: 0.5em;
   color: #999;
 }
 .node .links a, .comment .links a {
@@ -214,6 +219,9 @@ table {
 pre {
   background-color: #eee;
   padding: 0.75em 1.5em;
-  font-size: 11px;
+  font-size: 12px;
   border: 1px solid #ddd;
+}
+.content li {
+  padding-bottom: 0.25em;
 }
