@@ -238,6 +238,7 @@ function comment_preview($edit) {
 
   $comment->uid = $user->uid;
   $comment->timestamp = time();
+  $comment->name = $user->name ? $user->name : $comment->name;
 
   /*
   ** Preview the comment:
@@ -708,6 +709,7 @@ function comment_render($node, $cid = 0) {
 
       while ($comment = db_fetch_object($result)) {
         $comment = drupal_unpack($comment);
+        $comment->name = $comment->registered_name ? $comment->registered_name : $comment->name;
         $comment->depth = count(explode(".", $comment->thread)) - 1;
 
         if ($mode == 1) {
