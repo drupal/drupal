@@ -12,7 +12,7 @@ if (user_access("post content")) {
   }
   else {
     foreach (module_list() as $name) {
-      if (module_hook($name, "user")) $options .= "<option value=\"$name\">$name</option>";
+      if (module_hook($name, "user")) $options .= "<option value=\"$name\">". t($name) ."</option>";
     }
 
     $form .= form_item(t("Submission type"), "<SELECT NAME=\"mod\">$options</SELECT>");
