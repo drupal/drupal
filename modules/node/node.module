@@ -300,8 +300,6 @@ function node_conf_filters() {
 }
 
 function node_filter_html($text) {
-  $text = eregi_replace("([ \f\r\t\n\'\"])style=[^>]+>", "\\1", $text);
-  $text = eregi_replace("([ \f\r\t\n\'\"])on[a-z]+=[^>]+>", "\\1", $text);
   $text = strip_tags($text, variable_get("allowed_html", ""));
   return $text;
 }
@@ -370,6 +368,11 @@ function node_comment_mode($nid) {
 }
 
 function node_filter($text) {
+  $text = preg_replace("/\Wstyle\s*=[^>]+?>/i", ">", $text);
+  $text = preg_replace("/\Won[a-z]+\s*=[^>]+?>/i", ">", $text);
+  $text = preg_replace("/\Wsrc\s*=[\s'\"]*javascript[^>]+?>/i", ">", $text);
+  $text = preg_replace("/\Whref\s*=[\s'\"]*javascript:[^>]+?>/i", ">", $text);
+
   if (variable_get("filter_html", 0)) $text = node_filter_html($text);
   if (variable_get("filter_link", 0)) $text = node_filter_link($text);
   return node_filter_line($text);
