@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.85 2004/10/31 03:03:24 dries Exp $ */
+/* $Id: drupal.css,v 1.86 2004/11/21 08:34:57 dries Exp $ */
 
 /*
 ** HTML elements
@@ -21,9 +21,6 @@ img {
 p {
   margin-top: 0.5em;
   margin-bottom: 0.9em;
-}
-pre, code {
-  font-size: 11px;
 }
 table {
   border-collapse: collapse;
