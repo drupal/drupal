@@ -55,7 +55,7 @@ function init_theme() {
   $theme = $user->theme && $themes[$user->theme]->status ? $user->theme : variable_get('theme_default', 'bluemarine');
 
   // Allow modules to override the present theme... only select custom theme
-  // if it is available in the list of enabled themes.
+  // if it is available in the list of installed themes.
   $theme = $custom_theme && $themes[$custom_theme] ? $custom_theme : $theme;
 
   // Store the identifier for retrieving theme settings with.
@@ -221,7 +221,7 @@ function path_to_theme() {
  */
 function theme_get_settings($key = NULL) {
   $defaults = array(
-    'primary_links'                 =>  '',
+    'primary_links'                 =>  l('edit primary links', 'admin/themes/settings'),
     'secondary_links'               =>  l('edit secondary links', 'admin/themes/settings'),
     'mission'                       =>  '',
     'default_logo'                  =>  1,

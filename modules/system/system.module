@@ -93,8 +93,7 @@ function system_menu($may_cache) {
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -1);
 
     foreach (list_themes() as $theme) {
-       $theme_path = str_replace('/', '.', $theme->name);
-       $items[] = array('path' => 'admin/themes/settings/'. $theme_path, 'title' => basename($theme->name),
+       $items[] = array('path' => 'admin/themes/settings/'. $theme->name, 'title' => $theme->name,
        'callback' => 'system_theme_settings', 'access' => $access,
        'type' => MENU_LOCAL_TASK);
     }
@@ -153,7 +152,7 @@ function system_user($type, $edit, &$user, $category = NULL) {
         $row[] = file_exists($screenshot) ? theme('image', $screenshot, t('Screenshot for %theme theme', array('%theme' => $value->name)), '', 'class="screenshot"', false) : t('no screenshot');
 
         // Information field.
-        $field = '<strong>'. basename($value->name) .'</strong>';
+        $field = '<strong>'. $value->name .'</strong>';
         $row[] = $field;
 
         // Reset to follow site default theme if user selects the site default
@@ -318,7 +317,6 @@ function system_theme_data() {
   foreach (array_keys($themes) as $key) {
     drupal_get_filename('theme', $themes[$key]->name, $themes[$key]->filename);
     drupal_load('theme', $themes[$key]->name);
-    $themes[$key]->description = dirname($themes[$key]->filename);
     $themes[$key]->owner = $themes[$key]->filename;
     $themes[$key]->prefix = $key;
   }
@@ -336,15 +334,11 @@ function system_theme_data() {
     foreach (call_user_func($engine->name . '_templates') as $template) {
       $template->template = TRUE;
       $template->name = basename(dirname($template->filename));
-      $template->basename = $template->name;
-      $template->description = dirname($template->filename);
       $template->owner = $engine->filename;
       $template->prefix = $engine->name;
       // do not double-insert templates with theme files in their directory
-      foreach ($themes as $theme) {
-        if (dirname($template->filename) == dirname($theme->filename)) {
-          continue 2;
-        }
+      if (array_key_exists($template->name, $themes)) {
+        continue;
       }
       $themes[$template->name] = $template;
     }
@@ -353,16 +347,16 @@ function system_theme_data() {
   // Find styles in each theme's directory.
   foreach ($themes as $theme) {
     foreach (file_scan_directory(dirname($theme->filename), 'style.css$') as $style) {
-      // do not double-insert themes with css files in their directory
-      if (dirname($style->filename) != dirname($theme->filename)) {
-        $style->style = TRUE;
-        $style->template = $theme->template;
-        $style->name = basename(dirname($style->filename));
-        $style->description = dirname($style->filename);
-        $style->owner = $theme->filename;
-        $style->prefix = $theme->template ? $theme->prefix : $theme->name;
-        $themes[$style->name] = $style;
+      $style->style = TRUE;
+      $style->template = $theme->template;
+      $style->name = basename(dirname($style->filename));
+      $style->owner = $theme->filename;
+      $style->prefix = $theme->template ? $theme->prefix : $theme->name;
+      // do not double-insert styles with theme files in their directory
+      if (array_key_exists($style->name, $themes)) {
+        continue;
       }
+      $themes[$style->name] = $style;
     }
   }
 
@@ -425,7 +419,7 @@ function system_theme_listing() {
   $themes = system_theme_data();
   ksort($themes);
 
-  foreach ($themes as $name => $info) {
+  foreach ($themes as $info) {
     $info->screenshot = dirname($info->filename) . '/screenshot.png';
     $row = array();
 
@@ -433,13 +427,13 @@ function system_theme_listing() {
     $row[] = file_exists($info->screenshot) ? theme('image', $info->screenshot, t('Screenshot for %theme theme', array('%theme' => $info->name)), '', 'class="screenshot"', false) : t('no screenshot');
 
     // Information field.
-    $row[] = "<strong>$info->name</strong><br /><em>$info->description</em>";
+    $row[] = "<strong>$info->name</strong><br /><em>" . dirname($info->filename) . '</em>';
 
     // enabled, default, and operations columns
     $row[] = array('data' => form_checkbox('', 'status]['. $info->name, 1, $info->status), 'align' => 'center');
-    $row[] = array('data' => form_radio('', 'theme_default', $info->name, (variable_get('theme_default', 'bluemarine') == $name) ? 1 : 0), 'align' => 'center');
+    $row[] = array('data' => form_radio('', 'theme_default', $info->name, (variable_get('theme_default', 'bluemarine') == $info->name) ? 1 : 0), 'align' => 'center');
     if (function_exists($info->prefix . '_settings') || function_exists($info->prefix . '_features')) {
-      $row[] = array('data' => l(t('configure'), 'admin/themes/settings/' . str_replace('/', '.', preg_replace('<^.*themes/(.*)$>', '$1', $info->description))), 'align' => 'center');
+      $row[] = array('data' => l(t('configure'), 'admin/themes/settings/' . $info->name), 'align' => 'center');
     }
     else {
       $row[] = '';
@@ -606,11 +600,10 @@ function system_site_settings($module = NULL) {
 /**
  * Menu callback; display theme configuration for entire site and individual themes.
  */
-function system_theme_settings() {
+function system_theme_settings($key = '') {
   system_settings_save();
 
-  // Default settings are defined in _theme_settings() in includes/theme.inc
-  $key = str_replace('.', '/', arg(3));
+  // Default settings are defined in theme_get_settings() in includes/theme.inc
   if ($key) {
     $settings = theme_get_settings($key);
     $var = str_replace('/', '_', 'theme_'. $key .'_settings');
@@ -681,15 +674,13 @@ function system_theme_settings() {
         'toggle_primary_links' => t('Primary links'),
         'toggle_secondary_links' => t('Secondary links'),
         'toggle_node_user_picture' => t('User pictures in posts'),
-        'toggle_comment_user_picture' => t('User pictures in comments'));
-  // Only offer search box if search;module is enabled.
-  if (module_exist('search')) {
-    $toggles['toggle_search'] = t('Search box');
-  }
+        'toggle_comment_user_picture' => t('User pictures in comments'),
+        'toggle_search' => t('Search box'));
 
   foreach ($toggles as $name => $title) {
     if ((!$key) || in_array($name, $features)) {
-      $group .= form_checkbox($title, "$var][$name", 1, $settings[$name]);
+      // disable search box if search.module is disabled
+      $group .= form_checkbox($title, "$var][$name", 1, $settings[$name], NULL, (!module_exist('search') && $name == 'toggle_search') ? array('disabled' => 'disabled') : NULL);
     }
   }
   if ($group) {
