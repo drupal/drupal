@@ -293,7 +293,9 @@ function update_index($search_array) {
       // the search index.
       if ($newwords) {
         foreach ($newwords as $key => $value) {
-          db_query("INSERT INTO {search_index} VALUES('%s', %d, '%s', %d)", $key, $node['lno'], $node_type, $value);
+          if (strlen($key) <= 50) {
+            db_query("INSERT INTO {search_index} VALUES('%s', %d, '%s', %d)", $key, $node['lno'], $node_type, $value);
+          }
         }
       }
 
