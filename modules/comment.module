@@ -337,7 +337,7 @@ function comment_node_url() {
 function comment_edit($cid) {
   global $user;
 
-  $comment = db_fetch_object(db_query('SELECT c.*, u.uid, u.name AS registered_name, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status != 2', $cid));
+  $comment = db_fetch_object(db_query('SELECT c.*, u.uid, u.name AS registered_name, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d', $cid));
   $comment = drupal_unpack($comment);
   $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
   if (comment_access('edit', $comment)) {
@@ -909,7 +909,7 @@ function comment_admin_edit($cid) {
   }
 
   // If we're not saving our changes above, we're editing it.
-  $result = db_query('SELECT c.*, u.name AS registered_name, u.uid FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status != 2', $cid);
+  $result = db_query('SELECT c.*, u.name AS registered_name, u.uid FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d', $cid);
   $comment = db_fetch_object($result);
   $comment->name = $comment->uid ? $comment->registered_name : $comment->name;
   $comment = drupal_unpack($comment);
