@@ -1,5 +1,4 @@
 <?
-
 class backend {
 
   // Channel properties:
@@ -46,7 +45,7 @@ class backend {
     }
   }
 
-  function rdf2sql($timout = 10) {
+  function url2sql($timout = 10) {
     global $site_name;
 
     if ($this->file) {
@@ -62,12 +61,10 @@ class backend {
       $fp = fsockopen($host, $port, &$errno, &$errstr, $timout);
 
       if ($fp) {
-        // Get data from URL:
-        fputs($fp, "GET $path HTTP/1.0\n");
-        fputs($fp, "User-Agent: $site_name\n");
-        fputs($fp, "Host: ". $host ."\n");
-        fputs($fp, "Accept: */*\n\n");
+        // Request data via URL:
+        fputs($fp, "GET $path HTTP/1.0\nUser-Agent: $site_name\nHost: $host\nAccept: */*\n\n");
 
+        // Read data from socket:
         while(!feof($fp)) $data .= fgets($fp, 128);
 
         // print "<PRE>$data</PRE><HR>";
@@ -93,7 +90,7 @@ class backend {
             $title = ereg_replace(".*<title>", "", $item);
             $title = ereg_replace("</title>.*", "", $title);
 
-            // Count the number of stories:
+            // Increase the number of headlines:
             $number += 1;
 
             // Insert item in database:
@@ -104,23 +101,11 @@ class backend {
           $result = db_query("UPDATE channel SET timestamp = '". time() ."' WHERE id = $this->id");
           $this->timestamp = time();
         }
-        else print "<HR>RDF parser: 404 error?<BR><BR><PRE>$data</PRE><HR>";
+        else {
+          watchdog("error", "failed to retrieve headline data from $host: <PRE>$data</PRE>");
+        }
       }
     }
-  }
-
-  function rss2sql($timout = 10) {
-    print "backend->rss2sql : TODO<BR>";
-  }
-
-  function xml2sql($timout = 10) {
-    print "backend->xml2sql : TODO<BR>";
-  }
-
-  function url2sql($timout = 10) {
-    if (strstr($this->file, ".rdf")) $this->rdf2sql($timout);
-    if (strstr($this->file, ".rss")) $this->rss2sql($timout);
-    if (strstr($this->file, ".xml")) $this->xml2sql($timout);
   }
 
   function displayHeadlines($timout = 1800) {
