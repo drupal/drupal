@@ -3,6 +3,14 @@
 
 /*** Common functions ******************************************************/
 
+// we cannot use module_invoke because we need passing by reference
+function user_module_invoke($type, &$array, &$user) {
+  foreach (module_list() as $module) {
+    $function = $module .'_user';
+    if(function_exists($function)) $function($type, $array, $user);
+  }
+}
+
 function user_external_load($authname) {
   $result = db_query("SELECT uid FROM {authmap} WHERE authname = '%s'", $authname);
 
@@ -40,6 +48,8 @@ function user_load($array = array()) {
     }
   }
 
+  user_module_invoke("load", $array, $user);
+
   return $user;
 }
 
@@ -50,6 +60,8 @@ function user_save($account, $array = array()) {
 
   $user_fields = user_fields();
   if ($account->uid) {
+    user_module_invoke("update", $array, $account);
+
     $data = unserialize(db_result(db_query("SELECT data FROM {users} WHERE uid = %d", $account->uid)));
     foreach ($array as $key => $value) {
       if ($key == "pass") {
@@ -104,6 +116,8 @@ function user_save($account, $array = array()) {
     db_query("INSERT INTO {users} (". implode(", ", $fields) .") VALUES (". implode(", ", $s) .")", $values);
 
     $user = user_load(array("name" => $array["name"]));
+
+    module_invoke_all("user", "insert", $array, $user);
   }
 
   foreach ($array as $key => $value) {
@@ -603,6 +617,8 @@ function user_login($edit = array(), $msg = "") {
       // update the user table timestamp noting user has logged in
       db_query("UPDATE {users} SET timestamp = '%d' WHERE uid = '%s'", time(), $user->uid);
 
+      user_module_invoke("login", $edit, $user);
+
       /*
       ** If the user wants to be remembered, set the proper cookie such
       ** that the session won't expire.
@@ -693,6 +709,7 @@ function user_logout() {
     */
 
     session_destroy();
+    module_invoke_all("user", "logout", NULL, $user);
     unset($user);
   }
 
@@ -1424,6 +1441,7 @@ function user_admin_edit($edit = array()) {
         db_query("DELETE FROM {users} WHERE uid = %d", $account->uid);
         db_query("DELETE FROM {authmap} WHERE uid = %d", $account->uid);
         drupal_set_message(t("the account has been deleted."));
+        module_invoke_all("user", "delete", $account, $user);
       }
       else {
         $error = t("Failed to delete account: the account has to be blocked first.");
