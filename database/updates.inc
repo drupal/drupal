@@ -1,5 +1,5 @@
 <?php
-/* $Id: updates.inc,v 1.24 2004/07/11 07:19:22 dries Exp $ */
+/* $Id: updates.inc,v 1.25 2004/07/12 07:25:49 dries Exp $ */
 
 // Define the various updates in an array("date : comment" => "function");
 $sql_updates = array(
@@ -1158,7 +1158,6 @@ function update_93() {
   else {
     $ret[] = update_sql('ALTER TABLE {url_alias} DROP INDEX src');
   }
-  $ret[] = update_sql("INSERT INTO {url_alias} (src, dst) VALUES ('node/feed', 'index.rdf')");
   $ret[] = update_sql("INSERT INTO {url_alias} (src, dst) VALUES ('node/feed', 'rss.xml')");
   return $ret;
 }
