@@ -101,8 +101,8 @@
           </TD>
          </TR>
          <?php
-           if ($main || $links)
-             echo "<TR BGCOLOR=\"". $this->bgcolor3 ."\"><TD BGCOLOR=\"". $this->bgcolor3 ."\" ALIGN=\"right\" COLSPAN=\"2\">". $this->links($links, $main, $node) ."</TD></TR>";
+           if (node_links($links, $node, $main))
+             echo "<TR BGCOLOR=\"". $this->bgcolor3 ."\"><TD BGCOLOR=\"". $this->bgcolor3 ."\" ALIGN=\"right\" COLSPAN=\"2\">". $this->links($links, $main) ."</TD></TR>";
          ?>
        </TABLE></TD></TR></TABLE><BR>
       <?php

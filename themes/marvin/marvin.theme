@@ -63,7 +63,7 @@
      print "  <TD COLSPAN=\"2\"><P>". check_output($node->body, 1) ."</P></TD>\n";
      print " </TR>\n";
      print " <TR><TD COLSPAN=\"2\">&nbsp;</TD></TR>\n";
-     if ($main || $links) print " <TR><TD COLSPAN=\"2\">". $this->links($links, $main, $node) ."</TD></TR>\n";
+     if (node_links($links, $node, $main)) print " <TR><TD COLSPAN=\"2\">". $this->links($links, $main) ."</TD></TR>\n";
      print "</TABLE>\n";
      print "<BR><BR>\n\n";
    }
