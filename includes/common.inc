@@ -719,7 +719,7 @@ function form_weight($title = NULL, $name = "weight", $value = 0, $delta = 10, $
   return form_select($title, $name, $value, $weights, $description, $extra);
 }
 
-function url($url, $query = NULL) {
+function url($url = NULL, $query = NULL) {
 
   if (isset($url)) {
     if (isset($query)) {
@@ -732,6 +732,9 @@ function url($url, $query = NULL) {
   else {
     if (isset($query)) {
       return "?$query";
+    }
+    else {
+      return "";
     }
   }
 }

@@ -184,7 +184,7 @@ function queue_block($op = "list", $delta = 0) {
     return $blocks;
   }
   else {
-    if (user_access("access submission queue") && (substr_count(request_uri(), url("queue")) || substr_count(request_uri(), url()))) {
+    if (user_access("access submission queue") && (substr_count(request_uri(), url("queue")) || substr_count(request_uri(), url("node")))) {
       global $user, $id;
       if ($user->uid) {
         $node = node_load(array("nid" => $id));
