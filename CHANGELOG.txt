@@ -11,7 +11,8 @@ Drupal x.x.x, xxxx-xx-xx
     * added a mechanism to throttle certain operations.
 - usability:
     * refactored the block configuration pages.
-    * refactored the statistics and log pages.
+    * refactored the statistics pages.
+    * refactored the watchdog pages.
     * refactored the throttle module configuration.
     * added a 'add child page' link to book pages.
 - contact module:
