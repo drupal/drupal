@@ -25,6 +25,14 @@ function upload_menu($may_cache) {
   $items = array();
 
   if ($may_cache) {
+    $items[] = array(
+      'path' => 'admin/upload', 'title' => t('uploads'),
+      'callback' => 'upload_admin',
+      'access' => user_access('access administration pages'),
+      'type' => MENU_NORMAL_ITEM
+    );
+  }
+  else {
     // Add handlers for previewing new uploads.
     if ($_SESSION['file_uploads']) {
       foreach ($_SESSION['file_uploads'] as $key => $file) {
@@ -32,18 +40,12 @@ function upload_menu($may_cache) {
         $items[] = array(
           'path' => $filename, 'title' => t('file download'),
           'callback' => 'upload_download',
-          'access' => true,
-          'type' => MENU_DYNAMIC_ITEM & MENU_HIDDEN
+          'access' => TRUE,
+          'type' => MENU_CALLBACK
         );
         $_SESSION['file_uploads'][$key]->_filename = $filename;
       }
     }
-    $items[] = array(
-      'path' => 'admin/upload', 'title' => t('uploads'),
-      'callback' => 'upload_admin',
-      'access' => user_access('access administration pages'),
-      'type' => MENU_NORMAL_ITEM
-    );
   }
 
   return $items;

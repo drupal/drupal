@@ -25,6 +25,17 @@ function legacy_menu($may_cache) {
   $items = array();
 
   if ($may_cache) {
+    // Map "taxonomy/page/or/52,97" to "taxonomy/term/52+97".
+    $items[] = array('path' => 'taxonomy/page', 'title' => t('taxonomy'),
+      'callback' => 'legacy_taxonomy_page',
+      'access' => TRUE, 'type' => MENU_CALLBACK);
+
+    // Map "taxonomy/feed/or/52,97" to "taxonomy/term/52+97/0/feed".
+    $items[] = array('path' => 'taxonomy/feed', 'title' => t('taxonomy'),
+      'callback' => 'legacy_taxonomy_feed',
+      'access' => TRUE, 'type' => MENU_CALLBACK);
+  }
+  else {
     // Map "node/view/52" to "node/52".
     $items[] = array('path' => 'node/view', 'title' => t('view'),
       'callback' => 'drupal_goto',
@@ -41,16 +52,6 @@ function legacy_menu($may_cache) {
     $items[] = array('path' => 'user/view', 'title' => t('view'),
       'callback' => 'drupal_goto',
       'callback arguments' => array('user/'. arg(2), NULL, NULL),
-      'access' => TRUE, 'type' => MENU_CALLBACK);
-
-    // Map "taxonomy/page/or/52,97" to "taxonomy/term/52+97".
-    $items[] = array('path' => 'taxonomy/page', 'title' => t('taxonomy'),
-      'callback' => 'legacy_taxonomy_page',
-      'access' => TRUE, 'type' => MENU_CALLBACK);
-
-    // Map "taxonomy/feed/or/52,97" to "taxonomy/term/52+97/0/feed".
-    $items[] = array('path' => 'taxonomy/feed', 'title' => t('taxonomy'),
-      'callback' => 'legacy_taxonomy_feed',
       'access' => TRUE, 'type' => MENU_CALLBACK);
   }
 
