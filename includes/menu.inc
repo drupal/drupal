@@ -1,7 +1,8 @@
 <?php
 
 function menu_add() {
-  trigger_error(t("the 'menu_add()' function is depricated"), E_USER_ERROR);
+  trigger_error(t("The 'menu_add()' function is deprecated."), E_USER_ERROR);
+  // Note that this function will be removed shortly.
 }
 
 function menu($path, $title, $callback = NULL, $help = NULL, $weight = 0, $hidden = 0) {
