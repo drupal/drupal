@@ -1,5 +1,5 @@
 <?php
-/* $Id: path.module,v 1.53 2005/02/01 19:45:58 dries Exp $ */
+/* $Id: path.module,v 1.54 2005/02/10 19:30:08 dries Exp $ */
 
 /**
  * @file
@@ -266,7 +266,7 @@ function path_overview() {
 
   $destination = drupal_get_destination();
   while ($data = db_fetch_object($result)) {
-    $rows[] = array($data->dst, $data->src, l(t('edit'), "admin/path/edit/$data->pid", array(), $destination), l(t('delete'), "admin/path/delete/$data->pid"));
+    $rows[] = array($data->dst, $data->src, l(t('edit'), "admin/path/edit/$data->pid", array(), $destination), l(t('delete'), "admin/path/delete/$data->pid", array(), $destination));
   }
 
   if ($pager = theme('pager', NULL, 50, 0, tablesort_pager())) {
