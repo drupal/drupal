@@ -1167,7 +1167,7 @@ function node_page() {
       $theme->box($title, node_delete($edit));
       break;
     default:
-      $result = db_query("SELECT nid, type FROM node WHERE ". ($meta ? "attributes LIKE '%". check_input($meta) ."%' AND " : "") ." promote = '1' AND status = '1' ORDER BY static DESC, created DESC LIMIT ". ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
+      $result = db_query("SELECT nid, type FROM node WHERE ". ($meta ? "attributes LIKE '%". check_input($meta) ."%' AND " : "") . ($id ? "nid = '$id'" : "promote = '1'") ." AND status = '1' ORDER BY static DESC, created DESC LIMIT ". ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
       while ($node = db_fetch_object($result)) {
         node_view(node_load(array("nid" => $node->nid, "type" => $node->type)), 1);
       }
