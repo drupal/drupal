@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.162 2004/08/20 07:51:25 dries Exp $
+// $Id: system.module,v 1.163 2004/08/20 14:37:47 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -434,7 +434,7 @@ function system_module_listing() {
   // the throttle mechanism requires additional modules always be enabled
   $throttle_required = array_merge($required, array('modules/statistics.module', 'modules/throttle.module'));
 
-  $header = array(t('Name'), t('Description'), t('Status'), t('Throttle'));
+  $header = array(t('Name'), t('Description'), t('Enabled'), t('Throttle'));
 
   foreach ($files as $filename => $file) {
     module_set_filename($file->name, $filename);
