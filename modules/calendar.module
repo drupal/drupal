@@ -17,7 +17,7 @@ class Calendar {
 
     // Extract today's date:
     $today = mktime(23, 59, 59, date("n", time()), date("d", time()), date("Y", time()));
-    
+
     // Extract the timestamp of the last day of today's month:
     $thislast = mktime(23, 59, 59, date("n", time()), date("t", time()), date("Y", time()));
 
@@ -32,12 +32,12 @@ class Calendar {
     $prev = mktime(23, 59, 59, $month - 1, min(date("t", $prevmonth), $day), $year);
     $nextmonth = mktime(23, 59, 59, $month + 1, 1, $year);
     $next = mktime(23, 59, 59, $month + 1, min(date("t", $nextmonth), $day), $year);
-    
-    // Generate calendar header:    
+
+    // Generate calendar header:
     $output .= "\n<!-- calendar -->\n";
     $output .= "<TABLE WIDTH=\"100%\" BORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"1\">\n";
     $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"7\"><SMALL><A HREF=\"index.php?date=$prev\">&lt;</A> &nbsp; ". date("F Y", $this->date) ." &nbsp; " . ($next <= $thislast ? "<A HREF=\"index.php?date=$next\">&gt;</A>" : "&gt;") . "</SMALL></TD></TR>\n";
-    
+
     // Generate the days of the week:
     $output .= " <TR>";
     $somesunday = mktime(0, 0, 0, 3, 20, 1994);
