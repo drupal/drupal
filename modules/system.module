@@ -150,7 +150,6 @@ function system_modules() {
   while ($module = db_fetch_object($result)) {
     $status[$module->name] = $module->status;
   }
-  db_query("DELETE FROM system WHERE type = 'module'");
 
   if ($handle = @opendir("modules")) {
     $modules = array();
@@ -164,6 +163,8 @@ function system_modules() {
     closedir($handle);
     asort($modules);
   }
+
+  db_query("DELETE FROM system WHERE type = 'module'");
 
   $required = array("user", "system", "watchdog");
 
