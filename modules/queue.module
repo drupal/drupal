@@ -19,13 +19,12 @@ function queue_link($type) {
 }
 
 function queue_cron() {
-  global $status;
-  db_query("UPDATE node SET status = '$status[dumped]' WHERE status = '$status[queued]' AND ". time() ." - timestamp > ". variable_get("queue_clear", 604800));
+  // TODO: use 'created' or 'changed' ?
+  // db_query("UPDATE node SET status = 0 WHERE moderate = 1 AND ". time() ." - timestamp > ". variable_get("queue_clear", 604800));
 }
 
 function queue_count() {
-  global $status;
-  $result = db_query("SELECT COUNT(nid) FROM node WHERE status = '$status[queued]'");
+  $result = db_query("SELECT COUNT(nid) FROM node WHERE moderate = 1");
   return ($result) ? db_result($result, 0) : 0;
 }
 
@@ -35,27 +34,27 @@ function queue_score($id) {
 }
 
 function queue_vote($id, $vote) {
-  global $status, $user;
+  global $user;
 
-  if ($node = node_get_object(array(nid => $id))) {
+  if ($node = node_load(array(nid => $id))) {
 
     if (!field_get($node->users, $user->uid)) {
 
       // Update submission's score- and votes-field:
       db_query("UPDATE node SET score = score $vote, votes = votes + 1, users = '". field_set($node->users, $user->uid, $vote) ."' WHERE nid = $id");
 
-      $node = node_get_object(array(nid => $id, type => $node->type));
+      $node = node_load(array(nid => $id, type => $node->type));
 
       if (variable_get($node->type ."_post", 4) <= $node->score) {
-        node_save(array(nid => $id, status => $status[posted], timestamp => time()), array(status, timestamp));
+        node_save($node, array("nid", "status" => 1, "moderate" => 0));
         watchdog("special", "node: posted '$node->title' - moderation");
       }
       else if (variable_get($node->type ."_dump", -2) >= $node->score) {
-        node_save(array(nid => $id, status => $status[dumped], timestamp => time()), array(status, timestamp));
+        node_save($node, array("nid", "status" => 1, "moderate" => 0));
         watchdog("special", "node: dumped '$node->title' - moderation");
       }
       else if (variable_get($node->type ."_expire", 8) <= $node->votes) {
-        node_save(array(nid => $id, status => $status[expired], timestamp => time()), array(status, timestamp));
+        node_save($node, array("nid", "status" => 0, "moderate" => 0));
         watchdog("special", "node: expired '$node->title' - moderation");
       }
     }
@@ -63,17 +62,17 @@ function queue_vote($id, $vote) {
 }
 
 function queue_overview() {
-  global $status, $theme, $user;
+  global $theme, $user;
 
-  $result = db_query("SELECT n.*, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.status = '$status[queued]'");
+  $result = db_query("SELECT n.*, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.moderate = 1");
 
-  $content .= "<TABLE BORDER=\"0\" CELLSPACING=\"4\" CELLPADDING=\"4\">\n";
-  $content .= " <TR><TH>". t("Subject") ."</TH><TH>". t("Author") ."</TH><TH>". t("Type") ."</TH><TH>". t("Score") ."</TH></TR>\n";
+  $content .= "<table border=\"0\" cellspacing=\"4\" cellpadding=\"4\">";
+  $content .= " <tr><th>". t("Subject") ."</th><th>". t("Author") ."</th><th>". t("Type") ."</TH><TH>". t("Score") ."</th></tr>";
   while ($node = db_fetch_object($result)) {
-    if ($user->uid == $node->uid || field_get($node->users, $user->uid)) $content .= " <TR><TD><A HREF=\"module.php?mod=queue&op=view&id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">". format_name($node) ."</TD><TD ALIGN=\"center\">". check_output($node->type) ."</TD><TD ALIGN=\"center\">". queue_score($node->nid) ."</TD></TR>\n";
-    else $content .= " <TR><TD><A HREF=\"module.php?mod=queue&op=view&id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">". format_name($node) ."</TD><TD ALIGN=\"center\">". check_output($node->type) ."</TD><TD ALIGN=\"center\"><A HREF=\"module.php?mod=queue&op=view&id=$node->nid\">". t("vote") ."</A></TD></TR>\n";
+    if ($user->uid == $node->uid || field_get($node->users, $user->uid)) $content .= " <tr><td><a href=\"module.php?mod=queue&op=view&id=$node->nid\">". check_output($node->title) ."</a></td><td align=\"center\">". format_name($node) ."</td><td align=\"center\">". check_output($node->type) ."</td><td align=\"center\">". queue_score($node->nid) ."</td></tr>";
+    else $content .= " <tr><td><a href=\"module.php?mod=queue&op=view&id=$node->nid\">". check_output($node->title) ."</a></td><td align=\"center\">". format_name($node) ."</td><td align=\"center\">". check_output($node->type) ."</td><td align=\"center\"><a href=\"module.php?mod=queue&op=view&id=$node->nid\">". t("vote") ."</a></td></tr>";
   }
-  $content .= "</TABLE>\n";
+  $content .= "</table>";
 
   $theme->header();
   $theme->box(t("Moderation queue"), $content);
@@ -83,31 +82,37 @@ function queue_overview() {
 function queue_node($id) {
   global $theme, $user;
 
-
-  $node = node_get_object(array(nid => $id));
+  $node = node_load(array(nid => $id));
 
   if ($user->uid == $node->uid || field_get($node->users, $user->uid)) {
     drupal_goto("node.php?id=$node->nid");
   }
   else {
-    $queue_votes = array("neutral (+0)" => "+ 0", "post it (+1)" => "+ 1", "dump it (-1)" => "- 1");
-      // The keys of this associative array are displayed in each submission's selection box whereas the corresponding values represent the mathematical calculation to be performed to update a comment's value.
 
-    if ($n = node_get_object(array("nid" => $node->pid))) {
-      $output .= " ". t("The above node is a proposed update of an existing node:") ." \"<A HREF=\"node.php?id=$n->nid\">". check_output($n->title) ."</A>\".";
+    /*
+    ** The keys of this associative array are displayed in each submission's
+    ** selection box whereas the corresponding values represent the
+    ** mathematical calculation to be performed to update a comment's value.
+    */
+    $queue_votes = array("neutral (+0)" => "+ 0", "post it (+1)" => "+ 1", "dump it (-1)" => "- 1");
+
+    // TODO: this is where the upcoming versioning system should come in
+    if ($n = node_load(array("nid" => $node->pid))) {
+      $output .= " ". t("The above node is a proposed update of an existing node:") ." \"<a href=\"node.php?id=$n->nid\">". check_output($n->title) ."</a>\".";
     }
 
+    // TODO: this is where the upcoming versioning system should come in
     if ($node->log) {
-      $output .= " ". t("The log message to accompany this submission is given below:") ."<P><I>". check_output($node->log, 1) ."</I></P>";
+      $output .= " ". t("The log message to accompany this submission is given below:") ."<p><i>". check_output($node->log, 1) ."</i></p>";
     }
 
     // moderation form:
-    $output .= "<FORM ACTION=\"module.php?mod=queue\" METHOD=\"post\">\n";
-    foreach ($queue_votes as $key=>$value) $options .= "  <OPTION VALUE=\"$value\">$key</OPTION>\n";
-    $output .= "<SELECT NAME=\"vote\">$options</SELECT>\n";
-    $output .= "<INPUT TYPE=\"hidden\" NAME=\"id\" VALUE=\"$node->nid\">\n";
-    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Vote\">\n";
-    $output .= "</FORM>\n";
+    $output .= "<form action=\"module.php?mod=queue\" method=\"post\">";
+    foreach ($queue_votes as $key=>$value) $options .= "  <option value=\"$value\">$key</option>";
+    $output .= " <select name=\"vote\">$options</select>";
+    $output .= " <input type=\"hidden\" name=\"id\" value=\"$node->nid\">";
+    $output .= " <input type=\"submit\" name=\"op\" value=\"Vote\">";
+    $output .= "</form>";
 
     $theme->header();
     node_view($node);

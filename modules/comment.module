@@ -28,8 +28,8 @@ function comment_edit($id) {
   $comment = db_fetch_object($result);
 
   $form .= form_item(t("Author"), format_name($comment));
-  $form .= form_textfield(t("Subject"), "subject", $comment->subject, 50, 128);
-  $form .= form_textarea(t("Comment"), "comment", $comment->comment, 50, 10);
+  $form .= form_textfield(t("Subject"), "subject", $comment->subject, 70, 128);
+  $form .= form_textarea(t("Comment"), "comment", $comment->comment, 70, 15);
   $form .= form_submit(t("Submit"));
 
   return form($form);

@@ -135,7 +135,7 @@ function theme_blocks($region, &$theme) {
     case "/node.php":
       if ($region != "left") {
         if ($user->uid) $node = db_fetch_object(db_query("SELECT * FROM node WHERE nid = '$id'"));
-        if ($node->status == node_status("queued")) theme_moderation_results($theme, $node, $region);
+        if ($node->moderate == 1) theme_moderation_results($theme, $node, $region);
       }
     default:
       if ($user->uid) $result = db_query("SELECT * FROM blocks b LEFT JOIN layout l ON b.name = l.block WHERE (b.status = 2 OR (b.status = 1 AND l.uid = '$user->uid'))". (($region == "left" OR $region == "right") ? ($region == "left" ? " AND b.region = 0" : " AND b.region = 1") : "") ." AND (b.path = '' OR '". strrchr($REQUEST_URI, "/") ."' RLIKE b.path) ORDER BY weight");

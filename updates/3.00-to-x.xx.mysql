@@ -97,14 +97,62 @@ ALTER TABLE comments CHANGE lid lid int(10) NOT NULL;
 
 ## 17/10/01:
 
-# drop the "lid"s:
-ALTER TABLE story ADD KEY nid (nid);
-ALTER TABLE blog ADD KEY nid (nid);
-ALTER TABLE page ADD KEY nid (nid);
-ALTER TABLE forum ADD KEY nid (nid);
-ALTER TABLE book ADD KEY nid (nid);
+# add primary keys:
+ALTER TABLE story ADD PRIMARY KEY nid (nid);
+ALTER TABLE blog ADD PRIMARY KEY nid (nid);
+ALTER TABLE page ADD PRIMARY KEY nid (nid);
+ALTER TABLE forum ADD PRIMARY KEY nid (nid);
+ALTER TABLE book ADD PRIMARY KEY nid (nid);
 
 ## 22/10/01
 
 # add new field to blocks
 ALTER TABLE blocks ADD path varchar(255) NOT NULL DEFAULT '';
+
+## 01/31/01
+
+# rename the body fields:
+ALTER TABLE story CHANGE body body_old TEXT DEFAULT '' NOT NULL;
+ALTER TABLE page CHANGE body body_old TEXT DEFAULT '' NOT NULL;
+ALTER TABLE blog CHANGE body body_old TEXT DEFAULT '' NOT NULL;
+ALTER TABLE forum CHANGE body body_old TEXT DEFAULT '' NOT NULL;
+ALTER TABLE book CHANGE body body_old TEXT DEFAULT '' NOT NULL;
+
+#
+# Run the last part of updates/3.00-to-x.xx.php
+#
+
+# update the node table:
+ALTER TABLE node DROP lid;
+ALTER TABLE node ADD teaser TEXT DEFAULT '' NOT NULL;
+ALTER TABLE node ADD body TEXT DEFAULT '' NOT NULL;
+ALTER TABLE node ADD changed int(11) DEFAULT '0' NOT NULL;
+ALTER TABLE node CHANGE timestamp created int(11) DEFAULT '0' NOT NULL;
+ALTER TABLE node CHANGE comment comment int(2) DEFAULT '0' NOT NULL;
+ALTER TABLE node CHANGE promote promote int(2) DEFAULT '0' NOT NULL;
+ALTER TABLE node CHANGE moderate moderate int(2) DEFAULT '0' NOT NULL;
+ALTER TABLE node DROP timestamp_posted;
+ALTER TABLE node DROP timestamp_queued;
+ALTER TABLE node DROP timestamp_hidden;
+
+UPDATE node SET status = 1 WHERE status = 3;
+
+ALTER TABLE book DROP section;
+
+# change
+ALTER TABLE users CHANGE session sid varchar(32) DEFAULT '' NOT NULL;
+
+
+# ALTER TABLE users ADD session TEXT DEFAULT '' NOT NULL;
+# ALTER TABLE users ADD data TEXT DEFAULT '' NOT NULL;
+
+#CREATE TABLE mail (
+#  mid tinyint(10) DEFAULT '0' NOT NULL auto_increment,
+#  subject varchar(255) DEFAULT '' NOT NULL,
+#  recepient varchar(255) DEFAULT '' NOT NULL,
+#  sender varchar(255) DEFAULT '' NOT NULL,
+#  header text,
+#  body text,
+#  timestamp int(11) DEFAULT '0' NOT NULL,
+#  PRIMARY KEY (mid)
+#);

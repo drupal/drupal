@@ -45,7 +45,7 @@ function search_page() {
     $form .= t("Restrict search to") .": ";
 
     foreach (module_list() as $name) {
-      if (module_hook($name, "search")) {
+      if (module_hook($name, "user") || module_hook($name, "search")) {
         $form .= " <input type=\"checkbox\" name=\"edit[type][$name]\" ". ($edit["type"][$name] ? " checked=\"checked\"" : "") ."/> ". t($name);
       }
     }

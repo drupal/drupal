@@ -5,8 +5,10 @@
 # Database settings:
 #
 
-# $db_url = "pgsql://userer:password@hostname/database";
-# $db_url = "mysql://userer:password@hostname/database";
+# $db_url = "pgsql://user:password@hostname/database";
+# $db_url = "mysql://user:password@hostname/database";
+
+$db_url = "mysql://drop:drop@localhost/drop";
 
 #
 # PHP settings:

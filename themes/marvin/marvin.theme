@@ -57,11 +57,22 @@
      print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n";
      print " <tr><td colspan=\"2\"><img src=\"themes/marvin/images/drop.gif\" alt=\"\" /> &nbsp; <b>". check_output($node->title) ."</b></td></tr>\n";
      print " <tr valign=\"bottom\"><td colspan=\"2\" bgcolor=\"#000000\" width=\"100%\"><img src=\"themes/marvin/images/pixel.gif\" width=\"1\" height=\"1\" alt=\"\" /></td></tr>\n";
-     print " <tr><td nowrap=\"nowrap\"><font color=\"#7C7C7C\"><small>". strtr(t("Submitted by %a on %b"), array("%a" => format_name($node), "%b" => format_date($node->timestamp, "large"))); ?><?php print "</small></font></td><td align=\"right\" valign=\"top\" nowrap><small>". node_index($node) ."</small></td></tr>\n";
+     print " <tr><td nowrap=\"nowrap\"><font color=\"#7C7C7C\"><small>". strtr(t("Submitted by %a on %b"), array("%a" => format_name($node), "%b" => format_date($node->created, "large"))); ?><?php print "</small></font></td><td align=\"right\" valign=\"top\" nowrap><small>". node_index($node) ."</small></td></tr>\n";
      print " <tr><td colspan=\"2\">&nbsp;</td></tr>\n";
-     print " <tr><td colspan=\"2\"><p>". check_output($node->body, 1) ."</p></td></tr>\n";
+
+     if ($main && $node->teaser) {
+       print " <tr><td colspan=\"2\"><p>". check_output($node->teaser, 1) ."</p></td></tr>\n";
+     }
+     else {
+       print " <tr><td colspan=\"2\"><p>". check_output($node->body, 1) ."</p></td></tr>\n";
+     }
+
      print " <tr><td colspan=\"2\">&nbsp;</td></tr>\n";
-     if ($main) print " <tr><td colspan=\"2\">". $this->links(link_node($node)) ."</td></tr>\n";
+
+     if ($main) {
+       print " <tr><td colspan=\"2\">". $this->links(link_node($node)) ."</td></tr>\n";
+     }
+
      print "</table>\n";
      print "<br /><br />\n\n";
    }
@@ -141,7 +152,7 @@
        </td>
        <td valign="top" width="200">
          <?php
-          $this->user("all", $this);
+          $this->user("all");
           theme_blocks("all", $this);
          ?>
        </td>

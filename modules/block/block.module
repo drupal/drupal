@@ -57,7 +57,7 @@ function block_admin_display() {
     $region .= " <option value=\"0\"". (($block->region == 0) ? " selected" : "") .">left</option>\n";
     $region .= " <option value=\"1\"". (($block->region == 1) ? " selected" : "") .">right</option>\n";
     $region .= "</select>\n";
-    
+
     $path = "<input name=\"edit[$block->name][path]\" value=\"$block->path\">\n";
 
     $output .= " <tr><td>". $block->name ."</td><td align=\"center\">$module</td><td>$status</td><td>$weight</td><td>$region</td><td>$path</td></tr>\n";

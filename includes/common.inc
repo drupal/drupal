@@ -89,6 +89,14 @@ function drupal_goto($url) {
   else {
     header("Location: $url?". SID);
   }
+
+  /*
+  ** The "Location" header sends a REDIRECT status code to the http
+  ** deamon.  In some cases this can go wrong, so we make sure none
+  ** of the code /below/ gets executed when we redirect.
+  */
+
+  exit();
 }
 
 function check_form($text) {
@@ -209,7 +217,7 @@ function format_interval($timestamp) {
 function format_date($timestamp, $type = "medium", $format = "") {
   global $user;
 
-  $timestamp += ($user->timezone) ? $user->timezone - date("Z") : 0;
+  // $timestamp += ($user->timezone) ? $user->timezone - date("Z") : 0;
 
   switch ($type) {
     case "small":
@@ -327,7 +335,6 @@ function field_merge($a, $b) {
 function link_page() {
 
   $links[] = "<a href=\"index.php\">". t("home") ."</a>";
-  $links[] = "<a href=\"submit.php\">". t("submit") ."</a>";
 
   foreach (module_list() as $name) {
     if (module_hook($name, "link")) {

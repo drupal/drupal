@@ -103,9 +103,20 @@ function c(subject,mod,author,date,body) {document.writeln("<table border=\"0\" 
     function node($node, $main = 0) {
       echo "\n<!-- node: \"$node->title\" -->\n";
       $title = check_output($node->title);
-      $subleft = strtr(t("Submitted by %a on %b"), array("%a" => format_name($node), "%b" => format_date($node->timestamp, "large")));
+      $subleft = strtr(t("Submitted by %a on %b"), array("%a" => format_name($node), "%b" => format_date($node->created, "large")));
       $subright = node_index($node);
-      $body = check_output($node->body, 1) . ($main ? "<hr color=\"#404040\" size=\"1\"><div align=\"right\">[ " . $this->links(link_node($node)) . " ]</div>" : "");
+
+      if ($main && $node->teaser) {
+        $body = check_output($node->teaser, 1);
+      }
+      else {
+        $body = check_output($node->body, 1);
+      }
+
+      if ($main) {
+        $body .= "<hr color=\"#404040\" size=\"1\"><div align=\"right\">[ " . $this->links(link_node($node)) . " ]</div>";
+      }
+
       print "<script language=\"JavaScript\"><!--\ns(\"". $this->stripbreaks(addslashes($title)) ."\",\"". $this->stripbreaks(addslashes($subleft)) ."\",\"". $this->stripbreaks(addslashes($subright)) ."\",\"". $this->stripbreaks(addslashes($body)) ."\"); // -->\n</script>\n";
     } // close node function
 
@@ -114,11 +125,6 @@ function c(subject,mod,author,date,body) {document.writeln("<table border=\"0\" 
       echo "<A NAME=\"$comment->cid\"></A>\n";
 
       $author = "<b>" . format_name($comment) . "</b>";
-      if ($comment->name) {
-        if ($comment->fake_email) $info[] = format_email($comment->fake_email);
-        if (eregi("http://",$comment->url)) $info[] = format_url($comment->url);
-        if ($info) $author .= "<br>[ ". implode(" | ",$info) . " ]";
-      }
       $body = check_output($comment->comment, 1) . "<br><hr color=\"#404040\" size=\"1\"><div align=\"right\">[ $link ]</div>";
 
       print "<script language=\"JavaScript\"><!--\nc(\"". $this->stripbreaks(addslashes(check_output($comment->subject))) ."\",\"". $this->stripbreaks(addslashes(comment_moderation($comment))) ."\",\"". $this->stripbreaks(addslashes($author)) ."\",\"". $this->stripbreaks(addslashes(format_date($comment->timestamp))) ."\",\"". $this->stripbreaks(addslashes($body)) ."\"); // -->\n</script>\n";
@@ -140,7 +146,7 @@ function c(subject,mod,author,date,body) {document.writeln("<table border=\"0\" 
               </td>
               <td valign="top">
 <?php
-          $this->user("all", $this);
+          $this->user("all");
           theme_blocks("all", $this);
 ?>
      </td>

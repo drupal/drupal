@@ -1,6 +1,8 @@
 <?php
 // $Id$
 
+/*
+
 class Poll {
   function Poll($poll) {
     $this = new Node($poll);
@@ -180,13 +182,13 @@ function poll_form($edit = array(), $nocheck = 0) {
 
   if ($admin && !is_array($edit[choices])) $edit = poll_get_choices_array($edit);
 
-  /* Mini-form for number of choiceboxes */
+  // Mini-form for number of choiceboxes
   $choices = $edit[choices] ? $edit[choices] : max(2, count($edit[choices]) ? count($edit[choices]) : 5);
   for ($c = 2; $c <= 20; $c++) $opts[$c]=$c;
   $form .= form_select(t("Number of choices"), "choices", $choices, $opts, t("This box only specifies the number of boxes in this form, it doesn't have to equal the actual amount of choices in the poll."));
   $form .= form_submit(t("Preview")) . "<br><br><br>";
 
-  /* Main form */
+  // Main form
   $form .= form_item(t("Your name"), ($edit[name] ? $edit[name] : ($user->name ? $user->name : variable_get(anonymous, "Anonymous"))));
   $form .= form_hidden("name", $edit[name]);
   $form .= form_textfield(t("Question"), "title", $edit[title], 50, 127);
@@ -279,5 +281,5 @@ function poll_user() {
       $theme->box(t("Submit"), poll_form());
   }
 }
-
+*/
 ?>

@@ -3,14 +3,6 @@
 
 $GLOBALS["format"] = array(0 => "HTML", 1 => "PHP", 2 => "text");
 
-class Page {
-  function Page($page) {
-    $this = new Node($page);
-    $this->body = $page["body"];
-    $this->format = $page["format"];
-  }
-}
-
 function page_link($type) {
   if ($type == "page") {
     $result = db_query("SELECT nid,link FROM page WHERE link != '' ORDER BY link");
@@ -20,6 +12,11 @@ function page_link($type) {
   }
 
   return $links ? $links : array();
+}
+
+function page_load($node) {
+  $page = db_fetch_object(db_query("SELECT format, link FROM page WHERE nid = '$node->nid'"));
+  return $page;
 }
 
 function page_view($node, $main = 0) {
@@ -38,42 +35,35 @@ function page_view($node, $main = 0) {
 
 }
 
-function page_status() {
-  return array(dumped, posted);
-}
-
-function page_form($edit = array()) {
+function page_form($node) {
   global $format, $op;
 
-  if ($op != t("Preview") && $format[$edit["format"]] == "PHP") {
-    $edit["body"] = addslashes($edit["body"]);
+  if ($op != t("Preview") && $format[$node->format] == "PHP") {
+    $node->body = addslashes($node->body);
   }
 
-  if ($edit["title"]) {
-    $form = page_view(new Page(node_preview($edit)));
-  }
+  $output .= form_textarea("Body", "body", $node->body, 60, 30);
+  $output .= form_select("Type", "format", $node->format, $format);
 
-  $form .= form_textfield("Subject", "title", $edit["title"], 50, 64);
-  $form .= form_textfield("Link", "link", $edit["link"], 50, 64);
-  $form .= form_textarea("Body", "body", $edit["body"], 70, 30);
-  $form .= form_select("Type", "format", $edit["format"], $format);
-  $form .= form_hidden("nid", $edit["nid"]);
+  return $output;
+}
 
-  if ($edit["title"]) {
-    $form .= form_submit(t("Preview"));
-    $form .= form_submit(t("Submit"));
+function page_save() {
+
+  if (user_access("administer nodes")) {
+    if ($node->nid) {
+      return array();
+    }
+    else {
+      return array("promote" => 0, "moderate" => 0, "status" => 1);
+    }
   }
   else {
-    $form .= form_submit(t("Preview"));
+    return 0;
   }
 
-  return form($form);
 }
 
-function page_save($edit) {
-  global $status, $user;
 
-  node_save($edit, array(uid => $user->uid, link, body, comment => variable_get("page_comment", 0), format, moderate => variable_get("page_moderate", ""), promote => variable_get("page_promote", 0), score => 0, status => $status["posted"], timestamp => time(), title, type => "page", votes => 0));
-}
 
 ?>

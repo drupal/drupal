@@ -83,7 +83,7 @@ function comment_reply($pid, $id) {
     comment_view(new Comment($item->uid, $item->name, $item->subject, $item->comment, $item->timestamp, $item->url, $item->cid, $item->lid), t("reply to this comment"));
   }
   else {
-    node_view(node_get_object(array("nid" => $id)));
+    node_view(node_load(array("nid" => $id)));
     $pid = 0;
   }
 

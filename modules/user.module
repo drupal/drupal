@@ -16,20 +16,20 @@ function sess_close() {
 
 function sess_read($key) {
   global $user;
-  $user = user_load(array("session" => $key, "status" => 1));
+  $user = user_load(array("sid" => $key, "status" => 1));
   return $user;
 }
 
 function sess_write($key, $value) {
   global $HTTP_SERVER_VARS;
 
-  db_query("UPDATE users SET hostname = '". check_input($HTTP_SERVER_VARS[REMOTE_ADDR]) ."', timestamp = '". time() ."' WHERE session = '$key'");
+  db_query("UPDATE users SET hostname = '". check_input($HTTP_SERVER_VARS[REMOTE_ADDR]) ."', timestamp = '". time() ."' WHERE sid = '$key'");
 }
 
 function sess_destroy($key) {
   global $HTTP_SERVER_VARS;
 
-  db_query("UPDATE users SET hostname = '". check_input($HTTP_SERVER_VARS[REMOTE_ADDR]) ."', timestamp = '". time() ."', session = '' WHERE session = '$key'");
+  db_query("UPDATE users SET hostname = '". check_input($HTTP_SERVER_VARS[REMOTE_ADDR]) ."', timestamp = '". time() ."', sid = '' WHERE sid = '$key'");
 }
 
 function sess_gc($lifetime) {
@@ -151,18 +151,32 @@ function user_password($min_length = 6) {
   return $password;
 }
 
-function user_access($perm) {
+function user_access($string) {
+
   global $user;
+  static $perm;
+
+  /*
+  ** To reduce the number of SQL queries, we cache the user's permissions
+  ** in a static variable.
+  */
+
+  if (!$perm) {
+    if ($user->uid) {
+      $perm = db_result(db_query("SELECT perm FROM role WHERE name = '$user->role'"), 0);
+    }
+    else {
+      $perm = db_result(db_query("SELECT perm FROM role WHERE name = 'anonymous user'"), 0);
+    }
+  }
 
   if ($user->uid == 1) {
     return 1;
   }
-  else if ($user->perm) {
-    return strstr($user->perm, $perm);
-  }
   else {
-    return db_fetch_object(db_query("SELECT * FROM role WHERE name = 'anonymous user' AND perm LIKE '%$perm%'"));
+    return strstr($perm, $string);
   }
+
 }
 
 function user_mail($mail, $subject, $message, $header) {
@@ -171,6 +185,7 @@ function user_mail($mail, $subject, $message, $header) {
 }
 
 function user_deny($type, $mask) {
+
   $allow = db_fetch_object(db_query("SELECT * FROM access WHERE status = '1' AND type = '$type' AND LOWER('$mask') LIKE LOWER(mask)"));
 
   $deny = db_fetch_object(db_query("SELECT * FROM access WHERE status = '0' AND type = '$type' AND LOWER('$mask') LIKE LOWER(mask)"));
@@ -181,6 +196,7 @@ function user_deny($type, $mask) {
   else {
     return 0;
   }
+
 }
 
 /*** Module hooks **********************************************************/
@@ -205,7 +221,7 @@ function user_help() {
   <ul>
    <li>&nbsp;% : matches any number of characters, including zero characters.</li>
    <li>&nbsp;_ : matches exactly one character.</li>
-  </UL>
+  </ul>
   <p><u>Examples:</u></p>
   <ul>
    <li>E-mail address bans <code>%@hotmail.com</code>, <code>%@altavista.%</code>, <code>%@usa.net</code>, etc.  Used to prevent users from using free email accounts, which might be used to cause trouble.</li>
@@ -219,7 +235,7 @@ function user_help() {
   <ul>
    <li>Anonymous user: this role is used for users that don't have a user account or that are not authenticated.</li>
    <li>Registered user: this role is assigned automatically to authenticated users.  Most users will belong to this user role unless specified otherwise.</li>
-  </uL>
+  </ul>
   <p>For basic Drupal sites you can get by with <i>anonymous user</i> and <i>authenticated user</i> but for more complex sites where you want other users to be able to perform maintainance or administrative duties, you may want to create your own roles to classify your users into different groups.</p>
 
   <h3>User permissions</h3>
@@ -408,7 +424,7 @@ function jabber_auth($username, $password, $server, $port = 5222) {
   }
 }
 
-function drupal_auth($username, $password, $server) {
+function drupal_auth($username, $password, $server, $port = 80) {
 
   $message = new xmlrpcmsg("drupal.login", array(new xmlrpcval($username, "string"), new xmlrpcval($password, "string")));
 
@@ -431,6 +447,14 @@ function drupal_auth($username, $password, $server) {
 
 function user_login($edit = array()) {
   global $user, $HTTP_REFERER;
+
+  /*
+  ** If we are already logged on, go to the user page instead.
+  */
+
+  if ($user->uid) {
+    drupal_goto("module.php?mod=user");
+  }
 
   if (user_deny("user", $edit["name"])) {
     $error = sprintf(t("The name '%s' has been denied access."), $edit["name"]);
@@ -492,7 +516,7 @@ function user_login($edit = array()) {
       ** Write session ID to database:
       */
 
-      user_save($user, array("session" => session_id()));
+      user_save($user, array("sid" => session_id()));
 
       /*
       ** Redirect the user to the page he logged on from or to his personal
@@ -502,7 +526,6 @@ function user_login($edit = array()) {
       $url = $HTTP_REFERER ? $HTTP_REFERER : "module.php?mod=user&op=view";
 
       drupal_goto($url);
-      return;
 
     }
     else {
@@ -545,12 +568,15 @@ function user_logout() {
     session_destroy();
     unset($user);
 
-    /*
-    ** Redirect the user to his personal information page:
-    */
 
-    drupal_goto("index.php");
   }
+
+  /*
+  ** Redirect the user to his personal information page:
+  */
+
+  drupal_goto("index.php");
+
 }
 
 function user_pass($edit = array()) {
@@ -720,8 +746,8 @@ function user_edit($edit = array()) {
     $output .= form_textfield(t("E-mail address"), "mail", $user->mail, 30, 55, t("Insert a valid e-mail address.  All emails from the system will be sent to this address. The email address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by email."));
     $output .= form_textfield(t("Jabber ID"), "jabber", $user->jabber, 30, 55, t("Insert a valid Jabber ID.  If you are using your Jabber ID to log in,  it must be correct.  Your Jabber ID is not made public and is only used to log in or to authenticate for affilliate services."));
     $output .= form_textfield(t("Homepage"), "homepage", $user->homepage, 30, 55, t("Optional") .". ". t("Make sure you enter a fully qualified URL: remember to include \"http://\"."));
-    foreach ($themes as $key=>$value) $options .= "<OPTION VALUE=\"$key\"". (($user->theme == $key) ? " SELECTED" : "") .">$key - $value[1]</OPTION>\n";
-    $output .= form_item(t("Theme"), "<SELECT NAME=\"edit[theme]\">$options</SELECT>", t("Selecting a different theme will change the look and feel of the site."));
+    foreach ($themes as $key=>$value) $options .= "<option value=\"$key\"". (($user->theme == $key) ? " selected=\"selected\"" : "") .">$key - $value[1]</option>\n";
+    $output .= form_item(t("Theme"), "<select name=\"edit[theme]\">$options</select>", t("Selecting a different theme will change the look and feel of the site."));
     for ($zone = -43200; $zone <= 46800; $zone += 3600) $zones[$zone] = date("l, F dS, Y - h:i A", time() - date("Z") + $zone) ." (GMT ". $zone / 3600 .")";
     $output .= form_select(t("Timezone"), "timezone", $user->timezone, $zones, t("Select what time you currently have and your timezone settings will be set appropriate."));
     $output .= form_select(t("Language"), "language", $user->language, $languages, t("Selecting a different language will change the language of the site."));
@@ -1126,7 +1152,7 @@ function user_admin_edit($edit = array()) {
 function user_admin_account() {
   global $query;
 
-  $queries = array(array("ORDER BY timestamp DESC", "active users"), array("ORDER BY uid DESC", "new users"), array("WHERE status = 0 ORDER BY uid DESC", "blocked users"), array("WHERE role != 'authenticated user' ORDER BY uid DESC", "special users"));
+  $queries = array(array("ORDER BY timestamp DESC", "active users"), array("ORDER BY uid DESC", "new users"), array("WHERE status = 0 ORDER BY uid DESC", "blocked users"), array("WHERE role != 'authenticated user' ORDER BY uid DESC", "non-regular users"));
 
   $result = db_query("SELECT uid, name, timestamp FROM users ". $queries[$query ? $query : 0][0] ." LIMIT 50");
 
@@ -1168,7 +1194,7 @@ function user_admin() {
     admin_access_init();
 
     /*
-    ** Compile all the administrative links:
+    ** Compile a list of the administrative links:
     */
 
     $links[] = "<a href=\"admin.php?mod=user&op=create\">add new user</a>";
