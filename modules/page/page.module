@@ -145,7 +145,7 @@ function page_form(&$node, &$help, &$error) {
   }
 
   $output .= form_textarea("Body", "body", $node->body, 60, 20);
-  $output .= form_textfield("Link", "link", $node->link, 60, 64);
+  $output .= form_textfield("Navigation link header", "link", $node->link, 60, 64, "To make the page show up on the navigation links enter the name of the link, otherwise leave blank.");
   $output .= form_select("Type", "format", $node->format, array(0 => "HTML / text", 1 => "PHP"));
 
   return $output;
