@@ -71,7 +71,7 @@ function archive_calendar($original = 0) {
   // Generate calendar header:
   $output .= "\n<!-- calendar -->\n";
   $output .= "<div class=\"calendar\">";
-  $output .= "<table width=\"100%\">\n";
+  $output .= "<table>\n";
   $output .= " <tr><td colspan=\"7\" class=\"header-month\">". l("&lt;", "archive/". date("Y/m/d", $prev)) ." ". date("F Y", $requested) ." ". ($nextmonth <= time() ? l("&gt;", "archive/". date("Y/m/d", $next)) : "&gt;") ."</td></tr>\n";
 
   // First day of week (0 => Sunday, 1 => Monday, ...)
@@ -103,7 +103,7 @@ function archive_calendar($original = 0) {
     }
     // Start every week on a new line:
     if ($sday == $weekstart) {
-      $output .=  " <tr class=\"row-week\">\n";
+      $output .= " <tr class=\"row-week\">\n";
     }
 
     // Print one cell:
@@ -112,7 +112,7 @@ function archive_calendar($original = 0) {
       $daytext = l($nday, "archive/$year/$month/$nday");
     }
     else {
-      $daytext = $nday;
+      $daytext = "<div>$nday</div>";
     }
     if ($date == $requested) {
       $output .= "  <td class=\"day-selected\">$daytext</td>\n";
