@@ -1466,6 +1466,9 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
         $node->comment = variable_get("comment_$node->type", 2);
       }
       break;
+    case "delete":
+      db_query("DELETE FROM comments WHERE nid = '$node->nid'");
+      break;
   }
 }
 

@@ -1180,7 +1180,7 @@ function node_preview($node, $error = NULL) {
     }
 
     /*
-    ** Exctract a teaser:
+    ** Extract a teaser:
     */
 
     $node->teaser = node_teaser($node->body);
@@ -1197,7 +1197,7 @@ function node_preview($node, $error = NULL) {
     }
 
     /*
-    ** Display a prenode of the node:
+    ** Display a preview of the node:
     */
 
     if ($view->teaser && $view->teaser != $view->body) {
@@ -1245,17 +1245,8 @@ function node_submit($node) {
 
     if (node_access("update", $node)) {
       $nid = node_save($node);
-
-      /*
-      ** Update terms of the node
-      */
-
-      if (function_exists("taxonomy_node_save")) {
-        taxonomy_node_save($nid, $node->taxonomy);
-      }
-
       watchdog("special", "$node->type: updated '$node->title'", l("view post", "node/view/$node->nid"));
-      $output = t("The node has been updated.");
+      $output = t("The %name has been updated.", array ("%name" => module_invoke($node->type, "node", "name")));
     }
   }
   else {
@@ -1275,15 +1266,6 @@ function node_submit($node) {
       throttle("node", variable_get("max_node_rate", 900));
 
       $nid = node_save($node);
-
-      /*
-      ** Insert terms of the node
-      */
-
-      if (function_exists("taxonomy_node_save")) {
-        taxonomy_node_save($nid, $node->taxonomy);
-      }
-
       watchdog("special", "$node->type: added '$node->title'", l("view post", "node/view/$nid"));
       $output = t("Thanks for your submission.");
     }
@@ -1326,17 +1308,10 @@ function node_delete($edit) {
     if ($edit["confirm"]) {
 
       /*
-      ** Delete the specified node and its comments:
+      ** Delete the specified node:
       */
 
       db_query("DELETE FROM node WHERE nid = '$node->nid'");
-      db_query("DELETE FROM comments WHERE nid = '$node->nid'");
-
-      /*
-      ** Delete any taxonomy terms
-      */
-
-      module_invoke("taxonomy", "node_delete", $node->nid);
 
       /*
       ** Call the node specific callback (if any):
@@ -1381,26 +1356,26 @@ function node_page() {
     }
 
     theme("header");
-
+    $name = module_invoke(arg(2), "node", "name");
     switch ($op) {
       case "add":
-        theme("box", t("Create new post"), node_add(arg(2)));
+        theme("box", t("Create new $name"), node_add(arg(2)));
         break;
       case "edit":
-        theme("box", t("Edit post"), node_edit(arg(2)));
+        theme("box", t("Edit $name"), node_edit(arg(2)));
         break;
       case "view":
         print node_show(arg(2), arg(3));
         break;
       case t("Preview"):
         $edit = node_validate($edit, $error);
-        theme("box", t("Preview post"), node_preview($edit, $error));
+        theme("box", t("Preview $name"), node_preview($edit, $error));
         break;
       case t("Submit"):
-        theme("box", t("Submit post"), node_submit($edit));
+        theme("box", t("Submit $name"), node_submit($edit));
         break;
       case t("Delete"):
-        theme("box", t("Delete post"), node_delete($edit));
+        theme("box", t("Delete $name"), node_delete($edit));
         break;
       default:
         $result = pager_query("SELECT nid, type FROM node WHERE promote = '1' AND status = '1' ORDER BY static DESC, created DESC", variable_get("default_nodes_main", 10));
