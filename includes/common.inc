@@ -179,7 +179,7 @@ function variable_init($conf = array()) {
   return $conf;
 }
 
-function variable_get($name, $default, $object = 0) {
+function variable_get($name, $default) {
   global $conf;
 
   return isset($conf[$name]) ? $conf[$name] : $default;
@@ -413,12 +413,6 @@ function search_type($type = 0, $action = 0, $keys = 0, $options = 0) {
 function drupal_goto($url) {
 
   /*
-  ** Check the URL to prevent XSS attacks:
-  */
-
-  $url = check_url($url);
-
-  /*
   ** Translate &amp; to simply &
   */
 
@@ -475,12 +469,61 @@ function referer_load() {
   }
 }
 
-function check_url($uri) {
-  /*
-  ** We pipe the request URI through htmlspecialchars() to prevent
-  ** XSS attacks.
-  */
+function xss_check_input_data($data) {
 
+  if (is_array($data)) {
+    /*
+    ** Form data can contain a number of nested arrays.
+    */
+
+    foreach ($data as $key => $value) {
+      xss_check_input_data($value);
+    }
+  }
+  else {
+    /*
+    ** Detect evil input data.
+    */
+
+    // check attributes:
+    $match  = preg_match("/\Wstyle\s*=[^>]+?>/i", $data);
+    $match += preg_match("/\Wdynsrc\s*=[^>]+?>/i", $data);
+    $match += preg_match("/\Wdatasrc\s*=[^>]+?>/i", $data);
+    $match += preg_match("/\Wdata\s*=[^>]+?>/i", $data);
+    $match += preg_match("/\Wlowsrc\s*=[^>]+?>/i", $data);
+    $match += preg_match("/\Wstyle\s*=[^>]+?>/i", $data);
+    $match += preg_match("/\Won[a-z]+\s*=[^>]+?>/i", $data);
+    $match += preg_match("/\Wsrc\s*=[\s'\"]*javascript[^>]+?>/i", $data);
+    $match += preg_match("/\Whref\s*=[\s'\"]*javascript:[^>]+?>/i", $data);
+    $match += preg_match("/\Whref\s*=[\s'\"]*javascript:[^>]+?>/i", $data);
+
+    // check tags:
+    $match += preg_match("/<\s*applet/i", $data);
+    $match += preg_match("/<\s*script/i", $data);
+    $match += preg_match("/<\s*object/i", $data);
+    $match += preg_match("/<\s*style/i", $data);
+    $match += preg_match("/<\s*embed/i", $data);
+    $match += preg_match("/<\s*form/i", $data);
+    $match += preg_match("/<\s*blink/i", $data);
+    $match += preg_match("/<\s*meta/i", $data);
+    $match += preg_match("/<\s*font/i", $data);
+    $match += preg_match("/<\s*html/i", $data);
+    $match += preg_match("/<\s*frame/i", $data);
+    $match += preg_match("/<\s*iframe/i", $data);
+    $match += preg_match("/<\s*layer/i", $data);
+    $match += preg_match("/<\s*ilayer/i", $data);
+    $match += preg_match("/<\s*head/i", $data);
+    $match += preg_match("/<\s*frameset/i", $data);
+    $match += preg_match("/<\s*xml/i", $data);
+
+    if ($match) {
+      watchdog("warning", "terminated request because of suspicious input data: ". drupal_specialchars($data));
+      die("terminated request because of suspicious input data");
+    }
+  }
+}
+
+function check_url($uri) {
   $uri = htmlspecialchars($uri, ENT_QUOTES);
 
   /*
@@ -979,6 +1022,7 @@ function timer_start() {
 }
 
 function drupal_page_header() {
+
   if (variable_get("dev_timer", 0)) {
     timer_start();
   }
@@ -1036,6 +1080,9 @@ set_error_handler("error_handler");
 // spit out the correct charset http header
 header("Content-Type: text/html; charset=utf-8");
 
+// filter input data:
+xss_check_input_data($_REQUEST);
+
 // initialize installed modules:
 module_init();
 
@@ -1044,5 +1091,6 @@ $locale = locale_init();
 
 // initialize theme:
 $theme = theme_init();
+
 
 ?>

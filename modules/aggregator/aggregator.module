@@ -305,6 +305,9 @@ function import_refresh($feed) {
     }
     fclose($fp);
 
+    // filter the input data:
+    xss_check_input_data($data);
+
     // parse the data:
     $xml_parser = xml_parser_create();
     xml_set_element_handler($xml_parser, "import_element_start", "import_element_end");
@@ -319,14 +322,6 @@ function import_refresh($feed) {
     // initialize the translation table:
     $tt = array_flip(get_html_translation_table(HTML_ENTITIES));
     $tt["&apos;"] = "'";
-
-    /*
-    ** Strip invalid tags and provide default values (if required):
-    */
-
-    foreach ($channel as $key => $value) {
-      $channel[$key] = node_filter(strtr(trim($value), $tt));
-    }
 
     db_query("UPDATE feed SET timestamp = %d, link = '%s', description = '%s' WHERE fid = %d", time(), $channel["LINK"], $channel["DESCRIPTION"], $feed["fid"]);
 

@@ -364,15 +364,7 @@ function search_view($keys) {
         theme("box", t("Search Results"), $output);
       }
       else {
-        // no results. try a substring search
-        $output = search_data("*". $keys. "*");
-
-        if ($output) {
-          theme("box", t("Search Results"), $output);
-        }
-        else {
-          theme("box", t("Search Results"), t("Your search yielded no results."));
-        }
+        theme("box", t("Search Results"), t("Your search yielded no results."));
       }
     }
 

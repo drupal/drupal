@@ -87,7 +87,7 @@ function archive_calendar($original = 0) {
 
   $output .= " <tr class=\"header-week\">";
   for ($i = 0; $i < 7; $i++) {
-    $output .= "<td>". substr(ucfirst(t(date("l", $firstcolumn + $i * 86400))), 0, 1) ."</td>";
+    $output .= "<td>". t(substr(ucfirst(date("l", $firstcolumn + $i * 86400)), 0, 2)) ."</td>";
   }
   $output .= "</tr>\n";
 
