@@ -596,6 +596,7 @@ function import_page_feed($fid) {
   $output .= "</table>\n";
 
   $theme->header();
+  $theme->box(t("News feeds"), import_page_info());
   $theme->box(check_output($feed->title), $header);
   $theme->box(t("Latest news"), $output);
   $theme->footer();
@@ -606,7 +607,7 @@ function import_page_bundle($bid) {
 
   $bundle = db_fetch_object(db_query("SELECT * FROM bundle WHERE bid = '%s'", $bid));
 
-  $header .= "<p><b>". t("Website") .":</b><div style=\"margin-left: 20px;\">". lm("", array("mod" => "import", "op" => "bundle", "id" => $bundle->bid)) ."</div></p>";
+  $header .= "<p><b>". t("Website") .":</b><div style=\"margin-left: 20px;\">". lm($bundle->title, array("mod" => "import", "op" => "bundle", "id" => $bundle->bid)) ."</div></p>";
   $header .= "<p><b>". t("Description") .":</b><div style=\"margin-left: 20px;\">". t("A composite news feed about") ." ". check_output($bundle->attributes) .".</div></p>";
 
   $keys = explode(",", $bundle->attributes);
@@ -632,6 +633,7 @@ function import_page_bundle($bid) {
   $output .= "</table>\n";
 
   $theme->header();
+  $theme->box(t("News feeds"), import_page_info());
   $theme->box(check_output($bundle->title), $header);
   $theme->box(t("Latest news"), $output);
   $theme->footer();
@@ -644,7 +646,7 @@ function import_page_sources() {
   $result = db_query("SELECT * FROM feed ORDER BY title");
 
   while ($feed = db_fetch_object($result)) {
-    $output .= lm("", array("mod" => "import", "op" => "feed", "id" => $feed->fid));
+    $output .= lm($feed->title, array("mod" => "import", "op" => "feed", "id" => $feed->fid));
     $output .= "<div style=\"margin-left: 20px;\">". check_output($feed->description, 1) ."</div><br />";
   }
 
