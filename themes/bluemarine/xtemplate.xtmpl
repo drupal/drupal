@@ -15,7 +15,7 @@
     <td id="logo">
 
       <!-- BEGIN: logo -->
-        <a href="./" title="Home"><img src="{logo}" alt="Home" border="0" /></a>
+        <a href="./" title="Home"><img src="{logo}" alt="Home" /></a>
       <!-- END: logo -->
 
       <!-- BEGIN: site_name -->

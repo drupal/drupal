@@ -83,6 +83,7 @@ table {
 #logo img {
   float: left;
   padding: 0em 1.0em 0em 1em;
+  border: 0;
 }
 #menu {
   padding: 0.5em 0.5em 0 0.5em;
