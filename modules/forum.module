@@ -1,5 +1,32 @@
 <?php
-// $Id: forum.module,v 1.155 2004/01/21 18:34:17 dries Exp $
+// $Id: forum.module,v 1.156 2004/01/23 18:42:43 dries Exp $
+
+function forum_help($section = "admin/help#forum") {
+  $output = "";
+
+  switch ($section) {
+    case 'admin/help#forum':
+      $output = t("
+      <h3>Creating a forum</h3>
+      <p>The forum module uses taxonomy to organize itself. To create a forum you first have to create a <a href=\"%taxonomy\">taxonomy vocabulary</a>. When doing this, choose a sensible name for it (such as \"fora\") and make sure under \"Types\" that \"forum\" is selected. Once you have done this, <a href=\"%taxo-terms\">add some terms</a> to it. Each term will become a forum. If you fill in the description field, users will be given additonal information about the forum on the main forum page. For example: \"troubleshooting\" - \"Please ask your questions here.\"</p>
+      <p>When you are happy with your vocabulary, go to <a href=\"%forums\">administer &raquo; configutation &raquo; modules &raquo; forum</a> and set <strong>Forum vocabulary</strong> to the one you have just created. There will now be fora active on the site. For users to access them they must have the \"access content\" <a href=\"%permission\">permission</a> and to create a topic they must have the \"create forum topics\" <a href=\"%permission\">permission</a>. These permissions can be set in the <a href=\"%permission\">permission</a> pages.</p>
+      <h4>Icons</h4>
+      <p>To disable icons, set the icon path as blank in <a href=\"%forums\">administer &raquo; configutation &raquo; modules &raquo; forum</a>.</p>
+      <p>All files in the icon directory are assumed to be images. You may use images of whatever size you wish, but it is recommended to use 15x15 or 16x16.</p>", array("%taxonomy" => url("admin/taxonomy/add/vocabulary"), "%taxo-terms" => url("admin/taxonomy"), "%forums" => url("admin/system/modules/forum"), "%permission" => url("admin/user/permission")));
+      break;
+    case 'admin/system/modules#description':
+      $output = t("Enable threaded discussions about general topics.");
+      break;
+    case 'admin/system/modules/forum':
+      $output = t("Forums are threaded discussions based on the taxonomy system.  For the forums to work, the taxonomy module has to be installed and enabled.  When activated, a taxonomy vocabulary (eg. \"forums\") needs to be <a href=\"%created\">created</a> and bound to the node type \"forum topic\".", array('%created' => url('admin/taxonomy/add/vocabulary')));
+      break;
+    case 'node/add/forum':
+      $output = variable_get('forum_help', '');
+      break;
+  }
+
+  return $output;
+}
 
 function forum_node($field) {
   $info["name"] = t("forum topic");
@@ -393,10 +420,6 @@ function _forum_new($tid) {
   return $nid ? $nid : 0;
 }
 
-function _forum_message_taxonomy() {
-  return t("Forums are threaded discussions based on the taxonomy system.  For the forums to work, the taxonomy module has to be installed and enabled.  When activated, a taxonomy vocabulary (eg. \"forums\") needs to be <a href=\"%created\">created</a> and bound to the node type \"forum topic\".", array('%created' => url('admin/taxonomy/add/vocabulary')));
-}
-
 function forum_page() {
   global $sortby, $forum_per_page, $from, $user;
 
@@ -431,7 +454,7 @@ function forum_page() {
       print theme("forum_display", $forums, $topics, $parents, $tid, $sortby, $forum_per_page, $offset);
     }
     else {
-      print theme("page", _forum_message_taxonomy(), t("Warning"));
+      print theme("page", forum_help("admin/system/modules/forum"), t("Warning"));
     }
   }
   else {
@@ -673,33 +696,6 @@ function _forum_get_topic_order($sortby) {
       return "num_comments ASC";
       break;
   }
-}
-
-function forum_help($section = "admin/help#forum") {
-  $output = "";
-
-  switch ($section) {
-    case 'admin/help#forum':
-      $output .= "<h3>Creating a forum</h3>";
-      $output .= "<p>The forum module uses taxonomy to organize itself. To create a forum you first have to create a <a href=\"%taxonomy\">taxonomy vocabulary</a>. When doing this, choose a sensible name for it (such as \"fora\") and make sure under \"Types\" that \"forum\" is selected. Once you have done this, <a href=\"%taxo-terms\">add some terms</a> to it. Each term will become a forum. If you fill in the description field, users will be given additonal information about the forum on the main forum page. For example: \"troubleshooting\" - \"Please ask your questions here.\"</p>";
-      $output .= "<p>When you are happy with your vocabulary, go to <a href=\"%forums\">administer &raquo; configutation &raquo; modules &raquo; forum</a> and set <strong>Forum vocabulary</strong> to the one you have just created. There will now be fora active on the site. For users to access them they must have the \"access content\" <a href=\"%permission\">permission</a> and to create a topic they must have the \"create forum topics\" <a href=\"%permission\">permission</a>. These permissions can be set in the <a href=\"%permission\">permission</a> pages.</p>";
-      $output .= "<h4>Icons</h4>";
-      $output .= "<p>To disable icons, set the icon path as blank in <a href=\"%forums\">administer &raquo; configutation &raquo; modules &raquo; forum</a>.</p>";
-      $output .= "<p>All files in the icon directory are assumed to be images. You may use images of whatever size you wish, but it is recommended to use 15x15 or 16x16.</p>";
-      $output = t($output, array("%taxonomy" => url("admin/taxonomy/add/vocabulary"), "%taxo-terms" => url("admin/taxonomy"), "%forums" => url("admin/system/modules/forum"), "%permission" => url("admin/user/permission")));
-      break;
-    case 'admin/system/modules#description':
-      $output = t("Enable threaded discussions about general topics.");
-      break;
-    case 'admin/system/modules/forum':
-      $output = _forum_message_taxonomy();
-      break;
-    case 'node/add/forum':
-      $output = variable_get('forum_help', '');
-      break;
-  }
-
-  return $output;
 }
 
 ?>

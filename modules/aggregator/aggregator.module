@@ -1,58 +1,58 @@
 <?php
-/* $Id: aggregator.module,v 1.159 2004/01/23 18:21:45 dries Exp $ */
+/* $Id: aggregator.module,v 1.160 2004/01/23 18:42:43 dries Exp $ */
 
 function aggregator_help($section) {
   switch ($section) {
     case 'admin/help#aggregator':
-      $output = "<p>Thousands of web sites, especially news sites and weblogs, syndicate their most recent site content for others to display. The syndicated content always includes titles, also known as headlines, for the newest published stories.  Each headline acts as a direct link to the stories on the remote site. Along with the headline, most sites typically provide either the first few paragraphs of the story or a short summary. Many individuals use client-based news aggregators on their personal computer to aggregate content, such as <a href=\"%amphetadesk\">Amphetadesk</a>.</p>";
-      $output .= "<p>Drupal also has a news aggregator built in as a standard feature. With it, you can subscribe to feeds from other sites and display their content for your site users. Simply enable the aggregator module in site administration and enter the feeds that you choose.</p>";
-      $output .= "<h3>What do I need to subscribe to a feed?</h3>";
-      $output .= "<p>The standard method of syndication is using the XML-based <a href=\"%rss\">Rich Site Summary</a> (RSS). To syndicate a site's content, obtain the full URL of the RSS page providing syndication. Common file tags for RSS pages are .rss, .xml and .rdf. Example: <a href=\"%slashdot-rss\">Slashdot RSS</a>.</p>";
-      $output .= "<p>Most weblog sites that offer syndication will have an obvious link on the main page. Often you need only look for an XML syndication button, such as the one Drupal uses for site syndication.</p>";
-      $output .= "<p>But some sites do not make their RSS feeds as easy to find. Or maybe you want to find a number of feeds on a given topic, without extensively searching the web. In that case, try an RSS syndication directory such as <a href=\"%syndic8\">Syndic8</a>.</p>";
-      $output .= "<p>To learn much more about RSS, read Mark Pilgrim's <a href=\"%rss-what\">What is RSS</a> and WebReference.com's <a href=\"%rss-evolution\">The Evolution of RSS</a>.</p>";
-      $output .= "<p>NOTE: Enable your site's XML syndication button by turning on the Syndicate block in block management.</p>";
-      $output .= "<h3>Configuring news feeds</h3>";
-      $output .= "<p>To subscribe to an RSS feed on another site, use the <a href=\"%admin-news\">RSS/RDF</a> shortcut at the top of the news aggregation page. The link leads directly to the news aggregation configuration section of Drupal site administration.</p>";
-      $output .= "<p>Once there, select <a href=\"%new-feed\">new feed</a> from the left hand menu. Drupal will then ask for the following:</p>";
-      $output .= "<ul>";
-      $output .= "<li><strong>Title</strong> -- The text entered here will be used in your news aggregator, within the administration configuration section, and as title for the news feed block. As a general rule, use the web site name from which the feed originates.</li>";
-      $output .= " <li><strong>URL</strong> -- Here you'll enter the fully-qualified URL for the feed for the site you want to subscribe to.</li>";
-      $output .= "<li><strong>Attributes</strong> -- Attributes are keywords which can be used to collect feeds into <i>bundles</i> (see below). Think of these as the means of classifying your feeds. Separate multiple attributes with commas. If you do not plan on using the specific feed in a bundle, this input field can be left blank.</li>";
-      $output .= "<li><strong>Update interval</strong> -- The update interval is how often Drupal will automatically access the RSS URL for the site for fresh content. The 1 hour default is typically the minimum you will want to use. Accessing another site's RSS page more frequently can be considered impolite. After all, it does require the other site's server handle your requests. To use this feature cron.php must be called regularly, otherwise, you'll have to manually update feeds one at a time within the news aggregation administration section by using <a href=\"%update-items\">update items</a>.</li>";
-      $output .= "</ul>";
-      $output .= "<p>Once you submit your new feed, check to see if it is working properly. Select <a href=\"%update-items\">update items</a> on the <a href=\"%admin-news\">RSS/RDF</a> page. If you do not see any items listed for that feed, edit the feed and make sure that the URL was entered correctly.</p>";
-      $output .= "<h3>Adding bundles</h3>";
-      $output .= "<p>You may want to follow some feeds more closely than others. Or perhaps you'd like to display a select list of the titles for some feeds as a block for users.  Bundles are a way of grouping your feeds into categories. Bundles look for feeds that contain at least one of the keywords, or attributes, associated with the bundle and display those feeds together.</p>";
-      $output .= "<p>When adding a bundle, Drupal will ask for:</p>";
-      $output .= "<ul>";
-      $output .= " <li><strong>Title</strong> -- The title will be used in the <i>news by topics</i> listing in your news aggregator and with the customized block created for the bundle.</li>";
-      $output .= " <li><strong>Attributes</strong> -- Enter one or more of the attributes used to categorize the news feeds already created. Separate multiple attributes with commas.  Be careful to use the same spelling. Don't have any feeds with attributes for the bundle? After creating the bundle, edit existing feeds or create new ones and tag them with the attribute.</li>";
-      $output .= "</ul>";
-      $output .= "<h3>Using the news aggregator</h3>";
-      $output .= "<p>The news aggregator has a number of ways that it displays your subscribed content:</p>";
-      $output .= "<ul>";
-      $output .= " <li><strong>Latest news</strong> -- Displays all incoming content in the order received with:";
-      $output .= "  <ul>";
-      $output .= "   <li>The title of the original post.</li>";
-      $output .= "   <li>The name of the source, which acts as a link to an individual feed page, listing information about that feed and incoming content for that feed only.</li>";
-      $output .= "   <li>A description, the first few paragraphs or summary of the originating post (if any).</li>";
-      $output .= "   <li>A <i>blog it</i> link. Users can select this link to have Drupal automatically prepare a blog post for the specific item.</li>";
-      $output .= "   <li>A <i>feed</i> link, which acts as a link to an individual feed page, listing information about that feed and incoming content for that feed only.</li>";
-      $output .= "  </ul>";
-      $output .= " </li>";
-      $output .= " <li><strong>News by source</strong> -- Organizes incoming content by feed, displaying titles which link to the originating post. Also has an icon which acts as blog it link.</li>";
-      $output .= " <li><strong>News by topic</strong> -- Organizes incoming content by bundles, displaying titles which link to the originating post. Also has an icon which acts as blog it link.</li>";
-      $output .= " <li><strong>News sources</strong> -- Displays an alphabetical listing of all subscribed feeds and a description. The title acts as a link to an individual feed page, listing information about that feed and incoming content for that feed only.</li>";
-      $output .= "</ul>";
-      $output .= "<h3>RSS feed blocks</h3>";
-      $output .= "<p>In addition to providing subscribed content through the news aggregator, Drupal automatically creates a block for each subscribed feed and every bundle created.  Beside each headline in each block, Drupal includes an icon which acts a blog it link. Enable any or all of the blocks using block management.</p>";
-      $output .= "<h3>Subscription list</h3>";
-      $output .= "<p>Drupal automatically generates an OPML feed file that is available by selecting the XML icon on the News Sources page.</p>";
-      $output .= "<h3>Technical details</h3>";
-      $output .= "<p>When fetching feeds Drupal supports conditional GETs, this reduces the bandwidth usage for feeds that have not been updated since the last check.</p>";
-      $output .= "<p>If a feed is permanently moved to a new location Drupal will automatically update the feed URL to the new address.</p>";
-      return t($output, array("%amphetadesk" => "<a href=\"http://www.disobey.com/amphetadesk/\">AmphetaDesk</a>", "%rss" => "<a href=\"http://groups.yahoo.com/group/rss-dev/files/specification.html\">Rich Site Summary</a>", "%slashdot-rss" => "<a href=\"http://slashdot.org/slashdot.rdf\">http://slashdot.org/slashdot.rdf</a>", "%syndic8" => "<a href=\"http://www.syndic8.com/\">Syndic8</a>", "%rss-what" => "<a href=\"http://www.xml.com/pub/a/2002/12/18/dive-into-xml.html\">What is RSS</a>", "%rss-evolution" => "<a href=\"http://www.webreference.com/authoring/languages/xml/rss/1/\">The Evolution of RSS</a>", "%admin-news" => l(t("RSS/RDF"), "admin/syndication/news"), "%new-feed" => l(t("new feed"), "admin/syndication/news/add/feed"), "%update-items" => l(t("update items"), "admin/syndication/news")));
+      $output = t("
+      <p>Thousands of web sites, especially news sites and weblogs, syndicate their most recent site content for others to display. The syndicated content always includes titles, also known as headlines, for the newest published stories.  Each headline acts as a direct link to the stories on the remote site. Along with the headline, most sites typically provide either the first few paragraphs of the story or a short summary. Many individuals use client-based news aggregators on their personal computer to aggregate content, such as <a href=\"%amphetadesk\">Amphetadesk</a>.</p>
+      <p>Drupal also has a news aggregator built in as a standard feature. With it, you can subscribe to feeds from other sites and display their content for your site users. Simply enable the aggregator module in site administration and enter the feeds that you choose.</p>
+      <h3>What do I need to subscribe to a feed?</h3>
+      <p>The standard method of syndication is using the XML-based <a href=\"%rss\">Rich Site Summary</a> (RSS). To syndicate a site's content, obtain the full URL of the RSS page providing syndication. Common file tags for RSS pages are .rss, .xml and .rdf. Example: <a href=\"%slashdot-rss\">Slashdot RSS</a>.</p>
+      <p>Most weblog sites that offer syndication will have an obvious link on the main page. Often you need only look for an XML syndication button, such as the one Drupal uses for site syndication.</p>
+      <p>But some sites do not make their RSS feeds as easy to find. Or maybe you want to find a number of feeds on a given topic, without extensively searching the web. In that case, try an RSS syndication directory such as <a href=\"%syndic8\">Syndic8</a>.</p>
+      <p>To learn much more about RSS, read Mark Pilgrim's <a href=\"%rss-what\">What is RSS</a> and WebReference.com's <a href=\"%rss-evolution\">The Evolution of RSS</a>.</p>
+      <p>NOTE: Enable your site's XML syndication button by turning on the Syndicate block in block management.</p>
+      <h3>Configuring news feeds</h3>
+      <p>To subscribe to an RSS feed on another site, use the <a href=\"%admin-news\">RSS/RDF</a> shortcut at the top of the news aggregation page. The link leads directly to the news aggregation configuration section of Drupal site administration.</p>
+      <p>Once there, select <a href=\"%new-feed\">new feed</a> from the left hand menu. Drupal will then ask for the following:</p>
+      <ul>
+      <li><strong>Title</strong> -- The text entered here will be used in your news aggregator, within the administration configuration section, and as title for the news feed block. As a general rule, use the web site name from which the feed originates.</li>
+      <li><strong>URL</strong> -- Here you'll enter the fully-qualified URL for the feed for the site you want to subscribe to.</li>
+      <li><strong>Attributes</strong> -- Attributes are keywords which can be used to collect feeds into <i>bundles</i> (see below). Think of these as the means of classifying your feeds. Separate multiple attributes with commas. If you do not plan on using the specific feed in a bundle, this input field can be left blank.</li>
+      <li><strong>Update interval</strong> -- The update interval is how often Drupal will automatically access the RSS URL for the site for fresh content. The 1 hour default is typically the minimum you will want to use. Accessing another site's RSS page more frequently can be considered impolite. After all, it does require the other site's server handle your requests. To use this feature cron.php must be called regularly, otherwise, you'll have to manually update feeds one at a time within the news aggregation administration section by using <a href=\"%update-items\">update items</a>.</li>
+      </ul>
+      <p>Once you submit your new feed, check to see if it is working properly. Select <a href=\"%update-items\">update items</a> on the <a href=\"%admin-news\">RSS/RDF</a> page. If you do not see any items listed for that feed, edit the feed and make sure that the URL was entered correctly.</p>
+      <h3>Adding bundles</h3>
+      <p>You may want to follow some feeds more closely than others. Or perhaps you'd like to display a select list of the titles for some feeds as a block for users.  Bundles are a way of grouping your feeds into categories. Bundles look for feeds that contain at least one of the keywords, or attributes, associated with the bundle and display those feeds together.</p>
+      <p>When adding a bundle, Drupal will ask for:</p>
+      <ul>
+      <li><strong>Title</strong> -- The title will be used in the <i>news by topics</i> listing in your news aggregator and with the customized block created for the bundle.</li>
+      <li><strong>Attributes</strong> -- Enter one or more of the attributes used to categorize the news feeds already created. Separate multiple attributes with commas.  Be careful to use the same spelling. Don't have any feeds with attributes for the bundle? After creating the bundle, edit existing feeds or create new ones and tag them with the attribute.</li>
+      </ul>
+      <h3>Using the news aggregator</h3>
+      <p>The news aggregator has a number of ways that it displays your subscribed content:</p>
+      <ul>
+       <li><strong>Latest news</strong> -- Displays all incoming content in the order received with:
+        <ul>
+         <li>The title of the original post.</li>
+         <li>The name of the source, which acts as a link to an individual feed page, listing information about that feed and incoming content for that feed only.</li>
+         <li>A description, the first few paragraphs or summary of the originating post (if any).</li>
+         <li>A <i>blog it</i> link. Users can select this link to have Drupal automatically prepare a blog post for the specific item.</li>
+         <li>A <i>feed</i> link, which acts as a link to an individual feed page, listing information about that feed and incoming content for that feed only.</li>
+        </ul>
+       </li>
+       <li><strong>News by source</strong> -- Organizes incoming content by feed, displaying titles which link to the originating post. Also has an icon which acts as blog it link.</li>
+       <li><strong>News by topic</strong> -- Organizes incoming content by bundles, displaying titles which link to the originating post. Also has an icon which acts as blog it link.</li>
+       <li><strong>News sources</strong> -- Displays an alphabetical listing of all subscribed feeds and a description. The title acts as a link to an individual feed page, listing information about that feed and incoming content for that feed only.</li>
+      </ul>
+      <h3>RSS feed blocks</h3>
+      <p>In addition to providing subscribed content through the news aggregator, Drupal automatically creates a block for each subscribed feed and every bundle created.  Beside each headline in each block, Drupal includes an icon which acts a blog it link. Enable any or all of the blocks using block management.</p>
+      <h3>Subscription list</h3>
+      <p>Drupal automatically generates an OPML feed file that is available by selecting the XML icon on the News Sources page.</p>
+      <h3>Technical details</h3>
+      <p>When fetching feeds Drupal supports conditional GETs, this reduces the bandwidth usage for feeds that have not been updated since the last check.</p>
+      <p>If a feed is permanently moved to a new location Drupal will automatically update the feed URL to the new address.</p>", array("%amphetadesk" => "<a href=\"http://www.disobey.com/amphetadesk/\">AmphetaDesk</a>", "%rss" => "<a href=\"http://groups.yahoo.com/group/rss-dev/files/specification.html\">Rich Site Summary</a>", "%slashdot-rss" => "<a href=\"http://slashdot.org/slashdot.rdf\">http://slashdot.org/slashdot.rdf</a>", "%syndic8" => "<a href=\"http://www.syndic8.com/\">Syndic8</a>", "%rss-what" => "<a href=\"http://www.xml.com/pub/a/2002/12/18/dive-into-xml.html\">What is RSS</a>", "%rss-evolution" => "<a href=\"http://www.webreference.com/authoring/languages/xml/rss/1/\">The Evolution of RSS</a>", "%admin-news" => l(t("RSS/RDF"), "admin/syndication/news"), "%new-feed" => l(t("new feed"), "admin/syndication/news/add/feed"), "%update-items" => l(t("update items"), "admin/syndication/news")));
     case 'admin/system/modules#description':
       return t("Used to aggregate syndicated content (RSS and RDF).");
     case 'admin/system/modules/aggregator':

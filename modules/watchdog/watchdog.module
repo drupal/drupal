@@ -1,14 +1,14 @@
 <?php
-// $Id: watchdog.module,v 1.89 2004/01/11 20:31:26 dries Exp $
+// $Id: watchdog.module,v 1.90 2004/01/23 18:42:43 dries Exp $
 
 function watchdog_help($section = "admin/help#watchdog") {
   $output = "";
 
   switch ($section) {
     case 'admin/help#watchdog':
-      $output .= "<p>Watchdog module monitors your web site, capturing system events in a log to be reviewed by an authorized individual at a later time.  The watchdog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information.  It is vital to <a href=\"%watchdog\">check the watchdog report</a> on a regular basis as it is often the only way to tell what is going on.</p>";
-      $output .= "<p>To ease administration, the watchdog will automatically discard old log entries, <a href=\"%log-entry\">as configured</a>. Needs \"cron.php\" to discard the entries.</p>";
-      $output = t($output, array("%watchdog" => url("admin/watchdog"), "%log-entry" => url("admin/system/modules/watchdog")));
+      $output .= t("
+      <p>Watchdog module monitors your web site, capturing system events in a log to be reviewed by an authorized individual at a later time.  The watchdog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information.  It is vital to <a href=\"%watchdog\">check the watchdog report</a> on a regular basis as it is often the only way to tell what is going on.</p>
+      <p>To ease administration, the watchdog will automatically discard old log entries, <a href=\"%log-entry\">as configured</a>. Needs \"cron.php\" to discard the entries.</p>", array("%watchdog" => url("admin/watchdog"), "%log-entry" => url("admin/system/modules/watchdog")));
       break;
    case 'admin/watchdog':
      $output = t("The watchdog module monitors your web site, captures system events in a log and records them to be reviewed by an authorized individual at a later time.  The watchdog log is simply a list of events recorded during operation and contains usage data, performance data, errors, warnings and operational information. It is vital to check the watchdog report on a regular basis as it is often the only way to tell what is going on.");

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.317 2004/01/17 09:07:00 dries Exp $
+// $Id: node.module,v 1.318 2004/01/23 18:42:43 dries Exp $
 
 function node_help($section = "admin/help#node") {
   global $mod;
@@ -8,36 +8,33 @@ function node_help($section = "admin/help#node") {
   switch ($section) {
 
     case 'admin/help#node':
-      $output .= "<h3>Nodes</h3>";
-      $output .= "<p>The core of the Drupal system is the node. All of the contents of the system are placed in nodes, or extensions of nodes.";
-      $output .= "A base node contains:<dl>";
-      $output .= "<dt>A Title</dt><dd>Up to 128 characters of text that titles the node.</dd>";
-      $output .= "<dt>A Teaser</dt><dd>A small block of text that is meant to get you interested in the rest of node. Drupal will automatically pull a small amount of the body of the node to make the teaser (To configure how long the teaser will be <a href=\"%teaser\">click here</a>). The teaser can be changed if you don't like what Drupal grabs.</dd>";
-      $output .= "<dt>The Body</dt><dd>The main text that comprises your content.</dd>";
-      $output .= "<dt>A Type</dt><dd>What kind of node is this? Blog, book, forum, comment, unextended, etc.</dd>";
-      $output .= "<dt>An Author</dt><dd>The author's name. It will either be \"anonymous\" or a valid user. You <i>cannot</i> set it to an arbitrary value.</dd>";
-      $output .= "<dt>Authored on</dt><dd>The date the node was written.</dd>";
-      $output .= "<dt>Changed</dt><dd>The last time this node was changed.</dd>";
-      $output .= "<dt>Static on front page</dt><dd>The front page is configured to show the teasers from only a few of the total nodes you have on your site (To configure how many teasers <a href=\"%teaser\">click here</a>), but if you think a node is important enough that you want it to stay on the front page enable this.</dd>";
-      $output .= "<dt>Allow user comments</dt><dd>A node can have comments. These comments can be written by other users (Read-write), or only by admins (Read-only).</dd>";
-      $output .= "<dt>Attributes</dt><dd>A way to sort nodes.</dd>";
-      $output .= "<dt>Revisions</dt><dd>Drupal has a revision system so that you can \"roll back\" to an older version of a post if the new version is not what you want.</dd>";
-      $output .= "<dt>Promote to front page</dt><dd>To get people to look at the new stuff on your site you can choose to move it to the front page.</dd>";
-      $output .= "<dt>In moderation queue</dt><dd>Drupal has a moderation system. If it is active, a node is in one of three states: approved and published, approved and unpublished, and awaiting approval. If you are moderating a node it should be in the moderation queue.</dd>";
-      $output .= "<dt>Votes</dt><dd>If you are moderating a node this counts how many votes the node has gotten. Once a node gets a certain number of vote it will either be approved or dropped.";
-      $output .= "<dt>Score</dt><dd>The score of the node is gotten by the votes it is given.</dd>";
-      $output .= "<dt>Users</dt><dd>The list of users who have voted on a moderated node.</dd>";
-      $output .= "<dt>Published</dt><dd>When using Drupal's moderation system a node remains unpublished -- unavaliable to non-moderators -- until it is marked Published.</dd></dl>";
-      $output .= "<p>Now that you know what is in a node, here are some of the types of nodes available.</p>";
-
-      $output = t($output, array("%teaser" => url("admin/system/modules/node")));
+      $output .= t("
+      <h3>Nodes</h3>
+      <p>The core of the Drupal system is the node. All of the contents of the system are placed in nodes, or extensions of nodes.
+      A base node contains:<dl>
+      <dt>A Title</dt><dd>Up to 128 characters of text that titles the node.</dd>
+      <dt>A Teaser</dt><dd>A small block of text that is meant to get you interested in the rest of node. Drupal will automatically pull a small amount of the body of the node to make the teaser (To configure how long the teaser will be <a href=\"%teaser\">click here</a>). The teaser can be changed if you don't like what Drupal grabs.</dd>
+      <dt>The Body</dt><dd>The main text that comprises your content.</dd>
+      <dt>A Type</dt><dd>What kind of node is this? Blog, book, forum, comment, unextended, etc.</dd>
+      <dt>An Author</dt><dd>The author's name. It will either be \"anonymous\" or a valid user. You <i>cannot</i> set it to an arbitrary value.</dd>
+      <dt>Authored on</dt><dd>The date the node was written.</dd>
+      <dt>Changed</dt><dd>The last time this node was changed.</dd>
+      <dt>Static on front page</dt><dd>The front page is configured to show the teasers from only a few of the total nodes you have on your site (To configure how many teasers <a href=\"%teaser\">click here</a>), but if you think a node is important enough that you want it to stay on the front page enable this.</dd>
+      <dt>Allow user comments</dt><dd>A node can have comments. These comments can be written by other users (Read-write), or only by admins (Read-only).</dd>
+      <dt>Attributes</dt><dd>A way to sort nodes.</dd>
+      <dt>Revisions</dt><dd>Drupal has a revision system so that you can \"roll back\" to an older version of a post if the new version is not what you want.</dd>
+      <dt>Promote to front page</dt><dd>To get people to look at the new stuff on your site you can choose to move it to the front page.</dd>
+      <dt>In moderation queue</dt><dd>Drupal has a moderation system. If it is active, a node is in one of three states: approved and published, approved and unpublished, and awaiting approval. If you are moderating a node it should be in the moderation queue.</dd>
+      <dt>Votes</dt><dd>If you are moderating a node this counts how many votes the node has gotten. Once a node gets a certain number of vote it will either be approved or dropped.
+      <dt>Score</dt><dd>The score of the node is gotten by the votes it is given.</dd>
+      <dt>Users</dt><dd>The list of users who have voted on a moderated node.</dd>
+      <dt>Published</dt><dd>When using Drupal's moderation system a node remains unpublished -- unavaliable to non-moderators -- until it is marked Published.</dd></dl>
+      <p>Now that you know what is in a node, here are some of the types of nodes available.</p>", array("%teaser" => url("admin/system/modules/node")));
 
       if ($mod == "admin") {
-        foreach (module_list() as $name) {
-          if (module_hook($name, "node") && $name != "node") {
-            $output .= "<h3>". t("Node type: %module", array("%module" => module_invoke($name, "node", "name"))) ."</h3>";
-            $output .= module_invoke($name, "node", "description");
-          }
+        foreach (node_list() as $type => $module) {
+          $output .= "<h3>". t("Node type: %module", array("%module" => module_invoke($module, "node", "name", $type))). "</h3>";
+          $output .= module_invoke($module, "node", "description", $type);
         }
       }
       break;
@@ -219,16 +216,93 @@ function node_teaser($body) {
   return substr($body, 0, $size);
 }
 
-function node_invoke(&$node, $hook, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
+
+/*
+ * Determines the module that defines the node type of the given node.
+ *
+ * @param &$node
+ *   Either a node object, node array, or a string containing the node type.
+ * @return
+ *   A string containing the name of the defining module.
+ */
+function node_get_module_name($node) {
   if (is_array($node)) {
-    $function = $node["type"] ."_$hook";
+    if ($pos = strpos($node["type"], ".")) {
+      return substr($node["type"], 0, $pos);
+    } else {
+      return $node["type"];
+    }
   }
   else if (is_object($node)) {
-    $function = $node->type ."_$hook";
+    if ($pos = strpos($node->type, ".")) {
+      return substr($node->type, 0, $pos);
+    } else {
+      return $node->type;
+    }
   }
   else if (is_string($node)) {
-    $function = $node ."_$hook";
+    if ($pos = strpos($node, ".")) {
+      return substr($node, 0, $pos);
+    } else {
+      return $node;
+    }
   }
+} // node_get_module_name
+
+/*
+ * Get a list of all the defined node types.
+ *
+ * @return
+ *   An associative list in which the keys are node types and the values
+ *   are the names of the modules that define them.
+ */
+function node_list() {
+  $types = array();
+  foreach (module_list() as $module) {
+    if (module_hook($module, "node")) {
+      $module_types = module_invoke($module, "node", "types");
+      if ($module_types) {
+        foreach ($module_types as $type) {
+          $types[$type] = $module;
+        }
+      } else {
+        $types[$module] = $module;
+      }
+    }
+  }
+  return $types;
+} // node_list
+
+/*
+ * Determine whether a node hook exists.
+ *
+ * @param &$node
+ *   Either a node object, node array, or a string containing the node type.
+ * @param $hook
+ *   A string containing the name of the hook.
+ * @return
+ *   TRUE iff the $hook exists in the node type of $node.
+ */
+function node_hook(&$node, $hook) {
+  $function = node_get_module_name($node) ."_$hook";
+
+  return function_exists($function);
+}
+
+/*
+ * Invoke a node hook.
+ *
+ * @param &$node
+ *   Either a node object, node array, or a string containing the node type.
+ * @param $hook
+ *   A string containing the name of the hook.
+ * @param $a2, $a3, $a4
+ *   Arguments to pass on to the hook, after the $node argument.
+ * @return
+ *   The returned value of the invoked hook is returned.
+ */
+function node_invoke(&$node, $hook, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
+  $function = node_get_module_name($node) ."_$hook";
 
   if (function_exists($function)) {
     return ($function($node, $a2, $a3, $a4));
@@ -403,7 +477,7 @@ function node_view($node, $main = 0, $page = 0) {
   ** to display nodes.
   */
 
-  if (module_hook($node->type, "view")) {
+  if (node_hook($node, "view")) {
     return node_invoke($node, "view", $main, $page);
   }
   else {
@@ -461,20 +535,9 @@ function node_access($op, $node = 0) {
 
   $node = array2object($node);
 
-  /*
-  ** Construct a function:
-  */
-
-  if ($node->type) {
-    $type = $node->type;
-  }
-  else {
-    $type = $node;
-  }
-
   // Can't use node_invoke:
   // the access hook takes the $op parameter before the $node parameter.
-  return module_invoke($type, "access", $op, $node);
+  return module_invoke(node_get_module_name($node), "access", $op, $node);
 }
 
 function node_perm() {
@@ -661,7 +724,7 @@ function node_admin_nodes() {
   $header = array(NULL, t("title"), t("type"), t("author"), t("status"), array("data" => t("operations"), "colspan" => 2));
 
   while ($node = db_fetch_object($result)) {
-    $rows[] = array(form_checkbox(NULL, "status][$node->nid", 1, 0), l($node->title, "node/view/$node->nid") ." ". (node_is_new($node->nid, $node->changed) ? theme_mark() : ""), module_invoke($node->type, "node", "name"), format_name($node), ($node->status ? t("published") : t("not published")), l(t("edit node"), "admin/node/edit/$node->nid"), l(t("delete node"), "admin/node/delete/$node->nid"));
+    $rows[] = array(form_checkbox(NULL, "status][$node->nid", 1, 0), l($node->title, "node/view/$node->nid") ." ". (node_is_new($node->nid, $node->changed) ? theme_mark() : ""), module_invoke(node_get_module_name($node), "node", "name", $node->type), format_name($node), ($node->status ? t("published") : t("not published")), l(t("edit node"), "admin/node/edit/$node->nid"), l(t("delete node"), "admin/node/delete/$node->nid"));
   }
 
   if ($pager = theme("pager", NULL, 50, 0)) {
@@ -699,23 +762,20 @@ function node_admin_settings($edit) {
   }
 
   $header = array_merge(array(t("type")), array_keys(node_invoke_nodeapi($node, "settings")));
-  foreach (module_list() as $name) {
-    if (module_hook($name, "node")) {
-      $node->type = $name;
-      $cols = array();
-      foreach (node_invoke_nodeapi($node, "settings") as $setting) {
-        $cols[] = array("data" => $setting, "align" => "center", "width" => 55);
-      }
-      $rows[] = array_merge(array(module_invoke($name, "node", "name")), $cols);
+  foreach (node_list() as $type => $module) {
+    $node->type = $type;
+    $cols = array();
+    foreach (node_invoke_nodeapi($node, "settings") as $setting) {
+      $cols[] = array("data" => $setting, "align" => "center", "width" => 55);
     }
+    $rows[] = array_merge(array(module_invoke($module, "node", "name", $type)), $cols);
   }
 
   $output .= theme("table", $header, $rows);
 
   /* This is an idea for the future.
-  foreach (module_list() as $name) {
-    if (module_hook($name, "node")) {
-      $node->type = $name;
+  foreach (node_list() as $type => $module) {
+    $node->type = $type;
 
       // Create theme("table", ) data:
       $header = array_keys(node_invoke_nodeapi($node, "settings"));
@@ -724,7 +784,7 @@ function node_admin_settings($edit) {
         $cols[] = array("data" => $setting, "align" => "center", "width" => 75);
       }
 
-      $output .= "<h2>". module_invoke($name, "node", "name") ."</h2>";
+      $output .= "<h2>". module_invoke($module, "node", "name", $type) ."</h2>";
       $output .= theme("table", $header, array($cols));
       $output .= "<br /><br />";
     }
@@ -1090,7 +1150,7 @@ function node_form($edit, $error = NULL) {
 
   // Can't use node_invoke:
   // $error and $param must be passed by reference.
-  $function = $edit->type ."_form";
+  $function = node_get_module_name($edit) ."_form";
   if (function_exists($function)) {
     $form .= $function($edit, $error, $param);
   }
@@ -1218,11 +1278,11 @@ function node_add($type) {
     ** Compile a list with the different node types and their explanation:
     */
 
-    foreach (module_list() as $name) {
-      if (module_hook($name, "node") && node_access("create", $name)) {
+    foreach (node_list() as $type => $module) {
+      if (node_access("create", $type)) {
         $output .= "<li>";
-        $output .= " ". l(module_invoke($name, "node", "name"), "node/add/$name", array("title" => t("Add a new %s.", array("%s" => module_invoke($name, "node", "name")))));
-        $output .= " <div style=\"margin-left: 20px;\">". module_invoke($name, "node", "description") ."</div>";
+        $output .= " ". l(module_invoke($module, "node", "name", $type), "node/add/$type", array("title" => t("Add a new %s.", array("%s" => module_invoke($module, "node", "name", $type)))));
+        $output .= " <div style=\"margin-left: 20px;\">". module_invoke($module, "node", "description", $type) ."</div>";
         $output .= "</li>";
       }
     }
@@ -1297,29 +1357,18 @@ function node_preview($node, $error = NULL) {
     $node->teaser = node_teaser($node->body);
 
     /*
-    ** Apply the required filters:
-    */
-
-    if ($node->nid) {
-      $view = array2object(array_merge(object2array($node), module_invoke($node->type, "save", "update", $node)));
-    }
-    else {
-      $view = array2object(array_merge(object2array($node), module_invoke($node->type, "save", "create", $node)));
-    }
-
-    /*
     ** Display a preview of the node:
     */
 
-    if ($view->teaser && $view->teaser != $view->body) {
+    if ($node->teaser && $node->teaser != $node->body) {
       $output = "<h3>". t("Preview trimmed version") ."</h3>";
-      $output .= node_view($view, 1);
+      $output .= node_view($node, 1);
       $output .= "<p><i>". t("The trimmed version of your post shows how your post looks like when promoted to the main page or when exported for syndication.  You can insert a delimiter '&lt;!--break--&gt' (without the quotes) to fine-tune where your post gets split.") ."</i></p>";
       $output .= "<h3>". t("Preview full version") ."</h3>";
-      $output .= node_view($view, 0);
+      $output .= node_view($node, 0);
     }
     else {
-      $output .= node_view($view, 0);
+      $output .= node_view($node, 0);
     }
 
     $output .= node_form($node, $error);
@@ -1362,7 +1411,7 @@ function node_submit($node) {
     if (node_access("update", $node)) {
       $node->nid = node_save($node);
       watchdog("special", "$node->type: updated '$node->title'", l(t("view post"), "node/view/$node->nid"));
-      $msg = t("the %name was updated.", array ("%name" => module_invoke($node->type, "node", "name")));
+      $msg = t("the %name was updated.", array ("%name" => module_invoke(node_get_module_name($node), "node", "name", $node->type)));
     }
   }
   else {
@@ -1456,7 +1505,7 @@ function node_page() {
       $node = node_load(array("nid" => arg(2), "status" => 1), $_GET["revision"]);
     }
 
-    $name = module_invoke(arg(2), "node", "name");
+    $name = module_invoke(node_get_module_name(arg(2)), "node", "name", arg(2));
 
     switch ($op) {
       case "add":
