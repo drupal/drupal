@@ -560,7 +560,7 @@ function forum_forum_list($forums, $parents, $tid) {
         if ($user->uid) $new_topics = $forum->num_topics - $forum->old_topics;
         $icon = _forum_get_folder_icon($new_topics);
         $output .= " <tr><td>&nbsp;</td><td>$icon</td>";
-        $output .= "<td><table border=\"0\"><tr><td width=\"". ($forum->depth * 20) ."\">&nbsp;</td><td>".lm(check_output($forum->name), array("mod" => "forum", "tid" => $forum->tid))."<div style=\"padding-top: 5px; font-size: 80%;\">". check_output($forum->description, 1);
+        $output .= "<td><table border=\"0\"><tr><td width=\"". ($forum->depth * 20) ."\">&nbsp;</td><td>".lm(check_output($forum->name), array("mod" => "forum", "tid" => $forum->tid))."<div style=\"padding-top: 5px;\">". check_output($forum->description, 1);
 
         $links = array();
         if ($forum->last_post) {
