@@ -8,7 +8,7 @@ function tracker_help() {
 
 function tracker_link($type) {
 
-  if ($type == "menu.view") {
+  if ($type == "menu.view" && user_access("access comments")) {
     $links[] = lm(t("view new comments"), array("mod" => "tracker"), "", array("title" => t("Display an overview of the recent comments.")));
   }
 
@@ -16,8 +16,6 @@ function tracker_link($type) {
 }
 
 function tracker_comments($id = 0) {
-  global $theme, $user;
-
   $period = time() - 259200;  // all comments of the past 3 days
 
   if ($id) {
@@ -39,7 +37,7 @@ function tracker_comments($id = 0) {
 
     $output .= "<ul>";
     while ($comment = db_fetch_object($cresult)) {
-      $output .= " <li>". l(check_output($comment->subject), array("id" => $node->nid, "cid" => $comment->cid, "pid" => $comment->pid), $comment->cid) ." by ". lm(check_output($comment->name), array("mod" => "user", "op" => "view", "id" => $comment->uid)) ." (". t("replies") .": ". comment_num_replies($comment->cid) .") ". (comment_is_new($comment) ? "<span style=\"color: red;\">*</span>" : "") ."</li>\n";
+      $output .= " <li>". l(check_output($comment->subject), array("id" => $node->nid, "cid" => $comment->cid, "pid" => $comment->pid), "node", $comment->cid) ." by ". lm(check_output($comment->name), array("mod" => "user", "op" => "view", "id" => $comment->uid)) ." (". t("replies") .": ". comment_num_replies($comment->cid) .") ". (comment_is_new($comment) ? "<span style=\"color: red;\">*</span>" : "") ."</li>\n";
     }
     $output .= " </ul>\n";
   }
@@ -58,20 +56,38 @@ function tracker_menu() {
 
 
 function tracker_page() {
-  global $theme, $id;
+  global $theme, $id, $user;
 
-  $theme->header();
-
-  $theme->box(t("Tracker"), tracker_menu());
-
-  if ($id) {
-    $theme->box(t("Your recent comments"), tracker_comments($id));
+  if (user_access("access comments")) {
+    if ($id == $user->uid) {
+      $theme->header(t("Your recent comments"));
+      $theme->box(t("Tracker"), tracker_menu());
+      $theme->box(t("Your recent comments"), tracker_comments($id));
+      $theme->footer();
+    }
+    else if ($id) {
+      $account = user_load(array("uid" => $id));
+      $theme->header(t("%u's recent comments", array("%u" => $account->name)));
+      $theme->box(t("Tracker"), tracker_menu());
+      $theme->box(t("%u's recent comments", array("%u" => $account->name)), tracker_comments($id));
+      $theme->footer();
+    }
+    else {
+      $theme->header(t("All recent comments"));
+      $theme->box(t("Tracker"), tracker_menu());
+      $theme->box(t("All recent comments"), tracker_comments());
+      $theme->footer();
+    }
   }
-  else {
-    $theme->box(t("All recent comments"), tracker_comments());
-  }
-
-  $theme->footer();
 }
 
+function tracker_user($type, &$edit, &$user) {
+  switch ($type) {
+    case "view_public":
+    case "view_private":
+      if (user_access("access comments")) {
+        return form_item(t("Comments"), lm(t("View recent comments."), array("mod" => "tracker", "id" => $user->uid)));
+      }
+  }
+}
 ?>
