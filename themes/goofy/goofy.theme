@@ -126,8 +126,8 @@
          <td class="lgcnt" width="100%" colspan="2"><hr color="#404040" size="1">
          <?php
           echo check_output($story->abstract, 1) . "<br>";
-          if ($reply)
-            echo $story->body?"<br>" . check_output($story->body, 1);
+          if ($reply && $story->body)
+            echo "<br>" . check_output($story->body, 1);
          ?>
          <hr color="#404040" size="1"><div align="right">
          <?php

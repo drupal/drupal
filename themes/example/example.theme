@@ -82,8 +82,8 @@
 <?php
 
                         echo "<P>". check_output($story->abstract, 1) ."</P>";
-                        if ($reply && $story->article)
-                          echo "<P>". check_output($story->article, 1) ."</P>";
+                        if ($reply && $story->body)
+                          echo "<P>". check_output($story->body, 1) ."</P>";
 
 ?>
                    </TD>
