@@ -11,6 +11,13 @@ class Node {
   }
 }
 
+function node_macro($text) {
+  $src = array("/\[\[(([^\|]*?)(\|([^\|]*?))?)\]\]/e");  // [link|description]
+  $dst = array(format_tag('\\2', '\\4'));                // [link|description]
+
+  return preg_replace($src, $dst, $text);
+}
+
 function node_overview($query = array()) {
   global $user;
 

@@ -88,7 +88,7 @@ function check_name($name) {
 
 function check_output($message, $nl2br = 0) {
   global $allowed_html, $na;
-  $var = strip_tags(stripslashes(format_text($message)), $allowed_html);
+  $var = strip_tags(stripslashes(node_macro($message)), $allowed_html);
   return ($var) ? (($nl2br) ? nl2br($var) : $var) : $na;
 }
 
@@ -163,16 +163,6 @@ function format_tag($link, $text) {
   return "'<a href=\"node.php?title='. urlencode('$link') .'\">'. ('$text' ? '$text' : '$link') .'</a>'";
 }
 
-function format_text($text) {
-
-  $src = array( // "/(<\/?)(\w+)([^>]*>)/e",             // convert HTML to lower case
-               "/\[\[(([^\|]*?)(\|([^\|]*?))?)\]\]/e");  // [link|description]
-  $dst = array( // "'\\1'. strtolower('\\2') .'\\3'",    // convert HTML to lower case
-               format_tag('\\2', '\\4'));                // [link|description]
-
-  return preg_replace($src, $dst, $text);
-}
-
 function form($action, $form, $method = "post", $options = 0) {
   return "<FORM ACTION=\"$action\" METHOD=\"$method\"". ($options ? " $options" : "") .">\n$form</FORM>\n";
 }
@@ -206,36 +196,32 @@ function form_submit($value) {
   return "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". check_textfield($value) ."\">\n";
 }
 
-function field_get($object, $variable, $field) {
-  $data = explode(";", $object->$variable);
-  for (reset($data); current($data); next($data)) {
-    $entry = explode(":", current($data));
-    if (reset($entry) == $field) $rval = end($entry);
+function field_get($string, $name) {
+  foreach (explode(";", $string) as $data) {
+    $entry = explode(":", $data);
+    if ($entry[0] == $name) return $entry[1];
   }
-  return $rval;
 }
 
-function field_set($field, $name, $value) {
+function field_set($string, $name, $value) {
   if (!$value) {
     // remove entry:
-    $data = explode(";", $field);
-    for (reset($data); current($data); next($data)) {
-      $entry = explode(":", current($data));
+    foreach (explode(";", $string) as $data) {
+      $entry = explode(":", $data);
       if ($entry[0] != $name) $rval .= "$entry[0]:$entry[1];";
     }
   }
-  else if (strstr($field, "$name:")) {
+  else if (strstr($string, "$name:")) {
     // found: update exsisting entry:
-    $data = explode(";", $field);
-    for (reset($data); current($data); next($data)) {
-      $entry = explode(":", current($data));
+    foreach (explode(";", $string) as $data) {
+      $entry = explode(":", $data);
       if ($entry[0] == $name) $entry[1] = $value;
       $rval .= "$entry[0]:$entry[1];";
     }
   }
   else {
     // not found:
-    $rval = "$field$name:$value;";
+    $rval = "$string$name:$value;";
   }
 
   return $rval;
