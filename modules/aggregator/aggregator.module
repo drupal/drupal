@@ -40,10 +40,10 @@ function import_bundle($attributes, $limit = 100) {
     $keys = explode(",", $attributes);
     foreach ($keys as $key) $where[] = "attributes LIKE '%". trim($key) ."%'";
 
-    $result = db_query("SELECT * FROM item WHERE ". implode(" OR ", $where) ." ORDER BY timestamp DESC LIMIT $limit");
+    $result = db_query("SELECT * FROM item WHERE ". implode(" OR ", $where) ." ORDER BY iid DESC LIMIT $limit");
 
     while ($item = db_fetch_object($result)) {
-      $output .= "<LI><A HREF=\"". check_output($item->link) ."\">". check_output($item->title) ."</A></LI>";
+      $output .= "<li><a href=\"". check_output($item->link) ."\">". check_output($item->title) ."</a></li>";
     }
 
     return "$output";
@@ -53,7 +53,7 @@ function import_bundle($attributes, $limit = 100) {
 function import_view_bundle() {
   $result = db_query("SELECT * FROM bundle ORDER BY title");
   while ($bundle = db_fetch_object($result)) {
-    $output .= "<B>$bundle->title</B><UL>". import_bundle($bundle->attributes) ."</UL>";
+    $output .= "<b>$bundle->title</b><ul>". import_bundle($bundle->attributes) ."</ul>";
   }
   return $output;
 }
@@ -91,14 +91,16 @@ function import_update($feed) {
 
       // print "<PRE>". htmlentities($data[0]) ."</PRE>";
 
-      foreach (explode("</item>", $data[0]) as $item) {
+      $items = array_reverse(explode("</item>", $data[0]));
+
+      foreach ($items as $item) {
         $t = eregi("<title>(.*)</title>", $item, $title);
         $l = eregi("<link>(.*)</link>", $item, $link);
         $a = eregi("<author>(.*)</author>", $item, $author);
         $d = eregi("<description>(.*)</description>", $item, $description);
 
         if ($l || $t || $a || $d) {
-          import_save_item(array(fid => $feed[fid], title => $title[0], link => $link[0], author => $author[0], description => $description[0], attributes => $feed[attributes]));
+          import_save_item(array(fid => $feed[fid], title => $title[1], link => $link[1], author => $author[1], description => $description[1], attributes => $feed[attributes]));
         }
       }
 
@@ -209,23 +211,23 @@ function import_get_bundle($bid) {
 function import_view_feed() {
   $result = db_query("SELECT f.*, COUNT(i.iid) AS items FROM feed f LEFT JOIN item i ON f.fid = i.fid GROUP BY f.fid ORDER BY f.title");
 
-  $output .= "<H3>Feed overview</H3>";
-  $output .= "<TABLE BORDER=\"1\" CELLSPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR><TH>title</TH><TH>attributes</TH><TH>items</TH><TH>last update</TH><TH>next update</TH><TH COLSPAN=\"3\">operations</TH></TR>\n";
+  $output .= "<h3>Feed overview</h3>";
+  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
+  $output .= " <tr><th>title</th><th>attributes</th><th>items</th><th>last update</th><th>next update</th><th colspan=\"3\">operations</th></tr>\n";
   while ($feed = db_fetch_object($result)) {
-    $output .= " <TR><TD>". check_output($feed->title) ."</TD><TD>". check_output($feed->attributes) ."</TD><TD>". format_plural($feed->items, "item", "items") ."</TD><TD>". ($feed->timestamp ? format_interval(time() - $feed->timestamp) ." ago" : "never") ."</TD><TD>". ($feed->timestamp ? format_interval($feed->timestamp + $feed->refresh - time()) ." left" : "never") ."</TD><TD><A HREF=\"admin.php?mod=import&type=feed&op=edit&id=$feed->fid\">edit feed</A></TD><TD><A HREF=\"admin.php?mod=import&type=feed&op=remove&id=$feed->fid\">remove items</A></TD><TD><A HREF=\"admin.php?mod=import&type=feed&op=update&id=$feed->fid\">update items</A></TD></TR>\n";
+    $output .= " <tr><td>". check_output($feed->title) ."</td><td>". check_output($feed->attributes) ."</td><td>". format_plural($feed->items, "item", "items") ."</td><td>". ($feed->timestamp ? format_interval(time() - $feed->timestamp) ." ago" : "never") ."</td><td>". ($feed->timestamp ? format_interval($feed->timestamp + $feed->refresh - time()) ." left" : "never") ."</td><td><a href=\"admin.php?mod=import&type=feed&op=edit&id=$feed->fid\">edit feed</a></td><td><a href=\"admin.php?mod=import&type=feed&op=remove&id=$feed->fid\">remove items</a></td><td><a href=\"admin.php?mod=import&type=feed&op=update&id=$feed->fid\">update items</a></td></tr>\n";
   }
-  $output .= "</TABLE>\n";
+  $output .= "</table>\n";
 
   $result = db_query("SELECT * FROM bundle ORDER BY title");
 
-  $output .= "<H3>Bundle overview</H3>";
-  $output .= "<TABLE BORDER=\"1\" CELLSPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR><TH>title</TH><TH>attributes</TH><TH>operations</TH></TR>\n";
+  $output .= "<h3>Bundle overview</h3>";
+  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
+  $output .= " <tr><th>title</th><th>attributes</th><th>operations</th></tr>\n";
   while ($bundle = db_fetch_object($result)) {
-    $output .= " <TR><TD>". check_output($bundle->title) ."</TD><TD>". check_output($bundle->attributes) ."</TD><TD><A HREF=\"admin.php?mod=import&type=bundle&op=edit&id=$bundle->bid\">edit bundle</A></TD></TR>\n";
+    $output .= " <tr><td>". check_output($bundle->title) ."</td><td>". check_output($bundle->attributes) ."</td><td><a href=\"admin.php?mod=import&type=bundle&op=edit&id=$bundle->bid\">edit bundle</a></td></tr>\n";
   }
-  $output .= "</TABLE>\n";
+  $output .= "</table>\n";
 
   return $output;
 }
@@ -235,15 +237,15 @@ function import_view_item() {
 
   $result = db_query("SELECT i.*, f.title AS feed FROM item i LEFT JOIN feed f ON i.fid = f.fid ORDER BY i.timestamp DESC LIMIT 50");
 
-  $output .= "<FORM ACTION=\"$REQUEST_URI\" METHOD=\"post\">\n";
-  $output .= "<TABLE BORDER=\"1\" CELLSPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR><TH>time</TH><TH>feed</TH><TH>item</TH></TR>\n";
+  $output .= "<form action=\"$REQUEST_URI\" method=\"post\">\n";
+  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
+  $output .= " <tr><th>time</th><th>feed</th><th>item</th></tr>\n";
   while ($item = db_fetch_object($result)) {
-    $output .= " <TR><TD VALIGN=\"top\" NOWRAP>". format_date($item->timestamp, "custom", "m/d/y") ."<BR>".format_date($item->timestamp, "custom", "H:i") ."</TD><TD ALIGN=\"center\" VALIGN=\"top\" NOWRAP><A HREF=\"admin.php?mod=import&type=feed&op=edit&id=$item->fid\">". check_output($item->feed) ."</A></TD><TD><A HREF=\"". check_output($item->link) ."\">". check_output($item->title) ."</A>". ($item->description ? "<BR><SMALL><I>". check_output($item->description) ."</I></SMALL>" : "") ."<BR><INPUT TYPE=\"text\" NAME=\"edit[$item->iid]\" VALUE=\"". check_form($item->attributes) ."\" SIZE=\"50\"></TD></TR>\n";
+    $output .= " <tr><td valign=\"top\" nowrap=\"nowrap\">". format_date($item->timestamp, "custom", "m/d/y") ."<br />".format_date($item->timestamp, "custom", "H:i") ."</td><td align=\"center\" valign=\"top\" nowrap=\"nowrap\"><a href=\"admin.php?mod=import&type=feed&op=edit&id=$item->fid\">". check_output($item->feed) ."</a></td><td><a href=\"". check_output($item->link) ."\">". check_output($item->title) ."</a>". ($item->description ? "<br /><small><i>". check_output($item->description) ."</i></small>" : "") ."<br /><input type=\"text\" name=\"edit[$item->iid]\" value=\"". check_form($item->attributes) ."\" size=\"50\" /></td></tr>\n";
   }
-  $output .= "</TABLE>\n";
-  $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save attributes\">\n";
-  $output .= "</FORM>\n";
+  $output .= "</table>\n";
+  $output .= "<input type=\"submit\" name=\"op\" value=\"Save attributes\" />\n";
+  $output .= "</form>\n";
 
   return $output;
 }
@@ -253,7 +255,7 @@ function import_admin() {
 
   if (user_access("administer news feeds")) {
 
-    print "<SMALL><A HREF=\"admin.php?mod=import&type=bundle&op=add\">add new bundle</A> | <A HREF=\"admin.php?mod=import&type=feed&op=add\">add new feed</A> | <A HREF=\"admin.php?mod=import&type=bundle&op=view\">available bundles</A> | <A HREF=\"admin.php?mod=import&type=item&op=view\">available items</A> | <A HREF=\"admin.php?mod=import&op=view\">overview</A> | <A HREF=\"admin.php?mod=import&op=help\">help</A></SMALL><HR>";
+    print "<small><a href=\"admin.php?mod=import&type=bundle&op=add\">add new bundle</a> | <a href=\"admin.php?mod=import&type=feed&op=add\">add new feed</a> | <a href=\"admin.php?mod=import&type=bundle&op=view\">available bundles</a> | <a href=\"admin.php?mod=import&type=item&op=view\">available items</a> | <a href=\"admin.php?mod=import&op=view\">overview</a> | <a href=\"admin.php?mod=import&op=help\">help</a></small><hr />";
 
     switch($op) {
       case "help":

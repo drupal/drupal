@@ -10,6 +10,7 @@ function admin_page($mod) {
   global $user;
 
  ?>
+  <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
   <html>
    <head>
     <title><?php echo variable_get(site_name, "drupal"); ?> administration pages</title>
