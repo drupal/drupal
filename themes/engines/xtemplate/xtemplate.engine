@@ -1,0 +1,233 @@
+<?php
+// $Id$
+
+// Initialize the xtemplate engine.
+function xtemplate_init($template) {
+  // We cannot use the theme() or path_to_theme() functions here
+  if (!class_exists('XTemplate')) {
+    include_once('themes/engines/xtemplate/xtemplate.inc');
+  }
+  $GLOBALS['xtemplate']->template = new XTemplate(basename($template->filename), dirname($template->filename));
+  $GLOBALS['xtemplate']->template->SetNullBlock(' ');  // '' doesnt work!
+}
+
+function xtemplate_templates($directory) {
+  return file_scan_directory($directory, 'xtemplate.xtmpl$');
+}
+
+function xtemplate_features() {
+  return array(
+       'logo',
+       'toggle_name',
+       'toggle_search',
+       'toggle_slogan',
+       'toggle_mission',
+       'toggle_primary_links',
+       'toggle_secondary_links',
+       'toggle_node_user_picture',
+       'toggle_comment_user_picture');
+}
+
+function xtemplate_node($node, $main = 0, $page = 0) {
+  global $xtemplate;
+
+  $xtemplate->template->assign(array(
+        "submitted" => drupal_get_theme_setting("toggle_node_info_$node->type") ?
+                         t("Submitted by %a on %b.",
+                           array("%a" => format_name($node),
+                            "%b" => format_date($node->created))) : '',
+        "link"      => url("node/$node->nid"),
+        "title"     => $node->title,
+        "author"    => format_name($node),
+        "date"      => format_date($node->created),
+        "sticky"    => ($main && $node->sticky) ? 'sticky' : '',
+        "content"   => ($main && $node->teaser) ? $node->teaser : $node->body));
+
+  if ($page == 0) {
+    $xtemplate->template->parse("node.title");
+  }
+
+  if (drupal_get_theme_setting('toggle_node_user_picture') && $picture = theme('user_picture', $node)) {
+    $xtemplate->template->assign("picture", $picture);
+    $xtemplate->template->parse("node.picture");
+  }
+
+  if (module_exist("taxonomy") && ($taxonomy = taxonomy_link("taxonomy terms", $node))) {
+    $xtemplate->template->assign("taxonomy", theme_links($taxonomy));
+    $xtemplate->template->parse("node.taxonomy");
+  }
+
+  if ($links = link_node($node, $main)) {
+    $xtemplate->template->assign("links", theme_links($links));
+    $xtemplate->template->parse("node.links");
+  }
+
+  $xtemplate->template->parse("node");
+  $output = $xtemplate->template->text("node");
+  $xtemplate->template->reset("node");
+  return $output;
+}
+
+function xtemplate_comment($comment, $links = 0) {
+  global $xtemplate;
+
+  $xtemplate->template->assign(array (
+    "new"       => t("new"),
+    "submitted" => t("Submitted by %a on %b.",
+                      array("%a" => format_name($comment),
+                            "%b" => format_date($comment->timestamp))),
+    "title"     => l($comment->subject, $_GET['q'], NULL, NULL, "comment-$comment->cid"),
+    "author"    => format_name($comment),
+    "date"      => format_date($comment->timestamp),
+    "content"   => $comment->comment
+  ));
+
+  if ($comment->new) {
+    $xtemplate->template->parse("comment.new");
+  }
+
+  if (drupal_get_theme_setting('toggle_comment_user_picture') && $picture = theme('user_picture', $comment)) {
+    $xtemplate->template->assign("picture", $picture);
+    $xtemplate->template->parse("comment.picture");
+  }
+
+  if ($links) {
+    $xtemplate->template->assign("links", $links);
+    $xtemplate->template->parse("comment.links");
+  }
+
+  $xtemplate->template->parse("comment");
+  $output = $xtemplate->template->text("comment");
+  $xtemplate->template->reset("comment");
+
+  return $output;
+}
+
+function xtemplate_page($content, $title = NULL, $breadcrumb = NULL) {
+  if (isset($title)) {
+    drupal_set_title($title);
+  }
+  if (isset($breadcrumb)) {
+    drupal_set_breadcrumb($breadcrumb);
+  }
+
+  global $xtemplate;
+
+  $xtemplate->template->assign(array(
+    "head_title" => (drupal_get_title() ? drupal_get_title() ." | ". variable_get("site_name", "drupal") : variable_get("site_name", "drupal") ." | ". variable_get("site_slogan", "")),
+    "head" => drupal_get_html_head(),
+    "onload_attributes" => theme_onload_attribute(),
+    "primary_links" => drupal_get_theme_setting('primary_links'),
+    "secondary_links" => drupal_get_theme_setting('secondary_links')
+   ));
+
+  if ($logo = drupal_get_theme_setting('logo')) {
+    $xtemplate->template->assign('logo', $logo);
+    $xtemplate->template->parse('header.logo');
+  }
+
+  if (drupal_get_theme_setting('toggle_name')) {
+    $xtemplate->template->assign('site_name', variable_get('site_name', ''));
+    $xtemplate->template->parse('header.site_name');
+  }
+
+  if (drupal_get_theme_setting('toggle_slogan')) {
+    $xtemplate->template->assign('site_slogan', variable_get('site_slogan', ''));
+    $xtemplate->template->parse('header.site_slogan');
+  }
+
+  if ($tabs = theme('menu_local_tasks')) {
+    $xtemplate->template->assign("tabs", $tabs);
+    $xtemplate->template->parse("header.title.tabs");
+  }
+
+  if ($title = drupal_get_title()) {
+    $xtemplate->template->assign("title", $title);
+    $xtemplate->template->assign("breadcrumb", theme("breadcrumb", drupal_get_breadcrumb()));
+    $xtemplate->template->parse("header.title");
+  }
+
+  if ($help = menu_get_active_help()) {
+    $xtemplate->template->assign("help", $help);
+    $xtemplate->template->parse("header.help");
+  }
+
+  if ($message = theme_status_messages()) {
+    $xtemplate->template->assign("message", $message);
+    $xtemplate->template->parse("header.message");
+  }
+
+  if (drupal_get_theme_setting('toggle_search')) {
+    $xtemplate->template->assign(array(
+          //"search" => search_form(),
+          "search_url" => url("search"),
+          "search_button_text" => t("Search"),
+          "search_description" => t("Enter the terms you wish to search for.")
+          ));
+    $xtemplate->template->parse("header.search_box");
+  }
+
+  // only parse the mission block if we are on the frontpage ...
+  if ($_GET["q"] == variable_get("site_frontpage", "node") && drupal_get_theme_setting('toggle_mission') && ($mission = drupal_get_theme_setting('mission'))) {
+    $xtemplate->template->assign("mission", $mission);
+    $xtemplate->template->parse("header.mission");
+  }
+
+  if ($blocks = theme("blocks", "left")) {
+    $xtemplate->template->assign("blocks", $blocks);
+    $xtemplate->template->parse("header.blocks");
+  }
+
+  $xtemplate->template->parse("header");
+  $output = $xtemplate->template->text("header");
+
+  $output .= "\n<!-- begin content -->\n";
+  $output .= $content;
+  $output .= "\n<!-- end content -->\n";
+
+  if ($blocks = theme("blocks", "right")) {
+    $xtemplate->template->assign("blocks", $blocks);
+    $xtemplate->template->parse("footer.blocks");
+  }
+
+  // only parse the footer block if site_footer is set
+  if ($footer_message = variable_get("site_footer", FALSE)) {
+    $xtemplate->template->assign("footer_message", $footer_message);
+    $xtemplate->template->parse("footer.message");
+  }
+
+  $xtemplate->template->assign("footer", theme_closure());
+  $xtemplate->template->parse("footer");
+
+  $output .= $xtemplate->template->text("footer");
+
+  return $output;
+}
+
+function xtemplate_block(&$block) {
+  global $xtemplate;
+
+  // create template variables for all block variables (module, delta, region, subject, content, ...)
+  foreach ($block as $key => $value) {
+    $xtemplate->template->assign($key == "subject" ? "title" : $key, $value); // TODO: standardize on 'title' (ie. rename all $block["subject"] to "title")
+  }
+  $xtemplate->template->parse("block");
+  $output = $xtemplate->template->text("block");
+  $xtemplate->template->reset("block");
+  return $output;
+}
+
+function xtemplate_box($title, $content, $region = "main") {
+  global $xtemplate;
+
+  $xtemplate->template->assign(array(
+        "title" => $title,
+        "content" => $content));
+
+  $xtemplate->template->parse("box");
+  $output = $xtemplate->template->text("box");
+  $xtemplate->template->reset("box");
+  return $output;
+}
+
+?>

@@ -1,0 +1,354 @@
+/* $Id$ */
+
+/*
+** HTML elements
+*/
+body {
+  margin: 0;
+  padding: 0;
+  color: #000;
+  background-color: #fff;
+  font: 76% Verdana, Arial, Helvetica, sans-serif;
+}
+tr.dark td, tr.light td {
+  padding: 0.3em;
+}
+h1, h2, h3, h4, h5, h6 {
+  margin: 0.5;
+}
+h1 {
+  font-size: 1.3em;
+}
+h2 {
+  font-size: 1.2em;
+}
+h3, h4, h5, h6 {
+  font-size: 1.1em;
+}
+a {
+  text-decoration: none;
+  font-weight: bold;
+}
+a:link {
+  color: #39c;
+}
+a:visited {
+  color: #369;
+}
+a:hover {
+  color: #39c;
+  text-decoration: underline;
+}
+fieldset {
+  border: 1px solid #ccc;
+}
+pre {
+  background-color: #eee;
+  padding: 0.75em 1.5em;
+  font-size: 12px;
+  border: 1px solid #ddd;
+}
+table {
+  /* make <td> sizes relative to body size! */
+  font-size: 1em;
+}
+.form-item label {
+  font-size: 1em;
+  color: #222;
+}
+.item-list .title {
+  font-size: 1em;
+  color: #222;
+}
+.links {
+  margin-bottom: 2em;
+}
+.comment .links {
+  margin-bottom: 0em;
+}
+
+/*
+** Page layout blocks / IDs
+*/
+#header, #content {
+  width: 100%;
+}
+#header {
+  background-color: #69c;
+}
+#logo {
+  vertical-align: middle;
+  border: 0;
+}
+#logo img {
+  float: left;
+  padding: 0em 1.0em 0em 1em;
+}
+#menu {
+  padding: 0.5em 0.5em 0 0.5em;
+  text-align: right;
+  vertical-align: middle;
+}
+#primary {
+  font-size: 1.0em;
+  padding: 0em 0.8em 0.5em 0;
+  color: #9cf;
+}
+#primary a {
+  font-weight: bold;
+  color: #fff;
+}
+#secondary {
+  padding: 0 1em 0.5em 0;
+  font-size: 0.8em;
+  color: #9cf;
+}
+#secondary a {
+  font-weight: bold;
+  color: #9cf;
+}
+#search .form-text, #search .form-submit {
+  border: 1px solid #369;
+  font-size: 1.1em;
+}
+#search .form-text {
+  width: 8em;
+  height: 1.4em;
+  padding: 0 0.5em 0 0.5em;
+  margin: 0 0 0.5em 0;
+}
+#search .form-submit {
+  height: 1.5em;
+}
+#mission {
+  background-color: #369;
+  padding: 1.5em 2em;
+  color: #fff;
+}
+#mission a, #mission a:visited {
+  color: #9cf;
+  font-weight: bold;
+}
+.site-name {
+  margin: 0.6em 0em 0em 0em;
+  padding: 0em;
+  font-size: 2em;
+}
+.site-name a:link, .site-name a:visited {
+  color: #fff;
+}
+.site-name a:hover {
+  color: #369;
+  text-decoration: none;
+}
+.site-slogan {
+  font-size: 1em;
+  color: #eee;
+  display: block;
+  margin: 0em 0em 0em 0em;
+  font-style: italic;
+  font-weight: bold;
+}
+#main {
+  /* padding in px not ex because IE messes up 100% width tables otherwise */
+  padding: 10px;
+}
+#mission, .node .content, .comment .content {
+  line-height: 1.4;
+}
+#help {
+  font-size: 0.9em;
+  margin-bottom: 1em;
+}
+.breadcrumb {
+  margin-bottom: .5em;
+}
+.messages {
+  background-color: #eee;
+  border: 1px solid #ccc;
+  padding: 0.3em;
+  margin-bottom: 1em;
+}
+.error {
+  border-color: red;
+}
+#sidebar-left, #sidebar-right {
+  background-color: #ddd;
+  width: 16em;
+  /* padding in px not ex because IE messes up 100% width tables otherwise */
+  padding: 10px;
+  vertical-align: top;
+}
+#footer {
+  background-color: #eee;
+  padding: 1em;
+  font-size: 0.8em;
+}
+
+/*
+** Common declarations for child classes of node, comment, block, box, etc.
+** If you want any of them styled differently for a specific parent, add
+** additional rules /with only the differing properties!/ to .parent .class.
+** See .comment .title for an example.
+*/
+.title, .title a {
+  font-weight: bold;
+  font-size: 1.3em;
+  color: #777;
+  margin: 0 auto 0 auto;  /* decrease default margins for h<x>.title */
+}
+.submitted {
+  color: #999;
+  font-size: 0.8em;
+}
+.links {
+  color: #999;
+}
+.links a {
+  font-weight: bold;
+}
+.block, .box {
+  padding: 0 0 1.5em 0;
+}
+.block {
+  border-bottom: 1px solid #bbb;
+  padding-bottom: 0.75em;
+  margin-bottom: 1.5em;
+}
+.block .title {
+  margin-bottom: .25em;
+}
+.box .title {
+  font-size: 1.1em;
+}
+.node {
+  margin: .5em 0 1em 0;
+}
+.sticky {
+  padding: .5em;
+  background-color: #eee;
+  border: solid 1px #ddd;
+}
+.node .content, .comment .content {
+  margin: .5em 0 .5em 0;
+}
+.node .taxonomy {
+  color: #999;
+  font-size: 0.8em;
+  padding: 1.5em;
+}
+.node .picture {
+  border: 1px solid #ddd;
+  float: right;
+  margin: 0.5em;
+}
+.comment {
+  border: 1px solid #abc;
+  padding: .5em;
+  margin-bottom: 1em;
+}
+.comment .title a {
+  font-size: 1.1em;
+  font-weight: normal;
+}
+.comment .new {
+  text-align: right;
+  font-weight: bold;
+  font-size: 0.8em;
+  float: right;
+  color: red;
+}
+.comment .picture {
+  border: 1px solid #abc;
+  float: right;
+  margin: 0.5em;
+}
+
+/*
+** Module specific styles
+*/
+#aggregator .feed {
+  background-color: #eee;
+  border: 1px solid #ccc;
+  padding: 1em;
+  margin: 1em 0 1em 0;
+}
+#aggregator .news-item .source, #aggregator .news-item .categories, #aggregator .source, #aggregator .age {
+  color: #999;
+  font-style: italic;
+  font-size: 0.9em;
+}
+#aggregator .title {
+  margin-bottom: 0.5em;
+  font-size: 1em;
+}
+#aggregator h3 {
+  margin-top: 1em;
+}
+#forum table {
+  width: 100%;
+}
+#forum td {
+  padding: 0.5em 0.5em 0.5em 0.5em;
+}
+#forum td.forum, #forum td.posts {
+  background-color: #eee;
+}
+#forum td.topics, #forum td.last-reply {
+  background-color: #ddd;
+}
+#forum td.container {
+  background-color: #ccc;
+}
+#forum td.container a {
+  color: #555;
+}
+#forum td.statistics, #forum td.settings, #forum td.pager {
+  height: 1.5em;
+  border: 1px solid #bbb;
+}
+#forum td .name {
+  color: #96c;
+}
+#forum td .links {
+  padding-top: 0.7em;
+  font-size: 0.9em;
+}
+#profile .profile {
+  clear: both;
+  border: 1px solid #abc;
+  padding: .5em;
+  margin: 1em 0em 1em 0em;
+}
+#profile .profile .name {
+  padding-bottom: 0.5em;
+}
+.block-forum h3 {
+  margin-bottom: .5em;
+}
+.calendar a {
+  text-decoration: none;
+}
+.calendar td, .calendar th {
+  padding: 0.4em 0;
+  border-color: #888;
+}
+.calendar .day-today {
+  background-color: #69c;
+}
+.calendar .day-today a {
+  color: #fff;
+}
+.calendar .day-selected {
+  background-color: #369;
+  color: #fff;
+}
+.calendar .header-week {
+  background-color: #ccc;
+}
+.calendar .day-blank {
+  background-color: #ccc;
+}
+.calendar .row-week td a:hover {
+  background-color: #fff; color: #000;
+}

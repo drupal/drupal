@@ -11,7 +11,12 @@ function system_help($section) {
     case 'admin/settings':
       return t('General configuration options for your site. Set up the name of the site, e-mail address used in mail-outs, clean URL options, caching, etc.');
     case 'admin/themes':
-      return t('Select which themes are available to your users and specify the default theme.');
+      return t('Select which themes are available to your users and specify the default theme. To configure site-wide display settings, click the "configure" task above. Alternately, to override these settings in a specific theme, click the "configure" link for the corresponding theme.');
+    case 'admin/themes/settings':
+      return t('These options control the default display settings for your entire site, across all themes. Unless they have been overridden by a specific theme, these settings will be used.');
+    case 'admin/themes/settings/'. arg(3):
+      $theme = array_pop(explode('.', arg(3), 2));
+      return t('These options control the display settings for the <code>%template</code> theme. When your site is displayed using this theme, these settings will be used. By clicking "Reset to defaults," you can choose to use the <a href="%global">global settings</a> for this theme.', array('%template' => $theme, '%global' => url('admin/themes/settings')));
     case 'admin/modules':
       return t("Modules are plugins for Drupal that extend its core functionality.  Here you can select which modules are enabled.  Click on the name of the module in the navigation menu for their individual configuration pages.  Once a module is enabled, new <a href=\"%permissions\">permissions</a> might be made available.  Modules can automatically be temporarily disabled to reduce server load when your site becomes extremely busy by checking throttle.  The auto-throttle functionality must be enabled on the <a href=\"%throttle\">throttle configuration page</a> after having enabled the throttle module.", array('%permissions' => url('admin/user/configure/permission'), '%throttle' => url('admin/settings/throttle')));
     case 'admin/help#system':
@@ -57,28 +62,35 @@ function system_menu() {
     'type' => MENU_CALLBACK);
 
   $access = user_access('administer site configuration');
+
   // Themes:
   $items[] = array('path' => 'admin/themes', 'title' => t('themes'),
     'callback' => 'system_themes', 'access' => $access);
+
+  $items[] = array('path' => 'admin/themes/select', 'title' => t('select'),
+    'callback' => 'system_themes', 'access' => $access,
+    'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -1);
+
+  $items[] = array('path' => 'admin/themes/settings', 'title' => t('configure'),
+    'callback' => 'system_theme_settings', 'access' => $access,
+    'type' => MENU_LOCAL_TASK);
+
+  // Theme configuration subtabs
+  $items[] = array('path' => 'admin/themes/settings/global', 'title' => t('global settings'),
+    'callback' => 'system_theme_settings', 'access' => $access,
+    'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -1);
+
   foreach (list_themes() as $theme) {
-    // TODO: reenable 'forced refresh' once we move the menu_build() later
-    //   in the request. It added overhead with no benefit.
-    // NOTE: refresh the list because some themes might have been enabled/disabled.
-    include_once $theme->filename;
-    $function = $theme->name .'_settings';
-    if (function_exists($function)) {
-      $items[] = array('path' => 'admin/themes/'. $theme->name, 'title' => $theme->name,
-        'callback' => 'system_configure_theme', 'access' => $access);
-    }
+     $path = str_replace('/', '.', $theme->name);
+     $items[] = array('path' => 'admin/themes/settings/'. $path, 'title' => basename($theme->name),
+     'callback' => 'system_theme_settings', 'access' => $access,
+     'type' => MENU_LOCAL_TASK);
   }
 
   // Modules:
   $items[] = array('path' => 'admin/settings', 'title' => t('settings'),
     'callback' => 'system_site_settings', 'access' => $access);
   foreach (module_list() as $name) {
-    // TODO: reenable 'forced refresh' once we move the menu_build() later
-    //   in the request. It added overhead with no benefit.
-    // NOTE: refresh the list because some modules might have been enabled/disabled.
     if (module_hook($name, 'settings')) {
       $items[] = array('path' => 'admin/settings/'. $name, 'title' => t($name));
     }
@@ -96,12 +108,34 @@ function system_menu() {
  */
 function system_user($type, $edit, &$user, $category = NULL) {
   if ($type == 'form' && $category == 'account') {
-    $options = '<option value="">'. t('Default theme') ."</option>\n";
     if (count($themes = list_themes()) > 1) {
+      $rows = array();
       foreach ($themes as $key => $value) {
-        $options .= "<option value=\"$key\"". (($edit['theme'] == $key) ? ' selected="selected"' : '') .">$key - $value->description</option>\n";
+        $row = array();
+
+        // Screenshot column.
+        $screenshot = dirname($value->filename) .'/screenshot.png';
+        $row[] = file_exists($screenshot) ? theme('image', $screenshot, t('Screenshot for %theme theme', array('%theme' => $value->name)), '', 'class="screenshot"') : t('no screenshot');
+
+        // Information field.
+        $field = '<strong>'. basename($value->name) .'</strong>';
+        $row[] = $field;
+
+        // Reset to follow site default theme if user selects the site default
+        if ($key == variable_get('theme_default', 'bluemarine')) {
+          $key = '';
+          if ($edit['theme'] == variable_get('theme_default', 'bluemarine')) {
+            $edit['theme'] = '';
+          }
+        }
+
+        // Selected column.
+        $row[] = array('data' => form_radio('', 'theme', $key, ($edit['theme'] == $key) ? 1 : 0), 'align' => 'center');
+
+        $rows[] = $row;
       }
-      $data[] = array('title' => t('Theme settings'), 'data' => form_item(t('Theme'), "<select name=\"edit[theme]\">$options</select>", t('Selecting a different theme will change the look and feel of the site.')), 'weight' => 2);
+      $header = array(t('Screenshot'), t('Name'), t('Selected'));
+      $data[] = array('title' => t('Theme settings'), 'data' => form_item('', theme('table', $header, $rows), t('Selecting a different theme will change the look and feel of the site.')), 'weight' => 2);
     }
 
     if (variable_get('configurable_timezones', 1)) {
@@ -199,25 +233,48 @@ function system_view_general() {
   return $output;
 }
 
-function system_listing($type) {
-  // Pick appropriate directory and filetype
-  switch ($type) {
-    case 'modules':
-      $directory = 'modules';
-      $type = 'module';
-      break;
-    case 'themes':
-    default:
-      $directory = 'themes';
-      $type = 'theme';
-      break;
+/**
+ * Inventory theme engines and insert entries for them into the system table
+ */
+function system_theme_engine_inventory($directory) {
+  $engines = array();
+
+  // Remove all theme engines from the system table
+  db_query('DELETE FROM {system} WHERE type = \'%s\'', 'theme_engine');
+
+  // Find theme engines in the directory and insert into database
+  $files = file_scan_directory($directory. '/engines', '\.engine$');
+
+  foreach ($files as $filename => $file) {
+    module_set_filename($file->name, $filename);
+    module_load($file->name);
+
+    $info->name = $file->name;
+    $info->filename = $file->filename;
+    $engines[$info->name] = $info;
+
+    db_query('INSERT INTO {system} (name, type, filename, status, throttle, bootstrap) VALUES (\'%s\', \'%s\', \'%s\', %d, %d, %d)', $info->name, 'theme_engine', $filename, 1, 0, 0);
   }
+  return $engines;
+}
 
+/**
+ * Retrieves an array of a particular type of files (specified by $type) in a particular $directory
+ * and their current status in the system table.
+ */
+function system_get_files($search, $type, $directory) {
   // Find files in the directory.
-  $files = file_scan_directory($directory, "\.$type$");
+  $files = file_scan_directory($directory, $search);
 
+  return $files;
+}
+
+/**
+ * Retrieves the current status of an array of files in the system table.
+ */
+function system_get_files_database(&$files, $type) {
   // Extract current files from database.
-  $result = db_query("SELECT filename, type, status, throttle FROM {system} WHERE type = '%s'", $type);
+  $result = db_query('SELECT filename, type, status, throttle FROM {system} WHERE type = \'%s\'', $type);
   while ($file = db_fetch_object($result)) {
     if (is_object($files[$file->filename])) {
       foreach ($file as $key => $value) {
@@ -225,64 +282,186 @@ function system_listing($type) {
       }
     }
   }
+}
+
+/**
+ * Obtains information about each theme in the $files array
+ * Also updates the system table
+ */
+function system_obtain_theme_info($files, $directory) {
+  foreach ($files as $filename => $file) {
+    if ($file->theme) {
+      // file is a style
+      $info->description = $file->theme;
+      $info->style = TRUE;
+    }
+
+    if (strpos($filename, '.theme')) {
+      // file is a theme
+      module_set_filename($file->name, $filename);
+      module_load($file->name);
+      $info->description = '';
+      $info->prefix = basename($filename, '.theme');
+    }
+    elseif ($info->style && !$file->engine) {
+      $info->prefix = $info->description;
+    }
+    else {
+      // file is a template
+      $info->description = $info->style ? $info->description : $file->engine;
+      $info->template = TRUE;
+      $info->prefix = basename($file->engine, '.engine');
+    }
+
+    $info->filename = $filename;
+    $info->path = pathinfo($info->filename);
+    $info->name = str_replace(array($directory .'/'), '', $info->path['dirname']);
+    $info->shortname = basename($info->name);
+    $info->screenshot = dirname($info->filename) .'/screenshot.png';
+
+    $info->status = $file->status;
+
+    $themes[$info->name] = $info;
+
+    // Update the contents of the system table:
+    db_query('DELETE FROM {system} WHERE filename = \'%s\' AND type = \'%s\'', $info->filename, 'theme');
+    db_query('INSERT INTO {system} (name, description, type, filename, status, throttle, bootstrap) VALUES (\'%s\', \'%s\', \'%s\', \'%s\', %d, %d, %d)', $info->name, $info->description, 'theme', $info->filename, $info->status, 0, 0);
+  }
+  return $themes;
+}
+
+/**
+ * Collect data about all currently available themes
+ */
+function system_theme_data($directory) {
+  // Find theme engines
+  $engines = system_theme_engine_inventory($directory);
+
+  // Get current list of themes and their present status in the system table.
+  $files = system_get_files('\.theme$', 'theme', $directory);
+
+  // Add templates to the site listing
+  foreach ($engines as $engine) {
+    foreach (call_user_func($engine->name .'_templates', $directory) as $template) {
+      $template_files[$template->filename] = $template;
+      $template_files[$template->filename]->engine = $engine->filename;
+      foreach ($files as $file) {
+        // do not double-insert templates with theme files in their directory
+        if (dirname($template->filename) == dirname($file->filename)) {
+          unset($template_files[$template->filename]);
+        }
+      }
+    }
+  }
+  $files = array_merge($files, $template_files);
+
+  // Find styles in each theme's directory.
+  foreach ($files as $file) {
+    foreach (system_get_files("style.css$", 'theme', dirname($file->filename)) as $style) {
+      // do not double-insert themes with css files in their directory
+      if (dirname($style->filename) != dirname($file->filename)) {
+        $style_files[$style->filename] = $style;
+        $path = pathinfo($file->filename);
+        $style_files[$style->filename]->theme = str_replace(array($directory .'/'), '', $path['dirname']);
+        if ($file->engine) {
+          $style_files[$style->filename]->engine = $file->engine;
+        }
+      }
+    }
+  }
+  $files = array_merge($files, $style_files);
+
+  // Extract current files from database.
+  system_get_files_database($files, 'theme');
+
+  // Build an array of information about each theme for use in displaying the selection table.
+  return system_obtain_theme_info($files, $directory);
+}
+
+/**
+ * Generate a list of all the available theme/style combinations.
+ */
+function system_theme_listing() {
+  $directory = 'themes';
+
+  $themes = system_theme_data($directory);
+  ksort($themes);
+
+  foreach ($themes as $key => $info) {
+    $row = array();
+
+    // Screenshot column.
+    $row[] = file_exists($info->screenshot) ? theme('image', $info->screenshot, t('Screenshot for %theme theme', array('%theme' => $info->shortname)), '', 'class="screenshot"') : t('no screenshot');
+
+    // Information field.
+    $field = '<strong>'. $info->shortname .'</strong>';
+    $field .= '<br /><em>themes/'. $key .'</em>';
+    $row[] = $field;
+
+    // enabled, default, and operations columns
+    $row[] = array('data' => form_checkbox('', 'status]['. $info->filename, 1, $info->status), 'align' => 'center');
+    $row[] = array('data' => form_radio('', 'theme_default', $info->filename, (variable_get('theme_default', 'bluemarine') == $key) ? 1 : 0), 'align' => 'center');
+    if (function_exists($info->prefix .'_settings') || function_exists($info->prefix .'_features')) {
+      $row[] = array('data' => l(t('configure'), 'admin/themes/settings/'. str_replace('/', '.', $key)), 'align' => 'center');
+    }
+    else {
+      $row[] = '';
+    }
+    $rows[] = $row;
+  }
+
+  $header = array(t('Screenshot'), t('Name'), t('Enabled'), t('Default'), t('Operations'));
+  $output = form_hidden('type', 'theme');
+  $output .= theme('table', $header, $rows);
+  return $output;
+}
+
+/**
+ * Generate a list of all the available modules, as well as update the system list.
+ */
+function system_module_listing() {
+  $directory = 'modules';
+
+  // Get current list of modules
+  $files = system_get_files('\.module$', 'module', $directory);
+
+  // Extract current files from database.
+  system_get_files_database($files, 'module');
 
   ksort($files);
 
-  if ($type == 'module') {
-    $required = array('modules/admin.module', 'modules/block.module', 'modules/filter.module', 'modules/system.module', 'modules/user.module', 'modules/watchdog.module');
-    // the throttle mechanism requires additional modules always be enabled
-    $throttle_required = array_merge($required, array('modules/statistics.module', 'modules/throttle.module'));
+  $required = array('modules/admin.module', 'modules/block.module', 'modules/filter.module', 'modules/system.module', 'modules/user.module', 'modules/watchdog.module');
+  // the throttle mechanism requires additional modules always be enabled
+  $throttle_required = array_merge($required, array('modules/statistics.module', 'modules/throttle.module'));
 
-    $header = array(t('Name'), t('Description'), t('Status'), t('Throttle'));
-  }
-  else {
-    $required = array();
-    $header = array(t('Name'), t('Description'), t('Enable'), t('Default'));
-  }
+  $header = array(t('Name'), t('Description'), t('Status'), t('Throttle'));
 
   foreach ($files as $filename => $file) {
     module_set_filename($file->name, $filename);
     module_load($file->name);
 
-    if ($type == 'module') {
-      $info->name = module_invoke($file->name, 'help', 'admin/modules#name') ? module_invoke($file->name, 'help', 'admin/modules#name') : $file->name;
-      $info->description = module_invoke($file->name, 'help', 'admin/modules#description');
-      // log the critical hooks implemented by this module
-      $bootstrap = 0;
-      foreach (bootstrap_hooks() as $hook) {
-        if (module_hook($file->name, $hook)) {
-          $bootstrap = 1;
-          break;
-        }
-      }
-    }
-    elseif ($type == 'theme') {
-      $info->name = $file->name;
-      $info->description = module_invoke($file->name, 'help', 'admin/themes#description');
-      $themes[] = $info->name;
-
-      // Enable the default theme:
-      if ($info->name == variable_get('theme_default', 0)) {
-        $file->status = 1;
+    $info->name = module_invoke($file->name, 'help', 'admin/modules#name') ? module_invoke($file->name, 'help', 'admin/modules#name') : $file->name;
+    $info->description = module_invoke($file->name, 'help', 'admin/modules#description');
+    // log the critical hooks implemented by this module
+    $bootstrap = 0;
+    foreach (bootstrap_hooks() as $hook) {
+      if (module_hook($file->name, $hook)) {
+        $bootstrap = 1;
+        break;
       }
     }
 
     // Update the contents of the system table:
-    db_query("DELETE FROM {system} WHERE filename = '%s' AND type = '%s'", $filename, $type);
-    db_query("INSERT INTO {system} (name, description, type, filename, status, throttle, bootstrap) VALUES ('%s', '%s', '%s', '%s', %d, %d, %d)", $info->name, $info->description, $type, $filename, $file->status, $file->throttle, $bootstrap);
+    db_query('DELETE FROM {system} WHERE filename = \'%s\' AND type = \'%s\'', $filename, 'module');
+    db_query('INSERT INTO {system} (name, description, type, filename, status, throttle, bootstrap) VALUES (\'%s\', \'%s\', \'%s\', \'%s\', %d, %d, %d)', $info->name, $info->description, 'module', $filename, $file->status, $file->throttle, $bootstrap);
 
-    $row = array($info->name, $info->description, array('data' => (in_array($filename, $required) ? form_hidden("status][$filename", 1) . t('required') : form_checkbox('', "status][$filename", 1, $file->status)), 'align' => 'center'));
-    if ($type == 'module') {
-      $row[] = array('data' => (in_array($filename, $throttle_required) ? form_hidden("throttle][$filename", 0) . t('required') : form_checkbox(NULL, "throttle][$filename", 1, $file->throttle, NULL, module_exist('throttle') ? NULL : array('disabled' => 'disabled'))), 'align' => 'center');
-    }
-    else if ($type == 'theme') {
-      $row[] = array('data' => form_radio('', 'theme_default', $info->name, (variable_get('theme_default', 0) == $info->name) ? 1 : 0), 'align' => 'center');
-    }
+    $row = array($info->name, $info->description, array('data' => (in_array($filename, $required) ? form_hidden('status]['. $filename, 1) . t('required') : form_checkbox('', 'status]['. $filename, 1, $file->status)), 'align' => 'center'));
+    $row[] = array('data' => (in_array($filename, $throttle_required) ? form_hidden('throttle]['. $filename, 0) . t('required') : form_checkbox(NULL, 'throttle]['. $filename, 1, $file->throttle, NULL, module_exist('throttle') ? NULL : array('disabled' => 'disabled'))), 'align' => 'center');
     $rows[] = $row;
   }
 
   $output  = theme('table', $header, $rows);
-  $output .= form_hidden('type', $type);
+  $output .= form_hidden('type', 'module');
 
   return $output;
 }
@@ -294,10 +473,17 @@ function system_listing_save($edit = array()) {
   if ($op == t('Save configuration')) {
     db_query("UPDATE {system} SET status = 0 WHERE type = '%s'", $edit['type']);
     foreach ($edit['status'] as $filename => $status) {
+      // Make certain that the default theme is enabled to avoid user error
+      if (($edit['type'] == 'theme') && ($edit['theme_default'] == $filename)) {
+        $status = 1;
+      }
+
       db_query("UPDATE {system} SET status = %d, throttle = %d WHERE filename = '%s'", $status, $edit['throttle'][$filename], $filename);
     }
     if ($edit['type'] == 'theme') {
-      variable_set('theme_default', $edit['theme_default']);
+      $path = pathinfo($edit['theme_default']);
+      $name = str_replace(array('themes/'), '', $path['dirname']);
+      variable_set('theme_default', $name);
     }
 
     cache_clear_all();
@@ -343,7 +529,7 @@ function system_settings_save() {
  */
 function system_themes() {
   system_listing_save();
-  $form = system_listing('themes');
+  $form = system_theme_listing();
   $form .= form_submit(t('Save configuration'));
   print theme('page', form($form));
 }
@@ -353,31 +539,9 @@ function system_themes() {
  */
 function system_modules() {
   system_listing_save();
-  $form = system_listing('modules');
+  $form = system_module_listing();
   $form .= form_submit(t('Save configuration'));
   print theme('page', form($form));
-}
-
-/**
- * Menu callback; displays a theme's settings page.
- */
-function system_configure_theme() {
-  system_settings_save();
-
-  $name = arg(2);
-  $themes = list_themes();
-  $theme = $themes[$name];
-
-  if ($theme) {
-    include_once "$theme->filename";
-
-    $function = $theme->name .'_settings';
-    if (function_exists($function)) {
-      $form .= $function();
-    }
-  }
-
-  print theme('page', system_settings_form($form));
 }
 
 /**
@@ -391,6 +555,86 @@ function system_site_settings($module = NULL) {
   }
   else {
     $form = system_view_general();
+  }
+
+  print theme('page', system_settings_form($form));
+}
+
+/**
+ * Menu callback; display theme configuration for entire site and individual themes.
+ */
+function system_theme_settings() {
+  system_settings_save();
+  // Default settings are defined in _theme_settings() in includes/theme.inc
+  $key = str_replace('.', '/', arg(3));
+  if ($key) {
+    $settings = drupal_get_theme_settings($key);
+    $var = str_replace('/', '_', 'theme_'. $key .'_settings');
+    $themes = system_theme_data('themes');
+    $features = function_exists($themes[$key]->prefix .'_features') ? call_user_func($themes[$key]->prefix .'_features') : array();
+  }
+  else {
+    $settings = drupal_get_theme_settings('');
+    $var = 'theme_settings';
+  }
+
+  $form = '';
+
+  // Logo settings
+  if ((!$key) || in_array('logo', $features)) {
+    $group = form_checkbox(t('Use the default logo'), "$var][default_logo", 1, $settings['default_logo'], t('Check here if you want the theme to use the logo supplied with it.'));
+    $group .= form_textfield(t('Path to custom logo'), "$var][logo_path", $settings['logo_path'], 50, 60, t('The path to the file you would like to use as your logo file instead of the default logo.'));
+    $form = form_group(t('Logo image settings'), $group);
+  }
+
+  // System wide only settings.
+  if (!$key) {
+    // Menu settings
+    $group = form_textarea(t('Primary links'), "$var][primary_links", $settings['primary_links'], 70, 8, t('The HTML code for the primary links. If this field is empty, Drupal will automatically generate a set of links based on which modules are enabled.'));
+    $group .= form_textarea(t('Secondary links'), "$var][secondary_links", $settings['secondary_links'], 70, 8, t('The HTML code for the secondary links.'));
+    $form .= form_group(t('Menu Settings'), $group, t('Customize the menus that are displayed at the top and/or bottom of the page. This configuration screen is only available in the site wide display configuration.'));
+
+    // Toggle node display.
+    $group = '';
+    foreach (node_list() as $type) {
+      $group .= form_checkbox($type, "$var][toggle_node_info_$type", 1, $settings["toggle_node_info_$type"]);
+    }
+    $form .= form_group(t('Display post information on'), $group, t('Enable or disable the "submitted by Username on date" text when displaying posts of the above type'));
+  }
+
+  $group = '';
+
+  // Toggle settings
+  $toggles = array('toggle_name' => t('Site name'),
+        'toggle_search' => t('Search box'),
+        'toggle_slogan' => t('Site slogan'),
+        'toggle_mission' => t('Mission statement'),
+        'toggle_primary_links' => t('Primary links'),
+        'toggle_secondary_links' => t('Secondary links'),
+        'toggle_node_user_picture' => t('User pictures in posts'),
+        'toggle_comment_user_picture' => t('User pictures in comments'));
+
+  foreach ($toggles as $name => $title) {
+    if ((!$key) || in_array($name, $features)) {
+      $group .= form_checkbox($title, "$var][$name", 1, $settings[$name]);
+    }
+  }
+  if ($group) {
+    $form .= form_group(t('Toggle display'), $group, t('Enable or disable the display of certain page elements.'));
+  }
+
+  if ($key) {
+    // Template-specific settings
+    $function = function_exists($themes[$key]->prefix .'_settings');
+    if (function_exists($function)) {
+      $group = $function();
+      if (strpos($themes[$key]->description, '.theme')) {
+        $form .= form_group(t('Theme-specific settings'), $group, t('These settings only exist for the %theme theme and all the styles based on it.', array('%theme' => $themes[$key]->prefix)));
+      }
+      else {
+        $form .= form_group(t('Engine-specific settings'), $group, t('These settings only exist for all the templates and styles based on the %engine theme engine.', array('%engine' => $themes[$key]->prefix)));
+      }
+    }
   }
 
   print theme('page', system_settings_form($form));

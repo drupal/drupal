@@ -717,10 +717,11 @@ INSERT INTO system VALUES ('modules/node.module','node','module','',1,0,0);
 INSERT INTO system VALUES ('modules/page.module','page','module','',1,0,0);
 INSERT INTO system VALUES ('modules/story.module','story','module','',1,0,0);
 INSERT INTO system VALUES ('modules/taxonomy.module','taxonomy','module','',1,0,0);
-INSERT INTO system VALUES ('themes/xtemplate/xtemplate.theme','xtemplate','theme','Internet explorer, Netscape, Opera',1,0,0);
+INSERT INTO system VALUES ('themes/bluemarine/xtemplate.xtmpl','bluemarine','theme','themes/engines/xtemplate/xtemplate.engine',1,0,0);
+INSERT INTO system VALUES ('themes/engines/xtemplate/xtemplate.engine','xtemplate','theme_engine','',1,0,0);
 
 INSERT INTO variable(name,value) VALUES('update_start', 's:10:"2004-02-21";');
-INSERT INTO variable(name,value) VALUES('theme_default','s:9:"xtemplate";');
+INSERT INTO variable(name,value) VALUES('theme_default','s:10:"bluemarine";');
 INSERT INTO users(uid,name,mail) VALUES(0,'','');
 INSERT INTO users_roles(uid,rid) VALUES(0, 1);
 

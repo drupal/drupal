@@ -437,7 +437,7 @@ function file_scan_directory($dir, $mask, $nomask = array('.', '..', 'CVS'), $ca
         }
         elseif (ereg($mask, $file)) {
           $name = basename($file);
-          $files["$dir/$file"]->path = "$dir/$file";
+          $files["$dir/$file"]->filename = "$dir/$file";
           $files["$dir/$file"]->name = substr($name, 0, strrpos($name, '.'));
           if ($callback) {
             $callback("$dir/$file");

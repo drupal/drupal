@@ -379,6 +379,11 @@ tr.light .form-item, tr.dark .form-item {
 .node-form .poll-form fieldset {
   display: block;
 }
+img.screenshot {
+  border: 1px solid #808080;
+  display: block;
+  margin: 2px;
+}
 #tracker td.replies {
   text-align: center;
 }

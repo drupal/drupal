@@ -1,36 +1,14 @@
 <?php
 // $Id$
 
-function chameleon_help($section) {
-
-  $output = '';
-
-  switch ($section) {
-    case 'admin/themes#description':
-      $output = t('A fast PHP theme with different stylesheets.');
-      break;
-  }
-
-  return $output;
-}
-
-function chameleon_settings() {
-
-  /*
-  ** Compile a list of the available style sheets:
-  */
-
-  $fd = opendir('themes/chameleon');
-  while ($file = readdir($fd)) {
-    if (is_dir("themes/chameleon/$file") && !in_array($file, array('.', '..', 'CVS'))) {
-      $files["themes/chameleon/$file/chameleon.css"] = "themes/chameleon/$file/chameleon.css";
-    }
-  }
-  closedir($fd);
-
-  $output = form_select(t('CSS stylesheet'), 'chameleon_stylesheet', variable_get('chameleon_stylesheet', 'themes/chameleon/pure/chameleon.css'), $files, t('Selecting a different stylesheet will change the look and feel of your site.'));
-
-  return $output;
+function chameleon_features() {
+  return array(
+       'logo',
+       'toggle_name',
+       'toggle_search',
+       'toggle_slogan',
+       'toggle_primary_links',
+       'toggle_secondary_links');
 }
 
 function chameleon_page($content, $title = NULL, $breadcrumb = NULL) {
@@ -48,12 +26,34 @@ function chameleon_page($content, $title = NULL, $breadcrumb = NULL) {
   $output .= " <title>". ($title ? $title ." | ". variable_get("site_name", "drupal") : variable_get("site_name", "drupal") ." | ". variable_get("site_slogan", "")) ."</title>\n";
   $output .= drupal_get_html_head();
   $output .= " <link rel=\"stylesheet\" type=\"text/css\" href=\"themes/chameleon/common.css\" />\n";
-  $output .= " <link rel=\"stylesheet\" type=\"text/css\" href=\"". variable_get("chameleon_stylesheet", "themes/chameleon/pure/chameleon.css") ."\" />\n";
   $output .= "</head>";
   $output .= "<body". theme_onload_attribute() .">\n";
   $output .= " <div id=\"header\">";
-  $output .= "  <h1 class=\"title\">". l(variable_get("site_name", "drupal"), ""). "</h1>";
-  $output .= " </div>\n";
+
+  if ($logo = drupal_get_theme_setting('logo')) {
+    $output .= "  <a href=\"./\" title=\"Home\"><img src=\"$logo\" alt=\"Home\" /></a>";
+  } 
+  if (drupal_get_theme_setting('toggle_name')) {
+    $output .= "  <h1 class=\"site-name title\">". l(variable_get('site_name', 'drupal'), ""). "</h1>";
+  } 
+  if (drupal_get_theme_setting('toggle_slogan')) {
+    $output .= "  <div class=\"site-slogan\">". variable_get('site_slogan', '') ."</div>";
+  }
+
+  $output .= "</div>\n";
+
+  $primary_links = drupal_get_theme_setting('primary_links');
+  $secondary_links = drupal_get_theme_setting('secondary_links');
+  if ($primary_links || $secondary_links) {
+    $output .= ' <div class="navlinks">';
+    if ($primary_links) {
+      $output .= '<div class="primary">'. $primary_links .'</div>';
+    }
+    if ($secondary_links) {
+      $output .= '<div class="secondary">'. $secondary_links .'</div>';
+    }
+    $output .= " </div>\n"; 
+  }
 
   $output .= " <table>\n";
   $output .= "  <tr>\n";
@@ -122,7 +122,7 @@ function chameleon_node($node, $main = 0, $page = 0) {
 
   $output .= " </div>\n";
 
-  $submitted = array(t("By %author at %date", array('%author' => format_name($node), '%date' => format_date($node->created, 'small'))));
+  $submitted = drupal_get_theme_setting("toggle_node_info_$node->type") ? array(t("By %author at %date", array('%author' => format_name($node), '%date' => format_date($node->created, 'small')))) : array();
 
   if (module_exist('taxonomy')) {
     $terms = taxonomy_link("taxonomy terms", $node);

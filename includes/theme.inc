@@ -33,16 +33,52 @@ function theme_help($section) {
  *   The name of the currently selected theme.
  */
 function init_theme() {
-  global $user;
+  global $user, $custom_theme, $theme_engine, $theme_key;
 
   $themes = list_themes();
 
   // Only select the user selected theme if it is available in the
   // list of enabled themes.
-  $theme = $user->theme && $themes[$user->theme] ? $user->theme : variable_get('theme_default', 0);
+  $theme = $user->theme && $themes[$user->theme] ? $user->theme : variable_get('theme_default', 'bluemarine');
 
-  include_once($themes[$theme]->filename);
+  // Allow modules to override the present theme... only select custom theme
+  // if it is available in the list of enabled themes.
+  $theme = $custom_theme && $themes[$custom_theme] ? $custom_theme : $theme;
 
+  // Store the identifier for retrieving theme settings with.
+  $theme_key = $theme;
+
+  // If we're using a style, load its appropriate theme,
+  // which is stored in the style's description field.
+  // Also load the stylesheet using drupal_set_html_head().
+  // Otherwise, load the theme.
+  if (strpos($themes[$theme]->filename, '.css')) {
+    // File is a style; put it in the html_head buffer
+    // Set theme to its template/theme
+    drupal_set_html_head(theme('stylesheet_import', $themes[$theme]->filename));
+    $theme = $themes[$theme]->description;
+  }
+  else {
+    // File is a template/theme
+    // Put the css with the same name in html_head, if it exists
+    if (file_exists($stylesheet = dirname($themes[$theme]->filename) .'/style.css')) {
+      drupal_set_html_head(theme('stylesheet_import', $stylesheet));
+    }
+  }
+
+  if (strpos($themes[$theme]->filename, '.theme')) {
+    // file is a theme; include it
+    include_once($themes[$theme]->filename);
+  }
+  elseif (strpos($themes[$theme]->description, '.engine')) {
+    // file is a template; include its engine
+    include_once($themes[$theme]->description);
+    $theme_engine = basename($themes[$theme]->description, '.engine');
+    if (function_exists($theme_engine .'_init')) {
+      call_user_func($theme_engine .'_init', $themes[$theme]);
+    }
+  }
+  
   return $theme;
 }
 
@@ -75,12 +111,41 @@ function list_themes($refresh = FALSE) {
 }
 
 /**
+ * Provides a list of currently available theme engines
+ *
+ * @param $refresh
+ *   Whether to reload the list of themes from the database.
+ * @return
+ *   An array of the currently available theme engines.
+ */
+function list_theme_engines($refresh = FALSE) {
+  static $list;
+
+  if ($refresh) {
+    unset($list);
+  }
+
+  if (!$list) {
+    $list = array();
+    $result = db_query("SELECT * FROM {system} where type = 'theme_engine' AND status = '1' ORDER BY name");
+    while ($engine = db_fetch_object($result)) {
+      if (file_exists($engine->filename)) {
+        $list[$engine->name] = $engine;
+      }
+    }
+  }
+
+  return $list;
+}
+
+/**
  * Generate the themed representation of a Drupal object.
  *
  * All requests for themed functions must go through this function. It examines
  * the request and routes it to the appropriate theme function. If the current
- * theme does not implement the requested function, then the base theme function
- * is called.
+ * theme does not implement the requested function, then the current theme
+ * engine is checked. If neither the engine nor theme implement the requested
+ * function, then the base theme function is called.
  *
  * For example, to retrieve the HTML that is output by theme_page($output), a
  * module should call theme('page', $output).
@@ -94,14 +159,21 @@ function list_themes($refresh = FALSE) {
  */
 function theme() {
   global $theme;
+  global $theme_engine;
 
   $args = func_get_args();
   $function = array_shift($args);
 
-  if (($theme != '') && (function_exists($theme .'_'. $function))) {
+  if (($theme != '') && function_exists($theme .'_'. $function)) {
+    // call theme function
     return call_user_func_array($theme .'_'. $function, $args);
   }
+  elseif (($theme != '') && isset($theme_engine) && function_exists($theme_engine .'_'. $function)) {
+    // call engine function
+    return call_user_func_array($theme_engine .'_'. $function, $args);
+  }
   elseif (function_exists('theme_'. $function)){
+    // call Drupal function
     return call_user_func_array('theme_'. $function, $args);
   }
 }
@@ -115,6 +187,113 @@ function path_to_theme() {
   $themes = list_themes();
 
   return dirname($themes[$theme]->filename);
+}
+
+/**
+ * Retrieve an associative array containing the settings for a theme.
+ *
+ * The final settings are arrived at by merging the default settings, 
+ * the site-wide settings, and the settings defined for the specific theme.
+ * If no $key was specified, only the site-wide theme defaults are retrieved.
+ *
+ * The default values for each of settings are also defined in this function.
+ * To add new settings, add their default values here, and then add form elements
+ * to system_theme_settings() in system.module.
+ *
+ * @param $key
+ *  The template/style value for a given theme.
+ *
+ * @return
+ *   An associative array containing theme settings.
+ */
+function drupal_get_theme_settings($key = NULL) {
+  $defaults = array(
+    'primary_links'                 =>  '',
+    'secondary_links'               =>  l('edit secondary links', 'admin/themes/settings'),
+    'mission'                       =>  '',
+    'default_logo'                  =>  1,
+    'logo_path'                     =>  '',
+    'toggle_logo'                   =>  1,
+    'toggle_name'                   =>  1,
+    'toggle_search'                 =>  1,
+    'toggle_slogan'                 =>  0,
+    'toggle_mission'                =>  1,
+    'toggle_primary_links'          =>  1,
+    'toggle_secondary_links'        =>  1,
+    'toggle_node_user_picture'      =>  0,
+    'toggle_comment_user_picture'   =>  0,
+  );
+
+  foreach (node_list() as $type) {
+    $defaults['toggle_node_info_' . $type] = 1;
+  }
+  $settings = array_merge($defaults, variable_get('theme_settings', array()));
+
+  if ($key) {
+    $settings = array_merge($settings, variable_get(str_replace('/', '_', 'theme_'. $key .'_settings'), array()));
+  }
+
+  return $settings;
+}
+
+/**
+ * Retrieve a setting for the current theme.
+ * This function is designed for use from within themes & engines
+ * to determine theme settings made in the admin interface.
+ *
+ * Caches values for speed (use $refresh = TRUE to refresh cache)
+ *
+ * @param $setting_name
+ *  The name of the setting to be retrieved.
+ *
+ * @param $refresh
+ *  Whether to reload the cache of settings.
+ *
+ * @return
+ *   The value of the requested setting, NULL if the setting does not exist.
+ */
+function drupal_get_theme_setting($setting_name, $refresh = FALSE) {
+  global $theme_key;
+  static $settings;
+
+  if (empty($settings) || $refresh) {
+    $settings = drupal_get_theme_settings($theme_key);
+
+    $themes = list_themes();
+    $theme_object = $themes[$theme_key];
+
+    if ($settings['mission'] == '') {
+      $settings['mission'] = variable_get('site_mission', '');
+    }
+
+    if (!$settings['toggle_mission']) {
+      $settings['mission'] = '';
+    }
+
+    if ($settings['toggle_logo']) {
+      if ($settings['default_logo']) {
+        $settings['logo'] = dirname($theme_object->filename) .'/logo.png'; 
+      }
+      elseif ($settings['logo_path']) {
+        $settings['logo'] = $settings['logo_path'];
+      }
+    }
+
+    if ($settings['toggle_primary_links']) {
+      if (!$settings['primary_links']) {
+        $settings['primary_links'] = theme('links', link_page());
+      }
+    }
+    else {
+      $settings['primary_links'] = '';
+    }
+
+    if (!$settings['toggle_secondary_links']) {
+      $settings['secondary_links'] = '';
+    }
+  }
+
+  return isset($settings[$setting_name]) ? $settings[$setting_name] : NULL;
 }
 
 /**
@@ -474,6 +653,22 @@ function theme_block($block) {
  */
 function theme_mark() {
   return '<span class="marker">*</span>';
+}
+
+/**
+ * Import a stylesheet using @import.
+ * 
+ * @param $stylesheet
+ *  The filename to point the link at.
+ *
+ * @param $media
+ *  The media type to specify for the stylesheet
+ *
+ * @return
+ *  A string containing the HTML for the stylesheet import.
+ */
+function theme_stylesheet_import($stylesheet, $media = 'all') {
+  return '<style type="text/css" media="'. $media .'">@import "'. $stylesheet .'";</style>';
 }
 
 /**

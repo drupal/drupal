@@ -74,7 +74,8 @@ $sql_updates = array(
   "2004-08-10" => "update_100",
   "2004-08-11" => "update_101",
   "2004-08-12" => "update_102",
-  "2004-08-17" => "update_103"
+  "2004-08-17" => "update_103",
+  "2004-08-19" => "update_104"
 );
 
 function update_32() {
@@ -1519,6 +1520,34 @@ function update_103() {
     list tinyint(1) unsigned NOT NULL default '0',
     PRIMARY KEY  (fid)
   )");
+  return $ret;
+}
+
+function update_104() {
+  $ret = array();
+  if (variable_get('theme_default', 'xtemplate') == 'chameleon') {
+    $ret[] = update_sql("DELETE FROM {system} WHERE name = 'chameleon'");
+    $ret[] = update_sql("INSERT INTO system VALUES ('themes/chameleon/chameleon.theme','chameleon','theme','',1,0,0)");
+    $ret[] = update_sql("INSERT INTO system VALUES ('themes/chameleon/marvin/style.css','marvin','theme','themes/chameleon/chameleon.theme',1,0,0)");
+    if (variable_get("chameleon_stylesheet", "themes/chameleon/pure/chameleon.css") == "themes/chameleon/marvin/chameleon.css") {
+      variable_set('theme_default', 'chameleon/marvin');
+    }
+   else {
+      variable_set('theme_default', 'chameleon');
+    }
+  }
+  elseif (variable_get('theme_default', 'xtemplate') == 'xtemplate') {
+    $ret[] = update_sql("DELETE FROM {system} WHERE name = 'xtemplate'");
+    $ret[] = update_sql("INSERT INTO system VALUES ('themes/bluemarine/bluemarine.theme','bluemarine','theme','themes/engines/xtemplate/xtemplate.engine',1,0,0)");
+    $ret[] = update_sql("INSERT INTO system VALUES ('themes/pushbutton/pushbutton.theme','pushbutton','theme','themes/engines/xtemplate/xtemplate.engine',1,0,0)");
+    $ret[] = update_sql("INSERT INTO system VALUES ('themes/engines/xtemplate/xtemplate.engine','xtemplate','theme_engine','',1,0,0)");
+    if (variable_get('xtemplate_template', 'default') == 'pushbutton') {
+      variable_set('theme_default', 'pushbutton');
+    }
+    else {
+      variable_set('theme_default', 'bluemarine');
+    }
+  }
   return $ret;
 }
 

@@ -13,7 +13,6 @@ a:hover {
 body {
   margin: 0;
   padding: 3em;
-  font-family: arial, helvetica, sans-serif;
   font-size: .9em;
   line-height: 1.3em;
 }
@@ -75,7 +74,6 @@ br {
   padding-left: 1em;
   padding-right: 1em;
   vertical-align: top;
-  width: 60%;
 }
 #footer {
  font-size: 0.8em;
@@ -112,6 +110,31 @@ br {
   color: red;
 }
 
+/*
+** Common navigation links added on the admin/themes/settings page
+*/
+.navlinks {
+  padding: 0em 0.5em 1.5em 0em;
+}
+.primary a {
+  font-size: 1.0em;
+  padding: 0em 0.5em 0em 0em;
+}
+.secondary a {
+  font-size: 0.9em;
+  padding: 0em 0.5em 0em 0em;
+}
+
+/*
+** Logo Image Positioning
+*/
+#header img {
+	float: left;
+	padding: 0em 2em 0em 0em;
+}
+#header {
+	clear: both;
+}
 /*
 ** Module specific styles
 */
