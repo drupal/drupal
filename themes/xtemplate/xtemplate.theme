@@ -36,28 +36,24 @@ function xtemplate_node($node, $main = 0, $page = 0) {
 
   $xtemplate->template->assign(array(
         "link"      => url("node/view/$node->nid"),
-        "title"     => ucfirst($node->title),
+        "title"     => $node->title,
         "author"    => format_name($node),
         "date"      => format_date($node->created),
-        "classes"   => ($main && $node->static) ? 'node static-node' : 'node',
+        "static"    => ($main && $node->static) ? 'static' : '',
         "content"   => ($main && $node->teaser) ? $node->teaser : $node->body));
+
+  if ($page == 0) {
+    $xtemplate->template->parse("node.title");
+  }
 
   if (module_exist("taxonomy") && ($taxonomy = taxonomy_link("taxonomy terms", $node))) {
     $xtemplate->template->assign("taxonomy", theme_links($taxonomy));
-  }
-  else {
-    $xtemplate->template->assign("taxonomy", "");
+    $xtemplate->template->parse("node.taxonomy");
   }
 
   if ($links = link_node($node, $main)) {
     $xtemplate->template->assign("links", theme_links($links));
-  }
-  else {
-    $xtemplate->template->assign("links", "");
-  }
-
-  if ($page == 0) {
-    $xtemplate->template->parse("node.title");
+    $xtemplate->template->parse("node.links");
   }
 
   $xtemplate->template->parse("node");
@@ -66,26 +62,27 @@ function xtemplate_node($node, $main = 0, $page = 0) {
   return $output;
 }
 
-function xtemplate_comment($comment, $link = 0) {
+function xtemplate_comment($comment, $links = 0) {
   global $xtemplate;
 
   $xtemplate->template->assign(array (
-        "title"     => ucfirst($comment->subject),
-        "author"    => format_name($comment),
-        "date"      => format_date($comment->timestamp),
-        "content"   => $comment->comment,
-        "links"     => $link));
+    "title"   => $comment->subject,
+    "author"  => format_name($comment),
+    "date"    => format_date($comment->timestamp),
+    "content" => $comment->comment
+  ));
 
   if ($comment->new) {
-    $xtemplate->template->parse("comment_new");
-    $output = $xtemplate->template->text("comment_new");
-    $xtemplate->template->reset("comment_new");
+    $xtemplate->template->parse("comment.new");
   }
-  else {
-    $xtemplate->template->parse("comment_old");
-    $output = $xtemplate->template->text("comment_old");
-    $xtemplate->template->reset("comment_old");
+  if ($links) {
+    $xtemplate->template->assign("links", $links);
+    $xtemplate->template->parse("comment.links");
   }
+  $xtemplate->template->parse("comment");
+  $output = $xtemplate->template->text("comment");
+  $xtemplate->template->reset("comment");
+
   return $output;
 }
 
@@ -111,8 +108,8 @@ function xtemplate_header() {
   }
 
   if ($message = drupal_get_message()) {
-    $xtemplate->template->assign("class", $message->type ."-message");
-    $xtemplate->template->assign("message", ucfirst($message->message));
+    $xtemplate->template->assign("message", $message->message);
+    $xtemplate->template->assign("type", $message->type);
     $xtemplate->template->parse("header.message");
   }
 
@@ -146,7 +143,7 @@ function xtemplate_block(&$block) {
 
   // create template variables for all block variables (module, delta, region, subject, content, ...)
   foreach ($block as $key => $value) {
-    $xtemplate->template->assign($key, $value);
+    $xtemplate->template->assign($key == "subject" ? "title" : $key, $value); // TODO: standardize on 'title' (ie. rename all $block["subject"] to "title")
   }
   $xtemplate->template->parse("block");
   $output = $xtemplate->template->text("block");
@@ -158,7 +155,7 @@ function xtemplate_box($title, $content, $region = "main") {
   global $xtemplate;
 
   $xtemplate->template->assign(array(
-        "subject" => $title,
+        "title" => $title,
         "content" => $content));
 
   $xtemplate->template->parse("box");

@@ -1,12 +1,14 @@
 /* $Id$ */
 
+/*
+** HTML elements
+*/
 body {
   margin: 0;
   padding: 0;
   color: #000;
   background-color: #fff;
-  font-family: verdana, arial, helvetica, sans-serif;
-  font-size: 76%;
+  font: 76% Tahoma, Verdana, Arial, Helvetica, sans-serif;
 }
 tr.dark {
   background-color: #ddd;
@@ -16,6 +18,9 @@ tr.light {
 }
 tr.dark td, tr.light td {
   padding: 0.3em;
+}
+h1, h2, h3, h4, h5, h6 {
+  margin: 0;
 }
 h1 {
   font-size: 1.2em;
@@ -44,12 +49,37 @@ fieldset {
   border: 1px solid #ccc;
 }
 p {
-  margin: 0 0 1em 0;
+  margin: 0 0 .5em 0;
   padding: 0;
 }
 img {
   border-width: 0;
 }
+pre {
+  background-color: #eee;
+  padding: 0.75em 1.5em;
+  font-size: 12px;
+  border: 1px solid #ddd;
+}
+table {
+  /* make <td> sizes relative to body size! */
+  font-size: 1em;
+}
+.form-item {
+  margin-top: 1em;
+}
+.form-item label {
+  font-size: 1em;
+  color: #222;
+}
+.item-list .title {
+  font-size: 1em;
+  color: #222;
+}
+
+/*
+** Page layout blocks / IDs
+*/
 #header, #content {
   width: 100%;
 }
@@ -112,24 +142,24 @@ img {
   /* padding in px not ex because IE messes up 100% width tables otherwise */
   padding: 10px;
 }
-#mission, #main .node .content, .comment .content {
+#mission, .node .content, .comment .content {
   line-height: 1.4;
 }
 #help {
   font-size: 0.9em;
   margin-bottom: 1em;
 }
-.error-message {
-  background-color: #eee;
-  border: 1px solid red;
-  padding: 0.3em;
-  margin-bottom: 1em;
+.breadcrumb {
+  margin-bottom: .5em;
 }
-.status-message {
+.message {
   background-color: #eee;
   border: 1px solid #ccc;
   padding: 0.3em;
   margin-bottom: 1em;
+}
+.error {
+  border-color: red;
 }
 #sidebar-left, #sidebar-right {
   background-color: #ddd;
@@ -143,15 +173,28 @@ img {
   padding: 1em;
   font-size: 0.8em;
 }
-#forum td {
-  padding: 0.5em 0.5em 0.5em 0.5em;
+
+/*
+** Common declarations for child classes of node, comment, block, box, etc.
+** If you want any of them styled differently for a specific parent, add
+** additional rules /with only the differing properties!/ to .parent .class.
+** See .comment .title for an example.
+*/
+.title, .title a {
+  font-weight: bold;
+  font-size: 1.3em;
+  color: #777;
+  margin: 0 auto 0 auto;  /* decrease default margins for h<x>.title */
 }
-#forum td.statistics, #forum td.settings, #forum td.pager {
-  height: 1.5em;
-  border: 1px solid #bbb;
+.submitted {
+  color: #999;
+  font-size: 0.8em;
 }
-table {
-  font-size: 1em;
+.links {
+  color: #999;
+}
+.links a {
+  font-weight: bold;
 }
 .block, .box {
   padding: 0 0 1.5em 0;
@@ -161,56 +204,35 @@ table {
   padding-bottom: 0.75em;
   margin-bottom: 1.5em;
 }
-.comment {
-  border: 1px solid #abc;
-  padding: 0 1.5em 1.5em 1.5em;
-  margin: 0.5em 0 0.5em 0;
+.block .title {
+  margin-bottom: .25em;
 }
-.node h2, .node h2 a, .block h2, .box h2 {
-  font-weight: bold;
-  font-size: 1.3em;
-  color: #777;
+.box .title {
+  font-size: 1.1em;
 }
-.static-node {
+.node {
+  margin: .5em 0 1em 0;
+}
+.static {
+  padding: .5em;
   background-color: #eee;
   border: solid 1px #ddd;
-  padding: 0em 1em 1em 1em;
 }
-.form-item label {
-  font-size: 1em;
-  color: #222;
-}
-.item-list .title {
-  font-size: 1em;
-  color: #222;
-}
-.node .author, .comment .author {
-  color: #999;
-  font-size: 0.8em;
-  padding-bottom: 1em;
+.node .content, .comment .content {
+  padding: .5em 0 .75em 0;
 }
 .node .taxonomy {
   color: #999;
   font-size: 0.8em;
   padding: 1.5em;
 }
-.node .content, .comment .content {
-  padding-top: 0.5em;
+.comment {
+  border: 1px solid #abc;
+  padding: .5em;
+  margin-bottom: 1em;
 }
-.node .links, .comment .links {
-  padding-top: 0.5em;
-  color: #999;
-}
-.node .links a, .comment .links a {
-  font-weight: bold;
-}
-.path a, .path a:visited {
-  color: #777;
-}
-.comment h3 {
-  font-weight: bold;
+.comment .title {
   font-size: 1.1em;
-  color: #777;
 }
 .comment .new {
   text-align: right;
@@ -219,6 +241,10 @@ table {
   float: right;
   color: red;
 }
+
+/*
+** Module specific styles
+*/
 #tracker th {
   text-align: left;
   border-bottom: 1px solid #ddd;
@@ -230,6 +256,16 @@ table {
   vertical-align: top;
   padding: 1em 1em 1em 0;
   border-bottom: 1px solid #ddd;
+}
+#forum td {
+  padding: 0.5em 0.5em 0.5em 0.5em;
+}
+#forum td.statistics, #forum td.settings, #forum td.pager {
+  height: 1.5em;
+  border: 1px solid #bbb;
+}
+.block-forum h3 {
+  margin-bottom: .5em;
 }
 .calendar a {
   text-decoration: none;
@@ -265,13 +301,4 @@ table {
 }
 .calendar .row-week td a:hover {
   background-color: #fff; color: #000;
-}
-pre {
-  background-color: #eee;
-  padding: 0.75em 1.5em;
-  font-size: 12px;
-  border: 1px solid #ddd;
-}
-.content li {
-  padding-bottom: 0.25em;
 }
