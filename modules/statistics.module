@@ -46,7 +46,7 @@ function statistics_exit() {
       // if we affected 0 rows, this is the first time viewing the node
       if (!db_affected_rows()) {
         // must create a new row to store counter's for new node
-        db_query("INSERT INTO statistics (nid, daycount, totalcount) VALUES(%d, daycount + 1, totalcount + 1)", arg(2));
+        db_query("INSERT INTO statistics (nid, daycount, totalcount) VALUES(%d, 1, 1)", arg(2));
       }
     }
   }
@@ -95,7 +95,7 @@ function statistics_link($type, $node = 0, $main = 0) {
     $statistics = statistics_get($node->nid);
     if ($statistics) {
       if (user_access("administer statistics")) {
-        $links[] = l(format_plural($statistics["totalcount"], "1 read", "%count reads"), "admin/statistics/referrers/$node->nid");
+        $links[] = l(format_plural($statistics["totalcount"], "1 read", "%count reads"), "admin/statistics/log/node/$node->nid");
       }
       else {
         $links[] = format_plural($statistics["totalcount"], "1 read", "%count reads");
@@ -274,7 +274,7 @@ function statistics_admin() {
       case "statistics":
         return statistics_admin_displaycounts();
       case "referrers":
-        return  statistics_recent_refer(arg(3)) . statistics_top_refer(arg(3));
+        return  statistics_recent_refer() . statistics_top_refer();
       case "log":
         return statistics_admin_displaylog();
     }
@@ -334,7 +334,7 @@ function statistics_admin_count_table($dbfield, $dbrows) {
   $header = array(t("title"), t("today"), t("all time"), t("last hit"), t("operations"));
 
   while ($nid = db_fetch_array($result)) {
-    $rows[] = array(l($nid["title"], "node/view/". $nid["nid"], array("title" => t("View this posting."))), $nid["daycount"], $nid["totalcount"], format_date($nid["timestamp"], "small"), l("view referrers", "admin/statistics/referrers/". $nid["nid"]));
+    $rows[] = array(l($nid["title"], "node/view/". $nid["nid"], array("title" => t("View this posting."))), $nid["daycount"], $nid["totalcount"], format_date($nid["timestamp"], "small"), l("view referrers", "admin/statistics/log/host/". $nid["nid"]));
   }
 
   return table($header, $rows);
@@ -393,48 +393,24 @@ function statistics_admin_accesslog_table($type, $id) {
 }
 
 
-function statistics_recent_refer($nid = 0) {
-  global $view;
+function statistics_recent_refer() {
 
-  if (empty($view)) {
-    $view = arg(3);
+  $view = arg(3);
+
+  if ($view == "all") {
+    $query = "SELECT url,timestamp FROM accesslog WHERE url <> '' ORDER BY timestamp DESC";
   }
-
-  $node = node_load(array("nid" => $nid));
-
-  if ($nid > 0) {
-    if ($view == "all") {
-      $query = "SELECT url,timestamp FROM accesslog WHERE nid='$nid' AND url <> '' ORDER BY timestamp DESC";
-    }
-    elseif ($view == "internal") {
-      $query = "SELECT url,timestamp FROM accesslog WHERE nid='$nid' AND url LIKE '%". check_input($_SERVER["HTTP_HOST"]) ."%' ORDER BY timestamp DESC";
-      $describe = "internal ";
-    }
-    else {
-      /* default to external referrers */
-      $query = "SELECT url,timestamp FROM accesslog WHERE nid='$nid' AND url NOT LIKE '%". check_input($_SERVER["HTTP_HOST"]) ."%' AND url <> '' ORDER BY timestamp DESC";
-      $describe = "external ";
-    }
-
-    $result = db_query_range($query, 0, 25);
-    $output = "<h3>". t("Most recent %describe referrers for node", array("%describe" => $describe)) ."\"". l($node->title, "node/view/$nid", array("title" => t("View this posting."))) ."\"</h3>";
+  elseif ($view == "internal") {
+    $query = "SELECT url,timestamp FROM accesslog WHERE url LIKE '%". check_input($_SERVER["HTTP_HOST"]) ."%' ORDER BY timestamp DESC";
+    $describe = "internal ";
   }
   else {
-    if ($view == "all") {
-      $query = "SELECT url,timestamp FROM accesslog WHERE url <> '' ORDER BY timestamp DESC";
-    }
-    elseif ($view == "internal") {
-      $query = "SELECT url,timestamp FROM accesslog WHERE url LIKE '%". check_input($_SERVER["HTTP_HOST"]) ."%' ORDER BY timestamp DESC";
-      $describe = "internal ";
-    }
-    else {
-      $query = "SELECT url,timestamp FROM accesslog WHERE url NOT LIKE '%". check_input($_SERVER["HTTP_HOST"]) ."%' AND url <> '' ORDER BY timestamp DESC";
-      $describe = "external ";
-    }
-
-    $result = db_query_range($query, 0, 25);
-    $output = "<h3>". t("Most recent %describe referrers", array("%describe" => $describe)) ."</h3>";
+    $query = "SELECT url,timestamp FROM accesslog WHERE url NOT LIKE '%". check_input($_SERVER["HTTP_HOST"]) ."%' AND url <> '' ORDER BY timestamp DESC";
+    $describe = "external ";
   }
+
+  $result = db_query_range($query, 0, 25);
+  $output = "<h3>". t("Most recent $describe referrers") ."</h3>";
 
   $header = array(t("URL"), t("date"));
   while ($referrer = db_fetch_array($result)) {
@@ -447,44 +423,24 @@ function statistics_recent_refer($nid = 0) {
 }
 
 
-function statistics_top_refer($nid = 0) {
-  global $view;
+function statistics_top_refer() {
 
-  $node = node_load(array("nid" => $nid));
+  $view = arg(3);
 
-  if ($nid > 0) {
-    if ($view == "all") {
-      $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE nid = '$nid' AND url <> '' GROUP BY url ORDER BY count DESC";
-    }
-    elseif ($view == "internal") {
-      $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE nid = '$nid' AND url LIKE '%". check_input($_SERVER["HTTP_HOST"]) ."%' GROUP BY url ORDER BY count DESC";
-      $describe = "internal ";
-    }
-    else {
-      /* default to external */
-      $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE nid = '$nid' AND url NOT LIKE '%". check_input($_SERVER["HTTP_HOST"]) ."%' AND url <> '' GROUP BY url ORDER BY count DESC";
-      $describe = "external ";
-    }
-
-    $output = "<h3>Top ". $describe ."referrers of the past ". format_interval(variable_get("statistics_flush_accesslog_timer", 259200)) ." for node \"". l($node->title, "node/view/$nid", array("title" => t("View this posting."))) ."\"</h3>";
+  if ($view == "all") {
+    $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE url <> '' GROUP BY url ORDER BY count DESC";
+  }
+  elseif ($view == "internal") {
+    $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE url LIKE '%". check_input($_SERVER["HTTP_HOST"]) ."%' GROUP BY url ORDER BY count DESC";
+    $describe = "internal ";
   }
   else {
-    if ($view == "all") {
-      $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE url <> '' GROUP BY url ORDER BY count DESC";
-    }
-    elseif ($view == "internal") {
-      $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE url LIKE '%". check_input($_SERVER["HTTP_HOST"]) ."%' GROUP BY url ORDER BY count DESC";
-      $describe = "internal ";
-    }
-    else {
-      /* default to external */
-      $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE url NOT LIKE '%". check_input($_SERVER["HTTP_HOST"]) ."%' AND url <> '' GROUP BY url ORDER BY count DESC";
-      $describe = "external ";
-    }
-
-    $output = "<h3>". t("Top %describe referrers of the past ", array("%describe" => $describe));
-    $output .= format_interval(variable_get("statistics_flush_accesslog_timer", 259200)) ."</h3>";
+    /* default to external */
+    $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE url NOT LIKE '%". check_input($_SERVER["HTTP_HOST"]) ."%' AND url <> '' GROUP BY url ORDER BY count DESC";
+    $describe = "external ";
   }
+
+  $output = "<h3>". t("Top $describe referrers of the past %interval", array("%interval" => format_interval(variable_get("statistics_flush_accesslog_timer", 259200)))) ."</h3>";
 
   $result = db_query($query);
 
@@ -533,7 +489,7 @@ function statistics_admin_displaylog() {
     case "node":
       $node = node_load(array("nid" => $value));
       $output = "<h3>". t("Recent access logs for '%title'", array("%title" => $node->title)) ."</h3>\n";
-      $output .= statistics_admin_accesslog_table(2, $node->nid);
+      $output .= statistics_admin_accesslog_table(2, $value);
       break;
     case "host":
       $output = "<h3>". t("Recent access logs for '%hostname'", array("%hostname" => $value)) ."</h3>\n";
