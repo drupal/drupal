@@ -282,7 +282,8 @@ function pager_list($limit, $element = 0, $quantity = 5, $text = "", $attributes
  */
 
 function pager_query($query, $limit = 10, $element = 0, $count_query = "") {
-  global $from, $pager_from_array, $db_type, $pager_total;
+  global $pager_from_array, $pager_total;
+  $from = $_GET["from"];
 
   // count the total number of records in this query:
   if ($count_query == "") {
