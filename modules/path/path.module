@@ -1,5 +1,5 @@
 <?php
-/* $Id: path.module,v 1.54 2005/02/10 19:30:08 dries Exp $ */
+/* $Id: path.module,v 1.55 2005/03/31 09:25:33 unconed Exp $ */
 
 /**
  * @file
@@ -296,15 +296,15 @@ function path_save($edit) {
   $pid = $edit['pid'];
 
   if (!valid_url($src)) {
-    form_set_error('src', t('The system path %path is invalid.', array('%path' => "<em>$src</em>")));
+    form_set_error('src', t('The system path %path is invalid.', array('%path' => theme('placeholder', $src))));
   }
 
   if (!valid_url($dst)) {
-    form_set_error('dst', t('The alias %alias is invalid.', array('%alias' => "<em>$dst</em>")));
+    form_set_error('dst', t('The alias %alias is invalid.', array('%alias' => theme('placeholder', $dst))));
   }
 
   if (db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE pid != %d AND dst = '%s'", $pid, $dst))) {
-    form_set_error('dst', t('The alias %alias is already in use.', array('%alias' => "<em>$dst</em>")));
+    form_set_error('dst', t('The alias %alias is already in use.', array('%alias' => theme('placeholder', $dst))));
   }
 
   if (form_get_errors()) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.185 2005/03/18 07:07:04 unconed Exp $
+// $Id: statistics.module,v 1.186 2005/03/31 09:25:33 unconed Exp $
 
 /**
  * @file
@@ -183,7 +183,7 @@ function statistics_node_tracker() {
       $rows[] = array(array('data' => $pager, 'colspan' => '4'));
     }
 
-    drupal_set_title($node->title);
+    drupal_set_title(check_plain($node->title));
     print theme('page', theme('table', $header, $rows));
   }
   else {
