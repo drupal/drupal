@@ -4,7 +4,7 @@
 /**
  * Return a list of available toolkits.
  *
- * @return An array of toolkit name => descriptive title
+ * @return An array of toolkit name => descriptive title.
  */
 function image_get_available_toolkits() {
   $toolkits = file_scan_directory('includes', 'image\..*\.inc$');
@@ -18,7 +18,7 @@ function image_get_available_toolkits() {
       $output[$info['name']] = $info['title'];
     }
   }
-  $output['gd'] = t('Built-in GD Toolkit');
+  $output['gd'] = t('Built-in GD2 toolkit');
   return $output;
 }
 
@@ -30,11 +30,12 @@ function image_get_available_toolkits() {
 function image_get_toolkit() {
   static $toolkit;
   if (!$toolkit) {
-    $toolkit = variable_get('image_toolkit', 'gd');
-    if ($toolkit != 'gd') {
-      include_once 'includes/image.'. $toolkit .'.inc';
+    $toolkit = variable_get('image_toolkit', 'gd2');
+    $toolkit_file = 'includes/image.'.$toolkit.'.inc';
+    if ($toolkit != 'gd' && file_exists($toolkit_file)) {
+      include_once $toolkit_file;
     }
-    elseif (!image_gd_settings()) {
+    elseif (!image_gd_check_settings()) {
       $toolkit = false;
     }
   }
@@ -46,9 +47,9 @@ function image_get_toolkit() {
  * Invokes the given method using the currently selected toolkit.
  *
  * @param $method A string containing the method to invoke.
- * @param $params An optional array of parameters to pass to the toolkit method
+ * @param $params An optional array of parameters to pass to the toolkit method.
  *
- * @return Mixed values (typically Boolean for successful operation)
+ * @return Mixed values (typically Boolean for successful operation).
  */
 function image_toolkit_invoke($method, $params = array()) {
   if ($toolkit = image_get_toolkit()) {
@@ -57,7 +58,13 @@ function image_toolkit_invoke($method, $params = array()) {
       return call_user_func_array($function, $params);
     }
     else {
-      drupal_set_message(t('%method is not supported by %toolkit.', array('%method' => "<em>$method</em>", '%toolkit' => "<em>$toolkit</em>")));
+      watchdog('php', t("The selected image handling toolkit '%toolkit' can not correctly process '%function'.", array('%toolkit' => "<em>$toolkit</em>", '%function' => "<em>$function</em>")), WATCHDOG_ERROR);
+      return false;
+    }
+  }
+  else {
+    if ($method == 'settings') {
+      return image_gd_settings();
     }
   }
 }
@@ -161,18 +168,36 @@ function image_crop($source, $destination, $x, $y, $width, $height) {
 }
 
 /**
- * GD Toolkit functions
+ * GD2 toolkit functions
+ * With the minimal requirements of PHP 4.3 for Drupal, we use the build-in version of GD.
  */
 
 /**
- * Verify GD settings (that the extension is actually installed).
+ * Retrieve settings for the GD toolkit (not used).
  */
 function image_gd_settings() {
-  if (!extension_loaded('gd')) {
-    drupal_set_message(t('Unable to load the GD toolkit'), 'error');
+  if (image_gd_check_settings()) {
+    return t('The built-in GD toolkit is installed and working properly.');
+  }
+  else {
+    form_set_error('image_toolkit', t("The built-in GD2 toolkit requires that the GD module for PHP be installed and configured properly. For more information see %url.", array('%url' => '<a href="http://php.net/image">http://php.net/image</a>')));
     return false;
   }
-  return true;
+}
+
+/**
+ * Verify GD2 settings (that the right version is actually installed).
+ *
+ * @return boolean
+ */
+function image_gd_check_settings() {
+  if ($check = get_extension_funcs('gd')) {
+    if (in_array('imagegd2', $check)) {
+      // GD2 support is available.
+      return true;
+    }
+  }
+  return false;
 }
 
 /**
@@ -193,21 +218,8 @@ function image_gd_resize($source, $destination, $width, $height) {
     return false;
   }
 
-  // GD1 doesn't have true color
-  if (function_exists('imageCreateTrueColor')) {
-    $res = imageCreateTrueColor($width, $height);
-  }
-  else {
-    $res = imageCreate($width, $height);
-  }
-
-  // GD1 doesn't have copyResampled
-  if (function_exists('imageCopyResampled')) {
-    imageCopyResampled($res, $im, 0, 0, 0, 0, $width, $height, $info['width'], $info['height']);
-  }
-  else {
-    imageCopyResized($res, $im, 0, 0, 0, 0, $width, $height, $info['width'], $info['height']);
-  }
+  $res = imageCreateTrueColor($width, $height);
+  imageCopyResampled($res, $im, 0, 0, 0, 0, $width, $height, $info['width'], $info['height']);
   $result = image_gd_close($res, $destination, $info['extension']);
 
   imageDestroy($res);
@@ -235,7 +247,6 @@ function image_gd_rotate($source, $destination, $degrees, $bg_color = 0) {
   }
 
   $res = imageRotate($im, $degrees, $bg_color);
-
   $result = image_gd_close($res, $destination, $info['extension']);
 
   return $result;
@@ -251,17 +262,8 @@ function image_gd_crop($source, $destination, $x, $y, $width, $height) {
   }
 
   $im = image_gd_open($source, $info['extension']);
-
-  // GD1 doesn't have true color
-  if (function_exists('imageCreateTrueColor')) {
-    $res = imageCreateTrueColor($width, $height);
-  }
-  else {
-    $res = imageCreate($width, $height);
-  }
-
+  $res = imageCreateTrueColor($width, $height);
   imageCopy($im, $res, 0, 0, $x, $y, $width, $height);
-
   $result = image_gd_close($res, $destination, $info['extension']);
 
   imageDestroy($res);

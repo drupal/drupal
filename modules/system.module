@@ -241,14 +241,12 @@ function system_view_general() {
   $group = '';
   $toolkits_available = image_get_available_toolkits();
   if (count($toolkits_available) > 1) {
-    $group .= form_radios(t('Select an image processing toolkit'), 'image_toolkit', variable_get('image_toolkit', image_get_toolkit()), $toolkits_available);
-    $group .= image_toolkit_invoke('settings');
+      $group .= form_radios(t('Select an image processing toolkit'), 'image_toolkit', variable_get('image_toolkit', image_get_toolkit()), $toolkits_available);
   }
-  else {
-    $group .= t('<p>No image toolkits are installed.</p>');
+  $group .= image_toolkit_invoke('settings');
+  if ($group) {
+    $output .= form_group(t('Image handling'), $group);
   }
-
-  $output .= form_group(t('Image handling'), $group);
 
   // date settings:
   $zones = _system_zonelist();
