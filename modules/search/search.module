@@ -12,29 +12,65 @@ function search_link($type) {
   return $links ? $links : array();
 }
 
+function search_item($item, $type) {
+  $output .= "<p>";
+  $output .= " <b><u><a href=\"". $item["link"] ."\">". $item["title"] ."</a></u></b><br />";
+  $output .= " <small>$type ". ($item["user"] ? " - ". $item["user"] : "") ."". ($item["date"] ? " - ". format_date($item["date"], "small") : "") ."</small>";
+  $output .= "</p>";
+  
+  return $output;
+}
+
 function search_page() {
-  global $theme, $type, $keys, $REQUEST_URI;
+  global $theme, $edit, $type, $keys, $REQUEST_URI;
 
   if (user_access("search content")) {
-    // verify input:
+
+    /*
+    ** Verify the user input:
+    */
+
     $type = check_input($type);
     $keys = check_input($keys);
 
-    // build options list:
+
+    /*
+    ** Construct the search form:
+    */
+
+    $form .= "<form action=\"$REQUEST_URI\" method=\"POST\">";
+    $form .= " <input size=\"50\" value=\"". check_form($keys) ."\" name=\"keys\" type=\"text\">";
+    $form .= " <input type=\"submit\" value=\"". t("Search") ."\"><br />";
+    $form .= t("Restrict search to") .": ";
+
     foreach (module_list() as $name) {
       if (module_hook($name, "search")) {
-        $options .= "<option value=\"$name\"". ($name == $type ? " selected" : "") .">$name</option>\n";
+        $form .= "<input type=\"checkbox\" name=\"edit[type][$name]\" ". ($edit["type"][$name] ? " checked=\"checked\"" : "") ."/> $name ";
       }
     }
 
-    // build form:
-    $form .= "<form action=\"$REQUEST_URI\" method=\"POST\">\n";
-    $form .= " <input size=\"50\" value=\"". check_form($keys) ."\" name=\"keys\" TYPE=\"text\">\n";
-    $form .= " <select name=\"type\">$options</select>\n";
-    $form .= " <input type=\"submit\" value=\"". t("Search") ."\">\n";
     $form .= "</form>\n";
 
-    // visualize form:
+    /*
+    ** Collect the search results:
+    */
+
+    $array = array();
+
+    if ($keys) {
+      foreach (module_list() as $name) {
+        if ((!$edit["type"] || $edit["type"][$name]) && ($result = module_invoke($name, "search", $keys))) {
+          foreach ($result as $entry) {
+            $output .= search_item($entry, $name);
+          }
+        }
+      }
+    }
+
+    /*
+    ** Display form and search results:
+    */
+    
     $theme->header();
 
     if ($form) {
@@ -42,7 +78,12 @@ function search_page() {
     }
 
     if ($keys) {
-      $theme->box(t("Result"), search_data($keys, $type));
+      if ($output) {
+        $theme->box(t("Result"), $output);
+      }
+      else {
+        $theme->box(t("Result"), t("Your search yielded no results."));
+      }
     }
 
     $theme->footer();
