@@ -169,16 +169,12 @@ function account_site_edit() {
     }
     $output .= "<B>Comment sort order:</B><BR>\n";
     $output .= "<SELECT NAME=\"edit[sort]\">$options5</SELECT><P>\n";
-    $options  = "<OPTION VALUE=\"-1\"". ($user->threshold == -1 ? " SELECTED" : "") .">-1: Display uncut and raw comments.</OPTION>";
-    $options .= "<OPTION VALUE=\"0\"". ($user->threshold == 0 ? " SELECTED" : "") .">0: Display almost all comments.</OPTION>";
-    $options .= "<OPTION VALUE=\"1\"". ($user->threshold == 1 ? " SELECTED" : "") .">1: Display almost no anonymous comments.</OPTION>";
-    $options .= "<OPTION VALUE=\"2\"". ($user->threshold == 2 ? " SELECTED" : "") .">2: Display comments with score +2 only.</OPTION>";
-    $options .= "<OPTION VALUE=\"3\"". ($user->threshold == 3 ? " SELECTED" : "") .">3: Display comments with score +3 only.</OPTION>";
-    $options .= "<OPTION VALUE=\"4\"". ($user->threshold == 4 ? " SELECTED" : "") .">4: Display comments with score +4 only.</OPTION>";
-    $options .= "<OPTION VALUE=\"5\"". ($user->threshold == 5 ? " SELECTED" : "") .">5: Display comments with score +5 only.</OPTION>";
-    $output .= "<B>Comment threshold:</B><BR>\n";
-    $output .= "<SELECT NAME=\"edit[threshold]\">$options</SELECT><BR>\n";
-    $output .= "<I>Comments that scored less than this setting will be ignored. Anonymous comments start at 0, comments of people logged on start at 1 and moderators can add and subtract points.</I><P>\n";
+    for ($i = -1; $i < 6; $i++) {
+      $options6 .= " <OPTION VALUE=\"$i\"". ($user->threshold == $i ? " SELECTED" : "") .">Filter - $i</OPTION>";
+    }
+    $output .= "<B>Comment filter:</B><BR>\n";
+    $output .= "<SELECT NAME=\"edit[threshold]\">$options6</SELECT><BR>\n";
+    $output .= "<I>Comments that scored less than this threshold setting will be ignored.  Anonymous comments start at 0, comments of people logged on start at 1 and moderators can add and subtract points.</I><P>\n";
     $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save site settings\"><BR>\n";
     $output .= "</FORM>\n";
 

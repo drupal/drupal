@@ -7,7 +7,7 @@ if (strstr($id, " ") || strstr($pid, " ") || strstr($lid, " ") || strstr($mode, 
 }
 
 $cmodes = array(1 => "List - min", 2 => "List - max", 3 => "Threaded - min", 4 => "Threaded - max");
-$corder = array(1 => "Date - new", 2 => "Date - old", 3 => "Rate - high");
+$corder = array(1 => "Date - new", 2 => "Date - old", 3 => "Rate - high", 4 => "Rate - low");
 $link = ($mod) ? $mod : substr($PHP_SELF, 1, strlen($PHP_SELF) - 5);
 
 class Comment {
@@ -61,8 +61,11 @@ function comment_reply($pid, $id) {
     $theme->comment(new Comment($item->userid, $item->subject, $item->comment, $item->timestamp, $item->url, $item->fake_email, comment_score($comment), $comment->votes, $item->cid), "reply to this comment");
   }
   else {
-    $item = db_fetch_object(db_query("SELECT stories.*, users.userid FROM stories LEFT JOIN users ON stories.author = users.id WHERE stories.status != 0 AND stories.id = $id"));
-    $theme->article($item, "");
+    $pid = 0;
+    if ($link == "story") {
+      $item = db_fetch_object(db_query("SELECT stories.*, users.userid FROM stories LEFT JOIN users ON stories.author = users.id WHERE stories.status != 0 AND stories.id = $id"));
+      $theme->article($item, "");
+    }
   }
 
   // Build reply form:
@@ -211,16 +214,15 @@ function comment_moderation($comment) {
   return $output;
 }
 
-
-function comment_controls($threshold, $mode, $order) {
-  global $REQUEST_URI;
+function comment_controls($threshold = 1, $mode = 3, $order = 1) {
+  global $REQUEST_URI, $user;
   $output .= "<FONT SIZE=\"2\">\n";
   $output .= "<FORM METHOD=\"post\" ACTION=\"$REQUEST_URI\">\n";
-  $output .= comment_threshold($threshold);
-  $output .= comment_mode($mode);
-  $output .= comment_order($order);
-  $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Update\">\n";
-  // $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Reply\">\n";
+  $output .= comment_mode(($user->id ? $user->mode : $mode));
+  $output .= comment_order(($user->id ? $user->sort : $order));
+  $output .= comment_threshold(($user->id ? $user->threshold : $threshold));
+  $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Update settings\">\n";
+  $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Add comment\">\n";
   $output .= "</FORM>\n";
   $output .= "</FONT>\n";
   return $output;
@@ -229,7 +231,7 @@ function comment_controls($threshold, $mode, $order) {
 function comment_threshold($threshold) {
   $output .= "<SELECT NAME=\"threshold\">\n";
   for ($i = -1; $i < 6; $i++) {
-    $output .= " <OPTION VALUE=\"$i\"". ($threshold == $i ? " SELECTED" : "") .">Threshold: $i</OPTION>";
+    $output .= " <OPTION VALUE=\"$i\"". ($threshold == $i ? " SELECTED" : "") .">Filter - $i</OPTION>";
   }
   $output .= "</SELECT>\n";
   return $output;
@@ -259,7 +261,9 @@ function comment_query($link, $lid, $order, $pid = -1) {
   $query .= "SELECT c.*, u.* FROM comments c LEFT JOIN users u ON c.author = u.id WHERE link = '$link' AND c.lid = $lid";
   if ($pid >= 0) $query .= " AND pid = $pid";
   if ($order == 1) $query .= " ORDER BY c.timestamp DESC";
-  if ($order == 2) $query .= " ORDER BY c.score DESC";
+  else if ($order == 2) $query .= " ORDER BY c.timestamp";
+  else if ($order == 3) $query .= " ORDER BY c.score DESC";
+  else if ($order == 4) $query .= " ORDER BY c.score";
   return db_query($query);
 }
 
@@ -332,6 +336,9 @@ function comment_render($lid, $cid) {
   $threshold = ($user->id) ? $user->threshold : 3;
 
   if ($user->id) {
+    // Comment control:
+    $theme->controls($threshold, $mode, $order);
+
     // Print moderation form:
     print "<FORM METHOD=\"post\" ACTION=\"$REQUEST_URI\">\n";
   }

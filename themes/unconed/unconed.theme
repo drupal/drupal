@@ -140,9 +140,9 @@
     <? 
    }
 
-   function controls($threshold, $mode, $order) {
+   function controls() {
      print "<HR>";
-     print comment_controls($threshold, $mode, $order);
+     print comment_controls();
      print "<HR>";
    }
 
