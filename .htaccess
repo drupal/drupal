@@ -38,7 +38,7 @@ ErrorDocument 500 /error.php
 # Various rewrite rules
 <IfModule mod_rewrite.c>
   RewriteEngine on
-  RewriteRule ^blog/(.*) /index.php?q=blog/name=$1 [R]
+  RewriteRule ^blog/(.*) /index.php?q=blog/$1 [R]
 </IfModule>
 
 # $Id$
