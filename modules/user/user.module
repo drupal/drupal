@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.271 2003/12/07 18:09:28 dries Exp $
+// $Id: user.module,v 1.272 2003/12/08 17:46:21 dries Exp $
 
 /*** Common functions ******************************************************/
 
@@ -412,11 +412,10 @@ function user_block($op = "list", $delta = 0) {
                 $items[] = format_name(user_load(array("uid" => $uid->uid)));
               }
 
-              if (db_fetch_object($users)) {
-                $items[] = "...";
-              }
-
               if ($items) {
+                if (db_fetch_object($users)) {
+                  $items[] = "...";
+                }
                 $output .= theme("item_list", $items, t("Online users:"));
               }
             }
