@@ -1003,7 +1003,7 @@ function update_85() {
     $ret[] = update_sql("UPDATE {sequences} SET name = '{aggregator_feed}_fid' WHERE name = '{feed}_fid'");
     $ret[] = update_sql("ALTER TABLE {item} RENAME TO {aggregator_item}");
     $ret[] = update_sql("ALTER TABLE {aggregator_item} DROP attributes");
-    $max = db_result(db_query_range("SELECT iid FROM {aggregator_item} ORDER BY iid DESC", 1, 1));
+    $max = db_result(db_query_range("SELECT iid FROM {aggregator_item} ORDER BY iid DESC", 0, 1));
     if ($max) {
       $ret[] = update_sql("INSERT INTO {sequences} (name, id) VALUES ('{aggregator_item}_iid', $max)");
     }
