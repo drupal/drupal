@@ -1044,7 +1044,7 @@ function user_edit_validate($uid, &$edit) {
     form_set_error('mail', $error);
   }
   else if (db_num_rows(db_query("SELECT uid FROM {users} WHERE uid != %d AND LOWER(mail) = LOWER('%s')", $uid, $edit['mail'])) > 0) {
-    form_set_name('mail', t('The e-mail address "%s" is already taken.', array('%s' => $edit['mail'])));
+    form_set_error('mail', t('The e-mail address "%s" is already taken.', array('%s' => $edit['mail'])));
   }
   else if (user_deny('mail', $edit['mail'])) {
     form_set_error('mail', t('The e-mail address "%s" has been denied access.', array('%s' => $edit['mail'])));
