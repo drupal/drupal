@@ -1,0 +1,28 @@
+<?
+
+$module = array("page" => "drupal_page");
+
+include "includes/common.inc";
+
+function drupal_page() {
+  global $theme;
+
+  $output .= "
+   <H2>Introduction</H2>
+   <P>Drupal is the English pronounciation for the dutch word 'druppel' which stands for 'drop'.  Drupal is a full-featured content management/discussion engine suitable to setup a news-driven community or portal site.  Drupal aims towards easy installation, excessive configuration and fine-grained maintainance capabilities.  Due to its modular design drupal is flexibel and easy to adapt or extend.</P>
+   <P>Drupal is primarily written by Dries Buytaert (dries_at_drop.org) and build after Slash (<A HREF=\"http://slashcode.com/\">http://slashcode.com/</A>) and Scoop (<A HREF=\"http://scoop.kuro5hin.org/\">http://scoop.kuro5hin.org/</A>) and source code is available under terms of GNU General Public License (GPL).</P>
+   <H2>Download</H2>
+   <LI><A HREF=\"drupal/drupal-1.00-rc1.tgz\">drupal 1.00-rc1</A> (2000/01/01)</LI>
+   <H2>Demo</H2>
+   <P>We don't have a real demo site yet but drupal is used by (and created for) <A HREF=\"http://drop.org/\">http://drop.org/</A>.  Create an account, play with it for a bit, read the <A HREF=\"module.php?mod=documentation\">documentation</A> and spend some time getting used to.</P>
+   <H2>Documentation</H2>
+   <LI><A HREF=\"module.php?mod=documentation\">documentation</A></LI>
+   <LI><A HREF=\"module.php?mod=wishlist\">wishlist</A></LI>
+  ";
+
+  $theme->header();
+  $theme->box("Drupal", $output);
+  $theme->footer();
+}
+
+?>
