@@ -9,11 +9,11 @@ function statistics_init() {
     // node view counters are enabled
     if (!empty($id) && empty($mod)) {
       // a node has been viewed, so updated the node's counters
-      db_query("UPDATE statistics SET daycount = daycount + 1, totalcount = totalcount + 1, timestamp = '%s' WHERE nid = '%s'", time(), $id);
+      db_query("UPDATE statistics SET daycount = daycount + 1, totalcount = totalcount + 1, timestamp = '%d' WHERE nid = '%d'", time(), $id);
       // if we affected 0 rows, this is the first time viewing the node
       if (!db_affected_rows()) {
         // must create a new row to store counter's for new node
-        db_query("INSERT INTO statistics (nid, daycount, totalcount) VALUES('%s', daycount + 1, totalcount + 1)", $id);
+        db_query("INSERT INTO statistics (nid, daycount, totalcount) VALUES('%d', statistics.daycount + 1, statistics.totalcount + 1)", $id);
       }
     }
   }
@@ -24,10 +24,10 @@ function statistics_init() {
     $hostname = getenv("REMOTE_ADDR");
     // log this page access
     if (!empty($id) && empty($mod)) {
-      db_query("INSERT INTO accesslog (nid, url, hostname, uid, timestamp) values('%s', '%s', '%s', '%d', '%s')", $id, $referrer, $hostname, $user->uid, time());
+      db_query("INSERT INTO accesslog (nid, url, hostname, uid, timestamp) values('%d', '%s', '%s', '%d', '%d')", $id, $referrer, $hostname, $user->uid, time());
     }
     else {
-      db_query("INSERT INTO accesslog (url, hostname, uid, timestamp) values('%s', '%s', '%d', '%s')", $referrer, $hostname, $user->uid, time());
+      db_query("INSERT INTO accesslog (url, hostname, uid, timestamp) values('%s', '%s', '%d', '%d')", $referrer, $hostname, $user->uid, time());
     }
   }
 
