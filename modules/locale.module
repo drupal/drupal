@@ -128,7 +128,7 @@ function locale_seek() {
     session_register("locale_settings");
   }
 
-  if ($op != 'Search' || is_array($edit)) {
+  if (is_array($edit)) {
 
     if ($edit["status"]) {
       switch ($edit["language"]) {
@@ -216,7 +216,7 @@ function locale_admin() {
   if (user_access("administer locales")) {
     locale_admin_initialize();
 
-    print "<small>". locale_links(1) . locale_links(0) . la(t("search"), array("mod" => "locale", "op" => "Search")) ." | ". la(t("overview"), array("mod" => "locale", "op" => "overview")) ." | ". la(t("help"), array("mod" => "locale", "op" => "help")) ."</small><hr />\n";
+    print "<small>". locale_links(1) . locale_links(0) . la(t("search"), array("mod" => "locale", "op" => "search")) ." | ". la(t("overview"), array("mod" => "locale", "op" => "overview")) ." | ". la(t("help"), array("mod" => "locale", "op" => "help")) ."</small><hr />\n";
 
     switch ($op) {
       case "delete":
@@ -229,6 +229,7 @@ function locale_admin() {
       case "edit":
         print locale_edit(check_query($id));
         break;
+      case "search":
       case "Search":
         print locale_seek();
         break;
