@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.96 2001/12/08 13:11:33 dries Exp $
+// $Id: book.module,v 1.97 2001/12/09 15:15:10 dries Exp $
 
 function book_node($field) {
   global $user;
@@ -56,7 +56,12 @@ function book_save($op, $node) {
   }
 
   if ($op == "create") {
-    return array("format", "moderate" => 1, "parent", "promote" => 0, "status" => 1, "weight");
+    if (user_access("adminster nodes")) {
+      return array("format", "parent", "weight");
+    }
+    else {
+      return array("format", "moderate" => 1, "parent", "promote" => 0, "status" => 1, "weight");
+    }
   }
 
   if ($op == "decline") {
