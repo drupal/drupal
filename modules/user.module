@@ -969,8 +969,8 @@ function user_register($edit = array()) {
     $affiliates = implode(', ', $affiliates);
     $output .= '<p>'. t('Note: if you have an account with one of our affiliates (%s), you may <a href="%login_uri">login now</a> instead of registering.', array('%s' => $affiliates, '%login_uri' => url('user'))) .'</p>';
   }
-  $default = form_textfield(t('Username'), 'name', $edit['name'], 30, 64, t('Your full name or your preferred username; only letters, numbers and spaces are allowed.'));
-  $default .= form_textfield(t('E-mail address'), 'mail', $edit['mail'], 30, 64, t('A password and instructions will be sent to this e-mail address, so make sure it is accurate.'));
+  $default = form_textfield(t('Username'), 'name', $edit['name'], 30, 64, t('Your full name or your preferred username; only letters, numbers and spaces are allowed.'), NULL, TRUE);
+  $default .= form_textfield(t('E-mail address'), 'mail', $edit['mail'], 30, 64, t('A password and instructions will be sent to this e-mail address, so make sure it is accurate.'), NULL, TRUE);
   $extra = _user_forms($edit, $account, $category, 'register');
   // Only display form_group around default fields if there are other groups.
   if ($extra) {
