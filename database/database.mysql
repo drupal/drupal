@@ -255,22 +255,44 @@ CREATE TABLE history (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'locales'
+-- Table structure for table 'locales_meta'
 --
 
-CREATE TABLE locales (
-  lid int(10) NOT NULL auto_increment,
+CREATE TABLE locales_meta (
+  locale varchar(12) NOT NULL default '',
+  name varchar(64) NOT NULL default '',
+  enabled int(2) NOT NULL default '0',
+  isdefault int(2) NOT NULL default '0',
+  plurals int(1) NOT NULL default '0',
+  formula varchar(128) NOT NULL default '',
+  PRIMARY KEY  (locale)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table 'locales_source'
+--
+
+CREATE TABLE locales_source (
+  lid int(11) NOT NULL auto_increment,
   location varchar(128) NOT NULL default '',
-  string blob NOT NULL,
-  da blob NOT NULL,
-  fi blob NOT NULL,
-  fr blob NOT NULL,
-  en blob NOT NULL,
-  es blob NOT NULL,
-  nl blob NOT NULL,
-  no blob NOT NULL,
-  sw blob NOT NULL,
+  source blob NOT NULL,
   PRIMARY KEY  (lid)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table 'locales_target'
+--
+
+CREATE TABLE locales_target (
+  lid int(11) NOT NULL default '0',
+  translation blob NOT NULL,
+  locale varchar(12) NOT NULL default '',
+  plid int(11) NOT NULL default '0',
+  plural int(1) NOT NULL default '0',
+  KEY lid (lid),
+  KEY lang (locale),
+  KEY plid (plid),
+  KEY plural (plural)
 ) TYPE=MyISAM;
 
 --
@@ -620,7 +642,7 @@ CREATE TABLE users (
   changed int(11) NOT NULL default '0',
   status tinyint(4) NOT NULL default '0',
   timezone varchar(8) default NULL,
-  language char(2) NOT NULL default '',
+  language varchar(12) NOT NULL default '',
   picture varchar(255) NOT NULL DEFAULT '',
   init varchar(64) default '',
   data longtext,
@@ -723,3 +745,5 @@ INSERT INTO filters VALUES (1,'filter',3,1);
 INSERT INTO filters VALUES (2,'filter',1,0);
 INSERT INTO filters VALUES (3,'filter',3,0);
 INSERT INTO variable (name,value) VALUES ('filter_html_1','i:1;');
+
+INSERT INTO locales_meta (locale, name, enabled, isdefault) VALUES ('en', 'English', '1', '1');

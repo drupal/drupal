@@ -242,22 +242,46 @@ CREATE TABLE history (
 );
 
 --
--- Table structure for locales
+-- Table structure for locales_meta
 --
 
-CREATE TABLE locales (
-  lid SERIAL,
+CREATE TABLE locales_meta (
+  locale varchar(12) NOT NULL default '',
+  name varchar(64) NOT NULL default '',
+  enabled int4 NOT NULL default '0',
+  isdefault int4 NOT NULL default '0',
+  plurals int4 NOT NULL default '0',
+  formula varchar(128) NOT NULL default '',
+  PRIMARY KEY  (locale)
+);
+
+--
+-- Table structure for locales_source
+--
+
+CREATE sequence locales_source_lid_seq;
+
+CREATE TABLE locales_source (
+lid integer DEFAULT nextval('locales_source_lid_seq'::text) NOT NULL,
   location varchar(128) NOT NULL default '',
-  string text NOT NULL default '',
-  da text NOT NULL default '',
-  fi text NOT NULL default '',
-  fr text NOT NULL default '',
-  en text NOT NULL default '',
-  es text NOT NULL default '',
-  nl text NOT NULL default '',
-  no text NOT NULL default '',
-  sw text NOT NULL default '',
+  source text NOT NULL,
   PRIMARY KEY  (lid)
+);
+
+--
+-- Table structure for locales_target
+--
+
+CREATE TABLE locales_target (
+  lid int4 NOT NULL default '0',
+  translation text NOT NULL,
+  locale varchar(12) NOT NULL default '',
+  plid int4 NOT NULL default '0',
+  plural int4 NOT NULL default '0',
+    UNIQUE  (lid),
+    UNIQUE  (locale),
+    UNIQUE  (plid),
+    UNIQUE  (plural)
 );
 
 --
@@ -601,7 +625,7 @@ CREATE TABLE users (
   changed integer NOT NULL default '0',
   status smallint NOT NULL default '0',
   timezone varchar(8) default NULL,
-  language char(2) NOT NULL default '',
+  language varchar(12) NOT NULL default '',
   picture varchar(255) NOT NULL DEFAULT '',
   init varchar(64) default '',
   data text default '',
@@ -703,6 +727,7 @@ INSERT INTO filters VALUES (2,'filter',1,0);
 INSERT INTO filters VALUES (3,'filter',3,0);
 INSERT INTO variable (name,value) VALUES ('filter_html_1','i:1;');
 
+INSERT INTO locales_meta(locale, name, enabled, isdefault) VALUES('en', 'English', '1', '1');
 
 ---
 --- Functions

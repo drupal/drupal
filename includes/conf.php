@@ -1,5 +1,5 @@
 <?php
-// $Id: conf.php,v 1.29 2004/04/30 05:12:36 dries Exp $
+// $Id: conf.php,v 1.30 2004/08/11 11:26:14 dries Exp $
 
 #
 # Database settings:
@@ -44,15 +44,6 @@ $base_url = "http://localhost";
 
 # If required, update PHP's include path to include your PEAR directory:
 // ini_set("include_path", ".:/path/to/pear");
-
-#
-# Languages / translation / internationalization:
-#
-#   The first language listed in this associative array will
-#   automatically become the default language.  You can add a language
-#   but make sure your SQL table, called locales is updated
-#   appropriately.
-$languages = array("en" => "english");
 
 #
 # Custom navigation links:
