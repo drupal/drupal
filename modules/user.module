@@ -510,9 +510,6 @@ function user_block($op = 'list', $delta = 0) {
           $users = db_query('SELECT DISTINCT(uid), MAX(timestamp) AS max_timestamp FROM {sessions} WHERE timestamp >= %d AND uid != 0 GROUP BY uid ORDER BY max_timestamp DESC', time() - $time_period );
           $total_users = db_num_rows($users);
 
-          // Perform database queries to count all users
-          $all_users = db_fetch_object(db_query('SELECT COUNT(uid) AS count FROM {users} WHERE uid != 0 AND status != 0'));
-
           // Format the output with proper grammar.
           if ($total_users == 1 && $guests->count == 1) {
             $output = t('There is currently %members and %visitors online.', array('%members' => format_plural($total_users, '1 user', '%count users'), '%visitors' => format_plural($guests->count, '1 guest', '%count guests')));
