@@ -58,7 +58,7 @@ function account_search($keys) {
 }
 
 function account_ac_add($edit) {
-  db_query("INSERT INTO access (mask, type, reason) VALUES ('". check_input($edit[mask]) ."', '". check_input($edit[type]) ."', '". check_input($edit[reason]) ."')", 1);
+  db_query("INSERT INTO access (mask, type, reason) VALUES ('". check_input($edit[mask]) ."', '". check_input($edit[type]) ."', '". check_input($edit[reason]) ."')");
 }
 
 function account_ac_del($id) {
