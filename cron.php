@@ -1,5 +1,5 @@
 <?php
-// $Id: cron.php,v 1.15 2001/11/01 11:00:46 dries Exp $
+// $Id: cron.php,v 1.16 2003/04/21 12:23:16 dries Exp $
 
 include_once "includes/common.inc";
 
@@ -8,7 +8,7 @@ include_once "includes/common.inc";
 */
 
 if (!get_cfg_var("safe_mode")) {
-  set_time_limit(180);
+  set_time_limit(240);
 }
 
 /*
@@ -19,4 +19,5 @@ foreach (module_list() as $module) {
   module_invoke($module, "cron");
 }
 
+watchdog("message", "cron run completed");
 ?>
