@@ -127,7 +127,7 @@ function blog_page_user($uid) {
   // Breadcrumb navigation:
   $trail[] = l(t("Home"), NULL);
   $trail[] = l(t("Blogs"), "blog");
-  $trail[] = l(t("%name's blog", array("%name" => $account->name)), "blog/$account->uid");
+  $trail[] = t("%name's blog", array("%name" => $account->name));
   theme("path", $trail, $trail);
 
   $result = pager_query("SELECT nid FROM {node} WHERE type = 'blog' AND uid = '$account->uid' AND status = 1 ORDER BY nid DESC", variable_get("default_nodes_main", 10));
@@ -141,14 +141,18 @@ function blog_page_user($uid) {
 function blog_page_last() {
   global $user;
 
+  // Breadcrumb navigation:
+  $trail[] = l(t("Home"), NULL);
+  $trail[] = t("Blogs");
+  theme("path", $trail, $trail);
+
   $result = pager_query("SELECT nid FROM {node} WHERE type = 'blog' AND status = 1 ORDER BY nid DESC", variable_get("default_nodes_main", 10));
 
   while ($node = db_fetch_object($result)) {
-    $output = node_view(node_load(array("nid" => $node->nid)), 1);
+    node_view(node_load(array("nid" => $node->nid)), 1);
   }
-  $output .= pager_display(NULL, variable_get("default_nodes_main", 10));
-  $output .= "<div style=\"text-align: right;\">". l("<img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" alt=\"\" title=\"\" />", "blog/feed", array("title" => t("Read the XML version of all blogs."))) ."</div>";
-  return $output;
+  print pager_display(NULL, variable_get("default_nodes_main", 10));
+  print "<div style=\"text-align: right;\">". l("<img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" alt=\"\" title=\"\" />", "blog/feed", array("title" => t("Read the XML version of all blogs."))) ."</div>";
 }
 
 function blog_form(&$node, &$help, &$error) {
@@ -212,7 +216,7 @@ function blog_page() {
           blog_page_user(arg(1));
         }
         else {
-          print blog_page_last();
+          blog_page_last();
         }
         theme("footer");
     }
