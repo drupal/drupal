@@ -245,7 +245,9 @@ function system_listing($type) {
   }
 
   foreach ($files as $filename => $file) {
-    include_once($filename);
+    module_set_filename($file->name, $filename);
+    module_load($file->name);
+
     if ($type == 'module') {
       $info->name = module_invoke($file->name, 'help', 'admin/modules#name') ? module_invoke($file->name, 'help', 'admin/modules#name') : module_invoke($file->name, 'system', 'name') ? module_invoke($file->name, 'system', 'name') : $file->name;
       $info->description = module_invoke($file->name, 'help', 'admin/modules#description') ? module_invoke($file->name, 'help', 'admin/modules#description') : module_invoke($file->name, 'system', 'description');

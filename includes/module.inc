@@ -13,12 +13,7 @@
  * system_listing() and module_list().
  */
 function module_init() {
-  require_once 'modules/admin.module';
-  require_once 'modules/filter.module';
-  require_once 'modules/system.module';
-  require_once 'modules/user.module';
-  require_once 'modules/watchdog.module';
-  module_list();
+  module_load_all();
   module_invoke_all('init');
 }
 
@@ -33,9 +28,6 @@ function module_iterate($function, $argument = '') {
 
 /**
  * Collect a list of all installed and enabled modules.
- *
- * If any modules are enabled but have not yet been loaded, this function performs
- * the include_once() to load them.
  *
  * @param $refresh
  *   Whether to force the module list to be regenerated (such as after the
@@ -70,7 +62,7 @@ function module_list($refresh = FALSE, $bootstrap = FALSE) {
         $throttle = ($module->throttle && variable_get('throttle_level', 0) > 4);
         if (!$throttle) {
           $list[$module->name] = $module->name;
-          include_once $module->filename;
+          module_set_filename($module->name, $module->filename);
         }
       }
     }
@@ -78,6 +70,90 @@ function module_list($refresh = FALSE, $bootstrap = FALSE) {
   }
   return $list;
 }
+
+/**
+ * Set the filename of a module, for future loading through module_load()
+ *
+ * @param $module
+ *   Name of the module which to specify the filename of.
+ * @param $pa
+ *   Filename of the module named $module.
+ * @return
+ *   Filename of module, if no $path has been specified.
+ */
+function module_set_filename($module, $path = null) {
+  static $list;
+
+  if ($path) {
+    $list[$module] = $path;
+  }
+  else {
+    return $list[$module] ? $list[$module] : "modules/$module.module";
+  }
+}
+
+/**
+ * Retrieve the filename of a module
+ *
+ * @param $module
+ *   Name of the module which to retrieve the filename of.
+ * @return
+ *   Filename of module.
+ */
+function module_get_filename($module) {
+  return module_set_filename($module);
+}
+
+/**
+ * Retrieve the path of a module
+ *
+ * @param $module
+ *   Name of the module which to retrieve the path of.
+ * @return
+ *   Path of module.
+ */
+function module_get_path($module) {
+  return dirname(module_get_filename($module));
+}
+
+/**
+ * Load a module into Drupal, but check first wether a module by the same name
+ * has been loaded, and that the filename being included exists.
+ * @param $module
+ *   The name of the module to be loaded.
+ * @return
+ *   TRUE if the load was successfull.
+ */
+function module_load($module) {
+  static $loaded = array();
+
+  if (!$loaded[$module]) {
+    $filename = module_get_filename($module);
+    if (file_exists($filename)) {
+      include_once($filename);
+      $loaded[$module] = $filename;
+      return true;
+    }
+  }
+  return false;
+}
+
+
+/**
+ * Load all the modules that have been enabled in the system table.
+ *
+ * @return
+ *   TRUE if all modules were loaded successfully
+ */
+function module_load_all() {
+  $list = module_list();
+  $status = true;
+  foreach ($list as $module) {
+    $status = $status && module_load($module);
+  }
+  return $status;
+}
+
 
 /**
  * Determine whether a given module exists.
