@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.223 2005/01/22 08:38:25 dries Exp $
+// $Id: forum.module,v 1.224 2005/01/24 21:01:57 dries Exp $
 
 /**
  * @file
@@ -211,7 +211,7 @@ function forum_menu($may_cache) {
     $items[] = array('path' => 'forum', 'title' => t('forums'),
       'callback' => 'forum_page',
       'access' => user_access('access content'),
-      'type' => MENU_CALLBACK);
+      'type' => MENU_SUGGESTED_ITEM);
   }
 
   return $items;
