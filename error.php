@@ -1,11 +1,3 @@
-<?
-#  Future improvements:
-#  --------------------
-#  1. Automatically report all errors by e-mail.
-#  2. Keep a list of all errors either on file or in a MySQL table.
-#  3. Auto-redirect visitor to main page within x seconds.
-?>
-
 <H1>Oops, an error occured!</H1>
 <PRE>
 
@@ -44,5 +36,5 @@
 
 <B>Processed output:</B><BR>
   * <? echo $message; ?><BR>
-
+  * Return to the <A HREF="">main page</A>.
 </PRE>

@@ -264,12 +264,12 @@ function comment_edit($id) {
 
   $output .= "<P>\n";
   $output .= " <B>Subject:</B><BR>\n";
-  $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" VALUE=\"". stripslashes($comment->subject) ."\"><BR>\n";
+  $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" VALUE=\"". check_output($comment->subject) ."\"><BR>\n";
   $output .= "</P>\n";
 
   $output .= "<P>\n";
   $output .= "<B>Comment:</B><BR>\n";
-  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"comment\">". stripslashes($comment->comment) ."</TEXTAREA><BR>\n";
+  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"comment\">". check_output($comment->comment) ."</TEXTAREA><BR>\n";
   $output .= "</P>\n";
 
   $output .= "<P>\n";
@@ -281,7 +281,7 @@ function comment_edit($id) {
 }
 
 function comment_save($id, $subject, $comment) {
-  db_query("UPDATE comments SET subject = '". addslashes($subject) ."', comment = '". addslashes($comment) ."' WHERE cid = $id");
+  db_query("UPDATE comments SET subject = '". check_input($subject) ."', comment = '". check_input($comment) ."' WHERE cid = $id");
   watchdog(1, "modified comment `$subject'.");
 }
 
@@ -372,7 +372,7 @@ function diary_edit($id) {
 
   $output .= "<P>\n";
   $output .= "<B>Diary entry:</B><BR>\n";
-  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"text\">". stripslashes($diary->text) ."</TEXTAREA><BR>\n";
+  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"text\">". check_output($diary->text) ."</TEXTAREA><BR>\n";
   $output .= "</P>\n";
 
   $output .= "<P>\n";
@@ -384,7 +384,7 @@ function diary_edit($id) {
 }
 
 function diary_save($id, $text) {
-  db_query("UPDATE diaries SET text = '". addslashes($text) ."' WHERE id = $id");
+  db_query("UPDATE diaries SET text = '". check_input($text) ."' WHERE id = $id");
   watchdog(1, "modified diary entry #$id.");
 }
 
@@ -464,7 +464,7 @@ function story_edit($id) {
 
   $output .= "<P>\n";
   $output .= " <B>Subject:</B><BR>\n";
-  $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" VALUE=\"". stripslashes($story->subject) ."\"><BR>\n";
+  $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" VALUE=\"". check_output($story->subject) ."\"><BR>\n";
   $output .= "</P>\n";
 
   $output .= "<P><B>Category:</B><BR>\n";
@@ -479,17 +479,17 @@ function story_edit($id) {
 
   $output .= "<P>\n";
   $output .= "<B>Abstract:</B><BR>\n";
-  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"abstract\">". stripslashes($story->abstract) ."</TEXTAREA><BR>\n";
+  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"abstract\">". check_output($story->abstract) ."</TEXTAREA><BR>\n";
   $output .= "</P>\n";
 
   $output .= "<P>\n";
   $output .= "<B>Editor's note/updates:</B><BR>\n";
-  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"updates\">". stripslashes($story->updates) ."</TEXTAREA><BR>\n";
+  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"updates\">". check_output($story->updates) ."</TEXTAREA><BR>\n";
   $output .= "</P>\n";
 
   $output .= "<P>\n";
   $output .= " <B>Extended story:</B><BR>\n";
-  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"article\">". stripslashes($story->article) ."</TEXTAREA><BR>\n";
+  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"article\">". check_output($story->article) ."</TEXTAREA><BR>\n";
   $output .= "</P>\n";
 
   $output .= "<P><B>Status:</B><BR>\n";
@@ -509,7 +509,7 @@ function story_edit($id) {
 }
 
 function story_save($id, $subject, $abstract, $updates, $article, $category, $status) {
-  db_query("UPDATE stories SET subject = '". addslashes($subject) ."', abstract = '". addslashes($abstract) ."', updates = '". addslashes($updates) ."', article = '". addslashes($article) ."', category = '". addslashes($category) ."', status = '$status' WHERE id = $id");
+  db_query("UPDATE stories SET subject = '". check_input($subject) ."', abstract = '". check_input($abstract) ."', updates = '". check_input($updates) ."', article = '". check_input($article) ."', category = '". check_input($category) ."', status = '$status' WHERE id = $id");
   watchdog(1, "modified story `$subject'.");
 }
 
@@ -554,6 +554,8 @@ function story_display($order = "date") {
 }
 
 function info_display() {
+  include "includes/config.inc";
+
   $output .= "sitename: $sitename<BR>\n";
   $output .= "e-mail address: $contact_email<BR>\n";
   $output .= "send e-mail notifications: $notify<BR>\n";

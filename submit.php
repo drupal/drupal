@@ -12,8 +12,7 @@ function submit_enter() {
   $output .= "<FORM ACTION=\"submit.php\" METHOD=\"post\">\n";
 
   $output .= "<P>\n <B>Your name:</B><BR>\n";
-  if ($user->id) $output .= " $user->userid &nbsp; &nbsp; <SMALL>[ <A HREF=\"account.php\">edit</A> | <A HREF=\"account.php?op=logout\">logout</A> ]</SMALL>\n";
-  else $output .= " $anonymous &nbsp; &nbsp; <SMALL>[ <A HREF=\"account.php\">login</A> | <A HREF=\"account.php\">create an account</A> ]</SMALL>\n"; 
+  $output .= format_username($user->userid);
   $output .= "</P>\n";
  
   $output .= "<P>\n";
@@ -57,19 +56,18 @@ function submit_enter() {
 }
 
 function submit_preview($subject, $abstract, $article, $category) {
-  global $anonymous, $categories, $allowed_html, $theme, $user;
+  global $categories, $allowed_html, $theme, $user;
 
   $output .= "<FORM ACTION=\"submit.php\" METHOD=\"post\">\n";
 
   $output .= "<P>\n";
   $output .= " <B>Your name:</B><BR>\n";
-  if ($user->id) $output .= " $user->userid &nbsp; &nbsp; <SMALL> [ <A HREF=\"account.php\">edit</A> | <A HREF=\"account.php?op=logout\">logout</A> ]</SMALL>\n";
-  else $output .= " $anonymous &nbsp; &nbsp; <SMALL>[ <A HREF=\"account.php\">login</A> | <A HREF=\"account.php\">create an account</A> ]</SMALL>\n";
+  $output .= format_username($user->userid);
   $output .= "</P>\n";
 
   $output .= "<P>\n";
   $output .= " <B>Subject:</B><BR>\n";
-  $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" MAXLENGTH=\"60\" VALUE=\"". check_input($subject) ."\"><BR>\n";
+  $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" MAXLENGTH=\"60\" VALUE=\"". check_output(check_field($subject)) ."\"><BR>\n";
   $output .= " <SMALL><I>Bad subjects are 'Check this out!' or 'An article'.  Be descriptive, clear and simple!</I></SMALL>\n";
   $output .= "</P>\n";
 
@@ -85,13 +83,13 @@ function submit_preview($subject, $abstract, $article, $category) {
 
   $output .= "<P>\n";
   $output .= "<B>Abstract:</B><BR>\n";
-  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"abstract\">". check_input($abstract) ."</TEXTAREA><BR>\n";
+  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"abstract\">". check_output($abstract) ."</TEXTAREA><BR>\n";
   $output .= " <SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL>\n";
   $output .= "</P>\n";
 
   $output .= "<P>\n";
   $output .= " <B>Extended story:</B><BR>\n";
-  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"article\">". check_input($article) ."</TEXTAREA><BR>\n";
+  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"article\">". check_output($article) ."</TEXTAREA><BR>\n";
   $output .= " <SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL>\n";
   $output .= "</P>\n";
 
@@ -120,7 +118,7 @@ function submit_preview($subject, $abstract, $article, $category) {
   $output .= "</FORM>\n";
   
   $theme->header();
-  $theme->preview($user->userid, check_output(stripslashes($subject)), check_output(stripslashes($abstract)), "", check_output(stripslashes($article)), date("l, F d, Y - H:i A", time()), check_output(stripslashes($category)), "we-hate-typoes");
+  $theme->preview($user->userid, check_output($subject), check_output($abstract), "", check_output($article), date("l, F d, Y - H:i A", time()), check_output($category), "we-hate-typoes");
   $theme->box("Submit a story", $output);
   $theme->footer();
 }
@@ -129,7 +127,7 @@ function submit_submit($subject, $abstract, $article, $category) {
   global $user, $theme;
 
   ### Add submission to SQL table:
-  db_insert("INSERT INTO stories (author, subject, abstract, article, category, timestamp) VALUES ('$user->id', '". check_output(addslashes($subject)) ."', '". check_output(addslashes($abstract)) ."', '". check_output(addslashes($article)) ."', '". check_output(addslashes($category)) ."', '". time() ."')");
+  db_insert("INSERT INTO stories (author, subject, abstract, article, category, timestamp) VALUES ('$user->id', '". check_input($subject) ."', '". check_input($abstract) ."', '". check_input($article) ."', '". check_input($category) ."', '". time() ."')");
   
   ### Display confirmation message:
   $theme->header(); 

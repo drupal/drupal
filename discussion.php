@@ -9,10 +9,10 @@ function discussion_moderate($moderate) {
   global $user, $comment_votes;
 
   if ($user->id && $moderate) {
-    $na = $comment_votes[key($comment_votes)];
+    $none = $comment_votes[key($comment_votes)];
 
     foreach ($moderate as $id=>$vote) {
-      if ($vote != $comment_votes[$na] && !user_getHistory($user->history, "c$id")) {
+      if ($vote != $comment_votes[$none] && !user_getHistory($user->history, "c$id")) {
         ### Update the comment's score:
         $result = db_query("UPDATE comments SET score = score $vote, votes = votes + 1 WHERE cid = $id");
 
@@ -26,8 +26,6 @@ function discussion_moderate($moderate) {
 function discussion_kids($cid, $mode, $threshold, $level = 0, $dummy = 0) {
   global $user, $theme;
 
-  $comments = 0;
-
   $result = db_query("SELECT c.*, u.* FROM comments c LEFT JOIN users u ON c.author = u.id WHERE c.pid = $cid AND (c.votes = 0 OR c.score / c.votes >= $threshold) ORDER BY c.timestamp, c.cid");
 
   if ($mode == "nested") {
@@ -37,7 +35,7 @@ function discussion_kids($cid, $mode, $threshold, $level = 0, $dummy = 0) {
         $comments++;
 
         $link = "<A HREF=\"discussion.php?op=reply&sid=$comment->sid&pid=$comment->cid\"><FONT COLOR=\"$theme->hlcolor2\">reply to this comment</FONT></A>";
-        $theme->comment($comment->userid, stripslashes($comment->subject), stripslashes($comment->comment), $comment->timestamp, stripslashes($comment->url), stripslashes($comment->fake_email), discussion_score($comment), $comment->votes, $comment->cid, $link);
+        $theme->comment($comment->userid, check_output($comment->subject), check_output($comment->comment), $comment->timestamp, check_output($comment->url), check_output($comment->fake_email), discussion_score($comment), $comment->votes, $comment->cid, $link);
         
         discussion_kids($comment->cid, $mode, $threshold, $level + 1, $dummy + 1);
       }
@@ -47,15 +45,13 @@ function discussion_kids($cid, $mode, $threshold, $level = 0, $dummy = 0) {
     while ($comment = db_fetch_object($result)) {
       if ($comment->score >= $threshold) {
         $link = "<A HREF=\"discussion.php?op=reply&sid=$comment->sid&pid=$comment->cid\"><FONT COLOR=\"$theme->hlcolor2\">reply to this comment</FONT></A>";
-        $theme->comment($comment->userid, check_output($comment->subject), check_output($comment->comment), $comment->timestamp, $comment->url, $comment->fake_email, discussion_score($comment), $comment->votes, $comment->cid, $link);
+        $theme->comment($comment->userid, check_output($comment->subject), check_output($comment->comment), $comment->timestamp, check_output($comment->url), check_output($comment->fake_email), discussion_score($comment), $comment->votes, $comment->cid, $link);
       } 
       discussion_kids($comment->cid, $mode, $threshold);
     }
   } 
   
-  if ($level && $comments) {
-    print "</UL>";
-  }
+  if ($level && $comments) print "</UL>";
 }
 
 function discussion_childs($cid, $threshold, $level = 0, $thread) {
@@ -65,7 +61,6 @@ function discussion_childs($cid, $threshold, $level = 0, $thread) {
   $result = db_query("SELECT c.*, u.* FROM comments c LEFT JOIN users u ON c.author = u.id WHERE c.pid = $cid AND (c.votes = 0 OR c.score / c.votes >= $threshold) ORDER BY c.timestamp, c.cid");
   
   if ($level == 0) $thread = "";
-  $comments = 0;
 
   while ($comment = db_fetch_object($result)) {
     if ($level && !$comments) {
@@ -157,12 +152,12 @@ function discussion_display($sid, $pid, $cid, $level = 0) {
 }
 
 function discussion_reply($pid, $sid) {
-  global $anonymous, $user, $theme;
+  global $user, $theme;
 
   ### Extract parent-information/data:
   if ($pid) {
     $item = db_fetch_object(db_query("SELECT comments.*, users.userid FROM comments LEFT JOIN users ON comments.author = users.id WHERE comments.cid = $pid"));
-    $theme->comment($item->userid, check_output(stripslashes($item->subject)), check_output(stripslashes($item->comment)), $item->timestamp, stripslashes($item->url), stripslashes($item->fake_email), discussion_score($comment), $comment->votes, $item->cid, "reply to this comment");
+    $theme->comment($item->userid, check_output($item->subject), check_output($item->comment), $item->timestamp, check_output($item->url), check_output($item->fake_email), discussion_score($comment), $comment->votes, $item->cid, "reply to this comment");
   }
   else {
     $item = db_fetch_object(db_query("SELECT stories.*, users.userid FROM stories LEFT JOIN users ON stories.author = users.id WHERE stories.status != 0 AND stories.id = $sid"));
@@ -173,18 +168,10 @@ function discussion_reply($pid, $sid) {
   $output .= "<FORM ACTION=\"discussion.php\" METHOD=\"post\">\n";
 
   ### Name field:
-  if ($user->id) {
-    $output .= "<P>\n";
-    $output .= " <B>Your name:</B><BR>\n";
-    $output .= " <A HREF=\"account.php\">$user->userid</A> &nbsp; &nbsp; <FONT SIZE=\"2\">[ <A HREF=\"account.php?op=logout\">logout</A> ]</FONT>\n";
-    $output .= "</P>\n";
-  }
-  else {
-    $output .= "<P>\n";
-    $output .= " <B>Your name:</B><BR>\n";
-    $output .= " $anonymous\n"; 
-    $output .= "</P>\n";
-  }
+  $output .= "<P>\n";
+  $output .= " <B>Your name:</B><BR>\n";
+  $output .= format_username($user->userid);
+  $output .= "</P>\n";
 
   ### Subject field:
   $output .= "<P>\n";
@@ -195,7 +182,7 @@ function discussion_reply($pid, $sid) {
   ### Comment field:
   $output .= "<P>\n";
   $output .= " <B>Comment:</B><BR>\n";
-  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"comment\">". check_input($user->signature) ."</TEXTAREA><BR>\n";
+  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"comment\">". check_output(check_field($user->signature)) ."</TEXTAREA><BR>\n";
   $output .= "</P>\n";
  
   ### Hidden fields:
@@ -210,39 +197,30 @@ function discussion_reply($pid, $sid) {
 }
 
 function comment_preview($pid, $sid, $subject, $comment) {
-  global $anonymous, $user, $theme;
+  global $user, $theme;
 
   ### Preview comment:
-  if ($user->id) $theme->comment("", check_output(stripslashes($subject)), check_output(stripslashes($comment)), time(), "", "", "", "", "", "reply to this comment");
-  else $theme->comment($user->userid,  check_output(stripslashes($subject)), check_output(stripslashes($comment)), time(), stripslashes($user->url), stripslashes($user->fake_email), "", "", "", "reply to this comment");
+  $theme->comment($user->userid, check_output($subject), check_output($comment), time(), check_output($user->url), check_output($user->fake_email), "", "", "", "reply to this comment");
 
   ### Build reply form:
   $output .= "<FORM ACTION=\"discussion.php\" METHOD=\"post\">\n";
 
   ### Name field:
-  if ($user->id) {
-    $output .= "<P>\n";
-    $output .= " <B>Your name:</B><BR>\n";
-    $output .= " <A HREF=\"account.php\">$user->userid</A> &nbsp; &nbsp; <FONT SIZE=\"2\">[ <A HREF=\"account.php?op=logout\">logout</A> ]</FONT>\n";
-    $output .= "</P>\n";
-  }
-  else {
-    $output .= "<P>\n";
-    $output .= " <B>Your name:</B><BR>\n";
-    $output .= " $anonymous\n"; 
-    $output .= "</P>\n";
-  }
+  $output .= "<P>\n";
+  $output .= " <B>Your name:</B><BR>\n";
+  $output .= format_username($user->userid);
+  $output .= "</P>\n";
 
   ### Subject field:
   $output .= "<P>\n";
   $output .= " <B>Subject:</B><BR>\n";
-  $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" MAXLENGTH=\"60\" VALUE=\"". check_input($subject) ."\">\n";
+  $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" MAXLENGTH=\"60\" VALUE=\"". check_output(check_field($subject)) ."\">\n";
   $output .= "</P>\n";
 
   ### Comment field:
   $output .= "<P>\n";
   $output .= " <B>Comment:</B><BR>\n";
-  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"comment\">". check_input($comment) ."</TEXTAREA><BR>\n";
+  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"comment\">". check_output(check_field($comment)) ."</TEXTAREA><BR>\n";
   $output .= "</P>\n";
   
   ### Hidden fields:
