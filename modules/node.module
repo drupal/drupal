@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.232 2003/07/01 17:54:22 dries Exp $
+// $Id: node.module,v 1.233 2003/07/02 17:09:08 dries Exp $
 
 function node_help() {
   global $mod;
@@ -1064,7 +1064,7 @@ function node_form($edit, $error = NULL) {
   ** Add the default fields:
   */
   $output .= "<div class=\"standard\">";
-  $output .= form_textfield(t("Title"), "title", $edit->title, 60, 64, $error["title"]);
+  $output .= form_textfield(t("Title"), "title", $edit->title, 60, 128, $error["title"]);
 
   /*
   ** Add the node specific fields:
