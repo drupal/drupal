@@ -1,15 +1,5 @@
 <?php
-// $Id: marvin.theme,v 1.100 2003/05/27 20:59:32 dries Exp $
-
-  /*********************************************************************
-
-   Theme: Marvin
-   Author: Dries Buytaert (Dries)
-   Email: dries@drop.org
-   Description: Classic theme, white, basic design with a fresh look.
-   Notes: Only supports blocks on the right.
-
-  *********************************************************************/
+// $Id: marvin.theme,v 1.101 2003/05/29 00:36:20 dries Exp $
 
  class Theme_marvin extends BaseTheme {
    var $link = "#666699";
