@@ -1382,9 +1382,15 @@ function node_submit($node) {
     }
   }
 
-  // Node was submitted successfully. Redirect to the viewing page.
   drupal_set_message($msg);
-  drupal_goto('node/'. $node->nid);
+
+  // Node was submitted successfully: redirect the user.
+  if (node_access('view', $node)) {
+    drupal_goto('node/'. $node->nid);
+  }
+  else {
+    drupal_goto();
+  }
 }
 
 /**
