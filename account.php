@@ -290,7 +290,7 @@ function account_validate($user) {
 
   // Check to see whether the username or e-mail address are banned:
   if ($ban = ban_match($user[userid], $type2index[usernames])) $error = t("the specified username is banned") .": <I>$ban->reason</I>";
-  if ($ban = ban_match($user[real_email], $type2index[addresses])) $error = t("the specified e-mail address is banned") .": <I>$ban->reason</I>.";
+  if ($ban = ban_match($user[real_email], $type2index[addresses])) $error = t("the specified e-mail address is banned") .": <I>$ban->reason</I>";
 
   // Verify whether username and e-mail address are unique:
   if (db_num_rows(db_query("SELECT userid FROM users WHERE LOWER(userid) = LOWER('$user[userid]')")) > 0) $error = t("the specified username is already taken");
