@@ -176,14 +176,15 @@ function system_modules() {
   $required = array("user", "system", "watchdog");
 
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  $output .= "<tr><th>module</th><th>description</th><th>enabled</th><th colspan=\"2\">operations</th></tr>\n";
+  $output .= "<tr><th>module</th><th>description</th><th>status</th><th colspan=\"2\">operations</th></tr>\n";
   foreach ($modules as $name => $module) {
     $output .= "<tr>";
     $output .= "<td>$name</td>";
     $output .= "<td>". check_output(module_invoke($name, "system", "description")) ."</td>";
-    $output .= "<td align=\"center\">". (in_array($name, $required) ? "Enabled" : form_checkbox("", "status][$name", 1, $module["status"])) ."</td>";
+    $output .= "<td align=\"center\">". (in_array($name, $required) ? "required" : form_checkbox("", "status][$name", 1, $module["status"])) ."</td>";
     $output .= "<td>". (module_hook($name, "page") ? lm(t("view"), array("mod" => $name)) : "&nbsp;") ."</td>";
     $output .= "<td>". (module_hook($name, "admin") ? la(t("admin"), array("mod" => $name)) : "&nbsp;") ."</td>";
+    // $output .= "<td>". (module_hook($name, "help") ? la(t("help"), array("mod" => $name, "op" => "help")) : "&nbsp;") ."</td>";
     $output .= "</tr>\n";
     if (!in_array($name, $required)) {
       db_query("INSERT INTO system SET name = '$name', type = 'module', filename = '$module[filename]', status = '$module[status]'");
