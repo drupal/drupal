@@ -1,4 +1,6 @@
 <?php
+// $Id: cron.php,v 1.23 2004/08/07 21:00:43 unconed Exp $
+
 include_once "includes/bootstrap.inc";
 include_once "includes/common.inc";
 
