@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.44 2003/04/01 06:05:15 dries Exp $
+// $Id: taxonomy.module,v 1.45 2003/04/02 20:39:44 dries Exp $
 
 function taxonomy_system($field){
   $system["description"] = t("Enables the organization of content into categories.");
@@ -747,7 +747,7 @@ function taxonomy_admin() {
           $output .= status(taxonomy_save_vocabulary($edit));
         }
         else {
-          return status(taxonomy_save_term($edit));
+          $output .= status(taxonomy_save_term($edit));
           if (!$edit["tid"]) {
             // if INSERT show form again
             $output .= taxonomy_form_term();
@@ -763,6 +763,7 @@ function taxonomy_admin() {
   else {
     $output .= message_access();
   }
+
   return $output;
 }
 
