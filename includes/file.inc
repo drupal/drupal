@@ -1,5 +1,5 @@
 <?php
-/* $Id: file.inc,v 1.13 2004/06/02 18:26:44 kjartan Exp $ */
+/* $Id: file.inc,v 1.14 2004/06/04 18:00:48 kjartan Exp $ */
 
 /**
  * @defgroup file File interface
@@ -286,6 +286,37 @@ function file_save_upload($source, $dest = 0, $replace = 0) {
     }
   }
   return 0;
+}
+
+/**
+ * Save a string to the specified destination
+ *
+ * @param $data A string containing the contents of the file
+ * @param $dest A string containing the destination location
+ *
+ * @return A string containing the resulting filename or 0 on error
+ */
+function file_save_data($data, $dest, $replace = 0) {
+  if (!valid_input_data($data)) {
+    watchdog('error', t('Possible exploit abuse: invalid data.'));
+    drupal_set_message(t("file upload failed: invalid data."), 'error');
+    return 0;
+  }
+
+  $temp = variable_get('file_directory_temp', (PHP_OS == 'WINNT' ? 'c:\\windows\\temp' : '/tmp'));
+  $file = tempnam($temp, 'file');
+  if (!$fp = fopen($file, 'w')) {
+    drupal_set_message(t('unable to create file.'), 'error');
+    return 0;
+  }
+  fwrite($fp, $data);
+  fclose($fp);
+
+  if (!file_move($file, $dest)) {
+    return 0;
+  }
+
+  return $file;
 }
 
 /**
