@@ -1104,12 +1104,16 @@ function node_add($type) {
   */
 
   if ($type && node_access("create", $type)) {
-    // Initialize settings
-    // TODO : clean up this code.
+    // Initialize settings:
     $node = array("uid" => $user->uid, "name" => $user->name, "type" => $type);
+
+    /*
+    ** Allow the following fields to be initialized via $_GET (eg. for use
+    ** with a "blog it" bookmarklet):
+    */
     foreach (array("title", "teaser", "body") as $field) {
-      if ($edit[$field]) {
-        $node[$field] = check_input($edit[$field]);
+      if ($_GET["edit"][$field]) {
+        $node[$field] = check_input($_GET["edit"][$field]);
       }
     }
     $output = node_form($node);
