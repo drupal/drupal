@@ -356,7 +356,7 @@ function book_prev($node) {
   }
 
   // Previous on the same level:
-  $direct_above = db_fetch_object(db_query('SELECT n.nid, n.title FROM {node} n '. node_access_join_sql() .' INNER JOIN {book} b ON n.nid = b.nid WHERE '. node_access_where_sql() ." AND b.parent = %d AND n.status = 1 AND (n.moderate = 0 OR n.revisions != '') AND (b.weight < %d OR (b.weight = %d AND n.title < '%s')) ORDER BY b.weight DESC, n.title DESC", $node->parent, $node->weight, $node->weight, $node->title));
+  $direct_above = db_fetch_object(db_query('SELECT n.nid, n.title FROM {node} n '. node_access_join_sql() .' INNER JOIN {book} b ON n.nid = b.nid WHERE '. node_access_where_sql() ." AND b.parent = %d AND n.status = 1 AND n.moderate = 0 AND (b.weight < %d OR (b.weight = %d AND n.title < '%s')) ORDER BY b.weight DESC, n.title DESC", $node->parent, $node->weight, $node->weight, $node->title));
   if ($direct_above) {
     // Get last leaf of $above.
     $path = book_location_down($direct_above);
@@ -365,7 +365,7 @@ function book_prev($node) {
   }
   else {
     // Direct parent:
-    $prev = db_fetch_object(db_query('SELECT n.nid, n.title FROM {node} n '. node_access_join_sql() .' INNER JOIN {book} b ON n.nid = b.nid WHERE '. node_access_where_sql() ." AND n.nid = %d AND n.status = 1 AND (n.moderate = 0 OR n.revisions != '')", $node->parent));
+    $prev = db_fetch_object(db_query('SELECT n.nid, n.title FROM {node} n '. node_access_join_sql() .' INNER JOIN {book} b ON n.nid = b.nid WHERE '. node_access_where_sql() ." AND n.nid = %d AND n.status = 1 AND n.moderate = 0", $node->parent));
     return $prev;
   }
 }
@@ -375,7 +375,7 @@ function book_prev($node) {
  */
 function book_next($node) {
   // get first direct child
-  $child = db_fetch_object(db_query("SELECT DISTINCT(n.nid), n.title, b.weight FROM {node} n ". node_access_join_sql() ." INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = %d AND n.status = 1 AND ". node_access_where_sql() ." AND (n.moderate = 0 OR n.revisions != '') ORDER BY b.weight ASC, n.title ASC", $node->nid));
+  $child = db_fetch_object(db_query("SELECT DISTINCT(n.nid), n.title, b.weight FROM {node} n ". node_access_join_sql() ." INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = %d AND n.status = 1 AND ". node_access_where_sql() ." AND n.moderate = 0 ORDER BY b.weight ASC, n.title ASC", $node->nid));
   if ($child) {
     return $child;
   }
@@ -384,7 +384,7 @@ function book_next($node) {
   array_push($path = book_location($node), $node); // Path to top-level node including this one.
 
   while (($leaf = array_pop($path)) && count($path)) {
-    $next = db_fetch_object(db_query("SELECT DISTINCT(n.nid), n.title, b.weight FROM {node} n ". node_access_join_sql() ." INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = %d AND n.status = 1 AND ". node_access_where_sql() ." AND (n.moderate = 0 OR n.revisions != '') AND (b.weight > %d OR (b.weight = %d AND n.title > '%s')) ORDER BY b.weight ASC, n.title ASC", $leaf->parent, $leaf->weight, $leaf->weight, $leaf->title));
+    $next = db_fetch_object(db_query("SELECT DISTINCT(n.nid), n.title, b.weight FROM {node} n ". node_access_join_sql() ." INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = %d AND n.status = 1 AND ". node_access_where_sql() ." AND n.moderate = 0 AND (b.weight > %d OR (b.weight = %d AND n.title > '%s')) ORDER BY b.weight ASC, n.title ASC", $leaf->parent, $leaf->weight, $leaf->weight, $leaf->title));
     if ($next) {
       return $next;
     }
@@ -592,7 +592,7 @@ function book_tree($parent = 0, $depth = 3, $unfold = array()) {
  * Menu callback; prints a listing of all books.
  */
 function book_render() {
-  $result = db_query('SELECT n.nid FROM {node} n '. node_access_join_sql() .' INNER JOIN {book} b ON n.nid = b.nid WHERE '. node_access_where_sql() .' AND b.parent = 0 AND n.status = 1 AND (n.moderate = 0 OR n.revisions IS NOT NULL) ORDER BY b.weight, n.title');
+  $result = db_query('SELECT n.nid FROM {node} n '. node_access_join_sql() .' INNER JOIN {book} b ON n.nid = b.nid WHERE '. node_access_where_sql() .' AND b.parent = 0 AND n.status = 1 AND n.moderate = 0 ORDER BY b.weight, n.title');
 
   while ($page = db_fetch_object($result)) {
     // Load the node:
@@ -618,7 +618,7 @@ function book_render() {
  */
 function book_print($nid = 0, $depth = 1) {
   global $base_url;
-  $result = db_query('SELECT DISTINCT(n.nid), n.title, b.weight FROM {node} n '. node_access_join_sql() .' INNER JOIN {book} b ON n.nid = b.nid WHERE n.status = 1 AND '. node_access_where_sql() .' AND n.nid = %d AND (n.moderate = 0 OR n.revisions IS NOT NULL) ORDER BY b.weight, n.title', $nid);
+  $result = db_query('SELECT DISTINCT(n.nid), n.title, b.weight FROM {node} n '. node_access_join_sql() .' INNER JOIN {book} b ON n.nid = b.nid WHERE n.status = 1 AND '. node_access_where_sql() .' AND n.nid = %d AND n.moderate = 0 ORDER BY b.weight, n.title', $nid);
 
   while ($page = db_fetch_object($result)) {
     // load the node:
@@ -648,7 +648,7 @@ function book_print($nid = 0, $depth = 1) {
 }
 
 function book_print_recurse($parent = '', $depth = 1) {
-  $result = db_query("SELECT DISTINCT(n.nid), n.title, b.weight FROM {node} n ". node_access_join_sql() ." INNER JOIN {book} b ON n.nid = b.nid WHERE n.status = 1 AND ". node_access_where_sql() ." AND b.parent = '$parent' AND (n.moderate = 0 OR n.revisions IS NOT NULL) ORDER BY b.weight, n.title");
+  $result = db_query("SELECT DISTINCT(n.nid), n.title, b.weight FROM {node} n ". node_access_join_sql() ." INNER JOIN {book} b ON n.nid = b.nid WHERE n.status = 1 AND ". node_access_where_sql() ." AND b.parent = '$parent' AND n.moderate = 0 ORDER BY b.weight, n.title");
 
   while ($page = db_fetch_object($result)) {
     // Load the node:
