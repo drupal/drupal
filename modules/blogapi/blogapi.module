@@ -29,6 +29,7 @@ function blogapi_xmlrpc() {
                    'metaWeblog.newMediaObject' => array('function' => 'blogapi_new_media_object'),
                    'metaWeblog.getCategories' => array('function' => 'blogapi_get_category_list'),
                    'metaWeblog.getRecentPosts' => array('function' => 'blogapi_get_recent_posts'),
+                   'mt.getRecentPostTitles' => array('function' => 'blogapi_get_recent_post_titles'),
                    'mt.getCategoryList' => array('function' => 'blogapi_get_category_list'),
                    'mt.getPostCategories' => array('function' => 'blogapi_get_post_categories'),
                    'mt.setPostCategories' => array('function' => 'blogapi_set_post_categories')
@@ -342,9 +343,11 @@ function blogapi_set_post_categories($req_params) {
 }
 
 /**
- * Blogging API callback. Returns the latest few postings in a user's blog.
+ * Blogging API callback. Returns the latest few postings in a user's blog. $bodies TRUE
+ * <a href="http://movabletype.org/docs/mtmanual_programmatic.html#item_mt%2EgetRecentPostTitles">
+ * returns a bandwidth-friendly list</a>.
  */
-function blogapi_get_recent_posts($req_params) {
+function blogapi_get_recent_posts($req_params, $bodies = TRUE) {
   $params = blogapi_convert($req_params);
 
   // Remove unused appkey (from bloggerAPI).
@@ -356,17 +359,26 @@ function blogapi_get_recent_posts($req_params) {
     return blogapi_error($user);
   }
 
-  $result = db_query_range("SELECT n.nid, n.title, n.body, n.created, u.name FROM {node} n, {users} u WHERE n.uid=u.uid AND n.type = 'blog' AND n.uid = %d ORDER BY n.created DESC",  $user->uid, 0, $params[3]);
+  $result = db_query_range('SELECT n.nid, n.title,'. ($bodies ? ' n.body,' : '') ." n.created, u.name FROM {node} n, {users} u WHERE n.uid=u.uid AND n.type = 'blog' AND n.uid = %d ORDER BY n.created DESC",  $user->uid, 0, $params[3]);
   while ($blog = db_fetch_object($result)) {
-    $blogs[] = new xmlrpcval(array('userid' => new xmlrpcval($blog->name, 'string'),
-                                   'dateCreated' => new xmlrpcval(iso8601_encode($blog->created), 'dateTime.iso8601'),
-                                   'content' => new xmlrpcval("<title>$blog->title</title>$blog->body", 'string'),
-                                   'title' => new xmlrpcval($blog->title, 'string'),
-                                   'description' => new xmlrpcval($blog->body, 'string'),
-                                   'postid' => new xmlrpcval($blog->nid, 'string')),
-                             'struct');
+    $xmlrpcval = array (
+      'userid' => new xmlrpcval($blog->name, 'string'),
+      'dateCreated' => new xmlrpcval(iso8601_encode($blog->created), 'dateTime.iso8601'),
+      'title' => new xmlrpcval($blog->title, 'string'),
+      'postid' => new xmlrpcval($blog->nid, 'string')
+    );
+    if ($bodies) {
+      $xmlrpcval['content'] = new xmlrpcval("<title>$blog->title</title>$blog->body", 'string');
+      $xmlrpcval['description'] = new xmlrpcval($blog->body, 'string');
+    }
+    $blogs[] = new xmlrpcval($xmlrpcval, 'struct');
   }
   return new xmlrpcresp(new xmlrpcval($blogs, 'array'));
+}
+
+// see above
+function blogapi_get_recent_post_titles($req_params) {
+  return blogapi_get_recent_posts($req_params, TRUE);
 }
 
 /**
