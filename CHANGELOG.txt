@@ -17,7 +17,7 @@ Drupal x.x.x, xxxx-xx-xx
     * added support for RSS ping-notifications of http://technorati.com/.
     * refactored the categorization of syndicated news items.
 - database backend:
-    * added support for mutiple database connections.
+    * added support for multiple database connections.
 - theme system:
     * changed all GIFs to PNGs.
 - accessibility:

@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.198 2004/06/20 20:04:26 dries Exp $ */
+/* $Id: theme.inc,v 1.199 2004/06/21 20:05:37 dries Exp $ */
 
 /**
  * @file
@@ -42,7 +42,7 @@ function init_theme() {
   $themes = list_themes();
 
   /*
-  ** Only select the user selected theme if it is availible in the
+  ** Only select the user selected theme if it is available in the
   ** list of enabled themes.
   */
 

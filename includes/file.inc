@@ -1,5 +1,5 @@
 <?php
-/* $Id: file.inc,v 1.14 2004/06/04 18:00:48 kjartan Exp $ */
+/* $Id: file.inc,v 1.15 2004/06/21 20:05:37 dries Exp $ */
 
 /**
  * @defgroup file File interface
@@ -266,7 +266,7 @@ function file_save_upload($source, $dest = 0, $replace = 0) {
         drupal_set_message(t("file upload failed: incomplete upload."), 'error');
         return 0;
       default: // Unknown error
-        drupal_set_message(t("file upload failed: unkown error."), 'error');
+        drupal_set_message(t("file upload failed: unknown error."), 'error');
         return 0;
     }
 

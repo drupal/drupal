@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.357 2004/06/18 15:04:33 dries Exp $ */
+/* $Id: common.inc,v 1.358 2004/06/21 20:05:37 dries Exp $ */
 
 /**
  * @name Page title
@@ -670,7 +670,7 @@ function search_item($item, $type) {
  * Render a generic search form.
  *
  * "Generic" means "universal usable" - that is, usable not only from
- * 'site.com/search', but also as a simple seach box (without "Restrict search
+ * 'site.com/search', but also as a simple search box (without "Restrict search
  * to", help text, etc) from theme's header etc. This means: provide options to
  * only conditionally render certain parts of this form.
  *
