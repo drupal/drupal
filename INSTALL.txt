@@ -4,8 +4,8 @@ REQUIREMENTS
 ------------
 
 Drupal requires a web server, PHP4 (http://www.php.net/) and either
-MySQL or PostgreSQL.  Drupal requires PHP 4.1.0 or greater on Linux
-and PHP 4.2.3 or greater on Windows.  PHP5 is not yet supported.
+MySQL or PostgreSQL. Drupal requires PHP 4.1.0 or greater on Linux
+and PHP 4.2.3 or greater on Windows. PHP5 is not yet supported.
 
 NOTE: The Apache web server and MySQL database are strongly recommended;
 other web server and database combinations such as IIS and PostgreSQL
@@ -30,7 +30,7 @@ OPTIONAL COMPONENTS
 -------------------
 
 - To use XML-based services such as the Blogger API, Jabber, RSS
-  syndication, you will need PHP's XML extension.  This extension is
+  syndication, you will need PHP's XML extension. This extension is
   enabled by default in standard PHP4 installations.
 
 - If you want support for clean URLs, you'll need mod_rewrite and
@@ -43,37 +43,45 @@ INSTALLATION
 1. DOWNLOAD DRUPAL
 
    You can obtain the latest Drupal release from http://drupal.org/.
-   Download the current tar.gz format and extract the files:
+   The files are in .tar.gz format and can be extracted using most
+   compression tools. On a typical Unix command line, use:
 
-     $ wget http://drupal.org/files/project/drupal-x.x.x.tgz
-     $ tar -zxvf drupal-x.x.x.tgz
+     wget http://drupal.org/files/project/drupal-x.x.x.tgz
+     tar -zxvf drupal-x.x.x.tgz
 
    This will create a new directory drupal-x.x.x/ containing all
-   Drupal files and directories.  Move the contents of that directory
+   Drupal files and directories. Move the contents of that directory
    into a directory within your web server's document root or your
    public HTML directory:
 
-     $ mv drupal-x.x.x/* drupal-x.x.x/.htaccess /var/www/html
+     mv drupal-x.x.x/* drupal-x.x.x/.htaccess /var/www/html
 
 2. CREATE THE DRUPAL DATABASE
 
-   These instructions are for MySQL.  If you are using another database,
-   check the database documentation.  In the following examples,
+   This step is only necessary if you don't already have a database
+   set-up (e.g. by your host).
+
+   If you control your databases through a web-based control panel
+   check its documentation for creating databases, as these instructions
+   are for the command-line.
+
+   These instructions are for MySQL. If you are using another database,
+   check the database documentation. In the following examples,
    "dba_user" is an example MySQL user which has the CREATE and GRANT
-   privileges.  You will need to use the appropriate user name for your
+   privileges. You will need to use the appropriate user name for your
    system.
 
    First, you must create a new database for your Drupal site:
 
-     $ mysqladmin -u dba_user -p create drupal
+     mysqladmin -u dba_user -p create drupal
 
    MySQL will prompt for the dba_user database password and then create
-   the initial database files.  Next you must login and set the access
+   the initial database files. Next you must login and set the access
    database rights:
 
-     $ mysql -u dba_user -p
+     mysql -u dba_user -p
 
-   Again, you will be asked for the dba_user database password.  At the
+   Again, you will be asked for the dba_user database password. At the
    MySQL prompt, enter following command:
 
      GRANT ALL PRIVILEGES ON drupal.*
@@ -97,21 +105,31 @@ INSTALLATION
 
 3. LOAD THE DRUPAL DATABASE SCHEME
 
-   Once you have a database, you must load the required tables:
+   Once you have a database, you must load the required tables into
+   the database.
 
-     $ mysql -u nobody -p drupal < database/database.mysql
+   If you use a web-based control panel, you should be
+   able to upload the file 'database.mysql' from Drupal's 'database'
+   directory and run it directly as SQL commands.
+
+   From the command line, use:
+
+     mysql -u nobody -p drupal < database/database.mysql
 
 4. CONNECTING DRUPAL
 
    The default configuration can be found in the
    'sites/default/settings.php' file within your Drupal installation.
    Before you can run Drupal, you must set the database URL and the
-   base URL to the web site.  Open the configuration file and edit the
+   base URL to the web site. Open the configuration file and edit the
    $db_url line to match the database defined in the previous steps:
 
-     $db_url = "mysql://username:password@localhost/drupal";
+     $db_url = "mysql://username:password@localhost/database";
+   
+   where 'username', 'password', 'localhost' and 'database' are the
+   username, password, host and database name for your set up.
 
-   Set $base_url to match the address to your web site:
+   Set $base_url to match the address to your Drupal site:
 
      $base_url = "http://www.example.com";
 
@@ -121,19 +139,19 @@ INSTALLATION
    next section.
 
    Additional site configurations are created in subdirectories within
-   the 'sites' directory.  Each site subdirectory must have a
-   'settings.php' file which specifies the configuration settings.  The
+   the 'sites' directory. Each site subdirectory must have a
+   'settings.php' file which specifies the configuration settings. The
    easiest way to create additional sites is to copy the 'default'
-   directory and modify the 'settings.php' file as appropriate.  The new
-   directory name is constructed from the site's URL.  The
+   directory and modify the 'settings.php' file as appropriate. The new
+   directory name is constructed from the site's URL. The
    configuration for www.example.com could be in
    'sites/example.com/settings.php' (note that 'www.' should be omitted
    if users can access your site at http://example.com/).
 
-   Sites do not each have to have a different domain.  You can use
-   subdomains and subdirectories for Drupal sites also.  For example,
+   Sites do not each have to have a different domain. You can use
+   subdomains and subdirectories for Drupal sites also. For example,
    example.com, sub.example.com, and sub.example.com/site3 can all be
-   defined as independent Drupal sites.  The setup for a configuration
+   defined as independent Drupal sites. The setup for a configuration
    such as this would look like the following:
 
      sites/default/settings.php
@@ -156,9 +174,9 @@ INSTALLATION
 
    Each site configuration can have its own site-specific modules and
    themes that will be made available in addition to those installed
-   in the standard 'modules' and 'themes' directories.  To use
+   in the standard 'modules' and 'themes' directories. To use
    site-specific modules or themes, simply create a 'modules' or
-   'themes' directory within the site configuration directory.  For
+   'themes' directory within the site configuration directory. For
    example, if sub.example.dom has a custom theme and a custom module
    that should not be accessible to other sites, the setup would look
    like this:
@@ -177,23 +195,25 @@ INSTALLATION
 
    You can now launch your browser and point it to your Drupal site.
 
-   Create an account and login.  The first account will automatically
+   Create an account and login. The first account will automatically
    become the main administrator account.
 
 6. CRON TASKS
 
    Many Drupal modules have periodic tasks that must be triggered by a
-   cron job.  To activate these tasks, you must call the cron page;
-   this will pass control to the modules and the modules will decide
+   cron job. To activate these tasks, you must call the cron page by
+   visiting http://www.example.com/cron.php ;
+   This will pass control to the modules and the modules will decide
    if and what they must do.
 
-   The following example crontab line will activate the cron script
-   on the hour:
+   Most systems support the crontab utility for scheduling tasks like
+   this. The following example crontab line will activate the cron
+   tasks automatically on the hour:
 
-   0    *   *   *   *   wget -O - -q http://HOSTNAME/cron.php
+   0    *   *   *   *   wget -O - -q http://www.example.com/cron.php
 
    More information about the cron scripts are available in the admin
-   help pages and in the Drupal handbook at drupal.org.  Example
+   help pages and in the Drupal handbook at drupal.org. Example
    scripts can be found in the scripts/ directory.
 
 DRUPAL ADMINISTRATION
@@ -205,8 +225,8 @@ access rights.
 
 Use your administration panel to enable and configure services. For
 example, set some general settings for your site with "Administration -
-configuration".  Enable modules via "Administration -  configuration -
-modules".  User permissions can be set with "Administration - accounts
+configuration". Enable modules via "Administration - configuration -
+modules". User permissions can be set with "Administration - accounts
 - permissions".
 
 For more information on configuration options, read through the
@@ -220,10 +240,10 @@ CUSTOMIZING YOUR THEME(S)
 -------------------------
 
 Now that your server is running, you will want to customize the look
-of your site.  Several sample themes are included in the Drupal
+of your site. Several sample themes are included in the Drupal
 installation and more can be downloaded from drupal.org.
 
-Customizing each theme depends on the theme.  In general, each theme
+Customizing each theme depends on the theme. In general, each theme
 contains a PHP file themename.theme which defines a function header()
 that can be changed to reference your own logos.
 
@@ -252,6 +272,6 @@ MORE INFORMATION
 
 For platform specific configuration issues and other installation and
 administration assistance, please consult the Drupal handbook at
-http://drupal.org/.  You can also find support at the Drupal support
+http://drupal.org/. You can also find support at the Drupal support
 forum or through the Drupal mailing lists.
 
