@@ -355,7 +355,7 @@ function user_block($op = "list", $delta = 0) {
           $form .= form_password(t("Password"), "pass", $pass, 15, 64);
 
           if (variable_get("user_remember", 0) == 0) {
-            $form .= form_checkbox(t("Remember me"), "remember_me", 1, 0, 0);
+            $form .= form_checkbox(t("Remember me"), "remember_me");
           }
           elseif (variable_get("user_remember", 1) == 1) {
             $form .= form_hidden("remember_me", 1);
