@@ -6,7 +6,7 @@ function search_perm() {
 
 function search_link($type) {
   if ($type == "page" && user_access("search content")) {
-    $links[] = "<a href=\"module.php?mod=search\">search</a>";
+    $links[] = "<a href=\"module.php?mod=search\">". t("search") ."</a>";
   }
 
   return $links ? $links : array();
@@ -49,7 +49,7 @@ function search_page() {
   }
   else {
     $theme->header();
-    $theme->box("Access denied", message_access());
+    $theme->box(t("Access denied"), message_access());
     $theme->footer();
   }
 }

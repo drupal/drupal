@@ -143,7 +143,7 @@ function user_access($perm) {
   }
 }
 
-function user_mail($subject, $message, $header) {
+function user_mail($mail, $subject, $message, $header) {
   // print "<pre>subject: $subject<hr />header: $header<hr />$message</pre>";
   mail($mail, $subject, $message, $header);
 }
@@ -403,7 +403,7 @@ function drupal_auth($username, $password, $server) {
 /*** User features *********************************************************/
 
 function user_login($edit = array()) {
-  global $user, $REQUEST_URI;
+  global $user, $REQUEST_URI, $HTTP_REFERER;
 
   if (user_deny("user", $edit["name"])) {
     $error = sprintf(t("The name '%s' has been denied access."), $edit["name"]);
@@ -468,10 +468,14 @@ function user_login($edit = array()) {
       user_save($user, array("session" => session_id()));
 
       /*
-      ** Redirect the user to his personal information page:
+      ** Redirect the user to the page he logged on from or to his personal
+      ** information page if we can detect the referer page:
       */
 
-      header("Location: module.php?mod=user");
+      $url = $HTTP_REFERER ? $HTTP_REFERER : "module.php?mod=user&op=view";
+
+      header("Location: $url");
+
     }
     else {
       watchdog("user", "failed to login for '". $name ."': invalid password");
@@ -517,7 +521,7 @@ function user_logout() {
     ** Redirect the user to his personal information page:
     */
 
-    header("Location: module.php?mod=user");
+    header("Location: index.php");
   }
 }
 
@@ -608,6 +612,7 @@ function user_register($edit = array()) {
       ** Create new user account, no administrator approval required:
       */
 
+      user_save("", array("name" => $edit["name"], "pass" => $pass, "init" => $edit["mail"], "mail" => $edit["mail"], "role" => "authenticated user", "status" => 1));
 
       user_mail($edit["mail"], t("user account details"), sprintf(t("%s,\n\nsomoneone signed up for a user account on %s and supplied this e-mail address as their contact.  If it wasn't you, just ignore this mail but if it was you, you can now login using the following username and password:\n\n  username: %s\n  password: %s\n\n\n-- %s team"), $edit["name"], variable_get("site_name", "drupal"), $edit["name"], $pass, variable_get("site_name", "drupal")), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
     }

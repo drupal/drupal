@@ -24,7 +24,7 @@ if (user_access("post content")) {
   }
 }
 else {
-  $theme->box("Submit", message_access());
+  $theme->box(t("Submit"), message_access());
 }
 
 $theme->footer();
