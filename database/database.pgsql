@@ -789,7 +789,7 @@ INSERT INTO system VALUES ('modules/watchdog.module','watchdog','module','',1,0,
 INSERT INTO system VALUES ('themes/bluemarine/xtemplate.xtmpl','bluemarine','theme','themes/engines/xtemplate/xtemplate.engine',1,0,0);
 INSERT INTO system VALUES ('themes/engines/xtemplate/xtemplate.engine','xtemplate','theme_engine','',1,0,0);
 
-INSERT INTO variable(name,value) VALUES('update_start', 's:10:"2004-10-18";');
+INSERT INTO variable(name,value) VALUES('update_start', 's:10:"2005-03-21";');
 INSERT INTO variable(name,value) VALUES('theme_default','s:10:"bluemarine";');
 INSERT INTO users(uid,name,mail) VALUES(0,'','');
 INSERT INTO users_roles(uid,rid) VALUES(0, 1);
