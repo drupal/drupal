@@ -694,6 +694,16 @@ INSERT INTO permission VALUES (2,'access comments, access content, post comments
 INSERT INTO blocks(module,delta,status) VALUES('user', '0', '1');
 INSERT INTO blocks(module,delta,status) VALUES('user', '1', '1');
 
+INSERT INTO filter_formats VALUES (1,'Filtered HTML',',1,2,',1);
+INSERT INTO filter_formats VALUES (2,'PHP code','',0);
+INSERT INTO filter_formats VALUES (3,'Full HTML','',1));
+INSERT INTO filters VALUES (1,'filter',0,0);
+INSERT INTO filters VALUES (1,'filter',3,1);
+INSERT INTO filters VALUES (2,'filter',1,0);
+INSERT INTO filters VALUES (3,'filter',3,0);
+INSERT INTO variable (name,value) VALUES ('filter_html_1','i:1;');
+
+
 ---
 --- Functions
 ---

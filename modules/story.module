@@ -1,5 +1,5 @@
 <?php
-// $Id: story.module,v 1.153 2004/07/31 09:30:09 dries Exp $
+// $Id: story.module,v 1.154 2004/08/10 18:34:29 unconed Exp $
 
 /**
  * Implementation of hook_help().
@@ -113,7 +113,7 @@ function story_form(&$node) {
     $output .= implode('', taxonomy_node_form('story', $node));
   }
 
-  $output .= form_textarea(t('Body'), 'body', $node->body, 60, 15, filter_tips_short(), NULL, TRUE);
+  $output .= form_textarea(t('Body'), 'body', $node->body, 60, 15, '', NULL, TRUE);
 
   return $output;
 }

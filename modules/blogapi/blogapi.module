@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.18 2004/08/05 05:40:53 dries Exp $
+// $Id: blogapi.module,v 1.19 2004/08/10 18:34:29 unconed Exp $
 
 /**
  * Implementation of hook_help().
@@ -130,6 +130,7 @@ function blogapi_new_post($req_params) {
                               'promote' => $promote,
                               'comment' => $comment,
                               'moderate' => $moderate,
+                              'format' => FILTER_DEFAULT_FORMAT,
                               'revision' => $revision
                               ));
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.192 2004/08/09 18:54:49 dries Exp $
+// $Id: forum.module,v 1.193 2004/08/10 18:34:29 unconed Exp $
 
 /**
  * Implementation of hook_help().
@@ -268,7 +268,7 @@ function forum_form(&$node) {
     $output .= form_checkbox(t('Leave shadow copy'), 'shadow', 1, $node->shadow, t('If you move this topic, you can leave a link in the old forum to the new forum.'));
   }
 
-  $output .= form_textarea(t('Body'), 'body', $node->body, 60, 10, filter_tips_short());
+  $output .= form_textarea(t('Body'), 'body', $node->body, 60, 10, '');
 
   return $output;
 }

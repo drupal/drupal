@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.76 2004/08/10 05:44:17 dries Exp $ */
+/* $Id: drupal.css,v 1.77 2004/08/10 18:34:28 unconed Exp $ */
 
 /*
 ** HTML elements
@@ -318,6 +318,13 @@ tr.light .form-item, tr.dark .form-item {
   padding: 1px;
   margin: 0;
   font-size: 0.8em;
+}
+.tips {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  font-size: 0.9em;
 }
 #forum .description {
   font-size: 0.9em;

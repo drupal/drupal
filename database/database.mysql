@@ -135,7 +135,6 @@ CREATE TABLE book (
   nid int(10) unsigned NOT NULL default '0',
   parent int(10) NOT NULL default '0',
   weight tinyint(3) NOT NULL default '0',
-  format tinyint(2) default '0',
   log longtext,
   PRIMARY KEY  (nid),
   KEY parent (parent)
@@ -150,7 +149,7 @@ CREATE TABLE boxes (
   title varchar(64) NOT NULL default '',
   body longtext,
   info varchar(128) NOT NULL default '',
-  type tinyint(2) NOT NULL default '0',
+  format int(4) NOT NULL default '0',
   PRIMARY KEY  (bid),
   UNIQUE KEY title (title),
   UNIQUE KEY info (info)
@@ -184,6 +183,7 @@ CREATE TABLE comments (
   timestamp int(11) NOT NULL default '0',
   score mediumint(9) NOT NULL default '0',
   status tinyint(3) unsigned NOT NULL default '0',
+  format int(4) NOT NULL default '0',
   thread varchar(255) NOT NULL,
   users longtext,
   name varchar(60) default NULL,
@@ -208,13 +208,27 @@ CREATE TABLE directory (
 ) TYPE=MyISAM;
 
 --
+-- Table structure for table 'filter_formats'
+--
+
+CREATE TABLE filter_formats (
+  format int(4) NOT NULL default '0' auto_increment,
+  name varchar(255) NOT NULL default '',
+  roles varchar(255) NOT NULL default '',
+  cache tinyint(2) NOT NULL default '0',
+  PRIMARY KEY format (format)
+) TYPE=MyISAM;
+
+--
 -- Table structure for table 'filters'
 --
 
 CREATE TABLE filters (
+  format int(4) NOT NULL default '0',
   module varchar(64) NOT NULL default '',
+  delta tinyint(2) DEFAULT '0' NOT NULL,
   weight tinyint(2) DEFAULT '0' NOT NULL,
-  KEY module (module)
+  INDEX (weight)
 ) TYPE=MyISAM;
 
 --
@@ -330,6 +344,7 @@ CREATE TABLE node (
   body longtext NOT NULL,
   revisions longtext NOT NULL,
   sticky int(2) NOT NULL default '0',
+  format int(4) NOT NULL default '0',
   PRIMARY KEY  (nid),
   KEY node_type (type(4)),
   KEY node_title_type (title,type(4)),
@@ -362,7 +377,6 @@ CREATE TABLE node_access (
 CREATE TABLE page (
   nid int(10) unsigned NOT NULL default '0',
   link varchar(128) NOT NULL default '',
-  format tinyint(2) NOT NULL default '0',
   description varchar(128) NOT NULL default '',
   PRIMARY KEY  (nid)
 ) TYPE=MyISAM;
@@ -700,3 +714,12 @@ REPLACE blocks SET module = 'user', delta = '1', status = '1';
 INSERT INTO sequences (name, id) VALUES ('menu_mid', 1);
 
 INSERT INTO node_access VALUES (0, 0, 'all', 1, 0, 0);
+
+INSERT INTO filter_formats VALUES (1,'Filtered HTML',',1,2,',1);
+INSERT INTO filter_formats VALUES (2,'PHP code','',0);
+INSERT INTO filter_formats VALUES (3,'Full HTML','',1);
+INSERT INTO filters VALUES (1,'filter',0,0);
+INSERT INTO filters VALUES (1,'filter',3,1);
+INSERT INTO filters VALUES (2,'filter',1,0);
+INSERT INTO filters VALUES (3,'filter',3,0);
+INSERT INTO variable (name,value) VALUES ('filter_html_1','i:1;');
