@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.98 2003/10/09 18:53:21 dries Exp $
+// $Id: page.module,v 1.99 2003/11/07 19:03:35 dries Exp $
 
 function page_help($section = "admin/help#page") {
   $output = "";
@@ -132,7 +132,7 @@ function page_form(&$node, &$help, &$error) {
   $output .= form_textarea(t("Body"), "body", $node->body, 60, 20);
   $output .= form_textfield(t("Link name"), "link", $node->link, 60, 64, t("To make the page show up in the navigation links, enter the name of the link, otherwise leave blank."));
   $output .= form_textfield(t("Link description"), "description", $node->description, 60, 64, t("The description displayed when hovering over the page's link.  Leave blank when you don't want a description."));
-  $output .= form_select(t("Type"), "format", $node->format, array(0 => "HTML", 1 => "PHP"));
+  $output .= form_radios(t("Type"), "format", $node->format, array(0 => "HTML", 1 => "PHP"));
 
   return $output;
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.115 2003/11/01 15:11:51 unconed Exp $
+// $Id: poll.module,v 1.116 2003/11/07 19:03:35 dries Exp $
 
 function poll_allowvotes(&$node) {
   /*
@@ -129,7 +129,7 @@ function poll_form(&$node, &$help, &$error) {
   }
 
   if ($admin) {
-    $output .= form_select(t("Poll status"), "active", isset($node->active) ? $node->active : 1, $_active);
+    $output .= form_radios(t("Poll status"), "active", isset($node->active) ? $node->active : 1, $_active);
   }
 
   $output .= form_select(t("Poll duration"), "runtime", $node->runtime ? $node->runtime : 0, $_duration, t("After this period, the poll will be closed automatically."));

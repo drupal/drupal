@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.82 2003/11/05 17:40:41 dries Exp $
+// $Id: locale.module,v 1.83 2003/11/07 19:03:35 dries Exp $
 
 function locale_help($section = "admin/help#locale") {
   $output = "";
@@ -82,7 +82,7 @@ function locale_link($type) {
 function locale_user($type, &$edit, &$user) {
   global $languages;
   if ($type == "edit_form" && count($languages) > 1) {
-    $output = form_select(t("Language"), "language", $user->language, $languages, t("Selecting a different language will change the language of the site."));
+    $output = form_radios(t("Language"), "language", $user->language, $languages, t("Selecting a different language will change the language of the site."));
   }
   return $output;
 }
@@ -240,8 +240,8 @@ function locale_seek_form() {
   global $languages;
   $edit =& $_POST["edit"];
   $form .= form_textfield(t("Strings to search for"), "string", $edit["string"], 30, 30, t("Leave blank to show all strings."));
-  $form .= form_select(t("Language"), "language", ($edit["language"] ? $edit["language"] : key($languages)), array_merge(array("any" => t("Any language"), "all" => t("All languages")), $languages), t("In which language must the string be translated/untranslated (see status)?"));
-  $form .= form_select(t("Status"), "status", $edit["status"], array(2 => t("Untranslated"), 1 => t("Translated"), 0 => t("All")));
+  $form .= form_radios(t("Language"), "language", ($edit["language"] ? $edit["language"] : key($languages)), array_merge(array("any" => t("Any language"), "all" => t("All languages")), $languages), t("In which language must the string be translated/untranslated (see status)?"));
+  $form .= form_radios(t("Status"), "status", $edit["status"], array(2 => t("Untranslated"), 1 => t("Translated"), 0 => t("All")));
   $form .= form_submit(t("Search"));
 
   $output .= form($form);

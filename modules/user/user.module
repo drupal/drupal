@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.246 2003/10/31 19:34:02 dries Exp $
+// $Id: user.module,v 1.247 2003/11/07 19:03:35 dries Exp $
 
 session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
 session_start();
@@ -1185,9 +1185,9 @@ function _user_mail_text($message) {
 }
 
 function user_settings() {
-  $output .= form_select(t("Public registrations"), "user_register", variable_get("user_register", 1), array(t("Only site administrators can create new user accounts."), t("Visitors can create accounts and no administrator approval is required."), t("Visitors can create accounts but administrator approval is required.")));
+  $output .= form_radios(t("Public registrations"), "user_register", variable_get("user_register", 1), array(t("Only site administrators can create new user accounts."), t("Visitors can create accounts and no administrator approval is required."), t("Visitors can create accounts but administrator approval is required.")));
 
-  $output .= form_select(t("Remember authenticated users"), "user_remember", variable_get("user_remember", 0), array(t("Let the user decide whether he should be logged out when leaving the site."), t("Authenticated users are not logged out upon leaving the site."), t("Authenticated users are logged out upon leaving the site.")));
+  $output .= form_radios(t("Remember authenticated users"), "user_remember", variable_get("user_remember", 0), array(t("Let the user decide whether he should be logged out when leaving the site."), t("Authenticated users are not logged out upon leaving the site."), t("Authenticated users are logged out upon leaving the site.")));
 
   $output .= form_textarea(t("User registration guidelines"), "user_registration_help", variable_get("user_registration_help", ""), 70, 4, t("This text is displayed at the top of the user registration form.  It's useful for helping or instructing your users."));
 
@@ -1288,7 +1288,7 @@ function user_admin_access($edit = array()) {
   }
 
   $options = array ("1" => t("Allow"), "0" => t("Deny"));
-  $rows[] = array(form_select(NUll, "status", $edit["status"], $options), form_textfield(NULL, "mask", $edit["mask"], 32, 64), form_submit(t("Add rule")));
+  $rows[] = array(form_radios(NUll, "status", $edit["status"], $options), form_textfield(NULL, "mask", $edit["mask"], 32, 64), form_submit(t("Add rule")));
   $output .= table($header, $rows);
 
   $output .= "<p><small>%: ". t("Matches any number of characters, even zero characters") .".<br />_: ". t("Matches exactly one character.") ."</small></p>";
@@ -1518,8 +1518,8 @@ function user_admin_edit($edit = array()) {
     $output .= implode("\n", module_invoke_all("user", "edit_form", $edit, $account));
 
     $output .= form_item(t("Password"), "<input type=\"password\" name=\"edit[pass1]\" size=\"12\" maxlength=\"24\" /> <input type=\"password\" name=\"edit[pass2]\" size=\"12\" maxlength=\"24\" />", t("Enter a new password twice if you want to change the current password for this user or leave it blank if you are happy with the current password."));
-    $output .= form_select(t("Status"), "status", $account->status, array(t("Blocked"), t("Active")));
-    $output .= form_select(t("Role"), "rid", $account->rid, user_roles(1));
+    $output .= form_radios(t("Status"), "status", $account->status, array(t("Blocked"), t("Active")));
+    $output .= form_radios(t("Role"), "rid", $account->rid, user_roles(1));
 
     $output .= form_submit(t("Save account"));
     $output .= form_submit(t("Delete account"));

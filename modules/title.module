@@ -1,5 +1,5 @@
 <?php
-// $Id: title.module,v 1.15 2003/10/07 18:16:41 dries Exp $
+// $Id: title.module,v 1.16 2003/11/07 19:03:35 dries Exp $
 
 function title_help($section) {
   $output = "";
@@ -75,7 +75,7 @@ function title_filter($text) {
 }
 
 function title_conf_filters() {
-  $output = form_select(t("Enable node link tags"), "title_filter_link", variable_get("title_filter_link", 0), array(t("Disabled"), t("Enabled")), t("Enable Wiki-like [node title|text] links. This will generate a link labeled 'text' to the node with the title 'node title'. If you omit '|text', the label becomes 'node title'. You may use a substring of a node title if desired. When multiple matching titles are found, a list of matching nodes will be displayed. If no matching titles are found, a full-text search is returned."));
+  $output = form_radios(t("Enable node link tags"), "title_filter_link", variable_get("title_filter_link", 0), array(t("Disabled"), t("Enabled")), t("Enable Wiki-like [node title|text] links. This will generate a link labeled 'text' to the node with the title 'node title'. If you omit '|text', the label becomes 'node title'. You may use a substring of a node title if desired. When multiple matching titles are found, a list of matching nodes will be displayed. If no matching titles are found, a full-text search is returned."));
   return $output;
 }
 

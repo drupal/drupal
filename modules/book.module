@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.193 2003/11/03 08:59:39 dries Exp $
+// $Id: book.module,v 1.194 2003/11/07 19:03:34 dries Exp $
 
 function book_node($field) {
   global $user;
@@ -169,7 +169,7 @@ function book_form(&$node, &$help, &$error) {
   if (user_access("administer nodes")) {
     $output .= form_weight(t("Weight"), "weight", $node->weight, 15, t("The heavier pages will sink and the lighter pages will be positioned nearer the top."));
     if (user_access("create php content")) {
-      $output .= form_select("Type", "format", $node->format, array(0 => "HTML / text", 1 => "PHP"));
+      $output .= form_radios("Type", "format", $node->format, array(0 => "HTML / text", 1 => "PHP"));
     }
   }
   else {

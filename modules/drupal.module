@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.60 2003/10/09 21:51:57 dries Exp $
+// $Id: drupal.module,v 1.61 2003/11/07 19:03:35 dries Exp $
 
 function drupal_help($section = "admin/help#drupal") {
   $output = "";
@@ -34,7 +34,7 @@ function drupal_help($section = "admin/help#drupal") {
 
 function drupal_settings() {
   $output .= form_textfield("Drupal XML-RPC server", "drupal_server", variable_get("drupal_server", "http://www.drupal.org/xmlrpc.php"), 55, 128, "The URL of your root Drupal XML-RPC server.");
-  $output .= form_select("Drupal directory", "drupal_directory", variable_get("drupal_directory", 0), array("Disabled", "Enabled"), "If enabled, your Drupal site will make itself known to the Drupal directory at the specified Drupal XML-RPC server.  For this to work properly, you have to set your site's name, e-mail address, slogan and mission statement.  When the \"Drupal XML-RPC server\" field is set to \"http://www.drupal.org/xmlrpc.php\", your web site will get listed on <a href=\"http://www.drupal.org/\">http://www.drupal.org/</a>.  Requires crontab.");
+  $output .= form_radios("Drupal directory", "drupal_directory", variable_get("drupal_directory", 0), array("Disabled", "Enabled"), "If enabled, your Drupal site will make itself known to the Drupal directory at the specified Drupal XML-RPC server.  For this to work properly, you have to set your site's name, e-mail address, slogan and mission statement.  When the \"Drupal XML-RPC server\" field is set to \"http://www.drupal.org/xmlrpc.php\", your web site will get listed on <a href=\"http://www.drupal.org/\">http://www.drupal.org/</a>.  Requires crontab.");
 
   return $output;
 }
