@@ -12,13 +12,20 @@ $module = array("find" => "diary_find",
 include_once "includes/common.inc";
 
 function diary_find($keys) {
+  global $user;
   $find = array();
   $result = db_query("SELECT d.*, u.userid FROM diaries d LEFT JOIN users u ON d.author = u.id WHERE d.text LIKE '%". check_input($keys) ."%' ORDER BY d.timestamp DESC LIMIT 20");
   while ($diary = db_fetch_object($result)) {
-    array_push($find, array("subject" => "$diary->userid's diary", "link" => "module.php?mod=diary&op=view&name=$diary->userid", "user" => $diary->userid, "date" => $diary->timestamp));
+    array_push($find, array("subject" => "$diary->userid's diary", "link" => (user_permission($user) ? "admin.php?mod=diary&op=edit&id=$diary->id" : "module.php?mod=diary&op=view&name=$diary->userid"), "user" => $diary->userid, "date" => $diary->timestamp));
   }
   return $find;
 
+}
+
+function diary_search() {
+  global $keys, $mod;
+  search_form($keys);
+  search_data($keys, $mod);
 }
 
 function diary_page_overview($num = 20) {
@@ -26,7 +33,7 @@ function diary_page_overview($num = 20) {
 
   $result = db_query("SELECT d.*, u.userid FROM diaries d LEFT JOIN users u ON d.author = u.id ORDER BY d.timestamp DESC LIMIT $num");
 
-  $output .= "<P>This part of the website is dedicated to providing easy-to-write and easy-to-read online diaries or journals filled with daily thoughts, poetry, boneless blabber, spiritual theories, intimate details, valuable experiences, cynical rants, semi-coherent comments, writing experiments, artistic babblings, critics on current facts, fresh insights, diverse dreams, chronicles and mumbling madness available for general human consumption.</P>";
+  $output .= "<P>This part of the website is dedicated to provide easy-to-write and easy-to-read online diaries or journals filled with daily thoughts, poetry, boneless blabber, spiritual theories, intimate details, valuable experiences, cynical rants, semi-coherent comments, writing experiments, artistic babblings, critics on current facts, fresh insights, diverse dreams, chronicles and mumbling madness available for public consumption.</P>";
 
   while ($diary = db_fetch_object($result)) {
     if ($time != date("F jS", $diary->timestamp)) {
@@ -210,7 +217,7 @@ function diary_page() {
 
 function diary_help() {
  ?>
-  <P>Drupal's diary module allows registered users to maintain an online diary.</P>
+  <P>Drupal's diary module allows registered users to maintain an online diary.  It provides easy-to-write and easy-to-read online diaries or journals that can be filled with daily thoughts, poetry, boneless blabber, spiritual theories, intimate details, valuable experiences, cynical rants, semi-coherent comments, writing experiments, artistic babblings, critics on current facts, fresh insights, diverse dreams, chronicles and mumbling madness available for public consumption.</P>
  <?
 }
 
@@ -262,7 +269,7 @@ function diary_admin_edit($id) {
 
   $output .= "<P>\n";
   $output .= " <B>Author:</B><BR>\n";
-  $output .= " ". format_username($diary->userid, 1) ."\n";
+  $output .= " ". format_username($diary->userid) ."\n";
   $output .= "</P>\n";
 
   $output .= "<P>\n";
@@ -312,7 +319,7 @@ function diary_admin_display($order = "date") {
   $output .= " </TR>\n";
 
   while ($diary = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"module.php?mod=diary&op=view&name=$diary->userid\">$diary->userid on ". format_date($diary->timestamp, "small") ."</A></TD><TD>". format_username($diary->userid, 1) ."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=diary&op=edit&id=$diary->id\">edit</A></TD></TR>\n";
+    $output .= " <TR><TD><A HREF=\"module.php?mod=diary&op=view&name=$diary->userid\">$diary->userid on ". format_date($diary->timestamp, "small") ."</A></TD><TD>". format_username($diary->userid) ."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=diary&op=edit&id=$diary->id\">edit</A></TD></TR>\n";
   }
 
   $output .= "</TABLE>\n";
@@ -324,9 +331,17 @@ function diary_admin_display($order = "date") {
 function diary_admin() {
   global $op, $id, $text, $order;
 
+  print "<SMALL><A HREF=\"admin.php?mod=diary\">overview</A> | <A HREF=\"admin.php?mod=diary&op=search\">search diary</A> | <A HREF=\"admin.php?mod=diary&op=help\">help</A></SMALL><HR>\n";
+
   switch ($op) {
     case "edit":
       diary_admin_edit($id);
+      break;
+    case "help":
+      diary_help();
+      break;
+    case "search":
+      diary_search();
       break;
     case "Save diary entry":
       diary_admin_save($id, $text);

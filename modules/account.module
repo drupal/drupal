@@ -6,23 +6,6 @@ $module = array("cron" => "account_cron",
                 "block" => "account_block",
                 "admin" => "account_admin");
 
-function account_help() {
- ?>
-  <P>The account-module is responsible for maintaining the user database. It automatically handles tasks like registration, authentication, access rights, password retrieval, user settings and much more.</P>
-  <P>The required administration can be accomplished through the "account" interface of the administration section.  From here administrators can get a quick overview of all registered users and view/edit specific accounts using the links provided.  Some useful operations include blocking specific accounts (e.g. a troublesome user) and giving/taking administration permissions.  Note that you should only give these permissions to people you trust!</P>
-  <P>Check the documentation page for detailed information about user management.</P>
-  <H3>User rating</H3>
-  <P>The account cron will periodically calculate an overall rating of each user's contributed value that is a time-weighted average of his or her comments ratings with an additional bonus for the stories he or she contributed.  The system can be best compared with <A HREF="http://slashcode.com/">SlashCode</A>'s karma and is - in fact - even more similar to <A HREF="http://scoop.kuro5hin.org/">Scoop</A>'s mojo implementation.</P>
-  <P>I won't elaborate on all the funny math involved and it suffices to say that the actual weighting is done in such a way:</P>
-  <OL>
-   <LI>that comments with a lot of votes count more then comments with only one or two votes.</LI>
-   <LI>that newer comments count for more then older comments.</LI>
-  </OL>
-  <P>The idea of (1) is that it favors comments that more people voted on, and thus whose rating is more likely to be accurate or justified.</P>
-  <P>The latter (2) makes the user rating that comes out of the calulations temporary, based on users' most recent activity and responsive to their current state.  This is accomplished by taking each user's last 30 comments, or however many he or she posted in the last 60 days - whatever comes first.</P>
-  <P>Additionally, users that posted one or more succesful stories in the last 60 days gain extra bonus points which will boost up their overall rating.</P>
- <?
-}
 
 function account_cron_ratings() {
   $period = 5184000;  // 60 days
@@ -56,13 +39,38 @@ function account_cron() {
   account_cron_ratings();
 }
 
+function account_help() {
+ ?>
+  <P>The account-module is responsible for maintaining the user database. It automatically handles tasks like registration, authentication, access rights, password retrieval, user settings and much more.</P>
+  <P>The required administration can be accomplished through the "account" interface of the administration section.  From here administrators can get a quick overview of all registered users and view/edit specific accounts using the links provided.  Some useful operations include blocking specific accounts (e.g. a troublesome user) and giving/taking administration permissions.  Note that you should only give these permissions to people you trust!</P>
+  <P>Check the documentation page for detailed information about user management.</P>
+  <H3>User rating</H3>
+  <P>The account cron will periodically calculate an overall rating of each user's contributed value that is a time-weighted average of his or her comments ratings with an additional bonus for the stories he or she contributed.  The system can be best compared with <A HREF="http://slashcode.com/">SlashCode</A>'s karma and is - in fact - even more similar to <A HREF="http://scoop.kuro5hin.org/">Scoop</A>'s mojo implementation.</P>
+  <P>I won't elaborate on all the funny math involved and it suffices to say that the actual weighting is done in such a way:</P>
+  <OL>
+   <LI>that comments with a lot of votes count more then comments with only one or two votes.</LI>
+   <LI>that newer comments count for more then older comments.</LI>
+  </OL>
+  <P>The idea of (1) is that it favors comments that more people voted on, and thus whose rating is more likely to be accurate or justified.</P>
+  <P>The latter (2) makes the user rating that comes out of the calulations temporary, based on users' most recent activity and responsive to their current state.  This is accomplished by taking each user's last 30 comments, or however many he or she posted in the last 60 days - whatever comes first.</P>
+  <P>Additionally, users that posted one or more succesful stories in the last 60 days gain extra bonus points which will boost up their overall rating.</P>
+ <?
+}
+
 function account_find($keys) {
+  global $user;
   $find = array();
   $result = db_query("SELECT * FROM users WHERE userid LIKE '%". check_input($keys) ."%' LIMIT 20");
   while ($account = db_fetch_object($result)) {
-    array_push($find, array("subject" => $account->userid, "link" => "account.php?op=view&name=$account->userid", "user" => $account->userid));
+    array_push($find, array("subject" => $account->userid, "link" => (user_permission($user) ? "admin.php?mod=account&op=view&name=$account->userid" : "account.php?op=view&name=$account->userid"), "user" => $account->userid));
   }
   return $find;
+}
+
+function account_search() {
+  global $keys, $mod;
+  search_form($keys);
+  search_data($keys, $mod);
 }
 
 function account_display($order = "username") {
@@ -119,7 +127,7 @@ function account_display($order = "username") {
           $output .= "  <TD>". format_url($account[$value]) ."</TD>\n";
           break;
         case "userid":
-          $output .= "  <TD>". format_username($account[$value], 1) ."</TD>\n";
+          $output .= "  <TD>". format_username($account[$value]) ."</TD>\n";
           break;
         default:
           $output .= "  <TD>". format_data($account[$value]) ."</TD>\n";
@@ -185,7 +193,8 @@ function account_edit($name) {
     $output .= " <TR><TD ALIGN=\"right\"><B>Fake e-mail address:</B></TD><TD><INPUT NAME=\"edit[fake_email]\" SIZE=\"55\" VALUE=\"$account->fake_email\"></TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>URL of homepage:</B></TD><TD><INPUT NAME=\"edit[url]\" SIZE=\"55\" VALUE=\"$account->url\"></TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Permissions:</B></TD><TD>$perm</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Last access:</B></TD><TD>". format_date($account->last_access) ." from $account->last_host</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Last access:</B></TD><TD>". format_date($account->last_access) ." from ". format_data($account->last_host) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>User rating:</B></TD><TD>". format_data($account->rating) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Bio information:</B></TD><TD><TEXTAREA NAME=\"edit[bio]\" COLS=\"35\" ROWS=\"5\" WRAP=\"virtual\">$account->bio</TEXTAREA></TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Signature:</B></TD><TD><TEXTAREA NAME=\"edit[signature]\" COLS=\"35\" ROWS=\"5\" WRAP=\"virtual\">$account->signature</TEXTAREA></TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Theme:</B></TD><TD>". format_data($account->theme) ."</TD></TR>\n";
@@ -208,7 +217,7 @@ function account_view($name) {
 
   if ($account = db_fetch_object($result)) {
     $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>ID:</B></TD><TD>$account->id</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>ID:</B></TD><TD><A HREF=\"admin.php?mod=account&op=edit&name=$account->userid\">$account->id</A></TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Status:</B></TD><TD>". $status[$account->status] ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Username:</B></TD><TD>$account->userid</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Real name:</B></TD><TD>". format_data($account->name) ."</TD></TR>\n";
@@ -216,7 +225,8 @@ function account_view($name) {
     $output .= " <TR><TD ALIGN=\"right\"><B>Fake e-mail address:</B></TD><TD>". format_data($account->fake_email) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>URL of homepage:</B></TD><TD>". format_url($account->url) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Permissions:</B></TD><TD>". $permissions[$account->permissions] ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Last access:</B></TD><TD>". format_date($account->last_access) ." from $account->last_host</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Last access:</B></TD><TD>". format_date($account->last_access) ." from ". format_data($account->last_host) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>User rating:</B></TD><TD>". format_data($account->rating) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Bio information:</B></TD><TD>". format_data($account->bio) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Signature:</B></TD><TD>". format_data($account->signature) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Theme:</B></TD><TD>". format_data($account->theme) ."</TD></TR>\n";
@@ -248,7 +258,7 @@ function account_block() {
 function account_admin() {
   global $op, $edit, $order, $name;
 
-  print "<SMALL><A HREF=\"admin.php?mod=account\">overview</A> | <A HREF=\"admin.php?mod=account&op=help\">help</A></SMALL><HR>\n";
+  print "<SMALL><A HREF=\"admin.php?mod=account\">overview</A> | <A HREF=\"admin.php?mod=account&op=search\">search account</A> | <A HREF=\"admin.php?mod=account&op=help\">help</A></SMALL><HR>\n";
 
   switch ($op) {
     case "edit":
@@ -256,6 +266,9 @@ function account_admin() {
       break;
     case "help":
       account_help();
+      break;
+    case "search":
+      account_search();
       break;
     case "view":
       account_view($name);
