@@ -1,10 +1,12 @@
 <!-- BEGIN: header -->
+<?xml version="1.0" encoding="ISO-8859-1"?>
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 
 <head>
   <title>{title}</title>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
   <base href="{base}" />
   <style type="text/css" media="all">
     @import "themes/xtemplate/xtemplate.css";
@@ -18,26 +20,20 @@
 
   <tr>
     <td colspan="2" class="menu">
-      <span id="links">
-        <div id="secondary">
-          {secondary_links}
-          <!-- BEGIN: search_box -->
-          <form action="{search_url}" method="post">
-            <input class="keys" type="text" size="50" value="" name="keys" />
-            <input type="submit" value="{search_button_text}" />
-          </form>
-          <!-- END: search_box -->
-        </div>
-        <div id="primary">{primary_links}</div>
-      </span>
-      <span id="logo">
-        <a href="./"><img src="themes/xtemplate/images/druplicon.gif" alt="" /></a>
-      </span>
+      <span id="logo"><a href="./"><img src="themes/xtemplate/images/druplicon.gif" alt="" /></a></span>
+      <span id="secondary">{secondary_links}</span><br />
+      <!-- BEGIN: search_box -->
+      <form action="{search_url}" method="post">
+        <input class="keys" type="text" size="50" value="" name="keys" />
+        <input type="submit" value="{search_button_text}" />
+      </form>
+      <!-- END: search_box -->
+      <span id="primary">{primary_links}</span>
     </td>
   </tr>
 
   <tr>
-    <td valign="top" width="100%">
+    <td valign="top">
       <!-- BEGIN: message -->
         <div id="message">{header_message}</div>
       <!-- END: message -->
