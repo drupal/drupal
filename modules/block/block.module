@@ -3,7 +3,7 @@
 
 function block_help() {
  ?>
-  <p>Blocks are the boxes visible in the side bars on the left- and right-hand side of the website.  They are either exported by the engine or by any of the active modules.  To really get your teeth into a drupal website, you are going to have to deal with blocks and administering blocks in a fairly sophisticated fashion.  This means you will need to understand how the block placement strategy works.</p>
+  <p>Blocks are the boxes visible in the side bars on the left- and right-hand side of the website.  They are either exported by the engine or by any of the active modules.  To really get your teeth into a Drupal website, you are going to have to deal with blocks and administering blocks in a fairly sophisticated fashion.  This means you will need to understand how the block placement strategy works.</p>
   <p>The placement of blocks is delegated to the administrator. In most cases (i.e., the "custom" blocks), the user has complete control -- using preferences -- over whether or not they are enabled.</p>
   <p>An administrator can lay out and arrange the available blocks to fit in two regions: "left" and "right".  Regions simply contain blocks.  In addition, an administrator can assign each block (within a region) a weight to sort them vertically.  The heavier blocks will sink and the lighter blocks will be positioned nearer the top.</p>
   <p>As mentioned, blocks may be arranged to fit in two regions: left and right.  For theme builders, each region is identified by a corresponding constant: "left" and "right".</p>
