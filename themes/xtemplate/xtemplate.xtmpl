@@ -46,7 +46,7 @@
 
 <!-- BEGIN: node -->
   <div class="node">
-    <div class="title">{title}</div>
+    <div class="title"><a href="{link}">{title}</a></div>
     <span class="author">Submitted by {author} on {date}.</span>
     <span class="taxonomy">{taxonomy}</span>
     <div class="content">{content}</div>

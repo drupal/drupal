@@ -173,13 +173,19 @@ function locale_seek() {
       $query[] = "(". implode(" || ", $string_query) .")";
     }
 
-    $result = db_query("SELECT * FROM locales". (count($query) ? " WHERE ". implode(" && ", $query) : "") ." ORDER BY string");
+    $result = pager_query("SELECT * FROM locales". (count($query) ? " WHERE ". implode(" && ", $query) : "") ." ORDER BY string", 50);
 
     $header = array(t("string"), (($edit["status"] != 2 && strlen($edit["language"]) == 2) ? t("translated string") : t("languages")), array("data" => t("operations"), "colspan" => "2"));
     while ($locale = db_fetch_object($result)) {
       $rows[] = array("$locale->string<br /><small><i>$locale->location</i></small>", array("data" => (($edit["status"] != 2 && strlen($edit["language"]) == 2) ? $locale->$edit["language"] : locale_languages($locale)), "align" => "center"), array("data" => l(t("edit locale"), "admin/locale/edit/$locale->lid"), "nowrap" => "nowrap"), array("data" => l(t("delete locale"), "admin/locale/delete/$locale->lid"), "nowrap" => "nowrap"));
     }
+
+    if ($pager = pager_display(NULL, 50, 0, "admin")) {
+      $rows[] = array(array("data" => "$pager", "colspan" => "5"));
+    } 
+    
     $output .= table($header, $rows);
+
   }
 
   return $output;
