@@ -554,8 +554,6 @@ function story_display($order = "date") {
 }
 
 function info_display() {
-  include "includes/config.inc";
-
   $output .= "sitename: $sitename<BR>\n";
   $output .= "e-mail address: $contact_email<BR>\n";
   $output .= "send e-mail notifications: $notify<BR>\n";
@@ -569,6 +567,8 @@ function info_display() {
 
 include "includes/config.inc";
 include "includes/function.inc";
+include "includes/database.inc";
+include "includes/watchdog.inc";
 include "includes/admin.inc";
 
 admin_header();
