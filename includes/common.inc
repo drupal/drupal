@@ -563,10 +563,10 @@ function valid_email_address($mail) {
  */
 function valid_url($url, $absolute = false) {
   if ($absolute) {
-    return preg_match("/^http:\/\/[a-zA-z0-9\/:_\-_\.,]+$/", $url);
+    return preg_match("/^(http|https|ftp):\/\/[a-z0-9\/:_\-_\.\?,~=#&]+$/i", $url);
   }
   else {
-    return preg_match("/^[a-zA-z0-9\/:_\-_\.,]+$/", $url);
+    return preg_match("/^[a-z0-9\/:_\-_\.,]+$/i", $url);
   }
 }
 
