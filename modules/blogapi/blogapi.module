@@ -153,7 +153,7 @@ function blogapi_new_post($req_params) {
     return new xmlrpcresp(new xmlrpcval($nid, 'string'));
   }
 
-  return blogapi_error(t('error storing post'));
+  return blogapi_error(t('Error storing post.'));
 }
 
 /**
@@ -213,7 +213,7 @@ function blogapi_edit_post($req_params) {
     return new xmlrpcresp(new xmlrpcval(true, 'boolean'));
   }
 
-  return blogapi_error(t('error storing node'));
+  return blogapi_error(t('Error storing post.'));
 }
 
 /**
@@ -263,11 +263,11 @@ function blogapi_new_media_object($req_params) {
   $data = $params[3]['bits'];
 
   if (!$data) {
-    return blogapi_error(t('No file sent'));
+    return blogapi_error(t('No file sent.'));
   }
 
   if (!$file = file_save_data($data, $name)) {
-    return blogapi_error(t('Error storing file'));
+    return blogapi_error(t('Error storing file.'));
   }
 
   // Return the successful result.
@@ -412,7 +412,7 @@ function blogapi_supported_text_filters($req_params) {
  * trackback module.
  */
 function blogapi_get_trackback_pings($req_params) {
-  return blogapi_error(t('not implemented'));
+  return blogapi_error(t('Not implemented.'));
 }
 
 /**
@@ -424,7 +424,7 @@ function blogapi_publish_post($req_params) {
   $user = blogapi_validate_user($params[1], $params[2]);
   $node = node_load(array('nid' => $params[0]));
   if (!$node) {
-    return blogapi_error(t('invalid node'));
+    return blogapi_error(t('Invalid post.'));
   }
 
   $node->status = 1;
@@ -504,7 +504,7 @@ function blogapi_blogger_title(&$contents) {
 }
 
 function blogapi_settings() {
-  $output = form_select(t('XML-RPC Engine'), 'blogapi_engine', variable_get('blogapi_engine', 0), array(0 => 'Blogger', 1 => 'MetaWeblog', 2 => 'Movabletype'), t('RSD or Really-Simple-Discovery is a mechanism which allows external blogger tools to discover the APIs they can use to interact with Drupal. The common XML-RPC engines are Blogger, MetaWeblog and Movabletype. If you are not sure which is the correct setting, choose Blogger.'));
+  $output = form_select(t('XML-RPC Engine'), 'blogapi_engine', variable_get('blogapi_engine', 0), array(0 => 'Blogger', 1 => 'MetaWeblog', 2 => 'Movabletype'), t('RSD or Really-Simple-Discovery is a mechanism which allows external blogger tools to discover the APIs they can use to interact with Drupal. Here you can set the preferred method for blogger tools to interact with your site. The common XML-RPC engines are Blogger, MetaWeblog and Movabletype. If you are not sure which is the correct setting, choose Blogger.'));
   return $output;
 }
 
