@@ -191,7 +191,7 @@ CREATE TABLE item (
   link varchar(255) NOT NULL default '',
   author varchar(255) NOT NULL default '',
   description text NOT NULL default '',
-  timestamp integer NOT NULL default '',
+  timestamp integer NOT NULL default '0',
   attributes varchar(255) NOT NULL default '',
   PRIMARY KEY  (iid)
 );
