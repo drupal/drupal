@@ -2,34 +2,42 @@
 // $Id$
 
 /**
+ * @file
+ *
+ * System monitoring and logging for administrators.
+ *
+ * The watchdog module monitors your site and keeps a list of
+ * recorded events containing usage and performance data, errors,
+ * warnings, and similar operational information.
+ *
+ * @see watchdog().
+ */
+
+/**
  * Implementation of hook_help().
  */
 function watchdog_help($section = 'admin/help#watchdog') {
   switch ($section) {
     case 'admin/help#watchdog':
-      return t('
-      <p>Watchdog module monitors your web site, capturing system events in a log to be reviewed by an authorized individual at a later time.  The watchdog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information.  It is vital to <a href="%watchdog">check the watchdog report</a> on a regular basis as it is often the only way to tell what is going on.</p>
-      <p>To ease administration, the watchdog will automatically discard old log entries, <a href="%log-entry">as configured</a>. Needs "cron.php" to discard the entries.</p>', array('%watchdog' => url('admin/logs'), '%log-entry' => url('admin/settings/watchdog')));
+      return t('<p>The watchdog module monitors your web site, capturing system events in a log to be reviewed by an authorized individual at a later time.  The watchdog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information.  It is vital to <a href="%watchdog">check the watchdog report</a> on a regular basis as it is often the only way to tell what is going on.</p>', array('%watchdog' => url('admin/logs')));
     case 'admin/logs':
-      return t('The watchdog module monitors your web site, captures system events in a log and records them to be reviewed by an authorized individual at a later time.  The watchdog log is simply a list of events recorded during operation and contains usage data, performance data, errors, warnings and operational information. It is vital to check the watchdog report on a regular basis as it is often the only way to tell what is going on.');
+      return t('The watchdog module monitors your web site, capturing system events in a log to be reviewed by an authorized individual at a later time.  The watchdog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information.  It is vital to check the watchdog report on a regular basis as it is often the only way to tell what is going on.');
     case 'admin/logs/user':
-      return t('Watchdog events that have to do with users.');
+      return t('Watchdog events that have to do with users and their accounts.');
     case 'admin/logs/regular':
       return t('Watchdog events that are "normal" and have no other classification.');
     case 'admin/logs/httpd':
-      return t('Watchdog events that are from the web server.');
+      return t('Watchdog events that are from the web server, like 404s, etc.');
     case 'admin/logs/special':
       return t('Watchdog events about adding, changing, and moderating nodes and comments.');
     case 'admin/logs/search':
-      return t('Watchdog events showing what users searched for.');
+      return t('Watchdog events showing what users have searched for.');
     case 'admin/logs/error':
       return t('Watchdog events about PHP and database errors.');
     case 'admin/logs/warning':
       return t('Watchdog warning events. These events don\'t stop Drupal from running, but are things you should know.');
     case 'admin/modules#description':
       return t('Logs and records system events.');
-//    case 'admin/settings/watchdog':
-//      return t('Watchdog logs your system events.  To see these events go to the <a href="%watchdog">logs</a>. Since these logs can grow out of control if kept around forever, below set how long an item should be kept in the log.  Note that to discard entries as set below you must run "cron.php" regularly.', array('%watchdog' => url('admin/logs')));
   }
 }
 
