@@ -197,7 +197,6 @@ function comment_controls($threshold = 1, $mode = 3, $order = 1) {
   $output .= comment_order(($user->id ? $user->sort : $order));
   $output .= comment_threshold(($user->id ? $user->threshold : $threshold));
   $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Update settings") ."\">\n";
-  $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Add comment") ."\">\n";
   $output .= "</FORM>\n";
   $output .= "</FONT>\n";
   return $output;
