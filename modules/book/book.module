@@ -198,8 +198,8 @@ function book_view($node, $main = 0) {
   }
   else {
     if ($node->nid && $node->parent) {
-      $next = db_fetch_object(db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.status = 1 AND b.parent = '$node->parent' AND (b.weight > '$node->weight' OR (b.weight = '$node->weight' AND n.title > '". check_query($node->title) ."')) ORDER BY b.weight ASC, n.title ASC"));
-      $prev = db_fetch_object(db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.status = 1 AND b.parent = '$node->parent' AND (b.weight < '$node->weight' OR (b.weight = '$node->weight' AND n.title < '". check_query($node->title) ."')) ORDER BY b.weight DESC, n.title DESC"));
+      $next = db_fetch_object(db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.status = 1 AND b.parent = '$node->parent' AND (b.weight > '$node->weight' OR (b.weight = '$node->weight' AND n.title > '". check_query($node->title) ."')) AND (n.moderate = 0 OR n.revisions != '') ORDER BY b.weight ASC, n.title ASC"));
+      $prev = db_fetch_object(db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.status = 1 AND b.parent = '$node->parent' AND (b.weight < '$node->weight' OR (b.weight = '$node->weight' AND n.title < '". check_query($node->title) ."')) AND (n.moderate = 0 OR n.revisions != '') ORDER BY b.weight DESC, n.title DESC"));
     }
 
     $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n";
@@ -238,7 +238,7 @@ function book_toc($parent = "", $indent = "", $toc = array()) {
   ** Select all child nodes:
   */
 
-  $result = db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.type = 'book' AND n.status = 1 AND b.parent = '$parent' ORDER BY b.weight");
+  $result = db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.type = 'book' AND n.status = 1 AND b.parent = '$parent' AND (n.moderate = 0 OR n.revisions != '') ORDER BY b.weight");
 
   /*
   ** Add the root node:
@@ -267,7 +267,7 @@ function book_tree($parent = "", $depth = 0) {
     ** Select all child nodes and render them into a table of contents:
     */
 
-   $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.type = 'book' AND b.parent = '$parent' ORDER BY b.weight, n.title");
+   $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.type = 'book' AND b.parent = '$parent' AND (n.moderate = 0 OR n.revisions != '') ORDER BY b.weight, n.title");
 
      while ($page = db_fetch_object($result)) {
        // load the node:
@@ -295,7 +295,7 @@ function book_tree($parent = "", $depth = 0) {
 function book_render() {
   global $theme;
 
-  $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE b.parent = 0 AND n.status = 1 ORDER BY b.weight");
+  $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE b.parent = 0 AND n.status = 1 AND (n.moderate = 0 OR n.revisions != '') ORDER BY b.weight");
 
   while ($page = db_fetch_object($result)) {
     // load the node:
@@ -335,7 +335,7 @@ function book_page() {
 }
 
 function book_export_html($id = "", $depth = 1) {
-  $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.type = 'book' AND n.status = 1 AND n.nid = '". check_input($id) ."'");
+  $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.type = 'book' AND n.status = 1 AND n.nid = '". check_input($id) ." AND (n.moderate = 0 OR n.revisions != '')'");
 
   while ($page = db_fetch_object($result)) {
     // load the node:
@@ -360,7 +360,7 @@ function book_export_html($id = "", $depth = 1) {
 }
 
 function book_export_html_recursive($parent = "", $depth = 1) {
-  $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.type = 'book' AND n.status = 1 AND b.parent = '$parent' ORDER BY b.weight");
+  $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.type = 'book' AND n.status = 1 AND b.parent = '$parent' AND (n.moderate = 0 OR n.revisions != '') ORDER BY b.weight");
 
   while ($page = db_fetch_object($result)) {
     // load the node:
