@@ -24,12 +24,12 @@ function system_help_cron() {
 }
 
 function system_perm() {
-  return array("administer settings and filters", "access administration pages");
+  return array("administer site configuration", "access administration pages");
 }
 
 function system_link($type) {
-  if ($type == "admin" && user_access("administer settings and filters")) {
-    $links[] = la(t("settings and filters"), array("mod" => "system"));
+  if ($type == "admin" && user_access("administer site configuration")) {
+    $links[] = la(t("site configuration"), array("mod" => "system"));
   }
 
   /*if ($type == "admin" && user_access("administer modules and themes")) {
@@ -246,7 +246,7 @@ function system_themes() {
 
 function system_admin() {
   global $edit, $op, $type;
-  if (user_access("administer settings and filters")) {
+  if (user_access("administer site configuration")) {
 
     print "<small>".la(t("site settings"), array("mod" => "system", "type" => "options"))." | ".la(t("content filters"), array("mod" => "system", "type" => "filter"))." | ".la(t("modules"), array("mod" => "system", "op" => "modules"))." | ".la(t("themes"), array("mod" => "system", "op" => "themes"))." | ".la(t("help"), array("mod" => "system", "op" => "help"))."</small><hr />\n";
 
