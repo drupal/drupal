@@ -56,7 +56,7 @@ function filter_filter_tips($delta, $format, $long = false) {
       switch (variable_get("filter_html_$format", FILTER_HTML_STRIP)) {
 
         case FILTER_HTML_STRIP:
-          if ($allowed_html = variable_get("allowed_html_$format", '<a> <b> <dd> <dl> <dt> <i> <li> <ol> <u> <ul>')) {
+          if ($allowed_html = variable_get("allowed_html_$format", '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>')) {
             return t('Allowed HTML tags') .': '. htmlspecialchars($allowed_html);
           }
           else {
@@ -826,7 +826,7 @@ function filter_filter($op, $delta = 0, $format = -1, $text = '') {
  */
 function _filter_html_settings($format) {
   $group = form_radios(t('Filter HTML tags'), "filter_html_$format", variable_get("filter_html_$format", FILTER_HTML_STRIP), array(FILTER_HTML_STRIP => t('Strip tags'), FILTER_HTML_ESCAPE => t('Escape tags')), t('How to deal with HTML tags in user-contributed content. If set to "Strip tags", dangerous tags are removed (see below).  If set to "Escape tags", all HTML is escaped and presented as it was typed.'));
-  $group .= form_textfield(t('Allowed HTML tags'), "allowed_html_$format", variable_get("allowed_html_$format", '<a> <b> <dd> <dl> <dt> <i> <li> <ol> <u> <ul>'), 64, 255, t('If "Strip tags" is selected, optionally specify tags which should not be stripped. Javascript event attributes are always stripped.'));
+  $group .= form_textfield(t('Allowed HTML tags'), "allowed_html_$format", variable_get("allowed_html_$format", '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>'), 64, 255, t('If "Strip tags" is selected, optionally specify tags which should not be stripped. Javascript event attributes are always stripped.'));
   $group .= form_radios(t('HTML style attributes'), "filter_style_$format", variable_get("filter_style_$format", FILTER_STYLE_STRIP), array(FILTER_STYLE_ALLOW => t('Allowed'), FILTER_STYLE_STRIP => t('Removed')), t('If "Strip tags" is selected, you can choose whether "STYLE" attributes are allowed or removed from input.'));
   $output .= form_group(t('HTML filter'), $group);
 
@@ -839,7 +839,7 @@ function _filter_html_settings($format) {
 function _filter_html($text, $format) {
   if (variable_get("filter_html_$format", FILTER_HTML_STRIP) == FILTER_HTML_STRIP) {
     // Allow users to enter HTML, but filter it
-    $text = strip_tags($text, variable_get("allowed_html_$format", '<a> <b> <dd> <dl> <dt> <i> <li> <ol> <u> <ul>'));
+    $text = strip_tags($text, variable_get("allowed_html_$format", '<a> <em> <strong> <cite> <code> <ul> <ol> <li> <dl> <dt> <dd>'));
     if (variable_get("filter_style_$format", FILTER_STYLE_STRIP)) {
       $text = preg_replace('/\Wstyle\s*=[^>]+?>/i', '>', $text);
     }
