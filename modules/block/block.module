@@ -198,11 +198,20 @@ function block_admin_display() {
       $delete = '';
     }
 
-    $row = array($block['info'], array('data' => form_checkbox(NULL, $block['module'] .']['. $block['delta'] .'][status', 1, $block['status']), 'align' => 'center'), form_weight(NULL, $block['module'] .']['. $block['delta'] .'][weight', $block['weight']), form_radios(NULL, $block['module'] .']['. $block['delta'] .'][region', $block['region'], array(t('left'), t('right'))));
+    $row = array($block['info'],
+      form_checkbox(NULL, $block['module'] .']['. $block['delta'] .'][status', 1, $block['status']),
+      form_weight(NULL, $block['module'] .']['. $block['delta'] .'][weight', $block['weight']),
+      form_radios(NULL, $block['module'] .']['. $block['delta'] .'][region', $block['region'],
+      array(t('left'), t('right'))));
 
-    $row = array($block['info'], array('data' => form_checkbox(NULL, $block['module'] .']['. $block['delta'] .'][status', 1, $block['status']), 'align' => 'center'), form_weight(NULL, $block['module'] .']['. $block['delta'] .'][weight', $block['weight']), form_radios(NULL, $block['module'] .']['. $block['delta'] .'][region', $block['region'], array(t('left'), t('right'))));
+    $row = array($block['info'],
+      form_checkbox(NULL, $block['module'] .']['. $block['delta'] .'][status', 1, $block['status']),
+      form_weight(NULL, $block['module'] .']['. $block['delta'] .'][weight', $block['weight']),
+      form_radios(NULL, $block['module'] .']['. $block['delta'] .'][region', $block['region'],
+      array(t('left'), t('right'))));
+
     if (module_exist('throttle')) {
-      $row[] = array('data' => form_checkbox(NULL, $block['module'] .']['. $block['delta'] .'][throttle', 1, $block['throttle']), 'align' => 'center');
+      $row[] = form_checkbox(NULL, $block['module'] .']['. $block['delta'] .'][throttle', 1, $block['throttle']);
     }
     $row[] = l(t('configure'), 'admin/block/configure/'. $block['module'] .'/'. $block['delta']);
     $row[] = $delete;
