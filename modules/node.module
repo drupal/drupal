@@ -339,7 +339,7 @@ function node_revision_rollback($node, $revision) {
 
   node_save($rev, $filter);
 
-  watchdog("special", "node: rollbacked to revision #$revision of '$node->title'");
+  watchdog("special", "$node->type: rollbacked to revision #$revision of '$node->title'");
 }
 
 /*
@@ -352,7 +352,7 @@ function node_revision_delete($node, $revision) {
 
   node_save($node, array("nid", "revisions"));
 
-  watchdog("special", "node: removed revision #$revision of '$node->title'");
+  watchdog("special", "$node->type: removed revision #$revision of '$node->title'");
 }
 
 /*
@@ -784,11 +784,11 @@ function node_submit($node) {
 
       node_save($node, array_merge($fields, module_invoke($node->type, "save", "update", $node)));
 
-      watchdog("special", "node: updated '$node->title'");
+      watchdog("special", "$node->type: updated '$node->title'");
       $output = t("The node has been updated.");
     }
     else {
-      watchdog("warning", "node: not authorized to update node");
+      watchdog("warning", "$node->type: not authorized to update node");
       $output = t("You are not authorized to update this node.");
     }
 
@@ -816,11 +816,11 @@ function node_submit($node) {
 
       node_save($node, array_merge($fields, module_invoke($node->type, "save", "create", $node)));
 
-      watchdog("special", "node: added '$node->title'");
+      watchdog("special", "$node->type: added '$node->title'");
       $output = t("Thanks for your submission.");
     }
     else {
-      watchdog("warning", "node: not authorized to create node");
+      watchdog("warning", "$node->type: not authorized to create node");
       $output = t("You are not authorized to create this node.");
     }
   }
@@ -849,7 +849,7 @@ function node_delete($edit) {
 
       module_invoke($node->type, "delete", &$node);
 
-      watchdog("special", "node: deleted '$node->title'");
+      watchdog("special", "$node->type: deleted '$node->title'");
       $output = t("The node has been deleted.");
     }
     else {
@@ -857,11 +857,11 @@ function node_delete($edit) {
       $output .= form_hidden("nid", $node->nid);
       $output .= form_hidden("confirm", 1);
       $output .= form_submit(t("Delete"));
-      $output = form($output, "post", "admin.php?mod=node");
+      $output = form($output);
     }
   }
   else {
-    watchdog("warning", "node: not authorized to remove node");
+    watchdog("warning", "$node->type: not authorized to remove node");
     $output = t("You are not authorized to remove this node.");
   }
 
@@ -906,7 +906,7 @@ function node_page() {
       $theme->box($title, node_submit($edit));
       break;
     case t("Delete"):
-      print node_delete($edit);
+      $theme->box($title, node_delete($edit));
       break;
     default:
       $result = db_query("SELECT nid, type FROM node WHERE ". ($meta ? "attributes LIKE '%". check_input($meta) ."%' AND " : "") ." promote = '1' AND status = '1' AND created <= '". ($date > 0 ? check_input($date) : time()) ."' ORDER BY created DESC LIMIT ". ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
