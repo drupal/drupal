@@ -1940,6 +1940,7 @@ function update_110() {
       fromtype varchar(16) default NULL,
       score int(10) unsigned default NULL,
       KEY sid (sid),
+      KEY fromsid (fromsid),
       KEY word (word)
       ) TYPE=MyISAM");
 

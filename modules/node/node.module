@@ -1409,6 +1409,9 @@ function node_delete($edit) {
       // Clear the cache so an anonymous poster can see the node being deleted.
       cache_clear_all();
 
+      // Remove this node from the search index
+      search_wipe($node->nid, 'node');
+
       watchdog('special', t('%type: deleted %title.', array('%type' => '<em>'. t($node->type) .'</em>', '%title' => "<em>$node->title</em>")));
       $output = t('The node has been deleted.');
     }
@@ -1515,7 +1518,7 @@ function node_update_index() {
   $last = variable_get('node_cron_last', 0);
   $limit = (int)variable_get('search_cron_limit', 100);
 
-  $result = db_query_range('SELECT nid FROM {node} n WHERE n.status = 1 AND moderate = 0 AND (created > %d OR changed > %d) ORDER BY GREATEST(created, changed) ASC', $last, $last, 0, $limit);
+  $result = db_query_range('SELECT n.nid FROM {node} n LEFT JOIN {node_comment_statistics} c ON n.nid = c.nid WHERE n.status = 1 AND n.moderate = 0 AND (n.created > %d OR n.changed > %d OR c.last_comment_timestamp > %d) ORDER BY GREATEST(n.created, n.changed, c.last_comment_timestamp) ASC', $last, $last, $last, 0, $limit);
 
   while ($node = db_fetch_object($result)) {
     $node = node_load(array('nid' => $node->nid));

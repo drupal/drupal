@@ -47,8 +47,10 @@ function search_help($section = 'admin/help#search') {
   switch ($section) {
     case 'admin/modules#description':
       return t('Enables site-wide keyword searching.');
-    case 'admin/search':
-      return t('<p>The search engine works by maintaining an index of words in your site\'s content. You can adjust the settings below to tweak the indexing behaviour. Note that indexing requires cron to be set up correctly.</p><p>Changes to these settings will only apply to content that is indexed after the change. If you want them to apply to everything, you need to wipe the index with the button below.</p>');
+    case 'admin/settings/search':
+      return t('
+<p>The search engine works by maintaining an index of the words in your site\'s content. You can adjust the settings below to tweak the indexing behaviour. Note that the search requires cron to be set up correctly.</p>
+<p>Changes to these settings will only apply to content that is indexed after the change. If you want them to apply to everything, you need to wipe the index with the button below.</p>');
     case 'search#noresults':
       return t('<p><ul>
 <li>Check if your spelling is correct.</li>
@@ -97,6 +99,7 @@ function search_menu($may_cache) {
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
     $items[] = array('path' => 'admin/settings/search', 'title' => t('search'),
       'callback' => 'search_admin',
+      'type' => MENU_NORMAL_ITEM,
       'access' => user_access('administer site configuration'));
   }
 
@@ -112,6 +115,8 @@ function search_admin() {
   }
   if ($_POST['op'] == t('Wipe index')) {
     search_wipe();
+    drupal_set_message(t('The search index has been wiped.'));
+    drupal_goto('admin/settings/search');
   }
 
   // Indexing settings:
@@ -133,15 +138,25 @@ function search_admin() {
 }
 
 /**
- * Wipe the search index.
+ * Wipes a part of or the entire search index.
+ *
+ * @param $sid
+ *  (optional) The SID of the item to wipe. If specified, $type must be passed
+ *  too.
+ * @param $type
+ *  (optional) The type of item to wipe.
+ *
  */
-function search_wipe() {
-  db_query('DELETE FROM {search_index}');
-  db_query('DELETE FROM {search_total}');
-  module_invoke_all('search', 'reset');
-
-  drupal_set_message(t('The search index has been wiped.'));
-  drupal_goto('admin/settings/search');
+function search_wipe($type = NULL, $sid = NULL) {
+  if ($type == NULL && $sid == NULL) {
+    db_query('DELETE FROM {search_index}');
+    db_query('DELETE FROM {search_total}');
+    module_invoke_all('search', 'reset');
+  }
+  else {
+    db_query("DELETE FROM {search_index} WHERE sid = %d AND type = '%s'", $sid, $type);
+    db_query("DELETE FROM {search_index} WHERE fromsid = %d AND fromtype = '%s'", $sid, $type);
+  }
 }
 
 /**
@@ -356,7 +371,7 @@ function search_index($sid, $type, $text) {
     $tag = !$tag;
   }
 
-  db_query("DELETE FROM {search_index} WHERE sid = %d AND type = '%s'", $sid, $type);
+  search_wipe($sid, $type);
 
   // Insert results into search index
   foreach ($results[0] as $word => $score) {
