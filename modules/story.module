@@ -25,6 +25,26 @@ function story_access($op, $node) {
   }
 }
 
+function story_save($op, $node) {
+
+  if ($op == "approve") {
+    return array("status" => 1, "promote" => 1);
+  }
+
+  if ($op == "create") {
+    return array("moderate" => 1);
+  }
+
+  if ($op == "decline") {
+    return array("status" => 0, "promote" => 0);
+  }
+
+  if ($op == "update") {
+    return array("status");
+  }
+
+}
+
 function story_help() {
  ?>
   // TODO: update documentation, outdated
@@ -63,13 +83,5 @@ function story_form($node, $help, $error) {
   return $output;
 }
 
-function story_save($node) {
-  if ($node->nid) {
-    return array();
-  }
-  else {
-    return array("promote" => 1, "moderate" => 1);
-  }
-}
 
 ?>

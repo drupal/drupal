@@ -14,6 +14,24 @@ function forum_access($op, $node) {
   }
 }
 
+function forum_save() {
+  if ($op == "approve") {
+    return array("status" => 1);
+  }
+
+  if ($op == "create") {
+    return array("promote" => 0, "moderate" => 0, "status" => 1);
+  }
+
+  if ($op == "update") {
+    return array();
+  }
+
+  if ($op == "update") {
+    return array("status" => 0);
+  }
+}
+
 function forum_link($type) {
   if ($type == "page" && user_access("access content")) {
     $links[] = "<a href=\"module.php?mod=forum\">". t("forum") ."</a>";
@@ -34,14 +52,6 @@ function forum_form($node, $help, $error) {
   return $output;
 }
 
-function forum_save() {
-  if ($node->nid) {
-    return array();
-  }
-  else {
-    return array("promote" => 0, "moderate" => 0, "status" => 1);
-  }
-}
 
 function forum_num_comments($nid) {
   $value = db_fetch_object(db_query("SELECT COUNT(cid) AS count FROM comments WHERE lid = '$nid'"));

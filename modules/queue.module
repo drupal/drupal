@@ -2,8 +2,15 @@
 // $Id$
 
 function queue_conf_options() {
-  $period = array(3600 => format_interval(3600), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200), 1000000000 => t("Never"));
-  $output .= form_select(t("Discard entries older than"), "queue_clear", variable_get("queue_clear", 604800), $period, t("The time nodes should be kept in the submission queue.  Older entries will be automatically discarded.  Requires crontab."));
+
+  $threshold_post = array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => 7, 8 => 8, 9 => 9, 10 => 10, 11 => 11, 12 => 12, 13 => 13, 14 => 14, 15 => 15, 20 => 20, 25 => 25, 30 => 30, 35 => 35, 40 => 40, 45 => 45, 50 => 50, 60 => 60, 70 => 70, 80 => 80, 90 => 90, 100 => 100);
+  $threshold_dump = array(-1 => -1, -2 => -2, -3 => -3, -4 => -4, -5 => -5, -6 => -6, -7 => -7, -8 => -8, -9 => -9, -10 => -10, -11 => -11, -12 => -12, -13 => -13, -14 => -14, -15 => -15, -20 => -20, -25 => -25, -30 => -30);
+  $threshold_expire = array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => 7, 8 => 8, 9 => 9, 10 => 10, 11 => 11, 12 => 12, 13 => 13, 14 => 14, 15 => 15, 20 => 20, 25 => 25, 30 => 30, 35 => 35, 40 => 40, 45 => 45, 50 => 50, 60 => 60, 70 => 70, 80 => 80, 90 => 90, 100 => 100);
+
+  $output .= form_select(t("Post threshold"), "queue_threshold_post", variable_get("queue_threshold_post", 4), $threshold_post, t("If new submissions are subject to moderation, select a post threshold."));
+  $output .= form_select(t("Dump threshold"), "queue_threshold_dump", variable_get("queue_threshold_dump", -2), $threshold_dump, t("If new submissions are subject to moderation, select a dump threshold."));
+  $output .= form_select(t("Expiration threshold"),"queue_threshold_expire", variable_get("queue_threshold_expire", 8), $threshold_expire, t("If new submissions are subject to moderation, select an expiration threshold."));
+
   return $output;
 }
 
@@ -13,14 +20,10 @@ function queue_perm() {
 
 function queue_link($type) {
   if ($type == "menu" && user_access("access submission queue")) {
-    $links[] = "<a href=\"module.php?mod=queue\">". t("submission queue") ."</a> (<FONT COLOR=\"red\">". queue_count() ."</FONT>)";
+    $links[] = "<a href=\"module.php?mod=queue\">". t("submission queue") ."</a> (<font color=\"red\">". queue_count() ."</font>)";
   }
 
   return $links ? $links : array();
-}
-
-function queue_cron() {
-  db_query("UPDATE node SET status = 0 WHERE moderate = 1 AND ". time() ." - timestamp > ". variable_get("queue_clear", 604800));
 }
 
 function queue_count() {
@@ -39,32 +42,32 @@ function queue_vote($node, $vote) {
   if (!field_get($node->users, $user->uid)) {
 
     // Update submission's score- and votes-field:
-    db_query("UPDATE node SET score = score $vote, votes = votes + 1, users = '". field_set($node->users, $user->uid, $vote) ."' WHERE nid = $node->nid");
+    db_query("UPDATE node SET score = score $vote, votes = votes + 1, users = '". field_set($node->users, $user->uid, $vote) ."' WHERE nid = '$node->nid'");
 
     // Reload the updated node from the database:
     $node = node_load(array("nid" => $node->nid));
 
-    if (variable_get($node->type ."_post", 3) <= $node->score) {
-      node_save($node, array("nid", "status" => 1, "moderate" => 0));
+    if (variable_get("queue_threshold_post", 3) <= $node->score) {
+      node_save($node, array_merge(array("nid", "moderate" => 0), module_invoke($node->type, "save", "approve", $node)));
       watchdog("special", "moderation: posted '$node->title'");
     }
-    else if (variable_get($node->type ."_dump", -2) >= $node->score) {
+    else if (variable_get("queue_threshold_dump", -2) >= $node->score) {
       if ($node->revisions) {
         node_revision_rollback($node, end(node_revision_list($node)));
         watchdog("special", "moderation: dumped '$node->title' (rollback)");
       }
       else {
-        node_save($node, array("nid", "status" => 0, "moderate" => 0));
+        node_save($node, array_merge(array("nid", "moderate" => 0), module_invoke($node->type, "save", "decline", $node)));
         watchdog("special", "moderation: dumped '$node->title'");
       }
     }
-    else if (variable_get($node->type ."_expire", 6) <= $node->votes) {
+    else if (variable_get("queue_threshold_expire", 6) <= $node->votes) {
       if ($node->revisions) {
         node_revision_rollback($node, end(node_revision_list($node)));
         watchdog("special", "moderation: expired '$node->title' (rollback)");
       }
       else {
-        node_save($node, array("nid", "status" => 0, "moderate" => 0));
+        node_save($node, array_merge(array("nid", "moderate" => 0), module_invoke($node->type, "save", "decline", $node)));
         watchdog("special", "moderation: expired '$node->title'");
       }
     }
@@ -119,7 +122,7 @@ function queue_view($nid) {
 
     queue_vote($node, $edit["vote"]);
 
-    $output = t("Thanks for your vote.");
+    $output = t("Your vote has been recorded.");
   }
   else {
     /*

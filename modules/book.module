@@ -41,6 +41,42 @@ function book_access($op, $node) {
   }
 }
 
+function book_save($op, $node) {
+
+  if ($op == "approve") {
+    return array("status" => 1);
+  }
+
+  if ($op == "create") {
+    return array("moderate" => 1, "parent", "promote" => 0, "status" => 1, "weight");
+  }
+
+  if ($op == "decline") {
+    return array("status" => 0);
+  }
+
+  if ($op == "update") {
+    if (user_access("administer nodes")) {
+      /*
+      ** If a node administrator updates a book page, we don't create a
+      ** new revision unless we are explicitly instructed to.
+      */
+
+      return array("parent", "weight");
+    }
+    else {
+      /*
+      ** If a regular user updates a book page, we always create a new
+      ** revision.  All new revisions have to be approved (moderation)
+      ** and are not promoted by derault.
+      */
+
+      return array("created" => time(), "moderate" => 1, "parent", "promote" => 0, "score" => 0, "status" => 1, "users" => "", "revisions", "votes" => 0, "weight");
+    }
+  }
+
+}
+
 function book_link($type) {
   if ($type == "page" && user_access("access content")) {
     $links[] = "<a href=\"module.php?mod=book\">". t("collaborative book") ."</a>";
@@ -66,30 +102,6 @@ function book_delete($node) {
   db_query("DELETE FROM book WHERE nid = '$node->nid'");
 }
 
-function book_save($node) {
-  if ($node->nid) {
-    if (user_access("administer nodes")) {
-      /*
-      ** If a node administrator updates a book page, we don't create a
-      ** new revision unless we are explicitly instructed to.
-      */
-
-      return array("parent", "weight");
-    }
-    else {
-      /*
-      ** If a regular user updates a book page, we always create a new
-      ** revision.  All new revisions have to be approved (moderation)
-      ** and are not promoted by derault.
-      */
-
-      return array("created" => time(), "moderate" => 1, "parent", "promote" => 0, "score" => 0, "status" => 1, "users" => "", "revisions", "votes" => 0, "weight");
-    }
-  }
-  else {
-    return array("moderate" => 1, "parent", "promote" => 0, "status" => 1, "weight");
-  }
-}
 
 function book_form($node, $help, $error) {
   global $user;

@@ -723,7 +723,7 @@ function node_submit($node) {
         $fields = array("nid", "uid" => $user->uid, "body", "teaser", "title", "type" => $node->type);
       }
 
-      node_save($node, array_merge($fields, module_invoke($node->type, "save", $node)));
+      node_save($node, array_merge($fields, module_invoke($node->type, "save", "update", $node)));
 
       watchdog("special", "node: updated '$node->title'");
       $output = t("The node has been updated.");
@@ -755,7 +755,7 @@ function node_submit($node) {
         $fields = array("uid" => $user->uid, "body", "comment" => 1, "teaser", "title", "type" => $node->type);
       }
 
-      node_save($node, array_merge($fields, module_invoke($node->type, "save", $node)));
+      node_save($node, array_merge($fields, module_invoke($node->type, "save", "create", $node)));
 
       watchdog("special", "node: added '$node->title'");
       $output = t("Thanks for your submission.");

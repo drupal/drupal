@@ -16,6 +16,24 @@ function page_access($op, $node) {
   }
 }
 
+function page_save($op, $node) {
+  if ($op == "approve") {
+    return array("status" => 1);
+  }
+
+  if ($op == "create") {
+    return array("format", "link", "promote" => 0, "moderate" => 0, "status" => 1);
+  }
+
+  if ($op == "decline") {
+    return array("status" => 0);
+  }
+
+  if ($op == "update") {
+    return array("format", "link");
+  }
+}
+
 function page_insert($node) {
   db_query("INSERT INTO page (nid, format, link) VALUES ('$node->nid', '$node->format', '$node->link')");
 }
@@ -72,16 +90,5 @@ function page_form($node, $help, $error) {
 
   return $output;
 }
-
-function page_save() {
-  if ($node->nid) {
-    return array("format", "link");
-  }
-  else {
-    return array("format", "link", "promote" => 0, "moderate" => 0, "status" => 1);
-  }
-}
-
-
 
 ?>

@@ -39,6 +39,26 @@ function blog_access($op, $node) {
 
 }
 
+function blog_save($op, $node) {
+
+  if ($op == "approve") {
+    return array("promote" => 1);
+  }
+
+  if ($op == "create") {
+    return array("promote" => 0, "moderate" => 0, "status" => 1);
+  }
+
+  if ($op == "decline") {
+    return array("promote" => 0);
+  }
+
+  if ($op == "update") {
+    return array("promote");
+  }
+
+}
+
 function blog_help() {
  ?>
   <p>Drupal's blog module allows registered users to maintain an online blog or diary.  It provides easy-to-write and easy-to-read online diaries or journals that can be filled with daily thoughts, poetry, boneless blabber, spiritual theories, intimate details, valuable experiences, cynical rants, semi-coherent comments, writing experiments, artistic babblings, critics on current facts, fresh insights, diverse dreams, chronicles and mumbling madness available for public consumption.</p>
@@ -224,16 +244,6 @@ function blog_form($node, $help, $error) {
   return $output;
 }
 
-function blog_save($node) {
-
-  if ($node->nid) {
-    return array();
-  }
-  else {
-    return array("promote" => 0, "moderate" => 0, "status" => 1);
-  }
-
-}
 
 function blog_page() {
   global $theme, $id, $op, $date;
