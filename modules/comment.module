@@ -261,6 +261,16 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
       db_query('DELETE FROM {comments} WHERE nid = %d', $node->nid);
       db_query('DELETE FROM {node_comment_statistics} WHERE nid = %d', $node->nid);
       break;
+    case 'update index':
+      $text = '';
+      $comments = db_query('SELECT subject, comment, format FROM {comments} WHERE nid = %d AND status = 0', $node->nid);
+      while ($comment = db_fetch_object($comments)) {
+        $text .= '<h2>'. $comment->subject .'</h2>'. check_output($comment->comment, $comment->format);
+      }
+      return $text;
+    case 'search result':
+      $comments = db_result(db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = %d', $node->nid));
+      return format_plural($comments, '1 comment', '%count comments');
   }
 }
 

@@ -257,6 +257,8 @@ function upload_nodeapi(&$node, $op, $arg) {
     case 'delete':
       upload_delete($node);
       break;
+    case 'search result':
+      return $node->files ? format_plural(count($node->files), '1 attachment', '%count attachments') : null;
   }
 
   return $output;

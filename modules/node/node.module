@@ -582,13 +582,13 @@ function node_search($op = 'search', $keys = null) {
       $results = array();
       foreach ($find as $item) {
         $node = node_load(array('nid' => $item));
-        $comments = db_result(db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = %d', $item));
+        $extra = node_invoke_nodeapi($node, 'search result');
         $results[] = array('link' => url('node/'. $item),
                            'type' => node_invoke($node, 'node_name'),
                            'title' => $node->title,
                            'user' => format_name($node),
                            'date' => $node->changed,
-                           'extra' => format_plural($comments, '1 comment', '%count comments'),
+                           'extra' => $extra,
                            'snippet' => search_excerpt($keys, check_output($node->body, $node->format)));
       }
       return $results;
@@ -1588,12 +1588,10 @@ function node_update_index() {
 
     $text = '<h1>'. drupal_specialchars($node->title) .'</h1>'. $node->body;
 
-    // Fetch comments
-    if (module_exist('comment')) {
-      $comments = db_query('SELECT subject, comment, format FROM {comments} WHERE nid = %d AND status = 0', $node->nid);
-      while ($comment = db_fetch_object($comments)) {
-        $text .= '<h2>'. $comment->subject .'</h2>'. check_output($comment->comment, $comment->format);
-      }
+    // Fetch extra data normally not visible
+    $extra = node_invoke_nodeapi($node, 'update index');
+    foreach ($extra as $t) {
+      $text .= $t;
     }
 
     // Update index

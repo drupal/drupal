@@ -74,12 +74,20 @@ function search_menu($may_cache) {
   $items = array();
 
   if ($may_cache) {
-    $items[] = array('path' => 'search', 'title' => t('search'),
+    $items[] = array('path' => 'search', 'title' => t('search for'),
       'callback' => 'search_view',
       'access' => user_access('search content'),
       'type' => MENU_SUGGESTED_ITEM);
-    $items[] = array('path' => 'search/search', 'title' => t('search'),
-      'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
+
+    foreach (module_list() as $name) {
+      if (module_hook($name, 'search')) {
+        $items[] = array('path' => 'search/'. $name, 'title' => module_invoke($name, 'search', 'name'),
+          'callback' => 'search_view',
+          'access' => user_access('search content'),
+          'type' => $name == 'node' ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK);
+      }
+    }
+
     $items[] = array('path' => 'admin/settings/search', 'title' => t('search'),
       'callback' => 'search_admin',
       'type' => MENU_NORMAL_ITEM,
@@ -465,7 +473,7 @@ function do_search($keys, $type, $join = '', $where = '1') {
  */
 function search_view() {
   $keys = isset($_GET['keys']) ? $_GET['keys'] : $_POST['edit']['keys'];
-  $type = isset($_GET['type']) ? $_GET['type'] : ($_POST['edit']['type'] ? $_POST['edit']['type'] : 'node');
+  $type = arg(1) ? arg(1) : (isset($_GET['type']) ? $_GET['type'] : ($_POST['edit']['type'] ? $_POST['edit']['type'] : 'node'));
 
   if (user_access('search content')) {
     // Only perform search if there is non-whitespace search term:
@@ -538,6 +546,9 @@ function search_form($action = '', $keys = '', $type = null, $options = FALSE) {
   if (!$action) {
     $action = url('search');
   }
+  if (!$type) {
+    $type = 'node';
+  }
 
   $output = ' <div class="search-form">';
   $box = '<div class="container-inline">';
@@ -545,24 +556,7 @@ function search_form($action = '', $keys = '', $type = null, $options = FALSE) {
   $box .= form_submit(t('Search'));;
   $box .= '</div>';
   $output .= form_item(t('Enter your keywords'), $box);
-
-  if ($options) {
-    $output .= '<div class="container-inline">'. t('Search for') .': ';
-
-    if (!isset($edit['type'])) {
-      $edit['type'] = $type;
-    }
-
-    foreach (module_list() as $name) {
-      if (module_hook($name, 'search')) {
-        $output .= form_radio(module_invoke($name, 'search', 'name'), 'type', $name, $edit['type'] == $name);
-      }
-    }
-    $output .= '</div>';
-  }
-  else if ($type) {
-    $output .= form_hidden('type', $type);
-  }
+  $output .= form_hidden('type', $type);
   $output .= '</div>';
 
   return form($output, 'post', $action);
@@ -712,7 +706,9 @@ function _search_excerpt_replace($text) {
  *
  * @param $item
  *   A single search result as returned by hook_search(). The result should be
- *   an array with keys "count", "link", "title", "user", "date", and "keywords".
+ *   an array with keys "link", "title", "type", "user", "date", and "snippet".
+ *   Optionally, "extra" can be an array of extra info to show along with the
+ *   result.
  * @param $type
  *   The type of item found, such as "user" or "comment".
  */
@@ -732,8 +728,8 @@ function theme_search_item($item, $type) {
     if ($item['date']) {
       $info[] = format_date($item['date'], 'small');
     }
-    if (isset($item['extra'])) {
-      $info[] = $item['extra'];
+    if (is_array($item['extra'])) {
+      $info = array_merge($info, $item['extra']);
     }
     $output .= ' <dd>'. ($item['snippet'] ? '<p>'. $item['snippet'] . '</p>' : '') . '<p class="search-info">' . implode(' - ', $info) .'</p></dd>';
   }
