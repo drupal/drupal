@@ -650,7 +650,7 @@ function user_menu($may_cache) {
     $items[] = array('path' => 'user/register', 'title' => t('register'),
       'callback' => 'user_page', 'access' => $user->uid == 0 && variable_get('user_register', 1), 'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'user/password', 'title' => t('request new password'),
-      'callback' => 'user_page', 'access' => $user->uid == 0, 'type' => MENU_LOCAL_TASK);
+      'callback' => 'user_pass', 'access' => $user->uid == 0, 'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'user/help', 'title' => t('help'),
       'callback' => 'user_help_page', 'type' => MENU_CALLBACK);
 
@@ -909,49 +909,50 @@ function user_logout() {
   drupal_goto();
 }
 
-function user_pass($edit = array()) {
+function user_pass() {
   global $base_url;
+  $edit = $_POST['edit'];
 
-  if ($edit['name']) {
-    $account = user_load(array('name' => $edit['name'], 'status' => 1));
-    if (!$account) form_set_error('name', t('Sorry. The username %name is not recognized.', array('%name' => '<em>'. $edit['name'] .'</em>')));
+  if ($edit['name'] && !($account = user_load(array('name' => $edit['name'], 'status' => 1)))) {
+    form_set_error('name', t('Sorry. The username %name is not recognized.', array('%name' => '<em>'. $edit['name'] .'</em>')));
   }
-  else if ($edit['mail']) {
-    $account = user_load(array('mail' => $edit['mail'], 'status' => 1));
-    if (!$account) form_set_error('name', t('Sorry. The e-mail address %email is not recognized.', array('%email' => '<em>'. $edit['mail'] .'</em>')));
+  else if ($edit['mail'] && !($account = user_load(array('mail' => $edit['mail'], 'status' => 1)))) {
+    form_set_error('mail', t('Sorry. The e-mail address %email is not recognized.', array('%email' => '<em>'. $edit['mail'] .'</em>')));
+  }
+  else if ($edit) {
+    drupal_set_message(t('You must provider either a username or e-mail address.'), 'error');
   }
   if ($account) {
+    $from = variable_get('site_mail', ini_get('sendmail_from'));
+    $pass = user_password();
 
-      $from = variable_get('site_mail', ini_get('sendmail_from'));
-      $pass = user_password();
+    // Save new password:
+    user_save($account, array('pass' => $pass));
 
-      // Save new password:
-      user_save($account, array('pass' => $pass));
+    // Mail new password:
+    $variables = array('%username' => $account->name, '%site' => variable_get('site_name', 'drupal'), '%password' => $pass, '%uri' => $base_url, '%uri_brief' => substr($base_url, strlen('http://')), '%mailto' => $account->mail, '%date' => format_date(time()), '%login_uri' => url('user', NULL, NULL, TRUE), '%edit_uri' => url('user/'. $account->uid .'/edit', NULL, NULL, TRUE));
+    $subject = _user_mail_text('pass_subject', $variables);
+    $body = _user_mail_text('pass_body', $variables);
+    $headers = "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from";
+    $mail_success = user_mail($account->mail, $subject, $body, $headers);
 
-      // Mail new password:
-      $variables = array('%username' => $account->name, '%site' => variable_get('site_name', 'drupal'), '%password' => $pass, '%uri' => $base_url, '%uri_brief' => substr($base_url, strlen('http://')), '%mailto' => $account->mail, '%date' => format_date(time()), '%login_uri' => url('user', NULL, NULL, TRUE), '%edit_uri' => url('user/'. $account->uid .'/edit', NULL, NULL, TRUE));
-      $subject = _user_mail_text('pass_subject', $variables);
-      $body = _user_mail_text('pass_body', $variables);
-      $headers = "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from";
-      $mail_success = user_mail($account->mail, $subject, $body, $headers);
-
-      if ($mail_success) {
-        watchdog('user', t('Password mailed to %name at %email.', array('%name' => "<em>$account->name</em>" , '%email' => "<em>$account->mail</em>")));
-        return t('Your password and further instructions have been sent to your e-mail address.');
-      }
-      else {
-        watchdog('error', t('Error mailing password to %name at %email.', array('%name' => "<em>$account->name</em>", '%email' => "<em>$account->mail</em>")));
-        return t('Unable to send mail. Please contact the site admin.');
-      }
+    if ($mail_success) {
+      watchdog('user', t('Password mailed to %name at %email.', array('%name' => '<em>'. $account->name .'</em>', '%email' => '<em>'. $account->mail .'</em>')));
+      drupal_set_message(t('Your password and further instructions have been sent to your e-mail address.'));
     }
     else {
-
+      watchdog('error', t('Error mailing password to %name at %email.', array('%name' => '<em>'. $account->name .'</em>', '%email' => '<em>'. $account->mail .'</em>')));
+      drupal_set_message(t('Unable to send mail. Please contact the site admin.'));
+    }
+    drupal_goto('user');
+  }
+  else {
     // Display form:
-    $output .= '<p>'. t('Enter your username <strong><em>or</em></strong> your e-mail address.') .'</p>';
+    $output = '<p>'. t('Enter your username <strong><em>or</em></strong> your e-mail address.') .'</p>';
     $output .= form_textfield(t('Username'), 'name', $edit['name'], 30, 64);
     $output .= form_textfield(t('E-mail address'), 'mail', $edit['mail'], 30, 64);
     $output .= form_submit(t('E-mail new password'));
-    return form($output, 'post', url('user/password'));
+    print theme('page', form($output));
   }
 }
 
@@ -1206,10 +1207,6 @@ function user_page() {
   }
 
   switch ($op) {
-    case t('E-mail new password'):
-    case 'password':
-      print theme('page', user_pass($edit));
-      break;
     case t('Create new account'):
     case 'register':
       print theme('page', user_register($edit));
