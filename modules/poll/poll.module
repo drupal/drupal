@@ -1,13 +1,13 @@
 <?php
 // $Id$
 
-function poll_help($section = 'admin/help#poll') {
-  $output = '';
-
+/**
+ * Implementation of hook_help().
+ */
+function poll_help($section) {
   switch ($section) {
-
     case 'admin/help#poll':
-      $output .= t("
+      return t("
       <p>Users with the correct <a href=\"%permissions\">permissions</a> can create and/or vote on polls.</p>
       <ul>
       <li>To create a poll a user needs the \"create polls\" permission.</li>
@@ -16,18 +16,16 @@ function poll_help($section = 'admin/help#poll') {
       <li>To administer polls you need the \"administer nodes\" permission.</li>
       </ul>
       <p>Creating a poll is much like creating any other node. Click \"create poll\" in your user box. The title of the poll should be the question, then enter the answers and the \"base\" vote counts. You can also choose the time period over which the vote will run.</p><p>The <a href=\"%poll\">Poll</a> item in the navigation links will take you to a page where you can see all the current polls, vote on them (if you haven't already) and view the results.</p>", array("%permissions" => url("admin/user/permission"), "%poll" => url("poll")));
-      break;
     case 'admin/system/modules#description':
-      $output = t("Enables your site to capture votes on different topics in the form of multiple choice questions.");
-      break;
+      return t("Enables your site to capture votes on different topics in the form of multiple choice questions.");
     case 'node/add#poll':
-      $output = t("A poll is a multiple-choice question which visitors can vote on.");
-      break;
+      return t("A poll is a multiple-choice question which visitors can vote on.");
   }
-
-  return $output;
 }
 
+/**
+ * Implementation of hook_access().
+ */
 function poll_access($op, $node) {
   if ($op == 'view') {
     return $node->status;
@@ -38,6 +36,11 @@ function poll_access($op, $node) {
   }
 }
 
+/**
+ * Implementation of hook_block().
+ *
+ * Generates a block containing the latest poll.
+ */
 function poll_block($op = 'list', $delta = 0) {
   if (user_access('access content')) {
     if ($op == 'list') {
@@ -45,13 +48,13 @@ function poll_block($op = 'list', $delta = 0) {
       return $blocks;
     }
     else {
-      // Retrieve latest poll
+      // Retrieve the latest poll.
       $timestamp = db_result(db_query("SELECT MAX(created) FROM {node} WHERE type = 'poll' AND status = '1' AND moderate = '0'"));
       if ($timestamp) {
         $poll = node_load(array('type' => 'poll', 'created' => $timestamp, 'moderate' => 0, 'status' => 1));
 
         if ($poll->nid) {
-          // Poll_view dumps the output into $poll->body
+          // poll_view() dumps the output into $poll->body.
           poll_view($poll, 1, 0, 1);
         }
       }
@@ -62,19 +65,29 @@ function poll_block($op = 'list', $delta = 0) {
   }
 }
 
+/**
+ * Implementation of hook_cron().
+ *
+ * Closes polls that have exceeded their allowed runtime.
+ */
 function poll_cron() {
-  // Close polls that have exceeded their allowed runtime
   $result = db_query("SELECT p.nid FROM {poll} p INNER JOIN {node} n ON p.nid=n.nid WHERE (n.created + p.runtime) < '". time() ."' AND p.active = '1' AND p.runtime != '0'");
   while ($poll = db_fetch_object($result)) {
     db_query("UPDATE {poll} SET active='0' WHERE nid = %d", $poll->nid);
   }
 }
 
+/**
+ * Implementation of hook_delete().
+ */
 function poll_delete($node) {
   db_query("DELETE FROM {poll} WHERE nid=%d", $node->nid);
   db_query("DELETE FROM {poll_choices} WHERE nid = %d", $node->nid);
 }
 
+/**
+ * Implementation of hook_validate().
+ */
 function poll_validate(&$node) {
   if (isset($node->title)) {
     // Check for at least two options and validate amount of votes:
@@ -99,6 +112,9 @@ function poll_validate(&$node) {
   return $error;
 }
 
+/**
+ * Implementation of hook_form().
+ */
 function poll_form(&$node, &$error) {
   $admin = user_access('administer nodes');
 
@@ -110,7 +126,7 @@ function poll_form(&$node, &$error) {
     $node->choices = max(2, count($node->choice) ? count($node->choice) : 5);
   }
 
-  // User ticked 'need more choices'
+  // User ticked 'need more choices'.
   if ($node->morechoices) {
     $node->choices *= 2;
   }
@@ -170,7 +186,7 @@ function poll_link($type, $node = 0, $main) {
   $links = array();
 
   if ($type == 'system') {
-    menu('node/add/poll', t('poll'), user_access('create polls') ? 'node_page' : MENU_DENIED, 0);
+    menu('node/add/poll', t('poll'), user_access('create polls') ? MENU_FALLTHROUGH : MENU_DENIED, 0);
     menu('poll', t('polls'), user_access('access content') ? 'poll_page' : MENU_DENIED, 0, MENU_HIDE);
   }
   else if ($type == 'page' && user_access('access content')) {
@@ -211,6 +227,9 @@ function poll_uid() {
   return $id;
 }
 
+/**
+ * Implementation of hook_load().
+ */
 function poll_load($node) {
   // Load the appropriate choices into the $node object
   $poll = db_fetch_object(db_query("SELECT runtime, voters, active FROM {poll} WHERE nid = %d", $node->nid));
@@ -230,6 +249,9 @@ function poll_load($node) {
   return $poll;
 }
 
+/**
+ * Implementation of hook_node_name().
+ */
 function poll_node_name($node) {
   return t("poll");
 }
@@ -246,12 +268,17 @@ function poll_page() {
   print theme('page', $output);
 }
 
+/**
+ * Implementation of hook_perm().
+ */
 function poll_perm() {
   return array('create polls', 'vote on polls');
 }
 
+/**
+ * Creates a simple teaser that lists all the choices.
+ */
 function poll_teaser($node) {
-  // Create a simple teaser that lists all the choices
   if (is_array($node->choice)) {
     foreach ($node->choice as $k => $choice) {
       $teaser .= '* '. $choice['chtext'] .'\n';
@@ -261,7 +288,7 @@ function poll_teaser($node) {
 }
 
 /**
- * Display the vote form
+ * Generates the voting form for a poll.
  */
 function poll_view_voting(&$node, $main, $page, $block) {
   $url = request_uri();
@@ -286,6 +313,9 @@ function poll_view_voting(&$node, $main, $page, $block) {
   return $output;
 }
 
+/**
+ * Generates a graphical representation of the results of a poll.
+ */
 function poll_view_results(&$node, $main, $page, $block) {
   // Display the results
 
@@ -343,6 +373,13 @@ function poll_view_processvote(&$node) {
   }
 }
 
+/**
+ * Implementation of hook_view().
+ *
+ * @param $block
+ *   An extra parameter that adapts the hook to display a block-ready
+ *   rendering of the poll.
+ */
 function poll_view(&$node, $main = 0, $page = 0, $block = 0) {
   global $user;
 
@@ -377,6 +414,9 @@ function poll_view(&$node, $main = 0, $page = 0, $block = 0) {
   }
 }
 
+/**
+ * Implementation of hook_update().
+ */
 function poll_update($node) {
   db_query('UPDATE {poll} SET runtime = %d, active = %d WHERE nid = %d', $node->runtime, $node->active, $node->nid);
 

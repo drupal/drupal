@@ -1,40 +1,40 @@
 <?php
 // $Id$
 
-function forum_help($section = 'admin/help#forum') {
-  $output = '';
-
+/**
+ * Implementation of hook_help().
+ */
+function forum_help($section) {
   switch ($section) {
     case 'admin/help#forum':
-      $output = t("
+      return t("
       <h3>Creating a forum</h3>
       <p>The forum module uses taxonomy to organize itself. To create a forum you first have to create a <a href=\"%taxonomy\">taxonomy vocabulary</a>. When doing this, choose a sensible name for it (such as \"fora\") and make sure under \"Types\" that \"forum\" is selected. Once you have done this, <a href=\"%taxo-terms\">add some terms</a> to it. Each term will become a forum. If you fill in the description field, users will be given additonal information about the forum on the main forum page. For example: \"troubleshooting\" - \"Please ask your questions here.\"</p>
       <p>When you are happy with your vocabulary, go to <a href=\"%forums\">administer &raquo; configutation &raquo; modules &raquo; forum</a> and set <strong>Forum vocabulary</strong> to the one you have just created. There will now be fora active on the site. For users to access them they must have the \"access content\" <a href=\"%permission\">permission</a> and to create a topic they must have the \"create forum topics\" <a href=\"%permission\">permission</a>. These permissions can be set in the <a href=\"%permission\">permission</a> pages.</p>
       <h4>Icons</h4>
       <p>To disable icons, set the icon path as blank in <a href=\"%forums\">administer &raquo; configutation &raquo; modules &raquo; forum</a>.</p>
-      <p>All files in the icon directory are assumed to be images. You may use images of whatever size you wish, but it is recommended to use 15x15 or 16x16.</p>", array("%taxonomy" => url("admin/taxonomy/add/vocabulary"), "%taxo-terms" => url("admin/taxonomy"), "%forums" => url("admin/system/modules/forum"), "%permission" => url("admin/user/permission")));
-      break;
+      <p>All files in the icon directory are assumed to be images. You may use images of whatever size you wish, but it is recommended to use 15x15 or 16x16.</p>", array("%taxonomy" => url('admin/taxonomy/add/vocabulary'), '%taxo-terms' => url('admin/taxonomy'), '%forums' => url('admin/system/modules/forum'), '%permission' => url('admin/user/permission')));
     case 'admin/system/modules#description':
-      $output = t('Enable threaded discussions about general topics.');
-      break;
+      return t('Enable threaded discussions about general topics.');
     case 'admin/system/modules/forum':
-      $output = t("Forums are threaded discussions based on the taxonomy system.  For the forums to work, the taxonomy module has to be installed and enabled.  When activated, a taxonomy vocabulary (eg. \"forums\") needs to be <a href=\"%created\">created</a> and bound to the node type \"forum topic\".", array('%created' => url('admin/taxonomy/add/vocabulary')));
-      break;
+      return t("Forums are threaded discussions based on the taxonomy system.  For the forums to work, the taxonomy module has to be installed and enabled.  When activated, a taxonomy vocabulary (eg. \"forums\") needs to be <a href=\"%created\">created</a> and bound to the node type \"forum topic\".", array('%created' => url('admin/taxonomy/add/vocabulary')));
     case 'node/add/forum':
-      $output = variable_get('forum_help', '');
-      break;
+      return variable_get('forum_help', '');
     case 'node/add#forum':
-      $output = t('A forum is a threaded discussion, enabling users to communicate about a particular topic.');
-      break;
+      return t('A forum is a threaded discussion, enabling users to communicate about a particular topic.');
   }
-
-  return $output;
 }
 
+/**
+ * Implementation of hook_node_name().
+ */
 function forum_node_name($node) {
   return t('forum topic');
 }
 
+/**
+ * Implementation of hook_access().
+ */
 function forum_access($op, $node) {
   if ($op == 'view') {
     return $node->status;
@@ -44,10 +44,16 @@ function forum_access($op, $node) {
   }
 }
 
+/**
+ * Implementation of hook_perm().
+ */
 function forum_perm() {
   return array('create forum topics');
 }
 
+/**
+ * Implementation of hook_settings().
+ */
 function forum_settings() {
 
   if (module_exist('taxonomy')) {
@@ -63,7 +69,7 @@ function forum_settings() {
       $output = form_group(t('Forum structure settings'), $group);
 
       $group  = form_textarea(t('Explanation or submission guidelines'), 'forum_help', variable_get('forum_help', ''), 70, 5, t('This text will be displayed at the top of the forum submission form.  Useful for helping or instructing your users.'));
-      $group .= form_textfield(t('Forum icon path'), 'forum_icon_path', variable_get('forum_icon_path', ''), 30, 255, t("The path to the forum icons.  Leave blank to disable icons.  Don't add a trailing slash.  Default icons are available in the 'misc' directory."));
+      $group .= form_textfield(t('Forum icon path'), 'forum_icon_path', variable_get('forum_icon_path', ''), 30, 255, t('The path to the forum icons.  Leave blank to disable icons.  Don\'t add a trailing slash.  Default icons are available in the "misc" directory.'));
       $number = drupal_map_assoc(array(5, 10, 15, 20, 25, 30, 35, 40, 50, 60, 80, 100, 10000));
       $group .= form_select(t('Hot topic threshold'), 'forum_hot_topic', variable_get('forum_hot_topic', 15), $number, t('The number of posts a topic must have to be considered <strong>hot</strong>.'));
       $number = drupal_map_assoc(array(10, 25, 50, 75, 100));
@@ -72,7 +78,7 @@ function forum_settings() {
       $group .= form_radios(t('Default order'), 'forum_order', variable_get('forum_order', '1'), $forder, t('The default display order for topics.'));
       $output .= form_group(t('Forum viewing options'), $group);
 
-      $group = form_textfield(t('Number of topics in block'), 'forum_block_num', variable_get('forum_block_num', '5'), 5, 5, t("The number of topics to show in the \"Forum topics\" block.  To enable the block, go to the <a href=\"%block-administration\">block administration</a> page.", array('%block-administration' => url('admin/system/block'))));
+      $group = form_textfield(t('Number of topics in block'), 'forum_block_num', variable_get('forum_block_num', '5'), 5, 5, t('The number of topics to show in the "Forum topics" block.  To enable the block, go to the <a href="%block-administration">block administration</a> page.', array('%block-administration' => url('admin/system/block'))));
       $output .= form_group(t('"Forum topic" block settings'), $group);
     }
   }
@@ -80,6 +86,9 @@ function forum_settings() {
   return $output;
 }
 
+/**
+ * Implementation of hook_taxonomy().
+ */
 function forum_taxonomy($op, $type, $object) {
   if ($type == 'vocabulary' && ($op == 'insert' || $op == 'update')) {
     if (variable_get('forum_nav_vocabulary', '') == '' && in_array('forum', $object['nodes'])) {
@@ -89,12 +98,21 @@ function forum_taxonomy($op, $type, $object) {
   }
 }
 
+/**
+ * Implementation of hook_load().
+ */
 function forum_load($node) {
   $forum = db_fetch_object(db_query('SELECT * FROM {forum} WHERE nid = %d', $node->nid));
 
   return $forum;
 }
 
+/**
+ * Implementation of hook_block().
+ *
+ * Generates a block containing the currently active forum topics and the
+ * most recently added forum topics.
+ */
 function forum_block($op = 'list', $delta = 0) {
   global $user;
 
@@ -108,7 +126,7 @@ function forum_block($op = 'list', $delta = 0) {
       $content .= node_title_list(db_query_range("SELECT nid, title FROM {node} WHERE type = 'forum' AND status = 1 ORDER BY nid DESC", 0, variable_get('forum_block_num', '5')), t('New forum topics:'));
 
       if ($content) {
-        $content .= "<div class=\"more-link\">". l(t('more'), 'forum', array('title' => t('Read the latest forum topics.'))) .'</div>';
+        $content .= '<div class="more-link">'. l(t('more'), 'forum', array('title' => t('Read the latest forum topics.'))) .'</div>';
       }
 
       $blocks['subject'] = t('Forum topics');
@@ -132,7 +150,7 @@ function forum_link($type, $node = 0, $main = 0) {
   }
 
   if ($type == 'system') {
-    menu('node/add/forum', t('forum topic'), user_access('create forum topics') ? 'node_page' : MENU_DENIED);
+    menu('node/add/forum', t('forum topic'), user_access('create forum topics') ? MENU_FALLTHROUGH : MENU_DENIED);
     menu('forum', t('forums'), user_access('access content') ? 'forum_page' : MENU_DENIED, 0, MENU_HIDE);
   }
 
@@ -168,10 +186,16 @@ function forum_link($type, $node = 0, $main = 0) {
   return $links;
 }
 
+/**
+ * Implementation of hook_content().
+ */
 function forum_content($node, $main = 0) {
   return node_prepare($node, $main);
 }
 
+/**
+ * Implementation of hook_view().
+ */
 function forum_view($node, $main = 0, $page = 0) {
 
   if ($page) {
@@ -190,6 +214,12 @@ function forum_view($node, $main = 0, $page = 0) {
   return theme('node', forum_content($node, $main), $main, $page);
 }
 
+/**
+ * Implementation of hook_validate().
+ *
+ * Check in particular that only a "leaf" term in the associated taxonomy
+ * vocabulary is selected, not a "container" term.
+ */
 function forum_validate(&$node) {
   // Make sure all fields are set properly:
   $node->icon = $node->icon ? $node->icon : '';
@@ -214,6 +244,9 @@ function forum_validate(&$node) {
   return $error;
 }
 
+/**
+ * Implementation of hook_form().
+ */
 function forum_form(&$node, &$error) {
   if (!$node->nid) {
     // new topic
@@ -232,14 +265,23 @@ function forum_form(&$node, &$error) {
   return $output;
 }
 
+/**
+ * Implementation of hook_insert().
+ */
 function forum_insert($node) {
   db_query('INSERT INTO {forum} (nid, shadow, tid) VALUES (%d, %d, %d)', $node->nid, $node->shadow, $node->tid);
 }
 
+/**
+ * Implementation of hook_update().
+ */
 function forum_update($node) {
   db_query('UPDATE {forum} SET shadow = %d, tid = %d WHERE nid = %d', $node->shadow, $node->tid, $node->nid);
 }
 
+/**
+ * Implementation of hook_delete().
+ */
 function forum_delete(&$node) {
   db_query('DELETE FROM {forum} WHERE nid = %d', $node->nid);
 }
@@ -376,7 +418,7 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
       }
     }
     else {
-      // you're not logged in eh?
+      // Do not track "new replies" status for topics if the user is anonymous.
       $topic->new_replies = 0;
       $topic->new = 0;
     }
@@ -395,20 +437,21 @@ function _forum_new($tid) {
     $read[] = $r->nid;
   }
 
-  $nid = db_result(db_query_range("SELECT n.nid FROM {node} n INNER JOIN {forum} f ON n.nid = f.nid WHERE n.type = 'forum' AND f.nid = n.nid AND n.status = 1 AND f.tid = %d ". ($read ? "AND NOT (n.nid IN (". implode(',', $read) .")) " : '') ."ORDER BY created", $tid, 0, 1));
+  $nid = db_result(db_query_range("SELECT n.nid FROM {node} n INNER JOIN {forum} f ON n.nid = f.nid WHERE n.type = 'forum' AND f.nid = n.nid AND n.status = 1 AND f.tid = %d ". ($read ? 'AND NOT (n.nid IN ('. implode(',', $read) .')) ' : '') .'ORDER BY created', $tid, 0, 1));
 
   return $nid ? $nid : 0;
 }
 
-function forum_page() {
+/**
+ * Menu callback. Prints a forum listing.
+ */
+function forum_page($tid = 0, $display = 'all') {
   global $sortby, $forum_per_page, $from, $user;
 
   $op = $_POST['op'];
 
   if (module_exist('taxonomy')) {
-    $tid = arg(1);
-
-    if (arg(2) == 'new') {
+    if ($display == 'new') {
       if ($nid = _forum_new($tid)) {
         drupal_goto("node/view/$nid");
       }
@@ -484,34 +527,34 @@ function theme_forum_display($forums, $topics, $parents, $tid, $sortby, $forum_p
   }
 
   if (count($forums) || count($parents)) {
-    $output  = "<div id=\"forum\">";
-    $output .= "<ul>";
+    $output  = '<div id="forum">';
+    $output .= '<ul>';
 
     if (module_exist('tracker')) {
       if ($user->uid) {
-        $output .= " <li>". l(t('Track your forum discussions.'), "tracker/$user->uid") ."</li>";
+        $output .= ' <li>'. l(t('Track your forum discussions.'), "tracker/$user->uid") .'</li>';
       }
 
-      $output .= " <li>". l(t('Track active forum discussions.'), 'tracker') ."</li>";
+      $output .= ' <li>'. l(t('Track active forum discussions.'), 'tracker') .'</li>';
     }
 
     if (user_access('create forum topics')) {
-      $output .= "<li>". l(t('Post new forum topic.'), "node/add/forum/$tid") ."</li>";
+      $output .= '<li>'. l(t('Post new forum topic.'), "node/add/forum/$tid") .'</li>';
     }
     else if ($user->uid) {
-      $output .= "<li>". t('You are not allowed to post a new forum topic.') .'</li>';
+      $output .= '<li>'. t('You are not allowed to post a new forum topic.') .'</li>';
     }
     else {
       $output .= '<li>'. t('<a href="%login">Login</a> to post a new forum topic.', array('%login' => url('user/login'))) .'</li>';
     }
-    $output .= "</ul>";
+    $output .= '</ul>';
 
     $output .= theme('forum_list', $forums, $parents, $tid);
 
     if ($tid && !in_array($tid, variable_get('forum_containers', array()))) {
       $output .= theme('forum_topic_list', $tid, $topics, $sortby, $forum_per_page, $offset);
     }
-    $output .= "</div>";
+    $output .= '</div>';
   }
   else {
     $title = t('No forums defined');
@@ -539,8 +582,8 @@ function theme_forum_list($forums, $parents, $tid) {
 
     foreach ($forums as $forum) {
       if ($forum->container) {
-        $description  = "<div style=\"margin-left: ". ($forum->depth * 30) ."px;\">\n";
-        $description .= " <div class=\"name\">". l($forum->name, "forum/$forum->tid") ."</div>\n";
+        $description  = '<div style="margin-left: '. ($forum->depth * 30) ."px;\">\n";
+        $description .= ' <div class="name">'. l($forum->name, "forum/$forum->tid") ."</div>\n";
 
         if ($forum->description) {
           $description .= " <div class=\"description\">$forum->description</div>\n";
@@ -560,20 +603,20 @@ function theme_forum_list($forums, $parents, $tid) {
 
         $links = array();
 
-        $description  = "<div style=\"margin-left: ". ($forum->depth * 30) ."px;\">\n";
-        $description .= " <div class=\"name\">". l($forum->name, "forum/$forum->tid") ."</div>\n";
+        $description  = '<div style="margin-left: '. ($forum->depth * 30) ."px;\">\n";
+        $description .= ' <div class="name">'. l($forum->name, "forum/$forum->tid") ."</div>\n";
 
         if ($forum->description) {
           $description .= " <div class=\"description\">$forum->description</div>\n";
         }
         if ($links) {
-          $description .= " <div class=\"links\">". t('Jump to: %links', array('%links' => implode(', ', $links))) .".</div>\n";
+          $description .= ' <div class="links">'. t('Jump to: %links', array('%links' => implode(', ', $links))) .".</div>\n";
         }
         $description .= "</div>\n";
 
         $rows[] = array(
           array('data' => $description, 'class' => 'forum'),
-          array('data' => $forum->num_topics . ($new_topics ? "<br />". l(t('%a new', array('%a' => $new_topics)), "forum/$forum->tid", NULL, NULL, 'new') : ''), 'class' => 'topics'),
+          array('data' => $forum->num_topics . ($new_topics ? '<br />'. l(t('%a new', array('%a' => $new_topics)), "forum/$forum->tid", NULL, NULL, 'new') : ''), 'class' => 'topics'),
           array('data' => $forum->num_posts, 'class' => 'posts'),
           array('data' => _forum_format($forum->last_post), 'class' => 'last-reply'));
       }
@@ -612,7 +655,7 @@ function theme_forum_topic_list($tid, $topics, $sortby, $forum_per_page, $offset
         $rows[] = array(
           array('data' => _forum_icon($topic->new, $topic->num_comments, $topic->comment_mode), 'class' => 'icon'),
           array('data' => l($topic->title, "node/view/$topic->nid"), 'class' => 'topic'),
-          array('data' => $topic->num_comments . ($topic->new_replies ? "<br />". l(t('%a new', array('%a' => $topic->new_replies)), "node/view/$topic->nid", NULL, NULL, 'new') : ''), 'class' => 'replies'),
+          array('data' => $topic->num_comments . ($topic->new_replies ? '<br />'. l(t('%a new', array('%a' => $topic->new_replies)), "node/view/$topic->nid", NULL, NULL, 'new') : ''), 'class' => 'replies'),
           array('data' => _forum_format($topic), 'class' => 'created'),
           array('data' => _forum_format($topic->last_reply), 'class' => 'last-reply')
         );

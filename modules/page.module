@@ -2,95 +2,88 @@
 // $Id$
 
 /**
- * Provide online user help
+ * Implementation of hook_help().
  */
-function page_help($section = 'admin/help#page') {
-  $output = "";
-
+function page_help($section) {
   switch ($section) {
     case 'admin/help#page':
-      $output .= t("
+      return t("
       <p>The page module is used when you want to create content that optionally inserts a link into your navigation system. You can also, however, create pages that that don't have this link by skipping the link text field in the page form. At this time, not all themes support the link insertion behavior. Some themes, like xtemplate, provide alternative mechanisms for link creation. Pages are also unique in that they shortcut the typical lifecycle of user generated content (i.e. submit -&gt; moderate -&gt; post -&gt; comment). </p>
       <p>If you enable the <strong>create PHP content</strong> permission for a role, pages may consist of PHP code in addition to HTML and text.</p>
       <h3>User access permissions for pages</h3>
       <p><strong>create pages:</strong> Allows a role to create pages. They cannot edit or delete pages, even if they are the authors. You must enable this permission to in order for a role to create a page.</p>
       <p><strong>maintain personal pages:</strong> Allows a role to add/edit pages if they own the page. Use this permission if you want users to be able to edit and maintain their own pages.</p>
       ");
-      break;
     case 'admin/system/modules#description':
-      $output = t("Enables the creation of pages that can be added to the navigation system.");
-      break;
+      return t('Enables the creation of pages that can be added to the navigation system.');
     case 'node/add#page':
-      $output = t("If you just want to add a page with a link in the menu to your site, this would be the best choice.  Unlike a story, a static page by-passes the submission queue.");
-      break;
+      return t('If you just want to add a page with a link in the menu to your site, this is the best choice.  Unlike a story, a static page bypasses the submission queue.');
   }
-
-  return $output;
 }
 
 /**
- * Define user permissions.
+ * Implementation of hook_perm().
  */
 function page_perm() {
   return array('create pages', 'maintain personal pages');
 }
 
 /**
- * Define the human-readable name of a node type.
+ * Implementation of hook_node_name().
  */
 function page_node_name($node) {
   return t('page');
 }
 
 /**
- * Define access restrictions
+ * Implementation of hook_access().
  */
 function page_access($op, $node) {
   global $user;
 
-  if ($op == "view") {
+  if ($op == 'view') {
     return $node->status;
   }
 
-  if ($op == "create") {
+  if ($op == 'create') {
     return user_access('create pages');
   }
 
-  if ($op == "update") {
+  if ($op == 'update') {
     return user_access('maintain personal pages') && ($user->uid == $node->uid);
   }
 
-  if ($op == "delete") {
+  if ($op == 'delete') {
     return user_access('maintain personal pages') && ($user->uid == $node->uid);
   }
 }
 
 /**
- * Respond to node insertion.
+ * Implementation of hook_insert().
  */
 function page_insert($node) {
   db_query("INSERT INTO {page} (nid, format, link, description) VALUES (%d, %d, '%s', '%s')", $node->nid, $node->format, $node->link, $node->description);
 }
 
 /**
- * Respond to node updating.
+ * Implementation of hook_update().
  */
 function page_update($node) {
   db_query("UPDATE {page} SET format = %d, link = '%s', description = '%s' WHERE nid = %d", $node->format, $node->link, $node->description, $node->nid);
 }
 
 /**
- * Respond to node deletion
+ * Implementation of hook_delete().
  */
 function page_delete(&$node) {
-  db_query("DELETE FROM {page} WHERE nid = %d", $node->nid);
+  db_query('DELETE FROM {page} WHERE nid = %d', $node->nid);
 }
 
 /**
- * Load node-type-specific information.
+ * Implementation of hook_load().
  */
 function page_load($node) {
-  return db_fetch_object(db_query("SELECT format, link, description FROM {page} WHERE nid = %d", $node->nid));
+  return db_fetch_object(db_query('SELECT format, link, description FROM {page} WHERE nid = %d', $node->nid));
 }
 
 /**
@@ -101,7 +94,7 @@ function page_link($type, $node = 0, $main) {
   $links = array();
 
   if ($type == 'system') {
-    menu('node/add/page', t('page'), page_access('create', $node) ? 'node_page' : MENU_DENIED, 0);
+    menu('node/add/page', t('page'), page_access('create', $node) ? MENU_FALLTHROUGH : MENU_DENIED, 0);
   }
 
   if ($type == 'node' && $node->type == 'page') {
@@ -115,12 +108,11 @@ function page_link($type, $node = 0, $main) {
 }
 
 /**
- * Prepare a node's body content for viewing
+ * Implementation of hook_content().
+ *
+ * If body is dynamic (using PHP code), the body will be generated.
  */
 function page_content($node, $main = 0) {
-  /* Extract the page body.  If body is dynamic (using PHP code), the body will
-     be generated. */
-
   if ($node->format == 1) {
     // PHP type
     ob_start();
@@ -136,21 +128,21 @@ function page_content($node, $main = 0) {
 }
 
 /**
- * View a node.
+ * Implementation of hook_view().
  */
 function page_view($node, $main = 0, $page = 0) {
   // prepare the node content
   $node = page_content($node, $main);
   // print the node
-  return theme("node", $node, $main, $page);
+  return theme('node', $node, $main, $page);
 }
 
 /**
- * Display a node editing form
+ * Implementation of hook_form().
  */
 function page_form(&$node, &$error) {
-  if (function_exists("taxonomy_node_form")) {
-    $output .= implode("", taxonomy_node_form("page", $node));
+  if (function_exists('taxonomy_node_form')) {
+    $output .= implode('', taxonomy_node_form('page', $node));
   }
 
   if (($node->format == 1) && (!user_access('create php content'))) {
@@ -162,28 +154,28 @@ function page_form(&$node, &$error) {
     $output .= form_textarea(t('Body'), 'body', $node->body, 60, 20, filter_tips_short());
   }
 
-  $output .= form_textfield(t('Link name'), 'link', $node->link, 60, 64, t("To make the page show up in the navigation links, enter the name of the link, otherwise leave blank."));
+  $output .= form_textfield(t('Link name'), 'link', $node->link, 60, 64, t('To make the page show up in the navigation links, enter the name of the link. Otherwise, leave this blank.'));
   $output .= form_textfield(t('Link description'), 'description', $node->description, 60, 64, t("The description displayed when hovering over the page's link.  Leave blank when you don't want a description."));
-  $content_type = (user_access('create php content')) ? array(0 => "HTML", 1 => "PHP") : false;
+  $content_type = (user_access('create php content')) ? array(0 => 'HTML', 1 => 'PHP') : false;
   if (!$hide_types && $content_type) {
-    $output .= form_radios(t("Type"), "format", $node->format, $content_type);
+    $output .= form_radios(t('Type'), 'format', $node->format, $content_type);
   }
 
   return $output;
 }
 
 /**
- * Verify a node editing form.
+ * Implementation of hook_validate().
  */
 function page_validate(&$node) {
-  if ($node->format && user_access("create php content")) {
+  if ($node->format && user_access('create php content')) {
     // Do not filter PHP code, do not auto-extract a teaser
     $node->teaser = $node->body;
   }
 
   if (($node->format == 1) && (!user_access('create php content'))) {
     /* Overwrite the submitted node body since they don't have sufficient privileges. */
-    $node->body = db_result(db_query("SELECT body FROM {node} WHERE nid = '%d'", $node->nid));
+    $node->body = db_result(db_query('SELECT body FROM {node} WHERE nid = %d', $node->nid));
   }
 }
 
