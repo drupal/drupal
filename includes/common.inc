@@ -907,29 +907,29 @@ function format_date($timestamp, $type = "medium", $format = "") {
 
   switch ($type) {
     case "small":
-      $date = date(variable_get("date_format_short", "m/d/Y - H:i"), $timestamp);
-      break;
-    case "medium":
-      $date = date(variable_get("date_format_medium", "D, m/d/Y - H:i"), $timestamp);
+      $format = variable_get("date_format_short", "m/d/Y - H:i");
       break;
     case "large":
-      $date = date(variable_get("date_format_long", "l, F j, Y - H:i"), $timestamp);
+      $format = variable_get("date_format_long", "l, F j, Y - H:i");
       break;
     case "custom":
-      for ($i = strlen($format); $i >= 0; $c = $format[--$i]) {
-        if (strstr("DFlMSw", $c)) {
-          $date = t(date($c, $timestamp)) . $date;
-        }
-        else if (strstr("AaBdgGhHiIjLmnOrstTUWYyZz", $c)) {
-          $date = date($c, $timestamp) . $date;
-        }
-        else {
-          $date = $c.$date;
-        }
-      }
+      // No change to format
       break;
+    case "medium":
     default:
-      $date = date(variable_get("date_format_medium", "l, m/d/Y - H:i"), $timestamp);
+      $format = variable_get("date_format_medium", "D, m/d/Y - H:i");
+  }
+
+  for ($i = strlen($format); $i >= 0; $c = $format[--$i]) {
+    if (strstr("DFlMSw", $c)) {
+      $date = t(date($c, $timestamp)) . $date;
+    }
+    else if (strstr("AaBdgGhHiIjLmnOrstTUWYyZz", $c)) {
+      $date = date($c, $timestamp) . $date;
+    }
+    else {
+      $date = $c.$date;
+    }
   }
   return $date;
 }
