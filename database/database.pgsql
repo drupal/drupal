@@ -268,8 +268,7 @@ CREATE TABLE menu (
   path varchar(255) NOT NULL default '',
   title varchar(255) NOT NULL default '',
   weight smallint NOT NULL default '0',
-  visibility smallint NOT NULL default '0',
-  status smallint NOT NULL default '0',
+  type smallint NOT NULL default '0',
   PRIMARY KEY  (mid)
 );
 

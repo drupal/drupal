@@ -1,9 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.356 2004/06/04 18:10:05 kjartan Exp $ */
-
-/**
- * @defgroup common Core functions
- */
+/* $Id: common.inc,v 1.357 2004/06/18 15:04:33 dries Exp $ */
 
 /**
  * @name Page title
@@ -949,12 +945,7 @@ function format_name($object) {
       $name = $object->name;
     }
 
-    if (arg(0) == "admin" and user_access("administer users")) {
-      $output = l($name, "admin/user/edit/$object->uid", array("title" => t("Administer user profile.")));
-    }
-    else {
-      $output = l($name, "user/view/$object->uid", array("title" => t("View user profile.")));
-    }
+    $output = l($name, "user/$object->uid", array("title" => t("View user profile.")));
   }
   else if ($object->name) {
     /*

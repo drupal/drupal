@@ -45,6 +45,10 @@
         <!-- BEGIN: title -->
         {breadcrumb}
         <h1 class="title">{title}</h1>
+        <!-- BEGIN: tabs -->
+        <div class="tabs">{tabs}</div>
+        <div class="clear-tabs"></div>
+        <!-- END: tabs -->
         <!-- END: title -->
         <!-- BEGIN: help -->
         <div id="help">{help}</div>
@@ -55,7 +59,7 @@
 <!-- END: header -->
 
 <!-- BEGIN: node -->
-  <div class="node {static}">
+  <div class="node {sticky}">
     <!-- BEGIN: picture -->
     {picture}
     <!-- END: picture -->

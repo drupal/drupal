@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.69 2004/06/02 18:54:48 dries Exp $ */
+/* $Id: drupal.css,v 1.70 2004/06/18 15:04:34 dries Exp $ */
 
 /*
 ** HTML elements
@@ -83,7 +83,6 @@ li a.active {
 td.menu-disabled {
   background: #ccc;
 }
-
 /*
 ** Other common styles
 */

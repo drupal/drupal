@@ -1,5 +1,5 @@
 <?php
-// $Id: index.php,v 1.79 2004/04/21 13:56:37 dries Exp $
+// $Id: index.php,v 1.80 2004/06/18 15:04:33 dries Exp $
 
 include_once "includes/bootstrap.inc";
 drupal_page_header();
@@ -9,13 +9,12 @@ fix_gpc_magic();
 
 $status = menu_execute_active_handler();
 switch ($status) {
-  case MENU_FOUND:
+  case MENU_NOT_FOUND:
+    drupal_not_found();
     break;
-  case MENU_DENIED:
+  case MENU_ACCESS_DENIED:
     drupal_access_denied();
     break;
-  default:
-    drupal_not_found();
 }
 
 drupal_page_footer();
