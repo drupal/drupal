@@ -155,18 +155,22 @@ ALTER TABLE book DROP pid;
 #   visit http://www.yoursite.com/3.00-to-x.xx.php?part=3
 #
 
-## work in progress
+# 08/11/01:
+ALTER TABLE watchdog CHANGE message message text NOT NULL;
 
-# ALTER TABLE users ADD session TEXT DEFAULT '' NOT NULL;
-# ALTER TABLE users ADD data TEXT DEFAULT '' NOT NULL;
+# 14/11/01:
+CREATE TABLE authmap (
+  aid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
+  authname varchar(128) DEFAULT '' NOT NULL,
+  uid int(10) DEFAULT '' NOT NULL,
+  module varchar(128) DEFAULT '' NOT NULL,
+  UNIQUE authname (authname),
+  PRIMARY KEY (aid)
+);
 
-#CREATE TABLE mail (
-#  mid tinyint(10) DEFAULT '0' NOT NULL auto_increment,
-#  subject varchar(255) DEFAULT '' NOT NULL,
-#  recepient varchar(255) DEFAULT '' NOT NULL,
-#  sender varchar(255) DEFAULT '' NOT NULL,
-#  header text,
-#  body text,
-#  timestamp int(11) DEFAULT '0' NOT NULL,
-#  PRIMARY KEY (mid)
-#);
+DELETE FROM variable WHERE name = 'user_jabber';
+DELETE FROM variable WHERE name = 'user_drupal';
+
+# TODO:
+#   write some PHP code that moves the 'jabber' and 'drupal' fields
+#   to the new 'authmap' table.

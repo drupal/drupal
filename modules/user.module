@@ -38,6 +38,18 @@ function sess_gc($lifetime) {
 
 /*** Common functions ******************************************************/
 
+function user_external_load($authname) {
+  $arr_uid = db_query("SELECT uid FROM authmap WHERE authname = '$authname'");
+
+  if (db_fetch_object($arr_uid)) {
+    $uid = db_result($arr_uid);
+    return user_load(array("uid" => $uid));
+  }
+  else {
+    return 0;
+  }
+}
+
 function user_load($array = array()) {
 
   /*
@@ -47,7 +59,7 @@ function user_load($array = array()) {
   foreach ($array as $key => $value) {
     if ($key == "pass") {
       $query .= "u.$key = '" . md5($value) . "' AND ";
-    }
+     }
     else {
       $query .= "u.$key = '". addslashes($value) ."' AND ";
     }
@@ -58,7 +70,6 @@ function user_load($array = array()) {
 
   return $user;
 
-
 }
 
 function user_save($account, $array = array()) {
@@ -67,22 +78,16 @@ function user_save($account, $array = array()) {
   ** Dynamically compose a SQL query:
   */
 
-
-  /*
-  ** Update existing or insert new user account:
-  */
-
   if ($account->uid) {
-   foreach ($array as $key => $value) {
+    foreach ($array as $key => $value) {
       if ($key == "pass") {
         $query .= "$key = '". md5($value) ."', ";
       }
-      else {
+      else if (substr($key, 0, 4) !== "auth") {
         $query .= "$key = '". addslashes($value) ."', ";
       }
     }
     db_query("UPDATE users SET $query timestamp = '". time() ."' WHERE uid = '$account->uid'");
-    return user_load(array("uid" => $account->uid));
   }
   else {
     $fields = "(";
@@ -90,9 +95,11 @@ function user_save($account, $array = array()) {
     $num = 0;
 
     foreach ($array as $key => $value) {
-      $fields .= ($num ? ", " : "") . $key;
-      $values .= ($num ? ", " : "") . (($key == "pass") ? "'" . md5 ($value) . "'" : "'" . addslashes ($value) . "'");
-      $num = 1;
+      if (substr($key, 0, 4) !== "auth") {
+        $fields .= ($num ? ", " : "") . $key;
+        $values .= ($num ? ", " : "") . (($key == "pass") ? "'" . md5($value) . "'" : "'" . addslashes($value) . "'");
+        $num = 1;
+      }
     }
 
     $fields .= ($num ? ", " : "") . "timestamp";
@@ -101,9 +108,21 @@ function user_save($account, $array = array()) {
     $values .= ")";
 
     db_query("INSERT INTO users $fields VALUES $values");
-    return user_load(array("name" => $array["name"]));
   }
 
+  $user = user_load(array("name" => $array["name"]));
+
+  foreach ($array as $key => $value) {
+    if (substr($key, 0, 4) == "auth") {
+      $authmaps[$key] = $value;
+    }
+  }
+
+  if ($authmaps) {
+    $result = user_set_authmaps($user, $authmaps);
+  }
+
+  return $user;
 }
 
 function user_set($account, $key, $value) {
@@ -121,22 +140,37 @@ function user_validate_name($name) {
   ** Verify the syntax of the given name:
   */
 
-  if (!$name) return t("You must enter a name.");
-  if (eregi("^ ", $name)) return t("The name can not begin with a space.");
-  if (eregi(" \$", $name)) return t("The name can not end with a space.");
-  if (eregi("  ", $name)) return t("The name can not contain multiple spaces in a row.");
-  if (eregi("[^a-zA-Z0-9 ]", $name)) return t("The name contains an illegal character.");
-  if (strlen($name) > 32) return t("The name '$name' is too long: it must be less than 32 characters.");
+  if (!$name) return t("You must enter a Username.");
+  if (eregi("^ ", $name)) return t("The Username cannot begin with a space.");
+  if (eregi(" \$", $name)) return t("The Username cannot end with a space.");
+  if (eregi("  ", $name)) return t("The Username cannot contain multiple spaces in a row.");
+  // if (eregi("[^a-zA-Z0-9@-@]", $name)) return t("The Username contains an illegal character.");
+  if (!eregi('^[a-z0-9]+(@[a-z0-9]+)?$', $name)) t("The name contains an illegal character.");
+  if (strlen($name) > 56) return t("The Username '$name' is too long: it must be less than 56 characters.");
 }
 
 function user_validate_mail($mail) {
 
   /*
-  ** Verify the syntax of the given e-mail address:
+  ** Verify the syntax of the given e-mail address.  Empty e-mail addresses
+  ** allowed.
   */
 
-  if (!$mail) return t("Your must enter an e-mail address.");
-  if (!eregi("^[_+\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3}$", $mail)) return t("The e-mail address '$mail' is not valid.");
+  if ($mail && !eregi("^[_+\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3}$", $mail)) {
+    return t("The e-mail address '$mail' is not valid.");
+  }
+}
+
+function user_validate_authmaps($account, $edit) {
+  foreach (module_list() as $module) {
+    if (module_hook($module, "auth")) {
+      $result = db_query("SELECT COUNT(*) from authmap WHERE uid != '$account->uid' && authname = '". $edit["authname_$module"] . "'");
+      if (db_result($result) > 0) {
+        $info = module_invoke($module, "info");
+        return sprintf(t("The %s ID %s is already taken."), ucfirst($info["name"]), "<i>". $edit["authname_$module"] ."</i>");
+      }
+    }
+  }
 }
 
 function user_password($min_length = 6) {
@@ -203,46 +237,166 @@ function user_deny($type, $mask) {
 
 function user_help() {
  ?>
+  <style type="text/css">
+<!--
+p {  padding-left: 24px}
+-->
+</style>
+<h3>Introduction</h3>
+<p>Drupal offers a powerful and open user system. This system allows users to
+  register, login, logout, maintain user profiles, etc. No participant can use
+  his own name to post comments until he signs up and submits his e-mail address.
+  Those who do not register may participate as anonymous users, but they will
+  suffer numerous disadvantages, for example their posts beginning at a lower
+  score. </p>
+<p>In contrast, those with a user account can use their own name or handle and
+  are granted various privileges: the most important are probably the ability
+  to moderate new submissions, to rate comments, and to fine-tune the site to
+  their personal liking.  Drupal themes make fine tuning quite a pleasure.</p>
+<p>Registered users need to authenticate by supplying a username and password.
+  Users may authenticate locally or via an external authentication source like
+  <a href="http://www.jabber.org/">Jabber</a>, <a href="http://www.delphiforums.com/">Delphi</a>,
+  and other <a href="http://www.drupal.org/">Drupal</a> web sites. See <a href="#da">Distributed
+  Authentication</a> for more information on this innovative feature. The username
+  and password are kept in your database, where the password is hashed so that
+  no one can read nor use it. When a username and password needs to be checked
+  the system goes down the list of registered users until it finds a matching
+  username, and then hashes the password that was supplied and compares it to
+  the listed value. If the hashes match, the username and password are correct.
+  Once a user authenticated session is started, and until that session is over,
+  the user won't have to re-authenticate. To keep track of the individual sessions,
+  Drupal relies on <a href="http://www.php.net/manual/en/ref.session.php">PHP's
+  session support</a>. A visitor accessing your web site is assigned an unique
+  ID, the so-called session ID, which is stored in a cookie. For security's sake,
+  the cookie does not contain personal information but acts as a key to retrieve
+  the information stored on your server's side. When a visitor accesses your site,
+  Drupal will check whether a specific session ID has been sent with the request.
+  If this is the case, the prior saved environment is recreated.</p>
+<p>Authenticated users can select entirely different appearances for the site,
+  utilizing their own preferences for how the pages are structured, how navigation
+  lists and other page components are presented and much more. <br />
+</p>
+<h3>User Administration</h3>
+<p>Administrators manage user accounts by clicking on the <i>User Management</i> link in
+  their Admin interface. There, you will find several configuration pages and
+  reports which help you manage your users. The following pages are available:</p>
 
-  <p>The user system is responsible for maintaining the user database.  It automatically handles tasks like registration, authentication, access control, password retrieval, user settings and much more.</p>
-
-  <h3>User management</h3>
-  <p>No participant can use his own name or handle to post comments until they sign up and submit their e-mail address.  Those who do not may participate as anonymous users, but they will suffer numerous disadvantages, for example their posts beginning at a lower score.</p>
-  <p>In contrast, those with a user account can use their own name or handle and are granted various privileges: the most important are probably the ability to post content, to rate comments and to fine-tune the site to their personal liking.</p>
-  <p>Registered users need to authenticate by supplying a username and password, or alternatively, by supplying a valid Drupal ID or Jabber ID.  The username and password are kept in the database, where the password is hashed so that no one can read nor use it.  When a username and password needs to be checked the system goes down the list of registered users till it finds a matching username, and then hashes the password that was supplied and compares it to the listed value.  If they match then that means the username and password supplied were correct.</p>
-  <p>Once a user authenticated a session is started and until that session is over they won't have to re-authenticate.  To keep track of the individual sessions, drupal relies on PHP's session support.  A visitor accessing your web site is assigned an unique ID, the so-called session ID, which is stored in a cookie.  For security's sake, the cookie does not contain personal information but acts as a key to retrieve the information stored on your server's side.  When a visitor accesses your site, drupal will check whether a specific session ID has been sent with the request.  If this is the case, the prior saved environment is recreated.</p>
-  <p>Drupal allows you to control who is allowed to get authenticated and who is not.  To accomplish this, you can ban certain hostnames, IPs, IP-ranges, e-mail address and usernames.  Any user that matches any of the given ban criteria will not be able to authenticate or to register as a new user.</p>
-  <p>Authenticated users can themselves select entirely different appearances for the site, utilizing their own preferences for how the pages are structured, how navigation lists and other page components are presented and much more.</p>
-  <p>An important feature of drupal is that any user can be granted administrator rights.  The ability to share maintenance responsibility with volunteers from across the globe can be considered valuable for most community-based projects.</p>
-
-  <h3>Access rules</h3>
-  <p>The access rules allows you to describe which e-mail addresses or usernames will or will not be granted access using a flexible wild-card system.  Examples are given below.  If no access rules are provided, access control is turned off and everybody will be able to access your website.  For each category, zero or more access rules can be specified.  The 'allow' rules are processed prior to the 'deny' rules and are thus considered to be stronger.</p>
-  <p>To do describe access rules you can use the following wild-card characters:</p>
+<h4>add new user</h4>
+<p>If your site blocks is completely private, and doesn't allow registration for
+  any old web user (see <a href="#settings">Settings</a> for this feature), then
+  you'll need to add new users manually. This web page allows any administrator
+  to register a new user.</p>
+<h4>access rules<a name="access"></a></h4>
+<p>Access rules enable administrators to filter out usernames and email addresses
+  which are not allowed in Drupal. An administrator creates a 'mask' against which
+  each new registration is checked. Disallowed names and email addresses are denied
+  access to the site. Another handy use for this page is to disallow registration
+  to your site from an untrusted external authentication server. Just add their
+  server address to the username mask section and you've effectively blocked all
+  logins from that server.</p>
+<p>To do describe access rules you can use the following wild-card characters:</p>
   <ul>
    <li>&nbsp;% : matches any number of characters, including zero characters.</li>
    <li>&nbsp;_ : matches exactly one character.</li>
   </ul>
-  <p><u>Examples:</u></p>
+<p><u>Examples:</u></p>
   <ul>
    <li>E-mail address bans <code>%@hotmail.com</code>, <code>%@altavista.%</code>, <code>%@usa.net</code>, etc.  Used to prevent users from using free email accounts, which might be used to cause trouble.</li>
    <li>Username bans <code>root</code>, <code>webmaster</code>, <code>admin%</code>, etc.  Used to prevent administrator impersonators.</li>
   </ul>
-
-  <h3>User roles</h3>
-  <p>Users have roles that define what kinds of actions they can take.  Roles define classes of users such as <i>anonymous user</i>, <i>authenticated user</I>, <I>moderator</i>, <i>administrator</i> and so on.  Every user can have one role.</p>
-  <p>Roles make it easier for you to manage security.  Instead of defining what every single user can do, you can simply set a couple different permissions for different user roles.</p>
-  <p>Drupal comes with three built-in roles:</p>
-  <ul>
-   <li>Anonymous user: this role is used for users that don't have a user account or that are not authenticated.</li>
-   <li>Registered user: this role is assigned automatically to authenticated users.  Most users will belong to this user role unless specified otherwise.</li>
-  </ul>
-  <p>For basic Drupal sites you can get by with <i>anonymous user</i> and <i>authenticated user</i> but for more complex sites where you want other users to be able to perform maintainance or administrative duties, you may want to create your own roles to classify your users into different groups.</p>
-
-  <h3>User permissions</h3>
-  <p>Each Drupal's permission describes a fine-grained logical operation such as <i>access administration pages</i> or <i>add and modify user accounts</i>.  You could say a permission represents access granted to a user to perform a set of operations.</p>
-  <p>Roles tie users to permissions.  The combination of roles and permissions represent a way to tie user authorization to the performance of actions, which is how Drupal can determine what users can do.</p>
-
- <?php
+<p>If no access rules are provided, access control is turned off and everybody will be able to access your website.  The 'allow' rules are processed prior to the 'deny' rules and are thus considered to be stronger.</p>
+<h4>user accounts</h4>
+<p>This page is quite powerful. It allows an administrator to review any user's
+  profile. In addition, administrators may block any user, or assign him a <a href="#roles">role</a>,
+  using this page.</p>
+<h4>user roles<a name="roles"></a></h4>
+<p>Roles allow you to fine tune the security and administration of drupal. A role
+defines a group of users which have certain privileges. Examples of roles
+include: <I>anonymous user</I>, <I>authenticated user</I>, <I>moderator</I>,
+<I>administrator</I> and so on. By default, Drupal comes with two commonly used
+roles:
+<UL>
+  <LI>Anonymous user: this role is used for users that don't have a user account
+    or that are not authenticated.
+  <LI>Registered user: this role is assigned automatically to authenticated users.
+    Most users will belong to this user role unless specified otherwise.</LI>
+</UL></p>
+<p>These common roles will suffice for most sites. However, for a more complex site where you need to give several users different access privileges, you will
+  need to add a new role by clicking the "add new role" link. Then define what privileges that role will have by clicking the "permission overview" link and   checking the appropriate boxes to give that role the permissions you desire.
+  <p>To attach a specific user to a role, use the "account" section of the drupal Administration. </p>
+  <p>Note: If you intend for a user to access certain sections of the administration
+  pages, they must have "access administration page" privileges. </p>
+<h4>user permissions<a name="permissions"></a></h4>
+<p>Each role has certain things that its users are allowed to do, and some that
+  are disallowed. For example, authenticated users may usually post a story but
+  Anonymous users may not. </p>
+<p>Each permission describes a fine-grained logical operation such as <br />
+  <i>access administration pages</i> or <i>add and modify user
+  accounts</i>. You <br /b>
+  could say a permission represents access granted to a user to perform a set
+  of <br />
+  operations.</p>
+<h4>search account</h4>
+<p>Search Account enables an admin to query for any username in the user table
+  and return users which match that query. For example, one may search for 'br'
+  and Drupal might return 'brian', 'brad', and 'brenda'.</p>
+<h4>settings<a name="settings"></a></h4>
+<p>Administrators may choose to restrict registration to their site. That restriction
+  may be accomplished on this page. Also, the list of words which may be included
+  in a system geenrated password is also listed on this page. Drupal generates
+  passwords by joining small words from the password list until the new password
+  is greater than 6 characters.</p>
+<h4>active users - report</h4>
+<p>All users sorted by most recent login.</p>
+<h4> new users - report</h4>
+<p>All users sorted by most recent registration</p>
+<h4> blocked users - report</h4>
+<p>All users who have been blocked (status = 0) sorted by most recent registration</p>
+<h4> special users - report</h4>
+<p>All users with a <a href="#roles">role</a> other than Authenticated User</p>
+<h3>Distributed Authentication<a name="da"> </a></h3>
+<p>One of the more tedious moments in visiting a new web site is filling out the
+  registration form. The reg form provides helpful information to the web site
+  owner, but not much value for the user. The value for the end user is usually
+  a the ability to post a messages or receive personalized news, etc. Distributed
+  authentication (DA) gives the user what he wants without having to fill out
+  the reg form. Removing this obstacle yields more registered and active users
+  for the web site.</p>
+<p>DA enables a new user to input a username and password into the login box and
+  immediately be recognized, even if that user never registered on your site.
+  This works because Drupal knows how to communicate with external registration
+  databases. For example, lets say that your new user 'Joe' is already a registered
+  member of Delphi Forums. If your Drupal has delphi.module installed, then Drupal
+  will inform Joe on the registration and login screens that he may login with
+  his Delphi ID instead of registering with your Drupal instance. Joe likes that
+  idea, and logs in with a username of joe@remote.delphiforums.com and his usual
+  Delphi password. Drupal then communicates with remote.delphiforums.com (usually using <a href="http://www.xmlrpc.com/">XML-RPC</a>,
+  <a href="http://www.w3.org/Protocols/">HTTP POST</a>, or <a href="http://www.soapware.org/">SOAP</a>) behind
+  the scenes and asks &quot;is the password for username=joe? If Delphi replies
+  yes, then Drupal will create a new local account for joe and log joe into it.
+  Joe may keep on logging into your Drupal instance in the same manner, and he
+  will be logged into the same joe@remote.delphiforums.com account.</p>
+<p>One key element of DA is the 'authmap' table, which maps a user's authname
+  (e.g. joe@remote.delphiforums.com) to his local UID (i.e. universal identification
+  number). This map is checked whenever a user successfully logs into an external
+  authentication source. Once Drupal knows that the current user is definately
+  joe@remote.delphiforums.com (because Delphi says so), he looks up Joe's UID
+  and logs Joe into that account.</p>
+<p>Drupal is setup so that it is very easy to add support for any external authentication
+  source. See the <a href="http://ww.drupal.org/">Drupal Handbook</a> for information
+  on authpring authentication modules. You currently have the following authentication modules installed ...</p>
+  <?
+    foreach (module_list() as $module) {
+      if (module_hook($module, "auth")) {
+        print "<h4>" . module_invoke($module, "info", "name") . "</h4>";
+        print module_invoke($module, "auth_help");
+      }
+    }
+  ?>
+<h3><br />
+  User Preferences</h3>
+<p>Coming soonish.</p>
+ <?
 }
 
 function user_perm() {
@@ -268,7 +422,7 @@ function user_link($type) {
     $links[] = "<br /><a href=\"module.php?mod=user&op=logout\">". t("logout") ."</a>";
   }
 
-  if ($type == "admin") {
+  if ($type == "admin" && user_access("administer users")) {
     $links[] = "<a href=\"admin.php?mod=user\">user management</a>";
   }
 
@@ -276,6 +430,7 @@ function user_link($type) {
 }
 
 function drupal_login($arguments) {
+   // an XML-RPC method called by external clients (usually other Drupal instances)
   $argument = $arguments->getparam(0);
   $username = $argument->scalarval();
   $argument = $arguments->getparam(1);
@@ -291,156 +446,107 @@ function drupal_login($arguments) {
 
 
 function user_xmlrpc() {
-   return array("drupal.login" => array("function" => "drupal_login"));
+  return array("drupal.login" => array("function" => "drupal_login"));
 }
 
 /*** Authentication methods ************************************************/
 
-function startElement($parser, $name, $attributes) {
-  global $jabber;
-
-  if ($attributes["ID"]) {
-    $jabber["jid"] = $attributes["ID"];
-  }
-
-  if (stristr($name, "error") || ($attributes["ERROR"])){
-    $jabber["error"] = true;
-  }
-}
-
-function endElement($parser, $name) {
-}
-
-function characterData($parser, $data) {
-  global $jabber;
-
-  $jabber["data"] = $data;
-}
-
-function jabber_send($session, $message) {
-
-  // print "SEND: ". htmlentities($message) ."<br />";
-
-  fwrite($session, $message, strlen($message));
-}
-
-function jabber_recv($session, $timout = 50) {
+function user_get_authmaps($account = NULL, $authname = NULL) {
 
   /*
-  ** Returns a chunk of data, read from the socket descriptor '$session'.
-  ** If the call fails, or if no data is read after the specified timout,
-  ** false will be returned.
+  ** Accepts an user object, $account, or an DA name and returns an
+  ** associtive array of modules and DA names.
   */
 
-  while ($count < $timout) {
-    $data = fread($session, 1);
-    if ($data) {
-      $message .= $data;
-    }
-    else {
-      usleep(100);
-      $count = $count + 1;
-    }
+  if (!$account) { //called at external login
+    $result = db_query("SELECT authname, module FROM authmap WHERE authname = '$authname'");
+  }
+  else { //called from user_edit, user_view,, admin_user_edit
+    $result = db_query("SELECT authname, module FROM authmap WHERE uid = '$account->uid'");
   }
 
-  if ($message) {
-
-    // print "RECV: ". htmlentities($message) ."<br />";
-
-    return $message;
+  if (db_num_rows($result) > 0) {
+    while ($authmap = db_fetch_object($result)) {
+      $authmaps[$authmap->module] = $authmap->authname;
+    }
+    return $authmaps;
   }
   else {
-    return false;
-  }
-}
-
-function jabber_auth($username, $password, $server, $port = 5222) {
-  global $jabber;
-
-  // print "username = $username, pasword = $password, server = $server<br />";
-
-  $session = fsockopen($server, $port, &$errno, &$errstr, 5);
-
-  if ($session) {
-
-    $xml_parser = xml_parser_create();
-    xml_set_element_handler($xml_parser, "startElement", "endElement");
-    xml_set_character_data_handler($xml_parser, "characterData");
-
-    /*
-    ** Switch the given socket descriptor '$session' to non-blocking mode:
-    */
-
-    set_socket_blocking($session, false);
-
-    /*
-    ** A jabber session consists of two parallel XML streams, one from
-    ** the client to the server and one from the server to the client.
-    ** On connecting to a Jabber server, a Jabber client initiates the
-    ** client-to-server XML stream and the server responds by initiating
-    ** the server-to-client XML stream:
-    */
-
-    jabber_send($session, "<?xml version='1.0'?>");
-
-    jabber_send($session, "<stream:stream to='$server' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams'>");
-
-    $data = jabber_recv($session);
-
-    if (!xml_parse($xml_parser, $data, 0)) {
-      watchdog("error", "XML error: '". xml_error_string(xml_get_error_code($xml_parser)) ."' at line ". xml_get_current_line_number($xml_parser));
-      return 0;
-    }
-
-    if ($jabber["error"]) {
-      watchdog("error", "protocol error: ". $jabber["data"]);
-      return 0;
-    }
-
-    /*
-    ** Hash the password:
-    */
-
-    jabber_send($session, "<iq type='set' id='". $jabber["jid"] ."'><query xmlns='jabber:iq:auth'><username>$username</username><password>$password</password><resource>drupal</resource></query></iq>");
-
-    $data = jabber_recv($session);
-
-    if (!xml_parse($xml_parser, $data, 0)) {
-       watchdog("error", "XML error: '". xml_error_string(xml_get_error_code($xml_parser)) ."' at line ". xml_get_current_line_number($xml_parser));
-    }
-
-    if ($jabber["error"]) {
-      watchdog("error", "protocol error: ". $jabber["data"]);
-      return 0;
-    }
-
-    xml_parser_free($xml_parser);
-
-    return 1;
-  }
-  else {
-    watchdog("error", "failed to open socket to jabber server:\n  $errno, $errstr");
     return 0;
   }
 }
 
-function drupal_auth($username, $password, $server, $port = 80) {
+function user_set_authmaps($account, $authmaps) {
+  foreach ($authmaps as $key => $value) {
+    $module = explode("_", $key, 2);
+    if ($value) {
+      $result = db_query("SELECT COUNT(*) from authmap WHERE uid = '$account->uid' && module = '$module[1]'");
+      if (db_result($result) == 0) {
+        $result = db_query("INSERT INTO authmap (authname, uid, module) VALUES ('" . check_query($value) . "', '" . check_query($account->uid) . "', '" . check_query($module[1]) . "')");
+      }
+      else {
+        $result = db_query("UPDATE authmap SET authname = '$value' WHERE uid = '$account->uid' && module = '$module[1]'");
+      }
+    }
+    else {
+      $result = db_query("DELETE FROM authmap WHERE uid = '$account->uid' && module = '$module[1]'");
+    }
+  }
+  return $result;
+}
 
-  $message = new xmlrpcmsg("drupal.login", array(new xmlrpcval($username, "string"), new xmlrpcval($password, "string")));
+function user_help_da() {
+  $site = variable_get("site_name", "this web site");
 
-  // print "username = $username, pasword = $password, server = $server<br />";
-  // print "<pre>" . htmlentities($message->serialize()) . "</pre>";
+  $output = "
+    <style type=\"text/css\">
+    <!--
+    p {  padding-left: 24px}
+    -->
+    </style>
+    <br />
+    <h3>Distributed Authentication<a name=\"da\"> </a></h3>
+  <p>One of the more tedious moments in visiting a new web site is filling out the
+    registration form. Here at %s, you do not have to fill out a registration form
+    if you are already a member of ";
+    $output .= implode(", ", user_auth_help_links());
+    $output .= ".  This capability is called <i>Distributed
+    Authentication</i>, and is unique to <a href=\"http://www.drupal.org\">Drupal</a>,
+    the software which powers %s.</p>
+  <p>Distributed Authentication enables a new user to input a username and password into the login box,
+    and immediately be recognized, even if that user never registered at %s. This
+    works because Drupal knows how to communicate with external registration databases.
+    For example, lets say that new user 'Joe' is already a registered member of
+    <a href=\"http://www.delphiforums.com\">Delphi Forums</a>. Drupal informs Joe
+    on registration and login screens that he may login with his Delphi ID instead
+    of registering with %s. Joe likes that idea, and logs in with a username
+    of joe@remote.delphiforums.com and his usual Delphi password. Drupal then contacts
+    the <i>remote.delphiforums.com</i> server behind the scenes (usually using <a href=\"http://www.xmlrpc.com\">XML-RPC</a>,
+    <a href=\"http://www.w3.org/Protocols/\">HTTP POST</a>, or <a href=\"http://www.soapware.org\">SOAP</a>)
+    and asks: \"Is the password for user Joe correct?\".  If Delphi replies yes, then
+    we create a new $site account for Joe and log him into it.  Joe may keep
+    on logging into %s in the same manner, and he will always be logged into the
+    same account.</p>";
 
-  $client = new xmlrpc_client("/xmlrpc.php", $server, 80);
+  $output = sprintf(t($output), $site, $site, $site, $site, $site, $site);
 
-  $result = $client->send($message);
-
-  if ($result && !$result->faultCode()) {
-    $value = $result->value();
-    $login = $value->scalarval();
+  foreach (module_list() as $module) {
+    if (module_hook($module, "auth")) {
+      $output .= "<h4><A NAME=\"$module\"></A>" . module_invoke($module, "info", "name") . "</h4>";
+      $output .= module_invoke($module, "auth_help");
+    }
   }
 
-  return $login;
+  return $output;
+}
+
+function user_auth_help_links() {
+  foreach (module_list() as $module) {
+    if (module_hook($module, "auth_help")) {
+      $links[] = "<a href=\"module.php?mod=user&op=help#$module\">". module_invoke($module, "info", "name") ."</a>";
+    }
+  }
+  return $links;
 }
 
 /*** User features *********************************************************/
@@ -462,54 +568,56 @@ function user_login($edit = array()) {
   else if ($edit["name"] && $edit["pass"]) {
 
     /*
-    ** Strip name and server from ID:
-    */
-
-    if ($pos = strpos($edit["name"], "@")) {
-      $server = check_input(substr($edit["name"], $pos + 1, strlen($edit["name"])));
-      $name = check_input(substr($edit["name"], 0, $pos));
-      $pass = check_input($edit["pass"]);
-    }
-    else {
-      $name = check_input($edit["name"]);
-      $pass = check_input($edit["pass"]);
-    }
-
-    /*
     ** Try to log on the user locally:
     */
 
     if (!$user) {
+      $name = check_input($edit["name"]);
+      $pass = check_input($edit["pass"]);
       $user = user_load(array("name" => $name, "pass" => $pass, "status" => 1));
     }
 
     /*
-    ** Try to log on the user through Drupal:
+    ** Strip name and server from ID:
     */
 
-    if (!$user && $server && variable_get("user_drupal", 1) == 1 && $id = drupal_auth($name, $pass, $server)) {
-      $user = user_load(array("drupal" => "$id@$server", "status" => 1));
-
-      if (!$user && variable_get("user_register", 1) == 1 && !user_load(array("name" => $name))) {
-        watchdog("user", "new user: '$name' &lt;$name@$server&gt; (Drupal ID)");
-        $user = user_save("", array("name" => $name, "pass" => user_password(), "init" => "$id@$server", "drupal" => "$id@$server", "role" => "authenticated user", "status" => 1));
-      }
+    if ($server = strrchr($edit["name"], "@")) {
+      $name = check_input(substr($edit["name"], 0, strlen($edit["name"]) - strlen($server)));
+      $server = check_input(substr($server, 1));
+      $pass = check_input($edit["pass"]);
     }
 
     /*
-    ** Try to log on the user through Jabber:
+    ** When possible, determine corrosponding external auth source. Invoke source, and login user if successful:
     */
 
-    if (!$user && $server && variable_get("user_jabber", 1) == 1 && jabber_auth($name, $pass, $server)) {
-      $user = user_load(array("jabber" => "$name@$server", "status" => 1));
-      if (!$user && variable_get("user_register", 1) == 1 && !user_load(array("name" => "$name"))) {
-        watchdog("user", "new user: '$name' &lt;$name@$server&gt; (Jabber ID)");
-        $user = user_save("", array("name" => $name, "pass" => user_password(), "init" => "$name@$server", "jabber" => "$name@$server", "role" => "authenticated user", "status" => 1));
+    if (!$user && $server  && $result = user_get_authmaps("", "$name@$server")) {
+      // print "in external load for $name|$pass|$server|" . key($result);
+      if (module_invoke(key($result), "auth", $name, $pass, $server)) {
+        $user = user_external_load("$name@$server");
+        watchdog("user", "external load: $name@$server, module: " . key($result));
+      }
+    }
+
+     /*
+    ** Try each external authentication source in series. Register user if successful.
+    */
+
+    else if (!$user && $server) {
+      foreach (module_list() as $module) {
+        if (module_hook($module, "auth")) {
+          if (module_invoke($module, "auth", $name, $pass, $server)) {
+            if (variable_get("user_register", 1) == 1 && !user_load(array("name" => "$name@$server"))) { //register this new user
+              watchdog("user", "new user: $name@$server ($module ID)");
+              $user = user_save("", array("name" => "$name@$server", "pass" => user_password(), "init" => "$name@$server", "role" => "authenticated user", "status" => 1, "authname_$module" => "$name@$server"));
+              break;
+            }
+          }
+        }
       }
     }
 
     if ($user->uid) {
-
       watchdog("user", "session opened for '$user->name'");
 
       /*
@@ -524,13 +632,10 @@ function user_login($edit = array()) {
       */
 
       $url = $HTTP_REFERER ? $HTTP_REFERER : "module.php?mod=user&op=view";
-
       drupal_goto($url);
-
     }
     else {
       watchdog("user", "failed to login for '". $name ."': invalid password");
-
       $error = t("Authentication failed.");
     }
   }
@@ -547,12 +652,11 @@ function user_login($edit = array()) {
   ** Display login form:
   */
 
-  $output .= form_textfield(t("Username"), "name", $edit["name"], 20, 64, t("Enter your local username, a Drupal ID or a Jabber ID."));
+  $output .= form_textfield(t("Username"), "name", $edit["name"], 20, 64, sprintf(t("Enter your %s username, or an ID from one of our affiliates: %s."), variable_get("site_name", "local"), implode(", ", user_auth_help_links())));
   $output .= form_password(t("Password"), "pass", $pass, 20, 64, t("Enter the password that accompanies your username."));
   $output .= form_submit(t("Log in"));
 
   return form($output);
-
 }
 
 function user_logout() {
@@ -567,8 +671,6 @@ function user_logout() {
 
     session_destroy();
     unset($user);
-
-
   }
 
   /*
@@ -594,7 +696,7 @@ function user_pass($edit = array()) {
       user_save($account, array("pass" => $pass));
 
       /*
-      ** Mail new passowrd:
+      ** Mail new password:
       */
 
       user_mail($edit["mail"], t("user account details"), sprintf(t("%s,\n\nyou requested us to e-mail you a new password for your account at %s.  You can now login using the following username and password:\n\n  username: %s\n  password: %s\n\n\n-- %s team"), $edit["name"], variable_get("site_name", "drupal"), $edit["name"], $pass, variable_get("site_name", "drupal")), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
@@ -606,7 +708,7 @@ function user_pass($edit = array()) {
     else {
       watchdog("user", "mail password: '". $edit["name"] ."' and &lt;". $edit["mail"] ."&gt; do not match");
 
-      return t("Could not sent password: no match for the specified username and e-mail address.");
+      return t("Could not send password: no match for the specified username and e-mail address.");
     }
   }
   else {
@@ -711,24 +813,31 @@ function user_edit($edit = array()) {
       else if ($edit["mail"] && db_num_rows(db_query("SELECT uid FROM users WHERE uid != '$user->uid' AND LOWER(mail) = LOWER('". $edit["mail"] ."')")) > 0) {
         $error = sprintf(t("The e-mail address '%s' is already taken."), $edit["mail"]);
       }
-      else if ($edit["jabber"] && db_num_rows(db_query("SELECT uid FROM users WHERE uid != '$user->uid' AND LOWER(jabber) = LOWER('". $edit["jabber"] ."')")) > 0) {
-        $error = sprintf(t("The Jabber ID '%s' is already taken."), $edit["jabber"]);
+      else if ($error = user_validate_authmaps($user, $edit)) {
+        // do nothing
       }
       else if ($user->uid) {
+        /*
+        ** If required, check that proposed passwords match.  If so,
+        ** add new password to $edit.
+        */
+
+        if ($edit["pass1"]) {
+          if ($edit["pass1"] == $edit["pass2"]) {
+            $edit["pass"] = $edit["pass1"];
+          }
+          else {
+            $error = t("The specified passwords do not match.");
+          }
+        }
+
+        unset($edit["pass1"], $edit["pass2"]);
 
         /*
         ** Save user information:
         */
 
-        $user = user_save($user, array("name" => $edit["name"], "mail" => $edit["mail"], "jabber" => $edit["jabber"], "theme" => $edit["theme"], "timezone" => $edit["timezone"], "homepage" => $edit["homepage"], "signature" => $edit["signature"], "language" => $edit["language"]));
-
-        /*
-        ** Save new password (if required):
-        */
-
-        if ($edit[pass1] && $edit[pass1] == $edit[pass2]) {
-          $user = user_save($user, array("pass" => $edit[pass1]));
-        }
+        $user = user_save($user, $edit);
 
         /*
         ** Redirect the user to his personal information page:
@@ -744,9 +853,16 @@ function user_edit($edit = array()) {
 
     $output .= form_textfield(t("Username"), "name", $user->name, 30, 55, t("Your full name or your prefered username: only letters, numbers and spaces are allowed."));
     $output .= form_textfield(t("E-mail address"), "mail", $user->mail, 30, 55, t("Insert a valid e-mail address.  All emails from the system will be sent to this address. The email address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by email."));
-    $output .= form_textfield(t("Jabber ID"), "jabber", $user->jabber, 30, 55, t("Insert a valid Jabber ID.  If you are using your Jabber ID to log in,  it must be correct.  Your Jabber ID is not made public and is only used to log in or to authenticate for affilliate services."));
+
+    $result = user_get_authmaps($user);
+    foreach (module_list() as $module) {
+      if ($module != "drupal" && module_hook($module, "auth")) {
+        $output .= form_textfield(module_invoke($module, "info", "name") . " ID", "authname_" . $module, $result[$module], 30, 55, sprintf(t("You may login to %s using a valid %s."), variable_get("site_name", "this web site"), "<a href=\"module.php?mod=user&op=help#$module\">". module_invoke($module, "info", "name") ." ID</a>", ""));
+      }
+    }
+
     $output .= form_textfield(t("Homepage"), "homepage", $user->homepage, 30, 55, t("Optional") .". ". t("Make sure you enter a fully qualified URL: remember to include \"http://\"."));
-    foreach ($themes as $key=>$value) $options .= "<option value=\"$key\"". (($user->theme == $key) ? " selected=\"selected\"" : "") .">$key - $value[1]</option>\n";
+    foreach ($themes as $key => $value) $options .= "<option value=\"$key\"". (($user->theme == $key) ? " selected=\"selected\"" : "") .">$key - $value[1]</option>\n";
     $output .= form_item(t("Theme"), "<select name=\"edit[theme]\">$options</select>", t("Selecting a different theme will change the look and feel of the site."));
     for ($zone = -43200; $zone <= 46800; $zone += 3600) $zones[$zone] = date("l, F dS, Y - h:i A", time() - date("Z") + $zone) ." (GMT ". $zone / 3600 .")";
     $output .= form_select(t("Timezone"), "timezone", $user->timezone, $zones, t("Select what time you currently have and your timezone settings will be set appropriate."));
@@ -779,8 +895,17 @@ function user_view($uid = 0) {
   if ($user->uid && $user->uid == $uid) {
     $output .= form_item(t("Name"), check_output("$user->name ($user->init)"));
     $output .= form_item(t("E-mail address"), check_output($user->mail));
-    $output .= form_item(t("Drupal ID"), strtolower(urlencode($user->name) ."@$HTTP_HOST"));
-    $output .= form_item(t("Jabber ID"), check_output($user->jabber));
+    $result = user_get_authmaps($user);
+    foreach (module_list() as $module) {
+      if (module_hook($module, "auth")) {
+        if ($module != "drupal") {
+          $output .= "<a href=\"module.php?mod=user&op=help#$module\">". form_item(module_invoke($module, "info", "name") . " ID</a>", check_output($result[$module]));
+        }
+        else {
+          $output .= "<a href=\"module.php?mod=user&op=help#$module\">". form_item(module_invoke($module, "info", "name") . " ID</a>", check_output($user->name) . "@$HTTP_HOST");
+        }
+      }
+    }
     $output .= form_item(t("Homepage"), format_url($user->homepage));
     $output .= form_item(t("Signature"), check_output($user->signature, 1));
 
@@ -844,6 +969,11 @@ function user_page() {
     case "logout":
       print user_logout();
       break;
+    case "help":
+      $theme->header();
+      $theme->box(t("Distributed Authentication"), user_help_da());
+      $theme->footer();
+      break;
     default:
       print user_view();
   }
@@ -853,11 +983,8 @@ function user_page() {
 /*** Administrative features ***********************************************/
 
 function user_conf_options() {
-  $output .= form_select("Allow authentication with Drupal IDs", "user_drupal", variable_get("user_drupal", 1), array("Disabled", "Enabled"), "Allow people to authenticate with their Drupal ID and password from other Drupal sites.");
-  $output .= form_select("Allow authentication with Jabber IDs", "user_jabber", variable_get("user_jabber", 1), array("Disabled", "Enabled"), "Allow people to authenticate with their Jabber ID.");
   $output .= form_select("Public registrations", "user_register", variable_get("user_register", 1), array("Only site administrators can create new user accounts.", "Visitors can create accounts and no administrator approval is required.", "Visitors can create accounts but administrator approval is required."));
   $output .= form_textfield("Password words", "user_password", variable_get("user_password", "foo,bar,guy,neo,tux,moo,sun,asm,dot,god,axe,geek,nerd,fish,hack,star,mice,warp,moon,hero,cola,girl,fish,java,perl,boss,dark,sith,jedi,drop,mojo"), 55, 256, "A comma separated list of short words that can be concatenated to generate human-readable passwords.");
-
   return $output;
 }
 
@@ -1114,6 +1241,7 @@ function user_admin_edit($edit = array()) {
     else if ($op == "Delete account") {
       if ($edit["status"] == 0) {
         db_query("DELETE FROM users WHERE uid = '$account->uid'");
+        db_query("DELETE FROM authmap WHERE uid = '$account->uid'");
         $output .= "The account has been deleted.";
       }
       else {
@@ -1130,8 +1258,19 @@ function user_admin_edit($edit = array()) {
       $output .= form_item("User ID", check_output($account->uid));
       $output .= form_item(t("Name"), check_output("$account->name ($account->init)"));
       $output .= form_item(t("E-mail address"), format_email($account->mail));
-      $output .= form_item(t("Drupal ID"), strtolower(urlencode($account->name) ."@$HTTP_HOST"));
-      $output .= form_item(t("Jabber ID"), check_output($account->jabber));
+      $result = user_get_authmaps($account);
+
+      foreach (module_list() as $module) {
+        if (module_hook($module, "auth")) {
+          if ($module != "drupal") {
+            $output .= form_item("<a href=\"module.php?mod=user&op=help#$module\">". module_invoke($module, "info", "name") . " ID</a>", check_output($result[$module]));
+          }
+          else {
+            $output .= form_item("<a href=\"module.php?mod=user&op=help#$module\">". module_invoke($module, "info", "name") . " ID</a>", check_output($account->name) ."@$HTTP_HOST");
+          }
+        }
+      }
+
       $output .= form_item(t("Theme"), check_output("$account->theme"));
       $output .= form_select("Status", "status", $account->status, array("blocked", "active"));
       $output .= form_select("Role", "role", $account->role, user_roles());
@@ -1204,6 +1343,7 @@ function user_admin() {
     $links[] = "<a href=\"admin.php?mod=user&op=permission\">user permissions</a>";
     $links[] = "<a href=\"admin.php?mod=user&op=search\">search account</a>";
     $links[] = "<a href=\"admin.php?mod=user&op=settings\">settings</a>";
+    // $links[] = "<a href=\"admin.php?mod=user&op=info\">auth modules</a>";
     $links[] = "<a href=\"admin.php?mod=user&op=help\">help</a>";
 
     print "<small>". implode(" &middot; ", $links) ."</small><hr />";
