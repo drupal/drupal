@@ -1,5 +1,5 @@
 <?php
-// $Id: help.module,v 1.28 2003/11/25 19:26:21 dries Exp $
+// $Id: help.module,v 1.29 2004/01/11 20:31:25 dries Exp $
 
 function help_link($type) {
   if ($type == "system" && user_access("access administration pages")) {
@@ -21,12 +21,12 @@ function help_glossary() {
   $output .= "<dt>Public</dt><dd>See published.</dd>";
   $output .= "<dt>Published</dt><dd>A node that is viewable by everyone. (See unpublished.)</dd>";
   $output .= "<dt>Role</dt><dd>A classification users are placed into for the purpose of setting users' permissions.</dd>";
-  $output .= "<dt>Taxonomy</dt><dd>A division of a collection of things into ordered, classified groups. (See %taxonomy.)</dd>";
+  $output .= "<dt>Taxonomy</dt><dd>A division of a collection of things into ordered, classified groups. (See <a href=\"%taxonomy\">taxonomy help</a>.)</dd>";
   $output .= "<dt>Unpublished</dt><dd>A node that is only viewable by administrators and moderators.</dd>";
   $output .= "<dt>User</dt><dd>A person who has an account at your Drupal site, and is logged in with that account.</dd>";
   $output .= "<dt>Visitor</dt><dd>A person who does not have an account at your Drupal site or a person who has an account at your Drupal site but is <u>not</u> logged in with that account. Also termed \"anonymous user\".</dd>";
   $output .= "</dl>";
-  $output = t($output, array("%taxonomy" => l(t("taxonomy help"), "admin/taxonomy/help")));
+  $output = t($output, array("%taxonomy" => url("admin/taxonomy/help")));
 
   print theme("page", $output);
 }

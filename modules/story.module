@@ -1,5 +1,5 @@
 <?php
-// $Id: story.module,v 1.138 2004/01/11 20:16:26 dries Exp $
+// $Id: story.module,v 1.139 2004/01/11 20:31:25 dries Exp $
 
 function story_help($section = "admin/help#story") {
   $output = "";
@@ -13,8 +13,8 @@ function story_help($section = "admin/help#story") {
       break;
     case 'admin/help#story':
       $output = "<p>The story module lets your users submit articles for consideration by the rest of the community, who can vote on them if moderation is enabled.  Stories usually follow a publishing flow of <strong>submit -&gt; moderate -&gt; post to the main page -&gt; comments</strong>.  Administrators are able to shortcut this flow as desired.</p>";
-      $output .= "In %story-config you can set up an introductory text for story authors, and a floor on the number of words which may be included in a story. This is designed to help discourage the submission of trivially short stories.";
-      $output = t($output, array("%story-config" => l(t("administer") ." &raquo; ". t("configuration") ." &raquo; ". t("modules") ." &raquo; ". t("story"), "admin/system/modules/story")));
+      $output .= "In <a href=\"%story-config\">administer &raquo; configuration &raquo; modules &raquo; story</a> you can set up an introductory text for story authors, and a floor on the number of words which may be included in a story. This is designed to help discourage the submission of trivially short stories.";
+      $output = t($output, array("%story-config" => url("admin/system/modules/story")));
       break;
   }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.125 2004/01/04 21:54:13 dries Exp $
+// $Id: poll.module,v 1.126 2004/01/11 20:31:25 dries Exp $
 
 function poll_allowvotes(&$node) {
   /*
@@ -143,15 +143,15 @@ function poll_help($section = "admin/help#poll") {
   switch ($section) {
 
     case 'admin/help#poll':
-      $output .= "<p>Users with the correct %permissions can create and/or vote on polls.</p>";
+      $output .= "<p>Users with the correct <a href=\"%permissions\">permissions</a> can create and/or vote on polls.</p>";
       $output .= "<ul>";
       $output .= "<li> To create a poll a user needs the \"create polls\" permission.</li>";
       $output .= "<li>To vote on a poll question a user must have the \"vote on polls\" permission.</li>";
       $output .= "<li>To view the results one needs the \"access content\" permission.</li>";
       $output .= "<li>To administer polls you need the \"administer nodes\" permission.</li>";
       $output .= "</ul>";
-      $output .= "<p>Creating a poll is much like creating any other node. Click \"create poll\" in your user box. The title of the poll should be the question, then enter the answers and the \"base\" vote counts. You can also choose the time period over which the vote will run.</p><p>The %poll item in the navigation links will take you to a page where you can see all the current polls, vote on them (if you haven't already) and view the results.</p>";
-      $output = t($output, array("%permissions" => l(t("permissions"), "admin/user/permission"), "%poll" => l(t("Poll"), "poll")));
+      $output .= "<p>Creating a poll is much like creating any other node. Click \"create poll\" in your user box. The title of the poll should be the question, then enter the answers and the \"base\" vote counts. You can also choose the time period over which the vote will run.</p><p>The <a href=\"%poll\">Poll</a> item in the navigation links will take you to a page where you can see all the current polls, vote on them (if you haven't already) and view the results.</p>";
+      $output = t($output, array("%permissions" => url("admin/user/permission"), "%poll" => url("poll")));
       break;
     case 'admin/system/modules#description':
       $output = t("Enables your site to capture votes on different topics in the form of multiple choice questions.");

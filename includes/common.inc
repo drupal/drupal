@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.305 2004/01/07 20:43:26 unconed Exp $ */
+/* $Id: common.inc,v 1.306 2004/01/11 20:31:24 dries Exp $ */
 
 /**
  * @defgroup common Core functions
@@ -420,14 +420,18 @@ function locale_init() {
  *
  * Translates strings to the current locale.
  *
- * We try to keep strings whole as much as possible and are unafraid of HTML
- * markup within translation strings if necessary. The suggested syntax for
- * a link embedded within a translation string is for example:
+ * When using t(), try to put entire sentences and strings in one t() call.
+ * This makes it easier for translators. We are unafraid of HTML markup within
+ * translation strings if necessary. The suggested syntax for a link embedded
+ * within a translation string is for example:
  * @code
  *   $msg = t("You must login below or \<a href=\"%url\"\>create a new
  *             account\</a\> before viewing the next page.", array("%url"
  *             => url("user/register")));
  * @endcode
+ * We suggest the same syntax for links to other sites. This makes it easy to
+ * change link URLs if needed (which happens often) without requiring updates
+ * to translations.
  *
  * @param $string A string containing the english string to translate.
  * @param $args Array of values to replace in the string.
