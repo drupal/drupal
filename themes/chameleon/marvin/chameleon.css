@@ -1,4 +1,4 @@
-/* $Id: marvin.css,v 1.4 2004/01/11 15:05:21 dries Exp $ */
+/* $Id: chameleon.css,v 1.1 2004/02/15 14:21:37 dries Exp $ */
 body {
   background: #fff url(images/druplicon-watermark.png) no-repeat top right;
 }
@@ -78,7 +78,7 @@ table {
   padding: 0.5em;
 }
 .item-list ul li {
-  list-style-image: url(images/marvin-bullet.png);
+  list-style-image: url(marvin/bullet.png);
 }
 .path, .path a, .path a:visited {
   color: #888;
