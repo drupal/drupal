@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.128 2004/01/27 18:47:07 dries Exp $
+// $Id: poll.module,v 1.129 2004/02/15 15:19:35 dries Exp $
 
 function poll_allowvotes(&$node) {
   /*
@@ -104,7 +104,7 @@ function poll_validate(&$node) {
 function poll_form(&$node, &$help, &$error) {
   $admin = user_access("administer nodes");
 
-  $_duration = array(0 => t("Unlimited"), 86400 => format_interval(86400), 172800 => format_interval(172800), 345600 => format_interval(345600), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200), 4838400 => format_interval(4838400), 9676800 => format_interval(9676800), 31536000 => format_interval(31536000));
+  $_duration = array_merge(array(0 => t("Unlimited")), drupal_map_assoc(array(86400, 172800, 345600, 604800, 1209600, 2419200, 4838400, 9676800, 31536000), "format_interval"));
   $_active = array(0 => t("Closed"), 1 => t("Active"));
 
   $node->choices = $node->choices ? $node->choices : max(2, count($node->choice) ? count($node->choice) : 5);
@@ -115,9 +115,7 @@ function poll_form(&$node, &$help, &$error) {
     $output = implode("", taxonomy_node_form("poll", $node));
   }
 
-  for ($c = 2; $c <= 30; $c++) {
-    $opts[$c] = $c;
-  }
+  $opts = drupal_map_assoc(range(2, 30));
   $output .= form_select(t("Number of choices"), "choices", $node->choices, $opts, t("This item sets the number of multiple choice options in the poll, but it doesn't have to equal the actual amount of options; you can leave the extra boxes empty."));
   $output .= form_submit(t("Preview")) ."<br /><br /><br />";
 

@@ -1,10 +1,9 @@
 <?php
-// $Id: blog.module,v 1.165 2004/02/02 01:55:08 unconed Exp $
+// $Id: blog.module,v 1.166 2004/02/15 15:19:35 dries Exp $
 
 function blog_settings() {
   $output = form_textarea(t("Explanation or submission guidelines"), "blog_help", variable_get("blog_help", ""), 70, 4, t("This text is displayed at the top of the blog submission form.  It's useful for helping or instructing your users."));
-  $words = t("words");
-  $output .= form_select(t("Minimum number of words in a blog entry"), "minimum_blog_size", variable_get("minimum_blog_size", 0), array(0 => "0 $words", 10 => "10 $words", 25 => "25 $words",  50 => "50 $words", 75 => "75 $words", 100 => "100 $words", 125 => "125 $words",  150 => "150 $words", 175 => "175 $words", 200 => "200 $words"), t("The minimum number of words a personal blog entry should contain.  This is useful to rule out submissions that do not meet the site's standards, such as short test posts."));
+  $output .= form_select(t("Minimum number of words in a blog entry"), "minimum_blog_size", variable_get("minimum_blog_size", 0), drupal_map_assoc(array(0, 10, 25, 50, 75, 100, 125, 150, 175, 200)), t("The minimum number of words a personal blog entry should contain.  This is useful to rule out submissions that do not meet the site's standards, such as short test posts."));
   return $output;
 }
 

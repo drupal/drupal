@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.39 2004/02/07 16:59:34 dries Exp $
+// $Id: profile.module,v 1.40 2004/02/15 15:19:35 dries Exp $
 
 function _profile_init() {
   /*
@@ -29,11 +29,7 @@ function _profile_init() {
     "avatar"        => array("", t("Avatar or picture"), t("Your virtual face or picture.  Maximum dimensions are %dimensions and the maximum size is %size kB.", array("%dimensions" => variable_get("profile_avatar_dimensions", "85x85"), "%size" => variable_get("profile_avatar_file_size", "30"))))
   );
 
-  $GLOBALS["profile_days"][0] = t("day");
-  for ($n = 1; $n <= 31; $n++) {
-    $GLOBALS["profile_days"][$n] = $n;
-  }
-
+  $GLOBALS["profile_days"] = array_merge(array(0 => t("day")), drupal_map_assoc(range(1, 31)));
   $GLOBALS["profile_months"] = array(0 => t("month"), 1 => t("January"), 2 => t("February"), 3 => t("March"), 4 => t("April"), 5 => t("May"), 6 => t("June"), 7 => t("July"), 8 => t("August"), 9 => t("September"), 10 => t("October"), 11 => t("November"), 12 => t("December"));
 }
 

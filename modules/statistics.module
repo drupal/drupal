@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.137 2004/02/10 19:41:57 dries Exp $
+// $Id: statistics.module,v 1.138 2004/02/15 15:19:35 dries Exp $
 
 // Exit hook, runs at the end of every page request
 function statistics_exit() {
@@ -388,7 +388,8 @@ function statistics_admin_displaylog() {
 function statistics_settings() {
   // access log settings:
   $group = form_radios(t("Enable access log"), "statistics_enable_access_log", variable_get("statistics_enable_access_log", 0), array("1" => t("Enabled"), "0" => t("Disabled")), t("Log each page access.  Required for referrer statistics."));
-  $period = array(3600 => format_interval(3600), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200), 4838400 => format_interval(4838400), 9676800 => format_interval(9676800));
+
+  $period = drupal_map_assoc(array(3600, 10800, 21600, 32400, 43200, 86400, 172800, 259200, 604800, 1209600, 2419200, 4838400, 9676800), "format_interval");
   $group .= form_select(t("Discard access logs older than"), "statistics_flush_accesslog_timer", variable_get("statistics_flush_accesslog_timer", 259200), $period, t("Older access log entries (including referrer statistics) will be automatically discarded.  Requires crontab."));
   $output = form_group(t("Access log settings"), $group);
 
@@ -398,16 +399,18 @@ function statistics_settings() {
   $output .= form_group(t("Content viewing counter settings"), $group);
 
   // Popular content block settings
-  $group = form_select(t("Number of day's top views to display"), "statistics_block_top_day_num", variable_get("statistics_block_top_day_num", 0), array("0" => t("Disabled"), "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "25" => "25", "30" => "30", "40" => "40"), t("How many content items to display in \"day\" list.  Requires enabled content viewing counters."));
-  $group .= form_select(t("Number of all time views to display"), "statistics_block_top_all_num", variable_get("statistics_block_top_all_num", 0), array("0" => t("Disabled"), "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "25" => "25", "30" => "30", "40" => "40"), t("How many content items to display in \"all time\" list.  Requires enabled content viewing counters."));
-  $group .= form_select(t("Number of most recent views to display"), "statistics_block_top_last_num", variable_get("statistics_block_top_last_num", 0), array("0" => t("Disabled"), "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "25" => "25", "30" => "30", "40" => "40"), t("How many content items to display in \"recently viewed\" list.  Requires enabled content viewing counters."));
+  $numbers = array_merge(array("0" => t("Disabled")), drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25, 30, 40)));
+  $group = form_select(t("Number of day's top views to display"), "statistics_block_top_day_num", variable_get("statistics_block_top_day_num", 0), $numbers, t("How many content items to display in \"day\" list.  Requires enabled content viewing counters."));
+  $group .= form_select(t("Number of all time views to display"), "statistics_block_top_all_num", variable_get("statistics_block_top_all_num", 0), $numbers, t("How many content items to display in \"all time\" list.  Requires enabled content viewing counters."));
+  $group .= form_select(t("Number of most recent views to display"), "statistics_block_top_last_num", variable_get("statistics_block_top_last_num", 0), $numbers, t("How many content items to display in \"recently viewed\" list.  Requires enabled content viewing counters."));
   $output .= form_group(t("\"Popular content\" block settings"), $group);
 
   // Popular content page settings
+  $numbers = array_merge(array("0" => t("Disabled")), drupal_map_assoc(array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 15, 20, 25)));
   $group = form_textfield(t("Name for link to user page"), "statistics_userpage_link", variable_get("statistics_userpage_link", ""), 20, 40, t("This node generates a user page listing your site's most popular content.  If you specify a name here, a link to the \"Popular content\" page will be added automatically."));
-  $group .= form_select(t("Number of day's top views to display"), "statistics_userpage_day_cnt", variable_get("statistics_userpage_day_cnt", 0), array("0" => t("Disabled"), "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "25" => "25"), t("How many content items to display in the \"day\" list.  Requires enabled content viewing counters."));
-  $group .= form_select(t("Number of all time top views to display"), "statistics_userpage_all_cnt", variable_get("statistics_userpage_all_cnt", 0), array("0" => t("Disabled"), "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "25" => "25"), t("How many content items to display in the \"all time\" list.  Requires enabled content viewing counters."));
-  $group .= form_select(t("Number of most recent views to display"), "statistics_userpage_last_cnt", variable_get("statistics_userpage_last_cnt", 0), array("0" => t("Disabled"), "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "25" => "25"), t("How many posts to display in the \"recently viewed\" list.  Requires enabled content viewing counters."));
+  $group .= form_select(t("Number of day's top views to display"), "statistics_userpage_day_cnt", variable_get("statistics_userpage_day_cnt", 0), $numbers, t("How many content items to display in the \"day\" list.  Requires enabled content viewing counters."));
+  $group .= form_select(t("Number of all time top views to display"), "statistics_userpage_all_cnt", variable_get("statistics_userpage_all_cnt", 0), $numbers, t("How many content items to display in the \"all time\" list.  Requires enabled content viewing counters."));
+  $group .= form_select(t("Number of most recent views to display"), "statistics_userpage_last_cnt", variable_get("statistics_userpage_last_cnt", 0), $numbers, t("How many posts to display in the \"recently viewed\" list.  Requires enabled content viewing counters."));
   $output .= form_group(t("\"Popular content\" page settings"), $group);
 
   return $output;
