@@ -138,7 +138,13 @@ function message_throttle() {
 
 function locale_init() {
   global $languages, $user;
-  return ($languages ? (($user->uid && $user->language) ? $user->language : key($languages)) : 0);
+
+  if ($user->uid && $languages[$user->language]) {
+    return $user->language;
+  }
+  else {
+    return key($languages);
+  }
 }
 
 function t($string, $args = 0) {
