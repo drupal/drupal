@@ -1,8 +1,15 @@
 <?php
 
 function rating_conf_options() {
-  $period = array(3600 => format_interval(3600), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 1000000000 => t("never"));
+  $period = array(3600 => format_interval(3600), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 1000000000 => t("Never"));
   $output .= form_select(t("Update interval"), "rating_cron_time" , variable_get("rating_cron_time", 86400), $period, t("The update interval for the user ratings.  Requires crontab."));
+
+  $weight = array(t("Disabled"), 1, 2, 3, 4, 5, 6, 7, 9, 10);
+  foreach (module_list() as $name) {
+    if (module_hook($name, "status")) {
+      $output .= form_select(t("Weight of a $name"), "rating_weight_$name", variable_get("rating_weight_$name", 0), $weight, t("The weight of a $name."));
+    }
+  }
   return $output;
 }
 
@@ -12,7 +19,7 @@ function rating_cron() {
 
     $r1 = db_query("SELECT id FROM users ORDER BY rating DESC");
     while ($account = db_fetch_object($r1)) {
-      db_query("UPDATE users SET rating = '". user_gravity($account->id) ."' WHERE id = '$account->id'");
+      db_query("UPDATE users SET rating = '". rating_user($account->id) ."' WHERE id = '$account->id'");
       $rating[$account->id] = ++$i;
     }
 
@@ -29,6 +36,34 @@ function rating_help() {
  ?>
   <P>The rating cron will periodically calculate each user's gravity, the overall time-weighted rating of each user's contributions.</P>
  <?
+}
+
+function rating_user($id) {
+  global $status;
+
+  $period = 5184000;    // maximum 60 days
+  $number = 30;         // maximum 30 comments
+
+  $r1 = db_query("SELECT nid, type FROM node WHERE author = '$id' AND (". time() ." - timestamp < $period) AND status = '$status[posted]'");
+  while ($node = db_fetch_object($r1)) {
+    $bonus += variable_get("rating_weight_$node->type", 0);
+  }
+
+  $r2 = db_query("SELECT nid, type FROM node WHERE author = '$id' AND (". time() ." - timestamp < $period) AND status = '$status[dumped]'");
+  while ($node = db_fetch_object($r1)) {
+    $bonus -= variable_get("rating_weight_$node->type", 0);
+  }
+
+  $r3 = db_query("SELECT score, votes FROM comments WHERE author = '$id' AND votes > 0 AND (". time() ." - timestamp < $period) ORDER BY timestamp LIMIT $number");
+  while ($comment = db_fetch_object($r3)) {
+    $weight++;
+    $score += $weight * $comment->score;
+    $votes += $weight * $comment->votes;
+  }
+
+  $bonus += $weight / 5;
+
+  return ($votes ? ($score + $weight) / $votes + $bonus : $bonus);
 }
 
 function rating_list($limit) {
