@@ -750,7 +750,11 @@ function update_78() {
     )");
   }
   else {
-    /* Needs PostgreSQL equivalent */
+    $ret[] = update_sql("CREATE TABLE {filters} (
+      module varchar(64) NOT NULL DEFAULT '',
+      weight smallint NOT NULL DEFAULT 0
+      );");
+    $ret[] = update_sql("CREATE INDEX {filters_weight} ON {filters} (weight);");
   }
   return $ret;
 }
