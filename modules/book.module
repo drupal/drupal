@@ -92,7 +92,7 @@ function book_toc($parent = 0, $indent = "", $toc = array()) {
 }
 
 function book_form($edit = array()) {
-  global $allowed_html, $PHP_SELF, $REQUEST_URI, $user;
+  global $allowed_html, $REQUEST_URI, $user;
 
   $form .= form_item(t("Author"), format_username(($edit[userid] ? $edit[userid] : $user->userid)));
   $form .= form_hidden(userid, $edit[userid]);

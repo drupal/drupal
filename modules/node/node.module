@@ -3,15 +3,15 @@
 $module = array("admin" => "node_admin");
 
 function node_overview($query = array()) {
-  global $user, $rstatus;
+  global $user;
 
   $result = db_query("SELECT n.*, u.userid, c.name AS category FROM node n LEFT JOIN users u ON n.author = u.id LEFT JOIN category c ON n.cid = c.cid $query[1] LIMIT 50");
 
   $output .= status($query[0]);
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR><TH>title</TH><TH>category</TH><TH>status</TH><TH>author</TH><TH>date</TH><TH COLSPAN=\"3\">operations</TH></TR>\n";
+  $output .= " <TR><TH>title</TH><TH>category</TH><TH>status</TH><TH>author</TH><TH>date</TH><TH COLSPAN=\"2\">operations</TH></TR>\n";
   while ($node = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">". check_output($node->category ? $node->category : $node->type) ."</TD><TD>". $rstatus[$node->status] ."</TD><TD>". format_username($node->userid) ."</TD><TD>". format_date($node->timestamp, "small") ."</TD><TD>". (user_access($user, "node") ? "<A HREF=\"admin.php?mod=node&op=view&id=$node->nid\">view node</A></TD>" : "view node") ."</TD><TD>". (user_access($user, "node") ? "<A HREF=\"admin.php?mod=node&op=edit&id=$node->nid\">edit node</A></TD>" : "edit node") ."</TD><TD>". (user_access($user, $node->type) ? "<A HREF=\"admin.php?mod=$node->type&op=edit&id=$node->nid\">edit $node->type</A></TD>" : "edit $node->type") ."</TD></TR>\n";
+    $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">". check_output($node->category ? $node->category : $node->type) ."</TD><TD>". node_status($node, $node->status) ."</TD><TD>". format_username($node->userid) ."</TD><TD>". format_date($node->timestamp, "small") ."</TD><TD>". (user_access($user, "node") ? "<A HREF=\"admin.php?mod=node&op=edit&id=$node->nid\">edit node</A>" : "edit node") ."</TD><TD>". (user_access($user, $node->type) ? "<A HREF=\"admin.php?mod=$node->type&op=edit&id=$node->nid\">edit $node->type</A>" : "edit $node->type") ."</TD></TR>\n";
   }
   $output .= "</TABLE>\n";
 
@@ -19,16 +19,15 @@ function node_overview($query = array()) {
 }
 
 function node_admin_view($id) {
-  global $rstatus;
-
   $node = node_get_object("nid", $id);
 
   $output .= "<FORM ACTION=\"admin.php?mod=node&id=$node->nid\" METHOD=\"post\">\n";
   $output .= form_item("Title", check_output($node->title));
   $output .= form_item("Author", format_username($node->userid));
-  $output .= form_item("Status", $rstatus[$node->status]);
+  $output .= form_item("Status", node_status($node, $node->status));
   $output .= form_item("Comment", node_comment_status($node->comment));
   $output .= form_item("Promote", node_promote_status($node->promote));
+  $output .= form_item("Moderate", check_output($node->moderate));
   $output .= form_item("Date", format_date($node->timestamp));
   $output .= form_submit("Edit node");
   $output .= form_submit("Delete node");
@@ -48,6 +47,7 @@ function node_admin_edit($id) {
   $output .= form_select("Status", "status", $node->status, node_status($node));
   $output .= form_select("Comment", "comment", $node->comment, node_comment_status());
   $output .= form_select("Promote", "promote", $node->promote, node_promote_status());
+  $output .= form_textfield("Moderate", "moderate", $node->moderate, 35, 255, t("A comma-seperated list of usernames."));
   $output .= form_select("Date", "timestamp", $node->timestamp, array($node->timestamp => format_date($node->timestamp) ." (original)", time() => format_date(time()) ." (current)"));
   $output .= form_hidden("nid", $node->nid);
   $output .= form_submit("View node");

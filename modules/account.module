@@ -155,7 +155,7 @@ function account_edit($name) {
 
   function access($name, $module) {
     global $access, $account;
-    $access .= "<OPTION VALUE=\"$name\"". (user_access($account, $name) ? " SELECTED" : "") .">$name</OPTION>";
+    if ($module["admin"]) $access .= "<OPTION VALUE=\"$name\"". (user_access($account, $name) ? " SELECTED" : "") .">$name</OPTION>";
   }
 
   $status = array("blocked", "not confirmed", "open");
