@@ -63,7 +63,7 @@ function node_cron() {
 function node_overview($query) {
   global $user;
 
-  $color = array("#ffdc9b", "#dedec4");
+  $color = array("#ffffff", "#e5e5e5");
   $query = node_query($query ? $query : 0);
 
   $result = db_query("SELECT n.*, u.userid FROM node n LEFT JOIN users u ON n.author = u.id $query[1] LIMIT 50");
