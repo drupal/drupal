@@ -269,12 +269,15 @@ function statistics_admin() {
         case t("Submit \"top nodes\" block changes"):
           statistics_save_topnodes_block($edit);
           $output .= status(t("saved 'top nodes' block changes."));
+          break;
         case t("Submit \"who's online\" block changes"):
           statistics_save_online_block($edit);
           $output .= status(t("saved 'who's online' block changes."));
+          break;
         case t("Submit \"top nodes\" page changes"):
           statistics_save_userconfig($edit);
           $output .= status(t("saved 'top nodes' page changes."));
+          break;
         case "top nodes page":
           $output .= statistics_admin_userpage_config(array(
             "statistics_userpage_link" => variable_get("statistics_userpage_link", ""),
@@ -306,8 +309,8 @@ function statistics_admin() {
                 "statistics_block_online_max_len" => variable_get("statistics_block_online_max_len", 15),
                 "statistics_block_online_max_cnt" => variable_get("statistics_block_online_max_cnt", 10)
               ));
-              break;
            }
+           break;
         default:
           $output .= statistics_admin_topnodes();
       }
