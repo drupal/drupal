@@ -144,11 +144,11 @@ function theme_list($refresh = 0) {
 
 function theme_head($main = 0) {
   global $base_url;
-  $head = module_invoke_all("head", $main);
   $output .= "<base href=\"$base_url/\" />\n";
   $output .= "<style type=\"text/css\">\n";
   $output .= "@import url(misc/drupal.css);\n";
   $output .= "</style>\n";
+  $head = module_invoke_all("head", $main);
   $output .= implode($head, "\n");
   return $output;
 }
