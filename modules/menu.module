@@ -295,7 +295,7 @@ function menu_edit_item_save($edit) {
     drupal_set_message(t('updated menu item "%title".', array('%title' => $edit['title'])));
   }
   else {
-    $mid = db_next_id('menu_mid');
+    $mid = db_next_id('{menu}_mid');
     db_query("INSERT INTO {menu} (mid, pid, path, title, weight, type) VALUES (%d, %d, '%s', '%s', %d, %d)", $mid, $edit['pid'], $edit['path'], $edit['title'], $edit['weight'], $edit['type'] | MENU_MODIFIED_BY_ADMIN);
     drupal_set_message(t('created new menu item "%title".', array('%title' => $edit['title'])));
   }
