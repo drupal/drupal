@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.176 2005/02/21 19:47:44 dries Exp $
+// $Id: taxonomy.module,v 1.177 2005/02/27 15:40:35 dries Exp $
 
 /**
  * @file
@@ -803,7 +803,13 @@ function _taxonomy_prepare_insert($data, $stage) {
   }
   else {
     foreach (array_values($data) as $value) {
-      $q[] = "'". str_replace('%', '%%', db_escape_string($value)) ."'";
+      //Escape strings, but not integers
+      if (is_int($value)) {
+        $q[] = $value;
+      }
+      else {
+        $q[] = "'". str_replace('%', '%%', db_escape_string($value)) ."'";
+      }
     }
     $result = implode(', ', $q);
   }
