@@ -214,6 +214,23 @@ CREATE TABLE [dbo].[page] (
 ) ON [PRIMARY]
 GO
 
+CREATE TABLE [dbo].[path] (
+  [pid] numeric (10, 0) NOT NULL,
+  [dst] [varchar] (128) NOT NULL,
+  [src] [varchar] (128) NOT NULL
+) ON [PRIMARY]
+GO
+
+ALTER TABLE [dbo].[path] WITH NOCHECK ADD
+  CONSTRAINT [DF_[path_pid] DEFAULT (0) FOR [pid],
+  CONSTRAINT [DF_path_dst] DEFAULT ('') FOR [dst],
+  CONSTRAINT [DF_path_src] DEFAULT ('') FOR [src]
+GO
+
+CREATE INDEX [path_src_idx] ON [dbo].[path]([src]) ON [PRIMARY]
+CREATE INDEX path_dst_idx ON path(dst);
+GO
+
 CREATE TABLE [dbo].[permission] (
   [rid] [numeric](4, 0) NOT NULL ,
   [perm] [text] NULL ,
@@ -349,7 +366,8 @@ CREATE TABLE [dbo].[users] (
   [init] [varchar] (128) NULL ,
   [data] [varchar] (8000) NULL ,
   [rid] [int] NOT NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+)
+--ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
 CREATE TABLE [dbo].[variable] (
@@ -427,10 +445,18 @@ GO
 ALTER TABLE [dbo].[users] WITH NOCHECK ADD
   CONSTRAINT [DF_users_mode] DEFAULT (0) FOR [mode],
   CONSTRAINT [DF_users_sort] DEFAULT (0) FOR [sort],
-  CONSTRAINT [DF_users_threshold] DEFAULT (0) FOR [threshold]
+  CONSTRAINT [DF_users_threshold] DEFAULT (0) FOR [threshold],
+  CONSTRAINT [DF_users_status] DEFAULT (0) FOR [status],
+  CONSTRAINT [DF_users_timestamp] DEFAULT (0) FOR [timestamp],
+  CONSTRAINT [DF_users_rid] DEFAULT (0) FOR [rid],
+  CONSTRAINT [DF_users_pass] DEFAULT ('') FOR [pass],
+  CONSTRAINT [DF_users_homepage] DEFAULT ('') FOR [homepage],
+  CONSTRAINT [DF_users_theme] DEFAULT ('') FOR [theme],
+  CONSTRAINT [DF_users_signature] DEFAULT ('') FOR [signature],
+  CONSTRAINT [DF_users_language] DEFAULT ('') FOR [language]
 GO
 
- CREATE  INDEX [IX_sid] ON [dbo].[users]([sid]) ON [PRIMARY]
+ CREATE  INDEX [IX_sid] ON [dbo].[sessions]([sid]) ON [PRIMARY]
 GO
 
  CREATE  INDEX [IX_users] ON [dbo].[users]([uid]) ON [PRIMARY]
@@ -439,7 +465,7 @@ GO
  CREATE  INDEX [IX_timestamp] ON [dbo].[users]([timestamp]) ON [PRIMARY]
 GO
 
- CREATE  INDEX [users_sid_idx] ON [dbo].[users]([sid]) ON [PRIMARY]
+ CREATE  INDEX [sessions_sid_idx] ON [dbo].[sessions]([sid]) ON [PRIMARY]
 GO
 
  CREATE  INDEX [users_timestamp_idx] ON [dbo].[users]([timestamp]) ON [PRIMARY]
