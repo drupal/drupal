@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.54 2003/09/10 16:48:00 dries Exp $
+// $Id: search.module,v 1.55 2003/09/16 15:04:02 dries Exp $
 
 function search_help($section = "admin/search/help") {
   $output = "";
@@ -370,7 +370,7 @@ function search_view($keys) {
         $form .= "<br />". $help_link;
     }
 
-    theme("header");
+    theme("header", t("Search"));
 
     if ($form) {
       theme("box", t("Search"), $form);
@@ -388,7 +388,7 @@ function search_view($keys) {
     theme("footer");
   }
   else {
-    theme("header");
+    theme("header", t("Access denied"));
     theme("box", t("Access denied"), message_access());
     theme("footer");
   }
