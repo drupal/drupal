@@ -76,8 +76,9 @@ function format_data($field, $replacement = "<I>na</I>") {
   return ($field) ? $field : $replacement;
 }
 
-function format_username($username, $admin = 0) {
-  if ($username) return ($admin) ? "<A HREF=\"admin.php?mod=account&op=view&name=$username\">$username</A>" : "<A HREF=\"account.php?op=view&name=$username\">$username</A>";
+function format_username($username) {
+  global $user;
+  if ($username) return (user_permission($user) ? "<A HREF=\"admin.php?mod=account&op=view&name=$username\">$username</A>" : "<A HREF=\"account.php?op=view&name=$username\">$username</A>");
   else { global $anonymous; return $anonymous; }
 }
 

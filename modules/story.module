@@ -16,12 +16,19 @@ function story_cron() {
 }
 
 function story_find($keys) {
+  global $user;
   $find = array();
   $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON s.author = u.id WHERE s.status = 2 AND (s.subject LIKE '%". check_input($keys) ."%' OR s.abstract LIKE '%". check_input($keys) ."%' OR s.article LIKE '%". check_input($keys) ."%') ORDER BY s.timestamp DESC LIMIT 20");
   while ($story = db_fetch_object($result)) {
-    array_push($find, array("subject" => check_output($story->subject), "link" => "story.php?id=$story->id", "user" => $story->userid, "date" => $story->timestamp));
+    array_push($find, array("subject" => check_output($story->subject), "link" => (user_permission($user) ? "admin.php?mod=story&op=edit&id=$story->id" : "story.php?id=$story->id"), "user" => $story->userid, "date" => $story->timestamp));
   }
   return $find;
+}
+
+function story_search() {
+  global $keys, $mod;
+  search_form($keys);
+  search_data($keys, $mod);
 }
 
 function story_help() {
@@ -187,28 +194,28 @@ function story_display() {
   $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON u.id = s.author WHERE s.status = 1 ORDER BY timestamp DESC");
   $output .= " <TR><TH COLSPAN=\"4\">queued stories</TH></TR>\n";
   while ($story = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A></TD><TD>". format_username($story->userid, 1) ."</TD><TD>votes: $story->votes, score: $story->score</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=edit&id=$story->id\">edit</A></TD></TR>\n";
+    $output .= " <TR><TD><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A></TD><TD>". format_username($story->userid) ."</TD><TD>votes: $story->votes, score: $story->score</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=edit&id=$story->id\">edit</A></TD></TR>\n";
   }
 
   // Scheduled stories:
   $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON u.id = s.author WHERE s.status = 3 ORDER BY timestamp");
   $output .= " <TR><TH COLSPAN=\"4\">scheduled stories</TH></TR>\n";
   while ($story = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A></TD><TD>". format_username($story->userid, 1) ."</TD><TD>". date("D, m/d/Y H:i", $story->timestamp) ." - ". format_interval($story->timestamp - time()) ." left</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=edit&id=$story->id\">edit</A></TD></TR>\n";
+    $output .= " <TR><TD><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A></TD><TD>". format_username($story->userid) ."</TD><TD>". date("D, m/d/Y H:i", $story->timestamp) ." - ". format_interval($story->timestamp - time()) ." left</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=edit&id=$story->id\">edit</A></TD></TR>\n";
   }
 
   // Dumped stories:
   $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON u.id = s.author WHERE s.status = 0 ORDER BY timestamp DESC LIMIT 5");
   $output .= " <TR><TH COLSPAN=\"4\">dumped stories</TTH></TR>\n";
   while ($story = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A></TD><TD>". format_username($story->userid, 1) ."</TD><TD>$story->section</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=edit&id=$story->id\">edit</A></TD></TR>\n";
+    $output .= " <TR><TD><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A></TD><TD>". format_username($story->userid) ."</TD><TD>$story->section</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=edit&id=$story->id\">edit</A></TD></TR>\n";
   }
 
   // Posted stories:
   $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON u.id = s.author WHERE s.status = 2 ORDER BY timestamp DESC LIMIT 15");
   $output .= " <TR><TH COLSPAN=\"4\">posted stories</TH></TR>\n";
   while ($story = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A></TD><TD>". format_username($story->userid, 1) ."</TD><TD>$story->section</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=edit&id=$story->id\">edit</A></TD></TR>\n";
+    $output .= " <TR><TD><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A></TD><TD>". format_username($story->userid) ."</TD><TD>$story->section</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=edit&id=$story->id\">edit</A></TD></TR>\n";
   }
 
   $output .= "</TABLE>\n";
@@ -219,7 +226,7 @@ function story_display() {
 function story_admin() {
   global $op, $id, $edit;
 
-  print "<SMALL><A HREF=\"admin.php?mod=story&op=add\">add new story</A> | <A HREF=\"admin.php?mod=story\">overview</A> | <A HREF=\"admin.php?mod=story&op=help\">help</A></SMALL><HR>\n";
+  print "<SMALL><A HREF=\"admin.php?mod=story&op=add\">add new story</A> | <A HREF=\"admin.php?mod=story\">overview</A> | <A HREF=\"admin.php?mod=story&op=search\">search story</A> | <A HREF=\"admin.php?mod=story&op=help\">help</A></SMALL><HR>\n";
 
   switch ($op) {
     case "add":
@@ -230,6 +237,9 @@ function story_admin() {
       break;
     case "help":
       story_help();
+      break;
+   case "search":
+      story_search();
       break;
     case "Add story":
       story_add_save($edit);
