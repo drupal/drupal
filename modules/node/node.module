@@ -124,7 +124,7 @@ function node_delete($id) {
   return (node_del(array("nid" => $id)) ? "node has been deleted." : "failed to delete node: node must be dumped first.");
 }
 
-function node_query($type = "") {
+function node_query($type = -1) {
   $queries[] = array("all nodes: recent additions", "ORDER BY n.timestamp DESC");
   $queries[] = array("all nodes: status set to 'posted'", "WHERE n.status = '". node_status("posted") ."' ORDER BY n.timestamp DESC");
   $queries[] = array("all nodes: status set to 'queued'", "WHERE n.status = '". node_status("queued") ."' ORDER BY n.timestamp DESC");
@@ -145,7 +145,7 @@ function node_query($type = "") {
     }
   }
 
-  return ($queries[$type] ? $queries[$type] : $queries);
+  return ($type < 0 ? $queries : $queries[$type]);
 }
 
 function node_listing($queries) {
