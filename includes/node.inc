@@ -88,18 +88,27 @@ function node_save($node) {
       $f2 = implode(", ", $f2);
       $v2 = implode(", ", $v2);
 
-      db_query("INSERT INTO node ($f1) VALUES ($v1)");
-      if ($nid = db_insert_id()) {
-        $lid = db_query("INSERT INTO $node[type] ($f2, nid) VALUES ($v2, $nid)");
-        if ($lid = db_insert_id()) {
-          db_query("UPDATE node SET lid = '$lid' WHERE nid = '$nid'");
+      // insert data, try to roll-back when something goes wrong:
+      $result = db_query("INSERT INTO node ($f1) VALUES ($v1)");
+      if ($result && $nid = db_insert_id()) {
+        $result = db_query("INSERT INTO $node[type] ($f2, nid) VALUES ($v2, $nid)");
+        if ($result && $lid = db_insert_id()) {
+          $result = db_query("UPDATE node SET lid = '$lid' WHERE nid = '$nid'");
+          if ($result) {
+            watchdog("message", "node: added '$node[title]'");
+          }
+          else {
+            watchdog("warning", "node: added '$node[title]' - failed");
+          }
         }
         else {
           db_query("DELETE FROM node WHERE nid = '$nid'");
+          watchdog("warning", "node: added '$node[title]' - failed");
         }
       }
-
-      watchdog("message", "node: added '$node[title]'");
+      else {
+        watchdog("warning", "node: added '$node[title]' - failed");
+      }
     }
   }
 
@@ -137,7 +146,7 @@ function node_info($node) {
   </SCRIPT>
  <?php
 
-  $choices = array("/node.php?id=$node->nid" => t("view node"), "/submit.php?mod=$node->type&op=update&id=$node->nid" => t("suggest update"), "/node.php?op=history&id=$node->nid" => t("view history"));
+  $choices = array("node.php?id=$node->nid" => t("view node"), "/submit.php?mod=$node->type&op=update&id=$node->nid" => t("suggest update"), "node.php?op=history&id=$node->nid" => t("view history"));
 
   $output .= "<FORM METHOD=\"get\" ACTION=\"\">\n";
   foreach ($choices as $key => $value) $options .= "<OPTION VALUE=\"$key\"". ($key == $REQUEST_URI ? " SELECTED" : "") .">". check_select($value) ."</OPTION>\n";

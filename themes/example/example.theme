@@ -8,11 +8,9 @@
 ?>
 
       <HTML>
-
         <HEAD>
           <TITLE><? echo $site_name; ?></TITLE>
         </HEAD>
-
         <BODY>
           <TABLE BORDER="1">
             <TR>
@@ -36,7 +34,7 @@
 ?>
 
               </TD>
-              <TD>
+              <TD VALIGN="top">
 
 <?php
 
@@ -154,36 +152,14 @@
 
               <TABLE>
                 <TR>
-                  <TD></TD>
-                  <TD></TD>
-                  <TD></TD>
-                  <TD></TD>
-                  <TD></TD>
-                </TR>
-                <TR>
-                  <TD></TD>
                   <TD>
-                    <? echo $subject; ?>
+                    <DIV ALIGN="center"><B><? echo $subject; ?></B></DIV><HR>
                   </TD>
-                  <TD></TD>
                 </TR>
                 <TR>
-                  <TD></TD>
                   <TD>
-                    <TABLE>
-                      <TR>
-                        <TD>
-                          <?php echo $content; ?>
-                        </TD>
-                      </TR>
-                    </TABLE>
+                    <?php echo $content; ?>
                   </TD>
-                  <TD></TD>
-                </TR>
-                <TR>
-                  <TD></TD>
-                  <TD></TD>
-                  <TD></TD>
                 </TR>
               </TABLE>
               <BR>
