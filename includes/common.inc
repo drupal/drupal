@@ -383,9 +383,10 @@ function page_footer() {
   }
 }
 
-$conf = conf_init();
+$config = conf_init();
 
-include_once "includes/$conf.php";
+unset($conf);
+include_once "includes/$config.php";
 include_once "includes/database.inc";
 include_once "includes/variable.inc";
 include_once "includes/comment.inc";
@@ -397,7 +398,7 @@ include_once "includes/theme.inc";
 include_once "includes/node.inc";
 
 // initialize configuration variables:
-$conf = variable_init();
+$conf = variable_init($conf);
 
 // initialize installed modules:
 module_init();
