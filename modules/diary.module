@@ -250,7 +250,7 @@ function diary_admin_display($order = "date") {
   $output .= " </TR>\n";
 
   while ($diary = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"module.php?mod=diary&op=view&name=$diary->userid\">$diary->userid on ". format_date($diary->date, "small") ."</A></TD><TD>". format_username($diary->userid, 1) ."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=diary&op=edit&id=$diary->id\">edit</A></TD></TR>\n";
+    $output .= " <TR><TD><A HREF=\"module.php?mod=diary&op=view&name=$diary->userid\">$diary->userid on ". format_date($diary->timestamp, "small") ."</A></TD><TD>". format_username($diary->userid, 1) ."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=diary&op=edit&id=$diary->id\">edit</A></TD></TR>\n";
   }
 
   $output .= "</TABLE>\n";
