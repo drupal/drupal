@@ -137,7 +137,7 @@ function profile_view_field($user, $field) {
       case 'url':
         return '<a href="'. check_url(strip_tags($value)) .'">'. strip_tags($value) .'</a>';
       case 'list':
-        $values = split("[\n\r]", $value);
+        $values = split("[,\n\r]", $value);
         $fields = array();
         foreach ($values as $value) {
           if ($value = trim(strip_tags($value))) {
@@ -172,11 +172,7 @@ function _profile_form_explanation($field) {
   $output = $field->explanation;
 
   if ($field->type == 'list') {
-    $output .= ' '. t('Put each item on a separate line.  No HTML allowed.');
-  }
-
-  if ($field->required) {
-    $output .= ' '. t('This is a required field.');
+    $output .= ' '. t('Put each item on a separate line or separate them by commas.  No HTML allowed.');
   }
 
   if ($field->visibility == PROFILE_PRIVATE) {
@@ -207,7 +203,7 @@ function profile_form_profile($edit, $user, $category) {
         break;
       case 'selection':
         $options = array('--');
-        $lines = split("[\n\r]", $field->options);
+        $lines = split("[,\n\r]", $field->options);
         foreach ($lines as $line) {
           if ($line = trim($line)) {
             $options[$line] = $line;
@@ -229,8 +225,10 @@ function profile_validate_profile($edit, $category) {
 
   while ($field = db_fetch_object($result)) {
     if ($edit[$field->name]) {
-      if ($field->type == 'url' && !valid_url($edit[$field->name], true)) {
-        form_set_error($field->name, t('The value provided for "%field" is not a valid URL.', array('%field' => $field->title)));
+      if ($field->type == 'url') {
+        if (!valid_url($edit[$field->name], true)) {
+          form_set_error($field->name, t('The value provided for "%field" is not a valid URL.', array('%field' => $field->title)));
+         }
       }
     }
     else if ($field->required && !user_access('administer users')) {
