@@ -42,16 +42,20 @@
 <?php
 
                 $this->box("Drop where?", "
-                                             <TD ALIGN=\"left\" VALIGN=\"top\">
-                                               <A HREF=\"index.php\">home</A><BR>
-                                               <A HREF=\"module.php?mod=faq\">faq</A><BR>
-                                               <A HREF=\"search.php\">search</A>
-                                             </TD>
-                                             <TD ALIGN=\"right\" VALIGN=\"top\">
-                                               <A HREF=\"module.php?mod=diary\">diary</A><BR>
-                                               <A HREF=\"submit.php\">submit news</A><BR>
-                                               <A HREF=\"account.php\">account</A>
-                                             </TD>
+                                           <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0">
+                                             <TR>  
+                                               <TD ALIGN=\"left\" VALIGN=\"top\">
+                                                 <A HREF=\"index.php\">home</A><BR>
+                                                 <A HREF=\"module.php?mod=faq\">faq</A><BR>
+                                                 <A HREF=\"search.php\">search</A>
+                                               </TD>
+                                               <TD ALIGN=\"right\" VALIGN=\"top\">
+                                                 <A HREF=\"module.php?mod=diary\">diary</A><BR>
+                                                 <A HREF=\"submit.php\">submit news</A><BR>
+                                                 <A HREF=\"account.php\">account</A>
+                                               </TD>
+                                             </TR>
+                                           </TABLE>
                                            ");
 
 ?>
