@@ -137,8 +137,8 @@
 <?php
 
                                   echo "<br />". check_output($story->abstract, 1) ."<br />";
-                                  if ($reply)
-                                    echo "<br />". check_output($story->article, 1) ."<br />";
+                                  if ($reply && $story->body)
+                                    echo "<br />". check_output($story->body, 1) ."<br />";
 
 ?>
 
