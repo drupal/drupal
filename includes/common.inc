@@ -37,7 +37,7 @@ function error_handler($errno, $message, $filename, $line, $variables) {
 
 function watchdog($type, $message, $link = NULL) {
   global $user;
-  db_query("INSERT INTO watchdog (uid, type, message, link, location, hostname, timestamp) VALUES ('$user->uid', '%s', '%s', '%s', '%s', '%s', '%s')", $type, $message, $link, request_uri(), getenv("REMOTE_ADDR"), time());
+  db_query("INSERT INTO watchdog (uid, type, message, link, location, hostname, timestamp) VALUES ('%d', '%s', '%s', '%s', '%s', '%s', '%s')", $user->uid, $type, $message, $link, request_uri(), getenv("REMOTE_ADDR"), time());
 }
 
 function throttle($type, $rate) {
@@ -390,7 +390,7 @@ function drupal_goto($url) {
   ** Translate &amp; to simply &
   */
 
-  $url = str_replace ("&amp;", "&", $url);
+  $url = str_replace("&amp;", "&amp;", $url);
 
   /*
   ** It is advised to use "drupal_goto()" instead of PHP's "header()" as
@@ -748,7 +748,7 @@ function url($url = NULL, $query = NULL) {
 
   if (isset($url)) {
     if (isset($query)) {
-      return "?q=$url&$query";
+      return "?q=$url&amp;$query";
     }
     else {
       return "?q=$url";
@@ -775,7 +775,7 @@ function l($text, $url, $attributes = array(), $query = NULL) {
 }
 
 function field_get($string, $name) {
-  ereg(",$name=([^,]+)", ",$string", $regs);
+  ereg(",$name=([^,]+)", ", $string", $regs);
   return $regs[1];
 }
 
