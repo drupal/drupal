@@ -47,7 +47,7 @@ function locale_link($type) {
 }
 
 function locale_conf_options() {
-  return form_select(t("Locale support"), "locale", variable_get("locale", 0), array("Disabled", "Enabled"), t("Disable locale support if your site does not require translation or internationalization support."));
+  return form_select("Locale support", "locale", variable_get("locale", 0), array("Disabled", "Enabled"), "Disable locale support if your site does not require translation or internationalization support.");
 }
 
 function locale_delete($id) {
@@ -75,40 +75,77 @@ function locale_edit($id) {
 }
 
 function locale_languages($translation) {
-  global $languages, $na;
-  if (count($languages)) {
-    foreach ($languages as $key=>$value) {
-      $output .= ($translation->$key) ? "$key " : "<STRIKE>$key</STRIKE> ";
-    }
-    return $output;
+  global $languages;
+
+  foreach ($languages as $key=>$value) {
+    $output .= ($translation->$key) ? "$key " : "<STRIKE>$key</STRIKE> ";
   }
-  return $na;
+
+  return $output;
+}
+
+function locale_links($translation) {
+  global $languages;
+
+  foreach ($languages as $key=>$value) {
+    if ($translation) {
+      $output .= "<a href=\"admin.php?mod=locale&op=translated&lang=$key\">translated '$key' strings</a> | ";
+    }
+    else {
+      $output .= "<a href=\"admin.php?mod=locale&op=untranslated&lang=$key\">untranslated '$key' strings</a> | ";
+    }
+  }
+
+  return $output;
 }
 
 function locale_overview() {
-  if (variable_get("locale", 0)) {
-    $result = db_query("SELECT * FROM locales ORDER BY string");
+  $result = db_query("SELECT * FROM locales ORDER BY string");
 
-    $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-    $output .= " <TR><TH>string</TH><TH>languages</TH><TH COLSPAN=\"2\">operations</TH><TR>\n";
-    while ($locale = db_fetch_object($result)) {
-      $languages = locale_languages($locale);
-      $output .= " <TR><TD>". check_output($locale->string) ."<BR><SMALL><I>$locale->location</I></SMALL></TD><TD ALIGN=\"center\">$languages</TD><TD NOWRAP><A HREF=\"admin.php?mod=locale&op=edit&id=$locale->id\">edit locale</A></TD><TD NOWRAP><A HREF=\"admin.php?mod=locale&op=delete&id=$locale->id\">delete locale</A></TD></TR>";
-    }
-    $output .= "</TABLE>\n";
+  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
+  $output .= " <TR><TH>string</TH><TH>languages</TH><TH COLSPAN=\"2\">operations</TH><TR>\n";
+  while ($locale = db_fetch_object($result)) {
+    $output .= " <TR><TD>". check_output($locale->string) ."<BR><SMALL><I>". check_output($locale->location) ."</I></SMALL></TD><TD ALIGN=\"center\">". check_output(locale_languages($locale)) ."</TD><TD NOWRAP><A HREF=\"admin.php?mod=locale&op=edit&id=$locale->id\">edit locale</A></TD><TD NOWRAP><A HREF=\"admin.php?mod=locale&op=delete&id=$locale->id\">delete locale</A></TD></TR>";
+  }
+  $output .= "</TABLE>\n";
 
-    return $output;
+  return $output;
+}
+
+function locale_translated($lang) {
+  $result = db_query("SELECT * FROM locales WHERE $lang != '' ORDER BY string");
+
+  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
+  $output .= " <TR><TH>original string</TH><TH>translated string</TH><TH COLSPAN=\"2\">operations</TH><TR>\n";
+  while ($locale = db_fetch_object($result)) {
+    $output .= " <TR><TD>". check_output($locale->string) ."</TD><TD>". check_output($locale->$lang) ."</TD><TD NOWRAP><A HREF=\"admin.php?mod=locale&op=edit&id=$locale->id\"> edit locale</A></TD><TD NOWRAP><A HREF=\"admin.php?mod=locale&op=delete&id=$locale->id\">delete locale</A></TD></TR>";
   }
-  else {
-    return status("locale disabled.");
+  $output .= "</TABLE>\n";
+
+  return $output;
+}
+
+function locale_untranslated($lang) {
+  $result = db_query("SELECT * FROM locales WHERE $lang = '' ORDER BY string");
+
+  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
+  $output .= " <TR><TH>string</TH><TH COLSPAN=\"2\">operations</TH><TR>\n";
+  while ($locale = db_fetch_object($result)) {
+    $output .= " <TR><TD>". check_output($locale->string) ."<BR><SMALL><I>$locale->location</I></SMALL></TD><TD NOWRAP><A HREF=\"admin.php?mod=locale&op=edit&id=$locale->id\"> edit locale</A></TD><TD NOWRAP><A HREF=\"admin.php?mod=locale&op=delete&id=$locale->id\">delete locale</A></TD></TR>";
   }
+  $output .= "</TABLE>\n";
+
+  return $output;
 }
 
 function locale_admin() {
-  global $id, $edit, $op;
+  global $id, $edit, $op, $lang;
 
-  if (user_access("administer locales")) {
-    print "<SMALL><A HREF=\"admin.php?mod=locale\">overview</A> | <A HREF=\"admin.php?mod=locale&op=help\">help</A></SMALL><HR>\n";
+  if (!variable_get("locale", 0)) {
+    return status("locale disabled.");
+  }
+  else if (user_access("administer locales")) {
+    print "<SMALL>". locale_links(1) . locale_links(0) ."<A HREF=\"admin.php?mod=locale\">overview</A> | <A HREF=\"admin.php?mod=locale&op=help\">help</A></SMALL><HR>\n";
 
     switch ($op) {
       case "delete":
@@ -123,7 +160,13 @@ function locale_admin() {
         break;
       case "Save translations":
         print locale_save(check_input($id), $edit);
-        // fall through
+  break;
+      case "translated":
+        print locale_translated($lang);
+  break;
+      case "untranslated":
+        print locale_untranslated($lang);
+        break;
       default:
         print locale_overview();
     }

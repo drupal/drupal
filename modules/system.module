@@ -29,46 +29,46 @@ function system_view_options() {
 
   // general settings:
   $output .= "<H3>General settings</H3>\n";
-  $output .= form_textfield(t("Name"), "site_name", variable_get("site_name", "drupal"), 30, 55, t("The name of this website."));
-  $output .= form_textfield(t("Slogan"), "site_slogan", variable_get("site_slogan", ""), 30, 55, t("The slogan of this website"));
-  $output .= form_textfield(t("E-mail address"), "site_mail", variable_get("site_mail", "root@localhost"), 30, 55, t("A valid e-mail address for this website, used by the auto-mailer to create new user accounts."));
-  $output .= form_textarea(t("Footer message"), "site_footer", variable_get("site_footer", ""), 55, 3, t("This text will be displayed at the bottom of each page.  Useful for adding a copyright notice to your pages."));
-  $output .= form_textfield(t("Anonymous user"), "anonymous", variable_get("anonymous", "Anonymous"), 30, 55, t("The name used to indicate anonymous users."));
+  $output .= form_textfield("Name", "site_name", variable_get("site_name", "drupal"), 30, 55, "The name of this website.");
+  $output .= form_textfield("Slogan", "site_slogan", variable_get("site_slogan", ""), 30, 55, "The slogan of this website");
+  $output .= form_textfield("E-mail address", "site_mail", variable_get("site_mail", "root@localhost"), 30, 55, "A valid e-mail address for this website, used by the auto-mailer to create new user accounts.");
+  $output .= form_textarea("Footer message", "site_footer", variable_get("site_footer", ""), 55, 3, "This text will be displayed at the bottom of each page.  Useful for adding a copyright notice to your pages.");
+  $output .= form_textfield("Anonymous user", "anonymous", variable_get("anonymous", "Anonymous"), 30, 55, "The name used to indicate anonymous users.");
   $output .= "<HR>\n";
 
   // caching:
   $output .= "<H3>Cache settings</H3>\n";
   $period = array(10 => format_interval(10), 20 => format_interval(20), 30 => format_interval(30), 40 => format_interval(40), 50 => format_interval(50), 50 => format_interval(50), 60 => format_interval(60), 90 => format_interval(90), 120 => format_interval(120), 150 => format_interval(150), 180 => format_interval(180), 210 => format_interval(210), 240 => format_interval(240), 270 => format_interval(270), 300 => format_interval(300), 360 => format_interval(360), 420 => format_interval(420), 480 => format_interval(480), 540 => format_interval(540), 600 => format_interval(600), 1800 => format_interval(1800), 3600 => format_interval(3600), 7200 => format_interval(7200));
-  $output .= form_select(t("Cache support"), "cache", variable_get("cache", 0), array("Disabled", "Enabled"), t("Enable or disable the caching of pages."));
-  $output .= form_select(t("Discard cached pages older than"), "cache_clear", variable_get("cache_clear", 30), $period, t("The time cached pages should be kept.  Older pages are automatically refreshed."));
+  $output .= form_select("Cache support", "cache", variable_get("cache", 0), array("Disabled", "Enabled"), "Enable or disable the caching of pages.");
+  $output .= form_select("Discard cached pages older than", "cache_clear", variable_get("cache_clear", 30), $period, "The time cached pages should be kept.  Older pages are automatically refreshed.");
   $output .= "<HR>\n";
 
   // submission settings:
   $output .= "<H3>Submission settings</H3>\n";
   $size = array(1000 => "1.000 characters", 5000 => "5.000 characters", 10000 => "10.000 characters", 15000 => "15.000 characters", 30.000 => "30.000 characters", 50000 => "50.000 characters", 100000 => "100.000 characters");
-  $output .= form_select(t("Maximum submission size"), "max_input_size", variable_get("max_input_size", 10000), $size, t("The maximum number of characters someone can enter in a form."));
+  $output .= form_select("Maximum submission size", "max_input_size", variable_get("max_input_size", 10000), $size, "The maximum number of characters someone can enter in a form.");
   $rate = array(1 => "Maximum 1 every second", 5 => "Maximum 1 every 5 seconds", 15 => "Maximum 1 every 15 seconds", 30 => "Maximum 1 every 30 seconds", 60 => "Maximum 1 every minute", 300 => "Maximum 1 every 5 minutes", 900 => "Maximum 1 every 15 minutes", 1800 => "Maximum 1 every 30 minutes", 3600 => "Maximum 1 every hour", 21600 => "Maximum 1 every 6 hour", 43200 => "Maximum 1 every 12 hour");
-  $output .= form_select(t("Maximum node rate"), "max_node_rate", variable_get("max_node_rate", 900), $rate, t("The maximum submission rate for nodes.  Its purpose is to stop potential abuse or denial of service attacks."));
-  $output .= form_select(t("Maximum comment rate"), "max_comment_rate", variable_get("max_comment_rate", 120), $rate, t("The maximum submission rate for comments.  Its purpose is to stop potential abuse or denial of service attacks."));
+  $output .= form_select("Maximum node rate", "max_node_rate", variable_get("max_node_rate", 900), $rate, "The maximum submission rate for nodes.  Its purpose is to stop potential abuse or denial of service attacks.");
+  $output .= form_select("Maximum comment rate", "max_comment_rate", variable_get("max_comment_rate", 120), $rate, "The maximum submission rate for comments.  Its purpose is to stop potential abuse or denial of service attacks.");
   $output .= "<HR>\n";
 
   // comment settings:
   $output .= "<H3>Comment settings</H3>\n";
-  $output .= form_select(t("Default display mode"), "default_comment_mode", $conf[default_comment_mode], $cmodes, t("The default mode in which comments are displayed."));
-  $output .= form_select(t("Default display order"), "default_comment_order", $conf[default_comment_order], $corder, t("The default order in which comments are displayed."));
-  for ($count = -1; $count < 6; $count++) $threshold[$count] = t("Filter") ." - $count";
-  $output .= form_select(t("Default filter threshold"), "default_comment_threshold", $conf[default_comment_threshold], $threshold, t("The default threshold used to filter comments."));
+  $output .= form_select("Default display mode", "default_comment_mode", $conf[default_comment_mode], $cmodes, "The default mode in which comments are displayed.");
+  $output .= form_select("Default display order", "default_comment_order", $conf[default_comment_order], $corder, "The default order in which comments are displayed.");
+  for ($count = -1; $count < 6; $count++) $threshold[$count] = "Filter - $count";
+  $output .= form_select("Default filter threshold", "default_comment_threshold", $conf[default_comment_threshold], $threshold, "The default threshold used to filter comments.");
   $output .= "<HR>\n";
 
   // layout settings:
   $output .= "<H3>Layout settings</H3>\n";
   foreach ($themes as $key=>$value) $options .= "<OPTION VALUE=\"$key\"". (variable_get("theme_default", key($themes)) == $key ? " SELECTED" : "") .">$key</OPTION>\n";
-  $output .= form_item(t("Default theme"), "<SELECT NAME=\"edit[theme_default]\">$options</SELECT>", t("The default theme as seen by visitors or anonymous users."));
+  $output .= form_item("Default theme", "<SELECT NAME=\"edit[theme_default]\">$options</SELECT>", "The default theme as seen by visitors or anonymous users.");
   $output .= "<HR>\n";
 
   // development settings:
   $output .= "<H3>Development settings</H3>\n";
-  $output .= form_select(t("Display timer information"), "dev_timer", variable_get("dev_timer", 0), array("Disabled", "Enabled"), t("Display the time it took to generate a page.  For Drupal development only."));
+  $output .= form_select("Display timer information", "dev_timer", variable_get("dev_timer", 0), array("Disabled", "Enabled"), "Display the time it took to generate a page.  For Drupal development only.");
   $output .= "<HR>\n";
 
   foreach (module_list() as $name) {
