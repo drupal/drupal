@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.462 2005/02/10 20:58:03 dries Exp $
+// $Id: node.module,v 1.463 2005/02/11 19:10:28 dries Exp $
 
 /**
  * @file
@@ -922,7 +922,7 @@ function node_admin_nodes() {
   $output .= '</div>';
 
   // Overview table:
-  $header = array(NULL, t('Title'), t('Type'), t('Author'), t('Status'), array('data' => t('Operations'), 'colspan' => '2'));
+  $header = array(NULL, t('Title'), t('Type'), t('Author'), t('Status'), t('Operations'));
 
   $destination = drupal_get_destination();
   while ($node = db_fetch_object($result)) {
