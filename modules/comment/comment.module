@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.178 2003/10/17 16:10:48 dries Exp $
+// $Id: comment.module,v 1.179 2003/10/20 21:35:35 dries Exp $
 
 function comment_help($section = "admin/help#comment") {
   $output = "";
@@ -1502,21 +1502,19 @@ function comment_num_all($nid) {
   static $cache;
 
   if (!isset($cache[$nid])) {
-    $comment = db_fetch_object(db_query("SELECT COUNT(nid) AS number FROM {comments} WHERE nid = %d AND status = 0 GROUP BY nid", $nid));
-    $cache[$nid] = $comment->number ? $comment->number : 0;
+    $cache[$nid] = db_result(db_query("SELECT COUNT(cid) FROM {comments} WHERE nid = %d AND status = 0", $nid));
   }
   return $cache[$nid];
 }
 
-function comment_num_replies($id) {
+function comment_num_replies($pid) {
   static $cache;
 
-  if (!isset($cache[$id])) {
-    $result = db_query("SELECT COUNT(cid) FROM {comments} WHERE pid = %d AND status = 0", $id);
-    $cache[$id] = $result ? db_result($result, 0) : 0;
+  if (!isset($cache[$pid])) {
+    $cache[$pid] = db_result(db_query("SELECT COUNT(cid) FROM {comments} WHERE pid = %d AND status = 0", $pid));
   }
 
-  return $cache[$id];
+  return $cache[$pid];
 }
 
 /**
