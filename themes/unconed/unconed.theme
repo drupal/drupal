@@ -31,12 +31,12 @@
    # Syntax.......: header($title);
    # Description..: a function to draw the page header.
    function header($title) {
-     global $sitename;
+     global $site_name;
      srand((double)microtime()*1000000);
     ?>
      <HTML>
      <HEAD>
-      <TITLE><? echo $sitename; ?></TITLE>
+      <TITLE><? echo $site_name; ?></TITLE>
       <META NAME="description" CONTENT="drop.org">
       <META NAME="keywords" CONTENT="drop, weblog, portal, community, news, article, announcements, stories, story, computer, science, space, hype, cult, geek, nerd, foo, bar">
      </HEAD>
@@ -220,9 +220,7 @@
    function comment($comment, $link, $thread = "") {
      print "<A NAME=\"$comment->cid\"></A>\n";
 
-     $timestamp = format_date($timestamp);     
-
-     print "\n<!-- Comment: \"$subject\" by $poster -->\n";
+     print "\n<!-- Comment: \"$comment->subject\" by $comment->userid -->\n";
 
      ?>
       <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" BGCOLOR="<? echo $this->brcolor1; ?>" WIDTH="100%">
@@ -243,7 +241,7 @@
 
      ### Moderation:
      echo "     <TD ALIGN=\"right\" ROWSPAN=\"3\" VALIGN=\"middle\" WIDTH=\"15%\">";
-     display_comment_moderation($comment->cid, $comment->poster, $comment->score, $comment->votes);
+     display_comment_moderation($comment->cid, $comment->userid, $comment->score, $comment->votes);
      echo "     </TD>";
      echo "    </TR>";
 

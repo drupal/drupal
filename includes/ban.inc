@@ -31,7 +31,7 @@ function ban_add($mask, $category, $reason, $message = "") {
     $message = "Added new ban with mask `$mask'.<P>\n";
 
     ### Add log entry:
-    watchdog(1, "added new ban `$mask' to category `". $index2type[$category] ."' with reason `$reason'.");
+    watchdog("message", "added new ban `$mask' to category `". $index2type[$category] ."' with reason `$reason'.");
   }
 }
   
@@ -45,7 +45,7 @@ function ban_delete($id) {
     $result = db_query("DELETE FROM bans WHERE id = $id");
 
     ### Deleted log entry:
-    watchdog(1, "removed ban `$ban->mask' from category `". $index2type[$ban->type] ."'.");
+    watchdog("message", "removed ban `$ban->mask' from category `". $index2type[$ban->type] ."'.");
   }
 }
 

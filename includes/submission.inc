@@ -28,11 +28,11 @@ function submission_vote($id, $vote, $comment) {
     if ($submission = db_fetch_object($result)) {
       if ($submission->score >= $submission_post_threshold) {
         db_query("UPDATE stories SET status = 2, timestamp = '". time() ."' WHERE id = $id");
-        watchdog(1, "posted story `$submission->subject'");
+        watchdog("message", "posted story `$submission->subject'");
       }
       if ($submission->score <= $submission_dump_threshold) {
         db_query("UPDATE stories SET status = 0, timestamp = '". time() ."' WHERE id = $id");
-        watchdog(1, "dumped story `$submission->subject'");
+        watchdog("message", "dumped story `$submission->subject'");
       }
     }
   }

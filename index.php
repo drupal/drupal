@@ -2,6 +2,12 @@
 
 include "includes/theme.inc";
 
+### Security check:
+if (strstr($number, " ") || strstr($date, " ")) {
+  watchdog("error", "main page: attempt to provide malicious input through URI");
+  exit();
+}
+
 ### Initialize/pre-process variables:
 $number = ($user->stories) ? $user->stories : 10;
 $date = ($date) ? $date : time();

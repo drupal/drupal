@@ -1,4 +1,5 @@
 <?
+
 include "includes/submission.inc";
 include "includes/theme.inc";
 
@@ -55,6 +56,12 @@ function submission_displayItem($id) {
   }
 
   $theme->footer(); 
+}
+
+### Security check:
+if (strstr($id, " ")) {
+  watchdog("error", "submission: attempt to provide malicious input through URI");
+  exit();
 }
 
 if ($user->id) {

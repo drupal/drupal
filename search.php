@@ -4,7 +4,7 @@
 
  $theme->header();
 
- $terms = stripslashes($terms);
+ $terms = check_input($terms);
 
  $output .= "<TABLE WIDTH=\"100%\" BORDER=\"0\">\n";
  $output .= " <TR VALIGN=\"center\">\n";
