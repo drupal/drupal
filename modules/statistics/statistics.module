@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.98 2003/09/27 06:00:43 dries Exp $
+// $Id: statistics.module,v 1.99 2003/09/28 15:18:53 dries Exp $
 
 function statistics_init() {
   global $recent_activity;
@@ -117,20 +117,20 @@ function statistics_link($type, $node = 0, $main = 0) {
   if ($type == "system") {
     if ((user_access("administer statistics module") || (user_access("administer statistics")))) {
 
-      menu("admin/statistics", "statistics", "statistics_admin", statistics_help("admin/statistics"), 6);
-      menu("admin/statistics/referrers", "referrer log", "statistics_admin", statistics_help("admin/statistics/referrers") );
-      menu("admin/statistics/referrers/internal", "internal referrers only", "statistics_admin", statistics_help("admin/statistics/referrers/internal") );
-      menu("admin/statistics/referrers/external", "external referrers only", "statistics_admin", statistics_help("admin/statistics/referrers/external") );
-      menu("admin/statistics/log", "access log", "statistics_admin", statistics_help("admin/statistics/log") );
-      menu("admin/statistics/log/node", "track node", "statistics_admin", statistics_help("admin/statistics/log/node"), 0, 1); //hidden
-      menu("admin/statistics/log/user", "track user", "statistics_admin", statistics_help("admin/statistics/log/user"), 0, 1); //hidden
-      menu("admin/statistics/log/host", "track host", "statistics_admin", statistics_help("admin/statistics/log/host"), 0, 1); //hidden
-      menu("admin/statistics/top nodes page", "configure 'top nodes' page", "statistics_admin", statistics_help("admin/statistics/top nodes page"), 5);
-      menu("admin/statistics/help", "help", "statistics_help", NULL, 9);
+      menu("admin/statistics", t("statistics"), "statistics_admin", statistics_help("admin/statistics"), 6);
+      menu("admin/statistics/referrers", t("referrer log"), "statistics_admin", statistics_help("admin/statistics/referrers") );
+      menu("admin/statistics/referrers/internal", t("internal referrers only"), "statistics_admin", statistics_help("admin/statistics/referrers/internal") );
+      menu("admin/statistics/referrers/external", t("external referrers only"), "statistics_admin", statistics_help("admin/statistics/referrers/external") );
+      menu("admin/statistics/log", t("access log"), "statistics_admin", statistics_help("admin/statistics/log") );
+      menu("admin/statistics/log/node", t("track node"), "statistics_admin", statistics_help("admin/statistics/log/node"), 0, 1); //hidden
+      menu("admin/statistics/log/user", t("track user"), "statistics_admin", statistics_help("admin/statistics/log/user"), 0, 1); //hidden
+      menu("admin/statistics/log/host", t("track host"), "statistics_admin", statistics_help("admin/statistics/log/host"), 0, 1); //hidden
+      menu("admin/statistics/top nodes page", t("configure 'top nodes' page"), "statistics_admin", statistics_help("admin/statistics/top nodes page"), 5);
+      menu("admin/statistics/help", t("help"), "statistics_help", NULL, 9);
 
       // block configuration:
-      menu("admin/system/block/top nodes block", "configure 'top nodes' block", "statistics_admin", statistics_help("admin/system/block/top nodes/block"), 5);
-      menu("admin/system/block/whos online block", "configure 'who is online' block", "statistics_admin", statistics_help("admin/system/block/whos online block"), 5);
+      menu("admin/system/block/top nodes block", t("configure 'top nodes' block"), "statistics_admin", statistics_help("admin/system/block/top nodes/block"), 5);
+      menu("admin/system/block/whos online block", t("configure 'who is online' block"), "statistics_admin", statistics_help("admin/system/block/whos online block"), 5);
     }
   }
 

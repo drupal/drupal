@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.22 2003/09/28 13:42:12 dries Exp $
+// $Id: menu.inc,v 1.23 2003/09/28 15:18:52 dries Exp $
 
 /**
  * Register a menu item with the menu system.
@@ -137,7 +137,7 @@ function menu_tree($parent = "") {
         $style = ($_list[$item]["children"] ? (menu_in_active_trail($item)  ? "expanded" : "collapsed") : "leaf");
         $output .= "<li class=\"$style\">";
         $output .= _render_item($item);
-        if (menu_in_active_trail($item, $trail)) {
+        if (menu_in_active_trail($item)) {
           $output .= menu_tree($item);
         }
         $output .= "</li>\n";
