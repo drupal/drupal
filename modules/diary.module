@@ -35,7 +35,7 @@ function diary_page_overview($num = 20) {
 
   while ($diary = db_fetch_object($result)) {
     if ($time != date("F jS", $diary->timestamp)) {
-      $output .= "<B>". $date = t(date("l", $timestamp)) .", ". t(date("F", $timestamp)) ." ". date("j", $diary->timestamp) ."</B>\n";
+      $output .= "<B>". $date = t(date("l", $diary->timestamp)) .", ". t(date("F", $diary->timestamp)) ." ". date("j", $diary->timestamp) ."</B>\n";
       $time = date("F jS", $diary->timestamp);
     }
     $output .= "<DL>\n";
@@ -56,7 +56,7 @@ function diary_page_entry($timestamp, $text, $id = 0) {
   if ($id) {
     $output .= "<DL>\n";
     $output .= " <DT><B>". format_date($timestamp, "large") .":</B></DT>\n";
-    $output .= " <DD><P>[ <A HREF=\"module.php?mod=diary&op=edit&id=$id\">". t("edit") ."</A> ]</P><P>". check_output($text, 1) ."</P></DD>\n";
+    $output .= " <DD><P>[ <A HREF=\"module.php?mod=diary&op=edit&id=$id\">". t("edit") ."</A> | <A HREF=\"module.php?mod=diary&op=delete&id=$id\">". t("delete") ."</A> ]</P><P>". check_output($text, 1) ."</P></DD>\n";
     $output .= "</DL>\n";
   }
   else {
@@ -110,10 +110,15 @@ function diary_page_add() {
   $theme->footer();
 }
 
+function diary_page_delete($id) {
+  db_query("DELETE FROM diaries WHERE id = '$id'");
+  watchdog("message", "diary: diary entry deleted");
+}
+
 function diary_page_edit($id) {
   global $theme, $user, $allowed_html;
 
-  $result = db_query("SELECT * FROM diaries WHERE id = $id");
+  $result = db_query("SELECT * FROM diaries WHERE id = '$id'");
   $diary = db_fetch_object($result);
 
   $output .= diary_page_entry($diary->timestamp, $diary->text);
@@ -162,11 +167,11 @@ function diary_page_submit($text, $id = 0) {
   global $user, $theme;
 
   if ($id) {
-    watchdog("message", "old diary entry updated");
+    watchdog("message", "diary: old diary entry updated");
     db_query("UPDATE diaries SET text =  '". check_input($text) ."' WHERE id = $id");
   }
   else {
-    watchdog("diary", "new diary entry added");
+    watchdog("diary", "diary: new diary entry added");
     db_query("INSERT INTO diaries (author, text, timestamp) VALUES ('$user->id', '". check_input($text) ."', '". time() ."')");
   }
 
@@ -185,6 +190,10 @@ function diary_page() {
   switch($op) {
     case "add":
       diary_page_add();
+      break;
+    case "delete":
+      diary_page_delete($id);
+      diary_page_display($name);
       break;
    case "edit":
       diary_page_edit($id);
@@ -279,6 +288,11 @@ function diary_admin_save($id, $text) {
   watchdog("message", "diary: modified entry #$id.");
 }
 
+function diary_admin_delete($id) {
+  db_query("DELETE FROM diaries WHERE id = '$id'");
+  watchdog("message", "diary: deleted entry #$id.");
+}
+
 function diary_admin_display($order = "date") {
   // Initialize variables:
   $fields = array("author" => "author", "date" => "timestamp DESC");
@@ -289,7 +303,7 @@ function diary_admin_display($order = "date") {
   // Display stories:
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR>\n";
-  $output .= "  <TH ALIGN=\"right\" COLSPAN=\"3\">\n";
+  $output .= "  <TH ALIGN=\"right\" COLSPAN=\"4\">\n";
   $output .= "   <FORM ACTION=\"admin.php?mod=diary\" METHOD=\"post\">\n";
   $output .= "    <SELECT NAME=\"order\">\n";
   foreach ($fields as $key=>$value) {
@@ -304,11 +318,11 @@ function diary_admin_display($order = "date") {
   $output .= " <TR>\n";
   $output .= "  <TH>subject</TH>\n";
   $output .= "  <TH>author</TH>\n";
-  $output .= "  <TH>operations</TH>\n";
+  $output .= "  <TH COLSPAN=\"2\">operations</TH>\n";
   $output .= " </TR>\n";
 
   while ($diary = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"module.php?mod=diary&op=view&name=$diary->userid\">$diary->userid on ". format_date($diary->timestamp, "small") ."</A></TD><TD>". format_username($diary->userid) ."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=diary&op=edit&id=$diary->id\">edit</A></TD></TR>\n";
+    $output .= " <TR><TD><A HREF=\"module.php?mod=diary&op=view&name=$diary->userid\">$diary->userid on ". format_date($diary->timestamp, "small") ."</A></TD><TD>". format_username($diary->userid) ."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=diary&op=edit&id=$diary->id\">edit</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=diary&op=delete&id=$diary->id\">delete</A></TD></TR>\n";
   }
 
   $output .= "</TABLE>\n";
@@ -323,6 +337,10 @@ function diary_admin() {
   print "<SMALL><A HREF=\"admin.php?mod=diary\">overview</A> | <A HREF=\"admin.php?mod=diary&op=search\">search diary</A> | <A HREF=\"admin.php?mod=diary&op=help\">help</A></SMALL><HR>\n";
 
   switch ($op) {
+    case "delete":
+      diary_admin_delete($id);
+      diary_admin_display();
+      break;
     case "edit":
       diary_admin_edit($id);
       break;
@@ -334,7 +352,7 @@ function diary_admin() {
       break;
     case "Save diary entry":
       diary_admin_save($id, $text);
-      diary_admin_edit($id);
+      diary_admin_display();
       break;
     case "Update":
       diary_admin_display($order);
