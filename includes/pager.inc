@@ -38,27 +38,31 @@
  *   An optional integer to distinguish between multiple pagers on one page.
  * @param $count_query
  *   An SQL query used to count matching records.
+ * @param ...
+ *   A variable number of arguments which are substituted into the query (and
+ *   also the count query) using printf() syntax.
  * @return
  *   A database query result resource, or FALSE if the query was not executed
  *   correctly.
  */
-function pager_query($query, $limit = 10, $element = 0, $count_query = '') {
+function pager_query($query, $limit = 10, $element = 0, $count_query = NULL) {
   global $pager_from_array, $pager_total;
   $from = $_GET['from'];
 
+  // Substitute in query arguments.
+  $args = func_get_args();
+  $args = array_slice($args, 4);
+
   // Count the total number of records in this query.
-  if ($count_query == '') {
-    $pager_total[$element] = db_result(db_query(preg_replace(array('/SELECT.*FROM/is', '/ORDER BY .*/'), array('SELECT COUNT(*) FROM', ''), $query)));
+  if (!isset($count_query)) {
+    $count_query = preg_replace(array('/SELECT.*FROM/is', '/ORDER BY .*/'), array('SELECT COUNT(*) FROM', ''), $query);
   }
-  else {
-    $pager_total[$element] = db_result(db_query($count_query));
-  }
+  $pager_total[$element] = db_result(call_user_func_array('db_query', array_merge(array($count_query), $args)));
 
   // Convert comma-separated $from to an array, used by other functions.
   $pager_from_array = explode(',', $from);
 
-  return db_query_range($query, (int)$pager_from_array[$element], (int)$limit);
-
+  return call_user_func_array('db_query_range', array_merge(array($query), $args, array((int)$pager_from_array[$element], (int)$limit)));
 }
 
 /**
