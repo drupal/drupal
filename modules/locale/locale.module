@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.68 2003/08/21 19:29:31 dries Exp $
+// $Id: locale.module,v 1.69 2003/08/30 21:16:23 dries Exp $
 
 function locale_help($section = "admin/locale/help") {
   $output = "";
@@ -55,9 +55,9 @@ function locale_help($section = "admin/locale/help") {
 }
 
 function locale_system($field){
-  $output;
+  $output = "";
 
-  if ($field == "description") {locale_help($output = "admin/system/module");};
+  if ($field == "description") { $output = locale_help("admin/system/modules"); }
 
   return $output;
 }
