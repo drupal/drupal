@@ -276,7 +276,7 @@ function user_fields() {
   static $fields;
 
   if (!$fields) {
-    $result = db_query("SELECT * FROM users WHERE uid < 0");
+    $result = db_query("SELECT * FROM users WHERE uid = 1");
     $fields = array_keys(db_fetch_array($result));
   }
 
@@ -342,10 +342,9 @@ function user_block() {
   $block[1]["link"] = drupal_url(array("mod" => "user"), "module");
 
   // Who's online block
-  $time = 60 * 60; // minutes * seconds
-  $limit = 5; // List the X most recent people
+  $time = 60 * 60;  // minutes * seconds
 
-  $result = db_query("SELECT uid, name FROM users WHERE timestamp > unix_timestamp() - $time ORDER BY timestamp DESC LIMIT $limit");
+  $result = db_query("SELECT uid, name FROM users WHERE timestamp > %d - %d ORDER BY timestamp DESC", time(), $time);
 
   if (db_num_rows($result)) {
     $output = "";
