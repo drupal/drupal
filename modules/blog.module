@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.125 2003/06/19 17:26:27 dries Exp $
+// $Id: blog.module,v 1.126 2003/07/01 21:45:25 dries Exp $
 
 function blog_system($field){
   $system["description"] = t("Enables keeping a blog or easily and regularly updated web page.");
@@ -65,7 +65,9 @@ function blog_user($type, &$edit, &$user) {
   switch ($type) {
     case "view_public":
     case "view_private":
-      return form_item(t("Blog"), l(t("view recent blog entries"), "blog/$user->uid", array("title" => t("Read %username's latest blog entries.", array("%username" => $user->name)))));
+      if (user_access("maintain personal blog", $user)) {
+        return form_item(t("Blog"), l(t("view recent blog entries"), "blog/$user->uid", array("title" => t("Read %username's latest blog entries.", array("%username" => $user->name)))));
+      }
   }
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.83 2003/06/23 22:03:50 dries Exp $
+// $Id: statistics.module,v 1.84 2003/07/01 21:45:25 dries Exp $
 
 function statistics_init() {
   global $recent_activity;
@@ -710,7 +710,7 @@ function statistics_block($op = "list", $delta = 0) {
     }
     return $blocks;
   }
-  else {
+  else if (user_access("access content")) {
     switch($delta) {
       case 0:
         $block["subject"] = variable_get("statistics_block_top_title", t("Popular content"));
