@@ -325,7 +325,7 @@ function blog_block() {
 
   $result = db_query("SELECT u.name, n.timestamp, n.title, n.nid FROM node n LEFT JOIN users u ON n.author = u.id WHERE n.type = 'blog' ORDER BY n.nid DESC LIMIT 10");
   while ($node = db_fetch_object($result)) {
-    $output .= "<a href=\"module.php?mod=blog&op=view&name=". urlencode($node->name) ."\">". check_output($node->title) ."<br />\n";
+    $output .= "<a href=\"module.php?mod=blog&op=view&name=". urlencode($node->name) ."\">". check_output($node->title) ."</a><br />\n";
   }
 
   $block[0]["subject"] = "<a href=\"module.php?mod=blog\">". t("User blogs") ."</a>";
