@@ -11,13 +11,7 @@ function system_help($section) {
     case 'admin/settings':
       return t('General configuration options for your site. Set up the name of the site, e-mail address used in mail-outs, clean URL options, caching, etc.');
     case 'admin/themes':
-    case 'admin/themes/select':
-      return t('Choose a look and feel for your site.');
-    case 'admin/themes/settings':
-      return t('These options control the default display settings for your entire site, across all themes. Unless they have been overridden by a specific theme, these settings will be used.');
-    case 'admin/themes/settings/' . arg(3) . '/' . arg(4):
-      return t('These options control the display settings for the <code>%template/%style</code> theme. When your site is displayed using this as your theme, these settings will be used. By reverting to defaults you can choose to use the settings defined in the site wide display configuration screen.', array('%template' => arg(3), '%style' => arg(4)));
-
+      return t('Select which themes are available to your users and specify the default theme.');
     case 'admin/modules':
       return t("Modules are plugins for Drupal that extend its core functionality.  Here you can select which modules are enabled.  Click on the name of the module in the navigation menu for their individual configuration pages.  Once a module is enabled, new <a href=\"%permissions\">permissions</a> might be made available.  Modules can automatically be temporarily disabled to reduce server load when your site becomes extremely busy by checking throttle.  The auto-throttle functionality must be enabled on the <a href=\"%throttle\">throttle configuration page</a> after having enabled the throttle module.", array('%permissions' => url('admin/user/configure/permission'), '%throttle' => url('admin/settings/throttle')));
     case 'admin/help#system':
@@ -63,29 +57,24 @@ function system_menu() {
     'type' => MENU_CALLBACK);
 
   $access = user_access('administer site configuration');
-
-  // Templates:
+  // Themes:
   $items[] = array('path' => 'admin/themes', 'title' => t('themes'),
     'callback' => 'system_themes', 'access' => $access);
-
-  $items[] = array('path' => 'admin/themes/select', 'title' => t('select'),
-    'callback' => 'system_themes', 'access' => $access,
-    'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -1);
-
-  $items[] = array('path' => 'admin/themes/settings', 'title' => t('configure'),
-    'callback' => 'system_theme_settings', 'access' => $access,
-    'type' => MENU_LOCAL_TASK);
-
-  foreach (list_themes() as $style) {
-    $items[] = array('path' => 'admin/themes/settings/'. $style->name, 'title' => t($style->description), 'callback' => 'system_theme_settings', 'type' => MENU_CALLBACK);
+  foreach (list_themes() as $theme) {
+    // TODO: reenable 'forced refresh' once we move the menu_build() later
+    //   in the request. It added overhead with no benefit.
+    // NOTE: refresh the list because some themes might have been enabled/disabled.
+    include_once $theme->filename;
+    $function = $theme->name .'_settings';
+    if (function_exists($function)) {
+      $items[] = array('path' => 'admin/themes/'. $theme->name, 'title' => $theme->name,
+        'callback' => 'system_configure_theme', 'access' => $access);
+    }
   }
 
   // Modules:
   $items[] = array('path' => 'admin/settings', 'title' => t('settings'),
     'callback' => 'system_site_settings', 'access' => $access);
-
-
-
   foreach (module_list() as $name) {
     // TODO: reenable 'forced refresh' once we move the menu_build() later
     //   in the request. It added overhead with no benefit.
@@ -110,7 +99,7 @@ function system_user($type, $edit, &$user, $category = NULL) {
     $options = '<option value="">'. t('Default theme') ."</option>\n";
     if (count($themes = list_themes()) > 1) {
       foreach ($themes as $key => $value) {
-        $options .= "<option value=\"$key\"". (($edit['theme'] == $key) ? ' selected="selected"' : '') .">$key</option>\n";
+        $options .= "<option value=\"$key\"". (($edit['theme'] == $key) ? ' selected="selected"' : '') .">$key - $value->description</option>\n";
       }
       $data[] = array('title' => t('Theme settings'), 'data' => form_item(t('Theme'), "<select name=\"edit[theme]\">$options</select>", t('Selecting a different theme will change the look and feel of the site.')), 'weight' => 2);
     }
@@ -214,9 +203,19 @@ function system_view_general() {
   return $output;
 }
 
-function system_module_listing() {
-  $directory = 'modules';
-  $type = 'module';
+function system_listing($type) {
+  // Pick appropriate directory and filetype
+  switch ($type) {
+    case 'modules':
+      $directory = 'modules';
+      $type = 'module';
+      break;
+    case 'themes':
+    default:
+      $directory = 'themes';
+      $type = 'theme';
+      break;
+  }
 
   // Find files in the directory.
   $files = file_scan_directory($directory, "\.$type$");
@@ -277,7 +276,12 @@ function system_module_listing() {
     db_query("INSERT INTO {system} (name, description, type, filename, status, throttle, bootstrap) VALUES ('%s', '%s', '%s', '%s', %d, %d, %d)", $info->name, $info->description, $type, $filename, $file->status, $file->throttle, $bootstrap);
 
     $row = array($info->name, $info->description, array('data' => (in_array($filename, $required) ? form_hidden("status][$filename", 1) . t('required') : form_checkbox('', "status][$filename", 1, $file->status)), 'align' => 'center'));
-    $row[] = array('data' => (in_array($filename, $throttle_required) ? form_hidden("throttle][$filename", 0) . t('required') : form_checkbox(NULL, "throttle][$filename", 1, $file->throttle, NULL, module_exist('throttle') ? NULL : array('disabled' => 'disabled'))), 'align' => 'center');
+    if ($type == 'module') {
+      $row[] = array('data' => (in_array($filename, $throttle_required) ? form_hidden("throttle][$filename", 0) . t('required') : form_checkbox(NULL, "throttle][$filename", 1, $file->throttle, NULL, module_exist('throttle') ? NULL : array('disabled' => 'disabled'))), 'align' => 'center');
+    }
+    else if ($type == 'theme') {
+      $row[] = array('data' => form_radio('', 'theme_default', $info->name, (variable_get('theme_default', 0) == $info->name) ? 1 : 0), 'align' => 'center');
+    }
     $rows[] = $row;
   }
 
@@ -285,145 +289,6 @@ function system_module_listing() {
   $output .= form_hidden('type', $type);
 
   return $output;
-}
-
-
-/**
- * Generate a list of all the available template/style combinations, aswell as update the system list
- */
-function system_theme_listing() {
-  $templates = file_scan_directory('templates', 'template.php$');
-
-  // Extract current files from database.
-  $result = db_query("SELECT filename, type, status, throttle FROM {system} WHERE type = 'style'");
-  while ($file = db_fetch_object($result)) {
-    foreach ($file as $key => $value) {
-      $files[$file->filename]->$key = $value;
-    }
-  }
-
-  foreach (array_keys($templates) as $template) {
-    $styles = file_scan_directory(dirname($template), 'style.css$');
-    foreach ($styles as $style) {
-      $info = parse_theme_path($style->filename);
-
-      // Force default to be enabled
-      if (variable_get('theme_default', 'chameleon/default') == $info['key']) {
-        $info["status"] = 1;
-      }
-      else {
-        $info['status'] = $files[$info['style_file']]->status;
-      }
-      $themes[$info["key"]] = $info;
-      // Update the contents of the system table:
-
-      db_query("DELETE FROM {system} WHERE filename = '%s' AND type = 'style'", $info['style_file']);
-      db_query("INSERT INTO {system} (name, description, type, filename, status, throttle, bootstrap) VALUES ('%s', '%s', 'style', '%s', %d, 0, 0)", $info['key'], $info['name'], $info['style_file'], $info['status']);
-    }
-  }
-  ksort($themes);
-
-  foreach ($themes as $key => $info) {
-    $row = array();
-
-    /**
-     * Screenshot column.
-     */
-    $row[] = file_exists($info['screenshot']) ? theme('image', $info['screenshot'], 'Screenshot for ' . $info['name'] . ' theme') :  t('no screenshot');
-
-    /**
-     * Information field.
-     */
-    $fields = array();
-    $fields[] = '<h2>' . ucfirst($info['name']) . '</h2>';
-    $fields[] = $info['key'];
-    $row[] = implode('<br />', $fields);
-
-
-    $row[] = array('data' => form_checkbox('', "status][" . $info['style_file'], 1, $info['status']), 'align' => 'center') ;
-    $row[] = array('data' => form_radio('', 'theme_default', $key,  (variable_get('theme_default', 'chameleon/default') == $key) ? 1 : 0), 'align' => 'center');
-    $row[] = array('data' => l('configure', "admin/themes/settings/$key"), 'align' => 'center');
-    $rows[] = $row;
-  }
-
-  $header = array('screenshot', 'information', 'enabled', 'default', 'operations');
-  $output = form_hidden("type", "theme");
-  $output  .= theme('table', $header, $rows);
-  return $output;
-}
-
-/**
- * Display configuration for the entire site, and individual themes.
- */
-function system_theme_settings() {
-  system_settings_save();
-  /**
-   * Default settings are defined in _theme_settings() in includes/theme.inc
-   */
-  $key = (arg(3) && arg(4)) ? arg(3) . "/" . arg(4) : null;
-  if ($key) {
-    $info = _theme_info($key);
-    $var = 'theme_' . arg(3) . '_' . arg(4) . '_settings';
-  }
-  else {
-    $info['settings'] = _theme_settings();
-    $var = 'theme_settings';
-  }
-
-  /**
-   * Logo settings
-   */
-  $group = form_checkbox('Use the default logo', "$var][default_logo", 1, $info['settings']['default_logo'], t('Check here if you want the theme to use the logo supplied with it.'));
-  $group .= form_textfield('Path to custom logo', "$var][logo_path", $info['settings']['logo_path'], 50, 60, t('The path to the file you would like to use as your logo file instead of the default logo.'));
-  $form .= form_group('Logo image settings', $group);
-
-  /**
-   * System wide only settings.
-   */
-  if (!$key) {
-    /**
-     * Menu settings
-     */
-    $group = form_textarea(t('Primary links'), "$var][primary_links", $info['settings']['primary_links'], 70, 8, t('The HTML code for the primary links. If this field is empty, Drupal will automatically generate a set of links based on which modules are enabled.'));
-    $group .= form_textarea(t('Secondary links'), "$var][secondary_links", $info['settings']['secondary_links'], 70, 8, t('The HTML code for the secondary links.'));
-    $form .= form_group('Menu Settings', $group, 'Customize the menus that are displayed at the top and/or bottom of the page. This configuration screen is only available in the site wide display configuration.');
-
-    /**
-     * Toggle node display.
-     */
-    $group = '';
-    foreach (node_list() as $type) {
-      $group .= form_checkbox($type, "$var][toggle_node_info_$type", 1, $info['settings']['toggle_node_info_$type']);
-    }
-    $form .= form_group('Display post information on', $group, 'Enable or disable the "submitted by Username on date" text when displaying posts of the above type');
-
-  }
-  /**
-   * Toggle settings
-   */
-  $group = form_checkbox('Logo image', "$var][toggle_logo", 1, $info['settings']['toggle_logo']);
-  $group .= form_checkbox('Site name', "$var][toggle_name", 1, $info['settings']['toggle_name']);
-  $group .= form_checkbox('Search box', "$var][toggle_search", 1, $info['settings']['toggle_search']);
-  $group .= form_checkbox('Site slogan', "$var][toggle_slogan", 1, $info['settings']['toggle_slogan']);
-  $group .= form_checkbox('Site mission', "$var][toggle_mission", 1, $info['settings']['toggle_mission']);
-  $group .= form_checkbox('Primary links', "$var][toggle_primary_links", 1, $info['settings']['toggle_primary_links']);
-  $group .= form_checkbox('Secondary links', "$var][toggle_secondary_links", 1, $info['settings']['toggle_secondary_links']);
-  $group .= form_checkbox('User pictures in nodes', "$var][toggle_node_user_picture", 1, $info['settings']['toggle_node_user_picture']);
-  $group .= form_checkbox('User pictures in comments', "$var][toggle_comment_user_picture", 1, $info['settings']['toggle_comment_user_picture']);
-  $form .= form_group('Toggle display', $group, 'Enable or disable the display of certain page elements.');
-
-  /**
-   * Template specific settings
-   */
-  if ($key && file_exists($info['template_dir'] . '/settings.php')) {
-    include_once($info['template_dir'] . '/settings.php');
-    if (function_exists('template_settings')) {
-      $group = template_settings($var);
-      $form .= form_group('Template specific settings', $group, t('These settings only exist for the %template template, and all the styles based on it.', array('%template' => $info['template'])));
-    }
-  }
-
-  print theme('page', system_settings_form($form));
 }
 
 function system_listing_save($edit = array()) {
@@ -477,13 +342,12 @@ function system_settings_save() {
   drupal_goto($_GET['q']);
 }
 
-
 /**
  * Menu callback; displays a listing of all themes.
  */
 function system_themes() {
   system_listing_save();
-  $form = system_theme_listing();
+  $form = system_listing('themes');
   $form .= form_submit(t('Save configuration'));
   print theme('page', form($form));
 }
@@ -493,9 +357,31 @@ function system_themes() {
  */
 function system_modules() {
   system_listing_save();
-  $form = system_module_listing();
+  $form = system_listing('modules');
   $form .= form_submit(t('Save configuration'));
   print theme('page', form($form));
+}
+
+/**
+ * Menu callback; displays a theme's settings page.
+ */
+function system_configure_theme() {
+  system_settings_save();
+
+  $name = arg(2);
+  $themes = list_themes();
+  $theme = $themes[$name];
+
+  if ($theme) {
+    include_once "$theme->filename";
+
+    $function = $theme->name .'_settings';
+    if (function_exists($function)) {
+      $form .= $function();
+    }
+  }
+
+  print theme('page', system_settings_form($form));
 }
 
 /**
