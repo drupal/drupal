@@ -6,7 +6,7 @@ include_once "includes/common.inc";
 include_once "includes/comment.inc";
 
 function drupal_render($id, $cid) {
-  global $theme, $threshold, $mode, $order, $user;
+  global $theme, $user;
 
   $output  = " <P>Drupal is the English pronunciation for the Dutch word 'druppel' which stands for 'drop'.  Drupal is a full-featured content management/discussion engine suitable to setup a news-driven community or portal site.  Drupal aims towards easy installation, excessive configuration and fine-grained maintenance capabilities.  Due to its modular design drupal is flexible and easy to adapt or extend.</P>\n";
   $output .= " <P>Drupal is primarily written by Dries Buytaert (dries_at_drop.org) and build after Slash (<A HREF=\"http://slashcode.com/\">http://slashcode.com/</A>) and Scoop (<A HREF=\"http://scoop.kuro5hin.org/\">http://scoop.kuro5hin.org/</A>).  The source code is available under terms of GNU General Public License (GPL).</P>\n";
@@ -35,9 +35,6 @@ function drupal_render($id, $cid) {
 
   print "<H3>Comments</H3>\n";
 
-  // Display 'comment control'-box:
-  if ($user->id) $theme->controls($threshold, $mode, $order);
-
   // Display comments:
   comment_render($id, $cid);
 }
@@ -59,7 +56,7 @@ function drupal_page() {
       comment_reply($pid, $id);
       $theme->footer();
       break;
-    case "Update":
+    case "Update settings":
       comment_settings($mode, $order, $threshold);
       $theme->header();
       drupal_render($id, $cid);
