@@ -771,6 +771,24 @@ function update_data($start) {
   }
 }
 
+function update_page_header($title) {
+  $output = "<html><head><title>$title</title>";
+  $output .= <<<EOF
+      <link rel="stylesheet" type="text/css" media="print" href="misc/print.css" />
+      <style type="text/css" title="layout" media="Screen">
+        @import url("misc/admin.css");
+      </style>
+EOF;
+  $output .= "</head><body><a href=\"http://drupal.org/\">";
+  $output .= "<img align=\"right\" src=\"misc/druplicon-small.gif\" alt=\"Druplicon - Drupal logo\" border=\"0\" /></a>";
+  $output .= "<div id=\"update\"><h1>$title</h1>";
+  return $output;
+}
+
+function update_page_footer() {
+  return "</div></body></html>";
+}
+
 function update_page() {
   global $user, $mysql_updates;
 
@@ -779,7 +797,7 @@ function update_page() {
   switch ($_POST["op"]) {
     case "Update":
       // make sure we have updates to run.
-      print "<html><h1>Drupal database update</h1>";
+      print update_page_header("Drupal database update");
       print "<b>&raquo; <a href=\"index.php\">main page</a></b><br />\n";
       print "<b>&raquo; <a href=\"index.php?q=admin\">administration pages</a></b><br />\n";
         // NOTE: we can't use l() here because the URL would point to 'update.php?q=admin'.
@@ -791,11 +809,11 @@ function update_page() {
       }
       print "<br />Updates were attempted. If you see no failures above, you may proceed happily to the <a href=\"index.php?q=admin\">administration pages</a>.";
       print " Otherwise, you may need to update your database manually.";
-      print "</html>";
+      print update_page_footer();
       break;
     case "upgrade3":
       // make sure we have updates to run.
-      print "<html><h1>Drupal upgrade</h1>";
+      print update_page_header("Drupal upgrade");
       print "<b>&raquo; <a href=\"index.php\">home</a></b><br />\n";
       print "<b>&raquo; ". l("admin pages", "admin"). "</b><br /><br />\n";
       if ($edit["start"] == -1) {
@@ -807,7 +825,7 @@ function update_page() {
       print "<pre>\n";
       update_upgrade3();
       print "</pre>\n";
-      print "</html>";
+      print update_page_footer();
       break;
     case "upgrade4":
       variable_set("update_start", "2002-05-15");
@@ -825,12 +843,12 @@ function update_page() {
       $dates[$i] = "No updates available";
 
       // make update form and output it.
-      $form .= form_select("Perform updates since", "start", (isset($selected) ? $selected : -1), $dates);
+      $form .= form_select("Perform updates from", "start", (isset($selected) ? $selected : -1), $dates, "This defaults to the first available update since the last update you peformed.");
       $form .= form_select("Stop on errors", "bail", 0, array("Disabled", "Enabled"), "Don't forget to backup your database before performing an update.");
       $form .= form_submit("Update");
-      print "<html><h1>Drupal database update</h1>";
+      print update_page_header("Drupal database update");
       print form($form);
-      print "</html>";
+      print update_page_footer();
       break;
   }
 }
@@ -848,7 +866,7 @@ function update_content($pattern) {
 }
 
 function update_info() {
-  print "<html><h1>Drupal database update</h1>";
+  print update_page_header("Drupal database update");
   print "<ol>\n";
   print "<li>Use this script to <b>upgrade an existing Drupal installation</b>.  You don't need this script when installing Drupal from scratch.</li>";
   print "<li>Before doing anything, backup your database. This process will change your database and its values, and some things might get lost.</li>\n";
@@ -874,7 +892,7 @@ function update_info() {
   print "</li>";
   print "<li>Go through the various administration pages to change the existing and new settings to your liking.</li>\n";
   print "</ol>";
-  print "</html>";
+  print update_page_footer();
 }
 
 if (isset($_GET["op"])) {
@@ -885,7 +903,9 @@ if (isset($_GET["op"])) {
     update_page();
   }
   else {
+    print update_page_header("Access denied");
     print "Access denied.  You are not authorized to access to this page.  Please log in as the user with user ID #1 or edit <code>update.php</code> to by-pass this access check; search for <code>\$user->uid == 1</code> near the bottom of the file.";
+    print update_page_footer();
   }
 }
 else {
