@@ -57,8 +57,8 @@ function poll_block($op = "list", $delta = 0) {
           poll_view($poll, 1, 1);
         }
       }
-      $block["subject"] = t("Poll: %t", array("%t" => $poll->title));
-      $block["content"] = $poll->body;
+      $block["subject"] = t("Poll");
+      $block["content"] = "<div class=\"poll-title\">$poll->title</div>$poll->body";
       return $block;
     }
   }
