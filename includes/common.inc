@@ -99,11 +99,28 @@ function request_uri() {
   global $REQUEST_URI, $PATH_INFO, $QUERY_STRING;
 
   if ($REQUEST_URI) {
-    return $REQUEST_URI;
+    $uri = $REQUEST_URI;
   }
   else {
-    return $PATH_INFO ."?". $QUERY_STRING;
+    $uri = $PATH_INFO ."?". $QUERY_STRING;
   }
+
+  /*
+  ** We pipe the request URI through htmlspecialchars() to prevent
+  ** XSS attacks.
+  */
+
+  $uri = htmlspecialchars($uri, ENT_QUOTES);
+
+  /*
+  ** We replace ( and ) with their entity equivalents to prevent XSS
+  ** attacks.
+  */
+
+  $uri = strtr($uri, array("(" => "&040;", ")" => "&041;"));
+
+
+  return $uri;
 }
 
 function message_access() {
@@ -592,7 +609,7 @@ function format_tag($link, $text) {
 }
 
 function form($form, $method = "post", $action = 0, $options = 0) {
-  return "<form action=\"". ($action ? $action : htmlentities(request_uri())) ."\" method=\"$method\"". ($options ? " $options" : "") .">\n$form</form>\n";
+  return "<form action=\"". ($action ? $action : request_uri()) ."\" method=\"$method\"". ($options ? " $options" : "") .">\n$form</form>\n";
 }
 
 function form_item($title, $value, $description = 0) {
