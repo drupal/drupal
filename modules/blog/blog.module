@@ -202,7 +202,7 @@ function blog_save($edit) {
 
   if ($user->id && (user_access("administer blogs") || user_access("post blogs"))) {
     if (!$edit["nid"]) {
-      node_save($edit, array(author => $user->id, body, status => variable_get("blog_status", $status[posted]), timestamp => time(), title, type => "blog"));
+      node_save($edit, array(attributes => node_attributes_save("blog", $edit), author => $user->id, body, comment => variable_get("blog_comment", 0), moderate => variable_get("blog_moderate", ""), promote => variable_get("blog_promote", 0), score => 0, status => variable_get("blog_status", $status[queued]), timestamp => time(), title, type => "blog", votes => 0));
     }
     else {
       node_save($edit, array(title, body, type => "blog"));
