@@ -15,10 +15,13 @@ drupal x.xx, xx/xx/xxxx (CVS, unstable)
     * added "auto-post new submissions" feature versus "moderate new submissions".
 - rewrote configuration file resolving:
     * Drupal tries to locate a configuration file that matches your domainname or uses conf.php if the former failed.  Note also that the configuration files got renamed from .conf to .php for security's sake on mal-configured Drupal sites.
+- added access.module:
+    * allows you to setup 'roles' (groups) and to bind a set of permissions to each group.
 - added poll.module.
-- added conf.module:
+- added system.module:
     * moved most of the configuration options from hostname.conf to the new administration section.
     * added support for custom "filters".
+- added statistics.module
 - added moderate.module:
     * allows to assign users editorial/moderator rights to certain nodes or topics.
 - added page.module:
@@ -32,6 +35,7 @@ drupal x.xx, xx/xx/xxxx (CVS, unstable)
 - added book.module:
     * allows collaborative handbook writing: primary used for drupal documentation.
 - removed cron.module and integrated it into conf.module.
+- removed module.module as it was no longer needed.
 - various updates:
     * introduced links/drupal tags: [[link]]
     * added preview functionality when submitting new content (such as a story) from the administration pages.
