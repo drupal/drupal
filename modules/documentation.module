@@ -3,56 +3,151 @@
 $module = array("page"  => "documentation",
                 "admin" => "documentation");
 
+function documentation_module($name, $module) {
+  print "<H2>". ucfirst($name) ."</H2>\n";
+  if ($module["help"]) $module["help"]();
+  else print "<I>No documentation available for module '$name'.</I>\n";
+}
+
 function documentation() {
   ?>
   <SMALL><I>$Id$</I></SMALL>
- 
-  <H2>Chapter 1: installation guide</H2>
+  
+  <H1>Chapter 1: introduction</H1>
 
-  <H3>System requirements</H3>
-  <P>We assume that you have some working experience with Apache, MySQL and PHP.  The installation of these required packages is beyond the scope of this document.</P>
+  <P>Drupal (which is the English pronounciation of the dutch word 'druppel' that stands for 'drop') is a full-featured content management/discussion engine suitable to setup a news-driven community or portal site.  Drupal aims towards easy installation, exessive configuration and fine-grained maintainance capabilities.</P>
+  <P>Drupal build after Slash (<A HREF="http://slashcode.com/">http://slashcode.com/</A>) and Scoop (<A HREF="http://scoop.kuro5hin.org/">http://scoop.kuro5hin.org/</A>).</P>
+
+  <H1>Chapter 2: installation</H1>
+
+  <H2>System requirements</H2>
+
+  MySQL<BLOCKQUOTE><A HREF="http://mysql.com/">http://mysql.com/</A><BR>(development with version 3.22.32)</BLOCKQUOTE>
+  PHP4<BLOCKQUOTE><A HREF="http://php.net/">http://php.net/</A><BR>(development with version 4.0.0 and 4.0.4)</BLOCKQUOTE>
+  Apache<BLOCKQUOTE><A HREF="http://apache.org/">http://apache.org/</A><BR>(development with version 1.3.14)</BLOCKQUOTE>
+
+  <H2>Installation process</H2>
+
+  <P><B>1.</B> We assume that you have some working experience with Apache, MySQL and PHP.  If you still need to install Apache, MySQL or PHP, please install them now.  The installation of these required packages is beyond the scope of this document but make sure your Apache is setup to allow <CODE>.htaccess</CODE> files so that we can override Apache options from within the drupal directories.</P>
+  <P><B>2.</B> Unzip the distribution tarball into the directory you want to serve web files from:</P>
+  <BLOCKQUOTE>$ tar -zxvf drupal-x.x.x.tar.gz</BLOCKQUOTE>
+  <P><B>3.</B> Create a MySQL database for your drupal site (if not already done so):</P>
+  <BLOCKQUOTE>$ mysqladmin create &lt;database&gt;</BLOCKQUOTE>
+  <P>Make sure to check the MySQL documentation on how to setup the right access rights and permissions in your MySQL grant table.</P>
+  <P><B>4.</B> Once you have a proper database, dump the required tables into your database:</P>
+  <BLOCKQUOTE>$ mysql -h &lt;hostname&gt; -u &lt;username&gt; -p&lt;password&gt; &lt;database&gt; < ./database/databasy.mysql </BLOCKQUOTE>
+  <P><B>5.</B> Copy the file <CODE>includes/hostname.conf</CODE> to match your server's hostname:</P>
+  <BLOCKQUOTE>$ cp ./includes/hostname.conf ./includes/www.yourdomain.com.conf</BLOCKQUOTE>
+  <P><B>6.</B> Edit your configuration file to set the required settings such as the database options and to customize your site to your likings.</P>
+  <P><B>7.</B> Launch your browser and point it to http://yourdomain.com/, create an account, log in and head on to http://yourdomain.com/admin.php.  The first user will automatically have administrator permissions.  Play with it for a bit and spend some time getting used to the administration interfaces.</P>
+  <P><B>8. (optional)</B> Optionally (yet recommended for a smooth operation) setup a crontab to periodically visit http://yourdomain.com/cron.php.</P>
+  <P>Use a browser like lynx or wget but make sure the process terminates: either use /usr/bin/lynx -source http://yourdomain.com/cron.php or /usr/bin/wget -O /dev/null http://yourdomain.com/cron.php. Take a look at the example scripts in the <CODE>scripts</CODE>-directory and make sure to adjust them to your needs.</P>
+  <P>A good crontab-line to run the cron-script once every hour would be:</P>
   <PRE>
-   MySQL  -  http://mysql.com/
-             (development with version 3.22.32)
+    00 * * * * /home/www/drupal/scripts/cron-lynx
+  </PRE>
+  <P><B>9. (optional)</B> Create your site's theme or at least customize the existing themes.  To get started, head on to the <CODE>themes</CODE>-directory and make a custom logo for each theme.
+  <P><B>10. (optional)</B> Add and remove modules to customize the functionality of your site.  Adding and removing modules is plain easy.  You can add a module by copying the files into the <CODE>modules</CODE>-directory and you can remove a module by removing a module's file from the <CODE>modules</CODE>-directory.  The drupal engine will then automatically include or exclude this module.  If for some reason, this seems to fail, "manually" rehash the modules list from http://yourdomain.com/admin.php?mod=module.</P>
+  <P><B>11.</B> If you get is to run, let us know at <A HREF="mailto:info@drop.org">info@drop.org</A> so we can add your site to our list of drupal sites.  If you can't get it to run, you can find support at the drupal site or you can contact us by e-mail at <A HREF="mailto:info@drop.org">info@drop.org</A>.</P>
 
-   PHP4   -  http://php.net/
-             (development with version 4.0.0)
-         
-   Apache -  http://apache.org/
-             (development with version 1.3.14)
+  <H2>More than one (sub)domain on one machine</H2>
+
+  <H3>Multiple (sub)domains using the same database</H3>
+  <P>If you want to host multiple domains (or subdomains) on top of the same database (e.g. http://yourdomain.com/ and http://www.yourdomain.com/), simply use symbolic links to setup the required configuration files:</P>
+  <BLOCKQUOTE>$ ln -s includes/yourserver.com.conf includes/www.yourserver.com.conf</BLOCKQUOTE>
+  <PRE>
+   $ ls -l includes/*.conf
+   -rw-rw-r--    1 drupal   drupal      includes/yourdomain.com.conf
+   lrwxrwxrrx    1 drupal   drupal      includes/www.yourdomain.com.conf -> includes/yourdomain.com.conf
   </PRE>
 
-  <H3>Installation process</H3>
-
-  <H3>More than one engines on one machine</H3>
-
+  <H3>Multiple (sub)domains using different databases</H3>
   <P>Apache supports both IP- and name-based virtual hosts (vhosts).  While running more than one engine (by using vhosts) can be very useful for development and testing purpose, it might even be more interesting for hosting companies.  Therefore, we tried to support vhosts in the best possible way in order to make life of any administrator easier.  We do so by making it possible to run an unlimited amount of vhosts on the same physical source tree, though by using different configuration files.  Moreover, you can setup multiple configuration files in your <CODE>includes</CODE>-directory.</P>
   <PRE>
-   [drop@localhost drop]$ ls -l includes/*.conf
-   -rw-rw-r--    1 drop    drop        includes/www.yourdomain1.com.conf
-   -rw-rw-r--    1 drop    drop        includes/www.yourdomain2.com.conf
+   $ ls -l includes/*.conf
+   -rw-rw-r--    1 drupal   drupal      includes/www.yourdomain1.com.conf
+   -rw-rw-r--    1 drupal   drupal      includes/www.yourdomain2.com.conf
   </PRE>
   <P>The only thing left to be done is to setup the corresponding vhosts in your Apache configuration file.  Note that the <CODE>DocumentRoot</CODE> points to the same source tree twice:</P>
   <PRE>
    NameVirtualHost 127.0.0.1
 
    &lt;VirtualHost 127.0.0.1&gt;
-     DocumentRoot /home/www/drop
+     DocumentRoot /home/www/drupal
      ServerName www.yourdomain1.com
    &lt;/VirtualHost&gt;
 
    &lt;VirtualHost 127.0.0.1&gt;
-     DocumentRoot /home/www/drop
+     DocumentRoot /home/www/drupal
      ServerName www.yourdomain2.com
    &lt;/VirtualHost&gt;
   </PRE>
 
-  <H2>Chapter 2: technical guide</H2>
+  <H1>Chapter 3: drupal engine</H1>
 
-  <H3>Theme system</H3>
+  <H2>Block</H2>
   
-  <P>Drop's theme system is simple, elegant, flexible and powerful.  It let you control all aspect of your drop site in terms of colors, markup, layout and even the position of most boxes.  You can leave boxes out, move them from right to left, up and down until it fit your needs.  Therefore, drop uses a theme class that has a handful of functions. The drop.org engine dynamically loads the correct theme class, instantiates it and then calls these class' functions where approriate.</P>
-  <P>Let's illustrate this with an easy example. Say, to generate the main page, the drop.org engine would use something like:</P>
+  <H2>Cron</H2>
+ 
+  <P>Cron (wich stands for chronograph) is a periodic command scheduler: it executes commands at intervals specified in seconds.  It can be used to control the execution of daily, weekly and monthly jobs (or anything with a period of n seconds).   Automating tasks is one of the best ways to keep a system running smoothly, and if most of your administration does not require your direct involvement, cron is an ideal solution.</P>
+  <P>Note that cron does not guarantee that the commands will be executed at the specified interval.  However, the engine will make sure that the commands are run at the specified intervals as closely as possible.</P>
+  <P>Whenever <CODE>http://yourdomain.com/cron.php</CODE> is accessed, cron will run: it queries the database for the jobs cron controls, and their periods in seconds.  If a certain task wasn't executed in the last n seconds, where n is the period of that job, it will be executed.  It then records the date in the database so it can know when to run it again.  When all the executed commands terminate, cron is done.</P>
+  <P>Cron is handy to run daily, weekly and monthly tasks that take care of various "housekeeping chores" such as database maintainance, recalculating settings, periodic mailings, scheduled backups and so on.</P>
+  <P>The recommended way to setup drupal's cron system is to setup a  Unix/Linux <CODE>crontab</CODE> that frequently visits <CODE>http://yourdomain.com/cron.php</CODE>: the more you visit <CODE>cron.php</CODE>, the more accurate cron can and will be.  If your hosting company does not allow you to setup <CODE>crontabs</CODE>, you can always ask someone else to setup a <CODE>crontab</CODE> for you.  Afterall, virtually any host machine with access to the internet can setup a <CODE>crontab</CODE> to frequently visit <CODE>http://yourdomain.com/cron.php</CODE> for you.<P>
+  <P>For the <CODE>crontab</CODE> itself, use a browser like <CODE>lynx</CODE> or <CODE>wget</CODE> but make sure the process terminates: either use <CODE>/usr/bin/lynx -source http://yourdomain.com/cron.php</CODE> or <CODE>/usr/bin/wget -O /dev/null http://yourdomain.com/cron.php</CODE>.  Take a look at the example scripts in the <CODE>scripts</CODE>-directory and make sure to adjust them to your needs.</P>
+  <P>A good <CODE>crontab</CODE>-line to run the <CODE>cron</CODE>-script once every hour would be:</P>
+  <PRE>
+    00 * * * * /home/www/drupal/scripts/cron-lynx
+  </PRE>
+
+  <H2>Database abstraction</H2>
+
+  <P>Drupal uses a database abstraction layer so I can easily run on top of different databases like MySQL, Oracle, Postgres and so on.  However, the only supported database is MySQL for the time being.  In fact, we haven't even bothered or tried to migrate to another database so our database abstraction layer might even contain undiscovered flaws.  Nevertless, moving to another database shouldn't be much of a problem.</P>
+  <P>Take a look at <CODE>includes/database.inc</CODE> to see what database functions are supported.</P>
+
+  <H2>Modules</H2>
+    
+  <P>When developing drupal it became clear that we wanted to have a system which is as modular as possible. A modular design will provide flexibility, adaptability, and continuity which in turn allows people to customize the site to their needs and likings.</P>
+  <P>A drupal module is simply a file containing a set of routines written in PHP.  When used, the module code executes entirely within the context of the site.  Hence it can use all the functions and access all variables and structures of the main engine.  In fact, a module is not any different from any other PHP file: it is more of a notion that automatically leads to good design principles and a good development model. Modularity better suits the open-source development model, because otherwise you can't easily have people working in parallel without risk of interference.</P>
+  <P>The idea is to be able to run random code at given places in the engine.  This random code should then be able to do whatever needed to enhance the functionality.  The places where code can be executed are called "hooks" and are defined by a fixed interface.</P>
+  <P>In places where hooks are made available, the engine calls each module's exported functions.  This is done by iterating through the <CODE>modules</CODE> directory where all modules must reside.  Say your module is named <CODE>foo</CODE> (i.e. <CODE>./modules/foo.module</CODE>) and if there was a hook called <CODE>bar</CODE>, the engine will call <CODE>foo_bar()</CODE> if this was exported by your module.</P>
+  <P>Each module has to declare an associative array named <CODE>$module</CODE> that serves as the list of hooks that a module wants to export or carry out.  Each entry in the array contains the name of a hook followed by the name of the exported function.</P>
+  <P>In our above example, our associative array <CODE>$module</CODE> would look like:</P>
+  <PRE>
+    $module = array("bar" => "foo_bar");
+  </PRE>  
+  <TABLE BORDER="1">
+   <TR>
+    <TH>Hook name</TH>
+    <TH>Hook description</TH>
+   </TR>
+   <TR>
+    <TD VALIGN="top"><CODE>admin</CODE></TD>
+    <TD VALIGN="top">If a module requires a spot in the administrator section it should implement <CODE>module_admin</CODE>.  The engine will automatically add a link to the administration menus and will call <CODE>module_admin</CODE> when this link is followed.  In order to make virtually any module maintainer's life easier, you don't have to worry about access rights or permissions for that matter.  The engine will only allow priveleged users to call exported <CODE>admin</CODE> functions.</TD>
+   </TR>
+   <TR>
+    <TD VALIGN="top"><CODE>cron</CODE></TD>
+    <TD VALIGN="top">Modules that require to schedule some commands to be executed on regular intervals can implement the <CODE>cron</CODE> interface: the engine will then call <CODE>module_cron</CODE> at the appropriate intervals defined by the administrator.  This interface is particulary handy to implement timers or to automate certain tasks like for instance database maintainance, recalculation of settings or parameters, automatic mailings and so on.</TD>
+   </TR>
+   <TR>
+    <TD VALIGN="top"><CODE>help<CODE></TD>
+    <TD VALIGN="top">By implementing the help hook a module can make documentation available to the engine or other modules.</TD>
+   </TR>
+   <TR>
+    <TD VALIGN="top"><CODE>export</CODE></TD>
+    <TD VALIGN="top">The export hook allows a module to export data and to function as a XML/RDF/RSS backend.  All you have to do in your export function is examine the array with string and figure out where you're at.  This hook is typically used to export news headlines, but can be used to export virtually anything ranging from diary entries, reviews, rapports to entire discussions.</TD>
+   </TR>
+   <TR>
+    <TD VALIGN="top"><CODE>page</CODE></TD>
+    <TD VALIGN="top">If a module requires it's own page it should provide a function named <CODE>module_page</CODE>.  The page can then be publicly accessed via <CODE>http://yourdomain.com/module.php?mod=module</CODE> which will cause the engine to invoke <CODE>module_page</CODE> in order to generate the module's page.</TD>
+   </TR>
+  </TABLE>
+  <P>Even though we aim towards modularity, a basic rule is to avoid defined interfaces.  We are exceptionally careful when it comes down to adding hooks because once you give a hook to developers they will start coding to it and once somebody starts coding to it you are stuck with it.</P>
+
+  <H2>Theme system</H2>
+  
+  <P>Drupal's theme system is simple, elegant, flexible and powerful.  It let you control all aspect of your drupal site in terms of colors, markup, layout and even the position of most boxes.  You can leave boxes out, move them from right to left, up and down until it fit your needs.  Therefore, drupal uses a theme class that has a handful of functions. The drupal engine dynamically loads the correct theme class, instantiates it and then calls these class' functions where approriate.</P>
+  <P>Let's illustrate this with an easy example. Say, to generate the main page, the drupal engine would use something like:</P>
   <PRE>
    $theme = new Theme(); 
    $theme->header();   
@@ -64,103 +159,85 @@ function documentation() {
    $theme->footer(); 
      // displays the footer of a page
   </PRE>
-  <P>We have similar functions for thinkgs like comments (i.e. <CODE>$theme->comment($comment)</CODE>), generic boxes (i.e. <CODE>$theme->box($topic, $body)</CODE>) and so on.</P>
+  <P>We have similar functions for things like comments (i.e. <CODE>$theme->comment($comment)</CODE>), generic boxes (i.e. <CODE>$theme->box($topic, $body)</CODE>) and so on.  To create your own theme, you simply need to provide a new implementation of these functions.</P>
   <P>This simple and straight-forward approach has proven to be both flexible and fast.  If you want to learn more about the theme system, we recommand you to look athe code of the existing themes.  It is pretty straight-forward and doesn't require any knowledge about the engine itself.</P>
 
-  <H3>Modules</H3>
-    
-  <P>When developing drop.org it became clear that we wanted to have a system which is as modular as possible. A modular design will provide flexibility, adaptability, and continuity which in turn allows people to customize the site to their needs and likings.</P>
-  <P>A drop module is simply a file containing a set of routines written in PHP.  When used, the module code executes entirely within the context of the site.  Hence it can use all the functions and access all variables and structures of the main engine.  In fact, a module is not any different from any other PHP file: it is more of a notion that automatically leads to good design principles and a good development model. Modularity better suits the open-source development model, because otherwise you can't easily have people working in parallel without risk of interference.</P>
-
-  <P>The idea is to be able to run random code at given places in the engine.  This random code should then be able to do whatever needed to enhance the functionality.  The places where code can be executed are called "hooks" and are defined by a fixed interface.</P>
-  <P>Even though we aim towards modularity, a basic rule is to avoid defined interfaces.  We are exceptionally careful when it comes down to adding interfaces because once you give an interface to developers they will start coding to it and once somebody starts coding to it you are stuck with it.</P>
-  <P>In places where hooks are made available, the engine calls each module's exported functions.  This is done by iterating through the <CODE>modules</CODE> directory where all modules must reside.  Say your module is named <CODE>foo</CODE> (i.e. <CODE>./modules/foo.module</CODE>) and if there was a hook called <CODE>bar</CODE>, the engine will call <CODE>foo_bar()</CODE> if this was exported by your module.</P>
-  <P>Each module has to declare an associative array named <CODE>$module</CODE> that serves as the list of hooks that a module wants to export or carry out.  Each entry in the array contains the name of a hook followed by the name of the exported function.</P>
-  <P>In our above example, our associative array <CODE>$module</CODE> would look like:</P>
-  <PRE>
-    $module = array("bar" => "foo_bar");
-  </PRE>
+  <H2>User management</H2>
   
-  <TABLE BORDER="1">
-   <TR>
-    <TH>Hook name</TH>
-    <TH>Hook description</TH>
-   </TR>
-   <TR>
-    <TD VALIGN="top"><CODE>page</CODE></TD>
-    <TD VALIGN="top">If a module requires it's own page it should provide a function named <CODE>module_page</CODE>.  The page can then be publicly accessed via <CODE>http://www.yourdomain.com/module.php?mod=module</CODE> which will cause the engine to invoke <CODE>module_page</CODE> in order to generate the module's page.</TD>
-   </TR>
-   <TR>
-    <TD VALIGN="top"><CODE>cron</CODE></TD>
-    <TD VALIGN="top">Modules that require to schedule some commands to be executed on regular intervals can implement the <CODE>cron</CODE> interface: the engine will then call <CODE>module_cron</CODE> at the appropriate intervals defined by the administrator.  This interface is particulary handy to implement timers or to automate certain tasks like for instance database maintainance, recalculation of settings or parameters, automatic mailings and so on.</TD>
-   </TR>
-   <TR>
-    <TD VALIGN="top"><CODE>admin</CODE></TD>
-    <TD VALIGN="top">If a module requires a spot in the administrator section it should implement <CODE>module_admin</CODE>.  The engine will automatically add a link to the administration menus and will call <CODE>module_admin</CODE> when this link is followed.  In order to make virtually any module maintainer's life easier, you don't have to worry about access rights or permissions for that matter.  The engine will only allow priveleged users to call exported <CODE>admin</CODE> functions.</TD>
-   </TR>
-   <TR>
-    <TD VALIGN="top"><CODE>export</CODE></TD>
-    <TD VALIGN="top">... All you have to do is examine the string and figure out where you're at.</TD>
-   </TR>
-   <TR>
-    <TD VALIGN="top"></TD>
-    <TD VALIGN="top"></TD>
-   </TR>
-   <TR>
-    <TD VALIGN="top"></TD>
-    <TD VALIGN="top"></TD>
-   </TR>
-   <TR>
-    <TD VALIGN="top"></TD>
-    <TD VALIGN="top"></TD>
-   </TR>
-  </TABLE>
+  <H1>Chapter 4: drupal modules</H1>
 
-  <H3>Droplets</H3>
+  <?
+   module_iterate("documentation_module");
+  ?>
 
-  <P>The site can be almost entirely configured through a web interface by using <I>droplets</I>.  Simply put, droplets are small bit of PHP code which will get plugged into the engine or modules powering the site.  Droplets are typically used to link modules with the mainstream engine or to customize various aspects of the engine itself.</P>
-  <P>If you know how to script in PHP, droplets are pretty simple to create.  Don't get your panties in a knot if you are not confident with PHP: simply use the standard droplets (i.e. those available by default) as they are just fine or ask an expert dropletber to help you creating custom droplets that fit your need.</P>
-  <P>Each droplet consists of a key of maximum 255 characters and an associated block of PHP code which can be as long as you want it to be.  You can use any piece of PHP code to make up a droplet.  A droplet's code is stored in the database and the engine or a particular module will use the key to find the associated piece of PHP code which will then be dynamically embedded in the engine or the module just-in-time for execution.</P>
-  <P>There are however some factors to keep in mind when using and creating droplets: droplets can be extremly useful and flexible, yet be dangerous and insecure if not properly used.  If you are not confident with PHP, SQL or even with the site engine for that matter, avoid experimenting with droplets because you can - and you probably will - corrupt your database or even break your site!</P>
-  <P>Remember that the code within each droplet must be valid PHP code, including things like terminating statements with a semicolon so the parser won't die.  Therefore, it is highly recommended to test your droplets seperatly using a simple test script on top of a test database before migrating to your production environment running your real database.</P>
-  <P>Note that you can use any global variables, such as configuration parameters within the scope of a droplet and keep in mind that variables that have been given values in a droplet will retain these values in the engine or module afterwards.</P>
-  <P>You may as well use the <CODE>return</CODE> statement to return a value back to the engine.</P>
-  <P><U>A basic example:</U></P>
-  <P>Given the droplet with key <CODE>sumbit_information</CODE>, used in <CODE>submit.php</CODE> to retrieve and display submission guidelines at the top of the story submission page.  A simple code block for this droplet could look like this:</P>
-  <PRE>
-   return "Welcome visitor, ... sumbission guidelines go here ...";
-  </PRE>
-  <P>If we are however dealing with a registered user, we can customize the message by using:
-  <PRE>
-   if ($user) {
-     return "Welcome $user->userid, ... submission guidelines go here ...";
-   }
-   else {
-     return "Welcome visitor, ... sumbission guidelines go here ...";
-   }
-  </PRE>
-  <P>For more in depth example, we recommand you to check any of the available modules and to go from there.</P>
-  <P>As said above, you can virtually use any piece of PHP code in a droplet: you can declare and use functions, consult the SQL database, access configuration settings and so on.</P>
+  <H1>Chapter 5: development</H1>
 
-  <H3>Database abstraction</H3>
+  <P>The drupal engine is open source.  It is possible for each and every user to become a contributor.  The fact remains that most drupal users, even those skilled in programming arts, have never contributed to the code even though most of us had days where we thought to ourselves: "I wish drupal could do this or that ...".  Through this page, I hope I can make drupal programming more accessible to at least a small percentage of people.</P>
+  <P>We use diff and patch for content control even though we distribute our code via CVS.  Why?  Because diff and patch provide an immense amount of control.  Patches can be submitted via e-mail and in plain text; maintainers can read and judge the patch before it ever gets near a tree.  It allows maintainers to look at changes easily without blindly integrating them.</P>
 
-  <P>Drop uses a database abstraction layer so I can easily run on top of different databases like MySQL, Oracle, Postgres and so on.  However, the only supported database is MySQL for the time being.  In fact, we haven't even bothered or tried to migrate to another database so our database abstraction layer might even contain undiscovered flaws.  Nevertless, moving to another database shouldn't be much of a problem.</P>
-  <P>Take a look at <CODE>includes/database.inc</CODE> to see what database functions are supported.</P>
-  
-  <H3>Cron</H3>
+  <H2>CVS</H2>
+
+  <H3>Introduction</H3>
  
-  <P>Cron (wich stands for chronograph) is a periodic command scheduler: it executes commands at intervals specified in seconds.  It can be used to control the execution of daily, weekly and monthly jobs (or anything with a period of n seconds).   Automating tasks is one of the best ways to keep a system running smoothly, and if most of your administration does not require your direct involvement, cron is an ideal solution.</P>
-  <P>Note that cron does not guarantee that the commands will be executed at the specified interval.  However, the engine will make sure that the commands are run at the specified intervals as closely as possible.</P>
-  <P>Whenever <CODE>http://www.yourdomain.com/cron.php</CODE> is accessed, cron will run: it queries the database for the jobs cron controls, and their periods in seconds.  If a certain task wasn't executed in the last n seconds, where n is the period of that job, it will be executed.  It then records the date in the database so it can know when to run it again.  When all the executed commands terminate, cron is done.</P>
-  <P>Cron is handy to run daily, weekly and monthly tasks that take care of various "housekeeping chores" such as database maintainance, recalculating settings, periodic mailings, scheduled backups and so on.</P>
+  <P>CVS is a tool to manage software revisions and release control in a multi-developer, multi-directory, multi-group environment.  It comes in very handy to maintain local modificiations.</P>
+  <P>Thus, CVS helps you if you are part of a group of people working on the same project.  In large software development projects, it's usually necessary for more then one software developer to be modifying modules of the code at the same time.  Without CVS, it is all too easy to overwrite each others' changes unless you are extremely careful.</P>
+  <P>We can hand out CVS accounts rather then full-features shell accounts or ftp accounts, and having to mess with groups to give everyone access to the sources.  We could create a public read-only CVS account so beta testers could checkout the latest snapshot of the code.</P>
+  <P>In addition, CVS helps to keep track of all changes.  Therefore, the CVS server has been setup to mail all CVS commits to all maintainers.  Thus, it does not require any effort to inform the other people about the work you have done, and by reading the mails everyone is kept up to date.</P>
 
-  <P>The recommanded way to setup drop.org's cron system is to setup a  Unix/Linux <CODE>crontab</CODE> that frequently visits <CODE>http://www.yourdomain.com/cron.php</CODE>: the more you visit <CODE>cron.php</CODE>, the more accurate cron can and will be.  If your hosting company does not allow you to setup <CODE>crontabs</CODE>, you can always ask someone else to setup a <CODE>crontab</CODE> for you.  Afterall, virtually any host machine with access to the internet can setup a <CODE>crontab</CODE> to frequently visit <CODE>http://www.yourdomain.com/cron.php</CODE> for you.<P>
-  <P>For the <CODE>crontab</CODE> itself, use a browser like <CODE>lynx</CODE> or <CODE>wget</CODE> but make sure the process terminates: either use <CODE>/usr/bin/lynx -source http://www.yourdomain.com/cron.php</CODE> or <CODE>/usr/bin/wget -O /dev/null http://www.yourdomain.com/cron.php</CODE>.  Take a look at the example scripts in the <CODE>scripts</CODE>-directory and make sure to adjust them to your needs.</P>
-  <P>A good <CODE>crontab</CODE>-line to run the <CODE>cron</CODE>-script once every hour would be:</P>
-  <PRE>
-    00 * * * * /home/www/drop/scripts/cron-lynx
-  </PRE>
+  <H3>Linux</H3>
 
+  <P>To gain access via (anonymous) cvs use the following steps.  For this example it is assumed that you want a copy of the drupal source code.</P>
+  <P>1. Install a recent copy of cvs. All you really need is a copy of the CVS client binary.  Or you can download the latest CVS source code from <A HREF="http://www.cyclic.com">Cyclic Software</A>.  Don't get your panties in a nod; CVS is free software under the GNU GPL.</P>
+  <P>2. Set CVSROOT in your environment:</P>
+  <BLOCKQUOTE>export CVSROOT=":pserver:anonymous@drop.org:/home/dries/cvs"</BLOCKQUOTE>
+  <P>3. Login by running the command:</P>
+  <BLOCKQUOTE>cvs login</BLOCKQUOTE>
+  <P>4. To check out the latest drupal sources, run the command:</P>
+  <BLOCKQUOTE>cvs co drupal</BLOCKQUOTE>
+  <P>This will create a directory called <CODE>drupal</CODE> containing the latest drupal source tree.  For the other source code repositories on this system just substitute the correct package name.</P>
+  <P>5. Whenever you want to merge in the latest code changes, use the following command from within the <CODE>drupal</CODE> directory:</P>
+  <BLOCKQUOTE>cvs ci file1 file2 file3</BLOCKQUOTE>
+  <P>6. To add binary files like gifs you have to use:</P>
+  <BLOCKQUOTE>cvs add <B>-kb</B> file1 file2 file3</BLOCKQUOTE>
+  <P>If a binary file accidentically gets added without `-kb', one can use the <I>cvs admin</I> command to recover.  For example:</P>
+  <BLOCKQUOTE>cvs admin -kb file1 file2 file3<BR>cvs commit file1 file2 file3</BLOCKQUOTE>
+  <P>After you did, make sure to check out a fresh copy of the files (if they were broken):</P>
+  <BLOCKQUOTE>cvs update -A file1 file2 file3</BLOCKQUOTE>
+
+  <H3>Windows</H3>
+
+  <P>A graphical CVS client is available for MS Windows and for Macs.  You can download the latest version from <A HREF="http://www.wincvs.org">http://www.wincvs.org/</A>.</P>
+  <P>If you can want to interface the CVS repository just like Linux users do (raw and uncut), then check <A HREF="http://oodt.jpl.nasa.gov/doc/developers-resources/developing/windows/index.html">this site</A>.</P>
+
+  <H3>Additional references</H3>
+  <UL>
+   <LI><A HREF="http://cvsbook.red-bean.com/">CVS book</A></LI>
+   <LI><A HREF="http://www.loria.fr/~molli/cvs/doc/cvs_toc.html">CVS docs</A></LI>
+   <LI><A HREF="http://cellworks.washington.edu/pub/docs/cvs/cvs-FAQ/">CVS FAQ</A></LI>
+  </UL>
+
+  <H2>Diff and patch</H2>
+
+  <P>Diff is the first command in the set.  It has the simple purpose to create a file called a <I>patch</I> or a <I>diff</I> which contains the differences between two text files or two groups of text files.  diff can write into different formats, although the unified difference format is preferred.  The patches this command generates are much easier to distribute and allow maintainers to see quickly and easily what changed and to make a judgement.</P>
+  <P>Patch is diff's complement and takes a patch file generated by diff and applies it against a file or a group of files.</P>
+  <P>The actual usage of diff and patch is not complicated.</P>
+  <P>At its simplest, a diff command for comparing two files would be:</P>
+  <BLOCKQUOTE>diff old.txt new.txt > oldnew.patch</BLOCKQUOTE>
+  <P>For drupal, we prefer patches in unified format, so we add -u to the command line:</P>
+  <BLOCKQUOTE>diff -u old.txt new.txt > oldnew.patch</BLOCKQUOTE>
+  <P>Generally, however, a comparison of two source trees is often desired.  A possible command to do so is:</P>
+  <BLOCKQUOTE>diff -ruN old new > oldnew.patch</BLOCKQUOTE>
+  <P>Once a patch is generated, the process of patching the file is even simpler.  Based on our examples above, we could do:</P>
+  <BLOCKQUOTE>patch < oldnew.patch</BLOCKQUOTE>
+
+  <H2>Creating and sending your patches</H2>
+
+  <P>For a person or company who wishes to submit a change, the process can sometimes be daunting if you're not familiar with "the system".  This text is a collection of suggestions which can greatly increase the chances of your change being accepted.</P>
+  <P>1. <B>Coding style:</B><BR>If your code deviates too much from the "standard" coding style, it is more likely to be rejected without further review and without comment.</P>
+  <P>2. <B>"diff -u":</B><BR>Use "diff -u" or "diff -urN" to create patches: when creating your patch, make sure to create it in "unified diff" format, as supplied by the '-u' argument to diff.  Patches should be based in the root source directory, not in any lower subdirectory.  Make sure to create patches against a "vanilla", or unmodified source tree.</P>
+  <P>3. <B>Describe your changes:</B><BR>Describe the technical detail of the change(s) your patch includes and try to be as specific as possible.  Note that we prefer technical reasoning above marketing: give us clear reasons why "this way" is good.  Justify your changes and try to cary enough weigth.  It is important to note the version to which this patch applies.</P>
+  <P>4. <B>Separate your changes:</B><BR>Separate each logical change into its own patch.  For example, if your changes include both bug fixes and performance enhancements, separate those changes into two or more patches.  If your changes include an API update, and a new module which  uses that new API, separate those into two patches.</P>
+  <P>5. <B>Mail or submit the patch:</B><BR>Remember: no MIME, no HTML mail, no links, no compression, no attachments.  Just plain text.</P>
  <?
  }
 ?>

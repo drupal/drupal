@@ -77,7 +77,7 @@ function account_user_edit() {
   global $theme, $user;
 
   if ($user->id) {
-    ### Generate output/content:
+    // Generate output/content:
     $output .= "<FORM ACTION=\"account.php\" METHOD=\"post\">\n";
     $output .= "<B>Username:</B><BR>\n";
     $output .= "&nbsp; $user->userid<P>\n";
@@ -106,7 +106,7 @@ function account_user_edit() {
     $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save user information\"><BR>\n";
     $output .= "</FORM>\n";
 
-    ### Display output/content:
+    // Display output/content:
     $theme->header();
     $theme->box("Edit user settings", $output);
     $theme->footer();
@@ -276,7 +276,7 @@ function account_user($uname) {
     $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Signature:</B></TD><TD>". format_data($user->signature) ."</TD></TR>\n";
     $output .= "</TABLE>\n";
 
-    ### Display account information:
+    // Display account information:
     $theme->header();
     $theme->box("View user settings", $output);
     $theme->footer();
@@ -306,7 +306,7 @@ function account_user($uname) {
       $diaries++;
     }
     
-    ### Display account information:
+    // Display account information:
     $theme->header();
     if ($box1) $theme->box("User information for $uname", $box1);
     if ($box2) $theme->box("$uname has posted ". format_plural($comments, "comment", "comments") ." recently", $box2);
@@ -314,7 +314,7 @@ function account_user($uname) {
     $theme->footer();
   }
   else { 
-    ### Display login form:
+    // Display login form:
     $theme->header();
     $theme->box("Create user account", account_create());
     $theme->box("E-mail password", account_email());
@@ -323,18 +323,16 @@ function account_user($uname) {
 }
 
 function account_validate($user) {
-  include "includes/ban.inc";
-
-  ### Verify username and e-mail address:
+  // Verify username and e-mail address:
   if (empty($user[real_email]) || (!eregi("^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3}$", $user[real_email]))) $error .= "<LI>the specified e-mail address is not valid.</LI>\n";
   if (empty($user[userid]) || (ereg("[^a-zA-Z0-9_-]", $user[userid]))) $error .= "<LI>the specified username is not valid.</LI>\n";
   if (strlen($user[userid]) > 15) $error .= "<LI>the specified username is too long: it must be less than 15 characters.</LI>\n";
 
-  ### Check to see whether the username or e-mail address are banned:
+  // Check to see whether the username or e-mail address are banned:
   if ($ban = ban_match($user[userid], $type2index[usernames])) $error .= "<LI>the specified username is banned  for the following reason: <I>$ban->reason</I>.</LI>\n";
   if ($ban = ban_match($user[real_email], $type2index[addresses])) $error .= "<LI>the specified e-mail address is banned for the following reason: <I>$ban->reason</I>.</LI>\n";
 
-  ### Verify whether username and e-mail address are unique:
+  // Verify whether username and e-mail address are unique:
   if (db_num_rows(db_query("SELECT userid FROM users WHERE LOWER(userid) = LOWER('$user[userid]')")) > 0) $error .= "<LI>the specified username is already taken.</LI>\n";
   if (db_num_rows(db_query("SELECT real_email FROM users WHERE LOWER(real_email)=LOWER('$user[real_email]')")) > 0) $error .= "<LI>the specified e-mail address is already registered.</LI>\n";
 
@@ -537,7 +535,7 @@ function account_track_site() {
   $theme->footer();
 }
 
-### Security check:
+// Security check:
 if (strstr($name, " ") || strstr($hash, " ")) {
   watchdog("error", "account: attempt to provide malicious input through URI");
   exit();

@@ -1,7 +1,36 @@
 <?
 
-$module = array("block" => "ab_block",
+$module = array("help" => "ab_help",
+                "block" => "ab_block",
                 "admin" => "ab_admin");
+
+function ab_help() {
+ ?>
+  <P>The content of the site can be almost entirely altered by means of blocks.  Simply put, <I>admin blocks</I> are small bit of PHP code which will get plugged into the site.  Admin blocks are typically used to add custom blocks to the site.</P>
+  <P>If you know how to script in PHP, admin blocks are pretty simple to create.  Don't get your panties in a knot if you are not confident with PHP: simply use the standard admin blocks (i.e. those available by default) as they are just fine or ask an expert 'admin blocker' to help you creating custom admin blocks that fit your need.</P>
+  <P>Each admin block consists of a key of maximum 255 characters and an associated block of PHP code which can be as long as you want it to be.  You can use any piece of PHP code to make up an admin block.  A admin block's code is stored in the database and the engine or a particular module will use the key to find the associated piece of PHP code which will then be dynamically embedded in the engine or the module just-in-time for execution.</P>
+  <P>There are however some factors to keep in mind when using and creating admin blocks: admin blocks can be extremly useful and flexible, yet be dangerous and insecure if not properly used.  If you are not confident with PHP, SQL or even with the site engine for that matter, avoid experimenting with admin blocks because you can - and you probably will - corrupt your database or even break your site!  If you don't plan to do fancy stuff with admin blocks then you are probably save.</P>
+  <P>Remember that the code within each admin block must be valid PHP code, including things like terminating statements with a semicolon so the parser won't die.  Therefore, it is highly recommended to test your admin blocks seperatly using a simple test script on top of a test database before migrating to your production environment running your real database.</P>
+  <P>Note that you can use any global variables, such as configuration parameters within the scope of an admin block and keep in mind that variables that have been given values in an admin block will retain these values in the engine or module afterwards.</P>
+  <P>You may as well use the <CODE>return</CODE> statement to return the actual content of the block.</P>
+  <P><U>A basic example:</U></P>
+  <P>Given the admin block with subject "Welcome", used to create a Welcome-block.  The content for this admin block could be created by using:</P>
+  <PRE>
+   return "Welcome visitor, ... welcome message goes here ...";
+  </PRE>
+  <P>If we are however dealing with a registered user, we can customize the message by using:
+  <PRE>
+   if ($user) {
+     return "Welcome $user->userid, ... weclome message goes here ...";
+   }
+   else {
+     return "Welcome visitor, ... welcome message goes here ...";
+   }
+  </PRE>
+  <P>For more in depth example, we recommand you to check any of the available admin blocks and to go from there.</P>
+  <P>As said above, you can virtually use any piece of PHP code in an admin block: you can declare and use functions, consult the SQL database, access configuration settings and so on.</P>
+ <?
+}
 
 function ab_block() {
   $result = db_query("SELECT * FROM admin_blocks");

@@ -2,8 +2,6 @@
 
 $module = array("admin" => "cron_admin");
 
-include_once "includes/function.inc";
-
 function cron_save($edit) {
   foreach ($edit as $key=>$value) {
     db_query("UPDATE crons SET scheduled = '$value' WHERE module = '$key'");
