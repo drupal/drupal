@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.96 2005/02/24 13:07:47 unconed Exp $ */
+/* $Id: drupal.css,v 1.97 2005/03/05 09:03:57 dries Exp $ */
 
 /*
 ** HTML elements
@@ -17,10 +17,6 @@ hr {
 }
 img {
   border: 0;
-}
-p {
-  margin-top: 0.5em;
-  margin-bottom: 0.9em;
 }
 table {
   border-collapse: collapse;
