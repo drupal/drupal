@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.324 2004/02/17 23:36:22 unconed Exp $ */
+/* $Id: common.inc,v 1.325 2004/02/21 14:08:09 kjartan Exp $ */
 
 /**
  * @defgroup common Core functions
@@ -876,7 +876,7 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
   $max = strlen($format);
   for ($i = 0; $i <= $max; $c = $format{$i++}) {
     if (strpos('AaDFlM', $c)) {
-      $date .= gmdate($c, $timestamp);
+      $date .= t(gmdate($c, $timestamp));
     }
     else if (strpos('BdgGhHiIjLmnsStTUwWYyz', $c)) {
       $date .= gmdate($c, $timestamp);

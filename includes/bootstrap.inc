@@ -1,5 +1,5 @@
 <?php
-/* $Id: bootstrap.inc,v 1.10 2004/02/15 15:57:55 dries Exp $ */
+/* $Id: bootstrap.inc,v 1.11 2004/02/21 14:08:07 kjartan Exp $ */
 
 function conf_init() {
 
@@ -144,7 +144,7 @@ function drupal_page_header() {
       ** headers.
       */
 
-      $headers = explode('\n', $cache->headers);
+      $headers = explode("\n", $cache->headers);
       foreach ($headers as $header) {
         header($header);
       }
