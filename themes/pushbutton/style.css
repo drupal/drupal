@@ -166,6 +166,7 @@ td#home a:hover img {
   padding: 10px 0 10px 0px;
   margin: 0 0 0 0;
   white-space: nowrap;
+  width: 100%;
   list-style: none;
   height: auto;
   line-height: normal;
