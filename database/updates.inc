@@ -2001,17 +2001,7 @@ function update_113() {
   $ret = array();
 
   if ($GLOBALS['db_type'] == 'mysql') {
-    $ret[] = update_sql('DROP TABLE {accesslog}');
-    $ret[] = update_sql("CREATE TABLE {accesslog} (
-        aid int(10) NOT NULL auto_increment,
-        title varchar(255) default NULL,
-        path varchar(255) default NULL,
-        url varchar(255) default NULL,
-        hostname varchar(128) default NULL,
-        uid int(10) unsigned default '0',
-        timestamp int(11) unsigned NOT NULL default '0',
-        KEY accesslog_timestamp (timestamp),
-        PRIMARY KEY  (aid))");
+    $ret[] = update_sql('ALTER TABLE {accesslog} ADD aid int(10) NOT NULL auto_increment, ADD PRIMARY KEY (aid)');
   }
 
   // Flush the menu cache:
