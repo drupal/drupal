@@ -1427,14 +1427,6 @@ function node_submit($node) {
     */
 
     if (node_access('create', $node)) {
-
-      /*
-      ** Verify a user's submission rate and avoid duplicate nodes being
-      ** inserted:
-      */
-
-      throttle('node', variable_get('max_node_rate', 900));
-
       $node->nid = node_save($node);
       watchdog('special', "$node->type: added '$node->title'", l(t('view post'), "node/view/$node->nid"));
       $msg = t('your %name was created.', array ('%name' => node_invoke($node, 'node_name')));

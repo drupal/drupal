@@ -404,15 +404,6 @@ function error_handler($errno, $message, $filename, $line, $variables) {
   }
 }
 
-function throttle($type, $rate) {
-  if (!user_access("access administration pages")) {
-    if ($throttle = db_fetch_object(db_query("SELECT * FROM {watchdog} WHERE type = '%s' AND hostname = '%s' AND %d - timestamp < %d", $type, $_SERVER['REMOTE_ADDR'], time(), $rate))) {
-      watchdog("warning", "throttle: '". $_SERVER['REMOTE_ADDR'] ."' exceeded submission rate - $throttle->type");
-      die(message_throttle());
-    }
-  }
-}
-
 function _fix_gpc_magic(&$item, $key) {
   if (is_array($item)) {
     array_walk($item, '_fix_gpc_magic');
@@ -482,9 +473,6 @@ function message_na() {
   return t("n/a");
 }
 
-function message_throttle() {
-  return t("You exceeded the maximum submission rate.  Please wait a few minutes and try again.");
-}
 /* @} */
 
 function locale_init() {

@@ -331,13 +331,6 @@ function comment_post($edit) {
       }
       else {
         /*
-        ** Check the user's comment submission rate.  If exceeded,
-        ** throttle() will bail out.
-        */
-
-        throttle("post comment", variable_get("max_comment_rate", 60));
-
-        /*
         ** Add the comment to database:
         */
 

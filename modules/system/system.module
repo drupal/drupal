@@ -133,15 +133,7 @@ function system_view_general() {
   $group .= form_radios(t('Download method'), 'file_downloads', variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC), array(FILE_DOWNLOADS_PUBLIC => t('Public - files are available using http directly.'), FILE_DOWNLOADS_PRIVATE => t('Private - files are be transferred by Drupal.')), t('This setting can be changed at any time, however, all download URLs will change and there may be unexpected problems so it is not recommended.'));
   $output .= form_group(t('File system'), $group);
 
-  // submission settings:
-  $rate = array(-10000 => t("Disabled"), 1 => t("Maximum 1 every second"), 5 => t("Maximum 1 every 5 seconds"), 15 => t("Maximum 1 every 15 seconds"), 30 => t("Maximum 1 every 30 seconds"), 60 => t("Maximum 1 every minute"), 300 => t("Maximum 1 every 5 minutes"), 900 => t("Maximum 1 every 15 minutes"), 1800 => t("Maximum 1 every 30 minutes"), 3600 => t("Maximum 1 every hour"), 21600 => t("Maximum 1 every 6 hours"), 43200 => t("Maximum 1 every 12 hours"));
-  $group  = form_select(t("Maximum node rate"), "max_node_rate", variable_get("max_node_rate", 900), $rate, t("The maximum submission rate for nodes.  Its purpose is to stop potential abuse or denial of service attacks."));
-  $group .= form_select(t("Maximum comment rate"), "max_comment_rate", variable_get("max_comment_rate", 120), $rate, t("The maximum submission rate for comments.  Its purpose is to stop potential abuse or denial of service attacks."));
-
-  $output .= form_group(t("Submission settings"), $group);
-
   // date settings:
-
   $timestamp = time();
   $zonelist = array(-11, -10, -9.5, -9, -8, -7, -6, -5, -4, -3.5, -3, -2, -1, 0, 1, 2, 3, 3.5, 4, 5, 5.5, 5.75, 6, 6.5, 7, 8, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.75, 13, 14);
   foreach ($zonelist as $offset) {
