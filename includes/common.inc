@@ -131,6 +131,7 @@ function drupal_get_path_map($action = "") {
   }
 
   if (is_null($map)) {
+    $map = array();  // make $map non-null in case no aliases are defined
     $result = db_query("SELECT * FROM {url_alias}");
     while ($data = db_fetch_object($result)) {
       $map[$data->dst] = $data->src;
