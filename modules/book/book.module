@@ -122,7 +122,7 @@ function book_toc($parent = "", $indent = "", $toc = array()) {
 }
 
 function book_form($edit = array()) {
-  global $REQUEST_URI, $user;
+  global $user;
 
   if ($edit[title]) {
     $form .= book_view(new Book(node_preview($edit)));
@@ -161,7 +161,7 @@ function book_form($edit = array()) {
     $form .= form_submit(t("Submit"));
   }
 
-  return form($REQUEST_URI, $form);
+  return form($form);
 }
 
 function book_save($edit) {

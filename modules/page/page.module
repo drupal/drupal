@@ -42,7 +42,7 @@ function page_status() {
 }
 
 function page_form($edit = array()) {
-  global $REQUEST_URI, $format, $op;
+  global $format, $op;
 
   if ($op != t("Preview") && $format[$edit[format]] == "PHP") {
     $edit[body] = addslashes($edit[body]);
@@ -67,7 +67,7 @@ function page_form($edit = array()) {
     $form .= form_submit(t("Preview"));
   }
 
-  return form($REQUEST_URI, $form);
+  return form($form);
 }
 
 function page_save($edit) {

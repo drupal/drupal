@@ -22,7 +22,6 @@ function comment_link($type) {
 }
 
 function comment_edit($id) {
-  global $REQUEST_URI;
 
   $result = db_query("SELECT c.*, u.name, u.uid FROM comments c LEFT JOIN user u ON c.author = u.uid WHERE c.cid = '$id'");
   $comment = db_fetch_object($result);
@@ -32,7 +31,7 @@ function comment_edit($id) {
   $form .= form_textarea(t("Comment"), "comment", $comment->comment, 50, 10);
   $form .= form_submit(t("Submit"));
 
-  return form($REQUEST_URI, $form);
+  return form($form);
 }
 
 function comment_save($id, $edit) {
@@ -55,6 +54,7 @@ function comment_overview() {
 
 function comment_delete($id) {
   db_query("DELETE FROM comments WHERE cid = '$id'");
+  db_query("DELETE FROM moderate WHERE cid = '$id'");
   watchdog("special", "comment: deleted '$id'");
 }
 

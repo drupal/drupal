@@ -40,7 +40,7 @@ function story_view($node, $main = 0) {
 }
 
 function story_form($edit = array()) {
-  global $REQUEST_URI, $user;
+  global $user;
 
   if ($edit[title]) {
     story_view(new Story(node_preview($edit)));
@@ -73,7 +73,7 @@ function story_form($edit = array()) {
     $form .= form_submit(t("Submit"));
   }
 
-  return form($REQUEST_URI, $form);
+  return form($form);
 }
 
 function story_save($edit) {

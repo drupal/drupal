@@ -1,14 +1,11 @@
 <?php
 
 function search_form($keys) {
-  global $REQUEST_URI;
 
-  $output .= "<form action=\"$REQUEST_URI\" method=\"POST\">\n";
   $output .= " <input size=\"50\" value=\"". check_form($keys) ."\" name=\"keys\">";
   $output .= " <input type=\"submit\" value=\"". t("Search") ."\">\n";
-  $output .= "</form>\n";
 
-  return $output;
+  return form($output);
 }
 
 function search_data($keys, $type) {

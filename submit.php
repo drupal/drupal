@@ -18,7 +18,7 @@ if (user_access("post content")) {
     $form .= form_item(t("Submission type"), "<SELECT NAME=\"mod\">$options</SELECT>");
     $form .= form_submit(t("Next step"));
 
-    $output .= form("submit.php", $form, "get");
+    $output .= form($form, "get");
 
     $theme->box(t("Submit"), $output);
   }

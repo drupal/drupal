@@ -85,7 +85,6 @@ function box_save($edit) {
 }
 
 function box_form($edit = array()) {
-  global $REQUEST_URI;
 
   $type = array(0 => "ASCII", 1 => "HTML", 2 => "PHP");
 
@@ -101,7 +100,7 @@ function box_form($edit = array()) {
 
   $form .= form_submit("Submit");
 
-  return form($REQUEST_URI, $form);
+  return form($form);
 }
 
 

@@ -53,6 +53,7 @@ function node_del($conditions) {
     db_query("DELETE FROM node WHERE nid = '$node->nid'");
     db_query("DELETE FROM $node->type WHERE lid = '$node->lid' AND nid = '$node->nid'");
     db_query("DELETE FROM comments WHERE lid = '$node->nid'");
+    db_query("DELETE FROM moderate WHERE nid = '$node->nid'");
     watchdog("special", "node: deleted '$node->title'");
     return $node;
   }
@@ -199,7 +200,7 @@ function node_control($node) {
   }
 
   $output .= "<FORM METHOD=\"get\" ACTION=\"\">\n";
-  foreach ($choices as $key => $value) $options .= "<OPTION VALUE=\"$key\"". (strstr($REQUEST_URI,"/$key") ? " SELECTED" : "") .">". check_form($value) ."</OPTION>\n";
+  foreach ($choices as $key => $value) $options .= "<OPTION VALUE=\"$key\"". (strstr($REQUEST_URI, "/$key") ? " SELECTED" : "") .">". check_form($value) ."</OPTION>\n";
   $output .= " <SELECT NAME=\"op\" ONCHANGE=\"visit(this.options[this.selectedIndex].value)\">$options</SELECT>\n";
   $output .= "</FORM>\n";
 
