@@ -1,5 +1,6 @@
 <?
 
+
 function error_flood() {
   global $site_email;
 
