@@ -115,15 +115,15 @@ function node_teaser($body) {
   return substr($body, 0, $size);
 }
 
-function node_invoke($node, $name, $arg = 0) {
+function node_invoke(&$node, $hook, $arg = 0) {
   if (is_array($node)) {
-    $function = $node["type"] ."_$name";
+    $function = $node["type"] ."_$hook";
   }
   else if (is_object($node)) {
-    $function = $node->type ."_$name";
+    $function = $node->type ."_$hook";
   }
   else if (is_string($node)) {
-    $function = $node ."_$name";
+    $function = $node ."_$hook";
   }
 
   if (function_exists($function)) {
@@ -131,10 +131,10 @@ function node_invoke($node, $name, $arg = 0) {
   }
 }
 
-function node_invoke_all($hook, &$node, $op, $arg = 0) {
+function node_invoke_all(&$node, $hook, $op, $arg = 0) {
   $return = array();
   foreach (module_list() as $name) {
-    if (module_hook($name, $hook)) {
+    if ((module_hook($name, "node") || module_hook($name, "nodeapi")) && module_hook($name, $hook)) {
       $function = $name ."_". $hook;
       $result = $function($node, $op, $arg);
       if (isset($result)) {
@@ -183,32 +183,12 @@ function node_load($conditions) {
   return $node;
 }
 
-function node_save($node, $filter) {
+function node_save($node) {
 
-  $fields = node_invoke_all("nodeapi", $node, "fields");
-
-  foreach ($filter as $key => $value) {
-    /*
-    ** Only save those fields specified by the filter.  If the filter
-    ** does not specify a default value, use the value of the $node's
-    ** corresponding field instead.
-    */
-
-    if (is_numeric($key)) {
-      if (isset($node->$value)) {
-          // The above check is mandatory.
-        $edit->$value = $node->$value;
-      }
-    }
-    else {
-      if (isset($value)) {
-          // The above check is mandatory.
-        $edit->$key = $value;
-      }
-    }
-  }
-
-  $node = $edit;
+  /*
+  ** Fetch fields to save to node table:
+  */
+  $fields = node_invoke_all($node, "nodeapi", "fields");
 
   /*
   ** Serialize the revisions field:
@@ -247,7 +227,8 @@ function node_save($node, $filter) {
     db_query("INSERT INTO node (". implode(", ", $k) .") VALUES (". implode(", ", $v) .")");
 
     // Call the node specific callback (if any):
-    module_invoke($node->type, "insert", $node);
+    node_invoke($node, "insert");
+    node_invoke_all($node, "nodeapi", "insert");
   }
   else {
 
@@ -269,8 +250,8 @@ function node_save($node, $filter) {
     db_query("UPDATE node SET ". implode(", ", $q) ." WHERE nid = '$node->nid'");
 
     // Call the node specific callback (if any):
-    module_invoke($node->type, "update", $node);
-
+    node_invoke($node, "update");
+    node_invoke_all($node, "nodeapi", "update");
   }
 
   /*
@@ -471,10 +452,10 @@ function node_link($type, $node = 0, $main = 0) {
     menu("admin/node", "node management", "node_admin");
     menu("admin/node/nodes", "post overview");
     menu("admin/node/nodes/0", "new or updated posts", "node_admin", NULL, 0);
-    menu("admin/node/nodes/1", "approval queue", "node_admin", NULL, 1);
     menu("admin/node/search", "search posts", "node_admin", $help["search"], 8);
     menu("admin/node/help", "help", "node_help", NULL, 9);
     menu("admin/node/edit", "edit node", "node_admin", NULL, 0, 1);
+    menu("admin/node/settings", "content settings", "node_admin", NULL, 8);
   }
 
   return $links ? $links : array();
@@ -538,6 +519,57 @@ function node_admin_nodes() {
   }
 
   return table($header, $rows);
+}
+
+/*
+**
+*/
+
+function node_admin_settings($edit) {
+  global $op;
+
+  if ($op == t("Save configuration")) {
+    /*
+    ** Save the configuration options:
+    */
+
+    foreach ($edit as $name => $value) {
+      variable_set($name, $value);
+    }
+  }
+
+  if ($op == t("Reset to defaults")) {
+    /*
+    ** Reset the configuration options to their default value:
+    */
+
+    foreach ($edit as $name => $value) {
+      variable_del($name);
+    }
+  }
+
+  $output = "<h3>" . t("Content settings") . "</h3>\n";
+  
+  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
+  $output .= "<tr><th>". t("Node") ."</th><th>\n";
+  $output .= implode("</th><th>", array_keys(node_invoke_all($node, "nodeapi", "conf")));
+  $output .= "</th></tr>\n";
+
+  foreach (module_list() as $name) {
+    if (module_hook($name, "node")) {
+      $node->type = $name;
+      $output .= "<tr><td><p>$name</p></td><td align=\"center\">";
+      $output .= implode("</td><td align=\"center\">", node_invoke_all($node, "nodeapi", "conf"));
+      $output .= "</td></tr>\n";
+    }
+  }
+  $output .= "</table><br />";
+
+  $output .= form_submit(t("Save configuration"));
+  $output .= form_submit(t("Reset to defaults"));
+  
+  return form($output);
+
 }
 
 /*
@@ -681,6 +713,11 @@ function node_admin() {
       case t("Delete"):
         print node_delete($edit);
         break;
+      case t("Save configuration"):
+      case t("Reset to defaults"):
+      case "settings":
+        print node_admin_settings($edit);
+        break;
       default:
         print node_admin_nodes();
     }
@@ -742,8 +779,8 @@ function node_feed($nodes = 0, $channel = array()) {
 }
 
 function node_validate($node, &$error) {
-
   global $user;
+  $error = array();
 
   /*
   ** Convert the node to an object if necessary:
@@ -759,6 +796,18 @@ function node_validate($node, &$error) {
     $error["title"] = theme("theme_error", t("You have to specify a valid title."));
   }
 
+  /*
+  ** Common default values:
+  */
+
+  $node->teaser = node_teaser($node->body);
+
+  /*
+  ** Create a new revision when required:
+  */
+
+  $node = node_revision_create($node);
+
   if (user_access("administer nodes")) {
 
     /*
@@ -771,6 +820,10 @@ function node_validate($node, &$error) {
 
     if (!$node->date) {
       $node->date = date("M j, Y g:i a", $node->created);
+    }
+    
+    if (!is_numeric($node->status)) {
+      $node->status = 1;
     }
 
     /*
@@ -803,15 +856,20 @@ function node_validate($node, &$error) {
       $error["date"] = theme("theme_error", t("You have to specifiy a valid date."));
     }
   }
+  else {
+    // Validate for normal users:
+    $node->uid = $user->uid ? $user->uid : 0;
+    $node->promote = 0;
+    $node->status = 1;
+    unset($node->static, $node->created);
+  }
 
   /*
   ** Do node type specific validation checks.
   */
 
-  $function = $node->type ."_validate";
-  if (function_exists($function)) {
-    $node = $function($node, $error);
-  }
+  $result = node_invoke($node, "validate");
+  $error = $error + (is_array($result) ? $result : array()) + node_invoke_all($node, "nodeapi", "validate");
 
   return $node;
 }
@@ -835,6 +893,9 @@ function node_form($edit, $error = NULL) {
     $edit = node_validate($edit, $error);
   }
 
+  // Prepend extra node form:
+  $form = implode("", node_invoke_all($edit, "nodeapi", "form.pre", $error));
+
   /*
   ** Get the node specific bits:
   */
@@ -843,6 +904,9 @@ function node_form($edit, $error = NULL) {
   if (function_exists($function)) {
     $form .= $function($edit, $help, $error, $param);
   }
+  
+  // Append extra node form:
+  $form .= implode("", node_invoke_all($edit, "nodeapi", "form.post", $error));
 
   /*
   ** Add the help text:
@@ -913,11 +977,11 @@ function node_form($edit, $error = NULL) {
     $output .= form_textfield(t("Authored by"), "name", $edit->name, 20, 60, $error["name"]);
     $output .= form_textfield(t("Authored on"), "date", $edit->date, 20, 25, $error["date"]);
     $output .= "<br />";
-    $output .= form_select(t("Set public/published"), "status", $edit->status, array(t("Disabled"), t("Enabled")));
-    $output .= form_select(t("Promote to front page"), "promote", $edit->promote, array(t("Disabled"), t("Enabled")));
-    $output .= form_select(t("Static on front page"), "static", $edit->static, array(t("Disabled"), t("Enabled")));
-    $output .= implode("", node_invoke_all("nodeapi", $edit, "form", "admin"));
-    $output .= form_select(t("Create new revision"), "revision", $edit->revision, array(t("Disabled"), t("Enabled")));
+    $output .= form_select(t("Set public/published"), "status", isset($edit->status) ? $edit->status : variable_get("node_status_$edit->type", 1), array(t("Disabled"), t("Enabled")));
+    $output .= form_select(t("Promote to front page"), "promote", isset($edit->promote) ? $edit->promote : variable_get("node_promote_$edit->type", 1), array(t("Disabled"), t("Enabled")));
+    $output .= form_select(t("Static on front page"), "static", isset($edit->static) ? $edit->static : variable_get("node_static_$edit->type", 0), array(t("Disabled"), t("Enabled")));
+    $output .= implode("", node_invoke_all($edit, "nodeapi", "form admin"));
+    $output .= form_select(t("Create new revision"), "revision", isset($edit->revision) ? $edit->revision : variable_get("node_revision_$edit->type", 0), array(t("Disabled"), t("Enabled")));
   }
 
   $output .= "  </td>";
@@ -937,7 +1001,8 @@ function node_add($type) {
 
   if ($type && node_access("create", $type)) {
     // Initialize settings
-    $node = array("uid" => $user->uid, "name" => $user->name, "type" => $type, "status" => 1, "promote" => !module_exist("queue"), "moderate" => module_exist("queue"), "comment" => 2);
+    // TODO : clean up this code.
+    $node = array("uid" => $user->uid, "name" => $user->name, "type" => $type);
     foreach (array("title", "teaser", "body") as $field) {
       if ($edit[$field]) {
         $node[$field] = check_input($edit[$field]);
@@ -1076,12 +1141,6 @@ function node_submit($node) {
   }
 
   /*
-  ** Create a new revision when required:
-  */
-
-  $node = node_revision_create($node);
-
-  /*
   ** Prepare the node's body:
   */
 
@@ -1093,20 +1152,7 @@ function node_submit($node) {
     */
 
     if (node_access("update", $node)) {
-
-      /*
-      ** Compile a list of the node fields and their default values that users
-      ** and administrators are allowed to save when updating a node.
-      */
-
-      if (user_access("administer nodes")) {
-        $fields = array("nid", "uid", "body", "comment", "created", "promote", "static", "moderate", "revisions", "status", "teaser" => node_teaser($node->body), "title", "type" => $node->type);
-      }
-      else {
-        $fields = array("nid", "uid" => ($user->uid ? $user->uid : 0), "body", "teaser" => node_teaser($node->body), "title", "type" => $node->type);
-      }
-
-      $nid = node_save($node, array_merge($fields, module_invoke($node->type, "save", "update", $node)));
+      $nid = node_save($node);
 
       /*
       ** Update terms of the node
@@ -1136,19 +1182,7 @@ function node_submit($node) {
 
       throttle("node", variable_get("max_node_rate", 900));
 
-      /*
-      ** Compile a list of the node fields and their default values that users
-      ** and administrators are allowed to save when inserting a new node.
-      */
-
-      if (user_access("administer nodes")) {
-        $fields = array("uid", "body", "comment", "created", "promote", "static", "moderate", "status", "teaser" => node_teaser($node->body), "title", "type" => $node->type);
-      }
-      else {
-        $fields = array("uid" => ($user->uid ? $user->uid : 0), "body", "comment" => 2, "teaser" => node_teaser($node->body), "title", "type" => $node->type);
-      }
-
-      $nid = node_save($node, array_merge($fields, module_invoke($node->type, "save", "create", $node)));
+      $nid = node_save($node);
 
       /*
       ** Insert terms of the node
@@ -1222,7 +1256,8 @@ function node_delete($edit) {
       ** Call the node specific callback (if any):
       */
 
-      module_invoke($node->type, "delete", $node);
+      node_invoke($node, "delete");
+      node_invoke_all($node, "nodeapi", "delete");
 
       watchdog("special", "$node->type: deleted '$node->title'");
       $output = t("The node has been deleted.");
@@ -1311,8 +1346,14 @@ function node_update_index() {
 
 function node_nodeapi(&$node, $op, $arg = 0) {
   switch ($op) {
+    case "conf":
+      $output[t("Publish")] = form_checkbox("", "node_status_$node->type", 1, variable_get("node_status_$node->type", 1));
+      $output[t("Promote")] = form_checkbox("", "node_promote_$node->type", 1, variable_get("node_promote_$node->type", 1));
+      $output[t("Static")] = form_checkbox("", "node_static_$node->type", 1, variable_get("node_static_$node->type", 0));
+      $output[t("Revision")] = form_checkbox("", "node_revision_$node->type", 1, variable_get("node_revision_$node->type", 0));
+      return $output;
     case "fields":
-      return array("nid", "uid", "type", "title", "teaser", "body", "revisions", "score", "status", "promote", "static", "created", "changed", "users", "votes");
+      return array("nid", "uid", "type", "title", "teaser", "body", "revisions", "status", "promote", "static", "created", "changed");
   }
 }
 

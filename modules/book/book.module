@@ -57,48 +57,6 @@ function book_access($op, $node) {
   }
 }
 
-function book_save($op, $node) {
-  global $user;
-
-  if ($op == "approve") {
-    return array("status" => 1);
-  }
-
-  if ($op == "create") {
-    if (user_access("administer nodes")) {
-      return array("body" => filter($node->body), "teaser" => filter($node->body), "format", "parent", "weight", "log");
-    }
-    else {
-      return array("body" => filter($node->body), "teaser" => filter($node->body), "format", "moderate" => 1, "parent", "promote" => 0, "status" => 1, "weight", "log");
-    }
-  }
-
-  if ($op == "decline") {
-    return array("status" => 0);
-  }
-
-  if ($op == "update") {
-    if (user_access("administer nodes")) {
-      /*
-      ** If a node administrator updates a book page, we don't create a
-      ** new revision unless we are explicitly instructed to.
-      */
-
-      return array("body" => filter($node->body), "teaser" => filter($node->body), "format", "parent", "weight", "log");
-    }
-    else {
-      /*
-      ** If a regular user updates a book page, we always create a new
-      ** revision.  All new revisions have to be approved (moderation)
-      ** and are not promoted by default.  See also: book_load().
-      */
-
-      return array("body" => filter($node->body), "teaser" => filter($node->body), "created" => time(), "format", "moderate" => 1, "parent", "promote" => 0, "score" => 0, "status" => 1, "users" => "", "revisions", "votes" => 0, "weight", "log");
-    }
-  }
-
-}
-
 function book_link($type, $node = 0, $main = 0) {
   if ($type == "page" && user_access("access content")) {
     $links[] = l(t("collaborative book"), "book", array("title" => t("Read and contribute to the collaborative books.")));
@@ -166,20 +124,10 @@ function book_load($node) {
 }
 
 function book_insert($node) {
-  if (!user_access("administer nodes")) {
-    $node->format = 0;
-    $node->weight = 0;
-  }
-
   db_query("INSERT INTO book (nid, format, parent, weight, log) VALUES ('%d', '%d', '%d', '%d', '%s')", $node->nid, $node->format, $node->parent, $node->weight, $node->log);
 }
 
 function book_update($node) {
-  if (!user_access("administer nodes")) {
-    $node->format = 0;
-    $node->weight = 0;
-  }
-
   db_query("UPDATE book SET format = '%d', parent = '%d', weight = '%d', log = '%s' WHERE nid = '%d'", $node->format, $node->parent, $node->weight, $node->log, $node->nid);
 }
 
@@ -187,12 +135,23 @@ function book_delete(&$node) {
   db_query("DELETE FROM book WHERE nid = '%d'", $node->nid);
 }
 
-function book_validate($node, &$error) {
+function book_validate(&$node) {
+  if ($node->format && user_access("create php content")) {  
+    // Do not filter PHP code, do not auto-extract a teaser
+    $node->teaser = $node->body;
+  }
+  else {
+    $node->format = 0;
+    $node->body = filter($node->body);
+    $node->teaser = filter($node->body);
+  }
 
-  // Make sure user has permissions to create php content:
-  $node->format = $node->format && user_access("create php content");
-
-  return $node;
+  // Set default values for non administrators:
+  if (!user_access("administer nodes")) {
+    $node->format = 0;
+    $node->weight = 0;
+    $node->revision = 1;
+  }
 }
 
 function book_form(&$node, &$help, &$error) {

@@ -28,6 +28,10 @@ function queue_link($type) {
     $links[] = l(t("view submissions"), "queue", array("title" => t("Moderate the content in the submission queue."))) ." (<span style=\"color: red;\">". queue_count() ."</span>)";
   }
 
+  if ($type == "admin" && user_access("administer nodes")) {
+    menu("admin/node/nodes/1", "approval queue", "node_admin", NULL, 1);
+  }
+
   return $links ? $links : array();
 }
 
@@ -45,7 +49,6 @@ function queue_vote($node, $vote) {
   global $user;
 
   if (!field_get($node->users, $user->uid)) {
-
     // Update submission's score- and votes-field:
     db_query("UPDATE node SET score = score $vote, votes = votes + 1, users = '". field_set($node->users, $user->uid, $vote) ."' WHERE nid = '$node->nid'");
 
@@ -53,7 +56,9 @@ function queue_vote($node, $vote) {
     $node = node_load(array("nid" => $node->nid));
 
     if (variable_get("queue_threshold_post", 3) <= $node->score) {
-      node_save($node, array_merge(array("nid", "moderate" => 0), module_invoke($node->type, "save", "approve", $node)));
+      $node->moderate = 0;
+      $node->promote = 1;
+      node_save($node);
       watchdog("special", "moderation: approved '$node->title'");
     }
     else if (variable_get("queue_threshold_dump", -2) >= $node->score) {
@@ -62,7 +67,9 @@ function queue_vote($node, $vote) {
         watchdog("special", "moderation: declined '$node->title' (rollback)");
       }
       else {
-        node_save($node, array_merge(array("nid", "moderate" => 0), module_invoke($node->type, "save", "decline", $node)));
+        $node->moderate = 0;
+        $node->status = 0;
+        node_save($node);
         watchdog("special", "moderation: declined '$node->title'");
       }
     }
@@ -72,7 +79,9 @@ function queue_vote($node, $vote) {
         watchdog("special", "moderation: expired '$node->title' (rollback)");
       }
       else {
-        node_save($node, array_merge(array("nid", "moderate" => 0), module_invoke($node->type, "save", "decline", $node)));
+        $node->moderate = 0;
+        $node->status = 0;
+        node_save($node);
         watchdog("special", "moderation: expired '$node->title'");
       }
     }
@@ -212,13 +221,25 @@ function queue_block($op = "list", $delta = 0) {
 
 function queue_nodeapi(&$node, $op, $arg = 0) {
   switch ($op) {
-    case "form":
-      if ($arg == "admin" && user_access("administer moderation")) {
-        return form_select(t("Moderation status"), "moderate", $node->moderate, array(t("Approved"), t("Awaiting approval")));
+    case "conf":
+      $output[t("Queue")] = form_checkbox("", "queue_$node->type", 1, variable_get("queue_$node->type", 0));
+      return $output;
+    case "fields":
+      return array("moderate", "score", "users", "votes");
+    case "form admin":
+      if (user_access("administer moderation")) {
+        return form_select(t("Moderation status"), "moderate", isset($node->moderate) ? $node->moderate : variable_get("queue_$node->type", 0), array(t("Approved"), t("Awaiting approval")));
       }
       break;
-    case "fields":
-      return array("moderate");
+    case "validate":
+      $node->promote = $node->moderate ? 0 : 1;
+      if ($node->nid && $node->moderate) {
+        // Reset votes when node is updated:
+        $node->score = 0;
+        $node->users = "";
+        $node->votes = 0;
+      }
+      break;
   }
 }
 ?>

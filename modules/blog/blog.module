@@ -67,50 +67,6 @@ function blog_user($type, &$edit, &$user) {
   }
 }
 
-function blog_save($op, $node) {
-  if ($op == "approve") {
-    return array("promote" => 1);
-  }
-
-  if ($op == "create") {
-    if (user_access("administer nodes")) {
-      /*
-      ** When an administrator creates blog entries through the admin
-      ** pages, they will not be changed unless explicitly specified.
-      */
-
-      return array("body" => filter($node->body), "teaser" => filter($node->teaser));
-    }
-    else {
-      return array("body" => filter($node->body), "teaser" => filter($node->teaser), "promote" => 0, "moderate" => 1, "status" => 1);
-    }
-  }
-
-  if ($op == "decline") {
-    return array("promote" => 0);
-  }
-
-  if ($op == "update") {
-    if (user_access("administer nodes")) {
-      /*
-      ** When an administrator updates blog entries through the admin
-      ** pages, they will not be changed unless explicitly specified.
-      */
-
-      return array("body" => filter($node->body), "teaser" => filter($node->teaser));
-    }
-    else {
-      /*
-      ** Updating your own blog entry will demote it (if promoted),
-      ** and will queue it in the moderation queue for promotion.
-      */
-
-      return array("body" => filter($node->body), "teaser" => filter($node->teaser), "promote" => 0, "moderate" => 1, "score" => 0, "votes" => 0, "users" => 0);
-    }
-  }
-
-}
-
 function blog_help() {
  ?>
   <p>Drupal's blog module allows registered users to maintain an online blog, often referred to as an online journal or diary.  They can be filled with daily thoughts, poetry, boneless blabber, spiritual theories, intimate details, valuable experiences, cynical rants, semi-coherent comments, writing experiments, artistic babblings, critics on current facts, fresh insights, diverse dreams, chronicles and mumbling madness available for public consumption.  It is made up of individual entries that are timestamped and are typically viewed by day as you would a diary.  Blogs often contain links to things you've seen, or agree/disagree with.  A typical example of a long term blog can be seen at <a href="http://www.scripting.com/">http://www.scripting.com/</a>.</p>
@@ -294,6 +250,12 @@ function blog_block($op = "list", $delta = 0) {
     }
     return $block;
   }
+}
+
+function blog_validate(&$node) {
+  // Make sure all fields are set properly:
+  $node->body = filter($node->body);
+  $node->teaser = filter($node->teaser);
 }
 
 ?>

@@ -40,30 +40,6 @@ function story_access($op, $node) {
   }
 }
 
-function story_save($op, $node) {
-
-  if ($op == "approve") {
-    return array("status" => 1, "promote" => 1);
-  }
-
-  if ($op == "create") {
-    if (user_access("administer nodes")) {
-      return array("body" => filter($node->body), "teaser" => filter($node->teaser));
-    }
-    else {
-      return array("moderate" => 1);
-    }
-  }
-
-  if ($op == "decline") {
-    return array("status" => 0, "promote" => 0);
-  }
-
-  if ($op == "update") {
-    return array("body" => filter($node->body), "teaser" => filter($node->teaser));
-  }
-}
-
 function story_link($type) {
   if ($type == "menu.create" && user_access("create stories")) {
     $links[] = l(t("create story"), "node/add/story", array("title" => t("Add a new story.")));
@@ -105,4 +81,9 @@ function story_form(&$node, &$help, &$error) {
 }
 
 
+function story_validate(&$node) {
+  // Make sure all fields are set properly:
+  $node->body = filter($node->body);
+  $node->teaser = filter($node->teaser);
+}
 ?>

@@ -232,29 +232,6 @@ function poll_perm() {
   return array("create polls", "vote on polls");
 }
 
-function poll_save($op, $node) {
-  if ($op == "approve") {
-    return array("status" => 1, "promote" => 1);
-  }
-
-  if ($op == "create") {
-    if (user_access("administer nodes")) {
-      return array("runtime", "active", "choice", "choices", "chvotes", "body" => "", "moderate" => 0, "status" => 1, "teaser" => poll_teaser($node));
-    }
-    else {
-      return array("runtime", "active", "choice", "choices", "chvotes", "body" => "", "moderate" => 1, "status" => 0, "teaser" => poll_teaser($node));
-    }
-  }
-
-  if ($op == "decline") {
-    return array("status" => 0, "promote" => 0);
-  }
-
-  if ($op == "update") {
-    return array("runtime", "active", "choice", "choices", "chvotes");
-  }
-}
-
 function poll_system($field){
   $system["description"] = t("Enables your site to capture votes on different topics in the form of multiple choice questions.");
   return $system[$field];
@@ -411,6 +388,10 @@ function poll_update($node) {
       db_query("INSERT INTO poll_choices (nid, chtext, chvotes, chorder) VALUES ('%d', '%s', '%d', '%d')", $node->nid, $choice->chtext, $choice->chvotes, $choice->chorder);
     }
   }
+}
+
+function poll_validate(&$node) {
+  $node ->teaser = poll_teaser($node);
 }
 
 ?>

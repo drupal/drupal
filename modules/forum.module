@@ -69,24 +69,6 @@ function forum_taxonomy($op, $type, $object) {
   }
 }
 
-function forum_save($op, $node) {
-  if ($op == "approve") {
-    return array("status" => 1);
-  }
-
-  if ($op == "create") {
-    return array("body" => filter($node->body), "teaser" => filter($node->teaser), "moderate" => 0, "status" => 1, "tid", "icon_num", "shadow" => 0);
-  }
-
-  if ($op == "decline") {
-    return array("status" => 0);
-  }
-
-  if ($op == "update") {
-    return array("body" => filter($node->body), "teaser" => filter($node->teaser), "tid", "icon_num", "shadow");
-  }
-}
-
 function forum_load($node) {
   $forum = db_fetch_object(db_query("SELECT * FROM forum WHERE nid = '%d'", $node->nid));
 
@@ -185,13 +167,20 @@ function forum_view($node, $main = 0) {
   theme("node", $node, $main);
 }
 
-function forum_validate($node) {
-  // we use the validate hook to remember the old taxonomy terms
-  $node->taxonomy = array_keys(taxonomy_node_get_terms($node->nid));
-  if (!in_array($node->tid[0], $node->taxonomy)) {
-    $node->taxonomy[] = $node->tid[0];
+function forum_validate(&$node) {
+  // Make sure all fields are set properly:
+  $node->body = filter($node->body);
+  $node->teaser = filter($node->teaser);
+  $node->icon = $node->icon ? $node->icon : "";
+  $node->shadow = $node->shadow ? $node->shadow : 0;
+  $node->tid = $node->tid ? $node->tid : 0;  
+  // We use the validate hook to remember the old taxonomy terms:
+  if ($node->tid) {
+    $node->taxonomy = array_keys(taxonomy_node_get_terms($node->nid));
+    if (!in_array($node->tid[0], $node->taxonomy)) {
+      $node->taxonomy[] = $node->tid[0];
+    }
   }
-  return $node;
 }
 
 function forum_form(&$node, &$help, &$error) {

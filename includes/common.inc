@@ -723,7 +723,7 @@ function form_item($title, $value, $description = 0) {
 }
 
 function form_checkbox($title, $name, $value = 1, $checked = 0, $description = 0) {
-  return form_item(0, "<input type=\"checkbox\" name=\"edit[$name]\" value=\"". $value ."\"". ($checked ? " checked=\"checked\"" : "") ." /> $title", $description);
+  return form_hidden($name, 0) . form_item(0, "<input type=\"checkbox\" name=\"edit[$name]\" value=\"". $value ."\"". ($checked ? " checked=\"checked\"" : "") ." /> $title", $description);
 }
 
 function form_textfield($title, $name, $value, $size, $maxlength, $description = 0) {
@@ -819,7 +819,7 @@ function l($text, $url, $attributes = array(), $query = NULL) {
 }
 
 function field_get($string, $name) {
-  ereg(",$name=([^,]+)", ", $string", $regs);
+  ereg(",?$name=([^,]+)", ", $string", $regs);
   return $regs[1];
 }
 
@@ -839,7 +839,7 @@ function link_page() {
   }
   else {
     $links = module_invoke_all("link", "page");
-    array_unshift($links, "<a href=\"$base_url\" title=\"". t("Return to the main page.") ."\">". t("home") ."</a>");
+    array_unshift($links, "<a href=\"$base_url/\" title=\"". t("Return to the main page.") ."\">". t("home") ."</a>");
     return $links;
   }
 }
