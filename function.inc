@@ -1,6 +1,5 @@
 <?
 
-include "config.inc";
 include "database.inc";
 include "log.inc";
 
@@ -19,6 +18,19 @@ function dbsave($dbase, $data, $id=0) {
   
   if (!empty($id)) { db_query("UPDATE $dbase SET $query WHERE id=$id") or die(mysql_error()); return $id; }
   else { db_query("INSERT INTO $dbase SET $query") or die(mysql_error()); return mysql_insert_id(); }
+}
+
+function load_theme() {
+  global $user, $themes;
+
+  if ($user->theme && file_exists($themes[$user->theme][0])) {
+    include $themes[$user->theme][0];     
+  }
+  else {
+    include $themes[key($themes)][0];
+  }
+ 
+  return new Theme();
 }
 
 function check_input($message) {

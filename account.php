@@ -1,7 +1,5 @@
 <?
 
-include "function.inc";
-include "config.inc";
 include "theme.inc";
 
 function account_getUser($uname) {
@@ -87,7 +85,7 @@ function showUser($uname) {
   }
 }
 
-function newUser($user = "", $error="") {
+function newUser($user = "", $error = "") {
   global $theme;
 
   $output .= "<FORM ACTION=\"account.php\" METHOD=post>\n";
@@ -328,6 +326,8 @@ switch ($op) {
       $data[signature] = $edit[signature];
       dbsave("users", $data, $user->id);
       user_rehash();
+
+      header("account.php");
     }
     showUser($user->userid);
     break;

@@ -302,8 +302,6 @@ function comment_post($pid, $sid, $subject, $comment) {
   }
 }
 
-include "function.inc";
-include "config.inc";
 include "theme.inc";
 
 switch($op) {  

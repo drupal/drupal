@@ -375,6 +375,10 @@ function story_display($order = "date") {
   print $output;
 }
 
+function info_display() {
+  phpinfo();
+}
+
 include "function.inc";
 include "admin.inc";
 
@@ -440,6 +444,8 @@ switch ($section) {
         story_display();
     }
     break;
+  case "info":
+    info_display();
   default:
     print "Welcome to the adminstration page!";
 }
