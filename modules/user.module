@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.353 2004/07/07 20:18:22 dries Exp $
+// $Id: user.module,v 1.354 2004/07/08 06:12:39 dries Exp $
 
 /**
  * Invokes hook_user() in every module.
@@ -1141,22 +1141,17 @@ function user_view($uid = 0) {
   }
   else {
     if ($account = user_load(array('uid' => $uid, 'status' => 1))) {
-      if (user_access('access users')) {
-        // Retrieve and merge all profile fields:
-        $fields = array();
-        foreach (module_list() as $module) {
-          if ($data = module_invoke($module, 'user', 'view', '', $account)) {
-            foreach ($data as $category => $content) {
-              $fields[$category] .= $content;
-            }
+      // Retrieve and merge all profile fields:
+      $fields = array();
+      foreach (module_list() as $module) {
+        if ($data = module_invoke($module, 'user', 'view', '', $account)) {
+          foreach ($data as $category => $content) {
+            $fields[$category] .= $content;
           }
         }
+      }
 
-        print theme('page', theme('user_profile', $account, $fields), $account->name);
-      }
-      else {
-        drupal_access_denied();
-      }
+      print theme('page', theme('user_profile', $account, $fields), $account->name);
     }
     else {
       drupal_not_found();
