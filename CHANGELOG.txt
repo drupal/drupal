@@ -1,5 +1,5 @@
-Drupal x.x.x, xxxx-xx-xx
-------------------------
+Drupal 4.5.0 RC, xxxx-xx-xx
+---------------------------
 - navigation:
     * made it possible to add, delete, rename and move menu items.
     * introduced tabs and subtabs for local tasks.
