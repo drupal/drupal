@@ -42,7 +42,8 @@ $mysql_updates = array(
   "2002-04-16" => "update_27",
   "2002-04-20" => "update_28",
   "2002-04-23 : roles cleanup" => "update_29",
-  "2002-05-02" => "update_30"
+  "2002-05-02" => "update_30",
+  "2002-05-15" => "update_31"
 );
 
 // Update functions
@@ -91,33 +92,34 @@ function update_2() {
 }
 
 function update_3() {
+  update_sql("ALTER TABLE user RENAME users;");
   update_sql("ALTER TABLE locales CHANGE id lid int(10) DEFAULT '0' NOT NULL auto_increment;");
   update_sql("ALTER TABLE layout CHANGE userid uid int(10) DEFAULT '0' NOT NULL;");
   update_sql("ALTER TABLE rating CHANGE userid uid int(10) DEFAULT '0' NOT NULL;");
 }
 
 function update_4() {
-  print "remove the \"auto_increment\"s\:n";
+  print "remove the \"auto_increment\"s:<br />";
   update_sql("ALTER TABLE story CHANGE nid nid int(10) unsigned DEFAULT '0' NOT NULL;");
   update_sql("ALTER TABLE blog CHANGE nid nid int(10) unsigned DEFAULT '0' NOT NULL;");
   update_sql("ALTER TABLE page CHANGE nid nid int(10) unsigned DEFAULT '0' NOT NULL;");
   update_sql("ALTER TABLE forum CHANGE nid nid int(10) unsigned DEFAULT '0' NOT NULL;");
   update_sql("ALTER TABLE book CHANGE nid nid int(10) unsigned DEFAULT '0' NOT NULL;");
 
-  print "drop the \"lid\"s:\n";
+  print "drop the \"lid\"s:<br />";
   update_sql("ALTER TABLE story DROP lid;");
   update_sql("ALTER TABLE blog DROP lid;");
   update_sql("ALTER TABLE page DROP lid;");
   update_sql("ALTER TABLE forum DROP lid;");
   update_sql("ALTER TABLE book DROP lid;");
 
-  print "rename \"author\" to \"uid\":\n";
+  print "rename \"author\" to \"uid\":<br />";
   update_sql("ALTER TABLE comments CHANGE author uid int(10) DEFAULT '0' NOT NULL;");
   update_sql("ALTER TABLE node CHANGE author uid int(10) DEFAULT '0' NOT NULL;");
   update_sql("ALTER TABLE node DROP KEY author;");
   update_sql("ALTER TABLE node ADD KEY uid (uid);");
 
-  print "resize some \"id\"s:\n";
+  print "resize some \"id\"s:<br />";
   update_sql("ALTER TABLE feed CHANGE fid fid int(10) NOT NULL auto_increment;");
   update_sql("ALTER TABLE bundle CHANGE bid bid int(10) NOT NULL auto_increment;");
   update_sql("ALTER TABLE item CHANGE iid iid int(10) NOT NULL auto_increment;");
@@ -128,7 +130,7 @@ function update_4() {
 }
 
 function update_5() {
-  print "add primary keys:\n";
+  print "add primary keys:<br />";
   update_sql("ALTER TABLE story ADD PRIMARY KEY nid (nid);");
   update_sql("ALTER TABLE blog ADD PRIMARY KEY nid (nid);");
   update_sql("ALTER TABLE page ADD PRIMARY KEY nid (nid);");
@@ -138,23 +140,22 @@ function update_5() {
 }
 
 function update_6() {
-  print "add new field to blocks:\n";
+  print "add new field to blocks:<br />";
   update_sql("ALTER TABLE blocks ADD path varchar(255) NOT NULL DEFAULT '';");
 }
 
 function update_7() {
-  print "updating the story table:\n";
+  print "updating the story table:<br />";
   update_sql("UPDATE story SET body = CONCAT(abstract, '\n\n', body)");
-  update_sql("ALTER TABLE story DROP abstract");
 
-  print "rename the body fields:\n";
+  print "rename the body fields:<br />";
   update_sql("ALTER TABLE story CHANGE body body_old TEXT DEFAULT '' NOT NULL;");
   update_sql("ALTER TABLE page CHANGE body body_old TEXT DEFAULT '' NOT NULL;");
   update_sql("ALTER TABLE blog CHANGE body body_old TEXT DEFAULT '' NOT NULL;");
   update_sql("ALTER TABLE forum CHANGE body body_old TEXT DEFAULT '' NOT NULL;");
   update_sql("ALTER TABLE book CHANGE body body_old TEXT DEFAULT '' NOT NULL;");
 
-  print "update the node table:\n";
+  print "update the node table:<br />";
   update_sql("ALTER TABLE node DROP lid;");
   update_sql("ALTER TABLE node ADD teaser TEXT DEFAULT '' NOT NULL;");
   update_sql("ALTER TABLE node ADD body TEXT DEFAULT '' NOT NULL;");
@@ -178,7 +179,7 @@ function update_7() {
     include_once("modules/$object->type.module");
     $node = node_load(array("nid" => $object->nid));
 
-    $body = db_result(db_query("SELECT body_old FROM $node->type WHERE nid = $node->nid"), 0);
+    $old = db_fetch_object(db_query("SELECT * FROM $node->type WHERE nid = $node->nid"));
 
     switch ($node->type) {
       case "forum":
@@ -186,7 +187,7 @@ function update_7() {
       case "book":
       case "page":
       case "blog":
-        node_save($node, array("nid", "body" => $body, "teaser" => node_teaser($body)));
+        node_save($node, array("nid", "body" => $old->body, "teaser" => ($old->abstract ? $old->abstract : node_teaser($old->body_old))));
         print "updated node $node->nid '$node->title' ($node->type)<br />";
         break;
       default:
@@ -197,6 +198,7 @@ function update_7() {
     unset($body);
   }
 
+  update_sql("ALTER TABLE story DROP abstract");
   update_sql("ALTER TABLE book DROP section;");
 }
 
@@ -257,6 +259,7 @@ function update_10() {
 
 function update_11() {
   update_sql("ALTER TABLE users ADD session TEXT;");
+  update_sql("ALTER TABLE users ADD sid varchar(32) DEFAULT '' NOT NULL;");
 }
 
 function update_12() {
@@ -414,6 +417,98 @@ function update_30() {
   update_sql("UPDATE blocks SET status = 1, custom = 0 WHERE status = 2;");
 }
 
+function update_31() {
+  include_once("modules/taxonomy.module");
+  
+  print "Wiping tables.<br />";
+  db_query("DELETE FROM vocabulary");
+  db_query("DELETE FROM term_data");
+  db_query("DELETE FROM term_node");
+  db_query("DELETE FROM term_hierarchy");
+  
+  print "Creating collections.<br />";
+  $result = db_query("SELECT * FROM collection");
+  while ($c = db_fetch_object($result)) {
+    $collections[$c->name] = count($collections) + 1;
+    db_query("INSERT INTO vocabulary SET vid = '". count($collections) ."', name = '$c->name', types = '". str_replace(" ", "", $c->types) ."'");
+  }
+  
+  print "Creating terms.<br />";
+  $result = db_query("SELECT * FROM tag");
+  $i = 1;
+  while ($t = db_fetch_object($result)) {
+    foreach (explode(", ", $t->collections) as $c) {
+      if ($collections[$c]) {
+        db_query("INSERT INTO term_data SET tid = '$i', vid = '$collections[$c]', name = '$t->name'");
+        db_query("INSERT INTO term_hierarchy SET tid = '$i', parent = '0'");
+        $terms[$t->name] = $i;
+        $i++;
+      }
+    }
+  }
+  
+  print "Linking nodes with terms.<br />";
+  $result = db_query("SELECT nid,attributes FROM node WHERE attributes != ''");
+  while ($node = db_fetch_object($result)) {
+    foreach (explode(",", $node->attributes) as $t) {
+      $t = trim($t);
+      if ($t) {
+        if ($terms[$t]) {
+          db_query("INSERT INTO term_node SET nid = '$node->nid', tid = '$terms[$t]'");
+        }
+        else {
+          $errors[$t] = "$t";
+        }
+      }
+    }    
+  }
+   
+  if (count($errors)) {
+    asort($errors);
+    print "<br /><br />Terms not found:<br /><pre>  ". implode("\n  ", $errors) ."</pre>";
+  }
+  
+  // Clean up meta tag system
+  update_sql("DROP TABLE collection");
+  update_sql("DROP TABLE tag");
+  update_sql("ALTER TABLE node DROP attributes");
+}
+
+function update_upgrade3() {
+  update_sql("INSERT INTO system VALUES ('archive.module','archive','module','',1);");
+  update_sql("INSERT INTO system VALUES ('block.module','block','module','',1);");
+  update_sql("INSERT INTO system VALUES ('blog.module','blog','module','',1);");
+  update_sql("INSERT INTO system VALUES ('bloggerapi.module','bloggerapi','module','',1);");
+  update_sql("INSERT INTO system VALUES ('book.module','book','module','',1);");
+  update_sql("INSERT INTO system VALUES ('cloud.module','cloud','module','',1);");
+  update_sql("INSERT INTO system VALUES ('comment.module','comment','module','',1);");
+  update_sql("INSERT INTO system VALUES ('forum.module','forum','module','',1);");
+  update_sql("INSERT INTO system VALUES ('help.module','help','module','',1);");
+  update_sql("INSERT INTO system VALUES ('import.module','import','module','',1);");
+  update_sql("INSERT INTO system VALUES ('jabber.module','jabber','module','',1);");
+  update_sql("INSERT INTO system VALUES ('locale.module','locale','module','',1);");
+  update_sql("INSERT INTO system VALUES ('node.module','node','module','',1);");
+  update_sql("INSERT INTO system VALUES ('notify.module','notify','module','',1);");
+  update_sql("INSERT INTO system VALUES ('page.module','page','module','',1);");
+  update_sql("INSERT INTO system VALUES ('poll.module','poll','module','',1);");
+  update_sql("INSERT INTO system VALUES ('queue.module','queue','module','',1);");
+  update_sql("INSERT INTO system VALUES ('rating.module','rating','module','',1);");
+  update_sql("INSERT INTO system VALUES ('search.module','search','module','',1);");
+  update_sql("INSERT INTO system VALUES ('statistics.module','statistics','module','',1);");
+  update_sql("INSERT INTO system VALUES ('story.module','story','module','',1);");
+  update_sql("INSERT INTO system VALUES ('taxonomy.module','taxonomy','module','',1);");
+  update_sql("INSERT INTO system VALUES ('themes/example/example.theme','example','theme','Internet explorer, Netscape, Opera, Lynx',1);");
+  update_sql("INSERT INTO system VALUES ('themes/goofy/goofy.theme','goofy','theme','Internetexplorer, Netscape, Opera',1);");
+  update_sql("INSERT INTO system VALUES ('themes/marvin/marvin.theme','marvin','theme','Internet explorer, Netscape, Opera',1);");
+  update_sql("INSERT INTO system VALUES ('themes/sosim/sosim.theme','sosim','theme','MSIE/NN/Opera',1);");
+  update_sql("INSERT INTO system VALUES ('themes/unconed/unconed.theme','unconed','theme','Internet explorer, Netscape, Opera',1);");
+  update_sql("INSERT INTO system VALUES ('tracker.module','tracker','module','',1);");
+  update_sql("INSERT INTO system VALUES ('weblogs.module','weblogs','module','',1);");
+  update_sql("REPLACE variable SET value = 'marvin', name = 'theme_default';");
+  update_sql("REPLACE blocks SET name = 'User information', module = 'user', delta = '0', status = '1';");
+  update_sql("REPLACE blocks SET name = 'Log in', module = 'user', delta = '1', status = '1';");
+}
+
 /*
 ** System functions
 */
@@ -453,12 +548,30 @@ function update_page() {
     case "Update":
       // make sure we have updates to run.
       print "<html><h1>Drupal update</h1>";
+      print "<b>&raquo; <a href=\"index.php\">home</a></b><br />\n";
+      print "<b>&raquo; <a href=\"admin.php\">administer</a></b><br />\n";
       if ($edit["start"] == -1) {
         print "No updates to perform.";
       }
       else {
         update_data($edit["start"]);
       }
+      print "</html>";
+      break;
+    case "upgrade3":
+      // make sure we have updates to run.
+      print "<html><h1>Drupal upgrade</h1>";
+      print "<b>&raquo; <a href=\"index.php\">home</a></b><br />\n";
+      print "<b>&raquo; <a href=\"admin.php\">administer</a></b><br />\n";
+      if ($edit["start"] == -1) {
+        print "No updates to perform.";
+      }
+      else {
+        update_data($edit["start"]);
+      }
+      print "<pre>\n";
+      update_upgrade3();
+      print "</pre>\n";
       print "</html>";
       break;
     default:
@@ -486,38 +599,45 @@ function update_page() {
 
 function update_info() {
   print "<html><h1>Drupal update</h1>";
-  print "<h2>NOTES</h2>\n";
-  print "These queries have to be run manually:<br />\n";
+  print "<h2>Instructions</h2>\n";
+  print "<ol>\n";
+  print "<li><p>Before doing anything backup your database. This process will change your database and its values.</p></li>\n";
+  print "<li>These queries have to be run manually:<br />\n";
   print "<pre>\n";
   print "ALTER TABLE watchdog CHANGE user uid int(10) DEFAULT '0' NOT NULL;\n";
   print "ALTER TABLE watchdog CHANGE id wid int(5) DEFAULT '0' NOT NULL auto_increment;\n";
   print "ALTER TABLE users ADD sid varchar(32) DEFAULT '' NOT NULL;\n";
+  print "ALTER TABLE users ADD session TEXT;\n";
   print "ALTER TABLE users CHANGE last_host hostname varchar(128) DEFAULT '' NOT NULL;\n";
   print "ALTER TABLE users CHANGE last_access timestamp int(11) DEFAULT '0' NOT NULL;\n";
   print "CREATE TABLE system (filename varchar(255) NOT NULL default '', name varchar(255) NOT NULL default '', type varchar(255) NOT NULL default '', description varchar(255) NOT NULL default '', status int(2) NOT NULL default '0', PRIMARY KEY (filename));\n";
   print "CREATE TABLE permission (rid INT UNSIGNED NOT NULL, perm TEXT, tid INT UNSIGNED NOT NULL, KEY (rid));\n";
   print "INSERT INTO permission (rid, perm) SELECT rid, perm FROM role;\n";
   print "ALTER TABLE users ADD rid INT UNSIGNED NOT NULL;\n";
-  print "</pre>\n";
-  print "<p>You might also have to by-pass the access check near the bottom such that you can gain access to the form: search for <i>user_access()</i>.</p>";
-  print "<b><a href=\"update.php?op=page\">Go on to the updates...</a></b>\n";
+  print "</pre></li>\n";
+  print "<li><p>You might have to by-pass the access check near the bottom of the file called update.php such that you can gain access to the updates: search for <i>user_access()</i>.</p></li>";
+  print "<li><p>Choose one of the links below to either upgrade from Drupal 3.x or update from a CVS checkout. The upgrade will by default enable the standard Drupal themes and modules as well as setting some default values. The update will require modules and themes enabled manually under <i>Administer | Site configureation | modules</i>.</p></li>";
+  print "<li><p>Go through the various administration pages to change the existing and new settings to your liking.</p></li>\n";
+  print "<li><p>Remove or disable access to update.php so nobody else can possible tamper with the database.</p></li>\n";
+  print "<li><p>Thanks for using Drupal!</p></li>\n";
+  print "</ol>";
+  print "<p><b>&raquo; <a href=\"update.php?op=upgrade3\">Upgrade 3.x to 4.0.0</a></b></p>\n";
+  print "<p><b>&raquo; <a href=\"update.php?op=update\">Update CVS database</a></b></p>\n";
   print "</html>";
 }
 
 // Security check:
 
-switch ($op) {
-  case "page":
-  case "Update":
-    include_once "includes/common.inc";
-    if (user_access(NULL)) {
-      update_page();
-    }
-    else {
-      print message_access();
-    }
-    break;
-  default:
-    update_info();
+if ($op) {
+  include_once "includes/common.inc";
+  if (!user_access(NULL)) {
+    update_page();
+  }
+  else {
+    print message_access();
+  }
+}
+else {
+  update_info();
 }
 ?>
