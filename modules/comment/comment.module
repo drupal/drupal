@@ -1622,7 +1622,7 @@ function comment_search($keys) {
 
   $find = do_search(array("keys" => $keys, "type" => "comment", "select" => "select s.lno as lno, c.nid as nid, c.subject as title, c.timestamp as created, u.uid as uid, u.name as name, s.count as count FROM {search_index} s, {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE s.lno = c.cid AND s.type = 'comment' AND c.status = 0 AND s.word like '%'"));
 
-  return $find;
+  return array(t("Matching comments ranked in order of relevance"), $find);
 }
 
 function comment_update_index() {

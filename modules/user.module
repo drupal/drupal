@@ -300,7 +300,7 @@ function user_search($keys) {
   while ($account = db_fetch_object($result)) {
     $find[] = array("title" => $account->name, "link" => (strstr(request_uri(), "admin") ? url("admin/user/edit/$account->uid") : url("user/view/$account->uid")), "user" => $account->name);
   }
-  return $find;
+  return array(t("Matching users"), $find);
 }
 
 function user_block($op = "list", $delta = 0) {

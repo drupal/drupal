@@ -566,7 +566,7 @@ function node_search($keys) {
   //
   $find = do_search(array("keys" => $keys, "type" => "node", "select" => "select s.lno as lno, n.title as title, n.created as created, u.uid as uid, u.name as name, s.count as count FROM {search_index} s, {node} n INNER JOIN {users} u ON n.uid = u.uid WHERE s.lno = n.nid AND s.type = 'node' AND s.word like '%' AND n.status = 1"));
 
-  return $find;
+  return array(t("Matching nodes ranked in order of relevance"), $find);
 }
 
 function node_settings() {
