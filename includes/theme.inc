@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.152 2003/11/08 11:56:31 dries Exp $
+// $Id: theme.inc,v 1.153 2003/11/09 17:11:26 dries Exp $
 
 /**
  * Basic theme
@@ -107,7 +107,7 @@ function theme_block($block) {
 
 function theme_footer() {
   $output = "</td></tr></table>";
-  $output .= theme_footer();
+  $output .= theme_closure();
   $output .= "</body></html>";
   print $output;
 }
