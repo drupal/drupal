@@ -157,7 +157,7 @@ function comment_block($op = 'list', $delta = 0) {
     return $blocks;
   }
   else if ($op == 'view' && user_access('access comments')) {
-    $result = db_query_range(node_rewrite_sql('SELECT c.nid,c.* FROM {comments} c WHERE status = 0 ORDER BY timestamp DESC', 'c'), 0, 10);
+    $result = db_query_range(node_rewrite_sql('SELECT c.nid, c.* FROM {comments} c WHERE status = 0 ORDER BY timestamp DESC', 'c'), 0, 10);
     $items = array();
     while ($comment = db_fetch_object($result)) {
       $items[] = l($comment->subject, 'node/'. $comment->nid, NULL, NULL, 'comment-'. $comment->cid) .'<br />'. t('%time ago', array('%time' => format_interval(time() - $comment->timestamp)));

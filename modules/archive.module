@@ -241,7 +241,7 @@ function archive_page($year = 0, $month = 0, $day = 0) {
 
   if ($year && $month && $day) {
     // Fetch nodes for the selected date, if one was specified.
-    $sql = 'SELECT n.nid, n.created FROM {node} n WHERE n.status = 1 AND n.created > %d AND n.created < %d  ORDER BY n.created';
+    $sql = 'SELECT n.nid, n.created FROM {node} n WHERE n.status = 1 AND n.created > %d AND n.created < %d ORDER BY n.created';
     $sql = node_rewrite_sql($sql);
     $result = db_query_range($sql, $date, $date_end, 0, 20);
 

@@ -103,7 +103,7 @@ function taxonomy_block($op = 'list', $delta = 0) {
     return $blocks;
   }
   else if ($op == 'view' && user_access('access content')) {
-    $result = db_query(node_rewrite_sql("SELECT d.tid, d.name, MAX(n.created) AS updated, COUNT(*) AS count FROM {term_data} d INNER JOIN {term_node} USING (tid) INNER JOIN {node} n USING (nid) WHERE n.status = 1 GROUP BY d.tid, d.name ORDER BY updated DESC, d.name"));
+    $result = db_query(node_rewrite_sql('SELECT d.tid, d.name, MAX(n.created) AS updated, COUNT(*) AS count FROM {term_data} d INNER JOIN {term_node} USING (tid) INNER JOIN {node} n USING (nid) WHERE n.status = 1 GROUP BY d.tid, d.name ORDER BY updated DESC, d.name'));
     $items = array();
     while ($category = db_fetch_object($result)) {
       $items[] = l($category->name .' ('. $category->count .')', 'taxonomy/term/'. $category->tid) .'<br />'. t('%time ago', array('%time' => format_interval(time() - $category->updated)));
@@ -839,7 +839,7 @@ function taxonomy_select_nodes($tids = array(), $operator = 'or', $depth = 0, $p
     $sql = node_rewrite_sql($sql);
     $sql_count = node_rewrite_sql($sql_count);
     if ($pager) {
-      $result = pager_query($sql, variable_get('default_nodes_main', 10) , 0, $sql_count);
+      $result = pager_query($sql, variable_get('default_nodes_main', 10), 0, $sql_count);
     }
     else {
       $result = db_query_range($sql, 0, 15);

@@ -270,7 +270,7 @@ function aggregator_remove($feed) {
   }
   db_query('DELETE FROM {aggregator_item} WHERE fid = %d', $feed['fid']);
   db_query("UPDATE {aggregator_feed} SET checked = 0, etag = '', modified = 0 WHERE fid = %d", $feed['fid']);
-  drupal_set_message(t('Removed news items from %site.', array('%site' => '<em>'.$feed['title'] .'</em>')));
+  drupal_set_message(t('Removed news items from %site.', array('%site' => '<em>'. $feed['title'] .'</em>')));
 }
 
 /**
