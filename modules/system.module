@@ -249,8 +249,8 @@ function system_listing($type) {
     module_load($file->name);
 
     if ($type == 'module') {
-      $info->name = module_invoke($file->name, 'help', 'admin/modules#name') ? module_invoke($file->name, 'help', 'admin/modules#name') : module_invoke($file->name, 'system', 'name') ? module_invoke($file->name, 'system', 'name') : $file->name;
-      $info->description = module_invoke($file->name, 'help', 'admin/modules#description') ? module_invoke($file->name, 'help', 'admin/modules#description') : module_invoke($file->name, 'system', 'description');
+      $info->name = module_invoke($file->name, 'help', 'admin/modules#name') ? module_invoke($file->name, 'help', 'admin/modules#name') : $file->name;
+      $info->description = module_invoke($file->name, 'help', 'admin/modules#description');
       // log the critical hooks implemented by this module
       $bootstrap = 0;
       foreach (bootstrap_hooks() as $hook) {
