@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.50 2004/01/11 15:05:20 dries Exp $ */
+/* $Id: drupal.css,v 1.51 2004/01/12 22:35:57 dries Exp $ */
 
 form {
   margin: 0;
@@ -15,6 +15,21 @@ fieldset {
 }
 img {
   border: 0;
+}
+li.expanded {
+  list-style-type: circle;
+  list-style-image: url(menu-expanded.gif);
+}
+li.collapsed {
+  list-style-type: disc;
+  list-style-image: url(menu-collapsed.gif);
+}
+li.leaf {
+  list-style-type: square;
+  list-style-image: url(menu-leaf.gif);
+}
+li a.active {
+  color: #000;
 }
 #tracker table {
   border-collapse: collapse;
@@ -44,7 +59,7 @@ img {
   padding-bottom: .5em
 }
 .book {
-  margin-bottom: 2em;
+  margin: 1em 0 1em 0;
 }
 .book .title {
   font-weight: bold;
@@ -52,7 +67,9 @@ img {
   margin-bottom:1em;
 }
 .book .tree {
-  margin-bottom: 2em;
+  padding-top:1em;
+  border-top: 1px solid #888;
+  padding-bottom: 1em;
 }
 .book .name {
   padding-top:1em;
@@ -73,7 +90,9 @@ img {
   clear: both;
 }
 .book .nav .prev {
-  float: left; width: 45%;
+  float: left; 
+  text-align: left;
+  width: 45%;
   padding-bottom: 0.5em;
 }
 .book .nav .next {
@@ -84,6 +103,10 @@ img {
 }
 .book .nav .up {
   text-align: center;
+}
+.block-book ul {
+  margin: 0;
+  padding: 0 0 0.25em 1em;
 }
 .calendar .row-week td a {
   display: block;
@@ -286,24 +309,6 @@ pre, code {
   display: block;
   width: 100%;
   text-decoration: none;
-}
-.menu li a.active {
-  color: #000;
-}
-.menu li a:hover {
-  color: #009;
-}
-.menu li.expanded {
-  list-style-type: circle;
-  list-style-image: url(menu-expanded.gif);
-}
-.menu li.collapsed {
-  list-style-type: disc;
-  list-style-image: url(menu-collapsed.gif);
-}
-.menu li.leaf {
-  list-style-type: square;
-  list-style-image: url(menu-leaf.gif);
 }
 td.watchdog-user {
   background: #fea;
