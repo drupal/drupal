@@ -354,7 +354,7 @@ function taxonomy_node_delete($nid) {
 // relations: return array of related terms
 function taxonomy_get_related($tid, $key = "tid") {
   if ($tid) {
-    $result = db_query("SELECT t.*, tid1, tid2 FROM term_relation, term_data t WHERE (t.tid = tid1 OR t.tid = tid2) AND (tid1 = '%s' OR tid2 = '%s') ORDER BY weight", $tid, $tid);
+    $result = db_query("SELECT t.*, tid1, tid2 FROM term_relation, term_data t WHERE (t.tid = tid1 OR t.tid = tid2) AND (tid1 = '%d' OR tid2 = '%d') AND t.tid != '%d' ORDER BY weight", $tid, $tid, $tid);
     $related = array();
     while ($term = db_fetch_object($result)) {
       $related[$term->$key] = $term;
