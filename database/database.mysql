@@ -203,7 +203,6 @@ CREATE TABLE comments (
 
 CREATE TABLE node_comment_statistics (
   nid int(10) unsigned NOT NULL auto_increment,
-  cid int(10) unsigned NOT NULL default '0',
   last_comment_timestamp int(11) NOT NULL default '0',
   last_comment_name varchar(60)  default NULL,
   last_comment_uid int(10) NOT NULL default '0',

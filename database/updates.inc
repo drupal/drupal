@@ -99,7 +99,8 @@ $sql_updates = array(
   "2005-01-25" => "update_120",
   "2005-01-26" => "update_121",
   "2005-01-27" => "update_122",
-  "2005-01-28" => "update_123"
+  "2005-01-28" => "update_123",
+  "2005-02-11" => "update_124"
 );
 
 function update_32() {
@@ -1809,48 +1810,10 @@ function update_105() {
   if ($GLOBALS['db_type'] == 'mysql') {
     $ret[] = update_sql("ALTER TABLE {forum} DROP shadow");
     $ret[] = update_sql('ALTER TABLE {node} ADD INDEX node_status_type (status, type, nid)');
-
-    $ret[] = update_sql("CREATE TABLE {node_comment_statistics} (
-      nid int(10) unsigned NOT NULL auto_increment,
-      cid int(10) unsigned NOT NULL default '0',
-      last_comment_timestamp int(11) NOT NULL default '0',
-      last_comment_name varchar(60) default NULL,
-      last_comment_uid int(10) NOT NULL default '0',
-      comment_count int(10) unsigned NOT NULL default '0',
-      PRIMARY KEY (nid),
-      KEY node_comment_timestamp (last_comment_timestamp)
-      ) TYPE=MyISAM");
-    $ret[] = update_sql("INSERT INTO {node_comment_statistics} (nid, cid, last_comment_timestamp, last_comment_name, last_comment_uid, comment_count) SELECT n.nid, 0, n.created, NULL, n.uid, 0 FROM {node} n");
-
-    $ret[] = update_sql("CREATE TABLE {forum_conv_temp} (
-      nid int(10) unsigned NOT NULL default '0',
-      cid int(10) unsigned NOT NULL default '0',
-      comment_count int(10) unsigned NOT NULL default '0',
-      PRIMARY KEY (nid)
-      )");
-
-    $ret[] = update_sql('INSERT INTO {forum_conv_temp} SELECT f.nid, MAX(c.cid), COUNT(c.nid) FROM {forum} f INNER JOIN {comments} c ON f.nid = c.nid WHERE c.status = 0 GROUP BY f.nid');
-
-    /* This would be faster but only works with MySQL 4.0.4 or higher
-    $ret[] = update_sql('UPDATE {node_comment_statistics} n, {forum_conv_temp} t, {comments} c SET n.comment_count = t.comment_count, n.last_comment_timestamp = c.timestamp, n.last_comment_name = c.name, n.last_comment_uid = c.uid, n.cid = t.cid WHERE t.cid = c.cid AND n.nid = t.nid');
-    */
   }
   else {
     // PostgreSQL is incapable of dropping columns in all but the latest versions.
     $ret[] = update_sql("CREATE INDEX {node}_status_type_idx ON {node} (status, type, nid)");
-
-
-    $ret[] = update_sql("CREATE TABLE {node}_comment_statistics (
-      nid integer NOT NULL,
-      cid integer NOT NULL default '0',
-      last_comment_timestamp integer NOT NULL default '0',
-      last_comment_name varchar(60)  default NULL,
-      last_comment_uid integer NOT NULL default '0',
-      comment_count integer NOT NULL default '0',
-      PRIMARY KEY (nid)
-    )");
-
-    $ret[] = update_sql("SELECT f.nid, MAX(c.cid) as cid, COUNT(c.nid) as comment_count INTO TEMPORARY {forum_conv_temp} FROM {forum} f INNER JOIN {comments} c ON f.nid = c.nid WHERE c.status = 0 GROUP BY f.nid");
 
     $ret[] = update_sql("CREATE FUNCTION \"if\"(integer, text, text) RETURNS text AS '
       BEGIN
@@ -1863,13 +1826,6 @@ function update_105() {
       END;
       ' LANGUAGE 'plpgsql'");
   }
-
-  $commentupdates = db_query("SELECT t.nid, t.cid, t.comment_count, c.timestamp, c.name, c.uid FROM {forum_conv_temp} t INNER JOIN {comments} c ON t.cid = c.cid");
-  while ($commentrecord = db_fetch_object($commentupdates)) {
-    db_query("UPDATE {node_comment_statistics} SET comment_count = %d, last_comment_timestamp = %d, last_comment_name = '%s', last_comment_uid = %d, cid = %d WHERE nid = %d", $commentrecord->comment_count, $commentrecord->timestamp, $commentrecord->name, $commentrecord->uid, $commentrecord->cid, $commentrecord->nid);
-  }
-
-  $ret[] = update_sql("DROP TABLE {forum_conv_temp}");
 
   return $ret;
 }
@@ -1920,7 +1876,6 @@ function update_108() {
   }
   return $ret;
 }
-
 
 function update_109() {
   $ret = array();
@@ -2187,6 +2142,50 @@ function update_123() {
   $vid = variable_get('forum_nav_vocabulary', '');
   if (!empty($vid)) {
     $ret[] = update_sql("UPDATE {vocabulary} SET module = 'forum' WHERE vid = " . $vid);
+  }
+
+  return $ret;
+}
+
+function update_124() {
+  $ret = array();
+
+  if ($GLOBALS['db_type'] == 'mysql') {
+    // redo update_105, correctly creating node_comment_statistics
+    $ret[] = update_sql("DROP TABLE IF EXISTS {node_comment_statistics}");
+
+    $ret[] = update_sql("CREATE TABLE {node_comment_statistics} (
+      nid int(10) unsigned NOT NULL auto_increment,
+      last_comment_timestamp int(11) NOT NULL default '0',
+      last_comment_name varchar(60) default NULL,
+      last_comment_uid int(10) NOT NULL default '0',
+      comment_count int(10) unsigned NOT NULL default '0',
+      PRIMARY KEY (nid),
+      KEY node_comment_timestamp (last_comment_timestamp)
+      ) TYPE=MyISAM");
+  }
+
+  else {
+    // also drop incorrectly named table for PostgreSQL
+    $ret[] = update_sql("DROP TABLE {node}_comment_statistics");
+
+    $ret[] = update_sql("CREATE TABLE {node_comment_statistics} (
+      nid integer NOT NULL,
+      last_comment_timestamp integer NOT NULL default '0',
+      last_comment_name varchar(60)  default NULL,
+      last_comment_uid integer NOT NULL default '0',
+      comment_count integer NOT NULL default '0',
+      PRIMARY KEY (nid)
+    )");
+  }
+
+  // initialize table
+  $ret[] = update_sql("INSERT INTO {node_comment_statistics} (nid, last_comment_timestamp, last_comment_name, last_comment_uid, comment_count) SELECT n.nid, 0, NULL, 0, 0 FROM {node} n");
+
+  // fill table
+  $comment_updates = db_query("SELECT c.nid, c.timestamp, c.name, c.uid, COUNT(c.nid) as comment_count FROM {comments} c INNER JOIN {node} n ON c.nid = n.nid WHERE c.status = 0 GROUP BY c.nid");
+  while ($comment_record = db_fetch_object($comment_updates)) {
+    $ret[] = update_sql("UPDATE {node_comment_statistics} SET comment_count = $comment_record->comment_count, last_comment_timestamp = $comment_record->timestamp, last_comment_name = '$comment_record->name', last_comment_uid = $comment_record->uid WHERE nid = $comment_record->nid");
   }
 
   return $ret;

@@ -246,7 +246,7 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
       break;
 
     case 'load':
-      return db_fetch_array(db_query("SELECT last_comment_timestamp, last_comment_name, last_comment_name, comment_count, cid as last_comment_cid FROM {node_comment_statistics} WHERE nid = %d", $node->nid));
+      return db_fetch_array(db_query("SELECT last_comment_timestamp, last_comment_name, comment_count FROM {node_comment_statistics} WHERE nid = %d", $node->nid));
     case 'validate':
       if (!user_access('administer nodes')) {
         // Force default for normal users:
@@ -255,12 +255,9 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
       break;
 
     case 'insert':
-      db_query('INSERT INTO {node_comment_statistics} (nid, cid, last_comment_timestamp, last_comment_name, last_comment_uid, comment_count) VALUES (%d, 0, %d, NULL, %d, 0)', $node->nid, $node->created, $node->uid);
+      db_query('INSERT INTO {node_comment_statistics} (nid, last_comment_timestamp, last_comment_name, last_comment_uid, comment_count) VALUES (%d, %d, NULL, %d, 0)', $node->nid, $node->created, $node->uid);
       break;
 
-    case 'update':
-      db_query('UPDATE {node_comment_statistics} SET last_comment_timestamp = %d WHERE nid = %d AND cid = 0', $node->changed, $node->nid);
-      break;
     case 'delete':
       db_query('DELETE FROM {comments} WHERE nid = %d', $node->nid);
       db_query('DELETE FROM {node_comment_statistics} WHERE nid = %d', $node->nid);
@@ -994,6 +991,11 @@ function comment_save($id, $edit) {
   db_query("UPDATE {comments} SET subject = '%s', comment = '%s', status = %d, format = '%s', name = '%s', mail = '%s', homepage = '%s' WHERE cid = %d", $edit['subject'], $edit['comment'], $edit['status'], $edit['format'], $edit['name'], $edit['mail'], $edit['homepage'], $id);
   watchdog('content', t('Comment: modified %subject.', array('%subject' => '<em>'. $edit['subject'] .'</em>')));
   drupal_set_message(t('The comment has been saved.'));
+
+  _comment_update_node_statistics($edit['nid']);
+
+  // Allow modules to respond to the updating of a comment.
+  module_invoke_all('comment', 'update', $edit);
 }
 
 /**
@@ -1663,7 +1665,6 @@ function _comment_per_page() {
  * time a comment is added, deleted, or updated.
  *
  * The following fields are contained in the node_comment_statistics table.
- * - cid: cid of the last comment to be created for the node.
  * - last_comment_timestamp: the timestamp of the last comment for this node or the node create stamp if no comments exist for the node.
  * - last_comment_name: the name of the anonymous poster for the last comment
  * - last_comment_uid: the uid of the poster for the last comment for this node or the node authors uid if no comments exists for the node.
@@ -1671,9 +1672,17 @@ function _comment_per_page() {
  */
 function _comment_update_node_statistics($nid) {
   $count = db_result(db_query('SELECT COUNT(cid) FROM {comments} WHERE nid = %d AND status = 0', $nid));
-  $node = node_load(array('nid' => $nid));
-  $last_reply = db_fetch_object(db_query_range('SELECT cid, name, timestamp, uid FROM {comments} WHERE nid = %d AND status = 0 ORDER BY cid DESC', $nid, 0, 1));
-  db_query("UPDATE {node_comment_statistics} SET comment_count = %d, last_comment_timestamp = '%s', last_comment_name = '%s', last_comment_uid = %d WHERE nid = %d", $count, $last_reply ? $last_reply->timestamp : $node->created, $last_reply->name, $last_reply ? $last_reply->uid : $node->uid, $nid);
-}
 
+  // comments exist
+  if ($count > 0) {
+    $node = node_load(array('nid' => $nid));
+    $last_reply = db_fetch_object(db_query_range('SELECT cid, name, timestamp, uid FROM {comments} WHERE nid = %d AND status = 0 ORDER BY cid DESC', $nid, 0, 1));
+    db_query("UPDATE {node_comment_statistics} SET comment_count = %d, last_comment_timestamp = %d, last_comment_name = '%s', last_comment_uid = %d WHERE nid = %d", $count, $last_reply->timestamp, $last_reply->uid ? NULL : $last_reply->name, $last_reply->uid, $nid);
+  }
+
+  // no comments
+  else {
+    db_query("UPDATE {node_comment_statistics} SET comment_count = %d, last_comment_timestamp = %d, last_comment_name = '%s', last_comment_uid = %d WHERE nid = %d", 0, NULL, 0, 0, $nid);
+  }
+}
 ?>
