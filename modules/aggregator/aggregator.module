@@ -53,16 +53,16 @@ function aggregator_help($section) {
       <h3>Technical details</h3>
       <p>Drupal automatically generates an OPML feed file that is available by selecting the XML icon on the News Sources page.</p>
       <p>When fetching feeds Drupal supports conditional GETs, this reduces the bandwidth usage for feeds that have not been updated since the last check.</p>
-      <p>If a feed is permanently moved to a new location Drupal will automatically update the feed URL to the new address.</p>', array('%block' => url('admin/system/block'), '%admin-news' => url('admin/syndication/news'), '%new-feed' => url('admin/syndication/news/add/feed'), '%new-category' => url('admin/syndication/news/add/category'), '%update-items' => url('admin/syndication/news'), '%news-aggregator' => url('aggregator'), '%sources' => url('aggregator/sources'), '%categories' => url('aggregator/categories')));
+      <p>If a feed is permanently moved to a new location Drupal will automatically update the feed URL to the new address.</p>', array('%block' => url('admin/system/block'), '%admin-news' => url('admin/aggregator'), '%new-feed' => url('admin/aggregator/add/feed'), '%new-category' => url('admin/aggregator/add/category'), '%update-items' => url('admin/aggregator'), '%news-aggregator' => url('aggregator'), '%sources' => url('aggregator/sources'), '%categories' => url('aggregator/categories')));
     case 'admin/system/modules#description':
       return t('Used to aggregate syndicated content (RSS and RDF).');
     case 'admin/system/modules/aggregator':
       return t('These settings control the display of aggregated content.');
-    case 'admin/syndication/news':
+    case 'admin/aggregator':
       return t('Several web sites, especially news related sites, syndicate parts of their site\'s content for other web sites to display. Usually, the syndicated content includes the latest headlines with a direct link to that story on the remote site. Some syndicated content also includes a description of the headline. The standard method of syndication is using the XML based Rich Site Summary (RSS) or Resource Description Framework (RDF).  To get a feed to work you <strong>must</strong> have <a href=\"%cron\">cron</a> working. To display the feed or categoty in a block you must decide how many items to show by editing the feed or block and turn on the <a href="%block">feed\'s block</a>.', array('%block' => url('admin/system/block'), '%cron' => url('admin/help', NULL, 'cron')));
-    case 'admin/syndication/news/add/feed':
+    case 'admin/aggregator/add/feed':
       return t('Add a site that has an RSS/RDF feed. The URL is the full path to the RSS feed file. For the feed to update automatically you must run "cron.php". If you already have a feed with the URL you are planning to use, the system will not accept another feed with the same URL.');
-    case 'admin/syndication/news/add/category':
+    case 'admin/aggregator/add/category':
       return t('Categoriess provide a generalized way of creating composite news pages or blocks. They allow you, for example, to combine various sport-related items into one category called <i>Sports</i>. News items can be added to a category automatically by setting a feed to automatically place items in a category or by using the categorize items link in any listing of news items.');
   }
 }
@@ -105,15 +105,14 @@ function aggregator_link($type) {
 
   if ($type == 'system') {
     $access = user_access('administer news feeds');
-    menu('admin/syndication', t('syndication'), $access ? 'aggregator_help_page' : MENU_DENIED, 5);
-    menu('admin/syndication/news', t('RSS/RDF'), $access ? 'aggregator_admin_overview' : MENU_DENIED);
-    menu('admin/syndication/news/add/feed', t('new feed'), $access ? 'aggregator_admin_edit_feed' : MENU_DENIED, 2);
-    menu('admin/syndication/news/edit/feed', t('edit feed'), $access ? 'aggregator_admin_edit_feed' : MENU_DENIED, 2, MENU_HIDE);
-    menu('admin/syndication/news/add/category', t('new category'), $access ? 'aggregator_admin_edit_category' : MENU_DENIED, 3);
-    menu('admin/syndication/news/edit/category', t('edit category'), $access ? 'aggregator_admin_edit_category' : MENU_DENIED, 3, MENU_HIDE);
-    menu('admin/syndication/news/remove', t('remove items'), $access ? 'aggregator_admin_remove_feed' : MENU_DENIED, 0, MENU_HIDE, MENU_LOCKED);
-    menu('admin/syndication/news/update', t('update items'), $access ? 'aggregator_admin_refresh_feed' : MENU_DENIED, 0, MENU_HIDE, MENU_LOCKED);
-    menu('admin/syndication/news/help', t('help'), $access ? 'aggregator_help_page' : MENU_DENIED, 9);
+    menu('admin/aggregator', t('aggregator'), $access ? 'aggregator_admin_overview' : MENU_DENIED);
+    menu('admin/aggregator/add/feed', t('new feed'), $access ? 'aggregator_admin_edit_feed' : MENU_DENIED, 2);
+    menu('admin/aggregator/edit/feed', t('edit feed'), $access ? 'aggregator_admin_edit_feed' : MENU_DENIED, 2, MENU_HIDE);
+    menu('admin/aggregator/add/category', t('new category'), $access ? 'aggregator_admin_edit_category' : MENU_DENIED, 3);
+    menu('admin/aggregator/edit/category', t('edit category'), $access ? 'aggregator_admin_edit_category' : MENU_DENIED, 3, MENU_HIDE);
+    menu('admin/aggregator/remove', t('remove items'), $access ? 'aggregator_admin_remove_feed' : MENU_DENIED, 0, MENU_HIDE, MENU_LOCKED);
+    menu('admin/aggregator/update', t('update items'), $access ? 'aggregator_admin_refresh_feed' : MENU_DENIED, 0, MENU_HIDE, MENU_LOCKED);
+    menu('admin/aggregator/help', t('help'), $access ? 'aggregator_help_page' : MENU_DENIED, 9);
 
     $access = user_access('access news feeds');
     menu('aggregator', t('news aggregator'), $access ? 'aggregator_page_last' : MENU_DENIED, 5);
@@ -609,7 +608,7 @@ function aggregator_view() {
   $header = array(t('title'), t('items'), t('last update'), t('next update'), array('data' => t('operations'), 'colspan' => 3));
   $rows = array();
   while ($feed = db_fetch_object($result)) {
-    $rows[] = array(l($feed->title, "aggregator/sources/$feed->fid"), format_plural($feed->items, '1 item', '%count items'), ($feed->checked ? t('%time ago', array('%time' => format_interval(time() - $feed->checked))) : t('never')), ($feed->checked ? t('%time left', array('%time' => format_interval($feed->checked + $feed->refresh - time()))) : t('never')), l(t('edit feed'), "admin/syndication/news/edit/feed/$feed->fid"), l(t('remove items'), "admin/syndication/news/remove/$feed->fid"), l(t('update items'), "admin/syndication/news/update/$feed->fid"));
+    $rows[] = array(l($feed->title, "aggregator/sources/$feed->fid"), format_plural($feed->items, '1 item', '%count items'), ($feed->checked ? t('%time ago', array('%time' => format_interval(time() - $feed->checked))) : t('never')), ($feed->checked ? t('%time left', array('%time' => format_interval($feed->checked + $feed->refresh - time()))) : t('never')), l(t('edit feed'), "admin/aggregator/edit/feed/$feed->fid"), l(t('remove items'), "admin/aggregator/remove/$feed->fid"), l(t('update items'), "admin/aggregator/update/$feed->fid"));
   }
   $output .= theme('table', $header, $rows);
 
@@ -620,7 +619,7 @@ function aggregator_view() {
   $header = array(t('title'), t('operations'));
   $rows = array();
   while ($category = db_fetch_object($result)) {
-    $rows[] = array(l($category->title, "aggregator/categories/$category->cid"), l(t('edit category'), "admin/syndication/news/edit/category/$category->cid"));
+    $rows[] = array(l($category->title, "aggregator/categories/$category->cid"), l(t('edit category'), "admin/aggregator/edit/category/$category->cid"));
   }
   $output .= theme('table', $header, $rows);
 
@@ -901,7 +900,7 @@ function theme_aggregator_feed($feed) {
   $updated = t('%time ago', array('%time' => format_interval(time() - $feed->checked)));
 
   if (user_access('administer news feeds')) {
-    $output .= l($updated, 'admin/syndication/news');
+    $output .= l($updated, 'admin/aggregator');
   }
   else {
     $output .= $updated;
