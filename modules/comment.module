@@ -313,7 +313,7 @@ function comment_links($comment, $return = 1) {
   */
 
   if ($return) {
-    $links[] = l(t("return"), array("id" => $comment->nid), "node", $comment->cid);
+    $links[] = l(t("parent"), array("id" => $comment->nid), "node", $comment->cid);
   }
 
   /*
