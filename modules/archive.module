@@ -91,7 +91,7 @@ function archive_calendar($original = 0) {
   $output .= ' <caption>'. l('&laquo;', 'archive/'. date('Y/m/d', $prev), array('title' => t('Previous month'))) .' '. format_date($requested, 'custom', 'F') . date(' Y', $requested) .' '. ($nextmonth <= time() ? l('&raquo;', 'archive/'. date('Y/m/d', $next), array('title' => t('Next month'))) : '&nbsp;') ."</caption>\n";
 
   // First day of week (0 => Sunday, 1 => Monday, ...)
-  $weekstart = variable_get('default_firstday', 0);
+  $weekstart = variable_get('date_first_day', 0);
 
   // Last day of week
   ($weekstart - 1 == -1) ? $lastday = 6 : $lastday = $weekstart - 1;
