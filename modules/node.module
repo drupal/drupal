@@ -544,7 +544,7 @@ function node_link($type, $node = 0, $main = 0) {
 
   if ($type == "admin" && user_access("administer nodes")) {
     $help["overview"] = t("Below is a list of all of the nodes in your site. Other forms of content are listed elsewhere (e.g. ". l("comments", "admin/comment") .").<br />Clicking a title views that node, while clicking an author's name edits their user information.<br />Other node-related tasks are available from the menu on the left.");
-    $help["post-overview"] = t("Click on <a href=\"%nup\">new or updated posts</a> to see your latest nodes, or <a href=\"%queue\">approval queue</a> to approve new messages.", array("%nup" => url("admin/nodes/0"), "%queue" => url("admin/nodes/1")));
+    $help["post-overview"] = t("Click on <a href=\"%nup\">new or updated posts</a> to see your latest nodes, or <a href=\"%queue\">approval queue</a> to approve new messages.", array("%nup" => url("admin/node/nodes/0"), "%queue" => url("admin/node/nodes/1")));
     $help["new-update"] = t("Below is a list of the latest nodes in your site. Clicking a title views that node, while clicking an author's name edits their user information.");
     $help["queue"] = t("Below is a list of the node in your site that await approval. To approve a node click on <b>edit node</b> and then change its moderation status to <b>approved</b>.<br />Clicking a title views that node, while clicking an author's name edits their user information.");
     $help["search"] = t("Enter a simple pattern to search for a post. This can include the wildcard character *.<br />For example, a search for \"br*\" might return \"bread bakers\", \"our daily bread\" and \"brenda\".");
