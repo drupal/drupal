@@ -45,7 +45,7 @@ function db_num_rows($result) {
 
 function db_result($result, $field = 0) {
   if ($result) {
-    $tmp = $result->fetchRow(DB_FETCHMODE_ASSOC);
+    $tmp = $result->fetchRow(DB_FETCHMODE_ORDERED);
     return $tmp[$field];
   }
 }

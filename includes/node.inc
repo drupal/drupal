@@ -133,29 +133,29 @@ function node_save($node, $filter) {
       $v2 = implode(", ", $v2);
 
 
-      $result = db_query ("BEGIN");
-      if (db_error ($result)) {
-        watchdog ("error", "database: ". $result->getMessage () ."\nquery: ". htmlspecialchars ("BEGIN"));
+      $result = db_query("BEGIN");
+      if (db_error($result)) {
+        watchdog("error", "database: ". $result->getMessage() ."\nquery: ". htmlspecialchars("BEGIN"));
       }
       else {
 
-        $nid = $db_handle->nextId ("node_nid");
-        $lid = $db_handle->nextId ($filter[type] . "_lid");
+        $nid = $db_handle->nextId("node");
+        $lid = $db_handle->nextId($filter[type]);
 
-        $result = db_query ("INSERT INTO node ($f1, nid, lid) VALUES ($v1, '$nid', '$lid')");
-        if (db_error ($result)) {
+        $result = db_query("INSERT INTO node ($f1, nid, lid) VALUES ($v1, '$nid', '$lid')");
+        if (db_error($result)) {
           watchdog("warning", "node: added $filter[type] '$node[title]' - failed");
         }
         else {
-          $result = db_query ("INSERT INTO $filter[type] ($f2, nid, lid) VALUES ($v2, '$nid', '$lid')");
-          if (db_error ($result)) {
+          $result = db_query("INSERT INTO $filter[type] ($f2, nid, lid) VALUES ($v2, '$nid', '$lid')");
+          if (db_error($result)) {
             watchdog("warning", "node: added $filter[type] '$node[title]' - failed");
           }
           else {
-            $result = db_query ("COMMIT");
-            if (db_error ($result)) {
-              watchdog ("error", "database: ". $result->getMessage () ."\nquery: ". htmlspecialchars ("BEGIN"));
-              $db_handle->rollback ();
+            $result = db_query("COMMIT");
+            if (db_error($result)) {
+              watchdog("error", "database: ". $result->getMessage() ."\nquery: ". htmlspecialchars("BEGIN"));
+              $db_handle->rollback();
             }
             watchdog("special", "node: added $filter[type] '$node[title]'");
           }
