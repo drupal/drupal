@@ -22,6 +22,7 @@
    function header($title) {
      global $sitename;
     ?>
+     <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"> 
      <HTML>
      <HEAD>
       <TITLE><? print $sitename; ?></TITLE>
