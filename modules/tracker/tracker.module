@@ -1,17 +1,26 @@
 <?php
-// $Id: tracker.module,v 1.60 2003/09/30 17:01:26 dries Exp $
+// $Id: tracker.module,v 1.61 2003/10/03 14:55:27 dries Exp $
 
 function tracker_help($section = "admin/tracker/help") {
+  $output = "";
 
   switch ($section) {
-    case "admin/tracker/help":
-     return t("<p>The tracker module is a handy module for displaying the most recent posts.  By following the <i>view recent posts</i> link in the user block, a user may quickly review all recent postings.</p>");
+    case 'admin/tracker/help':
+      $output =  t("<p>The tracker module is a handy module for displaying the most recent posts.  By following the <i>view recent posts</i> link in the user block, a user may quickly review all recent postings.</p>");
+      break;
+    case 'admin/system/modules':
+      $output = t("Enables tracking of recent posts for users.");
+      break;
   }
+
+  return $output;
 }
 
 function tracker_system($field) {
-  $system["description"] = t("Enables tracking of recent posts for users.");
-  return $system[$field];
+  $output = "";
+
+  if ($field == "description") {$output = tracker_help("admin/system/modules"); };
+  return $output;
 }
 
 function tracker_link($type) {

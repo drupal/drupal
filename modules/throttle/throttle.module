@@ -1,10 +1,13 @@
 <?php
-// $Id: throttle.module,v 1.9 2003/09/25 07:27:21 dries Exp $
+// $Id: throttle.module,v 1.10 2003/10/03 14:55:27 dries Exp $
 
 function throttle_system($field) {
-  $system["description"] = throttle_help("admin/system/modules");
-  $system["admin_help"] = throttle_help("admin/system/modules/throttle");
-  return $system[$field];
+  $output = "";
+
+  if ($field == "description") {$output = throttle_help("admin/system/modules"); }
+  else if ($field == "admin_help") {$output = throttle_help("admin/system/modules/throttle"); };
+
+  return $output;
 }
 
 
@@ -20,17 +23,17 @@ function throttle_help($section = "admin/throttle/help") {
 
   switch ($section) {
     case "admin/system/modules":
-      $output = "Allows configuration of congestion control auto-throttle mechanism.";
+      $output = t("Allows configuration of congestion control auto-throttle mechanism.");
       break;
     case "admin/system/modules/throttle":
-      return t("If your site gets popular, or comes under a \"Denial of Service\" (DOS) attack, your hardware might become overwhelmed. These settings allow you to \"slow down\" the access to your site. To use throttle you need to have the <a href=\"%access\">access log</a> enabled. For Drupal to preform throttling it needs to do an extra database query. This extra query happens on page displays. <b>Auto-throttle probability limiter</b> tells Drupal to do this extra DB query once every \"x\" page displays, where \"x\" is the percentage. So if it is set to 10%, the default, then for every 100 web pages it displays, it will preform the extra query ten time. ", array("%access" => url("admin/system/modules/statistics")));
+      return t("If your site gets popular, or comes under a \"Denial of Service\" (DOS) attack, your hardware might become overwhelmed. These settings allow you to \"slow down\" the access to your site. To use throttle you need to have the %access enabled. For Drupal to preform throttling it needs to do an extra database query. This extra query happens on page displays. <b>Auto-throttle probability limiter</b> tells Drupal to do this extra DB query once every \"x\" page displays, where \"x\" is the percentage. So if it is set to 10%, the default, then for every 100 web pages it displays, it will preform the extra query ten time. ", array("%access" => l(t("access log"), "admin/system/modules/statistics") ));
     case "admin/throttle/help":
-      $output .= "<h3>Introduction</h3><p>This Drupal module allows you to enable and configure the auto-throttle congestion control mechanism offered by the ". l("statistics.module","admin/statistics") .".  The auto-throttle mechanism allows your site to automatically adapt to different server levels.</p>";
-      $output .= "<p>This module also adds a block that displays the current status of the throttle.  You must have ". l("\"access throttle block\"","admin/user/permission") ." privileges to view the block.  As a general rule of thumb, only site administrators should be granted access to this block.</p>";
+      $output .= "<h3>Introduction</h3><p>This Drupal module allows you to enable and configure the auto-throttle congestion control mechanism offered by the %stats-mod.  The auto-throttle mechanism allows your site to automatically adapt to different server levels.</p>";
+      $output .= "<p>This module also adds a block that displays the current status of the throttle.  You must have \"%throttle-block\" privileges to view the block.  As a general rule of thumb, only site administrators should be granted access to this block.</p>";
       $output .= "<p>The auto-throttle mechanism performs an extra database query in order to determine what the current throttle level should be.  Fortunately the throttle can be tuned so these database queries only occur on a fraction of all pages geenrated by your site, reducing the overhead to an insignificant amount.  Additionally, when the top-most throttle level is reached, all throttle queries are suspended for a configurable period of time.  More detail follows.</p>";
-      $output .= "<p>As with any module, the <i>throttle.module</i> needs to be ". l("enabled","admin/system/modules") ." before you can use it.  Also refer to the permissions section below if you wish to access the throttle statistics block.</p>";
-      $output .= "<h3>Configuring the throttle module</h3><p>The ". l("configuration section", "admin/system/modules/throttle") ." for the throttle allows you to turn it on and off, as well as to fine-tune how sensitive it is.</p>";
-      $output .= "<h4>enable auto-throttle:</h4><blockquote>This first option on the throttle module configuration screen allows you to enable or disable the auto-throttling mechanism.  Note that the access-log must also be enabled via the ". l("statistics.module", "admin/system/modules/statistics") ." for the auto-throttling mechanism to have any affect.</blockquote>";
+      $output .= "<p>As with any module, the <i>throttle.module</i> needs to be %modules-enable before you can use it.  Also refer to the permissions section below if you wish to access the throttle statistics block.</p>";
+      $output .= "<h3>Configuring the throttle module</h3><p>The %throttle-config for the throttle allows you to turn it on and off, as well as to fine-tune how sensitive it is.</p>";
+      $output .= "<h4>enable auto-throttle:</h4><blockquote>This first option on the throttle module configuration screen allows you to enable or disable the auto-throttling mechanism.  Note that the access-log must also be enabled via the %stats-config for the auto-throttling mechanism to have any affect.</blockquote>";
       $output .= "<h4>auto-throttle multiplier:</h4><blockquote><p>This second option allows you to tune the auto-throttle mechanism.  The auto-throttle mechanism supports six throttle levels, from 0 (off) to 5 (maximum).  The current throttle level is based upon how many pages have been accessed on your site in the past 60 seconds - the more pages being displayed, the higher the throttle level.  This multiplier defines how many hits are required to switch from one throttle level to the next.</p>";
       $output .= "<p>For example, with a throttle multiplier of 20:  Once 20 pages have been accessed on your site within a period of 60 seconds, the throttle level will be incremented to a level of 1.  Once 40 pages have been accessed on your site within a period of 60 seconds, the throttle level will be incremented to a level of 2.  And so on, until 100 pages are accessed on your site within a period of 60 seconds, at which time the throttle level will be set to a maximum level of 5.</p>";
       $output .= "<p>Upon reaching a throttle level of 5, access logs and the auto-throttle checking mechanism is automatically disabled.  It is only renabled by cron after a period of time defined by \"auto-throttle cron test\", explained below.</p></blockquote>";
@@ -38,9 +41,9 @@ function throttle_help($section = "admin/throttle/help") {
       $output .= "<p>As a rule of thumb, the higher your multiplier, the lower your probability limiter should be.  For example, if you have a multiplier of 100, then you logically don't need to check the throttle level more than once out of every 100 page views, so the probability limiter should be set to 1\%.  As database queries are \"expensive\", it's recommended that you keep the probability limiter to the smallest percentage possible, while still high enough to react quickly to a change in server load.</p></blockquote>";
       $output .= "<h4>auto-throttle cron test:</h4><blockquote><p>The auto-throttle dynamically adjusts its level upward, but not downward.  That is to say, if you have a multiplier of 20 and you get 45 hits in one minute, your throttle level will be adjusted to a level of 2.  If a few minutes later you only get 35 hits in one minute, the throttle level will <b>NOT</b> be adjusted down to a level of 1.  This prevents the throttle from bouncing back and forth between two levels.</p>";
       $output .= "<p>In order for the throttle level to be dropped, \"cron.php\" must be called regularly.  This option then defines how often the level will be dropped by one to test the server load.  If the server load is no longer as high as it was, the level will stay where it is, until the cron test period passes again and cron drops the throttle level again.  This process repeats until the throttle is returned to a throttle level of 0.</p></blockquote>";
-      $output .= "<h3>Throttle block</h3><p>This block displays some statistics regarding the current throttle and its configuration.  It is recommended that only site administrators receive the ". l("\"access throttle block\"","admin/user/permission") ." permission bit required to view this block.  It does not display information that would interest a normal site end-user.</p>";
-      $output .= "<p>Don't forget to enable the block ". l("here", "admin/block") .".</p>";
-      $output .= "<h3>Permissions</h3><p>This module has one permission that needs to be configured in ". l("user permissions", "admin/user/permission") .".</p>";
+      $output .= "<h3>Throttle block</h3><p>This block displays some statistics regarding the current throttle and its configuration.  It is recommended that only site administrators receive the \"%throttle-access\" permission bit required to view this block.  It does not display information that would interest a normal site end-user.</p>";
+      $output .= "<p>Don't forget to enable the block %throttle-block-enable.</p>";
+      $output .= "<h3>Permissions</h3><p>This module has one permission that needs to be configured in %permissions.</p>";
       $output .= "<ul><li><i>access throttle block</i> - enable for user roles that get to view the throttle block.</li></ul>";
       $output .= "<h3>For programmers: throttle_status()</h3><p>The function <code>throttle_status()</code> will return a number from 0 to 5.  0 means that there is no throttle enabled at this time.  Each number above that is a progressively more throttled system...  To disable a feature when a site first begins to get busy, disable it at a throttle of 2 or 3.  To hold on to the bitter end, wait until 4 or 5.</p>";
       $output .= "<p>To implement the throttle, you should do something like this:";
@@ -55,10 +58,11 @@ function throttle_help($section = "admin/throttle/help") {
         else {
           // throttle limit not reached, execute normally
        }</pre></p>";
+    $output = t($output, array("%stats-mod" => l(t("statistics-module"), "admin/statistics"), "%throttle-block" => l(t("access throttle block"), "admin/user/permission"), "%modules-enable" => l(t("enabled"), "admin/ststem/modules"),"throttle-config" => l(t("configuration section"), "admin/system/modules/throttle"), "%stats-config" => l(t("statistcs.module"), "admin/system/modules/statistics"), "%throttle-access" => l(t("access throttle block"), "admin/user/permission"),"%throttle-block-enable" => l(t("here"), "admin/block"), "%permissions" => l(t("user permissions"), "admin/user/permission") ));
     break;
   }
 
-  return t($output);
+  return $output;
 }
 
 

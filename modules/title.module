@@ -1,9 +1,23 @@
 <?php
-// $Id: title.module,v 1.13 2003/09/30 17:01:26 dries Exp $
+// $Id: title.module,v 1.14 2003/10/03 14:55:27 dries Exp $
 
 function title_system($field){
-  $system["description"] = t("Enables users to link to stories, articles or similar content by title.");
-  return $system[$field];
+  $output = "";
+
+  if ($field == "description") {$output = title_help("admin/system/modules"); };
+  return $output;
+}
+
+function title_help($section) {
+  $output = "";
+
+  switch ($section) {
+    case 'admin/system/modules':
+      $output = t("Enables users to link to stories, articles or similar content by title.");
+      break;
+  }
+
+  return $output;
 }
 
 function title_page() {

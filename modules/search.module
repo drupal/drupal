@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.56 2003/09/19 07:41:55 dries Exp $
+// $Id: search.module,v 1.57 2003/10/03 14:55:27 dries Exp $
 
 function search_help($section = "admin/search/help") {
   $output = "";
@@ -10,13 +10,14 @@ function search_help($section = "admin/search/help") {
       $output = "<b>Search guidelines</b>";
       $output .= "<p>The search page allows you to search the web site's content.  You can specify multiple words, and they will all be searched for.  You can also use wildcards, so 'walk*' will match 'walk', 'walking', 'walker', 'walkable' and so on.  Furthermore, searches are not case sensitive so searching for 'walk', 'Walk' or 'WALK' will yield exactly the same results.</p>";
       $output .= "<b>Words excluded from the search</b>";
-      $output .= strtr("<p>Words that frequently occur, typically called 'noise words', are ignored.  Example words are 'a', 'at', 'and', 'are', 'as', 'how', 'where', etc.  Words shorter than %number letters are also ignored.</p>", array("%number" => variable_get("minimum_word_size", 2)));
+      $output .= "<p>Words that frequently occur, typically called 'noise words', are ignored.  Example words are 'a', 'at', 'and', 'are', 'as', 'how', 'where', etc.  Words shorter than %number letters are also ignored.</p>";
+      $output = t($output, array("%number" => variable_get("minimum_word_size", 2) ));
       break;
     case 'admin/system/modules':
-      $output = "Enables site wide keyword searching.";
+      $output = t("Enables site wide keyword searching.");
       break;
     case 'admin/system/modules/search':
-      $output = "The search engine works by keeping an index of \"interesting\" words. To make sure we only get \"interesting\" words you need to set the following.";
+      $output = t("The search engine works by keeping an index of \"interesting\" words. To make sure we only get \"interesting\" words you need to set the following.");
       break;
   }
   return $output;

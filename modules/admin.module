@@ -1,5 +1,5 @@
 <?php
-// $Id: admin.module,v 1.29 2003/09/30 10:58:29 dries Exp $
+// $Id: admin.module,v 1.30 2003/10/03 14:55:26 dries Exp $
 
 include_once "includes/common.inc";
 
@@ -14,16 +14,16 @@ function admin_help($section) {
 
   switch ($section) {
     case "admin/system/modules":
-      $output .= "Handles the administration pages.";
+      $output .= t("Handles the administration pages.");
       break;
     case "admin":
-      $output .= "Welcome to the administration section. Below are the most recent system events.  To get started please choose an item in the left column. If there is an arrow it will expand into a submenu. To jump up a level use the link,bread crumbs, above this block of text. To return to the home page click on the site name, and to go to Drupal's home page click on Druplicon, the drop on to the right.";
+      $output .= t("Welcome to the administration section. Below are the most recent system events.  To get started please choose an item in the left column. If there is an arrow it will expand into a submenu. To jump up a level use the link,bread crumbs, above this block of text. To return to the home page click on the site name, and to go to Drupal's home page click on Druplicon, the drop on to the right.");
       break;
-    case "admin":
-      $output = "This is a complete overview of the site administration page.";
+    case "admin/overview":
+      $output = t("This is a complete overview of the site administration page.");
       break;
   }
-  return t($output);
+  return $output;
 }
 
 function admin_system($field){

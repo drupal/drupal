@@ -1,9 +1,12 @@
 <?php
-// $Id: help.module,v 1.22 2003/09/28 17:07:46 dries Exp $
+// $Id: help.module,v 1.23 2003/10/03 14:55:27 dries Exp $
 
 function help_system($field){
-  $system["description"] = t("Manages displaying online help.");
-  return $system[$field];
+  $output = "";
+
+  if ($field == "description") {$output = admin_help("admin/system/modules"); };
+
+  return $output;
 }
 
 function help_link($type) {
@@ -26,29 +29,39 @@ function help_glossary() {
   $output .= "<dt>Public</dt><dd>See published.</dd>";
   $output .= "<dt>Published</dt><dd>A node that is viewable by everyone. (See unpublished.)</dd>";
   $output .= "<dt>Role</dt><dd>A classification users are placed into for the purpose of setting users' permissions.</dd>";
-  $output .= strtr("<dt>Taxonomy</dt><dd>A division of a collection of things into ordered, classified groups. (See %taxonomy.)</dd>", array("%taxonomy" => l(t("taxonomy help"), "admin/taxonomy/help")));
+  $output .= "<dt>Taxonomy</dt><dd>A division of a collection of things into ordered, classified groups. (See %taxonomy.)</dd>";
   $output .= "<dt>Unpublished</dt><dd>A node that is only viewable by administrators and moderators.</dd>";
   $output .= "<dt>User</dt><dd>A person who has an account at your Drupal site, and is logged in with that account.</dd>";
   $output .= "<dt>Visitor</dt><dd>A person who does not have an account at your Drupal site or a person who has an account at your Drupal site but is <u>not</u> logged in with that account. Also termed \"anonymous user\".</dd>";
   $output .= "</dl>";
+  $output = t($output, array("%taxonomy" => l(t("taxonomy help"), "admin/taxonomy/help")));
 
-  return t($output);
+  return $output;
 }
 
-function help_admin() {
+function help_admin($section = "admin/help") {
   $output = "";
 
-  foreach (module_list() as $name) {
-    if (module_hook($name, "help")) {
-      $temp = module_invoke($name, "help", "admin/".$name."/help");
-      if (!empty($temp)) {
-        $links[] = l($name, "admin/help#$name");
-        $output .= "<h2><a id=\"$name\">". ucfirst($name) ." module</a></h2>";
-        $output .= $temp;
+  switch ($section) {
+
+    case 'admin/help':
+      foreach (module_list() as $name) {
+        if (module_hook($name, "help")) {
+          $temp = module_invoke($name, "help", "admin/".$name."/help");
+          if (!empty($temp)) {
+            $links[] = l($name, "admin/help#$name");
+            $output .= "<h2><a id=\"$name\">". ucfirst($name) ." module</a></h2>";
+            $output .= $temp;
+          }
+        }
       }
-    }
+      $output = "<small>". implode(" &middot; ", $links) ."</small><hr />". $output;
+      break;
+
+    case 'admin/system/modules':
+      $out = t("Manages displaying online help.");
+      break;
   }
-  $output = "<small>". implode(" &middot; ", $links) ."</small><hr />". $output;
   return $output;
 }
 
