@@ -219,6 +219,11 @@ table {
   font-size: 0.8em;
   padding: 1.5em;
 }
+.node .avatar {
+  border: 1px solid #ddd;
+  float: right;
+  margin: 0.5em;
+}
 .comment {
   border: 1px solid #abc;
   padding: .5em;
@@ -233,6 +238,11 @@ table {
   font-size: 0.8em;
   float: right;
   color: red;
+}
+.comment .avatar {
+  border: 1px solid #abc;
+  float: right;
+  margin: 0.5em;
 }
 
 /*
