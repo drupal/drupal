@@ -16,11 +16,6 @@ function module_invoke($name, $hook, $argument = "") {
   return function_exists($function) ? $function($argument) : $argument;
 }
 
-// return true if module $name supports hook $hook, and false otherwise:
-function module_is_hook($name, $hook) {
-  return function_exists($name ."_". $hook);
-}
-
 // return an array of module names (includes lazy module loading):
 function module_list() {
   static $list;
