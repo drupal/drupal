@@ -373,12 +373,14 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
   fwrite($fp, $request);
 
   // Fetch response.
+  $response = '';
   while (!feof($fp) && $data = fread($fp, 1024)) {
-    $response[] = $data;
+    $response .= $data;
   }
   fclose($fp);
 
   // Parse response.
+  $response = preg_split("/\r\n|\n|\r/", $response);
   list($protocol, $code, $text) = explode(' ', trim(array_shift($response)), 3);
   $result->headers = array();
   $result->data = '';
