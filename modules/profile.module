@@ -78,7 +78,7 @@ function profile_browse() {
         $query = "v.value = '". check_query($value) ."'";
         break;
       case 'list':
-        $query = "v.value LIKE '%". check_query($value) ."%'";
+        $query = "v.value LIKE '%%". check_query($value) ."%%'";
         break;
     }
 
