@@ -1266,14 +1266,14 @@ function form_checkbox($title, $name, $value = 1, $checked = FALSE, $description
  */
 function form_checkboxes($title, $name, $values, $options, $description = NULL, $attributes = NULL, $required = FALSE) {
   if (count($options) > 0) {
-    if (!isset($values)) {
+    if (!isset($values) || $values == 0) {
       $values = array();
     }
     $choices = '';
     foreach ($options as $key => $choice) {
       $choices .= '<label class="option"><input type="checkbox" class="form-checkbox" name="edit['. $name .'][]" value="'. $key .'"'. (in_array($key, $values) ? ' checked="checked"' : ''). drupal_attributes($attributes). ' /> '. $choice .'</label><br />';
     }
-    return theme('form_element', $title, $choices, $description, NULL, $required, _form_get_error($name));
+    return form_hidden($name, 0) . theme('form_element', $title, $choices, $description, NULL, $required, _form_get_error($name));
   }
 }
 
