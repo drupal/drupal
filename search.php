@@ -1,5 +1,4 @@
 <?
-
  include "includes/theme.inc";
 
  $theme->header();
