@@ -6,6 +6,9 @@ class Poll {
     $this->runtime = $poll[runtime];
     $this->active = $poll[active];
     $this->voters = $poll[voters];
+    $this->choice = $poll[choice];
+    $this->chvotes = $poll[chvotes];
+    $this->chid = $poll[chid];    
   }
 }
 
@@ -15,48 +18,48 @@ function poll_cron() {
     if ($poll[active]) {
       if (($poll[timestamp] + $poll[runtime]) < time()) {
         $poll[active] = 0;
-        node_save($poll,array(filter));
+        node_save($poll, array(filter));
       }
     }
   }
 }
 
 function poll_get_choices_array($poll) {
-  $result = db_query("SELECT * FROM poll_choices WHERE nid='" . $poll[nid] . "'");
-  if ($result) {
-    while ($choices = db_fetch_array($result)) {
-      $m = max($m,$choices[chvotes]);
-      $t += $choices[chvotes];
-      $poll[choice][$choices[chorder]]=$choices[chtext];
-      $poll[chvotes][$choices[chorder]]=$choices[chvotes];
-      $poll[chid][$choices[chorder]]=$choices[chid];
+  if (!$poll[choice]) {
+    $result = db_query("SELECT * FROM poll_choices WHERE nid='" . $poll[nid] . "'");
+    if ($result) {
+      while ($choices = db_fetch_array($result)) {
+        $m = max($m, $choices[chvotes]);
+        $t += $choices[chvotes];
+        $poll[choice][$choices[chorder]] = $choices[chtext];
+        $poll[chvotes][$choices[chorder]] = $choices[chvotes];
+        $poll[chid][$choices[chorder]] = $choices[chid];
+      }
+      if ($poll[choice]) ksort($poll[choice]);
     }
-    ksort($poll[choice]);
-    ksort($poll[votes]);
-    ksort($poll[chid]);
   }
-  $poll[maxvotes]=max(1,$m);
-  $poll[totalvotes]=$t;
+  $poll[maxvotes] = max(1, $m);
+  $poll[totalvotes] = $t;
   return $poll;
 }
 
 function poll_get_choices_obj($poll) {
-  $result = db_query("SELECT * FROM poll_choices WHERE nid='" . $poll->nid . "'");
-  if ($result) {
-    while ($choices = db_fetch_array($result)) {
-      $m = max($m,$choices[chvotes]);
-      $t += $choices[chvotes];
+  if (!$poll->choice) {
+    $result = db_query("SELECT * FROM poll_choices WHERE nid='" . $poll->nid . "'");
+    if ($result) {
+      while ($choices = db_fetch_array($result)) {
+        $m = max($m,$choices[chvotes]);
+        $t += $choices[chvotes];
 
-      $poll->choice[$choices[chorder]] = $choices[chtext];
-      $poll->chvotes[$choices[chorder]] = $choices[chvotes];
-      $poll->chid[$choices[chorder]] = $choices[chid];
+        $poll->choice[$choices[chorder]] = $choices[chtext];
+        $poll->chvotes[$choices[chorder]] = $choices[chvotes];
+        $poll->chid[$choices[chorder]] = $choices[chid];
+      }
+      if ($poll->choice) ksort($poll->choice);
     }
-    ksort($poll->choice);
-    ksort($poll->chvotes);
-    ksort($poll->chid);
   }
-  $poll->maxvotes=max(1,$m);
-  $poll->totalvotes=$t;
+  $poll->maxvotes = max(1, $m);
+  $poll->totalvotes = $t;
   return $poll;
 }
 
@@ -81,24 +84,24 @@ function poll_help() {
 
 function poll_graph($val) {
   $p = round($val * 100);
-  return "<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\"><tr>" . ($p?"<td width=\"" . $p . "%\" style=\"background-color: #000000;\"><span style=\"font-size: 4pt;\">&nbsp;</span></td>":"") . ($p<100?"<td style=\"background-color: #ffffff;\" width=\"" . (100-$p) . "%\"><span style=\"font-size: 4pt;\">&nbsp;</span></td>":"") . "</tr></table>";
+  return "<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\"><tr>" . ($p ? "<td width=\"" . $p . "%\" style=\"background-color: #000000;\"><span style=\"font-size: 4pt;\">&nbsp;</span></td>" : "") . ($p < 100 ? "<td style=\"background-color: #ffffff;\" width=\"" . (100 - $p) . "%\"><span style=\"font-size: 4pt;\">&nbsp;</span></td>":"") . "</tr></table>";
 }
 
 function poll_view($node, $main = 0, $block = 0) {
   global $theme, $op, $user, $chid, $REQUEST_URI;
 
-  if (($node->active) && (!field_get($node->voters,$user->userid))) $voting = 1;
+  if (($node->active) && (!field_get($node->voters, $user->userid))) $voting = 1;
   if ((!$voting) && ($op != "View")) $op = "View";
   
   switch ($op) {
     case "Vote":
-      if (($node->active) && (!field_get($node->voters,$user->userid))) {
+      if (($node->active) && (!field_get($node->voters, $user->userid))) {
         $result = db_query("UPDATE poll_choices SET chvotes=chvotes+1 WHERE nid='" . $node->nid . "' && chid='" . check_input($chid) . "'");
         if (($result) && ($user)) {
-          $new = node_get_array("nid",$node->nid);
-          $new[voters] = field_set($node->voters,$user->userid,1);
-          node_save($new,array(voters));
-          $node = node_get_object("nid",$node->nid);            
+          $new = node_get_array("nid", $node->nid);
+          $new[voters] = field_set($node->voters, $user->userid,1);
+          node_save($new, array(voters));
+          $node = node_get_object("nid", $node->nid);            
         }
       }
       
@@ -106,17 +109,19 @@ function poll_view($node, $main = 0, $block = 0) {
       $node = poll_get_choices_obj($node);
       
       $title = "<b>" . check_output($node->title) . "</b>";
-      $footer = "<small>(" . format_plural($node->totalvotes, "vote", "votes") . ")</small>";
+      $footer = "<small>(" . format_plural($node->totalvotes ? $node->totalvotes : 0, "vote", "votes") . ")</small>";
       
-      $node->totalvotes = max(1,$node->totalvotes);
+      $node->totalvotes = max(1, $node->totalvotes);
       
-      if (!$block) $output .= "<small>Posted by " . format_username($node->userid) . " on " . format_date($node->timestamp,large) . "</small><br>\r\n";
+      if (!$block) $output .= "<small>Posted by " . format_username($node->userid) . " on " . format_date($node->timestamp, "large") . "</small><br>\r\n";
       foreach ($node->choice as $key => $value) {
-        if ($main) {
-          $output .= "<table cellspacing=\"1\" cellpadding=\"0\" width=\"100%\"><tr><td width=\"20%\" valign=\"middle\" align=\"left\">" . check_output($value) . "</td><td width=\"70%\">" . poll_graph($node->chvotes[$key] / $node->maxvotes) . "</td><td width=\"10%\" align=\"right\">" . round(($node->chvotes[$key] / $node->totalvotes) * 100) . "%</td></tr></table>";
-        }
-        else {
-          $output .= (!$block ? "<br>" : "") . check_output($value) . "<br><table width=\"90%\" align=\"center\" cellspacing=\"1\" cellpadding=\"0\"><tr><td width=\"70%\" valign=\"middle\" align=\"left\">" . poll_graph($node->chvotes[$key] / $node->maxvotes) . "</td><td align=\"right\">" . round(($node->chvotes[$key] / $node->totalvotes) * 100) . "%</td></tr></table>\r\n";
+        if ($value) {
+          if ($main) {
+            $output .= "<table cellspacing=\"1\" cellpadding=\"0\" width=\"100%\"><tr><td width=\"20%\" valign=\"middle\" align=\"left\">" . check_output($value) . "</td><td width=\"70%\">" . poll_graph($node->chvotes[$key] / $node->maxvotes) . "</td><td width=\"10%\" align=\"right\">" . round(($node->chvotes[$key] / $node->totalvotes) * 100) . "%</td></tr></table>";
+          }
+          else {
+            $output .= (!$block ? "<br>" : "") . check_output($value) . "<br><table width=\"90%\" align=\"center\" cellspacing=\"1\" cellpadding=\"0\"><tr><td width=\"70%\" valign=\"middle\" align=\"left\">" . poll_graph($node->chvotes[$key] / $node->maxvotes) . "</td><td align=\"right\">" . round(($node->chvotes[$key] / $node->totalvotes) * 100) . "%</td></tr></table>\r\n";
+          }
         }
       }
       $output .= "<div align=\"center\">" . $footer . "</div>";
@@ -126,21 +131,23 @@ function poll_view($node, $main = 0, $block = 0) {
       $node = poll_get_choices_obj($node);
 
       $title = "<b>" . check_output($node->title) . "</b>";
-      $footer = "<small>(" . format_plural($node->totalvotes, "vote", "votes") . ")</small>";
+      $footer = "<small>(" . format_plural($node->totalvotes ? $node->totalvotes : 0, "vote", "votes") . ")</small>";
       
-      $node->totalvotes = max(1,$node->totalvotes);
+      $node->totalvotes = max(1, $node->totalvotes);
 
-      if (!$block) $output .= "<small>Posted by " . format_username($node->userid) . " on " . format_date($node->timestamp,large) . "</small><br><br>\r\n";
+      if (!$block) $output .= "<small>Posted by " . format_username($node->userid) . " on " . format_date($node->timestamp, "large") . "</small><br><br>\r\n";
       $output .= "<table align=\"center\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\"><tr><td align=\"left\">"; 
       foreach ($node->choice as $key => $value) {
-        $output .= "<input type=\"radio\" name=\"chid\" value=\"" . $node->chid[$key] . "\">&nbsp;" . check_output($value) . "<br>\r\n";
+        if ($value) {
+          $output .= "<input type=\"radio\" name=\"chid\" value=\"" . $node->chid[$key] . "\">&nbsp;" . check_output($value) . "<br>\r\n";
+        }
       }
       $output .= "</td></tr></table>";
-      $output .= "<br><div align=\"center\">" . form_submit("Vote") . "<br>" .$footer  . "</div>";
+      $output .= "<br><div align=\"center\">" . form_submit("Vote") . "<br>" . $footer  . "</div>";
       $output = form($REQUEST_URI, $output);
    }
 
-   if (!$block) $theme->box($title,$output);
+   if (!$block) $theme->box($title, $output);
    return array("title" => $title, "content" => $output);   
 }
 
@@ -167,8 +174,8 @@ function poll_form($edit = array(), $nocheck = 0) {
   $form .= form_textfield(t("Question"), "title", $edit[title], 50, 127);
   
   for ($a = 0; $a < $choices; $a++) {
-    $form .= form_textfield(t("Choice")." ".($a+1), "choice][$a", $edit[choice][$a], 50, 127);
-    if ($admin) $form .= form_textfield(strtr(t("Votes for choice %n"), array("%n" => ($a+1))), "chvotes][$a", $edit[chvotes][$a] ? $edit[chvotes][$a] : 0, 7, 7);    
+    $form .= form_textfield(t("Choice"). " " . ($a + 1), "choice][$a", $edit[choice][$a], 50, 127);
+    if ($admin) $form .= form_textfield(strtr(t("Votes for choice %n"), array("%n" => ($a + 1))), "chvotes][$a", $edit[chvotes][$a] ? $edit[chvotes][$a] : 0, 7, 7);    
   }
   
   $form .= form_select(t("Poll duration"), "runtime", $edit[runtime] ? $edit[runtime] : t("1 week"), $duration, t("After this period, the poll will automatically be closed."));
@@ -216,7 +223,7 @@ function poll_save($edit) {
         $v[] = "('" . $nid . "', '" . check_input($value) . "', '". check_input($edit[votes][$key]) ."', '". check_input($key) ."')";
       } 
     }
-    db_query("INSERT INTO poll_choices (nid, chtext, chvotes, chorder) VALUES " . implode(",",$v));
+    db_query("INSERT INTO poll_choices (nid, chtext, chvotes, chorder) VALUES " . implode(",", $v));
   }
 }
 
@@ -233,7 +240,7 @@ function poll_block() {
   $blocks[0][content] = $output ? $output : "No active polls.";
   $blocks[0][info] = "Display the latest active poll.";
   $blocks[0][link] = "index.php";
-  return $blocks;    
+  return $blocks;
 }
 
 function poll_query($type = "") {
@@ -271,13 +278,12 @@ function poll_admin() {
       print search_form($keys);
       print search_data($keys, $mod);
       break;
+    case t("Refresh"):
+      $refresh = 1;
     case t("Preview"):
       poll_view(new Poll($edit));
     case "add":
-      print poll_form($edit);
-      break;
-    case t("Refresh"):
-      print poll_form($edit, 1);
+      print poll_form($edit, $refresh);
       break;
     case t("Submit"):
       poll_save($edit);
@@ -293,11 +299,10 @@ function poll_user() {
 
   switch($op) {
     case t("Refresh"):
-      $theme->box(t("Submit"), poll_form($edit, 1));
-      break;
+      $refresh = 1;
     case t("Preview"):
       poll_view(new Poll($edit));
-      $theme->box(t("Submit"), poll_form($edit));
+      $theme->box(t("Submit"), poll_form($edit, $refresh));
       break;
     case t("Submit"):
       poll_save($edit);
