@@ -1,5 +1,5 @@
 <?php
-/* $Id: updates.inc,v 1.88 2005/01/27 19:41:00 dries Exp $ */
+/* $Id: updates.inc,v 1.89 2005/01/27 22:50:02 dries Exp $ */
 
 /**
  * @file
@@ -2173,7 +2173,7 @@ function update_121() {
 function update_122() {
 
   $ret = array();
-  $ret[] = update_sql("ALTER TABLE {blocks} ADD type text");
+  $ret[] = update_sql("ALTER TABLE {blocks} ADD types text");
   return $ret;
 
 }
