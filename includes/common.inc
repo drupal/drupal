@@ -3,7 +3,7 @@
 function conf_init() {
   global $HTTP_HOST, $REQUEST_URI;
   $file = strtolower(strtr($HTTP_HOST ."". substr($REQUEST_URI, 0, strrpos($REQUEST_URI, "/")), "/:", ".."));
-  while ($file && !file_exists("includes/$file.php")) $file = substr($file, strpos($file, ".") + 1);
+  while (strpos($file, '.') && !file_exists("includes/$file.php")) $file = substr($file, strpos($file, ".") + 1);
   return $file ? $file : "conf";
 }
 

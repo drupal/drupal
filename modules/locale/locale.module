@@ -62,7 +62,6 @@ function locale_save($id, $edit) {
 
 function locale_edit($id) {
   global $languages, $REQUEST_URI;
-
   $result = db_query("SELECT * FROM locales WHERE id = '$id'");
   if ($translation = db_fetch_object($result)) {
     $form .= form_item(t("Original text"), "<PRE>". wordwrap(check_output($translation->string)) ."</PRE>");
@@ -139,8 +138,15 @@ function locale_untranslated($language) {
 }
 
 function locale_seek() {
-  global $edit, $languages, $REQUEST_URI;
-  if (is_array($edit)) {
+  global $edit, $languages, $REQUEST_URI, $op, $locale_settings;
+
+  if ($edit[id] && session_is_registered("locale_settings")) {
+    $edit = $locale_settings;
+  }
+
+  if ($op != "search" && is_array($edit)) {
+    $locale_settings = $edit;
+    session_register("locale_settings");
     if ($edit[status]) {
       switch ($edit[language]) {
         case "all":
@@ -176,7 +182,6 @@ function locale_seek() {
   $form .= form_select("Status", "status", $edit[status], array("All", "Translated", "Untranslated"));
   $form .= form_select("Module", "module", $edit[module], array_merge(array("0" => "All modules + pages", "all" => "All modules"), module_list()));
   $form .= form_textfield("String", "string", $edit[string], 30, 30, "Leave blank to show all strings. This is treated as a regular expression.");
-
   $form .= form_submit("Search");
 
   $output .= form($REQUEST_URI, $form);
@@ -191,7 +196,7 @@ function locale_admin() {
     print status("locale disabled.");
   }
   else if (user_access("administer locales")) {
-    print "<SMALL>". locale_links(1) . locale_links(0) ."<A HREF=\"admin.php?mod=locale&op=search\">search</A> | <A HREF=\"admin.php?mod=locale\">overview</A> | <A HREF=\"admin.php?mod=locale&op=help\">help</A></SMALL><HR>\n";
+    print "<SMALL>". locale_links(1) . locale_links(0) ."<A HREF=\"admin.php?mod=locale&op=search\">search</A> | <A HREF=\"admin.php?mod=locale&op=overview\">overview</A> | <A HREF=\"admin.php?mod=locale&op=help\">help</A></SMALL><HR>\n";
 
     switch ($op) {
       case "delete":
@@ -210,14 +215,13 @@ function locale_admin() {
       case "untranslated":
         print locale_untranslated($language);
         break;
-      case "Search":
-      case "search":
-        print locale_seek();
+      case "overview":
+        print locale_overview();
         break;
       case "Save translations":
         print locale_save(check_input($id), $edit);
       default:
-        print locale_overview();
+        print locale_seek();
     }
   }
   else {
