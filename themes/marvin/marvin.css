@@ -16,7 +16,9 @@ h2 {
 h3, h4, h5, h6 {
   font-size: 1em;
 }
-
+table {
+  width: 100%;
+}
 p {
   margin: 0 0 1em 0;
   padding: 0;
