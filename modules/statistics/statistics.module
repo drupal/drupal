@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.50 2003/01/09 20:02:42 dries Exp $
+// $Id: statistics.module,v 1.51 2003/01/16 22:27:01 dries Exp $
 
 // Initialization hook, runs each time statistic module is loaded
 function statistics_init() {
@@ -398,6 +398,10 @@ function statistics_admin_accesslog_table($type, $id) {
 
 function statistics_recent_refer($nid = 0) {
   global $HTTP_HOST, $view;
+
+  if (empty($view)) {
+    $view = arg(3);
+  }
 
   $node = node_load(array("nid" => $nid));
 
