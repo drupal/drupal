@@ -1,5 +1,5 @@
 <?php
-/* $Id: path.module,v 1.14 2003/11/09 23:27:16 dries Exp $ */
+/* $Id: path.module,v 1.15 2003/11/13 19:52:54 dries Exp $ */
 
 function path_admin() {
   $op = $_POST["op"];
@@ -212,7 +212,7 @@ function path_overview() {
     $rows[] = array(array("data" => t("No URL aliases available."), "colspan" => "4"));
   }
 
-  return table($header, $rows);
+  return theme("table", $header, $rows);
 }
 
 function path_load($pid) {

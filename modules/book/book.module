@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.196 2003/11/09 23:27:16 dries Exp $
+// $Id: book.module,v 1.197 2003/11/13 19:52:54 dries Exp $
 
 function book_node($field) {
   global $user;
@@ -741,7 +741,7 @@ function book_admin_view($nid, $depth = 0) {
     $rows[] = book_admin_view_line($node);
     $rows = array_merge($rows, book_admin_view_book($nid));
 
-    $output .= table($header, $rows);
+    $output .= theme("table", $header, $rows);
     $output .= form_submit(t("Save book pages"));
 
     return form($output);
@@ -797,7 +797,7 @@ function book_admin_orphan() {
         $rows = array_merge($rows, book_admin_view_book($node->nid, $depth + 1));
       }
     }
-    $output .= table($header, $rows);
+    $output .= theme("table", $header, $rows);
   }
 
   return $output;

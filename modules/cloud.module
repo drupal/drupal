@@ -1,5 +1,5 @@
 <?php
-// $Id: cloud.module,v 1.64 2003/11/09 23:27:16 dries Exp $
+// $Id: cloud.module,v 1.65 2003/11/13 19:52:54 dries Exp $
 
 function cloud_help($section = "admin/help#cloud") {
   $output = "";
@@ -143,7 +143,7 @@ function cloud_display() {
     $rows[] = array("<a href=\"$site->link\">$site->name</a>", ($site->changed ? format_interval(time() - $site->changed) ." ago" : "never"), l(t("edit site"), "admin/node/syndication/cloud/edit/$site->sid"), l(t("update site"), "admin/node/syndication/cloud/update/$site->sid"));
   }
 
-  return table($header, $rows);
+  return theme("table", $header, $rows);
 }
 
 function cloud_list($limit = 10) {

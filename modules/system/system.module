@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.106 2003/11/09 23:27:16 dries Exp $
+// $Id: system.module,v 1.107 2003/11/13 19:52:54 dries Exp $
 
 function system_help($section = "admin/help#system") {
   global $base_url;
@@ -313,7 +313,7 @@ function system_listing($type, $directory, $required = array()) {
     $rows[] = array($info->name, $info->description, array("data" => (in_array($filename, $required) ? form_hidden("status][$filename", 1) . t("required") : form_checkbox("", "status][$filename", 1, $file->status)), "align" => "center"));
   }
 
-  $output = table($header, $rows);
+  $output = theme("table", $header, $rows);
 
   // If we're doing themes, stick the default one here...
   if ($type == "theme") {

@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.78 2003/10/23 14:57:15 dries Exp $
+// $Id: watchdog.module,v 1.79 2003/11/13 19:52:54 dries Exp $
 
 function watchdog_help($section = "admin/help#watchdog") {
   $output = "";
@@ -105,7 +105,7 @@ function watchdog_overview($type) {
   if (!empty($pager)) {
     $rows[] = array(array("data" => $pager, "colspan" => "5"));
   }
-  return table($header, $rows);
+  return theme("table", $header, $rows);
 }
 
 function watchdog_view($id) {

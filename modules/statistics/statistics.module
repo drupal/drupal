@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.115 2003/11/11 08:14:21 dries Exp $
+// $Id: statistics.module,v 1.116 2003/11/13 19:52:54 dries Exp $
 
 function statistics_init() {
   global $recent_activity;
@@ -340,7 +340,7 @@ function statistics_admin_topnodes_table() {
     $rows[] = array(array("data" => $pager, "colspan" => 5));
   }
 
-  return table($header, $rows);
+  return theme("table", $header, $rows);
 }
 
 
@@ -399,7 +399,7 @@ function statistics_admin_accesslog_table($type, $id) {
     $rows[] = array(array("data" => $pager, "colspan" => 8));
   }
 
-  return table($header, $rows);
+  return theme("table", $header, $rows);
 }
 
 function statistics_top_refer() {
@@ -440,7 +440,7 @@ function statistics_top_refer() {
     $rows[] = array(array("data" => $pager, "colspan" => 3));
   }
 
-  $output .= table($header, $rows);
+  $output .= theme("table", $header, $rows);
 
   return $output;
 

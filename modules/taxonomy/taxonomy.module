@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.75 2003/11/09 23:27:16 dries Exp $
+// $Id: taxonomy.module,v 1.76 2003/11/13 19:52:54 dries Exp $
 
 function taxonomy_feed($taxonomy) {
   global $id, $type;
@@ -289,7 +289,7 @@ function taxonomy_overview() {
     }
   }
 
-  return table($header, $rows);
+  return theme("table", $header, $rows);
 }
 
 function taxonomy_form($vocabulary_id, $value = 0) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: title.module,v 1.17 2003/11/09 23:27:16 dries Exp $
+// $Id: title.module,v 1.18 2003/11/13 19:52:54 dries Exp $
 
 function title_help($section) {
   $output = "";
@@ -46,7 +46,7 @@ function title_page() {
       }
 
       $output  = "<div id=\"title\">";
-      $output .= table($header, $rows);
+      $output .= theme("table", $header, $rows);
       $output .= "</div>";
 
       print theme("header");

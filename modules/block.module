@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.83 2003/11/07 19:03:34 dries Exp $
+// $Id: block.module,v 1.84 2003/11/13 19:52:54 dries Exp $
 
 function block_help($section = "admin/help#block") {
   $output = "";
@@ -164,7 +164,7 @@ function block_admin_display() {
     $rows[] = array($block["info"], array("data" => form_checkbox(NULL, $block["module"]."][".$block["delta"]."][status", 1, $block["status"]), "align" => "center"), array("data" => form_checkbox(NULL, $block["module"]."][".$block["delta"]."][custom", 1, $block["custom"]), "align" => "center"), form_weight(NULL, $block["module"]."][".$block["delta"]."][weight", $block["weight"]), form_radios(NULL, $block["module"]."][".$block["delta"]."][region", $block["region"], array(t("left"), t("right"))), form_textfield(NULL, $block["module"]."][".$block["delta"]."][path", $block["path"], 10, 255), $edit, $delete);
   }
 
-  $output = table($header, $rows);
+  $output = theme("table", $header, $rows);
   $output .= form_submit(t("Save blocks"));
 
   return form($output);

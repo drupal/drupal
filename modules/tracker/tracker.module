@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.66 2003/11/09 23:27:16 dries Exp $
+// $Id: tracker.module,v 1.67 2003/11/13 19:52:54 dries Exp $
 
 function tracker_help($section = "admin/help#tracker") {
   $output = "";
@@ -84,7 +84,7 @@ function tracker_posts($id = 0) {
   }
 
   $output  = "<div id=\"tracker\">";
-  $output .= table($header, $rows);
+  $output .= theme("table", $header, $rows);
   $output .= "</div>";
 
   return $output;

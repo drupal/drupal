@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.264 2003/11/09 23:27:15 dries Exp $
+// $Id: common.inc,v 1.265 2003/11/13 19:52:53 dries Exp $
 
 function conf_init() {
 
@@ -254,73 +254,6 @@ function drupal_specialchars($input, $quotes = ENT_NOQUOTES) {
   */
 
   return htmlspecialchars($input, $quotes);
-}
-
-function table_cell($cell, $header = 0) {
-  if (is_array($cell)) {
-    $data = $cell["data"];
-    foreach ($cell as $key => $value) {
-      if ($key != "data")  {
-        $attributes .= " $key=\"$value\"";
-      }
-    }
-  }
-  else {
-    $data = $cell;
-  }
-
-  if ($header) {
-    $output = "<th$attributes>$data</th>";
-  }
-  else {
-    $output = "<td$attributes>$data</td>";
-  }
-
-  return $output;
-}
-
-function table($header, $rows) {
-
-  $output = "<table>\n";
-
-  /*
-  ** Emit the table header:
-  */
-
-  if (is_array($header)) {
-    $output .= " <tr>";
-    foreach ($header as $cell) {
-      if (is_array($cell) && $cell["field"]) {
-        $cell = tablesort($cell, $header);
-      }
-      $output .= table_cell($cell, 1);
-    }
-    $output .= " </tr>\n";
-  }
-
-  /*
-  ** Emit the table rows:
-  */
-
-  if (is_array($rows)) {
-    foreach ($rows as $number => $row) {
-      if ($number % 2 == 1) {
-        $output .= " <tr class=\"light\">";
-      }
-      else {
-        $output .= " <tr class=\"dark\">";
-      }
-
-      foreach ($row as $cell) {
-        $output .= table_cell($cell, 0);
-      }
-      $output .= " </tr>\n";
-    }
-  }
-
-  $output .= "</table>\n";
-
-  return $output;
 }
 
 /**
