@@ -60,7 +60,7 @@ function comment_edit($id) {
 }
 
 function comment_save($id, $edit) {
-  db_query("UPDATE comments SET subject = '". check_input($edit[subject]) ."', comment = '". check_input($edit[comment]) ."' WHERE cid = '$id'");
+  db_query("UPDATE comments SET subject = '". check_input(filter($edit[subject])) ."', comment = '". check_input(filter($edit[comment])) ."' WHERE cid = '$id'");
   watchdog("special", "comment: modified '$edit[subject]'");
 }
 
@@ -98,11 +98,11 @@ function comment_admin() {
         print search_type("comment", "admin.php?mod=comment&op=search");
         break;
       case "delete":
-        print comment_delete(check_input($id));
+        print comment_delete(check_query($id));
         print comment_overview();
         break;
       case t("Submit"):
-        print status(comment_save(check_input($id), $edit));
+        print status(comment_save(check_query($id), $edit));
         print comment_overview();
         break;
       default:
