@@ -749,9 +749,18 @@ CREATE TABLE vocabulary (
   hierarchy tinyint(3) unsigned NOT NULL default '0',
   multiple tinyint(3) unsigned NOT NULL default '0',
   required tinyint(3) unsigned NOT NULL default '0',
-  nodes longtext,
   weight tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (vid)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table 'vocabulary_node_types'
+--
+
+CREATE TABLE vocabulary_node_types (
+  vid int(10) unsigned NOT NULL DEFAULT '0',
+  type varchar(16) NOT NULL DEFAULT '',
+  PRIMARY KEY (vid, type)
 ) TYPE=MyISAM;
 
 --
