@@ -1137,6 +1137,7 @@ function user_edit($edit = array()) {
 
 function _user_profile($edit, $account, $mode = 'form') {
 
+  $groups = array();
   foreach (module_list() as $module) {
     if ($data = module_invoke($module, 'user', $mode, $edit, $account)) {
       foreach ($data as $title => $form) {
