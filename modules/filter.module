@@ -17,7 +17,7 @@ function filter_help($section) {
       return t('Framework for handling filtering of content.');
     case 'admin/filters':
       return t("
-<p>Filters fit between the raw text in a node and the HTML output. They allow you to replace text selectively. Uses include automatic conversion of emoticons into graphics and filtering HTML content from users' submissions.</p>
+<p>Filters fit between the raw text in posts and comments, and the HTML output. They allow you to replace text selectively. Uses include automatic conversion of emoticons into graphics and filtering HTML content from users' submissions.</p>
 <p>If you notice some filters are causing conflicts in the output, you can <a href=\"%url\">rearrange them</a>.</p>", array('%url' => url('admin/filters/order')));
     case 'admin/filters/order':
       return t("
@@ -52,7 +52,7 @@ function filter_menu() {
   $items[] = array('path' => 'admin/filters', 'title' => t('filters'),
     'callback' => 'filter_admin_settings',
     'access' => user_access('administer site configuration'));
-  $items[] = array('path' => 'admin/filters/order', 'title' => t('order filters'),
+  $items[] = array('path' => 'admin/filters/order', 'title' => t('rearrange filters'),
     'callback' => 'filter_admin_order',
     'access' => user_access('administer site configuration'),
     'type' => MENU_LOCAL_TASK);
@@ -197,20 +197,18 @@ function check_output($text) {
  * Perform the default filters, preventing malicious HTML from being displayed.
  */
 function filter_default($text) {
-  if (!user_access('bypass html filter')) {
-    if (variable_get('filter_html', FILTER_HTML_DONOTHING) == FILTER_HTML_STRIP) {
-      // Allow users to enter HTML, but filter it
-      $text = strip_tags($text, variable_get('allowed_html', ''));
-      if (variable_get('filter_style', FILTER_STYLE_STRIP)) {
-        $text = preg_replace('/\Wstyle\s*=[^>]+?>/i', '>', $text);
-      }
-      $text = preg_replace('/\Won[a-z]+\s*=[^>]+?>/i', '>', $text);
+  if (variable_get('filter_html', FILTER_HTML_DONOTHING) == FILTER_HTML_STRIP) {
+    // Allow users to enter HTML, but filter it
+    $text = strip_tags($text, variable_get('allowed_html', ''));
+    if (variable_get('filter_style', FILTER_STYLE_STRIP)) {
+      $text = preg_replace('/\Wstyle\s*=[^>]+?>/i', '>', $text);
     }
+    $text = preg_replace('/\Won[a-z]+\s*=[^>]+?>/i', '>', $text);
+  }
 
-    if (variable_get('filter_html', FILTER_HTML_DONOTHING) == FILTER_HTML_ESCAPE) {
-      // Escape HTML
-      $text = htmlspecialchars($text);
-    }
+  if (variable_get('filter_html', FILTER_HTML_DONOTHING) == FILTER_HTML_ESCAPE) {
+    // Escape HTML
+    $text = htmlspecialchars($text);
   }
 
   return trim($text);
