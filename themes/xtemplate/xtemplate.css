@@ -1,17 +1,16 @@
 body {
   margin: 0;
   padding: 0;
-  color: #000000;
+  color: #000;
   background-color: #fff;
   font-family: verdana, arial, helvetica, sans-serif;
   font-size: 76%;
-  width: 100%;
 }
 tr.dark {
   background-color: #ddd;
 }
 tr.light {
-  background-color: #fff;
+  background-color: #eee;
 }
 h1 {
   font-size: 1.2em;
@@ -24,18 +23,17 @@ h3, h4, h5, h6 {
 }
 a {
   text-decoration: none;
-  font-weight: normal;
+  font-weight: bold;
 }
 a:link {
-  color: #069;
-  text-decoration: underline;
+  color: #369;
 }
 a:visited {
   color: #000;
-  text-decoration: underline;
 }
 a:hover {
   color: #39C;
+  text-decoration: underline;
 }
 p {
   margin: 0 0 1em 0;
@@ -96,7 +94,8 @@ img {
   font-weight: bold;
 }
 #main {
-  padding: 1em;
+  /* padding in px not ex because IE messes up 100% width tables otherwise */
+  padding: 10px;
 }
 #message, #main .node .content, .comment .content {
   line-height: 1.4;
@@ -104,7 +103,8 @@ img {
 #sidebar-left, #sidebar-right {
   background-color: #ddd;
   width: 16em;
-  padding: 1em;
+  /* padding in px not ex because IE messes up 100% width tables otherwise */
+  padding: 10px;
 }
 #footer {
   background-color: #eee;
@@ -117,11 +117,16 @@ table {
 .block, .box {
   padding: 0 0 1.5em 0;
 }
+.block {
+  border-bottom: 1px solid #bbb;
+  padding-bottom: 0.75em;
+  margin-bottom: 1.5em;
+}
 .node {
   padding: 0 0 2.5em 0;
 }
 .comment {
-  border: 1px solid #ccc;
+  border: 1px solid #abc;
   padding: 1.5em 1.5em 1.5em 1.5em;
   margin: 0.5em 0 0.5em 0;
 }
@@ -183,12 +188,18 @@ table {
   padding: 1em 1em 1em 0;
   border-bottom: 1px solid #ddd;
 }
+.calendar a {
+  text-decoration: none;
+}
 .calendar td {
-  padding: 0.2em;
+  padding: 0;
   border-color: #888;
 }
+.calendar td div {
+  padding: 0.4em 0;
+}
 .calendar .row-week td a {
-  padding: 0.2em;
+  padding: 0.4em 0;
 }
 .calendar .day-today {
   background-color: #69c;
