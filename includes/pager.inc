@@ -1,5 +1,5 @@
 <?php
-// $Id: pager.inc,v 1.34 2004/11/29 13:10:43 dries Exp $
+// $Id: pager.inc,v 1.35 2004/12/02 07:06:33 unconed Exp $
 
 /**
  * @file
@@ -55,6 +55,10 @@ function pager_query($query, $limit = 10, $element = 0, $count_query = NULL) {
   // Substitute in query arguments.
   $args = func_get_args();
   $args = array_slice($args, 4);
+  // Alternative syntax for '...'
+  if (is_array($args[0])) {
+    $args = $args[0];
+  }
 
   // Count the total number of records in this query.
   if (!isset($count_query)) {
