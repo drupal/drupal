@@ -111,13 +111,13 @@ function import_block($op, $delta) {
     $feed = db_fetch_object(db_query("SELECT * FROM feed WHERE fid = '%d'", $delta));
     if ($feed) {
       $block["subject"] = $feed->title;
-      $block["content"] = import_feed_block($feed) ."<p><div align=\"right\">". lm(t("more"), array("mod" => "import", "op" => "feed", "id" => $feed->fid), "", array("title" => t("View this feed's recent news."))) ."</div></p>";
+      $block["content"] = import_feed_block($feed) ."<p style=\"text-align: right\">". lm(t("more"), array("mod" => "import", "op" => "feed", "id" => $feed->fid), "", array("title" => t("View this feed's recent news."))) ."</p>";
     }
     else {
       // it was a bundle. this is NOT elegant
       $bundle = db_fetch_object(db_query("SELECT * FROM bundle WHERE bid = '%d'", $delta));
       $block["subject"] = $bundle->title;
-      $block["content"] = import_bundle_block($bundle->attributes) ."<p><div align=\"right\">". lm(t("more"), array("mod" => "import", "op" => "bundle", "id" => $bundle->bid), "", array("title" => t("View this bundle's recent news."))) ."</div></p>";
+      $block["content"] = import_bundle_block($bundle->attributes) ."<p style=\"text-align: right\">". lm(t("more"), array("mod" => "import", "op" => "bundle", "id" => $bundle->bid), "", array("title" => t("View this bundle's recent news."))) ."</p>";
     }
 
     return $block;
@@ -131,7 +131,7 @@ function import_get_bundles($attributes = 0) {
   $result = db_query("SELECT * FROM bundle ORDER BY title");
   while ($bundle = db_fetch_object($result)) {
     $block[$bundle->bid]["subject"] = $bundle->title;
-    $block[$bundle->bid]["content"] = import_bundle_block($bundle->attributes) ."<p><div align=\"right\">". lm(t("more"), array("mod" => "import", "op" => "bundle", "id" => $bundle->bid), "", array("title" => t("View this bundle's recent news."))) ."</div></p>";
+    $block[$bundle->bid]["content"] = import_bundle_block($bundle->attributes) ."<p style=\"text-align: right\">". lm(t("more"), array("mod" => "import", "op" => "bundle", "id" => $bundle->bid), "", array("title" => t("View this bundle's recent news."))) ."</p>";
     $block[$bundle->bid]["info"] = "$bundle->title bundle";
   }
 
@@ -145,7 +145,7 @@ function import_get_feeds($attributes = 0) {
   $result = db_query("SELECT * FROM feed ORDER BY fid");
   while ($feed = db_fetch_object($result)) {
     $block[$feed->fid]["subject"] = $feed->title;
-    $block[$feed->fid]["content"] = import_feed_block($feed) ."<p><div align=\"right\">". lm(t("more"), array("mod" => "import", "op" => "feed", "id" => $feed->fid), "", array("title" => t("View this feed's recent news."))) ."</div></p>";
+    $block[$feed->fid]["content"] = import_feed_block($feed) ."<p style=\"text-align: right\">". lm(t("more"), array("mod" => "import", "op" => "feed", "id" => $feed->fid), "", array("title" => t("View this feed's recent news."))) ."</p>";
     $block[$feed->fid]["info"] = "$feed->title feed";
   }
 
@@ -562,7 +562,7 @@ function import_page_info() {
     $links[] = la(t("administer news feeds"), array("mod" => "import"), "", array("title" => t("View the news feed administrative pages.")));
   }
 
-  return "<div align=\"center\">". $theme->links($links) ."</div>";
+  return "<div style=\"text-align: center\">". $theme->links($links) ."</div>";
 }
 
 function import_page_last() {
