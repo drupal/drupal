@@ -38,14 +38,12 @@
     } // close header function
 
     function story($story, $reply = 0) {
-      $timestamp = format_date($story->timestamp);
-
 ?>
 
               <TABLE BORDER="1">
                 <TR>
-                  <TD>
-                    <?php echo "". check_output($story->subject) .""; ?>
+                  <TD COLSPAN="2">
+                    <?php echo check_output($story->subject); ?>
                   </TD>
                 </TR>
                 <TR>
@@ -53,17 +51,21 @@
 
 <?php
 
-                     echo "". strtr(t("$how by %a on %b"), array("%a" => format_username($story->userid), "%b" => $timestamp, "large")) .";
+                     echo strtr(t("$how by %a on %b"), array("%a" => format_username($story->userid), "%b" => format_date($story->timestamp, "large")));
+?>
+
                    </TD>
                    <TD>
-                     <A HREF=\"search.php?category=". urlencode($story->section) ."\">$story->section</A>";
+
+<?php
+                     echo "<A HREF=\"search.php?category=". urlencode($story->section) ."\">$story->section</A>";
 
 ?>
 
                    </TD>
                  </TR>
                  <TR>
-                   <TD>
+                   <TD COLSPAN="2">
 
 <?php
  
@@ -77,7 +79,7 @@
                    </TD>
                  </TR>
                  <TR>
-                   <TD>
+                   <TD COLSPAN="2">
 
 <?php
 
@@ -102,8 +104,7 @@
       echo comment_controls();
     }
 
-    function comment($comment, $link = "", $thread = "") {
-      $timestamp = format_date($comment->timestamp);
+    function comment($comment, $link = "") {
       echo "<A NAME=\"$comment->cid\"></A>\n";
 
       // Create comment header:
@@ -124,7 +125,7 @@
       echo "                          ". t("Subject") .":";
       echo "                            </TD>";
       echo "                            <TD >";
-      echo "                          ". check_output($comment->subject) ."";
+      echo "                          ". check_output($comment->subject);
       echo "                        </TD>";
  
       // Moderation:
@@ -135,10 +136,10 @@
  
       // Author:
       echo "                      <TR>";
-      echo "                        <TD>". t("Author") .":</FONT></TD><TD>". format_username($comment->userid) ."";
+      echo "                        <TD>". t("Author") .":</FONT></TD><TD>". format_username($comment->userid);
 
       // Date:
-      echo "                          on ". $timestamp ."";
+      echo "                          on ". format_date($comment->timestamp);
       echo "                        </TD>";
       echo "                      </TR>";
  
@@ -149,11 +150,8 @@
       // Print body of comment:
                   if ($comment) echo " <TR><TD>" . check_output($comment->comment, 1) ."</TD></TR>";
  
-      // Print thread (if any):
-                  if ($thread) echo " <TR><TD>$thread</TD></TR>";
-
       // Print bottom link(s):
-      echo "                <TR><TD> $link</TD></TR>";
+      echo "                <TR><TD>$link</TD></TR>";
       echo "              </TABLE>";
       echo "            </TD>";
       echo "          </TR>";
@@ -235,7 +233,7 @@
                   <TD></TD>
                   <TD>
                     <!-- These are just some links from my theme as an example. -->
-                    <A HREF="">Home</A><A HREF="module.php?mod=faq">Faq</A><A HREF="search.php">Search</A><A HREF="module.php?mod=diary">Diary</A><A HREF="submit.php">Submit news</A><A HREF="account.php">Account</A>
+                    <A HREF="index.php">Home</A> <A HREF="module.php?mod=faq">Faq</A> <A HREF="search.php">Search</A> <A HREF="module.php?mod=diary">Diary</A> <A HREF="submit.php">Submit news</A> <A HREF="account.php">Account</A>
                   </TD>
                   <TD></TD>
                 </TR>
