@@ -128,7 +128,7 @@
                   <tr>
                     <td>
                       <a href="index.php?topic=<?php echo $story->tid; ?>"><img src="themes/yaroon/images/<?php echo $img; ?>" border="0" /></a>&nbsp;<b style="font-size: 12pt"><?php echo check_output($story->title); ?></b>
-                      <?php echo strtr(t("by %a on %b"), array("%a" => format_username($story->userid), "%b" => format_date($story->timestamp), "small")); echo $story->cid; ?>
+                      <?php echo strtr(t("by %a on %b"), array("%a" => format_username($story->userid), "%b" => format_date($story->timestamp), "small")); ?>
                     </td>
                   </tr>
                   <tr><td bgcolor="<?php echo $color; ?>"><img src="themes/yaroon/images/pixel.gif" width="1" height="1" alt="" border="0" /></td></tr>
