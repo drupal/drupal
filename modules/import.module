@@ -136,7 +136,7 @@ function import_form_feed($edit = array()) {
   $period = array(900 => format_interval(900), 1800 => format_interval(1800), 3600 => format_interval(3600), 7200 => format_interval(7200), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 64800 => format_interval(64800), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200));
 
   $form .= form_textfield("Title", "title", $edit[title], 50, 64, "The name of the feed; typically the name of the website you syndicate content from.");
-  $form .= form_textfield("Link", "link", $edit[link], 50, 64, "The fully-qualified URL of the feed.");
+  $form .= form_textfield("Link", "link", $edit[link], 50, 128, "The fully-qualified URL of the feed.");
   $form .= form_textfield("Attributes", "attribute", $edit[attribute], 50, 128, "A comma-seperated list of keywords describing the feed.");
   $form .= form_select("Update interval", "refresh", $edit[refresh], $period, "The refresh interval indicating how often you want to update this feed.  Requires crontab.");
   $form .= form_select("Expiration time", "uncache", $edit[uncache], $period, "The time cached items should be kept.  Older items will be automatically discarded.  Requires crontab.");
