@@ -379,11 +379,11 @@ function user_block($op = "list", $delta = 0) {
   }
 }
 
-function theme_user_list($items, $title = '') {
+function theme_user_list($items, $title = NULL) {
   return theme("theme_item_list",$items, $title);
 }
 
-function theme_menu_list($items, $title = '') {
+function theme_menu_list($items, $title = NULL) {
   return theme("theme_item_list",$items, $title);
 }
 
@@ -874,7 +874,7 @@ function user_delete() {
   global $edit, $user;
 
   if ($edit["confirm"]) {
-    watchdog(user,"$user->name deactivated her own account.");
+    watchdog("user","$user->name deactivated her own account.");
     db_query("UPDATE users SET mail = 'deleted', status = '0' WHERE uid = '%d'", $user->uid);
     $output .= t("Your account has been deactivated.");
   }
