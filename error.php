@@ -7,11 +7,6 @@ $errors = array(500 => "500 error: internal server error", 404 => "404 error: `$
 
 watchdog("httpd", $errors[$REDIRECT_STATUS]);
 
-if (strstr($REDIRECT_URL, "index.php")) {
-  drupal_goto("../index.php");
-}
-else {
-  drupal_goto("index.php");
-}
+drupal_goto($base_url);
 
 ?>
