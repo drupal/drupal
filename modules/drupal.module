@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.84 2004/08/04 20:36:24 dries Exp $
+// $Id: drupal.module,v 1.85 2004/08/14 06:30:32 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -211,7 +211,7 @@ function drupal_login($arguments) {
   $argument = $arguments->getparam(1);
   $password = $argument->scalarval();
 
-  if ($user = user_load(array(name => $username, 'pass' => $password, 'status' => 1))) {
+  if ($user = user_load(array('name' => $username, 'pass' => $password, 'status' => 1))) {
     return new xmlrpcresp(new xmlrpcval($user->uid, 'int'));
   }
   else {
