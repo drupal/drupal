@@ -112,7 +112,7 @@ function do_search($search_array) {
     if (strlen($word) < variable_get("remove_short", 0)) {
       continue;
     }
-    // If the word is preceeded by a "+", then this word is required, and
+    // If the word is proceeded by a "+", then this word is required, and
     // pages that match other words, but not this one will be removed
     if (substr($word, 0, 1) == "+") {
       $word = substr($word, 1);
@@ -286,11 +286,10 @@ function update_index($search_array) {
       // Walk through the weighted words array, inserting them into
       // the search index
       foreach ($newwords as $key => $value) {
-        $inputword = ("INSERT INTO search_index VALUES('$key', ". $node["lno"] .", '$node_type', $value)");
-        mysql_query($inputword);
+        db_query("INSERT INTO search_index VALUES('$key', ". $node["lno"] .", '$node_type', $value)");
       }
 
-      // Zap the weighted words array, so we dont add multiples.
+      // Zap the weighted words array, so we don't add multiples.
       $newwords = array ();
     }
   }
