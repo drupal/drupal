@@ -42,36 +42,39 @@ p {
 img {
   border-width: 0;
 }
-.header {
+#header, #content {
   width: 100%;
 }
-.header .menu {
+#header {
   background-color: #69c;
-  padding: 0.5em 0.5em 0 0.5em;
 }
-.menu #logo {
-  vertical-align: middle;
+#logo {
+  vertical-align: bottom;
   border: 0;
-  margin-bottom: .8em;
   font-weight: bold;
   font-size: 1.9em;
   color: #fff;
 }
-.menu #primary {
+#menu {
+  padding: 0.5em 0.5em 0 0.5em;
+  text-align: right;
+  vertical-align: middle;
+}
+#primary {
   font-size: 1.0em;
   padding: 0em 0.8em 0.5em 0;
   color: #9cf;
 }
-.menu #primary a {
+#primary a {
   font-weight: bold;
   color: #fff;
 }
-.menu #secondary {
+#secondary {
   padding: 0 1em 0.5em 0;
   font-size: 0.8em;
   color: #9cf;
 }
-.menu #secondary a {
+#secondary a {
   font-weight: bold;
   color: #9cf;
 }
@@ -109,6 +112,7 @@ img {
   width: 16em;
   /* padding in px not ex because IE messes up 100% width tables otherwise */
   padding: 10px;
+  vertical-align: top;
 }
 #footer {
   background-color: #eee;
