@@ -121,7 +121,8 @@ function xtemplate_header() {
     $xtemplate->template->assign(array(
           //"search" => search_form(),
           "search_url" => url("search"),
-          "search_button_text" => t("Search")
+          "search_button_text" => t("Search"),
+          "search_description" => t("Enter the terms you wish to search for.")
           ));
     $xtemplate->template->parse("header.search_box");
   }
