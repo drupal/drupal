@@ -172,22 +172,6 @@ CREATE TABLE feed (
 ) TYPE=MyISAM;
 
 #
-# Table structure for table 'file'
-#
-
-CREATE TABLE file (
-  lid int(10) unsigned NOT NULL auto_increment,
-  nid int(10) unsigned NOT NULL default '0',
-  version varchar(10) NOT NULL default '',
-  url varchar(255) NOT NULL default '',
-  downloads int(10) unsigned NOT NULL default '0',
-  abstract text NOT NULL,
-  description text NOT NULL,
-  homepage varchar(255) NOT NULL default '',
-  PRIMARY KEY  (lid)
-) TYPE=MyISAM;
-
-#
 # Table structure for table 'history'
 #
 
@@ -212,6 +196,14 @@ CREATE TABLE item (
   timestamp int(11) default NULL,
   attributes varchar(255) NOT NULL default '',
   PRIMARY KEY  (iid)
+) TYPE=MyISAM;
+
+#
+# Table structure for table 'layout'
+#
+CREATE TABLE layout (
+  user int(11) DEFAULT '0' NOT NULL,
+  block varchar(64) DEFAULT '' NOT NULL
 ) TYPE=MyISAM;
 
 #
@@ -341,20 +333,6 @@ CREATE TABLE project (
   PRIMARY KEY  (nid),
   KEY pid (pid),
   KEY assigned (assigned)
-) TYPE=MyISAM;
-
-#
-# Table structure for table 'projects'
-#
-
-CREATE TABLE projects (
-  pid int(10) unsigned NOT NULL auto_increment,
-  name varchar(255) NOT NULL default '',
-  versions varchar(255) NOT NULL default '',
-  developers varchar(255) NOT NULL default '',
-  areas varchar(255) NOT NULL default '',
-  mail varchar(255) NOT NULL default '',
-  PRIMARY KEY  (pid)
 ) TYPE=MyISAM;
 
 #
