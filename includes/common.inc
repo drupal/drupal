@@ -503,6 +503,11 @@ function message_na() {
  */
 function locale_initialize() {
   global $user;
+
+  if (function_exists('i18n_get_lang')) {
+    return i18n_get_lang();
+  }
+
   if (function_exists('locale')) {
     $languages = locale_supported_languages();
     $languages = $languages['name'];
