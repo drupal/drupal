@@ -1,5 +1,5 @@
 <?php
-/* $Id: menu.inc,v 1.72 2004/11/06 12:11:02 dries Exp $ */
+/* $Id: menu.inc,v 1.73 2004/11/28 12:03:11 dries Exp $ */
 
 /**
  * @file
@@ -610,7 +610,7 @@ function theme_menu_local_tasks() {
     $output .= "</ul>\n";
 
     foreach ($local_tasks[$pid]['children'] as $mid) {
-      if (menu_in_active_trail($mid) && count($local_tasks[$mid]['children'])) {
+      if (menu_in_active_trail($mid) && count($local_tasks[$mid]['children']) > 1) {
         $output .= "<ul class=\"tabs secondary\">\n";
         foreach ($local_tasks[$mid]['children'] as $cid) {
           $output .= theme('menu_local_task', $cid, menu_in_active_trail($cid));
