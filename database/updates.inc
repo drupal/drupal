@@ -962,7 +962,6 @@ function update_83() {
       status int(1) unsigned NOT NULL default '0',
       PRIMARY KEY  (mid)
      );");
-    $ret[] = update_sql("INSERT INTO {sequences} (name, id) VALUES ('menu_mid', 1)");
   }
   else {
     $ret[] = update_sql("CREATE TABLE {menu} (
@@ -977,6 +976,7 @@ function update_83() {
 );");
 
   }
+  db_next_id('{menu}_mid');
   return $ret;
 }
 
