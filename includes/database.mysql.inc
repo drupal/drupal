@@ -124,23 +124,6 @@ function db_affected_rows() {
  * @param integer $from  the row to start to fetching
  * @param integer $count the numbers of rows to fetch
  *
- * @return mixed a DB_Result object or a DB_Error
- *
- * @access public
- */
-function db_query_range($query, $from, $count) {
-  $query .= " LIMIT $from, $count";
-  // TODO: debug version
-  return db_query($query);
-}
-
-/**
- * Generates a limited query
- *
- * @param string  $query query
- * @param integer $from  the row to start to fetching
- * @param integer $count the numbers of rows to fetch
- *
  * @access public
  */
 function db_query_range($query, $from, $count) {
