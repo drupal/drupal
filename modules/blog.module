@@ -264,7 +264,7 @@ function blog_link($type, $node = 0, $main) {
       menu("node/add/blog", t("blog entry"), "blog_page", NULL, 0);
     }
     if (user_access("maintain personal blog")) {
-      menu("blog/" . $user->uid,t("view my blog"), "user_page", NULL, 1);
+      menu("blog/" . $user->uid,t("my blog"), "user_page", NULL, 1);
     }
   }
 
