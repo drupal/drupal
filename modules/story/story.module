@@ -1,5 +1,5 @@
 <?php
-// $Id: story.module,v 1.123 2003/08/22 17:06:42 dries Exp $
+// $Id: story.module,v 1.124 2003/09/20 15:11:41 dries Exp $
 
 function story_help($section = "admin/story/help") {
   switch ($section) {
@@ -92,4 +92,9 @@ function story_form(&$node, &$help, &$error) {
   return $output;
 }
 
+function story_content($node) {
+  $node->teaser = check_output($node->teaser);
+  $node->body = check_output($node->body);
+  return $node;
+}
 ?>

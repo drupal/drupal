@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.147 2003/09/18 14:03:08 dries Exp $
+// $Id: theme.inc,v 1.148 2003/09/20 15:11:40 dries Exp $
 
 /**
 * Basic theme
@@ -42,8 +42,8 @@ class BaseTheme {
     return "misc/$name";
   }
 
-  function breadcrumb($trail) {
-    print "<div class=\"breadcrumb\">". implode($trail, " &raquo; ") ."</div>";
+  function breadcrumb($breadcrumb) {
+    print "<div class=\"breadcrumb\">". implode($breadcrumb, " &raquo; ") ."</div>";
   }
 
   function node($node, $main) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.161 2003/09/19 07:41:54 dries Exp $
+// $Id: comment.module,v 1.162 2003/09/20 15:11:41 dries Exp $
 
 $GLOBALS["cmodes"] = array(1 => t("Flat list - collapsed"), 2 => t("Flat list - expanded"), 3 => t("Threaded list - collapsed"), 4 => t("Threaded list - expanded"));
 $GLOBALS["corder"] = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"));
@@ -207,8 +207,7 @@ function comment_reply($pid, $nid) {
       comment_view($comment);
     }
     else if (user_access("access content")) {
-      $node = node_view(node_load(array("nid" => $nid)),0,1);
-      theme("box", $node->title, $node->body);
+      node_view(node_load(array("nid" => $nid)));
       $pid = 0;
     }
 
@@ -259,8 +258,7 @@ function comment_preview($edit) {
     comment_view($comment);
   }
   else {
-    $node = node_view(node_load(array("nid" => $edit["nid"])), 0, 1);
-    theme("box", $node->title, $node->body);
+    node_view(node_load(array("nid" => $edit["nid"])));
     $edit["pid"] = 0;
   }
 }

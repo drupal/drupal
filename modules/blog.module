@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.134 2003/09/15 15:58:14 dries Exp $
+// $Id: blog.module,v 1.135 2003/09/20 15:11:41 dries Exp $
 
 function blog_system($field){
   $output = "";
@@ -125,10 +125,10 @@ function blog_page_user($uid) {
   $account = user_load(array((is_numeric($uid) ? "uid" : "name") => $uid, "status" => 1));
 
   // Breadcrumb navigation:
-  $trail[] = l(t("Home"), NULL);
-  $trail[] = l(t("Blogs"), "blog");
-  $trail[] = t("%name's blog", array("%name" => $account->name));
-  theme("breadcrumb", $trail);
+  $breadcrumb[] = l(t("Home"), NULL);
+  $breadcrumb[] = l(t("Blogs"), "blog");
+  $breadcrumb[] = t("%name's blog", array("%name" => $account->name));
+  theme("breadcrumb", $breadcrumb);
 
   $result = pager_query("SELECT nid FROM {node} WHERE type = 'blog' AND uid = '$account->uid' AND status = 1 ORDER BY nid DESC", variable_get("default_nodes_main", 10));
   while ($node = db_fetch_object($result)) {
@@ -142,9 +142,9 @@ function blog_page_last() {
   global $user;
 
   // Breadcrumb navigation:
-  $trail[] = l(t("Home"), NULL);
-  $trail[] = t("Blogs");
-  theme("breadcrumb", $trail);
+  $breadcrumb[] = l(t("Home"), NULL);
+  $breadcrumb[] = t("Blogs");
+  theme("breadcrumb", $breadcrumb);
 
   $result = pager_query("SELECT nid FROM {node} WHERE type = 'blog' AND status = 1 ORDER BY nid DESC", variable_get("default_nodes_main", 10));
 
@@ -229,17 +229,24 @@ function blog_page() {
 
 }
 
-function blog_view($node, $main = 0) {
-  if ($main == 0) {
-    // Breadcrumb navigation:
-    $node->trail[] = l(t("Home"), NULL);
-    $node->trail[] = l(t("%name's blog", array("%name" => $node->name)), "blog/$node->uid");
-  }
-
+function blog_content($node) {
   $node->teaser = check_output($node->teaser);
   $node->body = check_output($node->body);
-
   return $node;
+}
+
+function blog_view($node, $main = 0) {
+  if ($main == 0) {
+    // Breadcrumb navigation
+    $breadcrumb[] = l(t("Home"), NULL);
+    $breadcrumb[] = l(t("%name's blog", array("%name" => $node->name)), "blog/$node->uid");
+    // print the breadcrumb
+    theme("breadcrumb",$breadcrumb);
+  }
+  // prepair the node content
+  $node = blog_content($node);
+  // print the node
+  theme("node", $node, $main);
 }
 
 function blog_link($type, $node = 0, $main) {
