@@ -39,10 +39,7 @@ function drupal_get_path_map($action = "") {
   }
 
   if (!$cache) {
-    if (!$result) {
-      $result = db_query("SELECT * FROM {path}");
-    }
-
+    $result = db_query("SELECT * FROM {path}");
     while ($data = db_fetch_object($result)) {
       $map[$data->dst] = $data->src;
     }
