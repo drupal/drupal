@@ -161,7 +161,7 @@ tr.light .form-item, tr.dark .form-item {
   color: #f00;
 }
 .more-link {
-  float: right;
+  text-align: right;
 }
 .node-form .form-text {
   display: block;
