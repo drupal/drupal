@@ -284,10 +284,10 @@ CREATE TABLE node (
   KEY node_type (type(4)),
   KEY node_title_type (title,type(4)),
   KEY status (status),
-  KEY uid (uid)
-  KEY node_moderate (moderate);
-  KEY node_path (path(5));
-  KEY node_promote_status (promote, status);
+  KEY uid (uid),
+  KEY node_moderate (moderate),
+  KEY node_path (path(5)),
+  KEY node_promote_status (promote, status)
 ) TYPE=MyISAM;
 
 --
