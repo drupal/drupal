@@ -281,7 +281,7 @@ function user_fields() {
 /*** Module hooks **********************************************************/
 
 function user_perm() {
-  return array("administer users");
+  return array("administer users", "access userlist");
 }
 
 function user_search($keys) {
@@ -300,6 +300,7 @@ function user_block($op = "list", $delta = 0) {
      $blocks[0]["info"] = t("User login");
      $blocks[1]["info"] = t("Navigation");
      $blocks[2]["info"] = t("Who's new");
+     $blocks[3]["info"] = t("Who's online");
 
      return $blocks;
   }
@@ -376,6 +377,54 @@ function user_block($op = "list", $delta = 0) {
           $output = theme("user_list", $items);
 
           $block["subject"] = t("Who's new");
+          $block["content"] = $output;
+          return $block;
+        }
+      case 3:
+        if (user_access("access content")) {
+          /* utilize auto-throttle to disable when this site is too busy */
+          if (function_exists("throttle_status"))
+            $throttle = throttle_status();
+          else
+            $throttle = 0;
+
+          /* be sure the site isn't too busy prior to performing db queries */
+          if ($throttle < 5) {
+            /* count users with activity in the past defined period */
+            $time_period = variable_get("user_block_seconds_online", 2700);
+
+            /* perform database queries to gather online user lists */
+            $guests = db_fetch_object(db_query("SELECT COUNT(DISTINCT sid) AS count FROM {sessions} WHERE timestamp >= %d AND uid = 0", time() - $time_period));
+            $users = db_query("SELECT DISTINCT uid, MAX(timestamp) AS max_timestamp FROM {sessions} WHERE timestamp >= %d AND uid != 0 GROUP BY uid ORDER BY max_timestamp DESC", time() - $time_period );
+            $total_users = db_affected_rows();
+
+            /* format the output with proper grammar */
+            if ($total_users == 1 && $guests->count == 1) {
+              $output = t("There is currently %members and %visitors online.", array("%members" => format_plural($total_users, "1 user", "%count users"), "%visitors" => format_plural($guests->count, "1 guest", "%count guests")));
+            }
+            else {
+              $output = t("There are currently %members and %visitors online.", array("%members" => format_plural($total_users, "1 user", "%count users"), "%visitors" => format_plural($guests->count, "1 guest", "%count guests")));
+            }
+
+            if (user_access("access userlist") && $total_users) {
+              /* Display a list of currently online users */
+              $max_users = variable_get("user_block_max_list_count", 10);
+              $items = array();
+              while ($uid = db_fetch_object($users)) {
+                $items[] = format_name(user_load(array("uid" => $uid->uid)));
+              }
+
+              if ($items) {
+                $output .= "<br /><br />";
+                $output .= theme("item_list", $items, t("Online users:"));
+              }
+            }
+          }
+          else {
+            /* the site is too busy -- display a simple "too busy" message */
+            $output = t("This site is currently sustaining more than %total page views a minute.", array("%total" => ($throttle * variable_get("statistics_throttle_multiplier", 60))));
+          }
+          $block["subject"] = t("Who's online");
           $block["content"] = $output;
           return $block;
         }
@@ -1066,6 +1115,11 @@ function user_settings() {
   $output = form_radios(t("Public registrations"), "user_register", variable_get("user_register", 1), array(t("Only site administrators can create new user accounts."), t("Visitors can create accounts and no administrator approval is required."), t("Visitors can create accounts but administrator approval is required.")));
 
   $output .= form_radios(t("Remember authenticated users"), "user_remember", variable_get("user_remember", 0), array(t("Let the user decide whether he should be logged out when leaving the site."), t("Authenticated users are not logged out upon leaving the site."), t("Authenticated users are logged out upon leaving the site.")));
+
+  $period = array(30 => format_interval(30), 60 => format_interval(60), 120 => format_interval(120), 180 => format_interval(180), 300 => format_interval(300), 600 => format_interval(600), 900 => format_interval(900), 1800 => format_interval(1800), 2700 => format_interval(2700), 3600 => format_interval(3600), 5400 => format_interval(5400), 7200 => format_interval(7200), 10800 => format_interval(10800), 21600 => format_interval(21600), 43200 => format_interval(43200), 86400 => format_interval(86400));
+  $output .= form_select(t("User activity"), "user_block_seconds_online", $edit["user_block_seconds_online"], $period, t("Affects \"Who's online\" block.  A user is considered online for this long after they have last viewed a page."));
+
+  $form .= form_select(t("User list length"), "online_block_max_list_count", $edit["online_block_max_list_count"], array("0" => "0", "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "50" => "50", "100" => "100"), t("Affects \"Who's online\" block.  Maximum number of currently online user's to display."));
 
   $output .= form_textarea(t("User registration guidelines"), "user_registration_help", variable_get("user_registration_help", ""), 70, 4, t("This text is displayed at the top of the user registration form.  It's useful for helping or instructing your users."));
 
