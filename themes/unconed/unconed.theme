@@ -44,7 +44,6 @@
       <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
       <?php print theme_head($main); ?>
       <title><?php echo ($title ? ($title . " - ") : "") . variable_get(site_name, "drupal"); ?></title>
-      <base href="<?php echo "$base_url/"; ?>" />
       <link rel="stylesheet" type="text/css" media="screen, projection" href="themes/unconed/unconed.css" />
      </head>
      <body text="#000000" bgcolor="<?php print $this->clc0; ?>" alink="#000000" link="#404040" vlink="#404040">

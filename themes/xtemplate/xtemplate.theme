@@ -71,12 +71,9 @@ class Theme_xtemplate extends BaseTheme {
   }
 
   function header($title = "") {
-    global $base_url;
-
     $this->template->assign(array(
       "title" => ($title ? $title." | ". variable_get("site_name", "drupal") : variable_get("site_name", "drupal") ." | ". variable_get("site_slogan", "")),
       "head" => theme_head(),
-      "base" => "$base_url/",
       "onload_attributes" => theme_onload_attribute(),
       "primary_links" => variable_get("xtemplate_primary_links", l("edit primary links", "admin/system/themes/xtemplate")),
       "secondary_links" => variable_get("xtemplate_secondary_links", l("edit secondary links", "admin/system/themes/xtemplate"))
