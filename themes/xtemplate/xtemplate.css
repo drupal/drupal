@@ -7,7 +7,7 @@ body {
   width: 100%;
 }
 body, td, tr {
-  font-size: 90%;
+  font-size: 93%;
 }
 h1 {
   font-size: 1.2em;
@@ -48,11 +48,14 @@ img {
 .menu logo {
   vertical-align: bottom;
   float: left;
+  width: 30%;
 }
 .menu #links {
+  white-space: nowrap;
   text-align: right;
   float: right;
   color: #9cf;
+  width: 60%;
 }
 .menu #links #primary {
   font-size: 1.1em;
@@ -150,7 +153,7 @@ table .comment {
 .comment .new {
   text-align: right;
   font-weight: bold;
-  font-size: 0.7em;
+  font-size: 0.8em;
   float: right;
   color: red;
 }
