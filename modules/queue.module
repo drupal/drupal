@@ -28,10 +28,6 @@ function queue_link($type) {
     $links[] = l(t("view submissions"), "queue", array("title" => t("Moderate the content in the submission queue."))) ." (<span style=\"color: red;\">". queue_count() ."</span>)";
   }
 
-  if ($type == "admin" && user_access("administer nodes")) {
-    menu("admin/node/nodes/1", "approval queue", "node_admin", NULL, 1);
-  }
-
   return $links ? $links : array();
 }
 
@@ -221,16 +217,8 @@ function queue_block($op = "list", $delta = 0) {
 
 function queue_nodeapi(&$node, $op, $arg = 0) {
   switch ($op) {
-    case "settings":
-      $output[t("Queue")] = form_checkbox("", "queue_$node->type", 1, variable_get("queue_$node->type", 0));
-      return $output;
     case "fields":
-      return array("moderate", "score", "users", "votes");
-    case "form admin":
-      if (user_access("administer moderation")) {
-        return form_select(t("Moderation status"), "moderate", isset($node->moderate) ? $node->moderate : variable_get("queue_$node->type", 0), array(t("Approved"), t("Awaiting approval")));
-      }
-      break;
+      return array("score", "users", "votes");
     case "validate":
       $node->promote = $node->moderate ? 0 : 1;
       if ($node->nid && $node->moderate) {

@@ -1492,7 +1492,7 @@ function comment_update_index() {
 function comment_nodeapi(&$node, $op, $arg = 0) {
   switch ($op) {
     case "settings":
-      $output[t("Comment")] = form_select("", "comment_$node->type", variable_get("comment_$node->type", 2), array("Disabled", "Read only", "Read/Write"));
+      $output[t("comment")] = form_select("", "comment_$node->type", variable_get("comment_$node->type", 2), array("Disabled", "Read only", "Read/Write"));
       return $output;
     case "fields":
       return array("comment");

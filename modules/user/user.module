@@ -1046,8 +1046,9 @@ function user_view($uid = 0) {
     theme("footer");
   }
   else {
+    $output = user_login();
     theme("header");
-    theme("box", t("Log in"), user_login());
+    theme("box", t("Log in"), $output);
     if (variable_get("user_register", 1)) {
       theme("box", t("Create new user account"), user_register());
     }
@@ -1500,10 +1501,10 @@ function user_admin_account() {
     $rows[] = array(format_name($account), format_date($account->timestamp, "small"), l(t("edit account"), "admin/user/edit/$account->uid"));
   }
 
-  if ($pager = pager_display(NULL, 50, 0, "admin")) {
+  $pager = pager_display(NULL, 50, 0, "admin");
+  if (!empty($pager)) {
     $rows[] = array(array("data" => $pager, "colspan" => 3));
   }
-
   return table($header, $rows);
 }
 

@@ -449,9 +449,10 @@ function node_link($type, $node = 0, $main = 0) {
   if ($type == "admin" && user_access("administer nodes")) {
     $help["search"] = "On this page you can search for a post.  For example, one may search for 'br' and Drupal might return 'bread brakers', 'our daily bread' and 'brenda'.";
 
-    menu("admin/node", "node management", "node_admin");
+    menu("admin/node", "content management", "node_admin");
     menu("admin/node/nodes", "post overview");
     menu("admin/node/nodes/0", "new or updated posts", "node_admin", NULL, 0);
+    menu("admin/node/nodes/1", "approval queue", "node_admin", NULL, 1);
     menu("admin/node/search", "search posts", "node_admin", $help["search"], 8);
     menu("admin/node/help", "help", "node_help", NULL, 9);
     menu("admin/node/edit", "edit node", "node_admin", NULL, 0, 1);
@@ -527,7 +528,7 @@ function node_admin_nodes() {
 
 function node_admin_settings($edit) {
   global $op;
-
+  
   if ($op == t("Save configuration")) {
     /*
     ** Save the configuration options:
@@ -536,6 +537,7 @@ function node_admin_settings($edit) {
     foreach ($edit as $name => $value) {
       variable_set($name, $value);
     }
+    $output = status(t("the content settings have been saved."));
   }
 
   if ($op == t("Reset to defaults")) {
@@ -546,9 +548,10 @@ function node_admin_settings($edit) {
     foreach ($edit as $name => $value) {
       variable_del($name);
     }
+    $output = status(t("the content settings have been reset to their default values."));
   }
 
-  $header = array_merge(array(t("Node")), array_keys(node_invoke_all($node, "nodeapi", "settings")));
+  $header = array_merge(array(t("content type")), array_keys(node_invoke_all($node, "nodeapi", "settings")));
   foreach (module_list() as $name) {
     if (module_hook($name, "node")) {
       $node->type = $name;
@@ -560,7 +563,7 @@ function node_admin_settings($edit) {
     }
   }
   
-  $output = table($header, $rows);
+  $output .= table($header, $rows);
 
   /* This is an idea for the future.
   foreach (module_list() as $name) {
@@ -584,7 +587,7 @@ function node_admin_settings($edit) {
   $output .= form_submit(t("Save configuration"));
   $output .= form_submit(t("Reset to defaults"));
   
-  return form($output);
+  print form($output);
 
 }
 
@@ -910,7 +913,7 @@ function node_form($edit, $error = NULL) {
   }
 
   // Prepend extra node form:
-  $form = implode("", node_invoke_all($edit, "nodeapi", "form.pre", $error));
+  $form = implode("", node_invoke_all($edit, "nodeapi", "form pre", $error));
 
   /*
   ** Get the node specific bits:
@@ -922,7 +925,7 @@ function node_form($edit, $error = NULL) {
   }
   
   // Append extra node form:
-  $form .= implode("", node_invoke_all($edit, "nodeapi", "form.post", $error));
+  $form .= implode("", node_invoke_all($edit, "nodeapi", "form post", $error));
 
   /*
   ** Add the help text:
@@ -995,6 +998,7 @@ function node_form($edit, $error = NULL) {
     $output .= "<br />";
     $output .= form_select(t("Set public/published"), "status", isset($edit->status) ? $edit->status : variable_get("node_status_$edit->type", 1), array(t("Disabled"), t("Enabled")));
     $output .= form_select(t("Promote to front page"), "promote", isset($edit->promote) ? $edit->promote : variable_get("node_promote_$edit->type", 1), array(t("Disabled"), t("Enabled")));
+    $output .= form_select(t("Moderation status"), "moderate", isset($node->moderate) ? $node->moderate : variable_get("node_moderate_$edit->type", 0), array(t("Approved"), t("Awaiting approval")));
     $output .= form_select(t("Static on front page"), "static", isset($edit->static) ? $edit->static : variable_get("node_static_$edit->type", 0), array(t("Disabled"), t("Enabled")));
     $output .= implode("", node_invoke_all($edit, "nodeapi", "form admin"));
     $output .= form_select(t("Create new revision"), "revision", isset($edit->revision) ? $edit->revision : variable_get("node_revision_$edit->type", 0), array(t("Disabled"), t("Enabled")));
@@ -1363,13 +1367,14 @@ function node_update_index() {
 function node_nodeapi(&$node, $op, $arg = 0) {
   switch ($op) {
     case "settings":
-      $output[t("Publish")] = form_checkbox("", "node_status_$node->type", 1, variable_get("node_status_$node->type", 1));
-      $output[t("Promote")] = form_checkbox("", "node_promote_$node->type", 1, variable_get("node_promote_$node->type", 1));
-      $output[t("Static")] = form_checkbox("", "node_static_$node->type", 1, variable_get("node_static_$node->type", 0));
-      $output[t("Revision")] = form_checkbox("", "node_revision_$node->type", 1, variable_get("node_revision_$node->type", 0));
+      $output[t("publish")] = form_checkbox("", "node_status_$node->type", 1, variable_get("node_status_$node->type", 1));
+      $output[t("promote")] = form_checkbox("", "node_promote_$node->type", 1, variable_get("node_promote_$node->type", 1));
+      $output[t("moderate")] = form_checkbox("", "node_moderate_$node->type", 1, variable_get("node_moderate_$node->type", 0));
+      $output[t("static")] = form_checkbox("", "node_static_$node->type", 1, variable_get("node_static_$node->type", 0));
+      $output[t("revision")] = form_checkbox("", "node_revision_$node->type", 1, variable_get("node_revision_$node->type", 0));
       return $output;
     case "fields":
-      return array("nid", "uid", "type", "title", "teaser", "body", "revisions", "status", "promote", "static", "created", "changed");
+      return array("nid", "uid", "type", "title", "teaser", "body", "revisions", "status", "promote", "moderate", "static", "created", "changed");
   }
 }
 
