@@ -1,5 +1,6 @@
 #!/usr/local/bin/php -q
 <?php
+// $Id: mail-to-sql.php,v 1.2 2002/11/06 13:41:29 kjartan Exp $
 
 ini_set("include_path", ".:/home/dries/personal/cvs/web/pear:/home/dries/personal/cvs/web/drupal.org/x.x.x");
 include_once "includes/common.inc";
