@@ -26,10 +26,9 @@
      </head>
      <style type="text/css">
       <!--
-       P, DIV, TH, TD, TR, FORM, OL, UL, LI, INPUT, TEXTAREA, SELECT, A { font-family: Verdana, Tahoma, Arial, Helvetica; }
-       BODY { margin: 10px; font-size: 10pt; font-family: Verdana, Tahoma, Arial, Helvetica; }
+       BODY { margin: 10px; font-size: 12pt; font-family: Verdana, Helvetica; }
        SMALL { font-size: 10pt; }
-       BIG { font-size: 12pt; }
+       FONT, P, TH, TD, TR, FORM, OL, UL, LI, INPUT, TEXTAREA, SELECT, A { font-size: 12pt; font-family: Verdana, Helvetica; }
       -->
      </style>
      <body text="#000000" bgcolor="#ffffff" alink="#cccccc" link="#665566" vlink="#665566">
@@ -40,9 +39,11 @@
        </tr>
        <tr>
         <td align="right" colspan="2">
+         <small>
          <?php
-           print "<small>". $this->links(link_page()) ."</small>\n";
+           print $this->links(link_page());
          ?>
+         </small>
         </td>
        </tr>
        <tr>
@@ -52,10 +53,10 @@
 
    function node($node, $main = 0) {
      print "\n<!-- node: \"$node->title\" -->\n";
-     print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"2\" width=\"100%\">\n";
+     print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n";
      print " <tr><td colspan=\"2\"><img src=\"themes/marvin/images/drop.gif\" alt=\"\" /> &nbsp; <b>". check_output($node->title) ."</b></td></tr>\n";
-     print " <tr valign=\"bottom\"><td colspan=\"2\" bgcolor=\"#000000\" width=\"100%\"><img src=\"themes/marvin/images/pixel.gif\" width=\"1\" height=\"0\" alt=\"\" /></td></tr>\n";
-     print " <tr><td><font color=\"#7C7C7C\"><small>". strtr(t("Submitted by %a on %b"), array("%a" => format_name($node->name), "%b" => format_date($node->timestamp, "large"))); ?><?php print "</small></font></td><td align=\"right\" valign=\"top\" nowrap><small>". node_index($node) ."</small></td></tr>\n";
+     print " <tr valign=\"bottom\"><td colspan=\"2\" bgcolor=\"#000000\" width=\"100%\"><img src=\"themes/marvin/images/pixel.gif\" width=\"1\" height=\"1\" alt=\"\" /></td></tr>\n";
+     print " <tr><td nowrap=\"nowrap\"><font color=\"#7C7C7C\"><small>". strtr(t("Submitted by %a on %b"), array("%a" => format_name($node->name), "%b" => format_date($node->timestamp, "large"))); ?><?php print "</small></font></td><td align=\"right\" valign=\"top\" nowrap><small>". node_index($node) ."</small></td></tr>\n";
      print " <tr><td colspan=\"2\">&nbsp;</td></tr>\n";
      print " <tr><td colspan=\"2\"><p>". check_output($node->body, 1) ."</p></td></tr>\n";
      print " <tr><td colspan=\"2\">&nbsp;</tr></tr>\n";
