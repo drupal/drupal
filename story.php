@@ -29,11 +29,6 @@ switch($op) {
     story_render(check_input($id), check_input($cid));
     $theme->footer();
     break;
-  case t("Add comment"):
-    $theme->header();
-    comment_reply(check_input($cid), check_input($id));
-    $theme->footer();
-    break;
   case "reply":
     $theme->header();
     comment_reply(check_input($pid), check_input($id));
