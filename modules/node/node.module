@@ -528,7 +528,7 @@ function node_admin_nodes() {
 
 function node_admin_settings($edit) {
   global $op;
-  
+
   if ($op == t("Save configuration")) {
     /*
     ** Save the configuration options:
@@ -562,14 +562,14 @@ function node_admin_settings($edit) {
       $rows[] = array_merge(array(module_invoke($name, "node", "name")), $cols);
     }
   }
-  
+
   $output .= table($header, $rows);
 
   /* This is an idea for the future.
   foreach (module_list() as $name) {
     if (module_hook($name, "node")) {
       $node->type = $name;
-      
+
       // Create table() data:
       $header = array_keys(node_invoke_all($node, "nodeapi", "settings"));
       $cols = array();
@@ -586,7 +586,7 @@ function node_admin_settings($edit) {
 
   $output .= form_submit(t("Save configuration"));
   $output .= form_submit(t("Reset to defaults"));
-  
+
   print form($output);
 
 }
@@ -840,7 +840,7 @@ function node_validate($node, &$error) {
     if (!$node->date) {
       $node->date = date("M j, Y g:i a", $node->created);
     }
-    
+
     if (!is_numeric($node->status)) {
       $node->status = 1;
     }
@@ -923,7 +923,7 @@ function node_form($edit, $error = NULL) {
   if (function_exists($function)) {
     $form .= $function($edit, $help, $error, $param);
   }
-  
+
   // Append extra node form:
   $form .= implode("", node_invoke_all($edit, "nodeapi", "form post", $error));
 
