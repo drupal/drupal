@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.38 2002/06/08 10:09:03 dries Exp $
+// $Id: system.module,v 1.39 2002/06/08 14:13:11 dries Exp $
 
 function system_help() {
   $output .= "<p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviors including visual and operational settings.</p>";
@@ -273,7 +273,7 @@ function system_admin() {
 
     switch ($op) {
       case "help":
-        system_help();
+        print system_help();
         break;
       case "Save module settings":
         db_query("UPDATE system SET status = '0' WHERE type = 'module'");
