@@ -50,7 +50,7 @@ function check_output($text) {
     $text = filter_default($text);
 
     foreach ($modules as $name) {
-      if (module_hook($name, "filter") && $name != "node") {
+      if (module_hook($name, "filter")) {
         $text = module_invoke($name, "filter", $text);
       }
     }
