@@ -53,6 +53,11 @@ function comment_overview() {
   return $output;
 }
 
+function comment_delete($id) {
+  db_query("DELETE FROM comments WHERE cid = '$id'");
+  watchdog("special", "comment: deleted '$id'");
+}
+
 function comment_admin() {
   global $op, $id, $edit, $mod, $keys, $order;
 
@@ -67,6 +72,10 @@ function comment_admin() {
       case "search":
         print search_form($keys);
         print search_data($keys, $mod);
+        break;
+      case "delete":
+        print comment_delete(check_input($id));
+        print comment_overview();
         break;
       case t("Submit"):
         print status(comment_save(check_input($id), $edit));
