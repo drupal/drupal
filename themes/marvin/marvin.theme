@@ -177,9 +177,8 @@
    ######
    # Syntax.......: comment(...);
    # Description..: this function is used to theme user comments.
-   function comment($poster, $subject, $comment, $timestamp, $url, $email, $score, $votes, $cid, $link, $thread = "") {
-     print "\n<!-- Comment: \"$subject\" by $poster -->\n";
-     print "<A NAME=\"$cid\">\n";
+   function comment($comment, $link, $thread = "") {
+     print "<A NAME=\"$comment->cid\">\n";
 
      ### Create comment header:
      print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"0\" BGCOLOR=\"#000000\" WIDTH=\"100%\">\n";
@@ -193,22 +192,22 @@
 
      ### Subject:
      print "        <TD ALIGN=\"right\" WIDTH=\"5%\"><B>Subject:</FONT></TD>\n";
-     print "        <TD WIDTH=\"80%\"><B><FONT COLOR=\"$this->hlcolor1\">$subject</FONT></B></TD>\n";
+     print "        <TD WIDTH=\"80%\"><B><FONT COLOR=\"$this->hlcolor1\">". check_output($comment->subject) ."</FONT></B></TD>\n";
 
      ### Moderation:
      print "        <TD ALIGN=\"right\" ROWSPAN=\"3\" VALIGN=\"middle\" WIDTH=\"15%\">\n";
-     display_comment_moderation($cid, $poster, $score, $votes);
+     display_comment_moderation($comment->cid, $comment->poster, $comment->score, $comment->votes);
      print "        </TD>\n";
      print "       </TR>\n";
 
      ### Author:
      print "       <TR>\n";
-     print "        <TD ALIGN=\"right\" VALIGN=\"top\">Author:</TD><TD>". format_username($poster) ."</TD>\n";
+     print "        <TD ALIGN=\"right\" VALIGN=\"top\">Author:</TD><TD>". format_username($comment->userid) ."</TD>\n";
      print "       </TR>\n";
 
      ### Date
      print "       <TR>\n";
-     print "        <TD ALIGN=\"right\">Date:</TD><TD>". format_date($timestamp) ."</TD>\n";
+     print "        <TD ALIGN=\"right\">Date:</TD><TD>". format_date($comment->timestamp) ."</TD>\n";
      print "       </TR>\n";
 
      print "      </TABLE>\n";
@@ -216,7 +215,7 @@
      print "    </TR>\n";
 
      ### Print body of comment:
-     if ($comment) print "    <TR><TD BGCOLOR=\"#FFFFFF\">". check_output($comment, 1) ."</TD></TR>\n";
+     if ($comment->comment) print "    <TR><TD BGCOLOR=\"#FFFFFF\">". check_output($comment->comment, 1) ."</TD></TR>\n";
 
      ### Print thread (if any):
      if ($thread) print "    <TR><TD BGCOLOR=\"$this->bgcolor1\">$thread</TD></TR>\n";

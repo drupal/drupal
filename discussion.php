@@ -35,7 +35,7 @@ function discussion_kids($cid, $mode, $threshold, $level = 0, $dummy = 0) {
         $comments++;
 
         $link = "<A HREF=\"discussion.php?op=reply&sid=$comment->sid&pid=$comment->cid\"><FONT COLOR=\"$theme->hlcolor2\">reply to this comment</FONT></A>";
-        $theme->comment($comment->userid, check_output($comment->subject), check_output($comment->comment), $comment->timestamp, check_output($comment->url), check_output($comment->fake_email), discussion_score($comment), $comment->votes, $comment->cid, $link);
+        $theme->comment(new Comment($comment->userid, $comment->subject, $comment->comment, $comment->timestamp, $comment->url, $comment->fake_email, discussion_score($comment), $comment->votes, $comment->cid), $link);
         
         discussion_kids($comment->cid, $mode, $threshold, $level + 1, $dummy + 1);
       }
@@ -45,7 +45,7 @@ function discussion_kids($cid, $mode, $threshold, $level = 0, $dummy = 0) {
     while ($comment = db_fetch_object($result)) {
       if ($comment->score >= $threshold) {
         $link = "<A HREF=\"discussion.php?op=reply&sid=$comment->sid&pid=$comment->cid\"><FONT COLOR=\"$theme->hlcolor2\">reply to this comment</FONT></A>";
-        $theme->comment($comment->userid, check_output($comment->subject), check_output($comment->comment), $comment->timestamp, check_output($comment->url), check_output($comment->fake_email), discussion_score($comment), $comment->votes, $comment->cid, $link);
+        $theme->comment(new Comment($comment->userid, $comment->subject, $comment->comment, $comment->timestamp, $comment->url, $comment->fake_email, discussion_score($comment), $comment->votes, $comment->cid), $link);
       } 
       discussion_kids($comment->cid, $mode, $threshold);
     }
@@ -70,7 +70,7 @@ function discussion_childs($cid, $threshold, $level = 0, $thread) {
     $comments++;
 
     ### Compose link:
-    $thread .= "<LI><A HREF=\"discussion.php?id=$comment->sid&cid=$comment->cid&pid=$comment->pid\">". check_output($comment->subject) ."</A> by ". format_username($comment->userid) ." <SMALL>(". discussion_score($comment) .")<SMALL></LI>";
+    $thread .= "<LI><A HREF=\"discussion.php?id=$comment->sid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A> by ". format_username($comment->userid) ." <SMALL>(". discussion_score($comment) .")<SMALL></LI>";
 
     ### Recursive:
     discussion_childs($comment->cid, $threshold, $level + 1, &$thread);
@@ -138,10 +138,10 @@ function discussion_display($sid, $pid, $cid, $level = 0) {
     ### Display the comments:
     if (empty($mode) || $mode == "threaded") {
       $thread = discussion_childs($comment->cid, $threshold);
-      $theme->comment($comment->userid, check_output($comment->subject), check_output($comment->comment), $comment->timestamp, $comment->url, $comment->fake_email, discussion_score($comment), $comment->votes, $comment->cid, $link, $thread);
+      $theme->comment(new Comment($comment->userid, $comment->subject, $comment->comment, $comment->timestamp, $comment->url, $comment->fake_email, discussion_score($comment), $comment->votes, $comment->cid), $link, $thread);
     }
     else {
-      $theme->comment($comment->userid, check_output($comment->subject), check_output($comment->comment), $comment->timestamp, $comment->url, $comment->fake_email, discussion_score($comment), $comment->votes, $comment->cid, $link);
+      $theme->comment(new Comment($comment->userid, $comment->subject, $comment->comment, $comment->timestamp, $comment->url, $comment->fake_email, discussion_score($comment), $comment->votes, $comment->cid), $link);
       discussion_kids($comment->cid, $mode, $threshold, $level);
     }
   }
@@ -157,7 +157,7 @@ function discussion_reply($pid, $sid) {
   ### Extract parent-information/data:
   if ($pid) {
     $item = db_fetch_object(db_query("SELECT comments.*, users.userid FROM comments LEFT JOIN users ON comments.author = users.id WHERE comments.cid = $pid"));
-    $theme->comment($item->userid, check_output($item->subject), check_output($item->comment), $item->timestamp, check_output($item->url), check_output($item->fake_email), discussion_score($comment), $comment->votes, $item->cid, "reply to this comment");
+    $theme->comment(new Comment($item->userid, $item->subject, $item->comment, $item->timestamp, $item->url, $item->fake_email, discussion_score($comment), $comment->votes, $item->cid), "reply to this comment");
   }
   else {
     $item = db_fetch_object(db_query("SELECT stories.*, users.userid FROM stories LEFT JOIN users ON stories.author = users.id WHERE stories.status != 0 AND stories.id = $sid"));
@@ -201,7 +201,7 @@ function comment_preview($pid, $sid, $subject, $comment) {
   global $user, $theme, $allowed_html;
 
   ### Preview comment:
-  $theme->comment($user->userid, check_output($subject), check_output($comment), time(), check_output($user->url), check_output($user->fake_email), "", "", "", "reply to this comment");
+  $theme->comment(new Comment($user->userid, $subject, $comment, time(), $user->url, $user->fake_email, "", "", ""), "reply to this comment");
 
   ### Build reply form:
   $output .= "<FORM ACTION=\"discussion.php\" METHOD=\"post\">\n";
@@ -252,7 +252,7 @@ function comment_post($pid, $sid, $subject, $comment) {
   $fake = db_result(db_query("SELECT COUNT(*) FROM stories WHERE id = $sid"), 0);
 
   ### Check for duplicate comments:
-  $duplicate = db_result(db_query("SELECT COUNT(*) FROM comments WHERE pid = '$pid' AND sid = '$sid' AND subject = '". addslashes($subject) ."' AND comment = '". addslashes($comment) ."'"), 0);
+  $duplicate = db_result(db_query("SELECT COUNT(*) FROM comments WHERE pid = '$pid' AND sid = '$sid' AND subject = '". check_input($subject) ."' AND comment = '". check_input($comment) ."'"), 0);
 
   if ($fake != 1) {
     watchdog(3, "attemp to insert fake comment");
@@ -267,7 +267,7 @@ function comment_post($pid, $sid, $subject, $comment) {
     $subject = ($subject) ? $subject : substr($comment, 0, 29);
 
     ### Add comment to database:
-    db_insert("INSERT INTO comments (pid, sid, author, subject, comment, hostname, timestamp) VALUES ($pid, $sid, '$user->id', '". addslashes($subject) ."', '". addslashes($comment) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."')");
+    db_insert("INSERT INTO comments (pid, sid, author, subject, comment, hostname, timestamp) VALUES ($pid, $sid, '$user->id', '". check_input($subject) ."', '". check_input($comment) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."')");
 
     ### Compose header:
     header("Location: discussion.php?id=$sid");
@@ -275,6 +275,7 @@ function comment_post($pid, $sid, $subject, $comment) {
 }
 
 include "includes/theme.inc";
+include "includes/comment.inc";
 
 switch($op) {  
   case "Preview comment":
