@@ -24,7 +24,7 @@ class Theme_xtemplate extends BaseTheme {
     $this->template->SetNullBlock(" ");  // "" doesnt work!
   }
 
-  function node($node, $main) {
+  function node($node, $main = 0) {
 
     $this->template->assign(array (
        "title"     => ucfirst($node->title),
