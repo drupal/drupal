@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.368 2004/07/13 07:21:14 dries Exp $ */
+/* $Id: common.inc,v 1.369 2004/07/21 15:30:35 unconed Exp $ */
 
 /**
  * @file
@@ -934,10 +934,10 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
   $date = '';
   for ($i = 0; $i < $max; $i++) {
     $c = $format{$i};
-    if (strpos('AaDFlM', $c)) {
+    if (strpos('AaDFlM', $c) !== false) {
       $date .= t(gmdate($c, $timestamp));
     }
-    else if (strpos('BdgGhHiIjLmnsStTUwWYyz', $c)) {
+    else if (strpos('BdgGhHiIjLmnsStTUwWYyz', $c) !== false) {
       $date .= gmdate($c, $timestamp);
     }
     else if ($c == 'r') {
