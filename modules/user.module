@@ -717,14 +717,19 @@ function user_pass($edit = array()) {
       */
 
       $variables = array("%username" => $account->name, "%site" => variable_get("site_name", "drupal"), "%password" => $pass, "%uri" => $base_url, "%uri_brief" => substr($base_url, strlen("http://")), "%mailto" => $account->mail, "%date" => format_date(time()));
-      $subject = strtr(variable_get("user_mail_pass_subject", t("Replacement login information for %username at %site")), $variables);
-      $body = strtr(variable_get("user_mail_pass_body", t("%username,\n\nHere is your new password for %site.  You may now login to ". url("user/login") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at ". url("user/edit") .".\n\nYour new %site membership also enables you to login to other Drupal powered web sites (e.g. http://www.drop.org/) without registering.  Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n-- %site team")), $variables);
+      $subject = strtr(variable_get("user_mail_pass_subject", _user_mail_text("pass_subject")), $variables);
+      $body = strtr(variable_get("user_mail_pass_body", _user_mail_text("pass_body")), $variables);
       $headers = "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from";
-      user_mail($account->mail, $subject, $body, $headers);
+      $mail_success = user_mail($account->mail, $subject, $body, $headers);
 
-      watchdog("user", "mail password: '". $account->name ."' &lt;". $account->mail ."&gt;");
-
-      return t("Your password and further instructions have been sent to your e-mail address.");
+      if ($mail_success) {
+        watchdog("user", "mail password: '". $account->name ."' &lt;". $account->mail ."&gt;");
+        return t("Your password and further instructions have been sent to your e-mail address.");
+      }
+      else {
+        watchdog("error", "error mailing new password: '". $account->name ."' &lt;". $account->mail ."&gt;");
+        return t("Unable to send mail. Please contact the site admin.");
+      }
     }
     else {
 
@@ -835,8 +840,8 @@ function user_register($edit = array()) {
         ** Create new user account, no administrator approval required:
         */
 
-        $subject = strtr(variable_get("user_mail_welcome_subject", t("User account details for %username at %site")), $variables);
-        $body = strtr(variable_get("user_mail_welcome_body", t("%username,\n\nThank you for registering at %site. You may now login to ". url("user/login") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at ". url("user/edit") .".\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team")), $variables);
+        $subject = strtr(variable_get("user_mail_welcome_subject", _user_mail_text("welcome_subject")), $variables);
+        $body = strtr(variable_get("user_mail_welcome_body", _user_mail_text("welcome_body")), $variables);
         user_mail($edit["mail"], $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
         return t("Your password and further instructions have been sent to your e-mail address.");
       }
@@ -844,11 +849,11 @@ function user_register($edit = array()) {
         /*
         ** Create new user account, administrator approval required:
         */
-        $subject = strtr(variable_get("user_mail_welcome_subject", t("User account details for %username at %site")), $variables);
-        $body = strtr(variable_get("user_mail_welcome_body", t("%username,\n\nThank you for registering at %site. Your account will have to be approved by the site administrator. You may now login to ". url("user/login") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at ". url("user/edit") .".\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team")), $variables);
+        $subject = strtr(variable_get("user_mail_welcome_approval_subject", _user_mail_text("welcome_approval_subject")), $variables);
+        $body = strtr(variable_get("user_mail_welcome_approval_body", _user_mail_text("welcome_approval_body")), $variables);
         user_mail($edit["mail"], $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
         user_mail(variable_get("site_mail", ini_get("sendmail_from")), $subject, t("%u has applied for an account.\n\n%uri", array("%u" => $account->name, "%uri" => url("admin/user/edit/$account->uid"))), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
-        return t("Your password and further instructions have been sent to your e-mail address.");
+        return t("Thank you for applying for an account. Your account is currently pending approval by the site administrator.<br />In the meantime, your password and further instructions have been sent to your e-mail address.");
       }
     }
   }
@@ -1143,15 +1148,48 @@ function user_page() {
 
 /*** Administrative features ***********************************************/
 
+function _user_mail_text($message) {
+  switch ($message) {
+    case "welcome_subject":
+      return "Account details for %username at %site";
+
+    case "welcome_body":
+      return t("%username,\n\nThank you for registering at %site. You may now log in to ". url("user/login") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at ". url("user/edit") ."\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team");
+
+    case "welcome_approval_subject":
+      return "Account details for %username at %site (pending admin approval)";
+
+    case "welcome_approval_body":
+      return t("%username,\n\nThank you for registering at %site. Your application for an account is currently pending approval. Once it has been granted, you may log in to ". url("user/login") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at ". url("user/edit") ."\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team");
+
+    case "pass_subject":
+      return "Replacement login information for %username at %site";
+
+    case "pass_body":
+      return t("%username,\n\nHere is your new password for %site. You may now login to ". url("user/login") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at "). url("user/edit");
+  }
+}
+
 function user_settings() {
   $output .= form_select(t("Public registrations"), "user_register", variable_get("user_register", 1), array(t("Only site administrators can create new user accounts."), t("Visitors can create accounts and no administrator approval is required."), t("Visitors can create accounts but administrator approval is required.")));
+
   $output .= form_textfield(t("Password words"), "user_password", variable_get("user_password", "foo,bar,guy,neo,tux,moo,sun,asm,dot,god,axe,geek,nerd,fish,hack,star,mice,warp,moon,hero,cola,girl,fish,java,perl,boss,dark,sith,jedi,drop,mojo"), 55, 256, t("A comma separated list of short words that can be concatenated to generate human-readable passwords."));
+
   $output .= form_select(t("Remember authenticated users"), "user_remember", variable_get("user_remember", 0), array(t("Let the user decide whether he should be logged out when leaving the site."), t("Authenticated users are not logged out upon leaving the site."), t("Authenticated users are logged out upon leaving the site.")));
+
   $output .= form_textarea(t("User registration guidelines"), "user_registration_help", variable_get("user_registration_help", ""), 70, 4, t("This text is displayed at the top of the user registration form.  It's useful for helping or instructing your users."));
-  $output .= form_textfield(t("Subject of welcome e-mail"), "user_mail_welcome_subject", variable_get("user_mail_welcome_subject", "User account details for %username at %site"), 70, 180, t("Customize the subject of your welcome e-mail, which is sent to new members upon registering.") . " " . t("Available variables are:") . " " . "%username, %site, %password, %uri, %uri_brief, %mailto, %date");
-  $output .= form_textarea(t("Body of welcome e-mail"), "user_mail_welcome_body", variable_get("user_mail_welcome_body", t("%username,\n\nThank you for registering at %site. You may now login to ". url("user/login") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at ". url("user/edit") ."\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team")), 70, 10, t("Customize the body of the welcome e-mail, which is sent to new members upon registering.") . " " . t("Available variables are:") . " " . "%username, %site, %password, %uri, %uri_brief, %mailto");
-  $output .= form_textfield(t("Subject of password recovery e-mail"), "user_mail_pass_subject", variable_get("user_mail_pass_subject", t("Replacement login information for %username at %site")), 70, 180, t("Customize the Subject of your forgotten password e-mail.") . " " . t("Available variables are:") . " " . "%username, %site, %password, %uri, %uri_brief, %mailto, %date");
-  $output .= form_textarea(t("Body of password recovery e-mail"), "user_mail_pass_body", variable_get("user_mail_pass_body", t("%username,\n\nHere is your new password for %site. You may now login to ". url("user/login") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at ". url("user/edit") ."\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team")), 70, 10, t("Customize the body of the forgotten password e-mail.") . " " . t("Available variables are:") . " " . "%username, %site, %password, %uri, %uri_brief, %mailto");
+
+  $output .= form_textfield(t("Subject of welcome e-mail"), "user_mail_welcome_subject", variable_get("user_mail_welcome_subject", _user_mail_text("welcome_subject")), 70, 180, t("Customize the subject of your welcome e-mail, which is sent to new members upon registering.") . " " . t("Available variables are:") . " " . "%username, %site, %password, %uri, %uri_brief, %mailto, %date");
+
+  $output .= form_textarea(t("Body of welcome e-mail"), "user_mail_welcome_body", variable_get("user_mail_welcome_body", _user_mail_text("welcome_body")), 70, 10, t("Customize the body of the welcome e-mail, which is sent to new members upon registering.") . " " . t("Available variables are:") . " " . "%username, %site, %password, %uri, %uri_brief, %mailto");
+
+  $output .= form_textfield(t("Subject of welcome e-mail (awaiting admin approval)"), "user_mail_welcome_approval_subject", variable_get("user_mail_welcome_approval_subject", _user_mail_text("welcome_approval_subject")), 70, 180, t("Customize the subject of your awaiting approval welcome e-mail, which is sent to new members upon registering.") . " " . t("Available variables are:") . " " . "%username, %site, %password, %uri, %uri_brief, %mailto, %date");
+
+  $output .= form_textarea(t("Body of welcome e-mail (awaiting admin approval)"), "user_mail_welcome_approval_body", variable_get("user_mail_welcome_approval_body", _user_mail_text("welcome_approval_body")), 70, 10, t("Customize the body of the awaiting approval welcome e-mail, which is sent to new members upon registering.") . " " . t("Available variables are:") . " " . "%username, %site, %password, %uri, %uri_brief, %mailto");
+
+  $output .= form_textfield(t("Subject of password recovery e-mail"), "user_mail_pass_subject", variable_get("user_mail_pass_subject", _user_mail_text("pass_subject")), 70, 180, t("Customize the Subject of your forgotten password e-mail.") . " " . t("Available variables are:") . " " . "%username, %site, %password, %uri, %uri_brief, %mailto, %date");
+
+  $output .= form_textarea(t("Body of password recovery e-mail"), "user_mail_pass_body", variable_get("user_mail_pass_body", _user_mail_text("pass_body")), 70, 10, t("Customize the body of the forgotten password e-mail.") . " " . t("Available variables are:") . " " . "%username, %site, %password, %uri, %uri_brief, %mailto");
 
   return $output;
 }
