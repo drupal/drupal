@@ -247,7 +247,7 @@ function documentation() {
    $theme->header();
      // displays the header of a page
    for each $article to be displayed {
-     $theme->article($article);
+     $theme->story($story);
        // displays a themed article or story
    }
    $theme->footer();

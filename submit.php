@@ -87,7 +87,7 @@ function submit_preview($subject, $abstract, $article, $section) {
   $output .= "</FORM>\n";
 
   $theme->header();
-  $theme->article(new Story($user->userid, $subject, $abstract, $article, $section, time()));
+  $theme->story(new Story($user->userid, $subject, $abstract, $article, $section, time()));
   $theme->box(t("Submit a story"), $output);
   $theme->footer();
 }

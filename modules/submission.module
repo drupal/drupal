@@ -101,7 +101,7 @@ function submission_display_item($id) {
     $output .= "</FORM>\n";
 
     $theme->header();
-    $theme->article($submission, "[ <A HREF=\"module.php?mod=submission\"><FONT COLOR=\"$theme->link\">back</FONT></A> ]");
+    $theme->story($submission, "[ <A HREF=\"module.php?mod=submission\"><FONT COLOR=\"$theme->link\">back</FONT></A> ]");
     $theme->box(t("Moderate story"), $output);
     $theme->footer();
   }
