@@ -35,7 +35,7 @@ function tracker_page($uid = 0) {
 
   if ($user->uid) {
     $output .= '<ul>';
-    $output .= ' <li>'. l(t('Your active posts and discussions'), "tracker/$user->uid") .'</li>';
+    $output .= ' <li>'. l(t('My active posts and discussions'), "tracker/$user->uid") .'</li>';
     $output .= ' <li>'. l(t('All active posts and discussions'), 'tracker') .'</li>';
     $output .= '</ul>';
   }
@@ -72,7 +72,7 @@ function tracker_page($uid = 0) {
   }
 
   if ($pager = theme('pager', NULL, 25, 0)) {
-   $rows[] = array(array('data' => $pager, 'colspan' => 4));
+   $rows[] = array(array('data' => $pager, 'colspan' => 5));
   }
 
   $header = array(t('type'), t('post'), t('author'), t('replies'), t('last post'));
