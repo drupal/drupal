@@ -95,7 +95,7 @@ function user_save($account, $array = array()) {
 
   $user_fields = user_fields();
   if ($account->uid) {
-    $data = unserialize(db_result(db_query("SELECT data FROM users WHERE uid = '$account->uid'")));
+    $data = unserialize(db_result(db_query("SELECT data FROM users WHERE uid = '%d'", $account->uid)));
     foreach ($array as $key => $value) {
       if ($key == "pass") {
         $query .= "$key = '". md5($value) ."', ";
@@ -111,7 +111,7 @@ function user_save($account, $array = array()) {
     }
     $query .= "data = '". check_query(serialize($data)) ."', ";
 
-    db_query("UPDATE users SET $query timestamp = '%s' WHERE uid = '$account->uid'", time());
+    db_query("UPDATE users SET $query timestamp = '%s' WHERE uid = '%d'", time(), $account->uid);
 
     $user = user_load(array("uid" => $account->uid));
   }
@@ -193,7 +193,7 @@ function user_validate_mail($mail) {
 }
 
 function user_validate_authmap($account, $authname, $module) {
-  $result = db_query("SELECT COUNT(*) from authmap WHERE uid != '$account->uid' && authname = '%s'", $authname);
+  $result = db_query("SELECT COUNT(*) from authmap WHERE uid != '%d' && authname = '%s'", $account->uid, $authname);
   if (db_result($result) > 0) {
     $name = module_invoke($module, "info", "name");
     return t("The %u ID %s is already taken.", array("%u" => ucfirst($name), "%s" => "<i>$authname</i>"));
@@ -224,7 +224,7 @@ function user_access($string) {
 
   if (!$perm) {
     if ($user->uid) {
-      $perm = db_result(db_query("SELECT p.perm FROM role r, permission p WHERE r.rid = p.rid AND name = '$user->role'"), 0);
+      $perm = db_result(db_query("SELECT p.perm FROM role r, permission p WHERE r.rid = p.rid AND name = '%s'", $user->role), 0);
     }
     else {
       $perm = db_result(db_query("SELECT p.perm FROM role r, permission p WHERE r.rid = p.rid AND name = 'anonymous user'"), 0);
@@ -318,16 +318,16 @@ function user_block($op = "list", $delta = 0) {
           $output = "<div align=\"center\">\n";
           $output .= "<form action=\"". url("user/login") ."\" method=\"post\">\n";
           /*
-          ** Save the referer.  We record where the user came from such 
-          ** that we/ can redirect him after having completed the login 
+          ** Save the referer.  We record where the user came from such
+          ** that we/ can redirect him after having completed the login
           ** form.
           */
-          
+
           if (empty($edit)) {
             $edit["destination"] = request_uri();
           }
           // NOTE: special care needs to be taken because on pages with forms, such as node and comment submission pages, the $edit variable might already be set.
-          
+
           $output .= "<input name=\"edit[destination]\" type=\"hidden\" value=\"" . $edit["destination"] . "\" />";
           $output .= "<b>". t("Username") .":</b><br /><input name=\"edit[name]\" size=\"15\" /><br />\n";
           $output .= "<b>". t("Password") .":</b><br /><input name=\"edit[pass]\" size=\"15\" type=\"password\" /><br />\n";
@@ -443,7 +443,7 @@ function user_get_authname($account, $module) {
   **  Called by authentication modules in order to edit/view their authmap information.
   */
 
-  $result = db_query("SELECT authname FROM authmap WHERE uid = '$account->uid' && module = '$module'");
+  $result = db_query("SELECT authname FROM authmap WHERE uid = '%d' && module = '%s'", $account->uid, $module);
   return db_result($result);
 }
 
@@ -471,16 +471,16 @@ function user_set_authmaps($account, $authmaps) {
   foreach ($authmaps as $key => $value) {
     $module = explode("_", $key, 2);
     if ($value) {
-      $result = db_query("SELECT COUNT(*) from authmap WHERE uid = '$account->uid' && module = '$module[1]'");
+      $result = db_query("SELECT COUNT(*) from authmap WHERE uid = '%d' && module = '%s'", $account->uid, $module["1"]);
       if (db_result($result) == 0) {
         $result = db_query("INSERT INTO authmap (authname, uid, module) VALUES ('%s', '%s', '%s')", $value, $account->uid, $module[1]);
       }
       else {
-        $result = db_query("UPDATE authmap SET authname = '%s' WHERE uid = '$account->uid' && module = '$module[1]'", $value);
+        $result = db_query("UPDATE authmap SET authname = '%s' WHERE uid = '%d' AND module = '%s'", $value, $account->uid, $module["1"]);
       }
     }
     else {
-      $result = db_query("DELETE FROM authmap WHERE uid = '$account->uid' && module = '$module[1]'");
+      $result = db_query("DELETE FROM authmap WHERE uid = '%d' AND module = '%s'", $account->uid, $module["1"]);
     }
   }
   return $result;
@@ -866,7 +866,7 @@ function user_delete() {
 
   if ($edit["confirm"]) {
     watchdog(user,"$user->name deactivated her own account.");
-    db_query("UPDATE users SET mail = 'deleted', status='0' WHERE uid = '$user->uid'");
+    db_query("UPDATE users SET mail = 'deleted', status = '0' WHERE uid = '%d'", $user->uid);
     $output .= t("Your account has been deactivated.");
   }
   else {
@@ -1393,10 +1393,10 @@ function user_admin_edit($edit = array()) {
       else if ($error = user_validate_mail($edit["mail"])) {
         // do nothing
       }
-      else if (db_num_rows(db_query("SELECT uid FROM users WHERE uid != '$account->uid' AND LOWER(name) = LOWER('%s')", $edit["name"])) > 0) {
+      else if (db_num_rows(db_query("SELECT uid FROM users WHERE uid != '%d' AND LOWER(name) = LOWER('%s')", $account->uid, $edit["name"])) > 0) {
         $error = t("The name '%s' is already taken.", array("%s" => $edit["name"]));
       }
-      else if ($edit["mail"] && db_num_rows(db_query("SELECT uid FROM users WHERE uid != '$account->uid' AND LOWER(mail) = LOWER('%s')", $edit["mail"])) > 0) {
+      else if ($edit["mail"] && db_num_rows(db_query("SELECT uid FROM users WHERE uid != '%d' AND LOWER(mail) = LOWER('%s')", $account->uid, $edit["mail"])) > 0) {
         $error = t("The e-mail address '%s' is already taken.", array("%s" => $edit["mail"]));
       }
 
@@ -1425,8 +1425,8 @@ function user_admin_edit($edit = array()) {
     }
     else if ($op == t("Delete account")) {
       if ($edit["status"] == 0) {
-        db_query("DELETE FROM users WHERE uid = '$account->uid'");
-        db_query("DELETE FROM authmap WHERE uid = '$account->uid'");
+        db_query("DELETE FROM users WHERE uid = '%d'", $account->uid);
+        db_query("DELETE FROM authmap WHERE uid = '%d'", $account->uid);
         $output .= t("The account has been deleted.");
       }
       else {
