@@ -138,10 +138,10 @@ function comment_settings() {
 
 function comment_user($type, $edit, &$user) {
   switch ($type) {
-    case "edit":
+    case 'edit':
       // when user tries to edit his own data
       return array(t('Personal information') => form_textarea(t("Signature"), "signature", $user->signature, 64, 3, t("Your signature will be publicly displayed at the end of your comments.") ."<br />". filter_tips_short()));
-    case "edit":
+    case 'validate':
       // validate user data editing
       return array("signature" => $edit["signature"]);
   }
