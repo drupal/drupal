@@ -160,7 +160,7 @@ function blog_page_user($uid = 0) {
     node_view(node_load(array("nid" => $node->nid)), 1);
   }
   print pager_display(NULL, ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
-  print l("<img align=\"right\" src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" border=\"0\" />", "blog/feed/$account->uid", array("title" => t("View the XML version of %username's blog", array ("%username" => $account->name))));
+  print l("<img align=\"right\" src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" border=\"0\" alt=\"\" />", "blog/feed/$account->uid", array("title" => t("View the XML version of %username's blog", array ("%username" => $account->name))));
 }
 
 function blog_page_last() {
@@ -172,7 +172,7 @@ function blog_page_last() {
     $output = node_view(node_load(array("nid" => $node->nid)), 1);
   }
   $output .= pager_display(NULL, ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
-  $output .= l("<img align=\"right\" src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" border=\"0\" />", "blog/feed", array("title" => t("Read the XML version of all blogs.")));
+  $output .= l("<img align=\"right\" src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" border=\"0\" alt=\"\" />", "blog/feed", array("title" => t("Read the XML version of all blogs.")));
   return $output;
 }
 

@@ -755,7 +755,7 @@ function taxonomy_help() {
   <h4>Setting up a vocabulary</h4>
   <p>When you set up a controlled vocabulary, you will be asked to enter some descriptive data and define the attributes of this vocabulary. For example, if you select the <i>hierarchy</i> option, you will be defining a taxonomy or a thesaurus. If you select <i>related terms</i> option, you are allowing the definition of related terms as in a thesaurus. Selecting <i>multiple select</i> will allow you to describe a node using more than one term. That node will then appear in each term's page, thus increasing the chance that a user will find it.</p>
 
-  <i>Vocabulary name</i><br />Required. The name for this vocabulary. Example: <i>Dairy</i>.<br />
+  <p><i>Vocabulary name</i><br />Required. The name for this vocabulary. Example: <i>Dairy</i>.<br />
   <br />
   <i>Description</i><br />Optional. Description of the vocabulary, can be used by modules and feeds.<br />
   <br />
@@ -765,18 +765,18 @@ function taxonomy_help() {
   <br />
   <i><a name="hierarchy"></a>Hierarchy</i><br />Allows a tree-like taxonomy, as in our <i>Foods</i> example above<br />
   <br />
-  <i>Multiple select</i><br />Allows nodes to be described using more than one term. Nodes may then appear on multiple taxonomy pages.<br />
+  <i>Multiple select</i><br />Allows nodes to be described using more than one term. Nodes may then appear on multiple taxonomy pages.</p>
 
   <h4>Adding terms to a vocabulary</h4>
 <p>The options you see when adding a term to a vocabulary will depend on what you selected for <i>related terms</i>, <i>hierarchy </i>and <i>multiple select</i> when you created the corrosponding vocabulary.</p>
 
-  <i>Term name</i><br />Required. The name for this term. Example: <i>Milk</i><br />
+  <p><i>Term name</i><br />Required. The name for this term. Example: <i>Milk</i><br />
   <br />
   <i>Description</i><br />Optional. Description of the term that may be used by modules and RSS feeds.  This is synonymous with a 'scope note'.<br />
   <br />
   <i><a name="parent"></a>Parent</i><br />Required. Select the term under which this term is a subset -- the branch of the hierarchy that this term belongs under. This is also known as the "Broader term" indicator used in thesauri.<br />
   <br />
-  <i><a name="synonyms"></a>Synonyms</i><br />Optional. Enter synonyms for this term, one synonym per line. Synonyms can be used for variant spellings, acronyms, and other terms that have the same meaning as the added term, but which are not explicitly listed in this thesaurus (i.e. <i>unauthorized terms</i>).<br />
+  <i><a name="synonyms"></a>Synonyms</i><br />Optional. Enter synonyms for this term, one synonym per line. Synonyms can be used for variant spellings, acronyms, and other terms that have the same meaning as the added term, but which are not explicitly listed in this thesaurus (i.e. <i>unauthorized terms</i>).</p>
 
   <h3>Displaying nodes organized by term(s)</h3>
   <p>In order to view the nodes associated with a term or a collection of terms, you should browse to a properly formed URL. For example, see <a href="<?php print path_uri() . url("node", "or=1,2"); ?>"><?php print path_uri() . url("node", "or=1,2"); ?></a>.  Taxonomy URLs always contain  a term ID or list of term IDs at the end of the URL (aka <i>querystring</i>). You may learn the term ID for a given term by hovering over that term in the <?php echo l("taxonomy overview", "admin/taxonomy") ?> page in the Admin and noting the number after the querystring parameter called <i>tid</i>.  If you wish to see nodes from a collection of term IDs, separate each term ID with a comma.  Also, the name of the querystring parameter may be <i>or</i> or <i>and</i>: <i>or</i> shows nodes which appear in <b>any</b> of the term IDs while <i>and</i> shows nodes in <b>all</b> the specified term IDs.  Thus, <i>or</i> is less specific than <i>and</i>.</p>

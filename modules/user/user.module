@@ -1738,7 +1738,8 @@ function user_help_devel_da() {
 
   $appkey = &quot;6D4A2D6811A6E1F75148DC1155D33C0C958107BC&quot;; //provided to Drupal by Ev@Blogger
   $message = new xmlrpcmsg(&quot;blogger.getUsersBlogs&quot;, array(new xmlrpcval($appkey, &quot;string&quot;), new xmlrpcval($name, &quot;string&quot;), new xmlrpcval($pass, &quot;string&quot;)));
-  $client = new xmlrpc_client(&quot;/api/RPC2&quot;, &quot;plant.blogger.com&quot;);<br>  $result = $client-&gt;send($message, 5);
+  $client = new xmlrpc_client(&quot;/api/RPC2&quot;, &quot;plant.blogger.com&quot;);
+  $result = $client-&gt;send($message, 5);
 
   // Since Blogger doesn't return a properly formed FaultCode, we just search for the string 'fault'.
   if ($result &amp;&amp; !stristr($result-&gt;serialize(), &quot;fault&quot;)) {
@@ -1829,7 +1830,7 @@ function user_help_devel_da() {
     &lt;p&gt;You may login to &lt;i&gt;%s&lt;/i&gt; using a &lt;b&gt;Blogger ID&lt;/b&gt;
     and password. A Blogger ID consists of your Blogger username followed by &lt;i&gt;@blogger.com&lt;/i&gt;.
     So a valid blogger ID is mwlily@blogger.com. If you are a Blogger member, go
-    ahead and login now.&lt;/p&gt;<br>
+    ahead and login now.&lt;/p&gt;<br />
     &lt;p&gt;Blogger offers you instant communication power by letting you post
     your thoughts to the web whenever the urge strikes.
     Blogger will publish to your current web site or help you create one. &lt;a
@@ -1848,7 +1849,7 @@ function user_help_devel_da() {
 <p>Once you've written and tested your authentication module, you'll have to usually
   want to share it with the world. The best way to do this is to add the module
   to the <a href="http://cvs.drupal.org/viewcvs.cgi/contributions/modules/authentication/Blogger/?cvsroot=contrib">Drupal
-  contributions CVS repository</a>. You'll need to request priveleges in this repository - see <a href="http://cvs.drupal.org/viewcvs.cgi/contributions/README?rev=HEAD&cvsroot=contrib&content-type=text/vnd.viewcvs-markup">README</a>
+  contributions CVS repository</a>. You'll need to request priveleges in this repository - see <a href="http://cvs.drupal.org/viewcvs.cgi/contributions/README?rev=HEAD&amp;cvsroot=contrib&amp;content-type=text/vnd.viewcvs-markup">README</a>
   for the details. Then you'll want to announce your contribution on the <a href="http://list.drupal.org/>drupal-devel and drupal-support mailing lists</a>. You might also want to post a story on
   <a href="http://www.drupal.org/">Drupal.org</a>.<br>
 </p>
@@ -1860,9 +1861,9 @@ function user_help_devel_userhook() {
   <h3><a name="userhook">module_user()</a></h3>
   <p>The <b>_user()</b> hook provides to module authors a mechanism for inserting text and form fields into the registration page, the user account view/edit pages, and the administer users page. This is useful if you want to add a custom field for your particular community. This is best illustrated by an example called <a href="http://cvs.drupal.org/viewcvs.cgi/contributions/modules/profile/?cvsroot=contrib">profile.module</a> in the contributions CVS repository. Profile.module is meant to be customized for your needs. Please download it and hack away until it does what you need.</p>
 
-<p>Consider this simpler example from a fictional recipe community web site called Julia's Kitchen. Julia customizes her Drupal powered site by creating a new file called <i>julia.module</i>. That file does the following:
-- new members must agree to Julia's Privacy Policy on the reg page.
-- members may list their favorite ingredients on their public user profile page</p>
+<p>Consider this simpler example from a fictional recipe community web site called Julia's Kitchen. Julia customizes her Drupal powered site by creating a new file called <i>julia.module</i>. That file does the following:<ul>
+<li>new members must agree to Julia's Privacy Policy on the reg page.</li>
+<li>members may list their favorite ingredients on their public user profile page</li></ul></p>
 
 <p>Julia achieves this with the following code. The comments below should help you understand what is going on.</p>
 

@@ -218,7 +218,7 @@ function forum_form(&$node, &$help, &$error) {
         while($icon = readdir($dir)) {
           if ($icon == '.' || $icon == '..') {continue;}
           if ($node->icon == $icon) {$checked = "checked";} else {$checked = "";}
-          $radio .= "<input type=\"radio\" name=\"edit[icon_num]\" value=\"$icon_num\" $checked><img src=\"$icon_path$icon\"> \n";
+          $radio .= "<input type=\"radio\" name=\"edit[icon_num]\" value=\"$icon_num\" $checked /><img src=\"$icon_path$icon\" alt=\"\" /> \n";
           $icon_num++;
         }
         closedir($dir);
@@ -230,7 +230,7 @@ function forum_form(&$node, &$help, &$error) {
         while($icon = readdir($dir)) {
           if ($icon == '.' || $icon == '..') {continue;}
           if ($node->icon_num == $icon_num) {$checked = "checked";} else {$checked = "";}
-          $radio .= "<input type=\"radio\" name=\"edit[icon_num]\" value=\"$icon_num\" $checked><img src=\"$icon_path$icon\"> \n";
+          $radio .= "<input type=\"radio\" name=\"edit[icon_num]\" value=\"$icon_num\" $checked /><img src=\"$icon_path$icon\" alt=\"\" /> \n";
           $icon_num++;
         }
         closedir($dir);
@@ -238,7 +238,7 @@ function forum_form(&$node, &$help, &$error) {
     }
     $output .= form_item(t("Topic icon"), $radio);
   }
-  $output .= form_textarea("Body", "body", $node->body, 60, 10);
+  $output .= form_textarea(t("Body"), "body", $node->body, 60, 10);
 
   return $output;
 }
@@ -290,7 +290,7 @@ function _forum_last_reply($nid) {
 
 function _forum_format($topic) {
   if ($topic) {
-    return "<small>". format_date($topic->timestamp, "small")."<br>".t("by")." ". format_name($topic) ."</small>";
+    return "<small>". format_date($topic->timestamp, "small")."<br />".t("by")." ". format_name($topic) ."</small>";
   }
   else {
     return message_na();
@@ -565,7 +565,7 @@ function forum_forum_list($forums, $parents, $tid) {
         }
 
         $output .= "</div></td></tr></table></td>";
-        $output .= "<td align=\"center\">".$forum->num_topics.($new_topics ? "<br>(".t("%a new", array("%a" => $new_topics)).")" : "")."</td><td align=\"center\">".$forum->num_posts."</td><td align=\"center\">"._forum_format($forum->last_post)."</td></tr>";
+        $output .= "<td align=\"center\">".$forum->num_topics.($new_topics ? "<br />(".t("%a new", array("%a" => $new_topics)).")" : "")."</td><td align=\"center\">".$forum->num_posts."</td><td align=\"center\">"._forum_format($forum->last_post)."</td></tr>";
       }
     }
   }
@@ -684,7 +684,7 @@ function _forum_get_folder_icon($new_posts, $num_posts = 0, $comment_mode = 0) {
       $file = $base_path."/".$icon.".gif";
     }
 
-    return "<img src=\"$file\">";
+    return "<img src=\"$file\" alt=\"\" />";
   }
   else {
     return "&nbsp;";
@@ -726,15 +726,15 @@ function forum_help() {
   <p>Drupal lets you setup a countless number of forums by using the powerful taxonomy module. Therefore to create a forum you first have to create a taxonomy vocuabulary and add some terms to it, each term will be a forum. Creating a vocabulary is done by going the <b>taxonomy</b> page of the administration pages, then selecting the <b>add new vocabulary</b> link. Choose a name for the vocabulary (example: forum, message boards, or debates), and make sure under Types that forum is selected. Nothing else needs to be configured, so unless you have more advanced needs save the vocabulary. Now add a term to the vocabulary just added to create a forum. In the <b>add term</b> window enter the name of the forum (example: general, off topic, support), a description to make it clear to the users what the forum is about, and then save the term. You can now add a new forum by entering another term, repeat until all the forums are entered.</p>
   <p>Once a vocabulary is entered go to <b>site configuration</b> in the administration pages and set the <b>Forum vocabulary</b>, don't forget to save! There will now be forums active on the site. For users to access them the proper user permissions must be given in the <b>user management</b> pages.</p>
   <h3>Containers</h3>
-  <p>By designating a forum as a Container, users are not allowed to post into that forum. The forum will be visible on the forum listing page, so it acts as a section delimiter if you will. This is useful if you have a lots of forums which are nested. For example,<p>
-  Marketing<br />
+  <p>By designating a forum as a Container, users are not allowed to post into that forum. The forum will be visible on the forum listing page, so it acts as a section delimiter if you will. This is useful if you have a lots of forums which are nested. For example,</p>
+<p>  Marketing<br />
   -- Market research<br />
   -- Brand management<br />
   <br />
   Sales<br />
   -- Closing the deal<br />
-  -- Avoiding ear and throat pain<br />
-  <p>If you don't want people posting into the Marketing or Sales folders, you designate them as Containers.<br /></p>
+  -- Avoiding ear and throat pain</p>
+  <p>If you don't want people posting into the Marketing or Sales folders, you designate them as Containers.</p>
   <h4>Icons</h4>
   <p>To disable icons, set the icon paths as blank in Admin -> Site Configuration -> Forum</p>
   <p>All files in the icon directory are assumed to be images. Usually it is best to use GIF or JPG files as icons. You may use images of whatever size you wish, but it is customary to use 15x15 or 16x16.</p>

@@ -63,7 +63,7 @@ function import_format_item($item, $feed = 0) {
   global $theme, $user;
 
   if ($user->uid && user_access("maintain personal blog")) {
-    $output .= l("<img src=\"". $theme->image("blog.gif") ."\" border=\"0\" width=\"12\" height=\"16\" alt=\"". t("Blog this item") ."\" />", "node/add/blog&iid=$item->iid", array("title" => t("Comment on this news item in your personal blog.")));
+    $output .= l("<img src=\"". $theme->image("blog.gif") ."\" border=\"0\" width=\"12\" height=\"16\" alt=\"". t("Blog this item") ."\" />", "node/add/blog&amp;iid=$item->iid", array("title" => t("Comment on this news item in your personal blog.")));
   }
 
   // external link
@@ -136,7 +136,7 @@ function import_get_bundles($attributes = 0) {
   $result = db_query("SELECT * FROM bundle ORDER BY title");
   while ($bundle = db_fetch_object($result)) {
     $block[$bundle->bid]["subject"] = $bundle->title;
-    $block[$bundle->bid]["content"] = import_bundle_block($bundle->attributes) ."<p><div align=\"right\">". l(t("more"), "import/bundle/$bundle->bid", array("title" => t("View this bundle's recent news."))) ."</div></p>";
+    $block[$bundle->bid]["content"] = import_bundle_block($bundle->attributes) ."<div align=\"right\">". l(t("more"), "import/bundle/$bundle->bid", array("title" => t("View this bundle's recent news."))) ."</div>";
     $block[$bundle->bid]["info"] = "$bundle->title bundle";
   }
 
@@ -525,7 +525,7 @@ function import_page_last() {
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"2\">";
   while ($item = db_fetch_object($result)) {
     if (module_exist("blog") && user_access("maintain personal blog")) {
-      $links[] = l(t("blog it"), "node/add/blog&iid=$item->iid", array("title" => t("Comment on this news item in your personal blog.")));
+      $links[] = l(t("blog it"), "node/add/blog&amp;iid=$item->iid", array("title" => t("Comment on this news item in your personal blog.")));
     }
     $links[] = l(t("feed"), "import/feed/$item->fid", array("title" => t("Read more syndicated news from this feed.")));
 
@@ -554,14 +554,14 @@ function import_page_feed($fid) {
 
   $header .= "<p><b>". t("Website") .":</b><div style=\"margin-left: 20px;\"><a href=\"$feed->link\">$feed->link</a></div></p>";
   $header .= "<p><b>". t("Description") .":</b><div style=\"margin-left: 20px;\">$feed->description</div></p>";
-  $header .= "<p><b>". t("Last update") .":</b><div style=\"margin-left: 20px;\">". format_interval(time() - $feed->timestamp) ." ". t("ago") ." <a href=\"$feed->url\"><img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" /></a><br /><br /></div></p>\n";
+  $header .= "<p><b>". t("Last update") .":</b><div style=\"margin-left: 20px;\">". format_interval(time() - $feed->timestamp) ." ". t("ago") ." <a href=\"$feed->url\"><img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" alt=\"\" /></a><br /><br /></div></p>\n";
 
   $result = db_query("SELECT * FROM item WHERE fid = '%s' ORDER BY iid DESC LIMIT ". variable_get("import_page_limit", 75), $fid);
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"2\">";
   while ($item = db_fetch_object($result)) {
     if (module_exist("blog") && user_access("maintain personal blog")) {
-      $links[] = l(t("blog it"), "node/add/blog&iid=$item->iid", array("title" => t("Comment on this news item in your personal blog.")));
+      $links[] = l(t("blog it"), "node/add/blog&amp;iid=$item->iid", array("title" => t("Comment on this news item in your personal blog.")));
     }
     $links[] = "<a href=\"$item->link\">". t("visit") ."</a>";
 
@@ -598,7 +598,7 @@ function import_page_bundle($bid) {
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"2\">";
   while ($item = db_fetch_object($result)) {
     if (module_exist("blog") && user_access("maintain personal blog")) {
-      $links[] = l(t("blog it"), "node/add/blog&iid=$item->iid", array("title" => t("Comment on this news item in your personal blog.")));
+      $links[] = l(t("blog it"), "node/add/blog&amp;iid=$item->iid", array("title" => t("Comment on this news item in your personal blog.")));
     }
     $links[] = l(t("feed"), "import/feed/$item->fid", array("title" => t("Read more syndicated news from this feed.")));
     $links[] = "<a href=\"$item->link\">". t("visit") ."</a>";

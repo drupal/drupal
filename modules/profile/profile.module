@@ -125,7 +125,7 @@ function _profile_form($edit, $mode) {
     if ($edit["profile_avatar"] && $edit["uid"]) {
       $file = profile_avatar_path($edit["uid"], $edit["profile_avatar"]);
       if ($file) {
-        $output .= "<img src=\"$file\"><br />";
+        $output .= "<img src=\"$file\" alt=\"\" /><br />";
       }
     }
     $output .= form_file($profile_fields["avatar"][1], "profile_avatar", 64, $profile_fields["avatar"][2]);
@@ -187,7 +187,7 @@ function _profile_user_view(&$user, $mode) {
           if ($t == "profile_avatar") {
             $file = profile_avatar_path($user->uid, $user->profile_avatar);
             if (file_exists($file)) {
-              $output .= form_item(t("Avatar"), "<img src=\"$file\" />");
+              $output .= form_item(t("Avatar"), "<img src=\"$file\" alt=\"\" />");
             }
           }
 

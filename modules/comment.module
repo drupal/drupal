@@ -8,7 +8,7 @@ function comment_help() {
   $output .= "<p>The comment module enables users to submit posts that are directly associated with a piece of content.  These associated posts are called <i>comments</i>.  Comments may be <i>threaded</i>, which means that Drupal keeps track of multiple subconversations around a piece of content.  Threading helps to keep the comment conversation more organized.  Users are presented with several ways to view the comment conversation, and if desired, users may easily choose a <i>flat</i> presentation of comments instead of threaded.  Further, users may choose to order their comments view by <i>newest first</i> or by <i>oldest first</i>.  Finally, users may view a folded list or an expanded list of comments.  Folded limits the comment display to <i>subject</i> only.  Drupal remembers the comment view preference of each registered user whenever he changes a view setting.</p>";
   $output .= "<p>Users may also choose to view a maximum number of comments; if there are more comments, navigation links are dispayed.</p>";
   $output .= "<p>Since a busy site generates lots of comments, Drupal takes care to present a personalized view of comments for each user.  The home page lists displays the number of read and unread comments for a given post for the current user.  Also, the tracker module (when installed) displays all recent comments on the site.  Finally, comments which the user has not yet read are highlighted with a red star (this graphic may depend on the current theme).</p>";
-  $output .= "<p>Comments behave like other user submissions in Drupal.  Specifically, ". l("filters", "admin/system&type=filter") ." like smileys and HTML work fine if the administrator has enabled them.  Also, throttles are usually enabled to prevent a single user from spamming the web site with too many comments in a short period of time.</p>";
+  $output .= "<p>Comments behave like other user submissions in Drupal.  Specifically, ". l("filters", "admin/system&amp;type=filter") ." like smileys and HTML work fine if the administrator has enabled them.  Also, throttles are usually enabled to prevent a single user from spamming the web site with too many comments in a short period of time.</p>";
   $output .= "<p>Administrators may control which persons are allowed to submit and administer comments.  These controls appear in the ". l("user permissions", "admin/user/permission") ." administration page.  Additionally, administrators may edit or search through comments on the ". l("comments admininistration page", "admin/comment") .", as well as set the default display view for new users. Administrators can also state whether a certain role will have their comments published immediately, or just put in a queue to be reviewed.</p>";
   $output .= "<p>If you really have a lot of comments, you can enable moderation. You assign moderation permissions to role(s), then setup some \"moderation votes\"; these votes will appear to moderators in a dropdown menu near the comment. You also have to assign, for every role and every vote, a value, which can be either positive or negative; use the moderation matrix to do this. This allows for some roles having greater \"weight\" in their moderation, if you wish. If you set a value to 0, that vote won't be available to that role. When a user moderates, the value of their vote is added or subtracted to the score of that comment. Finally, you may want to setup the comment thresholds: these are floor/ceiling values which users see in the comment control panel. Threshholds are useful for hiding poorly rated comments while reading your site.</p>";
 
@@ -661,8 +661,8 @@ function comment_link($type, $node = 0, $main = 0) {
     $settings = "If you really have a lot of comments, you can enable moderation. You assign moderation permissions to role(s), then setup some 'moderation votes'; these votes will appear to moderators in a dropdown menu near the comment. You also have to assign, for every role and every vote, a value, which can be either positive or negative; use the moderation matrix to do this. This allows for some roles having greater 'weight' in their moderation, if you wish. If you set a value to 0, that vote won't be available to that role. When a user moderates, the value of their vote is added or subtracted to the score of that comment. Finally, you may want to setup the comment thresholds: these are floor/ceiling values which users see in the comment control panel. Threshholds are useful for hiding poorly rated comments while reading your site.";
 
     menu_add("comment management", url("admin/comment"), "Administer comments.", $help["comment"], "content management", 1);
-     menu_add("new or updated comments", url("admin/comment&status=0"),  "Display new or updated comments.", NULL, "comment management");
-     menu_add("comments that await approval", url("admin/comment&status=1"), "Display comments that await approval.", NULL, "comment management");
+     menu_add("new or updated comments", url("admin/comment&amp;status=0"),  "Display new or updated comments.", NULL, "comment management");
+     menu_add("comments that await approval", url("admin/comment&amp;status=1"), "Display comments that await approval.", NULL, "comment management");
      menu_add("search comment", url("admin/comment/search"), "Search a comment.", NULL, "comment management", 8);
      menu_add("help", url("admin/comment/help"), "More information about the comment system.", NULL, "comment management", 9);
 
@@ -720,7 +720,7 @@ function comment_page() {
     case t("Update settings"):
       global $mode, $order, $threshold, $comments_per_page;
       comment_settings(check_query($mode), check_query($order), check_query($threshold), check_query($comments_per_page));
-      drupal_goto(url("node/view/". $edit["nid"], "mode=$mode&order=$order&threshold=$threshold&comments_per_page=$comments_per_page"));
+      drupal_goto(url("node/view/". $edit["nid"], "mode=$mode&amp;order=$order&amp;threshold=$threshold&amp;comments_per_page=$comments_per_page"));
       break;
   }
 }
@@ -818,7 +818,7 @@ function comment_mod_matrix($edit) {
   global $tid, $rid;
 
   $output .= "<h3>Moderators/vote values matrix</h3>";
-  $output .= "<p><small><b>Note:</b> you must assign the <b>moderate comments</b> permission to at least one role in order to use this page.</small>";
+  $output .= "<p><small><b>Note:</b> you must assign the <b>moderate comments</b> permission to at least one role in order to use this page.</small></p>";
   $output .= "<p>In order to use comment moderation, every textbox on this page should be populated with an integer.  On this page, you also might wish to value the votes from some users more than others. For example, administrator votes might count twice as much as authenticated users.</p>";
 
   if ($rid) {
@@ -1113,13 +1113,13 @@ function comment_controls($threshold = 1, $mode = 3, $order = 1, $nid, $page = 0
 
     if (($mode == 2 || $mode == 4) && $comment_num > $comments_per_page) {
       if ($page > 1) {
-        $p[] = l(t("previous"), "node/view/$nid&comment_page=". $page - 1);
+        $p[] = l(t("previous"), "node/view/$nid&amp;comment_page=". $page - 1);
       }
       for ($n = 1; $n <= ceil($comment_num / $comments_per_page); $n++) {
-        $p[] = ($n == $page) ? "<b>&raquo;$n&laquo;</b>" : l($n, "node/view/$nid&comment_page=$n");
+        $p[] = ($n == $page) ? "<b>&raquo;$n&laquo;</b>" : l($n, "node/view/$nid&amp;comment_page=$n");
       }
       if ($page < ceil($comment_num / $comments_per_page)) {
-        $p[] = l(t("next"), "node/view/$nid&comment_page". $page + 1);
+        $p[] = l(t("next"), "node/view/$nid&amp;comment_page". $page + 1);
       }
       $output .= form_item(t("Browse %a comments", array("%a" => $comment_num)), implode("&nbsp;&#149;&nbsp;", $p), t("There are more than %a comments in this node. Use these links to navigate through them.", array("%a" => $comments_per_page)));
     }
@@ -1175,7 +1175,7 @@ function comment($comment, $link = 0) {
 }
 
 function comment_folded($comment) {
-  print l($comment->subject, "node/view/$comment->nid/$comment->cid#$comment->cid") ." ". t("by") . " " . format_name($comment) ."</small><p />";
+  print "<p>". l($comment->subject, "node/view/$comment->nid/$comment->cid#$comment->cid") ." <small>". t("by") . " " . format_name($comment) ."</small></p>";
 }
 
 function comment_flat_collapsed($comments, $threshold) {
