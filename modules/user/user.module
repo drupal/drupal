@@ -483,23 +483,16 @@ function user_block($op = 'list', $delta = 0, $edit = array()) {
 
           $output = "<div class=\"user-login-block\">\n";
 
-          // Save the referer.  We record where the user came from such
-          // that we can redirect him after having completed the login form.
-
-          if (empty($edit)) {
-            $edit['destination'] = $_GET['q'];
-          }
           // NOTE: special care needs to be taken because on pages with forms,
           // such as node and comment submission pages, the $edit variable
           // might already be set.
 
-          $output .= form_hidden('destination', $edit['destination']);
           $output .= form_textfield(t('Username'), 'name', $edit['name'], 15, 64);
           $output .= form_password(t('Password'), 'pass', $pass, 15, 64);
           $output .= form_submit(t('Log in'));
           $output .= "</div>\n";
 
-          $output  = form($output, 'post', url('user/login'));
+          $output  = form($output, 'post', url('user/login', drupal_get_destination()));
 
           if (variable_get('user_register', 1)) {
             $items[] = l(t('Create new account'), 'user/register', array('title' => t('Create a new user account.')));
@@ -796,7 +789,7 @@ function user_login($edit = array(), $msg = '') {
       user_module_invoke('login', $edit, $user);
 
       // Redirect the user to the page he logged on from.
-      drupal_goto($edit['destination']);
+      drupal_goto();
     }
     else {
       if (!$error) {
@@ -811,13 +804,6 @@ function user_login($edit = array(), $msg = '') {
     drupal_set_message($error, 'error');
   }
 
-  // Save the referrer.  We record where the user came from such that we
-  // can redirect him after having completed the login form.
-  if (empty($edit)) {
-    $edit['destination'] = $_GET['q'];
-  }
-  $output .= form_hidden('destination', $edit['destination']);
-
   // Display login form:
   if ($msg) {
     $output .= "<p>$msg</p>";
@@ -831,7 +817,7 @@ function user_login($edit = array(), $msg = '') {
   $output .= form_password(t('Password'), 'pass', $pass, 30, 64, t('Enter the password that accompanies your username.'));
   $output .= form_submit(t('Log in'));
 
-  return form($output, 'post', url('user/login'));
+  return form($output, 'post', url('user/login', drupal_get_destination()));
 }
 
 function user_authenticate($name, $pass) {
@@ -1609,6 +1595,7 @@ function user_admin_account() {
   $result = pager_query($sql, 50);
 
   $status = array(t('blocked'), t('active'));
+  $destination = drupal_get_destination();
   while ($account = db_fetch_object($result)) {
     $rolesresult = db_query('SELECT r.name FROM {role} r INNER JOIN {users_roles} ur ON ur.rid = r.rid WHERE ur.uid = %d', $account->uid);
     $roles = array();
@@ -1617,7 +1604,7 @@ function user_admin_account() {
       $roles[] = $role->name;
     }
 
-    $rows[] = array($account->uid, format_name($account), $status[$account->status], implode(',<br />', $roles), format_date($account->changed, 'small'), l(t('edit'), "user/$account->uid/edit"));
+    $rows[] = array($account->uid, format_name($account), $status[$account->status], implode(',<br />', $roles), format_date($account->changed, 'small'), l(t('edit'), "user/$account->uid/edit", array(), $destination));
   }
 
   $pager = theme('pager', NULL, 50, 0, tablesort_pager());

@@ -241,6 +241,9 @@ function taxonomy_form_term($edit = array()) {
     $form .= form_submit(t('Delete'));
     $form .= form_hidden('tid', $edit['tid']);
   }
+  else {
+    $form .= form_hidden('destination', $_GET['q']);
+  }
 
   return form($form);
 }

@@ -116,10 +116,38 @@ function drupal_get_headers() {
  */
 
 /**
+ * Prepare a destination query string for use in combination with
+ * drupal_goto().  Used to direct the user back to the referring page
+ * after completing a form.
+ *
+ * @see drupal_goto()
+ */
+function drupal_get_destination() {
+  $destination[] = $_GET['q'];
+  $params = array('from', 'sort', 'order');
+  foreach ($params as $param) {
+    if (isset($_GET[$param])) {
+      $destination[] = "$param=". $_GET[$param];
+    }
+  }
+  return 'destination='. urlencode(implode('&', $destination));
+}
+
+/**
  * Send the user to a different Drupal page.
  *
  * This issues an on-site HTTP redirect. The function makes sure the redirected
  * URL is formatted correctly.
+ *
+ * Usually the redirected URL is constructed from this function's input
+ * parameters.  However you may override that behavior by setting a
+ * <em>destination</em> in either the $_REQUEST-array (i.e. by using
+ * the query string of an URI) or the $_REQUEST['edit']-array (i.e. by
+ * using a hidden form field).  This is used to direct the user back to
+ * the proper page after completing a form.  For example, after editing
+ * a post on the 'admin/node'-page or after having logged on using the
+ * 'user login'-block in a sidebar.  The function drupal_get_destination()
+ * can be used to help set the destination URL.
  *
  * It is advised to use drupal_goto() instead of PHP's header(), because
  * drupal_goto() will append the user's session ID to the URI when PHP is
@@ -134,8 +162,17 @@ function drupal_get_headers() {
  *   The query string component, if any.
  * @param $fragment
  *   The destination fragment identifier (named anchor).
+ *
+ * @see drupal_get_destination()
  */
 function drupal_goto($path = '', $query = NULL, $fragment = NULL) {
+  if ($_REQUEST['destination']) {
+    extract(parse_url($_REQUEST['destination']));
+  }
+  else if ($_REQUEST['edit']['destination']) {
+    extract(parse_url($_REQUEST['edit']['destination']));
+  }
+
   // Translate &amp; to simply & in the absolute URL.
   $url = str_replace('&amp;', '&', url($path, $query, $fragment, TRUE));
 

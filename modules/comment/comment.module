@@ -970,24 +970,24 @@ function comment_delete($cid) {
 
     _comment_update_node_statistics($comment->nid);
 
-    // Clear the cache so an anonymous user
-    // can see his comment being added.
+    // Clear the cache so an anonymous user sees that his comment was deleted.
     cache_clear_all();
 
-  }
+    drupal_goto("node/$comment->nid");
 
-  // Print a confirmation.
+  }
   else if ($comment->cid) {
     drupal_set_message(t('Do you want to delete this comment and all its replies?'));
     $comment->comment = check_output($comment->comment, $comment->format);
     $output  = theme('comment', $comment);
     $output .= form_submit(t('Delete'));
+    $output = form($output);
   }
   else {
     drupal_set_message(t('The comment no longer exists.'));
   }
 
-  print theme('page', form($output));
+  print theme('page', $output);
 }
 
 function comment_save($id, $edit) {
@@ -1009,6 +1009,7 @@ function comment_admin_overview($type = 'new') {
     array('data' => t('Operations'), 'colspan' => '2')
   );
 
+  $destination = drupal_get_destination();
   $status = ($type == 'approval') ? 1 : 0;
   $sql = 'SELECT c.subject, c.nid, c.cid, c.comment, c.timestamp, c.status, c.name, c.homepage, u.name AS registered_name, u.uid FROM {comments} c INNER JOIN {users} u ON u.uid = c.uid WHERE c.status = '. db_escape_string($status);
   $sql .= tablesort_sql($header);
@@ -1021,8 +1022,8 @@ function comment_admin_overview($type = 'new') {
         format_name($comment),
         ($comment->status == 0 ? t('Published') : t('Not published')),
         format_date($comment->timestamp, 'small'),
-        l(t('edit'), "admin/comment/edit/$comment->cid"),
-        l(t('delete'), "admin/comment/delete/$comment->cid")
+        l(t('edit'), "admin/comment/edit/$comment->cid", array(), $destination),
+        l(t('delete'), "admin/comment/delete/$comment->cid", array(), $destination)
       );
   }
 
