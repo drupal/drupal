@@ -1167,7 +1167,7 @@ function comment_admin() {
     $op = arg(2);
   }
 
-  if ($op == t("moderation")) {
+  if ($op == "moderation") {
     $op = arg(3);
   }
 
