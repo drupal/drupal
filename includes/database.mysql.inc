@@ -9,8 +9,10 @@ function db_connect($url) {
      $url["host"] = $url["host"] . ":" . $url["port"];
   }
 
-  mysql_connect($url["host"], $url["user"], $url["pass"]) or die(mysql_error());
+  $connection = mysql_connect($url["host"], $url["user"], $url["pass"]) or die(mysql_error());
   mysql_select_db(substr($url["path"], 1)) or die("unable to select database");
+
+  return $connection;
 
   /*
   ** Note that you can change the 'mysql_connect' statement to 'mysql_pconnect'
@@ -70,6 +72,7 @@ function db_queryd($query) {
 
 // private
 function _db_query($query, $debug = 0) {
+  global $active_db;
   global $queries;
 
   if (variable_get("dev_query", 0)) {
@@ -77,7 +80,7 @@ function _db_query($query, $debug = 0) {
     $timer = (float)$usec + (float)$sec;
   }
 
-  $result = mysql_query($query);
+  $result = mysql_query($query, $active_db);
 
   if (variable_get("dev_query", 0)) {
     list($usec, $sec) = explode(" ", microtime());

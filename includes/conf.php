@@ -11,6 +11,11 @@
 #   That is, the use of ':', '/', '@', '?', '=' and '#', ''', '"',
 #   and so on is likely to confuse the parser; use alpha-numerical
 #   characters instead.
+#
+#   To specify multiple connections to be used in your site (i.e. for
+#   complex custom modules) you can also specify an associative array
+#   of $db_url variables with the 'default' element used until otherwise
+#   requested.
 
 # $db_url = "mysql://user:password@hostname/database";
 # $db_url = "pgsql://user:password@hostname/database";

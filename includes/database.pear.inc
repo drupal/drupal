@@ -4,8 +4,6 @@
 require_once 'DB.php';
 
 function db_connect($url) {
-  global $db_handle;
-
   $db_handle = DB::connect($url);
 
   if (DB::isError($db_handle)) {
@@ -13,6 +11,8 @@ function db_connect($url) {
   }
 
   $db_handle->setFetchMode(DB_FETCHMODE_ASSOC);
+
+  return $db_handle;
 }
 
 /**
@@ -65,14 +65,14 @@ function db_queryd($query) {
 
 // private
 function _db_query($query, $debug = 0) {
-  global $db_handle, $queries;
+  global $active_db, $queries;
 
   if (variable_get("dev_query", 0)) {
     list($usec, $sec) = explode(" ", microtime());
     $timer = (float)$usec + (float)$sec;
   }
 
-  $result = $db_handle->query($query);
+  $result = $active_db->query($query);
 
   if (variable_get("dev_query", 0)) {
     list($usec, $sec) = explode(" ", microtime());
@@ -119,16 +119,16 @@ function db_result($result, $row = 0) {
 }
 
 function db_error() {
-  global $db_handle;
+  global $active_db;
 
-  return DB::isError($db_handle);
+  return DB::isError($active_db);
 }
 
 function db_next_id($name) {
-  global $db_handle;
+  global $active_db;
 
   $name = db_prefix_tables($name);
-  $result = $db_handle->nextID($name);
+  $result = $active_db->nextID($name);
   if (DB::isError($result)) {
     watchdog("error", "database: ". $result->getMessage() ."\nsequence table: $name");
   }
@@ -138,9 +138,9 @@ function db_next_id($name) {
 }
 
 function db_affected_rows() {
-  global $db_handle;
+  global $active_db;
 
-  return $db_handle->affectedRows();
+  return $active_db->affectedRows();
 }
 
 /**
@@ -153,7 +153,7 @@ function db_affected_rows() {
  * @return a DB_Result object or a DB_Error
  */
 function db_query_range($query) {
-  global $db_handle, $queries;
+  global $active_db, $queries;
 
   if (variable_get("dev_query", 0)) {
     list($usec, $sec) = explode(" ", microtime());
@@ -167,12 +167,12 @@ function db_query_range($query) {
     $args = array_map("check_query", $args);
     $query = db_prefix_tables($query);
     $args[0] = $query;
-    $result = $db_handle->limitQuery(call_user_func_array("sprintf", $args), $from, $count);
+    $result = $active_db->limitQuery(call_user_func_array("sprintf", $args), $from, $count);
   }
   else {
     $query = func_get_arg(0);
     $query = db_prefix_tables($query);
-    $result = $db_handle->limitQuery( $query, $from, $count);
+    $result = $active_db->limitQuery( $query, $from, $count);
   }
 
   if (variable_get("dev_query", 0)) {
