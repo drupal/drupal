@@ -512,7 +512,7 @@ function do_search($keywords, $type, $join = '', $where = '1', $variation = true
   $conditions = $where .' AND ('. implode(' OR ', $words) .')';
 
   // Get result count (for pager)
-  $count = db_result(db_query("SELECT COUNT(DISTINCT i.sid, i.type) FROM {search_index} i $join WHERE $conditions", $arguments));
+  $count = db_num_rows(db_query("SELECT DISTINCT i.sid, i.type FROM {search_index} i $join WHERE $conditions", $arguments));
   if ($count == 0) {
     // Try out a looser search query if nothing was found.
     if ($variation && $loose = search_keywords_variation($keywords)) {
