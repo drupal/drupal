@@ -590,7 +590,7 @@ INSERT INTO system VALUES ('modules/story.module','story','module','',1);
 INSERT INTO system VALUES ('modules/taxonomy.module','taxonomy','module','',1);
 INSERT INTO system VALUES ('themes/marvin/marvin.theme','marvin','theme','Internet explorer, Netscape, Opera',1);
 
-INSERT INTO variable(name,value) VALUES('update_start', 's:10:"2003-10-22";');
+INSERT INTO variable(name,value) VALUES('update_start', 's:10:"2003-10-27";');
 INSERT INTO variable(name,value) VALUES('theme_default','s:6:"marvin";');
 INSERT INTO users(uid,name,mail,rid) VALUES(0,'','', '1');
 
