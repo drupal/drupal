@@ -34,17 +34,16 @@ function drupal_get_title() {
  * @{
  */
 function drupal_set_message($message = NULL, $type = "status") {
-  static $stored_message;
+  static $stored_message = array();
 
   if (isset($message)) {
-    $stored_message->message = $message;
-    $stored_message->type = $type;
+    $stored_message[] = array($message, $type);
   }
 
   return $stored_message;
 }
 
-function drupal_get_message() {
+function drupal_get_messages() {
   return drupal_set_message();
 }
 // @}
@@ -436,7 +435,6 @@ function valid_input_data($data) {
 
     // check attributes:
     $match += preg_match("/\W(dynsrc|datasrc|data|lowsrc|on[a-z]+)\s*=[^>]+?>/i", $data);
-
 
     // check tags:
     $match += preg_match("/<\s*(applet|script|object|style|embed|form|blink|meta|html|frame|iframe|layer|ilayer|head|frameset|xml)/i", $data);

@@ -111,9 +111,10 @@ function xtemplate_header() {
     $xtemplate->template->parse("header.help");
   }
 
-  if ($message = drupal_get_message()) {
-    $xtemplate->template->assign("message", ucfirst($message->message));
-    $xtemplate->template->assign("type", $message->type);
+  foreach (drupal_get_messages() as $message) {
+    list($message, $type) = $message;
+    $xtemplate->template->assign("message", ucfirst($message));
+    $xtemplate->template->assign("type", $type);
     $xtemplate->template->parse("header.message");
   }
 

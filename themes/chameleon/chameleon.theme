@@ -1,5 +1,4 @@
 <?php
-
 // $Id$
 
 function chameleon_help($section) {
@@ -66,8 +65,9 @@ function chameleon_header($title = "") {
     $output .= "<small>$help</small><hr />";
   }
 
-  if ($message = drupal_get_message()) {
-    $output .= "<strong>". t("Status") ."</strong>: ". $message->message ."<hr />";
+  foreach (drupal_get_messages() as $message) {
+    list($message, $type) = $message;
+    $output .= "<strong>". t("Status") ."</strong>: $message<hr />";
   }
 
   return $output;
