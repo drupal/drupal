@@ -83,10 +83,10 @@ function upload_file_download($file) {
 function upload_nodeapi(&$node, $op, $arg) {
   switch ($op) {
     case 'settings':
-      $output[t('attachments')] = form_checkbox(NULL, "upload_$node->type", 1, variable_get("upload_$node->type", 0));
+      $output[t('attachments')] = form_checkbox(NULL, "upload_$node->type", 1, variable_get("upload_$node->type", 1));
       break;
     case 'form param':
-      if (variable_get("upload_$node->type", 0)) {
+      if (variable_get("upload_$node->type", 1)) {
         $output['options'] = array('enctype' => 'multipart/form-data');
       }
       break;
@@ -166,12 +166,12 @@ function upload_nodeapi(&$node, $op, $arg) {
       }
       break;
     case 'form post':
-      if (variable_get("upload_$node->type", 0) == 1) {
+      if (variable_get("upload_$node->type", 1) == 1) {
         $output = upload_form($node);
       }
       break;
     case 'load':
-      if (variable_get("upload_$node->type", 0) == 1) {
+      if (variable_get("upload_$node->type", 1) == 1) {
         $output->files = upload_load($node);
       }
       break;
