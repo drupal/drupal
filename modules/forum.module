@@ -152,7 +152,7 @@ function forum_link($type, $node = 0, $main = 0) {
   if (!$main && $type == 'node' && $node->type == 'forum') {
     // get previous and next topic
 
-    $result = db_query('SELECT n.nid, n.title, GREATEST(n.created, MAX(c.timestamp)) AS date_sort, COUNT(c.nid) AS num_comments FROM {node} n INNER JOIN {forum} f ON n.nid = f.nid INNER JOIN {comments} c ON n.nid = c.nid WHERE n.nid = f.nid AND f.tid = %d AND n.status = 1 GROUP BY n.nid, n.title, n.created ORDER BY n.sticky DESC, '. _forum_get_topic_order(isset($user->sortby) ? $user->sortby : variable_get('forum_order', 1)), $node->tid);
+    $result = db_query('SELECT n.nid, n.title, n.sticky, GREATEST(n.created, MAX(c.timestamp)) AS date_sort, COUNT(c.nid) AS num_comments FROM {node} n INNER JOIN {forum} f ON n.nid = f.nid INNER JOIN {comments} c ON n.nid = c.nid WHERE n.nid = f.nid AND f.tid = %d AND n.status = 1 GROUP BY n.nid, n.title, n.created ORDER BY n.sticky DESC, '. _forum_get_topic_order(isset($user->sortby) ? $user->sortby : variable_get('forum_order', 1)), $node->tid);
 
     while ($topic = db_fetch_object($result)) {
       if ($stop == 1) {
