@@ -148,13 +148,13 @@ function format_username($username) {
 
 function format_email($address) {
   global $na;
-  return ($address) ? "<A HREF=\"mailto:$address\">$address</A>" : $na;
+  return ($address) ? "<a href=\"mailto:$address\">$address</A>" : $na;
 }
 
 function format_url($address, $description = "") {
   global $na;
   $description = ($description) ? $description : $address;
-  return ($address) ? "<A HREF=\"$address\">". check_output($description) ."</A>" : $na;
+  return ($address) ? "<a href=\"$address\">". check_output($description) ."</a>" : $na;
 }
 
 function format_tag($link, $text) {
@@ -162,36 +162,36 @@ function format_tag($link, $text) {
 }
 
 function form($action, $form, $method = "post", $options = 0) {
-  return "<FORM ACTION=\"$action\" METHOD=\"$method\"". ($options ? " $options" : "") .">\n$form</FORM>\n";
+  return "<form action=\"$action\" method=\"$method\"". ($options ? " $options" : "") .">\n$form</form>\n";
 }
 
 function form_item($title, $value, $description = 0) {
-  return ($description) ? "<B>$title:</B><BR>$value<BR><SMALL><I>$description</I></SMALL><P>\n" : "<B>$title:</B><BR>$value<P>\n";
+  return ($description) ? "<b>$title:</b><br />$value<br /><small><i>$description</i></small><p />\n" : "<b>$title:</b><br />$value<p />\n";
 }
 
 function form_textfield($title, $name, $value, $size, $maxlength, $description = 0) {
-  return form_item($title, "<INPUT MAXLENGTH=\"$maxlength\" NAME=\"edit[$name]\" SIZE=\"$size\" VALUE=\"". check_form($value) ."\">", $description);
+  return form_item($title, "<input maxlength=\"$maxlength\" name=\"edit[$name]\" size=\"$size\" value=\"". check_form($value) ."\" />", $description);
 }
 
 function form_textarea($title, $name, $value, $cols, $rows, $description = 0) {
-  return form_item($title, "<TEXTAREA WRAP=\"virtual\" COLS=\"$cols\" ROWS=\"$rows\" NAME=\"edit[$name]\">". check_form($value) ."</TEXTAREA>", $description);
+  return form_item($title, "<textarea wrap=\"virtual\" cols=\"$cols\" rows=\"$rows\" name=\"edit[$name]\">". check_form($value) ."</textarea>", $description);
 }
 
 function form_select($title, $name, $value, $options, $description = 0) {
-  foreach ($options as $key=>$choice) $select .= "<OPTION VALUE=\"$key\"". ($key == $value ? " SELECTED" : "") .">". check_form($choice) ."</OPTION>";
-  return form_item($title, "<SELECT NAME=\"edit[$name]\">$select</SELECT>", $description);
+  foreach ($options as $key=>$choice) $select .= "<option value=\"$key\"". ($key == $value ? " selected" : "") .">". check_form($choice) ."</option>";
+  return form_item($title, "<select name=\"edit[$name]\">$select</select>", $description);
 }
 
 function form_file($title, $name, $size, $description = 0) {
-  return form_item($title, "<INPUT TYPE=\"file\" NAME=\"edit[$name]\" SIZE=\"$size\">\n", $description);
+  return form_item($title, "<input type=\"file\" name=\"edit[$name]\" size=\"$size\" />\n", $description);
 }
 
 function form_hidden($name, $value) {
-  return "<INPUT TYPE=\"hidden\" NAME=\"edit[$name]\" VALUE=\"". check_form($value) ."\">\n";
+  return "<input type=\"hidden\" name=\"edit[$name]\" value=\"". check_form($value) ."\" />\n";
 }
 
 function form_submit($value) {
-  return "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". check_form($value) ."\">\n";
+  return "<input type=\"submit\" name=\"op\" value=\"". check_form($value) ."\" />\n";
 }
 
 function field_get($string, $name) {
