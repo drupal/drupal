@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.151 2004/07/31 11:17:27 dries Exp $
+// $Id: system.module,v 1.152 2004/08/04 20:40:01 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -233,7 +233,7 @@ function system_listing($type) {
   ksort($files);
 
   if ($type == 'module') {
-    $required = array('modules/admin.module', 'modules/filter.module', 'modules/system.module', 'modules/user.module', 'modules/watchdog.module');
+    $required = array('modules/admin.module', 'modules/block.module', 'modules/filter.module', 'modules/system.module', 'modules/user.module', 'modules/watchdog.module');
     // the throttle mechanism requires additional modules always be enabled
     $throttle_required = array_merge($required, array('modules/statistics.module', 'modules/throttle.module'));
 

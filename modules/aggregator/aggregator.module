@@ -1,5 +1,5 @@
 <?php
-/* $Id: aggregator.module,v 1.196 2004/08/04 17:45:46 dries Exp $ */
+/* $Id: aggregator.module,v 1.197 2004/08/04 20:40:00 dries Exp $ */
 
 /**
  * Implementation of hook_help().
@@ -1039,7 +1039,9 @@ function theme_aggregator_block_item($item, $feed = 0) {
   global $user;
 
   if ($user->uid && module_exist('blog') && user_access('edit own blog')) {
-    $output .= '<div class="icon">'. l('<img src="'. theme('image', 'blog.png') .'" alt="'. t('blog it') .'" title="'. t('blog it') .'" />', 'node/add/blog', array('title' => t('Comment on this news item in your personal blog.'), 'class' => 'blog-it'), "iid=$item->iid") .'</div>';
+    if ($image = theme('misc/blog.png', t('blog it'), t('blog it'))) {
+      $output .= '<div class="icon">'. l($image, 'node/add/blog', array('title' => t('Comment on this news item in your personal blog.'), 'class' => 'blog-it'), "iid=$item->iid") .'</div>';
+    }
   }
 
   // external link
