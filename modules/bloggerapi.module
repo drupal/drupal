@@ -35,8 +35,7 @@ function bloggerapi_newPost($params) {
     if (node_access("create", $node)) {
       throttle("node", variable_get("max_node_rate", 900));
 
-      $fields = array("uid" => $user->uid, "comment" => 2, "promote", "moderate", "status" => 1, "teaser", "title", "type" => $node->type, "body");
-      $nid = node_save($node, array_merge($fields, module_invoke($node->type, "save", "create", $node)));
+      $nid = node_save($node);
       if ($nid) {
         watchdog("special", "$node->type: added '$node->title', via Blogger API");
         return new xmlrpcresp(new xmlrpcval("$nid", "string"));
@@ -55,8 +54,7 @@ function bloggerapi_editPost($params) {
   $node = node_validate(bloggerapi_driver("editPost", $params, $error), $error);
 
   if (!$node->error) {
-    $filter = array("nid" => $node->nid, "uid" => $user->uid, "comment" => 2, "promote", "moderate", "status" => 1, "teaser", "title", "type" => $node->type, "body");
-    $nid = node_save($node, array_merge($filter, module_invoke($node->type, "save", "update", $node)));
+    $nid = node_save($node);
     if ($nid) {
       watchdog("special", "$node->type: updated '$node->title', via Blogger API");
       return new xmlrpcresp(new xmlrpcval($nid, "string"));
@@ -286,6 +284,7 @@ function bloggerapi_node_recent($num) {
   }
 }
 
+//TODO: rework node_delete() and then invoke it instead of performing the deletion here.
 function bloggerapi_node_delete($nid) {
   global $user;
 
