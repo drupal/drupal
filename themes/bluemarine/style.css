@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.6 2004/12/03 12:26:56 unconed Exp $ */
+/* $Id: style.css,v 1.7 2005/03/05 14:34:39 unconed Exp $ */
 
 /*
 ** HTML elements
@@ -24,6 +24,10 @@ h2 {
 }
 h3, h4, h5, h6 {
   font-size: 1.1em;
+}
+p {
+  margin-top: 0.5em;
+  margin-bottom: 0.9em;
 }
 a {
   text-decoration: none;
