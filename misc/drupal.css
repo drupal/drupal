@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.83 2004/09/17 22:07:17 unconed Exp $ */
+/* $Id: drupal.css,v 1.84 2004/09/21 01:35:40 unconed Exp $ */
 
 /*
 ** HTML elements
@@ -161,7 +161,7 @@ tr.light .form-item, tr.dark .form-item {
   color: #f00;
 }
 .more-link {
-  float: right;
+  text-align: right;
 }
 .node-form .form-text {
   display: block;
