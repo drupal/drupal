@@ -166,6 +166,9 @@ function forum_view($node, $main = 0) {
     $node->title = _forum_get_icon($node) ." ". l($voc->name, "forum") ." : ". l($term_data->name, "forum/$term_data->tid") ." / <b>$node->title</b>";
   }
 
+  $node->teaser = check_output($node->teaser);
+  $node->body = check_output($node->body);
+
   theme("node", $node, $main);
 }
 
