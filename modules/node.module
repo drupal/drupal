@@ -685,11 +685,13 @@ function node_admin_nodes() {
     $_SESSION['node_overview_filter'] = 0;
   }
 
-  if (isset($_POST['edit']['filter'])) {
+  $op = $_POST['op'];
+
+  if ($op == t('Filter') && isset($_POST['edit']['filter'])) {
     $_SESSION['node_overview_filter'] = $_POST['edit']['filter'];
   }
 
-  if (isset($_POST['edit']['operation'])) {
+  if ($op == t('Update') && isset($_POST['edit']['operation']) && isset($_POST['edit']['status'])) {
     $operation = $operations[$_POST['edit']['operation']][1];
     foreach ($_POST['edit']['status'] as $nid => $value) {
       if ($value) {
@@ -712,7 +714,7 @@ function node_admin_nodes() {
   }
 
   $form  = form_select(NULL, 'filter', $filter, $options);
-  $form .= form_submit(t('Go'));
+  $form .= form_submit(t('Filter'));
 
   $output .= '<h3>'. t('Filter options') .'</h3>';
   $output .= "<div class=\"container-inline\">$form</div>";
@@ -721,13 +723,18 @@ function node_admin_nodes() {
   ** Render operations form:
   */
 
+  $result = pager_query('SELECT n.*, u.name, u.uid FROM {node} n INNER JOIN {users} u ON n.uid = u.uid '. $filters[$filter][1], 50);
+
+  // Make sure the update controls are disabled if we don't have any rows to select from.
+  $disabled = !db_num_rows($result);
+
   $options = array();
   foreach ($operations as $key => $value) {
     $options[] = $value[0];
   }
 
-  $form = form_select(NULL, 'operation', 0, $options);
-  $form .= form_submit(t('Go'));
+  $form = form_select(NULL, 'operation', 0, $options, NULL, ($disabled ? 'disabled="disabled"' : ''));
+  $form .= form_submit(t('Update'), 'op', ($disabled ? array('disabled' => 'disabled') : array()));
 
   $output .= '<h3>'. t('Update options') .'</h3>';
   $output .= "<div class=\"container-inline\">$form</div>";
@@ -736,7 +743,6 @@ function node_admin_nodes() {
   ** Overview table:
   */
 
-  $result = pager_query('SELECT n.*, u.name, u.uid FROM {node} n INNER JOIN {users} u ON n.uid = u.uid '. $filters[$filter][1], 50);
   $header = array(NULL, t('title'), t('type'), t('author'), t('status'), array('data' => t('operations'), 'colspan' => 2));
 
   while ($node = db_fetch_object($result)) {
