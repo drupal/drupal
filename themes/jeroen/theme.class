@@ -19,7 +19,7 @@
     ?>
      <HTML>
       <HEAD>
-       <TITLE><? include "config.inc"; echo $sitename; ?></TITLE>
+       <TITLE><? include "config.inc"; echo $sitename; ?> - Tears of technology</TITLE>
        <META NAME="description" CONTENT="drop.org">
        <META NAME="keywords" CONTENT="drop, weblog, portal, community, news, article, announcements, stories, story, computer, science, space, hype, cult, geek, nerd, foo, bar">
       </HEAD>
@@ -30,7 +30,7 @@
        -->
       </STYLE>
       <BODY TEXT="#202020" BGCOLOR="#FEFEFE" BACKGROUND="themes/Jeroen/images/background.gif" ALINK="#000000" LINK="#000000" VLINK="#000000">
-       <TABLE BORDER="1" CELLPADDING="2" CELLSPACING="2">
+       <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0">
         <TR>
          <TD COLSPAN="2"><IMG SRC="themes/Jeroen/images/logo.gif" ALT="drop.org logo"></TD>
          <TD WIDTH="180" VALIGN="top" ALIGN="right">
@@ -530,15 +530,17 @@
           }
          ?>
         </TD>
-       </TR>
+       </TR> 
        <TR>
-        <TD ALIGN="right" VALIGN="bottom" BACKGROUND="themes/Jeroen/images/footer.gif>
-	 <IMG SRC="themes/Jeroen/images/footerleft.gif" ALIGN="left" WIDTH="20" HEIGHT="20" ALT=""></TD>
-	<TD ALIGN="center" VALIGN="center" HEIGHT="20" BACKGROUND="themes/Jeroen/images/footer.gif">
-	 <FONT SIZE="2">[ <A HREF="">home</A> | <A HREF="/faq.php">faq</A> | <A HREF="/search.php">search</A> | <A HREF="/submit.php">submit news</A> | <A HREF="/account.php">your account</A> | <A HREF="/webboard.php">webboard</A> ] </FONT>
+        <TD ALIGN="right" VALIGN="bottom"HEIGHT="20">
+         <IMG SRC="themes/Jeroen/images/footerleft.gif" WIDTH="20" HEIGHT="20" ALT="">
         </TD>
-	<TD ALIGN="left" VALIGN="center" BACKGROUND="themes/Jeroen/images/footer.gif>
-	 <IMG SRC="themes/Jeroen/images/footerright.gif" ALIGN="right" WIDTH="20" HEIGHT="20" ALT=""></TD>
+        <TD BACKGROUND="themes/Jeroen/images/footer.gif" ALIGN="center" VALIGN="center" HEIGHT="20">
+         <FONT SIZE="2">[ <A HREF="">home</A> | <A HREF="/faq.php">faq</A> | <A HREF="/search.php">search</A> | <A HREF="/submit.php">submit news</A> | <A HREF="/account.php">your account</A> | <A HREF="/webboard.php">webboard</A> ] </FONT>
+        </TD>
+        <TD ALIGN="left" VALIGN="bottom" HEIGHT="20">
+         <IMG SRC="themes/Jeroen/images/footerright.gif" WIDTH="20" HEIGHT="20" ALT="">
+        </TD>
        </TR>
       </TABLE>
      </BODY> 
