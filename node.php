@@ -1,5 +1,5 @@
 <?php
-// $Id: node.php,v 1.44 2002/06/22 19:32:08 dries Exp $
+// $Id: node.php,v 1.45 2002/09/17 19:38:46 dries Exp $
 
 include_once "includes/common.inc";
 
@@ -15,7 +15,7 @@ function node_render($node) {
     node_view($node);
 
     if (function_exists("comment_render") && $node->comment) {
-      comment_render($id, $cid);
+      comment_render($node, $cid);
     }
 
     $theme->footer();
