@@ -61,7 +61,7 @@ function node_search($keys) {
 
 function node_conf_options() {
   $output .= form_select(t("Default number of nodes to display"), "default_nodes_main", variable_get("default_nodes_main", 10), array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 =>  5, 6 => 6, 7 => 7, 8 => 8, 9 => 9, 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30), t("The default maximum number of nodes to display on the main page."));
-  $output .= form_select(t("Minimum number of words in teaser"), "minimum_teaser_size", variable_get("minimum_node_size", 0), array(0 => "0 words", 10 => "10 words", 25 => "25 words",  50 => "50 words", 75 => "75 words", 100 => "100 words", 125 => "125 words",  150 => "150 words", 175 => "175 words", 200 => "200 words"), t("The minimum number of words a teaser should consist of.  This can be useful to rule out submissions that do not meet the site's standards, such as short test post."));
+  $output .= form_select(t("Minimum number of words in teaser"), "minimum_teaser_size", variable_get("minimum_teaser_size", 0), array(0 => "0 words", 10 => "10 words", 25 => "25 words",  50 => "50 words", 75 => "75 words", 100 => "100 words", 125 => "125 words",  150 => "150 words", 175 => "175 words", 200 => "200 words"), t("The minimum number of words a teaser should consist of.  This can be useful to rule out submissions that do not meet the site's standards, such as short test post."));
   return $output;
 }
 
