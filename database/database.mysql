@@ -1,5 +1,3 @@
-
-DROP TABLE IF EXISTS access;
 CREATE TABLE access (
   id tinyint(10) DEFAULT '0' NOT NULL auto_increment,
   mask varchar(255) DEFAULT '' NOT NULL,
@@ -9,7 +7,6 @@ CREATE TABLE access (
   PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS blocks;
 CREATE TABLE blocks (
   name varchar(64) DEFAULT '' NOT NULL,
   module varchar(64) DEFAULT '' NOT NULL,
@@ -21,7 +18,6 @@ CREATE TABLE blocks (
   PRIMARY KEY (name)
 );
 
-DROP TABLE IF EXISTS book;
 CREATE TABLE book (
   lid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   nid int(10) unsigned DEFAULT '0' NOT NULL,
@@ -34,7 +30,6 @@ CREATE TABLE book (
   PRIMARY KEY (lid)
 );
 
-DROP TABLE IF EXISTS boxes;
 CREATE TABLE boxes (
   id tinyint(4) DEFAULT '0' NOT NULL auto_increment,
   subject varchar(64) DEFAULT '' NOT NULL,
@@ -47,7 +42,6 @@ CREATE TABLE boxes (
   PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS bundle;
 CREATE TABLE bundle (
   bid int(11) DEFAULT '0' NOT NULL auto_increment,
   title varchar(255) DEFAULT '' NOT NULL,
@@ -56,7 +50,6 @@ CREATE TABLE bundle (
   PRIMARY KEY (bid)
 );
 
-DROP TABLE IF EXISTS category;
 CREATE TABLE category (
   cid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   name varchar(32) DEFAULT '' NOT NULL,
@@ -71,7 +64,6 @@ CREATE TABLE category (
   PRIMARY KEY (cid)
 );
 
-DROP TABLE IF EXISTS channel;
 CREATE TABLE channel (
   id int(11) DEFAULT '0' NOT NULL auto_increment,
   site varchar(255) DEFAULT '' NOT NULL,
@@ -85,7 +77,6 @@ CREATE TABLE channel (
   PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS collection;
 CREATE TABLE collection (
   cid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   name varchar(32) DEFAULT '' NOT NULL,
@@ -94,7 +85,6 @@ CREATE TABLE collection (
   PRIMARY KEY (cid)
 );
 
-DROP TABLE IF EXISTS comments;
 CREATE TABLE comments (
   cid int(6) DEFAULT '0' NOT NULL auto_increment,
   pid int(6) DEFAULT '0' NOT NULL,
@@ -112,7 +102,6 @@ CREATE TABLE comments (
   KEY lid (lid)
 );
 
-DROP TABLE IF EXISTS cvs;
 CREATE TABLE cvs (
   user varchar(32) DEFAULT '' NOT NULL,
   files text,
@@ -121,7 +110,6 @@ CREATE TABLE cvs (
   timestamp int(11) DEFAULT '0' NOT NULL
 );
 
-DROP TABLE IF EXISTS diaries;
 CREATE TABLE diaries (
   id int(5) DEFAULT '0' NOT NULL auto_increment,
   author int(6) DEFAULT '0' NOT NULL,
@@ -130,7 +118,6 @@ CREATE TABLE diaries (
   PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS diary;
 CREATE TABLE diary (
   lid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   nid int(10) unsigned DEFAULT '0' NOT NULL,
@@ -138,7 +125,6 @@ CREATE TABLE diary (
   PRIMARY KEY (lid)
 );
 
-DROP TABLE IF EXISTS entry;
 CREATE TABLE entry (
   eid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   name varchar(32) DEFAULT '' NOT NULL,
@@ -148,7 +134,6 @@ CREATE TABLE entry (
   PRIMARY KEY (eid)
 );
 
-DROP TABLE IF EXISTS feed;
 CREATE TABLE feed (
   fid int(11) DEFAULT '0' NOT NULL auto_increment,
   title varchar(255) DEFAULT '' NOT NULL,
@@ -162,7 +147,6 @@ CREATE TABLE feed (
   PRIMARY KEY (fid)
 );
 
-DROP TABLE IF EXISTS file;
 CREATE TABLE file (
   lid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   nid int(10) unsigned DEFAULT '0' NOT NULL,
@@ -175,7 +159,6 @@ CREATE TABLE file (
   PRIMARY KEY (lid)
 );
 
-DROP TABLE IF EXISTS forum;
 CREATE TABLE forum (
   lid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   nid int(10) unsigned DEFAULT '0' NOT NULL,
@@ -183,7 +166,6 @@ CREATE TABLE forum (
   PRIMARY KEY (lid)
 );
 
-DROP TABLE IF EXISTS item;
 CREATE TABLE item (
   iid int(11) DEFAULT '0' NOT NULL auto_increment,
   fid int(11) DEFAULT '0' NOT NULL,
@@ -196,13 +178,11 @@ CREATE TABLE item (
   PRIMARY KEY (iid)
 );
 
-DROP TABLE IF EXISTS layout;
 CREATE TABLE layout (
   user int(11) DEFAULT '0' NOT NULL,
   block varchar(64) DEFAULT '' NOT NULL
 );
 
-DROP TABLE IF EXISTS locales;
 CREATE TABLE locales (
   id int(11) DEFAULT '0' NOT NULL auto_increment,
   location varchar(128) DEFAULT '' NOT NULL,
@@ -218,13 +198,11 @@ CREATE TABLE locales (
   PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS modules;
 CREATE TABLE modules (
   name varchar(64) DEFAULT '' NOT NULL,
   PRIMARY KEY (name)
 );
 
-DROP TABLE IF EXISTS node;
 CREATE TABLE node (
   nid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   lid int(10) DEFAULT '0' NOT NULL,
@@ -251,7 +229,6 @@ CREATE TABLE node (
   KEY status (status)
 );
 
-DROP TABLE IF EXISTS page;
 CREATE TABLE page (
   lid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   nid int(10) unsigned DEFAULT '0' NOT NULL,
@@ -260,7 +237,6 @@ CREATE TABLE page (
   PRIMARY KEY (lid)
 );
 
-DROP TABLE IF EXISTS poll;
 CREATE TABLE poll (
   lid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   nid int(10) unsigned DEFAULT '0' NOT NULL,
@@ -270,7 +246,6 @@ CREATE TABLE poll (
   PRIMARY KEY (lid)
 );
 
-DROP TABLE IF EXISTS poll_choices;
 CREATE TABLE poll_choices (
   chid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   nid int(10) unsigned DEFAULT '0' NOT NULL,
@@ -280,7 +255,6 @@ CREATE TABLE poll_choices (
   PRIMARY KEY (chid)
 );
 
-DROP TABLE IF EXISTS rating;
 CREATE TABLE rating (
   user int(6) DEFAULT '0' NOT NULL,
   new int(6) DEFAULT '0' NOT NULL,
@@ -288,7 +262,14 @@ CREATE TABLE rating (
   PRIMARY KEY (user)
 );
 
-DROP TABLE IF EXISTS story;
+CREATE TABLE role (
+  rid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
+  name varchar(32) DEFAULT '' NOT NULL,
+  perm text NOT NULL,
+  UNIQUE name (name),
+  PRIMARY KEY (rid)
+);
+
 CREATE TABLE story (
   lid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   nid int(10) unsigned DEFAULT '0' NOT NULL,
@@ -297,7 +278,6 @@ CREATE TABLE story (
   PRIMARY KEY (lid)
 );
 
-DROP TABLE IF EXISTS tag;
 CREATE TABLE tag (
   tid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   name varchar(32) DEFAULT '' NOT NULL,
@@ -307,7 +287,6 @@ CREATE TABLE tag (
   PRIMARY KEY (tid)
 );
 
-DROP TABLE IF EXISTS topic;
 CREATE TABLE topic (
   tid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   pid int(10) unsigned DEFAULT '0' NOT NULL,
@@ -317,11 +296,10 @@ CREATE TABLE topic (
   PRIMARY KEY (tid)
 );
 
-DROP TABLE IF EXISTS users;
 CREATE TABLE users (
   id int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   name varchar(60) DEFAULT '' NOT NULL,
-  userid varchar(15) DEFAULT '' NOT NULL,
+  userid varchar(32) DEFAULT '' NOT NULL,
   passwd varchar(20) DEFAULT '' NOT NULL,
   real_email varchar(60) DEFAULT '' NOT NULL,
   fake_email varchar(60) DEFAULT '' NOT NULL,
@@ -340,18 +318,16 @@ CREATE TABLE users (
   timezone varchar(8),
   rating decimal(8,2),
   language char(2) DEFAULT '' NOT NULL,
-  access varchar(255) DEFAULT '' NOT NULL,
+  role varchar(32) DEFAULT '' NOT NULL,
   PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS variable;
 CREATE TABLE variable (
   name varchar(32) DEFAULT '' NOT NULL,
   value text NOT NULL,
   PRIMARY KEY (name)
 );
 
-DROP TABLE IF EXISTS watchdog;
 CREATE TABLE watchdog (
   id int(5) DEFAULT '0' NOT NULL auto_increment,
   user int(6) DEFAULT '0' NOT NULL,
