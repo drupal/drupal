@@ -1752,7 +1752,7 @@ function _user_categories() {
   $categories = array();
 
   foreach (module_list() as $module) {
-    if ($data = module_invoke($module, 'user', 'categories')) {
+    if ($data = module_invoke($module, 'user', 'categories', NULL, NULL)) {
       $categories = array_merge($data, $categories);
     }
   }
