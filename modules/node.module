@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.279 2003/10/15 15:07:47 dries Exp $
+// $Id: node.module,v 1.280 2003/10/21 18:34:54 dries Exp $
 
 function node_help($section = "admin/help#node") {
   global $mod;
@@ -587,12 +587,13 @@ function node_admin_edit($node) {
 
   if ($node->revisions) {
     $output .= "<h3>". t("Edit revisions") ."</h3>";
-    $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
-    $output .= " <tr><th>". t("older revisions") ."</th><th colspan=\"3\">". t("operations") ."</th></tr>";
+
+    $header = array(t("older revisions"), array("colspan" => "3", "data" => t("operations")));
+
     foreach ($node->revisions as $key => $revision) {
-      $output .= " <tr><td>". t("revision #%r revised by %u on %d", array("%r" => $key, "%u" => format_name(user_load(array("uid" => $revision["uid"]))), "%d" => format_date($revision["timestamp"], "small"))) . ($revision["history"] ? "<br /><small>". $revision["history"] ."</small>" : "") ."</td><td>". l(t("view revision"), "node/view/$node->nid", array(), "revision=$key") ."</td><td>". l(t("rollback revision"), "admin/node/rollback+revision/$node->nid/$key") ."</td><td>". l(t("delete revision"), "admin/node/delete+revision/$node->nid/$key") ."</td></tr>";
+      $rows[] = array(t("revision #%r revised by %u on %d", array("%r" => $key, "%u" => format_name(user_load(array("uid" => $revision["uid"]))), "%d" => format_date($revision["timestamp"], "small"))) . ($revision["history"] ? "<br /><small>". $revision["history"] ."</small>" : ""), l(t("view revision"), "node/view/$node->nid", array(), "revision=$key"), l(t("rollback revision"), "admin/node/rollback+revision/$node->nid/$key"), l(t("delete revision"), "admin/node/delete+revision/$node->nid/$key"));
     }
-    $output .= "</table>";
+    $output .= table($header, $rows);
   }
 
   /*
