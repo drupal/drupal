@@ -48,15 +48,9 @@ function node_save($node) {
       }
     }
 
-    $u1 = implode(", ", $u1);
-    $u2 = implode(", ", $u2);
-
-    db_query("UPDATE node SET $u1 WHERE nid = '$node[nid]'");
-    db_query("UPDATE $node[type] SET $u2 WHERE nid = '$node[nid]'");
-
-    if (($node[pid]) && ($node[status] == $status[posted])) {
-      db_query("UPDATE node SET status = '$status[expired]' WHERE nid = '$node[pid]'");
-    }
+    if ($u1 = implode(", ", $u1)) db_query("UPDATE node SET $u1 WHERE nid = '$node[nid]'");
+    if ($u2 = implode(", ", $u2)) db_query("UPDATE $node[type] SET $u2 WHERE nid = '$node[nid]'");
+    if (($node[pid]) && ($node[status] == $status[posted])) db_query("UPDATE node SET status = '$status[expired]' WHERE nid = '$node[pid]'");
 
     watchdog("message", "node: modified '$node[title]'");
   }
