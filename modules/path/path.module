@@ -220,7 +220,7 @@ function path_load($pid) {
 }
 
 function path_delete($pid) {
-  db_query("DELETE FROM path WHERE pid = '%d'", $pid);
+  db_query("DELETE FROM {url_alias} WHERE pid = '%d'", $pid);
   return t("the alias has been deleted.");
 }
 
