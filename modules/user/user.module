@@ -20,15 +20,15 @@ function sess_read($key) {
 }
 
 function sess_write($key, $value) {
-  global $REMOTE_ADDR;
+  global $HTTP_SERVER_VARS;
 
-  db_query("UPDATE user SET hostname = '". check_input($REMOTE_ADDR) ."', timestamp = '". time() ."' WHERE session = '$key'");
+  db_query("UPDATE user SET hostname = '". check_input($HTTP_SERVER_VARS[REMOTE_ADDR]) ."', timestamp = '". time() ."' WHERE session = '$key'");
 }
 
 function sess_destroy($key) {
-  global $REMOTE_ADDR;
+  global $HTTP_SERVER_VARS;
 
-  db_query("UPDATE user SET hostname = '". check_input($REMOTE_ADDR) ."', timestamp = '". time() ."', session = '' WHERE session = '$key'");
+  db_query("UPDATE user SET hostname = '". check_input($HTTP_SERVER_VARS[REMOTE_ADDR]) ."', timestamp = '". time() ."', session = '' WHERE session = '$key'");
 }
 
 function sess_gc($lifetime) {
