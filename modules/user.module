@@ -938,7 +938,7 @@ function user_register($edit = array()) {
   }
 
   if ($edit) {
-    _user_profile($edit, NULL, 'validate', 'account');
+    _user_validate($edit, NULL, 'account');
 
     if (!form_has_errors()) {
       $from = variable_get('site_mail', ini_get('sendmail_from'));
@@ -1266,7 +1266,7 @@ function user_configure_settings() {
 function user_admin_create($edit = array()) {
 
   if ($edit) {
-    _user_profile($edit, NULL, 'validate', 'account');
+    _user_validate($edit, NULL, 'account');
 
     if (!form_has_errors()) {
       watchdog('user', 'new user: "'. $edit['name'] .'" &lt;'. $edit['mail'] .'&gt;');
