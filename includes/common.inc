@@ -25,6 +25,22 @@ function conf_init() {
   return "conf";
 }
 
+/**
+ * Build the alias/path array
+ */
+function get_url_map() {
+  static $map;
+
+  if (empty($map)) {
+    $result = db_query("SELECT * FROM {path}");
+    while ($data = db_fetch_object($result)) {
+      $map[$data->new] = $data->old;
+    }
+  }
+
+  return $map;
+}
+
 function error_handler($errno, $message, $filename, $line, $variables) {
   $types = array(1 => "error", 2 => "warning", 4 => "parse error", 8 => "notice", 16 => "core error", 32 => "core warning", 64 => "compile error", 128 => "compile warning", 256 => "user error", 512 => "user warning", 1024 => "user notice");
   $entry = $types[$errno] .": $message in $filename on line $line.";
@@ -1054,6 +1070,23 @@ function form_allowed_tags_text() {
   return variable_get("allowed_html", "") ? (t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", ""))) : "";
 }
 
+/**
+ * Given an old url, return the alias.
+ */
+function get_url_alias($path) {
+  $map = get_url_map();
+
+  return array_search($path, $map);
+}
+
+/**
+ * Given an alias, return the old url.
+ */
+function get_old_url($path) {
+  $map = get_url_map();
+  return $map[$path];
+}
+
 function url($url = NULL, $query = NULL) {
   global $base_url;
 
@@ -1066,6 +1099,10 @@ function url($url = NULL, $query = NULL) {
     ** Apache.
     */
     $script = (strpos($_SERVER["SERVER_SOFTWARE"], "Apache") === false) ? "index.php" : "";
+  }
+
+  if ($alias = get_url_alias($url)) {
+    $url = $alias;
   }
 
   if (variable_get("clean_url", "0") == "0") {
@@ -1242,6 +1279,16 @@ set_error_handler("error_handler");
 
 // spit out the correct charset http header
 header("Content-Type: text/html; charset=utf-8");
+
+// initialize the _GET["q"] prior to loading the modules and invoking their 'init' hook:
+if (!empty($_GET["q"])) {
+  if ($path = get_old_url(trim($_GET["q"], "/"))) {
+    $_GET["q"] = $path;
+  }
+}
+else {
+  $_GET["q"] = variable_get("site_frontpage", "node");
+}
 
 // initialize installed modules:
 module_init();

@@ -264,7 +264,6 @@ CREATE TABLE node (
   nid int(10) unsigned NOT NULL auto_increment,
   type varchar(16) NOT NULL default '',
   title varchar(128) NOT NULL default '',
-  path varchar(250) NULL default '',
   score int(11) NOT NULL default '0',
   votes int(11) NOT NULL default '0',
   uid int(10) NOT NULL default '0',
@@ -286,7 +285,6 @@ CREATE TABLE node (
   KEY status (status),
   KEY uid (uid),
   KEY node_moderate (moderate),
-  KEY node_path (path(5)),
   KEY node_promote_status (promote, status)
 ) TYPE=MyISAM;
 
@@ -301,6 +299,19 @@ CREATE TABLE page (
   description varchar(128) NOT NULL default '',
   PRIMARY KEY  (nid),
   KEY nid (nid)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table 'path'
+--
+
+CREATE TABLE path (
+  alid int(10) unsigned NOT NULL auto_increment,
+  old varchar(128) NOT NULL default '',
+  new varchar(128) NOT NULL default '',
+  PRIMARY KEY  (alid),
+  UNIQUE KEY new (new),
+  UNIQUE KEY old (old)
 ) TYPE=MyISAM;
 
 --

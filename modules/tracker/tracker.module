@@ -59,7 +59,7 @@ function tracker_posts($id = 0) {
     }
 
     $type = ucfirst(module_invoke($node->type, "node", "name"));
-    $title = l($node->title, node_url($node)) ." ". (node_is_new($node->nid, $node->changed) ? theme("theme_mark") : "");
+    $title = l($node->title, "node/view/$node->nid") ." ". (node_is_new($node->nid, $node->changed) ? theme("theme_mark") : "");
     $author = format_name($node);
 
     $comments = array();

@@ -35,7 +35,7 @@ class Theme_xtemplate extends BaseTheme {
   function node($node, $main = 0) {
 
     $this->template->assign(array(
-       "link"      => url(node_url($node)),
+       "link"      => url("node/view/$node->nid"),
        "title"     => ucfirst($node->title),
        "author"    => format_name($node),
        "date"      => format_date($node->created),
