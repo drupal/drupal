@@ -1,5 +1,5 @@
 <?php
-// $Id: marvin.theme,v 1.78 2001/12/15 22:31:32 unconed Exp $
+// $Id: marvin.theme,v 1.79 2001/12/16 01:28:41 kjartan Exp $
 
   /*********************************************************************
 
@@ -28,7 +28,7 @@
       <title>
        <?php
          if ($title) {
-           print $title . " - " variable_get("site_name", "drupal");
+           print $title ." - ". variable_get("site_name", "drupal");
          }
          else {
            print variable_get("site_name", "drupal") ." - ". variable_get("site_slogan", "");
