@@ -1,0 +1,136 @@
+<?
+
+$module = array("help" => "section_help",
+                "block" => "section_block",
+                "admin" => "section_admin");
+
+// global variables:
+$_section = array("status" => array(2 => "enabled: always", 1 => "enabled: custom", 0 => "disabled"),
+                 "timout" => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90, 100),
+                 "post" => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90, 100),
+                 "dump" => array(-1, -2, -3, -4, -5, -6, -7, -8, -9, -10, -11, -12, -13, -14, -15, -20, -25, -30));
+
+function section_help() {
+ ?>
+  under construction
+ <?
+}
+
+function section_block() {
+  $result = db_query("SELECT se.name, COUNT(st.id) AS stories FROM sections se LEFT JOIN stories st ON se.name = st.section GROUP BY se.name");
+  while ($_section = db_fetch_object($result)) {
+    $content .= "<LI><A HREF=\"?section=". urlencode($_section->name) ."\">$_section->name</A> (". format_data($_section->stories, 0) .")</LI>\n";
+  }
+
+  $block[0]["subject"] = "Sections";
+  $block[0]["content"] = $content;
+  $block[0]["info"] = "Section list";
+
+  return $block;
+}
+
+function section_add() {
+  global $_section;
+
+  $output .= " <FORM ACTION=\"admin.php?mod=section\" METHOD=\"post\">\n";
+  $output .= "  <P>\n";
+  $output .= "   <B>Section name:</B><BR>\n";
+  $output .= "   <INPUT TYPE=\"text\" NAME=\"edit[name]\" SIZE=\"50\">\n";
+  $output .= "  </P>\n";
+  $output .= "  <P>\n";
+  $output .= "   <B>Post threshold:</B><BR>\n";
+  $output .= "   <SELECT NAME=\"edit[post]\">\n";
+  foreach ($_section[post] as $value) $output .= "<OPTION VALUE=\"$value\">". format_plural($value, "point", "points") ."</OPTION>\n";
+  $output .= "   </SELECT>\n";
+  $output .= "  </P>\n";
+  $output .= "  <P>\n";
+  $output .= "   <B>Dump threshold:</B><BR>\n";
+  $output .= "   <SELECT NAME=\"edit[dump]\">\n";
+  foreach ($_section[dump] as $value) $output .= "<OPTION VALUE=\"$value\">". format_plural($value, "point", "points") ."</OPTION>\n";
+  $output .= "   </SELECT>\n";
+  $output .= "  </P>\n";
+  $output .= "  <P>\n";
+  $output .= "   <B>Timout threshold:</B><BR>\n";
+  $output .= "   <SELECT NAME=\"edit[timout]\">\n";
+  foreach ($_section[timout] as $value) $output .= "<OPTION VALUE=\"$value\">". format_plural($value, "vote", "votes") ."</OPTION>\n";
+  $output .= "   </SELECT>\n";
+  $output .= "  </P>\n";
+  $output .= "  <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Add section\">\n";
+  $output .= " </FORM>\n";
+ 
+  print $output;
+}
+
+function section_add_save($edit) {
+  db_query("INSERT INTO sections (name, post, dump, timout) VALUES ('". check_input($edit[name]) ."', '". check_input($edit[post]) ."', '". check_input($edit[dump]) ."', '". check_input($edit[timout]) ."')");
+}
+
+function section_delete($name) {
+  db_query("DELETE FROM sections WHERE name = '$name'");
+}
+
+function section_display() {
+  global $_section;
+
+  $status = $_section[status];
+  $timout = $_section[timout];
+  $post = $_section[post];
+  $dump = $_section[dump];
+
+  // Perform query:
+  $result = db_query("SELECT * FROM sections");
+ 
+  // Generate output:
+  $output .= "<FORM ACTION=\"admin.php?mod=section\" METHOD=\"post\">\n";
+  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
+  $output .= " <TR><TH>section name</TH><TH>status</TH><TH>post threshold</TH><TH>dump threshold</TH><TH>expiration threshold<TH>operations</TH></TR>\n";
+  while ($_section = db_fetch_object($result)) {
+    foreach ($status as $key=>$value) $options0 .= "<OPTION VALUE=\"$key\"". (($_section->status == $key) ? " SELECTED" : "") .">$value</OPTION>\n";
+    foreach ($post as $value) $options1 .= "<OPTION VALUE=\"$value\"". (($_section->post == $value) ? " SELECTED" : "") .">". format_plural($value, "point", "points") ."</OPTION>\n";
+    foreach ($dump as $value) $options2 .= "<OPTION VALUE=\"$value\"". (($_section->dump == $value) ? " SELECTED" : "") .">". format_plural($value, "point", "points") ."</OPTION>\n";
+    foreach ($timout as $value) $options3 .= "<OPTION VALUE=\"$value\"". (($_section->timout == $value) ? " SELECTED" : "") .">". format_plural($value, "vote", "votes") ."</OPTION>\n";
+    $output .= " <TR><TD>". check_output($_section->name) ."</TD><TD><SELECT NAME=\"edit[$_section->name][status]\">$options0</SELECT></TD><TD><SELECT NAME=\"edit[$_section->name][post]\">$options1</SELECT></TD><TD><SELECT NAME=\"edit[$_section->name][dump]\">$options2</SELECT></TD><TD><SELECT NAME=\"edit[$_section->name][timout]\">$options3</SELECT></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=section&op=delete&name=". urlencode($_section->name) ."\">delete</A></TD></TR>\n";
+    unset($options0); unset($options1); unset($options2); unset($options3);
+  }
+  $output .= "</TABLE>\n";
+  $output .= "<INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"Save sections\">\n";
+  $output .= "</FORM>\n";
+
+  print $output;
+}
+
+function section_display_save($edit) {
+  foreach ($edit as $key=>$value) {
+    db_query("UPDATE sections SET status = '". $value[status] ."', post = '". $value[post] ."', dump = '". $value[dump] ."', timout = '". $value[timout] ."' WHERE name = '$key'");
+  }
+}
+
+function section_admin() {
+  global $op, $edit, $name;
+
+  print "<SMALL><A HREF=\"admin.php?mod=section&op=add\">add new section</A> | <A HREF=\"admin.php?mod=section\">overview</A> | <A HREF=\"admin.php?mod=section&op=help\">help</A></SMALL><HR>\n";
+
+  switch($op) {
+    case "add":
+      section_add($edit);
+      break;
+    case "help":
+      section_help();
+      break;
+    case "delete":
+      section_delete($name);
+      section_display();
+      break;
+    case "Add section":
+      section_add_save($edit);
+      section_display();
+      break;
+    case "Save sections":
+      section_display_save($edit);
+      // fall through
+    default:
+      section_display();
+  }
+}
+
+?>

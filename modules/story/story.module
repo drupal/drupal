@@ -5,6 +5,8 @@ $module = array("cron" => "story_cron",
                 "block" => "story_block",
                 "admin" => "story_admin");
 
+include_once "includes/section.inc";
+
 function story_cron() {
   $result = db_query("SELECT * FROM stories WHERE status = 3 AND timestamp <= ". time() ."");
   while ($story = db_fetch_object($result)) {
@@ -46,7 +48,7 @@ function story_block() {
 }
 
 function story_add() {
-  global $allowed_html, $categories;
+  global $allowed_html;
 
   $output .= "<FORM ACTION=\"admin.php?mod=story\" METHOD=\"post\">\n";
  
@@ -55,10 +57,10 @@ function story_add() {
   $output .= " <INPUT TYPE=\"text\" NAME=\"edit[subject]\" SIZE=\"50\" MAXLENGTH=\"60\"><BR>\n";
   $output .= "</P>\n";
 
-  $output .= "<P><B>Category:</B><BR>\n";
-  $output .= " <SELECT NAME=\"edit[category]\">\n";  
-  for ($i = 0; $i < sizeof($categories); $i++) {
-    $output .= "  <OPTION VALUE=\"$categories[$i]\">$categories[$i]</OPTION>\n";  
+  $output .= "<P><B>Section:</B><BR>\n";
+  $output .= " <SELECT NAME=\"edit[section]\">\n";  
+  foreach ($sections = section_get() as $value) {
+    $output .= "  <OPTION VALUE=\"$value\">$value</OPTION>\n";  
   }
   $output .= " </SELECT>\n";
   $output .= "</P>\n";
@@ -96,12 +98,12 @@ function story_add() {
 function story_add_save($edit) {
   global $user;
   $timestamp = ($edit[status] == 3 && strtotime($edit[date]) > time()) ? strtotime($edit[date]) : time();
-  db_query("INSERT INTO stories (author, subject, abstract, article, category, status, timestamp) VALUES ('$user->id', '". check_input($edit[subject]) ."', '". check_input($edit[abstract]) ."', '". check_input($edit[article]) ."', '". check_input($edit[category]) ."', '$edit[status]', '$timestamp')");
+  db_query("INSERT INTO stories (author, subject, abstract, article, section, status, timestamp) VALUES ('$user->id', '". check_input($edit[subject]) ."', '". check_input($edit[abstract]) ."', '". check_input($edit[article]) ."', '". check_input($edit[section]) ."', '$edit[status]', '$timestamp')");
   watchdog("story", "story: added '$edit[subject]'");
 }
 
 function story_edit($id) {
-  global $allowed_html, $categories;
+  global $allowed_html;
 
   $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON s.author = u.id WHERE s.id = $id");
   $story = db_fetch_object($result);
@@ -119,10 +121,10 @@ function story_edit($id) {
   $output .= "</P>\n";
 
   $output .= "<P>\n";
-  $output .= " <B>Category:</B><BR>\n";
-  $output .= " <SELECT NAME=\"edit[category]\">\n";
-  for ($i = 0; $i < sizeof($categories); $i++) {
-    $output .= "  <OPTION VALUE=\"$categories[$i]\"". ($story->category == $categories[$i] ? " SELECTED" : "") .">$categories[$i]</OPTION>\n";
+  $output .= " <B>Section:</B><BR>\n";
+  $output .= " <SELECT NAME=\"edit[section]\">\n";
+  foreach ($sections = section_get() as $value) {
+    $output .= "  <OPTION VALUE=\"$value\"". ($story->section == $value ? " SELECTED" : "") .">$value</OPTION>\n";
   }
   $output .= "</SELECT>\n";
   $output .= "</P>\n";
@@ -163,8 +165,8 @@ function story_edit($id) {
 }
 
 function story_edit_save($id, $edit) {
-  if ($edit[status] == 3 && strtotime($edit[date]) > time()) db_query("UPDATE stories SET subject = '". check_input($edit[subject]) ."', abstract = '". check_input($edit[abstract]) ."', updates = '". check_input($edit[updates]) ."', article = '". check_input($edit[article]) ."', category = '". check_input($edit[category]) ."', status = '$edit[status]', timestamp = '". strtotime($edit[date]) ."' WHERE id = '$id'");
-  else db_query("UPDATE stories SET subject = '". check_input($edit[subject]) ."', abstract = '". check_input($edit[abstract]) ."', updates = '". check_input($edit[updates]) ."', article = '". check_input($edit[article]) ."', category = '". check_input($edit[category]) ."', status = '$edit[status]' WHERE id = '$id'");
+  if ($edit[status] == 3 && strtotime($edit[date]) > time()) db_query("UPDATE stories SET subject = '". check_input($edit[subject]) ."', abstract = '". check_input($edit[abstract]) ."', updates = '". check_input($edit[updates]) ."', article = '". check_input($edit[article]) ."', section = '". check_input($edit[section]) ."', status = '$edit[status]', timestamp = '". strtotime($edit[date]) ."' WHERE id = '$id'");
+  else db_query("UPDATE stories SET subject = '". check_input($edit[subject]) ."', abstract = '". check_input($edit[abstract]) ."', updates = '". check_input($edit[updates]) ."', article = '". check_input($edit[article]) ."', section = '". check_input($edit[section]) ."', status = '$edit[status]' WHERE id = '$id'");
   watchdog("message", "story: modified `$edit[subject]'");
 }
 
@@ -189,14 +191,14 @@ function story_display() {
   $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON u.id = s.author WHERE s.status = 0 ORDER BY timestamp DESC LIMIT 5");
   $output .= " <TR><TH COLSPAN=\"4\">dumped stories</TTH></TR>\n";
   while ($story = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A></TD><TD>". format_username($story->userid, 1) ."</TD><TD>$story->category</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=edit&id=$story->id\">edit</A></TD></TR>\n";
+    $output .= " <TR><TD><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A></TD><TD>". format_username($story->userid, 1) ."</TD><TD>$story->section</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=edit&id=$story->id\">edit</A></TD></TR>\n";
   }
 
   // Posted stories:
   $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON u.id = s.author WHERE s.status = 2 ORDER BY timestamp DESC LIMIT 15");
   $output .= " <TR><TH COLSPAN=\"4\">posted stories</TH></TR>\n";
   while ($story = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A></TD><TD>". format_username($story->userid, 1) ."</TD><TD>$story->category</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=edit&id=$story->id\">edit</A></TD></TR>\n";
+    $output .= " <TR><TD><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A></TD><TD>". format_username($story->userid, 1) ."</TD><TD>$story->section</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=edit&id=$story->id\">edit</A></TD></TR>\n";
   }
  
   $output .= "</TABLE>\n";

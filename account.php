@@ -454,12 +454,12 @@ function account_track_stories() {
 
   $msg = "<P>This page might be helpful in case you want to keep track of the stories you contributed.  You are presented an overview of your stories along with the number of replies each story got.\n<P>\n"; 
 
-  $result = db_query("SELECT s.id, s.subject, s.timestamp, s.category, COUNT(c.cid) as count FROM stories s LEFT JOIN comments c ON c.lid = s.id WHERE s.status = 2 AND s.author = $user->id GROUP BY s.id DESC");
+  $result = db_query("SELECT s.id, s.subject, s.timestamp, s.section, COUNT(c.cid) as count FROM stories s LEFT JOIN comments c ON c.lid = s.id WHERE s.status = 2 AND s.author = $user->id GROUP BY s.id DESC");
   
   while ($story = db_fetch_object($result)) {
     $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Subject:</B></TD><TD><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A> (". format_plural($story->count, "comment", "comments") .")</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Category:</B></TD><TD><A HREF=\"search.php?category=". urlencode($story->category) ."\">". check_output($story->category) ."</A></TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Section:</B></TD><TD><A HREF=\"search.php?section=". urlencode($story->section) ."\">". check_output($story->section) ."</A></TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Date:</B></TD><TD>". format_date($story->timestamp) ."</TD></TR>\n";
     $output .= "</TABLE>\n";
     $output .= "<P>\n";

@@ -12,7 +12,7 @@
    var $bgcolor1 = "#B5BECE";
    var $fgcolor1 = "#000000";   // table body color
    var $hlcolor1 = "#000000";   // high-light color
-   var $categorycolor = "#202020";
+   var $sectioncolor = "#202020";
 
    // color set #2:
    var $bgcolor2 = "#EEEEEE";
@@ -81,13 +81,13 @@
         <TR><TD BGCOLOR="<? echo $this->bgcolor1; ?>" COLSPAN="2"><FONT COLOR="<? echo $this->fgcolor1; ?>"><B><? echo "". check_output($story->subject, 1) .""; ?></B></FONT></TD></TR>
         <TR BGCOLOR="<? echo $this->bgcolor2; ?>">
          <?
-          if ($story->category) { print "<TD BGCOLOR=\"$this->bgcolor2\">"; }
+          if ($story->section) { print "<TD BGCOLOR=\"$this->bgcolor2\">"; }
           else { print "<TD COLSPAN=\"2\" BGCOLOR=\"$this->bgcolor2\">"; }
           if ($story->userid) { print "<SMALL>Posted by " . format_username($story->userid) . " on $timestamp"; }
           else { print "<SMALL>Posted by $anonymous on $timestamp"; }
           if ($story->department) { print " - from the $story->department dept."; }
           print "</SMALL>";
-          if ($story->category) { print "</TD><TD BGCOLOR=\"$this->bgcolor2\" ALIGN=\"center\"><B><A HREF=\"search.php?category=" . urlencode($story->category) . "\"><FONT COLOR=\"$this->categorycolor\">$story->category</FONT></A></B>"; }
+          if ($story->section) { print "</TD><TD BGCOLOR=\"$this->bgcolor2\" ALIGN=\"center\"><B><A HREF=\"index.php?section=" . urlencode($story->section) . "\"><FONT COLOR=\"$this->sectioncolor\">$story->section</FONT></A></B>"; }
          ?>
         </TD>
        </TR>
@@ -116,13 +116,13 @@
        <TR><TD COLSPAN="2" BGCOLOR="<? echo $this->bgcolor1; ?>"><FONT COLOR="<? echo $this->fgcolor1; ?>"><B><? echo check_output($story->subject, 1); ?></B></FONT></TD></TR>
        <TR BGCOLOR="<? echo $this->bgcolor3; ?>">
          <?
-          if ($story->category) { print "<TD BGCOLOR=\"$this->bgcolor3\">"; }
+          if ($story->section) { print "<TD BGCOLOR=\"$this->bgcolor3\">"; }
           else { print "<TD COLSPAN=\"2\" BGCOLOR=\"$this->bgcolor3\">"; }
           if ($story->userid) { print "<SMALL>Posted by " . format_username($story->userid) . " on $timestamp"; }
           else { print "<SMALL>Posted by $anonymous on $timestamp"; }
           if ($story->department) { print " - from the $story->department dept."; }
           print "</SMALL>";
-          if ($story->category) { print "</TD><TD BGCOLOR=\"$this->bgcolor3\" ALIGN=\"center\"><B><A HREF=\"search.php?category=" . urlencode($story->category) . "\"><FONT COLOR=\"$this->categorycolor\">$story->category</FONT></A></B>"; }
+          if ($story->section) { print "</TD><TD BGCOLOR=\"$this->bgcolor3\" ALIGN=\"center\"><B><A HREF=\"index.php?section=" . urlencode($story->section) . "\"><FONT COLOR=\"$this->sectioncolor\">$story->section</FONT></A></B>"; }
          ?>
         </TD>
        </TR>

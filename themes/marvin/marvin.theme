@@ -54,7 +54,7 @@
      print " <TR VALIGN=\"bottom\"><TD COLSPAN=\"2\" BGCOLOR=\"#000000\" WIDTH=\"100%\"><IMG SRC=\"themes/marvin/images/pixel.gif\" WIDTH=\"1\" HEIGHT=\"0\" ALT=\"\"></TD></TR>\n";
      print " <TR>\n";
      print "  <TD>\n";
-     print "   <FONT COLOR=\"#7C7C7C\"><SMALL>Submitted by ". format_username($story->userid) ." on ". format_date($story->timestamp, "extra large"). ""; ?><? if ($story->department) print "<BR>from the $story->department dept."; ?><? print "</SMALL></FONT></TD><TD ALIGN=\"right\" VALIGN=\"top\" NOWRAP><SMALL><A HREF=\"search.php?category=". urlencode($story->category) ."\"><FONT COLOR=\"#83997A\">$story->category</FONT></A></SMALL>\n";
+     print "   <FONT COLOR=\"#7C7C7C\"><SMALL>Submitted by ". format_username($story->userid) ." on ". format_date($story->timestamp, "extra large"). ""; ?><? if ($story->department) print "<BR>from the $story->department dept."; ?><? print "</SMALL></FONT></TD><TD ALIGN=\"right\" VALIGN=\"top\" NOWRAP><SMALL><A HREF=\"?section=". urlencode($story->section) ."\"><FONT COLOR=\"#83997A\">$story->section</FONT></A></SMALL>\n";
      print "  </TD>\n";
      print " </TR>\n";
      print " <TR><TD COLSPAN=\"2\">&nbsp;</TD></TR>\n";
@@ -77,7 +77,7 @@
      print " <TR VALIGN=\"bottom\"><TD COLSPAN=\"2\" BGCOLOR=\"#000000\" WIDTH=\"100%\"><IMG SRC=\"themes/marvin/images/pixel.gif\" WIDTH=\"1\" HEIGHT=\"0\" ALT=\"\"></TD></TR>\n";
      print " <TR>\n";
      print "  <TD>\n";
-     print "   <FONT COLOR=\"#7C7C7C\"><SMALL>Submitted by ". format_username($story->userid) ." on ". format_date($story->timestamp, "extra large") .""; ?><? if ($story->department) print "<BR>from the $story->department dept."; ?><? print "</SMALL></FONT></TD><TD ALIGN=\"right\" VALIGN=\"top\" NOWRAP><SMALL><A HREF=\"search.php?category=". urlencode($story->category) ."\"><FONT COLOR=\"#83997A\">$story->category</FONT></A></SMALL>\n"; 
+     print "   <FONT COLOR=\"#7C7C7C\"><SMALL>Submitted by ". format_username($story->userid) ." on ". format_date($story->timestamp, "extra large") .""; ?><? if ($story->department) print "<BR>from the $story->department dept."; ?><? print "</SMALL></FONT></TD><TD ALIGN=\"right\" VALIGN=\"top\" NOWRAP><SMALL><A HREF=\"index.php?section=". urlencode($story->section) ."\"><FONT COLOR=\"#83997A\">$story->section</FONT></A></SMALL>\n"; 
      print "  </TD>\n";
      print " </TR>\n";
      print " <TR><TD COLSPAN=\"2\">&nbsp;</TD></TR>\n";
