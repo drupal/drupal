@@ -8,33 +8,36 @@ define('FILTER_HTML_ESCAPE', 2);
 define('FILTER_STYLE_ALLOW', 0);
 define('FILTER_STYLE_STRIP', 1);
 
-function filter_help($section = "admin/help#filter") {
+/**
+ * Implementation of hook_help().
+ */
+function filter_help($section) {
   switch ($section) {
     case 'admin/system/modules#description':
-      return t("Framework for handling filtering of content.");
+      return t('Framework for handling filtering of content.');
     case 'admin/system/filters':
       return t("
 <p>Filters fit between the raw text in a node and the HTML output. They allow you to replace text selectively. Uses include automatic conversion of emoticons into graphics and filtering HTML content from users' submissions.</p>
-<p>If you notice some filters are causing conflicts in the output, you can <a href=\"%url\">rearrange them</a>.</p>", array("%url" => url("admin/system/filters/order")));
+<p>If you notice some filters are causing conflicts in the output, you can <a href=\"%url\">rearrange them</a>.</p>", array('%url' => url('admin/system/filters/order')));
     case 'admin/system/filters/order':
       return t("
 <p>Because of the flexible filtering system, you might encounter a situation where one filter prevents another from doing its job. For example: a word in an URL gets converted into a glossary term, before the URL can be converted in a clickable link. When this happens, you will need to rearrange the order in which filters get executed.</p>
 <p>Filters are executed from top-to-bottom. You can use the weight column to rearrange them: heavier filters 'sink' to the bottom. Standard HTML filtering is always run first.</p>");
     case 'filter#long-tip':
     case 'filter#short-tip':
-      switch (variable_get("filter_html", FILTER_HTML_DONOTHING)) {
+      switch (variable_get('filter_html', FILTER_HTML_DONOTHING)) {
         case 0:
-          return t("All HTML tags allowed");
+          return t('All HTML tags allowed');
           break;
         case 1:
-          if ($allowed_html = variable_get("allowed_html", "<a> <b> <dd> <dl> <dt> <i> <li> <ol> <u> <ul>")) {
-            return t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html);
+          if ($allowed_html = variable_get('allowed_html', '<a> <b> <dd> <dl> <dt> <i> <li> <ol> <u> <ul>')) {
+            return t('Allowed HTML tags') .': '. htmlspecialchars($allowed_html);
           } else {
-            return t("No HTML tags allowed");
+            return t('No HTML tags allowed');
           }
           break;
         case 2:
-          return t("No HTML tags allowed");
+          return t('No HTML tags allowed');
           break;
       }
       break;
@@ -46,18 +49,21 @@ function filter_help($section = "admin/help#filter") {
  */
 function filter_link($type) {
   if ($type == 'system') {
-    menu('admin/system/filters', t('filters'), user_access('administer site configuration') ? 'filter_admin' : MENU_DENIED, 5);
-    menu('admin/system/filters/order', t('ordering'), user_access('administer site configuration') ? 'filter_admin' : MENU_DENIED, 5);
+    menu('admin/system/filters', t('filters'), user_access('administer site configuration') ? 'filter_admin_settings' : MENU_DENIED, 5);
+    menu('admin/system/filters/order', t('ordering'), user_access('administer site configuration') ? 'filter_admin_order' : MENU_DENIED, 5);
     menu('filter/tips', t('compose tips'), 'filter_tips_long', 0, MENU_HIDE);
   }
 }
 
+/**
+ * Menu callback; allows administrators to change the filter ordering.
+ */
 function filter_admin_order() {
-  $edit = $_POST["edit"];
-  $op = $_POST["op"];
-  if ($op == t("Save configuration")) {
+  $edit = $_POST['edit'];
+  $op = $_POST['op'];
+  if ($op == t('Save configuration')) {
     foreach ($edit as $module => $filter) {
-      db_query("UPDATE {filters} SET weight = %d WHERE module = '%s'", $filter["weight"], $module);
+      db_query("UPDATE {filters} SET weight = %d WHERE module = '%s'", $filter['weight'], $module);
     }
   }
 
@@ -69,53 +75,47 @@ function filter_admin_order() {
   $rows = array();
 
   // Standard HTML filters are always run first, we add a dummy row to indicate this
-  $rows[] = array(t("HTML filtering"), array("data" => t("locked")));
+  $rows[] = array(t('HTML filtering'), array('data' => t('locked')));
 
   foreach ($filters as $module => $filter) {
-    $name = module_invoke($module, "filter", "name");
-    $rows[] = array($name, array("data" => form_weight(NULL, $module ."][weight", $filter["weight"])));
+    $name = module_invoke($module, 'filter', 'name');
+    $rows[] = array($name, array('data' => form_weight(NULL, $module .'][weight', $filter['weight'])));
   }
 
-  $form  = theme("table", $header, $rows);
-  $form .= form_submit(t("Save configuration"));
+  $form  = theme('table', $header, $rows);
+  $form .= form_submit(t('Save configuration'));
   $output = form($form);
 
-  return $output;
+  print theme('page', $output);
 }
 
+/**
+ * Menu callback; displays settings defined by filters.
+ */
 function filter_admin_settings() {
   system_settings_save();
 
   filter_refresh();
 
   $form  = filter_default_settings();
-  $form .= implode("\n", module_invoke_all("filter", "settings"));
+  $form .= implode("\n", module_invoke_all('filter', 'settings'));
   $output = system_settings_form($form);
 
-  return $output;
+  print theme('page', $output);
 }
 
-function filter_admin() {
-  switch (arg(3)) {
-    case "order":
-      $output = filter_admin_order();
-      break;
-    default:
-      $output = filter_admin_settings();
-      break;
-  }
-  print theme("page", $output);
-}
-
+/**
+ * Search through all modules for the filters they implement.
+ */
 function filter_refresh() {
   $modules = module_list();
   $filters = filter_list();
 
   // Update list in database
-  db_query("DELETE FROM {filters}");
+  db_query('DELETE FROM {filters}');
   foreach ($modules as $module) {
-    if (module_hook($module, "filter")) {
-      $weight = $filters[$module]["weight"];
+    if (module_hook($module, 'filter')) {
+      $weight = $filters[$module]['weight'];
 
       db_query("INSERT INTO {filters} (module, weight) VALUES ('%s', %d)", $module, $weight);
     }
@@ -124,16 +124,19 @@ function filter_refresh() {
   filter_list(1);
 }
 
+/**
+ * Retrieve a list of all filters from the database.
+ */
 function filter_list($force = 0) {
   static $filters;
 
   if (!is_array($filters) || $force) {
     $filters = array();
-    $result = db_query("SELECT * FROM {filters} ORDER BY weight ASC");
+    $result = db_query('SELECT * FROM {filters} ORDER BY weight ASC');
     while ($filter = db_fetch_array($result)) {
       // Fail-safe in case a module was deleted/changed without disabling it
-      if (module_hook($filter["module"], "filter")) {
-        $filters[$filter["module"]] = $filter;
+      if (module_hook($filter['module'], 'filter')) {
+        $filters[$filter['module']] = $filter;
       }
     }
   }
@@ -141,31 +144,31 @@ function filter_list($force = 0) {
   return $filters;
 }
 
+/**
+ * Run all the enabled filters on a piece of text.
+ */
 function check_output($text) {
   if (isset($text)) {
-    // Filter content on output:
     $filters = filter_list();
 
-    // Give filters the chance to escape HTML-like data such as code or formulas
-    // (from this point on, the input can be treated as HTML)
-    if (variable_get("filter_html", FILTER_HTML_DONOTHING) != FILTER_HTML_ESCAPE) {
+    // Give filters the chance to escape HTML-like data such as code or formulas.
+    // From this point on, the input can be treated as HTML.
+    if (variable_get('filter_html', FILTER_HTML_DONOTHING) != FILTER_HTML_ESCAPE) {
       foreach ($filters as $module => $filter) {
-        $text = module_invoke($module, "filter", "prepare", $text);
+        $text = module_invoke($module, 'filter', 'prepare', $text);
       }
     }
 
-    // HTML handling is done before all regular filtering activities
+    // HTML handling is done before all regular filtering activities.
     $text = filter_default($text);
 
-    // Regular filtering
+    // Regular filtering.
     foreach ($filters as $module => $filter) {
-      $text = module_invoke($module, "filter", "process", $text);
+      $text = module_invoke($module, 'filter', 'process', $text);
     }
 
-    /*
-    ** If only inline elements are used and no block level elements, we
-    ** replace all newlines with HTML line breaks.
-    */
+    // If only inline elements are used and no block level elements, we
+    // replace all newlines with HTML line breaks.
     if (strip_tags($text, '<a><br><span><bdo><map><object><img><tt><i><b><u><big><small><em><strong><dfn><code><q><samp><kbd><var><cite><abbr><acronym><sub><sup><input><select><textarea><label><button><ins><del><script>') == $text) {
       $text = nl2br($text);
     }
@@ -177,17 +180,20 @@ function check_output($text) {
   return $text;
 }
 
+/**
+ * Perform the default filters, preventing malicious HTML from being displayed.
+ */
 function filter_default($text) {
-  if (variable_get("filter_html", FILTER_HTML_DONOTHING) == FILTER_HTML_STRIP) {
+  if (variable_get('filter_html', FILTER_HTML_DONOTHING) == FILTER_HTML_STRIP) {
     // Allow users to enter HTML, but filter it
-    $text = strip_tags($text, variable_get("allowed_html", ""));
-    if (variable_get("filter_style", FILTER_STYLE_STRIP)) {
-      $text = preg_replace("/\Wstyle\s*=[^>]+?>/i", ">", $text);
+    $text = strip_tags($text, variable_get('allowed_html', ''));
+    if (variable_get('filter_style', FILTER_STYLE_STRIP)) {
+      $text = preg_replace('/\Wstyle\s*=[^>]+?>/i', '>', $text);
     }
-    $text = preg_replace("/\Won[a-z]+\s*=[^>]+?>/i", ">", $text);
+    $text = preg_replace('/\Won[a-z]+\s*=[^>]+?>/i', '>', $text);
   }
 
-  if (variable_get("filter_html", FILTER_HTML_DONOTHING) == FILTER_HTML_ESCAPE) {
+  if (variable_get('filter_html', FILTER_HTML_DONOTHING) == FILTER_HTML_ESCAPE) {
     // Escape HTML
     $text = htmlspecialchars($text);
   }
@@ -195,50 +201,55 @@ function filter_default($text) {
   return trim($text);
 }
 
+/**
+ * Settings for the filter system's built-in HTML handling.
+ */
 function filter_default_settings() {
-  $group   = form_radios(t("Filter HTML tags"), "filter_html", variable_get("filter_html", FILTER_HTML_DONOTHING), array(FILTER_HTML_DONOTHING => t("Do not filter"), FILTER_HTML_STRIP => t("Strip tags"), FILTER_HTML_ESCAPE => t("Escape tags")), t("How to deal with HTML and PHP tags in user-contributed content. If set to \"Strip tags\", dangerous tags are removed (see below).  If set to \"Escape tags\", all HTML is escaped and presented as it was typed."));
-  $group  .= form_textfield(t("Allowed HTML tags"), "allowed_html", variable_get("allowed_html", "<a> <b> <dd> <dl> <dt> <i> <li> <ol> <u> <ul>"), 64, 255, t("If \"Strip tags\" is selected, optionally specify tags which should not be stripped.  'ON*' attributes are always stripped."));
-  $group  .= form_radios(t("HTML style attributes"), "filter_style", variable_get("filter_style", FILTER_STYLE_STRIP), array(FILTER_STYLE_ALLOW => t("Allowed"), FILTER_STYLE_STRIP => t("Removed")), t("If \"Strip tags\" is selected, you can choose whether 'STYLE' attributes are allowed or removed from input."));
-  $output .= form_group(t("HTML filtering"), $group);
+  $group = form_radios(t('Filter HTML tags'), 'filter_html', variable_get('filter_html', FILTER_HTML_DONOTHING), array(FILTER_HTML_DONOTHING => t('Do not filter'), FILTER_HTML_STRIP => t('Strip tags'), FILTER_HTML_ESCAPE => t('Escape tags')), t('How to deal with HTML and PHP tags in user-contributed content. If set to "Strip tags", dangerous tags are removed (see below).  If set to "Escape tags", all HTML is escaped and presented as it was typed.'));
+  $group .= form_textfield(t('Allowed HTML tags'), 'allowed_html', variable_get('allowed_html', '<a> <b> <dd> <dl> <dt> <i> <li> <ol> <u> <ul>'), 64, 255, t('If "Strip tags" is selected, optionally specify tags which should not be stripped.  "ON*" attributes are always stripped.'));
+  $group .= form_radios(t('HTML style attributes'), 'filter_style', variable_get('filter_style', FILTER_STYLE_STRIP), array(FILTER_STYLE_ALLOW => t('Allowed'), FILTER_STYLE_STRIP => t('Removed')), t('If "Strip tags" is selected, you can choose whether "STYLE" attributes are allowed or removed from input.'));
+  $output .= form_group(t('HTML filtering'), $group);
 
   return $output;
 }
 
-function filter_filter($op, $text = "") {
+/**
+ * Implementation of hook_filter(). Handles URL upgrades from Drupal 4.1.
+ */
+function filter_filter($op, $text = '') {
   switch ($op) {
-    case "name":
-      return t("Legacy filtering");
-    case "process":
-      if (variable_get("rewrite_old_urls", 0)) {
+    case 'name':
+      return t('Legacy filtering');
+    case 'process':
+      if (variable_get('rewrite_old_urls', 0)) {
         $text = filter_old_urls($text);
       }
       return $text;
-    case "settings":
-      $group   = form_radios(t("Rewrite old URLs"), "rewrite_old_urls", variable_get("rewrite_old_urls", 0), array(t("Disabled"), t("Enabled")), t("The introduction of 'clean URLs' in Drupal 4.2.0 breaks internal URLs that date back from Drupal 4.1.0 and before.  If enabled, this filter will attempt to rewrite the old style URLs to avoid broken links.  If <code>mod_rewrite</code> is available on your system, use the rewrite rules in Drupal's <code>.htaccess</code> file instead as these will also correct external referrers."));
-      $output .= form_group(t("Legacy filtering"), $group);
+    case 'settings':
+      $group   = form_radios(t('Rewrite old URLs'), 'rewrite_old_urls', variable_get('rewrite_old_urls', 0), array(t('Disabled'), t('Enabled')), t('The introduction of "clean URLs" in Drupal 4.2.0 breaks internal URLs that date back from Drupal 4.1.0 and before.  If enabled, this filter will attempt to rewrite the old style URLs to avoid broken links.  If <code>mod_rewrite</code> is available on your system, use the rewrite rules in Drupal\'s <code>.htaccess</code> file instead as these will also correct external referrers.'));
+      $output .= form_group(t('Legacy filtering'), $group);
       return $output;
     default:
       return $text;
   }
 }
 
+/**
+ * Rewrite legacy URLs.
+ *
+ * This is a *temporary* filter to rewrite old-style URLs to new-style
+ * URLs (clean URLs).  Currently, URLs are being rewritten dynamically
+ * (ie. "on output"), however when these rewrite rules have been tested
+ * enough, we will use them to permanently rewrite the links in node
+ * and comment bodies.
+ */
 function filter_old_urls($text) {
   global $base_url;
 
   $end = substr($base_url, 12);
 
-  /*
-  ** This is a *temporary* filter to rewrite old-style URLs to new-style
-  ** URLs (clean URLs).  Currently, URLs are being rewritten dynamically
-  ** (ie. "on output"), however when these rewrite rules have been tested
-  ** enough, we will use them to permanently rewrite the links in node
-  ** and comment bodies.
-  */
-
-  if (variable_get("clean_url", "0") == "0") {
-    /*
-    ** Relative URLs:
-    */
+  if (variable_get('clean_url', '0') == '0') {
+    // Relative URLs:
 
     // rewrite 'node.php?id=<number>[&cid=<number>]' style URLs:
     $text = eregi_replace("\"(node)\.php\?id=([[:digit:]]+)(&cid=)?([[:digit:]]*)", "\"?q=\\1/view/\\2/\\4", $text);
@@ -248,9 +259,7 @@ function filter_old_urls($text) {
     $text = ereg_replace("\"module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "\"?q=\\2/\\4", $text);
     $text = ereg_replace("\"module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))", "\"?q=\\2", $text);
 
-    /*
-    ** Absolute URLs:
-    */
+    // Absolute URLs:
 
     // rewrite 'node.php?id=<number>[&cid=<number>]' style URLs:
     $text = eregi_replace("$end/(node)\.php\?id=([[:digit:]]+)(&cid=)?([[:digit:]]*)", "$end/?q=\\1/view/\\2/\\4", $text);
@@ -261,9 +270,7 @@ function filter_old_urls($text) {
     $text = ereg_replace("$end/module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))", "\"$end/?q=\\2", $text);
   }
   else {
-    /*
-    ** Relative URLs:
-    */
+    // Relative URLs:
 
     // rewrite 'node.php?id=<number>[&cid=<number>]' style URLs:
     $text = eregi_replace("\"(node)\.php\?id=([[:digit:]]+)(&cid=)?([[:digit:]]*)", "\"\\1/view/\\2/\\4", $text);
@@ -273,9 +280,7 @@ function filter_old_urls($text) {
     $text = ereg_replace("\"module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "\"\\2/\\4", $text);
     $text = ereg_replace("\"module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))", "\"\\2", $text);
 
-    /*
-    ** Absolute URLs:
-    */
+    // Absolute URLs:
 
     // rewrite 'node.php?id=<number>[&cid=<number>]' style URLs:
     $text = eregi_replace("$end/(node)\.php\?id=([[:digit:]]+)(&cid=)?([[:digit:]]*)", "$end/\\1/view/\\2/\\4", $text);
@@ -289,6 +294,9 @@ function filter_old_urls($text) {
   return $text;
 }
 
+/**
+ * Fetch full filter help texts defined by modules.
+ */
 function filter_tips_long() {
   $tiplist = '';
   foreach (module_list() as $name) {
@@ -297,9 +305,12 @@ function filter_tips_long() {
     }
   }
   $output = "<ul class=\"filter-tips-long\">\n$tiplist\n</ul>\n";
-  print theme("page", $output, t('Compose Tips'));
+  print theme('page', $output, t('Compose Tips'));
 }
 
+/**
+ * Fetch abbreviated filter help texts defined by modules.
+ */
 function filter_tips_short() {
   $tiplist = '';
   foreach (module_list() as $name) {

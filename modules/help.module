@@ -7,13 +7,15 @@
 function help_link($type) {
   if ($type == 'system') {
     menu('admin/help/glossary', t('glossary'), user_access('access administration pages') ? 'help_glossary' : MENU_DENIED, 8);
-    menu('admin/help', t('help'), user_access('access administration pages') ? 'help_help_page' : MENU_DENIED, 9);
+    menu('admin/help', t('help'), user_access('access administration pages') ? 'help_page' : MENU_DENIED, 9);
   }
 }
 
+/**
+ * Menu callback; prints a page listing a glossary of Drupal terminology.
+ */
 function help_glossary() {
-
-  $output .= t("
+  $output = t("
   <h3>Glossary</h3><dl>
   <dt>Block</dt><dd>A small box containing information or content placed in the left-hand or right-hand sidebar of a web page.</dd>
   <dt>Comment</dt><dd>A note attached to a node. Usually intended to clarify, explain, criticize, or express an opinion on the original material.</dd>
@@ -29,41 +31,39 @@ function help_glossary() {
   <dt>Unpublished</dt><dd>A node that is only viewable by administrators and moderators.</dd>
   <dt>User</dt><dd>A person who has an account at your Drupal site, and is logged in with that account.</dd>
   <dt>Visitor</dt><dd>A person who does not have an account at your Drupal site or a person who has an account at your Drupal site but is <u>not</u> logged in with that account. Also termed \"anonymous user\".</dd>
-  </dl>", array("%taxonomy" => url("admin/taxonomy/help")));
+  </dl>", array('%taxonomy' => url('admin/taxonomy/help')));
 
-  print theme("page", $output);
+  print theme('page', $output);
 }
 
-function help_help($section = "admin/help#help") {
-  $output = "";
-
+/**
+ * Implementation of hook_help().
+ */
+function help_help($section) {
   switch ($section) {
-
-    case 'admin/help#help':
-      foreach (module_list() as $name) {
-        if ($name == 'help') {
-          continue;
-        }
-        else if (module_hook($name, "help")) {
-          $temp = module_invoke($name, "help", "admin/help#$name");
-          if (!empty($temp)) {
-            $links[] = l($name, "admin/help#$name");
-            $output .= "<h2><a id=\"$name\">". ucfirst($name) ." module</a></h2>";
-            $output .= $temp;
-          }
-        }
-      }
-      $output = "<small>". implode(" &middot; ", $links) ."</small><hr />". $output;
-      break;
     case 'admin/system/modules#description':
-      $output = t("Manages displaying online help.");
+      $output = t('Manages displaying online help.');
       break;
   }
   return $output;
 }
 
-function help_help_page() {
-  print theme("page", help_help());
+/**
+ * Menu callback; prints a page listing general help for all modules.
+ */
+function help_page() {
+  foreach (module_list() as $name) {
+    if (module_hook($name, 'help')) {
+      $temp = module_invoke($name, 'help', "admin/help#$name");
+      if (!empty($temp)) {
+        $links[] = l($name, "admin/help#$name");
+        $output .= "<h2><a id=\"$name\">". ucfirst($name) .' module</a></h2>';
+        $output .= $temp;
+      }
+    }
+  }
+  $output = '<small>'. implode(' &middot; ', $links) .'</small><hr />'. $output;
+  print theme('page', $output);
 }
 
 ?>

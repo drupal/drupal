@@ -48,7 +48,7 @@ function block_help($section) {
 }
 
 /**
- * Menu callback. Presents the block-specific information from admin/help.
+ * Menu callback; presents the block-specific information from admin/help.
  */
 function block_help_page() {
   print theme('page', block_help('admin/help#block'));
@@ -192,7 +192,7 @@ function block_admin_display() {
 }
 
 /**
- * Menu callback. Displays the block layout as it will appear when themed.
+ * Menu callback; displays the block layout as it will appear when themed.
  */
 function block_admin_preview() {
   $result = db_query('SELECT * FROM {blocks} WHERE status > 0 AND region = 0 ORDER BY weight');
@@ -251,8 +251,9 @@ function block_box_get($bid) {
 }
 
 /**
- * Menu callback. Displays the block editing form, or saves changes and
- * displays the block overview.
+ * Menu callback; displays the block editing form.
+ *
+ * On edit, saves changes and displays the block overview.
  */
 function block_box_edit($bid = 0) {
   $edit = $_POST['edit'];
@@ -310,7 +311,7 @@ function block_box_save($edit) {
 }
 
 /**
- * Menu callback. Deletes a custom box, then displays the overview page.
+ * Menu callback; deletes a custom box, then displays the overview page.
  */
 function block_box_delete($bid = 0) {
   if ($bid) {
@@ -322,7 +323,7 @@ function block_box_delete($bid = 0) {
 }
 
 /**
- * Menu callback. Displays the block overview page.
+ * Menu callback; displays the block overview page.
  */
 function block_admin() {
   $edit = $_POST['edit'];

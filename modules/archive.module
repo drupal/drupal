@@ -208,7 +208,7 @@ function archive_link($type) {
 }
 
 /**
- * Menu callback. Lists all nodes posted on a given date.
+ * Menu callback; lists all nodes posted on a given date.
  */
 function archive_page($year = 0, $month = 0, $day = 0) {
   global $user;

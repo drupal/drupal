@@ -679,7 +679,7 @@ function book_tree($parent = 0, $depth = 3, $unfold = array()) {
 }
 
 /**
- * Menu callback. Prints a listing of all books.
+ * Menu callback; prints a listing of all books.
  */
 function book_render() {
 
@@ -705,7 +705,7 @@ function book_render() {
 }
 
 /**
- * Menu callback. Prints a node as a book page, complete with navigation.
+ * Menu callback; prints a node as a book page, complete with navigation.
  */
 function book_view_page($nid = 0, $cid = 0) {
   $node = node_load(array('nid' => $nid));
@@ -714,7 +714,7 @@ function book_view_page($nid = 0, $cid = 0) {
 }
 
 /**
- * Menu callback. Generates printer-friendly book page will all descendants.
+ * Menu callback; generates printer-friendly book page will all descendants.
  */
 function book_print($nid = 0, $depth = 1) {
   global $base_url;
@@ -845,7 +845,7 @@ function book_admin_save($nid, $edit = array()) {
 }
 
 /**
- * Menu callback. Displays a listing of all orphaned book pages.
+ * Menu callback; displays a listing of all orphaned book pages.
  */
 function book_admin_orphan() {
   $result = db_query("SELECT n.nid, n.title, n.status, b.parent FROM {node} n INNER JOIN {book} b ON n.nid = b.nid");
@@ -870,9 +870,9 @@ function book_admin_orphan() {
 }
 
 /**
- * Menu callback. Displays the book administration page.
+ * Menu callback; displays the book administration page.
  */
-function book_admin($nid) {
+function book_admin($nid = 0) {
   $op = $_POST["op"];
   $edit = $_POST["edit"];
 

@@ -20,15 +20,14 @@ function admin_help($section) {
  */
 function admin_link($type) {
   if ($type == 'system') {
-    menu('admin', t('administer'), user_access('access administration pages') ? 'admin_admin' : MENU_DENIED, 9);
+    menu('admin', t('administer'), user_access('access administration pages') ? 'admin_main_page' : MENU_DENIED, 9);
   }
 }
 
 /**
- * Menu callback. Provides an overview to serve as the main page of the
- * administration section.
+ * Menu callback; provides the main page of the administration section.
  */
-function admin_admin() {
+function admin_main_page() {
   print theme("page", watchdog_overview("actions"));
 }
 

@@ -80,7 +80,7 @@ function blog_help($section) {
 }
 
 /**
- * Menu callback. Displays an RSS feed containing recent blog entries.
+ * Menu callback; displays an RSS feed containing recent blog entries.
  */
 function blog_feed($uid = 0) {
   if ($uid) {
@@ -123,7 +123,7 @@ function blog_feed_last() {
 }
 
 /**
- * Menu callback. Displays a Drupal page containing recent blog entries.
+ * Menu callback; displays a Drupal page containing recent blog entries.
  */
 function blog_page($uid = 0) {
   if ($uid) {

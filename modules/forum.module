@@ -443,7 +443,7 @@ function _forum_new($tid) {
 }
 
 /**
- * Menu callback. Prints a forum listing.
+ * Menu callback; prints a forum listing.
  */
 function forum_page($tid = 0, $display = 'all') {
   global $sortby, $forum_per_page, $from, $user;

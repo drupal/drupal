@@ -68,7 +68,7 @@ function aggregator_help($section) {
 }
 
 /**
- * Menu callback. Displays the aggregator-specific information from admin/help.
+ * Menu callback; displays the aggregator-specific information from admin/help.
  */
 function aggregator_help_page() {
   print theme('page', aggregator_help('admin/help#aggregator'));
@@ -626,7 +626,7 @@ function aggregator_view() {
 }
 
 /**
- * Menu callback. Displays the category edit form, or saves changes and
+ * Menu callback; displays the category edit form, or saves changes and
  * displays the overview page.
  */
 function aggregator_admin_edit_category($category = 0) {
@@ -652,8 +652,9 @@ function aggregator_admin_edit_category($category = 0) {
 }
 
 /**
- * Menu callback. Displays the feed edit form, or saves changes and
- * displays the overview page.
+ * Menu callback; displays the feed edit form.
+ *
+ * After editing, saves changes and displays the overview page.
  */
 function aggregator_admin_edit_feed($feed = 0) {
   $edit = $_POST['edit'];
@@ -678,7 +679,7 @@ function aggregator_admin_edit_feed($feed = 0) {
 }
 
 /**
- * Menu callback. Removes all items from a feed, then displays the overview page.
+ * Menu callback; removes all items from a feed, then displays the overview page.
  */
 function aggregator_admin_remove_feed($feed) {
   aggregator_remove(aggregator_get_feed($feed));
@@ -686,7 +687,7 @@ function aggregator_admin_remove_feed($feed) {
 }
 
 /**
- * Menu callback. Refreshes a feed, then displays the overview page.
+ * Menu callback; refreshes a feed, then displays the overview page.
  */
 function aggregator_admin_refresh_feed($feed) {
   aggregator_refresh(aggregator_get_feed($feed));
@@ -694,21 +695,21 @@ function aggregator_admin_refresh_feed($feed) {
 }
 
 /**
- * Menu callback. Displays the aggregator administration page.
+ * Menu callback; displays the aggregator administration page.
  */
 function aggregator_admin_overview() {
   print theme('page', aggregator_view());
 }
 
 /**
- * Menu callback. Displays the most recent items gathered from any feed.
+ * Menu callback; displays the most recent items gathered from any feed.
  */
 function aggregator_page_last() {
   _aggregator_page_list('SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_item} i INNER JOIN {aggregator_feed} f ON i.fid = f.fid ORDER BY i.timestamp DESC, i.iid DESC', arg(1));
 }
 
 /**
- * Menu callback. Displays all the items captured from a particular feed.
+ * Menu callback; displays all the items captured from a particular feed.
  */
 function aggregator_page_source() {
   $feed = db_fetch_object(db_query('SELECT * FROM {aggregator_feed} WHERE fid = %d', arg(2)));
@@ -718,7 +719,7 @@ function aggregator_page_source() {
 }
 
 /**
- * Menu callback. Displays all the items aggregated in a particular category.
+ * Menu callback; displays all the items aggregated in a particular category.
  */
 function aggregator_page_category() {
   $category = db_fetch_object(db_query('SELECT cid, title FROM {aggregator_category} WHERE cid = %d', arg(2)));
@@ -804,7 +805,7 @@ function _aggregator_page_list($sql, $op, $header = '') {
 }
 
 /**
- * Menu callback. Displays all the feeds used by the aggregator.
+ * Menu callback; displays all the feeds used by the aggregator.
  */
 function aggregator_page_sources() {
   $result = db_query('SELECT f.fid, f.title, f.description, f.image, MAX(i.timestamp) AS last FROM {aggregator_feed} f LEFT JOIN {aggregator_item} i ON f.fid = i.fid GROUP BY fid');
@@ -829,7 +830,7 @@ function aggregator_page_sources() {
 }
 
 /**
- * Menu callback. Generates an OPML representation of all feeds.
+ * Menu callback; generates an OPML representation of all feeds.
  */
 function aggregator_page_opml() {
   $result = db_query('SELECT * FROM {aggregator_feed} ORDER BY title');
@@ -854,7 +855,7 @@ function aggregator_page_opml() {
 }
 
 /**
- * Menu callback. Displays all the categories used by the aggregator.
+ * Menu callback; displays all the categories used by the aggregator.
  */
 function aggregator_page_categories() {
   $result = db_query('SELECT c.cid, c.title, c.description FROM {aggregator_category} c LEFT JOIN {aggregator_category_item} ci ON c.cid = ci.cid LEFT JOIN {aggregator_item} i ON ci.iid = i.iid GROUP BY cid');

@@ -237,7 +237,7 @@ function statistics_admin_accesslog_table($type, $id) {
 }
 
 /**
- * Menu callback. Presents the "Top referrers" page.
+ * Menu callback; presents the "Top referrers" page.
  *
  * @param $view
  *   - "internal": Only display internal links.
@@ -286,14 +286,14 @@ function statistics_top_refer($view = 'all') {
 }
 
 /**
- * Menu callback. Presents the "Most Popular Content" page.
+ * Menu callback; presents the "Most Popular Content" page.
  */
 function statistics_admin_topnodes() {
   print theme('page', statistics_admin_topnodes_table());
 }
 
 /**
- * Menu callback. Presents the "Access logs" page.
+ * Menu callback; presents the "Access logs" page.
  *
  * @param $type
  *   - "user": display accesses for a particular user.
@@ -469,7 +469,7 @@ function statistics_block($op = 'list', $delta = 0) {
 }
 
 /**
- * Menu callback. Presents the "Top Nodes" summary page.
+ * Menu callback; presents the "Top Nodes" summary page.
  */
 function statistics_page() {
   $output = '';
