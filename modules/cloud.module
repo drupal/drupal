@@ -108,7 +108,7 @@ function cloud_list($limit = 10) {
       $hour = floor((time() - $site->timestamp) / 3600);
       $output .= "<p />Updated ". format_plural($hour, "hour", "hours") ." ago :";
     }
-    $output .= "<br />". format_url($site->url, $site->title);
+    $output .= "<br /> &nbsp; ". format_url($site->url, $site->title);
   }
   return $output;
 }
