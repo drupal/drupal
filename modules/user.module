@@ -789,6 +789,9 @@ function user_register($edit = array()) {
     else if (variable_get("user_register", 1) == 0) {
       $error = t("Public registrations have been disabled by the site administrator.");
     }
+    else {
+      $success = true;
+    }
   }
 
   if ($success) {
