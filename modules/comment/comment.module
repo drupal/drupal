@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.166 2003/09/28 15:18:52 dries Exp $
+// $Id: comment.module,v 1.167 2003/09/29 19:11:39 dries Exp $
 
 $GLOBALS["cmodes"] = array(1 => t("Flat list - collapsed"), 2 => t("Flat list - expanded"), 3 => t("Threaded list - collapsed"), 4 => t("Threaded list - expanded"));
 $GLOBALS["corder"] = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"));
@@ -1167,7 +1167,7 @@ function comment_admin() {
     $op = arg(2);
   }
 
-  if ($op == t("moderation")) {
+  if ($op == "moderation") {
     $op = arg(3);
   }
 
