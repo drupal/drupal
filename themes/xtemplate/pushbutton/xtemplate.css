@@ -1,4 +1,4 @@
-/* $Id: xtemplate.css,v 1.13 2004/07/08 16:04:07 dries Exp $ */
+/* $Id: xtemplate.css,v 1.14 2004/07/25 22:18:32 unconed Exp $ */
 
 /*
 ** HTML elements
@@ -318,7 +318,7 @@ table#footer-menu {
   margin: .5em 0 2.5em 0;
 }
 .node .content, .comment .content {
-  padding: .5em 0 .75em 0;
+  margin: .5em 0 .5em 0;
 }
 .node .taxonomy {
   color: #999;
