@@ -49,7 +49,7 @@
 <!-- BEGIN: node -->
   <div class="node">
     <div class="title"><a href="{link}">{title}</a></div>
-    <span class="author">Submitted by {author} on {date}.</span>
+    <span class="author">{submitted}</span>
     <span class="taxonomy">{taxonomy}</span>
     <div class="content">{content}</div>
     <div class="links">&raquo; {links}</div>
@@ -58,9 +58,9 @@
 
 <!-- BEGIN: comment_new -->
   <div class="comment">
-    <span class="new">new</span>
+    <span class="new">{new}</span>
     <div class="title">{title}</div>
-    <div class="author">Posted by {author} on {date}.</div>
+    <div class="author">{posted}</div>
     <div class="content">{content}</div>
     <div class="links">&raquo; {links}</div>
   </div>
@@ -69,7 +69,7 @@
 <!-- BEGIN: comment_old -->
   <div class="comment">
     <div class="title">{title}</div>
-    <div class="author">Posted by {author} on {date}.</div>
+    <div class="author">{posted}</div>
     <div class="content">{content}</div>
     <div class="links">&raquo; {links}</div>
   </div>

@@ -35,6 +35,9 @@ class Theme_xtemplate extends BaseTheme {
   function node($node, $main = 0) {
 
     $this->template->assign(array(
+       "submitted" => t("Submitted by %a on %b.",
+                      array("%a" => format_name($node),
+                            "%b" => format_date($node->created))),
        "link"      => url("node/view/$node->nid"),
        "title"     => ucfirst($node->title),
        "author"    => format_name($node),
@@ -62,6 +65,10 @@ class Theme_xtemplate extends BaseTheme {
 
   function comment($comment, $link = 0) {
     $this->template->assign(array (
+        "new"     => t("new"),
+        "posted"  => t("Posted by %a on %b.",
+                     array("%a" => format_name($comment),
+                           "%b" => format_date($comment->timestamp))),
         "title"     => ucfirst($comment->subject),
         "author"    => format_name($comment),
         "date"      => format_date($comment->timestamp),
