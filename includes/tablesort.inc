@@ -1,15 +1,13 @@
 <?php
-// $Id: tablesort.inc,v 1.5 2003/09/14 18:28:17 dries Exp $
+// $Id: tablesort.inc,v 1.6 2003/09/20 19:24:27 dries Exp $
 
 function tablesort_init($header) {
-  static $ts;
 
-  if (!$ts) {
-    $ts["order"] = tablesort_get_order($header);
-    $ts["order_sql"] = tablesort_get_order_sql($header, $ts["order"]);
-    $ts["sort"] = tablesort_get_sort($header);
-    $ts["query_string"] = tablesort_get_querystring();
-  }
+  $ts["order"] = tablesort_get_order($header);
+  $ts["order_sql"] = tablesort_get_order_sql($header, $ts["order"]);
+  $ts["sort"] = tablesort_get_sort($header);
+  $ts["query_string"] = tablesort_get_querystring();
+
   return $ts;
 }
 
