@@ -4,6 +4,60 @@
 /**
  * @defgroup menu Menu system
  * @{
+ *
+ * The Drupal menu system drives both the navigation system from a user
+ * perspective and the callback system that Drupal uses to respond to URLs
+ * passed from the browser. For this reason, a good understanding of the
+ * menu system is fundamental to the creation of complex modules.
+ *
+ * Drupal's menu system follows a simple hierarchy defined by paths.
+ * Implementations of hook_menu() define menu items and assign them to
+ * paths (which should be unique). The menu system aggregates these items
+ * and determines the menu hierarchy from the paths. For example, if the
+ * paths defined were a, a/b, e, a/b/c/d, f/g, and a/b/h, the menu system
+ * would form the structure:
+ * - a
+ *   - a/b
+ *     - a/b/c/d
+ *     - a/b/h
+ * - e
+ * - f/g
+ * Note that the number of elements in the path does not necessarily
+ * determine the depth of the menu item in the tree.
+ *
+ * When responding to a page request, the menu system looks to see if the
+ * path requested by the browser is registered as a menu item with a
+ * callback. If not, the system searches up the menu tree for the most
+ * complete match with a callback it can find. If the path a/b/i is
+ * requested in the tree above, the callback for a/b would be used.
+ *
+ * The found callback function is called with any arguments specified in
+ * the "callback arguments" attribute of its menu item. After these
+ * arguments, any remaining components of the path are appended as further
+ * arguments. In this way, the callback for a/b above could respond to a
+ * request for a/b/i differently than a request for a/b/j.
+ *
+ * For an illustration of this process, see page_example.module.
+ *
+ * Access to the callback functions is also protected by the menu system.
+ * The "access" attribute of each menu item is checked as the search for a
+ * callback proceeds. If this attribute is TRUE, then access is granted; if
+ * FALSE, then access is denied. The first found "access" attribute
+ * determines the accessibility of the target. Menu items may omit this
+ * attribute to use the value provided by an ancestor item.
+ *
+ * In the default Drupal interface, you will notice many links rendered as
+ * tabs. These are known in the menu system as "local tasks", and they are
+ * rendered as tabs by default, though other presentations are possible.
+ * Local tasks function just as other menu items in most respects. It is
+ * convention that the names of these tasks should be short verbs if
+ * possible. In addition, a "default" local task should be provided for
+ * each set. When visiting a local task's parent menu item, the default
+ * local task will be rendered as if it is selected; this provides for a
+ * normal tab user experience. This default task is special in that it
+ * links not to its provided path, but to its parent item's path instead.
+ * The default task's path is only used to place it appropriately in the
+ * menu hierarchy.
  */
 
 /**
@@ -34,19 +88,21 @@ define('MENU_LINKS_TO_PARENT', 0x0200);
 
 /**
  * Normal menu items show up in the menu tree and can be moved/hidden by
- * the administrator.
+ * the administrator. Use this for most menu items. It is the default value if
+ * no menu item type is specified.
  */
 define('MENU_NORMAL_ITEM', MENU_VISIBLE_IN_TREE | MENU_VISIBLE_IN_BREADCRUMB | MENU_MODIFIABLE_BY_ADMIN);
 
 /**
  * Item groupings are used for pages like "node/add" that simply list
- * subpages to visit.
+ * subpages to visit. They are distinguished from other pages in that they will
+ * disappear from the menu if no subpages exist.
  */
 define('MENU_ITEM_GROUPING', MENU_VISIBLE_IF_HAS_CHILDREN | MENU_VISIBLE_IN_BREADCRUMB | MENU_MODIFIABLE_BY_ADMIN);
 
 /**
  * Callbacks simply register a path so that the correct function is fired
- * when the URL is accessed.
+ * when the URL is accessed. They are not shown in the menu.
  */
 define('MENU_CALLBACK', MENU_VISIBLE_IN_BREADCRUMB);
 
@@ -57,19 +113,17 @@ define('MENU_CALLBACK', MENU_VISIBLE_IN_BREADCRUMB);
 define('MENU_DYNAMIC_ITEM', MENU_VISIBLE_IN_TREE | MENU_VISIBLE_IN_BREADCRUMB);
 
 /**
- * Modules may "suggest" menu items that the administrator may enable.
+ * Modules may "suggest" menu items that the administrator may enable. They act
+ * just as callbacks do until enabled, at which time they act like normal items.
  */
 define('MENU_SUGGESTED_ITEM', MENU_MODIFIABLE_BY_ADMIN);
 
 /**
- * Local tasks are rendered as tabs by default.
+ * Local tasks are rendered as tabs by default. Use this for menu items that
+ * describe actions to be performed on their parent item. An example is the path
+ * "node/52/edit", which performs the "edit" task on "node/52".
  */
 define('MENU_LOCAL_TASK', MENU_IS_LOCAL_TASK);
-
-/**
- * Local subtasks are rendered as a horizontal listing below the tabs by default.
- */
-define('MENU_LOCAL_SUBTASK', MENU_IS_LOCAL_SUBTASK);
 
 /**
  * Every set of local tasks should provide one "default" task, that links to the
@@ -78,12 +132,14 @@ define('MENU_LOCAL_SUBTASK', MENU_IS_LOCAL_SUBTASK);
 define('MENU_DEFAULT_LOCAL_TASK', MENU_IS_LOCAL_TASK | MENU_LINKS_TO_PARENT);
 
 /**
- * Custom items are those defined by the administrator.
+ * Custom items are those defined by the administrator. Reserved for internal
+ * use; do not return from hook_menu() implementations.
  */
 define('MENU_CUSTOM_ITEM', MENU_VISIBLE_IN_TREE | MENU_VISIBLE_IN_BREADCRUMB | MENU_CREATED_BY_ADMIN | MENU_MODIFIABLE_BY_ADMIN);
 
 /**
- * Custom menus are those defined by the administrator.
+ * Custom menus are those defined by the administrator. Reserved for internal
+ * use; do not return from hook_menu() implementations.
  */
 define('MENU_CUSTOM_MENU', MENU_IS_ROOT | MENU_VISIBLE_IN_TREE | MENU_CREATED_BY_ADMIN | MENU_MODIFIABLE_BY_ADMIN);
 
@@ -688,20 +744,15 @@ function _menu_build() {
 function _menu_item_is_accessible($mid) {
   $menu = menu_get_menu();
 
-  if (array_key_exists('access', $menu['items'][$mid])) {
-    return $menu['items'][$mid]['access'];
-  }
-
-  // Follow the path up to find the actual callback.
+  // Follow the path up to find the first "access" attribute.
   $path = $menu['items'][$mid]['path'];
-  while ($path && (!array_key_exists($path, $menu['path index']) || !array_key_exists('callback', $menu['items'][$menu['path index'][$path]]))) {
+  while ($path && (!array_key_exists($path, $menu['path index']) || !array_key_exists('access', $menu['items'][$menu['path index'][$path]]))) {
     $path = substr($path, 0, strrpos($path, '/'));
   }
   if (empty($path)) {
     return FALSE;
   }
-  $callback_mid = $menu['path index'][$path];
-  return $menu['items'][$callback_mid]['access'];
+  return $menu['items'][$menu['path index'][$path]]['access'];
 }
 
 /**
