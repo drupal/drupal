@@ -20,10 +20,6 @@ h1 {
   color: #369;
   font-size: 1.6em;
 }
-img {
-  display: block;
-  border: 0;
-}
 tr.dark td, tr.light td {
   padding: 0.3em;
 }
@@ -80,7 +76,9 @@ pre {
 ** Page layout blocks / IDs
 */
 #primary-menu  {
+  border-collapse: separate;
   background-color: #e0edfb;
+  border-bottom: 3px solid #69c;
 }
 #primary-menu tr {
   background: transparent url(header-a.jpg) left bottom repeat;
@@ -113,8 +111,8 @@ td#home a:hover img {
   color: #369;
 }
 #secondary-menu {
+  border-collapse: separate;
   background-color: #369;
-  border-top: 3px solid #69c;
   border-bottom: 3px solid #69c;
 }
 .secondary-links, .secondary-links a:link, .secondary-links a:visited  {
