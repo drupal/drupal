@@ -37,13 +37,10 @@ function ban_admin_new($mask, $category, $reason) {
 function ban_display($category = "") {
   global $type2index;
 
-  // initialize variable:
   $category = $category ? $category : 1;
 
-  // Perform query:
   $result = db_query("SELECT * FROM bans WHERE type = $category ORDER BY mask");
 
-  // Generate output:
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR>\n";
   $output .= "  <TH COLSPAN=\"3\">\n";
@@ -57,11 +54,7 @@ function ban_display($category = "") {
   $output .= "   </FORM>\n";
   $output .= "  </TH>\n";
   $output .= " </TR>\n";
-  $output .= " <TR>\n";
-  $output .= "  <TH>mask</TH>\n";
-  $output .= "  <TH>reason</TH>\n";
-  $output .= "  <TH>operations</TH>\n";
-  $output .= " </TR>\n";
+  $output .= " <TR><TH>mask</TH><TH>reason</TH><TH>operations</TH></TR>\n";
   while ($ban = db_fetch_object($result)) {
     $output .= "  <TR><TD>$ban->mask</TD><TD>$ban->reason</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=ban&op=delete&category=$category&id=$ban->id\">delete</A></TD></TR>\n";
   }
@@ -76,16 +69,17 @@ function ban_admin_add() {
 
   $output .= "<H3>Add new ban:</H3>\n";
   $output .= "<FORM ACTION=\"admin.php?mod=ban\" METHOD=\"post\">\n";
+
   $output .= "<B>Banmask:</B><BR>\n";
   $output .= "<INPUT TYPE=\"text\" NAME=\"mask\" SIZE=\"35\"><P>\n";
+
   $output .= "<B>Type:</B><BR>\n";
-  $output .= "<SELECT NAME=\"category\"\">\n";
-  for (reset($type2index); $cur = current($type2index); next($type2index)) {
-    $output .= "<OPTION VALUE=\"$cur\"". ($cur == $category ? " SELECTED" : "") .">". key($type2index) ."</OPTION>\n";
-  }
-  $output .= "</SELECT><P>\n";
+  for (reset($type2index); $cur = current($type2index); next($type2index)) $options .= "<OPTION VALUE=\"$cur\"". ($cur == $category ? " SELECTED" : "") .">". key($type2index) ."</OPTION>\n";
+  $output .= "<SELECT NAME=\"category\"\">$options</SELECT><P>\n";
+
   $output .= "<B>Reason:</B><BR>\n";
   $output .= "<TEXTAREA NAME=\"reason\" COLS=\"50\" ROWS=\"5\"></TEXTAREA><P>\n";
+
   $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Add ban\"><BR>\n";
   $output .= "</FORM>\n";
 
@@ -103,14 +97,14 @@ function ban_admin_check() {
 
   $output .= "<H3>Ban check:</H3>\n";
   $output .= "<FORM ACTION=\"admin.php?mod=ban\" METHOD=\"post\">\n";
+
   $output .= "<B>Banmask:</B><BR>\n";
   $output .= "<INPUT TYPE=\"text\" NAME=\"mask\" SIZE=\"35\"><P>\n";
+
   $output .= "<B>Type:</B><BR>\n";
-  $output .= "<SELECT NAME=\"category\"\">\n";
-  for (reset($type2index); $cur = current($type2index); next($type2index)) {
-    $output .= "<OPTION VALUE=\"$cur\"". ($cur == $category ? " SELECTED" : "") .">". key($type2index) ."</OPTION>\n";
-  }
-  $output .= "</SELECT><P>\n";
+  for (reset($type2index); $cur = current($type2index); next($type2index)) $options .= "<OPTION VALUE=\"$cur\"". ($cur == $category ? " SELECTED" : "") .">". key($type2index) ."</OPTION>\n";
+  $output .= "<SELECT NAME=\"category\"\">$options</SELECT><P>\n";
+
   $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Check ban\"><BR>\n";
   $output .= "</FORM>\n";
 

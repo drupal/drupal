@@ -165,8 +165,9 @@
       <TR>
        <TD ALIGN="center" COLSPAN="3">
         <?
-          print "<SMALL>[ <A HREF=\"index.php\">". t("home") ."</A> | <A HREF=\"module.php?mod=faq\">". t("faq") ."</A> | <A HREF=\"module.php?mod=diary\">". t("diary") ."</A> | <A HREF=\"search.php\">". t("search") ."</A> | <A HREF=\"submit.php\">". t("submit news") ."</A> | <A HREF=\"account.php\">". t("user account") ."</A> ]</SMALL>\n";
+          print "<SMALL>[ <A HREF=\"index.php\">". t("home") ."</A> | <A HREF=\"module.php?mod=faq\">". t("faq") ."</A> | <A HREF=\"module.php?mod=diary\">". t("diary") ."</A> | <A HREF=\"search.php\">". t("search") ."</A> | <A HREF=\"submit.php\">". t("submit news") ."</A> | <A HREF=\"account.php\">". t("user account") ."</A> ]</SMALL><P>\n";
         ?>
+        <CENTER><SMALL><I><FONT COLOR="#7C7C7C">Powered by <A HREF="http://drop.org/module.php?mod=drupal">drupal</A>.</FONT></I></SMALL></CENTER>
        </TD>
       </TR>
      </TABLE>

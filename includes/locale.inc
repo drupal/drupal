@@ -6,7 +6,8 @@ function locale_init() {
 }
 
 function t($string) {
-  return locale($string);
+  global $languages;
+  return ($languages ? locale($string) : $string);
 }
 
 ?>
