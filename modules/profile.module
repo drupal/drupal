@@ -266,7 +266,7 @@ function _profile_validate_avatar(&$edit, $user) {
     $error = t("The uploaded image is too large; the maximum dimensions are %a pixels.", array("%a" => variable_get("profile_avatar_dimensions", "85x85")));
   }
   else if ($file = file_save_upload('profile_avatar', variable_get("profile_avatar_path", "avatars") . FILE_SEPARATOR .'avatar-'. $user->uid . $extension, 1)) {
-    $edit["profile_avatar"] = $file->name;
+    $edit["profile_avatar"] = $file->path;
   }
   else {
     $error = t("Failed to upload the avatar image; the '%directory' directory doesn't exist.", array("%directory" => variable_get("profile_avatar_path", "avatars")));
