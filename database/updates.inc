@@ -1,5 +1,5 @@
 <?php
-/* $Id: updates.inc,v 1.49 2004/08/22 15:03:47 unconed Exp $ */
+/* $Id: updates.inc,v 1.50 2004/09/01 11:45:24 unconed Exp $ */
 
 /**
  * @file
@@ -1257,10 +1257,10 @@ function update_98() {
     if ($page == 'feed' || $page == 'page') {
       switch ($op) {
         case 'or':
-          $new = 'taxonomy/terms/'. str_replace(',', '+', $terms);
+          $new = 'taxonomy/term/'. str_replace(',', '+', $terms);
           break;
         case 'and':
-          $new = 'taxonomy/terms/'. $terms;
+          $new = 'taxonomy/term/'. $terms;
           break;
       }
       if ($new) {
