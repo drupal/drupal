@@ -1593,7 +1593,7 @@ function node_access($op, $node = NULL) {
       }
     }
     $sql .= implode(',', $grants) .') AND grant_'. $op .' = 1';
-    $result = db_query($sql, $nid);
+    $result = db_query($sql, $node->nid);
     return (db_result($result));
   }
   return FALSE;
