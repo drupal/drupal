@@ -17,9 +17,15 @@ define('FILE_DOWNLOADS_PRIVATE', 2);
 define('FILE_CREATE_DIRECTORY', 1);
 define('FILE_MODIFY_PERMISSIONS', 2);
 define('FILE_DIRECTORY_TEMP', PHP_OS == 'WINNT' ? 'c:\\windows\\temp' : '/tmp');
+define('FILE_EXISTS_RENAME', 0);
+define('FILE_EXISTS_REPLACE', 1);
+define('FILE_EXISTS_ERROR', 2);
 
 /**
  * Create the download path to a file.
+ *
+ * @param $path Path to the file to generate URL for
+ * @return URL pointing to the file
  */
 function file_create_url($path) {
   if (strpos($path, variable_get('file_directory_path', 'files')) !== false) {
@@ -34,8 +40,12 @@ function file_create_url($path) {
 }
 
 /**
- * Make sure the destination is a complete path, if it is not prepend the
+ * Make sure the destination is a complete path and resides in the
+ * file system directory, if it is not prepend the
  * file system directory.
+ *
+ * @param $dest Path to verifiy
+ * @return Path to file with file system directory appended if necessary.
  */
 function file_create_path($dest = 0) {
   if (!$dest) {
@@ -162,23 +172,24 @@ function file_check_location($source, $directory = 0) {
 }
 
 /**
- * Saves a file to a new location. This is a powerful function that in many ways
+ * Copies a file to a new location. This is a powerful function that in many ways
  * performs like an advanced version of copy().
  * - Checks if $source and $dest are valid and readable/writable.
  * - Performs a file copy if $source is not equal to $dest.
- * - If file already exists in $dest it will append a number to the end of the
- *   filename, but before the file extension. It will increment the number until
- *   it finds a filename that is not already in use.
+ * - If file already exists in $dest either the call will error out, replace the
+ *   file or rename the file based on the $replace parameter.
  *
  * @param $source A string specifying the file location of the original file.
  *   This parameter will contain the resulting destination filename in case of
  *   success.
  * @param $dest A string containing the directory $source should be copied to.
- * @param $replace A boolean that when true will overwrite any existing files,
- *   but when false append a _X to the filename.
+ * @param $replace Replace behavior when the destination file already exists.
+ *   - FILE_EXISTS_REPLACE - Replace the existing file
+ *   - FILE_EXISTS_RENAME - Append _{incrementing number} until the filename is unique
+ *   - FILE_EXISTS_ERROR - Do nothing and return false.
  * @return True for success, false for failure.
  */
-function file_copy(&$source, $dest = 0, $replace = 0) {
+function file_copy(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
   $dest = file_create_path($dest);
 
   $directory = $dest;
@@ -213,21 +224,32 @@ function file_copy(&$source, $dest = 0, $replace = 0) {
   // to copy it if they are. In fact copying the file will most likely result in
   // a 0 byte file. Which is bad. Real bad.
   if ($source != realpath($dest)) {
-    if (file_exists($dest) && !$replace) {
-      // Destination file already exists and we can't replace is so we try and
-      // and find a new filename.
-      if ($pos = strrpos($basename, '.')) {
-        $name = substr($basename, 0, $pos);
-        $ext = substr($basename, $pos);
-      }
-      else {
-        $name = $basename;
-      }
+    if (file_exists($dest)) {
+      switch ($replace) {
+        case FILE_EXISTS_RENAME:
+          // Destination file already exists and we can't replace is so we try and
+          // and find a new filename.
+          if ($pos = strrpos($basename, '.')) {
+            $name = substr($basename, 0, $pos);
+            $ext = substr($basename, $pos);
+          }
+          else {
+            $name = $basename;
+          }
 
-      $counter = 0;
-      do {
-        $dest = $directory .'/'. $name .'_'. $counter++ . $ext;
-      } while (file_exists($dest));
+          $counter = 0;
+          do {
+            $dest = $directory .'/'. $name .'_'. $counter++ . $ext;
+          } while (file_exists($dest));
+          break;
+
+        case FILE_EXISTS_ERROR:
+          drupal_set_message(t('File copy failed. File already exists.'), 'error');
+          return 0;
+
+        case FILE_EXISTS_REPLACE:
+          // Leave $dest where it is for replace.
+      }
     }
 
     if (!copy($source, $dest)) {
@@ -248,7 +270,24 @@ function file_copy(&$source, $dest = 0, $replace = 0) {
   return 1; // Everything went ok.
 }
 
-function file_move(&$source, $dest = 0, $replace = 0) {
+/**
+ * Moves a file to a new location.
+ * - Checks if $source and $dest are valid and readable/writable.
+ * - Performs a file move if $source is not equal to $dest.
+ * - If file already exists in $dest either the call will error out, replace the
+ *   file or rename the file based on the $replace parameter.
+ *
+ * @param $source A string specifying the file location of the original file.
+ *   This parameter will contain the resulting destination filename in case of
+ *   success.
+ * @param $dest A string containing the directory $source should be copied to.
+ * @param $replace Replace behavior when the destination file already exists.
+ *   - FILE_EXISTS_REPLACE - Replace the existing file
+ *   - FILE_EXISTS_RENAME - Append _{incrementing number} until the filename is unique
+ *   - FILE_EXISTS_ERROR - Do nothing and return false.
+ * @return True for success, false for failure.
+ */
+function file_move(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
 
   $path_original = is_object($source) ? $source->filepath : $source;
 
@@ -304,7 +343,7 @@ function file_delete($path) {
  *   when in use, but when false append a _X to the filename.
  * @return An object containing file info or 0 in case of error.
  */
-function file_save_upload($source, $dest = 0, $replace = 0) {
+function file_save_upload($source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
   // Make sure $source exists in $_FILES.
   if ($file = file_check_upload($source)) {
     if (!$dest) {
@@ -428,15 +467,24 @@ function file_download() {
 }
 
 /**
- * Finds all files that match a given mask in a given directory. Searches
- * recursively.
+ * Finds all files that match a given mask in a given directory.
+ *
+ * @param $dir Directory to scan
+ * @param $mask Regular expression to filter out files.  Only filenames that
+ *              match the mask will be returned.
+ * @param $nomask Array of filenames which should never be returned regardless
+ *                if they match the $mask
+ * @param $callback Function to call for qualifying file.
+ *                  Set to 0 or false if you do not want callbacks.
+ * @param $recurse When true directory scan will recurse the entire tree starting at $dir
+ * @return Array of qualifying files
  */
-function file_scan_directory($dir, $mask, $nomask = array('.', '..', 'CVS'), $callback = 0) {
+function file_scan_directory($dir, $mask, $nomask = array('.', '..', 'CVS'), $callback = 0, $recurse = TRUE) {
   $files = array();
   if (is_dir($dir) && $handle = opendir($dir)) {
     while ($file = readdir($handle)) {
       if (!in_array($file, $nomask)) {
-        if (is_dir("$dir/$file")) {
+        if (is_dir("$dir/$file") && $recurse) {
           $files = array_merge($files, file_scan_directory("$dir/$file", $mask, $nomask, $callback));
         }
         elseif (ereg($mask, $file)) {
