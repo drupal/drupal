@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.287 2003/12/22 15:38:07 dries Exp $ */
+/* $Id: common.inc,v 1.288 2003/12/24 12:40:28 dries Exp $ */
 
 /**
  * @name drupal_title
@@ -631,7 +631,7 @@ function format_size($size) {
 
 function format_interval($timestamp) {
   $units = array("1 year|%count years" => 31536000, "1 week|%count weeks" => 604800, "1 day|%count days" => 86400, "1 hour|%count hours" => 3600, "1 min|%count min" => 60, "1 sec|%count sec" => 1);
-  foreach ($units as $key=>$value) {
+  foreach ($units as $key => $value) {
     $key = explode("|", $key);
     if ($timestamp >= $value) {
       $output .= ($output ? " " : "") . format_plural(floor($timestamp / $value), $key[0], $key[1]);
@@ -730,7 +730,16 @@ function form_group($legend, $group, $description = NULL) {
 }
 
 function form_radio($title, $name, $value = 1, $checked = 0, $description = NULL, $attributes = NULL) {
-  return theme("form_element", 0, "<input type=\"radio\" class=\"form-radio\" name=\"edit[$name]\" id=\"$name\" value=\"". $value ."\"". ($checked ? " checked=\"checked\"" : "") . drupal_attributes($attributes) ." /> $title", $description, $name);
+  return theme("form_element", 0, "<input type=\"radio\" class=\"form-radio\" name=\"edit[$name]\" id=\"$name\" value=\"$value\"". ($checked ? " checked=\"checked\"" : "") . drupal_attributes($attributes) ." /> $title", $description, $name);
+}
+
+function form_radios($title, $name, $value, $options, $description = NULL) {
+  if (count($options) > 0) {
+    foreach ($options as $key => $choice) {
+      $choices .= "<input type=\"radio\" class=\"form-radio\" name=\"edit[$name]\" id=\"$name\" value=\"$key\"". ($key == $value ? " checked=\"checked\"" : "") ." /> $choice<br />";
+    }
+    return theme("form_element", $title, $choices, $description, $name);
+  }
 }
 
 function form_checkbox($title, $name, $value = 1, $checked = 0, $description = NULL, $attributes = NULL) {
@@ -754,21 +763,10 @@ function form_textarea($title, $name, $value, $cols, $rows, $description = NULL,
 }
 
 function form_select($title, $name, $value, $options, $description = NULL, $extra = 0, $multiple = 0) {
-  if (count($options) > 0) {
-    foreach ($options as $key=>$choice) {
-      $select .= "<option value=\"$key\"". (is_array($value) ? (in_array($key, $value) ? " selected=\"selected\"" : "") : ($value == $key ? " selected=\"selected\"" : "")) .">". check_form($choice) ."</option>";
-    }
-    return theme("form_element", $title, "<select name=\"edit[$name]". ($multiple ? "[]" : "") ."\"". ($multiple ? " multiple " : "") . ($extra ? " $extra" : "") ." id=\"$name\">$select</select>", $description, $name);
+  foreach ($options as $key => $choice) {
+    $select .= "<option value=\"$key\"". (is_array($value) ? (in_array($key, $value) ? " selected=\"selected\"" : "") : ($value == $key ? " selected=\"selected\"" : "")) .">". check_form($choice) ."</option>";
   }
-}
-
-function form_radios($title, $name, $value, $options, $description = NULL) {
-  if (count($options) > 0) {
-    foreach ($options as $key => $choice) {
-      $output .= form_radio($choice, $name, $key, ($key == $value));
-    }
-    return theme("form_element", $title, $output, $description, $name);
-  }
+  return theme("form_element", $title, "<select name=\"edit[$name]". ($multiple ? "[]" : "") ."\"". ($multiple ? " multiple " : "") . ($extra ? " $extra" : "") ." id=\"$name\">$select</select>", $description, $name);
 }
 
 function form_file($title, $name, $size, $description = NULL) {
