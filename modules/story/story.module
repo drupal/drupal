@@ -1,5 +1,5 @@
 <?php
-// $Id: story.module,v 1.124 2003/09/20 15:11:41 dries Exp $
+// $Id: story.module,v 1.125 2003/09/20 16:03:05 dries Exp $
 
 function story_help($section = "admin/story/help") {
   switch ($section) {
@@ -61,32 +61,32 @@ function story_link($type) {
   return $links;
 }
 
+function story_validate(&$node) {
+
+  /*
+  ** Validate the size of the story:
+  */
+
+  if (isset($node->body) && count(explode(" ", $node->body)) < variable_get("minimum_story_size", 0)) {
+print "body : $node->body";
+    $error["body"] = "<div class=\"error\">". t("The body of your story is too short.") ."</div>";
+  }
+
+  return $error;
+}
+
 function story_form(&$node, &$help, &$error) {
 
-  if (isset($node->body)) {
+  /*
+  ** Carry out some explanation or submission guidelines:
+  */
 
-    /*
-    ** Validate the size of the story:
-    */
-
-    if (count(explode(" ", $node->body)) < variable_get("minimum_story_size", 0)) {
-      $error["body"] = "<div class=\"error\">". t("The body of your story is too short.") ."</div>";
-    }
-
-  }
-  else {
-
-    /*
-    ** Carry out some explanation or submission guidelines:
-    */
-
-    $help = variable_get("story_help", "");
-
-  }
+  $help = variable_get("story_help", "");
 
   if (function_exists("taxonomy_node_form")) {
     $output .= implode("", taxonomy_node_form("story", $node));
   }
+
   $output .= form_textarea(t("Body"), "body", $node->body, 60, 15, $error["body"] ? $error["body"] : form_allowed_tags_text());
 
   return $output;
