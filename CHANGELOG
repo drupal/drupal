@@ -1,9 +1,16 @@
 Drupal x.x.x, xxxx-xx-xx
 ------------------------
 
-- usability improvements:
-    * grouped form elements using <fieldset> and <legend> tags.
-    * replaced short drop-down menus by radio buttons.
+- theme system:
+    * made all theme functions start with 'theme_'.
+    * made all theme functions return their output.
+    * migrated away from using the BaseTheme class.
+- usability:
+    * grouped form elements using '<fieldset>' and '<legend>' tags.
+    * replaced drop-down menus by radio buttons where appropriate.
+    * removed the 'magic_quotes_gpc = 0' requirement.
+- documentation:
+    * added PHPDoc/Doxygen comments.
 
 Drupal 4.3.0, 2003-11-01
 ------------------------
@@ -12,7 +19,7 @@ Drupal 4.3.0, 2003-11-01
 - added support for sortable table columns.
 - database backend:
     * added support for selective database table prefixing.
-- performance improvements:
+- performance:
     * optimized many SQL queries for speed by converting left joins to inner joins.
 - comment module:
     * rewrote the comment housekeeping code to be much more efficient and scalable.
@@ -24,7 +31,7 @@ Drupal 4.3.0, 2003-11-01
     * improved the forum views and the themability thereof.
 - book module:
     * improved integration of non-book nodes in the book outline.
-- usability improvements:
+- usability:
     * added support for "mass node operations" to ease repetitive tasks.
     * added support for breadcrumb navigation to several modules' user pages.
     * integrated the administration pages with the normal user pages.
@@ -45,7 +52,7 @@ Drupal 4.2.0, 2003-08-01
     * added MSSQL database scheme.
 - search module:
     * changed the search module to use implicit AND'ing instead of implicit OR'ing.
-- node system improvements:
+- node system:
     * replaced the "post content" permission by more fine-grained permissions.
     * improved content submission:
         + improved teasers: teasers are now optional, teaser length can be configured, teaser and body are edited in a single textarea, users will no longer be bothered with teasers when the post is too short for one.
@@ -113,7 +120,7 @@ Drupal 4.0.0, 2002-06-15
     * blocks can now be enabled and/or be set by the user.
     * blocks can be set to only show up on some pages.
     * merged box module with block module.
-- node system improvements:
+- node system:
     * fixed node retrieval based on titles.
     * blogs can be updated.
     * teasers (abstracts) on all node types.
