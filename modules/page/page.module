@@ -121,11 +121,9 @@ function page_content($node, $teaser = FALSE) {
 /**
  * Implementation of hook_view().
  */
-function page_view($node, $teaser = FALSE, $page = FALSE) {
+function page_view(&$node, $teaser = FALSE, $page = FALSE) {
   // prepare the node content
   $node = page_content($node, $teaser);
-  // print the node
-  return theme('node', $node, $teaser, $page);
 }
 
 /**

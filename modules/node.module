@@ -490,17 +490,18 @@ function node_view($node, $teaser = FALSE, $page = FALSE) {
   // TODO: this strips legitimate uses of '<!--break-->' also.
   $node->body = str_replace('<!--break-->', '', $node->body);
 
-  // Allow modules to change $node->body before viewing.
-  node_invoke_nodeapi($node, 'view', $teaser, $page);
-
   // The 'view' hook can be implemented to overwrite the default function
   // to display nodes.
   if (node_hook($node, 'view')) {
-    return node_invoke($node, 'view', $teaser, $page);
+    node_invoke($node, 'view', $teaser, $page);
   }
   else {
-    return theme('node', node_prepare($node, $teaser), $teaser, $page);
+    $node = node_prepare($node, $teaser);
   }
+  // Allow modules to change $node->body before viewing.
+  node_invoke_nodeapi($node, 'view', $teaser, $page);
+
+  return theme('node', $node, $teaser, $page);
 }
 
 /**

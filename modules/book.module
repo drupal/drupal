@@ -22,36 +22,26 @@ function book_access($op, $node) {
   global $user;
 
   if ($op == 'view') {
-    /*
-    ** Everyone can access all published book pages whether these pages
-    ** are still waiting for approval or not.  We might not always want
-    ** to display pages that are waiting for approval, but we take care
-    ** of that problem in the book_view() function.
-    */
-
+    // Everyone can access all published book pages whether these pages
+    // are still waiting for approval or not.  We might not always want
+    // to display pages that are waiting for approval, but we take care
+    // of that problem in the book_content() function.
     return $node->status;
   }
 
   if ($op == 'create') {
-    /*
-    ** Only registered users can create book pages.  Given the nature
-    ** of the book module this is considered to be a good/safe idea.
-    */
-
+    // Only registered users can create book pages.  Given the nature
+    // of the book module this is considered to be a good/safe idea.
     return user_access('maintain books');
   }
 
   if ($op == 'update') {
-    /*
-    ** Only registered users can update book pages.  Given the nature
-    ** of the book module this is considered to be a good/safe idea.
-    ** One can only update a book page if there are no suggested updates
-    ** of that page waiting for approval, when it is not a PHP-page and
-    ** as long as the "create new revision"-bit is set.  That is, only
-    ** updates that don't overwrite the current or pending information
-    ** are allowed.
-    */
-
+    // Only registered users can update book pages.  Given the nature
+    // of the book module this is considered to be a good/safe idea.
+    // One can only update a book page if there are no suggested updates
+    // of that page waiting for approval, it is not a PHP page, and
+    // the "create new revision" bit is set.  That is, only updates that
+    // don't overwrite the current or pending information are allowed.
     return user_access('maintain books') && !$node->moderate && !$node->format && $node->revision;
   }
 }
@@ -69,10 +59,10 @@ function book_link($type, $node = 0, $main = 0) {
 
   if ($type == 'node' && $node->type == 'book') {
     if (book_access('update', $node)) {
-      $links[] = l(t('edit this page'), "node/$node->nid/edit", array('title' => t('Suggest an update for this book page.')));
+      $links[] = l(t('edit this page'), 'node/'. $node->nid .'/edit', array('title' => t('Suggest an update for this book page.')));
     }
     if (!$main) {
-      $links[] = l(t('printer-friendly version'), "book/print/$node->nid", array('title' => t('Show a printer-friendly version of this book page and its sub-pages.')));
+      $links[] = l(t('printer-friendly version'), 'book/print/'. $node->nid, array('title' => t('Show a printer-friendly version of this book page and its sub-pages.')));
     }
   }
 
@@ -103,10 +93,6 @@ function book_menu() {
     'callback' => 'book_render',
     'access' => user_access('access content'),
     'type' => MENU_SUGGESTED_ITEM);
-  $items[] = array('path' => 'book/view', 'title' => t('view'),
-    'callback' => 'book_view_page',
-    'access' => user_access('access content'),
-    'type' => MENU_CALLBACK);
   $items[] = array('path' => 'book/print', 'title' => t('printer-friendly version'),
     'callback' => 'book_print',
     'access' => user_access('access content'),
@@ -118,32 +104,33 @@ function book_menu() {
 /**
  * Implementation of hook_block().
  *
- * Displays the book table of contents in a block when a node is being
- * viewed using a "book/view" path.
+ * Displays the book table of contents in a block when the current page is a
+ * single-node view of a book node.
  */
 function book_block($op = 'list', $delta = 0) {
-
-  // Only display this block when the user is browsing a book:
-  if (arg(0) == 'book' && arg(1) == 'view' && $nid = arg(2)) {
-    $page = db_fetch_object(db_query('SELECT n.nid, n.title, b.parent FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE n.nid = %d', $nid));
-
-    $path = book_location($page);
-    $path[] = $page;
-
-    foreach ($path as $key => $node) {
-      $expand[] = $node->nid;
-    }
-
-    $title = $path[0]->title;
-    $table = book_tree($expand[0], 5, $expand);
-  }
-
+  $block = array();
   if ($op == 'list') {
     $block[0]['info'] = t('Book navigation');
   }
   else {
-    $block['subject'] = $title;
-    $block['content'] = $table;
+    // Only display this block when the user is browsing a book:
+    if (arg(0) == 'node' && is_numeric(arg(1))) {
+      $result = db_query('SELECT n.nid, n.title, b.parent FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE n.nid = %d', arg(1));
+      if (db_num_rows($result) > 0) {
+        $node = db_fetch_object($result);
+
+        $path = book_location($node);
+        $path[] = $node;
+
+        $expand = array();
+        foreach ($path as $key => $node) {
+          $expand[] = $node->nid;
+        }
+
+        $block['subject'] = $path[0]->title;
+        $block['content'] = book_tree($expand[0], 5, $expand);
+      }
+    }
   }
 
    return $block;
@@ -158,11 +145,8 @@ function book_load($node) {
   $book = db_fetch_object(db_query('SELECT format, parent, weight, log FROM {book} WHERE nid = %d', $node->nid));
 
   if (arg(1) == 'edit' && !user_access('administer nodes')) {
-    /*
-    ** If a user is about to update a book page, we overload some
-    ** fields to reflect the changes.
-    */
-
+    // If a user is about to update a book page, we overload some
+    // fields to reflect the changes.
     if ($user->uid) {
       $book->uid = $user->uid;
       $book->name = $user->name;
@@ -173,12 +157,9 @@ function book_load($node) {
     }
   }
 
-  /*
-  ** We set the revision field to indicate that we have to create
-  ** a new revision when updating this book page.  We enable this
-  ** always such that the "edit this page" links appear.
-  */
-
+  // We set the revision field to indicate that we have to create
+  // a new revision when updating this book page.  We enable this
+  // always such that the "edit this page" links appear.
   $book->revision = 1;
 
   return $book;
@@ -248,11 +229,8 @@ function book_form(&$node) {
     }
   }
   else {
-    /*
-    ** If a regular user updates a book page, we create a new revision
-    ** authored by that user:
-    */
-
+    // If a regular user updates a book page, we create a new revision
+    // authored by that user:
     $output .= form_hidden('revision', 1);
   }
 
@@ -289,7 +267,7 @@ function book_node_link($node = 0) {
       drupal_set_message(t('removed the node form the book.'));
     }
 
-    $output .= '<h3>'. t('Edit book outline for node "%booktitle"', array('%booktitle' => "<em>$node->title</em>")) .'</h3>';
+    $output .= '<h3>'. t('Edit book outline for node "%booktitle"', array('%booktitle' => '<em>'. $node->title .'</em>')) .'</h3>';
 
     if ($edit['nid']) {
       $page = db_fetch_object(db_query('SELECT * FROM {book} WHERE nid = %d', $node->nid));
@@ -325,21 +303,15 @@ function book_revision_load($page, $conditions = array()) {
 
   foreach ($revisions as $revision) {
 
-    /*
-    ** Extract the specified revision:
-    */
-
+    // Extract the specified revision:
     $node = node_revision_load($page, $revision);
 
-    /*
-    ** Check to see if the conditions are met:
-    */
-
-    $status = 1;
+    // Check to see if the conditions are met:
+    $status = TRUE;
 
     foreach ($conditions as $key => $value) {
       if ($node->$key != $value) {
-        $status = 0;
+        $status = FALSE;
       }
     }
 
@@ -353,8 +325,6 @@ function book_revision_load($page, $conditions = array()) {
  * Return the path (call stack) to a certain book page.
  */
 function book_location($node, $nodes = array()) {
-  // TODO: eliminate the recursion
-
   $parent = db_fetch_object(db_query('SELECT n.nid, n.title, b.parent FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE n.nid = %d', $node->parent));
   if ($parent->title) {
     $nodes = book_location($parent, $nodes);
@@ -364,8 +334,6 @@ function book_location($node, $nodes = array()) {
 }
 
 function book_location_down($node, $nodes = array()) {
-  // TODO: eliminate the recursion
-
   $last_direct_child = db_fetch_object(db_query('SELECT n.nid, n.title, b.parent FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = %d ORDER BY b.weight DESC, n.title DESC', $node->nid));
   if ($last_direct_child) {
     array_push($nodes, $last_direct_child);
@@ -378,21 +346,21 @@ function book_location_down($node, $nodes = array()) {
  * Fetch the node object of the previous page of the book.
  */
 function book_prev($node) {
-  // if the parent is zero, we are at the start of a book so there is no previous
+  // If the parent is zero, we are at the start of a book so there is no previous.
   if ($node->parent == 0) {
     return NULL;
   }
 
-  // previous on the same level
+  // Previous on the same level:
   $direct_above = db_fetch_object(db_query("SELECT n.nid, n.title FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = %d AND n.status = 1 AND (n.moderate = 0 OR n.revisions != '') AND (b.weight < %d OR (b.weight = %d AND n.title < '%s')) ORDER BY b.weight DESC, n.title DESC", $node->parent, $node->weight, $node->weight, $node->title));
   if ($direct_above) {
-    // get last leaf of $above
+    // Get last leaf of $above.
     $path = book_location_down($direct_above);
 
     return $path ? (count($path) > 0 ? array_pop($path) : NULL) : $direct_above;
   }
   else {
-    // direct parent
+    // Direct parent:
     $prev = db_fetch_object(db_query("SELECT n.nid, n.title FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE n.nid = %d AND n.status = 1 AND (n.moderate = 0 OR n.revisions != '')", $node->parent));
     return $prev;
   }
@@ -408,8 +376,8 @@ function book_next($node) {
     return $child;
   }
 
-  // no direct child: get next for this level or any parent in this book
-  array_push($path = book_location($node), $node); // path to top-level node including this one
+  // No direct child: get next for this level or any parent in this book.
+  array_push($path = book_location($node), $node); // Path to top-level node including this one.
 
   while (($leaf = array_pop($path)) && count($path)) {
     $next = db_fetch_object(db_query("SELECT n.nid, n.title FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = %d AND n.status = 1 AND (n.moderate = 0 OR n.revisions != '') AND (b.weight > %d OR (b.weight = %d AND n.title > '%s')) ORDER BY b.weight ASC, n.title ASC", $leaf->parent, $leaf->weight, $leaf->weight, $leaf->title));
@@ -425,12 +393,9 @@ function book_next($node) {
 function book_content($node, $teaser = FALSE) {
   $op = $_POST['op'];
 
-  /*
-  ** Always display the most recently approved revision of a node
-  ** (if any) unless we have to display this page in the context of
-  ** the moderation queue.
-  */
-
+  // Always display the most recently approved revision of a node
+  // (if any) unless we have to display this page in the context of
+  // the moderation queue.
   if ($op != t('Preview') && $node->moderate && arg(0) != 'queue') {
     $revision = book_revision_load($node, array('moderate' => 0, 'status' => 1));
 
@@ -439,11 +404,8 @@ function book_content($node, $teaser = FALSE) {
     }
   }
 
-  /*
-  ** Extract the page body.  If body is dynamic (using PHP code), the body
-  ** will be generated.
-  */
-
+  // Extract the page body.  If body is dynamic (using PHP code), the body
+  // will be generated.
   if ($node->format == 1) {
     // Make sure only authorized users can preview PHP pages.
     if ($op == t('Preview') && !user_access('create php content')) {
@@ -470,51 +432,23 @@ function book_content($node, $teaser = FALSE) {
  * If not displayed on the main page, we render the node as a page in the
  * book with extra links to the previous and next pages.
  */
-function book_view($node, $teaser = FALSE, $page = FALSE) {
+function book_view(&$node, $teaser = FALSE, $page = FALSE) {
   $node = book_content($node, $teaser);
 
-  $output = '';
-
-  if ($teaser) {
-    $output .= theme('node', $node, $teaser, $page);
+  if (!$teaser && $node->moderate) {
+    $node->body .= '<div class="log"><div class="title">'. t('Log') .':</div>'. $node->log .'</div>';
   }
-  else {
-    if ($node->moderate) {
-      $node->body = $node->body . '<div class="log"><div class="title">'. t('Log') .":</div>$node->log</div>";
-    }
-    // Add the navigation and the breadcrumb if we view a page
-    if ($page) {
-      $node = book_navigation($node);
-      // Print the breadcrumb
-      menu_set_location($node->breadcrumb);
-    }
-    // Print the node
-    $output .= theme('node', $node, $teaser, $page);
-  }
-
-  return $output;
 }
 
 /**
- * Present a view of a node as a book page.
+ * Implementation of hook_nodeapi().
+ *
+ * Appends book navigation to all nodes in the book.
  */
-function book_show($node, $cid) {
-  $output = '';
-
-  if (node_access('view', $node)) {
-
-    if ($node->type == 'book') {
-      $output .= book_view($node, 0, 1);
-    }
-    else {
-
-      if (node_hook($node, 'content')) {
-        $node = node_invoke($node, 'content');
-
-        /*
-        ** Add the book navigation if the node is in the book.
-        */
-
+function book_nodeapi(&$node, $op, $teaser, $page) {
+  switch ($op) {
+    case 'view':
+      if (!$teaser) {
         $book = db_fetch_object(db_query('SELECT * FROM {book} WHERE nid = %d', $node->nid));
 
         if ($book) {
@@ -523,41 +457,12 @@ function book_show($node, $cid) {
           }
           $node = book_navigation($node);
         }
-
-        /*
-        ** make $node->type a book. This is for the links.
-        */
-
-        $node->type = 'book';
-
-        /*
-        ** View the node
-        */
-        menu_set_location($node->breadcrumb);
-        $output .= theme('node', $node, 0, 1);
+        if ($page) {
+          menu_set_location($node->breadcrumb);
+        }
       }
-      else {
-
-        /*
-        ** We can't get the content of the node and just view the node.
-        ** We don't add breadcrumbs or links.
-        */
-        $output .= node_view($node, 0, 1);
-      }
-    }
-    if (function_exists('comment_render') && $node->comment) {
-      $output .= comment_render($node, $cid);
-    }
-
-    /*
-    ** Update the history table, stating that this user viewed this node.
-    */
-    node_tag_new($node->nid);
+      break;
   }
-  else {
-    $output .= message_access();
-  }
-  return $output;
 }
 
 /**
@@ -567,13 +472,11 @@ function book_show($node, $cid) {
 function book_navigation($node) {
   $path = book_location($node);
 
-  /*
-  ** Construct the breadcrumb:
-  */
+  // Construct the breadcrumb:
 
   $node->breadcrumb = array(); // Overwrite the trail with a book trail.
   foreach ($path as $level) {
-    $node->breadcrumb[] = array('path' => 'book/view/'. $level->nid, 'title' =>  $level->title);
+    $node->breadcrumb[] = array('path' => 'node/'. $level->nid, 'title' =>  $level->title);
   }
   $node->breadcrumb[] = array('path' => 'node/'. $node->nid);
 
@@ -586,31 +489,31 @@ function book_navigation($node) {
 
     if ($prev = book_prev($node)) {
       $links .= '<div class="prev">';
-      $links .= l(t('previous'), "book/view/$prev->nid", array('title' => t('View the previous page.')));
+      $links .= l(t('previous'), 'node/'. $prev->nid, array('title' => t('View the previous page.')));
       $links .= '</div>';
-      $titles .= "<div class=\"prev\">$prev->title</div>";
+      $titles .= '<div class="prev">'. $prev->title .'</div>';
     }
     else {
-      $links .= '<div class="prev">&nbsp;</div>'; // make an empty div to fill the space
+      $links .= '<div class="prev">&nbsp;</div>'; // Make an empty div to fill the space.
     }
     if ($next = book_next($node)) {
       $links .= '<div class="next">';
-      $links .= l(t('next'), "book/view/$next->nid", array('title' => t('View the next page.')));
+      $links .= l(t('next'), 'node/'. $next->nid, array('title' => t('View the next page.')));
       $links .= '</div>';
-      $titles .= "<div class=\"next\">$next->title</div>";
+      $titles .= '<div class="next">'. $next->title .'</div>';
     }
     else {
-      $links .= '<div class="next">&nbsp;</div>'; // make an empty div to fill the space
+      $links .= '<div class="next">&nbsp;</div>'; // Make an empty div to fill the space.
     }
     if ($node->parent) {
       $links .= '<div class="up">';
-      $links .= l(t('up'), "book/view/$node->parent", array('title' => t("View this page's parent section.")));
+      $links .= l(t('up'), 'node/'. $node->parent, array('title' => t('View this page\'s parent section.')));
       $links .= '</div>';
     }
 
     $output .= '<div class="nav">';
-    $output .= " <div class=\"links\">$links</div>";
-    $output .= " <div class=\"titles\">$titles</div>";
+    $output .= ' <div class="links">'. $links .'</div>';
+    $output .= ' <div class="titles">'. $titles .'</div>';
     $output .= '</div>';
     $output .= '</div>';
   }
@@ -624,8 +527,8 @@ function book_toc_recurse($nid, $indent, $toc, $children) {
 
   if ($children[$nid]) {
     foreach ($children[$nid] as $foo => $node) {
-      $toc[$node->nid] = "$indent $node->title";
-      $toc = book_toc_recurse($node->nid, "$indent--", $toc, $children);
+      $toc[$node->nid] = $indent .' '. $node->title;
+      $toc = book_toc_recurse($node->nid, $indent .'--', $toc, $children);
     }
   }
 
@@ -642,11 +545,8 @@ function book_toc($parent = 0, $indent = '', $toc = array()) {
     array_push($children[$node->parent], $node);
   }
 
-  /*
-  ** If the user is an administrator, add the top-level book page;
-  ** only administrators can start new books.
-  */
-
+  // If the user is an administrator, add the top-level book page;
+  // only administrators can start new books.
   if (user_access('administer nodes')) {
     $toc[0] = '<'. t('top-level') .'>';
   }
@@ -663,20 +563,20 @@ function book_tree_recurse($nid, $depth, $children, $unfold = array()) {
         if (in_array($node->nid, $unfold)) {
           if ($tree = book_tree_recurse($node->nid, $depth - 1, $children, $unfold)) {
             $output .= '<li class="expanded">';
-            $output .= l($node->title, "book/view/$node->nid");
-            $output .= "<ul>$tree</ul>";
+            $output .= l($node->title, 'node/'. $node->nid);
+            $output .= '<ul>'. $tree .'</ul>';
             $output .= '</li>';
           }
           else {
-            $output .= '<li class="leaf">'. l($node->title, "book/view/$node->nid") .'</li>';
+            $output .= '<li class="leaf">'. l($node->title, 'node/'. $node->nid) .'</li>';
           }
         }
         else {
           if ($tree = book_tree_recurse($node->nid, 1, $children)) {
-            $output .= '<li class="collapsed">'. l($node->title, "book/view/$node->nid") .'</li>';
+            $output .= '<li class="collapsed">'. l($node->title, 'node/'. $node->nid) .'</li>';
           }
           else {
-            $output .= '<li class="leaf">'. l($node->title, "book/view/$node->nid") .'</li>';
+            $output .= '<li class="leaf">'. l($node->title, 'node/'. $node->nid) .'</li>';
           }
         }
       }
@@ -696,7 +596,7 @@ function book_tree($parent = 0, $depth = 3, $unfold = array()) {
   }
 
   if ($tree = book_tree_recurse($parent, $depth, $children, $unfold)) {
-    return "<ul>$tree</ul>";
+    return '<ul>'. $tree .'</ul>';
   }
 }
 
@@ -704,19 +604,18 @@ function book_tree($parent = 0, $depth = 3, $unfold = array()) {
  * Menu callback; prints a listing of all books.
  */
 function book_render() {
-
   $result = db_query('SELECT n.nid FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = 0 AND n.status = 1 AND (n.moderate = 0 OR n.revisions IS NOT NULL) ORDER BY b.weight, n.title');
 
   while ($page = db_fetch_object($result)) {
-    // load the node:
+    // Load the node:
     $node = node_load(array('nid' => $page->nid));
 
     if ($node) {
-      // take the most recent approved revision, extract the page and check output:
+      // Take the most recent approved revision, extract the page and check output:
       $node = book_content($node);
-      // output the content:
+      // Output the content:
       $output .= '<div class="book">';
-      $output .= '<div class="title">'. l($node->title, "book/view/$node->nid") .'</div>';
+      $output .= '<div class="title">'. l($node->title, 'node/'. $node->nid) .'</div>';
       $output .= '<div class="body">'. $node->teaser .'</div>';
       $output .= '</div>';
     }
@@ -727,16 +626,7 @@ function book_render() {
 }
 
 /**
- * Menu callback; prints a node as a book page, complete with navigation.
- */
-function book_view_page($nid = 0, $cid = 0) {
-  $node = node_load(array('nid' => $nid));
-  $output = book_show($node, $cid);
-  print theme('page', $output, $node->title);
-}
-
-/**
- * Menu callback; generates printer-friendly book page will all descendants.
+ * Menu callback; generates printer-friendly book page with all descendants.
  */
 function book_print($nid = 0, $depth = 1) {
   global $base_url;
@@ -751,7 +641,7 @@ function book_print($nid = 0, $depth = 1) {
       if (node_hook($node, 'content')) {
         $node = node_invoke($node, 'content');
       }
-      $output .= "<h1 id=\"$node->nid\" name=\"$node->nid\" class=\"book-h$depth\">$node->title</h1>";
+      $output .= '<h1 id="'. $node->nid .'" name="'. $node->nid .'" class="book-h'. $depth .'">'. $node->title .'</h1>';
 
       if ($node->body) {
         $output .= $node->body;
@@ -761,8 +651,8 @@ function book_print($nid = 0, $depth = 1) {
 
   $output .= book_print_recurse($nid, $depth);
 
-  $html = "<html><head><title>$node->title</title>";
-  $html .= "<base href=\"$base_url/\" />";
+  $html = '<html><head><title>'. $node->title .'</title>';
+  $html .= '<base href="'. $base_url .'/" />';
   $html .= "<style type=\"text/css\">\n@import url(misc/print.css);\n</style>";
   $html .= '</head><body>'. $output .'</body></html>';
 
@@ -773,20 +663,20 @@ function book_print_recurse($parent = '', $depth = 1) {
   $result = db_query("SELECT n.nid FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE n.status = 1 AND b.parent = '$parent' AND (n.moderate = 0 OR n.revisions IS NOT NULL) ORDER BY b.weight, n.title");
 
   while ($page = db_fetch_object($result)) {
-    // load the node:
+    // Load the node:
     $node = node_load(array('nid' => $page->nid));
 
-    // take the most recent approved revision:
+    // Take the most recent approved revision:
     if ($node->moderate) {
       $node = book_revision_load($node, array('moderate' => 0, 'status' => 1));
     }
 
     if ($node) {
-      // output the content:
+      // Output the content:
       if (node_hook($node, 'content')) {
         $node = node_invoke($node, 'content');
       }
-      $output .= "<h1 id=\"$node->nid\" name=\"$node->nid\" class=\"book-h$depth\">$node->title</h1>";
+      $output .= '<h1 id="'. $node->nid .'" name="'. $node->nid .'" class="book-h'. $depth .'">'. $node->title .'</h1>';
 
       if ($node->body) {
         $output .= '<ul>'. $node->body .'</ul>';
@@ -800,14 +690,14 @@ function book_print_recurse($parent = '', $depth = 1) {
 }
 
 function book_admin_view_line($node, $depth = 0) {
-  return array("<div style=\"padding-left: ". (25 * $depth) ."px;\">". form_textfield(NULL, "$node->nid][title", $node->title, 64, 255) ."</div>", form_weight(NULL, "$node->nid][weight", $node->weight), l(t("view node"), "node/$node->nid"), l(t("edit node"), "node/$node->nid/edit"), l(t("delete node"), "admin/node/delete/$node->nid"));
+  return array('<div style="padding-left: '. (25 * $depth) .'px;">'. form_textfield(NULL, $node->nid .'][title', $node->title, 64, 255) .'</div>', form_weight(NULL, $node->nid .'][weight', $node->weight), l(t('view node'), 'node/'. $node->nid), l(t('edit node'), 'node/'. $node->nid .'/edit'), l(t('delete node'), 'admin/node/delete/'. $node->nid));
 }
 
 function book_admin_view_book($nid, $depth = 1) {
   $result = db_query("SELECT n.nid FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = %d ORDER BY b.weight, n.title", $nid);
 
   while ($node = db_fetch_object($result)) {
-    $node = node_load(array("nid" => $node->nid));
+    $node = node_load(array('nid' => $node->nid));
     $rows[] = book_admin_view_line($node, $depth);
     $rows = array_merge($rows, book_admin_view_book($node->nid, $depth + 1));
   }
@@ -820,16 +710,16 @@ function book_admin_view_book($nid, $depth = 1) {
  */
 function book_admin_view($nid, $depth = 0) {
   if ($nid) {
-    $node = node_load(array("nid" => $nid));
+    $node = node_load(array('nid' => $nid));
 
-    $output .= "<h3>$node->title</h3>";
+    $output .= '<h3>'. $node->title .'</h3>';
 
-    $header = array(t("title"), t("weight"), array("data" => t("operations"), "colspan" => 3));
+    $header = array(t('title'), t('weight'), array('data' => t('operations'), 'colspan' => 3));
     $rows[] = book_admin_view_line($node);
     $rows = array_merge($rows, book_admin_view_book($nid));
 
-    $output .= theme("table", $header, $rows);
-    $output .= form_submit(t("Save book pages"));
+    $output .= theme('table', $header, $rows);
+    $output .= form_submit(t('Save book pages'));
 
     return form($output);
   }
@@ -837,25 +727,19 @@ function book_admin_view($nid, $depth = 0) {
 
 function book_admin_save($nid, $edit = array()) {
   if ($nid) {
-    $book = node_load(array("nid" => $nid));
+    $book = node_load(array('nid' => $nid));
 
     foreach ($edit as $nid => $value) {
-      /*
-      ** Check to see whether the title needs updating:
-      */
-
-      $title = db_result(db_query("SELECT title FROM {node} WHERE nid = %d", $nid));
-      if ($title != $value["title"]) {
-        db_query("UPDATE {node} SET title = '%s' WHERE nid = %d", $value["title"], $nid);
+      // Check to see whether the title needs updating:
+      $title = db_result(db_query('SELECT title FROM {node} WHERE nid = %d', $nid));
+      if ($title != $value['title']) {
+        db_query("UPDATE {node} SET title = '%s' WHERE nid = %d", $value['title'], $nid);
       }
 
-      /*
-      ** Check to see whether the weight needs updating:
-      */
-
-      $weight = db_result(db_query("SELECT weight FROM {book} WHERE nid = %d", $nid));
-      if ($weight != $value["weight"]) {
-        db_query("UPDATE {book} SET weight = %d WHERE nid = %d", $value["weight"], $nid);
+      // Check to see whether the weight needs updating:
+      $weight = db_result(db_query('SELECT weight FROM {book} WHERE nid = %d', $nid));
+      if ($weight != $value['weight']) {
+        db_query('UPDATE {book} SET weight = %d WHERE nid = %d', $value['weight'], $nid);
       }
     }
 
@@ -870,7 +754,7 @@ function book_admin_save($nid, $edit = array()) {
  * Menu callback; displays a listing of all orphaned book pages.
  */
 function book_admin_orphan() {
-  $result = db_query("SELECT n.nid, n.title, n.status, b.parent FROM {node} n INNER JOIN {book} b ON n.nid = b.nid");
+  $result = db_query('SELECT n.nid, n.title, n.status, b.parent FROM {node} n INNER JOIN {book} b ON n.nid = b.nid');
 
   while ($page = db_fetch_object($result)) {
     $pages[$page->nid] = $page;
@@ -878,52 +762,50 @@ function book_admin_orphan() {
 
   if ($pages) {
     $output .= '<h3>'. t('Orphan pages') .'</h3>';
-    $header = array(t("title"), t("weight"), array("data" => t("operations"), "colspan" => 3));
+    $header = array(t('title'), t('weight'), array('data' => t('operations'), 'colspan' => 3));
     foreach ($pages as $nid => $node) {
       if ($node->parent && empty($pages[$node->parent])) {
         $rows[] = book_admin_view_line($node, $depth);
         $rows = array_merge($rows, book_admin_view_book($node->nid, $depth + 1));
       }
     }
-    $output .= theme("table", $header, $rows);
+    $output .= theme('table', $header, $rows);
   }
 
-  print theme("page", $output);
+  print theme('page', $output);
 }
 
 /**
  * Menu callback; displays the book administration page.
  */
 function book_admin($nid = 0) {
-  $op = $_POST["op"];
-  $edit = $_POST["edit"];
+  $op = $_POST['op'];
+  $edit = $_POST['edit'];
 
   switch ($op) {
-    case t("Edit book outline"):
-    case t("Add to book outline"):
-    case t("Remove from book outline"):
-    case t("Update book outline"):
+    case t('Edit book outline'):
+    case t('Add to book outline'):
+    case t('Remove from book outline'):
+    case t('Update book outline'):
       $output = book_node_link();
       break;
-    case t("Save book pages"):
+    case t('Save book pages'):
       drupal_set_message(book_admin_save($nid, $edit));
       // fall through:
     default:
       $output .= book_admin_view($nid);
       break;
   }
-  print theme("page", $output);
+  print theme('page', $output);
 }
 
 /**
  * Implementation of hook_help().
  */
-function book_help($section = "admin/help#book") {
-  $output = "";
-
+function book_help($section) {
   switch ($section) {
     case 'admin/help#book':
-      $output .= t("
+      return t("
       <p>The book organises content into a nested hierarchical structure. It is particularly good for manuals, Frequently Asked Questions (FAQs) and the like, allowing you to have chapters, sections, etc.</p>
       <p>A book is simply a collection of nodes that have been linked together. These nodes are usually of type <em>book page</em>, but you can insert nodes of any type into a book outline. Every node in the book has a <em>parent</em> node which  \"contains\" it. This is how book.module establishes its hierarchy. At any given level in the hierarchy, a book can contain many nodes. All these sibling nodes are sorted according to the <em>weight</em> that you give them.</p>
       <p>A book page is a special node type that allows you to embed PHP within the body of the page. This capability is only offered to administrators, since malicious users could abuse this power. In addition, book pages contain a <em>log message</em> field which helps your users understand the motivation behind an edit of a book page. Each edited version of a book page is stored as a new revision of a node. This capability makes it easy to revert to an old version of a page, should that be desirable.</p>
@@ -934,26 +816,19 @@ function book_help($section = "admin/help#book") {
       <p>In order to set up the FAQ, you have to create a new book which will hold all your content. To do so, click on the <a href=\"%create\">create content &raquo; book page</a> link. Give it a thoughtful title, and body. A title like \"Estonia Travel - FAQ\" is nice. You may always edit these fields later. You will probably want to designate <em>&lt;top-level&gt;</em> as the parent of this page. Leave the <em>log message</em> and <em>type</em> fields blank for now. After you have submitted this book page, you are ready to begin filling up your book with questions that are frequently asked.</p>
       <p>Whenever you come across a post which you want to include in your FAQ, click on the <em>administer</em> link. Then click on the <em>edit book outline</em> button at the bottom of the page. Then place the relevant post wherever is most appropriate in your book by selecting a <em>parent</em>. Books are quite flexible. They can have sections like <em>Flying to Estonia</em>, <em>Eating in Estonia</em> and so on. As you get more experienced with the book module, you can reorganize posts in your book so that it stays organized.</p>
       <p>Notes:</p><ul><li>Any comments attached to those relevant posts which you designate as book pages will also be transported into your book. This is a great feature, since much wisdom is shared via comments. Remember that all future comments and edits will automatically be reflected in your book.</li><li>You may wish to edit the title of posts when adding them to your FAQ. This is done on the same page as the <em>Edit book outline</em> button. Clear titles improve navigability enormously.</li><li>Book pages may come from any content type (blog, story, page, etc.). If you are creating a post solely for inclusion in your book, then use the <a href=\"%create\">create content &raquo; book page</a> link.</li><li>If you don't see the <em>administer</em> link, then you probably have insufficient <a href=\"%permissions\">permissions</a>.</li><li>If you want to get really fancy, note that books are one of the few content types which allow raw PHP in their <em>body</em>. So you've got lots of geeky possibilities there.</li></ul>", array("%permissions" => url("admin/user/configure/permission"), "%create" => url("node/add/book"), "%collaborative-book" => url("admin/node/book"), "%orphans-book" => url("admin/node/book/orphan"), "%export-book" => url("book/print")));
-      break;
     case 'admin/modules#description':
-      $output = t("Allows users to collaboratively author a book.");
-      break;
+      return t('Allows users to collaboratively author a book.');
     case 'admin/node/book':
-      $output = t("The book module offers a mean to organize content, authored by many users, in an online manual, outline or FAQ.");
-      break;
+      return t('The book module offers a mean to organize content, authored by many users, in an online manual, outline or FAQ.');
     case 'admin/node/book/orphan':
-      $output = t("Pages in a book are like a tree. As pages are edited, reorganized and removed, child pages might be left with no link to the rest of the book.  Such pages are referred to as 'orphan pages'.  On this page, administrators can review their books for orphans and reattach those pages as desired.");
-      break;
+      return t('Pages in a book are like a tree. As pages are edited, reorganized and removed, child pages might be left with no link to the rest of the book.  Such pages are referred to as "orphan pages".  On this page, administrators can review their books for orphans and reattach those pages as desired.');
     case 'node/add#book':
-      $output = t("A book is a collaborative writing effort: users can collaborate writing the pages of the book, positioning the pages in the right order, and reviewing or modifying pages previously written.  So when you have some information to share or when you read a page of the book and you didn't like it, or if you think a certain page could have been written better, you can do something about it.");
-      break;
+      return t("A book is a collaborative writing effort: users can collaborate writing the pages of the book, positioning the pages in the right order, and reviewing or modifying pages previously written.  So when you have some information to share or when you read a page of the book and you didn't like it, or if you think a certain page could have been written better, you can do something about it.");
   }
-
-  return $output;
 }
 
 function book_help_page() {
-  print theme("page", book_help());
+  print theme('page', book_help('admin/help#book'));
 }
 
 ?>

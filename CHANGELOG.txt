@@ -27,6 +27,8 @@ Drupal x.x.x, xxxx-xx-xx
     * added 'categories' block.
 - blogger API:
     * added support for auto-discovery of blogger API via RSD.
+- news aggregator:
+    * improved date parsing.
 - performance:
     * added support for sending gzip compressed pages.
 - accessibility:

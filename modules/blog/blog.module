@@ -227,7 +227,7 @@ function blog_content($node, $teaser = FALSE) {
 /**
  * Implementation of hook_view().
  */
-function blog_view($node, $teaser = FALSE, $page = FALSE) {
+function blog_view(&$node, $teaser = FALSE, $page = FALSE) {
   if ($page) {
     // Breadcrumb navigation
     $breadcrumb[] = array('path' => 'blog', 'title' => t('blogs'));
@@ -237,8 +237,6 @@ function blog_view($node, $teaser = FALSE, $page = FALSE) {
   }
   // prepare the node content
   $node = blog_content($node, $teaser);
-  // print the node
-  return theme('node', $node, $teaser, $page);
 }
 
 /**

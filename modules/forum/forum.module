@@ -207,7 +207,7 @@ function forum_content($node, $teaser = FALSE) {
 /**
  * Implementation of hook_view().
  */
-function forum_view($node, $teaser = FALSE, $page = FALSE) {
+function forum_view(&$node, $teaser = FALSE, $page = FALSE) {
 
   if ($page) {
     $vocabulary = taxonomy_get_vocabulary(variable_get('forum_nav_vocabulary', ''));
@@ -224,7 +224,7 @@ function forum_view($node, $teaser = FALSE, $page = FALSE) {
     menu_set_location($breadcrumb);
   }
 
-  return theme('node', forum_content($node, $teaser), $teaser, $page);
+  $node = forum_content($node, $teaser);
 }
 
 /**

@@ -413,7 +413,7 @@ function poll_vote(&$node) {
  *   An extra parameter that adapts the hook to display a block-ready
  *   rendering of the poll.
  */
-function poll_view(&$node, $main = 0, $page = 0, $block = 0) {
+function poll_view(&$node, $teaser = FALSE, $page = FALSE, $block = FALSE) {
   global $user;
   $output = '';
 
@@ -439,11 +439,6 @@ function poll_view(&$node, $main = 0, $page = 0, $block = 0) {
   }
 
   $node->body = $node->teaser = $output;
-
-  // We also use poll_view() for the side-block
-  if (!$block) {
-    return theme('node', $node, $main, $page);
-  }
 }
 
 /**
