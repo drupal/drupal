@@ -529,7 +529,7 @@ function forum_forum_list($forums, $parents, $tid) {
   }
   $t[] = l(t("Discussion forum"), "forum");
 
-  $output .= "<table border=\"0\" cellpadding=\"5\" width=\"100%\">\n";
+  $output .= "<table border=\"0\" cellpadding=\"5\">\n";
   $output .= " <tr><th colspan=\"3\" align=\"left\">".implode(" : ", array_reverse($t)) ."</th>";
   if ($forums) {
     $output .= "<th>". t("topics") ."</th><th>". t("posts") ."</th><th>". t("last post") ."</th></tr>";
@@ -600,7 +600,7 @@ function forum_topic_list($tid, $topics, $sortby, $forum_per_page, $offset) {
   global $id, $status, $user, $pager_total;
 
   if ($topics) {
-    $output .= "<table border=\"0\" cellpadding=\"5\" cellspacing=\"5\" width=\"100%\">\n";
+    $output .= "<table border=\"0\" cellpadding=\"5\" cellspacing=\"5\">\n";
     $output .= " <tr><th>&nbsp;</th><th>&nbsp;</th><th>". t("topic") ."</th><th>". t("replies") ."</th><th>". t("posted") ."</th><th>". t("last reply") ."</th></tr>";
 
     foreach ($topics as $topic) {
