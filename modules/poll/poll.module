@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.111 2003/10/03 14:55:27 dries Exp $
+// $Id: poll.module,v 1.112 2003/10/06 12:21:34 dries Exp $
 
 function poll_allowvotes(&$node) {
   /*
@@ -57,8 +57,8 @@ function poll_block($op = "list", $delta = 0) {
           poll_view($poll, 1, 1);
         }
       }
-      $block["subject"] = t("Poll: %t", array("%t" => $poll->title));
-      $block["content"] = $poll->body;
+      $block["subject"] = t("Poll");
+      $block["content"] = "<div class=\"poll-title\">$poll->title</div>$poll->body";
       return $block;
     }
   }
