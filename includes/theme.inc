@@ -56,7 +56,7 @@ function init_theme() {
     // File is a style; loads its CSS.
     // Set theme to its template/theme
     theme_add_style($themes[$theme]->filename);
-    $theme = $themes[$theme]->description;
+    $theme = basename(dirname($themes[$theme]->description));
   }
   else {
     // File is a template/theme
