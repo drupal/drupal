@@ -1,5 +1,5 @@
 <?php
-/* $Id: menu.inc,v 1.46 2004/06/19 14:57:44 dries Exp $ */
+/* $Id: menu.inc,v 1.47 2004/06/20 08:27:02 dries Exp $ */
 
 /**
  * @defgroup menu Menu system
@@ -179,7 +179,7 @@ function menu_set_location($location) {
  * Execute the handler associated with the active menu item.
  *
  * This is called early in the page request. The active menu item is at
- * this point determined excusively by the URL. The handler that is called
+ * this point determined exclusively by the URL. The handler that is called
  * here may, as a side effect, change the active menu item so that later
  * menu functions (that display the menus and breadcrumbs, for example)
  * act as if the user were in a different location on the site.
