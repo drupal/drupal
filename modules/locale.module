@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.69 2003/08/30 21:16:23 dries Exp $
+// $Id: locale.module,v 1.70 2003/09/03 12:05:46 dries Exp $
 
 function locale_help($section = "admin/locale/help") {
   $output = "";
@@ -314,7 +314,7 @@ function locale($string) {
     $locale_t = unserialize($cache->data);
   }
 
-  if ($locale_t[$string] != "") {
+  if (array_key_exists($string, $locale_t)) {
     $string = $locale_t[$string];
   }
   else {
