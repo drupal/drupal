@@ -68,7 +68,7 @@ function blog_feed_user($uid = 0, $date = 0) {
 function blog_feed_last() {
   $result = db_query("SELECT n.nid, n.title, n.timestamp, b.body, u.name, u.uid FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN user u ON n.author = u.uid ORDER BY b.lid DESC LIMIT 15");
   while ($blog = db_fetch_object($result)) {
-    $items .= format_rss_item($blog->title, path_uri() ."module.php?mod=blog&op=view&id=". urlencode($blog->uid), $blog->body);
+    $items .= format_rss_item($blog->title, path_uri() ."module.php?mod=blog&op=view&id=$blog->uid", $blog->body);
   }
 
   $output .= "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n";
@@ -118,6 +118,7 @@ function blog_page_user($uid = 0, $date = 0) {
     }
 
     if ($blog->comment) {
+      $links[] = "<a href=\"node.php?id=$blog->nid\">". t("moderate") ."</a>";
       $links[] = "<a href=\"node.php?id=$blog->nid\">". format_plural($blog->comments, t("comment"), t("comments")) ."</a>";
     }
 
@@ -154,6 +155,7 @@ function blog_page_last() {
     }
 
     if ($blog->comment) {
+      $links[] = "<a href=\"node.php?id=$blog->nid\">". t("moderate") ."</a>";
       $links[] = "<a href=\"node.php?id=$blog->nid\">". format_plural($blog->comments, t("comment"), t("comments")) ."</a>";
     }
 
@@ -350,7 +352,7 @@ function blog_block() {
   $result = db_query("SELECT u.uid, u.name, n.timestamp, n.title, n.nid FROM node n LEFT JOIN user u ON n.author = u.uid WHERE n.type = 'blog' ORDER BY n.nid DESC LIMIT 10");
 
   while ($node = db_fetch_object($result)) {
-    $output .= "<a href=\"module.php?mod=blog&op=view&id=$node->nid\">". check_output($node->title) ."</a><br />\n";
+    $output .= "<a href=\"module.php?mod=blog&op=view&id=$node->uid\">". check_output($node->title) ."</a><br />\n";
   }
 
   $block[0]["subject"] = "<a href=\"module.php?mod=blog\">". t("User blogs") ."</a>";
