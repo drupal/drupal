@@ -1,5 +1,5 @@
 <?php
-// $Id: admin.module,v 1.18 2003/06/04 18:24:26 dries Exp $
+// $Id: admin.module,v 1.19 2003/06/08 08:39:28 dries Exp $
 
 include_once "includes/common.inc";
 
@@ -90,7 +90,7 @@ function admin_page() {
         menu_build("admin");
 
         print "<div id=\"menu\">";
-        echo "<h1><a href=\"$base_url\">". variable_get("site_name", "drupal") ."</a></h1>";
+        echo "<h1><a href=\"$base_url/\">". variable_get("site_name", "drupal") ."</a></h1>";
         print menu_tree("admin") ;
         print "</div>";
         print theme_footer();
