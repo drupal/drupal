@@ -102,7 +102,7 @@ function xtemplate_page($content, $title = NULL, $breadcrumb = NULL) {
         "head" => drupal_get_html_head(),
         "stylesheet" => variable_get("xtemplate_stylesheet", "themes/xtemplate/xtemplate.css"),
         "onload_attributes" => theme_onload_attribute(),
-        "logo" => variable_get("xtemplate_logo", "<img src=\"themes/xtemplate/images/druplicon.gif\" />"),
+        "logo" => variable_get("xtemplate_logo", "<img src=\"themes/xtemplate/images/druplicon.gif\" alt=\"Druplicon - Drupal logo\" />"),
         "primary_links" => variable_get("xtemplate_primary_links", l("edit primary links", "admin/system/themes/xtemplate")),
         "secondary_links" => variable_get("xtemplate_secondary_links", l("edit secondary links", "admin/system/themes/xtemplate"))
         ));
