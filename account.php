@@ -281,7 +281,7 @@ function account_user($uname) {
     $block1 .= " <TR><TD ALIGN=\"right\"><B>Bio:</B></TD><TD>". format_data($account->bio) ."</TD></TR>\n";
     $block1 .= "</TABLE>\n";
 
-    $result = db_query("SELECT c.cid, c.pid, c.lid, c.subject, c.timestamp, s.subject AS story FROM comments c LEFT JOIN users u ON u.id = c.author LEFT JOIN stories s ON s.id = c.lid WHERE u.userid = '$uname' AND s.status = 2 c.link = 'story' AND s.timestamp > ". (time() - 1209600) ." ORDER BY cid DESC LIMIT 10");
+    $result = db_query("SELECT c.cid, c.pid, c.lid, c.subject, c.timestamp, s.subject AS story FROM comments c LEFT JOIN users u ON u.id = c.author LEFT JOIN stories s ON s.id = c.lid WHERE u.userid = '$uname' AND s.status = 2 AND c.link = 'story' AND s.timestamp > ". (time() - 1209600) ." ORDER BY cid DESC LIMIT 10");
     while ($comment = db_fetch_object($result)) {
       $block2 .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
       $block2 .= " <TR><TD ALIGN=\"right\"><B>Comment:</B></TD><TD><A HREF=\"story.php?id=$comment->lid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A></TD></TR>\n";
