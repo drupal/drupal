@@ -25,11 +25,6 @@ $comment_votes = array("none" => "none",
                        "+5"   => "+ 5");
 
 #
-# Allowed HTML tags:
-#
-$allowed_html = "<A><B><BLOCKQUOTE><CODE><DD><DL><DT><EM><HR><I><LI><SMALL><OL><U><UL>";
-
-#
 # Themes:
 #   The first theme listed in this associative array will automatically
 #   become the default theme.
@@ -47,16 +42,6 @@ $themes = array("UnConeD" => array(
 #   automatically become the default language.  You can add a language
 #   but make sure your SQL table, called locales is updated
 #   appropriately.
-#
-#   Translation support - as provided by the default locale module add
-#   significant overhead to your site in exchange for excessive
-#   maintenance capabilities.  If your site does not require
-#   translation support, disable it by commenting out the $language
-#   variable below.
-#$languages = array();  // = language support disabled
 $languages = array("en" => "English");
-
-# This line prevents users from accessing your settings file:
-if (basename($SCRIPT_FILENAME) == basename(__FILE__) && basename($SCRIPT_FILENAME) != "") die("access denied");
 
 ?>

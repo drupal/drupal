@@ -48,7 +48,7 @@ function comment_settings($mode, $order, $threshold) {
 }
 
 function comment_reply($pid, $id) {
-  global $allowed_html, $REQUEST_URI, $theme, $user;
+  global $REQUEST_URI, $theme, $user;
 
   if ($pid) {
     $item = db_fetch_object(db_query("SELECT comments.*, users.userid FROM comments LEFT JOIN users ON comments.author = users.id WHERE comments.cid = '$pid'"));
@@ -69,8 +69,8 @@ function comment_reply($pid, $id) {
 
   // Comment field:
   $output .= "<B>".t("Comment") .":</B><BR>\n";
-  $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"comment\">". check_textarea($user->signature) ."</TEXTAREA><BR>\n";
-  $output .= "<SMALL><I>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</I></SMALL><P>\n";
+  $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"comment\">". check_form($user->signature) ."</TEXTAREA><BR>\n";
+  $output .= "<SMALL><I>". t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")) .".</I></SMALL><P>\n";
 
   // Preview button:
   $output .= "<SMALL><I>". t("You must preview at least once before you can submit") .":</I></SMALL><BR>\n";
@@ -84,10 +84,10 @@ function comment_reply($pid, $id) {
 }
 
 function comment_preview($pid, $id, $subject, $comment) {
-  global $allowed_html, $REQUEST_URI, $theme, $user;
+  global $REQUEST_URI, $theme, $user;
 
   // Preview comment:
-  comment_view(new Comment($user->userid, $subject, $comment, time(), $user->url, $user->fake_email, 0, 0, 0, 0), t("reply to this comment"));
+  comment_view(new Comment($user->userid, check_preview($subject), check_preview($comment), time(), check_preview($user->url), check_preview($user->fake_email), 0, 0, 0, 0), t("reply to this comment"));
 
   // Build reply form:
   $output .= "<FORM ACTION=\"$REQUEST_URI\" METHOD=\"post\">\n";
@@ -98,12 +98,12 @@ function comment_preview($pid, $id, $subject, $comment) {
 
   // Subject field:
   $output .= "<B>". t("Subject") .":</B><BR>\n";
-  $output .= "<INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" MAXLENGTH=\"60\" VALUE=\"". check_textfield($subject) ."\"><P>\n";
+  $output .= "<INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" MAXLENGTH=\"60\" VALUE=\"". check_form($subject) ."\"><P>\n";
 
   // Comment field:
   $output .= "<B>". t("Comment") .":</B><BR>\n";
-  $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"comment\">". check_textarea($comment) ."</TEXTAREA><BR>\n";
-  $output .= "<SMALL><I>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</I></SMALL><P>\n";
+  $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"comment\">". check_form($comment) ."</TEXTAREA><BR>\n";
+  $output .= "<SMALL><I>". t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")) .".</I></SMALL><P>\n";
 
   // Hidden fields:
   $output .= "<INPUT TYPE=\"hidden\" NAME=\"pid\" VALUE=\"$pid\">\n";

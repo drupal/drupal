@@ -24,9 +24,9 @@ function admin_page($mod) {
    <HEAD><TITLE><?php echo variable_get(site_name, "drupal"); ?> administration</TITLE></HEAD>
    <STYLE>
     body { font-family: helvetica, arial; }
-    h1   { font-size: 18pt; font-weight: bold; color: #990000; }
-    h2   { font-family: helvetica, arial; font-size: 18pt; font-weight: bold; }
-    h3   { font-family: helvetica, arial; font-size: 14pt; font-weight: bold; }
+    h1   { font-famile: helvetica, arial; font-size: 18pt; font-weight: bold; color: #660000; }
+    h2   { font-family: helvetica, arial; font-size: 18pt; font-weight: bold; color: #000066; }
+    h3   { font-family: helvetica, arial; font-size: 14pt; font-weight: bold; color: #006600; }
     th   { font-family: helvetica, arial; text-align: center; vertical-align: top; background-color: #CCCCCC; color: #995555; }
     td   { font-family: helvetica, arial; }
    </STYLE>

@@ -11,11 +11,32 @@ class Node {
   }
 }
 
-function node_macro($text) {
+function node_conf_filters() {
+  $output .= form_select(t("Strip HTML tags"), "filter_html", variable_get("filter_html", 0), array("Disabled", "Enabled"), t("Strip HTML and PHP tags."));
+  $output .= form_textfield(t("Allowed HTML tags"), "allowed_html", variable_get("allowed_html", "<A><B><BLOCKQUOTE><DD><DL><DT><I><LI><OL><U><UL>"), 64, 128, t("If enabled, optionally specify tags which should not be stripped.  'STYLE' attributes, 'ON' attributes and unclosed tags are always stripped."));
+  $output .= "<HR>";
+  $output .= form_select(t("Strip link tags"), "filter_link", variable_get("filter_link", 0), array("Disabled", "Enabled"), t("Substitute special [[link]] tags."));
+  $output .= "<HR>";
+  return $output;
+}
+
+function node_filter_html($text) {
+  $text = eregi_replace("([ \f\r\t\n\'\"])style=[^>]+", "\\1", $text);
+  $text = eregi_replace("([ \f\r\t\n\'\"])on[a-z]+=[^>]+", "\\1", $text);
+  $text = strip_tags($text, variable_get("allowed_html", ""));
+  return $text;
+}
+
+function node_filter_link($text) {
   $src = array("/\[\[(([^\|]*?)(\|([^\|]*?))?)\]\]/e");  // [link|description]
   $dst = array(format_tag('\\2', '\\4'));                // [link|description]
-
   return preg_replace($src, $dst, $text);
+}
+
+function node_filter($text) {
+  if (variable_get("filter_html", 0)) $text = node_filter_html($text);
+  if (variable_get("filter_link", 0)) $text = node_filter_link($text);
+  return $text;
 }
 
 function node_overview($query = array()) {

@@ -104,7 +104,7 @@ function box_admin_edit($id) {
 
     $output .= "<P>\n";
     $output .= " <B>Subject:</B><BR>\n";
-    $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" VALUE=\"". check_textfield($block->subject) ."\">\n";
+    $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" VALUE=\"". check_form($block->subject) ."\">\n";
     $output .= "</P>\n";
     $output .= "<P>\n";
     $output .= " <B>Content:</B><BR>\n";
@@ -120,11 +120,11 @@ function box_admin_edit($id) {
     $output .= "</P>\n";
     $output .= "<P>\n";
     $output .= " <B>Description:</B><BR>\n";
-    $output .= " <INPUT TYPE=\"text\" NAME=\"info\" VALUE=\"". check_textfield($block->info) ."\">\n";
+    $output .= " <INPUT TYPE=\"text\" NAME=\"info\" VALUE=\"". check_form($block->info) ."\">\n";
     $output .= "</P>\n";
     $output .= "<P>\n";
     $output .= " <B>Link:</B><BR>\n";
-    $output .= " <INPUT TYPE=\"text\" NAME=\"link\" VALUE=\"". check_textfield($block->link) ."\">\n";
+    $output .= " <INPUT TYPE=\"text\" NAME=\"link\" VALUE=\"". check_form($block->link) ."\">\n";
     $output .= "</P>\n";
     $output .= "<P>\n";
     $output .= " <INPUT TYPE=\"hidden\" NAME=\"id\" VALUE=\"$id\">\n";

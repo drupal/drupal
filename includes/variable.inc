@@ -32,7 +32,7 @@ function variable_get($name, $default, $object = 0) {
     case "expire_threshold":
       return handler_expire_threshold($object, $default);
     default:
-      return ($conf[$name] ? $conf[$name] : $default);
+      return $conf[$name] ? $conf[$name] : $default;
   }
 }
 
@@ -43,6 +43,14 @@ function variable_set($name, $value) {
   db_query("INSERT INTO variable (name, value) VALUES ('". check_input($name) ."', '". check_input($value) ."')");
 
   $conf[$name] = $value;
+}
+
+function variable_del($name) {
+  global $conf;
+
+  db_query("DELETE FROM variable WHERE name = '". check_input($name) ."'");
+
+  $conf[$name] = "";
 }
 
 ?>

@@ -6,6 +6,7 @@ function db_connect($host, $user, $pass, $name) {
   // NOTE: we are using a persistent connection!
 }
 
+
 function db_query($query, $debug = 0) {
   $result = mysql_query($query);
   if ($debug) print "<P>query: $query<BR>error:". mysql_error() ."</P>";

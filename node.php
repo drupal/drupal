@@ -2,7 +2,7 @@
 
 include_once "includes/common.inc";
 
-if (variable_get(dev_timing, 0)) timer_start();
+page_header();
 
 function node_render($node) {
   global $id, $cid, $op, $moderate, $pid, $subject, $comment, $theme, $mode, $order, $threshold, $PHP_SELF;
@@ -114,6 +114,6 @@ else {
   node_failure();
 }
 
-if (variable_get(dev_timing, 0)) timer_print();
+page_footer();
 
 ?>
