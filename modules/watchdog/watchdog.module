@@ -36,14 +36,14 @@ function watchdog_overview($type) {
 
   $result = db_query("SELECT w.*, u.name, u.uid FROM watchdog w LEFT JOIN users u ON w.uid = u.uid ". ($type ? $query[$type] : "") ." ORDER BY timestamp DESC LIMIT 1000");
 
-  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR><TH>date</TH><TH>message</TH><TH>user</TH><TH>operations</TH></TR>\n";
+  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
+  $output .= " <tr><th>date</th><th>message</th><th>user</th><th>operations</th></tr>";
   while ($watchdog = db_fetch_object($result)) {
     if ($background = $color[$watchdog->type]) {
-      $output .= " <TR BGCOLOR=\"$background\"><TD>". format_date($watchdog->timestamp, "small") ."</TD><TD>". substr(check_output($watchdog->message), 0, 64) ."</TD><TD ALIGN=\"center\">". format_name($watchdog) ."</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=watchdog&op=view&id=$watchdog->wid\">details</A></TD></TR>\n";
+      $output .= " <tr bgcolor=\"$background\"><td>". format_date($watchdog->timestamp, "small") ."</td><td>". substr(check_output($watchdog->message), 0, 64) ."</td><td align=\"center\">". format_name($watchdog) ."</a></td><td align=\"center\"><a href=\"admin.php?mod=watchdog&op=view&id=$watchdog->wid\">details</a></td></tr>";
     }
   }
-  $output .= "</TABLE>\n";
+  $output .= "</table>";
 
   return $output;
 }
@@ -52,14 +52,14 @@ function watchdog_view($id) {
   $result = db_query("SELECT w.*, u.name, u.uid FROM watchdog w LEFT JOIN users u ON w.uid = u.uid WHERE w.wid = '$id'");
 
   if ($watchdog = db_fetch_object($result)) {
-    $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
-    $output .= " <TR><TH>Type:</TH><TD>". check_output($watchdog->type) ."</TD></TR>\n";
-    $output .= " <TR><TH>Date:</TH><TD>". format_date($watchdog->timestamp, "large") ."</TD></TR>\n";
-    $output .= " <TR><TH>User:</TH><TD>". format_name($watchdog) ."</TD></TR>\n";
-    $output .= " <TR><TH>Location:</TH><TD>". check_output($watchdog->location). "</TD></TR>\n";
-    $output .= " <TR><TH>Message:</TH><TD>". check_output($watchdog->message) ."</TD></TR>\n";
-    $output .= " <TR><TH>Hostname:</TH><TD>". check_output($watchdog->hostname) ."</TD></TR>\n";
-    $output .= "</TABLE>\n";
+    $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
+    $output .= " <tr><th>Type:</th><td>". check_output($watchdog->type) ."</td></tr>";
+    $output .= " <tr><th>Date:</th><td>". format_date($watchdog->timestamp, "large") ."</td></tr>";
+    $output .= " <tr><th>User:</th><td>". format_name($watchdog) ."</td></tr>";
+    $output .= " <tr><th>Location:</th><td>". check_output($watchdog->location) ."</td></tr>";
+    $output .= " <tr><th>Message:</th><td>". check_output($watchdog->message) ."</td></tr>";
+    $output .= " <tr><th>Hostname:</th><td>". check_output($watchdog->hostname) ."</td></tr>";
+    $output .= "</table>";
 
     return $output;
   }
@@ -70,7 +70,7 @@ function watchdog_admin() {
 
   if (user_access("administer watchdog")) {
 
-    print "<SMALL><A HREF=\"admin.php?mod=watchdog&type=user\">user messages</A> | <A HREF=\"admin.php?mod=watchdog&type=regular\">regular messages</A> | <A HREF=\"admin.php?mod=watchdog&type=special\">special messages</A> | <A HREF=\"admin.php?mod=watchdog&type=warning\">warning messages</A> | <A HREF=\"admin.php?mod=watchdog&type=error\">error messages</A> | <A HREF=\"admin.php?mod=watchdog&type=httpd\">httpd messages</A> | <A HREF=\"admin.php?mod=watchdog\">overview</A> | <A HREF=\"admin.php?mod=watchdog&op=help\">help</A></SMALL><HR>\n";
+    print "<small><a href=\"admin.php?mod=watchdog&type=user\">user messages</a> | <a href=\"admin.php?mod=watchdog&type=regular\">regular messages</a> | <a href=\"admin.php?mod=watchdog&type=special\">special messages</a> | <a href=\"admin.php?mod=watchdog&type=warning\">warning messages</a> | <a href=\"admin.php?mod=watchdog&type=error\">error messages</a> | <a href=\"admin.php?mod=watchdog&type=httpd\">httpd messages</a> | <a href=\"admin.php?mod=watchdog\">overview</a> | <a href=\"admin.php?mod=watchdog&op=help\">help</a></small><hr />";
 
     switch ($op) {
       case "help":
