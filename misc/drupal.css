@@ -334,6 +334,9 @@ tr.light .form-item, tr.dark .form-item {
 #forum td.posts, #forum td.topics, #forum td.replies, #forum td.pager {
   text-align: center;
 }
+#node-admin-filter fieldset {
+  clear: both;
+}
 #node-admin-filter ul {
   list-style-type: none;
   padding: 0px;
