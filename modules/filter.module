@@ -197,18 +197,20 @@ function check_output($text) {
  * Perform the default filters, preventing malicious HTML from being displayed.
  */
 function filter_default($text) {
-  if (variable_get('filter_html', FILTER_HTML_DONOTHING) == FILTER_HTML_STRIP) {
-    // Allow users to enter HTML, but filter it
-    $text = strip_tags($text, variable_get('allowed_html', ''));
-    if (variable_get('filter_style', FILTER_STYLE_STRIP)) {
-      $text = preg_replace('/\Wstyle\s*=[^>]+?>/i', '>', $text);
+  if (!user_access('bypass html filter')) {
+    if (variable_get('filter_html', FILTER_HTML_DONOTHING) == FILTER_HTML_STRIP) {
+      // Allow users to enter HTML, but filter it
+      $text = strip_tags($text, variable_get('allowed_html', ''));
+      if (variable_get('filter_style', FILTER_STYLE_STRIP)) {
+        $text = preg_replace('/\Wstyle\s*=[^>]+?>/i', '>', $text);
+      }
+      $text = preg_replace('/\Won[a-z]+\s*=[^>]+?>/i', '>', $text);
     }
-    $text = preg_replace('/\Won[a-z]+\s*=[^>]+?>/i', '>', $text);
-  }
 
-  if (variable_get('filter_html', FILTER_HTML_DONOTHING) == FILTER_HTML_ESCAPE) {
-    // Escape HTML
-    $text = htmlspecialchars($text);
+    if (variable_get('filter_html', FILTER_HTML_DONOTHING) == FILTER_HTML_ESCAPE) {
+      // Escape HTML
+      $text = htmlspecialchars($text);
+    }
   }
 
   return trim($text);

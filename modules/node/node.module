@@ -29,7 +29,7 @@ function node_help($section = 'admin/help#node') {
       <dt>Votes</dt><dd>If you are moderating a node this counts how many votes the node has gotten. Once a node gets a certain number of vote it will either be approved or dropped.
       <dt>Score</dt><dd>The score of the node is gotten by the votes it is given.</dd>
       <dt>Users</dt><dd>The list of users who have voted on a moderated node.</dd>
-      <dt>Published</dt><dd>When using Drupal's moderation system a node remains unpublished -- unavaliable to non-moderators -- until it is marked Published.</dd></dl>
+      <dt>Published</dt><dd>When using Drupal's moderation system a node remains unpublished -- unavailable to non-moderators -- until it is marked Published.</dd></dl>
       <p>Now that you know what is in a node, here are some of the types of nodes available.</p>", array("%teaser" => url("admin/settings/node")));
 
       if ($mod == 'admin') {

@@ -62,7 +62,7 @@ function throttle_help($section) {
     case 'admin/modules#description':
       return t('Allows configuration of congestion control auto-throttle mechanism.');
     case 'admin/modules/throttle':
-      return t('If your site gets linked to by a popular website, or otherwise comes under a "Denial of Service" (DoS) attack, your webserver might become overwhelmed.  This module provides a mechanism for automatically detecting a surge in incoming traffic.  This mechanism is utilized by other Drupal models to automatically optimize their performance by temporarily disabling CPU-intensive functionality.  To use the auto-throttle, the access log must be enabled.  It is advised that you carefully read the explainations below and then properly tune this module based on your site\'s requirements and your webserver\'s capabilities.', array('%access' => url('admin/modules/statistics')));
+      return t('If your site gets linked to by a popular website, or otherwise comes under a "Denial of Service" (DoS) attack, your webserver might become overwhelmed.  This module provides a mechanism for automatically detecting a surge in incoming traffic.  This mechanism is utilized by other Drupal models to automatically optimize their performance by temporarily disabling CPU-intensive functionality.  To use the auto-throttle, the access log must be enabled.  It is advised that you carefully read the explanations below and then properly tune this module based on your site\'s requirements and your webserver\'s capabilities.', array('%access' => url('admin/modules/statistics')));
     case 'admin/help#throttle':
       return t("
       <h3>Introduction</h3>
