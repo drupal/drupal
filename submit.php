@@ -27,7 +27,7 @@ if ($user->id) {
   }
 }
 else {
-  $theme->box("Submit", t("This page requires a valid user account.  Please <A HREF=\"account.php\">login</A> prior to accessing it."));
+  $theme->box("Submit", notice_account());
 }
 
 $theme->footer();

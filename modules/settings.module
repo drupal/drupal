@@ -6,7 +6,6 @@ function settings_conf() {
   // general settings:
   $output .= form_textfield(t("Name"), "site_name", variable_get(site_name, "drupal"), 30, 55, t("The name of this website."));
   $output .= form_textfield(t("Slogan"), "site_slogan", variable_get(site_slogan, ""), 30, 55, t("The slogan of this website"));
-  $output .= form_textfield(t("URL"), "site_url", variable_get(site_url, "http://drupal/"), 30, 55, t("The fully qualified URL of this website: starts with \"http://\" and ends with a trailing slash!"));
   $output .= form_textfield(t("E-mail address"), "site_mail", variable_get(site_mail, "root@localhost"), 30, 55, t("A valid e-mail address for this website, used by the auto-mailer to create new user accounts."));
   $output .= form_textarea(t("Footer message"), "site_footer", variable_get(site_footer, ""), 55, 3, t("This text will be displayed at the bottom of each page.  Useful for adding a copyright notice to your pages."));
   $output .= form_textfield(t("Anonymous user"), "anonymous", variable_get(anonymous, "Anonymous"), 30, 55, t("The name used to indicate anonymous users."));

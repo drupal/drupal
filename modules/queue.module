@@ -97,7 +97,7 @@ function queue_node($id) {
 }
 
 function queue_page() {
-  global $id, $op, $user, $vote;
+  global $id, $op, $theme, $user, $vote;
 
   if ($user->id) {
     switch($op) {
@@ -111,6 +111,11 @@ function queue_page() {
         queue_overview();
         break;
     }
+  }
+  else {
+    $theme->header();
+    $theme->box(t("Moderation queue"), notice_account());
+    $theme->footer();
   }
 }
 

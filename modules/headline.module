@@ -64,7 +64,7 @@ function headline_help() {
   <P>Drupal's headline module both imports and exports RDF/RSS headlines.</P>
   <P>A lot of news-oriented websites are now publishing news (headlines) and making their content available through XML, RSS and RDF backend files.  They syndicate free content and allow retrieval and further transmission, aggregation, and online publication. In its current state, drupal's headline module supports RDF and RSS backends.</P>
   <P>RSS was originally developed by Netscape to allow adding news channels to "My Netscape" sites, but it has since become adopted as the <I>de facto</I> net standard for distributing headlines and brief dynamic texts.</P>
-  <P>The headline module goes out to a list of configured news sites once an hour or so (driven by cron), downloads new RSS/RDF data and makes it available to your visitors.  In addition, your headlines are exported as well and can be retrieved by other sites from <CODE><?php echo variable_get(site_url, "http://yourdomain.com/"); ?>export/headlines.rdf</CODE>.</P>
+  <P>The headline module goes out to a list of configured news sites once an hour or so (driven by cron), downloads new RSS/RDF data and makes it available to your visitors.  In addition, your headlines are exported as well and can be retrieved by other sites from <CODE><?php echo path_uri(); ?>export/headlines.rdf</CODE>.</P>
  <?php
 }
 
@@ -146,7 +146,7 @@ function headline_admin_add($id) {
 function headline_admin_edit($id) {
   $result = db_query("SELECT * FROM channel WHERE id='$id' ORDER BY id");
 
-  if ($channel = db_fetch_object($result)) {    
+  if ($channel = db_fetch_object($result)) {
     $output .= " <FORM ACTION=\"admin.php?mod=headline\" METHOD=\"post\">\n";
     $output .= "  <INPUT TYPE=\"hidden\" NAME=\"id\" VALUE=\"$id\">\n";
     $output .= "  <P>\n";
@@ -235,7 +235,7 @@ function headline_export_rdf() {
 
   print "<channel>\n";
   print " <title>". variable_get(site_name, "drupal") ."</title>\n";
-  print " <link>". variable_get(site_url, "http://drupal/") ."</link>\n";
+  print " <link>". path_uri() ."</link>\n";
   print " <description>". variable_get(site_name, "drupal") ."</description>\n";
   print "</channel>\n";
 
@@ -244,7 +244,7 @@ function headline_export_rdf() {
   while ($node = db_fetch_object($result)) {
     print "<item>\n";
     print " <title>". check_export($node->title) ."</title>\n";
-    print " <link>". variable_get(site_url, "http://drupal/") ."node.php?id=$node->nid</link>\n";
+    print " <link>". path_uri() ."node.php?id=$node->nid</link>\n";
     print "</item>\n";
   }
 
@@ -262,9 +262,9 @@ function headline_export_rss() {
   print "xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n";
   print "xmlns=\"http://purl.org/rss/1.0/\">\n\n";
 
-  print "<channel rdf:about=\"". variable_get(site_url, "http://drupal/") ."export/headlinesRSS10.rdf\">\n";
+  print "<channel rdf:about=\"". path_uri() ."export/headlinesRSS10.rdf\">\n";
   print "   <title>". variable_get(site_name, "drupal") ."</title>\n";
-  print "   <link>". variable_get(site_url, "http://drupal/") ."</link>\n";
+  print "   <link>". path_uri() ."</link>\n";
   print "   <description>". variable_get(site_name, "drupal") ."</description>\n";
 
   print "  <items>\n";
@@ -273,7 +273,7 @@ function headline_export_rss() {
   $result = db_query("SELECT * FROM node WHERE promote = '1' AND status = '$status[posted]' ORDER BY timestamp DESC LIMIT 10");
 
   while ($node = db_fetch_object($result)) {
-    print "      <rdf:li resource=\"". variable_get(site_url, "http://drupal/") ."node.php?id=$node->nid\" />\n";
+    print "      <rdf:li resource=\"". path_uri() ."node.php?id=$node->nid\" />\n";
   }
 
   print "    </rdf:Seq>\n";
@@ -283,9 +283,9 @@ function headline_export_rss() {
   $result = db_query("SELECT * FROM node WHERE promote = '1' AND status = '$status[posted]' ORDER BY timestamp DESC LIMIT 10");
 
   while ($node = db_fetch_object($result)) {
-    print "<item rdf:about=\"". variable_get(site_url, "http://drupal/") ."node.php?id=$node->nid\">\n";
+    print "<item rdf:about=\"". path_uri() ."node.php?id=$node->nid\">\n";
     print "  <title>". check_export($node->title) ."</title>\n";
-    print "  <link>". variable_get(site_url, "http://drupal/") ."node.php?id=$node->nid</link>\n";
+    print "  <link>". path_uri() ."node.php?id=$node->nid</link>\n";
 
     if ($node->abstract) print "  <description>". check_output($node->abstract, 1) ."</description>\n";
     if ($node->body) print "  <description>". check_output($node->body, 1) ."</description>\n";

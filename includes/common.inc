@@ -5,7 +5,8 @@ $na = "<I>na</I>";
 function conf_init() {
   global $HTTP_HOST, $REQUEST_URI;
   $file = strtolower(strtr($HTTP_HOST ."". substr($REQUEST_URI, 0, strrpos($REQUEST_URI, "/")), "/:", ".."));
-  return file_exists("includes/$file.php") ? $file : "setting";
+  while ($file && !file_exists("includes/$file.php")) $file = substr($file, 0, strrpos($file, "."));
+  return $file ? $file : "setting";
 }
 
 function error_handler($errno, $message, $filename, $line, $variables) {
@@ -37,6 +38,20 @@ function throttle($type, $rate) {
   }
 }
 
+function path_uri() {
+  global $HTTP_HOST, $REQUEST_URI;
+  $REQUEST_URI = strstr("export/", $REQUEST_URI);
+  return "http://". $HTTP_HOST . substr($REQUEST_URI, 0, strrpos($REQUEST_URI, "/")) ."/";
+}
+
+function path_img() {
+  // use "http://your-image-server.com/ if you want to host images on a seperate server.
+  return "./images/";
+}
+
+function notice_account() {
+  return t("This page requires a valid user account.  Please <A HREF=\"account.php\">create a user account</A> and <A HREF=\"account.php\">login</A> prior to accessing it.");
+}
 
 function check_textfield($message) {
   return strip_tags(str_replace("\"", "&quot;", stripslashes($message)));

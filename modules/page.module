@@ -1,6 +1,6 @@
 <?php
 
-$GLOBALS[format] = array(0 => HTML, 1 => PHP, 2 => text);
+$GLOBALS[format] = array(0 => "HTML", 1 => "PHP", 2 => "text");
 
 function page_view($node, $main = 0) {
   global $format, $theme;
@@ -37,8 +37,11 @@ function page_form($edit = array()) {
 }
 
 function page_save($edit) {
-  global $status;
-  node_save(array_merge($edit, array(type => "page", status => $status[posted])));
+  global $status, $user;
+
+  if (user_access($user)) {
+    node_save($edit, array(author => $user->id, body, cid, comment => category_comment($edit[cid]), format, moderate => topic_moderate($edit[tid]), promote => category_promote($edit[cid]), score => 0, status => $status[posted], tid, timestamp => time(), title, type => "page", votes => 0));
+  }
 }
 
 function page_query($type = "") {

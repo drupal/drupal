@@ -51,7 +51,7 @@ function node_get_comments($nid) {
   return $comment->number ? $comment->number : 0;
 }
 
-function node_save($node) {
+function node_save($node, $filter) {
   global $user, $status;
 
   $rows = array(nid, pid, lid, cid, tid, log, type, title, score, votes, author, status, comment, promote, moderate, timestamp);
@@ -63,11 +63,13 @@ function node_save($node) {
     $u2 = array();
 
     foreach ($node as $field=>$value) {
-      if (in_array($field, $rows)) {
-        array_push($u1, check_input($field) ." = '". check_input($value) ."'");
-      }
-      else {
-        array_push($u2, check_input($field) ." = '". check_input($value) ."'");
+      if (in_array($field, $filter)) {
+        if (in_array($field, $rows)) {
+          array_push($u1, check_input($field) ." = '". check_input($value) ."'");
+        }
+        else {
+          array_push($u2, check_input($field) ." = '". check_input($value) ."'");
+        }
       }
     }
 
@@ -89,23 +91,20 @@ function node_save($node) {
       // verify submission rate:
       throttle("post node", variable_get(max_node_rate, 900));
 
-      // setup default values:
-      $node = array_merge(array(title => "?", author => $user->id, type => "?", pid => 0, cid => 0, tid => 0, log => "node created", status => (category_submission($node[cid]) ? $status[queued] : $status[posted]) , score => 0, votes => 0, comment => category_comment($node[cid]), promote => category_promote($node[cid]), moderate => topic_moderate($node[tid]), timestamp => time()), $node);
-
       // prepare queries:
-      $f1 = array();
-      $v1 = array();
-      $f2 = array();
-      $v2 = array();
+      foreach ($filter as $field=>$value) {
+        $k = check_input(is_numeric($field) ? $value : $field);
+        $v = check_input(is_numeric($field) ? $node[$value] : $filter[$field]);
 
-      foreach ($node as $field=>$value) {
-        if (in_array($field, $rows)) {
-          array_push($f1, check_input($field));
-          array_push($v1, "'". check_input($value) ."'");
+        print "$k => $v ($field, $value)<BR>";
+
+        if (in_array($k, $rows)) {
+          $f1[] = $k;
+          $v1[] = "'$v'";
         }
         else {
-          array_push($f2, check_input($field));
-          array_push($v2, "'". check_input($value) ."'");
+          $f2[] = $k;
+          $v2[] = "'$v'";
         }
       }
 
@@ -115,14 +114,14 @@ function node_save($node) {
       $v2 = implode(", ", $v2);
 
       // insert data, try to roll-back when something goes wrong:
-      $result = db_query("INSERT INTO node ($f1) VALUES ($v1)");
+      $result = db_query("INSERT INTO node ($f1) VALUES ($v1)", 1);
       if ($result && $nid = db_insert_id()) {
-        $result = db_query("INSERT INTO $node[type] ($f2, nid) VALUES ($v2, $nid)");
+        $result = db_query("INSERT INTO $filter[type] ($f2, nid) VALUES ($v2, $nid)", 1);
         if ($result && $lid = db_insert_id()) {
-          $result = db_query("UPDATE node SET lid = '$lid' WHERE nid = '$nid'");
+          $result = db_query("UPDATE node SET lid = '$lid' WHERE nid = '$nid'", 1);
           if ($result) {
             if (($node[pid]) && ($node[status] == $status[posted])) {
-              db_query("UPDATE node SET status = '$status[expired]' WHERE nid = '$node[pid]'");
+              db_query("UPDATE node SET status = '$status[expired]' WHERE nid = '$node[pid]'", 1);
             }
             watchdog("special", "node: added '$node[title]'");
           }
@@ -131,7 +130,7 @@ function node_save($node) {
           }
         }
         else {
-          db_query("DELETE FROM node WHERE nid = '$nid'");
+          db_query("DELETE FROM node WHERE nid = '$nid'", 1);
           watchdog("warning", "node: added '$node[title]' - failed");
         }
       }

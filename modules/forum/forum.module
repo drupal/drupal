@@ -23,8 +23,11 @@ function forum_form($edit = array()) {
 }
 
 function forum_save($edit) {
-  global $status;
-  node_save(array_merge($edit, array(type => "forum", status => $status[posted])));
+  global $user, $status;
+
+  if (user_access($user)) {
+    node_save($edit, array(author => $user->id, body, cid, comment => category_comment($edit[cid]), moderate => topic_moderate($edit[tid]), promote => category_promote($edit[cid]), score => 0, status => $status[posted], tid, timestamp => time(), title, type => "forum", votes => 0));
+  }
 }
 
 function forum_num_comments($nid) {
