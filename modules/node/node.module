@@ -373,16 +373,20 @@ function node_view($node, $main = 0) {
   }
 }
 
-
-function node_show($nid, $cid) {
-  global $revision;
+function node_get_node_from_nid($nid) {
+  $revision = $_GET["revision"];
 
   $node = node_load(array("status" => 1, "nid" => $nid));
 
+  if (isset($revision)) {
+    $node = $node->revisions[$revision]["node"];
+  }
+  return $node;
+}
+
+function node_show($node, $cid) {
+
   if (node_access("view", $node)) {
-    if (isset($revision)) {
-      $node = $node->revisions[$revision]["node"];
-    }
 
     node_view($node);
 
@@ -795,7 +799,6 @@ function node_admin() {
     /*
     ** Compile a list of the administrative links:
     */
-
     switch ($op) {
       case "search":
         print search_type("node", url("admin/node/search"));
@@ -806,13 +809,13 @@ function node_admin() {
       case "delete":
         print node_delete(array("nid" => arg(3)));
         break;
-      case "rollback+revision":
-        print node_revision_rollback(node_load(array("nid" => arg(3))), arg(5));
-        print node_admin_edit(arg(4));
+      case "rollback revision":
+        print node_revision_rollback(node_load(array("nid" => arg(3))), arg(4));
+        print node_admin_edit(arg(3));
         break;
-      case "delete+revision":
-        print node_revision_delete(node_load(array("nid" => arg(3))), arg(5));
-        print node_admin_edit(arg(4));
+      case "delete revision":
+        print node_revision_delete(node_load(array("nid" => arg(3))), arg(4));
+        print node_admin_edit(arg(3));
         break;
       case t("Preview"):
         $edit = node_validate($edit, $error);
@@ -1399,7 +1402,11 @@ function node_page() {
       return;
     }
 
-    theme("header");
+    if ($op == "view") {
+      $node = node_get_node_from_nid(arg(2));
+    }
+
+    theme("header", $node->title);
 
     $name = module_invoke(arg(2), "node", "name");
 
@@ -1411,7 +1418,7 @@ function node_page() {
         theme("box", t("Edit $name"), node_edit(arg(2)));
         break;
       case "view":
-        print node_show(arg(2), arg(3));
+        print node_show($node, arg(3));
         break;
       case t("Preview"):
         $edit = node_validate($edit, $error);

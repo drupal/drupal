@@ -22,8 +22,9 @@ function title_page() {
     else if (db_num_rows($result) == 1) {
       $node = db_fetch_object($result);
 
+      $node = get_node_from_nid($node->nid);
       theme("header");
-      print node_show($node->nid, NULL);
+      print node_show($node, NULL);
       theme("footer");
     }
     else {
