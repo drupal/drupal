@@ -17,9 +17,14 @@
           <TABLE BORDER="1">
             <TR>
               <TD>
-              </TD>
                 Logo? <!-- I left a TD to add a logo of some kind -->
-              <TD>
+              </TD>
+              <TD ALIGN="right" COLSPAN="2">
+
+<?php
+               print theme_link(" | ");
+?>
+
               </TD>
             </TR>
             <TR>
@@ -40,7 +45,7 @@
     function story($story, $reply = 0) {
 ?>
 
-              <TABLE BORDER="1">
+              <TABLE BORDER="1" WIDTH="100%">
                 <TR>
                   <TD COLSPAN="2">
                     <?php echo check_output($story->title); ?>
@@ -106,59 +111,41 @@
       echo "<A NAME=\"$comment->cid\"></A>\n";
 
       // Create comment header:
-      echo "  <TABLE>";
+      echo "  <TABLE BORDER=\"1\" WIDTH=\"100%\">";
       echo "    <TR>";
       echo "      <TD>";
-      echo "        <TABLE BORDER=\"1\">";
-      echo "          <TR>";
-      echo "            <TD>";
-      echo "              <TABLE>";
-      echo "                <TR>";
-      echo "                  <TD>";
-      echo "                    <TABLE BORDER=\"1\">";
-
-      // Subject:
-      echo "                      <TR>";
-      echo "                        <TD>";
-      echo "                          ". t("Subject") .":";
-      echo "                            </TD>";
-      echo "                            <TD >";
-      echo "                          ". check_output($comment->subject);
-      echo "                        </TD>";
+      echo          t("Subject") .":";
+      echo "      </TD>";
+      echo "      <TD>";
+      echo "       ". check_output($comment->subject);
+      echo "      </TD>";
 
       // Moderation:
-      echo "                        <TD>";
-      echo                              comment_moderation($comment);
-      echo "                        </TD>";
-      echo "                      </TR>";
+      echo "      <TD>";
+      echo          comment_moderation($comment);
+      echo "      </TD>";
+      echo "    </TR>";
 
-      // Author:
-      echo "                      <TR>";
-      echo "                        <TD>". t("Author") .":</FONT></TD><TD>". format_username($comment->userid);
+      // Author and date:
+      echo "    <TR>";
+      echo "      <TD>";      
+      echo         t("Author") .":";
+      echo "      </TD>";
+      echo "      <TD COLSPAN=\"2\">";
+      echo          format_username($comment->userid) ." on ". format_date($comment->timestamp);
+      echo "      </TD>";
+      echo "    </TR>";
 
-      // Date:
-      echo "                          on ". format_date($comment->timestamp);
-      echo "                        </TD>";
-      echo "                      </TR>";
+      // Body of comment:
+      echo "    <TR>";
+      echo "      <TD COLSPAN=\"3\">";
+      echo         check_output($comment->comment, 1);
 
-      echo "                    </TABLE>";
-      echo "                  </TD>";
-      echo "                </TR>";
-
-      // Print body of comment:
-                  if ($comment) echo " <TR><TD>" . check_output($comment->comment, 1) ."</TD></TR>";
-
-      // Print bottom link(s):
-      echo "                <TR><TD>$link</TD></TR>";
-      echo "              </TABLE>";
-      echo "            </TD>";
-      echo "          </TR>";
-      echo "        </TABLE>";
+      // Print navigation / control links:
+      echo "       <P>$link</P>";
       echo "      </TD>";
       echo "    </TR>";
       echo "  </TABLE>";
-      echo "  <BR>";
-
     } // close comment function
 
     function box($subject, $content, $options = "") {
@@ -224,20 +211,11 @@
             </TD>
           </TR>
           <TR>
-            <TD></TD>
-            <TD>
-              <TABLE BORDER="1">
-                <TR>
-                  <TD></TD>
-                  <TD>
-                    <!-- These are just some links from my theme as an example. -->
-                    <A HREF="index.php">Home</A> <A HREF="module.php?mod=faq">Faq</A> <A HREF="search.php">Search</A> <A HREF="module.php?mod=diary">Diary</A> <A HREF="submit.php">Submit news</A> <A HREF="account.php">Account</A>
-                  </TD>
-                  <TD></TD>
-                </TR>
-              </TABLE>
+            <TD ALIGN="center" COLSPAN="3">
+<?php
+                   print theme_link(" | ");
+?>
             </TD>
-            <TD></TD>
           </TR>
         </TABLE>
       </BODY>

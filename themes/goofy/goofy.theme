@@ -77,7 +77,7 @@
         </tr>
         <tr>
          <td class="lgl"><img src="themes/goofy/images/null.gif" alt=""></td>
-         <td class="lgcnt" width="100%" valign="top"><div align="center"><big><a href="index.php">home</a> | <a href="module.php?mod=faq">faq</a> | <a href="module.php?mod=diary">diary</a> | <a href="search.php">search</a> | <a href="submit.php">submit news</a> | <a href="account.php">user account</a></big></div></td>
+         <td class="lgcnt" width="100%" valign="top"><div align="center"><big><?php print theme_link(" | "); ?></big></div></td>
          <td class="lgr"><img src="themes/goofy/images/null.gif" alt=""></td>
         </tr>
         <tr>

@@ -12,6 +12,16 @@ function theme_init() {
   return new Theme();
 }
 
+function theme_link($separator = " | ") {
+  $links = array("<A HREF=\"index.php\">". t("home") ."</A>",
+                 "<A HREF=\"search.php\">". t("search") ."</A>",
+                 "<A HREF=\"submit.php\">". t("submit") ."</A>",
+                 "<A HREF=\"module.php?mod=diary\">". t("diary") ."</A>",
+                 "<A HREF=\"account.php\">". t("account") ."</A>",
+                 "<A HREF=\"module.php?mod=book\">". t("help") ."</A>");
+  return implode($separator, $links);
+}
+
 function theme_menu($name, $module) {
   global $menu;
   if ($module["menu"]) $menu = ($menu) ? array_merge($menu, $module["menu"]()) : $module["menu"]();

@@ -26,7 +26,7 @@
        <TR>
         <TD ALIGN="right" COLSPAN="2">
          <?php
-           print "<SMALL><A HREF=\"index.php\">". t("home") ."</A> | <A HREF=\"module.php?mod=faq\">". t("faq") ."</A> | <A HREF=\"module.php?mod=diary\">". t("diary") ."</A> | <A HREF=\"search.php\">". t("search") ."</A> | <A HREF=\"submit.php\">". t("submit") ."</A> | <A HREF=\"module.php?mod=wiki\">". t("wiki") ."</A> | <A HREF=\"account.php\">". t("user account") ."</A></SMALL>\n";
+           print "<SMALL>". theme_link(" | ") ."</SMALL>\n";
          ?>
         </TD>
        </TR>
@@ -145,7 +145,7 @@
       <TR>
        <TD ALIGN="center" COLSPAN="3">
         <?php
-          print "<SMALL>[ <A HREF=\"index.php\">". t("home") ."</A> | <A HREF=\"module.php?mod=faq\">". t("faq") ."</A> | <A HREF=\"module.php?mod=diary\">". t("diary") ."</A> | <A HREF=\"search.php\">". t("search") ."</A> | <A HREF=\"submit.php\">". t("submit news") ."</A> | <A HREF=\"account.php\">". t("user account") ."</A> ]</SMALL><P>\n";
+          print "<SMALL>[ ". theme_link(" | ") ." ]</SMALL><P>\n";
         ?>
        </TD>
       </TR>
