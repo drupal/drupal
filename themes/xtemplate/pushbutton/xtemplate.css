@@ -95,6 +95,9 @@ table#primary-links-table  {
 table#primary-links-table tr {
   background: transparent url(header-a.jpg) left bottom repeat;
 }
+td#home {
+  background: transparent url(logo-background.jpg) left top repeat;
+}
 td#home a:link img, td#home a:visited img {
   background: transparent url(logo-active.jpg) repeat;
   width: 144px;
