@@ -32,7 +32,7 @@ function showUser() {
   include('theme.inc');
   $theme->header();
   if (!empty($user->userid)) {
-    print("<P>Welcome natrak! This is <B>your</B> user info page. There are many more, but this one is yours. You are probably most interested in editing something, but if you need to kill some time, this place is as good as any other place.</P>\n");
+    print("<P>Welcome $user->name! This is <B>your</B> user info page. There are many more, but this one is yours. You are probably most interested in editing something, but if you need to kill some time, this place is as good as any other place.</P>\n");
     print("<TABLE BORDER=0 CELLPADDING=2 CELLSPACING=2>\n");
     print("<TR><TD><B>Name:</B></TD><TD>$user->name</TD></TR>\n");
     print("<TR><TD><B>User ID:</B></TD><TD>$user->userid</TD></TR>\n");
