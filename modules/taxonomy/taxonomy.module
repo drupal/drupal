@@ -54,12 +54,34 @@ function taxonomy_menu($may_cache) {
     $items[] = array('path' => 'admin/taxonomy', 'title' => t('categories'),
       'callback' => 'taxonomy_admin',
       'access' => user_access('administer taxonomy'));
+
     $items[] = array('path' => 'admin/taxonomy/list', 'title' => t('list'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
+
     $items[] = array('path' => 'admin/taxonomy/add/vocabulary', 'title' => t('add vocabulary'),
       'callback' => 'taxonomy_admin',
       'access' => user_access('administer taxonomy'),
       'type' => MENU_LOCAL_TASK);
+
+    $items[] = array('path' => 'admin/taxonomy/edit/vocabulary', 'title' => t('edit vocabulary'),
+      'callback' => 'taxonomy_admin',
+      'access' => user_access('administer taxonomy'),
+      'type' => MENU_CALLBACK);
+
+    $items[] = array('path' => 'admin/taxonomy/preview/vocabulary', 'title' => t('preview vocabulary'),
+      'callback' => 'taxonomy_admin',
+      'access' => user_access('administer taxonomy'),
+      'type' => MENU_CALLBACK);
+
+    $items[] = array('path' => 'admin/taxonomy/add/term', 'title' => t('add term'),
+      'callback' => 'taxonomy_admin',
+      'access' => user_access('administer taxonomy'),
+      'type' => MENU_CALLBACK);
+
+    $items[] = array('path' => 'admin/taxonomy/edit/term', 'title' => t('edit term'),
+      'callback' => 'taxonomy_admin',
+      'access' => user_access('administer taxonomy'),
+      'type' => MENU_CALLBACK);
 
     $items[] = array('path' => 'taxonomy/term', 'title' => t('taxonomy term'),
       'callback' => 'taxonomy_term_page',
