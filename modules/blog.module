@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.58 2001/12/09 19:56:08 dries Exp $
+// $Id: blog.module,v 1.59 2001/12/31 13:02:22 dries Exp $
 
 function blog_conf_options() {
  $output .= form_textarea("Explanation or submission guidelines", "blog_help", variable_get("blog_help", ""), 55, 4, "This text will be displayed at the top of the blog submission form.  Useful for helping or instructing your users.");
@@ -180,7 +180,7 @@ function blog_page_user($uid = 0, $date = 0) {
     }
 
     if ($blog->comment) {
-      $links[] = "<a href=\"node.php?id=$blog->nid\">". format_plural(node_get_comments($blog->nid), t("comment"), t("comments")) ."</a>";
+      $links[] = "<a href=\"node.php?id=$blog->nid\">". format_plural(comment_num_all($blog->nid), t("comment"), t("comments")) ."</a>";
     }
 
     $output .= "<tr><td><div style=\"margin-left: 20px;\"><b>". check_output($blog->title) ."</b></div></td><td align=\"right\">". $theme->links($links) ."</td></tr>";
@@ -217,7 +217,7 @@ function blog_page_last() {
     }
 
     if ($blog->comment) {
-      $links[] = "<a href=\"node.php?id=$blog->nid\">". format_plural(node_get_comments($blog->nid), t("comment"), t("comments")) ."</a>";
+      $links[] = "<a href=\"node.php?id=$blog->nid\">". format_plural(comment_num_all($blog->nid), t("comment"), t("comments")) ."</a>";
     }
 
     $output .= "<tr><td><b>". check_output($blog->title) ."</b></td><td align=\"right\">". $theme->links($links) ."</td></tr>";
