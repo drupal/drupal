@@ -1,5 +1,5 @@
 <?php
-// $Id: admin.module,v 1.35 2003/10/24 12:26:03 dries Exp $
+// $Id: admin.module,v 1.36 2003/10/26 21:50:42 dries Exp $
 
 include_once "includes/common.inc";
 
@@ -34,15 +34,17 @@ function admin_link($type) {
 
 function admin_page() {
   if (user_access("access administration pages")) {
+    $contents = "";
+
     if ($help = menu_get_active_help()) {
-      $contents = "<small>$help</small><hr />";
+      $contents .= "<small>$help</small><hr />";
     }
+
     if (arg(1)) {
       $contents .= menu_execute_active_handler();
     }
     else {
-      $contents.= watchdog_overview("actions");
-      $title = t("System messages");
+      $contents .= watchdog_overview("actions");
     }
 
     $breadcrumb = menu_get_active_breadcrumb();
