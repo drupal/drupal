@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.43 2002/05/22 23:28:48 kjartan Exp $
+// $Id: forum.module,v 1.44 2002/05/23 14:14:48 kjartan Exp $
 
 function forum_node($field) {
   $info["name"] = t("discussion forum");
@@ -54,12 +54,6 @@ function forum_view($node) {
 }
 
 function forum_form(&$node, &$help, &$error) {
-
-  if (!$node->status) {
-    $node->status = 1;
-    $node->moderate = 1;
-    $node->comment = 2;
-  }
 
   if (function_exists("taxonomy_node_form")) {
     $output = implode("", taxonomy_node_form("forum", $node));

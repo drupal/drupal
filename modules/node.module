@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.132 2002/05/22 23:28:48 kjartan Exp $
+// $Id: node.module,v 1.133 2002/05/23 14:14:48 kjartan Exp $
 
 function node_help() {
   global $mod;
@@ -892,7 +892,8 @@ function node_add($type) {
   */
 
   if ($type && node_access("create", $type)) {
-    $output = node_form(array("uid" => $user->uid, "name" => $user->name, "type" => $type));
+    // Initialize settings
+    $output = node_form(array("uid" => $user->uid, "name" => $user->name, "type" => $type, "status" => 1, "moderate" => 1, "comment" => 2));
   }
   else {
 
