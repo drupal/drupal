@@ -386,18 +386,20 @@ function bloggerapi_help() {
 
 <p>Drupal's support for the Blogger API is quite complete. Each method with an asterisk below has been implemented in Drupal.</p>
 
+<p>
 <a href="http://plant.blogger.com/api/xmlrpc_newPost.html">blogger.newPost()*</a><br />
 <a href="http://plant.blogger.com/api/xmlrpc_editPost.html">blogger.editPost()*</a><br />
 <a href="http://plant.blogger.com/api/xmlrpc_getUsersBlogs.html">blogger.getUsersBlogs()*</a><br />
 <a href="http://plant.blogger.com/api/xmlrpc_getUserInfo.html">blogger.getUserInfo()*</a><br />
 <a href="http://plant.blogger.com/api/xmlrpc_getTemplate.html">blogger.getTemplate()</a><br />
-<a href="http://plant.blogger.com/api/xmlrpc_setTemplate.html">blogger.setTemplate()</a><br/>
+<a href="http://plant.blogger.com/api/xmlrpc_setTemplate.html">blogger.setTemplate()</a><br /></p>
 
 <p>Drupal also supports the following methods. These methods were added after the those listed above and are not documented on the Blogger API website. Each method is linked to its corresponding blogger-dev mailing list posts:</p>
 
+<p>
 <a href="http://groups.yahoo.com/group/bloggerDev/message/296">blogger.getPost()*</a><br />
 <a href="http://groups.yahoo.com/group/bloggerDev/message/225">blogger.getRecentPosts()*</a><br />
-<a href="http://groups.yahoo.com/group/bloggerDev/message/147">blogger.deletePost()*</a><br />
+<a href="http://groups.yahoo.com/group/bloggerDev/message/147">blogger.deletePost()*</a><br /></p>
 
 <h3>Installation and usage</h3>
 
