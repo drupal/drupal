@@ -1072,7 +1072,7 @@ function user_edit_validate($uid, &$edit) {
 function user_edit($category = 'account') {
   global $user;
 
-  $account = $user->uid != arg(1) ? user_load(array('uid' => arg(1))) : $user;
+  $account = user_load(array('uid' => arg(1)));
   $edit = $_POST['op'] ? $_POST['edit'] : object2array($account);
 
   if ($_POST['op'] == t('Save account')) {
