@@ -34,6 +34,11 @@ function legacy_menu($may_cache) {
     $items[] = array('path' => 'taxonomy/feed', 'title' => t('taxonomy'),
       'callback' => 'legacy_taxonomy_feed',
       'access' => TRUE, 'type' => MENU_CALLBACK);
+
+    // Map "blog/feed/52" to "blog/52/feed".
+    $items[] = array('path' => 'blog/feed', 'title' => t('blog'),
+      'callback' => 'legacy_blog_feed',
+      'access' => TRUE, 'type' => MENU_CALLBACK);
   }
   else {
     // Map "node/view/52" to "node/52".
@@ -76,6 +81,17 @@ function legacy_taxonomy_feed($operation = 'or', $str_tids = '') {
     $str_tids = str_replace(',', '+', $str_tids);
   }
   drupal_goto('taxonomy/term/'. $str_tids .'/0/feed');
+}
+
+/**
+ * Menu callback; redirects users to new blog feed paths.
+ */
+function legacy_blog_feed($str_uid = '') {
+  // if URL is of form blog/feed/52 redirect
+  // if URL is of form blog/feed no need to redirect
+  if (is_numeric($str_uid)) {
+    drupal_goto('blog/'. $str_uid .'/feed');
+  }
 }
 
 /**

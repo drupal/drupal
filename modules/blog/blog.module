@@ -162,9 +162,9 @@ function blog_page_user($uid) {
       $output .= node_view(node_load(array('nid' => $node->nid)), 1);
     }
     $output .= theme('pager', NULL, variable_get('default_nodes_main', 10));
-    $output .= theme('xml_icon', url("blog/feed/$account->uid"));
+    $output .= theme('xml_icon', url("blog/$account->uid/feed"));
 
-    drupal_set_html_head('<link rel="alternate" type="application/rss+xml" title="RSS - '. $title .'" href="'. url("blog/feed/$account->uid") .'" />');
+    drupal_set_html_head('<link rel="alternate" type="application/rss+xml" title="RSS - '. $title .'" href="'. url("blog/$account->uid/feed") .'" />');
     print theme('page', $output);
   }
   else {
