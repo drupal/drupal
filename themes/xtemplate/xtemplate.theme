@@ -5,7 +5,6 @@ if (!class_exists("XTemplate")) {
   include_once("themes/xtemplate/xtemplate.inc");
 }
 
-$GLOBALS["xtemplate"]->sidebar = variable_get("xtemplate_sidebar", "right");
 $GLOBALS["xtemplate"]->template = new XTemplate("themes/xtemplate/xtemplate.xtmpl");
 $GLOBALS["xtemplate"]->template->SetNullBlock(" ");  // "" doesnt work!
 
@@ -113,17 +112,7 @@ function xtemplate_header($title = "") {
     $xtemplate->template->parse("header.message");
   }
 
-  /*
-  if ($xtemplate->sidebar == "left") {
-    $blocks = render_blocks("all");
-  }
-  else if ($xtemplate->sidebar == "both") {
-    $blocks = render_blocks("left");
-  }
-  */
-  $blocks = render_blocks("left");
-
-  if ($blocks) {
+  if ($blocks = theme("blocks", "left")) {
     $xtemplate->template->assign("blocks", $blocks);
     $xtemplate->template->parse("header.blocks");
   }
@@ -162,17 +151,7 @@ function xtemplate_box($title, $content, $region = "main") {
 function xtemplate_footer() {
   global $xtemplate;
 
-  /*
-  if ($xtemplate->sidebar == "right") {
-    print render_blocks("all");
-  }
-  else if ($xtemplate->sidebar == "both") {
-    print render_blocks("right");
-  }
-  */
-  $blocks = render_blocks("right");
-
-  if ($blocks) {
+  if ($blocks = theme("blocks", "right")) {
     $xtemplate->template->assign("blocks", $blocks);
     $xtemplate->template->parse("footer.blocks");
   }

@@ -274,7 +274,7 @@ function unconed_footer() {
     </td>
     <td valign="top" width="20%">
       <?php
-        print render_blocks("all", $this);
+        print theme("blocks", "all");
       ?>
     </td>
     </tr>

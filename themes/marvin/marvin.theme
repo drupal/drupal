@@ -47,7 +47,7 @@ function marvin_header($title = "") {
   $output .= "<table border=\"0\" style=\"width: 100%\" cellpadding=\"8\" cellspacing=\"0\">\n";
   $output .= "  <tr>\n";
 
-  $blocks = render_blocks("left");
+  $blocks = theme("blocks", "left");
   if ($blocks) {
     $output .= "    <td style=\"width: 200px; vertical-align: top;\">\n";
     $output .= $blocks;
@@ -171,7 +171,7 @@ function marvin_links($links, $delimiter = " &middot; ") {
 
 function marvin_footer() {
   $output  = "    </td>\n";
-  $blocks = render_blocks("right");
+  $blocks = theme("blocks", "right");
   if ($blocks) {
     $output .= "    <td style=\"width: 200px; vertical-align: top;\">\n";
     $output .= $blocks;

@@ -346,4 +346,37 @@ function block_user($type, &$edit, &$user) {
   }
 }
 
+/**
+ * Return blocks available for current $user at $region.
+ *
+ * @param   $region   main|left|right
+ *
+ * @return  array of block objects, indexed with <i>module</i>_<i>delta</i>
+ *
+ * @see     <a href="http://drupal.org/node/view/1042" target="_top">[feature]
+ *   Generic template design difficult w/o block region "look-ahead"</a>
+ * @todo    add a proper primary key (bid) to the blocks table so we don't have
+ *   to mess around with this <i>module</i>_<i>delta</i> construct. currently,
+ *   "blocks" has no primary key defined (bad)!
+ */
+function block_list($region) {
+  global $user;
+  static $blocks = array();
+
+  if (!isset($blocks[$region])) {
+    $blocks[$region] = array();
+    $result = db_query("SELECT * FROM {blocks} WHERE (status = '1' OR custom = '1') ". ($region != "all" ? "AND region = %d " : "") ."ORDER BY weight, module", $region == "left" ? 0 : 1);
+
+    while ($result && ($block = db_fetch_array($result))) {
+      if ((($block['status'] && (!$user->uid || !$block['custom'])) || ($block['custom'] && $user->block[$block['module']][$block['delta']])) && (!$block['path'] || preg_match($block['path'], str_replace("?q=", "", request_uri())))) {
+        $block = array_merge($block, module_invoke($block['module'], 'block', 'view', $block['delta']));
+        if ($block['content']) {
+          $blocks[$region]["$block[module]_$block[delta]"] = (object) $block;
+        }
+      }
+    }
+  }
+  return $blocks[$region];
+}
+
 ?>
