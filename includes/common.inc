@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.234 2003/08/08 22:24:53 dries Exp $
+// $Id: common.inc,v 1.235 2003/08/11 20:41:24 kjartan Exp $
 
 function conf_init() {
 
@@ -997,14 +997,14 @@ function field_set($string, $name, $value) {
 }
 
 function link_page() {
-  global $custom_links, $base_url;
+  global $custom_links;
 
-  if (is_array($custom_links)) {
+  if (0 && is_array($custom_links)) {
     return $custom_links;
   }
   else {
     $links = module_invoke_all("link", "page");
-    array_unshift($links, "<a href=\"$base_url/\" title=\"". t("Return to the main page.") ."\">". t("home") ."</a>");
+    array_unshift($links, l(t("home"), "", array("title" => t("Return to the main page."))));
     return $links;
   }
 }
