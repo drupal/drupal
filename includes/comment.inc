@@ -2,7 +2,7 @@
 
 // Security check:
 if (strstr($id, " ") || strstr($pid, " ") || strstr($lid, " ") || strstr($mode, " ") || strstr($order, " ") || strstr($threshold, " ")) {
-  watchdog("error", "discussion: attempt to provide malicious input through URI");
+  watchdog("error", "comment: attempt to provide malicious input through URI");
   exit();
 }
 
@@ -155,7 +155,7 @@ function comment_post($pid, $id, $subject, $comment) {
   $duplicate = db_result(db_query("SELECT COUNT(cid) FROM comments WHERE link = '$link' AND pid = '$pid' AND lid = '$id' AND subject = '". check_input($subject) ."' AND comment = '". check_input($comment) ."'"), 0);
 
   if ($duplicate != 0) {
-    watchdog("error", "discussion: attempt to insert duplicate comment");
+    watchdog("error", "comment: attempt to insert duplicate comment");
     $theme->box("duplicate comment", "duplicate comment: $duplicate");
   }
   else { 
@@ -163,7 +163,7 @@ function comment_post($pid, $id, $subject, $comment) {
     $subject = ($subject) ? $subject : substr($comment, 0, 29);
 
     // Add watchdog entry:
-    watchdog("comment", "discussion: added comment with subject '$subject'");
+    watchdog("comment", "comment: added comment with subject '$subject'");
 
     // Add comment to database:
     db_query("INSERT INTO comments (link, lid, pid, author, subject, comment, hostname, timestamp, score) VALUES ('". check_input($link) ."', $id, $pid, '$user->id', '". check_input($subject) ."', '". check_input($comment) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."', '". ($user->userid ? 1 : 0) ."')");
