@@ -4,13 +4,8 @@ $module = array("admin" => "ban_admin");
 
 include "includes/ban.inc";
 
-function ban_check($mask, $category) {
-  $ban = ban_match($mask, $category);
-  $output .= "". ($ban ? "Matched ban '<B>$ban->mask</B>' with reason: <I>$ban->reason</I>.<P>\n" : "No matching bans for '$mask'.<P>\n") ."";
-  print $output;
-}
 
-function ban_new($mask, $category, $reason) {
+function ban_admin_new($mask, $category, $reason) {
   ban_add($mask, $category, $reason, &$message);
   $output .= "$message\n";
   print $output;
@@ -44,14 +39,17 @@ function ban_display($category = "") {
   $output .= "  <TH>reason</TH>\n";
   $output .= "  <TH>operations</TH>\n";
   $output .= " </TR>\n";
-
   while ($ban = db_fetch_object($result)) {
     $output .= "  <TR><TD>$ban->mask</TD><TD>$ban->reason</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=ban&op=delete&category=$category&id=$ban->id\">delete</A></TD></TR>\n";
   }
-  
   $output .= " <TR><TD COLSPAN=\"3\"><SMALL>%: matches any number of characters, even zero characters.<BR>_: matches exactly one character.</SMALL></TD></TR>\n";
   $output .= "</TABLE>\n";
-  $output .= "<BR><HR>\n";
+  
+  print $output;
+}
+
+function ban_admin_add() {
+  global $type2index;
 
   $output .= "<H3>Add new ban:</H3>\n";
   $output .= "<FORM ACTION=\"admin.php?mod=ban\" METHOD=\"post\">\n";
@@ -67,7 +65,18 @@ function ban_display($category = "") {
   $output .= "<TEXTAREA NAME=\"reason\" COLS=\"50\" ROWS=\"5\"></TEXTAREA><P>\n";
   $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Add ban\"><BR>\n";
   $output .= "</FORM>\n";
-  $output .= "<BR><HR>\n";
+  
+  print $output;
+}
+
+function ban_check($mask, $category) {
+  $ban = ban_match($mask, $category);
+  $output .= "". ($ban ? "Matched ban '<B>$ban->mask</B>' with reason: <I>$ban->reason</I>.<P>\n" : "No matching bans for '$mask'.<P>\n") ."";
+  print $output;
+}
+
+function ban_admin_check() {
+  global $type2index;
 
   $output .= "<H3>Ban check:</H3>\n";
   $output .= "<FORM ACTION=\"admin.php?mod=ban\" METHOD=\"post\">\n";
@@ -88,14 +97,21 @@ function ban_display($category = "") {
 function ban_admin() {
   global $op, $id, $mask, $category, $reason;
 
+  print "<SMALL><A HREF=\"admin.php?mod=ban&op=add\">add ban</A> | <A HREF=\"admin.php?mod=ban&op=check\">check ban</A> | <A HREF=\"admin.php?mod=ban\">overview</A></SMALL><HR>\n";
+
   switch ($op) {
     case "Add ban":
-      ban_new($mask, $category, $reason);
+      ban_admin_new($mask, $category, $reason);
       ban_display($category);
       break;
     case "Check ban":
       ban_check($mask, $category);
-      ban_display($category);
+      break;
+    case "add":
+      ban_admin_add();
+      break;
+    case "check":
+      ban_admin_check();
       break;
     case "delete":
       ban_delete($id);

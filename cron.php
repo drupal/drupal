@@ -2,7 +2,7 @@
 
 include "includes/common.inc";
 
-function cron_run($cron) {
+function cron_run() {
   global $repository;
 
   $time = time();

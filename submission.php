@@ -3,7 +3,7 @@
 include "includes/submission.inc";
 include "includes/common.inc";
 
-function submission_displayMain() {
+function submission_display_main() {
   global $PHP_SELF, $theme, $user;
 
   // Perform query:
@@ -23,7 +23,7 @@ function submission_displayMain() {
   $theme->footer();
 }
 
-function submission_displayItem($id) {
+function submission_display_item($id) {
   global $PHP_SELF, $theme, $user, $submission_votes;
 
   if ($vote = user_getHistory($user->history, "s$id")) {
@@ -67,14 +67,14 @@ if (strstr($id, " ")) {
 if ($user->id) {
   switch($op) {
     case "view":
-      submission_displayItem($id);
+      submission_display_item($id);
       break;
     case "Vote";
       submission_vote($id, $vote, $comment);
-      submission_displayItem($id);
+      submission_display_item($id);
       break;
     default:
-      submission_displayMain();
+      submission_display_main();
       break;
   }
 }

@@ -461,7 +461,7 @@ function account_track_comments() {
     $output .= " </UL>\n";
   }
 
-  $output = ($output) ? "$msg $output" : "$info <CENTER><B>You have not posted any comments recently.</B></CENTER>\n";
+  $output = ($output) ? "$msg $output" : "$info <CENTER>You have not posted any comments recently.</CENTER>\n";
 
   $theme->header();
   $theme->box("Track your comments", $output);
@@ -473,7 +473,7 @@ function account_track_stories() {
 
   $msg = "<P>This page might be helpful in case you want to keep track of the stories you contributed.  You are presented an overview of your stories along with the number of replies each story got.\n<P>\n"; 
 
-  $result = db_query("SELECT s.id, s.subject, s.timestamp, s.category, COUNT(s.id) as count FROM comments c LEFT JOIN stories s ON c.sid = s.id WHERE s.status = 2 AND s.author = $user->id GROUP BY s.id DESC");
+  $result = db_query("SELECT s.id, s.subject, s.timestamp, s.category, COUNT(c.cid) as count FROM stories s LEFT JOIN comments c ON c.sid = s.id WHERE s.status = 2 AND s.author = $user->id GROUP BY s.id DESC");
   
   while ($story = db_fetch_object($result)) {
     $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
@@ -484,10 +484,8 @@ function account_track_stories() {
     $output .= "<P>\n";
   }
 
-  $output = ($output) ? "$msg $output" : "$info <CENTER><B>You have not posted any stories.</B></CENTER>\n";
-
   $theme->header();
-  $theme->box("Track your stories", $output);
+  $theme->box("Track your stories", ($output ? "$msg $output" : "$msg You have not posted any stories.\n"));
   $theme->footer();
 }
 
@@ -504,6 +502,7 @@ function account_track_site() {
     $block1 .= "</TABLE>\n";
     $block1 .= "<P>\n";
   }
+  $block1 = ($block1) ? $block1 : "<CENTER>You have not posted any comments recently.</CENTER>\n";
 
   $users_total = db_result(db_query("SELECT COUNT(id) FROM users"));
   

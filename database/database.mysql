@@ -122,6 +122,7 @@ CREATE TABLE stories (
   score int(11) DEFAULT '0' NOT NULL,
   votes int(11) DEFAULT '0' NOT NULL,
   status int(4) DEFAULT '1',
+  UNIQUE subject (subject),
   PRIMARY KEY (id)
 );
 

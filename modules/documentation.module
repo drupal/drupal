@@ -42,15 +42,16 @@ function documentation() {
   <BLOCKQUOTE>$ cp includes/hostname.conf includes/www.yourdomain.com.conf</BLOCKQUOTE>
   <P>6. Edit your configuration file to set the required settings such as the database options and to customize your site to your likings.</P>
   <P>7. Launch your browser and point it to http://yourdomain.com/, create an account, log in and head on to http://yourdomain.com/admin.php.  The first user will automatically have administrator permissions.  Play with it for a bit and spend some time getting used to the administration interfaces.</P>
-  <P>8. Optionally (yet recommended for smooth operation) setup a crontab to periodically visit http://yourdomain.com/cron.php.</P>
+  <P>8. Optionally (yet recommended for smooth operation) edit the <CODE>.htaccess</CODE> file and set the values of the PHP variables to your likings: <CODE>session.name</CODE>, <CODE>session.cookie_lifetime</CODE>, <CODE>session.gc_maxlifetime</CODE>, <CODE>session.cache_expire</CODE> and <CODE>session.save_path</CODE>.  Check your PHP reference manual for the exact purpose of each variable mentioned.</P>
+  <P>9. Optionally (yet recommended for smooth operation) setup a crontab to periodically visit http://yourdomain.com/cron.php.</P>
   <P>Use a browser like lynx or wget but make sure the process terminates: either use /usr/bin/lynx -source http://yourdomain.com/cron.php or /usr/bin/wget -O /dev/null http://yourdomain.com/cron.php. Take a look at the example scripts in the <CODE>scripts</CODE>-directory and make sure to adjust them to your needs.</P>
   <P>A good crontab-line to run the cron-script once every hour would be:</P>
   <PRE>
     00 * * * * /home/www/drupal/scripts/cron-lynx
   </PRE>
-  <P>9. (optional) Create your site's theme or at least customize the existing themes.  To get started, head on to the <CODE>themes</CODE>-directory and make a custom logo for each theme.
-  <P>10. (optional) Add and remove modules to customize the functionality of your site.  Adding and removing modules is plain easy.  You can add a module by copying the files into the <CODE>modules</CODE>-directory and you can remove a module by removing a module's file from the <CODE>modules</CODE>-directory.  The drupal engine will then automatically include or exclude this module.  If for some reason, this seems to fail, "manually" rehash the modules list from http://yourdomain.com/admin.php?mod=module.</P>
-  <P>11. If you get it to run, let us know at <A HREF="mailto:info@drop.org">info@drop.org</A> so we can add your site to our list of drupal sites.  If you can't get it to run, you can find support at the drupal site or you can contact us by e-mail at <A HREF="mailto:info@drop.org">info@drop.org</A>.</P>
+  <P>10. Optionally create your site's theme or at least customize the existing themes.  To get started, head on to the <CODE>themes</CODE>-directory and make a custom logo for each theme.
+  <P>11. Optionally add and remove modules to customize the functionality of your site.  Adding and removing modules is plain easy.  You can add a module by copying the files into the <CODE>modules</CODE>-directory and you can remove a module by removing a module's file from the <CODE>modules</CODE>-directory.  The drupal engine will then automatically include or exclude this module.  If for some reason, this seems to fail, "manually" rehash the modules list from http://yourdomain.com/admin.php?mod=module.</P>
+  <P>12. If you get it to run, let us know at <A HREF="mailto:info@drop.org">info@drop.org</A> so we can add your site to our list of drupal sites.  If you can't get it to run, you can find support at the drupal site or you can contact us by e-mail at <A HREF="mailto:info@drop.org">info@drop.org</A>.</P>
 
   <H2>More than one (sub)domain on one machine</H2>
 
@@ -172,7 +173,7 @@ function documentation() {
    </TR>
    <TR>
     <TD VALIGN="top"><CODE>user</CODE></TD>
-    <TD VALIGN="top"></TD>
+    <TD VALIGN="top">If a module requires to extend any of the setting pages available to individual users, it should implement the user hook.  The function takes 3 parameters, resp.: <CODE>$username</CODE>, <CODE>$section</CODE> ("user", "site", "content") and <CODE>$operation</CODE> ("edit", "view", "save").</TD>
    </TR>
   </TABLE>
   <P>Even though we aim towards modularity, a basic rule is to avoid defined interfaces.  We are exceptionally careful when it comes down to adding hooks because once you give a hook to developers they will start coding to it and once somebody's using it, you are stuck with it.</P>

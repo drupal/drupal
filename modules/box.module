@@ -39,7 +39,7 @@ function box_block() {
   $i = 0;
   while ($block = db_fetch_object($result)) {
     $blocks[$i]["subject"] = check_output($block->subject);
-    $blocks[$i]["content"] = ($block->type == 2) ? eval($block->content) : check_output($block->content);
+    $blocks[$i]["content"] = ($block->type == 2) ? eval($block->content) : check_output($block->content, ($block->type == 1) ? 0 : 1);
     $blocks[$i]["info"] = check_output($block->info);
     $blocks[$i]["link"] = check_output($block->link);
     $i++;
@@ -58,12 +58,18 @@ function box_admin_display() {
     $output .= " <TR><TH>Subject:</TH><TD>". format_data($block->subject) ."</TD></TR>\n";
     $output .= " <TR><TH>Content:</TH><TD>". nl2br(htmlentities($block->content)) ."</TD></TR>\n";
     $output .= " <TR><TH>Type:</TH><TD>". $type[$block->type] ."</TD></TR>\n";
-    $output .= " <TR><TH>Description:</TH><TD><I>". format_data($block->info) ."</I></TD></TR>\n";
+    $output .= " <TR><TH>Description:</TH><TD>". format_data($block->info) ."</TD></TR>\n";
     $output .= " <TR><TH>Link:</TH><TD>". format_url($block->link) ."</TD></TR>\n";
     $output .= " <TR><TH>Operations:</TH><TD><A HREF=\"admin.php?mod=box&op=edit&id=$block->id\">edit</A>, <A HREF=\"admin.php?mod=box&op=delete&id=$block->id\">delete</A></TD></TR>\n";
     $output .= "</TABLE>\n";
     $output .= "<BR><BR>\n";
   }
+
+  print $output;
+}
+
+function box_admin_new() {
+  $type = array(0 => "ASCII", 1 => "HTML", 2 => "PHP");
 
   foreach ($type as $key=>$value) {
     $selection .= "  <OPTION VALUE=\"$key\">$value</OPTION>\n";
@@ -79,7 +85,6 @@ function box_admin_display() {
   $output .= " <TR><TH>Operations:</TH><TD><INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Add box\"></TD></TR>\n";
   $output .= "</TABLE>\n";
   $output .= "</FORM>\n";
-
   print $output;
 }
 
@@ -146,6 +151,8 @@ function box_admin_save($id, $subject, $content, $info, $link, $type) {
 function box_admin() {
   global $op, $id, $subject, $content, $info, $link, $type;
 
+  print "<SMALL><A HREF=\"admin.php?mod=box&op=add\">add new box</A> | <A HREF=\"admin.php?mod=box\">overview</A> | <A HREF=\"admin.php?mod=box&op=help\">help</A></SMALL><HR>\n";
+
   switch ($op) {
     case "Add box":
       box_admin_add($subject, $content, $info, $link, $type);
@@ -156,6 +163,12 @@ function box_admin() {
       box_admin_save($id, $subject, $content, $info, $link, $type);
       box_admin_display();
       box_admin_rehash();
+      break;
+    case "help":
+      box_help();
+      break;
+    case "add":
+      box_admin_new();
       break;
     case "edit":
       box_admin_edit($id);
