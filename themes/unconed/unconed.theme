@@ -1,5 +1,5 @@
 <?php
-// $Id: unconed.theme,v 1.86 2002/11/17 16:32:03 kjartan Exp $
+// $Id: unconed.theme,v 1.87 2002/12/10 20:14:10 dries Exp $
 
   /*********************************************************************
 
@@ -136,8 +136,6 @@
    }
 
    function comment($comment, $link) {
-     print "<A NAME=\"$comment->cid\"></A>\n";
-
      print "\n<!-- Comment: \"$comment->subject\" by $comment->name -->\n";
 
      ?>

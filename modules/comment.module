@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.85 2002/12/08 08:04:58 dries Exp $
+// $Id: comment.module,v 1.86 2002/12/10 20:14:08 dries Exp $
 
 $GLOBALS["cmodes"] = array(1 => t("Flat list - collapsed"), 2 => t("Flat list - expanded"), 3 => t("Threaded list - collapsed"), 4 => t("Threaded list - expanded"));
 $GLOBALS["corder"] = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"));
@@ -358,7 +358,7 @@ function comment_view($comment, $links = "", $visible = 1) {
     $comment->new = 1;
   }
 
-  print "<a name=\"$comment->cid\">\n";
+  print "<a name=\"$comment->cid\"></a>\n";
 
   if ($visible) {
     theme_invoke("comment", $comment, $links);
