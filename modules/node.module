@@ -620,7 +620,7 @@ function node_link($type, $node = 0, $main = 0) {
   $links = array();
 
   if ($type == 'node') {
-    if ($node->links) {
+    if (array_key_exists('links', $node)) {
       $links = $node->links;
     }
 

@@ -204,7 +204,9 @@ function arg($index) {
     $arguments = explode('/', $_GET['q']);
   }
 
-  return $arguments[$index];
+  if (array_key_exists($index, $arguments)) {
+    return $arguments[$index];
+  }
 }
 
 function check_query($text) {

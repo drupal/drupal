@@ -234,7 +234,7 @@ function drupal_not_found() {
   watchdog('httpd', t('404 error: "%page" not found', array('%page' => check_query($_GET["q"]))));
 
   $path = drupal_get_normal_path(variable_get('site_404', ''));
-  $status = MENU_FALLTHROUGH;
+  $status = MENU_NOT_FOUND;
   if ($path) {
     menu_set_active_item($path);
     $status = menu_execute_active_handler();
@@ -252,7 +252,7 @@ function drupal_access_denied() {
   header('HTTP/1.0 403 Forbidden');
 
   $path = drupal_get_normal_path(variable_get('site_403', ''));
-  $status = MENU_FALLTHROUGH;
+  $status = MENU_NOT_FOUND;
   if ($path) {
     menu_set_active_item($path);
     $status = menu_execute_active_handler();
@@ -866,7 +866,8 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
 
   $max = strlen($format);
   $date = '';
-  for ($i = 0; $i <= $max; $c = $format{$i++}) {
+  for ($i = 0; $i < $max; $i++) {
+    $c = $format{$i};
     if (strpos('AaDFlM', $c)) {
       $date .= t(gmdate($c, $timestamp));
     }
@@ -963,14 +964,16 @@ function form_set_error($name, $message) {
  * Return true when errors have been set.
  */
 function form_has_errors() {
-  return isset($GLOBALS['form']);
+  return array_key_exists('form', $GLOBALS);
 }
 
 /**
  * Return the error message filed against the form with the specified name.
  */
 function _form_get_error($name) {
-  return $GLOBALS['form'][$name];
+  if (array_key_exists('form', $GLOBALS)) {
+    return $GLOBALS['form'][$name];
+  }
 }
 
 function _form_get_class($name, $required, $error) {

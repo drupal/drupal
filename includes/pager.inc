@@ -70,6 +70,8 @@ function pager_query($query, $limit = 10, $element = 0, $count_query = "") {
  */
 function theme_pager($tags = "", $limit = 10, $element = 0, $attributes = array()) {
   global $pager_total;
+  $output = '';
+
   if ($pager_total[$element] > $limit) {
     $output .= "<div id=\"pager\" class=\"container-inline\">";
     $output .= "<div>". pager_first(($tags[0] ? $tags[0] : t("first page")), $limit, $element, $attributes) ."</div>";
@@ -282,8 +284,8 @@ function pager_list($limit, $element = 0, $quantity = 5, $text = "", $attributes
 /* @} End of member group pager pieces */
 
 function pager_link($from_new, $element, $attributes = array()) {
-  $q = $_GET["q"];
-  $from = $_GET["from"];
+  $q = $_GET['q'];
+  $from = array_key_exists('from', $_GET) ? $_GET['from'] : '';
 
   foreach($attributes as $key => $value) {
     $query[] = "$key=$value";

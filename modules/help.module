@@ -47,10 +47,8 @@ function help_glossary() {
 function help_help($section) {
   switch ($section) {
     case 'admin/modules#description':
-      $output = t('Manages displaying online help.');
-      break;
+      return t('Manages displaying online help.');
   }
-  return $output;
 }
 
 /**

@@ -38,7 +38,7 @@ function taxonomy_perm() {
 function taxonomy_link($type, $node = NULL) {
   if ($type == 'taxonomy terms' && $node != NULL) {
     $links = array();
-    if ($node->taxonomy) {
+    if (array_key_exists('taxonomy', $node)) {
       foreach ($node->taxonomy as $tid) {
         $term = taxonomy_get_term($tid);
         $links[] = l($term->name, "taxonomy/page/or/$term->tid", $term->description ? array ('title' => $term->description) : array());
