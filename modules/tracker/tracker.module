@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.97 2004/10/06 18:26:01 dries Exp $
+// $Id: tracker.module,v 1.98 2004/10/06 20:00:56 dries Exp $
 
 /**
  * @file
@@ -39,7 +39,7 @@ function tracker_menu($may_cache) {
   }
   else {
     if (arg(0) == 'user' && is_numeric(arg(1))) {
-      $items[] = array('path' => 'user/'. arg(1) .'/track', 'title' => t('track posts'),
+      $items[] = array('path' => 'user/'. arg(1) .'/track', 'title' => t('track'),
           'callback' => 'tracker_track_user', 'access' => user_access('access content'),
           'type' => MENU_LOCAL_TASK);
     }
