@@ -1,4 +1,4 @@
-/* $Id: marvin.css,v 1.10 2003/12/22 15:31:54 dries Exp $ */
+/* $Id: marvin.css,v 1.11 2003/12/24 12:15:20 dries Exp $ */
 
 body {
   margin: 10px;
@@ -38,6 +38,10 @@ p {
 }
 table {
   font-size: 1em;
+}
+#help {
+  font-size: 0.9em;
+  margin-bottom: 1em;
 }
 .calendar .day-today {
   background-color: #ccc;
@@ -79,6 +83,9 @@ table {
   margin: 0;
   padding: 5px;
 }
+.message {
+  margin-bottom: 1em;
+}
 .node h2.title {
   background-color: #fff;
   border: solid 1px #999;
@@ -101,10 +108,5 @@ table {
 }
 .node .links {
   padding: 1em;
-}
-#forum .title {
-  font-weight: bold;
-  color: #404040;
-  padding-bottom: 1em;
 }
 
