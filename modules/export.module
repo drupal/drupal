@@ -13,7 +13,7 @@ function export_export_rdf() {
   print "<channel>\n";
   print " <title>". variable_get(site_name, "drupal") ."</title>\n";
   print " <link>". path_uri() ."</link>\n";
-  print " <description>". variable_get(site_name, "drupal") ."</description>\n";
+  print " <description>". variable_get(site_slogan, "") ."</description>\n";
   print "</channel>\n";
 
   $result = db_query("SELECT * FROM node WHERE promote = '1' AND status = '$status[posted]' ORDER BY timestamp DESC LIMIT 10");
@@ -42,7 +42,7 @@ function export_export_rss() {
   print "<channel rdf:about=\"". path_uri() ."export.php?headlines.rss\">\n";
   print "   <title>". variable_get(site_name, "drupal") ."</title>\n";
   print "   <link>". path_uri() ."</link>\n";
-  print "   <description>". variable_get(site_name, "drupal") ."</description>\n";
+  print "   <description>". variable_get(site_slogan, "") ."</description>\n";
 
   print "  <items>\n";
   print "    <rdf:Seq>\n";

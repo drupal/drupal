@@ -365,7 +365,7 @@ function node_block() {
   global $theme;
 
   $block[0][subject] = t("Syndicate");
-  $block[0][content] = "<div align=\"center\"><a href=\"module.php?mod=blog&op=feed\"><img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" border=\"0\" /></a></div>\n";
+  $block[0][content] = "<div align=\"center\"><a href=\"module.php?mod=node&op=feed\"><img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" border=\"0\" /></a></div>\n";
   $block[0][info] = "Syndicate";
 
   return $block;

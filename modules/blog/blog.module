@@ -26,6 +26,10 @@ function blog_status() {
   return array(dumped, posted);
 }
 
+function blog_summary($node) {
+  return $node->body;
+}
+
 function blog_feed_user($name = 0, $date = 0) {
   global $user;
 
