@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.173 2003/12/16 21:18:51 kjartan Exp $ */
+/* $Id: theme.inc,v 1.174 2003/12/18 05:54:59 dries Exp $ */
 
 /**
  * @file
@@ -21,7 +21,7 @@
  * @return a string containing the help output.
  */
 function theme_help($section) {
-  $ouptout = "";
+  $output = "";
 
   switch ($section) {
     case 'admin/system/themes#description':
