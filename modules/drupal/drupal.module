@@ -19,7 +19,7 @@ function drupal_page() {
   $theme->box("Drupal", $output);
 
   $output  = "<H3>Download Drupal</H3>\n";
-  $output .= " <LI><A HREF=\"http://www.drupal.org/drupal/drupal-2.00.tgz\">Drupal 2.00</A> (2001/03/15 - latest version)</LI>\n";
+  $output .= " <LI><A HREF=\"http://www.drop.org/drupal/drupal-2.00.tgz\">Drupal 2.00</A> (2001/03/15 - latest version)</LI>\n";
   $output .= " <LI>Drupal 1.00 (2001/01/15)</LI>\n";
   $output .= "<H3>Drupal website</H3>\n";
   $output .= " <LI><A HREF=\"http://www.drupal.org/\">http://www.drupal.org/</A></LI>\n";
