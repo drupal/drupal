@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.14 2002/06/09 14:16:35 dries Exp $
+// $Id: taxonomy.module,v 1.15 2002/06/14 04:30:30 dries Exp $
 
 function taxonomy_system($field){
   $system["description"] = t("Enables the organization of content into categories.");
@@ -354,7 +354,7 @@ function taxonomy_node_delete($nid) {
 // relations: return array of related terms
 function taxonomy_get_related($tid, $key = "tid") {
   if ($tid) {
-    $result = db_query("SELECT t.*, tid1, tid2 FROM term_relation, term_data t WHERE (t.tid = tid1 OR t.tid = tid2) AND (tid1 = '%s' OR tid2 = '%s') ORDER BY weight", $tid, $tid);
+    $result = db_query("SELECT t.*, tid1, tid2 FROM term_relation, term_data t WHERE (t.tid = tid1 OR t.tid = tid2) AND (tid1 = '%d' OR tid2 = '%d') AND t.tid != '%d' ORDER BY weight", $tid, $tid, $tid);
     $related = array();
     while ($term = db_fetch_object($result)) {
       $related[$term->$key] = $term;
