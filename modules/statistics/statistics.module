@@ -697,17 +697,17 @@ function statistics_display_topnodes_block() {
 
   $daytop = variable_get("statistics_block_top_day_num", "");
   if ($daytop) {
-    $content[] = theme_invoke("theme_item_list", statistics_title_list("daycount", $daytop), variable_get("statistics_block_top_day_head", ""));
+    $content[] = node_title_list(statistics_title_list("daycount", $daytop), variable_get("statistics_block_top_day_head", ""));
   }
 
   $alltimetop = variable_get("statistics_block_top_all_num", "");
   if ($alltimetop) {
-    $content[] = theme_invoke("theme_item_list", statistics_title_list("totalcount", $alltimetop), variable_get("statistics_block_top_all_head", ""));
+    $content[] = node_title_list(statistics_title_list("totalcount", $alltimetop), variable_get("statistics_block_top_all_head", ""));
   }
 
   $lasttop = variable_get("statistics_block_top_last_num", "");
   if ($lasttop) {
-    $content[] = theme_invoke("theme_item_list", statistics_title_list("timestamp", $lasttop), variable_get("statistics_block_top_last_head", ""));
+    $content[] = node_title_list(statistics_title_list("timestamp", $lasttop), variable_get("statistics_block_top_last_head", ""));
   }
 
   $output = implode($content, "<br />");
@@ -796,13 +796,7 @@ function statistics_display_online_block() {
 /* Display linked title based on field name */
 function statistics_title_list($dbfield, $dbrows) {
   /* valid dbfields: totalcount, daycount, timestamp */
-
-  $result = db_query("SELECT statistics.nid, node.title FROM statistics LEFT JOIN node ON statistics.nid = node.nid WHERE %s <> '0' ORDER BY %s DESC LIMIT %s", $dbfield, $dbfield, $dbrows);
-  while ($nid = db_fetch_array($result)) {
-    $items[] = l($nid["title"], array("id" => $nid["nid"]), "node", "", array("title" => t("View this posting.")));
-  }
-
-  return $items;
+  return db_query("SELECT statistics.nid, node.title, u.name FROM statistics LEFT JOIN node ON statistics.nid = node.nid LEFT JOIN users u ON node.uid = u.uid WHERE %s <> '0' ORDER BY %s DESC LIMIT %s", "statistics.". $dbfield, "statistics.". $dbfield, $dbrows);
 }
 
 
