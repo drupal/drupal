@@ -4,19 +4,6 @@
 $GLOBALS["cmodes"] = array(1 => "List - min", 2 => "List - max", 3 => "Threaded - min", 4 => "Threaded - max");
 $GLOBALS["corder"] = array(1 => "Date - new", 2 => "Date - old", 3 => "Rate - high", 4 => "Rate - low");
 
-class Comment {
-  function Comment($uid, $name, $subject, $comment, $timestamp, $url, $cid, $lid) {
-    $this->uid = $uid;
-    $this->name = $name;
-    $this->subject = $subject;
-    $this->comment = $comment;
-    $this->timestamp = $timestamp;
-    $this->url = $url;
-    $this->cid = $cid;
-    $this->lid = $lid;
-  }
-}
-
 function comment_moderate($moderate) {
   global $user;
 
@@ -51,16 +38,16 @@ function comment_form($edit) {
   $form .= form_item(t("Your name"), format_name($user));
 
   // subject field:
-  $form .= form_textfield(t("Subject"), "subject", $edit[subject], 50, 64);
+  $form .= form_textfield(t("Subject"), "subject", $edit["subject"], 50, 64);
 
   // comment field:
-  $form .= form_textarea(t("Comment"), "comment", $edit[comment] ? $edit[comment] : $user->signature, 70, 10, t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
+  $form .= form_textarea(t("Comment"), "comment", $edit["comment"] ? $edit["comment"] : $user->signature, 70, 10, t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
 
   // preview button:
-  $form .= form_hidden("pid", $edit[pid]);
-  $form .= form_hidden("id", $edit[id]);
+  $form .= form_hidden("pid", $edit["pid"]);
+  $form .= form_hidden("id", $edit["id"]);
 
-  if (!$edit[comment]) {
+  if (!$edit["comment"]) {
     $form .= form_submit(t("Preview comment"));
   }
   else {
@@ -75,8 +62,8 @@ function comment_reply($pid, $id) {
   global $theme;
 
   if ($pid) {
-    $item = db_fetch_object(db_query("SELECT c.*, u.uid, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.cid = '$pid'"));
-    comment_view(new Comment($item->uid, $item->name, $item->subject, $item->comment, $item->timestamp, $item->url, $item->cid, $item->lid), t("reply to this comment"));
+    $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.cid = '$pid'"));
+    comment_view($comment, t("reply to this comment"));
   }
   else {
     node_view(node_load(array("nid" => $id)));
@@ -94,8 +81,28 @@ function comment_reply($pid, $id) {
 function comment_preview($edit) {
   global $theme, $user;
 
-  // Preview comment:
-  comment_view(new Comment($user->uid, $user->name, check_preview($edit[subject]), check_preview($edit[comment]), time(), check_preview($user->homepage), 0, 0, 0, 0), t("reply to this comment"));
+  foreach ($edit as $key => $value) {
+    $comment->$key = filter($value);
+  }
+
+  /*
+  ** Attach the user information:
+  */
+
+  $comment->uid = $user->uid;
+  $comment->name = $user->name;
+
+  /*
+  ** Attach the time:
+  */
+
+  $comment->timestamp = time();
+
+  /*
+  ** Preview the comment:
+  */
+
+  comment_view($comment, t("reply to this comment"));
 
   $theme->box(t("Reply"), comment_form($edit));
 }
@@ -104,26 +111,53 @@ function comment_post($edit) {
   global $theme, $user;
 
   if (user_access("post comments")) {
-    // check comment submission rate:
+    /*
+    ** Check the user's comment submission rate.  If exceeded,
+    ** throttle() will bail out.
+    */
+
     throttle("post comment", variable_get(max_comment_rate, 60));
 
-    // check for duplicate comments:
-    $duplicate = db_result(db_query("SELECT COUNT(cid) FROM comments WHERE pid = '". check_input($edit[pid]) ."' AND lid = '". check_input($edit[id]) ."' AND subject = '". check_input($edit[subject]) ."' AND comment = '". check_input($edit[comment]) ."'"), 0);
+    /*
+    ** Validate the comment's subject.  If not specified, extract
+    ** one from the comment's body.
+    */
+
+    $edit["subject"] = strip_tags(($edit["subject"] ? $edit["subject"] : substr($edit["comment"], 0, 29)));
+
+    /*
+    ** Validate the comment's body.
+    */
+
+    $edit["comment"] = filter($edit["comment"]);
+
+    /*
+    ** Check for duplicate comments.  Note that we have to use the
+    ** validated/filtered data to perform such check.
+    */
+
+    $duplicate = db_result(db_query("SELECT COUNT(cid) FROM comments WHERE pid = '". check_input($edit["pid"]) ."' AND lid = '". check_input($edit["id"]) ."' AND subject = '". check_input($edit["subject"]) ."' AND comment = '". check_input($edit["comment"]) ."'"), 0);
 
     if ($duplicate != 0) {
-      watchdog("warning", "comment: duplicate '$edit[subject]'");
+      watchdog("warning", "comment: duplicate '". $edit["subject"] ."'");
     }
     else {
-      // validate subject:
-      $edit[subject] = strip_tags(($edit[subject] ? $edit[subject] : substr($edit[comment], 0, 29)));
+      /*
+      ** Add the comment to database:
+      */
 
-      // add watchdog entry:
-      watchdog("special", "comment: added '$edit[subject]'");
+      db_query("INSERT INTO comments (lid, pid, uid, subject, comment, hostname, timestamp) VALUES ('". check_query($edit["id"]) ."', '". check_query($edit["pid"]) ."', '$user->uid', '". check_query($edit["subject"]) ."', '". check_query($edit["comment"]) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."')");
 
-      // add comment to database:
-      db_query("INSERT INTO comments (lid, pid, uid, subject, comment, hostname, timestamp) VALUES ('". check_input($edit[id]) ."', '". check_input($edit[pid]) ."', '$user->uid', '". check_input($edit[subject]) ."', '". check_input($edit[comment]) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."')");
+      /*
+      ** Add entry to the watchdog log:
+      */
 
-      // clear cache:
+      watchdog("special", "comment: added '". $edit["subject"] ."'");
+
+      /*
+      ** Clear the cache:
+      */
+
       cache_clear();
     }
   }
@@ -139,7 +173,7 @@ function comment_num_replies($id, $count = 0) {
 function comment_moderation($comment) {
   global $user;
 
-  $values = array("--", 1, 2, 3, 4, 5);
+  $values = array("--", "1", "2", "3", "4", "5");
 
   $moderate = db_fetch_object(db_query("SELECT * FROM moderate WHERE cid = '$comment->cid' AND uid = '$user->uid'"));
 
@@ -160,7 +194,7 @@ function comment_threshold($threshold) {
 function comment_mode($mode) {
   global $cmodes;
 
-  foreach ($cmodes as $key=>$value) $options .= " <option value=\"$key\"". ($mode == $key ? " SELECTED" : "") .">$value</option>\n";
+  foreach ($cmodes as $key => $value) $options .= " <option value=\"$key\"". ($mode == $key ? " SELECTED" : "") .">$value</option>\n";
   return "<select name=\"mode\">$options</select>\n";
 }
 
@@ -432,19 +466,19 @@ function comment_edit($id) {
 }
 
 function comment_save($id, $edit) {
-  db_query("UPDATE comments SET subject = '". check_input(filter($edit[subject])) ."', comment = '". check_input(filter($edit[comment])) ."' WHERE cid = '$id'");
-  watchdog("special", "comment: modified '$edit[subject]'");
+  db_query("UPDATE comments SET subject = '". check_query(filter($edit["subject"])) ."', comment = '". check_query(filter($edit["comment"])) ."' WHERE cid = '$id'");
+  watchdog("special", "comment: modified '". $edit["subject"] ."'");
 }
 
 function comment_overview() {
   $result = db_query("SELECT c.*, u.name, u.uid FROM comments c LEFT JOIN users u ON u.uid = c.uid ORDER BY timestamp DESC LIMIT 50");
 
-  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR><TH>subject</TH><TH>author</TH><TH>date</TH><TH COLSPAN=\"2\">operations</TH></TR>\n";
+  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
+  $output .= " <tr><th>subject</th><th>author</th><th>date</th><th colspan=\"2\">operations</th></tr>\n";
   while ($comment = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"node.php?id=$comment->lid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A></TD><TD>". format_name($comment) ."</TD><TD>". format_date($comment->timestamp, "small") ."</TD><TD><A HREF=\"admin.php?mod=comment&op=edit&id=$comment->cid\">edit comment</A></TD><TD><A HREF=\"admin.php?mod=comment&op=delete&id=$comment->cid\">delete comment</A></TD></TR>\n";
+    $output .= " <tr><td><a href=\"node.php?id=$comment->lid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</a></td><td>". format_name($comment) ."</td><td>". format_date($comment->timestamp, "small") ."</td><td><a href=\"admin.php?mod=comment&op=edit&id=$comment->cid\">edit comment</a></td><td><a href=\"admin.php?mod=comment&op=delete&id=$comment->cid\">delete comment</a></td></tr>\n";
   }
-  $output .= "</TABLE>\n";
+  $output .= "</table>\n";
 
   return $output;
 }
@@ -460,7 +494,7 @@ function comment_admin() {
 
   if (user_access("administer comments")) {
 
-    print "<SMALL><A HREF=\"admin.php?mod=comment\">overview</A> | <A HREF=\"admin.php?mod=comment&op=search\">search comment</A></SMALL><HR>\n";
+    print "<small><a href=\"admin.php?mod=comment\">overview</a> | <a href=\"admin.php?mod=comment&op=search\">search comment</a></small><hr />\n";
 
     switch ($op) {
       case "edit":
