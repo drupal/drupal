@@ -745,7 +745,7 @@ function page_set_cache() {
 
   if (!$user->uid && $_SERVER["REQUEST_METHOD"] == "GET") {
     if ($data = ob_get_contents()) {
-      cache_set(request_uri(), $data, (time() + variable_get("cache_clear", 120)));
+      cache_set(request_uri(), $data, 1);
     }
   }
 }

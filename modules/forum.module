@@ -95,7 +95,7 @@ function forum_block($op = "list", $delta = 0) {
           $content .= "<div id=\"forum_more\" style=\"text-align: right;\">". l(t("more"), "forum", array("title" => t("Read the latest forum topics."))) ."</div>";
         }
 
-        cache_set("forum:block", $content, time() + variable_get("cache_clear", 120));
+        cache_set("forum:block", $content, 1);
       }
       else {
         $content = $cache->data;
@@ -321,7 +321,7 @@ function forum_get_forums($tid = 0) {
       $n++;
     }
 
-    cache_set("forum:$tid", serialize($forums), time() + variable_get("cache_clear", 120));
+    cache_set("forum:$tid", serialize($forums), 1);
   }
   else {
     $forums = unserialize($cache->data);
