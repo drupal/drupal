@@ -143,7 +143,7 @@ function locale_search() {
 
   if (is_array($edit)) {
     if ($edit[language] && $edit[status]) $query[] = check_input($edit[language]) . (check_input($edit[status]) == 1 ? " !=" : " =") ." ''";
-    if ($edit[module]) $query[] = "location LIKE '%module.php?mod=". check_input($edit[module]) ."%'";
+    if ($edit[module]) $query[] = "location LIKE '%mod=". check_input($edit[module]) ."%'";
     if ($edit[string]) $query[] = "string LIKE '%". check_input($edit[string]) ."%'";
     
     $result = db_query("SELECT * FROM locales". (count($query) ? " WHERE ". @implode(" && ", $query) : ""));
