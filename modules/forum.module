@@ -145,7 +145,6 @@ function forum_link($type, $node = 0, $main = 0) {
 
 function forum_view($node, $main = 0) {
 
-
   $term_data = array_shift(taxonomy_node_get_terms($node->nid));
   if (!$term_data) {
     // we are previewing
@@ -319,15 +318,28 @@ function _forum_last_post($term) {
 }
 
 function forum_get_topics($tid, $sortby, $forum_per_page) {
-  global $user;
+  global $user, $forum_topic_list_header;
+
+  $forum_topic_list_header = array(
+      array("data" => t("Topic"), "field" => "n.title", "colspan" => "2"),
+      array("data" => t("Replies"),"field" => "num_comments"),
+      array("data" => t("Created"), "field" => "n.created"),
+      array("data" => t("Last reply"), "field" => "date_sort", "sort" => "desc"),
+  );
+
+  $sql_sortby = _forum_get_topic_order($sortby);
+  for ($i=0; $i < count($forum_topic_list_header); $i++) {
+    if ($forum_topic_list_header[$i]["field"] == $sql_sortby) {
+      $forum_topic_list_header[$i]["order"] = $sql_sortby;
+    }
+  }
 
   $term = taxonomy_get_term($tid);
   $voc = taxonomy_get_vocabulary($term->vid);
 
-  $sql_sortby = _forum_get_topic_order($sortby);
-
   // show topics with the correct tid, or in the forum but with shadow = 1
-  $sql = "SELECT n.nid, n.title, u.name AS name, u.uid AS uid, n.created AS timestamp, GREATEST(n.created, MAX(c.timestamp)) AS date_sort, COUNT(c.nid) AS num_comments, n.comment AS comment_mode, f.tid FROM {node} n INNER JOIN {term_node} r ON n.nid = r.nid LEFT JOIN {users} u ON n.uid = u.uid LEFT JOIN {comments} c ON n.nid = c.nid INNER JOIN {forum} f ON n.nid = f.nid WHERE n.nid = r.nid AND ((r.tid = '".check_query($tid)."' AND f.shadow = 1) OR f.tid = '".check_query($tid)."') AND n.status = 1 AND n.type = 'forum' GROUP BY n.nid, n.title, u.name, u.uid, n.created, n.comment, f.tid ORDER BY $sql_sortby";
+  $sql = "SELECT n.nid, n.title, u.name AS name, u.uid AS uid, n.created AS timestamp, GREATEST(n.created, MAX(c.timestamp)) AS date_sort, COUNT(c.nid) AS num_comments, n.comment AS comment_mode, f.tid FROM {node} n INNER JOIN {term_node} r ON n.nid = r.nid LEFT JOIN {users} u ON n.uid = u.uid LEFT JOIN {comments} c ON n.nid = c.nid INNER JOIN {forum} f ON n.nid = f.nid WHERE n.nid = r.nid AND ((r.tid = '".check_query($tid)."' AND f.shadow = 1) OR f.tid = '".check_query($tid)."') AND n.status = 1 AND n.type = 'forum' GROUP BY n.nid, n.title, u.name, u.uid, n.created, n.comment, f.tid";
+  $sql .= tablesort_sql($forum_topic_list_header);
 
   $sql_count = "SELECT COUNT(DISTINCT(n.nid)) FROM {node} n INNER JOIN {forum} f ON n.nid = f.nid INNER JOIN {term_node} r ON n.nid = r.nid WHERE n.nid = r.nid AND ( (r.tid = '".check_query($tid)."' AND f.shadow = 1) OR f.tid = '".check_query($tid)."') AND n.status = 1 AND n.type = 'forum'";
 
@@ -527,41 +539,11 @@ function forum_theme_list($forums, $parents, $tid) {
   return table($header, $rows);
 }
 
-function forum_theme_topic_browser() {
-  global $tid, $sortby, $forum_per_page, $offset;
-
-  if (empty($sortby)) {
-    $sortby = variable_get("forum_order",1);
-  }
-  if (empty($forum_per_page)) {
-    $forum_per_page = variable_get("forum_per_page", 25);
-  }
-
-  $forum_per_page_options = array(10, 25, 50, 75, 100);
-  foreach ($forum_per_page_options as $value) {
-    $options .= " <option value=\"$value\"". ($forum_per_page == $value ? " selected=\"selected\"" : "") .">".t("%a topics per page", array("%a" => $value))."</option>\n";
-  }
-
-  $output .= "<select name=\"forum_per_page\">$options</select>\n";
-
-  $options = "";
-  $sortby_options = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"), 3 => t("Posts - most active first"), 4=> t("Posts - least active first"));
-  foreach ($sortby_options as $key => $value) {
-    $options .= " <option value=\"$key\"". ($sortby == $key ? " selected=\"selected\"" : "") .">$value</option>\n";
-  }
-
-  $output .= "\n<select name=\"sortby\">$options</select>\n";
-  $output .= form_hidden("tid", $tid);
-  $output .= form_submit(t("Update settings"));
-  return form($output);
-}
 
 function forum_theme_topic_list($tid, $topics, $sortby, $forum_per_page, $offset) {
-  global $id, $status, $user, $pager_total;
+  global $id, $status, $user, $pager_total, $forum_topic_list_header;
 
   if ($topics) {
-
-    $header = array(array("data" => t("Topic"), "colspan" => "2"), t("Replies"), t("Created"), t("Last reply"));
 
     foreach ($topics as $topic) {
       // folder is new if topic is new or there are new comments since last visit
@@ -583,10 +565,7 @@ function forum_theme_topic_list($tid, $topics, $sortby, $forum_per_page, $offset
       }
     }
 
-    $rows[] = array(array("data" => t("%a topics, %b topics per page, page %c of %d", array("%a" => $pager_total[0], "%b" => $forum_per_page, "%c" => $offset, "%d" => ceil($pager_total[0]/$forum_per_page))), "colspan" => "5", "class" => "statistics"));
-    $rows[] = array(array("data" => theme("forum_theme_topic_browser", $sortby, $forum_per_page, $offset), "colspan" => "5", "class" => "settings"));
-
-    if ($pager = pager_display(NULL, $forum_per_page, 0, "default")) {
+    if ($pager = pager_display(NULL, $forum_per_page, 0, "default", tablesort_pager())) {
       $rows[] = array(array("data" => $pager, "colspan" => "5", "class" => "pager"));
     }
   }
@@ -596,7 +575,7 @@ function forum_theme_topic_list($tid, $topics, $sortby, $forum_per_page, $offset
     $output = l(t("create new forum topic"), "node/add/forum/$tid") ."<br /><br />";
   }
 
-  $output .= table($header, $rows);
+  $output .= table($forum_topic_list_header, $rows);
 
   return $output;
 }

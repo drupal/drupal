@@ -241,6 +241,8 @@ function node_load($conditions, $revision = -1) {
   ** Unserialize the revisions field:
   */
 
+print "wa: $node->title";
+
   if ($node->revisions) {
     $node->revisions = unserialize($node->revisions);
   }
@@ -676,7 +678,7 @@ function node_admin_nodes() {
   */
 
   $result = pager_query("SELECT n.*, u.name, u.uid FROM {node} n LEFT JOIN {users} u ON n.uid = u.uid ". $filters[$filter][1], 50);
-  $header = array(NULL, t("title"), t("type"), t("author"), t("status"), t("operations"));
+  $header = array(t("title"), t("type"), t("author"), t("status"), array ("data" => t("operations"), "colspan" => 2));
 
   while ($node = db_fetch_object($result)) {
     $rows[] = array(l($node->title, node_url($node)) ." ". (node_is_new($node->nid, $node->changed) ? theme_mark() : ""), module_invoke($node->type, "node", "name"), format_name($node), ($node->status ? t("published") : t("not published")), l(t("edit node"), "admin/node/edit/$node->nid"), l(t("delete node"), "admin/node/delete/$node->nid"));

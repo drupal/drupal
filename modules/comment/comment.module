@@ -60,7 +60,7 @@ function comment_help($section = "admin/comment/help") {
       $output .= "<p>So that users know how their votes affect the comment, these examples include the vote value as part of the label, although that is optional.</p>";
       $output .= "<p>Using the weight option, you can control the order in which the votes appear to users. Setting the weight heavier (positive numbers) will make the vote label appear at the bottom of the list. Lighter (a negative number) will push it to the top. To encourage positive voting, a useful order might be higher values, positive votes, at the top, with negative votes at the bottom.</p>";
 
-      $output .= "<h4>Moderators/vote values matrix</h4>";
+      $output .= "<h4>Moderator vote/values matrix</h4>";
 
       $output .= strtr("<p>Next go to %comment-matrix.  Enter the values for the vote labels for each permission role in the vote matrix. The values entered here will be used to create the rating for each comment.</p>", array("%comment-matrix" => l(t("comment management &raquo; comment moderation &raquo; matrix"), "admin/comment/moderation/,atrix") ));
       $output .= "<p>NOTE: Comment ratings are calculated by averaging user votes with the initial rating.</p>";
@@ -814,7 +814,7 @@ function comment_link($type, $node = 0, $main = 0) {
       menu("admin/comment/moderation/votes", "votes", "comment_admin", comment_help("admin/comment/moderation/votes"));
       menu("admin/comment/moderation/matrix", "matrix", "comment_admin", comment_help("admin/comment/moderation/matrix"));
       menu("admin/comment/moderation/filters", "thresholds", "comment_admin", comment_help("admin/comment/moderation/filters"));
-      menu("admin/comment/roles", "initial comment scores", "comment_admin", comment_help("admin/comment/roles"), 6);
+      menu("admin/comment/moderation/roles", "initial comment scores", "comment_admin", comment_help("admin/comment/roles"), 6);
     }
   }
 
@@ -948,15 +948,24 @@ function comment_save($id, $edit) {
 
 function comment_admin_overview($status = 0) {
 
-  $result = pager_query("SELECT c.*, u.name, u.uid FROM {comments} c LEFT JOIN {users} u ON u.uid = c.uid WHERE c.status = '". check_query($status). "' ORDER BY c.timestamp DESC",  50);
+  $header = array(
+    array("data" => t("Subject"), "field" => "subject"),
+    array("data" => t("Author"), "field" => "u.name"),
+    array("data" => t("Status"), "field" => "status"),
+    array("data" => t("Time"), "field" => "timestamp", "sort" => "desc"),
+    array("data" => t("operations"), "colspan" => 2)
+  );
 
-  $header = array(t("subject"), t("author"), t("status"), array("data" => t("operations"), "colspan" => 2));
+  $sql = "SELECT c.*, u.name, u.uid FROM {comments} c LEFT JOIN {users} u ON u.uid = c.uid WHERE c.status = ". check_query($status);
+  $sql .= tablesort_sql($header);
+  $result = pager_query($sql,  50);
+
   while ($comment = db_fetch_object($result)) {
-    $rows[] = array(l($comment->subject, "node/view/$comment->nid/$comment->cid#$comment->cid", array("title" => htmlspecialchars(substr($comment->comment, 0, 128)))) ." ". (node_is_new($comment->nid, $comment->timestamp) ? theme_mark() : ""), format_name($comment), ($comment->status == 0 ? t("published") : t("not published")) ."</td><td>". l(t("edit comment"), "admin/comment/edit/$comment->cid"), l(t("delete comment"), "admin/comment/delete/$comment->cid"));
+    $rows[] = array(l($comment->subject, "node/view/$comment->nid/$comment->cid#$comment->cid", array("title" => htmlspecialchars(substr($comment->comment, 0, 128)))) ." ". (node_is_new($comment->nid, $comment->timestamp) ? theme_mark() : ""), format_name($comment), ($comment->status == 0 ? t("published") : t("not published")) ."</td><td>". format_date($comment->timestamp, "small"). "</td><td>". l(t("edit comment"), "admin/comment/edit/$comment->cid"), l(t("delete comment"), "admin/comment/delete/$comment->cid"));
   }
 
-  if ($pager = pager_display(NULL, 50, 0, "admin")) {
-    $rows[] = array(array("data" => $pager, "colspan" => 5));
+  if ($pager = pager_display(NULL, 50, 0, "admin", tablesort_pager())) {
+    $rows[] = array(array("data" => $pager, "colspan" => 6));
   }
 
   return table($header, $rows);
@@ -964,7 +973,7 @@ function comment_admin_overview($status = 0) {
 
 function comment_mod_matrix($edit) {
 
-  $output .= "<h3>Moderators/vote values matrix</h3>";
+  $output .= "<h3>Moderation vote/value matrix</h3>";
 
   if ($edit) {
     db_query("DELETE FROM {moderation_roles} ");
@@ -974,6 +983,7 @@ function comment_mod_matrix($edit) {
       }
     }
     db_query("INSERT INTO {moderation_roles} (mid, rid, value) VALUES ". implode(", ", $sql));
+    $output = status("Vote values saved");
   }
 
   $result = db_query("SELECT r.rid, r.name FROM {role} r, {permission} p WHERE r.rid = p.rid AND p.perm LIKE '%moderate comments%'");
@@ -1009,6 +1019,7 @@ function comment_mod_roles($edit) {
 
   if ($edit) {
     variable_set("comment_roles", $edit);
+    $output = status("Comment scores saved");
   }
 
   $start_values = variable_get("comment_roles", array());
@@ -1035,15 +1046,18 @@ function comment_mod_votes($edit) {
   if ($op == t("Save vote")) {
     db_query("UPDATE {moderation_votes} SET vote = '%s', weight = %d WHERE mid = %d", $edit["vote"], $edit["weight"], $mid);
     $mid = 0;
+    $output = status("Vote saved");
   }
   else if ($op == t("Delete vote")) {
     db_query("DELETE FROM {moderation_votes} WHERE mid = %d", $mid);
     db_query("DELETE FROM {moderation_roles} WHERE mid = %d", $mid);
     $mid = 0;
+    $output = status("Vote deleted");
   }
   else if ($op == t("Add new vote")) {
     db_query("INSERT INTO {moderation_votes} (vote, weight) VALUES ('%s', %d)", $edit["vote"], $edit["weight"]);
     $mid = 0;
+    $output = status("Vote added");
   }
 
   $output .= "<h3>" . t("Moderation votes overview") . "</h3>";
@@ -1059,7 +1073,7 @@ function comment_mod_votes($edit) {
     $vote = db_fetch_object(db_query("SELECT vote, weight FROM {moderation_votes} WHERE mid = %d", $mid));
   }
 
-  $output .= "<br /><h3>". (isset($mid) ? "Edit" : "Add new") ."moderation option</h3>";
+  $output .= "<br /><h3>". (isset($mid) ? "Edit" : "Add new") ." moderation option</h3>";
   $form .= form_textfield(t("Vote"), "vote", $vote->vote, 32, 64, t("The name of this vote.  Example: 'off topic', 'excellent', 'sucky'."));
   $form .= form_textfield(t("Weight"), "weight", $vote->weight, 32, 64, t("Used to order votes in the comment control box; heavier sink."));
   if ($mid) {
@@ -1083,14 +1097,17 @@ function comment_mod_filters($edit) {
   if ($op == t("Save threshold")) {
     db_query("UPDATE {moderation_filters} SET filter = '%s', minimum = %d WHERE fid = %d", $edit["filter"], $edit["minimum"], $fid);
     $fid = 0;
+    $output = status("Saved threshold");
   }
   else if ($op == t("Delete threshold")) {
     db_query("DELETE FROM {moderation_filters} WHERE fid = %d", $fid);
     $fid = 0;
+    $output = status("Deleted threshold");
   }
   else if ($op == t("Add new threshold")) {
     db_query("INSERT INTO {moderation_filters} (filter, minimum) VALUES ('%s', %d)", $edit["filter"], $edit["minimum"]);
     $fid = 0;
+    $output = status("Added threshold");
   }
 
   $output .= "<h3>Comment threshold overview</h3>";

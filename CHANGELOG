@@ -2,6 +2,7 @@ Drupal x.x.x, xxxx-xx-xx (to be released)
 ------------------------
 
 - added support for configurable URLs.
+- added support for sortable table columns.
 - database backend:
     * added support for database table prefxing.
 - performance improvements:

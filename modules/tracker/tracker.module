@@ -27,14 +27,26 @@ function tracker_link($type) {
 
 function tracker_posts($id = 0) {
 
+  $header = array(
+    array("data" => t("Type"), "field" => "type"),
+    array("data" => t("Title"), "field" => "title"),
+    array("data" => t("Author"), "field" => "uid"),
+    array("data" => t("Last Post"), "field" => "last_activity", "sort" => "desc")
+  );
   if ($id) {
-    $sresult = pager_query("SELECT n.nid, n.title, n.type, n.changed, n.uid, u.name, MAX(GREATEST(n.changed, c.timestamp)) AS last_activity FROM {node} n LEFT JOIN {comments} c ON n.nid = c.nid LEFT JOIN {users} u ON n.uid = u.uid WHERE n.uid = '". check_query($id) ."' AND n.status = 1 GROUP BY n.nid, n.title, n.type, n.changed, n.uid, u.name ORDER BY last_activity DESC", 10, 0, "SELECT COUNT(nid) FROM {node} WHERE status = 1 AND uid = '". check_query($id) ."'");
+
+    $sql = "SELECT n.nid, n.title, n.type, n.changed, n.uid, u.name, MAX(GREATEST(n.changed, c.timestamp)) AS last_activity FROM {node} n LEFT JOIN {comments} c ON n.nid = c.nid LEFT JOIN {users} u ON n.uid = u.uid WHERE n.uid = '". check_query($id) ."' AND n.status = 1 GROUP BY n.nid, n.title, n.type, n.changed, n.uid, u.name";
+    $sql .= tablesort_sql($header);
+    $sresult = pager_query($sql, 10, 0, "SELECT COUNT(nid) FROM {node} WHERE status = 1 AND uid = '". check_query($id) ."'");
+
   }
   else {
-    $sresult = pager_query("SELECT n.nid, n.title, n.type, n.changed, n.uid, u.name, MAX(GREATEST(n.changed, c.timestamp)) AS last_activity FROM {node} n LEFT JOIN {comments} c ON n.nid = c.nid LEFT JOIN {users} u ON n.uid = u.uid WHERE n.status = 1 GROUP BY n.nid, n.title, n.type, n.changed, n.uid, u.name ORDER BY last_activity DESC", 10, 0, "SELECT COUNT(nid) FROM {node} WHERE status = 1");
-  }
 
-  $header = array(t("Type"), t("Title"), t("Author"));
+    $sql = "SELECT n.nid, n.title, n.type, n.changed, n.uid, u.name, MAX(GREATEST(n.changed, c.timestamp)) AS last_activity FROM {node} n LEFT JOIN {comments} c ON n.nid = c.nid LEFT JOIN {users} u ON n.uid = u.uid WHERE n.status = 1 GROUP BY n.nid, n.title, n.type, n.changed, n.uid, u.name";
+    $sql .= tablesort_sql($header);
+    $sresult = pager_query($sql, 10, 0, "SELECT COUNT(nid) FROM {node} WHERE status = 1");
+
+  }
 
   while ($node = db_fetch_object($sresult)) {
     if ($id) {
@@ -60,11 +72,11 @@ function tracker_posts($id = 0) {
       $comments = "";
     }
 
-    $rows[] = array(array("data" => $type, "class" => "type"), array("data" => $title . $comments, "class" => "content"), array("data" => $author, "class" => "author"));
+    $rows[] = array(array("data" => $type, "class" => "type"), array("data" => $title . $comments, "class" => "content"), array("data" => $author, "class" => "author"), array("data" => format_date($node->last_activity, "small"), "class" => "last_post"));
   }
 
   if ($pager = pager_display(NULL, 10)) {
-   $rows[] = array(array("data" => $pager, "colspan" => 3));
+   $rows[] = array(array("data" => $pager, "colspan" => 4));
   }
 
   $output  = "<div id=\"tracker\">";
