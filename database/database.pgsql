@@ -553,6 +553,7 @@ CREATE TABLE watchdog (
 -- Insert some default values
 --
 
+INSERT INTO system VALUES ('modules/admin.module','admin','module','',1);
 INSERT INTO system VALUES ('modules/block.module','block','module','',1);
 INSERT INTO system VALUES ('modules/comment.module','comment','module','',1);
 INSERT INTO system VALUES ('modules/help.module','help','module','',1);
@@ -562,7 +563,7 @@ INSERT INTO system VALUES ('modules/story.module','story','module','',1);
 INSERT INTO system VALUES ('modules/taxonomy.module','taxonomy','module','',1);
 INSERT INTO system VALUES ('themes/marvin/marvin.theme','marvin','theme','Internet explorer, Netscape, Opera',1);
 
-INSERT INTO variable(name,value) VALUES('update_start', '2002-05-15');
+INSERT INTO variable(name,value) VALUES('update_start', '2003-04-19');
 INSERT INTO variable(name,value) VALUES('theme_default','s:6:"marvin";');
 
 INSERT INTO blocks(module,delta,status) VALUES('user', '0', '1');

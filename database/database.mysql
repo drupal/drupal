@@ -551,6 +551,7 @@ CREATE TABLE watchdog (
 -- Insert some default values
 --
 
+INSERT INTO system VALUES ('modules/admin.module','admin','module','',1);
 INSERT INTO system VALUES ('modules/block.module','block','module','',1);
 INSERT INTO system VALUES ('modules/comment.module','comment','module','',1);
 INSERT INTO system VALUES ('modules/help.module','help','module','',1);
@@ -560,7 +561,7 @@ INSERT INTO system VALUES ('modules/story.module','story','module','',1);
 INSERT INTO system VALUES ('modules/taxonomy.module','taxonomy','module','',1);
 INSERT INTO system VALUES ('themes/marvin/marvin.theme','marvin','theme','Internet explorer, Netscape, Opera',1);
 
-REPLACE variable SET name='update_start', value='s:10:"2002-10-17;"';
+REPLACE variable SET name='update_start', value='s:10:"2003-04-19;"';
 REPLACE variable SET name='theme_default', value='s:6:"marvin";';
 
 REPLACE blocks SET module = 'user', delta = '0', status = '1';
