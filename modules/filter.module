@@ -195,13 +195,7 @@ function filter_admin_overview() {
 
     foreach ($roles as $rid => $name) {
       $checked = strstr($format->roles, ",$rid,");
-
-      if ($default && !$checked && !$error) {
-        form_set_error("roles][$id][$rid", t('The default input format must be accessible to every role.'));
-        $error = true;
-      }
-
-      $row[] = form_checkbox('', "roles][$id][$rid", 1, $checked);
+      $row[] = form_checkbox('', "roles][$id][$rid", 1, $default || $checked, NULL, $default ? array('disabled' => 'disabled') : NULL);
     }
 
     $row[] = l('configure', 'admin/filters/'. $id);
@@ -485,7 +479,8 @@ function filter_formats() {
         $where[] = "roles LIKE '%%,%d,%%'";
         $query[] = $rid;
       }
-      $query[0] .= ' WHERE '. implode(' OR ', $where);
+      $query[0] .= ' WHERE '. implode(' OR ', $where) . ' OR format = %d';
+      $query[] = variable_get('filter_default_format', 1);
     }
 
     $result = call_user_func_array('db_query', $query);
@@ -656,7 +651,7 @@ function filter_form($name, $value = FILTER_FORMAT_DEFAULT) {
  * Returns true if the user is allowed to access this format.
  */
 function filter_access($format) {
-  if (user_access('administer filters')) {
+  if (user_access('administer filters') || ($format == variable_get('filter_default_format', 1))) {
     return true;
   }
   else {
