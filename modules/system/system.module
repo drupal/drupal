@@ -16,16 +16,16 @@ function system_help($section) {
     case 'admin':
       return t('<p>Welcome to the administration section. Below are the most recent system events.</p>');
     case 'admin/settings':
-      return t('General configuration options for your site. Set up the name of the site, e-mail address used in mail-outs, clean URL options, caching, etc.');
+      return t('<p>General configuration options for your site. Set up the name of the site, e-mail address used in mail-outs, clean URL options, caching, etc.</p>');
     case 'admin/themes':
-      return t('Select which themes are available to your users and specify the default theme. To configure site-wide display settings, click the "configure" task above. Alternately, to override these settings in a specific theme, click the "configure" link for the corresponding theme.');
+      return t('<p>Select which themes are available to your users and specify the default theme. To configure site-wide display settings, click the "configure" task above. Alternately, to override these settings in a specific theme, click the "configure" link for the corresponding theme.</p>');
     case 'admin/themes/settings':
-      return t('These options control the default display settings for your entire site, across all themes. Unless they have been overridden by a specific theme, these settings will be used.');
+      return t('<p>These options control the default display settings for your entire site, across all themes. Unless they have been overridden by a specific theme, these settings will be used.</p>');
     case 'admin/themes/settings/'. arg(3):
       $theme = array_pop(explode('.', arg(3), 2));
-      return t('These options control the display settings for the <code>%template</code> theme. When your site is displayed using this theme, these settings will be used. By clicking "Reset to defaults," you can choose to use the <a href="%global">global settings</a> for this theme.', array('%template' => $theme, '%global' => url('admin/themes/settings')));
+      return t('<p>These options control the display settings for the <code>%template</code> theme. When your site is displayed using this theme, these settings will be used. By clicking "Reset to defaults," you can choose to use the <a href="%global">global settings</a> for this theme.</p>', array('%template' => $theme, '%global' => url('admin/themes/settings')));
     case 'admin/modules':
-      return t("Modules are plugins for Drupal that extend its core functionality.  Here you can select which modules are enabled.  Click on the name of the module in the navigation menu for their individual configuration pages.  Once a module is enabled, new <a href=\"%permissions\">permissions</a> might be made available.  Modules can automatically be temporarily disabled to reduce server load when your site becomes extremely busy by enabling the throttle.module and checking throttle.  The auto-throttle functionality must be enabled on the <a href=\"%throttle\">throttle configuration page</a> after having enabled the throttle module.", array('%permissions' => url('admin/access/permissions'), '%throttle' => url('admin/settings/throttle')));
+      return t('<p>Modules are plugins for Drupal that extend its core functionality. Here you can select which modules are enabled. Click on the name of the module in the navigation menu for their individual configuration pages. Once a module is enabled, new <a href="%permissions">permissions</a> might be made available. Modules can automatically be temporarily disabled to reduce server load when your site becomes extremely busy by enabling the throttle.module and checking throttle. The auto-throttle functionality must be enabled on the <a href="%throttle">throttle configuration page</a> after having enabled the throttle module.</p>', array('%permissions' => url('admin/access/permissions'), '%throttle' => url('admin/settings/throttle')));
     case 'admin/help#system':
       return t("
       <p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviours including visual and operational settings.</p>

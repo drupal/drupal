@@ -1689,20 +1689,19 @@ function user_help($section) {
 
   switch ($section) {
     case 'admin/user':
-      return t('<p>Drupal allows users to register, login, logout, maintain user profiles, etc.  No participant can use his own name to post content until he signs up for a user account.</p>');
+      return t('<p>Drupal allows users to register, login, logout, maintain user profiles, etc. No participant can use his own name to post content until he signs up for a user account.</p>');
     case 'admin/user/create':
     case 'admin/user/account/create':
-      return t('<p>This web page allows the administrators to register a new users by hand.  Note that you cannot have a user where either the e-mail address or the username match another user in the system.</p>');
+      return t('<p>This web page allows the administrators to register a new users by hand. Note that you cannot have a user where either the e-mail address or the username match another user in the system.</p>');
     case 'admin/access/rules':
-      return '<p>'. t('Set up username and e-mail address access rules for new accounts. If a username or email address for a new account matches any deny rule, but not an allow rule, then the new account will not be allowed to be created.') .'</p>';
+      return t('<p>Set up username and e-mail address access rules for new accounts. If a username or email address for a new account matches any deny rule, but not an allow rule, then the new account will not be allowed to be created.</p>');
     case 'admin/access':
       return t('<p>In this area you will define the permissions for each user role (role names are defined on the <a href="%role">user roles page</a>). Each permission describes a fine-grained logical operation, such as being able to access the administration pages, or adding/modifying a user account. You could say a permission represents access granted to a user to perform a set of operations.</p>', array('%role' => url('admin/access/roles')));
     case 'admin/access/roles':
-      return t('
-      Roles allow you to fine tune the security and administration of drupal.  A role defines a group of users that have certain privileges as defined in <a href="%permissions">user permissions</a>.  Examples of roles include: anonymous user, authenticated user, moderator, administrator and so on. In this area you will define the <em>role names</em> of the various roles. To delete a role choose "edit".<br />By default, Drupal comes with two user roles:
+      return t('<p>Roles allow you to fine tune the security and administration of drupal. A role defines a group of users that have certain privileges as defined in <a href="%permissions">user permissions</a>. Examples of roles include: anonymous user, authenticated user, moderator, administrator and so on. In this area you will define the <em>role names</em> of the various roles. To delete a role choose "edit".</p><p>By default, Drupal comes with two user roles:</p>
       <ul>
       <li>Anonymous user: this role is used for users that don\'t have a user account or that are not authenticated.</li>
-      <li>Authenticated user: this role is assigned automatically to authenticated users.  Most registered users will belong to this user role unless specified otherwise.</li>
+      <li>Authenticated user: this role is assigned automatically to authenticated users. Most registered users will belong to this user role unless specified otherwise.</li>
       </ul>', array('%permissions' => url('admin/access/permissions')));
     case 'admin/user/search':
       return t('<p>Enter a simple pattern ("*" may be user as a wildcard match) to search for a username.  For example, one may search for "br" and Drupal might return "brian", "brad", and "brenda".</p>');

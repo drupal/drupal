@@ -36,7 +36,7 @@ function block_help($section) {
 <p>If you want certain blocks to disable themselves temporarily during high server loads, check the 'Throttle' box. You can configure the auto-throttle on the <a href=\"%throttle\">throttle configuration page</a> after having enabled the throttle module.
 ", array('%throttle' => url('admin/settings/throttle')));
     case 'admin/block/add':
-      return t("Here you can create a new block. Once you have created this block you must make it active and give it a place on the page using <a href=\"%overview\">blocks</a>. The title is used when displaying the block. The description is used in the \"block\" column on the <a href=\"%overview\">blocks</a> page.", array('%overview' => url('admin/block')));
+      return t('<p>Here you can create a new block. Once you have created this block you must make it active and give it a place on the page using <a href="%overview">blocks</a>. The title is used when displaying the block. The description is used in the "block" column on the <a href="%overview">blocks</a> page.</p>', array('%overview' => url('admin/block')));
   }
 }
 

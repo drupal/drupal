@@ -21,7 +21,7 @@ function profile_help($section) {
     case 'admin/modules#description':
       return t('Support for configurable user profiles.');
     case 'admin/settings/profile':
-      return t('Here you can define custom fields that users can fill in in their user profile (such as <em>country</em>, <em>real name</em>, <em>age</em>, ...).');
+      return t('<p>Here you can define custom fields that users can fill in in their user profile (such as <em>country</em>, <em>real name</em>, <em>age</em>, ...).</p>');
   }
 }
 
