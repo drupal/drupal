@@ -1405,11 +1405,9 @@ function theme_comment_form($edit, $title) {
   $form .= form_hidden('pid', $edit['pid']);
   $form .= form_hidden('nid', $edit['nid']);
 
-  if (variable_get('comment_preview', 1)) {
-    $form .= form_submit(t('Preview comment'));
-  }
+  $form .= form_submit(t('Preview comment'));
 
-  if (!form_get_errors()) {
+  if (!variable_get('comment_preview', 1) || ($_POST['op'] == t('Preview comment') && !form_get_errors())) {
     $form .= form_submit(t('Post comment'));
   }
 
