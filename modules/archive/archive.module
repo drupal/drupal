@@ -8,13 +8,21 @@ function archive_system($field){
 }
 
 function archive_calendar($original = 0) {
+  $edit = $_POST["edit"];
 
   // Extract today's date:
   $start_of_today = mktime(0, 0, 0, date("n", time()), date("d", time()), date("Y", time()));
   $end_of_today = mktime(23, 59, 59, date("n", time()), date("d", time()), date("Y", time()));
 
   // Extract the requested date:
-  if (arg(0) == "archive" && arg(3)) {
+  if ($edit["year"] && $edit["month"] && $edit["day"]) {
+    $year = $edit["year"];
+    $month = $edit["month"];
+    $day = $edit["day"];
+
+    $requested = mktime(0, 0, 0, $month, $day, $year);
+  }
+  else if (arg(0) == "archive" && arg(3)) {
     $year = arg(1);
     $month = arg(2);
     $day = arg(3);
