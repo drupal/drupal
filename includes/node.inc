@@ -21,17 +21,17 @@ function _node_get($conditions) {
 }
 
 function node_comment_status($index = -1) {
-  $status = array("disabled", "enabled");
+  $status = array("Disabled", "Enabled");
   return $index < 0 ? $status : $status[$index];
 }
 
 function node_promote_status($index = -1) {
-  $status = array("disabled", "enabled");
+  $status = array("Disabled", "Enabled");
   return $index < 0 ? $status : $status[$index];
 }
 
 function node_submission_status($index = -1) {
-  $status = array("auto-post new submissions", "moderate new submissions");
+  $status = array("Auto-post new submissions", "Moderate new submissions");
   return $index < 0 ? $status : $status[$index];
 }
 
@@ -88,8 +88,6 @@ function node_save($node, $filter) {
     if ($u2 = implode(", ", $u2)) db_query("UPDATE $n->type SET $u2 WHERE nid = '$node[nid]'");
     if ($n->pid && ($node[status] == $status[posted])) db_query("UPDATE node SET status = '$status[expired]' WHERE nid = '$n->pid'");
 
-    watchdog("special", "node: modified '$n->title'");
-
     return $node[nid];
   }
   else {
@@ -132,7 +130,6 @@ function node_save($node, $filter) {
             if (($node[pid]) && ($node[status] == $status[posted])) {
               db_query("UPDATE node SET status = '$status[expired]' WHERE nid = '$node[pid]'");
             }
-            watchdog("special", "node: added '$node[title]'");
           }
           else {
             watchdog("warning", "node: added '$node[title]' - failed");
@@ -153,8 +150,9 @@ function node_save($node, $filter) {
 }
 
 function node_invoke($node, $name, $arg = 0) {
-  if ($node[type]) $function = $node[type] ."_$name";
-  if ($node->type) $function = $node->type ."_$name";
+  if (is_array($node)) $function = $node[type] ."_$name";
+  else if (is_object($node)) $function = $node->type ."_$name";
+  else if (is_string($node)) $function = $node ."_$name";
   if (function_exists($function)) return ($arg ? $function($node, $arg) : $function($node));
 }
 
@@ -166,9 +164,18 @@ function node_form($node) {
   return node_invoke($node, "form");
 }
 
-function node_status($node, $index = -1) {
+function node_status($value) {
   $status = array(dumped, expired, queued, posted);
-  return $index < 0 ? array_intersect($status, node_invoke($node, "status")) : $status[$index];
+  if (module_exist($value)) {
+    return array_intersect($status, node_invoke($value, "status"));
+  }
+  else if (strlen($value) > 3) {
+    $status = array_flip($status);
+    return $status[$value];
+  }
+  else {
+    return $status[$value];
+  }
 }
 
 function node_control($node) {

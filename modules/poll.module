@@ -142,7 +142,7 @@ function poll_view($node, $main = 0, $block = 0) {
       if ($block) {
         $output .= "</td></tr></table><br><div align=\"center\">" . form_submit("Vote") . "<br>" . $footer  . "</div>";
       } else {
-        $output .= "</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=\"center\"><br><div align=\"center\">" . form_submit("Vote") . "<br>" . $footer  . "</div></td></tr></table>";        
+        $output .= "</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=\"center\"><br><div align=\"center\">" . form_submit("Vote") . "<br>" . $footer  . "</div></td></tr></table>";
       }
       $output = form($REQUEST_URI, $output);
    }
@@ -215,7 +215,7 @@ function poll_save($edit) {
   global $status, $user;
 
   if (!$edit[nid]) {
-    $nid = node_save($edit, array(active => 1, author => $user->id, cid, comment => category_comment($edit[cid]), moderate => topic_moderate($edit[tid]), promote => category_promote($edit[cid]), runtime, score => 0, status => (category_submission($edit[cid]) ? $status[queued] : $status[posted]), tid, timestamp => time(), title, type => "poll", votes => 0, voters => ""));
+    $nid = node_save($edit, array(active => 1, author => $user->id, cid, comment => variable_get("poll_comment", 0), moderate => variable_get("poll_moderate", ""), promote => variable_get("poll_promote", 0), runtime, score => 0, status => variable_get("poll_status", $status[queued]), tid, timestamp => time(), title, type => "poll", votes => 0, voters => ""));
   }
   else if (user_access($user)) {
     $nid = node_save($edit, array(active, cid, tid, runtime, title, type => "poll"));
