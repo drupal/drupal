@@ -60,7 +60,7 @@ function topic_form($edit = array()) {
 
   $form .= form_textfield(t("Name"), "name", $edit[name], 30, 55, t("A unique name for this topic like 'science', 'internet', 'culture', etc."));
   $form .= form_select(t("Parent"), "pid", $edit[pid], $topics, t("The parent topic this topic belongs in."));
-  $form .= form_textfield("Moderate", "moderate", $edit[moderate], 35, 255, t("Provide a comma-seperated list of the moderators their usernames."));
+  $form .= form_textfield("Moderate", "moderate", $edit[moderate], 35, 255, t("Provide a comma-seperated list of the moderators' usernames."));
 
   if ($edit[tid]) {
     $form .= form_hidden("tid", $edit[tid]);
