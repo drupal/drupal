@@ -300,8 +300,8 @@ function node_conf_filters() {
 }
 
 function node_filter_html($text) {
-  $text = eregi_replace("([ \f\r\t\n\'\"])style=[^>]+", "\\1", $text);
-  $text = eregi_replace("([ \f\r\t\n\'\"])on[a-z]+=[^>]+", "\\1", $text);
+  $text = eregi_replace("([ \f\r\t\n\'\"])style=[^>]+>", "\\1", $text);
+  $text = eregi_replace("([ \f\r\t\n\'\"])on[a-z]+=[^>]+>", "\\1", $text);
   $text = strip_tags($text, variable_get("allowed_html", ""));
   return $text;
 }
