@@ -1,11 +1,6 @@
 <H1>Oops, an error occured!</H1>
 <PRE>
 
-<B>Temporary debug output:</B><BR>
-  * STATUS...: <? echo $REDIRECT_STATUS; ?><BR>
-  * URL......: <? echo $REDIRECT_URL; ?><BR>
-  * METHOD...: <? echo $REQUEST_METHOD; ?><BR>
-
 <?
  switch($REDIRECT_STATUS) {
    case 500:

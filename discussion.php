@@ -267,7 +267,7 @@ function comment_post($pid, $sid, $subject, $comment) {
     $subject = ($subject) ? $subject : substr($comment, 0, 29);
 
     ### Add watchdog entry:
-    watchdog("comment", "added new comment with subject '$subject'");
+    watchdog("comment", "discussion: added comment with subject '$subject'");
 
     ### Add comment to database:
     db_query("INSERT INTO comments (pid, sid, author, subject, comment, hostname, timestamp) VALUES ($pid, $sid, '$user->id', '". check_input($subject) ."', '". check_input($comment) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."')");
