@@ -1,5 +1,5 @@
 <?php
-// $Id: archive.module,v 1.67 2004/10/08 11:29:31 dries Exp $
+// $Id: archive.module,v 1.68 2004/10/23 16:15:29 dries Exp $
 
 /**
  * @file
@@ -13,8 +13,6 @@ function archive_help($section) {
   switch ($section) {
     case 'admin/modules#description':
       return t('Displays a calendar to navigate old content.');
-    case 'admin/settings/archive':
-      return t('Choose the starting "day of the week" for the displayed calendar block.');
   }
 }
 
