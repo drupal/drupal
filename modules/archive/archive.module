@@ -1,5 +1,5 @@
 <?php
-// $Id: archive.module,v 1.57 2004/06/18 15:04:35 dries Exp $
+// $Id: archive.module,v 1.58 2004/07/07 20:18:21 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -181,12 +181,9 @@ function archive_block($op = 'list', $delta = 0) {
     return $blocks;
   }
   else if (user_access('access content')) {
-    switch ($delta) {
-      case 0:
-        $block['subject'] = t('Browse archives');
-        $block['content'] = archive_calendar();
-        return $block;
-    }
+    $block['subject'] = t('Browse archives');
+    $block['content'] = archive_calendar();
+    return $block;
   }
 }
 

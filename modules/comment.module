@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.259 2004/07/05 05:42:06 dries Exp $
+// $Id: comment.module,v 1.260 2004/07/07 20:18:21 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -164,6 +164,29 @@ function comment_access($op, $comment) {
 
   if ($op == 'edit') {
     return $user->uid && $user->uid == $comment->uid && comment_num_replies($comment->cid) == 0;
+  }
+}
+
+/**
+ * Implementation of hook_block().
+ *
+ * Generates a block with the most recent comments.
+ */
+function comment_block($op = 'list', $delta = 0) {
+  if ($op == 'list') {
+    $blocks[0]['info'] = t('Recent comments');
+    return $blocks;
+  }
+  else if (user_access('access comments')) {
+    $result = db_query_range('SELECT * FROM {comments} WHERE status = 0 ORDER BY timestamp DESC', 0, 10);
+    $items = array();
+    while ($comment = db_fetch_object($result)) {
+      $items[] = l($comment->subject, "node/$comment->nid", NULL, NULL, "comment-$comment->cid") .'<br />'. format_interval(time() - $comment->timestamp) .' '. t('ago');
+    }
+
+    $block['subject'] = t('Recent comments');
+    $block['content'] = theme('item_list', $items);
+    return $block;
   }
 }
 
