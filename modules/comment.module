@@ -175,7 +175,7 @@ function comment_form($edit) {
 function comment_edit($cid) {
   global $user;
 
-  $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name, u.data FROM {comments} c LEFT JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status != 2", $cid));
+  $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status != 2", $cid));
 
   if (comment_access("edit", $comment)) {
     comment_preview(object2array($comment));
@@ -192,7 +192,7 @@ function comment_reply($pid, $nid) {
     */
 
     if ($pid) {
-      $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name, u.data FROM {comments} c LEFT JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0", $pid));
+      $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0", $pid));
       comment_view($comment);
     }
     else if (user_access("access content")) {
@@ -243,7 +243,7 @@ function comment_preview($edit) {
   theme("box", t("Reply"), comment_form($edit));
 
   if ($edit["pid"]) {
-    $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name, u.data FROM {comments} c LEFT JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0", $edit["pid"]));
+    $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0", $edit["pid"]));
     comment_view($comment);
   }
   else {
@@ -569,7 +569,7 @@ function comment_render($node, $cid = 0) {
       print "<form method=\"post\" action=\"". url("comment") ."\"><div>\n";
       print form_hidden("nid", $nid);
 
-      $result = db_query("SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users FROM {comments} c LEFT JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0 GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users", $cid);
+      $result = db_query("SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0 GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users", $cid);
 
       if ($comment = db_fetch_object($result)) {
         comment_view($comment, comment_links($comment));
@@ -586,7 +586,7 @@ function comment_render($node, $cid = 0) {
       ** Multiple comments view
       */
 
-      $query .= "SELECT c.cid as cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users, c.thread FROM {comments} c LEFT JOIN {users} u ON c.uid = u.uid WHERE c.nid = '". check_query($nid) ."' AND c.status = 0";
+      $query .= "SELECT c.cid as cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users, c.thread FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.nid = '". check_query($nid) ."' AND c.status = 0";
 
       $query .= " GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users, c.thread";
 
@@ -884,7 +884,7 @@ function comment_node_link($node) {
     ** Edit comments:
     */
 
-    $result = db_query("SELECT c.cid, c.subject, u.uid, u.name FROM {comments} c LEFT JOIN {users} u ON u.uid = c.uid WHERE nid = %d AND c.status = 0 ORDER BY c.timestamp", $node->nid);
+    $result = db_query("SELECT c.cid, c.subject, u.uid, u.name FROM {comments} c INNER JOIN {users} u ON u.uid = c.uid WHERE nid = %d AND c.status = 0 ORDER BY c.timestamp", $node->nid);
 
 
     $header = array(t("title"), t("author"), array("data" => t("operations"), "colspan" => 3));
@@ -904,7 +904,7 @@ function comment_node_link($node) {
 
 function comment_admin_edit($id) {
 
-  $result = db_query("SELECT c.*, u.name, u.uid FROM {comments} c LEFT JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status != 2", $id);
+  $result = db_query("SELECT c.*, u.name, u.uid FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status != 2", $id);
   $comment = db_fetch_object($result);
 
   // if a comment is "deleted", it's deleted
@@ -955,7 +955,7 @@ function comment_admin_overview($status = 0) {
     array("data" => t("operations"), "colspan" => 2)
   );
 
-  $sql = "SELECT c.*, u.name, u.uid FROM {comments} c LEFT JOIN {users} u ON u.uid = c.uid WHERE c.status = ". check_query($status);
+  $sql = "SELECT c.*, u.name, u.uid FROM {comments} c INNER JOIN {users} u ON u.uid = c.uid WHERE c.status = ". check_query($status);
   $sql .= tablesort_sql($header);
   $result = pager_query($sql,  50);
 
@@ -1539,7 +1539,7 @@ function comment_search($keys) {
   ** identifier which is currently used byt the comment module.
   */
 
-  $find = do_search(array("keys" => $keys, "type" => "comment", "select" => "select s.lno as lno, c.nid as nid, c.subject as title, c.timestamp as created, u.uid as uid, u.name as name, s.count as count FROM {search_index} s, {comments} c LEFT JOIN {users} u ON c.uid = u.uid WHERE s.lno = c.cid AND s.type = 'comment' AND c.status = 0 AND s.word like '%'"));
+  $find = do_search(array("keys" => $keys, "type" => "comment", "select" => "select s.lno as lno, c.nid as nid, c.subject as title, c.timestamp as created, u.uid as uid, u.name as name, s.count as count FROM {search_index} s, {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE s.lno = c.cid AND s.type = 'comment' AND c.status = 0 AND s.word like '%'"));
 
   return $find;
 }

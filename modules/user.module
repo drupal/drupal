@@ -142,6 +142,7 @@ function user_save($account, $array = array()) {
   }
   else {
     $array["timestamp"] = time();
+    $array["uid"] = db_next_id("user_uid");
 
     foreach ($array as $key => $value) {
       if ($key == "pass") {

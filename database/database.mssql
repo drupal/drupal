@@ -332,7 +332,7 @@ CREATE TABLE [dbo].[term_synonym] (
 GO
 
 CREATE TABLE [dbo].[users] (
-  [uid] [bigint] IDENTITY (1, 1) NOT NULL ,
+  [uid] [numeric](10, 0) NULL ,
   [name] [varchar] (60) NOT NULL ,
   [pass] [varchar] (32) NOT NULL ,
   [mail] [varchar] (64) NULL ,
@@ -471,6 +471,8 @@ INSERT INTO system VALUES ('themes/marvin/marvin.theme','marvin','theme','Intern
 
 INSERT INTO variable(name,value) VALUES('update_start', 's:10:"2002-05-15";');
 INSERT INTO variable(name,value) VALUES('theme_default','s:6:"marvin";');
+
+INSERT INTO users(uid,name,mail) VALUES(0,'Anonymous','root@localhost');
 
 INSERT INTO blocks(module,delta,status,custom,region,weight,path) VALUES('user', 0, 1, 0, 1, 0, '');
 INSERT INTO blocks(module,delta,status,custom,region,weight,path) VALUES('user', 1, 1, 0, 1, 0, '');

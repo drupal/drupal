@@ -263,7 +263,7 @@ function node_load($conditions, $revision = -1) {
   ** Retrieve the node:
   */
 
-  $node = db_fetch_object(db_query("SELECT n.*, u.uid, u.name FROM {node} n LEFT JOIN {users} u ON u.uid = n.uid WHERE ". implode(" AND ", $cond)));
+  $node = db_fetch_object(db_query("SELECT n.*, u.uid, u.name FROM {node} n INNER JOIN {users} u ON u.uid = n.uid WHERE ". implode(" AND ", $cond)));
 
   /*
   ** Unserialize the revisions field:
@@ -493,7 +493,7 @@ function node_search($keys) {
   // The select must always provide the following fields - lno, title,
   // created, uid, name, count
   //
-  $find = do_search(array("keys" => $keys, "type" => "node", "select" => "select s.lno as lno, n.title as title, n.created as created, u.uid as uid, u.name as name, s.count as count FROM {search_index} s, {node} n LEFT JOIN {users} u ON n.uid = u.uid WHERE s.lno = n.nid AND s.type = 'node' AND s.word like '%' AND n.status = 1"));
+  $find = do_search(array("keys" => $keys, "type" => "node", "select" => "select s.lno as lno, n.title as title, n.created as created, u.uid as uid, u.name as name, s.count as count FROM {search_index} s, {node} n INNER JOIN {users} u ON n.uid = u.uid WHERE s.lno = n.nid AND s.type = 'node' AND s.word like '%' AND n.status = 1"));
 
   return $find;
 }
@@ -697,7 +697,7 @@ function node_admin_nodes() {
   ** Overview table:
   */
 
-  $result = pager_query("SELECT n.*, u.name, u.uid FROM {node} n LEFT JOIN {users} u ON n.uid = u.uid ". $filters[$filter][1], 50);
+  $result = pager_query("SELECT n.*, u.name, u.uid FROM {node} n INNER JOIN {users} u ON n.uid = u.uid ". $filters[$filter][1], 50);
   $header = array(NULL, t("title"), t("type"), t("author"), t("status"), array ("data" => t("operations"), "colspan" => 2));
 
   while ($node = db_fetch_object($result)) {
