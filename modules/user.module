@@ -1597,7 +1597,7 @@ function user_admin_account() {
     $queries[] = "WHERE r.name = '$value' ORDER BY u.uid DESC";
   }
 
-  $result = pager_query("SELECT u.uid, u.name, u.timestamp FROM {role} r INNER JOIN users u ON r.rid = u.rid ". $queries[$query ? $query : 0], 50);
+  $result = pager_query("SELECT u.uid, u.name, u.timestamp FROM {role} r INNER JOIN {users} u ON r.rid = u.rid ". $queries[$query ? $query : 0], 50);
 
   $header = array(t("username"), t("last access"), t("operations"));
   while ($account = db_fetch_object($result)) {
