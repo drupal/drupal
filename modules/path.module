@@ -1,5 +1,5 @@
 <?php
-/* $Id: path.module,v 1.11 2003/10/22 20:20:35 dries Exp $ */
+/* $Id: path.module,v 1.12 2003/10/23 16:41:07 unconed Exp $ */
 
 function path_admin() {
   $op = $_POST["op"];
@@ -116,7 +116,7 @@ function path_help($section = "admin/help#path") {
       $output = t("Enter the path you wish to create the alias for, followed by the name of the new alias. Each path can be associated with only one alias.");
       break;
     case "admin/help#path":
-      $output .= "<h3>Background</h3><p>URL aliasing gives users the ability to have control over all Drupal paths. This functionality will integrate seamlessly into node forms and also provide the administrator an interface to view all aliases that have been created.</p><p>Aliases have a 1 to 1 relationship with their original Drupal URLs. In otherwards you cannot have an alias map to more than one path. Likewise, a Drupal URL can't be mapped to more than one alias.</p>";
+      $output .= "<h3>Background</h3><p>URL aliasing gives users the ability to have control over all Drupal paths. This functionality integrates seamlessly into node forms and also provides the administrator an interface to view all aliases that have been created.</p><p>Aliases have a 1 to 1 relationship with their original Drupal URLs. In other words you cannot have an alias map to more than one path. Likewise, a Drupal URL can't be mapped to more than one alias.</p>";
       $output .= "<h3>Permissions</h3><p>Two new permissions are introduced for aliasing URLs: <i>create url aliases</i> and <i>administer url aliases</i>.</p>";
       $output .= "<ol>";
       $output .= "<li><b>create url aliases</b> - Allows users to create aliases for nodes. Enabling this permission will display a new path field to the user in any node form, allowing them to enter an alias for that node. They will be able to edit/delete the alias after it is created using the same form.</li>";
