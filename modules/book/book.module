@@ -643,7 +643,7 @@ function book_page() {
         theme("footer");
         break;
       case "print":
-        return book_print(arg(2), $depth = 1);
+        print book_print(arg(2), $depth = 1);
         break;
       default:
         book_render();
