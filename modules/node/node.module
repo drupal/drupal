@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.104 2001/12/09 15:15:10 dries Exp $
+// $Id: node.module,v 1.105 2001/12/18 20:57:46 dries Exp $
 
 function node_help() {
   global $mod;
@@ -955,7 +955,7 @@ function node_preview($node) {
       $node->uid = 0; // anonymous user
     }
   }
-  else if ($edit["uid"]) {
+  else if ($node->uid) {
     $user = user_load(array("uid" => $node->uid));
     $node->name = $user->name;
   }
