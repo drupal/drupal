@@ -1512,19 +1512,6 @@ function user_admin_edit($edit = array()) {
   if ($account = user_load(array('uid' => $id))) {
 
     if ($op == t("Save account")) {
-      foreach (module_list() as $module) {
-        if (module_hook($module, 'user')) {
-          $result = module_invoke($module, 'user', 'validate', $edit, $account);
-        }
-        if (is_array($result)) {
-          $data = array_merge($data, $result);
-        }
-        elseif (is_string($result)) {
-          $error = $result;
-          break;
-        }
-      }
-
       // TODO: this display/edit/validate should be moved to a new profile module implementing the _user hooks
       if ($error = user_validate_name($edit['name'])) {
         // do nothing
@@ -1537,6 +1524,23 @@ function user_admin_edit($edit = array()) {
       }
       else if ($edit['mail'] && db_num_rows(db_query("SELECT uid FROM {users} WHERE uid != %d AND LOWER(mail) = LOWER('%s')", $account->uid, $edit['mail'])) > 0) {
         $error = t("The e-mail address '%s' is already taken.", array("%s" => $edit['mail']));
+      }
+
+      /*
+      ** Validate fields added by other modules.
+      */
+
+      foreach (module_list() as $module) {
+        if (module_hook($module, 'user')) {
+          $result = module_invoke($module, 'user', 'validate', $edit, $account);
+        }
+        if (is_array($result)) {
+          $data = array_merge($data, $result);
+        }
+        elseif (is_string($result)) {
+          $error = $result;
+          break;
+        }
       }
 
       /*

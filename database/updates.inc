@@ -52,7 +52,8 @@ $sql_updates = array(
   "2004-02-03" => "update_78",
   "2004-02-21" => "update_79",
   "2004-03-11: first update since Drupal 4.4.0 release" => "update_80",
-  "2004-02-20" => "update_81"
+  "2004-02-20" => "update_81",
+  "2004-02-27" => "update_82"
 );
 
 function update_32() {
@@ -887,6 +888,11 @@ function update_80() {
 function update_81() {
   $ret[] = update_sql('ALTER TABLE {profile_fields} ADD page varchar(255) default NULL');
   $ret[] = update_sql("UPDATE {profile_fields} SET type = 'url' WHERE name = 'homepage'");
+  return $ret;
+}
+
+function update_82() {
+  $ret[] = update_sql("ALTER TABLE {profile_fields} ADD required tinyint(1) DEFAULT '0' NOT NULL");
   return $ret;
 }
 

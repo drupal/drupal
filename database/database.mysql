@@ -325,6 +325,7 @@ CREATE TABLE profile_fields (
   page varchar(255) default NULL,
   type varchar(128) default NULL,
   weight tinyint(1) DEFAULT '0' NOT NULL,
+  required tinyint(1) DEFAULT '0' NOT NULL,
   overview tinyint(1) DEFAULT '0' NOT NULL,
   options text,
   KEY category (category),

@@ -185,6 +185,9 @@ function profile_validate_profile($edit) {
         return t("The value provided for '%field' is not a valid URL.", array('%field' => $field->title));
       }
     }
+    else if ($field->required) {
+      return t("The field '%field' is required.", array('%field' => $field->title));
+    }
   }
 
   return $edit;
@@ -240,7 +243,7 @@ function profile_admin_add($type) {
       drupal_set_message($error, 'error');
     }
     else {
-      db_query("INSERT INTO {profile_fields} (title, name, explanation, category, type, weight, overview, options, page) VALUES ('%s', '%s', '%s', '%s', '%s', %d, %d, '%s', '%s')", $data['title'], $data['name'], $data['explanation'], $data['category'], $type, $data['weight'], $data['overview'], $data['options'], $data['page']);
+      db_query("INSERT INTO {profile_fields} (title, name, explanation, category, type, weight, required, overview, options, page) VALUES ('%s', '%s', '%s', '%s', '%s', %d, %d, %d, '%s', '%s')", $data['title'], $data['name'], $data['explanation'], $data['category'], $type, $data['weight'], $data['required'], $data['overview'], $data['options'], $data['page']);
 
       drupal_set_message(t('the field has been created.'));
     }
@@ -262,7 +265,7 @@ function profile_admin_edit($fid) {
 
     }
     else {
-      db_query("UPDATE {profile_fields} SET title = '%s', name = '%s', explanation = '%s', category = '%s', weight = %d, overview = %d, options = '%s', page = '%s' WHERE fid = %d", $data['title'], $data['name'], $data['explanation'], $data['category'], $data['weight'], $data['overview'], $data['options'], $data['page'], $fid);
+      db_query("UPDATE {profile_fields} SET title = '%s', name = '%s', explanation = '%s', category = '%s', weight = %d, required = %d, overview = %d, options = '%s', page = '%s' WHERE fid = %d", $data['title'], $data['name'], $data['explanation'], $data['category'], $data['weight'], $data['required'], $data['overview'], $data['options'], $data['page'], $fid);
 
       drupal_set_message(t('the field has been updated.'));
     }
@@ -291,6 +294,7 @@ Unless you know what you are doing, it is highly recommended that you prefix the
     $group .= form_textarea(t('Selection options'), 'options', $edit['options'], 70, 8, t("A list of all options.  Put each option on a separate line.  Example options are 'red', 'blue', 'green', etc."));
   }
   $group .= form_weight(t('Weight'), 'weight', $edit['weight'], 5, t("The weights define the order in which the form fields are shown.  Lighter fields \"float up\" towards the top of the category."));
+  $group .= form_checkbox(t('Required field.'), 'required', 1, $edit['required']);
   $output = form_group(t('Field settings'), $group);
 
   $group = '';
