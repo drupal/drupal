@@ -1,5 +1,5 @@
 <?php
-// $Id: conf.php,v 1.22 2003/01/06 19:50:59 dries Exp $
+// $Id: conf.php,v 1.23 2003/02/14 19:52:38 dries Exp $
 
 #
 # Database settings:
@@ -16,6 +16,13 @@
 # $db_url = "mysql://user:password@hostname/database";
 
 $db_url = "mysql://drupal:drupal@localhost/drupal";
+
+#
+# Base URL:
+#
+#   The URL of your website's main page.
+#
+$base_url = "http://localhost";
 
 #
 # PHP settings:

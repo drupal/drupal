@@ -1,5 +1,5 @@
 <?php
-// $Id: unconed.theme,v 1.92 2003/02/09 17:39:37 dries Exp $
+// $Id: unconed.theme,v 1.93 2003/02/14 19:52:41 dries Exp $
 
   /*********************************************************************
 
@@ -45,12 +45,14 @@
    }
 
    function header($title = "") {
+     global $base_url;
      srand((double)microtime()*1000000);
     ?>
      <HTML>
      <HEAD>
       <?php print theme_head($main); ?>
       <TITLE><?php echo ($title ? ($title . " - ") : "") . variable_get(site_name, "drupal"); ?></TITLE>
+      <BASE HREF="<?php echo "$base_url/"; ?>" />
       <STYLE type="text/css">
        <!--
         TABLE { border-width: 0; }
