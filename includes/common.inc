@@ -72,14 +72,17 @@ function message_throttle() {
 }
 
 function drupal_goto($url) {
- 
+
   /*
-  ** It is advised to use "drupal_goto()" instead of PHP's "header()" as 
-  ** "drupal_goto()" will append the user's session ID to the URI when PHP 
+  ** It is advised to use "drupal_goto()" instead of PHP's "header()" as
+  ** "drupal_goto()" will append the user's session ID to the URI when PHP
   ** is compiled with "--enable-trans-sid".
   */
 
-  if (strstr($url, "?")) {
+  if (SID == "" || strstr($url, SID)) {
+    header("Location: $url");
+  }
+  else if (strstr($url, "?") && !strstr($url, SID)) {
     header("Location: $url&". SID);
   }
   else {
