@@ -65,7 +65,7 @@ class backend {
         if (strstr($data, "200 OK")) {
 
           // Remove existing entries:
-          $result = db_query("DELETE FROM headlines WHERE id = $this->id");
+          $result = db_query("DELETE FROM headlines WHERE id = '$this->id'");
 
           // Strip all 'junk':
           $data = ereg_replace("<?xml.*/image>", "", $data);
@@ -95,7 +95,7 @@ class backend {
           $this->timestamp = time();
         }
         else {
-          watchdog("error", "failed to retrieve headline data from $host: <PRE>$data</PRE>");
+          watchdog("error", "failed to retrieve headline data from $url[host]: <PRE>$data</PRE>");
         }
       }
     }
