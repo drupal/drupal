@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.193 2003/12/01 13:45:32 dries Exp $
+// $Id: comment.module,v 1.194 2003/12/04 20:53:19 dries Exp $
 
 function comment_help($section = "admin/help#comment") {
   $output = "";
@@ -777,6 +777,7 @@ function comment_perm() {
 }
 
 function comment_link($type, $node = 0, $main = 0) {
+  $links = array();
 
   if ($type == "node" && $node->comment) {
 
@@ -849,7 +850,7 @@ function comment_link($type, $node = 0, $main = 0) {
     menu("comment", t("comments"), "comment_page", 0, 1);
   }
 
-  return $links ? $links : array();
+  return $links;
 }
 
 function comment_page() {

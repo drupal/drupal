@@ -33,22 +33,22 @@ class XTemplate {
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-  $Id: xtemplate.inc,v 1.3 2003/04/04 06:08:53 dries Exp $
+  $Id: xtemplate.inc,v 1.4 2003/12/04 20:53:19 dries Exp $
 
 */
 
 /***[ variables ]***********************************************************/
 
-var $filecontents="";                /* raw contents of template file */
+var $filecontents="";               /* raw contents of template file */
 var $blocks=array();                /* unparsed blocks */
-var $parsed_blocks=array();          /* parsed blocks */
+var $parsed_blocks=array();         /* parsed blocks */
 var $preparsed_blocks=array();      /* preparsed blocks, for file includes */
-var $block_parse_order=array();      /* block parsing order for recursive parsing (sometimes reverse:) */
+var $block_parse_order=array();     /* block parsing order for recursive parsing (sometimes reverse:) */
 var $sub_blocks=array();            /* store sub-block names for fast resetting */
 var $VARS=array();                  /* variables array */
 var $FILEVARS=array();              /* file variables array */
 var $filevar_parent=array();        /* filevars' parent block */
-var $filecache=array();              /* file caching */
+var $filecache=array();             /* file caching */
 
 var $tpldir="";                     /* location of template files */
 var $FILES=null;                    /* file names lookup table */
@@ -56,15 +56,15 @@ var $FILES=null;                    /* file names lookup table */
 var $file_delim="/\{FILE\s*\"([^\"]+)\"\s*\}/m";  /* regexp for file includes */
 var $filevar_delim="/\{FILE\s*\{([A-Za-z0-9\._]+?)\}\s*\}/m";  /* regexp for file includes */
 var $filevar_delim_nl="/^\s*\{FILE\s*\{([A-Za-z0-9\._]+?)\}\s*\}\s*\n/m";  /* regexp for file includes w/ newlines */
-var $block_start_delim="<!-- ";      /* block start delimiter */
-var $block_end_delim="-->";          /* block end delimiter */
-var $block_start_word="BEGIN:";      /* block start word */
-var $block_end_word="END:";          /* block end word */
+var $block_start_delim="<!-- ";     /* block start delimiter */
+var $block_end_delim="-->";         /* block end delimiter */
+var $block_start_word="BEGIN:";     /* block start word */
+var $block_end_word="END:";         /* block end word */
 
 /* this makes the delimiters look like: <!-- BEGIN: block_name --> if you use my syntax. */
 
-var $NULL_STRING=array(""=>"");        /* null string for unassigned vars */
-var $NULL_BLOCK=array(""=>"");  /* null string for unassigned blocks */
+var $NULL_STRING=array(""=>"");     /* null string for unassigned vars */
+var $NULL_BLOCK=array(""=>"");      /* null string for unassigned blocks */
 var $mainblock="main";
 var $ERROR="";
 var $AUTORESET=1;                    /* auto-reset sub blocks */
@@ -184,6 +184,7 @@ function parse ($bname) {
       $copy=str_replace("\{$v}","$var",$copy);
     }
   }
+  if (empty($this->parsed_blocks[$bname])) $this->parsed_blocks[$bname] = null; // eliminates incremental assign error, when using E_ALL error reporting
   $this->parsed_blocks[$bname].=$copy;
 
   /* reset sub-blocks */
@@ -367,6 +368,7 @@ function maketree($con,$parentblock="") {
         $block_names[++$level]=$res[0][2];              /* add one level - array("main","table","row")*/
         $cur_block_name=implode(".",$block_names);  /* make block name (main.table.row) */
         $this->block_parse_order[]=$cur_block_name;  /* build block parsing order (reverse) */
+        if (empty($blocks[$cur_block_name])) $blocks[$cur_block_name] = null; // eliminates incremental assign error, when using E_ALL error reporting
         $blocks[$cur_block_name].=$res[0][3];          /* add contents */
         $blocks[$parent_name].="{_BLOCK_.$cur_block_name}";  /* add {_BLOCK_.blockname} string to parent block */
         $this->sub_blocks[$parent_name][]=$cur_block_name;    /* store sub block names for autoresetting and recursive parsing */
@@ -379,6 +381,7 @@ function maketree($con,$parentblock="") {
     } else { /* no block delimiters found */
       if ($k)
         $blocks[implode(".",$block_names)].=$this->block_start_delim;
+      if (empty($blocks[implode(".",$block_names)])) $blocks[implode(".",$block_names)] = null; // eliminates incremental assign error, when using E_ALL error reporting
       $blocks[implode(".",$block_names)].=$v;
     }
   }
@@ -474,69 +477,4 @@ function r_getfile($file) {
 
 
 } /* end of XTemplate class. */
-
-/*
-    $Log: xtemplate.inc,v $
-    Revision 1.3  2003/04/04 06:08:53  dries
-    Patch by Ax:
-
-    - Bugfix: xtemplate.inc removed "$xx" from content.
-
-    - Improvement: changed a high ascii char to low ascii to be able to debug
-      xtemplate.inc.
-
-    Revision 1.2  2003/02/01 19:54:19  dries
-
-    Patch by Ax:
-
-    - Bad usage of css ID's: they may be used for a single element only,
-    but were used as #node, #block, which can occur multiple times in a
-    single page.
-
-    - Moved HTML from theme to template - thats what templates are all
-    about!
-
-    - Added support for head() hook
-
-    - Added support for diffentiating between boxes and blocks.
-
-    - Typo: secundary -> secondary
-
-    Revision 1.1  2003/01/20 21:00:31  dries
-
-    - Added a template driven theme.
-
-    Revision 1.1  2002/12/10 23:11:59  ax
-    [argh - cvs @*#! didn't add any files with the last commit ... now, then (we should really give subversion a try: "Directories, renames, and file meta-data are versioned"]
-
-    - renamed from "ax" to "XTemplate_Tableless" to make people looking for ... this find it
-    - updated to CVS
-    - fixed some styles
-    - em/%'ized stylesheet (relative sizes) and "chaptered" into sections
-    - added 3 screenshots
-
-    Revision 1.2  2001/09/19 14:11:25  cranx
-    fixed a bug in the whitespace-stripping block variable interpolating regexp.
-
-    Revision 1.1  2001/07/11 10:42:39  cranx
-    added:
-     - filename substitution, no nested arrays for the moment, sorry
-       (including happens when assigning, so assign filevar in the outside blocks first!)
-
-    Revision 1.5  2001/07/11 10:39:08  cranx
-    added:
-     - we can now specify base dir
-     - array_loop()
-     - trigger_error in set_error
-
-    modified:
-     - newline bugs fixed (for XML)
-     - in out(): content-length header added
-     - whiles changed to foreach
-     - from now on, the class is php4 only :P
-
-
-*/
-
-
 ?>

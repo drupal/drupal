@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.128 2003/11/30 10:37:07 dries Exp $
+// $Id: statistics.module,v 1.129 2003/12/04 20:53:19 dries Exp $
 
 // Exit hook, runs at the end of every page request
 function statistics_exit() {
@@ -85,7 +85,7 @@ function statistics_link($type, $node = 0, $main = 0) {
     }
 
     if (user_access("access content")) {
-      menu("statistics", t("view most popular content"), statistics_page, 0, 1);
+      menu("statistics", t("view most popular content"), "statistics_page", 0, 1);
     }
   }
 

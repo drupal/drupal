@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.29 2003/11/21 19:08:46 dries Exp $
+// $Id: menu.inc,v 1.30 2003/12/04 20:53:19 dries Exp $
 
 /**
  * Register a menu item with the menu system.
@@ -137,13 +137,13 @@ function menu_in_active_trail($path) {
 function menu_tree($parent = "", $hidden = 0) {
   global $_list;
   static $trail;
+  $output = "";
 
   if (empty($trail)) {
     $trail = menu_get_trail($_GET["q"]);
   }
 
-  if ($_list[$parent]["children"]) {
-    $output = "";
+  if (isset($_list[$parent]) && $_list[$parent]["children"]) {
 
     usort($_list[$parent]["children"], "_menu_sort");
     foreach ($_list[$parent]["children"] as $item) {

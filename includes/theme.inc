@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.167 2003/11/27 13:31:13 dries Exp $ */
+/* $Id: theme.inc,v 1.168 2003/12/04 20:53:19 dries Exp $ */
 
 /**
  @file
@@ -403,7 +403,7 @@ function theme_mark() {
   @return a string containing the \a list output.
 **/
 function theme_item_list($items = array(), $title = NULL) {
-  $output .= "<div class=\"item-list\">";
+  $output = "<div class=\"item-list\">";
   if (isset($title)) {
     $output .= "<h3>$title</h3>";
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: queue.module,v 1.97 2003/11/25 19:26:21 dries Exp $
+// $Id: queue.module,v 1.98 2003/12/04 20:53:19 dries Exp $
 
 function queue_help($section) {
   $output = "";
@@ -33,13 +33,15 @@ function queue_perm() {
 }
 
 function queue_link($type) {
+  $links = array();
+
   if ($type == "system") {
     if (user_access("access submission queue")) {
       menu("queue", t("submission queue"), "queue_page", 1);
     }
   }
 
-  return $links ? $links : array();
+  return $links;
 }
 
 function queue_count() {
