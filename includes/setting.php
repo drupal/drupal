@@ -1,6 +1,5 @@
 <?php
 
-
 #
 # Database settings:
 #
@@ -58,6 +57,6 @@ $themes = array("UnConeD" => array(
 $languages = array("en" => "English");
 
 # This line prevents users from accessing your settings file:
-die();
+die("access denied");
 
 ?>

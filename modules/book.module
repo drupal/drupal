@@ -124,8 +124,10 @@ function book_form($edit = array()) {
     $form .= form_select(t("Weight"), "weight", $edit[weight], array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30), t("The heavier nodes will sink and the lighter nodes will be positioned nearer the top."));
   }
 
-  $form .= form_hidden("pid", $edit[pid]);
-  $form .= form_hidden("nid", $edit[nid]);
+  if ($edit[nid] > 0) {
+    $form .= form_hidden("pid", $edit[pid]);
+    $form .= form_hidden("nid", $edit[nid]);
+  }
 
   if (!$edit) {
     $form .= form_submit(t("Preview"));
@@ -143,7 +145,14 @@ function book_form($edit = array()) {
 }
 
 function book_save($edit) {
-  node_save(array_diff(array_merge($edit, array(nid => $edit[nid], type => "book")), array(userid => $edit[userid])));
+  global $status, $user;
+
+  if (!$edit[nid]) {
+    node_save($edit, array(author => $user->id, body, cid, comment => category_comment($edit[cid]), log, moderate => topic_moderate($edit[tid]), promote => category_promote($edit[cid]), score => 0, status => (category_submission($edit[cid]) ? $status[queued] : $status[posted]), tid, timestamp => time(), title, type => "book", votes => 0, weight));
+  }
+  else if (user_access($user)) {
+    node_save($edit, array(body, cid, log, parent, tid, title, type => "book", weight));
+  }
 }
 
 function book_parent($nid) {
@@ -173,26 +182,6 @@ function book_tree($parent = "", $depth = 0) {
   }
   return $output;
 }
-
-/*
-function book_tree($parent = 0, $depth = 0) {
-  global $PHP_SELF, $status;
-
-  // if (($parent > 0) && ($depth < 3 || strstr($PHP_SELF,"admin.php"))) {
-  if ($depth < 3 || strstr($PHP_SELF,"admin.php")) {
-    $result = db_query("SELECT n.*, b.* FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE n.type = 'book' AND n.status = '$status[posted]' AND b.parent = '$parent' ORDER BY b.weight", 1);
-    $output .= "<UL>";
-    while ($node = db_fetch_object($result)) {
-      $output .= "<LI><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A>";
-      if ($PHP_SELF == "/admin.php") $output .= " <SMALL>(weight: $node->weight/$node->parent, status: $node->status) (<A HREF=\"admin.php?mod=book&op=edit&id=$node->nid\">edit</A>)</SMALL>\n";
-      if ($node->pid) $output .= book_tree($node->pid, $depth + 1);
-      $output .= book_tree($node->nid, $depth + 1);
-    }
-    $output .= "</UL>";
-  }
-  return $output;
-}
-*/
 
 function book_list($query = array()) {
   return node_overview($query);

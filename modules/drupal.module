@@ -18,16 +18,16 @@ function drupal_page() {
   $theme->box("Screenshots", $output);
 */
 
-  $output  = "<H3>Download</H3>\n";
-  $output .= " <LI><A HREF=\"drupal/drupal-2.00.tgz\">drupal 2.00</A> (2001/03/15 - latest version)</LI>\n";
-  $output .= " <LI>drupal 1.00 (2001/01/15)</LI>\n";
-  $output .= "<H3>Documentation</H3>\n";
-  $output .= " <LI><A HREF=\"node.php?title=drupal+handbook\">drupal handbook</A></LI>\n";
-  $output .= "<H3>Mailing lists</H3>\n";
-  $output .= " <LI><A HREF=\"node.php?title=mailing+lists\">mailing lists</A></LI>";
-  $output .= "<H3>Development</H3>\n";
-  $output .= " <LI><A HREF=\"node.php?title=development\">drupal development</A> (<A HREF=\"node.php?title=CVS\">CVS</A>)</LI>\n";
-  $theme->box("Support and development", $output);
+  $output  = "<H3>Download Drupal</H3>\n";
+  $output .= " <LI><A HREF=\"drupal/drupal-2.00.tgz\">Drupal 2.00</A> (2001/03/15 - latest version)</LI>\n";
+  $output .= " <LI>Drupal 1.00 (2001/01/15)</LI>\n";
+  $output .= "<H3>Drupal documentation</H3>\n";
+  $output .= " <LI><A HREF=\"node.php?title=drupal+handbook\">Drupal handbook</A></LI>\n";
+  $output .= "<H3>Drupal mailing lists</H3>\n";
+  $output .= " <LI><A HREF=\"node.php?title=mailing+lists\">Mailing list information</A></LI>";
+  $output .= "<H3>Drupal development</H3>\n";
+  $output .= " <LI><A HREF=\"node.php?title=development\">Development information</A>, <A HREF=\"node.php?title=CVS\">CVS instructions</A>, <A HREF=\"module.php?mod=cvs\">CVS log messages</A></LI>\n";
+  $theme->box("Drupal support and development", $output);
 
   $theme->footer();
 }

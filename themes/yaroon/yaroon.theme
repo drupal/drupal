@@ -61,8 +61,7 @@
             <tr>
               <td align="left" valign="middle" width="20%">
                 <font size="+1">
-                &nbsp;<b><a href="<?php echo variable_get(site_url,
-"http://drupal/"); ?> "><?php echo variable_get(site_name, "drupal"); ?></a></b>
+                &nbsp;<b><a href="<?php echo path_uri(); ?>"><?php echo path_uri(); ?></a></b>
                 </font>
               </td>
               <td class="spacer1" width="1" height="1"><img src="themes/jeroen2/images/pixel.gif" width="1" height="1" alt="" border="0" /></td>

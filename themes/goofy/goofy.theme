@@ -51,10 +51,10 @@
 
    -->
    </style>
-   <script language="JavaScript" type="text/javascript"><!-- 
+   <script language="JavaScript" type="text/javascript"><!--
 function b(title,content) {document.writeln("<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\"><tr><td><img src=\"themes/goofy/images/or-ul.png\" alt=\"\"></td><td class=\"oru\" width=\"100%\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td><img src=\"themes/goofy/images/or-ur.png\" alt=\"\"></td></tr><tr><td class=\"orl\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td class=\"orcnt\" width=\"100%\" valign=\"top\">" + title + "</td><td class=\"orr\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td></tr><tr><td class=\"orl\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td class=\"orcnt\" width=\"100%\"><img src=\"themes/goofy/images/null.gif\" height=\"5\" alt=\"\"></td><td class=\"orr\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td></tr><tr><td class=\"lgl\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td class=\"lgcnt\" width=\"100%\"><img src=\"themes/goofy/images/null.gif\" height=\"4\" alt=\"\"></td><td class=\"lgr\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td></tr><tr><td class=\"lgl\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td class=\"lgcnt\" width=\"100%\">" + content + "</td><td class=\"lgr\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td></tr><tr><td><img src=\"themes/goofy/images/lg-dl.png\" alt=\"\"></td><td class=\"lgd\" width=\"100%\"><img src=\"themes/goofy/images/null.gif\" width=\"150\" height=\"1\" alt=\"\"></td><td><img src=\"themes/goofy/images/lg-dr.png\" alt=\"\"></td></tr></table><br>");}
 function s(title,subleft,subright,body) {document.writeln("<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\"><tr><td><img src=\"themes/goofy/images/or-ul.png\" alt=\"\"></td><td class=\"oru\" width=\"100%\" colspan=\"2\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td><img src=\"themes/goofy/images/or-ur.png\" alt=\"\"></td></tr><tr><td class=\"orl\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td class=\"orcnt\" width=\"100%\" valign=\"top\" colspan=\"2\">" + title + "</td><td class=\"orr\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td></tr><tr><td class=\"orl\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td class=\"orcnt\" width=\"100%\" colspan=\"2\"><img src=\"themes/goofy/images/null.gif\" height=\"5\" alt=\"\"></td><td class=\"orr\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td></tr><tr><td class=\"lgl\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td class=\"lgcnt\" width=\"100%\" colspan=\"2\"><img src=\"themes/goofy/images/null.gif\" height=\"4\" alt=\"\"></td><td class=\"lgr\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td></tr><tr><td class=\"lgl\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td class=\"lgcnt\"><small>" + subleft + "</small></td><td class=\"lgcnt\" nowrap><div align=\"right\">" + subright + "</div></td><td class=\"lgr\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td></tr><tr><td class=\"lgl\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td class=\"lgcnt\" width=\"100%\" colspan=\"2\"><hr color=\"#404040\" size=\"1\">" + body + "</div></td><td class=\"lgr\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td></tr><tr><td><img src=\"themes/goofy/images/lg-dl.png\" alt=\"\"></td><td class=\"lgd\" width=\"100%\" colspan=\"2\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td><img src=\"themes/goofy/images/lg-dr.png\" alt=\"\"></td></tr></table><br>");}
-function c(subject,mod,author,date,body) {document.writeln("<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\"><tr><td><img src=\"themes/goofy/images/or-ul.png\" alt=\"\"></td><td class=\"oru\" width=\"100%\" colspan=\"2\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td><img src=\"themes/goofy/images/or-ur.png\" alt=\"\"></td></tr><tr><td class=\"orl\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td class=\"orcnt\" width=\"100%\" valign=\"top\" colspan=\"2\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"1\" width=\"100%\"><tr><td valign=\"top\" width=\"5%\"><div align=\"right\"><b><?php echo t("Subject");  ?>:</b>&nbsp;</div></td><td width=\"80%\"><b>" + subject + "</b></td><td rowspan=\"3\" valign=\"middle\" width=\"15%\"><div align=\"right\">" + mod + "</div></td></tr><tr><td valign=\"top\"><div align=\"right\"><?php echo t("Author"); ?>:&nbsp;</div></td><td>" + author + "</td></tr><tr><td><div align=\"right\"><?php echo t("Date"); ?>:&nbsp;</div></td><td>" + date + "</td></tr></table></td><td class=\"orr\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td></tr><tr><td class=\"orl\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td class=\"orcnt\" width=\"100%\" colspan=\"2\"><img src=\"themes/goofy/images/null.gif\" height=\"5\" alt=\"\"></td><td class=\"orr\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td></tr><tr><td class=\"lgl\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td class=\"lgcnt\" width=\"100%\" colspan=\"2\"><img src=\"themes/goofy/images/null.gif\" height=\"4\" alt=\"\"></td><td class=\"lgr\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td></tr>");if(body){document.writeln("<tr><td class=\"lgl\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td class=\"lgcnt\" width=\"100%\" colspan=\"2\">" + body + "</td><td class=\"lgr\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td></tr>");};document.writeln("<tr><td><img src=\"themes/goofy/images/lg-dl.png\" alt=\"\"></td><td class=\"lgd\" width=\"100%\" colspan=\"2\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td><img src=\"themes/goofy/images/lg-dr.png\" alt=\"\"></td></tr></table><br>");}          
+function c(subject,mod,author,date,body) {document.writeln("<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\"><tr><td><img src=\"themes/goofy/images/or-ul.png\" alt=\"\"></td><td class=\"oru\" width=\"100%\" colspan=\"2\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td><img src=\"themes/goofy/images/or-ur.png\" alt=\"\"></td></tr><tr><td class=\"orl\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td class=\"orcnt\" width=\"100%\" valign=\"top\" colspan=\"2\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"1\" width=\"100%\"><tr><td valign=\"top\" width=\"5%\"><div align=\"right\"><b><?php echo t("Subject");  ?>:</b>&nbsp;</div></td><td width=\"80%\"><b>" + subject + "</b></td><td rowspan=\"3\" valign=\"middle\" width=\"15%\"><div align=\"right\">" + mod + "</div></td></tr><tr><td valign=\"top\"><div align=\"right\"><?php echo t("Author"); ?>:&nbsp;</div></td><td>" + author + "</td></tr><tr><td><div align=\"right\"><?php echo t("Date"); ?>:&nbsp;</div></td><td>" + date + "</td></tr></table></td><td class=\"orr\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td></tr><tr><td class=\"orl\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td class=\"orcnt\" width=\"100%\" colspan=\"2\"><img src=\"themes/goofy/images/null.gif\" height=\"5\" alt=\"\"></td><td class=\"orr\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td></tr><tr><td class=\"lgl\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td class=\"lgcnt\" width=\"100%\" colspan=\"2\"><img src=\"themes/goofy/images/null.gif\" height=\"4\" alt=\"\"></td><td class=\"lgr\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td></tr>");if(body){document.writeln("<tr><td class=\"lgl\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td class=\"lgcnt\" width=\"100%\" colspan=\"2\">" + body + "</td><td class=\"lgr\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td></tr>");};document.writeln("<tr><td><img src=\"themes/goofy/images/lg-dl.png\" alt=\"\"></td><td class=\"lgd\" width=\"100%\" colspan=\"2\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td><img src=\"themes/goofy/images/lg-dr.png\" alt=\"\"></td></tr></table><br>");}
    //-->
    </script>
    </head>
@@ -70,8 +70,8 @@ function c(subject,mod,author,date,body) {document.writeln("<table border=\"0\" 
 <?php
     } // close header function
 
-    
-    
+
+
     function linksbar() { // helper function to prevent double code
 ?>
        <table border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -100,12 +100,12 @@ function c(subject,mod,author,date,body) {document.writeln("<table border=\"0\" 
       $title = check_output($story->title);
       $subleft = strtr(t("Submitted by %a on %b"), array("%a" => format_username($story->userid), "%b" => format_date($story->timestamp, "large")));
       $subright = category_name($story->cid) ." / ". topic_name($story->tid);
-      $body = check_output($story->abstract, 1) . "<br>" . ((!$main && $story->body)?"<br>" . check_output($story->body, 1):"") . "<hr color=\"#404040\" size=\"1\"><div align=\"right\">" . ($main?theme_morelink($this, $story):""); 
+      $body = check_output($story->abstract, 1) . "<br>" . ((!$main && $story->body)?"<br>" . check_output($story->body, 1):"") . "<hr color=\"#404040\" size=\"1\"><div align=\"right\">" . ($main?theme_morelink($this, $story):"");
       print "<script language=\"JavaScript\"><!--\ns(\"". $this->stripbreaks(addslashes($title)) ."\",\"". $this->stripbreaks(addslashes($subleft)) ."\",\"". $this->stripbreaks(addslashes($subright)) ."\",\"". $this->stripbreaks(addslashes($body)) ."\"); // -->\n</script>\n";
     } // close story function
 
-    
-    
+
+
     function comment($comment, $link = "") {
       echo "<A NAME=\"$comment->cid\"></A>\n";
 
@@ -117,24 +117,24 @@ function c(subject,mod,author,date,body) {document.writeln("<table border=\"0\" 
       }
       $body = check_output($comment->comment, 1) . "<br><hr color=\"#404040\" size=\"1\"><div align=\"right\">[ $link ]</div>";
 
-      print "<script language=\"JavaScript\"><!--\nc(\"". $this->stripbreaks(addslashes(check_output($comment->subject))) ."\",\"". $this->stripbreaks(addslashes(comment_moderation($comment))) ."\",\"". $this->stripbreaks(addslashes($author)) ."\",\"". $this->stripbreaks(addslashes(format_date($comment->timestamp))) ."\",\"". $this->stripbreaks(addslashes($body)) ."\"); // -->\n</script>\n";     
+      print "<script language=\"JavaScript\"><!--\nc(\"". $this->stripbreaks(addslashes(check_output($comment->subject))) ."\",\"". $this->stripbreaks(addslashes(comment_moderation($comment))) ."\",\"". $this->stripbreaks(addslashes($author)) ."\",\"". $this->stripbreaks(addslashes(format_date($comment->timestamp))) ."\",\"". $this->stripbreaks(addslashes($body)) ."\"); // -->\n</script>\n";
     } // close comment function
-    
-    
-    
+
+
+
     function stripbreaks($a) { // helper function for generating the javascripted boxes
       return str_replace("\n","\\n",str_replace("\r","\\r",$a));
     } // close stripbreaks function
 
-    
+
     function box($subject, $content, $options = "") {
       print "<script language=\"JavaScript\"><!--\nb(\"". $this->stripbreaks(addslashes($subject)) ."\",\"". $this->stripbreaks(addslashes($content)) ."\"); // -->\n</script>\n";
     } // close box function
 
-    
-    
-    
-    
+
+
+
+
     function footer() {
 ?>
               </td>
