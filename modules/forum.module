@@ -482,7 +482,7 @@ function forum_page() {
 
   if (user_access("access content")) {
     if (module_exist("taxonomy")) {
-      if ($op == "Update settings") {
+      if ($op == "Update settings" && $user->uid) {
         $user = user_save($user, array("sortby" => $sortby, "forum_per_page" => $forum_per_page));
       }
 
