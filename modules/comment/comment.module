@@ -176,7 +176,7 @@ function comment_preview($edit) {
   ** Preview the comment:
   */
 
-  comment_view($comment);
+  comment_view($comment, t("reply to this comment"));
 
   theme("box", t("Reply"), comment_form($edit));
 
