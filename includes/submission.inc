@@ -21,7 +21,7 @@ function submission_vote($id, $vote, $comment) {
     if ($comment) {
       watchdog("comment", "moderation: added comment with subject '$subject'");
 
-      db_query("INSERT INTO comments (sid, author, subject, comment, hostname, timestamp) VALUES($id, $user->id, '". check_input(substr($comment, 0, 29)) ." ...', '". check_input($comment) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."')");
+      db_query("INSERT INTO comments (sid, author, subject, comment, hostname, timestamp, score) VALUES($id, $user->id, '". check_input(substr($comment, 0, 29)) ." ...', '". check_input($comment) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."', '" . ($user->userid ? 1 : 0) . "')");
     }
 
     // Update user's history record:
