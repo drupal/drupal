@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.326 2004/02/06 19:11:59 dries Exp $
+// $Id: node.module,v 1.327 2004/02/08 20:36:13 kjartan Exp $
 
 define('NODE_NEW_LIMIT', time() - 30 * 24 * 60 * 60);
 
@@ -23,7 +23,6 @@ function node_help($section = 'admin/help#node') {
       <dt>Changed</dt><dd>The last time this node was changed.</dd>
       <dt>Static on front page</dt><dd>The front page is configured to show the teasers from only a few of the total nodes you have on your site (To configure how many teasers <a href=\"%teaser\">click here</a>), but if you think a node is important enough that you want it to stay on the front page enable this.</dd>
       <dt>Allow user comments</dt><dd>A node can have comments. These comments can be written by other users (Read-write), or only by admins (Read-only).</dd>
-      <dt>Attributes</dt><dd>A way to sort nodes.</dd>
       <dt>Revisions</dt><dd>Drupal has a revision system so that you can \"roll back\" to an older version of a post if the new version is not what you want.</dd>
       <dt>Promote to front page</dt><dd>To get people to look at the new stuff on your site you can choose to move it to the front page.</dd>
       <dt>In moderation queue</dt><dd>Drupal has a moderation system. If it is active, a node is in one of three states: approved and published, approved and unpublished, and awaiting approval. If you are moderating a node it should be in the moderation queue.</dd>
@@ -218,7 +217,7 @@ function node_teaser($body) {
 }
 
 
-/*
+/**
  * Determines the module that defines the node type of the given node.
  *
  * @param &$node
@@ -230,27 +229,30 @@ function node_get_module_name($node) {
   if (is_array($node)) {
     if ($pos = strpos($node['type'], '/')) {
       return substr($node['type'], 0, $pos);
-    } else {
+    }
+    else {
       return $node['type'];
     }
   }
   else if (is_object($node)) {
     if ($pos = strpos($node->type, '/')) {
       return substr($node->type, 0, $pos);
-    } else {
+    }
+    else {
       return $node->type;
     }
   }
   else if (is_string($node)) {
     if ($pos = strpos($node, '/')) {
       return substr($node, 0, $pos);
-    } else {
+    }
+    else {
       return $node;
     }
   }
 }
 
-/*
+/**
  * Get a list of all the defined node types.
  *
  * @return
@@ -265,7 +267,8 @@ function node_list() {
         foreach ($module_types as $type) {
           $types[] = $type;
         }
-      } else {
+      }
+      else {
         $types[] = $module;
       }
     }
@@ -273,7 +276,7 @@ function node_list() {
   return $types;
 }
 
-/*
+/**
  * Determine whether a node hook exists.
  *
  * @param &$node
@@ -289,7 +292,7 @@ function node_hook(&$node, $hook) {
   return function_exists($function);
 }
 
-/*
+/**
  * Invoke a node hook.
  *
  * @param &$node
@@ -1072,7 +1075,7 @@ function node_validate($node, &$error) {
     }
 
     if (!$node->date) {
-      $node->date = date('M j, Y g:i a', $node->created);
+      $node->date = format_date($node->created, 'custom', 'Y-m-d H:i O');
     }
 
     if (!is_numeric($node->status)) {
@@ -1102,7 +1105,7 @@ function node_validate($node, &$error) {
     ** Validate the 'authored on'-field:
     */
 
-    if (strtotime($node->date) > 1000) {
+    if (strtotime($node->date) != -1) {
       $node->created = strtotime($node->date);
     }
     else {
@@ -1253,7 +1256,7 @@ function node_add($type) {
 
   /*
   ** If a node type has been specified, validate it existence.  If no
-  ** (valid) node type has been provied, display a node type overview.
+  ** (valid) node type has been provided, display a node type overview.
   */
 
   if ($type && node_access('create', $type)) {
