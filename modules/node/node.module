@@ -460,7 +460,7 @@ function node_save($node) {
         $v[] = $value;
       }
     }
-
+    
     // Update the node in the database:
     db_query("UPDATE {node} SET ". implode(', ', $q) ." WHERE nid = '$node->nid'", $v);
 
@@ -1059,7 +1059,7 @@ function node_validate($node) {
     }
 
     // Validate the "authored by" field.
-    if (empty($node->name) || empty($node->uid)){
+    if (empty($node->name)) {
       // The use of empty() is mandatory in the context of usernames
       // as the empty string denotes the anonymous user.  In case we
       // are dealing with an anomymous user we set the user ID to 0.
