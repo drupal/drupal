@@ -50,7 +50,19 @@ function category_expire_threshold($cid) {
 // return default comment status of category $cid:
 function category_comment($cid) {
   $category = category_get_object("cid", $cid);
-  return $category->comment;
+  return $category->comment ? $category->comment : 0;
+}
+
+// return default promote status of category $cid:
+function category_promote($cid) {
+  $category = category_get_object("cid", $cid);
+  return $category->promote ? $category->promote : 0;
+}
+
+// return default submission status of category $cid:
+function category_submission($cid) {
+  $category = category_get_object("cid", $cid);
+  return $category->submission ? $category->submission : 0;
 }
 
 // return linked string with name of category $cid:

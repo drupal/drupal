@@ -106,7 +106,7 @@ function story_form($edit = array()) {
 }
 
 function story_save($edit) {
-  node_save(array_diff(array_merge($edit, array(nid => $edit[nid], type => "story", comment => category_comment($edit[cid]))), array(userid => $edit[userid])));
+  node_save(array_diff(array_merge($edit, array(nid => $edit[nid], type => "story")), array(userid => $edit[userid])));
 }
 
 function story_block() {

@@ -1,5 +1,7 @@
 # 19/04/2001:
 ALTER TABLE node ADD comment int(2) DEFAULT '1' NOT NULL;
+ALTER TABLE node ADD promote int(2) DEFAULT '1' NOT NULL;
+ALTER TABLE category ADD promote int(2) unsigned DEFAULT '0' NOT NULL;
 
 CREATE TABLE cvs (
   user varchar(32) DEFAULT '' NOT NULL,

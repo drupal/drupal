@@ -36,8 +36,10 @@ function page_form($edit = array()) {
 
   $output .= "<FORM ACTION=\"admin.php?mod=page\" METHOD=\"post\">\n";
 
-  $output .= "<B>Name:</B><BR>\n";
+  $output .= "<B>Subject:</B><BR>\n";
   $output .= "<INPUT NAME=\"edit[title]\" SIZE=\"55\" VALUE=\"". check_textfield($edit[title]) ."\"><P>\n";
+
+  $output .= structure_form("page", $edit);
 
   $output .= "<B>Body:</B><BR>\n";
   $output .= "<TEXTAREA NAME=\"edit[body]\" COLS=\"55\" ROWS=\"10\" WRAP=\"virtual\">". check_textarea($edit[body]) ."</TEXTAREA><P>\n";

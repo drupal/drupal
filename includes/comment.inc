@@ -145,11 +145,6 @@ function comment_post($pid, $id, $subject, $comment) {
   }
 }
 
-function comment_status($index = -1) {
-  $status = array("disabled", "enabled");
-  return $index < 0 ? $status : $status[$index];
-}
-
 function comment_score($comment) {
   $value = ($comment->votes) ? ($comment->score / $comment->votes) : (($comment->score) ? $comment->score : 0);
   return ((strpos($value, ".")) ? substr($value ."00", 0, 4) : $value .".00");
