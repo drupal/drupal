@@ -1,5 +1,5 @@
 <?php
-/* $Id: aggregator.module,v 1.179 2004/05/17 22:00:06 dries Exp $ */
+/* $Id: aggregator.module,v 1.180 2004/05/17 22:11:12 dries Exp $ */
 
 /**
  * Implementation of hook_help().
@@ -583,9 +583,11 @@ function aggregator_save_feed($edit) {
   }
   if ($edit['title']) {
     // the feed is being saved, save the categories as well
-    foreach ($edit['category'] as $cid => $checked) {
-      if ($checked) {
-        db_query('INSERT INTO {aggregator_category_feed} (fid, cid) VALUES (%d, %d)', $edit['fid'], $cid);
+    if ($edit['category']) {
+      foreach ($edit['category'] as $cid => $checked) {
+        if ($checked) {
+          db_query('INSERT INTO {aggregator_category_feed} (fid, cid) VALUES (%d, %d)', $edit['fid'], $cid);
+        }
       }
     }
   }
