@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.389 2004/08/21 06:42:36 dries Exp $
+// $Id: node.module,v 1.390 2004/08/21 16:04:12 dries Exp $
 
 /**
  * @file
@@ -1588,6 +1588,10 @@ function node_access($op, $node = NULL) {
 
   if (user_access('administer nodes')) {
     return TRUE;
+  }
+
+  if (!user_access('access content')) {
+    return FALSE;
   }
 
   // Can't use node_invoke(), because the access hook takes the $op parameter
