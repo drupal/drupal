@@ -86,7 +86,7 @@ function menu_block($op = 'list', $delta = 0) {
   }
   else {
     $data['subject'] = $menu['items'][$delta]['title'];
-    $data['content'] = theme('menu_tree', $delta);
+    $data['content'] = '<div class="menu">'. theme('menu_tree', $delta) .'</div>' ;
     return $data;
   }
 }
