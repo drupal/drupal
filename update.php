@@ -67,7 +67,7 @@ function update_page() {
   }
 
   switch ($op) {
-      case "Update":
+    case "Update":
       // make sure we have updates to run.
       print update_page_header("Drupal database update");
       $links[] = "<a href=\"index.php\">main page</a>";
