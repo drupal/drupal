@@ -1,4 +1,5 @@
 <?
+
 $access = array("Administrator"	=> 0x00000001,
 		"User manager"	=> 0x00000002,
 		"News manager"	=> 0x00000004);
@@ -10,6 +11,7 @@ class User {
       foreach (db_fetch_row($result) as $key=>$value) { $field = mysql_field_name($result, $key); $this->$field = stripslashes($value); $this->field[] = $field; }
     }
   }
+
   function save() {
     ### Compose query to update user record:
     $query .= "UPDATE users SET ";
@@ -18,25 +20,29 @@ class User {
     ### Perform query:
     db_query($query);
   }
+
   function rehash() {
     $result = db_query("SELECT * FROM users WHERE id=$this->id");
     if (db_num_rows($result) == 1) {
       foreach (db_fetch_array($result) as $key=>$value) { $this->$key = stripslashes($value); }
     }
   }
-  function valid($access=0) {
-    if (!empty($this->userid)) {
+
+  function valid($access = 0) {
+    if ($this->userid) {
       $this->rehash();  // synchronisation purpose
       $this->last_access = time();
-      $this->last_host = (!empty($GLOBALS[REMOTE_HOST]) ? $GLOBALS[REMOTE_HOST] : $GLOBALS[REMOTE_ADDR] );
-      db_query("UPDATE users SET last_access='$this->last_access',last_host='$this->last_host' WHERE id=$this->id");
+      $this->last_host = (!empty($GLOBALS[REMOTE_HOST]) ? $GLOBALS[REMOTE_HOST] : $GLOBALS[REMOTE_ADDR]);
+      db_query("UPDATE users SET last_access = '$this->last_access', last_host = '$this->last_host' WHERE id = $this->id");
       if ($this->access & $access || $access == 0) return 1;
     }
     return 0;
   }
+
   function getHistory($field) {
     return getHistory($this->history, $field);
   }
+
   function setHistory($field, $value) {
     $this->history = setHistory($this->history, $field, $value);
   }
