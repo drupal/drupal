@@ -1722,13 +1722,18 @@ function drupal_xml_parser_create(&$data) {
  *   The string to truncate.
  * @param $len
  *   An upper limit on the returned string length.
+ * @param $wordsafe
+ *   Flag to truncate at nearest word boundary. Defaults to FALSE.
  * @return
  *   The truncated string.
  */
-function truncate_utf8($string, $len) {
+function truncate_utf8($string, $len, $wordsafe = FALSE) {
   $slen = strlen($string);
   if ($slen <= $len) {
     return $string;
+  }
+  if ($wordsafe) {
+    while (($string[--$len] != ' ') && ($len > 0)) {};
   }
   if ((ord($string[$len]) < 0x80) || (ord($string[$len]) >= 0xC0)) {
     return substr($string, 0, $len);

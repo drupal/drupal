@@ -494,7 +494,7 @@ function comment_post($edit) {
     $edit['subject'] = strip_tags($edit['subject']);
 
     if ($edit['subject'] == '') {
-      $edit['subject'] = truncate_utf8(strip_tags($edit['comment']), 29);
+      $edit['subject'] = truncate_utf8(strip_tags($edit['comment']), 29, TRUE);
     }
 
     if (!form_get_errors()) {
