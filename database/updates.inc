@@ -1072,10 +1072,10 @@ function update_85() {
       cid int(10) NOT NULL,
       PRIMARY KEY (iid, cid)
      )");
-    $ret[] = update_sql("ALTER TABLE {aggregator_category} ALTER COLUMN description DROP NOT NULL");
-    $ret[] = update_sql("ALTER TABLE {aggregator_item} ALTER COLUMN description DROP NOT NULL");
-    $ret[] = update_sql("ALTER TABLE {aggregator_feed} ALTER COLUMN description DROP NOT NULL");
-    $ret[] = update_sql("ALTER TABLE {aggregator_feed} ALTER COLUMN image DROP NOT NULL");
+    $ret[] = update_sql("ALTER TABLE {aggregator_category} MODIFY description longtext NULL");
+    $ret[] = update_sql("ALTER TABLE {aggregator_item} MODIFY description longtext NULL");
+    $ret[] = update_sql("ALTER TABLE {aggregator_feed} MODIFY description longtext NULL");
+    $ret[] = update_sql("ALTER TABLE {aggregator_feed} MODIFY image longtext NULL");
 
   }
   else {
