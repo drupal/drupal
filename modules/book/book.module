@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.209 2004/01/15 09:10:16 dries Exp $
+// $Id: book.module,v 1.210 2004/01/15 19:12:14 dries Exp $
 
 function book_node($field) {
   global $user;
@@ -124,7 +124,7 @@ function book_load($node) {
 
   $book = db_fetch_object(db_query("SELECT format, parent, weight, log FROM {book} WHERE nid = %d", $node->nid));
 
-  if (!user_access("administer nodes")) {
+  if (arg(1) == 'edit' && !user_access("administer nodes")) {
     /*
     ** If a user is about to update a book page, we overload some
     ** fields to reflect the changes.
