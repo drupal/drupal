@@ -621,10 +621,10 @@ function comment_link($type, $node = 0, $main = 0) {
         $new = comment_num_new($node->nid);
 
         if ($all) {
-          $links[] = l(format_plural($all, "comment", "comments"), "node/view/$node->nid#comment", array("title" => t('Jump to first comment of this posting.')));
+          $links[] = l(format_plural($all, "1 comment", "%count comments"), "node/view/$node->nid#comment", array("title" => t("Jump to the first comment of this posting.")));
 
           if ($new) {
-            $links[] = l("$new ". t("new"), "node/view/$node->nid#new", array("title" => t('Jump to first new comment of this posting.')));
+            $links[] = l(format_plural($new, "1 new comment", "%count new comments"), "node/view/$node->nid#new", array("title" => t("Jump to the first new comment of this posting.")));
           }
         }
         else {

@@ -90,10 +90,10 @@ function statistics_link($type, $node = 0, $main = 0) {
     $statistics = statistics_get($node->nid);
     if ($statistics) {
       if (user_access("administer statistics")) {
-        $links[] = l(format_plural($statistics[totalcount], t("read"), t("reads")), "admin/statistics/referrers/$node->nid");
+        $links[] = l(format_plural($statistics[totalcount], "1 read", "%count reads"), "admin/statistics/referrers/$node->nid");
       }
       else {
-        $links[] = format_plural($statistics[totalcount], t("read"), t("reads"));
+        $links[] = format_plural($statistics[totalcount], "1 read", "%count reads");
       }
     }
   }
@@ -765,7 +765,7 @@ function statistics_display_online_block() {
     }
 
     /* format the output with proper grammar */
-    $output .= t("There %verb currently %members and %visitors online.", array("%verb" => ($users == 1 ? "is" : "are"), "%members" => format_plural($users, "user", "users"), "%visitors" => format_plural($guests, "guest", "guests")));
+    $output .= t("There %verb currently %members and %visitors online.", array("%verb" => ($users == 1 ? "is" : "are"), "%members" => format_plural($users, "1 user", "%count users"), "%visitors" => format_plural($guests, "1 guest", "%count guests")));
 
     if (user_access("access userlist") && $users) {
       /* Display a list of currently online users */

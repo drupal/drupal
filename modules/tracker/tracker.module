@@ -37,7 +37,7 @@ function tracker_comments($id = 0) {
   }
 
   while ($node = db_fetch_object($sresult)) {
-    $output .= format_plural($node->comments, "comment", "comments") ." ". t("attached to node") ." ". l($node->title, "node/view/$node->nid") .":\n";
+    $output .= format_plural($node->comments, "1 comment", "%count comments") ." ". t("attached to node") ." ". l($node->title, "node/view/$node->nid") .":\n";
 
     if ($id) {
       $cresult = db_query("SELECT c.*, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.timestamp > $period AND c.uid = '%d' AND c.nid = '%d' ORDER BY cid DESC", $id, $node->nid);

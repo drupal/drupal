@@ -552,8 +552,22 @@ function format_rss_item($title, $link, $description, $args = array()) {
   return $output;
 }
 
+/**
+ * Formats a string with a count of items so that the string is pluralized
+ * correctly.
+ * format_plural calls t() by itself, make sure not to pass already localized
+ * strings to it.
+ *
+ * @param $count    The item count to display.
+ * @param $singular The string for the singular case. Please make sure it's clear
+ *                  this is singular, to ease translation. ("1 new comment" instead of
+ *                  "1 new").
+ * @param $plural   The string for the plrual case. Please make sure it's clear
+ *                  this is plural, to ease translation. Use %count in places of the
+ *                  item count, as in "%count new comments".
+ */
 function format_plural($count, $singular, $plural) {
-  return ($count == 1) ? "$count ". t($singular) : "$count ". t($plural);
+  return t($count == 1 ? $singular : $plural, array("%count" => $count));
 }
 
 function format_size($size) {
@@ -628,7 +642,7 @@ function page_get_cache() {
 }
 
 function format_interval($timestamp) {
-  $units = array("year|years" => 31536000, "week|weeks" => 604800, "day|days" => 86400, "hour|hours" => 3600, "min|min" => 60, "sec|sec" => 1);
+  $units = array("1 year|%count years" => 31536000, "1 week|%count weeks" => 604800, "1 day|%count days" => 86400, "1 hour|%count hours" => 3600, "1 min|%count min" => 60, "1 sec|%count sec" => 1);
   foreach ($units as $key=>$value) {
     $key = explode("|", $key);
     if ($timestamp >= $value) {

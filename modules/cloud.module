@@ -143,14 +143,14 @@ function cloud_list($limit = 10) {
       $hour = floor((time() - $site->timestamp) / 3600);
       if ($hour < 12) {
         if ($hour == 0) {
-          $output .= "<br />". t("Updated &lt; 1 hours ago:");
+          $output .= "<br />". t("Updated less than one hour ago:");
       }
       else {
-          $output .= "<br />". t("Updated %a ago:", array("%a" => format_plural($hour, "hour", "hours")));
+          $output .= "<br />". format_plural($hour, "Updated an hour ago:", "Updated %count hours ago:");
         }
       }
       else if ($list) {
-        $output .= "<br />". t("Updated more than %a ago:", array("%a" => format_plural($hour, "hour", "hours")));
+        $output .= "<br />". format_plural($hour, "Updated more than an hour ago:", "Updated more than %count hours ago:");
         $list = 0;
       }
     }

@@ -405,7 +405,7 @@ function import_view() {
   $header = array(t("title"), t("attributes"), t("items"), t("last update"), t("next update"), array("data" => t("operations"), "colspan" => 3));
   unset($rows);
   while ($feed = db_fetch_object($result)) {
-    $rows[] = array($feed->title, $feed->attributes, format_plural($feed->items, "item", "items"), ($feed->timestamp ? format_interval(time() - $feed->timestamp) ." ago" : "never"), ($feed->timestamp ? format_interval($feed->timestamp + $feed->refresh - time()) ." left" : "never"), l(t("edit feed"), "admin/import/edit/feed/$feed->fid"), l(t("remove items"), "admin/import/remove/$feed->fid"), l(t("update items"), "admin/import/update/$feed->fid"));
+    $rows[] = array($feed->title, $feed->attributes, format_plural($feed->items, "1 item", "%count items"), ($feed->timestamp ? format_interval(time() - $feed->timestamp) ." ago" : "never"), ($feed->timestamp ? format_interval($feed->timestamp + $feed->refresh - time()) ." left" : "never"), l(t("edit feed"), "admin/import/edit/feed/$feed->fid"), l(t("remove items"), "admin/import/remove/$feed->fid"), l(t("update items"), "admin/import/update/$feed->fid"));
   }
   $output .= table($header, $rows);
 
