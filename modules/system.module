@@ -124,6 +124,7 @@ function system_view($type) {
 
   switch ($type) {
     case "filter":
+      $output = "";
       $form = system_view_filters();
       break;
     default:
