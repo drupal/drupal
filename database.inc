@@ -35,6 +35,18 @@ function db_fetch_object($qid) {
   if ($qid) return mysql_fetch_object($qid);
 }
 
+function db_num_rows($qid) {
+  if ($qid) return mysql_num_rows($qid);
+}
+
+function db_fetch_row($qid) {
+  if ($qid) return mysql_fetch_row($qid);
+}
+
+function db_fetch_array($qid) {
+  if ($qid) return mysql_fetch_array($qid);
+}
+
 #
 # Automatically connect to database:
 #
