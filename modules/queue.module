@@ -155,7 +155,7 @@ function queue_view($nid) {
     $theme->box(t("Moderate"), $output);
   }
   if ($node->comment && variable_get("queue_show_comments", 1)) {
-    comment_render($node->nid);
+    comment_render($node);
   }
   $theme->footer();
 }
