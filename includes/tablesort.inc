@@ -71,7 +71,7 @@ function tablesort_get_order($headers) {
   }
   else {
     // The first column specified is initial 'order by' field unless otherwise specified
-    $first = reset($header);
+    $first = reset($headers);
     return $first['data'];
   }
 }
