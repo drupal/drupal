@@ -331,17 +331,6 @@ CREATE TABLE poll_choices (
 CREATE INDEX poll_choices_nid_idx ON poll_choices(nid);
 
 --
--- Table structure for rating
---
-
-CREATE TABLE rating (
-  uid integer NOT NULL default '0',
-  current integer NOT NULL default '0',
-  previous integer NOT NULL default '0',
-  PRIMARY KEY  (uid)
-);
-
---
 -- Table structure for role
 --
 
@@ -560,30 +549,14 @@ CREATE TABLE watchdog (
 -- Insert some default values
 --
 
-
-INSERT INTO system VALUES ('archive.module','archive','module','',1);
-INSERT INTO system VALUES ('block.module','block','module','',1);
-INSERT INTO system VALUES ('blog.module','blog','module','',1);
-INSERT INTO system VALUES ('book.module','book','module','',1);
-INSERT INTO system VALUES ('cloud.module','cloud','module','',1);
-INSERT INTO system VALUES ('comment.module','comment','module','',1);
-INSERT INTO system VALUES ('forum.module','forum','module','',1);
-INSERT INTO system VALUES ('help.module','help','module','',1);
-INSERT INTO system VALUES ('import.module','import','module','',1);
-INSERT INTO system VALUES ('node.module','node','module','',1);
-INSERT INTO system VALUES ('page.module','page','module','',1);
-INSERT INTO system VALUES ('poll.module','poll','module','',1);
-INSERT INTO system VALUES ('queue.module','queue','module','',1);
-INSERT INTO system VALUES ('rating.module','rating','module','',1);
-INSERT INTO system VALUES ('search.module','search','module','',1);
-INSERT INTO system VALUES ('statistics.module','statistics','module','',1);
-INSERT INTO system VALUES ('story.module','story','module','',1);
-INSERT INTO system VALUES ('taxonomy.module','taxonomy','module','',1);
-INSERT INTO system VALUES ('themes/example/example.theme','example','theme','Internet explorer, Netscape, Opera, Lynx',1);
-INSERT INTO system VALUES ('themes/goofy/goofy.theme','goofy','theme','Internetexplorer, Netscape, Opera',1);
+INSERT INTO system VALUES ('modules/block.module','block','module','',1);
+INSERT INTO system VALUES ('modules/comment.module','comment','module','',1);
+INSERT INTO system VALUES ('modules/help.module','help','module','',1);
+INSERT INTO system VALUES ('modules/node.module','node','module','',1);
+INSERT INTO system VALUES ('modules/page.module','page','module','',1);
+INSERT INTO system VALUES ('modules/story.module','story','module','',1);
+INSERT INTO system VALUES ('modules/taxonomy.module','taxonomy','module','',1);
 INSERT INTO system VALUES ('themes/marvin/marvin.theme','marvin','theme','Internet explorer, Netscape, Opera',1);
-INSERT INTO system VALUES ('themes/unconed/unconed.theme','unconed','theme','Internet explorer, Netscape, Opera',1);
-INSERT INTO system VALUES ('tracker.module','tracker','module','',1);
 
 INSERT INTO variable(name,value) VALUES('update_start', '2002-05-15');
 INSERT INTO variable(name,value) VALUES('theme_default','s:6:"marvin";');

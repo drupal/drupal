@@ -334,17 +334,6 @@ CREATE TABLE poll_choices (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'rating'
---
-
-CREATE TABLE rating (
-  uid int(10) NOT NULL default '0',
-  current int(6) NOT NULL default '0',
-  previous int(6) NOT NULL default '0',
-  PRIMARY KEY  (uid)
-) TYPE=MyISAM;
-
---
 -- Table structure for table 'role'
 --
 
