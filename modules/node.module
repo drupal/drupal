@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.391 2004/08/22 17:03:41 unconed Exp $
+// $Id: node.module,v 1.392 2004/08/23 00:44:02 unconed Exp $
 
 /**
  * @file
@@ -350,7 +350,7 @@ function node_invoke_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
       if (is_array($result)) {
         $return = array_merge($return, $result);
       }
-      else {
+      else if (isset($result)) {
         $return[] = $result;
       }
     }
