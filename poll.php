@@ -39,13 +39,11 @@
 
 
 function deletePoll($id) {
-  dbconnect();
   $query = "DELETE FROM poll WHERE id = $id";
   $result = mysql_query($query);
 }
 
 function enablePoll($id) {
-  dbconnect();
   $query = "UPDATE poll SET status = 0 WHERE status = 1";
   $result = mysql_query($query);
 
@@ -54,13 +52,11 @@ function enablePoll($id) {
 }
 
 function disablePoll($id) {
-  dbconnect();
   $query = "UPDATE poll SET status = 0 WHERE id = $id";
   $result = mysql_query($query);
 }
 
 function castVote($vote) {
-  dbconnect();
   $query = "SELECT * FROM poll WHERE status = 1";
   $result = mysql_query($query);
   if ($poll = mysql_fetch_object($result)) {
@@ -72,34 +68,28 @@ function castVote($vote) {
 }
 
 function addPoll($question, $answer1, $answer2, $answer3 = "", $answer4 = "", $answer5 = "", $answer6 = "") {
-  dbconnect();
   $query = "INSERT INTO poll (question, answer1, answer2, answer3, answer4, answer5, answer6) VALUES ('$question', '$answer1', '$answer2', '$answer3', '$answer4', '$answer5', '$answer6')";
   $result = mysql_query($query);
 }
 
 function updatePoll($id, $question, $answer1, $answer2, $answer3 = "", $answer4 = "", $answer5 = "", $answer6 = "") {
-  dbconnect();
   $query = "UPDATE poll SET question = '$question', answer1 = '$answer1', answer2 = '$answer2', answer3 = '$answer3', answer4 = '$answer4', answer5 = '$answer5', answer6 = '$answer6' WHERE id = $id";
   $result = mysql_query($query);
 }
 
 function getPoll($id) {
-  dbconnect();
   $query = "SELECT * FROM poll WHERE id = $id";
   $result = mysql_query($query);
   if ($poll = mysql_fetch_object($result)) return $poll;
 }
 
 function getActivePoll() {
-  dbconnect();
   $query = "SELECT * FROM poll WHERE status = 1";
   $result = mysql_query($query);
   if ($poll = mysql_fetch_object($result)) return $poll->id;
 }
 
 function getPollArray() {
-  dbconnect();
-
   $query = "SELECT * FROM poll";
   $result = mysql_query($query);
   
@@ -203,7 +193,6 @@ if (!$box) {
 }
 
 if ($section == "poll") {
-  include "authentication.inc";
   if ($method == "add") {
     if ($admin) {
       addPoll($question, $answer1, $answer2, $answer3, $answer4, $answer5, $answer6);

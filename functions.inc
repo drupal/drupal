@@ -1,11 +1,18 @@
 <?
 include "user.class.php";
 include "database.inc";
+include "log.inc";
 
 session_start();
 
 include "config.inc";
 $functions = 1;
+
+function id2story($id) {
+  ### Perform query:
+  $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON s.author = u.id WHERE s.id = $id");
+  return db_fetch_object($result);
+}
 
 function dbsave($dbase, $data, $id=0) {
   foreach ($data as $key=>$value) {
@@ -13,15 +20,9 @@ function dbsave($dbase, $data, $id=0) {
     else { $query .= "$key='". addslashes($value) ."', "; }
   }
   $query = substr($query, 0, -2);
-  dbconnect();
-  if (!empty($id)) { mysql_query("UPDATE $dbase SET $query WHERE id=$id") or die(mysql_error()); return $id; }
-  else { mysql_query("INSERT INTO $dbase SET $query") or die(mysql_error()); return mysql_insert_id(); }
-}
-
-function dbconnect() {
-  include "config.inc";
-  mysql_pconnect($dbhost, $dbuname, $dbpass) or die(mysql_Error());
-  mysql_select_db("$dbname") or die ("Unable to select database");
+  
+  if (!empty($id)) { db_query("UPDATE $dbase SET $query WHERE id=$id") or die(mysql_error()); return $id; }
+  else { db_query("INSERT INTO $dbase SET $query") or die(mysql_error()); return mysql_insert_id(); }
 }
 
 function morelink_bytes($theme, $story) {
@@ -96,12 +97,6 @@ function addRefer($url) {
   }
 }
 
-function id2story($id) {
-  ### Perform query:
-  $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON s.author = u.id WHERE s.id = $id");
-  return db_fetch_object($result);
-}
-
 function displayModerationResults($theme, $story) {
   global $user;
 
@@ -121,7 +116,7 @@ function displayModerationResults($theme, $story) {
 
 function displayRelatedLinks($theme, $story) {
   ### Parse story for <A HREF="">-tags:
-  $text = "$story->abstract $story->updates $story->article";
+  $text = stripslashes("$story->abstract $story->updates $story->article");
   while ($text = stristr($text, "<A HREF=")) {
     $link = substr($text, 0, strpos(strtolower($text), "</a>") + 4);
     $text = stristr($text, "</A>");
@@ -195,7 +190,7 @@ function displayUserblock($theme) {
   global $user;
 
   if ($user && $user->ublockon) {
-    $content .= "<P ALIGN=\"right\">[ <A HREF=\"account.php?op=edithome\"><FONT COLOR=\"$theme->hlcolor2\">edit</FONT></A> | <A HREF=\"account.php?op=logout\"><FONT COLOR=\"$theme->hlcolor2\">logout</FONT></A> ]</P>";
+    $content .= "<P ALIGN=\"right\">[ <A HREF=\"account.php?op=edithome\"><FONT COLOR=\"$theme->hlcolor2\">edit</FONT></A> | <A HREF=\"account.php?op=discussion\"><FONT COLOR=\"$theme->hlcolor2\">Track comments</FONT></A> | <A HREF=\"account.php?op=logout\"><FONT COLOR=\"$theme->hlcolor2\">logout</FONT></A>]</P>";
     $theme->box("$user->userid's box", $user->content);
   }
 }
@@ -224,28 +219,24 @@ function displayCalendar($theme, $date) {
   $theme->box("Browse archives", $calendar->display());
 }
 
-function displayAccountSettings($theme) {
+function displayAccount($theme) {
   global $user;
   
   if ($user && $user->userid) { 
+
+    function submission_number() {
+      $result = db_query("SELECT COUNT(id) FROM stories WHERE status = 1");
+      return ($result) ? mysql_result($result, 0) : 0;
+    }
+
     ### Display account settings:
-    $content  = "<LI><A HREF=\"account.php\">User info</A></LI>";
-    $content .= "<LI><A HREF=\"account.php?op=user\">Edit user info</A></LI>";
-    $content .= "<LI><A HREF=\"account.php?op=page\">Customize page</A></LI>";
-    $content .= "<LI><A HREF=\"account.php?op=logout\">Logout</A></LI>";
+    $content  = "<LI><A HREF=\"account.php\">view your information</A></LI>";
+    $content .= "<LI><A HREF=\"account.php?op=user\">edit your information</A></LI>";
+    $content .= "<LI><A HREF=\"account.php?op=page\">customize your page</A></LI>";
+    $content .= "<LI><A HREF=\"account.php?op=discussion\">track your comments</A></LI>";
+    $content .= "<LI><A HREF=\"submission.php\">moderate submissions</A> (<FONT COLOR=\"red\">". submission_number() ."</FONT>)</LI>";
+    $content .= "<LI><A HREF=\"account.php?op=logout\">logout</A></LI>";
 
-    $theme->box("$user->userid's account", "$content");
-  }
-}
-
-function displayAccount($theme) {
-  global $user;
- 
-  include "submission.inc";
-
-  if ($user && $user->userid) {
-    ### Display account settings:
-    $content .= "<LI><A HREF=\"submission.php\">moderate submissions</A> (<FONT COLOR=\"red\">". submission_count() ."</FONT>)</LI>";
     $theme->box("$user->userid's account", "$content");
   }
 }

@@ -1,9 +1,13 @@
 <?
 
-$type = array("addresses" => 0x01,
-              "profanity" => 0x02,
-              "hostnames" => 0x03,
-              "usernames" => 0x04);
+$type2index = array("addresses" => 0x01, 
+                    "profanity" => 0x02, 
+                    "hostnames" => 0x03,
+                    "usernames" => 0x04);
+$index2type = array(0x01 => "addresses", 
+                    0x02 => "profanity",
+                    0x03 => "hostnames",
+                    0x04 => "usernames");
 
 function ban_match($mask, $category) {
   ### Perform query:
@@ -14,6 +18,8 @@ function ban_match($mask, $category) {
 }
 
 function ban_add($mask, $category, $reason, $message = "") {
+  global $index2type;
+
   if (empty($mask)) {
     $message = "Failed: empty banmasks are not allowed.<P>\n";
   }
@@ -23,12 +29,24 @@ function ban_add($mask, $category, $reason, $message = "") {
   else {
     $result = db_query("INSERT INTO bans (mask, type, reason, timestamp) VALUES ('$mask', '$category', '$reason', '". time() ."')");
     $message = "Added new ban with mask `$mask'.<P>\n";
+
+    ### Add log entry:
+    watchdog(1, "added new ban `$mask' to category `". $index2type[$category] ."' with reason `$reason'.");
   }
 }
   
 function ban_delete($id) {
-  ### Perform query:
-  $result = db_query("DELETE FROM bans WHERE id = $id");
+  global $index2type;
+
+  $result = db_query("SELECT * FROM bans WHERE id = $id");
+
+  if ($ban = db_fetch_object($result)) {
+    ### Perform query:
+    $result = db_query("DELETE FROM bans WHERE id = $id");
+
+    ### Deleted log entry:
+    watchdog(1, "removed ban `$ban->mask' from category `". $index2type[$ban->type] ."'.");
+  }
 }
 
 ?>

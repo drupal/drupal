@@ -14,7 +14,7 @@ function comments_kids ($cid, $mode, $order = 0, $thold = 0, $level = 0, $dummy 
         $comments++;
 
         $link = "<A HREF=\"discussion.php?op=reply&sid=$comment->sid&pid=$comment->cid&mode=$mode&order=$order&thold=$thold\"><FONT COLOR=\"$theme->hlcolor2\">reply to this comment</FONT></A>";
-        $theme->comment($comment->userid, $comment->subject, $comment->comment, $comment->timestamp, $comment->url, $comment->femail, $comment->score, $comment->cid, $link);
+        $theme->comment($comment->userid, stripslashes($comment->subject), stripslashes($comment->comment), $comment->timestamp, stripslashes($comment->url), stripslashes($comment->femail), $comment->score, $comment->cid, $link);
         
         comments_kids($comment->cid, $mode, $order, $thold, $level + 1, $dummy + 1);
       }
@@ -133,7 +133,7 @@ function comments_reply($pid, $sid, $mode, $order, $thold) {
   ### Extract parent-information/data:
   if ($pid) {
     $item = db_fetch_object(db_query("SELECT comments.*, users.userid FROM comments LEFT JOIN users ON comments.author = users.id WHERE comments.cid = $pid"));
-    $theme->comment($item->userid, $item->subject, $item->comment, $item->timestamp, $item->url, $item->femail, $item->score, $item->cid, "reply to this comment");
+    $theme->comment($item->userid, stripslashes($item->subject), stripslashes($item->comment), $item->timestamp, stripslashes($item->url), stripslashes($item->femail), $item->score, $item->cid, "reply to this comment");
   }
   else {
     $item = db_fetch_object(db_query("SELECT stories.*, users.userid FROM stories LEFT JOIN users ON stories.author = users.id WHERE stories.status != 0 AND stories.id = $sid"));
@@ -162,13 +162,13 @@ function comments_reply($pid, $sid, $mode, $order, $thold) {
   $output .= " <B>Subject:</B><BR>\n";
   if (!eregi("Re:",$item->subject)) $item->subject = "Re: $item->subject"; 
     // Only one 'Re:' will just do fine. ;)
-  $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" MAXLENGTH=\"60\" VALUE=\"$item->subject\">\n";
+  $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" MAXLENGTH=\"60\" VALUE=\"". stripslashes($item->subject) ."\">\n";
   $output .= "</P>\n";
 
   ### Comment field:
   $output .= "<P>\n";
   $output .= " <B>Comment:</B><BR>\n";
-  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"comment\">$user->signature</TEXTAREA><BR>\n";
+  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"comment\">". stripslashes($user->signature) ."</TEXTAREA><BR>\n";
   $output .= "</P>\n";
  
   ### Hidden fields:
@@ -189,8 +189,8 @@ function comment_preview($pid, $sid, $subject, $comment, $mode, $order, $thold) 
   global $anonymous, $user, $theme;
 
   ### Preview comment:
-  if ($user) $theme->comment("", $subject, $comment, time(), "", "", "na", "", "reply to this comment");
-  else $theme->comment($user->userid, $subject, $comment, time(), $user->url, $user->femail, "na", "", "reply to this comment");
+  if ($user) $theme->comment("", stripslashes($subject), stripslashes($comment), time(), "", "", "na", "", "reply to this comment");
+  else $theme->comment($user->userid,  stripslashes($subject), stripslashes($comment), time(), stripslashes($user->url), stripslashes($user->femail), "na", "", "reply to this comment");
 
   ### Build reply form:
   $output .= "<FORM ACTION=\"discussion.php\" METHOD=\"post\">\n";
@@ -212,13 +212,13 @@ function comment_preview($pid, $sid, $subject, $comment, $mode, $order, $thold) 
   ### Subject field:
   $output .= "<P>\n";
   $output .= " <B>Subject:</B><BR>\n";
-  $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" MAXLENGTH=\"60\" VALUE=\"$subject\">\n";
+  $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" MAXLENGTH=\"60\" VALUE=\"". stripslashes($subject) ."\">\n";
   $output .= "</P>\n";
 
   ### Comment field:
   $output .= "<P>\n";
   $output .= " <B>Comment:</B><BR>\n";
-  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"comment\">$comment</TEXTAREA><BR>\n";
+  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"comment\">". stripslashes($comment) ."</TEXTAREA><BR>\n";
   $output .= "</P>\n";
   
   ### Hidden fields:

@@ -40,7 +40,7 @@ function submit_enter() {
 
   $output .= "<P>\n"; 
   $output .= " <B>Extended story:</B><BR>\n";
-  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"story\"></TEXTAREA><BR>\n";
+  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"article\"></TEXTAREA><BR>\n";
   $output .= " <SMALL><I>HTML is nice and dandy, but double check those URLs and HTML tags!</I></SMALL>\n";
   $output .= "</P>\n";
  
@@ -55,7 +55,7 @@ function submit_enter() {
   $theme->footer();
 }
 
-function submit_preview($subject, $abstract, $story, $category) {
+function submit_preview($subject, $abstract, $article, $category) {
   global $anonymous, $categories, $theme, $user;
 
   $output .= "<FORM ACTION=\"submit.php\" METHOD=\"post\">\n";
@@ -90,7 +90,7 @@ function submit_preview($subject, $abstract, $story, $category) {
 
   $output .= "<P>\n";
   $output .= " <B>Extended story:</B><BR>\n";
-  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"story\">". stripslashes($story) ."</TEXTAREA><BR>\n";
+  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"article\">". stripslashes($article) ."</TEXTAREA><BR>\n";
   $output .= " <SMALL><I>HTML is nice and dandy, but double check those URLs and HTML tags!</I></SMALL>\n";
   $output .= "</P>\n";
 
@@ -119,7 +119,7 @@ function submit_preview($subject, $abstract, $story, $category) {
   $output .= "</FORM>\n";
   
   $theme->header();
-  $theme->preview($user->userid, stripslashes($subject), stripslashes($abstract), "", stripslashes($story), date("l, F d, Y - H:i A", time()), stripslashes($category), "we-hate-typoes");
+  $theme->preview($user->userid, stripslashes($subject), stripslashes($abstract), "", stripslashes($article), date("l, F d, Y - H:i A", time()), stripslashes($category), "we-hate-typoes");
   $theme->box("Submit a story", $output);
   $theme->footer();
 }
@@ -140,6 +140,9 @@ function submit_submit($subject, $abstract, $article, $category) {
     $message = "New submission:\n\nsubject...: $subject\nauthor....: $user->userid <$user->email>\ncategory..: $category\nabstract..:\n$abstract\n\narticle...:\n$article";
     mail($notify_email, "$notify_subject $subject", $message, "From: $notify_from\nX-Mailer: PHP/" . phpversion());
   }
+
+  ### Add log entry:
+  watchdog(1, "added new submission with subject `$subject'.");
 }
 
 include "functions.inc";
@@ -147,10 +150,10 @@ include "theme.inc";
 
 switch($op) {
   case "Preview submission":
-    submit_preview($subject, $abstract, $story, $category);
+    submit_preview($subject, $abstract, $article, $category);
     break;
   case "Submit submission":
-    submit_submit($subject, $abstract, $story, $category);
+    submit_submit($subject, $abstract, $article, $category);
     break;
   default:
     submit_enter();

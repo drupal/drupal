@@ -9,8 +9,6 @@ include "theme.inc";
 
 $theme->header();
 
-dbconnect();
-
 /*
 function addRefer($url) {
   $query = "SELECT * FROM refer WHERE url = '$url'";
