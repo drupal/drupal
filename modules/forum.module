@@ -302,7 +302,6 @@ function forum_form(&$node) {
  * Implementation of hook_insert().
  */
 function forum_insert($node) {
-  global $user;
   db_query('INSERT INTO {forum} (nid, tid) VALUES (%d, %d)', $node->nid, $node->tid);
 }
 
