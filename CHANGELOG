@@ -1,6 +1,7 @@
 Drupal x.x.x, xxxx-xx-xx (to be released)
 ------------------------
 
+- restructured all admininstration pages
 - node system improvements:
     * replaced the "post content" permission by more fine-grained permissions.
     * improved content submission:
@@ -82,7 +83,7 @@ Drupal 4.0.0, 2002-06-15
     * added support for session IDs in URLs instead of cookies.
     * made the type of content on the front page configurable.
     * made each cloud site have its own settings.
-    * modules and themes can now be enabled/disabled using the administrative pages.
+    * modules and themes can now be enabled/disabled using the administration pages.
     * added URL abstraction for links.
     * usability changes (renamed links, better UI, etc).
 - collaboratively revised and expanded the Drupal documentation.

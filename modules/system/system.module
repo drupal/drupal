@@ -9,7 +9,7 @@ function system_help() {
 }
 
 function system_system($field){
-  $system["description"] = t("Configuration system that lets site admins modify the workings of the site.");
+  $system["description"] = t("Configuration system that lets administrators modify the workings of the site.");
   return $system[$field];
 }
 
@@ -34,10 +34,13 @@ function system_perm() {
 
 function system_link($type) {
   if ($type == "admin" && user_access("administer site configuration")) {
-    $links[] = la(t("site configuration"), array("mod" => "system"));
+    menu_add("site configuration", "admin.php?mod=system", "Site configuration.", NULL, NULL, 2);
+     menu_add("site settings", "admin.php?mod=system&op=options", "Site settings.", NULL, "site configuration", 1);
+     menu_add("content filters", "admin.php?mod=system&op=filters", "Content filters.", NULL, "site configuration", 2);
+     menu_add("module selector", "admin.php?mod=system&op=modules", "Module selector.", NULL, "site configuration", 3);
+     menu_add("theme selector", "admin.php?mod=system&op=themes", "Theme selector.", NULL, "site configuration", 4);
+     menu_add("help", "admin.php?mod=system&op=help", "Help.", NULL, "site configuration", 9);
   }
-
-  return $links ? $links : array();
 }
 
 function system_view_options() {
@@ -123,7 +126,7 @@ function system_default($edit = array()) {
 function system_view($type) {
 
   switch ($type) {
-    case "filter":
+    case "filters":
       $form = system_view_filters();
       break;
     default:
@@ -221,10 +224,8 @@ function system_listing($type, $directory, $required = array()) {
 
 function system_admin() {
   global $edit, $op, $type;
+
   if (user_access("administer site configuration")) {
-
-    print "<small>". la(t("site settings"), array("mod" => "system", "type" => "options")) ." - ". la(t("content filters"), array("mod" => "system", "type" => "filter")) ." - ". la(t("modules"), array("mod" => "system", "op" => "modules")) ." - ". la(t("themes"), array("mod" => "system", "op" => "themes")) ." - ". la(t("help"), array("mod" => "system", "op" => "help")) ."</small><hr />\n";
-
     switch ($op) {
       case "help":
         print system_help();
@@ -260,7 +261,7 @@ function system_admin() {
         cache_clear_all();
         break;
       default:
-        print system_view($type);
+        print system_view($op);
     }
   }
   else {

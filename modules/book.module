@@ -108,13 +108,23 @@ function book_link($type, $node = 0, $main = 0) {
     $links[] = lm(t("create book page"), array("mod" => "node", "op" => "add", "type" => "book"), "", array("title" => t("Add a new book page.")));
   }
 
-  if ($type == "admin" && user_access("maintain books")) {
-    $links[] = la(t("collaborative book"), array("mod" => "book"));
-  }
-
   if ($type == "node" && $node->type == "book" && book_access("update", $node)) {
     $links[] = lm(t("edit this page"), array("mod" => "node", "op" => "edit", "id" => $node->nid), "", array("title" => t("Suggest an update for this book page.")));
     $links[] = lm(t("printer-friendly version"), array("mod" => "book", "op" => "print", "id" => $node->nid), "", array("title" => t("Show a printer-friendly version of this book page and its sub-pages.")));
+  }
+
+  if ($type == "admin" && user_access("maintain books")) {
+    $help["book"] = "The collaborative book offers a mean to organize content, authored by many users, in an online manual, outline or FAQ.";
+    $help["orphan"] = "As pages in a book are edited, reorganized and removed, child pages might be left behind.  We refer to such pages as 'orphan pages'.  On this page, administrators can review their books for orphans and reaffiliate those pages as desired.";
+
+    menu_add("collaborative books", "admin.php?mod=book", "Maintain collaborative books.", $help["book"], "content management");
+    menu_add("orphan pages", "admin.php?mod=book&op=orphan", "Display all orphan pages.", $orphan, "collaborative books", 8);
+    menu_add("help", "admin.php?mod=book&op=help", "More information about the collaborative book.", NULL, "collaborative books", 9);
+
+    $result = db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE b.parent = 0 ORDER BY b.weight, n.title");
+    while ($book = db_fetch_object($result)) {
+      menu_add("administer book '". check_output($book->title) ."'", "admin.php?mod=book&op=view&id=$book->nid", "Display a book outline.", NULL, "collaborative books");
+    }
   }
 
   return $links ? $links : array();
@@ -707,29 +717,12 @@ function book_admin_orphan() {
 }
 
 function book_admin_links() {
-  $result = db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE b.parent = 0 ORDER BY b.weight, n.title");
-
-  while ($book = db_fetch_object($result)) {
-    $links[] = la(t("book") .": <i>". check_output($book->title) ."</i>", array("mod" => "book", "op" => "view", "id" => $book->nid));
-  }
-  $links[] = la(t("orphan pages"), array("mod" => "book", "op" => "orphan"));
-  $links[] = la(t("help"), array("mod" => "book", "op" => "help"));
-  return $links;
 }
 
 function book_admin() {
   global $id, $op, $edit;
 
   if (user_access("administer nodes")) {
-
-    /*
-    ** Compile a list of the administrative links:
-    */
-
-    $links = book_admin_links();
-
-    print "<small>". implode(" | ", $links) ."</small><hr />";
-
     switch ($op) {
       case t("Edit book outline"):
       case t("Add to book outline"):

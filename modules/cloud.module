@@ -40,7 +40,11 @@ function cloud_link($type) {
   }
 
   if ($type == "admin" && user_access("administer site cloud")) {
-    $links[] = la(t("site cloud"), array("mod" => "cloud"));
+    $cloud = "The cloud monitor tracks or crawls other interesting websites and displays their last modification dates. Visitors to the host site learn about relevant sites and can easily see if there is new content.";
+
+    menu_add("blogrolling", "admin.php?mod=cloud", "Maintain the sites in your blogroll.", $cloud, NULL, 3);
+     menu_add("add new site", "admin.php?mod=cloud&op=add", "Add a new sites to your blogroll.", NULL, "blogrolling", 3);
+     menu_add("help", "admin.php?mod=cloud&op=help", "More information about the site cloud.", NULL, "blogrolling", 9);
   }
 
   return $links ? $links : array();
@@ -89,7 +93,7 @@ function cloud_form($edit = array()) {
   $form .= form_textfield("Site URL", "link", $edit["link"], 50, 255, "The URL of the website you want to monitor for updates.");
   $form .= form_textfield("URL to monitor", "feed", $edit["feed"], 50, 255, "The URL of the page you want to monitor for updates.  Likely to be same as the site's URL but useful to monitor framed pages and more accurate when pointed to a XML/RSS/RDF feed.");
   $form .= form_select("Update interval", "refresh", ($edit["refresh"] ? $edit["refresh"] : 3600), $period, "The refresh interval indicating how often you want to check this site for updates.  Requires crontab.");
-  $form .= form_select("Change threshold", "threshold", ($edit["threshold"] ? $edit["threshold"] : 40), $threshold, "The number of bytes the site must have been modified before concidered changed.");
+  $form .= form_select("Change threshold", "threshold", ($edit["threshold"] ? $edit["threshold"] : 40), $threshold, "The number of bytes the site must have been modified before considered changed.");
 
   $form .= form_submit("Submit");
 

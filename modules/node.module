@@ -414,10 +414,6 @@ function node_filter($text) {
 
 function node_link($type, $node = 0, $main = 0) {
 
-  if ($type == "admin" && user_access("administer nodes")) {
-    $links[] = la(t("content management"), array("mod" => "node"));
-  }
-
   if ($type == "page") {
     $links[] = lm(t("submit"), array("mod" => "node", "op" => "add"), "", array("title" => t("Submit or suggest new content.")));
   }
@@ -436,46 +432,17 @@ function node_link($type, $node = 0, $main = 0) {
     }
   }
 
+  if ($type = "admin" && user_access("administer nodes")) {
+    $search = "On this page you can search for a post.  For example, one may search for 'br' and Drupal might return 'bread brakers', 'our daily bread' and 'brenda'.";
+
+    menu_add("content management", "admin.php?mod=node", "Content management.", NULL, NULL);
+     menu_add("new or updated posts", "admin.php?mod=node&op=nodes&query=0", "Display all new or updated posts.", NULL, "content management", 0, 1);
+     menu_add("posts that await approval", "admin.php?mod=node&op=nodes&query=1", "Display posts that await approval.", NULL, "content management", 0, 1);
+     menu_add("search content", "admin.php?mod=node&op=search", "Search a post.", $search, "content management", 5);
+     menu_add("help", "admin.php?mod=node&op=help", "More information about content management.", NULL, "content management", 7);
+  }
+
   return $links ? $links : array();
-}
-
-function node_admin_settings($edit = array()) {
-  global $op;
-
-  if ($op == t("Save configuration")) {
-    /*
-    ** Save the configuration options:
-    */
-
-    foreach ($edit as $name => $value) {
-      variable_set($name, $value);
-    }
-  }
-
-  if ($op == t("Reset to defaults")) {
-    /*
-    ** Reset the configuration options to their default value:
-    */
-
-    foreach ($edit as $name => $value) {
-      variable_del($name);
-    }
-  }
-
-  $output .= "<h3>". t("Global node settings") ."</h3>";
-  $output .= node_conf_options();
-
-  foreach (module_list() as $name) {
-    if (module_hook($name, "conf_options") && module_hook($name, "node")) {
-      $output .= "<h3>". t("%module settings", array("%module" => ucfirst(module_invoke($name, "node", "name")))) ."</h3>";
-      $output .= module_invoke($name, "conf_options");
-    }
-  }
-
-  $output .= form_submit(t("Save configuration"));
-  $output .= form_submit(t("Reset to defaults"));
-
-  return form($output);
 }
 
 function node_admin_edit($node) {
@@ -521,15 +488,9 @@ function node_admin_edit($node) {
 function node_admin_nodes() {
   global $query;
 
-  $queries = array(array("ORDER BY n.created DESC", "new nodes"), array("ORDER BY n.changed DESC", "updated nodes"), array("WHERE n.status = 1 AND n.moderate = 0 ORDER BY n.nid DESC", "published nodes"), array("WHERE n.status = 0 AND n.moderate = 0 ORDER BY n.nid DESC", "non-published nodes"), array("WHERE n.status = 1 AND n.moderate = 1 ORDER BY n.nid DESC", "pending nodes"), array("WHERE n.status = 1 AND n.promote = 1 ORDER BY n.nid DESC", "promoted nodes"));
+  $queries = array("ORDER BY n.changed DESC", "WHERE n.status = 0 OR n.moderate = 1 ORDER BY n.changed DESC");
 
-  $result = pager_query("SELECT n.*, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid ". $queries[$query ? $query : 1][0], 50);
-
-  foreach ($queries as $key => $value) {
-    $links[] = la($value[1], array("mod" => "node", "op" => "nodes", "query" => $key));
-  }
-
-  $output .= "<small>". implode(" :: ", $links) ."</small><hr />";
+  $result = pager_query("SELECT n.*, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid ". $queries[$query ? $query : 0], 50);
 
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
   $output .= " <tr><th>". t("title") ."</th><th>". t("type") ."</th><th>". t("author") ."</th><th>". t("status") ."</th><th colspan=\"2\">". t("operations") ."</th></tr>\n";
@@ -651,24 +612,12 @@ function node_admin() {
     ** Compile a list of the administrative links:
     */
 
-    $links[] = la(t("nodes"), array("mod" => "node", "op" => "nodes"));
-    $links[] = la(t("search content"), array("mod" => "node", "op" => "search"));
-    $links[] = la(t("settings"), array("mod" => "node", "op" => "settings"));
-    $links[] = la(t("help"), array("mod" => "node", "op" => "help"));
-
-    print "<small>". implode(" &middot; ", $links) ."</small><hr />";
-
     switch ($op) {
       case "help":
         print node_help();
         break;
       case "search":
         print search_type("node", drupal_url(array("mod" => "node", "op" => "search"), "admin"));
-        break;
-      case t("Save configuration"):
-      case t("Reset to defaults"):
-      case "settings":
-        print node_admin_settings($edit);
         break;
       case "edit":
         print node_admin_edit($id);

@@ -45,11 +45,18 @@ function locale_perm() {
 }
 
 function locale_link($type) {
-  if ($type == "admin" && user_access("administer locales")) {
-    $links[] = la(t("locales"), array("mod" => "locale"));
-  }
+  global $languages;
 
-  return $links ? $links : array();
+  if ($type == "admin" && user_access("administer locales")) {
+    menu_add("locale", "admin.php?mod=locale", "Translate this site.", NULL, NULL, 3);
+    menu_add("search string", "admin.php?mod=locale&op=search", "Search a string.", NULL, "locale", 8);
+    menu_add("help", "admin.php?mod=locale&op=help", "More information about the locale system.", NULL, "locale", 9);
+
+    foreach ($languages as $key => $value) {
+      menu_add("translated '$key' strings", "admin.php?mod=locale&op=translated&language=$key", "Display translated '$key' strings.", NULL, "locale");
+      menu_add("untranslated '$key' strings", "admin.php?mod=locale&op=untranslated&language=$key", "Display untranslated '$key' strings.", NULL, "locale");
+    }
+  }
 }
 
 function locale_delete($lid) {
@@ -97,21 +104,6 @@ function locale_languages($translation) {
 
   foreach ($languages as $key=>$value) {
     $output .= ($translation->$key) ? "<a href=\"#\" title=\"". check_output($translation->$key) ."\">$key</a> " : "<strike>$key</strike> ";
-  }
-
-  return $output;
-}
-
-function locale_links($translation) {
-  global $languages;
-
-  foreach ($languages as $key=>$value) {
-    if ($translation) {
-      $output .= la(t("translated '%langcode' strings", array("%langcode" => $key)), array("mod" => "locale", "op" => "translated", "language" => $key)) ." &middot; ";
-    }
-    else {
-      $output .= la(t("untranslated '%langcode' strings", array("%langcode" => $key)), array("mod" => "locale", "op" => "untranslated", "language" => $key)) ." &middot; ";
-    }
   }
 
   return $output;
@@ -216,7 +208,6 @@ function locale_admin() {
   if (user_access("administer locales")) {
     locale_admin_initialize();
 
-    print "<small>". locale_links(1) . locale_links(0) . la(t("search"), array("mod" => "locale", "op" => "search")) ." &middot; ". la(t("overview"), array("mod" => "locale", "op" => "overview")) ." &middot; ". la(t("help"), array("mod" => "locale", "op" => "help")) ."</small><hr />\n";
 
     switch ($op) {
       case "delete":

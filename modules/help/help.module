@@ -8,10 +8,8 @@ function help_system($field){
 
 function help_link($type) {
   if ($type == "admin") {
-    $links[] = la(t("help"), array("mod" => "help"));
+    menu_add("help", "admin.php?mod=help", "Help", NULL, NULL, 9);
   }
-
-  return $links ? $links : array();
 }
 
 function help_admin() {
@@ -22,7 +20,7 @@ function help_admin() {
     }
   }
 
-  print "<small>". implode(" | ", $links) ."</small><hr />";
+  print "<small>". implode(" &middot; ", $links) ."</small><hr />";
 
   foreach (module_list() as $name) {
     if (module_hook($name, "help")) {

@@ -29,12 +29,17 @@ function import_perm() {
 }
 
 function import_link($type) {
-  if ($type == "admin" && user_access("administer news feeds")) {
-    $links[] = la(t("news feeds"), array("mod" => "import"));
-  }
 
   if ($type == "page" && user_access("access news feeds")) {
     $links[] = lm(t("news feeds"), array("mod" => "import"), "", array("title" => t("Read the latest news from syndicated websites.")));
+  }
+
+  if ($type == "admin" && user_access("administer news feeds")) {
+    menu_add("news aggregation", "admin.php?mod=import", "Content syndication through RDF/RSS feeds.", NULL, NULL, 3);
+     menu_add("add new feed", "admin.php?mod=import&op=add&type=feed", "Add new news feed.", NULL, "news aggregation", 2);
+     menu_add("add new bundle", "admin.php?mod=import&op=add&type=bundle", "Create a new bundle.", NULL, "news aggregation", 3);
+     menu_add("tag news items", "admin.php?mod=import&op=tag", "Assign bundle attributes to a news item.", NULL, "news aggregation", 4);
+     menu_add("help", "admin.php?mod=import&op=help", "More information about news aggregation.", NULL, "news aggregation", 5);
   }
 
   return $links ? $links : array();
@@ -294,7 +299,7 @@ function import_save_item($edit) {
 function import_form_bundle($edit = array()) {
 
   $form .= form_textfield("Title", "title", $edit["title"], 50, 64, "The name of the bundle.");
-  $form .= form_textfield("Attributes", "attributes", $edit["attributes"], 50, 128, "A comma-seperated list of keywords describing the bundle.");
+  $form .= form_textfield("Attributes", "attributes", $edit["attributes"], 50, 128, "A comma-separated list of keywords describing the bundle.");
 
   $form .= form_submit("Submit");
 
@@ -330,7 +335,7 @@ function import_form_feed($edit = array()) {
 
   $form .= form_textfield("Title", "title", $edit["title"], 50, 64, "The name of the feed; typically the name of the website you syndicate content from.");
   $form .= form_textfield("Url", "url", $edit["url"], 50, 128, "The fully-qualified URL of the feed.");
-  $form .= form_textfield("Attributes", "attributes", $edit["attributes"], 50, 128, "A comma-seperated list of keywords describing the feed.");
+  $form .= form_textfield("Attributes", "attributes", $edit["attributes"], 50, 128, "A comma-separated list of keywords describing the feed.");
   $form .= form_select("Update interval", "refresh", $edit["refresh"], $period, "The refresh interval indicating how often you want to update this feed.  Requires crontab.");
 
   $form .= form_submit("Submit");
@@ -398,65 +403,6 @@ function import_view() {
   return $output;
 }
 
-function import_fd_form() {
-
-  $form .= form_textfield("Feed directory file", "url", "http://", 64, 128, "The fully-qualified URL of the feed directory file.");
-  $form .= form_submit("Collect feeds");
-
-  return form($form);
-}
-
-function import_fd_collect($edit) {
-
-  set_time_limit(180);
-
-  if ($fp = @fopen($edit["url"], "r")) {
-    // fetch data:
-    while (!feof($fp)) {
-      $data .= fgets($fp, 128);
-    }
-    fclose($fp);
-
-    // initialize the translation table:
-    $tt = array_flip(get_html_translation_table(HTML_ENTITIES));
-    $tt["&apos;"] = "'";
-
-    $items = explode("</channel>", $data);
-
-    foreach ($items as $item) {
-      unset($link, $title);
-
-      // print "<pre>item = ". htmlentities($item) ."\n\n</pre>";
-
-      eregi("<link>(.*)</link>", $item, $link);
-      eregi("<title>(.*)</title>", $item, $title);
-
-      $link = strip_tags(strtr($link[1], $tt));
-      $title = strip_tags(strtr($title[1], $tt));
-
-      // print "<b>title = $title, link = $link<br /></b>";
-      if ($link && $link && !db_fetch_array(db_query("SELECT * FROM feed WHERE url = '%s'", $link))) {
-        $output .= "<input type=\"checkbox\" name=\"edit[$title]\" value=\"$link\"> ". strtr($title, $tt) ."<br />";
-      }
-    }
-
-    $output .= "<input type=\"submit\" name=\"op\" value=\"Import feeds\" />\n";
-
-    return form($output);
-  }
-  else {
-    print status("failed to open '". $edit["url"] ."': $errstr.");
-  }
-}
-
-function import_fd_import($edit) {
-  if ($edit) {
-    foreach ($edit as $title => $link) {
-      import_save_feed(array("title" => $title, "url" => $link, "refresh" => 3600));
-    }
-  }
-}
-
 function import_tag() {
 
   $result = db_query("SELECT i.*, f.title AS feed FROM item i LEFT JOIN feed f ON i.fid = f.fid ORDER BY i.iid DESC LIMIT 50");
@@ -477,15 +423,6 @@ function import_admin() {
 
   if (user_access("administer news feeds")) {
 
-    $links[] = la(t("add new feed"), array("mod" => "import", "type" => "feed", "op" => "add"));
-    $links[] = la(t("add new bundle"), array("mod" => "import", "type" => "bundle", "op" => "add"));
-    $links[] = la(t("import feeds"), array("mod" => "import", "op" => "fd"));
-    $links[] = la(t("tag items"), array("mod" => "import", "op" => "tag"));
-    $links[] = la(t("overview"), array("mod" => "import", "op" => "view"));
-    $links[] = la(t("help"), array("mod" => "import", "op" => "help"));
-
-    print "<small>". implode(" | ", $links) ."</small><hr />";
-
     switch ($op) {
       case "help":
         print import_help();
@@ -505,16 +442,6 @@ function import_admin() {
         else {
           print import_form_feed(import_get_feed($id));
         }
-        break;
-      case "fd":
-        print import_fd_form();
-        break;
-      case "Collect feeds":
-        print import_fd_collect($edit);
-        break;
-      case "Import feeds":
-        print import_fd_import($edit);
-        print import_view();
         break;
       case "remove":
         print status(import_remove(import_get_feed($id)));

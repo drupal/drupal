@@ -69,7 +69,7 @@ function statistics_perm() {
   /*
   ** statistics module defines the following permissions:
   **   administer statistics module - full administrative control of module
-  **   administer statistics        - view statistics / referrers
+  **   administer statistics        - view statistics / referrer log
   **   access statistics            - see counts per node (if enabled)
   **   access userlist              - see list of online users
   */
@@ -80,10 +80,6 @@ function statistics_perm() {
 /* Link hook, defines module's links */
 function statistics_link($type, $node = 0, $main = 0) {
   global $id;
-
-  if ($type == "admin" && (user_access("administer statistics module") || (user_access("administer statistics")))) {
-    $links[] = la(t("statistics"), array("mod" => "statistics"));
-  }
 
   if ($type == "node" && user_access("access statistics") && variable_get("statistics_display_counter", 0)) {
     $statistics = statistics_get($node->nid);
@@ -102,6 +98,29 @@ function statistics_link($type, $node = 0, $main = 0) {
     if ($userlink) {
       $links[] = lm(t($userlink), array("mod" => "statistics"), "", array("title" => t("View the top nodes for this site.")));
     }
+  }
+
+  if ($type == "admin" && (user_access("administer statistics module") || (user_access("administer statistics")))) {
+    $help["statistics"] = "This page gives you an at-a-glance look at your top nodes.  It is useful for understanding what content on your site is the most popular.";
+    $help["referrers"] = "This page shows you site-wide referrer statistics.  You can see 'all referrers', 'external referrers' or 'internal referrers'.  Defaults to 'external'.";
+    $help["access"] = "This pages shows you who is accessing your website.  You can see the hostnames, referrers.  In particular, it is easy to inspect a user's navigation history/trail by clicking the username.";
+    $help["top nodes page"] = "The statistics module creates a user page that can display summaries of the day's top viewed nodes, the all time top nodes and the last nodes viewed.  Each of these summaries can be enabled or disabled individually, and the number of nodes displayed for each can be configured with a drop down menu.";
+    $help["top nodes block"] = "The statistics module exports a block that can display the day's top viewed nodes, the all time top viewed nodes and the last nodes viewed.  Each of these links can be enabled or disabled individually, and the number of nodes displayed for each can be configured with a drop down menu. If you disable all sections of this block, it will not appear.";
+    $help["who is online block"] = "This statistics module exports a block that can display how many user's and guests are currently online.  You can configure the name of the block, the name of a sub-block for displaying names of user's currently online, how recently a user must have been active to be considered online, the maximum characters to display from a user's name and the maximum number of user names to display.";
+
+    menu_add("site monitoring", "admin.php?mod=statistics", "Monitor your site.", NULL, NULL, 2);
+     menu_add("popular posts", "admin.php?mod=statistics&op=statistics", "Display the top nodes.", $help["statistics"], "site monitoring", 2, 1);
+     menu_add("referrer log", "admin.php?mod=statistics&op=referrers", "Display the referrers.", $help["referrers"], "site monitoring", 3, 1);
+      menu_add("view all referrers", "admin.php?mod=statistics&op=referrers&view=all", "Display all referrers.", $help["referrers"], "referre logs", 1);
+      menu_add("view internal referrers", "admin.php?mod=statistics&op=referrers&view=internal", "Display internal referrers.", $help["referrers"], "referrer log", 1);
+      menu_add("view external referrers", "admin.php?mod=statistics&op=referrers&view=external", "Display external referrers.", $help["referrers"], "referrer log", 1);
+     menu_add("access log", "admin.php?mod=statistics&op=log", "Display the access log.", $help["access"], "site monitoring", 4);
+     menu_add("configure 'top nodes' page", "admin.php?mod=statistics&op=top+nodes+page", "Configure the top node page.", $help["top nodes page"], "site monitoring", 5);
+     menu_add("help", "admin.php?mod=statistics&op=help", "More information about the statistics.", NULL, "site monitoring", 6);
+
+     // block configuration:
+     menu_add("configure 'top nodes' block", "admin.php?mod=statistics&op=top+nodes+block", "Configure the 'top nodes block'", $help["top nodes block"], "block management");
+     menu_add("configure 'who is online' block", "admin.php?mod=statistics&op=whos+online+block", "Configure the 'top nodes block'", $help["who is online block"], "block management");
   }
 
   return $links ? $links : array();
@@ -232,19 +251,6 @@ function statistics_admin() {
 
   /* Only allow people with sufficient access. */
   if ((user_access("administer statistics module")) || (user_access("administer statistics"))) {
-
-    /* Display the second level admin links */
-    $links[] = la(t("view statistics"), array("mod" => "statistics", "op" => "statistics"));
-    $links[] = la(t("view referrers"), array("mod" => "statistics", "op" => "referrers"));
-    $links[] = la(t("view access log"), array("mod" => "statistics", "op" => "log"));
-    if (user_access("administer statistics module")) {
-      $links[] = la(t("top nodes block"), array("mod" => "statistics", "op" => "top nodes block"));
-      $links[] = la(t("top nodes page"), array("mod" => "statistics", "op" => "top nodes page"));
-      $links[] = la(t("who's online block"), array("mod" => "statistics", "op" => "whos online block"));
-    }
-    $links[] = la(t("help"), array("mod" => "statistics", "op" => "help"));
-    print "<small>". implode(" | ", $links) ."</small><hr />";
-
     /* non-configuration admin pages */
     switch ($op) {
       case "help":
@@ -390,12 +396,6 @@ function statistics_recent_refer($nid = 0) {
   global $HTTP_HOST, $view;
 
   $node = node_load(array("nid" => $nid));
-
-  /* allow viewing of all, internal or external referrers */
-  $links[] = la(t("all"), array("mod" => "statistics", "op" => "referrers", "view" => "all", "nid" => "$nid"));
-  $links[] = la(t("external"), array("mod" => "statistics", "op" => "referrers", "view" => "external", "nid" => "$nid"));
-  $links[] = la(t("internal"), array("mod" => "statistics", "op" => "referrers", "view" => "internal", "nid" => "$nid"));
-  print "<small>". implode(" :: ", $links) ."</small><hr />";
 
   if ($nid > 0) {
     if ($view == "all") {

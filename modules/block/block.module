@@ -49,10 +49,13 @@ function block_perm() {
 
 function block_link($type) {
   if ($type == "admin" && user_access("administer blocks")) {
-    $links[] = la(t("blocks"), array("mod" => "block"));
-  }
+   $help["block"] = "Blocks are the boxes visible in the side bars on the left- and right-hand side of the website.  They are either exported by the Drupal or by any of the active modules.  Adminstrators can enable or disable block, as well control the block placement by assigning them a region and/or by assigning each block (within a region) a weight to sort them vertically.  The path setting lets you define which pages you want the specific blocks to be shown.";
 
-  return $links ? $links : array();
+    menu_add("block management", "admin.php?mod=block", "Block management", $help["block"], NULL, 2);
+     menu_add("add new block", "admin.php?mod=block&op=add", "Create a new block", $help["block"], "block management", 2);
+     menu_add("preview placement", "admin.php?mod=block&op=preview", "Preview the block placement", $help["block"], "block management", 3);
+     menu_add("help", "admin.php?mod=block&op=help", "More information about blocks", NULL, "block management", 5);
+  }
 }
 
 function block_block($op = "list", $delta = 0) {
@@ -266,13 +269,6 @@ function block_admin() {
   global $op, $edit, $theme;
 
   if (user_access("administer blocks")) {
-
-    $links[] = la(t("configure"), array("mod" => "block"));
-    $links[] = la(t("add block"), array("mod" => "block", "op" => "add"));
-    $links[] = la(t("preview"), array("mod" => "block", "op" => "preview"));
-    $links[] = la(t("help"), array("mod" => "block", "op" => "help"));
-
-    print "<small>". implode(" | ", $links) ."</small><hr />";
 
     switch ($op) {
       case "help":

@@ -10,7 +10,7 @@ function comment_help() {
   $output .= "<p>Since a busy site generates lots of comments, Drupal takes care to present a personalized view of comments for each user.  The home page lists displays the number of read and unread comments for a given post for the current user.  Also, the tracker module (when installed) displays all recent comments on the site.  Finally, comments which the user has not yet read are highlighted with a red star (this graphic may depend on the current theme).</p>";
   $output .= "<p>Comments behave like other user submissions in Drupal.  Specifically, ". la("filters", array("mod" => "system", "type" => "filter")) ." like smileys and HTML work fine if the administrator has enabled them.  Also, throttles are usually enabled to prevent a single user from spamming the web site with too many comments in a short period of time.</p>";
   $output .= "<p>Administrators may control which persons are allowed to submit and administer comments.  These controls appear in the ". la("user permissions", array("mod" => "user", "op" => "permission")) ." administration page.  Additionally, administrators may edit or search through comments on the ". la("comments admininistration page", array("mod" => "comment")) .", as well as set the default display view for new users. Administrators can also state whether a certain role will have their comments published immediately, or just put in a queue to be reviewed.</p>";
-  $output .= "<p>If you really have a lot of comments, you can enable moderation. You assign moderation permissions to role(s), then setup some \"moderation votes\"; these votes will appear to moderators in a dropdown menu near the comment. You also have to assign, for every role and every vote, a value, which can be either positive or negative; use the moderation matrix to do this. This allows for some roles having greater \"weight\" in their moderation, if you wish. If you set a value to 0, that vote won't be available to that role. When a user moderates, the value of their vote is added or subtracted to the score of that comment. Finally, you may want to setup the comment threshholds: these are floor/ceiling values which users see in the comment control panel. Threshholds are useful for hiding poorly rated comments while reading your site.</p>";
+  $output .= "<p>If you really have a lot of comments, you can enable moderation. You assign moderation permissions to role(s), then setup some \"moderation votes\"; these votes will appear to moderators in a dropdown menu near the comment. You also have to assign, for every role and every vote, a value, which can be either positive or negative; use the moderation matrix to do this. This allows for some roles having greater \"weight\" in their moderation, if you wish. If you set a value to 0, that vote won't be available to that role. When a user moderates, the value of their vote is added or subtracted to the score of that comment. Finally, you may want to setup the comment thresholds: these are floor/ceiling values which users see in the comment control panel. Threshholds are useful for hiding poorly rated comments while reading your site.</p>";
 
   return $output;
 }
@@ -32,7 +32,7 @@ function comment_conf_options() {
     $thresholds[$filter->fid] = ($filter->filter);
   }
 
-  $output .= form_select(t("Default threshold"), "comment_default_threshold", variable_get("comment_default_threshold", 0), $thresholds, t("Thresholds are values below which comments are hidden. These threshholds are useful for busy sites which wan tto hide poor comments from most users."));
+  $output .= form_select(t("Default threshold"), "comment_default_threshold", variable_get("comment_default_threshold", 0), $thresholds, t("Thresholds are values below which comments are hidden. These thresholds are useful for busy sites which want to hide poor comments from most users."));
 
   $output .= form_select(t("Preview comment"), "comment_preview", variable_get("comment_preview", 1), array(t("Optional"), t("Required")), t("Must users preview comments before submitting?"));
   $output .= form_select(t("New comment form"), "comment_new_form", variable_get("comment_new_form", 0), array(t("Disabled"), t("Enabled")), t("New comment form in the node page?"));
@@ -605,10 +605,6 @@ function comment_perm() {
 
 function comment_link($type, $node = 0, $main = 0) {
 
-  if ($type == "admin" && user_access("administer comments")) {
-    $links[] = la(t("comments"), array("mod" => "comment"));
-  }
-
   if ($type == "node" && $node->comment) {
 
     if ($main) {
@@ -655,6 +651,24 @@ function comment_link($type, $node = 0, $main = 0) {
       else {
         $links[] = t("Closed discussion: you can't post new comments.");
       }
+    }
+  }
+
+  if ($type == "admin" && user_access("administer comments")) {
+    $settings = "If you really have a lot of comments, you can enable moderation. You assign moderation permissions to role(s), then setup some 'moderation votes'; these votes will appear to moderators in a dropdown menu near the comment. You also have to assign, for every role and every vote, a value, which can be either positive or negative; use the moderation matrix to do this. This allows for some roles having greater 'weight' in their moderation, if you wish. If you set a value to 0, that vote won't be available to that role. When a user moderates, the value of their vote is added or subtracted to the score of that comment. Finally, you may want to setup the comment thresholds: these are floor/ceiling values which users see in the comment control panel. Threshholds are useful for hiding poorly rated comments while reading your site.";
+
+    menu_add("comment management", "admin.php?mod=comment", "Administer comments.", $help["comment"], "content management", 1, 1);
+     menu_add("new or updated comments", "admin.php?mod=comment&status=0",  "Display new or updated comments.", NULL, "comment management");
+     menu_add("comments that await approval", "admin.php?mod=comment&status=1", "Display comments that await approval.", NULL, "comment management");
+     menu_add("search comment", "admin.php?mod=comment&op=search", "Search a comment.", NULL, "comment management", 8);
+     menu_add("help", "admin.php?mod=comment&op=help", "More information about the comment system.", NULL, "comment management", 9);
+
+    // comment settings:
+    if (user_access("administer moderation")) {
+      menu_add("comment moderation votes", "admin.php?mod=comment&op=votes", "Configure the comment moderation votes.", $settings, "site configuration", 5);
+      menu_add("comment moderation matrix", "admin.php?mod=comment&op=matrix", "Configure the comment moderation matrix.", $settings, "site configuration", 5);
+      menu_add("comment moderation thresholds", "admin.php?mod=comment&op=filters", "Configure the comment moderation thresholds.", $settings, "site configuration", 5);
+      menu_add("initial comment scores", "admin.php?mod=comment&op=roles", "Configure the initial comment score.", $settings, "site configuration", 5);
     }
   }
 
@@ -795,7 +809,7 @@ function comment_admin_overview($status = 0, $comment_page = 0) {
 
   $start = $comment_page * $comments_per_page;
 
-  $output .= $status ? "<h3>" . t("Non-published comments") . "</h3>\n" : "<h3>" . t("Published comments") . "</h3>";
+  $output .= $status ? "<h3>" . t("Comments that await approval") . "</h3>\n" : "<h3>" . t("New or updated comments") . "</h3>";
   $result = db_query("SELECT c.*, u.name, u.uid FROM comments c LEFT JOIN users u ON u.uid = c.uid WHERE c.status = '%d' ORDER BY timestamp DESC LIMIT $start, $comments_per_page", $status);
 
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
@@ -944,21 +958,21 @@ function comment_mod_votes($edit) {
 function comment_mod_filters($edit) {
   global $op, $fid, $tid;
 
-  if ($op == t("Save threshhold")) {
+  if ($op == t("Save threshold")) {
     db_query("UPDATE moderation_filters SET filter = '%s', minimum = '%d' WHERE fid = '%d'", $edit["filter"], $edit["minimum"], $fid);
     $fid = 0;
   }
-  else if ($op == t("Delete threshhold")) {
+  else if ($op == t("Delete threshold")) {
     db_query("DELETE FROM moderation_filters WHERE fid = '%d'", $fid);
     $fid = 0;
   }
-  else if ($op == t("Add new threshhold")) {
+  else if ($op == t("Add new threshold")) {
     db_query("INSERT INTO moderation_filters (fid, filter, minimum) VALUES (NULL, '%s', '%d')", $edit["filter"], $edit["minimum"]);
     $fid = 0;
   }
 
-  $output .= "<h3>Comment threshhold overview</h3>";
-  $output .= "<p><i>Optional</i>. If your site gets lots of comments, you may offer your users threshholds, which are used to hide all comments whose moderation score is lower than the threshhold. This cuts down on clutter while your readers view the site. These threshholds appear in the Comment Control Panel.</p>";
+  $output .= "<h3>Comment threshold overview</h3>";
+  $output .= "<p><i>Optional</i>. If your site gets lots of comments, you may offer your users thresholds, which are used to hide all comments whose moderation score is lower than the threshold. This cuts down on clutter while your readers view the site. These thresholds appear in the Comment Control Panel.</p>";
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
   $output .= " <tr><th>" . t("name") . "</th><th>" . t("minimum score") . "</th><th>" . t("operations") . "</th></tr>";
 
@@ -972,15 +986,15 @@ function comment_mod_filters($edit) {
     $filter = db_fetch_object(db_query("SELECT filter, fid, minimum FROM moderation_filters WHERE fid = '%d'", $fid));
   }
 
-  $output .= "<h3>Add new threshhold</h3>";
-  $form .= form_textfield(t("Threshhold name"), "filter", $filter->filter, 32, 64, t("The name of this threshhold.  Example: 'good comments', '+1 comments', 'everything'."));
+  $output .= "<h3>Add new threshold</h3>";
+  $form .= form_textfield(t("Threshhold name"), "filter", $filter->filter, 32, 64, t("The name of this threshold.  Example: 'good comments', '+1 comments', 'everything'."));
   $form .= form_textfield(t("Minimum score"), "minimum", $filter->minimum, 32, 64, t("Show all comments whose score is larger or equal to the provided minimal score. Range: -127 + 128"));
   if ($fid) {
-    $form .= form_submit(t("Save threshhold"));
-    $form .= form_submit(t("Delete threshhold"));
+    $form .= form_submit(t("Save threshold"));
+    $form .= form_submit(t("Delete threshold"));
   }
   else {
-    $form .= form_submit(t("Add new threshhold"));
+    $form .= form_submit(t("Add new threshold"));
   }
 
   $output .= form($form);
@@ -993,26 +1007,6 @@ function comment_admin() {
   global $op, $id, $edit, $mod, $keys, $order, $status, $comment_page, $comment_settings;
 
   if (user_access("administer comments")) {
-
-    $links[] = la(t("published comments"), array("mod" => "comment", "status" => 0));
-    $links[] = la(t("non-published comments"), array("mod" => "comment", "status" => 1));
-    $links[] = la(t("search comments"), array("mod" => "comment", "op" => "search"));
-
-    if (user_access("administer site configuration")) {
-      $links[] = la(t("settings"), array("mod" => "system", "op" => "settings"), "comment");
-    }
-
-    if (user_access("administer moderation")) {
-      $links[] = la(t("moderation votes"), array("mod" => "comment", "op" => "votes"));
-      $links[] = la(t("moderation matrix"), array("mod" => "comment", "op" => "matrix"));
-      $links[] = la(t("comment threshholds"), array("mod" => "comment", "op" => "filters"));
-      $links[] = la(t("initial comment scores"), array("mod" => "comment", "op" => "roles"));
-    }
-
-    $links[] = la(t("help"), array("mod" => "comment", "op" => "help"));
-
-    print "<small>".  implode(" | ", $links) ."</small><hr />\n";
-
     switch ($op) {
       case "help":
         print comment_help();
@@ -1044,9 +1038,9 @@ function comment_admin() {
         }
         break;
       case "filters":
-      case t("Add new threshhold"):
-      case t("Delete threshhold"):
-      case t("Save threshhold"):
+      case t("Add new threshold"):
+      case t("Delete threshold"):
+      case t("Save threshold"):
         if (user_access("administer moderation")) {
           print comment_mod_filters($edit);
         }
@@ -1133,7 +1127,7 @@ function comment_controls($threshold = 1, $mode = 3, $order = 1, $nid, $page = 0
 
     $output .= " ". form_submit(t("Update settings"));
 
-    $output = form_item(t("Comment viewing options"), $output, t("Select your prefered way to display the comments and click 'Update settings' to submit your changes."));
+    $output = form_item(t("Comment viewing options"), $output, t("Select your preferred way to display the comments and click 'Update settings' to submit your changes."));
 
     if (($mode == 2 || $mode == 4) && $comment_num > $comments_per_page) {
       if ($page > 1) {

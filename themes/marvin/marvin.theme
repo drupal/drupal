@@ -17,7 +17,7 @@
    // General colorset that can be used for this theme
    var $foreground = "#000000";
    var $background = "#EAEAEA";
-   
+
    function system($field) {
      $system["name"] = "Marvin";
      $system["author"] = "Dries";

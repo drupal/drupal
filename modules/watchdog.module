@@ -19,10 +19,16 @@ function watchdog_perm() {
 
 function watchdog_link($type) {
   if ($type == "admin" && user_access("administer watchdog")) {
-    $links[] = la(t("watchdog"), array("mod" => "watchdog"));
-  }
+    $help = "The watchdog module monitors your website, captures system events in a log and records them to be reviewed by an authorized individual at a later time.  The watchdog log is simply a list of events recorded during operation and contains usage data, performance data, errors, warnings and operational information. It is vital to check the watchdog report on a regular basis as it is often the only way to tell what is going on.";
 
-  return $links ? $links : array();
+    menu_add("watchdog", "admin.php?mod=watchdog", "Display system events.", $help, "site monitoring", 1, 1);
+     menu_add("user messages", "admin.php?mod=watchdog&type=user", "Display system events", $help, "watchdog");
+     menu_add("regular messages", "admin.php?mod=watchdog&type=regular", "Display system events", $help, "watchdog");
+     menu_add("special messages", "admin.php?mod=watchdog&type=special", "Display system events", $help, "watchdog");
+     menu_add("warning messages", "admin.php?mod=watchdog&type=warning", "Display system events", $help, "watchdog");
+     menu_add("error messages", "admin.php?mod=watchdog&type=error", "Display system events", $help, "watchdog");
+     menu_add("httpd messages", "admin.php?mod=watchdog&type=httpd", "Display system events", $help, "watchdog");
+  }
 }
 
 function watchdog_conf_options() {
@@ -74,18 +80,6 @@ function watchdog_admin() {
   global $op, $id, $type, $order;
 
   if (user_access("administer watchdog")) {
-
-    $links[] = la(t("user messages"), array("mod" => "watchdog", "type" => "user"));
-    $links[] = la(t("regular messages"), array("mod" => "watchdog", "type" => "regular"));
-    $links[] = la(t("special messages"), array("mod" => "watchdog", "type" => "special"));
-    $links[] = la(t("warning messages"), array("mod" => "watchdog", "type" => "warning"));
-    $links[] = la(t("error messages"), array("mod" => "watchdog", "type" => "error"));
-    $links[] = la(t("httpd messages"), array("mod" => "watchdog", "type" => "httpd"));
-    $links[] = la(t("overview"), array("mod" => "watchdog"));
-    $links[] = la(t("help"), array("mod" => "watchdog", "op" => "help"));
-
-    print "<small>". implode(" | ", $links) ."</small><hr />";
-
     switch ($op) {
       case "help":
         watchdog_help();

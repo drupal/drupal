@@ -27,21 +27,42 @@ function admin_page($mod) {
     td   { font-family: helvetica, arial; font-size: 12pt; }
    </style>
    <body bgcolor="#FFFFFF" link="#005599" vlink="#004499" alink="#FF0000">
-    <h1><?php echo t("Administration"); ?></h1>
     <?php
+      module_invoke_all("link", "admin");
 
-      $links[] = "<a href=\"index.php\">" . t("home") . "</a>";
-      foreach (module_list() as $name) {
-        if (module_hook($name, "link")) {
-          $links = array_merge($links, module_invoke($name, "link", "admin"));
-        }
-      }
-
-      print implode(" | ", $links) ."<hr />";
+      print "<img align=\"right\" src=\"misc/druplicon-small.gif\" tag=\"Druplicon - Drupal logo\" />";
 
       if ($mod) {
+        /*
+        ** Generate the admin page's header.
+        */
+
+        if ($path = menu_path()) {
+          print "<h2>". la(t("Administration")) ." > $path</h2>";
+        }
+        else {
+          print "<h2>". t("Administration") ."</h2>";
+        }
+        if ($data) {
+          print "<hr />". implode("<hr />", $data) ."<hr />";
+        }
+        if ($menu = menu_menu()) {
+          print $menu;
+        }
+        if ($help = menu_help()) {
+          print "<hr />$help";
+        }
+        print "<hr />";
+
         module_invoke($mod, "admin");
       }
+      else {
+        print "<h2>". t("Administration") ."</h2>";
+        print "<hr />";
+        print menu_tree();
+      }
+
+      db_query("DELETE FROM menu");
     ?>
   </body>
  </html>
