@@ -65,6 +65,7 @@ function drupal_get_breadcrumb() {
 
 /**
  * Add output to the head tag of the HTML page.
+ * This function can be called as long the headers aren't sent.
  */
 function drupal_set_html_head($data = NULL) {
   static $stored_head = '';
