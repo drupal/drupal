@@ -117,8 +117,8 @@ function c(subject,mod,author,date,body) {document.writeln("<table border=\"0\" 
         $body = check_output($node->body, 1);
       }
 
-      if ($main) {
-        $body .= "<hr color=\"#404040\" size=\"1\"><div align=\"right\">[ " . $this->links(link_node($node)) . " ]</div>";
+      if ($links = link_node($node, $main)) {
+        $body .= "<hr color=\"#404040\" size=\"1\"><div align=\"right\">[ " . $this->links($links) . " ]</div>";
       }
 
       print "<script language=\"JavaScript\"><!--\ns(\"". $this->stripbreaks(addslashes($title)) ."\",\"". $this->stripbreaks(addslashes($subleft)) ."\",\"". $this->stripbreaks(addslashes($subright)) ."\",\"". $this->stripbreaks(addslashes($body)) ."\"); // -->\n</script>\n";
