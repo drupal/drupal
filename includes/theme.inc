@@ -13,12 +13,15 @@ function theme_init() {
 }
 
 function theme_link($separator = " | ") {
+  global $repository;
   $links = array("<A HREF=\"index.php\">". t("home") ."</A>",
                  "<A HREF=\"search.php\">". t("search") ."</A>",
-                 "<A HREF=\"submit.php\">". t("submit") ."</A>",
-                 "<A HREF=\"module.php?mod=diary\">". t("diary") ."</A>",
-                 "<A HREF=\"account.php\">". t("account") ."</A>",
-                 "<A HREF=\"module.php?mod=book\">". t("handbook") ."</A>");
+                 "<A HREF=\"submit.php\">". t("submit") ."</A>");
+  if (is_array($repository[diary]))
+    $links[] = "<A HREF=\"module.php?mod=diary\">". t("diary") ."</A>";
+  $links[] = "<A HREF=\"account.php\">". t("account") ."</A>";
+  if (is_array($repository[diary]))
+    $links[] = "<A HREF=\"module.php?mod=book\">". t("handbook") ."</A>";
   return implode($separator, $links);
 }
 

@@ -37,6 +37,9 @@ function module_rehash_blocks($name, $module) {
   db_query("UPDATE blocks SET remove = '1' WHERE module = '$name'");
   if ($module["block"] && $blocks = $module["block"]()) {
     foreach ($blocks as $offset=>$block) {
+      foreach ($block as $item=>$data) {
+        $block[$item] = addslashes($data);
+      }
       if (!db_fetch_object(db_query("SELECT * FROM blocks WHERE module = '$name' AND name = '$block[info]'"))) {
         db_query("INSERT INTO blocks (name, module, offset) VALUES ('$block[info]', '$name', '$offset')");
       }
@@ -75,8 +78,10 @@ function module_rehash($name) {
 
 // load modules into repository:
 $handle = opendir("modules");
+$repository = array();
 while ($file = readdir($handle)) {
-  if ($filename = substr($file, 0, strpos($file, ".module"))) {
+  if (".module" == substr($file, -7)) {
+    $filename = substr($file, 0, -7);
     include "modules/$filename.module";
     $repository[$filename] = $module;
   }
