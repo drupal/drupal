@@ -31,19 +31,19 @@ function forum_conf_options() {
     $vocs[$vid] = $voc->name;
   }
   $output .= "<a name=\"image_nav_vocabulary\"></a>";
-  $output .= form_select("Forum vocabulary", "forum_nav_vocabulary", variable_get("forum_nav_vocabulary", ""), $vocs, t("The taxonomy vocabulary that will be uses as the navigation tree."));
-  $output .= _taxonomy_term_select("Containers", "forum_containers", variable_get("forum_containers", array()), variable_get("forum_nav_vocabulary", ""), t("You can choose vocabularies which will not have topics, but will be just containers for other forums."), 1, t("<none>"));
+  $output .= form_select("Forum vocabulary", "forum_nav_vocabulary", variable_get("forum_nav_vocabulary", ""), $vocs, t("The taxonomy vocabulary that will be used as the navigation tree."));
+  $output .= _taxonomy_term_select("Containers", "forum_containers", variable_get("forum_containers", array()), variable_get("forum_nav_vocabulary", ""), t("You can choose forums which will not have topics, but will be just containers for other forums."), 1, t("<none>"));
 
   $output .= form_textfield("Topic icons path", "forum_topic_icon_path", variable_get("forum_topic_icon_path", "images/forum/topics/"), 30, 255, "The path to the topic icons.  Leave blank to disable icons.");
-  $output .= form_textfield("Folder icons path", "forum_folder_icon_path", variable_get("forum_folder_icon_path", "images/forum/folder/"), 30, 255, "Path to the <i>default</i>, <i>hot</i>, <i>new</i> and <i>closed folder</i> icons.  Leave blank to disable icons.");
+  $output .= form_textfield("Folder icons path", "forum_folder_icon_path", variable_get("forum_folder_icon_path", "images/forum/folder/"), 30, 255, "The path to the <b>default</b>, <b>hot</b>, <b>new</b>, <b>hot & new</b>, and <b>closed</b> folder icons.  Leave blank to disable icons.");
   $number = array(5 => 5, 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30, 35 => 35, 40 => 40, 50 => 50, 60 => 60, 80 => 80, 100 => 100, 10000=>10000);
-  $output .= form_select("Hot topic threshold", "forum_hot_topic", variable_get("forum_hot_topic", 15), $number, "The number of posts a topic must have to be considered <i>hot</i>.");
+  $output .= form_select("Hot topic threshold", "forum_hot_topic", variable_get("forum_hot_topic", 15), $number, "The number of posts a topic must have to be considered <b>hot</b>.");
   $number = array(10 => 10, 25 => 25, 50 => 50, 75 => 75, 100 => 100);
   $output .= form_select("Topics per page", "forum_per_page", variable_get("forum_per_page", 25), $number, "The default number of topics displayed per page; links to browse older messages are automatically being displayed.");
   $forder = array(1 => "Date - newest first", 2 => "Date - oldest first", 3 => "Posts - most active first", 4=> "Posts - least active first");
   $output .= form_select("Default order", "forum_order", variable_get("forum_order", 1), $forder, "The default display order for topics.");
-  $output .= form_textfield("Number of topics in block", "forum_block_num", variable_get("forum_block_num", "5"), 5, 5, "The number of topics in the <i>active topics</i> block.");
-  $output .= form_select("Internal caching", "forum_cache", variable_get("forum_cache", 0), array("disabled", "enabled"), "Cache internal datastructures for both anonymous and autheticated users.  When enabled, the forum data won't be 100% up to date with regards regardto the number of posts, the number of replies and the last topic being posted.  Enable when you have busy forum.");
+  $output .= form_textfield("Number of topics in block", "forum_block_num", variable_get("forum_block_num", "5"), 5, 5, "The number of topics in the <b>active topics</b> block. Enable the block ". la("here", array ("mod" => "block")));
+  $output .= form_select("Internal caching", "forum_cache", variable_get("forum_cache", 0), array("disabled", "enabled"), "Cache internal datastructures for both anonymous and autheticated users.  When enabled, the forum data won't be 100% up to date with regards regard to the number of posts, the number of replies and the last topic being posted.  Enable when you have busy forum.");
 
   return $output;
 }
@@ -145,6 +145,10 @@ function forum_link($type, $node) {
     if ($next) {
       $links[] = l(t("next topic"), array("id" => $next->nid), "node", "", array("title" => $next->title."\n".substr(strip_tags($next->body), 0, 100)."..."));
     }
+  }
+
+  if ($type == "admin" && user_access("administer site configuration")) {
+    $links[] = la(t("forum"), array("mod" => "forum"));
   }
 
   return $links ? $links : array();
@@ -481,7 +485,7 @@ function forum_page() {
       list($topics, $topic_num) = forum_get_topics($tid, $sortby, $forum_per_page, $offset);
     }
 
-    _forum_theme_invoke("forum_render", $forums, $topics, $topic_num, $parents, $tid, $sortby, $forum_per_page, $offset);
+    theme_invoke("forum_render", $forums, $topics, $topic_num, $parents, $tid, $sortby, $forum_per_page, $offset);
   }
   else {
     $theme->header();
@@ -498,15 +502,15 @@ function forum_render($forums, $topics, $topic_num, $parents, $tid, $sortby, $fo
   // forum list, topics list, topic browser and "add new topic" link
   global $theme;
 
-  $output .= _forum_theme_invoke("forum_forum_list", $forums, $parents, $tid);
+  $output .= theme_invoke("forum_forum_list", $forums, $parents, $tid);
   if ($tid && !in_array($tid, variable_get("forum_containers", array()))) {
-    $output .= _forum_theme_invoke("forum_topic_list", $topics, $topic_num, $sortby, $forum_per_page, $offset);
+    $output .= theme_invoke("forum_topic_list", $topics, $topic_num, $sortby, $forum_per_page, $offset);
   }
 
   $theme->header();
   $theme->box(t("Discussion forum"), $output);
   if ($tid && !in_array($tid, variable_get("forum_containers", array()))) {
-    $theme->box(t("Control panel"), _forum_theme_invoke("forum_topic_browser", $sortby, $forum_per_page, $offset));
+    $theme->box(t("Control panel"), theme_invoke("forum_topic_browser", $sortby, $forum_per_page, $offset));
   }
   $theme->footer();
 }
@@ -636,7 +640,9 @@ function forum_topic_list($topics, $num_topics, $sortby, $forum_per_page, $offse
     $output .= "<td width=\"33%\">&nbsp;</td>";
   }
 
-  $output .= "<td width=\"33%\"><div align=\"center\"><h4>".lm(t("Start new topic"), array("mod" => "node", "op" => "add", "type" => "forum", "tid" => $tid))."</h4></div></td>";
+  if (user_access("post content")) {
+    $output .= "<td width=\"33%\"><div align=\"center\"><h4>".lm(t("Start new topic"), array("mod" => "node", "op" => "add", "type" => "forum", "tid" => $tid))."</h4></div></td>";
+  }
 
   if (count($topics) >= $forum_per_page) {
     $output .= "<td width=\"33%\"><div align=\"right\"><h4>".lm(t("Next topics"), array("mod" => "forum", "tid" => $tid, "offset" => ($offset+$forum_per_page)))."</h4></div></td>";
@@ -704,20 +710,6 @@ function _forum_user_last_visit($nid) {
   return $history[$nid] ? $history[$nid] : 0;
 }
 
-// this will go away as soon as theme_invoke is committed
-function _forum_theme_invoke() {
-  global $theme;
-  $args = func_get_args();
-  $function = array_shift($args);
-
-  if (method_exists($theme, $function)) {
-    return call_user_method_array($function, $theme, $args);
-  }
-  else {
-    return call_user_func_array($function, $args);
-  }
-}
-
 function _forum_get_topic_order($sortby) {
   switch ($sortby) {
     case 1:
@@ -733,6 +725,40 @@ function _forum_get_topic_order($sortby) {
       return "num_comments ASC";
       break;
   }
+}
+
+function forum_admin() {
+  if (user_access("administer site configuration")) {
+    $links[] = la(t("settings"), array("mod" => "system", "op" => "settings"), "forum");
+
+    print "<small>". implode(" | ", $links) ."</small><hr>\n";
+    print forum_help();
+  }
+}
+
+function forum_help() {
+  ?>
+  <h4>Containers</h4>
+  By designating a forum as a Container, users are not allowed to post into that forum. The forum will be visible on the forum listing page, so it acts as a section delimiter if you will. This is useful if you have a lots of forums which are nested. For example,
+<br /><br />
+Marketing<br />
+-- Market research<br />
+-- Brand management<br />
+<br />
+Sales<br />
+-- Closing the deal<br />
+-- Avoiding ear and throat pain<br />
+<br />
+If you don't want people posting into the Marketing or Sales folders, you designate them as Containers.<br />
+<br />
+<h4>Icons</h4>
+To disable icons, set the icon paths as blank in Admin -> Site Configuration -> Forum<br />
+<br />
+All files in the icon directory are assumed to be images. Usually it is best to use GIF or JPG files as icons.
+You may use images of whatever size you wish, but it is customary to use 15x15 or 16x16.
+
+
+  <?php
 }
 
 ?>
