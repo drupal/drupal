@@ -544,9 +544,10 @@ function book_toc($parent = 0, $indent = "", $toc = array()) {
   $result = db_query("SELECT n.nid, n.title, b.parent FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE n.status = '1' ORDER BY b.weight, n.title");
 
   while ($node = db_fetch_object($result)) {
-    $list = $children[$node->parent] ? $children[$node->parent] : array();
-    array_push($list, $node);
-    $children[$node->parent] = $list;
+    if (!$children[$node->parent]) {
+      $children[$node->parent] = array();
+    }
+    array_push($children[$node->parent], $node);
   }
 
   /*
