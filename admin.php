@@ -20,7 +20,7 @@ function admin_page($mod) {
    </head>
    <style>
     body { font-family: helvetica, arial; font-size: 12pt; }
-    h1   { font-famile: helvetica, arial; font-size: 18pt; font-weight: bold; color: #660000; }
+    h1   { font-family: helvetica, arial; font-size: 18pt; font-weight: bold; color: #660000; }
     h2   { font-family: helvetica, arial; font-size: 18pt; font-weight: bold; color: #000066; }
     h3   { font-family: helvetica, arial; font-size: 14pt; font-weight: bold; color: #006600; }
     th   { font-family: helvetica, arial; font-size: 12pt; text-align: center; vertical-align: top; background-color: #CCCCCC; color: #995555; }
