@@ -45,6 +45,7 @@ function admin_page($mod) {
  <?php
 }
 
+user_rehash();
 admin_page($mod);
 
 ?>

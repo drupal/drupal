@@ -8,7 +8,7 @@
    Description: Very basic theme for demonstration purposes.
 
   *********************************************************************/
-  
+
   class Theme {
 
     function header() {

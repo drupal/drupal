@@ -146,10 +146,10 @@ function node_info($node) {
   </SCRIPT>
  <?php
 
-  $choices = array("node.php?id=$node->nid" => t("view node"), "/submit.php?mod=$node->type&op=update&id=$node->nid" => t("suggest update"), "node.php?op=history&id=$node->nid" => t("view history"));
+  $choices = array("node.php?id=$node->nid" => t("view node"), "submit.php?mod=$node->type" => t("add node"), "submit.php?mod=$node->type&op=update&id=$node->nid" => t("update node"),  "node.php?op=history&id=$node->nid" => t("view history"));
 
   $output .= "<FORM METHOD=\"get\" ACTION=\"\">\n";
-  foreach ($choices as $key => $value) $options .= "<OPTION VALUE=\"$key\"". ($key == $REQUEST_URI ? " SELECTED" : "") .">". check_select($value) ."</OPTION>\n";
+  foreach ($choices as $key => $value) $options .= "<OPTION VALUE=\"$key\"". ("/$key" == $REQUEST_URI ? " SELECTED" : "") .">". check_select($value) ."</OPTION>\n";
   $output .= " <SELECT NAME=\"op\" ONCHANGE=\"visit(this.options[this.selectedIndex].value)\">$options</SELECT>\n";
   $output .= "</FORM>\n";
 

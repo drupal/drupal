@@ -45,7 +45,7 @@ elseif ($number) {
         $theme->footer();
         break;
       default:
-        if ($user->id) user_load($user->userid);
+        user_rehash();
         node_view($node, 1);
     }
   }
