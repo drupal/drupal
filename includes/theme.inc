@@ -140,4 +140,18 @@ function theme_blocks($region, &$theme) {
   }
 }
 
+function theme_invoke() {
+  global $theme;
+  $args = func_get_args();
+  
+  $function = array_shift($args);
+
+  if (method_exists($theme, $function)) {
+    return call_user_method_array($function, $theme, $args);
+  } 
+  else {
+    return call_user_func_array($function, $args);
+  }
+}
+
 ?>
