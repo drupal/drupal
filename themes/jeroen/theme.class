@@ -4,18 +4,13 @@
    ### color set #1:
    var $bgcolor1 = "#6C6C6C";   // background color
    var $fgcolor1 = "#000000";   // table body color
-   var $hlcolor1 = "#";   // high-light color
+   var $hlcolor1 = "#";         // high-light color
 
    ### color set #2:
    var $bgcolor2 = "#E7E7E7";
    var $fgcolor2 = "#FEFEFE";
    var $hlcolor2 = "#E09226";
 
-   ### color set #3:
-
-   var $bgcolor3 = "#";
-   var $fgcolor3 = "#";
-   var $hlcolor3 = "#";
 
    ######
    # Syntax.......: header($title);
@@ -74,15 +69,15 @@
            <TD ALIGN="right" VALIGN="bottom" WIDTH="20" HEIGHT="20">
             <? if (rand(0,1) == 0) $img = "news1.gif"; else $img = "news3.gif"; ?><IMG SRC="themes/Jeroen/images/<? echo $img; ?>" WIDTH="20" HEIGHT="20" ALT=""></TD>
            <TD colspan="3" ALIGN="center" VALIGN="center" HEIGHT="20" BACKGROUND="themes/Jeroen/images/newsmiddle.gif">
-            <IMG SRC="themes/Jeroen/images/newsmiddle.gif" width="1" height="1" alt=""><B><? echo $subject; ?></B>
+            <B><? echo $subject; ?></B>
            </TD>
            <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20">
             <? if (rand(0,1) == 0) $img = "news2.gif"; else $img = "news4.gif"; if (rand(0,100) == 50) $img = "news5.gif"; ?><IMG SRC="themes/Jeroen/images/<? echo $img; ?>" WIDTH="20" HEIGHT="20" ALT=""></TD>
           </TR>
-          <TR BACKGROUND="themes/Jeroen/images/menutitle.gif">
+          <TR>
            <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20" BACKGROUND="themes/Jeroen/images/newsboxleft.gif" ><IMG SRC="themes/Jeroen/images/newsboxleft.gif" WIDTH="20" HEIGHT="20" alt="">
            </TD>
-           <TD COLSPAN="2" ALIGN="left" WIDTH="100%" BGCOLOR="#6C6C6C" HEIGHT=20 NOWRAP>
+           <TD COLSPAN="2" ALIGN="left" WIDTH="100%" BGCOLOR="#6C6C6C" HEIGHT="20" BACKGROUND="themes/Jeroen/images/menutitle.gif" NOWRAP>
             &nbsp;<FONT COLOR="<? echo $this->fgcolor2; ?>">
              <?
               switch (rand(0,12)) {
@@ -95,7 +90,7 @@
 		case 6: $how = "Tossed at us"; break;
 		case 7: $how = "Morsed"; break;
 		case 8: $how = "Flagged"; break;
-		case 9: $how = "Written to"; break;
+		case 9: $how = "Written to us"; break;
 		case 10: $how = "Made up"; break;
 		case 11: $how = "Uploaded"; break;
 		default: $how = "Sneaked through";
@@ -104,7 +99,7 @@
               if ($informant) {
                print "<FONT SIZE=\"-1\">$how by <A HREF=\"account.php?op=userinfo&uname=$informant\">$informant</A> on $timestamp"; ?><? print "</FONT>
            </TD>
-           <TD ALIGN=\"right\" WIDTH=\"80\">
+           <TD ALIGN=\"right\" WIDTH=\"80\" BGCOLOR=\"#6C6C6C\" BACKGROUND=\"themes/Jeroen/images/menutitle.gif\">
             <B><A HREF=\"search.php?category=$category\"><FONT COLOR=\"<? $this->fgcolor3; ?>\">$category</FONT></A></B>&nbsp;";
               }
               else {
@@ -153,7 +148,6 @@
            <TD ALIGN="left" VALIGN="top" WIDTH="20" HEIGHT="20" BACKGROUND="themes/Jeroen/images/newsboxbottomright.gif">&nbsp;</TD>
           </TR>
          </TABLE>
-         <BR>
     <?	
    }
 
@@ -170,20 +164,17 @@
          <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0" BORDER="0">
           <TR>
            <TD ALIGN="right" VALIGN="bottom" WIDTH="20" HEIGHT="20">
-            <? if (rand(0,1) == 0) $img = "news1.gif"; else $img = "news3.gif"; ?><IMG SRC="themes/Jeroen/images/<? echo $img; ?>" WIDTH="20" HEIGHT="20" ALT="">
-           </TD>
+            <? if (rand(0,1) == 0) $img = "news1.gif"; else $img = "news3.gif"; ?><IMG SRC="themes/Jeroen/images/<? echo $img; ?>" WIDTH="20" HEIGHT="20" ALT=""></TD>
            <TD colspan="3" ALIGN="center" VALIGN="center" HEIGHT="20" BACKGROUND="themes/Jeroen/images/newsmiddle.gif">
-            <IMG SRC="themes/Jeroen/images/newsmiddle.gif" width="1" height="1" alt=""><B><? echo $subject; ?></B>
-           </TD>
+            <IMG SRC="themes/Jeroen/images/newsmiddle.gif" width="1" height="1" alt=""><B><? echo $subject; ?></B></TD>
            <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20">
-            <? if (rand(0,1) == 0) $img = "news2.gif"; else $img = "news4.gif"; ?><IMG SRC="themes/Jeroen/images/<? echo $img; ?>" WIDTH="20" HEIGHT="20" ALT="">
-           </TD>
+            <? if (rand(0,1) == 0) $img = "news2.gif"; else $img = "news4.gif"; ?><IMG SRC="themes/Jeroen/images/<? echo $img; ?>" WIDTH="20" HEIGHT="20" ALT=""></TD>
           </TR>
-          <TR BACKGROUND="themes/Jeroen/images/menutitle.gif">
+          <TR>
            <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20" BACKGROUND="themes/Jeroen/images/newsboxleft.gif" >
             <IMG SRC="themes/Jeroen/images/newsboxleft.gif" WIDTH="20" HEIGHT="20" alt="">
            </TD>
-           <TD COLSPAN="2" ALIGN="left" WIDTH="100%" BGCOLOR="#6C6C6C" HEIGHT=20 NOWRAP>
+           <TD COLSPAN="2" ALIGN="left" WIDTH="100%" BGCOLOR="#6C6C6C" HEIGHT="20"  BACKGROUND="themes/Jeroen/images/menutitle.gif" NOWRAP>
             &nbsp;<FONT COLOR="<? echo $this->fgcolor1; ?>">
             <?
              switch (rand(0,12)) {
@@ -196,7 +187,7 @@
 	     case 6: $how = "Tossed at us"; break;
 	     case 7: $how = "Morsed"; break;
 	     case 8: $how = "Flagged"; break;
-	     case 9: $how = "Written to"; break;
+	     case 9: $how = "Written to us"; break;
 	     case 10: $how = "Made up"; break;
 	     case 11: $how = "Uploaded"; break;
 	     default: $how = "Sneaked through";
@@ -205,11 +196,14 @@
              if ($informant) {
               print "<FONT SIZE=\"-1\">$how by <A HREF=\"account.php?op=userinfo&uname=$informant\">$informant</A> on $timestamp"; ?><? print "</FONT>
            </TD>
-           <TD ALIGN=\"right\" WIDTH=\"80\">
+           <TD ALIGN=\"right\" WIDTH=\"80\" BGOLOR=\"6C6C6C\" BACKGROUND=\"themes/Jeroen/images/menutitle.gif\">
             <B><A HREF=\"search.php?category=$category\"><FONT COLOR=\"<? $this->fgcolor3; ?>\">$category</FONT></A></B>&nbsp;";
              }
              else {
-              print "<FONT SIZE=\"-1\">Reported to us by $anonymous on $timestamp"; ?><? print "</FONT></TD><TD ALIGN=\"center\" WIDTH=\"80\"><A HREF=\"search.php?category=$category\"><FONT COLOR=\"<? $this->fgcolor3; ?>\">$category</FONT></A>";
+              print "<FONT SIZE=\"-1\">Reported to us by $anonymous on $timestamp"; ?><? print "</FONT>
+           </TD>
+           <TD ALIGN=\"center\" WIDTH=\"80\" BGOLOR=\"6C6C6C\" BACKGROUND=\"themes/Jeroen/images/menutitle.gif\">
+            <A HREF=\"search.php?category=$category\"><FONT COLOR=\"<? $this->fgcolor3; ?>\">$category</FONT></A>";
              }
             ?></FONT>
            </TD>
@@ -252,7 +246,6 @@
            <TD ALIGN="left" VALIGN="top" WIDTH="20" HEIGHT="20" BACKGROUND="themes/Jeroen/images/newsboxbottomright.gif">&nbsp;</TD>
           </TR>
          </TABLE>
-         <BR>
     <?	
    }
 
@@ -271,14 +264,11 @@
          <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0">
           <TR>
            <TD ALIGN="right" VALIGN="bottom" WIDTH="20" HEIGHT="20">
-	    <IMG SRC="themes/Jeroen/images/news1.gif" WIDTH="20" HEIGHT="20" ALT="">
-	   </TD>
+	    <IMG SRC="themes/Jeroen/images/news1.gif" WIDTH="20" HEIGHT="20" ALT=""></TD>
 	   <TD ALIGN="center" VALIGN="center" WIDTH="100%" HEIGHT="20" BACKGROUND="themes/Jeroen/images/newsmiddle.gif">
-	    <B>Comment control</B></FONT>
-	   </TD>
+	    <B>Comment control</B></TD>
            <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20">
-            <IMG SRC="themes/Jeroen/images/news4.gif" WIDTH="20" HEIGHT="20" ALT="">
-           </TD>
+            <IMG SRC="themes/Jeroen/images/news4.gif" WIDTH="20" HEIGHT="20" ALT=""></TD>
           </TR>
           <TR>
            <TD COLSPAN="3" ALIGN="center" BGCOLOR="#E7E7E7" BACKGROUND="themes/Jeroen/images/sketch.gif">
@@ -432,7 +422,7 @@
         </TD>
        </TR>
        <TR BGCOLOR="<? echo $this->bgcolor2; ?>"><TD ALIGN="right">&nbsp;</TD></TR>
-      </TABLE><BR>
+      </TABLE>
      <?
    }
  
@@ -464,7 +454,7 @@
       <TD ALIGN="right" VALIGN="bottom" WIDTH="20" HEIGHT="20" BACKGROUND="themes/Jeroen/images/boxtopleftside1.gif">
        <IMG SRC="themes/Jeroen/images/<? echo $img2; ?>" WIDTH="20" HEIGHT="20" ALT="">
       </TD>
-      <TD COLSPAN="3" ALIGN="center" BGCOLOR="#6C6C6C" BACKGROUND="themes/Jeroen/images/menutitle.gif" HEIGHT=20>
+      <TD COLSPAN="3" ALIGN="center" BGCOLOR="#6C6C6C" HEIGHT="20" BACKGROUND="themes/Jeroen/images/menutitle.gif">
        <FONT COLOR="<? echo $this->fgcolor2; ?>"><?  echo $subject; ?></FONT>
       </TD>
       <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20" BACKGROUND="themes/Jeroen/images/boxtoprightside.gif">
@@ -542,7 +532,7 @@
         </TD>
        </TR>
        <TR>
-        <TD ALIGN="center" COLSPAN="3">
+        <TD ALIGN="center" COLSPAN="3" BGOLOR=\"6C6C6C\" BACKGROUND=\"themes/Jeroen/images/menutitle.gif\">
          <FONT SIZE="2">[ <A HREF="">home</A> | <A HREF="/faq.php">faq</A> | <A HREF="/search.php">search</A> | <A HREF="/submit.php">submit news</A> | <A HREF="/account.php">user account</A> | <A HREF="/webboard.php">webboard</A> ] </FONT>
         </TD>
        </TR>
