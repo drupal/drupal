@@ -17,11 +17,21 @@ function tracker_help($section) {
  * Implementation of hook_menu().
  */
 function tracker_menu() {
+  global $user;
+
   $items = array();
   $items[] = array('path' => 'tracker', 'title' => t('recent posts'),
-    'callback' => 'tracker_page',
-    'access' => user_access('access content'),
+    'callback' => 'tracker_page', 'access' => user_access('access content'),
     'weight' => 1);
+
+  // Tabs:
+  if ($user->uid) {
+    $items[] = array('path' => 'tracker/all', 'title' => t('all recent posts'),
+      'type' => MENU_DEFAULT_LOCAL_TASK);
+    $items[] = array('path' => "tracker/$user->uid", 'title' => t('my recent posts'),
+      'type' => MENU_LOCAL_TASK);
+  }
+
   return $items;
 }
 
@@ -32,13 +42,6 @@ function tracker_page($uid = 0) {
   global $user;
 
   $output .= '';
-
-  if ($user->uid) {
-    $output .= '<ul>';
-    $output .= ' <li>'. l(t('My active posts and discussions'), "tracker/$user->uid") .'</li>';
-    $output .= ' <li>'. l(t('All active posts and discussions'), 'tracker') .'</li>';
-    $output .= '</ul>';
-  }
 
   if ($uid) {
     $uid = check_query($uid);

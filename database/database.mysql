@@ -394,8 +394,7 @@ CREATE TABLE url_alias (
   src varchar(128) NOT NULL default '',
   dst varchar(128) NOT NULL default '',
   PRIMARY KEY  (pid),
-  UNIQUE KEY dst (dst),
-  UNIQUE KEY src (src)
+  UNIQUE KEY dst (dst)
 ) TYPE=MyISAM;
 
 --

@@ -407,7 +407,6 @@ CREATE TABLE url_alias (
   src varchar(128) NOT NULL default '',
   PRIMARY KEY  (pid)
 );
-CREATE INDEX url_alias_src_idx ON url_alias(src);
 CREATE INDEX url_alias_dst_idx ON url_alias(dst);
 --
 -- Table structure for permission

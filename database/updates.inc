@@ -63,7 +63,8 @@ $sql_updates = array(
   "2004-06-18" => "update_89",
   "2004-06-27" => "update_90",
   "2004-06-30" => "update_91",
-  "2004-07-07" => "update_92"
+  "2004-07-07" => "update_92",
+  "2004-07-10" => "update_93",
 );
 
 function update_32() {
@@ -1146,6 +1147,17 @@ function update_91() {
 function update_92() {
   $ret = array();
   $ret[] = update_sql("DELETE FROM {cache}");
+  return $ret;
+}
+
+function update_93() {
+  $ret = array();
+  if ($GLOBALS['db_type'] == 'pgsql') {
+    $ret[] = update_sql('DROP INDEX url_alias_src_idx');
+  }
+  else {
+    $ret[] = update_sql('ALTER TABLE {url_alias} DROP INDEX src');
+  }
   return $ret;
 }
 
