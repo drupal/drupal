@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.230 2004/03/20 14:32:21 dries Exp $
+// $Id: comment.module,v 1.231 2004/03/21 14:28:15 dries Exp $
 
 function comment_help($section = "admin/help#comment") {
   $output = "";
@@ -138,11 +138,6 @@ function comment_settings() {
 
 function comment_user($type, $edit, &$user) {
   switch ($type) {
-    case "view":
-      if ($user->signature) {
-        return form_item(t("Signature"), check_output($user->signature));
-      }
-      break;
     case "edit":
       // when user tries to edit his own data
       return array(t('Personal information') => form_textarea(t("Signature"), "signature", $user->signature, 64, 3, t("Your signature will be publicly displayed at the end of your comments.") ."<br />". filter_tips_short()));

@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.169 2004/03/11 20:33:58 dries Exp $
+// $Id: blog.module,v 1.170 2004/03/21 14:28:15 dries Exp $
 
 function blog_settings() {
   $output = form_textarea(t("Explanation or submission guidelines"), "blog_help", variable_get("blog_help", ""), 70, 4, t("This text is displayed at the top of the blog submission form.  It's useful for helping or instructing your users."));
@@ -38,7 +38,7 @@ function blog_access($op, $node) {
 
 function blog_user($type, &$edit, &$user) {
   if ($type == 'view' && user_access("maintain personal blog", $user)) {
-    return form_item(t("Blog"), l(t("view recent blog entries"), "blog/$user->uid", array("title" => t("Read %username's latest blog entries.", array("%username" => $user->name)))));
+    return array(t('History') => form_item(t("Blog"), l(t("view recent blog entries"), "blog/$user->uid", array("title" => t("Read %username's latest blog entries.", array("%username" => $user->name))))));
   }
 }
 
