@@ -45,7 +45,8 @@ $mysql_updates = array(
   "2002-05-02" => "update_30",
   "2002-05-15" => "update_31",
   "2002-06-22" => "update_32",
-  "2002-07-07" => "update_33"
+  "2002-07-07" => "update_33",
+  "2002-07-31" => "update_34"
 );
 
 // Update functions
@@ -479,16 +480,21 @@ function update_31() {
 }
 
 function update_32() {
-  update_sql(" ALTER TABLE users ADD index (sid(4));");
+  update_sql("ALTER TABLE users ADD index (sid(4));");
   update_sql("ALTER TABLE users ADD index (timestamp);");
 }
 
 function update_33() {
   $result = db_query("SELECT * FROM variable WHERE value NOT LIKE 's:%;';");
-    // NOTE: the "WHERE"-part of the query above avoids variables to get serialized twice.
+  // NOTE: the "WHERE"-part of the query above avoids variables to get serialized twice.
   while ($variable = db_fetch_object($result)) {
     variable_set($variable->name, $variable->value);
   }
+}
+
+function update_34() {
+  update_sql("ALTER TABLE feed MODIFY refresh int(10) NOT NULL default '0';");
+  update_sql("ALTER TABLE feed MODIFY timestamp int (10) NOT NULL default '0';");
 }
 
 function update_upgrade3() {
