@@ -261,7 +261,7 @@ function update_index($search_array) {
       ** the search index
       */
       foreach ($newwords as $key => $value) {
-        db_query("INSERT INTO search_index VALUES('$key', ". $node["lno"] .", '$node_type', $value)");
+        db_query("INSERT INTO search_index VALUES('%s', '%s', '%s', '%s')", $key, $node["lno"], $node_type, $value);
       }
 
       // Zap the weighted words array, so we don't add multiples.
