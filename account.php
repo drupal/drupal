@@ -226,8 +226,8 @@ function account_user($uname) {
 
   function module($name, $module, $username) {
     global $theme;
-    if ($module["account"] && $block = $module["account"]($username, "account", "view")) {
-      if ($block["content"]) $theme->box($block["subject"], $block["content"]);
+    if ($module[account] && $block = $module[account]($username, "account", "view")) {
+      if ($block[content]) $theme->box($block[subject], $block[content]);
     }
   }
 

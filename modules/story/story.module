@@ -193,9 +193,9 @@ function story_block() {
     $content .= "<LI><A HREF=\"node.php?id=$story->id\">". check_output($story->title) ."</A><BR><SMALL>(". format_plural($story->comments, "comment", "comments") .")</SMALL></LI>\n";
   }
 
-  $blocks[0]["subject"] = "Top 10:<BR>all stories";
-  $blocks[0]["content"] = $content;
-  $blocks[0]["info"] = "Top 10: all stories";
+  $blocks[0][subject] = "Top 10:<BR>all stories";
+  $blocks[0][content] = $content;
+  $blocks[0][info] = "Top 10: all stories";
 
   unset($content);
 
@@ -204,9 +204,9 @@ function story_block() {
     $content .= "<LI><A HREF=\"node.php?id=$story->id\">". check_output($story->title) ."</A><BR><SMALL>(". format_plural($story->comments, "comment", "comments") .")</SMALL></LI>\n";
   }
 
-  $blocks[1]["subject"] = "Top 10:<BR>recent stories";
-  $blocks[1]["content"] = $content;
-  $blocks[1]["info"] = "Top 10: recent stories";
+  $blocks[1][subject] = "Top 10:<BR>recent stories";
+  $blocks[1][content] = $content;
+  $blocks[1][info] = "Top 10: recent stories";
 
   return $blocks;
 */
