@@ -887,7 +887,7 @@ function user_pass($edit = array()) {
       user_save($account, array('pass' => $pass));
 
       // Mail new password:
-      $variables = array('%username' => $account->name, '%site' => variable_get('site_name', 'drupal'), '%password' => $pass, '%uri' => $base_url, '%uri_brief' => substr($base_url, strlen('http://')), '%mailto' => $account->mail, '%date' => format_date(time()), '%login_uri' => url('user/login', NULL, NULL, TRUE), '%edit_uri' => url('user/edit', NULL, NULL, TRUE));
+      $variables = array('%username' => $account->name, '%site' => variable_get('site_name', 'drupal'), '%password' => $pass, '%uri' => $base_url, '%uri_brief' => substr($base_url, strlen('http://')), '%mailto' => $account->mail, '%date' => format_date(time()), '%login_uri' => url('user/login', NULL, NULL, TRUE), '%edit_uri' => url('user/'. $account->uid .'/edit', NULL, NULL, TRUE));
       $subject = _user_mail_text('pass_subject', $variables);
       $body = _user_mail_text('pass_body', $variables);
       $headers = "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from";
@@ -924,7 +924,7 @@ function user_register($edit = array()) {
 
   // If we are already logged on, go to the user page instead.
   if ($user->uid) {
-    drupal_goto('user/edit');
+    drupal_goto('user/'. $user->uid);
   }
 
   if ($edit) {
@@ -939,14 +939,14 @@ function user_register($edit = array()) {
       $account = user_save('', array('name' => $edit['name'], 'pass' => $pass, 'init' => $edit['mail'], 'mail' => $edit['mail'], 'roles' => array(_user_authenticated_id()), 'status' => (variable_get('user_register', 1) == 1 ? 1 : 0)));
       watchdog('user', t('New user: %name %e-mail.', array('%name' => '<em>'. $edit['name'] .'</em>', '%e-mail' => '<em>&lt;'. $edit['mail'] .'&gt;</em>')), l(t('edit'), 'user/'. $account->uid .'/edit'));
 
-      $variables = array('%username' => $edit['name'], '%site' => variable_get('site_name', 'drupal'), '%password' => $pass, '%uri' => $base_url, '%uri_brief' => substr($base_url, strlen('http://')), '%mailto' => $edit['mail'], '%date' => format_date(time()), '%login_uri' => url('user/login', NULL, NULL, TRUE), '%edit_uri' => url('user/edit', NULL, NULL, TRUE));
+      $variables = array('%username' => $edit['name'], '%site' => variable_get('site_name', 'drupal'), '%password' => $pass, '%uri' => $base_url, '%uri_brief' => substr($base_url, strlen('http://')), '%mailto' => $edit['mail'], '%date' => format_date(time()), '%login_uri' => url('user/login', NULL, NULL, TRUE), '%edit_uri' => url('user/'. $account->uid .'/edit', NULL, NULL, TRUE));
 
       // The first user may login immediately, and receives a customized welcome e-mail.
       if ($account->uid == 1) {
         user_mail($edit['mail'], t('drupal user account details for %s', array('%s' => $edit['name'])), strtr(t("%username,\n\nYou may now login to %uri using the following username and password:\n\n  username: %username\n  password: %password\n\n%edit_uri\n\n--drupal"), $variables), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
         // This should not be t()'ed. No point as its only shown once in the sites lifetime, and it would be bad to store the password.
         $output .= "<p>Welcome to Drupal. You are user #1, which gives you full and immediate access.  All future registrants will receive their passwords via e-mail, so please configure your e-mail settings using the Administration pages.</p><p> Your password is <strong>$pass</strong>. You may change your password on the next page.</p><p>Please login below.</p>";
-        $output .= form_hidden('destination', 'user/edit');
+        $output .= form_hidden('destination', 'user/'. $account->uid);
         $output .= form_hidden('name', $account->name);
         $output .= form_hidden('pass', $pass);
         $output .= form_submit(t('Log in'));
