@@ -124,6 +124,12 @@ function topic_name($tid, $name = 0) {
   return ($topic->pid) ? topic_name($topic->pid, $name) : $name;
 }
 
+// return moderators for topic $tid:
+function topic_moderate($tid) {
+  $topic = topic_get_object("tid", $tid);
+  return $topic->moderate;
+}
+
 // renders a HTML form to select one or more topics:
 function topic_form_select($edit = array(), $size = 1) {
   foreach (topic_tree() as $tid=>$name) {

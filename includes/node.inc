@@ -90,7 +90,7 @@ function node_save($node) {
       throttle("post node", variable_get(max_node_rate, 900));
 
       // setup default values:
-      $node = array_merge(array(title => "?", author => $user->id, type => "?", pid => 0, cid => 0, tid => 0, log => "node created", status => (category_submission($node[cid]) ? $status[queued] : $status[posted]) , score => 0, votes => 0, comment => category_comment($node[cid]), promote => category_promote($node[cid]), moderate => "", timestamp => time()), $node);
+      $node = array_merge(array(title => "?", author => $user->id, type => "?", pid => 0, cid => 0, tid => 0, log => "node created", status => (category_submission($node[cid]) ? $status[queued] : $status[posted]) , score => 0, votes => 0, comment => category_comment($node[cid]), promote => category_promote($node[cid]), moderate => topic_moderate($node[tid]), timestamp => time()), $node);
 
       // prepare queries:
       $f1 = array();
