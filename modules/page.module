@@ -1,0 +1,83 @@
+<?php
+
+$module = array("page" => "page_page",
+                "admin" => "page_admin");
+
+$format = array(0 => HTML, 1 => PHP, 2 => text);
+
+function page_view($node) {
+  global $format, $theme;
+
+  switch ($format[$node->format]) {
+    case "PHP":
+      $output = eval($node->body);
+      break;
+    case "text":
+      $output = nl2br(htmlentities($node->body));
+      break;
+    default:
+      $output = check_output($node->body, 1);
+  }
+
+  $theme->header();
+  $theme->box(check_output($node->title), $output);
+  $theme->footer();
+}
+
+function page_status() {
+  return array(dumped, posted);
+}
+
+function page_form($edit = array()) {
+  global $format;
+
+  $output .= "<FORM ACTION=\"admin.php?mod=page\" METHOD=\"post\">\n";
+
+  $output .= "<B>Name:</B><BR>\n";
+  $output .= "<INPUT NAME=\"edit[title]\" SIZE=\"55\" VALUE=\"". check_textfield($edit[title]) ."\"><P>\n";
+
+  $output .= "<B>Body:</B><BR>\n";
+  $output .= "<TEXTAREA NAME=\"edit[body]\" COLS=\"55\" ROWS=\"10\" WRAP=\"virtual\">". check_textarea($edit[body]) ."</TEXTAREA><P>\n";
+
+  $output .= "<B>Type:</B><BR>\n";
+  foreach ($format as $key=>$value) $options .= "<OPTION VALUE=\"$key\"". ($edit[format] == $key ? " SELECTED" : "") .">$value</OPTION>\n";
+  $output .= "<SELECT NAME=\"edit[format]\">$options</SELECT><P>\n";
+
+  $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[nid]\" VALUE=\"$edit[nid]\">\n";
+
+  $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save page\">\n";
+  $output .= "</FORM>\n";
+
+  return $output;
+}
+
+function page_save($edit) {
+  global $status;
+  node_save(array_merge($edit, array(type => "page", status => $status[posted])));
+}
+
+function page_overview() {
+  return node_overview("type = 'page'");
+}
+
+function page_admin() {
+  global $id, $op, $edit;
+
+  print "<SMALL><A HREF=\"admin.php?mod=page&op=add\">add new page</A> | <A HREF=\"admin.php?mod=page\">overview</A> | <A HREF=\"admin.php?mod=page&op=help\">help</A></SMALL><HR>\n";
+
+  switch ($op) {
+    case "add":
+      print page_form();
+      break;
+    case "edit":
+      print page_form(node_get_array(nid, $id));
+      break;
+   case "Save page":
+      print status(page_save($edit));
+      // fall through:
+    default:
+      print page_overview();
+  }
+}
+
+?>

@@ -29,6 +29,10 @@ function book_timout_threshold($node, $default) {
   return $default;
 }
 
+function book_status() {
+  return array(dumped, expired, queued, posted);
+}
+
 function book_location($node, $nodes = array()) {
   $parent = db_fetch_object(db_query("SELECT n.nid, n.title, b.parent FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE n.nid = '$node->parent'"));
   if ($parent->title) {
