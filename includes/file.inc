@@ -2,7 +2,7 @@
 /* $Id$ */
 
 /**
- * @defgroup file File API
+ * @defgroup file File interface
  *   Common file handling functions.
  * @{
  */
