@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.127 2004/02/06 19:07:56 dries Exp $
+// $Id: update.php,v 1.128 2004/02/08 11:12:33 dries Exp $
 /*
 ** USAGE:
 **
@@ -655,7 +655,7 @@ function update_77() {
 
 function update_78() {
   if ($GLOBALS["db_type"] == "mysql") {
-    update_sql("CREATE TABLE filters (
+    update_sql("CREATE TABLE {filters} (
       module varchar(64) NOT NULL default '',
       weight tinyint(2) DEFAULT '0' NOT NULL,
       KEY weight (weight)
