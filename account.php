@@ -7,7 +7,6 @@ function dbsave($dbase, $data, $id=0) {
     if ($key == "passwd") { $query .= "$key=PASSWORD('". addslashes($value) ."'), "; }
     else { $query .= "$key='". addslashes($value) ."', "; }
   }
-  print($query);
   $query = substr($query, 0, -2);
   dbconnect();
   if (!empty($id)) { mysql_query("UPDATE $dbase SET $query WHERE id=$id") or die(mysql_error()); return $id; }
@@ -18,7 +17,7 @@ function showLogin($userid = "") {
   print("<TABLE BORDER=0 CELLPADDING=2 CELLSPACING=2>\n");
   print("<TR><TH>User ID:</TH><TD><INPUT NAME=userid VALUE=\"$userid\"></TD></TR>\n");
   print("<TR><TH>Password:</TH><TD><INPUT NAME=passwd TYPE=password></TD></TR>\n");
-  print("<TR><TD ALIGN=center><INPUT NAME=act TYPE=submit VALUE=\"Login\"></TD></TR>\n");
+  print("<TR><TD ALIGN=center><INPUT NAME=op TYPE=submit VALUE=\"Login\"></TD></TR>\n");
   print("<TR><TD ALIGN=center><A HREF=\"account.php?op=new\">Register</A> as new user.</A></TD></TR>\n");
   print("<TR><TD COLSPAN=2>$user->ublock</TD></TR>\n");
   print("</TABLE>\n");
@@ -55,7 +54,7 @@ function newUser($user = "", $error="") {
   print("<TR><TH>Name:</TH><TD><INPUT NAME=\"new[name]\" VALUE=\"$new[name]\"></TD></TR>\n");
   print("<TR><TH>User ID:</TR><TD><INPUT NAME=\"new[userid]\" VALUE=\"$new[userid]\"></TD></TR>\n");
   print("<TR><TH>E-mail:</TH><TD><INPUT NAME=\"new[email]\" VALUE=\"$new[email]\"></TD></TR>\n");
-  print("<TR><TD ALIGN=right COLSPAN=2><INPUT NAME=act TYPE=submit VALUE=\"Register\"></TD></TR>\n");
+  print("<TR><TD ALIGN=right COLSPAN=2><INPUT NAME=op TYPE=submit VALUE=\"Register\"></TD></TR>\n");
   print("</TABLE>\n");
   print("</FORM>\n");
   $theme->footer();
@@ -145,7 +144,7 @@ switch ($op) {
     print("<B>Password:</B><BR>\n");
     print("<INPUT TYPE=password NAME=\"edit[pass1]\" SIZE=10 MAXLENGTH=20> <INPUT TYPE=password NAME=edit[pass2] SIZE=10 MAXLENGTH=20><BR>\n");
     print("<I>Enter your new password twice if you want to change your current password or leave it blank if you are happy with your current password.</I><P>\n");
-    print("<INPUT TYPE=submit NAME=act VALUE=\"Save user information\"><BR>\n");
+    print("<INPUT TYPE=submit NAME=op VALUE=\"Save user information\"><BR>\n");
     print("</FORM>\n");
     $theme->footer();
     break;
@@ -189,7 +188,7 @@ switch ($op) {
     print("<B>Singature:</B> (255 char limit)<BR>\n");
     print("<TEXTAREA NAME=\"edit[signature]\" COLS=35 ROWS=5 WRAP=virtual>$user->signature</TEXTAREA><BR>\n");
     print("<I>Optional. This information will be publicly displayed at the end of your comments. </I><P>\n");
-    print("<INPUT TYPE=submit NAME=act VALUE=\"Save page settings\"><BR>\n");
+    print("<INPUT TYPE=submit NAME=op VALUE=\"Save page settings\"><BR>\n");
     print("</FORM>\n");
     $theme->footer();
     break;
