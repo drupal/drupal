@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.185 2003/10/03 14:55:26 dries Exp $
+// $Id: book.module,v 1.186 2003/10/06 08:53:17 dries Exp $
 
 function book_system($field){
   $output = "";
@@ -49,7 +49,7 @@ function book_access($op, $node) {
     /*
     ** Only registered users can update book pages.  Given the nature
     ** of the book module this is considered to be a good/safe idea.
-    ** One can only upate a book page if there are no suggested updates
+    ** One can only update a book page if there are no suggested updates
     ** of that page waiting for approval, when it is not a PHP-page and
     ** as long as the "create new revision"-bit is set.  That is, only
     ** updates that don't overwrite the current or pending information
@@ -355,7 +355,7 @@ function book_content($node) {
   ** the moderation queue.
   */
 
-  if ($node->moderate && arg(0) != "queue") {
+  if ($op != t("Preview") && $node->moderate && arg(0) != "queue") {
     $revision = book_revision_load($node, array("moderate" => 0, "status" => 1));
 
     if ($revision) {
