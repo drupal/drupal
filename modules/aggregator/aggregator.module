@@ -524,7 +524,7 @@ function import_page_last() {
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"2\">";
   while ($item = db_fetch_object($result)) {
     if (module_exist("blog") && user_access("maintain personal blog")) {
-      $links[] = l(t("blog it"), "node/add/blog&amp;iid=$item->iid", array("title" => t("Comment on this news item in your personal blog.")));
+      $links[] = l(t("blog it"), "node/add/blog", array("title" => t("Comment on this news item in your personal blog.")), "iid=$item->iid");
     }
     $links[] = l(t("feed"), "import/feed/$item->fid", array("title" => t("Read more syndicated news from this feed.")));
 
@@ -560,7 +560,7 @@ function import_page_feed($fid) {
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"2\">";
   while ($item = db_fetch_object($result)) {
     if (module_exist("blog") && user_access("maintain personal blog")) {
-      $links[] = l(t("blog it"), "node/add/blog&amp;iid=$item->iid", array("title" => t("Comment on this news item in your personal blog.")));
+      $links[] = l(t("blog it"), "node/add/blog", array("title" => t("Comment on this news item in your personal blog.")), "iid=$item->iid");
     }
     $links[] = "<a href=\"$item->link\">". t("visit") ."</a>";
 
@@ -597,7 +597,7 @@ function import_page_bundle($bid) {
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"2\">";
   while ($item = db_fetch_object($result)) {
     if (module_exist("blog") && user_access("maintain personal blog")) {
-      $links[] = l(t("blog it"), "node/add/blog&amp;iid=$item->iid", array("title" => t("Comment on this news item in your personal blog.")));
+      $links[] = l(t("blog it"), "node/add/blog", array("title" => t("Comment on this news item in your personal blog.")), "iid=$item->iid");
     }
     $links[] = l(t("feed"), "import/feed/$item->fid", array("title" => t("Read more syndicated news from this feed.")));
     $links[] = "<a href=\"$item->link\">". t("visit") ."</a>";

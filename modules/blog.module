@@ -134,17 +134,7 @@ function blog_page_last() {
 
 function blog_form(&$node, &$help, &$error) {
   global $nid, $iid;
-
-  if (isset($node->body)) {
-    /*
-    ** Validate the size of the blog:
-    */
-
-    if (count(explode(" ", $node->body)) < variable_get("minimum_blog_size", 0)) {
-      $error["body"] = theme("theme_error", t("The body of your blog is too short."));
-    }
-  }
-  else {
+  if (empty($node->body)) {
 
     /*
     ** Carry out some explanation or submission guidelines:
@@ -166,6 +156,15 @@ function blog_form(&$node, &$help, &$error) {
       $node->body = "<a href=\"$item->link\">$item->title</a> - <i>". check_output($item->description) ."</i> [<a href=\"$item->flink\">$item->ftitle</a>]\n";
     }
   }
+  else {
+    /*
+    ** Validate the size of the blog:
+    */
+
+    if (count(explode(" ", $node->body)) < variable_get("minimum_blog_size", 0)) {
+      $error["body"] = theme("theme_error", t("The body of your blog is too short."));
+    }
+  }
 
   if (function_exists("taxonomy_node_form")) {
     $output .= implode("", taxonomy_node_form("blog", $node));
@@ -176,7 +175,6 @@ function blog_form(&$node, &$help, &$error) {
 }
 
 function blog_page() {
-
 
   if (user_access("access content")) {
     switch (arg(1)) {
