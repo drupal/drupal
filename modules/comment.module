@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.203 2003/12/29 19:49:11 dries Exp $
+// $Id: comment.module,v 1.204 2003/12/30 14:19:57 dries Exp $
 
 function comment_help($section = "admin/help#comment") {
   $output = "";
@@ -950,7 +950,7 @@ function _comment_delete_thread($comment) {
   // Delete the comment's replies:
   $result = db_query("SELECT cid, subject FROM {comments} WHERE pid = %d", $comment->cid);
   while ($comment = db_fetch_object($result)) {
-    comment_delete_thread($comment);
+    _comment_delete_thread($comment);
   }
 }
 
