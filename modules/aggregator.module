@@ -341,7 +341,7 @@ function import_view() {
 function import_fd_form() {
   global $REQUEST_URI;
 
-  $form .= form_textfield("Feed directory file", "url", "http://127.0.0.1/1.fd", 64, 128, "The fully-qualified URL of the feed directory file.");
+  $form .= form_textfield("Feed directory file", "url", "http://", 64, 128, "The fully-qualified URL of the feed directory file.");
   $form .= form_submit("Collect feeds");
 
   return form($REQUEST_URI, $form);
@@ -394,8 +394,10 @@ function import_fd_collect($edit) {
 }
 
 function import_fd_import($edit) {
-  foreach ($edit as $title => $link) {
-    import_save_feed(array("title" => $title, "url" => $link, "refresh" => 3600, "uncache" => 2419200));
+  if ($edit) {
+    foreach ($edit as $title => $link) {
+      import_save_feed(array("title" => $title, "url" => $link, "refresh" => 3600, "uncache" => 2419200));
+    }
   }
 }
 
