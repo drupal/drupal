@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.162 2003/09/20 15:11:41 dries Exp $
+// $Id: comment.module,v 1.163 2003/09/21 07:01:51 dries Exp $
 
 $GLOBALS["cmodes"] = array(1 => t("Flat list - collapsed"), 2 => t("Flat list - expanded"), 3 => t("Threaded list - collapsed"), 4 => t("Threaded list - expanded"));
 $GLOBALS["corder"] = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"));
@@ -117,7 +117,7 @@ function comment_user($type, $edit, &$user) {
       break;
     case "edit_form":
       // when user tries to edit his own data
-      return form_textarea(t("Signature"), "signature", $edit["signature"], 70, 3, t("Your signature will be publicly displayed at the end of your comments.") ."<br />". form_allowed_tags_text());
+      return form_textarea(t("Signature"), "signature", $user->signature, 70, 3, t("Your signature will be publicly displayed at the end of your comments.") ."<br />". form_allowed_tags_text());
     case "edit_validate":
       // validate user data editing
       return array("signature" => $edit["signature"]);
