@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.227 2004/06/21 20:05:37 dries Exp $
+// $Id: book.module,v 1.228 2004/07/04 16:50:01 dries Exp $
 
 /**
  * Implementation of hook_node_name().
@@ -228,7 +228,7 @@ function book_validate(&$node) {
 /**
  * Implementation of hook_form().
  */
-function book_form(&$node, &$error) {
+function book_form(&$node) {
   global $user;
 
   $op = $_POST['op'];

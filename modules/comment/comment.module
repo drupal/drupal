@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.257 2004/06/23 05:41:16 dries Exp $
+// $Id: comment.module,v 1.258 2004/07/04 16:50:02 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -316,7 +316,7 @@ function comment_post($edit) {
       $edit['subject'] = truncate_utf8(strip_tags($edit['comment']), 29);
     }
 
-    if (!form_has_errors()) {
+    if (!form_get_errors()) {
       // Check for duplicate comments.  Note that we have to use the
       // validated/filtered data to perform such check.
 
@@ -1255,7 +1255,7 @@ function theme_comment_form($edit, $title) {
     $form .= form_submit(t('Preview comment'));
   }
 
-  if (!form_has_errors()) {
+  if (!form_get_errors()) {
     $form .= form_submit(t('Post comment'));
   }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.114 2004/06/18 15:04:35 dries Exp $
+// $Id: page.module,v 1.115 2004/07/04 16:50:02 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -129,7 +129,7 @@ function page_view($node, $teaser = FALSE, $page = FALSE) {
 /**
  * Implementation of hook_form().
  */
-function page_form(&$node, &$error) {
+function page_form(&$node) {
   if (function_exists('taxonomy_node_form')) {
     $output .= implode('', taxonomy_node_form('page', $node));
   }

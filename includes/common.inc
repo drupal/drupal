@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.362 2004/07/04 06:19:41 dries Exp $ */
+/* $Id: common.inc,v 1.363 2004/07/04 16:50:00 dries Exp $ */
 
 /**
  * @name Page title
@@ -961,9 +961,9 @@ function form_set_error($name, $message) {
 }
 
 /**
- * Return true when errors have been set.
+ * Return an associative array of all errors.
  */
-function form_has_errors() {
+function form_get_errors() {
   if (array_key_exists('form', $GLOBALS)) {
     return $GLOBALS['form'];
   }
