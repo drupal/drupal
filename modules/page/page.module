@@ -6,9 +6,9 @@ function page_help($section = "admin/help#page") {
 
   switch ($section) {
     case 'admin/help#page':
-      $output .= "<p>The page module is used to create a <i>static page</i>.  Unlike a story, a static page is a persistent web page on your site which usually shortcuts the typical lifecycle of user generated content (i.e. submit -&gt; moderate -&gt; post -&gt; comment).  A static page is usually linked from the main navigation bar, using whatever text the author wishes.  To create a static page without this navigation link, simply skip the link text field.</p>";
-      $output .= "<p>Site pages, unlike many other forms of Drupal content, may be made of PHP code in addition to HTML and text. All Drupal objects and functions are available to a site administrator.</p>";
-      $output = t($output);
+      $output .= t("
+      <p>The page module is used to create a <i>static page</i>.  Unlike a story, a static page is a persistent web page on your site which usually shortcuts the typical lifecycle of user generated content (i.e. submit -&gt; moderate -&gt; post -&gt; comment).  A static page is usually linked from the main navigation bar, using whatever text the author wishes.  To create a static page without this navigation link, simply skip the link text field.</p>
+      <p>Site pages, unlike many other forms of Drupal content, may be made of PHP code in addition to HTML and text. All Drupal objects and functions are available to a site administrator.</p>");
       break;
     case 'admin/system/modules#description':
       $output = t("Enables the creation of a static pages that can be added to the navigation system.");

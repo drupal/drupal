@@ -6,11 +6,11 @@ function search_help($section = "admin/help#search") {
 
   switch ($section) {
     case 'admin/help#search':
-      $output = "<strong>Search guidelines</strong>";
-      $output .= "<p>The search page allows you to search the web site's content.  You can specify multiple words, and they will all be searched for.  You can also use wildcards, so 'walk*' will match 'walk', 'walking', 'walker', 'walkable' and so on.  Furthermore, searches are not case sensitive so searching for 'walk', 'Walk' or 'WALK' will yield exactly the same results.</p>";
-      $output .= "<strong>Words excluded from the search</strong>";
-      $output .= "<p>Words that frequently occur, typically called 'noise words', are ignored.  Example words are 'a', 'at', 'and', 'are', 'as', 'how', 'where', etc.  Words shorter than %number letters are also ignored.</p>";
-      $output = t($output, array("%number" => variable_get("minimum_word_size", 2)));
+      $output = t("
+      <strong>Search guidelines</strong>
+      <p>The search page allows you to search the web site's content.  You can specify multiple words, and they will all be searched for.  You can also use wildcards, so 'walk*' will match 'walk', 'walking', 'walker', 'walkable' and so on.  Furthermore, searches are not case sensitive so searching for 'walk', 'Walk' or 'WALK' will yield exactly the same results.</p>
+      <strong>Words excluded from the search</strong>
+      <p>Words that frequently occur, typically called 'noise words', are ignored.  Example words are 'a', 'at', 'and', 'are', 'as', 'how', 'where', etc.  Words shorter than %number letters are also ignored.</p>", array("%number" => variable_get("minimum_word_size", 2)));
       break;
     case 'admin/system/modules#description':
       $output = t("Enables site wide keyword searching.");
