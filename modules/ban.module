@@ -1,9 +1,32 @@
 <?
 
-$module = array("admin" => "ban_admin");
+$module = array("help" => "ban_help",
+                "admin" => "ban_admin");
 
 include "includes/ban.inc";
 
+
+function ban_help() {
+ ?>
+  <P>The ban module keeps a list of bans in four categories:</P>
+  <UL>
+   <LI>E-mail bans: this type of ban specifies which email-addresses will be rejected when registering new users. Can be used to prevent users from using a free-mail account (e.g. hotmail.com).</LI>
+   <LI>Profanity bans: <I>under construction</I></LI>
+   <LI>Hostname bans: this type of ban allows you to block certain hostnames to access to your site or to register as a new user.</LI>
+   <LI>Username bans: this ban will block certain usernames from registration.  Typical examples include <I>admin</I>, <I>anonymous</I>, <I>root</I>, <I>webmaster</I>, etc.</LI>
+  </UL>
+  <P>The ban system allows you to use a flexible wild-card ban system. This means you can block all email addresses from a certain domain name, block every username starting with "guest", etc.  To do this, you can use the following wild-card characters:</P>
+  <UL>
+   <LI>&nbsp;% : matches any number of characters, including zero characters.</LI>
+   <LI>&nbsp;_ : matches exactly one character.</LI>
+  </UL>
+  <P><U>Examples</U>:</P>
+  <UL>
+   <LI>E-mail address bans <CODE>%@hotmail.com</CODE>, <CODE>%@altavista.%</CODE>, <CODE>%@usa.net</CODE>, etc.  Used to prevent users from using free-email accounts, which might be used to cause trouble.</LI>
+   <LI>Username bans <CODE>root</CODE>, <CODE>webmaster</CODE>, <CODE>admin%</CODE>, etc.  Used to prevent administrator impersonators.</LI>
+  </UL>
+ <?
+}
 
 function ban_admin_new($mask, $category, $reason) {
   ban_add($mask, $category, $reason, &$message);
@@ -97,7 +120,7 @@ function ban_admin_check() {
 function ban_admin() {
   global $op, $id, $mask, $category, $reason;
 
-  print "<SMALL><A HREF=\"admin.php?mod=ban&op=add\">add ban</A> | <A HREF=\"admin.php?mod=ban&op=check\">check ban</A> | <A HREF=\"admin.php?mod=ban\">overview</A></SMALL><HR>\n";
+  print "<SMALL><A HREF=\"admin.php?mod=ban&op=add\">add ban</A> | <A HREF=\"admin.php?mod=ban&op=check\">check ban</A> | <A HREF=\"admin.php?mod=ban\">overview</A> | <A HREF=\"admin.php?mod=ban&op=help\">help</A></SMALL><HR>\n";
 
   switch ($op) {
     case "Add ban":
@@ -109,6 +132,9 @@ function ban_admin() {
       break;
     case "add":
       ban_admin_add();
+      break;
+    case "help":
+      ban_help();
       break;
     case "check":
       ban_admin_check();

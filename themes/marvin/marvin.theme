@@ -221,11 +221,8 @@
        </TD>
        <TD VALIGN="top">
          <?
-          // Display main blocks:
-          theme_main_blocks($this);
-
-          // Display user-defined blocks:
-          theme_user_blocks($this);
+          theme_account($this);
+          theme_blocks("left", $this);
          ?>
        </TD>
       </TR>

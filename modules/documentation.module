@@ -11,7 +11,7 @@ function documentation_module($name, $module) {
 
 function documentation() {
   ?>
-  <SMALL><I>$Id: documentation.module,v 1.18 2001/01/13 08:29:50 dries Exp $</I></SMALL>
+  <SMALL><I>$Id: documentation.module,v 1.19 2001/01/13 16:33:18 dries Exp $</I></SMALL>
   
   <H1>Chapter 1: introduction</H1>
 
@@ -89,9 +89,6 @@ function documentation() {
   <H1>Chapter 3: drupal engine</H1>
 
   <P>While we in no way consider the design and implementation of the drupal engine to be finished, we feel that our own accompanying intensive experience has given us a fairly stable and well-proven design. The following provides a brief over-view of the different aspects of drupal's core engine and features.</P> 
-
-  <H2>Blocks</H2>
-  <P>Blocks are the side-boxes of the site that provide the main interface to the engine. They can be fully customized by an administrator to suit his or her needs. (Full documentation still under construction)</P>
 
   <H2>Cron</H2>
  

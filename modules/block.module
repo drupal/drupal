@@ -1,7 +1,17 @@
 <?
 
 $module = array("page" => "block_page",
+                "help" => "block_help",
                 "admin" => "block_admin");
+
+function block_help() {
+ ?>
+  <P>Blocks are the boxes visible in the side bars on the left and the right-hand side of the website.  They are either exported by the engine or by any of the available modules.  To really get your teeth in a drupal website, you are going to have to deal with blocks and administrating blocks in a fairly sophisticated fashion.  This means you are going to have to be sensitive to the way the block placement strategy works.</P>
+  <P>The placement of blocks is delegated to the administrator but for most blocks, i.e. those called "custom blocks", the sole force behind enabling and disabling them is the user itself.</P>
+  <P>An administrator can lay out and arrange the available blocks to fit in two regions: "left" and "right".  Regions simply contain blocks.  In addition, an administrator can assign each block (within a region) a weight to sort them vertically.  The heavy blocks will sink down whereas the light blocks will be positioned at the top.</P>
+  <P>As mentioned above, blocks can be arranged to fit in two regions: left and right.  For theme builders, each region is identified by a corresponding constant: "left" and "right".</P>
+ <?
+}
 
 function block_page() {
   global $theme;
@@ -25,7 +35,7 @@ function block_page() {
 
 function block_admin_save($edit) {
   foreach ($edit as $key=>$value) {
-    db_query("UPDATE blocks SET status = '$value' WHERE name = '$key'");
+    db_query("UPDATE blocks SET region = '$value[region]', status = '$value[status]', weight = '$value[weight]' WHERE name = '$key'");
   }
 }
 
@@ -37,20 +47,33 @@ function block_admin_display() {
   // Generate output:
   $output .= "<FORM ACTION=\"admin.php?mod=block\" METHOD=\"post\">\n";
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR><TH>block</TH><TH>module</TH><TH>status</TH></TR>\n";
+  $output .= " <TR><TH>block</TH><TH>module</TH><TH>status</TH><TH>weight</TH><TH>region</TH></TR>\n";
   
   while ($block = db_fetch_object($result)) {
     $module = ($repository[$block->module]["admin"]) ? "<A HREF=\"admin.php?mod=$block->module\">$block->module</A>" : $block->module;
 
-    $status .= "<SELECT NAME=\"edit[$block->name]\">\n";
+    $status .= "<SELECT NAME=\"edit[$block->name][status]\">\n";
     $status .= " <OPTION VALUE=\"2\"". (($block->status == 2) ? " SELECTED" : "") .">enabled: always</OPTION>\n";
     $status .= " <OPTION VALUE=\"1\"". (($block->status == 1) ? " SELECTED" : "") .">enabled: custom</OPTION>\n";
     $status .= " <OPTION VALUE=\"0\"". (($block->status == 0) ? " SELECTED" : "") .">disabled</OPTION>\n";
     $status .= "</SELECT>\n";
 
-    $output .= " <TR><TD>". $block->name ."</TD><TD ALIGN=\"center\">$module</TD><TD>$status</TD></TR>\n";
+    $weight .= "<SELECT NAME=\"edit[$block->name][weight]\">\n";
+    for ($count = 0; $count < 10; $count++) {
+      $weight .= "<OPTION VALUE=\"$count\"". (($block->weight == $count) ? " SELECTED" : "") .">$count</OPTION>\n";
+    }
+    $weight .= "</SELECT>\n";
+
+    $region .= "<SELECT NAME=\"edit[$block->name][region]\">\n";
+    $region .= " <OPTION VALUE=\"0\"". (($block->region == 0) ? " SELECTED" : "") .">left</OPTION>\n";
+    $region .= " <OPTION VALUE=\"1\"". (($block->region == 1) ? " SELECTED" : "") .">right</OPTION>\n";
+    $region .= "</SELECT>\n";
+
+    $output .= " <TR><TD>". $block->name ."</TD><TD ALIGN=\"center\">$module</TD><TD>$status</TD><TD>$weight</TD><TD>$region</TD></TR>\n";
     
     unset($status);
+    unset($weight);
+    unset($region);
   }
   
   $output .= "</TABLE>\n";
@@ -60,16 +83,67 @@ function block_admin_display() {
   print $output;
 }
 
+function block_admin_overview() {
+  global $site_name;
+
+  $result = db_query("SELECT * FROM blocks WHERE status > 0 AND region = 0 ORDER BY weight");
+  $lblocks .= "<TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
+  while ($block = db_fetch_object($result)) $lblocks .= " <TR><TD NOWRAP>". ($block->status == 2 ? "<B>$block->name</B>" : $block->name) ."</TD><TD>$block->weight</TD></TR>\n";
+  $lblocks .= "</TABLE>\n";
+
+  $result = db_query("SELECT * FROM blocks WHERE status > 0 AND region = 1 ORDER BY weight");
+  $rblocks .= "<TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
+  while ($block = db_fetch_object($result)) $rblocks .= " <TR><TD NOWRAP>". ($block->status == 2 ? "<B>$block->name</B>" : $block->name) ."</TD><TD>$block->weight</TD></TR>\n";
+  $rblocks .= "</TABLE>\n";
+  
+  $output .= "<P><B>layout 1:</B></P>\n";
+  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
+  $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"3\">$site_name header</TD></TR>\n";
+  $output .= " <TR><TD>\n". ($lblocks ? $lblocks : "&nbsp;") ."</TD><TD WIDTH=\"300\">&nbsp;</TD><TD>\n". ($rblocks ? $rblocks : "&nbsp;") ."</TD></TR>\n";
+  $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"3\">$site_name footer</TD></TR>\n";
+  $output .= "</TABLE>\n";
+
+  $result = db_query("SELECT * FROM blocks WHERE status > 0 ORDER BY weight");
+  $blocks .= "<TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
+  while ($block = db_fetch_object($result)) $blocks .= " <TR><TD NOWRAP>". ($block->status == 2 ? "<B>$block->name</B>" : $block->name) ."</TD><TD>$block->weight</TD></TR>\n";
+  $blocks .= "</TABLE>\n";
+
+  $output .= "<P><B>layout 2:</B></P>\n";
+  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
+  $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"2\">$site_name header</TD></TR>\n";
+  $output .= " <TR><TD WIDTH=\"400\">&nbsp;</TD><TD>\n". ($blocks ? $blocks : "&nbsp;") ."</TD></TR>\n";
+  $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"2\">$site_name footer</TD></TR>\n";
+  $output .= "</TABLE>\n";
+
+  $output .= "<P><B>layout 3:</B></P>\n";
+  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
+  $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"2\">$site_name header</TD></TR>\n";
+  $output .= " <TR><TD>\n". ($blocks ? $blocks : "&nbsp;") ."</TD><TD WIDTH=\"400\">&nbsp;</TD></TR>\n";
+  $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"2\">$site_name footer</TD></TR>\n";
+  $output .= "</TABLE>\n";
+
+  print $output;
+}
+
 function block_admin() {
   global $op, $edit;
+  
+  print "<SMALL><A HREF=\"admin.php?mod=block\">configure</A> | <A HREF=\"admin.php?mod=block&op=overview\">overview</A> | <A HREF=\"admin.php?mod=block&op=help\">help</A></SMALL><HR>\n";
 
   switch ($op) {
+    case "help":
+      block_help();
+      break;
+    case "overview":
+      block_admin_overview();
+      break;
     case "Save blocks":
       block_admin_save($edit);
-      break;
+      // fall through
+    default:
+      block_admin_display();
   }
  
-  block_admin_display();
 }
 
 ?>
