@@ -72,12 +72,12 @@
          <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0" BORDER="0">
           <TR>
            <TD ALIGN="right" VALIGN="bottom" WIDTH="20" HEIGHT="20">
-            <? if (rand(0,1) == 0) $img = "news5.gif"; else $img = "news7.gif"; ?><IMG SRC="themes/Jeroen/images/<? echo $img; ?>" WIDTH="20" HEIGHT="20" ALT=""></TD>
-           <TD colspan="3" ALIGN="center" VALIGN="center" HEIGHT="20" BACKGROUND="themes/Jeroen/images/newsmiddle2.gif">
+            <? if (rand(0,1) == 0) $img = "news1.gif"; else $img = "news3.gif"; ?><IMG SRC="themes/Jeroen/images/<? echo $img; ?>" WIDTH="20" HEIGHT="20" ALT=""></TD>
+           <TD colspan="3" ALIGN="center" VALIGN="center" HEIGHT="20" BACKGROUND="themes/Jeroen/images/newsmiddle.gif">
             <IMG SRC="themes/Jeroen/images/newsmiddle.gif" width="1" height="1" alt=""><B><? echo $subject; ?></B>
            </TD>
            <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20">
-            <? if (rand(0,1) == 0) $img = "news6.gif"; else $img = "news8.gif"; if (rand(0,100) == 50) $img = "news9.gif"; ?><IMG SRC="themes/Jeroen/images/<? echo $img; ?>" WIDTH="20" HEIGHT="20" ALT=""></TD>
+            <? if (rand(0,1) == 0) $img = "news2.gif"; else $img = "news4.gif"; if (rand(0,100) == 50) $img = "news5.gif"; ?><IMG SRC="themes/Jeroen/images/<? echo $img; ?>" WIDTH="20" HEIGHT="20" ALT=""></TD>
           </TR>
           <TR BACKGROUND="themes/Jeroen/images/menutitle.gif">
            <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20" BACKGROUND="themes/Jeroen/images/newsboxleft.gif" ><IMG SRC="themes/Jeroen/images/newsboxleft.gif" WIDTH="20" HEIGHT="20" alt="">
@@ -170,13 +170,13 @@
          <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0" BORDER="0">
           <TR>
            <TD ALIGN="right" VALIGN="bottom" WIDTH="20" HEIGHT="20">
-            <? if (rand(0,1) == 0) $img = "news5.gif"; else $img = "news5.gif"; ?><IMG SRC="themes/Jeroen/images/<? echo $img; ?>" WIDTH="20" HEIGHT="20" ALT="">
+            <? if (rand(0,1) == 0) $img = "news1.gif"; else $img = "news3.gif"; ?><IMG SRC="themes/Jeroen/images/<? echo $img; ?>" WIDTH="20" HEIGHT="20" ALT="">
            </TD>
-           <TD colspan="3" ALIGN="center" VALIGN="center" HEIGHT="20" BACKGROUND="themes/Jeroen/images/newsmiddle2.gif">
+           <TD colspan="3" ALIGN="center" VALIGN="center" HEIGHT="20" BACKGROUND="themes/Jeroen/images/newsmiddle.gif">
             <IMG SRC="themes/Jeroen/images/newsmiddle.gif" width="1" height="1" alt=""><B><? echo $subject; ?></B>
            </TD>
            <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20">
-            <? if (rand(0,1) == 0) $img = "news6.gif"; else $img = "news6.gif"; ?><IMG SRC="themes/Jeroen/images/<? echo $img; ?>" WIDTH="20" HEIGHT="20" ALT="">
+            <? if (rand(0,1) == 0) $img = "news2.gif"; else $img = "news4.gif"; ?><IMG SRC="themes/Jeroen/images/<? echo $img; ?>" WIDTH="20" HEIGHT="20" ALT="">
            </TD>
           </TR>
           <TR BACKGROUND="themes/Jeroen/images/menutitle.gif">
@@ -271,13 +271,13 @@
          <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0">
           <TR>
            <TD ALIGN="right" VALIGN="bottom" WIDTH="20" HEIGHT="20">
-	    <IMG SRC="themes/Jeroen/images/news5.gif" WIDTH="20" HEIGHT="20" ALT="">
+	    <IMG SRC="themes/Jeroen/images/news1.gif" WIDTH="20" HEIGHT="20" ALT="">
 	   </TD>
-	   <TD ALIGN="center" VALIGN="center" WIDTH="100%" HEIGHT="20" BACKGROUND="themes/Jeroen/images/newsmiddle2.gif">
+	   <TD ALIGN="center" VALIGN="center" WIDTH="100%" HEIGHT="20" BACKGROUND="themes/Jeroen/images/newsmiddle.gif">
 	    <B>Comment control</B></FONT>
 	   </TD>
            <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20">
-            <IMG SRC="themes/Jeroen/images/news6.gif" WIDTH="20" HEIGHT="20" ALT="">
+            <IMG SRC="themes/Jeroen/images/news4.gif" WIDTH="20" HEIGHT="20" ALT="">
            </TD>
           </TR>
           <TR>
@@ -441,38 +441,38 @@
    # Description..: a function to draw a box/block.
    function box($subject, $content) { 
      include "config.inc";
-     if (rand(0,50) == 25) $img = "boxbottomright6.gif";
-     else $img = "boxbottomright5.gif";
+     if (rand(0,50) == 25) $img = "boxbottomright2.gif";
+     else $img = "boxbottomright1.gif";
      $width = rand(10,200);
-     if (rand(0,100) == 50) $img2 = "boxtopleftside4.gif";
-     else $img2 ="boxtopleftside3.gif";
+     if (rand(0,100) == 50) $img2 = "boxtopleftside2.gif";
+     else $img2 ="boxtopleftside1.gif";
     ?>
     <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0" BORDER="0">
      <TR>
       <TD ALIGN="right" VALIGN="bottom" WIDTH="20" HEIGHT="20">
-       <IMG SRC="themes/Jeroen/images/boxtopleft3.gif" WIDTH="20=" HEIGHT="20" ALT=""></TD>
-      <TD ALIGN="left" VALIGN="bottom" HEIGHT="20" WIDTH="<? echo $width; ?>" BACKGROUND="themes/Jeroen/images/boxtop2.gif">
-       <IMG SRC="themes/Jeroen/images/boxtop2.gif" WIDTH="1" HEIGHT="1" ALT=""></TD>
+       <IMG SRC="themes/Jeroen/images/boxtopleft.gif" WIDTH="20=" HEIGHT="20" ALT=""></TD>
+      <TD ALIGN="left" VALIGN="bottom" HEIGHT="20" WIDTH="<? echo $width; ?>" BACKGROUND="themes/Jeroen/images/boxtop.gif">
+       <IMG SRC="themes/Jeroen/images/boxtop.gif" WIDTH="1" HEIGHT="1" ALT=""></TD>
       <TD ALIGN="left" VALIGN="bottom" HEIGHT="20" WIDTH="20" BACKGROUND="themes/Jeroen/images/boxtopmiddle.gif">
-       <IMG SRC="themes/Jeroen/images/boxtop2.gif" WIDTH="1" HEIGHT="1" ALT=""></TD>
-      <TD ALIGN="left" VALIGN="bottom" HEIGHT="20" BACKGROUND="themes/Jeroen/images/boxtop2.gif">
-       <IMG SRC="themes/Jeroen/images/boxtop2.gif" WIDTH="1" HEIGHT="1" ALT=""></TD>
+       <IMG SRC="themes/Jeroen/images/boxtop.gif" WIDTH="1" HEIGHT="1" ALT=""></TD>
+      <TD ALIGN="left" VALIGN="bottom" HEIGHT="20" BACKGROUND="themes/Jeroen/images/boxtop.gif">
+       <IMG SRC="themes/Jeroen/images/boxtop.gif" WIDTH="1" HEIGHT="1" ALT=""></TD>
       <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20">
-       <IMG SRC="themes/Jeroen/images/boxtopright3.gif" WIDTH="20" HEIGHT="20" ALT=""></TD>
+       <IMG SRC="themes/Jeroen/images/boxtopright.gif" WIDTH="20" HEIGHT="20" ALT=""></TD>
      </TR>
      <TR>
-      <TD ALIGN="right" VALIGN="bottom" WIDTH="20" HEIGHT="20" BACKGROUND="themes/Jeroen/images/boxtopleftside3.gif">
+      <TD ALIGN="right" VALIGN="bottom" WIDTH="20" HEIGHT="20" BACKGROUND="themes/Jeroen/images/boxtopleftside1.gif">
        <IMG SRC="themes/Jeroen/images/<? echo $img2; ?>" WIDTH="20" HEIGHT="20" ALT="">
       </TD>
       <TD COLSPAN="3" ALIGN="center" BGCOLOR="#6C6C6C" BACKGROUND="themes/Jeroen/images/menutitle.gif" HEIGHT=20>
        <FONT COLOR="<? echo $this->fgcolor2; ?>"><?  echo $subject; ?></FONT>
       </TD>
-      <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20" BACKGROUND="themes/Jeroen/images/boxtoprightside3.gif">
-       <IMG SRC="themes/Jeroen/images/boxtoprightside3.gif" WIDTH="20" HEIGHT="20" ALT="">
+      <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20" BACKGROUND="themes/Jeroen/images/boxtoprightside.gif">
+       <IMG SRC="themes/Jeroen/images/boxtoprightside.gif" WIDTH="20" HEIGHT="20" ALT="">
       </TD>
      </TR>
      <TR>
-      <TD ALIGN="right" BACKGROUND="themes/Jeroen/images/boxleft3.gif" WIDTH="20">&nbsp;</TD>
+      <TD ALIGN="right" BACKGROUND="themes/Jeroen/images/boxleft.gif" WIDTH="20">&nbsp;</TD>
       <TD COLSPAN="3" VALIGN="top" WIDTH="100%" BGCOLOR="#E7E7E7" BACKGROUND="themes/Jeroen/images/sketch.gif">
        <TABLE WIDTH="100%">
         <TR>
@@ -482,12 +482,12 @@
         </TR>
        </TABLE>
       </TD>
-      <TD ALIGN="left" BACKGROUND="themes/Jeroen/images/boxright3.gif" WIDTH="20">&nbsp;</TD>
+      <TD ALIGN="left" BACKGROUND="themes/Jeroen/images/boxright.gif" WIDTH="20">&nbsp;</TD>
      </TR>
      <TR>
       <TD ALIGN="right" VALIGN=TOP WIDTH="20" HEIGHT="20">
-       <IMG SRC="themes/Jeroen/images/boxbottomleft3.gif" WIDTH="20" HEIGHT="20" ALT=""></TD>
-      <TD COLSPAN="3" ALIGN="middle" HEIGHT="20" VALIGN="top" BACKGROUND="themes/Jeroen/images/boxbottom2.gif">
+       <IMG SRC="themes/Jeroen/images/boxbottomleft.gif" WIDTH="20" HEIGHT="20" ALT=""></TD>
+      <TD COLSPAN="3" ALIGN="middle" HEIGHT="20" VALIGN="top" BACKGROUND="themes/Jeroen/images/boxbottom.gif">
        &nbsp;</TD>
       <TD ALIGN="left" VALIGN="top" WIDTH="20" HEIGHT="20">
        <IMG SRC="themes/Jeroen/images/<? echo $img; ?>" WIDTH="20" HEIGHT="20" ALT=""></TD>
