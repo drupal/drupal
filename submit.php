@@ -4,7 +4,7 @@ function submit_enter() {
   global $anonymous, $categories, $allowed_html, $theme, $user;
   
   ### Guidlines:
-  $output .= block_get("submit_information");
+  $output .= blob_get("submit_information");
 
   ### Submission form:
   $output .= "<FORM ACTION=\"submit.php\" METHOD=\"post\">\n";
@@ -135,7 +135,7 @@ function submit_submit($subject, $abstract, $article, $category) {
   
   ### Display confirmation message:
   $theme->header(); 
-  $theme->box("Thank you for your submission.", block_get("sumbit_confirmation"));
+  $theme->box("Thank you for your submission.", blob_get("sumbit_confirmation"));
   $theme->footer();
 }
 
