@@ -1,3 +1,21 @@
+CREATE TABLE admin_blocks (
+  id tinyint(4) DEFAULT '0' NOT NULL auto_increment,
+  subject varchar(64) DEFAULT '' NOT NULL,
+  content text,
+  info varchar(128) DEFAULT '' NOT NULL,
+  link varchar(128) DEFAULT '' NOT NULL,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE affiliates (
+  id int(11) DEFAULT '0' NOT NULL auto_increment,
+  link varchar(255) DEFAULT '' NOT NULL,
+  name varchar(255) DEFAULT '' NOT NULL,
+  contact varchar(255) DEFAULT '' NOT NULL,
+  UNIQUE link (link),
+  PRIMARY KEY (id)
+);
+
 CREATE TABLE bans (
   id tinyint(4) DEFAULT '0' NOT NULL auto_increment,
   mask varchar(255) DEFAULT '' NOT NULL,
@@ -6,6 +24,14 @@ CREATE TABLE bans (
   timestamp int(11),
   UNIQUE mask (mask),
   PRIMARY KEY (id)
+);
+
+CREATE TABLE blocks (
+  name varchar(64) DEFAULT '' NOT NULL,
+  module varchar(64) DEFAULT '' NOT NULL,
+  offset tinyint(2) DEFAULT '0' NOT NULL,
+  status tinyint(2) DEFAULT '0' NOT NULL,
+  PRIMARY KEY (name)
 );
 
 CREATE TABLE channel (
@@ -35,8 +61,8 @@ CREATE TABLE comments (
   PRIMARY KEY (cid)
 );
 
-CREATE TABLE cron (
-  module varchar(255) DEFAULT '' NOT NULL,
+CREATE TABLE crons (
+  module varchar(64) DEFAULT '' NOT NULL,
   scheduled int(11),
   timestamp int(11),
   PRIMARY KEY (module)
@@ -50,15 +76,6 @@ CREATE TABLE diaries (
   PRIMARY KEY (id)
 );
 
-CREATE TABLE droplets (
-  id tinyint(4) DEFAULT '0' NOT NULL auto_increment,
-  name varchar(255) DEFAULT '' NOT NULL,
-  help text NOT NULL,
-  code text NOT NULL,
-  UNIQUE name (name),
-  PRIMARY KEY (id)
-);
-
 CREATE TABLE headlines (
   id int(11) DEFAULT '0' NOT NULL,
   title varchar(255) DEFAULT '' NOT NULL,
@@ -66,6 +83,17 @@ CREATE TABLE headlines (
   number int(3) DEFAULT '0' NOT NULL,
   UNIQUE title (title),
   UNIQUE link (link)
+);
+
+CREATE TABLE layout (
+  user int(11) DEFAULT '0' NOT NULL,
+  block varchar(64) DEFAULT '' NOT NULL,
+  weight int(11) DEFAULT '0' NOT NULL
+);
+
+CREATE TABLE modules (
+  name varchar(64) DEFAULT '' NOT NULL,
+  PRIMARY KEY (name)
 );
 
 CREATE TABLE stories (
