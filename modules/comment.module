@@ -499,7 +499,9 @@ function comment_render($nid, $cid = 0) {
     ** Render control panel:
     */
 
-    $theme->box(t("Control panel"), $theme->comment_controls($threshold, $mode, $order));
+    if (comment_num_all($nid)) {
+      $theme->box(t("Control panel"), $theme->comment_controls($threshold, $mode, $order));
+    }
 
     if ($cid) {
       $result = db_query("SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.cid = '$cid' GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name");
