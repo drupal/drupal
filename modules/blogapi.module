@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.28 2004/09/17 18:00:16 unconed Exp $
+// $Id: blogapi.module,v 1.29 2004/09/21 20:18:24 dries Exp $
 
 /**
  * @file
@@ -139,8 +139,8 @@ function blogapi_new_post($req_params) {
 
   $node = node_validate($edit);
 
-  if (form_get_errors()) {
-    return blogapi_error();
+  if ($errors = form_get_errors()) {
+    return blogapi_error(implode("\n", $errors));
   }
 
   if (!node_access('create', $node)) {
@@ -199,8 +199,8 @@ function blogapi_edit_post($req_params) {
 
   $node = node_validate($node);
 
-  if (form_get_errors()) {
-    return blogapi_error();
+  if ($errors = form_get_errors()) {
+    return blogapi_error(implode("\n", $errors));
   }
 
   $terms = module_invoke('taxonomy', 'node_get_terms', $node->nid, 'tid');
@@ -461,10 +461,6 @@ function blogapi_error($message) {
 
   if (!is_array($message)) {
     $message = array($message);
-  }
-
-  if ($errors = form_get_errors()) {
-    $message = $message + $errors;
   }
 
   $message = implode(' ', $message);
