@@ -137,7 +137,7 @@
      echo "<TABLE BORDER=\"0\" CELLPADDING=\"4\" CELLSPACING=\"1\" WIDTH=\"100%\">";
      echo " <TR BGCOLOR=\"$this->bgcolor1\">";
      echo "  <TD BGCOLOR=\"$this->bgcolor1\">";
-     echo "   <TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"1\"WIDTH=\"100%\">";
+     echo "   <TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"1\" WIDTH=\"100%\">";
 
      // Subject:
      echo "    <TR>";
