@@ -1,5 +1,5 @@
 <?php
-// $Id: node.php,v 1.36 2001/11/04 15:57:41 dries Exp $
+// $Id: node.php,v 1.37 2001/11/24 12:14:31 dries Exp $
 
 include_once "includes/common.inc";
 
@@ -24,7 +24,7 @@ function node_render($node) {
           comment_render($edit[id], $cid);
           $theme->footer();
           break;
-        case t("Add comment"):
+        case "comment":
           $theme->header();
           comment_reply(check_query($cid), check_query($id));
           $theme->footer();
