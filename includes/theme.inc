@@ -90,7 +90,8 @@ function theme_blocks($region, $theme) {
       else $result = db_query("SELECT * FROM blocks WHERE status = 2". (($region == "left" || $region == "right") ? ($region == "left" ? " AND region = 0" : " AND region = 1") : "") ." ORDER BY weight");
       while ($block = db_fetch_object($result)) {
         $blocks = module_invoke($block->module, "block");
-        $theme->box(t($blocks[$block->offset]["subject"]), $blocks[$block->offset]["content"], $region);
+        if ($blocks[$block->offset]["content"])
+          $theme->box(t($blocks[$block->offset]["subject"]), $blocks[$block->offset]["content"], $region);
       }
       break;
   }
