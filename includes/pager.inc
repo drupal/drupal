@@ -1,14 +1,6 @@
 <?php
 // $Id$
 
-function pager_help() {
-  ?>
-  <h3>Implementation note: making queries pagable</h3>
-  <p>The pager uses <code>LIMIT</code>-based queries to fetch only the records required to render a certain page.  However, it has to learn the total number of records returned by the query to (among others) compute the number of pages (= number of all records / number of records per page). This is done by inserting <code>COUNT(*)</code> in the original query, ie. by rewriting the original query <pre>SELECT nid, type FROM node WHERE status = '1' ORDER BY static DESC, created DESC</pre> to read <pre>SELECT COUNT(*) FROM node WHERE status = '1' ORDER BY static DESC, created DESC</pre>Rewriting the query is accomplished using a regular expression; <code>preg_replace("/SELECT.*FROM/i", "SELECT COUNT(*) FROM", $query)</code>.</p>
-  <p>Unfortunately, the call to <code>preg_replace()</code> does not work as intended for queries that already have a <code>COUNT()</code> clause; the original <code>COUNT()</code> will be removed from the query, possibly making the remainder of the query fail (eg. when the use of <code>HAVING</code> or <code>ORDER</code> depends on the value returned by <code>COUNT()</code>).  In practice, for queries to be <code>pager_query()</code>-able, they shold be reformulated not to use <code>COUNT()</code>.</p>
- <?php
-}
-
 /* ***************************************************
  *            external functions (API)
  * ***************************************************/
@@ -257,23 +249,45 @@ function pager_list($limit, $element = 0, $quantity = 5, $text = "", $attributes
 
 /**
  * Use this function when doing select queries you wish to be able to page.
+ * The pager uses LIMIT-based queries to fetch only the records required
+ * to render a certain page.  However, it has to learn the total number
+ * of records returned by the query to (among others) compute the number
+ * of pages (= number of all records / number of records per page).  This
+ * is done by inserting "COUNT(*)" in the original query, ie. by rewriting
+ * the original query, say "SELECT nid, type FROM node WHERE status = '1'
+ * ORDER BY static DESC, created DESC" to read "SELECT COUNT(*) FROM node
+ * WHERE status = '1' ORDER BY static DESC, created DESC".  Rewriting the
+ * query is accomplished using a regular expression.
  *
- * TODO:
- * - examine a better solution for the "no COUNT in $query" requirement (see (output of) {@link pager_help()})
+ * Unfortunately, the rewrite rule does not always work as intended for
+ * queries that (already) have a "COUNT(*)" or a "GROUP BY" clause, and
+ * possibly for other complex queries.  In those cases, you can optionally
+ * pass a query that will be used to count the records.
  *
- * @param   string  $query    the database query *without* "LIMIT" in it. examples:<pre>
- *   "SELECT * FROM table"
- *   "SELECT field1,field2 FROM table WHERE nid = '1'"</pre>
- * @param   int     $limit    how many rows to return (per page)
- * @param   int     $element  adds support for multiple paged tables on one page
+ * For example, if you want to page this query: "SELECT COUNT(*), TYPE FROM
+ * node GROUP BY TYPE", pager_query() would invoke the wrong query, being:
+ * "SELECT COUNT(*) FROM node GROUP BY TYPE".  So instead, you should pass
+ * "SELECT COUNT(DISTINCT(TYPE)) FROM node" as the optional $count_query
+ * parameter.
  *
- * @return  resource  MySQL query result
+ * @param   string  $query        the SQL query that needs paging
+ * @param   int     $limit        the number of rows per page
+ * @param   int     $element      optional attribute to distringuish between multiple pagers on one page
+ * @param   string  $count_query  an optional SQL query used to count records when rewriting the query would fail
+ *
+ * @return  resource  SQL query result
  */
-function pager_query($query, $limit = 10, $element = 0) {
+
+function pager_query($query, $limit = 10, $element = 0, $count_query = "") {
   global $from, $pager_from_array, $db_type, $pager_total;
 
   // count the total number of records in this query:
-  $pager_total[$element] = db_result(db_query(preg_replace("/SELECT.*FROM/i", "SELECT COUNT(*) FROM", $query)));
+  if ($count_query == "") {
+    $pager_total[$element] = db_result(db_query(preg_replace(array("/SELECT.*FROM/i", "/ORDER BY .*/"), array("SELECT COUNT(*) FROM", ""), $query)));
+  }
+  else {
+    $pager_total[$element] = db_result(db_query($count_query));
+  }
 
   // convert comma separated $from to an array, used by other functions:
   $pager_from_array = explode(",", $from);
@@ -282,16 +296,17 @@ function pager_query($query, $limit = 10, $element = 0) {
 }
 
 function pager_link($from_new, $attributes = array()) {
+  global $q;
 
   foreach($attributes as $key => $value) {
     $query[] = "$key=$value";
   }
 
   if (count($attributes)) {
-    $url = url("", "from=". $from_new[0] ."&". implode("&", $query));
+    $url = url($q, "from=". $from_new[0] ."&". implode("&", $query));
   }
   else {
-    $url = url("", "from=". $from_new[0]);
+    $url = url($q, "from=". $from_new[0]);
   }
 
   return $url;
