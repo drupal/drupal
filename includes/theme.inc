@@ -269,11 +269,12 @@ function theme_node($node, $main = 0, $page = 0) {
  * @param $value the form element's data
  * @param $description the form element's description or explanation
  * @param $id the form element's ID used by the &lt;label&gt; tag
+ * @param $required a boolean to indicate whether this is a required field or not
+ * @param $error a string with an error message filed against this form element
  *
  * @return a string representing the form element
  */
-
-function theme_form_element($title, $value, $description = NULL, $id = NULL, $required = FALSE) {
+function theme_form_element($title, $value, $description = NULL, $id = NULL, $required = FALSE, $error = FALSE) {
 
   $output  = "<div class=\"form-item\">\n";
 

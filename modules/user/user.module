@@ -187,22 +187,20 @@ function user_validate_picture($file, &$edit, $user) {
   list($maxwidth, $maxheight) = explode('x', variable_get('user_picture_dimensions', '85x85'));
 
   if ((!in_array($size[2], array(1, 2, 3))) || (!in_array($extension, array('.gif', '.jpg', '.png', '.jpeg')))) {
-    $error = t('The uploaded file was not an image.');
+    form_set_error('picture', t('The uploaded file was not an image.'));
   }
   else if ($file->size > (variable_get('user_picture_file_size', '30') * 1000)) {
-    $error = t('The uploaded image is too large; the maximum file size is %a kB.', array('%a' => variable_get('user_picture_file_size', '30')));
+    form_set_error('picture', t('The uploaded image is too large; the maximum file size is %a kB.', array('%a' => variable_get('user_picture_file_size', '30'))));
   }
   else if ($size[0] > $maxwidth || $size[1] > $maxheight) {
-    $error = t('The uploaded image is too large; the maximum dimensions are %a pixels.', array('%a' => variable_get('user_picture_dimensions', '85x85')));
+    form_set_error('picture', t('The uploaded image is too large; the maximum dimensions are %a pixels.', array('%a' => variable_get('user_picture_dimensions', '85x85'))));
   }
   else if ($file = file_save_upload('picture', variable_get('user_picture_path', 'pictures') . FILE_SEPARATOR .'picture-'. $user->uid . $extension, 1)) {
     $edit['picture'] = $file->path;
   }
   else {
-    $error = t('Failed to upload the picture image; the "%directory" directory doesn\'t exist.', array('%directory' => variable_get('user_picture_path', 'pictures')));
+    form_set_error('picture', t('Failed to upload the picture image; the "%directory" directory doesn\'t exist.', array('%directory' => variable_get('user_picture_path', 'pictures'))));
   }
-
-  return $error;
 }
 
 function user_validate_authmap($account, $authname, $module) {
@@ -821,11 +819,11 @@ function user_pass($edit = array()) {
 
   if ($edit['name']) {
     $account = db_fetch_object(db_query("SELECT uid, name, mail FROM {users} WHERE status = 1 AND LOWER(name) = '%s'", strtolower($edit['name'])));
-    if (!$account) $error = t('Sorry. The username "<i>%s</i>" is not recognized.', array('%s' => $edit['name']));
+    if (!$account) form_set_error('name', t('Sorry. The username "<i>%s</i>" is not recognized.', array('%s' => $edit['name'])));
   }
   else if ($edit['mail']) {
     $account = db_fetch_object(db_query("SELECT uid, name, mail FROM {users} WHERE status = 1 AND LOWER(mail) = '%s'", strtolower($edit['mail'])));
-    if (!$account) $error = t('Sorry. The e-mail address "<i>%s</i>" is not recognized.', array('%s' => $edit['mail']));
+    if (!$account) form_set_error('name', t('Sorry. The e-mail address "<i>%s</i>" is not recognized.', array('%s' => $edit['mail'])));
   }
   if ($account) {
 
@@ -853,11 +851,6 @@ function user_pass($edit = array()) {
     }
     else {
 
-    // Display error message if necessary.
-    if ($error) {
-      drupal_set_message($error, 'error');
-    }
-
     // Display form:
     $output .= '<p>'. t('Enter your username <strong><em>or</em></strong> your e-mail address.') .'</p>';
     $output .= form_textfield(t('Username'), 'name', $edit['name'], 30, 64);
@@ -883,25 +876,22 @@ function user_register($edit = array()) {
 
   if (!(is_null($edit['name']) && is_null($edit['mail']))) {
     if ($error = user_validate_name($edit['name'])) {
-      // Do nothing.
+      form_set_error('name', $error);
     }
     else if ($error = user_validate_mail($edit['mail'])) {
-      // Do nothing.
+      form_set_error('mail', $error);
     }
     else if (user_deny('user', $edit['name'])) {
-      $error = t('The name "%s" has been denied access.', array('%s' => $edit['name']));
+      form_set_error('name', t('The name "%s" has been denied access.', array('%s' => $edit['name'])));
     }
     else if (user_deny('mail', $edit['mail'])) {
-      $error = t('The e-mail address "%s" has been denied access.', array('%s' => $edit['mail']));
+      form_set_error('mail', t('The e-mail address "%s" has been denied access.', array('%s' => $edit['mail'])));
     }
     else if (db_num_rows(db_query("SELECT name FROM {users} WHERE LOWER(name) = LOWER('%s')", $edit['name'])) > 0) {
-      $error = t('The name "%s" is already taken.', array('%s' => $edit['name']));
+      form_set_error('name', t('The name "%s" is already taken.', array('%s' => $edit['name'])));
     }
     else if (db_num_rows(db_query("SELECT mail FROM {users} WHERE LOWER(mail) = LOWER('%s') OR LOWER(init) = LOWER('%s')", $edit['mail'], $edit['mail'])) > 0) {
-      $error = t('The e-mail address "%s" is already taken.', array('%s' => $edit['mail']));
-    }
-    else if (variable_get('user_register', 1) == 0) {
-      $error = t('Public registrations have been disabled by the site administrator.');
+      form_set_error('mail', t('The e-mail address "%s" is already taken.', array('%s' => $edit['mail'])));
     }
     else {
       foreach (module_list() as $module) {
@@ -910,19 +900,12 @@ function user_register($edit = array()) {
           if (is_array($result)) {
             $data = array_merge($data, $result);
           }
-          elseif (is_string($result)) {
-            $error = $result;
-            break;
-          }
         }
-      }
-      if (!$error) {
-        $success = true;
       }
     }
   }
 
-  if ($success) {
+  if (!form_has_errors()) {
     $from = variable_get('site_mail', ini_get('sendmail_from'));
     $pass = user_password();
 
@@ -963,11 +946,6 @@ function user_register($edit = array()) {
       }
     }
   }
-  else {
-    if ($error) {
-      drupal_set_message($error, 'error');
-    }
-  }
 
   // Display the registration form.
   $output .= variable_get('user_registration_help', '');
@@ -994,21 +972,21 @@ function user_edit($edit = array()) {
   if ($user->uid) {
     if (!(is_null($edit['name']) && is_null($edit['mail']))) {
       if ($error = user_validate_name($edit['name'])) {
-        // Do nothing.
+        form_set_error('name', $error);
       }
       else if ($error = user_validate_mail($edit['mail'])) {
-        // Do nothing.
+        form_set_error('mail', $error);
       }
       else if (db_num_rows(db_query("SELECT uid FROM {users} WHERE uid != $user->uid AND LOWER(name) = LOWER('%s')", $edit['name'])) > 0) {
-        $error = t('The name "%s" is already taken.', array('%s' => $edit['name']));
+        form_set_error('name', t('The name "%s" is already taken.', array('%s' => $edit['name'])));
       }
       else if ($edit['mail'] && db_num_rows(db_query("SELECT uid FROM {users} WHERE uid != $user->uid AND LOWER(mail) = LOWER('%s')", $edit['mail'])) > 0) {
-        $error = t('The e-mail address "%s" is already taken.', array('%s' => $edit['mail']));
+        form_set_name('mail', t('The e-mail address "%s" is already taken.', array('%s' => $edit['mail'])));
       }
       else {
         // If required, validate the picture.
         if ($file = file_check_upload('picture')) {
-          $error = user_validate_picture($file, $edit, $user);
+          user_validate_picture($file, $edit, $user);
         }
 
         // If required, check that proposed passwords match.  If so,
@@ -1018,7 +996,7 @@ function user_edit($edit = array()) {
             $edit['pass'] = $edit['pass1'];
           }
           else {
-            $error = t('The specified passwords do not match.');
+            form_set_error('pass2', t('The specified passwords do not match.'));
           }
         }
         unset($edit['pass1'], $edit['pass2']);
@@ -1044,23 +1022,15 @@ function user_edit($edit = array()) {
           if (is_array($result)) {
             $data = array_merge($data, $result);
           }
-          elseif (is_string($result)) {
-            $error = $result;
-            break;
-          }
         }
 
-        if (!$error) {
+        if (!form_has_errors()) {
           // Save user information.
           $user = user_save($user, array_merge($edit, $data));
 
           drupal_set_message(t('your user information changes have been saved.'));
         }
       }
-    }
-
-    if ($error) {
-      drupal_set_message($error, 'error');
     }
 
     if (!$edit) {
@@ -1276,23 +1246,20 @@ function user_settings() {
 function user_admin_create($edit = array()) {
   if ($edit['name'] || $edit['mail']) {
     if ($error = user_validate_name($edit['name'])) {
-      // Do nothing.
+      form_set_error('name', $error);
     }
     else if ($error = user_validate_mail($edit['mail'])) {
-      // Do nothing.
+      form_set_error('mail', $error);
     }
     else if (db_num_rows(db_query("SELECT name FROM {users} WHERE LOWER(name) = LOWER('%s')", $edit['name'])) > 0) {
-      $error = t('The name "%s" is already taken.', array('%s' => $edit['name']));
+      form_set_error('name', t('The name "%s" is already taken.', array('%s' => $edit['name'])));
     }
     else if (db_num_rows(db_query("SELECT mail FROM {users} WHERE LOWER(mail) = LOWER('%s')", $edit['mail'])) > 0) {
-      $error = t('The e-mail address "%s" is already taken.', array('%s' => $edit['mail']));
-    }
-    else {
-      $success = 1;
+      form_set_error('mail', t('The e-mail address "%s" is already taken.', array('%s' => $edit['mail'])));
     }
   }
 
-  if ($success) {
+  if (!form_has_errors()) {
     watchdog('user', 'new user: "'. $edit['name'] .'" &lt;'. $edit['mail'] .'&gt;');
 
     user_save('', array('name' => $edit['name'], 'pass' => $edit['pass'], 'init' => $edit['mail'], 'mail' => $edit['mail'], 'rid' => array(_user_authenticated_id()), 'status' => 1));
@@ -1300,11 +1267,6 @@ function user_admin_create($edit = array()) {
     drupal_set_message(t('Created a new user account.  No e-mail has been sent.'));
   }
   else {
-
-    if ($error) {
-      drupal_set_message($error, 'error');
-    }
-
     $output  = form_textfield(t('Username'), 'name', $edit['name'], 30, 55, t('Provide the username of the new account.'));
     $output .= form_textfield(t('E-mail address'), 'mail', $edit['mail'], 30, 55, t('Provide the e-mail address associated with the new account.'));
     $output .= _user_profile($edit, $edit, 'form');
@@ -1506,19 +1468,19 @@ function user_admin_edit($edit = array()) {
       // TODO: This display/edit/validate should be moved to a new profile
       // module implementing hook_user().
       if ($error = user_validate_name($edit['name'])) {
-        // Do nothing.
+        form_set_error('name', $error);
       }
       else if ($error = user_validate_mail($edit['mail'])) {
-        // Do nothing.
+        form_set_error('mail', $error);
       }
       else if (count($edit['rid']) < 1) {
-        $error = t('The user must have at least one role.');
+        form_set_error('rid', t('The user must have at least one role.'));
       }
       else if (db_num_rows(db_query("SELECT uid FROM {users} WHERE uid != %d AND LOWER(name) = LOWER('%s')", $account->uid, $edit['name'])) > 0) {
-        $error = t('The name "%s" is already taken.', array('%s' => $edit['name']));
+        form_set_error('name', t('The name "%s" is already taken.', array('%s' => $edit['name'])));
       }
       else if ($edit['mail'] && db_num_rows(db_query("SELECT uid FROM {users} WHERE uid != %d AND LOWER(mail) = LOWER('%s')", $account->uid, $edit['mail'])) > 0) {
-        $error = t('The e-mail address "%s" is already taken.', array('%s' => $edit['mail']));
+        form_set_error('mail', t('The e-mail address "%s" is already taken.', array('%s' => $edit['mail'])));
       }
 
       // Validate fields added by other modules.
@@ -1529,15 +1491,11 @@ function user_admin_edit($edit = array()) {
         if (is_array($result)) {
           $data = array_merge($data, $result);
         }
-        elseif (is_string($result)) {
-          $error = $result;
-          break;
-        }
       }
 
       // If required, validate the picture.
       if ($file = file_check_upload('picture')) {
-        $error = user_validate_picture($file, $edit, $account);
+        user_validate_picture($file, $edit, $account);
       }
 
       // If required, check that proposed passwords match.  If so,
@@ -1547,17 +1505,14 @@ function user_admin_edit($edit = array()) {
           $edit['pass'] = $edit['pass1'];
         }
         else {
-          $error = t('The specified passwords do not match.');
+          form_set_error('pass2', t('The specified passwords do not match.'));
         }
       }
 
       unset($edit['pass1'], $edit['pass2']);
-      if (!$error) {
+      if (!form_has_errors()) {
         $account = user_save($account, array_merge($edit, $data));
         drupal_set_message(t('user information changes have been saved.'));
-      }
-      else {
-        drupal_set_message($error, 'error');
       }
     }
     else if ($op == t('Delete account')) {
@@ -1570,8 +1525,7 @@ function user_admin_edit($edit = array()) {
         return user_admin_account();
       }
       else {
-        $error = t('Failed to delete account: the account has to be blocked first.');
-        drupal_set_message($error, 'error');
+        drupal_set_message(t('Failed to delete account: the account has to be blocked first.'), 'error');
       }
     }
 

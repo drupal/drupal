@@ -183,11 +183,11 @@ function profile_validate_profile($edit) {
   while ($field = db_fetch_object($result)) {
     if ($edit[$field->name]) {
       if ($field->type == 'url' && !valid_url($edit[$field->name], true)) {
-        return t("The value provided for '%field' is not a valid URL.", array('%field' => $field->title));
+        form_set_error($field->name, t("The value provided for '%field' is not a valid URL.", array('%field' => $field->title)));
       }
     }
     else if ($field->required) {
-      return t("The field '%field' is required.", array('%field' => $field->title));
+      form_set_error($field->name, t("The field '%field' is required.", array('%field' => $field->title)));
     }
   }
 
@@ -215,22 +215,22 @@ function profile_validate_form($edit) {
   // Validate the title:
 
   if (!$edit['title']) {
-    return t('You must enter a title.');
+    form_set_error('title', t('You must enter a title.'));
   }
 
   // Validate the 'form name':
 
   if (eregi('[^a-z0-9_-]', $edit['name'])) {
-    return t('The specified form name contains one or more illegal characters.  Spaces or any other special characters expect dash (-) and underscore (_) are not allowed.');
+    form_set_error('name', t('The specified form name contains one or more illegal characters.  Spaces or any other special characters expect dash (-) and underscore (_) are not allowed.'));
   }
 
   if (in_array($edit['name'], user_fields())) {
-    return t('The specified form name is reserved for use by Drupal.');
+    form_set_error('name', t('The specified form name is reserved for use by Drupal.'));
   }
 
   // Validate the category:
   if (!$edit['category']) {
-    return t('You must enter a category.');
+    form_set_error('category', t('You must enter a category.'));
   }
 }
 
@@ -241,16 +241,18 @@ function profile_admin_add($type) {
   if ($_POST['op']) {
     $data = $_POST['edit'];
 
-    if ($error = profile_validate_form($data)) {
-      drupal_set_message($error, 'error');
+    // Validate the form:
+    profile_validate_form($data);
+
+    if (db_result(db_query("SELECT fid FROM {profile_fields} WHERE title = '%s'", $data['title']))) {
+      form_set_error('title', t('the specified title is already in use.'));
     }
-    else if (db_result(db_query("SELECT fid FROM {profile_fields} WHERE title = '%s'", $data['title']))) {
-      drupal_set_message(t('the specified title is already in use'), 'error');
+
+    if (db_result(db_query("SELECT fid FROM {profile_fields} WHERE name = '%s'", $data['name']))) {
+      form_set_error('name', t('the specified name is already in use.'));
     }
-    else if (db_result(db_query("SELECT fid FROM {profile_fields} WHERE name = '%s'", $data['name']))) {
-      drupal_set_message(t('the specified name is already in use'), 'error');
-    }
-    else {
+
+    if (!form_has_errors()) {
       db_query("INSERT INTO {profile_fields} (title, name, explanation, category, type, weight, required, overview, options, page) VALUES ('%s', '%s', '%s', '%s', '%s', %d, %d, %d, '%s', '%s')", $data['title'], $data['name'], $data['explanation'], $data['category'], $type, $data['weight'], $data['required'], $data['overview'], $data['options'], $data['page']);
 
       drupal_set_message(t('the field has been created.'));
@@ -268,11 +270,10 @@ function profile_admin_edit($fid) {
   if ($_POST['op']) {
     $data = $_POST['edit'];
 
-    if ($error = profile_validate_form($data)) {
-      drupal_set_message($error, 'error');
+    // Validate form:
+    profile_validate_form($data);
 
-    }
-    else {
+    if (!form_has_errors()) {
       db_query("UPDATE {profile_fields} SET title = '%s', name = '%s', explanation = '%s', category = '%s', weight = %d, required = %d, overview = %d, options = '%s', page = '%s' WHERE fid = %d", $data['title'], $data['name'], $data['explanation'], $data['category'], $data['weight'], $data['required'], $data['overview'], $data['options'], $data['page'], $fid);
 
       drupal_set_message(t('the field has been updated.'));

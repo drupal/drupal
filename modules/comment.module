@@ -281,7 +281,7 @@ function comment_post($edit) {
     ** Validate the comment's body.
     */
 
-    if ($edit["comment"] == "") {
+    if ($edit['comment'] == '') {
       return array(t("Empty comment"), t("The comment you submitted is empty."));
     }
 
