@@ -1397,31 +1397,23 @@ function theme_comment_flat_expanded($comment, $threshold) {
 
 function theme_comment_thread_min($comment, $threshold, $pid = 0) {
   if (comment_visible($comment, $threshold)) {
-    $output  = "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr><td width=\"". ($comment->depth * 25) ."\"><br /></td><td>\n";
+    $output  = "<div style=\"margin-left:". ($comment->depth * 25) ."px;\">\n";
     $output .= theme("comment_view", $comment, "", 0);
-    $output .= "</td></tr></table>\n";
+    $output .= "</div>\n";
   }
   return $output;
 }
 
 function theme_comment_thread_max($comment, $threshold, $level = 0) {
-  /*
-  ** We had quite a few browser specific issues: expanded comments below
-  ** the top level got truncated on the right hand side.  A range of
-  ** solutions have been proposed and tried but either the right margins of
-  ** the comments didn't line up well, or the heavily nested tables made
-  ** for slow rendering and cluttered HTML.  This is the best work-around
-  ** in terms of speed and size.
-  */
   $output = "";
   if ($comment->depth) {
-    $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr><td width=\"". ($comment->depth * 25) ."\">&nbsp;</td><td>\n";
+    $output .= "<div style=\"margin-left:". ($comment->depth * 25) ."px;\">\n";
   }
 
   $output .= theme("comment_view", $comment, comment_links($comment, 0), comment_visible($comment, $threshold));
 
   if ($comment->depth) {
-    $output .= "</td></tr></table>\n";
+    $output .= "</div>\n";
   }
   return $output;
 }
