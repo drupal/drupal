@@ -14,10 +14,6 @@ function node_help() {
   }
 }
 
-// DEPRICATED: still used by themes, yet doesn't return anything at the moment
-function node_index() {
-}
-
 function node_teaser($body) {
 
   $size = 400;
