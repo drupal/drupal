@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.329 2004/03/08 18:35:04 dries Exp $ */
+/* $Id: common.inc,v 1.330 2004/03/10 19:32:37 dries Exp $ */
 
 /**
  * @defgroup common Core functions
@@ -1088,12 +1088,13 @@ function url($url = NULL, $query = NULL, $fragment = NULL, $absolute = NULL) {
   }
 }
 
-function drupal_attributes($attributes = NULL) {
-  if (is_array($attributes)) {
+function drupal_attributes($attributes = array()) {
+  if (count($attributes)) {
     $t = array();
     foreach ($attributes as $key => $value) {
       $t[] = "$key=\"$value\"";
     }
+
     return " ". implode($t, " ");
   }
 }
