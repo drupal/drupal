@@ -1793,8 +1793,8 @@ else {
   $_GET['q'] = drupal_get_normal_path(variable_get('site_frontpage', 'node'));
 }
 
-// Load all enabled modules.
-module_load_all();
+// Initialize all enabled modules.
+module_init();
 
 if ($_REQUEST && !user_access('bypass input data check')) {
   if (!valid_input_data($_REQUEST)) {

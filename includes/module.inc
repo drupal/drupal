@@ -7,6 +7,15 @@
  */
 
 /**
+ * Initialize all modules.
+ *
+ */
+function module_init() {
+  module_load_all();
+  module_invoke_all('init');
+}
+
+/**
  * Call a function repeatedly with each module in turn as an argument.
  */
 function module_iterate($function, $argument = '') {

@@ -402,11 +402,10 @@ function drupal_page_header() {
   if (variable_get('dev_timer', 0)) {
     timer_start();
   }
-  bootstrap_invoke_all('init');
 
   if (variable_get('cache', 0)) {
     if ($cache = page_get_cache()) {
-
+      bootstrap_invoke_all('init');
       // Set default values:
       $date = gmdate('D, d M Y H:i:s', $cache->created) .' GMT';
       $etag = '"'. md5($date) .'"';
