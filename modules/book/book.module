@@ -24,7 +24,7 @@ function book_access($op, $node) {
     return $node->status;
   }
 
-  if  ($op == "create") {
+  if ($op == "create") {
     return 1;
   }
 
@@ -36,12 +36,12 @@ function book_access($op, $node) {
     ** revision"-bit is set; that is, only updates that don't overwrite
     ** the current or pending information are allowed.
     */
-
     return !$node->moderate && $node->revision;
   }
 }
 
 function book_save($op, $node) {
+  global $user, $REQUEST_URI;
 
   if ($op == "approve") {
     return array("status" => 1);
@@ -56,22 +56,25 @@ function book_save($op, $node) {
   }
 
   if ($op == "update") {
-    if (user_access("administer nodes")) {
-      /*
-      ** If a node administrator updates a book page, we don't create a
-      ** new revision unless we are explicitly instructed to.
-      */
-
-      return array("parent", "weight");
-    }
-    else {
+    if (strstr($REQUEST_URI, "module.php?mod=node&op=edit")) {
       /*
       ** If a regular user updates a book page, we always create a new
       ** revision.  All new revisions have to be approved (moderation)
-      ** and are not promoted by derault.
+      ** and are not promoted by derault.  See also: book_load().
       */
 
-      return array("created" => time(), "moderate" => 1, "parent", "promote" => 0, "score" => 0, "status" => 1, "users" => "", "revisions", "votes" => 0, "weight");
+      return array("created" => time(), "moderate" => 1, "name" => $user->name, "parent", "promote" => 0, "score" => 0, "status" => 1, "uid" => $user->uid, "users" => "", "revisions", "votes" => 0, "weight");
+    }
+    else if (user_access("adminster nodes")) {
+      /*
+      ** If a node administrator updates a book page, we don't create a
+      ** new revision unless we are explicitly instructed to. If a node
+      ** administrator updates a book page using the "update this book
+      ** page"-link (like regular users do) then he'll be treated as a
+      ** regular user.
+      */
+
+      return array("parent", "weight");
     }
   }
 
@@ -90,7 +93,29 @@ function book_link($type) {
 }
 
 function book_load($node) {
-  $book = db_fetch_object(db_query("SELECT parent, weight, revision FROM book WHERE nid = '$node->nid'"));
+  global $user, $REQUEST_URI;
+
+  $book = db_fetch_object(db_query("SELECT parent, weight FROM book WHERE nid = '$node->nid'"));
+
+  if (strstr($REQUEST_URI, "module.php?mod=node&op=edit")) {
+    /*
+    ** If a user is about to update a book page, we overload some
+    ** fields to reflect the changes.  We use the $REQUEST_URI to
+    ** dectect this as we don't want to interfer with updating a
+    ** book page through the admin pages.  See also: book_save().
+    */
+
+    $book->name = $user->name;
+    $book->uid = $user->uid;
+  }
+
+  /*
+  ** We set the revision field to indicate that we have to create
+  ** a new revision when updating this book page.
+  */
+
+  $book->revision = 1;
+
   return $book;
 }
 
@@ -124,7 +149,6 @@ function book_form($node, $help, $error) {
     */
 
     $help = book_node("description");
-
 
     /*
     ** If a regular user updates a book page, we create a new revision

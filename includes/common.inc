@@ -119,11 +119,16 @@ function check_query($text) {
   return addslashes(stripslashes($text));
 }
 
-function check_input($text) {
+function filter($text) {
   foreach (module_list() as $name) {
     if (module_hook($name, "filter")) $text = module_invoke($name, "filter", $text);
   }
-  return addslashes(stripslashes(substr($text, 0, variable_get("max_input_size", 10000))));
+
+  return $text;
+}
+
+function check_input($text) {
+  return check_query($text);
 }
 
 function check_output($text, $nl2br = 0) {

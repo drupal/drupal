@@ -50,8 +50,6 @@ function system_view_options() {
 
   // submission settings:
   $output .= "<h3>Submission settings</h3>\n";
-  $size = array(1000 => "1.000 characters", 5000 => "5.000 characters", 10000 => "10.000 characters", 15000 => "15.000 characters", 30.000 => "30.000 characters", 50000 => "50.000 characters", 100000 => "100.000 characters");
-  $output .= form_select("Maximum submission size", "max_input_size", variable_get("max_input_size", 10000), $size, "The maximum number of characters someone can enter in a form.");
   $rate = array(1 => "Maximum 1 every second", 5 => "Maximum 1 every 5 seconds", 15 => "Maximum 1 every 15 seconds", 30 => "Maximum 1 every 30 seconds", 60 => "Maximum 1 every minute", 300 => "Maximum 1 every 5 minutes", 900 => "Maximum 1 every 15 minutes", 1800 => "Maximum 1 every 30 minutes", 3600 => "Maximum 1 every hour", 21600 => "Maximum 1 every 6 hours", 43200 => "Maximum 1 every 12 hours");
   $output .= form_select("Maximum node rate", "max_node_rate", variable_get("max_node_rate", 900), $rate, "The maximum submission rate for nodes.  Its purpose is to stop potential abuse or denial of service attacks.");
   $output .= form_select("Maximum comment rate", "max_comment_rate", variable_get("max_comment_rate", 120), $rate, "The maximum submission rate for comments.  Its purpose is to stop potential abuse or denial of service attacks.");

@@ -107,8 +107,8 @@ function node_load($conditions) {
   }
 
   /*
-  ** Call the node specific callback (if any) and piggy-back to
-  ** results to the node:
+  ** Call the node specific callback (if any) and piggy-back the
+  ** results to the node or overwrite some values:
   */
 
   if ($extra = module_invoke($node->type, "load", $node)) {
@@ -156,6 +156,10 @@ function node_save($node, $filter) {
     $node->revisions = serialize($node->revisions);
   }
 
+  /*
+  ** Apply filters to some default node fields:
+  */
+
   if (empty($node->nid)) {
 
     /*
@@ -170,9 +174,7 @@ function node_save($node, $filter) {
     foreach ($node as $key => $value) {
       if (in_array($key, $fields)) {
         $k[] = check_query($key);
-        $v[] = "'". check_input($value) ."'";
-           // NOTE: for the values we use 'check_input()' such that we apply
-           //       the filters
+        $v[] = "'". check_query($value) ."'";
       }
     }
 
@@ -194,9 +196,7 @@ function node_save($node, $filter) {
     // prepare the query:
     foreach ($node as $key => $value) {
       if (in_array($key, $fields)) {
-        $q[] = check_query($key) ." = '". ($key != "revisions" ? check_input($value) : $value) ."'";
-           // NOTE: for the values we use 'check_input()' such that we apply
-           //       the filters, except revisions
+        $q[] = check_query($key) ." = '". check_query($value) ."'";
       }
     }
 
