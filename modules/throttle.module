@@ -130,7 +130,7 @@ function throttle_display_throttle_block() {
       $output .= "Probability: $probability%<br />\n";
       if ($recent_activity["hits"]) {
         $output .= "<br />This site has served ";
-        $output .= format_plural($recent_activity["hits"] , " page", " pages");
+        $output .= format_plural($recent_activity["hits"] , "1 page", "%count pages");
         $output .= " in the past minute.";
       }
     }

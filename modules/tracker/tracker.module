@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.31 2003/01/06 19:51:01 dries Exp $
+// $Id: tracker.module,v 1.32 2003/01/21 22:44:25 dries Exp $
 
 function tracker_help() {
   $output .= "The tracker module is a handy module for displaying the most recent comments happenning all over your web site.  By following the <i>view new comments</i> link in the user block, a user may quickly review all recent comments.  When a user first arrives at the main tracker page, she sees all recent comments in reverse chronological order, grouped by post.  In addition, a self-centered user may choose to display only his own comments.</p>";
@@ -37,7 +37,7 @@ function tracker_comments($id = 0) {
   }
 
   while ($node = db_fetch_object($sresult)) {
-    $output .= format_plural($node->comments, "comment", "comments") ." ". t("attached to node") ." ". l($node->title, "node/view/$node->nid") .":\n";
+    $output .= format_plural($node->comments, "1 comment", "%count comments") ." ". t("attached to node") ." ". l($node->title, "node/view/$node->nid") .":\n";
 
     if ($id) {
       $cresult = db_query("SELECT c.*, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.timestamp > $period AND c.uid = '%d' AND c.nid = '%d' ORDER BY cid DESC", $id, $node->nid);
