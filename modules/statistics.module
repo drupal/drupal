@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.127 2003/11/29 06:53:03 dries Exp $
+// $Id: statistics.module,v 1.128 2003/11/30 10:37:07 dries Exp $
 
 // Exit hook, runs at the end of every page request
 function statistics_exit() {
@@ -18,7 +18,7 @@ function statistics_exit() {
     }
   }
 
-  if ((variable_get("statistics_enable_access_log", 0)) && (throttle_status() < 5)) {
+  if ((variable_get("statistics_enable_access_log", 0)) && (module_invoke("throttle", "status") < 5)) {
     // statistical logs are enabled
     $referrer = referer_uri();
     $hostname = getenv("REMOTE_ADDR");
@@ -28,35 +28,6 @@ function statistics_exit() {
     }
     else {
       db_query("INSERT INTO {accesslog} (url, hostname, uid, timestamp) values('%s', '%s', %d, %d)", $referrer, $hostname, $user->uid, time());
-    }
-  }
-
-  /*
-  ** The following logic determines what the current throttle level should
-  **  be, and can be disabled by the admin.  If enabled, the rand() function
-  **  returns a number between 0 and N, N being specified by the admin. If
-  **  0 is returned, the throttle logic is run, adding on additional database
-  **  query.  Otherwise, the following logic is skipped.  This mechanism is
-  **  referred to in the admin page as the 'probability limiter', roughly
-  **  limiting throttle related database calls to 1 in N.
-  */
-  if ((variable_get("throttle_enable", 0)) && (!rand(0, variable_get("throttle_probability_limiter", 9)))) {
-    /*
-    ** Note:  The rand() function is supported by PHP 3+.  However, prior to
-    ** PHP 4.2.0 it needs to be seeded with a call to srand().  It is important
-    ** that this only happens once, so this should be managed by the Drupal
-    ** engine, not this module.  The Drupal engine should use phpversion() to
-    ** detect and automatically seed pre-4.2.0 systems.
-    */
-
-    $throttle = throttle_status();
-    // if we're at throttle level 5, we don't do anything
-    if ($throttle < 5) {
-      $multiplier = variable_get("throttle_multiplier", 60);
-      // count all hits in past sixty seconds
-      $result = db_query("SELECT COUNT(timestamp) AS hits FROM {accesslog} WHERE timestamp >= %d", (time() - 60));
-      $recent_activity = db_fetch_array($result);
-      _throttle_update($recent_activity["hits"]);
     }
   }
 }
@@ -135,7 +106,6 @@ function statistics_help($section = "admin/help#statistics") {
       $output .= "<li>A configurable block can be added which can display the day's top stories, the all time top stories, and the last stories read. Each section in the block has a title, which you can change, as well as being able to change how many node titles will be displayed</li>";
       $output .= "<li>A configurable user page can be added, which can display the day's top stories, the all time top stories, and the last stories read.  You can individually configure how many posts are displayed in each section.</li>";
       $output .= "<li>A configurable block can be added that displays the count of how many users, as well as a list of their names, and guests are currently accessing your site.</li>";
-      $output .= "<li>An auto-throttle, congestion controling mechanism can be used on your site if you have enabled the %throttle.</li>";
       $output .= "</ul>";
       $output .= "<p>Notes on using the statistics:</p>";
       $output .= "<ul>";
@@ -178,20 +148,7 @@ function statistics_help($section = "admin/help#statistics") {
       $output .= "<li><i>timestamp</i> - This will return a array with links to the last viewed node.<br />Example:  <code>statistics_title_list(\"timestamp\",\"5\");</code></li>";
       $output .= "</ul>";
       $output .= "<p>\$dbrows is the number or rows you want returned in your array.</p>";
-      $output .= "<h3>Throttle</h3><p>The function <code>throttle_status()</code> will return a number from 0 to 5.  0 means that there is no throttle enabled at this time.  Each number above that is a progressively more throttled system...  To disable a feature when a site first begins to get busy, disable it at a throttle of 2 or 3.  To hold on to the bitter end, wait until 4 or 5.</p>";
-      $output .= "<p>To implement the throttle, you should do something like this:<pre>       \$throttle = 0;
-       /* verify that the statitistics module is installed */
-       if (function_exists(throttle_status)) {
-         \$throttle = throttle_status()
-       }
-       if (\$throttle >= \$my_throttle_value) {
-         // throttle limit reached, disable stuff
-       }
-       else {
-         // throttle limit not reached, execute normally
-       }</pre></p>";
-      $output .= "<p>Note: Even though the configuration for the throttle is handled by the throttle module, the throttle logic itself is part of the statistics module.  The configuration has been separated in order to make things easier for the average site that will not be utilizing the throttling mechanism.  More information about how the throttle works can be found on the throttle module help page.  (Find the throttle help page %here-help if you have enabled the throttle module).</p>";
-      $output = t($output, array("%throttle" => l(t("throttle module"), "admin/system/modules"), "%modules" => l(t("enabled"), "admin/system/modules"), "%permissions" => l(t("permissions section"), "admin/user/permission"), "%referers" => l(t("referrers log"), "admin/statistics/referrers"), "%access" => l(t("access log"), "admin/statistics/log"), "%configuration" => l(t("administer") ." &raquo; ". t("configuration"), "admin/system/modules/statistics"), "%here-block" => l(t("here"), "admin/system/block"), "%here-help" => l(t("here"), "admin/help#throttle")));
+      $output = t($output, array("%modules" => l(t("enabled"), "admin/system/modules"), "%permissions" => l(t("permissions section"), "admin/user/permission"), "%referers" => l(t("referrers log"), "admin/statistics/referrers"), "%access" => l(t("access log"), "admin/statistics/log"), "%configuration" => l(t("administer") ." &raquo; ". t("configuration"), "admin/system/modules/statistics"), "%here-block" => l(t("here"), "admin/system/block")));
       break;
     case 'admin/system/modules#description':
       $output = t("Logs access statistics for your site.");
@@ -472,15 +429,6 @@ function statistics_cron() {
 
   /* clean expired access logs */
   db_query("DELETE FROM {accesslog} WHERE ". time() ." - timestamp > ". variable_get("statistics_flush_accesslog_timer", 259200));
-
-  $throttle = variable_get("throttle_level", 0);
-  /* check if throttle is currently on and if it's time to drop level */
-  if (($throttle) && ((time() - variable_get("throttle_cron_timer", 10800)) > variable_get("statistics_throttle_cron_timestamp", 0))) {
-    /* If throttle is on, back off one notch to test server load */
-    variable_set("throttle_level", $throttle - 1);
-    variable_set("statistics_throttle_cron_timestamp", time());
-    watchdog("warning", t("cron: decreasing throttle to level '%level' to test server load.", array("%level" => ($throttle - 1))));
-  }
 }
 
 
@@ -604,56 +552,6 @@ function statistics_nodeapi(&$node, $op, $arg = 0) {
     case "delete":
     // clean up statistics table when node is deleted
     db_query("DELETE FROM {node_counter} WHERE nid = %d", $node->nid);
-  }
-}
-
-/* internal throttle function - do not call from other modules */
-function _throttle_update($recent_activity) {
-  $throttle = throttle_status();
-  $multiplier = variable_get("throttle_multiplier", 60);
-
-  for ($i = 0; $i <= 5; $i++) {
-    if (($i * $multiplier) <= $recent_activity) {
-      $throttle_new = $i;
-    }
-  }
-
-  if ($throttle_new != $throttle) {
-    /*
-    ** reduce throttle if new throttle would be 3+ less than current throttle,
-    ** (all other throttle reduction done by _cron hook), increase throttle if
-    **  new throttle would be greater than current throttle.
-    */
-    if (($throttle_new < ($throttle - 2)) || ($throttle_new > $throttle)) {
-      /* update throttle level */
-      variable_set("throttle_level", $throttle_new);
-      /*
-      ** update the global timestamp, preventing cron.php from jumping in
-      ** too quickly, allowing for user defined period to first pass.
-      */
-      variable_set("statistics_throttle_cron_timestamp", time());
-      /* log the change */
-      if ($throttle_new < $throttle) {
-        watchdog("message", "message: '". $recent_activity ."' hits in past minute; throttle decreased to level ". $throttle_new);
-      }
-      else {
-        watchdog("warning", "warning: '". $recent_activity ."' hits in past minute; throttle increased to level ". $throttle_new);
-      }
-    }
-  }
-}
-
-/***********************
- *  Auto-throttle API  *
- ***********************/
-
-/* external throttle functions - call this from other modules, themes, etc */
-function throttle_status() {
-  if (variable_get("throttle_enable", 0)) {
-    return variable_get("throttle_level", 0);
-  }
-  else {
-    return 0;
   }
 }
 
