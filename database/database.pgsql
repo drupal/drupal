@@ -50,7 +50,7 @@ CREATE TABLE blocks (
   weight smallint NOT NULL default '0',
   region smallint NOT NULL default '0',
   path varchar(255) NOT NULL default '',
-  custom smallint NOT NULL default '0',
+  custom smallint NOT NULL default '0'
 );
 
 --
