@@ -20,21 +20,21 @@ function watchdog_help($section = 'admin/help#watchdog') {
     case 'admin/help#watchdog':
       return t('<p>The watchdog module monitors your web site, capturing system events in a log to be reviewed by an authorized individual at a later time.  The watchdog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information.  It is vital to <a href="%watchdog">check the watchdog report</a> on a regular basis as it is often the only way to tell what is going on.</p>', array('%watchdog' => url('admin/logs')));
     case 'admin/logs':
-      return t('The watchdog module monitors your web site, capturing system events in a log to be reviewed by an authorized individual at a later time.  The watchdog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information.  It is vital to check the watchdog report on a regular basis as it is often the only way to tell what is going on.');
+      return t('<p>The watchdog module monitors your web site, capturing system events in a log to be reviewed by an authorized individual at a later time.  The watchdog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information.  It is vital to check the watchdog report on a regular basis as it is often the only way to tell what is going on.</p>');
     case 'admin/logs/error':
-      return t('Watchdog events about PHP and database errors.');
+      return t('<p>Watchdog events about PHP and database errors.</p>');
     case 'admin/logs/httpd':
-      return t('Watchdog events that are from the web server, like 404s, etc.');
+      return t('<p>Watchdog events that are from the web server, like 404s, etc.</p>');
     case 'admin/logs/regular':
-      return t('Watchdog events that are "normal" and have no other classification.');
+      return t('<p>Watchdog events that are "normal" and have no other classification.</p>');
     case 'admin/logs/search':
-      return t('Watchdog events showing what users have searched for.');
+      return t('<p>Watchdog events showing what users have searched for.</p>');
     case 'admin/logs/special':
-      return t('Watchdog events about adding, changing, and moderating nodes and comments.');
+      return t('<p>Watchdog events about adding, changing, and moderating nodes and comments.</p>');
     case 'admin/logs/user':
-      return t('Watchdog events that have to do with users and their accounts.');
+      return t('<p>Watchdog events that have to do with users and their accounts.</p>');
     case 'admin/logs/warning':
-      return t('Watchdog events that don\'t stop normal operation, but are things you should know.');
+      return t('<p>Watchdog events that don\'t stop normal operation, but are things you should know.</p>');
     case 'admin/modules#description':
       return t('Logs and records system events.');
   }

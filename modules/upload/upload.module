@@ -11,7 +11,7 @@ function upload_help($section) {
     case 'admin/modules#description':
       return t('File-handling and attaching files to nodes.');
     case 'admin/upload':
-      return t('Users with the <a href="%permissions"><em>upload files</em> permission</a> can upload attachments. You can choose which node types can take attachments on the <a href="%workflow">workflow settings</a> page.', array('%permissions' => url('admin/user/configure/permission'), '%workflow' => url('admin/node/configure/defaults')));
+      return t('<p>Users with the <a href="%permissions"><em>upload files</em> permission</a> can upload attachments. You can choose which node types can take attachments on the <a href="%workflow">workflow settings</a> page.</p>', array('%permissions' => url('admin/user/configure/permission'), '%workflow' => url('admin/node/configure/defaults')));
     case 'admin/node/configure/defaults':
       return t('<p>If you want users to be able to attach files to nodes, check the <em>attachments</em> column in the appropriate column.</p>');
     case 'admin/help#upload':

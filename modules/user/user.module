@@ -1618,18 +1618,18 @@ function user_help($section) {
 
   switch ($section) {
     case 'admin/user':
-      return t('Drupal allows users to register, login, logout, maintain user profiles, etc.  No participant can use his own name to post content until he signs up for a user account.');
+      return t('<p>Drupal allows users to register, login, logout, maintain user profiles, etc.  No participant can use his own name to post content until he signs up for a user account.</p>');
     case 'admin/user/create':
     case 'admin/user/account/create':
-      return t('This web page allows the administrators to register a new users by hand.  Note that you cannot have a user where either the e-mail address or the username match another user in the system.');
+      return t('<p>This web page allows the administrators to register a new users by hand.  Note that you cannot have a user where either the e-mail address or the username match another user in the system.</p>');
     case 'admin/user/configure/access':
-      return t('Access rules allow Drupal administrators to choose usernames and e-mail address that are prevented from using drupal. To enter the mask for e-mail addresses click on <a href="%email">e-mail rules</a>, for the username mask click on <a href="%username">name rules</a>.', array('%email' => url('admin/user/configure/access/mail'), '%username' => url('admin/user/configure/access/user')));
+      return t('<p>Access rules allow Drupal administrators to choose usernames and e-mail address that are prevented from using drupal. To enter the mask for e-mail addresses click on <a href="%email">e-mail rules</a>, for the username mask click on <a href="%username">name rules</a>.</p>', array('%email' => url('admin/user/configure/access/mail'), '%username' => url('admin/user/configure/access/user')));
     case 'admin/user/configure/access/mail':
-      return t('Setup and test the e-mail access rules. The access function checks if you match a deny and not an allow. If you match <strong>only</strong> a deny then it is denied. Any other case, such as both a deny and an allow pattern matching, allows the pattern.');
+      return t('<p>Setup and test the e-mail access rules. The access function checks if you match a deny and not an allow. If you match <strong>only</strong> a deny then it is denied. Any other case, such as both a deny and an allow pattern matching, allows the pattern.</p>');
     case 'admin/user/configure/access/user':
-      return t('Setup and test the username access rules. The access function checks if you match a deny and not an allow. If you do then it is denied. Any other case, such as a deny pattern and an allow pattern, allows the pattern.');
+      return t('<p>Setup and test the username access rules. The access function checks if you match a deny and not an allow. If you do then it is denied. Any other case, such as a deny pattern and an allow pattern, allows the pattern.</p>');
     case 'admin/user/configure/permission':
-      return t('In this area you will define the permissions for each user role (role names are defined on the <a href="%role">user roles page</a>). Each permission describes a fine-grained logical operation, such as being able to access the administration pages, or adding/modifying a user account. You could say a permission represents access granted to a user to perform a set of operations.', array('%role' => url('admin/user/configure/role')));
+      return t('<p>In this area you will define the permissions for each user role (role names are defined on the <a href="%role">user roles page</a>). Each permission describes a fine-grained logical operation, such as being able to access the administration pages, or adding/modifying a user account. You could say a permission represents access granted to a user to perform a set of operations.</p>', array('%role' => url('admin/user/configure/role')));
     case 'admin/user/configure/role':
       return t('
       Roles allow you to fine tune the security and administration of drupal.  A role defines a group of users that have certain privileges as defined in <a href="%permission">user permissions</a>.  Examples of roles include: anonymous user, authenticated user, moderator, administrator and so on. In this area you will define the <em>role names</em> of the various roles. To delete a role choose "edit".<br />By default, Drupal comes with two user roles:
@@ -1638,12 +1638,12 @@ function user_help($section) {
       <li>Authenticated user: this role is assigned automatically to authenticated users.  Most registered users will belong to this user role unless specified otherwise.</li>
       </ul>', array('%permission' => url('admin/user/configure/permission')));
     case 'admin/user/search':
-      return t('Enter a simple pattern ("*" may be user as a wildcard match) to search for a username.  For example, one may search for "br" and Drupal might return "brian", "brad", and "brenda".');
+      return t('<p>Enter a simple pattern ("*" may be user as a wildcard match) to search for a username.  For example, one may search for "br" and Drupal might return "brian", "brad", and "brenda".</p>');
     case 'admin/modules#description':
       return t('Enables the user registration and login system.');
     case 'admin/user/configure':
     case 'admin/user/configure/settings':
-      return t('In order to use the full power of Drupal a visitor must sign up for an account. This page lets you setup how a user signs up, logs out, the guidelines from the system about user subscriptions, and the e-mails the system will send to the user.');
+      return t('<p>In order to use the full power of Drupal a visitor must sign up for an account. This page lets you setup how a user signs up, logs out, the guidelines from the system about user subscriptions, and the e-mails the system will send to the user.</p>');
     case 'user/help#user':
       $site = variable_get('site_name', 'this website');
 

@@ -22,7 +22,7 @@ function forum_help($section) {
     case 'admin/modules#description':
       return t('Enable threaded discussions about general topics.');
     case 'admin/settings/forum':
-      return t("Forums are threaded discussions based on the taxonomy system.  For the forums to work, the taxonomy module has to be installed and enabled.  When activated, a taxonomy vocabulary (eg. \"forums\") needs to be <a href=\"%created\">created</a> and bound to the node type \"forum topic\".", array('%created' => url('admin/taxonomy/add/vocabulary')));
+      return t("<p>Forums are threaded discussions based on the taxonomy system.  For the forums to work, the taxonomy module has to be installed and enabled.  When activated, a taxonomy vocabulary (eg. \"forums\") needs to be <a href=\"%created\">created</a> and bound to the node type \"forum topic\".</p>", array('%created' => url('admin/taxonomy/add/vocabulary')));
     case 'node/add#forum':
       return t('A forum is a threaded discussion, enabling users to communicate about a particular topic.');
   }

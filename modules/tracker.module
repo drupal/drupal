@@ -41,7 +41,9 @@ function tracker_menu($may_cache) {
     if (arg(0) == 'user' && is_numeric(arg(1))) {
       $items[] = array('path' => 'user/'. arg(1) .'/track', 'title' => t('track'),
           'callback' => 'tracker_track_user', 'access' => user_access('access content'),
-          'type' => MENU_LOCAL_TASK);
+          'type' => MENU_IS_LOCAL_TASK);
+      $items[] = array('path' => 'user/'. arg(1) .'/track/posts', 'title' => t('track posts'),
+          'type' => MENU_DEFAULT_LOCAL_TASK);
     }
   }
 

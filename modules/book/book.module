@@ -802,9 +802,9 @@ function book_help($section) {
     case 'admin/modules#description':
       return t('Allows users to collaboratively author a book.');
     case 'admin/node/book':
-      return t('The book module offers a mean to organize content, authored by many users, in an online manual, outline or FAQ.');
+      return t('<p>The book module offers a mean to organize content, authored by many users, in an online manual, outline or FAQ.</p>');
     case 'admin/node/book/orphan':
-      return t('Pages in a book are like a tree. As pages are edited, reorganized and removed, child pages might be left with no link to the rest of the book.  Such pages are referred to as "orphan pages".  On this page, administrators can review their books for orphans and reattach those pages as desired.');
+      return t('<p>Pages in a book are like a tree. As pages are edited, reorganized and removed, child pages might be left with no link to the rest of the book.  Such pages are referred to as "orphan pages".  On this page, administrators can review their books for orphans and reattach those pages as desired.</p>');
     case 'node/add#book':
       return t("A book is a collaborative writing effort: users can collaborate writing the pages of the book, positioning the pages in the right order, and reviewing or modifying pages previously written.  So when you have some information to share or when you read a page of the book and you didn't like it, or if you think a certain page could have been written better, you can do something about it.");
   }

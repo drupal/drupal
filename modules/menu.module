@@ -60,11 +60,11 @@ function menu_help($section) {
     case 'admin/modules#description':
       return t('Allows administrators to customize the site navigation menu.');
     case 'admin/menu':
-      return t('Select an operation from the list to move, change, or delete a menu item.');
+      return t('<p>Select an operation from the list to move, change, or delete a menu item.</p>');
     case 'admin/menu/menu/add':
-      return t('Enter the name for your new menu. Remember to enable the newly created block in the %blocks administration page.', array('%blocks' => l(t('blocks'), 'admin/block')));
+      return t('<p>Enter the name for your new menu. Remember to enable the newly created block in the %blocks administration page.</p>', array('%blocks' => l(t('blocks'), 'admin/block')));
     case 'admin/menu/item/add':
-      return t('Enter the title, path, position and the weight for your new menu item.');
+      return t('<p>Enter the title, path, position and the weight for your new menu item.</p>');
   }
 }
 

@@ -14,7 +14,7 @@ function story_help($section) {
     case 'admin/modules#description':
       return t('Enables users to submit stories, articles or similar content.');
     case 'admin/settings/story':
-      return t("Stories are like newspaper articles. They tend to follow a publishing flow of <strong>submit -&gt; moderate -&gt; post to the main page -&gt; comments</strong>. Below you may fix a minimum word count for stories and also write some submission or content guidelines for users wanting to post a story.");
+      return t("<p>Stories are like newspaper articles. They tend to follow a publishing flow of <strong>submit -&gt; moderate -&gt; post to the main page -&gt; comments</strong>. Below you may fix a minimum word count for stories and also write some submission or content guidelines for users wanting to post a story.</p>");
     case 'admin/help#story':
       return t("
       <p>The story module lets your users submit articles for consideration by the rest of the community, who can vote on them if moderation is enabled.  Stories usually follow a publishing flow of <strong>submit -&gt; moderate -&gt; post to the main page -&gt; comments</strong>.  Administrators are able to shortcut this flow as desired.</p>

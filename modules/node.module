@@ -47,13 +47,13 @@ function node_help($section) {
       return t('The core that allows content to be submitted to the site.');
     case 'admin/node/configure':
     case 'admin/node/configure/settings':
-      return t('Settings for the core of Drupal. Almost everything is a node so these settings will affect most of the site.');
+      return t('<p>Settings for the core of Drupal. Almost everything is a node so these settings will affect most of the site.</p>');
     case 'admin/node':
-      return t('Below is a list of all of the posts on your site. Other forms of content are listed elsewhere (e.g. <a href="%comments">comments</a>).<br />Clicking a title views the post, while clicking an author\'s name edits their user information.<br />Other post-related tasks are available from the menu.', array('%comments' => url('admin/comment')));
+      return t('<p>Below is a list of all of the posts on your site. Other forms of content are listed elsewhere (e.g. <a href="%comments">comments</a>).<br />Clicking a title views the post, while clicking an author\'s name edits their user information.<br />Other post-related tasks are available from the menu.</p>', array('%comments' => url('admin/comment')));
     case 'admin/node/search':
-      return t('Enter a simple pattern to search for a post. This can include the wildcard character *.<br />For example, a search for "br*" might return "bread bakers", "our daily bread" and "brenda".');
+      return t('<p>Enter a simple pattern to search for a post. This can include the wildcard character *.<br />For example, a search for "br*" might return "bread bakers", "our daily bread" and "brenda".</p>');
     case 'admin/node/configure/defaults':
-      return t('This page lets you set the defaults used during creation of nodes for all the different node types.<br /><em>comment:</em> Read/write setting for comments.<br /><em>publish:</em> Is this post publicly viewable, has it been published?<br /><em>promote:</em> Is this post to be promoted to the front page?<br /><em>moderate:</em> Does this post need approval before it can be viewed?<br /><em>sticky:</em> Is this post always visible at the top of lists?<br /><em>revision:</em> Will this post go into the revision system allowing multiple versions to be saved?');
+      return t('<p>This page lets you set the defaults used during creation of nodes for all the different node types.<br /><em>comment:</em> Read/write setting for comments.<br /><em>publish:</em> Is this post publicly viewable, has it been published?<br /><em>promote:</em> Is this post to be promoted to the front page?<br /><em>moderate:</em> Does this post need approval before it can be viewed?<br /><em>sticky:</em> Is this post always visible at the top of lists?<br /><em>revision:</em> Will this post go into the revision system allowing multiple versions to be saved?</p>');
   }
 }
 

@@ -69,7 +69,7 @@ function blog_help($section) {
     case 'admin/modules#description':
       return t('Enables keeping an easily and regularly updated web page or a blog.');
     case 'admin/settings/blog':
-      return t("A weblog is a running journal of a user's ideas.  Enter the minimum word count for a single entry, and the text displayed on the entry submission form");
+      return t("<p>A weblog is a running journal of a user's ideas.  Enter the minimum word count for a single entry, and the text displayed on the entry submission form.</p>");
     case 'node/add/blog':
       return variable_get('blog_help', '');
     case 'node/add#blog':
