@@ -787,7 +787,8 @@ function form_password($title, $name, $value, $size, $maxlength, $description = 
 }
 
 function form_textarea($title, $name, $value, $cols, $rows, $description = 0) {
-  return form_item($title, "<textarea wrap=\"virtual\" cols=\"$cols\" rows=\"$rows\" name=\"edit[$name]\">". check_form($value) ."</textarea>", $description);
+  module_invoke_all("textarea", $name);  // eg. optionally plug in a WYSIWYG editor
+  return form_item($title, "<textarea wrap=\"virtual\" cols=\"$cols\" rows=\"$rows\" name=\"edit[$name]\" id=\"edit[$name]\">". check_form($value) ."</textarea>", $description);
 }
 
 function form_select($title, $name, $value, $options, $description = 0, $extra = 0, $multiple = 0) {
