@@ -755,11 +755,20 @@ function node_validate($node, &$error) {
 
   }
 
+  /*
+  ** Do node type specific validation checks.
+  */
+
+  $function = $node->type ."_validate";
+  if (function_exists($function)) {
+    $node = $function($node, $error);
+  }
+
   return $node;
 }
 
 
-function node_form($edit) {
+function node_form($edit, $error = NULL) {
 
   /*
   ** Save the referer.  We record where the user came from such that we
@@ -772,7 +781,10 @@ function node_form($edit) {
   ** Validate the node:
   */
 
+  if (!$error) {
+  /* Only validate if we don't already know the errors. */
   $edit = node_validate($edit, $error);
+  }
 
   /*
   ** Generate a teaser when necessary:
@@ -932,7 +944,7 @@ function node_edit($id) {
   return $output;
 }
 
-function node_preview($node) {
+function node_preview($node, $error = NULL) {
 
   if (!user_access("post content")) {
     return message_access();
@@ -991,7 +1003,7 @@ function node_preview($node) {
 
   node_view($view);
 
-  return node_form($node);
+  return node_form($node, $error);
 }
 
 function node_submit($node) {
@@ -1002,6 +1014,7 @@ function node_submit($node) {
   }
 
   $context->tid = $tid;
+
   if (user_access("post content", $context)) {
 
     /*
@@ -1009,6 +1022,14 @@ function node_submit($node) {
     */
 
     $node = node_validate($node, $error);
+
+    /*
+    ** If something went wrong, go back to the preview form:
+    */
+
+    if ($error) {
+      return node_preview($node, $error);
+    }
 
     /*
     ** Create a new revision when required:
