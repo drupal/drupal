@@ -666,7 +666,7 @@ function forum_help($section = "admin/help#forum") {
       $output = t("Enable threaded discussions about general topics.");
       break;
     case 'admin/system/modules/forum':
-      $output = t("Forums are threaded discussions based on the taxonomy system so you must first %taxonomy-create of type \"forum\" to place the forum tree in. Then %taxonomy-add to this taxonomy. Each term becomes the name of a forum. If you define a term as a \"Container\" (See below) the term is not a forum itself, but rather holds forms. This lets you group your forums.", array("%taxonomy-create" => l(t("create a taxonomy"), "admin/taxonomy/add/vocabulary"), "%taxonomy" => l(t("add terms"), "admin/taxonomy")));
+      $output = t("Forums are threaded discussions based on the taxonomy system so you must first %taxonomy-create of type \"forum\" to place the forum tree in. Then %taxonomy-add to this taxonomy. Each term becomes the name of a forum. If you define a term as a \"Container\" (See below) the term is not a forum itself, but rather holds forms. This lets you group your forums.", array("%taxonomy-create" => l(t("create a taxonomy"), "admin/taxonomy/add/vocabulary"), "%taxonomy-add" => l(t("add terms"), "admin/taxonomy")));
       break;
   }
 
