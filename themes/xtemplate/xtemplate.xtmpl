@@ -32,6 +32,7 @@
     </td>
   </tr>
 </table>
+
 <table border="0" cellpadding="0" cellspacing="0" id="content">
   <tr>
     <!-- BEGIN: blocks -->
@@ -83,7 +84,7 @@
 <!-- END: box -->
 
 <!-- BEGIN: block -->
-  <div class="block">
+  <div class="block block-{module}" id="block-{module}-{delta}">
     <div class="title">{subject}</div>
     <div class="content">{content}</div>
  </div>

@@ -126,12 +126,11 @@ class Theme_xtemplate extends BaseTheme {
     print $this->template->text("header");
   }
 
-  function block($title, $content, $region = "main") {
-    $this->template->assign(array(
-      "subject" => $title,
-      "content" => $content
-    ));
-
+  function block(&$block) {
+    // create template variables for all block variables (module, delta, region, subject, content, ...)
+    foreach ($block as $key => $value) {
+      $this->template->assign($key, $value);
+    }
     $this->template->parse("block");
     print $this->template->text("block");
     $this->template->reset("block");

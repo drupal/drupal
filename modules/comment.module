@@ -123,8 +123,8 @@ function comment_settings() {
   $output .= form_select(t("Default threshold"), "comment_default_threshold", variable_get("comment_default_threshold", 0), $thresholds, t("Thresholds are values below which comments are hidden. These thresholds are useful for busy sites which want to hide poor comments from most users."));
 
   $output .= form_select(t("Preview comment"), "comment_preview", variable_get("comment_preview", 1), array(t("Optional"), t("Required")), t("Must users preview comments before submitting?"));
-  $output .= form_select(t("New comment form"), "comment_new_form", variable_get("comment_new_form", 0), array(t("Disabled"), t("Enabled")), t("New comment form in the node page?"));
-  $output .= form_select(t("Comment controls"), "comment_controls", variable_get("comment_controls", 0), array(t("Above comments"), t("Below comments"), t("Above and below")), t("Position of the comment controls box."));
+  $output .= form_select(t("Location of comment submission form"), "comment_form_location", variable_get("comment_form_location", 0), array(t("Display below post or comments"), t("Display on separate page")), t("The location of the comment submission form."));
+  $output .= form_select(t("Comment controls"), "comment_controls", variable_get("comment_controls", 0), array(t("Display above the comments"), t("Display below the comments"), t("Display above and below the comments"), t("Do not display")), t("Position of the comment controls box."));
 
   return $output;
 }
@@ -773,7 +773,7 @@ function comment_render($node, $cid = 0) {
     ** If enabled, show new comment form
     */
 
-    if (user_access("post comments") && node_comment_mode($nid) == 2 && variable_get("comment_new_form", 0)) {
+    if (user_access("post comments") && node_comment_mode($nid) == 2 && variable_get("comment_form_location", 0)) {
       theme("box", t("Post new comment"), comment_form(array("nid" => $nid)));
     }
 

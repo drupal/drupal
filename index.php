@@ -5,7 +5,7 @@ include_once "includes/common.inc";
 
 drupal_page_header();
 
-check_php_setting("magic_quotes_gpc", 0);
+fix_gpc_magic();
 
 menu_build("system");
 

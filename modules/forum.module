@@ -415,9 +415,6 @@ function forum_page() {
   if (user_access("access content")) {
     if (module_exist("taxonomy")) {
       $tid = arg(1);
-      if ($op == t("Update settings") && $user->uid) {
-        $user = user_save($user, array("sortby" => $sortby, "forum_per_page" => $forum_per_page));
-      }
 
       if (arg(2) == "new") {
         if ($nid = _forum_new($tid)) {

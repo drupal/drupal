@@ -81,10 +81,23 @@ function throttle($type, $rate) {
   }
 }
 
-function check_php_setting($name, $value) {
-  if (ini_get($name) != $value) {
-    print "<p>Note that the value of PHP's configuration option <code><b>$name</b></code> is incorrect.  It should be set to '$value' for Drupal to work properly.  Either configure your webserver to support <code>.htaccess</code> files so Drupal's <code>.htaccess</code> file can set it to the proper value, or edit your <code>php.ini</code> file directly.  This message will automatically dissapear when the problem has been fixed.</p>";
+function _fix_gpc_magic_array(&$items) {
+  foreach ($items as $k => $i) {
+    if (is_array($i)) _fix_gpc_magic_array($items[$k]);
+    else $items[$k] = stripslashes($i);
   }
+}
+
+function fix_gpc_magic() {
+  static $fixed = false;
+  if ($fixed) return;
+  if (ini_get("magic_quotes_gpc") == 0) return;
+
+  _fix_gpc_magic_array($_GET);
+  _fix_gpc_magic_array($_POST);
+  _fix_gpc_magic_array($_COOKIE);
+
+  $fixed = true;
 }
 
 function arg($index) {
