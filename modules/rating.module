@@ -8,8 +8,6 @@ function rating_help() {
   return $output;
 }
 
-print rating_help();
-
 function rating_perm() {
   return array("access user ratings");
 }
