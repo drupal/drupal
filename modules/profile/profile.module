@@ -41,7 +41,7 @@ function profile_help($section) {
       $output = t("Support for configurable user profiles.");
       break;
     case 'admin/system/modules/profile':
-      $output = t("When a user creates an account you can ask for some extra information, as well as letting the user have a small picture, called an avatar.<br />Notes:<ul><li>In order for a user to enter information you <strong>must</strong> check \"enable\".</li><li>In order for other people too see the entered information you must make it \"public\".</li><li>If an item is \"public\", but not enabled, the user can never give it a value and it will never be seen.  Public does <strong>not</strong> imply \"enable\".</li></ul>", array("%edit" => url("user/edit")));
+      $output = t("When a user creates an account you can ask for some extra information, as well as letting the user have a small picture, called an avatar.  <ul><li>In order for a user to enter information, you <strong>must</strong> check <em>enable</em>.</li><li>In order for other people to see the entered information, you must make it <em>public</em>.</li><li>If an item is <em>public</em>, but not enabled, the user can never give it a value and it will never be seen.  <em>Public</em> does <strong>not</strong> imply <em>enable</em>.</li></ul>", array("%edit" => url("user/edit")));
       break;
   }
   return $output;
