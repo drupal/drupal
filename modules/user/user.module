@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.344 2004/06/28 07:23:53 dries Exp $
+// $Id: user.module,v 1.345 2004/06/28 08:09:30 dries Exp $
 
 /**
  * Invokes hook_user() in every module.
@@ -1648,11 +1648,11 @@ function _user_categories() {
 
   foreach (module_list() as $module) {
     if ($data = module_invoke($module, 'user', 'categories')) {
-      foreach ($data as $category) {
-        $categories[$category['weight']] = $category;
-      }
+      $categories = array_merge($data, $categories);
     }
   }
+
+  usort($categories, '_user_sort');
 
   return $categories;
 }
