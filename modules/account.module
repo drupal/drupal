@@ -206,7 +206,7 @@ function account_save($edit, &$name) {
 }
 
 function account_form($account = 0) {
-  global $access, $account;
+  global $access;
 
   function access($name) {
     global $access, $account;
