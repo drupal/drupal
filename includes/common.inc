@@ -107,9 +107,9 @@ function drupal_set_html_head($data = NULL) {
 function drupal_get_html_head() {
   global $base_url;
 
-  $output = "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />";
+  $output = "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
   $output .= "<base href=\"$base_url/\" />\n";
-  $output .= "<style type=\"text/css\">\n";
+  $output .= "<style type=\"text/css\" media=\"all\">\n";
   $output .= "@import url(misc/drupal.css);\n";
   $output .= "</style>\n";
 
