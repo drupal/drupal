@@ -162,31 +162,11 @@ function locale_seek() {
 
     $result = db_query("SELECT * FROM locales". (count($query) ? " WHERE ". implode(" && ", $query) : "") ." ORDER BY string");
 
-    $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
-    $output .= " <tr><th>string</th>";
-
-    if ($edit["status"] != 2 && strlen($edit["language"]) == 2) {
-      $output .= "<th>translated string</th>";
-    }
-    else {
-      $output .= "<th>languages</th>";
-    }
-
-    $output .= "<th colspan=\"2\">operations</th></tr>\n";
-
+    $header = array(t("string"), (($edit["status"] != 2 && strlen($edit["language"]) == 2) ? t("translated string") : t("languages")), array("data" => t("operations"), "colspan" => "2"));
     while ($locale = db_fetch_object($result)) {
-      $output .= " <tr><td>". check_output($locale->string) ."<br /><small><i>". check_output($locale->location) ."</i></small></td>";
-
-      if ($edit["status"] != 2 && strlen($edit["language"]) == 2) {
-        $output .= "<td>". check_output($locale->$edit["language"]) ."</td>";
-      }
-      else {
-        $output .= "<td align=\"center\">". check_output(locale_languages($locale)) ."</td>";
-      }
-
-      $output .= "<td nowrap=\"nowrap\">". la(t("edit locale"), array("mod" => "locale", "op" => "edit", "id" => $locale->lid)) ."</td><td nowrap=\"nowrap\">". la(t("delete locale"), array("mod" => "locale", "op" => "delete", "id" => $locale->lid)) ."</td></tr>";
+      $rows[] = array("$locale->string<br /><small><i>$locale->location</i></small>", array("data" => (($edit["status"] != 2 && strlen($edit["language"]) == 2) ? $locale->$edit["language"] : locale_languages($locale)), "align" => "center"), array("data" => la(t("edit locale"), array("mod" => "locale", "op" => "edit", "id" => $locale->lid)), "nowrap" => "nowrap"), array("data" => la(t("delete locale"), array("mod" => "locale", "op" => "delete", "id" => $locale->lid)), "nowrap" => "nowrap"));
     }
-    $output .= "</table>\n";
+    $output .= table($header, $rows);
   }
 
   reset($languages);
@@ -246,9 +226,11 @@ function locale_admin() {
 }
 
 function locale_admin_initialize() {
-  /* This function inserts common strings into the locale table (e.g. names of months and days).
-   * We use $revision and a stored variable to track if the locale table is up-to-date.
-   */
+  /*
+  ** This function inserts common strings into the locale table (eg.
+  ** names of months and days).  We use $revision and a stored variable
+  ** to track if the locale table is up-to-date.
+  */
 
   $revision = 1;
 
