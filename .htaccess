@@ -15,6 +15,12 @@
   deny from all
 </Files>
 
+# Protect CVS directories:
+<Files *CVS>
+  order deny,allow
+  deny from all
+</Files>
+
 # Customized server error messages:
 ErrorDocument 400 /error.php
 ErrorDocument 402 /error.php
