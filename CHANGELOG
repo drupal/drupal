@@ -17,7 +17,7 @@ Drupal 4.2.0, xxxx-xx-xx (to be released)
 - node system improvements:
     * replaced the "post content" permission by more fine-grained permissions.
     * improved content submission:
-        + improved teasers: teasers are now optional, teaser length can be configured, teaser and body are edited in a single textarea, users will no longer be bother with teasers when the post is too short for a teaser.
+        + improved teasers: teasers are now optional, teaser length can be configured, teaser and body are edited in a single textarea, users will no longer be bothered with teasers when the post is too short for one.
         + added the ability to preview both the short and the full version of your posts.
     * extended the node API which allows for better integration.
     * added default node settings to control the behaviour for promotion, moderation and other options.
