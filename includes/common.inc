@@ -663,10 +663,13 @@ function search_data($keys = NULL) {
 
   if (isset($keys)) {
     foreach (module_list() as $name) {
-      if (module_hook($name, "search") && (!$edit["type"] || $edit["type"][$name]) && ($result = module_invoke($name, "search", $keys))) {
-        $output .= "<h2>$result[0]</h2>";
-        foreach ($result[1] as $entry) {
-          $output .= search_item($entry, $name);
+      if (module_hook($name, "search") && (!$edit["type"] || $edit["type"][$name])) {
+        list($title, $results) = module_invoke($name, "search", $keys);
+        if ($results) {
+          $output .= "<h2>$title</h2>";
+          foreach ($results as $entry) {
+            $output .= search_item($entry, $name);
+          }
         }
       }
     }
