@@ -230,8 +230,8 @@ function displayAccountSettings($theme) {
   if ($user && $user->userid) { 
     ### Display account settings:
     $content  = "<LI><A HREF=\"account.php\">User info</A></LI>";
-    $content .= "<LI><A HREF=\"account.php?op=edituser\">Edit user info</A></LI>";
-    $content .= "<LI><A HREF=\"account.php?op=editpage\">Customize page</A></LI>";
+    $content .= "<LI><A HREF=\"account.php?op=user\">Edit user info</A></LI>";
+    $content .= "<LI><A HREF=\"account.php?op=page\">Customize page</A></LI>";
     $content .= "<LI><A HREF=\"account.php?op=logout\">Logout</A></LI>";
 
     $theme->box("$user->userid's account", "$content");

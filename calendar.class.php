@@ -61,8 +61,8 @@ class calendar {
       $nday++;
     }
     
-    ### Finish the calendar:
-    if ($sday != 0) {
+    ### Complete the calendar:
+    if ($sday) {
       $end = 7 - $sday;
       $output .= "  <TD COLSPAN=\"$end\">&nbsp;</TD>\n </TR>\n";
     }
