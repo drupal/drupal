@@ -26,7 +26,7 @@ function rating_cron() {
       $bonus -= $story->number / 2;
     }
 
-    $r4 = db_query("SELECT score, votes FROM comments WHERE author = '$rating->id' AND (". time() ." - timestamp < $period) ORDER BY timestamp LIMIT $number", 1);
+    $r4 = db_query("SELECT score, votes FROM comments WHERE author = '$rating->id' AND (". time() ." - timestamp < $period) ORDER BY timestamp LIMIT $number");
     while ($comment = db_fetch_object($r4)) {
       $weight++;
       $score += $weight * $comment->score;
