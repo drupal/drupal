@@ -138,18 +138,23 @@ function blog_page($uid = 0) {
 function blog_page_user($uid) {
   $account = user_load(array((is_numeric($uid) ? 'uid' : 'name') => $uid, 'status' => 1));
 
-  $title = t("%name's blog", array('%name' => $account->name));
-  $output = '';
+  if ($account->uid) {
+    $title = t("%name's blog", array('%name' => $account->name));
+    $output = '';
 
-  $result = pager_query('SELECT DISTINCT(n.nid), n.sticky, n.created FROM {node} n '. node_access_join_sql() ." WHERE type = 'blog' AND n.uid = %d AND n.status = 1 AND ". node_access_where_sql() .' ORDER BY n.sticky DESC, n.created DESC', variable_get('default_nodes_main', 10), 0, NULL, $account->uid);
-  while ($node = db_fetch_object($result)) {
-    $output .= node_view(node_load(array('nid' => $node->nid)), 1);
+    $result = pager_query('SELECT DISTINCT(n.nid), n.sticky, n.created FROM {node} n '. node_access_join_sql() ." WHERE type = 'blog' AND n.uid = %d AND n.status = 1 AND ". node_access_where_sql() .' ORDER BY n.sticky DESC, n.created DESC', variable_get('default_nodes_main', 10), 0, NULL, $account->uid);
+    while ($node = db_fetch_object($result)) {
+      $output .= node_view(node_load(array('nid' => $node->nid)), 1);
+    }
+    $output .= theme('pager', NULL, variable_get('default_nodes_main', 10));
+    $output .= theme('xml_icon', url("blog/feed/$account->uid"));
+
+    drupal_set_html_head('<link rel="alternate" type="application/rss+xml" title="RSS - '. $title .'" href="'. url("blog/feed/$account->uid") .'" />');
+    print theme('page', $output, $title);
   }
-  $output .= theme('pager', NULL, variable_get('default_nodes_main', 10));
-  $output .= theme('xml_icon', url("blog/feed/$account->uid"));
-
-  drupal_set_html_head('<link rel="alternate" type="application/rss+xml" title="RSS - '. $title .'" href="'. url("blog/feed/$account->uid") .'" />');
-  print theme('page', $output, $title);
+  else {
+    drupal_not_found();
+  }
 }
 
 /**
