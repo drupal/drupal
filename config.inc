@@ -83,7 +83,10 @@ $themes = array("Marvin" => array(
                    "white, simple"),
                 "Zaphod" => array(
                    "themes/zaphod/zaphod.theme", 
-                   "yellow, simple"));
+                   "yellow, simple"),
+		"UnConeD" => array(
+		   "themes/UnConeD/theme.class.php",
+		   "gray, flashy"));
 
 #
 # Submission moderation votes:
