@@ -307,7 +307,7 @@ function filter_admin_delete() {
 
   $form .= form_hidden('format', $format->format);
   $form .= form_hidden('name', $format->name);
-  $form .= '<p>'. t("Are you sure you want to delete the input format '%format'? If you have any content left in this input format, it will be switched to the default input format.", array('%format' => $format->name)) .'</p>';
+  $form .= '<p>'. t('Are you sure you want to delete the input format %format? If you have any content left in this input format, it will be switched to the default input format.', array('%format' => '<em>'. $format->name .'</em>')) ."</p>\n";
   $form .= form_submit(t('Confirm deletion'));
   print theme('page', form($form));
 }
