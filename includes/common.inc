@@ -483,16 +483,7 @@ function rewrite_old_urls($text) {
   ** and comment bodies.
   */
 
-  if (variable_get("clean_url", "1")) {
-    // rewrite 'node.php?id=<number>[&cid=<number>]' style URLs:
-    $text = eregi_replace("(node)\.php\?id=([[:digit:]]+)(&cid=)?([[:digit:]]*)", "\\1/view/\\2/\\4", $text);
-
-    // rewrite 'module.php?mod=<name>{&<op>=<value>}' style URLs:
-    $text = ereg_replace("module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "\\2/\\4/\\6" , $text);
-    $text = ereg_replace("module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "\\2/\\4" , $text);
-    $text = ereg_replace("module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))", "\\2" , $text);
-  }
-  else {
+  if (variable_get("clean_url", "0") == "0") {
     // rewrite 'node.php?id=<number>[&cid=<number>]' style URLs:
     $text = eregi_replace("(node)\.php\?id=([[:digit:]]+)(&cid=)?([[:digit:]]*)", "?q=\\1/view/\\2/\\4", $text);
 
@@ -500,6 +491,15 @@ function rewrite_old_urls($text) {
     $text = ereg_replace("module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "?q=\\2/\\4/\\6" , $text);
     $text = ereg_replace("module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "?q=\\2/\\4" , $text);
     $text = ereg_replace("module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))", "?q=\\2" , $text);
+  }
+  else {
+    // rewrite 'node.php?id=<number>[&cid=<number>]' style URLs:
+    $text = eregi_replace("(node)\.php\?id=([[:digit:]]+)(&cid=)?([[:digit:]]*)", "\\1/view/\\2/\\4", $text);
+
+    // rewrite 'module.php?mod=<name>{&<op>=<value>}' style URLs:
+    $text = ereg_replace("module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "\\2/\\4/\\6" , $text);
+    $text = ereg_replace("module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "\\2/\\4" , $text);
+    $text = ereg_replace("module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))", "\\2" , $text);
   }
 
   return $text;
@@ -783,25 +783,7 @@ function form_weight($title = NULL, $name = "weight", $value = 0, $delta = 10, $
 function url($url = NULL, $query = NULL) {
   global $base_url;
 
-  if (variable_get("clean_url", "1")) {
-    if (isset($url)) {
-      if (isset($query)) {
-        return "$base_url/$url?$query";
-      }
-      else {
-        return "$base_url/$url";
-      }
-    }
-    else {
-      if (isset($query)) {
-        return "$base_url/?$query";
-      }
-      else {
-        return "$base_url";
-      }
-    }
-  }
-  else {
+  if (variable_get("clean_url", "0") == "0") {
     if (isset($url)) {
       if (isset($query)) {
         return "?q=$url&amp;$query";
@@ -816,6 +798,24 @@ function url($url = NULL, $query = NULL) {
       }
       else {
         return "";
+      }
+    }
+  }
+  else {
+    if (isset($url)) {
+      if (isset($query)) {
+        return "$base_url/$url?$query";
+      }
+      else {
+        return "$base_url/$url";
+      }
+    }
+    else {
+      if (isset($query)) {
+        return "$base_url/?$query";
+      }
+      else {
+        return "$base_url";
       }
     }
   }
