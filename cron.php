@@ -1,5 +1,5 @@
 <?php
-// $Id: cron.php,v 1.16 2003/04/21 12:23:16 dries Exp $
+// $Id: cron.php,v 1.17 2003/09/14 18:33:16 dries Exp $
 
 include_once "includes/common.inc";
 
@@ -15,9 +15,7 @@ if (!get_cfg_var("safe_mode")) {
 ** Iterate through the modules calling their cron handlers (if any):
 */
 
-foreach (module_list() as $module) {
-  module_invoke($module, "cron");
-}
+module_invoke_all("cron");
 
 watchdog("message", "cron run completed");
 ?>
