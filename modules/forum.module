@@ -42,11 +42,12 @@ function forum_link($type) {
 
 function forum_view($node) {
   global $theme;
-  $output .= "<P><A HREF=\"module.php?mod=forum\">". t("Forum") ."</A> / <B><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></B>:</P><P>". check_output($node->body) ."</P>";
+  $output .= "<p><a href=\"module.php?mod=forum\">". t("Forum") ."</a> / <b><a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a></b>:</p><p>". check_output($node->body) ."</p>";
   $theme->box(t("Discussion forum"), $output);
 }
 
 function forum_form(&$node, &$help, &$error) {
+
   $output .= form_textarea("Body", "body", $node->body, 60, 10);
 
   return $output;
