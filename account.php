@@ -296,8 +296,8 @@ function account_user($uname) {
 
 function account_validate($user) {
   // Verify username and e-mail address:
-  if (empty($user[real_email]) || (!eregi("^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3}$", $user[real_email]))) $error = t("the e-mail address '$user[real_email]' is not valid");
-  if (empty($user[userid]) || (ereg("[^a-zA-Z0-9_-]", $user[userid]))) $error = t("the username '$user[userid]' is not valid");
+  if (empty($user[real_email]) || (!check_mail($user[real_email]))) $error = t("the e-mail address '$user[real_email]' is not valid");
+  if (empty($user[userid]) || (!check_name($user[userid]))) $error = t("the username '$user[userid]' is not valid");
   if (strlen($user[userid]) > 15) $error = t("the username '$user[userid]' is too long: it must be less than 15 characters");
 
   // Check to see whether the username or e-mail address are banned:

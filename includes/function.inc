@@ -28,6 +28,14 @@ function check_code($message) {
   return $message;
 }
 
+function check_mail($mail) {
+  return eregi("^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3}$", $mail) ? 1 : 0;
+}
+
+function check_name($name) {
+  return ereg("[^a-zA-Z0-9_-]", $name) ? 0 : 1;
+}
+
 function check_output($message, $nl2br = 0) {
   global $allowed_html, $na;
   $var = strip_tags(stripslashes(format_text($message)), $allowed_html);
