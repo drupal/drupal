@@ -11,7 +11,7 @@ $corder = array(1 => "Date - new", 2 => "Date - old", 3 => "Rate - high", 4 => "
 $link = ($mod) ? $mod : substr($PHP_SELF, 1, strlen($PHP_SELF) - 5);
 
 class Comment {
-  function Comment($userid, $subject, $comment, $timestamp, $url, $fake_email, $score, $votes, $cid) {
+  function Comment($userid, $subject, $comment, $timestamp, $url, $fake_email, $score, $votes, $cid, $lid) {
     $this->userid = $userid;
     $this->subject = $subject;
     $this->comment = $comment;
@@ -21,6 +21,7 @@ class Comment {
     $this->score = $score;
     $this->votes = $votes;
     $this->cid = $cid;
+    $this->lid = $lid;
   }
 }
 
@@ -58,7 +59,7 @@ function comment_reply($pid, $id) {
   // Extract parent-information/data:
   if ($pid) {
     $item = db_fetch_object(db_query("SELECT comments.*, users.userid FROM comments LEFT JOIN users ON comments.author = users.id WHERE comments.cid = $pid"));
-    $theme->comment(new Comment($item->userid, $item->subject, $item->comment, $item->timestamp, $item->url, $item->fake_email, comment_score($comment), $comment->votes, $item->cid), "reply to this comment");
+    $theme->comment(new Comment($item->userid, $item->subject, $item->comment, $item->timestamp, $item->url, $item->fake_email, comment_score($comment), $comment->votes, $item->cid, $item->lid), "reply to this comment");
   }
   else {
     $pid = 0;
@@ -90,8 +91,8 @@ function comment_reply($pid, $id) {
   $output .= " <SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL>\n";
   $output .= "</P>\n";
 
-  // Preview button: 
-  $output .= "<P>\n";  
+  // Preview button:
+  $output .= "<P>\n";
   $output .= " <SMALL><I>You must preview at least once before you can submit:</I></SMALL><BR>\n";
   $output .= " <INPUT TYPE=\"hidden\" NAME=\"pid\" VALUE=\"$pid\">\n";
   $output .= " <INPUT TYPE=\"hidden\" NAME=\"id\" VALUE=\"$id\">\n";
@@ -107,7 +108,7 @@ function comment_preview($pid, $id, $subject, $comment) {
   global $allowed_html, $link, $theme, $user;
 
   // Preview comment:
-  $theme->comment(new Comment($user->userid, $subject, $comment, time(), $user->url, $user->fake_email, "", "", ""), "reply to this comment");
+  $theme->comment(new Comment($user->userid, $subject, $comment, time(), $user->url, $user->fake_email, 0, 0, 0, 0), "reply to this comment");
 
   // Build reply form:
   $output .= "<FORM ACTION=\"". comment_uri() ."\" METHOD=\"post\">\n";
@@ -130,7 +131,7 @@ function comment_preview($pid, $id, $subject, $comment) {
   $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"comment\">". check_textarea($comment) ."</TEXTAREA><BR>\n";
   $output .= " <SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL>\n";
   $output .= "</P>\n";
-  
+
   // Hidden fields:
   $output .= "<INPUT TYPE=\"hidden\" NAME=\"pid\" VALUE=\"$pid\">\n";
   $output .= "<INPUT TYPE=\"hidden\" NAME=\"id\" VALUE=\"$id\">\n";
@@ -148,7 +149,7 @@ function comment_preview($pid, $id, $subject, $comment) {
   $output .= " </FORM>\n";
   $output .= "</P>\n";
 
-  $theme->box("Reply", $output); 
+  $theme->box("Reply", $output);
 }
 
 function comment_post($pid, $id, $subject, $comment) {
@@ -161,7 +162,7 @@ function comment_post($pid, $id, $subject, $comment) {
     watchdog("error", "comment: attempt to insert duplicate comment");
     $theme->box("duplicate comment", "duplicate comment: $duplicate");
   }
-  else { 
+  else {
     // Validate subject:
     $subject = ($subject) ? $subject : substr($comment, 0, 29);
 
@@ -170,7 +171,7 @@ function comment_post($pid, $id, $subject, $comment) {
 
     // Add comment to database:
     db_query("INSERT INTO comments (link, lid, pid, author, subject, comment, hostname, timestamp, score) VALUES ('". check_input($link) ."', $id, $pid, '$user->id', '". check_input($subject) ."', '". check_input($comment) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."', '". ($user->userid ? 1 : 0) ."')");
-    
+
     // Compose header:
     header("Location: ". comment_uri("id=$id"));
   }
@@ -185,7 +186,7 @@ function comment_num_replies($id, $count = 0) {
   $result = db_query("SELECT COUNT(cid) FROM comments WHERE pid = $id");
   return ($result) ? db_result($result, 0) : 0;
 }
- 
+
 function comment_num_filtered($lid, $pid) {
   global $user;
 
@@ -312,7 +313,7 @@ function comment_thread_max($cid, $mode, $threshold, $level = 0, $dummy = 0) {
   print "<UL>";
   while ($comment = db_fetch_object($result)) {
     if (comment_visible($comment, $threshold)) {
-      $comment = new Comment($comment->userid, $comment->subject, $comment->comment, $comment->timestamp, $comment->url, $comment->fake_email, comment_score($comment), $comment->votes, $comment->cid);
+      $comment = new Comment($comment->userid, $comment->subject, $comment->comment, $comment->timestamp, $comment->url, $comment->fake_email, comment_score($comment), $comment->votes, $comment->cid, $comment->lid);
       $theme->comment($comment, comment_link($comment, 0));
     }
     else {
@@ -362,7 +363,7 @@ function comment_render($lid, $cid) {
       print "</TABLE>\n";
     }
     else if ($mode == 2) {
-      $result = comment_query($link, $lid, $order);    
+      $result = comment_query($link, $lid, $order);
       while ($comment = db_fetch_object($result)) {
         if (comment_visible($comment, $threshold)) {
           $theme->comment($comment, comment_link($comment, 0));
@@ -384,11 +385,11 @@ function comment_render($lid, $cid) {
       }
     }
   }
- 
+
   if ($user->id) {
     // Print moderation form:
-    print " <INPUT TYPE=\"hidden\" NAME=\"id\" VALUE=\"$lid\">\n";  
-    print " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Moderate comments\">\n";  
+    print " <INPUT TYPE=\"hidden\" NAME=\"id\" VALUE=\"$lid\">\n";
+    print " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Moderate comments\">\n";
     print "</FORM>\n";
   }
 }
