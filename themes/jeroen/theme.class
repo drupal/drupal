@@ -34,10 +34,10 @@
         .NO-IN{margin-left:-25;}}
       -->
      </STYLE>
-     <BODY TEXT="#202020" BGCOLOR="#FEFEFE" ALINK="#000000" LINK="#000000" VLINK="#000000">
+     <BODY TEXT="#202020" BGCOLOR="#FEFEFE" BACKGROUND="themes/Jeroen/images/background.gif" ALINK="#000000" LINK="#000000" VLINK="#000000">
       <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="2">
        <TR>
-        <TD COLSPAN="2"><IMG SRC="themes/UnConeD/images/logo.gif" ALT="drop.org logo"></TD>
+        <TD COLSPAN="2"><IMG SRC="themes/Jeroen/images/logo.gif" ALT="drop.org logo"></TD>
         <TD WIDTH="180" VALIGN="top" ALIGN="right">
          <?  
           $this->box("Status", "<TABLE WIDTH=\"100%\"><TR><TD ALIGN=\"left\" VALIGN=\"top\"><FONT SIZE=\"-2\">Username: Your Name<BR>E-mail: your.name@drop.org<BR>Status: Logged in<BR>Since: The beginning of time</FONT></TD></TR></TABLE>");
@@ -287,31 +287,31 @@ SRC="themes/Jeroen/images/<? echo $img; ?>" WIDTH="20" HEIGHT="20" ALT=""></TD>
    function box($subject, $content) { 
      include "config.inc";
      if (rand(0,40) == 20) $img = "boxbottomright4.gif";
-     else $img = "boxbottomright3.gif";
+     else $img = "boxbottomright5.gif";
      $width = rand(10,200);
     ?>
     <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0" BORDER="0">
      <TR>
-      <TD ALIGN="right" VALIGN="bottom" WIDTH="20" HEIGHT="20"><IMG SRC="themes/Jeroen/images/boxtopleft2.gif" width="20" height="20" alt=""></TD>
-      <TD ALIGN="left" VALIGN="bottom" HEIGHT="20" WIDTH="<? echo $width; ?>" BACKGROUND="themes/Jeroen/images/boxtop2.gif"><img src="themes/Jeroen/images/boxtop2.gif" width="1" height="1" alt=""></TD>
+      <TD ALIGN="right" VALIGN="bottom" WIDTH="20" HEIGHT="20"><IMG SRC="themes/Jeroen/images/boxtopleft3.gif" width="20" height="20" alt=""></TD>
+      <TD ALIGN="left" VALIGN="bottom" HEIGHT="20" WIDTH="<? echo $width; ?>" BACKGROUND="themes/Jeroen/images/boxtop2.gif"><img src="themes/Jeroen/images/boxtop3.gif" width="1" height="1" alt=""></TD>
       <TD ALIGN="left" VALIGN="bottom" HEIGHT="20" WIDTH="20" BACKGROUND="themes/Jeroen/images/boxtopmiddle.gif"><img src="themes/Jeroen/images/boxtop2.gif" width="1" height="1" alt=""></TD>
       <TD ALIGN="left" VALIGN="bottom" HEIGHT="20" BACKGROUND="themes/Jeroen/images/boxtop2.gif"><img src="themes/Jeroen/images/boxtop2.gif" width="1" height="1" alt=""></TD>
-      <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20"><IMG SRC="themes/Jeroen/images/boxtopright2.gif" width="20" height="20" alt=""></TD>
+      <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20"><IMG SRC="themes/Jeroen/images/boxtopright3.gif" width="20" height="20" alt=""></TD>
      </TR>
      <TR>
-      <TD ALIGN="right" VALIGN="bottom" WIDTH="20" HEIGHT="20" BACKGROUND="themes/Jeroen/images/boxtopleftside.gif"><IMG SRC="themes/Jeroen/images/boxtopleftside2.gif" WIDTH="20" HEIGHT="20" alt=""></TD>
+      <TD ALIGN="right" VALIGN="bottom" WIDTH="20" HEIGHT="20" BACKGROUND="themes/Jeroen/images/boxtopleftside3.gif"><IMG SRC="themes/Jeroen/images/boxtopleftside3.gif" WIDTH="20" HEIGHT="20" alt=""></TD>
       <TD COLSPAN="3" ALIGN="center" BGCOLOR="#6C6C6C" BACKGROUND="themes/Jeroen/images/menutitle.gif" HEIGHT=20><FONT COLOR="<? echo $this->fgcolor1; ?>"><?  echo $subject; ?></FONT></TD>
-      <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20" BACKGROUND="themes/Jeroen/images/boxtoprightside.gif"><IMG SRC="themes/Jeroen/images/boxtoprightside2.gif" width="20" height="20" alt=""></TD>
+      <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20" BACKGROUND="themes/Jeroen/images/boxtoprightside3.gif"><IMG SRC="themes/Jeroen/images/boxtoprightside3.gif" width="20" height="20" alt=""></TD>
      </TR>
      <TR>
-      <TD ALIGN="right" BACKGROUND="themes/Jeroen/images/boxleft2.gif" WIDTH="20">&nbsp;</TD>
+      <TD ALIGN="right" BACKGROUND="themes/Jeroen/images/boxleft3.gif" WIDTH="20">&nbsp;</TD>
       <TD COLSPAN="3" VALIGN="top" WIDTH="100%" BGCOLOR="#E7E7E7" BACKGROUND="themes/Jeroen/images/sketch.gif">
        <TABLE WIDTH="100%"><TR><TD><? echo $content; ?></TD></TR></TABLE>
       </TD>
-      <TD ALIGN="left" BACKGROUND="themes/Jeroen/images/boxright2.gif" WIDTH="20">&nbsp;</TD>
+      <TD ALIGN="left" BACKGROUND="themes/Jeroen/images/boxright3.gif" WIDTH="20">&nbsp;</TD>
      </TR>
      <TR>
-      <TD ALIGN="right" VALIGN=TOP WIDTH="20" HEIGHT="20"><IMG SRC="themes/Jeroen/images/boxbottomleft2.gif" width="20" height="20" alt=""></TD>
+      <TD ALIGN="right" VALIGN=TOP WIDTH="20" HEIGHT="20"><IMG SRC="themes/Jeroen/images/boxbottomleft3.gif" width="20" height="20" alt=""></TD>
       <TD COLSPAN="3" ALIGN="middle" HEIGHT="20" VALIGN="top" BACKGROUND="themes/Jeroen/images/boxbottom2.gif">&nbsp;</TD>
       <TD ALIGN="left" VALIGN="top" WIDTH="20" HEIGHT="20"><IMG SRC="themes/Jeroen/images/<? echo $img; ?>" width="20" height="20" alt=""></TD>
      </TR>
