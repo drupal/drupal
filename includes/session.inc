@@ -26,7 +26,7 @@ function sess_read($key) {
 
   if (!db_num_rows($result)) {
     $result = db_query("SELECT u.* FROM {users} u WHERE u.uid = 0");
-    db_query("INSERT INTO {sessions} (uid, sid, hostname, timestamp) values(%d, '%s', '%s', %d)", $user->uid, $key, $_SERVER["REMOTE_ADDR"], time());
+    db_query("INSERT INTO {sessions} (sid, hostname, timestamp) values('%s', '%s', %d)", $key, $_SERVER["REMOTE_ADDR"], time());
   }
 
   $user = db_fetch_object($result);
