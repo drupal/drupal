@@ -1921,7 +1921,6 @@ function update_110() {
       PRIMARY KEY word (word)
       ) TYPE=MyISAM");
 
-    $ret[] = update_sql("DELETE FROM {variable} WHERE name = 'node_cron_last'");
 
     /*
     ** Blocks
@@ -1931,7 +1930,45 @@ function update_110() {
     $ret[] = update_sql('ALTER TABLE {blocks} ADD visibility tinyint(1) NOT NULL');
     $ret[] = update_sql('ALTER TABLE {blocks} ADD pages text NOT NULL');
   }
+  elseif ($GLOBALS['db_type'] == 'pgsql') {
+    /*
+    ** Search
+    */
+    $ret[] = update_sql('DROP TABLE {search_index}');
+    $ret[] = update_sql("CREATE TABLE {search_index} (
+      word varchar(50) NOT NULL default '',
+      sid integer NOT NULL default '0',
+      type varchar(16) default NULL,
+      fromsid integer NOT NULL default '0',
+      fromtype varchar(16) default NULL,
+      score integer default NULL
+      )");
+    $ret[] = update_sql("CREATE INDEX {search_index}_sid_idx on {search_index}(sid)");
+    $ret[] = update_sql("CREATE INDEX {search_index}_fromsid_idx on {search_index}(fromsid)");
+    $ret[] = update_sql("CREATE INDEX {search_index}_word_idx on {search_index}(word)");
 
+    $ret[] = update_sql("CREATE TABLE {search_total} (
+      word varchar(50) NOT NULL default '' PRIMARY KEY,
+      count integer default NULL
+      )");
+
+
+    /*
+    ** Blocks
+    */
+    // Postgres can only drop columns since 7.4
+    #$ret[] = update_sql('ALTER TABLE {blocks} DROP path');
+
+    $ret[] = update_sql('ALTER TABLE {blocks} ADD visibility smallint');
+    $ret[] = update_sql('UPDATE {blocks} SET visibility = 0');
+    $ret[] = update_sql('ALTER TABLE {blocks} ALTER COLUMN visibility SET NOT NULL');
+    $ret[] = update_sql('ALTER TABLE {blocks} ADD pages text');
+    $ret[] = update_sql("UPDATE {blocks} SET pages = ''");
+    $ret[] = update_sql('ALTER TABLE {blocks} ALTER COLUMN pages SET NOT NULL');
+
+  }
+
+  $ret[] = update_sql("DELETE FROM {variable} WHERE name = 'node_cron_last'");
   $ret[] = update_sql('UPDATE {blocks} SET status = 1, custom = 2 WHERE status = 0 AND custom = 1');
 
   return $ret;
@@ -1940,9 +1977,13 @@ function update_110() {
 function update_111() {
   $ret = array();
 
+  $ret[] = update_sql("DELETE FROM {variable} WHERE name LIKE 'throttle_%'");
+
   if ($GLOBALS['db_type'] == 'mysql') {
-    $ret[] = update_sql("DELETE FROM {variable} WHERE name LIKE 'throttle_%'");
     $ret[] = update_sql('ALTER TABLE {sessions} ADD PRIMARY KEY sid (sid)');
+  }
+  elseif ($GLOBALS['db_type'] == 'pgsql') {
+    $ret[] = update_sql('ALTER TABLE {sessions} ADD UNIQUE(sid)');
   }
 
   return $ret;
@@ -1951,11 +1992,20 @@ function update_111() {
 function update_112() {
   $ret = array();
 
-  $ret[] = update_sql("CREATE TABLE {flood} (
-    event varchar(64) NOT NULL default '',
-    hostname varchar(128) NOT NULL default '',
-    timestamp int(11) NOT NULL default '0'
-  );");
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql("CREATE TABLE {flood} (
+      event varchar(64) NOT NULL default '',
+      hostname varchar(128) NOT NULL default '',
+      timestamp int(11) NOT NULL default '0'
+     );");
+  }
+  elseif ($GLOBALS['db_type'] == 'pgsql') {
+    $ret[] = update_sql("CREATE TABLE {flood} (
+      event varchar(64) NOT NULL default '',
+      hostname varchar(128) NOT NULL default '',
+      timestamp integer NOT NULL default 0
+     );");
+  }
 
   return $ret;
 }
@@ -1965,6 +2015,23 @@ function update_113() {
 
   if ($GLOBALS['db_type'] == 'mysql') {
     $ret[] = update_sql('ALTER TABLE {accesslog} ADD aid int(10) NOT NULL auto_increment, ADD PRIMARY KEY (aid)');
+  }
+  elseif ($GLOBALS['db_type'] == 'pgsql') {
+    $ret[] = update_sql("SELECT * INTO TEMPORARY {accesslog}_t FROM {accesslog}");
+    $ret[] = update_sql("DROP TABLE {accesslog}");
+    $ret[] = update_sql("CREATE TABLE {accesslog} (
+      sid serial,
+      title varchar(255) default NULL,
+      path varchar(255) default NULL,
+      url varchar(255) default NULL,
+      hostname varchar(128) default NULL,
+      uid integer default '0',
+      timestamp integer NOT NULL default '0'
+    )");
+    $ret[] = update_sql("INSERT INTO accesslog (title, path, url, hostname, uid, timestamp) SELECT title, path, url, hostname, uid, timestamp FROM accesslog_t");
+
+    $ret[] = update_sql("DROP TABLE {accesslog}_t");
+
   }
 
   // Flush the menu cache:
@@ -1989,8 +2056,8 @@ function update_114() {
       uid integer NOT NULL default '0',
       vote integer NOT NULL default '0'
     )");
-    $ret[] = update_sql("CREATE INDEX queue_nid_idx ON queue(nid)");
-    $ret[] = update_sql("CREATE INDEX queue_uid_idx ON queue(uid)");
+    $ret[] = update_sql("CREATE INDEX {queue}_nid_idx ON queue(nid)");
+    $ret[] = update_sql("CREATE INDEX {queue}_uid_idx ON queue(uid)");
   }
 
   $result = db_query("SELECT nid, votes, score, users FROM {node}");
@@ -2016,9 +2083,12 @@ function update_114() {
     }
   }
 
-  $ret[] = update_sql("ALTER TABLE {node} DROP votes");
-  $ret[] = update_sql("ALTER TABLE {node} DROP score");
-  $ret[] = update_sql("ALTER TABLE {node} DROP users");
+  if ($GLOBALS['db_type'] == 'mysql') {
+    // Postgres only supports dropping of columns since 7.4
+    $ret[] = update_sql("ALTER TABLE {node} DROP votes");
+    $ret[] = update_sql("ALTER TABLE {node} DROP score");
+    $ret[] = update_sql("ALTER TABLE {node} DROP users");
+  }
 
   return $ret;
 }
@@ -2029,7 +2099,10 @@ function update_115() {
     $ret[] = update_sql("ALTER TABLE {watchdog} ADD severity tinyint(3) unsigned NOT NULL default '0'");
   }
   else if ($GLOBALS['db_type'] == 'pgsql') {
-    $ret[] = update_sql("ALTER TABLE {watchdog} ADD severity smallint NOT NULL default '0'");
+    $ret[] = update_sql('ALTER TABLE {watchdog} ADD severity smallint');
+    $ret[] = update_sql('UPDATE {watchdog} SET severity = 0');
+    $ret[] = update_sql('ALTER TABLE {watchdog} ALTER COLUMN severity SET NOT NULL');
+    $ret[] = update_sql('ALTER TABLE {watchdog} ALTER COLUMN severity SET DEFAULT 0');
   }
   return $ret;
 }
@@ -2048,9 +2121,9 @@ function update_117() {
   }
   else if ($GLOBALS['db_type'] == 'pgsql') {
     $ret[] = update_sql("CREATE TABLE {vocabulary_node_types} (
-                         vid integer NOT NULL default '0',
-                         type varchar(16) NOT NULL default '',
-                         PRIMARY KEY (vid, type))");
+                         vid serial,
+                         type varchar(16) NOT NULL default '') ");
+    $ret[] = update_sql("ALTER TABLE {vocabulary_node_types} ADD UNIQUE(vid, type)");
   }
   return $ret;
 }
@@ -2066,7 +2139,9 @@ function update_118() {
       db_query("INSERT INTO {vocabulary_node_types} (vid, type) VALUES (%d, '%s')", $vid, $type);
     }
   }
-  $ret[] = update_sql("ALTER TABLE {vocabulary} DROP nodes");
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql("ALTER TABLE {vocabulary} DROP nodes");
+  }
   return $ret;
 }
 
@@ -2137,7 +2212,16 @@ function update_122() {
 function update_123() {
   $ret = array();
 
-  $ret[] = update_sql("ALTER TABLE {vocabulary} ADD module varchar(255) NOT NULL default ''");
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql("ALTER TABLE {vocabulary} ADD module varchar(255) NOT NULL default ''");
+  }
+  elseif ($GLOBALS['db_type'] == 'pgsql') {
+    $ret[] = update_sql("ALTER TABLE {vocabulary} ADD module varchar(255)");
+    $ret[] = update_sql("UPDATE {vocabulary} SET module = ''");
+    $ret[] = update_sql("ALTER TABLE {vocabulary} ALTER COLUMN module SET NOT NULL");
+    $ret[] = update_sql("ALTER TABLE {vocabulary} ALTER COLUMN module SET DEFAULT ''");
+  }
+
   $ret[] = update_sql("UPDATE {vocabulary} SET module = 'taxonomy'");
   $vid = variable_get('forum_nav_vocabulary', '');
   if (!empty($vid)) {
@@ -2183,7 +2267,7 @@ function update_124() {
   $ret[] = update_sql("INSERT INTO {node_comment_statistics} (nid, last_comment_timestamp, last_comment_name, last_comment_uid, comment_count) SELECT n.nid, 0, NULL, 0, 0 FROM {node} n");
 
   // fill table
-  $comment_updates = db_query("SELECT c.nid, c.timestamp, c.name, c.uid, COUNT(c.nid) as comment_count FROM {comments} c INNER JOIN {node} n ON c.nid = n.nid WHERE c.status = 0 GROUP BY c.nid");
+  $comment_updates = db_query("SELECT c.nid, c.timestamp, c.name, c.uid, COUNT(c.nid) as comment_count FROM {comments} c INNER JOIN {node} n ON c.nid = n.nid WHERE c.status = 0 GROUP BY c.nid, c.timestamp, c.name, c.uid");
   while ($comment_record = db_fetch_object($comment_updates)) {
     $ret[] = update_sql("UPDATE {node_comment_statistics} SET comment_count = $comment_record->comment_count, last_comment_timestamp = $comment_record->timestamp, last_comment_name = '$comment_record->name', last_comment_uid = $comment_record->uid WHERE nid = $comment_record->nid");
   }
