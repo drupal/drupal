@@ -381,7 +381,7 @@ function block_user($type, $edit, &$user) {
  *   "blocks" has no primary key defined (bad)!
  */
 function block_list($region) {
-  global $user;
+  global $user, $base_url;
   static $blocks = array();
 
   if (!isset($blocks[$region])) {
@@ -393,7 +393,8 @@ function block_list($region) {
       if ($block['custom'] && $user->uid && !isset($user->block[$block['module']][$block['delta']])) {
         $user->block[$block['module']][$block['delta']] = $block['status'];
       }
-      if ((($block['status'] && (!$user->uid || !$block['custom'])) || ($block['custom'] && $user->block[$block['module']][$block['delta']])) && (!$block['path'] || preg_match($block['path'], ereg_replace('^/(\?q=)?', '', request_uri())))) {
+      $base = parse_url($base_url);
+      if ((($block['status'] && (!$user->uid || !$block['custom'])) || ($block['custom'] && $user->block[$block['module']][$block['delta']])) && (!$block['path'] || preg_match($block['path'], ereg_replace('^/(\?q=)?', '', str_replace($base['path'], '', request_uri()))))) {
 
         /*
         ** Check the current throttle status and see if block should be displayed
