@@ -1,5 +1,5 @@
 <?php
-// $Id: marvin.theme,v 1.101 2003/05/29 00:36:20 dries Exp $
+// $Id: marvin.theme,v 1.102 2003/05/30 05:49:56 dries Exp $
 
  class Theme_marvin extends BaseTheme {
    var $link = "#666699";
@@ -17,14 +17,12 @@
    }
 
    function header($title = "") {
-     global $base_url;
     ?>
      <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
      <html>
      <head>
       <?php print theme_head($main); ?>
       <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-      <base href="<?php echo "$base_url/" ?>" />
       <title>
        <?php
          if ($title) {

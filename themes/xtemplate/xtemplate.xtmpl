@@ -6,7 +6,6 @@
 <head>
   <title>{title}</title>
   <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
-  <base href="{base}" />
   <style type="text/css" media="all">
     @import "themes/xtemplate/xtemplate.css";
   </style>

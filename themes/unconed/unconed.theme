@@ -1,5 +1,5 @@
 <?php
-// $Id: unconed.theme,v 1.98 2003/05/29 10:16:11 dries Exp $
+// $Id: unconed.theme,v 1.99 2003/05/30 05:49:56 dries Exp $
 
  class Theme_unconed extends BaseTheme {
    var $foreground = "#000000";
@@ -44,7 +44,6 @@
       <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
       <?php print theme_head($main); ?>
       <title><?php echo ($title ? ($title . " - ") : "") . variable_get(site_name, "drupal"); ?></title>
-      <base href="<?php echo "$base_url/"; ?>" />
       <link rel="stylesheet" type="text/css" media="screen, projection" href="themes/unconed/unconed.css" />
      </head>
      <body text="#000000" bgcolor="<?php print $this->clc0; ?>" alink="#000000" link="#404040" vlink="#404040">
