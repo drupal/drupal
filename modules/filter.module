@@ -834,7 +834,7 @@ function _filter_html_settings($format) {
 function _filter_html($text, $format) {
   if (variable_get("filter_html_$format", FILTER_HTML_STRIP) == FILTER_HTML_STRIP) {
     // Allow users to enter HTML, but filter it
-    $text = strip_tags($text, variable_get("allowed_html_$format", ''));
+    $text = strip_tags($text, variable_get("allowed_html_$format", '<a> <b> <dd> <dl> <dt> <i> <li> <ol> <u> <ul>'));
     if (variable_get("filter_style_$format", FILTER_STYLE_STRIP)) {
       $text = preg_replace('/\Wstyle\s*=[^>]+?>/i', '>', $text);
     }
