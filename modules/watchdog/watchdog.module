@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.116 2004/11/28 12:28:35 dries Exp $
+// $Id: watchdog.module,v 1.117 2004/11/28 14:15:12 dries Exp $
 
 /**
  * @file
@@ -79,7 +79,7 @@ function watchdog_overview() {
     $_SESSION['watchdog_overview_filter'] = $_POST['edit']['filter'];
   }
 
-  $form  = form_select(t('Filter by type'), 'filter', $_SESSION['watchdog_overview_filter'], $names);
+  $form  = form_select(t('Filter by message type'), 'filter', $_SESSION['watchdog_overview_filter'], $names);
   $form .= form_submit(t('Filter'));
 
   $header = array(
