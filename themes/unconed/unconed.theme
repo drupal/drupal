@@ -165,7 +165,7 @@
      ?></TD></TR></TABLE><BR><?php
    }
 
-   function box($subject, $content) {
+   function box($subject, $content, $region = "main") {
      ?>
       <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" BGCOLOR="<?php echo $this->brcolor1; ?>" WIDTH="100%">
       <TR><TD>
@@ -188,7 +188,7 @@
        </TD>
        <TD VALIGN="top" WIDTH="20%">
         <?php
-          theme_account($this);
+          theme_account("all", $this);
           theme_blocks("all", $this);
         ?>
        </TD>

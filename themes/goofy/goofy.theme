@@ -129,7 +129,7 @@ function c(subject,mod,author,date,body) {document.writeln("<table border=\"0\" 
     } // close stripbreaks function
 
 
-    function box($subject, $content) {
+    function box($subject, $content, $region = "main") {
       print "<script language=\"JavaScript\"><!--\nb(\"". $this->stripbreaks(addslashes($subject)) ."\",\"". $this->stripbreaks(addslashes($content)) ."\"); // -->\n</script>\n";
     } // close box function
 
@@ -139,7 +139,7 @@ function c(subject,mod,author,date,body) {document.writeln("<table border=\"0\" 
               </td>
               <td valign="top">
 <?php
-          theme_account($this);
+          theme_account("all", $this);
           theme_blocks("all", $this);
 ?>
      </td>
