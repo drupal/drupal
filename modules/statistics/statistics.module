@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.67 2003/04/21 12:20:25 dries Exp $
+// $Id: statistics.module,v 1.68 2003/04/22 06:39:13 dries Exp $
 
 function statistics_init() {
   global $recent_activity;
@@ -299,7 +299,7 @@ function statistics_admin() {
           return status(t("saved 'who's online' block changes."));
         case "whos online block":
           return statistics_config_online_block(array(
-            "statistics_block_online_title" => variable_get("statistics_block_online_title", "Whos online"),
+            "statistics_block_online_title" => variable_get("statistics_block_online_title", "Who's online"),
             "statistics_block_online_subtitle" => variable_get("statistics_block_online_subtitle", "Online users:"),
             "statistics_block_online_time" => variable_get("statistics_block_online_time", 2700),
             "statistics_block_online_max_len" => variable_get("statistics_block_online_max_len", 15),
