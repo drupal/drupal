@@ -107,7 +107,7 @@ function diary_page_edit($id) {
 
   $output .= "<P>\n";
   $output .= " <B>Edit diary entry:</B><BR>\n";
-  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"text\">". check_input($diary->text) ."</TEXTAREA><BR>\n";
+  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"text\">". check_output($diary->text) ."</TEXTAREA><BR>\n";
   $output .= " <SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL>\n";
   $output .= "</P>\n";
 
