@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.263 2003/09/20 15:11:41 dries Exp $
+// $Id: node.module,v 1.264 2003/09/23 16:54:19 dries Exp $
 
 function node_help($section = "admin/node/help") {
   global $mod;
@@ -77,7 +77,7 @@ function node_system($field){
 function node_title_list($result, $title = NULL) {
   while ($node = db_fetch_object($result)) {
     $number = module_invoke("comment", "num_all", $node->nid);
-    $items[] = l($node->title, node_url($node), array("title" => format_plural($number, "%count comment", "%count comments")));
+    $items[] = l($node->title, "node/view/$node->nid", array("title" => format_plural($number, "%count comment", "%count comments")));
   }
 
   return theme("theme_node_list", $items, $title);
@@ -218,6 +218,30 @@ function node_teaser($body) {
 
   return substr($body, 0, $size);
 }
+/*
+function node_invoke() {
+
+  $args = func_get_args();
+
+  $node = array_shift($args);
+  $hook = array_shift($args);
+  array_unshift($args, $node);
+
+  if (is_array($node)) {
+    $function = $node["type"] ."_$hook";
+  }
+  else if (is_object($node)) {
+    $function = $node->type ."_$hook";
+  }
+  else if (is_string($node)) {
+    $function = $node ."_$hook";
+  }
+
+  if (function_exists($function)) {
+    return call_user_func_array($function, $args);
+  }
+}
+*/
 
 function node_invoke(&$node, $hook, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
   if (is_array($node)) {
@@ -233,6 +257,20 @@ function node_invoke(&$node, $hook, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
   if (function_exists($function)) {
     return ($function($node, $a2, $a3, $a4));
   }
+}
+
+function node_invoke_nodeapi(&$node, $op, $arg = 0) {
+  $return = array();
+  foreach (module_list() as $name) {
+    $function = $name ."_nodeapi";
+    if (function_exists($function)) {
+      $result = $function($node, $op, $arg);
+      if (isset($result)) {
+        $return = array_merge($return, $result);
+      }
+    }
+  }
+  return $return;
 }
 
 function node_load($conditions, $revision = -1) {
@@ -285,7 +323,7 @@ function node_save($node) {
   /*
   ** Fetch fields to save to node table:
   */
-  $fields = module_invoke_all("nodeapi", $node, "fields");
+  $fields = node_invoke_nodeapi($node, "fields");
 
   /*
   ** Serialize the revisions field:
@@ -330,7 +368,7 @@ function node_save($node) {
 
     // Call the node specific callback (if any):
     node_invoke($node, "insert");
-    module_invoke_all("nodeapi", $node, "insert");
+    node_invoke_nodeapi($node, "insert");
   }
   else {
 
@@ -354,7 +392,7 @@ function node_save($node) {
 
     // Call the node specific callback (if any):
     node_invoke($node, "update");
-    module_invoke_all("nodeapi", $node, "update");
+    node_invoke_nodeapi($node, "update");
   }
 
   /*
@@ -445,13 +483,13 @@ function node_access($op, $node = 0) {
     $type = $node;
   }
 
-  // Ideally this would be a node_invoke, but the access hook takes
-  // the $op parameter before the $node parameter so we can't do that.
+  // Can't use node_invoke:
+  // the access hook takes the $op parameter before the $node parameter.
   return module_invoke ($type, "access", $op, $node);
 }
 
 function node_perm() {
-  return array("administer nodes", "access content", "create custom URLs");
+  return array("administer nodes", "access content");
 }
 
 function node_search($keys) {
@@ -591,7 +629,7 @@ function node_admin_edit($node) {
     $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
     $output .= " <tr><th>". t("older revisions") ."</th><th colspan=\"3\">". t("operations") ."</th></tr>";
     foreach ($node->revisions as $key => $revision) {
-      $output .= " <tr><td>". t("revision #%r revised by %u on %d", array("%r" => $key, "%u" => format_name(user_load(array("uid" => $revision["uid"]))), "%d" => format_date($revision["timestamp"], "small"))) . ($revision["history"] ? "<br /><small>". $revision["history"] ."</small>" : "") ."</td><td>". l(t("view revision"), node_url($node), array(), "revision=$key") ."</td><td>". l(t("rollback revision"), "admin/node/rollback+revision/$node->nid/$key") ."</td><td>". l(t("delete revision"), "admin/node/delete+revision/$node->nid/$key") ."</td></tr>";
+      $output .= " <tr><td>". t("revision #%r revised by %u on %d", array("%r" => $key, "%u" => format_name(user_load(array("uid" => $revision["uid"]))), "%d" => format_date($revision["timestamp"], "small"))) . ($revision["history"] ? "<br /><small>". $revision["history"] ."</small>" : "") ."</td><td>". l(t("view revision"), "node/view/$node->nid", array(), "revision=$key") ."</td><td>". l(t("rollback revision"), "admin/node/rollback+revision/$node->nid/$key") ."</td><td>". l(t("delete revision"), "admin/node/delete+revision/$node->nid/$key") ."</td></tr>";
     }
     $output .= "</table>";
   }
@@ -686,7 +724,7 @@ function node_admin_nodes() {
   $header = array(NULL, t("title"), t("type"), t("author"), t("status"), array ("data" => t("operations"), "colspan" => 2));
 
   while ($node = db_fetch_object($result)) {
-    $rows[] = array(form_checkbox(NULL, "status][$node->nid", 1, 0), l($node->title, node_url($node)) ." ". (node_is_new($node->nid, $node->changed) ? theme_mark() : ""), module_invoke($node->type, "node", "name"), format_name($node), ($node->status ? t("published") : t("not published")), l(t("edit node"), "admin/node/edit/$node->nid"), l(t("delete node"), "admin/node/delete/$node->nid"));
+    $rows[] = array(form_checkbox(NULL, "status][$node->nid", 1, 0), l($node->title, "node/view/$node->nid") ." ". (node_is_new($node->nid, $node->changed) ? theme_mark() : ""), module_invoke($node->type, "node", "name"), format_name($node), ($node->status ? t("published") : t("not published")), l(t("edit node"), "admin/node/edit/$node->nid"), l(t("delete node"), "admin/node/delete/$node->nid"));
   }
 
   if ($pager = pager_display(NULL, 50, 0, "admin")) {
@@ -723,12 +761,12 @@ function node_admin_settings($edit) {
     $output = status(t("the content settings have been reset to their default values."));
   }
 
-  $header = array_merge(array(t("type")), array_keys(module_invoke_all("nodeapi", $node, "settings")));
+  $header = array_merge(array(t("type")), array_keys(node_invoke_nodeapi($node, "settings")));
   foreach (module_list() as $name) {
     if (module_hook($name, "node")) {
       $node->type = $name;
       $cols = array();
-      foreach (module_invoke_all("nodeapi", $node, "settings") as $setting) {
+      foreach (node_invoke_nodeapi($node, "settings") as $setting) {
         $cols[] = array("data" => $setting, "align" => "center", "width" => 55);
       }
       $rows[] = array_merge(array(module_invoke($name, "node", "name")), $cols);
@@ -743,9 +781,9 @@ function node_admin_settings($edit) {
       $node->type = $name;
 
       // Create table() data:
-      $header = array_keys(module_invoke_all("nodeapi", $node, "settings"));
+      $header = array_keys(node_invoke_nodeapi($node, "settings"));
       $cols = array();
-      foreach (module_invoke_all("nodeapi", $node, "settings") as $setting) {
+      foreach (node_invoke_nodeapi($node, "settings") as $setting) {
         $cols[] = array("data" => $setting, "align" => "center", "width" => 75);
       }
 
@@ -933,23 +971,6 @@ function node_block($op = "list", $delta = 0) {
   }
 }
 
-function node_get_alias($path) {
-
-  $result = db_query("SELECT nid FROM {node} WHERE path = '%s'", trim($path, "/"));
-  if ($node = db_fetch_object($result)) {
-    return "node/view/$node->nid";
-  }
-}
-
-function node_url($node) {
-  if ($node->path != NULL) {
-    return $node->path;
-  }
-  else {
-    return "node/view/$node->nid";
-  }
-}
-
 function node_feed($nodes = 0, $channel = array()) {
   global $base_url, $languages;
 
@@ -976,7 +997,7 @@ function node_feed($nodes = 0, $channel = array()) {
     ** Transform the node information into an RSS item:
     */
 
-    $items .= format_rss_item($item->title, url(node_url($node)), ($item->teaser ? $item->teaser : $item->body));
+    $items .= format_rss_item($item->title, url("node/view/$nide->nid"), ($item->teaser ? $item->teaser : $item->body));
 
     /*
     ** Determine the publication date:
@@ -1024,19 +1045,6 @@ function node_validate($node, &$error) {
     $node->title = strip_tags($node->title);
     if (!$node->title) {
       $error["title"] = theme("theme_error", t("You have to specify a valid title."));
-    }
-  }
-
-  /*
-  ** Clean the path field:
-  */
-
-  if ($node->path) {
-    if (!valid_url($node->path)) {
-      $error["path"] = theme("theme_error", t("The specified path is not valid."));
-    }
-    else if (db_result(db_query("SELECT COUNT(nid) FROM {node} WHERE nid != %d AND path = '%s'", $node->nid, $node->path))) {
-      $error["path"] = theme("theme_error", t("The specified path is already in use."));
     }
   }
 
@@ -1117,7 +1125,7 @@ function node_validate($node, &$error) {
   */
 
   $result = node_invoke($node, "validate");
-  $error = $error + (is_array($result) ? $result : array()) + module_invoke_all("nodeapi", $node, "validate");
+  $error = $error + (is_array($result) ? $result : array()) + node_invoke_nodeapi($node, "validate");
 
   return $node;
 }
@@ -1177,13 +1185,19 @@ function node_form($edit, $error = NULL) {
   }
 
   // Prepend extra node form:
-  $form = implode("", module_invoke_all("nodeapi", $edit, "form pre", $error));
+  $form = implode("", node_invoke_nodeapi($edit, "form pre", $error));
 
   // Get the node specific bits:
-  $form .= node_invoke($edit, "form", $help, $error, $param);
+
+  // Can't use node_invoke:
+  // $error and $param must be passed by reference.
+  $function = $edit->type ."_form";
+  if (function_exists($function)) {
+    $form .= $function($edit, $help, $error, $param);
+  }
 
   // Append extra node form:
-  $form .= implode("", module_invoke_all("nodeapi", $edit, "form post", $error));
+  $form .= implode("", node_invoke_nodeapi($edit, "form post", $error));
 
   /*
   ** Add the help text:
@@ -1216,7 +1230,7 @@ function node_form($edit, $error = NULL) {
     $output .= form_item(t("Options"), $options);
     $output .= "</div>";
 
-    $extras .= implode("</div><div class=\"extra\">", module_invoke_all("nodeapi", $edit, "form admin"));
+    $extras .= implode("</div><div class=\"extra\">", node_invoke_nodeapi($edit, "form admin"));
     $output .= $extras ? "<div class=\"extra\">$extras</div></div>" : "</div>";
   }
 
@@ -1225,10 +1239,6 @@ function node_form($edit, $error = NULL) {
   */
   $output .= "<div class=\"standard\">";
   $output .= form_textfield(t("Title"), "title", $edit->title, 60, 128, $error["title"]);
-
-  if (user_access("create custom URLs")) {
-    $output .= form_textfield(t("Path alias"), "path", ($edit->path == "node/view/$edit->nid") ? "" : $edit->path, 60, 250, $error["path"] ? $error["path"] : t("Optionally specify an alternative URL by which this node can be accessed.  For example, type 'about' when writing an about page.  Don't add a trailing slash or the URL won't work."));
-  }
 
   /*
   ** Add the node specific fields:
@@ -1451,7 +1461,7 @@ function node_submit($node) {
 
     if (node_access("update", $node)) {
       $node->nid = node_save($node);
-      watchdog("special", "$node->type: updated '$node->title'", l(t("view post"), node_url($node)));
+      watchdog("special", "$node->type: updated '$node->title'", l(t("view post"), "node/view/$node->nid"));
       $output = t("The %name has been updated.", array ("%name" => module_invoke($node->type, "node", "name")));
     }
   }
@@ -1472,7 +1482,7 @@ function node_submit($node) {
       throttle("node", variable_get("max_node_rate", 900));
 
       $node->nid = node_save($node);
-      watchdog("special", "$node->type: added '$node->title'", l(t("view post"), node_url($node)));
+      watchdog("special", "$node->type: added '$node->title'", l(t("view post"), "node/view/$node->nid"));
       $output = t("Thanks for your submission.");
     }
   }
@@ -1493,7 +1503,7 @@ function node_submit($node) {
   }
 
   if ($node->nid && node_access("view", $node)) {
-    $links[] = l(t("view"), node_url($node));
+    $links[] = l(t("view"), "node/view/$node->nid");
   }
 
   if ($node->nid && node_access("update", $node)) {
@@ -1524,7 +1534,7 @@ function node_delete($edit) {
       */
 
       node_invoke($node, "delete");
-      module_invoke_all("nodeapi", $node, "delete");
+      node_invoke_nodeapi($node, "delete");
 
       /*
       ** Clear the cache so an anonymous poster can see the node being
