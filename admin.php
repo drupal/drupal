@@ -168,6 +168,28 @@ function watchdog_view($id) {
 }
 
 /*
+ * Cron administration:
+ */
+function cron_display() {
+  ### Perform query:
+  $result = db_query("SELECT * FROM cron");
+ 
+  ### Generate output:
+  while ($cron = db_fetch_object($result)) {
+    $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
+    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\">Name:</TD><TD>". check_output($cron->name) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\">Help:</TD><TD>". check_output($cron->help) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\">Code:</TD><TD><CODE>". nl2br($cron->code) ."</CODE></TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\">Last run:</TD><TD>". format_date($cron->timestamp) ."</TD></TR>\n";
+    $output .= " <TD><TD ALIGN=\"right\" VALIGN=\"top\">Scheduled:</TD><TD>every $cron->scheduled seconds</TD></TR>\n";
+    $output .= "</TABLE>\n";
+    $output .= "<BR><BR>\n";
+  }
+
+  print $output;
+}
+
+/*
  * Ban administration:
  */
 
@@ -231,7 +253,7 @@ function ban_display($category = "") {
   }
   $output .= "</SELECT><P>\n";
   $output .= "<B>Reason:</B><BR>\n";
-  $output .= "<TEXTAREA NAME=\"reason\" COLS=\"35\" ROWS=\"5\"></TEXTAREA><P>\n";
+  $output .= "<TEXTAREA NAME=\"reason\" COLS=\"50\" ROWS=\"5\"></TEXTAREA><P>\n";
   $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Add ban\"><BR>\n";
   $output .= "</FORM>\n";
   $output .= "<BR><HR>\n";
@@ -439,22 +461,66 @@ function home_display() {
 }
 
 /*
- * Misc administration:
+ * Blob administration:
  */
-function misc_display() {
-  print "<BIG>Upcoming features:</BIG>";
-  print "<UL>\n";
-  print " <LI>backup functionality</LI>\n";
-  print " <LI>thresholds settings</LI>\n";
-  print " <LI>...</LI>\n";
-  print "</UL>\n";
+
+function blob_display() {
+  $result = db_query("SELECT * FROM blobs");
+
+  ### Generate output:
+  while ($block = db_fetch_object($result)) {
+    $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
+    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\">Name:</TD><TD>". check_output($block->name) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\">Help:</TD><TD>". check_output($block->help) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\">Code:</TD><TD><CODE>". nl2br(htmlentities($block->code)) ."</CODE></TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\">Operations:</TD><TD><A HREF=\"admin.php?section=blobs&op=edit&id=$block->id\">edit</A>, <A HREF=\"admin.php?section=blobs&op=delete&id=$block->id\">delete</A></TD></TR>\n";
+    $output .= "</TABLE>\n";
+    $output .= "<BR><BR>\n";
+  }
+
+  $output .= "<H3>Add new block:</H3>\n";
+  $output .= "<FORM ACTION=\"admin.php?section=blobs\" METHOD=\"post\">\n";
+  $output .= "<B>Name:</B><BR>\n";
+  $output .= "<INPUT TYPE=\"text\" NAME=\"name\" SIZE=\"35\"><P>\n";
+  $output .= "<B>Help:</B><BR>\n";
+  $output .= "<TEXTAREA NAME=\"help\" COLS=\"50\" ROWS=\"5\"></TEXTAREA><P>\n";
+  $output .= "<B>Code:</B><BR>\n";
+  $output .= "<TEXTAREA NAME=\"code\" COLS=\"50\" ROWS=\"5\"></TEXTAREA><P>\n";
+  $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Add block\"><BR>\n";
+  $output .= "</FORM>\n";
+  $output .= "<BR><HR>\n";
+
+  print $output;
 }
 
+function blob_edit($id) {
+  $result = db_query("SELECT * FROM blobs WHERE id = $id");
+
+  if ($block = db_fetch_object($result)) {
+    $output .= "<FORM ACTION=\"admin.php?section=blobs\" METHOD=\"post\">\n";
+    $output .= "<B>Name:</B><BR>\n";
+    $output .= "<INPUT TYPE=\"text\" NAME=\"name\" VALUE=\"". check_field($block->name) ."\" SIZE=\"35\"><P>\n";
+    $output .= "<B>Help:</B><BR>\n";
+    $output .= "<TEXTAREA NAME=\"help\" COLS=\"50\" ROWS=\"5\">$block->help</TEXTAREA><P>\n";
+    $output .= "<B>Code:</B><BR>\n";
+    $output .= "<TEXTAREA NAME=\"code\" COLS=\"50\" ROWS=\"5\">$block->code</TEXTAREA><P>\n";
+    $output .= "<INPUT TYPE=\"hidden\" NAME=\"id\" VALUE=\"$id\">\n";
+    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save block\"><BR>\n";
+    $output .= "</FORM>\n";
+    $output .= "<BR><HR>\n";
+  }
+
+  print $output;
+}
+
+function blob_save($id, $name, $help, $code) {
+  db_query("UPDATE blobs SET name = '". check_input($name) ."', help = '". check_input($help) ."', code = '". check_code($code) ."' WHERE id = $id");
+  watchdog("message", "modified block `$name'.");
+}
 
 /*
  * Story administration:
  */
-
 function story_edit($id) {
   global $categories;
 
@@ -642,8 +708,25 @@ switch ($section) {
         account_display(); 
     }
     break;
-  case "misc":
-    misc_display();
+  case "blobs":
+    include "includes/blob.inc";
+    switch ($op) {
+      case "Add block":
+        blob_add($name, $help, $code);
+        blob_display();
+        break;
+      case "Save block":
+        blob_save($id, $name, $help, $code);
+        blob_display();
+        break;
+      case "edit":
+        blob_edit($id);
+        break;
+      case "delete":
+        blob_delete($id);
+      default:
+        blob_display();
+    }
     break;
   case "bans":
     include "includes/ban.inc";
@@ -658,8 +741,6 @@ switch ($section) {
         break;
       case "delete":
         ban_delete($id);
-        ban_display($category);
-        break;
       default:
         ban_display($category);
     }
@@ -675,6 +756,9 @@ switch ($section) {
       default:
         watchdog_display();
     }
+    break;
+  case "cron":
+    cron_display();
     break;
   case "stats":
     stats_display();

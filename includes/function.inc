@@ -32,6 +32,10 @@ function check_input($message) {
   return strip_tags(addslashes(substr($message, 0, $submission_size)), $allowed_html);
 }
 
+function check_code($message) {
+  return $message;
+}
+
 function check_output($message, $nl2br = 0) {
   global $allowed_html;
   if ($nl2br == 1) return nl2br(strip_tags(stripslashes($message), $allowed_html));
