@@ -4,7 +4,7 @@
 function aggregator_help($section) {
   switch ($section) {
     case 'admin/help#aggregator':
-      $output = t("
+      return t("
       <p>Thousands of web sites, especially news sites and weblogs, syndicate their most recent site content for others to display. The syndicated content always includes titles, also known as headlines, for the newest published stories.  Each headline acts as a direct link to the stories on the remote site. Along with the headline, most sites typically provide either the first few paragraphs of the story or a short summary. Many individuals use client-based news aggregators on their personal computer to aggregate content, such as <a href=\"%amphetadesk\">Amphetadesk</a>.</p>
       <p>Drupal also has a news aggregator built in as a standard feature. With it, you can subscribe to feeds from other sites and display their content for your site users. Simply enable the aggregator module in site administration and enter the feeds that you choose.</p>
       <h3>What do I need to subscribe to a feed?</h3>
@@ -52,7 +52,7 @@ function aggregator_help($section) {
       <p>Drupal automatically generates an OPML feed file that is available by selecting the XML icon on the News Sources page.</p>
       <h3>Technical details</h3>
       <p>When fetching feeds Drupal supports conditional GETs, this reduces the bandwidth usage for feeds that have not been updated since the last check.</p>
-      <p>If a feed is permanently moved to a new location Drupal will automatically update the feed URL to the new address.</p>", array("%amphetadesk" => "<a href=\"http://www.disobey.com/amphetadesk/\">AmphetaDesk</a>", "%rss" => "<a href=\"http://groups.yahoo.com/group/rss-dev/files/specification.html\">Rich Site Summary</a>", "%slashdot-rss" => "<a href=\"http://slashdot.org/slashdot.rdf\">http://slashdot.org/slashdot.rdf</a>", "%syndic8" => "<a href=\"http://www.syndic8.com/\">Syndic8</a>", "%rss-what" => "<a href=\"http://www.xml.com/pub/a/2002/12/18/dive-into-xml.html\">What is RSS</a>", "%rss-evolution" => "<a href=\"http://www.webreference.com/authoring/languages/xml/rss/1/\">The Evolution of RSS</a>", "%admin-news" => l(t("RSS/RDF"), "admin/syndication/news"), "%new-feed" => l(t("new feed"), "admin/syndication/news/add/feed"), "%update-items" => l(t("update items"), "admin/syndication/news")));
+      <p>If a feed is permanently moved to a new location Drupal will automatically update the feed URL to the new address.</p>", array("%amphetadesk" => "http://www.disobey.com/amphetadesk/", "%rss" => "http://blogs.law.harvard.edu/tech/rss", "%slashdot-rss" => "http://slashdot.org/slashdot.rdf", "%syndic8" => "http://www.syndic8.com/", "%rss-what" => "http://www.xml.com/pub/a/2002/12/18/dive-into-xml.html", "%rss-evolution" => "http://www.webreference.com/authoring/languages/xml/rss/1/", "%admin-news" => url("admin/syndication/news"), "%new-feed" => url("admin/syndication/news/add/feed"), "%update-items" => url("admin/syndication/news")));
     case 'admin/system/modules#description':
       return t("Used to aggregate syndicated content (RSS and RDF).");
     case 'admin/system/modules/aggregator':
