@@ -1,11 +1,9 @@
 <?php
-// $Id: index.php,v 1.73 2003/11/18 23:37:48 kjartan Exp $
+// $Id: index.php,v 1.74 2003/11/20 19:55:04 dries Exp $
 
 include_once "includes/bootstrap.inc";
 drupal_page_header();
 include_once "includes/common.inc";
-
-drupal_page_header();
 
 fix_gpc_magic();
 
