@@ -360,7 +360,6 @@ function node_save($node) {
 
 function node_view($node, $main = 0) {
 
-
   $node = array2object($node);
 
   /*
@@ -1259,7 +1258,7 @@ function node_form($edit, $error = NULL) {
 
   $output .= "</div></div>";
 
-  return form($output, ($param["method"] ? $param["method"] : "post"), $param["action"], $param["options"]);
+  return form($output, ($param["method"] ? $param["method"] : "post"), $param["action"], array_merge($param["options"], array("id" => "node-form")));
 }
 
 function node_add($type) {

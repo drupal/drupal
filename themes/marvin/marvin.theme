@@ -59,7 +59,7 @@
    function node($node, $main = 0) {
 
      if (module_exist("taxonomy")) {
-      $terms = taxonomy_link("taxonomy terms", $node);
+       $terms = taxonomy_link("taxonomy terms", $node);
      }
 
      print "\n<!-- node: \"$node->title\" -->\n";

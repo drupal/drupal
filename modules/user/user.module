@@ -413,16 +413,18 @@ function user_block($op = "list", $delta = 0) {
         }
         break;
       case 2:
-        $result = db_query_range("SELECT uid, name FROM {users} WHERE status != '0' ORDER BY uid DESC", 0, 5);
-        while ($account = db_fetch_object($result)) {
-          $items[] = l((strlen($account->name) > 15 ? substr($account->name, 0, 15) . '...' : $account->name), "user/view/$account->uid");
+        if (user_access("access content")) {
+          $result = db_query_range("SELECT uid, name FROM {users} WHERE status != '0' ORDER BY uid DESC", 0, 5);
+          while ($account = db_fetch_object($result)) {
+            $items[] = l((strlen($account->name) > 15 ? substr($account->name, 0, 15) . '...' : $account->name), "user/view/$account->uid");
+          }
+
+          $output = theme("theme_user_list", $items);
+
+          $block["subject"] = t("Who's new");
+          $block["content"] = $output;
+          return $block;
         }
-
-        $output = theme("theme_user_list", $items);
-
-        $block["subject"] = t("Who's new");
-        $block["content"] = $output;
-        return $block;
     }
   }
 }
