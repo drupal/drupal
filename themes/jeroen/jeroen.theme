@@ -79,7 +79,7 @@
 
     } // close header function
 
-    function story($story, $reply = 0) {
+    function story($story, $main = 0) {
 
 ?>
 
@@ -118,7 +118,7 @@
                                   </FONT>
                                 </td>
                                 <td align=\"right\" background=\"themes/jeroen/images/menutitle.gif\" nowrap>
-                                  <B><a href=\"search.php?category=". urlencode($story->section) ."\"><FONT COLOR=\"#000000\">". check_output($story->section) ."</FONT></a></B>";
+                                  <b><a href=\"search.php?category=". urlencode($story->section) ."\"><FONT COLOR=\"#000000\">". check_output($story->section) ."</FONT></a><a href=\"index.php?category=$story->cid\">". check_output($story->category) ."</a> / <a href=\"index.php?topic=$story->tid\">". check_output($story->topic) ."</a></b>";
 
 ?>
 
@@ -130,7 +130,7 @@
 <?php
 
                                   echo "<br />". check_output($story->abstract, 1) ."<br />";
-                                  if ($reply && $story->body)
+                                  if (!$main && $story->body)
                                     echo "<br />". check_output($story->body, 1) ."<br />";
 
 ?>
@@ -139,13 +139,9 @@
                               </tr>
                               <tr>
                                 <td colspan="2" align="right">
-
 <?php
-
-                                  if (!$reply)
+                                  if ($main)
                                     echo "<FONT COLOR=\"#E09226\">". theme_morelink($this, $story) ."</FONT>";
-                                  else
-                                    echo "<FONT COLOR=\"#E09226\">". $reply ."</FONT>";
 
 ?>
 
