@@ -1,33 +1,29 @@
 // $Id$
 
+CONTENTS OF THIS FILE
+---------------------
+
+ * Requirements
+ * Optional requirements
+ * Installation
+    - Drupal administration
+    - Customizing your theme(s)
+ * Upgrading
+ * More Information
+
 REQUIREMENTS
 ------------
 
-Drupal requires a web server, PHP4 or PHP5 (http://www.php.net/) and
-either MySQL or PostgreSQL. Drupal requires PHP 4.1.0 or greater on
-Linux and PHP 4.2.3 or greater on Windows.
+Drupal requires a web server, PHP4 (4.33 or greater) or PHP5
+(http://www.php.net/) and either MySQL (http://www.mysql.com/)
+or PostgreSQL (http://www.postgresql.org/).
 
 NOTE: The Apache web server and MySQL database are strongly recommended;
 other web server and database combinations such as IIS and PostgreSQL
 are possible but tested to a lesser extent.
 
-SERVER CONFIGURATION
---------------------
-
-Your PHP must have the following settings:
-
-  session.save_handler     user
-
-In addition, we recommend the following settings:
-
-  session.cache_limiter    none
-
-These values are set in php.ini and can be overwritten in a .htaccess
-file; you can print out your local PHP settings with PHP's phpinfo()
-function.
-
-OPTIONAL COMPONENTS
--------------------
+OPTIONAL REQUIREMENTS
+---------------------
 
 - To use XML-based services such as the Blogger API, Jabber, RSS
   syndication, you will need PHP's XML extension. This extension is
@@ -59,30 +55,28 @@ INSTALLATION
 2. CREATE THE DRUPAL DATABASE
 
    This step is only necessary if you don't already have a database
-   set-up (e.g. by your host).
-
-   If you control your databases through a web-based control panel
-   check its documentation for creating databases, as these instructions
-   are for the command-line.
+   set-up (e.g. by your host). If you control your databases through a
+   web-based control panel, check its documentation for creating databases,
+   as the following instructions are for the command-line only.
 
    These instructions are for MySQL. If you are using another database,
    check the database documentation. In the following examples,
-   "dba_user" is an example MySQL user which has the CREATE and GRANT
-   privileges. You will need to use the appropriate user name for your
-   system.
+   'dba_user' is an example MySQL user which has the CREATE and GRANT
+   privileges. Use the appropriate user name for your system.
 
-   First, you must create a new database for your Drupal site:
+   First, you must create a new database for your Drupal site
+   (here, 'drupal' is the name of the new database):
 
      mysqladmin -u dba_user -p create drupal
 
-   MySQL will prompt for the dba_user database password and then create
+   MySQL will prompt for the 'dba_user' database password and then create
    the initial database files. Next you must login and set the access
    database rights:
 
      mysql -u dba_user -p
 
-   Again, you will be asked for the dba_user database password. At the
-   MySQL prompt, enter following command:
+   Again, you will be asked for the 'dba_user' database password.
+   At the MySQL prompt, enter following command:
 
      GRANT ALL PRIVILEGES ON drupal.*
         TO nobody@localhost IDENTIFIED BY 'password';
@@ -93,11 +87,11 @@ INSTALLATION
     'nobody@localhost' is the userid of your webserver MySQL account
     'password' is the password required to log in as the MySQL user
 
-   If successful, MySQL will reply with
+   If successful, MySQL will reply with:
 
      Query OK, 0 rows affected
 
-   to activate the new permissions you must enter the command
+   To activate the new permissions you must enter the command:
 
      flush privileges;
 
@@ -105,14 +99,14 @@ INSTALLATION
 
 3. LOAD THE DRUPAL DATABASE SCHEME
 
-   Once you have a database, you must load the required tables into
-   the database.
+   Once you have a database, you must load the required tables into it.
 
-   If you use a web-based control panel, you should be
-   able to upload the file 'database.mysql' from Drupal's 'database'
+   If you use a web-based control panel, you should be able
+   to upload the file 'database.mysql' from Drupal's 'database'
    directory and run it directly as SQL commands.
 
-   From the command line, use:
+   From the command line, use (again, replacing 'nobody' and
+   'drupal' with your MySQL userid and name of your database):
 
      mysql -u nobody -p drupal < database/database.mysql
 
@@ -124,9 +118,9 @@ INSTALLATION
    base URL to the web site. Open the configuration file and edit the
    $db_url line to match the database defined in the previous steps:
 
-     $db_url = "mysql://username:password@localhost/database";
+     $db_url = "mysql://userid:password@localhost/database";
 
-   where 'username', 'password', 'localhost' and 'database' are the
+   where 'userid', 'password', 'localhost' and 'database' are the
    username, password, host and database name for your set up.
 
    Set $base_url to match the address to your Drupal site:
@@ -135,18 +129,16 @@ INSTALLATION
 
    In addition, a single Drupal installation can host several
    Drupal-powered sites, each with its own individual configuration.
-   If you don't need to run multiple Drupal sites, you can skip to the
-   next section.
+   If you don't need multiple Drupal sites, skip to the next section.
 
    Additional site configurations are created in subdirectories within
-   the 'sites' directory. Each site subdirectory must have a
-   'settings.php' file which specifies the configuration settings. The
-   easiest way to create additional sites is to copy the 'default'
-   directory and modify the 'settings.php' file as appropriate. The new
-   directory name is constructed from the site's URL. The
-   configuration for www.example.com could be in
-   'sites/example.com/settings.php' (note that 'www.' should be omitted
-   if users can access your site at http://example.com/).
+   the 'sites' directory. Each subdirectory must have a 'settings.php'
+   file which specifies the configuration settings. The easiest way to
+   create additional sites is to copy the 'default' directory and modify
+   the 'settings.php' file as appropriate. The new directory name is
+   constructed from the site's URL. The configuration for www.example.com
+   could be in 'sites/example.com/settings.php' (note that 'www.' should
+   be omitted if users can access your site at http://example.com/).
 
    Sites do not each have to have a different domain. You can use
    subdomains and subdirectories for Drupal sites also. For example,
@@ -161,8 +153,7 @@ INSTALLATION
 
    When searching for a site configuration (for example
    www.sub.example.com/site3), Drupal will search for configuration
-   files in the following order, using the first configuration file it
-   finds:
+   files in the following order, using the first configuration it finds:
 
      sites/www.sub.example.com.site3/settings.php
      sites/sub.example.com.site3/settings.php
@@ -183,10 +174,8 @@ INSTALLATION
 
      sites/sub.example.com/:
        settings.php
-       themes/:
-         custom_theme
-       modules/:
-         custom_module
+       themes/custom_theme
+       modules/custom_module
 
    NOTE: for more information about multiple virtual hosts or the
    configuration settings, consult the Drupal handbook at drupal.org.
@@ -202,9 +191,8 @@ INSTALLATION
 
    Many Drupal modules have periodic tasks that must be triggered by a
    cron job. To activate these tasks, you must call the cron page by
-   visiting http://www.example.com/cron.php ;
-   This will pass control to the modules and the modules will decide
-   if and what they must do.
+   visiting http://www.example.com/cron.php -- this will pass control
+   to the modules and the modules will decide if and what they must do.
 
    Most systems support the crontab utility for scheduling tasks like
    this. The following example crontab line will activate the cron
@@ -224,17 +212,15 @@ configuration with only a few active modules, one theme, and no user
 access rights.
 
 Use your administration panel to enable and configure services. For
-example, set some general settings for your site with "Administration -
-configuration". Enable modules via "Administration - configuration -
-modules". User permissions can be set with "Administration - accounts
-- permissions".
+example, set some general settings for your site with "Administer >
+Settings". Enable modules via "Administer > Modules". User permissions
+can be set with "Administer > Users > Configure > Permissions".
 
 For more information on configuration options, read through the
 instructions which accompany the different configuration settings and
 consult the various help pages available in the administration panel.
 
-Note that additional community-contributed modules and themes are
-available at http://drupal.org/.
+Community-contributed modules and themes are available at http://drupal.org/.
 
 CUSTOMIZING YOUR THEME(S)
 -------------------------
@@ -243,27 +229,26 @@ Now that your server is running, you will want to customize the look
 of your site. Several sample themes are included in the Drupal
 installation and more can be downloaded from drupal.org.
 
-Customizing each theme depends on the theme. In general, each theme
+Customizing each theme depends on the theme engine. In general, each theme
 contains a PHP file themename.theme which defines a function header()
 that can be changed to reference your own logos.
 
 Most themes also contain stylesheets to tune the colors and layouts;
-check the themes/ directory for README files describing each alternate
-theme.
+check the themes/ directory for READMEs describing each alternate theme.
 
 UPGRADING
 ---------
 
 1. Backup your database and Drupal directory - especially your
-   configuration file.
+   configuration file in 'sites/default/settings.php'.
 
 2. Log on as the user with user ID 1.
 
-3. Remove all the old Drupal files then unpack the new Drupal files
-   into the directory that you run Drupal from.
+3. Remove all the old Drupal files then unpack the new Drupal
+   files into the directory that you run Drupal from.
 
-4. Modify the new configuration file to make sure it has the
-   correct information.
+4. Modify the new configuration file to make sure
+   it has the latest and correct information.
 
 5. Run update.php by visiting http://www.example.com/update.php.
 
