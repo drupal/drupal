@@ -494,7 +494,6 @@ function user_login($edit = array()) {
 
   $output .= form_textfield(t("Username"), "name", $edit["name"], 20, 64, t("Enter your local  username, a Drupal ID or a Jabber ID."));
   $output .= form_password(t("Password"), "pass", $pass, 20, 64, t("Enter the password that accompanies your username."));
-  $output .= form_hidden("type", "local");
   $output .= form_submit(t("Log in"));
 
   return form($REQUEST_URI, $output);

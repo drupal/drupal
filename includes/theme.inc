@@ -60,6 +60,19 @@ function theme_account($region, $theme) {
 
     $theme->box($user->name, $content, $region);
   }
+  else {
+    $output .= "<div align=\"center\">\n";
+    $output .= " <form action=\"module.php?mod=user&op=login\" method=\"post\">\n";
+    $output .= "  <b>". t("Username") .":</b><br /><input name=\"edit[name]\" size=\"15\"><p />\n";
+    $output .= "  <b>". t("Password") .":</b><br /><input name=\"edit[pass]\" size=\"15\" TYPE=\"password\"><br />\n";
+    $output .= "  <input type=\"submit\" value=\"". t("Log in") ."\"><br />\n";
+    if (variable_get("account_register", 1)) $output .= "  <a href=\"module.php?mod=user\">". t("REGISTER") ."</a>\n";
+    $output .= " </form>\n";
+    $output .= "</div>\n";
+
+    $theme->box(t("Log in"), $output, $region);
+  }
+
 }
 
 function theme_blocks($region, $theme) {
