@@ -51,7 +51,12 @@ function module_list($refresh = 0, $bootstrap = 0) {
 
   if (!$list) {
     $list = array("admin" => "admin", "filter" => "filter", "system" => "system", "user" => "user", "watchdog" => "watchdog");
-    $result = db_query("SELECT name, filename, throttle, bootstrap FROM {system} WHERE type = 'module' AND status = '1' ORDER BY name");
+    if ($bootstrap) {
+      $result = db_query("SELECT name, filename, throttle, bootstrap FROM {system} WHERE type = 'module' AND status = 1 AND bootstrap = 1");
+    }
+    else {
+      $result = db_query("SELECT name, filename, throttle, bootstrap FROM {system} WHERE type = 'module' AND status = 1");
+    }
     while ($module = db_fetch_object($result)) {
       if (file_exists($module->filename)) {
         /*
@@ -60,16 +65,13 @@ function module_list($refresh = 0, $bootstrap = 0) {
         **  throttle variables as the throttle.module may not be loaded yet.
         */
         $throttle = ($module->throttle && variable_get("throttle_level", 0) > 4);
-        if ($bootstrap && !$throttle) {
-          $list[$module->name] = array("name"=> $module->name, "bootstrap" => $module->bootstrap, "filename" => $module->filename);
-        }
-        else if (!$throttle) {
+        if (!$throttle) {
           $list[$module->name] = $module->name;
           include_once $module->filename;
         }
       }
     }
-    natcasesort($list);
+    sort($list);
   }
   return $list;
 }
