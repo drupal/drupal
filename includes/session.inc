@@ -25,7 +25,7 @@ function sess_read($key) {
   $result = db_query_range("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = '%s' AND u.status < 3", $key, 0, 1);
 
   if (!db_num_rows($result)) {
-    db_query("INSERT INTO {sessions} (uid, sid, hostname, timestamp) values(%d, '%s', '%s', %d)", 0, $key, $_SERVER["REMOTE_ADDR"], time());
+    db_query("INSERT INTO {sessions} (sid, hostname, timestamp) values('%s', '%s', %d)", $key, $_SERVER["REMOTE_ADDR"], time());
     $result = db_query("SELECT u.* FROM {users} u WHERE u.uid = 0");
   }
 
