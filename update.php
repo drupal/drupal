@@ -655,7 +655,7 @@ function update_77() {
 
 function update_78() {
   if ($GLOBALS["db_type"] == "mysql") {
-    update_sql("CREATE TABLE filters (
+    update_sql("CREATE TABLE {filters} (
       module varchar(64) NOT NULL default '',
       weight tinyint(2) DEFAULT '0' NOT NULL,
       KEY weight (weight)
