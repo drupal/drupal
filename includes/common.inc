@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.332 2004/03/21 10:28:09 dries Exp $ */
+/* $Id: common.inc,v 1.333 2004/03/24 06:01:43 dries Exp $ */
 
 /**
  * @defgroup common Core functions
@@ -1003,7 +1003,7 @@ function form_select($title, $name, $value, $options, $description = NULL, $extr
   foreach ($options as $key => $choice) {
     $select .= "<option value=\"$key\"". (is_array($value) ? (in_array($key, $value) ? " selected=\"selected\"" : "") : ($value == $key ? " selected=\"selected\"" : "")) .">". check_form($choice) ."</option>";
   }
-  return theme("form_element", $title, "<select name=\"edit[$name]". ($multiple ? "[]" : "") ."\"". ($multiple ? " multiple " : "") . ($extra ? " $extra" : "") ." id=\"$name\">$select</select>", $description, $name);
+  return theme("form_element", $title, "<select name=\"edit[$name]". ($multiple ? "[]" : "") ."\"". ($multiple ? " multiple=\"multiple\" " : "") . ($extra ? " $extra" : "") ." id=\"$name\">$select</select>", $description, $name);
 }
 
 function form_file($title, $name, $size, $description = NULL) {
