@@ -102,7 +102,7 @@ function node_links($nid, $type) {
   $link[] = ($op == "option") ? "edit options" : "<A HREF=\"admin.php?mod=node&op=option&id=$nid\">edit options</A>";
   $link[] = ($op == "status") ? "edit status" : "<A HREF=\"admin.php?mod=node&op=status&id=$nid\">edit status</A>";
   $link[] = ($op == "attribute") ? "edit attribute" : "<A HREF=\"admin.php?mod=node&op=attribute&id=$nid\">edit attributes</A>";
-  $link[] = ($op == "delete") ? "delete node" : "<A HREF=\"admin.php?mod=node&op=delete&id=$nid\">delete node</A>";
+  $link[] = "<A HREF=\"admin.php?mod=node&op=delete&id=$nid\">delete node</A>";
   return $link;
 }
 
