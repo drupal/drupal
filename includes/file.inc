@@ -490,8 +490,6 @@ function file_download() {
  *   of the file without an extension.
  * @param $min_depth
  *   Minimum depth of directories to return files from.
- * @param $max_depth
- *   Maximum recursion depth.
  * @param $depth
  *   Current depth of recursion. This parameter is only used interally and should not be passed.
  *
@@ -500,7 +498,7 @@ function file_download() {
  *   "path", "basename", and "name" members corresponding to the
  *   matching files.
  */
-function file_scan_directory($dir, $mask, $nomask = array('.', '..', 'CVS'), $callback = 0, $recurse = TRUE, $key = 'filename', $min_depth = 0, $max_depth = 9, $depth = 0) {
+function file_scan_directory($dir, $mask, $nomask = array('.', '..', 'CVS'), $callback = 0, $recurse = TRUE, $key = 'filename', $min_depth = 0, $depth = 0) {
   $key = (in_array($key, array('filename', 'basename', 'name')) ? $key : 'filename');
   $files = array();
 
@@ -508,9 +506,7 @@ function file_scan_directory($dir, $mask, $nomask = array('.', '..', 'CVS'), $ca
     while ($file = readdir($handle)) {
       if (!in_array($file, $nomask)) {
         if (is_dir("$dir/$file") && $recurse) {
-          if ($depth < $max_depth) {
-            $files = array_merge($files, file_scan_directory("$dir/$file", $mask, $nomask, $callback, $recurse, $key, $min_depth, $max_depth, $depth + 1));
-          }
+          $files = array_merge($files, file_scan_directory("$dir/$file", $mask, $nomask, $callback, $recurse, $key, $min_depth, $depth + 1));
         }
         elseif ($depth >= $min_depth && ereg($mask, $file)) {
           $filename = "$dir/$file";
