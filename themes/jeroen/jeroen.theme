@@ -115,8 +115,8 @@ PHP?>
                                   echo "<FONT SIZE=\"-1\">$how by ". format_username($story->userid) ." on $timestamp
                                 </FONT>
                               </TD>
-                              <TD ALIGN=\"right\" BACKGROUND=\"themes/jeroen/images/menutitle.gif\">
-                                <B><A HREF=\"search.php?category=". urlencode($story->category) ."\"><FONT COLOR=\"<? $this->fgc3; ?>\">$story->category</FONT></A></B>";
+                              <TD ALIGN=\"right\" BACKGROUND=\"themes/jeroen/images/menutitle.gif\" NOWRAP>
+                                <B><A HREF=\"search.php?category=". urlencode($story->section) ."\"><FONT COLOR=\"<? $this->fgc3; ?>\">$story->section</FONT></A></B>";
 
 PHP?>
 
@@ -199,14 +199,14 @@ PHP?>
                                   if ($story->userid) {
                                     echo "<FONT SIZE=\"-1\">$how by ". format_username($story->userid) ." on $timestamp"; ?><? echo "</FONT>
                               </TD>
-                              <TD ALIGN=\"right\" BACKGROUND=\"themes/jeroen/images/menutitle.gif\">
-                                <B><A HREF=\"search.php?category=". urlencode($story->category) ."\"><FONT COLOR=\"<? $this->fgc3; ?>\">$story->category</FONT></A></B>";
+                              <TD ALIGN=\"right\" BACKGROUND=\"themes/jeroen/images/menutitle.gif\" NOWRAP>
+                                <B><A HREF=\"search.php?category=". urlencode($story->section) ."\"><FONT COLOR=\"<? $this->fgc3; ?>\">$story->section</FONT></A></B>";
                                   }
                                   else {
                                     echo "<FONT SIZE=\"-1\">Reported to us by $anonymous on $story->timestamp"; ?><? print "</FONT>
                               </TD>
-                              <TD ALIGN=\"right\" BACKGROUND=\"themes/jeroen/images/menutitle.gif\">
-                                <A HREF=\"search.php?category=". urlencode($story->category) ."\"><FONT COLOR=\"<? $this->fgc3; ?>\">$story->category</FONT></A>";
+                              <TD ALIGN=\"right\" BACKGROUND=\"themes/jeroen/images/menutitle.gif\" NOWRAP>
+                                <A HREF=\"search.php?category=". urlencode($story->section) ."\"><FONT COLOR=\"<? $this->fgc3; ?>\">$story->section</FONT></A>";
                                   }
 
 PHP?>
@@ -282,7 +282,7 @@ PHP?>
       echo "                        </TD>";
  
       // Moderation:
-      echo "                        <TD BGCOLOR=\"#6C6C6C\" ALIGN=\"right\"ROWSPAN=\"2\" VALIGN=\"middle\" WIDTH=\"15%\">";
+      echo "                        <TD BGCOLOR=\"#6C6C6C\" BACKGROUND=\"themes/jeroen/images/menutitle.gif\" ALIGN=\"right\"ROWSPAN=\"2\" VALIGN=\"middle\" WIDTH=\"15%\">";
                                       echo comment_moderation($comment);
       echo "                        </TD>";
       echo "                      </TR>";
