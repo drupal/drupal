@@ -1386,12 +1386,12 @@ function theme_comment_form($edit, $title) {
   }
   else if (variable_get('comment_anonymous', 0) == 1) {
     $form .= form_textfield(t('Your name'), 'name', $edit['name'] ? $edit['name'] : variable_get('anonymous', 'Anonymous') , 20, 40);
-    $form .= form_textfield(t('E-mail'), 'mail', $edit['mail'], 20, 40);
+    $form .= form_textfield(t('E-mail'), 'mail', $edit['mail'], 20, 40, t('The content of this field is kept private and will not be shown publicly.'));
     $form .= form_textfield(t('Homepage'), 'homepage', $edit['homepage'], 20, 40);
   }
   else if (variable_get('comment_anonymous', 0) == 2) {
     $form .= form_textfield(t('Your name'), 'name', $edit['name'] ? $edit['name'] : variable_get('anonymous', 'Anonymous') , 20, 40, NULL, NULL, TRUE);
-    $form .= form_textfield(t('E-mail'), 'mail', $edit['mail'], 20, 40, NULL, NULL, TRUE);
+    $form .= form_textfield(t('E-mail'), 'mail', $edit['mail'], 20, 40, t('The content of this field is kept private and will not be shown publicly.'), NULL, TRUE);
     $form .= form_textfield(t('Homepage'), 'homepage', $edit['homepage'], 20, 40);
   }
 
