@@ -207,26 +207,29 @@ function pager_list($limit, $element = 0, $quantity = 5, $text = "") {
   }
 // end of generation loop preparation
 
-  $output = "$text";
-  if ($i > 1) {
-    $output .= "... ";
-  }
+  // when there is more than one page, create the pager list
+  if ($i != $pager_max) {
+    $output = "$text";
+    if ($i > 1) {
+      $output .= "... ";
+    }
 
-  // finally we're ready to generate the actual pager piece
-  for (; $i <= $pager_last && $i <= $pager_max; $i++) {
-    if ($i < $pager_current) {
-      $output .= pager_previous($i, $limit, $element, ($pager_current - $i)) ." ";
+    // finally we're ready to generate the actual pager piece
+    for (; $i <= $pager_last && $i <= $pager_max; $i++) {
+      if ($i < $pager_current) {
+        $output .= pager_previous($i, $limit, $element, ($pager_current - $i)) ." ";
+      }
+      if ($i == $pager_current) {
+        $output .= "<b>$i</b> ";
+      }
+      if ($i > $pager_current) {
+        $output .= pager_next($i, $limit, $element, ($i - $pager_current)) ." ";
+      }
     }
-    if ($i == $pager_current) {
-      $output .= "<b>$i</b> ";
-    }
-    if ($i > $pager_current) {
-      $output .= pager_next($i, $limit, $element, ($i - $pager_current)) ." ";
-    }
-  }
 
-  if ($i < $pager_max) {
-    $output .= "...";
+    if ($i < $pager_max) {
+      $output .= "...";
+    }
   }
 
   return $output;
