@@ -1,12 +1,14 @@
 <?php
-// $Id: conf.php,v 1.10 2001/10/23 20:26:02 dries Exp $
+// $Id: conf.php,v 1.11 2001/11/01 11:00:47 dries Exp $
 
 #
 # Database settings:
 #
 
-# $db_url = "pgsql://userer:password@hostname/database";
-# $db_url = "mysql://userer:password@hostname/database";
+# $db_url = "pgsql://user:password@hostname/database";
+# $db_url = "mysql://user:password@hostname/database";
+
+$db_url = "mysql://drop:drop@localhost/drop";
 
 #
 # PHP settings:

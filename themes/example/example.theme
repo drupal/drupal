@@ -1,5 +1,5 @@
 <?php
-// $Id: example.theme,v 1.32 2001/10/20 18:57:08 kjartan Exp $
+// $Id: example.theme,v 1.33 2001/11/01 11:00:49 dries Exp $
 
   class Theme extends BaseTheme {
 

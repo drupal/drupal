@@ -1,5 +1,5 @@
 <?php
-// $Id: module.php,v 1.11 2001/10/20 18:57:07 natrak Exp $
+// $Id: module.php,v 1.12 2001/11/01 11:00:46 dries Exp $
 
 include_once "includes/common.inc";
 

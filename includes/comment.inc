@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.inc,v 1.63 2001/10/20 18:57:07 natrak Exp $
+// $Id: comment.inc,v 1.64 2001/11/01 11:00:47 dries Exp $
 
 // Security check:
 if (strstr($id, " ") || strstr($pid, " ") || strstr($lid, " ") || strstr($mode, " ") || strstr($order, " ") || strstr($threshold, " ")) {
@@ -83,7 +83,7 @@ function comment_reply($pid, $id) {
     comment_view(new Comment($item->uid, $item->name, $item->subject, $item->comment, $item->timestamp, $item->url, $item->cid, $item->lid), t("reply to this comment"));
   }
   else {
-    node_view(node_get_object(array("nid" => $id)));
+    node_view(node_load(array("nid" => $id)));
     $pid = 0;
   }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: calendar.module,v 1.12 2001/10/20 18:57:07 natrak Exp $
+// $Id: calendar.module,v 1.13 2001/11/01 11:00:48 dries Exp $
 
 class Calendar {
   var $date;

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.16 2001/10/20 20:58:59 kjartan Exp $
+// $Id: system.module,v 1.17 2001/11/01 11:00:48 dries Exp $
 
 function system_help() {
  ?>

@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.22 2001/10/20 18:57:07 kjartan Exp $
+// $Id: module.inc,v 1.23 2001/11/01 11:00:47 dries Exp $
 
 // initialize modules:
 function module_init() {
@@ -24,17 +24,18 @@ function module_list() {
   static $list;
 
   if (!$list) {
-    $handle = opendir("modules");
-    $list = array();
-    while ($file = readdir($handle)) {
-      if (".module" == substr($file, -7)) {
-        $filename = substr($file, 0, -7);
-        include "modules/$filename.module";
-        $list[$filename] = $filename;
+    if ($handle = @opendir("modules")) {
+      $list = array();
+      while ($file = readdir($handle)) {
+        if (".module" == substr($file, -7)) {
+          $filename = substr($file, 0, -7);
+          include "modules/$filename.module";
+          $list[$filename] = $filename;
+        }
       }
+      closedir($handle);
+      asort($list);
     }
-    closedir($handle);
-    asort($list);
   }
 
   return $list;

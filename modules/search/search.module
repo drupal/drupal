@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.9 2001/10/20 18:57:07 kjartan Exp $
+// $Id: search.module,v 1.10 2001/11/01 11:00:48 dries Exp $
 
 function search_perm() {
   return array("search content");
@@ -45,7 +45,7 @@ function search_page() {
     $form .= t("Restrict search to") .": ";
 
     foreach (module_list() as $name) {
-      if (module_hook($name, "search")) {
+      if (module_hook($name, "user") || module_hook($name, "search")) {
         $form .= " <input type=\"checkbox\" name=\"edit[type][$name]\" ". ($edit["type"][$name] ? " checked=\"checked\"" : "") ."/> ". t($name);
       }
     }

@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.41 2001/10/20 18:57:07 kjartan Exp $
+// $Id: aggregator.module,v 1.42 2001/11/01 11:00:48 dries Exp $
 
 function import_help() {
  ?>

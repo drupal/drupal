@@ -1,5 +1,5 @@
 <?php
-// $Id: error.php,v 1.28 2001/10/20 18:57:07 kjartan Exp $
+// $Id: error.php,v 1.29 2001/11/01 11:00:46 dries Exp $
 
 include_once "includes/common.inc";
 

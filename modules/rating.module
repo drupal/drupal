@@ -1,5 +1,5 @@
 <?php
-// $Id: rating.module,v 1.33 2001/10/20 18:57:07 natrak Exp $
+// $Id: rating.module,v 1.34 2001/11/01 11:00:48 dries Exp $
 
 function rating_perm() {
   return array("access user ratings");
@@ -52,23 +52,21 @@ function rating_help() {
 }
 
 function rating_gravity($uid) {
-  global $status;
-
   $period = 5184000;    // maximum 60 days
   $number = 30;         // maximum 30 comments
 
-  $r1 = db_query("SELECT nid, type FROM node WHERE uid = '$uid' AND (". time() ." - timestamp < $period) AND status = '$status[posted]'");
+  $r1 = db_query("SELECT nid, type FROM node WHERE uid = '$uid' AND (". time() ." - created < $period) AND status = 1");
   while ($node = db_fetch_object($r1)) {
     $bonus += variable_get("rating_weight_$node->type", 0);
   }
 
-  $r2 = db_query("SELECT nid, type FROM node WHERE uid = '$uid' AND (". time() ." - timestamp < $period) AND status = '$status[dumped]'");
+  $r2 = db_query("SELECT nid, type FROM node WHERE uid = '$uid' AND (". time() ." - created < $period) AND status = 0");
   while ($node = db_fetch_object($r1)) {
     $bonus -= variable_get("rating_weight_$node->type", 0);
   }
 
 /*
-  $r3 = db_query("SELECT score, votes FROM comments WHERE uid = '$uid' AND votes > 0 AND (". time() ." - timestamp < $period) ORDER BY timestamp LIMIT $number");
+  $r3 = db_query("SELECT score, votes FROM comments WHERE uid = '$uid' AND votes > 0 AND (". time() ." - created < $period) ORDER BY created LIMIT $number");
   while ($comment = db_fetch_object($r3)) {
     $weight++;
     $score += $weight * $comment->score;

@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.33 2001/10/20 18:57:07 kjartan Exp $
+// $Id: watchdog.module,v 1.34 2001/11/01 11:00:48 dries Exp $
 
 function watchdog_help() {
  ?>

@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.12 2001/10/20 18:57:07 natrak Exp $
+// $Id: locale.inc,v 1.13 2001/11/01 11:00:47 dries Exp $
 
 function locale_init() {
   global $languages, $user;

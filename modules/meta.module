@@ -1,5 +1,5 @@
 <?php
-// $Id: meta.module,v 1.14 2001/10/20 18:57:07 natrak Exp $
+// $Id: meta.module,v 1.15 2001/11/01 11:00:48 dries Exp $
 
 function meta_help() {
   ?>

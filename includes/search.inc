@@ -1,5 +1,5 @@
 <?php
-// $Id: search.inc,v 1.19 2001/10/20 18:57:07 natrak Exp $
+// $Id: search.inc,v 1.20 2001/11/01 11:00:47 dries Exp $
 
 /*
 ** Format a single result entry of a search query:

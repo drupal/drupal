@@ -1,5 +1,5 @@
 <?php
-// $Id: cron.php,v 1.14 2001/10/20 18:57:06 kjartan Exp $
+// $Id: cron.php,v 1.15 2001/11/01 11:00:46 dries Exp $
 
 include_once "includes/common.inc";
 
