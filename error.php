@@ -1,5 +1,5 @@
 <?php
-// $Id: error.php,v 1.29 2001/11/01 11:00:46 dries Exp $
+// $Id: error.php,v 1.30 2003/04/14 18:15:11 dries Exp $
 
 include_once "includes/common.inc";
 
@@ -7,11 +7,6 @@ $errors = array(500 => "500 error: internal server error", 404 => "404 error: `$
 
 watchdog("httpd", $errors[$REDIRECT_STATUS]);
 
-if (strstr($REDIRECT_URL, "index.php")) {
-  drupal_goto("../index.php");
-}
-else {
-  drupal_goto("index.php");
-}
+drupal_goto($base_url);
 
 ?>
