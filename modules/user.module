@@ -980,7 +980,7 @@ function user_view($uid = 0) {
   }
 
   if ($user->uid && $user->uid == $uid) {
-    $output .= form_item(t("Name"), check_output("$user->name ($user->init)"));
+    $output = form_item(t("Name"), check_output("$user->name ($user->init)"));
     $output .= form_item(t("E-mail address"), check_output($user->mail));
 
     foreach (module_list() as $module) {
@@ -995,7 +995,7 @@ function user_view($uid = 0) {
     $theme->footer();
   }
   else if ($uid && $account = user_load(array("uid" => $uid, "status" => 1))) {
-    $output .= form_item(t("Name"), check_output($account->name));
+    $output = form_item(t("Name"), check_output($account->name));
 
     foreach (module_list() as $module) {
       if (module_hook($module, "user")) {
