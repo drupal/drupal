@@ -107,8 +107,7 @@ function blog_feed_user($uid = 0, $date = 0) {
   }
 
   $output .= "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n";
-  $output .= "<!DOCTYPE rss [<!ENTITY % HTMLlat1 PUBLIC \"-//W3C//ENTITIES Latin 1 for XHTML//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml-lat1.ent\">\n";
-  $output .= "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n";
+  // $output .= "<!DOCTYPE rss [<!ENTITY % HTMLlat1 PUBLIC \"-//W3C//ENTITIES Latin 1 for XHTML//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml-lat1.ent\">\n";
   $output .= "<rss version=\"0.91\">\n";
   $output .= format_rss_channel("$account->name's blog", path_uri() ."module.php?mod=blog&op=view&id=$account->uid", "$account->name's blog", $items);
   $output .= "</rss>\n";
