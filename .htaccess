@@ -20,9 +20,9 @@ ErrorDocument 500 /error.php
 
 # Overload PHP variables:
 <IfModule mod_php4.c>
-   php_value register_globals    1
+   php_value register_globals        1
    php_value track_vars              1
-   php_value magic_quotes_gpc        1
+   php_value magic_quotes_gpc        0
    php_value magic_quotes_runtime    0
    php_value magic_quotes_sybase     0
    php_value session.cache_expire    200000
@@ -38,4 +38,4 @@ ErrorDocument 500 /error.php
   RewriteRule ^blog/(.*) /module.php?mod=blog\&name=$1 [R]
 </IfModule>
 
-# $Id: .htaccess,v 1.37 2002/06/10 12:10:55 kjartan Exp $
+# $Id: .htaccess,v 1.38 2002/09/27 16:50:42 kjartan Exp $
