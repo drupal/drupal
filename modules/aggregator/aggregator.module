@@ -753,26 +753,25 @@ function aggregator_page_feeds() {
 }
 
 function aggregator_page_blocks($blocks) {
-  print theme("header");
-  print "<table cellpadding=\"0\" cellspacing=\"5\" border=\"0\" style=\"width: 100%;\">\n";
-  print " <tr>\n";
+  $output = "<table cellpadding=\"0\" cellspacing=\"5\" border=\"0\" style=\"width: 100%;\">\n";
+  $output .= " <tr>\n";
 
   for ($t = 0; $t < 3; $t++) {
     $i = 1;
-    print "  <td style=\"vertical-align: top; width: 33%;\">\n";
+    $output .= "  <td style=\"vertical-align: top; width: 33%;\">\n";
     while ($block = each($blocks)) {
-      print theme("box", $block["value"]["subject"], $block["value"]["content"]);
+      $output .= theme("box", $block["value"]["subject"], $block["value"]["content"]);
       if ($i == ceil(count($blocks) / 3)) {
         break;
       }
       $i++;
     }
-    print "  </td>\n";
+    $output .= "  </td>\n";
   }
 
-  print " </tr>\n";
-  print "</table>\n";
-  print theme("footer");
+  $output .= " </tr>\n";
+  $output .= "</table>\n";
+  print theme("page", $output);
 }
 
 function aggregator_page() {
