@@ -763,9 +763,12 @@ function comment_admin() {
 
   if (user_access("administer comments")) {
 
-    print "<small>". la(t("overview"), array("mod" => "comment")) ." | ". la(t("search comment"), array("mod" => "comment", "op" => "search")) ."</small><hr />\n";
+    print "<small>". la(t("overview"), array("mod" => "comment")) ." | ". la(t("search comment"), array("mod" => "comment", "op" => "search")) ." | ". la(t("help"), array("mod" => "comment", "op" => "help")) ."</small><hr />\n";
 
     switch ($op) {
+      case "help":
+        print comment_help();
+        break;
       case "edit":
         print comment_admin_edit($id);
         break;
