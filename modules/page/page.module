@@ -8,7 +8,7 @@ function page_help() {
 }
 
 function page_system($field){
-  $system["description"] = t("Enables the creation of persistent site pages that can be added to the navigation system.");
+  $system["description"] = t("Enables the creation of a static pages that can be added to the navigation system.");
   return $system[$field];
 }
 

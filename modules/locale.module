@@ -36,7 +36,7 @@ function locale_help() {
 }
 
 function locale_system($field){
-  $system["description"] = t("Enables the translation of drupal messages to languages other than English.");
+  $system["description"] = t("Enables the translation of the user interface to languages other than English.");
   return $system[$field];
 }
 

@@ -9,7 +9,7 @@ function system_help() {
 }
 
 function system_system($field){
-  $system["description"] = t("You'll need this.");
+  $system["description"] = t("Configuration system that lets site admins modify the workings of the site.");
   return $system[$field];
 }
 

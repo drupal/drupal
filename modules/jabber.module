@@ -2,7 +2,7 @@
 // $Id$
 
 function jabber_system($field){
-  $system["description"] = t("Enables login with Jabber ID and Password");
+  $system["description"] = t("Enables login with Jabber ID and password.");
   return $system[$field];
 }
 

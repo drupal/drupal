@@ -365,7 +365,7 @@ function bloggerapi_perm() {
 }
 
 function bloggerapi_system($field){
-  $system["description"] = t("Allows users post to Drupal via alternate methods or different tools.");
+  $system["description"] = t("Enables users to post using tools or applications that support the Blogger API.");
   return $system[$field];
 }
 

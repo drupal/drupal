@@ -14,7 +14,7 @@ function comment_help() {
 }
 
 function comment_system($field){
-  $system["description"] = t("Enables user commenting.");
+  $system["description"] = t("Enables user to comment on content (nodes).");
   return $system[$field];
 }
 

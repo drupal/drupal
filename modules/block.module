@@ -39,7 +39,7 @@ function block_help() {
 }
 
 function block_system($field){
-  $system["description"] = t("Displays content in small boxes, generally along the side of the page.");
+  $system["description"] = t("Controls the boxes that are displayed around the main content.");
   return $system[$field];
 }
 

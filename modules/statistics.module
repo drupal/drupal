@@ -15,7 +15,7 @@ function statistics_help() {
 }
 
 function statistics_system($field){
-  $system["description"] = t("Gathers and displays site metrics.");
+  $system["description"] = t("Gathers and displays referers.");
   return $system[$field];
 }
 

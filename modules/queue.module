@@ -2,7 +2,7 @@
 // $Id$
 
 function queue_system($field){
-  $system["description"] = t("Enables new content submissions to be rated before being displayed");
+  $system["description"] = t("Enables content to be moderated by the community.");
   return $system[$field];
 }
 
@@ -184,7 +184,7 @@ function queue_block() {
     if ($user->uid) {
       $node = node_load(array("nid" => $id));
     }
-    if (substr_count($node->users, "$user->uid=") && $node->moderate == 1) {
+    if (($user->uid == $node->uid && substr_count($node->users, "$user->uid=")) && $node->moderate == 1) {
       foreach (explode(",", $node->users) as $vote) {
         if ($vote) {
           $data = explode("=", $vote);

@@ -2,7 +2,7 @@
 // $Id$
 
 function taxonomy_system($field){
-  $system["description"] = t("Enables the organization of content into categories and subcategories.");
+  $system["description"] = t("Enables the organization of content into categories.");
   return $system[$field];
 }
 

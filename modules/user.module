@@ -5,7 +5,7 @@ session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "
 session_start();
 
 function user_system($field){
-  $system["description"] = t("Enables a user registration system.");
+  $system["description"] = t("Enables the user registration and login system.");
   return $system[$field];
 }
 

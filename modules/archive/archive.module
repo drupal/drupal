@@ -2,7 +2,7 @@
 // $Id$
 
 function archive_system($field){
-  $system["description"] = t("Displays calendar navigation to old content.");
+  $system["description"] = t("Displays a calendar to navigation old content.");
   return $system[$field];
 }
 

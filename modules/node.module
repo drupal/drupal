@@ -15,7 +15,7 @@ function node_help() {
 }
 
 function node_system($field){
-  $system["description"] = t("You'll need this too.");
+  $system["description"] = t("The core that allows content to be submitted to the site.");
   return $system[$field];
 }
 
@@ -494,7 +494,7 @@ function node_admin_nodes() {
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
   $output .= " <tr><th>title</th><th>type</th><th>author</th><th>status</th><th colspan=\"2\">operations</th></tr>\n";
   while ($node = db_fetch_object($result)) {
-    $output .= "<tr><td>". l(check_output($node->title), array("id" => $node->nid)) ."</td><td>$node->type</td><td nowrap=\"nowrap\">". format_name($node) ."</td><td>". ($node->status ? t("published") : t("not published")) ."</td><td nowrap=\"nowrap\">". la(t("edit node"), array("mod" => "node", "op" => "edit", "id" => $node->nid)) ."</td><td nowrap=\"nowrap\">". la(t("delete node"), array("mod" => "node", "op" => "delete", "id" => $node->nid)) ."</td></tr>";
+    $output .= "<tr><td>". l(check_output($node->title), array("id" => $node->nid)) ."</td><td>". module_invoke($node->type, "node", "name") ."</td><td nowrap=\"nowrap\">". format_name($node) ."</td><td>". ($node->status ? t("published") : t("not published")) ."</td><td nowrap=\"nowrap\">". la(t("edit node"), array("mod" => "node", "op" => "edit", "id" => $node->nid)) ."</td><td nowrap=\"nowrap\">". la(t("delete node"), array("mod" => "node", "op" => "delete", "id" => $node->nid)) ."</td></tr>";
   }
   $output .= "</table>";
 
@@ -878,10 +878,16 @@ function node_form($edit, $error = NULL) {
     $output .= form_textfield(t("Authored on"), "date", $edit->date, 20, 25, $error["date"]);
     $output .= "<br />";
     $output .= form_select(t("Set public/published"), "status", $edit->status, array("Disabled", "Enabled"));
-    $output .= form_select(t("Queue for moderation"), "moderate", $edit->moderate, array("Disabled", "Enabled"));
+    // TODO: move this to the queue.module
+    if (module_exist("queue")) {
+      $output .= form_select(t("Queue for moderation"), "moderate", $edit->moderate, array("Disabled", "Enabled"));
+    }
     $output .= form_select(t("Promote to front page"), "promote", $edit->promote, array("Disabled", "Enabled"));
     $output .= form_select(t("Static on front page"), "static", $edit->static, array("Disabled", "Enabled"));
-    $output .= form_select(t("Allow users comments"), "comment", $edit->comment, array("Disabled", "Read only", "Read/Write"));
+    // TODO: move this to the comment.module
+    if (module_exist("comment")) {
+      $output .= form_select(t("Allow users comments"), "comment", $edit->comment, array("Disabled", "Read only", "Read/Write"));
+    }
     $output .= form_select(t("Create new revision"), "revision", $edit->revision, array("Disabled", "Enabled"));
   }
 
@@ -906,7 +912,7 @@ function node_add($type) {
 
   if ($type && node_access("create", $type)) {
     // Initialize settings
-    $output = node_form(array("uid" => $user->uid, "name" => $user->name, "type" => $type, "status" => 1, "moderate" => 1, "comment" => 2));
+    $output = node_form(array("uid" => $user->uid, "name" => $user->name, "type" => $type, "status" => 1, "promote" => !module_exist("queue"), "moderate" => module_exist("queue"), "comment" => module_exist("queue") ? 2 : 0));
   }
   else {
 

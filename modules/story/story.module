@@ -8,7 +8,7 @@ function story_help() {
 }
 
 function story_system($field){
-  $system["description"] = t("Enables users to submit stories.  These stories are not part of their blogs.");
+  $system["description"] = t("Enables users to submit stories, articles or similar content.");
   return $system[$field];
 }
 

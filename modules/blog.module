@@ -2,7 +2,7 @@
 // $Id$
 
 function blog_system($field){
-  $system["description"] = t("Enables keeping an online journal.");
+  $system["description"] = t("Enables users to keep a blog or online journal.");
   return $system[$field];
 }
 

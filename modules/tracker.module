@@ -7,7 +7,7 @@ function tracker_help() {
 }
 
 function tracker_system($field){
-  $system["description"] = t("Enables tracking of recent and new comments for site readers.");
+  $system["description"] = t("Enables tracking of recent and new comments for users.");
   return $system[$field];
 }
 
