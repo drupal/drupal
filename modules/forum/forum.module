@@ -33,7 +33,7 @@ function forum_settings() {
       $group  = form_select(t("Forum vocabulary"), "forum_nav_vocabulary", variable_get("forum_nav_vocabulary", ""), $vocs, t("The taxonomy vocabulary that will be used as the navigation tree.  The vacabulary's terms define the forums."));
       $group .= _taxonomy_term_select(t("Containers"), "forum_containers", variable_get("forum_containers", array()), variable_get("forum_nav_vocabulary", ""), t("You can choose forums which will not have topics, but will be just containers for other forums.  This lets you both group and nest forums."), 1, t("<none>"));
 
-      $output = form_group(t("Forum structure"), $group);
+      $output = form_group(t('Forum structure settings'), $group);
 
       $group  = form_textarea(t("Explanation or submission guidelines"), "forum_help", variable_get("forum_help", ""), 70, 5, t("This text will be displayed at the top of the forum submission form.  Useful for helping or instructing your users."));
       $group .= form_textfield(t("Forum icon path"), "forum_icon_path", variable_get("forum_icon_path", ""), 30, 255, t("The path to the forum icons.  Leave blank to disable icons.  Don't add a trailing slash.  Default icons are available in the 'misc' directory."));
@@ -43,10 +43,10 @@ function forum_settings() {
       $group .= form_select(t("Topics per page"), "forum_per_page", variable_get("forum_per_page", 25), $number, t("The default number of topics displayed per page; links to browse older messages are automatically being displayed."));
       $forder = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"), 3 => t("Posts - most active first"), 4=> t("Posts - least active first"));
       $group .= form_radios(t("Default order"), "forum_order", variable_get("forum_order", "1"), $forder, t("The default display order for topics."));
-      $output .= form_group(t("Forum viewing options"), $group);
+      $output .= form_group(t('Forum viewing options'), $group);
 
       $group = form_textfield(t("Number of topics in block"), "forum_block_num", variable_get("forum_block_num", "5"), 5, 5, t("The number of topics to show in the \"Forum topics\" block.  To enable the block, click ". l("here", "admin/system/block") ."."));
-      $output .= form_group(t('"Forum topic" block'), $group);
+      $output .= form_group(t('"Forum topic" block settings'), $group);
     }
   }
 

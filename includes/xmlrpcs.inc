@@ -173,7 +173,7 @@ class xmlrpc_server {
     $payload="<?xml version=\"1.0\"?>\n" .
       $this->serializeDebug() .
       $r->serialize();
-    Header("Content-type: text/xml\r\nContent-Length: " .
+    Header("Content-Type: text/xml\r\nContent-Length: " .
            strlen($payload));
     print $payload;
   }

@@ -60,7 +60,8 @@ $mysql_updates = array(
   "2003-10-20" => "update_68",
   "2003-10-22" => "update_69",
   "2003-10-27" => "update_70",
-  "2003-11-17" => "update_71"
+  "2003-11-17" => "update_71",
+  "2003-11-27" => "update_72"
 );
 
 function update_32() {
@@ -550,6 +551,10 @@ function update_70() {
 
 function update_71() {
   update_sql("ALTER TABLE {system} ADD bootstrap int(2)");
+}
+
+function update_72() {
+  update_sql("ALTER TABLE {blocks} ADD throttle tinyint(1) NOT NULL DEFAULT '0'");
 }
 
 /*
