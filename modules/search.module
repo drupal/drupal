@@ -283,6 +283,21 @@ function _search_keywords_truncate(&$text) {
 }
 
 /**
+ * Loosens up a set of search keywords by adding wildcards, if possible.
+ * 
+ * @param $text
+ *   The keywords as entered by the user.
+ * @return
+ *   If more wildcards can be added, the adjusted keywords are returned.
+ *   If the query is already as loose as possible, NULL is returned.
+ */
+function search_keywords_variation($text) {
+  $text = trim($text);
+  $new = preg_replace('/\*+/', '*', '*'. implode('* *', explode(' ', trim($text))) .'*');
+  return ($new != $text) ? $new : NULL;
+}
+
+/**
  * Invokes hook_search_preprocess() in modules.
  */
 function search_preprocess(&$text) {
@@ -445,7 +460,7 @@ function search_index($sid, $type, $text) {
  * GROUP BY i.type, i.sid
  * ORDER BY score DESC";
  *
- * @param $keys
+ * @param $keywords
  *   A search string as entered by the user.
  *
  * @param $type
@@ -459,15 +474,18 @@ function search_index($sid, $type, $text) {
  *   (optional) A string to be inserted into the WHERE part of the SQL query.
  *   For example "(n.status > 0)".
  *
+ * @param $variation
+ *   Used internally. Must not be specified.
+ *
  * @return
  *   An array of SIDs for the search results.
  *
  * @ingroup search
  */
-function do_search($keys, $type, $join = '', $where = '1') {
+function do_search($keywords, $type, $join = '', $where = '1', $variation = true) {
   // Note, we replace the wildcards with U+FFFD (Replacement character) to pass
   // through the keyword extractor. Multiple wildcards are collapsed into one.
-  $keys = preg_replace('!\*+!', '�', $keys);
+  $keys = preg_replace('!\*+!', '�', $keywords);
 
   // Split into words
   $keys = search_keywords_split($keys);
@@ -494,24 +512,33 @@ function do_search($keys, $type, $join = '', $where = '1') {
     }
   }
   // Tell the user which words were excluded
-  if (count($refused)) {
-    drupal_set_message(t('The following word(s) were not included because they were too short: %words', array('%words' => '<em>'. implode(', ', $refused) .'</em>')));
+  if (count($refused) && $variation) {
+    $message = format_plural(count($refused),
+                             'The word %words was not included because it is too short.',
+                             'The words %words were not included because they were too short.');
+    drupal_set_message(strtr($message, array('%words' => '<em>'. drupal_specialchars(implode(', ', $refused)) .'</em>')));
   }
 
   if (count($words) == 0) {
     return array();
   }
-  $where .= ' AND ('. implode(' OR ', $words) .')';
+  $conditions = $where .' AND ('. implode(' OR ', $words) .')';
 
   // Get result count (for pager)
-  $count = db_result(db_query("SELECT COUNT(DISTINCT i.sid, i.type) FROM {search_index} i $join WHERE $where", $arguments));
+  $count = db_result(db_query("SELECT COUNT(DISTINCT i.sid, i.type) FROM {search_index} i $join WHERE $conditions", $arguments));
   if ($count == 0) {
-    return array();
+    // Try out a looser search query if nothing was found.
+    if ($variation && $loose = search_keywords_variation($keywords)) {
+      return do_search($loose, $type, $join, $where, false);
+    }
+    else {
+      return array();
+    }
   }
   $count_query = "SELECT $count";
 
   // Do pager query
-  $query = "SELECT i.type, i.sid, SUM(i.score/t.count) AS score FROM {search_index} i $join INNER JOIN {search_total} t ON i.word = t.word WHERE $where GROUP BY i.type, i.sid ORDER BY score DESC";
+  $query = "SELECT i.type, i.sid, SUM(i.score/t.count) AS score FROM {search_index} i $join INNER JOIN {search_total} t ON i.word = t.word WHERE $conditions GROUP BY i.type, i.sid ORDER BY score DESC";
   $result = pager_query($query, 15, 0, $count_query, $arguments);
 
   $results = array();
