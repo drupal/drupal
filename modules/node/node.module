@@ -1725,7 +1725,7 @@ function node_access($op, $node = NULL, $uid = NULL) {
  *   An SQL join clause.
  */
 function node_access_join_sql($node_alias = 'n', $node_access_alias = 'na') {
-  if (module_implements('access_grants') == array('node') || user_access('administer nodes')) {
+  if (empty(module_implements('node_grants')) || user_access('administer nodes')) {
     return '';
   }
 
@@ -1746,7 +1746,7 @@ function node_access_join_sql($node_alias = 'n', $node_access_alias = 'na') {
  *   An SQL where clause.
  */
 function node_access_where_sql($op = 'view', $node_access_alias = 'na', $uid = NULL) {
-  if (module_implements('access_grants') == array('node') || user_access('administer nodes')) {
+  if (empty(module_implements('node_grants')) || user_access('administer nodes')) {
     // This number is being used in a SQL query as a boolean.
     // It is "'1'" instead of "1" for database compatibility, as both
     // PostgreSQL and MySQL treat it as boolean in this case.
