@@ -208,7 +208,10 @@ function import_element_data($parser, $data) {
 }
 
 function import_refresh($feed) {
+  // unset the global variables before we use them:
+  unset($GLOBALS["channel"], $GLOBALS["element"], $GLOBALS["item"], $GLOBALS["items"], $GLOBALS["tag"]);
 
+  // after we unset the variables, we can global them again:
   global $items, $channel;
 
   /*
@@ -229,9 +232,6 @@ function import_refresh($feed) {
       $data .= fgets($fp, 128);
     }
     fclose($fp);
-
-    // unset the global variables:
-    unset($GLOBALS["channel"], $GLOBAL["element"], $GLOBALS["item"], $GLOBAL["items"]);
 
     // parse the data:
     $xml_parser = xml_parser_create();
