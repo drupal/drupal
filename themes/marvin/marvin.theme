@@ -20,7 +20,7 @@
 
    function system($field) {
      $system["name"] = "Marvin";
-     $system["author"] = "Dries Buytaerts";
+     $system["author"] = "Dries";
      $system["description"] = "Internet explorer, Netscape, Opera";
 
      return $system[$field];
