@@ -1,8 +1,5 @@
 <?php
 
-
-// entries => attributess
-
 function index_get_array($id) {
   return db_fetch_array(db_query("SELECT * FROM entry WHERE eid = '". check_input($id) ."'"));
 }
@@ -10,13 +7,10 @@ function index_get_array($id) {
 function index_collection_form($name, $selected = "") {
   $result = db_query("SELECT * FROM entry WHERE collection = '$name'");
   while ($entry = db_fetch_object($result)) {
-    $options[$entry->keyword] = $entry->name;
+    $options[$entry->attributes] = $entry->name;
   }
 
   return form_select(ucfirst($name), $name, $selected, $options);
-}
-
-function index_collection_link($name) {
 }
 
 // --------------------------------
@@ -34,7 +28,7 @@ function index_form($edit = array()) {
 
   $form .= form_textfield(t("Entry name"), "name", $edit[name], 55, 64, t("The name of this entry.  Example: 'Apache'."));
   $form .= form_textfield(t("Collection"), "collection", $edit[collection], 55, 64, t("The collection or group this entry belgons to.  Example: 'Software'."));
-  $form .= form_textfield(t("Keywords"), "keyword", $edit[keyword], 55, 64, htmlentities("Format: <type>:<value>;<type>:<value>;.  Example: 'software:apache;type:webserver;os:linux;'."));
+  $form .= form_textfield(t("Attributes"), "attributes", $edit[attributes], 55, 64, htmlentities("Format: <type>:<value>;<type>:<value>;.  Example: 'software=apache,type=webserver,os=linux,'."));
   $form .= form_submit(t("Submit"));
 
   if ($edit[eid]) {
@@ -47,10 +41,10 @@ function index_form($edit = array()) {
 
 function index_save($edit) {
   if ($edit[eid]) {
-    db_query("UPDATE entry SET name = '". check_input($edit[name]) ."', collection = '". check_input($edit[collection]) ."', keyword = '". check_input($edit[keyword]) ."' WHERE eid = '$edit[eid]'");
+    db_query("UPDATE entry SET name = '". check_input($edit[name]) ."', collection = '". check_input($edit[collection]) ."', attributes = '". check_input($edit[attributes]) ."' WHERE eid = '$edit[eid]'");
   }
   else {
-    db_query("INSERT INTO entry (name, collection, keyword) VALUES ('". check_input($edit[name]) ."', '". check_input($edit[collection]) ."', '". check_input($edit[keyword]) ."')");
+    db_query("INSERT INTO entry (name, collection, attributes) VALUES ('". check_input($edit[name]) ."', '". check_input($edit[collection]) ."', '". check_input($edit[attributes]) ."')");
   }
 }
 
@@ -116,7 +110,7 @@ function index_entry() {
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
   $output .= " <TR><TH>name</TH><TH>collection</TH><TH>meta attributes</TH><TH>oparations</TH></TR>\n";
   while ($entry = db_fetch_object($result)) {
-    $output .= "<TR><TD>". check_output($entry->name) ."</TD><TD>". check_output($entry->collection) ."</TD><TD>". check_output($entry->keyword) ."</TD><TD><A HREF=\"admin.php?mod=index&op=edit&id=$entry->eid\">edit entry</A></TD></TR>\n";
+    $output .= "<TR><TD>". check_output($entry->name) ."</TD><TD>". check_output($entry->collection) ."</TD><TD>". check_output($entry->attributes) ."</TD><TD><A HREF=\"admin.php?mod=index&op=edit&id=$entry->eid\">edit entry</A></TD></TR>\n";
   }
   $output .= "</TABLE>\n";
 
