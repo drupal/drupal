@@ -1,5 +1,14 @@
 <?php
 
+  /*********************************************************************
+  
+   Theme: UnConeD
+   Author: UnConeD
+   Email: unconed@drop.org
+   Description: Modern theme, gray and blue, high coolness factor.
+   
+  *********************************************************************/
+  
  class Theme {
    var $link = "#000000";
    var $themename = "unconed";
