@@ -84,13 +84,13 @@ function profile_user($type, $edit, &$user) {
       return _profile_form($edit, "register");
     case "register_validate":
       // validate first registration form
-      return _profile_validate($edit, "required");
+      return _profile_validate($edit, "required", $user);
     case "edit_form":
       // when user tries to edit his own data
       return _profile_form(object2array($user), "private");
     case "edit_validate":
       // validate user data editing
-      return _profile_validate($edit, "private");
+      return _profile_validate($edit, "private", $user);
     case "view_public":
       // when others look at user data
       return _profile_user_view($user, "public");
@@ -136,9 +136,9 @@ function _profile_form($edit, $mode) {
   return $output;
 }
 
-function _profile_validate($edit, $mode) {
+function _profile_validate($edit, $mode, $user) {
 
-  global $profile_fields, $user;
+  global $profile_fields;
 
   $enabled_fields = _profile_active_fields($mode);
 
@@ -146,7 +146,7 @@ function _profile_validate($edit, $mode) {
     $error .= $birth_error."<br />";
   }
 
-  if (in_array("avatar", $enabled_fields) && ($avatar_error = _profile_validate_avatar($edit))) {
+  if (in_array("avatar", $enabled_fields) && ($avatar_error = _profile_validate_avatar($edit, $user))) {
     $error .= $avatar_error."<br />";
   }
 
@@ -209,8 +209,7 @@ function _profile_user_view(&$user, $mode) {
   return $output;
 }
 
-function _profile_validate_avatar(&$edit) {
-  global $user;
+function _profile_validate_avatar(&$edit, $user) {
   // check that uploaded file is an image, with a maximum file size and maximum height/width
 
   unset($edit["profile_avatar"]);
