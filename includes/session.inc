@@ -21,7 +21,7 @@ function sess_read($key) {
 
   if (!db_num_rows($result)) {
     $result = db_query("SELECT u.*, r.name AS role FROM {users} u INNER JOIN {role} r ON u.rid = r.rid WHERE u.uid = 0");
-    db_query("INSERT INTO {sessions} (uid, sid, hostname, session, timestamp) values(%d, '%s', '%s', '%s', %d)", $user->uid, $key, $_SERVER["REMOTE_ADDR"], $value, time());
+    db_query("INSERT INTO {sessions} (uid, sid, hostname, timestamp) values(%d, '%s', '%s', %d)", $user->uid, $key, $_SERVER["REMOTE_ADDR"], time());
   }
 
   $user = db_fetch_object($result);
