@@ -73,7 +73,7 @@ function check_name($name) {
 }
 
 function check_preview($text) {
-  return check_output(check_input($text), 1);
+  return check_output(check_input($text));
 }
 
 function check_query($text) {
@@ -87,7 +87,7 @@ function check_input($text) {
 
 function check_output($text, $nl2br = 0) {
   global $na;
-  return ($text) ? (($nl2br) ? nl2br(stripslashes($text)) : stripslashes($text)) : $na;
+  return ($text) ? ($nl2br ? nl2br(stripslashes($text)) : stripslashes($text)) : $na;
 }
 
 function format_plural($count, $singular, $plural) {

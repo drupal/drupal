@@ -10,8 +10,9 @@ drupal x.xx, xx/xx/xxxx (CVS, unstable)
 - rewrote section code and renamed it to structure.module:
     * supports both "categories" and "topics" (cfr. Scoop, SlashCode).  Topics can be nested to create a multi-level hierarchy.
     * added "auto-post new submissions" feature versus "moderate new submissions".
-- added settings.module:
+- added conf.module:
     * moved most of the configuration options from hostname.conf to the new administration section.
+    * added support for custom "filters"
 - added moderate.module:
     * allows to assign users editorial/moderator rights to certain nodes or topics.
 - added page.module:
@@ -24,7 +25,7 @@ drupal x.xx, xx/xx/xxxx (CVS, unstable)
     * allows to display and mail CVS log messages as daily digests.
 - added book.module:
     * allows collaborative handbook writing: primary used for drupal documentation.
-- removed cron.module and integrated it into settings.module.
+- removed cron.module and integrated it into conf.module.
 - various updates:
     * introduced links/drupal tags: [[link]]
     * added preview functionality when submitting new content (such as a story) from the administration pages.
