@@ -67,7 +67,7 @@ function comment_help($section = "admin/help#comment") {
 
       $output .= "<h4>Initial comment scores</h4>";
       $output .= "<p>Finally, you may want to enter some <i>initial comment scores</i>. In <a href=\"%comment-initial\">administer &raquo; comments &raquo; initial comment scores</a> you can assign a beginning rating for all comments posted by a particular permission role. If you do not assign any initial scores, Drupal will assign a rating of <strong>0</strong> as the default.</p>";
-      $output = t($output, array("%comment-config" => url("admin/system/modules/comment"), "%site-config" => url("admin/system"), "%user-permissions" => url("admin/user/permission"), "%tracker" => url("tracker"), "%download-notify" => "http://drupal.org/project/releases", "%permission" => url("admin/user/permissions"), "%comment-moderation" => url("admin/comment/moderation"), "%comment-votes" => url("admin/comment/moderation/votes"), "%comment-matrix" => url("admin/comment/moderation/matrix"), "%comment-thresholds" => url("admin/comment/moderation/thresholds"), "%slashdot" => " http://slashdot.org", "%comment-initial" => url("admin/comments/moderation/roles")));
+      $output = t($output, array("%comment-config" => url("admin/system/modules/comment"), "%site-config" => url("admin/system"), "%user-permissions" => url("admin/user/permission"), "%tracker" => url("tracker"), "%download-notify" => "http://drupal.org/project/releases", "%permission" => url("admin/user/permission"), "%comment-moderation" => url("admin/comment/moderation"), "%comment-votes" => url("admin/comment/moderation/votes"), "%comment-matrix" => url("admin/comment/moderation/matrix"), "%comment-thresholds" => url("admin/comment/moderation/filters"), "%slashdot" => " http://slashdot.org", "%comment-initial" => url("admin/comment/moderation/roles")));
       break;
     case 'admin/system/modules#description':
       $output = t("Enables user to comment on content (nodes).");
@@ -79,7 +79,7 @@ function comment_help($section = "admin/help#comment") {
       $output = t("Comments let users give feedback to content authors.  Here you may review/approve/deny recent comments, and configure moderation if desired.");
       break;
     case 'admin/comment/comments':
-      $output = t("Click on <a href=\"%nup\">new or updated comments</a> to see your latest comments, or <a href=\"%queue\">comment approval queue</a> to approve new comments.", array("%nup" => url("admin/comment/0"), "%queue" => url("admin/comment/1")));
+      $output = t("Click on <a href=\"%nup\">new or updated comments</a> to see your latest comments, or <a href=\"%queue\">comment approval queue</a> to approve new comments.", array("%nup" => url("admin/comment/comments/0"), "%queue" => url("admin/comment/moderation")));
       break;
     case 'admin/comment/comments/0':
       $output = t("Below is a list of the latest comments posted your site. Click on a subject to see the comment, the author's name to edit the author's user information , \"edit comment\" to edit the comment, and \"delete comment\" to remove the comment.");
@@ -87,8 +87,8 @@ function comment_help($section = "admin/help#comment") {
     case 'admin/comment/comments/1':
       $output = t("Below is a list of the comments posted to your site that need approval. To approve a comment click on <strong>\"edit comment\"</strong> and then change it's <strong>moderation status</strong> to Approved.<br />Click on a subject to see the comment, the author's name to edit the author's user information, \"edit comment\" to edit the comment, and \"delete comment\" to remove the comment.");
       break;
-    case 'admin/comments/moderation':
-      $output = t("If you have a get a lot of comments, you can enable comment moderation. Once moderation is enabled users can vote on a comment based on dropdown menus. <a href=\"%votes\">Votes</a> sets up the names in the dropdown menu, and the order in which they appear, using weights. <a href=\"%matrix\">Matrix</a> sets up the value of each user's vote, and <a href=\"%threshold\">threshold</a> sets up the levels at which a comment will be displayed.", array("%votes" => url("admin/comment/moderation/votes"), "%matrix" => url("admin/comment/moderation/matrix"), "%threshold" => url("admin/comment/moderation/threshold")));
+    case 'admin/comment/moderation':
+      $output = t("If you have a get a lot of comments, you can enable comment moderation. Once moderation is enabled users can vote on a comment based on dropdown menus. <a href=\"%votes\">Votes</a> sets up the names in the dropdown menu, and the order in which they appear, using weights. <a href=\"%matrix\">Matrix</a> sets up the value of each user's vote, and <a href=\"%threshhold\">threshhold</a> sets up the levels at which a comment will be displayed.", array("%votes" => url("admin/comment/moderation/votes"), "%matrix" => url("admin/comment/moderation/matrix"), "%threshhold" => url("admin/comment/moderation/filters")));
       break;
     case 'admin/comment/moderation/votes':
       $output = t("Here is where you setup the names of each type of vote. Weight lets you set the order of the drop down menu. Click <strong>edit</strong> to edit a current vote weight.<br />Notes: <ul><li>you can have more than one type with the same name. The system does not protect you from this.</li><li>To <strong>delete</strong> a name/weight combiniation go to the <strong>edit</strong> area.</li></ul>");
@@ -102,7 +102,7 @@ function comment_help($section = "admin/help#comment") {
     case 'admin/comment/moderation/roles':
       $output = t("Here you can setup the <strong>initial</strong> vote value of a comment posted by each user role. This value is used before any other users vote on the comment.<br />Note: Blank entries are valued at zero");
       break;
-    case ' admin/comment/search':
+    case 'admin/comment/search':
       $output = t("Enter a simple pattern ( '*' maybe used as a wildcard match) to search for a comment.  For example, one may search for 'br' and Drupal might return 'bread brakers', 'our daily bread' and 'brenda'.");
       break;
   }
@@ -803,7 +803,7 @@ function comment_link($type, $node = 0, $main = 0) {
     if (user_access("administer comments")) {
 
       menu("admin/comment", t("comments"), "comment_admin", 1);
-      menu("admin/comment/comments", t("overview"), NULL, 2);
+      menu("admin/comment/comments", t("overview"), "comment_admin", 2);
       menu("admin/comment/comments/0", t("new/updated"), "comment_admin", 1);
       menu("admin/comment/comments/1", t("approval queue"), "comment_admin", 2);
       menu("admin/comment/search", t("search"), "comment_admin", 8);
@@ -813,7 +813,7 @@ function comment_link($type, $node = 0, $main = 0) {
 
       // comment settings:
       if (user_access("administer moderation")) {
-        menu("admin/comment/moderation", t("moderation"), NULL, 3);
+        menu("admin/comment/moderation", t("moderation"), "comment_admin", 3);
         menu("admin/comment/moderation/votes", t("votes"), "comment_admin");
         menu("admin/comment/moderation/matrix", t("matrix"), "comment_admin");
         menu("admin/comment/moderation/filters", t("thresholds"), "comment_admin");
