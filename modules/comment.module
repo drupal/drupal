@@ -115,7 +115,7 @@ function comment_post($edit) {
     }
     else {
       // validate subject:
-      $edit[subject] = $edit[subject] ? $edit[subject] : substr($edit[comment], 0, 29);
+      $edit[subject] = strip_tags(($edit[subject] ? $edit[subject] : substr($edit[comment], 0, 29)));
 
       // add watchdog entry:
       watchdog("special", "comment: added '$edit[subject]'");
