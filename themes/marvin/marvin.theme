@@ -32,7 +32,7 @@
        BIG { font-size: 12pt; }
       -->
      </style>
-     <body text="#000000" bgcolor="#FFFFFF" alink="#CCCCCC" link="#665555" vlink="#665555">
+     <body text="#000000" bgcolor="#ffffff" alink="#cccccc" link="#665566" vlink="#665566">
       <table border="0" cellpadding="8" cellspacing="0">
        <tr>
         <td><a href="index.php"><img src="themes/marvin/images/logo.gif" alt="" border="0" /></a></td>
@@ -121,15 +121,15 @@
      print " <tr>\n";
      print "  <td>\n";
      print "   <table border=\"0\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">\n";
-     print "    <tr><td align=\"center\" bgcolor=\"#eaeaea\" nowrap><font color=\"#404040\"><b>$subject</b></font></td></tr>\n";
-     print "    <tr><td bgcolor=\"#ffffff\">$content</td></tr>\n";
+     print "    <tr><td align=\"center\" bgcolor=\"#eaeaea\" nowrap=\"nowrap\"><font color=\"#404040\"><b>$subject</b></font></td></tr>\n";
+     print "    <tr><td bgcolor=\"#ffffff\" valign=\"top\">$content</td></tr>\n";
      print "   </table>\n";
      print "  </td>\n";
      print " </tr>\n";
      print "</table>\n";
      print "<br />\n\n";
    }
- 
+
    function links($links, $delimiter = " &middot ") {
      return implode($delimiter, $links);
    }
