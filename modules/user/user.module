@@ -350,22 +350,21 @@ function user_block($op = "list", $delta = 0) {
           }
           // NOTE: special care needs to be taken because on pages with forms, such as node and comment submission pages, the $edit variable might already be set.
 
-          $form = form_hidden("destination", $edit["destination"]);
-          $form .= form_textfield(t("Username"), "name", $edit["name"], 15, 64);
-          $form .= form_password(t("Password"), "pass", $pass, 15, 64);
+          $output .= form_hidden("destination", $edit["destination"]);
+          $output .= form_textfield(t("Username"), "name", $edit["name"], 15, 64);
+          $output .= form_password(t("Password"), "pass", $pass, 15, 64);
 
           if (variable_get("user_remember", 0) == 0) {
-            $form .= form_checkbox(t("Remember me"), "remember_me");
+            $output .= form_checkbox(t("Remember me"), "remember_me");
           }
           elseif (variable_get("user_remember", 1) == 1) {
-            $form .= form_hidden("remember_me", 1);
+            $output .= form_hidden("remember_me", 1);
           }
 
-          $form .= form_submit(t("Log in"));
-
-          $output .= form($form, "post", url("user/login"));
-
+          $output .= form_submit(t("Log in"));
           $output .= "</div>\n";
+
+          $output  = form($output, "post", url("user/login"));
 
           if (variable_get("user_register", 1)) {
             $items[] = l(t("Create new account"), "user/register", array("title" => t("Create a new user account.")));
@@ -375,7 +374,7 @@ function user_block($op = "list", $delta = 0) {
           $output .= theme("item_list", $items);
 
           $block["subject"] = t("User login");
-          $block["content"] = "<div class=\"user-login-link\">$output</div>";
+          $block["content"] = $output;
         }
         return $block;
       case 1:
