@@ -154,7 +154,8 @@ function profile_save_profile(&$edit, &$user, $category) {
     $result = db_query('SELECT fid, name, type FROM {profile_fields} WHERE register = 1 ORDER BY category, weight');
   }
   else {
-    $result = db_query("SELECT fid, name, type FROM {profile_fields} WHERE LOWER(category) = '%s'", strtolower($category));
+    $result = db_query("SELECT fid, name, type FROM {profile_fields} WHERE LOWER(category) = LOWER('%s')", $category);
+    // We use LOWER('%s') instead of PHP's strtolower() to avoid UTF-8 conversion issues.
   }
   while ($field = db_fetch_object($result)) {
     if (_profile_field_serialize($field->type)) {
@@ -250,7 +251,8 @@ function profile_form_profile($edit, $user, $category) {
     $result = db_query('SELECT * FROM {profile_fields} WHERE register = 1 ORDER BY category, weight');
   }
   else {
-    $result = db_query("SELECT * FROM {profile_fields} WHERE LOWER(category) = '%s' ORDER BY weight", strtolower($category));
+    $result = db_query("SELECT * FROM {profile_fields} WHERE LOWER(category) = LOWER('%s') ORDER BY weight", $category);
+    // We use LOWER('%s') instead of PHP's strtolower() to avoid UTF-8 conversion issues.
   }
 
   $fields = array();
@@ -349,7 +351,8 @@ function profile_validate_profile($edit, $category) {
     $result = db_query('SELECT * FROM {profile_fields} WHERE register = 1 ORDER BY category, weight');
   }
   else {
-    $result = db_query("SELECT * FROM {profile_fields} WHERE LOWER(category) = '%s' ORDER BY weight", strtolower($category));
+    $result = db_query("SELECT * FROM {profile_fields} WHERE LOWER(category) = LOWER('%s') ORDER BY weight", $category);
+    // We use LOWER('%s') instead of PHP's strtolower() to avoid UTF-8 conversion issues.
   }
 
   while ($field = db_fetch_object($result)) {
