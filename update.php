@@ -872,7 +872,7 @@ function update_info() {
   print "</html>";
 }
 
-if ($op) {
+if (isset($op)) {
   include_once "includes/common.inc";
 
   // Access check:
