@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.138 2004/06/20 20:04:25 dries Exp $
+// $Id: update.php,v 1.139 2004/08/01 08:07:27 dries Exp $
 /*
 ** USAGE:
 **
@@ -90,7 +90,7 @@ function update_page() {
       $dates[$i] = "No updates available";
 
       // make update form and output it.
-      $form .= form_select("Perform updates from", "start", (isset($selected) ? $selected : -1), $dates, "This defaults to the first available update since the last update you peformed.");
+      $form .= form_select("Perform updates from", "start", (isset($selected) ? $selected : -1), $dates, "This defaults to the first available update since the last update you performed.");
       $form .= form_submit("Update");
       print update_page_header("Drupal database update");
       print form($form);
