@@ -213,7 +213,7 @@ function diary_help() {
 
 function diary_link($type) {
 
-  if ($type == "admin" && user_access("adminsiter diary entries")) {
+  if ($type == "admin" && user_access("administer diary entries")) {
     $links[] = "<a href=\"admin.php?mod=diary\">online diaries</a>";
   }
 
