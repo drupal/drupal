@@ -209,6 +209,18 @@ function node_teaser($body) {
     return substr($body, 0, $length + 1);
   }
 
+  if ($length = strpos($body, '。', $size)) {
+    return substr($body, 0, $length + 1);
+  }
+
+  if ($length = strpos($body, '、', $size)) {
+    return substr($body, 0, $length + 1);
+  }
+
+  if ($length = strpos($body, '؟ ', $size)) {
+    return substr($body, 0, $length + 1);
+  }
+
   /*
   ** Nevermind, we split it the hard way ...
   */
