@@ -244,12 +244,21 @@ function comment_visible($comment, $threshold = 0) {
 function comment_links($comment, $return = 1) {
   global $theme;
 
+  $links = array();
+
   if ($return) {
-    return "<a href=\"node.php?id=$comment->lid#$comment->cid\"><font color=\"$theme->type\">". t("return") ."</font></a> | <a href=\"node.php?op=reply&id=$comment->lid&pid=$comment->cid\"><font color=\"$theme->type\">". t("reply to this comment") ."</font></a>";
+    $links[] = "<a href=\"node.php?id=$comment->lid#$comment->cid\"><font color=\"$theme->type\">". t("return") ."</font></a>";
   }
-  else {
-    return "<a href=\"node.php?op=reply&id=$comment->lid&pid=$comment->cid\"><font color=\"$theme->type\">". t("reply to this comment") ."</font></a>";
+
+  if (user_access("administer comments")) {
+    $links[] = "<a href=\"admin.php?mod=comment&op=edit&id=$comment->cid\"><font color=\"$theme->type\">". t("administer") ."</font></a>";
   }
+
+  if (user_access("post comments")) {
+    $links[] = "<a href=\"node.php?op=reply&id=$comment->lid&pid=$comment->cid\"><font color=\"$theme->type\">". t("reply to this comment") ."</font></a>";
+  }
+
+  return $theme->links($links);
 }
 
 function comment_view($comment, $folded = 0) {
@@ -263,20 +272,20 @@ function comment_view($comment, $folded = 0) {
   }
 }
 
-function comment_thread_min($cid, $threshold) {
+function comment_thread_min($comments, $threshold, $pid = 0) {
   global $user;
 
-  $result = db_query("SELECT c.cid, c.pid, c.lid, c.subject, c.comment, c.timestamp, u.uid, u.name, AVG(m.score) AS score, COUNT(m.cid) AS votes FROM comments c LEFT JOIN users u ON c.uid = u.uid LEFT JOIN moderate m ON c.cid = m.cid WHERE c.pid = '$cid' GROUP BY c.cid, c.pid, c.lid, c.subject, c.comment, c.timestamp, u.uid, u.name ORDER BY c.timestamp");
-
-  while ($comment = db_fetch_object($result)) {
-    print "<ul>";
-    print comment_view($comment);
-    comment_thread_min($comment->cid, $threshold);
-    print "</ul>";
+  foreach ($comments as $comment) {
+    if ($comment->pid == $pid) {
+      print "<ul>";
+      print comment_view($comment);
+      comment_thread_min($comments, $threshold, $comment->cid);
+      print "</ul>";
+    }
   }
 }
 
-function comment_thread_max($cid, $mode, $threshold, $level = 0) {
+function comment_thread_max($comments, $threshold, $pid = 0, $level = 0) {
   global $user;
 
   /*
@@ -288,14 +297,14 @@ function comment_thread_max($cid, $mode, $threshold, $level = 0) {
   ** in terms of speed and size.
   */
 
-  $result = db_query("SELECT c.cid, c.pid, c.lid, c.subject, c.comment, c.timestamp, u.uid, u.name, AVG(m.score) AS score, COUNT(m.cid) AS votes FROM comments c LEFT JOIN users u ON c.uid = u.uid LEFT JOIN moderate m ON c.cid = m.cid WHERE c.pid = '$cid' GROUP BY c.cid, c.pid, c.lid, c.subject, c.comment, c.timestamp, u.uid, u.name ORDER BY c.timestamp");
+  foreach ($comments as $comment) {
+    if ($comment->pid == $pid) {
+      print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr><td width=\"". ($level * 25) ."\">&nbsp;</td><td>\n";
+      comment_view($comment, (comment_visible($comment, $threshold) ? comment_links($comment, 0) : 0));
+      print "</td></tr></table>\n";
 
-  while ($comment = db_fetch_object($result)) {
-    print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr><td width=\"". ($level * 25) ."\">&nbsp;</td><td>\n";
-    comment_view($comment, (comment_visible($comment, $threshold) ? comment_links($comment, 0) : 0));
-    print "</td></tr></table>\n";
-
-    comment_thread_max($comment->cid, $mode, $threshold, $level + 1);
+      comment_thread_max($comments, $threshold, $comment->cid, $level + 1);
+    }
   }
 
 }
@@ -363,17 +372,23 @@ function comment_render($lid, $cid) {
         }
       }
       else if ($mode == 3) {
-        $result = comment_query($lid, $order, 0);
+        $result = comment_query($lid, $order);
         while ($comment = db_fetch_object($result)) {
-          comment_view($comment);
-          comment_thread_min($comment->cid, $threshold);
+          $comments[] = $comment;
+        }
+
+        if ($comments) {
+          comment_thread_min(array_reverse($comments), $threshold);
         }
       }
       else {
-        $result = comment_query($lid, $order, 0);
+        $result = comment_query($lid, $order);
         while ($comment = db_fetch_object($result)) {
-          comment_view($comment, (comment_visible($comment, $threshold) ? comment_links($comment, 0) : 0));
-          comment_thread_max($comment->cid, $mode, $threshold, $level + 1);
+          $comments[] = $comment;
+        }
+
+        if ($comments) {
+          comment_thread_max(array_reverse($comments), $threshold);
         }
       }
     }
@@ -397,7 +412,7 @@ function comment_perm() {
 }
 
 function comment_link($type, $node = 0, $main = 0) {
-  if ($type == "admin" and user_access("administer comments")) {
+  if ($type == "admin" && user_access("administer comments")) {
     $links[] = "<a href=\"admin.php?mod=comment\">comments</a>";
   }
 
@@ -430,7 +445,7 @@ function comment_link($type, $node = 0, $main = 0) {
 
 function comment_node_link($node) {
 
-  if (node_get_comments($node->nid)) {
+  if (user_access("administer comments") && node_get_comments($node->nid)) {
 
     /*
     ** Edit comments:
