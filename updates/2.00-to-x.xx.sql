@@ -287,3 +287,8 @@ CREATE TABLE referer (
   url varchar(255) DEFAULT '' NOT NULL,
   timestamp int(11) NOT NULL
 );
+
+# 30/06/01
+ALTER TABLE boxes CHANGE subject title varchar(64) DEFAULT '' NOT NULL;
+ALTER TABLE boxes CHANGE content body TEXT;
+ALTER TABLE boxes CHANGE id bid tinyint(4) DEFAULT '0' NOT NULL auto_increment;
