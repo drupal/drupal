@@ -285,19 +285,6 @@ CREATE TABLE [dbo].[sequences] (
 ) ON [PRIMARY]
 GO
 
-CREATE TABLE [dbo].[site] (
-  [sid] [numeric](10, 0) NULL ,
-  [name] [varchar] (128) NOT NULL ,
-  [link] [varchar] (255) NOT NULL ,
-  [size] [text] NOT NULL ,
-  [changed] [int] NOT NULL ,
-  [checked] [int] NOT NULL ,
-  [feed] [varchar] (255) NOT NULL ,
-  [refresh] [int] NOT NULL ,
-  [threshold] [int] NOT NULL
-) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
-GO
-
 CREATE TABLE [dbo].[node_counter] (
   [nid] [int] NOT NULL ,
   [totalcount] [numeric](20, 0) NOT NULL ,

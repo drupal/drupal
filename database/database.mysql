@@ -402,25 +402,6 @@ CREATE TABLE sequences (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'site'
---
-
-CREATE TABLE site (
-  sid int(10) unsigned NOT NULL auto_increment,
-  name varchar(128) NOT NULL default '',
-  link varchar(255) NOT NULL default '',
-  size text NOT NULL,
-  changed int(11) NOT NULL default '0',
-  checked int(11) NOT NULL default '0',
-  feed varchar(255) NOT NULL default '',
-  refresh int(11) NOT NULL default '0',
-  threshold int(11) NOT NULL default '0',
-  PRIMARY KEY  (sid),
-  UNIQUE KEY url (link),
-  UNIQUE KEY title (name)
-) TYPE=MyISAM;
-
---
 -- Table structure for table 'node_counter'
 --
 
