@@ -61,7 +61,7 @@ function block_block() {
 }
 
 function block_admin_save($edit) {
-  foreach ($edit as $key=>$value) {
+  foreach ($edit as $key => $value) {
     db_query("UPDATE blocks SET region = '%s', status = '%d', custom = '%d', path = '%s', weight = '%d' WHERE name = '%s'", $value["region"], $value["status"], $value["custom"], $value["path"], $value["weight"], $key);
   }
 }
@@ -71,7 +71,7 @@ function block_admin_display() {
 
   // Generate output:
   $output = "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  $output .= "<tr><th>block</th><th>module</th><th>status</th><th>custom</th><th>weight</th><th>region</th><th>path</th><th colspan=\"2\">operations</th></tr>\n";
+  $output .= "<tr><th>block</th><th>module</th><th>enabled</th><th>custom</th><th>weight</th><th>region</th><th>path</th><th colspan=\"2\">operations</th></tr>\n";
 
   while ($block = db_fetch_object($result)) {
     $weights = array(0 => 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
@@ -80,8 +80,8 @@ function block_admin_display() {
     //$output .= '<td>'. la($block->name, array("mod" => "block", "op" => "view", "id" => $block->delta), t("View the block details")) .'</td>';
     $output .= "<td>$block->name</td>";
     $output .= '<td>'. (module_hook($block->module, "admin") ? la($block->module, array("mod" => $block->module), "Administer module") : $block->module) .'</td>';
-    $output .= '<td>'. form_select(NULL, "$block->name][status", $block->status, array("disabled", "enabled")) .'</td>';
-    $output .= '<td>'. form_select(NULL, "$block->name][custom", $block->custom, array("disabled", "enabled")) .'</td>';
+    $output .= '<td align="center">'. form_checkbox(NULL, "$block->name][status", 1, $block->status) .'</td>';
+    $output .= '<td align="center">'. form_checkbox(NULL, "$block->name][custom", 1, $block->custom) .'</td>';
     $output .= '<td>'. form_select(NULL, "$block->name][weight", $block->weight, $weights) .'</td>';
     $output .= '<td>'. form_select(NULL, "$block->name][region", $block->region, array("left", "right")) .'</td>';
     $output .= '<td>'. form_textfield(NULL, "$block->name][path", $block->path, 10, 255) .'</td>';

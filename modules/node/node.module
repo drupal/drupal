@@ -416,7 +416,7 @@ function node_admin_settings($edit = array()) {
     ** Reset the configuration options to their default value:
     */
 
-    foreach ($edit as $name=>$value) {
+    foreach ($edit as $name => $value) {
       variable_del($name);
     }
   }
@@ -460,7 +460,7 @@ function node_admin_edit($node) {
     $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
     $output .= " <tr><th>older revisions</th><th colspan=\"3\">operations</th></tr>";
     foreach ($node->revisions as $key => $revision) {
-      $output .= " <tr><td>". t("revision #%r revised by %u on %d", array("%r" => $key, "%u" => format_name(user_load(array("uid" => $revision["uid"]))), "%d" => format_date($revision["timestamp"], "small"))) . ($revision["history"] ? "<br /><small>". $revision["history"] ."</small>" : "") ."</td><td>". l(t("view revision"), array("id" => $node->nid, "revision" =>$key)) ."</td><td>". la(t("rollback revision"), array("mod" => "node", "op" => "rollback+revision", "id" => $node->nid, "revision" => $key)) ."</td><td>". la(t("delete revision"), array("mod" => "node", "op" => "delete+revision", "id" => $node->nid, "revision" => $key)) ."</td></tr>";
+      $output .= " <tr><td>". t("revision #%r revised by %u on %d", array("%r" => $key, "%u" => format_name(user_load(array("uid" => $revision["uid"]))), "%d" => format_date($revision["timestamp"], "small"))) . ($revision["history"] ? "<br /><small>". $revision["history"] ."</small>" : "") ."</td><td>". l(t("view revision"), array("id" => $node->nid, "revision" => $key)) ."</td><td>". la(t("rollback revision"), array("mod" => "node", "op" => "rollback+revision", "id" => $node->nid, "revision" => $key)) ."</td><td>". la(t("delete revision"), array("mod" => "node", "op" => "delete+revision", "id" => $node->nid, "revision" => $key)) ."</td></tr>";
     }
     $output .= "</table>";
   }
@@ -1031,7 +1031,9 @@ function node_submit($node) {
         ** Update terms of the node
         */
 
-        taxonomy_node_save($nid, $node->taxonomy);
+        if (function_exists("taxonomy_node_save")) {
+          taxonomy_node_save($nid, $node->taxonomy);
+        }
 
         watchdog("special", "$node->type: updated '$node->title'");
         $output = t("The node has been updated.");
@@ -1076,7 +1078,9 @@ function node_submit($node) {
         ** Insert terms of the node
         */
 
-        taxonomy_node_save($nid, $node->taxonomy);
+        if (function_exists("taxonomy_node_save")) {
+          taxonomy_node_save($nid, $node->taxonomy);
+        }
 
         watchdog("special", "$node->type: added '$node->title'");
         $output = t("Thanks for your submission.");
@@ -1138,7 +1142,9 @@ function node_delete($edit) {
       ** Delete any taxonomy terms
       */
 
-      taxonomy_node_delete($node->nid);
+      if (function_exists("taxonomy_node_delete")) {
+        taxonomy_node_delete($nid, $node->taxonomy);
+      }
 
       /*
       ** Call the node specific callback (if any):

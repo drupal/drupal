@@ -78,7 +78,7 @@ function system_view_options() {
 
   // layout settings:
   $output .= "<h3>Layout settings</h3>\n";
-  foreach (theme_list() as $key=>$value) $options .= "<option value=\"$key\"". (variable_get("theme_default", 0) == $key ? " selected=\"selected\"" : "") .">$key</option>\n";
+  foreach (theme_list() as $key => $value) $options .= "<option value=\"$key\"". (variable_get("theme_default", 0) == $key ? " selected=\"selected\"" : "") .">$key</option>\n";
   $output .= form_item("Default theme", "<select name=\"edit[theme_default]\">$options</select>", "The default theme as seen by visitors or anonymous users.");
   $output .= "<hr />\n";
 
@@ -107,12 +107,12 @@ function system_view_filters() {
 }
 
 function system_save($edit = array()) {
-  foreach ($edit as $name=>$value) variable_set($name, $value);
+  foreach ($edit as $name => $value) variable_set($name, $value);
   return "the configuration options have been saved.";
 }
 
 function system_default($edit = array()) {
-  foreach ($edit as $name=>$value) variable_del($name);
+  foreach ($edit as $name => $value) variable_del($name);
   return "the configuration options have been reset to their default values.";
 }
 
@@ -163,9 +163,15 @@ function system_modules() {
   $required = array("user", "drupal", "system", "watchdog");
 
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  $output .= " <tr><th>module</th><th>description</th><th>status</th><th colspan=\"2\">operations</th></tr>\n";
+  $output .= "<tr><th>module</th><th>description</th><th>enabled</th><th colspan=\"2\">operations</th></tr>\n";
   foreach ($modules as $name => $module) {
-    $output .= " <tr><td>$name</td><td>". check_output(module_invoke($name, "system", "description")) ."</td><td>". (in_array($name, $required) ? "Enabled" : form_select("", "status][$name", $module["status"], array(t("Disabled"), t("Enabled")))) ."</td><td>". (module_hook($name, "page") ? lm(t("view"), array("mod" => $name)) : "&nbsp;") ."</td><td>". (module_hook($name, "admin") ? la(t("admin"), array("mod" => $name)) : "&nbsp;") ."</td></tr>\n";
+    $output .= "<tr>";
+    $output .= "<td>$name</td>";
+    $output .= "<td>". check_output(module_invoke($name, "system", "description")) ."</td>";
+    $output .= "<td align=\"center\">". (in_array($name, $required) ? "Enabled" : form_checkbox("", "status][$name", 1, $module["status"])) ."</td>";
+    $output .= "<td>". (module_hook($name, "page") ? lm(t("view"), array("mod" => $name)) : "&nbsp;") ."</td>";
+    $output .= "<td>". (module_hook($name, "admin") ? la(t("admin"), array("mod" => $name)) : "&nbsp;") ."</td>";
+    $output .= "</tr>\n";
     if (!in_array($name, $required)) {
       db_query("INSERT INTO system SET name = '$name', type = 'module', filename = '$module[filename]', status = '$module[status]'");
     }
@@ -229,9 +235,15 @@ function system_themes() {
   db_query("DELETE FROM system WHERE type = 'theme'");
 
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  $output .= " <tr><th>theme</th><th>name</th><th>description</th><th>author</th><th>status</th></tr>\n";
+  $output .= "<tr><th>theme</th><th>name</th><th>description</th><th>author</th><th>enabled</th></tr>\n";
   foreach ($themes as $name => $theme) {
-    $output .= " <tr><td>$name</td><td>$theme->displayname</td><td>". form_textfield("", "$name][description", $theme->description, 40, 255)."</td><td>$theme->author</td><td>". form_select("", "$name][status", $theme->status, array(t("Disabled"), t("Enabled"))) ."</td></tr>\n";
+    $output .= "<tr>";
+    $output .= "<td>$name</td>";
+    $output .= "<td>$theme->displayname</td>";
+    $output .= "<td>". form_textfield("", "$name][description", $theme->description, 40, 255)."</td>";
+    $output .= "<td>$theme->author</td>";
+    $output .= "<td align=\"center\">". form_checkbox("", "$name][status", 1, $theme->status) ."</td>";
+    $output .= "</tr>\n";
     db_query("INSERT INTO system SET name = '$name', type = 'theme', filename = '$theme->filename', status = '$theme->status', description = '$theme->description'");
   }
   $output .= "</table><br />\n";

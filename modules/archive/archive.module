@@ -146,9 +146,8 @@ function archive_page() {
           $edit["day"] = date("d", $date);
         }
 
-        $start = str_replace("<b>:</b><br />", " ", form_select("", "year", ($edit["year"] ? $edit["year"] : date("Y")), $years) . form_select("", "month", ($edit["month"] ? $edit["month"] : date("m")), $months) . form_select("", "day", ($edit["day"] ? $edit["day"] : date("d")), $days) . form_submit(t("Show")));
-        $start = str_replace("<p>", "", $start);
-        $start = str_replace("</p>\n", " ", $start);
+        $start = form_select("", "year", ($edit["year"] ? $edit["year"] : date("Y")), $years) . form_select("", "month", ($edit["month"] ? $edit["month"] : date("m")), $months) . form_select("", "day", ($edit["day"] ? $edit["day"] : date("d")), $days) . form_submit(t("Show"));
+        $start = ereg_replace("<[/]?p>", "", $start);
 
         $theme->box(t("Archives"), form($start));
 

@@ -96,7 +96,7 @@ function request_uri() {
     return $REQUEST_URI;
   }
   else {
-    return $PATH_INFO . "?" . $QUERY_STRING;
+    return $PATH_INFO ."?". $QUERY_STRING;
   }
 }
 
@@ -420,7 +420,7 @@ function format_rss_channel($title, $link, $description, $items, $language = "en
   $output .= " <description>". htmlentities($description) ."</description>\n";
   $output .= " <language>". htmlentities(strip_tags($language)) ."</language>\n";
   foreach ($args as $key => $value) {
-    $output .= "<$key>" . htmlentities(strip_tags($value)) . "</$key>";
+    $output .= "<$key>". htmlentities(strip_tags($value)) ."</$key>";
   }
   $output .= $items;
   $output .= "</channel>\n";
@@ -436,7 +436,7 @@ function format_rss_item($title, $link, $description, $args = array()) {
   $output .= " <link>". htmlentities(strip_tags($link)) ."</link>\n";
   $output .= " <description>". htmlentities($description) ."</description>\n";
   foreach ($args as $key => $value) {
-    $output .= "<$key>" . htmlentities(strip_tags($value)) . "</$key>";
+    $output .= "<$key>". htmlentities(strip_tags($value)) ."</$key>";
   }
   $output .= "</item>\n";
 
@@ -509,7 +509,7 @@ function page_get_cache() {
 
 function format_interval($timestamp) {
   $units = array("year|years" => 31536000, "week|weeks" => 604800, "day|days" => 86400, "hour|hours" => 3600, "min|min" => 60, "sec|sec" => 1);
-  foreach ($units as $key=>$value) {
+  foreach ($units as $key => $value) {
     $key = explode("|", $key);
     if ($timestamp >= $value) {
       $output .= ($output ? " " : "") . format_plural(floor($timestamp / $value), $key[0], $key[1]);
@@ -543,7 +543,7 @@ function format_date($timestamp, $type = "medium", $format = "") {
           $date = date($c, $timestamp).$date;
         }
         else {
-          $date = $c.$date;
+          $date = $c . $date;
         }
       }
       break;
@@ -610,7 +610,7 @@ function form_textarea($title, $name, $value, $cols, $rows, $description = 0) {
 
 function form_select($title, $name, $value, $options, $description = 0, $extra = 0, $multiple = 0) {
   if (count($options) > 0) {
-    foreach ($options as $key=>$choice) {
+    foreach ($options as $key => $choice) {
       $select .= "<option value=\"$key\"". (is_array($value) ? (in_array($key, $value) ? " selected=\"selected\"" : "") : ($key == $value ? " selected=\"selected\"" : "")) .">". check_form($choice) ."</option>";
     }
     return form_item($title, "<select name=\"edit[$name]". ($multiple ? "[]" : "") ."\"". ($multiple ? " multiple " : "") . ($extra ? " $extra" : "") .">$select</select>", $description);
