@@ -1,4 +1,14 @@
-# 30/03/2001:
+# 01/04/2001:
+
+CREATE TABLE access (
+  id tinyint(10) DEFAULT '0' NOT NULL auto_increment,
+  mask varchar(255) DEFAULT '' NOT NULL,
+  type varchar(16) DEFAULT '' NOT NULL,
+  reason text NOT NULL,
+  UNIQUE mask (mask),
+  PRIMARY KEY (id)
+);
+
 CREATE TABLE book (
   lid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   nid int(10) unsigned DEFAULT '0' NOT NULL,

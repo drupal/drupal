@@ -1,23 +1,27 @@
 drupal x.xx, xx/xx/xxxx
 -----------------------
 - major overhaul of the entire underlying design:
-    * everything is based on nodes
-    * introduced links/drupal tags
+    * everything is based on nodes: nodes are a conceptual "black box" to couple and manage different types of content and that promotes reusing existing code, thus reducing the complexity and size of drupal as well as improving long-term stability.
+    * introduced links/drupal tags: [[link]]
 - rewrote submission/moderation queue:
     * renamed submission.module to moderation.module
     * updated submission forms
-- added a "book module":
-    * merged documentation and FAQ module into a book module
+- removed FAQ and documentation module and merged them into a "book module":
+    * allows collaborative book writing
+- removed ban module and integrated it in account.module as "access control":
+    * access control is based on much more powerful regular expressions (regex) now rather than on MySQL pattern matching.
 - various updates:
     * added preview functionality when submitting new content (such as a story) from the administration pages.
     * made the administration section only show those links a user has access to.
-    * improved account module
+    * improved account module:
+        + added "acess control" to allow/deny certain usernames/e-mail addresses/hostnames
     * improved comment module
     * improved story module:
-        + stories can now be permanently deleted
+        + added preview functionality for administrators
+        + made it possible to permanently delete stories
     * improved themes:
         + W3C validation on a best effort basis
-        + added goofy theme
+        + added theme "goofy"
 - revised documentation
 
 drupal 2.00, 15/03/2001
@@ -56,10 +60,10 @@ drupal 2.00, 15/03/2001
     * improved database abstraction layer
     * improved themes:
         + W3C validation on a best effort basis
-        + added example theme
-    * added CREDITS file
-    * added directory "misc"
+        + added theme "example" (alas "Stone Age")
     * added new scripts to directory "scripts"
+    * added directory "misc"
+    * added CREDITS file
 - revised documentation
 
 drupal 1.00, 15/01/2001

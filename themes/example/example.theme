@@ -110,10 +110,6 @@
 
     } // close story function
 
-    function controls() {
-      echo comment_controls();
-    }
-
     function comment($comment, $link = "") {
       echo "<A NAME=\"$comment->cid\"></A>\n";
 

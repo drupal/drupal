@@ -1,7 +1,6 @@
 <?php
 
-$module = array("cron" => "story_cron",
-                "help" => "story_help",
+$module = array("help" => "story_help",
                 "find" => "story_find",
                 "user" => "story_user",
                 "queue" => "story_queue",
@@ -17,14 +16,6 @@ class Story {
     $this->body = $body;
     $this->section = $section;
     $this->timestamp = $timestamp;
-  }
-}
-
-function story_cron() {
-  global $status;
-  $result = db_query("SELECT * FROM node WHERE status = '$status[scheduled]' AND timestamp <= ". time() ."");
-  while ($story = db_fetch_object($result)) {
-    db_query("UPDATE node SET status = '$status[queued]', timestamp = '". time() ."' WHERE nid = '$story->nid' AND type = 'story'");
   }
 }
 
@@ -46,7 +37,6 @@ function story_search() {
 
 function story_help() {
  ?>
-  <P>Scheduled stories: stories that are scheduled to be automatically published at a given date and time.  Useful when you have to leave the site alone for a while or when you want to regulate the flow of new content.</P>
   <P>Queued stories: user-contributed stories are automatically whisked away to a submission queue for moderators (i.e. registered user) to frown at.  Moderators vote whether or not a story should be posted to the front page for discussion.</P>
   <P>Posted stories: published stories accessible to all visitors.</P>
   <P>Dumped stories: rejected stories that are no longer available to visitors.</P>
@@ -107,7 +97,7 @@ function story_view($node, $page = 1) {
 }
 
 function story_form($edit = array()) {
-  global $allowed_html, $REQUEST_URI, $status, $theme, $user;
+  global $allowed_html, $REQUEST_URI, $user;
 
   $output .= "<FORM ACTION=\"$REQUEST_URI\" METHOD=\"post\">\n";
 
@@ -131,13 +121,6 @@ function story_form($edit = array()) {
   $output .= "<SMALL><I>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</I></SMALL><P>\n";
 
   if (user_access($user, "story")) {
-    $output .= "<B>". t("Status") .":</B><BR>\n";
-    $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"$status[scheduled]\"". ($edit[status] == $status[scheduled] ? " CHECKED" : "") ."> scheduled for <INPUT TYPE=\"text\" NAME=\"edit[timestamp]\" SIZE=\"30\" VALUE=\"". date("j F Y G:i", ($edit[timetsamp] ? $edit[timestamp] : time())) ."\"><BR>\n";
-    $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"$status[dumped]\"". ($edit[status] == $status[dumped] ? " CHECKED" : "") ."> dumped<BR>\n";
-    $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"$status[queued]\"". ($edit[status] == $status[queued] ? " CHECKED" : "") ."> queued<BR>\n";
-    $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"$status[posted]\"". ($edit[status] == $status[posted] ? " CHECKED" : "") ."> posted<BR>\n";
-    $output .= "<SMALL><I>The textfield for scheduled stories expects a string containing an English date format of when you want to have your story automatically published.  Example input: '". date("j F Y G:i") ."', '". date("m/d/y H:i") ."', '". date("F j, Y H:i") ."', ...</I></SMALL><P>\n";
-
     $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[timestamp]\" VALUE=\"$edit[timestamp]\">\n";
     $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[nid]\" VALUE=\"$edit[nid]\">\n";
   }
@@ -173,13 +156,7 @@ function story_form($edit = array()) {
 }
 
 function story_save($edit) {
-  global $status;
-  $edit[timestamp] = ($edit[status] == $status[scheduled] && strtotime($edit[timestamp]) > time()) ? strtotime($edit[timestamp]) : ($node[timestamp] ? $node[timestamp] : time());
   node_save(array_diff(array_merge($edit, array(nid => $edit[nid], type => "story")), array(userid => $edit[userid])));
-}
-
-function story_delete($id) {
-  return ($node = node_del("nid", $id) ? "story has been deleted" : "failed to delete story: change status to 'dumped' first");
 }
 
 function story_block() {
@@ -213,41 +190,7 @@ function story_block() {
 }
 
 function story_overview() {
-  global $status;
-
-  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-
-  // Queued stories:
-  $result = db_query("SELECT n.*, u.userid FROM node n LEFT JOIN users u ON n.author = u.id WHERE n.type = 'story' AND n.status = '$status[queued]' ORDER BY timestamp DESC");
-  $output .= " <TR><TH COLSPAN=\"6\">queued stories</TH></TR>\n";
-  while ($node = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD>". format_username($node->userid) ."</TD><TD>votes: $node->votes, score: $node->score</TD><TD><A HREF=\"node.php?id=$node->nid\">view</A></TD><TD><A HREF=\"admin.php?mod=story&op=edit&id=$node->nid\">edit</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=delete&id=$node->nid\">delete</A></TD></TR>\n";
-  }
-
-  // Scheduled stories:
-  $result = db_query("SELECT n.*, u.userid FROM node n LEFT JOIN users u ON n.author = u.id WHERE n.type = 'story' AND n.status = '$status[scheduled]' ORDER BY timestamp DESC");
-  $output .= " <TR><TH COLSPAN=\"6\">scheduled stories</TH></TR>\n";
-  while ($node = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD>". format_username($node->userid) ."</TD><TD>". format_date($node->timestamp, "small") ."<BR><SMALL>(". format_interval($node->timestamp - time()) ." left)</SMALL></TD><TD><A HREF=\"node.php?id=$node->nid\">view</A></TD><TD><A HREF=\"admin.php?mod=story&op=edit&id=$node->nid\">edit</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=delete&id=$node->nid\">delete</A></TD></TR>\n";
-  }
-
-  // Dumped stories:
-  $result = db_query("SELECT n.*, u.userid FROM node n LEFT JOIN users u ON n.author = u.id WHERE n.type = 'story' AND n.status = '$status[dumped]' ORDER BY timestamp DESC LIMIT 5");
-  $output .= " <TR><TH COLSPAN=\"6\">dumped stories</TH></TR>\n";
-  while ($node = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD>". format_username($node->userid) ."</TD><TD>". format_date($node->timestamp, "small") ."</TD><TD><A HREF=\"node.php?id=$node->nid\">view</A></TD><TD><A HREF=\"admin.php?mod=story&op=edit&id=$node->nid\">edit</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=delete&id=$node->nid\">delete</A></TD></TR>\n";
-  }
-
-  // Posted stories:
-  $result = db_query("SELECT n.*, u.userid FROM node n LEFT JOIN users u ON n.author = u.id WHERE n.type = 'story' AND n.status = '$status[posted]' ORDER BY timestamp DESC LIMIT 15");
-  $output .= " <TR><TH COLSPAN=\"6\">posted stories</TH></TR>\n";
-  while ($node = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD>". format_username($node->userid) ."</TD><TD>". format_date($node->timestamp, "small") ."</TD><TD><A HREF=\"node.php?id=$node->nid\">view</A></TD><TD><A HREF=\"admin.php?mod=story&op=edit&id=$node->nid\">edit</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=delete&id=$node->nid\">delete</A></TD></TR>\n";
-  }
-
-  $output .= "</TABLE>\n";
-
-  print $output;
+  return node_overview("type = 'story'");
 }
 
 function story_admin() {
@@ -261,7 +204,7 @@ function story_admin() {
       break;
     case "delete":
       print story_delete($id);
-      story_overview();
+      print story_overview();
       break;
     case "edit":
       print story_form(node_get_array("nid", check_input($id)));
@@ -278,10 +221,10 @@ function story_admin() {
       break;
     case t("Submit"):
       story_save($edit);
-      story_overview();
+      print story_overview();
       break;
     default:
-      story_overview();
+      print story_overview();
   }
 }
 

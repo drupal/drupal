@@ -118,10 +118,6 @@
       <?php
    }
 
-   function controls() {
-     $this->box("Comment controls","<p align=\"center\">".comment_controls()."</p>");
-   }
-
    function comment($comment, $link) {
      print "<A NAME=\"$comment->cid\"></A>\n";
 

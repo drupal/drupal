@@ -36,6 +36,8 @@ function node_save($node) {
   $rows = array(nid, pid, lid, log, type, title, score, votes, author, status, timestamp);
 
   if ($node[nid] > 0) {
+    $n = node_get_object("nid", $node[nid]);
+
     $u1 = array();
     $u2 = array();
 
@@ -49,10 +51,10 @@ function node_save($node) {
     }
 
     if ($u1 = implode(", ", $u1)) db_query("UPDATE node SET $u1 WHERE nid = '$node[nid]'");
-    if ($u2 = implode(", ", $u2)) db_query("UPDATE $node[type] SET $u2 WHERE nid = '$node[nid]'");
-    if (($node[pid]) && ($node[status] == $status[posted])) db_query("UPDATE node SET status = '$status[expired]' WHERE nid = '$node[pid]'");
+    if ($u2 = implode(", ", $u2)) db_query("UPDATE $n->type SET $u2 WHERE nid = '$node[nid]'");
+    if ($n->pid && ($node[status] == $status[posted])) db_query("UPDATE node SET status = '$status[expired]' WHERE nid = '$node[pid]'");
 
-    watchdog("message", "node: modified '$node[title]'");
+    watchdog("message", "node: modified '$n->title'");
   }
   else {
     $duplicate = node_get_object("title", $node[title]);

@@ -24,7 +24,7 @@ function account_create($error = "") {
   global $theme;
 
   if ($error) {
-    $output .= "<P><FONT COLOR=\"red\">". t("Failed to create account: $error.") ."</FONT></P>\n";
+    $output .= "<P><FONT COLOR=\"red\">". t("Failed to create account") .": ". check_output($error) .".</FONT></P>\n";
     watchdog("message", "failed to create account: $error.");
   }
   else {
@@ -47,8 +47,19 @@ function account_create($error = "") {
 function account_session_start($userid, $passwd) {
   global $user;
   if ($userid && $passwd) $user = new User($userid, $passwd);
-  if ($user->id) session_register("user");
-  watchdog("message", ($user->id ? "session opened for user '$user->userid'" : "failed login for user '$userid'"));
+  if ($user->id) {
+    if ($rule = user_ban($user->userid, "username")) {
+      watchdog("message", "failed to login for '$user->userid': banned by $rule->type rule '$rule->mask'");
+    }
+    else if ($rule = user_ban($user->last_host, "hostname")) {
+      watchdog("message", "failed to login for '$user->userid': banned by $rule->type rule '$rule->mask'");
+    }
+    else {
+      session_register("user");
+      watchdog("message", "session opened for '$user->userid'");
+    }
+  }
+  else watchdog("message", "failed to login for '$userid': invalid username - password combination");
 }
 
 function account_session_close() {
@@ -283,20 +294,18 @@ function account_user($uname) {
 }
 
 function account_validate($user) {
-  global $type2index;
-
   // Verify username and e-mail address:
-  if (empty($user[real_email]) || (!eregi("^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3}$", $user[real_email]))) $error = t("the specified e-mail address is not valid");
-  if (empty($user[userid]) || (ereg("[^a-zA-Z0-9_-]", $user[userid]))) $error = t("the specified username is not valid");
-  if (strlen($user[userid]) > 15) $error = t("the specified username is too long: it must be less than 15 characters");
+  if (empty($user[real_email]) || (!eregi("^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3}$", $user[real_email]))) $error = t("the e-mail address '$user[real_email]' is not valid");
+  if (empty($user[userid]) || (ereg("[^a-zA-Z0-9_-]", $user[userid]))) $error = t("the username '$user[userid]' is not valid");
+  if (strlen($user[userid]) > 15) $error = t("the username '$user[userid]' is too long: it must be less than 15 characters");
 
   // Check to see whether the username or e-mail address are banned:
-  if ($ban = ban_match($user[userid], $type2index[usernames])) $error = t("the specified username is banned") .": <I>$ban->reason</I>";
-  if ($ban = ban_match($user[real_email], $type2index[addresses])) $error = t("the specified e-mail address is banned") .": <I>$ban->reason</I>";
+  if ($ban = user_ban($user[userid], "username")) $error = t("the username '$user[userid]' is banned") .": <I>$ban->reason</I>";
+  if ($ban = user_ban($user[real_email], "e-mail address")) $error = t("the e-mail address '$user[real_email]' is banned") .": <I>$ban->reason</I>";
 
   // Verify whether username and e-mail address are unique:
-  if (db_num_rows(db_query("SELECT userid FROM users WHERE LOWER(userid) = LOWER('$user[userid]')")) > 0) $error = t("the specified username is already taken");
-  if (db_num_rows(db_query("SELECT real_email FROM users WHERE LOWER(real_email) = LOWER('$user[real_email]')")) > 0) $error = t("the specified e-mail address is already in use by another account");
+  if (db_num_rows(db_query("SELECT userid FROM users WHERE LOWER(userid) = LOWER('$user[userid]')")) > 0) $error = t("the username '$user[userid]' is already taken");
+  if (db_num_rows(db_query("SELECT real_email FROM users WHERE LOWER(real_email) = LOWER('$user[real_email]')")) > 0) $error = t("the e-mail address '$user[real_email]' is already in use by another account");
 
   return $error;
 }

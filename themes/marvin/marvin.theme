@@ -69,15 +69,6 @@
        print "<BR><BR>\n\n";
    }
 
-   function controls() {
-     print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"0\">\n";
-     print " <TR><TD BGCOLOR=\"#000000\"><IMG SRC=\"themes/marvin/images/pixel.gif\" WIDTH=\"100%\" HEIGHT=\"0\" ALT=\"\"></TD></TR>\n";
-     print " <TR><TD>&nbsp;</TD></TR>\n";
-     print " <TR><TD>". comment_controls() ."</TD></TR>\n";
-     print " <TR><TD BGCOLOR=\"#000000\"><IMG SRC=\"themes/marvin/images/pixel.gif\" WIDTH=\"100%\" HEIGHT=\"0\" ALT=\"\"></TD></TR>\n";
-     print "</TABLE>";
-   }
-
    function comment($comment, $link = "") {
      print "<A NAME=\"$comment->cid\">\n";
 

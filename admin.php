@@ -5,6 +5,10 @@ include_once "includes/common.inc";
 // validate user access:
 if (!user_access($user)) exit();
 
+function status($message) {
+  if ($message) return "<B>Status:</B> $message<HR>\n";
+}
+
 function admin_page($mod) {
   global $repository, $site_name, $menu, $modules, $user;
 
