@@ -344,7 +344,7 @@ function account_password($min_length=6) {
 function account_track_comments() {
   global $theme, $user;
 
-  $sresult = db_query("SELECT n.nid, n.title, COUNT(n.nid) AS count FROM comments c LEFT JOIN node n ON c.lid = n.nid WHERE c.author = '$user->id' GROUP BY n.nid DESC LIMIT 5");
+  $sresult = db_query("SELECT n.nid, n.title, COUNT(n.nid) AS count FROM comments c LEFT JOIN node n ON c.lid = n.nid WHERE c.author = '$user->id' GROUP BY n.nid DESC ORDER BY n.nid DESC LIMIT 5");
 
   while ($node = db_fetch_object($sresult)) {
     $output .= "<LI>". format_plural($node->count, "comment", "comments") ." ". t("attached to node") ." `<A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A>`:</LI>\n";
@@ -365,7 +365,7 @@ function account_track_comments() {
 function account_track_nodes() {
   global $theme, $user;
 
-  $result = db_query("SELECT n.nid, n.type, n.title, n.timestamp, COUNT(c.cid) AS count FROM node n LEFT JOIN comments c ON c.lid = n.nid WHERE n.status = '". node_status("posted") ."' AND n.author = '$user->id' GROUP BY n.nid DESC LIMIT 25");
+  $result = db_query("SELECT n.nid, n.type, n.title, n.timestamp, COUNT(c.cid) AS count FROM node n LEFT JOIN comments c ON c.lid = n.nid WHERE n.status = '". node_status("posted") ."' AND n.author = '$user->id' GROUP BY n.nid DESC ORDER BY n.nid DESC LIMIT 25");
 
   while ($node = db_fetch_object($result)) {
     $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
