@@ -184,7 +184,7 @@ function queue_block() {
     if ($user->uid) {
       $node = node_load(array("nid" => $id));
     }
-    if (($user->uid == $node->uid && substr_count($node->users, "$user->uid=")) && $node->moderate == 1) {
+    if (($user->uid == $node->uid || substr_count($node->users, "$user->uid=")) && $node->moderate == 1) {
       foreach (explode(",", $node->users) as $vote) {
         if ($vote) {
           $data = explode("=", $vote);
