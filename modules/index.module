@@ -77,7 +77,7 @@ function index_test_1() {
     $form .= index_collection_form($entry->collection);
   }
   $form .= "Select around and click the button below:<BR>";
-  $form .= form_submit("Click to test");
+  $form .= form_submit("Click to test 1");
 
   return form($REQUEST_URI, $form);
 }
@@ -101,11 +101,20 @@ function index_test_2($edit) {
   return $output;
 }
 
+function index_test_3() {
+  global $REQUEST_URI;
+
+  $form .= "Fill out some meta-tags and search for those articles that matches best:<BR>";
+  $form .= form_submit("Click to test 2");
+
+  return form($REQUEST_URI, $form);
+}
+
 function index_entry() {
   $result = db_query("SELECT * FROM entry ORDER BY name");
 
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
-  $output .= " <TR><TH>name</TH><TH>collection</TH><TH>keywords string</TH><TH>oparations</TH></TR>\n";
+  $output .= " <TR><TH>name</TH><TH>collection</TH><TH>meta attributes</TH><TH>oparations</TH></TR>\n";
   while ($entry = db_fetch_object($result)) {
     $output .= "<TR><TD>". check_output($entry->name) ."</TD><TD>". check_output($entry->collection) ."</TD><TD>". check_output($entry->keyword) ."</TD><TD><A HREF=\"admin.php?mod=index&op=edit&id=$entry->eid\">edit entry</A></TD></TR>\n";
   }
@@ -117,7 +126,7 @@ function index_entry() {
 function index_admin() {
   global $edit, $op, $id;
 
-  print "<SMALL><A HREF=\"admin.php?mod=index&op=add\">add new entry</A> | <A HREF=\"admin.php?mod=index&op=entry\">entries</A> | <A HREF=\"admin.php?mod=index&op=collection\">collections</A> | <A HREF=\"admin.php?mod=index&op=help\">help</A> - <A HREF=\"admin.php?mod=index&op=test\">test</A></SMALL><HR>\n";
+  print "<SMALL><A HREF=\"admin.php?mod=index&op=add\">add new entry</A> | <A HREF=\"admin.php?mod=index&op=entry\">entries</A> | <A HREF=\"admin.php?mod=index&op=collection\">collections</A> | <A HREF=\"admin.php?mod=index&op=help\">help</A> - <A HREF=\"admin.php?mod=index&op=test1\">test1</A></SMALL><HR>\n";
 
   switch ($op) {
     case "add":
@@ -129,11 +138,17 @@ function index_admin() {
     case "help":
       print index_help();
       break;
-    case "test":
+    case "test1":
       print index_test_1();
       break;
-    case "Click to test":
+    case "Click to test 1":
       print index_test_2($edit);
+      break;
+    case "test2":
+      print index_test_3();
+      break;
+    case "Click to test 2":
+      print index_test_4($edit);
       break;
     case "collection":
       print index_collection();

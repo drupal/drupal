@@ -39,55 +39,84 @@ function node_filter($text) {
   return $text;
 }
 
+function node_cron() {
+  db_query("UPDATE node SET status = '". node_status("posted") ."', timestamp_posted = '' WHERE timestamp_posted > 0 AND timestamp_posted < ". time());
+  db_query("UPDATE node SET status = '". node_status("queued") ."', timestamp_posted = '' WHERE timestamp_queued > 0 AND timestamp_queued < ". time());
+  db_query("UPDATE node SET status = '". node_status("dumped") ."', timestamp_posted = '' WHERE timestamp_hidden > 0 AND timestamp_hidden < ". time());
+}
+
 function node_overview($query = array()) {
   global $user;
+
+  $colors = array("#ffdc9b", "#dedec4");
 
   $result = db_query("SELECT n.*, u.userid, c.name AS category FROM node n LEFT JOIN users u ON n.author = u.id LEFT JOIN category c ON n.cid = c.cid $query[1] LIMIT 50");
 
   $output .= status($query[0]);
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR><TH>title</TH><TH>category</TH><TH>status</TH><TH>author</TH><TH>date</TH><TH COLSPAN=\"2\">operations</TH></TR>\n";
+  $output .= " <TR><TH>title</TH><TH>type</TH><TH>status</TH><TH>meta attributes</TH><TH>author</TH><TH>date</TH></TR>\n";
+
   while ($node = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">". check_output($node->category ? $node->category : $node->type) ."</TD><TD>". node_status($node->status) ."</TD><TD>". format_username($node->userid) ."</TD><TD>". format_date($node->timestamp, "small") ."</TD><TD>". (user_access($user, "node") ? "<A HREF=\"admin.php?mod=node&op=edit&id=$node->nid\">edit node</A>" : "edit node") ."</TD><TD>". (user_access($user, $node->type) ? "<A HREF=\"admin.php?mod=$node->type&op=edit&id=$node->nid\">edit $node->type</A>" : "edit $node->type") ."</TD></TR>\n";
+    unset ($link);
+
+    $link[] = user_access($user, $node->type) ? "<A HREF=\"admin.php?mod=node&type=$node->type&op=edit&id=$node->nid\">edit content</A>" : "edit content";
+    $link[] = user_access($user, "node") ? "<A HREF=\"admin.php?mod=node&op=option&id=$node->nid\">edit options</A>" : "edit options";
+    $link[] = user_access($user, "node") ? "<A HREF=\"admin.php?mod=node&op=status&id=$node->nid\">edit status</A>" : "edit status";
+    $link[] = user_access($user, "node") ? "<A HREF=\"admin.php?mod=node&op=attribute&id=$node->nid\">edit attributes</A>" : "edit attributes";
+    $link[] = user_access($user, "node") ? "<A HREF=\"admin.php?mod=node&op=delete&id=$node->nid\">delete node</A>" : "delete node";
+
+    $color = $colors[$i++ % sizeof($colors)];
+
+    $output .= " <TR BGCOLOR=\"$color\"><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">$node->type</TD><TD>". node_status($node->status) ."</TD><TD>". check_output($node->attribute) ."</TD><TD>". format_username($node->userid) ."</TD><TD>". format_date($node->timestamp, "small") ."</TD></TR>\n";
+    $output .= " <TR BGCOLOR=\"$color\"><TD ALIGN=\"right\" COLSPAN=\"6\"><SMALL>". implode(", ", $link) ."</SMALL></TD>\n";
   }
   $output .= "</TABLE>\n";
 
   return $output;
 }
 
-function node_admin_view($id) {
-  $node = node_get_object(array("nid" => $id));
-
-  $form .= form_item("Title", check_output($node->title));
-  $form .= form_item("Author", format_username($node->userid));
-  $form .= form_item("Status", node_status($node->status));
-  $form .= form_item("Comment", node_comment_status($node->comment));
-  $form .= form_item("Promote", node_promote_status($node->promote));
-  $form .= form_item("Moderate", check_output($node->moderate));
-  $form .= form_item("Date", format_date($node->timestamp));
-  $form .= form_submit("Edit node");
-  $form .= form_submit("Delete node");
-
-  return form("admin.php?mod=node&id=$node->nid", $form);
-}
-
-function node_admin_edit($id) {
+function node_edit_option($id) {
   global $user;
 
   $node = node_get_object(array("nid" => $id));
 
-  $form .= form_item("Title", check_output($node->title));
-  $form .= form_select("Author", "author", $node->author, array($node->author => $node->userid, $user->id => $user->userid));
-  $form .= form_select("Status", "status", $node->status, node_status($node->type));
-  $form .= form_select("Comment", "comment", $node->comment, node_comment_status());
-  $form .= form_select("Promote", "promote", $node->promote, node_promote_status());
-  $form .= form_textfield("Moderate", "moderate", $node->moderate, 35, 255, t("Provide a comma-seperated list of the moderators their usernames."));
-  $form .= form_select("Date", "timestamp", $node->timestamp, array($node->timestamp => format_date($node->timestamp) ." (original)", time() => format_date(time()) ." (current)"));
+  $form .= form_item("Document title", check_output($node->title));
+  $form .= form_select("Comment", "comment", $node->comment, node_comment_status(), "Allow users to post comments to this document.");
+  $form .= form_select("Promote", "promote", $node->promote, node_promote_status(), "Promote this document on the main page.");
+  $form .= form_textfield("Moderate", "moderate", $node->moderate, 35, 255, t("A comma-seperated list of the moderators their usernames."));
   $form .= form_hidden("nid", $node->nid);
   $form .= form_submit("Save node");
-  $form .= form_submit("View node");
 
   return form("admin.php?mod=node&id=$node->nid", $form);
+}
+
+function node_edit_attribute($id) {
+  global $user;
+
+  $node = node_get_object(array("nid" => $id));
+
+  $form .= form_item("Document title", check_output($node->title));
+  $form .= form_textfield("Attributes", "attribute", $edit[attribute], 50, 128, htmlentities("A list meta attributes.  Format: <type>:<value>;<type>:<value>;.  Example: 'software:apache;type:webserver;os:linux;'."));
+  $form .= form_hidden("nid", $node->nid);
+  $form .= form_submit("Save node");
+
+  return form("admin.php?mod=node&id=$node->nid", $form);
+}
+
+function node_edit_status($id) {
+  global $REQUEST_URI;
+
+  $node = node_get_object(array("nid" => $id));
+
+  $form .= form_item("Document title", check_output($node->title));
+  $form .= form_select("Current status", "status", $node->status, node_status($node->type));
+  $form .= form_textfield("Automatically post document", "timestamp_posted", ($node->timestamp_posted ? format_date($node->timestamp_posted) : ""), 30, 55, "The date at which your document will be automatically posted.  Leave empty if you don't want to schedule this document, or fill out a string containing an English date format.  Example input: '". date("j F Y G:i") ."', '". date("m/d/y H:i") ."', '". date("F j, Y H:i") ."', ...");
+  $form .= form_textfield("Automatically queue document", "timestamp_queued", ($node->timestamp_queued ? format_date($node->timestamp_queued) : ""), 30, 55, "The date at which your document will be automatically queued.  Leave empty if you don't want to schedule this document, or fill out a string containing an English date format.  Example input: '". date("j F Y G:i") ."', '". date("m/d/y H:i") ."', '". date("F j, Y H:i") ."', ...");
+  $form .= form_textfield("Automatically hide document", "timestamp_hidden", ($node->timestamp_hidden ? format_date($node->timestamp_hidden) : ""), 30, 55, "The date at which your document will be automatically hidden.  Leave empty if you don't want to schedule this document, or fill out a string containing an English date format.  Example input: '". date("j F Y G:i") ."', '". date("m/d/y H:i") ."', '". date("F j, Y H:i") ."', ...");
+  $form .= form_hidden("nid", $node->nid);
+  $form .= form_submit("Save node");
+
+  return form($REQUEST_URI, $form);
 }
 
 function node_delete($id) {
@@ -95,8 +124,26 @@ function node_delete($id) {
 }
 
 function node_query($type = "") {
-  global $status;
-  $queries =  array(array("recent nodes", "ORDER BY n.timestamp DESC"), array("posted nodes", "WHERE n.status = '$status[posted]' ORDER BY n.timestamp DESC"), array("queued nodes", "WHERE n.status = '$status[queued]' ORDER BY n.timestamp DESC"), array("dumped nodes", "WHERE n.status = '$status[dumped]' ORDER BY n.timestamp DESC"));
+  $queries[] = array("all nodes: recent additions", "ORDER BY n.timestamp DESC");
+  $queries[] = array("all nodes: status set to 'posted'", "WHERE n.status = '". node_status("posted") ."' ORDER BY n.timestamp DESC");
+  $queries[] = array("all nodes: status set to 'queued'", "WHERE n.status = '". node_status("queued") ."' ORDER BY n.timestamp DESC");
+  $queries[] = array("all nodes: status set to 'dumped'", "WHERE n.status = '". node_status("dumped") ."' ORDER BY n.timestamp DESC");
+  $queries[] = array("all nodes: scheduled to be posted", "WHERE n.timestamp_posted > 0 ORDER BY n.timestamp DESC");
+  $queries[] = array("all nodes: scheduled to be queued", "WHERE n.timestamp_queued > 0 ORDER BY n.timestamp DESC");
+  $queries[] = array("all nodes: scheduled to be hidden", "WHERE n.timestamp_hidden > 0 ORDER BY n.timestamp DESC");
+
+  foreach (module_list() as $name) {
+    if (module_hook($name, "user")) {
+      $queries[] = array("$name: recent additions", "WHERE n.type = '$name' ORDER BY n.timestamp DESC");
+      $queries[] = array("$name: status set to 'posted'", "WHERE n.type = '$name' AND n.status = '". node_status("posted") ."' ORDER BY n.timestamp DESC");
+      $queries[] = array("$name: status set to 'queued'", "WHERE n.type = '$name' AND n.status = '". node_status("queued") ."' ORDER BY n.timestamp DESC");
+      $queries[] = array("$name: status set to 'dumped'", "WHERE n.type = '$name' AND n.status = '". node_status("dumped") ."' ORDER BY n.timestamp DESC");
+      $queries[] = array("$name: scheduled to be posted", "WHERE n.type = '$name' AND n.timestamp_posted > 0 ORDER BY n.timestamp DESC");
+      $queries[] = array("$name: scheduled to be queued", "WHERE n.type = '$name' AND n.timestamp_queued > 0 ORDER BY n.timestamp DESC");
+      $queries[] = array("$name: scheduled to be hidden", "WHERE n.type = '$name' AND n.timestamp_hidden > 0 ORDER BY n.timestamp DESC");
+    }
+  }
+
   return ($queries[$type] ? $queries[$type] : $queries);
 }
 
@@ -118,13 +165,13 @@ function node_setting() {
   foreach (module_list() as $name) {
     if (module_hook($name, "user")) {
       $form .= "<H3>Default settings for $name nodes</H3>";
-      $form .= form_select(t("Comment"), $name ."_comment", variable_get($name ."_comment", 0), node_comment_status(), t("By default, allow or dissallow users to post comments in this category."));
-      $form .= form_select(t("Promote"), $name ."_promote", variable_get($name ."_promote", 0), node_promote_status(), t("By default, promote new submissions in this category to the front page."));
-      $form .= form_select(t("Status"), $name ."_status", variable_get($name ."_status", node_status("queued")), node_status($name), t("What to do with new submissions in this category?"));
-      $form .= form_select(t("Post threshold"), $name ."_post", variable_get($name ."_post", 4), $threshold_post, t("If new submissions are subject to moderation, select a post threshold."));
-      $form .= form_select(t("Dump threshold"), $name ."_dump", variable_get($name ."_dump", -2), $threshold_dump, t("If new submissions are subject to moderation, select a dump threshold."));
-      $form .= form_select(t("Expiration threshold"), $name ."_expire", variable_get($name ."_expire", 8), $threshold_expire, t("If new submissions are subject to moderation, select a expiration threshold."));
-      $form .= form_textfield("Moderate", $name ."_moderate", variable_get($name ."_moderate", ""), 35, 255, t("Provide a comma-seperated list of the moderators' usernames."));
+      $form .= form_select(t("Comment"), $name ."_comment", variable_get($name ."_comment", 0), node_comment_status(), "By default, allow or dissallow users to post comments in this category.");
+      $form .= form_select(t("Promote"), $name ."_promote", variable_get($name ."_promote", 0), node_promote_status(), "By default, promote new submissions in this category to the front page.");
+      $form .= form_select(t("Status"), $name ."_status", variable_get($name ."_status", node_status("queued")), node_status($name), "What to do with new submissions in this category?");
+      $form .= form_select(t("Post threshold"), $name ."_post", variable_get($name ."_post", 4), $threshold_post, "If new submissions are subject to moderation, select a post threshold.");
+      $form .= form_select(t("Dump threshold"), $name ."_dump", variable_get($name ."_dump", -2), $threshold_dump, "If new submissions are subject to moderation, select a dump threshold.");
+      $form .= form_select(t("Expiration threshold"), $name ."_expire", variable_get($name ."_expire", 8), $threshold_expire, "If new submissions are subject to moderation, select a expiration threshold.");
+      $form .= form_textfield("Moderate", $name ."_moderate", variable_get($name ."_moderate", ""), 35, 255, "A comma-seperated list of the moderators' usernames.");
     }
   }
 
@@ -134,23 +181,83 @@ function node_setting() {
   return form($REQUEST_URI, $form);
 }
 
-function node_admin() {
-  global $op, $id, $edit, $type;
+function node_admin_save($edit) {
+  if (isset($edit[status])) {
+    $edit[timestamp_posted] = (strtotime($edit[timestamp_posted]) > time()) ? strtotime($edit[timestamp_posted]) : 0;
+    $edit[timestamp_queued] = (strtotime($edit[timestamp_queued]) > time()) ? strtotime($edit[timestamp_queued]) : 0;
+    $edit[timestamp_hidden] = (strtotime($edit[timestamp_hidden]) > time()) ? strtotime($edit[timestamp_hidden]) : 0;
+    node_save($edit, array(status, timestamp_posted, timestamp_queued, timestamp_hidden));
+  }
+  else if (isset($edit[attribute])) {
+    node_save($edit, array(attribute));
+  }
+  else {
+    node_save($edit, array(comment, moderate, promote));
+  }
+}
 
-  print "<SMALL><A HREF=\"admin.php?mod=node&op=default\">node settings</A> | <A HREF=\"admin.php?mod=node&op=listing\">node listings</A> | <A HREF=\"admin.php?mod=node\">overview</A></SMALL><HR>\n";
+function node_search() {
+  global $REQUEST_URI;
+
+  foreach (module_list() as $name) {
+    if (module_hook($name, "user")) {
+      $options .= "<OPTION VALUE=\"$name\">$name</OPTION>\n";
+    }
+  }
+
+  $output .= "<FORM ACTION=\"$REQUEST_URI\" METHOD=\"POST\">\n";
+  $output .= " <INPUT SIZE=\"50\" VALUE=\"". check_form($keys) ."\" NAME=\"keys\" TYPE=\"text\">\n";
+  $output .= " <SELECT NAME=\"module\">$options</SELECT>\n";
+  $output .= " <INPUT TYPE=\"submit\" VALUE=\"Search\">\n";
+  $output .= "</FORM>\n";
+
+  return $output;
+}
+
+function node_module_edit($edit, $type) {
+  $edit[type] = $type;
+  return node_invoke($edit, "form");
+}
+
+function node_module_save($edit, $type) {
+  $edit[type] = $type;
+  return node_invoke($edit, "save");
+}
+
+function node_admin() {
+  global $op, $id, $edit, $query, $type, $keys;
+
+  foreach (module_list() as $name) {
+    if (module_hook($name, "status") && $name != "node") {
+      $link[] = "<A HREF=\"admin.php?mod=node&type=$name&op=add\">add $name</A>";
+    }
+  }
+
+  print "<SMALL>". implode(" | ", $link) ." | <A HREF=\"admin.php?mod=node&op=default\">node settings</A> | <A HREF=\"admin.php?mod=node&op=listing\">node listings</A> | <A HREF=\"admin.php?mod=node&op=search\">search node</A> | <A HREF=\"admin.php?mod=node\">overview</A></SMALL><HR>\n";
 
   $id = check_input($edit[nid] ? $edit[nid] : $id);
-  $type = ($type ? $type : 0);
 
   switch ($op) {
-    case "Edit node":
-    case "edit":
-      print node_admin_edit($id);
+    case "add":
+      print module_invoke($type, "form");
+      break;
+    case "search":
+      print node_search($id);
+      print search_data($keys, $type);
+      break;
+    case "status":
+      print node_edit_status($id);
+      break;
+    case "option":
+      print node_edit_option($id);
+      break;
+    case "attribute":
+      print node_edit_attribute($id);
       break;
     case "default":
       print node_setting();
       break;
-    case "Delete node":
+    case "delete":
       print status(node_delete($id));
       print node_overview();
       break;
@@ -166,15 +273,20 @@ function node_admin() {
       print node_setting();
       break;
     case "Save node":
-      node_save($edit, array(author, comment, moderate, promote, status, timestamp));
-      print node_admin_view($id);
+      print node_admin_save($edit);
+      print node_overview();
       break;
-    case "View node":
-    case "view":
-      print node_admin_view($id);
+    case "edit":
+      print node_module_edit(node_get_array(array("nid" => $id)), $type);
       break;
+    case "Preview":
+      print node_module_edit($edit, $type);
+      break;
+    case "Submit":
+      print status(node_module_save($edit, $type));
+      // fall through:
     default:
-      print node_overview(node_query($type));
+      print node_overview(node_query($query ? $query : 0));
   }
 }
 
