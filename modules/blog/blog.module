@@ -249,6 +249,7 @@ function blog_form(&$node, &$help, &$error) {
     }
 
     if ($iid && $item = db_fetch_object(db_query("SELECT i.*, f.title as ftitle, f.link as flink FROM item i, feed f WHERE i.iid = '%s' AND i.fid = f.fid", $iid))) {
+      $node->title = $item->title;
       $node->body = "<a href=\"$item->link\">$item->title</a> - <i>". check_output($item->description) ."</i> [<a href=\"$item->flink\">$item->ftitle</a>]\n";
     }
   }

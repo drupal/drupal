@@ -531,6 +531,9 @@ function import_page_info() {
   $links[] = lm(t("news by source"), array("mod" => "import", "op" => "feeds"), "", array("title" => t("View the latest headlines sorted by source.")));
   $links[] = lm(t("news by topic"), array("mod" => "import", "op" => "bundles"), "", array("title" => t("View the latest headlines sorted by topic.")));
   $links[] = lm(t("news sources"), array("mod" => "import", "op" => "sources"), "", array("title" => t("View a list of all the websites we syndicate from.")));
+  if (user_access("administer news feeds")) {
+    $links[] = la(t("administer news feeds"), array("mod" => "import"), "", array("title" => t("View the news feed administrative pages.")));
+  }
 
   return "<div align=\"center\">". $theme->links($links) ."</div>";
 }
@@ -542,7 +545,9 @@ function import_page_last() {
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"2\">";
   while ($item = db_fetch_object($result)) {
-    $links[] = lm(t("blog it"), array("mod" => "node", "op" => "add", "type" => "blog", "iid" => $item->iid), "", array("title" => t("Comment on this news item in your personal blog.")));
+    if (module_exist("blog")) {
+      $links[] = lm(t("blog it"), array("mod" => "node", "op" => "add", "type" => "blog", "iid" => $item->iid), "", array("title" => t("Comment on this news item in your personal blog.")));
+    }
     $links[] = lm(t("feed"), array("mod" => "import", "op" => "feed", "id" => $item->fid), "", array("title" => t("Read more syndicated news from this feed.")));
 
     if ($item->link) {
