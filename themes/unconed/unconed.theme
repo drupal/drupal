@@ -87,7 +87,7 @@
           else { print "<SMALL>Posted by $anonymous on $timestamp"; }
           if ($story->department) { print " - from the $story->department dept."; }
           print "</SMALL>";
-          if ($story->category) { print "</TD><TD BGCOLOR=\"$this->bgcolor2\" ALIGN=\"center\"><B><A HREF=\"search.php?category=$story->category\"><FONT COLOR=\"$this->categorycolor\">$story->category</FONT></A></B>"; }
+          if ($story->category) { print "</TD><TD BGCOLOR=\"$this->bgcolor2\" ALIGN=\"center\"><B><A HREF=\"search.php?category=" . urlencode($story->category) . "\"><FONT COLOR=\"$this->categorycolor\">$story->category</FONT></A></B>"; }
          ?>
         </TD>
        </TR>
@@ -122,7 +122,7 @@
           else { print "<SMALL>Posted by $anonymous on $timestamp"; }
           if ($story->department) { print " - from the $story->department dept."; }
           print "</SMALL>";
-          if ($story->category) { print "</TD><TD BGCOLOR=\"$this->bgcolor3\" ALIGN=\"center\"><B><A HREF=\"search.php?category=$story->category\"><FONT COLOR=\"$this->categorycolor\">$story->category</FONT></A></B>"; }
+          if ($story->category) { print "</TD><TD BGCOLOR=\"$this->bgcolor3\" ALIGN=\"center\"><B><A HREF=\"search.php?category=" . urlencode($story->category) . "\"><FONT COLOR=\"$this->categorycolor\">$story->category</FONT></A></B>"; }
          ?>
         </TD>
        </TR>
