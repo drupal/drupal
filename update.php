@@ -53,7 +53,8 @@ $mysql_updates = array(
   "2002-04-14 : modules/themes web config" => "update_25",
   "2002-04-14 : new taxonomy system" => "update_26",
   "2002-04-16" => "update_27",
-  "2002-04-20" => "update_28"
+  "2002-04-20" => "update_28",
+  "2002-04-23 : roles cleanup" => "update_29"
 );
 
 // Update functions
@@ -411,6 +412,26 @@ function update_27() {
 
 function update_28() {
   update_sql("ALTER TABLE poll DROP lid;");
+}
+
+function update_29() {
+  update_sql("CREATE TABLE permission (
+    rid INT UNSIGNED NOT NULL,
+    perm TEXT,
+    tid INT UNSIGNED NOT NULL,
+    KEY (rid)
+  )");
+
+  update_sql("INSERT INTO permission (rid, perm) SELECT rid, perm FROM role");
+  update_sql("ALTER TABLE users ADD rid INT UNSIGNED NOT NULL");
+
+  $result = db_query("SELECT rid, name FROM role");
+  while ($role = db_fetch_object($result)) {
+    db_query("UPDATE users SET rid = ".$role->rid." WHERE role = '".$role->name."'");
+  }
+
+  update_sql("ALTER TABLE users DROP role");
+  update_sql("ALTER TABLE role DROP perm");
 }
 
 /*

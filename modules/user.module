@@ -69,7 +69,7 @@ function user_load($array = array()) {
       $query .= "u.$key = '". addslashes($value) ."' AND ";
     }
   }
-  $result = db_query("SELECT u.*, r.perm FROM users u LEFT JOIN role r ON u.role = r.name WHERE $query u.status < 3 LIMIT 1");
+  $result = db_query("SELECT u.*, r.name AS role FROM users u LEFT JOIN role r ON u.rid = r.rid WHERE $query u.status < 3 LIMIT 1");
 
   $user = db_fetch_object($result);
   if ($data = unserialize($user->data)) {
@@ -220,10 +220,10 @@ function user_access($string) {
 
   if (!$perm) {
     if ($user->uid) {
-      $perm = db_result(db_query("SELECT perm FROM role WHERE name = '$user->role'"), 0);
+      $perm = db_result(db_query("SELECT perm FROM role r, permission p WHERE r.rid = p.rid AND name = '$user->role'"), 0);
     }
     else {
-      $perm = db_result(db_query("SELECT perm FROM role WHERE name = 'anonymous user'"), 0);
+      $perm = db_result(db_query("SELECT perm FROM role r, permission p WHERE r.rid = p.rid AND name = 'anonymous user'"), 0);
     }
   }
 
@@ -716,7 +716,7 @@ function user_login($edit = array()) {
           if (module_invoke($module, "auth", $name, $pass, $server)) {
             if (variable_get("user_register", 1) == 1 && !user_load(array("name" => "$name@$server"))) { //register this new user
               watchdog("user", "new user: $name@$server ($module ID)");
-              $user = user_save("", array("name" => "$name@$server", "pass" => user_password(), "init" => "$name@$server", "role" => "authenticated user", "status" => 1, "authname_$module" => "$name@$server"));
+              $user = user_save("", array("name" => "$name@$server", "pass" => user_password(), "init" => "$name@$server", "rid" => _user_authenticated_id(), "status" => 1, "authname_$module" => "$name@$server"));
               break;
             }
           }
@@ -786,6 +786,10 @@ function user_login($edit = array()) {
   $output .= "&#187; " .lm(t("Create new account"), array("mod" => "user", "op" => "register")). "</p>";
 
   return form($output);
+}
+
+function _user_authenticated_id() {
+  return db_result(db_query("SELECT rid FROM role WHERE name = 'authenticated user'"));
 }
 
 function user_logout() {
@@ -929,10 +933,10 @@ function user_register($edit = array()) {
 
     // create new user account, noting whether administrator approval is required
     if (variable_get("user_register", 1) == 1) {
-      $user = user_save("", array_merge(array("name" => $edit["name"], "pass" => $pass, "init" => $edit["mail"], "mail" => $edit["mail"], "role" => "authenticated user", "status" => 1), $data));
+      $user = user_save("", array_merge(array("name" => $edit["name"], "pass" => $pass, "init" => $edit["mail"], "mail" => $edit["mail"], "rid" => _user_authenticated_id(), "status" => 1), $data));
     }
     else {
-      $user = user_save("", array_merge(array("name" => $edit["name"], "pass" => $pass, "init" => $edit["mail"], "mail" => $edit["mail"], "role" => "authenticated user", "status" => 0), $data));
+      $user = user_save("", array_merge(array("name" => $edit["name"], "pass" => $pass, "init" => $edit["mail"], "mail" => $edit["mail"], "rid" => _user_authenticated_id(), "status" => 0), $data));
     }
 
     $variables = array("%username" => $edit["name"], "%site" => variable_get("site_name", "drupal"), "%password" => $pass, "%uri" => path_uri(), "%uri_brief" => $HTTP_HOST, "%mailto" => $edit["mail"]);
@@ -1265,7 +1269,7 @@ function user_admin_create($edit = array()) {
 
     watchdog("user", "new user: '". $edit["name"] ."' &lt;". $edit["mail"] ."&gt;");
 
-    user_save("", array("name" => $edit["name"], "pass" => $edit["pass"], "init" => $edit["mail"], "mail" => $edit["mail"], "role" => "authenticated user", "status" => 1));
+    user_save("", array("name" => $edit["name"], "pass" => $edit["pass"], "init" => $edit["mail"], "mail" => $edit["mail"], "rid" => _user_authenticated_id(), "status" => 1));
 
     return "Created a new user '". $edit["name"] ."'.  No e-mail has been sent.";
   }
@@ -1348,13 +1352,14 @@ function user_roles($membersonly = 0) {
   $result = db_query("SELECT * FROM role ORDER BY name");
   while ($role = db_fetch_object($result)) {
     if (!$membersonly || ($membersonly && $role->name != "anonymous user")) {
-      $roles[$role->name] = $role->name;
+      $roles[$role->rid] = $role->name;
     }
   }
   return $roles;
 }
 
 function user_admin_perm($edit = array()) {
+  global $tid;
 
   if ($edit) {
 
@@ -1362,10 +1367,18 @@ function user_admin_perm($edit = array()) {
     ** Save permissions:
     */
 
+    $tid = check_input($edit["tid"]);
+
     $result = db_query("SELECT * FROM role");
     while ($role = db_fetch_object($result)) {
-      $perm = $edit[$role->name] ? implode(", ", array_keys($edit[$role->name])) : "";
-      db_query("UPDATE role SET perm = '%s' WHERE name = '$role->name'", $perm);
+      // delete, so if we clear every checkbox we reset that role;
+      // otherwise permissions are active and denied everywhere
+      db_query("DELETE FROM permission WHERE rid = '%s' AND tid = '$tid'", $role->rid);
+      $perm = $edit[$role->rid] ? implode(", ", array_keys($edit[$role->rid])) : "";
+      if ($perm) {
+        db_query("INSERT INTO permission (rid, perm, tid) VALUES ('%s', '$perm', '$tid')", $role->rid);
+      }
+
     }
   }
 
@@ -1384,10 +1397,16 @@ function user_admin_perm($edit = array()) {
   ** Compile role array:
   */
 
-  $result = db_query("SELECT * FROM role ORDER BY name");
-  $roles = array ();
+  $result = db_query("SELECT r.rid, p.perm FROM role r LEFT JOIN permission p ON r.rid = p.rid WHERE tid = '%s' ORDER BY name", $tid);
+  $roles = array();
   while ($role = db_fetch_object($result)) {
-    $roles[$role->name] = $role->perm;
+    $role_perms[$role->rid] = $role->perm;
+  }
+
+  $result = db_query("SELECT rid, name FROM role ORDER BY name");
+  $role_names = array ();
+  while ($role = db_fetch_object($result)) {
+    $role_names[$role->rid] = $role->name;
   }
 
   /*
@@ -1395,16 +1414,17 @@ function user_admin_perm($edit = array()) {
   */
 
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
-  $output .= " <tr><th>&nbsp;</th><th>". implode("</th><th>", array_keys($roles)) ."</th></tr>";
+  $output .= " <tr><th>&nbsp;</th><th>". implode("</th><th>", array_values($role_names)) ."</th></tr>";
   foreach ($perms as $perm) {
     $output .= " <tr>";
     $output .= "  <td>". check_output($perm) ."</td>";
-    foreach ($roles as $name => $value) {
-      $output .= "  <td align=\"center\"><input type=\"checkbox\" name=\"edit[$name][$perm]\"". (strstr($value, $perm) ? " checked=\"checked\"" : "") ." /></td>";
+    foreach ($role_names as $rid => $name) {
+      $output .= "  <td align=\"center\"><input type=\"checkbox\" name=\"edit[$rid][$perm]\"". (strstr($role_perms[$rid], $perm) ? " checked=\"checked\"" : "") ." /></td>";
     }
     $output .= " </tr>";
   }
   $output .= "</table>";
+  $output .= form_hidden("tid", $tid);
   $output .= form_submit("Save permissions");
 
   return form($output);
@@ -1419,6 +1439,7 @@ function user_admin_role($edit = array()) {
   }
   else if ($op == "Delete role") {
     db_query("DELETE FROM role WHERE rid = '%s'", $id);
+    db_query("DELETE FROM permission WHERE rid = '%s'", $id);
   }
   else if ($op == "Add role") {
     db_query("INSERT INTO role (name) VALUES ('%s')", $edit["name"]);
@@ -1534,7 +1555,7 @@ function user_admin_edit($edit = array()) {
   $output .= form_textarea(t("Signature"), "signature", $account->signature, 70, 3, t("Your signature will be publicly displayed at the end of your comments.") ."<br />". t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
 
   $output .= form_select("Status", "status", $account->status, array("blocked", "active"));
-  $output .= form_select("Role", "role", $account->role, user_roles(1));
+  $output .= form_select("Role", "rid", $account->rid, user_roles(1));
 
   $output .= form_submit("Save account");
   $output .= form_submit("Delete account");
