@@ -17,18 +17,18 @@ function block_page() {
   global $theme;
 
   $result = db_query("SELECT * FROM blocks WHERE status = 1 ORDER BY module");
-  
+
   $theme->header();
   print "<TABLE BORDER=\"0\">\n";
   while ($block = db_fetch_object($result)) {
     if ($state % 3 == 0) print " <TR>\n";
-    print "  <TD ALIGN=\"center\" VALIGN=\"top\" WIDTH=\"33%\">\n"; 
+    print "  <TD ALIGN=\"center\" VALIGN=\"top\" WIDTH=\"33%\">\n";
     $blocks = module_execute($block->module, "block");
     $theme->box($blocks[$block->offset]["subject"], $blocks[$block->offset]["content"]);
     print " </TD>\n";
     if ($state % 3 == 2) print " </TR>\n";
     $state += 1;
-  }  
+  }
   print "</TABLE>\n";
   $theme->footer();
 }
@@ -43,12 +43,12 @@ function block_admin_display() {
   global $repository;
 
   $result = db_query("SELECT * FROM blocks ORDER BY module");
-  
+
   // Generate output:
   $output .= "<FORM ACTION=\"admin.php?mod=block\" METHOD=\"post\">\n";
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR><TH>block</TH><TH>module</TH><TH>status</TH><TH>weight</TH><TH>region</TH></TR>\n";
-  
+
   while ($block = db_fetch_object($result)) {
     $module = ($repository[$block->module]["admin"]) ? "<A HREF=\"admin.php?mod=$block->module\">$block->module</A>" : $block->module;
 
@@ -70,12 +70,12 @@ function block_admin_display() {
     $region .= "</SELECT>\n";
 
     $output .= " <TR><TD>". $block->name ."</TD><TD ALIGN=\"center\">$module</TD><TD>$status</TD><TD>$weight</TD><TD>$region</TD></TR>\n";
-    
+
     unset($status);
     unset($weight);
     unset($region);
   }
-  
+
   $output .= "</TABLE>\n";
   $output .= "<INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"Save blocks\">\n";
   $output .= "</FORM>\n";
@@ -95,7 +95,7 @@ function block_admin_overview() {
   $rblocks .= "<TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   while ($block = db_fetch_object($result)) $rblocks .= " <TR><TD NOWRAP>". ($block->status == 2 ? "<B>$block->name</B>" : $block->name) ."</TD><TD>$block->weight</TD></TR>\n";
   $rblocks .= "</TABLE>\n";
-  
+
   $output .= "<P><B>layout 1:</B></P>\n";
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"3\">$site_name header</TD></TR>\n";
@@ -127,7 +127,7 @@ function block_admin_overview() {
 
 function block_admin() {
   global $op, $edit;
-  
+
   print "<SMALL><A HREF=\"admin.php?mod=block\">configure</A> | <A HREF=\"admin.php?mod=block&op=overview\">overview</A> | <A HREF=\"admin.php?mod=block&op=help\">help</A></SMALL><HR>\n";
 
   switch ($op) {
@@ -143,7 +143,7 @@ function block_admin() {
     default:
       block_admin_display();
   }
- 
+
 }
 
 ?>

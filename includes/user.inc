@@ -12,12 +12,12 @@ class User {
 
 function user_save($data, $id = 0) {
   global $user;
-  
+
   foreach ($data as $key=>$value) {
     if ($key == "passwd") $query .= "$key = PASSWORD('". addslashes($value) ."'), ";
     else $query .= "$key = '". addslashes($value) ."', ";
   }
-  
+
   if (empty($id)) {
     db_query("INSERT INTO users SET $query last_access = '". time() ."', last_host = '$GLOBALS[REMOTE_HOST]'");
   }
@@ -36,7 +36,7 @@ function user_getHistory($history, $field) {
     if (reset($entry) == $field) $rval = end($entry);
   }
   return $rval;
-} 
+}
 
 function user_setHistory(&$user, $field, $value) {
 
@@ -56,7 +56,7 @@ function user_setHistory(&$user, $field, $value) {
       $entry = explode(":", current($data));
       if ($entry[0] == $field) $entry[1] = $value;
       $rval .= "$entry[0]:$entry[1];";
-    } 
+    }
   }
   else {
     // not found: add new entry:

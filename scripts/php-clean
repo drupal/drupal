@@ -1,4 +1,4 @@
 #!/bin/sh
-
-find . -name "*~" | xargs rm -f 
+find . -name "*~" | xargs rm -f
 find . -name "DEADJOE" | xargs rm -f
+find . -name "*" -type f | xargs perl -wi -pe 's/\s+$/\n/'

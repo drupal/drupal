@@ -5,8 +5,8 @@ include "includes/common.inc";
 // validate user permission:
 if (!($user->permissions == 1 || $user->id == 1)) exit();
 
-function admin_page($mod) {  
-  global $repository, $menu, $modules;
+function admin_page($mod) {
+  global $repository, $site_name, $menu, $modules;
 
   function module($name, $module) {
     global $menu, $modules;
@@ -17,7 +17,7 @@ function admin_page($mod) {
  ?>
   <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
   <HTML>
-   <HEAD><TITLE>Administration</TITLE></HEAD>
+   <HEAD><TITLE><? echo $site_name; ?> administration</TITLE></HEAD>
    <STYLE>
     body { font-family: helvetica, arial; }
     h1   { font-size: 18pt; font-weight: bold; color: #990000; }
@@ -30,10 +30,10 @@ function admin_page($mod) {
     <H1>Administration</H1>
  <?
 
-  ksort($repository);  
+  ksort($repository);
   module_iterate("module");
- 
- ?> 
+
+ ?>
     <HR><? echo $menu; ?><A HREF="">home</A><HR>
  <?
 

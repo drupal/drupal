@@ -56,7 +56,7 @@ function diary_page_display($username) {
   global $theme, $user;
 
   $username = empty($username) ? $user->userid : $username;
- 
+
   $result = db_query("SELECT d.*, u.userid FROM diaries d LEFT JOIN users u ON d.author = u.id WHERE u.userid = '$username' ORDER BY timestamp DESC");
 
   if ($username == $user->userid) {
@@ -75,10 +75,10 @@ function diary_page_display($username) {
 
 function diary_page_add() {
   global $theme, $user, $allowed_html;
-  
+
   $output .= "<FORM ACTION=\"module.php?mod=diary\" METHOD=\"post\">\n";
 
-  $output .= "<P>\n"; 
+  $output .= "<P>\n";
   $output .= " <B>Enter new diary entry:</B><BR>\n";
   $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"text\" MAXLENGTH=\"20\"></TEXTAREA><BR>\n";
   $output .= " <SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL>\n";
@@ -89,7 +89,7 @@ function diary_page_add() {
   $output .= "</P>\n";
 
   $output .= "</FORM>\n";
-  
+
   $theme->header();
   $theme->box("Edit you diary", $output);
   $theme->footer();
@@ -118,7 +118,7 @@ function diary_page_edit($id) {
   $output .= "</P>\n";
 
   $output .= "</FORM>\n";
-  
+
   $theme->header();
   $theme->box("Edit your diary", $output);
   $theme->footer();
@@ -263,7 +263,7 @@ function diary_admin_edit($id) {
   $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save diary entry\">\n";
   $output .= "</P>\n";
   $output .= "</FORM>\n";
-  
+
   print $output;
 }
 
@@ -278,7 +278,7 @@ function diary_admin_display($order = "date") {
 
   // Perform SQL query:
   $result = db_query("SELECT d.*, u.userid FROM diaries d LEFT JOIN users u ON u.id = d.author ORDER BY d.$fields[$order] LIMIT 50");
-   
+
   // Display stories:
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR>\n";
@@ -305,14 +305,14 @@ function diary_admin_display($order = "date") {
   }
 
   $output .= "</TABLE>\n";
- 
+
   print $output;
 }
 
 
 function diary_admin() {
   global $op, $id, $text, $order;
- 
+
   switch ($op) {
     case "edit":
       diary_admin_edit($id);

@@ -24,7 +24,7 @@ function account_display($order = "username") {
 
   // Perform query:
   $result = db_query("SELECT u.id, u.userid, u.". strtok($sort[$order], " ") .", u.url FROM users u ORDER BY $sort[$order]");
-  
+
   // Generate output:
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR>\n";
@@ -57,7 +57,7 @@ function account_display($order = "username") {
         case "last_access":
           $output .= "  <TD>". format_interval(time() - $account[$value]) ." ago</TD>\n";
           break;
-	case "status":         
+	case "status":
           $output .= "  <TD ALIGN=\"center\">". $stat[$account[$value]] ."</TD>\n";
           break;
         case "permissions":
@@ -117,12 +117,12 @@ function account_edit($name) {
 
   if ($account = db_fetch_object($result)) {
     foreach ($status as $key=>$value) {
-      $stat .= " <OPTION VALUE=\"$key\"". (($account->status == $key) ? " SELECTED" : "") .">$value</OPTION>\n"; 
+      $stat .= " <OPTION VALUE=\"$key\"". (($account->status == $key) ? " SELECTED" : "") .">$value</OPTION>\n";
     }
     $stat = "<SELECT NAME=\"edit[status]\">\n$stat</SELECT>\n";
 
     foreach ($permissions as $key=>$value) {
-      $perm .= " <OPTION VALUE=\"$key\"". (($account->permissions == $key) ? " SELECTED" : "") .">$value</OPTION>\n"; 
+      $perm .= " <OPTION VALUE=\"$key\"". (($account->permissions == $key) ? " SELECTED" : "") .">$value</OPTION>\n";
     }
     $perm = "<SELECT NAME=\"edit[permissions]\">\n$perm</SELECT>\n";
 
@@ -202,7 +202,7 @@ function account_admin() {
       account_display($order);
       break;
     default:
-      account_display(); 
+      account_display();
   }
 }
 

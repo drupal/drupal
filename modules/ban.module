@@ -37,12 +37,12 @@ function ban_admin_new($mask, $category, $reason) {
 function ban_display($category = "") {
   global $type2index;
 
-  // initialize variable: 
+  // initialize variable:
   $category = $category ? $category : 1;
 
   // Perform query:
   $result = db_query("SELECT * FROM bans WHERE type = $category ORDER BY mask");
- 
+
   // Generate output:
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR>\n";
@@ -67,7 +67,7 @@ function ban_display($category = "") {
   }
   $output .= " <TR><TD COLSPAN=\"3\"><SMALL>%: matches any number of characters, even zero characters.<BR>_: matches exactly one character.</SMALL></TD></TR>\n";
   $output .= "</TABLE>\n";
-  
+
   print $output;
 }
 
@@ -88,7 +88,7 @@ function ban_admin_add() {
   $output .= "<TEXTAREA NAME=\"reason\" COLS=\"50\" ROWS=\"5\"></TEXTAREA><P>\n";
   $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Add ban\"><BR>\n";
   $output .= "</FORM>\n";
-  
+
   print $output;
 }
 

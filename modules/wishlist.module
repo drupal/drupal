@@ -6,7 +6,7 @@ $module = array("page" => "wishlist_page",
 function wishlist_page() {
  ?>
   <H1>Wishlist</H1>
-  <SMALL><I>$Id: wishlist.module,v 1.12 2001/01/21 19:41:11 dries Exp $</I></SMALL>
+  <SMALL><I>$Id: wishlist.module,v 1.13 2001/01/26 13:38:45 dries Exp $</I></SMALL>
 
    <H3>Users</H3>
     <UL>
@@ -17,7 +17,7 @@ function wishlist_page() {
      <LI>advanced search so people can search stories, comments, diaries, users, and so on by date</LI>
      <LI><I>see section "Modules" for more user oriented features</I></LI>
     </UL>
- 
+
    <H3>Adminstration</H3>
     <UL>
      <LI>auto-backup functionality</LI>
@@ -37,7 +37,7 @@ function wishlist_page() {
        <LI>enable/disable comments - pending comments</LI>
       </UL>
     </UL>
-  
+
    <H3>Modules</H3>
     <UL>
      <LI>messaging between administrators/users</LI>
@@ -53,7 +53,7 @@ function wishlist_page() {
      <LI>automatically post scheduled stories</LI>
      <LI>review system</LI>
     </UL>
-  
+
    <H3>Themes</H3>
     <UL>
      <LI>create a theme with topic icons - graphical theme</LI>

@@ -4,7 +4,7 @@ function error_flood() {
   global $site_email;
 
   print "WARNING: submission rate exceeded.  We detected too much data or events from your IP.  Please wait a few minutes and try again.  If you think this is not justified, please contact us at <A HREF=\"mailto:$site_email\">$site_email</A>.";
-} 
+}
 
 function error_httpd() {
   global $REDIRECT_STATUS, $REDIRECT_URL, $HTTP_REFERER, $HTTP_USER_AGENT;
@@ -30,7 +30,7 @@ function error_httpd() {
   }
 
   watchdog("error", "message: `$message' - requested url: $REDIRECT_URL - referring url: $HTTP_REFERER - user agent: $HTTP_USER_AGENT");
- 
+
   print "<PRE>\n";
   print "<H1>Oops, an error occured!</H1>\n";
   print "<B>Processed output:</B><BR>\n";
@@ -43,7 +43,7 @@ include "includes/common.inc";
 
 switch ($op) {
   case "flood":
-    error_flood();    
+    error_flood();
     break;
   default:
     error_httpd();

@@ -48,27 +48,29 @@ class backend {
   }
 
   function rdf2sql($timout = 10) {
+    global $site_name;
+
     if ($this->file) {
       // Decode URL:
       $url = parse_url($this->file);
       $host = $url[host];
       $port = $url[port] ? $url[port] : 80;
       $path = $url[path];
-     
+
       // print "<PRE><B>Debug:</B> $url - $host - $port - $path</PRE>";
- 
+
       // Retrieve data from website:
       $fp = fsockopen($host, $port, &$errno, &$errstr, $timout);
 
       if ($fp) {
         // Get data from URL:
         fputs($fp, "GET $path HTTP/1.0\n");
-        fputs($fp, "User-Agent: headline grabber\n");
+        fputs($fp, "User-Agent: $site_name\n");
         fputs($fp, "Host: ". $host ."\n");
         fputs($fp, "Accept: */*\n\n");
 
         while(!feof($fp)) $data .= fgets($fp, 128);
-        
+
         // print "<PRE>$data</PRE><HR>";
 
         if (strstr($data, "200 OK")) {
@@ -80,7 +82,7 @@ class backend {
           $data = ereg_replace("<?xml.*/image>", "", $data);
           $data = ereg_replace("</rdf.*", "", $data);
           $data = chop($data);
-     
+
           // Iterating through our data processing each entry/item:
           $items = explode("</item>", $data);
           $number = 0;
@@ -90,18 +92,18 @@ class backend {
             $link = ereg_replace(".*<link>", "", $item);
             $link = ereg_replace("</link>.*", "", $link);
             $title = ereg_replace(".*<title>", "", $item);
-            $title = ereg_replace("</title>.*", "", $title); 
+            $title = ereg_replace("</title>.*", "", $title);
 
             // Clean headlines:
             $title = stripslashes($title);
-           
+
             // Count the number of stories:
             $number += 1;
 
             // Insert item in database:
             $result = db_query("INSERT INTO headlines (id, title, link, number) VALUES('". check_input($this->id) ."', '". check_input($title) ."', '". check_input($link) ."', '". check_input($number) ."')");
           }
- 
+
           // Mark channels as being updated:
           $result = db_query("UPDATE channel SET timestamp = '". time() ."' WHERE id = $this->id");
           $this->timestamp = time();
@@ -143,8 +145,8 @@ class backend {
       }
       // Add timestamp:
       $update = round((time() - $this->timestamp) / 60);
-      $content .= "<P ALIGN=\"right\">[ <A HREF=\"backend.php?op=reset&site=$this->site\"><FONT COLOR=\"$theme->hlcolor2\">reset</FONT></A> | updated $update min. ago ]</P>";      
-      
+      $content .= "<P ALIGN=\"right\">[ <A HREF=\"backend.php?op=reset&site=$this->site\"><FONT COLOR=\"$theme->hlcolor2\">reset</FONT></A> | updated $update min. ago ]</P>";
+
       // Display box:
       $theme->box("$this->site", $content);
     }
@@ -152,24 +154,24 @@ class backend {
   }
 
   function add() {
-    // Add channel:    
+    // Add channel:
     $result = db_query("INSERT INTO channel (site, file, url, contact, timestamp) VALUES ('". check_input($this->site) ."', '". check_input($this->file) ."', '". check_input($this->url) ."', '". check_input($this->contact) ."', 1)");
   }
-  
+
   function delete() {
-    // Delete channel:    
+    // Delete channel:
     $result = db_query("DELETE FROM channel WHERE id = $this->id");
 
     // Delete headlines:
-    $result = db_query("DELETE FROM headlines WHERE id = $this->id");    
+    $result = db_query("DELETE FROM headlines WHERE id = $this->id");
   }
 
   function refresh() {
     // Delete headlines:
-    $result = db_query("DELETE FROM headlines WHERE id = $this->id");    
+    $result = db_query("DELETE FROM headlines WHERE id = $this->id");
 
     // Mark channel as invalid to enforce an update:
-    $result = db_query("UPDATE channel SET timestamp = 1 WHERE id = $this->id");    
+    $result = db_query("UPDATE channel SET timestamp = 1 WHERE id = $this->id");
   }
 
   function dump() {

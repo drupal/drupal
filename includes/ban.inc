@@ -1,11 +1,11 @@
 <?
 
-$type2index = array("addresses" => 0x01, 
-                    "profanity" => 0x02, 
+$type2index = array("addresses" => 0x01,
+                    "profanity" => 0x02,
                     "hostnames" => 0x03,
                     "usernames" => 0x04);
 
-$index2type = array(0x01 => "addresses", 
+$index2type = array(0x01 => "addresses",
                     0x02 => "profanity",
                     0x03 => "hostnames",
                     0x04 => "usernames");
@@ -14,7 +14,7 @@ $index2type = array(0x01 => "addresses",
 function ban_match($mask, $category) {
   // Perform query:
   $result = db_query("SELECT * FROM bans WHERE type = $category AND LOWER('$mask') LIKE LOWER(mask)");
-  
+
   // Return result:
   return db_fetch_object($result);
 }
@@ -36,7 +36,7 @@ function ban_add($mask, $category, $reason, $message = "") {
     watchdog("message", "added new ban `$mask' to category `". $index2type[$category] ."' with reason `$reason'.");
   }
 }
-  
+
 function ban_delete($id) {
   global $index2type;
 

@@ -58,7 +58,7 @@ function section_add() {
   $output .= "  </P>\n";
   $output .= "  <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Add section\">\n";
   $output .= " </FORM>\n";
- 
+
   print $output;
 }
 
@@ -80,7 +80,7 @@ function section_display() {
 
   // Perform query:
   $result = db_query("SELECT * FROM sections ORDER BY name");
- 
+
   // Generate output:
   $output .= "<FORM ACTION=\"admin.php?mod=section\" METHOD=\"post\">\n";
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
