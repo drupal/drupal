@@ -480,7 +480,7 @@ function user_block() {
     $output .= "<input name=\"edit[remember_me]\" type=\"checkbox\" />". t("Remember me") ."<br />\n";
     $output .= "<input name=\"edit[op]\" type=\"submit\" value=\"". t("Log in") ."\" /><br />\n";
     $output .= "</form></div>\n";
-    if (variable_get("account_register", 1)) {
+    if (variable_get("user_register", 1)) {
       $output .= "&#187; ". lm(t("Register"), array("mod" => "user", "op" => "register"), t("Create a new user account.")) ."\n";
     }
     $output .= "<br />&#187; ". lm(t("New password"), array("mod" => "user", "op" => "password"), t("Request new password via e-mail")) ."<br />";

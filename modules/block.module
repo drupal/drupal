@@ -248,6 +248,14 @@ function block_admin() {
 
 function block_user($type, &$edit, &$user) {
   switch ($type) {
+    case "register_form":
+      $result = db_query("SELECT * FROM blocks WHERE custom = '%d' ORDER BY name", 1);
+
+      while ($block = db_fetch_object($result)) {
+        $form .= form_hidden("block][$block->name", $block->status);
+      }
+
+      return $form;
     case "edit_form":
       $result = db_query("SELECT * FROM blocks WHERE custom = '%d' ORDER BY name", 1);
 
