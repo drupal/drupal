@@ -30,7 +30,7 @@ function node_title_list($result, $title = NULL) {
   while ($node = db_fetch_object($result)) {
     $number = module_invoke("comment", "num_all", $node->nid);
     $name = strip_tags(format_name($node)); // required for anonymous users to work
-    $items[] = l($node->title, array("id" => $node->nid), "node", "", array("title" => t("Author: %name, comments: %number", array("%name" => $name, "%number" => $number))));
+    $items[] = l($node->title, "node/view/$node->nid", array("title" => t("Author: %name, comments: %number", array("%name" => $name, "%number" => $number))));
   }
 
   return theme_invoke("theme_item_list", $items, $title);
@@ -303,6 +303,24 @@ function node_view($node, $main = 0) {
   }
 }
 
+function node_show($nid, $cid) {
+  global $theme, $revision;
+
+  $node = node_load(array("status" => 1, "nid" => $nid));
+
+  if (node_access("view", $node)) {
+    if (isset($revision)) {
+      $node = $node->revisions[$revision]["node"];
+    }
+
+    node_view($node);
+
+    if (function_exists("comment_render") && $node->comment) {
+      comment_render($node, $cid);
+    }
+  }
+}
+
 function node_access($op, $node = 0) {
 
   if (user_access("administer nodes")) {
@@ -388,7 +406,7 @@ function node_filter_html($text) {
 
 function node_filter_link($text) {
   $pat = '\[{2}([^\|]+)(\|([^\|]+)?)?\]{2}';                   // [link|description]
-  $dst = str_replace('%5C1', '\\1', format_tag('\\1', '\\3')); // [link|description]
+//  $dst = str_replace('%5C1', '\\1', format_tag('\\1', '\\3')); // [link|description]
   return ereg_replace($pat, $dst, $text);
 }
 
@@ -407,7 +425,7 @@ function node_filter($text) {
   $text = preg_replace("/\Whref\s*=[\s'\"]*javascript:[^>]+?>/i", ">", $text);
 
   if (variable_get("filter_html", 0)) $text = node_filter_html($text);
-  if (variable_get("filter_link", 0)) $text = node_filter_link($text);
+  // if (variable_get("filter_link", 0)) $text = node_filter_link($text);
 
   return trim($text);
 }
@@ -415,7 +433,7 @@ function node_filter($text) {
 function node_link($type, $node = 0, $main = 0) {
 
   if ($type == "page") {
-    $links[] = lm(t("submit"), array("mod" => "node", "op" => "add"), "", array("title" => t("Submit or suggest new content.")));
+    $links[] = l(t("submit"), "node/add", array("title" => t("Submit or suggest new content.")));
   }
 
   if ($type == "node") {
@@ -424,23 +442,23 @@ function node_link($type, $node = 0, $main = 0) {
     }
 
     if ($main == 1 && $node->teaser && $node->teaser != $node->body) {
-      $links[] = l(t("read more"), array("id" => $node->nid), "node", "", array("title" => t("Read the rest of this posting.")));
+      $links[] = l(t("read more"), "node/view/$node->nid", array("title" => t("Read the rest of this posting.")));
     }
 
     if (user_access("administer nodes")) {
-       $links[] = la(t("administer"), array("mod" => "node", "op" => "edit", "id" => $node->nid), "", array("title" => t("Administer this node.")));
+       $links[] = l(t("administer"), "node/edit/$node->nid", array("title" => t("Administer this node.")));
     }
   }
 
   if ($type = "admin" && user_access("administer nodes")) {
     $search = "On this page you can search for a post.  For example, one may search for 'br' and Drupal might return 'bread brakers', 'our daily bread' and 'brenda'.";
 
-    menu_add("content management", "admin.php?mod=node", "Content management.", NULL, NULL);
-     menu_add("submit new content", "module.php?mod=node&op=add", "Submit new content.", NULL, "content management", -1, 1);
-     menu_add("new or updated posts", "admin.php?mod=node&op=nodes&query=0", "Display all new or updated posts.", NULL, "content management", 0, 1);
-     menu_add("posts that await approval", "admin.php?mod=node&op=nodes&query=1", "Display posts that await approval.", NULL, "content management", 0, 1);
-     menu_add("search content", "admin.php?mod=node&op=search", "Search a post.", $search, "content management", 5);
-     menu_add("help", "admin.php?mod=node&op=help", "More information about content management.", NULL, "content management", 7);
+    menu_add("content management", url("admin/node"), "Content management.", NULL, NULL);
+     menu_add("submit new content", url("node/add"), "Submit new content.", NULL, "content management", -1, 1);
+     menu_add("new or updated posts", url("admin/node/nodes&query=0"), "Display all new or updated posts.", NULL, "content management", 0, 1);
+     menu_add("posts that await approval", url("admin/node/nodes&query=1"), "Display posts that await approval.", NULL, "content management", 0, 1);
+     menu_add("search content", url("admin/node/search"), "Search a post.", $search, "content management", 5);
+     menu_add("help", url("admin/node/help"), "More information about content management.", NULL, "content management", 7);
   }
 
   return $links ? $links : array();
@@ -469,7 +487,7 @@ function node_admin_edit($node) {
     $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
     $output .= " <tr><th>". t("older revisions") ."</th><th colspan=\"3\">". t("operations") ."</th></tr>";
     foreach ($node->revisions as $key => $revision) {
-      $output .= " <tr><td>". t("revision #%r revised by %u on %d", array("%r" => $key, "%u" => format_name(user_load(array("uid" => $revision["uid"]))), "%d" => format_date($revision["timestamp"], "small"))) . ($revision["history"] ? "<br /><small>". $revision["history"] ."</small>" : "") ."</td><td>". l(t("view revision"), array("id" => $node->nid, "revision" => $key)) ."</td><td>". la(t("rollback revision"), array("mod" => "node", "op" => "rollback+revision", "id" => $node->nid, "revision" => $key)) ."</td><td>". la(t("delete revision"), array("mod" => "node", "op" => "delete+revision", "id" => $node->nid, "revision" => $key)) ."</td></tr>";
+      $output .= " <tr><td>". t("revision #%r revised by %u on %d", array("%r" => $key, "%u" => format_name(user_load(array("uid" => $revision["uid"]))), "%d" => format_date($revision["timestamp"], "small"))) . ($revision["history"] ? "<br /><small>". $revision["history"] ."</small>" : "") ."</td><td>". l(t("view revision"), "node/view/$node->nid", NULL, "revision=$key") ."</td><td>". l(t("rollback revision"), "admin/node/rollback+revision/$node->nid/$key") ."</td><td>". l(t("delete revision"), "admin/node/delete+revision/$node->nid/$key") ."</td></tr>";
     }
     $output .= "</table>";
   }
@@ -496,7 +514,7 @@ function node_admin_nodes() {
   $header = array(t("title"), t("type"), t("author"), t("status"), array("data" => t("operations"), "colspan" => 2));
 
   while ($node = db_fetch_object($result)) {
-    $rows[] = array(l($node->title, array("id" => $node->nid)), module_invoke($node->type, "node", "name"), format_name($node), ($node->status ? t("published") : t("not published")), la(t("edit node"), array("mod" => "node", "op" => "edit", "id" => $node->nid)), la(t("delete node"), array("mod" => "node", "op" => "delete", "id" => $node->nid)));
+    $rows[] = array(l($node->title, "node/view/$node->nid"), module_invoke($node->type, "node", "name"), format_name($node), ($node->status ? t("published") : t("not published")), l(t("edit node"), "admin/node/edit/$node->nid"), l(t("delete node"), "admin/node/delete/$node->nid"));
   }
 
   if ($pager = pager_display(NULL, 50, 0, "admin")) {
@@ -607,9 +625,13 @@ function node_revision_list($node) {
 }
 
 function node_admin() {
-  global $op, $id, $revision, $edit;
+  global $op, $edit;
 
   if (user_access("administer nodes")) {
+
+    if (empty($op)) {
+      $op = arg(2);
+    }
 
     /*
     ** Compile a list of the administrative links:
@@ -620,21 +642,21 @@ function node_admin() {
         print node_help();
         break;
       case "search":
-        print search_type("node", drupal_url(array("mod" => "node", "op" => "search"), "admin"));
+        print search_type("node", url("admin/node/search"));
         break;
       case "edit":
-        print node_admin_edit($id);
+        print node_admin_edit(arg(3));
         break;
       case "delete":
-        print node_delete(array("nid" => $id));
+        print node_delete(array("nid" => arg(3)));
         break;
       case "rollback+revision":
-        print node_revision_rollback(node_load(array("nid" => $id)), $revision);
-        print node_admin_edit($id);
+        print node_revision_rollback(node_load(array("nid" => arg(3))), arg(5));
+        print node_admin_edit(arg(4));
         break;
       case "delete+revision":
-        print node_revision_delete(node_load(array("nid" => $id)), $revision);
-        print node_admin_edit($id);
+        print node_revision_delete(node_load(array("nid" => arg(3))), arg(5));
+        print node_admin_edit(arg(4));
         break;
       case t("Preview"):
         $edit = node_validate($edit, $error);
@@ -663,7 +685,7 @@ function node_block($op = "list", $delta = 0) {
   }
   else {
     $block["subject"] = t("Syndicate");
-    $block["content"] = "<div align=\"center\">". lm("<img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" border=\"0\" alt=\"XML\" />", array("mod" => "node", "op" => "feed"), "", array("title" => t("Read the XML version of this page."))) ."</div>\n";
+    $block["content"] = "<div align=\"center\">". l("<img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" border=\"0\" alt=\"XML\" />", "node/feed", array("title" => t("Read the XML version of this page."))) ."</div>";
 
     return $block;
   }
@@ -671,9 +693,11 @@ function node_block($op = "list", $delta = 0) {
 
 function node_feed($nodes = 0, $channel = array()) {
   /*
-    a generic function for generating rss feeds from a set of nodes.
-    $nodes should be an object as returned by db_query() which contains the nid field
-    $channel is an associative array containing title, link, and description keys
+  ** A generic function for generating RSS feeds from a set of nodes.
+  **   - $nodes should be an object as returned by db_query() which contains
+  **     the nid field.
+  **   - $channel is an associative array containing title, link, and
+  **     description keys.
   */
 
   if (!$nodes) {
@@ -682,7 +706,7 @@ function node_feed($nodes = 0, $channel = array()) {
 
   while ($node = db_fetch_object($nodes)) {
     $item = node_load(array("nid" => $node->nid));
-    $link = path_uri(). drupal_url(array("id" => $item->nid), "node");
+    $link = path_uri() . url("node/view/$item->nid");
     $items .= format_rss_item($item->title, $link, $item->teaser);
   }
 
@@ -874,6 +898,7 @@ function node_form($edit, $error = NULL) {
     $output .= form_textfield(t("Authored by"), "name", $edit->name, 20, 60, $error["name"]);
     $output .= form_textfield(t("Authored on"), "date", $edit->date, 20, 25, $error["date"]);
     $output .= "<br />";
+    $output .= form_select(t("Set public/published"), "status", $edit->status, array(t("Disabled"), t("Enabled")));
     $output .= form_select(t("Moderation status"), "moderate", $edit->moderate, array(t("Approved"), t("Awaiting approval")));
     $output .= form_select(t("Promote to front page"), "promote", $edit->promote, array(t("Disabled"), t("Enabled")));
     $output .= form_select(t("Static on front page"), "static", $edit->static, array(t("Disabled"), t("Enabled")));
@@ -918,7 +943,7 @@ function node_add($type) {
     foreach (module_list() as $name) {
       if (module_hook($name, "node") && node_access("create", $name)) {
         $output .= "<li>";
-        $output .= " ". lm(module_invoke($name, "node", "name"), array("mod" => "node", "op" => "add", "type" => $name), "", array("title" => t("Add a new %s.", array("%s" => module_invoke($name, "node", "name")))));
+        $output .= " ". l(module_invoke($name, "node", "name"), "node/add/$name", array("title" => t("Add a new %s.", array("%s" => module_invoke($name, "node", "name")))));
         $output .= " <div style=\"margin-left: 20px;\">". module_invoke($name, "node", "description") ."</div>";
         $output .= "</li>";
       }
@@ -1085,7 +1110,7 @@ function node_submit($node) {
         taxonomy_node_save($nid, $node->taxonomy);
       }
 
-      watchdog("special", "$node->type: updated '$node->title'", l("view post", array("id" => $node->nid)));
+      watchdog("special", "$node->type: updated '$node->title'", l("view post", "node/view/$node->nid"));
       $output = t("The node has been updated.");
     }
   }
@@ -1127,7 +1152,7 @@ function node_submit($node) {
         taxonomy_node_save($nid, $node->taxonomy);
       }
 
-      watchdog("special", "$node->type: added '$node->title'", l("view post", array("id" => $nid)));
+      watchdog("special", "$node->type: added '$node->title'", l("view post", "node/view/$nid"));
       $output = t("Thanks for your submission.");
     }
   }
@@ -1148,11 +1173,11 @@ function node_submit($node) {
   }
 
   if ($nid && node_access("view", $node)) {
-    $links[] = l(t("view"), array("id" => $nid));
+    $links[] = l(t("view"), "node/view/$nid");
   }
 
   if ($nid && node_access("update", $node)) {
-    $links[] = lm(t("edit"), array("mod" => "node", "op" => "edit", "id" => $nid));
+    $links[] = l(t("edit"), "node/edit/$nid");
   }
 
   $output .= "<p>". $theme->links($links) ."</p>";
@@ -1209,48 +1234,41 @@ function node_delete($edit) {
 }
 
 function node_page() {
-  global $op, $id, $user, $edit, $type, $theme, $or, $and;
+  global $op, $id, $user, $edit, $theme, $or, $and;
 
-  if ($op == "feed") {
-    node_feed();
-    return;
-  }
+  if (user_access("access content")) {
+    if (empty($op)) {
+      $op = arg(1);
+    }
 
-  /*
-  ** Try to find a good title:
-  */
+    if ($op == "feed") {
+      node_feed();
+      return;
+    }
 
-  if ($type) {
-    $title = ucfirst(module_invoke($type, "node", "name"));
-  }
-  else if ($edit["type"]) {
-    $title = ucfirst(module_invoke($edit["type"], "node", "name"));
-  }
-  else {
-    $title = t("Submission form");
-  }
+    $theme->header();
 
-  $theme->header();
-
-  switch ($op) {
-    case "add":
-      $theme->box($title, node_add($type));
-      break;
-    case "edit":
-      $theme->box($title, node_edit($id));
-      break;
-    case t("Preview"):
-      $edit = node_validate($edit, $error);
-      $theme->box($title, node_preview($edit, $error));
-      break;
-    case t("Submit"):
-      $theme->box($title, node_submit($edit));
-      break;
-    case t("Delete"):
-      $theme->box($title, node_delete($edit));
-      break;
-    default:
-      if (user_access("access content")) {
+    switch ($op) {
+      case "add":
+        $theme->box(t("Create new post"), node_add(arg(2)));
+        break;
+      case "edit":
+        $theme->box(t("Edit post"), node_edit(arg(2)));
+        break;
+      case "view":
+        print node_show(arg(2), arg(3));
+        break;
+      case t("Preview"):
+        $edit = node_validate($edit, $error);
+        $theme->box(t("Preview post"), node_preview($edit, $error));
+        break;
+      case t("Submit"):
+        $theme->box(t("Submit post"), node_submit($edit));
+        break;
+      case t("Delete"):
+        $theme->box(t("Delete post"), node_delete($edit));
+        break;
+      default:
         // prepare query
         if ($or) {
           foreach ((explode(",", $or)) as $t) {
@@ -1273,15 +1291,18 @@ function node_page() {
         }
         else {
           $result = pager_query("SELECT nid, type FROM node WHERE ". ($id ? "nid = '$id'" : "promote = '1'") ." AND status = '1' ORDER BY static DESC, created DESC", ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
-
         }
 
         while ($node = db_fetch_object($result)) {
           node_view(node_load(array("nid" => $node->nid, "type" => $node->type)), 1);
         }
+
         print pager_display(NULL, ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
-      }
     }
+  }
+  else {
+    $theme->box(t("Access denied"), message_access());
+  }
 
   $theme->footer();
 }

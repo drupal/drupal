@@ -29,7 +29,7 @@ function search_perm() {
  */
 function search_link($type) {
   if ($type == "page" && user_access("search content")) {
-    $links[] = lm(t("search"), array("mod" => "search"), "", array("title" => t("Search for older content.")));
+    $links[] = l(t("search"), "search", array("title" => t("Search for older content.")));
   }
 
   return $links ? $links : array();
@@ -40,8 +40,6 @@ function search_conf_options() {
   $output .= form_textfield(t("Minimum word length to search for"), "remove_short", variable_get("remove_short", 0), 10, 10, t("The number of characters a word has to be to be searched for."));
   $output .= form_textarea(t("Noise words"), "noisewords", variable_get("noisewords", ""), 70, 10, t("These words will not be indexed, enter comma separated list, linebreaks and whitespace do not matter.  Example: and, or, not, a, to, I, it, ..."));
   $output .= form_select(t("Help text position"), "help_pos", variable_get("help_pos", 1), array("1" => t("Above search output"), "2" => t("Below search output"), "3" => t("Link from above search output"), "4" => t("Link from below search output")), t("Where to show the help text for users on the search page."));
-
-  // $output .= form_item(t("Create search index"), la(t("reindex all"), array("mod" => "search", "op" => "reindex")));
 
   return $output;
 }
@@ -167,10 +165,10 @@ function do_search($search_array) {
       $count     = $value["count"];
       switch ($type) {
       case "node":
-        $find[$i++] = array("count" => $count, "title" => $title, "link" => (strstr($PHP_SELF, "admin.php") ? drupal_url(array("mod" => "node", "type" => "node", "op" => "edit", "id" => $lno), "admin") : drupal_url(array("id" => $lno))), "user" => $name, "date" => $created, "keywords" => implode("|", $words));
+        $find[$i++] = array("count" => $count, "title" => $title, "link" => (strstr($PHP_SELF, "admin") ? url("admin/node/edit/$lno") : url("node/view/$lno")), "user" => $name, "date" => $created, "keywords" => implode("|", $words));
         break;
       case "comment":
-        $find[$i++] = array("count" => $count, "title" => $title, "link" => (strstr($PHP_SELF, "admin.php") ? drupal_url(array("mod" => "comment", "op" => "edit", "id" =>$lno), "admin") : drupal_url(array("id" => $nid, "cid" => $lno))), "user" => $name, "date" => $created, "keywords" => implode("|", $words));
+        $find[$i++] = array("count" => $count, "title" => $title, "link" => (strstr($PHP_SELF, "admin") ? url("admin/comment/edit/$lno") : url("node/view/$nid#$cid")), "user" => $name, "date" => $created, "keywords" => implode("|", $words));
         break;
       }
     }
@@ -322,7 +320,7 @@ function search_view() {
     $output = search_data();
 
     // Display form and search results:
-    $help_link = lm(t("search help"), array("mod" => "search", "op" => "help"));
+    $help_link = l(t("search help"), "search/help");
     switch (variable_get("help_pos", 1)) {
       case "1":
         $form = search_help(). $form;
@@ -363,9 +361,9 @@ function search_view() {
 }
 
 function search_page() {
-  global $theme, $op;
+  global $theme;
 
-  switch ($op) {
+  switch (arg(1)) {
     case "help":
       $theme->header();
       $theme->box(t("Search Help"), search_help());

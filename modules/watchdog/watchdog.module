@@ -21,14 +21,14 @@ function watchdog_link($type) {
   if ($type == "admin" && user_access("administer watchdog")) {
     $help = "The watchdog module monitors your website, captures system events in a log and records them to be reviewed by an authorized individual at a later time.  The watchdog log is simply a list of events recorded during operation and contains usage data, performance data, errors, warnings and operational information. It is vital to check the watchdog report on a regular basis as it is often the only way to tell what is going on.";
 
-    menu_add("site monitoring", "admin.php?mod=watchdog", "Monitor your site.", NULL, NULL, 2);
-     menu_add("watchdog", "admin.php?mod=watchdog&type=all", "Display system events.", $help, "site monitoring", 1, 1);
-      menu_add("user messages", "admin.php?mod=watchdog&type=user", "Display system events", $help, "watchdog");
-      menu_add("regular messages", "admin.php?mod=watchdog&type=regular", "Display system events", $help, "watchdog");
-      menu_add("special messages", "admin.php?mod=watchdog&type=special", "Display system events", $help, "watchdog");
-      menu_add("warning messages", "admin.php?mod=watchdog&type=warning", "Display system events", $help, "watchdog");
-      menu_add("error messages", "admin.php?mod=watchdog&type=error", "Display system events", $help, "watchdog");
-      menu_add("httpd messages", "admin.php?mod=watchdog&type=httpd", "Display system events", $help, "watchdog");
+    menu_add("site monitoring", url("admin/watchdog"), "Monitor your site.", NULL, NULL, 2);
+     menu_add("watchdog", url("admin/watchdog/list/all"), "Display system events.", $help, "site monitoring", 1, 1);
+      menu_add("user messages", url("admin/watchdog/list/user"), "Display system events", $help, "watchdog");
+      menu_add("regular messages", url("admin/watchdog/list/regular"), "Display system events", $help, "watchdog");
+      menu_add("special messages", url("admin/watchdog/list/special"), "Display system events", $help, "watchdog");
+      menu_add("warning messages", url("admin/watchdog/list/warning"), "Display system events", $help, "watchdog");
+      menu_add("error messages", url("admin/watchdog/list/error"), "Display system events", $help, "watchdog");
+      menu_add("httpd messages", url("admin/watchdog/list/httpd"), "Display system events", $help, "watchdog");
   }
 }
 
@@ -52,7 +52,7 @@ function watchdog_overview($type) {
   $output .= " <tr><th>" . t("date") . "</th><th>" . t("event") . "</th><th>" . t("user") . "</th><th colspan=\"2\">" . t("operations") . "</th></tr>";
   while ($watchdog = db_fetch_object($result)) {
     if ($background = $color[$watchdog->type]) {
-      $output .= " <tr bgcolor=\"$background\"><td nowrap=\"nowrap\">". format_date($watchdog->timestamp, "small") ."</td><td>". substr(strip_tags($watchdog->message), 0, 64) ."</td><td align=\"center\">". format_name($watchdog) ."</a></td><td align=\"center\">$watchdog->link</td><td align=\"center\">". la(t("view details"), array("mod" => "watchdog", "op" => "view", "id" => $watchdog->wid)) ."</td></tr>";
+      $output .= " <tr bgcolor=\"$background\"><td nowrap=\"nowrap\">". format_date($watchdog->timestamp, "small") ."</td><td>". substr(strip_tags($watchdog->message), 0, 64) ."</td><td align=\"center\">". format_name($watchdog) ."</a></td><td align=\"center\">$watchdog->link</td><td align=\"center\">". l(t("view details"), "admin/watchdog/view/$watchdog->wid") ."</td></tr>";
     }
   }
 
@@ -84,18 +84,17 @@ function watchdog_view($id) {
 }
 
 function watchdog_admin() {
-  global $op, $id, $type, $order;
 
   if (user_access("administer watchdog")) {
-    switch ($op) {
+    switch (arg(2)) {
       case "help":
         watchdog_help();
         break;
       case "view":
-        print watchdog_view(check_input($id));
+        print watchdog_view(check_input(arg(3)));
         break;
       default:
-        print watchdog_overview($type);
+        print watchdog_overview(arg(3));
     }
   }
   else {

@@ -48,13 +48,13 @@ function locale_link($type) {
   global $languages;
 
   if ($type == "admin" && user_access("administer locales")) {
-    menu_add("locale", "admin.php?mod=locale", "Translate this site.", NULL, NULL, 3);
-    menu_add("search string", "admin.php?mod=locale&op=search", "Search a string.", NULL, "locale", 8);
-    menu_add("help", "admin.php?mod=locale&op=help", "More information about the locale system.", NULL, "locale", 9);
+    menu_add("locale", url("admin/locale"), "Translate this site.", NULL, NULL, 3);
+    menu_add("search string", url("admin/locale/search"), "Search a string.", NULL, "locale", 8);
+    menu_add("help", url("admin/locale/help"), "More information about the locale system.", NULL, "locale", 9);
 
     foreach ($languages as $key => $value) {
-      menu_add("translated '$key' strings", "admin.php?mod=locale&op=translated&language=$key", "Display translated '$key' strings.", NULL, "locale");
-      menu_add("untranslated '$key' strings", "admin.php?mod=locale&op=untranslated&language=$key", "Display untranslated '$key' strings.", NULL, "locale");
+      menu_add("translated '$key' strings", url("admin/locale/translated/$key"), "Display translated '$key' strings.", NULL, "locale");
+      menu_add("untranslated '$key' strings", url("admin/locale/untranslated/$key"), "Display untranslated '$key' strings.", NULL, "locale");
     }
   }
 }
@@ -164,7 +164,7 @@ function locale_seek() {
 
     $header = array(t("string"), (($edit["status"] != 2 && strlen($edit["language"]) == 2) ? t("translated string") : t("languages")), array("data" => t("operations"), "colspan" => "2"));
     while ($locale = db_fetch_object($result)) {
-      $rows[] = array("$locale->string<br /><small><i>$locale->location</i></small>", array("data" => (($edit["status"] != 2 && strlen($edit["language"]) == 2) ? $locale->$edit["language"] : locale_languages($locale)), "align" => "center"), array("data" => la(t("edit locale"), array("mod" => "locale", "op" => "edit", "id" => $locale->lid)), "nowrap" => "nowrap"), array("data" => la(t("delete locale"), array("mod" => "locale", "op" => "delete", "id" => $locale->lid)), "nowrap" => "nowrap"));
+      $rows[] = array("$locale->string<br /><small><i>$locale->location</i></small>", array("data" => (($edit["status"] != 2 && strlen($edit["language"]) == 2) ? $locale->$edit["language"] : locale_languages($locale)), "align" => "center"), array("data" => l(t("edit locale"), "admin/locale/edit/$locale->lid"), "nowrap" => "nowrap"), array("data" => l(t("delete locale"), "admin/locale/delete/$locale->lid"), "nowrap" => "nowrap"));
     }
     $output .= table($header, $rows);
   }
@@ -183,22 +183,25 @@ function locale_seek() {
 }
 
 function locale_admin() {
-  global $id, $edit, $op, $language;
+  global $op, $edit;
 
   if (user_access("administer locales")) {
     locale_admin_initialize();
 
+    if (empty($op)) {
+      $op = arg(2);
+    }
 
     switch ($op) {
       case "delete":
-        locale_delete(check_query($id));
+        locale_delete(check_query(arg(3)));
         print locale_seek();
         break;
       case "help":
         print locale_help();
         break;
       case "edit":
-        print locale_edit(check_query($id));
+        print locale_edit(check_query(arg(3)));
         break;
       case "search":
       case t("Search"):
@@ -206,16 +209,16 @@ function locale_admin() {
         break;
       case "translated":
         $edit["status"] = 1;
-        $edit["language"] = $language;
+        $edit["language"] = arg(3);
         print locale_seek();
         break;
       case "untranslated":
         $edit["status"] = 2;
-        $edit["language"] = $language;
+        $edit["language"] = arg(3);
         print locale_seek();
         break;
       case t("Save translations"):
-        print locale_save(check_query($id));
+        print locale_save(check_query(arg(3)));
       default:
         print locale_seek();
     }

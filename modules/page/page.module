@@ -83,12 +83,12 @@ function page_link($type) {
   if ($type == "page" && user_access("access content")) {
     $result = db_query("SELECT n.nid, n.title, p.link, p.description FROM page p LEFT JOIN node n ON p.nid = n.nid WHERE n.status = '1' AND p.link != '' ORDER BY p.link");
     while ($page = db_fetch_object($result)) {
-      $links[] = l($page->link, array("id" => $page->nid), "node", "", array("title" => $page->description));
+      $links[] = l($page->link, "node/view/$page->nid", array("title" => $page->description));
     }
   }
 
   if ($type == "menu.create" && user_access("maintain static pages")) {
-    $links[] = lm(t("create static page"), array("mod" => "node", "op" => "add", "type" => "page"), "", array("title" => t("Add a new static page.")));
+    $links[] = l(t("create static page"), "node/add/page", array("title" => t("Add a new static page.")));
   }
 
   return $links ? $links : array();

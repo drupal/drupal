@@ -295,7 +295,8 @@ function pager_link($from_new, $attributes = array()) {
     $url["query"] = array_merge($url["query"], $attributes);
   }
 
-  return drupal_url($url["query"], $url["script"]);
+  // TODO: should use 'url()':
+  // return drupal_url($url["query"], $url["script"]);
 }
 
 function pager_load_array($value, $element, $old_array) {

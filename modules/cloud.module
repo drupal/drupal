@@ -36,15 +36,15 @@ function cloud_perm() {
 
 function cloud_link($type) {
   if ($type == "page" && user_access("access site cloud")) {
-    $links[] = lm(t("site cloud"), array("mod" => "cloud"), "", array("title" => t("Monitor other sites in the cloud.")));
+    $links[] = l(t("site cloud"), "cloud", array("title" => t("Monitor other sites in the cloud.")));
   }
 
   if ($type == "admin" && user_access("administer site cloud")) {
     $cloud = "The cloud monitor tracks or crawls other interesting websites and displays their last modification dates. Visitors to the host site learn about relevant sites and can easily see if there is new content.";
 
-    menu_add("blogrolling", "admin.php?mod=cloud", "Maintain the sites in your blogroll.", $cloud, NULL, 3);
-     menu_add("add new site", "admin.php?mod=cloud&op=add", "Add a new sites to your blogroll.", NULL, "blogrolling", 3);
-     menu_add("help", "admin.php?mod=cloud&op=help", "More information about the site cloud.", NULL, "blogrolling", 9);
+    menu_add("blogrolling", url("admin/cloud"), "Maintain the sites in your blogroll.", $cloud, NULL, 3);
+     menu_add("add new site", url("admin/cloud/add"), "Add a new sites to your blogroll.", NULL, "blogrolling", 3);
+     menu_add("help", url("admin/cloud/help"), "More information about the site cloud.", NULL, "blogrolling", 9);
   }
 
   return $links ? $links : array();
@@ -57,11 +57,11 @@ function cloud_update($site) {
   */
 
   if (!ereg("^http://|https://|ftp://", $site["link"])) {
-    watchdog("warning", "cloud: invalid or missing URL for '". $site["name"] ."'");
+    watchdog("warning", "cloud: invalid or missing URL for '". $site["name"] ."'", l(t("edit site"), "admin/cloud/edit/". $site["sid"]));
   }
 
   if (!ereg("^http://|https://|ftp://", $site["feed"])) {
-    watchdog("warning", "cloud: invalid or missing URL to monitor for '". $site["name"] ."'");
+    watchdog("warning", "cloud: invalid or missing URL to monitor for '". $site["name"] ."'", l(t("edit site"), "admin/cloud/edit/". $site["sid"]));
   }
 
   /*
@@ -126,7 +126,7 @@ function cloud_display() {
 
   $header = array(t("site"), t("last update"), array("data" => t("operations"), "colspan" => 2));
   while ($site = db_fetch_object($result)) {
-    $rows[] = array("<a href=\"$site->link\">$site->name</a>", ($site->timestamp ? format_interval(time() - $site->timestamp) ." ago" : "never"), la(t("edit site"), array("mod" => "cloud", "op" => "edit", "id" => $site->sid)), la(t("update site"), array("mod" => "cloud", "op" => "update", "id" => $site->sid)));
+    $rows[] = array("<a href=\"$site->link\">$site->name</a>", ($site->timestamp ? format_interval(time() - $site->timestamp) ." ago" : "never"), l(t("edit site"), "admin/cloud/edit/$site->sid"), l(t("update site"), "admin/cloud/update/$site->sid"));
   }
 
   return table($header, $rows);
@@ -176,13 +176,17 @@ function cloud_block($op = "list", $delta = 0) {
   }
   else {
     $block["subject"] = t("Site cloud");
-    $block["content"] = cloud_list(20) ."<br /><div align=\"right\">". lm(t("more"), array("mod" => "cloud"), "", array("title" => t("Monitor other sites in the cloud."))) ."</div>";
+    $block["content"] = cloud_list(20) ."<br /><div align=\"right\">". l(t("more"), "cloud", array("title" => t("Monitor other sites in the cloud."))) ."</div>";
     return $block;
   }
 }
 
 function cloud_admin() {
-  global $op, $id, $edit;
+  global $op, $edit;
+
+  if (empty($op)) {
+    $op = arg(2);
+  }
 
   if (user_access("administer site cloud")) {
     switch ($op) {
@@ -190,10 +194,10 @@ function cloud_admin() {
         print cloud_form();
         break;
       case "edit":
-        print cloud_form(cloud_get_site($id));
+        print cloud_form(cloud_get_site(arg(3)));
         break;
       case "update":
-        print status(cloud_update(cloud_get_site($id)));
+        print status(cloud_update(cloud_get_site(arg(3))));
         print cloud_display();
         break;
       case "help":

@@ -153,10 +153,10 @@ function poll_insert($node) {
 
 function poll_link($type, $node = 0, $main) {
   if ($type == "menu.create" && user_access("create polls")) {
-    $links[] = lm(t("create poll"), array("mod" => "node", "op" => "add", "type" => "poll"), "", array("title" => t("Add a new poll.")));
+    $links[] = l(t("create poll"), "node/add/poll", array("title" => t("Add a new poll.")));
   }
   else if ($type == "page" && user_access("access content")) {
-    $links[] = lm(t("polls"), array("mod" => "poll"), "", array("title" => t("View the list of polls on this site.")));
+    $links[] = l(t("polls"), "poll", array("title" => t("View the list of polls on this site.")));
   }
   else if ($type == "node" && $node->type == "poll") {
     /*
@@ -221,7 +221,7 @@ function poll_page() {
   $result = db_query("SELECT n.nid, n.title, p.active, SUM(c.chvotes) AS votes FROM node n LEFT JOIN poll p ON n.nid=p.nid LEFT JOIN poll_choices c ON n.nid=c.nid WHERE type = 'poll' AND status = '1' AND moderate = '0' GROUP BY n.nid, n.title, p.active, n.created ORDER BY n.created DESC");
   $output = "<ul>";
   while ($node = db_fetch_object($result)) {
-    $output .= "<li>". l($node->title, array("id" => $node->nid)) ." - ". format_plural($node->votes, "vote", "votes") ." - ". ($node->active ? t("open") : t("closed")) ."</li>";
+    $output .= "<li>". l($node->title, "node/view/$node->nid") ." - ". format_plural($node->votes, "vote", "votes") ." - ". ($node->active ? t("open") : t("closed")) ."</li>";
   }
   $output .= "</ul>";
   $theme->box(t("Polls"), $output);
@@ -384,7 +384,7 @@ function poll_view(&$node, $main = 0, $block = 0) {
     $node->body = $node->teaser = "";
 
     $links = link_node($node, $main);
-    $links[] = lm(t("older polls"), array("mod" => "poll"), "", array("title" => t("View the list of polls on this site.")));
+    $links[] = l(t("older polls"), "poll", array("title" => t("View the list of polls on this site.")));
   }
 
   if (($node->allowvotes == 1) && !$pollresults[$node->nid]) {

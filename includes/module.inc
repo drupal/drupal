@@ -4,6 +4,7 @@
 // initialize modules:
 function module_init() {
   // Note: changing this also requires changing system_admin() @ modules/system.module.
+  require_once "modules/admin.module";
   require_once "modules/user.module";
   require_once "modules/system.module";
   require_once "modules/watchdog.module";

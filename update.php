@@ -61,7 +61,8 @@ $mysql_updates = array(
   "2002-12-10" => "update_46",
   "2002-12-22" => "update_47",
   "2002-12-29" => "update_48",
-  "2003-01-03" => "update_49"
+  "2003-01-03" => "update_49",
+  "2003-01-05" => "update_50"
 );
 
 // Update functions
@@ -667,6 +668,12 @@ function update_49() {
   update_sql("ALTER TABLE watchdog ADD link varchar(255) DEFAULT '' NULL");
 }
 
+function update_50() {
+  update_content("%admin.php%");
+  update_content("%module.php%");
+  update_content("%node.php%");
+}
+
 function update_upgrade3() {
   update_sql("INSERT INTO system VALUES ('archive.module','archive','module','',1)");
   update_sql("INSERT INTO system VALUES ('block.module','block','module','',1)");
@@ -785,6 +792,19 @@ function update_page() {
       print form($form);
       print "</html>";
       break;
+  }
+}
+
+function update_content($pattern) {
+
+  $result = db_query("SELECT n.nid, c.cid, c.subject FROM node n LEFT JOIN comments c ON n.nid = c.nid WHERE c.comment LIKE '%s'", $pattern);
+  while ($comment = db_fetch_object($result)) {
+    watchdog("special", "upgrade possibly affects comment '$comment->subject'", "<a href=\"node.php?id=$comment->nid&cid=$comment->cid#$comment->cid\">view post</a>");
+  }
+
+  $result = db_query("SELECT nid, title FROM node WHERE teaser LIKE '%s' OR body LIKE '%s'", $pattern, $pattern);
+  while ($node = db_fetch_object($result)) {
+    watchdog("special", "upgrade possibly affects node '$node->title'", "<a href=\"node.php?id=$node->nid\">view post</a>");
   }
 }
 

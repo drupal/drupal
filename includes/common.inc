@@ -2,7 +2,7 @@
 // $Id$
 
 function conf_init() {
-  global $HTTP_HOST;
+  global $HTTP_HOST, $PHP_SELF;
 
   /*
   ** Try finding a matching configuration file by stripping the website's
@@ -10,7 +10,9 @@ function conf_init() {
   ** default value 'conf'.
   */
 
-  $file = strtolower(strtr($HTTP_HOST . substr(request_uri(), 0, strrpos(request_uri(), "/")), "/:", ".."));
+  $uri = $PHP_SELF;
+
+  $file = strtolower(strtr($HTTP_HOST . substr($uri, 0, strrpos($uri, "/")), "/:", ".."));
 
   while (strlen($file) > 4) {
     if (file_exists("includes/$file.php")) {
@@ -35,7 +37,7 @@ function error_handler($errno, $message, $filename, $line, $variables) {
 
 function watchdog($type, $message, $link = NULL) {
   global $user;
-  db_query("INSERT INTO watchdog (uid, type, message, link, location, hostname, timestamp) VALUES ('$user->uid', '%s', '%s', '%s', '%s', '%s', '%s')", $type, $message, $link, request_uri(), getenv("REMOTE_ADDR"), time());
+  db_query("INSERT INTO watchdog (uid, type, message, link, location, hostname, timestamp) VALUES ('$user->uid', '%s', '%s', '%s', '%s', '%s', '%s')", $type, $message, $link, $uri, getenv("REMOTE_ADDR"), time());
 }
 
 function throttle($type, $rate) {
@@ -54,6 +56,18 @@ function check_php_setting($name, $value) {
   if (ini_get($name) != $value) {
     print "<p>Note that the value of PHP's configuration option <code><b>$name</b></code> is incorrect.  It should be set to '$value' for Drupal to work properly.  Either configure your webserver to support <code>.htaccess</code> files so Drupal's <code>.htaccess</code> file can set it to the proper value, or edit your <code>php.ini</code> file directly.  This message will automatically dissapear when the problem has been fixed.</p>";
   }
+}
+
+function arg($index) {
+
+  global $q;
+  static $arguments;
+
+  if (empty($arguments)) {
+    $arguments = explode("/", $q);
+  }
+
+  return $arguments[$index];
 }
 
 function array2object($node) {
@@ -85,8 +99,11 @@ function object2array($node) {
 }
 
 function path_uri($brief = 0) {
-  global $HTTP_HOST;
-  $path = $HTTP_HOST . substr(request_uri(), 0, strrpos(request_uri(), "/")) ."/";
+  global $HTTP_HOST, $PHP_SELF;
+
+  $uri = $PHP_SELF;
+  $path = $HTTP_HOST . substr($uri, 0, strrpos($uri, "/")) ."/";
+
   if (!$brief) {
     $path = "http://". $path;
   }
@@ -133,9 +150,8 @@ function t($string, $args = 0) {
   ** translation string is for example:
   **
   ** $msg = t("You must login below or <a href=\"%url\">create a new
-  **           account</a> before viewing the next page.", array ("%url"
-  **           => drupal_url(array ("mod" => "user", "op" => "register"),
-  **           "module")));
+  **           account</a> before viewing the next page.", array("%url"
+  **           => url("user/register")));
   */
 
   $string = ($languages && function_exists("locale") ? locale($string) : $string);
@@ -277,12 +293,12 @@ function search_item($item, $type) {
  * Render a generic search form.
  *
  * "Generic" means "universal usable" - that is, usable not only from
- * module.php?mod=search, but also as a simple seach box (without
+ * 'site.com/search', but also as a simple seach box (without
  * "Restrict search to", help text, etc) from theme's header etc.
  * This means: provide options to only conditionally render certain
  * parts of this form.
  *
- * @param $action  Form action. Defaults to module.php?mod=search.
+ * @param $action  Form action. Defaults to 'site.com/search'.
  * @param $query   Query string. Defaults to global $keys.
  * @param $options != 0: Render additional form fields/text
  *                 ("Restrict search to", help text, etc).
@@ -291,7 +307,7 @@ function search_form($action = 0, $query = 0, $options = 0) {
   global $keys;
 
   if (!$action) {
-    $action = drupal_url(array("mod" => "search"), "module");
+    $action = url("search");
   }
 
   if (!$query) {
@@ -310,8 +326,6 @@ function search_form($action = 0, $query = 0, $options = 0) {
         $output .= " <input type=\"checkbox\" name=\"edit[type][$name]\" ". ($edit["type"][$name] ? " checked=\"checked\"" : "") ." /> ". t($name);
       }
     }
-
-    // TODO: (link to) search hints
   }
 
   $form .= "<br />";
@@ -354,7 +368,7 @@ function search_data() {
  *
  * @param $type    If set, search only nodes of this type.
  *                 Otherwise, search all types.
- * @param $action  Form action. Defaults to module.php?mod=search.
+ * @param $action  Form action. Defaults to 'site.com/search'.
  * @param $query   Query string. Defaults to global $keys.
  * @param $options != 0: Render additional form fields/text
  *                 ("Restrict search to", help text, etc).
@@ -638,11 +652,11 @@ function format_name($object) {
   global $PHP_SELF;
 
   if ($object->uid && $object->name) {
-    if (strstr($PHP_SELF, "admin.php")) {
-      $output = la($object->name, array("mod" => "user", "op" => "edit", "id" => $object->uid), "", array("title" => t("Administer user profile.")));
+    if (strstr($PHP_SELF, "admin")) {
+      $output = l($object->name, "admin/user/edit/$object->uid", array("title" => t("Administer user profile.")));
     }
     else {
-      $output = lm($object->name, array("mod" => "user", "op" => "view", "id" => $object->uid), "", array("title" => t("View user profile.")));
+      $output = l($object->name, "user/view/$object->uid", array("title" => t("View user profile.")));
     }
   }
   else {
@@ -650,10 +664,6 @@ function format_name($object) {
   }
 
   return $output;
-}
-
-function format_tag($link, $text) {
-  return l(($text ? $text : $link), array("title" => $link));
 }
 
 function form($form, $method = "post", $action = 0, $options = 0) {
@@ -737,72 +747,22 @@ function drupal_parse_url($url = NULL) {
   return $cache[$url];
 }
 
-/**
- * Build an URL; use this functions when you must write an URL
- * for example in a form or a redirect.
- *
- * @param $args    dictionary of arguments to be passed to the script
- * @param $script  script to be invoked; optional, defaults to node
- * @param $anchor  optional, anchor name
- */
-function drupal_url($args = array(), $script = "node", $anchor = 0) {
-  static $search, $replace;
-
-  if (!$search) {
-    /*
-      According to RFC 1738 [3] the special characters "$-_.+!*'()," and the
-      reserved characters "/:@#?&=" can be used unencoded within an URL
-    */
-    $search = array("%24", "%2B", "%21", "%2A", "%27", "%28", "%29", "%2C", "%2F", "%3A", "%40", "%23", "%3F", "%26", "%3D");
-    $replace = array("$", "+", "!", "*", "'", "(", ")", ",", "/", ":", "@", "#", "?", "&", "=");
-  }
-
-  $t = array();
-  foreach ($args as $key => $value) {
-    $t[] = "$key=". str_replace($search, $replace, urlencode($value));
-  }
-  if (count($t)) {
-    return "$script.php?". implode("&amp;", $t) . ($anchor ? "#$anchor" : "");
-  }
-  else {
-    return "$script.php". ($anchor ? "#$anchor" : "");
-  }
+function url($url, $query = NULL) {
+  return "?q=$url". ($query ? "&$query" : "");
 }
 
-/**
- * Build a HTML link; use this functions when you must write a link
- * to another drupal page
- *
- * @param $args        dictionary of arguments to be passed to the script
- * @param $text        text of the link
- * @param $anchor      optional, anchor name
- * @param $script      script to be invoked; optional, defaults to node
- * @param $attributes  optional, dictionary of attributes for the <a> tag such as 'target', 'name', 'class', etc.
- */
-function l($text, $args = array(), $script = "node", $anchor = "", $attributes = array()) {
+function l($text, $url, $attributes = array(), $query = NULL) {
+
+  if (!is_array($attributes)) {
+    print "$text - $url";
+  }
+
   $t = array();
   foreach ($attributes as $key => $value) {
     $t[] = "$key=\"$value\"";
   }
-  return "<a href=\"". drupal_url($args, $script, $anchor) ."\" ". implode($t, " ")  .">$text</a>";
-}
 
-function la($text, $args = array(), $anchor = "", $attributes = array()) {
-  // we don't call l() to avoid another duplication of the array
-  $t = array();
-  foreach ($attributes as $key => $value) {
-    $t[] = "$key=\"$value\"";
-  }
-  return "<a href=\"". drupal_url($args, "admin", $anchor) ."\" ". implode($t, " ")  .">$text</a>";
-}
-
-function lm($text, $args = array(), $anchor = "", $attributes = array()) {
-  // we don't call l() to avoid another duplication of the array
-  $t = array();
-  foreach ($attributes as $key => $value) {
-    $t[] = "$key=\"$value\"";
-  }
-  return "<a href=\"". drupal_url($args, "module", $anchor) ."\" ". implode($t, " ")  .">$text</a>";
+  return "<a href=\"". url($url, $query) ."\" ". implode($t, " ") .">$text</a>";
 }
 
 function field_get($string, $name) {
@@ -825,7 +785,7 @@ function link_page() {
     return $custom_links;
   }
   else {
-    $links[] = l(t("home"), array(), "index", "", array("title" => t("Return to the main page.")));
+    $links[] = "<a href=\"index.php\" title=\"". t("Return to the main page.") ."\">". t("home") ."</a>";
     foreach (module_list() as $name) {
       if (module_hook($name, "link")) {
         $links = array_merge($links, module_invoke($name, "link", "page"));

@@ -8,7 +8,7 @@ function help_system($field){
 
 function help_link($type) {
   if ($type == "admin") {
-    menu_add("help", "admin.php?mod=help", "Help", NULL, NULL, 9);
+    menu_add("help", url("admin/help"), "Help", NULL, NULL, 9);
   }
 }
 
@@ -16,7 +16,7 @@ function help_admin() {
 
   foreach (module_list() as $name) {
     if (module_hook($name, "help")) {
-      $links[] = la($name, array("mod" => "help"), $name);
+      $links[] = l($name, "admin/help#$name");
     }
   }
 

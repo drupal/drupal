@@ -51,10 +51,10 @@ function block_link($type) {
   if ($type == "admin" && user_access("administer blocks")) {
    $help["block"] = "Blocks are the boxes visible in the side bars on the left- and right-hand side of the website.  They are either exported by the Drupal or by any of the active modules.  Adminstrators can enable or disable block, as well control the block placement by assigning them a region and/or by assigning each block (within a region) a weight to sort them vertically.  The path setting lets you define which pages you want the specific blocks to be shown.";
 
-    menu_add("block management", "admin.php?mod=block", "Block management", $help["block"], NULL, 2);
-    menu_add("add new block", "admin.php?mod=block&op=add", "Create a new block", $help["block"], "block management", 2);
-    menu_add("preview placement", "admin.php?mod=block&op=preview", "Preview the block placement", $help["block"], "block management", 3);
-    menu_add("help", "admin.php?mod=block&op=help", "More information about blocks", NULL, "block management", 5);
+    menu_add("block management", url("admin/block"), "Block management", $help["block"], NULL, 2);
+    menu_add("add new block", url("admin/block/add"), "Create a new block", $help["block"], "block management", 2);
+    menu_add("preview placement", url("admin/block/preview"), "Preview the block placement", $help["block"], "block management", 3);
+    menu_add("help", url("admin/block/help"), "More information about blocks", NULL, "block management", 5);
   }
 }
 
@@ -142,8 +142,8 @@ function block_admin_display() {
 
   foreach ($blocks as $block) {
     if ($block["module"] == "block") {
-      $edit = la(t("edit"), array("mod" => "block", "op" => "edit", "id" => $block["delta"]));
-      $delete = la(t("delete"), array("mod" => "block", "op" => "delete", "id" => $block["delta"]));
+      $edit = l(t("edit"), "admin/block/edit/". $block["delta"]);
+      $delete = l(t("delete"), "admin/block/delete". $block["delta"]);
     }
     else {
       $edit = "";
@@ -258,9 +258,13 @@ function block_box_delete($bid) {
 }
 
 function block_admin() {
-  global $op, $edit, $theme;
+  global $edit, $op, $theme;
 
   if (user_access("administer blocks")) {
+
+    if (empty($op)) {
+      $op = arg(2);
+    }
 
     switch ($op) {
       case "help":
@@ -273,12 +277,10 @@ function block_admin() {
         block_box_form();
         break;
       case "edit":
-        global $id;
-        block_box_form(block_box_get($id));
+        block_box_form(block_box_get(arg(3)));
         break;
       case "delete":
-        global $id;
-        print status(block_box_delete($id));
+        print status(block_box_delete(arg(3)));
         cache_clear_all();
         block_admin_display();
         break;

@@ -45,8 +45,7 @@ $languages = array("en" => "English");
 # top of every page.
 // $custom_links = array(
 //  "<a href=\"index.php\">home</a>",
-//  "<a href=\"module.php?mod=user\">school</a>",
-//  "<a href=\"module.php?mod=blog\">work</a>");
-
+//  "<a href=\"blog\">journal</a>",
+//  "<a href=\"story\">articles</a>");
 
 ?>

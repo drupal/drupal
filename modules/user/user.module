@@ -296,7 +296,7 @@ function user_search($keys) {
   global $PHP_SELF;
   $result = db_query("SELECT * FROM users WHERE name LIKE '%$keys%' LIMIT 20");
   while ($account = db_fetch_object($result)) {
-    $find[$i++] = array("title" => $account->name, "link" => (strstr($PHP_SELF, "admin.php") ? drupal_url(array("mod" => "user", "op" => "edit", "id" => $account->uid), "admin") : drupal_url(array("mod" => "user", "op" => "view", "id" => $account->uid), "module")), "user" => $account->name);
+    $find[$i++] = array("title" => $account->name, "link" => (strstr($PHP_SELF, "admin") ? url("admin/user/edit/$account->uid") : url("user/view/$account->uid")), "user" => $account->name);
   }
   return $find;
 }
@@ -315,7 +315,7 @@ function user_block($op = "list", $delta = 0) {
       case 0:
         if (!$user->uid) {
           $output = "<div align=\"center\">\n";
-          $output .= "<form action=\"". drupal_url(array("mod" => "user", "op" => "login"), "module") ."\" method=\"post\">\n";
+          $output .= "<form action=\"". url("user/login") ."\" method=\"post\">\n";
           // Save the referer.  We record where the user came from such that we
           // can redirect him after having completed the login form.
           if (!$edit["destination"]) $edit["destination"] = request_uri();
@@ -334,9 +334,9 @@ function user_block($op = "list", $delta = 0) {
           $output .= "</form></div>\n";
 
           if (variable_get("user_register", 1)) {
-            $items[] = lm(t("Create new account"), array("mod" => "user", "op" => "register"), "", array("title" => t("Create a new user account.")));
+            $items[] = l(t("Create new account"), "user/register", array("title" => t("Create a new user account.")));
           }
-          $items[] = lm(t("Request new password"), array("mod" => "user", "op" => "password"), "", array("title" => t("Request new password via e-mail.")));
+          $items[] = l(t("Request new password"), "user/password", array("title" => t("Request new password via e-mail.")));
 
           $output .= theme_invoke("theme_item_list", $items);
 
@@ -363,7 +363,7 @@ function user_block($op = "list", $delta = 0) {
 
         $result = db_query("SELECT uid, name FROM users WHERE status != '0' ORDER BY uid DESC LIMIT 5");
         while ($account = db_fetch_object($result)) {
-          $items[] = lm((strlen($account->name) > 15 ? substr($account->name, 0, 15) . '...' : $account->name), array("mod" =>user, "op" => "view", "id" => $account->uid));
+          $items[] = l((strlen($account->name) > 15 ? substr($account->name, 0, 15) . '...' : $account->name), "user/view/$account->uid");
         }
 
         $output = theme_invoke("theme_item_list", $items);
@@ -377,19 +377,19 @@ function user_block($op = "list", $delta = 0) {
 
 function user_link($type) {
   if ($type == "page") {
-    $links[] = lm(t("user account"), array("mod" => "user"), "", array("title" => t("Create a user account, request a new password or edit your account settings.")));
+    $links[] = l(t("user account"), "user", array("title" => t("Create a user account, request a new password or edit your account settings.")));
   }
 
   if ($type == "menu.settings") {
-    $links[] = lm(t("edit account"), array("mod" => "user", "op" => "edit"), "", array("title" => t("View and edit your account information.")));
+    $links[] = l(t("edit account"), "user/edit", array("title" => t("View and edit your account information.")));
   }
 
   if ($type == "menu.misc") {
     if (user_access("access administration pages")) {
-      $links[] = la(t("administer %a", array("%a" => variable_get("site_name", "drupal"))), array(), "", array("title" => t("Access administration pages.")));
+      $links[] = l(t("administer %a", array("%a" => variable_get("site_name", "drupal"))), "admin", array("title" => t("Access administration pages.")));
     }
 
-    $links[] = lm(t("logout"), array("mod" => "user", "op" => "logout"), "", array("title" => t("Logout.")));
+    $links[] = l(t("logout"), "user/logout", array("title" => t("Logout.")));
   }
 
   if ($type == "admin" && user_access("administer users")) {
@@ -402,24 +402,24 @@ function user_link($type) {
     $help["search"] = "On this page you can query any username.  For example, one may search for 'br' and Drupal might return 'brian', 'brad', and 'brenda'.";
     $help["setting"] = "Administrators may choose to restrict registration to their site.  That restriction may be accomplished on this page.  Also, the list of words which may be included in a system generated password is also listed on this page.  Drupal generates passwords by joining small words from the password list until the new password is greater than 6 characters.";
 
-    menu_add("user management", "admin.php?mod=user", "User management", $help["user"]);
-     menu_add("create new account", "admin.php?mod=user&op=create", "Create a new user account.", $help["create"], "user management", 1);
-     menu_add("view user accounts", "admin.php?mod=user&op=account", "Display user account listings.", $help["view"], "user management", 2, 1);
-     menu_add("access rules", "admin.php?mod=user&op=access", "Configure access rules.", $help["access"], "user management", 3);
-      menu_add("e-mail rules", "admin.php?mod=user&op=access&type=mail", "Allow or deny certain e-mail addresses.", $help["access"], "access rules");
-      menu_add("username rules", "admin.php?mod=user&op=access&type=user", "Allow or deny certain usernames.", $help["access"], "access rules");
-     menu_add("user roles", "admin.php?mod=user&op=role", "Configure user roles.", $help["role"], "user management", 4);
-     menu_add("user permissions", "admin.php?mod=user&op=permission", "Configure user permissions.", $help["permission"], "user management", 5);
-     menu_add("search account", "admin.php?mod=user&op=search", "Search a user account.", $help["search"], "user management", 5);
-     menu_add("help", "admin.php?mod=user&op=help", "More information about user management.", NULL, "user management", 7);
+    menu_add("user management", url("admin/user"), "User management", $help["user"]);
+     menu_add("create new account", url("admin/user/create"), "Create a new user account.", $help["create"], "user management", 1);
+     menu_add("view user accounts", url("admin/user/account"), "Display user account listings.", $help["view"], "user management", 2, 1);
+     menu_add("access rules", url("admin/user/access"), "Configure access rules.", $help["access"], "user management", 3);
+      menu_add("e-mail rules", url("admin/user/access/mail"), "Allow or deny certain e-mail addresses.", $help["access"], "access rules");
+      menu_add("username rules", url("admin/user/access/user"), "Allow or deny certain usernames.", $help["access"], "access rules");
+     menu_add("user roles", url("admin/user/role"), "Configure user roles.", $help["role"], "user management", 4);
+     menu_add("user permissions", url("admin/user/permission"), "Configure user permissions.", $help["permission"], "user management", 5);
+     menu_add("search account", url("admin/user/search"), "Search a user account.", $help["search"], "user management", 5);
+     menu_add("help", url("admin/user/help"), "More information about user management.", NULL, "user management", 7);
 
-     menu_add("active users", "admin.php?mod=user&op=account&query=0", t("Active users."), $help["view"], "view user accounts", 1);
-     menu_add("new users", "admin.php?mod=user&op=account&query=1", t("New users."), $help["view"], "view user accounts", 2);
-     menu_add("blocked users", "admin.php?mod=user&op=account&query=2", t("Blocked users."), $help["view"], "view user accounts", 3);
+     menu_add("active users", url("admin/user/account/0"), t("Active users."), $help["view"], "view user accounts", 1);
+     menu_add("new users", url("admin/user/account/1"), t("New users."), $help["view"], "view user accounts", 2);
+     menu_add("blocked users", url("admin/user/account/2"), t("Blocked users."), $help["view"], "view user accounts", 3);
 
      $i = 3;
      foreach (user_roles(1) as $key => $value) {
-       menu_add("users with role '$value'", "admin.php?mod=user&op=account&query=". $i++, NULL, $help["view"], "view user accounts", 4);
+       menu_add("users with role '$value'", url("admin/user/account/". $i++), NULL, $help["view"], "view user accounts", 4);
      }
   }
 
@@ -481,7 +481,7 @@ function user_auth_help_links() {
   $links = array();
   foreach (module_list() as $module) {
     if (module_hook($module, "auth_help")) {
-      $links[] = lm(module_invoke($module, "info", "name"), array("mod" => "user", "op" => "help"), $module);
+      $links[] = l(module_invoke($module, "info", "name"), "user/help#$module");
     }
   }
   return $links;
@@ -497,7 +497,7 @@ function user_login($edit = array(), $msg = "") {
   */
 
   if ($user->uid) {
-    drupal_goto(drupal_url(array("mod" => "user"), "module"));
+    drupal_goto(url("user"));
   }
 
   if (user_deny("user", $edit["name"])) {
@@ -549,7 +549,7 @@ function user_login($edit = array(), $msg = "") {
           if (module_invoke($module, "auth", $name, $pass, $server)) {
             if (variable_get("user_register", 1) == 1 && !user_load(array("name" => "$name@$server"))) { //register this new user
               $user = user_save("", array("name" => "$name@$server", "pass" => user_password(), "init" => "$name@$server", "status" => 1, "authname_$module" => "$name@$server", "rid" => _user_authenticated_id()));
-              watchdog("user", "new user: $name@$server ($module ID)", la("edit user", array("mod" => "user", "op" => "edit", "id" => $user->uid)));
+              watchdog("user", "new user: $name@$server ($module ID)", l("edit user", "admin/user/edit/$user->uid"));
               break;
             }
           }
@@ -586,7 +586,7 @@ function user_login($edit = array(), $msg = "") {
     }
     else {
       if (!$error) {
-        $error = t("Sorry.  Unrecognized username or password.") ." ". lm(t("Have you forgotten your password?"), array("mod" => "user", "op" => "password"));
+        $error = t("Sorry.  Unrecognized username or password.") ." ". l(t("Have you forgotten your password?"), "user/password");
       }
       if ($server) {
         watchdog("user", "failed login for '$name@$server': $error");
@@ -631,13 +631,13 @@ function user_login($edit = array(), $msg = "") {
   $output .= form_password(t("Password"), "pass", $pass, 20, 64, t("Enter the password that accompanies your username."));
   $output .= form_checkbox(t("Remember me"), "remember_me", 1, 0, 0);
   $output .= form_submit(t("Log in"));
-  $output .= "<p>&raquo; ". lm(t("Request new password"), array("mod" => "user", "op" => "password")). "<br />";
+  $output .= "<p>&raquo; ". l(t("Request new password"), "user/password"). "<br />";
   if (variable_get("user_register", 1)) {
-    $output .= "&raquo; ". lm(t("Create new account"), array("mod" => "user", "op" => "register"));
+    $output .= "&raquo; ". l(t("Create new account"), "user/register");
   }
   $output .= "</p>";
 
-  return form($output, "post", drupal_url(array ("mod" => "user"), "module"));
+  return form($output, "post", url("user"));
 }
 
 function _user_authenticated_id() {
@@ -693,7 +693,7 @@ function user_pass($edit = array()) {
 
       $variables = array("%username" => $account->name, "%site" => variable_get("site_name", "drupal"), "%password" => $pass, "%uri" => path_uri(), "%uri_brief" => path_uri(1), "%mailto" => $account->mail, "%date" => format_date(time()));
       $subject = strtr(variable_get("user_mail_pass_subject", t("Replacement login information for %username at %site")), $variables);
-      $body = strtr(variable_get("user_mail_pass_body", t("%username,\n\nHere is your new password for %site.  You may now login to %uri". drupal_url(array("mod" => "user", "op" => "login"), "module") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %uri". drupal_url(array("mod" => "user", "op" => "edit"), "module") .".\n\nYour new %site membership also enables you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering.  Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n-- %site team")), $variables);
+      $body = strtr(variable_get("user_mail_pass_body", t("%username,\n\nHere is your new password for %site.  You may now login to %uri". url("user/login") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %uri". url("user/edit") .".\n\nYour new %site membership also enables you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering.  Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n-- %site team")), $variables);
       $headers = "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from";
       user_mail($account->mail, $subject, $body, $headers);
 
@@ -716,13 +716,13 @@ function user_pass($edit = array()) {
     $output .= form_textfield(t("Username"), "name", $edit["name"], 30, 64);
     $output .= form_textfield(t("E-mail address"), "mail", $edit["mail"], 30, 64);
     $output .= form_submit(t("E-mail new password"));
-    $output .= "<p>&raquo; ". lm(t("Log in"), array("mod" =>user, "op" => "login")) ."<br />";
+    $output .= "<p>&raquo; ". l(t("Log in"), "user/login") ."<br />";
     if (variable_get("user_register", 1)) {
-      $output .= "&raquo; ". lm(t("Create new account"), array("mod" => "user", "op" => "register"));
+      $output .= "&raquo; ". l(t("Create new account"), "user/register");
     }
     $output .= "</p>";
 
-    return form($output, "post", drupal_url(array ("mod" => "user"), "module"));
+    return form($output, "post", url("user"));
   }
 }
 
@@ -734,7 +734,7 @@ function user_register($edit = array()) {
   */
 
   if ($user->uid) {
-    drupal_goto(drupal_url(array("mod" => "user", "op" => "edit"), "module"));
+    drupal_goto(url("user/edit"));
   }
 
   if ($edit["name"] && $edit["mail"]) {
@@ -788,13 +788,13 @@ function user_register($edit = array()) {
     // TODO: is this necessary? Won't session_write replicate this?
     unset($edit["session"]);
     $account = user_save("", array_merge(array("name" => $edit["name"], "pass" => $pass, "init" => $edit["mail"], "mail" => $edit["mail"], "rid" => _user_authenticated_id(), "rating" => 0, "status" => (variable_get("user_register", 1) == 1 ? 1 : 0)), $data));
-    watchdog("user", "new user: '". $edit["name"] ."' &lt;". $edit["mail"] ."&gt;", la("edit user", array("mod" => "user", "op" => "edit", "id" => $account->uid)));
+    watchdog("user", "new user: '". $edit["name"] ."' &lt;". $edit["mail"] ."&gt;", l("edit user", "admin/user/edit/$account->uid"));
 
     $variables = array("%username" => $edit["name"], "%site" => variable_get("site_name", "drupal"), "%password" => $pass, "%uri" => path_uri(), "%uri_brief" => path_uri(1), "%mailto" => $edit["mail"], "%date" => format_date(time()));
 
     //the first user may login immediately, and receives a customized welcome e-mail.
     if ($account->uid == 1) {
-      user_mail($edit["mail"], t("drupal user account details for %s", array("%s" => $edit["name"])), strtr(t("%username,\n\nYou may now login to %uri using the following username and password:\n\n  username: %username\n  password: %password\n\nAfter logging in, you may wish to visit the following pages:\n\nAdministration: %uriadmin.php\nEdit user account: %uri". drupal_url(array("mod" => "user", "op" => "edit"), "module") ."\n\n--drupal"), $variables), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+      user_mail($edit["mail"], t("drupal user account details for %s", array("%s" => $edit["name"])), strtr(t("%username,\n\nYou may now login to %uri using the following username and password:\n\n  username: %username\n  password: %password\n\n%uri". url("user/edit") ."\n\n--drupal"), $variables), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
       // This should not be t()'ed. No point as its only shown once in the sites lifetime, and it would be bad to store the password
       $output .= "<p>Welcome to Drupal. You are user #1, which gives you full and immediate access.  All future registrants will receive their passwords via e-mail, so please configure your e-mail settings using the Administration pages.</p><p> Your password is <b>$pass</b>. You may change your password on the next page.</p><p>Please login below.</p>";
       $output .= form_hidden("name", $account->name);
@@ -809,7 +809,7 @@ function user_register($edit = array()) {
         */
 
         $subject = strtr(variable_get("user_mail_welcome_subject", t("User account details for %username at %site")), $variables);
-        $body = strtr(variable_get("user_mail_welcome_body", t("%username,\n\nThank you for registering at %site. You may now login to %uri". drupal_url(array("mod" => "user", "op" => "login"), "module") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %urimodule.php?mod=user&op=edit\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team")), $variables);
+        $body = strtr(variable_get("user_mail_welcome_body", t("%username,\n\nThank you for registering at %site. You may now login to %uri". url("user/login") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %uri". url("user/edit") .".\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team")), $variables);
         user_mail($edit["mail"], $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
         return t("Your password and further instructions have been sent to your e-mail address.");
       }
@@ -818,9 +818,9 @@ function user_register($edit = array()) {
         ** Create new user account, administrator approval required:
         */
         $subject = strtr(variable_get("user_mail_welcome_subject", t("User account details for %username at %site")), $variables);
-        $body = strtr(variable_get("user_mail_welcome_body", t("%username,\n\nThank you for registering at %site. Your account will have to be approved by the site administrator. You may now login to %uri". drupal_url(array("mod" => "user", "op" => "login"), "module") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %urimodule.php?mod=user&op=edit\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team")), $variables);
+        $body = strtr(variable_get("user_mail_welcome_body", t("%username,\n\nThank you for registering at %site. Your account will have to be approved by the site administrator. You may now login to %uri". url("user/login") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %uri". url("user/edit") .".\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team")), $variables);
         user_mail($edit["mail"], $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
-        user_mail(variable_get("site_mail", ini_get("sendmail_from")), $subject, t("%u has applied for an account.\n\n%uri", array("%u" => $account->name, "%uri" => path_uri() . drupal_url(array("mod" => "user", "op" => "edit", "id" => $account->uid), "admin"))), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+        user_mail(variable_get("site_mail", ini_get("sendmail_from")), $subject, t("%u has applied for an account.\n\n%uri", array("%u" => $account->name, "%uri" => path_uri() . url("admin/user/edit/$account->uid"))), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
         return t("Your password and further instructions have been sent to your e-mail address.");
       }
     }
@@ -835,7 +835,7 @@ function user_register($edit = array()) {
   $affiliates = user_auth_help_links();
   if (count($affiliates) > 0) {
     $affiliates = implode(", ", $affiliates);
-    $output .= "<p>" . t("Note: If you have an account with one of our affiliates (%s), you may ". lm("login now", array("mod" => "user", "op" => "login")) ." instead of registering.", array("%s" => $affiliates)) ."</p>";
+    $output .= "<p>" . t("Note: If you have an account with one of our affiliates (%s), you may ". l("login now", "user/login") ." instead of registering.", array("%s" => $affiliates)) ."</p>";
   }
   $output .= form_textfield(t("Username"), "name", $edit["name"], 30, 64, t("Your full name or your preferred username: only letters, numbers and spaces are allowed."));
   $output .= form_textfield(t("E-mail address"), "mail", $edit["mail"], 30, 64, t("A password and instructions will be sent to this e-mail address, so make sure it is accurate."));
@@ -845,8 +845,8 @@ function user_register($edit = array()) {
     }
   }
   $output .= form_submit(t("Create new account"));
-  $output .= "<p>&raquo; ". lm(t("E-mail new password"), array("mod" => "user", "op" => "password")). "<br />";
-  $output .= "&raquo; " .lm(t("Log in"), array("mod" => "user", "op" => "login")). "</p>";
+  $output .= "<p>&raquo; ". l(t("E-mail new password"), "user/password"). "<br />";
+  $output .= "&raquo; ". l(t("Log in"), "user/login") ."</p>";
 
   return form($output);
 }
@@ -982,9 +982,9 @@ function user_edit($edit = array()) {
 }
 
 function user_menu() {
-  $links[] = lm(t("view user information"), array("mod" => "user", "op" => "view"));
-  $links[] = lm(t("edit user information"), array("mod" => "user", "op" => "edit"));
-  $links[] = lm(t("delete account"), array("mod" => "user", "op" => "delete"));
+  $links[] = l(t("view user information"), "user/view");
+  $links[] = l(t("edit user information"), "user/edit");
+  $links[] = l(t("delete account"), "user/delete");
 
   return "<div align=\"center\">". implode(" &middot; ", $links) ."</div>";
 }
@@ -1036,7 +1036,11 @@ function user_view($uid = 0) {
 }
 
 function user_page() {
-  global $edit, $op, $id, $theme;
+  global $edit, $op, $theme;
+
+  if (empty($op)) {
+    $op = arg(1);
+  }
 
   switch ($op) {
     case t("E-mail new password");
@@ -1082,7 +1086,7 @@ function user_page() {
       $theme->footer();
       break;
     case "view":
-      user_view($id);
+      user_view(arg(2));
       break;
     case t("Logout"):
     case "logout":
@@ -1106,9 +1110,9 @@ function user_conf_options() {
   $output .= form_textfield(t("Password words"), "user_password", variable_get("user_password", "foo,bar,guy,neo,tux,moo,sun,asm,dot,god,axe,geek,nerd,fish,hack,star,mice,warp,moon,hero,cola,girl,fish,java,perl,boss,dark,sith,jedi,drop,mojo"), 55, 256, t("A comma separated list of short words that can be concatenated to generate human-readable passwords."));
   $output .= form_select(t("Remember authenticated users"), "user_remember", variable_get("user_remember", 0), array(t("Let the user decide whether he should be logged out when leaving the site."), t("Authenticated users are not logged out upon leaving the site."), t("Authenticated users are logged out upon leaving the site.")));
   $output .= form_textfield(t("Subject of welcome e-mail"), "user_mail_welcome_subject", variable_get("user_mail_welcome_subject", "User account details for %username at %site"), 80, 180, t("Customize the subject of your welcome e-mail, which is sent to new members upon registering.") . " " . t("Available variables are:") . " " . "%username, %site, %password, %uri, %uri_brief, %mailto, %date");
-  $output .= form_textarea(t("Body of welcome e-mail"), "user_mail_welcome_body", variable_get("user_mail_welcome_body", t("%username,\n\nThank you for registering at %site. You may now login to %uri". drupal_url(array("mod" => "user", "op" => "login"), "module") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %uri". drupal_url(array("mod" => "user", "op" => "edit"), "module") ."\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team")), 70, 10, t("Customize the body of the welcome e-mail, which is sent to new members upon registering.") . " " . t("Available variables are:") . " " . "%username, %site, %password, %uri, %uri_brief, %mailto");
+  $output .= form_textarea(t("Body of welcome e-mail"), "user_mail_welcome_body", variable_get("user_mail_welcome_body", t("%username,\n\nThank you for registering at %site. You may now login to %uri". url("user/login") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %uri". url("user/edit") ."\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team")), 70, 10, t("Customize the body of the welcome e-mail, which is sent to new members upon registering.") . " " . t("Available variables are:") . " " . "%username, %site, %password, %uri, %uri_brief, %mailto");
   $output .= form_textfield(t("Subject of password recovery e-mail"), "user_mail_pass_subject", variable_get("user_mail_pass_subject", t("Replacement login information for %username at %site")), 80, 180, t("Customize the Subject of your forgotten password e-mail.") . " " . t("Available variables are:") . " " . "%username, %site, %password, %uri, %uri_brief, %mailto, %date");
-  $output .= form_textarea(t("Body of password recovery e-mail"), "user_mail_pass_body", variable_get("user_mail_pass_body", t("%username,\n\nHere is your new password for %site. You may now login to %uri". drupal_url(array("mod" => "user", "op" => "login"), "module") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %uri". drupal_url(array("mod" => "user", "op" => "edit"), "module") ."\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team")), 70, 10, t("Customize the body of the forgotten password e-mail.") . " " . t("Available variables are:") . " " . "%username, %site, %password, %uri, %uri_brief, %mailto");
+  $output .= form_textarea(t("Body of password recovery e-mail"), "user_mail_pass_body", variable_get("user_mail_pass_body", t("%username,\n\nHere is your new password for %site. You may now login to %uri". url("user/login") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %uri". url("user/edit") ."\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team")), 70, 10, t("Customize the body of the forgotten password e-mail.") . " " . t("Available variables are:") . " " . "%username, %site, %password, %uri, %uri_brief, %mailto");
 
   return $output;
 }
@@ -1158,6 +1162,9 @@ function user_admin_create($edit = array()) {
 function user_admin_access($edit = array()) {
   global $op, $id, $type;
 
+  $type = arg(3);
+  $id = arg(4);
+
   if (empty($type)) {
     return;
   }
@@ -1190,13 +1197,13 @@ function user_admin_access($edit = array()) {
   $result = db_query("SELECT * FROM access WHERE type = '%s' AND status = '1' ORDER BY mask", $type);
 
   while ($rule = db_fetch_object($result)) {
-    $rows[] = array(t("Allow"), $rule->mask, array("data" => la(t("delete rule"), array("mod" => "user", "op" => "access", "type" => $type, "id" => $rule->aid)), "align" => "center"));
+    $rows[] = array(t("Allow"), $rule->mask, array("data" => l(t("delete rule"), "admin/user/access/$type/$rule->aid"), "align" => "center"));
   }
 
   $result = db_query("SELECT * FROM access WHERE type = '%s' AND status = '0' ORDER BY mask", $type);
 
   while ($rule = db_fetch_object($result)) {
-    $rows[] = array(t("Deny"), $rule->mask, la(t("delete rule"), array("mod" => "user", "op" => "access", "type" => $type, "id" => $rule->aid)));
+    $rows[] = array(t("Deny"), $rule->mask, l(t("delete rule"), "admin/user/access/$type/$rule->aid"));
   }
 
   $rows[] = array("<select name=\"edit[status]\"><option value=\"1\">". t("Allow") ."</option><option value=\"0\">". t("Deny") ."</option></select>", "<input size=\"32\" maxlength=\"64\" name=\"edit[mask]\" />", "<input type=\"submit\" name=\"op\" value=\"" . t("Add rule") . "\" />");
@@ -1301,7 +1308,9 @@ function user_admin_perm($edit = array()) {
 }
 
 function user_admin_role($edit = array()) {
-  global $op, $id;
+  global $op;
+
+  $id = arg(3);
 
   if ($op == t("Save role")) {
     db_query("UPDATE role SET name = '%s' WHERE rid = '%s'", $edit["name"], $id);
@@ -1336,7 +1345,7 @@ function user_admin_role($edit = array()) {
 
     $header = array(t("name"), t("operations"));
     while ($role = db_fetch_object($result)) {
-      $rows[] = array($role->name, array("data" => la(t("edit role"), array("mod" => "user", "op" => "role", "id" => $role->rid)), "align" => "center"));
+      $rows[] = array($role->name, array("data" => l(t("edit role"), "admin/user/role/$role->rid"), "align" => "center"));
     }
     $rows[] = array("<input size=\"32\" maxlength=\"64\" name=\"edit[name]\" />", "<input type=\"submit\" name=\"op\" value=\"". t("Add role") ."\" />");
 
@@ -1348,7 +1357,9 @@ function user_admin_role($edit = array()) {
 }
 
 function user_admin_edit($edit = array()) {
-  global $op, $id;
+  global $op;
+
+  $id = arg(3);
 
   if ($account = user_load(array("uid" => $id))) {
 
@@ -1454,7 +1465,7 @@ function user_admin_edit($edit = array()) {
 }
 
 function user_admin_account() {
-  global $query;
+  $query = arg(3);
 
   $queries = array("ORDER BY timestamp DESC", "ORDER BY u.uid DESC", "WHERE status = 0 ORDER BY u.uid DESC");
   foreach (user_roles(1) as $key => $value) {
@@ -1465,7 +1476,7 @@ function user_admin_account() {
 
   $header = array(t("username"), t("last access"), t("operations"));
   while ($account = db_fetch_object($result)) {
-    $rows[] = array(format_name($account), format_date($account->timestamp, "small"), la(t("edit account"), array("mod" => "user", "op" => "edit", "id" => $account->uid)));
+    $rows[] = array(format_name($account), format_date($account->timestamp, "small"), l(t("edit account"), "admin/user/edit/$account->uid"));
   }
 
   if ($pager = pager_display(NULL, 50, 0, "admin")) {
@@ -1488,7 +1499,7 @@ function user_role_init() {
 }
 
 function user_admin() {
-  global $edit, $id, $op;
+  global $op, $edit;
 
   if (user_access("administer users")) {
     /*
@@ -1497,12 +1508,16 @@ function user_admin() {
 
     user_role_init();
 
+    if (empty($op)) {
+      $op = arg(2);
+    }
+
     switch ($op) {
       case "help":
         print user_help();
         break;
       case "search":
-        print search_type("user", drupal_url(array("mod" => "user", "op" => "search"), "admin"));
+        print search_type("user", url("admin/user/search"));
         break;
       case t("Add rule"):
       case t("Check"):
@@ -1690,7 +1705,7 @@ function user_help_devel_da() {
 <pre>function blogger_info($field = NULL) {
   $info["name"] = "Blogger";
   $info["protocol"] = "XML-RPC";
-  $info["link"] = "<a href=\"module.php?mod=user&op=da_help#blogger\">Blogger</a>";
+  $info["link"] = l("Blogger", "user/help#blogger");
   $info["maintainer"] = "Moshe Weitzman";
   $info["maintaineremail"] = "weitzman at tejasa.com";
 
@@ -1825,9 +1840,8 @@ function user_help_devel_da() {
   want to share it with the world. The best way to do this is to add the module
   to the <a href="http://cvs.drupal.org/viewcvs.cgi/contributions/modules/authentication/Blogger/?cvsroot=contrib">Drupal
   contributions CVS repository</a>. You'll need to request priveleges in this repository - see <a href="http://cvs.drupal.org/viewcvs.cgi/contributions/README?rev=HEAD&cvsroot=contrib&content-type=text/vnd.viewcvs-markup">README</a>
-  for the details. Then you'll want to announce your contribution on the <a href="http://www.drop.org/node.php?title=mailing%2Blists">Drupal_devel
-  and Drupal_support mailing lists</a>. You might also want to post a story on
-  <a href="http://www.drop.org">Drop.org</a>.<br>
+  for the details. Then you'll want to announce your contribution on the <a href="http://list.drupal.org/>drupal-devel and drupal-support mailing lists</a>. You might also want to post a story on
+  <a href="http://www.drupal.org/">Drupal.org</a>.<br>
 </p>
   <?php
 }

@@ -34,12 +34,12 @@ function system_perm() {
 
 function system_link($type) {
   if ($type == "admin" && user_access("administer site configuration")) {
-    menu_add("site configuration", "admin.php?mod=system", "Site configuration.", NULL, NULL, 2);
-     menu_add("site settings", "admin.php?mod=system&op=options", "Site settings.", NULL, "site configuration", 1);
-     menu_add("content filters", "admin.php?mod=system&op=filters", "Content filters.", NULL, "site configuration", 2);
-     menu_add("module selector", "admin.php?mod=system&op=modules", "Module selector.", NULL, "site configuration", 3);
-     menu_add("theme selector", "admin.php?mod=system&op=themes", "Theme selector.", NULL, "site configuration", 4);
-     menu_add("help", "admin.php?mod=system&op=help", "Help.", NULL, "site configuration", 9);
+    menu_add("site configuration", url("admin/system"), "Site configuration.", NULL, NULL, 2);
+     menu_add("site settings", url("admin/system/options"), "Site settings.", NULL, "site configuration", 1);
+     menu_add("content filters", url("admin/system/filters"), "Content filters.", NULL, "site configuration", 2);
+     menu_add("module selector", url("admin/system/modules"), "Module selector.", NULL, "site configuration", 3);
+     menu_add("theme selector", url("admin/system/themes"), "Theme selector.", NULL, "site configuration", 4);
+     menu_add("help", url("admin/system/help"), "Help.", NULL, "site configuration", 9);
   }
 }
 
@@ -132,7 +132,7 @@ function system_view($type) {
     default:
       foreach (module_list() as $name) {
         if (module_hook($name, "conf_options")) {
-          $links[] = la(t("$name"), array("mod" => "system"), $name);
+          $links[] = l(t("$name"), "admin/system#$name");
         }
       }
 
@@ -218,9 +218,13 @@ function system_listing($type, $directory, $required = array()) {
 }
 
 function system_admin() {
-  global $edit, $op, $type;
+  global $op, $edit;
 
   if (user_access("administer site configuration")) {
+    if (empty($op)) {
+      $op = arg(2);
+    }
+
     switch ($op) {
       case "help":
         print system_help();
@@ -233,7 +237,7 @@ function system_admin() {
         cache_clear_all();
       case "modules":
         // Note: changing this also requires changing module_init() @ includes/module.inc.
-        $required = array("modules/user.module", "modules/system.module", "modules/watchdog.module");
+        $required = array("modules/admin.module", "modules/user.module", "modules/system.module", "modules/watchdog.module");
         print system_listing("module", "modules", $required);
         break;
       case t("Save theme settings"):
@@ -247,12 +251,12 @@ function system_admin() {
         break;
       case t("Reset to defaults"):
         print status(system_default($edit));
-        print system_view($type);
+        print system_view(arg(3));
         cache_clear_all();
         break;
       case t("Save configuration"):
         print status(system_save($edit));
-        print system_view($type);
+        print system_view(arg(3));
         cache_clear_all();
         break;
       default:
