@@ -399,6 +399,10 @@ function statistics_admin_accesslog_table($type, $id) {
 function statistics_recent_refer($nid = 0) {
   global $HTTP_HOST, $view;
 
+  if (empty($view)) {
+    $view = arg(3);
+  }
+
   $node = node_load(array("nid" => $nid));
 
   if ($nid > 0) {
