@@ -97,6 +97,15 @@ function object2array($node) {
   return $array;
 }
 
+function referer_uri() {
+
+  if (isset($_SERVER["HTTP_REFERER"])) {
+    $uri = $_SERVER["HTTP_REFERER"];
+
+    return check_url($uri);
+  }
+}
+
 function request_uri() {
   /*
   ** Since request_uri() is only available on Apache, we generate
@@ -110,21 +119,7 @@ function request_uri() {
     $uri = $_SERVER["PHP_SELF"] ."?". $_SERVER["QUERY_STRING"];
   }
 
-  /*
-  ** We pipe the request URI through htmlspecialchars() to prevent
-  ** XSS attacks.
-  */
-
-  $uri = htmlspecialchars($uri, ENT_QUOTES);
-
-  /*
-  ** We replace ( and ) with their entity equivalents to prevent XSS
-  ** attacks.
-  */
-
-  $uri = strtr($uri, array("(" => "&040;", ")" => "&041;"));
-
-  return $uri;
+  return check_url($uri);
 }
 
 function message_access() {
@@ -457,8 +452,8 @@ function drupal_goto($url) {
 */
 
 function referer_save() {
-  if (!strstr($_SERVER["HTTP_REFERER"], request_uri())) {
-    $_SESSION["referer"] = $_SERVER["HTTP_REFERER"];
+  if (!strstr(referer_uri(), request_uri())) {
+    $_SESSION["referer"] = referer_uri();
   }
 }
 
@@ -473,6 +468,24 @@ function referer_load() {
   else {
     return 0;
   }
+}
+
+function check_url($uri) {
+  /*
+  ** We pipe the request URI through htmlspecialchars() to prevent
+  ** XSS attacks.
+  */
+
+  $uri = htmlspecialchars($uri, ENT_QUOTES);
+
+  /*
+  ** We replace ( and ) with their entity equivalents to prevent XSS
+  ** attacks.
+  */
+
+  $uri = strtr($uri, array("(" => "&040;", ")" => "&041;"));
+
+  return $uri;
 }
 
 function check_form($text) {
