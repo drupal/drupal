@@ -90,7 +90,7 @@ function node_filter_link($text) {
 function node_filter($text) {
   if (variable_get("filter_html", 0)) $text = node_filter_html($text);
   if (variable_get("filter_link", 0)) $text = node_filter_link($text);
-  return $text;
+  return trim($text);
 }
 
 function node_link($type, $node = 0) {
@@ -672,10 +672,18 @@ function node_preview($edit) {
   }
 
   /*
+  ** Apply the required filters:
+  */
+
+  foreach ($edit as $key => $value) {
+    $node->$key = check_input($value);
+  }
+
+  /*
   ** Display a preview of the node:
   */
 
-  node_view($edit);
+  node_view($node);
 
   return node_form($edit);
 }
