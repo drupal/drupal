@@ -47,8 +47,8 @@ function book_view($node, $main = 0) {
   else {
     if ($node->nid && $node->parent) {
       $list = book_parent_query($node->parent);
-      $next = db_fetch_object(db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE n.status = '$status[posted]' AND $list AND b.weight > '$node->weight' ORDER BY b.weight ASC"));
-      $prev = db_fetch_object(db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE n.status = '$status[posted]' AND $list AND b.weight < '$node->weight' ORDER BY b.weight DESC"));
+      $next = db_fetch_object(db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE n.status = '$status[posted]' AND $list AND (b.weight > '$node->weight' || (b.weight = '$node->weight' AND n.title > '$node->title')) ORDER BY b.weight ASC,n.title ASC"));
+      $prev = db_fetch_object(db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE n.status = '$status[posted]' AND $list AND (b.weight < '$node->weight' || (b.weight = '$node->weight' AND n.title < '$node->title')) ORDER BY b.weight DESC,n.title DESC"));
     }
 
     $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"0\" WIDTH=\"100%\">\n";
@@ -91,7 +91,7 @@ function book_search($keys) {
 }
 
 function book_parent_query($parent) {
-  if ($parent != "") {
+  if ($parent > 0) {
     $list = array();
     foreach (book_parent($parent) as $pid) array_push($list, "b.parent = $pid");
   }

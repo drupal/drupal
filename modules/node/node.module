@@ -340,6 +340,7 @@ function node_admin() {
         print node_edit_content(node_get_array(array("nid" => $id)), $type);
         break;
       case "default":
+        print node_setting();
         break;
       case "confirm delete":
         print node_delete_confirmation($id);
