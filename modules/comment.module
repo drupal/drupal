@@ -1503,7 +1503,7 @@ function theme_comment_moderation_form($comment) {
     // comment hasn't been moderated yet:
 
     if (!isset($votes) && $user->roles) {
-      $result = db_query('SELECT v.mid, v.vote, MAX(r.value) AS value FROM {moderation_votes} v INNER JOIN {moderation_roles} r ON r.mid = v.mid WHERE r.rid IN (%s) GROUP BY v.mid, v.vote ORDER BY weight', implode(', ', array_keys($user->roles)));
+      $result = db_query('SELECT v.mid, v.vote, MAX(v.weight) AS weight, MAX(r.value) AS value FROM {moderation_votes} v INNER JOIN {moderation_roles} r ON r.mid = v.mid WHERE r.rid IN (%s) GROUP BY v.mid, v.vote ORDER BY weight', implode(', ', array_keys($user->roles)));
       $votes = array();
       while ($vote = db_fetch_object($result)) {
         if ($vote->value != 0) {
