@@ -63,7 +63,7 @@ function book_save($op, $node) {
       ** and are not promoted by derault.  See also: book_load().
       */
 
-      return array("created" => time(), "moderate" => 1, "name" => $user->name, "parent", "promote" => 0, "score" => 0, "status" => 1, "uid" => $user->uid, "users" => "", "revisions", "votes" => 0, "weight");
+      return array("created" => time(), "moderate" => 1, "parent", "promote" => 0, "score" => 0, "status" => 1, "users" => "", "revisions", "votes" => 0, "weight");
     }
     else if (user_access("adminster nodes")) {
       /*
@@ -105,8 +105,14 @@ function book_load($node) {
     ** book page through the admin pages.  See also: book_save().
     */
 
-    $book->name = $user->name;
-    $book->uid = $user->uid;
+    if ($user->uid) {
+      $book->uid = $user->uid;
+      $book->name = $user->name;
+    }
+    else {
+      $book->uid = 0;
+      $book->name = "";
+    }
   }
 
   /*
@@ -156,10 +162,6 @@ function book_form($node, $help, $error) {
     */
 
     $output .= form_hidden("revision", 1);
-
-    $node->uid = $user->uid;    // $node is passed by reference
-    $node->name = $user->name;
-
   }
 
   return $output;

@@ -790,7 +790,7 @@ function node_submit($node) {
           $fields = array("nid", "uid", "body", "comment", "created", "promote", "moderate", "revisions", "status", "teaser", "title", "type" => $node->type);
         }
         else {
-          $fields = array("nid", "uid" => $user->uid, "body", "teaser", "title", "type" => $node->type);
+          $fields = array("nid", "uid" => ($user->uid ? $user->uid : 0), "body", "teaser", "title", "type" => $node->type);
         }
 
         node_save($node, array_merge($fields, module_invoke($node->type, "save", "update", $node)));
@@ -822,7 +822,7 @@ function node_submit($node) {
           $fields = array("uid", "body", "comment" => 1, "promote", "moderate", "status" => 1, "teaser", "title", "type" => $node->type);
         }
         else {
-          $fields = array("uid" => $user->uid, "body", "comment" => 1, "teaser", "title", "type" => $node->type);
+          $fields = array("uid" => ($user->uid ? $user->uid : 0), "body", "comment" => 1, "teaser", "title", "type" => $node->type);
         }
 
         node_save($node, array_merge($fields, module_invoke($node->type, "save", "create", $node)));
