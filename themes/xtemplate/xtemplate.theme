@@ -4,24 +4,43 @@
 if (!class_exists("XTemplate")) {
   include_once("themes/xtemplate/xtemplate.inc");
 }
-
-$GLOBALS["xtemplate"]->template = new XTemplate("themes/xtemplate/xtemplate.xtmpl");
+$template_directory = variable_get('xtemplate_template', 'default');
+$GLOBALS["xtemplate"]->template = new XTemplate('xtemplate.xtmpl', 'themes/xtemplate/' . $template_directory);
 $GLOBALS["xtemplate"]->template->SetNullBlock(" ");  // "" doesnt work!
 
 function xtemplate_settings() {
-  $output .= form_textarea(t("Message on front page"), "xtemplate_mission", variable_get("xtemplate_mission", "edit mission"), 70, 6, t("This text will be displayed on the front page.  It can be used to display a mission statement, announcement or site description.."));
-  $output .= form_textfield(t("Stylesheet URL"), "xtemplate_stylesheet", variable_get("xtemplate_stylesheet", "themes/xtemplate/xtemplate.css"), 70, 300, t("The URL for your theme's cascading stylesheet."));
-  $output .= form_textarea(t("Logo"), "xtemplate_logo", variable_get("xtemplate_logo", "<img src=\"themes/xtemplate/images/druplicon.gif\" alt=\"Druplicon - Drupal logo\" />"), 70, 4, t("The HTML code for displaying the logo."));
-  $output .= form_textarea(t("Primary links"), "xtemplate_primary_links", variable_get("xtemplate_primary_links", l("edit primary links", "admin/system/themes/xtemplate")), 70, 8, t("The HTML code for the primary links."));
-  $output .= form_textarea(t("Secondary links"), "xtemplate_secondary_links", variable_get("xtemplate_secondary_links", l("edit secondary links", "admin/system/themes/xtemplate")), 70, 8, t("The HTML code for the secondary links."));
-  $output .= form_radios(t("Search box"), "xtemplate_search_box", variable_get("xtemplate_search_box", 0), array(t("Disabled"), t("Enabled")), t("Show a search box in the upper right corner."));
-  $output .= form_group(t("Avatars"), form_checkbox(t("Display avatars with posts"), "xtemplate_avatar_node", 1, variable_get("xtemplate_avatar_node", 0), t("Display individualized pictures identifying users with posts they start.")) . form_checkbox(t("Display avatars with comments"), "xtemplate_avatar_comment", 1, variable_get("xtemplate_avatar_comment", 0), t("Display individualized pictures identifying users with their comments.")) . form_textfield(t("Default avatar"), "xtemplate_avatar_default", variable_get("xtemplate_avatar_default", ""), 70, 300, t("URL of avatar to display for users with no custom avatar selected. Leave blank for none.")));
+  /*
+  ** Compile a list of the available style sheets:
+  */
+
+  $fd = opendir('themes/xtemplate');
+  while ($file = readdir($fd)) {
+    if (is_dir("themes/xtemplate/$file") && !in_array($file, array('.', '..', 'CVS'))) {
+      $files[$file] = $file;
+    }
+  }
+  closedir($fd);
+
+  $template_directory = variable_get('xtemplate_template', 'default');
+  $group = form_select(t('Template'), 'xtemplate_template', variable_get('xtemplate_template', 'default'), $files, t('Selecting a different template will change the look and feel of your site.  To create a new template, create a new directory under <code>themes/xtemplate</code> and copy the contents of an existing template (e.g. <code>themes/xtemplate/default</code>) into it.  The new template will automatically become available in the selection menu and will be identified by its directory name.'));
+  $output = form_group(t('Template selection'), $group);
+  
+  $group = form_textarea(t('Logo'), 'xtemplate_logo', variable_get('xtemplate_logo', "<img src=\"themes/xtemplate/$template_directory/logo.gif\" alt=\"Logo\" />"), 70, 4, t('The HTML code for displaying the logo.'));
+  $group .= form_textarea(t('Primary links'), 'xtemplate_primary_links', variable_get('xtemplate_primary_links', l('edit primary links', 'admin/system/themes/xtemplate')), 70, 8, t('The HTML code for the primary links.'));
+  $group .= form_textarea(t('Secondary links'), 'xtemplate_secondary_links', variable_get('xtemplate_secondary_links', l('edit secondary links', 'admin/system/themes/xtemplate')), 70, 8, t('The HTML code for the secondary links.'));
+  $group .= form_textarea(t('Message on front page'), 'xtemplate_mission', variable_get('xtemplate_mission', 'edit mission'), 70, 6, t('This text will be displayed on the front page.  It can be used to display a mission statement, announcement or site description..'));
+  $group .= form_radios(t('Search box'), 'xtemplate_search_box', variable_get('xtemplate_search_box', 0), array(t('Disabled'), t('Enabled')), t('Show a search box in the upper right corner.'));
+  $output .= form_group(t('Header settings'), $group);
+  
+  $group = form_checkbox(t('Display avatars with posts'), 'xtemplate_avatar_node', 1, variable_get('xtemplate_avatar_node', 0), t('Display individualized pictures identifying users with posts they start.')) . form_checkbox(t('Display avatars with comments'), 'xtemplate_avatar_comment', 1, variable_get('xtemplate_avatar_comment', 0), t('Display individualized pictures identifying users with their comments.')) . form_textfield(t('Default avatar'), 'xtemplate_avatar_default', variable_get('xtemplate_avatar_default', ''), 70, 300, t('URL of avatar to display for users with no custom avatar selected. Leave blank for none.'));
+  $output .= form_group(t('Avatar settings'), $group);
+  
   return $output;
 }
 
 function xtemplate_help($section) {
 
-  $output = "";
+  $output = '';
 
   switch ($section) {
     case 'admin/system/themes#description':
@@ -133,17 +152,18 @@ function xtemplate_page($content, $title = NULL, $breadcrumb = NULL) {
   }
 
   global $xtemplate;
+  $template_directory = variable_get('xtemplate_template', 'default');
 
   $xtemplate->template->assign(array(
-        "head_title" => (drupal_get_title() ? drupal_get_title() ." | ". variable_get("site_name", "drupal") : variable_get("site_name", "drupal") ." | ". variable_get("site_slogan", "")),
-        "site" => variable_get("site_name", "drupal"),
-        "head" => drupal_get_html_head(),
-        "stylesheet" => variable_get("xtemplate_stylesheet", "themes/xtemplate/xtemplate.css"),
-        "onload_attributes" => theme_onload_attribute(),
-        "logo" => variable_get("xtemplate_logo", "<img src=\"themes/xtemplate/images/druplicon.gif\" alt=\"Druplicon - Drupal logo\" />"),
-        "primary_links" => variable_get("xtemplate_primary_links", l("edit primary links", "admin/system/themes/xtemplate")),
-        "secondary_links" => variable_get("xtemplate_secondary_links", l("edit secondary links", "admin/system/themes/xtemplate"))
-        ));
+    "head_title" => (drupal_get_title() ? drupal_get_title() ." | ". variable_get("site_name", "drupal") : variable_get("site_name", "drupal") ." | ". variable_get("site_slogan", "")),
+    "site" => variable_get("site_name", "drupal"),
+    "head" => drupal_get_html_head(),
+    "path" => "themes/xtemplate/$template_directory",
+    "onload_attributes" => theme_onload_attribute(),
+    "logo" => variable_get('xtemplate_logo', "<img src=\"themes/xtemplate/$template_directory/logo.gif\" alt=\"Logo\" />"),
+    "primary_links" => variable_get("xtemplate_primary_links", l("edit primary links", "admin/system/themes/xtemplate")),
+    "secondary_links" => variable_get("xtemplate_secondary_links", l("edit secondary links", "admin/system/themes/xtemplate"))
+   ));
 
   if ($title = drupal_get_title()) {
     $xtemplate->template->assign("title", $title);
