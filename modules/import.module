@@ -1,5 +1,5 @@
 <?php
-// $Id: import.module,v 1.98 2003/06/05 18:09:36 dries Exp $
+// $Id: import.module,v 1.99 2003/06/08 16:49:52 dries Exp $
 
 function import_help() {
   $output .= "<p>**REWRITE** In Drupal you have <i>feeds</i> and <i>bundles</i>.   Feeds define news sources and bundles categorize syndicated content by source, topic or any other heuristic.   Bundles provide a generalized way of creating composite feeds.  They allow you, for example, to combine various sport-related feeds into one bundle called \"Sport\".</p>";
@@ -706,7 +706,7 @@ function import_page_fd() {
 
   $result = db_query("SELECT * FROM feed ORDER BY title");
 
-  $output .= "<?xml version=\"1.0\" encoding=\"". variable_get("site_charset", "iso-8859-1") ."\"?>\n\n";
+  $output .= "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n\n";
   $output .= "<rssfeeds version=\"0.1\">\n\n";
 
   while ($feed = db_fetch_object($result)) {

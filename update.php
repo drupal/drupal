@@ -68,7 +68,8 @@ $mysql_updates = array(
   "2003-05-18" => "update_53",
   "2003-05-24" => "update_54",
   "2003-05-31" => "update_55",
-  "2003-06-04" => "update_56"
+  "2003-06-04" => "update_56",
+  "2003-06-08" => "update_57"
 );
 
 // Update functions
@@ -723,6 +724,10 @@ function update_55() {
 
 function update_56() {
   update_sql("ALTER TABLE vocabulary CHANGE types nodes TEXT DEFAULT '' NOT NULL");
+}
+
+function update_57() {
+  update_sql("DELETE FROM variable WHERE name = 'site_charset'");
 }
 
 function update_upgrade3() {
