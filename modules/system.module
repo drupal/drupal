@@ -235,6 +235,7 @@ function system_admin() {
           db_query("UPDATE system SET status = %d WHERE filename = '$filename'", $status);
         }
         cache_clear_all();
+        print status(t("Settings successfully updated."));
       case "modules":
         // Note: changing this also requires changing module_init() @ includes/module.inc.
         $required = array("modules/user.module", "modules/system.module", "modules/watchdog.module");
@@ -246,6 +247,7 @@ function system_admin() {
           db_query("UPDATE system SET status = %d WHERE filename = '$filename'", $status);
         }
         cache_clear_all();
+        print status(t("Settings successfully updated."));
       case "themes":
         print system_listing("theme", "themes");
         break;
