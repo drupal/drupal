@@ -67,6 +67,7 @@ CREATE TABLE comments (
   timestamp int(11) DEFAULT '0' NOT NULL,
   score int(6) DEFAULT '0' NOT NULL,
   votes int(6) DEFAULT '0' NOT NULL,
+  INDEX lid_link (lid, link),
   PRIMARY KEY (cid)
 );
 

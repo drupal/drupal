@@ -1,4 +1,8 @@
+# 26/02/2001: performance optimization
+ALTER TABLE comments ADD INDEX lid_link (lid, link);
+
 # 19/02/2001: internationalization / translation
+alter table users add language varchar(2) DEFAULT '0' NOT NULL;
 CREATE TABLE locales (
   id int(11) DEFAULT '0' NOT NULL auto_increment,
   location varchar(128) DEFAULT '' NOT NULL,
