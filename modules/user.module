@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.310 2004/03/21 16:21:04 dries Exp $
+// $Id: user.module,v 1.311 2004/03/24 05:54:20 dries Exp $
 
 /*** Common functions ******************************************************/
 
@@ -511,7 +511,7 @@ function user_link($type) {
     if ($user->uid) {
       menu('user', t("my account"), "user_page", 8);
       menu("user/edit", t("edit account"), "user_page", 0);
-      menu("user/logout", t("log out"), "user_page", 10);
+      menu("logout", t("log out"), "user_logout", 10);
     }
     else {
       menu('user', t("my account"), "user_page", 8, MENU_HIDE);
