@@ -144,7 +144,7 @@ function blog_page_user($uid = 0, $date = 0) {
     $date = time();
   }
 
-  $result = db_query("SELECT nid FROM node WHERE type = 'blog' AND uid = '$account->uid' AND created <= '$date' AND created >= '". ($date - 2592000) ."' ORDER BY nid DESC");
+  $result = db_query("SELECT nid FROM node WHERE type = 'blog' AND uid = '$account->uid' AND created <= '$date' ORDER BY nid DESC");
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\">";
 
