@@ -1,9 +1,13 @@
 <?php
-// $Id: index.php,v 1.62 2003/05/18 09:45:53 dries Exp $
+// $Id: index.php,v 1.63 2003/06/18 21:21:29 dries Exp $
 
 include_once "includes/common.inc";
 
 if (isset($_GET["q"])) {
+  $mod = arg(0);
+}
+else {
+  $_GET["q"] = variable_get("site_frontpage", "node");
   $mod = arg(0);
 }
 
