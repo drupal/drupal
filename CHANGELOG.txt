@@ -9,8 +9,11 @@ Drupal x.x.x, xxxx-xx-xx
     * improved search output.
 - syndication:
     * added support for RSS ping-notifications of http://technorati.com/.
+- flood control mechanism:
+    * added a mechanism to throttle certain operations.
 - usability:
     * refactored the throttle module configuration.
+    * added a 'add child page' link to book pages.
 - performance:
     * improved performance of the tracker module.
 

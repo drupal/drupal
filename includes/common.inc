@@ -669,6 +669,33 @@ function valid_input_data($data) {
  * @} End of "defgroup validation".
  */
 
+/**
+ * Register an event for the current visitor (hostname/IP) to the flood control mechanism.
+ *
+ * @param $name
+ *   The name of the event.
+ */
+function flood_register_event($name) {
+  db_query("INSERT INTO {flood} (event, hostname, timestamp) VALUES ('%s', '%s', %d)", $name, $_SERVER['REMOTE_ADDR'], time());
+}
+
+/**
+ * Check if the current visitor (hostname/IP) is allowed to proceed with the specified event.
+ * The user is allowed to proceed if he did not trigger the specified event more than
+ * $threshold times per hour.
+ *
+ * @param $name
+ *   The name of the event.
+ * @param $number
+ *   The maximum number of the specified event per hour (per visitor).
+ * @return
+ *   True if the user did not exceed the hourly threshold.  False otherwise.
+ */
+function flood_is_allowed($name, $threshold) {
+  $number = db_num_rows(db_query("SELECT event FROM {flood} WHERE event = '%s' AND hostname = '%s' AND timestamp > %d", $name, $_SERVER['REMOTE_ADDR'], time() - 3600));
+  return ($number < $threshold ? TRUE : FALSE);
+}
+
 function check_form($text) {
   return drupal_specialchars($text, ENT_QUOTES);
 }
