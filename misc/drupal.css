@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.66 2004/05/29 17:38:54 dries Exp $ */
+/* $Id: drupal.css,v 1.67 2004/05/31 09:40:56 dries Exp $ */
 
 /*
 ** HTML elements
@@ -131,6 +131,9 @@ td.menu-disabled {
 }
 .form-item {
   margin-bottom: 1em;
+}
+.form-item input.error {
+  border: 2px solid red;
 }
 .form-item .description {
   font-size: 0.85em;

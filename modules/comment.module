@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.243 2004/05/24 18:49:12 dries Exp $
+// $Id: comment.module,v 1.244 2004/05/31 09:40:56 dries Exp $
 
 function comment_help($section = "admin/help#comment") {
   $output = "";
@@ -281,7 +281,7 @@ function comment_post($edit) {
     ** Validate the comment's body.
     */
 
-    if ($edit["comment"] == "") {
+    if ($edit['comment'] == '') {
       return array(t("Empty comment"), t("The comment you submitted is empty."));
     }
 
