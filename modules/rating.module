@@ -1,13 +1,20 @@
 <?php
 // $Id$
 
+function rating_help() {
+  $output .= "Drupal uses <i>gravity</i> as an indication for each user's contributed value.  The system can be compared with <a href=\"http://www.slashcode.com/\">SlashCode</a>'s Karma and is - in fact - even more similar to <a href=\"http://scoop.kuro5hin.org/\">Scoop</a>'s Mojo.";
+  $output .= "Gravity is calculated based on the moderation done to a user's nodes: you gain or loose points based on the fact your nodes got approved/promoted or rejected/declined.  The sampling period could be an arbitrary number of days (by default set to 60 days) or an arbitrary number of nodes (by default set to 30), whatever comes first.  Thus, you lose one point for each node being rejected during the past 60 days and you gain one point for each node being approved.  You don't gain nor loose points for nodes that have been replaced or expired.";
+  $output .= "By default, Drupal does not use gravity but it can be used by module builders to automatically assign access rights or editorial priveledges to users or to limit or eliminate potential abuse by limiting the rate of posting or the ability to post at all.  Aside from that, it can be used to play point games but that is, needless to say, not the goal gravity aspires to.";
+  return $output;
+}
+
 function rating_perm() {
   return array("access user ratings");
 }
 
 function rating_link($type) {
   if ($type == "page" && user_access("access user ratings")) {
-    $links[] = "<a href=\"module.php?mod=rating\">". t("user ratings") ."</a>";
+    $links[] = "<a href=\"module.php/mod/rating\">". t("user ratings") ."</a>";
   }
 
   return $links ? $links : array();
@@ -27,8 +34,8 @@ function rating_conf_options() {
 }
 
 function rating_cron() {
-//  if (time() - variable_get("rating_cron_last", 0) > variable_get("rating_cron_time", time())) {
-//    variable_set("rating_cron_last", time());
+  if (time() - variable_get("rating_cron_last", 0) > variable_get("rating_cron_time", time())) {
+    variable_set("rating_cron_last", time());
 
     $r1 = db_query("SELECT uid FROM users ORDER BY rating DESC");
     while ($account = db_fetch_object($r1)) {
@@ -42,7 +49,7 @@ function rating_cron() {
     while ($account = db_fetch_object($r2)) {
       db_query("INSERT INTO rating (uid, new, old) VALUES ('$account->uid', '". ++$j ."', '". $rating[$account->uid] ."')");
     }
-//  }
+  }
 }
 
 function rating_help() {
