@@ -97,22 +97,25 @@ function user_save($account, $array = array()) {
     $data = unserialize(db_result(db_query("SELECT data FROM {users} WHERE uid = %d", $account->uid)));
     foreach ($array as $key => $value) {
       if ($key == "pass") {
-        $query .= "$key = '". md5($value) ."', ";
+        $query .= "$key = '%s', ";
+        $v[] = md5($value);
       }
       else if (substr($key, 0, 4) !== "auth") {
         if (in_array($key, $user_fields)) {
           // escape '%'s:
           $value = str_replace("%", "%%", $value);
-          $query .= "$key = '". check_query($value) ."', ";
+          $query .= "$key = '%s', ";
+          $v[] = $value;
         }
         else {
           $data[$key] = $value;
         }
       }
     }
-    $query .= "data = '". check_query(serialize($data)) ."', ";
+    $query .= "data = '%s', ";
+    $v[] = serialize($data);
 
-    db_query("UPDATE {users} SET $query timestamp = %d WHERE uid = %d", time(), $account->uid);
+    db_query("UPDATE {users} SET $query timestamp = %d WHERE uid = %d", array_merge($v, array(time(), $account->uid)));
 
     $user = user_load(array("uid" => $account->uid));
   }
