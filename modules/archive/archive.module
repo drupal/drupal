@@ -42,14 +42,20 @@ function archive_calendar($original = 0) {
   // Generate calendar header:
   $output .= "\n<!-- calendar -->\n";
   $output .= "<table width=\"100%\" border=\"1\" cellspacing=\"0\" cellpadding=\"1\">\n";
-  $output .= " <tr><td align=\"center\" colspan=\"7\"><small>". l("&lt;", "archive/". date("Y/m/d", $prev)) ." ". date("F Y", $requested) ." ". ($next <= time() ? l("&gt;", "archive/". date("Y/m/d", $next)) : "&gt;") ."</small></td></tr>\n";
+  $output .= " <tr><td align=\"center\" colspan=\"7\"><small>". l("&lt;", "archive/". date("Y/m/d", $prev)) ." ". date("F Y", $requested) ." ". ($nextmonth <= time() ? l("&gt;", "archive/". date("Y/m/d", $next)) : "&gt;") ."</small></td></tr>\n";
+
+  // First day of week (0 => Sunday, 1 => Monday, ...)
+  $weekstart = variable_get("default_firstday", 0);
+
+  // Last day of week
+  ($weekstart - 1 == -1 ) ? $lastday = 6 : $lastday = $weekstart - 1;
 
   // Generate the days of the week:
-  $somesunday = mktime(0, 0, 0, 3, 20, 1994);
+  $firstcolumn = mktime(0, 0, 0, 3, 20 + $weekstart, 1994);
 
   $output .= " <tr>";
   for ($i = 0; $i < 7; $i++) {
-    $output .= "<td align=\"center\"><small>". substr(ucfirst(t(date("l", $somesunday + $i * 86400))), 0, 1) ."</small></td>";
+    $output .= "<td align=\"center\"><small>". substr(ucfirst(t(date("l", $firstcolumn + $i * 86400))), 0, 1) ."</small></td>";
   }
   $output .= "</tr>\n";
 
@@ -60,13 +66,14 @@ function archive_calendar($original = 0) {
   // Loop through all the days of the month:
   while ($nday <= $last) {
     // Set up blank days for first week of the month:
-    if ($first) {
-      $output .= " <tr><td colspan=\"$first\">&nbsp;</td>\n";
-      $first = 0;
+    if ($first != $weekstart) {
+      $blankdays = ($first - $weekstart + 7) % 7;
+      $output .= " <tr><td colspan=\"$blankdays\">&nbsp;</td>\n";
+      $first = $weekstart;
     }
 
     // Start every week on a new line:
-    if ($sday == 0) {
+    if ($sday == $weekstart) {
       $output .=  " <tr>\n";
     }
 
@@ -84,7 +91,7 @@ function archive_calendar($original = 0) {
     }
 
     // Start every week on a new line:
-    if ($sday == 6) {
+    if ($sday == $lastday) {
       $output .=  " </tr>\n";
     }
 
@@ -95,8 +102,8 @@ function archive_calendar($original = 0) {
   }
 
   // Complete the calendar:
-  if ($sday) {
-    $end = 7 - $sday;
+  if ($sday != $weekstart) {
+    $end = (7 - $sday + $weekstart) % 7;
     $output .= "  <td colspan=\"$end\">&nbsp;</td>\n </tr>\n";
   }
 
@@ -179,6 +186,13 @@ function archive_page() {
   }
 
   $theme->footer();
+}
+
+function archive_conf_options() {
+
+  $output .= form_select( t("First day of week"), "default_firstday", variable_get("default_firstday", 0), array(0 => t("Sunday"), 1 => t("Monday"), 2 => t("Tuesday"), 3 => t("Wednesday"), 4 => t("Thursday"), 5 => t("Friday"), 6 => t("Saturday")), t("The first day of the week.  By changing this value you choose how the calendar block is rendered."));
+
+  return $output;
 }
 
 ?>
