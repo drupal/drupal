@@ -484,7 +484,7 @@ function xss_check_input_data($data) {
     */
 
     // check attributes:
-    $match  = preg_match("/\W(style|dynsrc|datasrc|data|lowsrc|style|on[a-z]+)\s*=[^>]+?>/i", $data);
+    $match  = preg_match("/\W(style|dynsrc|datasrc|data|lowsrc|on[a-z]+)\s*=[^>]+?>/i", $data);
     $match += preg_match("/\W(src|href)\s*=[\s'\"]*javascript[^>]+?>/i", $data);
 
     // check tags:
@@ -1021,6 +1021,16 @@ function drupal_page_header() {
       exit();
     }
   }
+
+  /*
+  ** Putting the check here avoids SQL query overhead in case we are
+  ** serving cached pages.  The downside, however, is that the init
+  ** hooks might use unchecked data.
+  */
+
+  if (!user_access("bypass input data check")) {
+    xss_check_input_data($_REQUEST);
+  }
 }
 
 function drupal_page_footer() {
@@ -1054,9 +1064,6 @@ set_error_handler("error_handler");
 // spit out the correct charset http header
 header("Content-Type: text/html; charset=utf-8");
 
-// filter input data:
-xss_check_input_data($_REQUEST);
-
 // initialize installed modules:
 module_init();
 
@@ -1065,6 +1072,5 @@ $locale = locale_init();
 
 // initialize theme:
 $theme = theme_init();
-
 
 ?>

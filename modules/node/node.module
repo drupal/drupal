@@ -1217,6 +1217,7 @@ function node_preview($node, $error = NULL) {
     if (empty($node->created)) {
       $node->created = time();
     }
+    $node->changed = time();
 
     /*
     ** Extract a teaser:

@@ -31,7 +31,7 @@ function system_help_cron() {
 }
 
 function system_perm() {
-  return array("administer site configuration", "access administration pages", "create php content");
+  return array("administer site configuration", "access administration pages", "bypass input data check", "create php content");
 }
 
 function system_link($type) {
