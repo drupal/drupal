@@ -55,6 +55,10 @@ function pager_query($query, $limit = 10, $element = 0, $count_query = NULL) {
   // Substitute in query arguments.
   $args = func_get_args();
   $args = array_slice($args, 4);
+  // Alternative syntax for '...'
+  if (is_array($args[0])) {
+    $args = $args[0];
+  }
 
   // Count the total number of records in this query.
   if (!isset($count_query)) {
