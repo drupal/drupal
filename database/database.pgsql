@@ -736,9 +736,18 @@ CREATE TABLE vocabulary (
   hierarchy smallint NOT NULL default '0',
   multiple smallint NOT NULL default '0',
   required smallint NOT NULL default '0',
-  nodes text default '',
   weight smallint NOT NULL default '0',
   PRIMARY KEY  (vid)
+);
+
+--
+-- Table structure for vocabulary_node_types
+--
+
+CREATE TABLE vocabulary_node_types (
+  vid integer NOT NULL default '0',
+  type varchar(16) NOT NULL default '',
+  PRIMARY KEY (vid, type)
 );
 
 --

@@ -92,7 +92,9 @@ $sql_updates = array(
   "2004-11-28" => "update_113",
   "2004-12-05" => "update_114",
   "2005-01-07" => "update_115",
-  "2005-01-14" => "update_116"
+  "2005-01-14" => "update_116",
+  "2005-01-18" => "update_117",
+  "2005-01-19" => "update_118"
 );
 
 function update_32() {
@@ -2081,6 +2083,38 @@ function update_115() {
 
 function update_116() {
   return array(update_sql("DELETE FROM {system} WHERE name = 'admin'"));
+}
+
+function update_117() {
+  $ret = array();
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql("CREATE TABLE {vocabulary_node_types} (
+                         vid int(10) NOT NULL default '',
+                         type varchar(16) NOT NULL default '',
+                         PRIMARY KEY (vid, type))");
+  }
+  else if ($GLOBALS['db_type'] == 'pgsql') {
+    $ret[] = update_sql("CREATE TABLE {vocabulary_node_types} (
+                         vid integer NOT NULL default '0',
+                         type varchar(16) NOT NULL default '',
+                         PRIMARY KEY (vid, type))");
+  }
+  return $ret;
+}
+
+function update_118() {
+  $ret = array();
+  $result = db_query('SELECT vid, nodes FROM {vocabulary}');
+  while ($vocabulary = db_fetch_object($result)) {
+    $node_types[$vocabulary->vid] = explode(',', $vocabulary->nodes);
+  }
+  foreach ($node_types as $vid => $type_array) {
+    foreach ($type_array as $type) {
+      db_query("INSERT INTO {vocabulary_node_types} (vid, type) VALUES (%d, '%s')", $vid, $type);
+    }
+  }
+  $ret[] = update_sql("ALTER TABLE {vocabulary} DROP nodes");
+  return $ret;
 }
 
 function update_sql($sql) {
