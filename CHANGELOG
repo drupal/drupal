@@ -3,8 +3,7 @@ drupal x.xx, xx/xx/xxxx (CVS, unstable)
 - major overhaul of the entire underlying design:
     * everything is based on nodes: nodes are a conceptual "black box" to couple and manage different types of content and that promotes reusing existing code, thus reducing the complexity and size of drupal as well as improving long-term stability.
 - rewrote submission/moderation queue and renamed it to queue.module.
-- removed FAQ and documentation module and merged them into a "book module":
-    * allows collaborative book writing.
+- removed FAQ and documentation module and merged them into a "book module".
 - removed ban module and integrated it into account.module as "access control":
     * access control is based on much more powerful regular expressions (regex) now rather than on MySQL pattern matching.
 - rewrote watchdog and submission throttle
