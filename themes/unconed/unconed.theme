@@ -1,5 +1,5 @@
 <?php
-// $Id: unconed.theme,v 1.90 2003/01/06 21:43:07 dries Exp $
+// $Id: unconed.theme,v 1.91 2003/01/29 23:29:01 dries Exp $
 
   /*********************************************************************
 
@@ -153,11 +153,6 @@
      echo "    <TR>";
      echo "     <TD ALIGN=\"right\" VALIGN=\"top\" WIDTH=\"5%\"><FONT COLOR=\"$this->hlcolor1\"><B>" . t("Subject") . ":</B></FONT></TD><TD WIDTH=\"80%\">";
      echo "      <B><FONT COLOR=\"$this->fgcolor1\">$comment->subject</FONT></B>";
-     echo "     </TD>";
-
-     // Moderation:
-     echo "     <TD ALIGN=\"right\" ROWSPAN=\"3\" VALIGN=\"middle\" WIDTH=\"15%\">";
-     print comment_moderation($comment);
      echo "     </TD>";
      echo "    </TR>";
 
