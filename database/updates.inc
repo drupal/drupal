@@ -1,5 +1,5 @@
 <?php
-/* $Id: updates.inc,v 1.94 2005/02/27 15:40:35 dries Exp $ */
+/* $Id: updates.inc,v 1.95 2005/02/28 18:00:58 unconed Exp $ */
 
 /**
  * @file
@@ -1961,7 +1961,7 @@ function update_110() {
     #$ret[] = update_sql('ALTER TABLE {blocks} DROP path');
 
     $ret[] = update_sql('ALTER TABLE {blocks} ADD visibility smallint');
-    $ret[] = update_sql("ALTER TABLE {blocks} ALTER COLUMN type set default ''");
+    $ret[] = update_sql("ALTER TABLE {blocks} ALTER COLUMN visibility set default 0");
     $ret[] = update_sql('UPDATE {blocks} SET visibility = 0');
     $ret[] = update_sql('ALTER TABLE {blocks} ALTER COLUMN visibility SET NOT NULL');
     $ret[] = update_sql('ALTER TABLE {blocks} ADD pages text');
@@ -2291,7 +2291,7 @@ function update_125() {
 
   if ($GLOBALS['db_type'] == 'pgsql') {
 
-    $ret[] = update_sql[] = ("CREATE FUNCTION "if"(boolean, anyelement, anyelement) RETURNS anyelement AS '
+    $ret[] = update_sql("CREATE OR REPLACE FUNCTION if(boolean, anyelement, anyelement) RETURNS anyelement AS '
           SELECT CASE WHEN $1 THEN $2 ELSE $3 END;
         ' LANGUAGE 'sql'");
 

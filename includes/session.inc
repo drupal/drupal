@@ -1,5 +1,5 @@
 <?php
-// $Id: session.inc,v 1.11 2005/01/10 19:36:21 dries Exp $
+// $Id: session.inc,v 1.12 2005/02/28 18:00:59 unconed Exp $
 
 /**
  * @file
@@ -21,11 +21,11 @@ function sess_close() {
 
 function sess_read($key) {
   global $user;
-
+  $uid = (isset($user->uid)) ? $user-uid : 0;
   $result = db_query_range("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = '%s' AND u.status < 3", $key, 0, 1);
 
   if (!db_num_rows($result)) {
-    db_query("INSERT INTO {sessions} (sid, hostname, timestamp) values('%s', '%s', %d)", $key, $_SERVER["REMOTE_ADDR"], time());
+    db_query("INSERT INTO {sessions} (sid, uid, hostname, timestamp) VALUES ('%s', %d, '%s', %d)", $key, $uid, $_SERVER["REMOTE_ADDR"], time());
     $result = db_query("SELECT u.* FROM {users} u WHERE u.uid = 0");
   }
 
