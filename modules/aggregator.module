@@ -218,7 +218,7 @@ function import_refresh($feed) {
       $items[] = "iid = '$item->iid'";
     }
 
-    if ($items) {
+    if (sizeof($items) > 50) {
       db_query("DELETE FROM item WHERE ". implode(" OR ", array_slice($items, 0, - 50)));
     }
 
