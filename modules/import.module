@@ -379,7 +379,7 @@ function import_view_item() {
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
   $output .= " <tr><th>time</th><th>feed</th><th>item</th></tr>\n";
   while ($item = db_fetch_object($result)) {
-    $output .= " <tr><td valign=\"top\" nowrap=\"nowrap\">". format_date($item->timestamp, "custom", "m/d/y") ."<br />".format_date($item->timestamp, "custom", "H:i") ."</td><td align=\"center\" valign=\"top\" nowrap=\"nowrap\"><a href=\"admin.php?mod=import&type=feed&op=edit&id=$item->fid\">". check_output($item->feed) ."</a></td><td><a href=\"". check_output($item->url) ."\">". check_output($item->title) ."</a>". ($item->description ? "<br /><small><i>". check_output($item->description) ."</i></small>" : "") ."<br /><input type=\"text\" name=\"edit[$item->iid]\" value=\"". check_form($item->attributes) ."\" size=\"50\" /></td></tr>\n";
+    $output .= " <tr><td valign=\"top\" nowrap=\"nowrap\">". format_date($item->timestamp, "custom", "m/d/y") ."<br />".format_date($item->timestamp, "custom", "H:i") ."</td><td align=\"center\" valign=\"top\" nowrap=\"nowrap\"><a href=\"admin.php?mod=import&type=feed&op=edit&id=$item->fid\">". check_output($item->feed) ."</a></td><td><a href=\"". check_output($item->link) ."\">". check_output($item->title) ."</a>". ($item->description ? "<br /><small><i>". check_output($item->description) ."</i></small>" : "") ."<br /><input type=\"text\" name=\"edit[$item->iid]\" value=\"". check_form($item->attributes) ."\" size=\"50\" /></td></tr>\n";
   }
   $output .= "</table>\n";
   $output .= "<input type=\"submit\" name=\"op\" value=\"Save attributes\" />\n";
