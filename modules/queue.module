@@ -253,13 +253,13 @@ function queue_nodeapi(&$node, $op) {
     case 'insert':
     case 'update':
       if ($node->moderate && user_access('access submission queue')) {
-        drupal_set_message(t('The post is queued for approval. You can check the votes in the <a href="%queue">submission queue</a>.', array('%queue' => url('queue'))));
+        drupal_set_message(t('the post is queued for approval. You can check the votes in the <a href="%queue">submission queue</a>.', array('%queue' => url('queue'))));
       }
       else if ($node->moderate) {
-        drupal_set_message(t('The post is queued for approval. The editors will decide whether it should be published.'));
+        drupal_set_message(t('the post is queued for approval. The editors will decide whether it should be published.'));
       }
       else {
-        drupal_set_message(t('The post is published.'));
+        drupal_set_message(t('the post is published.'));
       }
       break;
    }

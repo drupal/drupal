@@ -146,10 +146,10 @@ function system_view_general() {
 
   // file system:
   if (!file_check_directory(variable_get('file_directory_path', 'files'))) {
-    form_set_error('file_directory_path', t('Directory does not exist, or is not writable.'));
+    form_set_error('file_directory_path', t('the directory does not exist, or is not writable.'));
   }
   if (!file_check_directory(variable_get('file_directory_temp', (PHP_OS == 'WINNT' ? 'c:\\windows\\temp' : '/tmp')))) {
-    form_set_error('file_directory_temp', t('Directory does not exist, or is not writable.'));
+    form_set_error('file_directory_temp', t('the directory does not exist, or is not writable.'));
   }
   $group = form_textfield(t('File system path'), 'file_directory_path', variable_get('file_directory_path', 'files'), 70, 255, t('A file system path where the files will be stored. This directory has to exist and be writable by Drupal. If the download method is set to public this directory has to be relative to Drupal installation directory, and be accessible over the web. When download method is set to private this directory should not be accessible over the web. Changing this location after the site has been in use will cause problems so only change this setting on an existing site if you know what you are doing.'));
   $group .= form_textfield(t('Temporary directory'), 'file_directory_temp', variable_get('file_directory_temp', (PHP_OS == 'WINNT' ? 'c:\\windows\\temp' : '/tmp')), 70, 255, t('Location where files can be saved temporarily. This directory should not be accessible from the web.'));

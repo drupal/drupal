@@ -135,7 +135,7 @@ function page_form(&$node) {
   }
 
   if (($node->format == 1) && (!user_access('create php content'))) {
-    drupal_set_message(t('Note: The body contents of this page are written in PHP and you do not have sufficient permissions to make changes to the body. You can edit the other elements of the page.'));
+    drupal_set_message(t('the body contents of this page are written in PHP and you do not have sufficient permissions to make changes to the body. You can edit the other elements of the page.'));
     $output .= form_hidden('format', $node->format);
     $hide_types = true;
   }

@@ -181,12 +181,9 @@ function archive_block($op = 'list', $delta = 0) {
     return $blocks;
   }
   else if (user_access('access content')) {
-    switch ($delta) {
-      case 0:
-        $block['subject'] = t('Browse archives');
-        $block['content'] = archive_calendar();
-        return $block;
-    }
+    $block['subject'] = t('Browse archives');
+    $block['content'] = archive_calendar();
+    return $block;
   }
 }
 

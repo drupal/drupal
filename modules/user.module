@@ -366,7 +366,7 @@ function user_fields() {
  * Implementation of hook_perm().
  */
 function user_perm() {
-  return array('administer users', 'access users');
+  return array('administer users');
 }
 
 /**
@@ -532,25 +532,23 @@ function user_block($op = 'list', $delta = 0) {
             $output = t('There are currently %members and %visitors online.', array('%members' => format_plural($total_users, '1 user', '%count users'), '%visitors' => format_plural($guests->count, '1 guest', '%count guests')));
           }
 
-          if (user_access('access users') && $total_users) {
+          // Display a list of currently online users.
+          $max_users = variable_get('user_block_max_list_count', 10);
+          if ($max_users) {
+            $items = array();
 
-            // Display a list of currently online users.
-            $max_users = variable_get('user_block_max_list_count', 10);
-            if ($max_users) {
-              $items = array();
+            while ($max_users-- && $uid = db_fetch_object($users)) {
+              $items[] = format_name(user_load(array('uid' => $uid->uid)));
+            }
 
-              while ($max_users-- && $uid = db_fetch_object($users)) {
-                $items[] = format_name(user_load(array('uid' => $uid->uid)));
+            if ($items) {
+              if (db_fetch_object($users)) {
+                $items[] = '...';
               }
-
-              if ($items) {
-                if (db_fetch_object($users)) {
-                  $items[] = '...';
-                }
-                $output .= theme('item_list', $items, t('Online users:'));
-              }
+              $output .= theme('item_list', $items, t('Online users:'));
             }
           }
+
           $block['subject'] = t('Who\'s online');
           $block['content'] = $output;
         }
@@ -1003,9 +1001,9 @@ function user_register($edit = array()) {
 
 function user_edit_form($uid, $edit) {
   // Account information:
-  $group  = form_textfield(t('Username'), 'name', $edit['name'], 30, 55, t('Your full name or your preferred username: only letters, numbers and spaces are allowed.'));
-  $group .= form_textfield(t('E-mail address'), 'mail', $edit['mail'], 30, 55, t('Insert a valid e-mail address.  All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail.'));
-  $group .= form_item(t('Password'), '<input type="password" name="edit[pass1]" size="12" maxlength="24" /> <input type="password" name="edit[pass2]" size="12" maxlength="24" />', t('Enter your new password twice if you want to change your current password, or leave it blank if you are happy with your current password.'));
+  $group  = form_textfield(t('Username'), 'name', $edit['name'], 30, 55, t('Your full name or your preferred username: only letters, numbers and spaces are allowed.'), NULL, TRUE);
+  $group .= form_textfield(t('E-mail address'), 'mail', $edit['mail'], 30, 55, t('Insert a valid e-mail address.  All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail.'), NULL, TRUE);
+  $group .= form_item(t('Password'), '<input type="password" name="edit[pass1]" size="12" maxlength="24" /> <input type="password" name="edit[pass2]" size="12" maxlength="24" />', t('Enter your new password twice if you want to change your current password, or leave it blank if you are happy with your current password.'), NULL, TRUE);
 
   if (user_access('administer users')) {
     $group .= form_radios(t('Status'), 'status', $edit['status'], array(t('Blocked'), t('Active')));
@@ -1247,7 +1245,7 @@ function user_configure_settings() {
 
   // Picture settings.
   if (!file_check_directory(file_create_path(variable_get('user_picture_path', 'pictures')))) {
-    form_set_error('user_picture_path', t('The picture directory does not exist, or is not writable.'));
+    form_set_error('user_picture_path', t('the picture directory does not exist, or is not writable.'));
   }
 
   $group  = form_radios(t('Picture support'), 'user_pictures', variable_get('user_pictures', 0), array(t('Disabled'), t('Enabled')), t('Enable picture support.'));
@@ -1284,9 +1282,9 @@ function user_admin_create($edit = array()) {
     }
   }
 
-  $output  = form_textfield(t('Username'), 'name', $edit['name'], 30, 55, t('Provide the username of the new account.'));
-  $output .= form_textfield(t('E-mail address'), 'mail', $edit['mail'], 30, 55, t('Provide the e-mail address associated with the new account.'));
-  $output .= form_textfield(t('Password'), 'pass', $edit['pass'], 30, 55, t('Provide a password for the new account.'));
+  $output  = form_textfield(t('Username'), 'name', $edit['name'], 30, 55, t('Provide the username of the new account.'), NULL, TRUE);
+  $output .= form_textfield(t('E-mail address'), 'mail', $edit['mail'], 30, 55, t('Provide the e-mail address associated with the new account.'), NULL, TRUE);
+  $output .= form_password(t('Password'), 'pass', $edit['pass'], 30, 55, t('Provide a password for the new account.'), NULL, TRUE);
   $output .= form_submit(t('Create account'));
 
   $output = form_group(t('Create new user account'), $output);
@@ -1416,7 +1414,7 @@ function user_admin_perm($edit = array()) {
 
 function user_admin_role($edit = array()) {
   $op = $_POST['op'];
-  $id = arg(3);
+  $id = arg(4);
 
   if ($op == t('Save role')) {
     db_query("UPDATE {role} SET name = '%s' WHERE rid = %d", $edit['name'], $id);
@@ -1425,8 +1423,7 @@ function user_admin_role($edit = array()) {
     db_query('DELETE FROM {role} WHERE rid = %d', $id);
     db_query('DELETE FROM {permission} WHERE rid = %d', $id);
 
-    // Users with only the deleted role are put back in the authenticated users pool.
-    $aid = _user_authenticated_id();
+    // Update the users who have this role set:
     $result = db_query('SELECT DISTINCT ur1.uid FROM {users_roles} ur1 LEFT JOIN {users_roles} ur2 ON ur2.uid = ur1.uid WHERE ur1.rid = %d AND ur2.rid != ur1.rid', $id);
     $uid = array();
 
@@ -1434,8 +1431,12 @@ function user_admin_role($edit = array()) {
       $uid[] = $u->uid;
     }
 
-    db_query('DELETE FROM {users_roles} WHERE rid = %d AND uid IN (%s)', $id, implode(', ', $uid));
-    db_query('UPDATE {users_roles} SET rid = %d WHERE rid = %d', $aid, $id);
+    if ($uid) {
+      db_query('DELETE FROM {users_roles} WHERE rid = %d AND uid IN (%s)', $id, implode(', ', $uid));
+    }
+
+    // Users with only the deleted role are put back in the authenticated users pool.
+    db_query('UPDATE {users_roles} SET rid = %d WHERE rid = %d', _user_authenticated_id(), $id);
   }
   else if ($op == t('Add role')) {
     db_query("INSERT INTO {role} (name) VALUES ('%s')", $edit['name']);
@@ -1458,7 +1459,7 @@ function user_admin_role($edit = array()) {
     $header = array(t('name'), t('operations'));
     while ($role = db_fetch_object($result)) {
       if ($role->name != 'anonymous user' && $role->name != 'authenticated user') {
-        $rows[] = array($role->name, array('data' => l(t('edit role'), "admin/user/role/$role->rid"), 'align' => 'center'));
+        $rows[] = array($role->name, array('data' => l(t('edit role'), "admin/user/configure/role/$role->rid"), 'align' => 'center'));
       }
       else {
         $rows[] = array($role->name, array('data' => '<span class="disabled">'. t('locked') .'</span>', 'align' => 'center'));

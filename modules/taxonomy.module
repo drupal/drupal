@@ -74,6 +74,29 @@ function taxonomy_menu() {
   return $items;
 }
 
+/**
+ * Implementation of hook_block().
+ *
+ * Generates a block with all categories.
+ */
+function taxonomy_block($op = 'list', $delta = 0) {
+  if ($op == 'list') {
+    $blocks[0]['info'] = t('Categories');
+    return $blocks;
+  }
+  else if (user_access('access content')) {
+    $result = db_query("SELECT d.tid, d.name, MAX(n.created) AS updated, COUNT(*) AS count FROM {term_data} d INNER JOIN {term_node} USING (tid) INNER JOIN {node} n USING (nid) WHERE n.status = 1 GROUP BY d.tid ORDER BY updated DESC, d.name");
+    $items = array();
+    while ($category = db_fetch_object($result)) {
+      $items[] = l("$category->name ($category->count)", "taxonomy/page/or/$category->tid") .'<br />'. format_interval(time() - $category->updated) .' '. t('ago');
+    }
+
+    $block['subject'] = t('Categories');
+    $block['content'] = theme('item_list', $items);
+    return $block;
+  }
+}
+
 function taxonomy_form_vocabulary($edit = array()) {
   foreach (node_list() as $type) {
     $nodetypes[$type] = node_invoke($type, 'node_name');
