@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.34 2003/12/27 19:21:48 kjartan Exp $
+// $Id: profile.module,v 1.35 2003/12/28 10:47:33 dries Exp $
 
 function _profile_init() {
   /*
@@ -66,8 +66,8 @@ function profile_settings() {
   $profile_required_fields = variable_get("profile_required_fields", array());
   $profile_register_fields = variable_get("profile_register_fields", array());
 
-  $header = array (t("field"), t("enable"), t("public"), t("required"), t("show in registration form"));
-  $i=0;
+  $header = array(t("field"), t("enable"), t("public"), t("required"), t("show in registration form"));
+  $i = 0;
   foreach ($profile_fields as $key => $field) {
     $row[$i][] = $field[1];
     $row[$i][] = form_checkbox("", "profile_private_fields][", $key, in_array($key, $profile_private_fields));

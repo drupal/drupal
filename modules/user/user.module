@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.281 2003/12/26 13:44:18 dries Exp $
+// $Id: user.module,v 1.282 2003/12/28 10:47:33 dries Exp $
 
 /*** Common functions ******************************************************/
 
@@ -1201,10 +1201,10 @@ function user_admin_access($edit = array()) {
   }
   else if ($op == t("Check")) {
     if (user_deny($type, $edit["test"])) {
-      drupal_set_message(t("<i>%test</i> is not allowed.", array ("%test" => $edit["test"])));
+      drupal_set_message(t("<i>%test</i> is not allowed.", array("%test" => $edit["test"])));
     }
     else {
-      drupal_set_message(t("<i>%test</i> is allowed.", array ("%test" => $edit["test"])));
+      drupal_set_message(t("<i>%test</i> is allowed.", array("%test" => $edit["test"])));
     }
   }
   else if ($id) {
@@ -1223,7 +1223,7 @@ function user_admin_access($edit = array()) {
     $rows[] = array(t("Deny"), $rule->mask, l(t("delete rule"), "admin/user/access/$type/$rule->aid"));
   }
 
-  $options = array ("1" => t("Allow"), "0" => t("Deny"));
+  $options = array("1" => t("Allow"), "0" => t("Deny"));
   $rows[] = array(form_radios(NUll, "status", $edit["status"], $options), form_textfield(NULL, "mask", $edit["mask"], 32, 64), form_submit(t("Add rule")));
   $output .= theme("table", $header, $rows);
 
@@ -1477,18 +1477,18 @@ function user_admin_edit($edit = array()) {
 
 function user_admin_account() {
   $header = array(
-    array ("data" => t("ID"), "field" => "u.uid"),
-    array ("data" => t("username"), "field" => "u.name"),
-    array ("data" => t("status"), "field" => "u.status"),
-    array ("data" => t("role"), "field" => "u.rid"),
-    array ("data" => t("last access"), "field"  => "u.timestamp", "sort" => "desc"),
+    array("data" => t("ID"), "field" => "u.uid"),
+    array("data" => t("username"), "field" => "u.name"),
+    array("data" => t("status"), "field" => "u.status"),
+    array("data" => t("role"), "field" => "u.rid"),
+    array("data" => t("last access"), "field"  => "u.timestamp", "sort" => "desc"),
     t("operations")
   );
   $sql = "SELECT u.uid, u.name, u.status, u.timestamp, r.name AS rolename FROM {role} r INNER JOIN {users} u ON r.rid = u.rid WHERE uid != 0";
   $sql .= tablesort_sql($header);
   $result = pager_query($sql, 50);
 
-  $status = array (t("blocked"), t("active"));
+  $status = array(t("blocked"), t("active"));
   while ($account = db_fetch_object($result)) {
     $rows[] = array($account->uid, format_name($account), $status[$account->status], $account->rolename, format_date($account->timestamp, "small"), l(t("edit account"), "admin/user/edit/$account->uid"));
   }

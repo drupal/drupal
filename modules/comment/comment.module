@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.200 2003/12/24 13:13:07 dries Exp $
+// $Id: comment.module,v 1.201 2003/12/28 10:47:33 dries Exp $
 
 function comment_help($section = "admin/help#comment") {
   $output = "";
@@ -598,7 +598,7 @@ function comment_render($node, $cid = 0) {
       $result = db_query("SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0 GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users", $cid);
 
       if ($comment = db_fetch_object($result)) {
-        $output .= theme("comment_view",$comment, comment_links($comment));
+        $output .= theme("comment_view", $comment, comment_links($comment));
       }
 
       if ((comment_user_can_moderate($node)) && $user->uid != $comment->uid && !(comment_already_moderated($user->uid, $comment->users))) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: archive.module,v 1.43 2003/12/17 22:27:23 dries Exp $
+// $Id: archive.module,v 1.44 2003/12/28 10:47:33 dries Exp $
 
 function archive_help($section) {
   $output = "";
@@ -253,7 +253,7 @@ function archive_page() {
 
 function archive_settings() {
 
-  $output .= form_select( t("First day of week"), "default_firstday", variable_get("default_firstday", 0), array(0 => t("Sunday"), 1 => t("Monday"), 2 => t("Tuesday"), 3 => t("Wednesday"), 4 => t("Thursday"), 5 => t("Friday"), 6 => t("Saturday")), t("The first day of the week.  By changing this value you choose how the calendar block is rendered."));
+  $output .= form_select(t("First day of week"), "default_firstday", variable_get("default_firstday", 0), array(0 => t("Sunday"), 1 => t("Monday"), 2 => t("Tuesday"), 3 => t("Wednesday"), 4 => t("Thursday"), 5 => t("Friday"), 6 => t("Saturday")), t("The first day of the week.  By changing this value you choose how the calendar block is rendered."));
 
   return $output;
 }

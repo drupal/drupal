@@ -1,5 +1,5 @@
 <?php
-/* $Id: path.module,v 1.21 2003/12/09 20:13:48 dries Exp $ */
+/* $Id: path.module,v 1.22 2003/12/28 10:47:33 dries Exp $ */
 
 function path_admin() {
   $op = $_POST["op"];
@@ -190,9 +190,9 @@ function path_perm() {
 function path_overview() {
   $sql = "SELECT * FROM {url_alias}";
   $header = array(
-    array ("data" => t("alias"), "field" => "dst", "sort" => "asc"),
-    array ("data" => t("normal"), "field" => "src"),
-    array ("data" => t("operations"), "colspan" => 2)
+    array("data" => t("alias"), "field" => "dst", "sort" => "asc"),
+    array("data" => t("normal"), "field" => "src"),
+    array("data" => t("operations"), "colspan" => 2)
   );
   $sql .= tablesort_sql($header);
   $result = pager_query($sql, 50);
