@@ -130,7 +130,7 @@ function system_view_general() {
   if (!file_check_directory(variable_get('file_directory_path', 'files'))) {
     $error['file_directory_path'] = theme('error', t('Directory does not exist, or is not writable.'));
   }
-  if (!file_check_directory(variable_get('file_directory_temp', ini_get('upload_tmp_dir')))) {
+  if (!file_check_directory(variable_get('file_directory_temp', (PHP_OS == 'WINNT' ? 'c:\\windows\\temp' : '/tmp')))) {
     $error['file_directory_temp'] = theme('error', t('Directory does not exist, or is not writable.'));
   }
   $group = form_textfield(t('File system path'), 'file_directory_path', variable_get('file_directory_path', 'files'), 70, 255, t('A file system path where the files will be stored. This directory has to exist and be writable by Drupal. If the download method is set to public this directory has to be relative to Drupal installation directory, and be accessible over the web. When download method is set to private this directory should not be accessible over the web. Changing this location after the site has been in use will cause problems so only change this setting on an existing site if you know what you are doing.') . $error['file_directory_path']);
