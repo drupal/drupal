@@ -55,7 +55,8 @@ $mysql_updates = array(
   "2002-09-17" => "update_40",
   "2002-10-13" => "update_41",
   "2002-10-17" => "update_42",
-  "2002-10-26" => "update_43"
+  "2002-10-26" => "update_43",
+  "2002-11-08" => "update_44"
 );
 
 // Update functions
@@ -623,6 +624,10 @@ function update_43() {
   update_sql("ALTER TABLE blocks DROP name");
   update_sql("UPDATE boxes SET type = 0 WHERE type = 1");
   update_sql("UPDATE boxes SET type = 1 WHERE type = 2");
+}
+
+function update_44() {
+  update_sql("UPDATE system SET filename = CONCAT('modules/', filename) WHERE type = 'module'");
 }
 
 function update_upgrade3() {
