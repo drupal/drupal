@@ -216,7 +216,7 @@ function poll_page() {
   global $theme;
 
   $theme->header();
-  $result = db_query("SELECT n.nid, n.title, p.active, SUM(c.chvotes) AS votes FROM node n LEFT JOIN poll p ON n.nid=p.nid LEFT JOIN poll_choices c ON n.nid=c.nid WHERE type='poll' AND status='1' AND moderate='0' GROUP BY n.nid, n.title, p.active ORDER BY n.created DESC");
+  $result = db_query("SELECT n.nid, n.title, p.active, SUM(c.chvotes) AS votes FROM node n LEFT JOIN poll p ON n.nid=p.nid LEFT JOIN poll_choices c ON n.nid=c.nid WHERE type = 'poll' AND status = '1' AND moderate = '0' GROUP BY n.nid, n.title, p.active, n.created ORDER BY n.created DESC");
   $output = "<ul>";
   while ($node = db_fetch_object($result)) {
     $output .= "<li>". l($node->title, array("id" => $node->nid)) ." - ". format_plural($node->votes, "vote", "votes") ." - ". ($node->active ? t("open") : t("closed")) ."</li>";
