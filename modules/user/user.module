@@ -647,7 +647,7 @@ function user_register($edit = array()) {
 }
 
 function user_edit($edit = array()) {
-  global $REQUEST_URI, $HTTP_HOST, $themes, $user;
+  global $REQUEST_URI, $HTTP_HOST, $themes, $user, $languages;
 
   if ($user->uid) {
     if ($edit["name"]) {
