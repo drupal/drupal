@@ -294,7 +294,12 @@ function system_listing($type, $directory, $required = array()) {
 
   ksort($files);
 
-  $header = array(t("name"), t("description"), t("status"));
+  if ($type == "module") {
+    $header = array(t("name"), t("description"), t("status"));
+  }
+  else {
+    $header = array(t("name"), t("description"), t("enable"), t("default"));
+  }
 
   foreach ($files as $filename => $file) {
     include_once($filename);
@@ -311,27 +316,28 @@ function system_listing($type, $directory, $required = array()) {
       }
     }
     elseif ($type == "theme") {
-        $info->name = $file->name;
-        $info->description = module_invoke($file->name, "help", "admin/system/themes#description");
-        $themes[] = $info->name;
+      $info->name = $file->name;
+      $info->description = module_invoke($file->name, "help", "admin/system/themes#description");
+      $themes[] = $info->name;
+
+      // Enable the default theme:
+      if ($info->name == variable_get("theme_default", 0)) {
+        $file->status = 1;
+      }
     }
 
     // Update the contents of the system table:
     db_query("DELETE FROM {system} WHERE filename = '%s' AND type = '%s'", $filename, $type);
     db_query("INSERT INTO {system} (name, description, type, filename, status, bootstrap) VALUES ('%s', '%s', '%s', '%s', %d, %d)", $info->name, $info->description, $type, $filename, $file->status, $bootstrap);
 
-    $rows[] = array($info->name, $info->description, array("data" => (in_array($filename, $required) ? form_hidden("status][$filename", 1) . t("required") : form_checkbox("", "status][$filename", 1, $file->status)), "align" => "center"));
+    $row = array($info->name, $info->description, array("data" => (in_array($filename, $required) ? form_hidden("status][$filename", 1) . t("required") : form_checkbox("", "status][$filename", 1, $file->status)), "align" => "center"));
+    if ($type == "theme") {
+      $row[] = array("data" => form_radio("","theme_default",$info->name,(variable_get("theme_default",0) == $info->name) ? 1 : 0), "align" => "center");
+    }
+    $rows[] = $row;
   }
 
-  $output = theme("table", $header, $rows);
-
-  // If we're doing themes, stick the default one here...
-  if ($type == "theme") {
-    $output .= "<hr />\n";
-    foreach ($themes as $theme)
-      $options .= "<option value=\"$theme\"". (variable_get("theme_default", 0) == $theme ? " selected=\"selected\"" : "") .">$theme</option>\n";
-    $output .= form_item(t("Default theme"), "<select name=\"edit[theme_default]\">$options</select>", t("The default theme as seen by visitors or anonymous users. Make sure a valid theme is selected here (i.e. one that has its box checked above.)"));
-  }
+  $output  = theme("table", $header, $rows);
   $output .= form_hidden("type", $type);
 
   return $output;
