@@ -1,4 +1,5 @@
 <?php
+// $Id: variable.inc,v 1.11 2001/10/20 18:57:07 natrak Exp $
 
 function variable_init($conf = array()) {
   $result = db_query("SELECT * FROM variable");

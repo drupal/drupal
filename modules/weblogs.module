@@ -1,4 +1,5 @@
-<?
+<?php
+// $Id: weblogs.module,v 1.4 2001/10/20 18:57:07 natrak Exp $
 
 function weblogs_cron() {
 

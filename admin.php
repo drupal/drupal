@@ -1,4 +1,5 @@
 <?php
+// $Id: admin.php,v 1.48 2001/10/20 18:57:06 natrak Exp $
 
 include_once "includes/common.inc";
 

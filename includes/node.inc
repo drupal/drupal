@@ -1,4 +1,5 @@
 <?php
+// $Id: node.inc,v 1.70 2001/10/20 18:57:07 natrak Exp $
 
 $status = array(dumped => 0, expired => 1, queued => 2, posted => 3);
 

@@ -1,4 +1,5 @@
 <?php
+// $Id: search.inc,v 1.19 2001/10/20 18:57:07 natrak Exp $
 
 /*
 ** Format a single result entry of a search query:

@@ -1,4 +1,5 @@
 <?php
+// $Id: comment.inc,v 1.63 2001/10/20 18:57:07 natrak Exp $
 
 // Security check:
 if (strstr($id, " ") || strstr($pid, " ") || strstr($lid, " ") || strstr($mode, " ") || strstr($order, " ") || strstr($threshold, " ")) {

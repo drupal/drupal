@@ -1,4 +1,5 @@
 <?php
+// $Id: locale.inc,v 1.12 2001/10/20 18:57:07 natrak Exp $
 
 function locale_init() {
   global $languages, $user;
