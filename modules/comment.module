@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.113 2003/03/09 17:19:50 kjartan Exp $
+// $Id: comment.module,v 1.114 2003/03/10 18:13:45 kjartan Exp $
 
 $GLOBALS["cmodes"] = array(1 => t("Flat list - collapsed"), 2 => t("Flat list - expanded"), 3 => t("Threaded list - collapsed"), 4 => t("Threaded list - expanded"));
 $GLOBALS["corder"] = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"));
@@ -1503,7 +1503,8 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
       break;
     case "validate":
       if (!user_access("administer nodes")) {
-        unset($node->comment);
+        // Force default for normal users:
+        $node->comment = variable_get("comment_$node->type", 2);
       }
       break;
   }
