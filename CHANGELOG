@@ -15,7 +15,7 @@ drupal x.xx, xx/xx/xxxx
 - added settings.module:
     * moved most configuration options to the administration section
 - added page.module:
-    * allows creation of static (and dynamic) pages
+    * allows creation of static (and dynamic) pages through the administration interface
 - various updates:
     * added preview functionality when submitting new content (such as a story) from the administration pages.
     * made the administration section only show those links a user has access to.
