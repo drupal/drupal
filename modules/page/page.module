@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.39 2001/11/07 18:14:46 dries Exp $
+// $Id: page.module,v 1.40 2001/11/12 20:15:08 dries Exp $
 
 $GLOBALS["format"] = array(0 => "HTML", 1 => "PHP", 2 => "text");
 
@@ -12,7 +12,7 @@ function page_node($field) {
 
 function page_access($op, $node) {
   if ($op == "view") {
-    return ($node->nid && $node->status && !$node->moderate);
+    return $node->status;
   }
 }
 
