@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.35 2002/10/17 18:34:38 kjartan Exp $
+// $Id: module.inc,v 1.36 2002/10/26 15:17:25 dries Exp $
 
 // initialize modules:
 function module_init() {
@@ -67,27 +67,6 @@ function module_exist($name) {
 // return 1 if module $name implements hook $hook, 0 otherwise:
 function module_hook($name, $hook) {
   return function_exists($name ."_". $hook);
-}
-
-// rehash module-exported blocks:
-function module_rehash_blocks($name) {
-  db_query("UPDATE blocks SET remove = '1' WHERE module = '$name'");
-
-  if ($blocks = module_invoke($name, "block")) {
-    foreach ($blocks as $delta => $block) {
-      foreach ($block as $item => $data) {
-        $block[$item] = addslashes($data);
-      }
-      if (!db_fetch_object(db_query("SELECT * FROM blocks WHERE module = '$name' AND name = '$block[info]'"))) {
-        db_query("INSERT INTO blocks (name, module, delta) VALUES ('$block[info]', '$name', '$delta')");
-      }
-      else {
-        db_query("UPDATE blocks SET delta = '$delta', remove = '0' WHERE module = '$name' AND name = '$block[info]'");
-      }
-    }
-  }
-
-  db_query("DELETE FROM blocks WHERE module = '$name' AND remove = '1'");
 }
 
 ?>

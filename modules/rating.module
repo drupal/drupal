@@ -1,5 +1,5 @@
 <?php
-// $Id: rating.module,v 1.44 2002/08/16 07:37:02 dries Exp $
+// $Id: rating.module,v 1.45 2002/10/26 15:17:26 dries Exp $
 
 function rating_help() {
   $output .= "<p>Drupal uses <i>gravity</i> as an indication for each user's contributed value.  The system can be compared with <a href=\"http://www.slashcode.com/\">SlashCode</a>'s Karma and is - in fact - even more similar to <a href=\"http://scoop.kuro5hin.org/\">Scoop</a>'s Mojo.</p>";
@@ -103,11 +103,16 @@ function rating_page() {
   $theme->footer();
 }
 
-function rating_block() {
-  $block[0]["subject"] = "Top 10:<br />users";
-  $block[0]["content"] = rating_list(10);
-  $block[0]["info"] = "Top 10: users";
-  return $block;
+function rating_block($op = "list", $delta = 0) {
+  if ($op == "list") {
+    $blocks[0]["info"] = t("Top 10: users");
+    return $blocks;
+  }
+  else {
+    $block["subject"] = t("Top 10: users");
+    $block["content"] = rating_list(10);
+    return $block;
+  }
 }
 
 ?>

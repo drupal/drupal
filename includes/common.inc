@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.128 2002/10/20 19:17:17 kjartan Exp $
+// $Id: common.inc,v 1.129 2002/10/26 15:17:25 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST;
@@ -617,6 +617,14 @@ function form_hidden($name, $value) {
 
 function form_submit($value) {
   return "<input type=\"submit\" name=\"op\" value=\"". check_form($value) ."\" />\n";
+}
+
+function form_weight($title = NULL, $name = "weight", $value = 0, $delta = 10, $description = 0, $extra = 0) {
+  for ($n = (-1*$delta); $n <= $delta; $n++) {
+    $weights[$n] = $n;
+  }
+
+  return form_select($title, $name, $value, $weights, $description, $extra);
 }
 
 /**

@@ -54,7 +54,8 @@ $mysql_updates = array(
   "2002-09-15" => "update_39",
   "2002-09-17" => "update_40",
   "2002-10-13" => "update_41",
-  "2002-10-17" => "update_42"
+  "2002-10-17" => "update_42",
+  "2002-10-17" => "update_43"
 );
 
 // Update functions
@@ -615,6 +616,11 @@ function update_42() {
   update_sql("DROP TABLE modules");
   update_sql("DROP TABLE layout");
   update_sql("DROP TABLE referrer");
+}
+
+function update_43() {
+  update_sql("ALTER TABLE blocks DROP remove");
+  update_sql("ALTER TABLE blocks DROP name");
 }
 
 function update_upgrade3() {
