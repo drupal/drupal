@@ -3,6 +3,32 @@ include "function.inc";
 include "theme.inc";
 
 
+function diary_overview($num = 20) {
+  global $theme, $user;
+
+  $result = db_query("SELECT d.*, u.userid FROM diaries d LEFT JOIN users u ON d.author = u.id ORDER BY d.timestamp DESC LIMIT $num");
+
+  $output .= "<P>This part of the website is dedicated to providing easy to write and easy to read online diaries or journals filled with daily thoughts, poetry, boneless blather, spiritual theories, intimate details, valuable experiences, cynical rants, semi-coherent comments, writing experiments, artistic babblings, critics on actuality, fresh insights, diverse dreams, chronicles and general madness available for general human consumption.</P>";
+
+  while ($diary = db_fetch_object($result)) {
+    if ($time != date("F jS", $diary->timestamp)) {
+      $output .= "<B>". date("l, F jS", $diary->timestamp) ."</B>\n";
+      $time = date("F jS", $diary->timestamp);
+    }
+    $output .= "<DL>\n";
+    $output .= " <DD><P><B>$diary->userid wrote:</B></P></DD>\n";
+    $output .= " <DL>\n";
+    $output .= "  <DD><P>$diary->text</P><P>[ <A HREF=\"diary.php?op=view&name=$diary->userid\">more</A> ]</P></DD>\n";
+    $output .= " </DL>\n";
+    $output .= "</DL>\n";
+  }
+
+  $theme->header();
+  $theme->box("Online diary", $output);
+  $theme->footer();
+
+}
+
 function diary_entry($timestamp, $text, $id = 0) {
   if ($id) {
     $output .= "<DL>\n";
@@ -29,6 +55,7 @@ function diary_display($username) {
     while ($diary = db_fetch_object($result)) $output .= diary_entry($diary->timestamp, $diary->text, $diary->id);
   }
   else {
+    $output .= "<P>". format_username($username) ."'s diary:</P>\n";
     while ($diary = db_fetch_object($result)) $output .= diary_entry($diary->timestamp, $diary->text);
   }
 
@@ -148,7 +175,7 @@ switch($op) {
     else diary_submit($text);
     break;
   default:
-    diary_display($user->userid);
+    diary_overview();
 }
 
 ?>

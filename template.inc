@@ -48,7 +48,7 @@ function displayOldHeadlines($theme, $num = 10) {
 
   while ($story = db_fetch_object($result)) {    
     if ($time != date("F jS", $story->timestamp)) {
-      $content .= "<P><B>". date("l, F jS", $story->timestamp) ."</B></P>\n";
+      $content .= "<P><B>". date("l, M jS", $story->timestamp) ."</B></P>\n";
       $time = date("F jS", $story->timestamp);
     }
     $content .= "<LI>". format_story_link($story) ."</LI>\n";
@@ -59,10 +59,16 @@ function displayOldHeadlines($theme, $num = 10) {
 }
 
 function displayNewDiaries($theme, $num = 20) {
-  $result = db_query("SELECT u.userid FROM diaries d LEFT JOIN users u ON d.author = u.id GROUP BY u.userid ORDER BY timestamp DESC LIMIT $num");
+  $result = db_query("SELECT u.userid, d.timestamp FROM diaries d LEFT JOIN users u ON d.author = u.id ORDER BY timestamp DESC LIMIT $num");
+
   while ($diary = db_fetch_object($result)) {
+    if ($time != date("F jS", $diary->timestamp)) {
+      $content .= "<P><B>". date("l, M jS", $diary->timestamp) ."</B></P>\n";
+      $time = date("F jS", $diary->timestamp);
+    }
     $content .= "<LI><A HREF=\"diary.php?op=view&name=$diary->userid\">$diary->userid</A></LI>\n";
   }
+  $content .= "<P ALIGN=\"right\">[ <A HREF=\"diary.php\"><FONT COLOR=\"$theme->hlcolor2\">more</FONT></A> ]</P>";
   $theme->box("Recent diary entries", $content);
 }
 
@@ -132,7 +138,7 @@ function displayAccount($theme) {
     $content .= "<LI><A HREF=\"account.php?op=page\">customize your page</A></LI>";
     $content .= "<LI><A HREF=\"account.php?op=discussion\">track your comments</A></LI>";
     $content .= "<LI><A HREF=\"submission.php\">moderate submissions</A> (<FONT COLOR=\"red\">". submission_number() ."</FONT>)</LI>";
-    $content .= "<LI><A HREF=\"diary.php\">update your diary</A></LI>";
+    $content .= "<LI><A HREF=\"diary.php?op=view&name=$user->userid\">update your diary</A></LI>";
     $content .= "<LI><A HREF=\"account.php?op=logout\">logout</A></LI>";
 
     $theme->box("$user->userid's account", "$content");
