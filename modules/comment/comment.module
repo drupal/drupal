@@ -358,7 +358,7 @@ function comment_view($comment, $links = "", $visible = 1) {
     $comment->new = 1;
   }
 
-  print "<a name=\"$comment->cid\">\n";
+  print "<a name=\"$comment->cid\"></a>\n";
 
   if ($visible) {
     theme_invoke("comment", $comment, $links);

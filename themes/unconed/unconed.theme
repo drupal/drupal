@@ -136,8 +136,6 @@
    }
 
    function comment($comment, $link) {
-     print "<A NAME=\"$comment->cid\"></A>\n";
-
      print "\n<!-- Comment: \"$comment->subject\" by $comment->name -->\n";
 
      ?>
