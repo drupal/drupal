@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.144 2003/12/08 18:30:20 dries Exp $
+// $Id: forum.module,v 1.145 2003/12/09 18:57:05 dries Exp $
 
 function forum_node($field) {
   $info["name"] = t("forum topic");
@@ -539,6 +539,8 @@ function theme_forum_list($forums, $parents, $tid) {
         $forum->num_topics = "";
         $forum->num_posts = "";
         $forum->last_post = "";
+        $new_topics = 0;
+        $links = array();
       }
       else {
         if ($user->uid) {
