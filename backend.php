@@ -1,7 +1,5 @@
 <?
 
-include "theme.inc";
-include "backend.class.php";
 
 function adminAddChannel() {
   ?>
@@ -34,18 +32,15 @@ function adminAddChannel() {
 function displayAll() {
   global $theme;
 
-  ### Connect to database:
-  dbconnect();
-
   ### Get channel info:
-  $result = mysql_query("SELECT * FROM channel ORDER BY id");
+  $result = db_query("SELECT * FROM channel ORDER BY id");
 
-  print "<HR>";
-  print "<TABLE BORDER=\"0\">";
-  while ($channel = mysql_fetch_object($result)) {
-    if ($state % 3 == 0) print " <TR>";
+  print "<HR>\n";
+  print "<TABLE BORDER=\"0\">\n";
+  while ($channel = db_fetch_object($result)) {
+    if ($state % 3 == 0) print " <TR>\n";
 
-    print " <TD ALIGN=\"center\" VALIGN=\"top\" WIDTH=\"33%\">";
+    print "  <TD ALIGN=\"center\" VALIGN=\"top\" WIDTH=\"33%\">\n";
     
     ### Load backend from database:
     $backend = new backend($channel->id);
@@ -53,33 +48,30 @@ function displayAll() {
     ### Read headlines from backend class:
     $content = "";
     for (reset($backend->headlines); $headline = current($backend->headlines); next($backend->headlines)) {
-      $content .= "<LI>$headline</LI>";
+      $content .= "<LI>$headline</LI>\n";
     }
 
     ### Print backend box to screen:
-    $theme->box($backend->site, "$content<P ALIGN=\"right\">[ <A HREF=\"$backend->url\">more</A> ]");
-    print " </TD>";
+    $theme->box($backend->site, "$content<P ALIGN=\"right\">[ <A HREF=\"$backend->url\">more</A> ]\n");
+    print " </TD>\n";
 
-    if ($state % 3 == 2) print " </TR>";
+    if ($state % 3 == 2) print " </TR>\n";
 
     $state += 1;
   }  
-  print "</TABLE>";
+  print "</TABLE>\n";
 }
 
 function adminMain() {
   global $theme, $PHP_SELF;
 
-  ### Connect to database:
-  dbconnect();
-
   ### Get channel info:
-  $result = mysql_query("SELECT * FROM channel ORDER BY id");
+  $result = db_query("SELECT * FROM channel ORDER BY id");
 
   print "<TABLE BORDER=\"0\" WIDTH=\"100%\" CELLSPACING=\"2\" CELLPADDING=\"4\">";
   print " 
   <TR BGCOLOR=\"$theme->bgcolor1\"><TD ALIGN=\"center\"><B><FONT COLOR=\"$theme->fgcolor1\">Site</FONT></B></TD><TD ALIGN=\"center\"><B><FONT COLOR=\"$theme->fgcolor1\">Contact</FONT></B></TD><TD ALIGN=\"center\"><B><FONT COLOR=\"$theme->fgcolor1\">Last updated</FONT></B></TD><TD ALIGN=\"center\" COLSPAN=\"2\"><B><FONT COLOR=\"$theme->fgcolor1\">Operations</FONT></B></TD></TR>";
-  while ($channel = mysql_fetch_object($result)) {
+  while ($channel = db_fetch_object($result)) {
     ### Load backend from database:
     $backend = new backend($channel->id);
     
@@ -95,6 +87,8 @@ function adminMain() {
   print "<BR><BR>";
 }
 
+include "backend.class.php";
+include "theme.inc";
 
 $theme->header();
 

@@ -24,13 +24,10 @@ class backend {
   # Description..: Constructor - initializes the internal variables.
   #
   function backend($id, $site, $url, $file, $contact, $timout = 1800) {
-    ### Connect to database:
-    dbconnect();
-
     ### Get channel info:
-    $result = mysql_query("SELECT * FROM channel WHERE id = '$id' OR site = '$site'");
+    $result = db_query("SELECT * FROM channel WHERE id = '$id' OR site = '$site'");
 
-    if ($channel = mysql_fetch_object($result)) {
+    if ($channel = db_fetch_object($result)) {
       ### Initialize internal variables:
       $this->id = $channel->id;
       $this->site = $channel->site;
@@ -43,8 +40,8 @@ class backend {
       if (time() - $this->timestamp > $timout) $this->url2sql();
 
       ### Read headlines:
-      $result = mysql_query("SELECT * FROM headlines WHERE id = $this->id ORDER BY number");
-      while ($headline = mysql_fetch_object($result)) {
+      $result = db_query("SELECT * FROM headlines WHERE id = $this->id ORDER BY number");
+      while ($headline = db_fetch_object($result)) {
         array_push($this->headlines, "<A HREF=\"$headline->link\">$headline->title</A>");
       }
 
@@ -70,7 +67,7 @@ class backend {
       $port = $url[port] ? $url[port] : 80;
       $path = $url[path];
      
-      // print "<PRE>$url - $host - $port - $path</PRE>";
+      // print "<PRE><B>Debug:</B> $url - $host - $port - $path</PRE>";
  
       ### Retrieve data from website:
       $fp = fsockopen($host, $port, &$errno, &$errstr, $timout);
@@ -89,7 +86,7 @@ class backend {
         if (strstr($data, "200 OK")) {
 
           ### Remove existing entries:
-          $result = mysql_query("DELETE FROM headlines WHERE id = $this->id");
+          $result = db_query("DELETE FROM headlines WHERE id = $this->id");
 
           ### Strip all 'junk':
           $data = ereg_replace("<?xml.*/image>", "", $data);
@@ -114,11 +111,11 @@ class backend {
             $number += 1;
 
             ### Insert item in database:
-            $result = mysql_query("INSERT INTO headlines (id, title, link, number) VALUES('$this->id', '$title', '$link', '$number')");
+            $result = db_query("INSERT INTO headlines (id, title, link, number) VALUES('$this->id', '$title', '$link', '$number')");
           }
  
           ### Mark channels as being updated:
-          $result = mysql_query("UPDATE channel SET timestamp = '". time() ."' WHERE id = $this->id");
+          $result = db_query("UPDATE channel SET timestamp = '". time() ."' WHERE id = $this->id");
           $this->timestamp = time();
         }
         else print "<HR>RDF parser: 404 error?<BR><BR><PRE>$data</PRE><HR>";
@@ -169,11 +166,8 @@ class backend {
   function displayHeadlines($timout = 1800) {
     global $theme;
 
-    ### Connect to database:
-    dbconnect();
-
     ### Get channel info:
-    $result = mysql_query("SELECT * FROM channel WHERE site = '$this->site'");
+    $result = db_query("SELECT * FROM channel WHERE site = '$this->site'");
 
     if ($this->id) {
 
@@ -181,8 +175,8 @@ class backend {
       if (time() - $this->timestamp > $timout) $this->url2sql();
 
       ### Grab headlines from database:
-      $result = mysql_query("SELECT * FROM headlines WHERE id = $this->id ORDER BY number");
-      while ($headline = mysql_fetch_object($result)) {
+      $result = db_query("SELECT * FROM headlines WHERE id = $this->id ORDER BY number");
+      while ($headline = db_fetch_object($result)) {
         $content .= "<LI><A HREF=\"$headline->link\">$headline->title</A></LI>";
       }
       ### Add timestamp:
@@ -201,11 +195,8 @@ class backend {
   # Description..: Adds this backend to the database.
   #
   function add() {
-    ### Connect to database:
-    dbconnect();
-
     ### Add channel:    
-    $result = mysql_query("INSERT INTO channel (site, file, url, contact, timestamp) VALUES ('$this->site', '$this->file', '$this->url', '$this->contact', 42)");
+    $result = db_query("INSERT INTO channel (site, file, url, contact, timestamp) VALUES ('$this->site', '$this->file', '$this->url', '$this->contact', 42)");
   }
 
 
@@ -214,14 +205,11 @@ class backend {
   # Description..: Deletes this backend
   #
   function delete() {
-    ### Connect to database:
-    dbconnect();
-
     ### Delete channel:    
-    $result = mysql_query("DELETE FROM channel WHERE id = $this->id");
+    $result = db_query("DELETE FROM channel WHERE id = $this->id");
 
     ### Delete headlines:
-    $result = mysql_query("DELETE FROM headlines WHERE id = $this->id");    
+    $result = db_query("DELETE FROM headlines WHERE id = $this->id");    
   }
 
   #####
@@ -229,14 +217,11 @@ class backend {
   # Description..: Deletes all headlines associated with this backend.
   #
   function refresh() {
-    ### Connect to database:
-    dbconnect();
-
     ### Delete headlines:
-    $result = mysql_query("DELETE FROM headlines WHERE id = $this->id");    
+    $result = db_query("DELETE FROM headlines WHERE id = $this->id");    
 
     ### Mark channel as invalid to enforce an update:
-    $result = mysql_query("UPDATE channel SET timestamp = 42 WHERE id = $this->id");    
+    $result = db_query("UPDATE channel SET timestamp = 42 WHERE id = $this->id");    
   }
 
   #####
