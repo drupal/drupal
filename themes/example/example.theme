@@ -19,7 +19,7 @@
           <TITLE><? echo variable_get(site_name, "drupal"); ?></TITLE>
         </HEAD>
         <BODY>
-          <TABLE BORDER="1">
+          <TABLE BORDER="0">
             <TR>
               <TD>
                 <BIG><A HREF="index.php"><?php print variable_get(site_name, "drupal"); ?></A></BIG>
@@ -50,10 +50,10 @@
     function story($story, $reply = 0) {
 ?>
 
-              <TABLE BORDER="1" WIDTH="100%">
+              <TABLE BORDER="1" CELLSPACING="0" CELLPADDING="3" WIDTH="100%">
                 <TR>
                   <TD COLSPAN="2">
-                    <?php echo check_output($story->title); ?>
+                    <BIG><?php echo check_output($story->title); ?></BIG>
                   </TD>
                 </TR>
                 <TR>
@@ -65,13 +65,11 @@
 ?>
 
                    </TD>
-                   <TD>
-
+                   <TD ALIGN="right">
 <?php
-                     echo "<A HREF=\"search.php?category=". urlencode($story->section) ."\">". check_output($story->section) ."</A>";
+                     echo "<A HREF=\"index.php?category=$story->cid\">". check_output($story->category) ."</A> / <A HREF=\"index.php?topic=$story->tid\">". check_output($story->topic) ."</A>";
 
 ?>
-
                    </TD>
                  </TR>
                  <TR>
@@ -112,41 +110,41 @@
       echo "<A NAME=\"$comment->cid\"></A>\n";
 
       // Create comment header:
-      echo "  <TABLE BORDER=\"1\" WIDTH=\"100%\">";
-      echo "    <TR>";
-      echo "      <TD>";
-      echo          t("Subject") .":";
-      echo "      </TD>";
-      echo "      <TD>";
-      echo "       ". check_output($comment->subject);
-      echo "      </TD>";
+      echo "<TABLE BORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"3\" WIDTH=\"100%\">";
+      echo "  <TR>";
+      echo "    <TD>";
+      echo        t("Subject") .":";
+      echo "    </TD>";
+      echo "    <TD>";
+      echo "     ". check_output($comment->subject);
+      echo "    </TD>";
 
       // Moderation:
-      echo "      <TD>";
-      echo          comment_moderation($comment);
-      echo "      </TD>";
-      echo "    </TR>";
+      echo "    <TD>";
+      echo        comment_moderation($comment);
+      echo "    </TD>";
+      echo "  </TR>";
 
       // Author and date:
-      echo "    <TR>";
-      echo "      <TD>";
-      echo         t("Author") .":";
-      echo "      </TD>";
-      echo "      <TD COLSPAN=\"2\">";
-      echo          format_username($comment->userid) ." on ". format_date($comment->timestamp);
-      echo "      </TD>";
-      echo "    </TR>";
+      echo "  <TR>";
+      echo "    <TD>";
+      echo       t("Author") .":";
+      echo "    </TD>";
+      echo "    <TD COLSPAN=\"2\">";
+      echo        format_username($comment->userid) ." on ". format_date($comment->timestamp);
+      echo "    </TD>";
+      echo "  </TR>";
 
       // Body of comment:
-      echo "    <TR>";
-      echo "      <TD COLSPAN=\"3\">";
-      echo         check_output($comment->comment, 1);
+      echo "  <TR>";
+      echo "    <TD COLSPAN=\"3\">";
+      echo       check_output($comment->comment, 1);
 
       // Print navigation / control links:
-      echo "       <P>$link</P>";
-      echo "      </TD>";
-      echo "    </TR>";
-      echo "  </TABLE>";
+      echo "     <P>$link</P>";
+      echo "    </TD>";
+      echo "  </TR>";
+      echo "</TABLE>";
     } // close comment function
 
     function box($subject, $content, $options = "") {
@@ -156,7 +154,7 @@
               <TABLE>
                 <TR>
                   <TD>
-                    <DIV ALIGN="center"><B><? echo $subject; ?></B></DIV><HR>
+                    <DIV ALIGN="center"><BIG><? echo $subject; ?></BIG></DIV><HR>
                   </TD>
                 </TR>
                 <TR>

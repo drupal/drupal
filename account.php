@@ -282,7 +282,6 @@ function account_user($uname) {
     // Display account information:
     $theme->header();
     if ($block1) $theme->box(strtr(t("%a's user information"), array("%a" => $uname)), $block1);
-//    if ($block2) $theme->box(strtr(t("%a has posted %b recently"), array("%a" => $uname, "%b" => format_plural($comments, "comment", "comments"))), $block2);
     module_iterate("module", $uname);
     $theme->footer();
   }

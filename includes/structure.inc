@@ -25,19 +25,30 @@ function category_save($edit) {
 // delete category $cid:
 function category_del($cid) {
   db_query("DELETE FROM category WHERE cid = '". check_input($cid) ."'");
-  db_query("DELETE FROM node_category WHERE cid = '". check_input($cid) ."'");
+  db_query("UPDATE node SET cid = 0 WHERE cid = '". check_input($cid) ."'");
 }
 
-function category_node($nid, $cid) {
-  db_query("INSERT INTO node_category (nid, cid) VALUES ('". check_input($nid) ."', '". check_input($cid) ."')", 1);
+function category_post_threshold($cid, $default) {
+  $category = db_fetch_object(db_query("SELECT post AS threshold FROM category WHERE cid = '". check_input($cid) ."'"));
+  return $category->threshold ? $category->threshold : $default;
+}
+
+function category_dump_threshold($cid, $default) {
+  $category = db_fetch_object(db_query("SELECT dump AS threshold FROM category WHERE cid = '". check_input($cid) ."'"));
+  return $category->threshold ? $category->threshold : $default;
+}
+
+function category_expire_threshold($cid, $default) {
+  $category = db_fetch_object(db_query("SELECT expire AS threshold FROM category WHERE cid = '". check_input($cid) ."'"));
+  return $category->threshold ? $category->threshold : $default;
 }
 
 function category_form_select($type, $edit = array(), $size = 1) {
   $result = db_query("SELECT * FROM category WHERE type = '$type'");
   while ($category = db_fetch_object($result)) {
-    $options .= "<OPTION VALUE=\"$category->cid\"". ($edit[$category->cid] ? "SELECTED" : "") .">". check_select($category->name) ."</OPTION>";
+    $options .= "<OPTION VALUE=\"$category->cid\"". ($edit[cid] == $category->cid ? "SELECTED" : "") .">". check_select($category->name) ."</OPTION>";
   }
-  return "<SELECT NAME=\"category[]\" SIZE=\"$size\"". ($size > 1 ? "MULTIPLE" : "") .">$options</SELECT>\n";
+  return "<SELECT NAME=\"edit[cid]\" SIZE=\"$size\"". ($size > 1 ? "MULTIPLE" : "") .">$options</SELECT>\n";
 }
 
 // ----- topic -----
@@ -75,20 +86,15 @@ function topic_tree($parent = 0, $name = "", $tree = array()) {
 // delete topic $tid:
 function topic_del($tid) {
   db_query("DELETE FROM topic WHERE tid = '". check_input($tid) ."'");
-  db_query("DELETE FROM node_topic WHERE tid = '". check_input($tid) ."'");
-}
-
-// add node $nid to topic $tid:
-function topic_node($nid, $tid) {
-  db_query("INSERT INTO node_topic (nid, tid) VALUES ('". check_input($nid) ."', '". check_input($tid) ."')", 1);
+  db_query("UPDATE node SET tid = 0 WHERE tid = '". check_input($tid) ."'");
 }
 
 // renders a HTML form to select one or more topics:
 function topic_form_select($edit = array(), $size = 1) {
   foreach (topic_tree() as $tid=>$name) {
-    $options .= "<OPTION VALUE=\"$tid\"". ($edit[$tid] ? "SELECTED" : "") .">". check_select($name) ."</OPTION>";
+    $options .= "<OPTION VALUE=\"$tid\"". ($edit[tid] == $tid ? "SELECTED" : "") .">". check_select($name) ."</OPTION>";
   }
-  return "<SELECT NAME=\"topic[]\" SIZE=\"$size\"". ($size > 1 ? "MULTIPLE" : "") .">$options</SELECT>\n";
+  return "<SELECT NAME=\"edit[tid]\" SIZE=\"$size\"". ($size > 1 ? "MULTIPLE" : "") .">$options</SELECT>\n";
 }
 
 // ----- structure -----

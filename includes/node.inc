@@ -6,7 +6,7 @@ $rstatus = array(0 => dumped, 1 => expired, 2 => queued, 3 => posted);
 function _node_get($field, $value) {
   $result = db_query("SELECT lid, type FROM node WHERE $field = '$value'");
   if ($node = db_fetch_object($result)) {
-    return db_query("SELECT n.*, l.*, u.userid FROM node n LEFT JOIN $node->type l ON n.lid = l.lid AND n.nid = l.nid LEFT JOIN users u ON n.author = u.id WHERE n.$field = '$value' ORDER BY n.timestamp DESC");
+    return db_query("SELECT n.*, l.*, c.name AS category, t.name AS topic, u.userid FROM node n LEFT JOIN $node->type l ON n.lid = l.lid AND n.nid = l.nid LEFT JOIN users u ON n.author = u.id LEFT JOIN category c ON n.cid = c.cid LEFT JOIN topic t ON n.tid = t.tid WHERE n.$field = '$value' ORDER BY n.timestamp DESC");
   }
 }
 
@@ -31,10 +31,15 @@ function node_del($field, $value) {
   }
 }
 
+function node_get_comments($nid) {
+  $comment = db_fetch_object(db_query("SELECT COUNT(c.lid) AS number FROM node n LEFT JOIN comments c ON n.nid = c.lid WHERE n.nid = '$nid' GROUP BY n.nid", 1));
+  return $comment->number ? $comment->number : 0;
+}
+
 function node_save($node) {
   global $user, $status;
 
-  $rows = array(nid, pid, lid, log, type, title, score, votes, author, status, timestamp);
+  $rows = array(nid, pid, lid, cid, tid, log, type, title, score, votes, author, status, timestamp);
 
   if ($node[nid] > 0) {
     $n = node_get_object("nid", $node[nid]);
@@ -69,7 +74,7 @@ function node_save($node) {
       throttle("post node", variable_get(max_node_rate, 900));
 
       // setup default values:
-      $node = array_merge(array(title => "?", author => $user->id, type => "?", pid => 0, log => "node created", status => $status[queued], score => 0, votes => 0, timestamp => time()), $node);
+      $node = array_merge(array(title => "?", author => $user->id, type => "?", pid => 0, cid => 0, tid => 0, log => "node created", status => $status[queued], score => 0, votes => 0, timestamp => time()), $node);
 
       // prepare queries:
       $f1 = array();
@@ -129,7 +134,7 @@ function node_invoke($node, $name, $arg = 0) {
   if ($function) return ($arg ? $function($node) : $function($node, $arg));
 }
 
-function node_view($node, $page) {
+function node_view($node, $page = 0) {
   return node_invoke($node, "view", $page);
 }
 

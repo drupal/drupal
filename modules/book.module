@@ -19,18 +19,6 @@ class Book {
   }
 }
 
-function book_post_threshold($node, $default) {
-  return $default;
-}
-
-function book_dump_threshold($node, $default) {
-  return $default;
-}
-
-function book_timout_threshold($node, $default) {
-  return $default;
-}
-
 function book_status() {
   return array(dumped, expired, queued, posted);
 }

@@ -3,7 +3,7 @@
 $module = array("admin" => "structure_admin");
 
 $cstatus = array("disabled", "enabled: incl. anonymous", "enabled: excl. anonymous");
-$mstatus = array("post new submissions", "queue new submissions");
+$mstatus = array("post new submissions", "moderate new submissions");
 
 include "includes/structure.inc";
 
@@ -73,9 +73,9 @@ function category_overview() {
   $result = db_query("SELECT * FROM category ORDER BY name");
 
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR><TH>name</TH><TH>type</TH><TH>comments</TH><TH>submissions</TH><TH>thresholds</TH><TH>operations</TH></TR>\n";
+  $output .= " <TR><TH>name</TH><TH>type</TH><TH>comments</TH><TH>submissions</TH><TH>operations</TH></TR>\n";
   while ($category = db_fetch_object($result)) {
-    $output .= " <TR><TD>". check_output($category->name) ."</TD><TD>". check_output($category->type) ."</TD><TD>". check_output($cstatus[$category->comment]) ."</TD><TD>". check_output($mstatus[$category->submission]) ."</TD><TD>post: $category->post, dump: $category->dump, expire: $category->expire</TD><TD><A HREF=\"admin.php?mod=structure&type=category&op=edit&id=$category->cid\">edit category</A></TD></TR>\n";
+    $output .= " <TR><TD>". check_output($category->name) ."</TD><TD>". check_output($category->type) ."</TD><TD>". check_output($cstatus[$category->comment]) ."</TD><TD>". check_output($mstatus[$category->submission]) ."". ($category->submission ? "<BR><SMALL>post: $category->post, dump: $category->dump, expire: $category->expire</SMALL>" : "") ."</TD><TD><A HREF=\"admin.php?mod=structure&type=category&op=edit&id=$category->cid\">edit category</A></TD></TR>\n";
   }
   $output .= "</TABLE>\n";
   return $output;
@@ -88,7 +88,7 @@ function topic_form($edit = array()) {
   $output .= "<FORM ACTION=\"admin.php?mod=structure&type=topic\" METHOD=\"post\">\n";
 
   $output .= "<B>Name:</B><BR>\n";
-  $output .= "<INPUT NAME=\"edit[name]\" SIZE=\"55\" VALUE=\"". check_textfield($edit[name]) ."\"><P>\n";
+  $output .= "<INPUT NAME=\"edit[name]\" SIZE=\"55\" VALUE=\"". check_textfield($edit[name]) ."\"><BR>\n";
   $output .= "<SMALL><I>A unique name for this topic like 'science', 'internet', 'culture', etc.</I></SMALL><P>\n";
 
   $output .= "<B>Parent:</B><BR>\n";
@@ -112,9 +112,9 @@ function topic_overview() {
   $tree = topic_tree();
 
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR><TH>name</TH><TH>operations</TH></TR>\n";
+  $output .= " <TR><TH>name</TH><TH>read access</TH><TH>write access</TH><TH>operations</TH></TR>\n";
   foreach ($tree as $id=>$name) {
-    $output .= " <TR><TD>". check_output($name) ."</TD><TD><A HREF=\"admin.php?mod=structure&type=topic&op=edit&id=$id\">edit topic</A></TD></TR>\n";
+    $output .= " <TR><TD>". check_output($name) ."</TD><TD ALIGN=\"center\">all</TD><TD ALIGN=\"center\">all</TD><TD><A HREF=\"admin.php?mod=structure&type=topic&op=edit&id=$id\">edit topic</A></TD></TR>\n";
   }
   $output .= "</TABLE>\n";
   return $output;
@@ -133,7 +133,7 @@ function structure_overview() {
 function structure_admin() {
   global $id, $op, $type, $edit;
 
-  print "<SMALL><A HREF=\"admin.php?mod=structure&type=category&op=add\">add new category</A> | <A HREF=\"admin.php?mod=structure&type=topic&op=add\">add new topic</A> | <A HREF=\"admin.php?mod=structure&type=category\">categories</A> | <A HREF=\"admin.php?mod=structure&type=topic\">topics</A> | <A HREF=\"admin.php?mod=structure\">overview</A></SMALL><HR>\n";
+  print "<SMALL><A HREF=\"admin.php?mod=structure&type=category&op=add\">add new category</A> | <A HREF=\"admin.php?mod=structure&type=topic&op=add\">add new topic</A> | <A HREF=\"admin.php?mod=structure\">overview</A></SMALL><HR>\n";
 
   switch ($type) {
     case "category":
@@ -149,14 +149,14 @@ function structure_admin() {
         break;
       case "Delete category":
         print status(category_del($edit[cid]));
-        print category_overview();
+        print structure_overview();
         break;
       case "Save category":
         print status(category_save($edit));
-        print category_overview();
+        print structure_overview();
         break;
       default:
-        print category_overview();
+        print structure_overview();
       }
       break;
    case "topic":
@@ -172,14 +172,14 @@ function structure_admin() {
         break;
       case "Delete topic":
         print status(topic_del($edit[tid]));
-        print topic_overview();
+        print structure_overview();
         break;
       case "Save topic":
         print status(topic_save($edit));
-        print topic_overview();
+        print structure_overview();
         break;
       default:
-        print topic_overview();
+        print structure_overview();
       }
       break;
    default:
