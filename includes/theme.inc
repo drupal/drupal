@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.190 2004/03/20 13:23:32 dries Exp $ */
+/* $Id: theme.inc,v 1.191 2004/04/21 20:11:22 dries Exp $ */
 
 /**
  * @file
@@ -281,12 +281,6 @@ function theme_form_element($title, $value, $description = NULL, $id = NULL) {
     }
     else {
       $title = "<label>$title:</label><br />";
-    }
-  }
-  else {
-    if ($id) {
-      $title = "<label for=\"$id\"></label>";
-      // TODO: does this make sense to do?
     }
   }
 
