@@ -128,7 +128,7 @@ function blog_feed_last() {
   $result = db_query("SELECT n.nid, n.title, n.teaser, n.created, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'blog' ORDER BY n.nid DESC LIMIT 15");
 
   while ($blog = db_fetch_object($result)) {
-    $items .= format_rss_item($blog->title, path_uri() ."module.php?mod=blog&op=view&id=$blog->nid", $blog->teaser);
+    $items .= format_rss_item($blog->title, path_uri() ."node.php?id=$blog->nid", $blog->teaser);
   }
 
   $output .= "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n";
