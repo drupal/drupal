@@ -634,21 +634,21 @@ function aggregator_admin() {
   print theme("page", $output);
 }
 
-function aggregator_page_last($op) {
-  _aggregator_page_list(db_query_range("SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_item} i INNER JOIN {aggregator_feed} f ON i.fid = f.fid ORDER BY i.timestamp DESC, i.iid DESC", 0, variable_get("aggregator_page_limit", 75)), $op);
+function aggregator_page_last() {
+  _aggregator_page_list(db_query_range("SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_item} i INNER JOIN {aggregator_feed} f ON i.fid = f.fid ORDER BY i.timestamp DESC, i.iid DESC", 0, variable_get("aggregator_page_limit", 75)), arg(1));
 }
 
-function aggregator_page_source($op) {
+function aggregator_page_source() {
   $feed = db_fetch_object(db_query("SELECT * FROM {aggregator_feed} WHERE fid = %d", arg(2)));
   $info = theme('aggregator_feed', $feed);
 
-  _aggregator_page_list(db_query_range("SELECT * FROM {aggregator_item} WHERE fid = %d ORDER BY timestamp DESC, iid DESC", $feed->fid, 0, variable_get("aggregator_page_limit", 75)), $op, "<div class=\"feed\">$info</div>");
+  _aggregator_page_list(db_query_range("SELECT * FROM {aggregator_item} WHERE fid = %d ORDER BY timestamp DESC, iid DESC", $feed->fid, 0, variable_get("aggregator_page_limit", 75)), arg(1), "<div class=\"feed\">$info</div>");
 }
 
-function aggregator_page_category($op) {
+function aggregator_page_category() {
   $category = db_fetch_object(db_query("SELECT cid, title FROM {aggregator_category} WHERE cid = %d", arg(2)));
 
-  _aggregator_page_list(db_query_range('SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_category_item} c LEFT JOIN {aggregator_item} i ON c.iid = i.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE cid = %d ORDER BY timestamp DESC, iid DESC', $category->cid, 0, variable_get('aggregator_page_limit', 75)), $op);
+  _aggregator_page_list(db_query_range('SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_category_item} c LEFT JOIN {aggregator_item} i ON c.iid = i.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE cid = %d ORDER BY timestamp DESC, iid DESC', $category->cid, 0, variable_get('aggregator_page_limit', 75)), arg(1));
 }
 
 function _aggregator_page_list($result, $op, $header = '') {
