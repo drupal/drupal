@@ -1049,7 +1049,7 @@ function taxonomy_rss_item($node) {
 function taxonomy_help($section) {
   switch ($section) {
     case 'admin/modules#description':
-      return t('Enables the organization of content into categories.');
+      return t('Enables the categorization of content.');
     case 'admin/taxonomy':
       return t('<p>The taxonomy module allows you to classify content into categories and subcategories; it allows multiple lists of categories for classification (controlled vocabularies) and offers the possibility of creating thesauri (controlled vocabularies that indicate the relationship of terms) and taxonomies (controlled vocabularies where relationships are indicated hierarchically). To delete a term choose "edit term". To delete a vocabulary, and all its terms, choose "edit vocabulary".</p>');
     case 'admin/taxonomy/add/vocabulary':

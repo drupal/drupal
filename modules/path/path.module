@@ -12,7 +12,7 @@
 function path_help($section) {
   switch ($section) {
     case 'admin/modules#description':
-      return t('Enables users to rename URLs.');
+      return t('Allows users to rename URLs.');
     case 'admin/path':
       return t("<p>Drupal provides users complete control over URLs through aliasing.  This feature is typically used to make URLs human-readable or easy to remember.  For example, one could map the relative URL 'node/1' onto 'about'. Each system path can have multiple aliases.</p>");
     case 'admin/path/add':

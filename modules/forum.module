@@ -18,7 +18,7 @@ function forum_help($section) {
     case 'admin/forum/add/forum':
       return t('<p>A forum holds threaded topic discussions that are related. For example, a forum named "Fruit" might contain topic discussions titled "Apples" and "Bananas". You can place a forum into a container, another forum, or at the top (root) level of your forum.</p>');
     case 'admin/modules#description':
-      return t('Enable threaded discussions about general topics.');
+      return t('Enables threaded discussions about general topics.');
     case 'node/add#forum':
       return t('A forum is a threaded discussion, enabling users to communicate about a particular topic.');
   }

@@ -12,7 +12,7 @@
 function story_help($section) {
   switch ($section) {
     case 'admin/modules#description':
-      return t('Enables users to submit stories, articles or similar content.');
+      return t('Allows users to submit stories, articles or similar content.');
     case 'node/add#story':
       return t('Stories are articles in their simplest form: they have a title, a teaser and a body, but can be extended by other modules. The teaser is part of the body too. Stories may be used as a personal blog or for news articles.');
   }

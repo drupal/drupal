@@ -40,7 +40,7 @@ function node_help($section) {
       return $output;
 
     case 'admin/modules#description':
-      return t('The core that allows content to be submitted to the site.');
+      return t('Allows content to be submitted to the site and displayed on pages.');
     case 'admin/node/configure':
     case 'admin/node/configure/settings':
       return t('<p>Settings for the core of Drupal. Almost everything is a node so these settings will affect most of the site.</p>');

@@ -75,7 +75,7 @@ function comment_help($section = "admin/help#comment") {
     case 'admin/comment/configure/votes':
       return t('<p>Create and control the possible comment moderation votes here. "Weight" lets you set the order of the drop down menu. Click "edit" to edit a current vote weight. To delete a name/weight combination go to the "edit" area. To delete a setting, "edit" it first, and then choose "delete vote".</p>');
     case 'admin/modules#description':
-      return t('Enables user to comment on published content.');
+      return t('Allows users to comment on and discuss published content.');
    }
 }
 

@@ -1706,7 +1706,7 @@ function user_help($section) {
     case 'admin/user/search':
       return t('<p>Enter a simple pattern ("*" may be user as a wildcard match) to search for a username.  For example, one may search for "br" and Drupal might return "brian", "brad", and "brenda".</p>');
     case 'admin/modules#description':
-      return t('Enables the user registration and login system.');
+      return t('Manages the user registration and login system.');
     case 'admin/user/configure':
     case 'admin/user/configure/settings':
       return t('<p>In order to use the full power of Drupal a visitor must sign up for an account. This page lets you setup how a user signs up, logs out, the guidelines from the system about user subscriptions, and the e-mails the system will send to the user.</p>');

@@ -12,7 +12,7 @@
 function archive_help($section) {
   switch ($section) {
     case 'admin/modules#description':
-      return t('Displays a calendar to navigate old content.');
+      return t('Displays a calendar for navigating older content.');
   }
 }
 

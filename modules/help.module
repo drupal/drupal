@@ -85,7 +85,7 @@ function help_links_as_list() {
 function help_help($section) {
   switch ($section) {
     case 'admin/modules#description':
-      return t('Manages displaying online help.');
+      return t('Manages the display of online help.');
   }
 }
 

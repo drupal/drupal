@@ -18,7 +18,7 @@ function ping_help($section) {
       break;
 
     case 'admin/modules#description':
-      $output = t('Alerts other sites that your site has been updated.');
+      $output = t('Alerts other sites when your site has been updated.');
       break;
   }
 

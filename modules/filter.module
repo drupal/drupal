@@ -23,7 +23,7 @@ define('FILTER_STYLE_STRIP', 1);
 function filter_help($section) {
   switch ($section) {
     case 'admin/modules#description':
-      return t('Framework for handling filtering of content.');
+      return t('Handles the filtering of content in preparation for display.');
 
     case 'admin/filters':
       return t('

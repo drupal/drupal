@@ -39,7 +39,7 @@ function system_help($section) {
       <h3><a id=\"cache\">Cache</a></h3>
       <p>Drupal has a caching mechanism which stores dynamically generated web pages in a database.  By caching a web page, Drupal does not have to create the page each time someone wants to view it, instead it takes only one SQL query to display it, reducing response time and the server's load.  Only pages requested by \"anonymous\" users are cached.  In order to reduce server load and save bandwidth, Drupal stores and sends cached pages compressed.</p>", array('%base_url' => $base_url, '%cron-link' => "<a href=\"$base_url/cron.php\">$base_url/cron.php</a>", '%lynx' => 'http://lynx.browser.org', '%wget' => 'http://www.gnu.org/software/wget/wget.html' ));
     case 'admin/modules#description':
-      return t('Configuration system that lets administrators modify the workings of the site.');
+      return t('Handles general site configuration for administrators.');
   }
 }
 

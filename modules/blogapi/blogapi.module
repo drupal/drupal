@@ -14,7 +14,7 @@ function blogapi_help($section) {
     case 'admin/help#blogapi':
       return t('<p>This module adds support for several XML-RPC based blogging APIs. Specifically, it currently implements the %bloggerAPI, %metaweblogAPI, and most of the %moveabletype extensions.  This allows users to contribute to Drupal using external GUI applications, which can often offer richer functionality that online forms based editing.</p><p>This module also allows site administrators to configure which node types can be posted via the external applications. So, for instance, users can post forum topics as well as blog posts. Where supported, the external applications will display each node type as a separate "blog".</p>', array('%bloggerAPI' => '<a href="http://www.blogger.com/developers/api/1_docs/">Blogger API</a>', '%metaweblogAPI' => '<a href="http://www.xmlrpc.com/metaWeblogApi">MetaWeblog API</a>', '%moveabletype' => '<a href="http://www.movabletype.org/docs/mtmanual_programmatic.html">Movable Type API</a>. '));
     case 'admin/modules#description':
-      return t('Enable users to post using applications that support XML-RPC blog APIs.');
+      return t('Allows users to post content using applications that support XML-RPC blog APIs.');
   }
 }
 
