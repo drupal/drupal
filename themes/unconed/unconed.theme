@@ -106,7 +106,7 @@
     <?  
    }
 
-   function article($story, $reply) {
+   function article($story, $reply = "") {
      $timestamp = format_date($story->timestamp);
 
        ?>
