@@ -1831,7 +1831,9 @@ function mime_header_encode($string, $charset = 'UTF-8') {
 function drupal_eval($code) {
   ob_start();
   print eval('?>'. $code);
-  return ob_get_clean();
+  $output = ob_get_contents();
+  ob_end_clean();
+  return $output;
 }
 
 include_once 'includes/theme.inc';
