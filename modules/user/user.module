@@ -414,12 +414,12 @@ function user_search($keys) {
 
 function user_link($type) {
   if ($type == "page") {
-    $links[] = "<a href=\"module.php?mod=user\">". t("user account") ."</a>";
+    $links[] = "<a href=\"module.php?mod=user\" title=\"". t("Create a user account, e-mail a new password or edit your account settings.") ."\">". t("user account") ."</a>";
   }
 
   if ($type == "menu") {
-    $links[] = "<a href=\"module.php?mod=user&op=edit\">". t("account settings") ."</a>";
-    $links[] = "<br /><a href=\"module.php?mod=user&op=logout\">". t("logout") ."</a>";
+    $links[] = "<a href=\"module.php?mod=user&op=edit\" title=\"". t("View and edit your account information.") ."\">". t("account settings") ."</a>";
+    $links[] = "<br /><a href=\"module.php?mod=user&op=logout\" title=\"". t("Logout.") ."\">". t("logout") ."</a>";
   }
 
   if ($type == "admin" && user_access("administer users")) {

@@ -20,7 +20,7 @@ function queue_perm() {
 
 function queue_link($type) {
   if ($type == "menu" && user_access("access submission queue")) {
-    $links[] = "<a href=\"module.php?mod=queue\">". t("submission queue") ."</a> (<font color=\"red\">". queue_count() ."</font>)";
+    $links[] = "<a href=\"module.php?mod=queue\" title=\"". t("Moderate the content in the submission queue.") ."\">". t("submission queue") ."</a> (<font color=\"red\">". queue_count() ."</font>)";
   }
 
   return $links ? $links : array();

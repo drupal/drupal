@@ -29,7 +29,7 @@ function import_link($type) {
   }
 
   if ($type == "page" && user_access("access news feeds")) {
-    $links[] = "<a href=\"module.php?mod=import\">". t("news feeds") ."</a>";
+    $links[] = "<a href=\"module.php?mod=import\" title=\"". t("Read the latest news from syndicated websites.") ."\">". t("news feeds") ."</a>";
   }
 
   return $links ? $links : array();
@@ -53,7 +53,7 @@ function import_format_item($item, $feed = 0) {
   global $theme, $user;
 
   if ($user->uid && user_access("post blogs")) {
-    $output .= "<a href=\"module.php?mod=node&op=add&type=blog&iid=$item->iid\"><img src=\"". $theme->image("blog.gif") ."\" border=\"0\" width=\"12\" height=\"16\" alt=\"". t("Blog this item") ."\" /></a> ";
+    $output .= "<a href=\"module.php?mod=node&op=add&type=blog&iid=$item->iid\" title=\"". t("Comment on this news item in your personal blog.") ."\"><img src=\"". $theme->image("blog.gif") ."\" border=\"0\" width=\"12\" height=\"16\" alt=\"". t("Blog this item") ."\" /></a> ";
   }
 
   $output .= "<a href=\"". check_output($item->link) ."\" target=\"new\">". check_output($item->title) ."</a>";
@@ -97,7 +97,7 @@ function import_get_bundles($attributes = 0) {
   $i = 0;
   while ($bundle = db_fetch_object($result)) {
     $block[$i]["subject"] = $bundle->title;
-    $block[$i]["content"] = import_bundle_block($bundle->attributes) ."<p><div align=\"right\"><a href=\"module.php?mod=import&op=bundle&id=$bundle->bid\">". t("more") ."</a></div></p>";
+    $block[$i]["content"] = import_bundle_block($bundle->attributes) ."<p><div align=\"right\"><a href=\"module.php?mod=import&op=bundle&id=$bundle->bid\" title=\"". t("View this bundle's recent news.") ."\">". t("more") ."</a></div></p>";
     $block[$i]["info"] = "$bundle->title bundle";
 
     $i++;
@@ -112,7 +112,7 @@ function import_get_feeds($attributes = 0) {
   $i = 0;
   while ($feed = db_fetch_object($result)) {
     $block[$i]["subject"] = $feed->title;
-    $block[$i]["content"] = import_feed_block($feed) ."<p><div align=\"right\"><a href=\"module.php?mod=import&op=feed&id=$feed->fid\">". t("more") ."</a></div></p>";
+    $block[$i]["content"] = import_feed_block($feed) ."<p><div align=\"right\"><a href=\"module.php?mod=import&op=feed&id=$feed->fid\" title=\"". t("View this feed's recent news.") ."\">". t("more") ."</a></div></p>";
     $block[$i]["info"] = "$feed->title feed";
 
     $i++;
@@ -137,7 +137,7 @@ function import_refresh($feed) {
   }
 
   /*
-  ** Grab the headlines:
+  ** Grab the news items:
   */
 
   if ($fp = @fopen($feed["url"], "r")) {
@@ -514,10 +514,10 @@ function import_admin() {
 function import_page_info() {
   global $theme;
 
-  $links[] = "<a href=\"module.php?mod=import\">". t("latest news") ."</a>";
-  $links[] = "<a href=\"module.php?mod=import&op=feeds\">". t("news by source") ."</a>";
-  $links[] = "<a href=\"module.php?mod=import&op=bundles\">". t("news by topic") ."</a>";
-  $links[] = "<a href=\"module.php?mod=import&op=sources\">". t("news sources") ."</a>";
+  $links[] = "<a href=\"module.php?mod=import\" title=\"". t("Read the latest news from syndicated websites.") ."\">". t("latest news") ."</a>";
+  $links[] = "<a href=\"module.php?mod=import&op=feeds\" title=\"". t("View the latest headlines sorted by source.") ."\">". t("news by source") ."</a>";
+  $links[] = "<a href=\"module.php?mod=import&op=bundles\" title=\"". t("View the latest headlines sorted by topic.") ."\">". t("news by topic") ."</a>";
+  $links[] = "<a href=\"module.php?mod=import&op=sources\" title=\"". t("View a list of all the websites we syndicate from.") ."\">". t("news sources") ."</a>";
 
   return "<div align=\"center\">". $theme->links($links) ."</div>";
 }
@@ -529,12 +529,13 @@ function import_page_last() {
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"2\">";
   while ($item = db_fetch_object($result)) {
-    $links[] = "<a href=\"module.php?mod=node&op=add&type=blog&iid=$item->iid\">". t("blog it") ."</a>";
-    $links[] = "<a href=\"module.php?mod=import&op=feed&id=$item->fid\">". t("feed") ."</a>";
+    $links[] = "<a href=\"module.php?mod=node&op=add&type=blog&iid=$item->iid\" title=\"". t("Comment on this news item in your personal blog.") ."\">". t("blog it") ."</a>";
+    $links[] = "<a href=\"module.php?mod=import&op=feed&id=$item->fid\" title=\"". t("Read more syndicated news from this feed.") ."\">". t("feed") ."</a>";
 
     if ($item->link) {
-      $output .= "<tr><td>". format_url($item->link, $item->title) ." &middot; <a href=\"module.php?mod=import&op=feed&id=$item->fid\">$item->ftitle</a></td><td align=\"right\" nowrap=\"nowrap\" valign=\"top\">". $theme->links($links) ."</td></tr>\n";
+      $output .= "<tr><td>". format_url($item->link, $item->title) ." &middot; <a href=\"module.php?mod=import&op=feed&id=$item->fid\" title=\"". t("View more information about this feed.") ."\">$item->ftitle</a></td><td align=\"right\" nowrap=\"nowrap\" valign=\"top\">". $theme->links($links) ."</td></tr>\n";
     }
+
     if ($item->description) {
       $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 20px;\">". check_output($item->description, 1) ."</div><br /></td></tr>";
     }
@@ -562,7 +563,7 @@ function import_page_feed($fid) {
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"2\">";
   while ($item = db_fetch_object($result)) {
-    $links[] = "<a href=\"module.php?mod=node&op=add&type=blog&iid=$item->iid\">". t("blog it") ."</a>";
+    $links[] = "<a href=\"module.php?mod=node&op=add&type=blog&iid=$item->iid\" title=\"". t("Comment on this news item in your personal blog.") ."\">". t("blog it") ."</a>";
     $links[] = "<a href=\"$item->link\">". t("visit") ."</a>";
 
     if ($item->link) {
@@ -596,13 +597,14 @@ function import_page_bundle($bid) {
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"2\">";
   while ($item = db_fetch_object($result)) {
-    $links[] = "<a href=\"module.php?mod=node&op=add&type=blog&iid=$item->iid\">". t("blog it") ."</a>";
-    $links[] = "<a href=\"module.php?mod=import&op=feed&id=$item->fid\">". t("feed") ."</a>";
+    $links[] = "<a href=\"module.php?mod=node&op=add&type=blog&iid=$item->iid\" title=\"". t("Comment on this news item in your personal blog.") ."\">". t("blog it") ."</a>";
+    $links[] = "<a href=\"module.php?mod=import&op=feed&id=$item->fid\" title=\"". t("Read more syndicated news from this feed.") ."\">". t("feed") ."</a>";
     $links[] = "<a href=\"$item->link\">". t("visit") ."</a>";
 
     if ($item->link) {
-      $output .= "<tr><td>". format_url($item->link, $item->title) ." &middot; <a href=\"module.php?mod=import&op=feed&id=$item->fid\">$item->ftitle</a></td><td align=\"right\" nowrap=\"nowrap\" valign=\"top\">". $theme->links($links) ."</td></tr>\n";
+      $output .= "<tr><td>". format_url($item->link, $item->title) ." &middot; <a href=\"module.php?mod=import&op=feed&id=$item->fid\" title=\"". t("View more information about this feed.") ."\">$item->ftitle</a></td><td align=\"right\" nowrap=\"nowrap\" valign=\"top\">". $theme->links($links) ."</td></tr>\n";
     }
+
     if ($item->description) {
       $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 20px;\">". check_output($item->description, 1) ."</div><br /></td></tr>";
     }
@@ -628,7 +630,7 @@ function import_page_sources() {
     $output .= "<div style=\"margin-left: 20px;\">". check_output($feed->description, 1) ."</div><br />";
   }
 
-  $output .= "<a href=\"module.php?mod=import&op=fd\"><img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" /></a><br />\n";
+  $output .= "<a href=\"module.php?mod=import&op=fd\" title=\"". t("View the list of syndicated websites in XML format.") ."\"><img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" /></a><br />\n";
 
   $theme->header();
   $theme->box(t("News feeds"), import_page_info());

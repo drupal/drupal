@@ -58,7 +58,7 @@ function comment_tag_new($nid) {
 function comment_is_new($comment) {
   global $user;
   static $date;
- 
+
   if (!$date) {
     if ($user->uid) {
       $history = db_fetch_object(db_query("SELECT timestamp FROM history WHERE uid = '$user->uid' AND nid = '$comment->nid'"));
@@ -357,15 +357,15 @@ function comment_links($comment, $return = 1) {
   }
 
   if (user_access("administer comments")) {
-    $links[] = "<a href=\"admin.php?mod=comment&op=edit&id=$comment->cid\"><font color=\"$theme->type\">". t("administer") ."</font></a>";
+    $links[] = "<a href=\"admin.php?mod=comment&op=edit&id=$comment->cid\" title=\"". t("Administer this comment.") ."\"><font color=\"$theme->type\">". t("administer") ."</font></a>";
   }
 
   if (user_access("post comments")) {
     if (comment_access("edit", $comment)) {
-      $links[] = "<a href=\"module.php?mod=comment&op=edit&id=$comment->cid\"><font color=\"$theme->type\">". t("edit your comment") ."</font></a>";
+      $links[] = "<a href=\"module.php?mod=comment&op=edit&id=$comment->cid\"><font color=\"$theme->type\" title=\"". t("Make changes to your comment.") ."\">". t("edit your comment") ."</font></a>";
     }
     else {
-      $links[] = "<a href=\"module.php?mod=comment&op=reply&id=$comment->nid&pid=$comment->cid\"><font color=\"$theme->type\">". t("reply to this comment") ."</font></a>";
+      $links[] = "<a href=\"module.php?mod=comment&op=reply&id=$comment->nid&pid=$comment->cid\" title=\"". t("Reply to this comment.") ."\"><font color=\"$theme->type\">". t("reply to this comment") ."</font></a>";
     }
   }
 
@@ -551,7 +551,7 @@ function comment_link($type, $node = 0, $main = 0) {
         $all = comment_num_all($node->nid);
         $new = comment_num_new($node->nid);
 
-        $links[] = "<a href=\"node.php?id=$node->nid#comment\">". format_plural($all, "comment", "comments") . ($new ? ", $new ". t("new") : "") ."</a>";
+        $links[] = "<a href=\"node.php?id=$node->nid#comment\" title=\"". t("View this posting and all of its comments.") ."\">". format_plural($all, "comment", "comments") . ($new ? ", $new ". t("new") : "") ."</a>";
       }
     }
     else {
@@ -561,7 +561,7 @@ function comment_link($type, $node = 0, $main = 0) {
       */
 
       if (user_access("post comments")) {
-        $links[] = "<a href=\"module.php?mod=comment&op=reply&id=$node->nid#comment\">". t("add new comment") ."</a>";
+        $links[] = "<a href=\"module.php?mod=comment&op=reply&id=$node->nid#comment\" title=\"". t("Share your thoughts and opinions related to this posting.") ."\">". t("add new comment") ."</a>";
       }
     }
   }

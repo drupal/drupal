@@ -95,7 +95,7 @@ function book_save($op, $node) {
 
 function book_link($type, $node = 0, $main = 0) {
   if ($type == "page" && user_access("access content")) {
-    $links[] = "<a href=\"module.php?mod=book\">". t("collaborative book") ."</a>";
+    $links[] = "<a href=\"module.php?mod=book\" title=\"". t("Read and contribute to our collaborative books.") ."\">". t("collaborative book") ."</a>";
   }
 
   if ($type == "admin" && user_access("administer nodes")) {
@@ -103,7 +103,7 @@ function book_link($type, $node = 0, $main = 0) {
   }
 
   if ($type == "node" && $node->type == "book" && book_access("update", $node)) {
-    $links[] = "<a href=\"module.php?mod=node&op=edit&id=$node->nid\">". t("update this book page") ."</a>";
+    $links[] = "<a href=\"module.php?mod=node&op=edit&id=$node->nid\" title=\"". t("Suggest an update for this book page.") ."\">". t("update this book page") ."</a>";
   }
 
   return $links ? $links : array();
@@ -401,8 +401,8 @@ function book_view($node, $main = 0) {
     }
 
     $output .= " <tr><td colspan=\"3\"><hr /></td></tr>";
-    $output .= " <tr><td align=\"left\" width=\"33%\">". ($prev ? "<a href=\"node.php?id=$prev->nid\">". t("previous") ."</a>" : t("previous")) ."</td><td align=\"center\" width=\"34%\"><a href=\"module.php?mod=book\">index</a></td><td align=\"right\" width=\"33%\">". ($next ? "<a href=\"node.php?id=$next->nid\">". t("next") ."</a>" : t("next")) ."</td></tr>";
-    $output .= " <tr><td align=\"left\" width=\"33%\">". ($prev ? "<small>". check_output($prev->title) ."</small>" : "&nbsp;") ."</td><td align=\"center\" width=\"34%\">". ($node->parent ? "<a href=\"node.php?id=$node->parent\">". t("up") ."</a>" : t("up")) ."</td><td align=\"right\" width=\"33%\">". ($next ? "<small>". check_output($next->title) ."</small>" : "&nbsp;") ."</td></tr>";
+    $output .= " <tr><td align=\"left\" width=\"33%\">". ($prev ? "<a href=\"node.php?id=$prev->nid\" title=\"". t("View the previous page in this book.") ."\">". t("previous") ."</a>" : t("previous")) ."</td><td align=\"center\" width=\"34%\"><a href=\"module.php?mod=book\" title=\"". t("View this book's table of contents.") ."\">index</a></td><td align=\"right\" width=\"33%\">". ($next ? "<a href=\"node.php?id=$next->nid\" title=\"". t("View the next page in this book.") ."\">". t("next") ."</a>" : t("next")) ."</td></tr>";
+    $output .= " <tr><td align=\"left\" width=\"33%\">". ($prev ? "<small>". check_output($prev->title) ."</small>" : "&nbsp;") ."</td><td align=\"center\" width=\"34%\">". ($node->parent ? "<a href=\"node.php?id=$node->parent\" title=\"". t("View the parent section.") ."\">". t("up") ."</a>" : t("up")) ."</td><td align=\"right\" width=\"33%\">". ($next ? "<small>". check_output($next->title) ."</small>" : "&nbsp;") ."</td></tr>";
     $output .= " <tr><td colspan=\"3\"><hr /></td></tr>";
     $output .= " <tr><td colspan=\"3\" align=\"right\"><div style=\"margin: 10 10 10 10;\">". $theme->links(link_node($node, $main)) ."</div></td></tr>";
     $output .= "</table>";

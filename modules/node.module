@@ -358,7 +358,7 @@ function node_link($type, $node = 0, $main = 0) {
   }
 
   if ($type == "page" && user_access("post content")) {
-    $links[] = "<a href=\"module.php?mod=node&op=add\">submit</a>";
+    $links[] = "<a href=\"module.php?mod=node&op=add\" title=\"". t("Submit a contribution.") ."\">". t("submit") ."</a>";
   }
 
   if ($type == "node") {
@@ -367,11 +367,11 @@ function node_link($type, $node = 0, $main = 0) {
     }
 
     if ($main == 1 && $node->teaser != $node->body) {
-      $links[] = "<a href=\"node.php?id=$node->nid\">". t("read more") ."</a>";
+      $links[] = "<a href=\"node.php?id=$node->nid\" title=\"". t("Read the rest of this posting.") ."\">". t("read more") ."</a>";
     }
 
     if (user_access("administer nodes")) {
-       $links[] = "<a href=\"admin.php?mod=node&op=edit&id=$node->nid\">". t("administer") ."</a>";
+       $links[] = "<a href=\"admin.php?mod=node&op=edit&id=$node->nid\" title=\"". t("Administer this node.") ."\">". t("administer") ."</a>";
     }
   }
 
@@ -644,7 +644,7 @@ function node_block() {
   global $theme;
 
   $block[0][subject] = t("Syndicate");
-  $block[0][content] = "<div align=\"center\"><a href=\"module.php?mod=node&op=feed\"><img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" border=\"0\" alt=\"XML\" /></a></div>\n";
+  $block[0][content] = "<div align=\"center\"><a href=\"module.php?mod=node&op=feed\" title=\"". t("Read the XML version of this page.")."\"><img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" border=\"0\" alt=\"XML\" /></a></div>\n";
   $block[0][info] = "Syndicate";
 
   return $block;
@@ -879,7 +879,7 @@ function node_add($type) {
     foreach (module_list() as $name) {
       if (module_hook($name, "node") && node_access("create", array("type" => $name))) {
         $output .= "<li>";
-        $output .= " <a href=\"module.php?mod=node&op=add&type=$name\">". module_invoke($name, "node", "name") ."</a>";
+        $output .= " <a href=\"module.php?mod=node&op=add&type=$name\" title=\"". sprintf(t("Add a new %s."), module_invoke($name, "node", "name")) ."\">". module_invoke($name, "node", "name") ."</a>";
         $output .= " <div style=\"margin-left: 20px;\">". module_invoke($name, "node", "description") ."</div>";
         $output .= "</li>";
       }
