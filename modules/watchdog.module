@@ -96,7 +96,7 @@ function watchdog_admin() {
         watchdog_help();
         break;
       case "view":
-        print watchdog_view(check_input(arg(3)));
+        print watchdog_view(arg(3));
         break;
       default:
         print watchdog_overview(arg(2));

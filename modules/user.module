@@ -547,7 +547,7 @@ function user_login($edit = array(), $msg = "") {
       $server = substr($server, 1);
       $pass = $edit["pass"];
     }
-    
+
     /*
     ** When possible, determine corrosponding external auth source. Invoke source, and login user if successful:
     */

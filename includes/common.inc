@@ -496,10 +496,6 @@ function check_query($text) {
   return addslashes($text);
 }
 
-function check_input($text) {
-  return addslashes($text);
-}
-
 function filter($text) {
 
   $modules = module_list();

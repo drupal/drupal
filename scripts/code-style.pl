@@ -69,6 +69,16 @@ while (<>) {
   elsif (/<br>/i) {
     $msg = "'<br>' -> '<br />'";
   }
+  elsif (/HTTP_REFERER/i) {
+    $msg = "the use of HTTP_REFERER is prone to XSS exploits; use referer_uri() instead";
+  }
+  elsif (/QUERY_STRING/i) {
+    $msg = "the use of HTTP_REFERER is prone to XSS exploits; use referer_uri() instead";
+  }
+  elsif (/REQUEST_URI/i) {
+    $msg = "the use of HTTP_REFERER is prone to XSS exploits and does not work on IIS; use request_uri() instead";
+  }
+
   # XHTML compatibility mode suggests a blank before /
   # i.e. <br />
   elsif (/<[a-z][^>]*[^ >]\/>/i) {

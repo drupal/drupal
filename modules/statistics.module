@@ -53,7 +53,7 @@ function statistics_exit() {
 
   if ((variable_get("statistics_enable_access_log", 0)) && (throttle_status() < 5)) {
     // statistical logs are enabled
-    $referrer = getenv("HTTP_REFERER");
+    $referrer = referer_uri();
     $hostname = getenv("REMOTE_ADDR");
     // log this page access
     if ((arg(0) == "node") && (arg(1) == "view") && arg(2)) {
@@ -333,11 +333,11 @@ function statistics_recent_refer() {
     $query = "SELECT url,timestamp FROM accesslog WHERE url <> '' ORDER BY timestamp DESC";
   }
   elseif ($view == "internal") {
-    $query = "SELECT url,timestamp FROM accesslog WHERE url LIKE '%". check_input($_SERVER["HTTP_HOST"]) ."%' ORDER BY timestamp DESC";
+    $query = "SELECT url,timestamp FROM accesslog WHERE url LIKE '%". check_query($_SERVER["HTTP_HOST"]) ."%' ORDER BY timestamp DESC";
     $describe = "internal ";
   }
   else {
-    $query = "SELECT url,timestamp FROM accesslog WHERE url NOT LIKE '%". check_input($_SERVER["HTTP_HOST"]) ."%' AND url <> '' ORDER BY timestamp DESC";
+    $query = "SELECT url,timestamp FROM accesslog WHERE url NOT LIKE '%". check_query($_SERVER["HTTP_HOST"]) ."%' AND url <> '' ORDER BY timestamp DESC";
     $describe = "external ";
   }
 
@@ -363,12 +363,12 @@ function statistics_top_refer() {
     $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE url <> '' GROUP BY url ORDER BY count DESC";
   }
   elseif ($view == "internal") {
-    $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE url LIKE '%". check_input($_SERVER["HTTP_HOST"]) ."%' GROUP BY url ORDER BY count DESC";
+    $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE url LIKE '%". check_query($_SERVER["HTTP_HOST"]) ."%' GROUP BY url ORDER BY count DESC";
     $describe = "internal ";
   }
   else {
     /* default to external */
-    $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE url NOT LIKE '%". check_input($_SERVER["HTTP_HOST"]) ."%' AND url <> '' GROUP BY url ORDER BY count DESC";
+    $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE url NOT LIKE '%". check_query($_SERVER["HTTP_HOST"]) ."%' AND url <> '' GROUP BY url ORDER BY count DESC";
     $describe = "external ";
   }
 
