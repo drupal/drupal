@@ -6,7 +6,7 @@ function wishlist_page() {
  ?>
 
   <H1>Whislist</H1>
-  <SMALL><I>$Id: wishlist.module,v 1.4 2000/12/16 14:32:21 dries Exp $</I></SMALL>
+  <SMALL><I>$Id: wishlist.module,v 1.5 2000/12/23 15:20:10 dries Exp $</I></SMALL>
 
    <H3>Users</H3>
     <UL>
@@ -75,3 +75,4 @@ function wishlist_page() {
 }
 
 ?> 
+
