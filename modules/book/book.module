@@ -542,7 +542,7 @@ function book_page() {
   if (user_access("access content")) {
     switch ($op) {
       case "print":
-        print book_export_html($id, $depth = 1);
+        print book_print($id, $depth = 1);
         break;
       default:
         book_render();
@@ -555,8 +555,8 @@ function book_page() {
   }
 }
 
-function book_export_html($id = "", $depth = 1) {
-  $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.status = 1 AND n.nid = '%d' AND (n.moderate = 0 OR n.revisions != '')", $id);
+function book_print($id = "", $depth = 1) {
+  $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.status = 1 AND n.nid = '%d' AND (n.moderate = 0 OR n.revisions != '') ORDER BY b.weight, n.title", $id);
 
   while ($page = db_fetch_object($result)) {
     // load the node:
@@ -577,13 +577,13 @@ function book_export_html($id = "", $depth = 1) {
     }
   }
 
-  $output .= book_export_html_recurse($id, $depth);
+  $output .= book_print_recurse($id, $depth);
 
   return $output;
 }
 
-function book_export_html_recurse($parent = "", $depth = 1) {
-  $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.status = 1 AND b.parent = '$parent' AND (n.moderate = 0 OR n.revisions != '') ORDER BY b.weight");
+function book_print_recurse($parent = "", $depth = 1) {
+  $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.status = 1 AND b.parent = '$parent' AND (n.moderate = 0 OR n.revisions != '') ORDER BY b.weight, n.title");
 
   while ($page = db_fetch_object($result)) {
     // load the node:
@@ -602,7 +602,7 @@ function book_export_html_recurse($parent = "", $depth = 1) {
         $output .= "<ul>". book_body($node) ."</ul>";
       }
 
-      $output .= book_export_html_recurse($node->nid, $depth + 1);
+      $output .= book_print_recurse($node->nid, $depth + 1);
     }
   }
 
