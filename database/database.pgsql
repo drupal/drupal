@@ -734,6 +734,10 @@ INSERT INTO permission VALUES (2,'access comments, access content, post comments
 INSERT INTO blocks(module,delta,status) VALUES('user', '0', '1');
 INSERT INTO blocks(module,delta,status) VALUES('user', '1', '1');
 
+INSERT INTO sequences (name, id) VALUES ('menu_mid', 1);
+
+INSERT INTO node_access VALUES (0, 0, 'all', 1, 0, 0);
+
 INSERT INTO filter_formats VALUES (1,'Filtered HTML',',1,2,',1);
 INSERT INTO filter_formats VALUES (2,'PHP code','',0);
 INSERT INTO filter_formats VALUES (3,'Full HTML','',1));
