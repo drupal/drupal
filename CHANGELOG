@@ -3,18 +3,20 @@ drupal x.xx, xx/xx/xxxx
 - major overhaul of the entire underlying design:
     * everything is based on nodes: nodes are a conceptual "black box" to couple and manage different types of content and that promotes reusing existing code, thus reducing the complexity and size of drupal as well as improving long-term stability.
 - rewrote submission/moderation queue:
-    * renamed submission.module to moderation.module
+    * renamed submission.module to queue.module
     * updated submission forms
 - removed FAQ and documentation module and merged them into a "book module":
     * allows collaborative book writing
-- removed ban module and integrated it in account.module as "access control":
+- removed ban module and integrated it into account.module as "access control":
     * access control is based on much more powerful regular expressions (regex) now rather than on MySQL pattern matching.
 - rewrote watchdog and submission throttle
 - rewrote section code and renamed it to structure.module:
     * supports both "categories" and "topics" (cfr. Scoop, SlashCode).  Topics can be nested to create a multi-level hierarchy.
     * added "auto-post new submissions" feature versus "moderate new submissions".
 - added settings.module:
-    * moved most configuration options to the administration section
+    * moved most of the configuration options from hostname.conf to the new administration section
+- added moderate.module:
+    * allows to assign users editorial/moderator rights to certain nodes/topics.
 - added page.module:
     * allows creation of static (and dynamic) pages through the administration interface
 - added help.module:
