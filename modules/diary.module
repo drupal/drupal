@@ -4,8 +4,7 @@ $module = array("page"  => "diary_page",
                 "block" => "diary_block",
                 "admin" => "diary_admin");
 
-
-include "includes/theme.inc";
+include "includes/common.inc";
 
 function diary_page_overview($num = 20) {
   global $theme, $user;

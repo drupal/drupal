@@ -3,8 +3,7 @@
 // validate user permission:
 if (!$user->id || ($user->permissions != 1 && $user->id > 1)) exit();
 
-include_once "includes/theme.inc";
-include_once "includes/cron.inc";
+include "includes/common.inc";
 
 function admin_page($mod) {  
   global $repository, $menu, $modules;

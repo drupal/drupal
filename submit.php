@@ -139,7 +139,7 @@ function submit_submit($subject, $abstract, $article, $category) {
   $theme->footer();
 }
 
-include "includes/theme.inc";
+include "includes/common.inc";
 
 switch($op) {
   case "Preview submission":

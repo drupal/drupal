@@ -1,24 +1,21 @@
 <?
  
  class Theme {
-   ### color set #1:
+   // color set #1:
    var $bgcolor1 = "#EAEAEA";   // background color
    var $fgcolor1 = "#404040";   // table body color
    var $hlcolor1 = "#666699";   // high-light color
 
-   ### color set #2:
+   // color set #2:
    var $bgcolor2 = "#666699";
    var $fgcolor2 = "#666699";
    var $hlcolor2 = "#666699";
 
-   ### color set #3:
+   // color set #3:
    var $bgcolor3 = "#EFEFEF";
    var $fgcolor3 = "yellow";
    var $hlcolor3 = "yellow";
 
-   ######
-   # Syntax.......: header($title);
-   # Description..: a function to draw the page header.
    function header($title) {
      global $site_name;
     ?>
@@ -53,10 +50,6 @@
     <?
    }
 
-   ######
-   # Syntax.......: abstract(...);
-   # Description..: a function to draw an abstract story box, that is the
-   #                boxes displayed on the main page.
    function abstract($story) {
      print "\n<!-- story: \"$story->subject\" -->\n";     
      print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"2\" WIDTH=\"100%\">\n";
@@ -75,16 +68,11 @@
      print "  </TD>\n";
      print " </TR>\n";
      print " <TR><TD COLSPAN=\"2\">&nbsp;</TD></TR>\n";
-     print " <TR><TD COLSPAN=\"2\">". display_morelink($this, $story) ."</TD></TR>\n";
+     print " <TR><TD COLSPAN=\"2\">". theme_morelink($this, $story) ."</TD></TR>\n";
      print "</TABLE>\n";
      print "<BR><BR>\n\n";
    }
 
-   ######
-   # Syntax.......: article(...);
-   # Description..: a function to dispay a complete article (without user 
-   #                comments).  It's what you get when you followed for
-   #                instance one of read-more links on the main page.
    function article($story, $reply) {
      print "\n<!-- story: \"$story->subject\" -->\n";
      print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"2\" WIDTH=\"100%\">\n";
@@ -109,9 +97,6 @@
      print "<BR><BR>\n\n";
    }
 
-   ######
-   # Syntax.......: commentControl(...);
-   # Description..: this function is used to theme the comment control box.
    function commentControl($sid, $title, $threshold, $mode, $order) {
      global $user;
   
@@ -167,13 +152,10 @@
     <?
    }
 
-   ######
-   # Syntax.......: comment(...);
-   # Description..: this function is used to theme user comments.
    function comment($comment, $link, $thread = "") {
      print "<A NAME=\"$comment->cid\">\n";
 
-     ### Create comment header:
+     // Create comment header:
      print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"0\" BGCOLOR=\"#000000\" WIDTH=\"100%\">\n";
      print " <TR BGCOLOR=\"#000000\">\n";
      print "  <TD>\n";
@@ -183,22 +165,22 @@
      print "      <TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"1\" WIDTH=\"100%\">\n";
      print "       <TR>\n";
 
-     ### Subject:
+     // Subject:
      print "        <TD ALIGN=\"right\" WIDTH=\"5%\"><B>Subject:</FONT></TD>\n";
      print "        <TD WIDTH=\"80%\"><B><FONT COLOR=\"$this->hlcolor1\">". check_output($comment->subject) ."</FONT></B></TD>\n";
 
-     ### Moderation:
+     // Moderation:
      print "        <TD ALIGN=\"right\" ROWSPAN=\"3\" VALIGN=\"middle\" WIDTH=\"15%\">\n";
-     display_comment_moderation($comment->cid, $comment->userid, $comment->score, $comment->votes);
+     theme_comment_moderation($comment->cid, $comment->userid, $comment->score, $comment->votes);
      print "        </TD>\n";
      print "       </TR>\n";
 
-     ### Author:
+     // Author:
      print "       <TR>\n";
      print "        <TD ALIGN=\"right\" VALIGN=\"top\">Author:</TD><TD>". format_username($comment->userid) ."</TD>\n";
      print "       </TR>\n";
 
-     ### Date
+     // Date
      print "       <TR>\n";
      print "        <TD ALIGN=\"right\">Date:</TD><TD>". format_date($comment->timestamp) ."</TD>\n";
      print "       </TR>\n";
@@ -207,13 +189,13 @@
      print "     </TD>\n";
      print "    </TR>\n";
 
-     ### Print body of comment:
+     // Print body of comment:
      if ($comment->comment) print "    <TR><TD BGCOLOR=\"#FFFFFF\">". check_output($comment->comment, 1) ."</TD></TR>\n";
 
-     ### Print thread (if any):
+     // Print thread (if any):
      if ($thread) print "    <TR><TD BGCOLOR=\"$this->bgcolor1\">$thread</TD></TR>\n";
 
-     ### Print bottom link(s):
+     // Print bottom link(s):
      print "    <TR><TD ALIGN=\"right\" BGCOLOR=\"$this->bgcolor1\">[ $link ]</TD></TR>\n";
      print "   </TABLE>\n";
      print "  </TD>\n";
@@ -222,17 +204,14 @@
      print "<BR>\n\n";
    }
 
-   ######
-   # Syntax.......: box($subject, $body, $options = "");
-   # Description..: a function to draw a box/block.
    function box($subject, $content, $options = "") { 
      print "\n<!-- box: \"$subject\" -->\n";
      print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"0\" BGCOLOR=\"#000000\" WIDTH=\"100%\">\n";
      print " <TR>\n";
-     print "  <TD $wrap>\n";
+     print "  <TD>\n";
      print "   <TABLE BORDER=\"0\" CELLPADDING=\"5\" CELLSPACING=\"1\" WIDTH=\"100%\">\n";
-     print "    <TR><TD ALIGN=\"center\" BGCOLOR=\"$this->bgcolor1\" WIDTH=\"100%\"><FONT COLOR=\"$this->fgcolor1\"><B>$subject</B></FONT></TD></TR>\n";
-     print "    <TR><TD BGCOLOR=\"#FFFFFF\" $options>$content</TD></TR>\n";
+     print "    <TR><TD ALIGN=\"center\" BGCOLOR=\"$this->bgcolor1\" NOWRAP><FONT COLOR=\"$this->fgcolor1\"><B>$subject</B></FONT></TD></TR>\n";
+     print "    <TR><TD BGCOLOR=\"#FFFFFF\">$content</TD></TR>\n";
      print "   </TABLE>\n";
      print "  </TD>\n";
      print " </TR>\n";
@@ -240,73 +219,17 @@
      print "<BR>\n\n";
    }
 
-   ######
-   # Syntax.......: footer();
-   # Description..: a function to draw the page footer.
    function footer() {
      ?>
        </TD>
        <TD VALIGN="top">
          <?
-         global $PHP_SELF;  
+          // Display main blocks:
+          theme_main_blocks($this);
 
-         if (strstr($PHP_SELF, "index.php")) {
-           global $user, $date;
-
-           ### Display account:
-           display_account($this);
-
-           ### Display old headlines:
-           display_old_headlines($this);
-
-           ### Display module blocks:
-           display_module_blocks();
-         }
-         elseif (strstr($PHP_SELF, "account.php")) {
-           ### Display account:
-           display_account($this);
-         }
-         elseif (strstr($PHP_SELF, "module.php")) {
-           ### Display account:
-           display_account($this);
-         }
-         elseif (strstr($PHP_SELF, "submission.php")) {
-           ### Display account:
-           display_account($this);
-         }
-         elseif (strstr($PHP_SELF, "submit.php")) {
-           ### Display new headlines:
-           display_new_headlines($this);
-         }
-         elseif (strstr($PHP_SELF, "discussion.php")) {
-           global $id;
-           
-           if ($id && $story = id2story($id)) {
-             if ($story->status == 2) {
-               ### Display new headlines:
-               display_new_headlines($this);
-             }
-             else {
-               ### Display results of moderation:
-               display_moderation_results($this, $story);
-             }
-           }
-           else {
-             ### Display account:
-             display_account($this);
-
-             ### Display new headlines:
-             display_new_headlines($this);
-           }
-         }
-         else {
-           ### Display account:
-           display_account($this);
-
-           ### Display new headlines:
-           display_new_headlines($this);
-         }
-        ?>
+          // Display user-defined blocks:
+          theme_user_blocks($this);
+         ?>
        </TD>
       </TR>
       <TR>

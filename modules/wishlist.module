@@ -4,7 +4,6 @@ $module = array("page" => "wishlist_page");
 
 function wishlist_page() {
  ?>
-
   <H1>Whislist</H1>
   <SMALL><I>$Id$</I></SMALL>
 
@@ -74,5 +73,4 @@ function wishlist_page() {
  <?
 }
 
-?> 
-
+?>

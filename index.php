@@ -1,6 +1,6 @@
 <?
 
-include "includes/theme.inc";
+include "includes/common.inc";
 
 ### Security check:
 if (strstr($number, " ") || strstr($date, " ")) {

@@ -1,22 +1,10 @@
 <?
 
-include "includes/theme.inc";
+include "includes/common.inc";
 
 function account_get_user($uname) {
   $result = db_query("SELECT * FROM users WHERE userid = '$uname'");
   return db_fetch_object($result);
-}
-
-function account_login() {
-  $output .= "<FORM ACTION=\"account.php\" METHOD=\"post\">\n";
-  $output .= " <TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= "  <TR><TH ALIGN=\"right\">Username:</TH><TD><INPUT NAME=\"userid\"></TD></TR>\n";
-  $output .= "  <TR><TH ALIGN=\"right\">Password:</TH><TD><INPUT NAME=\"passwd\" TYPE=\"password\"></TD></TR>\n";
-  $output .= "  <TR><TD ALIGN=\"right\" COLSPAN=\"2\"><INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"Login\"></TD></TR>\n";
-  $output .= " </TABLE>\n";
-  $output .= "</FORM>\n";
-
-  return $output;
 }
 
 function account_email() {
@@ -36,7 +24,7 @@ function account_create($user = "", $error = "") {
   global $theme;
 
   if ($error) $output .= "<B><FONT COLOR=\"red\">Failed to register.</FONT>$error</B>\n";
-  else $output .= "<P>Registering allows you to comment on stories, to moderate comments and pending stories, to maintain an online diary, to customize the look and feel of the site and generally helps you interact with the site more efficiently.</P><P>To create an account, simply fill out this form an click the `Create account' button below.  An e-mail will then be sent to you with instructions on how to validate your account.</P>\n";
+  else $output .= "<P>Registering allows you to comment on stories, to moderate comments and pending stories, to customize the look and feel of the site and generally helps you interact with the site more efficiently.</P><P>To create an account, simply fill out this form an click the `Create account' button below.  An e-mail will then be sent to you with instructions on how to validate your account.</P>\n";
 
   $output .= "<FORM ACTION=\"account.php\" METHOD=\"post\">\n";
   $output .= "<P>\n";
@@ -119,15 +107,15 @@ function account_user_edit() {
   }
   else {
     $theme->header();
-    $theme->box("Login", account_login()); 
+    $theme->box("Create user account", account_create());
     $theme->box("E-mail password", account_email());
-    $theme->box("Create new account", account_create());
     $theme->footer();
   }
 }
 
 function account_user_save($edit) {
   global $user;
+
   if ($user->id) {
     $data[name] = $edit[name];
     $data[fake_email] = $edit[fake_email];
@@ -141,7 +129,7 @@ function account_user_save($edit) {
   }
 }
 
-function account_page_edit() {
+function account_site_edit() {
   global $theme, $themes, $user;
 
   if ($user->id) {
@@ -164,7 +152,12 @@ function account_page_edit() {
     $output .= "<SELECT NAME=\"edit[timezone]\">\n$options2</SELECT><BR>\n";
     $output .= "<I>Select what time you currently have and your timezone settings will be set appropriate.</I><P>\n";
     $output .= "<B>Maximum number of stories:</B><BR>\n";
-    $output .= "<INPUT NAME=\"edit[stories]\" MAXLENGTH=\"3\" SIZE=\"3\" VALUE=\"$user->stories\"><P>\n";
+    
+    for ($stories = 10; $stories <= 30; $stories += 5) {
+      $options3 .= "<OPTION VALUE=\"$stories\"". (($user->stories == $stories) ? " SELECTED" : "") .">$stories</OPTION>\n";
+    }
+
+    $output .= "<SELECT NAME=\"edit[stories]\">\n$options3</SELECT><BR>\n";
     $output .= "<I>The maximum number of stories that will be displayed on the main page.</I><P>\n";
     $options  = "<OPTION VALUE=\"nested\"". ($user->mode == "nested" ? " SELECTED" : "") .">Nested</OPTION>";
     $options .= "<OPTION VALUE=\"flat\"". ($user->mode == "flat" ? " SELECTED" : "") .">Flat</OPTION>";
@@ -186,7 +179,9 @@ function account_page_edit() {
     $output .= "<B>Comment threshold:</B><BR>\n";
     $output .= "<SELECT NAME=\"edit[threshold]\">$options</SELECT><BR>\n";
     $output .= "<I>Comments that scored less than this setting will be ignored. Anonymous comments start at 0, comments of people logged on start at 1 and moderators can add and subtract points.</I><P>\n";
-    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save page settings\"><BR>\n";
+
+
+    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save site settings\"><BR>\n";
     $output .= "</FORM>\n";
 
     $theme->header();
@@ -195,15 +190,15 @@ function account_page_edit() {
   }
   else {
     $theme->header();
-    $theme->box("Login", account_login()); 
+    $theme->box("Create user account", account_create());
     $theme->box("E-mail password", account_email());
-    $theme->box("E-mail password", account_create());
     $theme->footer();
   }
 }
 
-function account_page_save($edit) {
+function account_site_save($edit) {
   global $user;
+
   if ($user->id) {
     $data[theme] = $edit[theme];
     $data[timezone] = $edit[timezone];
@@ -212,6 +207,53 @@ function account_page_save($edit) {
     $data[sort] = $edit[sort];
     $data[threshold] = $edit[threshold];
     user_save($data, $user->id);
+  }
+}
+
+function account_block_edit() {
+  global $theme, $user;
+
+  if ($user->id) {
+    $output .= "<FORM ACTION=\"account.php\" METHOD=\"post\">\n";
+  
+    $output .= "<B>Blocks:</B><BR>\n";
+
+    $result = db_query("SELECT * FROM blocks WHERE status = 1");
+    while ($block = db_fetch_object($result)) {
+      $entry = db_fetch_object(db_query("SELECT * FROM layout WHERE block = '$block->name' AND user = '$user->id'"));
+
+      $options = "";
+      for ($weight = 0; $weight < 10; $weight++) {
+        $options .= "<OPTION VALUE=\"$weight\"". (($entry->weight == $weight) ? " SELECTED" : "") .">". (($weight == 0) ? "off" : $weight) ."</OPTION>\n";
+      }
+
+      $output .= "<SELECT NAME=\"edit[$block->name]\">\n$options</SELECT>";
+      $output .= "$block->name<BR>";
+    } 
+ 
+    $output .= "<I>You can more or less position your blocks by assigning them weights.  The heavy blocks sink down whereas the light blocks will be positioned on top.</I><P>\n";
+    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save block settings\"><BR>\n";
+    $output .= "</FORM>\n";
+
+    $theme->header();
+    $theme->box("Edit your blocks", $output);
+    $theme->footer();
+  }
+  else {
+    $theme->header();
+    $theme->box("Create user account", account_create());
+    $theme->box("E-mail password", account_email());
+    $theme->footer();
+  }
+}
+
+function account_block_save($edit) {
+  global $user;
+  if ($user->id) {
+    db_query("DELETE FROM layout WHERE user = $user->id");
+    foreach ($edit as $block=>$weight) {
+      db_query("INSERT INTO layout (user, block, weight) VALUES ('". check_input($user->id) ."', '". check_input($block) ."', '". check_input($weight) ."')");
+    }
   }
 }
 
@@ -268,9 +310,8 @@ function account_user($uname) {
   else { 
     ### Display login form:
     $theme->header();
-    $theme->box("Login", account_login()); 
+    $theme->box("Create user account", account_create());
     $theme->box("E-mail password", account_email());
-    $theme->box("Create new account", account_create());
     $theme->footer();
   }
 }
@@ -333,7 +374,7 @@ function account_create_submit($userid, $email) {
   
   if ($rval = account_validate($new)) { 
     $theme->header();
-    $theme->box("Create new account", account_create($new, $rval));
+    $theme->box("Create user account", account_create($new, $rval));
     $theme->footer();
   }
   else {
@@ -351,7 +392,7 @@ function account_create_submit($userid, $email) {
     mail($new[real_email], "Account details for $site_name", $message, "From: noreply");
 
     $theme->header();
-    $theme->box("Create new account", "Congratulations!  Your member account has been sucessfully created and further instructions on how to activate your account have been sent to your e-mail address.");
+    $theme->box("Create user account", "Congratulations!  Your member account has been sucessfully created and further instructions on how to activate your account have been sent to your e-mail address.");
     $theme->footer();
   }
 }
@@ -514,9 +555,13 @@ switch ($op) {
     account_user_save($edit);
     account_user($user->userid);
     break;
-  case "Save page settings":
-    account_page_save($edit);
+  case "Save site settings":
+    account_site_save($edit);
     header("Location: account.php?op=info");
+    break;
+  case "Save block settings":
+    account_block_save($edit);
+    account_user($user->userid);
     break;
   case "logout":
     account_session_close();
@@ -551,8 +596,11 @@ switch ($op) {
       case "user":
         account_user_edit();
         break;
-      case "page":
-        account_page_edit();
+      case "site":
+        account_site_edit();
+        break;
+      case "block":
+        account_block_edit();
         break;
       default:
         header("Location: module.php?mod=diary&op=add&name=$user->userid");

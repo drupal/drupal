@@ -1,7 +1,7 @@
 <?
 
 include "includes/submission.inc";
-include "includes/theme.inc";
+include "includes/common.inc";
 
 function submission_displayMain() {
   global $PHP_SELF, $theme, $user;

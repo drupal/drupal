@@ -1,19 +1,72 @@
 <?
 
-function display_module_blocks() {
-  global $repository, $theme;
+function display_account($theme) {
+  global $user, $site_name;
+  
+  if ($user->id) { 
 
-  function display_block($name, $module) {
-    global $theme;
-        
-    if ($blocks = module_execute($name, "block")) {
-      foreach ($blocks as $id=>$block) {
-        $theme->box($block["subject"], $block["content"]);
-      }
+    function submission_number() {
+      $result = db_query("SELECT COUNT(id) FROM stories WHERE status = 1");
+      return ($result) ? db_result($result, 0) : 0;
+    }
+
+    ### Display account settings:
+    $content .= "<LI><A HREF=\"account.php?op=track&topic=comments\">track your comments</A></LI>\n";
+    $content .= "<LI><A HREF=\"account.php?op=track&topic=stories\">track your stories</A></LI>\n";
+    $content .= "<LI><A HREF=\"account.php?op=track&topic=site\">track $site_name</A></LI>\n";
+    $content .= "<P>\n";
+    $content .= "<LI><A HREF=\"submission.php\">submission queue</A> (<FONT COLOR=\"red\">". submission_number() ."</FONT>)</LI>\n";
+    $content .= "<P>\n";
+    $content .= "<LI><A HREF=\"account.php?op=edit&topic=diary\">edit your diary</A></LI>\n";
+    $content .= "<LI><A HREF=\"account.php?op=edit&topic=user\">edit your information</A></LI>\n";
+    $content .= "<LI><A HREF=\"account.php?op=edit&topic=site\">edit your settings</A></LI>\n";
+    $content .= "<LI><A HREF=\"account.php?op=edit&topic=block\">edit your blocks</A></LI>\n";
+    $content .= "<P>\n";
+    $content .= "<LI><A HREF=\"account.php?op=view&topic=diary\">view your diary</A></LI>\n";
+    $content .= "<LI><A HREF=\"account.php?op=view&topic=info\">view your information</A></LI>\n";
+    $content .= "<P>\n";
+    $content .= "<LI><A HREF=\"account.php?op=logout\">logout</A></LI>\n";
+
+    $theme->box("$user->userid's configuration", "$content");
+  }
+  else {
+    $output .= "<CENTER>\n";
+    $output .= " <FORM ACTION=\"account.php?op=Login\" METHOD=\"post\">\n";
+    $output .= "  <P><B>Username:</B><BR><INPUT NAME=\"userid\" SIZE=\"15\"></P>\n";
+    $output .= "  <P><B>Password:</B><BR><INPUT NAME=\"passwd\" SIZE=\"15\" TYPE=\"password\"></P>\n";
+    $output .= "  <P><INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"Login\"></P>\n";
+    $output .= "  <P><A HREF=\"account.php\">REGISTER</A></P>\n";
+    $output .= " </FORM>\n";
+    $output .= "</CENTER>\n";
+
+    $theme->box("Login", $output);
+  }
+}
+
+
+function display_main_blocks($theme) {
+  global $PHP_SELF, $user, $id;
+ 
+  switch (strtok($PHP_SELF, ".")) {
+    case "/discussion":
+      if ($user->id) $story = db_fetch_object(db_query("SELECT * FROM stories WHERE id = '$id'"));
+      if ($story->status == 1) display_moderation_results($theme, $story);
+      else display_new_headlines($theme);
+      break;
+    default:
+      display_account($theme);
+  }
+}
+
+function display_user_blocks($theme) {
+  global $repository, $user; 
+  if ($user->id) {
+    $result = db_query("SELECT * FROM layout l LEFT JOIN blocks b ON l.block = b.name WHERE l.user = '$user->id' AND l.weight > 0 AND b.status = '1' ORDER BY weight DESC");
+    while ($block = db_fetch_object($result)) {
+      $blocks = module_execute($block->module, "block");
+      $theme->box($blocks[$block->offset]["subject"], $blocks[$block->offset]["content"]);
     }
   }
-
-  module_iterate("display_block");
 }
 
 function display_morelink($theme, $story) {
@@ -96,36 +149,6 @@ function display_new_headlines($theme, $num = 10) {
   while ($story = db_fetch_object($result)) $content .= "<LI><A HREF=\"discussion.php?id=$story->id\">$story->subject</A></LI>\n";
   $content .= "<P ALIGN=\"right\">[ <A HREF=\"search.php\"><FONT COLOR=\"$theme->hlcolor2\">more</FONT></A> ]</P>";
   $theme->box("Latest headlines", $content);
-}
-
-function display_account($theme) {
-  global $user, $site_name;
-  
-  if ($user->id) { 
-
-    function submission_number() {
-      $result = db_query("SELECT COUNT(id) FROM stories WHERE status = 1");
-      return ($result) ? db_result($result, 0) : 0;
-    }
-
-    ### Display account settings:
-    $content .= "<LI><A HREF=\"account.php?op=track&topic=comments\">track your comments</A></LI>\n";
-    $content .= "<LI><A HREF=\"account.php?op=track&topic=stories\">track your stories</A></LI>\n";
-    $content .= "<LI><A HREF=\"account.php?op=track&topic=site\">track $site_name</A></LI>\n";
-    $content .= "<P>\n";
-    $content .= "<LI><A HREF=\"submission.php\">submission queue</A> (<FONT COLOR=\"red\">". submission_number() ."</FONT>)</LI>\n";
-    $content .= "<P>\n";
-    $content .= "<LI><A HREF=\"account.php?op=edit&topic=diary\">edit your diary</A></LI>\n";
-    $content .= "<LI><A HREF=\"account.php?op=edit&topic=user\">edit your information</A></LI>\n";
-    $content .= "<LI><A HREF=\"account.php?op=edit&topic=site\">edit your settings</A></LI>\n";
-    $content .= "<P>\n";
-    $content .= "<LI><A HREF=\"account.php?op=view&topic=diary\">view your diary</A></LI>\n";
-    $content .= "<LI><A HREF=\"account.php?op=view&topic=info\">view your information</A></LI>\n";
-    $content .= "<P>\n";
-    $content .= "<LI><A HREF=\"account.php?op=logout\">logout</A></LI>\n";
-
-    $theme->box("$user->userid's account", "$content", "NOWRAP");
-  }
 }
 
 ?>
