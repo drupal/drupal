@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.234 2004/07/31 09:30:09 dries Exp $
+// $Id: book.module,v 1.235 2004/07/31 16:23:01 dries Exp $
 
 /**
  * Implementation of hook_node_name().
@@ -456,9 +456,9 @@ function book_nodeapi(&$node, $op, $teaser, $page) {
             $node->$key = $value;
           }
           $node = book_navigation($node);
-        }
-        if ($page) {
-          menu_set_location($node->breadcrumb);
+          if ($page) {
+            menu_set_location($node->breadcrumb);
+          }
         }
       }
       break;
