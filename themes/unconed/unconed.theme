@@ -53,7 +53,7 @@
      <BODY TEXT="#000000" BGCOLOR="<? print $this->clc0; ?>" ALINK="#000000" LINK="#404040" VLINK="#404040" MARGINHEIGHT="10" MARGINWIDTH="10">
      <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" ALIGN=CENTER>
      <TR><TD BGCOLOR="<? print $this->cl00; ?>"><IMG SRC="themes/<? print $this->themename; ?>/images/null.gif" WIDTH="10"></TD><TD BGCOLOR="<? print $this->clc0; ?>"><IMG SRC="themes/<? print $this->themename; ?>/images/null.gif" WIDTH="4"></TD>
-     <TD BGCOLOR="<? print $this->clc0; ?>">
+     <TD BGCOLOR="<? print $this->cl80; ?>">
       <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="9" BGCOLOR="<? print $this->cl80; ?>">
        <TR>
         <TD COLSPAN="2"><IMG SRC="themes/<? print $this->themename; ?>/images/logo.gif" ALT="drop.org logo"></TD>
