@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.112 2004/05/11 20:10:14 dries Exp $
+// $Id: block.module,v 1.113 2004/05/17 14:50:58 kjartan Exp $
 
 /**
  * Implementation of hook_help().
@@ -343,7 +343,7 @@ function block_admin() {
  */
 function block_user($type, $edit, &$user) {
   switch ($type) {
-    case 'edit':
+    case 'form':
       $result = db_query('SELECT * FROM {blocks} WHERE custom = %d ORDER BY module, delta', 1);
 
       while ($block = db_fetch_object($result)) {
