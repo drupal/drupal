@@ -1,5 +1,5 @@
-Drupal x.x.x, xxxx-xx-xx
-------------------------
+Drupal 4.4.0, xxxx-xx-xx (release candidate)
+--------------------------------------------
 
 - added support for the MetaWeblog API and MovableType extensions.
 - added a file API: enables better document management.
