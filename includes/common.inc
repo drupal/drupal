@@ -115,6 +115,9 @@ function locale_init() {
 
 function t($string, $args = 0) {
   global $languages;
+
+  $string = ($languages && function_exists("locale") ? locale($string) : $string);
+
   if (!$args) {
     return $string;
   }
