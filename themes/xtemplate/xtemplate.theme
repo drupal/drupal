@@ -1,5 +1,5 @@
 <?php
-// $Id: xtemplate.theme,v 1.39 2003/12/01 13:45:33 dries Exp $
+// $Id: xtemplate.theme,v 1.40 2003/12/06 13:11:17 dries Exp $
 
 if (!class_exists("XTemplate")) {
   include_once("themes/xtemplate/xtemplate.inc");
@@ -127,7 +127,7 @@ function xtemplate_header() {
 
   // only parse the mission block if we are on the frontpage ...
   if ($_GET["q"] == variable_get("site_frontpage", "node") && ($mission = variable_get("xtemplate_mission", "edit mission"))) {
-    $xtemplate->template->assign("header_mission", $mission);
+    $xtemplate->template->assign("mission", $mission);
     $xtemplate->template->parse("header.mission");
   }
 
