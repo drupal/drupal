@@ -149,7 +149,7 @@ function blog_page_user($uid = 0) {
   global $user, $theme;
 
   if ($uid) {
-    $account = user_load(array("uid" => $uid, "status" => 1));
+    $account = user_load(array((is_numeric($uid) ? "uid" : "name") => $uid, "status" => 1));
   }
   else {
     $account = $user;

@@ -742,7 +742,7 @@ function form_textarea($title, $name, $value, $cols, $rows, $description = 0) {
 function form_select($title, $name, $value, $options, $description = 0, $extra = 0, $multiple = 0) {
   if (count($options) > 0) {
     foreach ($options as $key=>$choice) {
-      $select .= "<option value=\"$key\"". (is_array($value) ? (in_array($key, $value) ? " selected=\"selected\"" : "") : ($key == $value ? " selected=\"selected\"" : "")) .">". check_form($choice) ."</option>";
+      $select .= "<option value=\"$key\"". (is_array($value) ? (in_array($key, $value) ? " selected=\"selected\"" : "") : ($value == $key ? " selected=\"selected\"" : "")) .">". check_form($choice) ."</option>";
     }
     return form_item($title, "<select name=\"edit[$name]". ($multiple ? "[]" : "") ."\"". ($multiple ? " multiple " : "") . ($extra ? " $extra" : "") .">$select</select>", $description);
   }
