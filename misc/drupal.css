@@ -5,7 +5,7 @@ th {
   padding-right: 1em;
   border-bottom: 1px solid #ccc;
 }
-        
+
 
 #tracker table            { border-collapse: collapse; }
 #tracker td               { vertical-align: top; padding: 1em; }
@@ -50,8 +50,8 @@ th {
 
 .node-form .admin         { float: right; width: 15em; margin-top: -1.1em; }
 .node-form .standard      { margin-right: 15em; }
-.node-form .form-text     { width: 95%; }
-.node-form textarea       { width: 95%; }
+.node-form .form-text     { display: block; }
+.node-form textarea       { display: block; }
 
 .marker                   { color: #f00; }
 .error                    { color: #f00; }
