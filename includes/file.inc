@@ -1,5 +1,5 @@
 <?php
-/* $Id: file.inc,v 1.22 2004/08/24 19:21:30 unconed Exp $ */
+/* $Id: file.inc,v 1.23 2004/09/09 05:51:08 dries Exp $ */
 
 /**
  * @file
@@ -8,8 +8,8 @@
 
 /**
  * @defgroup file File interface
- *   Common file handling functions.
  * @{
+ * Common file handling functions.
  */
 
 define('FILE_DOWNLOADS_PUBLIC', 1);

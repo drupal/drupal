@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.31 2004/09/08 15:38:25 dries Exp $
+// $Id: database.inc,v 1.32 2004/09/09 05:51:08 dries Exp $
 
 /**
  * @file
@@ -9,6 +9,7 @@
 /**
  * @defgroup database Database abstraction layer
  * @{
+ * Allow the use of different database servers using the same code base.
  *
  * Drupal provides a slim database abstraction layer to provide developers with
  * the ability to support multiple database servers easily. The intent of this
@@ -119,7 +120,7 @@ function db_set_active($name = 'default') {
 }
 
 /**
- * @} end of defgroup database
+ * @} End of "defgroup database".
  */
 
 // Initialize the default database.

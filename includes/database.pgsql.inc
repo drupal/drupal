@@ -1,13 +1,13 @@
 <?php
-// $Id: database.pgsql.inc,v 1.1 2004/09/08 15:38:25 dries Exp $
+// $Id: database.pgsql.inc,v 1.2 2004/09/09 05:51:08 dries Exp $
 
 /**
  * @file
- * Database interface code for postgresql database servers.
+ * Database interface code for PostgreSQL database servers.
  */
 
 /**
- * @addtogroup database
+ * @ingroup database
  * @{
  */
 
@@ -279,7 +279,7 @@ function db_decode_blob($data) {
 }
 
 /**
- * @} end of addtogroup database
+ * @} End of "ingroup database".
  */
 
 ?>

@@ -1,9 +1,9 @@
 <?php
-// $Id: cron.php,v 1.25 2004/08/21 06:42:34 dries Exp $
+// $Id: cron.php,v 1.26 2004/09/09 05:51:07 dries Exp $
 
 /**
  * @file
- * Handles incoming requests to fire of regularly-scheduled tasks (cron jobs).
+ * Handles incoming requests to fire off regularly-scheduled tasks (cron jobs).
  */
 
 include_once 'includes/bootstrap.inc';

@@ -1,5 +1,5 @@
 <?php
-// $Id: tablesort.inc,v 1.27 2004/08/10 19:15:57 dries Exp $
+// $Id: tablesort.inc,v 1.28 2004/09/09 05:51:08 dries Exp $
 
 /**
  * @file
@@ -33,7 +33,6 @@ function tablesort_pager() {
 
 /**
  * Create an SQL sort clause.
- * @ingroup database
  *
  * This function produces the ORDER BY clause to insert in your SQL queries,
  * assuring that the returned database table rows match the sort order chosen
@@ -46,6 +45,8 @@ function tablesort_pager() {
  *   Useful for sorting by important attributes like "sticky" first.
  * @return
  *   An SQL string to append to the end of a query.
+ *
+ * @ingroup database
  */
 function tablesort_sql($header, $before = '') {
   $ts = tablesort_init($header);

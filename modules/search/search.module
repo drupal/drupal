@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.84 2004/08/21 06:42:37 dries Exp $
+// $Id: search.module,v 1.85 2004/09/09 05:51:08 dries Exp $
 
 /**
  * @file
@@ -246,7 +246,7 @@ function update_index($search_array) {
 
       // Trash any existing entries in the search index for this node,
       // in case it is a modified node.
-      db_query("DELETE from {search_index} where lno = '". $node['lno'] ."' and type = '". $node_type ."'");
+      db_query("DELETE from {search_index} WHERE lno = '". $node['lno'] ."' AND type = '". $node_type ."'");
 
       // Build the word list (teaser not included, as it would give a
       // false count of the number of hits).

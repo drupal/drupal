@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.24 2004/09/08 15:38:25 dries Exp $
+// $Id: database.mysql.inc,v 1.25 2004/09/09 05:51:08 dries Exp $
 
 /**
  * @file
@@ -7,7 +7,7 @@
  */
 
 /**
- * @addtogroup database
+ * @ingroup database
  * @{
  */
 
@@ -286,7 +286,7 @@ function db_decode_blob($data) {
 }
 
 /**
- * @} end of addtogroup database
+ * @} End of "ingroup database".
  */
 
 ?>
