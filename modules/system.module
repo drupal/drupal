@@ -76,8 +76,7 @@ function system_view_general() {
   $output .= form_textarea(t("Mission"), "site_mission", variable_get("site_mission", ""), 70, 5, t("Your site's mission statement or focus."));
   $output .= form_textarea(t("Footer message"), "site_footer", variable_get("site_footer", ""), 70, 5, t("This text will be displayed at the bottom of each page.  Useful for adding a copyright notice to your pages."));
   $output .= form_textfield(t("Anonymous user"), "anonymous", variable_get("anonymous", "Anonymous"), 70, 70, t("The name used to indicate anonymous users."));
-  foreach (module_list() as $name) { if (module_hook($name, "page")) $pages[$name] = $name; }
-  $output .= form_select(t("Default front page"), "site_frontpage", variable_get("site_frontpage", "node"), $pages, t("The home page displays content from this module (usually node)."));
+  $output .= form_textfield(t("Default front page"), "site_frontpage", variable_get("site_frontpage", "node"), 70, 70, t("The home page displays content from this relative URL.  If you are not using clean URLs, specify the part after '?q='.  If unsure, specify 'node'."));
   $output .= form_select(t("Clean URLs"), "clean_url", variable_get("clean_url", 0), array(t("Disabled"), t("Enabled")), t("Enable or disable clean URLs.  If enabled, you'll need <code>ModRewrite</code> support.  See also the <code>.htaccess</code> file in Drupal's top-level directory."));
   $output .= "<hr />\n";
 
