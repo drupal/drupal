@@ -11,10 +11,10 @@ $errors = array(500 => "500 error: internal server error",
 watchdog("httpd", $errors[$REDIRECT_STATUS]);
 
 if (strstr($REDIRECT_URL, "index.php")) {
-  header("Location: ../index.php");
+  drupal_goto("../index.php");
 }
 else {
-  header("Location: index.php");
+  drupal_goto("index.php");
 }
 
 ?>

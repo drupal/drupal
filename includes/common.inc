@@ -71,6 +71,17 @@ function message_throttle() {
   return t("You exceeded the submission rate exceeded.  Please wait a few minutes and try again.");
 }
 
+function drupal_goto($url) {
+
+  /*
+  ** It is advised to use "drupal_goto()" instead of PHP's "header()" as 
+  ** "drupal_goto()" will append the user's session ID to the URI when PHP 
+  ** is compiled with "--enable-trans-sid".
+  */
+
+  header("Location: $url". SID);
+}
+
 function check_form($text) {
   return htmlspecialchars(stripslashes($text));
 }

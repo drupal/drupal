@@ -86,7 +86,7 @@ function queue_node($id) {
   $node = node_get_object(array(nid => $id));
 
   if ($user->uid == $node->author || field_get($node->users, $user->uid)) {
-    header("Location: node.php?id=$node->nid");
+    drupal_goto("node.php?id=$node->nid");
   }
   else {
     $queue_votes = array("neutral (+0)" => "+ 0", "post it (+1)" => "+ 1", "dump it (-1)" => "- 1");
