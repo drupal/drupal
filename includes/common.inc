@@ -1034,11 +1034,11 @@ function form_radio($title, $name, $value = 1, $checked = 0, $description = NULL
   return theme('form_element', NULL, $element, $description, $required, _form_get_error($name));
 }
 
-function form_radios($title, $name, $value, $options, $description = NULL, $required = FALSE) {
+function form_radios($title, $name, $value, $options, $description = NULL, $required = FALSE, $attributes = NULL) {
   if (count($options) > 0) {
     $choices = '';
     foreach ($options as $key => $choice) {
-      $choices .= "<label class=\"option\"><input type=\"radio\" class=\"form-radio\" name=\"edit[$name]\" value=\"$key\"". ($key == $value ? " checked=\"checked\"" : "") ." /> $choice</label><br />";
+      $choices .= "<label class=\"option\"><input type=\"radio\" class=\"form-radio\" name=\"edit[$name]\" value=\"$key\"". ($key == $value ? " checked=\"checked\"" : ""). drupal_attributes($attributes). " /> $choice</label><br />";
     }
     return theme('form_element', $title, $choices, $description, $required, _form_get_error($name));
   }
@@ -1052,14 +1052,14 @@ function form_checkbox($title, $name, $value = 1, $checked = 0, $description = N
   return form_hidden($name, 0) . theme('form_element', NULL, $element, $description, $required, _form_get_error($name));
 }
 
-function form_checkboxes($title, $name, $values, $options, $description = NULL, $required = FALSE) {
+function form_checkboxes($title, $name, $values, $options, $description = NULL, $required = FALSE, $attributes = NULL) {
   if (count($options) > 0) {
     if (!isset($values)) {
       $values = array();
     }
     $choices = '';
     foreach ($options as $key => $choice) {
-      $choices .= "<label class=\"option\"><input type=\"checkbox\" class=\"form-checkbox\" name=\"edit[$name][]\" value=\"$key\"". (in_array($key, $values) ? " checked=\"checked\"" : "") ." /> $choice</label><br />";
+      $choices .= "<label class=\"option\"><input type=\"checkbox\" class=\"form-checkbox\" name=\"edit[$name][]\" value=\"$key\"". (in_array($key, $values) ? " checked=\"checked\"" : ""). drupal_attributes($attributes). " /> $choice</label><br />";
     }
     return theme('form_element', $title, $choices, $description, $required, _form_get_error($name));
   }
