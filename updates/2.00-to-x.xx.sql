@@ -37,4 +37,4 @@ CREATE TABLE nodes (
 );
 
 alter table users change stories nodes tinyint(2) DEFAULT '10';
-alter table comments drop type;
+alter table comments drop link;
