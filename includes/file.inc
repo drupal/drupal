@@ -11,13 +11,6 @@ define('FILE_DOWNLOADS_PUBLIC', 1);
 define('FILE_DOWNLOADS_PRIVATE', 2);
 define('FILE_SEPARATOR', PHP_OS == 'WINNT' ? '\\' : '/');
 
-// Required for file uploads to work with PHP 4.2
-define('UPLOAD_ERR_OK', 0);
-define('UPLOAD_ERR_INI_SIZE', 1);
-define('UPLOAD_ERR_FORM_SIZE', 2);
-define('UPLOAD_ERR_PARTIAL', 3);
-define('UPLOAD_ERR_NO_FILE', 4);
-
 /**
  * Create the download path to a file.
  */
@@ -182,11 +175,17 @@ function file_copy(&$source, $dest = 0, $replace = 0) {
     // and find a new filename.
     $pos = strrpos($basename, '.');
     $name = substr($basename, 0, $pos);
-    $ext = substr($basename, $pos);
+    if ($pos = strrpos($basename, '.')) {
+      $name = substr($basename, 0, $pos);
+      $ext = substr($basename, $pos);
+    }
+    else {
+      $name = $basename;
+    }
+
     $counter = 0;
     do {
       $dest = $directory . FILE_SEPARATOR . $name .'_'. $counter++ . $ext;
-      $counter++;
     } while (file_exists($dest));
   }
 
@@ -256,13 +255,18 @@ function file_save_upload($source, $dest = 0, $replace = 0) {
 
     // Check for file upload errors.
     switch ($file->error) {
-      case UPLOAD_ERR_PARTIAL:
-      case UPLOAD_ERR_NO_FILE:
+      case 0: // UPLOAD_ERR_OK
+        break;
+      case 1: // UPLOAD_ERR_INI_SIZE
+      case 2: // UPLOAD_ERR_FORM_SIZE
+        drupal_set_message(t("file upload failed: file size too big."), 'error');
+        return 0;
+      case 3: // UPLOAD_ERR_PARTIAL
+      case 4: // UPLOAD_ERR_NO_FILE
         drupal_set_message(t("file upload failed: incomplete upload."), 'error');
         return 0;
-      case UPLOAD_ERR_INI_SIZE:
-      case UPLOAD_ERR_FORM_SIZE:
-        drupal_set_message(t("file upload failed: file size too big."), 'error');
+      default: // Unknown error
+        drupal_set_message(t("file upload failed: unkown error."), 'error');
         return 0;
     }
 
