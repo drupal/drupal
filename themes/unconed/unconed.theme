@@ -1,5 +1,5 @@
 <?php
-// $Id: unconed.theme,v 1.101 2003/06/17 21:26:51 dries Exp $
+// $Id: unconed.theme,v 1.102 2003/10/20 17:13:07 dries Exp $
 
  class Theme_unconed extends BaseTheme {
    var $foreground = "#000000";
@@ -198,6 +198,7 @@
      </table>
     </td><td style="background-color: <?php print $this->clc0; ?>;"><img src="<?php print $this->path; ?>/images/null.gif" width="4" alt="" title="" /></td><td  style="background-color: <?php print $this->cl00; ?>;"><img src="<?php print $this->path; ?>/images/null.gif" width="10" alt="" title="" /></td></tr>
     </table>
+    <?php print theme_footer();  ?>
     </body>
     </html>
     <?php
