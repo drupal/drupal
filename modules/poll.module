@@ -163,7 +163,7 @@ function poll_form($edit = array(), $nocheck = 0) {
   $admin = ($edit[nid] && user_access($user,"poll")) ? 1 : 0;
 
   /* Mini-form for number of choiceboxes */
-  $choices = $edit[choices]?$edit[choices]:5;
+  $choices = $edit[choices]?$edit[choices]:max(5,sizeof($edit[choice]));
   for ($c = 2; $c <= 20; $c++) $opts[$c]=$c;
   $form .= form_select(t("Number of choices"), "choices", $choices, $opts, t("This box specifies the number of choiceboxes in this form, it doesn't affect the actual amount of choices in the poll."));
   $form .= form_submit(t("Refresh")) . "<br><br><br>";
