@@ -44,6 +44,10 @@ ErrorDocument 500 /error.php
 <IfModule mod_rewrite.c>
   RewriteEngine on
 
+  # Modify the RewriteBase if you are using Drupal in a subdirectory
+  # and the rewrite rules are not working properly:
+  #RewriteBase /drupal
+
   # Rewrite old-style URLS of the form 'node.php?id=x':
   #RewriteCond %{REQUEST_FILENAME} !-f
   #RewriteCond %{REQUEST_FILENAME} !-d
