@@ -1,0 +1,239 @@
+<?php
+
+  /*********************************************************************
+
+   Theme: try-out
+   Author: Jeroen Bensch (Jeroen)
+   Email: jeroen@drop.org
+   Description: Lots of tables again, argg...
+
+  *********************************************************************/
+
+  class Theme {
+
+    function header() {
+    
+?>
+
+      <html>
+
+        <head>
+          <title><? echo variable_get(site_name, "drupal"); ?></title>
+          <style>
+          <!--
+            a { text-decoration: none; font-weight: bold; font-family: Arial }
+            a.link1 { color: #fefefe }
+            a.link2 { color: #a8b5ff }
+            td { color: #333333; font-family: Arial }
+          -->
+          </style>
+        </head>
+        
+        <body bgcolor="#fefefe" topmargin="0" leftmargin="0" marginwidth="0" marginheight="0">
+          <table border="0" cellpadding="0" cellspacing="0" width="100%">
+            <tr>
+              <td bgcolor="#ccddff" align="left" width="20%">
+                  &nbsp;<a href="http://drop.org/" class="link1">drop.org</a>
+              </td>
+              <td bgcolor="#ccddff" align="right">
+              <!--    The weblog for a dynamic community&nbsp;<br> -->&nbsp;
+              </td>
+            </tr>
+            <tr>
+              <td bgcolor="#a8b5ff" colspan="2">
+                <img src="themes/jeroen2/images/pixel.gif" width="1" height="1" alt="" border="0"><br>
+              </td>
+            </tr>
+            <tr>
+              <td colspan="2">
+                <br>
+              </td>
+            </tr>
+            <tr>
+              <td bgcolor="#a8b5ff" colspan="2">
+                <img src="themes/jeroen2/images/pixel.gif" width="1" height="1" alt="" border="0"><br>
+              </td>
+            </tr>
+            <tr>
+              <td bgcolor="#c0c0c0" background="themes/jeroen2/images/sketch.gif" align="center" cellspacing="1" cellpadding="1" colspan="2">
+                <font color="#fefefe">
+          	<a href="module.php?mod=book" class="link2">handbook</a> |
+		<a href="search.php" class="link2">search</a> |
+	        <a href="module.php?mod=diary" class="link2">diary</a> |
+                <a href="submit.php" class="link2">submit</a> |
+	        <a href="account.php" class="link2">account</a>
+                </font>
+              </td>
+            </tr>
+            <tr>
+              <td bgcolor="#a8b5ff" colspan="2">
+                <img src="themes/jeroen2/images/pixel.gif" width="1" height="1" alt="" border="0"><br>
+              </td>
+            </tr>
+            <tr>
+              <td valign="top"> 
+
+                <br>
+<?php
+                
+                theme_account($this);
+                theme_blocks("all", $this);
+
+?>
+
+              </td>
+              <td width="100%" valign="top" align="right">
+                <br>
+
+<?php
+    
+    } // close header function
+
+    function story($story, $reply = 0) {
+
+?>
+
+                <table bgcolor="#ccddff" width="100%" cellpadding="0" cellspacing="0" border="0">
+                  <tr>
+                    <td bgcolor="#a8b5ff" width="1" rowspan="6">
+                      <img src="themes/jeroen2/images/pixel.gif" width="1" height="1" alt="" border="0"><br>
+                    </td>
+                    <td bgcolor="#a8b5ff">
+                      <img src="themes/jeroen2/images/pixel.gif" width="1" height="1" alt="" border="0"><br>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <b>
+                      <?php echo "". strtr(t("Subject: %a Name: %b ID: %cDate: %d"), array("%a" => check_output($story->title), "%b" => format_username($story->userid), "%c" => $story->id, "%d" => format_date($story->timestamp, "small"))) .""; ?>
+                      </b>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td bgcolor="#a8b5ff">
+                      <img src="themes/jeroen2/images/pixel.gif" width="1" height="1" alt="" border="0"><br>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td background="themes/jeroen/images/sketch.gif">
+                      
+<?php
+
+                      echo "". check_output($story->abstract, 1) ."<br />";
+                      if ($reply && $story->body)
+                        echo "<br />". check_output($story->body, 1) ."<br />";
+
+?>
+
+                    </td>
+                  </tr>
+                  <tr>
+                    <td background="themes/jeroen/images/sketch.gif" align="right">
+
+<?php
+
+                      if (!$reply)
+                        echo "". theme_morelink($this, $story) ."";
+                      else
+                        echo "". $reply ."";
+
+?>
+
+                    </td>
+                  </tr>
+                  <tr>
+                    <td bgcolor="#a8b5ff">
+                      <img src="themes/jeroen2/images/pixel.gif" width="1" height="1" alt="" border="0"><br>
+                    </td>
+                  </tr>
+               </table>
+               <br />  
+<?php
+
+    } // close story function
+
+    function comment($comment, $link = "") {
+    echo "<a name=\"$comment->cid\"></a>\n";
+
+    // Create comment header:
+
+    } // close comment function
+
+    function box($subject, $content, $options = "") {
+
+?>
+
+               <table bgcolor="#ccddff" width="90%" cellpadding="0" cellspacing="0" border="0">
+                  <tr>
+                    <td bgcolor="#a8b5ff">
+                      <img src="themes/jeroen2/images/pixel.gif" width="1" height="1" alt="" border="0"><br>
+                    </td>
+                    <td bgcolor="#a8b5ff" width="1" rowspan="5">
+                      <img src="themes/jeroen2/images/pixel.gif" width="1" height="1" alt="" border="0"><br>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td>
+                      <b>
+                        <?php echo $subject; ?>
+                      </b>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td bgcolor="#a8b5ff">
+                      <img src="themes/jeroen2/images/pixel.gif" width="1" height="1" alt="" border="0"><br>
+                    </td>
+                  </tr>
+                  <tr>
+                    <td background="themes/jeroen/images/sketch.gif">
+
+<?php
+         
+                      echo $content;
+
+?>
+
+                    </td>
+                  </tr>
+                  <tr>
+                    <td bgcolor="#a8b5ff">
+                      <img src="themes/jeroen2/images/pixel.gif" width="1" height="1" alt="" border="0"><br>
+                    </td>
+                  </tr>
+               </table>
+               <br />     
+
+<?php
+
+    } // close box function
+
+    function footer() {
+
+?>
+            <tr>
+              <td text="#fefefe" bgcolor="#a8b5ff" colspan="2">
+                <img src="themes/jeroen2/images/pixel.gif" width="1" height="1" alt="" border="0"><br>
+              </td>
+            </tr>
+            <tr>
+              <td bgcolor="#ccddff" align="left">
+                  &nbsp;Creator: <a href="mailto:jeroen@drop.org" class="link1">Jeroen</a>
+              </td>
+              <td bgcolor="#ccddff" align="right">
+                  <a href="module.php?mod=book" class="link1">handbook</a> |
+                <a href="search.php" class="link1">search</a> |
+                <a href="module.php?mod=diary" class="link1">diary</a> |
+                <a href="submit.php" class="link1">submit</a> |
+                <a href="account.php" class="link1">account</a>
+              </td>
+            </tr>     
+          </table>
+        </body>
+      </html>
+
+<?php
+
+    } // close footer function
+  }
+
+?>
