@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.128 2003/10/17 16:10:48 dries Exp $
+// $Id: forum.module,v 1.129 2003/10/20 17:32:48 dries Exp $
 
 function forum_node($field) {
   $info["name"] = t("forum topic");
@@ -32,6 +32,7 @@ function forum_settings() {
     if ($voc) {
       $output .= form_textarea(t("Explanation or submission guidelines"), "forum_help", variable_get("forum_help", ""), 70, 5, t("This text will be displayed at the top of the forum submission form.  Useful for helping or instructing your users."));
       $output .= form_select(t("Forum vocabulary"), "forum_nav_vocabulary", variable_get("forum_nav_vocabulary", ""), $vocs, t("The taxonomy vocabulary that will be used as the navigation tree."));
+      $output .= _taxonomy_term_select(t("Containers"), "forum_containers", variable_get("forum_containers", array()), variable_get("forum_nav_vocabulary", ""), t("You can choose forums which will not have topics, but will be just containers for other forums."), 1, t("<none>"));
       $output .= form_textfield(t("Forum icon path"), "forum_icon_path", variable_get("forum_icon_path", ""), 30, 255, t("The path to the forum icons.  Leave blank to disable icons.  Don't add a trailing slash.  Default icons are available in the 'misc' directory."));
       $number = array(5 => 5, 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30, 35 => 35, 40 => 40, 50 => 50, 60 => 60, 80 => 80, 100 => 100, 10000 => 10000);
       $output .= form_select(t("Hot topic threshold"), "forum_hot_topic", variable_get("forum_hot_topic", 15), $number, t("The number of posts a topic must have to be considered <b>hot</b>."));
@@ -189,7 +190,7 @@ function forum_form(&$node, &$help, &$error) {
   // outputs the compose guidelines
   $help = variable_get("forum_help", "");
 
-  $output .= _taxonomy_term_select(t("Forum"), "tid", $tid, variable_get("forum_nav_vocabulary", ""), "", 0, "");
+  $output .= _taxonomy_term_select(t("Forum"), "tid", $tid, variable_get("forum_nav_vocabulary", ""), "", 0, "", variable_get("forum_containers", array()));
 
   if ($node->nid) {
     // if editing, give option to leave shadows
@@ -251,6 +252,9 @@ function forum_get_forums($tid = 0) {
     $_forums = taxonomy_get_tree(variable_get("forum_nav_vocabulary", ""), $tid);
     $n = 0;
     foreach ($_forums as $forum) {
+      if (in_array($forum->tid, variable_get("forum_containers", array()))) {
+        $forum->container = 1;
+      }
       $forum->num_topics = _forum_num_topics($forum->tid);
       $forum->num_posts = _forum_num_replies($forum->tid) + $forum->num_topics;
       $forum->last_post = _forum_last_post($forum->tid);
@@ -433,7 +437,9 @@ function forum_page() {
 
       $forums = forum_get_forums($tid);
       $parents = forum_get_parents($tid);
-      $topics = forum_get_topics($tid, $sortby, $forum_per_page);
+      if ($tid && !in_array($tid, variable_get("forum_containers", array()))) {
+        $topics = forum_get_topics($tid, $sortby, $forum_per_page);
+      }
 
       theme("forum_theme_display", $forums, $topics, $parents, $tid, $sortby, $forum_per_page, $offset);
     }
@@ -480,7 +486,7 @@ function forum_theme_display($forums, $topics, $parents, $tid, $sortby, $forum_p
   $output  = "<div id=\"forum\">";
   $output .= theme("forum_theme_list", $forums, $parents, $tid);
 
-  if ($tid) {
+  if ($tid && !in_array($tid, variable_get("forum_containers", array()))) {
     $output .= theme("forum_theme_topic_list", $tid, $topics, $sortby, $forum_per_page, $offset);
   }
 
@@ -500,18 +506,25 @@ function forum_theme_list($forums, $parents, $tid) {
     $header = array(t("Forum"), t("Topics"), t("Posts"), t("Last post"));
 
     foreach ($forums as $forum) {
-      if ($user->uid) {
-        $new_topics = $forum->num_topics - $forum->old_topics;
+      if ($forum->container) {
+        $forum->num_topics = "";
+        $forum->num_posts = "";
+        $forum->last_post = "";
       }
+      else {
+        if ($user->uid) {
+          $new_topics = $forum->num_topics - $forum->old_topics;
+        }
 
-      $links = array();
+        $links = array();
 
-      if ($forum->last_post) {
-        $links[] = l(t("the most recent topic"), "node/view/". $forum->last_post->nid);
-      }
+        if ($forum->last_post) {
+          $links[] = l(t("the most recent topic"), "node/view/". $forum->last_post->nid);
+        }
 
-      if ($new_topics) {
-        $links[] = l(t("the first new topic"), "forum/$forum->tid/new");
+        if ($new_topics) {
+          $links[] = l(t("the first new topic"), "forum/$forum->tid/new");
+        }
       }
 
       $description  = "<div class=\"forum\" style=\"margin-left: ". ($forum->depth * 30) ."px;\">\n";
@@ -529,7 +542,8 @@ function forum_theme_list($forums, $parents, $tid) {
         array("data" => $description, "class" => "description"),
         array("data" => $forum->num_topics . ($new_topics ? "<br />(".t("%a new", array("%a" => $new_topics)).")" : ""), "class" => "topics"),
         array("data" => $forum->num_posts, "class" => "posts"),
-        array("data" => _forum_format($forum->last_post), "class" => "last-reply")
+        array("data" => ($forum->container ? "" : _forum_format($forum->last_post)), "class" => "last-reply")
+
        );
 
     }
