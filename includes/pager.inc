@@ -1,5 +1,5 @@
 <?php
-// $Id: pager.inc,v 1.30 2004/07/25 14:25:41 dries Exp $
+// $Id: pager.inc,v 1.31 2004/08/12 05:46:37 dries Exp $
 
 /**
  * @file
@@ -55,7 +55,7 @@ function pager_query($query, $limit = 10, $element = 0, $count_query = NULL) {
 
   // Count the total number of records in this query.
   if (!isset($count_query)) {
-    $count_query = preg_replace(array('/SELECT.*FROM/is', '/ORDER BY .*/'), array('SELECT COUNT(*) FROM', ''), $query);
+    $count_query = preg_replace(array('/SELECT.*?FROM/As', '/ORDER BY .*/'), array('SELECT COUNT(*) FROM', ''), $query);
   }
   $pager_total[$element] = db_result(call_user_func_array('db_query', array_merge(array($count_query), $args)));
 
