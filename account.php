@@ -555,7 +555,7 @@ switch ($op) {
         account_page_edit();
         break;
       default:
-        header("Location: diary.php?op=edit&name=$user->userid");
+        header("Location: diary.php?op=add&name=$user->userid");
     }
     break;
   default: 
