@@ -199,7 +199,7 @@ function _render_item($path) {
     $css = " class=\"active\"";
   }
 
-  return "<a href=\"". url($path) ."\"$css>". t($_list[$path]["title"]) ."</a>";
+  return "<a href=\"". url($path) ."\"$css>". $_list[$path]["title"] ."</a>";
 }
 
 
