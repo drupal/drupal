@@ -1278,7 +1278,7 @@ function comment_mode_form($mode) {
 
   $modes = _comment_get_modes();
   foreach ($modes as $key => $value) {
-    $options .= " <option value=\"$key\"". ($mode == $key ? " selected=\"selected\"" : "") .">". t($value) ."</option>\n";
+    $options .= " <option value=\"$key\"". ($mode == $key ? " selected=\"selected\"" : "") .">$value</option>\n";
   }
 
   return "<select name=\"mode\">$options</select>\n";
@@ -1288,7 +1288,7 @@ function comment_order_form($order) {
 
   $order = _comment_get_orders();
   foreach ($order as $key=>$value) {
-    $options .= " <option value=\"$key\"". ($order == $key ? " selected=\"selected\"" : "") .">". t($value) ."</option>\n";
+    $options .= " <option value=\"$key\"". ($order == $key ? " selected=\"selected\"" : "") .">$value</option>\n";
   }
 
   return "<select name=\"order\">$options</select>\n";
