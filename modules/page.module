@@ -63,7 +63,7 @@ function page_overview() {
 function page_admin() {
   global $id, $op, $edit;
 
-  print "<SMALL><A HREF=\"admin.php?mod=page&op=add\">add new page</A> | <A HREF=\"admin.php?mod=page\">overview</A> | <A HREF=\"admin.php?mod=page&op=help\">help</A></SMALL><HR>\n";
+  print "<SMALL><A HREF=\"admin.php?mod=page&op=add\">add new page</A> | <A HREF=\"admin.php?mod=page\">overview</A></SMALL><HR>\n";
 
   switch ($op) {
     case "add":
