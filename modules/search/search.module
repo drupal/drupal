@@ -494,7 +494,9 @@ function do_search($keys, $type, $join = '', $where = '1') {
     }
   }
   // Tell the user which words were excluded
-  drupal_set_message(t('The following word(s) were not included because they were too short: %words', array('%words' => '<em>'. implode(', ', $refused) .'</em>')));
+  if (count($refused)) {
+    drupal_set_message(t('The following word(s) were not included because they were too short: %words', array('%words' => '<em>'. implode(', ', $refused) .'</em>')));
+  }
 
   if (count($words) == 0) {
     return array();
