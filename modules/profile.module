@@ -75,7 +75,7 @@ function profile_browse() {
 
     // Compile a list of fields to show
     $fields = array();
-    $result = db_query('SELECT name, title, type FROM {profile_fields} WHERE fid != %d AND visibility = %d', $field->fid, PROFILE_PUBLIC_LISTINGS);
+    $result = db_query('SELECT name, title, type FROM {profile_fields} WHERE fid != %d AND visibility = %d ORDER BY weight', $field->fid, PROFILE_PUBLIC_LISTINGS);
     while ($record = db_fetch_object($result)) {
       $fields[] = $record;
     }
@@ -183,7 +183,7 @@ function profile_view_field($user, $field) {
       case 'selection':
         return $browse ? l(drupal_specialchars($value), "profile/$field->name/". check_url($value)) : drupal_specialchars($value);
       case 'checkbox':
-        return $browse ? l(drupal_specialchars($field->title), "profile/$field->name") : drupal_specialchars($field->title);
+        return $browse ? l(strip_tags($field->title), "profile/$field->name") : drupal_specialchars($field->title);
       case 'url':
         return '<a href="'. check_url($value) .'">'. drupal_specialchars($value) .'</a>';
       case 'date':
