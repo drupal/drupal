@@ -528,7 +528,7 @@ switch ($op) {
         account_user($user->userid);
         break;
       case "diary":
-        header("Location: diary.php?op=view&name=$user->userid");
+        header("Location: module.php?mod=diary&op=view&name=$user->userid");
         break;        
       default:
         account_user($name);
@@ -555,7 +555,7 @@ switch ($op) {
         account_page_edit();
         break;
       default:
-        header("Location: diary.php?op=add&name=$user->userid");
+        header("Location: module.php?mod=diary&op=add&name=$user->userid");
     }
     break;
   default: 
