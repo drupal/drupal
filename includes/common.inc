@@ -499,10 +499,10 @@ function format_date($timestamp, $type = "medium", $format = "") {
 
   switch ($type) {
     case "small":
-      $date = date("m/d/y - H:i", $timestamp);
+      $date = date(variable_get("date_format", "m/d/Y - H:i"), $timestamp);
       break;
     case "medium":
-      $date = t(date("l", $timestamp)) .", ". date("m/d/Y - H:i", $timestamp);
+      $date = t(date("l", $timestamp)) .", ". date(variable_get("date_format", "m/d/Y - H:i"), $timestamp);
       break;
     case "large":
       $date = t(date("l", $timestamp)) .", ". t(date("F", $timestamp)) ." ". date("d, Y - H:i", $timestamp);
@@ -521,7 +521,7 @@ function format_date($timestamp, $type = "medium", $format = "") {
       }
       break;
     default:
-      $date = t(date("l", $timestamp)) .", ". date("m/d/Y - H:i", $timestamp);
+      $date = t(date("l", $timestamp)) .", ". date(variable_get("date_format", "m/d/Y - H:i"), $timestamp);
   }
   return $date;
 }

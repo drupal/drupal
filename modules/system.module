@@ -68,6 +68,11 @@ function system_view_options() {
   $output .= form_select("Maximum comment rate", "max_comment_rate", variable_get("max_comment_rate", 120), $rate, "The maximum submission rate for comments.  Its purpose is to stop potential abuse or denial of service attacks.");
   $output .= "<hr />\n";
 
+  // date settings:
+  $output .= "<h3>Date format setting</h3>\n";
+  $output .= form_select("Date format", "date_format", variable_get("date_format", "m/d/Y - H:i"), array("m/d/Y - H:i" => "m/d/Y - H:i", "d/m/Y - H:i" => "d/m/Y - H:i", "Y/m/d - H:i" => "Y/m/d - H:i"), "The format in which dates are displayed");
+  $output .= "<hr />\n";
+
   // comment settings:
   $output .= "<h3>Comment settings</h3>\n";
   $output .= form_select("Default display mode", "default_comment_mode", $conf["default_comment_mode"], $cmodes, "The default mode in which comments are displayed.");
