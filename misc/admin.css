@@ -101,7 +101,7 @@ hr {
 #menu li.collapsed {
   list-style-image: url(menu-collapsed.gif);
 }
-#menu li {
+#menu li.leaf {
   list-style-image: url(menu-leaf.gif);
 }
 #main {
