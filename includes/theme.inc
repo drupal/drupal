@@ -101,7 +101,7 @@ function theme_moderation_results($theme, $story) {
       $output .= format_username($account->userid) ." voted `". user_get($account, "history", "s$story->id") ."'.<BR>";
     }
 
-    $theme->box("Moderation results", ($output ? $output : "This story has not been moderated yet."));
+    $theme->box(t("Moderation results"), ($output ? $output : t("This story has not been moderated yet.")));
   }
 }
 
@@ -115,12 +115,9 @@ function theme_related_links($theme, $story) {
   }
 
   // Stories in the same section:
-  $content .= " <LI>More about <A HREF=\"index.php?section=". urlencode($story->section) ."\">$story->section</A>.</LI>";
+  $content .= " <LI>". t("More about") ." <A HREF=\"index.php?section=". urlencode($story->section) ."\">$story->section</A>.</LI>";
 
-  // Stories from the same author:
-  if ($story->userid) $content .= " <LI>Also by <A HREF=\"search.php?author=". urlencode($story->userid) ."\">$story->userid</A>.</LI>";
-
-  $theme->box("Related links", $content);
+  $theme->box(t("Related links"), $content);
 }
 
 function theme_new_headlines($theme, $num = 10) {
@@ -129,7 +126,7 @@ function theme_new_headlines($theme, $num = 10) {
   $content = "";
   $result = db_query("SELECT id, subject FROM stories WHERE status = 2 ORDER BY id DESC LIMIT $num");
   while ($story = db_fetch_object($result)) $content .= "<LI><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A></LI>\n";
-  $theme->box("Latest headlines", $content);
+  $theme->box(t("Latest headlines"), $content);
 }
 
 function theme_old_headlines($theme, $num = 10) {
@@ -145,7 +142,7 @@ function theme_old_headlines($theme, $num = 10) {
     }
     $content .= "<LI><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A></LI>\n";
   }
-  $theme->box("Older headlines", $content);
+  $theme->box(t("Older headlines"), $content);
 }
 
 ?>

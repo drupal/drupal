@@ -76,7 +76,7 @@ function diary_page_display($username) {
   $result = db_query("SELECT d.*, u.userid FROM diaries d LEFT JOIN users u ON d.author = u.id WHERE u.userid = '$username' ORDER BY timestamp DESC");
 
   if ($username == $user->userid) {
-    $output .= diary_page_entry(time(), "<BIG><A HREF=\"module.php?mod=diary&op=add\">Add new diary entry!</A></BIG><P>");
+    $output .= diary_page_entry(time(), "<BIG><A HREF=\"module.php?mod=diary&op=add\">". t("Add new diary entry!") ."</A></BIG><P>");
     while ($diary = db_fetch_object($result)) $output .= diary_page_entry($diary->timestamp, $diary->text, $diary->id);
   }
   else {

@@ -48,12 +48,12 @@ function account_session_start($userid, $passwd) {
   global $user;
   if ($userid && $passwd) $user = new User($userid, $passwd);
   if ($user->id) session_register("user");
-  watchdog("message", ($user->id ? "session opened for user `$user->userid'" : "failed login for user `$userid'"));
+  watchdog("message", ($user->id ? "session opened for user '$user->userid'" : "failed login for user `$userid'"));
 }
 
 function account_session_close() {
   global $user;
-  watchdog("message", "session closed for user `$user->userid'");
+  watchdog("message", "session closed for user '$user->userid'");
   session_unset();
   session_destroy();
   unset($user);
@@ -67,7 +67,7 @@ function account_user_edit() {
     $output .= "<FORM ACTION=\"account.php\" METHOD=\"post\">\n";
 
     $output .= "<B>". t("Username") .":</B><BR>\n";
-    $output .= "&nbsp; $user->userid<P>\n";
+    $output .= "$user->userid<P>\n";
     $output .= "<I>". t("Required, unique, and can not be changed.") ."</I><P>\n";
 
     $output .= "<B>". t("Real name") .":</B><BR>\n";
@@ -75,7 +75,7 @@ function account_user_edit() {
     $output .= "<I>". t("Optional") .".</I><P>\n";
 
     $output .= "<B>". t("Real e-mail address") .":</B><BR>\n";
-    $output .= "&nbsp; $user->real_email<P>\n";
+    $output .= "$user->real_email<P>\n";
     $output .= "<I>". t("Required, unique, can not be changed.") ." ". t("Your real e-mail address is never displayed publicly: only needed in case you lose your password.") ."</I><P>\n";
 
     $output .= "<B>". t("Fake e-mail address") .":</B><BR>\n";
@@ -128,7 +128,7 @@ function account_site_edit() {
   if ($user->id) {
     $output .= "<FORM ACTION=\"account.php\" METHOD=\"post\">\n";
 
-    $output .= "<B>". t("Theme" ) .":</B><BR>\n";
+    $output .= "<B>". t("Theme") .":</B><BR>\n";
     foreach ($themes as $key=>$value) $options1 .= " <OPTION VALUE=\"$key\"". (($user->theme == $key) ? " SELECTED" : "") .">$key - $value[1]</OPTION>\n";
     $output .= "<SELECT NAME=\"edit[theme]\">\n$options1</SELECT><BR>\n";
     $output .= "<I>". t("Selecting a different theme will change the look and feel of the site.") ."</I><P>\n";
@@ -319,7 +319,7 @@ function account_email_submit($userid, $email) {
 
     mail($email, $subject, $message, "From: noreply");
 
-    $output = "Your password and further instructions have been sent to your e-mail address.";
+    $output = t("Your password and further instructions have been sent to your e-mail address.");
   }
   else {
     watchdog("warning", "new password: '$userid' and &lt;$email&gt; do not match");
@@ -371,21 +371,21 @@ function account_create_confirm($name, $hash) {
     if ($account->status == 1) {
       if ($account->hash == $hash) {
         db_query("UPDATE users SET status = 2, hash = '' WHERE userid = '$name'");
-        $output .= "Your account has been successfully confirmed.  You can click <A HREF=\"account.php?op=login\">here</A> to login.\n";
+        $output = t("Your account has been successfully confirmed.");
         watchdog("message", "$name: account confirmation successful");
       }
       else {
-        $output .= "Confirmation failed: invalid confirmation hash.\n";
+        $output = t("Confirmation failed: invalid confirmation hash.");
         watchdog("warning", "$name: invalid confirmation hash");
       }
     }
     else {
-      $output .= "Confirmation failed: your account has already been confirmed.  You can click <A HREF=\"account.php?op=login\">here</A> to login.\n";
+      $output = t("Confirmation failed: your account has already been confirmed.");
       watchdog("warning", "$name: attempt to re-confirm account");
     }
   }
   else {
-    $output .= "Confirmation failed: no such account found.<BR>";
+    $output = t("Confirmation failed: non-existing account.");
     watchdog("warning", "$name: attempt to confirm non-existing account");
   }
 
