@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.285 2004/01/05 19:33:58 dries Exp $
+// $Id: user.module,v 1.286 2004/01/11 19:44:15 dries Exp $
 
 /*** Common functions ******************************************************/
 
@@ -695,7 +695,7 @@ function user_logout() {
   global $user;
 
   if ($user->uid) {
-    watchdog("user", "session closed for user '$user->name'");
+    watchdog("user", "session closed for '$user->name'");
 
     /*
     ** Destroy the current session:
