@@ -324,6 +324,31 @@ function user_perm() {
   return array("administer users", "access user list");
 }
 
+function user_file_download($file) {
+  if (strpos($file, variable_get('user_picture_path', "pictures") . FILE_SEPARATOR . 'picture-') === 0) {
+    list($width, $height, $type, $attr) = getimagesize(file_create_path($file));
+    $types = array(
+      IMAGETYPE_GIF => 'image/gif',
+      IMAGETYPE_JPEG => 'image/jpeg',
+      IMAGETYPE_PNG => 'image/png',
+      IMAGETYPE_SWF => 'application/x-shockwave-flash',
+      IMAGETYPE_PSD => 'image/psd',
+      IMAGETYPE_BMP => 'image/bmp',
+      IMAGETYPE_TIFF_II => 'image/tiff',
+      IMAGETYPE_TIFF_MM  => 'image/tiff',
+      IMAGETYPE_JPC => 'application/octet-stream',
+      IMAGETYPE_JP2 => 'image/jp2',
+      IMAGETYPE_JPX => 'application/octet-stream',
+      IMAGETYPE_JB2 => 'application/octet-stream',
+      IMAGETYPE_SWC => 'application/x-shockwave-flash',
+      IMAGETYPE_IFF => 'image/iff',
+      IMAGETYPE_WBMP => 'image/vnd.wap.wbmp',
+      IMAGETYPE_XBM => 'image/xbm'
+    );
+    return array('Content-type: '. $types[$type]);
+  }
+}
+
 function user_search($keys) {
   $find = array();
   $result = db_query_range("SELECT * FROM {users} WHERE name LIKE '%%%s%%'", $keys, 0, 20);
