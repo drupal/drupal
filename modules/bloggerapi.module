@@ -173,12 +173,12 @@ function bloggerapi_driver($method, $params = 0, $error = 0) {
 
     switch ($method) {
       case "newPost":
-        return array("type" => "blog", "title" => $title, "body" => $cparams[4], "status" => 1, "moderate" => 0, "comment" => 2, "promote" => 0, "revision" => 0);
+        return array("type" => "blog", "name" => $user->name, "title" => $title, "body" => $cparams[4], "status" => 1, "moderate" => 0, "comment" => 2, "promote" => 0, "revision" => 0);
         break;
       case "editPost":
         $node = node_load(array("nid" => $cparams[1]));
         if ($node->uid == $user->uid) {
-          return array("nid" => $cparams[1], "type" => "blog", "title" => $title, "body" => $cparams[4], "status" => 1, "moderate" => 0, "comment" => 2, "promote" => 0, "revision" => 0);
+          return array("nid" => $cparams[1], "type" => "blog", "name" => $user->name, "title" => $title, "body" => $cparams[4], "status" => 1, "moderate" => 0, "comment" => 2, "promote" => 0, "revision" => 0);
         }
         else {
           return bloggerapi_error("Error updating node");
@@ -221,7 +221,7 @@ function bloggerapi_user_blogs() {
   global $user;
 
   if ($user->uid) {
-    $struct = new xmlrpcval(array("url" => new xmlrpcval(url("blog/view". urlencode($user->uid))), "blogid" => new xmlrpcval($user->uid), "blogName" => new xmlrpcval($user->name . "'s blog at ". variable_get("site_name", "drupal"))),"struct");
+    $struct = new xmlrpcval(array("url" => new xmlrpcval(url("blog/$user->uid")), "blogid" => new xmlrpcval($user->uid), "blogName" => new xmlrpcval($user->name . "'s blog at ". variable_get("site_name", "drupal"))),"struct");
     return new xmlrpcval(array($struct), "array");
   }
   else {
