@@ -95,14 +95,14 @@ function import_link($type) {
 }
 
 function import_cron() {
-  $result = db_query("SELECT * FROM feed WHERE timestamp + refresh < ". time());
+  $result = db_query("SELECT * FROM {feed} WHERE timestamp + refresh < ". time());
   while ($feed = db_fetch_array($result)) {
     import_refresh($feed);
   }
 }
 
 function import_update() {
-  $result = db_query("SELECT * FROM feed");
+  $result = db_query("SELECT * FROM {feed} ");
   while ($feed = db_fetch_array($result)) {
     import_refresh($feed);
   }
@@ -127,7 +127,7 @@ function import_bundle_block($attributes) {
     $keys = explode(",", $attributes);
     foreach ($keys as $key) $where[] = "attributes LIKE '%". trim($key) ."%'";
 
-    $result = db_query_range("SELECT * FROM item WHERE ". implode(" OR ", $where) ." ORDER BY iid DESC", 0, variable_get("import_block_limit", 15));
+    $result = db_query_range("SELECT * FROM {item} WHERE ". implode(" OR ", $where) ." ORDER BY iid DESC", 0, variable_get("import_block_limit", 15));
   }
 
   $items = array();
@@ -143,7 +143,7 @@ function import_bundle_block($attributes) {
 }
 
 function import_feed_block($feed) {
-  $result = db_query_range("SELECT * FROM item WHERE fid = %d ORDER BY iid DESC ", $feed->fid, 0, variable_get("import_block_limit", 15));
+  $result = db_query_range("SELECT * FROM {item} WHERE fid = %d ORDER BY iid DESC ", $feed->fid, 0, variable_get("import_block_limit", 15));
 
   $items = array();
   while ($item = db_fetch_object($result)) {
@@ -159,12 +159,12 @@ function import_feed_block($feed) {
 
 function import_block($op, $delta) {
   if ($op == "list") {
-    $result = db_query("SELECT * FROM bundle ORDER BY title");
+    $result = db_query("SELECT * FROM {bundle} ORDER BY title");
     while ($bundle = db_fetch_object($result)) {
       $block["bundle:$bundle->bid"]["info"] = "$bundle->title bundle";
     }
 
-    $result = db_query("SELECT * FROM feed ORDER BY fid");
+    $result = db_query("SELECT * FROM {feed} ORDER BY fid");
     while ($feed = db_fetch_object($result)) {
       $block["feed:$feed->fid"]["info"] = "$feed->title feed";
     }
@@ -175,13 +175,13 @@ function import_block($op, $delta) {
     list($type, $id) = split(":", $delta);
     switch ($type) {
       case "feed":
-        $feed = db_fetch_object(db_query("SELECT * FROM feed WHERE fid = %d", $id));
+        $feed = db_fetch_object(db_query("SELECT * FROM {feed} WHERE fid = %d", $id));
         $block["subject"] = $feed->title;
         $block["content"] .= import_feed_block($feed) ."<div style=\"text-align: right;\">".  l(t("more"), "import/feed/$feed->fid", array("title" => t("View this feed's recent news."))) ."</div>";
         break;
 
       case "bundle":
-        $bundle = db_fetch_object(db_query("SELECT * FROM bundle WHERE bid = %d", $id));
+        $bundle = db_fetch_object(db_query("SELECT * FROM {bundle} WHERE bid = %d", $id));
         $block["subject"] = $bundle->title;
         $block["content"] .= import_bundle_block($bundle->attributes) ."<div style=\"text-align: right;\">". l(t("more"), "import/bundle/$bundle->bid", array("title" => t("View this bundle's recent news."))) ."</div>";
         break;
@@ -195,7 +195,7 @@ function import_get_bundles($attributes = 0) {
 
   $block = array();
 
-  $result = db_query("SELECT * FROM bundle ORDER BY title");
+  $result = db_query("SELECT * FROM {bundle} ORDER BY title");
   while ($bundle = db_fetch_object($result)) {
     $block["bundle:$bundle->bid"]["subject"] = $bundle->title;
     $block["bundle:$bundle->bid"]["content"] = import_bundle_block($bundle->attributes) ."<div style=\"text-align: right;\">".
@@ -211,7 +211,7 @@ function import_get_feeds($attributes = 0) {
 
   $block = array();
 
-  $result = db_query("SELECT * FROM feed ORDER BY fid");
+  $result = db_query("SELECT * FROM {feed} ORDER BY fid");
   while ($feed = db_fetch_object($result)) {
     $block["feed:$feed->fid"]["subject"] = $feed->title;
     $block["feed:$feed->fid"]["content"] = import_feed_block($feed) ."<div style=\"text-align: right;\">".
@@ -224,7 +224,7 @@ function import_get_feeds($attributes = 0) {
 }
 
 function import_remove($feed) {
-  db_query("DELETE FROM item WHERE fid = %d", $feed["fid"]);
+  db_query("DELETE FROM {item} WHERE fid = %d", $feed["fid"]);
   return t("removed news items from '%site'.", array("%site" => $feed["title"]));
 }
 
@@ -323,7 +323,7 @@ function import_refresh($feed) {
     $tt = array_flip(get_html_translation_table(HTML_ENTITIES));
     $tt["&apos;"] = "'";
 
-    db_query("UPDATE feed SET timestamp = %d, link = '%s', description = '%s' WHERE fid = %d", time(), $channel["LINK"], $channel["DESCRIPTION"], $feed["fid"]);
+    db_query("UPDATE {feed} SET timestamp = %d, link = '%s', description = '%s' WHERE fid = %d", time(), $channel["LINK"], $channel["DESCRIPTION"], $feed["fid"]);
 
     /*
     ** We reverse the array such that we store the first item last,
@@ -369,10 +369,10 @@ function import_refresh($feed) {
       */
 
       if ($link && $link != $feed["link"] && $link != $feed["url"]) {
-        $entry = db_fetch_object(db_query("SELECT iid FROM item WHERE fid = %d AND link = '%s'", $feed["fid"], $link));
+        $entry = db_fetch_object(db_query("SELECT iid FROM {item} WHERE fid = %d AND link = '%s'", $feed["fid"], $link));
       }
       else {
-        $entry = db_fetch_object(db_query("SELECT iid FROM item WHERE fid = %d AND title = '%s'", $feed["fid"], $title));
+        $entry = db_fetch_object(db_query("SELECT iid FROM {item} WHERE fid = %d AND title = '%s'", $feed["fid"], $title));
       }
 
       import_save_item(array(iid => $entry->iid, fid => $feed["fid"], title => $title, link => $link, author => $item["AUTHOR"], description => $item["DESCRIPTION"], attributes => $feed["attributes"]));
@@ -384,14 +384,14 @@ function import_refresh($feed) {
 
     unset($items);
 
-    $result = db_query("SELECT iid FROM item WHERE fid = %d ORDER BY timestamp", $feed["fid"]);
+    $result = db_query("SELECT iid FROM {item} WHERE fid = %d ORDER BY timestamp", $feed["fid"]);
 
     while ($item = db_fetch_object($result)) {
       $items[] = "iid = '$item->iid'";
     }
 
     if (sizeof($items) > 50) {
-      db_query("DELETE FROM item WHERE ". implode(" OR ", array_slice($items, 0, - 50)));
+      db_query("DELETE FROM {item} WHERE ". implode(" OR ", array_slice($items, 0, - 50)));
     }
 
     cache_clear_all();
@@ -405,13 +405,13 @@ function import_refresh($feed) {
 
 function import_save_item($edit) {
   if ($edit["iid"] && $edit["title"]) {
-    db_query("UPDATE item SET title = '%s', link = '%s', author = '%s', description = '%s', attributes = '%s' WHERE iid = %d", $edit["title"], $edit["link"], $edit["author"], $edit["description"], $edit["attributes"], $edit["iid"]);
+    db_query("UPDATE {item} SET title = '%s', link = '%s', author = '%s', description = '%s', attributes = '%s' WHERE iid = %d", $edit["title"], $edit["link"], $edit["author"], $edit["description"], $edit["attributes"], $edit["iid"]);
   }
   else if ($edit["iid"]) {
-    db_query("DELETE FROM item WHERE iid = %d", $edit["iid"]);
+    db_query("DELETE FROM {item} WHERE iid = %d", $edit["iid"]);
   }
   else if ($edit["title"] && $edit["link"]) {
-    db_query("INSERT INTO item (fid, title, link, author, description, attributes, timestamp) VALUES (%d, '%s', '%s', '%s', '%s', '%s', %d)", $edit["fid"], $edit["title"], $edit["link"], $edit["author"], $edit["description"], $edit["attributes"], time());
+    db_query("INSERT INTO {item} (fid, title, link, author, description, attributes, timestamp) VALUES (%d, '%s', '%s', '%s', '%s', '%s', %d)", $edit["fid"], $edit["title"], $edit["link"], $edit["author"], $edit["description"], $edit["attributes"], time());
   }
 }
 
@@ -432,15 +432,15 @@ function import_form_bundle($edit = array()) {
 
 function import_save_bundle($edit) {
   if ($edit["bid"] && $edit["title"]) {
-    db_query("UPDATE bundle SET title = '%s', attributes = '%s' WHERE bid = %d", $edit["title"], $edit["attributes"], $edit["bid"]);
+    db_query("UPDATE {bundle} SET title = '%s', attributes = '%s' WHERE bid = %d", $edit["title"], $edit["attributes"], $edit["bid"]);
   }
   else if ($edit["bid"]) {
-    db_query("DELETE FROM bundle WHERE bid = %d", $edit["bid"]);
+    db_query("DELETE FROM {bundle} WHERE bid = %d", $edit["bid"]);
   }
   else if ($edit["title"]) {
     // a single unique id for bundles and feeds, to use in blocks
     $next_id = db_next_id("bundle_bid");
-    db_query("INSERT INTO bundle (bid, title, attributes) VALUES (%d, '%s', '%s')", $next_id, $edit["title"], $edit["attributes"]);
+    db_query("INSERT INTO {bundle} (bid, title, attributes) VALUES (%d, '%s', '%s')", $next_id, $edit["title"], $edit["attributes"]);
   }
 }
 
@@ -469,37 +469,37 @@ function import_form_feed($edit = array()) {
 
 function import_save_feed($edit) {
   if ($edit["fid"] && $edit["title"]) {
-    db_query("UPDATE feed SET title = '%s', url = '%s', attributes = '%s', refresh = %d WHERE fid = %d", $edit["title"], $edit["url"], $edit["attributes"], $edit["refresh"], $edit["fid"]);
-    db_query("DELETE FROM item WHERE fid = %d", $edit["fid"]);
+    db_query("UPDATE {feed} SET title = '%s', url = '%s', attributes = '%s', refresh = %d WHERE fid = %d", $edit["title"], $edit["url"], $edit["attributes"], $edit["refresh"], $edit["fid"]);
+    db_query("DELETE FROM {item} WHERE fid = %d", $edit["fid"]);
   }
   else if ($edit["fid"]) {
-    db_query("DELETE FROM feed WHERE fid = %d", $edit["fid"]);
-    db_query("DELETE FROM item WHERE fid = %d", $edit["fid"]);
+    db_query("DELETE FROM {feed} WHERE fid = %d", $edit["fid"]);
+    db_query("DELETE FROM {item} WHERE fid = %d", $edit["fid"]);
   }
   else if ($edit["title"]) {
     // a single unique id for bundles and feeds, to use in blocks
     $next_id = db_next_id("feed_fid");
-    db_query("INSERT INTO feed (fid, title, url, attributes, refresh) VALUES (%d, '%s', '%s', '%s', %d)", $next_id, $edit["title"], $edit["url"], $edit["attributes"], $edit["refresh"]);
+    db_query("INSERT INTO {feed} (fid, title, url, attributes, refresh) VALUES (%d, '%s', '%s', '%s', %d)", $next_id, $edit["title"], $edit["url"], $edit["attributes"], $edit["refresh"]);
   }
 }
 
 function import_save_attributes($edit) {
   foreach ($edit as $iid => $value) {
-    db_query("UPDATE item SET attributes = '%s' WHERE iid = %d", $value, $iid);
+    db_query("UPDATE {item} SET attributes = '%s' WHERE iid = %d", $value, $iid);
   }
   return "attributes has been saved";
 }
 
 function import_get_feed($fid) {
-  return db_fetch_array(db_query("SELECT * FROM feed WHERE fid = %d", $fid));
+  return db_fetch_array(db_query("SELECT * FROM {feed} WHERE fid = %d", $fid));
 }
 
 function import_get_bundle($bid) {
-  return db_fetch_array(db_query("SELECT * FROM bundle WHERE bid = %d", $bid));
+  return db_fetch_array(db_query("SELECT * FROM {bundle} WHERE bid = %d", $bid));
 }
 
 function import_view() {
-  $result = db_query("SELECT f.*, COUNT(i.iid) AS items FROM feed f LEFT JOIN item i ON f.fid = i.fid GROUP BY f.fid, f.title, f.url, f.refresh, f.timestamp, f.attributes, f.link, f.description ORDER BY f.title");
+  $result = db_query("SELECT f.*, COUNT(i.iid) AS items FROM {feed} f LEFT JOIN {item} i ON f.fid = i.fid GROUP BY f.fid, f.title, f.url, f.refresh, f.timestamp, f.attributes, f.link, f.description ORDER BY f.title");
 
   $output .= "<h3>Feed overview</h3>";
 
@@ -510,7 +510,7 @@ function import_view() {
   }
   $output .= table($header, $rows);
 
-  $result = db_query("SELECT * FROM bundle ORDER BY title");
+  $result = db_query("SELECT * FROM {bundle} ORDER BY title");
 
   $output .= "<h3>Bundle overview</h3>";
 
@@ -526,7 +526,7 @@ function import_view() {
 
 function import_tag() {
 
-  $result = db_query_range("SELECT i.*, f.title AS feed FROM item i LEFT JOIN feed f ON i.fid = f.fid ORDER BY i.iid DESC", 0, 50);
+  $result = db_query_range("SELECT i.*, f.title AS feed FROM {item} i LEFT JOIN {feed} f ON i.fid = f.fid ORDER BY i.iid DESC", 0, 50);
 
   $header = array(t("date"), t("feed"), t("news item"));
   while ($item = db_fetch_object($result)) {
@@ -619,7 +619,7 @@ function import_page_info() {
 function import_page_last() {
 
 
-  $result = db_query_range("SELECT i.*, f.title AS ftitle, f.link AS flink FROM item i LEFT JOIN feed f ON i.fid = f.fid ORDER BY i.iid DESC", 0, variable_get("import_page_limit", 75));
+  $result = db_query_range("SELECT i.*, f.title AS ftitle, f.link AS flink FROM {item} i LEFT JOIN {feed} f ON i.fid = f.fid ORDER BY i.iid DESC", 0, variable_get("import_page_limit", 75));
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"2\">";
   while ($item = db_fetch_object($result)) {
@@ -649,13 +649,13 @@ function import_page_last() {
 function import_page_feed($fid) {
 
 
-  $feed = db_fetch_object(db_query("SELECT * FROM feed WHERE fid = %d", $fid));
+  $feed = db_fetch_object(db_query("SELECT * FROM {feed} WHERE fid = %d", $fid));
 
   $header .= "<p><b>". t("Website") .":</b><div style=\"margin-left: 20px;\"><a href=\"$feed->link\">$feed->link</a></div></p>";
   $header .= "<p><b>". t("Description") .":</b><div style=\"margin-left: 20px;\">$feed->description</div></p>";
   $header .= "<p><b>". t("Last update") .":</b><div style=\"margin-left: 20px; text-align: right;\">". format_interval(time() - $feed->timestamp) ." ". t("ago") ." <a href=\"$feed->url\"><img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" alt=\"\" title=\"\" /></a><br /><br /></div></p>\n";
 
-  $result = db_query_range("SELECT * FROM item WHERE fid = %d ORDER BY iid DESC", $fid, 0, variable_get("import_page_limit", 75));
+  $result = db_query_range("SELECT * FROM {item} WHERE fid = %d ORDER BY iid DESC", $fid, 0, variable_get("import_page_limit", 75));
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"2\">";
   while ($item = db_fetch_object($result)) {
@@ -685,14 +685,14 @@ function import_page_feed($fid) {
 function import_page_bundle($bid) {
 
 
-  $bundle = db_fetch_object(db_query("SELECT * FROM bundle WHERE bid = %d", $bid));
+  $bundle = db_fetch_object(db_query("SELECT * FROM {bundle} WHERE bid = %d", $bid));
 
   $header .= "<p><b>". t("Website") .":</b><div style=\"margin-left: 20px;\">". l($bundle->title, "import/bundle/$bundle->bid") ."</div></p>";
   $header .= "<p><b>". t("Description") .":</b><div style=\"margin-left: 20px;\">". t("A composite news feed about") ." $bundle->attributes.</div></p>";
 
   $keys = explode(",", $bundle->attributes);
   foreach ($keys as $key) $where[] = "i.attributes LIKE '%". trim($key) ."%'";
-  $result = db_query_range("SELECT i.*, f.title AS ftitle, f.link AS flink FROM item i, feed f WHERE (". implode(" OR ", $where) .") AND i.fid = f.fid ORDER BY iid DESC", 0, variable_get("import_page_limit", 75));
+  $result = db_query_range("SELECT i.*, f.title AS ftitle, f.link AS flink FROM {item} i, {feed} f WHERE (". implode(" OR ", $where) .") AND i.fid = f.fid ORDER BY iid DESC", 0, variable_get("import_page_limit", 75));
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"2\">";
   while ($item = db_fetch_object($result)) {
@@ -725,7 +725,7 @@ function import_page_bundle($bid) {
 function import_page_sources() {
 
 
-  $result = db_query("SELECT * FROM feed ORDER BY title");
+  $result = db_query("SELECT * FROM {feed} ORDER BY title");
 
   while ($feed = db_fetch_object($result)) {
     $output .= l($feed->title, "import/feed/$feed->fid");
@@ -742,7 +742,7 @@ function import_page_sources() {
 
 function import_page_fd() {
 
-  $result = db_query("SELECT * FROM feed ORDER BY title");
+  $result = db_query("SELECT * FROM {feed} ORDER BY title");
 
   $output .= "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n\n";
   $output .= "<rssfeeds version=\"0.1\">\n\n";

@@ -23,6 +23,7 @@ function db_connect($url) {
 
 function db_query($query) {
   $args = func_get_args();
+  $query = db_prefix_tables($query);
   if (count($args) > 1) {
     $args = array_map("check_query", $args);
     $args[0] = $query;
@@ -36,6 +37,7 @@ function db_query($query) {
 // debug version
 function db_queryd($query) {
   $args = func_get_args();
+  $query = db_prefix_tables($query);
   if (count($args) > 1) {
     $args = array_map("check_query", $args);
     $args[0] = $query;
@@ -111,9 +113,9 @@ function db_next_id($name) {
   ** when needed
   */
 
-  db_query("LOCK TABLES sequences WRITE");
-  $id = db_result(db_query("SELECT id FROM sequences WHERE name = '%s'", $name)) + 1;
-  db_query("REPLACE INTO sequences VALUES ('%s', %d)", $name, $id);
+  db_query("LOCK TABLES {sequences} WRITE");
+  $id = db_result(db_query("SELECT id FROM {sequences} WHERE name = '%s'", $name)) + 1;
+  db_query("REPLACE INTO {sequences} VALUES ('%s', %d)", $name, $id);
   db_query("UNLOCK TABLES");
 
   return $id;
@@ -136,11 +138,13 @@ function db_query_range($query) {
   $from = array_pop($args);
   if (count(func_get_args()) > 3) {
     $args = array_map("check_query", $args);
+    $query = db_prefix_tables($query);
     $args[0] = $query;
     $query = call_user_func_array("sprintf", $args);
   }
   else {
     $query = func_get_arg(0);
+    $query = db_prefix_tables($query);
   }
   $query .= " LIMIT $from, $count";
   return _db_query($query);

@@ -91,7 +91,7 @@ function blog_feed_user($uid = 0) {
     $account = $user;
   }
 
-  $result = db_query_range("SELECT n.nid, n.title, n.teaser, n.created, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'blog' AND u.uid = %d AND n.status = 1 ORDER BY n.nid DESC", $uid, 0, 15);
+  $result = db_query_range("SELECT n.nid, n.title, n.teaser, n.created, u.name, u.uid FROM {node} n LEFT JOIN {users} u ON n.uid = u.uid WHERE n.type = 'blog' AND u.uid = %d AND n.status = 1 ORDER BY n.nid DESC", $uid, 0, 15);
   $channel["title"] = $account->name. "'s blog";
   $channel["link"] = url("blog/view/$uid");
   $channel["description"] = $term->description;
@@ -99,7 +99,7 @@ function blog_feed_user($uid = 0) {
 }
 
 function blog_feed_last() {
-  $result = db_query_range("SELECT n.nid, n.title, n.teaser, n.created, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'blog' AND n.status = 1 ORDER BY n.nid DESC", 0, 15);
+  $result = db_query_range("SELECT n.nid, n.title, n.teaser, n.created, u.name, u.uid FROM {node} n LEFT JOIN {users} u ON n.uid = u.uid WHERE n.type = 'blog' AND n.status = 1 ORDER BY n.nid DESC", 0, 15);
   $channel["title"] = variable_get("site_name", "drupal") ." blogs";
   $channel["link"] = url("blog");
   $channel["description"] = $term->description;
@@ -116,7 +116,7 @@ function blog_page_user($uid = 0) {
     $account = $user;
   }
 
-  $result = pager_query("SELECT nid FROM node WHERE type = 'blog' AND uid = '$account->uid' AND status = 1 ORDER BY nid DESC", variable_get("default_nodes_main", 10));
+  $result = pager_query("SELECT nid FROM {node} WHERE type = 'blog' AND uid = '$account->uid' AND status = 1 ORDER BY nid DESC", variable_get("default_nodes_main", 10));
   while ($node = db_fetch_object($result)) {
     node_view(node_load(array("nid" => $node->nid)), 1);
   }
@@ -127,7 +127,7 @@ function blog_page_user($uid = 0) {
 function blog_page_last() {
   global $user;
 
-  $result = pager_query("SELECT nid FROM node WHERE type = 'blog' AND status = 1 ORDER BY nid DESC", variable_get("default_nodes_main", 10));
+  $result = pager_query("SELECT nid FROM {node} WHERE type = 'blog' AND status = 1 ORDER BY nid DESC", variable_get("default_nodes_main", 10));
 
   while ($node = db_fetch_object($result)) {
     $output = node_view(node_load(array("nid" => $node->nid)), 1);
@@ -157,7 +157,7 @@ function blog_form(&$node, &$help, &$error) {
       $node->body = "<i>". $blog->body ."</i> [". l($blog->name, "node/view/$nid") ."]";
     }
 
-    if ($iid && $item = db_fetch_object(db_query("SELECT i.*, f.title as ftitle, f.link as flink FROM item i, feed f WHERE i.iid = %d AND i.fid = f.fid", $iid))) {
+    if ($iid && $item = db_fetch_object(db_query("SELECT i.*, f.title as ftitle, f.link as flink FROM {item} i, {feed} f WHERE i.iid = %d AND i.fid = f.fid", $iid))) {
       $node->title = $item->title;
       $node->body = "<a href=\"$item->link\">$item->title</a> - <i>". check_output($item->description) ."</i> [<a href=\"$item->flink\">$item->ftitle</a>]\n";
     }
@@ -250,7 +250,7 @@ function blog_block($op = "list", $delta = 0) {
   }
   else {
     if (user_access("access content")) {
-      $block["content"] = node_title_list(db_query_range("SELECT n.title, n.nid FROM node n WHERE n.type = 'blog' AND n.status = 1 ORDER BY n.nid DESC", 0, 10));
+      $block["content"] = node_title_list(db_query_range("SELECT n.title, n.nid FROM {node} n WHERE n.type = 'blog' AND n.status = 1 ORDER BY n.nid DESC", 0, 10));
       $block["content"] .= "<div align=\"right\" id=\"blog_more\">". l(t("more"), "blog", array("title" => t("Read the latest blog entries."))) ."</div>";
       $block["subject"] = t("Blogs");
     }

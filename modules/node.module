@@ -64,12 +64,12 @@ function node_tag_new($nid) {
   global $user;
 
   if ($user->uid) {
-    $result = db_query("SELECT timestamp FROM history WHERE uid = %d AND nid = %d", $user->uid, $nid);
+    $result = db_query("SELECT timestamp FROM {history} WHERE uid = %d AND nid = %d", $user->uid, $nid);
     if (db_fetch_object($result)) {
-      db_query("UPDATE history SET timestamp = %d WHERE uid = %d AND nid = %d", time(), $user->uid, $nid);
+      db_query("UPDATE {history} SET timestamp = %d WHERE uid = %d AND nid = %d", time(), $user->uid, $nid);
     }
     else {
-      db_query("INSERT INTO history (uid, nid, timestamp) VALUES (%d, %d, %d)", $user->uid, $nid, time());
+      db_query("INSERT INTO {history} (uid, nid, timestamp) VALUES (%d, %d, %d)", $user->uid, $nid, time());
     }
   }
 }
@@ -81,7 +81,7 @@ function node_tag_new($nid) {
 function node_last_viewed($nid) {
   global $user;
 
-  $history = db_fetch_object(db_query("SELECT timestamp FROM history WHERE uid = '$user->uid' AND nid = %d", $nid));
+  $history = db_fetch_object(db_query("SELECT timestamp FROM {history} WHERE uid = '$user->uid' AND nid = %d", $nid));
   return ($history->timestamp ? $history->timestamp : 0);
 }
 
@@ -97,7 +97,7 @@ function node_is_new($nid, $timestamp) {
 
   if (!isset($cache[$nid])) {
     if ($user->uid) {
-      $history = db_fetch_object(db_query("SELECT timestamp FROM history WHERE uid = %d AND nid = %d", $user->uid, $nid));
+      $history = db_fetch_object(db_query("SELECT timestamp FROM {history} WHERE uid = %d AND nid = %d", $user->uid, $nid));
       $cache[$nid] = $history->timestamp ? $history->timestamp : 0;
     }
     else {
@@ -235,7 +235,7 @@ function node_load($conditions, $revision = -1) {
   ** Retrieve the node:
   */
 
-  $node = db_fetch_object(db_query("SELECT n.*, u.uid, u.name FROM node n LEFT JOIN users u ON u.uid = n.uid WHERE ". implode(" AND ", $cond)));
+  $node = db_fetch_object(db_query("SELECT n.*, u.uid, u.name FROM {node} n LEFT JOIN {users} u ON u.uid = n.uid WHERE ". implode(" AND ", $cond)));
 
   /*
   ** Unserialize the revisions field:
@@ -307,7 +307,7 @@ function node_save($node) {
     }
 
     // Insert the node into the database:
-    db_query("INSERT INTO node (". implode(", ", $k) .") VALUES (". implode(", ", $v) .")");
+    db_query("INSERT INTO {node} (". implode(", ", $k) .") VALUES (". implode(", ", $v) .")");
 
     // Call the node specific callback (if any):
     node_invoke($node, "insert");
@@ -330,7 +330,7 @@ function node_save($node) {
     }
 
     // Update the node in the database:
-    db_query("UPDATE node SET ". implode(", ", $q) ." WHERE nid = '$node->nid'");
+    db_query("UPDATE {node} SET ". implode(", ", $q) ." WHERE nid = '$node->nid'");
 
     // Call the node specific callback (if any):
     node_invoke($node, "update");
@@ -460,7 +460,7 @@ function node_search($keys) {
   // The select must always provide the following fields - lno, title,
   // created, uid, name, count
   //
-  $find = do_search(array("keys" => $keys, "type" => "node", "select" => "select s.lno as lno, n.title as title, n.created as created, u.uid as uid, u.name as name, s.count as count FROM search_index s, node n LEFT JOIN users u ON n.uid = u.uid WHERE s.lno = n.nid AND s.type = 'node' AND s.word like '%' AND n.status = 1"));
+  $find = do_search(array("keys" => $keys, "type" => "node", "select" => "select s.lno as lno, n.title as title, n.created as created, u.uid as uid, u.name as name, s.count as count FROM {search_index} s, {node} n LEFT JOIN {users} u ON n.uid = u.uid WHERE s.lno = n.nid AND s.type = 'node' AND s.word like '%' AND n.status = 1"));
 
   return $find;
 }
@@ -493,7 +493,7 @@ function node_filter_link($text) {
 function node_comment_mode($nid) {
   static $comment_mode;
   if (!isset($comment_mode[$nid])) {
-    $comment_mode[$nid] = db_result(db_query("SELECT comment FROM node WHERE nid = %d", $nid));
+    $comment_mode[$nid] = db_result(db_query("SELECT comment FROM {node} WHERE nid = %d", $nid));
   }
   return $comment_mode[$nid];
 }
@@ -598,7 +598,7 @@ function node_admin_nodes() {
   $query = arg(3);
   $queries = array("ORDER BY n.changed DESC", "WHERE n.status = 0 OR n.moderate = 1 ORDER BY n.changed DESC");
 
-  $result = pager_query("SELECT n.*, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid ". $queries[$query ? $query : 0], 50);
+  $result = pager_query("SELECT n.*, u.name, u.uid FROM {node} n LEFT JOIN {users} u ON n.uid = u.uid ". $queries[$query ? $query : 0], 50);
 
   $header = array(t("title"), t("type"), t("author"), t("status"), array("data" => t("operations"), "colspan" => 2));
 
@@ -863,7 +863,7 @@ function node_feed($nodes = 0, $channel = array()) {
   */
 
   if (!$nodes) {
-    $nodes = db_query_range("SELECT nid FROM node WHERE promote = '1' AND status = '1' ORDER BY created DESC", 0, 15);
+    $nodes = db_query_range("SELECT nid FROM {node} WHERE promote = '1' AND status = '1' ORDER BY created DESC", 0, 15);
   }
 
   while ($node = db_fetch_object($nodes)) {
@@ -1351,7 +1351,7 @@ function node_delete($edit) {
       ** Delete the specified node:
       */
 
-      db_query("DELETE FROM node WHERE nid = '$node->nid'");
+      db_query("DELETE FROM {node} WHERE nid = '$node->nid'");
 
       /*
       ** Call the node specific callback (if any):
@@ -1427,7 +1427,7 @@ function node_page() {
         theme("box", t("Delete $name"), node_delete($edit));
         break;
       default:
-        $result = pager_query("SELECT nid, type FROM node WHERE promote = '1' AND status = '1' ORDER BY static DESC, created DESC", variable_get("default_nodes_main", 10));
+        $result = pager_query("SELECT nid, type FROM {node} WHERE promote = '1' AND status = '1' ORDER BY static DESC, created DESC", variable_get("default_nodes_main", 10));
 
         while ($node = db_fetch_object($result)) {
           node_view(node_load(array("nid" => $node->nid, "type" => $node->type)), 1);
@@ -1461,7 +1461,7 @@ function node_update_index() {
   // last run date for the nodes update.
   return array("last_update" => "node_cron_last",
          "node_type" => "node",
-         "select" => "SELECT n.nid as lno, n.title as text1, n.body as text2 FROM node n WHERE n.status = 1 AND moderate = 0 and (created > " . variable_get("node_cron_last", 1) . " or changed > " . variable_get("node_cron_last", 1) . ")");
+         "select" => "SELECT n.nid as lno, n.title as text1, n.body as text2 FROM {node} n WHERE n.status = 1 AND moderate = 0 and (created > " . variable_get("node_cron_last", 1) . " or changed > " . variable_get("node_cron_last", 1) . ")");
 }
 
 function node_nodeapi(&$node, $op, $arg = 0) {

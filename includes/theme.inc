@@ -84,7 +84,7 @@ class BaseTheme {
     print $output;
   }
 
-}
+}  // End of BaseTheme class //
 
 function theme_mark() {
   /*
@@ -130,7 +130,7 @@ function theme_list($refresh = 0) {
 
   if (!$list) {
     $list = array();
-    $result = db_query("SELECT * FROM system where type = 'theme' AND status = '1' ORDER BY name");
+    $result = db_query("SELECT * FROM {system} where type = 'theme' AND status = '1' ORDER BY name");
     while ($theme = db_fetch_object($result)) {
       if (file_exists($theme->filename)) {
         $list[$theme->name] = $theme;
@@ -189,7 +189,7 @@ function theme_init() {
 function theme_blocks($region) {
   global $user;
 
-  $result = db_query("SELECT * FROM blocks WHERE (status = '1' OR custom = '1') ". ($region != "all" ? "AND region = %d " : "") ."ORDER BY weight, module", $region == "left" ? 0 : 1);
+  $result = db_query("SELECT * FROM {blocks} WHERE (status = '1' OR custom = '1') ". ($region != "all" ? "AND region = %d " : "") ."ORDER BY weight, module", $region == "left" ? 0 : 1);
 
   while ($result && ($block = db_fetch_object($result))) {
     if ((($block->status && (!$user->uid || !$block->custom)) || ($block->custom && $user->block[$block->module][$block->delta])) && (!$block->path || preg_match($block->path, str_replace("?q=", "", request_uri())))) {

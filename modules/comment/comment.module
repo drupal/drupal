@@ -84,7 +84,7 @@ function comment_settings() {
   $output .= form_select(t("Default display order"), "comment_default_order", variable_get("comment_default_order", 1), $corder, t("The default sorting for new users and anonymous users while viewing comments. These users may change their view using the comment control panel. For registered users, this change is remembered as a persistent user preference."));
   $output .= form_textfield(t("Default comments per page"), "comment_default_per_page", variable_get("comment_default_per_page", "50"), 5, 5, t("Default number of comments for each page; more comments are distributed in several pages."));
 
-  $result = db_query("SELECT fid, filter FROM moderation_filters");
+  $result = db_query("SELECT fid, filter FROM {moderation_filters} ");
   while ($filter = db_fetch_object($result)) {
     $thresholds[$filter->fid] = ($filter->filter);
   }
@@ -170,7 +170,7 @@ function comment_form($edit) {
 function comment_edit($cid) {
   global $user;
 
-  $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name, u.data FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.cid = %d AND c.status != 2", $cid));
+  $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name, u.data FROM {comments} c LEFT JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status != 2", $cid));
 
   if (comment_access("edit", $comment)) {
     comment_preview(object2array($comment));
@@ -187,7 +187,7 @@ function comment_reply($pid, $nid) {
     */
 
     if ($pid) {
-      $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name, u.data FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0", $pid));
+      $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name, u.data FROM {comments} c LEFT JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0", $pid));
       comment_view($comment);
     }
     else {
@@ -238,7 +238,7 @@ function comment_preview($edit) {
   theme("box", t("Reply"), comment_form($edit));
 
   if ($edit["pid"]) {
-    $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name, u.data FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0", $edit["pid"]));
+    $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name, u.data FROM {comments} c LEFT JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0", $edit["pid"]));
     comment_view($comment);
   }
   else {
@@ -276,7 +276,7 @@ function comment_post($edit) {
     ** validated/filtered data to perform such check.
     */
 
-    $duplicate = db_result(db_query("SELECT COUNT(cid) FROM comments WHERE pid = %d AND nid = %d AND subject = '%s' AND comment = '%s'", $edit["pid"], $edit["nid"], $edit["subject"], $edit["comment"]), 0);
+    $duplicate = db_result(db_query("SELECT COUNT(cid) FROM {comments} WHERE pid = %d AND nid = %d AND subject = '%s' AND comment = '%s'", $edit["pid"], $edit["nid"], $edit["subject"], $edit["comment"]), 0);
 
     if ($duplicate != 0) {
       watchdog("warning", "comment: duplicate '". $edit["subject"] ."'");
@@ -292,7 +292,7 @@ function comment_post($edit) {
         ** user.
         */
 
-        db_query("UPDATE comments SET subject = '%s', comment = '%s' WHERE cid = %d AND uid = '$user->uid'", $edit["subject"], $edit["comment"], $edit["cid"]);
+        db_query("UPDATE {comments} SET subject = '%s', comment = '%s' WHERE cid = %d AND uid = '$user->uid'", $edit["subject"], $edit["comment"], $edit["cid"]);
 
         /*
         ** Fire a hook
@@ -325,7 +325,7 @@ function comment_post($edit) {
 
         $edit["cid"] = db_next_id("comments_cid");
 
-        db_query("INSERT INTO comments (cid, nid, pid, uid, subject, comment, hostname, timestamp, status, score, users) VALUES (%d, %d, %d, %d, '%s', '%s', '%s', %d, %d, %d, '%s')", $edit["cid"], $edit["nid"], $edit["pid"], $user->uid, $edit["subject"], $edit["comment"], getenv("REMOTE_ADDR"), time(), $status, $score, $users);
+        db_query("INSERT INTO {comments} (cid, nid, pid, uid, subject, comment, hostname, timestamp, status, score, users) VALUES (%d, %d, %d, %d, '%s', '%s', '%s', %d, %d, %d, '%s')", $edit["cid"], $edit["nid"], $edit["pid"], $user->uid, $edit["subject"], $edit["comment"], getenv("REMOTE_ADDR"), time(), $status, $score, $users);
 
         /*
         ** Tell the other modules a new comment has been submitted:
@@ -459,7 +459,7 @@ function comment_render($node, $cid = 0) {
     if (empty($threshold)) {
       $threshold = $user->uid ? $user->threshold : variable_get("comment_default_threshold", 0);
     }
-    $threshold_min = db_result(db_query("SELECT minimum FROM moderation_filters WHERE fid = %d", $threshold));
+    $threshold_min = db_result(db_query("SELECT minimum FROM {moderation_filters} WHERE fid = %d", $threshold));
 
     if (empty($comment_page)) {
       $comment_page = 1;
@@ -481,7 +481,7 @@ function comment_render($node, $cid = 0) {
       print "<form method=\"post\" action=\"". url("comment") ."\"><div>\n";
       print form_hidden("nid", $nid);
 
-      $result = db_query("SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0 GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users", $cid);
+      $result = db_query("SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users FROM {comments} c LEFT JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0 GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users", $cid);
 
       if ($comment = db_fetch_object($result)) {
         comment_view($comment, comment_links($comment));
@@ -498,7 +498,7 @@ function comment_render($node, $cid = 0) {
       ** Multiple comments view
       */
 
-      $query .= "SELECT c.cid as cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.nid = '". check_query($nid) ."' AND c.status = 0";
+      $query .= "SELECT c.cid as cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users FROM {comments} c LEFT JOIN {users} u ON c.uid = u.uid WHERE c.nid = '". check_query($nid) ."' AND c.status = 0";
 
       $query .= " GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users";
 
@@ -809,7 +809,7 @@ function comment_node_link($node) {
     ** Edit comments:
     */
 
-    $result = db_query("SELECT c.cid, c.subject, u.uid, u.name FROM comments c LEFT JOIN users u ON u.uid = c.uid WHERE nid = %d AND c.status = 0 ORDER BY c.timestamp", $node->nid);
+    $result = db_query("SELECT c.cid, c.subject, u.uid, u.name FROM {comments} c LEFT JOIN {users} u ON u.uid = c.uid WHERE nid = %d AND c.status = 0 ORDER BY c.timestamp", $node->nid);
 
 
     $header = array(t("title"), t("author"), array("data" => t("operations"), "colspan" => 3));
@@ -829,7 +829,7 @@ function comment_node_link($node) {
 
 function comment_admin_edit($id) {
 
-  $result = db_query("SELECT c.*, u.name, u.uid FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.cid = %d AND c.status != 2", $id);
+  $result = db_query("SELECT c.*, u.name, u.uid FROM {comments} c LEFT JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status != 2", $id);
   $comment = db_fetch_object($result);
 
   // if a comment is "deleted", it's deleted
@@ -849,7 +849,7 @@ function comment_admin_edit($id) {
 function comment_delete($edit) {
 
   if ($edit["confirm"]) {
-    db_query("UPDATE comments SET status = 2 WHERE cid = %d", $edit["cid"]);
+    db_query("UPDATE {comments} SET status = 2 WHERE cid = %d", $edit["cid"]);
     watchdog("special", "comment: deleted comment #". $edit["cid"]);
     $output = "deleted comment.";
   }
@@ -865,14 +865,14 @@ function comment_delete($edit) {
 }
 
 function comment_save($id, $edit) {
-  db_query("UPDATE comments SET subject = '%s', comment = '%s', status = %d WHERE cid = %d", $edit["subject"], $edit["comment"], $edit["status"], $id);
+  db_query("UPDATE {comments} SET subject = '%s', comment = '%s', status = %d WHERE cid = %d", $edit["subject"], $edit["comment"], $edit["status"], $id);
   watchdog("special", "comment: modified '". $edit["subject"] ."'");
   return "updated comment.";
 }
 
 function comment_admin_overview($status = 0) {
 
-  $result = pager_query("SELECT c.*, u.name, u.uid FROM comments c LEFT JOIN users u ON u.uid = c.uid WHERE c.status = '". check_query($status). "' ORDER BY c.timestamp DESC",  50);
+  $result = pager_query("SELECT c.*, u.name, u.uid FROM {comments} c LEFT JOIN {users} u ON u.uid = c.uid WHERE c.status = '". check_query($status). "' ORDER BY c.timestamp DESC",  50);
 
   $header = array(t("subject"), t("author"), t("status"), array("data" => t("operations"), "colspan" => 2));
   while ($comment = db_fetch_object($result)) {
@@ -891,29 +891,29 @@ function comment_mod_matrix($edit) {
   $output .= "<h3>Moderators/vote values matrix</h3>";
 
   if ($edit) {
-    db_query("DELETE FROM moderation_roles");
+    db_query("DELETE FROM {moderation_roles} ");
     foreach ($edit as $role_id => $votes) {
       foreach ($votes as $mid => $value) {
         $sql[] = "('$mid', '$role_id', '". ($value ? $value : 0 ) ."')";
       }
     }
-    db_query("INSERT INTO moderation_roles (mid, rid, value) VALUES ". implode(", ", $sql));
+    db_query("INSERT INTO {moderation_roles} (mid, rid, value) VALUES ". implode(", ", $sql));
   }
 
-  $result = db_query("SELECT r.rid, r.name FROM role r, permission p WHERE r.rid = p.rid AND p.perm LIKE '%moderate comments%'");
+  $result = db_query("SELECT r.rid, r.name FROM {role} r, {permission} p WHERE r.rid = p.rid AND p.perm LIKE '%moderate comments%'");
   $role_names = array();
   while ($role = db_fetch_object($result)) {
     $role_names[$role->rid] = $role->name;
   }
 
-  $result = db_query("SELECT rid, mid, value FROM moderation_roles");
+  $result = db_query("SELECT rid, mid, value FROM {moderation_roles} ");
   while ($role = db_fetch_object($result)) {
     $mod_roles[$role->rid][$role->mid] = $role->value;
   }
 
   $header = array_merge(array(t("votes")), array_values($role_names));
 
-  $result = db_query("SELECT mid, vote FROM moderation_votes ORDER BY weight");
+  $result = db_query("SELECT mid, vote FROM {moderation_votes} ORDER BY weight");
   while ($vote = db_fetch_object($result)) {
     $row = array($vote->vote);
     foreach (array_keys($role_names) as $rid) {
@@ -937,7 +937,7 @@ function comment_mod_roles($edit) {
 
   $start_values = variable_get("comment_roles", array());
 
-  $result = db_query("SELECT r.rid, r.name FROM role r, permission p WHERE r.rid = p.rid AND p.perm LIKE '%post comments%'");
+  $result = db_query("SELECT r.rid, r.name FROM {role} r, {permission} p WHERE r.rid = p.rid AND p.perm LIKE '%post comments%'");
 
   $header = array(t("user role"), t("initial score"));
 
@@ -957,30 +957,30 @@ function comment_mod_votes($edit) {
   $mid = arg(4);
 
   if ($op == t("Save vote")) {
-    db_query("UPDATE moderation_votes SET vote = '%s', weight = %d WHERE mid = %d", $edit["vote"], $edit["weight"], $mid);
+    db_query("UPDATE {moderation_votes} SET vote = '%s', weight = %d WHERE mid = %d", $edit["vote"], $edit["weight"], $mid);
     $mid = 0;
   }
   else if ($op == t("Delete vote")) {
-    db_query("DELETE FROM moderation_votes WHERE mid = %d", $mid);
-    db_query("DELETE FROM moderation_roles WHERE mid = %d", $mid);
+    db_query("DELETE FROM {moderation_votes} WHERE mid = %d", $mid);
+    db_query("DELETE FROM {moderation_roles} WHERE mid = %d", $mid);
     $mid = 0;
   }
   else if ($op == t("Add new vote")) {
-    db_query("INSERT INTO moderation_votes (vote, weight) VALUES ('%s', %d)", $edit["vote"], $edit["weight"]);
+    db_query("INSERT INTO {moderation_votes} (vote, weight) VALUES ('%s', %d)", $edit["vote"], $edit["weight"]);
     $mid = 0;
   }
 
   $output .= "<h3>" . t("Moderation votes overview") . "</h3>";
   $header = array(t("votes"), t("weight"), t("operations"));
 
-  $result = db_query("SELECT mid, vote, weight FROM moderation_votes ORDER BY weight");
+  $result = db_query("SELECT mid, vote, weight FROM {moderation_votes} ORDER BY weight");
   while ($vote = db_fetch_object($result)) {
     $rows[] = array($vote->vote, array("data" => $vote->weight, "align" => "center"), array("data" => l(t("edit"), "admin/comment/moderation/votes/$vote->mid"), "align" => "center"));
   }
   $output .= table($header, $rows);
 
   if ($mid) {
-    $vote = db_fetch_object(db_query("SELECT vote, weight FROM moderation_votes WHERE mid = %d", $mid));
+    $vote = db_fetch_object(db_query("SELECT vote, weight FROM {moderation_votes} WHERE mid = %d", $mid));
   }
 
   $output .= "<br /><h3>". (isset($mid) ? "Edit" : "Add new") ."moderation option</h3>";
@@ -1005,15 +1005,15 @@ function comment_mod_filters($edit) {
   $fid = arg(4);
 
   if ($op == t("Save threshold")) {
-    db_query("UPDATE moderation_filters SET filter = '%s', minimum = %d WHERE fid = %d", $edit["filter"], $edit["minimum"], $fid);
+    db_query("UPDATE {moderation_filters} SET filter = '%s', minimum = %d WHERE fid = %d", $edit["filter"], $edit["minimum"], $fid);
     $fid = 0;
   }
   else if ($op == t("Delete threshold")) {
-    db_query("DELETE FROM moderation_filters WHERE fid = %d", $fid);
+    db_query("DELETE FROM {moderation_filters} WHERE fid = %d", $fid);
     $fid = 0;
   }
   else if ($op == t("Add new threshold")) {
-    db_query("INSERT INTO moderation_filters (filter, minimum) VALUES ('%s', %d)", $edit["filter"], $edit["minimum"]);
+    db_query("INSERT INTO {moderation_filters} (filter, minimum) VALUES ('%s', %d)", $edit["filter"], $edit["minimum"]);
     $fid = 0;
   }
 
@@ -1021,14 +1021,14 @@ function comment_mod_filters($edit) {
 
   $header = array(t("name"), t("minimum score"), t("operations"));
 
-  $result = db_query("SELECT fid, filter, minimum FROM moderation_filters ORDER BY minimum");
+  $result = db_query("SELECT fid, filter, minimum FROM {moderation_filters} ORDER BY minimum");
   while ($filter = db_fetch_object($result)) {
     $rows[] = array($filter->filter, array("data" => $filter->minimum, "align" => "center"), array("data" => l(t("edit"), "admin/comment/moderation/filters/$filter->fid"), "align" => "center"));
   }
   $output .= table($header, $rows);
 
   if ($fid) {
-    $filter = db_fetch_object(db_query("SELECT filter, fid, minimum FROM moderation_filters WHERE fid = %d", $fid));
+    $filter = db_fetch_object(db_query("SELECT filter, fid, minimum FROM {moderation_filters} WHERE fid = %d", $fid));
   }
 
   $output .= "<br /><h3>". (isset($fid) ? "Edit" : "Add new") ." threshold</h3>";
@@ -1154,7 +1154,7 @@ function comment_per_page_form($comments_per_page) {
 }
 
 function comment_threshold($threshold) {
-  $result = db_query("SELECT fid, filter FROM moderation_filters");
+  $result = db_query("SELECT fid, filter FROM {moderation_filters} ");
   $options .= " <option value=\"0\">". t("-- threshold --") ."</option>";
   while ($filter = db_fetch_object($result)) {
     $filters .= " <option value=\"$filter->fid\"". ($threshold == $filter->fid ? " selected=\"selected\"" : "") .">". t($filter->filter) ."</option>";
@@ -1210,7 +1210,7 @@ function comment_moderation_form($comment) {
     // comment hasn't been moderated yet:
 
     if (!isset($votes)) {
-      $result = db_query("SELECT v.mid, v.vote, r.value FROM moderation_votes v, moderation_roles r WHERE v.mid = r.mid AND r.rid = %d ORDER BY weight", $user->rid);
+      $result = db_query("SELECT v.mid, v.vote, r.value FROM {moderation_votes} v, {moderation_roles} r WHERE v.mid = r.mid AND r.rid = %d ORDER BY weight", $user->rid);
       $votes = array();
       while ($vote = db_fetch_object($result)) {
         if ($vote->value != 0) {
@@ -1328,18 +1328,18 @@ function comment_moderate() {
   global $moderation, $user;
 
   if ($moderation) {
-    $result = db_query("SELECT mid, value FROM moderation_roles WHERE rid = %d", $user->rid);
+    $result = db_query("SELECT mid, value FROM {moderation_roles} WHERE rid = %d", $user->rid);
     while ($mod = db_fetch_object($result)) {
       $votes[$mod->mid] = $mod->value;
     }
 
-    $node = node_load(array("nid" => db_result(db_query("SELECT nid FROM comments WHERE cid = %d", key($moderation)))));
+    $node = node_load(array("nid" => db_result(db_query("SELECT nid FROM {comments} WHERE cid = %d", key($moderation)))));
 
     if (user_access("administer comments") || comment_user_can_moderate($node)) {
       foreach ($moderation as $cid => $vote) {
         if ($vote) {
           if (($vote == 'offline') && (user_access("administer comments"))) {
-            db_query("UPDATE comments SET status = 1 WHERE cid = %d", $cid);
+            db_query("UPDATE {comments} SET status = 1 WHERE cid = %d", $cid);
             watchdog("special", "comment: unpublished comment #". $cid);
 
             /*
@@ -1349,7 +1349,7 @@ function comment_moderate() {
             module_invoke_all("comment", "unpublish", $cid);
           }
           else {
-            $comment = db_fetch_object(db_query("SELECT * FROM comments WHERE cid = %d", $cid));
+            $comment = db_fetch_object(db_query("SELECT * FROM {comments} WHERE cid = %d", $cid));
             $users = unserialize($comment->users);
             if ($user->uid != $comment->uid && !(comment_already_moderated($user->uid, $comment->users))) {
               $users[$user->uid] = $vote;
@@ -1364,7 +1364,7 @@ function comment_moderate() {
                 }
               }
               $new_score = round($tot_score / count($users));
-              db_query("UPDATE comments SET score = '$new_score', users = '%s' WHERE cid = %d", serialize($users), $cid);
+              db_query("UPDATE {comments} SET score = '$new_score', users = '%s' WHERE cid = %d", serialize($users), $cid);
 
               /*
               ** Fire a hook
@@ -1391,7 +1391,7 @@ function comment_num_all($nid) {
   static $cache;
 
   if (!isset($cache[$nid])) {
-    $comment = db_fetch_object(db_query("SELECT COUNT(c.nid) AS number FROM node n LEFT JOIN comments c ON n.nid = c.nid WHERE n.nid = %d AND c.status = 0 GROUP BY n.nid", $nid));
+    $comment = db_fetch_object(db_query("SELECT COUNT(c.nid) AS number FROM {node} n LEFT JOIN {comments} c ON n.nid = c.nid WHERE n.nid = %d AND c.status = 0 GROUP BY n.nid", $nid));
     $cache[$nid] = $comment->number ? $comment->number : 0;
   }
   return $cache[$nid];
@@ -1401,7 +1401,7 @@ function comment_num_replies($id) {
   static $cache;
 
   if (!isset($cache[$nid])) {
-    $result = db_query("SELECT COUNT(cid) FROM comments WHERE pid = %d AND status = 0", $id);
+    $result = db_query("SELECT COUNT(cid) FROM {comments} WHERE pid = %d AND status = 0", $id);
     $cache[$nid] = $result ? db_result($result, 0) : 0;
   }
 
@@ -1431,7 +1431,7 @@ function comment_num_new($nid, $timestamp = 0) {
     ** Use the timestamp to retrieve the number of new comments
     */
 
-    $result = db_result(db_query("SELECT COUNT(c.cid) FROM node n LEFT JOIN comments c ON n.nid = c.nid WHERE n.nid = %d AND timestamp > %d AND c.status = 0", $nid, $timestamp));
+    $result = db_result(db_query("SELECT COUNT(c.cid) FROM {node} n LEFT JOIN {comments} c ON n.nid = c.nid WHERE n.nid = %d AND timestamp > %d AND c.status = 0", $nid, $timestamp));
 
     return $result;
   }
@@ -1493,7 +1493,7 @@ function comment_search($keys) {
   ** identifier which is currently used byt the comment module.
   */
 
-  $find = do_search(array("keys" => $keys, "type" => "comment", "select" => "select s.lno as lno, c.nid as nid, c.subject as title, c.timestamp as created, u.uid as uid, u.name as name, s.count as count FROM search_index s, comments c LEFT JOIN users u ON c.uid = u.uid WHERE s.lno = c.cid AND s.type = 'comment' AND c.status = 0 AND s.word like '%'"));
+  $find = do_search(array("keys" => $keys, "type" => "comment", "select" => "select s.lno as lno, c.nid as nid, c.subject as title, c.timestamp as created, u.uid as uid, u.name as name, s.count as count FROM {search_index} s, {comments} c LEFT JOIN {users} u ON c.uid = u.uid WHERE s.lno = c.cid AND s.type = 'comment' AND c.status = 0 AND s.word like '%'"));
 
   return $find;
 }
@@ -1515,7 +1515,7 @@ function comment_update_index() {
   ** last run date for the comments update.
   */
 
-  return array("last_update" => "comment_cron_last", "node_type" => "comment", "select" => "SELECT c.cid as lno, c.subject as text1, c.comment as text2 FROM comments c WHERE c.status = 0 AND timestamp > ". variable_get("comment_cron_last", 1));
+  return array("last_update" => "comment_cron_last", "node_type" => "comment", "select" => "SELECT c.cid as lno, c.subject as text1, c.comment as text2 FROM {comments} c WHERE c.status = 0 AND timestamp > ". variable_get("comment_cron_last", 1));
 }
 
 function comment_nodeapi(&$node, $op, $arg = 0) {
@@ -1541,7 +1541,7 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
       }
       break;
     case "delete":
-      db_query("DELETE FROM comments WHERE nid = '$node->nid'");
+      db_query("DELETE FROM {comments} WHERE nid = '$node->nid'");
       break;
   }
 }

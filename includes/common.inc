@@ -37,12 +37,12 @@ function error_handler($errno, $message, $filename, $line, $variables) {
 
 function watchdog($type, $message, $link = NULL) {
   global $user;
-  db_query("INSERT INTO watchdog (uid, type, message, link, location, hostname, timestamp) VALUES (%d, '%s', '%s', '%s', '%s', '%s', %d)", $user->uid, $type, $message, $link, request_uri(), getenv("REMOTE_ADDR"), time());
+  db_query("INSERT INTO {watchdog} (uid, type, message, link, location, hostname, timestamp) VALUES (%d, '%s', '%s', '%s', '%s', '%s', %d)", $user->uid, $type, $message, $link, request_uri(), getenv("REMOTE_ADDR"), time());
 }
 
 function throttle($type, $rate) {
   if (!user_access("access administration pages")) {
-    if ($throttle = db_fetch_object(db_query("SELECT * FROM watchdog WHERE type = '$type' AND hostname = '". getenv("REMOTE_ADDR") ."' AND ". time() ." - timestamp < $rate"))) {
+    if ($throttle = db_fetch_object(db_query("SELECT * FROM {watchdog} WHERE type = '$type' AND hostname = '". getenv("REMOTE_ADDR") ."' AND ". time() ." - timestamp < $rate"))) {
       watchdog("warning", "throttle: '". getenv("REMOTE_ADDR") ."' exceeded submission rate - $throttle->type");
       die(message_throttle());
     }
@@ -169,7 +169,7 @@ function t($string, $args = 0) {
 }
 
 function variable_init($conf = array()) {
-  $result = db_query("SELECT * FROM variable");
+  $result = db_query("SELECT * FROM {variable} ");
   while ($variable = db_fetch_object($result)) {
     if (!isset($conf[$variable->name])) {
       $conf[$variable->name] = unserialize($variable->value);
@@ -188,8 +188,8 @@ function variable_get($name, $default) {
 function variable_set($name, $value) {
   global $conf;
 
-  db_query("DELETE FROM variable WHERE name = '%s'", $name);
-  db_query("INSERT INTO variable (name, value) VALUES ('%s', '%s')", $name, serialize($value));
+  db_query("DELETE FROM {variable} WHERE name = '%s'", $name);
+  db_query("INSERT INTO {variable} (name, value) VALUES ('%s', '%s')", $name, serialize($value));
 
   $conf[$name] = $value;
 }
@@ -197,7 +197,7 @@ function variable_set($name, $value) {
 function variable_del($name) {
   global $conf;
 
-  db_query("DELETE FROM variable WHERE name = '%s'", $name);
+  db_query("DELETE FROM {variable} WHERE name = '%s'", $name);
 
   unset($conf[$name]);
 }
@@ -490,7 +490,7 @@ function xss_check_input_data($data) {
 
     // check attributes:
     $match += preg_match("/\W(dynsrc|datasrc|data|lowsrc|on[a-z]+)\s*=[^>]+?>/i", $data);
-    
+
 
     // check tags:
     $match += preg_match("/<\s*(applet|script|object|style|embed|form|blink|meta|html|frame|iframe|layer|ilayer|head|frameset|xml)/i", $data);
@@ -703,25 +703,25 @@ function format_size($size) {
 }
 
 function cache_get($key) {
-  $cache = db_fetch_object(db_query("SELECT data, created FROM cache WHERE cid = '%s'", $key));
+  $cache = db_fetch_object(db_query("SELECT data, created FROM {cache} WHERE cid = '%s'", $key));
   return $cache->data ? $cache : 0;
 }
 
 function cache_set($cid, $data, $expire = 0) {
-  if (db_fetch_object(db_query("SELECT cid FROM cache WHERE cid = '%s'", $cid))) {
-    db_query("UPDATE cache SET data = '%s', created = %d, expire = %d WHERE cid = '%s'", $data, time(), $expire, $cid);
+  if (db_fetch_object(db_query("SELECT cid FROM {cache} WHERE cid = '%s'", $cid))) {
+    db_query("UPDATE {cache} SET data = '%s', created = %d, expire = %d WHERE cid = '%s'", $data, time(), $expire, $cid);
   }
   else {
-    db_query("INSERT INTO cache (cid, data, created, expire) VALUES('%s', '%s', %d, %d)", $cid, $data, time(), $expire);
+    db_query("INSERT INTO {cache} (cid, data, created, expire) VALUES('%s', '%s', %d, %d)", $cid, $data, time(), $expire);
   }
 }
 
 function cache_clear_all($cid = NULL) {
   if (empty($cid)) {
-    db_query("DELETE FROM cache WHERE expire <> 0");
+    db_query("DELETE FROM {cache} WHERE expire <> 0");
   }
   else {
-    db_query("DELETE FROM cache WHERE cid = %d", $cid);
+    db_query("DELETE FROM {cache} WHERE cid = %d", $cid);
   }
 }
 

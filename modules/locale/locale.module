@@ -22,9 +22,9 @@ function locale_help() {
   </pre>";
   $output .= "<p>After having edited your configuration file, make sure your SQL table \"locales\" has the required database fields setup to host your new translations.  You can add the required rows to your \"locales\" table from the MySQL prompt:</p>";
   $output .= "<pre>
-    mysql> ALTER TABLE locales ADD en TEXT DEFAULT '' NOT NULL;
-    mysql> ALTER TABLE locales ADD nl TEXT DEFAULT '' NOT NULL;
-    mysql> ALTER TABLE locales ADD fr TEXT DEFAULT '' NOT NULL;
+    mysql> ALTER TABLE {locales} ADD en TEXT DEFAULT '' NOT NULL;
+    mysql> ALTER TABLE {locales} ADD nl TEXT DEFAULT '' NOT NULL;
+    mysql> ALTER TABLE {locales} ADD fr TEXT DEFAULT '' NOT NULL;
   </pre>";
   return t($output);
 }
@@ -62,7 +62,7 @@ function locale_link($type) {
 }
 
 function locale_delete($lid) {
-  db_query("DELETE FROM locales WHERE lid = %d", $lid);
+  db_query("DELETE FROM {locales} WHERE lid = %d", $lid);
   locale_refresh_cache();
 
   return t("deleted string");
@@ -71,7 +71,7 @@ function locale_delete($lid) {
 function locale_save($lid) {
   $edit =& $_POST["edit"];
   foreach ($edit as $key=>$value) {
-    db_query("UPDATE locales SET $key = '%s' WHERE lid = %d", $value, $lid);
+    db_query("UPDATE {locales} SET $key = '%s' WHERE lid = %d", $value, $lid);
   }
   locale_refresh_cache();
   // delete form data so it will remember where it came from
@@ -84,7 +84,7 @@ function locale_refresh_cache() {
   global $languages;
 
   foreach (array_keys($languages) as $locale) {
-    $result = db_query("SELECT string, %s FROM locales", $locale);
+    $result = db_query("SELECT string, %s FROM {locales} ", $locale);
     while ($data = db_fetch_object($result)) {
       if (empty($data->$locale)) {
         $t[$data->string] = $data->string;
@@ -100,7 +100,7 @@ function locale_refresh_cache() {
 function locale_edit($lid) {
   global $languages;
 
-  $result = db_query("SELECT * FROM locales WHERE lid = '$lid'");
+  $result = db_query("SELECT * FROM {locales} WHERE lid = '$lid'");
   if ($translation = db_fetch_object($result)) {
 
     $form .= form_item(t("Original text"), wordwrap(drupal_specialchars($translation->string, 0)));
@@ -173,7 +173,7 @@ function locale_seek() {
       $query[] = "(". implode(" || ", $string_query) .")";
     }
 
-    $result = pager_query("SELECT * FROM locales". (count($query) ? " WHERE ". implode(" && ", $query) : "") ." ORDER BY string", 50);
+    $result = pager_query("SELECT * FROM {locales} ". (count($query) ? " WHERE ". implode(" && ", $query) : "") ." ORDER BY string", 50);
 
     $header = array(t("string"), (($edit["status"] != 2 && strlen($edit["language"]) == 2) ? t("translated string") : t("languages")), array("data" => t("operations"), "colspan" => "2"));
     while ($locale = db_fetch_object($result)) {
@@ -182,8 +182,8 @@ function locale_seek() {
 
     if ($pager = pager_display(NULL, 50, 0, "admin")) {
       $rows[] = array(array("data" => "$pager", "colspan" => "5"));
-    } 
-    
+    }
+
     $output .= table($header, $rows);
 
   }
@@ -294,9 +294,9 @@ function locale($string) {
     $string = $locale_t[$string];
   }
   else {
-    $result = db_query("SELECT lid, $locale FROM locales WHERE string = '%s'", $string);
+    $result = db_query("SELECT lid, $locale FROM {locales} WHERE string = '%s'", $string);
     if (!db_fetch_object($result)) {
-      db_query("INSERT INTO locales (string, location) VALUES ('%s', '%s')", $string, request_uri());
+      db_query("INSERT INTO {locales} (string, location) VALUES ('%s', '%s')", $string, request_uri());
       cache_clear_all("locale:$locale");
     }
   }

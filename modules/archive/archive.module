@@ -62,7 +62,7 @@ function archive_calendar($original = 0) {
   $next = mktime(23, 59, 59, $month + 1, min(date("t", $nextmonth), $day), $year);
 
 
-  $result = db_query("SELECT created FROM node WHERE status = 1 AND created > $start_of_month AND created < $end_of_month");
+  $result = db_query("SELECT created FROM {node} WHERE status = 1 AND created > $start_of_month AND created < $end_of_month");
 
   $days_with_posts = array();
   while ($day_with_post = db_fetch_object($result)) {
@@ -223,7 +223,7 @@ function archive_page() {
     */
 
     if ($year && $month && $day) {
-      $result = db_query_range("SELECT nid FROM node WHERE status = '1' AND created > %d ORDER BY created", $date, 0, 20);
+      $result = db_query_range("SELECT nid FROM {node} WHERE status = '1' AND created > %d ORDER BY created", $date, 0, 20);
 
       while ($nid = db_fetch_object($result)) {
         node_view(node_load(array("nid" => $nid->nid)), 1);

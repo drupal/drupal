@@ -167,9 +167,9 @@ function system_view_filters() {
 function system_save_settings($edit = array()) {
 
   if ($edit["type"]) {
-    db_query("UPDATE system SET status = '0' WHERE type = '%s'", $edit["type"]);
+    db_query("UPDATE {system} SET status = '0' WHERE type = '%s'", $edit["type"]);
     foreach ($edit["status"] as $filename => $status) {
-      db_query("UPDATE system SET status = %d WHERE filename = '$filename'", $status);
+      db_query("UPDATE {system} SET status = %d WHERE filename = '$filename'", $status);
     }
     if ($edit["type"] == "theme") {
       variable_set("theme_default", $edit["theme_default"]);
@@ -257,7 +257,7 @@ function system_listing($type, $directory, $required = array()) {
   $files = system_dirscan($directory, "\.$type$");
 
   // Extract current files from database.
-  $result = db_query("SELECT filename, type, status FROM system WHERE type = '%s'", $type);
+  $result = db_query("SELECT filename, type, status FROM {system} WHERE type = '%s'", $type);
   while ($file = db_fetch_object($result)) {
     if (is_object($files[$file->filename])) {
       foreach ($file as $key => $value) {
@@ -290,8 +290,8 @@ function system_listing($type, $directory, $required = array()) {
     }
 
     // Update the contents of the system table:
-    db_query("DELETE FROM system WHERE filename = '%s' AND type = '%s'", $filename, $type);
-    db_query("INSERT INTO system (name, description, type, filename, status) VALUES ('%s', '%s', '%s', '%s', %d)", $info->name, $info->description, $type, $filename, $file->status);
+    db_query("DELETE FROM {system} WHERE filename = '%s' AND type = '%s'", $filename, $type);
+    db_query("INSERT INTO {system} (name, description, type, filename, status) VALUES ('%s', '%s', '%s', '%s', %d)", $info->name, $info->description, $type, $filename, $file->status);
 
     $rows[] = array($info->name, $info->description, array("data" => (in_array($filename, $required) ? form_hidden("status][$filename", 1) . t("required") : form_checkbox("", "status][$filename", 1, $file->status)), "align" => "center"));
   }

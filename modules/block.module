@@ -58,14 +58,14 @@ function block_link($type) {
 
 function block_block($op = "list", $delta = 0) {
   if ($op == "list") {
-    $result = db_query("SELECT bid, title, info FROM boxes ORDER BY title");
+    $result = db_query("SELECT bid, title, info FROM {boxes} ORDER BY title");
     while ($block = db_fetch_object($result)) {
       $blocks[$block->bid]["info"] = $block->info;
     }
     return $blocks;
   }
   else {
-    $block = db_fetch_object(db_query("SELECT * FROM boxes WHERE bid = %d", $delta));
+    $block = db_fetch_object(db_query("SELECT * FROM {boxes} WHERE bid = %d", $delta));
     $data["subject"] = $block->title;
     $data["content"] = ($block->type == 1) ? eval($block->body) : $block->body;
     return $data;
@@ -75,7 +75,7 @@ function block_block($op = "list", $delta = 0) {
 function block_admin_save($edit) {
   foreach ($edit as $module => $blocks) {
     foreach ($blocks as $delta => $block) {
-      db_query("UPDATE blocks SET region = %d, status = %d, custom = %d, path = '%s', weight = %d WHERE module = '%s' AND delta = '%s'",
+      db_query("UPDATE {blocks} SET region = %d, status = %d, custom = %d, path = '%s', weight = %d WHERE module = '%s' AND delta = '%s'",
                 $block["region"], $block["status"], $block["custom"], $block["path"], $block["weight"], $module, $delta);
     }
   }
@@ -91,12 +91,12 @@ function block_admin_save($edit) {
  * @access  private
  */
 function _block_rehash($order_by = array("weight")) {
-  $result = db_query("SELECT * FROM blocks");
+  $result = db_query("SELECT * FROM {blocks} ");
   while ($old_block = db_fetch_object($result)) {
     $old_blocks[$old_block->module][$old_block->delta] = $old_block;
   }
 
-  db_query("DELETE FROM blocks");
+  db_query("DELETE FROM {blocks} ");
 
   foreach (module_list() as $module) {
     $module_blocks = module_invoke($module, "block", "list");
@@ -117,7 +117,7 @@ function _block_rehash($order_by = array("weight")) {
         }
 
         // reinsert blocks into table
-        db_query("INSERT INTO blocks (module, delta, status, weight, region, path, custom) VALUES ('%s', '%s', %d, %d, %d, '%s', %d)",
+        db_query("INSERT INTO {blocks} (module, delta, status, weight, region, path, custom) VALUES ('%s', '%s', %d, %d, %d, '%s', %d)",
                   $block["module"], $block["delta"], $block["status"], $block["weight"], $block["region"], $block["path"], $block["custom"]);
 
         $blocks[] = $block;
@@ -161,7 +161,7 @@ function block_admin_display() {
 
 function block_admin_preview() {
 
-  $result = db_query("SELECT * FROM blocks WHERE status > 0 AND region = 0 ORDER BY weight");
+  $result = db_query("SELECT * FROM {blocks} WHERE status > 0 AND region = 0 ORDER BY weight");
   $lblocks .= "<table border=\"0\" cellpadding=\"2\" cellspacing=\"2\">\n";
   while ($block = db_fetch_object($result)) {
     $block_data = module_invoke($block->module, "block", "list");
@@ -170,7 +170,7 @@ function block_admin_preview() {
   }
   $lblocks .= "</table>\n";
 
-  $result = db_query("SELECT * FROM blocks WHERE status > 0 AND region = 1 ORDER BY weight");
+  $result = db_query("SELECT * FROM {blocks} WHERE status > 0 AND region = 1 ORDER BY weight");
   $rblocks .= "<table border=\"0\" cellpadding=\"2\" cellspacing=\"2\">\n";
   while ($block = db_fetch_object($result)) {
     $block_data = module_invoke($block->module, "block", "list");
@@ -186,7 +186,7 @@ function block_admin_preview() {
   $output .= " <tr><td colspan=\"3\" style=\"text-align: center;\">". t("footer") ."</td></tr>\n";
   $output .= "</table>\n";
 
-  $result = db_query("SELECT * FROM blocks WHERE status > 0 ORDER BY weight");
+  $result = db_query("SELECT * FROM {blocks} WHERE status > 0 ORDER BY weight");
   $blocks .= "<table border=\"0\" cellpadding=\"2\" cellspacing=\"2\">\n";
   while ($block = db_fetch_object($result)) {
     $block_data = module_invoke($block->module, "block", "list");
@@ -213,7 +213,7 @@ function block_admin_preview() {
 }
 
 function block_box_get($bid) {
-  return db_fetch_array(db_query("SELECT * FROM boxes WHERE bid = %d", $bid));
+  return db_fetch_array(db_query("SELECT * FROM {boxes} WHERE bid = %d", $bid));
 }
 
 function block_box_form($edit = array()) {
@@ -241,18 +241,18 @@ function block_box_save($edit) {
   }
 
   if ($edit["bid"]) {
-    db_query("UPDATE boxes SET title = '%s', body = '%s', info = '%s', type = %d WHERE bid = %d", $edit["title"], $edit["body"], $edit["info"], $edit["type"], $edit["bid"]);
+    db_query("UPDATE {boxes} SET title = '%s', body = '%s', info = '%s', type = %d WHERE bid = %d", $edit["title"], $edit["body"], $edit["info"], $edit["type"], $edit["bid"]);
     return t("the block has been updated.");
   }
   else {
-    db_query("INSERT INTO boxes (title, body, info, type) VALUES  ('%s', '%s', '%s', %d)", $edit["title"], $edit["body"], $edit["info"], $edit["type"]);
+    db_query("INSERT INTO {boxes} (title, body, info, type) VALUES  ('%s', '%s', '%s', %d)", $edit["title"], $edit["body"], $edit["info"], $edit["type"]);
     return t("the new block has been added.");
   }
 }
 
 function block_box_delete($bid) {
   if ($bid) {
-    db_query("DELETE FROM boxes WHERE bid = %d", $bid);
+    db_query("DELETE FROM {boxes} WHERE bid = %d", $bid);
     return t("the block has been deleted.");
   }
 }
@@ -303,7 +303,7 @@ function block_admin() {
 function block_user($type, &$edit, &$user) {
   switch ($type) {
     case "register_form":
-      $result = db_query("SELECT * FROM blocks WHERE custom = %d ORDER BY module, delta", 1);
+      $result = db_query("SELECT * FROM {blocks} WHERE custom = %d ORDER BY module, delta", 1);
 
       while ($block = db_fetch_object($result)) {
         $form .= form_hidden("block][$block->module][$block->delta", $block->status);
@@ -311,7 +311,7 @@ function block_user($type, &$edit, &$user) {
 
       return $form;
     case "edit_form":
-      $result = db_query("SELECT * FROM blocks WHERE custom = %d ORDER BY module, delta", 1);
+      $result = db_query("SELECT * FROM {blocks} WHERE custom = %d ORDER BY module, delta", 1);
 
       while ($block = db_fetch_object($result)) {
         $data = module_invoke($block->module, "block", "list");

@@ -226,7 +226,7 @@ function update_index($search_array) {
       ** Trash any existing entries in the search index for this node,
       ** in case its a modified node.
       */
-      db_query("DELETE from search_index where lno = '". $node["lno"] ."' and type = '". $node_type ."'");
+      db_query("DELETE from {search_index} where lno = '". $node["lno"] ."' and type = '". $node_type ."'");
 
       /*
       ** Build the wordlist, teaser not included, as it then gives a
@@ -284,7 +284,7 @@ function update_index($search_array) {
       */
       if ($newwords) {
         foreach ($newwords as $key => $value) {
-          db_query("INSERT INTO search_index VALUES('%s', %d, '%s', %d)", $key, $node["lno"], $node_type, $value);
+          db_query("INSERT INTO {search_index} VALUES('%s', %d, '%s', %d)", $key, $node["lno"], $node_type, $value);
         }
       }
 

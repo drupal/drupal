@@ -15,8 +15,13 @@
 # $db_url = "mysql://user:password@hostname/database";
 # $db_url = "pgsql://user:password@hostname/database";
 # $db_url = "mssql://user:password@hostname/database";
-
 $db_url = "mysql://drupal:drupal@localhost/drupal";
+
+#   If $db_prefix is specified all database table names will be
+#   prepended with this string.  Be sure to use valid database
+#   characters only, usually alphanumeric and underscore.  If no
+#   prefixes are desired, set to empty string "".
+$db_prefix = "";
 
 #
 # Base URL:

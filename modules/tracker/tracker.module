@@ -25,20 +25,20 @@ function tracker_link($type) {
 function tracker_posts($id = 0) {
 
   if ($id) {
-    $sresult = pager_query("SELECT n.nid, n.title, n.type, n.changed, n.uid, u.name, MAX(GREATEST(n.changed, c.timestamp)) AS last_activity FROM node n LEFT JOIN comments c ON n.nid = c.nid LEFT JOIN users u ON n.uid = u.uid WHERE n.uid = '". check_query($id) ."' AND n.status = 1 GROUP BY n.nid, n.title, n.type, n.changed, n.uid, u.name ORDER BY last_activity DESC", 10, 0, "SELECT COUNT(nid) FROM node WHERE status = 1 AND uid = '". check_query($id) ."'");
+    $sresult = pager_query("SELECT n.nid, n.title, n.type, n.changed, n.uid, u.name, MAX(GREATEST(n.changed, c.timestamp)) AS last_activity FROM {node} n LEFT JOIN {comments} c ON n.nid = c.nid LEFT JOIN {users} u ON n.uid = u.uid WHERE n.uid = '". check_query($id) ."' AND n.status = 1 GROUP BY n.nid, n.title, n.type, n.changed, n.uid, u.name ORDER BY last_activity DESC", 10, 0, "SELECT COUNT(nid) FROM {node} WHERE status = 1 AND uid = '". check_query($id) ."'");
   }
   else {
-    $sresult = pager_query("SELECT n.nid, n.title, n.type, n.changed, n.uid, u.name, MAX(GREATEST(n.changed, c.timestamp)) AS last_activity FROM node n LEFT JOIN comments c ON n.nid = c.nid LEFT JOIN users u ON n.uid = u.uid WHERE n.status = 1 GROUP BY n.nid, n.title, n.type, n.changed, n.uid, u.name ORDER BY last_activity DESC", 10, 0, "SELECT COUNT(nid) FROM node WHERE status = 1");
+    $sresult = pager_query("SELECT n.nid, n.title, n.type, n.changed, n.uid, u.name, MAX(GREATEST(n.changed, c.timestamp)) AS last_activity FROM {node} n LEFT JOIN {comments} c ON n.nid = c.nid LEFT JOIN {users} u ON n.uid = u.uid WHERE n.status = 1 GROUP BY n.nid, n.title, n.type, n.changed, n.uid, u.name ORDER BY last_activity DESC", 10, 0, "SELECT COUNT(nid) FROM {node} WHERE status = 1");
   }
 
   $header = array(t("Type"), t("Title"), t("Author"));
 
   while ($node = db_fetch_object($sresult)) {
     if ($id) {
-      $cresult = db_query("SELECT c.*, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.uid = %d AND c.nid = %d AND c.status = 0 ORDER BY cid DESC", $id, $node->nid);
+      $cresult = db_query("SELECT c.*, u.name FROM {comments} c LEFT JOIN {users} u ON c.uid = u.uid WHERE c.uid = %d AND c.nid = %d AND c.status = 0 ORDER BY cid DESC", $id, $node->nid);
     }
     else {
-      $cresult = db_query("SELECT c.*, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.nid = %d AND c.status = 0 ORDER BY cid DESC", $node->nid);
+      $cresult = db_query("SELECT c.*, u.name FROM {comments} c LEFT JOIN {users} u ON c.uid = u.uid WHERE c.nid = %d AND c.status = 0 ORDER BY cid DESC", $node->nid);
     }
 
     $type = ucfirst(module_invoke($node->type, "node", "name"));

@@ -53,19 +53,19 @@ function page_save($op, $node) {
 }
 
 function page_insert($node) {
-  db_query("INSERT INTO page (nid, format, link, description) VALUES (%d, %d, '%s', '%s')", $node->nid, $node->format, $node->link, $node->description);
+  db_query("INSERT INTO {page} (nid, format, link, description) VALUES (%d, %d, '%s', '%s')", $node->nid, $node->format, $node->link, $node->description);
 }
 
 function page_update($node) {
-db_query("UPDATE page SET format = %d, link = '%s', description = '%s' WHERE nid = %d", $node->format, $node->link, $node->description, $node->nid);
+db_query("UPDATE {page} SET format = %d, link = '%s', description = '%s' WHERE nid = %d", $node->format, $node->link, $node->description, $node->nid);
   }
 
 function page_delete(&$node) {
-  db_query("DELETE FROM page WHERE nid = %d", $node->nid);
+  db_query("DELETE FROM {page} WHERE nid = %d", $node->nid);
 }
 
 function page_load($node) {
-  $page = db_fetch_object(db_query("SELECT format, link, description FROM page WHERE nid = %d", $node->nid));
+  $page = db_fetch_object(db_query("SELECT format, link, description FROM {page} WHERE nid = %d", $node->nid));
 
   return $page;
 }
@@ -75,7 +75,7 @@ function page_link($type) {
   $links = array();
 
   if ($type == "page" && user_access("access content")) {
-    $result = db_query("SELECT n.nid, n.title, p.link, p.description FROM page p LEFT JOIN node n ON p.nid = n.nid WHERE n.status = '1' AND p.link != '' ORDER BY p.link");
+    $result = db_query("SELECT n.nid, n.title, p.link, p.description FROM {page} p LEFT JOIN {node} n ON p.nid = n.nid WHERE n.status = '1' AND p.link != '' ORDER BY p.link");
     while ($page = db_fetch_object($result)) {
       $links[] = l($page->link, "node/view/$page->nid", array("title" => $page->description));
     }

@@ -37,7 +37,7 @@ function drupal_cron() {
     ** stopped sending "ping" messages.
     */
 
-    db_query("DELETE FROM directory WHERE timestamp < '". (time() - 259200) ."'");
+    db_query("DELETE FROM {directory} WHERE timestamp < '". (time() - 259200) ."'");
 
     /*
     ** If this site acts as a Drupal XML-RPC client, send a message to the
@@ -72,8 +72,8 @@ function drupal_directory_ping($arguments) {
   */
 
   if ($link && $name && $mail && $slogan && $mission) {
-    db_query("DELETE FROM directory WHERE link = '%s' OR mail = '%s'", $link, $mail);
-    db_query("INSERT INTO directory (link, name, mail, slogan, mission, timestamp) VALUES ('%s', '%s', '%s', '%s', '%s', %d)", $link, $name, $mail, $slogan, $mission, time());
+    db_query("DELETE FROM {directory} WHERE link = '%s' OR mail = '%s'", $link, $mail);
+    db_query("INSERT INTO {directory} (link, name, mail, slogan, mission, timestamp) VALUES ('%s', '%s', '%s', '%s', '%s', %d)", $link, $name, $mail, $slogan, $mission, time());
 
     watchdog("message", "directory: ping from '$name' ($link)");
 
@@ -86,7 +86,7 @@ function drupal_directory_ping($arguments) {
 }
 
 function drupal_directory_page() {
-  $result = db_query("SELECT * FROM directory ORDER BY name");
+  $result = db_query("SELECT * FROM {directory} ORDER BY name");
 
   while ($site = db_fetch_object($result)) {
     $output .= "<a href=\"$site->link\">$site->name</a> - $site->slogan<div style=\"padding-left: 20px;\">$site->mission</div><br />";

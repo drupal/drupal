@@ -33,12 +33,12 @@ function queue_link($type) {
 }
 
 function queue_count() {
-  $result = db_query("SELECT COUNT(nid) FROM node WHERE moderate = 1");
+  $result = db_query("SELECT COUNT(nid) FROM {node} WHERE moderate = 1");
   return ($result) ? db_result($result, 0) : 0;
 }
 
 function queue_score($id) {
-  $result = db_query("SELECT score FROM node WHERE nid = %d", $id);
+  $result = db_query("SELECT score FROM {node} WHERE nid = %d", $id);
   return ($result) ? db_result($result, 0) : 0;
 }
 
@@ -47,7 +47,7 @@ function queue_vote($node, $vote) {
 
   if (!field_get($node->users, $user->uid)) {
     // Update submission's score- and votes-field:
-    db_query("UPDATE node SET score = score $vote, votes = votes + 1, users = '". field_set($node->users, $user->uid, $vote) ."' WHERE nid = '$node->nid'");
+    db_query("UPDATE {node} SET score = score $vote, votes = votes + 1, users = '". field_set($node->users, $user->uid, $vote) ."' WHERE nid = '$node->nid'");
 
     // Reload the updated node from the database:
     $node = node_load(array("nid" => $node->nid));
@@ -88,7 +88,7 @@ function queue_vote($node, $vote) {
 function queue_overview() {
   global $user;
 
-  $result = db_query("SELECT n.*, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.moderate = 1");
+  $result = db_query("SELECT n.*, u.name, u.uid FROM {node} n LEFT JOIN {users} u ON n.uid = u.uid WHERE n.moderate = 1");
 
   $output .= "<table border=\"0\" cellspacing=\"4\" cellpadding=\"4\">";
   $output .= " <tr><th>". t("Subject") ."</th><th>". t("Author") ."</th><th>". t("Type") ."</th><th>". t("Score") ."</th></tr>";
