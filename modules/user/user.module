@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.291 2004/01/24 16:54:22 dries Exp $
+// $Id: user.module,v 1.292 2004/01/26 19:22:22 dries Exp $
 
 /*** Common functions ******************************************************/
 
@@ -300,7 +300,7 @@ function user_search($keys) {
   while ($account = db_fetch_object($result)) {
     $find[] = array("title" => $account->name, "link" => (strstr(request_uri(), "admin") ? url("admin/user/edit/$account->uid") : url("user/view/$account->uid")), "user" => $account->name);
   }
-  return $find;
+  return array(t("Matching users"), $find);
 }
 
 function user_block($op = "list", $delta = 0) {

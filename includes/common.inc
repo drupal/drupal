@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.314 2004/01/25 09:09:00 dries Exp $ */
+/* $Id: common.inc,v 1.315 2004/01/26 19:22:21 dries Exp $ */
 
 /**
  * @defgroup common Core functions
@@ -664,13 +664,8 @@ function search_data($keys = NULL) {
   if (isset($keys)) {
     foreach (module_list() as $name) {
       if (module_hook($name, "search") && (!$edit["type"] || $edit["type"][$name]) && ($result = module_invoke($name, "search", $keys))) {
-        if ($name == "node" || $name == "comment") {
-          $output .= "<p><strong>". t("Matching %names ranked in order of relevance:", array("%name" => $name)) ."</strong></p>";
-        }
-        else {
-          $output .= "<p><strong>". t("Matching {$name}s") .":</strong></p>";
-        }
-        foreach ($result as $entry) {
+        $output .= "<h2>$result[0]</h2>";
+        foreach ($result[1] as $entry) {
           $output .= search_item($entry, $name);
         }
       }
