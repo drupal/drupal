@@ -1,5 +1,10 @@
 <?php
-// $Id: tracker.module,v 1.14 2002/01/31 20:23:44 dries Exp $
+// $Id: tracker.module,v 1.15 2002/02/22 19:23:04 dries Exp $
+
+function tracker_help() {
+  $output .= "The tracker module is a handy module for displaying the most recent comments happenning all over your web site.  By following the <i>view new comments</i> link in the user block, a user may quickly review all recent comments.  When a user first arrives at the main tracker page, she sees all recent comments in reverse chronological order, grouped by post.  In addition, a self-centered user may choose to display only his own comments.</p>";
+  return $output;
+}
 
 function tracker_link($type) {
 
