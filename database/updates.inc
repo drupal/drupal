@@ -2308,7 +2308,9 @@ function update_125() {
 function update_126() {
   variable_set('forum_block_num_0', variable_get('forum_block_num', 5));
   variable_set('forum_block_num_1', variable_get('forum_block_num', 5));
-  variable_delete('forum_block_num');
+  variable_del('forum_block_num');
+
+  return array();
 }
 
 function update_sql($sql) {
