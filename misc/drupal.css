@@ -208,12 +208,15 @@ fieldset {
   display: block;
   width: 95%;
 }
+node-form .standard {
+  clear: both;
+}
 .node-form textarea {
   display: block;
   width: 95%;
 }
-.node-form .standard {
-  clear: both;
+.node-form fieldset {
+  display: inline;
 }
 .node-form .admin .form-item .title {
   margin-top: 0;
