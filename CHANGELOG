@@ -1,20 +1,22 @@
-drupal 1.xx, xx/xx/2001
+drupal 2.00, 15/03/2001
 -----------------------
 - rewrote the comment/discussion code:
     * comment navigation should be less confusing now additional/alternative display and order methods have been added.
     * modules can be extended with a "comment system" as they can embed the existing comment code without having to write duplicate code.
-- added section manager:
+- added sections and section manager:
     * story sections can be maintained from the administration pages.
-    * makes the open submission more adaptive in that you can set individual post, dump and expiration thresholds for each section according to the
-      story type and urgency level: some section do not really "expire" and stay interesting and active as time passes by, whereas news-related stories are only considered "hot" over a short period of time.
+    * story sections make the open submission more adaptive in that you can set individual post, dump and expiration thresholds for each section according to the story type and urgency level: some section do not really "expire" and stay interesting and active as time passes by, whereas news-related stories are only considered "hot" over a short period of time.
 - multiple vhosts + multiple directories:
     * you can setup multiple drupal sites on top of the same physical source tree either by using vhosts or sub-directories
-- added "user ratings" similar to SlashCode's karma or Scoop's mojo.
-- added "search infractructure":
+- added "user ratings" similar to SlashCode's karma or Scoop's mojo:
+    * all rating logic is packed into a module to ease experimenting with different rating heuristics/algorithms.
+- added "search infrastructure":
     * improved search page and integrated search functionality in the administration pages.
 - added translation / localization / internationalization support:
     * because many people love see their website showing a lot less of English, and far more of their own language, drupal provides a framework to setup a multi-lingual website or to overwrite the default English text in English.
-- added fine-grained user permssion (or group) system
+- added fine-grained user permission (or group) system:
+    * users can be granted access to specific administration sections.  Example: a FAQ maintainer can be given access to maintain the FAQ and translators can be given access to the translation pages.
+- added FAQ module
 - changed the "open submission queue" into a (optional) module
 - various updates:
     * improved account module:
@@ -28,6 +30,8 @@ drupal 1.xx, xx/xx/2001
     * improved module module
     * improved watchdog module
     * added CREDITS file
+    * added directory "misc"
+    * added new scripts to directory "scripts"
 - revised documentation
 
 drupal 1.00, 15/01/2001
