@@ -20,6 +20,8 @@ function profile_help($section) {
   switch ($section) {
     case 'admin/modules#description':
       return t('Support for configurable user profiles.');
+    case 'admin/settings/profile':
+      return t('Here you can define custom fields that users can fill in in their user profile (such as <em>country</em>, <em>real name</em>, <em>age</em>, ...).');
   }
 }
 
@@ -35,19 +37,18 @@ function profile_menu($may_cache) {
       'callback' => 'profile_browse',
       'access' => TRUE,
       'type' => MENU_SUGGESTED_ITEM);
-    $items[] = array('path' => 'admin/user/configure/profile', 'title' => t('profiles'),
+    $items[] = array('path' => 'admin/settings/profile', 'title' => t('profiles'),
       'callback' => 'profile_admin_overview',
-      'access' => user_access('administer users'),
-      'type' => MENU_LOCAL_TASK);
-    $items[] = array('path' => 'admin/user/configure/profile/add', 'title' => t('add field'),
+      'access' => user_access('administer users'));
+    $items[] = array('path' => 'admin/settings/profile/add', 'title' => t('add field'),
       'callback' => 'profile_admin_add',
       'access' => user_access('administer users'),
       'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'admin/user/configure/profile/edit', 'title' => t('edit field'),
+    $items[] = array('path' => 'admin/settings/profile/edit', 'title' => t('edit field'),
       'callback' => 'profile_admin_edit',
       'access' => user_access('administer users'),
       'type' => MENU_CALLBACK);
-    $items[] = array('path' => 'admin/user/configure/profile/delete', 'title' => t('delete field'),
+    $items[] = array('path' => 'admin/settings/profile/delete', 'title' => t('delete field'),
       'callback' => 'profile_admin_delete',
       'access' => user_access('administer users'),
       'type' => MENU_CALLBACK);
@@ -452,7 +453,7 @@ function profile_admin_add($type) {
       cache_clear_all();
 
       drupal_set_message(t('The field has been created.'));
-      drupal_goto('admin/user/configure/profile');
+      drupal_goto('admin/settings/profile');
     }
   }
   else {
@@ -480,7 +481,7 @@ function profile_admin_edit($fid) {
       cache_clear_all();
 
       drupal_set_message(t('The field has been updated.'));
-      drupal_goto('admin/user/configure/profile');
+      drupal_goto('admin/settings/profile');
     }
   }
   else {
@@ -500,7 +501,7 @@ function profile_admin_delete($fid) {
   cache_clear_all();
 
   drupal_set_message(t('The field has been deleted.'));
-  drupal_goto('admin/user/configure/profile');
+  drupal_goto('admin/settings/profile');
 }
 
 function _profile_field_form($type, $edit = array()) {
@@ -538,7 +539,7 @@ function profile_admin_overview() {
   $result = db_query('SELECT * FROM {profile_fields} ORDER BY category, weight');
   $rows = array();
   while ($field = db_fetch_object($result)) {
-    $rows[] = array($field->title, $field->name, _profile_field_types($field->type), $field->category, l(t('edit'), "admin/user/configure/profile/edit/$field->fid"), l(t('delete'), "admin/user/configure/profile/delete/$field->fid"));
+    $rows[] = array($field->title, $field->name, _profile_field_types($field->type), $field->category, l(t('edit'), "admin/settings/profile/edit/$field->fid"), l(t('delete'), "admin/settings/profile/delete/$field->fid"));
   }
   if (count($rows) == 0) {
     $rows[] = array(array('data' => t('No fields defined.'), 'colspan' => '6'));
@@ -550,7 +551,7 @@ function profile_admin_overview() {
   $output .= '<h2>'. t('Add new field') .'</h2>';
   $output .= '<ul>';
   foreach (_profile_field_types() as $key => $value) {
-    $output .= '<li>'. l($value, "admin/user/configure/profile/add/$key") .'</li>';
+    $output .= '<li>'. l($value, "admin/settings/profile/add/$key") .'</li>';
   }
   $output .= '</ul>';
 

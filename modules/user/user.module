@@ -664,17 +664,36 @@ function user_menu($may_cache) {
     $items[] = array('path' => 'admin/user/configure', 'title' => t('configure'),
       'callback' => 'user_configure', 'access' => $access,
       'type' => MENU_LOCAL_TASK);
-    $items[] = array('path' => 'admin/user/configure/settings', 'title' => t('settings'),
+
+    $items[] = array('path' => 'admin/access', 'title' => t('access control'),
+      'callback' => 'user_admin_perm', 'access' => $access);
+    $items[] = array('path' => 'admin/access/perms', 'title' => t('permissions'),
+      'callback' => 'user_admin_perm', 'access' => $access,
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-    $items[] = array('path' => 'admin/user/configure/access', 'title' => t('access rules'),
+    $items[] = array('path' => 'admin/access/roles', 'title' => t('roles'),
+      'callback' => 'user_admin_role', 'access' => $access,
+      'type' => MENU_LOCAL_TASK);
+    $items[] = array('path' => 'admin/access/roles/edit', 'title' => t('edit role'),
+      'callback' => 'user_admin_role', 'access' => $access,
+      'type' => MENU_CALLBACK);
+
+    $items[] = array('path' => 'admin/access/rules', 'title' => t('account rules'),
       'callback' => 'user_admin_access', 'access' => $access,
+      'type' => MENU_LOCAL_TASK, 'weight' => 10);
+    $items[] = array('path' => 'admin/access/rules/list', 'title' => t('list'),
+      'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
+    $items[] = array('path' => 'admin/access/rules/add', 'title' => t('add rule'),
+      'callback' => 'user_admin_access_edit', 'access' => $access,
       'type' => MENU_LOCAL_TASK);
-    $items[] = array('path' => 'admin/user/configure/role', 'title' => t('roles'),
-      'callback' => 'user_configure', 'access' => $access,
+    $items[] = array('path' => 'admin/access/rules/check', 'title' => t('check rules'),
+      'callback' => 'user_admin_access_check', 'access' => $access,
       'type' => MENU_LOCAL_TASK);
-    $items[] = array('path' => 'admin/user/configure/permission', 'title' => t('permissions'),
-      'callback' => 'user_configure', 'access' => $access,
-      'type' => MENU_LOCAL_TASK);
+    $items[] = array('path' => 'admin/access/rules/edit', 'title' => t('edit rule'),
+      'callback' => 'user_admin_access_edit', 'access' => $access,
+      'type' => MENU_CALLBACK, 'callback arguments' => array('edit'));
+    $items[] = array('path' => 'admin/access/rules/delete', 'title' => t('delete rule'),
+      'callback' => 'user_admin_access_edit', 'access' => $access,
+      'type' => MENU_CALLBACK, 'callback arguments' => array('delete'));
 
     if (module_exist('search')) {
       $items[] = array('path' => 'admin/user/search', 'title' => t('search'),
@@ -1306,79 +1325,23 @@ function user_admin_create($edit = array()) {
   return form($output);
 }
 
-function user_admin_access($op = NULL, $aid = 0) {
+/**
+ * Menu callback: check an access rule
+ */
+function user_admin_access_check() {
   if ($_POST['op']) {
     $op = $_POST['op'];
   }
   $edit = $_POST['edit'];
 
-  // If a non-checking form was submitted, then it needs to have a mask.
-  if ($edit && !$edit['test'] && !$edit['mask']) {
-    form_set_error('mask', t('You must enter a mask.'));
+  if ($op) {
+    if (user_deny($edit['type'], $edit['test'])) {
+      drupal_set_message(t('%test is not allowed.', array('%test' => '<em>'. $edit['test'] .'</em>')));
+    }
+    else {
+      drupal_set_message(t('%test is allowed.', array('%test' => '<em>'. $edit['test'] .'</em>')));
+    }
   }
-
-  switch ($op) {
-    case t('Add rule'):
-      if (!form_get_errors()) {
-        $aid = db_next_id('{access}_aid');
-        db_query("INSERT INTO {access} (aid, mask, type, status) VALUES ('%s', '%s', '%s', %d)", $aid, $edit['mask'], $edit['type'], $edit['status']);
-        drupal_set_message(t('The access rule has been added.'));
-        // Since we are not refreshing the page we need to clear out $edit.
-        $edit = array();
-      }
-      break;
-
-    case 'delete':
-      db_query('DELETE FROM {access} WHERE aid = %d', $aid);
-      drupal_set_message(t('The access rule has been deleted.'));
-      drupal_goto('admin/user/configure/access');
-
-    case t('Save rule'):
-      if (!form_get_errors()) {
-        db_query("UPDATE {access} SET mask = '%s', type = '%s', status = '%s' WHERE aid = %d", $edit['mask'], $edit['type'], $edit['status'], $aid);
-        drupal_set_message(t('The access rule has been saved.'));
-        drupal_goto('admin/user/configure/access');
-      }
-      // Fall through to the edit form if there are errors.
-    case 'edit':
-      if (!$edit) {
-        $edit = db_fetch_array(db_query('SELECT aid, type, status, mask FROM {access} WHERE aid = %d', $aid));
-      }
-      $form = _user_admin_access_form($edit);
-      $form .= form_submit(t('Save rule'));
-      print theme('page', form($form, 'post', NULL, array('id' => 'access-rules')));
-      return;
-
-    case t('Check username'):
-    case t('Check e-mail'):
-      if (user_deny($edit['type'], $edit['test'])) {
-        drupal_set_message(t('%test is not allowed.', array('%test' => '<em>'. $edit['test'] .'</em>')));
-      }
-      else {
-        drupal_set_message(t('%test is allowed.', array('%test' => '<em>'. $edit['test'] .'</em>')));
-      }
-      break;
-  }
-
-  $header = array(array('data' => t('Access type'), 'field' => 'status'), array('data' => t('Rule type'), 'field' => 'type'), array('data' =>t('Mask'), 'field' => 'mask'), array('data' => t('Operations'), 'colspan' => 2));
-  $result = db_query("SELECT aid, type, status, mask FROM {access}". tablesort_sql($header));
-  $access_types = array('user' => t('username'), 'mail' => t('e-mail'));
-  $rows = array();
-  while ($rule = db_fetch_object($result)) {
-    $rows[] = array($rule->status ? t('allow') : t('deny'), $access_types[$rule->type], $rule->mask, l(t('edit'), 'admin/user/configure/access/edit/'. $rule->aid), l(t('delete'), 'admin/user/configure/access/delete/'. $rule->aid));
-  }
-  if (count($rows) == 0) {
-    $rows[] = array(array('data' => '<em>'. t('There are currently no access rules.') .'</em>', 'colspan' => 5));
-  }
-  $output .= theme('table', $header, $rows);
-
-  $output .= '<h3>'. t('Add new rule') ."</h3>\n";
-
-  $form = _user_admin_access_form($edit);
-  $form .= form_submit(t('Add rule'));
-  $output .= form($form, 'post', NULL, array('id' => 'access-rules'));
-
-  $output .= '<h3>'. t('Check rules') .'</h3>';
 
   $form = form_textfield(t('Username'), 'test', '', 32, 64, t('Enter a username to check if it will be denied or allowed.'));
   $form .= form_hidden('type', 'user');
@@ -1393,12 +1356,95 @@ function user_admin_access($op = NULL, $aid = 0) {
   print theme('page', $output);
 }
 
+/**
+ * Menu callback: add/edit an access rule
+ */
+function user_admin_access_edit($op = NULL, $aid = 0) {
+  if ($_POST['op']) {
+    $op = $_POST['op'];
+  }
+  $edit = $_POST['edit'];
+
+  switch ($op) {
+    case t('Add rule'):
+      if (!$edit['mask']) {
+        form_set_error('mask', t('You must enter a mask.'));
+      }
+      else {
+        $aid = db_next_id('{access}_aid');
+        db_query("INSERT INTO {access} (aid, mask, type, status) VALUES ('%s', '%s', '%s', %d)", $aid, $edit['mask'], $edit['type'], $edit['status']);
+        drupal_set_message(t('The access rule has been added.'));
+        drupal_goto('admin/access/rules');
+      }
+      break;
+
+    case t('Delete'):
+    case 'delete':
+      if ($edit['confirm']) {
+        db_query('DELETE FROM {access} WHERE aid = %d', $aid);
+        drupal_set_message(t('The access rule has been deleted.'));
+        drupal_goto('admin/access/rules');
+      }
+      else {
+        $access_types = array('user' => t('username'), 'mail' => t('e-mail'));
+        $edit = db_fetch_object(db_query('SELECT aid, type, status, mask FROM {access} WHERE aid = %d', $aid));
+        $output .= form_item(t('Confirm deletion'), $edit->mask .' ('. $access_types[$edit->type] .')');
+        $output .= form_hidden('aid', $edit->aid);
+        $output .= form_hidden('confirm', 1);
+        $output .= form_submit(t('Delete'));
+        $output = form($output); 
+        print theme('page', $output);
+      }
+      return;
+
+    case t('Save rule'):
+      if (!form_get_errors()) {
+        db_query("UPDATE {access} SET mask = '%s', type = '%s', status = '%s' WHERE aid = %d", $edit['mask'], $edit['type'], $edit['status'], $aid);
+        drupal_set_message(t('The access rule has been saved.'));
+        drupal_goto('admin/access/rules');
+      }
+      // Fall through to the edit form if there are errors.
+    case 'edit':
+      if (!$edit) {
+        $edit = db_fetch_array(db_query('SELECT aid, type, status, mask FROM {access} WHERE aid = %d', $aid));
+      }
+      $form = _user_admin_access_form($edit);
+      $form .= form_submit(t('Save rule'));
+      print theme('page', form($form, 'post', NULL, array('id' => 'access-rules')));
+  }
+
+  $form = _user_admin_access_form($edit);
+  $form .= form_submit(t('Add rule'));
+  $output .= form($form, 'post', NULL, array('id' => 'access-rules'));
+
+  print theme('page', $output);
+}
+
 function _user_admin_access_form($edit) {
   $output = '<div class="access-type">'. form_radios(t('Access type'), 'status', $edit['status'], array('1' => t('Allow'), '0' => t('Deny'))) .'</div>';
   $output .= '<div class="rule-type">'. form_radios(t('Rule type'), 'type', $edit['type'] ? $edit['type'] : 'user', array('user' => t('Username'), 'mail' => t('E-mail'))) .'</div>';
   $output .= '<div class="mask">'. form_textfield(t('Mask'), 'mask', $edit['mask'], 32, 64, '%: '. t('Matches any number of characters, even zero characters') .'.<br />_: '. t('Matches exactly one character.'), NULL, TRUE) .'</div>';
 
   return $output;
+}
+
+/**
+ * Menu callback: list all access rules
+ */
+function user_admin_access() {
+  $header = array(array('data' => t('Access type'), 'field' => 'status'), array('data' => t('Rule type'), 'field' => 'type'), array('data' =>t('Mask'), 'field' => 'mask'), array('data' => t('Operations'), 'colspan' => 2));
+  $result = db_query("SELECT aid, type, status, mask FROM {access}". tablesort_sql($header));
+  $access_types = array('user' => t('username'), 'mail' => t('e-mail'));
+  $rows = array();
+  while ($rule = db_fetch_object($result)) {
+    $rows[] = array($rule->status ? t('allow') : t('deny'), $access_types[$rule->type], $rule->mask, l(t('edit'), 'admin/access/rules/edit/'. $rule->aid), l(t('delete'), 'admin/access/rules/delete/'. $rule->aid));
+  }
+  if (count($rows) == 0) {
+    $rows[] = array(array('data' => '<em>'. t('There are currently no access rules.') .'</em>', 'colspan' => 5));
+  }
+  $output .= theme('table', $header, $rows);
+
+  print theme('page', $output);
 }
 
 function user_roles($membersonly = 0, $permission = 0) {
@@ -1418,10 +1464,14 @@ function user_roles($membersonly = 0, $permission = 0) {
   return $roles;
 }
 
-function user_admin_perm($edit = array()) {
+/**
+ * Menu callback: administer permissions.
+ */
+function user_admin_perm() {
+  $edit = $_POST['edit'];
   if ($edit) {
     // Save permissions:
-    $result = db_query('SELECT * FROM {role} ');
+    $result = db_query('SELECT * FROM {role}');
     while ($role = db_fetch_object($result)) {
       // Delete, so if we clear every checkbox we reset that role;
       // otherwise permissions are active and denied everywhere.
@@ -1479,10 +1529,14 @@ function user_admin_perm($edit = array()) {
   $output = theme('table', $header, $rows, array('id' => 'permissions'));
   $output .= form_submit(t('Save permissions'));
 
-  return form($output);
+  print theme('page', form($output));
 }
 
-function user_admin_role($edit = array()) {
+/**
+ * Menu callback: administer roles.
+ */
+function user_admin_role() {
+  $edit = $_POST['edit'];
   $op = $_POST['op'];
   $id = arg(4);
 
@@ -1515,11 +1569,13 @@ function user_admin_role($edit = array()) {
     db_query('UPDATE {users_roles} SET rid = %d WHERE rid = %d', _user_authenticated_id(), $id);
 
     drupal_set_message(t('The role has been deleted.'));
+    drupal_goto('admin/access/roles');
   }
   else if ($op == t('Add role')) {
     if ($edit['name']) {
       db_query("INSERT INTO {role} (name) VALUES ('%s')", $edit['name']);
       drupal_set_message(t('The role has been added.'));
+      drupal_goto('admin/access/roles');
     }
     else {
       form_set_error('name', t('You must specify a valid role name.'));
@@ -1543,7 +1599,7 @@ function user_admin_role($edit = array()) {
     $header = array(t('Name'), t('Operations'));
     while ($role = db_fetch_object($result)) {
       if ($role->name != 'anonymous user' && $role->name != 'authenticated user') {
-        $rows[] = array($role->name, array('data' => l(t('edit'), "admin/user/configure/role/$role->rid"), 'align' => 'center'));
+        $rows[] = array($role->name, array('data' => l(t('edit'), "admin/access/roles/edit/$role->rid"), 'align' => 'center'));
       }
       else {
         $rows[] = array($role->name, array('data' => '<span class="disabled">'. t('locked') .'</span>', 'align' => 'center'));
@@ -1555,7 +1611,7 @@ function user_admin_role($edit = array()) {
     $output = form($output);
   }
 
-  return $output;
+  print theme('page', $output);
 }
 
 function user_admin_account() {
@@ -1598,21 +1654,10 @@ function user_configure() {
     $op = arg(3);
   }
 
-  switch ($op) {
-    case t('Save permissions'):
-    case 'permission':
-      $output = user_admin_perm($edit);
-      break;
-    case t('Add role'):
-    case t('Delete role'):
-    case t('Save role'):
-    case 'role':
-      $output = user_admin_role($edit);
-      break;
-    default:
-      if ($_POST) system_settings_save();
-      $output = system_settings_form(user_configure_settings());
+  if ($_POST) {
+    system_settings_save();
   }
+  $output = system_settings_form(user_configure_settings());
 
   print theme('page', $output);
 }
@@ -1651,17 +1696,17 @@ function user_help($section) {
     case 'admin/user/create':
     case 'admin/user/account/create':
       return t('<p>This web page allows the administrators to register a new users by hand.  Note that you cannot have a user where either the e-mail address or the username match another user in the system.</p>');
-    case 'admin/user/configure/access':
+    case 'admin/access/rules':
       return '<p>'. t('Set up username and e-mail address access rules for new accounts. If a username or email address for a new account matches any deny rule, but not an allow rule, then the new account will not be allowed to be created.') .'</p>';
-    case 'admin/user/configure/permission':
-      return t('<p>In this area you will define the permissions for each user role (role names are defined on the <a href="%role">user roles page</a>). Each permission describes a fine-grained logical operation, such as being able to access the administration pages, or adding/modifying a user account. You could say a permission represents access granted to a user to perform a set of operations.</p>', array('%role' => url('admin/user/configure/role')));
-    case 'admin/user/configure/role':
+    case 'admin/access':
+      return t('<p>In this area you will define the permissions for each user role (role names are defined on the <a href="%role">user roles page</a>). Each permission describes a fine-grained logical operation, such as being able to access the administration pages, or adding/modifying a user account. You could say a permission represents access granted to a user to perform a set of operations.</p>', array('%role' => url('admin/access/roles')));
+    case 'admin/access/roles':
       return t('
       Roles allow you to fine tune the security and administration of drupal.  A role defines a group of users that have certain privileges as defined in <a href="%permission">user permissions</a>.  Examples of roles include: anonymous user, authenticated user, moderator, administrator and so on. In this area you will define the <em>role names</em> of the various roles. To delete a role choose "edit".<br />By default, Drupal comes with two user roles:
       <ul>
       <li>Anonymous user: this role is used for users that don\'t have a user account or that are not authenticated.</li>
       <li>Authenticated user: this role is assigned automatically to authenticated users.  Most registered users will belong to this user role unless specified otherwise.</li>
-      </ul>', array('%permission' => url('admin/user/configure/permission')));
+      </ul>', array('%permission' => url('admin/access')));
     case 'admin/user/search':
       return t('<p>Enter a simple pattern ("*" may be user as a wildcard match) to search for a username.  For example, one may search for "br" and Drupal might return "brian", "brad", and "brenda".</p>');
     case 'admin/modules#description':
