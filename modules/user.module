@@ -1539,6 +1539,8 @@ function user_admin_edit($edit = array()) {
         db_query("DELETE FROM {users} WHERE uid = %d", $account->uid);
         db_query("DELETE FROM {authmap} WHERE uid = %d", $account->uid);
         $output .= status(t("the account has been deleted."));
+        $output .= user_admin_account();
+        return $output;
       }
       else {
         $error = t("Failed to delete account: the account has to be blocked first.");
