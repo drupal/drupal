@@ -106,7 +106,7 @@ function book_load($node) {
     ** If a user is about to update a book page, we overload some
     ** fields to reflect the changes.  We use the request URI to
     ** dectect this as we don't want to interfer with updating a
-    ** book page through the admin pages.  See also: book_save().
+    ** book page through the admin pages.
     */
 
     if ($user->uid) {
@@ -622,7 +622,7 @@ function book_page() {
   if (user_access("access content")) {
     switch (arg(1)) {
       case "view":
-        $node = node_load(array("nid" => arg(2)), 1);
+        $node = node_load(array("nid" => arg(2)));
         theme("header");
         book_show($node, arg(3));
         theme("footer");
