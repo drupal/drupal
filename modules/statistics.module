@@ -24,10 +24,10 @@ function statistics_init() {
     $hostname = getenv("REMOTE_ADDR");
     // log this page access
     if (!empty($id) && empty($mod)) {
-      db_query("INSERT INTO accesslog (nid, url, hostname, uid, timestamp) values('%s', '%s', '%s', '%s', '%s')", $id, $referrer, $hostname, $user->uid, time());
+      db_query("INSERT INTO accesslog (nid, url, hostname, uid, timestamp) values('%s', '%s', '%s', '%d', '%s')", $id, $referrer, $hostname, $user->uid, time());
     }
     else {
-      db_query("INSERT INTO accesslog (url, hostname, uid, timestamp) values('%s', '%s', '%s', '%s')", $referrer, $hostname, $user->uid, time());
+      db_query("INSERT INTO accesslog (url, hostname, uid, timestamp) values('%s', '%s', '%d', '%s')", $referrer, $hostname, $user->uid, time());
     }
   }
 
