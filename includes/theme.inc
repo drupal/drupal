@@ -69,6 +69,12 @@ class BaseTheme {
     print $output;
   }
 
+  function block($subject, $content, $region = "main") {
+    global $theme;
+
+    $theme->box($subject, $content, $region);
+  }
+
   function footer() {
     $output = "</td></tr></table>";
     $output .= "</body></html>";
@@ -148,7 +154,13 @@ function theme_init() {
   return $obj;
 }
 
-function theme_blocks($region, &$theme) {
+/**
+ * Render blocks available for $user and $region calling $theme->block($region).
+ *
+ * @param   string  $region   main|left|right
+ * @param
+ */
+function theme_blocks($region) {
   global $user, $PHP_SELF;
 
   $result = db_query("SELECT * FROM blocks WHERE (status = '1' OR custom = '1') ". ($region != "all" ? "AND region = '%s' " : "") ."ORDER BY weight, module", $region == "left" ? 0 : 1);
@@ -157,7 +169,7 @@ function theme_blocks($region, &$theme) {
     if ((($block->status && (!$user->uid || !$block->custom)) || ($block->custom && $user->block[$block->module][$block->delta])) && (!$block->path || preg_match("|$block->path|", $PHP_SELF))) {
       $block_data = module_invoke($block->module, "block", "view", $block->delta);
       if ($block_data["content"]) {
-        $theme->box($block_data["subject"], $block_data["content"], $region);
+        theme_invoke("block", $block_data["subject"], $block_data["content"], $region);
       }
     }
   }

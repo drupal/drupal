@@ -2,68 +2,93 @@
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
 
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
-  <head>
-    <title>{name} - {slogan}</title>
-    <style type="text/css" media="all">
-      @import "themes/xtemplate/xtemplate.css";
-    </style>
-  </head>
-  <body>
+
+<head>
+  <title>{title}</title>
+  <style type="text/css" media="all">
+    @import "themes/xtemplate/xtemplate.css";
+  </style>
+  {head}
+</head>
+
+<body>
+
+<table border="0" cellpadding="0" cellspacing="0" class="header">
+
+  <tr>
+    <td colspan="2" class="menu">
+      <span id="links">
+        <div id="secondary">{secondary}</div>
+        <div id="primary">{primary}</div>
+      </span>
+      <span id="logo"><a href="index.php"><img src="themes/xtemplate/images/druplicon.gif" alt="" /></a></span>
+    </td>
+  </tr>
+
+  <tr>
+    <td valign="top" width="100%">
+      <!-- BEGIN: message -->
+        <div id="message">{message}</div>
+      <!-- END: message -->
+      <div id="main">
 <!-- END: header -->
-
-<!-- BEGIN: menu -->
-    <span id="links">
-      <div id="secundary">{secundary}</div>
-      <div id="primary">{primary}</div>
-    </span>
-    <span id="logo"><a href="index.php"><img src="themes/xtemplate/images/druplicon.gif" alt="" /></a></span>
-<!-- END: menu -->
-
-
-<!-- BEGIN: message -->
-  <div id="message">{message}</div>
-<!-- END: message -->
 
 
 <!-- BEGIN: node -->
-  <div id="node">
-    <div id="title">{title}</div>
-    <span id="author">Submitted by {author} on {date}.</span>
-    <span id="taxonomy">{taxonomy}</span>
-    <div id="content">{content}</div>
-    <div id="links">&raquo; {links}</div>
+  <div class="node">
+    <div class="title">{title}</div>
+    <span class="author">Submitted by {author} on {date}.</span>
+    <span class="taxonomy">{taxonomy}</span>
+    <div class="content">{content}</div>
+    <div class="links">&raquo; {links}</div>
   </div>
 <!-- END: node -->
 
 <!-- BEGIN: comment_new -->
-  <div id="comment">
-    <span id="new">new</span>
-    <div id="title">{title}</div>
-    <div id="author">Posted by {author} on {date}.</div>
-    <div id="content">{content}</div>
-    <div id="links">&raquo; {links}</div>
- </div>
+  <div class="comment">
+    <span class="new">new</span>
+    <div class="title">{title}</div>
+    <div class="author">Posted by {author} on {date}.</div>
+    <div class="content">{content}</div>
+    <div class="links">&raquo; {links}</div>
+  </div>
 <!-- END: comment_new -->
 
 <!-- BEGIN: comment_old -->
-  <div id="comment">
-    <div id="title">{title}</div>
-    <div id="author">Posted by {author} on {date}.</div>
-    <div id="content">{content}</div>
-    <div id="links">&raquo; {links}</div>
- </div>
+  <div class="comment">
+    <div class="title">{title}</div>
+    <div class="author">Posted by {author} on {date}.</div>
+    <div class="content">{content}</div>
+    <div class="links">&raquo; {links}</div>
+  </div>
 <!-- END: comment_old -->
 
 
+<!-- BEGIN: box -->
+  <div class="box">
+    <div class="title">{subject}</div>
+    <div class="content">{content}</div>
+ </div>
+<!-- END: box -->
+
+
 <!-- BEGIN: block -->
-  <div id="block">
-    <div id="title">{title}</div>
-    <div id="content">{content}</div>
+  <div class="block">
+    <div class="title">{subject}</div>
+    <div class="content">{content}</div>
  </div>
 <!-- END: block -->
 
 
 <!-- BEGIN: footer -->
-  </body>
+      </div><!-- main -->
+    </td>
+    <td valign="top" id="sidebar">
+      {blocks}
+    </td>
+  </tr>
+</table>
+
+</body>
 </html>
 <!-- END: footer -->
