@@ -94,7 +94,7 @@ function watchdog_overview($type) {
   while ($watchdog = db_fetch_object($result)) {
     $rows[] = array(
       array("data" => format_date($watchdog->timestamp, "small"), "class" => "watchdog-$watchdog->type"),
-      array("data" => substr(strip_tags($watchdog->message), 0, 64), "class" => "watchdog-$watchdog->type"),
+      array("data" => truncate_utf8(strip_tags($watchdog->message), 64), "class" => "watchdog-$watchdog->type"),
       array("data" => format_name($watchdog), "class" => "watchdog-$watchdog->type"),
       array("data" => $watchdog->link, "class" => "watchdog-$watchdog->type"),
       array("data" => l(t("view details"), "admin/watchdog/view/$watchdog->wid"), "class" => "watchdog-$watchdog->type")

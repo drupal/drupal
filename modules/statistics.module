@@ -278,7 +278,7 @@ function statistics_admin_accesslog_table($type, $id) {
     $user = user_load(array("uid" => $log->uid));
 
     if ($log->url) {
-      $url = "<a href=\"$log->url\" title=\"$log->url\">". (strlen($log->url) > 28 ? substr($log->url, 0, 28) . '...' : $log->url) ."</a>";
+      $url = "<a href=\"$log->url\" title=\"$log->url\">". (strlen($log->url) > 28 ? truncate_utf8($log->url, 28) . '...' : $log->url) ."</a>";
     }
     else {
       $url = message_na();
@@ -326,7 +326,7 @@ function statistics_top_refer() {
   $result = pager_query($query, 50, 0, $query_cnt);
 
   while ($referrer = db_fetch_array($result)) {
-    $rows[] = array("<a href=\"". $referrer["url"] ."\">". substr($referrer["url"], 0, 100) ."</a>", format_date($referrer["last_view"], "small"), $referrer["count"]);
+    $rows[] = array("<a href=\"". $referrer["url"] ."\">". truncate_utf8($referrer["url"], 100) ."</a>", format_date($referrer["last_view"], "small"), $referrer["count"]);
   }
   if ($pager = theme("pager", NULL, 50, 0, tablesort_pager())) {
     $rows[] = array(array("data" => $pager, "colspan" => 3));
