@@ -176,9 +176,6 @@ function system_listing($type, $directory, $required = array()) {
 
   ksort($files);
 
-  // Clean up database.
-  db_query("DELETE FROM system WHERE type = '%s'", $type);
-
   $output = "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
   $output .= "<tr><th>name</th><th>description</th><th>enabled</th></tr>\n";
 
@@ -200,6 +197,8 @@ function system_listing($type, $directory, $required = array()) {
       }
     }
 
+    // Clean up database.
+    db_query("DELETE FROM system WHERE filename = '%s' AND type = '%s'", $filename, $type);
     db_query("INSERT INTO system (name, description, type, filename, status) VALUES ('%s', '%s', '%s', '%s', %d)", $info->name, $info->description, $type, $filename, $file->status);
 
     $output .= "<tr>";
