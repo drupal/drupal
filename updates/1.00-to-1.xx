@@ -1,18 +1,9 @@
+# 18/02/2001: permissions / access / group
+alter table users drop permissions;
+alter table users add access varchar(255) DEFAULT '' NOT NULL;
 
-# 20/01/2001: comment/discussion code rewrite:
-alter table users modify mode tinyint(1) DEFAULT '' NOT NULL;
-alter table comments change sid lid int(6) DEFAULT '0' NOT NULL;
-alter table comments add link varchar(16) DEFAULT '' NOT NULL;
-update comments set link = 'article';
-
-# 21/01/2001: section manager
-alter table stories change category section varchar(64) DEFAULT '' NOT NULL;
-
-# 31/01/2001: block rehashing
-alter table blocks add remove tinyint(1) DEFAULT '0' NOT NULL;
-
-# 07/02/2001: value calculation
-alter table users add rating decimal(8,4) DEFAULT '0' NOT NULL;
+# 14/02/2001: locale / internationalisation
+alter table users add language varchar(2) DEFAULT '' NOT NULL;
 
 # 12/02/2001: locale / internationalisation
 create table locales (
@@ -22,5 +13,17 @@ create table locales (
   PRIMARY KEY (id)
 );
 
-# 14/02/2001: locale / internationalisation
-alter table users add language varchar(2) DEFAULT '' NOT NULL;
+# 07/02/2001: value calculation
+alter table users add rating decimal(8,4) DEFAULT '0' NOT NULL;
+
+# 31/01/2001: block rehashing
+alter table blocks add remove tinyint(1) DEFAULT '0' NOT NULL;
+
+# 21/01/2001: section manager
+alter table stories change category section varchar(64) DEFAULT '' NOT NULL;
+
+# 20/01/2001: comment/discussion code rewrite:
+alter table users modify mode tinyint(1) DEFAULT '' NOT NULL;
+alter table comments change sid lid int(6) DEFAULT '0' NOT NULL;
+alter table comments add link varchar(16) DEFAULT '' NOT NULL;
+update comments set link = 'article';

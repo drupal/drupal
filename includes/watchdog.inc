@@ -9,8 +9,8 @@ $watchdog = array("comment" => array("0", $submission_rate["comment"]),
 
 function watchdog($id, $message) {
   global $user, $watchdog, $watchdog_history;
-/*
-  if ($watchdog[$id][1] && !user_permission($user)) {
+
+  if ($watchdog[$id][1] && !user_access($user, "watchdog")) {
     if ($log = db_fetch_object(db_query("SELECT * FROM watchdog WHERE hostname = '". getenv("REMOTE_ADDR") ."' AND level = '". $watchdog[$id][0] ."'"))) {
       if (time() - $log->timestamp < $watchdog[$id][1]) {
         watchdog("warning", "'". getenv("REMOTE_ADDR") ."' exceeded '$id' submission rate");
@@ -19,7 +19,7 @@ function watchdog($id, $message) {
       }
     }
   }
-*/
+
   // Perform query to add new watchdog entry:
   db_query("INSERT INTO watchdog (level, timestamp, user, message, location, hostname) VALUES ('". $watchdog[$id][0] ."', '". time() ."', '". check_input($user->id) ."', '". check_input($message) ."', '". check_input(getenv("REQUEST_URI")) ."', '". check_input(getenv("REMOTE_ADDR")) ."')");
 }

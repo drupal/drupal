@@ -32,12 +32,12 @@ function comment_moderate($moderate) {
     $none = $comment_votes[key($comment_votes)];
 
     foreach ($moderate as $id=>$vote) {
-      if ($vote != $comment_votes[$none] && !user_get_history($user->history, "c$id")) {
+      if ($vote != $comment_votes[$none] && !user_get($user, "history", "c$id")) {
         // Update the comment's score:
         $result = db_query("UPDATE comments SET score = score $vote, votes = votes + 1 WHERE cid = $id");
 
         // Update the user's history:
-        user_set_history("c$id", $vote);
+        $user = user_set($user, "history", "c$id", $vote);
       }
     }
   }
@@ -45,12 +45,7 @@ function comment_moderate($moderate) {
 
 function comment_settings($mode, $order, $threshold) {
   global $user;
-  if ($user->id) {
-    $data[mode] = $mode;
-    $data[sort] = $order;
-    $data[threshold] = $threshold;
-    user_save($data, $user->id);
-  }
+  if ($user->id) $user = user_save($user, array("mode" => $mode, "sort" => $order, "threshold" => $threshold));
 }
 
 function comment_reply($pid, $id) {
@@ -180,7 +175,7 @@ function comment_moderation($comment) {
   if ($op == "reply") {
     $output .= "&nbsp;";
   }
-  else if ($user->id && $user->userid != $comment->userid && !user_get_history($user->history, "c$comment->cid")) {
+  else if ($user->id && $user->userid != $comment->userid && !user_get($user, "history", "c$comment->cid")) {
     $output .= "<SELECT NAME=\"moderate[$comment->cid]\">\n";
     foreach ($comment_votes as $key=>$value) $output .= " <OPTION VALUE=\"$value\">$key</OPTION>\n";
     $output .= "</SELECT>\n";

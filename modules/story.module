@@ -20,7 +20,7 @@ function story_find($keys) {
   $find = array();
   $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON s.author = u.id WHERE s.status = 2 AND (s.subject LIKE '%". check_input($keys) ."%' OR s.abstract LIKE '%". check_input($keys) ."%' OR s.article LIKE '%". check_input($keys) ."%') ORDER BY s.timestamp DESC LIMIT 20");
   while ($story = db_fetch_object($result)) {
-    array_push($find, array("subject" => check_output($story->subject), "link" => (user_permission($user) ? "admin.php?mod=story&op=edit&id=$story->id" : "story.php?id=$story->id"), "user" => $story->userid, "date" => $story->timestamp));
+    array_push($find, array("subject" => check_output($story->subject), "link" => (user_access($user, "story") ? "admin.php?mod=story&op=edit&id=$story->id" : "story.php?id=$story->id"), "user" => $story->userid, "date" => $story->timestamp));
   }
   return $find;
 }

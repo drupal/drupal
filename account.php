@@ -41,15 +41,9 @@ function account_create($user = "", $error = "") {
 
 function account_session_start($userid, $passwd) {
   global $user;
-
-  $user = new User($userid, $passwd);
-  if ($user->id) {
-    session_register("user");
-    watchdog("message", "session opened for user `$user->userid'");
-  }
-  else {
-    watchdog("warning", "failed login for user `$userid'");
-  }
+  if ($userid && $passwd) $user = new User($userid, $passwd);
+  if ($user->id) session_register("user");
+  watchdog("message", ($user->id ? "session opened for user `$user->userid'" : "failed login for user `$userid'"));
 }
 
 function account_session_close() {
@@ -117,17 +111,9 @@ function account_user_edit() {
 
 function account_user_save($edit) {
   global $user;
-
   if ($user->id) {
-    $data[name] = $edit[name];
-    $data[fake_email] = $edit[fake_email];
-    $data[url] = $edit[url];
-    $data[bio] = $edit[bio];
-    $data[signature] = $edit[signature];
-
-    if ($edit[pass1] && $edit[pass1] == $edit[pass2]) $data[passwd] = $edit[pass1];
-
-    user_save($data, $user->id);
+    $user = user_save($user, array("name" => $edit[name], "fake_email" => $edit[fake_email], "url" => $edit[url], "bio" => $edit[bio], "signature" => $edit[signature]));
+    if ($edit[pass1] && $edit[pass1] == $edit[pass2]) $user = user_save($user, array("passwd" => $edit[pass1]));
   }
 }
 
@@ -188,16 +174,8 @@ function account_site_edit() {
 
 function account_site_save($edit) {
   global $user;
-
   if ($user->id) {
-    $data[theme] = $edit[theme];
-    $data[timezone] = $edit[timezone];
-    $data[language] = $edit[language];
-    $data[stories] = $edit[stories];
-    $data[mode] = $edit[mode];
-    $data[sort] = $edit[sort];
-    $data[threshold] = $edit[threshold];
-    user_save($data, $user->id);
+    $user = user_save($user, array("theme" => $edit[theme], "timezone" => $edit[timezone], "language" => $edit[language], "stories" => $edit[stories], "mode" => $edit[mode], "sort" => $edit[sort], "threshold" => $edit[threshold]));
   }
 }
 
@@ -363,10 +341,9 @@ function account_create_submit($userid, $email) {
   }
   else {
     $new[passwd] = account_password();
-    $new[status] = 1;
-    $new[hash] = substr(md5("$new[userid]. ". time() .""), 0, 12);
+    $new[hash] = substr(md5("$new[userid]. ". time()), 0, 12);
 
-    user_save($new);
+    $user = user_save("", array("userid" => $new[userid], "real_email" => $new[real_email], "passwd" => $new[passwd], "status" => 1, "hash" => $new[hash]));
 
     $link = $site_url ."account.php?op=confirm&name=$new[userid]&hash=$new[hash]";
     $subject = strtr(t("Account details for %a"), array("%a" => $site_name));

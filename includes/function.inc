@@ -76,7 +76,7 @@ function format_date($timestamp, $type = "medium") {
 
 function format_username($username) {
   global $user;
-  if ($username) return (user_permission($user) ? "<A HREF=\"admin.php?mod=account&op=view&name=$username\">$username</A>" : "<A HREF=\"account.php?op=view&name=$username\">$username</A>");
+  if ($username) return (user_access($user, "account") ? "<A HREF=\"admin.php?mod=account&op=view&name=$username\">$username</A>" : "<A HREF=\"account.php?op=view&name=$username\">$username</A>");
   else { global $anonymous; return $anonymous; }
 }
 

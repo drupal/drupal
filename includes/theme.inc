@@ -1,6 +1,6 @@
 <?
 
-function theme_load() {
+function theme_init() {
   global $user, $themes;
 
   if ($user->theme && file_exists($themes[$user->theme][0])) {
@@ -39,7 +39,7 @@ function theme_account($theme) {
     $content .= "<LI><A HREF=\"account.php?op=edit&topic=content\">". t("edit your content") ."</A></LI>\n";
     $content .= "<P>\n";
 
-    if (user_permission($user)) {
+    if (user_access($user)) {
       $content .= "<LI><A HREF=\"admin.php\">administer ". $site_name ."</A></LI>\n";
       $content .= "<P>\n";
     }
@@ -95,10 +95,10 @@ function theme_morelink($theme, $story) {
 function theme_moderation_results($theme, $story) {
   global $user;
 
-  if ($user->id && $story->id && ($user->id == $story->author || user_get_history($user->history, "s$story->id"))) {
+  if ($user->id && $story->id && ($user->id == $story->author || user_get($user, "history", "s$story->id"))) {
     $result = db_query("SELECT * FROM users WHERE history LIKE '%s$story->id%'");
     while ($account = db_fetch_object($result)) {
-      $output .= format_username($account->userid) ." voted `". user_get_history($account->history, "s$story->id") ."'.<BR>";
+      $output .= format_username($account->userid) ." voted `". user_get($account, "history", "s$story->id") ."'.<BR>";
     }
 
     $theme->box("Moderation results", ($output ? $output : "This story has not been moderated yet."));
