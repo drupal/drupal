@@ -678,7 +678,7 @@ function update_79() {
   }
   else {
     update_sql("ALTER TABLE {node} DROP attributes");
-    update_sql("ALTER TABLE {comment} DROP link";
+    update_sql("ALTER TABLE {comment} DROP link");
   }
 }
 
