@@ -49,8 +49,7 @@ function import_link($type) {
 }
 
 function import_cron() {
-  // $result = db_query("SELECT * FROM feed WHERE timestamp + refresh < ". time());
-  $result = db_query("SELECT * FROM feed");
+  $result = db_query("SELECT * FROM feed WHERE timestamp + refresh < ". time());
   while ($feed = db_fetch_array($result)) {
     import_refresh($feed);
   }
