@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.83 2001/11/03 18:38:28 dries Exp $
+// $Id: common.inc,v 1.84 2001/11/12 22:17:16 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST, $REQUEST_URI;
@@ -69,7 +69,7 @@ function message_na() {
 }
 
 function message_throttle() {
-  return t("You exceeded the submission rate exceeded.  Please wait a few minutes and try again.");
+  return t("You exceeded the maximum submission rate.  Please wait a few minutes and try again.");
 }
 
 function drupal_goto($url) {
