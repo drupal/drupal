@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.292 2003/12/29 11:16:45 dries Exp $ */
+/* $Id: common.inc,v 1.293 2003/12/29 12:44:30 dries Exp $ */
 
 /**
  * @name drupal_title
@@ -730,7 +730,7 @@ function form_group($legend, $group, $description = NULL) {
 }
 
 function form_radio($title, $name, $value = 1, $checked = 0, $description = NULL, $attributes = NULL) {
-  return theme("form_element", 0, "<input type=\"radio\" class=\"form-radio\" name=\"edit[$name]\" value=\"$value\"". ($checked ? " checked=\"checked\"" : "") . drupal_attributes($attributes) ." /> $title", $description);
+  return theme("form_element", NULL, "<input type=\"radio\" class=\"form-radio\" name=\"edit[$name]\" value=\"$value\"". ($checked ? " checked=\"checked\"" : "") . drupal_attributes($attributes) ." /> $title", $description);
 }
 
 function form_radios($title, $name, $value, $options, $description = NULL) {
