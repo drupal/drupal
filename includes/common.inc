@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.274 2003/12/08 06:32:18 dries Exp $
+// $Id: common.inc,v 1.275 2003/12/09 23:38:32 kjartan Exp $
 
 /**
  * @name drupal_title
@@ -963,7 +963,7 @@ else {
 // initialize installed modules:
 module_init();
 
-if (!user_access("bypass input data check")) {
+if ($_REQUEST && !user_access("bypass input data check")) {
   if (!valid_input_data($_REQUEST)) {
     die("terminated request because of suspicious input data");
   }
