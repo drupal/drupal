@@ -1,7 +1,21 @@
 <?
 
 // TEMPORARY SECURITY PATCH:
-if ($user->userid != "Dries") exit();
+// if ($user->userid != "Dries") exit();
+  if(!$PHP_AUTH_USER) {
+      Header("WWW-Authenticate: Basic realm=\"Admin Area\"");
+      Header("HTTP/1.0 401 Unauthorized");
+      echo "The cow says: Moo! You can't come in!\n";
+      exit;
+  } else {
+    if ($PHP_AUTH_PW != "mOo!")
+    {
+      Header("WWW-Authenticate: Basic realm=\"Admin Area\"");
+      Header("HTTP/1.0 401 Unauthorized");
+      echo "The cow says: Moo! You can't come in!\n";
+      exit;
+    }
+  }
 
 /*
  * Account administration:
