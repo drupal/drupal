@@ -1,1 +1,89 @@
-body {  font-size: 90%;  margin: 0;  background-color: #fff;}/* text */body, th, td, h1, h2, h3, h4, #menu, #main {  font-family: helvetica, arial;}a {}a:link {  color: #059;}a:visited {  color: #049;}h1 {  font-size: 1.3em;  font-weight: bold;  color: #000066;}h2 {  font-size: 1.3em;  font-weight: bold;  color: #000066;  margin: 0;  padding: 0 0 .5em 0;}h3 {  font-size: 1.2em;  font-weight: bold;  color: #006600;  margin: 0;  padding: 0 0 .5em 0;}th {  font-size: 90%;  text-align: left;  vertical-align: top;  background-color: #CCCCCC;  color: #995555;}td {  font-size: 90%;}/* layout */#menu {  position: absolute;  left: 0px;  top: 0px;  padding: 1em 0 1em 0;  width: 200px;  z-index: 1;  overflow: hidden;  background-color: #6699cc;  border-right: 1px solid #999;  border-bottom: 1px solid #999;}#menu h1 a {  display: block;  margin: 0;  padding: 0 0 .2em .6em;  color: #fff;  text-decoration: none;  border-bottom: 1px dotted #90bade;}#menu ul {  list-style: none;  margin: 0 0 0 0;  padding: 0 0 0 .75em;  border: none;}#menu li {  margin: 0;  padding: .25em .25em .25em 0;  border-bottom: 1px dotted #90bade;}#menu li a {  display: block;  width: 100%;  color: #fff;  text-decoration: none;}#main {  margin: 0 0 0 220px;  padding: 1em 1em 1em 0;  z-index: 2;}
+body {
+  font-size: 90%;
+  margin: 0;
+  background-color: #fff;
+}
+/* text */
+body, th, td, h1, h2, h3, h4, #menu, #main {
+  font-family: helvetica, arial;
+}
+a {
+}
+a:link {
+  color: #059;
+}
+a:visited {
+  color: #049;
+}
+h1 {
+  font-size: 1.3em;
+  font-weight: bold;
+  color: #000066;
+}
+h2 {
+  font-size: 1.3em;
+  font-weight: bold;
+  color: #000066;
+  margin: 0;
+  padding: 0 0 .5em 0;
+}
+h3 {
+  font-size: 1.2em;
+  font-weight: bold;
+  color: #006600;
+  margin: 0;
+  padding: 0 0 .5em 0;
+}
+th {
+  font-size: 90%;
+  text-align: left;
+  vertical-align: top;
+  background-color: #CCCCCC;
+  color: #995555;
+}
+td {
+  font-size: 90%;
+}
+/* layout */
+#menu {
+  position: absolute;
+  left: 0px;
+  top: 0px;
+  padding: 1em 0 1em 0;
+  width: 200px;
+  z-index: 1;
+  overflow: hidden;
+  background-color: #6699cc;
+  border-right: 1px solid #999;
+  border-bottom: 1px solid #999;
+}
+#menu h1 a {
+  display: block;
+  margin: 0;
+  padding: 0 0 .2em .6em;
+  color: #fff;
+  text-decoration: none;
+  border-bottom: 1px dotted #90bade;
+}
+#menu ul {
+  list-style: none;
+  margin: 0 0 0 0;
+  padding: 0 0 0 .75em;
+  border: none;
+}
+#menu li {
+  margin: 0;
+  padding: .25em .25em .25em 0;
+  border-bottom: 1px dotted #90bade;
+}
+#menu li a {
+  display: block;
+  width: 100%;
+  color: #fff;
+  text-decoration: none;
+}
+#main {
+  margin: 0 0 0 220px;
+  padding: 1em 1em 1em 0;
+  z-index: 2;
+}
