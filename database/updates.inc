@@ -87,7 +87,8 @@ $sql_updates = array(
   "2004-10-16" => "update_108",
   "2004-10-18" => "update_109",
   "2004-10-31: first update since Drupal 4.5.0 release" => "update_110",
-  "2004-11-07" => "update_111"
+  "2004-11-07" => "update_111",
+  "2004-11-15" => "update_112"
 );
 
 function update_32() {
@@ -1974,6 +1975,18 @@ function update_111() {
     $ret[] = update_sql("DELETE FROM {variable} WHERE name LIKE 'throttle_%'");
     $ret[] = update_sql('ALTER TABLE {sessions} ADD PRIMARY KEY sid (sid)');
   }
+
+  return $ret;
+}
+
+function update_112() {
+  $ret = array();
+
+  $ret[] = update_sql("CREATE TABLE flood (
+    event varchar(64) NOT NULL default '',
+    hostname varchar(128) NOT NULL default '',
+    timestamp int(11) NOT NULL default '0'
+  );");
 
   return $ret;
 }
