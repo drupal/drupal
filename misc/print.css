@@ -1,0 +1,24 @@
+body {
+  margin: 1em;
+  background-color: #fff;
+}
+th {
+  text-align: left;
+  color: #006;
+  border-bottom: 1px solid #ccc;
+}
+tr.dark {
+  background-color: #ddd;
+}
+tr.light {
+  background-color: #fff;
+}
+td {
+  padding: 5px;
+}
+#menu {
+  visibility: hidden;
+}
+#main {
+  margin: 1em;
+}

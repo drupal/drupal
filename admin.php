@@ -1,5 +1,5 @@
 <?php
-// $Id: admin.php,v 1.61 2002/12/31 12:33:50 dries Exp $
+// $Id: admin.php,v 1.62 2003/01/02 23:35:04 dries Exp $
 
 include_once "includes/common.inc";
 
@@ -24,6 +24,7 @@ function admin_page($mod) {
    </head>
    <body>
     <?php
+      // NOTE: we include a dummy "print.css" to remove the "flash of unstyled content" (FUOC) problems in IE.
 
       module_invoke_all("link", "admin");
 
