@@ -607,18 +607,20 @@ function search_data($keys = NULL, $type = 'node') {
 function search_excerpt($keys, $text) {
   $keys = search_keywords_split($keys);
   $text = strip_tags(str_replace(array('<', '>'), array(' <', '> '), $text));
+  array_walk($keys, '_search_excerpt_replace');
+  $workkeys = $keys;
 
   // Extract a fragment per keyword for at most 4 keywords.
   // First we collect ranges of text around each keyword, starting/ending
   // at spaces.
-  // If the fragment is too short, we look for second occurences.
+  // If the sum of all fragments is too short, we look for second occurences.
   $ranges = array();
   $included = array();
   $length = 0;
-  while ($length < 256) {
-    foreach ($keys as $k => $key) {
+  while ($length < 256 && count($workkeys)) {
+    foreach ($workkeys as $k => $key) {
       if (strlen($key) == 0) {
-        unset($keys[$k]);
+        unset($workkeys[$k]);
         continue;
       }
       if ($length >= 256) {
@@ -629,8 +631,10 @@ function search_excerpt($keys, $text) {
       if (!isset($included[$key])) {
         $included[$key] = 0;
       }
-      // Note: workaround for lack of stripos() in PHP4
-      if (($p = strpos($text, stristr(substr($text, $included[$key]), $key), $included[$key])) !== false) {
+      // Locate a keyword (position $p), then locate a space in front (position
+      // $q) and behind it (position $s)
+      if (preg_match('/\b'. $key .'\b/iu', $text, $match, PREG_OFFSET_CAPTURE, $included[$key])) {
+        $p = $match[0][1];
         if (($q = strpos($text, ' ', max(0, $p - 60))) !== false) {
           $end = substr($text, $p, 80);
           if (($s = strrpos($end, ' ')) !== false) {
@@ -639,22 +643,22 @@ function search_excerpt($keys, $text) {
             $included[$key] = $p + 1;
           }
           else {
-            unset($keys[$k]);
+            unset($workkeys[$k]);
           }
         }
         else {
-          unset($keys[$k]);
+          unset($workkeys[$k]);
         }
       }
       else {
-        unset($keys[$k]);
+        unset($workkeys[$k]);
       }
     }
+  }
 
-    // If we didn't find anything, return the beginning.
-    if (count($ranges) == 0 || count($keys) == 0) {
-      return truncate_utf8($text, 256) . ' ...';
-    }
+  // If we didn't find anything, return the beginning.
+  if (count($ranges) == 0) {
+    return truncate_utf8($text, 256) . ' ...';
   }
 
   // Sort the text ranges by starting position.
@@ -684,11 +688,10 @@ function search_excerpt($keys, $text) {
   foreach ($newranges as $from => $to) {
     $out[] = substr($text, $from, $to - $from);
   }
-  $text = '... '. implode(' ... ', $out) .' ...';
+  $text = (isset($newranges[0]) ? '' : '... '). implode(' ... ', $out) .' ...';
 
   // Highlight keywords. Must be done at once to prevent conflicts ('strong' and '<strong>').
-  array_walk($keys, '_search_excerpt_replace');
-  $text = preg_replace('/('. implode('|', $keys) .')/i', '<strong>\0</strong>', $text);
+  $text = preg_replace('/\b('. implode('|', $keys) .')\b/iu', '<strong>\0</strong>', $text);
   return $text;
 }
 
@@ -696,7 +699,7 @@ function search_excerpt($keys, $text) {
  * Helper function for array_walk in search_except.
  */
 function _search_excerpt_replace($text) {
-  return preg_quote($text);
+  return preg_quote($text, '/');
 }
 
 /**
