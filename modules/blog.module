@@ -254,7 +254,7 @@ function blog_link($type, $node = 0, $main) {
 
   if ($type == 'system') {
     menu('node/add/blog', t('blog entry'), user_access('maintain personal blog') ? MENU_FALLTHROUGH : MENU_DENIED, 0);
-    menu('blog/'. $user->uid, t('my blog'), user_access('maintain personal blog') ? 'blog_page' : MENU_DENIED, 1, MENU_SHOW, MENU_LOCKED);
+    menu('blog/'. $user->uid, t('my blog'), MENU_FALLTHROUGH, 1, MENU_SHOW, MENU_LOCKED);
     menu('blog', t('blogs'), user_access('access content') ? 'blog_page' : MENU_DENIED, 0, MENU_HIDE);
     menu('blog/feed', t('RSS feed'), user_access('access content') ? 'blog_feed' : MENU_DENIED, 0, MENU_HIDE, MENU_LOCKED);
   }
