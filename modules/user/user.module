@@ -59,6 +59,8 @@ function user_load($array = array()) {
   ** Dynamically compose a SQL query:
   */
 
+  $query = "";
+
   foreach ($array as $key => $value) {
     if ($key == "pass") {
       $query .= "u.$key = '" . md5($value) . "' AND ";
@@ -456,7 +458,7 @@ function user_block() {
     // Display account settings:
     $block[0]["subject"] = $user->name;
 
-    $output .= "<div style=\"width: 125;\">\n";
+    $output .= "<div style=\"{ width: 155; }\">\n";
 
     $links = array_merge(module_invoke_all("link", "menu.create"), array(""), module_invoke_all("link", "menu.view"), array(""), module_invoke_all("link", "menu.settings"), array(""), module_invoke_all("link", "menu.misc"));
     $output .= @implode("<br />\n", $links);
