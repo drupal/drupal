@@ -191,34 +191,14 @@ function form_submit($value) {
 }
 
 function field_get($string, $name) {
-  foreach (explode(",", $string) as $data) {
-    $entry = explode("=", $data);
-    if ($entry[0] == $name) return $entry[1];
-  }
+  ereg(",$name=([^,]+)", ",$string", $regs);
+  return $regs[1];
 }
 
 function field_set($string, $name, $value) {
-  if (!$value) {
-    // remove entry:
-    foreach (explode(",", $string) as $data) {
-      $entry = explode("=", $data);
-      if ($entry[0] != $name) $rval .= "$entry[0]=$entry[1],";
-    }
-  }
-  else if (strstr($string, "$name=")) {
-    // found: update exsisting entry:
-    foreach (explode(",", $string) as $data) {
-      $entry = explode("=", $data);
-      if ($entry[0] == $name) $entry[1] = $value;
-      $rval .= "$entry[0]=$entry[1],";
-    }
-  }
-  else {
-    // not found:
-    $rval = "$string$name=$value,";
-  }
-
-  return $rval;
+  $rval = ereg_replace(",$name=[^,]+", "", ",$string");
+  if ($value) $rval .= ($rval == "," ? "" : ",") ."$name=$value";
+  return substr($rval, 1);
 }
 
 function field_merge($a, $b) {
