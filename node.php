@@ -101,12 +101,12 @@ if ($number > 1) {
   $theme->footer();
 }
 elseif ($number) {
-  $node = ($title ? node_get_object(array("title" => $title)) : node_get_object(array("nid" => ($edit[id] ? $edit[id] : $id))));
+  $node = ($title ? node_get_object(array("title" => $title, "status" => node_status("posted"))) : node_get_object(array("nid" => ($edit[id] ? $edit[id] : $id))));
   if ($node && node_access($node)) {
     switch ($op) {
       case "history":
         $theme->header();
-        $theme->box(t("History"), node_control($node) ."<DL>". node_history($node) ."</DL>");
+        $theme->box(t("History"), node_control($node) ."<dl>". node_history($node) ."</dl>");
         $theme->footer();
         break;
       default:
