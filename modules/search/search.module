@@ -363,6 +363,9 @@ function search_view($keys) {
         $output .= "<br />". $help_link ."<br />";
     }
 
+    // Log the search keys:
+    watchdog("search", "search: '$keys'", l("view results", "search", NULL, "keys=". urlencode($keys)));
+
     // Collect the search results:
     $results = search_data($keys);
 
