@@ -188,6 +188,7 @@ CREATE TABLE comments (
   name varchar(60) default NULL,
   mail varchar(64) default NULL,
   url varchar(255) default NULL,
+  homepage varchar(255) default NULL,
   PRIMARY KEY  (cid)
 );
 CREATE INDEX comments_nid_idx ON comments(nid);
