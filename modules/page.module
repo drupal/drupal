@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.58 2002/05/12 15:40:57 kjartan Exp $
+// $Id: page.module,v 1.59 2002/05/19 23:05:05 kjartan Exp $
 
 function page_help() {
   $output .= "<p>The page module is used to create a <i>site page</i>.  Unlike a story, a site page is a persistent web page on your site which usually shortcuts the typical lifecycle of user generated content (i.e. submit -&gt; moderate -&gt; post -&gt; comment).  A site page is usually linked from the main navigation bar, using whatever text the author wishes.  To create a site page without this navigation link, simply skip the form field which requests link text.  Administrators are the exclusive authors of site pages (i.e. requires the <i>administer nodes</i> in ". la("permission", array("mod" => "user", "op" => "permission")) .").</p>";
@@ -138,6 +138,10 @@ function page_form(&$node, &$help, &$error) {
     if ($node->teaser) {
       $output .= form_textarea(t("Teaser"), "teaser", $node->teaser, 60, 5, $error["teaser"]);
     }
+  }
+
+  if (function_exists("taxonomy_node_form")) {
+    $output .= implode("", taxonomy_node_form("page", $node));
   }
 
   $output .= form_textarea("Body", "body", $node->body, 60, 20);

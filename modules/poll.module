@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.53 2002/05/14 21:56:01 unconed Exp $
+// $Id: poll.module,v 1.54 2002/05/19 23:05:05 kjartan Exp $
 
 function poll_access($op, $node) {
   if ($op == "view") {
@@ -65,6 +65,10 @@ function poll_form(&$node, &$help, &$error) {
   }
   else {
     $help = variable_get("poll_help", "");
+  }
+
+  if (function_exists("taxonomy_node_form")) {
+    $output = implode("", taxonomy_node_form("poll", $node));
   }
 
   for ($c = 2; $c <= 20; $c++) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.74 2002/05/12 15:40:57 kjartan Exp $
+// $Id: blog.module,v 1.75 2002/05/19 23:05:05 kjartan Exp $
 
 function blog_conf_options() {
  $output .= form_textarea("Explanation or submission guidelines", "blog_help", variable_get("blog_help", ""), 55, 4, "This text will be displayed at the top of the blog submission form.  Useful for helping or instructing your users.");
@@ -241,7 +241,9 @@ function blog_form(&$node, &$help, &$error) {
     $output .= form_textarea(t("Teaser"), "teaser", $node->teaser, 60, 5, $error["teaser"]);
   }
 
-  $output .= implode("<p>", taxonomy_node_form("blog", $node));
+  if (function_exists("taxonomy_node_form")) {
+    $output = implode("", taxonomy_node_form("blog", $node));
+  }
 
   $output .= form_textarea(t("Body"), "body", $node->body, 60, 15, $error["body"] ? $error["body"] : t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
 

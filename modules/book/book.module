@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.117 2002/05/13 22:07:26 kjartan Exp $
+// $Id: book.module,v 1.118 2002/05/19 23:05:05 kjartan Exp $
 
 function book_node($field) {
   global $user;
@@ -181,6 +181,10 @@ function book_form(&$node, &$help, &$error) {
     if ($node->teaser) {
       $output .= form_textarea(t("Teaser"), "teaser", $node->teaser, 60, 5, $error["teaser"]);
     }
+  }
+
+  if (function_exists("taxonomy_node_form")) {
+    $output .= implode("", taxonomy_node_form("book", $node));
   }
 
   $output .= form_textarea(t("Body"), "body", $node->body, 60, 20, t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));

@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.41 2002/05/12 15:40:57 kjartan Exp $
+// $Id: forum.module,v 1.42 2002/05/19 23:05:05 kjartan Exp $
 
 function forum_node($field) {
   $info["name"] = t("discussion forum");
@@ -54,6 +54,10 @@ function forum_view($node) {
 }
 
 function forum_form(&$node, &$help, &$error) {
+
+  if (function_exists("taxonomy_node_form")) {
+    $output = implode("", taxonomy_node_form("forum", $node));
+  }
 
   $output .= form_textarea("Body", "body", $node->body, 60, 10);
 
