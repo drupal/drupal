@@ -1,5 +1,5 @@
 <?php
-// $Id: marvin.theme,v 1.118 2003/12/13 17:37:02 dries Exp $
+// $Id: marvin.theme,v 1.119 2003/12/22 11:45:04 dries Exp $
 
 function marvin_help($section) {
 
@@ -22,8 +22,8 @@ function marvin_header() {
   $output .= theme_head($main);
   $output .= "<title>";
 
-  if (drupal_get_title()) {
-    $output .= drupal_get_title() ." - ". variable_get("site_name", "drupal");
+  if ($title = drupal_get_title()) {
+    $output .= "$title - ". variable_get("site_name", "drupal");
   }
   else {
     $output .= variable_get("site_name", "drupal");
@@ -56,8 +56,11 @@ function marvin_header() {
   }
   $output .= "    <td style=\"vertical-align: top; width: 85%;\">\n";
 
-  $output .= theme("breadcrumb", drupal_get_breadcrumb());
-  $output .= "<h2>" . drupal_get_title() . "</h2>";
+  if ($title = drupal_get_title()) {
+    $output .= theme("breadcrumb", drupal_get_breadcrumb());
+    $output .= "<h2>$title</h2>";
+  }
+
   if ($help = menu_get_active_help()) {
     $output .= "<small>$help</small><hr />";
   }
