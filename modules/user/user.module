@@ -593,15 +593,14 @@ function user_menu($may_cache) {
   $access = user_access('administer users');
 
   if ($may_cache) {
-    $items[] = array('path' => 'user', 'title' => t('user'),
-      'callback' => 'user_page', 'access' => TRUE,
-      'type' => MENU_CALLBACK);
+    $items[] = array('path' => 'user', 'title' => t('user account'),
+      'callback' => 'user_page', 'access' => TRUE, 'type' => MENU_CALLBACK);
     $items[] = array('path' => 'user/login', 'title' => t('log in'),
-      'callback' => 'user_page', 'access' => TRUE, 'type' => MENU_CALLBACK);
+      'type' => MENU_DEFAULT_LOCAL_TASK);
     $items[] = array('path' => 'user/register', 'title' => t('register'),
-      'callback' => 'user_page', 'access' => TRUE, 'type' => MENU_CALLBACK);
+      'callback' => 'user_page', 'access' => $user->uid == 0 && variable_get('user_register', 1), 'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'user/password', 'title' => t('request new password'),
-      'callback' => 'user_page', 'access' => TRUE, 'type' => MENU_CALLBACK);
+      'callback' => 'user_page', 'access' => $user->uid == 0, 'type' => MENU_LOCAL_TASK);
 
     $items[] = array('path' => 'admin/user', 'title' => t('users'),
       'callback' => 'user_admin', 'access' => $access);
@@ -792,13 +791,6 @@ function user_login($edit = array(), $msg = '') {
   }
   $output .= form_password(t('Password'), 'pass', $pass, 30, 64, t('Enter the password that accompanies your username.'));
   $output .= form_submit(t('Log in'));
-  $items[] = l(t('Request new password'), 'user/password');
-  if (variable_get('user_register', 1)) {
-    $items[] = l(t('Create new account'), 'user/register');
-  }
-  $output .= theme('item_list', $items);
-
-  $output  = form_group(t('User login'), $output);
 
   return form($output, 'post', url('user/login'));
 }
@@ -890,7 +882,7 @@ function user_pass($edit = array()) {
       user_save($account, array('pass' => $pass));
 
       // Mail new password:
-      $variables = array('%username' => $account->name, '%site' => variable_get('site_name', 'drupal'), '%password' => $pass, '%uri' => $base_url, '%uri_brief' => substr($base_url, strlen('http://')), '%mailto' => $account->mail, '%date' => format_date(time()), '%login_uri' => url('user/login', NULL, NULL, TRUE), '%edit_uri' => url('user/'. $account->uid .'/edit', NULL, NULL, TRUE));
+      $variables = array('%username' => $account->name, '%site' => variable_get('site_name', 'drupal'), '%password' => $pass, '%uri' => $base_url, '%uri_brief' => substr($base_url, strlen('http://')), '%mailto' => $account->mail, '%date' => format_date(time()), '%login_uri' => url('user', NULL, NULL, TRUE), '%edit_uri' => url('user/'. $account->uid .'/edit', NULL, NULL, TRUE));
       $subject = _user_mail_text('pass_subject', $variables);
       $body = _user_mail_text('pass_body', $variables);
       $headers = "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from";
@@ -912,12 +904,6 @@ function user_pass($edit = array()) {
     $output .= form_textfield(t('Username'), 'name', $edit['name'], 30, 64);
     $output .= form_textfield(t('E-mail address'), 'mail', $edit['mail'], 30, 64);
     $output .= form_submit(t('E-mail new password'));
-    $items[] = l(t('Log in'), 'user/login');
-    if (variable_get('user_register', 1)) {
-      $items[] = l(t('Create new account'), 'user/register');
-    }
-    $output .= theme('item_list', $items);
-    $output  = form_group(t('Request new password'), $output);
     return form($output, 'post', url('user/password'));
   }
 }
@@ -942,7 +928,7 @@ function user_register($edit = array()) {
       $account = user_save('', array('name' => $edit['name'], 'pass' => $pass, 'init' => $edit['mail'], 'mail' => $edit['mail'], 'roles' => array(_user_authenticated_id()), 'status' => (variable_get('user_register', 1) == 1 ? 1 : 0)));
       watchdog('user', t('New user: %name %e-mail.', array('%name' => '<em>'. $edit['name'] .'</em>', '%e-mail' => '<em>&lt;'. $edit['mail'] .'&gt;</em>')), l(t('edit'), 'user/'. $account->uid .'/edit'));
 
-      $variables = array('%username' => $edit['name'], '%site' => variable_get('site_name', 'drupal'), '%password' => $pass, '%uri' => $base_url, '%uri_brief' => substr($base_url, strlen('http://')), '%mailto' => $edit['mail'], '%date' => format_date(time()), '%login_uri' => url('user/login', NULL, NULL, TRUE), '%edit_uri' => url('user/'. $account->uid .'/edit', NULL, NULL, TRUE));
+      $variables = array('%username' => $edit['name'], '%site' => variable_get('site_name', 'drupal'), '%password' => $pass, '%uri' => $base_url, '%uri_brief' => substr($base_url, strlen('http://')), '%mailto' => $edit['mail'], '%date' => format_date(time()), '%login_uri' => url('user', NULL, NULL, TRUE), '%edit_uri' => url('user/'. $account->uid .'/edit', NULL, NULL, TRUE));
 
       // The first user may login immediately, and receives a customized welcome e-mail.
       if ($account->uid == 1) {
@@ -981,15 +967,11 @@ function user_register($edit = array()) {
   $affiliates = user_auth_help_links();
   if (count($affiliates) > 0) {
     $affiliates = implode(', ', $affiliates);
-    $output .= '<p>'. t('Note: if you have an account with one of our affiliates (%s), you may <a href="%login_uri">login now</a> instead of registering.', array('%s' => $affiliates, '%login_uri' => url('user/login'))) .'</p>';
+    $output .= '<p>'. t('Note: if you have an account with one of our affiliates (%s), you may <a href="%login_uri">login now</a> instead of registering.', array('%s' => $affiliates, '%login_uri' => url('user'))) .'</p>';
   }
   $output .= form_textfield(t('Username'), 'name', $edit['name'], 30, 64, t('Your full name or your preferred username; only letters, numbers and spaces are allowed.'));
   $output .= form_textfield(t('E-mail address'), 'mail', $edit['mail'], 30, 64, t('A password and instructions will be sent to this e-mail address, so make sure it is accurate.'));
   $output .= form_submit(t('Create new account'));
-  $items[] = l(t('Request new password'), 'user/password');
-  $items[] = l(t('Log in'), 'user/login');
-  $output .= theme('item_list', $items);
-  $output  = form_group(t('Create new user account'), $output);
 
   return form($output);
 }
@@ -1127,50 +1109,27 @@ function user_edit($category = 'account') {
 function user_view($uid = 0) {
   global $user;
 
-  if ($uid == 0) {
-    if ($user->uid) {
-      // Retrieve and merge all profile fields:
-      $fields = array();
-      foreach (module_list() as $module) {
-        if ($data = module_invoke($module, 'user', 'view', '', $user)) {
-          foreach ($data as $category => $content) {
-            $fields[$category] .= $content;
-          }
+  if ($account = user_load(array('uid' => $uid, 'status' => 1))) {
+    // Retrieve and merge all profile fields:
+    $fields = array();
+    foreach (module_list() as $module) {
+      if ($data = module_invoke($module, 'user', 'view', '', $account)) {
+        foreach ($data as $category => $content) {
+          $fields[$category] .= $content;
         }
       }
-      print theme('page', theme('user_profile', $user, $fields), $user->name);
     }
-    else {
-      $output = user_login();
-      if (variable_get('user_register', 1)) {
-        $output .= user_register();
-      }
-      $output .= user_pass();
 
-      print theme('page', $output, t('User login'));
-    }
+    print theme('page', theme('user_profile', $account, $fields), $account->name);
   }
   else {
-    if ($account = user_load(array('uid' => $uid, 'status' => 1))) {
-      // Retrieve and merge all profile fields:
-      $fields = array();
-      foreach (module_list() as $module) {
-        if ($data = module_invoke($module, 'user', 'view', '', $account)) {
-          foreach ($data as $category => $content) {
-            $fields[$category] .= $content;
-          }
-        }
-      }
-
-      print theme('page', theme('user_profile', $account, $fields), $account->name);
-    }
-    else {
-      drupal_not_found();
-    }
+    drupal_not_found();
   }
 }
 
 function user_page() {
+  global $user;
+
   $edit = $_POST['edit'];
   $op = $_POST['op'];
 
@@ -1181,28 +1140,31 @@ function user_page() {
   switch ($op) {
     case t('E-mail new password'):
     case 'password':
-      print theme('page', user_pass($edit), t('E-mail new password'));
+      print theme('page', user_pass($edit));
       break;
     case t('Create new account'):
     case 'register':
-      $output = user_register($edit);
-      if (variable_get('user_register', 1)) {
-        print theme('page', $output, t('Create new account'));
-      }
-      else {
-        drupal_access_denied();
-      }
+      print theme('page', user_register($edit));
       break;
     case t('Log in'):
     case 'login':
-      $output = user_login($edit);
-      print theme('page', $output, t('Log in'));
+      print theme('page', user_login($edit));
       break;
     case 'logout':
       print user_logout();
       break;
     default:
-      print user_view(arg(1));
+      if (!arg(1)) {
+        if ($user->uid) {
+          drupal_goto('user/'. $user->uid);
+        }
+        else {
+          print theme('page', user_login($edit));
+        }
+      }
+      else {
+        print user_view(arg(1));
+      }
   }
 
 }
