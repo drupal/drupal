@@ -1,6 +1,6 @@
 <?php
 /** @file
- * $Id: menu.inc,v 1.33 2003/12/17 22:15:35 dries Exp $
+ * $Id: menu.inc,v 1.34 2003/12/18 21:13:17 dries Exp $
  */
 /**
  * @defgroup menu Menu system
@@ -100,16 +100,19 @@ function menu_get_active_title() {
  * Returns the help associated with the active menu item.
  */
 function menu_get_active_help() {
-  $path = $_GET["q"];
-  $output = "";
 
-  $return = module_invoke_all("help", $path);
-  foreach ($return as $item) {
-    if (!empty($item)) {
-      $output .= $item ."\n";
+  if (menu_active_handler_exists()) {
+    $path = $_GET["q"];
+    $output = "";
+
+    $return = module_invoke_all("help", $path);
+    foreach ($return as $item) {
+      if (!empty($item)) {
+        $output .= $item ."\n";
+      }
     }
+    return $output;
   }
-  return $output;
 }
 
 /**
