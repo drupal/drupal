@@ -31,6 +31,9 @@ h3 {
   margin: 0;
   padding: 0 0 .5em 0;
 }
+table {
+  border-collapse: collapse;
+}
 th {
   text-align: left;
   color: #006;
@@ -40,7 +43,7 @@ tr.dark {
   background-color: #ddd;
 }
 tr.light {
-  background-color: #fff;
+  background-color: #eee;
 }
 td {
   padding: 5px;
