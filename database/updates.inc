@@ -1971,6 +1971,7 @@ function update_111() {
   $ret = array();
 
   if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql('DELETE FROM {variable} WHERE name LIKE 'throttle_%';
     $ret[] = update_sql('ALTER TABLE {sessions} ADD PRIMARY KEY sid (sid)');
   }
 
