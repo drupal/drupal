@@ -54,7 +54,7 @@ function tracker_posts($id = 0) {
 
     $comments = array();
     while ($comment = db_fetch_object($cresult)) {
-      $comments[] = "<li>". t("%subject by %author", array("%subject" => l($comment->subject, "node/view/$node->nid#comment-$comment->cid"), "%author" => format_name($comment))) ." ". (node_is_new($comment->nid, $comment->timestamp) ? theme("mark") : "") ."</li>\n";
+      $comments[] = "<li>". t("%subject by %author", array("%subject" => l($comment->subject, "node/view/$node->nid", NULL, NULL, "comment-$comment->cid"), "%author" => format_name($comment))) ." ". (node_is_new($comment->nid, $comment->timestamp) ? theme("mark") : "") ."</li>\n";
     }
 
     if ($comments) {
