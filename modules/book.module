@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.171 2003/08/15 15:17:23 dries Exp $
+// $Id: book.module,v 1.172 2003/08/22 17:06:41 dries Exp $
 
 function book_system($field){
   $output = "";
@@ -411,7 +411,8 @@ function book_view($node, $main = 0) {
 
     // build the tree from bottom to top to have the book index in $level for navigation later
     $path = book_location($node);
-    $trail[] = l(t("Books"), "book");
+    $trail[] = l(t("Home"), "");
+    $trail[] = l(t("books"), "book");
     foreach ($path as $level) {
       $trail[] = l($level->title, "node/view/$level->nid");
     }

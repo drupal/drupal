@@ -329,11 +329,11 @@ function _update_thread_structure($comments, $pid, $depth, $structure) {
 }
 
 function update_60() {
-  update_sql("ALTER TABLE forum DROP icon");
+  update_sql("ALTER TABLE {forum} DROP icon");
 }
 
 function update_61() {
-  update_sql("CREATE TABLE IF NOT EXISTS sessions (
+  update_sql("CREATE TABLE IF NOT EXISTS {sessions} (
     uid int(10) unsigned NOT NULL,
     sid varchar(32) NOT NULL default '',
     hostname varchar(128) NOT NULL default '',
@@ -344,9 +344,9 @@ function update_61() {
     KEY timestamp (timestamp)
   )");
 
-  update_sql("ALTER TABLE users DROP session;");
-  update_sql("ALTER TABLE users DROP hostname;");
-  update_sql("ALTER TABLE users DROP sid;");
+  update_sql("ALTER TABLE {users} DROP session;");
+  update_sql("ALTER TABLE {users} DROP hostname;");
+  update_sql("ALTER TABLE {users} DROP sid;");
 }
 
 function _update_next_thread($structure, $parent) {

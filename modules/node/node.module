@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.246 2003/08/21 17:42:00 dries Exp $
+// $Id: node.module,v 1.247 2003/08/22 17:06:42 dries Exp $
 
 function node_help() {
   global $mod;
@@ -1553,7 +1553,7 @@ function node_page() {
 
     switch ($op) {
       case "add":
-        theme("box", t("Create new $name"), node_add(arg(2)));
+        theme("box", t("Submit $name"), node_add(arg(2)));
         break;
       case "edit":
         theme("box", t("Edit $name"), node_edit(arg(2)));

@@ -509,7 +509,6 @@ CREATE TABLE users (
   timestamp integer NOT NULL default '0',
   status smallint NOT NULL default '0',
   timezone varchar(8) default NULL,
-  rating decimal(8,2) default NULL,
   language char(2) NOT NULL default '',
   init varchar(64) default '',
   data text default '',

@@ -171,6 +171,9 @@ table {
 .node .links a, .comment .links a {
   font-weight: bold;
 }
+.path a, .path a:visited {
+  color: #777;
+}
 .comment .title {
   font-weight: bold;
   font-size: 1.1em;
