@@ -57,6 +57,6 @@ $themes = array("UnConeD" => array(
 $languages = array("en" => "English");
 
 # This line prevents users from accessing your settings file:
-die("access denied");
+if (basename($SCRIPT_FILENAME) == basename(__FILE__) && basename($SCRIPT_FILENAME) != "") die("access denied");
 
 ?>
