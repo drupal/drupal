@@ -140,11 +140,11 @@ function menu_execute_active_handler() {
 
   if ($_list[$path]["callback"]) {
     $arg = substr($_GET["q"], strlen($path) + 1);
-    if (empty($arg)) {
-      return call_user_func($_list[$path]["callback"]);
+    if (isset($arg)) {
+      return call_user_func_array($_list[$path]["callback"], explode("/", $arg));
     }
     else {
-      return call_user_func_array($_list[$path]["callback"], explode("/", $arg));
+      return call_user_func($_list[$path]["callback"]);
     }
   }
 }
@@ -171,6 +171,23 @@ function menu_in_active_trail($path) {
 }
 
 /**
+ * Returns true when the menu has visisble children.
+ */
+function menu_has_visible_children($item) {
+  global $_list;
+
+  if ($_list[$item]['children']) {
+    foreach ($_list[$item]['children'] as $child) {
+      if ($_list[$child]['hidden'] == MENU_SHOW) {
+        return true;
+      }
+    }
+  }
+
+  return false;
+}
+
+/**
  * Returns a rendered menu tree.
  */
 function menu_tree($parent = "", $hidden = 0) {
@@ -191,8 +208,11 @@ function menu_tree($parent = "", $hidden = 0) {
       ** nor children.  The latter check avoids that useless links are being
       ** rendered.
       */
-      if (($_list[$item]["hidden"] == MENU_SHOW && ($_list[$item]["callback"] || $_list[$item]["children"])) || ($_list[$item]["hidden"] == MENU_HIDE_NOCHILD && $_list[$item]["children"])) {
-        $style = ($_list[$item]["children"] ? (menu_in_active_trail($item)  ? "expanded" : "collapsed") : "leaf");
+      $visible = menu_has_visible_children($item);
+      if (($_list[$item]["hidden"] == MENU_SHOW && $_list[$item]["callback"]) ||
+         ($_list[$item]["hidden"] == MENU_SHOW && $visible) ||
+         ($_list[$item]["hidden"] == MENU_HIDE_NOCHILD && $visible)) {
+        $style = ($visible ? (menu_in_active_trail($item)  ? "expanded" : "collapsed") : "leaf");
         $output .= "<li class=\"$style\">";
         $output .= _render_item($item);
         if (menu_in_active_trail($item)) {
