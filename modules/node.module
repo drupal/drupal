@@ -927,7 +927,7 @@ function node_form($edit, $error = NULL) {
     $output .= form_select(t("Static on front page"), "static", $edit->static, array(t("Disabled"), t("Enabled")));
     // TODO: move this to the comment.module
     if (module_exist("comment")) {
-      $output .= form_select(t("Allow users comments"), "comment", $edit->comment, array(t("Disabled"), t("Read only"), t("Read-write")));
+      $output .= form_select(t("Allow user comments"), "comment", $edit->comment, array(t("Disabled"), t("Read only"), t("Read-write")));
     }
     $output .= form_select(t("Create new revision"), "revision", $edit->revision, array(t("Disabled"), t("Enabled")));
   }
@@ -949,7 +949,7 @@ function node_add($type) {
 
   if ($type && node_access("create", $type)) {
     // Initialize settings
-    $node = array("uid" => $user->uid, "name" => $user->name, "type" => $type, "status" => 1, "promote" => !module_exist("queue"), "moderate" => module_exist("queue"), "comment" => module_exist("queue") ? 2 : 0);
+    $node = array("uid" => $user->uid, "name" => $user->name, "type" => $type, "status" => 1, "promote" => !module_exist("queue"), "moderate" => module_exist("queue"), "comment" => 2);
     foreach (array("title", "teaser", "body") as $field) {
       if ($edit[$field]) {
         $node[$field] = check_input($edit[$field]);
