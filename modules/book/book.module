@@ -533,7 +533,7 @@ function book_toc_recurse($nid, $indent, $toc, $children, $exclude) {
   return $toc;
 }
 
-function book_toc($exclude = 0, $parent = 0, $indent = '', $toc = array()) {
+function book_toc($exclude = 0) {
   $result = db_query('SELECT DISTINCT(n.nid), n.title, b.parent FROM {node} n '. node_access_join_sql() .' INNER JOIN {book} b ON n.nid = b.nid WHERE n.status = 1 AND '. node_access_where_sql() .' ORDER BY b.weight, n.title');
 
   while ($node = db_fetch_object($result)) {
@@ -549,7 +549,7 @@ function book_toc($exclude = 0, $parent = 0, $indent = '', $toc = array()) {
     $toc[0] = '<'. t('top-level') .'>';
   }
 
-  $toc = book_toc_recurse($parent, $indent, $toc, $children, $exclude);
+  $toc = book_toc_recurse(0, '', array(), $children, $exclude);
 
   return $toc;
 }
