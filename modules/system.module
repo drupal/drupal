@@ -194,7 +194,7 @@ function system_view($type) {
     default:
       foreach (module_list() as $name) {
         if (module_hook($name, "settings")) {
-          $links[] = "<a href=\"#$name\">". t("$name") ."</a>";
+          $links[] = l($name, "admin/system/modules/settings#$name");
         }
       }
       $form = system_view_modules();
