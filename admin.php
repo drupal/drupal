@@ -5,7 +5,7 @@ include_once "includes/common.inc";
 
 function status($message) {
   if ($message) {
-    return "<B>Status:</B> $message<HR>\n";
+    return "<b>Status:</b> $message<hr />\n";
   }
 }
 
@@ -49,12 +49,12 @@ function admin_page($mod) {
 }
 
 if (user_access("access administration pages")) {
-  page_header();  
+  page_header();
   admin_page($mod);
   page_footer();
 }
 else {
   print message_access();
-}  
+}
 
 ?>

@@ -32,10 +32,6 @@ function system_link($type) {
     $links[] = la(t("site configuration"), array("mod" => "system"));
   }
 
-  /*if ($type == "admin" && user_access("administer modules and themes")) {
-    $links[] = la(t("modules and themes"), array("mod" => "system", "op" => "modules"));
-  }*/
-
   return $links ? $links : array();
 }
 
@@ -82,8 +78,8 @@ function system_view_options() {
 
   // layout settings:
   $output .= "<h3>Layout settings</h3>\n";
-  foreach (theme_list() as $key=>$value) $options .= "<OPTION VALUE=\"$key\"". (variable_get("theme_default", 0) == $key ? " SELECTED" : "") .">$key</OPTION>\n";
-  $output .= form_item("Default theme", "<SELECT NAME=\"edit[theme_default]\">$options</SELECT>", "The default theme as seen by visitors or anonymous users.");
+  foreach (theme_list() as $key=>$value) $options .= "<option value=\"$key\"". (variable_get("theme_default", 0) == $key ? " selected=\"selected\"" : "") .">$key</option>\n";
+  $output .= form_item("Default theme", "<select name=\"edit[theme_default]\">$options</select>", "The default theme as seen by visitors or anonymous users.");
   $output .= "<hr />\n";
 
   // development settings:
