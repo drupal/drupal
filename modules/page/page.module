@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.62 2002/05/24 12:27:10 kjartan Exp $
+// $Id: page.module,v 1.63 2002/05/29 17:17:09 kjartan Exp $
 
 function page_help() {
   $output .= "<p>The page module is used to create a <i>site page</i>.  Unlike a story, a site page is a persistent web page on your site which usually shortcuts the typical lifecycle of user generated content (i.e. submit -&gt; moderate -&gt; post -&gt; comment).  A site page is usually linked from the main navigation bar, using whatever text the author wishes.  To create a site page without this navigation link, simply skip the form field which requests link text.  Administrators are the exclusive authors of site pages (i.e. requires the <i>administer nodes</i> in ". la("permission", array("mod" => "user", "op" => "permission")) .").</p>";
@@ -58,7 +58,7 @@ function page_load($node) {
 }
 
 function page_link($type) {
-  if ($type == "page") {
+  if ($type == "page" && user_access("access content")) {
     $result = db_query("SELECT n.nid, p.link FROM page p LEFT JOIN node n ON p.nid = n.nid WHERE n.status = '1' AND p.link != '' ORDER BY p.link");
     while ($page = db_fetch_object($result)) {
       $links[] = l($page->link, array("id" => $page->nid));
