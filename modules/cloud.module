@@ -141,7 +141,7 @@ function cloud_list($limit = 10) {
       $hour = floor((time() - $site->timestamp) / 3600);
       if ($hour < 12) {
         if ($hour == 0) {
-          $output .= "<br />". t("Updated < 1 hours ago:");
+          $output .= "<br />". t("Updated &lt; 1 hours ago:");
       }
       else {
           $output .= "<br />". t("Updated %a ago:", array("%a" => format_plural($hour, "hour", "hours")));
