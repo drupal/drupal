@@ -1,5 +1,5 @@
 <?php
-/* $Id: updates.inc,v 1.21 2004/07/08 19:22:47 dries Exp $ */
+/* $Id: updates.inc,v 1.22 2004/07/10 16:03:30 dries Exp $ */
 
 // Define the various updates in an array("date : comment" => "function");
 $sql_updates = array(
@@ -1144,7 +1144,9 @@ function update_91() {
 }
 
 function update_92() {
+  $ret = array();
   $ret[] = update_sql("DELETE FROM {cache}");
+  return $ret;
 }
 
 function update_sql($sql) {
