@@ -61,6 +61,7 @@ pre {
 table {
   /* make <td> sizes relative to body size! */
   font-size: 1em;
+}
 .form-item {
   margin-top: 1em;
 }
