@@ -89,14 +89,16 @@ function statistics_perm() {
 function statistics_link($type, $node = 0, $main = 0) {
   global $id;
 
+  $links = array();
+
   if ($type == "node" && user_access("access statistics") && variable_get("statistics_display_counter", 0)) {
     $statistics = statistics_get($node->nid);
     if ($statistics) {
       if (user_access("administer statistics")) {
-        $links[] = l(format_plural($statistics[totalcount], "1 read", "%count reads"), "admin/statistics/referrers/$node->nid");
+        $links[] = l(format_plural($statistics["totalcount"], "1 read", "%count reads"), "admin/statistics/referrers/$node->nid");
       }
       else {
-        $links[] = format_plural($statistics[totalcount], "1 read", "%count reads");
+        $links[] = format_plural($statistics["totalcount"], "1 read", "%count reads");
       }
     }
   }
@@ -133,7 +135,7 @@ function statistics_link($type, $node = 0, $main = 0) {
     menu("admin/block/whos online block", "configure 'who is online' block", "statistics_admin", $help["who is online block"], 5);
 }
 
-  return $links ? $links : array();
+  return $links;
 }
 
 
