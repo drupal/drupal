@@ -1256,14 +1256,21 @@ function node_add($type) {
     // If no (valid) node type has been provided, display a node type overview.
     foreach (node_list() as $type) {
       if (node_access('create', $type)) {
-        $output .= '<li>';
-        $output .= ' '. l(node_invoke($type, 'node_name'), 'node/add/'. $type, array('title' => t('Add a new %s.', array('%s' => node_invoke($type, 'node_name')))));
-        $output .= ' <div style="margin-left: 20px;">'. implode("\n", module_invoke_all('help', 'node/add#'. $type)) .'</div>';
-        $output .= '</li>';
+        $out = '<li>';
+        $out .= ' '. l(node_invoke($type, 'node_name'), "node/add/$type", array('title' => t('Add a new %s.', array('%s' => node_invoke($type, 'node_name')))));
+        $out .= " <div style=\"margin-left: 20px;\">". implode("\n", module_invoke_all('help', 'node/add#'. $type)) .'</div>';
+        $out .= '</li>';
+        $item[node_invoke($type, 'node_name')] = $out;
       }
     }
 
-    $output = t('Choose the appropriate item from the list:') .'<ul>'. $output .'</ul>';
+    if (isset($item)) {
+      ksort($item);
+      $output = t('Choose the appropriate item from the list:') .'<ul>'. implode('', $item) .'</ul>';
+    }
+    else {
+      $output = message_access();
+    }
   }
 
   return $output;
