@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.426 2004/11/27 10:02:06 dries Exp $
+// $Id: node.module,v 1.427 2004/11/29 12:49:17 dries Exp $
 
 /**
  * @file
@@ -1271,7 +1271,7 @@ function node_add($type) {
   $edit = $_POST['edit'];
 
   // If a node type has been specified, validate its existence.
-  if ($type && node_access('create', $type)) {
+  if (in_array($type, node_list()) && node_access('create', $type)) {
     // Initialize settings:
     $node = array('uid' => $user->uid, 'name' => $user->name, 'type' => $type);
 
