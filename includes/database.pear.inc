@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pear.inc,v 1.7 2002/08/20 19:29:15 dries Exp $
+// $Id: database.pear.inc,v 1.8 2002/08/26 18:23:29 dries Exp $
 
 require_once 'DB.php';
 
@@ -94,7 +94,7 @@ function db_result($result, $row = 0) {
   }
 }
 
-function db_error($result) {
+function db_error() {
   global $db_handle;
 
   return DB::isError($db_handle);
