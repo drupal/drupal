@@ -28,7 +28,7 @@ function node_title_list($result, $title = NULL) {
   }
 
   while ($node = db_fetch_object($result)) {
-    $number = comment_num_all($node->nid);
+    $number = module_invoke("comment", "num_all", $node->nid);
     $name = strip_tags(format_name($node)); // required for anonymous users to work
     $items[] = l(check_output($node->title), array("id" => $node->nid), "node", "", array("title" => t("Author: %name, comments: %number", array("%name" => $name, "%number" => $number))));
   }
@@ -38,7 +38,16 @@ function node_title_list($result, $title = NULL) {
 
 function node_teaser($body) {
 
-  $size = 400;
+  $size = variable_get("teaser_length", 600);
+
+  /*
+  ** If the size is zero, teasers are disabled so we
+  ** return the entire body.
+  */
+
+  if ($size == 0) {
+    return $body;
+  }
 
   /*
   ** If we have a short body, return the entire body:
@@ -49,19 +58,59 @@ function node_teaser($body) {
   }
 
   /*
-  ** If we have a long body, try not to split paragraphs:
+  ** If a valid delimiter has been specified, use it to
+  ** chop of the teaser.
+  */
+
+  $delimiter = strpos($body, "---");
+  if ($delimiter > 100 && $delimiter < $size) {
+    return substr($body, 0, $delimiter);
+  }
+
+  /*
+  ** In some cases no delimiter has been specified (eg.
+  ** when posting using the Blogger API) in which case
+  ** we try to split at paragraph boundaries.
   */
 
   if ($length = strpos($body, "\n", $size)) {
     return substr($body, 0, $length + 1);
   }
 
+  if ($length = strpos($body, "<br />", $size)) {
+    return substr($body, 0, $length + 1);
+  }
+
+  if ($length = strpos($body, "<br>", $size)) {
+    return substr($body, 0, $length + 1);
+  }
+
+  if ($length = strpos($body, "</p>", $size)) {
+    return substr($body, 0, $length + 1);
+  }
+
   /*
-  ** If we have a long body, try not to split sentences:
+  ** When even the first paragraph is too long, try to 
+  ** split at the end of the next sentence.
   */
 
-  return substr($body, 0, strpos($body, ". ", $size) + 1);
+  if ($length = strpos($body, ". ", $size)) {
+    return substr($body, 0, $length + 1);
+  }
 
+  if ($length = strpos($body, "! ", $size)) {
+    return substr($body, 0, $length + 1);
+  }
+
+  if ($length = strpos($body, "? ", $size)) {
+    return substr($body, 0, $length + 1);
+  }
+
+  /*
+  ** Nevermind, we split it the hard way ...
+  */
+
+  return substr($body, 0, $size);
 }
 
 function node_invoke($node, $name, $arg = 0) {
@@ -229,6 +278,13 @@ function node_view($node, $main = 0) {
   $node = array2object($node);
 
   /*
+  ** Remove the delimiter (if any) that seperates the teaser from the
+  ** body.
+  */
+
+  $node->body = str_replace("---", "", $node->body);
+
+  /*
   ** The "view" hook can be implemented to overwrite the default function
   ** to display nodes.
   */
@@ -251,38 +307,36 @@ function node_access($op, $node = 0) {
   if (user_access("administer nodes")) {
     return 1;
   }
+
+  /*
+  ** Convert the node to an object if necessary:
+  */
+
+  $node = array2object($node);
+
+  /*
+  ** Construct a function:
+  */
+
+  if ($node->type) {
+    $type = $node->type;
+  }
   else {
+    $type = $node;
+  }
 
-    /*
-    ** Convert the node to an object if necessary:
-    */
+  $function = $type ."_access";
 
-    $node = array2object($node);
-
-    /*
-    ** Construct a function:
-    */
-
-    if ($node->type) {
-      $type = $node->type;
-    }
-    else {
-      $type = $node;
-    }
-
-    $function = $type ."_access";
-
-    if (function_exists($function)) {
-      return $function($op, $node);
-    }
-    else {
-      return 0;
-    }
+  if (function_exists($function)) {
+    return $function($op, $node);
+  }
+  else {
+    return 0;
   }
 }
 
 function node_perm() {
-  return array("administer nodes", "access content", "post content");
+  return array("administer nodes", "access content");
 }
 
 function node_search($keys) {
@@ -312,7 +366,8 @@ function node_search($keys) {
 }
 
 function node_conf_options() {
-  $output .= form_select(t("Default number of nodes to display"), "default_nodes_main", variable_get("default_nodes_main", 10), array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 =>  5, 6 => 6, 7 => 7, 8 => 8, 9 => 9, 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30), t("The default maximum number of nodes to display on the main page."));
+  $output .= form_select(t("Number of posts on main page"), "default_nodes_main", variable_get("default_nodes_main", 10), array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 =>  5, 6 => 6, 7 => 7, 8 => 8, 9 => 9, 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30), t("The default maximum number of posts to display on the main page."));
+  $output .= form_select(t("Length of trimmed posts"), "teaser_length", variable_get("teaser_length", 600), array(0 => t("Unlimited"), 200 => t("200 characters"), 400 => t("400 characters"), 600 => t("600 characters"), 800 => t("800 characters"), 1000 => t("1000 characters"), 1200 => t("1200 characters"), 1400 => t("1400 characters"), 1600 => t("1600 characters"), 1800 => t("1800 characters"), 2000 => t("2000 characters")), t("The maximum number of characters used in the trimmed version of a post.  Drupal will use this setting to determine at which offset long posts should be trimmed.  The trimmed version of a post is typically used as a teaser when displaying the post on the main page, in XML feeds, etc.  To disable teasers, set to 'Unlimited'."));
   return $output;
 }
 
@@ -410,7 +465,7 @@ function node_link($type, $node = 0, $main = 0) {
     $links[] = la(t("content management"), array("mod" => "node"));
   }
 
-  if ($type == "page" && user_access("post content")) {
+  if ($type == "page") {
     $links[] = lm(t("submit"), array("mod" => "node", "op" => "add"), "", array("title" => t("Submit or suggest new content.")));
   }
 
@@ -802,7 +857,6 @@ function node_validate($node, &$error) {
     else {
       $error["date"] = theme_invoke("theme_error", t("You have to specifiy a valid date."));
     }
-
   }
 
   /*
@@ -834,14 +888,6 @@ function node_form($edit, $error = NULL) {
   if (!$error) {
     /* Only validate if we don't already know the errors. */
     $edit = node_validate($edit, $error);
-  }
-
-  /*
-  ** Generate a teaser when necessary:
-  */
-
-  if ($edit->body && !$edit->teaser) {
-    $edit->teaser = node_teaser($edit->body);
   }
 
   /*
@@ -922,11 +968,7 @@ function node_form($edit, $error = NULL) {
     $output .= form_textfield(t("Authored by"), "name", $edit->name, 20, 60, $error["name"]);
     $output .= form_textfield(t("Authored on"), "date", $edit->date, 20, 25, $error["date"]);
     $output .= "<br />";
-    $output .= form_select(t("Set public/published"), "status", $edit->status, array(t("Disabled"), t("Enabled")));
-    // TODO: move this to the queue.module
-    if (module_exist("queue")) {
-      $output .= form_select(t("Queue for moderation"), "moderate", $edit->moderate, array(t("Disabled"), t("Enabled")));
-    }
+    $output .= form_select(t("Moderation status"), "moderate", $edit->moderate, array(t("Approved"), t("Awaiting approval")));
     $output .= form_select(t("Promote to front page"), "promote", $edit->promote, array(t("Disabled"), t("Enabled")));
     $output .= form_select(t("Static on front page"), "static", $edit->static, array(t("Disabled"), t("Enabled")));
     // TODO: move this to the comment.module
@@ -945,10 +987,6 @@ function node_form($edit, $error = NULL) {
 
 function node_add($type) {
   global $user, $edit;
-
-  if (!user_access("post content")) {
-    return message_access();
-  }
 
   /*
   ** If a node type has been specified, validate it existence.  If no
@@ -972,7 +1010,7 @@ function node_add($type) {
     */
 
     foreach (module_list() as $name) {
-      if (module_hook($name, "node") && node_access("create", array("type" => $name))) {
+      if (module_hook($name, "node") && node_access("create", $name)) {
         $output .= "<li>";
         $output .= " ". lm(module_invoke($name, "node", "name"), array("mod" => "node", "op" => "add", "type" => $name), "", array("title" => t("Add a new %s.", array("%s" => module_invoke($name, "node", "name")))));
         $output .= " <div style=\"margin-left: 20px;\">". module_invoke($name, "node", "description") ."</div>";
@@ -990,10 +1028,6 @@ function node_add($type) {
 function node_edit($id) {
   global $user;
 
-  if (!user_access("post content")) {
-    return message_access();
-  }
-
   $node = node_load(array("nid" => $id));
 
   if (node_access("update", $node)) {
@@ -1007,10 +1041,6 @@ function node_edit($id) {
 }
 
 function node_preview($node, $error = NULL) {
-
-  if (!user_access("post content")) {
-    return message_access();
-  }
 
   /*
   ** Convert the array to an object:
@@ -1049,21 +1079,37 @@ function node_preview($node, $error = NULL) {
   }
 
   /*
+  ** Exctract a teaser:
+  */
+
+  $node->teaser = node_teaser($node->body);
+
+  /*
   ** Apply the required filters:
   */
 
+  $node = object2array($node);
   if ($node->nid) {
-    $view = array_merge($node, module_invoke($node->type, "save", "update", $node));
+    $node = array_merge($node, module_invoke($node->type, "save", "update", $node));
   }
   else {
-    $view = array_merge($node, module_invoke($node->type, "save", "create", $node));
+    $node = array_merge($node, module_invoke($node->type, "save", "create", $node));
   }
+  $node = array2object($node);
 
   /*
-  ** Display a preview of the node:
+  ** Display a prenode of the node:
   */
-
-  node_view($view);
+  if ($node->teaser && $node->teaser != $node->body) {
+    print "<h3>". t("Preview full version") ."</h3>";
+    node_view($node, 0);
+    print "<h3>". t("Preview trimmed version") ."</h3>";
+    node_view($node, 1);
+    print "<p><i>". t("The trimmed version of your post shows how your post would look like when promoted to the main page or when exported for syndication.  You can insert a delimiter '---' (without the quotes) to fine-tune where your post gets split.  However note that delimiter will be ignored when misplaced.") ."</i></p>";
+  }
+  else {
+    node_view($node, 0);
+  }
 
   return node_form($node, $error);
 }
@@ -1071,152 +1117,148 @@ function node_preview($node, $error = NULL) {
 function node_submit($node) {
   global $user, $theme;
 
-  if (user_access("post content")) {
+  /*
+  ** Fixup the node when required:
+  */
+
+  $node = node_validate($node, $error);
+
+  /*
+  ** If something went wrong, go back to the preview form:
+  */
+
+  if ($error) {
+    return node_preview($node, $error);
+  }
+
+  /*
+  ** Create a new revision when required:
+  */
+
+  $node = node_revision_create($node);
+
+  /*
+  ** Prepare the node's body:
+  */
+
+  $node->body = filter($node->body);
+
+  if ($node->nid) {
 
     /*
-    ** Fixup the node when required:
+    ** Check whether the current user has the proper access rights to
+    ** perform this operation:
     */
 
-    $node = node_validate($node, $error);
-
-    /*
-    ** If something went wrong, go back to the preview form:
-    */
-
-    if ($error) {
-      return node_preview($node, $error);
-    }
-
-    /*
-    ** Create a new revision when required:
-    */
-
-    $node = node_revision_create($node);
-
-    if ($node->nid) {
+    if (node_access("update", $node)) {
 
       /*
-      ** Check whether the current user has the proper access rights to
-      ** perform this operation:
+      ** Compile a list of the node fields and their default values that users
+      ** and administrators are allowed to save when updating a node.
       */
 
-      if (node_access("update", $node)) {
-
-        /*
-        ** Compile a list of the node fields and their default values that users
-        ** and administrators are allowed to save when updating a node.
-        */
-
-        if (user_access("administer nodes")) {
-          $fields = array("nid", "uid", "body", "comment", "created", "promote", "static", "moderate", "revisions", "status", "teaser", "title", "type" => $node->type);
-        }
-        else {
-          $fields = array("nid", "uid" => ($user->uid ? $user->uid : 0), "body", "teaser", "title", "type" => $node->type);
-        }
-
-        $nid = node_save($node, array_merge($fields, module_invoke($node->type, "save", "update", $node)));
-
-        /*
-        ** Update terms of the node
-        */
-
-        if (function_exists("taxonomy_node_save")) {
-          taxonomy_node_save($nid, $node->taxonomy);
-        }
-
-        watchdog("special", "$node->type: updated '$node->title'");
-        $output = t("The node has been updated.");
+      if (user_access("administer nodes")) {
+        $fields = array("nid", "uid", "body", "comment", "created", "promote", "static", "moderate", "revisions", "status", "teaser" => node_teaser($node->body), "title", "type" => $node->type);
       }
       else {
-        watchdog("warning", "$node->type: not authorized to update node");
-        $output = t("You are not authorized to update this node.");
+        $fields = array("nid", "uid" => ($user->uid ? $user->uid : 0), "body", "teaser" => node_teaser($node->body), "title", "type" => $node->type);
       }
 
+      $nid = node_save($node, array_merge($fields, module_invoke($node->type, "save", "update", $node)));
+
+      /*
+      ** Update terms of the node
+      */
+
+      if (function_exists("taxonomy_node_save")) {
+        taxonomy_node_save($nid, $node->taxonomy);
+      }
+
+      watchdog("special", "$node->type: updated '$node->title'");
+      $output = t("The node has been updated.");
     }
     else {
-
-      /*
-      ** Check whether the current user has the proper access rights to
-      ** perform this operation:
-      */
-
-      if (node_access("create", $node)) {
-
-        /*
-        ** Verify a user's submission rate and avoid duplicate nodes being
-        ** inserted:
-        */
-
-        throttle("node", variable_get("max_node_rate", 900));
-
-        /*
-        ** Compile a list of the node fields and their default values that users
-        ** and administrators are allowed to save when inserting a new node.
-        */
-
-        if (user_access("administer nodes")) {
-          $fields = array("uid", "body", "comment", "created", "promote", "static", "moderate", "status", "teaser", "title", "type" => $node->type);
-        }
-        else {
-          $fields = array("uid" => ($user->uid ? $user->uid : 0), "body", "comment" => 2, "teaser", "title", "type" => $node->type);
-        }
-
-        $nid = node_save($node, array_merge($fields, module_invoke($node->type, "save", "create", $node)));
-
-        /*
-        ** Insert terms of the node
-        */
-
-        if (function_exists("taxonomy_node_save")) {
-          taxonomy_node_save($nid, $node->taxonomy);
-        }
-
-        watchdog("special", "$node->type: added '$node->title'");
-        $output = t("Thanks for your submission.");
-      }
-      else {
-        watchdog("warning", "$node->type: not authorized to create node");
-        $output = t("You are not authorized to create this node.");
-      }
+      watchdog("warning", "$node->type: not authorized to update node");
+      $output = t("You are not authorized to update this node.");
     }
 
-    /*
-    ** Reload the node from the database:
-    */
-
-    $node = node_load(array("nid" => $nid));
-
-    /*
-    ** For usability's sake, make sure to present the user with some
-    ** useful links as where to go next.
-    */
-
-    if ($referer = referer_load()) {
-      $links[] = "<a href=\"$referer\">". t("return") ."</a>";
-    }
-
-    if ($nid && node_access("view", $node)) {
-      $links[] = l(t("view"), array("id" => $nid));
-    }
-
-    if ($nid && node_access("update", $node)) {
-      $links[] = lm(t("edit"), array("mod" => "node", "op" => "edit", "id" => $nid));
-    }
-
-    $output .= "<p>". $theme->links($links) ."</p>";
   }
   else {
-    $output = message_access();
+
+    /*
+    ** Check whether the current user has the proper access rights to
+    ** perform this operation:
+    */
+
+    if (node_access("create", $node)) {
+
+      /*
+      ** Verify a user's submission rate and avoid duplicate nodes being
+      ** inserted:
+      */
+
+      throttle("node", variable_get("max_node_rate", 900));
+
+      /*
+      ** Compile a list of the node fields and their default values that users
+      ** and administrators are allowed to save when inserting a new node.
+      */
+
+      if (user_access("administer nodes")) {
+        $fields = array("uid", "body", "comment", "created", "promote", "static", "moderate", "status", "teaser" => node_teaser($node->body), "title", "type" => $node->type);
+      }
+      else {
+        $fields = array("uid" => ($user->uid ? $user->uid : 0), "body", "comment" => 2, "teaser" => node_teaser($node->body), "title", "type" => $node->type);
+      }
+
+      $nid = node_save($node, array_merge($fields, module_invoke($node->type, "save", "create", $node)));
+
+      /*
+      ** Insert terms of the node
+      */
+
+      if (function_exists("taxonomy_node_save")) {
+        taxonomy_node_save($nid, $node->taxonomy);
+      }
+
+      watchdog("special", "$node->type: added '$node->title'");
+      $output = t("Thanks for your submission.");
+    }
+    else {
+      watchdog("warning", "$node->type: not authorized to create node");
+      $output = t("You are not authorized to create this node.");
+    }
   }
+
+  /*
+  ** Reload the node from the database:
+  */
+
+  $node = node_load(array("nid" => $nid));
+
+  /*
+  ** For usability's sake, make sure to present the user with some
+  ** useful links as where to go next.
+  */
+
+  if ($referer = referer_load()) {
+    $links[] = "<a href=\"$referer\">". t("return") ."</a>";
+  }
+
+  if ($nid && node_access("view", $node)) {
+    $links[] = l(t("view"), array("id" => $nid));
+  }
+
+  if ($nid && node_access("update", $node)) {
+    $links[] = lm(t("edit"), array("mod" => "node", "op" => "edit", "id" => $nid));
+  }
+
+  $output .= "<p>". $theme->links($links) ."</p>";
 
   return $output;
 }
 
 function node_delete($edit) {
-
-  if (!user_access("post content")) {
-    return message_access();
-  }
 
   $node = node_load(array("nid" => $edit["nid"]));
 

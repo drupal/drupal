@@ -2,19 +2,23 @@
 // $Id$
 
 function page_help() {
-  $output .= "<p>The page module is used to create a <i>site page</i>.  Unlike a story, a site page is a persistent web page on your site which usually shortcuts the typical lifecycle of user generated content (i.e. submit -&gt; moderate -&gt; post -&gt; comment).  A site page is usually linked from the main navigation bar, using whatever text the author wishes.  To create a site page without this navigation link, simply skip the form field which requests link text.  Administrators are the exclusive authors of site pages (i.e. requires the <i>administer nodes</i> in ". la("permission", array("mod" => "user", "op" => "permission")) .").</p>";
+  $output .= "<p>The page module is used to create a <i>static page</i>.  Unlike a story, a static page is a persistent web page on your site which usually shortcuts the typical lifecycle of user generated content (i.e. submit -&gt; moderate -&gt; post -&gt; comment).  A static page is usually linked from the main navigation bar, using whatever text the author wishes.  To create a static page without this navigation link, simply skip the form field which requests link text.  Administrators are the exclusive authors of static pages (i.e. requires the <i>administer nodes</i> in ". la("permission", array("mod" => "user", "op" => "permission")) .").</p>";
   $output .= "<p>Site pages, unlike many other forms of Drupal content, may be made of PHP code in addition to HTML and text. All Drupal objects and functions are available to the Site Page author.</p>";
   return $output;
 }
 
-function page_system($field){
+function page_system($field) {
   $system["description"] = t("Enables the creation of a static pages that can be added to the navigation system.");
   return $system[$field];
 }
 
+function page_perm() {
+  return array("maintain static pages");
+}
+
 function page_node($field) {
-  $info["name"] = t("site page");
-  $info["description"] = t("If you just want to add a page with a link in the menu to your site, this would be the best choice.  Unlike a story, a site page by-passes the submission queue.");
+  $info["name"] = t("static page");
+  $info["description"] = t("If you just want to add a page with a link in the menu to your site, this would be the best choice.  Unlike a story, a static page by-passes the submission queue.");
 
   return $info[$field];
 }
@@ -22,6 +26,18 @@ function page_node($field) {
 function page_access($op, $node) {
   if ($op == "view") {
     return $node->status;
+  }
+
+  if ($op == "create") {
+    return user_access("maintain static pages");
+  }
+
+  if ($op == "update") {
+    return user_access("maintain static pages");
+  }
+
+  if ($op == "delete") {
+    return user_access("maintain static pages");
   }
 }
 
@@ -32,7 +48,7 @@ function page_save($op, $node) {
   }
 
   if ($op == "create") {
-    return array("body" => filter($node->body), "teaser" => filter($node->teaser), "format", "link", "description");
+    return array("teaser" => $node->body, "format", "link", "description");
   }
 
   if ($op == "decline") {
@@ -40,7 +56,7 @@ function page_save($op, $node) {
   }
 
   if ($op == "update") {
-    return array("body" => filter($node->body), "teaser" => filter($node->teaser), "format", "link", "description");
+    return array("teaser" => $node->body, "format", "link", "description");
   }
 }
 
@@ -70,8 +86,8 @@ function page_link($type) {
     }
   }
 
-  if ($type == "menu.create" && user_access("administer nodes")) {
-    $links[] = lm(t("create site page"), array("mod" => "node", "op" => "add", "type" => "page"), "", array("title" => t("Add a new site page.")));
+  if ($type == "menu.create" && user_access("maintain static pages")) {
+    $links[] = lm(t("create static page"), array("mod" => "node", "op" => "add", "type" => "page"), "", array("title" => t("Add a new static page.")));
   }
 
   return $links ? $links : array();
@@ -137,11 +153,6 @@ function page_form(&$node, &$help, &$error) {
   if ($node->format) {
     if ($op != t("Preview")) {
       $node->body = addslashes($node->body);
-    }
-  }
-  else {
-    if ($node->teaser) {
-      $output .= form_textarea(t("Teaser"), "teaser", $node->teaser, 60, 5, $error["teaser"]);
     }
   }
 

@@ -22,6 +22,10 @@ function blog_node($field) {
   return $info[$field];
 }
 
+function blog_perm() {
+  return array("maintain personal blog");
+}
+
 function blog_access($op, $node) {
   global $user;
 
@@ -30,15 +34,15 @@ function blog_access($op, $node) {
   }
 
   if ($op == "create") {
-    return $user->uid;
+    return user_access("maintain personal blog") && $user->uid;
   }
 
   if ($op == "update") {
-    return ($user->uid == $node->uid);
+    return user_access("maintain personal blog") && ($user->uid == $node->uid);
   }
 
   if ($op == "delete") {
-    return ($user->uid == $node->uid);
+    return user_access("maintain personal blog") && ($user->uid == $node->uid);
   }
 
 }
@@ -68,10 +72,15 @@ function blog_save($op, $node) {
 
   if ($op == "create") {
     if (user_access("administer nodes")) {
-      return array("body" => filter($node->body), "teaser" => filter($node->teaser));
+      /*
+      ** When an administrator creates blog entries through the admin
+      ** pages, they will not be changed unless explicitly specified.
+      */
+
+      return array();
     }
     else {
-      return array("body" => filter($node->body), "promote" => 0, "moderate" => 1, "status" => 1, "teaser" => filter($node->teaser));
+      return array("promote" => 0, "moderate" => 1, "status" => 1);
     }
   }
 
@@ -86,7 +95,7 @@ function blog_save($op, $node) {
       ** pages, they will not be changed unless explicitly specified.
       */
 
-      return array("body" => filter($node->body), "teaser" => filter($node->teaser));
+      return array();
     }
     else {
       /*
@@ -94,7 +103,7 @@ function blog_save($op, $node) {
       ** and will queue it in the moderation queue for promotion.
       */
 
-      return array("body" => filter($node->body), "promote" => 0, "moderate" => 1, "score" => 0, "teaser" => filter($node->teaser), "votes" => 0, "users" => 0);
+      return array("promote" => 0, "moderate" => 1, "score" => 0, "votes" => 0, "users" => 0);
     }
   }
 
@@ -205,10 +214,6 @@ function blog_form(&$node, &$help, &$error) {
     }
   }
 
-  if ($node->teaser) {
-    $output .= form_textarea(t("Teaser"), "teaser", $node->teaser, 60, 5, $error["teaser"]);
-  }
-
   if (function_exists("taxonomy_node_form")) {
     $output .= implode("", taxonomy_node_form("blog", $node));
   }
@@ -260,11 +265,11 @@ function blog_link($type, $node = 0, $main) {
     $links[] = lm(t("user blogs"), array("mod" => "blog"), "", array("title" => t("Read the latest blog entries.")));
   }
 
-  if ($type == "menu.create" && user_access("post content")) {
+  if ($type == "menu.create" && user_access("maintain personal blog")) {
     $links[] = lm(t("create blog entry"), array("mod" => "node", "op" => "add", "type" => "blog"), "", array("title" => t("Add a new personal blog entry.")));
   }
 
-  if ($type == "menu.view" && user_access("access content")) {
+  if ($type == "menu.view" && user_access("maintain personal blog")) {
     $links[] = lm(t("view personal blog"), array("mod" => "blog", "op" => "view", "id" => $user->uid), "", array("title" => t("Read your latest blog entries.")));
   }
 

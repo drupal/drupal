@@ -21,7 +21,7 @@ $db_url = "mysql://drupal:drupal@localhost/drupal";
 # PHP settings:
 #
 #   To see what PHP settings are known to work well, take a look at
-#   the .htacesss file in Drupal's root directory.  If you get 
+#   the .htacesss file in Drupal's root directory.  If you get
 #   unexecpted warnings or errors, double-check your PHP settings.
 
 # If required, update PHP's include path to include your PEAR directory:

@@ -18,12 +18,12 @@ function forum_access($op, $node) {
     return $node->status;
   }
   if ($op == "create") {
-    return user_access("post content");
+    return user_access("create forum topics");
   }
 }
 
 function forum_perm() {
-  return array("post forum topics without approval");
+  return array("create forum topics");
 }
 
 function forum_conf_options() {
@@ -53,11 +53,7 @@ function forum_save($op, $node) {
   }
 
   if ($op == "create") {
-    if (user_access("post forum topics without approval")) {
-      $moderation = array("body" => filter($node->body), "moderate" => 0, "status" => 1);
-    } else {
-      $moderation = array("body" => filter($node->body), "moderate" => 1, "status" => 0);
-    }
+    $moderation = array("body" => filter($node->body), "moderate" => 0, "status" => 1);
     return array_merge($moderation, array("tid", "icon_num", "shadow"));
   }
 
@@ -118,11 +114,6 @@ function forum_block($op = "list", $delta = 0) {
 function forum_link($type, $node = 0, $main = 0) {
   if ($type == "page" && user_access("access content")) {
     $links[] = lm(t("forum"), array("mod" => "forum"));
-  }
-
-  if ($type == "menu.create" && user_access("post content")) {
-    // I had complains that having this link leads people not to choose a forum, and always post in the first forum.
-    #$links[] = lm(t("create forum topic"), array("mod" => "node", "op" => "add", "type" => "forum"), "", array("title" => t("Start a new forum topic.")));
   }
 
   if (!$main && $type == "node" && $node->type == "forum") {
@@ -650,8 +641,8 @@ function forum_topic_list($topics, $num_topics, $sortby, $forum_per_page, $offse
     $output .= "<td width=\"33%\">&nbsp;</td>";
   }
 
-  if (user_access("post content")) {
-    $output .= "<td width=\"33%\"><div align=\"center\" style=\"font-style: bold;\">". lm(t("start new topic"), array("mod" => "node", "op" => "add", "type" => "forum", "tid" => $tid)) ."</div></td>";
+  if (user_access("create forum topics")) {
+    $output .= "<td width=\"33%\"><div align=\"center\" style=\"font-style: bold;\">". lm(t("create new forum topic"), array("mod" => "node", "op" => "add", "type" => "forum", "tid" => $tid)) ."</div></td>";
   }
 
   if (count($topics) >= $forum_per_page) {

@@ -57,7 +57,7 @@ function import_update() {
 function import_format_item($item, $feed = 0) {
   global $theme, $user;
 
-  if ($user->uid && user_access("post content")) {
+  if ($user->uid && user_access("maintain personal blog")) {
     $output .= lm("<img src=\"". $theme->image("blog.gif") ."\" border=\"0\" width=\"12\" height=\"16\" alt=\"". t("Blog this item") ."\" />", array("mod" => "node", "op" => "add", "type" => "blog", "iid" => $item->iid), "", array("title" => t("Comment on this news item in your personal blog.")));
   }
 
@@ -568,7 +568,7 @@ function import_page_last() {
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"2\">";
   while ($item = db_fetch_object($result)) {
-    if (module_exist("blog") && user_access("post content")) {
+    if (module_exist("blog") && user_access("maintain personal blog")) {
       $links[] = lm(t("blog it"), array("mod" => "node", "op" => "add", "type" => "blog", "iid" => $item->iid), "", array("title" => t("Comment on this news item in your personal blog.")));
     }
     $links[] = lm(t("feed"), array("mod" => "import", "op" => "feed", "id" => $item->fid), "", array("title" => t("Read more syndicated news from this feed.")));
@@ -604,7 +604,7 @@ function import_page_feed($fid) {
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"2\">";
   while ($item = db_fetch_object($result)) {
-    if (module_exist("blog") && user_access("post content")) {
+    if (module_exist("blog") && user_access("maintain personal blog")) {
       $links[] = lm(t("blog it"), array("mod" => "node", "op" => "add", "type" => "blog", "iid" => $item->iid), "", array("title" => t("Comment on this news item in your personal blog.")));
     }
     $links[] = "<a href=\"$item->link\">". t("visit") ."</a>";
@@ -641,7 +641,7 @@ function import_page_bundle($bid) {
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"2\">";
   while ($item = db_fetch_object($result)) {
-    if (module_exist("blog") && user_access("post content")) {
+    if (module_exist("blog") && user_access("maintain personal blog")) {
       $links[] = lm(t("blog it"), array("mod" => "node", "op" => "add", "type" => "blog", "iid" => $item->iid), "", array("title" => t("Comment on this news item in your personal blog.")));
     }
     $links[] = lm(t("feed"), array("mod" => "import", "op" => "feed", "id" => $item->fid), "", array("title" => t("Read more syndicated news from this feed.")));

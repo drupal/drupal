@@ -26,13 +26,17 @@ function story_node($field) {
   return $info[$field];
 }
 
+function story_perm() {
+  return array("create stories");
+}
+
 function story_access($op, $node) {
   if ($op == "view") {
     return $node->status;
   }
 
   if ($op == "create") {
-    return 1;
+    return user_access("create stories");
   }
 }
 
@@ -44,10 +48,10 @@ function story_save($op, $node) {
 
   if ($op == "create") {
     if (user_access("administer nodes")) {
-      return array("body" => filter($node->body), "teaser" => filter($node->teaser));
+      return array();
     }
     else {
-      return array("body" => filter($node->body), "moderate" => 1, "teaser" => filter($node->teaser));
+      return array("moderate" => 1);
     }
   }
 
@@ -56,12 +60,12 @@ function story_save($op, $node) {
   }
 
   if ($op == "update") {
-    return array("body" => filter($node->body), "teaser" => filter($node->teaser));
+    return array();
   }
 }
 
 function story_link($type) {
-  if ($type == "menu.create" && user_access("post content")) {
+  if ($type == "menu.create" && user_access("create stories")) {
     $links[] = lm(t("create story"), array("mod" => "node", "op" => "add", "type" => "story"), "", array("title" => t("Add a new story.")));
   }
 
@@ -89,10 +93,6 @@ function story_form(&$node, &$help, &$error) {
 
     $help = variable_get("story_help", "");
 
-  }
-
-  if ($node->teaser) {
-    $output .= form_textarea(t("Teaser"), "teaser", $node->teaser, 60, 5, $error["teaser"]);
   }
 
   if (function_exists("taxonomy_node_form")) {
