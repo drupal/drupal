@@ -34,10 +34,11 @@
        <TABLE WIDTH="750" ALIGN="left" BORDER="0" CELLPADDING="0" CELLSPACING="0">
         <TR>
          <TD COLSPAN="2">
-	  <IMG SRC="themes/Jeroen/images/logo.gif" ALT="drop.org logo"></TD>
+	  <IMG SRC="themes/Jeroen/images/logo.gif" ALT="drop.org logo"><BR><BR>
+	 </TD>
          <TD WIDTH="160" VALIGN="top" ALIGN="left">
           <?  
-           $this->box("Status", "<SMALL>Username: $user->name<BR>E-mail: $user->email<BR>Status: Logged in<BR>Since: 04/06/00, 12:20</SMALL>");
+           $this->box("Status", "<SMALL>Real name: $user->name<BR>User name: $user->name<BR>E-mail: $user->email<BR>Mojo: infinite<BR>Status: Logged in<BR>Since: 04/06/00, 12:20</SMALL>");
           ?>
          </TD>
         </TR>
@@ -79,7 +80,7 @@
           <TR>
            <TD ALIGN="left" VALIGN="bottom" HEIGHT="20" BACKGROUND="themes/Jeroen/images/newsboxleft.gif" ><IMG SRC="themes/Jeroen/images/newsboxleft.gif" WIDTH="20" HEIGHT="20" ALT="">
            </TD>
-           <TD COLSPAN="2" ALIGN="left" WIDTH="100%" BGCOLOR="#6C6C6C" HEIGHT="20" BACKGROUND="themes/Jeroen/images/menutitle.gif" NOWRAP>
+           <TD COLSPAN="2" ALIGN="left" WIDTH="100%" BGCOLOR="#6C6C6C" HEIGHT="20" BACKGROUND="themes/Jeroen/images/menutitle.gif">
             &nbsp;<FONT COLOR="<? echo $this->fgcolor2; ?>">
              <?
               switch (rand(0,12)) {
@@ -101,13 +102,13 @@
               if ($informant) {
                print "<FONT SIZE=\"-1\">$how by <A HREF=\"account.php?op=userinfo&uname=$informant\">$informant</A> on $timestamp"; ?><? print "</FONT>
            </TD>
-           <TD ALIGN=\"center\" WIDTH=\"80\" BGCOLOR=\"#6C6C6C\" BACKGROUND=\"themes/Jeroen/images/menutitle.gif\">
+           <TD ALIGN=\"right\" BGCOLOR=\"#6C6C6C\" BACKGROUND=\"themes/Jeroen/images/menutitle.gif\">
             <B><A HREF=\"search.php?category=$category\"><FONT COLOR=\"<? $this->fgcolor3; ?>\">$category</FONT></A></B>&nbsp;";
               }
               else {
                print "<FONT SIZE=\"-1\">Reported to us by $anonymous on $timestamp"; ?><? print "</FONT>
            </TD>
-           <TD ALIGN=\"center\" WIDTH=\"80\"><A HREF=\"search.php?category=$category\"><FONT COLOR=\"<? $this->fgcolor3; ?>\">$category</FONT></A>";
+           <TD ALIGN=\"right\" WIDTH=\"65\"><A HREF=\"search.php?category=$category\"><FONT COLOR=\"<? $this->fgcolor3; ?>\">$category</FONT></A>";
               }
              ?></FONT>
            </TD>
@@ -177,7 +178,7 @@
             <IMG SRC="themes/Jeroen/images/newsboxleft.gif" WIDTH="20" HEIGHT="20" alt="">
            </TD>
            <TD COLSPAN="2" ALIGN="left" WIDTH="100%" BGCOLOR="#6C6C6C" HEIGHT="20"  BACKGROUND="themes/Jeroen/images/menutitle.gif" NOWRAP>
-            &nbsp;<FONT COLOR="<? echo $this->fgcolor1; ?>">
+            &nbsp;<FONT COLOR="<? echo $this->fgcolor2; ?>">
             <?
              switch (rand(0,12)) {
 	     case 0: $how = "Yelled at us"; break;
