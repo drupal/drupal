@@ -46,14 +46,12 @@ function node_get_array($conditions) {
 function node_del($conditions) {
   global $status;
   if ($node = node_get_object($conditions)) {
-    if ($node->status == $status[dumped]) {
-      module_invoke($node->type, "delete", $node);
-      db_query("DELETE FROM node WHERE nid = '$node->nid'");
-      db_query("DELETE FROM $node->type WHERE lid = '$node->lid' AND nid = '$node->nid'");
-      db_query("DELETE FROM comments WHERE lid = '$node->nid'");
-      watchdog("special", "node: deleted '$node->title'");
-      return $node;
-    }
+    module_invoke($node->type, "delete", $node);
+    db_query("DELETE FROM node WHERE nid = '$node->nid'");
+    db_query("DELETE FROM $node->type WHERE lid = '$node->lid' AND nid = '$node->nid'");
+    db_query("DELETE FROM comments WHERE lid = '$node->nid'");
+    watchdog("special", "node: deleted '$node->title'");
+    return $node;
   }
 }
 
@@ -239,5 +237,39 @@ function node_access($node) {
   return ($node->status == $status[posted]) || ($node->status == $status[queued] && $user->uid) || user_access("administer nodes");
 }
 
+function node_moderate($moderate) {
+  global $user;
+
+  if ($user->uid && $moderate) {
+    foreach ($moderate as $nid => $score) {
+      if ($score > 0 && $score < 6) {
+        if (db_fetch_object(db_query("SELECT * FROM moderate WHERE uid = '". check_query($user->uid) ."' AND nid = '". check_query($nid) ."'"))) {
+          db_query("UPDATE moderate SET score = '". check_query($score) ."' WHERE uid = '". check_query($user->uid) ."' AND nid = '". check_query($nid) ."'");
+        }
+        else {
+          db_query("INSERT INTO moderate (uid, nid, score, timestamp) VALUES ('". check_query($user->uid) ."', '". check_query($nid) ."', '". check_query($score) ."', '". time() ."')");
+        }
+      }
+    }
+  }
+}
+
+function node_moderation($nid) {
+  global $user;
+
+  $node = node_get_object(array("nid" => $nid));
+
+  $values = array("--", 1, 2, 3, 4, 5);
+
+  $moderate = db_fetch_object(db_query("SELECT * FROM moderate WHERE nid = '$node->nid' AND uid = '$user->uid'"));
+
+  foreach ($values as $key => $value) {
+    $options .= " <option value=\"$key\"". ($moderate->score == $key ? " selected=\"selected\"" : "") .">$value</option>\n";
+  }
+
+  $output .= " <select name=\"moderate[node][$node->nid]\">$options</select> (". ($node->score ? $node->score : "--") ." / $node->votes)";
+
+  return $output;
+}
 
 ?>
