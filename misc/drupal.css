@@ -1,12 +1,29 @@
 /* $Id$ */
 
-table {
-  border-collapse: collapse;
-  width: 100%;
+/*
+** HTML elements
+*/
+fieldset {
+  margin-bottom: 1em;
+  padding: .5em;
 }
 form {
   margin: 0;
   padding: 0;
+}
+hr {
+  height: 1px;
+  border: 1px solid gray;
+}
+img {
+  border: 0;
+}
+pre, code {
+  font-size: 11px;
+}
+table {
+  border-collapse: collapse;
+  width: 100%;
 }
 th {
   text-align: left;
@@ -14,12 +31,30 @@ th {
   border-bottom: 3px solid #ccc;
   white-space: nowrap;
 }
-fieldset {
-  margin-bottom: 1em;
-  padding: .5em;
+tr.dark {
+  background-color: #ddd;
 }
-img {
-  border: 0;
+tr.light {
+  background-color: #eee;
+}
+tr.dark td, tr.light td {
+  padding: 0.1em 0.6em;
+}
+
+/*
+** Menu styles
+*/
+.menu {
+  padding: 0 0 0 0.5em;
+}
+.menu ul {
+  list-style: none;
+  border: none;
+  text-align:left;
+}
+.menu li a {
+  width: 100%;
+  text-decoration: none;
 }
 li.expanded {
   list-style-type: circle;
@@ -41,6 +76,107 @@ li.leaf {
 }
 li a.active {
   color: #000;
+}
+td.menu-disabled {
+  background: #ccc;
+}
+
+/*
+** Other common styles
+*/
+.breadcrumb {
+  padding-bottom: .5em
+}
+.block ul {
+  margin: 0;
+  padding: 0 0 0.25em 1em;
+}
+.container-inline div {
+  display: inline;
+}
+.container-inline .form-submit {
+  margin: 0;
+}
+.error {
+  color: red;
+}
+.item-list .icon {
+  color: #555;
+  float: right;
+  padding-left: 0.25em;
+  clear: right;
+}
+.item-list .icon a {
+  color: #000;
+  text-decoration: none;
+}
+.item-list .icon a:hover {
+  color: #000;
+  text-decoration: none;
+}
+.item-list .title {
+  font-weight: bold;
+}
+.item-list ul {
+  margin: 0 0 0.75em 0;
+  padding: 0;
+}
+.item-list ul li {
+  margin: 0 0 0.25em 1.5em;
+  padding: 0;
+  list-style: disc;
+}
+.form-item {
+  margin-bottom: 1em;
+}
+.form-item .description {
+  font-size: 0.85em;
+}
+.form-item label {
+  font-weight: bold;
+}
+.form-item label.option {
+  font-weight: normal;
+}
+.form-submit {
+  margin: 0.5em 0;
+}
+.marker {
+  color: #f00;
+}
+.more-link {
+  text-align: right;
+}
+.node-form .form-text {
+  display: block;
+  width: 95%;
+}
+.node-form .standard {
+  clear: both;
+}
+.node-form textarea {
+  display: block;
+  width: 95%;
+}
+.node-form fieldset {
+  display: inline;
+}
+.node-form .admin .form-item .title {
+  margin-top: 0;
+}
+.node-form .admin .authored .form-item {
+  margin-bottom: 1.1em;
+}
+.node-form .admin .authored .form-text  {
+  width: auto;
+}
+.node-form .admin .authored, .node-form .admin .options, .node-form .admin .extra {
+  float: left;
+  margin-right: 2em;
+  margin-bottom: 1em;
+}
+.ok {
+  color: #080;
 }
 #pager {
   clear: both;
@@ -137,48 +273,6 @@ li a.active {
   margin: 0;
   font-size: 0.8em;
 }
-.container-inline div {
-  display: inline;
-}
-.container-inline .form-submit {
-  margin: 0;
-}
-.form-item {
-  margin-bottom: 1em;
-}
-.form-item .description {
-  font-size: 0.85em;
-}
-.form-item label {
-  font-weight: bold;
-}
-.form-item label.option {
-  font-weight: normal;
-}
-.form-submit {
-  margin: 0.5em 0;
-}
-.profile {
-  clear: both;
-  margin: 1em 0em 1em 0em;
-}
-.profile .picture {
-  float: right;
-  margin: 0 1em 1em 0;
-}
-#aggregator .feed img {
-  float: right;
-}
-#aggregator .news-item .date {
-  float: left;
-}
-#aggregator .news-item .body {
-  margin-top: 1em;
-  margin-left: 4em;
-}
-#aggregator .news-item .body .feed {
-  font-size: 0.9em;
-}
 #forum .description {
   font-size: 0.9em;
   margin: 0.5em;
@@ -186,11 +280,8 @@ li a.active {
 #forum td.created, #forum td.posts, #forum td.topics, #forum td.last-reply, #forum td.replies, #forum td.pager {
   white-space: nowrap;
 }
-#forum td.posts, #forum td.topics, #forum td.replies, #forum td.pager, #tracker td.replies {
+#forum td.posts, #forum td.topics, #forum td.replies, #forum td.pager {
   text-align: center;
-}
-#tracker table {
-  width: 100%;
 }
 .poll .bar {
   height: 1em;
@@ -220,75 +311,25 @@ li a.active {
   margin: 0 auto;
   display: table;
 }
+.profile {
+  clear: both;
+  margin: 1em 0em 1em 0em;
+}
+.profile .picture {
+  float: right;
+  margin: 0 1em 1em 0;
+}
 .node-form .poll-form fieldset {
   display: block;
 }
-.more-link {
-  text-align: right;
+#tracker td.replies {
+  text-align: center;
 }
-.node-form .form-text {
-  display: block;
-  width: 95%;
-}
-.node-form .standard {
-  clear: both;
-}
-.node-form textarea {
-  display: block;
-  width: 95%;
-}
-.node-form fieldset {
-  display: inline;
-}
-.node-form .admin .form-item .title {
-  margin-top: 0;
-}
-.node-form .admin .authored .form-item {
-  margin-bottom: 1.1em;
-}
-.node-form .admin .authored .form-text  {
-  width: auto;
-}
-.node-form .admin .authored, .node-form .admin .options, .node-form .admin .extra {
-  float: left;
-  margin-right: 2em;
-  margin-bottom: 1em;
-}
-.marker {
-  color: #f00;
-}
-.error {
-  color: #f00;
-}
-.ok {
-  color: #080;
+#tracker table {
+  width: 100%;
 }
 .user-login-block {
   text-align: center;
-}
-tr.dark {
-  background-color: #ddd;
-}
-tr.light {
-  background-color: #eee;
-}
-tr.dark td, tr.light td {
-  padding: 0.1em 0.6em;
-}
-pre, code {
-  font-size: 11px;
-}
-.menu {
-  padding: 0 0 0 0.5em;
-}
-.menu ul {
-  list-style: none;
-  border: none;
-  text-align:left;
-}
-.menu li a {
-  width: 100%;
-  text-decoration: none;
 }
 td.watchdog-user {
   background: #fea;
@@ -313,7 +354,4 @@ td.watchdog-httpd {
 td.watchdog-error {
   background: #e44;
   border: 1px solid #c22;
-}
-td.menu-disabled {
-  background: #ccc;
 }
