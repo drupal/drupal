@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.126 2003/10/09 22:03:28 dries Exp $
+// $Id: forum.module,v 1.127 2003/10/16 17:29:26 dries Exp $
 
 function forum_node($field) {
   $info["name"] = t("forum topic");
@@ -96,6 +96,10 @@ function forum_link($type, $node = 0, $main = 0) {
 
   if ($type == "page" && user_access("access content")) {
     $links[] = l(t("forums"), "forum");
+  }
+
+  if ($type == "system" && user_access("create forum topics")) {
+      menu("node/add/forum",t("forum topic"), "forum_page");
   }
 
   if (!$main && $type == "node" && $node->type == "forum") {

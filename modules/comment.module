@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.176 2003/10/14 18:08:33 dries Exp $
+// $Id: comment.module,v 1.177 2003/10/16 17:29:26 dries Exp $
 
 function comment_help($section = "admin/help#comment") {
   $output = "";
@@ -1619,7 +1619,7 @@ function comment_update_index() {
 function comment_nodeapi(&$node, $op, $arg = 0) {
   switch ($op) {
     case "settings":
-      $output[t("comment")] = form_select("", "comment_$node->type", variable_get("comment_$node->type", 2), array("Disabled", "Read only", "Read/Write"));
+      $output[t("comment")] = form_select("", "comment_$node->type", variable_get("comment_$node->type", 2), array(t("Disabled"), t("Read only"), t("Read/Write")));
       return $output;
     case "fields":
       return array("comment");
