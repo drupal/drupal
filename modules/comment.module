@@ -164,16 +164,8 @@ function comment_access($op, $comment) {
   }
 
 }
-function comment_referer_save() {
-  $_SESSION["comment_referer"] = arg(0) ."/". arg(1) ."/". arg(2);
-}
-
-/*
-** Restores the referer from a persistent variable:
-*/
-
-function comment_referer_load() {
-  return $_SESSION["comment_referer"];
+function comment_node_url() {
+  return arg(0) ."/". arg(1) ."/". arg(2);
 }
 
 function comment_edit($cid) {
@@ -469,7 +461,7 @@ function comment_links($comment, $return = 1) {
   */
 
   if ($return) {
-    $links[] = l(t("parent"), comment_referer_load(), NULL, NULL, "comment-$comment->cid");
+    $links[] = l(t("parent"), comment_node_url(), NULL, NULL, "comment-$comment->cid");
   }
 
   if (node_comment_mode($comment->nid) == 2) {
@@ -508,13 +500,6 @@ function comment_render($node, $cid = 0) {
   $output = "";
 
   if (user_access("access comments")) {
-
-    /*
-    ** Save were we come from so we can go back after a reply
-    */
-
-    comment_referer_save();
-
     /*
     ** Pre-process variables:
     */
@@ -830,7 +815,7 @@ function comment_page() {
     case t("Moderate comments"):
     case t("Moderate comment"):
       comment_moderate($edit);
-      drupal_goto(comment_referer_load());
+      drupal_goto(comment_node_url());
       break;
     case "reply":
       print theme("page", comment_reply(check_query(arg(3)), check_query(arg(2))), t("Add new comment"));
@@ -844,7 +829,7 @@ function comment_page() {
         print theme("page", $error_body, $error_title);
       }
       else {
-        drupal_goto(comment_referer_load());
+        drupal_goto(comment_node_url());
       }
       break;
     case t("Save settings"):
@@ -854,7 +839,7 @@ function comment_page() {
       $comments_per_page = $_POST["comments_per_page"];
 
       comment_save_settings(check_query($mode), check_query($order), check_query($threshold), check_query($comments_per_page));
-      drupal_goto(comment_referer_load());
+      drupal_goto(comment_node_url());
       break;
   }
 }
@@ -1393,7 +1378,7 @@ function theme_comment($comment, $links = 0) {
 
 function theme_comment_folded($comment) {
   $output  = "<div class=\"comment-folded\">\n";
-  $output .= " <span class=\"subject\">". l($comment->subject, comment_referer_load() ."/$comment->cid", NULL, NULL, "comment-$comment->cid") . ($comment->new ? ' '. theme('mark') : '') ."</span> ";
+  $output .= " <span class=\"subject\">". l($comment->subject, comment_node_url() ."/$comment->cid", NULL, NULL, "comment-$comment->cid") . ($comment->new ? ' '. theme('mark') : '') ."</span> ";
   $output .= "<span class=\"credit\">". t("by") ." ". format_name($comment) ."</span>\n";
   $output .= "</div>\n";
   return $output;
