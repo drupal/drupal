@@ -1,3 +1,12 @@
+# MySQL dump 7.1
+#
+# Host: localhost    Database: drop
+#--------------------------------------------------------
+# Server version	3.22.32
+
+#
+# Table structure for table 'access'
+#
 DROP TABLE IF EXISTS access;
 CREATE TABLE access (
   id tinyint(10) DEFAULT '0' NOT NULL auto_increment,
@@ -8,6 +17,9 @@ CREATE TABLE access (
   PRIMARY KEY (id)
 );
 
+#
+# Table structure for table 'blocks'
+#
 DROP TABLE IF EXISTS blocks;
 CREATE TABLE blocks (
   name varchar(64) DEFAULT '' NOT NULL,
@@ -20,6 +32,9 @@ CREATE TABLE blocks (
   PRIMARY KEY (name)
 );
 
+#
+# Table structure for table 'book'
+#
 DROP TABLE IF EXISTS book;
 CREATE TABLE book (
   lid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
@@ -31,6 +46,9 @@ CREATE TABLE book (
   PRIMARY KEY (lid)
 );
 
+#
+# Table structure for table 'boxes'
+#
 DROP TABLE IF EXISTS boxes;
 CREATE TABLE boxes (
   id tinyint(4) DEFAULT '0' NOT NULL auto_increment,
@@ -44,6 +62,26 @@ CREATE TABLE boxes (
   PRIMARY KEY (id)
 );
 
+#
+# Table structure for table 'category'
+#
+DROP TABLE IF EXISTS category;
+CREATE TABLE category (
+  cid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
+  name varchar(32) DEFAULT '' NOT NULL,
+  type varchar(16) DEFAULT '' NOT NULL,
+  post int(3) DEFAULT '0' NOT NULL,
+  dump int(3) DEFAULT '0' NOT NULL,
+  expire int(3) DEFAULT '0' NOT NULL,
+  comment int(2) unsigned DEFAULT '0' NOT NULL,
+  submission int(2) unsigned DEFAULT '0' NOT NULL,
+  UNIQUE name (name),
+  PRIMARY KEY (cid)
+);
+
+#
+# Table structure for table 'channel'
+#
 DROP TABLE IF EXISTS channel;
 CREATE TABLE channel (
   id int(11) DEFAULT '0' NOT NULL auto_increment,
@@ -58,6 +96,9 @@ CREATE TABLE channel (
   PRIMARY KEY (id)
 );
 
+#
+# Table structure for table 'comments'
+#
 DROP TABLE IF EXISTS comments;
 CREATE TABLE comments (
   cid int(6) DEFAULT '0' NOT NULL auto_increment,
@@ -71,9 +112,13 @@ CREATE TABLE comments (
   score int(6) DEFAULT '0' NOT NULL,
   votes int(6) DEFAULT '0' NOT NULL,
   link varchar(16) DEFAULT '' NOT NULL,
-  PRIMARY KEY (cid)
+  PRIMARY KEY (cid),
+  KEY lid (lid)
 );
 
+#
+# Table structure for table 'crons'
+#
 DROP TABLE IF EXISTS crons;
 CREATE TABLE crons (
   module varchar(64) DEFAULT '' NOT NULL,
@@ -82,6 +127,9 @@ CREATE TABLE crons (
   PRIMARY KEY (module)
 );
 
+#
+# Table structure for table 'diaries'
+#
 DROP TABLE IF EXISTS diaries;
 CREATE TABLE diaries (
   id int(5) DEFAULT '0' NOT NULL auto_increment,
@@ -91,6 +139,9 @@ CREATE TABLE diaries (
   PRIMARY KEY (id)
 );
 
+#
+# Table structure for table 'headlines'
+#
 DROP TABLE IF EXISTS headlines;
 CREATE TABLE headlines (
   id int(11) DEFAULT '0' NOT NULL,
@@ -101,12 +152,18 @@ CREATE TABLE headlines (
   UNIQUE link (link)
 );
 
+#
+# Table structure for table 'layout'
+#
 DROP TABLE IF EXISTS layout;
 CREATE TABLE layout (
   user int(11) DEFAULT '0' NOT NULL,
   block varchar(64) DEFAULT '' NOT NULL
 );
 
+#
+# Table structure for table 'locales'
+#
 DROP TABLE IF EXISTS locales;
 CREATE TABLE locales (
   id int(11) DEFAULT '0' NOT NULL auto_increment,
@@ -123,12 +180,18 @@ CREATE TABLE locales (
   PRIMARY KEY (id)
 );
 
+#
+# Table structure for table 'modules'
+#
 DROP TABLE IF EXISTS modules;
 CREATE TABLE modules (
   name varchar(64) DEFAULT '' NOT NULL,
   PRIMARY KEY (name)
 );
 
+#
+# Table structure for table 'node'
+#
 DROP TABLE IF EXISTS node;
 CREATE TABLE node (
   nid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
@@ -142,12 +205,17 @@ CREATE TABLE node (
   author int(6) DEFAULT '0' NOT NULL,
   status int(4) DEFAULT '1' NOT NULL,
   timestamp int(11) DEFAULT '0' NOT NULL,
+  cid int(10) unsigned DEFAULT '0' NOT NULL,
+  tid int(10) unsigned DEFAULT '0' NOT NULL,
   KEY type (lid,type),
   KEY author (author),
   KEY title (title,type),
   PRIMARY KEY (nid)
 );
 
+#
+# Table structure for table 'page'
+#
 DROP TABLE IF EXISTS page;
 CREATE TABLE page (
   lid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
@@ -157,26 +225,44 @@ CREATE TABLE page (
   PRIMARY KEY (lid)
 );
 
-DROP TABLE IF EXISTS sections;
-CREATE TABLE sections (
-  name varchar(64) DEFAULT '' NOT NULL,
-  post tinyint(3) DEFAULT '0' NOT NULL,
-  dump tinyint(3) DEFAULT '0' NOT NULL,
-  status tinyint(2) DEFAULT '0' NOT NULL,
-  timout tinyint(3) DEFAULT '0' NOT NULL,
-  PRIMARY KEY (name)
+#
+# Table structure for table 'rating'
+#
+DROP TABLE IF EXISTS rating;
+CREATE TABLE rating (
+  user int(6) DEFAULT '0' NOT NULL,
+  new int(6) DEFAULT '0' NOT NULL,
+  old int(6) DEFAULT '0' NOT NULL,
+  PRIMARY KEY (user)
 );
 
+#
+# Table structure for table 'story'
+#
 DROP TABLE IF EXISTS story;
 CREATE TABLE story (
   lid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   nid int(10) unsigned DEFAULT '0' NOT NULL,
   abstract text NOT NULL,
   body text NOT NULL,
-  section varchar(64) DEFAULT '' NOT NULL,
   PRIMARY KEY (lid)
 );
 
+#
+# Table structure for table 'topic'
+#
+DROP TABLE IF EXISTS topic;
+CREATE TABLE topic (
+  tid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
+  pid int(10) unsigned DEFAULT '0' NOT NULL,
+  name varchar(32) DEFAULT '' NOT NULL,
+  UNIQUE name (name),
+  PRIMARY KEY (tid)
+);
+
+#
+# Table structure for table 'users'
+#
 DROP TABLE IF EXISTS users;
 CREATE TABLE users (
   id int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
@@ -205,21 +291,19 @@ CREATE TABLE users (
   PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS rating;
-CREATE TABLE rating (
-  user int(6) DEFAULT '0' NOT NULL,
-  new int(6) DEFAULT '0' NOT NULL,
-  old int(6) DEFAULT '0' NOT NULL,
-  PRIMARY KEY (user)
-);
-
+#
+# Table structure for table 'variable'
+#
 DROP TABLE IF EXISTS variable;
 CREATE TABLE variable (
   name varchar(32) DEFAULT '' NOT NULL,
-  value varchar(128) DEFAULT '' NOT NULL,
+  value text NOT NULL,
   PRIMARY KEY (name)
 );
 
+#
+# Table structure for table 'watchdog'
+#
 DROP TABLE IF EXISTS watchdog;
 CREATE TABLE watchdog (
   id int(5) DEFAULT '0' NOT NULL auto_increment,
@@ -232,3 +316,4 @@ CREATE TABLE watchdog (
   timestamp int(11) DEFAULT '0' NOT NULL,
   PRIMARY KEY (id)
 );
+
