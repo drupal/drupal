@@ -524,7 +524,7 @@ function valid_input_data($data) {
     */
 
     foreach ($data as $key => $value) {
-      if (!valid_input_data($value)) {
+      if (!valid_input_data($key) || !valid_input_data($value)) {
         return 0;
       }
     }
