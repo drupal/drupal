@@ -353,7 +353,6 @@ CREATE TABLE [dbo].[users] (
   [name] [varchar] (60) NOT NULL ,
   [pass] [varchar] (32) NOT NULL ,
   [mail] [varchar] (64) NULL ,
-  [homepage] [varchar] (128) NULL ,
   [mode] [smallint] NOT NULL ,
   [sort] [smallint] NULL ,
   [threshold] [smallint] NULL ,
