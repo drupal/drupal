@@ -3,17 +3,17 @@
  class Theme {
    ### color set #1:
    var $bgcolor1 = "#9370DB";   // background color
-   var $fgcolor1 = "#COCOCO";   // table body color
+   var $fgcolor1 = "#FEFEFE";   // table body color
    var $hlcolor1 = "#FF00FF";   // high-light color
 
    ### color set #2:
-   var $bgcolor2 = "#EEEEEE";
-   var $fgcolor2 = "#666699";
+   var $bgcolor2 = "#836FFF";
+   var $fgcolor2 = "#FEFEFE";
    var $hlcolor2 = "#666699";
 
    ### color set #3:
 
-   var $bgcolor3 = "#EEEEEE";
+   var $bgcolor3 = "#FEFEFE";
    var $fgcolor3 = "yellow";
    var $hlcolor3 = "yellow";
 
@@ -66,7 +66,7 @@
       ?>
        <TABLE BORDER="0" CELLPADDING="4" WIDTH="100%">
         <TR BGCOLOR="<? echo $this->bgcolor1; ?>"><TD COLSPAN="2"><FONT COLOR="<? echo $this->bgcolor2; ?>"><B><? echo $subject; ?></B></FONT></TD></TR>
-        <TR BGCOLOR="<? echo $this->bgcolor2; ?>">
+        <TR BGCOLOR="<? echo $this->bgcolor1; ?>">
          <TD>
          <?
           if ($informant) {
@@ -107,7 +107,7 @@
        ?>
       <TABLE BORDER="0" CELLPADDING="4" WIDTH="100%">
        <TR BGCOLOR="<? echo $this->bgcolor1; ?>"><TD><FONT COLOR="<? echo $this->bgcolor2; ?>"><B><? echo $subject; ?></B></FONT></TD></TR>
-       <TR BGCOLOR="<? echo $this->bgcolor2; ?>">
+       <TR BGCOLOR="<? echo $this->bgcolor1; ?>">
         <TD>
          <?
           if ($informant) {
