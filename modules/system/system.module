@@ -267,6 +267,7 @@ function system_theme_engine_inventory($directory) {
     module_set_filename($file->name, $filename);
     module_load($file->name);
 
+    $info = new StdClass();
     $info->name = $file->name;
     $info->filename = $file->filename;
     $engines[$info->name] = $info;
@@ -308,6 +309,7 @@ function system_get_files_database(&$files, $type) {
  */
 function system_obtain_theme_info($files, $directory) {
   foreach ($files as $filename => $file) {
+    $info = new StdClass();
     if ($file->theme) {
       // file is a style
       $info->description = $file->theme;
@@ -458,6 +460,7 @@ function system_module_listing() {
     module_set_filename($file->name, $filename);
     module_load($file->name);
 
+    $info = new StdClass();
     $info->name = module_invoke($file->name, 'help', 'admin/modules#name') ? module_invoke($file->name, 'help', 'admin/modules#name') : $file->name;
     $info->description = module_invoke($file->name, 'help', 'admin/modules#description');
     // log the critical hooks implemented by this module
