@@ -5,7 +5,7 @@ function xtemplate_settings() {
   $output  = form_select(t("Sidebar placement"), "xtemplate_sidebar", variable_get("xtemplate_sidebar", "left"), array("none" => t("No sidebars"), "left" => t("Sidebar on the left"), "right" => t("Sidebar on the right"), "both" => t("Sidebar on the left and the right")));
   $output .= form_textarea(t("Message on front page"), "xtemplate_message", variable_get("xtemplate_message", "edit message"), 70, 6, t("This text will be displayed on the front page.  It can be used to display a mission statement, announcement or site description.."));
   $output .= form_textfield(t("Stylesheet URL"), "xtemplate_stylesheet", variable_get("xtemplate_stylesheet", "themes/xtemplate/xtemplate.css"), 100, 300, t("The URL for your theme's cascading stylesheet."));
-  $output .= form_textarea(t("Logo"), "xtemplate_logo", variable_get("xtemplate_logo", "<img src=\"themes/xtemplate/images/druplicon.gif\" alt=\"Druplicon\" />"), 70, 4, t("The HTML code for displaying the logo."));
+  $output .= form_textarea(t("Logo"), "xtemplate_logo", variable_get("xtemplate_logo", "<img src=\"themes/xtemplate/images/druplicon.gif\" alt=\"Druplicon - Drupal logo\" />"), 70, 4, t("The HTML code for displaying the logo."));
   $output .= form_textarea(t("Primary links"), "xtemplate_primary_links", variable_get("xtemplate_primary_links", l("edit primary links", "admin/system/themes/xtemplate")), 70, 8, t("The HTML code for the primary links."));
   $output .= form_textarea(t("Secondary links"), "xtemplate_secondary_links", variable_get("xtemplate_secondary_links", l("edit secondary links", "admin/system/themes/xtemplate")), 70, 8, t("The HTML code for the secondary links."));
   $output .= form_select(t("Search box"), "xtemplate_search_box", variable_get("xtemplate_search_box", 0), array(t("Disabled"), t("Enabled")), t("Show a search box in the upper right corner."));
@@ -86,7 +86,7 @@ class Theme_xtemplate extends BaseTheme {
       "head" => theme_head(),
       "stylesheet" => variable_get("xtemplate_stylesheet", "themes/xtemplate/xtemplate.css"),
       "onload_attributes" => theme_onload_attribute(),
-      "logo" => variable_get("xtemplate_logo", "<img src=\"themes/xtemplate/images/druplicon.gif\" />"),
+      "logo" => variable_get("xtemplate_logo", "<img src=\"themes/xtemplate/images/druplicon.gif\" alt=\"Druplicon - Drupal logo\" />"),
       "primary_links" => variable_get("xtemplate_primary_links", l("edit primary links", "admin/system/themes/xtemplate")),
       "secondary_links" => variable_get("xtemplate_secondary_links", l("edit secondary links", "admin/system/themes/xtemplate"))
     ));
