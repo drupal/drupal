@@ -99,12 +99,13 @@ function drupal_xmlrpc() {
 }
 
 function drupal_notify($server) {
+  global $base_url;
 
   $url = parse_url($server);
 
   $client = new xmlrpc_client($url["path"], $url["host"], 80);
 
-  $message = new xmlrpcmsg("drupal.site.ping", array(new xmlrpcval(path_uri(), "string"), new xmlrpcval(variable_get("site_name", ""), "string"), new xmlrpcval(variable_get("site_mail", ""), "string"), new xmlrpcval(variable_get("site_slogan", ""), "string"), new xmlrpcval(variable_get("site_mission", ""), "string")));
+  $message = new xmlrpcmsg("drupal.site.ping", array(new xmlrpcval($base_url, "string"), new xmlrpcval(variable_get("site_name", ""), "string"), new xmlrpcval(variable_get("site_mail", ""), "string"), new xmlrpcval(variable_get("site_slogan", ""), "string"), new xmlrpcval(variable_get("site_mission", ""), "string")));
 
   $result = $client->send($message, 5);
 
@@ -185,7 +186,7 @@ function drupal_user($type, $edit, $user) {
         $output .= form_item(t("$name ID"), $result);
       }
       else {
-        // TODO: use a variation of path_uri() instead of $HTTP_HOST below
+        // TODO: use a variation of $base_url instead of $HTTP_HOST below
         $output .= form_item(t("$name ID"), "$user->name@$HTTP_HOST");
       }
       return $output;

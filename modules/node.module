@@ -705,6 +705,8 @@ function node_block($op = "list", $delta = 0) {
 }
 
 function node_feed($nodes = 0, $channel = array()) {
+  global $base_url;
+
   /*
   ** A generic function for generating RSS feeds from a set of nodes.
   **   - $nodes should be an object as returned by db_query() which contains
@@ -719,7 +721,7 @@ function node_feed($nodes = 0, $channel = array()) {
 
   while ($node = db_fetch_object($nodes)) {
     $item = node_load(array("nid" => $node->nid));
-    $link = path_uri() . url("node/view/$item->nid");
+    $link = url("node/view/$item->nid");
     $items .= format_rss_item($item->title, $link, $item->teaser);
   }
 
@@ -728,7 +730,7 @@ function node_feed($nodes = 0, $channel = array()) {
     // NOTE: &eacute; - for example - is the correct ISO-8859-1 translation of  (e acute) but apparently XML parsers don't (have to) understand it.  To solve this problem, we use a DTD that defines commonly used entity such as &eacute;.
   if (!$channel["version"]) $channel["version"] = "0.91";
   if (!$channel["title"]) $channel["title"] = variable_get("site_name", "drupal") ." - ". variable_get("site_slogan", "");
-  if (!$channel["link"]) $channel["link"] = path_uri();
+  if (!$channel["link"]) $channel["link"] = $base_url;
   if (!$channel["description"]) $channel["description"] = variable_get("site_mission", "");
   if (!$channel["language"]) $channel["language"] = "en";
   $output .= "<rss version=\"". $channel["version"] . "\">\n";

@@ -682,6 +682,8 @@ function user_logout() {
 
 function user_pass($edit = array()) {
 
+  global $base_url;
+
   if ($edit["name"]) {
     $account = db_fetch_object(db_query("SELECT uid, name, mail FROM users WHERE name = '%s'", $edit["name"]));
     if (!$account) $error = t("Sorry. The username <i>%s</i> is not recognized.", array("%s" => $edit["name"]));
@@ -705,7 +707,7 @@ function user_pass($edit = array()) {
       ** Mail new password:
       */
 
-      $variables = array("%username" => $account->name, "%site" => variable_get("site_name", "drupal"), "%password" => $pass, "%uri" => path_uri(), "%uri_brief" => path_uri(1), "%mailto" => $account->mail, "%date" => format_date(time()));
+      $variables = array("%username" => $account->name, "%site" => variable_get("site_name", "drupal"), "%password" => $pass, "%uri" => $base_url, "%uri_brief" => substr($base_url, strlen("http://")), "%mailto" => $account->mail, "%date" => format_date(time()));
       $subject = strtr(variable_get("user_mail_pass_subject", t("Replacement login information for %username at %site")), $variables);
       $body = strtr(variable_get("user_mail_pass_body", t("%username,\n\nHere is your new password for %site.  You may now login to %uri". url("user/login") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %uri". url("user/edit") .".\n\nYour new %site membership also enables you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering.  Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n-- %site team")), $variables);
       $headers = "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from";
@@ -741,7 +743,7 @@ function user_pass($edit = array()) {
 }
 
 function user_register($edit = array()) {
-  global $user;
+  global $user, $base_url;
 
   /*
   ** If we are already logged on, go to the user page instead.
@@ -804,7 +806,7 @@ function user_register($edit = array()) {
     $account = user_save("", array_merge(array("name" => $edit["name"], "pass" => $pass, "init" => $edit["mail"], "mail" => $edit["mail"], "rid" => _user_authenticated_id(), "rating" => 0, "status" => (variable_get("user_register", 1) == 1 ? 1 : 0)), $data));
     watchdog("user", "new user: '". $edit["name"] ."' &lt;". $edit["mail"] ."&gt;", l("edit user", "admin/user/edit/$account->uid"));
 
-    $variables = array("%username" => $edit["name"], "%site" => variable_get("site_name", "drupal"), "%password" => $pass, "%uri" => path_uri(), "%uri_brief" => path_uri(1), "%mailto" => $edit["mail"], "%date" => format_date(time()));
+    $variables = array("%username" => $edit["name"], "%site" => variable_get("site_name", "drupal"), "%password" => $pass, "%uri" => $base_url, "%uri_brief" => substr($base_url, strlen("http://")), "%mailto" => $edit["mail"], "%date" => format_date(time()));
 
     //the first user may login immediately, and receives a customized welcome e-mail.
     if ($account->uid == 1) {
@@ -834,7 +836,7 @@ function user_register($edit = array()) {
         $subject = strtr(variable_get("user_mail_welcome_subject", t("User account details for %username at %site")), $variables);
         $body = strtr(variable_get("user_mail_welcome_body", t("%username,\n\nThank you for registering at %site. Your account will have to be approved by the site administrator. You may now login to %uri". url("user/login") ." using the following username and password:\n\nusername: %username\npassword: %password\n\nAfter logging in, you may wish to change your password at %uri". url("user/edit") .".\n\nYour new %site membership also enables to you to login to other Drupal powered websites (e.g. http://www.drop.org/) without registering. Just use the following Drupal ID and password:\n\nDrupal ID: %username@%uri_brief\npassword: %password\n\n\n--  %site team")), $variables);
         user_mail($edit["mail"], $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
-        user_mail(variable_get("site_mail", ini_get("sendmail_from")), $subject, t("%u has applied for an account.\n\n%uri", array("%u" => $account->name, "%uri" => path_uri() . url("admin/user/edit/$account->uid"))), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+        user_mail(variable_get("site_mail", ini_get("sendmail_from")), $subject, t("%u has applied for an account.\n\n%uri", array("%u" => $account->name, "%uri" => url("admin/user/edit/$account->uid"))), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
         return t("Your password and further instructions have been sent to your e-mail address.");
       }
     }

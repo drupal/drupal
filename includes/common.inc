@@ -98,19 +98,6 @@ function object2array($node) {
   return $array;
 }
 
-function path_uri($brief = 0) {
-  global $HTTP_HOST, $PHP_SELF;
-
-  $uri = $PHP_SELF;
-  $path = $HTTP_HOST . substr($uri, 0, strrpos($uri, "/")) ."/";
-
-  if (!$brief) {
-    $path = "http://". $path;
-  }
-
-  return $path;
-}
-
 function request_uri() {
   // since request_uri() is only available on apache, we generate equivalent using other environment vars.
 
@@ -786,18 +773,18 @@ function url($url = NULL, $query = NULL) {
   if (variable_get("clean_url", "0") == "0") {
     if (isset($url)) {
       if (isset($query)) {
-        return "?q=$url&amp;$query";
+        return "$base_url/?q=$url&amp;$query";
       }
       else {
-        return "?q=$url";
+        return "$base_url/?q=$url";
       }
     }
     else {
       if (isset($query)) {
-        return "?$query";
+        return "$base_url/?$query";
       }
       else {
-        return "";
+        return "$base_url/";
       }
     }
   }
@@ -815,7 +802,7 @@ function url($url = NULL, $query = NULL) {
         return "$base_url/?$query";
       }
       else {
-        return "$base_url";
+        return "$base_url/";
       }
     }
   }
