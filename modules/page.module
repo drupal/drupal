@@ -53,7 +53,7 @@ function page_load($node) {
 
 function page_link($type) {
   if ($type == "page") {
-    $result = db_query("SELECT nid, link FROM page WHERE status = '1' AND link != '' ORDER BY link");
+    $result = db_query("SELECT n.nid, p.link FROM page p LEFT JOIN node n ON p.nid = n.nid WHERE n.status = '1' AND p.link != '' ORDER BY p.link");
     while ($page = db_fetch_object($result)) {
       $links[] = "<a href=\"node.php?id=$page->nid\">$page->link</a>";
     }
