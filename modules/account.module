@@ -221,15 +221,8 @@ function account_view($name) {
 }
 
 function account_query($type = "") {
-  $queries = array(0 => array("users recently visiting", "ORDER BY last_access DESC"), 1 => array("users recently joining", "ORDER BY id DESC"), 2 => array("users with access rights", "WHERE access != '' ORDER BY last_access DESC"), 3 => array("users with pending accounts", "WHERE status = 1 ORDER BY last_access DESC"), 4 => array("users with blocked accounts", "WHERE status = 0 ORDER BY last_access DESC"));
+  $queries = array(array("users recently visiting", "ORDER BY last_access DESC"), array("users recently joining", "ORDER BY id DESC"), array("users with access rights", "WHERE access != '' ORDER BY last_access DESC"), array("users with pending accounts", "WHERE status = 1 ORDER BY last_access DESC"), array("users with blocked accounts", "WHERE status = 0 ORDER BY last_access DESC"));
   return ($queries[$type] ? $queries[$type] : $queries);
-}
-
-function account_listing() {
-  foreach (account_query() as $key=>$array) {
-    $output .= "<LI><A HREF=\"admin.php?mod=account&type=$key\">$array[0]</A></LI>\n";
-  }
-  return "<OL>$output</OL>\n";
 }
 
 function account_admin() {
@@ -237,7 +230,7 @@ function account_admin() {
 
   print "<SMALL><A HREF=\"admin.php?mod=account&op=access\">access control</A> | <A HREF=\"admin.php?mod=account&op=listing\">account listings</A> | <A HREF=\"admin.php?mod=account&op=search\">search account</A> | <A HREF=\"admin.php?mod=account\">overview</A> | <A HREF=\"admin.php?mod=account&op=help\">help</A></SMALL><HR>";
 
-  $type = ($type ? $type : 1);
+  $type = ($type ? $type : 0);
 
   switch ($op) {
     case "access":
@@ -268,7 +261,7 @@ function account_admin() {
       print account_help();
       break;
     case "listing":
-      print account_listing();
+      print node_listing(account_query());
       break;
     case "search":
       print search_form($keys);
