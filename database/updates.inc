@@ -1490,7 +1490,7 @@ function update_101() {
 
     // get all strings
     $result = db_query('SELECT * FROM {locales}');
-    while($entry = db_fetch_object($result)) {
+    while ($entry = db_fetch_object($result)) {
       // insert string if at least one translation exists
       $test = 'return $entry->'. implode(' == "" && $entry->', array_keys($fields)) .' == "";';
       if (!eval($test)) {
@@ -1498,7 +1498,13 @@ function update_101() {
         $lid = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE location = '%s' AND source = '%s'", $entry->location, $entry->string));
         foreach ($fields as $key => $value) {
           // insert translation if non-empty
-          db_query("INSERT INTO {locales_target} (lid, translation, locale) VALUES (%d, '%s', '%s')", $lid->lid, $entry->$key, $key);
+          if ($key == 'en') {
+            $keynew = 'en-local';
+          }
+          else {
+            $keynew = $key;
+          }
+          db_query("INSERT INTO {locales_target} (lid, translation, locale) VALUES (%d, '%s', '%s')", $lid->lid, $entry->$key, $keynew);
         }
       }
     }
