@@ -36,7 +36,7 @@ function node_help($section = 'admin/help#node') {
       if ($mod == 'admin') {
         foreach (node_list() as $type) {
           $output .= '<h3>'. t('Node type: %module', array('%module' => node_invoke($type, 'node_name'))). '</h3>';
-          $output .= implode('\n', module_invoke_all('help', 'node/add#'. $type));
+          $output .= implode("\n", module_invoke_all('help', 'node/add#'. $type));
         }
       }
       break;
@@ -189,7 +189,7 @@ function node_teaser($body) {
     return substr($body, 0, $length);
   }
 
-  if ($length = strpos($body, '\n', $size)) {
+  if ($length = strpos($body, "\n", $size)) {
     return substr($body, 0, $length);
   }
 
@@ -284,7 +284,7 @@ function node_list() {
  *   TRUE iff the $hook exists in the node type of $node.
  */
 function node_hook(&$node, $hook) {
-  $function = node_get_module_name($node) .'_$hook';
+  $function = node_get_module_name($node) ."_$hook";
 
   return function_exists($function);
 }
@@ -302,7 +302,7 @@ function node_hook(&$node, $hook) {
  *   The returned value of the invoked hook is returned.
  */
 function node_invoke(&$node, $hook, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
-  $function = node_get_module_name($node) .'_$hook';
+  $function = node_get_module_name($node) ."_$hook";
 
   if (function_exists($function)) {
     return ($function($node, $a2, $a3, $a4));
@@ -637,7 +637,7 @@ function node_admin_edit($node) {
   /*
   ** Display the node form extensions:
   */
-  $output .= implode('\n', module_invoke_all('node_link', $node));
+  $output .= implode("\n", module_invoke_all('node_link', $node));
 
   return $output;
 
@@ -1283,7 +1283,7 @@ function node_add($type) {
       if (node_access('create', $type)) {
         $output .= '<li>';
         $output .= ' '. l(node_invoke($type, 'node_name'), "node/add/$type", array('title' => t('Add a new %s.', array('%s' => node_invoke($type, 'node_name')))));
-        $output .= " <div style=\"margin-left: 20px;\">". implode('\n', module_invoke_all('help', 'node/add#'. $type)) .'</div>';
+        $output .= " <div style=\"margin-left: 20px;\">". implode("\n", module_invoke_all('help', 'node/add#'. $type)) .'</div>';
         $output .= '</li>';
       }
     }
