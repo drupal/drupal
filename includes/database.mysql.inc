@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.11 2002/11/09 20:02:41 dries Exp $
+// $Id: database.mysql.inc,v 1.12 2002/11/09 20:47:52 dries Exp $
 
 function db_connect($url) {
   $url = parse_url($url);
@@ -115,23 +115,6 @@ function db_next_id($name) {
 
 function db_affected_rows() {
   return mysql_affected_rows();
-}
-
-/**
- * Generates a limited query
- *
- * @param string  $query query
- * @param integer $from  the row to start to fetching
- * @param integer $count the numbers of rows to fetch
- *
- * @return mixed a DB_Result object or a DB_Error
- *
- * @access public
- */
-function db_query_range($query, $from, $count) {
-  $query .= " LIMIT $from, $count";
-  // TODO: debug version
-  return db_query($query);
 }
 
 /**
