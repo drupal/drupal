@@ -112,10 +112,10 @@ function statistics_help($section = "admin/help#statistics") {
       $output .= "<li>If you enable the view counters for content, this adds 1 database query for each node that is viewed (2 queries if it's the first time the node has ever been viewed).</li>";
       $output .= "<li>If you enable the access log, this adds 1 database query for each page that Drupal displays.  Logged information includes:  HTTP referrer (if any), node being accessed (if any), user ID (if any), the IP address of the user, and the time the page was viewed.</li>";
       $output .= "</ul>";
-      $output .= "<p>As with any new module, the statistics module needs to be %modules before you can use it.  Also refer to the %permissions, as this module supports four separate permissions.</p>";
-      $output .= "<h3>%referers</h3><p>This admin page shows you site-wide referrer statistics.  You can see '<i>all</i>' statistics, '<i>external</i>' statistics or '<i>internal</i>' statistics.  Default is 'all'.</p>";
-      $output .= "<h3>%access</h3><p>This admin page gives you an at-a-glance look at your most popular content.  It is useful for understanding what content on your Drupal site is the most popular.  Also on this page are links to the referrer statistics for each listed node.</p>";
-      $output .= "<h3>Configuring the statistics module</h3><p>There are some configuration options added to the main %configuration section:</p>";
+      $output .= "<p>As with any new module, the statistics module needs to be <a href=\"%modules\">enabled</a> before you can use it.  Also refer to the <a href=\"%permissions\">permissions section</a>, as this module supports four separate permissions.</p>";
+      $output .= "<h3><a href=\"%referers\">referrers log</a></h3><p>This admin page shows you site-wide referrer statistics.  You can see '<i>all</i>' statistics, '<i>external</i>' statistics or '<i>internal</i>' statistics.  Default is 'all'.</p>";
+      $output .= "<h3><a href=\"%access\">access log</a></h3><p>This admin page gives you an at-a-glance look at your most popular content.  It is useful for understanding what content on your Drupal site is the most popular.  Also on this page are links to the referrer statistics for each listed node.</p>";
+      $output .= "<h3>Configuring the statistics module</h3><p>There are some configuration options added to the main <a href=\"%configuration\">administer &raquo; configuration</a> section:</p>";
       $output .= "<ul>";
       $output .= "<li><i>enable access log</i> -- allows you to turn the access log on and off.  This log is used to store data about every page accessed, such as the remote host's IP address, where they came from (referrer), what node theyve viewed, and their user name.  Enabling the log adds one database call per page displayed by Drupal.</li>";
       $output .= "<li><i>discard access logs older than</i> -- allows you to configure how long an access log entry is saved, after which time it is deleted from the database table. To use this you need to run \"cron.php\"</li>";
@@ -124,11 +124,11 @@ function statistics_help($section = "admin/help#statistics") {
       $output .= "</ul>";
       $output .= "<h3>Popular content block</h3>";
       $output .= "<p>This module creates a block that can display the day's top viewed content, the all time top viewed content, and the last content viewed.  Each of these links can be enabled or disabled individually, and the number of posts displayed for each can be configured with a drop down menu.  If you disable all sections of this block, it will not appear.</p>";
-      $output .= "<p>Don't forget to enable the block %here-block.</p>";
+      $output .= "<p>Don't forget to <a href=\"%block\">enable the block</a>.</p>";
 
       $output .= "<h3>Popular content page</h3>";
       $output .= "<p>This module creates a user page that can display summaries of the day's most popular viewed content, the all time most popular content, and the last content viewed.  Each of these summaries can be enabled or disabled individually, and the number of posts displayed for each can be configured with a drop down menu.  You can also assign a name for the automatically generated link to the user page.  If no name is set, the link will not be displayed.</p>";
-      $output .= "<h3>Permissions</h3><p>This module has four permissions that need to be configured in %permissions.</p>";
+      $output .= "<h3>Permissions</h3><p>This module has four permissions that need to be configured in the <a href=\"%permissions\">permissions section</a>.</p>";
       $output .= "<ul>";
       $output .= "<li><i>access statistics</i> - enable for user roles that get to see view counts for individual content.  (This does not define access to the block)</li>";
       $output .= "<li><i>administer statistics module</i> - enable for user roles that get to configure the statistics module.</li><li><i>administer statistics</i> - enable for user roles that get to view the referrer statistics.</li>";
@@ -148,13 +148,13 @@ function statistics_help($section = "admin/help#statistics") {
       $output .= "<li><i>timestamp</i> - This will return a array with links to the last viewed node.<br />Example:  <code>statistics_title_list(\"timestamp\",\"5\");</code></li>";
       $output .= "</ul>";
       $output .= "<p>\$dbrows is the number or rows you want returned in your array.</p>";
-      $output = t($output, array("%modules" => l(t("enabled"), "admin/system/modules"), "%permissions" => l(t("permissions section"), "admin/user/permission"), "%referers" => l(t("referrers log"), "admin/statistics/referrers"), "%access" => l(t("access log"), "admin/statistics/log"), "%configuration" => l(t("administer") ." &raquo; ". t("configuration"), "admin/system/modules/statistics"), "%here-block" => l(t("here"), "admin/system/block")));
+      $output = t($output, array("%modules" => url("admin/system/modules"), "%permissions" => url("admin/user/permission"), "%referers" => url("admin/statistics/referrers"), "%access" => url("admin/statistics/log"), "%configuration" => url("admin/system/modules/statistics"), "%block" => url("admin/system/block")));
       break;
     case 'admin/system/modules#description':
       $output = t("Logs access statistics for your site.");
       break;
     case 'admin/system/modules/statistics':
-      $output = t("Settings for the statistical information that Drupal will keep about the site. See %statistics for the actual information.", array("%statistics" => l(t("site statistics"), "admin/statistics")));
+      $output = t("Settings for the statistical information that Drupal will keep about the site. See <a href=\"%statistics\">site statistics</a> for the actual information.", array("%statistics" => url("admin/statistics")));
       break;
     case 'admin/statistics':
       $output = t("This page gives you an at-a-glance look at your most popular content.");

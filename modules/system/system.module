@@ -13,10 +13,9 @@ function system_help($section = "admin/help#system") {
       $output = t("Select which themes are available to your users and specify the default theme.");
       break;
     case 'admin/system/modules':
-      $output = t("Modules are plugins for Drupal that extend its core functionality.  Here you can select which modules are enabled.  Click on the name of the module in the navigation menu for their individual configuration pages.  Once a module is enabled, new %permissions might be made available.  Modules can automatically be temporarily disabled to reduce server load when your site becomes extremely busy by checking throttle.  The auto-throttle functionality must be enabled on the %throttle after having enabled the throttle module.", array("%permissions" => l(t("permissions"), "admin/user/permission"), "%throttle" => l(t("throttle configuration page"), "admin/system/modules/throttle")));
+      $output = t("Modules are plugins for Drupal that extend its core functionality.  Here you can select which modules are enabled.  Click on the name of the module in the navigation menu for their individual configuration pages.  Once a module is enabled, new <a href=\"%permissions\">permissions</a> might be made available.  Modules can automatically be temporarily disabled to reduce server load when your site becomes extremely busy by checking throttle.  The auto-throttle functionality must be enabled on the <a href=\"%throttle\">throttle configuration page</a> after having enabled the throttle module.", array("%permissions" => url("admin/user/permission"), "%throttle" => url("admin/system/modules/throttle")));
       break;
     case 'admin/help#system':
-    case 'admin/system/help':
       $output .= "<p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviours including visual and operational settings.</p>";
       $output .= "<h3><a id=\"cron\">Cron</a></h3>";
       // Start of system_help_cron
@@ -24,7 +23,7 @@ function system_help($section = "admin/help#system") {
       $output .= "<p>Whenever %cron-link is accessed, cron will run: it calls the _cron hook in each module allowing the module to run tasks if they have not been executed in the last <i>n</i> seconds, where n is the period of that task.  When all the tasks are finished, cron is done.</p>";
       $output .= "<p>The recommended way to set up your cron system is to set up a Unix/Linux crontab entry (see \"man crontab\") that frequently visits %cron-link.  Note that cron does not guarantee the commands will be executed at the specified interval.  However, Drupal will try its best to run the tasks as close to the specified intervals as possible.  The more you visit cron.php, the more accurate cron will be.</p>";
       $output .= "<p>If your hosting company does not allow you to set up crontab entries, you can always ask someone else to set up an entry for you. After all, virtually any Unix/Linux machine with access to the internet can set up a crontab entry to frequently visit %cron-link.</p>";
-      $output .= "<p>For the Unix/Linux crontab itself, use a browser like %lynx or %wget but make sure the process terminates: either use <code>/usr/bin/lynx -source %base_url/cron.php</code> or <code>/usr/bin/wget -o /dev/null -O /dev/null %cron-link</code>.  Take a look at the example scripts in the <code>scripts</code>-directory. Make sure to adjust them to fit your needs.  A good crontab line to run the cron script once every hour would be:";
+      $output .= "<p>For the Unix/Linux crontab itself, use a browser like <a href=\"%lynx\">lynx</a> or <a href=\"%wget\">wget</a> but make sure the process terminates: either use <code>/usr/bin/lynx -source %base_url/cron.php</code> or <code>/usr/bin/wget -o /dev/null -O /dev/null %cron-link</code>.  Take a look at the example scripts in the <code>scripts</code>-directory. Make sure to adjust them to fit your needs.  A good crontab line to run the cron script once every hour would be:";
       $output .= "<pre>     00 * * * * /home/www/drupal/scripts/cron-lynx.sh</pre>";
       $output .= "Note that it is essential to access <code>cron.php</code> using a browser on the web site's domain; do not run it using command line PHP and avoid using <code>localhost</code> or <code>127.0.0.1</code> or some of the environment varibles will not be set correctly and features may not work as expected.</p>";
       // End of system_help_cron
@@ -32,7 +31,7 @@ function system_help($section = "admin/help#system") {
       // Start of system_help_cache
       $output .= "<p>Drupal has a caching mechanism which stores dynamically generated web pages in a database.  By caching a web page, Drupal does not have to create the page each time someone wants to view it, instead it takes only one SQL query to display it, reducing response time and the server's load.  Only pages requested by \"anonymous\" users are cached.</p>";
       // End of system_help_cache
-      $output = t($output, array("%base_url" => $base_url, "%cron-link" => "<a href=\"$base_url/cron.php\">$base_url/cron.php</a>", "%lynx" => "<a href=\"http://lynx.browser.org\">lynx</a>", "%wget" => "<a href=\"http://www.gnu.org/software/wget/wget.html\">wget</a>" ));
+      $output = t($output, array("%base_url" => $base_url, "%cron-link" => "<a href=\"$base_url/cron.php\">$base_url/cron.php</a>", "%lynx" => "http://lynx.browser.org", "%wget" => "http://www.gnu.org/software/wget/wget.html" ));
       break;
     case 'admin/system/modules#description':
       $output = t("Configuration system that lets administrators modify the workings of the site.");
@@ -118,7 +117,7 @@ function system_view_general() {
   $output = form_group(t("General settings"), $group);
 
   // caching:
-  $group  = form_radios(t("Cache support"), "cache", variable_get("cache", 0), array(t("Disabled"), t("Enabled")), t("Enable or disable the caching of rendered pages.  When caching is enabled, Drupal will flush the cache when required to make sure updates take effect immediately.  Check the %documentation for information on Drupal's cache system.", array("%documentation" => l(t("cache documentation"), "admin/system/help", NULL, NULL, "cache"))));
+  $group  = form_radios(t("Cache support"), "cache", variable_get("cache", 0), array(t("Disabled"), t("Enabled")), t("Enable or disable the caching of rendered pages.  When caching is enabled, Drupal will flush the cache when required to make sure updates take effect immediately.  Check the <a href=\"%documentation\">cache documentation</a> for information on Drupal's cache system.", array("%documentation" => url("admin/system/help", NULL, NULL, "cache"))));
 
   $output .= form_group(t("Cache settings"), $group);
 

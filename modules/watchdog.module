@@ -6,9 +6,9 @@ function watchdog_help($section = "admin/help#watchdog") {
 
   switch ($section) {
     case 'admin/help#watchdog':
-      $output .= "<p>Watchdog module monitors your web site, capturing system events in a log to be reviewed by an authorized individual at a later time.  The watchdog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information.  It is vital to %watchdog on a regular basis as it is often the only way to tell what is going on.</p>";
-      $output .= "<p>To ease administration, the watchdog will automatically discard old log entries, %log-entry. Needs \"cron.php\" to discard the entries.</p>";
-      $output = t($output, array("%watchdog" => l(t("check the watchdog report"), "admin/watchdog"), "%log-entry" => l(t("as configured"), "admin/system/modules/watchdog")));
+      $output .= "<p>Watchdog module monitors your web site, capturing system events in a log to be reviewed by an authorized individual at a later time.  The watchdog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information.  It is vital to <a href=\"%watchdog\">check the watchdog report</a> on a regular basis as it is often the only way to tell what is going on.</p>";
+      $output .= "<p>To ease administration, the watchdog will automatically discard old log entries, <a href=\"%log-entry\">as configured</a>. Needs \"cron.php\" to discard the entries.</p>";
+      $output = t($output, array("%watchdog" => url("admin/watchdog"), "%log-entry" => url("admin/system/modules/watchdog")));
       break;
    case 'admin/watchdog':
      $output = t("The watchdog module monitors your web site, captures system events in a log and records them to be reviewed by an authorized individual at a later time.  The watchdog log is simply a list of events recorded during operation and contains usage data, performance data, errors, warnings and operational information. It is vital to check the watchdog report on a regular basis as it is often the only way to tell what is going on.");
@@ -38,7 +38,7 @@ function watchdog_help($section = "admin/help#watchdog") {
     $output = t("Logs and records system events.");
     break;
   case 'admin/system/modules/watchdog':
-    $output = t("Watchdog logs your system events. To see these logs go to %watchdog. Since these logs can grow out of control if kept around forever, below set how long an item should be kept in the log.  Note that to discard entries as set below you must run \"cron.php\" regularly.", array("%watchdog" => l(t("messages"), "admin/watchdog")));
+    $output = t("Watchdog logs your system events. To see these logs go to <a href=\"%watchdog\">messages</a>. Since these logs can grow out of control if kept around forever, below set how long an item should be kept in the log.  Note that to discard entries as set below you must run \"cron.php\" regularly.", array("%watchdog" => url("admin/watchdog")));
     break;
   }
 

@@ -12,13 +12,13 @@ function node_help($section = "admin/help#node") {
       $output .= "<p>The core of the Drupal system is the node. All of the contents of the system are placed in nodes, or extensions of nodes.";
       $output .= "A base node contains:<dl>";
       $output .= "<dt>A Title</dt><dd>Up to 128 characters of text that titles the node.</dd>";
-      $output .= "<dt>A Teaser</dt><dd>A small block of text that is meant to get you interested in the rest of node. Drupal will automatically pull a small amount of the body of the node to make the teaser (To configure how long the teaser will be %teaser). The teaser can be changed if you don't like what Drupal grabs.</dd>";
+      $output .= "<dt>A Teaser</dt><dd>A small block of text that is meant to get you interested in the rest of node. Drupal will automatically pull a small amount of the body of the node to make the teaser (To configure how long the teaser will be <a href=\"%teaser\">click here</a>). The teaser can be changed if you don't like what Drupal grabs.</dd>";
       $output .= "<dt>The Body</dt><dd>The main text that comprises your content.</dd>";
       $output .= "<dt>A Type</dt><dd>What kind of node is this? Blog, book, forum, comment, unextended, etc.</dd>";
       $output .= "<dt>An Author</dt><dd>The author's name. It will either be \"anonymous\" or a valid user. You <i>cannot</i> set it to an arbitrary value.</dd>";
       $output .= "<dt>Authored on</dt><dd>The date the node was written.</dd>";
       $output .= "<dt>Changed</dt><dd>The last time this node was changed.</dd>";
-      $output .= "<dt>Static on front page</dt><dd>The front page is configured to show the teasers from only a few of the total nodes you have on your site (To configure how many teasers %teaser), but if you think a node is important enough that you want it to stay on the front page enable this.</dd>";
+      $output .= "<dt>Static on front page</dt><dd>The front page is configured to show the teasers from only a few of the total nodes you have on your site (To configure how many teasers <a href=\"%teaser\">click here</a>), but if you think a node is important enough that you want it to stay on the front page enable this.</dd>";
       $output .= "<dt>Allow user comments</dt><dd>A node can have comments. These comments can be written by other users (Read-write), or only by admins (Read-only).</dd>";
       $output .= "<dt>Attributes</dt><dd>A way to sort nodes.</dd>";
       $output .= "<dt>Revisions</dt><dd>Drupal has a revision system so that you can \"roll back\" to an older version of a post if the new version is not what you want.</dd>";
@@ -30,7 +30,7 @@ function node_help($section = "admin/help#node") {
       $output .= "<dt>Published</dt><dd>When using Drupal's moderation system a node remains unpublished -- unavaliable to non-moderators -- until it is marked Published.</dd></dl>";
       $output .= "<p>Now that you know what is in a node, here are some of the types of nodes available.</p>";
 
-      $output = t($output, array("%teaser" => l(t("click here"), "admin/system/modules/node")));
+      $output = t($output, array("%teaser" => url("admin/system/modules/node")));
 
       if ($mod == "admin") {
         foreach (module_list() as $name) {
@@ -49,7 +49,7 @@ function node_help($section = "admin/help#node") {
       $output = t("Settings for the core of Drupal. Almost everything is a node so these settings will affect most of the site.");
       break;
     case 'admin/node':
-      $output = t("Below is a list of all of the nodes in your site. Other forms of content are listed elsewhere (e.g. %comments).<br />Clicking a title views that node, while clicking an author's name edits their user information.<br />Other node-related tasks are available from the menu on the left.", array("%comments" => l(t("comments"), "admin/comment")));
+      $output = t("Below is a list of all of the nodes in your site. Other forms of content are listed elsewhere (e.g. <a href=\"%comments\">comments</a>).<br />Clicking a title views that node, while clicking an author's name edits their user information.<br />Other node-related tasks are available from the menu on the left.", array("%comments" => url("admin/comment")));
       break;
     case 'admin/node/search':
       $output = t("Enter a simple pattern to search for a post. This can include the wildcard character *.<br />For example, a search for \"br*\" might return \"bread bakers\", \"our daily bread\" and \"brenda\".");
