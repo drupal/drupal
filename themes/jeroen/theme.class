@@ -107,7 +107,7 @@
        ?>
       <TABLE BORDER="0" CELLPADDING="4" WIDTH="100%">
        <TR BGCOLOR="<? echo $this->bgcolor1; ?>"><TD><FONT COLOR="<? echo $this->bgcolor2; ?>"><B><? echo $subject; ?></B></FONT></TD></TR>
-       <TR BGCOLOR="<? echo $this->bgcolor1; ?>">
+       <TR BGCOLOR="<? echo $this->bgcolor2; ?>">
         <TD>
          <?
           if ($informant) {
