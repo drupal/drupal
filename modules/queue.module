@@ -36,15 +36,15 @@ function queue_vote($id, $vote) {
       // Update submission's score- and votes-field:
       db_query("UPDATE node SET score = score $vote, votes = votes + 1, users = '". field_set($node->users, $user->userid, $vote) ."' WHERE nid = $id");
 
-      if (variable_get("post_threshold", 4, $node) <= $node->score) {
+      if (variable_get("post_threshold", 4, $node) <= $node->score - 1) {
         node_save(array(nid => $id, status => $status[posted]), array(status));
         watchdog("message", "node: posted '$node->title' - moderation");
       }
-      else if (variable_get("dump_threshold", -2, $node) >= $node->score) {
+      else if (variable_get("dump_threshold", -2, $node) >= $node->score - 1) {
         node_save(array(nid => $id, status => $status[dumped]), array(status));
         watchdog("message", "node: dumped '$node->title' - moderation");
       }
-      else if (variable_get("expire_threshold", 8, $node) <= $node->votes) {
+      else if (variable_get("expire_threshold", 8, $node) <= $node->votes - 1) {
         node_save(array(nid => $id, status => $status[expired]), array(status));
         watchdog("message", "node: expired '$node->title' - moderation");
       }
