@@ -112,15 +112,9 @@ function path_admin_edit($pid = 0) {
  * Menu callback; handles deletion of an URL alias.
  */
 function path_admin_delete($pid = 0) {
-  path_delete($pid);
-  print theme('page', path_overview());
-}
-
-/**
- * Menu callback; presents the path-specific information from admin/help.
- */
-function path_admin_help() {
-  print theme('page', path_help('admin/help#path'));
+  db_query('DELETE FROM {url_alias} WHERE pid = %d', $pid);
+  drupal_set_message(t('the alias has been deleted.'));
+  drupal_goto('admin/path');
 }
 
 /**
@@ -285,14 +279,6 @@ function path_overview() {
  */
 function path_load($pid) {
   return db_fetch_array(db_query('SELECT * FROM {url_alias} WHERE pid = %d', $pid));
-}
-
-/**
- * Remove an URL alias from the database.
- */
-function path_delete($pid) {
-  db_query('DELETE FROM {url_alias} WHERE pid = %d', $pid);
-  drupal_set_message(t('the alias has been deleted.'));
 }
 
 /**
