@@ -3,10 +3,10 @@
  class Theme {
    var $themename = "unconed";
 
-	 var $cl80 = "#8B8E95";
-	 var $clc0 = "#c8c8d0";
-	 var $cl00 = "#000000";
-	 
+   var $cl80 = "#8B8E95";
+   var $clc0 = "#c8c8d0";
+   var $cl00 = "#000000";
+   
    ### color set #1:
    var $brcolor1 = "#000000";   // border color
    var $bgcolor1 = "#B5BECE";
@@ -42,9 +42,9 @@
      </HEAD>
      <STYLE type="text/css"> 
       <!-- 
-			 TABLE { border-width: 0; }
+       TABLE { border-width: 0; }
        TD { border-width: 0; font-size: 8pt; font-family: verdana,helvetica,arial; }
-			 P,UL,LI,DIV,FORM,EM,BLOCKQUOTE { font-size: 8pt; font-family: verdana,helvetica,arial; }
+       P,UL,LI,DIV,FORM,EM,BLOCKQUOTE { font-size: 8pt; font-family: verdana,helvetica,arial; }
        BODY { margin: 10px; font-size: 9pt; font-family: verdana,helvetica,arial; }
        SMALL { font-size: 8pt; }
        BIG { font-size: 10pt; }
@@ -91,13 +91,13 @@
         <TR><TD BGCOLOR="<? echo $this->bgcolor1; ?>" COLSPAN="2"><FONT COLOR="<? echo $this->fgcolor1; ?>"><B><? echo "". check_output($story->subject, 1) .""; ?></B></FONT></TD></TR>
         <TR BGCOLOR="<? echo $this->bgcolor2; ?>">
          <?
-				  if ($story->category) { print "<TD BGCOLOR=\"$this->bgcolor2\">"; }
-					else { print "<TD COLSPAN=\"2\" BGCOLOR=\"$this->bgcolor2\">"; }
+          if ($story->category) { print "<TD BGCOLOR=\"$this->bgcolor2\">"; }
+          else { print "<TD COLSPAN=\"2\" BGCOLOR=\"$this->bgcolor2\">"; }
           if ($story->userid) { print "<SMALL>Posted by " . format_username($story->userid) . " on $timestamp"; }
-					else { print "<SMALL>Posted by $anonymous on $timestamp"; }
-					if ($story->department) { print " - from the $story->department dept."; }
-					print "</SMALL>";
-					if ($story->category) { print "</TD><TD BGCOLOR=\"$this->bgcolor2\" ALIGN=\"center\"><B><A HREF=\"search.php?category=$story->category\"><FONT COLOR=\"$this->categorycolor\">$story->category</FONT></A></B>"; }
+          else { print "<SMALL>Posted by $anonymous on $timestamp"; }
+          if ($story->department) { print " - from the $story->department dept."; }
+          print "</SMALL>";
+          if ($story->category) { print "</TD><TD BGCOLOR=\"$this->bgcolor2\" ALIGN=\"center\"><B><A HREF=\"search.php?category=$story->category\"><FONT COLOR=\"$this->categorycolor\">$story->category</FONT></A></B>"; }
          ?>
         </TD>
        </TR>
@@ -113,7 +113,7 @@
        </TR>
       <TR BGCOLOR="<? echo $this->bgcolor3; ?>"><TD BGCOLOR="<? echo $this->bgcolor3 ?>" ALIGN="right" COLSPAN="2"><? echo display_morelink($this, $story) ?></TD></TR>
      </TABLE></TD></TR></TABLE><BR>
-    <?	
+    <?  
    }
 
    ######
@@ -131,13 +131,13 @@
        <TR><TD COLSPAN="2" BGCOLOR="<? echo $this->bgcolor1; ?>"><FONT COLOR="<? echo $this->fgcolor1; ?>"><B><? echo $story->subject; ?></B></FONT></TD></TR>
        <TR BGCOLOR="<? echo $this->bgcolor3; ?>">
          <?
-				  if ($story->category) { print "<TD BGCOLOR=\"$this->bgcolor3\">"; }
-					else { print "<TD COLSPAN=\"2\" BGCOLOR=\"$this->bgcolor3\">"; }
+          if ($story->category) { print "<TD BGCOLOR=\"$this->bgcolor3\">"; }
+          else { print "<TD COLSPAN=\"2\" BGCOLOR=\"$this->bgcolor3\">"; }
           if ($story->userid) { print "<SMALL>Posted by " . format_username($story->userid) . " on $timestamp"; }
-					else { print "<SMALL>Posted by $anonymous on $timestamp"; }
-					if ($story->department) { print " - from the $story->department dept."; }
-					print "</SMALL>";
-					if ($story->category) { print "</TD><TD BGCOLOR=\"$this->bgcolor3\" ALIGN=\"center\"><B><A HREF=\"search.php?category=$story->category\"><FONT COLOR=\"$this->categorycolor\">$story->category</FONT></A></B>"; }
+          else { print "<SMALL>Posted by $anonymous on $timestamp"; }
+          if ($story->department) { print " - from the $story->department dept."; }
+          print "</SMALL>";
+          if ($story->category) { print "</TD><TD BGCOLOR=\"$this->bgcolor3\" ALIGN=\"center\"><B><A HREF=\"search.php?category=$story->category\"><FONT COLOR=\"$this->categorycolor\">$story->category</FONT></A></B>"; }
          ?>
         </TD>
        </TR>
@@ -217,13 +217,12 @@
    ######
    # Syntax.......: comment(...);
    # Description..: this function is used to theme user comments.
-   function comment($poster, $subject, $comment, $timestamp, $url, $email, $score, $votes, $cid, $link, $thread = "") {
+   function comment($comment, $link, $thread = "") {
+     print "<A NAME=\"$comment->cid\"></A>\n";
 
-     if (empty($poster)) $poster = $anonymous;
      $timestamp = format_date($timestamp);     
 
      print "\n<!-- Comment: \"$subject\" by $poster -->\n";
-     print "<A NAME=\"$cid\">\n";
 
      ?>
       <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" BGCOLOR="<? echo $this->brcolor1; ?>" WIDTH="100%">
@@ -239,36 +238,36 @@
      ### Subject:
      echo "    <TR>";
      echo "     <TD ALIGN=\"right\" VALIGN=\"top\" WIDTH=\"5%\"><FONT COLOR=\"$this->hlcolor1\"><B>Subject:</B></FONT></TD><TD WIDTH=\"80%\">";
-     echo "      <B><FONT COLOR=\"$this->fgcolor1\">$subject</FONT></B>";
+     echo "      <B><FONT COLOR=\"$this->fgcolor1\">" . check_output($comment->subject) . "</FONT></B>";
      echo "     </TD>";
 
      ### Moderation:
      echo "     <TD ALIGN=\"right\" ROWSPAN=\"3\" VALIGN=\"middle\" WIDTH=\"15%\">";
-     display_comment_moderation($cid, $poster, $score, $votes);
+     display_comment_moderation($comment->cid, $comment->poster, $comment->score, $comment->votes);
      echo "     </TD>";
      echo "    </TR>";
 
      ### Author:
      echo "    <TR>";
-     echo "     <TD ALIGN=\"right\" VALIGN=\"top\">Author:</TD><TD><B>" . format_username($poster) . "</B> ";
-     if ($poster != $anonymous) {
+     echo "     <TD ALIGN=\"right\" VALIGN=\"top\">Author:</TD><TD><B>" . format_username($comment->userid) . "</B> ";
+     if ($comment->userid != $anonymous) {
        ### Display extra information line:
-       if ($email) $info .= format_email($email);
-       if (eregi("http://",$url)) $info .= " | " . format_url($url);
-       echo "<BR>[ $info ]";
+       if ($comment->fake_email) $info .= format_email($comment->fake_email);
+       if (eregi("http://",$comment->url)) $info .= " | " . format_url($comment->url);
+       if ($info) echo "<BR>[ $info ]";
      }
      echo "     </TD>";
      echo "    </TR>";
 
      ### Date
-     echo "    <TR><TD ALIGN=\"right\">Date:</TD><TD>". $timestamp ."</TD></TR>";
+     echo "    <TR><TD ALIGN=\"right\">Date:</TD><TD>". format_date($comment->timestamp) ."</TD></TR>";
 
      echo "   </TABLE>";
      echo "  </TD>";
      echo " </TR>";
 
      ### Print body of comment:
-     if ($comment) echo " <TR><TD BGCOLOR=\"$this->bgcolor2\">". check_output($comment, 1) ."</TD></TR>";
+     if ($comment) echo " <TR><TD BGCOLOR=\"$this->bgcolor2\">". check_output($comment->comment, 1) ."</TD></TR>";
 
      ### Print thread (if any):
      if ($thread) echo " <TR><TD BGCOLOR=\"$this->bgcolor3\">$thread</TD></TR>";
@@ -279,43 +278,6 @@
      ?></TD></TR></TABLE><BR><?
    }
 
-   ######
-   # Syntax.......: preview(...);
-   # Description..: this function is used to preview a story and is used at
-   #                different parts of the homepage: when a visitors sumbits
-   #                news, when an editor wants to post news, when people
-   #                check the entries in the sumbission queue, etc.
-   function preview($author, $subject, $abstract, $updates, $article, $timestamp, $category, $department) {
-
-     ?>
-      <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" BGCOLOR="<? echo $this->brcolor1; ?>" WIDTH="100%">
-      <TR><TD>
-      <TABLE BORDER="0" CELLPADDING="4" CELLSPACING="1" WIDTH="100%">
-       <TR BGCOLOR="<? echo $this->bgcolor1; ?>"><TD COLSPAN="2"><FONT COLOR="<? echo $this->fgcolor1; ?>"><B><? echo $subject; ?></B></FONT></TD></TR>
-       <TR BGCOLOR="<? echo $this->bgcolor3; ?>">
-         <?
-				  if ($category) { print "<TD BGCOLOR=\"$this->bgcolor2\">"; }
-					else { print "<TD COLSPAN=\"2\" BGCOLOR=\"$this->bgcolor2\">"; }
-          print "<SMALL>Posted by <A HREF=\"account.php?op=info&uname=" . $author . "\">" . $author . "</A> on " . format_date($timestamp);
-					if ($department) { print " - from the $department dept."; }
-					print "</SMALL>";
-					if ($category) { print "</TD><TD BGCOLOR=\"$this->bgcolor2\" ALIGN=\"center\"><B><A HREF=\"search.php?category=$category\"><FONT COLOR=\"$this->categorycolor\">$category</FONT></A></B>"; }
-         ?>
-        </TD>
-       </TR>
-       <TR BGCOLOR="<? echo $this->bgcolor2; ?>">
-        <TD COLSPAN="2">
-         <? 
-          if ($abstract) echo "<P>". check_output($abstract, 1) ."<P>";
-          if ($comments) echo "<P><FONT COLOR=\"$this->fgcolor1\">Editor's note:</FONT> ". check_output($comments, 1) ."</P>";
-          if ($article) echo "<P>". check_output($article, 1) ."</P>";
-        ?>
-       </TD>
-      </TR>
-      <TR BGCOLOR="<? echo $this->bgcolor3; ?>"><TD COLSPAN="2" BGCOLOR="<? echo $this->bgcolor3 ?>" ALIGN="right"><? echo $link; ?></TD></TR>
-     </TABLE></TD></TR></TABLE><BR>
-    <?
-   }
  
    ######
    # Syntax.......: box($title, $body);
