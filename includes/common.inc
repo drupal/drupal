@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.161 2003/01/26 13:22:01 dries Exp $
+// $Id: common.inc,v 1.162 2003/01/27 19:37:07 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST, $PHP_SELF;
@@ -462,7 +462,14 @@ function check_input($text) {
 }
 
 function filter($text) {
-  return module_invoke_all("filter", $text);;
+
+  foreach (module_list() as $name) {
+    if (module_hook($name, "filter")) {
+      $text = module_invoke($name, "filter", $text);
+    }
+  }
+
+  return $text;
 }
 
 function rewrite_old_urls($text) {
