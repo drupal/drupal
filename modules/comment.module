@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.64 2002/05/16 09:32:01 kjartan Exp $
+// $Id: comment.module,v 1.65 2002/05/20 21:55:22 kjartan Exp $
 
 $GLOBALS["cmodes"] = array(1 => "Flat list - collapsed", 2 => "Flat list - expanded", 3 => "Threaded list - collapsed", 4 => "Threaded list - expanded");
 $GLOBALS["corder"] = array(1 => "Date - newest first", 2 => "Date - oldest first");
@@ -499,7 +499,9 @@ function comment_render($nid, $cid = 0) {
     ** Render control panel:
     */
 
-    $theme->box(t("Control panel"), $theme->comment_controls($threshold, $mode, $order));
+    if (comment_num_all($nid)) {
+      $theme->box(t("Control panel"), $theme->comment_controls($threshold, $mode, $order));
+    }
 
     if ($cid) {
       $result = db_query("SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.cid = '$cid' GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name");
