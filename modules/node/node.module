@@ -1553,7 +1553,7 @@ function node_page() {
 
     switch ($op) {
       case "add":
-        theme("box", t("Create new $name"), node_add(arg(2)));
+        theme("box", t("Submit $name"), node_add(arg(2)));
         break;
       case "edit":
         theme("box", t("Edit $name"), node_edit(arg(2)));

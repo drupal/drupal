@@ -125,6 +125,7 @@ CREATE TABLE comments (
   link varchar(16) NOT NULL default '',
   score mediumint(9) NOT NULL default '0',
   status tinyint(3) unsigned NOT NULL default '0',
+  thread varchar(255) NOT NULL,
   users mediumtext,
   PRIMARY KEY  (cid),
   KEY lid (nid)
@@ -509,7 +510,6 @@ CREATE TABLE users (
   timestamp int(11) NOT NULL default '0',
   status tinyint(4) NOT NULL default '0',
   timezone varchar(8) default NULL,
-  rating decimal(8,2) default NULL,
   language char(2) NOT NULL default '',
   init varchar(64) default '',
   data text,

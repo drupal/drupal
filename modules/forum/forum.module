@@ -455,32 +455,29 @@ function forum_page() {
 function forum_theme_display($forums, $topics, $parents, $tid, $sortby, $forum_per_page, $offset) {
   // forum list, topics list, topic browser and "add new topic" link
 
-  theme("header");
 
   /*
   ** Breadcrumb navigation:
   */
 
-  if ($tid) {
-    $trail[] = l(t("Forums"), "forum");
-  }
-  else {
-    $trail[] = t("Forums");
-  }
+  $trail[] = l(t("Home"), "");
+  $trail[] = l(t("forums"), "forum");
 
   if ($parents) {
     $parents = array_reverse($parents);
     foreach ($parents as $p) {
-      if ($tid != $p->tid) {
-        $trail[] = l($p->name, "forum/$p->tid");
+      if ($p->tid == $tid) {
+        $title = $p->name;
       }
       else {
-        $trail[] = $p->name;
+        $trail[] = l(strtolower($p->name), "forum/$p->tid");
       }
     }
   }
 
   $output  = "<div id=\"forum\">";
+  $output .= "<div class=\"path\">". implode($trail, " &raquo; ") ."</div>";
+  $output .= "<div class=\"title\">$title</div>";
   $output .= theme("forum_theme_list", $forums, $parents, $tid);
 
   if ($tid) {
@@ -489,7 +486,8 @@ function forum_theme_display($forums, $topics, $parents, $tid, $sortby, $forum_p
 
   $output .= "</div>";
 
-  theme("box", implode($trail, " &raquo; "), $output);
+  theme("header");
+  theme("box", NULL, $output);
   theme("footer");
 }
 

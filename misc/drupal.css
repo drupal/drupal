@@ -127,7 +127,7 @@ th {
   font-size: 0.9em;
   margin: 0.5em;
 }
-#forum td.created, #forum td.posts, #forum td.topics, #forum td.last-reply, #forum td.replies, #forum td.statistics, #forum td.settings, #forum td.pager {
+#forum td.created, #forum td.posts, #forum td.topics, #forum td.last-reply, #forum td.replies, #forum td.pager {
   text-align: center;
   white-space: nowrap;
 }

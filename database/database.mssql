@@ -345,7 +345,6 @@ CREATE TABLE [dbo].[users] (
   [timestamp] [float] NOT NULL ,
   [status] [smallint] NOT NULL ,
   [timezone] [varchar] (8) NULL ,
-  [rating] [float] NULL ,
   [language] [char] (2) NULL ,
   [init] [varchar] (128) NULL ,
   [data] [varchar] (8000) NULL ,

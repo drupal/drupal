@@ -334,7 +334,7 @@ function user_fields() {
   }
 
   // Make sure we return the default fields at least
-  return is_array($fields) ? $fields: array("uid", "name", "pass", "mail", "homepage", "mode", "sort", "threshold", "theme", "signature", "timestamp", "status", "timezone", "rating", "language", "init", "data", "rid");
+  return is_array($fields) ? $fields: array("uid", "name", "pass", "mail", "homepage", "mode", "sort", "threshold", "theme", "signature", "timestamp", "status", "timezone", "language", "init", "data", "rid");
 }
 
 /*** Module hooks **********************************************************/
@@ -886,7 +886,7 @@ function user_register($edit = array()) {
     user_role_init();
     // TODO: is this necessary? Won't session_write replicate this?
     unset($edit["session"]);
-    $account = user_save("", array_merge(array("name" => $edit["name"], "pass" => $pass, "init" => $edit["mail"], "mail" => $edit["mail"], "rid" => _user_authenticated_id(), "rating" => 0, "status" => (variable_get("user_register", 1) == 1 ? 1 : 0)), $data));
+    $account = user_save("", array_merge(array("name" => $edit["name"], "pass" => $pass, "init" => $edit["mail"], "mail" => $edit["mail"], "rid" => _user_authenticated_id(), "status" => (variable_get("user_register", 1) == 1 ? 1 : 0)), $data));
     watchdog("user", "new user: '". $edit["name"] ."' &lt;". $edit["mail"] ."&gt;", l(t("edit user"), "admin/user/edit/$account->uid"));
 
     $variables = array("%username" => $edit["name"], "%site" => variable_get("site_name", "drupal"), "%password" => $pass, "%uri" => $base_url, "%uri_brief" => substr($base_url, strlen("http://")), "%mailto" => $edit["mail"], "%date" => format_date(time()));
@@ -1012,13 +1012,12 @@ function user_edit($edit = array()) {
         */
 
         if (!user_access("administer users")) {
-           if (array_intersect(array_keys($edit), array("rid", "init", "rating", "session"))) {
+           if (array_intersect(array_keys($edit), array("rid", "init", "session"))) {
              watchdog("warning", "detected malicious attempt to alter a protected database field");
            }
 
            $edit["rid"] = $user->rid;
            $edit["init"] = $user->init;
-           $edit["rating"] = $user->rating;
            $edit["session"] = $user->session;
         }
 
