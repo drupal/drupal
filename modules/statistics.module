@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.107 2003/10/12 21:25:42 dries Exp $
+// $Id: statistics.module,v 1.108 2003/10/13 21:24:38 dries Exp $
 
 function statistics_init() {
   global $recent_activity;
@@ -347,24 +347,24 @@ function statistics_admin_accesslog_table($type, $id) {
     /* retrieve user access logs */
     if ($id) {
       /* retrieve recent access logs for user $id */
-      $sql = "SELECT nid, url, hostname, uid, timestamp FROM {accesslog} WHERE uid = ". check_query($id);
+      $sql = "SELECT a.nid, a.url, a.hostname, a.uid, a.timestamp, n.title FROM {accesslog} a LEFT JOIN {node} n ON a.nid = n.nid WHERE a.uid = ". check_query($id);
     }
     else {
       /* retrieve recent access logs for all users */
-      $sql = "SELECT nid, url, hostname, uid, MAX(timestamp) AS timestamp FROM {accesslog} WHERE uid <> '0' GROUP BY uid, nid, url, hostname";
+      $sql = "SELECT a.nid, a.url, a.hostname, a.uid, MAX(a.timestamp) AS timestamp, n.title FROM {accesslog} a LEFT JOIN {node} n ON a.nid = n.nid WHERE a.uid <> '0' GROUP BY a.uid, a.nid, a.url, a.hostname";
     }
   }
   else if ($type == 2) {
     /* retrieve recent access logs for node $id */
-    $sql = "SELECT nid, url, hostname, uid, timestamp FROM {accesslog} WHERE nid = ". check_query($id);
+    $sql = "SELECT a.nid, a.url, a.hostname, a.uid, a.timestamp, n.title FROM {accesslog} a LEFT JOIN {node} n ON a.nid = n.nid WHERE a.nid = ". check_query($id);
   }
   else if ($type == 3) {
     /* retrieve recent access logs for hostname $id */
-    $sql = "SELECT nid, url, hostname, uid, timestamp FROM {accesslog} WHERE hostname = '". check_query($id) ."'";
+    $sql = "SELECT a.nid, a.url, a.hostname, a.uid, a.timestamp, n.title FROM {accesslog} a LEFT JOIN {node} n ON a.nid = n.nid WHERE a.hostname = '". check_query($id) ."'";
   }
   else {
     /* retrieve all recent access logs */
-    $sql = "SELECT nid, url, hostname, uid, timestamp FROM {accesslog}";
+    $sql = "SELECT a.nid, a.url, a.hostname, a.uid, a.timestamp, n.title FROM {accesslog} a LEFT JOIN {node} n ON a.nid = n.nid";
   }
 
   $header = array(
@@ -389,7 +389,7 @@ function statistics_admin_accesslog_table($type, $id) {
       $url = message_na();
     }
 
-    $rows[] = array(array("data" => format_date($log->timestamp, "small"), "nowrap" => "nowrap"), ($node->nid ? l($node->title, "node/view/$node->nid") : message_na()), format_name($user), $log->hostname ? $log->hostname : message_na(), $url, ($log->nid ? l(t("track node"), "admin/statistics/log/node/$log->nid") : ""), ($user->uid ? l(t("track user"), "admin/statistics/log/user/$user->uid") : ""), ($log->hostname ? l(t("track host"), "admin/statistics/log/host/$log->hostname") : ""));
+    $rows[] = array(array("data" => format_date($log->timestamp, "small"), "nowrap" => "nowrap"), ($log->nid ? l($log->title, "node/view/$log->nid") : message_na()), format_name($user), $log->hostname ? $log->hostname : message_na(), $url, ($log->nid ? l(t("track node"), "admin/statistics/log/node/$log->nid") : ""), ($user->uid ? l(t("track user"), "admin/statistics/log/user/$user->uid") : ""), ($log->hostname ? l(t("track host"), "admin/statistics/log/host/$log->hostname") : ""));
   }
 
   if ($pager = pager_display(NULL, 50, 0, "admin", tablesort_pager())) {
