@@ -129,6 +129,9 @@ function do_search($search_array) {
         $name      = $row["name"];
         $count     = $row["count"];
 
+        // Build reduction variable
+        $reduction[$lno][$word] = true;
+
         // If the just fetched row is not already in the table
         if ($results[$lno]["lno"] != $lno) {
           $results[$lno]["count"] = $count;
@@ -152,6 +155,23 @@ function do_search($search_array) {
     }
   }
 
+  if ($found) {
+    foreach ($results as $lno => $values) {
+      $pass = true;
+      foreach ($words as $word) {
+        if (!$reduction[$lno][$word]) {
+          $pass = false;
+        }
+      }
+      if ($pass) {
+        $fullresults[$lno] = $values;
+      }
+    }
+    $results = $fullresults;
+    if (!is_array($results)) {
+      $found = 0;
+    }
+  }
   if ($found) {
     // Black magic here to sort the results
     array_multisort($results, SORT_DESC);
