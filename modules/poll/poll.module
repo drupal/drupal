@@ -131,7 +131,7 @@ function poll_form(&$node, &$error) {
 
 
   // Poll attributes
-  $_duration = array_merge(array(0 => t('Unlimited')), drupal_map_assoc(array(86400, 172800, 345600, 604800, 1209600, 2419200, 4838400, 9676800, 31536000), "format_interval"));
+  $_duration = array(0 => t('Unlimited')) + drupal_map_assoc(array(86400, 172800, 345600, 604800, 1209600, 2419200, 4838400, 9676800, 31536000), "format_interval");
   $_active = array(0 => t('Closed'), 1 => t('Active'));
 
   if ($admin) {
