@@ -5,9 +5,13 @@ $module = array("page" => "locale",
 
 function locale() {
   $result = db_query("SELECT * FROM locales ORDER BY english");
+  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
+  $output .= " <TR><TH>string</TH><TH COLSPAN=\"2\">operations</TH><TR>\n";
   while ($locale = db_fetch_object($result)) {
-    print "<LI>". check_output($locale->english) ."</LI>";
+    $output .= " <TR><TD>". check_output($locale->english) ."<BR><SMALL><I>$locale->location</I></SMALL></TD><TD><A HREF=\"admin.php?mod=locale&op=edit&id=$locale->id\">edit</A></TD><TD><A HREF=\"admin.php?mod=locale&op=edit&id=$locale->id\">delete</A></TD></TR>";
   }
+  $output .= "</TABLE>\n";
+  print $output;
 }
 
 ?>
