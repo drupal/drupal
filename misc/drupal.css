@@ -9,6 +9,9 @@ th {
   padding-right: 1em;
   border-bottom: 1px solid #ccc;
 }
+fieldset {
+  display: inline;
+}
 #tracker table {
   border-collapse: collapse;
 }
