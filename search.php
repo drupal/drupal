@@ -12,16 +12,16 @@ if (user_access($user, "search content")) {
   // build options list:
   foreach (module_list() as $name) {
     if (module_hook($name, "search")) {
-      $options .= "<OPTION VALUE=\"$name\"". ($name == $type ? " SELECTED" : "") .">$name</OPTION>\n";
+      $options .= "<option value=\"$name\"". ($name == $type ? " selected" : "") .">$name</option>\n";
     }
   }
 
   // build form:
-  $form .= "<FORM ACTION=\"search.php\" METHOD=\"POST\">\n";
-  $form .= " <INPUT SIZE=\"50\" VALUE=\"". check_form($keys) ."\" NAME=\"keys\" TYPE=\"text\">\n";
-  $form .= " <SELECT NAME=\"type\">$options</SELECT>\n";
-  $form .= " <INPUT TYPE=\"submit\" VALUE=\"". t("Search") ."\">\n";
-  $form .= "</FORM>\n";
+  $form .= "<form action=\"search.php\" method=\"POST\">\n";
+  $form .= " <input size=\"50\" value=\"". check_form($keys) ."\" name=\"keys\" TYPE=\"text\">\n";
+  $form .= " <select name=\"type\">$options</select>\n";
+  $form .= " <input type=\"submit\" value=\"". t("Search") ."\">\n";
+  $form .= "</form>\n";
 
   // visualize form:
   $theme->header();
