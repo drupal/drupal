@@ -120,8 +120,10 @@ function menu_tree($parent = "", $all = 1) {
     $output = "<ul>";
     while ($item = db_fetch_object($result)) {
       $all = (stristr(request_uri(), $item->link) == $item->link) ? 1 : 0;
-      $output .= "<li>". menu_item($item) ."</li>";
+      $output .= "<li>";
+      $output .= menu_item($item);
       $output .= menu_tree($item->name, menu_in_trail($item));
+      $output .= "</li>";
     }
     $output .= "</ul>";
   }
@@ -136,8 +138,10 @@ function menu_map($parent = "") {
   if (db_num_rows($result)) {
     $output = "<ul>";
     while ($item = db_fetch_object($result)) {
-      $output .= "<li>". menu_item($item) ."</li>";
+      $output .= "<li>";
+      $output .= menu_item($item);
       $output .= menu_map($item->name);
+      $output .= "</li>";
     }
     $output .= "</ul>";
   }
