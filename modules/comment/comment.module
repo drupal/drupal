@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.223 2004/02/29 17:16:27 dries Exp $
+// $Id: comment.module,v 1.224 2004/03/01 19:45:32 dries Exp $
 
 function comment_help($section = "admin/help#comment") {
   $output = "";
@@ -330,13 +330,6 @@ function comment_post($edit) {
         watchdog("special", "comment: updated '". $edit["subject"] ."'", l(t("view comment"), "node/view/". $edit["nid"], NULL, NULL, "comment-". $edit["cid"]));
       }
       else {
-        /*
-        ** Check the user's comment submission rate.  If exceeded,
-        ** throttle() will bail out.
-        */
-
-        throttle("post comment", variable_get("max_comment_rate", 60));
-
         /*
         ** Add the comment to database:
         */

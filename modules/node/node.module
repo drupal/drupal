@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.339 2004/02/29 17:16:27 dries Exp $
+// $Id: node.module,v 1.340 2004/03/01 19:45:33 dries Exp $
 
 define('NODE_NEW_LIMIT', time() - 30 * 24 * 60 * 60);
 
@@ -1427,14 +1427,6 @@ function node_submit($node) {
     */
 
     if (node_access('create', $node)) {
-
-      /*
-      ** Verify a user's submission rate and avoid duplicate nodes being
-      ** inserted:
-      */
-
-      throttle('node', variable_get('max_node_rate', 900));
-
       $node->nid = node_save($node);
       watchdog('special', "$node->type: added '$node->title'", l(t('view post'), "node/view/$node->nid"));
       $msg = t('your %name was created.', array ('%name' => node_invoke($node, 'node_name')));
