@@ -1203,9 +1203,19 @@ function drupal_xml_parser_create(&$data) {
   }
 
   /*
-   * Note: unsupported encodings will need to be converted here into UTF-8,
-   * and $encoding set to 'utf-8'.
+   * Unsupported encodings are converted here into UTF-8.
+   * Requires iconv, see http://www.php.net/iconv
    */
+  $php_supported = array('utf-8', 'iso-8859-1', 'us-ascii');
+  if (!in_array(strtolower($encoding), $php_supported)) {
+    if (function_exists('iconv')) {
+      $out = iconv($encoding, 'utf-8', $data);
+      if ($out !== false) {
+        $data = $out;
+        $encoding = 'utf-8';
+      }
+    }
+  }
 
   $xml_parser = xml_parser_create($encoding);
   xml_parser_set_option($xml_parser, XML_OPTION_TARGET_ENCODING, 'utf-8');
