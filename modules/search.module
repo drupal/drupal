@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.59 2003/10/09 18:53:22 dries Exp $
+// $Id: search.module,v 1.60 2003/10/21 20:55:33 dries Exp $
 
 function search_help($section = "admin/help#search") {
   $output = "";
@@ -120,7 +120,7 @@ function do_search($search_array) {
     }
 
     // Put the next search word into the query and do the query
-    $query = preg_replace("'\%'", check_query($word), $select);
+    $query = str_replace("'%'", "'". check_query($word) ."'", $select);
     $result = db_query($query);
 
     // If we got any results
