@@ -89,20 +89,6 @@ function user_load($array = array()) {
 }
 
 function user_save($account, $array = array()) {
-
-  /*
-  ** Validate input fields to make sure users don't submit
-  ** invalid form data.
-  */
-
-  if (!user_access("administer users")) {
-    if (array_intersect(array_keys($array), array("rid", "init", "rating", "session"))) {
-      watchdog("warning", "detected malicious attempt to alter a protected user field");
-    }
-
-    unset($array["rid"], $array["init"], $array["rating"], $array["session"]);
-  }
-
   /*
   ** Dynamically compose a SQL query:
   */
@@ -358,7 +344,19 @@ function user_block() {
   $block[1]["info"] = t("Log in");
   $block[1]["link"] = drupal_url(array("mod" => "user"), "module");
 
+  $block[2]["subject"] = t("Who's new");
+  $block[2]["info"] = t("Who's new");
+  $block[2]["content"] = user_new_users();
+
   return $block;
+}
+
+function user_new_users() {
+  $result = db_query("SELECT uid, name FROM users WHERE status != '0' ORDER BY uid DESC LIMIT 5");
+  while ($account = db_fetch_object($result)) {
+    $output .= lm((strlen($account->name) > 15 ? substr($account->name, 0, 15) . '...' : $account->name), array("mod" =>user, "op" => "view", "id" => $account->uid)) ."<br />";
+  }
+  return $output;
 }
 
 function user_link($type) {
@@ -890,6 +888,21 @@ function user_edit($edit = array()) {
         }
         unset($edit["pass1"], $edit["pass2"]);
 
+        /*
+        ** Validate input fields to make sure users don't submit
+        ** invalid form data.
+        */
+
+        if (!user_access("administer users")) {
+           if (array_intersect(array_keys($edit), array("rid", "init", "rating", "session"))) {
+             watchdog("warning", "detected malicious attempt to alter a protected database field");
+           }
+
+           $edit["rid"] = $user->rid;
+           $edit["init"] = $user->init;
+           $edit["rating"] = $user->rating;
+           $edit["session"] = $user->session;
+        }
 
         if (!$error) {
           /*
