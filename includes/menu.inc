@@ -1,5 +1,5 @@
 <?php
-/* $Id: menu.inc,v 1.73 2004/11/28 12:03:11 dries Exp $ */
+/* $Id: menu.inc,v 1.74 2005/01/19 21:57:58 dries Exp $ */
 
 /**
  * @file
@@ -728,6 +728,8 @@ function _menu_build() {
   if (module_exist('menu')) {
     $result = db_query('SELECT * FROM {menu} ORDER BY mid ASC');
     while ($item = db_fetch_object($result)) {
+      // Handle URL aliases if entered in menu administration.
+      $item->path = drupal_get_normal_path($item->path);
       if (array_key_exists($item->path, $_menu['path index'])) {
         // The path is already declared.
         $old_mid = $_menu['path index'][$item->path];
