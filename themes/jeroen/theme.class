@@ -4,7 +4,7 @@
    ### color set #1:
    var $bgcolor1 = "#000000";   // background color
    var $fgcolor1 = "#675849";   // table body color
-   var $hlcolor1 = "#AAAAAA";   // high-light color
+   var $hlcolor1 = "orange";   // high-light color
 
    ### color set #2:
    var $bgcolor2 = "#EEEEEE";
