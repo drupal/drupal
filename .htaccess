@@ -26,7 +26,7 @@ ErrorDocument 500 /error.php
    php_value magic_quotes_gpc        0
    php_value magic_quotes_runtime    0
    php_value magic_quotes_sybase     0
-   php_value arg_separator.output  "&amp;"  
+   php_value arg_separator.output    "&amp;"  
    php_value session.cache_expire    200000
    php_value session.cookie_lifetime 2000000
    php_value session.auto_start      0
@@ -38,7 +38,7 @@ ErrorDocument 500 /error.php
 # Various rewrite rules
 <IfModule mod_rewrite.c>
   RewriteEngine on
-  RewriteRule ^blog/(.*) /module.php?mod=blog\&name=$1 [R]
+  RewriteRule ^blog/(.*) /index.php?q=blog/name=$1 [R]
 </IfModule>
 
 # $Id$
