@@ -613,9 +613,11 @@ function theme_forum_list($forums, $parents, $tid) {
           array('data' => _forum_format($forum->last_post), 'class' => 'last-reply'));
       }
     }
+
+    return theme('table', $header, $rows);
+
   }
 
-  return theme('table', $header, $rows);
 }
 
 /**
