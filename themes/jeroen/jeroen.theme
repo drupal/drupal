@@ -35,11 +35,11 @@
       <BODY TEXT="#202020" BGCOLOR="#FEFEFE" BACKGROUND="themes/jeroen/images/background.gif" ALINK="#000000" LINK="#000000" VLINK="#000000">
         <TABLE WIDTH="100%" ALIGN="left" CELLPADDING="0" CELLSPACING="6">
           <TR>
-            <TD COLSPAN="2">
+            <TD COLSPAN="2" WIDTH="80%">
               <? if (rand(0,150) == 75) $img = "logo2.gif"; else $img = "logo.gif"; ?>
               <IMG SRC="themes/jeroen/images/<? echo $img; ?>" ALT="drop.org logo"><BR><BR>
             </TD>
-            <TD>
+            <TD WIDTH="20%">
 <?
               $this->box("Drop where?", "<TR>
                                            <TD ALIGN=\"left\" VALIGN=\"top\">
@@ -49,7 +49,7 @@
                                            </TD>
                                            <TD ALIGN=\"right\" VALIGN=\"top\">
                                              <A HREF=\"module.php?mod=diary\">diary</A><BR>
-                                             <A HREF=\"submit.php\">submit news</A>
+                                             <A HREF=\"submit.php\">submit news</A><BR>
                                              <A HREF=\"account.php\">account</A>
                                           </TD>
                                        </TR>");
@@ -62,7 +62,7 @@
                 theme_blocks("all", $this);
               ?>
             </TD>
-            <TD VALIGN="top" ALIGN="left">
+            <TD WIDTH="100%"  VALIGN="top" ALIGN="left">
 
 <?
     }
@@ -153,7 +153,7 @@
 
               <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0" BORDER="0">
                 <TR>
-                  <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20" BACKGROUND="themes/jeroen/images/<? echo (rand(0, 1) ? "news1.gif" : "news3.gif"); ?>">&nbsp;</TD>
+                  <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20" BACKGROUND="themes/jeroen/images/<? echo (rand(0, 1) ? "news1.gif" : "news3.gif"); ?>" NOWRAP>&nbsp;</TD>
                   <TD ALIGN="center" VALIGN="center" HEIGHT="20" BACKGROUND="themes/jeroen/images/newsmiddle.gif">
                     <B><? echo "". check_output($story->subject) .""; ?></B>
                   </TD>
@@ -315,7 +315,7 @@
       else $img2 ="boxtopleftside1.gif";
 ?>
 
-              <TABLE ALIGN="center" CELLPADDING="0" CELLSPACING="0" BORDER="0">
+              <TABLE WIDTH="100%" ALIGN="center" CELLPADDING="0" CELLSPACING="0" BORDER="0">
                 <TR>
                   <TD WIDTH="20" HEIGHT="20" BACKGROUND="themes/jeroen/images/boxtopleft.gif" NOWRAP>&nbsp;</TD>
                   <TD WIDTH="<? echo $width; ?>" BACKGROUND="themes/jeroen/images/boxtop.gif">&nbsp;</TD>
@@ -325,7 +325,7 @@
                 </TR>
                 <TR>
                   <TD BACKGROUND="themes/jeroen/images/<? echo $img2; ?>" HEIGHT="20">&nbsp;</TD>
-                  <TD ALIGN="center" COLSPAN="3" BACKGROUND="themes/jeroen/images/menutitle.gif">
+                  <TD ALIGN="center" COLSPAN="3" BACKGROUND="themes/jeroen/images/menutitle.gif" NOWRAP>
                     <FONT COLOR="<? echo $this->fgc2; ?>"><? echo $subject; ?></FONT>
                   </TD>
                   <TD BACKGROUND="themes/jeroen/images/boxtoprightside.gif">&nbsp;</TD>
@@ -361,8 +361,6 @@
             <TD VALIGN="top" ALIGN="right">
 <?
          global $PHP_SELF;
-
-
 
            theme_account($this);
 ?>
