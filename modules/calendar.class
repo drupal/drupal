@@ -13,6 +13,9 @@ class Calendar {
     $year = date("Y", $this->date);
     $day = date("d", $this->date);
 
+    // Extract today's date:
+    $today = mktime(23, 59, 59, date("n", time()), date("d", time()), date("Y", time()));
+
     // Extract first day of the month:
     $first = date("w", mktime(0, 0, 0, $month, 1, $year));
 
@@ -47,7 +50,7 @@ class Calendar {
       // Print one cell:
       $date = mktime(23, 59, 59, $month, $nday, $year);
       if ($nday == $day) $output .= "  <TD ALIGN=\"center\"><SMALL><B>$nday</B></SMALL></TD>\n";
-      else if ($date > time()) $output .= "  <TD ALIGN=\"center\"><SMALL>$nday</SMALL></TD>\n";
+      else if ($date > $today) $output .= "  <TD ALIGN=\"center\"><SMALL>$nday</SMALL></TD>\n";
       else $output .= "  <TD ALIGN=\"center\"><SMALL><A HREF=\"index.php?date=$date\" STYLE=\"text-decoration: none;\">$nday</A></SMALL></TD>\n";
 
       // Start every week on a new line:
