@@ -5,7 +5,17 @@ function locale_help() {
   <P>Normally programs are written and documented in English, and use English to interact with users.  This is true for a great deal of websites.  However, most people are less comfortable with English than with their own native language, and would prefer to use their mother tongue as much as possible.  Many people love see their website showing a lot less of English, and far more of their own language.</P>
   <P>Therefore drupal provides a framework to setup a multi-lingual website, or to overwrite the default texts in English.  We explored the various alternatives to support internationalization and decided to design the framework in such a way that the impact of internationalization on drupal's sources is minimized, modular and that it doesn't require a HTML or PHP wizard to maintain translations.  Maintaining translations had to be simple so it became as easy as filling out forms on the administration page.  A side effect is that translation support adds significant overhead to the dynamic generation of your website.  If you don't need translation support, consider to turning it off from the "conf" section.</P>
 
-  <H3>Adding a new language</H3>
+  <H3>How to translate texts</H3>
+
+  <P>The actual translation starts at the "overview" of the locale page of the administration pages.  To allow a user to maintain the translations, he obviously needs access to the locale module.  See the account documentation for more information on roles and permissions.</P>
+  <P>At the locale page, users with the proper access rights will see the various texts that need translation on the left column of the table.</P>
+  <P>Below the text you can see an URI where this text shows up one your site.  Changes are most of these texts will be used and displayed on more than one page, though only one example URI is presented.</P>
+  <P>The second column displays the supported languages as defined in the configuration file.  See below for more information on how to support new languages.  If the symbol for a language is seen like <strike>this</strike>, it means that this entry still needs to be translated into that language.  If not, it has been translated already.</P>
+  <P>To add or change a translation click the "edit locale" link in the third column, the "operations" column.  You'll be presented the original text and fields for translation in the supported languages.  Enter the translations and confirm by clicking the "Save translations" button.  The translations need not be accurate; they are for your site so you can choose what to show to your users.</P>
+  <P>To delete a translation, click the "delete locale" link at the overview page and the translation will be immediately deleted without confirmation.  Deleting translations is convenient for removing texts that belonged to an obsolete module.</P>
+  <P>In some texts special strings such as "%a" and "%b" show up.  Those get replaced by some string at run-time when Drupal dynamically generate pages.  You can find out which string this is by looking at the page where the text appears.  This is where the above mentioned URI can come in handy.</P>
+
+  <H3>How to add new languages</H3>
 
   <P>Adding a new language requires you to edit your configuration file and to edit your SQL database.  Assuming you want to support Dutch (ISO 639 code: "nl") and French (ISO 639 code: "fr"), you add the following line to your configuration file's <CODE>$languages</CODE>-variable:</P>
   <PRE>
@@ -75,7 +85,7 @@ function locale_overview() {
     $output .= " <TR><TH>string</TH><TH>languages</TH><TH COLSPAN=\"2\">operations</TH><TR>\n";
     while ($locale = db_fetch_object($result)) {
       $languages = locale_languages($locale);
-      $output .= " <TR><TD>". check_output($locale->string) ."<BR><SMALL><I>$locale->location</I></SMALL></TD><TD ALIGN=\"center\">$languages</TD><TD><A HREF=\"admin.php?mod=locale&op=edit&id=$locale->id\">edit</A></TD><TD><A HREF=\"admin.php?mod=locale&op=delete&id=$locale->id\">delete</A></TD></TR>";
+      $output .= " <TR><TD>". check_output($locale->string) ."<BR><SMALL><I>$locale->location</I></SMALL></TD><TD ALIGN=\"center\">$languages</TD><TD><A HREF=\"admin.php?mod=locale&op=edit&id=$locale->id\">edit locale</A></TD><TD><A HREF=\"admin.php?mod=locale&op=delete&id=$locale->id\">delete locale</A></TD></TR>";
     }
     $output .= "</TABLE>\n";
 
