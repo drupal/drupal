@@ -42,8 +42,7 @@
           <TR>
             <TD WIDTH="160" VALIGN="top" ALIGN="right">
               <?
-                ### Display admin blocks:
-                #  displayAdminblock($this);
+                theme_blocks("all", $this);
               ?>
             </TD>
             <TD WIDTH="430" VALIGN="top" ALIGN="left">
@@ -92,13 +91,13 @@
 
                   </TD>
                   <TD ALIGN=\"right\" BGCOLOR=\"#6C6C6C\" BACKGROUND=\"themes/jeroen/images/menutitle.gif\">
-                    <B><A HREF=\"search.php?category=$story->category\"><FONT COLOR=\"<? $this->fgcolor3; ?>\">$story->category</FONT></A></B>&nbsp;";
+                    <B><A HREF=\"search.php?category=$story->category\"><FONT COLOR=\"<? $this->fgc3; ?>\">$story->category</FONT></A></B>&nbsp;";
                     }
                     else {
                       print "<FONT SIZE=\"-1\">Reported to us by $anonymous on $timestamp"; ?><? print "</FONT>
                   </TD>
                   <TD ALIGN=\"right\" WIDTH=\"65\"><A HREF=\"search.php?category=$story->category\">
-                    <FONT COLOR=\"<? $this->fgcolor3; ?>\">$story->category</FONT></A>";
+                    <FONT COLOR=\"<? $this->fgc3; ?>\">$story->category</FONT></A>";
                     }
 ?>
                     </FONT>
@@ -117,17 +116,17 @@
                         <TD>
 <? 
                           if ($story->updates) {
-                            echo "<P>$story->abstract</P><P><FONT COLOR=\"$this->hlcolor1\">Editor's note by <A HREF=\"account.php?op=userinfo&uname=$story->editor\">$story->editor</A>:</FONT>$story->updates</P>";
+                            echo "<P><FONT COLOR=\"$this->hlc1\">Editor's note:</FONT> ". check_output($story->updates, 1) ."</P>";
                           }
-                          else {
-                            echo $story->abstract;
+                          if ($story->abstract) {
+                            echo "<P>". check_output($story->abstract, 1) ."</P>";
                           }
 ?> 
                        </TD>
                       </TR> 
                       <TR>
                         <TD ALIGN="right">
-                          <? echo $link; ?>
+                          <FONT COLOR="<? echo $this->hlc2;?>"><? echo theme_morelink($this, $story);?></FONT>
                         </TD>
                       </TR>
                     </TABLE>
@@ -170,7 +169,7 @@
                   </TD>
                   <TD COLSPAN="2" ALIGN="left" WIDTH="100%" BGCOLOR="#6C6C6C" HEIGHT="20" BACKGROUND="themes/jeroen/images/menutitle.gif" NOWRAP>
                     &nbsp;
-                    <FONT COLOR="<? echo $this->fgcolor2; ?>">
+                    <FONT COLOR="<? echo $this->fgc2; ?>">
 <?
                     switch (rand(0,12)) {
 	              case 0: $how = "Yelled at us"; break;   case 1: $how = "Whispered"; break;
@@ -186,7 +185,7 @@
                       print "<FONT SIZE=\"-1\">$how by <A HREF=\"account.php?op=userinfo&uname=$story->userid\">$story->userid</A> on $story->timestamp"; ?><? print "</FONT>
                   </TD>
                   <TD ALIGN=\"right\" WIDTH=\"80\" BGOLOR=\"6C6C6C\" BACKGROUND=\"themes/jeroen/images/menutitle.gif\">
-                    <B><A HREF=\"search.php?category=$story->category\"><FONT COLOR=\"<? $this->fgcolor3; ?>\">$story->category</FONT></A></B>&nbsp;";
+                    <B><A HREF=\"search.php?category=$story->category\"><FONT COLOR=\"<? $this->fgc3; ?>\">$story->category</FONT></A></B>&nbsp;";
                     }
                     else {
                       print "<FONT SIZE=\"-1\">Reported to us by $anonymous on $story->timestamp"; ?><? print "</FONT>
@@ -217,7 +216,7 @@
                             echo $story->abstract;
                           }
 	                  if ($story->article) 
-                            echo "<P>". check_out($story->article) ."</P>";
+                            echo "<P>". check_output($story->article) ."</P>";
 ?>
                         </TD>
                       </TR>
@@ -241,71 +240,9 @@
 
 <?	
     }
-
-    function commentControl($sid, $title, $treshold, $mode, $order) {
-      global $user;
-      $query = mysql_query("SELECT sid FROM comments WHERE sid = $sid");
-
-      if (!$query) $count = 0; else $count = mysql_num_rows($query);
-      if (!isset($treshold)) $treshold = 0; 
-?>
-
-              <TABLE WIDTH="100%" BORDER="0" CELLSPACING="0" CELLPADDING="0">
-                <TR>
-                  <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20">
-	            <IMG SRC="themes/jeroen/images/news1.gif" WIDTH="20" HEIGHT="20" ALT="">
-                  </TD>
-	          <TD ALIGN="center" VALIGN="center" WIDTH="100%" HEIGHT="20" BACKGROUND="themes/jeroen/images/newsmiddle.gif">
-	            <B>Comment control</B></TD>
-                  <TD ALIGN="right" VALIGN="bottom" WIDTH="20" HEIGHT="20">
-                    <IMG SRC="themes/jeroen/images/news4.gif" WIDTH="20" HEIGHT="20" ALT="">
-                  </TD>
-                </TR>
-                <TR>
-                  <TD COLSPAN="3" ALIGN="center" BGCOLOR="#E7E7E7" BACKGROUND="themes/jeroen/images/sketch.gif">
-                    <FORM METHOD="post" ACTION="dicussion.php">
-                      <FONT SIZE="2"> 
-                        <SELECT NAME="treshold">
-                          <OPTION VALUE="-1" <? if ($treshold == -1) { echo "SELECTED"; } ?>>Threshold: -1
-                          <OPTION VALUE="0" <? if ($treshold == 0) { echo "SELECTED"; } ?>>Threshold: 0
-                          <OPTION VALUE="1" <? if ($treshold == 1) { echo "SELECTED"; } ?>>Threshold: 1
-	                  <OPTION VALUE="2" <? if ($treshold == 2) { echo "SELECTED"; } ?>>Threshold: 2
-                          <OPTION VALUE="3" <? if ($treshold == 3) { echo "SELECTED"; } ?>>Threshold: 3
-                          <OPTION VALUE="4" <? if ($treshold == 4) { echo "SELECTED"; } ?>>Threshold: 4
-	                  <OPTION VALUE="5" <? if ($treshold == 5) { echo "SELECTED"; } ?>>Threshold: 5
-                        </SELECT> 
-	                <SELECT NAME="mode">
-                          <OPTION VALUE="nocomments" <? if ($mode == 'nocomments') { echo "SELECTED"; } ?>>No comments
-                          <OPTION VALUE="nested" <? if ($mode == 'nested') { echo "SELECTED"; } ?>>Nested
-                          <OPTION VALUE="flat" <? if ($mode == 'flat') { echo "SELECTED"; } ?>>Flat
-                          <OPTION VALUE="threaded" <? if (!isset($mode) || $mode=='threaded' || $mode=="") { echo "SELECTED"; } ?>>Threaded
-                        </SELECT> 
-                        <SELECT NAME="order">
-                          <OPTION VALUE="0" <? if (!$order) { echo "SELECTED"; } ?>>Oldest first
-                          <OPTION VALUE="1" <? if ($order==1) { echo "SELECTED"; } ?>>Newest first
-                          <OPTION VALUE="2" <? if ($order==2) { echo "SELECTED"; } ?>>Highest scoring first
-                        </SELECT> 
-                        <INPUT TYPE="hidden" NAME="sid" VALUE="<? echo "$sid"; ?>">
-                        <INPUT TYPE="submit" VALUE="Save">
-                      </FONT>
-                    </FORM>
-                  </TD>
-                </TR>
-<?
-       $result = mysql_query("SELECT COUNT(cid) FROM comments WHERE sid = $sid AND score < $treshold");
-       if ($result && $number = mysql_result($result, 0)) {
-?>
-                <TR>
-                  <TD ALIGN="center" BGCOLOR="<? echo "$this->bgcolor2"; ?>">
-                    <SMALL><FONT COLOR="<? echo "$this->fgcolor2"; ?>">There are at least <? echo $number; ?> comments below your threshold.</FONT></SMALL>
-                  </TD>
-                </TR>
-<?
-       }
-?> 
-              </TABLE>
-
-<?
+    
+    function control() {
+      print comment_controls();
     }
 
     function comment($comment, $link = "", $thread = "") {
@@ -325,7 +262,7 @@
 
      // Moderation:
      echo "             <TD ALIGN=\"right\" ROWSPAN=\"3\" VALIGN=\"middle\" WIDTH=\"15%\">";
-                          print theme_comment_moderation($comment);
+                          print comment_moderation($comment);
      echo "             </TD>"; 
      echo "           </TR>";
 
@@ -367,31 +304,22 @@
 ?>
               <TABLE WIDTH="100%" ALIGN="center" CELLPADDING="0" CELLSPACING="0" BORDER="0">
                 <TR>
-                  <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20">
-                    <IMG SRC="themes/jeroen/images/boxtopleft.gif" WIDTH="20" HEIGHT="20" ALT=""></TD>
+                  <TD HEIGHT="20" WIDTH="20"><IMG SRC="themes/jeroen/images/boxtopleft.gif"></TD>
                   <TD HEIGHT="20" WIDTH="<? echo $width; ?>" BACKGROUND="themes/jeroen/images/boxtop.gif">&nbsp;</TD>
-                  <TD HEIGHT="20" WIDTH="20" BACKGROUND="themes/jeroen/images/boxtopmiddle.gif">
-                    &nbsp;
-                  </TD>
-                  <TD VALIGN="bottom" HEIGHT="20" BACKGROUND="themes/jeroen/images/boxtop.gif">&nbsp;</TD>
-                  <TD ALIGN="right" VALIGN="bottom" WIDTH="20" HEIGHT="20" BACKGROUND="themes/jeroen/images/boxtopright.gif">
-                    &nbsp;
-                  </TD>
+                  <TD HEIGHT="20" WIDTH="20" BACKGROUND="themes/jeroen/images/boxtopmiddle.gif">&nbsp;</TD>
+                  <TD HEIGHT="20" BACKGROUND="themes/jeroen/images/boxtop.gif">&nbsp;</TD>
+                  <TD HEIGHT="20" WIDTH="20" BACKGROUND="themes/jeroen/images/boxtopright.gif">&nbsp;</TD>
                 </TR>
                 <TR>
-                  <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20" BACKGROUND="themes/jeroen/images/<? echo $img2; ?>">
-                    &nbsp;
+                  <TD WIDTH="20" HEIGHT="20" BACKGROUND="themes/jeroen/images/<? echo $img2;?>">&nbsp;</TD>
+                  <TD COLSPAN="3" BGCOLOR="#6C6C6C" HEIGHT="20" BACKGROUND="themes/jeroen/images/menutitle.gif">
+                    <FONT COLOR="<? echo $this->fgc2; ?>"><?  echo $subject; ?></FONT>
                   </TD>
-                  <TD COLSPAN="3" ALIGN="center" BGCOLOR="#6C6C6C" HEIGHT="20" BACKGROUND="themes/jeroen/images/menutitle.gif">
-                    <FONT COLOR="<? echo $this->fgcolor2; ?>"><?  echo $subject; ?></FONT>
-                  </TD>
-                  <TD ALIGN="right" VALIGN="bottom" WIDTH="20" HEIGHT="20" BACKGROUND="themes/jeroen/images/boxtoprightside.gif">
-                    &nbsp;
-                  </TD>
+                  <TD WIDTH="20" HEIGHT="20" BACKGROUND="themes/jeroen/images/boxtoprightside.gif">&nbsp;</TD>
                 </TR>
                 <TR>
-                  <TD ALIGN="left" BACKGROUND="themes/jeroen/images/boxleft.gif" WIDTH="20">&nbsp;</TD>
-                  <TD COLSPAN="3" ALIGN="center" VALIGN="top" WIDTH="100%" BGCOLOR="#E7E7E7" BACKGROUND="themes/jeroen/images/sketch.gif">
+                  <TD BACKGROUND="themes/jeroen/images/boxleft.gif" WIDTH="20">&nbsp;</TD>
+                  <TD COLSPAN="3" WIDTH="100%" BGCOLOR="#E7E7E7" BACKGROUND="themes/jeroen/images/sketch.gif">
                     <TABLE WIDTH="100%">
                        <TR>
                          <TD>
@@ -400,17 +328,17 @@
                        </TR>
                      </TABLE>
                    </TD>
-                   <TD ALIGN="right" BACKGROUND="themes/jeroen/images/boxright.gif" WIDTH="20">&nbsp;</TD>
+                   <TD BACKGROUND="themes/jeroen/images/boxright.gif" WIDTH="20">&nbsp;</TD>
                  </TR>
                  <TR>
-                   <TD ALIGN="left" VALIGN=TOP WIDTH="20" HEIGHT="20" BACKGROUND="themes/jeroen/images/boxbottomleft.gif">
+                   <TD WIDTH="20" HEIGHT="20" BACKGROUND="themes/jeroen/images/boxbottomleft.gif">
                       &nbsp;
                    </TD>
                    <TD COLSPAN="3" ALIGN="center" HEIGHT="20" VALIGN="top" BACKGROUND="themes/jeroen/images/boxbottom.gif">
                      &nbsp;
                    </TD>
                    <TD ALIGN="right" VALIGN="top" WIDTH="20" HEIGHT="20">
-                     <IMG SRC="themes/jeroen/images/<? echo $img; ?>" WIDTH="20" HEIGHT="20" ALT="">
+                     <IMG SRC="themes/jeroen/images/<? echo $img; ?>" ALT="">
                    </TD>
                  </TR>
               </TABLE>
@@ -429,11 +357,7 @@
  
 	 $this->box("Drop where?", "<TD ALIGN=\"left\" VALIGN=\"top\"><A HREF=\"index.php\">home</A><BR><A HREF=\"faq.php\">faq</A><BR><A HREF=\"search.php\">search</A></TD><TD ALIGN=\"right\" VALIGN=\"top\"><A HREF=\"submit.php\">submit news</A><BR><A HREF=\"account.php\">your account</A></TD>");
          
-           //Display main blocks:
-           theme_main_blocks($this);
-
-           //Display user-defined blocks:
-           theme_user_blocks($this);
+           theme_account($this);
 ?> 
             </TD>
           </TR>
@@ -442,7 +366,7 @@
               <IMG SRC="themes/jeroen/images/footerleft.gif" WIDTH="20" HEIGHT="20" ALT="">
             </TD>
             <TD WIDTH="100%" BACKGROUND="themes/jeroen/images/footer.gif" ALIGN="center" VALIGN="center" HEIGHT="20">
-              <FONT COLOR="<? echo $this->hlcolor2; ?>" SIZE="2">[ <A HREF="">home</A> | <A HREF="faq.php">faq</A> | <A HREF="search.php">search</A> | <A HREF="submit.php">submit news</A> | <A HREF="account.php">your account</A> ] </FONT>
+              <FONT COLOR="<? echo $this->hlc2; ?>" SIZE="2">[ <A HREF="">home</A> | <A HREF="faq.php">faq</A> | <A HREF="search.php">search</A> | <A HREF="submit.php">submit news</A> | <A HREF="account.php">your account</A> ] </FONT>
             </TD>
             <TD WIDTH="160" ALIGN="left" VALIGN="bottom" HEIGHT="20">
               <IMG SRC="themes/jeroen/images/footerright.gif" WIDTH="20" HEIGHT="20" ALT="">
