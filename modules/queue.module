@@ -1,5 +1,5 @@
 <?php
-// $Id: queue.module,v 1.76 2003/06/05 18:09:39 dries Exp $
+// $Id: queue.module,v 1.77 2003/06/06 21:09:55 dries Exp $
 
 function queue_system($field){
   $system["description"] = t("Enables content to be moderated by the community.");
@@ -174,7 +174,7 @@ function queue_page() {
 
   if ($user->uid && user_access("access submission queue")) {
     if (arg(1)) {
-      queue_view(check_input(arg(1)));
+      queue_view(arg(1));
     }
     else {
       queue_overview();
