@@ -1,5 +1,5 @@
 <?php
-/* $Id: aggregator.module,v 1.153 2004/01/11 15:05:21 dries Exp $ */
+/* $Id: aggregator.module,v 1.154 2004/01/11 15:10:27 dries Exp $ */
 
 function aggregator_help($section) {
   switch ($section) {
@@ -272,8 +272,6 @@ function aggregator_element_data($parser, $data) {
 function aggregator_refresh($feed) {
   global $channel, $image;
 
-  $headers = array();
-/* ENABLE ME AGAIN:
   // Generate conditional GET headers.
   $headers = array();
   if ($feed['etag']) {
@@ -282,7 +280,6 @@ function aggregator_refresh($feed) {
   if ($feed['modified']) {
     $headers['If-Modified-Since'] = gmdate("D, d M Y H:i:s", $feed['modified']) ." GMT";
   }
-*/
 
   // Request feed.
   $result = drupal_http_request($feed['url'], $headers);
@@ -304,8 +301,6 @@ function aggregator_refresh($feed) {
       }
 
       aggregator_parse_feed($result->data, $feed);
-
-// print "<pre>"; print_r($image); print "</pre>";
 
       if ($result->headers['Last-Modified']) {
         $modified = strtotime($result->headers['Last-Modified']);
