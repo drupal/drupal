@@ -85,7 +85,7 @@
                   <tr>
                     <td align="left" valign="bottom" width="20" height="20" background="themes/jeroen/images/<?php echo (rand(0, 1) ? "news1.gif" : "news3.gif"); ?>" nowrap>&nbsp;</td>
                     <td align="center" valign="top" width="100%" background="themes/jeroen/images/newsmiddle.gif" nowrap>
-                      <B><?php echo "". check_output($story->subject) .""; ?></B>
+                      <B><?php echo "". check_output($story->title) .""; ?></B>
                     </td>
                     <td align="right" valign="bottom" width="20" background="themes/jeroen/images/<?php echo (rand(0, 1) == 0) ? "news2.gif" : "news4.gif"; if (rand(0,100) == 50) "news5.gif"; ?>" nowrap>&nbsp;</td>
                   </tr>
@@ -116,7 +116,7 @@
                                   </FONT>
                                 </td>
                                 <td align=\"right\" background=\"themes/jeroen/images/menutitle.gif\" nowrap>
-                                  <B><a href=\"search.php?category=". urlencode($story->section) ."\"><FONT COLOR=\"#000000\">$story->section</FONT></A></B>";
+                                  <B><a href=\"search.php?category=". urlencode($story->section) ."\"><FONT COLOR=\"#000000\">". check_output($story->section) ."</FONT></A></B>";
 
 ?>
 
@@ -128,8 +128,6 @@
 <?php
 
                                   echo "<br />". check_output($story->abstract, 1) ."<br />";
-                                  if ($story->updates)
-                                    echo "<P><FONT COLOR=\"#E09226\">". t("Editor's note by <a href=\"account.php?op=userinfo&uname=$story->editor\">$story->editor</A>") .":</FONT>". check_output($story->updates, 1) ."</P>";
                                   if ($reply)
                                     echo "<br />". check_output($story->article, 1) ."<br />";
 
