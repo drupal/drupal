@@ -301,22 +301,8 @@ function search_keywords_variation($text) {
  * Invokes hook_search_preprocess() in modules.
  */
 function search_preprocess(&$text) {
-  static $modules = null;
-  // Cache list of modules which implement this hook. This function gets called
-  // a lot during reindexing.
-  if (!is_array($modules)) {
-    $modules = array();
-    foreach (module_list() as $module) {
-      if (module_hook($module, 'search_preprocess')) {
-        $modules[] = $module;
-      }
-    }
-  }
-  // Process $text
-  if (count($modules) > 0) {
-    foreach ($modules as $module) {
-      $text = module_invoke($module, 'search_preprocess', $text);
-    }
+  foreach (module_implements('search_preprocess') as $module) {
+    $text = module_invoke($module, 'search_preprocess', $text);
   }
 }
 
