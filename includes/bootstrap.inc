@@ -144,7 +144,7 @@ function drupal_page_header() {
       ** headers.
       */
 
-      $headers = explode('\n', $cache->headers);
+      $headers = explode("\n", $cache->headers);
       foreach ($headers as $header) {
         header($header);
       }

@@ -876,7 +876,7 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
   $max = strlen($format);
   for ($i = 0; $i <= $max; $c = $format{$i++}) {
     if (strpos('AaDFlM', $c)) {
-      $date .= gmdate($c, $timestamp);
+      $date .= t(gmdate($c, $timestamp));
     }
     else if (strpos('BdgGhHiIjLmnsStTUwWYyz', $c)) {
       $date .= gmdate($c, $timestamp);
