@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.80 2004/03/21 14:28:15 dries Exp $
+// $Id: tracker.module,v 1.81 2004/03/29 19:00:07 dries Exp $
 
 function tracker_help($section = 'admin/help#tracker') {
   switch ($section) {
@@ -45,7 +45,7 @@ function tracker_page() {
 
       if ($new = comment_num_new($node->nid)) {
         $comments .= '<br />';
-        $comments .= l(t('%a new', array('%a' => $new)), "node/view/$node->nid", NULL, NULL, 'new');
+        $comments .= l(t('%num new', array('%num' => $new)), "node/view/$node->nid", NULL, NULL, 'new');
       }
     }
     else {
