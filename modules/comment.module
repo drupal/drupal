@@ -1,5 +1,5 @@
-<?
-// $Id: comment.module,v 1.52 2002/01/27 14:58:45 dries Exp $
+<?php
+// $Id: comment.module,v 1.53 2002/02/16 13:38:00 kjartan Exp $
 
 $GLOBALS["cmodes"] = array(1 => "Flat list - collapsed", 2 => "Flat list - expanded", 3 => "Threaded list - collapsed", 4 => "Threaded list - expanded");
 $GLOBALS["corder"] = array(1 => "Date - newest first", 2 => "Date - oldest first");
