@@ -14,7 +14,11 @@ body, p, td, li, ul, ol  {
 }
 h1, h2, h3, h4, h5, h6 {
   font-family: "Trebuchet MS", Geneva, Arial, Helvetica, SunSans-Regular, Verdana, sans-serif;
+  margin: 0;
+}
+h1 {
   color: #369;
+  font-size: 1.6em;
 }
 img {
   display: block;
@@ -28,19 +32,6 @@ tr.light {
 }
 tr.dark td, tr.light td {
   padding: 0.3em;
-}
-h1, h2, h3, h4, h5, h6 {
-  margin: 0;
-}
-h1 {
-  font-size: 1.2em;
-  font-weight: bold;
-}
-h2 {
-  font-size: 1.1em;
-}
-h3, h4, h5, h6 {
-  font-size: 1em;
 }
 a {
   text-decoration: none;
@@ -269,11 +260,28 @@ table#footer-links {
 ** additional rules /with only the differing properties!/ to .parent .class.
 ** See .comment .title for an example.
 */
-.title, .title a {
-  font-weight: bold;
-  font-size: 1.3em;
+#content .title, #content .title a {
   color: #369;
-  margin: 0 auto 0 auto;  /* decrease default margins for h<x>.title */
+}
+.content h1 {
+  color: #369;
+  font-size: 1.9em;
+}
+.content h2 {
+  color: #58b;
+  font-size: 1.7em;
+}
+.content h3 {
+  color: #69c;
+  font-size: 1.5em;
+}
+.content h4 {
+  color: #8be;
+  font-size: 1.3em;
+}
+.content h5 {
+  color: #96c6f6;
+  font-size: 1.15em;
 }
 .submitted {
   color: #999;
