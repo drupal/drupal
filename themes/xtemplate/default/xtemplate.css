@@ -1,4 +1,4 @@
-/* $Id: xtemplate.css,v 1.3 2004/03/20 13:23:34 dries Exp $ */
+/* $Id: xtemplate.css,v 1.4 2004/03/20 19:39:45 dries Exp $ */
 
 /*
 ** HTML elements
@@ -296,6 +296,12 @@ table {
 #forum td .links {
   padding-top: 0.7em;
   font-size: 0.9em;
+}
+#profile .profile {
+  clear: both;
+  border: 1px solid #abc;
+  padding: .5em;
+  margin: 1em 0em 1em 0em;
 }
 .block-forum h3 {
   margin-bottom: .5em;
