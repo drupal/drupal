@@ -11,6 +11,9 @@
   *********************************************************************/
 
  class Theme {
+   var $foreground = "#000000";
+   var $background = "#FFFFFF";
+
    var $link = "#000000";
    var $themename = "unconed";
 

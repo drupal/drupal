@@ -13,6 +13,10 @@
  class Theme {
    var $link = "#666699";
 
+   // General colorset that can be used for this theme 
+   var $foreground = "#000000";
+   var $background = "#EAEAEA";
+
    function header() {
     ?>
      <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">

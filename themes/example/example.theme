@@ -10,6 +10,9 @@
   *********************************************************************/
 
   class Theme {
+    // General colorset that can be used for this theme 
+    var $foreground = "#000000";
+    var $background = "#FFFFFF";
 
     function header() {
 ?>

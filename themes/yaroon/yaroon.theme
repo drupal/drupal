@@ -10,7 +10,9 @@
   *********************************************************************/
 
   class Theme {
-
+    var $foreground = "#000000";
+    var $background = "#F0F0F0";
+   
     function header() {
 
     global $PHP_SELF, $REQUEST_URI, $cid, $id;
