@@ -449,4 +449,67 @@ function blogapi_blogger_title(&$contents) {
   }
   return $title;
 }
+
+function blogapi_settings() {
+  $output = form_select(t('XML-RPC Engine'), 'blogapi_engine', variable_get('blogapi_engine', 0), array(0 => 'Blogger', 1 => 'MetaWeblog', 2 => 'Movabletype'), t('RSD or Really-Simple-Discovery is a mechanism which allows external blogger tools to discover the APIs they can use to interact with Drupal. The common XML-RPC engines are Blogger, MetaWeblog and Movabletype. If you are not sure which is the correct setting, choose Blogger.'));
+  return $output;
+}
+
+function blogapi_menu() {
+  global $user;
+  $items = array();
+
+  if ($_GET['q'] == variable_get('site_frontpage', 'node')) {
+    drupal_set_html_head('<link rel="EditURI" type="application/rsd+xml" title="RSD" href="' . url('blogapi/rsd', NULL, NULL, TRUE) . '" />');
+  }
+
+  $items[] = array('path' => 'blogapi', 'title' => t('RSD'), 'callback' => 'blogapi_blogapi', 'access' => user_access('access_content'), 'type' => MENU_CALLBACK);
+
+  return $items;
+}
+
+function blogapi_blogapi() {
+  switch (arg(1)) {
+    case 'rsd':
+      blogapi_rsd();
+      break;
+    default:
+      drupal_not_found();
+      break;
+  }
+}
+
+function blogapi_rsd() {
+  global $base_url;
+
+  $xmlrpc = $base_url . FILE_SEPARATOR . 'xmlrpc.php';
+  $base = url('', NULL, NULL, TRUE);
+  $blogid = 1; # until we figure out how to handle multiple bloggers
+
+  $metaweblog = 'false'; $blogger = 'false'; $mt = 'false';
+  if (variable_get('blogapi_engine', 0) == 0) {
+    $blogger = 'true';
+  } else if (variable_get('blogapi_engine', 0) == 1) {
+    $metaweblog = 'true';
+  } else if (variable_get('blogapi_engine', 0) == 2) {
+    $mt = 'true';
+  }
+
+  print <<<__RSD__
+<?xml version="1.0"?>
+<rsd version="1.0" xmlns="http://archipelago.phrasewise.com/rsd">
+  <service>
+    <engineName>Drupal</engineName>
+    <engineLink>http://www.drupal.org/</engineLink>
+    <homePageLink>$base</homePageLink>
+    <apis>
+      <api name="MetaWeblog" preferred="$metaweblog" apiLink="$xmlrpc" blogID="$blogid" />
+      <api name="Blogger" preferred="$blogger" apiLink="$xmlrpc" blogID="$blogid" />
+      <api name="Movabletype" preferred="$mt" apiLink="$xmlrpc" blogID="$blogid" />
+    </apis>
+  </service>
+</rsd>
+__RSD__;
+}
+
 ?>
