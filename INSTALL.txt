@@ -125,7 +125,7 @@ INSTALLATION
    $db_url line to match the database defined in the previous steps:
 
      $db_url = "mysql://username:password@localhost/database";
-   
+
    where 'username', 'password', 'localhost' and 'database' are the
    username, password, host and database name for your set up.
 
