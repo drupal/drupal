@@ -42,12 +42,6 @@ function forum_settings() {
       $output .= form_select(t("Default order"), "forum_order", variable_get("forum_order", 1), $forder, t("The default display order for topics."));
       $output .= form_textfield(t("Number of topics in block"), "forum_block_num", variable_get("forum_block_num", "5"), 5, 5, t("The number of topics in the <b>Forum topics</b>-block.  To enable the block, click ". l("here", "admin/block") ."."));
     }
-    else {
-      $output .= _forum_message_taxonomy();
-    }
-  }
-  else {
-    $output .= _forum_message_taxonomy();
   }
 
   return $output;
@@ -344,6 +338,8 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
   $check_tid = $tid ? "'". check_query($tid). "'" : "NULL";
 
   // show topics with the correct tid, or in the forum but with shadow = 1
+  // @TODO: this is not ANSI SQL! ("user error: 'n.created' isn't in GROUP BY")
+  // @TODO: timestamp is a sql reserved word. are there more?
   $sql = "SELECT n.nid, n.title, u.name AS name, u.uid AS uid, n.created AS timestamp, GREATEST(n.created, MAX(c.timestamp)) AS date_sort, COUNT(c.nid) AS num_comments, n.comment AS comment_mode, f.tid FROM {node} n INNER JOIN {term_node} r ON n.nid = r.nid INNER JOIN {users} u ON n.uid = u.uid LEFT JOIN {comments} c ON n.nid = c.nid INNER JOIN {forum} f ON n.nid = f.nid WHERE n.nid = r.nid AND ((r.tid = $check_tid AND f.shadow = 1) OR f.tid = $check_tid) AND n.status = 1 AND n.type = 'forum' GROUP BY n.nid, n.title, u.name, u.uid, n.created, n.comment, f.tid";
   $sql .= tablesort_sql($forum_topic_list_header);
 
@@ -404,7 +400,7 @@ function _forum_new($tid) {
 }
 
 function _forum_message_taxonomy() {
-  return t("For the forums to work, the taxonomy module has to be installed and enabled.  When activated, a taxonomy vocubulary needs to be created, bound to the forum module.  The vocabulary's terms define the forums.");
+  return t("Forums are threaded discussions based on the taxonomy system.  For the forums to work, the taxonomy module has to be installed and enabled.  When activated, a taxonomy vocabulary (eg. \"forums\") needs to be %created and bound to the node type \"forum topic\".  The vocabulary's %terms define the forums.  If you define a term as a \"Container\", the term is not a forum itself, but rather holds forums.  This lets you group your forums.", array('%created' => l(t('created'), 'admin/taxonomy/add/vocabulary'), '%terms' => l(t('terms'), 'admin/taxonomy', array('title' => t('add terms')))));
 }
 
 function forum_page() {
@@ -441,14 +437,16 @@ function forum_page() {
       theme("forum_theme_display", $forums, $topics, $parents, $tid, $sortby, $forum_per_page, $offset);
     }
     else {
-      theme("header");
-      theme("box", t("Warning"), _forum_message_taxonomy());
+      $message = t("Warning");
+      theme("header", $message);
+      theme("box", $message, _forum_message_taxonomy());
       theme("footer");
     }
   }
   else {
-    theme("header");
-    theme("box", t("Access denied"), message_access());
+    $message = t("Access denied");
+    theme("header", $message);
+    theme("box", $message, message_access());
     theme("footer");
   }
 }
@@ -460,13 +458,13 @@ function forum_page() {
 function forum_theme_display($forums, $topics, $parents, $tid, $sortby, $forum_per_page, $offset) {
   // forum list, topics list, topic browser and "add new topic" link
 
+  $title = t("Forums");
 
   /*
   ** Breadcrumb navigation:
   */
-
   $breadcrumb[] = l(t("Home"), "");
-  $breadcrumb[] = l(t("Forums"), "forum");
+  $breadcrumb[] = l($title, "forum");
 
   if ($parents) {
     $parents = array_reverse($parents);
@@ -480,16 +478,21 @@ function forum_theme_display($forums, $topics, $parents, $tid, $sortby, $forum_p
     }
   }
 
-  $output  = "<div id=\"forum\">";
-  $output .= theme("forum_theme_list", $forums, $parents, $tid);
+  if (count($forums) || count($parents)) {
+    $output  = "<div id=\"forum\">";
+    $output .= theme("forum_theme_list", $forums, $parents, $tid);
 
-  if ($tid && !in_array($tid, variable_get("forum_containers", array()))) {
-    $output .= theme("forum_theme_topic_list", $tid, $topics, $sortby, $forum_per_page, $offset);
+    if ($tid && !in_array($tid, variable_get("forum_containers", array()))) {
+      $output .= theme("forum_theme_topic_list", $tid, $topics, $sortby, $forum_per_page, $offset);
+    }
+    $output .= "</div>";
+  }
+  else {
+    $title = t("No forums defined");
+    $output = '';
   }
 
-  $output .= "</div>";
-
-  theme("header");
+  theme("header", $title);
   theme("breadcrumb", $breadcrumb);
   theme("box", $title, $output);
   theme("footer");
@@ -661,7 +664,7 @@ function forum_help($section = "admin/help#forum") {
       $output = t("Enable threaded discussions about general topics.");
       break;
     case 'admin/system/modules/forum':
-      $output = t("Forums are threaded discussions based on the taxonomy system so you must first %taxonomy-create of type \"forum\" to place the forum tree in. Then %taxonomy-add to this taxonomy. Each term becomes the name of a forum. If you define a term as a \"Container\" (See below) the term is not a forum itself, but rather holds forms. This lets you group your forums.", array("%taxonomy-create" => l(t("create a taxonomy"), "admin/taxonomy/add/vocabulary"), "%taxonomy" => l(t("add terms"), "admin/taxonomy")));
+      $output = _forum_message_taxonomy();
       break;
   }
 
