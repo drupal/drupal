@@ -51,7 +51,7 @@ function queue_vote($id, $vote) {
       }
       else if (variable_get($node->type ."_dump", -2) >= $node->score) {
         if ($node->revisions) {
-          node_revision_rollback($node->nid, node_revision_previous($node));
+          node_revision_rollback($node, end(node_revision_list($node)));
           watchdog("special", "moderation: dumped '$node->title' (rollback)");
         }
         else {
@@ -61,7 +61,7 @@ function queue_vote($id, $vote) {
       }
       else if (variable_get($node->type ."_expire", 6) <= $node->votes) {
         if ($node->revisions) {
-          node_revision_rollback($node->nid,  node_revision_previous($node));
+          node_revision_rollback($node, end(node_revision_list($node)));
           watchdog("special", "moderation: expired '$node->title' (rollback)");
         }
         else {
@@ -107,16 +107,6 @@ function queue_view($id) {
     ** mathematical calculation to be performed to update a comment's value.
     */
     $queue_votes = array("neutral (+0)" => "+ 0", "post it (+1)" => "+ 1", "dump it (-1)" => "- 1");
-
-    // TODO: this is where the upcoming versioning system should come in
-    if ($n = node_load(array("nid" => $node->pid))) {
-      $output .= " ". t("The above node is a proposed update of an existing node:") ." \"<a href=\"node.php?id=$n->nid\">". check_output($n->title) ."</a>\".";
-    }
-
-    // TODO: this is where the upcoming versioning system should come in
-    if ($node->log) {
-      $output .= " ". t("The log message to accompany this submission is given below:") ."<p><i>". check_output($node->log, 1) ."</i></p>";
-    }
 
     // moderation form:
     $output .= "<form action=\"module.php?mod=queue\" method=\"post\">";

@@ -142,7 +142,7 @@ function book_view($node, $main = 0) {
   */
 
   if ($node->moderate && $mod != "queue") {
-    $node = $node->revisions[sizeof($node->revisions) - 1]["node"];
+    $node = node_revision_load($node, end(node_revision_list($node)));
   }
 
   /*
@@ -233,7 +233,7 @@ function book_tree($parent = "", $depth = 0) {
 
       // take the most recent approved revision:
       if ($node->moderate) {
-        $node = $node->revisions[sizeof($node->revisions) - 1]["node"];
+        $node = node_revision_load($node, end(node_revision_list($node)));
       }
 
       // output the content:
@@ -260,7 +260,7 @@ function book_render() {
 
     // take the most recent approved revision:
     if ($node->moderate) {
-      $node = $node->revisions[sizeof($node->revisions) - 1]["node"];
+      $node = node_revision_load($node, end(node_revision_list($node)));
     }
 
     // output the content:
@@ -300,7 +300,7 @@ function book_export_html($id = "", $depth = 1) {
 
     // take the most recent approved revision:
     if ($node->moderate) {
-      $node = $node->revisions[sizeof($node->revisions) - 1]["node"];
+      $node = node_revision_load($node, end(node_revision_list($node)));
     }
 
     // output the content:
@@ -325,7 +325,7 @@ function book_export_html_recursive($parent = "", $depth = 1) {
 
     // take the most recent approved revision:
     if ($node->moderate) {
-      $node = $node->revisions[sizeof($node->revisions) - 1]["node"];
+      $node = node_revision_load($node, end(node_revision_list($node)));
     }
 
     // output the content:
