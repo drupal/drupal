@@ -89,8 +89,6 @@ $xmlrpcstr["no_ssl"]="No SSL support compiled in.";
 $xmlrpcerr["curl_fail"]=8;
 $xmlrpcstr["curl_fail"]="CURL error";
 
-$xmlrpc_defencoding="UTF-8";
-
 $xmlrpcName="XML-RPC for PHP";
 $xmlrpcVersion="1.02";
 
@@ -622,10 +620,9 @@ class xmlrpcmsg {
 
   function parseResponse($data="") {
     global $_xh,$xmlrpcerr,$xmlrpcstr;
-    global $xmlrpc_defencoding;
 
 
-    $parser = xml_parser_create($xmlrpc_defencoding);
+    $parser = drupal_xml_parser_create($data);
 
     $_xh[$parser]=array();
 

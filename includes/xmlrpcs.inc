@@ -208,15 +208,14 @@ class xmlrpc_server {
 
   function parseRequest($data="") {
   global $_xh;
-  global $xmlrpcerr, $xmlrpcstr, $xmlrpcerrxml, $xmlrpc_defencoding,
-    $_xmlrpcs_dmap;
+  global $xmlrpcerr, $xmlrpcstr, $xmlrpcerrxml, $_xmlrpcs_dmap;
 
 
 
   if ($data=="") {
     $data=$GLOBALS["HTTP_RAW_POST_DATA"];
   }
-  $parser = xml_parser_create($xmlrpc_defencoding);
+  $parser = drupal_xml_parser_create($data);
 
   $_xh[$parser]=array();
   $_xh[$parser]['st']="";
