@@ -212,7 +212,7 @@ function blog_form(&$node) {
     $output .= implode('', taxonomy_node_form('blog', $node));
   }
 
-  $output .= form_textarea(t('Body'), 'body', $node->body, 60, 15, filter_tips_short());
+  $output .= form_textarea(t('Body'), 'body', $node->body, 60, 15, filter_tips_short(), NULL, TRUE);
 
   return $output;
 }
@@ -291,14 +291,14 @@ function blog_menu() {
 function blog_block($op = 'list', $delta = 0) {
   global $user;
   if ($op == 'list') {
-    $block[0]['info'] = t('Blogs');
+    $block[0]['info'] = t('Recent blog posts');
     return $block;
   }
   else {
     if (user_access('access content')) {
       $block['content'] = node_title_list(db_query_range("SELECT n.title, n.nid FROM {node} n WHERE n.type = 'blog' AND n.status = 1 ORDER BY n.created DESC", 0, 10));
       $block['content'] .= '<div class="more-link">'. l(t('more'), 'blog', array('title' => t('Read the latest blog entries.'))) .'</div>';
-      $block['subject'] = t('Blogs');
+      $block['subject'] = t('Recent blog posts');
     }
     return $block;
   }
