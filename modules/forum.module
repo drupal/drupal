@@ -1,14 +1,9 @@
 <?php
 
-$module = array("type" => "forum_type",
-                "page" => "forum_page",
+$module = array("page" => "forum_page",
                 "admin" => "forum_admin");
 
 $format = array(0 => HTML, 1 => PHP, 2 => text);
-
-function forum_type() {
-  return array("forum", "forum");
-}
 
 function forum_status() {
   return array(dumped, posted);
@@ -16,7 +11,7 @@ function forum_status() {
 
 function forum_view($node) {
   global $theme;
-  $output .= "<P><A HREF=\"module.php?mod=forum\">Forum</A> / <B><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></B>:</P><P>". check_output($node->body) ."</P>";
+  $output .= "<P><A HREF=\"module.php?mod=forum\">". t("Forum") ."</A> / <B><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></B>:</P><P>". check_output($node->body) ."</P>";
   $theme->box(t("Discussion forum"), $output);
 }
 
@@ -27,7 +22,7 @@ function forum_form($edit = array()) {
   $form .= structure_form("forum", $edit);
   $form .= form_textarea(t("Body"), "body", $edit[body], 50, 10);
   $form .= form_hidden("nid", $edit[nid]);
-  $form .= form_submit("Submit");
+  $form .= form_submit(t("Submit"));
 
   return form($REQUEST_URI, $form);
 }
@@ -53,10 +48,10 @@ function forum_page() {
   $result = db_query("SELECT nid FROM node WHERE type = 'forum' ORDER BY title");
 
   $output .= "<TABLE BORDER=\"0\" CELLSPACING=\"4\" CELLPADDING=\"4\">\n";
-  $output .= " <TR><TH>". t("Forum") ."</TH><TH>". t("Comments") ."</TH><TH>". t("Last comment") ."</TH></TR>";
+  $output .= " <TR><TH>". t("Forum") ."</TH><TH>". t("Comments") ."</TH><TH>". t("Last comment") ."</TH><TH>". t("Moderators") ."</TH></TR>";
   while ($node = db_fetch_object($result)) {
     $node = node_get_object("nid", $node->nid);
-    $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A><BR><SMALL>". check_output($node->body, 1) ."</SMALL></TD><TD ALIGN=\"center\">". forum_num_comments($node->nid) ."</TD><TD ALIGN=\"center\">". forum_last_comment($node->nid) ."</TD></TR>";
+    $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A><BR><SMALL>". check_output($node->body, 1) ."</SMALL></TD><TD ALIGN=\"center\">". forum_num_comments($node->nid) ."</TD><TD ALIGN=\"center\">". forum_last_comment($node->nid) ."</TD><TD ALIGN=\"center\"><SMALL>". check_output($node->moderate) ."</SMALL></TD></TR>";
   }
   $output .= "</TABLE>\n";
 
@@ -70,11 +65,9 @@ function forum_overview() {
 }
 
 function forum_admin() {
-  global $id, $op, $edit, $type;
+  global $id, $op, $edit;
 
   print "<SMALL><A HREF=\"admin.php?mod=forum&op=add\">add new forum</A> | <A HREF=\"admin.php?mod=forum\">overview</A></SMALL><HR>\n";
-
-  $type = ($type ? $type : 0);
 
   switch ($op) {
     case "add":
@@ -83,7 +76,7 @@ function forum_admin() {
     case "edit":
       print forum_form(node_get_array(nid, $id));
       break;
-   case "Submit":
+   case t("Submit"):
       print status(forum_save($edit));
       // fall through:
     default:

@@ -22,7 +22,7 @@ function comment_edit($id) {
   $form .= form_item(t("Author"), format_username($comment->userid));
   $form .= form_textfield(t("Subject"), "subject", $comment->subject, 50, 128);
   $form .= form_textarea(t("Comment"), "comment", $comment->comment, 50, 10);
-  $form .= form_submit("Submit");
+  $form .= form_submit(t("Submit"));
 
   return form($REQUEST_URI, $form);
 }
@@ -58,7 +58,7 @@ function comment_admin() {
       print search_form($keys);
       print search_data($keys, $mod);
       break;
-    case "Submit":
+    case t("Submit"):
       print status(comment_save(check_input($id), $edit));
       print comment_overview();
       break;

@@ -82,7 +82,7 @@ function moderate_admin() {
         case "edit":
           print moderate_comment_edit($id);
           break;
-        case "Submit":
+        case t("Submit"):
           print status(moderate_comment_save($id, $edit));
           // fall through:
         default:
@@ -94,7 +94,7 @@ function moderate_admin() {
         case "edit":
           print moderate_node_edit($id);
           break;
-        case "Submit":
+        case t("Submit"):
           print status(moderate_node_save($edit));
           // fall through:
        default:
