@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.101 2003/10/24 09:27:58 dries Exp $
+// $Id: system.module,v 1.102 2003/10/24 18:01:58 dries Exp $
 
 function system_help($section = "admin/help#system") {
   global $base_url;
@@ -108,11 +108,6 @@ function system_view_general() {
   $output .= form_textfield(t("Anonymous user"), "anonymous", variable_get("anonymous", "Anonymous"), 70, 70, t("The name used to indicate anonymous users."));
   $output .= form_textfield(t("Default front page"), "site_frontpage", variable_get("site_frontpage", "node"), 70, 70, t("The home page displays content from this relative URL.  If you are not using clean URLs, specify the part after '?q='.  If unsure, specify 'node'."));
   $output .= form_select(t("Clean URLs"), "clean_url", variable_get("clean_url", 0), array(t("Disabled"), t("Enabled")), t("Enable or disable clean URLs.  If enabled, you'll need <code>ModRewrite</code> support.  See also the <code>.htaccess</code> file in Drupal's top-level directory."));
-  $output .= "<hr />\n";
-
-  // cron:
-  $output .= "<h3>". t("Cron settings") ."</h3>\n";
-  $output .= form_select(t("Cron support"), "cron", variable_get("cron", 1), array(t("Disabled"), t("Enabled")), t("Enable or disable cron support.  Enable this setting if you have set up a cron job.  Check the %documentation for information on setting up a cron job.", array("%documentation" => l(t("cron documentation"), "admin/system/help#cron"))));
   $output .= "<hr />\n";
 
   // caching:
