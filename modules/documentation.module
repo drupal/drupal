@@ -99,8 +99,8 @@ function documentation_page() {
     <TD VALIGN="top">If a module requires a spot in the administrator section it should implement <CODE>module_admin</CODE>.  The engine will automatically add a link to the administration menus and will call <CODE>module_admin</CODE> when this link is followed.  In order to make virtually any module maintainer's life easier, you don't have to worry about access rights or permissions for that matter.  The engine will only allow priveleged users to call exported <CODE>admin</CODE> functions.</TD>
    </TR>
    <TR>
-    <TD VALIGN="top"></TD>
-    <TD VALIGN="top"></TD>
+    <TD VALIGN="top"><CODE>export</CODE></TD>
+    <TD VALIGN="top">... All you have to do is examine the string and figure out where you're at.</TD>
    </TR>
    <TR>
     <TD VALIGN="top"></TD>

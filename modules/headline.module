@@ -1,43 +1,16 @@
 <?
 
-$module = array("page"  => "backend_page",
-                "cron"  => "backend_cron",
-                "block" => "backend_block",
-                "admin" => "backend_admin");
+$module = array("page"  => "headline_page",
+                "cron"  => "headline_cron",
+                "block" => "headline_block",
+                "admin" => "headline_admin",
+                "export" => "headline_export");
 
 include "includes/common.inc";
 include "modules/backend.class";
 
-function backend_rdf() {
-  global $site_name, $site_url;
-  
-  header("Content-Type: text/plain");
-  
-  print "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
-  print "<rdf:RDF\n";
-  print " xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n";
-  print " xmlns=\"http://my.netscape.com/rdf/simple/0.9/\">\n";
 
-  print "<channel>\n";
-  print " <title>$site_name</title>\n";
-  print " <link>$site_url</link>\n";
-  print " <description>$site_name</description>\n";
-  print "</channel>\n";
-
-  $result = db_query("SELECT * FROM stories WHERE status = 2 ORDER BY timestamp DESC LIMIT 10");
-
-  while ($story = db_fetch_object($result)) {
-    print "<item>\n";
-    print " <title>$story->subject</title>\n";
-    print " <link>". $site_url ."discussion.php?id=$story->id</link>\n";
-    print "</item>\n";
-  }
-
-  print "</rdf:RDF>\n";
-
-}
-
-function backend_blocks() {
+function headline_blocks() {
   global $theme;
  
   // Get channel info:
@@ -54,9 +27,9 @@ function backend_blocks() {
     // Load backend from database:
     $backend = new backend($channel->id);
     
-    // Read headlines from backend class:
+    // Read headline from backend class:
     $content = "";
-    for (reset($backend->headlines); $headline = current($backend->headlines); next($backend->headlines)) {
+    for (reset($backend->headline); $headline = current($backend->headline); next($backend->headline)) {
       $content .= "<LI>$headline</LI>\n";
     }
 
@@ -73,44 +46,44 @@ function backend_blocks() {
   $theme->footer();
 }
 
-function backend_page() {
+function headline_page() {
   global $type;
 
   switch($type) {
     case "rdf":
-      backend_rdf();
+      headline_rdf();
       break;
     default:
-      backend_blocks();
+      headline_blocks();
   }
 }
 
-function backend_cron() {
+function headline_cron() {
   $result = db_query("SELECT * FROM channel");
   while ($channel = db_fetch_object($result)) {
     $backend = new Backend($channel->id);
   }
 }
 
-function backend_block() {
+function headline_block() {
   $result = db_query("SELECT * FROM channel");
   while ($channel = db_fetch_object($result)) {
     $backend = new Backend($channel->id);
   
     $content = "";
-    for (reset($backend->headlines); $headline = current($backend->headlines); next($backend->headlines)) {
+    for (reset($backend->headline); $headline = current($backend->headline); next($backend->headline)) {
       $content .= "<LI>$headline</LI>\n";
     }
 
     $blocks[$channel->id]["subject"] = $backend->site;
     $blocks[$channel->id]["content"] = $content;
-    $blocks[$channel->id]["info"] = "$backend->site headlines";
+    $blocks[$channel->id]["info"] = "$backend->site headline";
     $blocks[$channel->id]["link"] = $backend->url;
   }
   return $blocks;
 }
 
-function backend_admin_main() {
+function headline_admin_main() {
   global $theme;
 
   // Get channel info:
@@ -158,27 +131,58 @@ function backend_admin_main() {
   print $output;
 }
 
-function backend_admin() {
+function headline_admin() {
   global $op, $id, $site, $url, $backend, $contact;
   
   switch($op) {
     case "refresh":
       $backend = new backend($id);
       $backend->refresh();
-      backend_admin_main();
+      headline_admin_main();
       break;
     case "delete":
       $backend = new backend($id);
       $backend->dump();
       $backend->delete();
-      backend_admin_main();
+      headline_admin_main();
       break;
     case "Add backend":
       $backend = new backend($id, $site, $url, $backend, $contact);
       $backend->add();
       // fall through:
     default:
-      backend_admin_main();
+      headline_admin_main();
+  }
+}
+
+function headline_export($uri) {
+  global $site_name, $site_url;
+  
+  if ($uri[2] == "headlines.rdf") {
+
+    header("Content-Type: text/plain");
+
+    print "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
+    print "<rdf:RDF\n";
+    print " xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n";
+    print " xmlns=\"http://my.netscape.com/rdf/simple/0.9/\">\n";
+
+    print "<channel>\n";
+    print " <title>$site_name</title>\n";
+    print " <link>$site_url</link>\n";
+    print " <description>$site_name</description>\n";
+    print "</channel>\n";
+
+    $result = db_query("SELECT * FROM stories WHERE status = 2 ORDER BY timestamp DESC LIMIT 10");
+  
+    while ($story = db_fetch_object($result)) {
+      print "<item>\n";
+      print " <title>$story->subject</title>\n";
+      print " <link>". $site_url ."discussion.php?id=$story->id</link>\n";
+      print "</item>\n";
+    }
+
+    print "</rdf:RDF>\n";
   }
 }
 

@@ -2,7 +2,8 @@
 
 $module = array("page"  => "diary_page",
                 "block" => "diary_block",
-                "admin" => "diary_admin");
+                "admin" => "diary_admin",
+                "export" => "diary_export");
 
 include "includes/common.inc";
 
@@ -294,6 +295,12 @@ function diary_admin() {
       break;
     default:
       diary_admin_display();
+  }
+}
+
+function diary_export($uri) {
+  if ($uri[2] == "diary") {
+    print "TODO: export diary for user $uri[3]";
   }
 }
 

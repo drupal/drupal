@@ -53,7 +53,7 @@
    function abstract($story) {
      print "\n<!-- story: \"$story->subject\" -->\n";     
      print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"2\" WIDTH=\"100%\">\n";
-     print " <TR><TD COLSPAN=\"2\"><IMG SRC=\"themes/marvin/images/drop.gif\" ALT=\"\"> &nbsp; <B>$story->subject</B></TD></TR>\n";
+     print " <TR><TD COLSPAN=\"2\"><IMG SRC=\"themes/marvin/images/drop.gif\" ALT=\"\"> &nbsp; <B>". check_output($story->subject) ."</B></TD></TR>\n";
      print " <TR VALIGN=\"bottom\"><TD COLSPAN=\"2\" BGCOLOR=\"#000000\" WIDTH=\"100%\"><IMG SRC=\"themes/marvin/images/pixel.gif\" WIDTH=\"1\" HEIGHT=\"0\" ALT=\"\"></TD></TR>\n";
      print " <TR>\n";
      print "  <TD>\n";
@@ -76,7 +76,7 @@
    function article($story, $reply) {
      print "\n<!-- story: \"$story->subject\" -->\n";
      print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"2\" WIDTH=\"100%\">\n";
-     print " <TR><TD COLSPAN=\"2\"><IMG SRC=\"themes/marvin/images/drop.gif\" ALT=\"\"> &nbsp; <B>$story->subject</B></TD></TR>\n";
+     print " <TR><TD COLSPAN=\"2\"><IMG SRC=\"themes/marvin/images/drop.gif\" ALT=\"\"> &nbsp; <B>". check_output($story->subject) ."</B></TD></TR>\n";
      print " <TR VALIGN=\"bottom\"><TD COLSPAN=\"2\" BGCOLOR=\"#000000\" WIDTH=\"100%\"><IMG SRC=\"themes/marvin/images/pixel.gif\" WIDTH=\"1\" HEIGHT=\"0\" ALT=\"\"></TD></TR>\n";
      print " <TR>\n";
      print "  <TD>\n";
