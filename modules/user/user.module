@@ -1261,7 +1261,7 @@ function user_admin_perm($edit = array()) {
       db_query("DELETE FROM permission WHERE rid = '%s' AND tid = '%s'", $role->rid, $tid);
       $perm = $edit[$role->rid] ? implode(", ", array_keys($edit[$role->rid])) : "";
       if ($perm) {
-        db_query("INSERT INTO permission (rid, perm, tid) VALUES ('%s', '%s', %s'')", $role->rid, $perm, $tid);
+        db_query("INSERT INTO permission (rid, perm, tid) VALUES ('%s', '%s', '%s')", $role->rid, $perm, $tid);
       }
 
     }
