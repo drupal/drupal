@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.75 2003/09/27 06:00:43 dries Exp $
+// $Id: block.module,v 1.76 2003/09/28 17:07:46 dries Exp $
 
 function block_help($section = "admin/block/help") {
   $output = "";
@@ -68,10 +68,10 @@ function block_perm() {
 function block_link($type) {
   if ($type == "system" && user_access("administer blocks")) {
 
-    menu("admin/system/block", "blocks", "block_admin", block_help("admin/system/block"), 3);
-    menu("admin/system/block/add", "new block", "block_admin", block_help("admin/system/block/add"), 2);
-    menu("admin/system/block/preview", "preview placement", "block_admin", block_help("admin/system/block/preview"), 3);
-    menu("admin/system/block/help", "help", "block_help", NULL, 9);
+    menu("admin/system/block", t("blocks"), "block_admin", block_help("admin/system/block"), 3);
+    menu("admin/system/block/add", t("new block"), "block_admin", block_help("admin/system/block/add"), 2);
+    menu("admin/system/block/preview", t("preview placement"), "block_admin", block_help("admin/system/block/preview"), 3);
+    menu("admin/system/block/help", t("help"), "block_help", NULL, 9);
   }
 }
 

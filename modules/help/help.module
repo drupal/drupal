@@ -1,5 +1,5 @@
 <?php
-// $Id: help.module,v 1.21 2003/09/26 23:05:14 dries Exp $
+// $Id: help.module,v 1.22 2003/09/28 17:07:46 dries Exp $
 
 function help_system($field){
   $system["description"] = t("Manages displaying online help.");
@@ -8,8 +8,8 @@ function help_system($field){
 
 function help_link($type) {
   if ($type == "system" && user_access("access administration pages")) {
-    menu("admin/help/glossary", "glossary", "help_glossary", NULL, 8);
-    menu("admin/help", "help", "help_admin", NULL, 9);
+    menu("admin/help/glossary", t("glossary"), "help_glossary", NULL, 8);
+    menu("admin/help", t("help"), "help_admin", NULL, 9);
   }
 }
 

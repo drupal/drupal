@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.94 2003/09/28 15:27:19 dries Exp $
+// $Id: system.module,v 1.95 2003/09/28 17:07:46 dries Exp $
 
 function system_help($section = "admin/system/help") {
   switch ($section) {
@@ -75,7 +75,7 @@ function system_link($type) {
       foreach (module_list(1) as $name) {
         // NOTE: refresh the list because some modules might have been enabled/disabled.
         if (module_hook($name, "settings")) {
-          menu("admin/system/modules/$name", $name, "system_admin", module_invoke($name, "system", "admin_help"));
+          menu("admin/system/modules/$name", t($name), "system_admin", module_invoke($name, "system", "admin_help"));
         }
       }
       menu("admin/system/filters", t("filters"), "system_admin", system_help("admin/system/filters"), 4);
