@@ -30,7 +30,7 @@ function submission_display_item($id) {
   $submission = db_fetch_object($result);
 
   if ($user->id == $submission->author || user_getHistory($user->history, "s$id")) {
-    header("Location: discussion.php?id=$id");
+    header("Location: story.php?id=$id");
   }
   else {
     $theme->header();

@@ -140,64 +140,10 @@
     <? 
    }
 
-   function commentControl($sid, $title, $threshold, $mode, $order) {
-     global $user;
-     $query = mysql_query("SELECT sid FROM comments WHERE sid = $sid");
-
-     if (!$query) $count = 0; else $count = mysql_num_rows($query);
-     if (!isset($threshold)) $threshold = 0; 
-
-     ?>
-      <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" BGCOLOR="<? echo $this->brcolor1; ?>" WIDTH="100%">
-      <TR><TD>
-     <?
-
-     print "<TABLE BORDER=\"0\" CELLPADDING=\"3\" CELLSPACING=\"1\" WIDTH=\"100%\">";
-     print " <TR><TD ALIGN=\"center\" BGCOLOR=\"$this->bgcolor1\"><FONT COLOR=\"$this->fgcolor1\"><B>Comment Control</B></FONT></TD></TR>";
-     print " <TR><TD BGCOLOR=\"$this->bgcolor2\">";
-
-     ?> 
-           <FORM METHOD="post" ACTION="discussion.php">
-            <FONT SIZE="2"> 
-            <SELECT NAME="threshold">
-             <OPTION VALUE="-1" <? if ($threshold == -1) { echo "SELECTED"; } ?>>Threshold: -1</OPTION>
-             <OPTION VALUE="0" <? if ($threshold == 0) { echo "SELECTED"; } ?>>Threshold: 0</OPTION>
-             <OPTION VALUE="1" <? if ($threshold == 1) { echo "SELECTED"; } ?>>Threshold: 1</OPTION>
-             <OPTION VALUE="2" <? if ($threshold == 2) { echo "SELECTED"; } ?>>Threshold: 2</OPTION>
-             <OPTION VALUE="3" <? if ($threshold == 3) { echo "SELECTED"; } ?>>Threshold: 3</OPTION>
-             <OPTION VALUE="4" <? if ($threshold == 4) { echo "SELECTED"; } ?>>Threshold: 4</OPTION>
-             <OPTION VALUE="5" <? if ($threshold == 5) { echo "SELECTED"; } ?>>Threshold: 5</OPTION>
-            </SELECT> 
-            <SELECT NAME="mode">
-             <OPTION VALUE="nested" <? if ($mode == 'nested') { echo "SELECTED"; } ?>>Nested</OPTION>
-             <OPTION VALUE="flat" <? if ($mode == 'flat') { echo "SELECTED"; } ?>>Flat</OPTION>
-             <OPTION VALUE="threaded" <? if (!isset($mode) || $mode=='threaded' || $mode=="") { echo "SELECTED"; } ?>>Threaded</OPTION>
-            </SELECT> 
-            <SELECT NAME="order">
-             <OPTION VALUE="0" <? if (!$order) { echo "SELECTED"; } ?>>Oldest first</OPTION>
-             <OPTION VALUE="1" <? if ($order == 1) { echo "SELECTED"; } ?>>Newest first</OPTION>
-             <OPTION VALUE="2" <? if ($order == 2) { echo "SELECTED"; } ?>>Highest scoring first</OPTION>
-            </SELECT>
-            <INPUT TYPE="hidden" NAME="id" VALUE="<? echo "$sid"; ?>"> 
-            <INPUT TYPE="submit" NAME="op" VALUE="Save">
-            </FONT>
-
-          <?
-
-          $number=discussion_num_filtered($sid, $pid);					
-					if ($number>0)
-					{					
-           ?>
-           <BR><SMALL>There are at least <? echo format_plural($number, "comment", "comments"); ?> below your threshold.</SMALL>
-           <?
-          }
-
-       print "</TD></TR>";
-       print "</TABLE>";
-     ?>
-      </TD></TR>
-      </TABLE><BR>
-     <?
+   function controls($threshold, $mode, $order) {
+     print "<HR>";
+     print comment_controls($threshold, $mode, $order);
+     print "<HR>";
    }
 
    function comment($comment, $link, $thread = "") {
@@ -224,7 +170,7 @@
 
      // Moderation:
      echo "     <TD ALIGN=\"right\" ROWSPAN=\"3\" VALIGN=\"middle\" WIDTH=\"15%\">";
-     print theme_comment_moderation($comment);
+     print comment_moderation($comment);
      echo "     </TD>";
      echo "    </TR>";
 

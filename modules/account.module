@@ -87,15 +87,15 @@ function account_display($order = "username") {
 function account_stories($id) {
   $result = db_query("SELECT * FROM stories WHERE author = $id ORDER BY timestamp DESC");
   while ($story = db_fetch_object($result)) {
-    $output .= "<LI><A HREF=\"discussion.php?id=$story->id\">". check_output($story->subject) ."</A></LI>\n";
+    $output .= "<LI><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A></LI>\n";
   }
   return $output;
 }
 
 function account_comments($id) {
-  $result = db_query("SELECT * FROM comments WHERE author = $id ORDER BY timestamp DESC");
+  $result = db_query("SELECT * FROM comments WHERE link = 'story' AND author = $id ORDER BY timestamp DESC");
   while ($comment = db_fetch_object($result)) {
-    $output .= "<LI><A HREF=\"discussion.php?id=$comment->sid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A></LI>\n";
+    $output .= "<LI><A HREF=\"story.php?id=$comment->sid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A></LI>\n";
   }
   return $output;
 }

@@ -11,7 +11,7 @@ function submission_score($id) {
 }
 
 function submission_vote($id, $vote, $comment) {
-  global $user, $submission_post_threshold, $submission_dump_threshold;
+  global $submission_post_threshold, $submission_dump_threshold, $user;
   
   if (!user_getHistory($user->history, "s$id")) {
     // Update submission's score- and votes-field:
@@ -21,7 +21,7 @@ function submission_vote($id, $vote, $comment) {
     if ($comment) {
       watchdog("comment", "moderation: added comment with subject '$subject'");
 
-      db_query("INSERT INTO comments (sid, author, subject, comment, hostname, timestamp, score) VALUES($id, $user->id, '". check_input(substr($comment, 0, 29)) ." ...', '". check_input($comment) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."', '" . ($user->userid ? 1 : 0) . "')");
+      db_query("INSERT INTO comments (lid, link, author, subject, comment, hostname, timestamp, score) VALUES($id, 'story', $user->id, '". check_input(substr($comment, 0, 29)) ." ...', '". check_input($comment) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."', '1')");
     }
 
     // Update user's history record:

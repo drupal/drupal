@@ -2,41 +2,80 @@
 
 $module = array("page" => "drupal_page");
 
-include "includes/common.inc";
+include_once "includes/common.inc";
+include_once "includes/comment.inc";
 
-function drupal_page() {
-  global $theme;
+function drupal_render($id, $cid) {
+  global $theme, $threshold, $mode, $order, $user;
 
-  $output .= "
-   <H2>Introduction</H2>
-   <P>Drupal is the English pronunciation for the Dutch word 'druppel' which stands for 'drop'.  Drupal is a full-featured content management/discussion engine suitable to setup a news-driven community or portal site.  Drupal aims towards easy installation, excessive configuration and fine-grained maintenance capabilities.  Due to its modular design drupal is flexible and easy to adapt or extend.</P>
-   <P>Drupal is primarily written by Dries Buytaert (dries_at_drop.org) and build after Slash (<A HREF=\"http://slashcode.com/\">http://slashcode.com/</A>) and Scoop (<A HREF=\"http://scoop.kuro5hin.org/\">http://scoop.kuro5hin.org/</A>) and source code is available under terms of GNU General Public License (GPL).</P>
-   <H2>Download</H2>
-   <LI><A HREF=\"drupal/drupal-1.00.tgz\">drupal 1.00</A> (2000/01/15)</LI>
-   <LI><A HREF=\"drupal/drupal-1.00-rc2.tgz\">drupal 1.00-rc2</A> (2000/01/08)</LI>
-   <LI><A HREF=\"drupal/drupal-1.00-rc1.tgz\">drupal 1.00-rc1</A> (2000/01/01)</LI>
-   <H2>Screenshots</H2>
-  ";
+  $output  = " <P>Drupal is the English pronunciation for the Dutch word 'druppel' which stands for 'drop'.  Drupal is a full-featured content management/discussion engine suitable to setup a news-driven community or portal site.  Drupal aims towards easy installation, excessive configuration and fine-grained maintenance capabilities.  Due to its modular design drupal is flexible and easy to adapt or extend.</P>\n";
+  $output .= " <P>Drupal is primarily written by Dries Buytaert (dries_at_drop.org) and build after Slash (<A HREF=\"http://slashcode.com/\">http://slashcode.com/</A>) and Scoop (<A HREF=\"http://scoop.kuro5hin.org/\">http://scoop.kuro5hin.org/</A>).  The source code is available under terms of GNU General Public License (GPL).</P>\n";
+  $output .= " <P>We don't have a real demo site yet but drupal is used by (and created for) <A HREF=\"http://drop.org/\">http://drop.org/</A>.  Create an account, play with it for a bit, read the <A HREF=\"module.php?mod=documentation\">documentation</A> and spend some time getting used to it.</P>\n";
+  $theme->box("Introduction", $output); 
+  
+  $output  = "<LI><A HREF=\"drupal/drupal-1.00.tgz\">drupal 1.00</A> (2000/01/15 - latest version)</LI>\n";
+  $output .= "<LI><A HREF=\"drupal/drupal-1.00-rc2.tgz\">drupal 1.00-rc2</A> (2000/01/08)</LI>\n";
+  $output .= "<LI><A HREF=\"drupal/drupal-1.00-rc1.tgz\">drupal 1.00-rc1</A> (2000/01/01)</LI>\n";
+  $theme->box("Download", $output);
 
+  unset($output);
   $handle = opendir("drupal");
   while ($file = readdir($handle)) if (ereg(".jpg", $file) || ereg(".gif", $file)) $output .= " <LI><SMALL><A HREF=\"drupal/$file\">$file</A></SMALL></LI>\n";
   closedir($handle);
+  $theme->box("Screenshots", $output);
+   
+  $output  = "<H2>Documentation</H2>\n";
+  $output .= " <LI><A HREF=\"module.php?mod=documentation\">documentation</A></LI>\n";
+  $output .= " <LI><A HREF=\"module.php?mod=wishlist\">wishlist</A></LI>\n";
+  $output .= "<H2>Mailing list</H2>\n";
+  $output .= " <P>The <CODE>drupal-support@drop.org</CODE> list discusses drupal development. All submissions relevant to that, such as bug reports, enhancement ideas, patches or reports that a patch fixed a bug are appropriate.</P>\n";
+  $output .= " <LI>To subscribe to the <CODE>drupal-support@drop.org</CODE> mailing list, send an e-mail to <A HREF=\"mailto:drupal-support-request@drop.org\">drupal-support-request@drop.org</A> with no subject and put <B>subscribe</B> in the body of your message.</LI>\n";
+  $output .= " <LI>To unsubscribe from the <CODE>drupal-support@drop.org</CODE> mailing list, send an e-mail to <A HREF=\"mailto:drupal-support-request@drop.org\">drupal-support-request@drop.org</A> and put <B>unsubscribe</B> in the body of your mail.\n";
+  $theme->box("Support and development", $output);
 
-  $output .= "
-   <H2>Demo</H2>
-   <P>We don't have a real demo site yet but drupal is used by (and created for) <A HREF=\"http://drop.org/\">http://drop.org/</A>.  Create an account, play with it for a bit, read the <A HREF=\"module.php?mod=documentation\">documentation</A> and spend some time getting used to it.</P>
-   <H2>Documentation</H2>
-   <LI><A HREF=\"module.php?mod=documentation\">documentation</A></LI>
-   <LI><A HREF=\"module.php?mod=wishlist\">wishlist</A></LI>
-   <H2>Mailing list</H2>
-   <P>The <CODE>drupal-support@drop.org</CODE> list discusses drupal development. All submissions relevant to that, such as bug reports, enhancement ideas, patches or reports that a patch fixed a bug are appropriate.</P>
-   <LI>To subscribe to the <CODE>drupal-support@drop.org</CODE> mailing list, send an e-mail to <A HREF=\"mailto:drupal-support-request@drop.org\">drupal-support-request@drop.org</A> with no subject and put <B>subscribe</B> in the body of your message.</LI>
-   <LI>To unsubscribe from the <CODE>drupal-support@drop.org</CODE> mailing list, send an e-mail to <A HREF=\"mailto:drupal-support-request@drop.org\">drupal-support-request@drop.org</A> and put <B>unsubscribe</B> in the body of your mail.
-  ";
+  print "<H3>Comments</H3>\n";
 
-  $theme->header();
-  $theme->box("Drupal", $output);
-  $theme->footer();
+  // Display 'comment control'-box:
+  if ($user->id) $theme->controls($threshold, $mode, $order);
+
+  // Display comments:
+  comment_render($id, $cid);
+}
+
+function drupal_page() {
+  global $cid, $comment, $id, $op, $pid, $lid, $link, $mode, $order, $subject, $theme, $threshold;
+
+  switch($op) { 
+    case "Preview comment":
+      $theme->header();
+      comment_preview($pid, $id, $subject, $comment);
+      $theme->footer();
+      break;
+    case "Post comment":
+      comment_post($pid, $id, $subject, $comment);
+      break;
+    case "reply":
+      $theme->header();
+      comment_reply($pid, $id);
+      $theme->footer();
+      break;
+    case "Update":
+      comment_settings($mode, $order, $threshold);
+      $theme->header();
+      drupal_render($id, $cid);
+      $theme->footer();
+      break;
+    case "Moderate comments":
+      comment_moderate($moderate);
+      $theme->header();
+      drupal_render($id, $cid);
+      $theme->footer();
+      break;
+    default:
+      $theme->header();
+      drupal_render(0, $cid);
+      $theme->footer();
+  }
 }
 
 ?>

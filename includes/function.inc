@@ -12,11 +12,6 @@ function load_theme() {
   return new Theme();
 }
 
-function discussion_score($comment) {
-  $value = ($comment->votes) ? ($comment->score / $comment->votes) : (($comment->score) ? $comment->score : 0);
-  return (strpos($value, ".")) ? substr($value ."00", 0, 4) : $value .".00";
-}
-
 function check_textfield($message) {
   global $allowed_html;
   return strip_tags(str_replace("\"", "&quot;", stripslashes($message)), $allowed_html);
@@ -40,21 +35,6 @@ function check_output($message, $nl2br = 0) {
   global $allowed_html;
   if ($nl2br == 1) return nl2br(strip_tags(stripslashes($message), $allowed_html));
   else return strip_tags(stripslashes($message), $allowed_html);
-}
-
-function discussion_num_replies($id, $count = 0) {
-  $result = db_query("SELECT COUNT(cid) FROM comments WHERE pid = $id");
-  return ($result) ? db_result($result, 0) : 0;
-}
-
-function discussion_num_filtered($sid, $pid) {
-  global $user;
-
-  $threshold = ($user->id) ? $user->threshold  : "0"; 
-  $pid = ($pid) ? $pid : 0;
-
-  $result = db_query("SELECT COUNT(cid) FROM comments WHERE sid = $sid AND pid = $pid AND (votes != 0 AND score / votes < $threshold)");
-  return ($result) ? db_result($result, 0) : 0;
 }
 
 function format_plural($count, $singular, $plural) {

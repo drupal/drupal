@@ -22,9 +22,9 @@ function story_help() {
 }
 
 function story_block() {
-  $result = db_query("SELECT s.id, COUNT(s.id) AS comments, s.subject FROM stories s LEFT JOIN comments c ON s.id = c.sid WHERE s.status = 2 GROUP BY s.id ORDER BY comments DESC LIMIT 10");
+  $result = db_query("SELECT s.id, COUNT(s.id) AS comments, s.subject FROM stories s LEFT JOIN comments c ON s.id = c.lid WHERE s.status = 2 AND c.link = 'link' GROUP BY s.id ORDER BY comments DESC LIMIT 10");
   while ($story = db_fetch_object($result)) {
-    $content .= "<LI><A HREF=\"discussion.php?id=$story->id\">$story->subject</A><BR><SMALL>(". format_plural($story->comments, "comment", "comments") .")</SMALL></LI>\n";
+    $content .= "<LI><A HREF=\"story.php?id=$story->id\">$story->subject</A><BR><SMALL>(". format_plural($story->comments, "comment", "comments") .")</SMALL></LI>\n";
   }
 
   $blocks[0]["subject"] = "Top 10:<BR>all stories";
@@ -33,9 +33,9 @@ function story_block() {
 
   unset($content);
 
-  $result = db_query("SELECT s.id, COUNT(s.id) AS comments, s.subject FROM stories s LEFT JOIN comments c ON s.id = c.sid WHERE s.status = 2 AND ". time() ." - s.timestamp < 2419200 GROUP BY s.id ORDER BY comments DESC LIMIT 10");
+  $result = db_query("SELECT s.id, COUNT(s.id) AS comments, s.subject FROM stories s LEFT JOIN comments c ON s.id = c.lid WHERE s.status = 2 AND c.link = 'story' AND ". time() ." - s.timestamp < 2419200 GROUP BY s.id ORDER BY comments DESC LIMIT 10");
   while ($story = db_fetch_object($result)) {
-    $content .= "<LI><A HREF=\"discussion.php?id=$story->id\">$story->subject</A><BR><SMALL>(". format_plural($story->comments, "comment", "comments") .")</SMALL></LI>\n";
+    $content .= "<LI><A HREF=\"story.php?id=$story->id\">$story->subject</A><BR><SMALL>(". format_plural($story->comments, "comment", "comments") .")</SMALL></LI>\n";
   }
 
   $blocks[1]["subject"] = "Top 10:<BR>recent stories";
@@ -175,28 +175,28 @@ function story_display() {
   $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON u.id = s.author WHERE s.status = 1 ORDER BY timestamp DESC");
   $output .= " <TR><TH COLSPAN=\"4\">queued stories</TH></TR>\n";
   while ($story = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"discussion.php?id=$story->id\">". check_output($story->subject) ."</A></TD><TD>". format_username($story->userid, 1) ."</TD><TD>votes: $story->votes, score: $story->score</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=edit&id=$story->id\">edit</A></TD></TR>\n";
+    $output .= " <TR><TD><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A></TD><TD>". format_username($story->userid, 1) ."</TD><TD>votes: $story->votes, score: $story->score</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=edit&id=$story->id\">edit</A></TD></TR>\n";
   }
 
   // Scheduled stories:
   $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON u.id = s.author WHERE s.status = 3 ORDER BY timestamp");
   $output .= " <TR><TH COLSPAN=\"4\">scheduled stories</TH></TR>\n";
   while ($story = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"discussion.php?id=$story->id\">". check_output($story->subject) ."</A></TD><TD>". format_username($story->userid, 1) ."</TD><TD>". date("D, m/d/Y H:i", $story->timestamp) ." - ". format_interval($story->timestamp - time()) ." left</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=edit&id=$story->id\">edit</A></TD></TR>\n";
+    $output .= " <TR><TD><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A></TD><TD>". format_username($story->userid, 1) ."</TD><TD>". date("D, m/d/Y H:i", $story->timestamp) ." - ". format_interval($story->timestamp - time()) ." left</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=edit&id=$story->id\">edit</A></TD></TR>\n";
   }
 
   // Dumped stories:
   $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON u.id = s.author WHERE s.status = 0 ORDER BY timestamp DESC LIMIT 5");
   $output .= " <TR><TH COLSPAN=\"4\">dumped stories</TTH></TR>\n";
   while ($story = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"discussion.php?id=$story->id\">". check_output($story->subject) ."</A></TD><TD>". format_username($story->userid, 1) ."</TD><TD>$story->category</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=edit&id=$story->id\">edit</A></TD></TR>\n";
+    $output .= " <TR><TD><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A></TD><TD>". format_username($story->userid, 1) ."</TD><TD>$story->category</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=edit&id=$story->id\">edit</A></TD></TR>\n";
   }
 
   // Posted stories:
   $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON u.id = s.author WHERE s.status = 2 ORDER BY timestamp DESC LIMIT 15");
   $output .= " <TR><TH COLSPAN=\"4\">posted stories</TH></TR>\n";
   while ($story = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"discussion.php?id=$story->id\">". check_output($story->subject) ."</A></TD><TD>". format_username($story->userid, 1) ."</TD><TD>$story->category</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=edit&id=$story->id\">edit</A></TD></TR>\n";
+    $output .= " <TR><TD><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A></TD><TD>". format_username($story->userid, 1) ."</TD><TD>$story->category</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=edit&id=$story->id\">edit</A></TD></TR>\n";
   }
  
   $output .= "</TABLE>\n";

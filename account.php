@@ -136,45 +136,39 @@ function account_user_save($edit) {
 }
 
 function account_site_edit() {
-  global $theme, $themes, $user;
+  global $cmodes, $corder, $theme, $themes, $user;
 
   if ($user->id) {
     $output .= "<FORM ACTION=\"account.php\" METHOD=\"post\">\n";
     $output .= "<B>Theme:</B><BR>\n";
-
     foreach ($themes as $key=>$value) { 
       $options1 .= " <OPTION VALUE=\"$key\"". (($user->theme == $key) ? " SELECTED" : "") .">$key - $value[1]</OPTION>\n";
     }
-
     $output .= "<SELECT NAME=\"edit[theme]\">\n$options1</SELECT><BR>\n";
     $output .= "<I>Selecting a different theme will change the look and feel of the site.</I><P>\n";
     $output .= "<B>Timezone:</B><BR>\n";
-
     $date = time() - date("Z");
     for ($zone = -43200; $zone <= 46800; $zone += 3600) {
       $options2 .= " <OPTION VALUE=\"$zone\"". (($user->timezone == $zone) ? " SELECTED" : "") .">". date("l, F dS, Y - h:i A", $date + $zone) ." (GMT ". $zone / 3600 .")</OPTION>\n";
     }
-
     $output .= "<SELECT NAME=\"edit[timezone]\">\n$options2</SELECT><BR>\n";
     $output .= "<I>Select what time you currently have and your timezone settings will be set appropriate.</I><P>\n";
     $output .= "<B>Maximum number of stories:</B><BR>\n";
-    
     for ($stories = 10; $stories <= 30; $stories += 5) {
       $options3 .= "<OPTION VALUE=\"$stories\"". (($user->stories == $stories) ? " SELECTED" : "") .">$stories</OPTION>\n";
     }
-
     $output .= "<SELECT NAME=\"edit[stories]\">\n$options3</SELECT><BR>\n";
     $output .= "<I>The maximum number of stories that will be displayed on the main page.</I><P>\n";
-    $options  = "<OPTION VALUE=\"nested\"". ($user->mode == "nested" ? " SELECTED" : "") .">Nested</OPTION>";
-    $options .= "<OPTION VALUE=\"flat\"". ($user->mode == "flat" ? " SELECTED" : "") .">Flat</OPTION>";
-    $options .= "<OPTION VALUE=\"threaded\"". ($user->mode == "threaded" ? " SELECTED" : "") .">Threaded</OPTION>";
+    foreach ($cmodes as $key=>$value) {
+      $options4 .= "<OPTION VALUE=\"$key\"". ($user->mode == $key ? " SELECTED" : "") .">$value</OPTION>\n";
+    }
     $output .= "<B>Comment display mode:</B><BR>\n";
-    $output .= "<SELECT NAME=\"edit[mode]\">$options</SELECT><P>\n";
-    $options  = "<OPTION VALUE=\"0\"". ($user->sort == 0 ? " SELECTED" : "") .">Oldest first</OPTION>";
-    $options .= "<OPTION VALUE=\"1\"". ($user->sort == 1 ? " SELECTED" : "") .">Newest first</OPTION>";
-    $options .= "<OPTION VALUE=\"2\"". ($user->sort == 2 ? " SELECTED" : "") .">Highest scoring first</OPTION>";
+    $output .= "<SELECT NAME=\"edit[mode]\">$options4</SELECT><P>\n";
+    foreach ($corder as $key=>$value) {
+      $options5 .= "<OPTION VALUE=\"$key\"". ($user->sort == $key ? " SELECTED" : "") .">$value</OPTION>\n";
+    }
     $output .= "<B>Comment sort order:</B><BR>\n";
-    $output .= "<SELECT NAME=\"edit[sort]\">$options</SELECT><P>\n";
+    $output .= "<SELECT NAME=\"edit[sort]\">$options5</SELECT><P>\n";
     $options  = "<OPTION VALUE=\"-1\"". ($user->threshold == -1 ? " SELECTED" : "") .">-1: Display uncut and raw comments.</OPTION>";
     $options .= "<OPTION VALUE=\"0\"". ($user->threshold == 0 ? " SELECTED" : "") .">0: Display almost all comments.</OPTION>";
     $options .= "<OPTION VALUE=\"1\"". ($user->threshold == 1 ? " SELECTED" : "") .">1: Display almost no anonymous comments.</OPTION>";
@@ -185,8 +179,6 @@ function account_site_edit() {
     $output .= "<B>Comment threshold:</B><BR>\n";
     $output .= "<SELECT NAME=\"edit[threshold]\">$options</SELECT><BR>\n";
     $output .= "<I>Comments that scored less than this setting will be ignored. Anonymous comments start at 0, comments of people logged on start at 1 and moderators can add and subtract points.</I><P>\n";
-
-
     $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save site settings\"><BR>\n";
     $output .= "</FORM>\n";
 
@@ -289,12 +281,12 @@ function account_user($uname) {
     $block1 .= " <TR><TD ALIGN=\"right\"><B>Bio:</B></TD><TD>". format_data($account->bio) ."</TD></TR>\n";
     $block1 .= "</TABLE>\n";
 
-    $result = db_query("SELECT c.cid, c.pid, c.sid, c.subject, c.timestamp, s.subject AS story FROM comments c LEFT JOIN users u ON u.id = c.author LEFT JOIN stories s ON s.id = c.sid WHERE u.userid = '$uname' AND s.status = 2 AND s.timestamp > ". (time() - 1209600) ." ORDER BY cid DESC LIMIT 10");
+    $result = db_query("SELECT c.cid, c.pid, c.lid, c.subject, c.timestamp, s.subject AS story FROM comments c LEFT JOIN users u ON u.id = c.author LEFT JOIN stories s ON s.id = c.lid WHERE u.userid = '$uname' AND s.status = 2 c.link = 'story' AND s.timestamp > ". (time() - 1209600) ." ORDER BY cid DESC LIMIT 10");
     while ($comment = db_fetch_object($result)) {
       $block2 .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
-      $block2 .= " <TR><TD ALIGN=\"right\"><B>Comment:</B></TD><TD><A HREF=\"discussion.php?id=$comment->sid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A></TD></TR>\n";
+      $block2 .= " <TR><TD ALIGN=\"right\"><B>Comment:</B></TD><TD><A HREF=\"story.php?id=$comment->lid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A></TD></TR>\n";
       $block2 .= " <TR><TD ALIGN=\"right\"><B>Date:</B></TD><TD>". format_date($comment->timestamp) ."</TD></TR>\n";
-      $block2 .= " <TR><TD ALIGN=\"right\"><B>Story:</B></TD><TD><A HREF=\"discussion.php?id=$comment->sid\">". check_output($comment->story) ."</A></TD></TR>\n";
+      $block2 .= " <TR><TD ALIGN=\"right\"><B>Story:</B></TD><TD><A HREF=\"story.php?id=$comment->lid\">". check_output($comment->story) ."</A></TD></TR>\n";
       $block2 .= "</TABLE>\n";
       $block2 .= "<P>\n";
       $comments++;
@@ -441,15 +433,15 @@ function account_track_comments() {
 
   $msg = "<P>This page might be helpful in case you want to keep track of your recent comments in any of the current discussions.  You are presented an overview of your comments in each of the stories you participated in along with the number of replies each comment got.\n<P>\n"; 
 
-  $sresult = db_query("SELECT s.id, s.subject, COUNT(s.id) as count FROM comments c LEFT JOIN stories s ON c.sid = s.id WHERE c.author = $user->id GROUP BY s.id DESC LIMIT 5");
+  $sresult = db_query("SELECT s.id, s.subject, COUNT(s.id) as count FROM comments c LEFT JOIN stories s ON c.lid = s.id WHERE c.author = $user->id GROUP BY s.id DESC LIMIT 5");
   
   while ($story = db_fetch_object($sresult)) {
-    $output .= "<LI>". format_plural($story->count, comment, comments) ." attached to story `<A HREF=\"discussion.php?id=$story->id\">". check_output($story->subject) ."</A>`:</LI>\n";
+    $output .= "<LI>". format_plural($story->count, comment, comments) ." attached to story `<A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A>`:</LI>\n";
     $output .= " <UL>\n";
    
-    $cresult = db_query("SELECT * FROM comments WHERE author = $user->id AND sid = $story->id");
+    $cresult = db_query("SELECT * FROM comments WHERE author = $user->id AND lid = $story->id");
     while ($comment = db_fetch_object($cresult)) {
-      $output .= "  <LI><A HREF=\"discussion.php?id=$story->id&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A> - replies: ". discussion_num_replies($comment->cid) ." - score: ". discussion_score($comment) ."</LI>\n";
+      $output .= "  <LI><A HREF=\"story.php?id=$story->id&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A> - replies: ". comment_num_replies($comment->cid) ." - score: ". comment_score($comment) ."</LI>\n";
     }
     $output .= " </UL>\n";
   }
@@ -466,11 +458,11 @@ function account_track_stories() {
 
   $msg = "<P>This page might be helpful in case you want to keep track of the stories you contributed.  You are presented an overview of your stories along with the number of replies each story got.\n<P>\n"; 
 
-  $result = db_query("SELECT s.id, s.subject, s.timestamp, s.category, COUNT(c.cid) as count FROM stories s LEFT JOIN comments c ON c.sid = s.id WHERE s.status = 2 AND s.author = $user->id GROUP BY s.id DESC");
+  $result = db_query("SELECT s.id, s.subject, s.timestamp, s.category, COUNT(c.cid) as count FROM stories s LEFT JOIN comments c ON c.lid = s.id WHERE s.status = 2 AND s.author = $user->id GROUP BY s.id DESC");
   
   while ($story = db_fetch_object($result)) {
     $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Subject:</B></TD><TD><A HREF=\"discussion.php?id=$story->id\">". check_output($story->subject) ."</A> (". format_plural($story->count, "comment", "comments") .")</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Subject:</B></TD><TD><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A> (". format_plural($story->count, "comment", "comments") .")</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Category:</B></TD><TD><A HREF=\"search.php?category=". urlencode($story->category) ."\">". check_output($story->category) ."</A></TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Date:</B></TD><TD>". format_date($story->timestamp) ."</TD></TR>\n";
     $output .= "</TABLE>\n";
@@ -485,13 +477,13 @@ function account_track_stories() {
 function account_track_site() {
   global $theme, $user, $site_name;
 
-  $result1 = db_query("SELECT c.cid, c.pid, c.sid, c.subject, u.userid, s.subject AS story FROM comments c LEFT JOIN users u ON u.id = c.author LEFT JOIN stories s ON s.id = c.sid WHERE s.status = 2 ORDER BY cid DESC LIMIT 10");
+  $result1 = db_query("SELECT c.cid, c.pid, c.lid, c.subject, u.userid, s.subject AS story FROM comments c LEFT JOIN users u ON u.id = c.author LEFT JOIN stories s ON s.id = c.lid WHERE s.status = 2 ORDER BY cid DESC LIMIT 10");
 
   while ($comment = db_fetch_object($result1)) {
     $block1 .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
-    $block1 .= " <TR><TD ALIGN=\"right\"><B>Comment:</B></TD><TD><A HREF=\"discussion.php?id=$comment->sid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A></TD></TR>\n";
+    $block1 .= " <TR><TD ALIGN=\"right\"><B>Comment:</B></TD><TD><A HREF=\"story.php?id=$comment->lid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A></TD></TR>\n";
     $block1 .= " <TR><TD ALIGN=\"right\"><B>Author:</B></TD><TD>". format_username($comment->userid) ."</TD></TR>\n";
-    $block1 .= " <TR><TD ALIGN=\"right\"><B>Story:</B></TD><TD><A HREF=\"discussion.php?id=$comment->sid\">". check_output($comment->story) ."</A></TD></TR>\n";
+    $block1 .= " <TR><TD ALIGN=\"right\"><B>Story:</B></TD><TD><A HREF=\"story.php?id=$comment->lid\">". check_output($comment->story) ."</A></TD></TR>\n";
     $block1 .= "</TABLE>\n";
     $block1 .= "<P>\n";
   }

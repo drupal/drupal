@@ -207,7 +207,7 @@ function headline_export($uri) {
     while ($story = db_fetch_object($result)) {
       print "<item>\n";
       print " <title>$story->subject</title>\n";
-      print " <link>". $site_url ."discussion.php?id=$story->id</link>\n";
+      print " <link>". $site_url ."story.php?id=$story->id</link>\n";
       print "</item>\n";
     }
 
