@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.253 2003/10/07 10:22:33 kjartan Exp $
+// $Id: common.inc,v 1.254 2003/10/09 17:22:22 dries Exp $
 
 function conf_init() {
 
@@ -29,17 +29,25 @@ function conf_init() {
  * Build the alias/path array
  */
 function drupal_get_path_map($action = "") {
+
+  static $cache;
   static $map;
 
   if ($action == "rebuild") {
     $map = NULL;
+    $cache = 0;
   }
 
-  if (empty($map)) {
-    $result = db_query("SELECT * FROM {path}");
+  if (!$cache) {
+    if (!$result) {
+      $result = db_query("SELECT * FROM {path}");
+    }
+
     while ($data = db_fetch_object($result)) {
       $map[$data->dst] = $data->src;
     }
+
+    $cache = 1;
   }
 
   return $map;
