@@ -1,32 +1,19 @@
 <?php
 // $Id$
 
-function tracker_help($section = "admin/help#tracker") {
-  $output = "";
-
+function tracker_help($section = 'admin/help#tracker') {
   switch ($section) {
     case 'admin/help#tracer':
-      $output =  t("<p>The tracker module is a handy module for displaying the most recent posts.  By following the <i>recent posts</i> link in the user block, a user may quickly review all recent postings.</p>");
-      break;
+      return t('<p>The tracker module is a handy module for displaying the most recent posts.  By following the <i>recent posts</i> link in the user block, a user may quickly review all recent postings.</p>');
     case 'admin/system/modules#description':
-      $output = t("Enables tracking of recent posts for users.");
-      break;
+      return t('Enables tracking of recent posts for users.');
   }
-
-  return $output;
 }
 
 function tracker_link($type) {
-
-  $links = array();
-
-  if ($type == "system") {
-    if (user_access("access content")) {
-      menu("tracker", t("recent posts"), "tracker_page", 1);
-    }
+  if ($type == 'system' && user_access('access content')) {
+    menu('tracker', t('recent posts'), 'tracker_page', 1);
   }
-
-  return $links;
 }
 
 function tracker_posts($id = 0) {
@@ -37,23 +24,24 @@ function tracker_posts($id = 0) {
     array("data" => t("author"), "field" => "u.name"),
     array("data" => t("last post"), "field" => "last_activity", "sort" => "desc")
   );
-  if ($id) {
 
+  if ($id) {
     $sql = "SELECT n.nid, n.title, n.type, n.changed, n.uid, u.name, MAX(GREATEST(n.changed, c.timestamp)) AS last_activity FROM {node} n LEFT JOIN {comments} c ON n.nid = c.nid INNER JOIN {users} u ON n.uid = u.uid WHERE n.uid = '". check_query($id) ."' AND n.status = 1 GROUP BY n.nid, n.title, n.type, n.changed, n.uid, u.name";
     $sql .= tablesort_sql($header);
     $sresult = pager_query($sql, 10, 0, "SELECT COUNT(nid) FROM {node} WHERE status = 1 AND uid = '". check_query($id) ."'");
 
   }
   else {
-
     $sql = "SELECT n.nid, n.title, n.type, n.changed, n.uid, u.name, MAX(GREATEST(n.changed, c.timestamp)) AS last_activity FROM {node} n LEFT JOIN {comments} c ON n.nid = c.nid INNER JOIN {users} u ON n.uid = u.uid WHERE n.status = 1 GROUP BY n.nid, n.title, n.type, n.changed, n.uid, u.name";
     $sql .= tablesort_sql($header);
     $sresult = pager_query($sql, 10, 0, "SELECT COUNT(nid) FROM {node} WHERE status = 1");
-
   }
 
   while ($node = db_fetch_object($sresult)) {
-    if ($id) {
+    if (node_hook($node, 'tracker_comments')) {
+      $cresult = node_invoke($node, 'tracker_comments');
+    }
+    elseif ($id) {
       $cresult = db_query("SELECT c.*, u.name FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.uid = %d AND c.nid = %d AND c.status = 0 ORDER BY c.cid DESC", $id, $node->nid);
     }
     else {
