@@ -494,6 +494,7 @@ function update_31() {
 function update_32() {
   update_sql("ALTER TABLE users ADD index (sid(4))");
   update_sql("ALTER TABLE users ADD index (timestamp)");
+  update_sql("ALTER TABLE users ADD UNIQUE KEY name (name)");
 }
 
 function update_33() {
