@@ -3,8 +3,10 @@ Drupal x.x.x, xxxx-xx-xx
 
 - search:
     * added UTF-8 support to make it work with all languages.
-    * improved search indexing.
+    * improved search indexing algorithm.
     * improved search output.
+    * impose a throttle on indexing of large sites.
+    * added search block.
 - syndication:
     * made the ping module ping pingomatic.com which, in turn, will ping all the major ping services.
     * added categories to RSS feeds.
