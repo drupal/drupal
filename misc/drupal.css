@@ -89,13 +89,6 @@ td.menu-disabled {
 }
 
 /*
-** CSS capitalization
-*/
-.title:first-letter,
-.messages:first-letter,
-.messages li:first-letter { text-transform: uppercase; }
-
-/*
 ** Other common styles
 */
 .breadcrumb {
