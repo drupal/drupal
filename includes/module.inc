@@ -1,10 +1,19 @@
 <?php
-// $Id: module.inc,v 1.62 2004/11/25 06:14:59 dries Exp $
+// $Id: module.inc,v 1.63 2004/12/01 22:16:50 dries Exp $
 
 /**
  * @file
  * API for loading and interacting with Drupal modules.
  */
+
+/**
+ * Initialize all modules.
+ *
+ */
+function module_init() {
+  module_load_all();
+  module_invoke_all('init');
+}
 
 /**
  * Call a function repeatedly with each module in turn as an argument.
