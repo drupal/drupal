@@ -1,5 +1,5 @@
 <?php
-/* $Id: updates.inc,v 1.60 2004/09/15 20:34:34 unconed Exp $ */
+/* $Id: updates.inc,v 1.61 2004/09/19 13:28:11 dries Exp $ */
 
 /**
  * @file
@@ -82,7 +82,8 @@ $sql_updates = array(
   "2004-08-17" => "update_103",
   "2004-08-19" => "update_104",
   "2004-09-14" => "update_105",
-  "2004-09-15" => "update_106"
+  "2004-09-15" => "update_106",
+  "2004-09-17" => "update_107"
 );
 
 function update_32() {
@@ -1809,6 +1810,18 @@ function update_106() {
   }
 
   $ret[] = update_sql('DELETE FROM {cache}');
+  return $ret;
+}
+
+function update_107() {
+  $ret = array();
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql('ALTER TABLE {profile_fields} ADD register TINYINT(1) DEFAULT 0 NOT NULL AFTER required');
+  }
+  else if ($GLOBALS['db_type'] == 'pgsql') {
+    $ret[] = update_sql('ALTER TABLE {profile_fields} ADD register smallint');
+  }
+
   return $ret;
 }
 
