@@ -930,7 +930,7 @@ function comment_mod_votes($edit) {
   }
 
   $output .= "<h3>Add new moderation option</h3>";
-  $form .= form_textfield(t("Vote"), "vote", $vote->vote, 32, 64, t("The name of this vote.  Example: 'offtopic', 'excellent', 'sucky'."));
+  $form .= form_textfield(t("Vote"), "vote", $vote->vote, 32, 64, t("The name of this vote.  Example: 'off topic', 'excellent', 'sucky'."));
   $form .= form_textfield(t("Weight"), "weight", $vote->weight, 32, 64, t("Used to order votes in the comment control box; heavier sink."));
   if ($mid) {
     $form .= form_submit(t("Save vote"));
