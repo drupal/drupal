@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.444 2005/02/28 16:41:15 dries Exp $
+// $Id: user.module,v 1.445 2005/02/28 18:13:12 unconed Exp $
 
 /**
  * @file
@@ -135,6 +135,11 @@ function user_save($account, $array = array(), $category = 'account') {
       foreach (array_keys($array['roles']) as $rid) {
         db_query('INSERT INTO {users_roles} (uid, rid) VALUES (%d, %d)', $account->uid, $rid);
       }
+    }
+
+    // Delete a blocked user's sessions to kick them if they are online.
+    if ($user->status == 0) {
+      db_query('DELETE FROM {sessions} WHERE uid = %d', $user->uid);
     }
 
     // Refresh user object
