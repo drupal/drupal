@@ -80,7 +80,7 @@ function module_list($refresh = FALSE, $bootstrap = FALSE) {
  *   Filename of module, if no $path has been specified.
  */
 function module_set_filename($module, $path = null) {
-  static $list;
+  static $list = array();
 
   if ($path) {
     $list[$module] = $path;
