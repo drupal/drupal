@@ -622,7 +622,7 @@ function user_login($edit = array(), $msg = "") {
       ** Redirect the user to the page he logged on from.
       */
 
-      drupal_goto(check_url($edit["destination"]));
+      drupal_goto($edit["destination"]);
     }
     else {
       if (!$error) {

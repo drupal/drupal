@@ -414,6 +414,12 @@ function search_type($type = 0, $action = 0, $query = 0, $options = 0) {
 function drupal_goto($url) {
 
   /*
+  ** Check the URL to prevent XSS attacks:
+  */
+
+  $url = check_url($url);
+
+  /*
   ** Translate &amp; to simply &
   */
 
