@@ -1,5 +1,5 @@
 <?php
-// $Id: queue.module,v 1.36 2001/11/17 22:22:18 dries Exp $
+// $Id: queue.module,v 1.37 2001/11/18 20:47:53 dries Exp $
 
 function queue_conf_options() {
 
@@ -90,7 +90,7 @@ function queue_overview() {
     }
 
     if ($node->teaser) {
-      $output .= " <tr><td colspan=\"4\"><div style=\"margin-left: 40px; margin-bottom: 20px; font-size: 10px;\">$node->teaser</div></td></tr>";
+      $output .= " <tr><td colspan=\"4\"><div style=\"margin-left: 40px; margin-bottom: 20px; font-size: 10px;\">". check_output($node->teaser, 1) ."</div></td></tr>";
     }
   }
   $output .= "</table>";
