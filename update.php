@@ -39,6 +39,7 @@ $mysql_updates = array(
   "2001-12-06" => "update_12",
   "2001-12-09" => "update_13",
   "2001-12-16" => "update_14",
+  "2001-12-24" => "update_15",
 );
 
 // Update functions
@@ -284,6 +285,10 @@ function update_14() {
     timestamp int(11) DEFAULT '0' NOT NULL,
     PRIMARY KEY (link)
   );");
+}
+
+function update_15() {
+  update_sql("ALTER TABLE feed DROP uncache;");
 }
 
 // System functions
