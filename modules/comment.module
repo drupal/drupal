@@ -904,7 +904,7 @@ function comment_admin_edit($id) {
     $form .= form_item(t("Author"), format_name($comment));
     $form .= form_textfield(t("Subject"), "subject", $comment->subject, 70, 128);
     $form .= form_textarea(t("Comment"), "comment", $comment->comment, 70, 15, filter_tips_short());
-    $form .= form_radios(t("Status"), "status", $comment->status, array("published", "not published"));
+    $form .= form_radios(t("Status"), "status", $comment->status, array(t("published"), t("not published")));
     $form .= form_hidden("cid", $id);
     $form .= form_submit(t("Submit"));
 
