@@ -1505,7 +1505,7 @@ function node_page_default() {
   $result = pager_query('SELECT nid, type FROM {node} WHERE promote = 1 AND status = 1 ORDER BY static DESC, created DESC', variable_get('default_nodes_main', 10));
 
   if (db_num_rows($result)) {
-    drupal_set_html_head('<link rel="alternate" type="application/rss+xml" title="RSS" href="'. url('node/feed') .'" />');
+    drupal_set_html_head('<link rel="alternate" type="application/rss+xml" title="RSS" href="'. url('node/feed', NULL, NULL, TRUE) .'" />');
 
     $output = '';
     while ($node = db_fetch_object($result)) {
