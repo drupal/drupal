@@ -23,7 +23,7 @@ function admin_page($mod) {
     h1   { font-size: 18pt; font-weight: bold; color: #990000; }
     h2   { font-family: helvetica, arial; font-size: 18pt; font-weight: bold; }
     h3   { font-family: helvetica, arial; font-size: 14pt; font-weight: bold; }
-    th   { font-family: helvetica, arial; text-align: center; background-color: #CCCCCC; color: #995555; }
+    th   { font-family: helvetica, arial; text-align: center; vertical-align: top; background-color: #CCCCCC; color: #995555; }
     td   { font-family: helvetica, arial; }
    </STYLE>
    <BODY BGCOLOR="#FFFFFF" LINK="#005599" VLINK="#004499" ALINK="#FF0000">

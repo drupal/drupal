@@ -75,64 +75,12 @@ function account_search() {
 }
 
 function account_display($order = "username") {
-  $sort = array("ID" => "id", "fake e-mail address" => "fake_email", "hostname" => "last_host DESC", "last access date" => "last_access DESC", "real e-mail address" => "real_email", "real name" => "name", "rating" => "rating DESC", "status" => "status", "theme" => "theme", "timezone" => "timezone DESC", "username" => "userid");
-  $show = array("ID" => "id", "username" => "userid", "$order" => "$sort[$order]", "homepage" => "url");
-  $stat = array(0 => "blocked", 1 => "not confirmed", 2 => "open");
-  $perm = array(0 => "regular user", 1 => "administrator");
+  $result = db_query("SELECT id, userid, last_access FROM users ORDER BY last_access DESC LIMIT 50");
 
-  // Perform query:
-  $result = db_query("SELECT u.id, u.userid, u.". strtok($sort[$order], " ") .", u.url FROM users u ORDER BY $sort[$order]");
-
-  // Generate output:
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR>\n";
-  $output .= "  <TH ALIGN=\"right\" COLSPAN=\"". (sizeof($show) + 2) ."\">\n";
-  $output .= "   <FORM ACTION=\"admin.php?mod=account\" METHOD=\"post\">\n";
-  $output .= "    <SELECT NAME=\"order\">\n";
-  foreach ($sort as $key=>$value) {
-    $output .= "     <OPTION VALUE=\"$key\"". ($key == $order ? " SELECTED" : "") .">Sort by $key</OPTION>\n";
-  }
-  $output .= "    </SELECT>\n";
-  $output .= "    <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Update\">\n";
-  $output .= "   </FORM>\n";
-  $output .= "  </TH>\n";
-  $output .= " </TR>\n";
-  $output .= " <TR>\n";
-
-  foreach ($show as $key=>$value) {
-    $output .= " <TH>$key</TH>\n";
-  }
-  $output .= "  <TH COLSPAN=\"2\">operations</TH>\n";
-  $output .= " </TR>\n";
-
-  while ($account = db_fetch_array($result)) {
-    $output .= " <TR>\n";
-    foreach ($show as $key=>$value) {
-      switch($value = strtok($value, " ")) {
-        case "real_email":
-          $output .= "  <TD>". format_email($account[$value]) ."</TD>\n";
-          break;
-        case "last_access":
-          $output .= "  <TD>". format_interval(time() - $account[$value]) ." ago</TD>\n";
-          break;
-        case "status":
-          $output .= "  <TD ALIGN=\"center\">". $stat[$account[$value]] ."</TD>\n";
-          break;
-        case "timezone":
-          $output .= "  <TD ALIGN=\"center\">". check_output($account[$value] / 3600) ."</TD>\n";
-          break;
-        case "url":
-          $output .= "  <TD>". format_url($account[$value]) ."</TD>\n";
-          break;
-        case "userid":
-          $output .= "  <TD>". format_username($account[$value]) ."</TD>\n";
-          break;
-        default:
-          $output .= "  <TD>". check_output($account[$value]) ."</TD>\n";
-      }
-    }
-    $output .= "  <TD ALIGN=\"center\"><A HREF=\"admin.php?mod=account&op=view&name=$account[userid]\">view</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=account&op=edit&name=$account[userid]\">edit</A></TD>\n";
-    $output .= " </TR>\n";
+  $output .= " <TR><TH>username</TH><TH>last access</TH><TH COLSPAN=\"3\">operations</TH></TR>\n";
+  while ($account = db_fetch_object($result)) {
+    $output .= " <TR><TD>". format_username($account->userid) ."</TD><TD>". format_date($account->last_access) ."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=account&op=view&name=$account->userid\">view</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=account&op=edit&name=$account->userid\">edit</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=account&op=delete&name=$account->userid\">delete</A></TD></TR>\n";
   }
   $output .= "</TABLE>\n";
 
@@ -143,7 +91,7 @@ function account_access($account) {
   $data = explode(";", $account->access);
   foreach ($data as $array) {
     $access = explode(":", $array);
-    if ($access[0]) $output .= " <A HREF=\"admin.php?mod=$access[0]\">$access[0]</A>";
+    if ($access[0]) $output .= " $access[0]";
   }
   return $output;
 }
@@ -172,10 +120,20 @@ function account_comments($id) {
   return $output;
 }
 
+function account_delete($name) {
+  $result = db_query("SELECT * FROM users WHERE userid = '$name' AND status = 0 AND id > 1");
+  if ($account = db_fetch_object($result)) {
+    db_query("DELETE FROM users WHERE id = $account->id");
+  }
+  else {
+    print "<P>Failed to delete account '". format_username($name) ."': the account must be blocked first.</P>";
+  }
+}
+
 function account_edit_save($name, $edit) {
   foreach ($edit as $key=>$value) if ($key != "access") $query .= "$key = '". addslashes($value) ."', ";
-  db_query("UPDATE users SET $query last_access = '". time() ."' WHERE userid = '$name'");
-  foreach ($edit["access"] as $key=>$value) user_set(user_load($name), "access", $value, 1);
+  db_query("UPDATE users SET $query access = '' WHERE userid = '$name'");
+  if ($edit["access"]) foreach ($edit["access"] as $key=>$value) user_set(user_load($name), "access", $value, 1);
 
   watchdog("message", "account: modified user '$name'");
 }
@@ -196,32 +154,23 @@ function account_edit($name) {
     foreach ($status as $key=>$value) {
       $stat .= " <OPTION VALUE=\"$key\"". (($account->status == $key) ? " SELECTED" : "") .">$value</OPTION>\n";
     }
-    $stat = "<SELECT NAME=\"edit[status]\">\n$stat</SELECT>\n";
 
     module_iterate("access");
 
     $output .= "<FORM ACTION=\"admin.php?mod=account\" METHOD=\"post\">\n";
-    $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>ID:</B></TD><TD>$account->id</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Status:</B></TD><TD>$stat</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Access:</B></TD><TD><SELECT NAME=\"edit[access][]\" MULTIPLE=\"true\" SIZE=\"10\">$access</SELECT></TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Username:</B></TD><TD>$account->userid</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Real name:</B></TD><TD>". check_output($account->name) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Real e-mail address:</B></TD><TD>". format_email($account->real_email) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Fake e-mail address:</B></TD><TD><INPUT NAME=\"edit[fake_email]\" SIZE=\"55\" VALUE=\"$account->fake_email\"></TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>URL of homepage:</B></TD><TD><INPUT NAME=\"edit[url]\" SIZE=\"55\" VALUE=\"$account->url\"></TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Last access:</B></TD><TD>". format_date($account->last_access) ." from ". check_output($account->last_host) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>User rating:</B></TD><TD>". check_output($account->rating) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Bio information:</B></TD><TD><TEXTAREA NAME=\"edit[bio]\" COLS=\"35\" ROWS=\"5\" WRAP=\"virtual\">$account->bio</TEXTAREA></TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Signature:</B></TD><TD><TEXTAREA NAME=\"edit[signature]\" COLS=\"35\" ROWS=\"5\" WRAP=\"virtual\">$account->signature</TEXTAREA></TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Theme:</B></TD><TD>". check_output($account->theme) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Timezone:</B></TD><TD>". check_output($account->timezone / 3600) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Selected blocks:</B></TD><TD>". check_output(account_blocks($account->id)) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Submitted stories:</B></TD><TD>". check_output(account_stories($account->id)) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Submitted comments:</B></TD><TD>". check_output(account_comments($account->id)) ."</TD></TR>\n";
-    $output .= "</TABLE>\n";
-    $output .= "<INPUT NAME=\"name\" TYPE=\"hidden\" VALUE=\"$account->userid\">\n";
-    $output .= "<INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"Save account\">\n";
+    $output .= "<B>ID:</B><BR>$account->id<P>\n";
+    $output .= "<B>Username:</B><BR>". check_output($account->userid) ."<P>\n";
+    $output .= "<B>Status:</B><BR><SELECT NAME=\"edit[status]\">\n$stat</SELECT><P>\n";
+    $output .= "<B>Administrator access:</B><BR><SELECT NAME=\"edit[access][]\" MULTIPLE=\"true\" SIZE=\"10\">$access</SELECT><P>\n";
+    $output .= "<B>Real name:</B><BR><INPUT NAME=\"edit[name]\" SIZE=\"55\" VALUE=\"$account->real_name\"><P>\n";
+    $output .= "<B>Real e-mail address:</B><BR><INPUT NAME=\"edit[real_email]\" SIZE=\"55\" VALUE=\"$account->real_email\"><P>\n";
+    $output .= "<B>Fake e-mail address:</B><BR><INPUT NAME=\"edit[fake_email]\" SIZE=\"55\" VALUE=\"$account->fake_email\"><P>\n";
+    $output .= "<B>URL of homepage:</B><BR><INPUT NAME=\"edit[url]\" SIZE=\"55\" VALUE=\"$account->url\"><P>\n";
+    $output .= "<B>Bio information:</B><BR><TEXTAREA NAME=\"edit[bio]\" COLS=\"35\" ROWS=\"5\" WRAP=\"virtual\">$account->bio</TEXTAREA><P>\n";
+    $output .= "<B>Signature:</B><BR><TEXTAREA NAME=\"edit[signature]\" COLS=\"35\" ROWS=\"5\" WRAP=\"virtual\">$account->signature</TEXTAREA><P>\n";
+    $output .= "<INPUT TYPE=\"hidden\" NAME=\"name\" VALUE=\"$account->userid\">\n";
+    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"View account\">\n";
+    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save account\">\n";
     $output .= "</FORM>\n";
     print "$output";
   }
@@ -233,25 +182,28 @@ function account_view($name) {
   $result = db_query("SELECT * FROM users WHERE userid = '$name'");
 
   if ($account = db_fetch_object($result)) {
+    $output .= "<FORM ACTION=\"admin.php?mod=account\" METHOD=\"post\">\n";
     $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>ID:</B></TD><TD><A HREF=\"admin.php?mod=account&op=edit&name=$account->userid\">$account->id</A></TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Status:</B></TD><TD>". $status[$account->status] ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Access:</B></TD><TD>". check_output(account_access($account)) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Username:</B></TD><TD>$account->userid</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Real name:</B></TD><TD>". check_output($account->name) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Real e-mail address:</B></TD><TD>". format_email($account->real_email) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Fake e-mail address:</B></TD><TD>". check_output($account->fake_email) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>URL of homepage:</B></TD><TD>". format_url($account->url) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Last access:</B></TD><TD>". format_date($account->last_access) ." from ". check_output($account->last_host) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>User rating:</B></TD><TD>". check_output($account->rating) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Bio information:</B></TD><TD>". check_output($account->bio) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Signature:</B></TD><TD>". check_output($account->signature) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Theme:</B></TD><TD>". check_output($account->theme) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Timezone:</B></TD><TD>". check_output($account->timezone / 3600) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Selected blocks:</B></TD><TD>". check_output(account_blocks($account->id)) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Submitted stories:</B></TD><TD>". check_output(account_stories($account->id)) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Submitted comments:</B></TD><TD>". check_output(account_comments($account->id)) ."</TD></TR>\n";
+    $output .= " <TR><TH>ID:</TH><TD>$account->id</TD></TR>\n";
+    $output .= " <TR><TH>Username:</TH><TD>$account->userid</TD></TR>\n";
+    $output .= " <TR><TH>Status:</TH><TD>". $status[$account->status] ."</TD></TR>\n";
+    $output .= " <TR><TH>Access:</TH><TD>". check_output(account_access($account)) ."</TD></TR>\n";
+    $output .= " <TR><TH>Real name:</TH><TD>". check_output($account->name) ."</TD></TR>\n";
+    $output .= " <TR><TH>Real e-mail address:</TH><TD>". format_email($account->real_email) ."</TD></TR>\n";
+    $output .= " <TR><TH>Fake e-mail address:</TH><TD>". check_output($account->fake_email) ."</TD></TR>\n";
+    $output .= " <TR><TH>URL of homepage:</TH><TD>". format_url($account->url) ."</TD></TR>\n";
+    $output .= " <TR><TH>Last access:</TH><TD>". format_date($account->last_access) ." from ". check_output($account->last_host) ."</TD></TR>\n";
+    $output .= " <TR><TH>User rating:</TH><TD>". check_output($account->rating) ."</TD></TR>\n";
+    $output .= " <TR><TH>Bio information:</TH><TD>". check_output($account->bio) ."</TD></TR>\n";
+    $output .= " <TR><TH><B>Signature:</TH><TD>". check_output($account->signature) ."</TD></TR>\n";
+    $output .= " <TR><TH>Theme:</TH><TD>". check_output($account->theme) ."</TD></TR>\n";
+    $output .= " <TR><TH>Timezone:</TH><TD>". check_output($account->timezone / 3600) ."</TD></TR>\n";
+    $output .= " <TR><TH>Selected blocks:</TH><TD>". check_output(account_blocks($account->id)) ."</TD></TR>\n";
+    $output .= " <TR><TH>Submitted stories:</TH><TD>". check_output(account_stories($account->id)) ."</TD></TR>\n";
+    $output .= " <TR><TH>Submitted comments:</TH><TD>". check_output(account_comments($account->id)) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"2\"><INPUT TYPE=\"hidden\" NAME=\"name\" VALUE=\"$account->userid\"><INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Edit account\"><INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Delete account\"></TD></TR>\n";
     $output .= "</TABLE>\n";
+    $output .= "</FORM>\n";
     print "$output";
   }
 }
@@ -279,6 +231,12 @@ function account_admin() {
   print "<SMALL><A HREF=\"admin.php?mod=account\">overview</A> | <A HREF=\"admin.php?mod=account&op=search\">search account</A> | <A HREF=\"admin.php?mod=account&op=help\">help</A></SMALL><HR>\n";
 
   switch ($op) {
+    case "Delete account":
+    case "delete":
+      account_delete($name);
+      account_display();
+      break;
+    case "Edit account":
     case "edit":
       account_edit($name);
       break;
@@ -288,15 +246,13 @@ function account_admin() {
     case "search":
       account_search();
       break;
+    case "View account":
     case "view":
       account_view($name);
       break;
     case "Save account":
       account_edit_save($name, $edit);
       account_view($name);
-      break;
-    case "Update":
-      account_display($order);
       break;
     default:
       account_display();
