@@ -24,9 +24,6 @@
    var $fgcolor3 = "#000000";
    var $hlcolor3 = "yellow";
 
-   var $posted = array("Posted by: ","Added by: ","Typed by: ","Dropped by: ");
-
-
    ######
    # Syntax.......: header($title);
    # Description..: a function to draw the page header.
@@ -206,7 +203,7 @@
 					if ($number>0)
 					{					
            ?>
-           <BR><SMALL>There are at least <? echo format_plural($number, "comment", "comments"); ?> comments below your threshold.</SMALL>
+           <BR><SMALL>There are at least <? echo format_plural($number, "comment", "comments"); ?> below your threshold.</SMALL>
            <?
           }
 
