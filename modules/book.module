@@ -95,9 +95,11 @@ function book_form($edit = array()) {
   $output .= format_username(($edit[userid] ? $edit[userid] : $user->userid)) ."<P>\n";
 
   if ($edit[pid]) {
+    print "parent: $edit[parent]<BR>";
     $node = node_get_object("nid", $edit[pid]);
     $output .= "<B>". t("Parent") .":</B><BR>\n";
     $output .= "<A HREF=\"node.php?id=$node->id\">". check_output($node->title) ."</A><P>\n";
+    $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[parent]\" VALUE=\"$edit[parent]\">\n";
     $output .= "<SMALL><I>". t("The parent subject or category the new page belongs in.") ."</I></SMALL><P>\n";
   }
   else {
@@ -155,7 +157,7 @@ function book_form($edit = array()) {
 }
 
 function book_save($edit) {
-  node_save(array_diff(array_merge($edit, array(nid => $edit[nid], type => "book")), array(userid => $edit[userid])));
+  $id = node_save(array_diff(array_merge($edit, array(nid => $edit[nid], type => "book")), array(userid => $edit[userid])));
 }
 
 function book_delete($id) {
