@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.89 2003/12/17 22:27:23 dries Exp $
+// $Id: locale.module,v 1.90 2003/12/28 09:40:49 dries Exp $
 
 function locale_help($section = "admin/help#locale") {
   $output = "";
@@ -114,7 +114,11 @@ function locale_refresh_cache() {
   global $languages;
 
   foreach (array_keys($languages) as $locale) {
-    $result = db_query("SELECT string, %s FROM {locales} ", $locale);
+    /*
+    ** We only load short strings into the cache to improve both performance
+    ** and memory usages.
+    */
+    $result = db_query("SELECT string, %s FROM {locales} WHERE LENGTH(string) < 75", $locale);
     while ($data = db_fetch_object($result)) {
       if (empty($data->$locale)) {
         $t[$data->string] = $data->string;
@@ -344,12 +348,18 @@ function locale($string) {
     $locale_t = unserialize($cache->data);
   }
 
-  if (is_array($locale_t) && array_key_exists($string, $locale_t)) {
+  if (isset($locale_t[$string])) {
     $string = $locale_t[$string];
   }
   else {
     $result = db_query("SELECT lid, $locale FROM {locales} WHERE string = '%s'", $string);
-    if (!db_fetch_object($result)) {
+    if ($trans = db_fetch_object($result)) {
+      if (!empty($trans->$locale)) {
+        $locale_t[$string] = $trans->$locale;
+        $string = $trans->$locale;
+      }
+    }
+    else {
       db_query("INSERT INTO {locales} (string, location) VALUES ('%s', '%s')", $string, request_uri());
       cache_clear_all("locale:$locale");
     }
