@@ -1,5 +1,5 @@
 <?php
-// $Id: pager.inc,v 1.14 2003/05/23 21:33:24 dries Exp $
+// $Id: pager.inc,v 1.15 2003/06/03 18:04:44 dries Exp $
 
 /* ***************************************************
  *            external functions (API)
@@ -17,7 +17,7 @@
  * @return  string  html of pager
  */
 function pager_display($tags = "", $limit = 10, $element = 0, $type = "default", $attributes = array()) {
-  return theme("pager_display_". $type, $tags, $limit, $element, $attributes = array());
+  return theme("pager_display_". $type, $tags, $limit, $element, $attributes);
 }
 
 /**
