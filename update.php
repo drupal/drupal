@@ -58,7 +58,8 @@ $mysql_updates = array(
   "2003-09-30" => "update_66",
   "2003-10-11" => "update_67",
   "2003-10-20" => "update_68",
-  "2003-10-22" => "update_69"
+  "2003-10-22" => "update_69",
+  "2003-10-27" => "update_70"
 );
 
 function update_32() {
@@ -540,6 +541,10 @@ function update_69() {
   }
 
   update_sql("UPDATE {users} SET name = '' WHERE uid = 0;");
+}
+
+function update_70() {
+  update_sql("ALTER TABLE {variable} CHANGE name name varchar(48) NOT NULL");
 }
 
 /*
