@@ -1409,7 +1409,7 @@ function theme_comment_form($edit, $title) {
   }
 
   // subject field:
-  if (variable_get('comment_subject_field', 0)) {
+  if (variable_get('comment_subject_field', 1)) {
     $form .= form_textfield(t('Subject'), 'subject', $edit['subject'], 50, 64);
   }
 
