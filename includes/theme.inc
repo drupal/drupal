@@ -50,28 +50,28 @@ function theme_account($theme) {
 
   if ($user->id) {
     // Display account settings:
-    $content .= "<LI><A HREF=\"account.php?op=track&topic=comments\">". t("track your comments") ."</A></LI>\n";
-    $content .= "<LI><A HREF=\"account.php?op=track&topic=nodes\">". t("track your nodes") ."</A></LI>\n";
-    $content .= "<LI><A HREF=\"account.php?op=track&topic=site\">". strtr(t("track %a"), array("%a" => variable_get("site_name", "drupal"))) ."</A></LI>\n";
+    $content .= "<A HREF=\"account.php?op=track&topic=comments\">". t("track your comments") ."</A><BR>\n";
+    $content .= "<A HREF=\"account.php?op=track&topic=nodes\">". t("track your nodes") ."</A><BR>\n";
+    $content .= "<A HREF=\"account.php?op=track&topic=site\">". strtr(t("track %a"), array("%a" => variable_get("site_name", "drupal"))) ."</A><BR>\n";
     $content .= "<P>\n";
-    $content .= "<LI><A HREF=\"account.php?op=edit&topic=user\">". t("edit your information") ."</A></LI>\n";
-    $content .= "<LI><A HREF=\"account.php?op=edit&topic=site\">". t("edit your preferences") ."</A></LI>\n";
-    $content .= "<LI><A HREF=\"account.php?op=edit&topic=content\">". t("edit your content") ."</A></LI>\n";
+    $content .= "<A HREF=\"account.php?op=edit&topic=user\">". t("edit your information") ."</A><BR>\n";
+    $content .= "<A HREF=\"account.php?op=edit&topic=site\">". t("edit your preferences") ."</A><BR>\n";
+    $content .= "<A HREF=\"account.php?op=edit&topic=content\">". t("edit your content") ."</A><BR>\n";
     $content .= "<P>\n";
 
     if (user_access($user)) {
-      $content .= "<LI><A HREF=\"admin.php\">". strtr(t("administer %a"), array("%a" => variable_get("site_name", "drupal"))) ."</A></LI>\n";
-      $content .= "<P>\n";
+      $content .= "<A HREF=\"admin.php\">". strtr(t("administer %a"), array("%a" => variable_get("site_name", "drupal"))) ."</A><BR>\n";
+    $content .= "<P>\n";
     }
 
     foreach (module_list() as $name) {
       if ($links = module_invoke($name, "menu")) {
-        foreach ($links as $link) $content .= "<LI>$link</LI>\n";
+        foreach ($links as $link) $content .= "$link<BR>\n";
       }
     }
     if ($link) $content .= "<P>\n";
 
-    $content .= "<LI><A HREF=\"account.php?op=logout\">". t("logout") ."</A></LI>\n";
+    $content .= "<A HREF=\"account.php?op=logout\">". t("logout") ."</A><BR>\n";
 
     $theme->box(strtr(t("%a's configuration"), array("%a" => $user->userid)), "$content");
   }
