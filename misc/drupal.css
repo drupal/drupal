@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.92 2005/01/23 15:36:07 dries Exp $ */
+/* $Id: drupal.css,v 1.93 2005/01/25 20:27:09 dries Exp $ */
 
 /*
 ** HTML elements
@@ -339,6 +339,16 @@ tr.light .form-item, tr.dark .form-item {
 }
 #permissions td.permission {
   padding-left: 2em;
+}
+#access-rules .access-type, #access-rules .rule-type {
+  margin-right: 1em;
+  float: left;
+}
+#access-rules .access-type .form-item, #access-rules .rule-type .form-item {
+  margin-top: 0;
+}
+#access-rules .mask {
+  clear: both;
 }
 .poll .bar {
   height: 1em;
