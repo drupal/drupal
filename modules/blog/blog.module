@@ -47,7 +47,7 @@ function blog_save($op, $node) {
   }
 
   if ($op == "create") {
-    if (user_access("adminster nodes")) {
+    if (user_access("administer nodes")) {
       return array();
     }
     else {
@@ -60,27 +60,21 @@ function blog_save($op, $node) {
   }
 
   if ($op == "update") {
-    if (strstr($REQUEST_URI, "module.php?mod=node&op=edit")) {
-      /*
-      ** Updating your own blog entry will demote it (if promoted),
-      ** and will queue it in the moderation queue for promotion.
-      ** If a node administrator updates his own blog entry through
-      ** the blog update mechanism that regular users use, then he
-      ** will be treated as a regular user and his blog entry will
-      ** be demoted.  We use the $REQUEST_URI field to dectect this
-      ** as we don't want to interfer with the updating of blog
-      ** entries through the admin pages.
-      */
-
-      return array("body" => filter($node->body), "promote" => 0, "moderate" => 1, "score" => 0, "teaser" => filter($node->teaser), "votes" => 0, "users" => 0);
-    }
-    else if (user_access("adminster nodes")) {
+    if (user_access("administer nodes")) {
       /*
       ** When an administrator updates blog entries through the admin
       ** pages, they will not be changed unless explicitly specified.
       */
 
       return array();
+    }
+    else {
+      /*
+      ** Updating your own blog entry will demote it (if promoted),
+      ** and will queue it in the moderation queue for promotion.
+      */
+
+      return array("body" => filter($node->body), "promote" => 0, "moderate" => 1, "score" => 0, "teaser" => filter($node->teaser), "votes" => 0, "users" => 0);
     }
   }
 
@@ -315,7 +309,7 @@ function blog_link($type, $node = 0) {
   }
 
   if ($type == "menu.create" && user_access("post content")) {
-    $links[] = "<a href=\"module.php?mod=node&op=add&type=blog\" title=\"". t("Post a new entry to your personal blog.") ."\">". t("create blog entry") ."</a>";
+    $links[] = "<a href=\"module.php?mod=node&op=add&type=blog\" title=\"". t("Add a new personal blog entry.") ."\">". t("create blog entry") ."</a>";
   }
 
   if ($type == "menu.view" && user_access("access content")) {

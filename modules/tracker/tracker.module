@@ -4,7 +4,7 @@
 function tracker_link($type) {
 
   if ($type == "menu.view") {
-    $links[] = "<a href=\"module.php?mod=tracker\" title=\"". t("Display an overview of the recent comments.") ."\">". t("recent comments") ."</a>";
+    $links[] = "<a href=\"module.php?mod=tracker\" title=\"". t("Display an overview of the recent comments.") ."\">". t("view new comments") ."</a>";
   }
 
   return $links ? $links : array();

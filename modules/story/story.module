@@ -32,7 +32,7 @@ function story_save($op, $node) {
   }
 
   if ($op == "create") {
-    if (user_access("adminster nodes")) {
+    if (user_access("administer nodes")) {
       return array();
     }
     else {
@@ -47,6 +47,14 @@ function story_save($op, $node) {
   if ($op == "update") {
     return array();
   }
+}
+
+function story_link($type) {
+  if ($type == "menu.create") {
+    $links[] = "<a href=\"module.php?mod=node&op=add&type=story\" title=\"". t("Add a new story.") ."\">". t("create story") ."</a>";
+  }
+
+  return $links ? $links : array();
 }
 
 function story_help() {

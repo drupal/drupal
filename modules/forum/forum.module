@@ -38,6 +38,10 @@ function forum_link($type) {
     $links[] = "<a href=\"module.php?mod=forum\" title=\"". t("Read and participate in the discussion forums.") ."\">". t("forum") ."</a>";
   }
 
+  if ($type == "menu.create" && user_access("administer nodes")) {
+    $links[] = "<a href=\"module.php?mod=node&op=add&type=forum\" title=\"". t("Add a new discussion forum.") ."\">". t("create forum") ."</a>";
+  }
+
   return $links ? $links : array();
 }
 

@@ -2,8 +2,8 @@
 // $Id$
 
 function page_node($field) {
-  $info["name"] = t("page");
-  $info["description"] = t("If you just want to add a page with a link in the menu to your site, this would be the best choice.  Unlike a story, a page by-passes the submission queue.");
+  $info["name"] = t("site page");
+  $info["description"] = t("If you just want to add a page with a link in the menu to your site, this would be the best choice.  Unlike a story, a site page by-passes the submission queue.");
 
   return $info[$field];
 }
@@ -59,13 +59,15 @@ function page_link($type) {
     }
   }
 
+  if ($type == "menu.create" && user_access("administer nodes")) {
+    $links[] = "<a href=\"module.php?mod=node&op=add&type=page\" title=\"". t("Add a new site page.") ."\">". t("create site page") ."</a>";
+  }
+
   return $links ? $links : array();
 }
 
 function page_body($node) {
   global $theme, $op;
-
-
 
   if ($node->format) {
     /*
@@ -74,7 +76,7 @@ function page_body($node) {
     */
 
     if ($op == t("Preview")) {
-      if (user_access("adminster nodes")) {
+      if (user_access("administer nodes")) {
         $node->body = stripslashes($node->body);  // see also page_form()
       }
       else {

@@ -49,14 +49,14 @@ function book_access($op, $node) {
 }
 
 function book_save($op, $node) {
-  global $user, $REQUEST_URI;
+  global $user;
 
   if ($op == "approve") {
     return array("status" => 1);
   }
 
   if ($op == "create") {
-    if (user_access("adminster nodes")) {
+    if (user_access("administer nodes")) {
       return array("format", "parent", "weight");
     }
     else {
@@ -69,7 +69,15 @@ function book_save($op, $node) {
   }
 
   if ($op == "update") {
-    if (strstr($REQUEST_URI, "module.php?mod=node&op=edit")) {
+    if (user_access("administer nodes")) {
+      /*
+      ** If a node administrator updates a book page, we don't create a
+      ** new revision unless we are explicitly instructed to.
+      */
+
+      return array("format", "parent", "weight");
+    }
+    else {
       /*
       ** If a regular user updates a book page, we always create a new
       ** revision.  All new revisions have to be approved (moderation)
@@ -78,24 +86,17 @@ function book_save($op, $node) {
 
       return array("created" => time(), "format", "moderate" => 1, "parent", "promote" => 0, "score" => 0, "status" => 1, "users" => "", "revisions", "votes" => 0, "weight");
     }
-    else if (user_access("adminster nodes")) {
-      /*
-      ** If a node administrator updates a book page, we don't create a
-      ** new revision unless we are explicitly instructed to. If a node
-      ** administrator updates a book page using the "edit this page"
-      ** link (like regular users do) then he'll be treated as a regular
-      **  user.
-      */
-
-      return array("format", "parent", "weight");
-    }
   }
 
 }
 
 function book_link($type, $node = 0, $main = 0) {
   if ($type == "page" && user_access("access content")) {
-    $links[] = "<a href=\"module.php?mod=book\" title=\"". t("Read and contribute to our collaborative books.") ."\">". t("collaborative book") ."</a>";
+    $links[] = "<a href=\"module.php?mod=book\" title=\"". t("Read and contribute to the collaborative books.") ."\">". t("collaborative book") ."</a>";
+  }
+
+  if ($type == "menu.create" && user_access("administer nodes")) {
+    $links[] = "<a href=\"module.php?mod=node&op=add&type=book\" title=\"". t("Add a new book page.") ."\">". t("create book page") ."</a>";
   }
 
   if ($type == "admin" && user_access("administer nodes")) {
@@ -316,7 +317,7 @@ function book_body($node) {
     */
 
     if ($op == t("Preview")) {
-      if (user_access("adminster nodes")) {
+      if (user_access("administer nodes")) {
         $node->body = stripslashes($node->body);  // see also book_form()
       }
       else {
