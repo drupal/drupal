@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.251 2003/10/01 05:18:02 dries Exp $
+// $Id: common.inc,v 1.252 2003/10/03 14:10:05 dries Exp $
 
 function conf_init() {
 
@@ -28,8 +28,12 @@ function conf_init() {
 /**
  * Build the alias/path array
  */
-function get_url_map() {
+function drupal_get_path_map($action = "") {
   static $map;
+
+  if ($action == "rebuild") {
+    $map = NULL;
+  }
 
   if (empty($map)) {
     $result = db_query("SELECT * FROM {path}");
@@ -39,6 +43,10 @@ function get_url_map() {
   }
 
   return $map;
+}
+
+function drupal_rebuild_path_map() {
+  drupal_get_path_map("rebuild");
 }
 
 function error_handler($errno, $message, $filename, $line, $variables) {
@@ -324,7 +332,7 @@ function valid_email_address($mail) {
  */
 function valid_url($url) {
 
-  if (preg_match("/^[a-zA-z0-9\/:_\-_\.]+$/", $url)) {
+  if (preg_match("/^[a-zA-z0-9\/:_\-_\.,]+$/", $url)) {
     return 1;
   }
   else {
@@ -1073,8 +1081,8 @@ function form_allowed_tags_text() {
 /**
  * Given an old url, return the alias.
  */
-function get_url_alias($path) {
-  $map = get_url_map();
+function drupal_get_path_alias($path) {
+  $map = drupal_get_path_map();
 
   if ($map) {
     return array_search($path, $map);
@@ -1082,10 +1090,10 @@ function get_url_alias($path) {
 }
 
 /**
- * Given an alias, return the old url.
+ * Given an alias, return the default url.
  */
-function get_old_url($path) {
-  $map = get_url_map();
+function drupal_get_normal_path($path) {
+  $map = drupal_get_path_map();
   return $map[$path];
 }
 
@@ -1103,7 +1111,7 @@ function url($url = NULL, $query = NULL) {
     $script = (strpos($_SERVER["SERVER_SOFTWARE"], "Apache") === false) ? "index.php" : "";
   }
 
-  if ($alias = get_url_alias($url)) {
+  if ($alias = drupal_get_path_alias($url)) {
     $url = $alias;
   }
 
@@ -1284,7 +1292,7 @@ header("Content-Type: text/html; charset=utf-8");
 
 // initialize the _GET["q"] prior to loading the modules and invoking their 'init' hook:
 if (!empty($_GET["q"])) {
-  if ($path = get_old_url(trim($_GET["q"], "/"))) {
+  if ($path = drupal_get_normal_path(trim($_GET["q"], "/"))) {
     $_GET["q"] = $path;
   }
 }
