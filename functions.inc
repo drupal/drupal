@@ -1,5 +1,6 @@
 <?
 include("user.class.php");
+
 session_start();
 
 include "config.inc";

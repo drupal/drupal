@@ -47,6 +47,16 @@ CREATE TABLE blocks (
   PRIMARY KEY (id)
 );
 
+CREATE TABLE bans (
+  id tinyint(4) DEFAULT '0' NOT NULL auto_increment,
+  mask varchar(255) NOT NULL,
+  type tinyint(2) DEFAULT '' NOT NULL,
+  reason text DEFAULT '' NOT NULL,
+  timestamp int(11),
+  UNIQUE mask (mask),
+  PRIMARY KEY (id)
+);
+
 #
 # Dumping data for table 'blocks'
 #
@@ -63,7 +73,6 @@ CREATE TABLE channel (
   url varchar(255) DEFAULT '' NOT NULL,
   contact varchar(255) DEFAULT '',
   timestamp int(11),
-  UNIQUE site (site),
   UNIQUE file (file),
   UNIQUE url (url),
   PRIMARY KEY (id)

@@ -74,4 +74,12 @@ $cfg_theme = "default";
 #   to '0'
 $system = 0;
 
+/*
+class config {
+  var $path = "/home/buytaert/public_html/projects/drop";
+}
+
+if (!$config) $config = new config();
+*/
+
 ?>

@@ -1,6 +1,7 @@
 <?
-include('config.inc');
-include('functions.inc');
+include "config.inc";
+include "functions.inc";
+include "database.inc";
 
 function dbsave($dbase, $data, $id=0) {
   foreach ($data as $key=>$value) {
@@ -60,12 +61,17 @@ function newUser($user = "", $error="") {
   $theme->footer();
 }
 function validateUser($user) {
+  include "ban.class.php";
+
   ### Verify username and e-mail address:
   $user[userid] = trim($user[userid]);
   if (empty($user[email]) || (!eregi("^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3}$", $user[email]))) $rval = "the specified e-mail address is not valid.<BR>";
   if (empty($user[userid]) || (ereg("[^a-zA-Z0-9_-]", $user[userid]))) $rval = "the specified username '$new[userid]' is not valid.<BR>";
   if (strlen($user[userid]) > 15) $rval = "the specified username is too long: it must be less than 15 characters.";
-  if (eregi("^((root)|(httpd)|(operator)|(admin)|(administrator)|(news)|(deamon)|(nobody)|(ftp))$", $user[userid])) $rval = "the specified username is reserved.";
+
+  ### Check to see whether the username or e-mail address are banned:
+  if ($ban = ban_match($user[userid], $type[usernames])) $rval = "the specified username is banned  for the following reason: <I>$ban->reason</I>.";
+  if ($ban = ban_match($user[email], $type[addresses])) $rval = "the specified e-mail address is banned for the following reason: <I>$ban->reason</I>.";
 
   ### Verify whether username and e-mail address are unique:
   dbconnect();
@@ -73,13 +79,10 @@ function validateUser($user) {
   if (mysql_num_rows(mysql_query("SELECT email FROM testusers WHERE LOWER(email)=LOWER('$user[email]')")) > 0) $rval = "the specified e-mail address is already registered.";
   return($rval);
 }
-
 function makePassword($min_length=6) {
   mt_srand((double)microtime() * 1000000);
-  $words = array("foo","bar","guy","neo","geek","nerd","fish","hack","star","moon","hero","cola","girl","fish","java","boss");
-  while(strlen($password) < $min_length) {
-    $password .= $words[mt_rand(0, count($words))];
-  }
+  $words = array("foo","bar","guy","neo","tux","moo","sun","god","geek","nerd","fish","hack","star","mice","warp","moon","hero","cola","girl","fish","java","boss");
+  while(strlen($password) < $min_length) $password .= $words[mt_rand(0, count($words))];
   return $password;
 }
 
