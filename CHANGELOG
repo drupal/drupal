@@ -21,6 +21,7 @@ drupal x.xx, xx/xx/xxxx
         + made it possible to permanently delete stories
     * improved themes:
         + W3C validation on a best effort basis
+        + removed $theme->control() from themes
         + added theme "goofy"
 - revised documentation
 
