@@ -1,5 +1,5 @@
 <?php
-// $Id: marvin.theme,v 1.80 2002/02/17 13:04:49 kjartan Exp $
+// $Id: marvin.theme,v 1.81 2002/04/14 19:34:04 kjartan Exp $
 
   /*********************************************************************
 
@@ -17,6 +17,14 @@
    // General colorset that can be used for this theme
    var $foreground = "#000000";
    var $background = "#EAEAEA";
+
+   function system($field) {
+     $system["name"] = "Marvin";
+     $system["author"] = "Dries Buytaerts";
+     $system["description"] = "Internet explorer, Netscape, Opera";
+
+     return $system[$field];
+   }
 
    function header($title = "") {
      global $HTTP_USER_AGENT;

@@ -1,5 +1,5 @@
 <?php
-// $Id: goofy.theme,v 1.45 2002/02/17 13:04:49 kjartan Exp $
+// $Id: goofy.theme,v 1.46 2002/04/14 19:34:03 kjartan Exp $
 
   /*********************************************************************
 
@@ -16,6 +16,14 @@
     // General colorset that can be used for this theme
     var $foreground = "#000000";
     var $background = "#FFFFFF";
+
+    function system($field) {
+      $system["name"] = "Goofy";
+      $system["author"] = "Steven Wittens";
+      $system["description"] = "Internet explorer, Netscape, Opera";
+
+      return $system[$field];
+    }
 
     function header($title = "") {
 ?>

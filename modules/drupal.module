@@ -110,8 +110,9 @@ function drupal_auth($username, $password, $server) {
 
   $message = new xmlrpcmsg("drupal.login", array(new xmlrpcval($username, "string"), new xmlrpcval($password, "string")));
 
+  // TODO remove hard coded Port 80
+  // TODO manage server/path such that HTTP_HOST/xml.rpc.php is not assumed
   $client = new xmlrpc_client("/xmlrpc.php", $server, 80);
-
   $result = $client->send($message, 5);
   if ($result && !$result->faultCode()) {
     $value = $result->value();
@@ -131,11 +132,29 @@ function drupal_page() {
 function drupal_auth_help() {
   $site = variable_get("site_name", "this web site");
 
-  $output = "
-   <p><a href=\"http://www.drupal.org\">Drupal</a> is the name of the software which powers %s. There are Drupal websites all over the world, and many of them share their registration databases so that users may freely login to any Drupal site using a single <b>Drupal ID</b>.</p>
-   <p>So please feel free to login to your account here at %s with a username from another Drupal site. The format of a Drupal ID is similar to an  email address: <b>username</b>@<i>server</i>. An example of valid Drupal ID is <b>mwlily</b><i>@www.drupal.org</i>.</p>";
+  $output = "<p><a href=\"http://www.drupal.org\">Drupal</a> is the name of the software which powers %s. There are Drupal websites all over the world, and many of them share their registration databases so that users may freely login to any Drupal site using a single <b>Drupal ID</b>.</p>\n";
+  $output .= "<p>So please feel free to login to your account here at %s with a username from another Drupal site. The format of a Drupal ID is similar to an  email address: <b>username</b>@<i>server</i>. An example of valid Drupal ID is <b>mwlily</b><i>@www.drupal.org</i>.</p>";
 
-  return sprintf(t($output), $site, $site);
+  return strtr(t($output), array("%s" => "<i>$site</i>"));
+}
+
+function drupal_user($type, $edit, $user) {
+  global $HTTP_HOST;
+
+  $module = "drupal";
+  $name = module_invoke($module, "info", "name");
+  switch ($type) {
+    case "view_private":
+      $result = user_get_authname($user, $module);
+      if ($result) {
+        $output .= form_item("$name ID", $result);
+      }
+      else {
+        // TODO: use a variation of path_uri() instead of $HTTP_HOST below
+        $output .= form_item("$name ID", "$user->name@$HTTP_HOST");
+      }
+      return $output;
+  }
 }
 
 ?>

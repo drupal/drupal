@@ -1,8 +1,16 @@
 <?php
-// $Id: example.theme,v 1.34 2002/02/17 13:04:49 kjartan Exp $
+// $Id: example.theme,v 1.35 2002/04/14 19:34:03 kjartan Exp $
 
-  class Theme_example extends BaseTheme {
+class Theme_example extends BaseTheme {
 
+  function system($field) {
+    $system["name"] = "Stone Age";
+    $system["author"] = "Dries Buytaerts";
+    $system["description"] = "Internet explorer, Netscape, Opera, Lynx";
+
+    return $system[$field];
   }
+
+}
 
 ?>

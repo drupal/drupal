@@ -1,5 +1,5 @@
 <?php
-// $Id: unconed.theme,v 1.74 2002/02/17 13:04:50 kjartan Exp $
+// $Id: unconed.theme,v 1.75 2002/04/14 19:34:04 kjartan Exp $
 
   /*********************************************************************
 
@@ -36,6 +36,14 @@
    // color set #3:
    var $bgcolor3 = "#D7D7D7";
    var $fgcolor3 = "#000000";
+
+   function system($field) {
+     $system["name"] = "UnConeD";
+     $system["author"] = "Steven Wittens";
+     $system["description"] = "Internet explorer, Netscape, Opera";
+     
+     return $system[$field];
+   }
 
    function header($title = "") {
      srand((double)microtime()*1000000);

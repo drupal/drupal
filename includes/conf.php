@@ -1,5 +1,5 @@
 <?php
-// $Id: conf.php,v 1.14 2002/04/02 09:45:55 kjartan Exp $
+// $Id: conf.php,v 1.15 2002/04/14 19:34:02 kjartan Exp $
 
 #
 # Database settings:
@@ -20,22 +20,6 @@ $db_url = "mysql://drupal:drupal@localhost/drupal";
 
 # If required, update PHP's include path to include your PEAR directory:
 // ini_set("include_path", ".:/path/to/pear");
-
-#
-# Themes:
-#
-$themes = array("UnConeD" => array(
-                  "themes/unconed/unconed.theme",
-                  "Internet explorer, Netscape, Opera"),
-                "Marvin"  => array(
-                  "themes/marvin/marvin.theme",
-                  "Internet explorer, Netscape, Opera"),
-                "Stone Age"  => array(
-                  "themes/example/example.theme",
-                  "Internet explorer, Netscape, Opera, Lynx"),
-                "Goofy"  => array(
-                  "themes/goofy/goofy.theme",
-                  "Internet explorer, Netscape, Opera"));
 
 #
 # Languages / translation / internationalization:
