@@ -28,6 +28,10 @@ DISTRIBUTED AUTHENTICATION MODULES
 M: Moshe Weitzman <weitzman@tejasa.com>
 S: maintained
 
+FILTER SYSTEM
+M: Steven Wittens <unconed@drupal.org>
+S: maintained
+
 LOCALE MODULE
 M: Gabor Hojtsy <goba@php.net>
 S: maintained
