@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.116 2002/11/09 20:50:50 dries Exp $
+// $Id: theme.inc,v 1.117 2002/11/10 21:16:58 dries Exp $
 
 /**
 * Basic theme
@@ -128,7 +128,7 @@ function theme_list() {
 
 function theme_head($main = 0) {
   $head = module_invoke_all("head", $main);
-  return "\n". implode($head, "\n"). "\n";
+  return implode($head, "\n");
 }
 
 function theme_init() {
