@@ -10,7 +10,7 @@ a:visited {
 }
 body {
   padding: 5em 0 0 3em;
-  background-image: url(pure/background.gif);
+  background-image: url(background.gif);
   background-repeat: repeat-x;
   font-family: tahoma, verdana, arial, helvetica;
   border-top: 10px solid gray;
