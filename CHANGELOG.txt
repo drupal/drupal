@@ -14,7 +14,8 @@ Drupal x.x.x, xxxx-xx-xx
     * refactored the categorization of news items.
 - usability:
     * slightly reorganized navigation menus.
-
+- accessibility:
+    * improved the accessibility of the archive module's calendar.
 
 Drupal 4.4.1, 2004-04-01
 ------------------------
