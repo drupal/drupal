@@ -769,11 +769,13 @@ function comment_link($type, $node = 0, $main = 0) {
           }
         }
         else {
-          if (user_access("post comments")) {
-            $links[] = l(t("add new comment"), "comment/reply/$node->nid", array("title" => t("Add a new comment to this page.")));
-          }
-          else {
-            $links[] = theme("comment_post_forbidden");
+          if ($node->comment == 2) {
+            if (user_access("post comments")) {
+              $links[] = l(t("add new comment"), "comment/reply/$node->nid", array("title" => t("Add a new comment to this page.")));
+            }
+            else {
+              $links[] = theme("comment_post_forbidden");
+            }
           }
         }
       }
@@ -791,9 +793,6 @@ function comment_link($type, $node = 0, $main = 0) {
         else {
           $links[] = theme("comment_post_forbidden");
         }
-      }
-      else {
-        $links[] = t("Closed discussion: you can't post new comments.");
       }
     }
   }
