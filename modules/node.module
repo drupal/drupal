@@ -1228,7 +1228,7 @@ function node_form($edit, $error = NULL) {
   $output .= form_textfield(t("Title"), "title", $edit->title, 60, 128, $error["title"]);
 
   if (user_access("create custom URLs")) {
-    $output .= form_textfield(t("Path alias"), "path", ($edit->path == "node/view/$edit->nid") ? "" : $edit->path, 60, 250, $error["path"] ? $error["path"] : t("Optionally specify an alternative URL by which this node can be accessed.  For example, type 'about/' when writing an about page."));
+    $output .= form_textfield(t("Path alias"), "path", ($edit->path == "node/view/$edit->nid") ? "" : $edit->path, 60, 250, $error["path"] ? $error["path"] : t("Optionally specify an alternative URL by which this node can be accessed.  For example, type 'about' when writing an about page.  Don't add a trailing slash or the URL won't work."));
   }
 
   /*
