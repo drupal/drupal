@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.240 2003/07/31 09:50:33 dries Exp $
+// $Id: node.module,v 1.241 2003/07/31 09:56:29 dries Exp $
 
 function node_help() {
   global $mod;
@@ -869,7 +869,7 @@ function node_get_alias($path) {
 }
 
 function node_url($node) {
-  if ($node->path) {
+  if ($node->path != NULL) {
     return $node->path;
   }
   else {
