@@ -763,6 +763,7 @@ CREATE TABLE watchdog (
   uid int(10) NOT NULL default '0',
   type varchar(16) NOT NULL default '',
   message longtext NOT NULL,
+  severity tinyint(3) unsigned NOT NULL default '0',
   link varchar(255) NOT NULL default '',
   location varchar(128) NOT NULL default '',
   hostname varchar(128) NOT NULL default '',
@@ -797,7 +798,7 @@ INSERT INTO permission VALUES (1,'access content',0);
 INSERT INTO role (rid, name) VALUES (2, 'authenticated user');
 INSERT INTO permission VALUES (2,'access comments, access content, post comments, post comments without approval',0);
 
-REPLACE variable SET name='update_start', value='s:10:"2004-10-18;"';
+REPLACE variable SET name='update_start', value='s:10:"2004-10-18";';
 REPLACE variable SET name='theme_default', value='s:10:"bluemarine";';
 
 REPLACE blocks SET module = 'user', delta = '0', status = '1';
