@@ -3,35 +3,35 @@
 
 function locale_help() {
  ?>
-  <P>Normally programs are written and documented in English, and use English to interact with users.  This is true for a great deal of websites.  However, most people are less comfortable with English than with their own native language, and would prefer to use their mother tongue as much as possible.  Many people love see their website showing a lot less of English, and far more of their own language.</P>
-  <P>Therefore drupal provides a framework to setup a multi-lingual website, or to overwrite the default texts in English.  We explored the various alternatives to support internationalization and decided to design the framework in such a way that the impact of internationalization on drupal's sources is minimized, modular and that it doesn't require a HTML or PHP wizard to maintain translations.  Maintaining translations had to be simple so it became as easy as filling out forms on the administration page.</P>";
+  <p>Normally programs are written and documented in English, and use English to interact with users.  This is true for a great deal of websites.  However, most people are less comfortable with English than with their own native language, and would prefer to use their mother tongue as much as possible.  Many people love see their website showing a lot less of English, and far more of their own language.</p>
+  <p>Therefore drupal provides a framework to setup a multi-lingual website, or to overwrite the default texts in English.  We explored the various alternatives to support internationalization and decided to design the framework in such a way that the impact of internationalization on drupal's sources is minimized, modular and that it doesn't require a HTML or PHP wizard to maintain translations.  Maintaining translations had to be simple so it became as easy as filling out forms on the administration page.</p>
 
-  <H3>How to translate texts</H3>
+  <h3>How to translate texts</h3>
 
-  <P>The actual translation starts at the "overview" of the locale page of the administration pages.  To allow a user to maintain the translations, he obviously needs access to the locale module.  See the account documentation for more information on roles and permissions.</P>
-  <P>At the locale page, users with the proper access rights will see the various texts that need translation on the left column of the table.</P>
-  <P>Below the text you can see an URI where this text shows up one your site.  Changes are most of these texts will be used and displayed on more than one page, though only one example URI is presented.</P>
-  <P>The second column displays the supported languages as defined in the configuration file.  See below for more information on how to support new languages.  If the symbol for a language is seen like <strike>this</strike>, it means that this entry still needs to be translated into that language.  If not, it has been translated already.</P>
-  <P>To add or change a translation click the "edit locale" link in the third column, the "operations" column.  You'll be presented the original text and fields for translation in the supported languages.  Enter the translations and confirm by clicking the "Save translations" button.  The translations need not be accurate; they are for your site so you can choose what to show to your users.</P>
-  <P>To delete a translation, click the "delete locale" link at the overview page and the translation will be immediately deleted without confirmation.  Deleting translations is convenient for removing texts that belonged to an obsolete module.</P>
-  <P>In some texts special strings such as "%a" and "%b" show up.  Those get replaced by some string at run-time when Drupal dynamically generate pages.  You can find out which string this is by looking at the page where the text appears.  This is where the above mentioned URI can come in handy.</P>
+  <p>The actual translation starts at the "overview" of the locale page of the administration pages.  To allow a user to maintain the translations, he obviously needs access to the locale module.  See the account documentation for more information on roles and permissions.</p>
+  <p>At the locale page, users with the proper access rights will see the various texts that need translation on the left column of the table.</p>
+  <p>Below the text you can see an URI where this text shows up one your site.  Changes are most of these texts will be used and displayed on more than one page, though only one example URI is presented.</p>
+  <p>The second column displays the supported languages as defined in the configuration file.  See below for more information on how to support new languages.  If the symbol for a language is seen like <strike>this</strike>, it means that this entry still needs to be translated into that language.  If not, it has been translated already.</p>
+  <p>To add or change a translation click the "edit locale" link in the third column, the "operations" column.  You'll be presented the original text and fields for translation in the supported languages.  Enter the translations and confirm by clicking the "Save translations" button.  The translations need not be accurate; they are for your site so you can choose what to show to your users.</p>
+  <p>To delete a translation, click the "delete locale" link at the overview page and the translation will be immediately deleted without confirmation.  Deleting translations is convenient for removing texts that belonged to an obsolete module.</p>
+  <p>In some texts special strings such as "%a" and "%b" show up.  Those get replaced by some string at run-time when Drupal dynamically generate pages.  You can find out which string this is by looking at the page where the text appears.  This is where the above mentioned URI can come in handy.</p>
 
-  <H3>How to add new languages</H3>
+  <h3>How to add new languages</h3>
 
-  <P>Adding a new language requires you to edit your configuration file and to edit your SQL database.  Assuming you want to support Dutch (ISO 639 code: "nl") and French (ISO 639 code: "fr"), you add the following line to your configuration file's <CODE>$languages</CODE>-variable:</P>
-  <PRE>
+  <p>Adding a new language requires you to edit your configuration file and to edit your SQL database.  Assuming you want to support Dutch (ISO 639 code: "nl") and French (ISO 639 code: "fr"), you add the following line to your configuration file's <code>$languages</code>-variable:</p>
+  <pre>
     $languages = array("nl" => "Dutch / Nederlands", "fr" => "French / Francais");
-  </PRE>
-  <P>Note that the default language must come first and that if you want to overwrite the default text you can add an entry for English (ISO 639 code: "en"):</P>
-  <PRE>
+  </pre>
+  <p>Note that the default language must come first and that if you want to overwrite the default text you can add an entry for English (ISO 639 code: "en"):</p>
+  <pre>
     $languages = array("en" => "English", "nl" => "Dutch / Nederlands", "fr" => "French / Francais");
-  </PRE>
-  <P>After having edited your configuration file, make sure your SQL table "locales" has the required database fields setup to host your new translations.  You can add the required rows to your "locales" table from the MySQL prompt:</P>
-  <PRE>
+  </pre>
+  <p>After having edited your configuration file, make sure your SQL table "locales" has the required database fields setup to host your new translations.  You can add the required rows to your "locales" table from the MySQL prompt:</p>
+  <pre>
     mysql> ALTER TABLE locales ADD en TEXT DEFAULT '' NOT NULL;
     mysql> ALTER TABLE locales ADD nl TEXT DEFAULT '' NOT NULL;
     mysql> ALTER TABLE locales ADD fr TEXT DEFAULT '' NOT NULL;
-  </PRE>
+  </pre>
  <?php
 }
 
@@ -56,11 +56,14 @@ function locale_delete($lid) {
   locale_refresh_cache();
 }
 
-function locale_save($lid, $edit) {
+function locale_save($lid) {
+  global $edit;
   foreach ($edit as $key=>$value) {
     db_query("UPDATE locales SET $key = '". check_query($value) ."' WHERE lid = '$lid'");
   }
   locale_refresh_cache();
+  // delete form data so it will remember where it came from
+  $edit = '';
 }
 
 function locale_refresh_cache() {
@@ -80,7 +83,7 @@ function locale_edit($lid) {
 
   $result = db_query("SELECT * FROM locales WHERE lid = '$lid'");
   if ($translation = db_fetch_object($result)) {
-    $form .= form_item(t("Original text"), "<PRE>". wordwrap(check_output($translation->string)) ."</PRE>");
+    $form .= form_item(t("Original text"), "<pre>". wordwrap(check_output($translation->string)) ."</pre>");
     foreach ($languages as $code=>$language) $form .= (strlen($translation->string) > 30) ? form_textarea($language, $code, $translation->$code, 50, 10) : form_textfield($language, $code, $translation->$code, 50, 128);
     $form .= form_submit("Save translations");
 
@@ -92,7 +95,7 @@ function locale_languages($translation) {
   global $languages;
 
   foreach ($languages as $key=>$value) {
-    $output .= ($translation->$key) ? "$key " : "<STRIKE>$key</STRIKE> ";
+    $output .= ($translation->$key) ? "<a href=\"#\" title=\"".check_output($translation->$key)."\">$key</a> " : "<strike>$key</strike> ";
   }
 
   return $output;
@@ -113,90 +116,92 @@ function locale_links($translation) {
   return $output;
 }
 
-function locale_overview() {
-  $result = db_query("SELECT * FROM locales ORDER BY string");
-
-  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR><TH>string</TH><TH>languages</TH><TH COLSPAN=\"2\">operations</TH></TR>\n";
-  while ($locale = db_fetch_object($result)) {
-    $output .= " <TR><TD>". check_output($locale->string) ."<BR><SMALL><I>". check_output($locale->location) ."</I></SMALL></TD><TD ALIGN=\"center\">". check_output(locale_languages($locale)) ."</TD><TD NOWRAP><A HREF=\"admin.php?mod=locale&op=edit&id=$locale->lid\">edit locale</A></TD><TD NOWRAP><A HREF=\"admin.php?mod=locale&op=delete&id=$locale->lid\">delete locale</A></TD></TR>";
-  }
-  $output .= "</TABLE>\n";
-
-  return $output;
-}
-
-function locale_translated($language) {
-  $result = db_query("SELECT * FROM locales WHERE $language != '' ORDER BY string");
-
-  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR><TH>original string</TH><TH>translated string</TH><TH COLSPAN=\"2\">operations</TH></TR>\n";
-  while ($locale = db_fetch_object($result)) {
-    $output .= " <TR><TD>". check_output($locale->string) ."</TD><TD>". check_output($locale->$language) ."</TD><TD NOWRAP><A HREF=\"admin.php?mod=locale&op=edit&id=$locale->lid\"> edit locale</A></TD><TD NOWRAP><A HREF=\"admin.php?mod=locale&op=delete&id=$locale->lid\">delete locale</A></TD></TR>";
-  }
-  $output .= "</TABLE>\n";
-
-  return $output;
-}
-
-function locale_untranslated($language) {
-  $result = db_query("SELECT * FROM locales WHERE $language = '' ORDER BY string");
-
-  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR><TH>string</TH><TH COLSPAN=\"2\">operations</TH></TR>\n";
-  while ($locale = db_fetch_object($result)) {
-    $output .= " <TR><TD>". check_output($locale->string) ."<BR><SMALL><I>$locale->location</I></SMALL></TD><TD NOWRAP><A HREF=\"admin.php?mod=locale&op=edit&id=$locale->lid\"> edit locale</A></TD><TD NOWRAP><A HREF=\"admin.php?mod=locale&op=delete&id=$locale->lid\">delete locale</A></TD></TR>";
-  }
-  $output .= "</TABLE>\n";
-
-  return $output;
-}
-
 function locale_seek() {
   global $id, $edit, $languages, $op, $locale_settings;
 
-  if (session_is_registered("locale_settings")) {
+  if ($op != 'overview' && !$edit && session_is_registered("locale_settings")) {
     $edit = $locale_settings;
   }
-
-  if ($op != "search" && is_array($edit)) {
+  else {
     $locale_settings = $edit;
     session_register("locale_settings");
-    if ($edit[status]) {
-      switch ($edit[language]) {
+  }
+
+  if ($op != 'Search' || is_array($edit)) {
+
+    if ($edit["status"]) {
+      switch ($edit["language"]) {
         case "all":
           foreach ($languages as $key=>$value) {
-            $tmp[] = $key . (check_query($edit[status]) == 1 ? " !=" : " =") ." ''";
+            $tmp[] = $key . (check_query($edit["status"]) == 1 ? " !=" : " =") ." ''";
           }
           $query[] = implode(" && ", $tmp);
           break;
         case "any":
           foreach ($languages as $key=>$value) {
-            $tmp[] = $key . (check_query($edit[status]) == 1 ? " !=" : " =") ." ''";
+            $tmp[] = $key . (check_query($edit["status"]) == 1 ? " !=" : " =") ." ''";
           }
           $query[] = "(". implode(" || ", $tmp) .")";
           break;
         default:
-          $query[] = check_query($edit[language]) . (check_query($edit[status]) == 1 ? " !=" : " =") ." ''";
+          $query[] = check_query($edit["language"]) . (check_query($edit["status"]) == 1 ? " !=" : " =") ." ''";
       }
     }
-    if ($edit[module]) $query[] = "location LIKE '%mod=". (check_query($edit[module]) != "all" ? check_query($edit[module]) : "") ."%'";
-    if ($edit[string]) $query[] = "string RLIKE '". check_query($edit[string]) ."'";
 
-    $result = db_query("SELECT * FROM locales". (count($query) ? " WHERE ". implode(" && ", $query) : ""));
-
-    $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-    $output .= " <TR><TH>string</TH><TH>languages</TH><TH COLSPAN=\"2\">operations</TH></TR>\n";
-    while ($locale = db_fetch_object($result)) {
-      $output .= " <TR><TD>". check_output($locale->string) ."<BR><SMALL><I>". check_output($locale->location) ."</I></SMALL></TD><TD ALIGN=\"center\">". check_output(locale_languages($locale)) ."</TD><TD NOWRAP><A HREF=\"admin.php?mod=locale&op=edit&id=$locale->lid\">edit locale</A></TD><TD NOWRAP><A HREF=\"admin.php?mod=locale&op=delete&id=$locale->lid\">delete locale</A></TD></TR>";
+    if ($edit["module"]) {
+      $query[] = "location LIKE '%mod=". (check_query($edit["module"]) != "all" ? check_query($edit["module"]) : "") ."%'";
     }
-    $output .= "</TABLE>\n";
+
+    if ($edit["string"]) {
+      $string_query[] = "string LIKE '%". check_query($edit["string"]) ."%'";
+      if ($edit["status"] != 2) {
+        if (strlen($edit["language"]) == 2) {
+          $string_query[] = check_query($edit["language"]). " LIKE '%". check_query($edit["string"]) ."%'";
+        }
+        else {
+          foreach ($languages as $key=>$value) {
+            $string_query[] = check_query($key). " LIKE '%". check_query($edit["string"]) ."%'";
+          }
+        }
+      }
+      $query[] = "(" . implode(" || ", $string_query) . ")";
+    }
+
+    $result = db_query("SELECT * FROM locales". (count($query) ? " WHERE ". implode(" && ", $query) : ""). " ORDER BY string");
+
+    $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
+    $output .= " <tr><th>string</th>";
+
+    if ($edit["status"] != 2 && strlen($edit["language"]) == 2) {
+      $output .= "<th>translated string</th>";
+    }
+    else {
+      $output .= "<th>languages</th>";
+    }
+
+    $output .= "<th colspan=\"2\">operations</th></tr>\n";
+
+    while ($locale = db_fetch_object($result)) {
+      $output .= " <tr><td>". check_output($locale->string) ."<br /><small><i>". check_output($locale->location) ."</i></small></td>";
+
+      if ($edit["status"] != 2 && strlen($edit["language"]) == 2) {
+        $output .= "<td>". check_output($locale->$edit["language"]) ."</td>";
+      }
+      else {
+        $output .= "<td align=\"center\">". check_output(locale_languages($locale)) ."</td>";
+      }
+
+      $output .= "<td nowrap=\"nowrap\"><a href=\"admin.php?mod=locale&op=edit&id=$locale->lid\">edit locale</a></td><td nowrap=\"nowrap\"><a href=\"admin.php?mod=locale&op=delete&id=$locale->lid\">delete locale</a></td></tr>";
+    }
+    $output .= "</table>\n";
   }
 
-  $form .= form_select("Language", "language", $edit[language], array_merge(array("all" => "All", "any" => "Any"), $languages));
-  $form .= form_select("Status", "status", $edit[status], array("All", "Translated", "Untranslated"));
-  $form .= form_select("Module", "module", $edit[module], array_merge(array("0" => "All modules + pages", "all" => "All modules"), module_list()));
-  $form .= form_textfield("String", "string", $edit[string], 30, 30, "Leave blank to show all strings. This is treated as a regular expression.");
+  reset($languages);
+
+  $form .= form_textfield("String", "string", $edit["string"], 30, 30, "Leave blank to show all strings. This is treated as a regular expression.");
+  $form .= form_select("Language", "language", ($edit["language"] ? $edit["language"] : key($languages)), array_merge(array("any" => "Any language", "all" => "All languages"), $languages), "In which language must the string be translated/untranslated (see status)?");
+  $form .= form_select("Status", "status", $edit["status"], array(2 => "Untranslated", 1 => "Translated", 0 => "All"));
+  $form .= form_select("Module", "module", $edit["module"], array_merge(array("0" => "All modules + pages", "all" => "All modules"), module_list()));
   $form .= form_submit("Search");
 
   $output .= form($form);
@@ -211,12 +216,12 @@ function locale_admin() {
     print status("locale disabled.");
   }
   else if (user_access("administer locales")) {
-    print "<SMALL>". locale_links(1) . locale_links(0) ."<A HREF=\"admin.php?mod=locale&op=search\">search</A> | <A HREF=\"admin.php?mod=locale&op=overview\">overview</A> | <A HREF=\"admin.php?mod=locale&op=help\">help</A></SMALL><HR>\n";
+    print "<small>". locale_links(1) . locale_links(0) ."<a href=\"admin.php?mod=locale&op=Search\">search</a> | <a href=\"admin.php?mod=locale&op=overview\">overview</a> | <a href=\"admin.php?mod=locale&op=help\">help</a></small><hr />\n";
 
     switch ($op) {
       case "delete":
-        print status(locale_delete(check_query($id)));
-        print locale_overview();
+        locale_delete(check_query($id));
+        print locale_seek();
         break;
       case "help":
         print locale_help();
@@ -224,17 +229,21 @@ function locale_admin() {
       case "edit":
         print locale_edit(check_query($id));
         break;
+      case "Search":
+        print locale_seek();
+        break;
       case "translated":
-        print locale_translated($language);
+        $edit["status"] = 1;
+        $edit["language"] = $language;
+        print locale_seek();
         break;
       case "untranslated":
-        print locale_untranslated($language);
-        break;
-      case "overview":
-        print locale_overview();
+        $edit["status"] = 2;
+        $edit["language"] = $language;
+        print locale_seek();
         break;
       case "Save translations":
-        print locale_save(check_query($id), $edit);
+        print locale_save(check_query($id));
       default:
         print locale_seek();
     }
