@@ -584,7 +584,7 @@ function aggregator_form_feed($edit = array()) {
   }
 
   $form .= form_textfield(t('Title'), 'title', $edit['title'], 50, 64, t('The name of the feed; typically the name of the web site you syndicate content from.'));
-  $form .= form_textfield(t('URL'), 'url', $edit['url'], 50, 128, t('The fully-qualified URL of the feed.'));
+  $form .= form_textfield(t('URL'), 'url', $edit['url'], 50, 255, t('The fully-qualified URL of the feed.'));
   $form .= form_select(t('Update interval'), 'refresh', $edit['refresh'], $period, t('The refresh interval indicating how often you want to update this feed.  Requires crontab.'));
   $form .= form_select(t('Latest items block'), 'block', $edit['block'], $block_items, t('If enabled, a block containing the latest items from this feed will be available for placement on the <a href="%url">block configuration</a> page.', array('%url' => url('admin/block'))));
   $categories = db_query('SELECT c.cid, c.title, f.fid FROM {aggregator_category} c LEFT JOIN {aggregator_category_feed} f ON c.cid = f.cid AND f.fid = %d ORDER BY title', $edit['fid']);
