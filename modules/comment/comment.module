@@ -789,51 +789,20 @@ function comment_save($id, $edit) {
   return "Comment updated.";
 }
 
-function comment_admin_overview($status = 0, $comment_page = 0) {
-  global $comment_settings;
+function comment_admin_overview($status = 0) {
 
-  $comments_per_page = 50;
+  $result = pager_query("SELECT c.*, u.name, u.uid FROM comments c LEFT JOIN users u ON u.uid = c.uid WHERE c.status = '". check_query($status) ."' ORDER BY c.timestamp DESC");
 
-  /*
-  ** Save location to come back here after a edit/delete
-  */
-
-  $comment_settings["status"] = $status;
-  $comment_settings["comment_page"] = $comment_page;
-  session_register("comment_settings");
-
-
-  /*
-  ** Now render the page
-  */
-
-  $start = $comment_page * $comments_per_page;
-
-  $output .= $status ? "<h3>" . t("Comments that await approval") . "</h3>\n" : "<h3>" . t("New or updated comments") . "</h3>";
-  $result = db_query("SELECT c.*, u.name, u.uid FROM comments c LEFT JOIN users u ON u.uid = c.uid WHERE c.status = '%d' ORDER BY timestamp DESC LIMIT $start, $comments_per_page", $status);
-
-  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  $output .= " <tr><th>" . t("subject") . "</th><th>" . t("author") . "</th><th>" . t("date") . "</th><th>" . t("published") . "</th><th colspan=\"2\">" . t("operations") . "</th></tr>\n";
+  $header = array(t("subject"), t("author"), t("status"), array("data" => t("operations"), "colspan" => 2));
   while ($comment = db_fetch_object($result)) {
-    $output .= " <tr><td>". l(check_output($comment->subject), array("id" => $comment->nid, "cid" => $comment->cid, "pid" => $comment->pid), "node", $comment->cid, array("title" => htmlentities($comment->comment))) ."</td><td>". format_name($comment) ."</td><td>". format_date($comment->timestamp, "small") ."</td><td>". ($comment->status == 0 ? "yes" : "no") ."</td><td>". la(t("edit comment"), array("mod" => "comment", "op" => "edit", "id" => $comment->cid)) ."</td><td>". la(t("delete comment"), array("mod" => "comment", "op" => "delete", "id" => $comment->cid)) ."</td></tr>\n";
+    $rows[] = array(l(check_output($comment->subject), array("id" => $comment->nid, "cid" => $comment->cid, "pid" => $comment->pid), "node", $comment->cid, array("title" => htmlentities(substr($comment->comment, 0, 128)))) ." ". (comment_is_new($comment) ? theme_mark() : ""), format_name($comment), ($comment->status == 0 ? t("published") : t("not published")) ."</td><td>". la(t("edit comment"), array("mod" => "comment", "op" => "edit", "id" => $comment->cid)), la(t("delete comment"), array("mod" => "comment", "op" => "delete", "id" => $comment->cid)));
   }
 
-  if ($comment_page > 0) {
-    // show previous
-    $prev_link = la(t("previous comments"), array("mod" => "comment", "status" => $status, "comment_page" => ($comment_page - 1)));
+  if ($pager = pager_display(NULL, 50, 0, "admin")) {
+    $rows[] = array(array("data" => $pager, "colspan" => 5));
   }
 
-  if (db_num_rows($result) == $comments_per_page) {
-    // show next
-    $next_link = la(t("next comments"), array("mod" => "comment", "status" => $status, "comment_page" => ($comment_page + 1)));
-  }
-
-  if ($prev_link || $next_link) {
-    $output .= "<tr><td>$prev_link</td><td></td><td></td><td></td><td></td><td>$next_link</td></tr>";
-  }
-  $output .= "</table>\n";
-
-  return $output;
+  return table($header, $rows);
 }
 
 function comment_mod_matrix($edit) {
