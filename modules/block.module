@@ -1,0 +1,53 @@
+<?
+
+$module = array("admin" => "block_admin");
+
+function block_admin_save($edit) {
+  foreach ($edit as $key=>$value) {
+    db_query("UPDATE blocks SET status = '$value' WHERE name = '$key'");
+  }
+}
+
+function block_admin_display() {
+  global $repository;
+
+  $result = db_query("SELECT * FROM blocks");
+  
+  // Generate output:
+  $output .= "<FORM ACTION=\"admin.php?mod=block\" METHOD=\"post\">\n";
+  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
+  $output .= " <TR><TH>block</TH><TH>module</TH><TH>status</TH></TR>\n";
+  
+  while ($block = db_fetch_object($result)) {
+    $module = ($repository[$block->module]["admin"]) ? "<A HREF=\"admin.php?mod=$block->module\">$block->module</A>" : $block->module;
+
+    $status .= "<SELECT NAME=\"edit[$block->name]\">\n";
+    $status .= " <OPTION VALUE=\"1\"". (($block->status == 1) ? " SELECTED" : "") .">enabled</OPTION>\n";
+    $status .= " <OPTION VALUE=\"0\"". (($block->status == 0) ? " SELECTED" : "") .">disabled</OPTION>\n";
+    $status .= "</SELECT>\n";
+
+    $output .= " <TR><TD>". $block->name ."</TD><TD>$module</TD><TD>$status</TD></TR>\n";
+    
+    unset($status);
+  }
+  
+  $output .= "</TABLE>\n";
+  $output .= "<INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"Save blocks\">\n";
+  $output .= "</FORM>\n";
+
+  print $output;
+}
+
+function block_admin() {
+  global $op, $edit;
+
+  switch ($op) {
+    case "Save blocks":
+      block_admin_save($edit);
+      break;
+  }
+ 
+  block_admin_display();
+}
+
+?>

@@ -1,6 +1,7 @@
 <?
 
 $module = array("page"  => "diary_page",
+                "block" => "diary_block",
                 "admin" => "diary_admin");
 
 
@@ -189,6 +190,25 @@ function diary_page() {
     default:
       diary_page_overview();
   }
+}
+
+function diary_block() {
+  $result = db_query("SELECT u.userid, d.timestamp FROM diaries d LEFT JOIN users u ON d.author = u.id ORDER BY timestamp DESC LIMIT 20");
+
+  while ($diary = db_fetch_object($result)) {
+    if ($time != date("F jS", $diary->timestamp)) {
+      $content .= "<P><B>". date("l, M jS", $diary->timestamp) ."</B></P>\n";
+      $time = date("F jS", $diary->timestamp);
+    }
+    $content .= "<LI><A HREF=\"module.php?mod=diary&op=view&name=$diary->userid\">$diary->userid</A></LI>\n";
+  }
+
+  $block[0]["subject"] = "Recent diary entries";
+  $block[0]["content"] = $content;
+  $block[0]["info"] = "recent diary entries";
+  $block[0]["link"] = "module.php?mod=diary";
+
+  return $block;
 }
 
 function diary_admin_edit($id) {
