@@ -1530,7 +1530,7 @@ function node_page() {
         while ($node = db_fetch_object($result)) {
           $output .= node_view(node_load(array("nid" => $node->nid, "type" => $node->type)), 1);
         }
-        $output .= pager_display(NULL, variable_get("default_nodes_main", 10));
+        $output .= theme('pager', NULL, variable_get("default_nodes_main", 10));
         print theme("page", $output, "");
     }
   }
