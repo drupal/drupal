@@ -8,7 +8,6 @@
  dbconnect();
 
  if ($save) {
-   cookiedecode($user);
    mysql_query("UPDATE testusers SET umode='$mode', uorder='$order', thold='$thold' where id='$user->id'");
    $user->update();
  }
@@ -24,7 +23,6 @@
 
  $theme->article($aid, $informant, $time, stripslashes($subject), $department, stripslashes($abstract), stripslashes($comments), stripslashes($article), $reply);
 
- cookiedecode($user);
  if ($mode != "nocomments") include "comments.php";
 
  $theme->footer();
