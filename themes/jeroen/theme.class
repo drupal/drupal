@@ -2,14 +2,14 @@
 
  class Theme {
    ### color set #1:
-   var $bgcolor1 = "#6C6C6C";   // background color
-   var $fgcolor1 = "#000000";   // table body color
-   var $hlcolor1 = "#";         // high-light color
+   var $bgcolor1 = "#6C6C6C";   // header color
+   var $fgcolor1 = "#000000";   // link  color
+   var $hlcolor1 = "#";         // ? color
 
    ### color set #2:
-   var $bgcolor2 = "#E7E7E7";
-   var $fgcolor2 = "#FEFEFE";
-   var $hlcolor2 = "#E09226";
+   var $bgcolor2 = "#E7E7E7";   // color
+   var $fgcolor2 = "#FEFEFE";   // header-text color
+   var $hlcolor2 = "#E09226";   // rust color
 
 
    ######
@@ -25,12 +25,12 @@
       </HEAD>
       <STYLE type="text/css"> 
        <!--
-        BODY,P,DIV,LI,UL,TD,EM,FONT,BLOCKQUOTE,FORM{font-family:Helvetica,Lucida,sans-serif;}
+        BODY,P,DIV,LI,UL,TD,EM,FONT,BLOCKQUOTE,FORM{ font-size: 9pt; font-family:Helvetica,Lucida,sans-serif;}
         .NO-IN{margin-left:-25;}}
        -->
       </STYLE>
       <BODY TEXT="#202020" BGCOLOR="#FEFEFE" BACKGROUND="themes/Jeroen/images/background.gif" ALINK="#000000" LINK="#000000" VLINK="#000000">
-       <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="2">
+       <TABLE BORDER="1" CELLPADDING="2" CELLSPACING="2">
         <TR>
          <TD COLSPAN="2"><IMG SRC="themes/Jeroen/images/logo.gif" ALT="drop.org logo"></TD>
          <TD WIDTH="180" VALIGN="top" ALIGN="right">
@@ -75,7 +75,7 @@
             <? if (rand(0,1) == 0) $img = "news2.gif"; else $img = "news4.gif"; if (rand(0,100) == 50) $img = "news5.gif"; ?><IMG SRC="themes/Jeroen/images/<? echo $img; ?>" WIDTH="20" HEIGHT="20" ALT=""></TD>
           </TR>
           <TR>
-           <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20" BACKGROUND="themes/Jeroen/images/newsboxleft.gif" ><IMG SRC="themes/Jeroen/images/newsboxleft.gif" WIDTH="20" HEIGHT="20" alt="">
+           <TD ALIGN="right" VALIGN="bottom" WIDTH="20" HEIGHT="20" BACKGROUND="themes/Jeroen/images/newsboxleft.gif" ><IMG SRC="themes/Jeroen/images/newsboxleft.gif" WIDTH="20" HEIGHT="20" ALT="">
            </TD>
            <TD COLSPAN="2" ALIGN="left" WIDTH="100%" BGCOLOR="#6C6C6C" HEIGHT="20" BACKGROUND="themes/Jeroen/images/menutitle.gif" NOWRAP>
             &nbsp;<FONT COLOR="<? echo $this->fgcolor2; ?>">
@@ -99,7 +99,7 @@
               if ($informant) {
                print "<FONT SIZE=\"-1\">$how by <A HREF=\"account.php?op=userinfo&uname=$informant\">$informant</A> on $timestamp"; ?><? print "</FONT>
            </TD>
-           <TD ALIGN=\"right\" WIDTH=\"80\" BGCOLOR=\"#6C6C6C\" BACKGROUND=\"themes/Jeroen/images/menutitle.gif\">
+           <TD ALIGN=\"center\" WIDTH=\"80\" BGCOLOR=\"#6C6C6C\" BACKGROUND=\"themes/Jeroen/images/menutitle.gif\">
             <B><A HREF=\"search.php?category=$category\"><FONT COLOR=\"<? $this->fgcolor3; ?>\">$category</FONT></A></B>&nbsp;";
               }
               else {
@@ -144,7 +144,7 @@
           </TR>
           <TR>
            <TD ALIGN="right" VALIGN="top" WIDTH="20" HEIGHT="20" BACKGROUND="themes/Jeroen/images/newsboxbottomleft.gif">&nbsp;</TD>
-           <TD COLSPAN="3" ALIGN="middle" HEIGHT="20" VALIGN="top" BACKGROUND="themes/Jeroen/images/newsboxbottom.gif">&nbsp;</TD>
+           <TD COLSPAN="3" ALIGN="center" HEIGHT="20" VALIGN="top" BACKGROUND="themes/Jeroen/images/newsboxbottom.gif">&nbsp;</TD>
            <TD ALIGN="left" VALIGN="top" WIDTH="20" HEIGHT="20" BACKGROUND="themes/Jeroen/images/newsboxbottomright.gif">&nbsp;</TD>
           </TR>
          </TABLE>
@@ -242,7 +242,7 @@
           </TR>
           <TR>
            <TD ALIGN="right" VALIGN="top" WIDTH="20" HEIGHT="20" BACKGROUND="themes/Jeroen/images/newsboxbottomleft.gif">&nbsp;</TD>
-           <TD COLSPAN="3" ALIGN="middle" HEIGHT="20" VALIGN="top" BACKGROUND="themes/Jeroen/images/newsboxbottom.gif">&nbsp;</TD>
+           <TD COLSPAN="3" ALIGN="center" HEIGHT="20" VALIGN="top" BACKGROUND="themes/Jeroen/images/newsboxbottom.gif">&nbsp;</TD>
            <TD ALIGN="left" VALIGN="top" WIDTH="20" HEIGHT="20" BACKGROUND="themes/Jeroen/images/newsboxbottomright.gif">&nbsp;</TD>
           </TR>
          </TABLE>
@@ -497,7 +497,7 @@
          <?
          global $PHP_SELF; 
  
-	 $this->box("Drop where?", "<TABLE WIDTH=\"100%\"><TR><TD ALIGN=\"left\" VALIGN=\"top\"><A HREF=\"index.php\">home</A><BR><A HREF=\"faq.php\">faq</A><BR><A HREF=\"search.php\">search</A></TD><TD ALIGN=\"right\" VALIGN=\"top\"><A HREF=\"submit.php\">submit news</A><BR><A HREF=\"account.php\">user account</A><BR><A HREF=\"webboard.php\">webboard</A></TD></TR></TABLE>");
+	 $this->box("Drop where?", "<TABLE WIDTH=\"100%\"><TR><TD ALIGN=\"left\" VALIGN=\"top\"><A HREF=\"index.php\">home</A><BR><A HREF=\"faq.php\">faq</A><BR><A HREF=\"search.php\">search</A></TD><TD ALIGN=\"right\" VALIGN=\"top\"><A HREF=\"submit.php\">submit news</A><BR><A HREF=\"account.php\">your account</A><BR><A HREF=\"webboard.php\">webboard</A></TD></TR></TABLE>");
          
           if (strstr($PHP_SELF, "index.php")) {
            global $user;
@@ -532,9 +532,13 @@
         </TD>
        </TR>
        <TR>
-        <TD ALIGN="center" COLSPAN="3" BGOLOR=\"6C6C6C\" BACKGROUND=\"themes/Jeroen/images/menutitle.gif\">
-         <FONT SIZE="2">[ <A HREF="">home</A> | <A HREF="/faq.php">faq</A> | <A HREF="/search.php">search</A> | <A HREF="/submit.php">submit news</A> | <A HREF="/account.php">user account</A> | <A HREF="/webboard.php">webboard</A> ] </FONT>
+        <TD ALIGN="right" VALIGN="bottom" BACKGROUND="themes/Jeroen/images/footer.gif>
+	 <IMG SRC="themes/Jeroen/images/footerleft.gif" ALIGN="left" WIDTH="20" HEIGHT="20" ALT=""></TD>
+	<TD ALIGN="center" VALIGN="center" HEIGHT="20" BACKGROUND="themes/Jeroen/images/footer.gif">
+	 <FONT SIZE="2">[ <A HREF="">home</A> | <A HREF="/faq.php">faq</A> | <A HREF="/search.php">search</A> | <A HREF="/submit.php">submit news</A> | <A HREF="/account.php">your account</A> | <A HREF="/webboard.php">webboard</A> ] </FONT>
         </TD>
+	<TD ALIGN="left" VALIGN="center" BACKGROUND="themes/Jeroen/images/footer.gif>
+	 <IMG SRC="themes/Jeroen/images/footerright.gif" ALIGN="right" WIDTH="20" HEIGHT="20" ALT=""></TD>
        </TR>
       </TABLE>
      </BODY> 
