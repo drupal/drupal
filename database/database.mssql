@@ -257,7 +257,8 @@ CREATE TABLE [dbo].[site] (
   [name] [varchar] (128) NOT NULL ,
   [link] [varchar] (255) NOT NULL ,
   [size] [text] NOT NULL ,
-  [timestamp] [int] NOT NULL ,
+  [changed] [int] NOT NULL ,
+  [checked] [int] NOT NULL ,
   [feed] [varchar] (255) NOT NULL ,
   [refresh] [int] NOT NULL ,
   [threshold] [int] NOT NULL

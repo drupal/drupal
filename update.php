@@ -66,7 +66,8 @@ $mysql_updates = array(
   "2003-04-19" => "update_51",
   "2003-04-20" => "update_52",
   "2003-05-18" => "update_53",
-  "2003-05-24" => "update_54"
+  "2003-05-24" => "update_54",
+  "2003-05-31" => "update_55"
 );
 
 // Update functions
@@ -712,6 +713,11 @@ function update_53() {
 
 function update_54() {
   update_sql("ALTER TABLE locales CHANGE string string BLOB DEFAULT '' NOT NULL");
+}
+
+function update_55() {
+  update_sql("ALTER TABLE site ADD checked INT(11) NOT NULL;");
+  update_sql("ALTER TABLE site CHANGE timestamp changed INT(11) NOT NULL;");
 }
 
 function update_upgrade3() {
