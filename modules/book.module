@@ -150,7 +150,7 @@ function book_validate(&$node) {
   else {
     $node->format = 0;
     $node->body = filter($node->body);
-    $node->teaser = filter($node->body);
+    $node->teaser = filter($node->teaser);
   }
 
   // Set default values for non administrators:
