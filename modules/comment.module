@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.120 2003/04/13 18:33:01 dries Exp $
+// $Id: comment.module,v 1.121 2003/04/15 19:50:04 dries Exp $
 
 $GLOBALS["cmodes"] = array(1 => t("Flat list - collapsed"), 2 => t("Flat list - expanded"), 3 => t("Threaded list - collapsed"), 4 => t("Threaded list - expanded"));
 $GLOBALS["corder"] = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"));
@@ -1465,6 +1465,9 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
         // Force default for normal users:
         $node->comment = variable_get("comment_$node->type", 2);
       }
+      break;
+    case "delete":
+      db_query("DELETE FROM comments WHERE nid = '$node->nid'");
       break;
   }
 }
