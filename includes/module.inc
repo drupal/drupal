@@ -149,7 +149,7 @@ function module_load_all() {
   $list = module_list();
   $status = true;
   foreach ($list as $module) {
-    $status = $status && module_load($module);
+    $status &= module_load($module);
   }
   return $status;
 }
