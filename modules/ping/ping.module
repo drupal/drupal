@@ -1,5 +1,5 @@
 <?php
-// $Id: ping.module,v 1.14 2004/01/23 18:42:43 dries Exp $
+// $Id: ping.module,v 1.15 2004/04/23 06:30:42 dries Exp $
 
 function ping_help($section = "admin/help#ping") {
   $output = "";
@@ -74,6 +74,19 @@ function ping_ping($name = "", $url = "") {
   if (!$result || $result->faultCode()) {
     watchdog("error", "failed to notify 'blo.gs' ");
   }
+
+  unset($client);
+
+  $client = new xmlrpc_client("/rpc/ping", "rpc.technorati.com", 80);
+
+  $message = new xmlrpcmsg("weblogUpdates.ping", array(new xmlrpcval($name), new xmlrpcval($url)));
+
+  $result = $client->send($message);
+
+  if (!$result || $result->faultCode()) {
+    watchdog("error", "failed to notify 'technorati.com'");
+  }
+
 
 }
 ?>
