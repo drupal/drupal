@@ -14,7 +14,7 @@ CONTENTS OF THIS FILE
 REQUIREMENTS
 ------------
 
-Drupal requires a web server, PHP4 (4.33 or greater) or PHP5
+Drupal requires a web server, PHP4 (4.3.3 or greater) or PHP5
 (http://www.php.net/) and either MySQL (http://www.mysql.com/)
 or PostgreSQL (http://www.postgresql.org/).
 
@@ -182,17 +182,25 @@ INSTALLATION
 
 5. CONFIGURE DRUPAL
 
+   You should consider creating a "files" subdirectory in your Drupal
+   installation directory. This subdirectory stores files such as
+   custom logos, user avatars, and other media associated with your
+   new site. The sub-directory requires "read and write" permission
+   by the Drupal server process. You can change the name of this
+   subdirectory at "Administer > Settings > File system settings".
+
    You can now launch your browser and point it to your Drupal site.
 
    Create an account and login. The first account will automatically
-   become the main administrator account.
+   become the main administrator account with total control.
 
 6. CRON TASKS
 
-   Many Drupal modules have periodic tasks that must be triggered by a
-   cron job. To activate these tasks, you must call the cron page by
-   visiting http://www.example.com/cron.php -- this will pass control
-   to the modules and the modules will decide if and what they must do.
+   Many Drupal modules (such as the search functionality) have periodic
+   tasks that must be triggered by a cron job. To activate these tasks,
+   call the cron page by visiting http://www.example.com/cron.php --
+   this will pass control to the modules and the modules will decide if
+   and what they must do.
 
    Most systems support the crontab utility for scheduling tasks like
    this. The following example crontab line will activate the cron
