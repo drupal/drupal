@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.75 2003/03/05 18:56:57 dries Exp $
+// $Id: aggregator.module,v 1.76 2003/03/08 00:20:47 dries Exp $
 
 function import_help() {
  ?>
@@ -194,6 +194,7 @@ function import_refresh($feed) {
     ** Remove unsupported tags or sub-elements:
     */
 
+    $data = ereg_replace("<textinput([^s].*)/>", "", $data);
     $data = ereg_replace("<textinput([^s].*)</textinput>", "", $data);
     $data = ereg_replace("<image([^s].*)</image>", "", $data);
 
