@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.93 2002/01/11 21:19:54 dries Exp $
+// $Id: theme.inc,v 1.94 2002/01/12 21:35:13 dries Exp $
 
 class BaseTheme {
 
@@ -9,7 +9,7 @@ class BaseTheme {
 
     print $output;
     $this->box(t("Navigation"), implode("<br />", link_page())); $this->user("all", $this); theme_blocks("all", $this);
-    print "</td><td valgin=\"top\">";
+    print "</td><td valign=\"top\">";
 
   }
 
