@@ -76,9 +76,14 @@ function archive_calendar($original = 0) {
 
   $days_with_posts = array();
   while ($day_with_post = db_fetch_object($result)) {
-    $days_with_posts[] = date('j', $day_with_post->created + $user->timezone);
+    $daynum = date('j', $day_with_post->created + $user->timezone);
+    if (isset($days_with_posts[$daynum])) {
+      $days_with_posts[$daynum]++;
+    }
+    else {
+      $days_with_posts[$daynum] = 1;
+    }
   }
-  $days_with_posts = array_unique($days_with_posts);
 
   // Generate calendar header:
   $output .= "\n<!-- calendar -->\n";
@@ -125,8 +130,8 @@ function archive_calendar($original = 0) {
 
     // Print one cell:
     $date = mktime(0, 0, 0, $month, $nday, $year) + $user->timezone;
-    if (in_array($nday, $days_with_posts)) {
-      $daytext = l($nday, "archive/$year/$month/$nday");
+    if (isset($days_with_posts[$nday])) {
+      $daytext = l($nday, "archive/$year/$month/$nday", array("title" => format_plural($days_with_posts[$nday], "1 post", "%count posts")));
       $dayclass = 'day-link';
     }
     else {
