@@ -252,7 +252,7 @@ function file_copy(&$source, $dest = 0, $replace = FILE_EXISTS_RENAME) {
       }
     }
 
-    if (!copy($source, $dest)) {
+    if (!@copy($source, $dest)) {
       drupal_set_message(t('File copy failed.'), 'error');
       return 0;
     }
