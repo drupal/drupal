@@ -906,42 +906,44 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
     while ($term = db_fetch_object($result)) {
       $names[] = $term->name;
     }
-    if (count($names) == 0) {
-      drupal_not_found();
-      return;
+
+    if ($names) {
+      drupal_set_title($title = implode(', ', $names));
+
+      switch ($op) {
+        case 'page':
+          // Build breadcrumb based on first hierarchy of first term:
+          $current->tid = $tids[0];
+          $breadcrumbs = array(array('path' => $_GET['q']));
+          while ($parents = taxonomy_get_parents($current->tid)) {
+            $current = array_shift($parents);
+            $breadcrumbs[] = array('path' => 'taxonomy/term/'. $current->tid, 'title' => $current->name);
+          }
+          $breadcrumbs = array_reverse($breadcrumbs);
+          menu_set_location($breadcrumbs);
+
+          drupal_set_html_head('<link rel="alternate" type="application/rss+xml" title="RSS - '. $title .'" href="'. url('taxonomy/term/'. $str_tids .'/'. $depth .'/feed') .'" />');
+
+          $output = taxonomy_render_nodes(taxonomy_select_nodes($tids, $operator, $depth, TRUE));
+          $output .= theme('xml_icon', url("taxonomy/term/$str_tids/$depth/feed"));
+          print theme('page', $output);
+          break;
+
+        case 'feed':
+          $term = taxonomy_get_term($tids[0]);
+          $channel['link'] = url('taxonomy/term/'. $str_tids .'/'. $depth, NULL, NULL, TRUE);
+          $channel['title'] = variable_get('site_name', 'drupal') .' - '. $title;
+          $channel['description'] = $term->description;
+
+          $result = taxonomy_select_nodes($tids, $operator, $depth, FALSE);
+          node_feed($result, $channel);
+          break;
+        default:
+          drupal_not_found();
+      }
     }
-    drupal_set_title($title = implode(', ', $names));
-
-    switch ($op) {
-      case 'page':
-        // Build breadcrumb based on first hierarchy of first term:
-        $current->tid = $tids[0];
-        $breadcrumbs = array(array('path' => $_GET['q']));
-        while ($parents = taxonomy_get_parents($current->tid)) {
-          $current = array_shift($parents);
-          $breadcrumbs[] = array('path' => 'taxonomy/term/'. $current->tid, 'title' => $current->name);
-        }
-        $breadcrumbs = array_reverse($breadcrumbs);
-        menu_set_location($breadcrumbs);
-
-        drupal_set_html_head('<link rel="alternate" type="application/rss+xml" title="RSS - '. $title .'" href="'. url('taxonomy/term/'. $str_tids .'/'. $depth .'/feed') .'" />');
-
-        $output = taxonomy_render_nodes(taxonomy_select_nodes($tids, $operator, $depth, TRUE));
-        $output .= theme('xml_icon', url("taxonomy/term/$str_tids/$depth/feed"));
-        print theme('page', $output);
-        break;
-
-      case 'feed':
-        $term = taxonomy_get_term($tids[0]);
-        $channel['link'] = url('taxonomy/term/'. $str_tids .'/'. $depth, NULL, NULL, TRUE);
-        $channel['title'] = variable_get('site_name', 'drupal') .' - '. $title;
-        $channel['description'] = $term->description;
-
-        $result = taxonomy_select_nodes($tids, $operator, $depth, FALSE);
-        node_feed($result, $channel);
-        break;
-      default:
-        drupal_not_found();
+    else {
+      drupal_not_found();
     }
   }
 }
