@@ -467,27 +467,20 @@ function _forum_new($tid) {
 /**
  * Menu callback; prints a forum listing.
  */
-function forum_page($tid = 0, $display = 'all') {
+function forum_page($tid = 0) {
   global $user;
 
   if (module_exist('taxonomy')) {
-    if ($display == 'new') {
-      if ($nid = _forum_new($tid)) {
-        drupal_goto("node/$nid");
-      }
-    }
-    else {
-      $forum_per_page = variable_get('forum_per_page', 25);
-      $sortby = variable_get('forum_order', 1);
+    $forum_per_page = variable_get('forum_per_page', 25);
+    $sortby = variable_get('forum_order', 1);
 
-      $forums = forum_get_forums($tid);
-      $parents = taxonomy_get_parents_all($tid);
-      if ($tid && !in_array($tid, variable_get('forum_containers', array()))) {
-        $topics = forum_get_topics($tid, $sortby, $forum_per_page);
-      }
-
-      print theme('forum_display', $forums, $topics, $parents, $tid, $sortby, $forum_per_page);
+    $forums = forum_get_forums($tid);
+    $parents = taxonomy_get_parents_all($tid);
+    if ($tid && !in_array($tid, variable_get('forum_containers', array()))) {
+      $topics = forum_get_topics($tid, $sortby, $forum_per_page);
     }
+
+    print theme('forum_display', $forums, $topics, $parents, $tid, $sortby, $forum_per_page);
   }
   else {
     print theme('page', forum_help('admin/settings/forum'), t('Warning'));
