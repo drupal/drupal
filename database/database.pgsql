@@ -343,6 +343,21 @@ CREATE INDEX node_created ON node(created);
 CREATE INDEX node_changed ON node(changed);
 
 --
+-- Table structure for table `node_access`
+--
+
+CREATE TABLE node_access (
+  nid SERIAL,
+  gid integer NOT NULL default '0',
+  realm text NOT NULL default '',
+  grant_view smallint NOT NULL default '0',
+  grant_update smallint NOT NULL default '0',
+  grant_delete smallint NOT NULL default '0',
+  PRIMARY KEY  (nid,gid,realm)
+); 
+
+
+--
 -- Table structure for table 'node_counter'
 --
 
@@ -698,5 +713,11 @@ END;
 CREATE FUNCTION "rand"() RETURNS float AS '
 BEGIN
   RETURN random();
+END;
+' LANGUAGE 'plpgsql';
+
+CREATE FUNCTION "concat"(text, text) RETURNS text AS '
+BEGIN
+  RETURN $1 || $2;
 END;
 ' LANGUAGE 'plpgsql';

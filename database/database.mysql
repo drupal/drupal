@@ -341,9 +341,9 @@ CREATE TABLE node (
   KEY node_changed (changed)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table `node_access`
-#
+--
+-- Table structure for table `node_access`
+--
 
 CREATE TABLE node_access (
   nid int(10) unsigned NOT NULL default '0',

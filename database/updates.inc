@@ -1090,11 +1090,15 @@ function update_86() {
   $ret = array();
   $ret[] = update_sql("INSERT INTO {users_roles} (uid, rid) SELECT uid, rid FROM {users}");
   // TODO: should we verify the insert above worked before dropping rid?
-  $ret[] = update_sql("ALTER TABLE {users} DROP rid");
+  if ($GLOBALS['db_type'] == 'mysql') {
+    //only the most recent versions of postgres support dropping columns
+    $ret[] = update_sql("ALTER TABLE {users} DROP rid");
+  }
   return $ret;
 }
 
 function update_87() {
+  // Works for both postgres and mysql
   $ret = array();
   $ret[] = update_sql("ALTER TABLE {comments} ADD name varchar(60) DEFAULT NULL");
   $ret[] = update_sql("ALTER TABLE {comments} ADD mail varchar(64) DEFAULT NULL");
@@ -1104,16 +1108,31 @@ function update_87() {
 
 function update_88() {
   $ret = array();
-  $ret[] = update_sql("ALTER TABLE {menu} DROP status");
-  $ret[] = update_sql("ALTER TABLE {menu} DROP visibility");
-  $ret[] = update_sql("ALTER TABLE {menu} ADD type INT(2) UNSIGNED DEFAULT '0' NOT NULL");
+
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql("ALTER TABLE {menu} DROP status");
+    $ret[] = update_sql("ALTER TABLE {menu} DROP visibility");
+    $ret[] = update_sql("ALTER TABLE {menu} ADD type INT(2) UNSIGNED DEFAULT '0' NOT NULL");
+  } 
+  else {
+    $ret[] = update_sql("ALTER TABLE {menu} ADD type smallint");
+    $ret[] = update_sql("ALTER TABLE {menu} ALTER COLUMN type SET DEFAULT '0'");
+    $ret[] = update_sql("UPDATE {menu} SET type = '0'");
+    $ret[] = update_sql("ALTER TABLE {menu} ALTER COLUMN type SET NOT NULL");
+  }
   $ret[] = update_sql("DELETE FROM {menu}");
   return $ret;
 }
 
 function update_89() {
   $ret = array();
-  $ret[] = update_sql("ALTER TABLE {node} CHANGE static sticky INT(2) DEFAULT '0' NOT NULL");
+  
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql("ALTER TABLE {node} CHANGE static sticky INT(2) DEFAULT '0' NOT NULL");
+  }
+  else {
+    $ret[] = update_sql("ALTER TABLE {node} RENAME static TO sticky;");
+  }
 
   // Change the node settings, so that it uses node_sticky_$type instead of node_static_$type
   $result = db_query("SELECT * FROM {variable} WHERE name LIKE 'node_static_%'");
@@ -1128,7 +1147,13 @@ function update_89() {
 }
 
 function update_90() {
-  $ret[] = update_sql("ALTER TABLE {profile_fields} CHANGE overview visibility INT(1) UNSIGNED DEFAULT '0' NOT NULL");
+
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql("ALTER TABLE {profile_fields} CHANGE overview visibility INT(1) UNSIGNED DEFAULT '0' NOT NULL");
+  }
+  else {
+    $ret[] = update_sql("ALTER TABLE {profile_fields} RENAME overview TO visibility");
+  }
   $ret[] = update_sql("UPDATE {profile_fields} SET visibility = 2 WHERE visibility = 1");
   $ret[] = update_sql("UPDATE {profile_fields} SET visibility = 1 WHERE visibility = 0");
   return $ret;
@@ -1137,7 +1162,7 @@ function update_90() {
 function update_91() {
   $ret = array();
   if ($GLOBALS["db_type"] == "pgsql") {
-    $ret[] = update_sql("CREATE INDEX node_created ON {node} (created)");
+    // node_created was created implicitly somewhere else
     $ret[] = update_sql("CREATE INDEX node_changed ON {node} (changed)");
   }
   else {
@@ -1192,15 +1217,34 @@ function update_94() {
 function update_95() {
  $ret = array();
 
- $ret[] = update_sql("CREATE TABLE {node_access} (
-   nid int(10) unsigned NOT NULL default '0',
-   gid int(10) unsigned NOT NULL default '0',
-   realm varchar(255) NOT NULL default '',
-   grant_view tinyint(1) unsigned NOT NULL default '0',
-   grant_update tinyint(1) unsigned NOT NULL default '0',
-   grant_delete tinyint(1) unsigned NOT NULL default '0',
-   PRIMARY KEY  (nid,gid,realm)
-   )");
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql("CREATE TABLE {node_access} (
+     nid int(10) unsigned NOT NULL default '0',
+     gid int(10) unsigned NOT NULL default '0',
+     realm varchar(255) NOT NULL default '',
+     grant_view tinyint(1) unsigned NOT NULL default '0',
+     grant_update tinyint(1) unsigned NOT NULL default '0',
+     grant_delete tinyint(1) unsigned NOT NULL default '0',
+     PRIMARY KEY  (nid,gid,realm)
+     )");
+  }
+  else {
+    $ret[] = update_sql("CREATE TABLE {node_access} (
+    nid SERIAL,
+    gid integer NOT NULL default '0',
+    realm text NOT NULL default '',
+    grant_view smallint NOT NULL default '0',
+    grant_update smallint NOT NULL default '0',
+    grant_delete smallint NOT NULL default '0',
+    PRIMARY KEY  (nid,gid,realm)
+    )");
+
+    $ret[] = update_sql("CREATE FUNCTION \"concat\"(text, text) RETURNS text AS '
+        BEGIN
+          RETURN $1 || $2;
+        END;
+        ' LANGUAGE 'plpgsql';");
+  }
   $ret[] = update_sql("INSERT INTO {node_access} VALUES (0, 0, 'all', 1, 0, 0);");
   return $ret;
 }
@@ -1212,7 +1256,15 @@ function update_96() {
   $ret[] = update_sql('ALTER TABLE {accesslog} ADD title VARCHAR(255) DEFAULT NULL');
   $ret[] = update_sql('ALTER TABLE {accesslog} ADD path VARCHAR(255) DEFAULT NULL');
 
-  $ret[] = update_sql("ALTER TABLE {menu} ADD description varchar(255) DEFAULT '' NOT NULL");
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql("ALTER TABLE {menu} ADD description varchar(255) DEFAULT '' NOT NULL");
+  }
+  else {
+    $ret[] = update_sql("ALTER TABLE {menu} ADD description smallint");
+    $ret[] = update_sql("ALTER TABLE {menu} ALTER COLUMN description SET DEFAULT '0'");
+    $ret[] = update_sql("UPDATE {menu} SET description = '0'");
+    $ret[] = update_sql("ALTER TABLE {menu} ALTER COLUMN description SET NOT NULL");
+  }
 
   return $ret;
 }
