@@ -52,7 +52,9 @@ function filter_menu() {
   $items[] = array('path' => 'admin/filters', 'title' => t('filters'),
     'callback' => 'filter_admin_settings',
     'access' => user_access('administer site configuration'));
-  $items[] = array('path' => 'admin/filters/order', 'title' => t('rearrange filters'),
+  $items[] = array('path' => 'admin/filters/configure', 'title' => t('configure'),
+    'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
+  $items[] = array('path' => 'admin/filters/order', 'title' => t('rearrange'),
     'callback' => 'filter_admin_order',
     'access' => user_access('administer site configuration'),
     'type' => MENU_LOCAL_TASK);

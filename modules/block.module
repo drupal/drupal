@@ -67,6 +67,8 @@ function block_menu() {
   $items[] = array('path' => 'admin/block', 'title' => t('blocks'),
     'access' => user_access('administer blocks'),
     'callback' => 'block_admin');
+  $items[] = array('path' => 'admin/block/list', 'title' => t('list'),
+    'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
   $items[] = array('path' => 'admin/block/edit', 'title' => t('edit block'),
     'access' => user_access('administer blocks'),
     'callback' => 'block_box_edit',

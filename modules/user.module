@@ -605,6 +605,8 @@ function user_menu() {
   if (arg(0) == 'user' && is_numeric(arg(1))) {
     $items[] = array('path' => 'user/'. arg(1), 'title' => t('user'),
       'callback' => 'user_page', 'access' => TRUE);
+    $items[] = array('path' => 'user/'. arg(1) .'/view', 'title' => t('view'),
+      'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
     $items[] = array('path' => 'user/'. arg(1) .'/edit', 'title' => t('edit'),
       'callback' => 'user_edit', 'access' => $access || $user->uid == arg(1),
       'type' => MENU_LOCAL_TASK);
@@ -613,8 +615,8 @@ function user_menu() {
       if (($categories = _user_categories()) && (count($categories) > 1)) {
         foreach ($categories as $key => $category) {
           $items[] = array('path' => 'user/'. arg(1) .'/edit/'. $category['name'], 'title' => $category['title'],
-              'callback' => $function, 'access' => $access || $user->uid == arg(1),
-              'type' => MENU_LOCAL_SUBTASK, 'weight' => $category['weight']);
+            'type' => $category['name'] == 'account' ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK,
+            'weight' => $category['weight']);
         }
       }
     }
@@ -645,39 +647,37 @@ function user_menu() {
 
   $items[] = array('path' => 'admin/user', 'title' => t('users'),
     'callback' => 'user_admin', 'access' => $access);
-
-  // Tabs:
-  $items[] = array('path' => 'admin/user/create', 'title' => t('add user'),
+  $items[] = array('path' => 'admin/user/list', 'title' => t('list'),
+    'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
+  $items[] = array('path' => 'admin/user/create', 'title' => t('add'),
     'callback' => 'user_admin', 'access' => $access,
     'type' => MENU_LOCAL_TASK);
   $items[] = array('path' => 'admin/user/configure', 'title' => t('configure'),
     'callback' => 'user_configure', 'access' => $access,
     'type' => MENU_LOCAL_TASK);
+  $items[] = array('path' => 'admin/user/configure/settings', 'title' => t('settings'),
+    'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
+  $items[] = array('path' => 'admin/user/configure/access', 'title' => t('access rules'),
+    'callback' => 'user_configure', 'access' => $access,
+    'type' => MENU_LOCAL_TASK);
+  $items[] = array('path' => 'admin/user/configure/access/mail', 'title' => t('e-mail rules'),
+    'callback' => 'user_configure', 'access' => $access,
+    'type' => MENU_LOCAL_TASK);
+  $items[] = array('path' => 'admin/user/configure/access/user', 'title' => t('name rules'),
+    'callback' => 'user_configure', 'access' => $access,
+    'type' => MENU_LOCAL_TASK);
+  $items[] = array('path' => 'admin/user/configure/role', 'title' => t('roles'),
+    'callback' => 'user_configure', 'access' => $access,
+    'type' => MENU_LOCAL_TASK);
+  $items[] = array('path' => 'admin/user/configure/permission', 'title' => t('permissions'),
+    'callback' => 'user_configure', 'access' => $access,
+    'type' => MENU_LOCAL_TASK);
+
   if (module_exist('search')) {
     $items[] = array('path' => 'admin/user/search', 'title' => t('search'),
       'callback' => 'user_admin', 'access' => $access,
       'type' => MENU_LOCAL_TASK);
   }
-
-  // Sub-tabs:
-  $items[] = array('path' => 'admin/user/configure/settings', 'title' => t('settings'),
-    'callback' => 'user_configure', 'access' => $access,
-    'type' => MENU_LOCAL_SUBTASK);
-  $items[] = array('path' => 'admin/user/configure/access', 'title' => t('access rules'),
-    'callback' => 'user_configure', 'access' => $access,
-    'type' => MENU_LOCAL_SUBTASK);
-  $items[] = array('path' => 'admin/user/configure/access/mail', 'title' => t('e-mail rules'),
-    'callback' => 'user_configure', 'access' => $access,
-    'type' => MENU_LOCAL_SUBTASK);
-  $items[] = array('path' => 'admin/user/configure/access/user', 'title' => t('name rules'),
-    'callback' => 'user_configure', 'access' => $access,
-    'type' => MENU_LOCAL_SUBTASK);
-  $items[] = array('path' => 'admin/user/configure/role', 'title' => t('roles'),
-    'callback' => 'user_configure', 'access' => $access,
-    'type' => MENU_LOCAL_SUBTASK);
-  $items[] = array('path' => 'admin/user/configure/permission', 'title' => t('permissions'),
-    'callback' => 'user_configure', 'access' => $access,
-    'type' => MENU_LOCAL_SUBTASK);
 
   return $items;
 }

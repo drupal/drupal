@@ -208,6 +208,8 @@ function archive_menu() {
     'access' => user_access('access content'),
     'callback' => 'archive_page',
     'type' => MENU_SUGGESTED_ITEM);
+  $items[] = array('path' => 'archive/browse', 'title' => t('browse'),
+    'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
   $items[] = array('path' => 'archive/configure', 'title' => t('configure'),
     'access' => user_access('administer site configuration'),
     'callback' => 'archive_configure',

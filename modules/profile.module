@@ -34,7 +34,7 @@ function profile_menu() {
   $items[] = array('path' => 'admin/user/configure/profile', 'title' => t('profiles'),
     'callback' => 'profile_admin_overview',
     'access' => user_access('administer users'),
-    'type' => MENU_LOCAL_SUBTASK);
+    'type' => MENU_LOCAL_TASK);
   $items[] = array('path' => 'admin/user/configure/profile/add', 'title' => t('add field'),
     'callback' => 'profile_admin_add',
     'access' => user_access('administer users'),

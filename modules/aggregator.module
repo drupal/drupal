@@ -129,7 +129,8 @@ function aggregator_menu() {
     'callback' => 'aggregator_admin_refresh_feed', 'access' => $edit,
     'type' => MENU_CALLBACK);
 
-  // Tabs:
+  $items[] = array('path' => 'admin/aggregator/list', 'title' => t('list'),
+    'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
   $items[] = array('path' => 'admin/aggregator/add/feed', 'title' => t('add feed'),
     'callback' => 'aggregator_admin_edit_feed', 'access' => $edit,
     'type' => MENU_LOCAL_TASK);
@@ -159,6 +160,8 @@ function aggregator_menu() {
     while ($feed = db_fetch_object($result)) {
       $items[] = array('path' => 'aggregator/sources/'. $feed->fid, 'title' => $feed->title,
         'callback' => 'aggregator_page_source', 'access' => $view);
+      $items[] = array('path' => 'aggregator/sources/'. $feed->fid .'/view', 'title' => t('view'),
+        'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
       $items[] = array('path' => 'aggregator/sources/'. $feed->fid .'/categorize', 'title' => t('categorize'),
         'callback' => 'aggregator_page_source', 'access' => $edit,
         'type' => MENU_LOCAL_TASK);
@@ -173,6 +176,8 @@ function aggregator_menu() {
     while ($category = db_fetch_object($result)) {
       $items[] = array('path' => 'aggregator/categories/'. $category->cid, 'title' => $category->title,
         'callback' => 'aggregator_page_category', 'access' => $view);
+      $items[] = array('path' => 'aggregator/categories/'. $category->cid .'/view', 'title' => t('view'),
+        'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
       $items[] = array('path' => 'aggregator/categories/'. $category->cid .'/categorize', 'title' => t('categorize'),
         'callback' => 'aggregator_page_category', 'access' => $edit,
         'type' => MENU_LOCAL_TASK);

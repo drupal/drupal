@@ -26,7 +26,8 @@ function menu_menu() {
     'access' => user_access('administer menu'),
     'type' => MENU_CALLBACK);
 
-  // Tabs:
+  $items[] = array('path' => 'admin/menu/list', 'title' => t('list'),
+    'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
   $items[] = array('path' => 'admin/menu/menu/add', 'title' => t('add menu'),
     'callback' => 'menu_add_menu',
     'access' => user_access('administer menu'),

@@ -66,8 +66,9 @@ function path_menu() {
     'callback' => 'path_admin_delete',
     'access' => user_access('administer url aliases'),
     'type' => MENU_CALLBACK);
-  // Tabs:
-  $items[] = array('path' => 'admin/path/add', 'title' => t('add alias'),
+  $items[] = array('path' => 'admin/path/list', 'title' => t('list'),
+    'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
+  $items[] = array('path' => 'admin/path/add', 'title' => t('add'),
     'callback' => 'path_admin_edit',
     'access' => user_access('administer url aliases'),
     'type' => MENU_LOCAL_TASK);

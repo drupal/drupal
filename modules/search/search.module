@@ -52,6 +52,8 @@ function search_menu() {
     'callback' => 'search_help_page',
     'access' => user_access('search content'),
     'type' => MENU_SUGGESTED_ITEM);
+  $items[] = array('path' => 'search/search', 'title' => t('search'),
+    'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
   $items[] = array('path' => 'search/configure', 'title' => t('configure'),
     'callback' => 'search_configure',
     'access' => user_access('administer site configuration'),

@@ -63,6 +63,8 @@ function taxonomy_menu() {
   $items[] = array('path' => 'admin/taxonomy', 'title' => t('categories'),
     'callback' => 'taxonomy_admin',
     'access' => user_access('administer taxonomy'));
+  $items[] = array('path' => 'admin/taxonomy/list', 'title' => t('list'),
+    'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
   $items[] = array('path' => 'admin/taxonomy/add/vocabulary', 'title' => t('add vocabulary'),
     'callback' => 'taxonomy_admin',
     'access' => user_access('administer taxonomy'),
