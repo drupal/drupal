@@ -437,6 +437,20 @@ function taxonomy_get_parents($tid, $key = "tid") {
   }
 }
 
+// Gets all parents, parents of parents, etc.
+function taxonomy_get_parents_all($tid, $key = "tid") {
+  $parents = array();
+  if ($tid) {
+    $parents[] = taxonomy_get_term($tid);
+    $n = 0;
+    while ($parent = taxonomy_get_parents($parents[$n]->tid)) {
+      $parents = array_merge($parents, $parent);
+      $n++;
+    }
+  }
+  return $parents;
+}
+
 // hierarchy: get children
 function taxonomy_get_children($tid, $vid = 0, $key = "tid") {
   if ($vid) {
