@@ -22,6 +22,7 @@
     */
 
     function header() {
+
 ?>
 
       <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
@@ -31,8 +32,8 @@
           <title><?php echo variable_get(site_name, "drupal"); ?> - Tears of technology</title>
           <style type="text/css">
             <!--
-              BODY,P,DIV,LI,UL,td,EM,FONT,BLOCKQUOTE,FORM{font-size: 10pt; font-family:Helvetica,Lucida,sans-serif;}
-              SMALL {font-size: 8pt;}
+              body,p,div,li,ul,td,em,FONT,BLOCKQUOTE,FORM{ font-size: 10pt; font-family: Helvetica,Lucida,sans-serif; }
+              SMALL { font-size: 10pt; }
             -->
           </style>
         </head>
@@ -68,6 +69,7 @@
               <td valign="top" align="right">
 
 <?php
+
                 theme_blocks("left", $this);
 
 ?>
@@ -118,7 +120,7 @@
                                   </FONT>
                                 </td>
                                 <td align=\"right\" background=\"themes/jeroen/images/menutitle.gif\" nowrap>
-                                  <b><a href=\"search.php?category=". urlencode($story->section) ."\"><FONT COLOR=\"#000000\">". check_output($story->section) ."</FONT></a><a href=\"index.php?category=$story->cid\">". check_output($story->category) ."</a> / <a href=\"index.php?topic=$story->tid\">". check_output($story->topic) ."</a></b>";
+                                  <b><a href=\"index.php?category=$story->cid\">". check_output($story->category) ."</a> / <a href=\"index.php?topic=$story->tid\">". check_output($story->topic) ."</a></b>";
 
 ?>
 
@@ -236,12 +238,12 @@
 
 ?>
 
-                <table width="100%" align="center" cellpadding="1" cellspacing="0" border="0">
+                <table width="100%" align="center" cellpadding="0" cellspacing="0" border="0">
                   <tr>
-                    <td width="20" height="20" background="themes/jeroen/images/boxtopleft.gif" nowrap>&nbsp;</td>
+                    <td background="themes/jeroen/images/boxtopleft.gif" width="20" height="20" border="0" nowrap>&nbsp;</td>
                     <td width="<?php echo $width; ?>" background="themes/jeroen/images/boxtop.gif">&nbsp;</td>
-                    <td background="themes/jeroen/images/boxtopmiddle.gif">&nbsp;</td>
-                    <td background="themes/jeroen/images/boxtop.gif">&nbsp;</td>
+                    <td background="themes/jeroen/images/boxtopmiddle.gif" nowrap>&nbsp;</td>
+                    <td background="themes/jeroen/images/boxtop.gif"nowrap>&nbsp;</td>
                     <td width="20" background="themes/jeroen/images/boxtopright.gif" nowrap>&nbsp;</td>
                   </tr>
                   <tr>
