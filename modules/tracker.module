@@ -45,7 +45,7 @@ function tracker_page() {
 
       if ($new = comment_num_new($node->nid)) {
         $comments .= '<br />';
-        $comments .= l(t('%a new', array('%a' => $new)), "node/view/$node->nid", NULL, NULL, 'new');
+        $comments .= l(t('%num new', array('%num' => $new)), "node/view/$node->nid", NULL, NULL, 'new');
       }
     }
     else {
