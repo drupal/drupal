@@ -21,7 +21,8 @@
   <head>
    <title><?php echo $site_name; ?></title>
     <style type="text/css">
-     body,p,ul,li,div,form,em,blockquote,quote { font-size: 10pt; font-family: tahoma,helvetica,arial; }
+     body { background-color: #FFFFFF; font-size: 10pt; font-family: tahoma,helvetica,arial; }
+     p,ul,li,div,form,em,blockquote,quote { font-size: 10pt; font-family: tahoma,helvetica,arial; }
      td { font-family: tahoma,arial,helvetica; font-size: 10pt; }
      td.oru { background: url("themes/goofy/images/or-u.png"); width: 100%; } 
      td.ord { background: url("themes/goofy/images/or-d.png"); width: 100%; } 
@@ -34,7 +35,7 @@
      td.grr { background: url("themes/goofy/images/gr-r.png"); }
      td.grcnt { background: #C6C6C6; width: 100%; font-family: tahoma,arial,helvetica; font-size: 10pt; } 
      td.lgu { background: url("themes/goofy/images/lg-u.png"); width: 100%; } 
-     td.lgd { background: url("themes/goofy/images/lg-d.png"); width: 100%; margin: 0; } 
+     td.lgd { background: url("themes/goofy/images/lg-d.png"); width: 100%; } 
      td.lgl { background: url("themes/goofy/images/lg-l.png"); } 
      td.lgr { background: url("themes/goofy/images/lg-r.png"); }
      td.lgcnt { background: #E4E4E4; width: 100%; font-family: tahoma,arial,helvetica; font-size: 10pt; white-space: normal; }
