@@ -117,6 +117,15 @@ function path_to_theme() {
   return dirname($themes[$theme]->filename);
 }
 
+/**
+ * @defgroup themeable Themeable functions
+ * @{
+ *
+ * Themeable functions - functions that can be styled differently in themes.
+ *
+ * @see theme
+ * @see theme.inc
+ */
 
 /**
  * Returns an entire Drupal page displaying the supplied content.
@@ -487,7 +496,7 @@ function theme_blocks($region) {
   }
   return $output;
 }
-/* @} End of defgroup themeable */
+/* @} */
 
 function _theme_table_cell($cell, $header = 0) {
   if (is_array($cell)) {
