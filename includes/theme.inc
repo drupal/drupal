@@ -283,12 +283,6 @@ function theme_form_element($title, $value, $description = NULL, $id = NULL) {
       $title = "<label>$title:</label><br />";
     }
   }
-  else {
-    if ($id) {
-      $title = "<label for=\"$id\"></label>";
-      // TODO: does this make sense to do?
-    }
-  }
 
   if ($description) {
     $description = "<div class=\"description\">$description</div>";
