@@ -161,16 +161,4 @@ function node_visible($node) {
   return ($node->status == $status[posted]) || ($node->status == $status[queued] && $user->id) || user_access($user, "node");
 }
 
-function node_post_threshold($node, $threshold = 5) {
-  return 3;
-}
-
-function node_dump_threshold($node, $threshold = - 3) {
-  return -2;
-}
-
-function node_timout_threshold($node, $threshold = 10) {
-  return 9;
-}
-
 ?>

@@ -13,6 +13,7 @@ $conf = conf_init();
 
 include_once "includes/$conf.conf";
 include_once "includes/database.inc";
+include_once "includes/variable.inc";
 include_once "includes/watchdog.inc";
 include_once "includes/function.inc";
 include_once "includes/comment.inc";
@@ -25,6 +26,7 @@ include_once "includes/node.inc";
 
 user_init();
 $locale = locale_init();
+$conf = variable_init();
 $theme = theme_init();
 
 ?>

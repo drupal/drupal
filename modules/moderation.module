@@ -1,10 +1,17 @@
 <?php
 
+#
+# Submission moderation votes:
+#   The keys of this associative array are displayed in each
+#   submission's selection box whereas the corresponding values
+#   represent the mathematical calculation to be performed to
+#   update a comment's value.
+$moderation_votes = array("neutral (+0)" => "+ 0",
+                          "post it (+1)" => "+ 1",
+                          "dump it (-1)" => "- 1");
+
 $module = array("menu" => "moderation_menu",
                 "page" => "moderation_page");
-
-include_once "includes/common.inc";
-include_once "includes/node.inc";
 
 function moderation_menu() {
   return array("<A HREF=\"module.php?mod=moderation\">". t("moderation queue") ."</A> (<FONT COLOR=\"red\">". moderation_count() ."</FONT>)");
@@ -32,15 +39,15 @@ function moderation_vote($id, $vote) {
     $user = user_set($user, "history", "n$id", $vote);
 
     if ($node = node_get_object(nid, $id)) {
-      if (node_post_threshold($node) <= $node->score) {
+      if (variable_get("post_threshold", 4, $node) <= $node->score) {
         node_save(array(nid => $id, status => $status[posted]));
         watchdog("message", "node: posted '$node->title' - moderation");
       }
-      else if (node_dump_threshold($node) >= $node->score) {
+      else if (variable_get("dump_threshold", -2, $node) >= $node->score) {
         node_save(array(nid => $id, status => $status[dumped]));
         watchdog("message", "node: dumped '$node->title' - moderation");
       }
-      else if (node_timout_threshold($node) <= $node->votes) {
+      else if (variable_get("timout_threshold", 8, $node) <= $node->votes) {
         node_save(array(nid => $id, status => $status[expired]));
         watchdog("message", "node: expired '$node->title' - moderation");
       }

@@ -19,6 +19,18 @@ class Story {
   }
 }
 
+function story_post_threshold($node, $default) {
+  return $default;
+}
+
+function story_dump_threshold($node, $default) {
+  return $default;
+}
+
+function story_timout_threshold($node, $default) {
+  return $default;
+}
+
 function story_find($keys) {
   global $status, $user;
   $find = array();
@@ -44,7 +56,7 @@ function story_view($node, $page = 1) {
     switch($op) {
       case t("Preview comment"):
         $theme->header();
-        comment_preview(check_input($pid), check_input($id), ($subject ? check_output($subject) : ""), ($comment ? check_output($comment) : ""));
+        comment_preview(check_input($pid), check_input($id), $subject, $comment);
         $theme->footer();
         break;
       case t("Post comment"):

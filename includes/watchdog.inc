@@ -1,7 +1,7 @@
 <?php
 
-$watchdog = array("comment" => array("0", $submission_rate["comment"]),
-                  "node"    => array("1", $submission_rate["node"]),
+$watchdog = array("comment" => array("0", variable_get("max_comment_rate", 60)),
+                  "node"    => array("1", variable_get("max_node_rate", 900)),
                   "message" => array("3", "0"),
                   "warning" => array("4", "0"),
                   "error"   => array("5", "0"));

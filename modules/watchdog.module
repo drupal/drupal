@@ -2,6 +2,7 @@
 
 $module = array("help" => "watchdog_help",
                 "cron" => "watchdog_cron",
+                "conf" => "watchdog_conf",
                 "admin" => "watchdog_admin");
 
 function watchdog_help() {
@@ -15,7 +16,7 @@ function watchdog_cron() {
   watchdog_clean();
 }
 
-function watchdog_display($order = "date") {
+function watchdog_overview($order = "date") {
   $colors = array("#D8BFD8", "#6495ED", "#6A5ADF", "#FFFFFF", "#FFA500", "#FF3C3C");
   $fields = array("date" => "id DESC", "username" => "user", "location" => "location", "message" => "message DESC", "level" => "level DESC");
 
@@ -68,6 +69,24 @@ function watchdog_view($id) {
   }
 }
 
+function watchdog_conf() {
+  global $conf;
+
+  $rate = array(1 => "maximum 1 every second", 5 => "maximum 1 every 5 seconds", 15 => "maximum 1 every 15 seconds", 30 => "maximum 1 every 30 seconds", 60 => "maximum 1 every minute", 300 => "maximum 1 every 5 minutes", 900 => "maximum 1 every 15 minutes", 1800 => "maximum 1 every 30 minutes", 3600 => "maximum 1 every hour", 21600 => "maximum 1 every 6 hour", 43200 => "maximum 1 every 12 hour");
+
+  $output .= "<B>Maximum node rate:</B><BR>\n";
+  foreach ($rate as $key=>$value) $options1 .= " <OPTION VALUE=\"$key\"". (($conf[max_node_rate] == $key) ? " SELECTED" : "") .">$value</OPTION>\n";
+  $output .= "<SELECT NAME=\"edit[max_node_rate]\">$options1</SELECT><BR>\n";
+  $output .= "<I><SMALL>The maximum submission rate for nodes.  Its purpose is to stop denial of service attacks.</SMALL></I><P>\n";
+
+  $output .= "<B>Maximum comment rate:</B><BR>\n";
+  foreach ($rate as $key=>$value) $options2 .= " <OPTION VALUE=\"$key\"". (($conf[max_comment_rate] == $key) ? " SELECTED" : "") .">$value</OPTION>\n";
+  $output .= "<SELECT NAME=\"edit[max_comment_rate]\"$options2</SELECT><BR>\n";
+  $output .= "<I><SMALL>The maximum submission rate for comments.  Its purpose is to stop denial of service attacks.</SMALL></I><P>\n";
+
+  return $output;
+}
+
 function watchdog_admin() {
   global $op, $id, $order;
 
@@ -81,10 +100,10 @@ function watchdog_admin() {
       watchdog_view(check_input($id));
       break;
     case "Update":
-      watchdog_display(check_input($order));
+      watchdog_overview(check_input($order));
       break;
     default:
-      watchdog_display();
+      watchdog_overview();
   }
 }
 

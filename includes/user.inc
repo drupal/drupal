@@ -103,7 +103,7 @@ function user_ban($mask, $type) {
 function user_gravity($id) {
   global $status;
 
-  $period = 5184000;  // maximum 60 days
+  $period = 5184000;    // maximum 60 days
   $number = 30;         // maximum 30 comments
 
   $r1 = db_query("SELECT COUNT(nid) AS number FROM node WHERE author = '$id' AND (". time() ." - timestamp < $period) AND status = '$status[posted]'");
