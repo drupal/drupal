@@ -198,14 +198,12 @@ function queue_block($op = "list", $delta = 0) {
           }
         }
 
-        $block[0]["subject"] = t("Moderation results");
-        $block[0]["content"] = $output ? $output : t("This node has not been moderated yet.");
-        $block[0]["info"] = t("Moderation results");
+        $block["subject"] = t("Moderation results");
+        $block["content"] = $output ? $output : t("This node has not been moderated yet.");
       }
     }
     elseif ((user_access("access submission queue") || user_access("administer blocks")) && (substr_count(request_uri(), drupal_url(array("mod" => "user"), "module")) || substr_count(request_uri(), drupal_url(array(), "admin")))) {
-      $block[0]["subject"] = t("Moderation results");
-      $block[0]["info"] = t("Moderation results");
+      $block["subject"] = t("Moderation results");
     }
 
     return $block;
