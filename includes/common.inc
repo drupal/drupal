@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.312 2004/01/21 06:40:57 dries Exp $ */
+/* $Id: common.inc,v 1.313 2004/01/23 15:31:29 dries Exp $ */
 
 /**
  * @defgroup common Core functions
@@ -1054,7 +1054,7 @@ function l($text, $url, $attributes = array(), $query = NULL, $fragment = NULL) 
 }
 
 function field_get($string, $name) {
-  ereg(",?$name=([^,]+)", ", $string", $regs);
+  ereg(",$name=([^,]+)", ",$string", $regs);
   return $regs[1];
 }
 
