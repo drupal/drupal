@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Enables the organization of content into categories.
+ */
+
+/**
  * Implementation of hook_perm().
  */
 function taxonomy_perm() {

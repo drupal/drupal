@@ -1,6 +1,11 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ * A slim, CSS-driven theme.
+ */
+
 function chameleon_features() {
   return array(
        'logo',

@@ -3,7 +3,6 @@
 
 /**
  * @file
- *
  * Enables administrators to manage the site interface languages.
  *
  * When enabled, the site interface can be displayed in different

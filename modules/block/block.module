@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Controls the boxes that are displayed around the main content.
+ */
+
+/**
  * Implementation of hook_help().
  */
 function block_help($section) {

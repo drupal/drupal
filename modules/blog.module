@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Enables keeping an easily and regularly updated web page or a blog.
+ */
+
+/**
  * Implementation of hook_settings().
  */
 function blog_settings() {

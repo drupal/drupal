@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Support for configurable user profiles.
+ */
+
+/**
  * Flags to define the visibility of a profile field.
  */
 define('PROFILE_PRIVATE', 1);

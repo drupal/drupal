@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Logs access statistics for your site.
+ */
+
+/**
  * Implementation of hook_help().
  */
 function statistics_help($section) {

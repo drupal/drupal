@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Allows configuration of congestion control auto-throttle mechanism.
+ */
+
+/**
  * Determine the current load on the site.
  *
  * Call the throttle_status() function from your own modules, themes, blocks,

@@ -1,10 +1,9 @@
 <?php
 // $Id$
+
 /**
  * @file
- *
- * Admin related functions for locale.module
- *
+ * Admin-related functions for locale.module.
  */
 
 // ---------------------------------------------------------------------------------

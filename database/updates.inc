@@ -1,6 +1,11 @@
 <?php
 /* $Id$ */
 
+/**
+ * @file
+ * All incremental database updates performed between Drupal releases.
+ */
+
 // Define the various updates in an array("date : comment" => "function");
 $sql_updates = array(
   "2002-06-22: first update since Drupal 4.0.0 release" => "update_32",

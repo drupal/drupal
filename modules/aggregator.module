@@ -2,6 +2,11 @@
 /* $Id$ */
 
 /**
+ * @file
+ * Used to aggregate syndicated content (RSS and RDF).
+ */
+
+/**
  * Implementation of hook_help().
  */
 function aggregator_help($section) {

@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Enables users to submit stories, articles or similar content.
+ */
+
+/**
  * Implementation of hook_help().
  */
 function story_help($section) {

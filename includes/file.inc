@@ -2,6 +2,11 @@
 /* $Id$ */
 
 /**
+ * @file
+ * API for handling file uploads and server file management.
+ */
+
+/**
  * @defgroup file File interface
  *   Common file handling functions.
  * @{

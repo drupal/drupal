@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Enables content to be moderated by the community.
+ */
+
+/**
  * Implementation of hook_help().
  */
 function queue_help($section) {

@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Enables tracking of recent posts for users.
+ */
+
+/**
  * Implementation of hook_help().
  */
 function tracker_help($section) {

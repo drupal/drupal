@@ -1,6 +1,11 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ * Handles incoming requests to fire of regularly-scheduled tasks (cron jobs).
+ */
+
 include_once 'includes/bootstrap.inc';
 include_once 'includes/common.inc' ;
 

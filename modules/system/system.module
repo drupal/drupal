@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Configuration system that lets administrators modify the workings of the site.
+ */
+
+/**
  * Implementation of hook_help().
  */
 function system_help($section) {

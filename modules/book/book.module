@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Allows users to collaboratively author a book.
+ */
+
+/**
  * Implementation of hook_node_name().
  */
 function book_node_name($node) {

@@ -1,6 +1,11 @@
 <?php
 /* $Id$ */
 
+/**
+ * @file
+ * File-handling and attaching files to nodes.
+ */
+
 function upload_help($section) {
   switch ($section) {
     case 'admin/modules#description':

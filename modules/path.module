@@ -2,6 +2,11 @@
 /* $Id$ */
 
 /**
+ * @file
+ * Enables users to rename URLs.
+ */
+
+/**
  * Implementation of hook_help().
  */
 function path_help($section) {

@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Manages displaying online help.
+ */
+
+/**
  * Implementation of hook_menu().
  */
 function help_menu() {

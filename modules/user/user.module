@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Enables the user registration and login system.
+ */
+
+/**
  * Invokes hook_user() in every module.
  *
  * We cannot use module_invoke() for this, becuse the arguments need to

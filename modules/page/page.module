@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Enables the creation of pages that can be added to the navigation system.
+ */
+
+/**
  * Implementation of hook_help().
  */
 function page_help($section) {

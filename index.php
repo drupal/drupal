@@ -1,6 +1,14 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ * The PHP page that serves all page requests on a Drupal installation.
+ *
+ * The routines here dispatch control to the appropriate handler, which then
+ * prints the appropriate page.
+ */
+
 include_once 'includes/bootstrap.inc';
 drupal_page_header();
 include_once 'includes/common.inc';

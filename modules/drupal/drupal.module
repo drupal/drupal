@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Lets users log in using a Drupal ID and can notify a central server about your site.
+ */
+
+/**
  * Implementation of hook_help().
  */
 function drupal_help($section) {

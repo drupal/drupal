@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Enable threaded discussions about general topics.
+ */
+
+/**
  * Implementation of hook_help().
  */
 function forum_help($section) {

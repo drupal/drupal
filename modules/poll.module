@@ -2,6 +2,12 @@
 // $Id$
 
 /**
+ * @file
+ * Enables your site to capture votes on different topics in the form of multiple
+ * choice questions.
+ */
+
+/**
  * Implementation of hook_help().
  */
 function poll_help($section) {

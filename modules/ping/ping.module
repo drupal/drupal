@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Alerts other sites that your site has been updated.
+ */
+
+/**
  * Implementation of hook_help().
  */
 function ping_help($section) {

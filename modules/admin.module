@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Handles the administration pages.
+ */
+
+/**
  * Implementation of hook_help().
  */
 function admin_help($section) {

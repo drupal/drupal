@@ -1,6 +1,11 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ * Drupal site-specific configuration file.
+ */
+
 #
 # Database settings:
 #

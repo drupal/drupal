@@ -1,19 +1,21 @@
 <?php
 // $Id$
-/*
-** USAGE:
-**
-** - Point your browser to "http://www.site.com/update.php" and follow
-**   the instructions.
-**
-** - If you are not logged in as administrator, you will need to modify the
-**   statement below. Change the 1 into a 0 to disable the access check.
-**   After finishing the upgrade, open this file and change the 0 back into
-**   a 1!
-*/
+
+/**
+ * @file
+ * Administrative page for handling updates from one Drupal version to another.
+ *
+ * Point your browser to "http://www.site.com/update.php" and follow the
+ * instructions.
+ *
+ * If you are not logged in as administrator, you will need to modify the access
+ * check statement below. Change the TRUE into a FALSE to disable the access
+ * check. After finishing the upgrade, be sure to open this file and change the
+ * FALSE back into a TRUE!
+ */
 
 // Disable access checking?
-$access_check = 1;
+$access_check = TRUE;
 
 if (!ini_get("safe_mode")) {
   set_time_limit(180);

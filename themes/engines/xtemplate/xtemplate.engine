@@ -1,6 +1,11 @@
 <?php
 // $Id$
 
+/**
+ * @file
+ * Handles the interface between XTemplate files and the Drupal theme system.
+ */
+
 // Initialize the xtemplate engine.
 function xtemplate_init($template) {
   // We cannot use the theme() or path_to_theme() functions here

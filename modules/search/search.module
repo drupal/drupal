@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Enables site-wide keyword searching.
+ */
+
+/**
  * Implementation of hook_help().
  */
 function search_help($section = 'admin/help#search') {

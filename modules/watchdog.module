@@ -3,7 +3,6 @@
 
 /**
  * @file
- *
  * System monitoring and logging for administrators.
  *
  * The watchdog module monitors your site and keeps a list of

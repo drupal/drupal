@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * Displays a calendar to navigate old content.
+ */
+
+/**
  * Implementation of hook_help().
  */
 function archive_help($section) {

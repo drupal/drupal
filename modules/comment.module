@@ -3,8 +3,7 @@
 
 /**
  * @file
- *
- * Enables user to comment on published content.
+ * Enables users to comment on published content.
  *
  * When enabled, the Drupal comment module creates a discussion
  * board for each Drupal node. Users can post comments to discuss
