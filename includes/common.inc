@@ -172,7 +172,7 @@ function format_email($address) {
   return ($address) ? "<a href=\"mailto:$address\">$address</A>" : message_na();
 }
 
-function format_url($address, $description = "") {
+function format_url($address, $description = 0) {
   $description = ($description) ? $description : $address;
   return ($address) ? "<a href=\"$address\">". check_output($description) ."</a>" : message_na();
 }

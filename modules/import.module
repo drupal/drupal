@@ -11,69 +11,153 @@ function import_help() {
  <?php
 }
 
+function import_conf_options() {
+  $number = array(5 => 5, 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30, 35 => 35, 40 => 40, 45 => 45, 50 => 50, 55 => 55, 60 => 60, 65 => 65, 70 => 70, 75 => 75, 80 => 80, 85 => 85, 90 => 90, 95 => 95, 100 => 100);
+  $output .= form_select("Items per block", "import_block_limit", variable_get("import_block_limit", 15), $number, "The maximum number of items displayed in one block.");
+  $output .= form_select("Items per page", "import_page_limit", variable_get("import_page_limit", 75), $number, "The maximum number of items displayed on one page.");
+  return $output;
+}
+
 function import_perm() {
-  return array("administer syndication");
+  return array("administer news feeds", "access news feeds");
 }
 
 function import_link($type) {
-  if ($type == "admin") {
-    $links[] = "<a href=\"admin.php?mod=import\">syndication</a>";
+  if ($type == "admin" && user_access("administer news feeds")) {
+    $links[] = "<a href=\"admin.php?mod=import\">news feeds</a>";
+  }
+
+  if ($type == "menu" && user_access("administer news feeds")) {
+    $links[] = "<a href=\"module.php?mod=import&op=update\">". t("update all news") ."</a>";
+  }
+
+  if ($type == "page" && user_access("access news feeds")) {
+    $links[] = "<a href=\"module.php?mod=import\">". t("latest news") ."</a>";
   }
 
   return $links ? $links : array();
 }
 
 function import_cron() {
-  $result = db_query("SELECT * FROM feed");
+  $result = db_query("SELECT * FROM feed WHERE timestamp + refresh < ". time());
   while ($feed = db_fetch_array($result)) {
-    // remove expired items:
-    db_query("DELETE FROM item WHERE fid = '$feed[fid]' AND timestamp < ". (time() - $feed[uncache]));
-
-    // update feeds:
-    if ($feed[timestamp] + $feed[refresh] < time()) import_update($feed);
+    import_refresh($feed);
   }
 }
 
-function import_bundle($attributes, $limit = 100) {
+function import_update() {
+  $result = db_query("SELECT * FROM feed");
+  while ($feed = db_fetch_array($result)) {
+    import_refresh($feed);
+  }
+}
+
+function import_format_item($item, $feed = 0, $description = 0) {
+  if (module_hook("blog", "page")) {
+    $output .= "<a href=\"submit.php?mod=blog&type=import&id=$item->iid\"><img src=\"misc/blog.gif\" border=\"0\" width=\"12\" height=\"16\" alt=\"" . t("Blog this item") . "\" /></a> ";
+  }
+
+  if ($feed != 1) {
+     $output .= "<a href=\"module.php?mod=import&op=feed&id=$item->fid\"><img src=\"misc/earth.gif\" border= \"0\" width=\"11\" height=\"11\" alt=\"". t("All headlines from this feed") ."\" /></a> ";
+  }
+
+  $output .= "<a href=\"". check_output($item->link) ."\" target=\"new\">". check_output($item->title) ."</a>";
+
+  if ($description && ($feed != 1)) {
+    $output .= " &nbsp; <small>". format_url($item->flink, $item->ftitle) ."</small>";
+  }
+
+ if ($description) {
+    $output .= "<br />". check_output($item->description) ."<br />\n";
+  }
+
+  return $output ."<br />";
+}
+
+function import_bundle_block($attributes) {
+
   if ($attributes) {
-    // compose query:
     $keys = explode(",", $attributes);
     foreach ($keys as $key) $where[] = "attributes LIKE '%". trim($key) ."%'";
 
-    $result = db_query("SELECT * FROM item WHERE ". implode(" OR ", $where) ." ORDER BY iid DESC LIMIT $limit");
+    $result = db_query("SELECT * FROM item WHERE ". implode(" OR ", $where) ." ORDER BY iid DESC LIMIT ". variable_get("import_block_limit", 15));
 
     while ($item = db_fetch_object($result)) {
-      $output .= "<li><a href=\"". check_output($item->link) ."\">". check_output($item->title) ."</a></li>";
+      $output .= import_format_item($item, 0);
     }
 
-    return "$output";
+    return $output;
   }
 }
 
-function import_view_bundle() {
-  $result = db_query("SELECT * FROM bundle ORDER BY title");
-  while ($bundle = db_fetch_object($result)) {
-    $output .= "<b>$bundle->title</b><ul>". import_bundle($bundle->attributes) ."</ul>";
-  }
-  return $output;
-}
+function import_feed_block($feed) {
+  $result = db_query("SELECT * FROM item WHERE fid = '$feed->fid' ORDER BY iid DESC LIMIT ". variable_get("import_block_limit", 15));
 
-function import_view_feed() {
-  $result = db_query("SELECT * FROM feed ORDER BY title");
-  while ($feed = db_fetch_object($result)) {
-    $output .= "<b>$feed->title</b>". ($feed->link ? " (". format_url($feed->link) .")" : "") ."<ul>". check_output($feed->description) ."</ul>";
+  while ($item = db_fetch_object($result)) {
+    $output .= import_format_item($item, 1);
   }
+
+  $output .= "<br />". t("Last update:") ." ". format_interval(time() - $feed->timestamp) ." ". t("ago");
+
   return $output;
 }
 
 function import_block() {
+  return import_block_bundle();
+}
+
+function import_block_bundle($attributes = 0) {
+
+  if ($attributes) {
+    $keys = explode(",", $attributes);
+    foreach ($keys as $key) $where[] = "attributes LIKE '%". trim($key) ."%'";
+    $result = db_query("SELECT * FROM item WHERE ". implode(" OR ", $where) ." ORDER BY iid DESC LIMIT ". variable_get("import_block_limit", 15));
+  }
+  else {
+    $result = db_query("SELECT * FROM item ORDER BY iid DESC LIMIT ". variable_get("import_block_limit", 15));
+  }
+
+  while ($item = db_fetch_object($result)) {
+    $output .= import_format_item($item, 0);
+  }
+
+  $blocks[0][subject] = format_url("module.php?mod=import", t("Latest news"));
+  $blocks[0][content] = $output;
+  $blocks[0][info] = t("Latest news");
+
   $result = db_query("SELECT * FROM bundle ORDER BY title");
+
   while ($bundle = db_fetch_object($result)) {
     $i++;
-    $blocks[$i][subject] = $bundle->title;
-    $blocks[$i][content] = import_bundle($bundle->attributes, 10);
+
+    $blocks[$i][subject] = format_url("module.php?mod=import&op=bundle&id=$bundle->bid", $bundle->title);
+    $blocks[$i][content] = import_bundle_block($bundle->attributes);
     $blocks[$i][info] = "$bundle->title bundle";
   }
+
+  return $blocks;
+}
+
+function import_block_feed($attributes = 0) {
+
+  if ($attributes) {
+    $keys = explode(",", $attributes);
+    foreach ($keys as $key) $where[] = "attributes LIKE '%". trim($key) ."%'";
+    $result = db_query("SELECT * FROM feed WHERE ". implode(" OR ", $where) ." ORDER BY fid LIMIT ". variable_get("import_block_limit", 15));
+  }
+  else {
+    $result = db_query("SELECT * FROM feed ORDER BY fid LIMIT ". variable_get("import_block_limit", 15));
+  }
+
+  $i = 0;
+  while ($feed = db_fetch_object($result)) {
+    $blocks[$i][subject] = format_url("module.php?mod=import&op=feed&id=$feed->fid", $feed->title);
+    $blocks[$i][content] = import_feed_block($feed);
+    $blocks[$i][info] = "$feed->title feed";
+
+    $i++;
+  }
+
   return $blocks;
 }
 
@@ -82,7 +166,7 @@ function import_remove($feed) {
   return "feed '$feed[title]' reset.";
 }
 
-function import_update($feed) {
+function import_refresh($feed) {
 
   // open socket:
   $url = parse_url($feed[url]);
@@ -90,16 +174,21 @@ function import_update($feed) {
 
   if ($fp) {
     // fetch data:
-    fputs($fp, "GET $url[path]?$url[query] HTTP/1.0\nUser-Agent: ". variable_get(site_name, "drupal") ."\nHost: $url[host]\nAccept: */*\n\n");
+    fputs($fp, "GET $url[path]?$url[query] HTTP/1.0\nUser-Agent: ". variable_get("site_name", "drupal") ."\nHost: $url[host]\nAccept: */*\n\n");
+
+    while (!feof($fp)) $data .= fgets($fp, 128);
 
     // initialize the translation table:
     $tt = array_flip(get_html_translation_table(HTML_ENTITIES));
     $tt["&apos;"] = "'";
 
-    while(!feof($fp)) $data .= fgets($fp, 128);
-
     if (strstr($data, "200 OK")) {
- 
+      /*
+      ** Remove expired items:
+      */
+
+      db_query("DELETE FROM item WHERE fid = '$feed[fid]' AND timestamp < ". (time() - $feed[uncache]));
+
       /*
       ** Extract and process channel information:
       */
@@ -118,6 +207,8 @@ function import_update($feed) {
 
       eregi("<item([^s].*)</item>", $data, $data);
 
+      // print "<PRE>". htmlentities($data[0]) ."</PRE>";
+
       $items = array_reverse(explode("</item>", $data[0]));
 
       foreach ($items as $item) {
@@ -134,7 +225,7 @@ function import_update($feed) {
       }
     }
     else {
-      watchdog("error", "import: failed to syndicate from '$feed[title]'");
+      watchdog("error", "failed to syndicate from '$feed[title]'");
     }
   }
 
@@ -148,7 +239,7 @@ function import_save_item($edit) {
   else if ($edit[iid]) {
     db_query("DELETE FROM item WHERE iid = '". check_input($edit[iid]) ."'");
   }
-  else {
+  else if ($edit[title] && $edit[link]) {
     if (!db_fetch_object(db_query("SELECT iid FROM item WHERE link = '". check_input($edit[link]) ."'"))) {
       db_query("INSERT INTO item (fid, title, link, author, description, attributes, timestamp) VALUES ('". check_input($edit[fid]) ."', '". check_input($edit[title]) ."', '". check_input($edit[link]) ."', '". check_input($edit[author]) ."', '". check_input($edit[description]) ."', '". check_input($edit[attributes]) ."', '". time() ."')");
     }
@@ -178,7 +269,7 @@ function import_save_bundle($edit) {
   else if ($edit[bid]) {
     db_query("DELETE FROM bundle WHERE bid = '". check_input($edit[bid]) ."'");
   }
-  else {
+  else if ($edit[title]) {
     db_query("INSERT INTO bundle (title, attributes) VALUES ('". check_input($edit[title]) ."', '". check_input($edit[attributes]) ."')");
   }
 
@@ -190,8 +281,11 @@ function import_form_feed($edit = array()) {
 
   $period = array(900 => format_interval(900), 1800 => format_interval(1800), 3600 => format_interval(3600), 7200 => format_interval(7200), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 64800 => format_interval(64800), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200));
 
+  if ($edit[refresh]== "") $edit[refresh] = 3600;
+  if ($edit[uncache]== "") $edit[uncache] = 2419200;
+
   $form .= form_textfield("Title", "title", $edit[title], 50, 64, "The name of the feed; typically the name of the website you syndicate content from.");
-  $form .= form_textfield("URL", "url", $edit[url], 50, 128, "The fully-qualified URL of the feed.");
+  $form .= form_textfield("Url", "url", $edit[url], 50, 128, "The fully-qualified URL of the feed.");
   $form .= form_textfield("Attributes", "attributes", $edit[attributes], 50, 128, "A comma-seperated list of keywords describing the feed.");
   $form .= form_select("Update interval", "refresh", $edit[refresh], $period, "The refresh interval indicating how often you want to update this feed.  Requires crontab.");
   $form .= form_select("Expiration time", "uncache", $edit[uncache], $period, "The time cached items should be kept.  Older items will be automatically discarded.  Requires crontab.");
@@ -215,7 +309,7 @@ function import_save_feed($edit) {
     db_query("DELETE FROM feed WHERE fid = '". check_input($edit[fid]) ."'");
     db_query("DELETE FROM item WHERE fid = '". check_input($edit[fid]) ."'");
   }
-  else {
+  else if ($edit[title]) {
     db_query("INSERT INTO feed (title, url, attributes, refresh, uncache) VALUES ('". check_input($edit[title]) ."', '". check_input($edit[url]) ."', '". check_input($edit[attributes]) ."', '". check_input($edit[refresh]) ."', '". check_input($edit[uncache]) ."')");
   }
 }
@@ -240,7 +334,7 @@ function import_view() {
 
   $output .= "<h3>Feed overview</h3>";
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  $output .= " <tr><th>site</th><th>attributes</th><th>items</th><th>last update</th><th>next update</th><th colspan=\"3\">operations</th></tr>\n";
+  $output .= " <tr><th>title</th><th>attributes</th><th>items</th><th>last update</th><th>next update</th><th colspan=\"3\">operations</th></tr>\n";
   while ($feed = db_fetch_object($result)) {
     $output .= " <tr><td>". check_output($feed->title) ."</td><td>". check_output($feed->attributes) ."</td><td>". format_plural($feed->items, "item", "items") ."</td><td>". ($feed->timestamp ? format_interval(time() - $feed->timestamp) ." ago" : "never") ."</td><td>". ($feed->timestamp ? format_interval($feed->timestamp + $feed->refresh - time()) ." left" : "never") ."</td><td><a href=\"admin.php?mod=import&type=feed&op=edit&id=$feed->fid\">edit feed</a></td><td><a href=\"admin.php?mod=import&type=feed&op=remove&id=$feed->fid\">remove items</a></td><td><a href=\"admin.php?mod=import&type=feed&op=update&id=$feed->fid\">update items</a></td></tr>\n";
   }
@@ -259,6 +353,22 @@ function import_view() {
   return $output;
 }
 
+function import_view_feed() {
+  $result = db_query("SELECT * FROM feed ORDER BY title");
+  while ($feed = db_fetch_object($result)) {
+    $output .= "<b>$feed->title</b>". ($feed->link ? " (". format_url($feed->link) .")" : "") ."<ul>". check_output($feed->description) ."</ul>";
+  }
+  return $output;
+}
+
+function import_view_bundle() {
+  $result = db_query("SELECT * FROM bundle ORDER BY title");
+  while ($bundle = db_fetch_object($result)) {
+    $output .= "<b>$bundle->title</b><ul>". import_bundle_block($bundle->attributes) ."</ul>";
+  }
+  return $output;
+}
+
 function import_view_item() {
   global $REQUEST_URI;
 
@@ -268,7 +378,7 @@ function import_view_item() {
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
   $output .= " <tr><th>time</th><th>feed</th><th>item</th></tr>\n";
   while ($item = db_fetch_object($result)) {
-    $output .= " <tr><td valign=\"top\" nowrap=\"nowrap\">". format_date($item->timestamp, "custom", "m/d/y") ."<br />".format_date($item->timestamp, "custom", "H:i") ."</td><td align=\"center\" valign=\"top\" nowrap=\"nowrap\"><a href=\"admin.php?mod=import&type=feed&op=edit&id=$item->fid\">". check_output($item->feed) ."</a></td><td><a href=\"". check_output($item->link) ."\">". check_output($item->title) ."</a>". ($item->description ? "<br /><small><i>". check_output($item->description) ."</i></small>" : "") ."<br /><input type=\"text\" name=\"edit[$item->iid]\" value=\"". check_form($item->attributes) ."\" size=\"50\" /></td></tr>\n";
+    $output .= " <tr><td valign=\"top\" nowrap=\"nowrap\">". format_date($item->timestamp, "custom", "m/d/y") ."<br />".format_date($item->timestamp, "custom", "H:i") ."</td><td align=\"center\" valign=\"top\" nowrap=\"nowrap\"><a href=\"admin.php?mod=import&type=feed&op=edit&id=$item->fid\">". check_output($item->feed) ."</a></td><td><a href=\"". check_output($item->url) ."\">". check_output($item->title) ."</a>". ($item->description ? "<br /><small><i>". check_output($item->description) ."</i></small>" : "") ."<br /><input type=\"text\" name=\"edit[$item->iid]\" value=\"". check_form($item->attributes) ."\" size=\"50\" /></td></tr>\n";
   }
   $output .= "</table>\n";
   $output .= "<input type=\"submit\" name=\"op\" value=\"Save attributes\" />\n";
@@ -280,7 +390,7 @@ function import_view_item() {
 function import_admin() {
   global $op, $id, $type, $edit;
 
-  if (user_access("administer syndication")) {
+  if (user_access("administer news feeds")) {
 
     print "<small><a href=\"admin.php?mod=import&type=feed&op=add\">add new feed</a> | <a href=\"admin.php?mod=import&type=bundle&op=add\">add new bundle</a> | <a href=\"admin.php?mod=import&type=feed&op=view\">available feeds</a> | <a href=\"admin.php?mod=import&type=bundle&op=view\">available bundles</a> | <a href=\"admin.php?mod=import&type=item&op=view\">available items</a> | <a href=\"admin.php?mod=import&op=view\">overview</a> | <a href=\"admin.php?mod=import&op=help\">help</a></small><hr />";
 
@@ -302,11 +412,11 @@ function import_admin() {
         break;
       case "remove":
         print status(import_remove(import_get_feed($id)));
-        print import_view_feed();
+        print import_view();
         break;
       case "update":
-        print status(import_update(import_get_feed($id)));
-        print import_view_feed();
+        print status(import_refresh(import_get_feed($id)));
+        print import_view();
         break;
       case "Save attributes":
         print status(import_save_attributes($edit));
@@ -334,6 +444,134 @@ function import_admin() {
   }
   else {
     print message_access();
+  }
+}
+
+function import_page_all() {
+  global $theme;
+
+  $result = db_query("SELECT i.*, f.title AS ftitle, f.link AS flink FROM item i LEFT JOIN feed f ON i.fid = f.fid ORDER BY i.iid DESC LIMIT ". variable_get("import_page_limit", 75));
+  while ($item = db_fetch_object($result)) {
+    $output .= import_format_item($item, 0, 1);
+  }
+
+  $header = t("Latest news for all bundles") ." (<a href=\"module.php?mod=import&op=bundles\">by bundle</A>) (<a href=\"module.php?mod=import&op=feeds\">by feed</a>) ";
+
+  $theme->header();
+  $theme->box($header, $output);
+  $theme->footer();
+}
+
+function import_page_feed($fid) {
+  global $theme;
+
+  $result = db_query("SELECT * FROM feed WHERE fid = '". check_input($fid) ."'");
+  $feed = db_fetch_object($result);
+
+  $header .= "<a href=\"$feed->url\"><img src=\"misc/xml.gif\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" /></a>";
+  $header .= $feed->title . " <a href=\"$feed->link\" target=\"new\"><img src=\"misc/earth.gif\" border= \"0\" width=\"11\" height=\"11\" alt=\"". t("View site") ."\" /></a>";
+
+  $result = db_query("SELECT * FROM item WHERE fid = '". check_input($fid) ."' ORDER BY iid DESC LIMIT ". variable_get("import_page_limit", 75));
+  while ($item = db_fetch_object($result)) {
+    $output .= import_format_item($item, 1, 1);
+  }
+
+  $output .= t("Last update:") ." ". format_interval(time() - $feed->timestamp) ." ". t("ago");
+
+  $theme->header();
+  $theme->box($header, $output);
+  $theme->footer();
+}
+
+function import_page_bundle($bid) {
+  global $theme;
+
+  $bundle = db_fetch_object(db_query("SELECT * FROM bundle where bid = '". check_input($bid) ."'"));
+  $header = $bundle->title ." ". t("bundle") ." (<a href=\"module.php?mod=import&op=bundlefeeds&id=$bid\">". t("by feed") ."</a>)";
+
+  $keys = explode(",", $bundle->attributes);
+  foreach ($keys as $key) $where[] = "i.attributes LIKE '%". trim($key) ."%'";
+  $result = db_query("SELECT i.*, f.title AS ftitle, f.link AS flink FROM item i, feed f WHERE (". implode(" OR ", $where) .") AND i.fid = f.fid ORDER BY iid DESC LIMIT ". variable_get("import_page_limit", 75));
+
+  while ($item = db_fetch_object($result)) {
+    $output .= import_format_item($item, 0, 1);
+  }
+
+  $theme->header();
+  $theme->box($header, $output);
+  $theme->footer();
+}
+
+function import_page_bundles() {
+  import_page_blocks(import_block_bundle());
+}
+
+function import_page_feeds() {
+  import_page_blocks(import_block_feed());
+}
+
+function import_page_bundle_feeds($bid) {
+  $bundle = db_fetch_object(db_query("SELECT * FROM bundle WHERE bid = '". check_input($bid) ."'"));
+  import_page_blocks(import_block_feed($bundle->attributes));
+}
+
+function import_page_blocks($blocks) {
+  global $theme;
+
+  $count = count($blocks);
+  $items = ceil($count / 3);
+  $c1 = min($items, $count);
+  $c2 = min(2 * $items, $count);
+  $c3 = $count;
+  $i = 0;
+
+  $theme->header();
+  print "<table cellpadding=\"0\" cellspacing=\"5\" border=\"0\" width=\"100%\">\n";
+  print " <tr>\n";
+  print "  <td width=\"33%\" valign=\"top\">\n";
+  for ($i; $i < $c1; $i++) $theme->box($blocks[$i]["subject"], $blocks[$i]["content"]);
+  print "  </td>\n";
+  print "  <td width=\"33%\" valign=\"top\">\n";
+  for ($i; $i < $c2; $i++) $theme->box($blocks[$i]["subject"], $blocks[$i]["content"]);
+  print "  </td>\n";
+  print "  <td width=\"33%\" valign=\"top\">\n";
+  for ($i; $i < $c3; $i++) $theme->box($blocks[$i]["subject"], $blocks[$i]["content"]);
+  print "  </td>\n";
+  print " </tr>\n";
+  print "</table>\n";
+  $theme->footer();
+}
+
+function import_page() {
+  global $op, $id;
+
+  if (user_access("access news feeds")) {
+    switch($op) {
+      case "all":
+        import_page_all();
+        break;
+      case "feed":
+        import_page_feed($id);
+        break;
+      case "bundle":
+        import_page_bundle($id);
+        break;
+      case "bundlefeeds":
+        import_page_bundle_feeds($id);
+        break;
+      case "bundles":
+        import_page_bundles();
+        break;
+      case "feeds":
+        import_page_feeds();
+        break;
+      case "update":
+        import_update();
+        import_page_all();
+        break;
+      default:
+        import_page_all();
+    }
   }
 }
 
