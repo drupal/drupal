@@ -59,12 +59,12 @@ function affiliate_admin_del($id) {
 function affiliate_admin_display() {
   $result = db_query("SELECT * FROM affiliates ORDER BY name");
 
-  $output .= "<FORM ACTION=\"admin.php?mod=affiliate\" METHOD=\"post\">\n";
+  $output .= "<FORM ACTION=\"admin.php?mod=affiliate-site\" METHOD=\"post\">\n";
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR><TH>name</TH><TH>link</TH><TH>contact</TH><TH>operations</TH></TR>\n";
 
   while ($affiliate = db_fetch_object($result)) {
-    $output .= " <TR><TD>$affiliate->name</TD><TD>". format_url($affiliate->link) ."</TD><TD>". format_email($affiliate->contact) ."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=affiliate&op=delete&id=$affiliate->id\">delete</A></TD></TR>\n";
+    $output .= " <TR><TD>$affiliate->name</TD><TD>". format_url($affiliate->link) ."</TD><TD>". format_email($affiliate->contact) ."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=affiliate-site&op=delete&id=$affiliate->id\">delete</A></TD></TR>\n";
   }
 
   $output .= " <TR><TD><INPUT TYPE=\"text\" NAME=\"name\"></TD><TD><INPUT TYPE=\"text\" NAME=\"link\"></TD><TD><INPUT TYPE=\"text\" NAME=\"contact\"></TD><TD><INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"Add affiliate\"></TD></TR>\n";
