@@ -127,7 +127,18 @@ function import_remove($feed) {
 
 function import_refresh($feed) {
 
-  // open socket:
+  /*
+  ** Check whether the feed is properly configured:
+  */
+
+  if (!ereg("^http://|ftp://", $feed[url])) {
+    watchdog("warning", "import: invalid or missing URL for '$feed[title]'");
+  }
+
+  /*
+  ** Grab the headlines:
+  */
+
   $url = parse_url($feed[url]);
   $fp = fsockopen($url[host], ($url[port] ? $url[port] : 80), $errno, $errstr, 15);
 
@@ -149,16 +160,25 @@ function import_refresh($feed) {
       db_query("DELETE FROM item WHERE fid = '$feed[fid]' AND timestamp < ". (time() - $feed[uncache]));
 
       /*
+      ** Remove unsupported tags or sub-elements:
+      */
+
+      $data = ereg_replace("<textinput([^s].*)</textinput>", "", $data);
+      $data = ereg_replace("<image([^s].*)</image>", "", $data);
+
+      /*
       ** Extract and process channel information:
       */
 
       $channel = ereg_replace("<item([^s].*)</item>", "", $data);
-      $channel = ereg_replace("<image([^s].*)</image>", "", $channel);
+
       eregi("<title>(.*)</title>", $channel, $title);
       eregi("<link>(.*)</link>", $channel, $link);
       eregi("<description>(.*)</description>", $channel, $description);
 
       db_query("UPDATE feed SET timestamp = '". time() ."', link = '". check_input($link[1]) ."', description = '". check_input($description[1]) ."' WHERE fid = '". $feed[fid] ."'");
+
+      unset($title, $link, $description);
 
       /*
       ** Extract and process individual items:
@@ -166,25 +186,30 @@ function import_refresh($feed) {
 
       eregi("<item([^s].*)</item>", $data, $data);
 
-      // print "<PRE>". htmlentities($data[0]) ."</PRE>";
+      // print "<pre>". htmlentities($data[0]) ."</pre>";
 
       $items = array_reverse(explode("</item>", $data[0]));
 
       foreach ($items as $item) {
+        unset($title, $link, $author, $description);
+
         $t = eregi("<title>(.*)</title>", $item, $title);
         $l = eregi("<link>(.*)</link>", $item, $link);
         $a = eregi("<author>(.*)</author>", $item, $author);
         $d = eregi("<description>(.*)</description>", $item, $description);
 
         if ($l || $t || $a || $d) {
-          $title = strtr(strip_tags($title[1]), $tt);
+          $title = strip_tags(strtr($title[1], $tt));
           $description = strtr($description[1], $tt);
+
+          // print "<pre>title = ". htmlentities($title) ."\n\ndescription = ". htmlentities($description) ."\n\nauthor = ". htmlentities($author[1]) ."</pre><hr />";
+
           import_save_item(array(fid => $feed[fid], title => $title, link => $link[1], author => $author[1], description => $description, attributes => $feed[attributes]));
         }
       }
     }
     else {
-      watchdog("error", "failed to syndicate from '$feed[title]'");
+      watchdog("warning", "failed to syndicate from '$feed[title]'". ($errstr ? ": $errstr" : ""));
     }
   }
 
@@ -390,6 +415,8 @@ function import_admin() {
         else
           print status(import_save_feed($edit));
         // fall through:
+        print import_view();
+        break;
       default:
         if ($type == "bundle")
           print import_view_bundle();
