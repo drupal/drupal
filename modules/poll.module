@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.105 2003/09/20 15:11:41 dries Exp $
+// $Id: poll.module,v 1.106 2003/09/20 21:28:52 dries Exp $
 
 function poll_allowvotes(&$node) {
   /*
@@ -77,14 +77,8 @@ function poll_delete($node) {
   db_query("DELETE FROM {poll_choices} WHERE nid = %d", $node->nid);
 }
 
-function poll_form(&$node, &$help, &$error) {
-  $admin = user_access("administer nodes");
 
-  $_duration = array(0 => t("Unlimited"), 86400 => format_interval(86400), 172800 => format_interval(172800), 345600 => format_interval(345600), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200), 4838400 => format_interval(4838400), 9676800 => format_interval(9676800), 31536000 => format_interval(31536000));
-  $_active = array(0 => t("Closed"), 1 => t("Active"));
-
-  $node->choices = $node->choices ? $node->choices : max(2, count($node->choice) ? count($node->choice) : 5);
-
+function poll_validate(&$node) {
   if (isset($node->title)) {
     // Check for at least two options and validate amount of votes:
     for ($i = 0; $i < $node->choices; $i++) {
@@ -101,9 +95,21 @@ function poll_form(&$node, &$help, &$error) {
       $error["choice][0"] = theme("theme_error", t("You must fill in at least two choices."));
     }
   }
-  else {
-    $help = variable_get("poll_help", "");
-  }
+
+  $node->teaser = poll_teaser($node);
+
+  return $error;
+}
+
+function poll_form(&$node, &$help, &$error) {
+  $admin = user_access("administer nodes");
+
+  $_duration = array(0 => t("Unlimited"), 86400 => format_interval(86400), 172800 => format_interval(172800), 345600 => format_interval(345600), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200), 4838400 => format_interval(4838400), 9676800 => format_interval(9676800), 31536000 => format_interval(31536000));
+  $_active = array(0 => t("Closed"), 1 => t("Active"));
+
+  $node->choices = $node->choices ? $node->choices : max(2, count($node->choice) ? count($node->choice) : 5);
+
+  $help = variable_get("poll_help", "");
 
   if (function_exists("taxonomy_node_form")) {
     $output = implode("", taxonomy_node_form("poll", $node));
@@ -378,10 +384,6 @@ function poll_update($node) {
       db_query("INSERT INTO {poll_choices} (nid, chtext, chvotes, chorder) VALUES (%d, '%s', %d, %d)", $node->nid, $choice->chtext, $choice->chvotes, $choice->chorder);
     }
   }
-}
-
-function poll_validate(&$node) {
-  $node->teaser = poll_teaser($node);
 }
 
 ?>
