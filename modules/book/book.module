@@ -97,7 +97,7 @@ function book_toc($parent = "", $indent = "", $toc = array()) {
 
   // add root node:
   if (user_access($user, "add and edit nodes")) {
-    $toc[0] = "&nbsp;";
+    $toc[0] = "<root>";
   }
 
   // build table of contents:
@@ -120,12 +120,7 @@ function book_form($edit = array()) {
   $form .= form_hidden(userid, $edit[userid]);
   $form .= form_textfield(t("Subject"), "title", $edit[title], 50, 64);
 
-  if ($edit[pid] > 0) {
-    $form .= form_hidden("pid", $edit[pid]);
-  }
-  else {
-    $form .= form_select(t("Parent"), "parent", $edit[parent], book_toc(), t("The parent subject or category the page belongs in."));
-  }
+  $form .= form_select(t("Parent"), "parent", $edit[parent], book_toc(), t("The parent subject or category the page belongs in."));
 
   $form .= form_textarea(t("Content"), "body", $edit[body], 70, 20, t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
   $form .= form_textarea(t("Log message"), "log", $edit[log], 70, 5, t("An explanation of the additions or updates being made to help the group understand your motivations."));
@@ -136,6 +131,10 @@ function book_form($edit = array()) {
 
   if ($edit[nid] > 0) {
     $form .= form_hidden("nid", $edit[nid]);
+  }
+
+  if ($edit[pid] > 0) {
+    $form .= form_hidden("pid", $edit[pid]);
   }
 
   if ($edit && !$edit[title]) {
@@ -169,13 +168,13 @@ function book_delete($node) {
 
 function book_insert($node) {
   if ($node->pid && $node->status == node_status("posted")) {
-    db_query("UPDATE node SET status = '". node_status("expired") ."' WHERE nid = '$node->pid'");
+    db_query("UPDATE node SET status = '". node_status("expired") ."' WHERE nid = '$node->pid'", 1);
   }
 }
 
 function book_update($node) {
   if ($node->pid && $node->status == node_status("posted")) {
-    db_query("UPDATE node SET status = '". node_status("expired") ."' WHERE nid = '$node->pid'");
+    db_query("UPDATE node SET status = '". node_status("expired") ."' WHERE nid = '$node->pid'", 1);
   }
 }
 
