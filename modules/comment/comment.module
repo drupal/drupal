@@ -1293,7 +1293,7 @@ function comment_thread_max($comment, $threshold, $level = 0) {
   */
 
   if ($level) {
-    print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr><td style=\"width: ". ($level * 25) ."px;\">&nbsp;</td><td>\n";
+    print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"width: 100%;\"><tr><td style=\"width: ". ($level * 25) ."px;\">&nbsp;</td><td>\n";
   }
 
   comment_view($comment, comment_links($comment, 0), comment_visible($comment, $threshold));

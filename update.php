@@ -769,11 +769,11 @@ function update_sql($sql) {
   print nl2br(htmlentities($sql)) ." ";
   $result = db_query($sql);
   if ($result) {
-    print "<font color=\"green\">OK</font>\n";
+    print "<div style=\"color: green;\">OK</div>\n";
     return 1;
   }
   else {
-    print "<font color=\"red\">FAILED</font>\n";
+    print "<div style=\"color: red;\">FAILED</div>\n";
     if ($edit["bail"]) {
       die("Fatal error. Bailing");
     }

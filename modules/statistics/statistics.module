@@ -752,7 +752,7 @@ function statistics_page_user($uid = 0, $date = 0, $all = 0) {
   }
 
   if ($displaycount = variable_get("statistics_userpage_day_cnt", 10)) {
-    $output = "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\" width=\"100%\">";
+    $output = "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\" style=\"width: 100%;\">";
     $output .= statistics_summary("daycount", $displaycount);
     $output .= "</table>";
 
@@ -761,7 +761,7 @@ function statistics_page_user($uid = 0, $date = 0, $all = 0) {
 
 
   if ($displaycount = variable_get("statistics_userpage_all_cnt", "10")) {
-    $output = "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\" width=\"100%\">";
+    $output = "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\" style=\"width: 100%;\">";
     $output .= statistics_summary("totalcount", $displaycount);
     $output .= "</table>";
 
@@ -769,7 +769,7 @@ function statistics_page_user($uid = 0, $date = 0, $all = 0) {
   }
 
   if ($displaycount = variable_get("statistics_userpage_last_cnt", "10")) {
-    $output = "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\" width=\"100%\">";
+    $output = "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\" style=\"width: 100%;\">";
     $output .= statistics_summary("timestamp", $displaycount);
     $output .= "</table>";
 

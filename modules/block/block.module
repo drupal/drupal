@@ -172,7 +172,7 @@ function block_admin_preview() {
   while ($block = db_fetch_object($result)) {
     $block_data = module_invoke($block->module, "block", "list");
     $name = $block_data[$block->delta]["info"];
-    $rblocks .= " <tr><td nowrap=\"nowrap\">". ($block->status == 2 ? "<b>$name</b>" : $name) ."</td><td>$block->weight</td></tr>\n";
+    $rblocks .= " <tr><td>". ($block->status == 2 ? "<b>$name</b>" : $name) ."</td><td>$block->weight</td></tr>\n";
   }
   $rblocks .= "</table>\n";
 
@@ -188,7 +188,7 @@ function block_admin_preview() {
   while ($block = db_fetch_object($result)) {
     $block_data = module_invoke($block->module, "block", "list");
     $name = $block_data[$block->delta]["info"];
-    $blocks .= " <tr><td nowrap=\"nowrap\">". ($block->status == 2 ? "<b>$name</b>" : $name) ."</td><td>$block->weight</td></tr>\n";
+    $blocks .= " <tr><td>". ($block->status == 2 ? "<b>$name</b>" : $name) ."</td><td>$block->weight</td></tr>\n";
   }
   $blocks .= "</table>\n";
 

@@ -24,7 +24,7 @@ class BaseTheme {
     $output = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"DTD/xhtml1-transitional.dtd\">\n";
     $output .= "<html><head><title>". $title ? $title : variable_get(site_name, "drupal") ."</title>";
     $output .= theme_head($main);
-    $output .= "</head><body bgcolor=\"$this->background\" text=\"$this->foreground". theme_onload_attribute(). "\">";
+    $output .= "</head><body style=\"background-color: $this->background; color: $this->foreground;\"". theme_onload_attribute(). "\">";
     $output .= "<table border=\"0\" cellspacing=\"4\" cellpadding=\"4\"><tr><td style=\"vertical-align: top; width: 170px;\">";
 
     print $output;
