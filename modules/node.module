@@ -87,10 +87,46 @@ function node_filter_link($text) {
   return preg_replace($src, $dst, $text);
 }
 
+function node_filter_line($text) {
+
+  /*
+  ** If HTML mark-up is being used, strip regular mark-up:
+  */
+
+  if (strstr($text, "<br />") || strstr($text, "<p>")) {
+    $text = ereg_replace("[\r\n\t\v]", "", $text);
+  }
+
+  /*
+  ** Replace '<br>', '<br />', '<p>' and '<p />' by '\n':
+  */
+
+  $text = eregi_replace("<br>", "\n", $text);
+  $text = eregi_replace("<br />", "\n", $text);
+  $text = eregi_replace("<p>", "\n", $text);
+  $text = eregi_replace("<br />", "\n", $text);
+
+  /*
+  ** Replace "\r\n" by "\n": 
+  */
+
+  $text = ereg_replace("\r\n", "\n", $text);
+
+  /*
+  ** Replace some new line charachters:
+  */
+
+  while (strpos($text, "\n\n\n")) {
+    $text = ereg_replace("\n\n\n", "\n\n", $text);
+  }
+ 
+  return trim($text);
+}
+
 function node_filter($text) {
   if (variable_get("filter_html", 0)) $text = node_filter_html($text);
   if (variable_get("filter_link", 0)) $text = node_filter_link($text);
-  return trim($text);
+  return node_filter_line($text);
 }
 
 function node_link($type, $node = 0) {
