@@ -27,6 +27,8 @@ function showAccess() {
 }
 
 function showUser($uname) {
+  global $user;
+
   include "theme.inc";
   
   if ($user && $uname && $user->userid == $uname) {
@@ -40,7 +42,8 @@ function showUser($uname) {
     $output .= " <TR><TD><B>Bio:</B></TD><TD>$user->bio</TD></TR>\n";
     $output .= " <TR><TD><B>Signature:</B></TD><TD>$user->signature</TD></TR>\n";
     $output .= "</TABLE>\n";
-  
+
+    ### Display account information:
     $theme->header();
     $theme->box("User information", $output);
     $theme->footer();
@@ -54,11 +57,13 @@ function showUser($uname) {
     $output .= " <TR><TD><B>Signature:</B></TD><TD>$account->signature</TD></TR>\n";
     $output .= "</TABLE>\n";
 
+    ### Display account information:
     $theme->header();
     $theme->box("User information", $output);
     $theme->footer();
   }
   else { 
+    ### Display login form:
     $theme->header();
     $theme->box("Login", showLogin($userid)); 
     $theme->footer();
@@ -98,12 +103,13 @@ function validateUser($user) {
   ### Verify whether username and e-mail address are unique:
   if (db_num_rows(db_query("SELECT userid FROM users WHERE LOWER(userid)=LOWER('$user[userid]')")) > 0) $rval = "the specified username is already taken.";
   if (db_num_rows(db_query("SELECT email FROM users WHERE LOWER(email)=LOWER('$user[email]')")) > 0) $rval = "the specified e-mail address is already registered.";
+
   return($rval);
 }
 
 function account_makePassword($min_length=6) {
   mt_srand((double)microtime() * 1000000);
-  $words = array("foo","bar","guy","neo","tux","moo","sun","asm","dot","god","geek","nerd","fish","hack","star","mice","warp","moon","hero","cola","girl","fish","java","perl","boss","dark","sith","jedi");
+  $words = array("foo","bar","guy","neo","tux","moo","sun","asm","dot","god","axe","geek","nerd","fish","hack","star","mice","warp","moon","hero","cola","girl","fish","java","perl","boss","dark","sith","jedi","drop","mojo");
   while(strlen($password) < $min_length) $password .= $words[mt_rand(0, count($words))];
   return $password;
 }
@@ -112,13 +118,13 @@ switch ($op) {
   case "Login":
     session_start();
     $user = new User($userid,$passwd);
-    if ($user->valid()) { session_register("user"); }
+    if ($user && $user->valid()) { session_register("user"); }
     showUser($user->userid);
     break;
   case "new":
     newUser();
     break;
-  case "userinfo":
+  case "info":
     showUser($uname);
     break;
   case "logout":
@@ -154,7 +160,7 @@ switch ($op) {
     }
     break;
   case "edituser":
-    if ($user->valid()) {
+    if ($user && $user->valid()) {
       ### Generate output/content:
       $output .= "<FORM ACTION=\"account.php\" METHOD=post>\n";
       $output .= "<B>Real name:</B><BR>\n";
@@ -189,6 +195,7 @@ switch ($op) {
       $theme->footer();
     }
     else {
+      include "theme.inc";
       $theme->header();
       $theme->box("Login", showLogin($userid)); 
       $theme->footer();
@@ -243,7 +250,7 @@ switch ($op) {
 
     break;
   case "Save user information":
-    if ($user->valid()) {
+    if ($user && $user->valid()) {
       $data[name] = $edit[name];
       $data[email] = $edit[email];
       $data[femail] = $edit[femail];
@@ -258,7 +265,7 @@ switch ($op) {
     showUser($user->userid);
     break;
   case "Save page settings":
-    if ($user->valid()) {
+    if ($user && $user->valid()) {
       $data[theme] = $edit[theme];
       $data[storynum] = $edit[storynum];
       $data[umode] = $edit[umode];
