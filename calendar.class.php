@@ -47,7 +47,7 @@ class calendar {
       if ($sday == 0) $output .=  " <TR>\n";
     
       ### Print one cell:
-      $date = mktime(0, 0, 0, $month, $nday, $year);
+      $date = mktime(24, 0, 0, $month, $nday, $year);
       if ($nday == $day) $output .= "  <TD ALIGN=\"center\"><SMALL><B>$nday</B></SMALL></TD>\n";
       else if ($date > time()) $output .= "  <TD ALIGN=\"center\"><SMALL>$nday</SMALL></TD>\n";
       else $output .= "  <TD ALIGN=\"center\"><SMALL><A HREF=\"$PHP_SELF?date=$date\" STYLE=\"text-decoration: none;\">$nday</A></SMALL></TD>\n";
