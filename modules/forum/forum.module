@@ -559,7 +559,7 @@ function forum_theme_list($forums, $parents, $tid) {
         }
 
         if ($links) {
-          $output .= "<br />". t("Jump to") .": ". implode(", ", $links);
+          $output .= "<br />". t("Jump to: %links", array("%links" => implode(", ", $links)));
         }
 
         $output .= "</div></td></tr></table></td>";
