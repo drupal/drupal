@@ -1,5 +1,5 @@
 <?php
-/* $Id: aggregator.module,v 1.150 2004/01/07 19:52:10 dries Exp $ */
+/* $Id: aggregator.module,v 1.151 2004/01/08 19:29:10 kjartan Exp $ */
 
 function aggregator_help($section) {
   switch ($section) {
@@ -312,13 +312,18 @@ function aggregator_refresh($feed) {
 
       $channel = aggregator_parse_feed($result->data, $feed);
 
-      if ($result->headers['Last-Modified']) {
-        $modified = strtotime($result->headers['Last-Modified']);
+      if (is_array($channel)) {
+        if ($result->headers['Last-Modified']) {
+          $modified = strtotime($result->headers['Last-Modified']);
+        }
+
+        db_query("UPDATE {feed} SET url = '%s', checked = %d, link = '%s', description = '%s', etag = '%s', modified = %d WHERE fid = %d", $feed['url'], time(), $channel["LINK"], $channel["DESCRIPTION"], $result->headers['ETag'], $modified, $feed["fid"]);
+
+        return t("syndicated content from '%site'.", array("%site" => $feed["title"]));
       }
-
-      db_query("UPDATE {feed} SET url = '%s', checked = %d, link = '%s', description = '%s', etag = '%s', modified = %d WHERE fid = %d", $feed['url'], time(), $channel["LINK"], $channel["DESCRIPTION"], $result->headers['ETag'], $modified, $feed["fid"]);
-
-      return t("syndicated content from '%site'.", array("%site" => $feed["title"]));
+      else {
+        return $channel;
+      }
     default:
       return t("failed to parse RSS feed '%site': %error.", array('%site' => $feed['title'], '%error' => $result->code .' '. $result->error));
   }
