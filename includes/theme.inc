@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.104 2002/05/25 06:47:47 dries Exp $
+// $Id: theme.inc,v 1.105 2002/06/12 12:33:27 kjartan Exp $
 
 /**
 * Basic theme
@@ -7,17 +7,19 @@
 * @package theme system
 */
 class BaseTheme {
+  var $background = "#ffffff";
+  var $foreground = "#000000";
 
   function system($field) {
-    $system["name"] = "I need a name o'wise one!";
-    $system["author"] = "What is your name master?";
-    $system["description"] = "What am I mighty one?";
+    $system["name"] = "Basic theme";
+    $system["author"] = "Drupal";
+    $system["description"] = "Basic theme. Lynx friendly";
 
     return $system[$field];
   }
 
   function header($title = "") {
-    $output .= "<html><head><title>". variable_get(site_name, "drupal") ."</title></head><body>";
+    $output .= "<html><head><title>". variable_get(site_name, "drupal") ."</title></head><body bgcolor=\"$this->background\" text=\"$this->foreground\">";
     $output .= "<table border=\"0\" cellspacing=\"4\" cellpadding=\"4\"><tr><td valign=\"top\" width=\"170\">";
 
     print $output;
@@ -27,7 +29,7 @@ class BaseTheme {
   }
 
   function links($links, $delimiter = " | ") {
-    return @implode($delimiter, $links);
+    return implode($delimiter, $links);
   }
 
   function image($name) {
