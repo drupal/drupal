@@ -250,7 +250,7 @@ function update_index($search_array) {
       ** false count of the number of hist, and doesn't show up
       ** when clicking on a node from the search interface anyway.
       */
-      $wordlist = $node["text1"] . $node["text2"];
+      $wordlist = $node["text1"] ." ". $node["text2"];
 
       // Strip heaps of stuff out of it
       $wordlist = preg_replace("'<[\/\!]*?[^<>]*?>'si", "", $wordlist);
