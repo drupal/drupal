@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.147 2003/03/16 07:02:19 dries Exp $
+// $Id: book.module,v 1.148 2003/04/04 06:17:02 dries Exp $
 
 function book_system($field){
   $system["description"] = t("Allows users to collaboratively author a book.");
@@ -716,7 +716,7 @@ function book_admin() {
       case "orphan":
         print book_admin_orphan();
         break;
-      case t("Save book pages");
+      case t("Save book pages"):
         print status(book_admin_save(arg(3), $edit));
         // fall through:
       default:
