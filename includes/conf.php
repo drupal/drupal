@@ -1,5 +1,5 @@
 <?php
-// $Id: conf.php,v 1.24 2003/02/15 21:49:17 dries Exp $
+// $Id: conf.php,v 1.25 2003/02/20 22:44:50 dries Exp $
 
 #
 # Database settings:
@@ -42,7 +42,7 @@ $base_url = "http://localhost";
 #   automatically become the default language.  You can add a language
 #   but make sure your SQL table, called locales is updated
 #   appropriately.
-$languages = array("en" => "English");
+$languages = array("en" => "english");
 
 #
 # Custom navigation links:
