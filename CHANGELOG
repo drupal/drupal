@@ -1,12 +1,10 @@
-drupal x.xx, xx/xx/xxxx
+drupal x.xx, xx/xx/xxxx (CVS, unstable)
 -----------------------
 - major overhaul of the entire underlying design:
     * everything is based on nodes: nodes are a conceptual "black box" to couple and manage different types of content and that promotes reusing existing code, thus reducing the complexity and size of drupal as well as improving long-term stability.
-- rewrote submission/moderation queue:
-    * renamed submission.module to queue.module
-    * updated submission forms
+- rewrote submission/moderation queue and renamed it to queue.module.
 - removed FAQ and documentation module and merged them into a "book module":
-    * allows collaborative book writing
+    * allows collaborative book writing.
 - removed ban module and integrated it into account.module as "access control":
     * access control is based on much more powerful regular expressions (regex) now rather than on MySQL pattern matching.
 - rewrote watchdog and submission throttle
@@ -14,33 +12,37 @@ drupal x.xx, xx/xx/xxxx
     * supports both "categories" and "topics" (cfr. Scoop, SlashCode).  Topics can be nested to create a multi-level hierarchy.
     * added "auto-post new submissions" feature versus "moderate new submissions".
 - added settings.module:
-    * moved most of the configuration options from hostname.conf to the new administration section
+    * moved most of the configuration options from hostname.conf to the new administration section.
 - added moderate.module:
-    * allows to assign users editorial/moderator rights to certain nodes/topics.
+    * allows to assign users editorial/moderator rights to certain nodes or topics.
 - added page.module:
-    * allows creation of static (and dynamic) pages through the administration interface
+    * allows creation of static (and dynamic) pages through the administration interface.
 - added help.module:
-    * groups all available documentation on installed modules on a single page.
+    * groups all available module documentation on a single page.
+- added forum.module:
+    * added an integrated forum.
 - added cvs.module and cvs-to-sql.pl:
-    * allows to display and mail CVS log messages as digests.
+    * allows to display and mail CVS log messages as daily digests.
+- added book.module:
+    * allows collaborative handbook writing: primary used for drupal documentation.
 - various updates:
     * introduced links/drupal tags: [[link]]
     * added preview functionality when submitting new content (such as a story) from the administration pages.
     * made the administration section only show those links a user has access to.
     * made all modules use specific form_* functions to guarantee a rock-solid forms and more consistent layout.
     * improved account module:
-        + added "access control" to allow/deny certain usernames/e-mail addresses/hostnames
+        + added "access control" to allow/deny certain usernames/e-mail addresses/hostnames.
     * improved comment module:
-        + made it possible to permanently delete comments
+        + made it possible to permanently delete comments.
     * improved rating module
     * improved story module:
-        + added preview functionality for administrators
-        + made it possible to permanently delete stories
+        + added preview functionality for administrators.
+        + made it possible to permanently delete stories.
     * improved themes:
-        + W3C validation on a best effort basis
-        + removed $theme->control() from themes
-        + added theme "goofy"
-- collaboratively revised and expanded the drupal documentation
+        + W3C validation on a best effort basis.
+        + removed $theme->control() from themes.
+        + added theme "goofy".
+- collaboratively revised and expanded the drupal documentation.
 
 drupal 2.00, 15/03/2001
 -----------------------
