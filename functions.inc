@@ -147,7 +147,7 @@ function displayUserblock($theme) {
   global $user;
   dbconnect();
   if ($user->ublockon) {
-    $content .= "<P ALIGN=\"right\">[ <A HREF=\"account.php?op=edithome\"><FONT COLOR=\"$theme->hlcolor2\">edit</FONT></A> | <A HREF=\"account.php?op=logout\"><FONT COLOR=\"$theme->hlcolor2\">logout</FONT></A> ]</P>";
+    $content .= "<P ALIGN=\"right\">[ <A HREF=\"account.php?act=edithome\"><FONT COLOR=\"$theme->hlcolor2\">edit</FONT></A> | <A HREF=\"account.php?act=logout\"><FONT COLOR=\"$theme->hlcolor2\">logout</FONT></A> ]</P>";
     $theme->box("$user->userid's box", $user->content);
   }
 }
