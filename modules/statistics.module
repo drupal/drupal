@@ -238,7 +238,7 @@ function statistics_admin() {
       $links[] = la(t("top nodes page"), array("mod" => "statistics", "op" => "top nodes page"));
       $links[] = la(t("who's online block"), array("mod" => "statistics", "op" => "whos online block"));
     }
-    $links[] .= la(t("help"), array("mod" => "statistics", "op" => "help"));
+    $links[] = la(t("help"), array("mod" => "statistics", "op" => "help"));
     print "<small>". implode(" &middot; ", $links) ."</small><hr />";
 
     /* non-configuration admin pages */
@@ -323,7 +323,7 @@ function statistics_admin() {
 function statistics_admin_count_table($dbfield, $dbrows) {
   $result = db_query("SELECT statistics.nid, statistics.daycount, statistics.totalcount, statistics.timestamp, node.title FROM statistics LEFT JOIN node USING (nid) ORDER BY statistics.%s DESC LIMIT %s", $dbfield, $dbrows);
 
-  $output .= "<table border=\"1\" cellpadding=\"3\" cellspacing =\"0\"><tr><th>title</th><th>today</th><th>all time</th><th>last hit</th><th>referrers</th></tr>\n";
+  $output = "<table border=\"1\" cellpadding=\"3\" cellspacing =\"0\"><tr><th>title</th><th>today</th><th>all time</th><th>last hit</th><th>referrers</th></tr>\n";
 
   while ($nid = db_fetch_array($result)) {
     $output .= "<tr><td>". l($nid["title"], array("id" => $nid["nid"]), "node", "", array("title" => t("View this posting."))) ."</td><td>". $nid["daycount"] ."</td><td>". $nid["totalcount"] ."</td><td>". format_date($nid["timestamp"], "small") ."</td><td><center>";
@@ -368,7 +368,7 @@ function statistics_admin_accesslog_table($type, $id) {
     $result = db_query("SELECT nid, url, hostname, uid, timestamp FROM accesslog ORDER BY timestamp DESC LIMIT %s", $limit0);
   }
 
-  $output .= "<table border=\"1\" cellpadding=\"3\" cellspacing =\"0\"><tr><th>timestamp</th><th>title</th><th>user</th><th>hostname</th><th>referrer</th></tr>\n";
+  $output = "<table border=\"1\" cellpadding=\"3\" cellspacing =\"0\"><tr><th>timestamp</th><th>title</th><th>user</th><th>hostname</th><th>referrer</th></tr>\n";
 
   while ($log = db_fetch_array($result)) {
     if (!$node = node_load(array("nid" => $log["nid"]))) {
@@ -397,9 +397,9 @@ function statistics_recent_refer($nid = 0) {
   $node = node_load(array("nid" => $nid));
 
   /* allow viewing of all, internal or external referrers */
-  $links[] .= la(t("all"), array("mod" => "statistics", "op" => "referrers", "view" => "all", "nid" => "$nid"));
-  $links[] .= la(t("external"), array("mod" => "statistics", "op" => "referrers", "view" => "external", "nid" => "$nid"));
-  $links[] .= la(t("internal"), array("mod" => "statistics", "op" => "referrers", "view" => "internal", "nid" => "$nid"));
+  $links[] = la(t("all"), array("mod" => "statistics", "op" => "referrers", "view" => "all", "nid" => "$nid"));
+  $links[] = la(t("external"), array("mod" => "statistics", "op" => "referrers", "view" => "external", "nid" => "$nid"));
+  $links[] = la(t("internal"), array("mod" => "statistics", "op" => "referrers", "view" => "internal", "nid" => "$nid"));
   print "<small>". implode(" :: ", $links) ."</small><hr />";
 
   if ($nid > 0) {
@@ -502,7 +502,7 @@ function statistics_top_refer($nid = 0) {
 
 function statistics_admin_displaycounts() {
 
-  $output .= "<h3>Today's top nodes</h3>\n";
+  $output = "<h3>Today's top nodes</h3>\n";
   $output .= statistics_admin_count_table("daycount", 15);
 
   $output .= "<br />";
@@ -524,20 +524,20 @@ function statistics_admin_displaylog() {
 
   if ($uid) {
     $user = user_load(array("uid" => $uid));
-    $output .= "<h3>Recent access logs for '$user->name'</h3>\n";
+    $output = "<h3>Recent access logs for '$user->name'</h3>\n";
     $output .= statistics_admin_accesslog_table(1, $user->uid);
   }
   else if ($nid) {
     $node = node_load(array("nid" => $nid));
-    $output .= "<h3>Recent access logs for '$node->title'</h3>\n";
+    $output = "<h3>Recent access logs for '$node->title'</h3>\n";
     $output .= statistics_admin_accesslog_table(2, $node->nid);
   }
   else if ($hostname) {
-    $output .= "<h3>Recent access logs for '$hostname'</h3>\n";
+    $output = "<h3>Recent access logs for '$hostname'</h3>\n";
     $output .= statistics_admin_accesslog_table(3, $hostname);
   }
   else {
-    $output .= "<h3>Recent access logs</h3>\n";
+    $output = "<h3>Recent access logs</h3>\n";
     $output .= statistics_admin_accesslog_table(0, 0);
 
     $output .= "<br />";
@@ -576,16 +576,14 @@ function statistics_config_topnodes_block($edit) {
 
   $form .= form_submit("Submit \"top nodes\" block changes");
 
-  $output .= form($form);
-
-  return $output;
+  return form($form);
 }
 
 
 /* Displays the block configuration administration form */
 function statistics_config_online_block($edit) {
 
-  $form .= form_textfield(t("Block name"), "statistics_block_online_title", $edit["statistics_block_online_title"], 20, 40, "This module generates a block displaying how many users/guests are online.  You may assign a name for this block.");
+  $form = form_textfield(t("Block name"), "statistics_block_online_title", $edit["statistics_block_online_title"], 20, 40, "This module generates a block displaying how many users/guests are online.  You may assign a name for this block.");
   $form .= form_textfield(t("Sub-block name"), "statistics_block_online_subtitle", $edit["statistics_block_online_subtitle"], 20, 40, "This module generates a sub-block listing the names of currently online users.  You may assign a name for this block.");
 
   $period = array(30 => format_interval(30), 60 => format_interval(60), 120 => format_interval(120), 180 => format_interval(180), 300 => format_interval(300), 600 => format_interval(600), 900 => format_interval(900), 1800 => format_interval(1800), 2700 => format_interval(2700), 3600 => format_interval(3600), 5400 => format_interval(5400), 7200 => format_interval(7200), 10800 => format_interval(10800), 21600 => format_interval(21600), 43200 => format_interval(43200), 86400 => format_interval(86400));
@@ -595,8 +593,7 @@ function statistics_config_online_block($edit) {
 
   $form .= form_submit("Submit \"who's online\" block changes");
 
-  $output .= form($form);
-  return $output;
+  return form($form);
 }
 
 
@@ -620,16 +617,14 @@ function statistics_admin_userpage_config($edit) {
 
   $form .= form_submit("Submit \"top nodes\" page changes");
 
-  $output .= form($form);
-
-  return $output;
+  return form($form);
 }
 
 
 /* Adds configure option to the main configure site admin page */
 function statistics_conf_options() {
   /* access log options */
-  $output .= form_select(t("Enable access log"), "statistics_enable_access_log", variable_get("statistics_enable_access_log", 0), array("1" => t("Enabled"), "0" => t("Disabled")), "Log each page access.  Required for referrer statistics.");
+  $output = form_select(t("Enable access log"), "statistics_enable_access_log", variable_get("statistics_enable_access_log", 0), array("1" => t("Enabled"), "0" => t("Disabled")), "Log each page access.  Required for referrer statistics.");
   $period = array(3600 => format_interval(3600), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200), 4838400 => format_interval(4838400), 9676800 => format_interval(9676800));
   $output .= form_select(t("Discard access logs older than"), "statistics_flush_accesslog_timer", variable_get("statistics_flush_accesslog_timer", 259200), $period, "Older access log entries (including referrer statistics) will be automatically discarded.  Requires crontab.");
 
@@ -710,6 +705,7 @@ function statistics_cron() {
 function statistics_display_topnodes_block() {
   global $id;
 
+  $output = "";
   $daytop = variable_get("statistics_block_top_day_num", "");
   if ($daytop) {
     $dayheading = variable_get("statistics_block_top_day_head", "");
@@ -806,7 +802,7 @@ function statistics_display_online_block() {
   }
   else {
     /* default message when fully throttled */
-    $output = "This site is currently sustaining more than ". ($throttle * $multiplier) ." page views a minute!";
+    $output = "This site is currently sustaining more than ". ($throttle * $multiplier) ." page views a minute.";
   }
   return $output;
 }
@@ -816,6 +812,7 @@ function statistics_display_online_block() {
 function statistics_display_linked_title($dbfield, $dbrows) {
   /* valid dbfields: totalcount, daycount, timestamp */
 
+  $output = "";
   $result = db_query("SELECT statistics.nid, node.title FROM statistics LEFT JOIN node ON statistics.nid = node.nid ORDER BY %s DESC LIMIT %s", $dbfield, $dbrows);
   while ($nid = db_fetch_array($result)) {
     $output .= " - ". l($nid["title"], array("id" => $nid["nid"]), "node", "", array("title" => t("View this posting."))) ."<br />";
@@ -887,9 +884,8 @@ function statistics_page_user($uid = 0, $date = 0, $all = 0) {
     $date = time();
   }
 
-  $displaycount = variable_get("statistics_userpage_day_cnt", 10);
-  if ($displaycount) {
-    $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\" width=\"100%\">";
+  if ($displaycount = variable_get("statistics_userpage_day_cnt", 10)) {
+    $output = "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\" width=\"100%\">";
     $output .= statistics_summary("daycount", $displaycount);
     $output .= "</table>";
 
@@ -897,8 +893,7 @@ function statistics_page_user($uid = 0, $date = 0, $all = 0) {
   }
 
 
-  $displaycount = variable_get("statistics_userpage_all_cnt", "10");
-  if ($displaycount) {
+  if ($displaycount = variable_get("statistics_userpage_all_cnt", "10")) {
     $output = "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\" width=\100%\">";
     $output .= statistics_summary("totalcount", $displaycount);
     $output .= "</table>";
@@ -906,8 +901,7 @@ function statistics_page_user($uid = 0, $date = 0, $all = 0) {
     $theme->box(t(variable_get("statistics_userpage_all_head", "")), $output, "main");
   }
 
-  $displaycount = variable_get("statistics_userpage_last_cnt", "10");
-  if ($displaycount) {
+  if ($displaycount = variable_get("statistics_userpage_last_cnt", "10")) {
     $output = "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\" width=\100%\">";
     $output .= statistics_summary("timestamp", $displaycount);
     $output .= "</table>";
@@ -921,6 +915,7 @@ function statistics_summary($dbfield, $dbrows) {
   /* valid dbfields: totalcount, daycount, timestamp */
   global $theme;
 
+  $output = "";
   $result = db_query("SELECT statistics.nid,node.title FROM statistics LEFT JOIN node ON statistics.nid = node.nid ORDER BY %s DESC LIMIT %s", $dbfield, $dbrows);
   while ($nid = db_fetch_array($result)) {
     $content = node_load(array("nid" => $nid["nid"]));
