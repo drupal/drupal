@@ -53,25 +53,31 @@ function locale_edit($id) {
 }
 
 function locale_languages($translation) {
-  global $languages;
-  foreach ($languages as $key=>$value) {
-    $output .= ($translation->$key) ? "$key " : "<STRIKE>$key</STRIKE> ";
+  global $languages, $na;
+  if (count($languages)) {
+    foreach ($languages as $key=>$value) {
+      $output .= ($translation->$key) ? "$key " : "<STRIKE>$key</STRIKE> ";
+    }
+    return $output;
   }
-  return $output;
+  return $na;
 }
 
 function locale_overview() {
-  $result = db_query("SELECT * FROM locales ORDER BY string");
-
-  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR><TH>string</TH><TH>languages</TH><TH COLSPAN=\"2\">operations</TH><TR>\n";
-  while ($locale = db_fetch_object($result)) {
-    $languages = locale_languages($locale);
-    $output .= " <TR><TD>". check_output($locale->string) ."<BR><SMALL><I>$locale->location</I></SMALL></TD><TD ALIGN=\"center\">$languages</TD><TD><A HREF=\"admin.php?mod=locale&op=edit&id=$locale->id\">edit</A></TD><TD><A HREF=\"admin.php?mod=locale&op=delete&id=$locale->id\">delete</A></TD></TR>";
+  if (variable_get("locale", 0)) {
+    $result = db_query("SELECT * FROM locales ORDER BY string");
+    
+    $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
+    $output .= " <TR><TH>string</TH><TH>languages</TH><TH COLSPAN=\"2\">operations</TH><TR>\n";
+    while ($locale = db_fetch_object($result)) {
+      $languages = locale_languages($locale);
+      $output .= " <TR><TD>". check_output($locale->string) ."<BR><SMALL><I>$locale->location</I></SMALL></TD><TD ALIGN=\"center\">$languages</TD><TD><A HREF=\"admin.php?mod=locale&op=edit&id=$locale->id\">edit</A></TD><TD><A HREF=\"admin.php?mod=locale&op=delete&id=$locale->id\">delete</A></TD></TR>";
+    }
+    $output .= "</TABLE>\n";
+    
+    return $output;
   }
-  $output .= "</TABLE>\n";
-
-  return $output;
+  return "Locale disabled.";
 }
 
 function locale_admin() {
