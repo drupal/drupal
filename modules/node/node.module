@@ -1866,7 +1866,7 @@ function node_rewrite_sql($query, $nid_alias = 'n', $args = array()) {
 
   $query = preg_replace('/(SELECT.*)('. $nid_alias .'\.)?(?<!DISTINCT\()(?<!DISTINCT\('. $nid_alias .'\.)nid(.*FROM)/AUsi', '\1'. $nid_to_select .'\3', $query);
 
-  $query = preg_replace('|FROM[^[:upper:]/,]+|','\0 '.$join.' ', $query);
+  $query = preg_replace('|FROM[^[:upper:]/,]+|','\0 '. $join .' ', $query);
   if (strpos($query, 'WHERE')) {
     $replace = 'WHERE';
     $add = 'AND';
