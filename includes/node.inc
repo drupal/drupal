@@ -4,7 +4,10 @@ $status = array(dumped => 0, expired => 1, queued => 2, posted => 3);
 $rstatus = array(0 => dumped, 1 => expired, 2 => queued, 3 => posted);
 
 function _node_get($conditions) {
-  foreach ($conditions as $key=>$value) $cond[] = "n.". check_query($key) ." = '". check_query($value) ."'";
+  foreach ($conditions as $key=>$value) {
+    $cond[] = "n.". check_query($key) ." = '". check_query($value) ."'";
+  }
+
   $where = implode(" AND ", $cond);
 
   if ($conditions[type]) {
@@ -16,7 +19,7 @@ function _node_get($conditions) {
   }
 
   if ($type) {
-    return db_query("SELECT n.*, l.*, u.uid, u.name FROM node n LEFT JOIN $type l ON n.lid = l.lid AND n.nid = l.nid LEFT JOIN user u ON n.author = u.uid WHERE $where ORDER BY n.timestamp DESC");
+    return db_query("SELECT n.*, l.*, u.uid, u.name, SUM(m.score) / COUNT(m.cid) AS score, COUNT(m.cid) AS votes FROM node n LEFT JOIN $type l ON n.lid = l.lid AND n.nid = l.nid LEFT JOIN user u ON n.author = u.uid LEFT JOIN moderate m ON m.nid = n.nid WHERE $where GROUP BY n.nid ORDER BY n.timestamp DESC");
   }
 }
 
@@ -267,7 +270,8 @@ function node_moderation($nid) {
     $options .= " <option value=\"$key\"". ($moderate->score == $key ? " selected=\"selected\"" : "") .">$value</option>\n";
   }
 
-  $output .= " <select name=\"moderate[node][$node->nid]\">$options</select> (". ($node->score ? $node->score : "--") ." / $node->votes)";
+  $output .= "accumulated rating: ". ($node->score ? $node->score : "--") ." / $node->votes<br />";
+  $output .= "<select name=\"moderate[node][$node->nid]\">$options</select>";
 
   return $output;
 }

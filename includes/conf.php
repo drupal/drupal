@@ -9,22 +9,6 @@ $db_pass = "drop";      // password
 $db_name = "database";  // database
 
 #
-# Comment votes:
-#   The keys of this associative array are displayed in each comment's
-#   selection box whereas the corresponding values represent the
-#   mathematical calculation to be performed to update a comment's
-#   value.
-#
-$comment_votes = array("none" => "none",
-                       "-1"   => "- 1",
-                       "0"    => "+ 0",
-                       "+1"   => "+ 1",
-                       "+2"   => "+ 2",
-                       "+3"   => "+ 3",
-                       "+4"   => "+ 4",
-                       "+5"   => "+ 5");
-
-#
 # Themes:
 #
 $themes = array("UnConeD" => array(

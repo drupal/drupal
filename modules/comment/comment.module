@@ -4,7 +4,7 @@ function comment_search($keys) {
   global $PHP_SELF;
   $result = db_query("SELECT c.*, u.name FROM comments c LEFT JOIN user u ON c.author = u.uid WHERE c.subject LIKE '%$keys%' OR c.comment LIKE '%$keys%' ORDER BY c.timestamp DESC LIMIT 20");
   while ($comment = db_fetch_object($result)) {
-    $find[$i++] = array("title" => check_output($comment->subject), "link" => ($PHP_SELF == "/admin.php" ? "admin.php?mod=comment&op=edit&id=$comment->cid" : "node.php?id=$comment->lid&cid=$comment->cid"), "user" => $comment->name, "date" => $comment->timestamp);
+    $find[$i++] = array("title" => check_output($comment->subject), "link" => (strstr($PHP_SELF, "admin.php") ? "admin.php?mod=comment&op=edit&id=$comment->cid" : "node.php?id=$comment->lid&cid=$comment->cid"), "user" => $comment->name, "date" => $comment->timestamp);
   }
   return $find;
 }

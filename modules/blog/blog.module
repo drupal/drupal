@@ -14,6 +14,15 @@ function blog_help() {
  <?php
 }
 
+function blog_cron() {
+  $result = db_query("SELECT n.nid, n.timestamp, SUM(m.score) / COUNT(m.cid) AS score, COUNT(m.cid) AS votes FROM node n LEFT JOIN moderate m ON m.nid = n.nid WHERE n.type = 'blog' AND n.status = '". node_status("posted") ."' GROUP BY n.nid ORDER BY n.timestamp DESC LIMIT 30");
+  while ($node = db_fetch_object($result)) {
+    if ($node->score > 3 && $node->votes > 4) {
+      db_query("UPDATE node SET promote = '1' WHERE nid = '$node->nid'");
+    }
+  }
+}
+
 function blog_perm() {
   return array("administer blogs", "access blogs", "post blogs");
 }
@@ -358,7 +367,7 @@ function blog_search($keys) {
 
   $result = db_query("SELECT n.*, b.* FROM blog b LEFT JOIN node n ON n.nid = b.nid AND n.lid = b.lid WHERE (n.title LIKE '%$keys%' OR b.body LIKE '%$keys%') ORDER BY n.timestamp DESC LIMIT 20");
   while ($blog = db_fetch_object($result)) {
-    $find[$i++] = array("title" => check_output($blog->title), "link" => ($PHP_SELF == "/admin.php" ? "admin.php?mod=node&type=blog&op=edit&id=$blog->nid" : "node.php?id=$blog->nid"), "user" => $blog->name, "date" => $blog->timestamp);
+    $find[$i++] = array("title" => check_output($blog->title), "link" => (strstr($PHP_SELF, "admin.php") ? "admin.php?mod=node&type=blog&op=edit&id=$blog->nid" : "node.php?id=$blog->nid"), "user" => $blog->name, "date" => $blog->timestamp);
   }
   return $find;
 }

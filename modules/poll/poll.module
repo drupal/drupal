@@ -78,7 +78,7 @@ function poll_search($keys) {
   global $PHP_SELF, $status;
   $result = db_query("SELECT n.*, p.* FROM poll p LEFT JOIN node n ON n.nid = p.nid AND n.lid = p.lid WHERE n.status = '$status[posted]' AND (n.title LIKE '%$keys%') LIMIT 20");
   while ($poll = db_fetch_object($result)) {
-    $find[$i++] = array("title" => check_output($poll->title), "link" => ($PHP_SELF == "/admin.php" ? "admin.php?mod=poll&op=edit&id=$poll->nid" : "node.php?id=$poll->nid"), "user" => $poll->name, "date" => $poll->timestamp);
+    $find[$i++] = array("title" => check_output($poll->title), "link" => (strstr($PHP_SELF, "admin.php") ? "admin.php?mod=poll&op=edit&id=$poll->nid" : "node.php?id=$poll->nid"), "user" => $poll->name, "date" => $poll->timestamp);
   }
   return $find;
 }
