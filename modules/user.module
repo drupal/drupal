@@ -1493,9 +1493,6 @@ function user_admin_edit($edit = array()) {
       }
 
       // TODO: this display/edit/validate should be moved to a new profile module implementing the _user hooks
-      if ($error) {
-        // do nothing
-      }
       if ($error = user_validate_name($edit["name"])) {
         // do nothing
       }
@@ -1526,7 +1523,7 @@ function user_admin_edit($edit = array()) {
       unset($edit["pass1"], $edit["pass2"]);
       if (!$error) {
         $account = user_save($account, array_merge($edit, $data));
-        $output .= status(t("your user information changes have been saved."));
+        $output .= status(t("user information changes have been saved."));
       }
       else {
         $output .= theme("theme_error", $error);
@@ -1542,6 +1539,10 @@ function user_admin_edit($edit = array()) {
         $error = t("Failed to delete account: the account has to be blocked first.");
         $output .= theme("theme_error", $error);
       }
+    }
+
+    if (!$edit) {
+      $edit = object2array($account);
     }
 
     /*
