@@ -17,6 +17,7 @@ $mysql_updates = array(
   "2001-11-02" => "update_8",
   "2001-11-04" => "update_9",
   "2001-11-17: distributed authentication" => "update_10",
+  "2001-12-01" => "update_11",
 );
 
 // Update functions
@@ -234,6 +235,10 @@ function update_10() {
   update_sql("ALTER TABLE book DROP body_old;");
   update_sql("ALTER TABLE page DROP body_old;");
   update_sql("ALTER TABLE blog DROP body_old;");
+}
+
+function update_11() {
+  update_sql("ALTER TABLE users ADD session TEXT;");
 }
 
 // System functions

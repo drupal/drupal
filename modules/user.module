@@ -17,13 +17,14 @@ function sess_close() {
 function sess_read($key) {
   global $user;
   $user = user_load(array("sid" => $key, "status" => 1));
-  return $user;
+
+  return $user->session;
 }
 
 function sess_write($key, $value) {
   global $HTTP_SERVER_VARS;
 
-  db_query("UPDATE users SET hostname = '". check_input($HTTP_SERVER_VARS[REMOTE_ADDR]) ."', timestamp = '". time() ."' WHERE sid = '$key'");
+  db_query("UPDATE users SET hostname = '". check_input($HTTP_SERVER_VARS[REMOTE_ADDR]) ."', session = '". check_query($value) ."', timestamp = '". time() ."' WHERE sid = '$key'");
 }
 
 function sess_destroy($key) {
@@ -141,11 +142,11 @@ function user_validate_name($name) {
   */
 
   if (!$name) return t("You must enter a Username.");
-  if (eregi("^ ", $name)) return t("The Username cannot begin with a space.");
-  if (eregi(" \$", $name)) return t("The Username cannot end with a space.");
-  if (eregi("  ", $name)) return t("The Username cannot contain multiple spaces in a row.");
-  // if (eregi("[^a-zA-Z0-9@-@]", $name)) return t("The Username contains an illegal character.");
-  if (!eregi('^[a-z0-9]+(@[a-z0-9]+)?$', $name)) t("The name contains an illegal character.");
+  if (ereg("^ ", $name)) return t("The Username cannot begin with a space.");
+  if (ereg(" \$", $name)) return t("The Username cannot end with a space.");
+  if (ereg("  ", $name)) return t("The Username cannot contain multiple spaces in a row.");
+  // if (ereg("[^a-zA-Z0-9@-@]", $name)) return t("The Username contains an illegal character.");
+  if (!ereg('^[a-z0-9]+(@[a-z0-9]+)?$', $name)) t("The name contains an illegal character.");
   if (strlen($name) > 56) return t("The Username '$name' is too long: it must be less than 56 characters.");
 }
 
@@ -639,13 +640,13 @@ function user_login($edit = array()) {
     else {
       if (!$error) {
         $error = t("Authentication failed.");
-      }  
+      }
       if ($server) {
         watchdog("user", "failed login for '$name@$server': $error");
-      }  
+      }
       else {
         watchdog("user", "failed login for '$name': $error");
-      } 
+      }
     }
   }
 
