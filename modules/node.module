@@ -693,7 +693,7 @@ function node_admin() {
         print node_admin_edit($id);
         break;
       case t("Preview"):
-        $edit = node_validate($edit, $error);
+        $edit = object2array(node_validate($edit, $error));
         print node_preview($edit);
         break;
       case t("Submit"):
