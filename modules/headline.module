@@ -196,7 +196,7 @@ function headline_export($uri) {
 
     header("Content-Type: text/plain");
 
-    print "<?phpxml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
+    print "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
     print "<rdf:RDF\n";
     print " xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n";
     print " xmlns=\"http://my.netscape.com/rdf/simple/0.9/\">\n";
