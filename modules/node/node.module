@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.331 2004/02/09 00:56:23 unconed Exp $
+// $Id: node.module,v 1.332 2004/02/11 05:58:54 dries Exp $
 
 define('NODE_NEW_LIMIT', time() - 30 * 24 * 60 * 60);
 
@@ -77,7 +77,7 @@ function node_help_page() {
 function node_title_list($result, $title = NULL) {
   while ($node = db_fetch_object($result)) {
     $number = module_invoke('comment', 'num_all', $node->nid);
-    $items[] = l($node->title, "node/view/$node->nid", array('title' => format_plural($number, '%count comment', '%count comments')));
+    $items[] = l($node->title, "node/view/$node->nid", array('title' => format_plural($number, '1 comment', '%count comments')));
   }
 
   return theme('node_list', $items, $title);
