@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.68 2003/10/03 17:43:49 dries Exp $
+// $Id: taxonomy.module,v 1.69 2003/10/06 12:21:03 kjartan Exp $
 
 function taxonomy_system($field){
   $output = "";
@@ -38,7 +38,7 @@ function taxonomy_link($type, $node = NULL) {
     }
   }
   else if ($type == "taxonomy terms" && $node != NULL) {
-
+    $links = array();
     if ($node->taxonomy) {
       foreach ($node->taxonomy as $tid) {
         $term = taxonomy_get_term($tid);
