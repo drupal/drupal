@@ -42,8 +42,10 @@
       <div id="mission">{mission}</div>
       <!-- END: mission -->
       <div id="main">
+        <!-- BEGIN: title -->
         {breadcrumb}
-        <h1 class="title">{body_title}</h1>
+        <h1 class="title">{title}</h1>
+        <!-- END: title -->
         <!-- BEGIN: help -->
         <div id="help">{help}</div>
         <!-- END: help -->
