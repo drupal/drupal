@@ -15,7 +15,7 @@ function account_help() {
 function account_find($keys) {
   global $user;
   $find = array();
-  $result = db_query("SELECT * FROM users WHERE userid LIKE '%". check_input($keys) ."%' LIMIT 20");
+  $result = db_query("SELECT * FROM users WHERE userid LIKE '%$keys%' LIMIT 20");
   while ($account = db_fetch_object($result)) {
     array_push($find, array("subject" => $account->userid, "link" => (user_access($user, "account") ? "admin.php?mod=account&op=view&name=$account->userid" : "account.php?op=view&name=$account->userid"), "user" => $account->userid));
   }
@@ -51,7 +51,7 @@ function account_access($account) {
 }
 
 function account_blocks($id) {
-  $result = db_query("SELECT * FROM layout WHERE user = $id");
+  $result = db_query("SELECT * FROM layout WHERE user = '$id'");
   while ($layout = db_fetch_object($result)) {
     $output .= "<LI>$layout->block</LI>\n";
   }
@@ -67,7 +67,7 @@ function account_stories($id) {
 }
 
 function account_comments($id) {
-  $result = db_query("SELECT * FROM comments WHERE link = 'story' AND author = $id ORDER BY timestamp DESC");
+  $result = db_query("SELECT * FROM comments WHERE link = 'story' AND author = '$id' ORDER BY timestamp DESC");
   while ($comment = db_fetch_object($result)) {
     $output .= "<LI><A HREF=\"story.php?id=$comment->lid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">$comment->subject</A></LI>\n";
   }
@@ -77,7 +77,7 @@ function account_comments($id) {
 function account_delete($name) {
   $result = db_query("SELECT * FROM users WHERE userid = '$name' AND status = 0 AND id > 1");
   if ($account = db_fetch_object($result)) {
-    db_query("DELETE FROM users WHERE id = $account->id");
+    db_query("DELETE FROM users WHERE id = '$account->id'");
   }
   else {
     print "<P>Failed to delete account '". format_username($name) ."': the account must be blocked first.</P>";
@@ -170,12 +170,12 @@ function account_admin() {
   switch ($op) {
     case "Delete account":
     case "delete":
-      account_delete($name);
+      account_delete(check_input($name));
       account_display();
       break;
     case "Edit account":
     case "edit":
-      account_edit($name);
+      account_edit(check_input($name));
       break;
     case "help":
       account_help();
@@ -188,8 +188,8 @@ function account_admin() {
       account_view($name);
       break;
     case "Save account":
-      account_edit_save($name, $edit);
-      account_view($name);
+      account_edit_save(check_input($name), $edit);
+      account_view(check_input($name));
       break;
     default:
       account_display();

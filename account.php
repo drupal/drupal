@@ -214,9 +214,9 @@ function account_content_edit() {
 function account_content_save($edit) {
   global $user;
   if ($user->id) {
-    db_query("DELETE FROM layout WHERE user = $user->id");
+    db_query("DELETE FROM layout WHERE user = '$user->id'");
     foreach (($edit ? $edit : array()) as $block=>$weight) {
-      db_query("INSERT INTO layout (user, block) VALUES ('". check_input($user->id) ."', '". check_input($block) ."')");
+      db_query("INSERT INTO layout (user, block) VALUES ('$user->id', '". check_input($block) ."')");
     }
   }
 }
@@ -294,7 +294,7 @@ function account_validate($user) {
 
   // Verify whether username and e-mail address are unique:
   if (db_num_rows(db_query("SELECT userid FROM users WHERE LOWER(userid) = LOWER('$user[userid]')")) > 0) $error = t("the specified username is already taken");
-  if (db_num_rows(db_query("SELECT real_email FROM users WHERE LOWER(real_email)=LOWER('$user[real_email]')")) > 0) $error = t("the specified e-mail address is already in use by another account");
+  if (db_num_rows(db_query("SELECT real_email FROM users WHERE LOWER(real_email) = LOWER('$user[real_email]')")) > 0) $error = t("the specified e-mail address is already in use by another account");
 
   return $error;
 }
@@ -302,7 +302,7 @@ function account_validate($user) {
 function account_email_submit($userid, $email) {
   global $theme, $site_name, $site_url;
 
-  $result = db_query("SELECT id FROM users WHERE userid = '". check_input($userid) ."' AND real_email = '". check_input($email) ."'");
+  $result = db_query("SELECT id FROM users WHERE userid = '$userid' AND real_email = '$email'");
 
   if ($account = db_fetch_object($result)) {
     $passwd = account_password();
@@ -370,7 +370,7 @@ function account_create_confirm($name, $hash) {
   if ($account = db_fetch_object($result)) {
     if ($account->status == 1) {
       if ($account->hash == $hash) {
-        db_query("UPDATE users SET status = 2, hash = '' WHERE userid = '$name'");
+        db_query("UPDATE users SET status = '2', hash = '' WHERE userid = '$name'");
         $output = t("Your account has been successfully confirmed.");
         watchdog("message", "$name: account confirmation successful");
       }
@@ -404,13 +404,13 @@ function account_password($min_length=6) {
 function account_track_comments() {
   global $theme, $user;
 
-  $sresult = db_query("SELECT s.id, s.subject, COUNT(s.id) as count FROM comments c LEFT JOIN stories s ON c.lid = s.id WHERE c.author = $user->id GROUP BY s.id DESC LIMIT 5");
+  $sresult = db_query("SELECT s.id, s.subject, COUNT(s.id) AS count FROM comments c LEFT JOIN stories s ON c.lid = s.id WHERE c.author = '$user->id' GROUP BY s.id DESC LIMIT 5");
 
   while ($story = db_fetch_object($sresult)) {
     $output .= "<LI>". format_plural($story->count, "comment", "comments") ." ". t("attached to story") ." `<A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A>`:</LI>\n";
     $output .= " <UL>\n";
 
-    $cresult = db_query("SELECT * FROM comments WHERE author = $user->id AND lid = $story->id");
+    $cresult = db_query("SELECT * FROM comments WHERE author = '$user->id' AND lid = '$story->id'");
     while ($comment = db_fetch_object($cresult)) {
       $output .= "  <LI><A HREF=\"story.php?id=$story->id&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A> - ". t("replies") .": ". comment_num_replies($comment->cid) ." - ". t("score") .": ". comment_score($comment) ."</LI>\n";
     }
@@ -425,7 +425,7 @@ function account_track_comments() {
 function account_track_stories() {
   global $theme, $user;
 
-  $result = db_query("SELECT s.id, s.subject, s.timestamp, s.section, COUNT(c.cid) as count FROM stories s LEFT JOIN comments c ON c.lid = s.id WHERE s.status = 2 AND s.author = $user->id GROUP BY s.id DESC");
+  $result = db_query("SELECT s.id, s.subject, s.timestamp, s.section, COUNT(c.cid) AS count FROM stories s LEFT JOIN comments c ON c.lid = s.id WHERE s.status = '2' AND s.author = '$user->id' GROUP BY s.id DESC");
 
   while ($story = db_fetch_object($result)) {
     $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
@@ -446,11 +446,11 @@ function account_track_site() {
 
   $period = 259200; // 3 days
 
-  $sresult = db_query("SELECT s.subject, s.id, COUNT(c.lid) AS count FROM comments c LEFT JOIN stories s ON c.lid = s.id WHERE s.status = 2 AND c.link = 'story' AND ". time() ." - c.timestamp < $period GROUP BY c.lid ORDER BY s.timestamp DESC LIMIT 10");
+  $sresult = db_query("SELECT s.subject, s.id, COUNT(c.lid) AS count FROM comments c LEFT JOIN stories s ON c.lid = s.id WHERE s.status = '2' AND c.link = 'story' AND ". time() ." - c.timestamp < $period GROUP BY c.lid ORDER BY s.timestamp DESC LIMIT 10");
   while ($story = db_fetch_object($sresult)) {
     $output .= "<LI>". format_plural($story->count, "comment", "comments") ." ". t("attached to story") ." '<A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A>':</LI>";
 
-    $cresult = db_query("SELECT c.subject, c.cid, c.pid, u.userid FROM comments c LEFT JOIN users u ON u.id = c.author WHERE c.lid = $story->id AND c.link = 'story' ORDER BY timestamp DESC LIMIT $story->count");
+    $cresult = db_query("SELECT c.subject, c.cid, c.pid, u.userid FROM comments c LEFT JOIN users u ON u.id = c.author WHERE c.lid = '$story->id' AND c.link = 'story' ORDER BY timestamp DESC LIMIT $story->count");
     $output .= "<UL>\n";
     while ($comment = db_fetch_object($cresult)) {
       $output .= " <LI>'<A HREF=\"story.php?id=$story->id&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A>' ". t("by") ." ". format_username($comment->userid) ."</LI>\n";
@@ -471,10 +471,10 @@ if (strstr($name, " ") || strstr($hash, " ")) {
 
 switch ($op) {
   case t("E-mail new password"):
-    account_email_submit($userid, $email);
+    account_email_submit(check_input($userid), check_input($email));
     break;
   case t("Create account"):
-    account_create_submit($userid, $email);
+    account_create_submit(check_input($userid), check_input($email));
     break;
   case t("Save user information"):
     account_user_save($edit);
@@ -489,10 +489,10 @@ switch ($op) {
     account_user($user->userid);
     break;
   case "confirm":
-    account_create_confirm($name, $hash);
+    account_create_confirm(check_input($name), check_input($hash));
     break;
   case "login":
-    account_session_start($userid, $passwd);
+    account_session_start(check_input($userid), check_input($passwd));
     header("Location: account.php?op=info");
     break;
   case "logout":
@@ -505,7 +505,7 @@ switch ($op) {
         account_user($user->userid);
         break;
       default:
-        account_user($name);
+        account_user(check_input($name));
     }
     break;
   case "track":

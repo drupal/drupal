@@ -32,7 +32,7 @@ class backend {
       if (time() - $this->timestamp > $timout) $this->url2sql();
 
       // Read headlines:
-      $result = db_query("SELECT * FROM headlines WHERE id = $this->id ORDER BY number");
+      $result = db_query("SELECT * FROM headlines WHERE id = '$this->id' ORDER BY number");
       while ($headline = db_fetch_object($result)) {
         array_push($this->headlines, "<A HREF=\"$headline->link\">$headline->title</A>");
       }
@@ -91,7 +91,7 @@ class backend {
           }
 
           // Mark channels as being updated:
-          $result = db_query("UPDATE channel SET timestamp = '". time() ."' WHERE id = $this->id");
+          $result = db_query("UPDATE channel SET timestamp = '". time() ."' WHERE id = '$this->id'");
           $this->timestamp = time();
         }
         else {
@@ -113,7 +113,7 @@ class backend {
       if (time() - $this->timestamp > $timout) $this->url2sql();
 
       // Grab headlines from database:
-      $result = db_query("SELECT * FROM headlines WHERE id = $this->id ORDER BY number");
+      $result = db_query("SELECT * FROM headlines WHERE id = '$this->id' ORDER BY number");
       while ($headline = db_fetch_object($result)) {
         $content .= "<LI><A HREF=\"$headline->link\">$headline->title</A></LI>";
       }
@@ -133,27 +133,18 @@ class backend {
 
   function delete() {
     // Delete channel:
-    $result = db_query("DELETE FROM channel WHERE id = $this->id");
+    $result = db_query("DELETE FROM channel WHERE id = '$this->id'");
 
     // Delete headlines:
-    $result = db_query("DELETE FROM headlines WHERE id = $this->id");
+    $result = db_query("DELETE FROM headlines WHERE id = '$this->id'");
   }
 
   function refresh() {
     // Delete headlines:
-    $result = db_query("DELETE FROM headlines WHERE id = $this->id");
+    $result = db_query("DELETE FROM headlines WHERE id = '$this->id'");
 
     // Mark channel as invalid to enforce an update:
-    $result = db_query("UPDATE channel SET timestamp = 1 WHERE id = $this->id");
-  }
-
-  function dump() {
-    print "<B>Dump backend:</B><BR>";
-    print "Id: $this->id<BR>";
-    print "Site: $this->site<BR>";
-    print "URL: $this->url<BR>";
-    print "File: $this->file<BR>";
-    print "Contact: $this->contact<BR>";
+    $result = db_query("UPDATE channel SET timestamp = 1 WHERE id = '$this->id'");
   }
 }
 

@@ -99,7 +99,7 @@ function submit_submit($subject, $abstract, $article, $section) {
   watchdog("story", "story: added '$subject'");
 
   // Add submission to SQL table:
-  db_query("INSERT INTO stories (author, subject, abstract, article, section, timestamp) VALUES ('$user->id', '". check_input($subject) ."', '". check_input($abstract) ."', '". check_input($article) ."', '". check_input($section) ."', '". time() ."')");
+  db_query("INSERT INTO stories (author, subject, abstract, article, section, timestamp) VALUES ('$user->id', '$subject', '$abstract', '$article', '$section', '". time() ."')");
 
   // Display confirmation message:
   $theme->header();
@@ -109,10 +109,10 @@ function submit_submit($subject, $abstract, $article, $section) {
 
 switch($op) {
   case t("Preview submission"):
-    submit_preview($subject, $abstract, $article, $section);
+    submit_preview(check_input($subject), check_input($abstract), check_input($article), check_input($section));
     break;
   case t("Submit submission"):
-    submit_submit($subject, $abstract, $article, $section);
+    submit_submit(check_input($subject), check_input($abstract), check_input($article), check_input($section));
     break;
   default:
     submit_enter();

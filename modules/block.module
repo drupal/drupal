@@ -35,7 +35,7 @@ function block_page() {
 
 function block_admin_save($edit) {
   foreach ($edit as $key=>$value) {
-    db_query("UPDATE blocks SET region = '$value[region]', status = '$value[status]', weight = '$value[weight]' WHERE name = '$key'");
+    db_query("UPDATE blocks SET region = '". check_input($value[region]) ."', status = '". check_input($value[status]) ."', weight = '". check_input($value[weight]) ."' WHERE name = '". check_input($key) ."'");
   }
 }
 

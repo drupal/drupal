@@ -53,7 +53,7 @@ function watchdog_display($order = "date") {
 }
 
 function watchdog_view($id) {
-  $result = db_query("SELECT l.*, u.userid FROM watchdog l LEFT JOIN users u ON l.user = u.id WHERE l.id = $id");
+  $result = db_query("SELECT l.*, u.userid FROM watchdog l LEFT JOIN users u ON l.user = u.id WHERE l.id = '$id'");
 
   if ($watchdog = db_fetch_object($result)) {
     $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
@@ -78,10 +78,10 @@ function watchdog_admin() {
       watchdog_help();
       break;
     case "view":
-      watchdog_view($id);
+      watchdog_view(check_input($id));
       break;
     case "Update":
-      watchdog_display($order);
+      watchdog_display(check_input($order));
       break;
     default:
       watchdog_display();

@@ -118,11 +118,11 @@ function ban_admin() {
 
   switch ($op) {
     case "Add ban":
-      ban_admin_new($mask, $category, $reason);
-      ban_display($category);
+      ban_admin_new(check_input($mask), check_input($category), check_input($reason));
+      ban_display(check_input($category));
       break;
     case "Check ban":
-      ban_check($mask, $category);
+      ban_check(check_input($mask), check_input($category));
       break;
     case "add":
       ban_admin_add();
@@ -134,9 +134,9 @@ function ban_admin() {
       ban_admin_check();
       break;
     case "delete":
-      ban_delete($id);
+      ban_delete(check_input($id));
     default:
-      ban_display($category);
+      ban_display(check_input($category));
   }
 }
 

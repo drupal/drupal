@@ -15,7 +15,7 @@ function submission_count() {
 }
 
 function submission_score($id) {
-  $result = db_query("SELECT score FROM stories WHERE id = $id");
+  $result = db_query("SELECT score FROM stories WHERE id = '$id'");
   return ($result) ? db_result($result, 0) : 0;
 }
 
@@ -28,7 +28,7 @@ function submission_vote($id, $vote, $comment) {
 
     // Update the comments (if required):
     if ($comment) {
-      db_query("INSERT INTO comments (lid, link, author, subject, comment, hostname, timestamp, score) VALUES($id, 'story', $user->id, '". check_input(substr($comment, 0, 29)) ." ...', '". check_input($comment) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."', '1')");
+      db_query("INSERT INTO comments (lid, link, author, subject, comment, hostname, timestamp, score) VALUES($id, 'story', $user->id, '". substr($comment, 0, 29) ." ...', '$comment', '". getenv("REMOTE_ADDR") ."', '". time() ."', '1')");
       watchdog("comment", "moderation: added comment with subject '$subject'");
     }
 
@@ -115,10 +115,10 @@ function submission_page() {
 
     switch($op) {
       case "view":
-        submission_display_item($id);
+        submission_display_item(check_input($id));
         break;
       case "Vote";
-        submission_vote($id, $vote, $comment);
+        submission_vote(check_input($id), check_input($vote), check_input($comment));
         // fall through
       default:
         submission_page_main();

@@ -14,7 +14,7 @@ include_once "includes/common.inc";
 function diary_find($keys) {
   global $user;
   $find = array();
-  $result = db_query("SELECT d.*, u.userid FROM diaries d LEFT JOIN users u ON d.author = u.id WHERE d.text LIKE '%". check_input($keys) ."%' ORDER BY d.timestamp DESC LIMIT 20");
+  $result = db_query("SELECT d.*, u.userid FROM diaries d LEFT JOIN users u ON d.author = u.id WHERE d.text LIKE '%$keys%' ORDER BY d.timestamp DESC LIMIT 20");
   while ($diary = db_fetch_object($result)) {
     array_push($find, array("subject" => "$diary->userid's diary", "link" => (user_access($user, "diary") ? "admin.php?mod=diary&op=edit&id=$diary->id" : "module.php?mod=diary&op=view&name=$diary->userid"), "user" => $diary->userid, "date" => $diary->timestamp));
   }
@@ -168,11 +168,11 @@ function diary_page_submit($text, $id = 0) {
 
   if ($id) {
     watchdog("message", "diary: old diary entry updated");
-    db_query("UPDATE diaries SET text =  '". check_input($text) ."' WHERE id = $id");
+    db_query("UPDATE diaries SET text = '$text' WHERE id = '$id'");
   }
   else {
     watchdog("diary", "diary: new diary entry added");
-    db_query("INSERT INTO diaries (author, text, timestamp) VALUES ('$user->id', '". check_input($text) ."', '". time() ."')");
+    db_query("INSERT INTO diaries (author, text, timestamp) VALUES ('$user->id', '$text', '". time() ."')");
   }
 
   header("Location: module.php?mod=diary&op=view&name=$user->userid");
@@ -192,22 +192,22 @@ function diary_page() {
       diary_page_add();
       break;
     case "delete":
-      diary_page_delete($id);
-      diary_page_display($name);
+      diary_page_delete(check_input($id));
+      diary_page_display(check_input($name));
       break;
    case "edit":
-      diary_page_edit($id);
+      diary_page_edit(check_input($id));
       break;
     case "view":
-      diary_page_display($name);
+      diary_page_display(check_input($name));
       break;
     case "Preview diary entry":
-      if ($id) diary_page_preview($text, $timestamp, $id);
-      else diary_page_preview($text, time());
+      if ($id) diary_page_preview(check_input($text), check_input($timestamp), check_input($id));
+      else diary_page_preview(check_input($text), time());
       break;
     case "Submit diary entry":
-      if ($id) diary_page_submit($text, $id);
-      else diary_page_submit($text);
+      if ($id) diary_page_submit(check_input($text), check_input($id));
+      else diary_page_submit(check_input($text));
       break;
     default:
       diary_page_overview();
@@ -259,7 +259,7 @@ function diary_block() {
 }
 
 function diary_admin_edit($id) {
-  $result = db_query("SELECT d.*, u.userid FROM diaries d LEFT JOIN users u ON d.author = u.id WHERE d.id = $id");
+  $result = db_query("SELECT d.*, u.userid FROM diaries d LEFT JOIN users u ON d.author = u.id WHERE d.id = '$id'");
 
   $diary = db_fetch_object($result);
 
@@ -284,7 +284,7 @@ function diary_admin_edit($id) {
 }
 
 function diary_admin_save($id, $text) {
-  db_query("UPDATE diaries SET text = '". check_input($text) ."' WHERE id = $id");
+  db_query("UPDATE diaries SET text = '$text' WHERE id = $id");
   watchdog("message", "diary: modified entry #$id.");
 }
 
@@ -338,11 +338,11 @@ function diary_admin() {
 
   switch ($op) {
     case "delete":
-      diary_admin_delete($id);
+      diary_admin_delete(check_input($id));
       diary_admin_display();
       break;
     case "edit":
-      diary_admin_edit($id);
+      diary_admin_edit(check_input($id));
       break;
     case "help":
       diary_help();
@@ -351,11 +351,11 @@ function diary_admin() {
       diary_search();
       break;
     case "Save diary entry":
-      diary_admin_save($id, $text);
+      diary_admin_save(check_input($id), check_input($text));
       diary_admin_display();
       break;
     case "Update":
-      diary_admin_display($order);
+      diary_admin_display(check_input($order));
       break;
     default:
       diary_admin_display();

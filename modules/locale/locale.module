@@ -84,17 +84,17 @@ function locale_admin() {
 
   switch ($op) {
     case "delete":
-      locale_delete($id);
+      locale_delete(check_input($id));
       locale_display();
       break;
     case "help":
       locale_help();
       break;
     case "edit":
-      locale_edit($id);
+      locale_edit(check_input($id));
       break;
     case "Save translations":
-      locale_save($id, $edit);
+      locale_save(check_input($id), $edit);
       // fall through
     default:
       locale_display();

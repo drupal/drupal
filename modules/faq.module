@@ -106,18 +106,18 @@ function faq_admin() {
       faq_add();
       break;
     case "delete":
-      faq_delete($id);
+      faq_delete(check_input($id));
       faq_display();
       break;
     case "edit":
-      faq_edit($id);
+      faq_edit(check_input($id));
       break;
     case "Add FAQ":
       faq_add_save($edit);
       faq_display();
       break;
     case "Save FAQ":
-      faq_edit_save($id, $edit);
+      faq_edit_save(check_input($id), $edit);
       // fall through:
     default:
       faq_display();
