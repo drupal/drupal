@@ -286,13 +286,15 @@ function book_export_html($parent = "", $depth = 0) {
     if ($node->pid) $output .= book_export_html($node->pid, $depth + 1);
     $output .= book_export_html($node->nid, $depth + 1);
   }
+
   return $output;
 }
 
-function book_export($uri) {
-  $uri = explode("&", $uri);
-  if ($uri[0] == "book") {
-    print book_export_html($uri[1], $depth = 1);
+function book_export($query) {
+  global $book;
+
+  if ($book) {
+    print book_export_html($book, $depth = 1);
   }
 }
 
