@@ -43,7 +43,7 @@ Drupal 4.4.2, 2004-07-04
 - fixed bugs: no critical bugs were identified.
 
 
-Drupal 4.4.1, 2004-04-01
+Drupal 4.4.1, 2004-05-01
 ------------------------
 
 - fixed bugs: no critical bugs were identified.
