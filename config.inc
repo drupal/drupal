@@ -49,8 +49,7 @@ $comments_meta_reasons = array('Off topic', 'Redundant', 'Insightfull', 'As is',
 #
 # Categories:
 #
-$categories = array('Announcements', 'Coding', 'Geeking', 'Drop.org', 'Gaming', 'Girls', 'Graphics', 'Hardware', 'Humor', 'Internet', 'Music', 'Movies', 'Politics', 'Science', 'Software', 'Space', 'Webdesign', 'Quickies');
-
+$categories = array('Announcements', 'Arts & Humanities', 'Business & Economy', 'Coding & Webdesign', 'Computers & Internet', 'Drop.org', 'Entertainment', 'Freedom', 'Government', 'News & Media', 'Science', 'Society & Culture');
 
 # 
 # Allowed HTML tags:

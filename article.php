@@ -9,7 +9,7 @@
 
  if ($save) {
    mysql_query("UPDATE users SET umode='$mode', uorder='$order', thold='$thold' where id='$user->id'");
-   $user->update();
+   $user->rehash();
  }
 
  if($op == "reply") Header("Location: comments.php?op=reply&pid=0&sid=$sid&mode=$mode&order=$order&thold=$thold");

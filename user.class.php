@@ -19,16 +19,16 @@ class User {
     ### Perform query:
     mysql_query($query);
   }
-  function update() {
+  function rehash() {
     dbconnect();
     $result = mysql_query("SELECT * FROM users WHERE id=$this->id") or die(sprintf("Critical error at line %d in %s: %s", __LINE__, __FILE__, mysql_error()));
     if (mysql_num_rows($result) == 1) {
-      foreach (mysql_fetch_array($result) as $key=>$value) { $this->$key = $value; }
+      foreach (mysql_fetch_array($result) as $key=>$value) { $this->$key = stripslashes($value); }
     }
   }
   function valid($access=0) {
     if (!empty($this->userid)) {
-      $this->update();  // synchronisation purpose
+      $this->rehash();  // synchronisation purpose
       $this->last_access = time();
       $this->last_host = (!empty($GLOBALS[REMOTE_HOST]) ? $GLOBALS[REMOTE_HOST] : $GLOBALS[REMOTE_ADDR] );
       dbconnect();

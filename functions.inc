@@ -91,11 +91,11 @@ function displayRelatedLinks($theme, $sid = 0) {
   }
 }
 
-function displayOldHeadlines($theme) {
+function displayOldHeadlines($theme, $num = 10) {
   global $user;
   
-  if ($user->storynum) $result = db_query("SELECT sid, subject, time FROM stories ORDER BY time DESC LIMIT $user->storynum, 10");
-  else $result = db_query("SELECT sid, subject, time FROM stories ORDER BY time DESC LIMIT 10, 10");
+  if ($user->storynum) $result = db_query("SELECT sid, subject, time FROM stories WHERE status = 1 ORDER BY time DESC LIMIT $user->storynum, $num");
+  else $result = db_query("SELECT sid, subject, time FROM stories WHERE status = 1 ORDER BY time DESC LIMIT $num, $num");
 
   while ($story = db_fetch_object($result)) {        
     
@@ -124,7 +124,7 @@ function displayNewHeadlines($theme, $num = 10) {
   global $user;
 
   $content = "";
-  $result = db_query("SELECT sid, subject FROM stories ORDER BY time DESC LIMIT $num");
+  $result = db_query("SELECT sid, subject FROM stories WHERE status = 1 ORDER BY sid DESC LIMIT $num");
   while(list($sid, $subject) = mysql_fetch_row($result)) {
     if ($user) {
       $content .= "<LI><A HREF=\"article.php?sid=$sid";
