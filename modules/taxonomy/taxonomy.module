@@ -676,7 +676,7 @@ function taxonomy_term_count_nodes($tid, $type = 0) {
       $result = db_query(db_rewrite_sql('SELECT t.tid, COUNT(n.nid) AS c FROM {term_node} t INNER JOIN {node} n ON t.nid = n.nid WHERE n.status = 1 GROUP BY t.tid'));
     }
     else {
-      $result = db_query(db_rewrite_sql("SELECT t.tid, COUNT((n.nid) AS c FROM {term_node} t, {node} n WHERE t.nid = n.nid AND n.status = 1 AND n.type = '%s' GROUP BY t.tid"), $type);
+      $result = db_query(db_rewrite_sql("SELECT t.tid, COUNT(n.nid) AS c FROM {term_node} t, {node} n WHERE t.nid = n.nid AND n.status = 1 AND n.type = '%s' GROUP BY t.tid"), $type);
     }
     while ($term = db_fetch_object($result)) {
       $count[$type][$term->tid] = $term->c;
