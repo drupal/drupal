@@ -439,7 +439,7 @@ function filter_admin_filters() {
   // Composition tips (guidelines)
   $tips = _filter_tips($format, false);
   $extra = l(t('More information about formatting options'), 'filter/tips');
-  $tiplist = theme('filter_tips', $tips, $extra);
+  $tiplist = theme('filter_tips', $tips, false, $extra);
   if (!$tiplist) {
     $tiplist = t('<p>No guidelines available.</p>');
   }
@@ -730,7 +730,7 @@ function filter_form($name = 'format', $value = FILTER_FORMAT_DEFAULT) {
     $format = array_shift($formats);
     $output = form_hidden($name, $format->format);
     $tips = _filter_tips(variable_get('filter_default_format', 1), false);
-    $output .= form_item(t('Formatting guidelines'), theme('filter_tips', $tips, $extra), $extra);
+    $output .= form_item(t('Formatting guidelines'), theme('filter_tips', $tips, false, $extra), $extra);
     return $output;
   }
 }
@@ -757,10 +757,10 @@ function filter_access($format) {
 function filter_tips_long() {
   $format = arg(2);
   if ($format) {
-    $output = theme('filter_tips', _filter_tips($format, true));
+    $output = theme('filter_tips', _filter_tips($format, true), true);
   }
   else {
-    $output = theme('filter_tips', _filter_tips(-1, true));
+    $output = theme('filter_tips', _filter_tips(-1, true), true);
   }
   print theme('page', $output);
 }
@@ -817,7 +817,7 @@ function theme_filter_tips($tips, $long = false, $extra = '') {
 
       $tips = '';
       foreach ($tiplist as $tip) {
-        $tips .= '<li'. ($long ? ' id="'. $tip['id'] .'">' : '>') . $tip['tip'] . '</li>';
+        $tips .= '<li'. ($long ? ' id="filter-'. str_replace("/", "-", $tip['id']) .'">' : '>') . $tip['tip'] . '</li>';
       }
 
       if ($tips) {
