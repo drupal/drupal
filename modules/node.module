@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.215 2003/05/26 19:49:01 dries Exp $
+// $Id: node.module,v 1.216 2003/05/26 21:31:18 dries Exp $
 
 function node_help() {
   global $mod;
@@ -887,10 +887,11 @@ function node_validate($node, &$error) {
   ** Validate the title field:
   */
 
-  $node->title = strip_tags($node->title);
-
-  if (isset($node->title) && !$node->title) {
-    $error["title"] = theme("theme_error", t("You have to specify a valid title."));
+  if (isset($node->title)) {
+    $node->title = strip_tags($node->title);
+    if (!$node->title) {
+      $error["title"] = theme("theme_error", t("You have to specify a valid title."));
+    }
   }
 
   /*
