@@ -181,7 +181,7 @@ function comment_order($order) {
 }
 
 function comment_query($lid, $order, $pid = -1) {
-  $query .= "SELECT c.*, u.* FROM comments c LEFT JOIN user u ON c.author = u.uid WHERE c.lid = '$lid'";
+  $query .= "SELECT u.*, c.* FROM comments c LEFT JOIN user u ON c.author = u.uid WHERE c.lid = '$lid'";
   if ($pid >= 0) $query .= " AND pid = '$pid'";
   if ($order == 1) $query .= " ORDER BY c.timestamp DESC";
   else if ($order == 2) $query .= " ORDER BY c.timestamp";
@@ -222,7 +222,7 @@ function comment_view($comment, $folded = 0) {
 function comment_thread_min($cid, $threshold) {
   global $user;
 
-  $result = db_query("SELECT c.*, u.* FROM comments c LEFT JOIN user u ON c.author = u.uid WHERE c.pid = '$cid' ORDER BY c.timestamp, c.cid");
+  $result = db_query("SELECT u.*, c.* FROM comments c LEFT JOIN user u ON c.author = u.uid WHERE c.pid = '$cid' ORDER BY c.timestamp, c.cid");
 
   while ($comment = db_fetch_object($result)) {
     print "<ul>";
@@ -244,7 +244,7 @@ function comment_thread_max($cid, $mode, $threshold, $level = 0, $dummy = 0) {
   ** terms of speed and size.
   */
 
-  $result = db_query("SELECT c.*, u.* FROM comments c LEFT JOIN user u ON c.author = u.uid WHERE c.pid = '$cid' ORDER BY c.timestamp, c.cid");
+  $result = db_query("SELECT u.*, c.* FROM comments c LEFT JOIN user u ON c.author = u.uid WHERE c.pid = '$cid' ORDER BY c.timestamp, c.cid");
 
   while ($comment = db_fetch_object($result)) {
     print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr><td width=\"". ($level * 25) ."\">&nbsp;</td><td>\n";
@@ -277,7 +277,7 @@ function comment_render($lid, $cid) {
     }
 
     if ($cid > 0) {
-      $result = db_query("SELECT c.*, u.* FROM comments c LEFT JOIN user u ON c.author = u.uid WHERE cid = '$cid'");
+      $result = db_query("SELECT u.*, c.* FROM comments c LEFT JOIN user u ON c.author = u.uid WHERE cid = '$cid'");
       if ($comment = db_fetch_object($result)) {
         comment_view($comment, comment_links($comment));
       }
