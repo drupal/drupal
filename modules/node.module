@@ -1337,14 +1337,14 @@ function node_page() {
 
         if ($or) {
           // this is an OR of terms
-          $result = db_query_pager("SELECT DISTINCT(n.nid), type FROM node n LEFT JOIN term_node r ON n.nid = r.nid WHERE tid IN (".implode(",", $terms).") AND ". ($id ? "nid = '$id' AND " : "") ."status = '1' ORDER BY static DESC, created DESC", ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
+          $result = db_query_pager("SELECT DISTINCT(n.nid), type FROM node n LEFT JOIN term_node r ON n.nid = r.nid WHERE tid IN (".implode(",", $terms).") AND status = '1' ORDER BY static DESC, created DESC", ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
         }
         else if ($and) {
           // this is an AND
-          $result = db_query_pager("SELECT n.nid, n.type FROM node n LEFT JOIN term_node r ON n.nid = r.nid WHERE tid IN (".implode(",", $terms).") AND ". ($id ? "nid = '$id' AND " : "") ."status = '1' GROUP BY n.nid, n.type, n.status, n.static, n.created HAVING COUNT(n.nid) = ".count($terms)." ORDER BY static DESC, created DESC", ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
+          $result = db_query_pager("SELECT n.nid, n.type FROM node n LEFT JOIN term_node r ON n.nid = r.nid WHERE tid IN (".implode(",", $terms).") AND status = '1' GROUP BY n.nid, n.type, n.status, n.static, n.created HAVING COUNT(n.nid) = ".count($terms)." ORDER BY static DESC, created DESC", ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
         }
         else {
-          $result = db_query_pager("SELECT nid, type FROM node WHERE ". ($id ? "nid = '$id'" : "promote = '1'") ." AND status = '1' ORDER BY static DESC, created DESC", ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
+          $result = db_query_pager("SELECT nid, type FROM node WHERE promote = '1' AND status = '1' ORDER BY static DESC, created DESC", ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
 
         }
 
