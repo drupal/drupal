@@ -47,7 +47,8 @@ $mysql_updates = array(
   "2002-01-27" => "update_20",
   "2002-01-30" => "update_21",
   "2002-02-19" => "update_22",
-  "2002-03-05" => "update_23"
+  "2002-03-05" => "update_23",
+  "2002-04-08" => "update_24"
 );
 
 // Update functions
@@ -335,6 +336,13 @@ function update_22() {
 
 function update_23() {
   update_sql("CREATE TABLE search_index (word varchar(50) default NULL, lno int(10) unsigned default NULL, type varchar(16) default NULL, count int(10) unsigned default NULL, KEY lno (lno), KEY word (word));");
+}
+
+function update_24() {
+  update_sql("ALTER TABLE site ADD refresh int(11) NOT NULL;");
+  update_sql("ALTER TABLE site ADD threshold int(11) NOT NULL;");
+  update_sql("UPDATE site SET refresh = '7200';");
+  update_sql("UPDATE site SET threshold = '50';");
 }
 
 /*
