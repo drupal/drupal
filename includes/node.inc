@@ -249,8 +249,8 @@ function node_links(&$links, &$node, $main = 0) {
     if ($node->body) $_links[] = array("node.php?id=$node->nid", t("read more"));
     if ($node->comment) $_links[] = array("node.php?id=$node->nid", format_plural(node_get_comments($node->nid), "comment", "comments"));
   }
-  $links = array_merge($_links, $links);
-  return $links;
+  $links = ($links ? array_merge($_links, $links) : $_links);
+  return count($links) ? $links : 0;
 }
 
 ?>
