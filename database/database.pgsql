@@ -523,7 +523,7 @@ CREATE TABLE users (
   PRIMARY KEY  (uid),
   UNIQUE (name)
 );
-CREATE INDEX users_timestamp_idx ON users(timestamp);
+CREATE INDEX users_changed_idx ON users(changed);
 
 CREATE SEQUENCE users_uid_seq INCREMENT 1 START 1;
 
