@@ -15,7 +15,7 @@
 // Disable access checking?
 $access_check = 1;
 
-if (!get_cfg_var("safe_mode")) {
+if (!ini_get("safe_mode")) {
   set_time_limit(180);
 }
 
