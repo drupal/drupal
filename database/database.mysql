@@ -557,7 +557,7 @@ CREATE TABLE users (
   rid int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (uid),
   UNIQUE KEY name (name),
-  KEY timestamp (timestamp)
+  KEY changed (changed)
 ) TYPE=MyISAM;
 
 --
