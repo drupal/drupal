@@ -225,6 +225,14 @@ function field_set($string, $name, $value) {
   return $rval;
 }
 
+function field_merge($a, $b) {
+  foreach (explode(";", $b) as $data) {
+    $entry = explode(":", $data);
+    $a = field_set($a, $entry[0], $entry[1]);
+  }
+  return $a;
+}
+
 function timer_start() {
   global $timer;
   $timer = explode(" ", microtime());
