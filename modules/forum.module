@@ -23,10 +23,13 @@ function forum_help($section) {
       return t('Enable threaded discussions about general topics.');
     case 'admin/settings/forum':
       return t("Forums are threaded discussions based on the taxonomy system.  For the forums to work, the taxonomy module has to be installed and enabled.  When activated, a taxonomy vocabulary (eg. \"forums\") needs to be <a href=\"%created\">created</a> and bound to the node type \"forum topic\".", array('%created' => url('admin/taxonomy/add/vocabulary')));
-    case 'node/add/forum':
-      return variable_get('forum_help', '');
     case 'node/add#forum':
       return t('A forum is a threaded discussion, enabling users to communicate about a particular topic.');
+  }
+
+  // The 'add forum topic' form takes a variable argument:
+  if (substr($section, 0, 14) == 'node/add/forum'){
+    return variable_get('forum_help', '');
   }
 }
 
