@@ -1330,8 +1330,11 @@ function node_preview($node) {
     }
     $node->changed = time();
 
-    // Extract a teaser:
-    $node->teaser = node_teaser($node->body);
+    // Extract a teaser, if it hasn't been set (e.g. by a module-provided
+    // 'teaser' form item).
+    if (!isset($node->teaser)) {
+      $node->teaser = node_teaser($node->body);
+    }
 
     // Display a preview of the node:
     if ($node->teaser && $node->teaser != $node->body) {
