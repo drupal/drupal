@@ -121,7 +121,7 @@ class backend {
       $update = round((time() - $this->timestamp) / 60);
 
       // Display box:
-      $theme->box("$this->site", $content);
+      $theme->box($this->site, $content);
     }
     else print "<P>Warning: something whiched happened: specified channel could not be found in database.</P>";
   }

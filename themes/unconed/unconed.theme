@@ -22,7 +22,7 @@
    // color set #3:
    var $bgcolor3 = "#D7D7D7";
    var $fgcolor3 = "#000000";
-	
+
    function header() {
      global $site_name;
      srand((double)microtime()*1000000);

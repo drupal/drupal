@@ -102,7 +102,7 @@ function submission_display_item($id) {
 
     $theme->header();
     $theme->article($submission, "[ <A HREF=\"module.php?mod=submission\"><FONT COLOR=\"$theme->link\">back</FONT></A> ]");
-    $theme->box("Moderate story", $output);
+    $theme->box(t("Moderate story"), $output);
     $theme->footer();
   }
 }
