@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.91 2003/09/27 06:00:43 dries Exp $
+// $Id: system.module,v 1.92 2003/09/28 14:11:49 dries Exp $
 
 function system_help($section = "admin/system/help") {
   switch ($section) {
@@ -101,12 +101,12 @@ function system_view_general() {
 
   // cron:
   $output .= "<h3>". t("Cron settings") ."</h3>\n";
-  $output .= form_select(t("Cron support"), "cron", variable_get("cron", 1), array(t("Disabled"), t("Enabled")), t("Enable or disable cron support.  Enable this setting if you have set up a cron job.  Check the ". l("cron documentation", "admin/system/help#cron") ." for information on setting up a cron job."));
+  $output .= form_select(t("Cron support"), "cron", variable_get("cron", 1), array(t("Disabled"), t("Enabled")), t("Enable or disable cron support.  Enable this setting if you have set up a cron job.  Check the %documentation for information on setting up a cron job.", array("%documentation" => l(t("cron documentation"), "admin/system/help#cron"))));
   $output .= "<hr />\n";
 
   // caching:
   $output .= "<h3>". t("Cache settings") ."</h3>\n";
-  $output .= form_select(t("Cache support"), "cache", variable_get("cache", 0), array(t("Disabled"), t("Enabled")), t("Enable or disable the caching of rendered pages.  When caching is enabled, Drupal will flush the cache when required to make sure updates take effect immediately.   Check the ". l("cache documentation", "admin/system/help#cache") ." for information on Drupal's cache system."));
+  $output .= form_select(t("Cache support"), "cache", variable_get("cache", 0), array(t("Disabled"), t("Enabled")), t("Enable or disable the caching of rendered pages.  When caching is enabled, Drupal will flush the cache when required to make sure updates take effect immediately.  Check the %documentation for information on Drupal's cache system.", array("%documentation" => l(t("cache documentation"), "admin/system/help#cache"))));
   $output .= "<hr />\n";
 
 
