@@ -94,7 +94,7 @@ function forum_link($type, $node = 0, $main = 0) {
   }
 
   if ($type == "system" && user_access("create forum topics")) {
-      menu("node/add/forum",t("forum topic"), "forum_page");
+      menu("node/add/forum",t("forum topic"), "page");
   }
 
   if (!$main && $type == "node" && $node->type == "forum") {

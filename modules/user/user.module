@@ -496,9 +496,9 @@ function user_link($type) {
   if ($type == "system") {
     global $user;
     if ($user->uid) {
-      menu("user", t("my account"), "user_page", 8);
-      menu("user/edit", t("edit account"), "user_page", 0);
-      menu("user/logout", t("log out"), "user_page", 10);
+      menu("user", t("my account"), "page", 8);
+      menu("user/edit", t("edit account"), "page", 0);
+      menu("user/logout", t("log out"), "page", 10);
     }
 
     if (user_access("administer users")) {

@@ -32,36 +32,9 @@ function admin_link($type) {
   }
 }
 
-function admin_page() {
+function admin_admin() {
   if (user_access("access administration pages")) {
-    $title = menu_get_active_title();
-
-    theme("header", $title);
-
-    $contents = "";
-
-    if ($help = menu_get_active_help()) {
-      $contents .= "<small>$help</small><hr />";
-    }
-
-    if (arg(1)) {
-      $contents .= menu_execute_active_handler();
-    }
-    else {
-      $contents .= watchdog_overview("actions");
-    }
-
-    $breadcrumb = menu_get_active_breadcrumb();
-    array_pop($breadcrumb);
-
-    theme("breadcrumb", $breadcrumb);
-    theme("box", $title, $contents);
-    theme("footer");
-  }
-  else {
-    theme("header", t("Access denied"));
-    theme("box", t("Access denied"), message_access());
-    theme("footer");
+    return watchdog_overview("actions");
   }
 }
 

@@ -71,7 +71,7 @@ function book_link($type, $node = 0, $main = 0) {
 
   if ($type == "system") {
     if (user_access("maintain books")) {
-      menu("node/add/book", t("book page"), "book_page", 0);
+      menu("node/add/book", t("book page"), "page", 0);
     }
     if (user_access("administer nodes")) {
       menu("admin/node/book", t("books"), "book_admin", 4);

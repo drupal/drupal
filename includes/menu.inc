@@ -110,6 +110,14 @@ function menu_execute_active_handler() {
   }
 }
 
+function menu_active_handler_exists() {
+  global $_list;
+
+  $path = menu_get_active_item();
+
+  return function_exists($_list[$path]["callback"]);
+}
+
 /**
  * Returns true when the path is in the active trail.
  */
