@@ -20,7 +20,7 @@
  <html> 
   <head>
    <title><?php echo $site_name; ?></title>
-   <link rel="stylesheet" type="text/css" href="themes/goofy/goofy.css" title="Goofy Stylesheet">
+   <link rel="stylesheet" type="text/css" href="themes/goofy/style.css" title="Goofy Stylesheet">
    </head>
    <body>
     <table border="0" cellspacing="3" cellpadding="0" width="100%">
