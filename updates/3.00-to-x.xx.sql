@@ -32,3 +32,17 @@ CREATE TABLE access (
   UNIQUE mask (mask),
   PRIMARY KEY (aid)
 );
+
+CREATE TABLE moderate (
+  cid int(10) DEFAULT '0' NOT NULL,
+  nid int(10) DEFAULT '0' NOT NULL,
+  uid int(10) DEFAULT '0' NOT NULL,
+  score int(2) DEFAULT '0' NOT NULL,
+  timestamp int(11) DEFAULT '0' NOT NULL,
+  INDEX (cid),
+  INDEX (nid)
+);
+
+ALTER TABLE comments DROP score;
+ALTER TABLE comments DROP votes;
+ALTER TABLE comments DROP users;

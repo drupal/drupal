@@ -219,7 +219,7 @@ function user_search($keys) {
   global $PHP_SELF;
   $result = db_query("SELECT * FROM user WHERE name LIKE '%$keys%' LIMIT 20");
   while ($account = db_fetch_object($result)) {
-    $find[$i++] = array("title" => $account->name, "link" => ($PHP_SELF == "/admin.php" ? "admin.php?mod=user&op=edit&id=$account->uid" : "module.php?mod=user&op=view&id=$account->uid"), "user" => $account->name);
+    $find[$i++] = array("title" => $account->name, "link" => (strstr($PHP_SELF, "admin.php") ? "admin.php?mod=user&op=edit&id=$account->uid" : "module.php?mod=user&op=view&id=$account->uid"), "user" => $account->name);
   }
   return $find;
 }

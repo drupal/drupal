@@ -188,16 +188,16 @@ function node_save_content($edit, $type) {
 function node_delete($id) {
   return (node_del(array("nid" => $id)) ? "node has been deleted." : "failed to delete node.");
 }
-  
+
 
 function node_delete_confirmation($id) {
- 
+
   $node = node_get_object(array("nid" => $id));
 
   $form .= form_item(t("Do you really want to delete this node"), check_output($node->title));
   $form .= form_submit("Delete node");
   $form .= form_submit("Keep node");
- 
+
   return form("admin.php?mod=node&id=$node->nid", $form);
 
 }

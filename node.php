@@ -40,8 +40,9 @@ function node_render($node) {
           comment_render($id, $cid);
           $theme->footer();
           break;
-        case t("Moderate comments"):
-          comment_moderate($moderate);
+        case t("Update ratings"):
+          node_moderate($moderate["node"]);
+          comment_moderate($moderate["comment"]);
           $theme->header();
           node_view($node);
           comment_render($id, $cid);

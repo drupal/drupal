@@ -10,16 +10,18 @@ class BaseTheme {
   }
 
   function comment_controls($threshold = 1, $mode = 3, $order = 1) {
-    global $REQUEST_URI, $user;
-    $output .= "<DIV ALIGN=\"CENTER\">\n";
-    $output .= "<FORM METHOD=\"post\" ACTION=\"$REQUEST_URI\">\n";
-    $output .= comment_mode(($user->uid ? $user->mode : $mode));
-    $output .= comment_order(($user->uid ? $user->sort : $order));
-    $output .= comment_threshold(($user->uid ? $user->threshold : $threshold));
-    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Update settings") ."\">\n";
-    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Add comment") ."\">\n";
-    $output .= "</FORM>\n";
-    $output .= "</DIV>\n";
+    global $user, $id;
+
+    if ($user->uid) {
+      $output .= form_item(t("Node rating"), node_moderation($id) ." <input type=\"submit\" name=\"op\" value=\"". t("Update ratings") ."\" />", t("Nodes and comments can be moderated by assigning them a score: content with a high rating is made more visible."));
+    }
+
+    $output .= form_item(t("Comment viewing options"), comment_mode($mode) . comment_order($order) . comment_threshold($threshold) ." <input type=\"submit\" name=\"op\" value=\"". t("Update settings") ."\" />", t("Select your prefered way to display the comments and click 'Update settings' to active your changes."));
+
+    if (user_access("post comment")) {
+      $output .= form_item(t("Add a comment"), "<input type=\"submit\" name=\"op\" value=\"". t("Add comment") ."\" />", t("Click 'Add comment' to start a new thread in the discussion."));
+    }
+
     return $output;
   }
 
