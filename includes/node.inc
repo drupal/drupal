@@ -1,5 +1,5 @@
 <?php
-// $Id: node.inc,v 1.78 2001/11/12 20:06:02 dries Exp $
+// $Id: node.inc,v 1.79 2001/11/18 13:21:35 dries Exp $
 
 // TODO: still used by themes, yet doesn't return anything at the moment
 function node_index() {
@@ -170,7 +170,9 @@ function node_save($node, $filter) {
     foreach ($node as $key => $value) {
       if (in_array($key, $fields)) {
         $k[] = check_query($key);
-        $v[] = "'". check_query($value) ."'";
+        $v[] = "'". check_input($value) ."'";
+           // NOTE: for the values we use 'check_input()' such that we apply
+           //       the filters
       }
     }
 
@@ -192,7 +194,9 @@ function node_save($node, $filter) {
     // prepare the query:
     foreach ($node as $key => $value) {
       if (in_array($key, $fields)) {
-        $q[] = check_query($key) ." = '". check_query($value) ."'";
+        $q[] = check_query($key) ." = '". check_input($value) ."'";
+           // NOTE: for the values we use 'check_input()' such that we apply
+           //       the filters
       }
     }
 
