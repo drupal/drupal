@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.38 2005/02/05 00:12:24 unconed Exp $
+// $Id: database.inc,v 1.39 2005/02/19 22:24:23 unconed Exp $
 
 /**
  * @file
@@ -207,10 +207,10 @@ function _db_rewrite_sql($query = '', $primary_table = 'n', $primary_field = 'ni
     }
   }
 
-  $where = empty($where) ? '' : '('. implode(') AND (',$where).')';
-  $join = empty($join) ? '' : implode(' ',$join);
+  $where = empty($where) ? '' : '('. implode(') AND (', $where) .')';
+  $join = empty($join) ? '' : implode(' ', $join);
 
-  return array($join, $where, $distinct );
+  return array($join, $where, $distinct);
 }
 
 /**
