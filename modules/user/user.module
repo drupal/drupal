@@ -601,6 +601,8 @@ function user_menu($may_cache) {
       'callback' => 'user_page', 'access' => $user->uid == 0 && variable_get('user_register', 1), 'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'user/password', 'title' => t('request new password'),
       'callback' => 'user_page', 'access' => $user->uid == 0, 'type' => MENU_LOCAL_TASK);
+    $items[] = array('path' => 'user/help', 'title' => t('help'),
+      'callback' => 'user_help_page', 'type' => MENU_CALLBACK);
 
     $items[] = array('path' => 'admin/user', 'title' => t('users'),
       'callback' => 'user_admin', 'access' => $access);
@@ -1634,10 +1636,10 @@ function user_help($section) {
 }
 
 /**
- * Menu callback; Prints user-specific information from admin/help.
+ * Menu callback; Prints user-specific help information.
  */
 function user_help_page() {
-  print theme('page', user_help('admin/help#user'));
+  print theme('page', user_help('user/help#user'));
 }
 
 /**
