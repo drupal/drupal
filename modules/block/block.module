@@ -72,7 +72,7 @@ function block_admin_save($edit) {
 }
 
 function block_admin_display() {
-  $result = db_query("SELECT * FROM blocks ORDER BY module");
+  $result = db_query("SELECT * FROM blocks ORDER BY weight");
 
   // Generate output:
   $output = "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
