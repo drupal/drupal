@@ -321,7 +321,7 @@ function poll_view_results(&$node, $main, $block, $links) {
 }
 
 function poll_view_processvote(&$node) {
-  global $pollvote;
+  $pollvote = $_POST["pollvote"];
 
   if (isset($pollvote[$node->nid]) && ($node->allowvotes == 1)) {
     if (!empty($node->choice[$pollvote[$node->nid]])) {
