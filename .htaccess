@@ -41,8 +41,9 @@ ErrorDocument 500 /error.php
    php_value magic_quotes_gpc        1
    php_value magic_quotes_runtime    0
    php_value magic_quotes_sybase     0
+   php_value session.name            DROPID
    php_value session.auto_start      1  
    php_value session.cookie_lifetime 17280000
    php_value session.gc_maxlifetime  17280000
-   php_value session.name            DROPID
+   php_value session.cache_expire    180
 </IfModule>
