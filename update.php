@@ -1,6 +1,24 @@
 <?php
 include_once "includes/common.inc";
 
+/*
+** USAGE:
+**
+** - Point your browser to "http://www.site.com/update.php" and follow
+**   the instructions.
+**
+** NOTES:
+**
+** - If you upgrade from Drupal 3.00, you have to update your watchdog
+**   table manually before executing/starting this script.  Simply do:
+**
+**   sql> ALTER TABLE watchdog CHANGE user uid int(10) DEFAULT '0' NOT NULL;
+**   sql> ALTER TABLE watchdog CHANGE id wid int(5) DEFAULT '0' NOT NULL auto_increment;
+**
+**   You'll also have to by-pass the access check near the bottom such
+**   that you can gain access to the form: search for "user_access()".
+*/
+
 if (!get_cfg_var("safe_mode")) {
   set_time_limit(180);
 }
@@ -249,6 +267,13 @@ function update_12() {
   update_sql("ALTER TABLE book ADD format tinyint(2) DEFAULT '0';");
 }
 
+function update_13() {
+  update_sql("ALTER TABLE referer RENAME AS referrer;");
+  update_sql("DROP TABLE blog;");
+  update_sql("DROP TABLE story;");
+  update_sql("DROP TABLE forum;");
+}
+
 function update_14() {
   update_sql("CREATE TABLE directory (
     link varchar(255) DEFAULT '' NOT NULL,
@@ -332,5 +357,7 @@ if (user_access(NULL)) {
 else {
   print message_access();
 }
+
 print "</html>";
+
 ?>
