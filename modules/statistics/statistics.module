@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.19 2002/05/21 21:23:31 kjartan Exp $
+// $Id: statistics.module,v 1.20 2002/06/01 21:57:29 kjartan Exp $
 
 if (variable_get("referrer", 0) && $referrer = getenv("HTTP_REFERER")) {
   db_query("INSERT INTO referrer (URL, timestamp) values ('%s', '%s')", $referrer, time());
@@ -12,6 +12,11 @@ function statistics_help() {
   $output .= "<p>Drupal automatically rotates the referrer logs after a set period of time. The life-time of the accumulated data can be configured via the <i>site configuration</i> option under site administration.</p>";
   $output .= "<p>Warning: Drupal gets the referrer information from the HTTP_REFERER environment variable. This is not always set properly by web browsers.</p>";
   return $output;
+}
+
+function statistics_system($field){
+  $system["description"] = t("Gathers and displays site metrics.");
+  return $system[$field];
 }
 
 function statistics_cron() {

@@ -1,5 +1,10 @@
 <?php
-// $Id: book.module,v 1.120 2002/05/23 14:14:48 kjartan Exp $
+// $Id: book.module,v 1.121 2002/06/01 21:57:28 kjartan Exp $
+
+function book_system($field){
+  $system["description"] = t("Allows users to collaboratively author a book.");
+  return $system[$field];
+}
 
 function book_node($field) {
   global $user;

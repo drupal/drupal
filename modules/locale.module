@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.38 2002/05/20 22:41:33 unconed Exp $
+// $Id: locale.module,v 1.39 2002/06/01 21:57:29 kjartan Exp $
 
 function locale_help() {
  ?>
@@ -33,6 +33,11 @@ function locale_help() {
     mysql> ALTER TABLE locales ADD fr TEXT DEFAULT '' NOT NULL;
   </pre>
  <?php
+}
+
+function locale_system($field){
+  $system["description"] = t("Enables the translation of drupal messages to languages other than English.");
+  return $system[$field];
 }
 
 function locale_perm() {

@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.18 2002/05/26 11:00:50 dries Exp $
+// $Id: search.module,v 1.19 2002/06/01 21:57:29 kjartan Exp $
 
 function search_help() {
   $output = "<b>". t("Search hints") ."</b>";
@@ -12,6 +12,11 @@ function search_help() {
   $output .= "<p>". t("Some words which commonly occur are filtered out by the searching process, these are commonly called 'noisewords'. Examples are 'a, at, and, are, as, ask', and the list goes on. Words shorter than ". variable_get("minimum_word_size", 2) ." letters are also filtered from the search index.");
   $output .= "<p>". t("These words will never be matched when specified, even if they appear in the node you are searching for.");
   return $output;
+}
+
+function search_system($field){
+  $system["description"] = t("Enables site wide key word searching");
+  return $system[$field];
 }
 
 /**

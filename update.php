@@ -82,7 +82,7 @@ function update_2() {
       $output .= "$name ...";
       db_query("DROP TABLE IF EXISTS ". $name ."_seq");
       db_query("CREATE TABLE ". $name ."_seq (id INTEGER UNSIGNED AUTO_INCREMENT NOT NULL, PRIMARY KEY(id))");
-      $result = db_query("SELECT MAX(". ($name == "node" ? "nid" : "lid") .") FROM $name", 1);
+      $result = db_query("SELECT MAX(". ($name == "node" ? "nid" : "lid") .") FROM $name");
       $count = $result ? db_result($result, 0) : 0;
       db_query("INSERT INTO ". $name ."_seq (id) VALUES ('$count')");
       $output .= "done ($count)<br />";
@@ -333,7 +333,7 @@ function update_24() {
   update_sql("ALTER TABLE site ADD refresh int(11) NOT NULL;");
   update_sql("ALTER TABLE site ADD threshold int(11) NOT NULL;");
   update_sql("UPDATE site SET refresh = '7200';");
-  update_sql("UPDATE site SET threshold = '50';");
+  update_sql("UPDATE site SET threshold = '60';");
 }
 
 function update_25() {
@@ -471,9 +471,9 @@ function update_31() {
   }
 
   // Clean up meta tag system
-/*  update_sql("DROP TABLE collection");
+  update_sql("DROP TABLE collection");
   update_sql("DROP TABLE tag");
-  update_sql("ALTER TABLE node DROP attributes");*/
+  update_sql("ALTER TABLE node DROP attributes");
 }
 
 function update_upgrade3() {
@@ -605,8 +605,7 @@ function update_info() {
   print "<ol>\n";
   print "<li><p>Before doing anything backup your database. This process will change your database and its values, and some things might get lost.</p></li>\n";
   print "<li><p>Don't run this script twice as it will cause some serious problems!</p></li>\n";
-  print "<li><p><b>Backup your database.</b> If you haven't done it by now don't blame anyone if by some statistical anomaly things blow up and you loose all data.</p></li>\n";
-  print "<li>These queries have to be run manually:<br />\n";
+  print "<li>Before doing anything else these queries have to be run manually:<br />\n";
   print "<pre>\n";
   print "ALTER TABLE watchdog CHANGE user uid int(10) DEFAULT '0' NOT NULL;\n";
   print "ALTER TABLE watchdog CHANGE id wid int(5) DEFAULT '0' NOT NULL auto_increment;\n";
@@ -620,21 +619,24 @@ function update_info() {
   print "ALTER TABLE users ADD rid INT UNSIGNED NOT NULL;\n";
   print "</pre></li>\n";
   print "<li><p>You might have to by-pass the access check near the bottom of the file called update.php such that you can gain access to the updates: search for <i>user_access()</i>.</p></li>";
-  print "<li><p>Choose one of the links below to either upgrade from Drupal 3.x or update from a CVS checkout.<br />&raquo; upgrading will by default enable the standard Drupal themes and modules as well as setting some default values.<br />&raquo; updating will require modules and themes enabled manually under <i>Administer | Site configuration | modules</i>.</p></li>";
-  print "<li><p>Go through the various administration pages to change the existing and new settings to your liking.</p></li>\n";
-  print "<li><p>Remove or disable access to update.php so nobody else can tamper with the database.</p></li>\n";
-  print "<li><p>Thanks for using Drupal!</p></li>\n";
-  print "</ol>";
+  print "<li><p>";
+  print "Choose one of the links below to either upgrade from Drupal 3.x or update from a CVS checkout.<br />";
+  print "&raquo; upgrading will by default enable the standard Drupal themes and modules as well as setting some default values.<br />";
+  print "&raquo; updating will require modules and themes enabled manually under <i>Administer | Site configuration | modules</i>.<br />";
   print "<p><b>&raquo; <a href=\"update.php?op=upgrade3\">Upgrade 3.x to 4.0.0</a></b></p>\n";
   print "<p><b>&raquo; <a href=\"update.php?op=update\">Update CVS database</a></b></p>\n";
+  print "<p>Once you are done remove or disable access to update.php so nobody else can tamper with the database.</p>\n";
+  print "</p></li>";
+  print "<li><p>Go through the various administration pages to change the existing and new settings to your liking.</p></li>\n";
+  print "<li><p>Thanks for using Drupal!</p></li>\n";
+  print "</ol>";
   print "</html>";
 }
 
-// Security check:
-
 if ($op) {
   include_once "includes/common.inc";
-  if (user_access(NULL)) {
+  // Security check:
+  if (user_access(NULL) || variable_get("update_start", 0) == 0) {
     update_page();
   }
   else {

@@ -1,5 +1,10 @@
 <?php
-// $Id: archive.module,v 1.6 2002/05/31 20:22:14 dries Exp $
+// $Id: archive.module,v 1.7 2002/06/01 21:57:28 kjartan Exp $
+
+function archive_system($field){
+  $system["description"] = t("Displays calendar navigation to old content.");
+  return $system[$field];
+}
 
 function archive_display($original = 0) {
 

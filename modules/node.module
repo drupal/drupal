@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.137 2002/05/30 20:26:08 dries Exp $
+// $Id: node.module,v 1.138 2002/06/01 21:57:29 kjartan Exp $
 
 function node_help() {
   global $mod;
@@ -12,6 +12,11 @@ function node_help() {
       }
     }
   }
+}
+
+function node_system($field){
+  $system["description"] = t("You'll need this too.");
+  return $system[$field];
 }
 
 function node_teaser($body) {

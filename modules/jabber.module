@@ -1,4 +1,10 @@
 <?php
+// $Id: jabber.module,v 1.11 2002/06/01 21:57:29 kjartan Exp $
+
+function jabber_system($field){
+  $system["description"] = t("Enables login with Jabber ID and Password");
+  return $system[$field];
+}
 
 function jabber_info($field = 0) {
   $info["name"] = "Jabber";

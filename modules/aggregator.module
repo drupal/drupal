@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.53 2002/05/13 19:14:35 kjartan Exp $
+// $Id: aggregator.module,v 1.54 2002/06/01 21:57:29 kjartan Exp $
 
 function import_help() {
  ?>
@@ -9,6 +9,11 @@ function import_help() {
   <p>Now you have to define some bundles.  Bundles look for feeds that contain one of the keywords associated with the bundle and display those feeds together.  To define a bundle you have to give it a name and a comma-separated list of keywords just like this is the case for feeds.</p>
   <p>Your newly created bundle will now show up in the list of blocks that you can see at the block related administration pages.  There you can customize where and when your bundles will be displayed.</p>
  <?php
+}
+
+function import_system($field){
+  $system["description"] = t("Used to import syndicated content (ie. news)");
+  return $system[$field];
 }
 
 function import_conf_options() {

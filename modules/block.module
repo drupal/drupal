@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.31 2002/05/31 20:29:29 dries Exp $
+// $Id: block.module,v 1.32 2002/06/01 21:57:28 kjartan Exp $
 
 function block_help() {
  ?>
@@ -36,6 +36,11 @@ function block_help() {
   <p>For more in-depth examples, we recommend that you check the existing boxes and use them as a starting point.</p>
 
  <?php
+}
+
+function block_system($field){
+  $system["description"] = t("Displays content in small boxes, generally along the side of the page.");
+  return $system[$field];
 }
 
 function block_perm() {

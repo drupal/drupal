@@ -1,5 +1,10 @@
 <?php
-// $Id: poll.module,v 1.62 2002/06/01 21:36:05 unconed Exp $
+// $Id: poll.module,v 1.63 2002/06/01 21:57:29 kjartan Exp $
+
+function poll_system($field){
+  $system["description"] = t("Enables submission of multiple choice questions for voting.");
+  return $system[$field];
+}
 
 function poll_access($op, $node) {
   if ($op == "view") {

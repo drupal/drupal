@@ -1,11 +1,16 @@
 <?php
-// $Id: system.module,v 1.35 2002/05/20 07:34:38 dries Exp $
+// $Id: system.module,v 1.36 2002/06/01 21:57:29 kjartan Exp $
 
 function system_help() {
   $output .= "<p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviors including visual and operational settings.</p>";
   $output .= "<h3>Cache</h3>". system_help_cache();
   $output .= "<h3>Cron</h3>". system_help_cron();
   return $output;
+}
+
+function system_system($field){
+  $system["description"] = t("You'll need this.");
+  return $system[$field];
 }
 
 function system_help_cache() {

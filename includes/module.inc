@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.29 2002/05/23 19:01:49 kjartan Exp $
+// $Id: module.inc,v 1.30 2002/06/01 21:57:28 kjartan Exp $
 
 // initialize modules:
 function module_init() {
@@ -46,7 +46,9 @@ function module_list() {
     $result = db_query("SELECT name, filename FROM system WHERE type = 'module' AND status = '1' ORDER BY name");
     while ($module = db_fetch_object($result)) {
       $list[$module->name] = $module->name;
-      include_once "modules/$module->filename";
+      if (file_exists("modules/$module->filename")) {
+        include_once "modules/$module->filename";
+      }
     }
     asort($list);
   }

@@ -1,5 +1,10 @@
 <?php
-// $Id: forum.module,v 1.45 2002/05/31 20:29:29 dries Exp $
+// $Id: forum.module,v 1.46 2002/06/01 21:57:29 kjartan Exp $
+
+function forum_system($field){
+  $system["description"] = t("Enables threaded discussions.");
+  return $system[$field];
+}
 
 function forum_node($field) {
   $info["name"] = t("discussion forum");

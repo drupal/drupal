@@ -368,6 +368,11 @@ function bloggerapi_perm() {
   return array("access bloggerapi");
 }
 
+function bloggerapi_system($field){
+  $system["description"] = t("Allows users post to Drupal via alternate methods or different tools.");
+  return $system[$field];
+}
+
 function bloggerapi_help() {
   ?>
 <h3>Introduction</h3>

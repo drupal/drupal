@@ -44,7 +44,7 @@ drupal 4.0.0, xx/xx/xxxx
     * changed output to valid XHTML.
     * improved multiple sites using the same Drupal database support.
     * added support for session IDs in URLs instead of cookies.
-    * made front page a configuration setting.
+    * made the type of content on the front page configurable
     * made each cloud site have its own settings.
     * modules and themes can now be enabled/disabled using the administrative pages.
     * added URL abstraction for links.

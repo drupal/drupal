@@ -1,5 +1,11 @@
 <?php
-// $Id: blog.module,v 1.82 2002/05/31 20:29:29 dries Exp $
+// $Id: blog.module,v 1.83 2002/06/01 21:57:28 kjartan Exp $
+
+function blog_system($field){
+  $system["description"] = t("Enables keeping an online journal.");
+  return $system[$field];
+}
+
 
 function blog_conf_options() {
  $output .= form_textarea("Explanation or submission guidelines", "blog_help", variable_get("blog_help", ""), 55, 4, "This text will be displayed at the top of the blog submission form.  Useful for helping or instructing your users.");

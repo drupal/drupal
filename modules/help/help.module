@@ -1,5 +1,10 @@
 <?php
-// $Id: help.module,v 1.8 2002/04/20 11:52:49 dries Exp $
+// $Id: help.module,v 1.9 2002/06/01 21:57:29 kjartan Exp $
+
+function help_system($field){
+  $system["description"] = t("Manages displaying online help.");
+  return $system[$field];
+}
 
 function help_link($type) {
   if ($type == "admin") {

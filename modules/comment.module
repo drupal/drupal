@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.68 2002/05/31 20:29:29 dries Exp $
+// $Id: comment.module,v 1.69 2002/06/01 21:57:28 kjartan Exp $
 
 $GLOBALS["cmodes"] = array(1 => "Flat list - collapsed", 2 => "Flat list - expanded", 3 => "Threaded list - collapsed", 4 => "Threaded list - expanded");
 $GLOBALS["corder"] = array(1 => "Date - newest first", 2 => "Date - oldest first");
@@ -11,6 +11,11 @@ function comment_help() {
   $output .= "<p>Administrators may control which persons are allowed to submit and administer comments.  These controls appear in the ". la("user permissions", array("mod" => "user", "op" => "permission")) ." administration page.  Additionally, administrators may edit or search through comments on the ". la("comments admininistration page", array("mod" => "comment")) .", as well as set the default display view for new users.</p>";
 
   return $output;
+}
+
+function comment_system($field){
+  $system["description"] = t("Enables user commenting.");
+  return $system[$field];
 }
 
 function comment_settings($mode, $order, $threshold) {
@@ -516,7 +521,7 @@ function comment_render($nid, $cid = 0) {
     }
 
     if ($mode == 1) {
-      if (db_result($result)) {
+      if (db_num_rows($result)) {
         print "<table border=\"0\" cellpadding=\"2\" cellspacing=\"2\">\n";
         print " <tr><th>". t("Subject") ."</th><th>". t("Author") ."</th><th>". t("Date") ."</th></tr>\n";
         while ($comment = db_fetch_object($result)) {
