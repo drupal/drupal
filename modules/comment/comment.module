@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.282 2004/09/16 07:17:55 dries Exp $
+// $Id: comment.module,v 1.283 2004/09/20 20:02:42 dries Exp $
 
 /**
  * @file
@@ -327,7 +327,7 @@ function comment_update_index() {
 function comment_user($type, $edit, &$user, $category = NULL) {
   if ($type == 'form' && $category == 'account') {
     // when user tries to edit his own data
-    return array(array('title' => t('Comment settings'), 'data' => form_textarea(t('Signature'), 'signature', $user->signature, 64, 3, t('Your signature will be publicly displayed at the end of your comments.')), 'weight' => 2));
+    return array(array('title' => t('Comment settings'), 'data' => form_textarea(t('Signature'), 'signature', $edit['signature'], 64, 3, t('Your signature will be publicly displayed at the end of your comments.')), 'weight' => 2));
   }
   if ($type == 'validate') {
     // validate user data editing
