@@ -95,6 +95,245 @@ function comment_help($section) {
 }
 
 /**
+ * Implementation of hook_menu().
+ */
+function comment_menu() {
+  $items = array();
+  $access = user_access('administer comments');
+
+  $items[] = array('path' => 'admin/comment', 'title' => t('comments'),
+    'callback' => 'comment_admin', 'access' => $access);
+  $items[] = array('path' => 'admin/comment/edit', 'title' => t('edit comment'),
+    'callback' => 'comment_admin', 'access' => $access,
+    'type' => MENU_CALLBACK);
+  $items[] = array('path' => 'admin/comment/delete', 'title' => t('delete comment'),
+    'callback' => 'comment_admin', 'access' => $access,
+    'type' => MENU_CALLBACK);
+
+  // Tabs:
+  $items[] = array('path' => 'admin/comment/configure', 'title' => t('configure'),
+    'callback' => 'comment_configure', 'access' => $access,
+    'type' => MENU_LOCAL_TASK);
+  if (module_exist('search')) {
+    $items[] = array('path' => 'admin/comment/search', 'title' => t('search'),
+      'callback' => 'comment_admin', 'access' => $access,
+      'type' => MENU_LOCAL_TASK);
+  }
+
+  // Subtabs:
+  $items[] = array('path' => 'admin/comment/new', 'title' => t('new comments'),
+    'callback' => 'comment_admin', 'access' => $access,
+    'type' => MENU_LOCAL_SUBTASK);
+  $items[] = array('path' => 'admin/comment/approval', 'title' => t('approval queue'),
+    'callback' => 'comment_admin', 'access' => $access,
+    'type' => MENU_LOCAL_SUBTASK);
+  $items[] = array('path' => 'admin/comment/configure/settings', 'title' => t('settings'),
+    'callback' => 'comment_configure', 'access' => $access,
+    'type' => MENU_LOCAL_SUBTASK);
+  $access = user_access('administer comments') && user_access('administer moderation');
+  $items[] = array('path' => 'admin/comment/configure/matrix', 'title' => t('moderation matrix'),
+    'callback' => 'comment_matrix_settings', 'access' => $access,
+    'type' => MENU_LOCAL_SUBTASK);
+  $items[] = array('path' => 'admin/comment/configure/thresholds', 'title' => t('moderation thresholds'),
+    'callback' => 'comment_threshold_settings', 'access' => $access,
+    'type' => MENU_LOCAL_SUBTASK);
+  $items[] = array('path' => 'admin/comment/configure/votes', 'title' => t('moderation votes'),
+    'callback' => 'comment_vote_settings', 'access' => $access,
+    'type' => MENU_LOCAL_SUBTASK,
+    'weight' => 6);
+  $items[] = array('path' => 'admin/comment/configure/roles', 'title' => t('moderation roles'),
+    'callback' => 'comment_role_settings', 'access' => $access,
+    'type' => MENU_LOCAL_SUBTASK,
+    'weight' => 6);
+
+  $items[] = array('path' => 'comment', 'title' => t('comments'),
+    'callback' => 'comment_page', 'access' => $access,
+    'type' => MENU_CALLBACK);
+
+  return $items;
+}
+
+/**
+ * Implementation of hook_perm().
+ */
+function comment_perm() {
+  return array('access comments', 'post comments', 'administer comments', 'moderate comments', 'post comments without approval', 'administer moderation');
+}
+
+/**
+ * Implementation of hook_block().
+ *
+ * Generates a block with the most recent comments.
+ */
+function comment_block($op = 'list', $delta = 0) {
+  if ($op == 'list') {
+    $blocks[0]['info'] = t('Recent comments');
+    return $blocks;
+  }
+  else if (user_access('access comments')) {
+    $result = db_query_range('SELECT * FROM {comments} WHERE status = 0 ORDER BY timestamp DESC', 0, 10);
+    $items = array();
+    while ($comment = db_fetch_object($result)) {
+      $items[] = l($comment->subject, "node/$comment->nid", NULL, NULL, "comment-$comment->cid") .'<br />'. format_interval(time() - $comment->timestamp) .' '. t('ago');
+    }
+
+    $block['subject'] = t('Recent comments');
+    $block['content'] = theme('item_list', $items);
+    return $block;
+  }
+}
+
+/**
+ * Implementation of hook_link().
+ */
+function comment_link($type, $node = 0, $main = 0) {
+  $links = array();
+
+  if ($type == 'node' && $node->comment) {
+
+    if ($main) {
+      // Main page: display the number of comments that have been posted.
+
+      if (user_access('access comments')) {
+        $all = comment_num_all($node->nid);
+        $new = comment_num_new($node->nid);
+
+        if ($all) {
+          $links[] = l(format_plural($all, '1 comment', '%count comments'), "node/$node->nid", array('title' => t('Jump to the first comment of this posting.')), NULL, 'comment');
+
+          if ($new) {
+            $links[] = l(format_plural($new, '1 new comment', '%count new comments'), "node/$node->nid", array('title' => t('Jump to the first new comment of this posting.')), NULL, 'new');
+          }
+        }
+        else {
+          if ($node->comment == 2) {
+            if (user_access('post comments')) {
+              $links[] = l(t('add new comment'), "comment/reply/$node->nid", array('title' => t('Add a new comment to this page.')));
+            }
+            else {
+              $links[] = theme('comment_post_forbidden');
+            }
+          }
+        }
+      }
+    }
+    else {
+      // Node page: add a "post comment" link if the user is allowed to
+      // post comments, if this node is not read-only, and if the comment form isn't already shown
+
+      if ($node->comment == 2 && variable_get('comment_form_location', 0) == 0) {
+        if (user_access('post comments')) {
+          $links[] = l(t('add new comment'), "comment/reply/$node->nid", array('title' => t('Share your thoughts and opinions related to this posting.')), NULL, 'comment');
+        }
+        else {
+          $links[] = theme('comment_post_forbidden');
+        }
+      }
+    }
+  }
+
+  if ($type == 'comment') {
+    $links = comment_links($node, $main);
+  }
+
+  return $links;
+}
+
+/**
+ * Implementation of hook_nodeapi().
+ */
+function comment_nodeapi(&$node, $op, $arg = 0) {
+  switch ($op) {
+    case 'settings':
+      $output[t('comment')] = form_select('', "comment_$node->type", variable_get("comment_$node->type", 2), array(t('Disabled'), t('Read only'), t('Read/Write')));
+      return $output;
+    case 'fields':
+      return array('comment');
+    case 'form admin':
+      if (user_access('administer comments')) {
+        $selected = isset($node->comment) ? $node->comment : variable_get("comment_$node->type", 2);
+        $output = form_radios('', 'comment', $selected, array(t('Disabled'), t('Read only'), t('Read/write')));
+        return form_group(t('User comments'), $output);
+      }
+      break;
+    case 'validate':
+      if (!user_access('administer nodes')) {
+        // Force default for normal users:
+        $node->comment = variable_get("comment_$node->type", 2);
+      }
+      break;
+    case 'delete':
+      db_query("DELETE FROM {comments} WHERE nid = '$node->nid'");
+      break;
+  }
+}
+
+/**
+ * Implementation of hook_node_link().
+ *
+ * Allows users with appropriate privileges to edit comments when viewing
+ * a node.
+ */
+function comment_node_link($node) {
+  if (user_access('administer comments')) {
+    $result = db_query('SELECT c.cid, c.subject, c.name, c.homepage, u.uid, u.name AS registered_name, c.name FROM {comments} c INNER JOIN {users} u ON u.uid = c.uid WHERE nid = %d AND c.status = 0 ORDER BY c.timestamp', $node->nid);
+
+    $header = array(t('title'), t('author'), array('data' => t('operations'), 'colspan' => 3));
+
+    while ($comment = db_fetch_object($result)) {
+      $comment->name = $comment->registered_name ? $comment->registered_name : $comment->name;
+      $rows[] = array(l($comment->subject, "node/$node->nid", NULL, NULL, "comment-$comment->cid"), format_name($comment), l(t('view comment'), "node/$node->nid", NULL, NULL, $comment->cid), l(t('edit comment'), "admin/comment/edit/$comment->cid"), l(t('delete comment'), "admin/comment/delete/$comment->cid"));
+    }
+
+    if ($rows) {
+      $output  = '<h3>'. t('Edit comments') .'</h3>';
+      $output .= theme('table', $header, $rows);
+    }
+
+    return $output;
+  }
+}
+
+/**
+ * Implementation of hook_search().
+ *
+ * This search function uses search.module's built-in content index by
+ * calling do_search(). The "nid" identifier in the select is used to
+ * present search results in the context of their associated node.
+ */
+function comment_search($keys) {
+  $find = do_search(array("keys" => $keys, "type" => 'comment', "select" => "select s.lno as lno, c.nid as nid, c.subject as title, c.timestamp as created, u.uid as uid, u.name as name, s.count as count FROM {search_index} s, {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE s.lno = c.cid AND s.type = 'comment' AND c.status = 0 AND s.word like '%'"));
+
+  return array(t('Matching comments ranked in order of relevance'), $find);
+}
+
+/**
+ * Implementation of hook_update_index().
+ *
+ * The SQL statement returned checks for the last time the index was updated
+ * so as not to cause redundant work for the indexer.
+ */
+function comment_update_index() {
+  return array('last_update' => 'comment_cron_last', 'node_type' => 'comment', 'select' => 'SELECT c.cid as lno, c.subject as text1, c.comment as text2 FROM {comments} c WHERE c.status = 0 AND timestamp > '. variable_get('comment_cron_last', 1));
+}
+
+/**
+ * Implementation of hook_user().
+ *
+ * Provides signature customization for the user's comments.
+ */
+function comment_user($type, $edit, &$user, $category = NULL) {
+  if ($type == 'form' && $category == 'account') {
+    // when user tries to edit his own data
+    return array(array('title' => t('Comment settings'), 'data' => form_textarea(t('Signature'), 'signature', $user->signature, 64, 3, t('Your signature will be publicly displayed at the end of your comments.') .'<br />'. filter_tips_short()), 'weight' => 2));
+  }
+  if ($type == 'validate') {
+    // validate user data editing
+    return array('signature' => $edit['signature']);
+  }
+}
+
+/**
  * Menu callback; prints the comment-specific help text from admin/help.
  */
 function comment_help_page() {
@@ -134,22 +373,6 @@ function comment_configure() {
 }
 
 /**
- * Implementation of hook_user().
- *
- * Provides signature customization for the user's comments.
- */
-function comment_user($type, $edit, &$user, $category = NULL) {
-  if ($type == 'form' && $category == 'account') {
-    // when user tries to edit his own data
-    return array(array('title' => t('Comment settings'), 'data' => form_textarea(t('Signature'), 'signature', $user->signature, 64, 3, t('Your signature will be publicly displayed at the end of your comments.') .'<br />'. filter_tips_short()), 'weight' => 2));
-  }
-  if ($type == 'validate') {
-    // validate user data editing
-    return array('signature' => $edit['signature']);
-  }
-}
-
-/**
  * This is *not* a hook_access() implementation. This function is called
  * to determine whether the current user has access to a particular comment.
  *
@@ -164,29 +387,6 @@ function comment_access($op, $comment) {
 
   if ($op == 'edit') {
     return $user->uid && $user->uid == $comment->uid && comment_num_replies($comment->cid) == 0;
-  }
-}
-
-/**
- * Implementation of hook_block().
- *
- * Generates a block with the most recent comments.
- */
-function comment_block($op = 'list', $delta = 0) {
-  if ($op == 'list') {
-    $blocks[0]['info'] = t('Recent comments');
-    return $blocks;
-  }
-  else if (user_access('access comments')) {
-    $result = db_query_range('SELECT * FROM {comments} WHERE status = 0 ORDER BY timestamp DESC', 0, 10);
-    $items = array();
-    while ($comment = db_fetch_object($result)) {
-      $items[] = l($comment->subject, "node/$comment->nid", NULL, NULL, "comment-$comment->cid") .'<br />'. format_interval(time() - $comment->timestamp) .' '. t('ago');
-    }
-
-    $block['subject'] = t('Recent comments');
-    $block['content'] = theme('item_list', $items);
-    return $block;
   }
 }
 
@@ -738,128 +938,6 @@ function comment_render($node, $cid = 0) {
 }
 
 /**
- * Implementation of hook_perm().
- */
-function comment_perm() {
-  return array('access comments', 'post comments', 'administer comments', 'moderate comments', 'post comments without approval', 'administer moderation');
-}
-
-/**
- * Implementation of hook_link().
- */
-function comment_link($type, $node = 0, $main = 0) {
-  $links = array();
-
-  if ($type == 'node' && $node->comment) {
-
-    if ($main) {
-      // Main page: display the number of comments that have been posted.
-
-      if (user_access('access comments')) {
-        $all = comment_num_all($node->nid);
-        $new = comment_num_new($node->nid);
-
-        if ($all) {
-          $links[] = l(format_plural($all, '1 comment', '%count comments'), "node/$node->nid", array('title' => t('Jump to the first comment of this posting.')), NULL, 'comment');
-
-          if ($new) {
-            $links[] = l(format_plural($new, '1 new comment', '%count new comments'), "node/$node->nid", array('title' => t('Jump to the first new comment of this posting.')), NULL, 'new');
-          }
-        }
-        else {
-          if ($node->comment == 2) {
-            if (user_access('post comments')) {
-              $links[] = l(t('add new comment'), "comment/reply/$node->nid", array('title' => t('Add a new comment to this page.')));
-            }
-            else {
-              $links[] = theme('comment_post_forbidden');
-            }
-          }
-        }
-      }
-    }
-    else {
-      // Node page: add a "post comment" link if the user is allowed to
-      // post comments, if this node is not read-only, and if the comment form isn't already shown
-
-      if ($node->comment == 2 && variable_get('comment_form_location', 0) == 0) {
-        if (user_access('post comments')) {
-          $links[] = l(t('add new comment'), "comment/reply/$node->nid", array('title' => t('Share your thoughts and opinions related to this posting.')), NULL, 'comment');
-        }
-        else {
-          $links[] = theme('comment_post_forbidden');
-        }
-      }
-    }
-  }
-
-  if ($type == 'comment') {
-    $links = comment_links($node, $main);
-  }
-
-  return $links;
-}
-
-/**
- * Implementation of hook_menu().
- */
-function comment_menu() {
-  $items = array();
-  $access = user_access('administer comments');
-
-  $items[] = array('path' => 'admin/comment', 'title' => t('comments'),
-    'callback' => 'comment_admin', 'access' => $access);
-  $items[] = array('path' => 'admin/comment/edit', 'title' => t('edit comment'),
-    'callback' => 'comment_admin', 'access' => $access,
-    'type' => MENU_CALLBACK);
-  $items[] = array('path' => 'admin/comment/delete', 'title' => t('delete comment'),
-    'callback' => 'comment_admin', 'access' => $access,
-    'type' => MENU_CALLBACK);
-
-  // Tabs:
-  $items[] = array('path' => 'admin/comment/configure', 'title' => t('configure'),
-    'callback' => 'comment_configure', 'access' => $access,
-    'type' => MENU_LOCAL_TASK);
-  if (module_exist('search')) {
-    $items[] = array('path' => 'admin/comment/search', 'title' => t('search'),
-      'callback' => 'comment_admin', 'access' => $access,
-      'type' => MENU_LOCAL_TASK);
-  }
-
-  // Subtabs:
-  $items[] = array('path' => 'admin/comment/new', 'title' => t('new comments'),
-    'callback' => 'comment_admin', 'access' => $access,
-    'type' => MENU_LOCAL_SUBTASK);
-  $items[] = array('path' => 'admin/comment/approval', 'title' => t('approval queue'),
-    'callback' => 'comment_admin', 'access' => $access,
-    'type' => MENU_LOCAL_SUBTASK);
-  $items[] = array('path' => 'admin/comment/configure/settings', 'title' => t('settings'),
-    'callback' => 'comment_configure', 'access' => $access,
-    'type' => MENU_LOCAL_SUBTASK);
-  $access = user_access('administer comments') && user_access('administer moderation');
-  $items[] = array('path' => 'admin/comment/configure/matrix', 'title' => t('moderation matrix'),
-    'callback' => 'comment_matrix_settings', 'access' => $access,
-    'type' => MENU_LOCAL_SUBTASK);
-  $items[] = array('path' => 'admin/comment/configure/thresholds', 'title' => t('moderation thresholds'),
-    'callback' => 'comment_threshold_settings', 'access' => $access,
-    'type' => MENU_LOCAL_SUBTASK);
-  $items[] = array('path' => 'admin/comment/configure/votes', 'title' => t('moderation votes'),
-    'callback' => 'comment_vote_settings', 'access' => $access,
-    'type' => MENU_LOCAL_SUBTASK,
-    'weight' => 6);
-  $items[] = array('path' => 'admin/comment/configure/roles', 'title' => t('moderation roles'),
-    'callback' => 'comment_role_settings', 'access' => $access,
-    'type' => MENU_LOCAL_SUBTASK,
-    'weight' => 6);
-
-  $items[] = array('path' => 'comment', 'title' => t('comments'),
-    'callback' => 'comment_page', 'access' => $access,
-    'type' => MENU_CALLBACK);
-
-  return $items;
-}
-
-/**
  * Menu callback; dispatches to the correct comment function.
  */
 function comment_page() {
@@ -902,32 +980,6 @@ function comment_page() {
   }
 }
 
-/**
- * Implementation of hook_node_link().
- *
- * Allows users with appropriate privileges to edit comments when viewing
- * a node.
- */
-function comment_node_link($node) {
-  if (user_access('administer comments')) {
-    $result = db_query('SELECT c.cid, c.subject, c.name, c.homepage, u.uid, u.name AS registered_name, c.name FROM {comments} c INNER JOIN {users} u ON u.uid = c.uid WHERE nid = %d AND c.status = 0 ORDER BY c.timestamp', $node->nid);
-
-    $header = array(t('title'), t('author'), array('data' => t('operations'), 'colspan' => 3));
-
-    while ($comment = db_fetch_object($result)) {
-      $comment->name = $comment->registered_name ? $comment->registered_name : $comment->name;
-      $rows[] = array(l($comment->subject, "node/$node->nid", NULL, NULL, "comment-$comment->cid"), format_name($comment), l(t('view comment'), "node/$node->nid", NULL, NULL, $comment->cid), l(t('edit comment'), "admin/comment/edit/$comment->cid"), l(t('delete comment'), "admin/comment/delete/$comment->cid"));
-    }
-
-    if ($rows) {
-      $output  = '<h3>'. t('Edit comments') .'</h3>';
-      $output .= theme('table', $header, $rows);
-    }
-
-    return $output;
-  }
-}
-
 function comment_admin_edit($id) {
 
   $result = db_query('SELECT c.*, u.name AS registered_name, u.uid FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status != 2', $id);
@@ -944,18 +996,6 @@ function comment_admin_edit($id) {
     $form .= form_submit(t('Submit'));
 
     return form($form);
-  }
-}
-
-function _comment_delete_thread($comment) {
-  // Delete the comment:
-  db_query('DELETE FROM {comments} WHERE cid = %d', $comment->cid);
-  watchdog('special', t('comment: deleted "%comment-subject"', array('%comment-subject' => $comment->subject)));
-
-  // Delete the comment's replies:
-  $result = db_query('SELECT cid, subject FROM {comments} WHERE pid = %d', $comment->cid);
-  while ($comment = db_fetch_object($result)) {
-    _comment_delete_thread($comment);
   }
 }
 
@@ -1241,6 +1281,140 @@ function comment_admin() {
   print theme('page', $output);
 }
 
+/**
+*** misc functions: helpers, privates, history, search
+**/
+
+
+function comment_visible($comment, $threshold = 0) {
+  if ($comment->score >= $threshold) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
+function comment_moderate() {
+  global $user;
+
+  $moderation = $_POST['moderation'];
+
+  if ($moderation) {
+    $result = db_query('SELECT mid, MAX(value) AS value FROM {moderation_roles} WHERE rid IN (%s) GROUP BY mid', implode(', ', array_keys($user->roles)));
+    while ($mod = db_fetch_object($result)) {
+      $votes[$mod->mid] = $mod->value;
+    }
+
+    $node = node_load(array('nid' => db_result(db_query('SELECT nid FROM {comments} WHERE cid = %d', key($moderation)))));
+
+    if (user_access('administer comments') || comment_user_can_moderate($node)) {
+      foreach ($moderation as $cid => $vote) {
+        if ($vote) {
+          $comment = db_fetch_object(db_query('SELECT * FROM {comments} WHERE cid = %d', $cid));
+          $users = unserialize($comment->users);
+          if ($user->uid != $comment->uid && !(comment_already_moderated($user->uid, $comment->users))) {
+            $users[$user->uid] = $vote;
+            $tot_score = 0;
+            foreach ($users as $uid => $vote) {
+              if ($uid) {
+                $tot_score = $tot_score + $votes[$vote];
+              }
+              else {
+                // vote 0 is the start value
+                $tot_score = $tot_score + $vote;
+              }
+            }
+            $new_score = round($tot_score / count($users));
+            db_query("UPDATE {comments} SET score = '$new_score', users = '%s' WHERE cid = %d", serialize($users), $cid);
+
+            /*
+            ** Fire a hook
+            */
+
+            module_invoke_all('comment', 'moderate', $cid, $vote);
+          }
+        }
+      }
+    }
+  }
+}
+
+function comment_save_settings($mode, $order, $threshold, $comments_per_page) {
+  global $user;
+
+  if ($user->uid) {
+    $user = user_save($user, array('mode' => $mode, 'sort' => $order, 'threshold' => $threshold, 'comments_per_page' => $comments_per_page));
+  }
+  else {
+    $_SESSION['comment_mode'] = $mode;
+    $_SESSION['comment_sort'] = $order;
+    $_SESSION['comment_threshold'] = $threshold;
+    $_SESSION['comment_comments_per_page'] = $comments_per_page;
+  }
+}
+
+function comment_num_all($nid) {
+  static $cache;
+
+  if (!isset($cache[$nid])) {
+    $cache[$nid] = db_result(db_query('SELECT COUNT(cid) FROM {comments} WHERE nid = %d AND status = 0', $nid));
+  }
+  return $cache[$nid];
+}
+
+function comment_num_replies($pid) {
+  static $cache;
+
+  if (!isset($cache[$pid])) {
+    $cache[$pid] = db_result(db_query('SELECT COUNT(cid) FROM {comments} WHERE pid = %d AND status = 0', $pid));
+  }
+
+  return $cache[$pid];
+}
+
+/**
+ * get number of new comments for current user and specified node
+ *
+ * @param $nid node-id to count comments for
+ * @param $timestamp time to count from (defaults to time of last user access
+ *   to node)
+ */
+function comment_num_new($nid, $timestamp = 0) {
+  global $user;
+
+  if ($user->uid) {
+    // Retrieve the timestamp at which the current user last viewed the
+    // specified node.
+    if (!$timestamp) {
+      $timestamp = node_last_viewed($nid);
+    }
+
+    // Use the timestamp to retrieve the number of new comments.
+    $result = db_result(db_query('SELECT COUNT(c.cid) FROM {node} n INNER JOIN {comments} c ON n.nid = c.nid WHERE n.nid = %d AND timestamp > %d AND c.status = 0', $nid, $timestamp));
+
+    return $result;
+  }
+  else {
+    return 0;
+  }
+
+}
+
+function comment_user_can_moderate($node) {
+  global $user;
+  return (user_access('moderate comments'));
+  // TODO: || (($user->uid == $node->uid) && user_access("moderate comments in owned node")));
+}
+
+function comment_already_moderated($uid, $users) {
+  $comment_users = unserialize($users);
+  if (!$comment_users) {
+    $comment_users = array();
+  }
+  return in_array($uid, array_keys($comment_users));
+}
+
 /*
 ** Renderer or visualization functions this can be optionally
 ** overridden by themes.
@@ -1476,189 +1650,15 @@ function theme_comment_post_forbidden() {
   }
 }
 
-/**
-*** misc functions: helpers, privates, history, search
-**/
+function _comment_delete_thread($comment) {
+  // Delete the comment:
+  db_query('DELETE FROM {comments} WHERE cid = %d', $comment->cid);
+  watchdog('special', t('comment: deleted "%comment-subject"', array('%comment-subject' => $comment->subject)));
 
-
-function comment_visible($comment, $threshold = 0) {
-  if ($comment->score >= $threshold) {
-    return 1;
-  }
-  else {
-    return 0;
-  }
-}
-
-function comment_moderate() {
-  global $user;
-
-  $moderation = $_POST['moderation'];
-
-  if ($moderation) {
-    $result = db_query('SELECT mid, MAX(value) AS value FROM {moderation_roles} WHERE rid IN (%s) GROUP BY mid', implode(', ', array_keys($user->roles)));
-    while ($mod = db_fetch_object($result)) {
-      $votes[$mod->mid] = $mod->value;
-    }
-
-    $node = node_load(array('nid' => db_result(db_query('SELECT nid FROM {comments} WHERE cid = %d', key($moderation)))));
-
-    if (user_access('administer comments') || comment_user_can_moderate($node)) {
-      foreach ($moderation as $cid => $vote) {
-        if ($vote) {
-          $comment = db_fetch_object(db_query('SELECT * FROM {comments} WHERE cid = %d', $cid));
-          $users = unserialize($comment->users);
-          if ($user->uid != $comment->uid && !(comment_already_moderated($user->uid, $comment->users))) {
-            $users[$user->uid] = $vote;
-            $tot_score = 0;
-            foreach ($users as $uid => $vote) {
-              if ($uid) {
-                $tot_score = $tot_score + $votes[$vote];
-              }
-              else {
-                // vote 0 is the start value
-                $tot_score = $tot_score + $vote;
-              }
-            }
-            $new_score = round($tot_score / count($users));
-            db_query("UPDATE {comments} SET score = '$new_score', users = '%s' WHERE cid = %d", serialize($users), $cid);
-
-            /*
-            ** Fire a hook
-            */
-
-            module_invoke_all('comment', 'moderate', $cid, $vote);
-          }
-        }
-      }
-    }
-  }
-}
-
-function comment_save_settings($mode, $order, $threshold, $comments_per_page) {
-  global $user;
-
-  if ($user->uid) {
-    $user = user_save($user, array('mode' => $mode, 'sort' => $order, 'threshold' => $threshold, 'comments_per_page' => $comments_per_page));
-  }
-  else {
-    $_SESSION['comment_mode'] = $mode;
-    $_SESSION['comment_sort'] = $order;
-    $_SESSION['comment_threshold'] = $threshold;
-    $_SESSION['comment_comments_per_page'] = $comments_per_page;
-  }
-}
-
-function comment_num_all($nid) {
-  static $cache;
-
-  if (!isset($cache[$nid])) {
-    $cache[$nid] = db_result(db_query('SELECT COUNT(cid) FROM {comments} WHERE nid = %d AND status = 0', $nid));
-  }
-  return $cache[$nid];
-}
-
-function comment_num_replies($pid) {
-  static $cache;
-
-  if (!isset($cache[$pid])) {
-    $cache[$pid] = db_result(db_query('SELECT COUNT(cid) FROM {comments} WHERE pid = %d AND status = 0', $pid));
-  }
-
-  return $cache[$pid];
-}
-
-/**
- * get number of new comments for current user and specified node
- *
- * @param $nid node-id to count comments for
- * @param $timestamp time to count from (defaults to time of last user access
- *   to node)
- */
-function comment_num_new($nid, $timestamp = 0) {
-  global $user;
-
-  if ($user->uid) {
-    // Retrieve the timestamp at which the current user last viewed the
-    // specified node.
-    if (!$timestamp) {
-      $timestamp = node_last_viewed($nid);
-    }
-
-    // Use the timestamp to retrieve the number of new comments.
-    $result = db_result(db_query('SELECT COUNT(c.cid) FROM {node} n INNER JOIN {comments} c ON n.nid = c.nid WHERE n.nid = %d AND timestamp > %d AND c.status = 0', $nid, $timestamp));
-
-    return $result;
-  }
-  else {
-    return 0;
-  }
-
-}
-
-function comment_user_can_moderate($node) {
-  global $user;
-  return (user_access('moderate comments'));
-  // TODO: || (($user->uid == $node->uid) && user_access("moderate comments in owned node")));
-}
-
-function comment_already_moderated($uid, $users) {
-  $comment_users = unserialize($users);
-  if (!$comment_users) {
-    $comment_users = array();
-  }
-  return in_array($uid, array_keys($comment_users));
-}
-
-/**
- * Implementation of hook_search().
- *
- * This search function uses search.module's built-in content index by
- * calling do_search(). The "nid" identifier in the select is used to
- * present search results in the context of their associated node.
- */
-function comment_search($keys) {
-  $find = do_search(array("keys" => $keys, "type" => 'comment', "select" => "select s.lno as lno, c.nid as nid, c.subject as title, c.timestamp as created, u.uid as uid, u.name as name, s.count as count FROM {search_index} s, {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE s.lno = c.cid AND s.type = 'comment' AND c.status = 0 AND s.word like '%'"));
-
-  return array(t('Matching comments ranked in order of relevance'), $find);
-}
-
-/**
- * Implementation of hook_update_index().
- *
- * The SQL statement returned checks for the last time the index was updated
- * so as not to cause redundant work for the indexer.
- */
-function comment_update_index() {
-  return array('last_update' => 'comment_cron_last', 'node_type' => 'comment', 'select' => 'SELECT c.cid as lno, c.subject as text1, c.comment as text2 FROM {comments} c WHERE c.status = 0 AND timestamp > '. variable_get('comment_cron_last', 1));
-}
-
-/**
- * Implementation of hook_nodeapi().
- */
-function comment_nodeapi(&$node, $op, $arg = 0) {
-  switch ($op) {
-    case 'settings':
-      $output[t('comment')] = form_select('', "comment_$node->type", variable_get("comment_$node->type", 2), array(t('Disabled'), t('Read only'), t('Read/Write')));
-      return $output;
-    case 'fields':
-      return array('comment');
-    case 'form admin':
-      if (user_access('administer comments')) {
-        $selected = isset($node->comment) ? $node->comment : variable_get("comment_$node->type", 2);
-        $output = form_radios('', 'comment', $selected, array(t('Disabled'), t('Read only'), t('Read/write')));
-        return form_group(t('User comments'), $output);
-      }
-      break;
-    case 'validate':
-      if (!user_access('administer nodes')) {
-        // Force default for normal users:
-        $node->comment = variable_get("comment_$node->type", 2);
-      }
-      break;
-    case 'delete':
-      db_query("DELETE FROM {comments} WHERE nid = '$node->nid'");
-      break;
+  // Delete the comment's replies:
+  $result = db_query('SELECT cid, subject FROM {comments} WHERE pid = %d', $comment->cid);
+  while ($comment = db_fetch_object($result)) {
+    _comment_delete_thread($comment);
   }
 }
 
