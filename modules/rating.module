@@ -66,6 +66,7 @@ function rating_gravity($id) {
     $bonus -= variable_get("rating_weight_$node->type", 0);
   }
 
+/*
   $r3 = db_query("SELECT score, votes FROM comments WHERE author = '$id' AND votes > 0 AND (". time() ." - timestamp < $period) ORDER BY timestamp LIMIT $number");
   while ($comment = db_fetch_object($r3)) {
     $weight++;
@@ -74,6 +75,7 @@ function rating_gravity($id) {
   }
 
   $bonus += $weight / 5;
+*/
 
   return ($votes ? ($score + $weight) / $votes + $bonus : $bonus);
 }
