@@ -21,7 +21,7 @@ function page_help($section) {
     case 'admin/modules#description':
       return t('Enables the creation of pages that can be added to the navigation system.');
     case 'node/add#page':
-      return t('If you want to add a static page, like an a contact page or an about page, use a page.');
+      return t('If you want to add a static page, like a contact page or an about page, use a page.');
   }
 }
 
