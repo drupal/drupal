@@ -2,9 +2,26 @@
 // $Id$
 
 function queue_system($field){
-  $system["description"] = t("Enables content to be moderated by the community.");
-  $system["admin_help"] = t("The queue provides a way for your users to vote on submitted content. This is called <b>moderation</b>. Users can moderate a post up (give it a point), or down (subtract a point). The settings below give you control over how many points are required for the status of a post to be automatically changed. See individual items for details.");
-  return $system[$field];
+  $output = "";
+
+  if ($field == "description") {$output = queue_help("admin/system/modules"); }
+  else if ($field == "admin_help") {$output = queue_help("admin/system/modules/queue"); };
+
+  return $output;
+}
+
+function queue_help($section) {
+  $output = "";
+
+  switch ($section) {
+    case 'admin/system/modules':
+      $output = "Enables content to be moderated by the community.";
+      break;
+    case 'admin/system/modules/queue':
+      $output = "The queue provides a way for your users to vote on submitted content. This is called <b>moderation</b>. Users can moderate a post up (give it a point), or down (subtract a point). The settings below give you control over how many points are required for the status of a post to be automatically changed. See individual items for details.";
+      break;
+  }
+  return t($output);
 }
 
 function queue_settings() {

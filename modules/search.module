@@ -1,18 +1,34 @@
 <?php
 // $Id$
 
-function search_help() {
-  $output = "<b>". t("Search guidelines") ."</b>";
-  $output .= "<p>". t("The search page allows you to search the web site's content.  You can specify multiple words, and they will all be searched for.  You can also use wildcards, so 'walk*' will match 'walk', 'walking', 'walker', 'walkable' and so on.  Furthermore, searches are not case sensitive so searching for 'walk', 'Walk' or 'WALK' will yield exactly the same results.") ."</p>";
-  $output .= "<b>". t("Words excluded from the search") ."</b>";
-  $output .= "<p>". t("Words that frequently occur, typically called 'noise words', are ignored.  Example words are 'a', 'at', 'and', 'are', 'as', 'how', 'where', etc.  Words shorter than %number letters are also ignored.", array("%number" => variable_get("minimum_word_size", 2))) ."</p>";
+function search_help($section = "admin/search/help") {
+  $output = "";
+
+  switch ($section) {
+    case 'admin/help':
+    case 'admin/search/help':
+      $output = "<b>Search guidelines</b>";
+      $output .= "<p>The search page allows you to search the web site's content.  You can specify multiple words, and they will all be searched for.  You can also use wildcards, so 'walk*' will match 'walk', 'walking', 'walker', 'walkable' and so on.  Furthermore, searches are not case sensitive so searching for 'walk', 'Walk' or 'WALK' will yield exactly the same results.</p>";
+      $output .= "<b>Words excluded from the search</b>";
+      $output .= strtr("<p>Words that frequently occur, typically called 'noise words', are ignored.  Example words are 'a', 'at', 'and', 'are', 'as', 'how', 'where', etc.  Words shorter than %number letters are also ignored.</p>", array("%number" => variable_get("minimum_word_size", 2)));
+      break;
+    case 'admin/system/modules':
+      $output = "Enables site wide keyword searching.";
+      break;
+    case 'admin/system/modules/search':
+      $output = "The search engine works by keeping an index of \"interesting\" words. To make sure we only get \"interesting\" words you need to set the following.";
+      break;
+  }
   return $output;
 }
 
 function search_system($field){
-  $system["description"] = t("Enables site wide keyword searching.");
-  $system["admin_help"] = t("The search engine works by keeping an index of \"interesting\" words. To make sure we only get \"interesting\" words you need to set the following.");
-  return $system[$field];
+  $output = "";
+
+  if ($field == "description") {$output = search_help("admin/system/modules"); }
+  else if ($field == "admin_help") {$output = search_help("admin/system/modules/queue"); };
+
+  return $output;
 }
 
 /**
