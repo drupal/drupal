@@ -901,14 +901,14 @@ function user_edit($edit = array()) {
 
         /*
         ** Validate input fields to make sure users don't submit
-        ** invalid form.
+        ** invalid form data.
         */
 
         if (!user_access("administer users")) {
-           if (array_intersect(array_keys($array), array("rid", "init", "rating", "session"))) {
+           if (array_intersect(array_keys($edit), array("rid", "init", "rating", "session"))) {
              watchdog("warning", "detected malicious attempt to alter a protected database field");
            }
-        
+
            $edit["rid"] = $user->rid;
            $edit["init"] = $user->init;
            $edit["rating"] = $user->rating;
