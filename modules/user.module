@@ -488,7 +488,7 @@ function user_block() {
     if (variable_get("user_register", 1)) {
       $output .= "&raquo; ". lm(t("Register"), array("mod" => "user", "op" => "register"), "", array("title" => t("Create a new user account."))) ."<br />\n";
     }
-    $output .= "&raquo; ". lm(t("New password"), array("mod" => "user", "op" => "password"), "", array("title" => t("Request new password via e-mail")));
+    $output .= "&raquo; ". lm(t("New password"), array("mod" => "user", "op" => "password"), "", array("title" => t("Request new password via e-mail.")));
 
     $block[1]["content"] = $output;
   }
