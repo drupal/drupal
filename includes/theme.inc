@@ -46,15 +46,15 @@ class BaseTheme {
       }
     }
 
-    $output = "<b>". check_output($node->title) ."</b> by ". format_name($node) ."<br />";
+    $output = "<b>$node->title</b> by ". format_name($node) ."<br />";
     if (count($terms)) {
       $output .= "<small>(". $this->links($terms) .")</small><br />";
     }
     if ($main && $node->teaser) {
-      $output .= check_output($node->teaser, 1);
+      $output .= check_output($node->teaser);
     }
     else {
-      $output .= check_output($node->body, 1);
+      $output .= check_output($node->body);
     }
     if ($links = link_node($node, $main)) {
       $output .= "<br />[ ". $this->links($links) ." ]";
@@ -65,7 +65,7 @@ class BaseTheme {
   }
 
   function box($subject, $content, $region = "main") {
-    $output = "<b>". check_output($subject) ."</b><br />". check_output($content) ."<p />";
+    $output = "<b>$subject</b><br />$content<p />";
     print $output;
   }
 

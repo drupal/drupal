@@ -98,7 +98,7 @@
         <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" BGCOLOR="<?php echo $this->brcolor1; ?>" WIDTH="100%">
         <TR><TD>
          <TABLE BORDER="0" CELLPADDING="4" CELLSPACING="1" WIDTH="100%">
-          <TR><TD COLSPAN="2" BGCOLOR="<?php echo $this->bgcolor1; ?>" WIDTH="100%"><table width="100%" cellpadding="0" cellspacing="0"><tr><td width="100%"><FONT COLOR="<?php echo $this->fgcolor1; ?>"><B><?php echo "". check_output($node->title) .""; ?></B></FONT></td><td valign="middle" align="center"><IMG SRC="<?php print $this->path; ?>/images/icon.gif" valign="middle"></td></tr></table></TD></TR>
+          <TR><TD COLSPAN="2" BGCOLOR="<?php echo $this->bgcolor1; ?>" WIDTH="100%"><table width="100%" cellpadding="0" cellspacing="0"><tr><td width="100%"><FONT COLOR="<?php echo $this->fgcolor1; ?>"><B><?php echo "$node->title"; ?></B></FONT></td><td valign="middle" align="center"><IMG SRC="<?php print $this->path; ?>/images/icon.gif" valign="middle"></td></tr></table></TD></TR>
           <TR BGCOLOR="<?php echo $this->bgcolor2; ?>">
            <?php
             if (function_exists("taxonomy_node_get_terms")) {
@@ -118,10 +118,10 @@
           <TD BGCOLOR="<?php echo $this->bgcolor2 ?>" COLSPAN="2">
           <?php
            if ($main && $node->teaser) {
-             echo "<P>". check_output($node->teaser, 1) ."</P>";
+             echo "<P>". check_output($node->teaser) ."</P>";
            }
            else {
-             echo "<P>". check_output($node->body, 1) ."</P>";
+             echo "<P>". check_output($node->body) ."</P>";
            }
           ?>
           </TD>
@@ -152,7 +152,7 @@
      // Subject:
      echo "    <TR>";
      echo "     <TD ALIGN=\"right\" VALIGN=\"top\" WIDTH=\"5%\"><FONT COLOR=\"$this->hlcolor1\"><B>" . t("Subject") . ":</B></FONT></TD><TD WIDTH=\"80%\">";
-     echo "      <B><FONT COLOR=\"$this->fgcolor1\">" . check_output($comment->subject) . "</FONT></B>";
+     echo "      <B><FONT COLOR=\"$this->fgcolor1\">$comment->subject</FONT></B>";
      echo "     </TD>";
 
      // Moderation:
@@ -175,7 +175,7 @@
      echo " </TR>";
 
      // Print body of comment:
-     if ($comment) echo " <TR><TD BGCOLOR=\"$this->bgcolor2\">". check_output($comment->comment, 1) ."</TD></TR>";
+     if ($comment) echo " <TR><TD BGCOLOR=\"$this->bgcolor2\">". check_output($comment->comment) ."</TD></TR>";
 
      // Print bottom link(s):
      echo " <TR><TD ALIGN=\"right\" BGCOLOR=\"$this->bgcolor3\">[ $link ]</TD></TR>";

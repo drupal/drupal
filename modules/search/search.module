@@ -182,10 +182,10 @@ function do_search($search_array) {
       }
       switch ($type) {
       case "node":
-        $find[$i++] = array("count" => $count, "title" => check_output($title), "link" => (strstr($PHP_SELF, "admin.php") ? drupal_url(array("mod" => "node", "type" => "node", "op" => "edit", "id" => $lno), "admin") : drupal_url(array("id" => $lno))), "user" => $name, "date" => $created, "keywords" => implode("|", $words));
+        $find[$i++] = array("count" => $count, "title" => $title, "link" => (strstr($PHP_SELF, "admin.php") ? drupal_url(array("mod" => "node", "type" => "node", "op" => "edit", "id" => $lno), "admin") : drupal_url(array("id" => $lno))), "user" => $name, "date" => $created, "keywords" => implode("|", $words));
         break;
       case "comment":
-        $find[$i++] = array("count" => $count, "title" => check_output($title), "link" => (strstr($PHP_SELF, "admin.php") ? drupal_url(array("mod" => "comment", "op" => "edit", "id" =>$lno), "admin") : drupal_url(array("id" => $nid, "cid" => $lno))), "user" => $name, "date" => $created, "keywords" => implode("|", $words));
+        $find[$i++] = array("count" => $count, "title" => $title, "link" => (strstr($PHP_SELF, "admin.php") ? drupal_url(array("mod" => "comment", "op" => "edit", "id" =>$lno), "admin") : drupal_url(array("id" => $nid, "cid" => $lno))), "user" => $name, "date" => $created, "keywords" => implode("|", $words));
         break;
       }
     }

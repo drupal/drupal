@@ -71,12 +71,12 @@ function watchdog_view($id) {
 
   if ($watchdog = db_fetch_object($result)) {
     $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
-    $output .= " <tr><th>" . t("Type") . ":" . "</th><td>". check_output($watchdog->type) ."</td></tr>";
-    $output .= " <tr><th>" . t("Date") . ":" . "</th><td>". format_date($watchdog->timestamp, "large") ."</td></tr>";
-    $output .= " <tr><th>" . t("User") . ":" . "</th><td>". format_name($watchdog) ."</td></tr>";
-    $output .= " <tr><th>" . t("Location") . ":" . "</th><td>". check_output($watchdog->location) ."</td></tr>";
-    $output .= " <tr><th>" . t("Message") . ":" . "</th><td>". check_output($watchdog->message) ."</td></tr>";
-    $output .= " <tr><th>" . t("Hostname") . ":" . "</th><td>". check_output($watchdog->hostname) ."</td></tr>";
+    $output .= " <tr><th>". t("Type") ."</th><td>$watchdog->type</td></tr>";
+    $output .= " <tr><th>". t("Date") ."</th><td>". format_date($watchdog->timestamp, "large") ."</td></tr>";
+    $output .= " <tr><th>". t("User") ."</th><td>". format_name($watchdog) ."</td></tr>";
+    $output .= " <tr><th>". t("Location") ."</th><td>$watchdog->location</td></tr>";
+    $output .= " <tr><th>". t("Message") ."</th><td>$watchdog->message</td></tr>";
+    $output .= " <tr><th>". t("Hostname") ."</th><td>$watchdog->hostname</td></tr>";
     $output .= "</table>";
 
     return $output;

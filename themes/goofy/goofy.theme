@@ -115,7 +115,7 @@ function c(subject,mod,author,date,body) {document.writeln("<table border=\"0\" 
 
     function node($node, $main = 0) {
       echo "\n<!-- node: \"$node->title\" -->\n";
-      $title = check_output($node->title);
+      $title = $node->title;
       $subleft = strtr(t("Submitted by %a on %b"), array("%a" => format_name($node), "%b" => format_date($node->created, "large")));
       if (function_exists("taxonomy_node_get_terms")) {
         if ($terms = taxonomy_node_get_terms($node->nid)) {
@@ -128,10 +128,10 @@ function c(subject,mod,author,date,body) {document.writeln("<table border=\"0\" 
       }
 
       if ($main && $node->teaser) {
-        $body = check_output($node->teaser, 1);
+        $body = check_output($node->teaser);
       }
       else {
-        $body = check_output($node->body, 1);
+        $body = check_output($node->body);
       }
 
       if ($links = link_node($node, $main)) {
@@ -144,9 +144,9 @@ function c(subject,mod,author,date,body) {document.writeln("<table border=\"0\" 
 
     function comment($comment, $link = "") {
       $author = "<b>" . format_name($comment) . "</b>";
-      $body = check_output($comment->comment, 1) . "<br><hr color=\"#404040\" size=\"1\"><div align=\"right\">[ $link ]</div>";
+      $body = check_output($comment->comment) . "<br><hr color=\"#404040\" size=\"1\"><div align=\"right\">[ $link ]</div>";
 
-      print "<script language=\"JavaScript\"><!--\nc(\"". $this->stripbreaks(addslashes(check_output($comment->subject))) ."\",\"". $this->stripbreaks(addslashes(comment_moderation($comment))) ."\",\"". $this->stripbreaks(addslashes($author)) ."\",\"". $this->stripbreaks(addslashes(format_date($comment->timestamp))) ."\",\"". $this->stripbreaks(addslashes($body)) ."\"); // -->\n</script>\n";
+      print "<script language=\"JavaScript\"><!--\nc(\"". $this->stripbreaks(addslashes($comment->subject)) ."\",\"". $this->stripbreaks(addslashes(comment_moderation($comment))) ."\",\"". $this->stripbreaks(addslashes($author)) ."\",\"". $this->stripbreaks(addslashes(format_date($comment->timestamp))) ."\",\"". $this->stripbreaks(addslashes($body)) ."\"); // -->\n</script>\n";
     } // close comment function
 
 

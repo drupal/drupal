@@ -30,7 +30,7 @@ function node_title_list($result, $title = NULL) {
   while ($node = db_fetch_object($result)) {
     $number = module_invoke("comment", "num_all", $node->nid);
     $name = strip_tags(format_name($node)); // required for anonymous users to work
-    $items[] = l(check_output($node->title), array("id" => $node->nid), "node", "", array("title" => t("Author: %name, comments: %number", array("%name" => $name, "%number" => $number))));
+    $items[] = l($node->title, array("id" => $node->nid), "node", "", array("title" => t("Author: %name, comments: %number", array("%name" => $name, "%number" => $number))));
   }
 
   return theme_invoke("theme_item_list", $items, $title);
@@ -496,7 +496,7 @@ function node_admin_nodes() {
   $header = array(t("title"), t("type"), t("author"), t("status"), array("data" => t("operations"), "colspan" => 2));
 
   while ($node = db_fetch_object($result)) {
-    $rows[] = array(l(check_output($node->title), array("id" => $node->nid)), module_invoke($node->type, "node", "name"), format_name($node), ($node->status ? t("published") : t("not published")), la(t("edit node"), array("mod" => "node", "op" => "edit", "id" => $node->nid)), la(t("delete node"), array("mod" => "node", "op" => "delete", "id" => $node->nid)));
+    $rows[] = array(l($node->title, array("id" => $node->nid)), module_invoke($node->type, "node", "name"), format_name($node), ($node->status ? t("published") : t("not published")), la(t("edit node"), array("mod" => "node", "op" => "edit", "id" => $node->nid)), la(t("delete node"), array("mod" => "node", "op" => "delete", "id" => $node->nid)));
   }
 
   if ($pager = pager_display(NULL, 50, 0, "admin")) {
@@ -1197,7 +1197,7 @@ function node_delete($edit) {
       $output = t("The node has been deleted.");
     }
     else {
-      $output .= form_item(t("Confirm deletion"), check_output($node->title));
+      $output .= form_item(t("Confirm deletion"), $node->title);
       $output .= form_hidden("nid", $node->nid);
       $output .= form_hidden("confirm", 1);
       $output .= form_submit(t("Delete"));

@@ -457,7 +457,7 @@ function filter($text) {
   return $text;
 }
 
-function check_output($text, $nl2br = 0) {
+function check_output($text) {
   if ($text) {
     $text = stripslashes($text);
 

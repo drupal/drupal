@@ -67,7 +67,7 @@ function import_format_item($item, $feed = 0) {
   }
 
   // external link
-  $output .= "<a href=\"". check_output($item->link) ."\" target=\"new\">". check_output($item->title) ."</a>";
+  $output .= "<a href=\"$item->link\" target=\"new\">$item->title</a>";
 
   return $output ."<br />";
 }
@@ -387,7 +387,7 @@ function import_view() {
   $header = array(t("title"), t("attributes"), t("items"), t("last update"), t("next update"), array("data" => t("operations"), "colspan" => 3));
   unset($rows);
   while ($feed = db_fetch_object($result)) {
-    $rows[] = array(check_output($feed->title), check_output($feed->attributes), format_plural($feed->items, "item", "items"), ($feed->timestamp ? format_interval(time() - $feed->timestamp) ." ago" : "never"), ($feed->timestamp ? format_interval($feed->timestamp + $feed->refresh - time()) ." left" : "never"), la(t("edit feed"), array("mod" => "import", "type" => "feed", "op" => "edit", "id" => $feed->fid)), la(t("remove items"), array("mod" => "import", "type" => "feed", "op" => "remove", "id" => $feed->fid)), la(t("update items"), array("mod" => "import", "type" => "feed", "op" => "update", "id" => $feed->fid)));
+    $rows[] = array($feed->title, $feed->attributes, format_plural($feed->items, "item", "items"), ($feed->timestamp ? format_interval(time() - $feed->timestamp) ." ago" : "never"), ($feed->timestamp ? format_interval($feed->timestamp + $feed->refresh - time()) ." left" : "never"), la(t("edit feed"), array("mod" => "import", "type" => "feed", "op" => "edit", "id" => $feed->fid)), la(t("remove items"), array("mod" => "import", "type" => "feed", "op" => "remove", "id" => $feed->fid)), la(t("update items"), array("mod" => "import", "type" => "feed", "op" => "update", "id" => $feed->fid)));
   }
   $output .= table($header, $rows);
 
@@ -398,7 +398,7 @@ function import_view() {
   $header = array(t("title"), t("attributes"), t("operations"));
   unset($rows);
   while ($bundle = db_fetch_object($result)) {
-    $rows[] = array(check_output($bundle->title), check_output($bundle->attributes), la(t("edit bundle"), array("mod" => "import", "type" => "bundle", "op" => "edit", "id" => $bundle->bid)));
+    $rows[] = array($bundle->title, $bundle->attributes, la(t("edit bundle"), array("mod" => "import", "type" => "bundle", "op" => "edit", "id" => $bundle->bid)));
   }
   $output .= table($header, $rows);
 
@@ -411,7 +411,7 @@ function import_tag() {
 
   $header = array(t("date"), t("feed"), t("news item"));
   while ($item = db_fetch_object($result)) {
-    $rows[] = array(array("data" => format_date($item->timestamp, "small"), "nowrap" => "nowrap", "valign" => "top"), array("data" => la(check_output($item->feed), array("mod" => "import", "type" => "feed", "op" => "edit", "id" => $item->fid)), "valign" => "top"), "<a href=\"". check_output($item->link) ."\">". check_output($item->title) ."</a>". ($item->description ? "<br /><small><i>". check_output($item->description, 1) ."</i></small>" : "") ."<br /><input type=\"text\" name=\"edit[$item->iid]\" value=\"". check_form($item->attributes) ."\" size=\"50\" />");
+    $rows[] = array(array("data" => format_date($item->timestamp, "small"), "nowrap" => "nowrap", "valign" => "top"), array("data" => la($item->feed, array("mod" => "import", "type" => "feed", "op" => "edit", "id" => $item->fid)), "valign" => "top"), "<a href=\"$item->link\">$item->title</a>". ($item->description ? "<br /><small><i>$item->description</i></small>" : "") ."<br /><input type=\"text\" name=\"edit[$item->iid]\" value=\"". check_form($item->attributes) ."\" size=\"50\" />");
   }
 
   $output .= table($header, $rows);
@@ -511,7 +511,7 @@ function import_page_last() {
     }
 
     if ($item->description) {
-      $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 20px;\">". check_output($item->description, 1) ."</div><br /></td></tr>";
+      $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 20px;\">$item->description</div><br /></td></tr>";
     }
 
     unset($links);
@@ -530,7 +530,7 @@ function import_page_feed($fid) {
   $feed = db_fetch_object(db_query("SELECT * FROM feed WHERE fid = '%s'", $fid));
 
   $header .= "<p><b>". t("Website") .":</b><div style=\"margin-left: 20px;\"><a href=\"$feed->link\">$feed->link</a></div></p>";
-  $header .= "<p><b>". t("Description") .":</b><div style=\"margin-left: 20px;\">". check_output($feed->description, 1) ."</div></p>";
+  $header .= "<p><b>". t("Description") .":</b><div style=\"margin-left: 20px;\">$feed->description</div></p>";
   $header .= "<p><b>". t("Last update") .":</b><div style=\"margin-left: 20px;\">". format_interval(time() - $feed->timestamp) ." ". t("ago") ."<a href=\"$feed->url\"><img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" /></a><br /><br /></div></p>\n";
 
   $result = db_query("SELECT * FROM item WHERE fid = '%s' ORDER BY iid DESC LIMIT ". variable_get("import_page_limit", 75), $fid);
@@ -546,7 +546,7 @@ function import_page_feed($fid) {
       $output .= "<tr><td><a href=\"$item->link\">$item->title</a></td><td align=\"right\" nowrap=\"nowrap\" valign=\"top\">". $theme->links($links) ."</td></tr>\n";
     }
     if ($item->description) {
-      $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 20px;\">". check_output($item->description, 1) ."</div><br /></td></tr>";
+      $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 20px;\">$item->description</div><br /></td></tr>";
     }
 
     unset($links);
@@ -555,7 +555,7 @@ function import_page_feed($fid) {
 
   $theme->header();
   $theme->box(t("News feeds"), import_page_info());
-  $theme->box(check_output($feed->title), $header);
+  $theme->box($feed->title, $header);
   $theme->box(t("Latest news"), $output);
   $theme->footer();
 }
@@ -566,7 +566,7 @@ function import_page_bundle($bid) {
   $bundle = db_fetch_object(db_query("SELECT * FROM bundle WHERE bid = '%s'", $bid));
 
   $header .= "<p><b>". t("Website") .":</b><div style=\"margin-left: 20px;\">". lm($bundle->title, array("mod" => "import", "op" => "bundle", "id" => $bundle->bid)) ."</div></p>";
-  $header .= "<p><b>". t("Description") .":</b><div style=\"margin-left: 20px;\">". t("A composite news feed about") ." ". check_output($bundle->attributes) .".</div></p>";
+  $header .= "<p><b>". t("Description") .":</b><div style=\"margin-left: 20px;\">". t("A composite news feed about") ." $bundle->attributes.</div></p>";
 
   $keys = explode(",", $bundle->attributes);
   foreach ($keys as $key) $where[] = "i.attributes LIKE '%". trim($key) ."%'";
@@ -585,7 +585,7 @@ function import_page_bundle($bid) {
     }
 
     if ($item->description) {
-      $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 20px;\">". check_output($item->description, 1) ."</div><br /></td></tr>";
+      $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 20px;\">$item->description</div><br /></td></tr>";
     }
 
     unset($links);
@@ -594,7 +594,7 @@ function import_page_bundle($bid) {
 
   $theme->header();
   $theme->box(t("News feeds"), import_page_info());
-  $theme->box(check_output($bundle->title), $header);
+  $theme->box($bundle->title, $header);
   $theme->box(t("Latest news"), $output);
   $theme->footer();
 
@@ -607,7 +607,7 @@ function import_page_sources() {
 
   while ($feed = db_fetch_object($result)) {
     $output .= lm($feed->title, array("mod" => "import", "op" => "feed", "id" => $feed->fid));
-    $output .= "<div style=\"margin-left: 20px;\">". check_output($feed->description, 1) ."</div><br />";
+    $output .= "<div style=\"margin-left: 20px;\">$feed->description</div><br />";
   }
 
   $output .= lm("<img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" />", array("mod" => "import", "op" => "fd"), "", array("title" => t("View the list of syndicated websites in XML format."))) ."<br />\n";

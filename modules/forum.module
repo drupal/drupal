@@ -180,16 +180,16 @@ function forum_view($node, $main = 0) {
 
   /* TODO: find out what this code was ment to do and either use it or not.
 
-  $output .= "<p>"._forum_get_icon($node)." ".lm(check_output($voc->name), array("mod" => "forum"))." : ".lm(check_output($term_data->name), array("mod" => "forum", "tid" => $term_data->tid));
+  $output .= "<p>". _forum_get_icon($node) ." ". lm($voc->name, array("mod" => "forum")) ." : ". lm($term_data->name, array("mod" => "forum", "tid" => $term_data->tid));
 
-  $output .= " / <b>". check_output($node->title) ."</b><br>".t("%a by %b", array("%a" => format_date($node->created), "%b" => format_name($node)))."</p><p>". check_output($node->body, 1) ."</p>";
+  $output .= " / <b>$node->title</b><br>".t("%a by %b", array("%a" => format_date($node->created), "%b" => format_name($node)))."</p><p>". check_output($node->body) ."</p>";
   $output .= "<p>". $theme->links(link_node($node, $main)) ."</p>";
 
   #$theme->box(t("Discussion forum"), $output);
   */
 
   if (!$main) {
-    $node->title = _forum_get_icon($node)." ".lm(check_output($voc->name), array("mod" => "forum"))." : ".lm(check_output($term_data->name), array("mod" => "forum", "tid" => $term_data->tid)) . " / <b>". check_output($node->title) ."</b>";
+    $node->title = _forum_get_icon($node) ." ". lm($voc->name, array("mod" => "forum")) ." : ". lm($term_data->name, array("mod" => "forum", "tid" => $term_data->tid)) ." / <b>$node->title</b>";
   }
 
   $theme->node($node, $main);
@@ -568,13 +568,13 @@ function forum_forum_list($forums, $parents, $tid) {
 
     foreach ($forums as $forum) {
       if ($forum->container) {
-        $output .= " <tr><td colspan=\"5\">". lm(check_output($forum->name), array("mod" => "forum", "tid" => $forum->tid))."<br /><small>". ($forum->description ? check_output($forum->description, 1) : "") ."</small></td></tr>";
+        $output .= " <tr><td colspan=\"5\">". lm($forum->name, array("mod" => "forum", "tid" => $forum->tid)) ."<br /><small>". ($forum->description ? check_output($forum->description) : "") ."</small></td></tr>";
       }
       else {
         if ($user->uid) $new_topics = $forum->num_topics - $forum->old_topics;
         $icon = _forum_get_folder_icon($new_topics);
         $output .= " <tr><td>&nbsp;</td><td>$icon</td>";
-        $output .= "<td><table border=\"0\"><tr><td width=\"". ($forum->depth * 20) ."\">&nbsp;</td><td>".lm(check_output($forum->name), array("mod" => "forum", "tid" => $forum->tid))."<div style=\"padding-top: 5px;\">". check_output($forum->description, 1);
+        $output .= "<td><table border=\"0\"><tr><td width=\"". ($forum->depth * 20) ."\">&nbsp;</td><td>". lm($forum->name, array("mod" => "forum", "tid" => $forum->tid))."<div style=\"padding-top: 5px;\">". check_output($forum->description);
 
         $links = array();
         if ($forum->last_post) {
@@ -643,7 +643,7 @@ function forum_topic_list($topics, $num_topics, $sortby, $forum_per_page, $offse
           <tr>
             <td>"._forum_get_folder_icon($topic->new, $topic->num_comments, $topic->comment_mode)."</td>
             <td>"._forum_get_icon($topic)."</td>
-            <td valign=\"top\">". check_output($topic->title) ."</td>
+            <td valign=\"top\">$topic->title</td>
             <td align=\"center\" valign=\"top\" colspan=\"3\">".lm(t("This topic has been moved"), array("mod" => "forum", "tid" => $topic->shadow))."</td>
           </tr>";
       }
@@ -652,7 +652,7 @@ function forum_topic_list($topics, $num_topics, $sortby, $forum_per_page, $offse
           <tr>
             <td>"._forum_get_folder_icon($topic->new, $topic->num_comments, $topic->comment_mode)."</td>
             <td>"._forum_get_icon($topic)."</td>
-            <td valign=\"top\">".l(check_output($topic->title), array("id" => $topic->nid))."</td>
+            <td valign=\"top\">". l($topic->title, array("id" => $topic->nid))."</td>
             <td align=\"center\" valign=\"top\" nowrap=\"nowrap\">".$topic->num_comments.($topic->new_replies ? " (".t("%a new", array("%a" => $topic->new_replies)).")" : "")."</td>
             <td align=\"center\">"._forum_format($topic)."</td>
             <td align=\"center\">"._forum_format($topic->last_reply)."</td>
@@ -691,7 +691,7 @@ function forum_topic_list($topics, $num_topics, $sortby, $forum_per_page, $offse
 
 function _forum_get_icon($node) {
   if (variable_get("forum_topic_icon_path", "") && $node->icon) {
-    return "<img src=\"".variable_get("forum_topic_icon_path", ""). check_output($node->icon)."\">";
+    return "<img src=\"". variable_get("forum_topic_icon_path", "") ."$node->icon\" />";
   }
   else {
     return "&nbsp;";

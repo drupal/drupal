@@ -123,7 +123,7 @@ function book_link($type, $node = 0, $main = 0) {
 
     $result = db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE b.parent = 0 ORDER BY b.weight, n.title");
     while ($book = db_fetch_object($result)) {
-      menu_add("administer book '". check_output($book->title) ."'", "admin.php?mod=book&op=view&id=$book->nid", "Display a book outline.", NULL, "collaborative books");
+      menu_add("administer book '$book->title'", "admin.php?mod=book&op=view&id=$book->nid", "Display a book outline.", NULL, "collaborative books");
     }
   }
 
@@ -360,7 +360,7 @@ function book_body($node) {
     ob_end_clean();
   }
   else {
-    $output = check_output(filter($node->body), 1);
+    $output = check_output(filter($node->body));
   }
 
   return $output;
@@ -419,7 +419,7 @@ function book_view($node, $main = 0) {
 
       $output .= " <tr><td colspan=\"3\">$location</td></tr>";
       $output .= " <tr><td colspan=\"3\"><hr /></td></tr>";
-      $output .= " <tr><td colspan=\"3\"><b><big>". check_output($node->title) ."</big></b>". ($node->body ? "<br /><small><i>". t("Last updated by %u on %d", array("%u" => format_name($node), "%d" => format_date($node->created))) ."</i></small> " : "") ."</td></tr>";
+      $output .= " <tr><td colspan=\"3\"><b><big>$node->title</big></b>". ($node->body ? "<br /><small><i>". t("Last updated by %u on %d", array("%u" => format_name($node), "%d" => format_date($node->created))) ."</i></small> " : "") ."</td></tr>";
     }
 
     if ($node->body) {
@@ -436,7 +436,7 @@ function book_view($node, $main = 0) {
 
     $output .= " <tr><td colspan=\"3\"><hr /></td></tr>";
     $output .= " <tr><td align=\"left\" width=\"33%\">". ($prev ? l(t("previous"), array("id" => $prev->nid), "node", "", array("title" => t("View the previous page in this book."))) : t("previous")) ."</td><td align=\"center\" width=\"34%\">". lm(t("index"), array("mod" => "book"), "", array("title" => t("View this book's table of contents."))) ."</td><td align=\"right\" width=\"33%\">". ($next ? l(t("next"), array("id" => $next->nid), "node", "", array("title" => t("View the next page in this book."))) : t("next")) ."</td></tr>";
-    $output .= " <tr><td align=\"left\" width=\"33%\">". ($prev ? "<small>". check_output($prev->title) ."</small>" : "&nbsp;") ."</td><td align=\"center\" width=\"34%\">". ($node->parent ? l(t("up"), array("id" => $node->parent), "node", "", array("title" => t("View this page's parent section."))) : t("up")) ."</td><td align=\"right\" width=\"33%\">". ($next ? "<small>". check_output($next->title) ."</small>" : "&nbsp;") ."</td></tr>";
+    $output .= " <tr><td align=\"left\" width=\"33%\">". ($prev ? "<small>$prev->title</small>" : "&nbsp;") ."</td><td align=\"center\" width=\"34%\">". ($node->parent ? l(t("up"), array("id" => $node->parent), "node", "", array("title" => t("View this page's parent section."))) : t("up")) ."</td><td align=\"right\" width=\"33%\">". ($next ? "<small>$next->title</small>" : "&nbsp;") ."</td></tr>";
     $output .= " <tr><td colspan=\"3\"><hr /></td></tr>";
     $output .= " <tr><td colspan=\"3\" align=\"right\"><div style=\"margin: 10 10 10 10;\">". $theme->links(link_node($node, $main)) ."</div></td></tr>";
     $output .= "</table>";
@@ -491,7 +491,7 @@ function book_tree_recurse($nid, $depth, $children) {
   if ($depth > 0) {
     if ($children[$nid]) {
       foreach ($children[$nid] as $foo => $node) {
-        $output .= "<li>". l(check_output($node->title), array("id" => $node->nid)) ."</li>";
+        $output .= "<li>". l($node->title, array("id" => $node->nid)) ."</li>";
 
         if ($tree = book_tree_recurse($node->nid, $depth - 1, $children)) {
           $output .= "<ul>$tree</ul>";
@@ -537,7 +537,7 @@ function book_render() {
 
     if ($node) {
       // output the content:
-      $output .= "<dt>". l(check_output($node->title), array("id" => $node->nid)) ."</dt><dd>". book_body($node) ."<br /><br /></dd>";
+      $output .= "<dt>". l($node->title, array("id" => $node->nid)) ."</dt><dd>". book_body($node) ."<br /><br /></dd>";
     }
   }
 
@@ -579,7 +579,7 @@ function book_print($id = "", $depth = 1) {
 
     if ($node) {
       // output the content:
-      $output .= "<h$depth>". check_output($node->title) ."</h$depth>";
+      $output .= "<h$depth>$node->title</h$depth>";
 
       if ($node->body) {
         $output .= "<ul>". book_body($node) ."</ul>";
@@ -606,7 +606,7 @@ function book_print_recurse($parent = "", $depth = 1) {
 
     if ($node) {
       // output the content:
-      $output .= "<h$depth>". check_output($node->title) ."</h$depth>";
+      $output .= "<h$depth>$node->title</h$depth>";
 
       if ($node->body) {
         $output .= "<ul>". book_body($node) ."</ul>";
@@ -652,7 +652,7 @@ function book_admin_view($nid, $depth = 0) {
 
   $node = node_load(array("nid" => $nid));
 
-  $output .= "<h3>". check_output($node->title) ."</h3>";
+  $output .= "<h3>$node->title</h3>";
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
   $output .= " <tr><th>title</th><th>weight</th><th colspan=\"3\">operations</th></tr>";
   $output .= book_admin_view_line($node);
@@ -707,7 +707,7 @@ function book_admin_orphan() {
     $output .= " <tr><th>title</th><th colspan=\"2\">operations</th></tr>";
     foreach ($pages as $nid => $node) {
       if ($node->parent && empty($pages[$node->parent])) {
-        $output .= "<tr><td>". l(check_output($node->title), array("id" => $node->nid)) ."</td><td>". la(t("edit page"), array("mod" => "node", "op" => "edit", "id" => $node->nid)) ."</td><td>". la(t("delete page"), array("mod" => "node", "op" => "delete", "id" => $node->nid)) ."</td>";
+        $output .= "<tr><td>". l($node->title, array("id" => $node->nid)) ."</td><td>". la(t("edit page"), array("mod" => "node", "op" => "edit", "id" => $node->nid)) ."</td><td>". la(t("delete page"), array("mod" => "node", "op" => "delete", "id" => $node->nid)) ."</td>";
       }
     }
     $output .= "</table>";

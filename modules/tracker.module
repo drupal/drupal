@@ -37,7 +37,7 @@ function tracker_comments($id = 0) {
   }
 
   while ($node = db_fetch_object($sresult)) {
-    $output .= format_plural($node->comments, "comment", "comments") ." ". t("attached to node") ." ". l(check_output($node->title), array("id" => $node->nid)) .":\n";
+    $output .= format_plural($node->comments, "comment", "comments") ." ". t("attached to node") ." ". l($node->title, array("id" => $node->nid)) .":\n";
 
     if ($id) {
       $cresult = db_query("SELECT c.*, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.timestamp > $period AND c.uid = '%d' AND c.nid = '%d' ORDER BY cid DESC", $id, $node->nid);
@@ -48,7 +48,7 @@ function tracker_comments($id = 0) {
 
     $output .= "<ul>";
     while ($comment = db_fetch_object($cresult)) {
-      $output .= " <li>". l(check_output($comment->subject), array("id" => $node->nid, "cid" => $comment->cid, "pid" => $comment->pid), "node", $comment->cid) ." ". t("by") ." ". format_name($comment) ." (". t("replies") .": ". comment_num_replies($comment->cid) .") ". (comment_is_new($comment) ? theme_invoke("theme_mark") : "") ."</li>\n";
+      $output .= " <li>". l($comment->subject, array("id" => $node->nid, "cid" => $comment->cid, "pid" => $comment->pid), "node", $comment->cid) ." ". t("by") ." ". format_name($comment) ." (". t("replies") .": ". comment_num_replies($comment->cid) .") ". (comment_is_new($comment) ? theme_invoke("theme_mark") : "") ."</li>\n";
     }
     $output .= " </ul>\n";
   }

@@ -41,8 +41,8 @@ function admin_page($mod) {
       ** Body:
       */
 
-      print "<div id=\"main\">";
       print "<a href=\"http://drupal.org/\"><img align=\"right\" src=\"misc/druplicon-small.gif\" alt=\"Druplicon - Drupal logo\" border=\"0\" /></a>";
+      print "<div id=\"main\">";
 
       if ($path = menu_path()) {
         print "<h2>". la(t("Administration")) ." &gt; $path</h2>";

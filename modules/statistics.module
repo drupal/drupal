@@ -427,7 +427,7 @@ function statistics_recent_refer($nid = 0) {
 
   $header = array(t("URL"), t("date"));
   while ($referrer = db_fetch_array($result)) {
-    $rows[] = array("<a href=\"". check_output($referrer["url"]) ."\">". substr(check_output($referrer["url"]), 0, 100) ."</a>", format_date($referrer["timestamp"], "small"));
+    $rows[] = array("<a href=\"". $referrer["url"] ."\">". substr($referrer["url"], 0, 100) ."</a>", format_date($referrer["timestamp"], "small"));
   }
 
   $output .= table($header, $rows);
@@ -479,7 +479,7 @@ function statistics_top_refer($nid = 0) {
 
   $header = array(t("URL"), t("count"));
   while ($referrer = db_fetch_array($result)) {
-    $rows[] = array("<a href=\"". $referrer["url"] ."\">". substr(check_output($referrer["url"]), 0, 100) ."</a>", $referrer["count"]);
+    $rows[] = array("<a href=\"". $referrer["url"] ."\">". substr($referrer["url"], 0, 100) ."</a>", $referrer["count"]);
   }
 
   $output .= table($header, $rows);
@@ -889,7 +889,7 @@ function statistics_summary($dbfield, $dbrows) {
     $links = link_node($content, 1);
 
     $output .= "<tr><td><b>". l($nid["title"], array("id" => $nid["nid"]), "node", "", array("title" => t("View this posting."))) ."</b></td><td align=\"right\"><small>". t("Submitted by %a on %b", array("%a" => format_name($content), "%b" => format_date($content->created, "large"))) ."</td></tr>";
-    $output .= "</small><tr><td colspan=\"2\"><div style=\"margin-left: 20px;\">". check_output($content->teaser, 1) ."</div></td></tr>";
+    $output .= "</small><tr><td colspan=\"2\"><div style=\"margin-left: 20px;\">". check_output($content->teaser) ."</div></td></tr>";
     $output .= "<tr><td align=\"right\" colspan=\"2\">[ ". $theme->links($links) ." ]<br /><br /></td></tr>";
   }
 

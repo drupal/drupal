@@ -276,7 +276,7 @@ function taxonomy_overview() {
     if ($tree) {
       unset($data);
       foreach ($tree as $term) {
-        $data .= _taxonomy_depth($term->depth) ." ". $term->name ." (". la(t("edit term"), array("mod" => "taxonomy", "op" => "edit", "type" => "term", "id" => check_output($term->tid))) .")<br />";
+        $data .= _taxonomy_depth($term->depth) ." ". $term->name ." (". la(t("edit term"), array("mod" => "taxonomy", "op" => "edit", "type" => "term", "id" => $term->tid)) .")<br />";
       }
       $rows[] = array(array("data" => $data, "colspan" => 5));
     }

@@ -45,12 +45,12 @@ function comment_user($type, $edit, &$user) {
   switch ($type) {
     case "view_public":
       if ($user->signature) {
-        return form_item(t("Signature"), check_output($user->signature, 1));
+        return form_item(t("Signature"), check_output($user->signature));
       }
       break;
     case "view_private":
       if ($user->signature) {
-        return form_item(t("Signature"), check_output($user->signature, 1));
+        return form_item(t("Signature"), check_output($user->signature));
       }
       break;
     case "edit_form":
@@ -795,7 +795,7 @@ function comment_admin_overview($status = 0) {
 
   $header = array(t("subject"), t("author"), t("status"), array("data" => t("operations"), "colspan" => 2));
   while ($comment = db_fetch_object($result)) {
-    $rows[] = array(l(check_output($comment->subject), array("id" => $comment->nid, "cid" => $comment->cid, "pid" => $comment->pid), "node", $comment->cid, array("title" => htmlentities(substr($comment->comment, 0, 128)))) ." ". (comment_is_new($comment) ? theme_mark() : ""), format_name($comment), ($comment->status == 0 ? t("published") : t("not published")) ."</td><td>". la(t("edit comment"), array("mod" => "comment", "op" => "edit", "id" => $comment->cid)), la(t("delete comment"), array("mod" => "comment", "op" => "delete", "id" => $comment->cid)));
+    $rows[] = array(l($comment->subject, array("id" => $comment->nid, "cid" => $comment->cid, "pid" => $comment->pid), "node", $comment->cid, array("title" => htmlentities(substr($comment->comment, 0, 128)))) ." ". (comment_is_new($comment) ? theme_mark() : ""), format_name($comment), ($comment->status == 0 ? t("published") : t("not published")) ."</td><td>". la(t("edit comment"), array("mod" => "comment", "op" => "edit", "id" => $comment->cid)), la(t("delete comment"), array("mod" => "comment", "op" => "delete", "id" => $comment->cid)));
   }
 
   if ($pager = pager_display(NULL, 50, 0, "admin")) {
@@ -1153,9 +1153,9 @@ function comment($comment, $link = 0) {
   $output .= "<a name=\"$comment->cid\"></a>";
   $output .= "<div style=\"border: 1px solid; padding: 10px;\">";
   $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">";
-  $output .= " <tr><td><div style=\"font-size: 110%; font-weight: bold;\">". check_output($comment->subject) . ($comment->new ? theme_invoke("theme_mark") : "") ."</div></td><td align=\"right\" rowspan=\"2\" valign=\"top\">". $comment->moderation ."</td></tr>";
+  $output .= " <tr><td><div style=\"font-size: 110%; font-weight: bold;\">$comment->subject ". ($comment->new ? theme_invoke("theme_mark") : "") ."</div></td><td align=\"right\" rowspan=\"2\" valign=\"top\">". $comment->moderation ."</td></tr>";
   $output .= " <tr><td><div style=\"margin-left: 10px; padding-bottom: 10px; font-size: 90%;\">". t("by %a on %b", array("%a" => format_name($comment), "%b" => format_date($comment->timestamp))) ."</div></td></tr>";
-  $output .= " <tr><td colspan=\"2\">". check_output($comment->comment, 1) ."</td></tr>";
+  $output .= " <tr><td colspan=\"2\">". check_output($comment->comment) ."</td></tr>";
   $output .= " <tr><td align=\"right\" colspan=\"2\">$link</td></tr>";
   $output .= "</table>";
   $output .= "</div><br />";
@@ -1163,7 +1163,7 @@ function comment($comment, $link = 0) {
 }
 
 function comment_folded($comment) {
-  print l(check_output($comment->subject), array("id" => $comment->nid, "cid" => $comment->cid), "node", $comment->cid) ." ". t("by") . " " . format_name($comment) ."</small><p />";
+  print l($comment->subject, array("id" => $comment->nid, "cid" => $comment->cid), "node", $comment->cid) ." ". t("by") . " " . format_name($comment) ."</small><p />";
 }
 
 function comment_flat_collapsed($comments, $threshold) {

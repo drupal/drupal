@@ -62,13 +62,13 @@ function block_block($op = "list", $delta = 0) {
   if ($op == "list") {
     $result = db_query("SELECT bid, title, info FROM boxes ORDER BY title");
     while ($block = db_fetch_object($result)) {
-      $blocks[$block->bid]["info"] = check_output($block->info);
+      $blocks[$block->bid]["info"] = $block->info;
     }
     return $blocks;
   }
   else {
     $block = db_fetch_object(db_query("SELECT * FROM boxes WHERE bid = '%d'", $delta));
-    $data["subject"] = check_output($block->title);
+    $data["subject"] = $block->title;
     $data["content"] = ($block->type == 1) ? eval($block->body) : $block->body;
     return $data;
   }

@@ -91,7 +91,7 @@ function locale_edit($lid) {
 
   $result = db_query("SELECT * FROM locales WHERE lid = '$lid'");
   if ($translation = db_fetch_object($result)) {
-    $form .= form_item(t("Original text"), "<pre>". wordwrap(check_output($translation->string)) ."</pre>");
+    $form .= form_item(t("Original text"), "<pre>". wordwrap($translation->string) ."</pre>");
     foreach ($languages as $code=>$language) $form .= (strlen($translation->string) > 30) ? form_textarea($language, $code, $translation->$code, 50, 10) : form_textfield($language, $code, $translation->$code, 50, 128);
     $form .= form_submit(t("Save translations"));
 
@@ -102,8 +102,8 @@ function locale_edit($lid) {
 function locale_languages($translation) {
   global $languages;
 
-  foreach ($languages as $key=>$value) {
-    $output .= ($translation->$key) ? "<a href=\"#\" title=\"". check_output($translation->$key) ."\">$key</a> " : "<strike>$key</strike> ";
+  foreach ($languages as $key => $value) {
+    $output .= ($translation->$key) ? "<a href=\"#\" title=\"". $translation->$key ."\">$key</a> " : "<strike>$key</strike> ";
   }
 
   return $output;
@@ -262,7 +262,7 @@ function locale($string) {
   }
 
   if ($locale_t[$string] != "") {
-    $string = check_output($locale_t[$string]);
+    $string = $locale_t[$string];
   }
   else {
     $result = db_query("SELECT lid, $locale FROM locales WHERE string = '%s'", $string);

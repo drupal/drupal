@@ -10,7 +10,7 @@ function node_render($node) {
 
   if (user_access("access content")) {
 
-    $theme->header(check_output($node->title));
+    $theme->header($node->title);
 
     node_view($node);
 
@@ -42,7 +42,7 @@ if ($number > 1) {
 
   while ($node = db_fetch_object($result)) {
     if (node_access("view", $node)) {
-      $output .= "<p><b>". l(check_output($node->title), array("id" => $node->nid)) ."</b><br /><small>$node->type - ". format_name($node) ." - ". format_date($node->ccreated, "small") ."</small></p>";
+      $output .= "<p><b>". l($node->title, array("id" => $node->nid)) ."</b><br /><small>$node->type - ". format_name($node) ." - ". format_date($node->ccreated, "small") ."</small></p>";
     }
   }
 
