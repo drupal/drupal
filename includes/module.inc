@@ -2,6 +2,11 @@
 // $Id$
 
 /**
+ * @file
+ * API for loading and interacting with Drupal modules.
+ */
+
+/**
  * Initialize all modules.
  *
  * To change the required set of modules, change this function as well as

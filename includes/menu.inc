@@ -2,6 +2,11 @@
 /* $Id$ */
 
 /**
+ * @file
+ * API for the Drupal menu system.
+ */
+
+/**
  * @defgroup menu Menu system
  * @{
  *
@@ -493,7 +498,9 @@ function menu_rebuild() {
   _menu_build();
 }
 
-/** @} end of "menu" function group */
+/**
+ * @} end of defgroup menu
+ */
 
 /**
  * @addtogroup themeable
@@ -591,7 +598,9 @@ function theme_menu_local_task($mid, $active) {
   }
 }
 
-/** @} End of addtogroup themeable */
+/**
+ * @} end of addtogroup themeable
+ */
 
 /**
  * Returns an array with the menu items that lead to the current menu item.

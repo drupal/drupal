@@ -2,62 +2,64 @@
 // $Id$
 
 /**
- * @defgroup pager Pager interface
- * @{
- *
- * Pager external functions (API).
+ * @file
+ * Functions to aid in presenting database results as a set of pages.
  */
 
 /**
+ * Perform a paged database query.
+ * @ingroup database
+ *
  * Use this function when doing select queries you wish to be able to page. The
  * pager uses LIMIT-based queries to fetch only the records required to render a
  * certain page. However, it has to learn the total number of records returned
- * by the query to (among others) compute the number of pages (= number of all
- * records / number of records per page). This is done by inserting "COUNT(*)"
- * in the original query, ie. by rewriting the original query, say "SELECT nid,
- * type FROM node WHERE status = '1' ORDER BY sticky DESC, created DESC" to read
- * "SELECT COUNT(*) FROM node WHERE status = '1' ORDER BY sticky DESC, created
- * DESC". Rewriting the query is accomplished using a regular expression.
+ * by the query to compute the number of pages (the number of records / records
+ * per page). This is done by inserting "COUNT(*)" in the original query. For
+ * example, the query "SELECT nid, type FROM node WHERE status = '1' ORDER BY
+ * sticky DESC, created DESC" would be rewritten to read "SELECT COUNT(*) FROM
+ * node WHERE status = '1' ORDER BY sticky DESC, created DESC". Rewriting the
+ * query is accomplished using a regular expression.
  *
  * Unfortunately, the rewrite rule does not always work as intended for queries
- * that (already) have a "COUNT(*)" or a "GROUP BY" clause, and possibly for
+ * that already have a "COUNT(*)" or a "GROUP BY" clause, and possibly for
  * other complex queries. In those cases, you can optionally pass a query that
  * will be used to count the records.
  *
- * For example, if you want to page this query: "SELECT COUNT(*), TYPE FROM node
- * GROUP BY TYPE", pager_query() would invoke the wrong query, being: "SELECT
+ * For example, if you want to page the query "SELECT COUNT(*), TYPE FROM node
+ * GROUP BY TYPE", pager_query() would invoke the incorrect query "SELECT
  * COUNT(*) FROM node GROUP BY TYPE". So instead, you should pass "SELECT
  * COUNT(DISTINCT(TYPE)) FROM node" as the optional $count_query parameter.
  *
- * @param $query the SQL query that needs paging
- * @param $limit the number of rows per page
- * @param $element optional attribute to distinguish between multiple pagers
- *   on one page
- * @param $count_query an optional SQL query used to count records when
- *   rewriting the query would fail
- *
- * @return SQL query result
+ * @param $query
+ *   The SQL query that needs paging.
+ * @param $limit
+ *   The number of query results to display per page.
+ * @param $element
+ *   An optional integer to distinguish between multiple pagers on one page.
+ * @param $count_query
+ *   An SQL query used to count matching records.
+ * @return
+ *   A database query result resource, or FALSE if the query was not executed
+ *   correctly.
  */
-function pager_query($query, $limit = 10, $element = 0, $count_query = "") {
+function pager_query($query, $limit = 10, $element = 0, $count_query = '') {
   global $pager_from_array, $pager_total;
-  $from = $_GET["from"];
+  $from = $_GET['from'];
 
-  // count the total number of records in this query:
-  if ($count_query == "") {
-    $pager_total[$element] = db_result(db_query(preg_replace(array("/SELECT.*FROM/is", "/ORDER BY .*/"), array("SELECT COUNT(*) FROM", ""), $query)));
-
+  // Count the total number of records in this query.
+  if ($count_query == '') {
+    $pager_total[$element] = db_result(db_query(preg_replace(array('/SELECT.*FROM/is', '/ORDER BY .*/'), array('SELECT COUNT(*) FROM', ''), $query)));
   }
   else {
     $pager_total[$element] = db_result(db_query($count_query));
   }
 
-  // convert comma separated $from to an array, used by other functions:
-  $pager_from_array = explode(",", $from);
+  // Convert comma-separated $from to an array, used by other functions.
+  $pager_from_array = explode(',', $from);
 
   return db_query_range($query, (int)$pager_from_array[$element], (int)$limit);
 
 }
-/** @} End of defgroup pager_api */
 
 /**
  * @addtogroup themeable
@@ -65,26 +67,42 @@ function pager_query($query, $limit = 10, $element = 0, $count_query = "") {
  */
 
 /**
- * When writing themes, you can rewrite this pager function in your theme.
- * You need to call theme("pager", ...) to get a pager.
+ * Format a query pager.
+ *
+ * Menu callbacks that display paged query results should call theme('pager') to
+ * retrieve a pager control so that users can view other results.
+ *
+ * @param $tags
+ *   An array of labels for the controls in the pager.
+ * @param $limit
+ *   The number of query results to display per page.
+ * @param $element
+ *   An optional integer to distinguish between multiple pagers on one page.
+ * @param $attributes
+ *   An associative array of query string parameters to append to the pager links.
+ * @return
+ *   An HTML string that generates the query pager.
  */
-function theme_pager($tags = "", $limit = 10, $element = 0, $attributes = array()) {
+function theme_pager($tags = array(), $limit = 10, $element = 0, $attributes = array()) {
   global $pager_total;
   $output = '';
 
   if ($pager_total[$element] > $limit) {
-    $output .= "<div id=\"pager\" class=\"container-inline\">";
-    $output .= "<div>". pager_first(($tags[0] ? $tags[0] : t("first page")), $limit, $element, $attributes) ."</div>";
-    $output .= "<div>". pager_previous(($tags[1] ? $tags[1] : t("previous page")), $limit, $element, 1, $attributes) ."</div>";
-    $output .= "<div>". pager_list($limit, $element, ($tags[2] ? $tags[2] : 9 ), "", $attributes) ."</div>";
-    $output .= "<div>". pager_next(($tags[3] ? $tags[3] : t("next page")), $limit, $element, 1, $attributes) ."</div>";
-    $output .= "<div>". pager_last(($tags[4] ? $tags[4] : t("last page")), $limit, $element, $attributes) ."</div>";
-    $output .= "</div>";
+    $output .= '<div id="pager" class="container-inline">';
+    $output .= '<div>'. pager_first(($tags[0] ? $tags[0] : t('first page')), $limit, $element, $attributes) .'</div>';
+    $output .= '<div>'. pager_previous(($tags[1] ? $tags[1] : t('previous page')), $limit, $element, 1, $attributes) .'</div>';
+    $output .= '<div>'. pager_list($limit, $element, ($tags[2] ? $tags[2] : 9 ), '', $attributes) .'</div>';
+    $output .= '<div>'. pager_next(($tags[3] ? $tags[3] : t('next page')), $limit, $element, 1, $attributes) .'</div>';
+    $output .= '<div>'. pager_last(($tags[4] ? $tags[4] : t('last page')), $limit, $element, $attributes) .'</div>';
+    $output .= '</div>';
 
     return $output;
   }
 }
-/** @} End of addtogroup themeable */
+
+/**
+ * @} end of addtogroup themeable
+ */
 
 /**
  * @name Pager pieces
@@ -94,80 +112,94 @@ function theme_pager($tags = "", $limit = 10, $element = 0, $attributes = array(
  */
 
 /**
- * displays a "first-page" link
+ * Format a "first page" link.
  *
- * @param $text defines the name (or image) of the link
- * @param $limit how many nodes are displayed per page
- * @param $element distinguish between multiple pagers on one page
- * @param $attributes extra html attributes for \<a href> (eg. title,
- *   onMouseOver, etc.)
- *
- * @return string html of this pager piece
+ * @param $text
+ *   The name (or image) of the link.
+ * @param $limit
+ *   The number of query results to display per page.
+ * @param $element
+ *   An optional integer to distinguish between multiple pagers on one page.
+ * @param $attributes
+ *   An associative array of query string parameters to append to the pager links.
+ * @return
+ *   An HTML string that generates this piece of the query pager.
  */
 function pager_first($text, $limit, $element = 0, $attributes = array()) {
   global $pager_from_array;
 
   if ($pager_from_array[$element]) {
-    return "<a href=\"". pager_link(pager_load_array(0, $element, $pager_from_array), $element, $attributes) ."\">$text</a>";
+    return '<a href="'. pager_link(pager_load_array(0, $element, $pager_from_array), $element, $attributes) .'">'. $text .'</a>';
   }
   else {
-    // we are already at the first page, return nothing
-    return " ";
+    // We are already at the first page, so return nothing.
+    return ' ';
   }
 }
 
 /**
- * displays a "previous-page" link
+ * Format a "previous page" link.
  *
- * @param $text defines the name (or image) of the link
- * @param $limit how many nodes are displayed per page
- * @param $element distinguish between multiple pagers on one page
- * @param $n how many pages we move back (defaults to 1)
- * @param $attributes extra html attributes for \<a href> (eg. title,
- *   onMouseOver, etc.)
- *
- * @return string html of this pager piece
+ * @param $text
+ *   The name (or image) of the link.
+ * @param $limit
+ *   The number of query results to display per page.
+ * @param $element
+ *   An optional integer to distinguish between multiple pagers on one page.
+ * @param $interval
+ *   The number of pages to move backward when the link is clicked.
+ * @param $attributes
+ *   An associative array of query string parameters to append to the pager links.
+ * @return
+ *   An HTML string that generates this piece of the query pager.
  */
-function pager_previous($text, $limit, $element = 0, $n = 1, $attributes = array()) {
+function pager_previous($text, $limit, $element = 0, $interval = 1, $attributes = array()) {
   global $pager_from_array;
-  $from_new = pager_load_array(((int)$pager_from_array[$element] - ((int)$limit * (int)$n)), $element, $pager_from_array);
+  $from_new = pager_load_array(((int)$pager_from_array[$element] - ((int)$limit * (int)$interval)), $element, $pager_from_array);
   if ($from_new[$element] < 1) {
     return pager_first($text, $limit, $element, $attributes);
   }
-  return "<a href=\"". pager_link($from_new, $element, $attributes) ."\">$text</a>";
+  return '<a href="'. pager_link($from_new, $element, $attributes) .'">'. $text .'</a>';
 }
 
 /**
- * displays a "next-page" link
+ * Format a "next page" link.
  *
- * @param $text defines the name (or image) of the link
- * @param $limit how many nodes are displayed per page
- * @param $element distinguish between multiple pagers on one page
- * @param $n how many pages we move back (defaults to 1)
- * @param $attributes extra html attributes for \<a href> (eg. title,
- *   onMouseOver, etc.)
- *
- * @return string html of this pager piece
+ * @param $text
+ *   The name (or image) of the link.
+ * @param $limit
+ *   The number of query results to display per page.
+ * @param $element
+ *   An optional integer to distinguish between multiple pagers on one page.
+ * @param $interval
+ *   The number of pages to move forward when the link is clicked.
+ * @param $attributes
+ *   An associative array of query string parameters to append to the pager links.
+ * @return
+ *   An HTML string that generates this piece of the query pager.
  */
-function pager_next($text, $limit, $element = 0, $n = 1, $attributes = array()) {
+function pager_next($text, $limit, $element = 0, $interval = 1, $attributes = array()) {
   global $pager_from_array, $pager_total;
-  $from_new = pager_load_array(((int)$pager_from_array[$element] + ((int)$limit * (int)$n)), $element, $pager_from_array);
+  $from_new = pager_load_array(((int)$pager_from_array[$element] + ((int)$limit * (int)$interval)), $element, $pager_from_array);
   if ($from_new[$element] < $pager_total[$element]) {
-    return "<a href=\"". pager_link($from_new, $element, $attributes) ."\">$text</a>";
+    return '<a href="'. pager_link($from_new, $element, $attributes) .'">'. $text .'</a>';
   }
-  return " ";
+  return ' ';
 }
 
 /**
- * displays a "last-page" link
+ * Format a "last page" link.
  *
- * @param $text defines the name (or image) of the link
- * @param $limit how many nodes are displayed per page
- * @param $element distinguish between multiple pagers on one page
- * @param $attributes extra html attributes for \<a href> (eg. title,
- *   onMouseOver, etc.)
- *
- * @return string html of this pager piece
+ * @param $text
+ *   The name (or image) of the link.
+ * @param $limit
+ *   The number of query results to display per page.
+ * @param $element
+ *   An optional integer to distinguish between multiple pagers on one page.
+ * @param $attributes
+ *   An associative array of query string parameters to append to the pager links.
+ * @return
+ *   An HTML string that generates this piece of the query pager.
  */
 function pager_last($text, $limit, $element = 0, $attributes = array()) {
   global $pager_from_array, $pager_total;
@@ -177,22 +209,26 @@ function pager_last($text, $limit, $element = 0, $attributes = array()) {
     return pager_next($text, $limit, $element, 1, $attributes);
   }
   if (($from_new[$element] > $pager_from_array[$element]) && ($from_new[$element] > 0) && $from_new[$element] < $pager_total[$element]) {
-    return "<a href=\"". pager_link($from_new, $element, $attributes) ."\">$text</a>";
+    return '<a href="'. pager_link($from_new, $element, $attributes) .'">'. $text .'</a>';
   }
-  return " ";
+  return ' ';
 }
 
 /**
- * displays "%d through %d of $d" type detail about the cur page
+ * Format a summary of the current pager position, such as "6 through 10 of 52".
  *
- * @param $limit how many nodes are displayed per page
- * @param $element distinguish between multiple pagers on one page
- * @param $format allows you to reword the format string
- *
- * @return string html of this pager piece
+ * @param $limit
+ *   The number of query results to display per page.
+ * @param $element
+ *   An optional integer to distinguish between multiple pagers on one page.
+ * @param $format
+ *   A printf-style format string for customizing the pager text.
+ * @return
+ *   An HTML string that generates this piece of the query pager.
  */
-function pager_detail($limit, $element = 0, $format = "%d through %d of %d.") {
+function pager_detail($limit, $element = 0, $format = '%d through %d of %d.') {
   global $pager_from_array, $pager_total;
+  $output = '';
 
   if ($pager_total[$element] > (int)$pager_from_array[$element] + 1) {
     $output = sprintf($format, (int)$pager_from_array[$element] + 1, ((int)$pager_from_array[$element] + $limit <= $pager_total[$element] ? (int)$pager_from_array[$element] + $limit : $pager_total[$element]), $pager_total[$element]);
@@ -202,22 +238,26 @@ function pager_detail($limit, $element = 0, $format = "%d through %d of %d.") {
 }
 
 /**
- * displays a list of nearby pages with additional nodes
+ * Format a list of nearby pages with additional query results.
  *
- * @param $limit how many nodes are displayed per page
- * @param $element distinguish between multiple pagers on one page
- * @param $quantity defines the length of the page list
- * @param $text optional text to display before the page list
- * @param $attributes extra html attributes for \<a href> (eg. title,
- *   onMouseOver, etc.)
- *
- * @return string html of this pager piece
+ * @param $limit
+ *   The number of query results to display per page.
+ * @param $element
+ *   An optional integer to distinguish between multiple pagers on one page.
+ * @param $quantity
+ *   The number of pages in the list.
+ * @param $text
+ *   A string of text to display before the page list.
+ * @param $attributes
+ *   An associative array of query string parameters to append to the pager links.
+ * @return
+ *   An HTML string that generates this piece of the query pager.
  */
-function pager_list($limit, $element = 0, $quantity = 5, $text = "", $attributes = array()) {
+function pager_list($limit, $element = 0, $quantity = 5, $text = '', $attributes = array()) {
   global $pager_from_array, $pager_total;
 
-  // calculate various markers within this pager piece:
-  // middle used to "center" pages around current page
+  // Calculate various markers within this pager piece:
+  // Middle is used to "center" pages around the current page.
   $pager_middle = ceil((int)$quantity / 2);
   // offset adds "offset" second page
   $pager_offset = (int)$pager_from_array[$element] % (int)$limit;
@@ -238,36 +278,36 @@ function pager_list($limit, $element = 0, $quantity = 5, $text = "", $attributes
     $pager_max++;
     $pager_current++;
   }
-// end of various marker calculations
+// End of marker calculations.
 
-// prepare for generation loop
+// Prepare for generation loop.
   $i = (int)$pager_first;
   if ($pager_last > $pager_max) {
-    // adjust "center" if at end of query
+    // Adjust "center" if at end of query.
     $i = $i + (int)($pager_max - $pager_last);
     $pager_last = $pager_max;
   }
   if ($i <= 0) {
-    // adjust "center" if at start of query
+    // Adjust "center" if at start of query.
     $pager_last = $pager_last + (1 - $i);
     $i = 1;
   }
-// end of generation loop preparation
+// End of generation loop preparation.
 
-  // when there is more than one page, create the pager list
+  // When there is more than one page, create the pager list.
   if ($i != $pager_max) {
-    $output = "$text";
+    $output = $text;
     if ($i > 1) {
-      $output .= "... ";
+      $output .= '... ';
     }
 
-    // finally we're ready to generate the actual pager piece
+    // Now generate the actual pager piece.
     for (; $i <= $pager_last && $i <= $pager_max; $i++) {
       if ($i < $pager_current) {
         $output .= pager_previous($i, $limit, $element, ($pager_current - $i), $attributes) ." ";
       }
       if ($i == $pager_current) {
-        $output .= "<strong>$i</strong> ";
+        $output .= '<strong>'. $i .'</strong> ';
       }
       if ($i > $pager_current) {
         $output .= pager_next($i, $limit, $element, ($i - $pager_current), $attributes) ." ";
@@ -275,7 +315,7 @@ function pager_list($limit, $element = 0, $quantity = 5, $text = "", $attributes
     }
 
     if ($i < $pager_max) {
-      $output .= "...";
+      $output .= '...';
     }
   }
 
@@ -283,20 +323,32 @@ function pager_list($limit, $element = 0, $quantity = 5, $text = "", $attributes
 }
 /* @} End of member group pager pieces */
 
+/**
+ * Format a link to a specific query result page.
+ *
+ * @param $from_new
+ *   The first result to display on the linked page.
+ * @param $element
+ *   An optional integer to distinguish between multiple pagers on one page.
+ * @param $attributes
+ *   An associative array of query string parameters to append to the pager link.
+ * @return
+ *   An HTML string that generates the link.
+ */
 function pager_link($from_new, $element, $attributes = array()) {
   $q = $_GET['q'];
   $from = array_key_exists('from', $_GET) ? $_GET['from'] : '';
 
   foreach($attributes as $key => $value) {
-    $query[] = "$key=$value";
+    $query[] = $key .'='. $value;
   }
 
-  $from_new = pager_load_array($from_new[$element], $element, explode("," ,$from));
+  $from_new = pager_load_array($from_new[$element], $element, explode(',', $from));
   if (count($attributes)) {
-    $url = url($q, "from=". implode($from_new, ",") ."&amp;". implode("&amp;", $query));
+    $url = url($q, 'from='. implode($from_new, ',') .'&amp;'. implode('&amp;', $query));
   }
   else {
-    $url = url($q, "from=". implode($from_new, ","));
+    $url = url($q, 'from='. implode($from_new, ','));
   }
 
   return $url;
