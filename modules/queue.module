@@ -39,15 +39,15 @@ function queue_vote($id, $vote) {
       $node = node_get_object(array(nid => $id, type => $node->type));
 
       if (variable_get($node->type ."_post", 4) <= $node->score) {
-        node_save(array(nid => $id, status => $status[posted]), array(status));
+        node_save(array(nid => $id, status => $status[posted], timestamp => time()), array(status, timestamp));
         watchdog("special", "node: posted '$node->title' - moderation");
       }
       else if (variable_get($node->type ."_dump", -2) >= $node->score) {
-        node_save(array(nid => $id, status => $status[dumped]), array(status));
+        node_save(array(nid => $id, status => $status[dumped], timestamp => time()), array(status, timestamp));
         watchdog("special", "node: dumped '$node->title' - moderation");
       }
       else if (variable_get($node->type ."_expire", 8) <= $node->votes) {
-        node_save(array(nid => $id, status => $status[expired]), array(status));
+        node_save(array(nid => $id, status => $status[expired], timestamp => time()), array(status, timestamp));
         watchdog("special", "node: expired '$node->title' - moderation");
       }
     }
