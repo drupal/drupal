@@ -1,8 +1,6 @@
 <?php
 // $Id$
 
-// TODO: add a 'date' field so we can migrate the birthday information.
-
 /**
  * Flags to define the visibility of a profile field.
  */
@@ -56,12 +54,18 @@ function profile_menu() {
  */
 function profile_browse() {
 
-  $name = strip_tags(arg(1));
-  $value = strip_tags(arg(2));
+  $name = arg(1);
+  $value = arg(2);
 
-  $field = db_fetch_object(db_query("SELECT DISTINCT(fid), type, title, page FROM {profile_fields} WHERE name = '%s'", $name));
+  $field = db_fetch_object(db_query("SELECT DISTINCT(fid), type, title, page, visibility FROM {profile_fields} WHERE name = '%s'", $name));
 
   if ($name && $field->fid) {
+    // Do not allow browsing of private fields by non-admins
+    if (!user_access('administer users') && $field->visibility == PROFILE_PRIVATE) {
+       drupal_access_denied();
+       return;
+    }
+
     // Compile a list of fields to show
     $fields = array();
     $result = db_query('SELECT name, title, type FROM {profile_fields} WHERE fid != %d AND visibility = %d', $field->fid, PROFILE_PUBLIC_LISTINGS);
@@ -80,6 +84,9 @@ function profile_browse() {
       case 'list':
         $query = "v.value LIKE '%%". check_query($value) ."%%'";
         break;
+      default:
+        drupal_not_found();
+        return;
     }
 
     // Extract the affected users:
@@ -127,17 +134,20 @@ function profile_browse() {
 }
 
 function profile_load_profile(&$user) {
-  $result = db_query('SELECT f.name, v.value FROM {profile_fields} f INNER JOIN {profile_values} v ON f.fid = v.fid WHERE uid = %d', $user->uid);
+  $result = db_query('SELECT f.name, f.type, v.value FROM {profile_fields} f INNER JOIN {profile_values} v ON f.fid = v.fid WHERE uid = %d', $user->uid);
   while ($field = db_fetch_object($result)) {
     if (empty($user->{$field->name})) {
-      $user->{$field->name} = $field->value;
+      $user->{$field->name} = _profile_field_serialize($field->type) ? unserialize($field->value) : $field->value;
     }
   }
 }
 
 function profile_save_profile(&$edit, &$user, $category) {
-  $result = db_query("SELECT fid, name FROM {profile_fields} WHERE LOWER(category) = '%s'", strtolower($category));
+  $result = db_query("SELECT fid, name, type FROM {profile_fields} WHERE LOWER(category) = '%s'", strtolower($category));
   while ($field = db_fetch_object($result)) {
+    if (_profile_field_serialize($field->type)) {
+       $edit[$field->name] = serialize($edit[$field->name]);
+    }
     db_query("DELETE FROM {profile_values} WHERE fid = %d AND uid = %d", $field->fid, $user->uid);
     db_query("INSERT INTO {profile_values} (fid, uid, value) VALUES (%d, %d, '%s')", $field->fid, $user->uid, $edit[$field->name]);
     unset($edit[$field->name], $user->{$field->name});
@@ -145,23 +155,38 @@ function profile_save_profile(&$edit, &$user, $category) {
 }
 
 function profile_view_field($user, $field) {
+  // Only allow browsing of private fields for admins
+  $browse = user_access('administer users') || $field->visibility != PROFILE_PRIVATE;
+
   if ($value = $user->{$field->name}) {
     switch ($field->type) {
       case 'textfield':
+        return drupal_specialchars($value);
       case 'textarea':
         return check_output($value);
       case 'selection':
-        return l($value, "profile/$field->name/". drupal_specialchars($value, ENT_QUOTES));
+        return $browse ? l(drupal_specialchars($value), "profile/$field->name/". check_url($value)) : drupal_specialchars($value);
       case 'checkbox':
-        return l($field->title, "profile/$field->name");
+        return $browse ? l(drupal_specialchars($field->title), "profile/$field->name") : drupal_specialchars($field->title);
       case 'url':
-        return '<a href="'. check_url(strip_tags($value)) .'">'. strip_tags($value) .'</a>';
+        return '<a href="'. check_url($value) .'">'. drupal_specialchars($value) .'</a>';
+      case 'date':
+        list($format) = explode(' - ', variable_get('date_format_short', 'm/d/Y - H:i'), 2);
+        // Note: we avoid PHP's date() because it does not handle dates before
+        // 1970 on Windows. This would make the date field useless for e.g.
+        // birthdays.
+        $replace = array('d' => sprintf('%02d', $value['day']),
+                         'j' => $value['day'],
+                         'm' => sprintf('%02d', $value['month']),
+                         'M' => _profile_map_month($value['month']),
+                         'Y' => $value['year']);
+        return strtr($format, $replace);
       case 'list':
         $values = split("[,\n\r]", $value);
         $fields = array();
         foreach ($values as $value) {
-          if ($value = trim(strip_tags($value))) {
-            $fields[] = l($value, "profile/$field->name/". drupal_specialchars($value, ENT_QUOTES));
+          if ($value = trim($value)) {
+            $fields[] = $browse ? l(drupal_specialchars($value), "profile/$field->name/". check_url($value)) : drupal_specialchars($value);
           }
         }
         return implode(', ', $fields);
@@ -173,15 +198,19 @@ function profile_view_profile($user) {
 
   profile_load_profile($user);
 
-  $result = db_query('SELECT * FROM {profile_fields} WHERE visibility != %d ORDER BY category, weight', PROFILE_PRIVATE);
+  // Show private fields to administrators and people viewing their own account.
+  if (user_access('administer users') || $GLOBALS['user']->uid == $user->uid) {
+    $result = db_query('SELECT * FROM {profile_fields} ORDER BY category, weight');
+  }
+  else {
+    $result = db_query('SELECT * FROM {profile_fields} WHERE visibility != %d ORDER BY category, weight', PROFILE_PRIVATE);
+  }
+
   while ($field = db_fetch_object($result)) {
     if ($value = profile_view_field($user, $field)) {
-      if ($field->type == 'checkbox') {
-        $fields[$field->category] .= "<p>$value</p>";
-      }
-      else {
-        $fields[$field->category] .= form_item($field->title, check_output($value));
-      }
+      $description = ($field->visibility == PROFILE_PRIVATE) ? t('The content of this field is private and only visible to yourself.') : '';
+      $title = ($field->type != 'checkbox') ? $field->title : '';
+      $fields[$field->category] .= form_item($title, $value, $description);
     }
   }
 
@@ -232,12 +261,63 @@ function profile_form_profile($edit, $user, $category) {
 
         $output .= form_select($field->title, $field->name, $edit[$field->name], $options, _profile_form_explanation($field), 0, 0, $field->required);
         break;
+      case 'date':
+        $output .= _profile_date_field($field, $edit);
+        break;
     }
   }
 
   if ($output) {
     return array(array('title' => $category, 'data' => $output));
   }
+}
+
+/**
+ * Helper function: output a date selector
+ */
+function _profile_date_field($field, $edit) {
+  // Default to current date
+  if (!isset($edit[$field->name])) {
+    $edit[$field->name] = array('day' => format_date(time(), 'custom', 'j'),
+                                'month' => format_date(time(), 'custom', 'n'),
+                                'year' => format_date(time(), 'custom', 'Y'));
+  }
+
+  // Determine the order of day, month, year in the site's chosen date format.
+  $format = variable_get('date_format_short', 'm/d/Y');
+  $sort = array();
+  $sort['day'] = max(strpos($format, 'd'), strpos($format, 'j'));
+  $sort['month'] = max(strpos($format, 'm'), strpos($format, 'M'));
+  $sort['year'] = strpos($format, 'Y');
+  asort($sort);
+  $order = array_keys($sort);
+
+  // Output multi-selector for date
+  $output = '<div class="container-inline">';
+  foreach ($order as $type) {
+    switch ($type) {
+      case 'day':
+        $options = drupal_map_assoc(range(1, 31));
+        break;
+      case 'month':
+        $options = drupal_map_assoc(range(1, 12), '_profile_map_month');
+        break;
+      case 'year':
+        $options = drupal_map_assoc(range(1900, 2050));
+        break;
+    }
+    $output .= form_select('', $field->name .']['. $type, $edit[$field->name][$type], $options, '', 0, 0);
+  }
+  $output .= '</div>';
+
+  return form_item($field->title, $output, _profile_form_explanation($field), NULL, $field->required);
+}
+
+/**
+ * Helper function for usage with drupal_map_assoc
+ */
+function _profile_map_month($month) {
+  return format_date(gmmktime(0, 0, 0, $month, 2, 1970), 'custom', 'M', 0);
 }
 
 function profile_validate_profile($edit, $category) {
@@ -316,9 +396,6 @@ function profile_validate_form($edit) {
  * Menu callback; adds a new field to all user profiles.
  */
 function profile_admin_add($type) {
-  $type = _profile_field_types($type);
-
-
   if ($_POST['op']) {
     $data = $_POST['edit'];
 
@@ -326,17 +403,17 @@ function profile_admin_add($type) {
     profile_validate_form($data);
 
     if (db_result(db_query("SELECT fid FROM {profile_fields} WHERE title = '%s'", $data['title']))) {
-      form_set_error('title', t('the specified title is already in use.'));
+      form_set_error('title', t('The specified title is already in use.'));
     }
 
     if (db_result(db_query("SELECT fid FROM {profile_fields} WHERE name = '%s'", $data['name']))) {
-      form_set_error('name', t('the specified name is already in use.'));
+      form_set_error('name', t('The specified name is already in use.'));
     }
 
     if (!form_get_errors()) {
       db_query("INSERT INTO {profile_fields} (title, name, explanation, category, type, weight, required, visibility, options, page) VALUES ('%s', '%s', '%s', '%s', '%s', %d, %d, %d, '%s', '%s')", $data['title'], $data['name'], $data['explanation'], $data['category'], $type, $data['weight'], $data['required'], $data['visibility'], $data['options'], $data['page']);
 
-      drupal_set_message(t('the field has been created.'));
+      drupal_set_message(t('The field has been created.'));
       drupal_goto('admin/user/configure/profile');
     }
   }
@@ -344,7 +421,7 @@ function profile_admin_add($type) {
     $data = array('name' => 'profile_');
   }
 
-  print theme('page', _profile_field_form($type, $data), t('Add new %type', array('%type' => $type)));
+  print theme('page', _profile_field_form($type, $data), t('Add new %type', array('%type' => _profile_field_types($type))));
 }
 
 /**
@@ -361,7 +438,7 @@ function profile_admin_edit($fid) {
     if (!form_get_errors()) {
       db_query("UPDATE {profile_fields} SET title = '%s', name = '%s', explanation = '%s', category = '%s', weight = %d, required = %d, visibility = %d, options = '%s', page = '%s' WHERE fid = %d", $data['title'], $data['name'], $data['explanation'], $data['category'], $data['weight'], $data['required'], $data['visibility'], $data['options'], $data['page'], $fid);
 
-      drupal_set_message(t('the field has been updated.'));
+      drupal_set_message(t('The field has been updated.'));
       drupal_goto('admin/user/configure/profile');
     }
   }
@@ -377,7 +454,7 @@ function profile_admin_edit($fid) {
  */
 function profile_admin_delete($fid) {
   db_query('DELETE FROM {profile_fields} WHERE fid = %d', $fid);
-  drupal_set_message(t('the field has been deleted.'));
+  drupal_set_message(t('The field has been deleted.'));
   drupal_goto('admin/user/configure/profile');
 }
 
@@ -413,17 +490,21 @@ Unless you know what you are doing, it is highly recommended that you prefix the
 function profile_admin_overview() {
 
   $result = db_query('SELECT * FROM {profile_fields} ORDER BY category, weight');
+  $rows = array();
   while ($field = db_fetch_object($result)) {
-    $rows[] = array($field->title, $field->name, $field->type, $field->category, l(t('edit'), "admin/user/configure/profile/edit/$field->fid"), l(t('delete'), "admin/user/configure/profile/delete/$field->fid"));
+    $rows[] = array($field->title, $field->name, _profile_field_types($field->type), $field->category, l(t('edit'), "admin/user/configure/profile/edit/$field->fid"), l(t('delete'), "admin/user/configure/profile/delete/$field->fid"));
+  }
+  if (count($rows) == 0) {
+    $rows[] = array(array('data' => t('No fields defined.'), 'colspan' => '6'));
   }
 
   $header = array(t('title'), t('name'), t('type'), t('category'), array('data' => t('operations'), 'colspan' => '2'));
 
   $output  = theme('table', $header, $rows);
-  $output .= '<h2>'. t('Create new field') .'</h2>';
+  $output .= '<h2>'. t('Add new field') .'</h2>';
   $output .= '<ul>';
   foreach (_profile_field_types() as $key => $value) {
-    $output .= '<li>'. l(t('Add new %type', array('%type' => $value)), "admin/user/configure/profile/add/$key") .'</li>';
+    $output .= '<li>'. l($value, "admin/user/configure/profile/add/$key") .'</li>';
   }
   $output .= '</ul>';
 
@@ -448,8 +529,18 @@ function theme_profile_profile($user, $fields = array()) {
 }
 
 function _profile_field_types($type = NULL) {
-  $types = array('textfield', 'textarea', 'checkbox', 'selection', 'list', 'url');
+  $types = array('textfield' => t('single-line textfield'),
+                 'textarea' => t('multi-line textfield'),
+                 'checkbox' => t('checkbox'),
+                 'selection' => t('list selection'),
+                 'list' => t('freeform list'),
+                 'url' => t('URL'),
+                 'date' => t('date'));
   return isset($type) ? $types[$type] : $types;
+}
+
+function _profile_field_serialize($type = NULL) {
+  return $type == 'date';
 }
 
 ?>
