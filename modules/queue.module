@@ -74,29 +74,34 @@ function queue_vote($node, $vote) {
       $node->promote = 1;
       node_save($node);
       watchdog('special', t('moderation: approved "%node-title"', array('%node-title' => $node->title)));
+      drupal_set_message(t('The post is promoted.'));
     }
     else if (variable_get('queue_threshold_dump', -2) >= $node->score) {
       if ($node->revisions) {
         node_revision_rollback($node, end(node_revision_list($node)));
         watchdog('special', t('moderation: declined "%node-title" (rollback)', array('%node-title' => $node->title)));
+        drupal_set_message(t('The post has been declined and the previous version has been restored.'));
       }
       else {
         $node->moderate = 0;
         $node->status = 0;
         node_save($node);
         watchdog('special', t('moderation: declined "%node-title"', array('%node-title' => $node->title)));
+        drupal_set_message(t('The post has been declined.'));
       }
     }
     else if (variable_get('queue_threshold_expire', 8) <= $node->votes) {
       if ($node->revisions) {
         node_revision_rollback($node, end(node_revision_list($node)));
         watchdog('special', t('moderation: expired "%node-title" (rollback)', array('%node-title' => $node->title)));
+        drupal_set_message(t('The post has expired and the previous version has been restored.'));
       }
       else {
         $node->moderate = 0;
         $node->status = 0;
         node_save($node);
         watchdog('special', t('moderation: expired "%node-title"', array('%node-title' => $node->title)));
+        drupal_set_message(t('The post has expired.'));
       }
     }
   }
@@ -117,7 +122,7 @@ function queue_overview() {
       $rows[] = array(array('data' => l($node->title, 'queue/'. $node->nid), 'class' => 'title'), array('data' => format_name($node), 'class' => 'name'), array('data' => module_invoke($node->type, 'node_name', $node), 'class' => 'type'), array('data' => queue_score($node->nid), 'class' => 'score'));
     }
     else {
-      $rows[] = array(array('data' => l($node->title, 'queue/'. $node->nid), 'class' => 'title'), array('data' => format_name($node), 'class' => 'name'), array('data' => module_invoke($node->type, 'node_name', $node), 'class' => 'type'), array('data' => l(t('vote'), 'queue/', $node->nid), 'class' => 'score'));
+      $rows[] = array(array('data' => l($node->title, 'queue/'. $node->nid), 'class' => 'title'), array('data' => format_name($node), 'class' => 'name'), array('data' => module_invoke($node->type, 'node_name', $node), 'class' => 'type'), array('data' => l(t('vote'), 'queue/'. $node->nid), 'class' => 'score'));
     }
   }
 
@@ -253,15 +258,12 @@ function queue_nodeapi(&$node, $op) {
     case 'insert':
     case 'update':
       if ($node->moderate && user_access('access submission queue')) {
-        drupal_set_message(t('the post is queued for approval. You can check the votes in the <a href="%queue">submission queue</a>.', array('%queue' => url('queue'))));
+        drupal_set_message(t('The post is queued for approval. You can check the votes in the <a href="%queue">submission queue</a>.', array('%queue' => url('queue'))));
       }
       else if ($node->moderate) {
-        drupal_set_message(t('the post is queued for approval. The editors will decide whether it should be published.'));
-      }
-      else {
-        drupal_set_message(t('the post is published.'));
+        drupal_set_message(t('The post is queued for approval. The editors will decide whether it should be published.'));
       }
       break;
-   }
+  }
 }
 ?>
