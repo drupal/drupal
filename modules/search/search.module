@@ -219,7 +219,7 @@ function update_index($search_array) {
       $wordlist = preg_replace("'<[\/\!]*?[^<>]*?>'si", "", $wordlist);
 
       // Remove punctuation and stuff
-      $wordlist = preg_replace("'(»|«|!|¡|%|,|:|;|\(|\)|\&|\"|\'|\.|-|\/|\?|\\\)'", "", $wordlist);
+      $wordlist = preg_replace("'(\xBB|\xAB|!|\xA1|%|,|:|;|\(|\)|\&|\"|\'|\.|-|\/|\?|\\\)'", "", $wordlist);
 
       // Strip out (now mangled) http and tags.
       $wordlist = preg_replace("'http\w+'", "", $wordlist);
@@ -361,7 +361,7 @@ function search_view($keys = NULL) {
 }
 
 function search_page() {
-  $keys = $_POST["keys"];
+  $keys = isset($_GET["keys"]) ? $_GET["keys"] : $_POST["keys"];
 
   switch (arg(1)) {
     case "help":
