@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.378 2004/08/12 21:56:48 dries Exp $ */
+/* $Id: common.inc,v 1.379 2004/08/17 18:40:59 dries Exp $ */
 
 /**
  * @file
@@ -1813,6 +1813,7 @@ include_once 'includes/pager.inc';
 include_once 'includes/menu.inc';
 include_once 'includes/tablesort.inc';
 include_once 'includes/file.inc';
+include_once 'includes/xmlrpc.inc';
 
 // set error handler:
 set_error_handler('error_handler');
