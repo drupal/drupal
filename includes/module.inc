@@ -42,7 +42,7 @@ function module_list($refresh = FALSE, $bootstrap = FALSE) {
   static $list;
 
   if ($refresh) {
-    unset($list);
+    $list = array();
   }
 
   if (!$list) {

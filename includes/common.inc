@@ -10,31 +10,6 @@
  */
 
 /**
- * Set the title of the current page, for display on the page and in the title bar.
- */
-function drupal_set_title($title = NULL) {
-  static $stored_title;
-
-  if (isset($title)) {
-    $stored_title = $title;
-  }
-  return $stored_title;
-}
-
-/**
- * Get the title of the current page, for display on the page and in the title bar.
- */
-function drupal_get_title() {
-  $title = drupal_set_title();
-
-  if (!isset($title)) {
-    $title = menu_get_active_title();
-  }
-
-  return $title;
-}
-
-/**
  * Set the breadcrumb trail for the current page.
  *
  * @param $breadcrumb
@@ -89,47 +64,10 @@ function drupal_get_html_head() {
 }
 
 /**
- * Return an array mapping path aliases to their internal Drupal paths.
- */
-function drupal_get_path_map($action = '') {
-  static $map = NULL;
-
-  if ($action == 'rebuild') {
-    $map = NULL;
-  }
-
-  if (is_null($map)) {
-    $map = array();  // Make $map non-null in case no aliases are defined.
-    $result = db_query('SELECT * FROM {url_alias}');
-    while ($data = db_fetch_object($result)) {
-      $map[$data->dst] = $data->src;
-    }
-  }
-
-  return $map;
-}
-
-/**
  * Regenerate the path map from the information in the database.
  */
 function drupal_rebuild_path_map() {
   drupal_get_path_map('rebuild');
-}
-
-/**
- * Given an internal Drupal path, return the alias set by the administrator.
- */
-function drupal_get_path_alias($path) {
-  if (($map = drupal_get_path_map()) && ($newpath = array_search($path, $map))) {
-    return $newpath;
-  }
-  elseif (function_exists('conf_url_rewrite')) {
-    return conf_url_rewrite($path, 'outgoing');
-  }
-  else {
-    // No alias found. Return the normal path.
-    return $path;
-  }
 }
 
 /**
