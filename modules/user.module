@@ -384,7 +384,7 @@ function user_link($type) {
 
   if ($type == "menu.misc") {
     if (user_access("access administration pages")) {
-      $links[] = la(t("administer %a", array("%a" => variable_get("site_name", "drupal"))));
+      $links[] = la(t("administer %a", array("%a" => variable_get("site_name", "drupal"))), array(), "", array("title" => t("Access administration pages.")));
     }
 
     $links[] = lm(t("logout"), array("mod" => "user", "op" => "logout"), "", array("title" => t("Logout.")));

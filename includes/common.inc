@@ -554,10 +554,10 @@ function format_name($object) {
 
   if ($object->uid && $object->name) {
     if (strstr($PHP_SELF, "admin.php")) {
-      $output = la($object->name, array("mod" => "user", "op" => "edit", "id" => $object->uid));
+      $output = la($object->name, array("mod" => "user", "op" => "edit", "id" => $object->uid), "", array("title" => t("Administer user profile.")));
     }
     else {
-      $output = lm($object->name, array("mod" => "user", "op" => "view", "id" => $object->uid));
+      $output = lm($object->name, array("mod" => "user", "op" => "view", "id" => $object->uid), "", array("title" => t("View user profile.")));
     }
   }
   else {
@@ -674,7 +674,7 @@ function lm($text, $args = array(), $anchor = "", $attributes = array()) {
 }
 
 function field_get($string, $name) {
-  ereg(",$name=([^,]+)", ",$string", $regs);
+  ereg(", $name=([^,]+)", ",$string", $regs);
   return $regs[1];
 }
 
