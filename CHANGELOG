@@ -2,21 +2,21 @@ Drupal 4.3.1, 2003-12-01
 ------------------------
 - fixed broken link in forum module.
 - fixed broken usernames in 'Who's new' block.
-- fixed error messages not being shown. (Matt)
+- fixed error messages not being shown.
 - fixed incorrect link title in watchdog module.
-- fixed invalid XHTML in poll.module. (Gabor)
-- fixed leftover debug statement in story module. (Bart)
-- fixed menu glitch in book module. (Kjartan)
+- fixed invalid XHTML in poll.module.
+- fixed leftover debug statement in story module.
+- fixed menu glitch in book module.
 - fixed non-ANSI SQL query in path module.
-- fixed typo in cloud module. (Marky)
-- fixed bug #2617: editing user information does not work. (Kjartan)
-- fixed bug #3900: PostgreSQL problem with locale module. (Gerhard)
-- fixed bug #4055: Added missing break statements. (Chris)
+- fixed typo in cloud module. 
+- fixed bug #2617: editing user information does not work.
+- fixed bug #3900: PostgreSQL problem with locale module.
+- fixed bug #4055: Added missing break statements.
 - fixed bug #4080: comments shown against wrong node.
 - fixed bug #4323: Renamed 'Content-length' to 'Content-Length.
-- translation fix: made the word 'permission' translatable in the system module' help text. (Gabor)
-- translation fix: the date in the calendar block could not be translated. (Goba)
-- translation fix: the ping module's help text was translated twice. (Gabor)
+- translation fix: made the word 'permission' translatable in the system module' help text.
+- translation fix: the date in the calendar block could not be translated.
+- translation fix: the ping module's help text was translated twice.
 
 Drupal 4.3.0, 2003-11-01
 ------------------------
