@@ -6,6 +6,8 @@ Drupal x.x.x, xxxx-xx-xx (to be released)
     * added support for database table prefxing.
 - performance improvements:
     * optimized SQL queries.
+- usability improvements:
+    * added support for "mass node operations" to ease repetitive tasks.
 
 Drupal 4.2.0, xxxx-xx-xx (to be released)
 ------------------------
@@ -95,7 +97,8 @@ Drupal 4.0.0, 2002-06-15
     * fixed node retrieval based on titles.
     * blogs can be updated.
     * teasers (abstracts) on all node types.
-    * improved error checking and usability changes.
+    * improved error checking.
+    * usability improvements.
     * content versioning support.
 - improved book module to support text, HTML and PHP pages.
 - improved comment module to mark new comments.
