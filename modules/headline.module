@@ -179,35 +179,87 @@ function headline_admin() {
   }
 }
 
+function headline_export_rdf() {
+  global $status;
+
+  header("Content-Type: text/plain");
+
+  print "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
+  print "<rdf:RDF\n";
+  print " xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n";
+  print " xmlns=\"http://my.netscape.com/rdf/simple/0.9/\">\n";
+
+  print "<channel>\n";
+  print " <title>". variable_get(site_name, "drupal") ."</title>\n";
+  print " <link>". variable_get(site_url, "http://drupal/") ."</link>\n";
+  print " <description>". variable_get(site_name, "drupal") ."</description>\n";
+  print "</channel>\n";
+
+  $result = db_query("SELECT * FROM node WHERE promote = '1' AND status = '$status[posted]' ORDER BY timestamp DESC LIMIT 10");
+
+  while ($node = db_fetch_object($result)) {
+    print "<item>\n";
+    print " <title>". check_export($node->title) ."</title>\n";
+    print " <link>". variable_get(site_url, "http://drupal/") ."node.php?id=$node->nid</link>\n";
+    print "</item>\n";
+  }
+
+  print "</rdf:RDF>\n";
+}
+
+function headline_export_rss() {
+  global $status;
+
+  header("Content-Type: text/plain");
+
+  print "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
+  print "<rdf:RDF\n";
+
+  print "xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n";
+  print "xmlns=\"http://purl.org/rss/1.0/\">\n\n";
+
+  print "<channel rdf:about=\"". variable_get(site_url, "http://drupal/") ."export/headlinesRSS10.rdf\">\n";
+  print "   <title>". variable_get(site_name, "drupal") ."</title>\n";
+  print "   <link>". variable_get(site_url, "http://drupal/") ."</link>\n";
+  print "   <description>". variable_get(site_name, "drupal") ."</description>\n";
+
+  print "  <items>\n";
+  print "    <rdf:Seq>\n";
+
+  $result = db_query("SELECT * FROM node WHERE promote = '1' AND status = '$status[posted]' ORDER BY timestamp DESC LIMIT 10");
+
+  while ($node = db_fetch_object($result)) {
+    print "      <rdf:li resource=\"". variable_get(site_url, "http://drupal/") ."node.php?id=$node->nid\" />\n";
+  }
+
+  print "    </rdf:Seq>\n";
+  print "  </items>\n";
+  print "</channel>\n\n";
+
+  $result = db_query("SELECT * FROM node WHERE promote = '1' AND status = '$status[posted]' ORDER BY timestamp DESC LIMIT 10");
+
+  while ($node = db_fetch_object($result)) {
+    print "<item rdf:about=\"". variable_get(site_url, "http://drupal/") ."node.php?id=$node->nid\">\n";
+    print "  <title>". check_export($node->title) ."</title>\n";
+    print "  <link>". variable_get(site_url, "http://drupal/") ."node.php?id=$node->nid</link>\n";
+
+    if ($node->abstract) print "  <description>". check_output($node->abstract, 1) ."</description>\n";
+    if ($node->body) print "  <description>". check_output($node->body, 1) ."</description>\n";
+
+    print "</item>\n";
+  }
+
+  print "</rdf:RDF>\n";
+}
+
 function headline_export($uri) {
-  global $status, $HTTP_REFERER, $HTTP_USER_AGENT;
-
-  if ($uri[2] == "headlines.rdf") {
-    watchdog("message", "grabbed 'headlines.rdf' - referring url: $HTTP_REFERER - user agent: $HTTP_USER_AGENT");
-
-    header("Content-Type: text/plain");
-
-    print "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
-    print "<rdf:RDF\n";
-    print " xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n";
-    print " xmlns=\"http://my.netscape.com/rdf/simple/0.9/\">\n";
-
-    print "<channel>\n";
-    print " <title>". variable_get(site_name, "drupal") ."</title>\n";
-    print " <link>". variable_get(site_url, "http://drupal/") ."</link>\n";
-    print " <description>". variable_get(site_name, "drupal") ."</description>\n";
-    print "</channel>\n";
-
-    $result = db_query("SELECT * FROM node WHERE type = 'story' AND status = '$status[posted]' ORDER BY timestamp DESC LIMIT 10");
-
-    while ($node = db_fetch_object($result)) {
-      print "<item>\n";
-      print " <title>". check_export($node->title) ."</title>\n";
-      print " <link>". variable_get(site_url, "http://drupal/") ."node.php?id=$node->nid</link>\n";
-      print "</item>\n";
-    }
-
-    print "</rdf:RDF>\n";
+  switch ($uri[2]) {
+    case "headlines.rss":
+      headline_export_rss();
+      break;
+    case "headlines.rdf":
+    case "default":
+      headline_export_rdf();
   }
 }
 
