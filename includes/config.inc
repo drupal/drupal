@@ -4,11 +4,20 @@
 # MySQL settings:
 #
 
+
+### www.drop.org:
+#$dbhost = "zind.net";
+#$dbuname = "droporg";
+#$dbpass = "DropIes";
+#$dbname = "droporg";
+
+### beta.drop.org:
 $dbhost = "zind.net";
 $dbuname = "dries";
 $dbpass = "Abc123";
 $dbname = "dries";
 
+### localhost Dries:
 #$dbhost = "";
 #$dbuname = "dries";
 #$dbpass = "oakley";
