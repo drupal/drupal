@@ -32,19 +32,47 @@ function book_navigation($node) {
   return $output;
 }
 
+function book_location($node, $nodes = array()) {
+  $parent = db_fetch_object(db_query("SELECT n.nid, n.title, b.parent FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE n.nid = '$node->parent'"));
+  if ($parent->title) {
+    $nodes = book_location($parent, $nodes);
+    array_push($nodes, $parent);
+  }
+  return $nodes;
+}
+
 function theme_book($node) {
   global $theme;
 
-  if ($node->title) {
-    $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"0\" WIDTH=\"100%\">\n";
-    $output .= " <TR><TD><B><BIG>". check_output($node->title) ."</BIG></B>". ($node->body ? "<BR><SMALL><I>Last updated by ". format_username($node->userid) ." on ". format_date($node->timestamp) ."</I></SMALL> " : "") ."</TD><TD ALIGN=\"right\">". node_info($node) ."</TD></TR>\n";
-    $output .= "</TABLE>\n";
-  }
-  if ($node->body) {
-    $output .= "<P>". check_output($node->body, 1) ."</P>";
+  if ($node->nid && $node->parent) {
+    $next = db_fetch_object(db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE b.parent = '$node->parent' AND b.weight > '$node->weight' ORDER BY b.weight ASC"));
+    $prev = db_fetch_object(db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE b.parent = '$node->parent' AND b.weight < '$node->weight' ORDER BY b.weight DESC"));
   }
 
-  $theme->box(t("Handbook"), $output ."". book_tree($node->nid) ."". book_navigation($node));
+  $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"0\" WIDTH=\"100%\">\n";
+
+  if ($node->title) {
+    foreach (book_location($node) as $level) {
+      $location .= "$indent <A HREF=\"node.php?id=$level->nid\">$level->title</A><BR>";
+      $indent .= "-";
+    }
+
+    $output .= " <TR><TD COLSPAN=\"2\">$location</TD><TD ALIGN=\"right\">". node_control($node) ."</TD></TR>\n";
+    $output .= " <TR><TD COLSPAN=\"3\"><HR></TD</TR>";
+    $output .= " <TR><TD COLSPAN=\"3\"><B><BIG>". check_output($node->title) ."</BIG></B>". ($node->body ? "<BR><SMALL><I>Last updated by ". format_username($node->userid) ." on ". format_date($node->timestamp) ."</I></SMALL> " : "") ."</TD></TR>\n";
+  }
+
+  if ($node->body) {
+    $output .= " <TR><TD COLSPAN=\"3\"><BR>". check_output($node->body, 1) ."</TD></TR>";
+  }
+
+  $output .= " <TR><TD COLSPAN=\"3\"><BR>". book_tree($node->nid) ."</TD</TR>";
+  $output .= " <TR><TD COLSPAN=\"3\"><HR></TD</TR>";
+  $output .= " <TR><TD ALIGN=\"left\" WIDTH=\"33%\">". ($prev ? "<A HREF=\"node.php?id=$prev->nid\">". t("previous") ."</A>" : t("previous")) ."</TD><TD ALIGN=\"center\" WIDTH=\"34%\"><A HREF=\"module.php?mod=book\">index</A></TD><TD ALIGN=\"right\" WIDTH=\"33%\">". ($next ? "<A HREF=\"node.php?id=$next->nid\">". t("next") ."</A>" : t("next")) ."</TD></TR>\n";
+  $output .= " <TR><TD ALIGN=\"left\" WIDTH=\"33%\">". ($prev ? "<SMALL>". check_output($prev->title) ."</SMALL>" : "&nbsp;") ."</TD><TD ALIGN=\"center\" WIDTH=\"34%\">". ($node->parent ? "<A HREF=\"node.php?id=$node->parent\">". t("up") ."</A>" : t("up")) ."</TD><TD ALIGN=\"right\" WIDTH=\"33%\">". ($next ? "<SMALL>". check_output($next->title) ."</SMALL>" : "&nbsp;") ."</TD></TR>\n";
+  $output .= "</TABLE>\n";
+
+  $theme->box(t("Handbook"), $output);
 }
 
 function book_view($node, $page = 1) {
@@ -75,13 +103,13 @@ function book_search() {
   print search_data($keys, $mod);
 }
 
-function book_toc($parent = 0, $offset = "", $toc = array()) {
+function book_toc($parent = 0, $indent = "", $toc = array()) {
   global $status;
   $result = db_query("SELECT n.*, b.* FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE n.type = 'book' AND n.status = '$status[posted]' AND b.parent = '$parent' ORDER BY b.weight");
   while ($node = db_fetch_object($result)) {
-    $toc[$node->nid] = "$offset $node->title";
-    if ($node->pid) $toc = book_toc($node->pid, "$offset-", $toc);
-    $toc = book_toc($node->nid, "$offset-", $toc);
+    $toc[$node->nid] = "$indent $node->title";
+    if ($node->pid) $toc = book_toc($node->pid, "$indent-", $toc);
+    $toc = book_toc($node->nid, "$indent-", $toc);
   }
   return $toc;
 }
@@ -100,14 +128,14 @@ function book_form($edit = array()) {
     $output .= "<B>". t("Parent") .":</B><BR>\n";
     $output .= "<A HREF=\"node.php?id=$node->id\">". check_output($node->title) ."</A><P>\n";
     $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[parent]\" VALUE=\"$edit[parent]\">\n";
-    $output .= "<SMALL><I>". t("The parent subject or category the new page belongs in.") ."</I></SMALL><P>\n";
+    $output .= "<SMALL><I>". t("The parent subject or category the page belongs in.") ."</I></SMALL><P>\n";
   }
   else {
     $output .= "<B>". t("Parent") .":</B><BR>\n";
     foreach (book_toc() as $key=>$value) $options2 .= "<OPTION VALUE=\"$key\"". ($edit[parent] == $key ? " SELECTED" : "") .">". check_select($value) ."</OPTION>";
     if (user_access($user, "book")) $options2 .= "<OPTION VALUE=\"0\"". ($edit[parent] == 0 ? " SELECTED" : "") .">&nbsp;</OPTION>";
     $output .= "<SELECT NAME=\"edit[parent]\">$options2</SELECT><BR>\n";
-    $output .= "<SMALL><I>". t("The parent subject or category the new page belongs in.") ."</I></SMALL><P>\n";
+    $output .= "<SMALL><I>". t("The parent subject or category the page belongs in.") ."</I></SMALL><P>\n";
   }
 
   $output .= "<B>". t("Subject") .":</B><BR>\n";
@@ -120,7 +148,7 @@ function book_form($edit = array()) {
   if ($edit[pid]) {
     $output .= "<B>". t("Log message") .":</B><BR>\n";
     $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"5\" NAME=\"edit[log]\" MAXLENGTH=\"20\">". check_textarea($edit[log]) ."</TEXTAREA><BR>\n";
-    $output .= "<SMALL><I>". t("A brief explanation of your update.") ."</I></SMALL><P>\n";
+    $output .= "<SMALL><I>". t("An explanation of the updates being made to help the group understand the changes.") ."</I></SMALL><P>\n";
   }
 
   if (user_access($user, "book")) {
