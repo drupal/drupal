@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.261 2003/11/25 20:45:05 dries Exp $
+// $Id: user.module,v 1.262 2003/11/27 06:30:22 dries Exp $
 
 /*** Common functions ******************************************************/
 
@@ -1112,28 +1112,26 @@ function _user_mail_text($message) {
 }
 
 function user_settings() {
-  $output = form_radios(t("Public registrations"), "user_register", variable_get("user_register", 1), array(t("Only site administrators can create new user accounts."), t("Visitors can create accounts and no administrator approval is required."), t("Visitors can create accounts but administrator approval is required.")));
+  // user registration settings
+  $group = form_radios(t("Public registrations"), "user_register", variable_get("user_register", 1), array(t("Only site administrators can create new user accounts."), t("Visitors can create accounts and no administrator approval is required."), t("Visitors can create accounts but administrator approval is required.")));
+  $group .= form_radios(t("Remember authenticated users"), "user_remember", variable_get("user_remember", 0), array(t("Let the user decide whether he should be logged out when leaving the site."), t("Authenticated users are not logged out upon leaving the site."), t("Authenticated users are logged out upon leaving the site.")));
+  $group .= form_textarea(t("User registration guidelines"), "user_registration_help", variable_get("user_registration_help", ""), 70, 4, t("This text is displayed at the top of the user registration form.  It's useful for helping or instructing your users."));
+  $output = form_group(t("User registration settings"), $group);
 
-  $output .= form_radios(t("Remember authenticated users"), "user_remember", variable_get("user_remember", 0), array(t("Let the user decide whether he should be logged out when leaving the site."), t("Authenticated users are not logged out upon leaving the site."), t("Authenticated users are logged out upon leaving the site.")));
+  // user email settings
+  $group = form_textfield(t("Subject of welcome e-mail"), "user_mail_welcome_subject", variable_get("user_mail_welcome_subject", _user_mail_text("welcome_subject")), 70, 180, t("Customize the subject of your welcome e-mail, which is sent to new members upon registering.") ." ". t("Available variables are:") ." ". "%username, %site, %password, %uri, %uri_brief, %mailto, %date");
+  $group .= form_textarea(t("Body of welcome e-mail"), "user_mail_welcome_body", variable_get("user_mail_welcome_body", _user_mail_text("welcome_body")), 70, 10, t("Customize the body of the welcome e-mail, which is sent to new members upon registering.") ." ". t("Available variables are:") ." ". "%username, %site, %password, %uri, %uri_brief, %mailto");
+  $group .= form_textfield(t("Subject of welcome e-mail (awaiting admin approval)"), "user_mail_approval_subject", variable_get("user_mail_approval_subject", _user_mail_text("welcome_approval_subject")), 70, 180, t("Customize the subject of your awaiting approval welcome e-mail, which is sent to new members upon registering.") ." ". t("Available variables are:") ." ". "%username, %site, %password, %uri, %uri_brief, %mailto, %date");
+  $group .= form_textarea(t("Body of welcome e-mail (awaiting admin approval)"), "user_mail_approval_body", variable_get("user_mail_approval_body", _user_mail_text("welcome_approval_body")), 70, 10, t("Customize the body of the awaiting approval welcome e-mail, which is sent to new members upon registering.") ." ". t("Available variables are:") ." ". "%username, %site, %password, %uri, %uri_brief, %mailto");
+  $group .= form_textfield(t("Subject of password recovery e-mail"), "user_mail_pass_subject", variable_get("user_mail_pass_subject", _user_mail_text("pass_subject")), 70, 180, t("Customize the Subject of your forgotten password e-mail.") ." ". t("Available variables are:") ." ". "%username, %site, %password, %uri, %uri_brief, %mailto, %date");
+  $group .= form_textarea(t("Body of password recovery e-mail"), "user_mail_pass_body", variable_get("user_mail_pass_body", _user_mail_text("pass_body")), 70, 10, t("Customize the body of the forgotten password e-mail.") ." ". t("Available variables are:") ." ". "%username, %site, %password, %uri, %uri_brief, %mailto");
+  $output .= form_group(t("User email settings"), $group);
 
+  // "Who's online" block settings
   $period = array(30 => format_interval(30), 60 => format_interval(60), 120 => format_interval(120), 180 => format_interval(180), 300 => format_interval(300), 600 => format_interval(600), 900 => format_interval(900), 1800 => format_interval(1800), 2700 => format_interval(2700), 3600 => format_interval(3600), 5400 => format_interval(5400), 7200 => format_interval(7200), 10800 => format_interval(10800), 21600 => format_interval(21600), 43200 => format_interval(43200), 86400 => format_interval(86400));
-  $output .= form_select(t("User activity"), "user_block_seconds_online", $edit["user_block_seconds_online"], $period, t("Affects \"Who's online\" block.  A user is considered online for this long after they have last viewed a page."));
-
-  $form .= form_select(t("User list length"), "user_block_max_list_count", $edit["user_block_max_list_count"], array("0" => "0", "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "50" => "50", "100" => "100"), t("Affects \"Who's online\" block.  Maximum number of currently online user's to display."));
-
-  $output .= form_textarea(t("User registration guidelines"), "user_registration_help", variable_get("user_registration_help", ""), 70, 4, t("This text is displayed at the top of the user registration form.  It's useful for helping or instructing your users."));
-
-  $output .= form_textfield(t("Subject of welcome e-mail"), "user_mail_welcome_subject", variable_get("user_mail_welcome_subject", _user_mail_text("welcome_subject")), 70, 180, t("Customize the subject of your welcome e-mail, which is sent to new members upon registering.") ." ". t("Available variables are:") ." ". "%username, %site, %password, %uri, %uri_brief, %mailto, %date");
-
-  $output .= form_textarea(t("Body of welcome e-mail"), "user_mail_welcome_body", variable_get("user_mail_welcome_body", _user_mail_text("welcome_body")), 70, 10, t("Customize the body of the welcome e-mail, which is sent to new members upon registering.") ." ". t("Available variables are:") ." ". "%username, %site, %password, %uri, %uri_brief, %mailto");
-
-  $output .= form_textfield(t("Subject of welcome e-mail (awaiting admin approval)"), "user_mail_approval_subject", variable_get("user_mail_approval_subject", _user_mail_text("welcome_approval_subject")), 70, 180, t("Customize the subject of your awaiting approval welcome e-mail, which is sent to new members upon registering.") ." ". t("Available variables are:") ." ". "%username, %site, %password, %uri, %uri_brief, %mailto, %date");
-
-  $output .= form_textarea(t("Body of welcome e-mail (awaiting admin approval)"), "user_mail_approval_body", variable_get("user_mail_approval_body", _user_mail_text("welcome_approval_body")), 70, 10, t("Customize the body of the awaiting approval welcome e-mail, which is sent to new members upon registering.") ." ". t("Available variables are:") ." ". "%username, %site, %password, %uri, %uri_brief, %mailto");
-
-  $output .= form_textfield(t("Subject of password recovery e-mail"), "user_mail_pass_subject", variable_get("user_mail_pass_subject", _user_mail_text("pass_subject")), 70, 180, t("Customize the Subject of your forgotten password e-mail.") ." ". t("Available variables are:") ." ". "%username, %site, %password, %uri, %uri_brief, %mailto, %date");
-
-  $output .= form_textarea(t("Body of password recovery e-mail"), "user_mail_pass_body", variable_get("user_mail_pass_body", _user_mail_text("pass_body")), 70, 10, t("Customize the body of the forgotten password e-mail.") ." ". t("Available variables are:") ." ". "%username, %site, %password, %uri, %uri_brief, %mailto");
+  $group = form_select(t("User activity"), "user_block_seconds_online", variable_get("user_block_seconds_online", 900), $period, t("Affects \"Who's online\" block.  A user is considered online for this long after they have last viewed a page."));
+  $group .= form_select(t("User list length"), "user_block_max_list_count", variable_get("user_block_max_list_count", 10), array("0" => "0", "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "50" => "50", "100" => "100"), t("Affects \"Who's online\" block.  Maximum number of currently online user's to display."));
+  $output .= form_group(t("\"Who's online\" block settings"), $group);
 
   return $output;
 }
