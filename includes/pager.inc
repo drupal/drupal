@@ -202,11 +202,12 @@ function pager_next($text, $limit, $element = 0, $interval = 1, $attributes = ar
 function pager_last($text, $limit, $element = 0, $attributes = array()) {
   global $pager_from_array, $pager_total;
 
-  $from_new = pager_load_array(($pager_total[$element] - ($pager_total[$element] % $limit)), $element, $pager_from_array);
+  $last_num = (($pager_total[$element] % $limit) ? ($pager_total[$element] % $limit) : $limit);
+  $from_new = pager_load_array(($pager_total[$element] - $last_num), $element, $pager_from_array);
   if ($from_new[$element] < ($pager_from_array[$element] + $limit)) {
     return pager_next($text, $limit, $element, 1, $attributes);
   }
-  if (($from_new[$element] > $pager_from_array[$element]) && ($from_new[$element] > 0) && $from_new[$element] < $pager_total[$element]) {
+  if (($from_new[$element] > $pager_from_array[$element]) && ($from_new[$element] > 0) && ($from_new[$element] < $pager_total[$element])) {
     return '<a href="'. pager_link($from_new, $element, $attributes) .'">'. $text .'</a>';
   }
   return ' ';
