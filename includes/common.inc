@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.299 2004/01/02 12:15:37 dries Exp $ */
+/* $Id: common.inc,v 1.300 2004/01/05 18:23:21 dries Exp $ */
 
 /**
  * @name drupal_title
@@ -801,10 +801,14 @@ function form_allowed_tags_text() {
  * Given an old url, return the alias.
  */
 function drupal_get_path_alias($path) {
-  $map = drupal_get_path_map();
-
-  if ($map) {
-    return array_search($path, $map);
+  if (($map = drupal_get_path_map()) && ($newpath = array_search($path, $map))) {
+    return $newpath;
+  }
+  elseif (function_exists("conf_url_rewrite")) {
+    return conf_url_rewrite($path, 'outgoing');
+  }
+  else {
+    return $path;
   }
 }
 
@@ -812,9 +816,15 @@ function drupal_get_path_alias($path) {
  * Given an alias, return the default url.
  */
 function drupal_get_normal_path($path) {
-  $map = drupal_get_path_map();
-
-  return $map[$path] ? $map[$path] : $path;
+  if (($map = drupal_get_path_map()) && isset($map[$path])) {
+    return $map[$path];
+  }
+  elseif (function_exists("conf_url_rewrite")) {
+    return conf_url_rewrite($path, 'incoming');
+  }
+  else {
+    return $path;
+  }
 }
 
 function url($url = NULL, $query = NULL, $fragment = NULL) {
