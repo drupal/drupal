@@ -1,37 +1,362 @@
 <?php
 // $Id$
 
+function search_help() {
+  $output = "<b>". t("Search hints") ."</b>";
+  $output .= "<p>". t("The search allows you to search for words in the website's content. You can specify multiple words, and they will all be searched for, and the page that provides the highest hit count returned.") ."</p>";
+  $output .= "<p>". t("As this website provides multiple content types, the results are grouped by content type as well. If you only wish to search through certain types of content, you can modify the behaviour of this search using the 'Restrict search to' checkboxes below.") ."</p>";
+  $output .= "<p>". t("To specify that a word is <b>required</b> in the pages that are returned, place a '+' in front of it like this '+walk'.") ."</p>";
+  $output .= "<p>". t("You can also use wildcards, so 'walk*' will match 'walk', 'walking', 'walker', 'walkable' and 'walkability'... Alright you got me, I made the last ones up.") ."</p>";
+  $output .= "<p>". t("Searches are not case sensitive, regardless of how you type them all letters will be searched for in lower case") ."</p>";
+  $output .= "<b>". t("Words excluded from the search") ."</b>";
+  $output .= "<p>". t("Some words which commonly occur are filtered out by the searching process, these are commonly called 'noisewords'. Examples are 'a, at, and, are, as, ask', and the list goes on. Words shorter than ". variable_get("minimum_word_size", 2) ." letters are also filtered from the search index.");
+  $output .= "<p>". t("These words will never be matched when specified, even if they appear in the node you are searching for.");
+  return $output;
+} 
+
+/**
+ * Return an array of valid search access permissions
+ */
 function search_perm() {
-  return array("search content");
+  return array("search content", "administer search");
 }
 
+/**
+ * Return an array of links to be displayed
+ *
+ * @param $type  The type of page requesting the link
+ *
+ */
 function search_link($type) {
   if ($type == "page" && user_access("search content")) {
     $links[] = "<a href=\"module.php?mod=search\" title=\"". t("Search for older content.") ."\">". t("search") ."</a>";
   }
 
+  if ($type == "admin" && user_access("administer search")) {
+    $links[] = "<a href=\"admin.php?mod=search\">". t("search") ."</a>";
+  }
+
   return $links ? $links : array();
 }
 
-/*
-function search_item($item, $type) {
-  $output .= "<p>";
-  $output .= " <b><u><a href=\"". $item["link"] ."\">". $item["title"] ."</a></u></b><br />";
-  $output .= " <small>$type ". ($item["user"] ? " - ". $item["user"] : "") ."". ($item["date"] ? " - ". format_date($item["date"], "small") : "") ."</small>";
-  $output .= "</p>";
+/**
+ * search engine administration actions
+ *
+ */
+function search_admin() {
+  global $op, $id, $edit;
+
+  // Only allow people with sufficient access.
+  if (user_access("administer search")) {
+    switch ($op) {
+    case "Submit":
+      print status(search_save($edit));
+      break;
+    case "reindex":
+      search_invalidate();
+      print t("index invalidated") ."<br />\n";
+      search_cron();
+      print t("index recreated") ."<br /><hr />\n";
+      break;
+    default:
+    }
+    print search_display(array("noisewords" => variable_get("noisewords", ""), "minimum_word_size" => variable_get("minimum_word_size", 2), "help_pos" => variable_get("help_pos", 1), "remove_short" => variable_get("remove_short", "0")));
+  }
+  return;
+}
+
+/**
+ * perform a regularly run action across all modules that have the 
+ * <module>_update_index function in them.
+ *
+ */
+function search_cron() {
+  foreach (module_list() as $module) {
+    $module_array = module_invoke($module, "update_index");
+    if ($module_array) {
+      update_index($module_array);
+    }
+    $module_array = null;
+  }
+  return;
+}
+
+/**
+ * Perform a search on a word(s)
+ *
+ * Search function called by each node that supports the indexed search
+ *
+ * @param $search_array  an array as returned from <module>_search 
+ *                       of type array("keys" => ..., 
+ *                       "type" => ..., "select" => ...)
+ *                       see node_search in node.module for an 
+ *                       explanation of array items
+ */
+function do_search($search_array) {
+  global $PHP_SELF;
+
+  $keys = strtolower($search_array["keys"]);
+  $type = $search_array["type"];
+  $select = $search_array["select"];
+
+  // Replace wildcards with mysql wildcards
+  $keys = str_replace("*", "%", $keys);
+
+  // Split the words entered into an array
+  $words = explode(" ", $keys);
+
+  foreach ($words as $word) {
+
+    // If the word is too short, and we've got it set to skip them, 
+    // loop
+    if (strlen($word) < variable_get("remove_short", 0)) {
+      continue;
+    }
+    // If the word is preceeded by a "+", then this word is required, and
+    // pages that match other words, but not this one will be removed
+    if (substr($word, 0, 1) == "+") {
+      $word = substr($word, 1);
+      $required = 1;
+      $reqcount++;
+      $remove_rest = 1;
+    }
+    else {
+      $required = 0;
+    }
+
+    // Put the next search word into the query and do the query
+    $query = preg_replace("'\%'", $word, $select);
+    $result = db_query($query);
+
+    // If we got any results
+    if (db_num_rows($result) != 0) {
+      $found = 1;
+      
+      // Create an in memory array of the results, 
+      while ($row = db_fetch_array($result)) {
+        $lno       = $row["lno"];
+        $nid       = $row["nid"];
+        $title     = $row["title"];
+        $created   = $row["created"];
+        $uid       = $row["uid"];
+        $name      = $row["name"];
+        $count     = $row["count"];
+
+        // If the just fetched row is not already in the table
+        if ($results[$lno]["lno"] != $lno) {
+          $results[$lno]["count"] = $count;
+
+          $results[$lno]["lno"] = $lno;
+          $results[$lno]["nid"] = $nid;
+          $results[$lno]["title"] = $title;
+          $results[$lno]["created"] = $created;
+          $results[$lno]["uid"] = $uid;
+          $results[$lno]["name"] = $name;
+
+          // If this is a required word, set it to "valid"
+          if ($required == 1) {
+            $results[$lno]["valid"] = 1;
+          }
+        }
+        else {
+          // Different word, but existing "lno", increase the count of
+          // matches against this "lno" by the number of times this
+          // word appears in the text
+          $results[$lno]["count"] = $results[$lno]["count"] + $count;
+
+          // Another match on the a required word, increase valid
+          if ($required == 1) {
+            $results[$lno]["valid"]++;
+          }
+        }
+      }
+    } 
+  }
+
+  if ($found) {
+    // Black magic here to sort the results
+    array_multisort($results, SORT_DESC);
+
+    // OK, time to output the results.
+    foreach ($results as $key => $value) {
+      $lno       = $value["lno"];
+      $nid       = $value["nid"];
+      $title     = $value["title"];
+      $created   = $value["created"];
+      $uid       = $value["uid"];
+      $name      = $value["name"];
+      $count     = $value["count"];
+      if ($remove_rest) {
+        if ($value["valid"] != $reqcount) {
+          continue;
+        }
+      }
+      switch ($type) {
+      case "node":
+        $find[$i++] = array("count" => $count, "title" => check_output($title), "link" => (strstr($PHP_SELF, "admin.php") ? "admin.php?mod=node&type=node&op=edit&id=$lno" : "node.php?id=$lno"), "user" => $name, "date" => $created, "keywords" => implode("|", $words));
+        break;
+      case "comment":
+        $find[$i++] = array("count" => $count, "title" => check_output($title), "link" => (strstr($PHP_SELF, "admin.php") ? "admin.php?mod=comment&op=edit&id=$lno" : "node.php?id=$nid&cid=$lno"), "user" => $name, "date" => $created, "keywords" => implode("|", $words));
+        break;
+      }
+    }
+  }
+
+  return $find;
+}
+
+/**
+ * Update the search_index table
+ *
+ * @param $search_array  an array as returned from <module>_update_index 
+ *                       of type array("last_update" => ..., 
+ *                       "node_type" => ..., "select" => ...)
+ *                       see node_update_index in node.module for an 
+ *                       explanation of array items
+ */
+function update_index($search_array) {
+  $last_update = variable_get($search_array["last_update"], 1);
+  $node_type = $search_array["node_type"];
+  $select = $search_array["select"];
+  $minimum_word_size = variable_get("minimum_word_size", 2);
+
+  //watchdog("user", "$last_update<br />$node_type<br />$select");
+
+  $result = db_query($select);
+
+  if (db_num_rows($result)) {
+    // Wohoo, found some, look through the nodes we just selected
+    while ($node = db_fetch_array ($result)) {
+      
+      // Trash any existing entries in the search index for this node,
+      // in case its a modified node.
+      db_query("DELETE from search_index where lno = '". $node["lno"] ."' and type = '". $node_type ."'");
+
+      // Build the wordlist, teaser not included, as it then gives a 
+      // false count of the number of hist, and doesn't show up
+      // when clicking on a node from the search interface anyway.
+      $wordlist = $node["text1"] . $node["text2"];
+
+      // Strip heaps of stuff out of it
+      $wordlist = preg_replace("'<[\/\!]*?[^<>]*?>'si", "", $wordlist);
+
+      // Remove all numbers
+      $wordlist = preg_replace("'[0-9]'", "", $wordlist);
+
+      // Remove punctuation and stuff
+      $wordlist = preg_replace("'(!|%|,|:|;|\(|\)|\&|\"|\'|\.|-|\/|\?|\\\)'", 
+                               "",
+                               $wordlist);
+
+      // Strip out (now mangled) http and tags.
+      $wordlist = preg_replace("'http\w+'", "", $wordlist);
+      $wordlist = preg_replace("'www\w+'", "", $wordlist);
+
+      // Remove all newlines of any type
+      $wordlist = preg_replace("'([\r\n]|[\r]|[\n])'", " ", $wordlist);
+
+      // Lower case the whole thing.
+      $wordlist = strtolower($wordlist);
+
+      // Remove "noisewords"
+      $noise = explode("|", $noisewords);
+      foreach ($noise as $word) {
+        $wordlist = preg_replace("' $word '", " ", $wordlist);
+      }
+
+      // Remove whitespace
+      $wordlist = preg_replace("'[\s]+'", " ", $wordlist);
+
+      // Make it an array
+      $eachword = explode(" ", $wordlist);
+
+      // walk through the array, giving a "weight" to each word, based on
+      // the number of times it appears in a page.
+      foreach ($eachword as $word) {
+        if (strlen($word) > $minimum_word_size) {
+          if ($newwords[$word]) {
+            $newwords[$word]++;
+          } 
+          else {
+            $newwords[$word] = 1;
+          }
+        }
+      }
+
+      // Walk through the weighted words array, inserting them into 
+      // the search index
+      foreach ($newwords as $key => $value) {
+        $inputword = ("INSERT INTO search_index VALUES('$key', ". $node["lno"] .", '$node_type', $value)");
+        mysql_query($inputword);
+      }
+
+      // Zap the weighted words array, so we dont add multiples.
+      $newwords = array ();
+    }
+  }
+
+  // update the last time this process was run.
+  variable_set($search_array["last_update"], time());
+
+  return true;
+}
+
+/**
+ * Display the current search parameters for the administrator to be able
+ * to modify
+ *
+ * @param $edit  An array of fields as setup via calling form_textfield,
+ *               form_textarea etc
+ */
+function search_display($edit) {
+  $form = form_textfield(t("Minimum word size to index"), "minimum_word_size", $edit["minimum_word_size"], 10, 10);
+  $form .= form_textfield(t("Minimum word length to try and search for"), "remove_short", $edit["remove_short"], 10, 10);
+  $form .= form_textarea(t("Noisewords"), "noisewords", $edit["noisewords"], 70, 10);
+  $form .= form_select(t("Help text position"), "help_pos", $edit["help_pos"], array("1" => t("Above search form"), "2" => t("Below search form"), "3" => t("Link from above search form"), "4" => t("Link from below search form")));
+  $form .= form_submit("Submit");
+
+  $links[] = "<a href=\"admin.php?mod=search&op=reindex\">reindex all</a>";
+
+  $output = "<small>". implode(" &middot; ", $links) ."</small><hr />";
+
+  $output .= form($form);
 
   return $output;
 }
-*/
 
-function search_page() {
+function search_invalidate() {
+  foreach (module_list() as $module) {
+    $module_array = module_invoke($module, "update_index");
+    if ($module_array) {
+      variable_set($module_array["last_update"], 1);
+    }
+    $module_array = null;
+  }
+  return;
+}
+
+/**
+ * Save the values entered by the administrator for the search module
+ *
+ * @param $edit  An array of fields as setup via calling form_textfield, 
+ *               form_textarea etc
+ */
+function search_save($edit) {
+  variable_set("minimum_word_size", $edit["minimum_word_size"]);
+  variable_set("noisewords", $edit["noisewords"]);
+  variable_set("help_pos", $edit["help_pos"]);
+  variable_set("remove_short", $edit["remove_short"]);
+}
+
+function search_view() {
   global $theme, $edit, $type, $keys;
 
   if (user_access("search content")) {
-
+  
     /*
     ** Verify the user input:
     */
+    // TODO: is this necessary or is it / should it be done in search_{form|data}?
 
     $type = check_input($type);
     $keys = check_input($keys);
@@ -40,37 +365,32 @@ function search_page() {
     ** Construct the search form:
     */
 
-    $form .= " <input size=\"50\" value=\"". check_form($keys) ."\" name=\"keys\" type=\"text\" />";
-    $form .= " <input type=\"submit\" value=\"". t("Search") ."\" /><br />";
-    $form .= t("Restrict search to") .": ";
-
-    foreach (module_list() as $name) {
-      if (module_hook($name, "user") || module_hook($name, "search")) {
-        $form .= " <input type=\"checkbox\" name=\"edit[type][$name]\"". ($edit["type"][$name] ? " checked=\"checked\"" : "") ." /> ". t($name);
-      }
-    }
-
-    $form = form($form);
+    $form = search_form(NULL, NULL, TRUE);
 
     /*
     ** Collect the search results:
     */
 
-    $array = array();
-
-    if ($keys) {
-      foreach (module_list() as $name) {
-        if ((!$edit["type"] || $edit["type"][$name]) && ($result = module_invoke($name, "search", $keys))) {
-          foreach ($result as $entry) {
-            $output .= search_item($entry, $name);
-          }
-        }
-      }
-    }
+    $output = search_data();
 
     /*
     ** Display form and search results:
     */
+
+    $help_link = "<a href=\"module.php?mod=search&amp;op=help\">search help</a>";
+    switch (variable_get("help_pos", 1)) {
+      case "1":
+        $form = search_help(). $form;
+        break;
+      case "2":
+        $form .= search_help();
+        break;
+      case "3":
+        $form = $help_link. $form;
+        break;
+      case "4":
+        $form .= $help_link;
+    }
 
     $theme->header();
 
@@ -88,11 +408,26 @@ function search_page() {
     }
 
     $theme->footer();
-  }
+	}
   else {
     $theme->header();
     $theme->box(t("Access denied"), message_access());
     $theme->footer();
+  }
+
+}
+
+function search_page() {
+  global $theme, $op;
+
+  switch ($op) {
+    case "help":
+      $theme->header();
+      $theme->box(t("Search Help"), search_help());
+      $theme->footer();
+      break;
+    default:
+      search_view();
   }
 }
 

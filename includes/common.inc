@@ -144,22 +144,36 @@ function variable_del($name) {
   unset($conf[$name]);
 }
 
-/*
-** Format a single result entry of a search query:
-*/
-
+/**
+ * Format a single result entry of a search query:
+ *
+ * @param $item  a single search result as returned by <module>_search of type
+ *               array("count" => ..., "link" => ..., "title" => ..., 
+ *               "user" => ..., "date" => ..., "keywords" => ...)
+ * @param $type  module type of this item
+ */
 function search_item($item, $type) {
-  $output .= " <b><u><a href=\"". $item["link"] ."\">". $item["title"] ."</a></u></b><br />";
+  $output .= " <b>". $item["count"] . "&nbsp;&nbsp;<u><a href=\"". $item["link"] . "\">". $item["title"] ."</a></u></b><br />";
   $output .= " <small>$type ". ($item["user"] ? " - ". $item["user"] : "") ."". ($item["date"] ? " - ". format_date($item["date"], "small") : "") ."</small>";
   $output .= "<br /><br />";
 
   return $output;
 }
 
-/*
-** Render a generic search form:
-*/
-
+/**
+ * Render a generic search form.
+ *
+ * "Generic" means "universal usable" - that is, usable not only from
+ * module.php?mod=search, but also as a simple seach box (without 
+ * "Restrict search to", help text, etc) from theme's header etc. 
+ * This means: provide options to only conditionally render certain 
+ * parts of this form.
+ *
+ * @param $action  Form action. Defaults to module.php?mod=search.
+ * @param $query   Query string. Defaults to global $keys.
+ * @param $options != 0: Render additional form fields/text 
+ *                 ("Restrict search to", help text, etc).
+ */
 function search_form($action = 0, $query = 0, $options = 0) {
   global $keys;
 
@@ -171,8 +185,8 @@ function search_form($action = 0, $query = 0, $options = 0) {
     $query = $keys;
   }
 
-  $output .= " <input type=\"text\" size=\"50\" value=\"". check_form($keys) ."\" name=\"keys\">";
-  $output .= " <input type=\"submit\" value=\"". t("Search") ."\">\n";
+  $output .= " <br /><input type=\"text\" size=\"50\" value=\"". check_form($keys) ."\" name=\"keys\" />";
+  $output .= " <input type=\"submit\" value=\"". t("Search") ."\" />\n";
 
   if ($options != 0) {
     $output .= "<br />";
@@ -180,18 +194,21 @@ function search_form($action = 0, $query = 0, $options = 0) {
 
     foreach (module_list() as $name) {
       if (module_hook($name, "search")) {
-        $output .= " <input type=\"checkbox\" name=\"edit[type][$name]\" ". ($edit["type"][$name] ? " checked=\"checked\"" : "") ."/> ". t($name);
+        $output .= " <input type=\"checkbox\" name=\"edit[type][$name]\" ". ($edit["type"][$name] ? " checked=\"checked\"" : "") ." /> ". t($name);
       }
     }
+
+    // TODO: (link to) search hints
   }
+
+  $form .= "<br />";
 
   return form($output, "post", $action);
 }
 
 /*
-** Collect the search results:
-*/
-
+ * Collect the search results:
+ */
 function search_data() {
   global $keys, $edit;
 
@@ -200,12 +217,18 @@ function search_data() {
   if ($keys) {
     foreach (module_list() as $name) {
       if (module_hook($name, "search") && (!$edit["type"] || $edit["type"][$name]) && ($result = module_invoke($name, "search", check_query($keys)))) {
+        if ($name == "node" || $name == "comment") {
+          $output .= "<b>Matching ". $name ."s ranked in order of relevance</b><br />";
+        }
+        else {
+          $output .= "<b>Matching ". $name ."s</b><br />";
+        }
         foreach ($result as $entry) {
           $output .= search_item($entry, $name);
         }
       }
     }
-    if(!$output) {
+    if (!$output) {
       $output .= t("Your search yielded no results.");
     }
   }
@@ -213,10 +236,16 @@ function search_data() {
   return $output;
 }
 
-/*
-** Display the search form and the resulting data:
-*/
-
+/**
+ * Display the search form and the resulting data.
+ *
+ * @param $type    If set, search only nodes of this type. 
+ *                 Otherwise, search all types.
+ * @param $action  Form action. Defaults to module.php?mod=search.
+ * @param $query   Query string. Defaults to global $keys.
+ * @param $options != 0: Render additional form fields/text 
+ *                 ("Restrict search to", help text, etc).
+ */
 function search_type($type = 0, $action = 0, $query = 0, $options = 0) {
   global $edit;
 
@@ -304,7 +333,9 @@ function check_query($text) {
 
 function filter($text) {
   foreach (module_list() as $name) {
-    if (module_hook($name, "filter")) $text = module_invoke($name, "filter", $text);
+    if (module_hook($name, "filter")) {
+      $text = module_invoke($name, "filter", $text);
+    }
   }
 
   return $text;
@@ -325,10 +356,6 @@ function check_file($filename) {
   else {
     return 0;
   }
-}
-
-function file_encode($filename) {
-  $edit[filedata] = base64_encode(fread($fd, filesize($edit[upload_file])));
 }
 
 function format_info($body, $block) {
@@ -552,7 +579,9 @@ function field_get($string, $name) {
 
 function field_set($string, $name, $value) {
   $rval = ereg_replace(",$name=[^,]+", "", ",$string");
-  if ($value) $rval .= ($rval == "," ? "" : ",") ."$name=$value";
+  if ($value) {
+    $rval .= ($rval == "," ? "" : ",") ."$name=$value";
+  }
   return substr($rval, 1);
 }
 

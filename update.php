@@ -46,7 +46,8 @@ $mysql_updates = array(
   "2002-01-17" => "update_19",
   "2002-01-27" => "update_20",
   "2002-01-30" => "update_21",
-  "2002-02-19" => "update_22"
+  "2002-02-19" => "update_22",
+  "2002-03-05" => "update_23"
 );
 
 // Update functions
@@ -330,6 +331,10 @@ function update_21() {
 
 function update_22() {
   update_sql("ALTER TABLE cache MODIFY data MEDIUMTEXT;");
+}
+
+function update_23() {
+  update_sql("CREATE TABLE search_index (word varchar(50) default NULL, lno int(10) unsigned default NULL, type varchar(16) default NULL, count int(10) unsigned default NULL, KEY lno (lno), KEY word (word);");
 }
 
 /*

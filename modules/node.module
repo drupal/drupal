@@ -48,7 +48,7 @@ function node_teaser($body) {
 
 function node_invoke($node, $name, $arg = 0) {
   if (is_array($node)) {
-    $function = $node[type] ."_$name";
+    $function = $node["type"] ."_$name";
   }
   else if (is_object($node)) {
     $function = $node->type ."_$name";
@@ -261,11 +261,28 @@ function node_perm() {
 function node_search($keys) {
   global $PHP_SELF;
 
-  $result = db_query("SELECT n.nid, n.title, n.created, u.uid, u.name FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.status = 1 AND (n.title LIKE '%$keys%' OR n.teaser LIKE '%$keys%' OR n.body LIKE '%$keys%') ORDER BY n.created DESC LIMIT 20");
-  while ($node = db_fetch_object($result)) {
-    $find[$i++] = array("title" => check_output($node->title), "link" => (strstr($PHP_SELF, "admin.php") ? "admin.php?mod=node&type=node&op=edit&id=$node->nid" : "node.php?id=$node->nid"), "user" => $node->name, "date" => $node->created);
-  }
-
+  // Return the results of performing a search using the indexed search
+  // for this particular type of node.
+  //
+  // Pass an array to the "do_search" function which dictates what it
+  // will search through, and what it will search for
+  //
+  // "keys"'s value is the keywords entered by the user
+  //
+  // "type"'s value is used to identify the node type in the search
+  // index.
+  //
+  // "select"'s value is used to relate the data from the specific nodes
+  // table to the data that the search_index table has in it, and the the 
+  // do_search functino will rank it.
+  //
+  // The select must always provide the following fields - lno, title, 
+  // created, uid, name, count
+  //
+  $find = do_search(array("keys" => $keys,
+                          "type" => "node",
+                          "select" => "select s.lno as lno, n.title as title, n.created as created, u.uid as uid, u.name as name, s.count as count FROM search_index s, node n LEFT JOIN users u ON n.uid = u.uid WHERE s.lno = n.nid AND s.type = 'node' AND s.word like '%' AND n.status = 1"));
+  
   return $find;
 }
 
@@ -316,7 +333,7 @@ function node_filter_line($text) {
   ** Replace '<br>', '<br />', '<p>' and '<p />' by '\n':
   */
 
-  $text = eregi_replace("<br>", "\n", $text);
+  $text = eregi_replace("<br />", "\n", $text);
   $text = eregi_replace("<br />", "\n", $text);
   $text = eregi_replace("<p>", "\n", $text);
   $text = eregi_replace("<p />", "\n", $text);
@@ -772,7 +789,7 @@ function node_form($edit) {
 
   $function = $edit->type ."_form";
   if (function_exists($function)) {
-    $form .= $function($edit, $help, $error);
+    $form .= $function($edit, $help, $error, $param);
   }
 
   /*
@@ -857,7 +874,7 @@ function node_form($edit) {
   $output .= " </tr>";
   $output .= "</table>";
 
-  return form($output);
+  return form($output, ($param["method"] ? $param["method"] : "post"), $param["action"], $param["options"]);
 }
 
 function node_add($type) {
@@ -1174,6 +1191,25 @@ function node_page() {
   }
 
   $theme->footer();
+}
+
+function node_update_index() {
+
+  // Return an array of values to dictate how to update the search index
+  // for this particular type of node.
+  //
+  // "last_update"'s value is used with variable_set to set the 
+  // last time this node type had an index update run.
+  //
+  // "node_type"'s value is used to identify the node type in the search
+  // index.
+  //
+  // "select"'s value is used to select the node id and text fields from
+  // the table we are indexing. In this case, we also check against the 
+  // last run date for the nodes update.
+  return array("last_update" => "node_cron_last",
+			   "node_type" => "node",
+			   "select" => "SELECT n.nid as lno, n.title as text1, n.body as text2 FROM node n WHERE n.status = 1 AND moderate = 0 and (created > " . variable_get("node_cron_last", 1) . " or changed > " . variable_get("node_cron_last", 1) . ")");
 }
 
 ?>
