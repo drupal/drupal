@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.96 2003/09/30 21:48:32 dries Exp $
+// $Id: system.module,v 1.97 2003/10/02 08:28:19 dries Exp $
 
 function system_help($section = "admin/system/help") {
   switch ($section) {
@@ -101,7 +101,7 @@ function system_user($type, &$edit, $user) {
 }
 
 function system_view_general() {
-  global $conf, $cmodes, $corder;
+  global $conf;
 
   // general settings:
   $output .= "<h3>". t("General settings") ."</h3>\n";
