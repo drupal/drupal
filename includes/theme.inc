@@ -158,15 +158,14 @@ function theme_init() {
  * Render blocks available for $user and $region calling $theme->block($region).
  *
  * @param   string  $region   main|left|right
- * @param
  */
 function theme_blocks($region) {
-  global $user, $PHP_SELF;
+  global $user, $REQUEST_URI;
 
   $result = db_query("SELECT * FROM blocks WHERE (status = '1' OR custom = '1') ". ($region != "all" ? "AND region = '%s' " : "") ."ORDER BY weight, module", $region == "left" ? 0 : 1);
 
   while ($result && ($block = db_fetch_object($result))) {
-    if ((($block->status && (!$user->uid || !$block->custom)) || ($block->custom && $user->block[$block->module][$block->delta])) && (!$block->path || preg_match("|$block->path|", $PHP_SELF))) {
+    if ((($block->status && (!$user->uid || !$block->custom)) || ($block->custom && $user->block[$block->module][$block->delta])) && (!$block->path || preg_match('/'. str_replace('/', '\/', $block->path) .'/', request_uri()))) {
       $block_data = module_invoke($block->module, "block", "view", $block->delta);
       if ($block_data["content"]) {
         theme("block", $block_data["subject"], $block_data["content"], $region);
