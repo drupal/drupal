@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.100 2003/11/08 09:56:22 dries Exp $
+// $Id: page.module,v 1.101 2003/11/09 23:27:16 dries Exp $
 
 function page_help($section = "admin/help#page") {
   $output = "";
@@ -121,7 +121,7 @@ function page_view($node, $main) {
   // prepair the node content
   $node = page_content($node);
   // print the node
-  theme("node", $node, $main);
+  print theme("node", $node, $main);
 }
 
 function page_form(&$node, &$help, &$error) {

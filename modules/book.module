@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.195 2003/11/08 09:56:22 dries Exp $
+// $Id: book.module,v 1.196 2003/11/09 23:27:16 dries Exp $
 
 function book_node($field) {
   global $user;
@@ -390,7 +390,7 @@ function book_view($node, $main = 0) {
   */
 
   if ($main) {
-    theme("node", $node, $main);
+    print theme("node", $node, $main);
   }
   else {
     if ($node->moderate) {
@@ -400,10 +400,10 @@ function book_view($node, $main = 0) {
     if (arg(1) == "view") {
       $node = book_navigation($node);
       // Print the breadcrumb
-      theme("breadcrumb", $node->breadcrumb);
+      print theme("breadcrumb", $node->breadcrumb);
     }
     // Print the node
-    theme("node", $node, $main);
+    print theme("node", $node, $main);
   }
 }
 
@@ -441,8 +441,8 @@ function book_show($node, $cid) {
         /*
         ** View the node
         */
-        theme("breadcrumb", $node->breadcrumb);
-        theme("node", $node, 0);
+        print theme("breadcrumb", $node->breadcrumb);
+        print theme("node", $node, 0);
       }
       else {
 
@@ -621,9 +621,9 @@ function book_render() {
     }
   }
 
-  theme("header");
-  theme("box", t("Books"), "$output");
-  theme("footer");
+  print theme("header");
+  print theme("box", t("Books"), "$output");
+  print theme("footer");
 }
 
 function book_page() {
@@ -632,9 +632,9 @@ function book_page() {
     switch (arg(1)) {
       case "view":
         $node = node_load(array("nid" => arg(2)));
-        theme("header");
+        print theme("header");
         book_show($node, arg(3));
-        theme("footer");
+        print theme("footer");
         break;
       case "print":
         print book_print(arg(2), $depth = 1);
@@ -644,9 +644,9 @@ function book_page() {
     }
   }
   else {
-    theme("header");
-    theme("box", t("Access denied"), message_access());
-    theme("footer");
+    print theme("header");
+    print theme("box", t("Access denied"), message_access());
+    print theme("footer");
   }
 }
 

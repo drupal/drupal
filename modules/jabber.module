@@ -1,5 +1,5 @@
 <?php
-// $Id: jabber.module,v 1.20 2003/10/09 18:53:21 dries Exp $
+// $Id: jabber.module,v 1.21 2003/11/09 23:27:16 dries Exp $
 
 function jabber_help($section) {
   $output = "";
@@ -162,9 +162,9 @@ function jabber_auth($username, $password, $server) {
 
 function jabber_page() {
 
-  theme("header");
-  theme("box", "Jabber", jabber_help("user/help#jabber"));
-  theme("footer");
+  print theme("header");
+  print theme("box", "Jabber", jabber_help("user/help#jabber"));
+  print theme("footer");
 }
 
 function jabber_user($type, $edit, $user) {

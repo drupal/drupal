@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.28 2003/10/13 19:18:39 dries Exp $
+// $Id: profile.module,v 1.29 2003/11/09 23:27:16 dries Exp $
 
 function _profile_init() {
   /*
@@ -111,7 +111,7 @@ function profile_user($type, $edit, &$user) {
 
 function profile_required($title) {
   // this pleads "theme, theme" ;)
-  return $title ." ". theme("theme_mark");
+  return $title ." ". theme("mark");
 }
 
 function _profile_form($edit, $mode) {

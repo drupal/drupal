@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.61 2003/11/07 19:03:35 dries Exp $
+// $Id: drupal.module,v 1.62 2003/11/09 23:27:16 dries Exp $
 
 function drupal_help($section = "admin/help#drupal") {
   $output = "";
@@ -157,9 +157,9 @@ function drupal_auth($username, $password, $server) {
 
 function drupal_page() {
 
-  theme("header");
-  theme("box", "Drupal", drupal_help("user/help#drupal"));
-  theme("footer");
+  print theme("header");
+  print theme("box", "Drupal", drupal_help("user/help#drupal"));
+  print theme("footer");
 }
 
 function drupal_login($arguments) {

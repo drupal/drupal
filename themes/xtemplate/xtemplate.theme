@@ -1,8 +1,5 @@
 <?php
-// $Id: xtemplate.theme,v 1.31 2003/11/08 11:56:33 dries Exp $
-
-class Theme_xtemplate extends BaseTheme {
-}
+// $Id: xtemplate.theme,v 1.32 2003/11/09 23:27:22 dries Exp $
 
 if (!class_exists("XTemplate")) {
   include_once("themes/xtemplate/xtemplate.inc");
@@ -121,10 +118,10 @@ function xtemplate_header($title = "") {
   ob_start();
 
   if ($xtemplate->sidebar == "left") {
-    theme_blocks("all");
+    print render_blocks("all");
   }
   else if ($xtemplate->sidebar == "both") {
-    theme_blocks("left");
+    print render_blocks("left");
   }
 
   if ($blocks = ob_get_contents()) {
@@ -171,10 +168,10 @@ function xtemplate_footer() {
   ob_start();
 
   if ($xtemplate->sidebar == "right") {
-    theme_blocks("all");
+    print render_blocks("all");
   }
   else if ($xtemplate->sidebar == "both") {
-    theme_blocks("right");
+    print render_blocks("right");
   }
 
   if ($blocks = ob_get_contents()) {

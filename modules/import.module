@@ -1,5 +1,5 @@
 <?php
-// $Id: import.module,v 1.130 2003/10/31 19:34:02 dries Exp $
+// $Id: import.module,v 1.131 2003/11/09 23:27:16 dries Exp $
 
 
 function import_help($section = "admin/help#import") {
@@ -124,7 +124,7 @@ function import_update() {
   }
 }
 
-function import_theme_format_item($item, $feed = 0) {
+function theme_import_format_item($item, $feed = 0) {
   global $user;
 
   if ($user->uid && module_exist("blog") && user_access("maintain personal blog")) {
@@ -148,7 +148,7 @@ function import_bundle_block($attributes) {
 
   $items = array();
   while ($item = db_fetch_object($result)) {
-    $items[] = theme("import_theme_format_item", $item);
+    $items[] = theme("import_format_item", $item);
   }
 
   $output = "<div class=\"import-block\"><div class=\"bundle\">";
@@ -163,11 +163,11 @@ function import_feed_block($feed) {
 
   $items = array();
   while ($item = db_fetch_object($result)) {
-    $items[] = theme("import_theme_format_item", $item);
+    $items[] = theme("import_format_item", $item);
   }
 
   $output = "<div class=\"import-block\"><div class=\"feed\">";
-  $output .= theme("theme_item_list", $items);
+  $output .= theme("item_list", $items);
   $output .= "</div></div>";
 
   return $output;
@@ -656,10 +656,10 @@ function import_page_last() {
   }
   $output .= "</table>\n";
 
-  theme("header");
-  theme("box", t("News feeds"), import_page_info());
-  theme("box", t("Latest news"), $output);
-  theme("footer");
+  print theme("header");
+  print theme("box", t("News feeds"), import_page_info());
+  print theme("box", t("Latest news"), $output);
+  print theme("footer");
 }
 
 function import_page_feed($fid) {
@@ -691,11 +691,11 @@ function import_page_feed($fid) {
   }
   $output .= "</table>\n";
 
-  theme("header");
-  theme("box", t("News feeds"), import_page_info());
-  theme("box", $feed->title, $header);
-  theme("box", t("Latest news"), $output);
-  theme("footer");
+  print theme("header");
+  print theme("box", t("News feeds"), import_page_info());
+  print theme("box", $feed->title, $header);
+  print theme("box", t("Latest news"), $output);
+  print theme("footer");
 }
 
 function import_page_bundle($bid) {
@@ -730,11 +730,11 @@ function import_page_bundle($bid) {
   }
   $output .= "</table>\n";
 
-  theme("header");
-  theme("box", t("News feeds"), import_page_info());
-  theme("box", $bundle->title, $header);
-  theme("box", t("Latest news"), $output);
-  theme("footer");
+  print theme("header");
+  print theme("box", t("News feeds"), import_page_info());
+  print theme("box", $bundle->title, $header);
+  print theme("box", t("Latest news"), $output);
+  print theme("footer");
 
 }
 
@@ -750,10 +750,10 @@ function import_page_sources() {
 
   $output .= "<div style=\"xml-icon\">". l("<img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" />", "import/fd", array("title" => t("View the list of syndicated web sites in XML format."))) ."</div><br />";
 
-  theme("header");
-  theme("box", t("News feeds"), import_page_info());
-  theme("box", t("News sources"), $output);
-  theme("footer");
+  print theme("header");
+  print theme("box", t("News feeds"), import_page_info());
+  print theme("box", t("News sources"), $output);
+  print theme("footer");
 }
 
 function import_page_fd() {
@@ -788,8 +788,8 @@ function import_page_feeds() {
 function import_page_blocks($blocks) {
 
 
-  theme("header");
-  theme("box", t("News feeds"), import_page_info());
+  print theme("header");
+  print theme("box", t("News feeds"), import_page_info());
   print "<table cellpadding=\"0\" cellspacing=\"5\" border=\"0\" style=\"width: 100%;\">\n";
   print " <tr>\n";
 
@@ -797,7 +797,7 @@ function import_page_blocks($blocks) {
     $i = 1;
     print "  <td style=\"vertical-align: top; width: 33%;\">\n";
     while ($block = each($blocks)) {
-      theme("box", $block["value"]["subject"], $block["value"]["content"]);
+      print theme("box", $block["value"]["subject"], $block["value"]["content"]);
       if ($i == ceil(count($blocks) / 3)) {
         break;
       }
@@ -808,7 +808,7 @@ function import_page_blocks($blocks) {
 
   print " </tr>\n";
   print "</table>\n";
-  theme("footer");
+  print theme("footer");
 }
 
 function import_page() {

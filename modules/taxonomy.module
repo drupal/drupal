@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.74 2003/11/07 19:03:35 dries Exp $
+// $Id: taxonomy.module,v 1.75 2003/11/09 23:27:16 dries Exp $
 
 function taxonomy_feed($taxonomy) {
   global $id, $type;
@@ -717,9 +717,9 @@ function taxonomy_page() {
       taxonomy_feed($taxonomy);
       break;
     default:
-      theme("header");
+      print theme("header");
       taxonomy_render_nodes(taxonomy_select_nodes($taxonomy));
-      theme("footer");
+      print theme("footer");
       break;
   }
 }

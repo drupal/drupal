@@ -1,29 +1,25 @@
 <?php
-// $Id: theme.inc,v 1.153 2003/11/09 17:11:26 dries Exp $
+/**
+  Theme System - controls the output of Drupal.
+
+  The theme system allows for nearly all output of the Drupal system to be
+  customized by user themes.
+
+  @package theme_system
+
+  @defgroup theme_system
+  @{
+**/
+
+/* $Id: theme.inc,v 1.154 2003/11/09 23:27:15 dries Exp $ */
 
 /**
- * Basic theme
- *
- * @package theme system
- */
+  Returns the theme header.
 
+  @param $title (optional) override the page title.
 
-function theme_help($section) {
-
-  $ouptout = "";
-
-  switch ($section) {
-    case 'admin/system/themes#description':
-      $output = t("The base theme");
-      break;
-  }
-
-  return $output;
-}
-
-class BaseTheme {
-}
-
+  @return a string contraining the \a header output.
+**/
 function theme_header($title = "") {
   global $base_url;
 
@@ -31,27 +27,69 @@ function theme_header($title = "") {
   $output .= "<html xmlns=\"http://www.w3.org/1999/xhtml\">";
   $output .= "<head><title>". $title ? $title : variable_get(site_name, "drupal") ."</title>";
   $output .= theme_head($main);
-  $output .= "</head><body style=\"background-color: #fff; color: #000;\"". theme_onload_attribute(). "\">";
+  $output .= "</head><body style=\"background-color: #fff; color: #000;\"". theme("onload_attribute"). "\">";
   $output .= "<table border=\"0\" cellspacing=\"4\" cellpadding=\"4\"><tr><td style=\"vertical-align: top; width: 170px;\">";
 
-  print $output;
-  theme("box", t("Navigation"), @implode("<br />", link_page()));
-  theme_blocks("all", $this);
-  print "</td><td style=\"vertical-align: top;\">";
+  $output .= theme("box", t("Navigation"), @implode("<br />", link_page()));
+  $output .= render_blocks("all");
+  $output .= "</td><td style=\"vertical-align: top;\">";
+
+  return $output;
 }
 
+/**
+  Returns themed set of links.
+
+  @param $links an array of \a links to be themed.
+  @param $delimiter (optional) \a delimiter used to seperate the links.
+
+  @return a string contraining the \a links output.
+**/
 function theme_links($links, $delimiter = " | ") {
   return implode($delimiter, $links);
 }
 
+/**
+  Returns themed image.
+
+  @param $name the \a name of the image file.
+
+  @return a string contraining the \a image output.
+**/
 function theme_image($name) {
   return "misc/$name";
 }
 
+/**
+  Returns a themed breadcrumb menu.
+
+  @param $breadcrumb an array containing the breadcrumb links.
+
+  @return a string contraining the \a breadcrumb output.
+**/
 function theme_breadcrumb($breadcrumb) {
-  print "<div class=\"breadcrumb\">". implode($breadcrumb, " &raquo; ") ."</div>";
+  return "<div class=\"breadcrumb\">". implode($breadcrumb, " &raquo; ") ."</div>";
 }
 
+/**
+  Returns themed node.
+
+  The passed $node object provides a all relevant information for displaying a node:
+  \li \c $node->nid
+  \li \c $node->type i.e. story, blog, forum.
+  \li \c $node->title
+  \li \c $node->created a unix timestamp.
+  \li \c $node->teaser
+  \li \c $node->body
+  \li \c $node->changed a unix timestamp.
+  \li \c $node->uid the id of the poster.
+  \li \c $node->username the username of the poster.
+
+  @param $node the \a node to be themed.
+  @param $main
+
+  @return a string contraining the \a node output.
+**/
 function theme_node($node, $main) {
   if (module_exist("taxonomy")) {
     $terms = taxonomy_link("taxonomy terms", $node);
@@ -60,7 +98,7 @@ function theme_node($node, $main) {
   $output = "<h2>$node->title</h2> by ". format_name($node);
 
   if (count($terms)) {
-    $output .= " <small>(". theme("links", $terms) .")</small><br />";
+    $output .= " <small>(". print theme("links", $terms) .")</small><br />";
   }
 
   if ($main && $node->teaser) {
@@ -71,58 +109,77 @@ function theme_node($node, $main) {
   }
 
   if ($links = link_node($node, $main)) {
-    $output .= "<br />[ ". theme("links", $links) ." ]";
+    $output .= "<br />[ ". print theme("links", $links) ." ]";
   }
   $output .= "<hr />";
 
-  print $output;
-}
-
-function theme_box($subject, $content, $region = "main") {
-  $output = "<h2>$subject</h2><p>$content</p>";
-  print $output;
+  return $output;
 }
 
 /**
- * Render a block.
- *
- * You can style your blocks by defining .block (all blocks),
- * .block-<i>module</i> (all blocks of module <i>module</i>),
- * and \#block-<i>module</i>-<i>delta</i> (specific block of
- * module <i>module</i> with delta <i>delta</i>) in your
- * theme's CSS.
- *
- * @param   $block  object "indexed with" fields from database
- *   table 'blocks' ($block->module, $block->delta, $block->region,
- *   ...) and fields returned by <i>module</i>_block("view")
- *   ($block->subject, $block->content, ...).
- */
+  Returns themed box.
+
+  @param $subject the \a subject of the box.
+  @param $content the \a content of the box.
+  @param $requion the \a region of the box.
+
+  @return a string contraining the \a box output.
+**/
+function theme_box($subject, $content, $region = "main") {
+  $output = "<h2>$subject</h2><p>$content</p>";
+  return $output;
+}
+
+/**
+  Returns a themed block.
+
+  You can style your blocks by defining .block (all blocks),
+  .block-<i>module</i> (all blocks of module <i>module</i>),
+  and \#block-<i>module</i>-<i>delta</i> (specific block of
+  module <i>module</i> with delta <i>delta</i>) in your
+  theme's CSS.
+
+  @param $block object "indexed with" fields from database table 'blocks' ($block->module, $block->delta, $block->region, ...) and fields returned by <i>module</i>_block("view") ($block->subject, $block->content, ...).
+
+  @return a string contraining the \a box output.
+**/
 function theme_block($block) {
   $output  = "<div class=\"block block-$block->module\" id=\"block-$block->module-$block->delta\">";
   $output .= " <h3>$block->subject</h3>";
   $output .= " <div class=\"content\">$block->content</div>";
   $output .= "</div>";
-  print $output;
+  return $output;
 }
 
+/**
+  Returns themed page footer.
+
+  @return a string contraining the \a footer output.
+**/
 function theme_footer() {
   $output = "</td></tr></table>";
   $output .= theme_closure();
   $output .= "</body></html>";
-  print $output;
+  return $output;
 }
 
 /**
- * Return a marker.  Used to indicate new comments or required form
- * fields.
- */
+  Returns themed marker, useful for marking new comments or required form elements.
+
+  @return a string contraining the \a mark output.
+**/
 function theme_mark() {
   return "<span class=\"marker\">*</span>";
 }
 
 /**
- * Return a formatted array of items.
- */
+  Returns themed list of items.
+
+  @param $items (optional) an array of the items to be displayed in a list.
+  @param $title (optional) the title of the list.
+
+  @return a string contraining the \a list output.
+**/
 function theme_item_list($items = array(), $title = NULL) {
   $output .= "<div class=\"item-list\">";
   if (isset($title)) {
@@ -141,13 +198,119 @@ function theme_item_list($items = array(), $title = NULL) {
 }
 
 /**
- * Return an error message.
- */
+  Returns themed error message.
+
+  @param $message the error message to be themed.
+
+  @return a string contraining the \a error output.
+**/
 function theme_error($message) {
   return "<div class=\"error\">$message</div>";
 }
 
-function theme_list($refresh = 0) {
+/**
+  Execute hook _head which is run at the start of the page, and output should be in the head tags.
+
+  @param $main (optional)
+
+  @return a string contraining the \a error output.
+**/
+function theme_head($main = 0) {
+  global $base_url;
+  $output .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />";
+  $output .= "<base href=\"$base_url/\" />\n";
+  $output .= "<style type=\"text/css\">\n";
+  $output .= "@import url(misc/drupal.css);\n";
+  $output .= "</style>\n";
+  $head = module_invoke_all("head", $main);
+  $output .= implode($head, "\n");
+  return $output;
+}
+
+/**
+  Execute hook _footer() which is run at the end of the page right
+  before the </body> tag.
+
+  @param $main (optional)
+
+  @return a string contraining the \a cloasure output.
+**/
+function theme_closure($main = 0) {
+  $footer = module_invoke_all("footer", $main);
+  return implode($footer, "\n");
+}
+
+/**
+  Call _onload hook in all modules to enable modules to insert javascript
+  that will get run once the page has been loaded by the browser.
+
+  @param $theme_onloads (optional) addition onload directives.
+
+  @return a string contraining the \a onload output.
+**/
+function theme_onload_attribute($theme_onloads = array()) {
+  if (!is_array($theme_onloads)) {
+    $theme_onloads = array($theme_onloads);
+  }
+  // Merge theme onloads (javascript rollovers, image preloads, etc.)
+  // with module onloads (htmlarea, etc.)
+  $onloads = array_merge(module_invoke_all("onload"), $theme_onloads);
+  if (count($onloads)) {
+    return " onload=\"" . implode("; ", $onloads) . "\"";
+  }
+  return "";
+}
+
+/**
+  Render blocks available for (global) $user and $region calling $theme->block($block).
+
+  @param   $region   main|left|right
+
+  @return a string contraining the \a blocks output.
+ **/
+function render_blocks($region) {
+  global $user;
+
+  $result = db_query("SELECT * FROM {blocks} WHERE (status = '1' OR custom = '1') ". ($region != "all" ? "AND region = %d " : "") ."ORDER BY weight, module", $region == "left" ? 0 : 1);
+
+  $output = "";
+  while ($result && ($block = db_fetch_array($result))) {
+    if ((($block['status'] && (!$user->uid || !$block['custom'])) || ($block['custom'] && $user->block[$block['module']][$block['delta']])) && (!$block['path'] || preg_match($block['path'], str_replace("?q=", "", request_uri())))) {
+      $block = array_merge($block, module_invoke($block['module'], 'block', 'view', $block['delta']));
+      if ($block['content']) {
+        $output .= theme('block', (object)$block);
+      }
+    }
+  }
+  return $output;
+}
+
+/**
+  Hook Help - returns theme specific help and information.
+
+  @param section defines the \a section of the help to be returned.
+
+  @return a string contraining the help output.
+**/
+function theme_help($section) {
+  $ouptout = "";
+
+  switch ($section) {
+    case 'admin/system/themes#description':
+      $output = t("The base theme");
+      break;
+  }
+  return $output;
+}
+
+/**
+  Provides a list of currently avalible themes.
+
+  @param $refresh
+
+  @return an array of the currently avalible themes.
+**/
+function list_themes($refresh = 0) {
   static $list;
 
   if ($refresh) {
@@ -167,108 +330,63 @@ function theme_list($refresh = 0) {
   return $list;
 }
 
-function theme_head($main = 0) {
-  global $base_url;
-  $output .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />";
-  $output .= "<base href=\"$base_url/\" />\n";
-  $output .= "<style type=\"text/css\">\n";
-  $output .= "@import url(misc/drupal.css);\n";
-  $output .= "</style>\n";
-  $head = module_invoke_all("head", $main);
-  $output .= implode($head, "\n");
-  return $output;
-}
-
 /**
- * Execute hook _footer() which is run at the end of the page right
- * before the </body> tag
- */
-function theme_closure($main = 0) {
-  $footer = module_invoke_all("footer", $main);
-  return implode($footer, "\n");
-}
+  Initialized the theme system.
 
-function theme_init() {
+  @return the name of the currently selected theme.
+**/
+function init_theme() {
   global $user;
 
-  $themes = theme_list();
+  $themes = list_themes();
   $name = $user->theme ? $user->theme : variable_get("theme_default", 0);
+
+  $theme->path = "";
+  $theme->name = "";
 
   if (is_object($themes[$name])) {
     include_once($themes[$name]->filename);
-    $class = "Theme_$name";
-    $instance =& new $class();
-    $instance->path = dirname($themes[$name]->filename);
-  }
-  else {
-    $instance =& new BaseTheme;
+    $theme->path = dirname($themes[$name]->filename);
+    $theme->name = $name;
   }
 
-  $instance->theme = $name;
-
-  return $instance;
+  return $theme;
 }
 
 /**
- * Render blocks available for (global) $user and $region calling $theme->block($block).
- *
- * @param   $region   main|left|right
- */
-function theme_blocks($region) {
-  global $user;
+  Returns the path to the currently selected theme.
 
-  $result = db_query("SELECT * FROM {blocks} WHERE (status = '1' OR custom = '1') ". ($region != "all" ? "AND region = %d " : "") ."ORDER BY weight, module", $region == "left" ? 0 : 1);
-
-  while ($result && ($block = db_fetch_array($result))) {
-    if ((($block['status'] && (!$user->uid || !$block['custom'])) || ($block['custom'] && $user->block[$block['module']][$block['delta']])) && (!$block['path'] || preg_match($block['path'], str_replace("?q=", "", request_uri())))) {
-      $block = array_merge($block, module_invoke($block['module'], 'block', 'view', $block['delta']));
-      if ($block['content']) {
-        theme('block', (object) $block);
-      }
-    }
-  }
+  @return the path to the the currently selected theme.
+**/
+function path_to_theme() {
+  global $theme;
+  return $theme->path;
 }
 
+/**
+  External interface of the theme system to all other modules, and core files.
+
+  All requests for themed functions must go through this function. It examines
+  the request and routes it to the appropriate theme function. If the current
+  theme does not implement the requested function, then the base theme function
+  is called.
+  Example: \verbatim $header_text = theme("header"); \endverbatim
+
+  @return the path to the the currently selected theme.
+**/
 function theme() {
   global $theme;
 
   $args = func_get_args();
-
   $function = array_shift($args);
 
-  $name = $theme->theme;
-
-  if (function_exists($name ."_". $function)) {
-    return call_user_func_array($name ."_". $function, $args);
+  if (($theme->name != "") && (function_exists($theme->name ."_". $function))) {
+    return call_user_func_array($theme->name ."_". $function, $args);
   }
-  else if (method_exists($theme, $function)) {
-    return call_user_method_array($function, $theme, $args);
-      // temporary fall-back; can be removed as soon the $theme-object is no more
-  }
-  else if (function_exists("theme_". $function)) {
+  elseif (function_exists("theme_". $function)){
     return call_user_func_array("theme_". $function, $args);
   }
-  else {
-    return call_user_func_array($function, $args);
-      // temporary fall-back; can be removed as soon the $theme-object is no more
-  }
 }
 
-/**
- * Call _onload hook in all modules to enable modules to insert javascript
- * that will get run once the page has been loaded by the browser
- */
-function theme_onload_attribute($theme_onloads = array()) {
-  if (!is_array($theme_onloads)) {
-    $theme_onloads = array($theme_onloads);
-  }
-  // Merge theme onloads (javascript rollovers, image preloads, etc.)
-  // with module onloads (htmlarea, etc.)
-  $onloads = array_merge(module_invoke_all("onload"), $theme_onloads);
-  if (count($onloads)) {
-    return " onload=\"" . implode("; ", $onloads) . "\"";
-  }
-  return;
-}
-
+/**  @} End of defgroup theme_system **/
 ?>

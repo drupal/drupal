@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.263 2003/11/09 17:25:10 dries Exp $
+// $Id: common.inc,v 1.264 2003/11/09 23:27:15 dries Exp $
 
 function conf_init() {
 
@@ -1186,6 +1186,5 @@ module_init();
 $locale = locale_init();
 
 // initialize theme:
-$theme = theme_init();
-
+$theme = init_theme();
 ?>

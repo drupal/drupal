@@ -1,15 +1,18 @@
 <?php
-// $Id: example.theme,v 1.37 2003/01/06 21:43:06 dries Exp $
+// $Id: example.theme,v 1.38 2003/11/09 23:27:17 dries Exp $
 
-class Theme_example extends BaseTheme {
+function example_help($section) {
 
-  function system($field) {
-    $system["name"] = "example";
-    $system["author"] = "Dries";
-    $system["description"] = "Internet explorer, Netscape, Opera, Lynx";
+  $output = "";
 
-    return $system[$field];
+  switch ($section) {
+    case 'admin/system/themes#description':
+      $output = t("Internet explorer, Netscape, Opera, Lynx");
+      break;
   }
+
+  return $output;
 }
+
 
 ?>

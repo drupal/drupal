@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.185 2003/11/07 19:03:35 dries Exp $
+// $Id: comment.module,v 1.186 2003/11/09 23:27:16 dries Exp $
 
 function comment_help($section = "admin/help#comment") {
   $output = "";
@@ -242,17 +242,17 @@ function comment_reply($pid, $nid) {
     */
 
     if (node_comment_mode($nid) != 2) {
-      theme("box", t("Reply"), t("This discussion is closed: you can't post new comments."));
+      print theme("box", t("Reply"), t("This discussion is closed: you can't post new comments."));
     }
     else if (user_access("post comments")) {
-      theme("box", t("Reply"), comment_form(array("pid" => $pid, "nid" => $nid)));
+      print theme("box", t("Reply"), comment_form(array("pid" => $pid, "nid" => $nid)));
     }
     else {
-      theme("box", t("Reply"), t("You are not authorized to post comments."));
+      print theme("box", t("Reply"), t("You are not authorized to post comments."));
     }
   }
   else {
-    theme("box", t("Reply"), t("You are not authorized to view comments."));
+    print theme("box", t("Reply"), t("You are not authorized to view comments."));
   }
 }
 
@@ -277,7 +277,7 @@ function comment_preview($edit) {
 
   comment_view($comment, t("reply to this comment"));
 
-  theme("box", t("Reply"), comment_form($edit));
+  print theme("box", t("Reply"), comment_form($edit));
 
   if ($edit["pid"]) {
     $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0", $edit["pid"]));
@@ -528,7 +528,7 @@ function comment_links($comment, $return = 1) {
     }
   }
 
-  if ($moderation = comment_moderation_form($comment)) {
+  if ($moderation = theme("comment_moderation_form", $comment)) {
     $links[] = $moderation;
   }
 
@@ -550,10 +550,10 @@ function comment_view($comment, $links = "", $visible = 1) {
 
   if ($visible) {
     $comment->comment = check_output($comment->comment);
-    theme("comment", $comment, $links);
+    print theme("comment", $comment, $links);
   }
   else {
-    theme("comment_folded", $comment);
+    print theme("comment_folded", $comment);
   }
 }
 
@@ -722,7 +722,7 @@ function comment_render($node, $cid = 0) {
 
       if (db_num_rows($result) && (variable_get("comment_controls", 0) == 0 || variable_get("comment_controls", 0) == 2)) {
         print "<form method=\"post\" action=\"". url("comment") ."\"><div>\n";
-        theme("comment_controls", $threshold, $mode, $order, $comments_per_page);
+        print theme("comment_controls", $threshold, $mode, $order, $comments_per_page);
         print form_hidden("nid", $nid);
         print "</div></form>";
       }
@@ -734,16 +734,16 @@ function comment_render($node, $cid = 0) {
         $comment->depth = count(explode(".", $comment->thread)) - 1;
 
         if ($mode == 1) {
-          theme("comment_flat_collapsed", $comment, $threshold_min);
+          print theme("comment_flat_collapsed", $comment, $threshold_min);
         }
         else if ($mode == 2) {
-          theme("comment_flat_expanded", $comment, $threshold_min);
+          print theme("comment_flat_expanded", $comment, $threshold_min);
         }
         else if ($mode == 3) {
-          theme("comment_thread_min", $comment, $threshold_min);
+          print theme("comment_thread_min", $comment, $threshold_min);
         }
         else if ($mode == 4) {
-          theme("comment_thread_max", $comment, $threshold_min);
+          print theme("comment_thread_max", $comment, $threshold_min);
         }
       }
 
@@ -763,7 +763,7 @@ function comment_render($node, $cid = 0) {
 
       if (db_num_rows($result) && (variable_get("comment_controls", 0) == 1 || variable_get("comment_controls", 0) == 2)) {
         print "<form method=\"post\" action=\"". url("comment") ."\"><div>\n";
-        theme("comment_controls", $threshold, $mode, $order, $comments_per_page);
+        print theme("comment_controls", $threshold, $mode, $order, $comments_per_page);
         print form_hidden("nid", $nid);
         print "</div></form>";
       }
@@ -774,7 +774,7 @@ function comment_render($node, $cid = 0) {
     */
 
     if (user_access("post comments") && node_comment_mode($nid) == 2 && variable_get("comment_form_location", 0)) {
-      theme("box", t("Post new comment"), comment_form(array("nid" => $nid)));
+      print theme("box", t("Post new comment"), comment_form(array("nid" => $nid)));
     }
 
     /*
@@ -874,9 +874,9 @@ function comment_page() {
 
   switch ($op) {
     case "edit":
-      theme("header");
+      print theme("header");
       comment_edit(check_query(arg(2)));
-      theme("footer");
+      print theme("footer");
       break;
     case t("Moderate comments"):
     case t("Moderate comment"):
@@ -884,21 +884,21 @@ function comment_page() {
       drupal_goto(url(comment_referer_load()));
       break;
     case "reply":
-      theme("header");
+      print theme("header");
       comment_reply(check_query(arg(3)), check_query(arg(2)));
-      theme("footer");
+      print theme("footer");
       break;
     case t("Preview comment"):
-      theme("header");
+      print theme("header");
       comment_preview($edit);
-      theme("footer");
+      print theme("footer");
       break;
     case t("Post comment"):
       list($error_title, $error_body) = comment_post($edit);
       if ($error_body) {
-        theme("header");
-        theme("box", $error_title, $error_body);
-        theme("footer");
+        print theme("header");
+        print theme("box", $error_title, $error_body);
+        print theme("footer");
       }
       else {
         drupal_goto(url(comment_referer_load()));
@@ -1005,7 +1005,7 @@ function comment_admin_overview($status = 0) {
   $result = pager_query($sql,  50);
 
   while ($comment = db_fetch_object($result)) {
-    $rows[] = array(l($comment->subject, "node/view/$comment->nid/$comment->cid#$comment->cid", array("title" => htmlspecialchars(substr($comment->comment, 0, 128)))) ." ". (node_is_new($comment->nid, $comment->timestamp) ? theme_mark() : ""), format_name($comment), ($comment->status == 0 ? t("published") : t("not published")) ."</td><td>". format_date($comment->timestamp, "small") ."</td><td>". l(t("edit comment"), "admin/comment/edit/$comment->cid"), l(t("delete comment"), "admin/comment/delete/$comment->cid"));
+    $rows[] = array(l($comment->subject, "node/view/$comment->nid/$comment->cid#$comment->cid", array("title" => htmlspecialchars(substr($comment->comment, 0, 128)))) ." ". (node_is_new($comment->nid, $comment->timestamp) ? theme("mark") : ""), format_name($comment), ($comment->status == 0 ? t("published") : t("not published")) ."</td><td>". format_date($comment->timestamp, "small") ."</td><td>". l(t("edit comment"), "admin/comment/edit/$comment->cid"), l(t("delete comment"), "admin/comment/delete/$comment->cid"));
   }
 
   if ($pager = pager_display(NULL, 50, 0, "admin", tablesort_pager())) {
@@ -1264,7 +1264,7 @@ function comment_admin() {
 ** overridden by themes.
 */
 
-function comment_mode_form($mode) {
+function theme_comment_mode_form($mode) {
 
   $modes = _comment_get_modes();
   foreach ($modes as $key => $value) {
@@ -1274,7 +1274,7 @@ function comment_mode_form($mode) {
   return "<select name=\"mode\">$options</select>\n";
 }
 
-function comment_order_form($order) {
+function theme_comment_order_form($order) {
 
   $orders = _comment_get_orders();
   foreach ($orders as $key=>$value) {
@@ -1284,14 +1284,14 @@ function comment_order_form($order) {
   return "<select name=\"order\">$options</select>\n";
 }
 
-function comment_per_page_form($comments_per_page) {
+function theme_comment_per_page_form($comments_per_page) {
   for ($i = 10; $i < 100; $i = $i + 20) {
     $options .= " <option value=\"$i\"". ($comments_per_page == $i ? " selected=\"selected\"" : "") .">". t("%a comments per page", array("%a" => $i)) ."</option>";
   }
   return "<select name=\"comments_per_page\">$options</select>\n";
 }
 
-function comment_threshold($threshold) {
+function theme_comment_threshold($threshold) {
   $result = db_query("SELECT fid, filter FROM {moderation_filters} ");
   $options .= " <option value=\"0\">". t("-- threshold --") ."</option>";
   while ($filter = db_fetch_object($result)) {
@@ -1302,14 +1302,14 @@ function comment_threshold($threshold) {
   }
 }
 
-function comment_controls($threshold = 1, $mode = 3, $order = 1, $comments_per_page = 50) {
+function theme_comment_controls($threshold = 1, $mode = 3, $order = 1, $comments_per_page = 50) {
   static $output;
 
   if (!$output) {
-    $output .= comment_mode_form($mode);
-    $output .= comment_order_form($order);
-    $output .= comment_per_page_form($comments_per_page);
-    $output .= comment_threshold($threshold);
+    $output .= theme("comment_mode_form", $mode);
+    $output .= theme("comment_order_form", $order);
+    $output .= theme("comment_per_page_form", $comments_per_page);
+    $output .= theme("comment_threshold", $threshold);
 
     $output .= " ". form_submit(t("Save settings"));
 
@@ -1319,7 +1319,7 @@ function comment_controls($threshold = 1, $mode = 3, $order = 1, $comments_per_p
   return theme("box", t("Comment viewing options"), $output);
 }
 
-function comment_moderation_form($comment) {
+function theme_comment_moderation_form($comment) {
   global $comment_votes, $user, $node;
   static $votes;
 
@@ -1360,9 +1360,9 @@ function comment_moderation_form($comment) {
   return $output;
 }
 
-function comment($comment, $links = 0) {
+function theme_comment($comment, $links = 0) {
   $output .= "<div class=\"comment\">";
-  $output .= "<div class=\"subject\">$comment->subject". ($comment->new ? " ". theme("theme_mark") : "") ."</div>";
+  $output .= "<div class=\"subject\">$comment->subject". ($comment->new ? " ". theme("mark") : "") ."</div>";
   $output .= "<div class=\"moderation\">". $comment->moderation ."</div>";
   $output .= "<div class=\"credit\">". t("by %a on %b", array("%a" => format_name($comment), "%b" => format_date($comment->timestamp))) ."</div>";
   $output .= "<div class=\"body\">". check_output($comment->comment) ."</div>";
@@ -1371,21 +1371,21 @@ function comment($comment, $links = 0) {
   print $output;
 }
 
-function comment_folded($comment) {
+function theme_comment_folded($comment) {
   print "<div class=\"comment-folded\"><span class=\"subject\">". l($comment->subject, comment_referer_load() ."/$comment->cid#$comment->cid") ."</span> <span class=\"credit\">". t("by") ." ". format_name($comment) ."</span></div>";
 }
 
-function comment_flat_collapsed($comment, $threshold) {
+function theme_comment_flat_collapsed($comment, $threshold) {
   if (comment_visible($comment, $threshold)) {
     print comment_view($comment, "", 0);
   }
 }
 
-function comment_flat_expanded($comment, $threshold) {
+function theme_comment_flat_expanded($comment, $threshold) {
   comment_view($comment, comment_links($comment, 0), comment_visible($comment, $threshold));
 }
 
-function comment_thread_min($comment, $threshold, $pid = 0) {
+function theme_comment_thread_min($comment, $threshold, $pid = 0) {
   if (comment_visible($comment, $threshold)) {
     print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr><td width=\"". ($comment->depth * 25) ."\"><br /></td><td>\n";
     print comment_view($comment, "", 0);
@@ -1394,7 +1394,7 @@ function comment_thread_min($comment, $threshold, $pid = 0) {
   }
 }
 
-function comment_thread_max($comment, $threshold, $level = 0) {
+function theme_comment_thread_max($comment, $threshold, $level = 0) {
   /*
   ** We had quite a few browser specific issues: expanded comments below
   ** the top level got truncated on the right hand side.  A range of
@@ -1415,7 +1415,7 @@ function comment_thread_max($comment, $threshold, $level = 0) {
   }
 }
 
-function comment_post_forbidden() {
+function theme_comment_post_forbidden() {
   global $user;
   if ($user->uid) {
     return t("You can't post comments.");

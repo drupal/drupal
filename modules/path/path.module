@@ -1,5 +1,5 @@
 <?php
-/* $Id: path.module,v 1.13 2003/10/27 20:54:08 dries Exp $ */
+/* $Id: path.module,v 1.14 2003/11/09 23:27:16 dries Exp $ */
 
 function path_admin() {
   $op = $_POST["op"];
@@ -84,7 +84,7 @@ function path_form($edit = "", $error = "") {
 
   if ($error) {
     foreach ($error as $message) {
-      $form .= theme("theme_error", $message);
+      $form .= theme("error", $message);
     }
   }
 

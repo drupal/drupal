@@ -1,5 +1,5 @@
 <?php
-// $Id: cloud.module,v 1.63 2003/11/03 08:59:39 dries Exp $
+// $Id: cloud.module,v 1.64 2003/11/09 23:27:16 dries Exp $
 
 function cloud_help($section = "admin/help#cloud") {
   $output = "";
@@ -192,9 +192,9 @@ function cloud_page() {
 
 
   if (user_access("access site cloud")) {
-    theme("header");
-    theme("box", t("Site cloud"), cloud_help("cloud") . cloud_list(100));
-    theme("footer");
+    print theme("header");
+    print theme("box", t("Site cloud"), cloud_help("cloud") . cloud_list(100));
+    print theme("footer");
   }
 }
 
