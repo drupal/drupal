@@ -326,12 +326,13 @@ function block_user($type, &$edit, &$user) {
       if (isset($form)) {
         return form_item(t("Block configuration"), "<table border=\"0\" cellpadding=\"2\" cellspacing=\"2\">". $form ."</table>", t("Enable the blocks you would like to see displayed in the side bars."));
       }
+
+      break;
     case "edit_validate":
       if (!$edit["block"]) {
         $edit["block"] = array();
       }
       return $edit;
-      break;
   }
 }
 
