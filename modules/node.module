@@ -885,7 +885,7 @@ function node_form($edit, $error = NULL) {
 
   if (user_access("administer nodes")) {
     $output .= "</td><td align=\"left\" valign=\"top\">";
-    $output .= form_textfield(t("Authored by"), "name", $edit->name, 20, 25, $error["name"]);
+    $output .= form_textfield(t("Authored by"), "name", $edit->name, 20, 60, $error["name"]);
     $output .= form_textfield(t("Authored on"), "date", $edit->date, 20, 25, $error["date"]);
     $output .= "<br />";
     $output .= form_select(t("Set public/published"), "status", $edit->status, array(t("Disabled"), t("Enabled")));
@@ -1073,7 +1073,7 @@ function node_submit($node) {
         else {
           $fields = array("nid", "uid" => ($user->uid ? $user->uid : 0), "body", "teaser", "title", "type" => $node->type);
         }
-
+        
         $nid = node_save($node, array_merge($fields, module_invoke($node->type, "save", "update", $node)));
 
         /*
@@ -1120,7 +1120,7 @@ function node_submit($node) {
         else {
           $fields = array("uid" => ($user->uid ? $user->uid : 0), "body", "comment" => 2, "teaser", "title", "type" => $node->type);
         }
-
+        
         $nid = node_save($node, array_merge($fields, module_invoke($node->type, "save", "create", $node)));
 
         /*
