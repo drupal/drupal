@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.58 2002/05/23 14:14:48 kjartan Exp $
+// $Id: poll.module,v 1.59 2002/05/26 09:03:16 dries Exp $
 
 function poll_access($op, $node) {
   if ($op == "view") {
@@ -120,7 +120,7 @@ function poll_insert($node) {
 
 function poll_link($type) {
   if ($type == "menu.create" && user_access("post content")) {
-    $links[] = lm(t("create poll"), array("mod" => "node", "op" => "add", "type" => "poll"), "", array("title", t("Add a new poll.")));
+    $links[] = lm(t("create poll"), array("mod" => "node", "op" => "add", "type" => "poll"), "", array("title" => t("Add a new poll.")));
   }
 
   return $links ? $links : array();
