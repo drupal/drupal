@@ -189,7 +189,7 @@ function headline_admin() {
 }
 
 function headline_export($uri) {
-  global $site_name, $site_url, $HTTP_REFERER, $HTTP_USER_AGENT;
+  global $site_name, $site_url, $status, $HTTP_REFERER, $HTTP_USER_AGENT;
 
   if ($uri[1] == "headlines.rdf") {
     watchdog("message", "grabbed 'headlines.rdf' - referring url: $HTTP_REFERER - user agent: $HTTP_USER_AGENT");
@@ -207,12 +207,12 @@ function headline_export($uri) {
     print " <description>$site_name</description>\n";
     print "</channel>\n";
 
-    $result = db_query("SELECT * FROM stories WHERE status = 2 ORDER BY timestamp DESC LIMIT 10");
+    $result = db_query("SELECT * FROM nodes WHERE type = 'story' AND status = '$status[posted]' ORDER BY timestamp DESC LIMIT 10");
 
-    while ($story = db_fetch_object($result)) {
+    while ($node = db_fetch_object($result)) {
       print "<item>\n";
-      print " <title>". check_export($story->subject) ."</title>\n";
-      print " <link>". $site_url ."story.php?id=$story->id</link>\n";
+      print " <title>". check_export($node->title) ."</title>\n";
+      print " <link>". $site_url ."node.php?id=$node->id</link>\n";
       print "</item>\n";
     }
 
