@@ -1,12 +1,11 @@
 <?php
 // $Id$
 
-function ping_help($section = "admin/ping/help") {
+function ping_help($section = "admin/help#ping") {
   $output = "";
 
   switch($section) {
-    case 'admin/help':
-    case 'admin/ping/help':
+    case 'admin/help#ping':
       $output .= "<p>Drupal can pings sites automatically to notify them that your site has changed. It can ping the following sites:</p>";
       $output .= "<p>%weblogs, a web site that tracks and displays links to changed weblogs and news-oriented web sites. To get your Drupal site listed, weblogs.com must be informed about your site's updates.  This is the job of the ping module and when installed, the administrator doesn't have to do anything to participate in the %weblogs system. The ping module automatically notifies weblogs.com when your site is updated.  To do so, Drupal implements the %weblogs-XML.</p>";
       $output .= "<p>%weblogs-RSS, a web site that tracks and displays links to recently changed RSS feeds in XML format. To get your Drupal site listed, %weblogs-RSS must be informed about updates to your RSS feed.  This is the job of the ping module and when installed, the administrator doesn't have to do anything to participate in the %weblogs-RSS-changes system. The ping module automatically notifies %weblogs-RSS when your site is updated.</p>";

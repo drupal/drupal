@@ -1,13 +1,11 @@
 <?php
 // $Id$
 
-function cloud_help($section = "admin/node/syndication/cloud/help") {
+function cloud_help($section = "admin/help#cloud") {
   $output = "";
 
   switch ($section) {
-    case 'admin/help':
-    case 'admin/cloud/help':
-    case 'admin/node/syndication/cloud/help':
+    case 'admin/help#cloud':
       $output .= "The cloud monitor tracks or crawls other interesting web sites and displays their last modification dates.  Visitors to the host site learn about relevant sites and can easily see if there is new content.  Here is how it works:";
       $output .= "<ul>";
       $output .= "<li>The site administrator enters names and URLs of the relevant pages on the %cloud-add page.</li>";
@@ -54,9 +52,9 @@ function cloud_link($type) {
 
   if ($type == "system") {
     if (user_access("administer site cloud")) {
-      menu("admin/node/syndication/cloud", t("site cloud"), "cloud_admin", cloud_help("admin/node/syndication/cloud"));
-      menu("admin/node/syndication/cloud/add", t("add new site"), "cloud_admin", cloud_help("admin/node/syndication/cloud/add"));
-      menu("admin/node/syndication/cloud/help", t("help"), "cloud_help", NULL, 9);
+      menu("admin/node/syndication/cloud", t("site cloud"), "cloud_admin");
+      menu("admin/node/syndication/cloud/add", t("add new site"), "cloud_admin");
+      menu("admin/node/syndication/cloud/help", t("help"), "cloud_help", 9);
     }
   }
 

@@ -71,10 +71,10 @@ function book_link($type, $node = 0, $main = 0) {
 
   if ($type == "system") {
     if (user_access("maintain books")) {
-      menu("node/add/book", t("book page"), "book_page", NULL, 0);
-      menu("admin/node/book", t("books"), NULL, NULL, 4);
-      menu("admin/node/book/orphan", t("orphan pages"), NULL, NULL, 8);
-      menu("admin/node/book/help", t("help"), NULL, NULL, 9);
+      menu("node/add/book", t("book page"), "book_page", 0);
+      menu("admin/node/book", t("books"), NULL, 4);
+      menu("admin/node/book/orphan", t("orphan pages"), NULL, 8);
+      menu("admin/node/book/help", t("help"), NULL, 9);
 
       $result = db_query("SELECT n.nid, n.title FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = 0 ORDER BY b.weight, n.title");
       while ($book = db_fetch_object($result)) {
@@ -834,13 +834,11 @@ function book_admin() {
   }
 }
 
-function book_help($section = "admin/node/book/help") {
+function book_help($section = "admin/help#book") {
   $output = "";
 
   switch ($section) {
-    case 'admin/node/book/help':
-    case 'admin/book/help':
-    case 'admin/help':
+    case 'admin/help#book':
       $output .= "<p>The book organises content into a nested hierarchical structure. It is particularly good for manuals, Frequently Asked Questions (FAQs) and the like, allowing you to have chapters, sections, etc.</p>";
       $output .= "<p>A book is simply a collection of nodes that have been linked together. These nodes are usually of type <i>book page</i>, but you can insert nodes of any type into a book outline. Every node in the book has a <i>parent</i> node which  \"contains\" it. This is how book.module establishes its hierarchy. At any given level in the hierarchy, a book can contain many nodes. All these sibling nodes are sorted according to the <i>weight</i> that you give them.</p>";
       $output .= "<p>A book page is a special node type that allows you to embed PHP within the body of the page. This capability is only offerred to administrators, since malicious users could abuse this power. In addiiton, book pages contain a <i>log message</i> field which helps your users understand the motivation behind an edit of a book page. Each edited version of a book page is stored as a new revision of a node. This capability makes it easy to revert to an old version of a page, should that be desirable.</p>";

@@ -3,8 +3,8 @@
 
 function help_link($type) {
   if ($type == "system" && user_access("access administration pages")) {
-    menu("admin/help/glossary", t("glossary"), "help_glossary", NULL, 8);
-    menu("admin/help", t("help"), "help_help", NULL, 9);
+    menu("admin/help/glossary", t("glossary"), "help_glossary", 8);
+    menu("admin/help", t("help"), "help_help", 9);
   }
 }
 
@@ -31,15 +31,18 @@ function help_glossary() {
   return $output;
 }
 
-function help_help($section = "admin/help") {
+function help_help($section = "admin/help#help") {
   $output = "";
 
   switch ($section) {
 
-    case 'admin/help':
+    case 'admin/help#help':
       foreach (module_list() as $name) {
-        if (module_hook($name, "help")) {
-          $temp = module_invoke($name, "help", "admin/$name/help");
+        if ($name == 'help') {
+          continue;
+        }
+        else if (module_hook($name, "help")) {
+          $temp = module_invoke($name, "help", "admin/help#$name");
           if (!empty($temp)) {
             $links[] = l($name, "admin/help#$name");
             $output .= "<h2><a id=\"$name\">". ucfirst($name) ." module</a></h2>";

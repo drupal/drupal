@@ -1,11 +1,11 @@
 <?php
 // $Id$
 
-function tracker_help($section = "admin/tracker/help") {
+function tracker_help($section = "admin/help#tracker") {
   $output = "";
 
   switch ($section) {
-    case 'admin/tracker/help':
+    case 'admin/help#tracer':
       $output =  t("<p>The tracker module is a handy module for displaying the most recent posts.  By following the <i>view recent posts</i> link in the user block, a user may quickly review all recent postings.</p>");
       break;
     case 'admin/system/modules#description':
@@ -22,7 +22,7 @@ function tracker_link($type) {
 
   if ($type == "system") {
     if (user_access("access content")) {
-      menu("tracker", t("recent posts"), "tracker_page", NULL, 1);
+      menu("tracker", t("recent posts"), "tracker_page", 1);
     }
   }
 

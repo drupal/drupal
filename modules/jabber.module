@@ -9,7 +9,7 @@ function jabber_help($section) {
       $output = t("Enables login with Jabber ID and password.");
       break;
 
-    case 'user/help':
+    case 'user/help#jabber':
       $site = variable_get("site_name", "this web site");
 
       $output = "<p>%jabber is an %opensource instant messaging system designed to give the power of choice and freedom back to the users of instant messaging.  Not only does Jabber allow its users to use (and create) clients for numerous platforms, but it allows people to communicate to whomever they want in the way which is most convenient for them.</p>";
@@ -163,7 +163,7 @@ function jabber_auth($username, $password, $server) {
 function jabber_page() {
 
   theme("header");
-  theme("box", "Jabber", jabber_help("user/help"));
+  theme("box", "Jabber", jabber_help("user/help#jabber"));
   theme("footer");
 }
 

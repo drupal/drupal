@@ -630,12 +630,11 @@ function _forum_get_topic_order($sortby) {
   }
 }
 
-function forum_help($section = "admin/forum/help") {
+function forum_help($section = "admin/help#forum") {
   $output = "";
 
   switch ($section) {
-    case 'admin/help':
-    case 'admin/forum/help':
+    case 'admin/help#forum':
       $output .= "<h3>Creating a forum</h3>";
       $output .= "<p>The forum module uses taxonomy to organize itself. To create a forum you first have to create a %taxonomy. When doing this, choose a sensible name for it (such as \"fora\") and make sure under \"Types\" that \"forum\" is selected. Once you have done this, %taxo-terms to it. Each term will become a forum. If you fill in the description field, users will be given additonal information about the forum on the main forum page. For example: \"troubleshooting\" - \"Please ask your questions here.\"</p>";
       $output .= "<p>When you are happy with your vocabulary, go to %forums and set <b>Forum vocabulary</b> to the one you have just created. There will now be fora active on the site. For users to access them they must have the \"access content\" %permission and to create a topic they must have the \"create forum topics\" %permission. These permissions can be set in the %permission pages.</p>";

@@ -1,14 +1,13 @@
 <?php
 // $Id$
 
-function node_help($section = "admin/node/help") {
+function node_help($section = "admin/help#node") {
   global $mod;
   $output = "";
 
   switch ($section) {
 
-    case 'admin/help':
-    case 'admin/node/help':
+    case 'admin/help#node':
       $output .= "<h3>Nodes</h3>";
       $output .= "<p>The core of the Drupal system is the node. All of the contents of the system are placed in nodes, or extensions of nodes.";
       $output .= "A base node contains:<dl>";
@@ -560,14 +559,14 @@ function node_link($type, $node = 0, $main = 0) {
   }
 
   if ($type == "system") {
-    menu("node/add", t("create content"), NULL, NULL, 1);
+    menu("node/add", t("create content"), NULL, 1);
 
     if (user_access("administer nodes")) {
-      menu("admin/node", t("content"), "node_admin", node_help("admin/node"));
-      menu("admin/node/search", t("search"), "node_admin", node_help("admin/node/search"), 8);
-      menu("admin/node/help", t("help"), "node_help", NULL, 9);
-      menu("admin/node/edit", t("edit post"), "node_admin", NULL, 0, 1);
-      menu("admin/node/settings", t("settings"), "node_admin", node_help("admin/node/settings"), 8);
+      menu("admin/node", t("content"), "node_admin");
+      menu("admin/node/search", t("search"), "node_admin", 8);
+      menu("admin/node/help", t("help"), "node_help", 9);
+      menu("admin/node/edit", t("edit post"), "node_admin", 0, 1);
+      menu("admin/node/settings", t("settings"), "node_admin", 8);
     }
   }
 

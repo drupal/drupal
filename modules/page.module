@@ -1,12 +1,11 @@
 <?php
 // $Id$
 
-function page_help($section = "admin/page/help") {
+function page_help($section = "admin/help#page") {
   $output = "";
 
   switch ($section) {
-    case 'admin/help':
-    case 'admin/page/help':
+    case 'admin/help#page':
       $output .= "<p>The page module is used to create a <i>static page</i>.  Unlike a story, a static page is a persistent web page on your site which usually shortcuts the typical lifecycle of user generated content (i.e. submit -&gt; moderate -&gt; post -&gt; comment).  A static page is usually linked from the main navigation bar, using whatever text the author wishes.  To create a static page without this navigation link, simply skip the link text field.</p>";
       $output .= "<p>Site pages, unlike many other forms of Drupal content, may be made of PHP code in addition to HTML and text. All Drupal objects and functions are available to a site administrator.</p>";
       $output = t($output);
@@ -90,7 +89,7 @@ function page_link($type) {
 
   if ($type == "system") {
     if (user_access("maintain static pages")) {
-      menu("node/add/page", t("static page"), "page_page", NULL, 0);
+      menu("node/add/page", t("static page"), "page_page", 0);
     }
   }
 

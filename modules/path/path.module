@@ -102,7 +102,7 @@ function path_form($edit = "", $error = "") {
   return form($form);
 }
 
-function path_help($section = "admin/path/help") {
+function path_help($section = "admin/help#path") {
   $output = "";
 
   switch ($section) {
@@ -115,7 +115,7 @@ function path_help($section = "admin/path/help") {
     case "admin/path/add":
       $output = t("Enter the path you wish to create the alias for, followed by the name of the new alias. Each path can be associated with only one alias.");
       break;
-    case "admin/path/help":
+    case "admin/help#path":
       $output .= "<h3>Background</h3><p>URL aliasing gives users the ability to have control over all Drupal paths. This functionality will integrate seamlessly into node forms and also provide the administrator an interface to view all aliases that have been created.</p><p>Aliases have a 1 to 1 relationship with their original Drupal URLs. In otherwards you cannot have an alias map to more than one path. Likewise, a Drupal URL can't be mapped to more than one alias.</p>";
       $output .= "<h3>Permissions</h3><p>Two new permissions are introduced for aliasing URLs: <i>create url aliases</i> and <i>administer url aliases</i>.</p>";
       $output .= "<ol>";
@@ -131,9 +131,9 @@ function path_help($section = "admin/path/help") {
 
 function path_link($type, $node = NULL) {
   if ($type == "system" && user_access("administer url aliases")) {
-    menu("admin/path", t("url aliasing"), "path_admin", path_help("admin/path"), 4);
-    menu("admin/path/add", t("new alias"), "path_admin", path_help("admin/path/add"));
-    menu("admin/path/help", t("help"), "path_admin", NULL, 9);
+    menu("admin/path", t("url aliasing"), "path_admin", 4);
+    menu("admin/path/add", t("new alias"), "path_admin");
+    menu("admin/path/help", t("help"), "path_admin", 9);
    }
 }
 

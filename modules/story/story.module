@@ -1,17 +1,17 @@
 <?php
 // $Id$
 
-function story_help($section = "admin/story/help") {
+function story_help($section = "admin/help#story") {
   $output = "";
 
   switch ($section) {
-    case "admin/system/modules#description":
+    case 'admin/system/modules#description':
       $output = t("Enables users to submit stories, articles or similar content.");
       break;
-    case "admin/system/modules/story":
+    case 'admin/system/modules/story':
       $output = t("Stories are like newspaper articles. They tend to follow a publishing flow of <b>submit -&gt; moderate -&gt; post to the main page -&gt; comments</b>. Below you may fix a minimum word count for stories and also write some submission or content guidelines for users wanting to post a story.");
       break;
-    case "admin/story/help":
+    case 'admin/help#story':
       $output = "<p>The story module lets your users submit articles for consideration by the rest of the community, who can vote on them if moderation is enabled.  Stories usually follow a publishing flow of <b>submit -&gt; moderate -&gt; post to the main page -&gt; comments</b>.  Administrators are able to shortcut this flow as desired.</p>";
       $output .= "In %story-config you can set up an introductory text for story authors, and a floor on the number of words which may be included in a story. This is designed to help discourage the submission of trivially short stories.";
       $output = t($output, array("%story-config" => l(t("site configuration &raquo; modules &raquo; story"), "admin/system/modules/story")));
@@ -53,7 +53,7 @@ function story_link($type) {
 
   if ($type == "system") {
     if (user_access("create stories")) {
-      menu("node/add/story", t("story"), "story_page", NULL, 0);
+      menu("node/add/story", t("story"), "story_page", 0);
     }
   }
 
