@@ -42,8 +42,8 @@
 <?php
 
                 $this->box("Drop where?", "
-                                           <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0">
-                                             <TR>  
+                                           <TABLE WIDTH=\"100%\" CELLPADDING=\"0\" CELLSPACING=\"0\">
+                                             <TR>
                                                <TD ALIGN=\"left\" VALIGN=\"top\">
                                                  <A HREF=\"index.php\">home</A><BR>
                                                  <A HREF=\"module.php?mod=faq\">faq</A><BR>
@@ -128,11 +128,11 @@
 
 <?php
 
-                                  echo "<BR>". check_output($story->abstract, 1) ."</BR>";
+                                  echo "<BR>". check_output($story->abstract, 1) ."<BR>";
                                   if ($story->updates)
                                     echo "<P><FONT COLOR=\"#E09226\">". t("Editor's note by <A HREF=\"account.php?op=userinfo&uname=$story->editor\">$story->editor</A>") .":</FONT>". check_output($story->updates, 1) ."</P>";
                                   if ($reply)
-                                    echo "<BR>". check_output($story->article, 1) ."</BR>";
+                                    echo "<BR>". check_output($story->article, 1) ."<BR>";
 
 ?>
 
@@ -140,16 +140,16 @@
                               </TR>
                               <TR>
                                 <TD COLSPAN="2" ALIGN="right">
- 
+
 <?php
 
                                   if (!$reply)
                                     echo "<FONT COLOR=\"#E09226\">". theme_morelink($this, $story) ."</FONT>";
                                   else
                                     echo "<FONT COLOR=\"#E09226\">". $reply ."</FONT>";
-  
+
 ?>
- 
+
                                 </TD>
                               </TR>
                             </TABLE>
@@ -204,7 +204,7 @@
 
       // Author:
       echo "                        <TR>";
-      echo "                          <TD ALIGN=\"right\"><FONT COLOR=\"#FEFEFE\">". t("Author") .":</FONT></TD><TD><B>" .format_username($comment->userid) . "</B> ";
+      echo "                          <TD ALIGN=\"right\"><FONT COLOR=\"#FEFEFE\">". t("Author") .":</FONT></TD><TD><B>". format_username($comment->userid) ."</B> ";
                                         if ($comment->userid != $anonymous) {
       // Display extra information line:
                                           if ($comment->fake_email) $info .= format_email($comment->fake_email);
@@ -220,10 +220,9 @@
       echo "                  </TR>";
 
       // Print body of comment:
-                  if ($comment) echo " 
+                  if ($comment) echo "
                               <TR>
-                                <TD BGCOLOR=\"#E7E7E7\" BACKGROUND=\"themes/jeroen/images/sketch.gif\">" . check_output($comment->comment, 1) ."
-                                </TD>
+                                <TD BGCOLOR=\"#E7E7E7\" BACKGROUND=\"themes/jeroen/images/sketch.gif\">". check_output($comment->comment, 1) ."</TD>
                               </TR>";
 
       // Print bottom link(s):
