@@ -65,23 +65,18 @@ function aggregator_help($section) {
       return t('<p>Add a site that has an RSS/RDF feed. The URL is the full path to the RSS feed file. For the feed to update automatically you must run "cron.php" on a regular basis. If you already have a feed with the URL you are planning to use, the system will not accept another feed with the same URL.</p>');
     case 'admin/aggregator/add/category':
       return t('<p>Categories provide a way to group items from different news feeds together. Each news category has its own feed page and block. For example, you could tag various sport-related feeds as belonging to a category called <em>Sports</em>. News items can be added to a category automatically by setting a feed to automatically place its item into that category, or by using the categorize items link in any listing of news items.</p>');
-    case 'admin/aggregator/configure':
-      return t('<p>These settings control the display of aggregated content.</p>');
   }
 }
 
-function aggregator_configure() {
-  if ($_POST) {
-    system_settings_save();
-  }
+function aggregator_settings() {
+  $items = array(0 => t('none')) + drupal_map_assoc(array(3, 5, 10, 15, 20, 25), '_aggregator_items');
+  $period = drupal_map_assoc(array(3600, 10800, 21600, 32400, 43200, 86400, 172800, 259200, 604800, 1209600, 2419200, 4838400, 9676800), 'format_interval');
 
   $output = '';
-  $items = array(0 => t('none')) + drupal_map_assoc(array(3, 5, 10, 15, 20, 25), '_aggregator_items');
-
   $output .= form_select(t('Items shown in sources and categories pages'), 'aggregator_summary_items', variable_get('aggregator_summary_items', 3), $items, t('The number of items which will be shown with each feed or category in the feed and category summary pages.'));
+   $output .= form_select(t('Discard news items older than'), 'aggregator_clear', variable_get('aggregator_clear', 9676800), $period, t('Older news items will be automatically discarded.  Requires crontab.'));
   $output .= form_radios(t('Category selection type'), 'aggregator_category_selector', variable_get('aggregator_category_selector', 'check'), array('check' => t('checkboxes'), 'select' => t('multiple selector')), t('The type of category selection widget which is shown on categorization pages. Checkboxes are easier to use; a multiple selector is good for working with large numbers of categories.'));
-
-  print theme('page', system_settings_form($output));
+  return $output;
 }
 
 /**
@@ -130,9 +125,6 @@ function aggregator_menu($may_cache) {
       'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'admin/aggregator/add/category', 'title' => t('add category'),
       'callback' => 'aggregator_admin_edit_category', 'access' => $edit,
-      'type' => MENU_LOCAL_TASK);
-    $items[] = array('path' => 'admin/settings/aggregator', 'title' => t('configure'),
-      'callback' => 'aggregator_configure', 'access' => $edit,
       'type' => MENU_LOCAL_TASK);
 
     $items[] = array('path' => 'aggregator', 'title' => t('news aggregator'),
@@ -567,10 +559,10 @@ function aggregator_parse_feed(&$data, $feed) {
   }
 
   /*
-  ** Remove all items that are older than 3 months:
+  ** Remove all items that are older than flush item timer:
   */
 
-  $age = time() - 8035200; // 60 * 60 * 24 * 31 * 3
+  $age = time() - variable_get('aggregator_clear', 9676800);
   $result = db_query('SELECT iid FROM {aggregator_item} WHERE fid = %d AND timestamp < %d', $feed['fid'], $age);
 
   if (db_num_rows($result)) {
