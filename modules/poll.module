@@ -257,7 +257,7 @@ function poll_page() {
     $output .= "<li>".l($node->title, "node/view/$node->nid") ." - ". format_plural($node->votes, "1 vote", "%count votes") ." - ". ($node->active ? t("open") : t("closed")) ."</li>";
   }
   $output .= "</ul>";
-  print theme("box", t("Polls"), $output);
+  print $output;
   print theme("footer");
 }
 

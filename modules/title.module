@@ -57,14 +57,16 @@ function title_page() {
       $output .= theme("table", $header, $rows);
       $output .= "</div>";
 
+      drupal_set_title(t("Matching Posts"));
       print theme("header");
-      print theme("box", t("Matching Posts"), $output);
+      print $output;
       print theme("footer");
     }
   }
   else {
+    drupal_set_title(t("Access denied"));
     print theme("header");
-    print theme("box", t("Access denied"), message_access());
+    print message_access();
     print theme("footer");
   }
 }

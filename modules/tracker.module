@@ -104,8 +104,9 @@ function tracker_page() {
   global $user;
 
   if (user_access("access content")) {
-    print theme("header", t("Recent posts"));
-    print theme("box", t("Recent posts"), tracker_posts(arg(1)));
+    drupal_set_title(t("Recent posts"));
+    print theme("header");
+    print tracker_posts(arg(1));
     print theme("footer");
   }
   else {

@@ -783,8 +783,9 @@ function statistics_page() {
     print theme("footer");
   }
   else {
+    drupal_set_title(t("Access denied"));
     print theme("header");
-    print theme("box", t("Access denied"), message_access());
+    print message_access();
     print theme("footer");
   }
 }

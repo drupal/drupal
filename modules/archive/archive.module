@@ -194,6 +194,12 @@ function archive_link($type) {
     }
   }
 
+  if ($type == "system") {
+    if (user_access("access content")) {
+      menu("archive", t("archives"), "archive_page", 0, 1);
+    }
+  }
+
   return $links;
 }
 
@@ -230,7 +236,7 @@ function archive_page() {
     $start = "<div class=\"container-inline\">";
     $start .= form_select("", "year", ($year ? $year : date("Y")), $years). form_select("", "month", ($month ? $month : date("m")), $months) . form_select("", "day", ($day ? $day : date("d")), $days) . form_submit(t("Show"));
     $start .= "</div>";
-    print theme("box", t("Archives"), form($start));
+    print form($start);
 
     /*
     ** Fetch nodes for the selected date, or current date if none

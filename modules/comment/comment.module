@@ -883,8 +883,9 @@ function comment_page() {
     case t("Post comment"):
       list($error_title, $error_body) = comment_post($edit);
       if ($error_body) {
+        drupal_set_title($error_title);
         print theme("header");
-        print theme("box", $error_title, $error_body);
+        print $error_body;
         print theme("footer");
       }
       else {

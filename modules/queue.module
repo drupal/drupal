@@ -116,8 +116,9 @@ function queue_overview() {
   }
   $output .= "</table>";
 
+  drupal_set_title(t("Moderation queue"));
   print theme("header");
-  print theme("box", t("Moderation queue"), $output);
+  print $output;
   print theme("footer");
 }
 
@@ -192,7 +193,7 @@ function queue_page() {
   }
   else {
     print theme("header");
-    print theme("box", t("Moderation queue"), message_access());
+    print message_access();
     print theme("footer");
   }
 }

@@ -40,6 +40,12 @@ function theme_header($title = "") {
   $output .= theme("blocks", "all");
   $output .= "</td><td style=\"vertical-align: top;\">";
 
+  $output .= theme("breadcrumb", drupal_get_breadcrumb());
+  $output .= "<h1>" . drupal_get_title() . "</h1>";
+  if ($help = menu_get_active_help()) {
+    $output .= "<small>$help</small><hr />";
+  }
+
   return $output;
 }
 

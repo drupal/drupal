@@ -14,8 +14,9 @@ function unconed_help($section) {
   return $output;
 }
 
-function unconed_header($title = "") {
+function unconed_header() {
   global $base_url;
+  $title = drupal_get_title();
   $foreground = "#000000";
   $background = "#ffffff";
 
@@ -74,6 +75,11 @@ function unconed_header($title = "") {
     <tr>
     <td valign="top" width="80%">
   <?php
+  print theme("breadcrumb", drupal_get_breadcrumb());
+  print "<h1>" . drupal_get_title() . "</h1>";
+  if ($help = menu_get_active_help()) {
+    print "<small>$help</small><hr />";
+  }
 }
 
 function unconed_node($node, $main = 0) {

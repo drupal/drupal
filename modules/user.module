@@ -963,8 +963,9 @@ function user_view($uid = 0) {
 
     $output .= implode("\n", module_invoke_all("user", "view_private", "", $user));
 
-    print theme("header", $user->name);
-    print theme("box", $user->name, $output);
+    drupal_set_title($user->name);
+    print theme("header");
+    print $output;
     print theme("footer");
   }
   else if ($uid && $account = user_load(array("uid" => $uid, "status" => 1))) {
@@ -976,13 +977,15 @@ function user_view($uid = 0) {
       $output .= form_item(t("Administration"), l(t("edit account"), "admin/user/edit/$account->uid"));
     }
 
-    print theme("header", $account->name);
-    print theme("box", $account->name, $output);
+    drupal_set_title($account->name);
+    print theme("header");
+    print $output;
     print theme("footer");
   }
   else {
     $output = user_login();
-    print theme("header", t("User login"));
+    drupal_set_title(t("User login"));
+    print theme("header");
     print theme("box", t("User login"), $output);
     if (variable_get("user_register", 1)) {
       print theme("box", t("Create new user account"), user_register());
@@ -1004,16 +1007,18 @@ function user_page() {
   switch ($op) {
     case t("E-mail new password"):
     case "password":
-      print theme("header", t("E-mail new password"));
-      print theme("box", t("E-mail new password"), user_pass($edit));
+      drupal_set_title(t("E-mail new password"));
+      print theme("header");
+      print user_pass($edit);
       print theme("footer");
       break;
     case t("Create new account"):
     case "register":
       $output = user_register($edit);
-      print theme("header", t("Create new account"));
+      drupal_set_title(t("Create new account"));
+      print theme("header");
       if (variable_get("user_register", 1)) {
-        print theme("box", t("Create new account"), $output);
+        print $output;
       }
       else {
         print message_access();
@@ -1023,16 +1028,18 @@ function user_page() {
     case t("Log in"):
     case "login":
       $output = user_login($edit);
-      print theme("header", t("Log in"));
-      print theme("box", t("Log in"), $output);
+      drupal_set_title(t("Log in"));
+      print theme("header");
+      print $output;
       print theme("footer");
       break;
     case t("Save user information"):
     case "edit":
       $output = user_edit($edit);
       $GLOBALS["theme"] = init_theme();
-      print theme("header", t("Edit user information"));
-      print theme("box", t("Edit user information"), $output);
+      drupal_set_title(t("Edit user information"));
+      print theme("header");
+      print $output;
       print theme("footer");
       break;
     case "view":
@@ -1043,8 +1050,9 @@ function user_page() {
       print user_logout();
       break;
     case "help":
+      drupal_set_title(t("Distributed authentication"));
       print theme("header");
-      print theme("box", t("Distributed authentication"), user_help("user/help#user"));
+      print user_help("user/help#user");
       print theme("footer");
       break;
     default:
