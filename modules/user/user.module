@@ -352,15 +352,13 @@ function user_block($op = "list", $delta = 0) {
         break;
       case 1:
         if ($user->uid) {
-          $content[] = theme("theme_menu_list", module_invoke_all("link", "menu.create"));
-          $content[] = theme("theme_menu_list", module_invoke_all("link", "menu.view"));
-          $content[] = theme("theme_menu_list", module_invoke_all("link", "menu.settings"));
-          $content[] = theme("theme_menu_list", module_invoke_all("link", "menu.misc"));
-
-          $output = implode($content, "<br />");
+          $output .= theme("theme_menu_list", module_invoke_all("link", "menu.create"));
+          $output .= theme("theme_menu_list", module_invoke_all("link", "menu.view"));
+          $output .= theme("theme_menu_list", module_invoke_all("link", "menu.settings"));
+          $output .= theme("theme_menu_list", module_invoke_all("link", "menu.misc"));
 
           $block["subject"] = $user->name;
-          $block["content"] = "<div style=\"{ white-space: nowrap; }\">$output</div>";
+          $block["content"] = "<div style=\"white-space: nowrap;\">$output</div>";
           return $block;
         }
         break;

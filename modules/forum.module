@@ -87,7 +87,6 @@ function forum_block($op = "list", $delta = 0) {
       if (empty($cache)) {
         unset($items);
         $content = node_title_list(db_query_range("SELECT n.nid, n.title, u.uid, u.name, GREATEST(n.created, MAX(c.timestamp)) AS sort FROM node n, forum f LEFT JOIN comments c ON c.nid = n.nid LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'forum' AND n.nid = f.nid AND n.status = 1 GROUP BY n.nid ORDER BY sort DESC", 0, variable_get("forum_block_num", "5")), t("Active forum topics:"));
-        $content .= "<br />";
 
         unset ($items);
         $content .= node_title_list(db_query_range("SELECT n.nid, n.title, u.uid, u.name FROM node n LEFT JOIN forum f ON n.nid = f.nid LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'forum' ORDER BY n.nid DESC", 0, variable_get("forum_block_num", "5")), t("New forum topics:"));

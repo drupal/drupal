@@ -306,8 +306,8 @@ function poll_view_results(&$node, $main, $block, $links) {
         $percentage = round($node->chvotes[$key] * 100 / max($votestotal, 1));
 
         $output .= "<div class=\"poll-text\">". filter($value) ."</div>";
-        $output .= "<div style=\"float:left; width:". $width ."%; height: 1em;\" class=\"poll-foreground\"></div>";
-        $output .= "<div style=\"float:left; width:". (100 - $width) ."%; height: 1em;\" class=\"poll-background\"></div>";
+        $output .= "<div style=\"width:". $width ."%;\" class=\"poll-foreground\"></div>";
+        $output .= "<div style=\"width:". (100 - $width) ."%;\" class=\"poll-background\"></div>";
         $output .= "<div align=\"right\"> $percentage%". (!$block ? " (". format_plural($node->chvotes[$key], "1 vote", "%count votes") .")" : "") ."</div>";
       }
     }

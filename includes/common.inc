@@ -427,7 +427,7 @@ function drupal_goto($url) {
 
   /*
   ** The "Location" header sends a REDIRECT status code to the http
-  ** deamon.  In some cases this can go wrong, so we make sure none
+  ** daemon.  In some cases this can go wrong, so we make sure none
   ** of the code /below/ gets executed when we redirect.
   */
 
@@ -773,7 +773,7 @@ function form($form, $method = "post", $action = 0, $options = 0) {
 }
 
 function form_item($title, $value, $description = 0) {
-  return "<p>". ($title ? "<b>$title:</b><br />" : "") . $value . ($description ? "<br /><small><i>$description</i></small>" : "") ."</p>\n";
+  return "<div class=\"form-item\">". ($title ? "<div class=\"title\">$title:</div>" : "") . $value . ($description ? "<div class=\"description\">$description</div>" : "") ."</div>\n";
 }
 
 function form_radio($title, $name, $value = 1, $checked = 0, $description = 0) {
