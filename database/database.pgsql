@@ -263,7 +263,6 @@ CREATE TABLE node (
   nid SERIAL,
   type varchar(16) NOT NULL default '',
   title varchar(128) NOT NULL default '',
-  path varchar(250) NULL default '',
   score integer NOT NULL default '0',
   votes integer NOT NULL default '0',
   uid integer NOT NULL default '0',
@@ -281,12 +280,11 @@ CREATE TABLE node (
   static integer NOT NULL default '0',
   PRIMARY KEY  (nid)
 );
-CREATE INDEX node_type_idx ON node(type(4));
-CREATE INDEX node_title_idx ON node(title,type(4));
+CREATE INDEX node_type_idx ON node(type);
+CREATE INDEX node_title_idx ON node(title,type);
 CREATE INDEX node_status_idx ON node(status);
 CREATE INDEX node_uid_idx ON node(uid);
 CREATE INDEX node_moderate_idx ON node (moderate);
-CREATE INDEX node_path_idx ON node (path(8));
 CREATE INDEX node_promote_status_idx ON node (promote, status);
 
 --
@@ -301,6 +299,19 @@ CREATE TABLE page (
   PRIMARY KEY  (nid)
 );
 CREATE INDEX page_nid_idx ON page(nid);
+
+--
+-- Table structure for table 'path'
+--
+
+CREATE TABLE path (
+  pid integer NOT NULL default '0',
+  dst varchar(128) NOT NULL default '',
+  src varchar(128) NOT NULL default '',
+  PRIMARY KEY  (pid)
+);
+CREATE INDEX path_src_idx ON path(src);
+CREATE INDEX path_dst_idx ON path(dst);
 
 --
 -- Table structure for permission

@@ -454,28 +454,46 @@ function update_65() {
     update_sql("CREATE FUNCTION \"rand\"() RETURNS float AS '
       BEGIN
         RETURN random();
-      END;' LANGUAGE 'plpgsql';");
+      END;' LANGUAGE 'plpgsql'");
   }
 }
 
 function update_66() {
-  update_sql("CREATE TABLE path (
-    pid int(10) unsigned NOT NULL auto_increment,
-    old varchar(128) NOT NULL default '',
-    new varchar(128) NOT NULL default '',
-    PRIMARY KEY  (pid),
-    UNIQUE KEY old (old),
-    UNIQUE KEY new (new)
-  )");
+  if ($GLOBALS["db_type"] == "pgsql") {
+    update_sql("CREATE TABLE {path} (
+      pid integer NOT NULL default '0',
+      src varchar(128) NOT NULL default '',
+      dst varchar(128) NOT NULL default '',
+      PRIMARY KEY  (pid)
+    )");
+    update_sql("CREATE INDEX path_src_idx ON {path}(src)");
+    update_sql("CREATE INDEX path_dst_idx ON {path}(dst)");
+    $result = db_query("SELECT nid, path FROM {node} WHERE path != ''");
+    while ($node = db_fetch_object($result)) {
+      update_sql("INSERT INTO {path} (src, dst) VALUES ('node/view/$node->nid', '". check_query($node->path) ."')");
+    }
 
-  // Migrate the existing paths:
-  $result = db_query("SELECT nid, path FROM {node} WHERE path != ''");
-  while ($node = db_fetch_object($result)) {
-    update_sql("INSERT INTO {path} (old, new) VALUES ('node/view/$node->nid', '". check_query($node->path) ."')");
+    /* most versions of pgsql are incapable of dropping columns */
+
   }
+  else {
+    update_sql("CREATE TABLE {path} (
+      pid int(10) unsigned NOT NULL auto_increment,
+      src varchar(128) NOT NULL default '',
+      dst varchar(128) NOT NULL default '',
+      PRIMARY KEY  (pid),
+      UNIQUE KEY src (src),
+      UNIQUE KEY dst (dst)
+    )");
+    // Migrate the existing paths:
+    $result = db_query("SELECT nid, path FROM {node} WHERE path != ''");
+    while ($node = db_fetch_object($result)) {
+      update_sql("INSERT INTO {path} (src, dst) VALUES ('node/view/$node->nid', '". check_query($node->path) ."')");
+    }
 
-  update_sql("ALTER TABLE {node} DROP path");
- }
+    update_sql("ALTER TABLE {node} DROP path");
+  }
+}
 
 /*
 ** System functions
