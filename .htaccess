@@ -43,7 +43,8 @@ ErrorDocument 500 /error.php
    php_value magic_quotes_sybase     0
    php_value session.name            DROPID
    php_value session.auto_start      1  
-   php_value session.cookie_lifetime 864000
-   php_value session.gc_maxlifetime  864000
-   php_value session.cache_expire    28800
+   php_value session.cookie_lifetime 2000000
+   php_value session.gc_maxlifetime  2000000
+   php_value session.cache_expire    200000
 </IfModule>
+
