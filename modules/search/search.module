@@ -236,12 +236,20 @@ function search_keywords_split($text) {
 
   // Process words
   $words = explode(' ', $text);
+  array_walk($words, '_search_keywords_truncate');
 
   // Save last keyword result
   $last = $text;
   $lastsplit = $words;
 
   return $words;
+}
+
+/**
+ * Helper function for array_walk in search_keywords_split.
+ */
+function _search_keywords_truncate(&$text) {
+  $text = truncate_utf8($text, 3);
 }
 
 /**
