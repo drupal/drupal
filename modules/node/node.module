@@ -460,7 +460,7 @@ function node_save($node) {
         $v[] = $value;
       }
     }
-    
+
     // Update the node in the database:
     db_query("UPDATE {node} SET ". implode(', ', $q) ." WHERE nid = '$node->nid'", $v);
 
@@ -1406,14 +1406,14 @@ function node_delete($edit) {
  * Generate a listing of promoted nodes.
  */
 function node_page_default() {
-  $result = pager_query('SELECT DISTINCT(n.nid), n.type, n.sticky, n.created FROM {node} n '. node_access_join_sql() .' WHERE n.promote = 1 AND n.status = 1 AND '. node_access_where_sql() .' ORDER BY n.sticky DESC, n.created DESC', variable_get('default_nodes_main', 10));
+  $result = pager_query('SELECT DISTINCT(n.nid), n.sticky, n.created FROM {node} n '. node_access_join_sql() .' WHERE n.promote = 1 AND n.status = 1 AND '. node_access_where_sql() .' ORDER BY n.sticky DESC, n.created DESC', variable_get('default_nodes_main', 10));
 
   if (db_num_rows($result)) {
     drupal_set_html_head('<link rel="alternate" type="application/rss+xml" title="RSS" href="'. url('node/feed', NULL, NULL, TRUE) .'" />');
 
     $output = '';
     while ($node = db_fetch_object($result)) {
-      $output .= node_view(node_load(array('nid' => $node->nid, 'type' => $node->type)), 1);
+      $output .= node_view(node_load(array('nid' => $node->nid)), 1);
     }
     $output .= theme('pager', NULL, variable_get('default_nodes_main', 10));
   }
