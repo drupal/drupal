@@ -42,7 +42,7 @@
    
  ### Compose query:
  $query = "SELECT DISTINCT s.id, s.subject, u.userid, s.timestamp FROM stories s LEFT JOIN users u ON s.author = u.id WHERE s.status = 2 ";
- if ($terms != "") $query .= "AND (s.subject LIKE '%$terms%' OR s.abstract LIKE '%$terms%' OR s.comments LIKE '%$terms%') ";
+ if ($terms != "") $query .= "AND (s.subject LIKE '%$terms%' OR s.abstract LIKE '%$terms%' OR s.updates LIKE '%$terms%') ";
  if ($category != "") $query .= "AND s.category = '$category' ";
  if ($author != "") $query .= "AND u.userid = '$author' ";
  if ($order == "Oldest first") $query .= " ORDER BY s.timestamp ASC";

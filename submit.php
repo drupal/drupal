@@ -1,11 +1,8 @@
 <?PHP
 
 function submit_enter() {
-  include "functions.inc";
-  include "theme.inc";
+  global $user, $theme;
   
-  global $user;
-
   ### Guidlines:
   $output .= "<P>Got some news or some thoughts you would like to share?  Fill out this form and they will automatically get whisked away to our submission queue where our moderators will frown at it, poke at it and hopefully post it.  Every registered user is automatically a moderator and can vote whether or not your sumbission should be carried to the front page for discussion.</P>\n";
   $output .= "<P>Note that we do not revamp or extend your submission so it is up to you to make sure your submission is well-written: if you don't care enough to be clear and complete, your submission is likely to be moderated down by our army of moderators.  Try to be complete, aim for clarity, organize and structure your text, and try to carry out your statements with examples.  It is also encouraged to extend your submission with arguments that flow from your unique intellectual capability and experience: offer some insight or explanation as to why you think your submission is interesting.  Make sure your submission has some meat on it!</P>\n";
@@ -59,10 +56,7 @@ function submit_enter() {
 }
 
 function submit_preview($subject, $abstract, $story, $category) {
-  global $user;
-
-  include "functions.inc";
-  include "theme.inc";
+  global $user, $theme;
 
   $output .= "<FORM ACTION=\"submit.php\" METHOD=\"post\">\n";
 
@@ -131,10 +125,7 @@ function submit_preview($subject, $abstract, $story, $category) {
 }
 
 function submit_submit($subject, $abstract, $article, $category) {
-  global $user;
-
-  include "functions.inc";
-  include "theme.inc";
+  global $user, $theme;
 
   ### Add submission to SQL table:
   db_query("INSERT INTO stories (author, subject, abstract, article, category, timestamp) VALUES ('$user->id', '". addslashes($subject) ."', '". addslashes($abstract) ."', '". addslashes($article) ."', '". addslashes($category) ."', '". time() ."')");
@@ -150,6 +141,9 @@ function submit_submit($subject, $abstract, $article, $category) {
     mail($notify_email, "$notify_subject $subject", $message, "From: $notify_from\nX-Mailer: PHP/" . phpversion());
   }
 }
+
+include "functions.inc";
+include "theme.inc";
 
 switch($op) {
   case "Preview submission":
