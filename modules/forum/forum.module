@@ -21,15 +21,15 @@ function forum_view($node) {
 }
 
 function forum_form($edit = array()) {
-  global $format;
+  global $format, $REQUEST_URI;
 
   $form .= form_textfield(t("Subject"), "title", $edit[title], 50, 64);
   $form .= structure_form("forum", $edit);
   $form .= form_textarea(t("Body"), "body", $edit[body], 50, 10);
   $form .= form_hidden("nid", $edit[nid]);
-  $form .= form_submit("Save forum");
+  $form .= form_submit("Submit");
 
-  return form("admin.php?mod=forum", $form);
+  return form($REQUEST_URI, $form);
 }
 
 function forum_save($edit) {
@@ -83,7 +83,7 @@ function forum_admin() {
     case "edit":
       print forum_form(node_get_array(nid, $id));
       break;
-   case "Save forum":
+   case "Submit":
       print status(forum_save($edit));
       // fall through:
     default:

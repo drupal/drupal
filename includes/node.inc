@@ -54,7 +54,7 @@ function node_get_comments($nid) {
 function node_save($node) {
   global $user, $status;
 
-  $rows = array(nid, pid, lid, cid, tid, log, type, title, score, votes, author, status, comment, promote, timestamp);
+  $rows = array(nid, pid, lid, cid, tid, log, type, title, score, votes, author, status, comment, promote, moderate, timestamp);
 
   if ($node[nid] > 0) {
     $n = node_get_object("nid", $node[nid]);
@@ -90,7 +90,7 @@ function node_save($node) {
       throttle("post node", variable_get(max_node_rate, 900));
 
       // setup default values:
-      $node = array_merge(array(title => "?", author => $user->id, type => "?", pid => 0, cid => 0, tid => 0, log => "node created", status => (category_submission($node[cid]) ? $status[queued] : $status[posted]) , score => 0, votes => 0, comment => category_comment($node[cid]), promote => category_promote($node[cid]), timestamp => time()), $node);
+      $node = array_merge(array(title => "?", author => $user->id, type => "?", pid => 0, cid => 0, tid => 0, log => "node created", status => (category_submission($node[cid]) ? $status[queued] : $status[posted]) , score => 0, votes => 0, comment => category_comment($node[cid]), promote => category_promote($node[cid]), moderate => "", timestamp => time()), $node);
 
       // prepare queries:
       $f1 = array();
@@ -159,8 +159,8 @@ function node_form($node) {
 }
 
 function node_status($node, $index = -1) {
-  $status = array_intersect(array(dumped, expired, queued, posted), node_invoke($node, "status"));
-  return $index < 0 ? $status : $status[$index];
+  $status = array(dumped, expired, queued, posted);
+  return $index < 0 ? array_intersect($status, node_invoke($node, "status")) : $status[$index];
 }
 
 function node_control($node) {
@@ -196,6 +196,10 @@ function node_control($node) {
 function node_visible($node) {
   global $user, $status;
   return ($node->status == $status[posted]) || ($node->status == $status[queued] && $user->id) || user_access($user, $node->type) || user_access($user, "node");
+}
+
+function node_access($account, $node) {
+  return strstr($node->moderate, $account->userid);
 }
 
 ?>

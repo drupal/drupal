@@ -6,29 +6,29 @@
 #   submission's selection box whereas the corresponding values
 #   represent the mathematical calculation to be performed to
 #   update a comment's value.
-$moderation_votes = array("neutral (+0)" => "+ 0",
+$queue_votes = array("neutral (+0)" => "+ 0",
                           "post it (+1)" => "+ 1",
                           "dump it (-1)" => "- 1");
 
-$module = array("menu" => "moderation_menu",
-                "page" => "moderation_page");
+$module = array("menu" => "queue_menu",
+                "page" => "queue_page");
 
-function moderation_menu() {
-  return array("<A HREF=\"module.php?mod=moderation\">". t("moderation queue") ."</A> (<FONT COLOR=\"red\">". moderation_count() ."</FONT>)");
+function queue_menu() {
+  return array("<A HREF=\"module.php?mod=queue\">". t("moderation queue") ."</A> (<FONT COLOR=\"red\">". queue_count() ."</FONT>)");
 }
 
-function moderation_count() {
+function queue_count() {
   global $status;
   $result = db_query("SELECT COUNT(nid) FROM node WHERE status = '$status[queued]'");
   return ($result) ? db_result($result, 0) : 0;
 }
 
-function moderation_score($id) {
+function queue_score($id) {
   $result = db_query("SELECT score FROM node WHERE nid = '$id'");
   return ($result) ? db_result($result, 0) : 0;
 }
 
-function moderation_vote($id, $vote) {
+function queue_vote($id, $vote) {
   global $status, $user;
 
   if (!user_get($user, "history", "n$id")) {
@@ -55,7 +55,7 @@ function moderation_vote($id, $vote) {
   }
 }
 
-function moderation_overview() {
+function queue_overview() {
   global $status, $theme, $user;
 
   $result = db_query("SELECT n.*, u.userid FROM node n LEFT JOIN users u ON n.author = u.id WHERE n.status = '$status[queued]'");
@@ -63,8 +63,8 @@ function moderation_overview() {
   $content .= "<TABLE BORDER=\"0\" CELLSPACING=\"4\" CELLPADDING=\"4\">\n";
   $content .= " <TR><TH>". t("Subject") ."</TH><TH>". t("Author") ."</TH><TH>". t("Type") ."</TH><TH>". t("Score") ."</TH></TR>\n";
   while ($node = db_fetch_object($result)) {
-    if ($user->id == $node->author || user_get($user, "history", "n$node->nid")) $content .= " <TR><TD><A HREF=\"module.php?mod=moderation&op=view&id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">". format_username($node->userid) ."</TD><TD ALIGN=\"center\">". check_output($node->type) ."</TD><TD ALIGN=\"center\">". moderation_score($node->nid) ."</TD></TR>\n";
-    else $content .= " <TR><TD><A HREF=\"module.php?mod=moderation&op=view&id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">". format_username($node->userid) ."</TD><TD ALIGN=\"center\">". check_output($node->type) ."</TD><TD ALIGN=\"center\"><A HREF=\"module.php?mod=moderation&op=view&id=$node->nid\">". t("vote") ."</A></TD></TR>\n";
+    if ($user->id == $node->author || user_get($user, "history", "n$node->nid")) $content .= " <TR><TD><A HREF=\"module.php?mod=queue&op=view&id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">". format_username($node->userid) ."</TD><TD ALIGN=\"center\">". check_output($node->type) ."</TD><TD ALIGN=\"center\">". queue_score($node->nid) ."</TD></TR>\n";
+    else $content .= " <TR><TD><A HREF=\"module.php?mod=queue&op=view&id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">". format_username($node->userid) ."</TD><TD ALIGN=\"center\">". check_output($node->type) ."</TD><TD ALIGN=\"center\"><A HREF=\"module.php?mod=queue&op=view&id=$node->nid\">". t("vote") ."</A></TD></TR>\n";
   }
   $content .= "</TABLE>\n";
 
@@ -73,8 +73,8 @@ function moderation_overview() {
   $theme->footer();
 }
 
-function moderation_node($id) {
-  global $theme, $user, $moderation_votes;
+function queue_node($id) {
+  global $theme, $user, $queue_votes;
 
   $node = node_get_object(nid, $id);
 
@@ -91,8 +91,8 @@ function moderation_node($id) {
     }
 
     // moderation form:
-    $output .= "<FORM ACTION=\"module.php?mod=moderation\" METHOD=\"post\">\n";
-    foreach ($moderation_votes as $key=>$value) $options .= "  <OPTION VALUE=\"$value\">$key</OPTION>\n";
+    $output .= "<FORM ACTION=\"module.php?mod=queue\" METHOD=\"post\">\n";
+    foreach ($queue_votes as $key=>$value) $options .= "  <OPTION VALUE=\"$value\">$key</OPTION>\n";
     $output .= "<SELECT NAME=\"vote\">$options</SELECT>\n";
     $output .= "<INPUT TYPE=\"hidden\" NAME=\"id\" VALUE=\"$node->nid\">\n";
     $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Vote\">\n";
@@ -105,19 +105,19 @@ function moderation_node($id) {
   }
 }
 
-function moderation_page() {
+function queue_page() {
   global $id, $op, $user, $vote;
 
   if ($user->id) {
     switch($op) {
       case "Vote";
-        moderation_vote(check_input($id), check_input($vote));
+        queue_vote(check_input($id), check_input($vote));
         // fall through:
       case "view":
-        moderation_node(check_input($id));
+        queue_node(check_input($id));
         break;
       default:
-        moderation_overview();
+        queue_overview();
         break;
     }
   }

@@ -1,0 +1,106 @@
+<?php
+
+$module = array("admin" => "moderate_admin");
+
+function moderate_comment_access($cid) {
+  global $user;
+  return db_fetch_object(db_query("SELECT n.moderate FROM comments c LEFT JOIN node n ON c.lid = n.nid WHERE c.cid = '". check_input($cid) ."' AND n.moderate LIKE '%$user->userid%'"));
+}
+
+function moderate_overview($query = array()) {
+  global $user;
+
+  $result = db_query("SELECT n.*, u.userid FROM node n LEFT JOIN users u ON n.author = u.id WHERE n.moderate LIKE '%$user->userid%' ORDER BY n.timestamp DESC LIMIT 15");
+
+  $output .= status($query[0]);
+  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
+  $output .= " <TR><TH>node</TH><TH>category / topic</TH><TH>status</TH><TH>author</TH><TH>date</TH><TH>operations</TH></TR>\n";
+
+  $r1 = db_query("SELECT n.*, u.userid FROM node n LEFT JOIN users u ON n.author = u.id WHERE n.moderate LIKE '%$user->userid%' ORDER BY n.timestamp DESC LIMIT 30");
+  while ($node = db_fetch_object($r1)) {
+    $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD>". category_name($node->cid) ." / ". topic_name($node->tid) ."</TD><TD>". node_status($node, $node->status) ."</TD><TD>". format_username($node->userid) ."</TD><TD>". format_date($node->timestamp, "small") ."</TD><TD><A HREF=\"admin.php?mod=moderate&type=node&op=edit&id=$node->nid\">edit $node->type</A></TD></TR>\n";
+
+    $r2 = db_query("SELECT c.*, u.userid FROM comments c LEFT JOIN users u ON c.author = u.id WHERE c.lid = '$node->nid' ORDER BY c.timestamp DESC");
+    while ($comment = db_fetch_object($r2)) {
+      $output .= "<TR><TD COLSPAN=\"3\">&nbsp;- <A HREF=\"node.php?id=$comment->lid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A></TD><TD>". format_username($user->userid) ."</TD><TD>". format_date($node->timestamp, "small") ."</TD><TD><A HREF=\"admin.php?mod=moderate&type=comment&op=edit&id=$comment->cid\">edit comment</A></TD></TR>\n";
+    }
+  }
+  $output .= "</TABLE>\n";
+
+  return $output;
+}
+
+function moderate_node_edit($id) {
+  global $user;
+
+  $node = node_get_array("nid", $id);
+  if ($node && strstr($node[moderate], $user->userid)) {
+    return node_form($node);
+  }
+  else {
+    return "access denied";
+  }
+}
+
+function moderate_node_save($edit) {
+  global $user;
+
+  $node = node_get_array("nid", $edit[nid]);
+  if ($node && strstr($node[moderate], $user->userid)) {
+    $edit[type] = $node[type];
+    return node_invoke($edit, "save");
+  }
+  else {
+    return "access denied";
+  }
+}
+
+function moderate_comment_edit($id) {
+  if (moderate_comment_access($id)) {
+    return comment_edit($id);
+  }
+  else {
+    return "access denied";
+  }
+}
+
+function moderate_comment_save($id, $edit) {
+  if (moderate_comment_access($id)) {
+    return comment_save($id, $edit);
+  }
+  else {
+    return "access denied";
+  }
+}
+
+function moderate_admin() {
+  global $op, $id, $edit, $type;
+
+   switch ($type) {
+    case "comment":
+      switch ($op) {
+        case "edit":
+          print moderate_comment_edit($id);
+          break;
+        case "Submit":
+          print status(moderate_comment_save($id, $edit));
+          // fall through:
+        default:
+          print moderate_overview();
+      }
+      break;
+    default:
+      switch ($op) {
+        case "edit":
+          print moderate_node_edit($id);
+          break;
+        case "Submit":
+          print status(moderate_node_save($edit));
+          // fall through:
+       default:
+         print moderate_overview();
+    }
+  }
+}
+
+?>

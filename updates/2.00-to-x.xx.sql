@@ -130,3 +130,6 @@ CREATE TABLE forum (
   body text NOT NULL,
   PRIMARY KEY (lid)
 );
+
+# 01/05/2001:
+ALTER TABLE node ADD moderate TEXT NOT NULL;
