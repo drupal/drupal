@@ -34,8 +34,8 @@ function forum_conf_options() {
   $output .= form_select("Forum vocabulary", "forum_nav_vocabulary", variable_get("forum_nav_vocabulary", ""), $vocs, t("The taxonomy vocabulary that will be used as the navigation tree."));
   $output .= _taxonomy_term_select("Containers", "forum_containers", variable_get("forum_containers", array()), variable_get("forum_nav_vocabulary", ""), t("You can choose forums which will not have topics, but will be just containers for other forums."), 1, t("<none>"));
 
-  $output .= form_textfield("Topic icons path", "forum_topic_icon_path", variable_get("forum_topic_icon_path", "images/forum/topics/"), 30, 255, "The path to the topic icons.  Leave blank to disable icons.");
-  $output .= form_textfield("Folder icons path", "forum_folder_icon_path", variable_get("forum_folder_icon_path", "images/forum/folder/"), 30, 255, "The path to the <b>default</b>, <b>hot</b>, <b>new</b>, <b>hot & new</b>, and <b>closed</b> folder icons.  Leave blank to disable icons.");
+  $output .= form_textfield("Topic icons path", "forum_topic_icon_path", variable_get("forum_topic_icon_path", ""), 30, 255, "The path to the topic icons.  Leave blank to disable icons.");
+  $output .= form_textfield("Folder icons path", "forum_folder_icon_path", variable_get("forum_folder_icon_path", ""), 30, 255, "The path to the <b>default</b>, <b>hot</b>, <b>new</b>, <b>hot & new</b>, and <b>closed</b> folder icons.  Leave blank to disable icons.");
   $number = array(5 => 5, 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30, 35 => 35, 40 => 40, 50 => 50, 60 => 60, 80 => 80, 100 => 100, 10000=>10000);
   $output .= form_select("Hot topic threshold", "forum_hot_topic", variable_get("forum_hot_topic", 15), $number, "The number of posts a topic must have to be considered <b>hot</b>.");
   $number = array(10 => 10, 25 => 25, 50 => 50, 75 => 75, 100 => 100);
@@ -211,7 +211,7 @@ function forum_form(&$node, &$help, &$error) {
 
   $output .= _taxonomy_term_select("Forum", "taxonomy", $tid, variable_get("forum_nav_vocabulary", ""), "", 0, "", variable_get("forum_containers", array()));
 
-  if ($icon_path = variable_get("forum_topic_icon_path", "images/forum/topics/")) {
+  if ($icon_path = variable_get("forum_topic_icon_path", "")) {
     if ($node->icon) {
       // we are editing post
       if ($dir = @opendir($icon_path)) {
@@ -270,7 +270,7 @@ function forum_update($node) {
 
 function _forum_decode_icon($node) {
   // to prevent malicious users
-  if ($icon_path = variable_get("forum_topic_icon_path", "images/forum/topics/")) {
+  if ($icon_path = variable_get("forum_topic_icon_path", "")) {
     if ($dir = @opendir($icon_path)) {
       $icon_num = 0;
       while($icon = readdir($dir)) {
@@ -668,8 +668,8 @@ function forum_topic_list($topics, $num_topics, $sortby, $forum_per_page, $offse
 
 
 function _forum_get_icon($node) {
-  if (variable_get("forum_topic_icon_path", "images/topics/") && $node->icon) {
-    return "<img src=\"".variable_get("forum_topic_icon_path", "images/forum/topics/"). check_output($node->icon)."\">";
+  if (variable_get("forum_topic_icon_path", "") && $node->icon) {
+    return "<img src=\"".variable_get("forum_topic_icon_path", ""). check_output($node->icon)."\">";
   }
   else {
     return "&nbsp;";
@@ -680,7 +680,7 @@ function _forum_get_folder_icon($new_posts, $num_posts = 0, $comment_mode = 0) {
   // "folder" icon because it's generally rendered as a folder
   global $theme;
 
-  $base_path = variable_get("forum_folder_icon_path", "images/forum/folder");
+  $base_path = variable_get("forum_folder_icon_path", "");
   if ($base_path) {
     if ($num_posts > variable_get("forum_hot_topic", 15)) {
       $icon = $new_posts ? "hot_new" : "hot";
@@ -757,7 +757,6 @@ To disable icons, set the icon paths as blank in Admin -> Site Configuration -> 
 <br />
 All files in the icon directory are assumed to be images. Usually it is best to use GIF or JPG files as icons.
 You may use images of whatever size you wish, but it is customary to use 15x15 or 16x16.
-
 
   <?php
 }
