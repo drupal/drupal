@@ -7,15 +7,6 @@
  */
 
 /**
- * Implementation of hook_settings().
- */
-function blog_settings() {
-  $output = form_textarea(t('Explanation or submission guidelines'), 'blog_help', variable_get('blog_help', ''), 70, 5, t('This text will be displayed at the top of the blog submission form.  It is useful for helping or instructing your users.'));
-  $output .= form_select(t('Minimum number of words in a blog entry'), 'minimum_blog_size', variable_get('minimum_blog_size', 0), drupal_map_assoc(array(0, 10, 25, 50, 75, 100, 125, 150, 175, 200)), t("The minimum number of words a personal blog entry should contain.  This is useful to rule out submissions that do not meet the site's standards, such as short test posts."));
-  return $output;
-}
-
-/**
  * Implementation of hook_node_name().
  */
 function blog_node_name($node) {
@@ -68,10 +59,6 @@ function blog_help($section) {
       <p>If a user has the ability to post blogs, then the import module (news aggregator) will display a blog-it link <strong>(b)</strong> next to each news item in its lists.  Click on this and you will be taken to the blog submission form, with the title, a link to the item, and a link to the source into the body text already in the text box, ready for you to add your explanation.  This actively encourages people to add blog entries about things they see and hear elsewhere in the Drupal site and from your syndicated partner sites.</p>", array('%scripting-com' => '<a href="http://www.scripting.com/">http://www.scripting.com/</a>'));
     case 'admin/modules#description':
       return t('Enables keeping an easily and regularly updated web page or a blog.');
-    case 'admin/settings/blog':
-      return t("<p>A weblog is a running journal of a user's ideas.  Enter the minimum word count for a single entry, and the text displayed on the entry submission form.</p>");
-    case 'node/add/blog':
-      return variable_get('blog_help', '');
     case 'node/add#blog':
       return t("A blog is a regularly updated journal or diary made up of individual posts shown in reversed chronological order.  A blog is tightly coupled to the author so each user will have his 'own' blog.");
   }
@@ -190,17 +177,6 @@ function blog_page_last() {
 
   drupal_set_html_head('<link rel="alternate" type="application/rss+xml" title="RSS - blogs" href="'. url('blog/feed') .'" />');
   print theme('page', $output);
-}
-
-/**
- * Implementation of hook_validate().
- *
- * Ensures the blog entry is of adequate length.
- */
-function blog_validate(&$node) {
-  if (isset($node->body) && count(explode(' ', $node->body)) < variable_get('minimum_blog_size', 0)) {
-    form_set_error('body', t('The body of your blog is too short. You need at least %words words to submit your blog.', array('%words' => variable_get('minimum_story_size', 0))));
-  }
 }
 
 /**

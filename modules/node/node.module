@@ -53,6 +53,10 @@ function node_help($section) {
   if (arg(0) == 'node' && is_numeric(arg(1)) && arg(2) == 'revisions') {
     return t('The revisions let you track differences between multiple versions of a post.');
   }
+
+  if (arg(0) == 'node' && arg(1) == 'add' && $type = arg(2)) {
+    return variable_get($type .'_help', '');
+  }
 }
 
 /**
@@ -825,14 +829,19 @@ function node_types() {
   print theme('page', theme('table', $header, $rows));
 }
 
-function node_types_configure($type = NULL) {
+function node_types_configure() {
   // Go to the listing page when we submit this form, system_settings_save() calls drupal_goto().
   if ($_POST['op']) {
     $_GET['q'] = 'admin/node/configure/types';
   }
   system_settings_save();
 
-  $output .= implode('', node_invoke_nodeapi($type, 'settings'));
+  $type = arg(4);
+
+  $group = form_textarea(t('Explanation or submission guidelines'), $type .'_help', variable_get($type .'_help', ''), 70, 5, t('This text will be displayed at the top of the %type submission form. It is useful for helping or instructing your users.', array('%type' => node_invoke($type, 'node_name'))));
+  $group .= form_select(t('Minimum number of words'), 'minimum_'. $type .'_size', variable_get('minimum_'. $type .'_size', 0), drupal_map_assoc(array(0, 10, 25, 50, 75, 100, 125, 150, 175, 200)), t('The minimum number of words a %type must be to be considered valid. This can be useful to rule out submissions that do not meet the site\'s standards, such as short test posts.', array('%type' => node_invoke($type, 'node_name'))));
+  $output = form_group(t('Submission form'), $group);
+  $output .= form_group(t('Workflow'), implode('', node_invoke_nodeapi($type, 'settings')));
 
   print theme('page', system_settings_form($output));
 }
@@ -1060,6 +1069,12 @@ function node_validate($node) {
     if (!$node->title) {
       form_set_error('title', t('You have to specify a valid title.'));
     }
+  }
+
+  // Make sure the body has the minimim number of words.
+  // todo use a better word counting algorithm that will work in other languages
+  if (isset($node->body) && count(explode(' ', $node->body)) < variable_get('minimum_'. $node->type .'_size', 0)) {
+    form_set_error('body', t('The body of your %type is too short. You need at least %words words.', array('%words' => variable_get('minimum_'. $node->type .'_size', 0), '%type' => node_invoke($node->type, 'node_name'))));
   }
 
   // Auto-generate the teaser, but only if it hasn't been set (e.g. by a

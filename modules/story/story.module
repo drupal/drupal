@@ -13,25 +13,11 @@ function story_help($section) {
   switch ($section) {
     case 'admin/modules#description':
       return t('Enables users to submit stories, articles or similar content.');
-    case 'admin/settings/story':
-      return t("Stories are articles in their simplest form: they have a title, a teaser and a body, but can be extended by other modules. The teaser is part of the body too. Stories may be used as a personal blog or for news articles.");
     case 'admin/help#story':
       return t("Stories are articles in their simplest form: they have a title, a teaser and a body, but can be extended by other modules. The teaser is part of the body too. Stories may be used as a personal blog or for news articles. By default, no menu item, or navigation element is created for a story. An extra feature of a story is, that an administrator can specify a submission guideline and enforce a minimum word count for user submitted stories");
-    case 'node/add/story':
-      return variable_get('story_help', '');
     case 'node/add#story':
       return t('Stories are articles in their simplest form: they have a title, a teaser and a body, but can be extended by other modules. The teaser is part of the body too. Stories may be used as a personal blog or for news articles.');
   }
-}
-
-/**
- * Implementation of hook_settings().
- */
-function story_settings() {
- $output .= form_textarea(t('Explanation or submission guidelines'), 'story_help', variable_get('story_help', ''), 70, 5, t('This text will be displayed at the top of the story submission form.  It is useful for helping or instructing your users.'));
- $output .= form_select(t('Minimum number of words'), 'minimum_story_size', variable_get('minimum_story_size', 0), drupal_map_assoc(array(0, 10, 25, 50, 75, 100, 125, 150, 175, 200)), t('The minimum number of words a story must be to be considered valid.  This can be useful to rule out submissions that do not meet the site\'s standards, such as short test posts.'));
-
- return $output;
 }
 
 /**
@@ -77,17 +63,6 @@ function story_menu($may_cache) {
   }
 
   return $items;
-}
-
-/**
- * Implementation of hook_validate().
- *
- * Ensures the story is of adequate length.
- */
-function story_validate(&$node) {
-  if (isset($node->body) && count(explode(' ', $node->body)) < variable_get('minimum_story_size', 0)) {
-    form_set_error('body', t('The body of your story is too short. You need at least %words words to submit your story.', array('%words' => variable_get('minimum_story_size', 0))));
-  }
 }
 
 /**
