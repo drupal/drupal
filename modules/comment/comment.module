@@ -1106,13 +1106,13 @@ function comment_controls($threshold = 1, $mode = 3, $order = 1, $nid, $page = 0
 
     if (($mode == 2 || $mode == 4) && $comment_num > $comments_per_page) {
       if ($page > 1) {
-        $p[] = l(t("previous"), "node/view/$nid&amp;comment_page=". $page - 1);
+        $p[] = l(t("previous"), "node/view/$nid&amp;comment_page=". ($page - 1));
       }
       for ($n = 1; $n <= ceil($comment_num / $comments_per_page); $n++) {
         $p[] = ($n == $page) ? "<b>&raquo;$n&laquo;</b>" : l($n, "node/view/$nid&amp;comment_page=$n");
       }
       if ($page < ceil($comment_num / $comments_per_page)) {
-        $p[] = l(t("next"), "node/view/$nid&amp;comment_page". $page + 1);
+        $p[] = l(t("next"), "node/view/$nid&amp;comment_page=". ($page + 1));
       }
       $output .= form_item(t("Browse %a comments", array("%a" => $comment_num)), implode("&nbsp;&#149;&nbsp;", $p), t("There are more than %a comments in this node. Use these links to navigate through them.", array("%a" => $comments_per_page)));
     }
