@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.282 2003/12/18 13:58:59 kjartan Exp $ */
+/* $Id: common.inc,v 1.283 2003/12/19 10:52:37 kjartan Exp $ */
 
 /**
  * @name drupal_title
@@ -144,14 +144,16 @@ function throttle($type, $rate) {
 
 function _fix_gpc_magic(&$item, $key) {
   if (is_array($item)) {
-    array_walk($item, '_fix_gpc_magic_array');
+    array_walk($item, '_fix_gpc_magic');
   }
-  $item = stripslashes($i);
+  else {
+    $item = stripslashes($i);
+  }
 }
 
 function fix_gpc_magic() {
   static $fixed = false;
-  if ($fixed && ini_get("magic_quotes_gpc")) {
+  if (!$fixed && ini_get("magic_quotes_gpc")) {
     array_walk($_GET, '_fix_gpc_magic');
     array_walk($_POST, '_fix_gpc_magic');
     array_walk($_COOKIE, '_fix_gpc_magic');
