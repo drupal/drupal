@@ -7,7 +7,7 @@ function error_flood() {
 }
 
 function error_httpd() {
-  global $REDIRECT_STATUS, $REDIRECT_URL, $HTTP_REFERER, $HTTP_USER_AGENT;
+  global $REDIRECT_STATUS, $REDIRECT_URL, $HTTP_REFERER, $HTTP_USER_AGENT, $site_url;
 
   switch($REDIRECT_STATUS) {
     case 500:
@@ -35,7 +35,7 @@ function error_httpd() {
   print "<H1>Oops, an error occured!</H1>\n";
   print "<B>Processed output:</B><BR>\n";
   print "  * $message<BR>\n";
-  print "  * Return to the <A HREF=\"\">main page</A>.\n";
+  print "  * Return to the <A HREF=\"$site_url\">main page</A>.\n";
   print "</PRE>\n";
 }
 
