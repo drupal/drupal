@@ -32,7 +32,11 @@ function blogapi_xmlrpc() {
                    'mt.getRecentPostTitles' => array('function' => 'blogapi_get_recent_post_titles'),
                    'mt.getCategoryList' => array('function' => 'blogapi_get_category_list'),
                    'mt.getPostCategories' => array('function' => 'blogapi_get_post_categories'),
-                   'mt.setPostCategories' => array('function' => 'blogapi_set_post_categories')
+                   'mt.setPostCategories' => array('function' => 'blogapi_set_post_categories'),
+                   'mt.supportedMethods' => array('function' => 'blogapi_supported_methods'),
+                   'mt.supportedTextFilters' => array('function' => 'blogapi_supported_text_filters'),
+                   'mt.getTrackbackPings' => array('function' => 'blogapi_get_trackback_pings'),
+                   'mt.publishPost' => array('function' => 'blogapi_publish_post')
                    );
 
   return $methods;
@@ -102,37 +106,33 @@ function blogapi_new_post($req_params) {
     return blogapi_error($user);
   }
 
-  $promote = variable_get('node_promote_blog', 0);
-  $comment = variable_get('node_comment_blog', 2);
-  $moderate = variable_get('node_moderate_blog', 0);
-  $revision = variable_get('node_revision_blog', 0);
+  $edit = array();
+  $edit['type'] = 'blog';
+  $edit['uid'] = $user->uid;
+  $edit['name'] = $user->name;
+  $edit['promote'] = variable_get('node_promote_blog', 0);
+  $edit['comment'] = variable_get('node_comment_blog', 2);
+  $edit['moderate'] = variable_get('node_moderate_blog', 0);
+  $edit['revision'] = variable_get('node_revision_blog', 0);
+  $edit['format'] = FILTER_DEFAULT_FORMAT;
+  $edit['status'] = $params[4];
 
   // check for bloggerAPI vs. metaWeblogAPI
   if (is_array($params[3])) {
-    $title = $params[3]['title'];
-    $body = $params[3]['description'];
+    $edit['title'] = $params[3]['title'];
+    $edit['body'] = $params[3]['description'];
+    _blogapi_mt_extra($edit, $params[3]);
   }
   else {
-    $title = blogapi_blogger_title($params[3]);
-    $body = $params[3];
+    $edit['title'] = blogapi_blogger_title($params[3]);
+    $edit['body'] = $params[3];
   }
 
-  if (!valid_input_data($title, $body)) {
+  if (!valid_input_data($edit['title'], $edit['body'])) {
     return blogapi_error(t('Terminated request because of suspicious input data.'));
   }
 
-  $node = node_validate(array('type' => 'blog',
-                              'uid' => $user->uid,
-                              'name' => $user->name,
-                              'title' => $title,
-                              'body' => $body,
-                              'status' => $params[4],
-                              'promote' => $promote,
-                              'comment' => $comment,
-                              'moderate' => $moderate,
-                              'format' => FILTER_DEFAULT_FORMAT,
-                              'revision' => $revision
-                              ));
+  $node = node_validate($edit);
 
   if (form_get_errors()) {
     return blogapi_error();
@@ -175,23 +175,23 @@ function blogapi_edit_post($req_params) {
     return blogapi_error(message_access());
   }
 
+  $node->status = $params[4];
+
   // check for bloggerAPI vs. metaWeblogAPI
   if (is_array($params[3])) {
-    $title = $params[3]['title'];
-    $body = $params[3]['description'];
+    $node->title = $params[3]['title'];
+    $node->body = $params[3]['description'];
+    _blogapi_mt_extra($node, $params[3]);
   }
   else {
-    $title = blogapi_blogger_title($params[3]);
-    $body = $params[3];
+    $node->title = blogapi_blogger_title($params[3]);
+    $node->body = $params[3];
   }
 
   if (!valid_input_data($title, $body)) {
     return blogapi_error(t('Terminated request because of suspicious input data.'));
   }
 
-  $node->title = $title;
-  $node->body = $body;
-  $node->status = $params[4];
   $node = node_validate($node);
 
   if (form_get_errors()) {
@@ -222,12 +222,8 @@ function blogapi_get_post($req_params) {
   }
 
   $node = node_load(array('nid' => $params[0]));
-  $blog = new xmlrpcval(array('userid' => new xmlrpcval($node->name, 'string'),
-                              'dateCreated' => new xmlrpcval(iso8601_encode($node->created), 'dateTime.iso8601'),
-                              'title' => new xmlrpcval($node->title, 'string'),
-                              'description' => new xmlrpcval($node->body, 'string'),
-                              'postid' => new xmlrpcval($node->nid, 'string')),
-                        'struct');
+
+  $blog = _blogapi_get_post($node, true);
 
   return new xmlrpcresp($blog);
 }
@@ -362,17 +358,8 @@ function blogapi_get_recent_posts($req_params, $bodies = TRUE) {
 
   $result = db_query_range('SELECT n.nid, n.title,'. ($bodies ? ' n.body,' : '') ." n.created, u.name FROM {node} n, {users} u WHERE n.uid=u.uid AND n.type = 'blog' AND n.uid = %d ORDER BY n.created DESC",  $user->uid, 0, $params[3]);
   while ($blog = db_fetch_object($result)) {
-    $xmlrpcval = array (
-      'userid' => new xmlrpcval($blog->name, 'string'),
-      'dateCreated' => new xmlrpcval(iso8601_encode($blog->created), 'dateTime.iso8601'),
-      'title' => new xmlrpcval($blog->title, 'string'),
-      'postid' => new xmlrpcval($blog->nid, 'string')
-    );
-    if ($bodies) {
-      $xmlrpcval['content'] = new xmlrpcval("<title>$blog->title</title>$blog->body", 'string');
-      $xmlrpcval['description'] = new xmlrpcval($blog->body, 'string');
-    }
-    $blogs[] = new xmlrpcval($xmlrpcval, 'struct');
+    $xmlrpcval = _blogapi_get_post($blog, $bodies);
+    $blogs[] = $xmlrpcval;
   }
   return new xmlrpcresp(new xmlrpcval($blogs, 'array'));
 }
@@ -381,6 +368,70 @@ function blogapi_get_recent_posts($req_params, $bodies = TRUE) {
 function blogapi_get_recent_post_titles($req_params) {
   return blogapi_get_recent_posts($req_params, TRUE);
 }
+
+/**
+ * Blogging API callback. Sends a list of supported methods to the client.
+ */
+function blogapi_supported_methods($req_params) {
+  $methods = array_keys(blogapi_xmlrpc());
+
+  $output = array();
+  foreach ($methods as $method) {
+    $output[] = new xmlrpcval($method, 'string');
+  }
+  return new xmlrpcresp(new xmlrpcval($output, 'array'));
+}
+
+/**
+ * Blogging API callback. Sends a list of available input formats.
+ */
+function blogapi_supported_text_filters($req_params) {
+  global $user;
+
+  // NOTE: we're only using anonymous' formats because the MT spec
+  // does not allow for per-user formats.
+  $formats = filter_formats();
+
+  $filters = array();
+  foreach ($formats as $format) {
+    $filter['key'] = new xmlrpcval($format->format, 'string');
+    $filter['label'] = new xmlrpcval($format->name, 'string');
+    $filters[] = new xmlrpcval($filter, 'struct');
+  }
+
+  return new xmlrpcresp(new xmlrpcval($filters, 'array'));
+}
+
+/**
+ * Blogging API callback. Can not be implemented without support from
+ * trackback module.
+ */
+function blogapi_get_trackback_pings($req_params) {
+  return blogapi_error(t('not implemented'));
+}
+
+/**
+ * Blogging API callback. Publishes the given node
+ */
+function blogapi_publish_post($req_params) {
+  $params = blogapi_convert($req_params);
+
+  $user = blogapi_validate_user($params[1], $params[2]);
+  $node = node_load(array('nid' => $params[0]));
+  if (!$node) {
+    return blogapi_error(t('invalid node'));
+  }
+
+  $node->status = 1;
+  if (!node_access('update', $node)) {
+    return blogapi_error(message_access());
+  }
+
+  node_save($node);
+
+  return new xmlrpcresp(new xmlrpcval(true, 'boolean'));
+}
+
 
 /**
  * Process the parameters to an XMLRPC callback, and return them as an array.
@@ -513,4 +564,91 @@ function blogapi_rsd() {
 __RSD__;
 }
 
+/**
+ * Handles extra information sent by clients according to MovableType's spec.
+ */
+function _blogapi_mt_extra(&$node, $struct) {
+  if (is_array($node)) {
+    $was_array = true;
+    $node = array2object($node);
+  }
+
+  // mt_allow_comments
+  if (array_key_exists('mt_allow_comments', $struct)) {
+    switch ($struct['mt_allow_comments']) {
+      case 0:
+        $node->comment = 0;
+        break;
+      case 1:
+        $node->comment = 2;
+        break;
+      case 2:
+        $node->comment = 1;
+        break;
+    }
+  }
+
+  // merge the 3 body sections (description, mt_excerpt, mt_text_more) into
+  // one body
+  if ($struct['mt_excerpt']) {
+    $node->body = $struct['mt_excerpt'] .'<!--break-->'.$node->body;
+  }
+  if ($struct['mt_text_more']) {
+    $node->body = $node->body . '<!--extended-->' . $struct['mt_text_more'];
+  }
+
+  // mt_tb_ping_urls
+  if (function_exists('trackback_send')) {
+    if (is_array($struct['mt_tb_ping_urls'])) {
+      foreach ($struct['mt_tb_ping_urls'] as $tb_ping_url) {
+        $node->tb_url = $tb_ping_url->getVal();
+        trackback_send($node);
+      }
+    }
+    else {
+      $node->tb_url = $struct['mt_tb_ping_urls'];
+    }
+  }
+
+  // mt_convert_breaks
+  if ($struct['mt_convert_breaks']) {
+    $node->format = $struct['mt_convert_breaks'];
+  }
+
+  // dateCreated
+  if ($struct['dateCreated']) {
+    $node->created = iso8601_decode($struct['dateCreated'], 1);
+  }
+
+  if ($was_array) {
+    $node = object2array($node);
+  }
+}
+
+function _blogapi_get_post($node, $bodies = true) {
+  $xmlrpcval = array (
+    'userid' => new xmlrpcval($node->name, 'string'),
+    'dateCreated' => new xmlrpcval(iso8601_encode($node->created), 'dateTime.iso8601'),
+    'title' => new xmlrpcval($node->title, 'string'),
+    'postid' => new xmlrpcval($node->nid, 'string'),
+    'link' => new xmlrpcval(url('node/'.$node->nid, NULL, NULL, true)),
+    'permaLink' => new xmlrpcval(url('node/'.$node->nid, NULL, NULL, true)),
+  );
+  if ($bodies) {
+    if ($node->comment = 1) {
+      $comment = 2;
+    }
+    if ($node->comment = 2) {
+      $comment = 1;
+    }
+
+    $xmlrpcval['content'] = new xmlrpcval("<title>$blog->title</title>$node->body", 'string');
+    $xmlrpcval['description'] = new xmlrpcval($node->body, 'string');
+    // Add MT specific fields
+    $xmlrpcval['mt_allow_comments'] = $comment;
+    $xmlrpcval['mt_convert_breaks'] = $node->format;
+  }
+
+  return new xmlrpcval($xmlrpcval, 'struct');
+}
 ?>
