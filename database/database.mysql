@@ -596,6 +596,6 @@ INSERT INTO system VALUES ('tracker.module','tracker','module','',1);
 REPLACE variable SET name='update_start', value='s:10:"2002-10-17;"';
 REPLACE variable SET name='theme_default', value='s:6:"marvin";';
 
-REPLACE blocks SET name = 'User information', module = 'user', delta = '0', status = '1';
-REPLACE blocks SET name = 'Log in', module = 'user', delta = '1', status = '1';
+REPLACE blocks SET module = 'user', delta = '0', status = '1';
+REPLACE blocks SET module = 'user', delta = '1', status = '1';
 
