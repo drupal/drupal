@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.204 2003/12/30 14:19:57 dries Exp $
+// $Id: comment.module,v 1.205 2004/01/03 12:32:21 dries Exp $
 
 function comment_help($section = "admin/help#comment") {
   $output = "";
@@ -183,36 +183,6 @@ function comment_referer_load() {
   return $_SESSION["comment_referer"];
 }
 
-function comment_form($edit) {
-  global $user;
-
-  $form .= "<a id=\"comment\"></a>\n";
-
-  // name field:
-  $form .= form_item(t("Your name"), format_name($user));
-
-  // subject field:
-  $form .= form_textfield(t("Subject"), "subject", $edit["subject"], 50, 64);
-
-  // comment field:
-  $form .= form_textarea(t("Comment"), "comment", $edit["comment"] ? $edit["comment"] : $user->signature, 70, 10, form_allowed_tags_text());
-
-  // preview button:
-  $form .= form_hidden("cid", $edit["cid"]);
-  $form .= form_hidden("pid", $edit["pid"]);
-  $form .= form_hidden("nid", $edit["nid"]);
-
-  if (!$edit["comment"] && variable_get("comment_preview", 1)) {
-    $form .= form_submit(t("Preview comment"));
-  }
-  else {
-    $form .= form_submit(t("Preview comment"));
-    $form .= form_submit(t("Post comment"));
-  }
-
-  return form($form, "post", url("comment/reply/". $edit["nid"]));
-}
-
 function comment_edit($cid) {
   global $user;
 
@@ -250,7 +220,7 @@ function comment_reply($pid, $nid) {
       $output .= theme("box", t("Reply"), t("This discussion is closed: you can't post new comments."));
     }
     else if (user_access("post comments")) {
-      $output .= theme("box", t("Reply"), comment_form(array("pid" => $pid, "nid" => $nid)));
+      $output .= theme("comment_form", array("pid" => $pid, "nid" => $nid), t("Reply"));
     }
     else {
       $output .= theme("box", t("Reply"), t("You are not authorized to post comments."));
@@ -285,7 +255,7 @@ function comment_preview($edit) {
   */
 
   $output .= theme("comment_view", $comment, comment_links($comment));
-  $output .= theme("box", t("Reply"), comment_form($edit));
+  $output .= theme("comment_form", $edit, t("Reply"));
 
   if ($edit["pid"]) {
     $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0", $edit["pid"]));
@@ -763,7 +733,7 @@ function comment_render($node, $cid = 0) {
     */
 
     if (user_access("post comments") && node_comment_mode($nid) == 2 && variable_get("comment_form_location", 0)) {
-      $output .= theme("box", t("Post new comment"), comment_form(array("nid" => $nid)));
+      $output .= theme("comment_form", array("nid" => $nid), t("Post new comment"));
     }
   }
   return $output;
@@ -1270,6 +1240,36 @@ function comment_admin() {
 ** Renderer or visualization functions this can be optionally
 ** overridden by themes.
 */
+
+function theme_comment_form($edit, $title) {
+  global $user;
+
+  $form .= "<a id=\"comment\"></a>\n";
+
+  // name field:
+  $form .= form_item(t("Your name"), format_name($user));
+
+  // subject field:
+  $form .= form_textfield(t("Subject"), "subject", $edit["subject"], 50, 64);
+
+  // comment field:
+  $form .= form_textarea(t("Comment"), "comment", $edit["comment"] ? $edit["comment"] : $user->signature, 70, 10, form_allowed_tags_text());
+
+  // preview button:
+  $form .= form_hidden("cid", $edit["cid"]);
+  $form .= form_hidden("pid", $edit["pid"]);
+  $form .= form_hidden("nid", $edit["nid"]);
+
+  if (!$edit["comment"] && variable_get("comment_preview", 1)) {
+    $form .= form_submit(t("Preview comment"));
+  }
+  else {
+    $form .= form_submit(t("Preview comment"));
+    $form .= form_submit(t("Post comment"));
+  }
+
+  return theme("box", $title, form($form, "post", url("comment/reply/". $edit["nid"])));
+}
 
 function theme_comment_view($comment, $links = "", $visible = 1) {
 
