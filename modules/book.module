@@ -90,11 +90,6 @@ function book_menu($may_cache) {
       'callback' => 'book_admin_orphan',
       'access' => user_access('administer nodes'),
       'weight' => 8);
-    $result = db_query('SELECT n.nid, n.title FROM {node} n '. node_access_join_sql() .' INNER JOIN {book} b ON n.nid = b.nid WHERE '. node_access_where_sql() .' AND b.parent = 0 ORDER BY b.weight, n.title');
-    while ($book = db_fetch_object($result)) {
-      $items[] = array('path' => 'admin/node/book/'. $book->nid, 'title' => t('"%title" book', array('%title' => $book->title)));
-    }
-
     $items[] = array('path' => 'book', 'title' => t('books'),
       'callback' => 'book_render',
       'access' => user_access('access content'),
@@ -114,6 +109,15 @@ function book_menu($may_cache) {
         $items[] = array('path' => 'node/'. arg(1) .'/outline', 'title' => t('outline'),
           'callback' => 'book_outline', 'access' => user_access('maintain books'),
           'type' => MENU_LOCAL_TASK, 'weight' => 2);
+      }
+    }
+
+    // We don't want to cache these menu items because they could change whenever
+    // a book page or outline node is edited.
+    if (arg(0) == 'admin' && arg(1) == 'node' && arg(2) == 'book') {
+      $result = db_query('SELECT n.nid, n.title FROM {node} n '. node_access_join_sql() .' INNER JOIN {book} b ON n.nid = b.nid WHERE '. node_access_where_sql() .' AND b.parent = 0 ORDER BY b.weight, n.title');
+      while ($book = db_fetch_object($result)) {
+        $items[] = array('path' => 'admin/node/book/'. $book->nid, 'title' => t('"%title" book', array('%title' => $book->title)));
       }
     }
   }
