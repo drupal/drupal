@@ -150,6 +150,11 @@ function headline_admin_add() {
   print $output;
 }
 
+function headline_admin_rehash() {
+  global $repository;
+  module_rehash_blocks("headline", $repository["headline"]);
+}
+
 function headline_admin() {
   global $op, $id, $site, $url, $backend, $contact;
 
@@ -162,6 +167,7 @@ function headline_admin() {
     case "delete":
       $backend = new backend($id);
       $backend->delete();
+      headline_admin_rehash();
       headline_admin_display();
       break;
     case "help":
@@ -175,6 +181,7 @@ function headline_admin() {
     case "Add backend":
       $backend = new backend($id, $site, $url, $backend, $contact);
       $backend->add();
+      headline_admin_rehash();
       // fall through:
     default:
       headline_admin_display();
