@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.187 2004/07/07 20:18:22 dries Exp $
+// $Id: forum.module,v 1.188 2004/07/08 15:19:08 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -546,10 +546,10 @@ function theme_forum_display($forums, $topics, $parents, $tid, $sortby, $forum_p
 
     if (module_exist('tracker')) {
       if ($user->uid) {
-        $output .= ' <li>'. l(t('Track your forum discussions.'), "tracker/$user->uid") .'</li>';
+        $output .= ' <li>'. l(t('My forum discussions.'), "tracker/$user->uid") .'</li>';
       }
 
-      $output .= ' <li>'. l(t('Track active forum discussions.'), 'tracker') .'</li>';
+      $output .= ' <li>'. l(t('Active forum discussions.'), 'tracker') .'</li>';
     }
 
     if (user_access('create forum topics')) {
