@@ -56,7 +56,7 @@ function forum_perm() {
 }
 
 /**
- * Admiinstration page which allows maintaining forums
+ * Administration page which allows maintaining forums
  */
 function forum_admin() {
   $op = $_POST['op'];
@@ -219,7 +219,7 @@ function _forum_parent_select($tid, $title, $name) {
 }
 
 /**
- * Returns an overview list of existing forums and contianers
+ * Returns an overview list of existing forums and containers
  */
 function forum_overview() {
   $header = array(t('Name'), t('Operations'));

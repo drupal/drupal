@@ -23,7 +23,7 @@ define('WATCHDOG_ERROR', 2);
  * remaining will ignored.  If no configuration file is found,
  * return a default value '$confdir/default'.
  *
- * Example for a ficticious site installed at
+ * Example for a fictitious site installed at
  * http://www.drupal.org/mysite/test/ the 'settings.php' is
  * searched in the following directories:
  *

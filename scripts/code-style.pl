@@ -51,14 +51,14 @@ while (<>) {
     $program = 0;
   }
 
-  # enfoce "bar". foo() ."bar" syntax
+  # enforce "bar". foo() ."bar" syntax
   if (/^("[^"]*"|[^"])*("[^"]*")\.[^ ]/ && $program) {
     $msg = "'\".' -> '\". '";
   }
   elsif (/^("[^"]*"|[^"])*("[^"]*")\s+\./ && $program) {
     $msg = "'\" .' -> '\".'";
   }
-  # enfoce "bar". foo() ."bar" syntax
+  # enforce "bar". foo() ."bar" syntax
   elsif (/^("[^"]*"|[^"])*[^ "]\.("[^"]*")/ && $program) {
     $msg = "'.\"' -> '.\"'";
   }

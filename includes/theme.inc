@@ -348,7 +348,7 @@ function theme_get_styles() {
  *
  * The theme system is described and defined in theme.inc.
  */
- 
+
 /**
  * Format a dynamic text string for emphasised display in a placeholder.
  *
@@ -876,7 +876,7 @@ function theme_blocks($region) {
  * his/her mind.
  *
  * You should use $_POST['edit'][$name] (where $name is usually 'confirm') to
- * check if the confirmation was succesful.
+ * check if the confirmation was successful.
  *
  * @param $question
  *   The question to ask the user (e.g. "Are you sure you want to delete the

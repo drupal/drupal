@@ -491,7 +491,7 @@ function file_download() {
  * @param $min_depth
  *   Minimum depth of directories to return files from.
  * @param $depth
- *   Current depth of recursion. This parameter is only used interally and should not be passed.
+ *   Current depth of recursion. This parameter is only used internally and should not be passed.
  *
  * @return
  *   An associative array (keyed on the provided key) of objects with

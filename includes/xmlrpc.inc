@@ -911,7 +911,7 @@ class xmlrpcval {
     list($a,$b)=each($this->me);
     // contributed by I Sofer, 2001-03-24
     // add support for nested arrays to scalarval
-    // i've created a new method here, so as to
+    // I've created a new method here, so as to
     // preserve back compatibility
 
     if (is_array($b))    {

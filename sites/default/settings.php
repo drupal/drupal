@@ -13,7 +13,7 @@
  * others will be ignored. If no other configuration file is found
  * then the default configuration file at 'sites/default' will be used.
  *
- * For example, for a ficticious site installed at
+ * For example, for a fictitious site installed at
  * http://www.drupal.org/mysite/test/, the 'settings.php'
  * is searched in the following directories:
  *

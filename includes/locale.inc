@@ -1006,7 +1006,7 @@ function _locale_string_seek_query() {
  * Perform a string search and display results in a table
  */
 function _locale_string_seek() {
-  // We have at least one criterium to match
+  // We have at least one criterion to match
   if ($query = _locale_string_seek_query()) {
     $join = "SELECT s.source, s.location, s.lid, t.translation, t.locale FROM {locales_source} s INNER JOIN {locales_target} t ON s.lid = t.lid ";
 

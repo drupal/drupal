@@ -1204,7 +1204,7 @@ function node_validate($node) {
     }
   }
 
-  // Make sure the body has the minimim number of words.
+  // Make sure the body has the minimum number of words.
   // todo use a better word counting algorithm that will work in other languages
   if (isset($node->body) && count(explode(' ', $node->body)) < variable_get('minimum_'. $node->type .'_size', 0)) {
     form_set_error('body', t('The body of your %type is too short. You need at least %words words.', array('%words' => variable_get('minimum_'. $node->type .'_size', 0), '%type' => node_invoke($node->type, 'node_name'))));

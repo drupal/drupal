@@ -202,7 +202,7 @@ function menu_delete_item($mid) {
       }
       else {
         $message = t('Are you sure you want to delete the custom menu item %item?', array('%item' => theme('placeholder', $menu->title)));
-      }     
+      }
       $output = theme('confirm', $message, 'admin/menu', t('This action cannot be undone.'), t('Delete'));
       print theme('page', $output);
   }

@@ -285,7 +285,7 @@ function _search_keywords_truncate(&$text) {
 
 /**
  * Loosens up a set of search keywords by adding wildcards, if possible.
- * 
+ *
  * @param $text
  *   The keywords as entered by the user.
  * @return
@@ -563,7 +563,7 @@ function search_view() {
   }
   else if ($type == '') {
     // Note: search/node can not be a default tab because it would take on the
-    // path of its parent (search). It would prevent remembing keywords when
+    // path of its parent (search). It would prevent remembering keywords when
     // switching tabs. This is why we drupal_goto to it from the parent instead.
     drupal_goto('search/node');
   }
@@ -719,7 +719,7 @@ function search_excerpt($keys, $text) {
   // Extract a fragment per keyword for at most 4 keywords.
   // First we collect ranges of text around each keyword, starting/ending
   // at spaces.
-  // If the sum of all fragments is too short, we look for second occurences.
+  // If the sum of all fragments is too short, we look for second occurrences.
   $ranges = array();
   $included = array();
   $length = 0;
@@ -732,7 +732,7 @@ function search_excerpt($keys, $text) {
       if ($length >= 256) {
         break;
       }
-      // Remember occurence of key so we can skip over it if more occurences
+      // Remember occurrence of key so we can skip over it if more occurrences
       // are desired.
       if (!isset($included[$key])) {
         $included[$key] = 0;
