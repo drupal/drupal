@@ -75,7 +75,7 @@
 <?php
 
                         echo "<P>". check_output($story->abstract, 1) ."</P>";
-                        if ($reply)
+                        if ($reply && $story->article)
                           echo "<P>". check_output($story->article, 1) ."</P>";
 
 ?>
