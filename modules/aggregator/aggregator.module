@@ -259,10 +259,11 @@ function import_refresh($feed) {
     ** Strip invalid tags and provide default values (if required):
     */
 
-    $feed["link"] = strip_tags($channel["LINK"]);
-    $feed["description"] = filter(strtr($channel["DESCRIPTION"], $tt));
+    foreach ($channel as $key => $value) {
+      $channel[$key] = filter(strtr(trim($value), $tt));
+    }
 
-    db_query("UPDATE feed SET timestamp = '%d', link = '%s', description = '%s' WHERE fid = '%d'", time(), $feed["link"], $feed["description"], $feed["fid"]);
+    db_query("UPDATE feed SET timestamp = '%d', link = '%s', description = '%s' WHERE fid = '%d'", time(), $channel["LINK"], $channel["DESCRIPTION"], $feed["fid"]);
 
     /*
     ** We reverse the array such that we store the first item last,
@@ -275,39 +276,37 @@ function import_refresh($feed) {
     foreach ($items as $item) {
       unset($title, $link, $author, $description);
 
-      // Prepare the description:
-      $description = filter(strtr($item["DESCRIPTION"], $tt));
+      // Prepare the item:
+      foreach ($item as $key => $value) {
+        $item[$key] = filter(strtr(trim($value), $tt));
+      }
 
-      // Prepare the title:
       if ($item["TITLE"]) {
-        $title = strip_tags(strtr($item["TITLE"], $tt));
+        $title = $item["TITLE"];
       }
       else {
         /*
-         ** Use up to 40 characters of the $description, ending at
+         ** Use up to 40 characters of the description, ending at
          ** word boundary, but don't split potential entities.
          */
-        $title = preg_replace('/^(.*)[^\w;&].*?$/', "\\1", substr(strip_tags($description), 0, 40));
+        $title = preg_replace('/^(.*)[^\w;&].*?$/', "\\1", substr($item["DESCRIPTION"], 0, 40));
       }
+
       if ($item["LINK"]) {
-        $link = strip_tags($item["LINK"]);
+        $link = $item["LINK"];
       }
       elseif ($item["GUID"] && (strncmp($item["GUID"], "http://", 7) == 0)) {
-        $link = strip_tags($item["GUID"]);
+        $link = $item["GUID"];
       }
       else {
         $link = $feed["link"];
       }
 
-      $author = strip_tags($item["AUTHOR"]);
-
-      // print "<pre>title = ". htmlentities($title) ."\n\ndescription = ". htmlentities($description) ."\n\nlink = ". htmlentities($link) ."</pre><hr />";
-
       /*
-       ** Save this item.  Try to avoid duplicate entries as much as
-       ** possible.  If we find a duplicate entry, we resolve it and
-       ** pass along its ID such that we can update it (when needed).
-       */
+      ** Save this item.  Try to avoid duplicate entries as much as
+      ** possible.  If we find a duplicate entry, we resolve it and
+      ** pass along it's ID such that we can update it if needed.
+      */
 
       if ($link && $link != $feed["link"] && $link != $feed["url"]) {
         $entry = db_fetch_object(db_query("SELECT iid FROM item WHERE fid = '%d' AND link = '%s'", $feed["fid"], $link));
@@ -316,7 +315,7 @@ function import_refresh($feed) {
         $entry = db_fetch_object(db_query("SELECT iid FROM item WHERE fid = '%d' AND title = '%s'", $feed["fid"], $title));
       }
 
-      import_save_item(array(iid => $entry->iid, fid => $feed["fid"], title => $title, link => $link, author => $author, description => $description, attributes => $feed["attributes"]));
+      import_save_item(array(iid => $entry->iid, fid => $feed["fid"], title => $title, link => $link, author => $item["AUTHOR"], description => $item["DESCRIPTION"], attributes => $feed["attributes"]));
     }
 
     /*
@@ -496,6 +495,7 @@ function import_admin() {
         else {
           print import_form_feed();
         }
+        break;
       case "edit":
         if (arg(4) == "bundle") {
           print import_form_bundle(import_get_bundle(arg(5)));
