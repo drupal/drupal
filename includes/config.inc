@@ -11,16 +11,16 @@
 #$db_name = "droporg";
 
 ### host: "http://beta.drop.org/":
-#$db_host = "zind.net";
-#$db_uname = "dries";
-#$db_pass = "Abc123";
-#$db_name = "dries";
+$db_host = "zind.net";
+$db_uname = "dries";
+$db_pass = "Abc123";
+$db_name = "dries";
 
 ### host: "http://localhost/":
-$db_host = "";
-$db_uname = "dries";
-$db_pass = "oakley";
-$db_name = "dries";
+#$db_host = "";
+#$db_uname = "dries";
+#$db_pass = "oakley";
+#$db_name = "dries";
 
 #
 # Administrative information
