@@ -258,7 +258,7 @@ function block_admin_configure($module = NULL, $delta = 0) {
       $group = form_radios(t('Show on specific pages'), 'visibility', $edit['visibility'], array(t('Show on every page except the listed pages.'), t('Show on only the listed pages.')));
       $group .= form_textarea(t('Pages'), 'pages', $edit['pages'], 40, 5, t("Enter one page per line as Drupal paths. The '*' character is a wildcard. Example paths are '<em>blog</em>' for the blog page and '<em>blog/*</em>' for every personal blog. '<em>&lt;front&gt;</em>' is the front page. "));
 
-      $group .= form_radios(t('User options'), 'custom', $edit['custom'], array(t('Users may not turn on or off this block.'), t('Users may turn this block on or off, on by default.'), t('Users may turn this block on or off, off by default.')), t('Users can decide which blocks they want on or off on their account editing page.'));
+      $group .= form_radios(t('Custom visibility settings'), 'custom', $edit['custom'], array(t('Users cannot control whether or not they see this block.'), t('Show this block by default, but let individual users hide it.'), t('Hide this block by default but let individual users show it.')), t('Allow individual users to customize the visibility of this block in their account settings.'));
 
       $form .= form_group(t('Visibility settings'), $group);
 
