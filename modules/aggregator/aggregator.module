@@ -10,7 +10,7 @@ function import_cron() {
   $result = db_query("SELECT * FROM feed");
   while ($feed = db_fetch_array($result)) {
     // remove expired items:
-    db_query("DELETE FROM item WHERE fid = '$feed[fid]' AND timstamp < ". (time() - $feed[uncache]));
+    db_query("DELETE FROM item WHERE fid = '$feed[fid]' AND timestamp < ". (time() - $feed[uncache]));
 
     // update feeds:
     if ($feed[timestamp] + $feed[refresh] < time()) import_update($feed);
