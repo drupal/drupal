@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.137 2004/08/18 19:57:27 dries Exp $
+// $Id: taxonomy.module,v 1.138 2004/08/19 15:41:56 dries Exp $
 
 /**
  * Implementation of hook_perm().
@@ -294,7 +294,7 @@ function _taxonomy_confirm_del_term($tid) {
  * Generate a tabular listing of administrative functions for vocabularies.
  */
 function taxonomy_overview() {
-  $header = array(t('name'), t('node types'), array('data' => t('operations'), 'colspan' => 3));
+  $header = array(t('Name'), t('Node types'), array('data' => t('Operations'), 'colspan' => 3));
 
   $vocabularies = taxonomy_get_vocabularies();
 
