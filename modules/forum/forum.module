@@ -400,8 +400,7 @@ function forum_get_topics($tid, $sortby, $forum_per_page, $offset) {
 
   $sql_sortby = _forum_get_topic_order($sortby);
 
-  $sql = "
-    SELECT n.nid, title, users.name AS name, users.uid AS uid, n.created AS timestamp, GREATEST(n.created, MAX(c.timestamp)) AS date_sort, COUNT(c.nid) AS num_comments, icon, n.comment AS comment_mode, shadow FROM node n, term_node r LEFT JOIN users ON n.uid = users.uid LEFT JOIN comments c ON c.nid = n.nid LEFT JOIN forum f ON n.nid = f.nid WHERE n.nid = r.nid AND r.tid = '%d' AND n.status = 1 AND n.type = 'forum' GROUP BY n.nid ORDER BY $sql_sortby";
+  $sql = "SELECT n.nid, title, users.name AS name, users.uid AS uid, n.created AS timestamp, GREATEST(n.created, MAX(c.timestamp)) AS date_sort, COUNT(c.nid) AS num_comments, icon, n.comment AS comment_mode, shadow FROM node n, term_node r LEFT JOIN users ON n.uid = users.uid LEFT JOIN comments c ON c.nid = n.nid LEFT JOIN forum f ON n.nid = f.nid WHERE n.nid = r.nid AND r.tid = '%d' AND n.status = 1 AND n.type = 'forum' GROUP BY n.nid ORDER BY $sql_sortby";
 
   $result = db_query($sql, $tid);
   $topic_num = db_num_rows($result);
@@ -424,7 +423,7 @@ function forum_get_topics($tid, $sortby, $forum_per_page, $offset) {
         $topic->new = 1;
       }
       else {
-        $comments = db_result(db_query("SELECT COUNT(c.nid) FROM node n LEFT JOIN comments c ON n.nid = c.nid WHERE n.nid = '$topic->nid' AND c.status = 0 AND timestamp > '$history' GROUP BY n.nid"));
+        $comments = db_result(db_query("SELECT COUNT(c.nid) FROM node n LEFT JOIN comments c ON n.nid = c.nid WHERE n.nid = '$topic->nid' AND n.status = 1 AND c.status = 0 AND timestamp > '$history' GROUP BY n.nid"));
 
         $topic->new_replies = $comments ? $comments : 0;
         if ($topic->new_replies) {
