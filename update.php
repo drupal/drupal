@@ -49,7 +49,8 @@ $mysql_updates = array(
   "2002-07-31" => "update_34",
   "2002-08-10" => "update_35",
   "2002-08-16" => "update_36",
-  "2002-08-19" => "update_37"
+  "2002-08-19" => "update_37",
+  "2002-08-26" => "update_38"
 );
 
 // Update functions
@@ -514,7 +515,7 @@ function update_37() {
   update_sql("DROP TABLE IF EXISTS sequences;");
 
   update_sql("CREATE TABLE sequences (
-    name VARCHAR(255) NOT NULL PRIMARY KEY, 
+    name VARCHAR(255) NOT NULL PRIMARY KEY,
     id INT UNSIGNED NOT NULL
   ) TYPE=MyISAM;");
 
@@ -530,6 +531,10 @@ function update_37() {
   if ($max = db_result(db_query("SELECT MAX(tid) FROM term_data;"))) {
     update_sql("REPLACE INTO sequences VALUES ('term_data', $max);");
   }
+}
+
+function update_38() {
+  update_sql("ALTER TABLE watchdog CHANGE message message text NOT NULL default '';");
 }
 
 function update_upgrade3() {
