@@ -85,7 +85,7 @@ function theme_mark() {
   return "<span style=\"color: red;\">*</span>";
 }
 
-function theme_item_list($items = array(), $title = 0) {
+function theme_item_list($items = array(), $title = NULL) {
   /*
   ** Return a formatted array of items.
   */
