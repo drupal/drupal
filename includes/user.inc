@@ -41,7 +41,7 @@ function user_save($account, $array) {
   else db_query("INSERT INTO users SET $query last_access = '". time() ."', last_host = '$GLOBALS[REMOTE_ADDR]'");
 
   // return account:
-  return user_load(($account->userid ? $account->userid : $array["userid"]));
+  return user_load(($account->userid ? $account->userid : $array[userid]));
 }
 
 function user_get($account, $column, $field) {

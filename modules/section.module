@@ -23,9 +23,9 @@ function section_block() {
     $content .= "<LI><A HREF=\"?section=". urlencode($_section->name) ."\">$_section->name</A> (". check_output($_section->stories, 0) .")</LI>\n";
   }
 
-  $block[0]["subject"] = "Sections";
-  $block[0]["content"] = $content;
-  $block[0]["info"] = "Section list";
+  $block[0][subject] = "Sections";
+  $block[0][content] = $content;
+  $block[0][info] = "Section list";
 
   return $block;
 }

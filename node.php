@@ -27,6 +27,7 @@ if ($node && node_visible($node)) {
       $theme->footer();
       break;
     default:
+      if ($user->id) user_load($user->userid);
       node_view($node, 1);
   }
 }

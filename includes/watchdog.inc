@@ -1,8 +1,7 @@
 <?php
 
 $watchdog = array("comment" => array("0", $submission_rate["comment"]),
-                  "diary"   => array("1", $submission_rate["diary"]),
-                  "story"   => array("2", $submission_rate["story"]),
+                  "node"    => array("1", $submission_rate["node"]),
                   "message" => array("3", "0"),
                   "warning" => array("4", "0"),
                   "error"   => array("5", "0"));
