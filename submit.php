@@ -15,7 +15,9 @@ if ($user->id) {
 
     $output .= "<FORM ACTION=\"submit.php\" METHOD=\"get\">\n";
     $output .= "<B>". t("Category") .":</B><BR>\n";
-    while ($category = db_fetch_object($result)) $options .= "<OPTION VALUE=\"$category->type\">$category->name</OPTION>";
+    while ($category = db_fetch_object($result)) {
+      if (module_hook($category->type, "user")) $options .= "<OPTION VALUE=\"$category->type\">$category->name</OPTION>";
+    }
     $output .= "<SELECT NAME=\"mod\">$options</SELECT><P>\n";
     $output .= "<INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"". t("Next step") ."\">\n";
 

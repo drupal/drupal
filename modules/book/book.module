@@ -157,7 +157,7 @@ function book_form($edit = array()) {
 }
 
 function book_save($edit) {
-  node_save(array_diff(array_merge($edit, array(nid => $edit[nid], type => "book")), array(userid => $edit[userid])));
+  node_save(array_diff(array_merge($edit, array(nid => $edit[nid], type => "book", comment => category_comment($edit[cid]))), array(userid => $edit[userid])));
 }
 
 function book_tree($parent = "", $depth = 0) {
