@@ -3,24 +3,36 @@
 $module = array("cron" => "story_cron",
                 "help" => "story_help",
                 "find" => "story_find",
+                "user" => "story_user",
+                "queue" => "story_queue",
                 "admin" => "story_admin",
                 "block" => "story_block");
 
 include_once "includes/section.inc";
 
+class Story {
+  function Story($userid, $title, $abstract, $body, $section, $timestamp) {    $this->userid = $userid;
+    $this->title = $title;
+    $this->abstract = $abstract;
+    $this->body = $body;
+    $this->section = $section;
+    $this->timestamp = $timestamp;
+  }
+}
+
 function story_cron() {
-  $result = db_query("SELECT * FROM stories WHERE status = 3 AND timestamp <= ". time() ."");
+  $result = db_query("SELECT * FROM nodes WHERE status = 3 AND timestamp <= ". time() ."");
   while ($story = db_fetch_object($result)) {
-    db_query("UPDATE stories SET status = '1', timestamp = '". time() ."' WHERE id = '$story->id'");
+    db_query("UPDATE nodes SET status = '1', timestamp = '". time() ."' WHERE nid = '$story->nid' AND type = 'story'");
   }
 }
 
 function story_find($keys) {
   global $user;
   $find = array();
-  $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON s.author = u.id WHERE s.status = 2 AND (s.subject LIKE '%". check_input($keys) ."%' OR s.abstract LIKE '%". check_input($keys) ."%' OR s.article LIKE '%$keys%') ORDER BY s.timestamp DESC LIMIT 20");
+  $result = db_query("SELECT n.*, s.* FROM story s LEFT JOIN nodes n ON s.node = n.nid WHERE n.status = 2 AND (n.title LIKE '%". check_input($keys) ."%' OR s.abstract LIKE '%". check_input($keys) ."%' OR s.body LIKE '%$keys%') LIMIT 20");
   while ($story = db_fetch_object($result)) {
-    array_push($find, array("subject" => check_output($story->subject), "link" => (user_access($user, "story") ? "admin.php?mod=story&op=edit&id=$story->id" : "story.php?id=$story->id"), "user" => $story->userid, "date" => $story->timestamp));
+    array_push($find, array("title" => check_output($story->title), "link" => (user_access($user, "story") ? "admin.php?mod=story&op=edit&id=$story->nid" : "node.php?id=$story->nid"), "user" => $story->userid, "date" => $story->timestamp));
   }
   return $find;
 }
@@ -40,10 +52,143 @@ function story_help() {
  <?php
 }
 
+function story_view($node, $page = 0) {
+  global $id, $cid, $op, $pid, $subject, $comment, $theme, $mode, $order, $threshold;
+
+  if ($page == 0) {
+    switch($op) {
+      case t("Preview comment"):
+        $theme->header();
+        comment_preview(check_input($pid), check_input($id), ($subject ? check_output($subject) : ""), ($comment ? check_output($comment) : ""));
+        $theme->footer();
+        break;
+      case t("Post comment"):
+        comment_post(check_input($pid), check_input($id), check_input($subject), check_input($comment));
+        $theme->header();
+        $theme->story($node, "[ <A HREF=\"node.php?op=reply&id=$node->nid&pid=0\">". t("reply to this story") ."</A> ]");
+        comment_render($id, $cid);
+        $theme->footer();
+        break;
+      case "reply":
+        $theme->header();
+        comment_reply(check_input($pid), check_input($id));
+        $theme->footer();
+        break;
+      case t("Update settings"):
+        comment_settings(check_input($mode), check_input($order), check_input($threshold));
+        $theme->header();
+        $theme->story($node, "[ <A HREF=\"node.php?op=reply&id=$node->nid&pid=0\">". t("reply to this story") ."</A> ]");
+        comment_render($id, $cid);
+        $theme->footer();
+        break;
+      case t("Moderate comments"):
+        comment_moderate($moderate);
+        $theme->header();
+        $theme->story($node, "[ <A HREF=\"node.php?op=reply&id=$node->nid&pid=0\">". t("reply to this story") ."</A> ]");
+        comment_render($id, $cid);
+        $theme->footer();
+        break;
+      case "reply":
+        $theme->header();
+        comment_reply(check_input($pid), check_input($id));
+        $theme->footer();
+        break;
+      default:
+        $theme->header();
+        $theme->story($node, "[ <A HREF=\"node.php?op=reply&id=$node->nid&pid=0\">". t("reply to this story") ."</A> ]");
+        comment_render($id, $cid);
+        $theme->footer();
+    }
+  }
+  else {
+    $theme->story($node, "[ <A HREF=\"node.php?op=reply&id=$node->nid&pid=0\">". t("reply to this story") ."</A> ]");
+  }
+}
+
+function story_form($edit = array()) {
+  global $allowed_html, $PHP_SELF, $theme, $user;
+
+  include "includes/story.inc";
+
+  $output .= "<FORM ACTION=\"$PHP_SELF?mod=story&id=$edit[id]\" METHOD=\"post\">\n";
+
+  $output .= "<B>". t("Your name") .":</B><BR>\n";
+  $output .= format_username(($edit[userid] ? $edit[userid] : $user->userid)) ."<P>";
+
+  $output .= "<B>". t("Subject") .":</B><BR>\n";
+  $output .= "<INPUT TYPE=\"text\" NAME=\"edit[title]\" SIZE=\"50\" MAXLENGTH=\"60\" VALUE=\"". check_textfield($edit[title]) ."\"><P>\n";
+
+  $output .= "<B>". t("Section") .":</B><BR>\n";
+  foreach ($sections = section_get() as $value) $options .= "  <OPTION VALUE=\"". check_select($value) ."\"". ($edit[section] == $value ? " SELECTED" : "") .">". check_output($value) ."</OPTION>\n";
+  $output .= "<SELECT NAME=\"edit[section]\">$options</SELECT><P>\n";
+
+  $output .= "<B>". t("Abstract") .":</B><BR>\n";
+  $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"edit[abstract]\">". check_textarea($edit[abstract]) ."</TEXTAREA><BR>\n";
+  $output .= "<SMALL><I>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</I></SMALL><P>\n";
+
+  $output .= "<B>". t("Body") .":</B><BR>\n";
+  $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"edit[body]\">". check_textarea($edit[body]) ."</TEXTAREA><BR>\n";
+  $output .= "<SMALL><I>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</I></SMALL><P>\n";
+
+  if (user_access($user, "story")) {
+    $output .= "<B>". t("Status") .":</B><BR>\n";
+    $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"3\"". ($edit[status] == 3 ? " CHECKED" : "") ."> scheduled for <INPUT TYPE=\"text\" NAME=\"edit[timestamp]\" SIZE=\"30\" VALUE=\"". date("j F Y G:i", ($edit[timetsamp] ? $edit[timestamp] : time())) ."\"><BR>\n";
+    $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"2\"". ($edit[status] == 2 ? " CHECKED" : "") ."> posted<BR>\n";
+    $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"1\"". ($edit[status] == 1 ? " CHECKED" : "") ."> queued<BR>\n";
+    $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"0\"". ($edit[status] == 0 ? " CHECKED" : "") ."> dumped<BR>\n";
+    $output .= "<SMALL><I>The textfield for scheduled stories expects a string containing an English date format of when you want to have your story automatically published.  Example input: '". date("j F Y G:i") ."', '". date("m/d/y H:i") ."', '". date("F j, Y H:i") ."', ...</I></SMALL><P>\n";
+  }
+
+  $duplicate = db_result(db_query("SELECT COUNT(nid) FROM nodes WHERE title = '$title'"));
+
+  if (!$edit) {
+    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview") ."\">\n";
+  }
+  else if (!$edit[title]) {
+    $output .= "<FONT COLOR=\"red\">". t("Warning: you did not supply a subject.") ."</FONT><P>\n";
+    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview") ."\">\n";
+  }
+  else if (!$edit[section]) {
+    $output .= "<FONT COLOR=\"red\">". t("Warning: you did not supply a section.") ."</FONT><P>\n";
+    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview") ."\">\n";
+  }
+  else if (!$edit[abstract]) {
+    $output .= "<FONT COLOR=\"red\">". t("Warning: you did not supply an abstract.") ."</FONT><P>\n";
+    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview") ."\">\n";
+  }
+  else if (!$edit[nid] && $duplicate) {
+    $output .= "<FONT COLOR=\"red\">". t("Warning: there is already a story with that subject.") ."</FONT><P>\n";
+    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview") ."\">\n";
+  }
+  else {
+    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview") ."\">\n";
+    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Submit") ."\">\n";
+  }
+
+  $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[nid]\" VALUE=\"$edit[nid]\">\n";
+  $output .= "</FORM>\n";
+
+  return $output;
+}
+
+function story_save($edit) {
+  $node = ($edit[nid] ? node_get_object("nid", $edit[nid]) : node_get_object("title", $edit[title]));
+  $edit[timestamp] = ($edit[status] == 3 && strtotime($edit[timestamp]) > time()) ? strtotime($edit[timestamp]) : ($node->timestamp ? $node->timestamp : time());
+  node_save(array_merge($edit, array(nid => ($edit[nid] ? $edit[nid] : $node->nid), type => "story")));
+}
+
+function story_delete($id) {
+  node_del_object("nid", $id);
+}
+
 function story_block() {
-  $result = db_query("SELECT s.id, COUNT(c.cid) AS comments, s.subject FROM stories s LEFT JOIN comments c ON s.id = c.lid WHERE s.status = 2 AND c.link = 'story' GROUP BY s.id ORDER BY comments DESC LIMIT 10");
+/*
+  //
+  // disabled for now
+  //
+  $result = db_query("SELECT s.id, COUNT(c.cid) AS comments, s.title FROM story s LEFT JOIN comments c ON s.id = c.lid WHERE s.status = 2 AND c.link = 'story' GROUP BY s.id ORDER BY comments DESC LIMIT 10");
   while ($story = db_fetch_object($result)) {
-    $content .= "<LI><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A><BR><SMALL>(". format_plural($story->comments, "comment", "comments") .")</SMALL></LI>\n";
+    $content .= "<LI><A HREF=\"node.php?id=$story->id\">". check_output($story->title) ."</A><BR><SMALL>(". format_plural($story->comments, "comment", "comments") .")</SMALL></LI>\n";
   }
 
   $blocks[0]["subject"] = "Top 10:<BR>all stories";
@@ -52,9 +197,9 @@ function story_block() {
 
   unset($content);
 
-  $result = db_query("SELECT s.id, COUNT(c.cid) AS comments, s.subject FROM stories s LEFT JOIN comments c ON s.id = c.lid WHERE s.status = 2 AND c.link = 'story' AND ". time() ." - s.timestamp < 2419200 GROUP BY s.id ORDER BY comments DESC LIMIT 10");
+  $result = db_query("SELECT s.id, COUNT(c.cid) AS comments, s.title FROM story s LEFT JOIN comments c ON s.id = c.lid WHERE s.status = 2 AND c.link = 'story' AND ". time() ." - s.timestamp < 2419200 GROUP BY s.id ORDER BY comments DESC LIMIT 10");
   while ($story = db_fetch_object($result)) {
-    $content .= "<LI><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A><BR><SMALL>(". format_plural($story->comments, "comment", "comments") .")</SMALL></LI>\n";
+    $content .= "<LI><A HREF=\"node.php?id=$story->id\">". check_output($story->title) ."</A><BR><SMALL>(". format_plural($story->comments, "comment", "comments") .")</SMALL></LI>\n";
   }
 
   $blocks[1]["subject"] = "Top 10:<BR>recent stories";
@@ -62,126 +207,38 @@ function story_block() {
   $blocks[1]["info"] = "Top 10: recent stories";
 
   return $blocks;
+*/
 }
 
-function story_add() {
-  global $allowed_html;
-
-  $output .= "<FORM ACTION=\"admin.php?mod=story\" METHOD=\"post\">\n";
-
-  $output .= "<B>Subject:</B><BR>\n";
-  $output .= "<INPUT TYPE=\"text\" NAME=\"edit[subject]\" SIZE=\"50\" MAXLENGTH=\"60\"><BR>\n";
-
-  $output .= "<B>Section:</B><BR>\n";
-  foreach ($sections = section_get() as $value) $options .= "  <OPTION VALUE=\"". check_textfield($value) ."\">". check_output($value) ."</OPTION>\n";
-  $output .= "<SELECT NAME=\"edit[section]\">$options</SELECT><P>\n";
-
-  $output .= "<B>Abstract:</B><BR>\n";
-  $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"edit[abstract]\" MAXLENGTH=\"20\"></TEXTAREA><BR>\n";
-  $output .= "<SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL><P>\n";
-
-  $output .= "<B>Extended story:</B><BR>\n";
-  $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"edit[article]\"></TEXTAREA><BR>\n";
-  $output .= "<SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL><P>\n";
-
-  $output .= "<B>Status:</B><BR>\n";
-  $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"3\">scheduled story for <INPUT TYPE=\"text\" NAME=\"edit[date]\" SIZE=\"30\" VALUE=\"". date("j F Y G:i") ."\"><BR>\n";
-  $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"2\">posted story<BR>\n";
-  $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"1\" CHECKED>queued story<BR>\n";
-  $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"0\">dumped story<BR>\n";
-  $output .= "<SMALL><I>The textfield for scheduled stories expects a string containing an English date format of when you want to have your story automatically published.<BR>Example input: '". date("j F Y G:i") ."', '". date("m/d/y H:i") ."', '". date("F j, Y H:i") ."', ...</I></SMALL><P>\n";
-
-  $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Add story\">\n";
-  $output .= "</FORM>\n";
-
-  print $output;
-}
-
-function story_add_save($edit) {
-  global $user;
-  $timestamp = ($edit[status] == 3 && strtotime($edit[date]) > time()) ? strtotime($edit[date]) : time();
-  db_query("INSERT INTO stories (author, subject, abstract, article, section, status, timestamp) VALUES ('$user->id', '". check_input($edit[subject]) ."', '". check_input($edit[abstract]) ."', '". check_input($edit[article]) ."', '". check_input($edit[section]) ."', '$edit[status]', '$timestamp')");
-  watchdog("story", "story: added '$edit[subject]'");
-}
-
-function story_edit($id) {
-  global $allowed_html;
-
-  $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON s.author = u.id WHERE s.id = '$id'");
-  $story = db_fetch_object($result);
-
-  $output .= "<FORM ACTION=\"admin.php?mod=story&id=$id\" METHOD=\"post\">\n";
-
-  $output .= "<B>Author:</B><BR>\n";
-  $output .= format_username($story->userid) ."<P>\n";
-
-  $output .= "<B>Subject:</B><BR>\n";
-  $output .= "<INPUT TYPE=\"text\" NAME=\"edit[subject]\" SIZE=\"50\" MAXLENGTH=\"60\" VALUE=\"". check_textfield($story->subject) ."\"><P>\n";
-
-  $output .= "<B>Section:</B><BR>\n";
-  foreach ($sections = section_get() as $value) $options .= "  <OPTION VALUE=\"$value\"". ($story->section == $value ? " SELECTED" : "") .">$value</OPTION>\n";
-  $output .= "<SELECT NAME=\"edit[section]\">$options</SELECT><P>\n";
-
-  $output .= "<B>Abstract:</B><BR>\n";
-  $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"edit[abstract]\">". check_textarea($story->abstract) ."</TEXTAREA><BR>\n";
-  $output .= "<SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL><P>\n";
-
-  $output .= "<B>Editor's note/updates:</B><BR>\n";
-  $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"edit[updates]\">". check_textarea($story->updates) ."</TEXTAREA><BR>\n";
-  $output .= "<SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL><P>\n";
-
-  $output .= "<B>Extended story:</B><BR>\n";
-  $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"edit[article]\">". check_textarea($story->article) ."</TEXTAREA><BR>\n";
-  $output .= "<SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL><P>\n";
-
-  $output .= "<B>Status:</B><BR>\n";
-  $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"3\"". ($story->status == 3 ? " CHECKED" : "") .">scheduled story for <INPUT TYPE=\"text\" NAME=\"edit[date]\" SIZE=\"30\" VALUE=\"". date("j F Y G:i", $story->timestamp) ."\"><BR>\n";
-  $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"2\"". ($story->status == 2 ? " CHECKED" : "") .">posted story<BR>\n";
-  $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"1\"". ($story->status == 1 ? " CHECKED" : "") .">queued story<BR>\n";
-  $output .= "<INPUT TYPE=\"radio\" NAME=\"edit[status]\" VALUE=\"0\"". ($story->status == 0 ? " CHECKED" : "") .">dumped story<BR>\n";
-  $output .= "<SMALL><I>The textfield for scheduled stories expects a string containing an English date format of when you want to have your story automatically published.<BR>Example input: '". date("j F Y G:i") ."', '". date("m/d/y H:i") ."', '". date("F j, Y H:i") ."', ...</I></SMALL><P>\n";
-
-  $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save story\">\n";
-  $output .= "</FORM>\n";
-
-  print $output;
-}
-
-function story_edit_save($id, $edit) {
-  if ($edit[status] == 3 && strtotime($edit[date]) > time()) db_query("UPDATE stories SET subject = '". check_input($edit[subject]) ."', abstract = '". check_input($edit[abstract]) ."', updates = '". check_input($edit[updates]) ."', article = '". check_input($edit[article]) ."', section = '". check_input($edit[section]) ."', status = '$edit[status]', timestamp = '". strtotime($edit[date]) ."' WHERE id = '$id'");
-  else db_query("UPDATE stories SET subject = '". check_input($edit[subject]) ."', abstract = '". check_input($edit[abstract]) ."', updates = '". check_input($edit[updates]) ."', article = '". check_input($edit[article]) ."', section = '". check_input($edit[section]) ."', status = '$edit[status]' WHERE id = '$id'");
-  watchdog("message", "story: modified '$edit[subject]'");
-}
-
-function story_display() {
+function story_overview() {
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
 
   // Pending stories:
-  $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON u.id = s.author WHERE s.status = 1 ORDER BY timestamp DESC");
-  $output .= " <TR><TH COLSPAN=\"4\">queued stories</TH></TR>\n";
+  $result = db_query("SELECT n.*, u.userid FROM nodes n LEFT JOIN users u ON n.author = u.id WHERE n.type = 'story' AND n.status = 1 ORDER BY timestamp DESC");
+  $output .= " <TR><TH COLSPAN=\"6\">queued stories</TH></TR>\n";
   while ($story = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A></TD><TD>". format_username($story->userid) ."</TD><TD>votes: $story->votes, score: $story->score</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=edit&id=$story->id\">edit</A></TD></TR>\n";
+    $output .= " <TR><TD><A HREF=\"node.php?id=$story->nid\">". check_output($story->title) ."</A></TD><TD>". format_username($story->userid) ."</TD><TD>votes: $story->votes, score: $story->score</TD><TD><A HREF=\"node.php?id=$story->nid\">view</A></TD><TD><A HREF=\"admin.php?mod=story&op=edit&id=$story->nid\">edit</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=delete&id=$story->nid\">delete</A></TD></TR>\n";
   }
 
   // Scheduled stories:
-  $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON u.id = s.author WHERE s.status = 3 ORDER BY timestamp");
-  $output .= " <TR><TH COLSPAN=\"4\">scheduled stories</TH></TR>\n";
+  $result = db_query("SELECT n.*, u.userid FROM nodes n LEFT JOIN users u ON n.author = u.id WHERE n.type = 'story' AND n.status = 3 ORDER BY timestamp DESC");
+  $output .= " <TR><TH COLSPAN=\"6\">scheduled stories</TH></TR>\n";
   while ($story = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A></TD><TD>". format_username($story->userid) ."</TD><TD>". date("D, m/d/Y H:i", $story->timestamp) ." - ". format_interval($story->timestamp - time()) ." left</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=edit&id=$story->id\">edit</A></TD></TR>\n";
+    $output .= " <TR><TD><A HREF=\"node.php?id=$story->nid\">". check_output($story->title) ."</A></TD><TD>". format_username($story->userid) ."</TD><TD>". date("D, m/d/Y H:i", $story->timestamp) ."<BR><SMALL>(". format_interval($story->timestamp - time()) ." left)</SMALL></TD><TD><A HREF=\"node.php?id=$story->nid\">view</A></TD><TD><A HREF=\"admin.php?mod=story&op=edit&id=$story->nid\">edit</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=delete&id=$story->nid\">delete</A></TD></TR>\n";
   }
 
   // Dumped stories:
-  $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON u.id = s.author WHERE s.status = 0 ORDER BY timestamp DESC LIMIT 5");
-  $output .= " <TR><TH COLSPAN=\"4\">dumped stories</TTH></TR>\n";
+  $result = db_query("SELECT n.*, u.userid FROM nodes n LEFT JOIN users u ON n.author = u.id WHERE n.type = 'story' AND n.status = 0 ORDER BY timestamp DESC LIMIT 5");
+  $output .= " <TR><TH COLSPAN=\"6\">dumped stories</TH></TR>\n";
   while ($story = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A></TD><TD>". format_username($story->userid) ."</TD><TD>$story->section</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=edit&id=$story->id\">edit</A></TD></TR>\n";
+    $output .= " <TR><TD><A HREF=\"node.php?id=$story->nid\">". check_output($story->title) ."</A></TD><TD>". format_username($story->userid) ."</TD><TD>". date("D, m/d/Y H:i", $story->timestamp) ."</TD><TD><A HREF=\"node.php?id=$story->nid\">view</A></TD><TD><A HREF=\"admin.php?mod=story&op=edit&id=$story->nid\">edit</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=delete&id=$story->nid\">delete</A></TD></TR>\n";
   }
 
   // Posted stories:
-  $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON u.id = s.author WHERE s.status = 2 ORDER BY timestamp DESC LIMIT 15");
-  $output .= " <TR><TH COLSPAN=\"4\">posted stories</TH></TR>\n";
+  $result = db_query("SELECT n.*, u.userid FROM nodes n LEFT JOIN users u ON n.author = u.id WHERE n.type = 'story' AND n.status = 2 ORDER BY timestamp DESC LIMIT 15");
+  $output .= " <TR><TH COLSPAN=\"6\">posted stories</TH></TR>\n";
   while ($story = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A></TD><TD>". format_username($story->userid) ."</TD><TD>$story->section</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=edit&id=$story->id\">edit</A></TD></TR>\n";
+    $output .= " <TR><TD><A HREF=\"node.php?id=$story->nid\">". check_output($story->title) ."</A></TD><TD>". format_username($story->userid) ."</TD><TD>". date("D, m/d/Y H:i", $story->timestamp) ."</TD><TD><A HREF=\"node.php?id=$story->nid\">view</A></TD><TD><A HREF=\"admin.php?mod=story&op=edit&id=$story->nid\">edit</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=delete&id=$story->nid\">delete</A></TD></TR>\n";
   }
 
   $output .= "</TABLE>\n";
@@ -190,33 +247,55 @@ function story_display() {
 }
 
 function story_admin() {
-  global $op, $id, $edit;
+  global $id, $edit, $op, $theme, $user;
 
   print "<SMALL><A HREF=\"admin.php?mod=story&op=add\">add new story</A> | <A HREF=\"admin.php?mod=story\">overview</A> | <A HREF=\"admin.php?mod=story&op=search\">search story</A> | <A HREF=\"admin.php?mod=story&op=help\">help</A></SMALL><HR>\n";
 
   switch ($op) {
     case "add":
-      story_add();
+      print story_form();
+      break;
+    case "delete":
+      print story_delete($id);
+      story_overview();
       break;
     case "edit":
-      story_edit(check_input($id));
+      print story_form(node_get_array("nid", check_input($id)));
       break;
     case "help":
       story_help();
       break;
-   case "search":
+    case "search":
       story_search();
       break;
-    case "Add story":
-      story_add_save($edit);
-      story_display();
+    case t("Preview"):
+      $theme->story(new Story(($edit[author] ? $edit[author] : $user->userid), $edit[title], $edit[abstract], $edit[body], $edit[section], ($edit[timestamp] ? $edit[timestamp] : time())), "[ ". t("reply to this story") ." ]");
+      print story_form($edit);
       break;
-    case "Save story":
-      story_edit_save(check_input($id), $edit);
-      story_display();
+    case t("Submit"):
+      story_save($edit, check_input($id));
+      story_overview();
       break;
     default:
-      story_display();
+      story_overview();
+  }
+}
+
+
+function story_user() {
+  global $edit, $id, $op, $theme, $user;
+
+  switch($op) {
+    case t("Preview"):
+      $theme->story(new Story(($edit[author] ? $edit[author] : $user->userid), $edit[title], $edit[abstract], $edit[body], $edit[section], ($edit[timestamp] ? $edit[timestamp] : time())), "[ ". t("reply to this story") ." ]");
+      $theme->box("Submit a story", story_form($edit));
+      break;
+    case t("Submit"):
+      story_save($edit, check_input($id));
+      $theme->box(t("Submit a story"), t("Thank you for your submission."));
+      break;
+    default:
+      $theme->box("Submit a story", story_form());
   }
 }
 
