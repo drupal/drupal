@@ -294,7 +294,7 @@ function import_save_item($edit) {
 function import_form_bundle($edit = array()) {
 
   $form .= form_textfield("Title", "title", $edit["title"], 50, 64, "The name of the bundle.");
-  $form .= form_textfield("Attributes", "attributes", $edit["attributes"], 50, 128, "A comma-seperated list of keywords describing the bundle.");
+  $form .= form_textfield("Attributes", "attributes", $edit["attributes"], 50, 128, "A comma-separated list of keywords describing the bundle.");
 
   $form .= form_submit("Submit");
 
@@ -330,7 +330,7 @@ function import_form_feed($edit = array()) {
 
   $form .= form_textfield("Title", "title", $edit["title"], 50, 64, "The name of the feed; typically the name of the website you syndicate content from.");
   $form .= form_textfield("Url", "url", $edit["url"], 50, 128, "The fully-qualified URL of the feed.");
-  $form .= form_textfield("Attributes", "attributes", $edit["attributes"], 50, 128, "A comma-seperated list of keywords describing the feed.");
+  $form .= form_textfield("Attributes", "attributes", $edit["attributes"], 50, 128, "A comma-separated list of keywords describing the feed.");
   $form .= form_select("Update interval", "refresh", $edit["refresh"], $period, "The refresh interval indicating how often you want to update this feed.  Requires crontab.");
 
   $form .= form_submit("Submit");
