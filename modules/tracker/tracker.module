@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.76 2004/02/21 22:20:21 kjartan Exp $
+// $Id: tracker.module,v 1.77 2004/03/11 20:33:58 dries Exp $
 
 function tracker_help($section = 'admin/help#tracker') {
   switch ($section) {
@@ -79,12 +79,8 @@ function tracker_posts($id = 0) {
 }
 
 function tracker_user($type, &$edit, &$user) {
-  switch ($type) {
-    case "view_private":
-    case "view_public":
-      if (user_access("access content")) {
-        return form_item(t("Recent posts"), l(t("recent posts"), "tracker/$user->uid"));
-      }
+  if ($type == 'view' && user_access("access content")) {
+    return form_item(t("Recent posts"), l(t("recent posts"), "tracker/$user->uid"));
   }
 }
 

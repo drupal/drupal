@@ -1,4 +1,4 @@
-/* $Id: xtemplate.css,v 1.1 2004/02/15 14:54:39 dries Exp $ */
+/* $Id: xtemplate.css,v 1.2 2004/03/11 20:33:58 dries Exp $ */
 
 /*
 ** HTML elements
@@ -222,7 +222,7 @@ table {
   font-size: 0.8em;
   padding: 1.5em;
 }
-.node .avatar {
+.node .picture {
   border: 1px solid #ddd;
   float: right;
   margin: 0.5em;
@@ -242,7 +242,7 @@ table {
   float: right;
   color: red;
 }
-.comment .avatar {
+.comment .picture {
   border: 1px solid #abc;
   float: right;
   margin: 0.5em;

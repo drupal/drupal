@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.74 2004/02/28 17:55:50 dries Exp $
+// $Id: drupal.module,v 1.75 2004/03/11 20:33:58 dries Exp $
 
 function drupal_help($section = "admin/help#drupal") {
 
@@ -182,24 +182,6 @@ function drupal_login($arguments) {
   }
   else {
     return new xmlrpcresp(new xmlrpcval(0, "int"));
-  }
-}
-
-function drupal_user($type, $edit, $user) {
-
-  $module = "drupal";
-  $name = module_invoke($module, "info", "name");
-  switch ($type) {
-    case "view_private":
-      $result = user_get_authname($user, $module);
-      $title = t("%name ID", array("%name" => $name));
-      if ($result) {
-        return form_item($title, $result);
-      }
-      else {
-        // TODO: use a variation of $base_url instead of $HTTP_HOST below
-        return form_item($title, "$user->name@". $_SERVER["HTTP_HOST"]);
-      }
   }
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.131 2004/03/01 19:45:33 dries Exp $
+// $Id: system.module,v 1.132 2004/03/11 20:33:58 dries Exp $
 
 function system_help($section = "admin/help#system") {
   global $base_url;
@@ -77,7 +77,7 @@ function system_link($type) {
 }
 
 function system_user($type, $edit, &$user) {
-  if ($type == "edit_form") {
+  if ($type == 'edit') {
     $options = "<option value=\"\">". t("Default theme") ."</option>\n";
     if (count($themes = list_themes()) > 1) {
       foreach ($themes as $key => $value) {
