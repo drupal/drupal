@@ -769,7 +769,7 @@ function _taxonomy_term_select($title, $name, $value, $vocabulary_id, $descripti
     }
   }
 
-  return form_select($title, $name .'][', $value, $options, $description, $multiple ? 'size="'. min(12, count($options)) .'"' : 0, $multiple);
+  return form_select($title, $name . ($multiple ? '' : ']['), $value, $options, $description, $multiple ? 'size="'. min(12, count($options)) .'"' : 0, $multiple);
 }
 
 function _taxonomy_depth($depth, $graphic = '--') {
