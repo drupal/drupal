@@ -122,12 +122,14 @@ function user_save($account, $array = array()) {
     foreach ($array as $key => $value) {
       if ($key == "pass") {
         $fields[] = check_query($key);
-        $values[] = "'". md5($value) ."'";
+        $values[] = md5($value);
+        $s[] = "'%s'";
       }
       else if (substr($key, 0, 4) !== "auth") {
         if (in_array($key, $user_fields)) {
           $fields[] = check_query($key);
-          $values[] = "'". check_query($value) ."'";
+          $values[] = $value;
+          $s[] = "'%s'";
         }
         else {
           $data[$key] = $value;
@@ -136,9 +138,10 @@ function user_save($account, $array = array()) {
     }
 
     $fields[] = "data";
-    $values[] = "'". check_query(serialize($data)) ."'";
+    $values[] = serialize($data);
+    $s[] = "'%s'";
 
-    db_query("INSERT INTO {users} (". implode(", ", $fields) .") VALUES (". implode(", ", $values) .")");
+    db_query("INSERT INTO {users} (". implde(", ", $fields) .") VALUES (". implde(", ", $s) .")", $values);
 
     $user = user_load(array("name" => $array["name"]));
   }

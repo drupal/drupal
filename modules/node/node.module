@@ -127,14 +127,6 @@ function node_teaser($body) {
   }
 
   /*
-  ** If we have a short body, return the entire body:
-  */
-
-  if (strlen($body) < $size) {
-    return $body;
-  }
-
-  /*
   ** If a valid delimiter has been specified, use it to
   ** chop of the teaser.  The delimiter can be outside
   ** the allowed range but no more than a factor two.
@@ -143,6 +135,14 @@ function node_teaser($body) {
   $delimiter = strpos($body, "<!--break-->");
   if ($delimiter > 0) {
     return substr($body, 0, $delimiter);
+  }
+
+  /*
+  ** If we have a short body, return the entire body:
+  */
+
+  if (strlen($body) < $size) {
+    return $body;
   }
 
   /*
@@ -302,12 +302,17 @@ function node_save($node) {
     foreach ($node as $key => $value) {
       if (in_array($key, $fields)) {
         $k[] = check_query($key);
-        $v[] = "'". check_query($value) ."'";
+        $v[] = $value;
+        $s[] = "'%s'";
       }
     }
 
+    $keysfmt = implode(", ", $s);
+    // need to quote the placeholders for the values
+    $valsfmt = "'". implode("', '", $s) ."'";
+
     // Insert the node into the database:
-    db_query("INSERT INTO {node} (". implode(", ", $k) .") VALUES (". implode(", ", $v) .")");
+    db_query("INSERT INTO {node} (". implode(", ", $k) .") VALUES(". implode(", ", $s) .")", $v);
 
     // Call the node specific callback (if any):
     node_invoke($node, "insert");
@@ -325,12 +330,13 @@ function node_save($node) {
     // Prepare the query:
     foreach ($node as $key => $value) {
       if (in_array($key, $fields)) {
-        $q[] = check_query($key) ." = '". check_query($value) ."'";
+        $q[] = check_query($key) ." = '%s'";
+        $v[] = $value;
       }
     }
 
     // Update the node in the database:
-    db_query("UPDATE {node} SET ". implode(", ", $q) ." WHERE nid = '$node->nid'");
+    db_query("UPDATE {node} SET ". implode(", ", $q) ." WHERE nid = '$node->nid'", $v);
 
     // Call the node specific callback (if any):
     node_invoke($node, "update");

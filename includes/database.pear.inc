@@ -25,11 +25,18 @@ function db_connect($url) {
 function db_query($query) {
 
   $args = func_get_args();
+
   $query = db_prefix_tables($query);
   if (count($args) > 1) {
-    $args = array_map("check_query", $args);
-    $args[0] = $query;
-    return _db_query(call_user_func_array("sprintf", $args));
+    if(is_array($args[1])){
+      $args1 = array_map("check_query", $args[1]);
+      $nargs = array_merge(array($query), $args1);
+    }
+    else {
+      $nargs = array_map("check_query", $args);
+      $nargs[0] = $query;
+    }
+    return _db_query(call_user_func_array("sprintf", $nargs));
   }
   else {
     return _db_query($query);
@@ -41,9 +48,15 @@ function db_queryd($query) {
   $args = func_get_args();
   $query = db_prefix_tables($query);
   if (count($args) > 1) {
-    $args = array_map("check_query", $args);
-    $args[0] = $query;
-    return _db_query(call_user_func_array("sprintf", $args), 1);
+    if(is_array($args[1])){
+      $args1 = array_map("check_query", $args[1]);
+      $nargs = array_merge(array($query), $args1);
+    }
+    else {
+      $nargs = array_map("check_query", $args);
+      $nargs[0] = $query;
+    }
+    return _db_query(call_user_func_array("sprintf", $nargs), 1);
   }
   else {
     return _db_query($query, 1);
