@@ -81,7 +81,7 @@ function theme_account($theme) {
     $output .= "  <B>". t("Username") .":</B><BR><INPUT NAME=\"userid\" SIZE=\"15\"><P>\n";
     $output .= "  <B>". t("Password") .":</B><BR><INPUT NAME=\"passwd\" SIZE=\"15\" TYPE=\"password\"><BR>\n";
     $output .= "  <INPUT TYPE=\"submit\" VALUE=\"". t("Login") ."\"><BR>\n";
-    if (variable_get("account_reg_allow", 1)) $output .= "  <A HREF=\"account.php\">". t("REGISTER") ."</A>\n";
+    if (variable_get("account_register", 1)) $output .= "  <A HREF=\"account.php\">". t("REGISTER") ."</A>\n";
     $output .= " </FORM>\n";
     $output .= "</DIV>\n";
 

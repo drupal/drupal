@@ -26,6 +26,11 @@ function node_help() {
   }
 }
 
+function node_conf_options() {
+  $output .= form_select(t("Default number of nodes to display"), "default_nodes_main", variable_get("default_nodes_main", 10), array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 =>  5, 6 => 6, 7 => 7, 8 => 8, 9 => 9, 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30), t("The default maximum number of nodes to display on the main page."));
+  return $output;
+}
+
 function node_conf_filters() {
   $output .= form_select(t("Enable HTML tags"), "filter_html", variable_get("filter_html", 0), array("Disabled", "Enabled"), t("Strip HTML and PHP tags."));
   $output .= form_textfield(t("Allowed HTML tags"), "allowed_html", variable_get("allowed_html", "<A><B><BLOCKQUOTE><DD><DL><DT><I><LI><OL><U><UL>"), 64, 128, t("If enabled, optionally specify tags which should not be stripped.  'STYLE' attributes, 'ON' attributes and unclosed tags are always stripped."));
