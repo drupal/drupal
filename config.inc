@@ -61,6 +61,12 @@ $allowableHTML   = array('B','/B','I','/I','P .*','P','/P','A .*','/A','LI','OL'
 #
 $anonymous = "Anonymous Chicken";
 
+#
+# 
+# Default theme:
+#
+$cfg_theme = "default";
+
 # 
 # Debug flag:
 #   Set to '1' if you are using Windows so the engine won't try
