@@ -101,11 +101,13 @@ function poll_graph($val) {
 
 function poll_view($node, $main = 0, $block = 0) {
   global $theme, $op, $user, $chid, $REQUEST_URI;
+  
+  $pollop = $op;
 
   if (($node->active) && (!field_get($node->voters, $user->userid))) $voting = 1;
-  if ((!$voting) && ($op != "View")) $op = "View";
+  if ((!$voting) && ($pollop != "View")) $pollop = "View";
 
-  switch ($op) {
+  switch ($pollop) {
     case "Vote":
       if (($node->active) && (!field_get($node->voters, $user->userid))) {
         $result = db_query("UPDATE poll_choices SET chvotes=chvotes+1 WHERE nid='" . $node->nid . "' && chid='" . check_input($chid) . "'");
