@@ -1,5 +1,5 @@
 <?php
-// $Id: queue.module,v 1.100 2003/12/29 17:14:26 dries Exp $
+// $Id: queue.module,v 1.101 2004/01/19 22:23:37 dries Exp $
 
 function queue_help($section) {
   $output = "";
@@ -174,15 +174,14 @@ function queue_view($nid) {
     }
   }
 
-  print theme("header");
-  print node_view($node);
+  $output .= node_view($node);
   if ($output) {
-    print theme("box", t("Moderate"), $output);
+    $output .= theme("box", t("Moderate"), $output);
   }
   if ($node->comment && variable_get("queue_show_comments", 1)) {
-    print module_invoke("comment", "render", $node);
+    $output .= module_invoke("comment", "render", $node);
   }
-  print theme("footer");
+  print theme("page", $output);
 }
 
 function queue_page() {
