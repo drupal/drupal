@@ -173,12 +173,7 @@ function system_view_theme($name) {
 }
 
 function system_view_filters() {
-  foreach (module_list() as $name) {
-    if (module_hook($name, "conf_filters")) {
-      $output .= module_invoke($name, "conf_filters");
-    }
-  }
-  return $output;
+  return implode("\n", module_invoke_all("conf_filters"));
 }
 
 function system_save_settings($edit = array()) {

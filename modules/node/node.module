@@ -219,7 +219,7 @@ function node_teaser($body) {
   return substr($body, 0, $size);
 }
 
-function node_invoke(&$node, $hook, $arg = 0) {
+function node_invoke(&$node, $hook, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
   if (is_array($node)) {
     $function = $node["type"] ."_$hook";
   }
@@ -231,7 +231,7 @@ function node_invoke(&$node, $hook, $arg = 0) {
   }
 
   if (function_exists($function)) {
-    return ($arg ? $function($node, $arg) : $function($node));
+    return ($function($node, $a2, $a3, $a4));
   }
 }
 
@@ -264,7 +264,7 @@ function node_load($conditions, $revision = -1) {
   ** results to the node or overwrite some values:
   */
 
-  if ($extra = module_invoke($node->type, "load", $node)) {
+  if ($extra = node_invoke($node, "load")) {
     foreach ($extra as $key => $value) {
       $node->$key = $value;
     }
@@ -445,14 +445,9 @@ function node_access($op, $node = 0) {
     $type = $node;
   }
 
-  $function = $type ."_access";
-
-  if (function_exists($function)) {
-    return $function($op, $node);
-  }
-  else {
-    return 0;
-  }
+  // Ideally this would be a node_invoke, but the access hook takes
+  // the $op parameter before the $node parameter so we can't do that.
+  return module_invoke ($type, "access", $op, $node);
 }
 
 function node_perm() {
@@ -597,10 +592,7 @@ function node_admin_edit($node) {
   /*
   ** Display the node form extensions:
   */
-
-  foreach (module_list() as $name) {
-    $output .= module_invoke($name, "node_link", $node);
-  }
+  $output .= implode("\n", module_invoke_all("node_link", $node));
 
   return $output;
 
@@ -1179,14 +1171,8 @@ function node_form($edit, $error = NULL) {
   // Prepend extra node form:
   $form = implode("", module_invoke_all("nodeapi", $edit, "form pre", $error));
 
-  /*
-  ** Get the node specific bits:
-  */
-
-  $function = $edit->type ."_form";
-  if (function_exists($function)) {
-    $form .= $function($edit, $help, $error, $param);
-  }
+  // Get the node specific bits:
+  $form .= node_invoke($edit, "form", $help, $error, $param);
 
   // Append extra node form:
   $form .= implode("", module_invoke_all("nodeapi", $edit, "form post", $error));

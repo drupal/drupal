@@ -15,9 +15,7 @@ if (!get_cfg_var("safe_mode")) {
 ** Iterate through the modules calling their cron handlers (if any):
 */
 
-foreach (module_list() as $module) {
-  module_invoke($module, "cron");
-}
+module_invoke_all("cron");
 
 watchdog("message", "cron run completed");
 ?>
