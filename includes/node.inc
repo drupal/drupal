@@ -96,8 +96,6 @@ function node_save($node, $filter) {
         $k = check_input(is_numeric($field) ? $value : $field);
         $v = check_input(is_numeric($field) ? $node[$value] : $filter[$field]);
 
-        print "$k => $v ($field, $value)<BR>";
-
         if (in_array($k, $rows)) {
           $f1[] = $k;
           $v1[] = "'$v'";
@@ -114,14 +112,14 @@ function node_save($node, $filter) {
       $v2 = implode(", ", $v2);
 
       // insert data, try to roll-back when something goes wrong:
-      $result = db_query("INSERT INTO node ($f1) VALUES ($v1)", 1);
+      $result = db_query("INSERT INTO node ($f1) VALUES ($v1)");
       if ($result && $nid = db_insert_id()) {
-        $result = db_query("INSERT INTO $filter[type] ($f2, nid) VALUES ($v2, $nid)", 1);
+        $result = db_query("INSERT INTO $filter[type] ($f2, nid) VALUES ($v2, $nid)");
         if ($result && $lid = db_insert_id()) {
-          $result = db_query("UPDATE node SET lid = '$lid' WHERE nid = '$nid'", 1);
+          $result = db_query("UPDATE node SET lid = '$lid' WHERE nid = '$nid'");
           if ($result) {
             if (($node[pid]) && ($node[status] == $status[posted])) {
-              db_query("UPDATE node SET status = '$status[expired]' WHERE nid = '$node[pid]'", 1);
+              db_query("UPDATE node SET status = '$status[expired]' WHERE nid = '$node[pid]'");
             }
             watchdog("special", "node: added '$node[title]'");
           }
@@ -130,7 +128,7 @@ function node_save($node, $filter) {
           }
         }
         else {
-          db_query("DELETE FROM node WHERE nid = '$nid'", 1);
+          db_query("DELETE FROM node WHERE nid = '$nid'");
           watchdog("warning", "node: added '$node[title]' - failed");
         }
       }
