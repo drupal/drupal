@@ -51,7 +51,7 @@ function search_help($section = 'admin/help#search') {
       return t('Enables site-wide keyword searching.');
     case 'admin/settings/search':
       return t('
-<p>The search engine works by maintaining an index of the words in your site\'s content. You can adjust the settings below to tweak the indexing behaviour.</p>
+<p>The search engine works by maintaining an index of the words in your site\'s content. You can adjust the settings below to tweak the indexing behaviour. Note that the search requires cron to be set up correctly.</p>
 ');
     case 'search#noresults':
       return t('<p><ul>
