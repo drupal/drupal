@@ -7,6 +7,7 @@ function dbsave($dbase, $data, $id=0) {
     if ($key == "passwd") { $query .= "$key=PASSWORD('". addslashes($value) ."'), "; }
     else { $query .= "$key='". addslashes($value) ."', "; }
   }
+  print($query);
   $query = substr($query, 0, -2);
   dbconnect();
   if (!empty($id)) { mysql_query("UPDATE $dbase SET $query WHERE id=$id") or die(mysql_error()); return $id; }
