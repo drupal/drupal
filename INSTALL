@@ -1,4 +1,4 @@
-// $Id: INSTALL,v 1.14 2003/09/24 08:29:45 dries Exp $
+// $Id: INSTALL,v 1.15 2003/11/27 14:42:49 dries Exp $
 
 REQUIREMENTS
 ------------
@@ -15,7 +15,6 @@ SERVER CONFIGURATION
 
 Your PHP must have the following settings:
 
-  magic_quotes_gpc         0
   session.save_handler     user
 
 In addition, we recommend the following settings:
