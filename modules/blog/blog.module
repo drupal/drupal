@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.154 2003/12/29 17:14:26 dries Exp $
+// $Id: blog.module,v 1.155 2004/01/02 16:30:09 dries Exp $
 
 function blog_settings() {
   $output = form_textarea(t("Explanation or submission guidelines"), "blog_help", variable_get("blog_help", ""), 70, 4, t("This text is displayed at the top of the blog submission form.  It's useful for helping or instructing your users."));
@@ -220,9 +220,7 @@ function blog_page() {
 }
 
 function blog_content($node) {
-  $node->teaser = check_output($node->teaser);
-  $node->body = check_output($node->body);
-  return $node;
+  return node_prepare($node);
 }
 
 function blog_view($node, $main = 0, $page = 0) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.203 2003/12/17 22:27:23 dries Exp $
+// $Id: book.module,v 1.204 2004/01/02 16:30:09 dries Exp $
 
 function book_node($field) {
   global $user;
@@ -376,8 +376,7 @@ function book_content($node) {
     ob_end_clean();
   }
   else {
-    $node->teaser = check_output($node->teaser);
-    $node->body = check_output($node->body);
+    $node = node_prepare($node);
   }
 
   return $node;

@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.103 2003/11/25 19:26:21 dries Exp $
+// $Id: page.module,v 1.104 2004/01/02 16:30:09 dries Exp $
 
 function page_help($section = "admin/help#page") {
   $output = "";
@@ -104,8 +104,7 @@ function page_content($node) {
 
   if ($node->format == 0) {
     // HTML type
-    $node->teaser = check_output($node->teaser);
-    $node->body = check_output($node->body);
+    $node = node_prepare($node);
   }
   else {
     // PHP type
