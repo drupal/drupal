@@ -65,16 +65,20 @@
 "http://drupal/"); ?> "><?php echo variable_get(site_name, "drupal"); ?></a></b>
                 </font>
               </td>
-              <td class="spacer1" width="1" height="1"><img src="themes/yaroon/images/pixel.gif" width="1" height="1" alt="" border="0" /></td>
+              <td class="spacer1" width="1" height="1"><img src="themes/jeroen2/images/pixel.gif" width="1" height="1" alt="" border="0" /></td>
               <form name="navform" action="" method="get">
               <td align="right" valign="top" width="80%">
                 <select name="navdrop" onChange="do_nav()" class="small">
                   <option value="index.php" <?php if (strstr($PHP_SELF, "index.php")) { echo "selected"; $true = 1; } ?>>Main</option>
                   <option value="account.php" <?php if (strstr($PHP_SELF, "account.php")) { echo "selected"; $true = 1; } ?>>Account</option>
                   <option value="module.php?mod=diary" <?php if (strstr($REQUEST_URI, "mod=diary")) { echo "selected"; $true = 1; } ?>>Diary</option>
+                  <option value="module.php?mod=forum" <?php if (strstr($REQUEST_URI, "mod=forum")) { echo "selected"; $true = 1; } ?>>Forum</option>
+                  <option value="module.php?mod=headline" <?php if (strstr($REQUEST_URI, "mod=headline")) { echo "selected"; $true = 1; } ?>>Headline</option>
                   <option value="module.php?mod=book" <?php if (strstr($REQUEST_URI, "mod=book")) { echo "selected"; $true = 1; } ?>>Handbook</option>
+                  <option value="module.php?mod=cvs" <?php if (strstr($REQUEST_URI, "mod=cvs")) { echo "selected"; $true = 1; } ?>>CVS</option>
                   <option value="submit.php" <?php if (strstr($PHP_SELF, "submit.php")) { echo "selected"; $true = 1; } ?>>Submit</option>
                   <option value="search.php" <?php if (strstr($PHP_SELF, "search.php")) { echo "selected"; $true = 1; } ?>>Search</option>
+                  <option value="module.php?mod=rating" <?php if (strstr($REQUEST_URI, "mod=rating")) { echo "selected"; $true = 1; } ?>>Rating</option>
                   <?php if ($REQUEST_URI == "/module.php?mod=queue") { $true = 1; echo "<option selected>Moderation</option>"; }
                   if (!$true) { echo "<option selected>"; if($cid) echo "Node $cid"; else if($id) echo "Node $id"; else echo "Other"; echo"</option>"; } ?>
                 </select>
@@ -82,7 +86,7 @@
               </td>
               </form>
             </tr>
-            <tr><td colspan="3" class="spacer1"><img src="themes/yaroon/images/pixel.gif" width="1" height="1" alt="" border="0" /></td></tr>
+            <tr><td colspan="3" class="spacer1"><img src="themes/jeroen2/images/pixel.gif" width="1" height="1" alt="" border="0" /></td></tr>
             <tr>
               <td align="center" valign="top" width="20%">
                 <br />
@@ -95,7 +99,7 @@
 ?>
 
               </td>
-              <td class="spacer1"><img src="themes/yaroon/images/pixel.gif" width="1" height="1" alt="" border="0" /></td>
+              <td class="spacer1"><img src="themes/jeroen2/images/pixel.gif" width="1" height="1" alt="" border="0" /></td>
               <td align="center" valign="top" bgcolor="#f4f4f4" width="80%" height="100%">
                 <br />
                 <table border="0" cellpadding="0" cellspacing="0" width="95%">
@@ -124,11 +128,11 @@
                 <table border="0" cellpadding="0" cellspacing="1" width="100%">
                   <tr>
                     <td>
-                      <a href="index.php?topic=<?php echo $story->tid; ?>"><img src="themes/yaroon/images/<?php echo $img; ?>" border="0" /></a>&nbsp;<b style="font-size: 12pt"><?php echo check_output($story->title); ?></b>
+                      <a href="index.php?topic=<?php echo $story->tid; ?>"><img src="themes/jeroen2/images/<?php echo $img; ?>" border="0" /></a>&nbsp;<b style="font-size: 12pt"><?php echo check_output($story->title); ?></b>
                       <?php echo strtr(t("by %a on %b"), array("%a" => format_username($story->userid), "%b" => format_date($story->timestamp), "small")); echo $story->cid; ?>
                     </td>
                   </tr>
-                  <tr><td bgcolor="<?php echo $color; ?>"><img src="themes/yaroon/images/pixel.gif" width="1" height="1" alt="" border="0" /></td></tr>
+                  <tr><td bgcolor="<?php echo $color; ?>"><img src="themes/jeroen2/images/pixel.gif" width="1" height="1" alt="" border="0" /></td></tr>
                   <tr>
                     <td>
 
@@ -164,12 +168,12 @@
       <table width="90%" border="0" cellpadding="0" cellspacing="1" heigth="100%">
         <tr>
           <td valign="bottom" class="box">
-            <img src="themes/yaroon/images/square.gif" />&nbsp;<b><?php echo check_output($comment->subject); ?></b>
+            <img src="themes/jeroen2/images/square.gif" />&nbsp;<b><?php echo check_output($comment->subject); ?></b>
       <font size="-1"><?php echo strtr(t(" by %a on %b"), array("%a" => format_username($comment->userid), "%b" => format_date($comment->timestamp), "small")); ?></font>
           </td>
           <td align="right"><?php echo comment_moderation($comment); ?></td>
         </tr>
-        <tr><td colspan="2" class="spacer1"><img src="themes/yaroon/images/pixel.gif" width="1" height="1" alt="" border="0" /><br></td></tr>
+        <tr><td colspan="2" class="spacer1"><img src="themes/jeroen2/images/pixel.gif" width="1" height="1" alt="" border="0" /><br></td></tr>
         <tr>
           <td colspan="2">
             <br />
@@ -206,16 +210,16 @@
 
       <table width="90%" border="0" cellpadding="0" cellspacing="1">
         <tr>
-    <td class="box"><img src="themes/yaroon/images/square.gif" />&nbsp;<b><?php echo $subject; ?></b></td>
+    <td class="box"><img src="themes/jeroen2/images/square.gif" />&nbsp;<b><?php echo $subject; ?></b></td>
         </tr>
-        <tr><td class="spacer1"><img src="themes/yaroon/images/pixel.gif" width="1" height="1" alt="" border="0" /><br></td></tr>
+        <tr><td class="spacer1"><img src="themes/jeroen2/images/pixel.gif" width="1" height="1" alt="" border="0" /><br></td></tr>
         <tr>
           <td>
             <br />
             <?php echo $content; ?>
           </td>
         </tr>
-        <tr><td align="right" class="box"><img src="themes/yaroon/images/<?php echo $img; ?>" /><br />&nbsp;</td></tr>
+        <tr><td align="right" class="box"><img src="themes/jeroen2/images/<?php echo $img; ?>" /><br />&nbsp;</td></tr>
       </table>
 
 <?php
@@ -232,14 +236,14 @@
                 &nbsp; <!-- I call this the super-space, withouth it, the comment section looks crappy at the bottom :) -->
               </td>
             </tr>
-            <tr><td colspan="3" class="spacer1"><img src="themes/yaroon/images/pixel.gif" width="1" height="1" alt="" border="0" /></td></tr>
+            <tr><td colspan="3" class="spacer1"><img src="themes/jeroen2/images/pixel.gif" width="1" height="1" alt="" border="0" /></td></tr>
             <tr>
               <td align="left">
-                  &nbsp;<a href="mailto:<?php echo variable_get(site_email,"root@localhost"); ?>"><?php echo variable_get(site_email,"root@localhost"); ?></a>
+                  &nbsp;<a href="mailto:<?php echo variable_get(site_mail,"root@localhost"); ?>"><?php echo variable_get(site_mail,"root@localhost"); ?></a>
                   </font>
               </td>
 
-              <td class="spacer1"><img src="themes/yaroon/images/pixel.gif" width="1" height="1" alt="" border="0" /></td>
+              <td class="spacer1"><img src="themes/jeroen2/images/pixel.gif" width="1" height="1" alt="" border="0" /></td>
               <td align="right">
                 <?php echo variable_get(site_footer, ""); ?>
               </td>
