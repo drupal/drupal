@@ -116,7 +116,7 @@
         </tr>
         <tr>
          <td class="lgl"><img src="themes/goofy/images/null.gif" alt=""></td>
-         <td class="lgcnt"><small><?php echo strtr(t("$how by %a on %b"), array("%a" => format_username($story->userid), "%b" => format_date($story->timestamp, "large"))); ?></small></td>
+         <td class="lgcnt"><small><?php echo strtr(t("Submitted by %a on %b"), array("%a" => format_username($story->userid), "%b" => format_date($story->timestamp, "large"))); ?></small></td>
          <td class="lgcnt" nowrap><div align="right"><?php echo category_name($story->cid) ." / ". topic_name($story->tid); ?></div></td>
          <td class="lgr"><img src="themes/goofy/images/null.gif" alt=""></td>
         </tr>
