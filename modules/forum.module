@@ -112,6 +112,8 @@ function forum_block($op = "list", $delta = 0) {
 function forum_link($type, $node = 0, $main = 0) {
   global $user;
 
+  $links = array();
+
   if ($type == "page" && user_access("access content")) {
     $links[] = l(t("forum"), "forum");
   }
@@ -147,7 +149,7 @@ function forum_link($type, $node = 0, $main = 0) {
     }
   }
 
-  return $links ? $links : array();
+  return $links;
 }
 
 function forum_view($node, $main = 0) {

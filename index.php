@@ -7,7 +7,7 @@ if (isset($q)) {
   $mod = arg(0);
 }
 
-if ($mod && module_hook($mod, "page")) {
+if (isset($mod) && module_hook($mod, "page")) {
   if ($mod != "admin") {
     page_header();
   }

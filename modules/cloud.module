@@ -35,6 +35,8 @@ function cloud_perm() {
 }
 
 function cloud_link($type) {
+  $links = array();
+
   if ($type == "page" && user_access("access site cloud")) {
     $links[] = l(t("site cloud"), "cloud", array("title" => t("Monitor other sites in the cloud.")));
   }
@@ -48,7 +50,7 @@ function cloud_link($type) {
     menu("admin/syndication/cloud/help", "help", "cloud_help", NULL, 9);
   }
 
-  return $links ? $links : array();
+  return $links;
 }
 
 function cloud_update($site) {

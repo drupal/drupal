@@ -152,6 +152,8 @@ function poll_insert($node) {
 }
 
 function poll_link($type, $node = 0, $main) {
+  $links = array();
+
   if ($type == "menu.create" && user_access("create polls")) {
     $links[] = l(t("create poll"), "node/add/poll", array("title" => t("Add a new poll.")));
   }
@@ -190,7 +192,8 @@ function poll_link($type, $node = 0, $main) {
       }
     }
   }
-  return $links ? $links : array();
+
+  return $links;
 }
 
 function poll_load($node) {

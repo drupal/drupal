@@ -13,11 +13,13 @@ function tracker_system($field) {
 
 function tracker_link($type) {
 
+  $links = array();
+
   if ($type == "menu.view" && user_access("access content")) {
     $links[] = l(t("view recent posts"), "tracker", array("title" => t("Display an overview of the recent posts.")));
   }
 
-  return $links ? $links : array();
+  return $links;
 }
 
 function tracker_posts($id = 0) {

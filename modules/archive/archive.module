@@ -129,11 +129,14 @@ function archive_block($op = "list", $delta = 0) {
 }
 
 function archive_link($type) {
+
+  $links = array();
+
   if ($type == "page" && user_access("access content")) {
     $links[] = l(t("archives"), "archive", array("title" => t("Read the older content in our archive.")));
   }
 
-  return $links ? $links : array();
+  return $links;
 }
 
 function archive_page() {

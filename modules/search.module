@@ -28,11 +28,13 @@ function search_perm() {
  *
  */
 function search_link($type) {
+  $links = array();
+
   if ($type == "page" && user_access("search content")) {
     $links[] = l(t("search"), "search", array("title" => t("Search for older content.")));
   }
 
-  return $links ? $links : array();
+  return $links;
 }
 
 function search_settings() {

@@ -66,7 +66,7 @@ function module_list($refresh = 0) {
 // return 1 if module $name exists, 0 otherwise:
 function module_exist($name) {
   $list = module_list();
-  return ($list[$name]) ? 1 : 0;
+  return isset($list[$name]) ? 1 : 0;
 }
 
 // return 1 if module $name implements hook $hook, 0 otherwise:

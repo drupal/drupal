@@ -30,6 +30,8 @@ function import_perm() {
 
 function import_link($type) {
 
+  $links = array();
+
   if ($type == "page" && user_access("access news feeds")) {
     $links[] = l(t("news feeds"), "import", array("title" => t("Read the latest news from syndicated websites.")));
   }
@@ -45,7 +47,7 @@ function import_link($type) {
     menu("admin/syndication/news/help", "help", "import_help", NULL, 9);
   }
 
-  return $links ? $links : array();
+  return $links;
 }
 
 function import_cron() {

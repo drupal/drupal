@@ -380,6 +380,9 @@ function user_block($op = "list", $delta = 0) {
 }
 
 function user_link($type) {
+
+  $links = array();
+
   if ($type == "page") {
     $links[] = l(t("user account"), "user", array("title" => t("Create a user account, request a new password or edit your account settings.")));
   }
@@ -427,7 +430,7 @@ function user_link($type) {
     }
   }
 
-  return $links ? $links : array();
+  return $links;
 }
 
 /*** Authentication methods ************************************************/

@@ -40,11 +40,13 @@ function story_access($op, $node) {
 }
 
 function story_link($type) {
+  $links = array();
+
   if ($type == "menu.create" && user_access("create stories")) {
     $links[] = l(t("create story"), "node/add/story", array("title" => t("Add a new story.")));
   }
 
-  return $links ? $links : array();
+  return $links;
 }
 
 function story_form(&$node, &$help, &$error) {

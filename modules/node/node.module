@@ -491,6 +491,8 @@ function node_filter($text) {
 
 function node_link($type, $node = 0, $main = 0) {
 
+  $links = array();
+
   if ($type == "page") {
     $links[] = l(t("submit"), "node/add", array("title" => t("Submit or suggest new content.")));
   }
@@ -522,7 +524,7 @@ function node_link($type, $node = 0, $main = 0) {
     menu("admin/node/settings", "content settings", "node_admin", NULL, 8);
   }
 
-  return $links ? $links : array();
+  return $links;
 }
 
 function node_admin_edit($node) {

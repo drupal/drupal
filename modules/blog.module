@@ -51,12 +51,14 @@ function blog_head($main = 0) {
   $mod = arg(0);
   $id = arg(1);
 
+  $output = array();
+
   if ($mod == "blog" && $id) {
     $account = user_load(array("uid" => $id));
     $output[] = "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"RSS - ". $account->name. "'s blog\" href=\"". url("blog/view/$id") ."\" />";
   }
 
-  return $output ? $output : array();
+  return $output;
 }
 
 function blog_user($type, &$edit, &$user) {
@@ -208,6 +210,8 @@ function blog_page() {
 function blog_link($type, $node = 0, $main) {
   global $user;
 
+  $links = array();
+
   if ($type == "page" && user_access("access content")) {
     $links[] = l(t("user blogs"), "blog", array("title" => t("Read the latest blog entries.")));
   }
@@ -231,7 +235,7 @@ function blog_link($type, $node = 0, $main) {
     }
   }
 
-  return $links ? $links : array();
+  return $links;
 }
 
 function blog_block($op = "list", $delta = 0) {
