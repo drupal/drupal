@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.71 2003/12/29 19:49:11 dries Exp $
+// $Id: search.module,v 1.72 2004/01/02 16:44:11 dries Exp $
 
 function search_help($section = "admin/help#search") {
   $output = "";
@@ -362,6 +362,9 @@ function search_view($keys) {
       case "4":
         $output .= "<br />". $help_link ."<br />";
     }
+
+    // Log the search keys:
+    watchdog("search", "search: '$keys'", l("view results", "search", NULL, "keys=". urlencode($keys)));
 
     // Collect the search results:
     $results = search_data($keys);
