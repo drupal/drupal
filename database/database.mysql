@@ -31,15 +31,15 @@ CREATE TABLE book (
 );
 
 CREATE TABLE boxes (
-  id tinyint(4) DEFAULT '0' NOT NULL auto_increment,
-  subject varchar(64) DEFAULT '' NOT NULL,
-  content text,
+  bid tinyint(4) DEFAULT '0' NOT NULL auto_increment,
+  title varchar(64) DEFAULT '' NOT NULL,
+  body text,
   info varchar(128) DEFAULT '' NOT NULL,
   link varchar(128) DEFAULT '' NOT NULL,
   type tinyint(2) DEFAULT '0' NOT NULL,
-  UNIQUE subject (subject),
+  UNIQUE subject (title),
   UNIQUE info (info),
-  PRIMARY KEY (id)
+  PRIMARY KEY (bid)
 );
 
 CREATE TABLE bundle (
@@ -48,6 +48,13 @@ CREATE TABLE bundle (
   attributes varchar(255) DEFAULT '' NOT NULL,
   UNIQUE title (title),
   PRIMARY KEY (bid)
+);
+
+CREATE TABLE cache (
+  url varchar(255) DEFAULT '' NOT NULL,
+  data text NOT NULL,
+  timestamp int(11) DEFAULT '0' NOT NULL,
+  PRIMARY KEY (url)
 );
 
 CREATE TABLE category (
@@ -262,12 +269,28 @@ CREATE TABLE rating (
   PRIMARY KEY (user)
 );
 
+CREATE TABLE referer (
+  url varchar(255) DEFAULT '' NOT NULL,
+  timestamp int(11) DEFAULT '0' NOT NULL
+);
+
 CREATE TABLE role (
   rid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   name varchar(32) DEFAULT '' NOT NULL,
   perm text NOT NULL,
   UNIQUE name (name),
   PRIMARY KEY (rid)
+);
+
+CREATE TABLE site (
+  sid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
+  title varchar(128) DEFAULT '' NOT NULL,
+  url varchar(255) DEFAULT '' NOT NULL,
+  size text NOT NULL,
+  timestamp int(11) DEFAULT '0' NOT NULL,
+  UNIQUE title (title),
+  UNIQUE url (url),
+  PRIMARY KEY (sid)
 );
 
 CREATE TABLE story (
