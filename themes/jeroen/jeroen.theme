@@ -329,7 +329,7 @@ PHP?>
     } // close comment function
 
     function box($subject, $content, $options = "") {
-      $img = (rand(0, 5) == 2) ? "boxbottomright3.gif" : "boxbottomright1.gif";
+      $img = (rand(0, 50) == 25) ? "boxbottomright2.gif" : "boxbottomright1.gif";
       $width = rand(10, 200);
       $img2 = (rand(0, 100) == 50) ? "boxtopleftside2.gif" : "boxtopleftside1.gif";
 
