@@ -941,9 +941,7 @@ function comment_admin_edit($cid) {
   if ($_POST['op'] == t('Submit')) {
     $edit = $_POST['edit'];
     $output  = comment_save($edit['cid'], $edit);
-    $output .= comment_admin_overview();
-    print theme('page', $output);
-    return;
+    drupal_goto('admin/comment');
   }
 
   // if we're not saving our changes above, we're editing it.
@@ -988,6 +986,7 @@ function comment_delete($cid) {
   // Print a confirmation.
   else if ($comment->cid) {
     drupal_set_message(t('do you want to delete this comment and all its replies?'));
+    $comment->comment = check_output($comment->comment);
     $output  = theme('comment', $comment);
     $output .= form_submit(t('Delete comment'));
   }
