@@ -1525,6 +1525,9 @@ function user_admin_edit($edit = array()) {
       }
 
       // TODO: this display/edit/validate should be moved to a new profile.module implementing the _user hooks
+      if ($error) {
+        // do nothing
+      }
       if ($error = user_validate_name($edit["name"])) {
         // do nothing
       }
