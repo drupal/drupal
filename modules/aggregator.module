@@ -452,10 +452,10 @@ function import_admin() {
 
     switch ($op) {
       case "add feed":
-        print import_form_bundle();
+        print import_form_feed();
         break;
       case "add bundle":
-        print import_form_feed();
+        print import_form_bundle();
         break;
       case "edit":
         if (arg(4) == "bundle") {
