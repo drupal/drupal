@@ -263,32 +263,6 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
 }
 
 /**
- * Implementation of hook_node_link().
- *
- * Allows users with appropriate privileges to edit comments when viewing
- * a node.
- */
-function comment_node_link($node) {
-  if (user_access('administer comments')) {
-    $result = db_query('SELECT c.cid, c.subject, c.name, c.homepage, u.uid, u.name AS registered_name, c.name FROM {comments} c INNER JOIN {users} u ON u.uid = c.uid WHERE nid = %d AND c.status = 0 ORDER BY c.timestamp', $node->nid);
-
-    $header = array(t('Title'), t('Author'), array('data' => t('Operations'), 'colspan' => 3));
-
-    while ($comment = db_fetch_object($result)) {
-      $comment->name = $comment->registered_name ? $comment->registered_name : $comment->name;
-      $rows[] = array(l($comment->subject, "node/$node->nid", NULL, NULL, "comment-$comment->cid"), format_name($comment), l(t('view'), "node/$node->nid", NULL, NULL, $comment->cid), l(t('edit'), "admin/comment/edit/$comment->cid"), l(t('delete'), "admin/comment/delete/$comment->cid"));
-    }
-
-    if ($rows) {
-      $output  = '<h3>'. t('Edit comments') .'</h3>';
-      $output .= theme('table', $header, $rows);
-    }
-
-    return $output;
-  }
-}
-
-/**
  * Implementation of hook_search().
  *
  * This search function uses search.module's built-in content index by
