@@ -13,7 +13,7 @@ class Story {
 
 function story_visible($story) {
   global $user;
-  return ($story->status == 1 && $user->id) || ($story->status == 2) || user_permission();
+  return ($story->status == 2) || ($story->status == 1 && $user->id) || user_permission($user);
 }
 
 ?>

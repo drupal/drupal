@@ -16,10 +16,10 @@ function story_cron() {
 
 function story_help() {
  ?>
-  <P><B>Scheduled stories</B>: stories that are scheduled to be automatically published at a given date and time.  Useful when you have to leave the site alone for a while or when you want to regulate the flow of new content.</P>
-  <P><B>Queued stories</B>: user-contributed stories are automatically whisked away to a submission queue for moderators to frown at it.  Moderators vote whether or not a story should be carried to the front page for discussion.</P>
-  <P><B>Posted stories</B>: published stories accessible to all visitors.</P>
-  <P><B>Dumped stories</B>: rejected stories that are no longer available to visitors.</P>
+  <P>Scheduled stories: stories that are scheduled to be automatically published at a given date and time.  Useful when you have to leave the site alone for a while or when you want to regulate the flow of new content.</P>
+  <P>Queued stories: user-contributed stories are automatically whisked away to a submission queue for moderators (i.e. registered user) to frown at.  Moderators vote whether or not a story should be posted to the front page for discussion.</P>
+  <P>Posted stories: published stories accessible to all visitors.</P>
+  <P>Dumped stories: rejected stories that are no longer available to visitors.</P>
  <?
 }
 
