@@ -1,5 +1,5 @@
 <?php
-/* $Id: bootstrap.inc,v 1.13 2004/06/28 20:00:53 unconed Exp $ */
+/* $Id: bootstrap.inc,v 1.14 2004/06/30 07:26:02 dries Exp $ */
 
 function conf_init() {
 
@@ -95,7 +95,7 @@ function page_get_cache() {
   global $user;
 
   $cache = NULL;
-  
+
   /*
    * Note, we do not serve cached pages when status messages are waiting (from
    * a redirected form submission which was completed).

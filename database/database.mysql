@@ -334,7 +334,9 @@ CREATE TABLE node (
   KEY status (status),
   KEY uid (uid),
   KEY node_moderate (moderate),
-  KEY node_promote_status (promote, status)
+  KEY node_promote_status (promote, status),
+  KEY node_created (created),
+  KEY node_changed (changed)
 ) TYPE=MyISAM;
 
 --

@@ -336,6 +336,8 @@ CREATE INDEX node_status_idx ON node(status);
 CREATE INDEX node_uid_idx ON node(uid);
 CREATE INDEX node_moderate_idx ON node (moderate);
 CREATE INDEX node_promote_status_idx ON node (promote, status);
+CREATE INDEX node_created ON node(created);
+CREATE INDEX node_changed ON node(changed);
 
 --
 -- Table structure for table 'node_counter'
