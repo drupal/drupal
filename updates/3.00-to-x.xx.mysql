@@ -94,3 +94,12 @@ ALTER TABLE item CHANGE fid fid int(10) NOT NULL;
 ALTER TABLE comments CHANGE cid cid int(10) NOT NULL auto_increment;
 ALTER TABLE comments CHANGE pid pid int(10) NOT NULL;
 ALTER TABLE comments CHANGE lid lid int(10) NOT NULL;
+
+## 17/10/01:
+
+# drop the "lid"s:
+ALTER TABLE story ADD KEY nid (nid);
+ALTER TABLE blog ADD KEY nid (nid);
+ALTER TABLE page ADD KEY nid (nid);
+ALTER TABLE forum ADD KEY nid (nid);
+ALTER TABLE book um ADD KEY nid (nid);
