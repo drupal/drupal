@@ -3,7 +3,7 @@
 include "includes/common.inc";
 
 db_query("DELETE FROM watchdog");
-db_query("DELETE FROM nodes");
+db_query("DELETE FROM node");
 db_query("DELETE FROM story");
 db_query("DELETE FROM book");
 

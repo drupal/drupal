@@ -1,13 +1,24 @@
 drupal x.xx, xx/xx/xxxx
 -----------------------
-- major overhaul of the underlying design:
+- major overhaul of the entire underlying design:
     * everything is based on nodes
-    * introduced links / drupal tags
-- refactored submission / moderation queue
-- added a "wiki module"
+    * introduced links/drupal tags
+- rewrote submission/moderation queue:
+    * renamed submission.module to moderation.module
+    * updated submission forms
+- added a "book module":
+    * merged documentation and FAQ module into a book module
 - various updates:
     * added preview functionality when submitting new content (such as a story) from the administration pages.
     * made the administration section only show those links a user has access to.
+    * improved account module
+    * improved comment module
+    * improved story module:
+        + stories can now be permanently deleted
+    * improved themes:
+        + W3C validation on a best effort basis
+        + added goofy theme
+- revised documentation
 
 drupal 2.00, 15/03/2001
 -----------------------
@@ -45,7 +56,7 @@ drupal 2.00, 15/03/2001
     * improved database abstraction layer
     * improved themes:
         + W3C validation on a best effort basis
-        + added example theme for theme designers
+        + added example theme
     * added CREDITS file
     * added directory "misc"
     * added new scripts to directory "scripts"

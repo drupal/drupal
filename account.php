@@ -254,7 +254,7 @@ function account_user($uname) {
     $block1 .= "</TABLE>\n";
 
 /*
-    $result = db_query("SELECT c.cid, c.pid, c.lid, c.subject, c.timestamp, n.title AS node FROM comments c LEFT JOIN users u ON u.id = c.author LEFT JOIN nodes ON n.id = c.lid WHERE u.userid = '$uname' AND n.status = '$status[posted]' AND s.timestamp > ". (time() - 1209600) ." ORDER BY cid DESC LIMIT 10");
+    $result = db_query("SELECT c.cid, c.pid, c.lid, c.subject, c.timestamp, n.title AS node FROM comments c LEFT JOIN users u ON u.id = c.author LEFT JOIN node ON n.id = c.lid WHERE u.userid = '$uname' AND n.status = '$status[posted]' AND s.timestamp > ". (time() - 1209600) ." ORDER BY cid DESC LIMIT 10");
     while ($comment = db_fetch_object($result)) {
       $block2 .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
       $block2 .= " <TR><TD ALIGN=\"right\"><B>". t("Comment") .":</B></TD><TD><A HREF=\"node.php?id=$comment->lid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A></TD></TR>\n";
@@ -406,7 +406,7 @@ function account_password($min_length=6) {
 function account_track_comments() {
   global $theme, $user;
 
-  $sresult = db_query("SELECT n.nid, n.title, COUNT(n.nid) AS count FROM comments c LEFT JOIN nodes n ON c.lid = n.nid WHERE c.author = '$user->id' GROUP BY n.nid DESC LIMIT 5");
+  $sresult = db_query("SELECT n.nid, n.title, COUNT(n.nid) AS count FROM comments c LEFT JOIN node n ON c.lid = n.nid WHERE c.author = '$user->id' GROUP BY n.nid DESC LIMIT 5");
 
   while ($node = db_fetch_object($sresult)) {
     $output .= "<LI>". format_plural($node->count, "comment", "comments") ." ". t("attached to node") ." `<A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A>`:</LI>\n";
@@ -427,7 +427,7 @@ function account_track_comments() {
 function account_track_nodes() {
   global $status, $theme, $user;
 
-  $result = db_query("SELECT n.nid, n.type, n.title, n.timestamp, COUNT(c.cid) AS count FROM nodes n LEFT JOIN comments c ON c.lid = n.nid WHERE n.status = '$status[posted]' AND n.author = '$user->id' GROUP BY n.nid DESC LIMIT 25");
+  $result = db_query("SELECT n.nid, n.type, n.title, n.timestamp, COUNT(c.cid) AS count FROM node n LEFT JOIN comments c ON c.lid = n.nid WHERE n.status = '$status[posted]' AND n.author = '$user->id' GROUP BY n.nid DESC LIMIT 25");
 
   while ($node = db_fetch_object($result)) {
     $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
@@ -448,7 +448,7 @@ function account_track_site() {
 
   $period = 259200; // 3 days
 
-  $sresult = db_query("SELECT n.title, n.nid, COUNT(c.lid) AS count FROM comments c LEFT JOIN nodes n ON c.lid = n.nid WHERE n.status = '$status[posted]' AND ". time() ." - n.timestamp < $period GROUP BY c.lid ORDER BY n.timestamp DESC LIMIT 10");
+  $sresult = db_query("SELECT n.title, n.nid, COUNT(c.lid) AS count FROM comments c LEFT JOIN node n ON c.lid = n.nid WHERE n.status = '$status[posted]' AND ". time() ." - n.timestamp < $period GROUP BY c.lid ORDER BY n.timestamp DESC LIMIT 10");
   while ($node = db_fetch_object($sresult)) {
     $output .= "<LI>". format_plural($node->count, "comment", "comments") ." ". t("attached to node") ." '<A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A>':</LI>";
 

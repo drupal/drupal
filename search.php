@@ -15,7 +15,7 @@ $search .= " <SELECT NAME=\"type\">$options</SELECT>\n";
 $search .= " <INPUT TYPE=\"submit\" VALUE=\"". t("Search") ."\">\n";
 $search .= "</FORM>\n";
 
-$output = search_data(check_input($keys), check_input($type));
+$output = search_data($keys, $type);
 
 $theme->header();
 $theme->box(t("Search"), $search);

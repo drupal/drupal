@@ -32,7 +32,7 @@ function headlineRSS10_export($uri) {
     print "  <items>\n";
     print "    <rdf:Seq>\n";
 
-    $result = db_query("SELECT * FROM nodes WHERE type = 'story' AND status = '$status[posted]' ORDER BY timestamp DESC LIMIT 10");
+    $result = db_query("SELECT * FROM node WHERE type = 'story' AND status = '$status[posted]' ORDER BY timestamp DESC LIMIT 10");
 
     while ($node = db_fetch_object($result)) {
       print "      <rdf:li resource=\"". $site_url ."node.php?id=$node->nid\" />\n";

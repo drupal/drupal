@@ -18,7 +18,7 @@ function theme_link($separator = " | ") {
                  "<A HREF=\"submit.php\">". t("submit") ."</A>",
                  "<A HREF=\"module.php?mod=diary\">". t("diary") ."</A>",
                  "<A HREF=\"account.php\">". t("account") ."</A>",
-                 "<A HREF=\"module.php?mod=book\">". t("help") ."</A>");
+                 "<A HREF=\"module.php?mod=book\">". t("handbook") ."</A>");
   return implode($separator, $links);
 }
 
@@ -80,7 +80,7 @@ function theme_blocks($region, $theme) {
   switch (strrchr($PHP_SELF, "/")) {
     case "/node.php":
       if ($region != "left") {
-        if ($user->id) $node = db_fetch_object(db_query("SELECT * FROM nodes WHERE nid = '$id'"));
+        if ($user->id) $node = db_fetch_object(db_query("SELECT * FROM node WHERE nid = '$id'"));
         if ($node->status == $status[queued]) theme_moderation_results($theme, $node);
         // else theme_new_headlines($theme);
       }
@@ -118,7 +118,7 @@ function theme_moderation_results($theme, $node) {
 // depricated -> new block strategy
 //
 function theme_new_headlines($theme, $num = 10) {
-  $result = db_query("SELECT nid, title FROM nodes WHERE status = 2 AND type = 'story' ORDER BY nid DESC LIMIT $num");
+  $result = db_query("SELECT nid, title FROM node WHERE status = 2 AND type = 'story' ORDER BY nid DESC LIMIT $num");
   while ($node = db_fetch_object($result)) $content .= "<LI><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></LI>\n";
   $theme->box(t("Latest headlines"), $content);
 }

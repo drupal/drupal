@@ -3,9 +3,9 @@
 $status = array(dumped => 0, expired => 1, queued => 2, posted => 3, scheduled => 4);
 
 function _node_get($field, $value) {
-  $result = db_query("SELECT lid, type FROM nodes WHERE $field = '$value'");
+  $result = db_query("SELECT lid, type FROM node WHERE $field = '$value'");
   if ($node = db_fetch_object($result)) {
-    return db_query("SELECT n.*, l.*, u.userid FROM nodes n LEFT JOIN $node->type l ON n.lid = l.id AND l.node = n.nid LEFT JOIN users u ON n.author = u.id WHERE n.$field = '$value' ORDER BY n.timestamp DESC");
+    return db_query("SELECT n.*, l.*, u.userid FROM node n LEFT JOIN $node->type l ON n.lid = l.lid AND n.nid = l.nid LEFT JOIN users u ON n.author = u.id WHERE n.$field = '$value' ORDER BY n.timestamp DESC");
   }
 }
 
@@ -21,8 +21,9 @@ function node_del($field, $value) {
   global $status;
   if ($node = node_get_object($field, $value)) {
     if ($node->status == $status[dumped]) {
-      db_query("DELETE FROM nodes WHERE nid = '$node->nid'");
-      db_query("DELETE FROM $node->type WHERE node = '$node->nid'");
+      db_query("DELETE FROM node WHERE nid = '$node->nid'");
+      db_query("DELETE FROM $node->type WHERE lid = '$node->lid' AND nid = '$node->nid'");
+      db_query("DELETE FROM comments WHERE lid = '$node->nid'");
       watchdog("message", "node: deleted '$node->title'");
       return $node;
     }
@@ -50,8 +51,8 @@ function node_save($node) {
     $u1 = implode(", ", $u1);
     $u2 = implode(", ", $u2);
 
-    db_query("UPDATE nodes SET $u1 WHERE nid = '$node[nid]'");
-    db_query("UPDATE $node[type] SET $u2 WHERE node = '$node[nid]'");
+    db_query("UPDATE node SET $u1 WHERE nid = '$node[nid]'");
+    db_query("UPDATE $node[type] SET $u2 WHERE nid = '$node[nid]'");
 
     watchdog("message", "node: modified '$node[title]'");
   }
@@ -59,7 +60,7 @@ function node_save($node) {
     $duplicate = node_get_object("title", $node[title]);
 
     if ($duplicate && (time() - $duplicate->timestamp < 300)) {
-      watchdog("warning", "node: duplicate node '$node[title]'");
+      watchdog("warning", "node: duplicate '$node[title]'");
     }
     else {
       // setup default values:
@@ -87,14 +88,14 @@ function node_save($node) {
       $f2 = implode(", ", $f2);
       $v2 = implode(", ", $v2);
 
-      db_query("INSERT INTO nodes ($f1) VALUES ($v1)");
+      db_query("INSERT INTO node ($f1) VALUES ($v1)");
       if ($nid = db_insert_id()) {
-        $lid = db_query("INSERT INTO $node[type] ($f2, node) VALUES ($v2, $nid)");
+        $lid = db_query("INSERT INTO $node[type] ($f2, nid) VALUES ($v2, $nid)");
         if ($lid = db_insert_id()) {
-          db_query("UPDATE nodes SET lid = '$lid' WHERE nid = '$nid'");
+          db_query("UPDATE node SET lid = '$lid' WHERE nid = '$nid'");
         }
         else {
-          db_query("DELETE FROM nodes WHERE nid = '$nid'");
+          db_query("DELETE FROM node WHERE nid = '$nid'");
         }
       }
 
@@ -103,7 +104,7 @@ function node_save($node) {
   }
 
   if (($node[pid]) && ($node[status] == $status[posted])) {
-    db_query("UPDATE nodes SET status = '$status[expired]' WHERE nid = '$node[pid]'");
+    db_query("UPDATE node SET status = '$status[expired]' WHERE nid = '$node[pid]'");
   }
 }
 

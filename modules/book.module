@@ -19,8 +19,8 @@ class Book {
 
 function book_navigation($node) {
   if ($node->nid) {
-    $next = db_fetch_object(db_query("SELECT n.nid, n.title FROM nodes n LEFT JOIN book b ON n.nid = b.node WHERE b.parent = '$node->parent' AND b.weight > $node->weight ORDER BY b.weight ASC"));
-    $prev = db_fetch_object(db_query("SELECT n.nid, n.title FROM nodes n LEFT JOIN book b ON n.nid = b.node WHERE b.parent = '$node->parent' AND b.weight < $node->weight ORDER BY b.weight DESC"));
+    $next = db_fetch_object(db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE b.parent = '$node->parent' AND b.weight > $node->weight ORDER BY b.weight ASC"));
+    $prev = db_fetch_object(db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE b.parent = '$node->parent' AND b.weight < $node->weight ORDER BY b.weight DESC"));
   }
 
   $output .= "<HR>";
@@ -62,7 +62,7 @@ function book_view($node, $page = 1) {
 function book_find($keys) {
   global $status, $user;
   $find = array();
-  $result = db_query("SELECT n.*, u.userid FROM nodes n LEFT JOIN book b ON n.nid = b.node LEFT JOIN users u ON n.author = u.id WHERE n.type = 'book' AND n.status = '$status[posted]' AND (n.title LIKE '%". check_input($keys) ."%' OR b.body LIKE '%". check_input($keys) ."%') ORDER BY n.timestamp DESC LIMIT 20");
+  $result = db_query("SELECT n.*, u.userid FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid LEFT JOIN users u ON n.author = u.id WHERE n.type = 'book' AND n.status = '$status[posted]' AND (n.title LIKE '%". check_input($keys) ."%' OR b.body LIKE '%". check_input($keys) ."%') ORDER BY n.timestamp DESC LIMIT 20");
   while ($node = db_fetch_object($result)) {
     array_push($find, array("title" => check_output($node->title), "link" => (user_access($user, "book") ? "admin.php?mod=book&op=edit&id=$node->nid" : "node.php?id=$node->nid"), "user" => $node->userid, "date" => $node->timestamp));
   }
@@ -77,7 +77,7 @@ function book_search() {
 
 function book_toc($parent = 0, $offset = 0, $toc = array()) {
   global $status;
-  $result = db_query("SELECT n.*, b.* FROM nodes n LEFT JOIN book b ON n.nid = b.node WHERE n.type = 'book' AND n.status = '$status[posted]' AND b.parent = '$parent' ORDER BY b.weight");
+  $result = db_query("SELECT n.*, b.* FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE n.type = 'book' AND n.status = '$status[posted]' AND b.parent = '$parent' ORDER BY b.weight");
   while ($node = db_fetch_object($result)) {
     $toc[$node->nid] = ($offset ? $offset : "") ."". ++$number .". $node->title";
     $toc = book_toc($node->nid, ($offset ? "$offset." : "") ."$number.", $toc);
@@ -165,7 +165,7 @@ function book_delete($id) {
 function book_overview($parent = "", $offset = "") {
   global $PHP_SELF, $status;
 
-  $result = db_query("SELECT n.*, b.* FROM nodes n LEFT JOIN book b ON n.nid = b.node WHERE n.type = 'book' AND n.status = '$status[posted]' AND b.parent = '$parent' ORDER BY b.weight");
+  $result = db_query("SELECT n.*, b.* FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE n.type = 'book' AND n.status = '$status[posted]' AND b.parent = '$parent' ORDER BY b.weight");
 
   $output .= "<DL>";
   while ($node = db_fetch_object($result)) {
@@ -182,7 +182,7 @@ function book_overview($parent = "", $offset = "") {
 function book_history() {
   global $status;
 
-  $result = db_query("SELECT n.*, b.* FROM nodes n LEFT JOIN book b ON n.nid = b.node WHERE n.type = 'book' AND n.status != '$status[expired]' ORDER BY n.timestamp DESC");
+  $result = db_query("SELECT n.*, b.* FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE n.type = 'book' AND n.status != '$status[expired]' ORDER BY n.timestamp DESC");
 
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR><TH>node</TH><TH>status</TH><TH>date</TH><TH COLSPAN=\"3\">operations</TH></TR>\n";

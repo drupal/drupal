@@ -18,7 +18,8 @@ function ban_match($mask, $category) {
   return db_fetch_object($result);
 }
 
-function ban_add($mask, $category, $reason, $message = "") {
+// TODO --> $message by reference
+function ban_add($mask, $category, $reason, $message = 0) {
   global $index2type;
 
   if (empty($mask)) {

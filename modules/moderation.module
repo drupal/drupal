@@ -12,12 +12,12 @@ function moderation_menu() {
 
 function moderation_count() {
   global $status;
-  $result = db_query("SELECT COUNT(nid) FROM nodes WHERE status = '$status[queued]'");
+  $result = db_query("SELECT COUNT(nid) FROM node WHERE status = '$status[queued]'");
   return ($result) ? db_result($result, 0) : 0;
 }
 
 function moderation_score($id) {
-  $result = db_query("SELECT score FROM nodes WHERE nid = '$id'");
+  $result = db_query("SELECT score FROM node WHERE nid = '$id'");
   return ($result) ? db_result($result, 0) : 0;
 }
 
@@ -26,7 +26,7 @@ function moderation_vote($id, $vote) {
 
   if (!user_get($user, "history", "n$id")) {
     // Update submission's score- and votes-field:
-    db_query("UPDATE nodes SET score = score $vote, votes = votes + 1 WHERE nid = $id");
+    db_query("UPDATE node SET score = score $vote, votes = votes + 1 WHERE nid = $id");
 
     // Update user's history record:
     $user = user_set($user, "history", "n$id", $vote);
@@ -51,7 +51,7 @@ function moderation_vote($id, $vote) {
 function moderation_overview() {
   global $status, $theme, $user;
 
-  $result = db_query("SELECT n.*, u.userid FROM nodes n LEFT JOIN users u ON n.author = u.id WHERE n.status = '$status[queued]'");
+  $result = db_query("SELECT n.*, u.userid FROM node n LEFT JOIN users u ON n.author = u.id WHERE n.status = '$status[queued]'");
 
   $content .= "<TABLE BORDER=\"0\" CELLSPACING=\"4\" CELLPADDING=\"4\">\n";
   $content .= " <TR BGCOLOR=\"$bgcolor1\"><TH>". t("Subject") ."</TH><TH>". t("Author") ."</TH><TH>". t("Type") ."</TH><TH>". t("Score") ."</TH></TR>\n";

@@ -2,6 +2,13 @@
 
 include "includes/common.inc";
 
+function node_failure() {
+  global $theme;
+  $theme->header();
+  $theme->box(t("Warning: not found"), t("The content or data you requested does not exist or is not accessible."));
+  $theme->footer();
+}
+
 function node_history($node) {
   global $status;
   if ($node->status == $status[expired] || $node->status == $status[posted]) {
@@ -13,28 +20,37 @@ function node_history($node) {
   return $output;
 }
 
-function node_refers($node) {
-  print "under construction";
-}
+$number = ($title ? db_result(db_query("SELECT COUNT(nid) FROM node WHERE title = '$title' AND status = $status[posted]", 1)) : 1);
 
-$node = ($title ? node_get_object(title, check_input($title)) : node_get_object(nid, check_input($id)));
+if ($number > 1) {
+  $result = db_query("SELECT n.*, u.userid FROM node n LEFT JOIN users u ON n.author = u.id WHERE n.title = '$title'");
 
-if ($node && node_visible($node)) {
-  switch ($op) {
-    case "history":
-      $theme->header();
-      $theme->box(t("History"), node_info($node) ."<DL>". node_history($node) ."</DL>");
-      $theme->footer();
-      break;
-    default:
-      if ($user->id) user_load($user->userid);
-      node_view($node, 1);
+  while ($node = db_fetch_object($result)) {
+    if (node_visible($node)) {
+      $output .= "<P><B><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></B><BR><SMALL>$node->type - ". format_username($node->userid) ." - ". format_date($node->timestamp, "small") ."</SMALL></P>";
+    }
   }
-}
-else {
+
   $theme->header();
-  $theme->box(t("Warning: not found"), t("The content or data you requested does not exist or is not accessible."));
+  $theme->box(t("Result"), $output);
   $theme->footer();
 }
+elseif ($number) {
+  $node = ($title ? node_get_object(title, check_input($title)) : node_get_object(nid, check_input($id)));
+  if ($node && node_visible($node)) {
+    switch ($op) {
+      case "history":
+        $theme->header();
+        $theme->box(t("History"), node_info($node) ."<DL>". node_history($node) ."</DL>");
+        $theme->footer();
+        break;
+      default:
+        if ($user->id) user_load($user->userid);
+        node_view($node, 1);
+    }
+  }
+  else node_failure();
+}
+else node_failure();
 
 ?>

@@ -48,7 +48,7 @@ function format_interval($timestamp) {
     $timestamp = $timestamp % 3600;
   }
   if ($timestamp >= 60) {
-    $output .= " ". floor($timestamp / 60) ."min";
+    $output .= " ". floor($timestamp / 60) ." min";
     $timestamp = $timestamp % 60;
   }
   if ($timestamp > 0) {
