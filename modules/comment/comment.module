@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.214 2004/01/29 19:51:39 kjartan Exp $
+// $Id: comment.module,v 1.215 2004/01/31 21:16:42 dries Exp $
 
 function comment_help($section = "admin/help#comment") {
   $output = "";
@@ -139,10 +139,6 @@ function comment_settings() {
 function comment_user($type, $edit, &$user) {
   switch ($type) {
     case "view_public":
-      if ($user->signature) {
-        return form_item(t("Signature"), check_output($user->signature));
-      }
-      break;
     case "view_private":
       if ($user->signature) {
         return form_item(t("Signature"), check_output($user->signature));
@@ -909,7 +905,7 @@ function comment_admin_edit($id) {
   if ($comment) {
     $form .= form_item(t("Author"), format_name($comment));
     $form .= form_textfield(t("Subject"), "subject", $comment->subject, 70, 128);
-    $form .= form_textarea(t("Comment"), "comment", $comment->comment, 70, 15);
+    $form .= form_textarea(t("Comment"), "comment", $comment->comment, 70, 15, filter_tips_short());
     $form .= form_radios(t("Status"), "status", $comment->status, array("published", "not published"));
     $form .= form_hidden("cid", $id);
     $form .= form_submit(t("Submit"));

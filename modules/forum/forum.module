@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.160 2004/01/29 22:00:31 kjartan Exp $
+// $Id: forum.module,v 1.161 2004/01/31 21:16:42 dries Exp $
 
 function forum_help($section = "admin/help#forum") {
   $output = "";
@@ -218,7 +218,7 @@ function forum_form(&$node, &$error) {
     $output .= form_checkbox(t("Leave shadow copy"), "shadow", 1, $node->shadow, t("If you move this topic, you can leave a link in the old forum to the new forum."));
   }
 
-  $output .= form_textarea(t("Body"), "body", $node->body, 60, 10);
+  $output .= form_textarea(t("Body"), "body", $node->body, 60, 10, filter_tips_short());
 
   return $output;
 }
@@ -288,7 +288,7 @@ function forum_get_forums($tid = 0) {
   else {
     $forums = unserialize($cache->data);
   }
-  
+
   return $forums;
 }
 
