@@ -631,7 +631,7 @@ function node_admin_nodes() {
    );
 
   $operations = array(
-    array(t("Approve the selected posts"), "UPDATE {node} SET status = 1, moderate = 1 WHERE nid = %d"),
+    array(t("Approve the selected posts"), "UPDATE {node} SET status = 1, moderate = 0 WHERE nid = %d"),
     array(t("Promote the selected posts"), "UPDATE {node} SET status = 1, promote = 1 WHERE nid = %d"),
     array(t("Make the selected posts static"), "UPDATE {node} SET status = 1, static = 1 WHERE nid = %d"),
     array(t("Demote the selected posts"), "UPDATE {node} SET promote = 0 WHERE nid = %d"),
@@ -646,15 +646,15 @@ function node_admin_nodes() {
     $_SESSION["node-overview-filter"] = 0;
   }
 
-  if ($_POST["edit"]["filter"]) {
+  if (isset($_POST["edit"]["filter"])) {
     $_SESSION["node-overview-filter"] = $_POST["edit"]["filter"];
   }
 
-  if ($_POST["edit"]["operation"]) {
+  if (isset($_POST["edit"]["operation"])) {
     $operation = $operations[$_POST["edit"]["operation"]][1];
     foreach ($_POST["edit"]["status"] as $nid => $value) {
       if ($value) {
-        db_query($operation, $nid);
+        db_queryd($operation, $nid);
       }
     }
 
