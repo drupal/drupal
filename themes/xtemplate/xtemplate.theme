@@ -18,7 +18,9 @@ class Theme_xtemplate extends BaseTheme {
   }
 
   function Theme_xtemplate() {
-    include_once("themes/xtemplate/xtemplate.inc");
+    if (!class_exists("XTemplate")) {
+      include_once("themes/xtemplate/xtemplate.inc");
+    }
 
     $this->template = new XTemplate("themes/xtemplate/xtemplate.xtmpl");
     $this->template->SetNullBlock(" ");  // "" doesnt work!
