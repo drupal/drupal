@@ -9,7 +9,7 @@ function comments_kids ($cid, $mode, $order = 0, $thold = 0, $level = 0, $dummy 
 
   if ($mode == "nested") {
     while ($comment = db_fetch_object($result)) {
-      if ($$comment->score >= $thold) {
+      if ($comment->score >= $thold) {
         if ($level && !$comments) print "<UL>";
         $comments++;
 

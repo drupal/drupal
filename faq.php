@@ -49,8 +49,18 @@ $output = "
 
    <DT><B>What is your privacy policy?</B></DT>
    <DD>under construction<P></DD>
-  </DL>
-  ";
+
+   <DT><B>What is your disclaimer?</B></DT>
+   <DD>All messages made available (including any discussion goups and bulletin boards) and any opinions, advice, statements or other information contained in any messages posted or transmitted by any third party are the responsibility of the author of that message and not of $sitename. The fact that a particular message is posted on or transmitted using this website does not mean that $sitename has endorsed that message in any way or verified the accuracy, completeness or usefulness of any message.<P>Furthermore, all persons who use the Security Focus Forum are advised not to use them for solicitations or any other commercial purposes.  We make no representation regarding the merchantability or fitness for any particular purpose of any message posted by any third party. Users are encouraged to seek the advice of their appropriate professional advisors, when evaluating the information contained in any message. $sitename is not responsible for any defamatory, offensive or illegal conduct of any user.<P></DD>
+   
+   <DT><B>What are your terms and conditions?</B></DT>
+   <DD>
+    This website includes threaded discussion groups and discussion forums which allow feedback to $sitename and real-time interaction between the persons who use this service.  The responsibility for any opinions, advice, statements or other information contained in any messages posted or transmitted by any third party on this website resides solely with the author.<P>
+    <U>1. When using the discussion forums, you may NOT:</U><UL><LI>Keep any other person from using and enjoying the discussion forums.</LI><LI>Post or transmit any messages (or content in general) that would constitute or encourage conduct that would constitute a criminal offense, give rise to civil liability or otherwise violate any local, state, national or international law, including any threatening, abusive libelous, defamatory, obscene, vulgar, pornographic, profane or indecent messages of any kind.</LI><LI>Post or transmit any information, software or other materials which violate or infringe upon the rights of others, including their privacy or publicity rights, or which is protected by copyright, trademark or other proprietary rights, without first obtaining permission from the person who owns or holds that right.</LI><LI>Use the discussion forum in any way for solicitations or other commercial purposes.</LI></UL><P>
+    <U>2. $sitename's right to monitor the discussion forums:</U><BR>You understand that $sitename has no obligation to monitor the discussion forum.  However $sitename reserves the right at all times to edit, refuse to post or to remove any information or materials, in whole or in part, that in $sitename's sole discretion are objectionable or in violation of these terms and conditions and to disclose any information necessary to
+satisf[Ay or governmental request.<P>
+   </DD>
+  </DL>";
 
 $theme->header();
 $theme->box("Frequently Asked Questions", $output);
