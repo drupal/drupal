@@ -627,10 +627,6 @@ function node_link($type, $node = 0, $main = 0) {
     if ($main == 1 && $node->teaser && $node->readmore) {
       $links[] = l(t('read more'), "node/$node->nid", array('title' => t('Read the rest of this posting.'), 'class' => 'read-more'));
     }
-
-    if (user_access('administer nodes') && $node->revisions) {
-      $links[] = l(t('revisions'), "node/revisions/$node->nid", array('title' => t('Administer revisions.')));
-    }
   }
 
   return $links;
@@ -688,7 +684,16 @@ function node_menu() {
     $items[] = array('path' => 'node/'. arg(1) .'/edit', 'title' => t('edit'),
       'callback' => 'node_page',
       'access' => node_access('update', $node),
+      'weight' => 1,
       'type' => MENU_LOCAL_TASK);
+
+    if ($node->revisions) {
+      $items[] = array('path' => 'node/'. arg(1) .'/revisions', 'title' => t('revisions'),
+        'callback' => 'node_page',
+        'access' => user_access('administer nodes'),
+        'weight' => 2,
+        'type' => MENU_LOCAL_TASK);
+    }
   }
 
   // Legacy handler for old "node/view/52" paths.
@@ -851,11 +856,13 @@ function node_revision_overview($nid) {
   if (user_access('administer nodes')) {
     $node = node_load(array('nid' => $nid));
 
+    drupal_set_title($node->title);
+
     if ($node->revisions) {
       $header = array(t('older revisions'), array('colspan' => '3', 'data' => t('operations')));
 
       foreach ($node->revisions as $key => $revision) {
-        $rows[] = array(t('revision #%r revised by %u on %d', array('%r' => $key, '%u' => format_name(user_load(array('uid' => $revision['uid']))), '%d' => format_date($revision['timestamp'], 'small'))) . ($revision['history'] ? '<br /><small>'. $revision['history'] .'</small>' : ''), l(t('view'), "node/$node->nid", array(), "revision=$key"), l(t('rollback'), "node/rollback-revision/$node->nid/$key"), l(t('delete'), "node/delete-revision/$node->nid/$key"));
+        $rows[] = array(t('revision #%r revised by %u on %d', array('%r' => $key, '%u' => format_name(user_load(array('uid' => $revision['uid']))), '%d' => format_date($revision['timestamp'], 'small'))) . ($revision['history'] ? '<br /><small>'. $revision['history'] .'</small>' : ''), l(t('view'), "node/$node->nid", array(), "revision=$key"), l(t('rollback'), "node/$node->nid/rollback-revision/$key"), l(t('delete'), "node/$node->nid/delete-revision/$key"));
       }
       $output .= theme('table', $header, $rows);
     }
@@ -919,6 +926,7 @@ function node_revision_rollback($nid, $revision) {
     node_save($rev, $filter);
 
     drupal_set_message(t('rolled back to revision #%revision of "%title"', array('%revision' => $revision, '%title' => $node->title)));
+    drupal_goto('node/'. $nid .'/revisions');
   }
 }
 
@@ -934,6 +942,7 @@ function node_revision_delete($nid, $revision) {
     node_save($node, array('nid', 'revisions'));
 
     drupal_set_message(t('deleted revision #%revision of "%title"', array('%revision' => $revision, '%title' => $node->title)));
+    drupal_goto('node/'. $nid . (count($node->revisions) ? '/revisions' : ''));
   }
 }
 
@@ -1369,10 +1378,9 @@ function node_submit($node) {
     }
   }
 
-  $node = node_load(array('nid' => $node->nid));
+  // Node was submitted successfully. Redirect to the viewing page.
   drupal_set_message($msg);
-  drupal_set_title($node->title);
-  return node_show($node, NULL);
+  drupal_goto('node/'. $node->nid);
 }
 
 /**
@@ -1464,15 +1472,13 @@ function node_page() {
       print theme('page', node_edit(arg(1)));
       break;
     case 'revisions':
-      print theme('page', node_revision_overview(arg(2)), t('Revisions'));
+      print theme('page', node_revision_overview(arg(1)));
       break;
     case 'rollback-revision':
-      node_revision_rollback(arg(2), arg(3));
-      print theme('page', node_revision_overview(arg(2)), t('Revisions'));
+      node_revision_rollback(arg(1), arg(3));
       break;
     case 'delete-revision':
-      node_revision_delete(arg(2), arg(3));
-      print theme('page', node_revision_overview(arg(2)), t('Revisions'));
+      node_revision_delete(arg(1), arg(3));
       break;
     case 'view':
       if (is_numeric(arg(1))) {
