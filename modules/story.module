@@ -1,5 +1,5 @@
 <?php
-// $Id: story.module,v 1.100 2002/04/20 11:52:50 dries Exp $
+// $Id: story.module,v 1.101 2002/05/04 18:56:43 kjartan Exp $
 
 function story_help() {
   $output .= "<p>The story module enables to users to submit thoughful, cohesive posts for consideration by the rest of the community.  Stories usually follow a specific content flow: <i>submit -&gt; moderate -&gt; post to home page -&gt; comment</i>.  Administrators are able to shortcut this flow as desired.</p>";
@@ -39,7 +39,7 @@ function story_save($op, $node) {
 
   if ($op == "create") {
     if (user_access("administer nodes")) {
-      return array();
+      return array("body" => filter($node->body), "teaser" => filter($node->teaser));
     }
     else {
       return array("body" => filter($node->body), "moderate" => 1, "teaser" => filter($node->teaser));
@@ -51,7 +51,7 @@ function story_save($op, $node) {
   }
 
   if ($op == "update") {
-    return array();
+    return array("body" => filter($node->body), "teaser" => filter($node->teaser));
   }
 }
 

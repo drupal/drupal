@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.39 2002/04/22 09:05:35 kjartan Exp $
+// $Id: forum.module,v 1.40 2002/05/04 18:56:43 kjartan Exp $
 
 function forum_node($field) {
   $info["name"] = t("discussion forum");
@@ -21,7 +21,7 @@ function forum_save($op, $node) {
   }
 
   if ($op == "create") {
-    return array("teaser" => $node->body);
+    return array("body" => filter($node->body), "teaser" => filter($node->teaser));
   }
 
   if ($op == "decline") {
@@ -29,7 +29,7 @@ function forum_save($op, $node) {
   }
 
   if ($op == "update") {
-    return array("teaser" => $node->body);
+    return array("body" => filter($node->body), "teaser" => filter($node->teaser));
   }
 }
 
