@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.97 2003/06/15 19:06:23 dries Exp $
+// $Id: poll.module,v 1.98 2003/06/17 18:20:17 dries Exp $
 
 function poll_allowvotes(&$node) {
   /*
@@ -382,7 +382,7 @@ function poll_update($node) {
 }
 
 function poll_validate(&$node) {
-  $node ->teaser = poll_teaser($node);
+  $node->teaser = poll_teaser($node);
 }
 
 ?>
