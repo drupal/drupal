@@ -16,6 +16,6 @@
 
  $theme->header();
  $theme->article($story, "[ <A HREF=\"\"><FONT COLOR=\"$theme->hlcolor2\">home</FONT></A> | <A HREF=\"comments.php?op=reply&pid=0&sid=$story->id\"><FONT COLOR=\"$theme->hlcolor2\">add a comment</FONT></A> ]");
- if ($mode != "nocomments") include "comments.php";
+ include "comments.php";
  $theme->footer();
 ?>

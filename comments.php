@@ -1,6 +1,6 @@
 <?
 
-function displayKids ($cid, $mode, $order = 0, $thold = 0, $level = 0, $dummy = 0) {
+function comments_kids ($cid, $mode, $order = 0, $thold = 0, $level = 0, $dummy = 0) {
   global $user, $theme;
 
   include "config.inc";
@@ -17,7 +17,7 @@ function displayKids ($cid, $mode, $order = 0, $thold = 0, $level = 0, $dummy = 
         $link = "<A HREF=\"comments.php?op=reply&pid=$comment->cid&sid=$comment->sid&mode=$mode&order=$order&thold=$thold\"><FONT COLOR=\"$theme->hlcolor2\">reply to this comment</FONT></A>";
         $theme->comment($comment->userid, $comment->subject, $comment->comment, $comment->timestamp, $comment->url, $comment->femail, $comment->score, $comment->cid, $link);
         
-        displayKids($comment->cid, $mode, $order, $thold, $level + 1, $dummy + 1);
+        comments_kids($comment->cid, $mode, $order, $thold, $level + 1, $dummy + 1);
       }
     }
   } 
@@ -27,9 +27,13 @@ function displayKids ($cid, $mode, $order = 0, $thold = 0, $level = 0, $dummy = 
         $link = "<A HREF=\"comments.php?op=reply&pid=$comment->cid&sid=$comment->sid&mode=$mode&order=$order&thold=$thold\"><FONT COLOR=\"$theme->hlcolor2\">reply to this comment</FONT></A>";
         $theme->comment($comment->userid, $comment->subject, $comment->comment, $comment->timestamp, $comment->url, $comment->femail, $comment->score, $comment->cid, $link);
       } 
-      displayKids($comment->cid, $mode, $order, $thold);
+      comments_kids($comment->cid, $mode, $order, $thold);
     }
-  } else {
+  } 
+  elseif ($mode == "disabled") {
+    // do nothing
+  }
+  else {
     print "ERROR: we should not get here!";
   }
   
@@ -38,7 +42,7 @@ function displayKids ($cid, $mode, $order = 0, $thold = 0, $level = 0, $dummy = 
   }
 }
 
-function displayBabies($cid, $mode, $order, $thold, $level = 0, $thread) {
+function comments_childs($cid, $mode, $order, $thold, $level = 0, $thread) {
   global $theme, $user;
 
   ### Perform SQL query:
@@ -62,7 +66,7 @@ function displayBabies($cid, $mode, $order, $thold, $level = 0, $thread) {
     $thread .= "\">$comment->subject</A> by $comment->userid <SMALL>(". date("D, M d, Y - H:i:s", $comment->timestamp) .")<SMALL></LI>";
 
     ### Recursive:
-    displayBabies($comment->cid, $mode, $order, $thold, $level + 1, &$thread);
+    comments_childs($comment->cid, $mode, $order, $thold, $level + 1, &$thread);
   } 
 
   if ($level && $comments) {
@@ -101,20 +105,14 @@ function comments_display ($sid = 0, $pid = 0, $cid = 0, $mode = "threaded", $or
 
     ### Display the comments:
     if ($mode == "threaded") {
-      $thread = displayBabies($comment->cid, $mode, $order, $thold);
+      $thread = comments_childs($comment->cid, $mode, $order, $thold);
       $theme->comment($comment->userid, $comment->subject, $comment->comment, $comment->timestamp, $comment->url, $comment->femail, $comment->score, $comment->cid, $link, $thread);
     }
     else {
       $theme->comment($comment->userid, $comment->subject, $comment->comment, $comment->timestamp, $comment->url, $comment->femail, $comment->score, $comment->cid, $link);
-      displayKids($comment->cid, $mode, $order, $thold, $level);
+      comments_kids($comment->cid, $mode, $order, $thold, $level);
     }
-/*
-    print "</UL>\n";
-    print "</P>\n";
-*/
   }
-
-  if ($pid == 0) return array($sid, $pid, $subject);
 }
 
 function comments_reply($pid, $sid, $mode, $order, $thold) {
@@ -273,37 +271,12 @@ function comment_post($pid, $sid, $subject, $comment, $mode, $order, $thold) {
   }
 }
 
-function moderate($cid, $meta_value = 0) {
-  include "config.inc";
-  if ($meta_value != -1) {
-    ### Compose query:
-    $query = "UPDATE comments SET";
-    if ($meta_value > (sizeof($comments_meta_reasons) / 2)) {
-      $query .= " score = score + 1, reason = $meta_value WHERE cid = $cid";
-    } 
-    elseif ($meta_value < ((sizeof($comments_meta_reasons) / 2) - 1)) {
-      $query .= " score = score - 1, reason = $meta_value WHERE cid = $cid";
-    }
-    else {
-      $query .= " reason = $meta_value WHERE cid = $cid";
-    }
-
-    ### Perform query:
-    mysql_query("$query");
-  }
-}
-
 if (strstr($PHP_SELF, "comments.php")) {
   include "theme.inc";
   include "functions.inc";
 }
 
 switch($op) {
-  case "reply":
-    $theme->header();
-    comments_reply($pid, $sid, $mode, $order, $thold);
-    $theme->footer();
-    break;
   case "Preview comment":
     $theme->header();
     comment_preview($pid, $sid, $subject, $comment, $mode, $order, $thold);
@@ -312,16 +285,10 @@ switch($op) {
   case "Post comment":
     comment_post($pid, $sid, $subject, $comment, $mode, $order, $thold);
     break;
-  case "Moderate":
-    while (list($name, $value) = each($HTTP_POST_VARS)) {
-      if (eregi("meta", $name)) {
-        ### extract comment id (cid):
-        $info = explode(":", $name);
-        moderate($info[1], $value);
-      }
-    }
-
-    Header("Location: article.php?sid=$sid&mode=$mode&order=$order&thold=$thold");
+  case "reply":
+    $theme->header();
+    comments_reply($pid, $sid, $mode, $order, $thold);
+    $theme->footer();
     break;
   case "show":
     $theme->header();
