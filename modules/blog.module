@@ -105,7 +105,7 @@ function blog_page_last() {
     $links[] = "<a href=\"node.php?id=$blog->nid\">". t("discuss") ."</a>";
 
     $output .= "<tr><td><b>". check_output($blog->title) ."</b></td><td align=\"right\">". $theme->links($links) ."</td></tr>";
-    $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 20px;\">". check_output($blog->body) ."</div><br /></td></tr>";
+    $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 20px;\">". check_output($blog->body, 1) ."</div><br /></td></tr>";
     unset($links);
   }
   $output .= "</table>";
