@@ -52,10 +52,9 @@ function rating_help() {
 function rating_list($limit) {
   $result = db_query("SELECT userid, rating FROM users ORDER BY rating DESC LIMIT $limit");
 
-  $output .= "<TABLE CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= "<TR><TH>Username</TH><TH>Rating</TH></TR>\n";
+  $output .= "<TABLE CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
   while ($account = db_fetch_object($result)) {
-    $output .= "<TR><TD>". format_username($account->userid) ."</TD><TD>". check_output($account->rating) ."</TD></TR>";
+    $output .= "<TR><TD ALIGN=\"right\">". ++$i ."</TD><TD>". format_username($account->userid) ."</TD><TD>". check_output($account->rating) ."</TD></TR>";
   }
   $output .= "</TABLE>\n";
   return $output;
