@@ -1,4 +1,4 @@
-/* $Id: xtemplate.css,v 1.42 2003/12/09 18:55:36 dries Exp $ */
+/* $Id: xtemplate.css,v 1.43 2003/12/09 21:36:41 dries Exp $ */
 
 /*
 ** HTML elements
@@ -8,7 +8,7 @@ body {
   padding: 0;
   color: #000;
   background-color: #fff;
-  font: 76% Tahoma, Verdana, Arial, Helvetica, sans-serif;
+  font: 76% Verdana, Arial, Helvetica, sans-serif;
 }
 tr.dark {
   background-color: #ddd;
