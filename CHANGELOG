@@ -7,14 +7,16 @@ drupal x.xx, xx/xx/xxxx (CVS, unstable)
 - removed ban module and integrated it into account.module as "access control":
     * access control is based on much more powerful regular expressions (regex) now rather than on MySQL pattern matching.
 - rewrote watchdog and submission throttle
-- rewrote headline code and renamed it to import.module and export.module
-    * added a various new features compared with the old headline code.
+- rewrote headline code and renamed it to import.module and export.module:
+    * added various improvements, including a better parser, bundles and better control over individual feeds.
 - rewrote section code and renamed it to structure.module:
     * supports both "categories" and "topics" (cfr. Scoop, SlashCode).  Topics can be nested to create a multi-level hierarchy.
     * added "auto-post new submissions" feature versus "moderate new submissions".
+- renamed hostname.conf to conf.php for security's sake.
+- added poll.module.
 - added conf.module:
     * moved most of the configuration options from hostname.conf to the new administration section.
-    * added support for custom "filters"
+    * added support for custom "filters".
 - added moderate.module:
     * allows to assign users editorial/moderator rights to certain nodes or topics.
 - added page.module:
@@ -33,6 +35,8 @@ drupal x.xx, xx/xx/xxxx (CVS, unstable)
     * added preview functionality when submitting new content (such as a story) from the administration pages.
     * made the administration section only show those links a user has access to.
     * made all modules use specific form_* functions to guarantee a rock-solid forms and more consistent layout.
+    * improved scheduler:
+        + content can be scheduled to be 'posted', 'queued' and 'hidden'.
     * improved account module:
         + added "access control" to allow/deny certain usernames/e-mail addresses/hostnames.
     * improved comment module:
