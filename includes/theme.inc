@@ -1,6 +1,17 @@
 <?php
 
 class BaseTheme {
+
+  function header() {
+    $output .= "<html><head><title>". variable_get(site_name, "drupal") ."</title></head><body>";
+    $output .= "<table border=\"0\" cellspacing=\"4\" cellpadding=\"4\"><tr><td valign=\"top\" width=\"170\">";
+
+    print $output;
+    $this->box(t("Navigation"), implode("<br />", link_page())); $this->user("all", $this); theme_blocks("all", $this);
+    print "</td><td valgin=\"top\">";
+
+  }
+
   function links($links, $delimiter = " | ") {
     return implode($delimiter, $links);
   }
@@ -9,7 +20,7 @@ class BaseTheme {
     return "misc/$name";
   }
 
-  function user($region, &$theme) {
+  function user($region) {
     global $user;
 
     if ($user->uid) {
@@ -33,7 +44,7 @@ class BaseTheme {
 
       $output .= "</div>";
 
-      $theme->box($user->name, $output, $region);
+      $this->box($user->name, $output, $region);
     }
     else {
       $output .= "<div align=\"center\">\n";
@@ -45,9 +56,26 @@ class BaseTheme {
       $output .= " </form>\n";
       $output .= "</div>\n";
 
-      $theme->box(t("Log in"), $output, $region);
+      $this->box(t("Log in"), $output, $region);
     }
   }
+
+  function node($node, $main) {
+    $output .= "<b>". check_output($node->title) ."</b> by ". format_name($node) ."<br />";
+    if ($main && $node->teaser) {
+      $output .= strip_tags(check_output($node->teaser, 1));
+    }
+    else {
+      $output .= check_output($node->body, 1);
+    }
+    if ($main) {
+      $output .= "<br />[ ". $this->links(link_node($node)) ." ]";
+    }
+    $output .= "<hr />";
+
+    print $output;
+  }
+
 
   function comment_controls($threshold = 1, $mode = 3, $order = 1) {
     global $user, $id;
@@ -73,6 +101,18 @@ class BaseTheme {
     $output .= "</div><br />";
     print $output;
   }
+
+  function box($subject, $content, $region = "main") {
+    $output .= "<b>". check_output($subject) ."</b><br />". check_output($content) ."<p />";
+    print $output;
+  }
+
+  function footer() {
+    $output .= "</td></tr></table>";
+    $output .= "</body></html>";
+    print $output;
+  }
+
 }
 
 function theme_init() {
