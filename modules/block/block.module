@@ -145,14 +145,8 @@ function block_admin_preview() {
 }
 
 function block_init() {
-
-  $result = db_query("SELECT * FROM modules");
-  while ($module = db_fetch_object($result)) {
-    module_rehash($module->name);
-  }
-
   foreach (module_list() as $name) {
-    module_rehash($name);
+    module_rehash_blocks($name);
   }
 }
 
