@@ -5,8 +5,8 @@ $module = array();
 class Calendar {
   var $date;
 
-  function calendar($date) {
-    $this->date = $date;
+  function calendar($date = 0) {
+    $this->date = ($date ? $date : time());
   }
 
   function display() {
