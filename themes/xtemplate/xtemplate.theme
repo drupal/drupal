@@ -37,7 +37,7 @@ class Theme_xtemplate extends BaseTheme {
        "date"      => format_date($node->created),
        "content"   => ($main && $node->teaser) ? $node->teaser : $node->body));
 
-    if ($taxonomy = taxonomy_link("taxonomy terms", $node)) {
+    if (module_exist("taxonomy") && ($taxonomy = taxonomy_link("taxonomy terms", $node))) {
       $this->template->assign("taxonomy", $this->links($taxonomy));
     }
 
