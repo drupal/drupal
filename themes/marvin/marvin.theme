@@ -19,16 +19,33 @@
    var $background = "#EAEAEA";
 
    function header() {
+     global $HTTP_USER_AGENT;
     ?>
-     <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">
+     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
      <html>
      <head>
-      <title><?php print variable_get("site_name", "drupal") ." - ". variable_get("site_slogan", ""); ?></title>
+      <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+      <title>
+       <?php
+        print variable_get("site_name", "drupal") ." - ". variable_get("site_slogan", "");
+       ?>
+      </title>
       <style type="text/css">
        <!--
-        BODY { margin: 10px; font-size: 12pt; font-family: Verdana, Helvetica; }
-        SMALL { font-size: 10pt; }
-        FONT, P, TH, TD, TR, FORM, OL, UL, LI, INPUT, TEXTAREA, SELECT, A { font-size: 12pt; font-family: Verdana, Helvetica; }
+       <?php
+        if (eregi("Windows", $HTTP_USER_AGENT)) {
+          // Windows / MSIE specific settings:
+          print "BODY { margin: 10px; font-size: 10pt; font-family: Verdana, Helvetica; }";
+          print "SMALL { font-size: 9pt; }";
+          print "FONT, P, TH, TD, TR, FORM, OL, UL, LI, INPUT, TEXTAREA, SELECT, A { font-size: 10pt; font-family: Verdana, Helvetica; }";
+        }
+        else {
+          // Linux specific settings:
+          print "BODY { margin: 10px; font-size: 12pt; font-family: Verdana, Helvetica; }";
+          print "SMALL { font-size: 10pt; }";
+          print "FONT, P, TH, TD, TR, FORM, OL, UL, LI, INPUT, TEXTAREA, SELECT, A { font-size: 12pt; font-family: Verdana, Helvetica; }";
+        }
+       ?>
        -->
       </style>
      </head>
@@ -57,7 +74,7 @@
      print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n";
      print " <tr><td colspan=\"2\"><img src=\"themes/marvin/images/drop.gif\" alt=\"\" /> &nbsp; <b>". check_output($node->title) ."</b></td></tr>\n";
      print " <tr valign=\"bottom\"><td colspan=\"2\" bgcolor=\"#000000\" width=\"100%\"><img src=\"themes/marvin/images/pixel.gif\" width=\"1\" height=\"1\" alt=\"\" /></td></tr>\n";
-     print " <tr><td nowrap=\"nowrap\"><font color=\"#7C7C7C\"><small>". strtr(t("Submitted by %a on %b"), array("%a" => format_name($node), "%b" => format_date($node->created, "large"))); ?><?php print "</small></font></td><td align=\"right\" valign=\"top\" nowrap><small>". node_index($node) ."</small></td></tr>\n";
+     print " <tr><td nowrap=\"nowrap\"><font color=\"#7C7C7C\"><small>". strtr(t("Submitted by %a on %b"), array("%a" => format_name($node), "%b" => format_date($node->created, "large"))); ?><?php print "</small></font></td><td align=\"right\" valign=\"top\" nowrap=\"nowrap\"><small>". node_index($node) ."</small></td></tr>\n";
      print " <tr><td colspan=\"2\">&nbsp;</td></tr>\n";
 
      if ($main && $node->teaser) {
