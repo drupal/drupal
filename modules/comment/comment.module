@@ -260,7 +260,7 @@ function comment_post($edit) {
 
         $edit["cid"] = db_next_id("comments");
 
-        db_query("INSERT INTO comments (cid, nid, pid, uid, subject, comment, hostname, timestamp, status, score, users) VALUES ('%d', '%d', '%d', '$user->uid', '%s', '%s', '%s', '%s', '%s', $score, '%s')", $edit["cid"], $edit["nid"], $edit["pid"], $edit["subject"], $edit["comment"], getenv("REMOTE_ADDR"), time(), $status, $users);
+        db_query("INSERT INTO comments (cid, nid, pid, uid, subject, comment, hostname, timestamp, status, score, users) VALUES ('%d', '%d', '%d', '$user->uid', '%s', '%s', '%s', '%s', '%s', '%s', '%s')", $edit["cid"], $edit["nid"], $edit["pid"], $edit["subject"], $edit["comment"], getenv("REMOTE_ADDR"), time(), $status, $score, $users);
 
         /*
         ** Tell the other modules a new comment has been submitted:
