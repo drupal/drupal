@@ -650,7 +650,7 @@ function book_page() {
 
 function book_print($id = "", $depth = 1) {
   global $base_url;
-  $result = db_query("SELECT n.nid FROM {node} n INNER JOIN book b ON n.nid = b.nid WHERE n.status = 1 AND n.nid = %d AND (n.moderate = 0 OR n.revisions IS NOT NULL) ORDER BY b.weight, n.title", $id);
+  $result = db_query("SELECT n.nid FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE n.status = 1 AND n.nid = %d AND (n.moderate = 0 OR n.revisions IS NOT NULL) ORDER BY b.weight, n.title", $id);
 
   while ($page = db_fetch_object($result)) {
     // load the node:

@@ -689,7 +689,7 @@ function node_admin_nodes() {
   }
 
   if ($pager = pager_display(NULL, 50, 0, "admin")) {
-    $rows[] = array(array("data" => $pager, "colspan" => 6));
+    $rows[] = array(array("data" => $pager, "colspan" => 7));
   }
 
   $output .= "<h3>". $filters[$filter][0] ."</h3>";

@@ -33,6 +33,9 @@ th {
 #pager div {
   padding: 0.5em;
 }
+.breadcrumb {
+  padding-bottom: .5em
+}
 .book {
   margin-bottom: 2em;
 }

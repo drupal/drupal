@@ -35,6 +35,9 @@ function tablesort($cell, $header) {
     $image = "&nbsp;<img border=\"0\" src=\"". theme("image", "arrow-". $ts["sort"]. ".gif"). "\"></img>";
     $dir = array("asc" => "ascending", "desc" => "descending");
     $title = t("sort ". $dir[$ts["sort"]]);
+  } else {
+    // If the user clicks a different header, we want to sort ascending initially.
+    $ts["sort"] = "asc";
   }
 
   $cell["data"] = l($cell["data"] . $image, $_GET["q"], array("title" => $title), "sort=". $ts["sort"]. "&order=". urlencode($cell["data"]). $ts["query_string"]);

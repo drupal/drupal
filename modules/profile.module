@@ -62,17 +62,17 @@ function profile_settings() {
   $profile_required_fields = variable_get("profile_required_fields", array());
   $profile_register_fields = variable_get("profile_register_fields", array());
 
-  $output = "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  $output .= "<tr><th>field</th><th>enable</th><th>public</th><th>required</th><th>show in registration form</th></tr>\n";
+  $header = array (t("field"), t("enable"), t("public"), t("required"), t("show in registration form"));
+  $i=0;
   foreach ($profile_fields as $key => $field) {
-    $output .= "<tr><td>$field[1]</td>";
-    $output .= "<td style=\"text-align: center;\">". form_checkbox("", "profile_private_fields][", $key, in_array($key, $profile_private_fields)) ."</td>";
-    $output .= "<td style=\"text-align: center;\">". form_checkbox("", "profile_public_fields][", $key, in_array($key, $profile_public_fields)) ."</td>";
-    $output .= "<td style=\"text-align: center;\">". form_checkbox("", "profile_required_fields][", $key, in_array($key, $profile_required_fields)) ."</td>";
-    $output .= "<td style=\"text-align: center;\">". form_checkbox("", "profile_register_fields][", $key, in_array($key, $profile_register_fields)) ."</td>";
-    $output .= "</tr>\n";
+    $row[$i][] = $field[1];
+    $row[$i][] = form_checkbox("", "profile_private_fields][", $key, in_array($key, $profile_private_fields));
+    $row[$i][] = form_checkbox("", "profile_public_fields][", $key, in_array($key, $profile_public_fields));
+    $row[$i][] = form_checkbox("", "profile_required_fields][", $key, in_array($key, $profile_required_fields));
+    $row[$i][] = form_checkbox("", "profile_register_fields][", $key, in_array($key, $profile_register_fields));
+    $i++;
   }
-  $output .= "</table>\n";
+  $output .= table($header, $row);
 
   $output .= form_textfield(t("Avatar image path"), "profile_avatar_path", variable_get("profile_avatar_path", "misc/avatars/"), 30, 255, t("Path for avatar directory; it must be writable and visible from the web."));
   $output .= form_textfield(t("Avatar maximum dimensions"), "profile_avatar_dimensions", variable_get("profile_avatar_dimensions", "85x85"), 10, 10, t("Maximum dimensions for avatars."));
