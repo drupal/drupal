@@ -17,10 +17,6 @@
     var $foreground = "#000000";
     var $background = "#FFFFFF";
 
-    function Theme_goofy($filename) {
-      $this->path = dirname($filename);
-    }
-
     function system($field) {
       $system["name"] = "Goofy";
       $system["author"] = "Steven Wittens";

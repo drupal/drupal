@@ -16,7 +16,6 @@
    var $background = "#FFFFFF";
 
    var $link = "#000000";
-   var $themename = "unconed";
 
    var $cl80 = "#8f9399";
    var $clc0 = "#c8c8d0";
@@ -36,10 +35,6 @@
    // color set #3:
    var $bgcolor3 = "#D7D7D7";
    var $fgcolor3 = "#000000";
-
-   function Theme_unconed($filename) {
-     $this->path = dirname($filename);
-   }
 
    function system($field) {
      $system["name"] = "UnConeD";

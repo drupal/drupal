@@ -18,10 +18,6 @@
    var $foreground = "#000000";
    var $background = "#EAEAEA";
    
-   function Theme_marvin($filename) {
-     $this->path = dirname($filename);
-   }
-  
    function system($field) {
      $system["name"] = "Marvin";
      $system["author"] = "Dries";
