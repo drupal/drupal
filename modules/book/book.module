@@ -513,7 +513,7 @@ function book_tree($parent = 0, $depth = 3) {
 function book_render() {
 
 
-  $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE b.parent = 0 AND n.status = 1 AND (n.moderate = 0 OR n.revisions != '') ORDER BY b.weight, n.title");
+  $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE b.parent = 0 AND n.status = 1 AND (n.moderate = 0 OR n.revisions IS NOT NULL) ORDER BY b.weight, n.title");
 
   while ($page = db_fetch_object($result)) {
     // load the node:
@@ -555,7 +555,7 @@ function book_page() {
 }
 
 function book_print($id = "", $depth = 1) {
-  $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.status = 1 AND n.nid = '%d' AND (n.moderate = 0 OR n.revisions != '') ORDER BY b.weight, n.title", $id);
+  $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.status = 1 AND n.nid = '%d' AND (n.moderate = 0 OR n.revisions IS NOT NULL) ORDER BY b.weight, n.title", $id);
 
   while ($page = db_fetch_object($result)) {
     // load the node:
@@ -582,7 +582,7 @@ function book_print($id = "", $depth = 1) {
 }
 
 function book_print_recurse($parent = "", $depth = 1) {
-  $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.status = 1 AND b.parent = '$parent' AND (n.moderate = 0 OR n.revisions != '') ORDER BY b.weight, n.title");
+  $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.status = 1 AND b.parent = '$parent' AND (n.moderate = 0 OR n.revisions IS NOT NULL) ORDER BY b.weight, n.title");
 
   while ($page = db_fetch_object($result)) {
     // load the node:

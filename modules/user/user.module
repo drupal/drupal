@@ -74,7 +74,7 @@ function user_load($array = array()) {
       $query .= "u.$key = '". check_query($value) ."' AND ";
     }
   }
-  $result = db_query("SELECT u.*, r.name AS role FROM users u LEFT JOIN role r ON u.rid = r.rid WHERE $query u.status < 3 LIMIT 1");
+  $result = db_query_range("SELECT u.*, r.name AS role FROM users u LEFT JOIN role r ON u.rid = r.rid WHERE $query u.status < 3", 0, 1);
 
   $user = db_fetch_object($result);
   if ($user->data && $data = unserialize($user->data)) {
@@ -299,7 +299,7 @@ function user_perm() {
 
 function user_search($keys) {
   global $PHP_SELF;
-  $result = db_query("SELECT * FROM users WHERE name LIKE '%$keys%' LIMIT 20");
+  $result = db_query_range("SELECT * FROM users WHERE name LIKE '%$keys%'", 0, 20);
   while ($account = db_fetch_object($result)) {
     $find[$i++] = array("title" => $account->name, "link" => (strstr($PHP_SELF, "admin") ? url("admin/user/edit/$account->uid") : url("user/view/$account->uid")), "user" => $account->name);
   }
@@ -375,7 +375,7 @@ function user_block($op = "list", $delta = 0) {
         break;
       case 2:
 
-        $result = db_query("SELECT uid, name FROM users WHERE status != '0' ORDER BY uid DESC LIMIT 5");
+        $result = db_query_range("SELECT uid, name FROM users WHERE status != '0' ORDER BY uid DESC", 0, 5);
         while ($account = db_fetch_object($result)) {
           $items[] = l((strlen($account->name) > 15 ? substr($account->name, 0, 15) . '...' : $account->name), "user/view/$account->uid");
         }
@@ -1257,7 +1257,6 @@ function user_roles($membersonly = 0) {
 }
 
 function user_admin_perm($edit = array()) {
-  global $tid;
 
   if ($edit) {
 
@@ -1265,16 +1264,14 @@ function user_admin_perm($edit = array()) {
     ** Save permissions:
     */
 
-    $tid = check_input($edit["tid"]);
-
     $result = db_query("SELECT * FROM role");
     while ($role = db_fetch_object($result)) {
       // delete, so if we clear every checkbox we reset that role;
       // otherwise permissions are active and denied everywhere
-      db_query("DELETE FROM permission WHERE rid = '%s' AND tid = '%s'", $role->rid, $tid);
+      db_query("DELETE FROM permission WHERE rid = '%s'", $role->rid);
       $perm = $edit[$role->rid] ? implode(", ", array_keys($edit[$role->rid])) : "";
       if ($perm) {
-        db_query("INSERT INTO permission (rid, perm, tid) VALUES ('%s', '%s', '%s')", $role->rid, $perm, $tid);
+        db_query("INSERT INTO permission (rid, perm) VALUES ('%s', '%s')", $role->rid, $perm);
       }
 
     }
@@ -1295,7 +1292,7 @@ function user_admin_perm($edit = array()) {
   ** Compile role array:
   */
 
-  $result = db_query("SELECT r.rid, p.perm FROM role r LEFT JOIN permission p ON r.rid = p.rid WHERE tid = '%s' ORDER BY name", $tid);
+  $result = db_query("SELECT r.rid, p.perm FROM role r LEFT JOIN permission p ON r.rid = p.rid ORDER BY name");
   $roles = array();
   while ($role = db_fetch_object($result)) {
     $role_perms[$role->rid] = $role->perm;
@@ -1323,7 +1320,6 @@ function user_admin_perm($edit = array()) {
   }
 
   $output = table($header, $rows);
-  $output .= form_hidden("tid", $tid);
   $output .= form_submit(t("Save permissions"));
 
   return form($output);

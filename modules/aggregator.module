@@ -81,7 +81,7 @@ function import_bundle_block($attributes) {
     $keys = explode(",", $attributes);
     foreach ($keys as $key) $where[] = "attributes LIKE '%". trim($key) ."%'";
 
-    $result = db_query("SELECT * FROM item WHERE ". implode(" OR ", $where) ." ORDER BY iid DESC LIMIT ". variable_get("import_block_limit", 15));
+    $result = db_query_range("SELECT * FROM item WHERE ". implode(" OR ", $where) ." ORDER BY iid DESC", 0, variable_get("import_block_limit", 15));
   }
 
   while ($item = db_fetch_object($result)) {
@@ -92,7 +92,7 @@ function import_bundle_block($attributes) {
 }
 
 function import_feed_block($feed) {
-  $result = db_query("SELECT * FROM item WHERE fid = '%s' ORDER BY iid DESC LIMIT ". variable_get("import_block_limit", 15), $feed->fid);
+  $result = db_query_range("SELECT * FROM item WHERE fid = '%s' ORDER BY iid DESC ", 0, variable_get("import_block_limit", 15), $feed->fid);
 
   while ($item = db_fetch_object($result)) {
     $output .= import_format_item($item);
@@ -429,7 +429,7 @@ function import_view() {
 
 function import_tag() {
 
-  $result = db_query("SELECT i.*, f.title AS feed FROM item i LEFT JOIN feed f ON i.fid = f.fid ORDER BY i.iid DESC LIMIT 50");
+  $result = db_query_range("SELECT i.*, f.title AS feed FROM item i LEFT JOIN feed f ON i.fid = f.fid ORDER BY i.iid DESC", 0, 50);
 
   $header = array(t("date"), t("feed"), t("news item"));
   while ($item = db_fetch_object($result)) {
@@ -519,7 +519,7 @@ function import_page_info() {
 function import_page_last() {
 
 
-  $result = db_query("SELECT i.*, f.title AS ftitle, f.link AS flink FROM item i LEFT JOIN feed f ON i.fid = f.fid ORDER BY i.iid DESC LIMIT ". variable_get("import_page_limit", 75));
+  $result = db_query_range("SELECT i.*, f.title AS ftitle, f.link AS flink FROM item i LEFT JOIN feed f ON i.fid = f.fid ORDER BY i.iid DESC", 0, variable_get("import_page_limit", 75));
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"2\">";
   while ($item = db_fetch_object($result)) {
@@ -555,7 +555,7 @@ function import_page_feed($fid) {
   $header .= "<p><b>". t("Description") .":</b><div style=\"margin-left: 20px;\">$feed->description</div></p>";
   $header .= "<p><b>". t("Last update") .":</b><div style=\"margin-left: 20px;\">". format_interval(time() - $feed->timestamp) ." ". t("ago") ." <a href=\"$feed->url\"><img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" alt=\"\" /></a><br /><br /></div></p>\n";
 
-  $result = db_query("SELECT * FROM item WHERE fid = '%s' ORDER BY iid DESC LIMIT ". variable_get("import_page_limit", 75), $fid);
+  $result = db_query_range("SELECT * FROM item WHERE fid = '%s' ORDER BY iid DESC", 0, variable_get("import_page_limit", 75), $fid);
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"2\">";
   while ($item = db_fetch_object($result)) {
@@ -592,7 +592,7 @@ function import_page_bundle($bid) {
 
   $keys = explode(",", $bundle->attributes);
   foreach ($keys as $key) $where[] = "i.attributes LIKE '%". trim($key) ."%'";
-  $result = db_query("SELECT i.*, f.title AS ftitle, f.link AS flink FROM item i, feed f WHERE (". implode(" OR ", $where) .") AND i.fid = f.fid ORDER BY iid DESC LIMIT ". variable_get("import_page_limit", 75));
+  $result = db_query_range("SELECT i.*, f.title AS ftitle, f.link AS flink FROM item i, feed f WHERE (". implode(" OR ", $where) .") AND i.fid = f.fid ORDER BY iid DESC", 0, variable_get("import_page_limit", 75));
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"2\">";
   while ($item = db_fetch_object($result)) {

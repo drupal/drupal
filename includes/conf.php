@@ -12,8 +12,9 @@
 #   and so on is likely to confuse the parser; use alpha-numerical
 #   characters instead.
 
-# $db_url = "pgsql://user:password@hostname/database";
 # $db_url = "mysql://user:password@hostname/database";
+# $db_url = "pgsql://user:password@hostname/database";
+# $db_url = "mssql://user:password@hostname/database";
 
 $db_url = "mysql://drupal:drupal@localhost/drupal";
 

@@ -174,7 +174,7 @@ function archive_page() {
     */
 
     if ($year && $month && $day) {
-      $result = db_query("SELECT nid FROM node WHERE status = '1' AND created > %d ORDER BY created LIMIT 20", $date);
+      $result = db_query_range("SELECT nid FROM node WHERE status = '1' AND created > %d ORDER BY created", $date, 0, 20);
 
       while ($nid = db_fetch_object($result)) {
         node_view(node_load(array("nid" => $nid->nid)), 1);

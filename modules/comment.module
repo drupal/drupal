@@ -797,7 +797,7 @@ function comment_save($id, $edit) {
 
 function comment_admin_overview($status = 0) {
 
-  $result = pager_query("SELECT c.*, u.name, u.uid FROM comments c LEFT JOIN users u ON u.uid = c.uid WHERE c.status = '". check_query($status) ."' ORDER BY c.timestamp DESC", 50);
+  $result = pager_query("SELECT c.*, u.name, u.uid FROM comments c LEFT JOIN users u ON u.uid = c.uid WHERE c.status = '". check_query($status). "' ORDER BY c.timestamp DESC",  50);
 
   $header = array(t("subject"), t("author"), t("status"), array("data" => t("operations"), "colspan" => 2));
   while ($comment = db_fetch_object($result)) {

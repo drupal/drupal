@@ -323,7 +323,7 @@ function statistics_admin() {
 
 /* Displays the various admin tables */
 function statistics_admin_count_table($dbfield, $dbrows) {
-  $result = db_query("SELECT statistics.nid, statistics.daycount, statistics.totalcount, statistics.timestamp, node.title FROM statistics LEFT JOIN node USING (nid) WHERE statistics.%s <> '0' ORDER BY statistics.%s DESC LIMIT %s", $dbfield, $dbfield, $dbrows);
+  $result = db_query_range("SELECT statistics.nid, statistics.daycount, statistics.totalcount, statistics.timestamp, node.title FROM statistics LEFT JOIN node USING (nid) WHERE statistics.%s <> '0' ORDER BY statistics.%s DESC", $dbfield, $dbfield, 0, $dbrows);
 
   $header = array(t("title"), t("today"), t("all time"), t("last hit"), t("operations"));
 
@@ -346,24 +346,24 @@ function statistics_admin_accesslog_table($type, $id) {
     /* retrieve user access logs */
     if ($id) {
       /* retrieve recent access logs for user $id */
-      $result = db_query("SELECT nid, url, hostname, uid, timestamp FROM accesslog WHERE uid = '%s' ORDER BY timestamp DESC LIMIT %s", $id, $limit1);
+      $result = db_query_range("SELECT nid, url, hostname, uid, timestamp FROM accesslog WHERE uid = '%s' ORDER BY timestamp DESC", $id, 0, $limit1);
     }
     else {
       /* retrieve recent access logs for all users */
-      $result = db_query("SELECT nid, url, hostname, uid, MAX(timestamp) AS timestamp FROM accesslog WHERE uid <> '0' GROUP BY uid, nid, url, hostname ORDER BY timestamp DESC LIMIT %s", $limit1);
+      $result = db_query_range("SELECT nid, url, hostname, uid, MAX(timestamp) AS timestamp FROM accesslog WHERE uid <> '0' GROUP BY uid, nid, url, hostname ORDER BY timestamp DESC", 0, $limit1);
     }
   }
   else if ($type == 2) {
     /* retrieve recent access logs for node $id */
-    $result = db_query("SELECT nid, url, hostname, uid, timestamp FROM accesslog WHERE nid = '%s' ORDER BY timestamp DESC LIMIT %s", $id, $limit1);
+    $result = db_query_range("SELECT nid, url, hostname, uid, timestamp FROM accesslog WHERE nid = '%s' ORDER BY timestamp DESC", $id, 0, $limit1);
   }
   else if ($type == 3) {
     /* retrieve recent access logs for hostname $id */
-    $result = db_query("SELECT nid, url, hostname, uid, timestamp FROM accesslog WHERE hostname = '%s' ORDER BY timestamp DESC LIMIT %s", $id, $limit1);
+    $result = db_query_range("SELECT nid, url, hostname, uid, timestamp FROM accesslog WHERE hostname = '%s' ORDER BY timestamp DESC %s", $id, 0, $limit1);
   }
   else {
     /* retrieve all recent access logs */
-    $result = db_query("SELECT nid, url, hostname, uid, timestamp FROM accesslog ORDER BY timestamp DESC LIMIT %s", $limit0);
+    $result = db_query_range("SELECT nid, url, hostname, uid, timestamp FROM accesslog ORDER BY timestamp DESC", 0, $limit0);
   }
 
   $header = array(t("timestamp"), t("title"), t("user"), t("hostname"), t("referrer"));
@@ -399,31 +399,31 @@ function statistics_recent_refer($nid = 0) {
 
   if ($nid > 0) {
     if ($view == "all") {
-      $query = "SELECT url,timestamp FROM accesslog WHERE nid='$nid' AND url <> '' ORDER BY timestamp DESC LIMIT 15";
+      $query = "SELECT url,timestamp FROM accesslog WHERE nid='$nid' AND url <> '' ORDER BY timestamp DESC";
     }
     elseif ($view == "internal") {
-      $query = "SELECT url,timestamp FROM accesslog WHERE nid='$nid' AND url LIKE '%". check_input($HTTP_HOST) ."%' ORDER BY timestamp DESC LIMIT 15";
+      $query = "SELECT url,timestamp FROM accesslog WHERE nid='$nid' AND url LIKE '%". check_input($HTTP_HOST) ."%' ORDER BY timestamp DESC";
       $describe = "internal ";
     }
     else {
       /* default to external referrers */
-      $query = "SELECT url,timestamp FROM accesslog WHERE nid='$nid' AND url NOT LIKE '%". check_input($HTTP_HOST) ."%' AND url <> '' ORDER BY timestamp DESC LIMIT 15";
+      $query = "SELECT url,timestamp FROM accesslog WHERE nid='$nid' AND url NOT LIKE '%". check_input($HTTP_HOST) ."%' AND url <> '' ORDER BY timestamp DESC";
       $describe = "external ";
     }
 
-    $result = db_query($query);
+    $result = db_query_range($query, 0, 15);
     $output = "<h3>". t("Most recent %describe referrers for node", array("%describe" => $describe)) ."\"". l($node->title, "node/view/$nid", array("title" => t("View this posting."))) ."\"</h3>";
   }
   else {
     if ($view == "all") {
-      $query = "SELECT url,timestamp FROM accesslog WHERE url <> '' ORDER BY timestamp DESC LIMIT 15";
+      $query = "SELECT url,timestamp FROM accesslog WHERE url <> '' ORDER BY timestamp DESC";
     }
     elseif ($view == "internal") {
-      $query = "SELECT url,timestamp FROM accesslog WHERE url LIKE '%". check_input($HTTP_HOST) ."%' ORDER BY timestamp DESC LIMIT 15";
+      $query = "SELECT url,timestamp FROM accesslog WHERE url LIKE '%". check_input($HTTP_HOST) ."%' ORDER BY timestamp DESC";
       $describe = "internal ";
     }
     else {
-      $query = "SELECT url,timestamp FROM accesslog WHERE url NOT LIKE '%". check_input($HTTP_HOST) ."%' AND url <> '' ORDER BY timestamp DESC LIMIT 15";
+      $query = "SELECT url,timestamp FROM accesslog WHERE url NOT LIKE '%". check_input($HTTP_HOST) ."%' AND url <> '' ORDER BY timestamp DESC";
       $describe = "external ";
     }
 
@@ -792,7 +792,7 @@ function statistics_display_online_block() {
 /* Display linked title based on field name */
 function statistics_title_list($dbfield, $dbrows) {
   /* valid dbfields: totalcount, daycount, timestamp */
-  return db_query("SELECT statistics.nid, node.title, u.uid, u.name FROM statistics LEFT JOIN node ON statistics.nid = node.nid LEFT JOIN users u ON node.uid = u.uid WHERE %s <> '0' AND node.status = 1 ORDER BY %s DESC LIMIT %s", "statistics.". $dbfield, "statistics.". $dbfield, $dbrows);
+  return db_query_range("SELECT statistics.nid, node.title, u.uid, u.name FROM statistics LEFT JOIN node ON statistics.nid = node.nid LEFT JOIN users u ON node.uid = u.uid WHERE %s <> '0' AND node.status = 1 ORDER BY %s DESC", "statistics.". $dbfield, "statistics.". $dbfield, 0, $dbrows);
 }
 
 
@@ -890,7 +890,7 @@ function statistics_summary($dbfield, $dbrows) {
 
 
   $output = "";
-  $result = db_query("SELECT statistics.nid,node.title FROM statistics LEFT JOIN node ON statistics.nid = node.nid ORDER BY %s DESC LIMIT %s", $dbfield, $dbrows);
+  $result = db_query_range("SELECT statistics.nid,node.title FROM statistics LEFT JOIN node ON statistics.nid = node.nid ORDER BY %s DESC LIMIT", $dbfield, 0, $dbrows);
   while ($nid = db_fetch_array($result)) {
     $content = node_load(array("nid" => $nid["nid"]));
     $links = link_node($content, 1);

@@ -40,6 +40,10 @@ POLL MODULE
 M: Steven Wittens <unconed@drop.org>
 S: maintained
 
+MSSQL PORT
+M: Moshe Weitzman <weitzman@tejasa.com>
+S: maintained
+
 POSTGRES PORT
 M: James Arthur <j_a_arthur@yahoo.com>
 S: maintained

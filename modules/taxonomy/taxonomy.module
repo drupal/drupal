@@ -268,7 +268,6 @@ function taxonomy_overview() {
   $vocabularies = taxonomy_get_vocabularies();
   foreach ($vocabularies as $vocabulary) {
     $links = array();
-
     $rows[] = array($vocabulary->name, array("data" => $vocabulary->types, "align" => "center"), l(t("edit vocabulary"), "admin/taxonomy/editvocabulary/$vocabulary->vid"), l(t("add term"), "admin/taxonomy/addterm/$vocabulary->vid"), l(t("preview form"), "admin/taxonomy/preview/vocabulary/$vocabulary->vid"));
 
     $tree = taxonomy_get_tree($vocabulary->vid);
@@ -644,7 +643,7 @@ function taxonomy_select_nodes($taxonomy, $pager = 1) {
   global $user;
 
   if ($taxonomy->operator == "or") {
-    $sql = "SELECT DISTINCT(n.nid), n.title, n.type, n.created, n.changed, n.uid, u.name FROM node n LEFT JOIN term_node r ON n.nid = r.nid LEFT JOIN users u ON n.uid = u.uid WHERE tid IN ($taxonomy->str_tids) AND n.status = '1' ORDER BY static DESC, created DESC";
+    $sql = "SELECT DISTINCT(n.nid), n.title, n.type, n.created, n.changed, n.uid, n.static, n.created, u.name FROM node n LEFT JOIN term_node r ON n.nid = r.nid LEFT JOIN users u ON n.uid = u.uid WHERE tid IN ($taxonomy->str_tids) AND n.status = '1' ORDER BY static DESC, created DESC";
     $sql_count = "SELECT COUNT(DISTINCT(n.nid)) FROM node n LEFT JOIN term_node r ON n.nid = r.nid LEFT JOIN users u ON n.uid = u.uid WHERE tid IN ($taxonomy->str_tids) AND n.status = '1'";
   }
   else {
@@ -659,7 +658,7 @@ function taxonomy_select_nodes($taxonomy, $pager = 1) {
     $result = pager_query($sql, variable_get("default_nodes_main", 10) , 0, $sql_count);
   }
   else {
-    $result = db_query($sql ." LIMIT 15");
+    $result = db_query_range($sql, 0, 15);
   }
 
   return $result;

@@ -86,7 +86,7 @@ function blog_feed_user($uid = 0) {
     $account = $user;
   }
 
-  $result = db_query("SELECT n.nid, n.title, n.teaser, n.created, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'blog' AND u.uid = '%d' AND n.status = 1 ORDER BY n.nid DESC LIMIT 15", $uid);
+  $result = db_query_range("SELECT n.nid, n.title, n.teaser, n.created, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'blog' AND u.uid = '%d' AND n.status = 1 ORDER BY n.nid DESC", $uid, 0, 15);
   $channel["title"] = $account->name. "'s blog";
   $channel["link"] = url("blog/view/$uid");
   $channel["description"] = $term->description;
@@ -94,7 +94,7 @@ function blog_feed_user($uid = 0) {
 }
 
 function blog_feed_last() {
-  $result = db_query("SELECT n.nid, n.title, n.teaser, n.created, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'blog' AND n.status = 1 ORDER BY n.nid DESC LIMIT 15");
+  $result = db_query_range("SELECT n.nid, n.title, n.teaser, n.created, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'blog' AND n.status = 1 ORDER BY n.nid DESC", 0, 15);
   $channel["title"] = variable_get("site_name", "drupal") ." blogs";
   $channel["link"] = url("blog/view");
   $channel["description"] = $term->description;
@@ -242,7 +242,7 @@ function blog_block($op = "list", $delta = 0) {
   }
   else {
     if (user_access("access content")) {
-      $block["content"] = node_title_list(db_query("SELECT u.uid, u.name, n.created, n.title, n.nid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'blog' AND n.status = 1 ORDER BY n.nid DESC LIMIT 10"));
+      $block["content"] = node_title_list(db_query_range("SELECT u.uid, u.name, n.created, n.title, n.nid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'blog' AND n.status = 1 ORDER BY n.nid DESC", 0, 10));
       $block["content"] .= "<div align=\"right\" id=\"blog_more\">". l(t("more"), "blog", array("title" => t("Read the latest blog entries."))) ."</div>";
       $block["subject"] = t("User blogs");
     }

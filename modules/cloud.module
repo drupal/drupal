@@ -134,7 +134,7 @@ function cloud_display() {
 }
 
 function cloud_list($limit = 10) {
-  $result = db_query("SELECT * FROM site WHERE timestamp > ". (time() - 604800) ." ORDER BY timestamp DESC LIMIT $limit");
+  $result = db_query_range("SELECT * FROM site WHERE timestamp > ". (time() - 604800) ." ORDER BY timestamp DESC", 0, $limit);
 
   $hour = -1;
   $list = -1;

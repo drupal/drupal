@@ -142,7 +142,7 @@ function locale_seek() {
           foreach ($languages as $key=>$value) {
             $tmp[] = $key . (check_query($edit["status"]) == 1 ? " !=" : " =") ." ''";
           }
-          $query[] = implode(" && ", $tmp);
+          $query[] = implode(" AND ", $tmp);
           break;
         case "any":
           foreach ($languages as $key=>$value) {
