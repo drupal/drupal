@@ -45,7 +45,10 @@ function comment_moderate($moderate) {
 
 function comment_settings($mode, $order, $threshold) {
   global $user;
-  if ($user->uid) $user = user_save($user, array("mode" => $mode, "sort" => $order, "threshold" => $threshold));
+
+  if ($user->uid) {
+    $user = user_save($user, array("mode" => $mode, "sort" => $order, "threshold" => $threshold));
+  }
 }
 
 function comment_form($edit) {
@@ -257,21 +260,41 @@ function comment_thread_max($cid, $mode, $threshold, $level = 0, $dummy = 0) {
 }
 
 function comment_render($lid, $cid) {
-  global $user, $theme, $REQUEST_URI;
+  global $user, $theme, $mode, $order, $threshold, $REQUEST_URI;
 
   if (user_access("access comments")) {
 
-    // Pre-process variables:
-    $lid = empty($lid) ? 0 : $lid;
-    $cid = empty($cid) ? 0 : $cid;
-    $mode  = ($user->uid) ? $user->mode : variable_get(default_comment_mode, 4);
-    $order = ($user->uid) ? $user->sort : variable_get(default_comment_order, 1);
-    $threshold = ($user->uid) ? $user->threshold : variable_get(default_comment_threshold, 3);
+    /*
+    ** pre-process variables:
+    */
+
+    if (empty($lid)) {
+      $lid = 0;
+    }
+
+    if (empty($cid)) {
+      $cide = 0;
+    }
+
+    if (empty($mode)) {
+      $mode = $user->uid ? $user->mode : variable_get(default_comment_mode, 4);
+    }
+
+    if (empty($order)) {
+      $order = $user->uid ? $user->sort : variable_get(default_comment_order, 1);
+    }
+
+    if (empty($threshold)) {
+      $threshold = $user->uid ? $user->threshold : variable_get(default_comment_threshold, 3);
+    }
+
+    /*
+    ** Render comment control:
+    */
+
+    $theme->box(t("Comment control"), $theme->comment_controls($threshold, $mode, $order));
 
     if ($user->uid) {
-      // Comment control:
-      $theme->box(t("Comment control"), $theme->comment_controls($threshold, $mode, $order));
-
       // Print moderation form:
       print "<FORM METHOD=\"post\" ACTION=\"$REQUEST_URI\">\n";
     }
