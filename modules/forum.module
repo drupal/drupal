@@ -95,7 +95,7 @@ function forum_block() {
 
     $content .= "<br />";
     $content .= "<b>". t("New forum topics:") ."</b><br />";
-    $result = db_query("SELECT n.nid, n.title, n.body FROM node n LEFT JOIN forum f ON n.nid = f.nid ORDER BY n.nid DESC LIMIT ". variable_get("forum_block_num", "5"));
+    $result = db_query("SELECT n.nid, n.title, n.body FROM node n LEFT JOIN forum f ON n.nid = f.nid WHERE n.type = 'forum' ORDER BY n.nid DESC LIMIT ". variable_get("forum_block_num", "5"));
     while ($node = db_fetch_object($result)) {
       $content .= "- ".l(check_output($node->title), array("id" => $node->nid), "node", "", array("title" => substr(strip_tags($node->body), 0, 100)."...")) ."<br />";
     }
@@ -148,11 +148,11 @@ function forum_link($type, $node) {
     }
 
     if ($prev) {
-      $links[] = l(t("previous topic"), array("id" => $prev->nid), "node", "", array("title" => $prev->title."\n".substr(strip_tags($prev->body), 0, 100)."..."));
+      $links[] = l(t("previous forum topic"), array("id" => $prev->nid), "node", "", array("title" => $prev->title .": ". substr(strip_tags($prev->body), 0, 100)."..."));
     }
 
     if ($next) {
-      $links[] = l(t("next topic"), array("id" => $next->nid), "node", "", array("title" => $next->title."\n".substr(strip_tags($next->body), 0, 100)."..."));
+      $links[] = l(t("next forum topic"), array("id" => $next->nid), "node", "", array("title" => $next->title .": ". substr(strip_tags($next->body), 0, 100)."..."));
     }
   }
 
@@ -387,7 +387,7 @@ function _forum_topics_read($uid) {
 function _forum_last_post($term) {
   $topic = db_fetch_object(db_query("SELECT n.nid, n.created AS timestamp, u.name AS name, u.uid AS uid FROM node n, term_node r LEFT JOIN users u ON n.uid = u.uid WHERE r.tid = '%d' AND n.nid = r.nid AND n.type = 'forum' AND n.status = 1 ORDER BY timestamp DESC LIMIT 1", $term));
 
-  $reply = db_fetch_object(db_query("SELECT n.nid, c.timestamp, u.name AS name, u.uid AS uid FROM term_node r, node n LEFT JOIN comments c ON n.nid=c.nid LEFT JOIN users u ON c.uid = u.uid WHERE r.tid = '%d' AND n.nid = r.nid AND n.type = 'forum' AND n.status = 1 AND c.status = 0 ORDER BY c.timestamp DESC LIMIT 1", $term));
+  $reply = db_fetch_object(db_query("SELECT n.nid, c.timestamp, u.name AS name, u.uid AS uid FROM term_node r, node n LEFT JOIN comments c ON n.nid = c.nid LEFT JOIN users u ON c.uid = u.uid WHERE r.tid = '%d' AND n.nid = r.nid AND n.type = 'forum' AND n.status = 1 AND c.status = 0 ORDER BY c.timestamp DESC LIMIT 1", $term));
 
   $value = ($topic->timestamp > $reply->timestamp) ? $topic : $reply;
 
@@ -546,7 +546,7 @@ function forum_forum_list($forums, $parents, $tid) {
 
     foreach ($forums as $forum) {
       if ($forum->container) {
-        $output .= " <tr><td colspan=\"5\">".lm(check_output($forum->name), array("mod" => "forum", "tid" => $forum->tid))."<br /><small>". ($forum->description ? check_output($forum->description, 1) : "") ."</small></td></tr>";
+        $output .= " <tr><td colspan=\"5\">". lm(check_output($forum->name), array("mod" => "forum", "tid" => $forum->tid))."<br /><small>". ($forum->description ? check_output($forum->description, 1) : "") ."</small></td></tr>";
       } else {
         if ($user->uid) $new_topics = $forum->num_topics - $forum->old_topics;
         $icon = _forum_get_folder_icon($new_topics);
@@ -555,14 +555,14 @@ function forum_forum_list($forums, $parents, $tid) {
 
         $links = array();
         if ($forum->last_post) {
-          $links[] = l(t("the most recent topic"), array("nid" => $forum->last_post->nid));
+          $links[] = l(t("the most recent topic"), array("id" => $forum->last_post->nid));
         }
         if ($new_topics) {
           $links[] = lm(t("the first new topic"), array("mod" => "forum", "op" => "first_new", "tid" => $forum->tid));
         }
 
         if ($links) {
-          $output .= "<br />Jump to: ".implode(", ", $links);
+          $output .= "<br />Jump to: ". implode(", ", $links);
         }
 
         $output .= "</div></td></tr></table></td>";
@@ -733,15 +733,6 @@ function _forum_get_topic_order($sortby) {
     case 4:
       return "num_comments ASC";
       break;
-  }
-}
-
-function forum_admin() {
-  if (user_access("administer site configuration")) {
-    $links[] = la(t("settings"), array("mod" => "system", "op" => "settings"), "forum");
-
-    print "<small>". implode(" | ", $links) ."</small><hr>\n";
-    print forum_help();
   }
 }
 
