@@ -24,9 +24,7 @@ function page_view($node, $main = 0) {
       $output = check_output($node->body, 1);
   }
 
-  $theme->header();
   $theme->box(check_output($node->title), $output);
-  $theme->footer();
 }
 
 function page_status() {
