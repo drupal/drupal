@@ -533,8 +533,8 @@ function user_login($edit = array(), $msg = "") {
     */
 
     if (!$user) {
-      $name = check_input($edit["name"]);
-      $pass = check_input($edit["pass"]);
+      $name = $edit["name"];
+      $pass = $edit["pass"];
       $user = user_load(array("name" => $name, "pass" => $pass, "status" => 1));
     }
 
@@ -543,11 +543,11 @@ function user_login($edit = array(), $msg = "") {
     */
 
     if ($server = strrchr($edit["name"], "@")) {
-      $name = check_input(substr($edit["name"], 0, strlen($edit["name"]) - strlen($server)));
-      $server = check_input(substr($server, 1));
-      $pass = check_input($edit["pass"]);
+      $name = substr($edit["name"], 0, strlen($edit["name"]) - strlen($server));
+      $server = substr($server, 1);
+      $pass = $edit["pass"];
     }
-
+    
     /*
     ** When possible, determine corrosponding external auth source. Invoke source, and login user if successful:
     */
