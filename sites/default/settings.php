@@ -1,5 +1,5 @@
 <?php
-// $Id: settings.php,v 1.3 2005/01/17 00:41:35 unconed Exp $
+// $Id: settings.php,v 1.4 2005/01/17 18:56:11 unconed Exp $
 
 /**
  * @file
@@ -46,9 +46,6 @@ $base_url = "http://localhost";
 #   To see what PHP settings are known to work well, take a look at
 #   the .htaccesss file in Drupal's root directory.  If you get
 #   unexpected warnings or errors, double-check your PHP settings.
-
-# If required, update PHP's include path to include your PEAR directory:
-// ini_set("include_path", ".:/path/to/pear");
 
 #
 # Variable overrides:
