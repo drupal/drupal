@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.131 2002/12/22 11:06:33 dries Exp $
+// $Id: book.module,v 1.132 2002/12/22 11:25:50 dries Exp $
 
 function book_system($field){
   $system["description"] = t("Allows users to collaboratively author a book.");
@@ -496,7 +496,7 @@ function book_tree_recurse($nid, $depth, $children) {
 
 function book_tree($parent = 0, $depth = 3) {
 
-  $result = db_query("SELECT n.nid, n.title, b.parent FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.status = '1' ORDER BY b.weight, n.title");
+  $result = db_query("SELECT n.nid, n.title, b.parent FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.status = '1' AND n.moderate = '0' ORDER BY b.weight, n.title");
 
   while ($node = db_fetch_object($result)) {
     $list = $children[$node->parent] ? $children[$node->parent] : array();
