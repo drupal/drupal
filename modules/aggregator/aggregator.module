@@ -388,7 +388,7 @@ function aggregator_refresh($feed) {
 
         cache_clear_all();
 
-        watchdog('regular', t('Aggregator: syndicated content from %site.', array('%site' => '<em>'. $feed[title] .'</em>')));
+        watchdog('status', t('Aggregator: syndicated content from %site.', array('%site' => '<em>'. $feed[title] .'</em>')));
         drupal_set_message(t('Syndicated content from %site.', array('%site' => '<em>'. $feed['title'] .'</em>')));
       }
       break;

@@ -88,7 +88,8 @@ $sql_updates = array(
   "2004-10-18" => "update_109",
   "2004-10-31: first update since Drupal 4.5.0 release" => "update_110",
   "2004-11-07" => "update_111",
-  "2004-11-15" => "update_112"
+  "2004-11-15" => "update_112",
+  "2004-11-28" => "update_113"
 );
 
 function update_32() {
@@ -1987,6 +1988,29 @@ function update_112() {
     hostname varchar(128) NOT NULL default '',
     timestamp int(11) NOT NULL default '0'
   );");
+
+  return $ret;
+}
+
+function update_113() {
+  $ret = array();
+
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql('DROP TABLE {accesslog}');
+    $ret[] = update_sql("CREATE TABLE {accesslog} (
+        aid tinyint(10) NOT NULL auto_increment,
+        title varchar(255) default NULL,
+        path varchar(255) default NULL,
+        url varchar(255) default NULL,
+        hostname varchar(128) default NULL,
+        uid int(10) unsigned default '0',
+        timestamp int(11) unsigned NOT NULL default '0',
+        KEY accesslog_timestamp (timestamp),
+        PRIMARY KEY  (aid))");
+  }
+
+  // Flush the menu cache:
+  cache_clear_all('menu:', TRUE);
 
   return $ret;
 }

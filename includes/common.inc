@@ -166,7 +166,7 @@ function drupal_goto($path = '', $query = NULL, $fragment = NULL) {
  */
 function drupal_not_found() {
   header('HTTP/1.0 404 Not Found');
-  watchdog('httpd', t('404 error: %page not found.', array('%page' => '<em>'. db_escape_string($_GET['q']) .'</em>')));
+  watchdog('page not found', t('%page not found.', array('%page' => '<em>'. db_escape_string($_GET['q']) .'</em>')));
 
   $path = drupal_get_normal_path(variable_get('site_404', ''));
   $status = MENU_NOT_FOUND;
@@ -185,6 +185,7 @@ function drupal_not_found() {
  */
 function drupal_access_denied() {
   header('HTTP/1.0 403 Forbidden');
+  watchdog('access denied', t('%page denied access.', array('%page' => '<em>'. db_escape_string($_GET['q']) .'</em>')));
 
   $path = drupal_get_normal_path(variable_get('site_403', ''));
   $status = MENU_NOT_FOUND;
@@ -339,7 +340,7 @@ function error_handler($errno, $message, $filename, $line, $variables) {
     $types = array(1 => 'error', 2 => 'warning', 4 => 'parse error', 8 => 'notice', 16 => 'core error', 32 => 'core warning', 64 => 'compile error', 128 => 'compile warning', 256 => 'user error', 512 => 'user warning', 1024 => 'user notice', 2048 => 'strict warning');
     $entry = $types[$errno] .': '. $message .' in '. $filename .' on line '. $line .'.';
 
-    watchdog('error', t('%error: %message in %file on line %line.', array('%error' => $types[$errno], '%message' => $message, '%file' => $filename, '%line' => $line)));
+    watchdog('error', t('%message in %file on line %line.', array('%error' => $types[$errno], '%message' => $message, '%file' => $filename, '%line' => $line)));
 
     if (variable_get('error_level', 1) == 1) {
       print '<pre>'. $entry .'</pre>';

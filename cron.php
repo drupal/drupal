@@ -16,7 +16,7 @@ if (!ini_get('safe_mode')) {
 
 // Check if the last cron run completed
 if (variable_get('cron_busy', false)) {
-  watchdog('warning', t('Last cron run did not complete.'));
+  watchdog('cron', t('Last cron run did not complete.'));
 }
 else {
   variable_set('cron_busy', true);
@@ -27,6 +27,6 @@ module_invoke_all('cron');
 
 // Clean up
 variable_set('cron_busy', false);
-watchdog('regular', t('Cron run completed'));
+watchdog('cron', t('Cron run completed'));
 
 ?>
