@@ -242,10 +242,13 @@ function statistics_admin() {
     switch ($op) {
       case "statistics":
         $output = statistics_admin_topnodes();
+        break;
       case "referrers":
         $output = statistics_top_refer();
+        break;
       case "log":
         $output = statistics_admin_displaylog();
+        break;
     }
 
     print theme("page", $output);
