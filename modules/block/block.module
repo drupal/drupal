@@ -215,11 +215,11 @@ function block_admin_display() {
       if ($block['region'] == 0) {
         $left[] = $row;
       }
-      else {
+      if ($block['region'] == 1) {
         $right[] = $row;
       }
     }
-    else {
+    else if ($block['region'] <= 1) {
       $disabled[] = $row;
     }
   }
@@ -420,28 +420,40 @@ function block_user($type, $edit, &$user, $category = NULL) {
   }
 }
 
-/**
- * Return blocks available for current $user at $region.
- *
- * @param $region main|left|right
- *
- * @return array of block objects, indexed with <i>module</i>_<i>delta</i>
- *
- * @see <a href="http://drupal.org/node/1042" target="_top">[feature]
- *   Generic template design difficult w/o block region "look-ahead"</a>
- * @todo add a proper primary key (bid) to the blocks table so we don't have
- *   to mess around with this <i>module</i>_<i>delta</i> construct. currently,
- *   "blocks" has no primary key defined (bad)!
- */
-function block_list($region) {
+ /**
+  * Return all blocks in the specied region for the current user. You may
+  * use this function to implement variable block regions.  The default
+  * regions are 'left', 'right' and 'all', where 'all' means both left and
+  * right.
+  *
+  * @param $region
+  *   This is a string which describes in a human readable form which region
+  *   you need.
+  *
+  * @param $regions
+  *   This is an optional array and contains map(s) from the string $region to
+  *   the numerical region value(s) in the blocks table. See default value for
+  *   examples.
+  *
+  * @return
+  *   An array of block objects, indexed with <i>module</i>_<i>delta</i>.
+  *   If you are displaying your blocks in one or two sidebars, you may check
+  *   whether this array is empty to see how many columns are going to be
+  *   displayed.
+  *
+  * @todo
+  *   Add a proper primary key (bid) to the blocks table so we don't have
+  *   to mess around with this <i>module</i>_<i>delta</i> construct.
+  *   Currently, the blocks table has no primary key defined!
+  */
+function block_list($region, $regions = array('left' => 0, 'right' => 1, 'all' => '0, 1')) {
   global $user;
   static $blocks = array();
 
   if (!isset($blocks[$region])) {
     $blocks[$region] = array();
-    $result = db_query('SELECT * FROM {blocks} WHERE status = 1 '. ($region != 'all' ? 'AND region = %d ' : '') .'ORDER BY weight, module', $region == 'left' ? 0 : 1);
-
-    while ($result && ($block = db_fetch_array($result))) {
+    $result = db_query("SELECT * FROM {blocks} WHERE status = 1 AND region IN ('%s') ORDER BY weight, module", $regions[$region]);
+    while ($block = db_fetch_array($result)) {
       // Use the user's block visibility setting, if necessary
       if ($block['custom'] != 0) {
         if ($user->uid && isset($user->block[$block['module']][$block['delta']])) {
