@@ -62,7 +62,8 @@ $mysql_updates = array(
   "2002-12-22" => "update_47",
   "2002-12-29" => "update_48",
   "2003-01-03" => "update_49",
-  "2003-01-05" => "update_50"
+  "2003-01-05" => "update_50",
+  "2003-01-15" => "update_51"
 );
 
 // Update functions
@@ -671,6 +672,15 @@ function update_50() {
   update_content("%admin.php%");
   update_content("%module.php%");
   update_content("%node.php%");
+}
+
+function update_51() {
+  update_sql("ALTER TABLE form ADD tid INT UNSIGNED NOT NULL");
+  $result = db_queryd("SELECT n.nid, t.tid FROM node n, term_node t WHERE n.nid = t.nid AND type = 'forum'");
+  while ($node = db_fetch_object($result)) {
+    db_queryd("UPDATE forum SET tid = '%d' WHERE nid = '%d'", $node->tid, $node->nid);
+  }
+  update_sql("ALTER TABLE forum ADD INDEX (tid)");
 }
 
 function update_upgrade3() {
