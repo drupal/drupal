@@ -388,11 +388,11 @@ function account_track_site() {
 
   $theme->header();
 
-  $sresult = db_query("SELECT n.title, n.nid, COUNT(c.lid) AS count FROM comments c LEFT JOIN node n ON c.lid = n.nid WHERE n.status = '". node_status("posted") ."' AND ". time() ." - n.timestamp < $period GROUP BY c.lid ORDER BY n.timestamp DESC LIMIT 10");
-  while ($node = db_fetch_object($sresult)) {
-    $output .= "<LI>". format_plural($node->count, "comment", "comments") ." ". t("attached to node") ." '<A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A>':</LI>";
+  $nresult = db_query("SELECT n.nid, n.title, COUNT(c.cid) AS count FROM comments c LEFT JOIN node n ON n.nid = c.lid WHERE c.timestamp > ". (time() - $period) ." GROUP BY c.lid ORDER BY count DESC");
+  while ($node = db_fetch_object($nresult)) {
+    $output .= "<LI>". format_plural($node->count, "comment", "comments") ." ". t("attached to") ." '<A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A>':</LI>";
 
-    $cresult = db_query("SELECT c.subject, c.cid, c.pid, u.userid FROM comments c LEFT JOIN users u ON u.id = c.author WHERE c.lid = '$node->nid' ORDER BY c.timestamp DESC LIMIT $node->count");
+    $cresult = db_query("SELECT c.subject, c.cid, c.pid, u.userid FROM comments c LEFT JOIN users u ON u.id = c.author WHERE c.lid = $node->nid ORDER BY c.timestamp DESC LIMIT $node->count");
     $output .= "<UL>\n";
     while ($comment = db_fetch_object($cresult)) {
       $output .= " <LI>'<A HREF=\"node.php?id=$node->nid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A>' ". t("by") ." ". format_username($comment->userid) ."</LI>\n";
