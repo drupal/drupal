@@ -1255,7 +1255,7 @@ function node_validate($node) {
     // Validate for normal users:
     $node->uid = $user->uid ? $user->uid : 0;
     // Force defaults in case people modify the form:
-    $node_options = variable_get('node_options_'. $edit->type, array('status', 'promote'));
+    $node_options = variable_get('node_options_'. $node->type, array('status', 'promote'));
     $node->status = in_array('status', $node_options);
     $node->moderate = in_array('moderate', $node_options);
     $node->promote = in_array('promote', $node_options);
