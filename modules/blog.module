@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.72 2002/05/02 19:36:03 kjartan Exp $
+// $Id: blog.module,v 1.73 2002/05/03 20:27:53 kjartan Exp $
 
 function blog_conf_options() {
  $output .= form_textarea("Explanation or submission guidelines", "blog_help", variable_get("blog_help", ""), 55, 4, "This text will be displayed at the top of the blog submission form.  Useful for helping or instructing your users.");
@@ -46,7 +46,7 @@ function blog_save($op, $node) {
 
   if ($op == "create") {
     if (user_access("administer nodes")) {
-      return array();
+      return array("body" => filter($node->body), "teaser" => filter($node->teaser));
     }
     else {
       return array("body" => filter($node->body), "promote" => 0, "moderate" => 1, "status" => 1, "teaser" => filter($node->teaser));
@@ -64,7 +64,7 @@ function blog_save($op, $node) {
       ** pages, they will not be changed unless explicitly specified.
       */
 
-      return array();
+      return array("body" => filter($node->body), "teaser" => filter($node->teaser));
     }
     else {
       /*

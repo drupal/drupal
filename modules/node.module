@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.124 2002/04/22 09:05:36 kjartan Exp $
+// $Id: node.module,v 1.125 2002/05/03 20:27:53 kjartan Exp $
 
 function node_help() {
   global $mod;
@@ -307,9 +307,9 @@ function node_filter_html($text) {
 }
 
 function node_filter_link($text) {
-  $src = array("/\[\[(([^\|]*?)(\|([^\|]*?))?)\]\]/e");  // [link|description]
-  $dst = array(format_tag('\\2', '\\4'));                // [link|description]
-  return preg_replace($src, $dst, $text);
+  $src = '\[{2}([^\|]+)(\|([^\|]+)?)?\]{2}';                   // [link|description]
+  $dst = str_replace('%5C1', '\\1', format_tag('\\1', '\\3')); // [link|description]
+  return ereg_replace($src, $dst, $text);
 }
 
 function node_filter_line($text) {
