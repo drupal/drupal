@@ -26,6 +26,9 @@ Drupal x.x.x, xxxx-xx-xx
     * added support for multiple database connections.
 - theme system:
     * changed all GIFs to PNGs.
+    * reorganised the handling of themes, template engines, templates and styles.
+    * unified the settings for themes.
+    * added theme screenshots.
 - blocks:
     * added 'recent comments' block.
     * added 'categories' block.
