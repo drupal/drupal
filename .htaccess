@@ -8,8 +8,12 @@
   deny from all
 </Files>
 
-# Deny directory listings:
+# Set some options
 Options -Indexes
+Options FollowSymLinks
+
+# Set the default handler to index.php:
+DirectoryIndex index.php
 
 # Customized server error messages:
 ErrorDocument 400 /error.php
