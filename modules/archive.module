@@ -1,5 +1,5 @@
 <?php
-// $Id: archive.module,v 1.3 2002/04/22 09:05:35 kjartan Exp $
+// $Id: archive.module,v 1.4 2002/05/11 16:21:48 kjartan Exp $
 
 function archive_display($original = 0) {
 
@@ -146,9 +146,8 @@ function archive_page() {
           $edit["day"] = date("d", $date);
         }
 
-        $start = str_replace("<b>:</b><br />", " ", form_select("", "year", ($edit["year"] ? $edit["year"] : date("Y")), $years) . form_select("", "month", ($edit["month"] ? $edit["month"] : date("m")), $months) . form_select("", "day", ($edit["day"] ? $edit["day"] : date("d")), $days) . form_submit(t("Show")));
-        $start = str_replace("<p>", "", $start);
-        $start = str_replace("</p>\n", " ", $start);
+        $start = form_select("", "year", ($edit["year"] ? $edit["year"] : date("Y")), $years) . form_select("", "month", ($edit["month"] ? $edit["month"] : date("m")), $months) . form_select("", "day", ($edit["day"] ? $edit["day"] : date("d")), $days) . form_submit(t("Show"));
+        $start = ereg_replace("<[/]?p>", "", $start);
 
         $theme->box(t("Archives"), form($start));
 

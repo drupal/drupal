@@ -403,6 +403,7 @@ function update_26() {
   update_sql("ALTER TABLE term_synonym ADD INDEX (name(3));");
   update_sql("ALTER TABLE term_node ADD INDEX (nid);");
   update_sql("ALTER TABLE term_node ADD INDEX (tid);");
+  update_sql("UPDATE node SET comment = 2 WHERE comment = 1");
 }
 
 function update_27() {
@@ -456,7 +457,7 @@ function update_sql($sql) {
 function update_data($start) {
   global $mysql_updates;
   $mysql_updates = array_slice($mysql_updates, ($start-- ? $start : 0));
-  foreach ($mysql_updates as $date=>$func) {
+  foreach ($mysql_updates as $date => $func) {
     print "<b>$date</b><br />\n<pre>\n";
     $func();
     variable_set("update_start", $date);
@@ -481,7 +482,7 @@ function update_page() {
       $start = variable_get("update_start", 0);
       $dates[] = "All";
       $i = 1;
-      foreach ($mysql_updates as $date=>$sql) {
+      foreach ($mysql_updates as $date => $sql) {
         $dates[$i++] = $date;
         if ($date == $start) {
           $selected = $i;
