@@ -146,7 +146,7 @@ function poll_insert($node) {
 
   for ($i = 0; $i < $node->choices; $i++) {
     if ($node->choice[$i] != "") {
-      db_query("INSERT INTO poll_choices (nid, chtext, chvotes, chorder) VALUES ('%d', '%s', '%d', '%d')", $node->nid, $node->choice[$i], $node->chvotes[$i], $i);
+      db_query("INSERT INTO poll_choices (nid, chtext, chvotes, chorder) VALUES ('%d', '%s', '%d', '%d')", $node->nid, filter($node->choice[$i]), $node->chvotes[$i], $i);
     }
   }
 }
