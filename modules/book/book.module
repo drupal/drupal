@@ -459,27 +459,27 @@ function book_tree($parent = "", $depth = 0) {
     ** Select all child nodes and render them into a table of contents:
     */
 
-   $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE b.parent = '$parent' AND (n.moderate = 0 OR n.revisions != '') ORDER BY b.weight, n.title");
+    $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE b.parent = '$parent' AND (n.moderate = 0 OR n.revisions != '') ORDER BY b.weight, n.title");
 
-     while ($page = db_fetch_object($result)) {
-       // load the node:
-       $node = node_load(array("nid" => $page->nid));
+    while ($page = db_fetch_object($result)) {
+      // load the node:
+      $node = node_load(array("nid" => $page->nid));
 
-       // take the most recent approved revision:
-       if ($node->moderate) {
-         $node = book_revision_load($node, array("moderate" => 0, "status" => 1));
-       }
+      // take the most recent approved revision:
+      if ($node->moderate) {
+        $node = book_revision_load($node, array("moderate" => 0, "status" => 1));
+      }
 
-       if ($node) {
-         // output the content:
-         $output .= "<li><a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a></li>";
+      if ($node) {
+        // output the content:
+        $output .= "<li><a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a></li>";
 
-         // build the sub-tree of each child:
-         $output .= book_tree($node->nid, $depth + 1);
-       }
-     }
+        // build the sub-tree of each child:
+        $output .= book_tree($node->nid, $depth + 1);
+      }
+    }
 
-     $output = "<ul>$output</ul>";
+    $output = "<ul>$output</ul>";
 
   }
 
