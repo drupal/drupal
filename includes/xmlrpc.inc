@@ -37,12 +37,7 @@
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
 if (!function_exists('xml_parser_create')) {
-  // Win 32 fix. From: "Leo West" <lwest@imaginet.fr>
-  if($WINDIR) {
-    dl("php3_xml.dll");
-  } else {
-    dl("xml.so");
-  }
+  dl("xml.so");
 }
 
 $xmlrpcI4="i4";
