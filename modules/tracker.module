@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.81 2004/03/29 19:00:07 dries Exp $
+// $Id: tracker.module,v 1.82 2004/04/01 18:57:41 dries Exp $
 
 function tracker_help($section = 'admin/help#tracker') {
   switch ($section) {
@@ -77,7 +77,6 @@ function tracker_page() {
 function tracker_user($type, &$edit, &$user) {
   if ($type == 'view' && user_access("access content")) {
     return array(t('History') => form_item(t("Recent posts"), l(t("recent posts"), "tracker/$user->uid")));
-    return $fields;
   }
 }
 
