@@ -2,8 +2,9 @@
 // $Id$
 
 function page_help() {
-  $output .= "<p>The page module is used to create a <i>static page</i>.  Unlike a story, a static page is a persistent web page on your site which usually shortcuts the typical lifecycle of user generated content (i.e. submit -&gt; moderate -&gt; post -&gt; comment).  A static page is usually linked from the main navigation bar, using whatever text the author wishes.  To create a static page without this navigation link, simply skip the form field which requests link text.  Administrators are the exclusive authors of static pages (i.e. requires the <i>administer nodes</i> in ". la("permission", array("mod" => "user", "op" => "permission")) .").</p>";
-  $output .= "<p>Site pages, unlike many other forms of Drupal content, may be made of PHP code in addition to HTML and text. All Drupal objects and functions are available to the Site Page author.</p>";
+  $output .= "<p>The page module is used to create a <i>static page</i>.  Unlike a story, a static page is a persistent web page on your site which usually shortcuts the typical lifecycle of user generated content (i.e. submit -&gt; moderate -&gt; post -&gt; comment).  A static page is usually linked from the main navigation bar, using whatever text the author wishes.  To create a static page without this navigation link, simply skip the form field which requests link text.</p>";
+  $output .= "<p>Site pages, unlike many other forms of Drupal content, may be made of PHP code in addition to HTML and text. All Drupal objects and functions are available to a site administrator.</p>";
+
   return $output;
 }
 
@@ -95,29 +96,16 @@ function page_link($type) {
 
 function page_body($node) {
   global $theme, $op;
-
-  if ($node->format) {
-    /*
-    ** Make sure only authorized users can preview static (PHP)
-    ** pages.
-    */
-
-    if ($op == t("Preview")) {
-      if (user_access("administer nodes")) {
-        $node->body = stripslashes($node->body);  // see also page_form()
-      }
-      else {
-        return;
-      }
-    }
-
+  if ($node->format == 0) {
+    // HTML type
+    $output = check_output($node->body);
+  }
+  else {
+    // PHP type
     ob_start();
     eval($node->body);
     $output = ob_get_contents();
     ob_end_clean();
-  }
-  else {
-    $output = check_output($node->body, 1);
   }
 
   return $output;
@@ -126,36 +114,28 @@ function page_body($node) {
 function page_view($node, $main = 0) {
   global $theme;
 
+  /*
+  ** Extract the page body.  If body is dynamic (using PHP code), the body
+  ** will be generated.
+  */
+
+  $node->teaser = $node->body = page_body($node);
+
   if ($main) {
     $theme->node($node, $main);
   }
   else {
-    /*
-    ** Extract the page body.  If body is dynamic (using PHP code), the body
-    ** will be generated.
-    */
-
-    $output .= page_body($node);
-
     /*
     ** Add the node specific links:
     */
 
     $output .= "<div align=\"right\">". $theme->links(link_node($node, $main)) ."</div>";
 
-    $theme->box($node->title, $output);
+    $theme->box($node->title, $node->body);
   }
 }
 
 function page_form(&$node, &$help, &$error) {
-  global $op;
-
-  if ($node->format) {
-    if ($op != t("Preview")) {
-      $node->body = addslashes($node->body);
-    }
-  }
-
   if (function_exists("taxonomy_node_form")) {
     $output .= implode("", taxonomy_node_form("page", $node));
   }
@@ -163,7 +143,7 @@ function page_form(&$node, &$help, &$error) {
   $output .= form_textarea(t("Body"), "body", $node->body, 60, 20);
   $output .= form_textfield(t("Link name"), "link", $node->link, 60, 64, t("To make the page show up in the navigation links, enter the name of the link, otherwise leave blank."));
   $output .= form_textfield(t("Link description"), "description", $node->description, 60, 64, t("The description displayed when hovering over the page's link.  Leave blank when you don't want a description."));
-  $output .= form_select(t("Type"), "format", $node->format, array(0 => "HTML / text", 1 => "PHP"));
+  $output .= form_select(t("Type"), "format", $node->format, array(0 => "HTML", 1 => "PHP"));
 
   return $output;
 }
