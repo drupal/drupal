@@ -1,5 +1,5 @@
 <?php
-// $Id: tablesort.inc,v 1.22 2004/06/20 20:04:26 dries Exp $
+// $Id: tablesort.inc,v 1.23 2004/06/27 16:02:31 dries Exp $
 
 function tablesort_init($header) {
   $ts = tablesort_get_order($header);
@@ -14,12 +14,12 @@ function tablesort_pager() {
   return $cgi;
 }
 
-function tablesort_sql($header) {
+function tablesort_sql($header, $before = "") {
   $ts = tablesort_init($header);
   if ($ts['sql']) {
     $sql = check_query($ts['sql']);
     $sort = strtoupper(check_query($ts['sort']));
-    return " ORDER BY $sql $sort";
+    return " ORDER BY $before $sql $sort";
   }
 }
 

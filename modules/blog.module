@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.178 2004/06/18 15:04:35 dries Exp $
+// $Id: blog.module,v 1.179 2004/06/27 16:02:31 dries Exp $
 
 /**
  * Implementation of hook_settings().
@@ -143,7 +143,7 @@ function blog_page_user($uid) {
   $title = t("%name's blog", array('%name' => $account->name));
   $output = '';
 
-  $result = pager_query("SELECT nid FROM {node} WHERE type = 'blog' AND uid = '$account->uid' AND status = 1 ORDER BY nid DESC", variable_get('default_nodes_main', 10));
+  $result = pager_query("SELECT nid FROM {node} WHERE type = 'blog' AND uid = '$account->uid' AND status = 1 ORDER BY sticky DESC, nid DESC", variable_get('default_nodes_main', 10));
   while ($node = db_fetch_object($result)) {
     $output .= node_view(node_load(array('nid' => $node->nid)), 1);
   }
