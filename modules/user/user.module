@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.257 2003/11/23 10:41:04 dries Exp $
+// $Id: user.module,v 1.258 2003/11/23 14:02:35 dries Exp $
 
 /*** Common functions ******************************************************/
 
@@ -1037,7 +1037,7 @@ function user_page() {
     case "edit":
       $output = user_edit($edit);
       $GLOBALS["theme"] = init_theme();
-      drupal_set_title(t("Edit user information"));
+      drupal_set_title(t("Edit account"));
       print theme("header");
       print $output;
       print theme("footer");

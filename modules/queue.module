@@ -1,5 +1,5 @@
 <?php
-// $Id: queue.module,v 1.95 2003/11/23 10:41:03 dries Exp $
+// $Id: queue.module,v 1.96 2003/11/23 14:02:35 dries Exp $
 
 function queue_help($section) {
   $output = "";
@@ -35,7 +35,7 @@ function queue_perm() {
 function queue_link($type) {
   if ($type == "system") {
     if (user_access("access submission queue")) {
-      menu("queue", t("view submissions"), "queue_page", 1);
+      menu("queue", t("submission queue"), "queue_page", 1);
     }
   }
 
@@ -116,7 +116,7 @@ function queue_overview() {
   }
   $output .= "</table>";
 
-  drupal_set_title(t("Moderation queue"));
+  drupal_set_title(t("Submission queue"));
   print theme("header");
   print $output;
   print theme("footer");
