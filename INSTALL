@@ -60,20 +60,23 @@ INSTALLATION
 
 2. CREATE THE DRUPAL DATABASE
 
-   These instructions are for MySQL if you are using anything else
-   check the database documentation.
+   These instructions are for MySQL.  If you are using another database,
+   check the database documentation.  In the following examples,
+   "dba_user" is an example MySQL user which has the CREATE and GRANT
+   privileges.  You will need to use the appropriate user name for your
+   system.
 
    First, you must create a new database for your Drupal site:
 
-     $ mysqladmin -u root -p create drupal
+     $ mysqladmin -u dba_user -p create drupal
 
-   MySQL will prompt for the root database password and then create
+   MySQL will prompt for the dba_user database password and then create
    the initial database files.  Next you must login and set the access
    database rights:
 
-     $ mysql -u root -p
+     $ mysql -u dba_user -p
 
-   Again, you will be asked for the root database password.  At the
+   Again, you will be asked for the dba_user database password.  At the
    MySQL prompt, enter following command:
 
      GRANT ALL PRIVILEGES ON drupal.*
