@@ -1,5 +1,5 @@
 <?php
-// $Id: xtemplate.theme,v 1.41 2003/12/09 18:55:36 dries Exp $
+// $Id: xtemplate.theme,v 1.42 2003/12/13 18:00:51 dries Exp $
 
 if (!class_exists("XTemplate")) {
   include_once("themes/xtemplate/xtemplate.inc");
@@ -108,7 +108,7 @@ function xtemplate_header() {
   }
 
   if ($message = drupal_get_message()) {
-    $xtemplate->template->assign("message", $message->message);
+    $xtemplate->template->assign("message", ucfirst($message->message));
     $xtemplate->template->assign("type", $message->type);
     $xtemplate->template->parse("header.message");
   }
