@@ -498,7 +498,7 @@ function node_admin_nodes() {
   while ($node = db_fetch_object($result)) {
     $rows[] = array(l(check_output($node->title), array("id" => $node->nid)), module_invoke($node->type, "node", "name"), format_name($node), ($node->status ? t("published") : t("not published")), la(t("edit node"), array("mod" => "node", "op" => "edit", "id" => $node->nid)), la(t("delete node"), array("mod" => "node", "op" => "delete", "id" => $node->nid)));
   }
- 
+
   if ($pager = pager_display(NULL, 50, 0, "admin")) {
     $rows[] = array(array("data" => $pager, "colspan" => 6));
   }
@@ -637,7 +637,7 @@ function node_admin() {
         print node_admin_edit($id);
         break;
       case t("Preview"):
-        $edit = object2array(node_validate($edit, $error));
+        $edit = node_validate($edit, $error);
         print node_preview($edit);
         break;
       case t("Submit"):
@@ -954,72 +954,75 @@ function node_preview($node, $error = NULL) {
 
   $node = array2object($node);
 
-  /*
-  ** Load the user's name when needed:
-  */
+  if (node_access("create", $node) || node_access("update", $node)) {
 
-  if (isset($node->name)) {
     /*
-    ** The use of isset() is mandatory in the context of user IDs as uid
-    ** 0 denotes the anonymous user.
+    ** Load the user's name when needed:
     */
 
-    if ($user = user_load(array("name" => $node->name))) {
-      $node->uid = $user->uid;
+    if (isset($node->name)) {
+      /*
+      ** The use of isset() is mandatory in the context of user IDs as uid
+      ** 0 denotes the anonymous user.
+      */
+
+      if ($user = user_load(array("name" => $node->name))) {
+        $node->uid = $user->uid;
+      }
+      else {
+        $node->uid = 0; // anonymous user
+      }
+    }
+    else if ($node->uid) {
+      $user = user_load(array("uid" => $node->uid));
+      $node->name = $user->name;
+    }
+
+    /*
+    ** Set the created time when needed:
+    */
+
+    if (empty($node->created)) {
+      $node->created = time();
+    }
+
+    /*
+    ** Exctract a teaser:
+    */
+
+    $node->teaser = node_teaser($node->body);
+
+    /*
+    ** Apply the required filters:
+    */
+
+    if ($node->nid) {
+      $view = array2object(array_merge(object2array($node), module_invoke($node->type, "save", "update", $node)));
     }
     else {
-      $node->uid = 0; // anonymous user
+      $view = array2object(array_merge(object2array($node), module_invoke($node->type, "save", "create", $node)));
     }
+
+    /*
+    ** Display a prenode of the node:
+    */
+
+    $view->body = filter($view->body);
+    $view->teaser = filter($view->teaser);
+
+    if ($view->teaser && $view->teaser != $view->body) {
+      print "<h3>". t("Preview trimmed version") ."</h3>";
+      node_view($view, 1);
+      print "<p><i>". t("The trimmed version of your post shows how your post looks like when promoted to the main page or when exported for syndication.  You can insert a delimiter '---' (without the quotes) to fine-tune where your post gets split.  However note that delimiter will be ignored when misplaced.") ."</i></p>";
+      print "<h3>". t("Preview full version") ."</h3>";
+      node_view($view, 0);
+    }
+    else {
+      node_view($view, 0);
+    }
+
+    return node_form($node, $error);
   }
-  else if ($node->uid) {
-    $user = user_load(array("uid" => $node->uid));
-    $node->name = $user->name;
-  }
-
-  /*
-  ** Set the created time when needed:
-  */
-
-  if (empty($node->created)) {
-    $node->created = time();
-  }
-
-  /*
-  ** Exctract a teaser:
-  */
-
-  $node->teaser = node_teaser($node->body);
-
-  /*
-  ** Apply the required filters:
-  */
-
-  if ($node->nid) {
-    $view = array2object(array_merge(object2array($node), module_invoke($node->type, "save", "update", $node)));
-  }
-  else {
-    $view = array2object(array_merge(object2array($node), module_invoke($node->type, "save", "create", $node)));
-  }
-
-  /*
-  ** Display a prenode of the node:
-  */
-
-  $view->body = filter($view->body);
-  $view->teaser = filter($view->teaser);
-
-  if ($view->teaser && $view->teaser != $view->body) {
-    print "<h3>". t("Preview trimmed version") ."</h3>";
-    node_view($view, 1);
-    print "<p><i>". t("The trimmed version of your post shows how your post looks like when promoted to the main page or when exported for syndication.  You can insert a delimiter '---' (without the quotes) to fine-tune where your post gets split.  However note that delimiter will be ignored when misplaced.") ."</i></p>";
-    print "<h3>". t("Preview full version") ."</h3>";
-    node_view($view, 0);
-  }
-  else {
-    node_view($view, 0);
-  }
-
-  return node_form($node, $error);
 }
 
 function node_submit($node) {
@@ -1085,11 +1088,6 @@ function node_submit($node) {
       watchdog("special", "$node->type: updated '$node->title'");
       $output = t("The node has been updated.");
     }
-    else {
-      watchdog("warning", "$node->type: not authorized to update node");
-      $output = t("You are not authorized to update this node.");
-    }
-
   }
   else {
 
@@ -1131,10 +1129,6 @@ function node_submit($node) {
 
       watchdog("special", "$node->type: added '$node->title'");
       $output = t("Thanks for your submission.");
-    }
-    else {
-      watchdog("warning", "$node->type: not authorized to create node");
-      $output = t("You are not authorized to create this node.");
     }
   }
 
@@ -1209,10 +1203,6 @@ function node_delete($edit) {
       $output .= form_submit(t("Delete"));
       $output = form($output);
     }
-  }
-  else {
-    watchdog("warning", "$node->type: not authorized to remove node");
-    $output = t("You are not authorized to remove this node.");
   }
 
   return $output;
