@@ -91,7 +91,7 @@ function filter_filter_tips($delta, $format, $long = false) {
 <p>For more in-depth examples, we recommend that you check the existing Drupal code and use it as a starting point, especially for sidebar boxes.</p>');
       }
 
-    case 3:
+    case 2:
       return t('Lines and paragraphs break automatically.');
       break;
   }
@@ -774,7 +774,7 @@ function theme_filter_tips($tips, $long = false, $extra = '') {
 function filter_filter($op, $delta = 0, $format = -1, $text = '') {
   switch ($op) {
     case 'list':
-      return array(0 => t('HTML filter'), 1 => t('PHP evaluator'), 3 => t('Line break converter'));
+      return array(0 => t('HTML filter'), 1 => t('PHP evaluator'), 2 => t('Line break converter'));
 
     case 'no cache':
       return $delta == 1; // No caching for the PHP evaluator.
@@ -785,7 +785,7 @@ function filter_filter($op, $delta = 0, $format = -1, $text = '') {
           return t('Allows you to restrict if users can post HTML and which tags to filter out.');
         case 1:
           return t('Runs a piece of PHP code. The usage of this filter should be restricted to administrators only!');
-        case 3:
+        case 2:
           return t('Converts line breaks into HTML (i.e. &lt;br&gt; and &lt;p&gt; tags).');
         default:
           return;
@@ -797,7 +797,7 @@ function filter_filter($op, $delta = 0, $format = -1, $text = '') {
           return _filter_html($text, $format);
         case 1:
           return drupal_eval($text);
-        case 3:
+        case 2:
           return _filter_autop($text);
         default:
           return $text;
