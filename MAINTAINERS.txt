@@ -17,7 +17,7 @@ LEGEND
 --------------------------------------------------------------------------------
 
 BLOG API
-M:James Walker <walkah@walkah.net>
+M: James Walker <walkah@walkah.net>
 S: maintained
 
 CODING STYLE CHECKER
@@ -32,16 +32,20 @@ LOCALE MODULE
 M: Gabor Hojtsy <goba@php.net>
 S: maintained
 
+MENU SYSTEM
+M: Jonathan Chaffer <jchaffer@structureinteractive.com>
+S: maintained
+
+PATH MODULE
+M: Matt Westgate <drupal@asitis.org>
+S: maintained
+
 POSTGRES PORT
 M: Adrian Rossouw <adrian@obsidian.co.za>
 S: maintained
 
 STATISTICS MODULE
 M: Jeremy Andrews <jeremy@kerneltrap.com>
-S: maintained
-
-USER SYSTEM
-M: Moshe Weitzman <weitzman@tejasa.com>
 S: maintained
 
 DEBIAN PACKAGE
