@@ -67,7 +67,7 @@ function blog_page_user($name = 0, $date = 0) {
   $name = check_input($name ? $name : $user->userid);
   $date = check_input($date ? $date : time());
 
-  $result = db_query("SELECT n.nid, n.timestamp, b.body FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.id WHERE u.userid = '$name' AND n.timestamp > '". ($date - 2592000) ."' ORDER BY b.lid DESC LIMIT 30");
+  $result = db_query("SELECT n.nid, n.timestamp, b.body FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.id WHERE u.userid = '$name' AND n.timestamp > '". ($date - 2592000) ."' ORDER BY b.lid DESC LIMIT 20");
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\">";
   while ($blog = db_fetch_object($result)) {
@@ -86,15 +86,13 @@ function blog_page_user($name = 0, $date = 0) {
   $output .= "</table>";
   $output .= "<a href=\"module.php?mod=blog&op=feed&name=". urlencode($name) ."\"><img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" /></a>\n";
 
-  $theme->header();
   $theme->box(strtr(t("%a's blog"), array("%a" => $name)), $output, "main");
-  $theme->footer();
 }
 
-function blog_page_last($num = 20) {
+function blog_page_last() {
   global $theme;
 
-  $result = db_query("SELECT n.nid, n.title, n.timestamp, b.body, u.userid FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.id ORDER BY b.lid DESC LIMIT $num");
+  $result = db_query("SELECT n.nid, n.title, n.timestamp, b.body, u.userid FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.id ORDER BY b.lid DESC LIMIT 20");
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\">";
   while ($blog = db_fetch_object($result)) {
@@ -109,9 +107,7 @@ function blog_page_last($num = 20) {
   $output .= "</table>";
   $output .= "<a href=\"module.php?mod=blog&op=feed\"><img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" /></a>\n";
 
-  $theme->header();
   $theme->box(t("User blogs"), $output, "main");
-  $theme->footer();
 }
 
 function blog_remove($nid) {
@@ -210,7 +206,9 @@ function blog_edit_history($nid) {
 }
 
 function blog_page() {
-  global $op, $name, $date;
+  global $theme, $op, $name, $date;
+
+  $theme->header();
 
   if (user_access("access blogs")) {
     switch ($op) {
@@ -232,8 +230,10 @@ function blog_page() {
     }
   }
   else {
-    print message_access();
+    $theme->box(t("Access denied"), message_access());
   }
+
+  $theme->footer();
 }
 
 function blog_user() {
