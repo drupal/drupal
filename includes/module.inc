@@ -3,10 +3,11 @@
 
 // initialize modules:
 function module_init() {
-  // Note: changing this also requires changing system_admin() @ modules/system.module.
+  // Note: changing this also requires changing system_listing() @ modules/system.module.
   require_once "modules/admin.module";
-  require_once "modules/user.module";
+  require_once "modules/filter.module";
   require_once "modules/system.module";
+  require_once "modules/user.module";
   require_once "modules/watchdog.module";
   module_list();
   module_invoke_all("init");
@@ -49,7 +50,7 @@ function module_list($refresh = 0, $bootstrap = 0) {
   }
 
   if (!$list) {
-    $list = array("admin" => "admin", "system" => "system", "user" => "user", "watchdog" => "watchdog");
+    $list = array("admin" => "admin", "filter" => "filter", "system" => "system", "user" => "user", "watchdog" => "watchdog");
     $result = db_query("SELECT name, filename, throttle, bootstrap FROM {system} WHERE type = 'module' AND status = '1' ORDER BY name");
     while ($module = db_fetch_object($result)) {
       if (file_exists($module->filename)) {
