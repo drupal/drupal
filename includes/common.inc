@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.188 2003/04/01 06:05:13 dries Exp $
+// $Id: common.inc,v 1.189 2003/04/03 22:18:27 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST, $PHP_SELF;
@@ -805,7 +805,7 @@ function form_submit($value) {
 }
 
 function form_weight($title = NULL, $name = "weight", $value = 0, $delta = 10, $description = 0, $extra = 0) {
-  for ($n = (-1*$delta); $n <= $delta; $n++) {
+  for ($n = (-1 * $delta); $n <= $delta; $n++) {
     $weights[$n] = $n;
   }
 
