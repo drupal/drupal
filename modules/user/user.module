@@ -320,7 +320,7 @@ function user_block($op = "list", $delta = 0) {
           */
 
           if (empty($edit)) {
-            $edit["destination"] = request_uri();
+            $edit["destination"] = url($_GET["q"]);
           }
           // NOTE: special care needs to be taken because on pages with forms, such as node and comment submission pages, the $edit variable might already be set.
 
@@ -634,7 +634,7 @@ function user_login($edit = array(), $msg = "") {
   */
 
   if (empty($edit)) {
-    $edit["destination"] = request_uri();
+    $edit["destination"] = url($_GET["q"]);
   }
   $output .= form_hidden("destination", $edit["destination"]);
 
@@ -685,7 +685,7 @@ function user_logout() {
   ** Redirect the user to his personal information page:
   */
 
-  drupal_goto("index.php");
+  drupal_goto(url());
 
 }
 
