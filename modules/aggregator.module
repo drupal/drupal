@@ -907,20 +907,20 @@ function _aggregator_page_list($sql, $op, $header = '') {
  */
 function aggregator_page_sources() {
   $result = db_query('SELECT f.fid, f.title, f.description, f.image, MAX(i.timestamp) AS last FROM {aggregator_feed} f LEFT JOIN {aggregator_item} i ON f.fid = i.fid GROUP BY fid');
-  $output = '<div id="aggregator">';
+  $output = "<div id=\"aggregator\">\n";
   while ($feed = db_fetch_object($result)) {
-    $output .= "<h2>$feed->title</h2>";
+    $output .= "<h2>$feed->title</h2>\n";
 
     // Most recent items:
     $list = array();
     if (variable_get('aggregator_summary_items', 3)) {
       $items = db_query_range('SELECT i.title, i.timestamp, i.link FROM {aggregator_item} i WHERE i.fid = %d ORDER BY i.timestamp DESC', $feed->fid, 0, variable_get('aggregator_summary_items', 3));
       while ($item = db_fetch_object($items)) {
-        $list[] = '<a href="'. check_url($item->link) .'">'. $item->title .'</a> <span class="age">'. t('%age old', array('%age' => format_interval(time() - $item->timestamp))) .'</span>';
+        $list[] = theme('aggregator_summary_item', $item);
       }
     }
     $output .= theme('item_list', $list);
-    $output .= '<div class="more-link">'. l(t('more'), 'aggregator/sources/'. $feed->fid) .'</div>';
+    $output .= '<div class="links">'. theme('links', array(l(t('more'), 'aggregator/sources/'. $feed->fid))) ."</div>\n";
   }
   $output .= theme('xml_icon', url('aggregator/opml'));
   $output .= '</div>';
@@ -965,11 +965,11 @@ function aggregator_page_categories() {
       $list = array();
       $items = db_query_range('SELECT i.title, i.timestamp, i.link, f.title as feed_title, f.link as feed_link FROM {aggregator_category_item} ci LEFT JOIN {aggregator_item} i ON i.iid = ci.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE ci.cid = %d ORDER BY i.timestamp DESC', $category->cid, 0, variable_get('aggregator_summary_items', 3));
       while ($item = db_fetch_object($items)) {
-        $list[] = '<a href="'. check_url($item->link) ."\">$item->title</a> <span class=\"age\">". t('%age ago', array('%age' => format_interval(time() - $item->timestamp))) ."</span>, <span class=\"source\"><a href=\"$item->feed_link\">$item->feed_title</a></span>\n";
+        $list[] = theme('aggregator_summary_item', $item);
       }
       $output .= theme('item_list', $list);
     }
-    $output .= '<div class="more-link">'. l(t('more'), 'aggregator/categories/'. $category->cid) .'</div>';
+    $output .= '<div class="links">'. theme('links', array(l(t('more'), 'aggregator/categories/'. $category->cid))) ."</div>\n";
   }
   $output .= '</div>';
 
@@ -1014,9 +1014,24 @@ function theme_aggregator_block_item($item, $feed = 0) {
   }
 
   // external link
-  $output .= "<a href=\"$item->link\">$item->title</a>";
+  $output .= "<a href=\"$item->link\">$item->title</a>\n";
 
   return $output;
+}
+
+/**
+ * Returns a themed item heading for summary pages located at
+ * aggregator/sources and aggregator/categories.
+ *
+ * @param $item The item object from the aggregator module.
+ * @return A string containing the output.
+ */
+function theme_aggregator_summary_item($item) {
+  $output = '<a href="'. check_url($item->link) .'">'. $item->title .'</a> <span class="age">'. t('%age old', array('%age' => format_interval(time() - $item->timestamp))) .'</span>';
+  if ($item->feed_link) {
+    $output .= ', <span class="source"><a href="'. $item->feed_link .'">'. $item->feed_title .'</a></span>';
+  }
+  return $output ."\n";
 }
 
 function theme_aggregator_page_item($item) {
