@@ -108,7 +108,7 @@ function xtemplate_header() {
   }
 
   if ($message = drupal_get_message()) {
-    $xtemplate->template->assign("message", $message->message);
+    $xtemplate->template->assign("message", ucfirst($message->message));
     $xtemplate->template->assign("type", $message->type);
     $xtemplate->template->parse("header.message");
   }
