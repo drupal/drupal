@@ -1,17 +1,17 @@
 <?
 
 class User {
-  function User($userid) {
-    $result = db_query("SELECT * FROM users WHERE userid = '$userid' && STATUS = 2");
-    if (db_num_rows($result) == 1) {
-      foreach (db_fetch_row($result) as $key=>$value) { $field = mysql_field_name($result, $key); $this->$field = stripslashes($value); $this->field[] = $field; }
-    }
-  }
   function User($userid, $passwd) {
     $result = db_query("SELECT * FROM users WHERE LOWER(userid) = LOWER('$userid') && passwd = PASSWORD('$passwd') && STATUS = 2");
     if (db_num_rows($result) == 1) {
       foreach (db_fetch_row($result) as $key=>$value) { $field = mysql_field_name($result, $key); $this->$field = stripslashes($value); $this->field[] = $field; }
       db_query("UPDATE users SET last_access = '". time() ."', last_host = '$GLOBALS[REMOTE_HOST]' WHERE id = $this->id");
+    }
+  }
+  function User($userid) {
+    $result = db_query("SELECT * FROM users WHERE userid = '$userid' && STATUS = 2");
+    if (db_num_rows($result) == 1) {
+      foreach (db_fetch_row($result) as $key=>$value) { $field = mysql_field_name($result, $key); $this->$field = stripslashes($value); $this->field[] = $field; }
     }
   }
 }
