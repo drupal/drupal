@@ -22,16 +22,6 @@
  }
  $output .= "</SELECT>";
 
- ### author:
- $output .= "  <SELECT NAME=\"author\">";
- $result = db_query("SELECT aid FROM authors ORDER BY aid");
- if ($author != "") $output .= " <OPTION VALUE=\"$author\">$author";
- $output .= " <OPTION VALUE=\"\">All authors";
- while(list($authors) = db_fetch_row($result)) {
-   $output .= "   <OPTION VALUE=\"$authors\">$authors";
- }
- $output .= "</SELECT>";
-
  ### order:
  $output .= "<SELECT NAME=\"order\">";
  if ($order == "Oldest first") {
@@ -51,10 +41,8 @@
  $output .= "  <TD>";
    
  ### Compose query:
- $query = "SELECT DISTINCT s.id, s.subject, u.userid, s.timestamp FROM stories s LEFT JOIN users u ON s.author = u.id WHERE s.id != 0 ";
-     // Note: s.sid is a dummy clause used to enforce the WHERE-tag.
+ $query = "SELECT DISTINCT s.id, s.subject, u.userid, s.timestamp FROM stories s LEFT JOIN users u ON s.author = u.id WHERE s.status = 2 ";
  if ($terms != "") $query .= "AND (s.subject LIKE '%$terms%' OR s.abstract LIKE '%$terms%' OR s.comments LIKE '%$terms%') ";
- if ($author != "") $query .= "AND u.userid = '$author' ";
  if ($category != "") $query .= "AND s.category = '$category' ";
  if ($order == "Oldest first") $query .= " ORDER BY s.timestamp ASC";
  else $query .= " ORDER BY s.timestamp DESC";
