@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.261 2003/10/31 19:34:01 dries Exp $
+// $Id: common.inc,v 1.262 2003/11/06 18:27:58 dries Exp $
 
 function conf_init() {
 
@@ -904,6 +904,9 @@ function form($form, $method = "post", $action = 0, $options = 0) {
 
 function form_item($title, $value, $description = 0) {
   return "<div class=\"form-item\">". ($title ? "<div class=\"title\">$title:</div>" : "") . $value . ($description ? "<div class=\"description\">$description</div>" : "") ."</div>\n";
+}
+function form_group($legend, $group, $description = 0) {
+  return "<fieldset>" . ($legend ? "<legend>$legend</legend>" : "") . $group . ($description ? "<div class=\"description\">$description</div>" : "") . "</fieldset>\n";
 }
 
 function form_radio($title, $name, $value = 1, $checked = 0, $description = 0, $attributes = 0) {

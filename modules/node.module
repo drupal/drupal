@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.285 2003/10/31 19:34:02 dries Exp $
+// $Id: node.module,v 1.286 2003/11/06 18:27:58 dries Exp $
 
 function node_help($section = "admin/help#node") {
   global $mod;
@@ -1127,10 +1127,13 @@ function node_form($edit, $error = NULL) {
 
   if (user_access("administer nodes")) {
     $output .= "<div class=\"admin\">";
+
+    $author = form_textfield(t("Authored by"), "name", $edit->name, 20, 60, $error["name"]);
+    $author .= form_textfield(t("Authored on"), "date", $edit->date, 20, 25, $error["date"]);
+
     $output .= "<div class=\"authored\">";
-    $output .= form_textfield(t("Authored by"), "name", $edit->name, 20, 60, $error["name"]);
-    $output .= form_textfield(t("Authored on"), "date", $edit->date, 20, 25, $error["date"]);
-    $output .= "</div>";
+    $output .= form_group(t("Authoring information"), $author);
+    $output .= "</div>\n";
 
     $options .= form_checkbox(t("Published"), "status", 1, isset($edit->status) ? $edit->status : variable_get("node_status_$edit->type", 1));
     $options .= form_checkbox(t("In moderation queue"), "moderate", 1, isset($edit->moderate) ? $edit->moderate : variable_get("node_moderate_$edit->type", 0));
@@ -1139,8 +1142,8 @@ function node_form($edit, $error = NULL) {
     $options .= form_checkbox(t("Create new revision"), "revision", 1, isset($edit->revision) ? $edit->revision : variable_get("node_revision_$edit->type", 0));
 
     $output .= "<div class=\"options\">";
-    $output .= form_item(t("Options"), $options);
-    $output .= "</div>";
+    $output .= form_group("Options", $options);
+    $output .= "</div>\n";
 
     $extras .= implode("</div><div class=\"extra\">", node_invoke_nodeapi($edit, "form admin"));
     $output .= $extras ? "<div class=\"extra\">$extras</div></div>" : "</div>";

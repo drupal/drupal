@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.183 2003/10/31 19:34:02 dries Exp $
+// $Id: comment.module,v 1.184 2003/11/06 18:27:58 dries Exp $
 
 function comment_help($section = "admin/help#comment") {
   $output = "";
@@ -1627,7 +1627,7 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
         $output = form_radio(t("Disabled"), "comment", 0, ($selected == 0));
         $output .= form_radio(t("Read only"), "comment", 1, ($selected == 1));
         $output .= form_radio(t("Read/write"), "comment", 2, ($selected == 2));
-        return form_item(t("Allow user comments"), $output);
+        return form_group(t("User comments"), $output);
       }
       break;
     case "validate":
