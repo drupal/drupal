@@ -84,15 +84,33 @@ function node_array($node) {
 
 function node_load($conditions) {
 
-  // prepare query:
+  /*
+  ** Turn the conditions into a query:
+  */
+
   foreach ($conditions as $key => $value) {
     $cond[] = "n.". check_query($key) ." = '". check_query($value) ."'";
   }
 
-  // retrieve the node:
+  /*
+  ** Retrieve the node:
+  */
+
   $node = db_fetch_object(db_query("SELECT n.*, u.uid, u.name FROM node n LEFT JOIN users u ON u.uid = n.uid LEFT JOIN comments c ON c.lid = n.nid WHERE ". implode(" AND ", $cond)));
 
-  // call the node specific callback (if any):
+  /*
+  ** Unserialize the revisions field:
+  */
+
+  if ($node->revisions) {
+    $node->revisions = unserialize($node->revisions);
+  }
+
+  /*
+  ** Call the node specific callback (if any) and piggy-back to
+  ** results to the node:
+  */
+
   if ($extra = module_invoke($node->type, "load", $node)) {
     foreach ($extra as $key => $value) {
       $node->$key = $value;
@@ -105,7 +123,7 @@ function node_load($conditions) {
 
 function node_save($node, $filter) {
 
-  $fields = array("nid", "uid", "type", "title", "teaser", "body", "status", "comment", "promote", "moderate", "created", "changed");
+  $fields = array("nid", "uid", "type", "title", "teaser", "body", "revisions", "status", "comment", "promote", "moderate", "created", "changed");
 
   foreach ($filter as $key => $value) {
     /*
@@ -115,16 +133,31 @@ function node_save($node, $filter) {
     */
 
     if (is_numeric($key)) {
-      $edit->$value = $node->$value;
+      if (isset($node->$value)) {
+          // The above check is mandatory.
+        $edit->$value = check_query($node->$value);
+      }
     }
     else {
-      $edit->$key = $value;
+      if (isset($value)) {
+          // The above check is mandatory.
+        $edit->$key = check_query($value);
+      }
     }
   }
 
   $node = $edit;
 
+  /*
+  ** Serialize the revisions field:
+  */
+
+  if ($node->revisions) {
+    $node->revisions = serialize($node->revisions);
+  }
+
   if (empty($node->nid)) {
+
     /*
     ** Verify a user's submission rate and avoid duplicate nodes being
     ** inserted:
@@ -143,8 +176,8 @@ function node_save($node, $filter) {
     // prepare the query:
     foreach ($node as $key => $value) {
       if (in_array($key, $fields)) {
-        $k[] = check_query($key);
-        $v[] = "'". check_query($value) ."'";
+        $k[] = $key;
+        $v[] = "'$value'";
       }
     }
 
@@ -168,12 +201,12 @@ function node_save($node, $filter) {
     // prepare the query:
     foreach ($node as $key => $value) {
       if (in_array($key, $fields)) {
-        $q[] = check_query($key) ." = '". check_query($value) ."'";
+        $q[] = "$key = '$value'";
       }
     }
 
     // update the node in the database:
-    db_query("UPDATE node SET ". implode(", ", $q) ." WHERE nid = '". check_query($node->nid) ."'");
+    db_query("UPDATE node SET ". implode(", ", $q) ." WHERE nid = '$node->nid'");
 
     // call the node specific callback (if any):
     module_invoke($node->type, "update", $node);
@@ -187,23 +220,6 @@ function node_save($node, $filter) {
 
   return $node->nid;
 
-}
-
-function node_delete($node) {
-
-  if (is_array($node)) {
-    $node = node_object($node);
-  }
-
-  // delete the node and its comments:
-  db_query("DELETE FROM node WHERE nid = '$node->nid'");
-  db_query("DELETE FROM comments WHERE lid = '$node->nid'");
-  db_query("DELETE FROM moderate WHERE nid = '$node->nid'");
-
-  // call the node specific callback (if any):
-  module_invoke($node->type, "delete", &$node);
-
-  watchdog("special", "node: deleted '$node->title'");
 }
 
 function node_view($node, $main = 0) {

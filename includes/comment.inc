@@ -1,12 +1,6 @@
 <?php
 // $Id$
 
-// Security check:
-if (strstr($id, " ") || strstr($pid, " ") || strstr($lid, " ") || strstr($mode, " ") || strstr($order, " ") || strstr($threshold, " ")) {
-  watchdog("error", "comment: attempt to provide malicious input through URI");
-  exit();
-}
-
 $cmodes = array(1 => "List - min", 2 => "List - max", 3 => "Threaded - min", 4 => "Threaded - max");
 $corder = array(1 => "Date - new", 2 => "Date - old", 3 => "Rate - high", 4 => "Rate - low");
 

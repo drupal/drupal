@@ -1,6 +1,14 @@
 <?php
 // $Id$
 
+function blog_conf_options() {
+ $output .= form_textarea("Explanation or submission guidelines", "blog_help", variable_get("blog_help", ""), 55, 4, "This text will be displayed at the top of the blog submission form.  Useful for helping or instructing your users.");
+ $output .= form_select(t("Minimum number of words in a node"), "minimum_blog_size", variable_get("minimum_node_size", 0), array(0 => "0 words", 10 => "10 words", 25 => "25 words",  50 => "50 words", 75 => "75 words", 100 => "100 words", 125 => "125 words",  150 => "150 words", 175 => "175 words", 200 => "200 words"), t("The minimum number of words a personal blog entry should consist of.  This can be useful to rule out submissions that do not meet the site's standards, such as short test post."));
+
+ return $output;
+
+}
+
 function blog_node($field) {
   global $user;
 
@@ -13,7 +21,7 @@ function blog_access($op, $node) {
   global $user;
 
   if ($op == "view") {
-    return $node->nid && $node->status && !$node->moderate;
+    return ($node->nid && $node->status && !$node->moderate);
   }
 
   if ($op == "create") {
@@ -21,11 +29,11 @@ function blog_access($op, $node) {
   }
 
   if ($op == "update") {
-    return user_access("administer nodes") || ($user->uid == $node->uid);
+    return ($user->uid == $node->uid);
   }
 
   if ($op == "delete") {
-    return user_access("administer nodes") || ($user->uid == $node->uid);
+    return ($user->uid == $node->uid);
   }
 
 }
@@ -34,10 +42,6 @@ function blog_help() {
  ?>
   <p>Drupal's blog module allows registered users to maintain an online blog or diary.  It provides easy-to-write and easy-to-read online diaries or journals that can be filled with daily thoughts, poetry, boneless blabber, spiritual theories, intimate details, valuable experiences, cynical rants, semi-coherent comments, writing experiments, artistic babblings, critics on current facts, fresh insights, diverse dreams, chronicles and mumbling madness available for public consumption.</p>
  <?php
-}
-
-function blog_perm() {
-  return array("administer blogs", "access blogs", "post blogs");
 }
 
 function blog_feed_user($uid = 0, $date = 0) {
@@ -122,7 +126,7 @@ function blog_page_user($uid = 0, $date = 0) {
       $links[] = "<a href=\"module.php?mod=node&op=edit&id=$blog->nid\">". t("edit") ."</a>";
     }
 
-    if ($user->uid && user_access("post blogs")) {
+    if ($user->uid) {
       $links[] = "<a href=\"module.php?mod=node&op=add&type=blog&nid=$blog->nid\">". t("blog it") ."</a>";
     }
 
@@ -159,7 +163,7 @@ function blog_page_last() {
       $links[] = "<a href=\"module.php?mod=node&op=edit&id=$blog->nid\">". t("edit") ."</a>";
     }
 
-    if ($user->uid && user_access("post blogs")) {
+    if ($user->uid) {
       $links[] = "<a href=\"module.php?mod=node&op=add&type=blog&nid=$blog->nid\">". t("blog it") ."</a>";
     }
 
@@ -178,15 +182,33 @@ function blog_page_last() {
   $theme->box(t("User blogs"), $output, "main");
 }
 
-function blog_form($node, $error) {
+function blog_form($node, $help, $error) {
   global $nid, $iid;
 
-  if ($node->body) {
-    if (count(explode(" ", $node->body)) < variable_get("minimum_node_size", 0)) {
+
+  if (isset($node->body)) {
+
+    /*
+    ** Validate the size of the blog:
+    */
+
+    if (count(explode(" ", $node->body)) < variable_get("minimum_blog_size", 0)) {
       $error["body"] = "<div style=\"color: red;\">". t("The body of your blog is too short.") ."</div>";
     }
   }
   else {
+
+    /*
+    ** Carry out some explanation or submission guidelines:
+    */
+
+    $help = variable_get("blog_help", "");
+
+    /*
+    ** If the user clicked a "blog it" link, we load the data from the
+    ** database and quote it in the blog:
+    */
+
     if ($nid && $blog = node_load(array("nid" => $nid))) {
       $node->body = "<i>". $blog->body ."</i> [<a href=\"module.php?mod=blog&id=$blog->uid&date=$blog->created\">$blog->name</a>]";
     }
@@ -215,7 +237,7 @@ function blog_save($node) {
 function blog_page() {
   global $theme, $id, $op, $date;
 
-  if (user_access("access blogs")) {
+  if (user_access("access content")) {
     switch ($op) {
       case "feed":
         if ($id) {
@@ -247,11 +269,11 @@ function blog_page() {
 function blog_link($type, $node = 0) {
   global $user;
 
-  if ($type == "page" && user_access("access blogs")) {
+  if ($type == "page" && user_access("access content")) {
     $links[] = "<a href=\"module.php?mod=blog\">". t("user blogs") ."</a>";
   }
 
-  if ($type == "menu" && user_access("post blogs")) {
+  if ($type == "menu") {
     $links[] = "<a href=\"module.php?mod=node&op=add&type=blog\">". t("add blog entry") ."</a>";
     $links[] = "<a href=\"module.php?mod=blog&op=view&id=$user->uid\">". t("view your blog") ."</a>";
   }

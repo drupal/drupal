@@ -8,12 +8,9 @@ function forum_node($field) {
 }
 
 function forum_access($op, $node) {
-
   if ($op == "view") {
-    return $node->nid && $node->status && !$node->moderate;
+    return ($node->nid && $node->status && !$node->moderate);
   }
-
-  return user_access("adminster nodes");
 }
 
 function forum_link($type) {
@@ -30,15 +27,13 @@ function forum_view($node) {
   $theme->box(t("Discussion forum"), $output);
 }
 
-function forum_form($node, $error) {
-
+function forum_form($node, $help, $error) {
   $output .= form_textarea("Body", "body", $node->body, 60, 10);
 
   return $output;
 }
 
 function forum_save() {
-
   if ($node->nid) {
     return array();
   }
@@ -63,13 +58,13 @@ function forum_page() {
   if (user_access("access content")) {
     $result = db_query("SELECT nid FROM node WHERE type = 'forum' ORDER BY title");
 
-    $output .= "<TABLE BORDER=\"0\" CELLSPACING=\"4\" CELLPADDING=\"4\">\n";
-    $output .= " <TR><TH>". t("Forum") ."</TH><TH>". t("Comments") ."</TH><TH>". t("Last comment") ."</TH></TR>";
+    $output .= "<table border=\"0\" cellspacing=\"4\" cellpadding=\"4\">";
+    $output .= " <tr><th>". t("Forum") ."</th><th>". t("Comments") ."</th><th>". t("Last comment") ."</th></tr>";
     while ($node = db_fetch_object($result)) {
       $node = node_load(array("nid" => $node->nid));
-      $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A><BR><SMALL>". check_output($node->body, 1) ."</SMALL></TD><TD ALIGN=\"center\">". forum_num_comments($node->nid) ."</TD><TD ALIGN=\"center\">". forum_last_comment($node->nid) ."</TD></TR>";
+      $output .= " <tr><td><a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a><br /><small>". check_output($node->body, 1) ."</small></td><td align=\"center\">". forum_num_comments($node->nid) ."</td><td align=\"center\">". forum_last_comment($node->nid) ."</td></tr>";
     }
-    $output .= "</TABLE>\n";
+    $output .= "</table>";
 
     $theme->header();
     $theme->box(t("Discussion forum"), $output);

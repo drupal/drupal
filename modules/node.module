@@ -16,25 +16,31 @@ function node_help() {
 
 function node_access($op, $node = 0) {
 
-  /*
-  ** Convert the node to an object if necessary:
-  */
-
-  if (is_array($node)) {
-    $node = node_object($node);
-  }
-
-  /*
-  ** Construct a function:
-  */
-
-  $function = $node->type ."_access";
-
-  if (function_exists($function)) {
-    return $function($op, $node);
+  if (user_access("administer nodes")) {
+    return 1;
   }
   else {
-    return 0;
+
+    /*
+    ** Convert the node to an object if necessary:
+    */
+
+    if (is_array($node)) {
+      $node = node_object($node);
+    }
+
+    /*
+    ** Construct a function:
+    */
+
+    $function = $node->type ."_access";
+
+    if (function_exists($function)) {
+      return $function($op, $node);
+    }
+    else {
+      return 0;
+    }
   }
 }
 
@@ -56,7 +62,6 @@ function node_search($keys) {
 function node_conf_options() {
 
   $output .= form_select(t("Default number of nodes to display"), "default_nodes_main", variable_get("default_nodes_main", 10), array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 =>  5, 6 => 6, 7 => 7, 8 => 8, 9 => 9, 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30), t("The default maximum number of nodes to display on the main page."));
-  $output .= form_select(t("Minimum number of words in a node"), "minimum_node_size", variable_get("minimum_node_size", 0), array(0 => "0 words", 10 => "10 words", 25 => "25 words",  50 => "50 words", 75 => "75 words", 100 => "100 words", 125 => "125 words",  150 => "150 words", 175 => "175 words", 200 => "200 words"), t("The minimum number of words a node should have.  This can be useful to stop test post."));
 
   return $output;
 }
@@ -129,7 +134,9 @@ function node_admin_settings($edit = array()) {
     ** Save the configuration options:
     */
 
-    foreach ($edit as $name => $value) variable_set($name, $value);
+    foreach ($edit as $name => $value) {
+      variable_set($name, $value);
+    }
   }
 
   if ($op == t("Reset to defaults")) {
@@ -137,10 +144,21 @@ function node_admin_settings($edit = array()) {
     ** Reset the configuration options to their default value:
     */
 
-    foreach ($edit as $name=>$value) variable_del($name);
+    foreach ($edit as $name=>$value) {
+      variable_del($name);
+    }
   }
 
+  $output .= "<h3>". t("Global node settings") ."</h3>";
   $output .= node_conf_options();
+
+  foreach (module_list() as $name) {
+    if (module_hook($name, "conf_options") && module_hook($name, "node")) {
+      $output .= "<h3>". t(ucfirst(module_invoke($name, "node", "name")) ." settings") ."</h3>";
+      $output .= module_invoke($name, "conf_options");
+    }
+  }
+
   $output .= form_submit(t("Save configuration"));
   $output .= form_submit(t("Reset to defaults"));
 
@@ -150,7 +168,7 @@ function node_admin_settings($edit = array()) {
 function node_admin_edit($node) {
 
   if (is_numeric($node)) {
-    $node = node_array(node_load(array("nid" => $node)));
+    $node = node_load(array("nid" => $node));
   }
 
   /*
@@ -162,6 +180,20 @@ function node_admin_edit($node) {
   $output .= node_form($node);
 
   /*
+  ** Edit revisions:
+  */
+
+  if ($node->revisions) {
+    $output .= "<h3>". t("Edit revisions") ."</h3>";
+    $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
+    $output .= " <tr><th>older revisions</th><th colspan=\"3\">operations</th></tr>";
+    foreach ($node->revisions as $key => $revision) {
+      $output .= " <tr><td>". sprintf(t("revision #%d by %s on %s"), $key, format_name(user_load(array("uid" => $revision["uid"]))), format_date($revision["timestamp"])) ."</td><td><a href=\"node.php?id=$node->nid&revision=$key\">". t("view revision") ."</a></td><td><a href=\"admin.php?mod=node&op=rollback+revision&id=$node->nid&revision=$key\">". t("rollback revision") ."</a></td><td><a href=\"admin.php?mod=node&op=delete+revision&id=$node->nid&revision=$key\">". t("delete revision") ."</a></td></tr>";
+    }
+    $output .= "</table>";
+  }
+
+  /*
   ** Edit comments:
   */
 
@@ -169,9 +201,12 @@ function node_admin_edit($node) {
 
   $result = db_query("SELECT c.cid, c.subject, u.uid, u.name FROM comments c LEFT JOIN users u ON u.uid = c.uid WHERE lid = '". $node["nid"] ."' ORDER BY c.timestamp");
 
+  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
+  $output .= " <tr><th>title</th><th>author</th><th colspan=\"3\">operations</th></tr>";
   while ($comment = db_fetch_object($result)) {
-    $output .= "<a href=\"admin.php?mod=comment&op=edit&id=$comment->cid\">$comment->subject</a> by ". format_name($comment) ."<br />";
+    $output .= "<tr><td><a href=\"node.php?id=$node->nid&cid=$comment->cid#$comment->cid\">$comment->subject</a></td><td>". format_name($comment) ."</td><td><a href=\"node.php?id=$node->nid&cid=$comment->cid#$comment->cid\">". t("view comment") ."</a></td><td><a href=\"admin.php?mod=comment&op=edit&id=$comment->cid\">". t("edit comment") ."</a></td><td><a href=\"admin.php?mod=comment&op=delete&id=$comment->cid\">". t("delete comment") ."</a></td></tr>";
   }
+  $output .= "</table>";
 
   return $output;
 
@@ -200,8 +235,74 @@ function node_admin_nodes() {
   return $output;
 }
 
+function node_revision_create($node) {
+  global $user;
+
+  if ($node->nid && $node->revision) {
+    $no = node_load(array("nid" => $node->nid));
+    $node->revisions = $no->revisions;
+    unset($no->revisions);
+    $node->revisions[] = array("uid" => $user->uid, "timestamp" => time(), "node" => $no);
+  }
+
+  return $node;
+}
+
+function node_revision_rollback($nid, $revision) {
+  global $user;
+
+  /*
+  ** Load the original/current node:
+  */
+
+  $node = node_load(array("nid" => $nid));
+
+  /*
+  ** Extract the specified revision:
+  */
+
+  $rev = $node->revisions[$revision]["node"];
+
+  /*
+  ** Inherit all the past revisions:
+  */
+
+  $rev->revisions = $node->revisions;
+
+  /*
+  ** Save the original/current node:
+  */
+
+  $rev->revisions[] = array("uid" => $user->uid, "timestamp" => time(), "node" => $node);
+
+  /*
+  ** Remove the specified revision:
+  */
+
+  unset($rev->revisions[$revision]);
+
+  /*
+  ** Save the node:
+  */
+
+  foreach ($node as $key => $value) {
+    $filter[] = $key;
+  }
+
+  node_save($rev, $filter);
+
+  watchdog("message", "node: rolled-back '$node->title'");
+}
+
+function node_revision_delete($nid, $revision) {
+  $node = node_load(array("nid" => $nid));
+
+  unset($node->revisions[$revision]);
+  node_save($node, array("nid", "revisions"));
+}
+
 function node_admin() {
-  global $op, $id, $edit;
+  global $op, $id, $revision, $edit;
 
   if (user_access("administer nodes")) {
 
@@ -231,6 +332,12 @@ function node_admin() {
       case "edit":
         print node_admin_edit($id);
         break;
+      case "rollback revision":
+        print node_revision_rollback($id, $revision);
+        break;
+      case "delete revision":
+        print node_revision_delete($id, $revision);
+        break;
       case t("Preview"):
         print node_preview($edit);
         break;
@@ -239,7 +346,7 @@ function node_admin() {
         print node_admin_nodes();
         break;
       case t("Delete"):
-        print node_remove($edit);
+        print node_delete($edit);
         break;
       default:
         print node_admin_nodes();
@@ -285,7 +392,7 @@ function node_feed() {
 }
 
 
-function node_validate($node, $error) {
+function node_validate($node, $error = array()) {
 
   global $user;
 
@@ -299,7 +406,7 @@ function node_validate($node, $error) {
   ** Validate the title field:
   */
 
-  if (($node->nid || $node->body) && !$node->title) {
+  if (isset($node->title) && $node->title == "") {
     $error["title"] = "<div style=\"color: red;\">". t("You have to specify a valid title.") ."</div>";
   }
 
@@ -356,11 +463,33 @@ function node_validate($node, $error) {
   return $node;
 }
 
+
 function node_form($edit) {
+
+  /*
+  ** Validate the node:
+  */
 
   $edit = node_validate($edit, &$error);
 
+  /*
+  ** Get the node specific bits:
+  */
+
+  $function = $edit->type ."_form";
+  if (function_exists($function)) {
+    $form .= $function(&$edit, &$help, &$error);
+  }
+
   $output .= "<div style=\"margin-right: 40px; float: left;\">";
+
+  /*
+  ** Add the help text:
+  */
+
+  if ($help) {
+    $output .= "<p>$help</p>";
+  }
 
   /*
   ** Add the default fields:
@@ -377,13 +506,10 @@ function node_form($edit) {
   }
 
   /*
-  ** Add the node specific parts:
+  ** Add the node specific fields:
   */
 
-  $function = $edit->type ."_form";
-  if (function_exists($function)) {
-    $output .= $function($edit, &$error);
-  }
+  $output .= $form;
 
   /*
   ** Add the hidden fields:
@@ -428,9 +554,10 @@ function node_form($edit) {
     $output .= form_textfield(t("Authored by"), "name", $edit->name, 20, 25, $error["name"]);
     $output .= form_textfield(t("Authored on"), "date", $edit->date, 20, 25, $error["date"]);
     $output .= "<br />";
-    $output .= form_select(t("Current status"), "status", $edit->status, array("Disabled", "Enabled"));
-    $output .= form_select(t("User comments"), "comment", $edit->comment, array("Disabled", "Enabled"));
-    $output .= form_select(t("Node location"), "promote", $edit->promote, array("Default", "Front page"));
+    $output .= form_select(t("Set public/published"), "status", $edit->status, array("Disabled", "Enabled"));
+    $output .= form_select(t("Allow users comments"), "comment", $edit->comment, array("Disabled", "Enabled"));
+    $output .= form_select(t("Promote to front page"), "promote", $edit->promote, array("Disabled", "Enabled"));
+    $output .= form_select(t("Create new revision"), "revision", $edit->revision, array("Disabled", "Enabled"));
     $output .= "</div>";
   }
 
@@ -515,6 +642,14 @@ function node_submit($node) {
 
   $node = node_validate($node);
 
+  /*
+  ** Create a new revision when required:
+  */
+
+  if ($node->revision) {
+    $node = node_revision_create($node);
+  }
+
   if ($node->nid) {
 
     /*
@@ -530,7 +665,7 @@ function node_submit($node) {
       */
 
       if (user_access("administer nodes")) {
-        $fields = array("nid", "uid", "body", "comment", "promote", "moderate", "status", "teaser", "title", "created", "type" => $node->type);
+        $fields = array("nid", "uid", "body", "comment", "created", "promote", "moderate", "revisions", "status", "teaser", "title", "type" => $node->type);
       }
       else {
         $fields = array("nid", "uid" => $user->uid, "body", "teaser", "title", "type" => $node->type);
@@ -580,18 +715,32 @@ function node_submit($node) {
   return $output;
 }
 
-function node_remove($edit) {
+function node_delete($edit) {
 
   $node = node_load(array("nid" => $edit["nid"]));
 
   if (node_access("delete", $node)) {
-    if ($edit["confirm"]) {
-      node_delete($node);
 
+    if ($edit["confirm"]) {
+
+      /*
+      ** Delete the specified node and its comments:
+      */
+
+      db_query("DELETE FROM node WHERE nid = '$node->nid'");
+      db_query("DELETE FROM comments WHERE lid = '$node->nid'");
+
+      /*
+      ** Call the node specific callback (if any):
+      */
+
+      module_invoke($node->type, "delete", &$node);
+
+      watchdog("special", "node: deleted '$node->title'");
       $output = t("The node has been deleted.");
     }
     else {
-      $output .= form_item(t("Confirm removal of"), check_output($node->title));
+      $output .= form_item(t("Confirm deletion"), check_output($node->title));
       $output .= form_hidden("nid", $node->nid);
       $output .= form_hidden("confirm", 1);
       $output .= form_submit(t("Delete"));
@@ -630,10 +779,10 @@ function node_page() {
       $theme->box(t("Node"), node_submit($edit));
       break;
     case t("Delete"):
-      print node_remove($edit);
+      print node_delete($edit);
       break;
     default:
-      $result = db_query("SELECT nid, type FROM node WHERE ". ($meta ? "attributes LIKE '%". check_input($meta) ."%' AND " : "") ." promote = '1' AND status = '1' AND created <= '". ($date > 0 ? check_input($date) : time()) ."' ORDER BY created DESC LIMIT ". ($user->nodes ? $user->nodes : variable_get(default_nodes_main, 10)));
+      $result = db_query("SELECT nid, type FROM node WHERE ". ($meta ? "attributes LIKE '%". check_input($meta) ."%' AND " : "") ." promote = '1' AND status = '1' AND created <= '". ($date > 0 ? check_input($date) : time()) ."' ORDER BY created DESC LIMIT ". ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
       while ($node = db_fetch_object($result)) {
         node_view(node_load(array("nid" => $node->nid, "type" => $node->type)), 1);
       }

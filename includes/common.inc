@@ -279,7 +279,11 @@ function form($form, $method = "post", $action = 0, $options = 0) {
 }
 
 function form_item($title, $value, $description = 0) {
-  return ($description) ? "<b>$title:</b><br />$value<br /><small><i>$description</i></small><p />\n" : "<b>$title:</b><br />$value<p />\n";
+  return ($title ? "<b>$title:</b><br />" : "") . $value . ($description ? "<br /><small><i>$description</i></small>" : "") ."<p />\n";
+}
+
+function form_checkbox($title, $name, $value, $description = 0) {
+  return form_item(0, "<input type=\"checkbox\" name=\"edit[$name]\" ". ($value ? " checked=\"checked\"" : "") ." /> $title", $description);
 }
 
 function form_textfield($title, $name, $value, $size, $maxlength, $description = 0) {

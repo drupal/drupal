@@ -10,10 +10,9 @@ function book_node($field) {
 }
 
 function book_access($op, $node) {
-  global $user;
 
   if ($op == "view") {
-    return $node->nid && $node->status && !$node->moderate;
+    return ($node->nid && $node->status && !$node->moderate);
   }
 
   if  ($op == "create") {
@@ -22,10 +21,6 @@ function book_access($op, $node) {
 
   if ($op == "update") {
     return 1;
-  }
-
-  if ($op == "delete") {
-    return user_access("adminster nodes");
   }
 
 }
@@ -155,7 +150,7 @@ function book_toc($parent = "", $indent = "", $toc = array()) {
   return $toc;
 }
 
-function book_form($node, $error) {
+function book_form($node, $help, $error) {
   global $user;
 
   $output .= form_select(t("Parent"), "parent", $node->parent, book_toc(), t("The parent subject or category the page belongs in."));
