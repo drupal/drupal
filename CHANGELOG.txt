@@ -7,6 +7,10 @@ Drupal x.x.x, xxxx-xx-xx
     * added UTF-8 support to make it work with all languages.
     * improved search indexing.
     * improved search output.
+- syndication:
+    * added support for RSS ping-notifications of http://technorati.com/.
+- performance:
+    * improved performance of the tracker module.
 
 Drupal 4.5.0, 2004-10-18
 ------------------------
