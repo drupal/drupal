@@ -1,6 +1,7 @@
 Drupal x.x.x, xxxx-xx-xx
 ------------------------
 
+- added support for the MetaWeblog API and MoveableType extensions.
 - theme system:
     * made all theme functions start with 'theme_'.
     * made all theme functions return their output.
@@ -103,7 +104,7 @@ Drupal 4.0.0, 2002-06-15
     * speeds up pages for anonymous users and reduces system load.
 - added support for external SMTP libraries.
 - added an archive extension to the calendar.
-- added blogger API support.
+- added support for the Blogger API.
 - themes:
     * cleaned up the theme system.
     * moved themes that are not maintained to contributions CVS repository.
