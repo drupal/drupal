@@ -291,7 +291,7 @@ function import_refresh($feed) {
   */
 
   if (!ereg("^http://|ftp://", $feed["url"])) {
-    return t("failed to parse RSS feed '%site': incorrect or missing URL.", array("%side" => $feed["title"]));
+    return t("failed to parse RSS feed '%site': incorrect or missing URL.", array("%site" => $feed["title"]));
   }
 
   /*
@@ -306,7 +306,9 @@ function import_refresh($feed) {
     fclose($fp);
 
     // filter the input data:
-    xss_check_input_data($data);
+    if (!valid_input_data($data)) {
+      return t("failed to parse RSS feed '%site': suspicious input data.", array("%site" => $feed["title"]));
+    }
 
     // parse the data:
     $xml_parser = xml_parser_create();

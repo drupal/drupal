@@ -482,7 +482,7 @@ function referer_load() {
   }
 }
 
-function xss_check_input_data($data) {
+function valid_input_data($data) {
 
   if (is_array($data)) {
     /*
@@ -490,7 +490,9 @@ function xss_check_input_data($data) {
     */
 
     foreach ($data as $key => $value) {
-      xss_check_input_data($value);
+      if (!valid_input_data($value)) {
+        return 0;
+      }
     }
   }
   else {
@@ -512,9 +514,11 @@ function xss_check_input_data($data) {
 
     if ($match) {
       watchdog("warning", "terminated request because of suspicious input data: ". drupal_specialchars($data));
-      die("terminated request because of suspicious input data");
+      return 0;
     }
   }
+
+  return 1;
 }
 
 function check_url($uri) {
@@ -1049,7 +1053,9 @@ function drupal_page_header() {
   */
 
   if (!user_access("bypass input data check")) {
-    xss_check_input_data($_REQUEST);
+    if (!valid_input_data($_REQUEST)) {
+      die("terminated request because of suspicious input data");
+    }
   }
 }
 
