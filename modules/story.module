@@ -1,5 +1,5 @@
 <?php
-// $Id: story.module,v 1.89 2001/12/06 17:33:05 dries Exp $
+// $Id: story.module,v 1.90 2001/12/08 13:11:33 dries Exp $
 
 function story_conf_options() {
  $output .= form_textarea("Explanation or submission guidelines", "story_help", variable_get("story_help", ""), 55, 4, "This text will be displayed at the top of the story submission form.  Useful for helping or instructing your users.");
@@ -32,17 +32,12 @@ function story_save($op, $node) {
   }
 
   if ($op == "create") {
-    return array("moderate" => 1);
+    return array("body" => filter($node->body), "moderate" => 1);
   }
 
   if ($op == "decline") {
     return array("status" => 0, "promote" => 0);
   }
-
-  if ($op == "update") {
-    return array("status");
-  }
-
 }
 
 function story_help() {
