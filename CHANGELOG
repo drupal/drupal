@@ -12,10 +12,15 @@ drupal 1.xx, xx/xx/2001
 - added "user ratings" similar to SlashCode's karma or Scoop's mojo.
 - added "search infractructure":
     * improved search page and integrated search functionality in the administration pages.
-- changed the "open submission queue" into an optional module
+- added translation / localization / internationalization support:
+    * because many people love see their website showing a lot less of English, and far more of their own language, drupal provides a framework to setup a multi-lingual website or to overwrite the default English text in English.
+- changed the "open submission queue" into a (optional) module
 - various updates:
-    * improved cron-module
-    * improved module-module
+    * improved block module
+    * improved cron module
+    * improved diary module
+    * improved headline module
+    * improved module module
 - revised documentation
 
 drupal 1.00, 15/01/2001
