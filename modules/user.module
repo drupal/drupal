@@ -412,11 +412,10 @@ function user_block($op = "list", $delta = 0) {
                 $items[] = format_name(user_load(array("uid" => $uid->uid)));
               }
 
-              if (db_fetch_object($users)) {
-                $items[] = "...";
-              }
-
               if ($items) {
+                if (db_fetch_object($users)) {
+                  $items[] = "...";
+                }
                 $output .= theme("item_list", $items, t("Online users:"));
               }
             }
