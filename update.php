@@ -480,17 +480,14 @@ function update_upgrade3() {
   update_sql("INSERT INTO system VALUES ('archive.module','archive','module','',1);");
   update_sql("INSERT INTO system VALUES ('block.module','block','module','',1);");
   update_sql("INSERT INTO system VALUES ('blog.module','blog','module','',1);");
-  update_sql("INSERT INTO system VALUES ('bloggerapi.module','bloggerapi','module','',1);");
   update_sql("INSERT INTO system VALUES ('book.module','book','module','',1);");
   update_sql("INSERT INTO system VALUES ('cloud.module','cloud','module','',1);");
   update_sql("INSERT INTO system VALUES ('comment.module','comment','module','',1);");
   update_sql("INSERT INTO system VALUES ('forum.module','forum','module','',1);");
   update_sql("INSERT INTO system VALUES ('help.module','help','module','',1);");
   update_sql("INSERT INTO system VALUES ('import.module','import','module','',1);");
-  update_sql("INSERT INTO system VALUES ('jabber.module','jabber','module','',1);");
   update_sql("INSERT INTO system VALUES ('locale.module','locale','module','',1);");
   update_sql("INSERT INTO system VALUES ('node.module','node','module','',1);");
-  update_sql("INSERT INTO system VALUES ('notify.module','notify','module','',1);");
   update_sql("INSERT INTO system VALUES ('page.module','page','module','',1);");
   update_sql("INSERT INTO system VALUES ('poll.module','poll','module','',1);");
   update_sql("INSERT INTO system VALUES ('queue.module','queue','module','',1);");
@@ -504,7 +501,6 @@ function update_upgrade3() {
   update_sql("INSERT INTO system VALUES ('themes/marvin/marvin.theme','marvin','theme','Internet explorer, Netscape, Opera',1);");
   update_sql("INSERT INTO system VALUES ('themes/unconed/unconed.theme','unconed','theme','Internet explorer, Netscape, Opera',1);");
   update_sql("INSERT INTO system VALUES ('tracker.module','tracker','module','',1);");
-  update_sql("INSERT INTO system VALUES ('weblogs.module','weblogs','module','',1);");
   update_sql("REPLACE variable SET value = 'marvin', name = 'theme_default';");
   update_sql("REPLACE blocks SET name = 'User information', module = 'user', delta = '0', status = '1';");
   update_sql("REPLACE blocks SET name = 'Log in', module = 'user', delta = '1', status = '1';");
