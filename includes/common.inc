@@ -789,7 +789,9 @@ function format_interval($timestamp, $granularity = 2) {
  *   The format to use. Can be "small", "medium" or "large" for the preconfigured
  *   date formats. If "custom" is specified, then $format is required as well.
  * @param $format
- *   A PHP date format string as required by date().
+ *   A PHP date format string as required by date(). A backslash should be used
+ *   before a character to avoid interpreting the character as part of a date
+ *   format.
  * @param $timezone
  *   Time zone offset in seconds; if omitted, the user's time zone is used.
  * @return
@@ -841,6 +843,9 @@ function format_date($timestamp, $type = 'medium', $format = '', $timezone = NUL
     }
     else if ($c == 'Z') {
       $date .= $timezone;
+    }
+    else if ($c == '\\') {
+      $date .= $format[++$i];
     }
     else {
       $date .= $c;
