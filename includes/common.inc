@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.198 2003/05/19 18:26:49 dries Exp $
+// $Id: common.inc,v 1.199 2003/05/20 04:41:36 dries Exp $
 
 function conf_init() {
 
@@ -98,13 +98,16 @@ function object2array($node) {
 }
 
 function request_uri() {
-  // since request_uri() is only available on apache, we generate equivalent using other environment vars.
+  /*
+  ** Since request_uri() is only available on Apache, we generate
+  ** equivalent using other environment vars.
+  */
 
   if (isset($_SERVER["REQUEST_URI"])) {
     return $_SERVER["REQUEST_URI"];
   }
   else {
-    return $_SERVER["PATH_INFO"] ."?". $_SERVER["QUERY_STRING"];
+    return $_SERVER["PHP_SELF"] ."?". $_SERVER["QUERY_STRING"];
   }
 }
 
