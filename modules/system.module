@@ -2,13 +2,13 @@
 
 function system_help() {
  ?>
-  <P>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviors including visual and operational settings.</P>
-  <H3>Cron</H3>
-  <P>Some settings require a <I>cron</I> or <I>crontab</I>.  Cron (which stands for chronograph) is a periodic command scheduler: it executes commands at intervals specified in seconds.  It can be used to control the execution of daily, weekly and monthly jobs (or anything with a period of <i>n</i> seconds).   Automating tasks is one of the best ways to keep a system running smoothly, and if most of your administration does not require your direct involvement, cron is an ideal solution.</P>
-  <P>Whenever <A HREF="<?php echo path_uri(); ?>cron.php"><?php echo path_uri(); ?>cron.php</A> is accessed, cron will run: it checks for the jobs cron controls, and their periods in seconds.  If a certain task wasn't executed in the last n seconds, where n is the period of that job, it will be executed.  When all the executed commands terminate, cron is done.</P>
-  <P>The recommended way to setup your cron system is to setup a Unix/Linux crontab that frequently visits <A HREF="<?php echo path_uri(); ?>cron.php"><?php echo path_uri(); ?>cron.php</A>. Note that cron does not guarantee the commands will be executed at the specified interval.  However, Drupal will try his best and run the crons as close to the specified intervals as possible.  The more you visit cron.php, the more accurate cron will be.</P>
-  <P>If your hosting company does not allow you to setup crontabs, you can always ask someone else to setup a crontab for you. After all, virtually any Unix/Linux machine with access to the internet can setup a crontab to frequently visit <A HREF="<?php echo path_uri(); ?>cron.php"><?php echo path_uri(); ?>cron.php</A>.</P>
-  <P>For the Unix/Linux crontab itself, use a browser like <I>lynx</I> or <I>wget</I> but make sure the process terminates: either use <CODE>/usr/bin/lynx -source <?php echo path_uri(); ?>cron.php</CODE> or <CODE>/usr/bin/wget -O /dev/null <?php echo path_uri(); ?>cron.php</CODE>.  Take a look at the example scripts in the <CODE>scripts</CODE>-directory and make sure to adjust them to your needs.  A good crontab-line to run the cron-script once every hour would be: <CODE>00 * * * * /home/www/drupal/scripts/cron-lynx</CODE>.</P>
+  <p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviors including visual and operational settings.</p>
+  <h>Cron</h3>
+  <p>Some settings require a <i>cron</i> or <i>crontab</i>.  Cron (which stands for chronograph) is a periodic command scheduler: it executes commands at intervals specified in seconds.  It can be used to control the execution of daily, weekly and monthly jobs (or anything with a period of <i>n</i> seconds).   Automating tasks is one of the best ways to keep a system running smoothly, and if most of your administration does not require your direct involvement, cron is an ideal solution.</p>
+  <p>Whenever <a href="<?php echo path_uri(); ?>cron.php"><?php echo path_uri(); ?>cron.php</a> is accessed, cron will run: it checks for the jobs cron controls, and their periods in seconds.  If a certain task wasn't executed in the last n seconds, where n is the period of that job, it will be executed.  When all the executed commands terminate, cron is done.</p>
+  <p>The recommended way to setup your cron system is to setup a Unix/Linux crontab that frequently visits <a href="<?php echo path_uri(); ?>cron.php"><?php echo path_uri(); ?>cron.php</a>. Note that cron does not guarantee the commands will be executed at the specified interval.  However, Drupal will try his best and run the crons as close to the specified intervals as possible.  The more you visit cron.php, the more accurate cron will be.</p>
+  <p>If your hosting company does not allow you to setup crontabs, you can always ask someone else to setup a crontab for you. After all, virtually any Unix/Linux machine with access to the internet can setup a crontab to frequently visit <a href="<?php echo path_uri(); ?>cron.php"><?php echo path_uri(); ?>cron.php</a>.</p>
+  <p>For the Unix/Linux crontab itself, use a browser like <i>lynx</i> or <i>wget</i> but make sure the process terminates: either use <code>/usr/bin/lynx -source <?php echo path_uri(); ?>cron.php</code> or <code>/usr/bin/wget -O /dev/null <?php echo path_uri(); ?>cron.php</code>.  Take a look at the example scripts in the <code>scripts</code>-directory and make sure to adjust them to your needs.  A good crontab-line to run the cron-script once every hour would be: <code>00 * * * * /home/www/drupal/scripts/cron-lynx</code>.</p>
  <?php
 }
 
@@ -28,52 +28,52 @@ function system_view_options() {
   global $conf, $cmodes, $corder, $themes;
 
   // general settings:
-  $output .= "<H3>General settings</H3>\n";
+  $output .= "<h3>General settings</h3>\n";
   $output .= form_textfield("Name", "site_name", variable_get("site_name", "drupal"), 30, 55, "The name of this website.");
-  $output .= form_textfield("Slogan", "site_slogan", variable_get("site_slogan", ""), 30, 55, "The slogan of this website");
-  $output .= form_textfield("E-mail address", "site_mail", variable_get("site_mail", "root@localhost"), 30, 55, "A valid e-mail address for this website, used by the auto-mailer to create new user accounts.");
+  $output .= form_textfield("E-mail address", "site_mail", variable_get("site_mail", "root@localhost"), 35, 55, "A valid e-mail address for this website, used by the auto-mailer to create new user accounts.");
+  $output .= form_textfield("Slogan", "site_slogan", variable_get("site_slogan", ""), 55, 128, "The slogan of this website");
   $output .= form_textarea("Footer message", "site_footer", variable_get("site_footer", ""), 55, 3, "This text will be displayed at the bottom of each page.  Useful for adding a copyright notice to your pages.");
   $output .= form_textfield("Anonymous user", "anonymous", variable_get("anonymous", "Anonymous"), 30, 55, "The name used to indicate anonymous users.");
-  $output .= "<HR>\n";
+  $output .= "<hr />\n";
 
   // caching:
-  $output .= "<H3>Cache settings</H3>\n";
+  $output .= "<h3>Cache settings</h3>\n";
   $period = array(10 => format_interval(10), 20 => format_interval(20), 30 => format_interval(30), 40 => format_interval(40), 50 => format_interval(50), 50 => format_interval(50), 60 => format_interval(60), 90 => format_interval(90), 120 => format_interval(120), 150 => format_interval(150), 180 => format_interval(180), 210 => format_interval(210), 240 => format_interval(240), 270 => format_interval(270), 300 => format_interval(300), 360 => format_interval(360), 420 => format_interval(420), 480 => format_interval(480), 540 => format_interval(540), 600 => format_interval(600), 1800 => format_interval(1800), 3600 => format_interval(3600), 7200 => format_interval(7200));
   $output .= form_select("Cache support", "cache", variable_get("cache", 0), array("Disabled", "Enabled"), "Enable or disable the caching of pages.");
   $output .= form_select("Discard cached pages older than", "cache_clear", variable_get("cache_clear", 30), $period, "The time cached pages should be kept.  Older pages are automatically refreshed.");
-  $output .= "<HR>\n";
+  $output .= "<hr />\n";
 
   // submission settings:
-  $output .= "<H3>Submission settings</H3>\n";
+  $output .= "<h3>Submission settings</h3>\n";
   $size = array(1000 => "1.000 characters", 5000 => "5.000 characters", 10000 => "10.000 characters", 15000 => "15.000 characters", 30.000 => "30.000 characters", 50000 => "50.000 characters", 100000 => "100.000 characters");
   $output .= form_select("Maximum submission size", "max_input_size", variable_get("max_input_size", 10000), $size, "The maximum number of characters someone can enter in a form.");
   $rate = array(1 => "Maximum 1 every second", 5 => "Maximum 1 every 5 seconds", 15 => "Maximum 1 every 15 seconds", 30 => "Maximum 1 every 30 seconds", 60 => "Maximum 1 every minute", 300 => "Maximum 1 every 5 minutes", 900 => "Maximum 1 every 15 minutes", 1800 => "Maximum 1 every 30 minutes", 3600 => "Maximum 1 every hour", 21600 => "Maximum 1 every 6 hour", 43200 => "Maximum 1 every 12 hour");
   $output .= form_select("Maximum node rate", "max_node_rate", variable_get("max_node_rate", 900), $rate, "The maximum submission rate for nodes.  Its purpose is to stop potential abuse or denial of service attacks.");
   $output .= form_select("Maximum comment rate", "max_comment_rate", variable_get("max_comment_rate", 120), $rate, "The maximum submission rate for comments.  Its purpose is to stop potential abuse or denial of service attacks.");
-  $output .= "<HR>\n";
+  $output .= "<hr />\n";
 
   // comment settings:
-  $output .= "<H3>Comment settings</H3>\n";
+  $output .= "<h3>Comment settings</h3>\n";
   $output .= form_select("Default display mode", "default_comment_mode", $conf[default_comment_mode], $cmodes, "The default mode in which comments are displayed.");
   $output .= form_select("Default display order", "default_comment_order", $conf[default_comment_order], $corder, "The default order in which comments are displayed.");
   for ($count = -1; $count < 6; $count++) $threshold[$count] = "Filter - $count";
   $output .= form_select("Default filter threshold", "default_comment_threshold", $conf[default_comment_threshold], $threshold, "The default threshold used to filter comments.");
-  $output .= "<HR>\n";
+  $output .= "<hr />\n";
 
   // layout settings:
-  $output .= "<H3>Layout settings</H3>\n";
+  $output .= "<h3>Layout settings</h3>\n";
   foreach ($themes as $key=>$value) $options .= "<OPTION VALUE=\"$key\"". (variable_get("theme_default", key($themes)) == $key ? " SELECTED" : "") .">$key</OPTION>\n";
   $output .= form_item("Default theme", "<SELECT NAME=\"edit[theme_default]\">$options</SELECT>", "The default theme as seen by visitors or anonymous users.");
-  $output .= "<HR>\n";
+  $output .= "<hr />\n";
 
   // development settings:
-  $output .= "<H3>Development settings</H3>\n";
+  $output .= "<h3>Development settings</h3>\n";
   $output .= form_select("Display timer information", "dev_timer", variable_get("dev_timer", 0), array("Disabled", "Enabled"), "Display the time it took to generate a page.  For Drupal development only.");
-  $output .= "<HR>\n";
+  $output .= "<hr />\n";
 
   foreach (module_list() as $name) {
     if (module_hook($name, "conf_options")) {
-      $output .= "<H3>". ucfirst($name) ." settings</H3>". module_invoke($name, "conf_options") ."<HR>\n";
+      $output .= "<h3>". ucfirst($name) ." settings</h3>". module_invoke($name, "conf_options") ."<hr />\n";
     }
   }
   return $output;
@@ -116,12 +116,12 @@ function system_view($type) {
 }
 
 function system_modules() {
-  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR><TH>module</TH><TH COLSPAN=\"2\">operations</TH></TR>\n";
+  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
+  $output .= " <tr><th>module</th><th colspan=\"2\">operations</th></tr>\n";
   foreach (module_list() as $name) {
-    $output .= " <TR><TD>$name</TD><TD>". (module_hook($name, "page") ? "<A HREF=\"module.php?mod=$name\">view</A>" : "&nbsp;") ."</TD><TD>". (module_hook($name, "admin") ? "<A HREF=\"admin.php?mod=$name\">admin</A>" : "&nbsp;") ."</TD></TR>\n";
+    $output .= " <tr><td>$name</td><td>". (module_hook($name, "page") ? "<a href=\"module.php?mod=$name\">view</a>" : "&nbsp;") ."</td><td>". (module_hook($name, "admin") ? "<a href=\"admin.php?mod=$name\">admin</a>" : "&nbsp;") ."</td></tr>\n";
   }
-  $output .= "</TABLE>\n";
+  $output .= "</table>\n";
 
   return $output;
 }
@@ -131,7 +131,7 @@ function system_admin() {
 
   if (user_access("administer settings and filters")) {
 
-    print "<SMALL><A HREF=\"admin.php?mod=system&type=options\">site settings</A> | <A HREF=\"admin.php?mod=system&type=filter\">content filters</A> | <A HREF=\"admin.php?mod=system&op=modules\">modules</A> | <A HREF=\"admin.php?mod=system&op=help\">help</A></SMALL><HR>\n";
+    print "<small><a href=\"admin.php?mod=system&type=options\">site settings</a> | <a href=\"admin.php?mod=system&type=filter\">content filters</a> | <a href=\"admin.php?mod=system&op=modules\">modules</a> | <a href=\"admin.php?mod=system&op=help\">help</a></small><hr />\n";
 
     switch ($op) {
       case "help":
