@@ -12,6 +12,9 @@
 Options -Indexes
 Options FollowSymLinks
 
+# Customized server error messages:
+ErrorDocument 404 /index.php
+
 # Set the default handler to index.php:
 DirectoryIndex index.php
 
@@ -61,4 +64,4 @@ DirectoryIndex index.php
   RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
 </IfModule>
 
-# $Id: .htaccess,v 1.55 2003/12/16 21:06:33 dries Exp $
+# $Id: .htaccess,v 1.56 2003/12/18 18:53:11 dries Exp $
