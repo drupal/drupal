@@ -220,9 +220,7 @@ function blog_page() {
 }
 
 function blog_content($node) {
-  $node->teaser = check_output($node->teaser);
-  $node->body = check_output($node->body);
-  return $node;
+  return node_prepare($node);
 }
 
 function blog_view($node, $main = 0, $page = 0) {

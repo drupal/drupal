@@ -141,9 +141,7 @@ function forum_link($type, $node = 0, $main = 0) {
 }
 
 function forum_content($node) {
-  $node->teaser = check_output($node->teaser);
-  $node->body = check_output($node->body);
-  return $node;
+  return node_prepare($node);
 }
 
 function forum_view($node, $main = 0, $page = 0) {
