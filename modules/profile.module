@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.12 2003/04/29 20:31:21 dries Exp $
+// $Id: profile.module,v 1.13 2003/05/03 05:44:25 dries Exp $
 
 function _profile_init() {
   /*
@@ -157,7 +157,7 @@ function _profile_validate($edit, $mode) {
 
   // now check for required fields
   foreach(_profile_active_fields("required") as $required) {
-    if (in_array($required, $enabled_fields)) {
+    if ($required != "0" && in_array($required, $enabled_fields)) {
       if (!$edit["profile_".$required]) {
         $error .= t("This required field is missing: %a", array("%a" => $profile_fields[$required][1]))."<br />";
       }
