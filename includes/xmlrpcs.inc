@@ -1,7 +1,7 @@
 <?php
 // by Edd Dumbill (C) 1999-2001
 // <edd@usefulinc.com>
-// $Id: xmlrpcs.inc,v 1.7 2003/11/28 11:41:11 dries Exp $
+// $Id: xmlrpcs.inc,v 1.8 2003/11/28 20:03:00 dries Exp $
 
 // Copyright (c) 1999,2000,2001 Edd Dumbill.
 // All rights reserved.
@@ -173,7 +173,7 @@ class xmlrpc_server {
     $payload="<?xml version=\"1.0\"?>\n" .
       $this->serializeDebug() .
       $r->serialize();
-    Header("Content-type: text/xml\r\nContent-Length: " .
+    Header("Content-Type: text/xml\r\nContent-Length: " .
            strlen($payload));
     print $payload;
   }

@@ -34,7 +34,8 @@ CREATE TABLE [dbo].[blocks] (
   [weight] [smallint] NOT NULL ,
   [region] [smallint] NOT NULL ,
   [path] [varchar] (255) NOT NULL ,
-  [custom] [smallint] NOT NULL
+  [custom] [smallint] NOT NULL,
+  [throttle] [smallint] NOT NULL
 ) ON [PRIMARY]
 GO
 
