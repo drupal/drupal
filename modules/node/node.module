@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.87 2001/11/20 22:51:06 dries Exp $
+// $Id: node.module,v 1.88 2001/11/20 22:53:26 dries Exp $
 
 function node_help() {
   global $mod;
@@ -94,7 +94,7 @@ function node_filter_line($text) {
   */
 
   if (strstr($text, "<br />") || strstr($text, "<p>")) {
-    $text = ereg_replace("[\r\n\t\v]", "", $text);
+    $text = ereg_replace("[\r\n]", "", $text);
   }
 
   /*
