@@ -518,7 +518,7 @@ CREATE TABLE watchdog (
 # Insert some default values
 #
 
-INSERT INTO variable SET name='update_start', value='2002-05-15';
+INSERT INTO variable SET name='update_start', value='s:10:"2002-05-15"';
 INSERT INTO system VALUES ('archive.module','archive','module','',1);
 INSERT INTO system VALUES ('block.module','block','module','',1);
 INSERT INTO system VALUES ('blog.module','blog','module','',1);
