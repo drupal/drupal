@@ -1,14 +1,14 @@
 <?php
 
   /*********************************************************************
-  
+
    Theme: Goofy
    Author: UnConeD
    Email: unconed@drop.org
    Description: Colourful, graphical, orange theme for high-resolutions.
    Notes: Only boxes on the right, because the graphcis take up a lot
           of horizontal space.
-   
+
   *********************************************************************/
 
   class Theme {
@@ -16,41 +16,41 @@
     function header() {
       global $site_name;
 ?>
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
- <html> 
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+ <html>
   <head>
    <title><?php echo $site_name; ?></title>
    <style type="text/css">
-   <!-- 
+   <!--
      body { background-color: #FFFFFF; font-size: 10pt; font-family: tahoma,helvetica,arial; }
      p,ul,li,div,form,em,blockquote,quote { font-size: 10pt; font-family: tahoma,helvetica,arial; }
      td { font-family: tahoma,arial,helvetica; font-size: 10pt; }
-     td.oru { background: url("themes/goofy/images/or-u.png"); width: 100%; } 
-     td.ord { background: url("themes/goofy/images/or-d.png"); width: 100%; } 
-     td.orl { background: url("themes/goofy/images/or-l.png"); } 
+     td.oru { background: url("themes/goofy/images/or-u.png"); width: 100%; }
+     td.ord { background: url("themes/goofy/images/or-d.png"); width: 100%; }
+     td.orl { background: url("themes/goofy/images/or-l.png"); }
      td.orr { background: url("themes/goofy/images/or-r.png"); }
-     td.orcnt { background: #FBC636; width: 100%; font-family: tahoma,arial,helvetica; font-size: 10pt; font-weight: bold; text-align: center; } 
-     td.gru { background: url("themes/goofy/images/gr-u.png"); width: 100%; } 
-     td.grd { background: url("themes/goofy/images/gr-d.png"); width: 100%; } 
-     td.grl { background: url("themes/goofy/images/gr-l.png"); } 
+     td.orcnt { background: #FBC636; width: 100%; font-family: tahoma,arial,helvetica; font-size: 10pt; font-weight: bold; text-align: center; }
+     td.gru { background: url("themes/goofy/images/gr-u.png"); width: 100%; }
+     td.grd { background: url("themes/goofy/images/gr-d.png"); width: 100%; }
+     td.grl { background: url("themes/goofy/images/gr-l.png"); }
      td.grr { background: url("themes/goofy/images/gr-r.png"); }
-     td.grcnt { background: #C6C6C6; width: 100%; font-family: tahoma,arial,helvetica; font-size: 10pt; } 
-     td.lgu { background: url("themes/goofy/images/lg-u.png"); width: 100%; } 
-     td.lgd { background: url("themes/goofy/images/lg-d.png"); width: 100%; } 
-     td.lgl { background: url("themes/goofy/images/lg-l.png"); } 
+     td.grcnt { background: #C6C6C6; width: 100%; font-family: tahoma,arial,helvetica; font-size: 10pt; }
+     td.lgu { background: url("themes/goofy/images/lg-u.png"); width: 100%; }
+     td.lgd { background: url("themes/goofy/images/lg-d.png"); width: 100%; }
+     td.lgl { background: url("themes/goofy/images/lg-l.png"); }
      td.lgr { background: url("themes/goofy/images/lg-r.png"); }
      td.lgcnt { background: #E4E4E4; width: 100%; font-family: tahoma,arial,helvetica; font-size: 10pt; white-space: normal; }
-     
+
      small { font-size: 8pt; }
      big { font-size: 12pt; }
-     
+
      hr { color: #404040; height: 1px; }
-     
+
      a { color: #804000; text-decoration: none; }
      a:link { color: #804000; }
      a:visited { color: #804000; }
      a:active { color: #804000; }
-   
+
    -->
    </style>
    </head>
@@ -66,7 +66,7 @@
 <?php
 
     } // close header function
-    
+
     function linksbar() {
     ?>
            <table border="0" cellspacing="0" cellpadding="0" width="100%">
@@ -90,7 +90,7 @@
     }
 
     function story($story, $reply = 0) {
-    
+
     echo "\n<!-- story: \"$story->title\" -->\n";
 ?>
 
@@ -130,7 +130,7 @@
             echo check_output($story->article, 1);
          ?>
          <hr color="#404040" size="1"><div align="right">
-         <?php                                
+         <?php
           if (!$reply)
             echo theme_morelink($this, $story);
           else
@@ -197,7 +197,7 @@
      echo "    <tr><td><div align=\"right\">" . t("Date:") . "&nbsp;</div></td><td>". format_date($comment->timestamp) ."</td></tr>";
 
      echo "   </table>";
-          
+
          ?></td>
          <td class="orr"><img src="themes/goofy/images/null.gif" alt=""></td>
         </tr>
@@ -212,11 +212,11 @@
          <td class="lgr"><img src="themes/goofy/images/null.gif" alt=""></td>
         </tr>
         <?php
-        if ($comment) { 
+        if ($comment) {
         ?>
         <tr>
          <td class="lgl"><img src="themes/goofy/images/null.gif" alt=""></td>
-         <td class="lgcnt" width="100%" colspan="2"><?php 
+         <td class="lgcnt" width="100%" colspan="2"><?php
           echo check_output($comment->comment, 1);
           echo "<br><hr color=\"#404040\" size=\"1\"><div align=\"right\">[ $link ]</div>";
           ?></td>
@@ -232,7 +232,7 @@
         </tr>
        </table><br>
        <?php
-  
+
     } // close comment function
 
     function box($subject, $content, $options = "") {
@@ -284,11 +284,11 @@
 
           theme_account($this);
           theme_blocks("all", $this);
-         
-?>    
+
+?>
      </td>
-    </tr>   
-    <tr><td colspan="2"><?php $this->linksbar(); ?></td></tr>          
+    </tr>
+    <tr><td colspan="2"><?php $this->linksbar(); ?></td></tr>
    </table>
   </body>
  </html>
