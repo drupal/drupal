@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.88 2001/12/01 15:20:48 dries Exp $
+// $Id: common.inc,v 1.89 2001/12/05 18:54:14 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST, $REQUEST_URI;
@@ -295,14 +295,21 @@ function format_date($timestamp, $type = "medium", $format = "") {
 }
 
 function format_name($object) {
+  global $PHP_SELF;
 
   if ($object->uid && $object->name) {
-    return "<a href=\"module.php?mod=user&op=view&id=$object->uid\">$object->name</a>";
+    if (strstr($PHP_SELF, "admin.php")) {
+      $output = "<a href=\"admin.php?mod=user&op=edit&id=$object->uid\">$object->name</a>";
+    }
+    else {
+      $output = "<a href=\"module.php?mod=user&op=view&id=$object->uid\">$object->name</a>";
+    }
   }
   else {
-    return variable_get(anonymous, "Anonymous");
+    $output = variable_get(anonymous, "Anonymous");
   }
 
+  return $output;
 }
 
 function format_email($address) {
