@@ -57,7 +57,7 @@
        </TR>
        <TR>
         <TD COLSPAN="2" ALIGN="CENTER">
-         <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0" BGCOLOR="<? echo $this->brcolor1; ?>"><TR><TD ALIGN="CENTER"><TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="4"><TR><TD ALIGN="CENTER" BGCOLOR="<? echo $this->bgcolor2; ?>"><BIG><A HREF="index.php">home</A> | <A HREF="faq.php">faq</A> | <A HREF="diary.php">diary</A> | <A HREF="search.php">search</A> | <A HREF="submit.php">submit news</A> | <A HREF="account.php">user account</A></BIG></TD></TR></TABLE></TD></TR></TABLE>
+         <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0" BGCOLOR="<? echo $this->brcolor1; ?>"><TR><TD ALIGN="CENTER"><TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="4"><TR><TD ALIGN="CENTER" BGCOLOR="<? echo $this->bgcolor2; ?>"><BIG><A HREF="index.php">home</A> | <A HREF="module.php?mod=faq">faq</A> | <A HREF="diary.php">diary</A> | <A HREF="search.php">search</A> | <A HREF="submit.php">submit news</A> | <A HREF="account.php">user account</A></BIG></TD></TR></TABLE></TD></TR></TABLE>
         </TD>
        </TR>
        <TR><TD COLSPAN="2"><?
@@ -383,7 +383,7 @@
        ?></TD></TR>
       <TR>
        <TD COLSPAN="2">
-        <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0" BGCOLOR="<? echo $this->brcolor1; ?>"><TR><TD ALIGN="CENTER"><TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="4"><TR><TD ALIGN="CENTER" BGCOLOR="<? echo $this->bgcolor2; ?>"><BIG><A HREF="index.php">home</A> | <A HREF="faq.php">faq</A> | <A HREF="diary.php">diary</A> | <A HREF="search.php">search</A> | <A HREF="submit.php">submit news</A> | <A HREF="account.php">user account</A></BIG></TD></TR></TABLE></TD></TR></TABLE>
+        <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0" BGCOLOR="<? echo $this->brcolor1; ?>"><TR><TD ALIGN="CENTER"><TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="4"><TR><TD ALIGN="CENTER" BGCOLOR="<? echo $this->bgcolor2; ?>"><BIG><A HREF="index.php">home</A> | <A HREF="module.php?mod=faq">faq</A> | <A HREF="diary.php">diary</A> | <A HREF="search.php">search</A> | <A HREF="submit.php">submit news</A> | <A HREF="account.php">user account</A></BIG></TD></TR></TABLE></TD></TR></TABLE>
        </TD>
       </TR>
      </TABLE>

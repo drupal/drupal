@@ -69,7 +69,7 @@ function display_comment_moderation($id, $author, $score, $votes) {
     $output .= "<TABLE BORDER=\"0\" CELLSPACING=\"1\" CELLPADDING=\"0\"><TR><TD>score:</TD><TD>". format_data($score) ."</TD></TR><TR><TD>votes:</TD><TD>". format_data($votes) ."</TR></TABLE>";
   }
 
-  print $output;
+  return $output;
 }
 
 function display_new_diaries($theme, $num = 20) {
