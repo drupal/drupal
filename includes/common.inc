@@ -817,7 +817,7 @@ function drupal_get_normal_path($path) {
   return $map[$path] ? $map[$path] : $path;
 }
 
-function url($url = NULL, $query = NULL) {
+function url($url = NULL, $query = NULL, $fragment = NULL) {
   global $base_url;
 
   static $script;
@@ -835,39 +835,46 @@ function url($url = NULL, $query = NULL) {
     $url = $alias;
   }
 
+  if (isset($fragment)) {
+    $fragment = "#$fragment";
+  }
+  else {
+    $fragment = '';
+  }
+
   if (variable_get("clean_url", "0") == "0") {
     if (isset($url)) {
       if (isset($query)) {
-        return "$base_url/$script?q=$url&amp;$query";
+        return "$base_url/$script?q=$url&amp;$query$fragment";
       }
       else {
-        return "$base_url/$script?q=$url";
+        return "$base_url/$script?q=$url$fragment";
       }
     }
     else {
       if (isset($query)) {
-        return "$base_url/$script?$query";
+        return "$base_url/$script?$query$fragment";
       }
       else {
-        return "$base_url/";
+        return "$base_url/$fragment";
       }
     }
   }
   else {
     if (isset($url)) {
       if (isset($query)) {
-        return "$base_url/$url?$query";
+        return "$base_url/$url?$query$fragment";
       }
       else {
-        return "$base_url/$url";
+        return "$base_url/$url$fragment";
       }
     }
     else {
       if (isset($query)) {
-        return "$base_url/$script?$query";
+        return "$base_url/$script?$query$fragment";
       }
       else {
-        return "$base_url/";
+        return "$base_url/$fragment";
       }
     }
   }
@@ -883,8 +890,8 @@ function drupal_attributes($attributes = NULL) {
   }
 }
 
-function l($text, $url, $attributes = array(), $query = NULL) {
-  return "<a href=\"". url($url, $query) ."\"". drupal_attributes($attributes) .">$text</a>";
+function l($text, $url, $attributes = array(), $query = NULL, $fragment = NULL) {
+  return "<a href=\"". url($url, $query, $fragment) ."\"". drupal_attributes($attributes) .">$text</a>";
 }
 
 function field_get($string, $name) {
