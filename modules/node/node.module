@@ -241,8 +241,6 @@ function node_load($conditions, $revision = -1) {
   ** Unserialize the revisions field:
   */
 
-print "wa: $node->title";
-
   if ($node->revisions) {
     $node->revisions = unserialize($node->revisions);
   }
