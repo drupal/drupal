@@ -21,7 +21,7 @@ function story_conf_options() {
 
 function story_node($field) {
   $info["name"] = t("story");
-  $info["description"] = t("A story is a post that is submitted to the attention of other users and is queued in the submission queue.  Users and moderators vote on the posts they like or dislike, promoting or demoting them.  When a post gets above a certain threshold it gets authomatically published to front page.");
+  $info["description"] = t("A story is a post that is submitted to the attention of other users and is queued in the submission queue.  Users and moderators vote on the posts they like or dislike, promoting or demoting them.  When a post gets above a certain threshold it gets automatically published to front page.");
 
   return $info[$field];
 }
