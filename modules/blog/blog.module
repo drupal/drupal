@@ -81,7 +81,7 @@ function blog_page_user($name = 0, $date = 0) {
 
     if ($date != date("dny", $blog->timestamp)) {
       $date = date("dny", $blog->timestamp);
-      $output .= "<tr><td colspan=\"2\"><b><a href=\"module.php?mod=blog&name=$name&date=". mktime(23, 59, 59, date("n", $blog->timestamp), date("d", $blog->timestamp), date("Y", $blog->timestamp)) ."\">". format_date($blog->timestamp, custom, "d M Y") .":</a></b></td></tr>";
+      $output .= "<tr><td colspan=\"2\"><b><a href=\"module.php?mod=blog&name=". urlencode($name) ."&date=". mktime(23, 59, 59, date("n", $blog->timestamp), date("d", $blog->timestamp), date("Y", $blog->timestamp)) ."\">". format_date($blog->timestamp, custom, "d M Y") .":</a></b></td></tr>";
     }
 
     if ($user->id && $user->name == $name) {
@@ -397,7 +397,7 @@ class BlogCalendar {
     // Generate calendar header:
     $output .= "\n<!-- calendar -->\n";
     $output .= "<TABLE WIDTH=\"100%\" BORDER=\"0\" CELLSPACING=\"0\" CELLPADDING=\"1\">\n";
-    $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"7\"><B><A HREF=\"module.php?mod=blog&name=$this->name&date=$prev\" STYLE=\"text-decoration: none;\">&lt;&lt;</A> &nbsp; ". date("F Y", $this->date) ." &nbsp; " . ($next <= $thislast ? "<A HREF=\"module.php?mod=blog&name=$this->name&date=$next\" STYLE=\"text-decoration: none;\">&gt;&gt;</A>" : "&gt;&gt;") . "<B></TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"7\"><B><A HREF=\"module.php?mod=blog&name=". urlencode($this->name) ."&date=$prev\" STYLE=\"text-decoration: none;\">&lt;&lt;</A> &nbsp; ". date("F Y", $this->date) ." &nbsp; " . ($next <= $thislast ? "<A HREF=\"module.php?mod=blog&name=". urlencode($this->name) ."&date=$next\" STYLE=\"text-decoration: none;\">&gt;&gt;</A>" : "&gt;&gt;") . "<B></TD></TR>\n";
 
     // Generate the days of the week:
     $output .= " <TR>";
@@ -426,7 +426,7 @@ class BlogCalendar {
       $date = mktime(23, 59, 59, $month, $nday, $year);
       if ($date == $this->date) $output .= "  <TD ALIGN=\"center\" BGCOLOR=\"#CCCCCC\"><B>$nday</B></TD>\n";
       else if ($date > $today) $output .= "  <TD ALIGN=\"center\">$nday</TD>\n";
-      else $output .= "  <TD ALIGN=\"center\"><A HREF=\"module.php?mod=blog&name=$this->name&date=$date\" STYLE=\"text-decoration: none;\">$nday</A></TD>\n";
+      else $output .= "  <TD ALIGN=\"center\"><A HREF=\"module.php?mod=blog&name=". urlencode($this->name) ."&date=$date\" STYLE=\"text-decoration: none;\">$nday</A></TD>\n";
 
       // Start every week on a new line:
       if ($sday == 6) $output .=  " </TR>\n";
