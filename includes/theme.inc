@@ -54,12 +54,12 @@ function theme_main_blocks($theme) {
       else theme_new_headlines($theme);
       break;
     case "/index":
-      theme_account($theme);
       $result = db_query("SELECT * FROM blocks WHERE status = 2");
       while ($block = db_fetch_object($result)) {
         $blocks = module_execute($block->module, "block");
         $theme->box($blocks[$block->offset]["subject"], $blocks[$block->offset]["content"]);     
       }
+      theme_account($theme);
       break;
     default:
       theme_account($theme);
