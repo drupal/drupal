@@ -1566,10 +1566,10 @@ function user_admin_role() {
     $header = array(t('Name'), t('Operations'));
     while ($role = db_fetch_object($result)) {
       if ($role->name != 'anonymous user' && $role->name != 'authenticated user') {
-        $rows[] = array($role->name, array('data' => l(t('edit'), "admin/access/roles/edit/$role->rid"), 'align' => 'center'));
+        $rows[] = array($role->name, l(t('edit'), 'admin/access/roles/edit/'. $role->rid));
       }
       else {
-        $rows[] = array($role->name, array('data' => '<span class="disabled">'. t('locked') .'</span>', 'align' => 'center'));
+        $rows[] = array($role->name, '<span class="disabled">'. t('locked') .'</span>');
       }
     }
     $rows[] = array('<input type="text" size="32" maxlength="64" name="edit[name]" />', '<input type="submit" name="op" value="'. t('Add role') .'" />');
