@@ -148,7 +148,7 @@ function book_save($edit) {
   global $status, $user;
 
   if (!$edit[nid]) {
-    node_save($edit, array(author => $user->id, body, cid, comment => category_comment($edit[cid]), log, moderate => topic_moderate($edit[tid]), promote => category_promote($edit[cid]), score => 0, status => (category_submission($edit[cid]) ? $status[queued] : $status[posted]), tid, timestamp => time(), title, type => "book", votes => 0, weight));
+    node_save($edit, array(author => $user->id, body, cid, comment => category_comment($edit[cid]), log, moderate => topic_moderate($edit[tid]), parent, promote => category_promote($edit[cid]), score => 0, status => (category_submission($edit[cid]) ? $status[queued] : $status[posted]), tid, timestamp => time(), title, type => "book", votes => 0, weight));
   }
   else if (user_access($user)) {
     node_save($edit, array(body, cid, log, parent, tid, title, type => "book", weight));
