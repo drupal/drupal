@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.83 2002/06/09 17:24:42 kjartan Exp $
+// $Id: user.module,v 1.84 2002/06/10 19:49:16 kjartan Exp $
 
 session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
 session_start();
@@ -929,8 +929,9 @@ function user_edit($edit = array()) {
     }
 
     $output .= form_textfield(t("Homepage"), "homepage", $edit["homepage"], 30, 55, t("Optional") .". ". t("Make sure you enter a fully qualified URL: remember to include \"http://\"."));
+    $options = "<option value=\"\"". (("" == $key) ? " selected=\"selected\"" : "") .">". t("Default theme") ."</option>\n";
     foreach (theme_list() as $key => $value) {
-      $options .= "$value[type]<option value=\"$key\"". (($edit["theme"] == $key) ? " selected=\"selected\"" : "") .">$key - $value->description</option>\n";
+      $options .= "<option value=\"$key\"". (($edit["theme"] == $key) ? " selected=\"selected\"" : "") .">$key - $value->description</option>\n";
     }
     $output .= form_item(t("Theme"), "<select name=\"edit[theme]\">$options</select>", t("Selecting a different theme will change the look and feel of the site."));
     for ($zone = -43200; $zone <= 46800; $zone += 3600) $zones[$zone] = date("l, F dS, Y - h:i A", time() - date("Z") + $zone) ." (GMT ". $zone / 3600 .")";
