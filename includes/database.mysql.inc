@@ -1,9 +1,14 @@
 <?php
-// $Id: database.mysql.inc,v 1.7 2002/10/13 12:00:49 dries Exp $
+// $Id: database.mysql.inc,v 1.8 2002/10/23 20:09:29 dries Exp $
 
 function db_connect($url) {
   $url = parse_url($url);
 
+  // Allow for non-standard MySQL port.
+  if ($url["port"]) {
+     $url["host"] = $url["host"] . ":" . $url["port"];
+  }
+  
   mysql_pconnect($url["host"], $url["user"], $url["pass"]) or die(mysql_error());
   mysql_select_db(substr($url["path"], 1)) or die("unable to select database");
 
