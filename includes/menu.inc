@@ -1,5 +1,5 @@
 <?php
-/* $Id: menu.inc,v 1.57 2004/07/22 16:06:54 unconed Exp $ */
+/* $Id: menu.inc,v 1.58 2004/07/25 18:16:48 dries Exp $ */
 
 /**
  * @file
@@ -469,7 +469,7 @@ function menu_rebuild() {
   $new_items = array();
   foreach ($menu['items'] as $mid => $item) {
     if ($mid < 0 && ($item['type'] & MENU_MODIFIABLE_BY_ADMIN)) {
-      $new_mid = db_next_id('menu_mid');
+      $new_mid = db_next_id('{menu}_mid');
       if (isset($new_items[$item['pid']])) {
         $new_pid = $new_items[$item['pid']]['mid'];
       }
