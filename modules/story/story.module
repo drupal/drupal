@@ -8,8 +8,6 @@ $module = array("help" => "story_help",
                 "admin" => "story_admin",
                 "block" => "story_block");
 
-include_once "includes/structure.inc";
-
 class Story {
   function Story($story) {
     global $user;
@@ -191,7 +189,7 @@ function story_block() {
 
 function story_query($type = "") {
   global $status;
-  $queries = array(array("recent stories", "WHERE n.type = 'story' ORDER BY n.timestamp DESC"), array("posted stories", "WHERE n.type = 'story' AND n.status = '$status[posted]' ORDER BY n.timestamp DESC"), array("queued stories", "WHERE n.type = 'story' AND n.status = '$status[queued]' ORDER BY n.timestamp DESC"), array("dumped stories", "WHERE n.type = 'story' AND n.status = '$status[dumped]' ORDER BY n.timestamp DESC"), array("stories without category (integrity)", "WHERE n.cid = '0' ORDER BY n.timestamp DESC"), array("stories without topic (integrity)", "WHERE n.tid = '0' ORDER BY n.timestamp DESC"));
+  $queries = array(array("recent stories", "WHERE n.type = 'story' ORDER BY n.timestamp DESC"), array("posted stories", "WHERE n.type = 'story' AND n.status = '$status[posted]' ORDER BY n.timestamp DESC"), array("queued stories", "WHERE n.type = 'story' AND n.status = '$status[queued]' ORDER BY n.timestamp DESC"), array("dumped stories", "WHERE n.type = 'story' AND n.status = '$status[dumped]' ORDER BY n.timestamp DESC"), array("stories without category (integrity)", "WHERE n.type = 'story' AND n.cid = '0' ORDER BY n.timestamp DESC"), array("stories without topic (integrity)", "WHERE n.type = 'story' AND n.tid = '0' ORDER BY n.timestamp DESC"));
   return ($queries[$type] ? $queries[$type] : $queries);
 }
 
