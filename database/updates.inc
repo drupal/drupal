@@ -1081,6 +1081,7 @@ function update_86() {
   $ret[] = update_sql("INSERT INTO {users_roles} (uid, rid) SELECT uid, rid FROM {users}");
   // TODO: should we verify the insert above worked before dropping rid?
   $ret[] = update_sql("ALTER TABLE {users} DROP rid");
+  return $ret;
 }
 
 function update_sql($sql) {
