@@ -172,7 +172,7 @@ function _profile_user_view(&$user, $mode) {
   foreach (_profile_active_fields($mode) as $name) {
     $field = $profile_fields[$name];
     $t = "profile_".$name;
-    if (isset($user->$t)) {
+    if (!empty($user->$t)) {
       switch ($field[0]) {
         case "textfield":
         case "textarea":
