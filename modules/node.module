@@ -1397,7 +1397,7 @@ function node_delete($edit) {
  * Generate a listing of promoted nodes.
  */
 function node_page_default() {
-  $result = pager_query('SELECT DISTINCT(n.nid), n.type FROM {node} n '. node_access_join_sql() .' WHERE n.promote = 1 AND n.status = 1 AND '. node_access_where_sql() .' ORDER BY n.sticky DESC, n.created DESC', variable_get('default_nodes_main', 10));
+  $result = pager_query('SELECT DISTINCT(n.nid), n.type, n.sticky, n.created FROM {node} n '. node_access_join_sql() .' WHERE n.promote = 1 AND n.status = 1 AND '. node_access_where_sql() .' ORDER BY n.sticky DESC, n.created DESC', variable_get('default_nodes_main', 10));
 
   if (db_num_rows($result)) {
     drupal_set_html_head('<link rel="alternate" type="application/rss+xml" title="RSS" href="'. url('node/feed', NULL, NULL, TRUE) .'" />');
@@ -1634,7 +1634,12 @@ function node_access_join_sql($node_alias = 'n', $node_access_alias = 'na') {
  */
 function node_access_where_sql($op = 'view', $node_access_alias = 'na') {
   if (user_access('administer nodes')) {
-    return '1';
+    /**
+     * This number is being used in a SQL query in a boolean nature.
+     * It is "'1'" instead of "1" for database compatibility, as both
+     * Postgres and Mysql treat it as boolean in this case.
+     */
+    return "'1'";
   }
 
   $sql = $node_access_alias .'.grant_'. $op .' = 1 AND CONCAT('. $node_access_alias .'.realm, '. $node_access_alias .'.gid) IN (';
