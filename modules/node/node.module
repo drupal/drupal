@@ -2,18 +2,15 @@
 
 $module = array("admin" => "node_admin");
 
-
-$nstatus = array(0 => dumped, 1 => expired, 2 => queued, 3 => posted);
-
 function node_overview($query = 0) {
-  global $user, $nstatus;
+  global $user, $rstatus;
 
   $result = db_query("SELECT n.*, u.userid FROM node n LEFT JOIN users u ON n.author = u.id ". ($query ? "WHERE $query" : "") ." ORDER BY n.timestamp DESC");
 
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR><TH>title</TH><TH>type</TH><TH>status</TH><TH>author</TH><TH>date</TH><TH COLSPAN=\"3\">operations</TH></TR>\n";
   while ($node = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">$node->type</TD><TD>". $nstatus[$node->status] ."</TD><TD>". format_username($node->userid) ."</TD><TD>". format_date($node->timestamp) ."</TD><TD>". (user_access($user, "node") ? "<A HREF=\"admin.php?mod=node&op=view&id=$node->nid\">view node</A></TD>" : "view node") ."</TD><TD>". (user_access($user, "node") ? "<A HREF=\"admin.php?mod=node&op=edit&id=$node->nid\">edit node</A></TD>" : "edit node") ."</TD><TD>". (user_access($user, $node->type) ? "<A HREF=\"admin.php?mod=$node->type&op=edit&id=$node->nid\">edit $node->type</A></TD>" : "edit $node->type") ."</TD></TR>\n";
+    $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">$node->type</TD><TD>". $rstatus[$node->status] ."</TD><TD>". format_username($node->userid) ."</TD><TD>". format_date($node->timestamp) ."</TD><TD>". (user_access($user, "node") ? "<A HREF=\"admin.php?mod=node&op=view&id=$node->nid\">view node</A></TD>" : "view node") ."</TD><TD>". (user_access($user, "node") ? "<A HREF=\"admin.php?mod=node&op=edit&id=$node->nid\">edit node</A></TD>" : "edit node") ."</TD><TD>". (user_access($user, $node->type) ? "<A HREF=\"admin.php?mod=$node->type&op=edit&id=$node->nid\">edit $node->type</A></TD>" : "edit $node->type") ."</TD></TR>\n";
   }
   $output .= "</TABLE>\n";
 
@@ -21,14 +18,14 @@ function node_overview($query = 0) {
 }
 
 function node_admin_view($id) {
-  global $nstatus;
+  global $rstatus;
 
   $node = node_get_object("nid", $id);
 
   $output .= "<FORM ACTION=\"admin.php?mod=node&id=$node->nid\" METHOD=\"post\">\n";
   $output .= "<B>Title:</B><BR>". check_output($node->title) ."<P>\n";
   $output .= "<B>Author:</B><BR>". format_username($node->userid) ."<P>\n";
-  $output .= "<B>Status:</B><BR>". $nstatus[$node->status] ."<P>\n";
+  $output .= "<B>Status:</B><BR>". $rstatus[$node->status] ."<P>\n";
   $output .= "<B>Date:</B><BR>". format_date($node->timestamp) ."<P>\n";
   $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Edit node\">\n";
   $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Delete node\">\n";
@@ -38,13 +35,13 @@ function node_admin_view($id) {
 }
 
 function node_admin_edit($id) {
-  global $status, $user;
+  global $user, $status;
 
   $node = node_get_object("nid", $id);
 
   foreach (array($node->userid => $node->author, $user->userid => $user->id) as $value=>$key) $author .= " <OPTION VALUE=\"$key\"". (($node->author == $key) ? " SELECTED" : "") .">$value</OPTION>\n";
   foreach (array(format_date($node->timestamp) ." (original)" => $node->timestamp, format_date(time()) ." (current)" => time()) as $value=>$key) $timestamp .= " <OPTION VALUE=\"$key\"". (($node->timestamp == $key) ? " SELECTED" : "") .">$value</OPTION>\n";
-  foreach ($status as $value=>$key) $statuz .= " <OPTION VALUE=\"$key\"". (($node->status == $key) ? " SELECTED" : "") .">$value</OPTION>\n";
+  foreach (node_status($node) as $value) $statuz .= " <OPTION VALUE=\"". $status[$value] ."\"". (($node->status == $status[$value]) ? " SELECTED" : "") .">$value</OPTION>\n";
 
   $output .= "<FORM ACTION=\"admin.php?mod=node&id=$node->nid\" METHOD=\"post\">\n";
   $output .= "<B>Title:</B><BR>". check_output($node->title) ."<P>\n";
@@ -60,7 +57,7 @@ function node_admin_edit($id) {
 }
 
 function node_delete($id) {
-  return (node_del("nid", $id) ? "failed to delete node: node must be dumped first." : "node has been deleted.");
+  return (node_del("nid", $id) ? "node has been deleted." : "failed to delete node: node must be dumped first.");
 }
 
 function node_admin() {
@@ -79,7 +76,7 @@ function node_admin() {
       break;
     case "Save node":
       print status(node_save($edit));
-      print node_overview();
+      print node_admin_view($id);
       break;
     case "View node":
     case "view":

@@ -31,6 +31,10 @@ function story_timout_threshold($node, $default) {
   return section_timout_threshold($node->section, $default);
 }
 
+function story_status() {
+  return array(dumped, queued, posted);
+}
+
 function story_find($keys) {
   global $status, $user;
   $find = array();

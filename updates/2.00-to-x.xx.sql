@@ -1,4 +1,12 @@
-# 05/04/2001:
+# 07/04/2001:
+CREATE TABLE page (
+  lid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
+  nid int(10) unsigned DEFAULT '0' NOT NULL,
+  body text NOT NULL,
+  format tinyint(2) DEFAULT '0' NOT NULL,
+  PRIMARY KEY (lid)
+);
+
 CREATE TABLE variable (
   name varchar(32) DEFAULT '' NOT NULL,
   value varchar(128) DEFAULT '' NOT NULL,

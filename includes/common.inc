@@ -16,6 +16,7 @@ function watchdog($type, $message) {
 }
 
 function throttle($type, $rate) {
+  global $user;
   if (!(user_access($user, "watchdog") || user_access($user, "comment") || user_access($user, "node"))) {
     if ($throttle = db_fetch_object(db_query("SELECT * FROM watchdog WHERE type = '$type' AND hostname = '". getenv("REMOTE_ADDR") ."' AND ". time() ." - timestamp < $rate"))) {
       watchdog("warning", "throttle: '". getenv("REMOTE_ADDR") ."' exceeded submission rate - $throttle->type");

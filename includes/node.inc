@@ -1,6 +1,7 @@
 <?php
 
 $status = array(dumped => 0, expired => 1, queued => 2, posted => 3);
+$rstatus = array(0 => dumped, 1 => expired, 2 => queued, 3 => posted);
 
 function _node_get($field, $value) {
   $result = db_query("SELECT lid, type FROM node WHERE $field = '$value'");
@@ -119,18 +120,23 @@ function node_save($node) {
 
 }
 
+
+function node_invoke($node, $name, $arg = 0) {
+  if ($node[type]) $function = $node[type] ."_$name";
+  if ($node->type) $function = $node->type ."_$name";
+  if ($function) return ($arg ? $function($node) : $function($node, $arg));
+}
+
 function node_view($node, $page) {
-  if ($node->type) {
-    $function = $node->type ."_view";
-    return $function($node, $page);
-  }
+  return node_invoke($node, "view", $page);
 }
 
 function node_form($node) {
-  if ($node[type]) {
-    $function = $node[type] ."_form";
-    return $function($node);
-  }
+  return node_invoke($node, "form");
+}
+
+function node_status($node) {
+  return node_invoke($node, "status");
 }
 
 function node_control($node) {
