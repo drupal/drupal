@@ -25,7 +25,7 @@ define('MENU_FOUND', 2);
  * Register a menu item with the menu system.
  *
  * @ingroup menu
- * @param $path Location then menu item refers to.
+ * @param $path Location the menu item refers to. Do not add a trailing slash.
  * @param $title The title of the menu item to show in the rendered menu.
  * @param $callback
  * - string - The function to call when this is the active menu item.
@@ -394,8 +394,23 @@ function menu_build_visible_tree($pid = 0) {
         $children = array_merge($children, menu_build_visible_tree($mid));
       }
     }
-    if ((($parent['visibility'] == MENU_SHOW) ||
-        ($parent['visibility'] == MENU_HIDE_NOCHILD && count($children) > 1)) && $parent['callback'] !== MENU_DENIED) {
+    $visible = ($parent['visibility'] == MENU_SHOW) ||
+      ($parent['visibility'] == MENU_HIDE_NOCHILD && count($children) > 0);
+
+    if ($parent['callback'] === MENU_FALLTHROUGH) {
+      // Follow the path up to find the actual callback.
+      $path = $parent['path'];
+      while ($path && (!$_menu['path index'][$path] || $_menu['items'][$_menu['path index'][$path]]['callback'] === MENU_FALLTHROUGH)) {
+        $path = substr($path, 0, strrpos($path, '/'));
+      }
+      $callback_mid = $_menu['path index'][$path];
+      $allowed = $_menu['items'][$callback_mid]['callback'] !== MENU_DENIED;
+    }
+    else {
+      $allowed = $parent['callback'] !== MENU_DENIED;
+    }
+
+    if ($visible && $allowed) {
       $_menu['visible'][$pid] = array('title' => $parent['title'], 'path' => $parent['path'], 'children' => $children);
       foreach ($children as $mid) {
         $_menu['visible'][$mid]['pid'] = $pid;

@@ -2,81 +2,72 @@
 // $Id$
 
 /**
- * Provide online user help
+ * Implementation of hook_help().
  */
-function story_help($section = "admin/help#story") {
-  $output = "";
-
+function story_help($section) {
   switch ($section) {
     case 'admin/system/modules#description':
-      $output = t("Enables users to submit stories, articles or similar content.");
-      break;
+      return t('Enables users to submit stories, articles or similar content.');
     case 'admin/system/modules/story':
-      $output = t("Stories are like newspaper articles. They tend to follow a publishing flow of <strong>submit -&gt; moderate -&gt; post to the main page -&gt; comments</strong>. Below you may fix a minimum word count for stories and also write some submission or content guidelines for users wanting to post a story.");
-      break;
+      return t("Stories are like newspaper articles. They tend to follow a publishing flow of <strong>submit -&gt; moderate -&gt; post to the main page -&gt; comments</strong>. Below you may fix a minimum word count for stories and also write some submission or content guidelines for users wanting to post a story.");
     case 'admin/help#story':
-      $output = t("
+      return t("
       <p>The story module lets your users submit articles for consideration by the rest of the community, who can vote on them if moderation is enabled.  Stories usually follow a publishing flow of <strong>submit -&gt; moderate -&gt; post to the main page -&gt; comments</strong>.  Administrators are able to shortcut this flow as desired.</p>
       In <a href=\"%story-config\">administer &raquo; configuration &raquo; modules &raquo; story</a> you can set up an introductory text for story authors, and a floor on the number of words which may be included in a story. This is designed to help discourage the submission of trivially short stories.</p>
       <h3>User access permissions for stories</h3>
       <p><strong>create stories:</strong> Allows a role to create stories. They cannot edit or delete stories, even if they are the authors. You must enable this permission to in order for a role to create a story.</p>
       <p><strong>maintain personal stories:</strong> Allows a role to add/edit stories if they own the story. Use this permission if you want users to be able to edit and maintain their own stories.</p>
-      ", array("%story-config" => url("admin/system/modules/story")));
-      break;
+      ", array('%story-config' => url('admin/system/modules/story')));
     case 'node/add/story':
-      $output = variable_get('story_help', '');
-      break;
+      return variable_get('story_help', '');
     case 'node/add#story':
-      $output = t("A story is similar to a newspaper article. If stories are moderated, the post will be submitted to the attention of other users and be queued in the submission queue.  Users and moderators vote on the posts they like or dislike, promoting or demoting them.  When a post gets above a certain threshold it automatically gets promoted to the front page.");
-      break;
+      return t("A story is similar to a newspaper article. If stories are moderated, the post will be submitted to the attention of other users and be queued in the submission queue.  Users and moderators vote on the posts they like or dislike, promoting or demoting them.  When a post gets above a certain threshold it automatically gets promoted to the front page.");
   }
-
-  return $output;
 }
 
 /**
- * Declare administrative settings for a module.
+ * Implementation of hook_settings().
  */
 function story_settings() {
- $output .= form_textarea(t("Explanation or submission guidelines"), "story_help", variable_get("story_help", ""), 70, 5, t("This text will be displayed at the top of the story submission form.  It is useful for helping or instructing your users."));
- $output .= form_select(t("Minimum number of words"), "minimum_story_size", variable_get("minimum_story_size", 0), drupal_map_assoc(array(0, 10, 25, 50, 75, 100, 125, 150, 175, 200)), t("The minimum number of words a story must be to be considered valid.  This can be useful to rule out submissions that do not meet the site's standards, such as short test posts."));
+ $output .= form_textarea(t('Explanation or submission guidelines'), 'story_help', variable_get('story_help', ''), 70, 5, t('This text will be displayed at the top of the story submission form.  It is useful for helping or instructing your users.'));
+ $output .= form_select(t('Minimum number of words'), 'minimum_story_size', variable_get('minimum_story_size', 0), drupal_map_assoc(array(0, 10, 25, 50, 75, 100, 125, 150, 175, 200)), t('The minimum number of words a story must be to be considered valid.  This can be useful to rule out submissions that do not meet the site\'s standards, such as short test posts.'));
 
  return $output;
 }
 
 /**
- * Define the human-readable name of a node type.
+ * Implementation of hook_node_name().
  */
 function story_node_name($node) {
-  return t("story");
+  return t('story');
 }
 
 /**
- * Define user permissions.
+ * Implementation of hook_perm().
  */
 function story_perm() {
   return array('create stories', 'maintain personal stories');
 }
 
 /**
- * Define access restrictions
+ * Implementation of hook_access().
  */
 function story_access($op, $node) {
   global $user;
 
-  if ($op == "view") {
+  if ($op == 'view') {
     return $node->status;
   }
 
-  if ($op == "create") {
+  if ($op == 'create') {
     return user_access('create stories');
   }
 
-  if ($op == "update") {
+  if ($op == 'update') {
     return user_access('maintain personal stories') && ($user->uid == $node->uid);
   }
 
-  if ($op == "delete") {
+  if ($op == 'delete') {
     return user_access('maintain personal stories') && ($user->uid == $node->uid);
   }
 }
@@ -88,7 +79,7 @@ function story_link($type, $node = 0, $main) {
   $links = array();
 
   if ($type == 'system') {
-    menu('node/add/story', t('story'), story_access('create', $node) ? 'node_page' : MENU_DENIED, 0);
+    menu('node/add/story', t('story'), story_access('create', $node) ? MENU_FALLTHROUGH : MENU_DENIED, 0);
   }
 
   if ($type == 'node' && $node->type == 'story') {
@@ -102,37 +93,35 @@ function story_link($type, $node = 0, $main) {
 }
 
 /**
- * Verify a node editing form.
+ * Implementation of hook_validate().
+ *
+ * Ensures the story is of adequate length.
  */
 function story_validate(&$node) {
-
-  /*
-  ** Validate the size of the story:
-  */
-
-  if (isset($node->body) && count(explode(" ", $node->body)) < variable_get("minimum_story_size", 0)) {
-    $error["body"] = t("The body of your story is too short. You need at least %word_count words to submit your story.", array('%word_count' => variable_get("minimum_story_size", 0)));
+  if (isset($node->body) && count(explode(' ', $node->body)) < variable_get('minimum_story_size', 0)) {
+    $error['body'] = t('The body of your story is too short. You need at least %word_count words to submit your story.', array('%word_count' => variable_get('minimum_story_size', 0)));
   }
 
   return $error;
 }
 
 /**
- * Display a node editing form
+ * Implementation of hook_form().
  */
 function story_form(&$node, &$error) {
+  $output = '';
 
-  if (function_exists("taxonomy_node_form")) {
-    $output .= implode("", taxonomy_node_form("story", $node));
+  if (function_exists('taxonomy_node_form')) {
+    $output .= implode('', taxonomy_node_form('story', $node));
   }
 
-  $output .= form_textarea(t("Body"), "body", $node->body, 60, 15, ($error["body"] ? theme('error', $error["body"]) : ''). filter_tips_short());
+  $output .= form_textarea(t('Body'), 'body', $node->body, 60, 15, ($error['body'] ? theme('error', $error['body']) : ''). filter_tips_short());
 
   return $output;
 }
 
 /**
- * Prepare a node's body content for viewing
+ * Implementation of hook_content().
  */
 function story_content($node, $main = 0) {
   return node_prepare($node, $main);
