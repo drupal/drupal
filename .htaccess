@@ -10,7 +10,7 @@
 
 # Set some options
 Options -Indexes
-Options FollowSymLinks
+Options +FollowSymLinks
 
 # Customized server error messages:
 ErrorDocument 404 /index.php
