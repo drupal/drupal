@@ -6,6 +6,8 @@ Drupal x.x.x, xxxx-xx-xx
     * made it possible to browse the profiles by field.
 - menu module:
     * made it possible to customize menus.
+- user management:
+    * added support for multiple roles per user.
 - refactored 403 (forbidden) handling and added support for custom 403 pages.
 - syndication:
     * added support for RSS ping-notifications of http://technorati.com/.

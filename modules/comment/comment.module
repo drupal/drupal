@@ -322,7 +322,12 @@ function comment_post($edit) {
 
         $status = user_access("post comments without approval") ? 0 : 1;
         $roles = variable_get("comment_roles", array());
-        $score = $roles[$user->rid] ? $roles[$user->rid] : 0;
+        $score = 0;
+
+        foreach (array_intersect(array_keys($roles), array_keys($user->roles)) as $rid) {
+          $score = max($roles[$rid], $score);
+        }
+
         $users = serialize(array(0 => $score));
 
         /*
@@ -371,13 +376,13 @@ function comment_post($edit) {
           */
 
           // Get the parent comment:
-          $parent = db_fetch_object(db_query("SELECT * FROM {comments} WHERE cid = '%d'", $edit["pid"]));
+          $parent = db_fetch_object(db_query("SELECT * FROM {comments} WHERE cid = %d", $edit['pid']));
 
           // Strip the "/" from the end of the parent thread:
           $parent->thread = (string)rtrim((string)$parent->thread, "/");
 
           // Get the max value in _this_ thread:
-          $max = db_result(db_query("SELECT MAX(thread) FROM {comments} WHERE thread LIKE '%s.%%' AND nid = '%d'", $parent->thread, $edit["nid"]));
+          $max = db_result(db_query("SELECT MAX(thread) FROM {comments} WHERE thread LIKE '%s.%%' AND nid = %d", $parent->thread, $edit['nid']));
 
           if ($max == "") {
             // First child of this parent
@@ -1342,7 +1347,7 @@ function theme_comment_moderation_form($comment) {
     // comment hasn't been moderated yet:
 
     if (!isset($votes)) {
-      $result = db_query("SELECT v.mid, v.vote, r.value FROM {moderation_votes} v, {moderation_roles} r WHERE v.mid = r.mid AND r.rid = %d ORDER BY weight", $user->rid);
+      $result = db_query("SELECT v.mid, v.vote, MAX(r.value) AS value FROM {moderation_votes} v INNER JOIN {moderation_roles} r ON r.mid = v.mid WHERE r.rid IN (%s) GROUP BY v.mid, v.vote ORDER BY weight", implode(", ", array_keys($user->roles)));
       $votes = array();
       while ($vote = db_fetch_object($result)) {
         if ($vote->value != 0) {
@@ -1452,7 +1457,7 @@ function comment_moderate() {
   $moderation = $_POST["moderation"];
 
   if ($moderation) {
-    $result = db_query("SELECT mid, value FROM {moderation_roles} WHERE rid = %d", $user->rid);
+    $result = db_query("SELECT mid, MAX(value) AS value FROM {moderation_roles} WHERE rid IN (%s) GROUP BY mid", implode(", ", array_keys($user->roles)));
     while ($mod = db_fetch_object($result)) {
       $votes[$mod->mid] = $mod->value;
     }

@@ -593,6 +593,16 @@ CREATE INDEX users_changed_idx ON users(changed);
 CREATE SEQUENCE users_uid_seq INCREMENT 1 START 1;
 
 --
+-- Table structure for users_roles
+--
+
+CREATE TABLE users_roles (
+  uid integer NOT NULL default '0',
+  rid integer NOT NULL default '0',
+  PRIMARY KEY (uid, rid)
+);
+
+--
 -- Table structure for variable
 --
 

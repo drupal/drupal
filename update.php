@@ -109,7 +109,29 @@ function update_info() {
   print "</ol>";
   print "Notes:";
   print "<ol>";
-  print " <li>If you <strong>upgrade from Drupal 4.3.x</strong>, you have will need to add the <code>bootstrap</code> and <code>throttle</code> fields to the <code>system</code> table manually before upgrading. To add the required fields, issue the following SQL commands:
+  print " <li>If you <strong>upgrade from Drupal 4.4.x</strong>, you will need to create the <code>users_roles</code> table manually before upgrading. To create the <code>users_roles</code> table, issue the following SQL commands:
+
+  <p>MySQL specific example:
+  <pre>
+  CREATE TABLE users_roles (
+    uid int(10) unsigned NOT NULL default '0',
+    rid int(10) unsigned NOT NULL default '0',
+    PRIMARY KEY (uid, rid)
+  );
+  </pre>
+  </p>
+
+  <p>PostgreSQL specific example:
+  <pre>
+  CREATE TABLE users_roles (
+    uid integer NOT NULL default '0',
+    rid integer NOT NULL default '0',
+    PRIMARY KEY (uid, rid)
+  );
+  </pre>
+  </p>
+  </li>";
+  print " <li>If you <strong>upgrade from Drupal 4.3.x</strong>, you will need to add the <code>bootstrap</code> and <code>throttle</code> fields to the <code>system</code> table manually before upgrading. To add the required fields, issue the following SQL commands:
 
   <p>MySQL specific example:
   <pre>
@@ -128,7 +150,11 @@ function update_info() {
   </pre>
   </p>
   </li>";
-  print " <li>If you <strong>upgrade from Drupal 4.2.0</strong>, you have to create the <code>sessions</code> table manually before upgrading.  After you created the table, you'll want to log in and immediately continue the upgrade.  To create the <code>sessions</code> table, issue the following SQL command (MySQL specific example):<pre>CREATE TABLE sessions (
+  print " <li>If you <strong>upgrade from Drupal 4.2.0</strong>, you will need to create the <code>sessions</code> table manually before upgrading.  After creating the table, you will want to log in and immediately continue the upgrade.  To create the <code>sessions</code> table, issue the following SQL command:
+
+  <p>MySQL specific example:
+  <pre>
+  CREATE TABLE sessions (
   uid int(10) unsigned NOT NULL,
   sid varchar(32) NOT NULL default '',
   hostname varchar(128) NOT NULL default '',
@@ -136,7 +162,10 @@ function update_info() {
   session text,
   KEY uid (uid),
   KEY sid (sid(4)),
-  KEY timestamp (timestamp));</pre></li>";
+  KEY timestamp (timestamp));
+  </pre>
+  </p>
+  </li>";
   print "</ol>";
   print update_page_footer();
 }

@@ -37,11 +37,17 @@ function user_load($array = array()) {
       $query .= "u.$key = '". check_query($value) ."' AND ";
     }
   }
-  $result = db_query_range("SELECT u.*, r.name AS role FROM {role} r INNER JOIN {users} u ON r.rid = u.rid WHERE $query u.status < 3", 0, 1);
+  $result = db_query_range("SELECT u.* FROM {users} u WHERE $query u.status < 3", 0, 1);
 
   $user = db_fetch_object($result);
   $user = drupal_unpack($user);
+  $user->roles = array();
 
+  $result = db_query("SELECT r.rid, r.name FROM {role} r INNER JOIN {users_roles} ur ON ur.rid = r.rid WHERE ur.uid = %d", $user->uid);
+
+  while ($role = db_fetch_object($result)) {
+    $user->roles[$role->rid] = $role->name;
+  }
 
   user_module_invoke("load", $array, $user);
 
@@ -80,6 +86,13 @@ function user_save($account, $array = array()) {
 
     db_query("UPDATE {users} SET $query changed = %d WHERE uid = %d", array_merge($v, array(time(), $account->uid)));
 
+    // reload user roles
+    db_query("DELETE FROM {users_roles} WHERE uid = %d", $account->uid);
+
+    foreach ($array['rid'] as $rid) {
+      db_query("INSERT INTO {users_roles} (uid, rid) VALUES (%d, %d)", $account->uid, $rid);
+    }
+
     $user = user_load(array('uid' => $account->uid));
   }
   else {
@@ -110,6 +123,13 @@ function user_save($account, $array = array()) {
     $s[] = "'%s'";
 
     db_query("INSERT INTO {users} (". implode(", ", $fields) .") VALUES (". implode(", ", $s) .")", $values);
+
+    // reload user roles (delete just to be safe)
+    db_query("DELETE FROM {users_roles} WHERE uid = %d", $array['uid']);
+
+    foreach ($array['rid'] as $rid) {
+      db_query("INSERT INTO {users_roles} (uid, rid) VALUES (%d, %d)", $array['uid'], $rid);
+    }
 
     $user = user_load(array('name' => $array['name']));
 
@@ -232,10 +252,14 @@ function user_access($string) {
   */
 
   if ($perm === 0) {
-    $perm = db_result(db_query("SELECT p.perm FROM {role} r, {permission} p WHERE r.rid = p.rid AND r.rid = %d", $user->rid), 0);
+    $result = db_query("SELECT DISTINCT p.perm FROM {role} r INNER JOIN {permission} p ON p.rid = r.rid INNER JOIN {users_roles} ur ON ur.rid = r.rid WHERE ur.uid = %d", $user->uid);
+
+    while ($row = db_fetch_object($result)) {
+      $perm .= "$row->perm, ";
+    }
   }
 
-  return strstr($perm, $string);
+  return strstr($perm, "$string, ");
 }
 
 function user_mail($mail, $subject, $message, $header) {
@@ -314,7 +338,7 @@ function user_fields() {
     }
     else {
       // Make sure we return the default fields at least
-      $fields = array('uid', 'name', 'pass', "mail", "picture", "mode", "sort", "threshold", "theme", "signature", "created", "changed", "status", "timezone", "language", "init", "data", "rid");
+      $fields = array('uid', 'name', 'pass', 'mail', 'picture', 'mode', 'sort', 'threshold', 'theme', 'signature', 'created', 'changed', 'status', 'timezone', 'language', 'init', 'data');
     }
   }
 
@@ -690,7 +714,7 @@ function user_login($edit = array(), $msg = "") {
         if (module_hook($module, "auth")) {
           if (module_invoke($module, "auth", $name, $pass, $server)) {
             if (variable_get("user_register", 1) == 1 && !user_load(array('name' => "$name@$server"))) { //register this new user
-              $user = user_save("", array('name' => "$name@$server", 'pass' => user_password(), "init" => "$name@$server", "status" => 1, "authname_$module" => "$name@$server", "rid" => _user_authenticated_id()));
+              $user = user_save('', array('name' => "$name@$server", 'pass' => user_password(), 'init' => "$name@$server", 'status' => 1, "authname_$module" => "$name@$server", 'rid' => array(_user_authenticated_id())));
               watchdog('user', "new user: $name@$server ($module ID)", l(t("edit user"), "admin/user/edit/$user->uid"));
               break;
             }
@@ -925,7 +949,7 @@ function user_register($edit = array()) {
 
     // TODO: is this necessary? Won't session_write replicate this?
     unset($edit["session"]);
-    $account = user_save("", array_merge(array('name' => $edit['name'], 'pass' => $pass, "init" => $edit['mail'], "mail" => $edit['mail'], "rid" => _user_authenticated_id(), "status" => (variable_get("user_register", 1) == 1 ? 1 : 0)), $data));
+    $account = user_save('', array_merge(array('name' => $edit['name'], 'pass' => $pass, 'init' => $edit['mail'], 'mail' => $edit['mail'], 'rid' => array(_user_authenticated_id()), 'status' => (variable_get('user_register', 1) == 1 ? 1 : 0)), $data));
     watchdog('user', "new user: '". $edit['name'] ."' &lt;". $edit['mail'] ."&gt;", l(t("edit user"), "admin/user/edit/$account->uid"));
 
     $variables = array("%username" => $edit['name'], "%site" => variable_get("site_name", "drupal"), "%password" => $pass, "%uri" => $base_url, "%uri_brief" => substr($base_url, strlen("http://")), "%mailto" => $edit['mail'], "%date" => format_date(time()), "%login_uri" => url('user/login', NULL, NULL, TRUE), "%edit_uri" => url("user/edit", NULL, NULL, TRUE));
@@ -1041,9 +1065,9 @@ function user_edit($edit = array()) {
              watchdog("warning", "detected malicious attempt to alter a protected database field");
            }
 
-           $edit["rid"] = $user->rid;
-           $edit["init"] = $user->init;
-           $edit["session"] = $user->session;
+           $edit['rid'] = array_keys($user->roles);
+           $edit['init'] = $user->init;
+           $edit['session'] = $user->session;
         }
 
         /*
@@ -1319,7 +1343,7 @@ function user_admin_create($edit = array()) {
   if ($success) {
     watchdog('user', "new user: '". $edit['name'] ."' &lt;". $edit['mail'] ."&gt;");
 
-    user_save("", array('name' => $edit['name'], 'pass' => $edit['pass'], "init" => $edit['mail'], "mail" => $edit['mail'], "rid" => _user_authenticated_id(), "status" => 1));
+    user_save('', array('name' => $edit['name'], 'pass' => $edit['pass'], 'init' => $edit['mail'], 'mail' => $edit['mail'], 'rid' => array(_user_authenticated_id()), 'status' => 1));
 
     drupal_set_message(t('Created a new user account.  No e-mail has been sent.'));
   }
@@ -1486,9 +1510,17 @@ function user_admin_role($edit = array()) {
     db_query("DELETE FROM {role} WHERE rid = %d", $id);
     db_query("DELETE FROM {permission} WHERE rid = %d", $id);
 
-    // Users with the deleted role are put back in the authenticated users pool
-    $aid = db_result(db_query("SELECT rid FROM {role} WHERE name = 'Authenticated user'"));
-    db_query("UPDATE {users} SET rid = %d WHERE rid = %d", $aid, $id);
+    // Users with only the deleted role are put back in the authenticated users pool
+    $aid = _user_authenticated_id();
+    $result = db_query("SELECT DISTINCT ur1.uid FROM {users_roles} ur1 LEFT JOIN {users_roles} ur2 ON ur2.uid = ur1.uid WHERE ur1.rid = %d AND ur2.rid != ur1.rid", $id);
+    $uid = array();
+
+    while ($u = db_fetch_object($result)) {
+      $uid[] = $u->uid;
+    }
+
+    db_query("DELETE FROM {users_roles} WHERE rid = %d AND uid IN (%s)", $id, implode(', ', $uid));
+    db_query("UPDATE {users_roles} SET rid = %d WHERE rid = %d", $aid, $id);
   }
   else if ($op == t("Add role")) {
     db_query("INSERT INTO {role} (name) VALUES ('%s')", $edit['name']);
@@ -1545,6 +1577,9 @@ function user_admin_edit($edit = array()) {
       }
       else if ($error = user_validate_mail($edit['mail'])) {
         // do nothing
+      }
+      else if (count($edit['rid']) < 1) {
+        $error = t('The user must have at least one role.');
       }
       else if (db_num_rows(db_query("SELECT uid FROM {users} WHERE uid != %d AND LOWER(name) = LOWER('%s')", $account->uid, $edit['name'])) > 0) {
         $error = t("The name '%s' is already taken.", array("%s" => $edit['name']));
@@ -1604,6 +1639,7 @@ function user_admin_edit($edit = array()) {
     else if ($op == t("Delete account")) {
       if ($edit['status'] == 0) {
         db_query("DELETE FROM {users} WHERE uid = %d", $account->uid);
+        db_query("DELETE FROM {users_roles} WHERE uid = %d", $account->uid);
         db_query("DELETE FROM {authmap} WHERE uid = %d", $account->uid);
         drupal_set_message(t("the account has been deleted."));
         module_invoke_all('user', 'delete', $edit, $account);
@@ -1628,7 +1664,7 @@ function user_admin_edit($edit = array()) {
     $group .= form_textfield(t("E-mail address"), "mail", $account->mail, 30, 55, t("Insert a valid e-mail address.  All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail."));
     $group .= form_item(t("Password"), "<input type=\"password\" name=\"edit[pass1]\" size=\"12\" maxlength=\"24\" /> <input type=\"password\" name=\"edit[pass2]\" size=\"12\" maxlength=\"24\" />", t("Enter a new password twice if you want to change the current password for this user or leave it blank if you are happy with the current password."));
     $group .= form_radios(t("Status"), "status", $account->status, array(t("Blocked"), t("Active")));
-    $group .= form_radios(t("Role"), "rid", $account->rid, user_roles(1));
+    $group .= form_select(t('Roles'), 'rid', array_keys($account->roles), user_roles(1), t("Select at least one role.  The user receives the combined permissions of all of the selected roles."), 0, 1);
 
     $output  = form_group(t('Account information'), $group);
 
@@ -1660,17 +1696,24 @@ function user_admin_account() {
     array("data" => t("ID"), "field" => "u.uid"),
     array("data" => t("username"), "field" => "u.name"),
     array("data" => t("status"), "field" => "u.status"),
-    array("data" => t("role"), "field" => "u.rid"),
+    array('data' => t('roles')),
     array("data" => t("last access"), "field"  => "u.changed", "sort" => "desc"),
     t("operations")
   );
-  $sql = "SELECT u.uid, u.name, u.status, u.changed, r.name AS rolename FROM {role} r INNER JOIN {users} u ON r.rid = u.rid WHERE uid != 0";
+  $sql = "SELECT u.uid, u.name, u.status, u.changed FROM {users} u WHERE uid != 0";
   $sql .= tablesort_sql($header);
   $result = pager_query($sql, 50);
 
   $status = array(t("blocked"), t("active"));
   while ($account = db_fetch_object($result)) {
-    $rows[] = array($account->uid, format_name($account), $status[$account->status], $account->rolename, format_date($account->changed, "small"), l(t("edit account"), "admin/user/edit/$account->uid"));
+    $rolesresult = db_query("SELECT r.name FROM {role} r INNER JOIN {users_roles} ur ON ur.rid = r.rid WHERE ur.uid = %d", $account->uid);
+    $roles = array();
+
+    while ($role = db_fetch_object($rolesresult)) {
+      $roles[] = $role->name;
+    }
+
+    $rows[] = array($account->uid, format_name($account), $status[$account->status], implode(',<br />', $roles), format_date($account->changed, 'small'), l(t('edit account'), "admin/user/edit/$account->uid"));
   }
 
   $pager = theme("pager", NULL, 50, 0, tablesort_pager());
@@ -1774,7 +1817,7 @@ function user_help($section = "admin/help#user") {
       // Start of user_help_admin
       $output = t("
       <h3>Introduction</h3>
-      <p>Drupal offers a powerful access system that allows users to register, login, logout, maintain user profiles, etc. By using <a href=\"%user-role\">roles</a> you can setup fine grained <a href=\"%user-permission\">permissions</a> allowing each role to do only what you want them to. Each user is assigned to a role. By default there are two roles \"anonymous\" - a user who has not logged in, and \"authorized\" a user who has signed up and who has been authorized. As anonymous users, participants suffer numerous disadvantages, for example they cannot sign their names to nodes, and their moderated posts beginning at a lower score.</p>
+      <p>Drupal offers a powerful access system that allows users to register, login, logout, maintain user profiles, etc. By using <a href=\"%user-role\">roles</a> you can setup fine grained <a href=\"%user-permission\">permissions</a> allowing each role to do only what you want them to. Each user is assigned to one or more roles. By default there are two roles \"anonymous\" - a user who has not logged in, and \"authorized\" a user who has signed up and who has been authorized. As anonymous users, participants suffer numerous disadvantages, for example they cannot sign their names to nodes, and their moderated posts beginning at a lower score.</p>
       <p>In contrast, those with a user account can use their own name or handle and are granted various privileges: the most important is probably the ability to moderate new submissions, to rate comments, and to fine-tune the site to their personal liking, with saved personal settings.  Drupal themes make fine tuning quite a pleasure.</p>
       <p>Registered users need to authenticate by supplying either a local username and password, or a remote username and password such as a <a href=\"%jabber\">Jabber ID</a>, <a href=\"%delphiforums\">DelphiForums ID</a>, or one from a <a href=\"%drupal\">Drupal powered</a> website. See the <a href=\"%da-auth\">distributed authentication help</a> for more information on this innovative feature.
       The local username and password, hashed with Message Digest 5 (MD5), are stored in your database. When you enter a password it is also hashed with MD5 and compaired with what is in the database. If the hashes match, the username and password are correct. Once a user authenticated session is started, and until that session is over, the user won't have to re-authenticate. To keep track of the individual sessions, Drupal relies on <a href=\"%php-sess\">PHP sessions</a>. A visitor accessing your website is assigned an unique ID, the so-called session ID, which is stored in a cookie. For security's sake, the cookie does not contain personal information but acts as a key to retrieve the information stored on your server. When a visitor accesses your site, Drupal will check whether a specific session ID has been sent with the request. If this is the case, the prior saved environment is recreated.</p>

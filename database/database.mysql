@@ -598,6 +598,16 @@ CREATE TABLE users (
 ) TYPE=MyISAM;
 
 --
+-- Table structure for table 'users_roles'
+--
+
+CREATE TABLE users_roles (
+  uid int(10) unsigned NOT NULL default '0',
+  rid int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY (uid, rid)
+) TYPE=MyISAM;
+
+--
 -- Table structure for table 'variable'
 --
 
