@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.178 2004/01/02 16:24:28 dries Exp $ */
+/* $Id: theme.inc,v 1.179 2004/01/07 18:42:02 dries Exp $ */
 
 /**
  * @file
@@ -136,7 +136,7 @@ function theme_header() {
   $output = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
   $output .= "<html xmlns=\"http://www.w3.org/1999/xhtml\">";
   $output .= "<head>";
-  $output .= " <title>". drupal_get_title() ? drupal_get_title() : variable_get('site_name', "drupal") ."</title>";
+  $output .= " <title>". (drupal_get_title() ? drupal_get_title() : variable_get('site_name', "drupal")) ."</title>";
   $output .= theme_head();
   $output .= " <style type=\"text/css\" media=\"all\">";
   $output .= "  @import url(misc/drupal.css);";
