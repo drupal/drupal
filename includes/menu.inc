@@ -421,17 +421,17 @@ function theme_menu_item($mid) {
  */
 function theme_menu_local_tasks() {
 
-  $active = true;
 
   if ($mid = menu_get_active_nontask_item()) {
     $menu = menu_get_menu();
+    $active_mid = $mid;
 
     if ($children = $menu['items'][$mid]['children']) {
       foreach ($menu['items'][$mid]['children'] as $cid) {
         if (($menu['items'][$cid]['type'] & MENU_IS_LOCAL_TASK) && _menu_item_is_accessible($cid)) {
           if (menu_in_active_trail($cid)) {
             $tabs[] = theme('menu_local_task', $cid, TRUE);
-            $active = false;
+            $active_mid = $cid;
           }
           else {
             $tabs[] = theme('menu_local_task', $cid, FALSE);
@@ -442,13 +442,14 @@ function theme_menu_local_tasks() {
       if ($tabs) {
         // We add a default view-tab for the parent:
         $output  = "<ul class=\"tabs primary\">\n";
-        $output .= theme('menu_local_task', $mid, $active);
+        $output .= theme('menu_local_task', $mid, $active_mid == $mid);
         $output .= implode($tabs);
         $output .= "</ul>\n";
-        $output .= theme('menu_local_subtasks', $mid);
+        $output .= theme('menu_local_subtasks', $active_mid);
       }
     }
   }
+
   return $output;
 }
 
@@ -462,7 +463,7 @@ function theme_menu_local_tasks() {
  */
 function theme_menu_local_task($mid, $active) {
   if ($active) {
-    return '<li class="active">'. theme('menu_item', $mid)  ."</li>\n";
+    return '<li class="active">'. theme('menu_item', $mid) ."</li>\n";
   }
   else {
     return '<li>'. theme('menu_item', $mid) ."</li>\n";
