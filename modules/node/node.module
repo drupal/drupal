@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.329 2004/02/08 21:16:03 dries Exp $
+// $Id: node.module,v 1.330 2004/02/08 21:42:59 kjartan Exp $
 
 define('NODE_NEW_LIMIT', time() - 30 * 24 * 60 * 60);
 
@@ -1075,7 +1075,7 @@ function node_validate($node, &$error) {
     }
 
     if (!$node->date) {
-      $node->date = date('M j, Y g:i a', $node->created);
+      $node->date = format_date($node->created, 'custom', 'Y-m-d H:i O');
     }
 
     if (!is_numeric($node->status)) {

@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.320 2004/02/08 17:12:44 dries Exp $ */
+/* $Id: common.inc,v 1.321 2004/02/08 21:42:58 kjartan Exp $ */
 
 /**
  * @defgroup common Core functions
@@ -844,39 +844,55 @@ function format_interval($timestamp, $granularity = 2) {
  *              should contain the format string
  * @param $format Format string (as required by the PHP date() function).
  *                Only required if 'custom' date format is requested.
+ * @param $timezone Timezone offset in seconds in case the user timezone
+ *   should not be used.
  * @return Translated date string in the requested format
  */
-function format_date($timestamp, $type = "medium", $format = "") {
-  global $user;
+function format_date($timestamp, $type = 'medium', $format = '', $timezone = NULL) {
+  if ($timezone === NULL) {
+    global $user;
+    $timezone = $user->uid ? $user->timezone : variable_get('date_default_timezone', 0);
+  }
 
-  $timestamp += ($user->timezone) ? $user->timezone - date("Z") : 0;
+  $timestamp += $timezone;
 
   switch ($type) {
-    case "small":
-      $format = variable_get("date_format_short", "m/d/Y - H:i");
+    case 'small':
+      $format = variable_get('date_format_short', 'm/d/Y - H:i');
       break;
-    case "large":
-      $format = variable_get("date_format_long", "l, F j, Y - H:i");
+    case 'large':
+      $format = variable_get('date_format_long', 'l, F j, Y - H:i');
       break;
-    case "custom":
+    case 'custom':
       // No change to format
       break;
-    case "medium":
+    case 'medium':
     default:
-      $format = variable_get("date_format_medium", "D, m/d/Y - H:i");
+      $format = variable_get('date_format_medium', 'D, m/d/Y - H:i');
   }
 
-  for ($i = strlen($format); $i >= 0; $c = $format[--$i]) {
-    if (strstr("AaDFlM", $c)) {
-      $date = t(date($c, $timestamp)) . $date;
+  $max = strlen($format);
+  for ($i = 0; $i <= $max; $c = $format{$i++}) {
+    if (strpos('AaDFlM', $c)) {
+      $date .= gmdate($c, $timestamp);
     }
-    else if (strstr("BdgGhHiIjLmnOrsStTUwWYyZz", $c)) {
-      $date = date($c, $timestamp) . $date;
+    else if (strpos('BdgGhHiIjLmnsStTUwWYyz', $c)) {
+      $date .= gmdate($c, $timestamp);
+    }
+    else if ($c == 'r') {
+      $date .= format_date($timestamp - $timezone, 'custom', 'D, d M Y H:i:s O', $timezone);
+    }
+    else if ($c == 'O') {
+      $date .= sprintf('%s%02d%02d', ($timezone < 0 ? '-' : '+'), abs($timezone / 3600), abs($timezone % 3600) / 60);
+    }
+    else if ($c == 'Z') {
+      $date .= $timezone;
     }
     else {
-      $date = $c.$date;
+      $date .= $c;
     }
   }
+
   return $date;
 }
 
