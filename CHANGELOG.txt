@@ -7,6 +7,8 @@ Drupal x.x.x, xxxx-xx-xx
     * improved search output.
 - syndication:
     * made the ping module ping pingomatic.com which, in turn, will ping all the major ping services.
+    * added categories to RSS feeds.
+    * added enclosures to RSS feeds.
 - flood control mechanism:
     * added a mechanism to throttle certain operations.
 - usability:
