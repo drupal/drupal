@@ -72,8 +72,6 @@ function jabber_recv($session, $timout = 50) {
 function jabber_auth($username, $password, $server) {
   global $jabber;
 
-  watchdog("user", "starting jabber auth");
-
   $session = fsockopen($server, 5222, &$errno, &$errstr, 5);
 
   if ($session) {
