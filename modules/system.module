@@ -109,12 +109,6 @@ function system_save($edit = array()) {
     variable_set($name, $value);
   }
 
-  /*
-  ** Clear the cache so the changes take effect for anonymous users.
-  */
-
-  cache_clear_all();
-
   return t("The configuration options have been saved.");
 }
 
@@ -240,6 +234,7 @@ function system_admin() {
         foreach ($edit["status"] as $filename => $status) {
           db_query("UPDATE system SET status = %d WHERE filename = '$filename'", $status);
         }
+        cache_clear_all();
       case "modules":
         // Note: changing this also requires changing module_init() @ includes/module.inc.
         $required = array("modules/user.module", "modules/system.module", "modules/watchdog.module");
@@ -250,16 +245,19 @@ function system_admin() {
         foreach ($edit["status"] as $filename => $status) {
           db_query("UPDATE system SET status = %d WHERE filename = '$filename'", $status);
         }
+        cache_clear_all();
       case "themes":
         print system_listing("theme", "themes");
         break;
       case t("Reset to defaults"):
         print status(system_default($edit));
         print system_view($type);
+        cache_clear_all();
         break;
       case t("Save configuration"):
         print status(system_save($edit));
         print system_view($type);
+        cache_clear_all();
         break;
       default:
         print system_view($type);
