@@ -60,9 +60,7 @@ pre {
 }
 table {
   /* make <td> sizes relative to body size! */
-  font-size: 1em; 
-  width: 100%;
-}
+  font-size: 1em;
 .form-item {
   margin-top: 1em;
 }
@@ -272,8 +270,17 @@ table {
   padding: 1em 1em 1em 0;
   border-bottom: 1px solid #bbb;
 }
+#forum table {
+  width: 100%;
+}
 #forum td {
   padding: 0.5em 0.5em 0.5em 0.5em;
+}
+#forum td.forum, #forum td.posts {
+  background-color: #eee;
+}
+#forum td.topics, #forum td.last-reply {
+  background-color: #ddd;
 }
 #forum td.container {
   background-color: #ccc;
