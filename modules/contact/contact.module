@@ -74,9 +74,9 @@ function contact_mail_user() {
         if (!$edit['message']) {
           form_set_error('message',  t('You must enter a message.'));
         }
-  if (!$edit['subject']) {
-    form_set_error('subject', t('You must enter a subject.'));
-  }
+        if (!$edit['subject']) {
+          form_set_error('subject', t('You must enter a subject.'));
+        }
 
         if (!form_get_errors()) {
           // Compose the body:
@@ -89,18 +89,17 @@ function contact_mail_user() {
           // Tidy up the body:
           foreach ($message as $key => $value) {
             $message[$key] = wordwrap(strip_tags($value));
-
           }
 
           // Prepare all fields:
           $to = $account->mail;
           $from = $user->mail;
 
-    // Format the subject:
+          // Format the subject:
           $subject = '['. variable_get('site_name', 'drupal') .'] '. $edit['subject'];
 
           // Prepare the body:
-    $body = implode("\n\n", $message);
+          $body = implode("\n\n", $message);
 
           // Send the e-mail:
           user_mail($to, $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
