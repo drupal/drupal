@@ -86,7 +86,7 @@ function forum_block($op = "list", $delta = 0) {
 
       if (empty($cache)) {
         unset($items);
-        $content = node_title_list(db_query_range("SELECT n.nid, n.title, u.uid, u.name, GREATEST(n.created, MAX(c.timestamp)) AS sort FROM node n, forum f LEFT JOIN comments c ON c.nid = n.nid LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'forum' AND n.nid = f.nid AND n.status = 1 GROUP BY n.nid ORDER BY sort DESC", 0, variable_get("forum_block_num", "5")), t("Active forum topics:"));
+        $content = node_title_list(db_query_range("SELECT n.nid, n.title, u.uid, u.name, GREATEST(n.created, MAX(c.timestamp)) AS sort FROM node n LEFT JOIN forum f ON n.nid = f.nid LEFT JOIN comments c ON n.nid = c.nid LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'forum' AND n.nid = f.nid AND n.status = 1 GROUP BY n.nid, n.title, n.created, u.uid, u.name ORDER BY sort DESC", 0, variable_get("forum_block_num", "5")), t("Active forum topics:"));
 
         unset ($items);
         $content .= node_title_list(db_query_range("SELECT n.nid, n.title, u.uid, u.name FROM node n LEFT JOIN forum f ON n.nid = f.nid LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'forum' ORDER BY n.nid DESC", 0, variable_get("forum_block_num", "5")), t("New forum topics:"));
@@ -121,7 +121,7 @@ function forum_link($type, $node = 0, $main = 0) {
   if (!$main && $type == "node" && $node->type == "forum") {
     // get previous and next topic
 
-    $result = db_query("SELECT n.nid, title, body, GREATEST(n.created, MAX(c.timestamp)) AS date_sort, COUNT(c.nid) AS num_comments FROM node n, forum f LEFT JOIN comments c ON c.nid = n.nid WHERE n.nid = f.nid AND f.tid = %d AND n.status = 1 GROUP BY n.nid ORDER BY ". _forum_get_topic_order(isset($user->sortby) ? $user->sortby : variable_get("forum_order",1)), $node->tid);
+    $result = db_query("SELECT n.nid, n.title, n.body, GREATEST(n.created, MAX(c.timestamp)) AS date_sort, COUNT(c.nid) AS num_comments FROM node n LEFT JOIN forum f ON n.nid = f.nid LEFT JOIN comments c ON n.nid = c.nid WHERE n.nid = f.nid AND f.tid = %d AND n.status = 1 GROUP BY n.nid, n.title, n.body, n.created ORDER BY ". _forum_get_topic_order(isset($user->sortby) ? $user->sortby : variable_get("forum_order",1)), $node->tid);
 
     while ($topic = db_fetch_object($result)) {
       if ($stop == 1) {
@@ -349,17 +349,17 @@ function forum_get_parents($tid) {
 }
 
 function _forum_num_topics($term) {
-  $value = db_fetch_object(db_query("SELECT COUNT(n.nid) AS count FROM node n, forum f WHERE f.tid = %d AND n.nid = f.nid AND n.status = 1 AND n.type = 'forum'", $term));
+  $value = db_fetch_object(db_query("SELECT COUNT(n.nid) AS count FROM node n LEFT JOIN forum f ON n.nid = f.nid WHERE f.tid = %d AND n.nid = f.nid AND n.status = 1 AND n.type = 'forum'", $term));
   return ($value) ? $value->count : 0;
 }
 
 function _forum_num_replies($term) {
-  $value = db_fetch_object(db_query("SELECT COUNT(*) AS count FROM comments c, node n, forum f WHERE f.tid = %d AND n.nid = f.nid AND n.nid = c.nid AND n.status = 1 AND c.status = 0 AND n.type = 'forum'", $term));
+  $value = db_fetch_object(db_query("SELECT COUNT(*) AS count FROM comments c LEFT JOIN node n ON n.nid = c.nid LEFT JOIN forum f ON n.nid = f.nid WHERE f.tid = %d AND n.nid = f.nid AND n.nid = c.nid AND n.status = 1 AND c.status = 0 AND n.type = 'forum'", $term));
   return ($value) ? $value->count : 0;
 }
 
 function _forum_topics_read($uid) {
-  $result = db_query("SELECT tid, count(*) AS c FROM history h, node n, forum f WHERE f.nid = n.nid AND n.nid = h.nid AND n.type = 'forum' AND n.status = 1 AND h.uid = %d GROUP BY tid", $uid);
+  $result = db_query("SELECT tid, count(*) AS c FROM history h LEFT JOIN node n ON n.nid = h.nid LEFT JOIN forum f ON n.nid = f.nid WHERE f.nid = n.nid AND n.nid = h.nid AND n.type = 'forum' AND n.status = 1 AND h.uid = %d GROUP BY tid", $uid);
 
   while ($obj = db_fetch_object($result)) {
     $topics_read[$obj->tid] = $obj->c;
@@ -387,9 +387,9 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
   $sql_sortby = _forum_get_topic_order($sortby);
 
   // show topics with the correct tid, or in the forum but with shadow = 1
-  $sql = "SELECT n.nid, title, u.name AS name, u.uid AS uid, n.created AS timestamp, GREATEST(n.created, MAX(c.timestamp)) AS date_sort, COUNT(c.nid) AS num_comments, icon, n.comment AS comment_mode, f.tid FROM node n, term_node r LEFT JOIN users u ON n.uid = u.uid LEFT JOIN comments c ON c.nid = n.nid LEFT JOIN forum f ON n.nid = f.nid WHERE n.nid = r.nid AND ( (r.tid = '".check_query($tid)."' AND f.shadow = 1) OR f.tid = '".check_query($tid)."' ) AND n.status = 1 AND n.type = 'forum' GROUP BY n.nid ORDER BY $sql_sortby";
+  $sql = "SELECT n.nid, n.title, u.name AS name, u.uid AS uid, n.created AS timestamp, GREATEST(n.created, MAX(c.timestamp)) AS date_sort, COUNT(c.nid) AS num_comments, f.icon, n.comment AS comment_mode, f.tid FROM node n LEFT JOIN term_node r ON n.nid = r.nid LEFT JOIN users u ON n.uid = u.uid LEFT JOIN comments c ON n.nid = c.nid LEFT JOIN forum f ON n.nid = f.nid WHERE n.nid = r.nid AND ((r.tid = '".check_query($tid)."' AND f.shadow = 1) OR f.tid = '".check_query($tid)."') AND n.status = 1 AND n.type = 'forum' GROUP BY n.nid, n.title, u.name, u.uid, n.created, n.comment, f.tid, f.icon ORDER BY $sql_sortby";
 
-  $sql_count = "SELECT COUNT(DISTINCT(n.nid)) FROM term_node r, node n LEFT JOIN forum f ON n.nid = f.nid WHERE n.nid = r.nid AND ( (r.tid = '".check_query($tid)."' AND f.shadow = 1) OR f.tid = '".check_query($tid)."' ) AND n.status = 1 AND n.type = 'forum'";
+  $sql_count = "SELECT COUNT(DISTINCT(n.nid)) FROM node n LEFT JOIN forum f ON n.nid = f.nid LEFT JOIN term_node r ON n.nid = r.nid WHERE n.nid = r.nid AND ( (r.tid = '".check_query($tid)."' AND f.shadow = 1) OR f.tid = '".check_query($tid)."') AND n.status = 1 AND n.type = 'forum'";
 
   $result = pager_query($sql, $forum_per_page, 0, $sql_count);
   $topic_num = db_num_rows($result);
@@ -440,7 +440,7 @@ function _forum_new($tid) {
     $read[] = $r->nid;
   }
 
-  $nid = db_result(db_query_range("SELECT n.nid FROM node n, forum f WHERE n.type = 'forum' AND f.nid = n.nid AND n.status = 1 AND f.tid = %d ".($read ? "AND NOT (n.nid IN (".implode(",", $read).")) " : "") ."ORDER BY created", $tid, 0, 1));
+  $nid = db_result(db_query_range("SELECT n.nid FROM node n LEFT JOIN forum f ON n.nid = f.nid WHERE n.type = 'forum' AND f.nid = n.nid AND n.status = 1 AND f.tid = %d ".($read ? "AND NOT (n.nid IN (".implode(",", $read).")) " : "") ."ORDER BY created", $tid, 0, 1));
 
   return $nid ? $nid : 0;
 }
@@ -451,7 +451,9 @@ function _forum_message_taxonomy() {
 
 function forum_page() {
   global $sortby, $forum_per_page, $from, $user;
+  
   $op = $_POST["op"];
+  
   if (user_access("access content")) {
     if (module_exist("taxonomy")) {
       $tid = arg(1);
@@ -464,7 +466,7 @@ function forum_page() {
           drupal_goto(url("node/view/$nid"));
         }
       }
-
+      
       if (empty($sortby)) {
         $sortby = isset($user->sortby) ? $user->sortby : variable_get("forum_order",1);
       }
@@ -474,7 +476,6 @@ function forum_page() {
       }
 
       $offset = ($from / $forum_per_page) + 1;
-
 
       $forums = forum_get_forums($tid);
 
