@@ -2,11 +2,14 @@
 // $Id$
 
 function tablesort_init($header) {
+  static $ts;
 
-  $ts["order"] = tablesort_get_order($header);
-  $ts["order_sql"] = tablesort_get_order_sql($header, $ts["order"]);
-  $ts["sort"] = tablesort_get_sort($header);
-  $ts["query_string"] = tablesort_get_querystring();
+  if (empty($ts)) {
+    $ts["order"] = tablesort_get_order($header);
+    $ts["order_sql"] = tablesort_get_order_sql($header, $ts["order"]);
+    $ts["sort"] = tablesort_get_sort($header);
+    $ts["query_string"] = tablesort_get_querystring();
+  }
 
   return $ts;
 }

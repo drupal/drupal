@@ -265,11 +265,11 @@ function statistics_admin() {
     /* non-configuration admin pages */
     switch ($op) {
       case "statistics":
-        $output = statistics_admin_topnodes();
+        return statistics_admin_topnodes();
       case "referrers":
-        $output = statistics_top_refer();
+        return statistics_top_refer();
       case "log":
-        $output = statistics_admin_displaylog();
+        return statistics_admin_displaylog();
     }
 
     /* configuration admin pages */
@@ -288,6 +288,7 @@ function statistics_admin() {
             "statistics_block_top_last_head" => variable_get("statistics_block_top_last_head" ,"<b>Last:</b>"),
             "statistics_block_top_last_num" => variable_get("statistics_block_top_last_num", 0)
           ));
+          break;
         case "Submit \"who's online\" block changes":
           statistics_save_online_block($edit);
           $output .= status(t("saved 'who's online' block changes."));
@@ -299,6 +300,7 @@ function statistics_admin() {
             "statistics_block_online_max_len" => variable_get("statistics_block_online_max_len", 15),
             "statistics_block_online_max_cnt" => variable_get("statistics_block_online_max_cnt", 10)
           ));
+          break;
         case "Submit \"top nodes\" page changes":
           statistics_save_userconfig($edit);
           $output .= status(t("saved 'top nodes' page changes."));
@@ -312,6 +314,7 @@ function statistics_admin() {
             "statistics_userpage_last_head" => variable_get("statistics_userpage_last_head", "Last read"),
             "statistics_userpage_last_cnt" => variable_get("statistics_userpage_last_cnt", 0)
           ));
+          break;
         default:
           $output .= statistics_admin_topnodes();
       }
@@ -372,7 +375,7 @@ function statistics_admin_accesslog_table($type, $id) {
   }
 
   $header = array(
-    array("data" => t("timestamp"), "field" => "timestamp"),
+    array("data" => t("timestamp"), "field" => "timestamp", "sort" => "desc"),
     array("data" => t("post"), "field" => "nid"),
     array("data" => t("user"), "field" => "uid"),
     array("data" => t("hostname"), "field" => "hostname"),
@@ -381,6 +384,7 @@ function statistics_admin_accesslog_table($type, $id) {
   );
 
   $sql .= tablesort_sql($header);
+
   $result = pager_query($sql, 50);
   while ($log = db_fetch_object($result)) {
     $user = user_load(array("uid" => $log->uid));
@@ -425,11 +429,12 @@ function statistics_top_refer() {
   $output = "<h3>". t("Top $describe referrers of the past %interval", array("%interval" => format_interval(variable_get("statistics_flush_accesslog_timer", 259200)))) ."</h3>";
 
   $header = array(
-    array("data" =>t("URL"), "field" => "url"),
-    array("data" =>t("last view"), "field" => "last_view"),
+    array("data" => t("URL"), "field" => "url"),
+    array("data" => t("last view"), "field" => "last_view"),
     array("data" => t("count"), "field" => "count", "sort" => "desc")
   );
   $query .= tablesort_sql($header);
+
   $result = pager_query($query, 50, 0, $query_cnt);
 
   while ($referrer = db_fetch_array($result)) {
