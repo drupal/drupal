@@ -1,5 +1,5 @@
 <?php
-// $Id: xtemplate.theme,v 1.25 2003/09/10 19:27:49 dries Exp $
+// $Id: xtemplate.theme,v 1.26 2003/09/11 21:57:39 dries Exp $
 
 function xtemplate_settings() {
   $output  = form_select(t("Sidebar placement"), "xtemplate_sidebar", variable_get("xtemplate_sidebar", "right"), array("none" => t("No sidebars"), "left" => t("Sidebar on the left"), "right" => t("Sidebar on the right"), "both" => t("Sidebar on the left and the right")));
@@ -44,9 +44,15 @@ class Theme_xtemplate extends BaseTheme {
     if (module_exist("taxonomy") && ($taxonomy = taxonomy_link("taxonomy terms", $node))) {
       $this->template->assign("taxonomy", $this->links($taxonomy));
     }
+    else {
+      $this->template->assign("taxonomy", "");
+    }
 
     if ($links = link_node($node, $main)) {
       $this->template->assign("links", $this->links($links));
+    }
+    else {
+      $this->template->assign("links", "");
     }
 
     $this->template->parse("node");
