@@ -1,5 +1,5 @@
 <?php
-// $Id: story.module,v 1.162 2004/12/04 10:00:22 dries Exp $
+// $Id: story.module,v 1.163 2004/12/07 16:55:38 dries Exp $
 
 /**
  * @file
@@ -26,7 +26,7 @@ function story_help($section) {
     case 'node/add/story':
       return variable_get('story_help', '');
     case 'node/add#story':
-      return t('A story is similar to an article and usually gets promoted to the front page after approval or moderation.');
+      return t('A story is similar to an article and usually gets promoted to the front page.  If you want to post news items, articles or maintain a group blog, use stories.');
   }
 }
 
