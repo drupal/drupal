@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.133 2004/08/22 17:03:41 unconed Exp $
+// $Id: block.module,v 1.134 2004/09/08 15:38:25 dries Exp $
 
 /**
  * @file
@@ -366,7 +366,7 @@ function block_list($region) {
         */
         if (!($block['throttle'] && (module_invoke('throttle', 'status') > 4))) {
           $array = module_invoke($block['module'], 'block', 'view', $block['delta']);
-          if (is_array($array)) { 
+          if (is_array($array)) {
             $block = array_merge($block, $array);
           }
         }

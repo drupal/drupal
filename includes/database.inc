@@ -1,5 +1,5 @@
 <?php
-// $Id: database.inc,v 1.30 2004/07/14 19:15:25 dries Exp $
+// $Id: database.inc,v 1.31 2004/09/08 15:38:25 dries Exp $
 
 /**
  * @file
@@ -108,7 +108,7 @@ function db_set_active($name = 'default') {
       include_once 'includes/database.mysql.inc';
     }
     else {
-      include_once 'includes/database.pear.inc';
+      include_once 'includes/database.pgsql.inc';
     }
 
     $db_conns[$name] = db_connect($connect_url);

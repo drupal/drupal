@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.24 2004/08/27 23:26:20 unconed Exp $
+// $Id: locale.inc,v 1.25 2004/09/08 15:38:25 dries Exp $
 
 /**
  * @file
@@ -123,7 +123,7 @@ function _locale_import_po($file, $lang, $mode) {
   // If not in 'safe mode', increase the maximum execution time:
   if (!ini_get('safe_mode')) {
     set_time_limit(240);
-  }  
+  }
 
   // Check if we have the language already in the database
   if (!db_fetch_object(db_query("SELECT locale FROM {locales_meta} WHERE locale = '%s'", $lang))) {

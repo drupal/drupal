@@ -80,7 +80,7 @@ CREATE TABLE boxes (
   title varchar(64) NOT NULL default '',
   body text default '',
   info varchar(128) NOT NULL default '',
-  type smallint NOT NULL default '0',
+  format smallint NOT NULL default '0',
   PRIMARY KEY  (bid),
   UNIQUE (info),
   UNIQUE (title)
@@ -145,7 +145,7 @@ CREATE TABLE aggregator_feed (
 --
 
 CREATE TABLE aggregator_item (
-  iid integer NOT NULL auto_increment,
+  iid SERIAL,
   fid integer NOT NULL default '0',
   title varchar(255) NOT NULL default '',
   link varchar(255) NOT NULL default '',
@@ -162,7 +162,7 @@ CREATE TABLE aggregator_item (
 
 CREATE TABLE cache (
   cid varchar(255) NOT NULL default '',
-  data text default '',
+  data bytea default '',
   expire integer NOT NULL default '0',
   created integer NOT NULL default '0',
   headers text default '',
@@ -181,6 +181,7 @@ CREATE TABLE comments (
   subject varchar(64) NOT NULL default '',
   comment text NOT NULL default '',
   hostname varchar(128) NOT NULL default '',
+  format smallint NOT NULL default '0',
   timestamp integer NOT NULL default '0',
   score integer NOT NULL default '0',
   status smallint  NOT NULL default '0',
@@ -213,14 +214,26 @@ CREATE TABLE directory (
 --
 
 CREATE TABLE files (
-  fid int(10) unsigned NOT NULL default '0',
-  nid int(10) unsigned NOT NULL default '0',
+  fid serial,
+  nid integer NOT NULL default '0',
   filename varchar(255) NOT NULL default '',
   filepath varchar(255) NOT NULL default '',
   filemime varchar(255) NOT NULL default '',
-  filesize int(10) unsigned NOT NULL default '0',
-  list tinyint(1) unsigned NOT NULL default '0',
+  filesize integer NOT NULL default '0',
+  list smallint NOT NULL default '0',
   PRIMARY KEY  (fid)
+);
+
+--
+-- Table structure for table 'filter_formats'
+--
+
+CREATE TABLE filter_formats (
+  format SERIAL,
+  name varchar(255) NOT NULL default '',
+  roles varchar(255) NOT NULL default '',
+  cache smallint NOT NULL default '0',
+  PRIMARY KEY (format)
 );
 
 --
@@ -228,10 +241,13 @@ CREATE TABLE files (
 --
 
 CREATE TABLE filters (
-  module varchar(64) NOT NULL default '',
-  weight smallint DEFAULT '0' NOT NULL,
-  PRIMARY KEY (module)
+  format integer NOT NULL DEFAULT '0',
+  module varchar(64) NOT NULL DEFAULT '',
+  delta smallint NOT NULL DEFAULT 1,
+  weight smallint DEFAULT '0' NOT NULL
 );
+
+CREATE INDEX filters_module_idx ON filters(module);
 
 --
 -- Table structure for table 'forum'
@@ -274,10 +290,9 @@ CREATE TABLE locales_meta (
 -- Table structure for locales_source
 --
 
-CREATE sequence locales_source_lid_seq;
 
 CREATE TABLE locales_source (
-lid integer DEFAULT nextval('locales_source_lid_seq'::text) NOT NULL,
+lid serial,
   location varchar(128) NOT NULL default '',
   source text NOT NULL,
   PRIMARY KEY  (lid)
@@ -289,7 +304,7 @@ lid integer DEFAULT nextval('locales_source_lid_seq'::text) NOT NULL,
 
 CREATE TABLE locales_target (
   lid int4 NOT NULL default '0',
-  translation text NOT NULL,
+  translation text DEFAULT '' NOT NULL,
   locale varchar(12) NOT NULL default '',
   plid int4 NOT NULL default '0',
   plural int4 NOT NULL default '0',
@@ -303,8 +318,9 @@ CREATE TABLE locales_target (
 -- Table structure for table 'menu'
 --
 
+
 CREATE TABLE menu (
-  mid integer NOT NULL default '0',
+  mid serial,
   pid integer NOT NULL default '0',
   path varchar(255) NOT NULL default '',
   title varchar(255) NOT NULL default '',
@@ -313,7 +329,6 @@ CREATE TABLE menu (
   type smallint NOT NULL default '0',
   PRIMARY KEY  (mid)
 );
-
 --
 -- Table structure for table 'moderation_filters'
 --
@@ -370,6 +385,7 @@ CREATE TABLE node (
   changed integer NOT NULL default '0',
   revisions text NOT NULL default '',
   sticky integer NOT NULL default '0',
+  format smallint NOT NULL default '0',
   PRIMARY KEY  (nid)
 );
 CREATE INDEX node_type_idx ON node(type);
@@ -439,6 +455,7 @@ CREATE TABLE profile_fields (
   weight smallint DEFAULT '0' NOT NULL,
   required smallint DEFAULT '0' NOT NULL,
   visibility smallint DEFAULT '0' NOT NULL,
+  overview smallint DEFAULT '0' NOT NULL,
   options text,
   UNIQUE (name),
   PRIMARY KEY (fid)
@@ -725,22 +742,20 @@ INSERT INTO variable(name,value) VALUES('theme_default','s:10:"bluemarine";');
 INSERT INTO users(uid,name,mail) VALUES(0,'','');
 INSERT INTO users_roles(uid,rid) VALUES(0, 1);
 
-INSERT INTO role (rid, name) VALUES (1, 'anonymous user');
+INSERT INTO role (name) VALUES ('anonymous user');
 INSERT INTO permission VALUES (1,'access content',0);
 
-INSERT INTO role (rid, name) VALUES (2, 'authenticated user');
+INSERT INTO role (name) VALUES ('authenticated user');
 INSERT INTO permission VALUES (2,'access comments, access content, post comments, post comments without approval',0);
 
 INSERT INTO blocks(module,delta,status) VALUES('user', '0', '1');
 INSERT INTO blocks(module,delta,status) VALUES('user', '1', '1');
 
-INSERT INTO sequences (name, id) VALUES ('menu_mid', 1);
-
 INSERT INTO node_access VALUES (0, 0, 'all', 1, 0, 0);
 
-INSERT INTO filter_formats VALUES (1,'Filtered HTML',',1,2,',1);
-INSERT INTO filter_formats VALUES (2,'PHP code','',0);
-INSERT INTO filter_formats VALUES (3,'Full HTML','',1));
+INSERT INTO filter_formats (name, roles, cache) VALUES ('Filtered HTML',',1,2,',1);
+INSERT INTO filter_formats (name, roles, cache) VALUES ('PHP code','',0);
+INSERT INTO filter_formats (name, roles, cache) VALUES ('Full HTML','',1);
 INSERT INTO filters VALUES (1,'filter',0,0);
 INSERT INTO filters VALUES (1,'filter',3,1);
 INSERT INTO filters VALUES (2,'filter',1,0);
@@ -748,6 +763,12 @@ INSERT INTO filters VALUES (3,'filter',3,0);
 INSERT INTO variable (name,value) VALUES ('filter_html_1','i:1;');
 
 INSERT INTO locales_meta(locale, name, enabled, isdefault) VALUES('en', 'English', '1', '1');
+
+---
+--- Alter some sequences
+---
+ALTER SEQUENCE menu_mid_seq RESTART 2;
+
 
 ---
 --- Functions
