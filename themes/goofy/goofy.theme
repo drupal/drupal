@@ -103,7 +103,7 @@ function c(subject,mod,author,date,body) {document.writeln("<table border=\"0\" 
       echo "\n<!-- node: \"$node->title\" -->\n";
       $title = check_output($node->title);
       $subleft = strtr(t("Submitted by %a on %b"), array("%a" => format_username($node->userid), "%b" => format_date($node->timestamp, "large")));
-      $subright = node_index($node->attribute);
+      $subright = node_index($node);
       $body = check_output($node->body, 1) . (node_links($links, $node, $main) ? "<hr color=\"#404040\" size=\"1\"><div align=\"right\">" . $this->links($links, $main) . "</div>" : "");
       print "<script language=\"JavaScript\"><!--\ns(\"". $this->stripbreaks(addslashes($title)) ."\",\"". $this->stripbreaks(addslashes($subleft)) ."\",\"". $this->stripbreaks(addslashes($subright)) ."\",\"". $this->stripbreaks(addslashes($body)) ."\"); // -->\n</script>\n";
     } // close node function

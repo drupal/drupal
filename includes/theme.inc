@@ -113,9 +113,9 @@ function theme_blocks($region, $theme) {
 }
 
 function theme_moderation_results($theme, $node) {
-  foreach (explode(";", $node->users) as $vote) {
+  foreach (explode(",", $node->users) as $vote) {
     if ($vote) {
-      $data = explode(":", $vote);
+      $data = explode("=", $vote);
       $output .= format_username($data[0]) ." voted '$data[1]'.<BR>";
     }
   }

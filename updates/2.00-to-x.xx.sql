@@ -219,3 +219,21 @@ ALTER TABLE node ADD attribute varchar(255) DEFAULT '' NOT NULL;
 # 10/06/01
 ALTER TABLE node DROP cid;
 ALTER TABLE node DROP tid;
+
+# 11/06/01
+UPDATE users SET access = REPLACE(access, ':', '=');
+UPDATE users SET access = REPLACE(access, ';', ',');
+UPDATE comments SET users = REPLACE(users, ';', ',');
+UPDATE comments SET users = REPLACE(users, ':', '=');
+UPDATE node SET users = REPLACE(users, ';', ',');
+UPDATE node SET users = REPLACE(users, ':', '=');
+UPDATE node SET attributes = REPLACE(attributes, ';', ',');
+UPDATE node SET attributes = REPLACE(attributes, ':', '=');
+UPDATE entry SET attributes = REPLACE(attributes, ';', ',');
+UPDATE entry SET attributes = REPLACE(attributes, ':', '=');
+
+ALTER TABLE entry CHANGE keyword attributes varchar(255) DEFAULT '' NOT NULL;
+ALTER TABLE node CHANGE attribute attributes varchar(255) DEFAULT '' NOT NULL;
+ALTER TABLE bundle CHANGE attribute attributes varchar(255) DEFAULT '' NOT NULL;
+ALTER TABLE feed CHANGE attribute attributes varchar(255) DEFAULT '' NOT NULL;
+ALTER TABLE item CHANGE attribute attributes varchar(255) DEFAULT '' NOT NULL;

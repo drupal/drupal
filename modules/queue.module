@@ -10,7 +10,6 @@ function queue_cron() {
   db_query("UPDATE node SET status = '$status[dumped]' WHERE status = '$status[queued]' AND ". time() ." - timestamp > ". variable_get("queue_clear", 604800));
 }
 
-
 function queue_menu() {
   return array("<A HREF=\"module.php?mod=queue\">". t("moderation queue") ."</A> (<FONT COLOR=\"red\">". queue_count() ."</FONT>)");
 }

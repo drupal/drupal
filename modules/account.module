@@ -95,9 +95,9 @@ function account_overview($query = array()) {
 }
 
 function account_access($account) {
-  $data = explode(";", $account->access);
+  $data = explode(",", $account->access);
   foreach ($data as $array) {
-    $access = explode(":", $array);
+    $access = explode("=", $array);
     if ($access[0]) $output .= " $access[0]";
   }
   return $output;

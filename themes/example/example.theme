@@ -69,7 +69,7 @@
                    </TD>
                    <TD ALIGN="right">
 <?php
-                     echo node_index($node->attribute);
+                     echo node_index($node);
 ?>
                    </TD>
                  </TR>
