@@ -952,7 +952,7 @@ function _locale_string_edit($lid) {
   foreach ($languages['name'] as $key => $lang) {
     $form .= (strlen($orig) > 40) ? form_textarea($lang, $key, '', 70, 15) : form_textfield($lang, $key, '', 50, 128);
   }
-  $form = form_item(t('Original text'), wordwrap(drupal_specialchars($orig, 0))) . $form;
+  $form = form_item(t('Original text'), wordwrap(check_plain($orig, 0))) . $form;
 
   $form .= form_submit(t('Save translations'));
 
