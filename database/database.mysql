@@ -2,7 +2,7 @@
 #
 # Host: localhost    Database: drupal
 #--------------------------------------------------------
-# Server version  3.23.38
+# Server version	3.23.38
 
 #
 # Table structure for table 'access'
@@ -55,6 +55,7 @@ CREATE TABLE book (
   parent int(10) NOT NULL default '0',
   weight tinyint(3) NOT NULL default '0',
   format tinyint(2) default '0',
+  log text,
   PRIMARY KEY  (nid),
   KEY nid (nid)
 ) TYPE=MyISAM;
@@ -70,8 +71,8 @@ CREATE TABLE boxes (
   info varchar(128) NOT NULL default '',
   type tinyint(2) NOT NULL default '0',
   PRIMARY KEY  (bid),
-  UNIQUE KEY info (info),
-  UNIQUE KEY subject (title)
+  UNIQUE KEY subject (title),
+  UNIQUE KEY info (info)
 ) TYPE=MyISAM;
 
 #
@@ -92,7 +93,7 @@ CREATE TABLE bundle (
 
 CREATE TABLE cache (
   cid varchar(255) NOT NULL default '',
-  data text NOT NULL,
+  data mediumtext,
   expire int(11) NOT NULL default '0',
   PRIMARY KEY  (cid)
 ) TYPE=MyISAM;
@@ -167,8 +168,8 @@ CREATE TABLE feed (
   link varchar(255) NOT NULL default '',
   description text NOT NULL,
   PRIMARY KEY  (fid),
-  UNIQUE KEY title (title),
-  UNIQUE KEY link (url)
+  UNIQUE KEY link (url),
+  UNIQUE KEY title (title)
 ) TYPE=MyISAM;
 
 #
@@ -201,9 +202,10 @@ CREATE TABLE item (
 #
 # Table structure for table 'layout'
 #
+
 CREATE TABLE layout (
-  uid int(11) DEFAULT '0' NOT NULL,
-  block varchar(64) DEFAULT '' NOT NULL
+  uid int(11) NOT NULL default '0',
+  block varchar(64) NOT NULL default ''
 ) TYPE=MyISAM;
 
 #
@@ -270,6 +272,7 @@ CREATE TABLE node (
   body text NOT NULL,
   changed int(11) NOT NULL default '0',
   revisions text NOT NULL,
+  static int(2) NOT NULL default '0',
   PRIMARY KEY  (nid),
   KEY type (type),
   KEY title (title,type),
@@ -288,6 +291,17 @@ CREATE TABLE page (
   format tinyint(2) NOT NULL default '0',
   PRIMARY KEY  (nid),
   KEY nid (nid)
+) TYPE=MyISAM;
+
+#
+# Table structure for table 'permission'
+#
+
+CREATE TABLE permission (
+  rid int(10) unsigned NOT NULL default '0',
+  perm text,
+  tid int(10) unsigned NOT NULL default '0',
+  KEY rid (rid)
 ) TYPE=MyISAM;
 
 #
@@ -342,9 +356,21 @@ CREATE TABLE referrer (
 CREATE TABLE role (
   rid int(10) unsigned NOT NULL auto_increment,
   name varchar(32) NOT NULL default '',
-  perm text NOT NULL,
   PRIMARY KEY  (rid),
   UNIQUE KEY name (name)
+) TYPE=MyISAM;
+
+#
+# Table structure for table 'search_index'
+#
+
+CREATE TABLE search_index (
+  word varchar(50) default NULL,
+  lno int(10) unsigned default NULL,
+  type varchar(16) default NULL,
+  count int(10) unsigned default NULL,
+  KEY lno (lno),
+  KEY word (word)
 ) TYPE=MyISAM;
 
 #
@@ -358,9 +384,24 @@ CREATE TABLE site (
   size text NOT NULL,
   timestamp int(11) NOT NULL default '0',
   feed varchar(255) NOT NULL default '',
+  refresh int(11) NOT NULL default '0',
+  threshold int(11) NOT NULL default '0',
   PRIMARY KEY  (sid),
-  UNIQUE KEY title (name),
-  UNIQUE KEY url (link)
+  UNIQUE KEY url (link),
+  UNIQUE KEY title (name)
+) TYPE=MyISAM;
+
+#
+# Table structure for table 'system'
+#
+
+CREATE TABLE system (
+  filename varchar(255) NOT NULL default '',
+  name varchar(255) NOT NULL default '',
+  type varchar(255) NOT NULL default '',
+  description varchar(255) NOT NULL default '',
+  status int(2) NOT NULL default '0',
+  PRIMARY KEY  (filename)
 ) TYPE=MyISAM;
 
 #
@@ -374,6 +415,64 @@ CREATE TABLE tag (
   collections varchar(32) NOT NULL default '',
   PRIMARY KEY  (tid),
   UNIQUE KEY name (name,collections)
+) TYPE=MyISAM;
+
+#
+# Table structure for table 'term_data'
+#
+
+CREATE TABLE term_data (
+  tid int(10) unsigned NOT NULL auto_increment,
+  vid int(10) unsigned NOT NULL default '0',
+  name varchar(255) NOT NULL default '',
+  description text,
+  weight tinyint(4) NOT NULL default '0',
+  PRIMARY KEY  (tid),
+  KEY vid (vid)
+) TYPE=MyISAM;
+
+#
+# Table structure for table 'term_hierarchy'
+#
+
+CREATE TABLE term_hierarchy (
+  tid int(10) unsigned NOT NULL default '0',
+  parent int(10) unsigned NOT NULL default '0',
+  KEY tid (tid),
+  KEY parent (parent)
+) TYPE=MyISAM;
+
+#
+# Table structure for table 'term_node'
+#
+
+CREATE TABLE term_node (
+  nid int(10) unsigned NOT NULL default '0',
+  tid int(10) unsigned NOT NULL default '0',
+  KEY nid (nid),
+  KEY tid (tid)
+) TYPE=MyISAM;
+
+#
+# Table structure for table 'term_relation'
+#
+
+CREATE TABLE term_relation (
+  tid1 int(10) unsigned NOT NULL default '0',
+  tid2 int(10) unsigned NOT NULL default '0',
+  KEY tid1 (tid1),
+  KEY tid2 (tid2)
+) TYPE=MyISAM;
+
+#
+# Table structure for table 'term_synonym'
+#
+
+CREATE TABLE term_synonym (
+  tid int(10) unsigned NOT NULL default '0',
+  name varchar(255) NOT NULL default '',
+  KEY tid (tid),
+  KEY name (name(3))
 ) TYPE=MyISAM;
 
 #
@@ -397,11 +496,11 @@ CREATE TABLE users (
   timezone varchar(8) default NULL,
   rating decimal(8,2) default NULL,
   language char(2) NOT NULL default '',
-  role varchar(32) NOT NULL default '',
   sid varchar(32) NOT NULL default '',
   init varchar(64) default '',
   session varchar(32) NOT NULL default '',
   data text,
+  rid int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (uid),
   UNIQUE KEY name (name)
 ) TYPE=MyISAM;
@@ -414,6 +513,23 @@ CREATE TABLE variable (
   name varchar(32) NOT NULL default '',
   value text NOT NULL,
   PRIMARY KEY  (name)
+) TYPE=MyISAM;
+
+#
+# Table structure for table 'vocabulary'
+#
+
+CREATE TABLE vocabulary (
+  vid int(10) unsigned NOT NULL auto_increment,
+  name varchar(255) NOT NULL default '',
+  description text,
+  relations tinyint(3) unsigned NOT NULL default '0',
+  hierarchy tinyint(3) unsigned NOT NULL default '0',
+  multiple tinyint(3) unsigned NOT NULL default '0',
+  required tinyint(3) unsigned NOT NULL default '0',
+  types text,
+  weight tinyint(4) NOT NULL default '0',
+  PRIMARY KEY  (vid)
 ) TYPE=MyISAM;
 
 #
@@ -435,5 +551,6 @@ CREATE TABLE watchdog (
 # Insert some default values
 #
 
-INSERT INTO variable SET name='update_start', value='2002-01-05';
-INSERT INTO blocks SET name='User information', module='user', delta='0', status='2', weight='0', region='1', remove='0', path='';
+INSERT INTO variable SET name='update_start', value='2002-04-23';
+INSERT INTO blocks SET name='User information', module='user', delta='0', status='1', weight='0', region='1', remove='0', path='', custom='0';
+INSERT INTO blocks SET name='Log in', module='user', delta='1', status='1', weight='0', region='1', remove='0', path='', custom='0';
