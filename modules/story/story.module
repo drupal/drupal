@@ -90,7 +90,7 @@ function story_form(&$node, &$help, &$error) {
   return $output;
 }
 
-function story_content($node) {
-  return node_prepare($node);
+function story_content($node, $main = 0) {
+  return node_prepare($node, $main);
 }
 ?>

@@ -242,7 +242,7 @@ table {
 /*
 ** Module specific styles
 */
-#aggregator .info {
+#aggregator .feed {
   background-color: #eee;
   border: 1px solid #ccc;
   padding: 1em;
