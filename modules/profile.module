@@ -29,10 +29,8 @@ function profile_link($type) {
 
 function profile_browse() {
 
-  $value = arg(2) ? arg(2) : 1;
 
-  // Determine the field to group users by:
-  $field = db_fetch_object(db_query("SELECT DISTINCT(f.fid), f.type, f.title, f.page FROM {profile_fields} f INNER JOIN {profile_values} v ON f.fid = v.fid WHERE f.name = '%s' AND v.value = '%s' ORDER BY f.category, f.weight", arg(1), $value));
+  $field = db_fetch_object(db_query("SELECT DISTINCT(fid), type, title, page FROM {profile_fields} WHERE name = '%s'", arg(1)));
 
   if ($field->fid) {
     // Compile a list of fields to show:
@@ -42,8 +40,21 @@ function profile_browse() {
       $fields[] = $record;
     }
 
+    // Determine what query to use:
+    switch ($field->type) {
+      case 'checkbox':
+        $query = 'v.value = 1';
+        break;
+      case 'selection':
+        $query = "v.value = '". check_query(arg(2)) ."'";
+        break;
+      case 'list':
+        $query = "v.value LIKE '%". check_query(arg(2)) ."%'";
+        break;
+    }
+
     // Extract the affected users:
-    $result = pager_query("SELECT u.uid FROM {users} u INNER JOIN {profile_values} v ON u.uid = v.uid WHERE v.fid = $field->fid AND v.value = '". check_query($value) ."' ORDER BY u.changed DESC", 20);
+    $result = pager_query("SELECT u.uid FROM {users} u INNER JOIN {profile_values} v ON u.uid = v.uid WHERE v.fid = $field->fid AND $query ORDER BY u.changed DESC", 20);
 
     $output = '<div id="profile">';
     while ($account = db_fetch_object($result)) {
@@ -51,7 +62,7 @@ function profile_browse() {
     }
     $output .= theme('pager', NULL, 20);
 
-    if ($field->type == "selection") {
+    if ($field->type == 'selection' || $field->type == 'list') {
       $title = strtr($field->page, array('%value' => arg(2)));
     }
     else {
@@ -93,11 +104,19 @@ function profile_view_field($user, $field) {
       case 'textarea':
         return check_output($value);
       case 'selection':
-        return l($value, "profile/$field->name/$value");
+        return l($value, "profile/$field->name/". htmlentities($value));
       case 'checkbox':
-        return l($field->title, "profile/$field->name/");
+        return l($field->title, "profile/$field->name");
       case 'url':
-        return "<a href=\"". check_url(strip_tags($value)) ."\">". strip_tags($value) ."</a>";
+        return "<a href=\"". check_url(strip_tags($value)) ."\">". strip_tags($value) ."</a>";      case 'list':
+        $values = split("[\n\r]", $value);
+        $fields = array();
+        foreach ($values as $value) {
+          if ($value = trim(strip_tags($value))) {
+            $fields[] = l($value, "profile/$field->name/". htmlentities($value));
+          }
+        }
+        return implode(', ', $fields);
     }
   }
 }
@@ -132,7 +151,10 @@ function profile_edit_profile($edit, $user) {
         $fields[$field->category] .= form_textfield($field->title, $field->name, $edit[$field->name], 70, 255, $field->explanation);
         break;
       case 'textarea':
-        $fields[$field->category] .= form_textarea($field->title, $field->name, $edit[$field->name], 60, 4, $field->explanation);
+        $fields[$field->category] .= form_textarea($field->title, $field->name, $edit[$field->name], 60, 5, $field->explanation);
+        break;
+      case 'list':
+        $fields[$field->category] .= form_textarea($field->title, $field->name, $edit[$field->name], 60, 5, $field->explanation ." ". t('Put each entry on a separate line.  No HTML allowed.'));
         break;
       case 'checkbox':
         $fields[$field->category] .= form_checkbox($field->title, $field->name, 1, $edit[$field->name], $field->explanation);
@@ -272,7 +294,7 @@ Unless you know what you are doing, it is highly recommended that you prefix the
   $output = form_group(t('Field settings'), $group);
 
   $group = '';
-  if ($type == 'selection') {
+  if ($type == 'selection' || $type == 'list') {
     $group .= form_textfield(t('Page title'), 'page', $edit['page'], 70, 128, t("The title of the page showing all users with the specified field.  The word <code>%value</code> will be substituted with the corresponding value.  An example page title is 'People whose favorite color is %value'."));
   }
   else {
@@ -324,7 +346,7 @@ function theme_profile_profile($user, $fields = array()) {
 }
 
 function _profile_field_types($type = NULL) {
-  $types = array('textfield', 'textarea', 'checkbox', 'selection', 'url');
+  $types = array('textfield', 'textarea', 'checkbox', 'selection', 'list', 'url');
   return isset($type) ? $types[$type] : $types;
 }
 
