@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.7 2005/03/18 07:40:04 unconed Exp $ */
+/* $Id: style.css,v 1.8 2005/03/27 18:55:35 unconed Exp $ */
 
 /*
 ** HTML elements
@@ -166,6 +166,7 @@ td#home a:hover img {
   padding: 10px 0 10px 0px;
   margin: 0 0 0 0;
   white-space: nowrap;
+  width: 100%;
   list-style: none;
   height: auto;
   line-height: normal;
