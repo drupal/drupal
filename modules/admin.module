@@ -9,7 +9,17 @@ function status($message) {
   }
 }
 
-function admin_page($mod) {
+function admin_link($type) {
+  if ($type == "admin") {
+    menu_add("sitemap", url("admin/admin/sitemap"), "Sitemap", NULL, NULL, 8);
+  }
+}
+
+function admin_admin() {
+  print menu_map();
+}
+
+function admin_page() {
   global $user;
 
   if (user_access("access administration pages")) {
