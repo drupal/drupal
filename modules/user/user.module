@@ -1164,7 +1164,7 @@ function user_page() {
     case t("Save user information"):
     case "edit":
       $output = user_edit($edit);
-      $theme = theme_init();
+      $GLOBALS["theme"] = theme_init();
       theme("header");
       theme("box", t("User account"), user_menu());
       theme("box", t("Edit user information"), $output);

@@ -873,8 +873,8 @@ function form_hidden($name, $value) {
   return "<input type=\"hidden\" name=\"edit[$name]\" value=\"". check_form($value) ."\" />\n";
 }
 
-function form_submit($value) {
-  return "<input type=\"submit\" class=\"form-submit\" name=\"op\" value=\"". check_form($value) ."\" />\n";
+function form_submit($value, $name = "op") {
+  return "<input type=\"submit\" class=\"form-submit\" name=\"$name\" value=\"". check_form($value) ."\" />\n";
 }
 
 function form_weight($title = NULL, $name = "weight", $value = 0, $delta = 10, $description = 0, $extra = 0) {

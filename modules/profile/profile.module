@@ -9,21 +9,21 @@ function _profile_init() {
   */
 
   $GLOBALS["profile_fields"] = array(
-    "address"       => array("textfield", t("Address"), "", 64, 64, t("Your address: street and number.")),
-    "city"          => array("textfield", t("City"), "", 64, 64, t("Your city.")),
+    "address"       => array("textfield", t("Address"), "", 64, 64, ""),
+    "city"          => array("textfield", t("City"), "", 64, 64, ""),
     "state"         => array("textfield", t("State, province or region"), "", 64, 64, ""),
     "zip"           => array("textfield", t("Zip or postal code"), "", 7, 10, ""),
     "country"       => array("textfield", t("Country"), "", 64, 64, ""),
     "birthday"      => array("", t("Birthday"), ""),
     "gender"        => array("select", t("Gender"), "", array(0 => "-", "m" => t("male"), "f" => t("female")), "", 0, 0),
-    "job"           => array("textfield", t("Job title"), "", 64, 64, t("Your job title or position.")),
+    "job"           => array("textfield", t("Job title"), "", 64, 64, ""),
     "icq"           => array("textfield", t("ICQ messenger ID"), "", 12, 12, ""),
     "msn"           => array("textfield", t("MSN messenger ID"), "", 64, 64, ""),
     "yahoo"         => array("textfield", t("Yahoo messenger ID"), "", 64, 64, ""),
     "aim"           => array("textfield", t("AIM messenger ID"), "", 64, 64, ""),
     "homepage"      => array("textfield", t("URL of homepage"), "", 64, 64, t("Make sure you enter a fully qualified URL: remember to include \"http://\".")),
     "biography"     => array("textarea", t("Biography"), "", 64, 4, ""),
-    "interests"     => array("textarea", t("Interests"), "", 64, 4, t("What you like.")),
+    "interests"     => array("textarea", t("Interests"), "", 64, 4, ""),
     "publickey"     => array("textarea", t("Public key"), "", 64, 4, ""),
     "avatar"        => array("", t("Avatar or picture"), t("Your virtual face or picture.  Maximum dimensions are %dimensions and the maximum size is %size kB.", array("%dimensions" => variable_get("profile_avatar_dimensions", "85x85"), "%size" => variable_get("profile_avatar_file_size", "30"))))
   );
