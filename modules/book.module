@@ -454,7 +454,7 @@ function book_toc($parent = 0, $indent = "", $toc = array()) {
   */
 
   if (user_access("administer nodes")) {
-    $toc[0] = "<root>";
+    $toc[0] = "<". t("root") .">";
   }
 
   /*
