@@ -147,7 +147,7 @@ function node_save($node) {
 function node_invoke($node, $name, $arg = 0) {
   if ($node[type]) $function = $node[type] ."_$name";
   if ($node->type) $function = $node->type ."_$name";
-  if ($function) return ($arg ? $function($node, $arg) : $function($node));
+  if (function_exists($function)) return ($arg ? $function($node, $arg) : $function($node));
 }
 
 function node_view($node, $main = 0) {
