@@ -1,11 +1,19 @@
 drupal x.xx, xx/xx/xxxx
 -----------------------
+- improved comment.inc:
+    * anonymous users can now change the comment settings
+    * moved the "Moderate comments" button to the "Comment control" block
 - rewrote the user system:
     * added support for Drupal authentication through XML-RPC and through
       a Jabber server.
+    * merged access.module, user.inc, account.php and user.module.
+- rewrote the search module:
+    * imrproved look and feel.
+- added new tracker module
 - various updates:
     * improved the search system by making it context sensitive.
-
+    * fixed various HTML/XHTML typos.
+  
 drupal 3.00, 15/09/2001
 -----------------------
 - major overhaul of the entire underlying design:
