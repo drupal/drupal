@@ -229,7 +229,7 @@ function locale_seek() {
       }
     }
 
-    if ($pager = pager_display(NULL, 50, 0, "admin", $request)) {
+    if ($pager = theme("pager", NULL, 50, 0, $request)) {
       $rows[] = array(array("data" => "$pager", "colspan" => "5"));
     }
 

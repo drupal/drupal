@@ -57,24 +57,6 @@ function pager_query($query, $limit = 10, $element = 0, $count_query = "") {
   return db_query_range($query, (int)$pager_from_array[$element], (int)$limit);
 
 }
-
-/**
- * Use this function in your module or theme to display a pager.
- *
- * @param $tags defines your buttons; text or img.
- * @param $limit how many nodes are displayed per page
- * @param $element support for multiple pagers per page (specify which this
- *   is)
- * @param $type allows for distinction between pagers on main page and admin
- *   page, etc. Supported types are "default", "admin" and "simple".
- * @param $attributes extra html attributes for \<a href> (eg. title,
- *   onMouseOver, etc.)
- *
- * @return string html of pager
- */
-function pager_display($tags = "", $limit = 10, $element = 0, $type = "default", $attributes = array()) {
-  return theme("pager_display_". $type, $tags, $limit, $element, $attributes);
-}
 /** @} End of defgroup pager_api */
 
 /**
@@ -83,13 +65,10 @@ function pager_display($tags = "", $limit = 10, $element = 0, $type = "default",
  */
 
 /**
- * DEFAULT PAGER: When writing themes, you can rewrite this pager function in
- * your theme. This is the most common pager type, and thus the main one to
- * re-write in your theme.
- *
- * @see pager_display
+ * When writing themes, you can rewrite this pager function in your theme.
+ * You need to call theme("pager", ...) to get a pager.
  */
-function theme_pager_display_default($tags = "", $limit = 10, $element = 0, $attributes = array()) {
+function theme_pager($tags = "", $limit = 10, $element = 0, $attributes = array()) {
   global $pager_total;
   if ($pager_total[$element] > $limit) {
     $output .= "<div id=\"pager\" class=\"container-inline\">";
@@ -102,38 +81,6 @@ function theme_pager_display_default($tags = "", $limit = 10, $element = 0, $att
 
     return $output;
   }
-}
-
-/**
- * SIMPLE PAGER: When writing themes, you can rewrite this pager function in
- * your theme. Keep in mind that the pager it defines is intended to have a
- * "simple" look, possibly located in a table or block.
- *
- * @see pager_display
- */
-function theme_pager_display_simple($tags = "", $limit = 10, $element = 0, $attributes = array()) {
-  /*
-  ** It's left as an exercise to theme writers to create an alternative
-  ** pager for pager_display_simple().  if your theme does not offer a
-  ** replacement, the theme.inc pager_display_default() is used.
-  */
-  return theme_pager_display_default($tags, $limit, $element, $attributes);
-}
-
-/**
- * ADMIN PAGER: When writing themes, you can rewrite this pager function in your
- * theme. Most themes will probably NOT re-write this function, as admin pages
- * are not normally themed.
- *
- * @see pager_display
- */
-function theme_pager_display_admin($tags = "", $limit = 10, $element = 0, $attributes = array()) {
-  /*
-  ** It's left as an exercise to theme writers to create an alternative
-  ** pager for pager_display_admin().  if your theme does not offer a
-  ** replacement, the pager.inc pager_display_default() is used.
-  */
-  return theme_pager_display_default($tags, $limit, $element, $attributes);
 }
 /** @} End of addtogroup themeable */
 

@@ -98,7 +98,7 @@ function watchdog_overview($type) {
     $rows[] = array(array("data" => t("No log messages available."), "colspan" => "5"));
   }
 
-  $pager = pager_display(NULL, 50, 0, "admin", tablesort_pager());
+  $pager = theme("pager", NULL, 50, 0, tablesort_pager());
   if (!empty($pager)) {
     $rows[] = array(array("data" => $pager, "colspan" => "5"));
   }

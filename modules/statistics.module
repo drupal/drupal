@@ -232,7 +232,7 @@ function statistics_admin_topnodes_table() {
   while ($nid = db_fetch_array($result)) {
     $rows[] = array(l($nid["title"], "node/view/". $nid["nid"], array("title" => t("View this posting."))), $nid["daycount"], $nid["totalcount"], format_date($nid["timestamp"], "small"), l("track node", "admin/statistics/log/node/$nid[nid]"));
   }
-  if ($pager = pager_display(NULL, 20, 0, "admin", tablesort_pager())) {
+  if ($pager = theme("pager", NULL, 20, 0, tablesort_pager())) {
     $rows[] = array(array("data" => $pager, "colspan" => 5));
   }
 
@@ -291,7 +291,7 @@ function statistics_admin_accesslog_table($type, $id) {
     $rows[] = array(array("data" => format_date($log->timestamp, "small"), "nowrap" => "nowrap"), ($log->nid ? l($log->title, "node/view/$log->nid") : message_na()), format_name($user), $log->hostname ? $log->hostname : message_na(), $url, ($log->nid ? l(t("track node"), "admin/statistics/log/node/$log->nid") : ""), ($user->uid ? l(t("track user"), "admin/statistics/log/user/$user->uid") : ""), ($log->hostname ? l(t("track host"), "admin/statistics/log/host/$log->hostname") : ""));
   }
 
-  if ($pager = pager_display(NULL, 50, 0, "admin", tablesort_pager())) {
+  if ($pager = theme("pager", NULL, 50, 0, tablesort_pager())) {
     $rows[] = array(array("data" => $pager, "colspan" => 8));
   }
 
@@ -332,7 +332,7 @@ function statistics_top_refer() {
   while ($referrer = db_fetch_array($result)) {
     $rows[] = array("<a href=\"". $referrer["url"] ."\">". substr($referrer["url"], 0, 100) ."</a>", format_date($referrer["last_view"], "small"), $referrer["count"]);
   }
-  if ($pager = pager_display(NULL, 50, 0, "admin", tablesort_pager())) {
+  if ($pager = theme("pager", NULL, 50, 0, tablesort_pager())) {
     $rows[] = array(array("data" => $pager, "colspan" => 3));
   }
 

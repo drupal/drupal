@@ -617,7 +617,7 @@ function theme_forum_topic_list($tid, $topics, $sortby, $forum_per_page, $offset
       }
     }
 
-    if ($pager = pager_display(NULL, $forum_per_page, 0, "default", tablesort_pager())) {
+    if ($pager = theme("pager", NULL, $forum_per_page, 0, tablesort_pager())) {
       $rows[] = array(array("data" => $pager, "colspan" => "5", "class" => "pager"));
     }
   }
