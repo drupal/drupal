@@ -135,7 +135,8 @@ function menu_tree($parent = "") {
   }
 
   if ($_list[$parent]["children"]) {
-    $output = "\n<ul>\n";
+    $output = "";
+
     usort($_list[$parent]["children"], "_menu_sort");
     foreach ($_list[$parent]["children"] as $item) {
       /*
@@ -153,7 +154,10 @@ function menu_tree($parent = "") {
         $output .= "</li>\n";
       }
     }
-    $output .= "</ul>\n";
+
+    if ($output != '') {
+      $output  = "\n<ul>\n$output\n</ul>\n";
+    }
   }
 
   return $output;
