@@ -273,10 +273,10 @@ CREATE TABLE [dbo].[statistics] (
 GO
 
 CREATE TABLE [dbo].[system] (
-  [filename] [varchar] (26) NOT NULL ,
-  [name] [varchar] (8) NOT NULL ,
-  [type] [varchar] (6) NOT NULL ,
-  [description] [varchar] (34) NOT NULL ,
+  [filename] [varchar] (255) NOT NULL ,
+  [name] [varchar] (255) NOT NULL ,
+  [type] [varchar] (255) NOT NULL ,
+  [description] [varchar] (255) NOT NULL ,
   [status] [int] NOT NULL
 ) ON [PRIMARY]
 GO
