@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.302 2003/12/08 19:32:06 kjartan Exp $
+// $Id: node.module,v 1.303 2003/12/17 22:15:34 dries Exp $
 
 function node_help($section = "admin/help#node") {
   global $mod;
@@ -575,7 +575,7 @@ function node_link($type, $node = 0, $main = 0) {
   }
 
   if ($type == "system") {
-    menu("node/add", t("create content"), NULL, 1);
+    menu("node/add", t("create content"), 'node_page', 1, MENU_HIDE_NOCHILD);
 
     if (user_access("administer nodes")) {
       menu("admin/node", t("content"), "node_admin");

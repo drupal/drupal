@@ -1,10 +1,32 @@
 <?php
-// $Id: menu.inc,v 1.32 2003/12/16 21:06:33 dries Exp $
+/** @file
+ * $Id: menu.inc,v 1.33 2003/12/17 22:15:35 dries Exp $
+ */
+/**
+ * @defgroup menu Menu system
+ * @{
+ */
+
+define('MENU_SHOW', 0);
+define('MENU_HIDE', 1);
+define('MENU_HIDE_NOCHILD', 2);
+
+/** @} */
 
 /**
  * Register a menu item with the menu system.
+ *
+ * @ingroup menu
+ * @param $path Location then menu item refers to.
+ * @param $title The title of the menu item to show in the rendered menu.
+ * @param $callback The function to call when this is the active menu item.
+ * @param $weight Heavier menu items sink down the menu.
+ * @param $hidden
+ * - MENU_SHOW show the menu (default).
+ * - MENU_HIDE hide the menu item, but register a callback.
+ * - MENU_HIDE_NOCHILD hide the menu item when it has no children.
  */
-function menu($path, $title, $callback = NULL, $weight = 0, $hidden = 0) {
+function menu($path, $title, $callback = NULL, $weight = 0, $hidden = MENU_SHOW) {
   global $_list;
 
   // add the menu to the flat list of menu items:
@@ -12,7 +34,7 @@ function menu($path, $title, $callback = NULL, $weight = 0, $hidden = 0) {
 }
 
 /**
- * Returns an array with the menu items that lead to the specied path.
+ * Returns an array with the menu items that lead to the specified path.
  */
 function menu_get_trail($path) {
   global $_list;
@@ -32,11 +54,16 @@ function menu_get_trail($path) {
 
 /**
  * Returns the path of the active menu item.
+ * @ingroup menu
  */
 function menu_get_active_item() {
   return menu_set_active_item();
 }
 
+/**
+ * Sets the path of the active menu item.
+ * @ingroup menu
+ */
 function menu_set_active_item($path = NULL) {
   global $_list;
   static $stored_path;
@@ -162,7 +189,7 @@ function menu_tree($parent = "", $hidden = 0) {
       ** nor children.  The latter check avoids that useless links are being
       ** rendered.
       */
-      if ($_list[$item]["hidden"] == 0 && ($_list[$item]["callback"] || $_list[$item]["children"])) {
+      if (($_list[$item]["hidden"] == MENU_SHOW && ($_list[$item]["callback"] || $_list[$item]["children"])) || ($_list[$item]["hidden"] == MENU_HIDE_NOCHILD && $_list[$item]["children"])) {
         $style = ($_list[$item]["children"] ? (menu_in_active_trail($item)  ? "expanded" : "collapsed") : "leaf");
         $output .= "<li class=\"$style\">";
         $output .= _render_item($item);
@@ -171,12 +198,12 @@ function menu_tree($parent = "", $hidden = 0) {
         }
         $output .= "</li>\n";
       }
-      else if ($_list[$item]["hidden"] == 1 && $_list[$item]["children"]) {
+      else if ($_list[$item]["hidden"] == MENU_HIDE && $_list[$item]["children"]) {
         $output .= menu_tree($item, 1);
       }
     }
 
-    if ($output != '' && $hidden != 1) {
+    if ($output != '' && $hidden != MENU_HIDE) {
       $output  = "\n<ul>\n$output\n</ul>\n";
     }
   }
