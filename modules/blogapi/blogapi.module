@@ -115,7 +115,7 @@ function blogapi_new_post($req_params) {
   $edit['type'] = 'blog';
   $edit['uid'] = $user->uid;
   $edit['name'] = $user->name;
-  $edit['promote'] = variable_get('node_promote_blog', 0);
+  $edit['promote'] = variable_get('node_promote_blog', 1);
   $edit['comment'] = variable_get('node_comment_blog', 2);
   $edit['moderate'] = variable_get('node_moderate_blog', 0);
   $edit['revision'] = variable_get('node_revision_blog', 0);
