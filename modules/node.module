@@ -334,8 +334,15 @@ function node_filter_link($text) {
 }
 
 function node_filter_line($text) {
+
   /*
-  ** If HTML mark-up is being used, strip regular mark-up:
+  ** This "line break filter" will try to get the line breaks right
+  ** regardless of the user's input.  Its goal aspires a consistent
+  ** mark-up and use of line breaks and paragraphs.
+  */
+
+  /*
+  ** If HTML mark-up is being used, strip regular line breaks:
   */
 
   if (strstr($text, "<br />") || strstr($text, "<p>")) {
@@ -349,10 +356,10 @@ function node_filter_line($text) {
   $text = eregi_replace("<br>", "\n", $text);
   $text = eregi_replace("<br />", "\n", $text);
   $text = eregi_replace("<p>", "\n", $text);
-  $text = eregi_replace("<br />", "\n", $text);
+  $text = eregi_replace("<p />", "\n", $text);
 
   /*
-  ** Replace "\r\n" by "\n":
+  ** Replace '\r\n' by '\n':
   */
 
   $text = ereg_replace("\r\n", "\n", $text);
@@ -364,6 +371,13 @@ function node_filter_line($text) {
   while (strpos($text, "\n\n\n")) {
     $text = ereg_replace("\n\n\n", "\n\n", $text);
   }
+
+  /*
+  ** Replace some common "artifacts":
+  */
+
+  $list = "blockquote|li|ol|ul|table|th|td|tr|pre";
+  $text = preg_replace(array("/\n\s*<([\/])($list)/", "/($list)>\s*\n/"), array("<$1$2", "$1>"), $text);
 
   return trim($text);
 }
