@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.99 2003/09/28 15:18:53 dries Exp $
+// $Id: statistics.module,v 1.100 2003/09/28 20:08:48 dries Exp $
 
 function statistics_init() {
   global $recent_activity;
@@ -280,29 +280,9 @@ function statistics_admin() {
         case "Submit \"top nodes\" block changes":
           statistics_save_topnodes_block($edit);
           $output .= status(t("saved 'top nodes' block changes."));
-        case "top nodes block":
-          $output .= statistics_config_topnodes_block(array(
-            "statistics_block_top_title" => variable_get("statistics_block_top_title", "Top nodes"),
-            "statistics_block_top_day_head" => variable_get("statistics_block_top_day_head", "<b>Todays top:</b>"),
-            "statistics_block_top_day_num" => variable_get("statistics_block_top_day_num", 0),
-            "statistics_block_top_all_head" => variable_get("statistics_block_top_all_head", "<b>All time top:</b>"),
-            "statistics_block_top_all_num" => variable_get("statistics_block_top_all_num", 0),
-            "statistics_block_top_last_head" => variable_get("statistics_block_top_last_head" ,"<b>Last:</b>"),
-            "statistics_block_top_last_num" => variable_get("statistics_block_top_last_num", 0)
-          ));
-          break;
         case "Submit \"who's online\" block changes":
           statistics_save_online_block($edit);
           $output .= status(t("saved 'who's online' block changes."));
-        case "whos online block":
-          $output .= statistics_config_online_block(array(
-            "statistics_block_online_title" => variable_get("statistics_block_online_title", "Who's online"),
-            "statistics_block_online_subtitle" => variable_get("statistics_block_online_subtitle", "Online users:"),
-            "statistics_block_online_time" => variable_get("statistics_block_online_time", 2700),
-            "statistics_block_online_max_len" => variable_get("statistics_block_online_max_len", 15),
-            "statistics_block_online_max_cnt" => variable_get("statistics_block_online_max_cnt", 10)
-          ));
-          break;
         case "Submit \"top nodes\" page changes":
           statistics_save_userconfig($edit);
           $output .= status(t("saved 'top nodes' page changes."));
@@ -317,6 +297,28 @@ function statistics_admin() {
             "statistics_userpage_last_cnt" => variable_get("statistics_userpage_last_cnt", 0)
           ));
           break;
+        case "block":
+          if (arg(3) == "top nodes block") {
+              $output .= statistics_config_topnodes_block(array(
+                "statistics_block_top_title" => variable_get("statistics_block_top_title", "Top nodes"),
+                "statistics_block_top_day_head" => variable_get("statistics_block_top_day_head", "<b>Todays top:</b>"),
+                "statistics_block_top_day_num" => variable_get("statistics_block_top_day_num", 0),
+                "statistics_block_top_all_head" => variable_get("statistics_block_top_all_head", "<b>All time top:</b>"),
+                "statistics_block_top_all_num" => variable_get("statistics_block_top_all_num", 0),
+                "statistics_block_top_last_head" => variable_get("statistics_block_top_last_head" ,"<b>Last:</b>"),
+                "statistics_block_top_last_num" => variable_get("statistics_block_top_last_num", 0)
+              ));
+           }
+           elseif (arg(3) == "whos online block") {
+              $output .= statistics_config_online_block(array(
+                "statistics_block_online_title" => variable_get("statistics_block_online_title", "Who's online"),
+                "statistics_block_online_subtitle" => variable_get("statistics_block_online_subtitle", "Online users:"),
+                "statistics_block_online_time" => variable_get("statistics_block_online_time", 2700),
+                "statistics_block_online_max_len" => variable_get("statistics_block_online_max_len", 15),
+                "statistics_block_online_max_cnt" => variable_get("statistics_block_online_max_cnt", 10)
+              ));
+              break;
+           }
         default:
           $output .= statistics_admin_topnodes();
       }
