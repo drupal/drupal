@@ -363,6 +363,14 @@ function aggregator_refresh($feed) {
         }
 
         /*
+        ** Prepare the channel data:
+        */
+
+        foreach ($channel as $key => $value) {
+          $channel[$key] = trim(strip_tags($value));
+        }
+
+        /*
         ** Prepare the image data (if any):
         */
 
@@ -381,7 +389,7 @@ function aggregator_refresh($feed) {
         ** Update the feed data:
         */
 
-        db_query("UPDATE {aggregator_feed} SET url = '%s', checked = %d, link = '%s', description = '%s', image = '%s', etag = '%s', modified = %d WHERE fid = %d", $feed['url'], time(), strip_tags($channel['LINK']), strip_tags($channel['DESCRIPTION']), $image, $result->headers['ETag'], $modified, $feed['fid']);
+        db_query("UPDATE {aggregator_feed} SET url = '%s', checked = %d, link = '%s', description = '%s', image = '%s', etag = '%s', modified = %d WHERE fid = %d", $feed['url'], time(), $channel['LINK'], $channel['DESCRIPTION'], $image, $result->headers['ETag'], $modified, $feed['fid']);
 
         /*
         ** Clear the cache:
@@ -948,7 +956,7 @@ function _aggregator_page_list($sql, $op, $header = '') {
  * Menu callback; displays all the feeds used by the aggregator.
  */
 function aggregator_page_sources() {
-  $result = db_query('SELECT f.fid, f.title, f.description, f.image, MAX(i.timestamp) AS last FROM {aggregator_feed} f LEFT JOIN {aggregator_item} i ON f.fid = i.fid GROUP BY fid');
+  $result = db_query('SELECT f.fid, f.title, f.description, f.image, MAX(i.timestamp) AS last FROM {aggregator_feed} f LEFT JOIN {aggregator_item} i ON f.fid = i.fid GROUP BY f.fid');
   $output = "<div id=\"aggregator\">\n";
   while ($feed = db_fetch_object($result)) {
     $output .= "<h2>$feed->title</h2>\n";
@@ -998,7 +1006,7 @@ function aggregator_page_opml() {
  * Menu callback; displays all the categories used by the aggregator.
  */
 function aggregator_page_categories() {
-  $result = db_query('SELECT c.cid, c.title, c.description FROM {aggregator_category} c LEFT JOIN {aggregator_category_item} ci ON c.cid = ci.cid LEFT JOIN {aggregator_item} i ON ci.iid = i.iid GROUP BY cid');
+  $result = db_query('SELECT c.cid, c.title, c.description FROM {aggregator_category} c LEFT JOIN {aggregator_category_item} ci ON c.cid = ci.cid LEFT JOIN {aggregator_item} i ON ci.iid = i.iid GROUP BY c.cid, c.title, c.description');
   $output = "<div id=\"aggregator\">\n";
 
   while ($category = db_fetch_object($result)) {
