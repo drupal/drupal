@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.19 2004/08/10 18:34:29 unconed Exp $
+// $Id: blogapi.module,v 1.20 2004/08/14 07:00:27 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -422,7 +422,7 @@ function blogapi_error($message) {
 function blogapi_validate_user($username, $password) {
   global $user;
 
-  $user = user_load(array('name' => $username, 'pass' => $password, 'status' => 1));
+  $user = user_authenticate($username, $password);
 
   if ($user->uid) {
     if (user_access('edit own blog')) {
