@@ -311,7 +311,7 @@ function taxonomy_overview() {
 /**
  * Generate a form element for selecting terms from a vocabulary.
  */
-function taxonomy_form($vid, $value = 0, $error = array(), $help = NULL) {
+function taxonomy_form($vid, $value = 0, $error = array(), $help = NULL, $name = 'taxonomy') {
   $vocabulary = taxonomy_get_vocabulary($vid);
   $help = ($help) ? $help : $vocabulary->help;
   if ($vocabulary->required) {
@@ -323,7 +323,7 @@ function taxonomy_form($vid, $value = 0, $error = array(), $help = NULL) {
 
   $help .= $error['taxonomy'];
 
-  return _taxonomy_term_select($vocabulary->name, 'taxonomy', $value, $vid, $help, intval($vocabulary->multiple), $blank);
+  return _taxonomy_term_select($vocabulary->name, $name, $value, $vid, $help, intval($vocabulary->multiple), $blank);
 }
 
 /**
@@ -350,7 +350,7 @@ function taxonomy_get_vocabularies($type = '', $key = 'vid') {
 /**
  * Generate a form for selecting terms to associate with a node.
  */
-function taxonomy_node_form($type, $node = '', $error = array()) {
+function taxonomy_node_form($type, $node = '', $error = array(), $help = NULL, $name = 'taxonomy') {
   if (!$node->taxonomy) {
     if ($node->nid) {
       $terms = array_keys(taxonomy_node_get_terms($node->nid));
@@ -365,7 +365,7 @@ function taxonomy_node_form($type, $node = '', $error = array()) {
 
   $c = db_query("SELECT * FROM {vocabulary} WHERE nodes LIKE '%%%s%%' ORDER BY weight, name", $type);
   while ($vocabulary = db_fetch_object($c)) {
-    $result[] .= taxonomy_form($vocabulary->vid, $terms, $error);
+    $result[] = taxonomy_form($vocabulary->vid, $terms, $error, $help, $name);
   }
   return $result ? $result : array();
 }
@@ -673,19 +673,6 @@ function taxonomy_get_term($tid) {
 
 function _taxonomy_term_select($title, $name, $value, $vocabulary_id, $description, $multiple, $blank, $exclude = array()) {
   $tree = taxonomy_get_tree($vocabulary_id);
-
-  // We store the last selected ID in a session variable:
-  if (!$value) {
-    $value = $_SESSION['vocabulary']["$vocabulary_id"];
-  }
-  else {
-    $_SESSION['vocabulary']["$vocabulary_id"] = $value;
-  }
-
-  if ($blank) {
-    $options[] = array('tid' => 0, 'name' => $blank);
-  }
-
   if ($tree) {
     foreach ($tree as $term) {
       if (!in_array($term->tid, $exclude)) {
