@@ -620,7 +620,11 @@ function user_menu() {
     'callback' => 'user_page', 'access' => TRUE,
     'type' => MENU_CALLBACK);
   $items[] = array('path' => 'user/login', 'title' => t('log in'),
-    'type' => MENU_CALLBACK);
+    'callback' => 'user_page', 'access' => TRUE, 'type' => MENU_CALLBACK);
+  $items[] = array('path' => 'user/register', 'title' => t('register'),
+    'callback' => 'user_page', 'access' => TRUE, 'type' => MENU_CALLBACK);
+  $items[] = array('path' => 'user/password', 'title' => t('request new password'),
+    'callback' => 'user_page', 'access' => TRUE, 'type' => MENU_CALLBACK);
 
   $items[] = array('path' => 'admin/user', 'title' => t('users'),
     'callback' => 'user_admin', 'access' => $access);
@@ -1173,7 +1177,7 @@ function user_page() {
   $op = $_POST['op'];
 
   if (empty($op)) {
-    $op = arg(2);
+    $op = arg(2) ? arg(2) : arg(1);
   }
 
   switch ($op) {
