@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.106 2002/04/27 13:19:37 dries Exp $
+// $Id: common.inc,v 1.107 2002/05/02 18:47:35 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST;
@@ -124,6 +124,18 @@ function locale_init() {
 
 function t($string, $args = 0) {
   global $languages;
+
+  /*
+  ** About the usage of t().  We try to keep strings whole as much as
+  ** possible and are unafraid of HTML markup within translation strings
+  ** if necessary.  The suggested syntax for a link embedded within a
+  ** translation string is for example:
+  **
+  ** $msg = t("You must login below or <a href=\"%url\">create a new
+  **           account</a> before viewing the next page.", array ("%url"
+  **           => drupal_url(array ("mod" => "user", "op" => "register"),
+  **           "module")));
+  */
 
   $string = ($languages && function_exists("locale") ? locale($string) : $string);
 
@@ -626,8 +638,8 @@ function form_submit($value) {
  */
 function drupal_url($args = array(), $script = "node") {
   $t = array();
-  foreach ($args as $k => $v) {
-    $t[] = "$k=$v";
+  foreach ($args as $key => $value) {
+    $t[] = "$key = $value";
   }
   return "$script.php?". implode("&amp;", $t);
 }
