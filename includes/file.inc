@@ -223,7 +223,7 @@ function file_delete($path) {
  *   success.
  * @param $dest A string containing the directory $source should be copied to,
  *   will use the temporary directory in case no other value is set.
- * @param $dest A boolean, set to true if the destination should be replaced
+ * @param $replace A boolean, set to true if the destination should be replaced
  *   when in use, but when false append a _X to the filename.
  * @return An object containing file info or 0 in case of error.
  */
