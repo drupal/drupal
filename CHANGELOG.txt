@@ -1,4 +1,4 @@
-Drupal 4.5.0 RC, xxxx-xx-xx
+Drupal 4.5.0 RC, 2004-10-18
 ---------------------------
 - navigation:
     * made it possible to add, delete, rename and move menu items.

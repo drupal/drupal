@@ -382,7 +382,7 @@ function request_uri() {
       $uri = $_SERVER['PHP_SELF'] .'?'. $_SERVER['QUERY_STRING'];
     }
   }
-  
+
   return check_url($uri);
 }
 

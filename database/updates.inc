@@ -84,7 +84,8 @@ $sql_updates = array(
   "2004-09-14" => "update_105",
   "2004-09-15" => "update_106",
   "2004-09-17" => "update_107",
-  "2004-10-16" => "update_108"
+  "2004-10-16" => "update_108",
+  "2004-10-18" => "update_109"
 );
 
 function update_32() {
@@ -1882,6 +1883,7 @@ function update_107() {
 }
 
 function update_108() {
+  $ret = array();
   // This update is needed for 4.5-RC sites, where profile data was not being
   // wiped from the user->data column correctly because update_80() was faulty.
   if (!variable_get('update_80_fix', false)) {
@@ -1899,7 +1901,26 @@ function update_108() {
       user_save($user, $unset);
     }
   }
+  return $ret;
 }
+
+
+function update_109() {
+  $ret = array();
+  // This is to fix the PostreSQL locales_source table.
+  if ($GLOBALS['db_type'] == 'pgsql') {
+    $ret[] = update_sql("ALTER TABLE {locales_source} RENAME location TO old_location");
+    $ret[] = update_sql("ALTER TABLE {locales_source} ADD COLUMN location text");
+    db_query("UPDATE {locales_source} SET location = old_location");
+    $ret[] = update_sql("ALTER TABLE {locales_source} ALTER COLUMN location SET NOT NULL");
+    $ret[] = update_sql("ALTER TABLE {locales_source} ALTER COLUMN location SET DEFAULT ''");
+    $ret[] = update_sql("ALTER TABLE {locales_target} DROP CONSTRAINT {locales_target}_locale_key ");
+    $ret[] = update_sql("ALTER TABLE {locales_target} DROP CONSTRAINT {locales_target}_plid_key ");
+    $ret[] = update_sql("ALTER TABLE {locales_target} DROP CONSTRAINT {locales_target}_plural_key ");
+  }
+  return $ret;
+}
+
 
 function update_sql($sql) {
   $edit = $_POST["edit"];

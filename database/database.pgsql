@@ -307,7 +307,7 @@ CREATE TABLE locales_meta (
 
 CREATE TABLE locales_source (
 lid serial,
-  location varchar(128) NOT NULL default '',
+  location text NOT NULL default '',
   source text NOT NULL,
   PRIMARY KEY  (lid)
 );
@@ -322,10 +322,7 @@ CREATE TABLE locales_target (
   locale varchar(12) NOT NULL default '',
   plid int4 NOT NULL default '0',
   plural int4 NOT NULL default '0',
-    UNIQUE  (lid),
-    UNIQUE  (locale),
-    UNIQUE  (plid),
-    UNIQUE  (plural)
+    UNIQUE  (lid)
 );
 
 --
@@ -752,7 +749,7 @@ INSERT INTO system VALUES ('modules/taxonomy.module','taxonomy','module','',1,0,
 INSERT INTO system VALUES ('themes/bluemarine/xtemplate.xtmpl','bluemarine','theme','themes/engines/xtemplate/xtemplate.engine',1,0,0);
 INSERT INTO system VALUES ('themes/engines/xtemplate/xtemplate.engine','xtemplate','theme_engine','',1,0,0);
 
-INSERT INTO variable(name,value) VALUES('update_start', 's:10:"2004-10-16";');
+INSERT INTO variable(name,value) VALUES('update_start', 's:10:"2004-10-18";');
 INSERT INTO variable(name,value) VALUES('theme_default','s:10:"bluemarine";');
 INSERT INTO users(uid,name,mail) VALUES(0,'','');
 INSERT INTO users_roles(uid,rid) VALUES(0, 1);
