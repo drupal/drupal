@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.82 2003/03/07 22:11:44 kjartan Exp $
+// $Id: forum.module,v 1.83 2003/03/09 10:19:16 kjartan Exp $
 
 function forum_system($field){
   $system["description"] = t("Enable threaded discussions about general topics.");
@@ -173,7 +173,7 @@ function forum_validate(&$node) {
   $node->teaser = filter($node->teaser);
   $node->icon = $node->icon ? $node->icon : "";
   $node->shadow = $node->shadow ? $node->shadow : 0;
-  $node->tid = $node->tid ? $node->tid : 0;  
+  $node->tid = $node->tid ? $node->tid : 0;
   // We use the validate hook to remember the old taxonomy terms:
   if ($node->tid) {
     $node->taxonomy = array_keys(taxonomy_node_get_terms($node->nid));

@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.77 2003/03/07 22:11:44 kjartan Exp $
+// $Id: page.module,v 1.78 2003/03/09 10:19:16 kjartan Exp $
 
 function page_help() {
   $output .= "<p>The page module is used to create a <i>static page</i>.  Unlike a story, a static page is a persistent web page on your site which usually shortcuts the typical lifecycle of user generated content (i.e. submit -&gt; moderate -&gt; post -&gt; comment).  A static page is usually linked from the main navigation bar, using whatever text the author wishes.  To create a static page without this navigation link, simply skip the form field which requests link text.</p>";
@@ -138,7 +138,7 @@ function page_form(&$node, &$help, &$error) {
 }
 
 function page_validate(&$node) {
-  if ($node->format && user_access("create php content")) {  
+  if ($node->format && user_access("create php content")) {
     // Do not filter PHP code, do not auto-extract a teaser
     $node->teaser = $node->body;
   }
