@@ -66,7 +66,7 @@ function poll_block($op = "list", $delta = 0) {
 
 function poll_cron() {
   // Close polls that have exceeded their allowed runtime
-  $result = db_query("SELECT p.nid FROM {poll} p LEFT JOIN {node} n ON p.nid=n.nid WHERE (n.created + p.runtime) < '". time() ."' AND p.active = '1' AND p.runtime != '0'");
+  $result = db_query("SELECT p.nid FROM {poll} p INNER JOIN {node} n ON p.nid=n.nid WHERE (n.created + p.runtime) < '". time() ."' AND p.active = '1' AND p.runtime != '0'");
   while ($poll = db_fetch_object($result)) {
     db_query("UPDATE {poll} SET active='0' WHERE nid = %d", $poll->nid);
   }
@@ -221,7 +221,7 @@ function poll_node($field) {
 function poll_page() {
 
   theme("header");
-  $result = db_query("SELECT n.nid, n.title, p.active, SUM(c.chvotes) AS votes FROM {node} n LEFT JOIN {poll} p ON n.nid=p.nid LEFT JOIN {poll_choices} c ON n.nid=c.nid WHERE type = 'poll' AND status = '1' AND moderate = '0' GROUP BY n.nid, n.title, p.active, n.created ORDER BY n.created DESC");
+  $result = db_query("SELECT n.nid, n.title, p.active, SUM(c.chvotes) AS votes FROM {node} n INNER JOIN {poll} p ON n.nid=p.nid INNER JOIN {poll_choices} c ON n.nid=c.nid WHERE type = 'poll' AND status = '1' AND moderate = '0' GROUP BY n.nid, n.title, p.active, n.created ORDER BY n.created DESC");
   $output = "<ul>";
   while ($node = db_fetch_object($result)) {
     $output .= "<li>".l($node->title, "node/view/$node->nid") ." - ". format_plural($node->votes, "1 vote", "%count votes") ." - ". ($node->active ? t("open") : t("closed")) ."</li>";

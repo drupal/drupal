@@ -3,6 +3,8 @@ Drupal x.x.x, xxxx-xx-xx (to be released)
 
 - database backend:
     * added support for database table prefxing.
+- performance improvements:
+    * optimized SQL queries.
 
 Drupal 4.2.0, xxxx-xx-xx (to be released)
 ------------------------

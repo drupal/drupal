@@ -499,7 +499,7 @@ function import_get_bundle($bid) {
 }
 
 function import_view() {
-  $result = db_query("SELECT f.*, COUNT(i.iid) AS items FROM {feed} f LEFT JOIN {item} i ON f.fid = i.fid GROUP BY f.fid, f.title, f.url, f.refresh, f.timestamp, f.attributes, f.link, f.description ORDER BY f.title");
+  $result = db_query("SELECT f.*, COUNT(i.iid) AS items FROM {feed} f INNER JOIN {item} i ON f.fid = i.fid GROUP BY f.fid, f.title, f.url, f.refresh, f.timestamp, f.attributes, f.link, f.description ORDER BY f.title");
 
   $output .= "<h3>Feed overview</h3>";
 
@@ -526,7 +526,7 @@ function import_view() {
 
 function import_tag() {
 
-  $result = db_query_range("SELECT i.*, f.title AS feed FROM {item} i LEFT JOIN {feed} f ON i.fid = f.fid ORDER BY i.iid DESC", 0, 50);
+  $result = db_query_range("SELECT i.*, f.title AS feed FROM {item} i INNER JOIN {feed} f ON i.fid = f.fid ORDER BY i.iid DESC", 0, 50);
 
   $header = array(t("date"), t("feed"), t("news item"));
   while ($item = db_fetch_object($result)) {
@@ -619,7 +619,7 @@ function import_page_info() {
 function import_page_last() {
 
 
-  $result = db_query_range("SELECT i.*, f.title AS ftitle, f.link AS flink FROM {item} i LEFT JOIN {feed} f ON i.fid = f.fid ORDER BY i.iid DESC", 0, variable_get("import_page_limit", 75));
+  $result = db_query_range("SELECT i.*, f.title AS ftitle, f.link AS flink FROM {item} i INNER JOIN {feed} f ON i.fid = f.fid ORDER BY i.iid DESC", 0, variable_get("import_page_limit", 75));
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"2\">";
   while ($item = db_fetch_object($result)) {

@@ -88,7 +88,7 @@ function queue_vote($node, $vote) {
 function queue_overview() {
   global $user;
 
-  $result = db_query("SELECT n.*, u.name, u.uid FROM {node} n LEFT JOIN {users} u ON n.uid = u.uid WHERE n.moderate = 1");
+  $result = db_query("SELECT n.*, u.name, u.uid FROM {node} n INNER JOIN {users} u ON n.uid = u.uid WHERE n.moderate = 1");
 
   $output .= "<table border=\"0\" cellspacing=\"4\" cellpadding=\"4\">";
   $output .= " <tr><th>". t("Subject") ."</th><th>". t("Author") ."</th><th>". t("Type") ."</th><th>". t("Score") ."</th></tr>";

@@ -261,7 +261,7 @@ function statistics_admin() {
 
 /* Displays the various admin tables */
 function statistics_admin_count_table($dbfield, $dbrows) {
-  $result = db_query_range("SELECT s.nid, s.daycount, s.totalcount, s.timestamp, n.title FROM {statistics} s LEFT JOIN {node} n USING (nid) WHERE s.%s <> '0' ORDER BY s.%s DESC", $dbfield, $dbfield, 0, $dbrows);
+  $result = db_query_range("SELECT s.nid, s.daycount, s.totalcount, s.timestamp, n.title FROM {statistics} s INNER JOIN {node} n USING (nid) WHERE s.%s <> '0' ORDER BY s.%s DESC", $dbfield, $dbfield, 0, $dbrows);
 
   $header = array(t("title"), t("today"), t("all time"), t("last hit"), t("operations"));
 
@@ -682,7 +682,7 @@ function statistics_display_online_block() {
 /* Display linked title based on field name */
 function statistics_title_list($dbfield, $dbrows) {
   /* valid dbfields: totalcount, daycount, timestamp */
-  return db_query_range("SELECT s.nid, n.title, u.uid, u.name FROM {statistics} s LEFT JOIN {node} n ON s.nid = n.nid LEFT JOIN {users} u ON n.uid = u.uid WHERE %s <> '0' AND n.status = 1 ORDER BY %s DESC", "s.". $dbfield, "s.". $dbfield, 0, $dbrows);
+  return db_query_range("SELECT s.nid, n.title, u.uid, u.name FROM {statistics} s INNER JOIN {node} n ON s.nid = n.nid INNER JOIN {users} u ON n.uid = u.uid WHERE %s <> '0' AND n.status = 1 ORDER BY %s DESC", "s.". $dbfield, "s.". $dbfield, 0, $dbrows);
 }
 
 
@@ -782,7 +782,7 @@ function statistics_summary($dbfield, $dbrows) {
   /* valid dbfields: totalcount, daycount, timestamp */
 
   $output = "";
-  $result = db_query_range("SELECT n.nid, n.title FROM {statistics} s LEFT JOIN {node} n ON s.nid = n.nid ORDER BY %s DESC", $dbfield, 0, $dbrows);
+  $result = db_query_range("SELECT n.nid, n.title FROM {statistics} s INNER JOIN {node} n ON s.nid = n.nid ORDER BY %s DESC", $dbfield, 0, $dbrows);
   while ($nid = db_fetch_array($result)) {
     $content = node_load(array("nid" => $nid["nid"]));
     $links = link_node($content, 1);
