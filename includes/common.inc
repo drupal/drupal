@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.404 2004/11/24 22:44:00 dries Exp $ */
+/* $Id: common.inc,v 1.405 2004/11/24 22:50:25 dries Exp $ */
 
 /**
  * @file
@@ -1575,24 +1575,6 @@ function field_set($string, $name, $value) {
     $rval .= ($rval == ',' ? '' : ',') . $name .'='. $value;
   }
   return substr($rval, 1);
-}
-
-/**
- * Fetch a set of global navigation links.
- *
- * The links are gathered by calls to hook_link('page') in each module.
- */
-function link_page() {
-  global $custom_links;
-
-  if (is_array($custom_links)) {
-    return $custom_links;
-  }
-  else {
-    $links = module_invoke_all('link', 'page');
-    array_unshift($links, l(t('home'), '', array('title' => t('Return to the main page.'))));
-    return $links;
-  }
 }
 
 /**
