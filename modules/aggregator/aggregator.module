@@ -361,7 +361,7 @@ function import_refresh($feed) {
 
       // Prepare the item:
       foreach ($item as $key => $value) {
-        $item[$key] = node_filter(strtr(trim($value), $tt));
+        $item[$key] = filter_default(strtr(trim($value), $tt));
       }
 
       if ($item["TITLE"]) {
