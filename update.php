@@ -774,10 +774,9 @@ function update_data($start) {
 function update_page() {
   global $user, $mysql_updates;
 
-  $op = $_POST["op"];
   $edit = $_POST["edit"];
 
-  switch ($op) {
+  switch ($_POST["op"]) {
     case "Update":
       // make sure we have updates to run.
       print "<html><h1>Drupal database update</h1>";
@@ -837,7 +836,6 @@ function update_page() {
 }
 
 function update_content($pattern) {
-
   $result = db_query("SELECT n.nid, c.cid, c.subject FROM node n LEFT JOIN comments c ON n.nid = c.nid WHERE c.comment LIKE '%s'", $pattern);
   while ($comment = db_fetch_object($result)) {
     watchdog("special", "upgrade possibly affects comment '$comment->subject'", "<a href=\"node.php?id=$comment->nid&cid=$comment->cid#$comment->cid\">view post</a>");
@@ -850,7 +848,6 @@ function update_content($pattern) {
 }
 
 function update_info() {
-
   print "<html><h1>Drupal database update</h1>";
   print "<ol>\n";
   print "<li>Use this script to <b>upgrade an existing Drupal installation</b>.  You don't need this script when installing Drupal from scratch.</li>";
@@ -880,12 +877,11 @@ function update_info() {
   print "</html>";
 }
 
-if (isset($op)) {
+if (isset($_GET["op"])) {
   include_once "includes/common.inc";
 
   // Access check:
   if ($user->uid == 1) {
-
     update_page();
   }
   else {
