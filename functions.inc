@@ -1,5 +1,6 @@
 <?
-include("user.class.php");
+include "user.class.php";
+include "database.inc";
 
 session_start();
 
@@ -13,8 +14,7 @@ function dbconnect() {
 }
 
 function counter() {
-  dbconnect();
-  mysql_query("UPDATE vars SET value=value+1 where name='totalhits'");
+  db_query("UPDATE vars SET value=value+1 where name='totalhits'");
 }
 
 function FixQuotes ($what = "") {
@@ -44,30 +44,26 @@ function formatTimestamp($time) {
 }
 
 function addRefer($url) {
-  dbconnect();
-
   $query = "SELECT * FROM refer WHERE url = '$url'";
-  $result = mysql_query($query);
+  $result = db_query($query);
 
-  if ($site = mysql_fetch_object($result)) {
+  if ($site = db_fetch_object($result)) {
     if ($site->status) {
       $site->refers++;
       $query = "UPDATE refer SET refers = '$site->refers', access_dt = '". time() ."' WHERE url = '$url'";
-      $result = mysql_query($query);
+      $result = db_query($query);
     }
   }
   else {
     $query = "INSERT INTO refer (url, name, refers, create_dt, access_dt) VALUES ('$url', '', '1', '". time() ."', '". time() ."')";
-    $result = mysql_query($query);
+    $result = db_query($query);
   }
 }
 
 function displayRelatedLinks($theme, $sid = 0) {
-  dbconnect();
+  $result = db_query("SELECT * FROM stories WHERE sid = $sid");
 
-  $result = mysql_query("SELECT * FROM stories WHERE sid = $sid");
-
-  if ($story = mysql_fetch_object($result)) {
+  if ($story = db_fetch_object($result)) {
     ### parse story for A HREF-tags:
     $text = "$story->abstract $story->comments $story->article";
     while ($text = stristr($text, "<A HREF=")) {
@@ -87,10 +83,10 @@ function displayRelatedLinks($theme, $sid = 0) {
 function displayOldHeadlines($theme) {
   global $user;
   
-  if ($user->storynum) $result = mysql_query("SELECT sid, subject, time FROM stories ORDER BY time DESC LIMIT $user->storynum, 10");
-  else $result = mysql_query("SELECT sid, subject, time FROM stories ORDER BY time DESC LIMIT 10, 10");
+  if ($user->storynum) $result = db_query("SELECT sid, subject, time FROM stories ORDER BY time DESC LIMIT $user->storynum, 10");
+  else $result = db_query("SELECT sid, subject, time FROM stories ORDER BY time DESC LIMIT 10, 10");
 
-  while ($story = mysql_fetch_object($result)) {        
+  while ($story = db_fetch_object($result)) {        
     
     if ($time != date("F jS", $story->time)) {
       $content .= "<P><B>". date("l, F jS", $story->time) ."</B></P>";
@@ -116,10 +112,8 @@ function displayOldHeadlines($theme) {
 function displayNewHeadlines($theme, $num = 10) {
   global $user;
 
-  dbconnect();
-
   $content = "";
-  $result = mysql_query("SELECT sid, subject FROM stories ORDER BY time DESC LIMIT $num");
+  $result = db_query("SELECT sid, subject FROM stories ORDER BY time DESC LIMIT $num");
   while(list($sid, $subject) = mysql_fetch_row($result)) {
     if ($user) {
       $content .= "<LI><A HREF=\"article.php?sid=$sid";
@@ -137,7 +131,7 @@ function displayNewHeadlines($theme, $num = 10) {
 }
 
 function displayAdminblock($theme) {
-  $result = mysql_query("SELECT title, content FROM blocks");
+  $result = db_query("SELECT title, content FROM blocks");
   while (list($title, $content) = mysql_fetch_array($result)) {
     $theme->box($title, nl2br($content));
   }
@@ -145,14 +139,14 @@ function displayAdminblock($theme) {
 
 function displayUserblock($theme) {
   global $user;
-  dbconnect();
+
   if ($user->ublockon) {
     $content .= "<P ALIGN=\"right\">[ <A HREF=\"account.php?op=edithome\"><FONT COLOR=\"$theme->hlcolor2\">edit</FONT></A> | <A HREF=\"account.php?op=logout\"><FONT COLOR=\"$theme->hlcolor2\">logout</FONT></A> ]</P>";
     $theme->box("$user->userid's box", $user->content);
   }
 }
 
-function displayAccount($theme) {
+function displayLogin($theme) {
   global $user;
   
   if ($user) { 
@@ -190,20 +184,31 @@ function displayAccountSettings($theme) {
   }
 }
 
+function displayAccount($theme) {
+  global $user;
+ 
+  include "submission.inc";
+
+  if ($user) {
+    ### Display account settings:
+    $content .= "<LI><A HREF=\"submission.php\">moderate submissions</A> (". submission_count() .")</LI>";
+    $theme->box("$user->userid's account", "$content");
+  }
+}
+
 function displayReferrals($theme, $number = 10) {
   $count = 1;
 
-  dbconnect();
   if ($number) {
     $query = "SELECT * FROM refer ORDER BY refers DESC LIMIT $number";
-    $result = mysql_query($query);
+    $result = db_query($query);
   }
   else {
     $query = "SELECT * FROM refer ORDER BY refers DESC";
-    $result = mysql_query($query);
+    $result = db_query($query);
   }
   
-  while (($site = mysql_fetch_object($result)) && ($count <= $number)) {
+  while (($site = db_fetch_object($result)) && ($count <= $number)) {
     if ($site->name) $rval .= "$count. <A HREF=\"$site->url\">$site->name</A> ($site->refers)<BR>";
     else $rval .= "$count. <A HREF=\"$site->url\">$site->url</A> ($site->refers)<BR>";
     $count++;
