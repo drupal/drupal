@@ -27,7 +27,7 @@ Drupal x.x.x, xxxx-xx-xx
 - theme system:
     * changed all GIFs to PNGs.
     * reorganised the handling of themes, template engines, templates and styles.
-    * unified the settings for themes.
+    * unified and extended the available theme settings.
     * added theme screenshots.
 - blocks:
     * added 'recent comments' block.
