@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.15 2004/05/17 22:00:06 dries Exp $
+// $Id: filter.module,v 1.16 2004/06/15 18:02:52 dries Exp $
 
 define('FILTER_HTML_DONOTHING', 0);
 define('FILTER_HTML_STRIP', 1);
@@ -149,6 +149,12 @@ function filter_list($force = 0) {
  */
 function check_output($text) {
   if (isset($text)) {
+
+    // Convert all Windows and Mac newlines to a single newline,
+    // so filters only need to deal with this one
+    $text = str_replace(array("\r\n", "\r"), "\n", $text);
+
+    // Get complete list of filters ordered properly
     $filters = filter_list();
 
     // Give filters the chance to escape HTML-like data such as code or formulas.
