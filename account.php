@@ -34,13 +34,12 @@ function showUser($uname) {
   if ($user && $uname && $user->userid == $uname) {
     $output .= "<P>Welcome $user->userid! This is <B>your</B> user info page. There are many more, but this one is yours. You are probably most interested in editing something, but if you need to kill some time, this place is as good as any other place.</P>\n";
     $output .= "<TABLE BORDER=0 CELLPADDING=2 CELLSPACING=2>\n";
-    $output .= " <TR><TD><B>User ID:</B></TD><TD>$user->userid</TD></TR>\n";
-    $output .= " <TR><TD><B>Name:</B></TD><TD>$user->name</TD></TR>\n";
-    $output .= " <TR><TD><B>E-mail:</B></TD><TD><A HREF=\"mailto:$user->femail\">$user->femail</A></TD></TR>\n";
-    $output .= " <TR><TD><B>URL:</B></TD><TD><A HREF=\"$user->url\" TARGET=\"_new\">$user->url</A></TD></TR>\n";
-    if ($user->access > 0) $output .= "<TR><TD VALIGN=top><B>Access:</B></TD><TD>". showAccess() ."</TD></TR>\n";
-    $output .= " <TR><TD><B>Bio:</B></TD><TD>$user->bio</TD></TR>\n";
-    $output .= " <TR><TD><B>Signature:</B></TD><TD>$user->signature</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>User ID:</B></TD><TD>$user->userid</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Name:</B></TD><TD>". format_data($user->name) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>E-mail:</B></TD><TD>". format_email_address($user->femail) ."</A></TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>URL:</B></TD><TD>". format_url($user->url) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Bio:</B></TD><TD>". format_data($user->bio) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Signature:</B></TD><TD>". format_data($user->signature) ."</TD></TR>\n";
     $output .= "</TABLE>\n";
 
     ### Display account information:
@@ -51,9 +50,9 @@ function showUser($uname) {
   elseif ($uname && $account = account_getUser($uname)) {
     $box1 .= "<TABLE BORDER=0 CELLPADDING=2 CELLSPACING=2>\n";
     $box1 .= " <TR><TD ALIGN=\"right\"><B>Username:</B></TD><TD>$account->userid</TD></TR>\n";
-    $box1 .= " <TR><TD ALIGN=\"right\"><B>E-mail:</B></TD><TD><A HREF=\"mailto:$account->femail\">$account->femail</A></TD></TR>\n";
-    $box1 .= " <TR><TD ALIGN=\"right\"><B>URL:</B></TD><TD><A HREF=\"$account->url\">$account->url</A></TD></TR>\n";
-    $box1 .= " <TR><TD ALIGN=\"right\"><B>Bio:</B></TD><TD>$account->bio</TD></TR>\n";
+    $box1 .= " <TR><TD ALIGN=\"right\"><B>E-mail:</B></TD><TD>". format_email_address($account->femail) ."</TD></TR>\n";
+    $box1 .= " <TR><TD ALIGN=\"right\"><B>URL:</B></TD><TD>". format_url($account->url) ."</TD></TR>\n";
+    $box1 .= " <TR><TD ALIGN=\"right\"><B>Bio:</B></TD><TD>". format_data($account->bio) ."</TD></TR>\n";
     $box1 .= "</TABLE>\n";
 
     $result = db_query("SELECT c.cid, c.pid, c.sid, c.subject, c.timestamp, s.subject AS story FROM comments c LEFT JOIN users u ON u.id = c.author LEFT JOIN stories s ON s.id = c.sid WHERE u.userid = '$uname' AND c.timestamp > ". (time() - 1209600) ." ORDER BY cid DESC LIMIT 10");
