@@ -17,8 +17,6 @@
  */
 function watchdog_help($section = 'admin/help#watchdog') {
   switch ($section) {
-    case 'admin/help#watchdog':
-      return t('<p>The watchdog module monitors your web site, capturing system events in a log to be reviewed by an authorized individual at a later time.  The watchdog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information.  It is vital to <a href="%watchdog">check the watchdog report</a> on a regular basis as it is often the only way to tell what is going on.</p>', array('%watchdog' => url('admin/logs')));
     case 'admin/logs':
       return t('<p>The watchdog module monitors your web site, capturing system events in a log to be reviewed by an authorized individual at a later time.  The watchdog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information.  It is vital to check the watchdog report on a regular basis as it is often the only way to tell what is going on.</p>');
     case 'admin/modules#description':
