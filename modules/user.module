@@ -1186,23 +1186,24 @@ function user_admin_access($edit = array()) {
     db_query("DELETE FROM access WHERE aid = '%s'", $id);
   }
 
-  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
-  $output .= " <tr><th>" . t("type") . "</th><th>" . t("mask") . "</th><th>" . t("operations") . "</th></tr>";
+  $header = array(t("type"), t("mask"), t("operations"));
 
   $result = db_query("SELECT * FROM access WHERE type = '%s' AND status = '1' ORDER BY mask", $type);
 
   while ($rule = db_fetch_object($result)) {
-    $output .= "<tr><td align=\"center\">" . t("Allow") . "</td><td>". check_output($rule->mask) ."</td><td>". la(t("delete rule"), array("mod" => "user", "op" => "access", "type" => $type, "id" => $rule->aid)) ."</td></tr>";
+    $rows[] = array(t("Allow"), $rule->mask, array("data" => la(t("delete rule"), array("mod" => "user", "op" => "access", "type" => $type, "id" => $rule->aid)), "align" => "center"));
   }
 
   $result = db_query("SELECT * FROM access WHERE type = '%s' AND status = '0' ORDER BY mask", $type);
 
   while ($rule = db_fetch_object($result)) {
-    $output .= "<tr><td align=\"center\">" . t("Deny") . "</td><td>". check_output($rule->mask) ."</td><td>". la(t("delete rule"), array("mod" => "user", "op" => "access", "type" => $type, "id" => $rule->aid)). "</td></tr>";
+    $rows[] = array(t("Deny"), $rule->mask, la(t("delete rule"), array("mod" => "user", "op" => "access", "type" => $type, "id" => $rule->aid)));
   }
 
-  $output .= " <tr><td><select name=\"edit[status]\"><option value=\"1\">" . t("Allow") . "</option><option value=\"0\">" . t("Deny") . "</option></select></td><td><input size=\"32\" maxlength=\"64\" name=\"edit[mask]\" /></td><td><input type=\"submit\" name=\"op\" value=\"" . t("Add rule") . "\" /></td></tr>";
-  $output .= "</table>";
+  $rows[] = array("<select name=\"edit[status]\"><option value=\"1\">". t("Allow") ."</option><option value=\"0\">". t("Deny") ."</option></select>", "<input size=\"32\" maxlength=\"64\" name=\"edit[mask]\" />", "<input type=\"submit\" name=\"op\" value=\"" . t("Add rule") . "\" />");
+
+  $output .= table($header, $rows);
+
   $output .= "<p><small>%: " . t("Matches any number of characters, even zero characters") . ".<br />_: " . t("Matches exactly one character.") . "</small></p>";
 
   if ($type != "user") {
@@ -1273,7 +1274,7 @@ function user_admin_perm($edit = array()) {
   }
 
   $result = db_query("SELECT rid, name FROM role ORDER BY name");
-  $role_names = array ();
+  $role_names = array();
   while ($role = db_fetch_object($result)) {
     $role_names[$role->rid] = $role->name;
   }
@@ -1282,22 +1283,22 @@ function user_admin_perm($edit = array()) {
   ** Render roles / permission overview:
   */
 
-  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
-  $output .= " <tr><th>&nbsp;</th><th>". implode("</th><th>", array_values($role_names)) ."</th></tr>";
+  $header = array_merge(array("&nbsp;"), $role_names);
+
   foreach ($perms as $perm) {
-    $output .= " <tr>";
-    $output .= "  <td>". check_output($perm) ."</td>";
+    $row[] = t($perm);
     foreach ($role_names as $rid => $name) {
-      $output .= "  <td align=\"center\"><input type=\"checkbox\" name=\"edit[$rid][$perm]\"". (strstr($role_perms[$rid], $perm) ? " checked=\"checked\"" : "") ." /></td>";
+      $row[] = "<input type=\"checkbox\" name=\"edit[$rid][$perm]\"". (strstr($role_perms[$rid], $perm) ? " checked=\"checked\"" : "") ." />";
     }
-    $output .= " </tr>";
+    $rows[] = $row;
+    unset($row);
   }
-  $output .= "</table>";
+
+  $output = table($header, $rows);
   $output .= form_hidden("tid", $tid);
   $output .= form_submit(t("Save permissions"));
 
   return form($output);
-
 }
 
 function user_admin_role($edit = array()) {
@@ -1334,14 +1335,13 @@ function user_admin_role($edit = array()) {
 
     $result = db_query("SELECT * FROM role ORDER BY name");
 
-    $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
-    $output .= " <tr><th>" . t("name") . "</th><th>" . t("operations") . "</th></tr>";
+    $header = array(t("name"), t("operations"));
     while ($role = db_fetch_object($result)) {
-      $output .= "<tr><td>". check_output($role->name) ."</td><td align=\"center\">". la(t("edit role"), array("mod" => "user", "op" => "role", "id" => $role->rid)) ."</td></tr>";
+      $rows[] = array($role->name, array("data" => la(t("edit role"), array("mod" => "user", "op" => "role", "id" => $role->rid)), "align" => "center"));
     }
-    $output .= " <tr><td><input size=\"32\" maxlength=\"64\" name=\"edit[name]\" /></td><td><input type=\"submit\" name=\"op\" value=\"" . t("Add role") . "\" /></td></tr>";
-    $output .= "</table>";
+    $rows[] = array("<input size=\"32\" maxlength=\"64\" name=\"edit[name]\" />", "<input type=\"submit\" name=\"op\" value=\"". t("Add role") ."\" />");
 
+    $output = table($header, $rows);
     $output = form($output);
   }
 
