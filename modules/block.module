@@ -71,12 +71,10 @@ function block_admin_display() {
 
   // Generate output:
   $output = "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  $output .= "<tr><th>block</th><th>module</th><th>status</th><th>custom</th><th>weight</th><th>region</th><th>path</th></tr>\n";
+  $output .= "<tr><th>block</th><th>module</th><th>status</th><th>custom</th><th>weight</th><th>region</th><th>path</th><th colspan=\"2\">operations</th></tr>\n";
 
   while ($block = db_fetch_object($result)) {
-    for ($count = 0; $count < 10; $count++) {
-      $weights[$count] = $count;
-    }
+    $weights = array(0 => 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
 
     $output .= '<tr>';
     //$output .= '<td>'. la($block->name, array("mod" => "block", "op" => "view", "id" => $block->delta), t("View the block details")) .'</td>';
@@ -177,18 +175,23 @@ function block_box_form($edit = array()) {
 function block_box_save($edit) {
   if ($edit["bid"]) {
     db_query("UPDATE boxes SET title = '%s', body = '%s', info = '%s', type = '%s' WHERE bid = '%s'", $edit["title"], $edit["body"], $edit["info"], $edit["type"], $edit["bid"]);
-    return "Block updated.";
+    return "block updated.";
   }
   else {
     db_query("INSERT INTO boxes (title, body, info, type) VALUES  ('%s', '%s', '%s', '%s')", $edit["title"], $edit["body"], $edit["info"], $edit["type"]);
-    return "Block added.";
+    if (db_error()) {
+      return "block added.";
+    }
+    else {
+      return "failed to add block.";
+    }
   }
 }
 
 function block_box_delete($bid) {
   if ($bid) {
     db_query("DELETE FROM boxes WHERE bid = '%s'", $bid);
-    return "Block deleted.";
+    return "block deleted.";
   }
 }
 
