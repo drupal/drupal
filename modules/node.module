@@ -1,5 +1,7 @@
 <?php
-// $Id: node.module,v 1.320 2004/01/27 18:47:07 dries Exp $
+// $Id: node.module,v 1.321 2004/01/29 22:00:31 kjartan Exp $
+
+define('NODE_NEW_LIMIT', time() - 30 * 24 * 60 * 60);
 
 function node_help($section = "admin/help#node") {
   global $mod;
@@ -60,6 +62,10 @@ function node_help($section = "admin/help#node") {
   return $output;
 }
 
+function node_cron() {
+  db_query("DELETE FROM {history} WHERE timestamp < %d", NODE_NEW_LIMIT);
+}
+
 function node_help_page() {
   print theme("page", node_help());
 }
@@ -105,15 +111,15 @@ function node_last_viewed($nid) {
   global $user;
 
   $history = db_fetch_object(db_query("SELECT timestamp FROM {history} WHERE uid = '$user->uid' AND nid = %d", $nid));
-  return ($history->timestamp ? $history->timestamp : 0);
+  return ($history->timestamp ? $history->timestamp : NODE_NEW_LIMIT);
 }
 
 /**
  * Determines whether the supplied timestamp is newer than the user's last view
  * of a given node
  *
- * @param $nid node-id twhose history supplies the 'last viewed' timestamp
- * @param $timestamp time which is compared against node's 'last veiwed'
+ * @param $nid node-id whose history supplies the 'last viewed' timestamp
+ * @param $timestamp time which is compared against node's 'last viewed'
  *   timestamp
  */
 function node_is_new($nid, $timestamp) {
@@ -130,12 +136,7 @@ function node_is_new($nid, $timestamp) {
     }
   }
 
-  if ($timestamp > $cache[$nid]) {
-    return 1;
-  }
-  else {
-    return 0;
-  }
+  return ($timestamp > $cache[$nid] && $timestamp > NODE_NEW_LIMIT);
 }
 
 function node_teaser($body) {
