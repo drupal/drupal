@@ -24,6 +24,8 @@ ErrorDocument 500 /error.php
 
 # Overload PHP variables:
 <IfModule mod_php4.c>
+   # If you are using Apache 2, you have to use <IfModule sapi_apache2.c>
+   # instead of <IfModule mod_php4.c>.
    php_value register_globals        0
    php_value track_vars              1
    php_value short_open_tag          1
@@ -44,8 +46,8 @@ ErrorDocument 500 /error.php
 <IfModule mod_rewrite.c>
   RewriteEngine on
 
-  # Modify the RewriteBase if you are using Drupal in a subdirectory
-  # and the rewrite rules are not working properly:
+  # Modify the RewriteBase if you are using Drupal in a subdirectory and the
+  # rewrite rules are not working properly:
   #RewriteBase /drupal
 
   # Rewrite old-style URLS of the form 'node.php?id=x':
