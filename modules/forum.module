@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.93 2003/05/29 10:18:36 dries Exp $
+// $Id: forum.module,v 1.94 2003/05/31 16:30:21 dries Exp $
 
 function forum_system($field){
   $system["description"] = t("Enable threaded discussions about general topics.");
@@ -165,6 +165,9 @@ function forum_view($node, $main = 0) {
   if (!$main) {
     $node->title = _forum_get_icon($node) ." ". l($voc->name, "forum") ." : ". l($term_data->name, "forum/$term_data->tid") ." / <b>$node->title</b>";
   }
+
+  $node->teaser = check_output($node->teaser);
+  $node->body = check_output($node->body);
 
   theme("node", $node, $main);
 }
