@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.275 2003/10/07 18:16:41 dries Exp $
+// $Id: node.module,v 1.276 2003/10/08 17:35:19 dries Exp $
 
 function node_help($section = "admin/node/help") {
   global $mod;
@@ -566,7 +566,7 @@ function node_link($type, $node = 0, $main = 0) {
       menu("admin/node", t("content"), "node_admin", node_help("admin/node"));
       menu("admin/node/search", t("search"), "node_admin", node_help("admin/node/search"), 8);
       menu("admin/node/help", t("help"), "node_help", NULL, 9);
-      menu("admin/node/edit", t("edit node"), "node_admin", NULL, 0, 1);
+      menu("admin/node/edit", t("edit post"), "node_admin", NULL, 0, 1);
       menu("admin/node/settings", t("settings"), "node_admin", node_help("admin/node/settings"), 8);
     }
   }
@@ -579,12 +579,6 @@ function node_admin_edit($node) {
   if (is_numeric($node)) {
     $node = node_load(array("nid" => $node));
   }
-
-  /*
-  ** Edit node:
-  */
-
-  $output .= "<h3>". t("Edit %module", array("%module" => module_invoke($node->type, "node", "name"))) ."</h3>";
 
   $output .= node_form($node);
 
