@@ -4,7 +4,10 @@ include_once "includes/common.inc";
 
 function submit_type($name, $module) {
   global $modules;
-  if ($module[user]) $modules = array_merge(($modules ? $modules : array()), array($name => $name));
+  if ($module[user]) {
+    $type = module_execute($name, "type");
+    $modules[$name] = $type[1];
+  }
 }
 
 $theme->header();
