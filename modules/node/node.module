@@ -1235,9 +1235,13 @@ function node_delete($edit) {
       ** Delete any taxonomy terms
       */
 
-      if (function_exists("taxonomy_node_delete")) {
-        taxonomy_node_delete($nid, $node->taxonomy);
-      }
+      module_invoke("taxonomy", "node_delete", $node->nid);
+
+      /*
+      ** Delete related node statistics
+      */
+
+      module_invoke("statistics", "node_delete", $node->nid);
 
       /*
       ** Call the node specific callback (if any):
@@ -1325,7 +1329,7 @@ function node_page() {
         }
         else if ($and) {
           // this is an AND
-          $result = db_query_pager("SELECT n.nid, type, count(*) AS c FROM node n LEFT JOIN term_node r ON n.nid = r.nid WHERE tid IN (".implode(",", $terms).") AND ". ($id ? "nid = '$id' AND " : "") ."status = '1' GROUP BY n.nid HAVING c = ".count($terms)." ORDER BY static DESC, created DESC", ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
+          $result = db_query_pager("SELECT n.nid, n.type FROM node n LEFT JOIN term_node r ON n.nid = r.nid WHERE tid IN (".implode(",", $terms).") AND ". ($id ? "nid = '$id' AND " : "") ."status = '1' GROUP BY n.nid, n.type, n.status, n.static, n.created HAVING COUNT(n.nid) = ".count($terms)." ORDER BY static DESC, created DESC", ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
         }
         else {
           $result = db_query_pager("SELECT nid, type FROM node WHERE ". ($id ? "nid = '$id'" : "promote = '1'") ." AND status = '1' ORDER BY static DESC, created DESC", ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));

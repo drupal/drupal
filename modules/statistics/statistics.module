@@ -341,7 +341,7 @@ function statistics_admin_accesslog_table($type, $id) {
     }
     else {
       /* retrieve recent access logs for all users */
-      $result = db_query("SELECT nid, url, hostname, uid, MAX(timestamp) AS max_timestamp FROM accesslog WHERE uid <> '0' GROUP BY uid ORDER BY max_timestamp DESC LIMIT %s", $limit1);
+      $result = db_query("SELECT nid, url, hostname, uid, MAX(timestamp) AS timestamp FROM accesslog WHERE uid <> '0' GROUP BY uid ORDER BY timestamp DESC LIMIT %s", $limit1);
     }
   }
   else if ($type == 2) {
@@ -533,7 +533,7 @@ function statistics_admin_displaylog() {
 
     $output .= "<br />";
 
-    $output .= "<h3>Recent users</h3>\n";
+    $output .= "<h3>Recent user logs</h3>\n";
     $output .= statistics_admin_accesslog_table(1, 0);
 
     $output .= "<br />";
@@ -906,6 +906,11 @@ function statistics_summary($dbfield, $dbrows) {
 
   return $output;
 
+}
+
+// clean up statistics table when node is deleted
+function statistics_node_delete($nid) {
+  db_query("DELETE FROM statistics WHERE nid = '%d'", $nid);
 }
 
 /* internal throttle function - do not call from other modules */
