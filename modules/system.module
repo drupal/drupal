@@ -1,15 +1,32 @@
 <?php
 // $Id$
 
-function system_help() {
-  $output .= "<p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviours including visual and operational settings.</p>";
-  $output .= "<h3><a id=\"cron\">Cron</a></h3>". system_help_cron();
-  $output .= "<h3><a id=\"cache\">Cache</a></h3>". system_help_cache();
+function system_help($section = "admin/system/help") {
+  switch ($section) {
+    case "admin/system":
+      $output = "General configuration options for your site. Set up the name of the site, e-mail address used in mail-outs, clean URL options, caching, etc.";
+      break;
+    case "admin/system/themes":
+      $output = "Select which themes are available to your users and specify the default theme.";
+      break;
+    case "admin/system/modules":
+      $output = "Modules are plugins for Drupal that extend its core functionality.  Here you can select which modules are enabled. On the left hand side click on the name of the module for their individual configurations.  Once a module is enabled, you will need to grant permissions to users in user management.";
+      break;
+    case "admin/system/filters":
+      $output = "Filters fit between the raw text in a node and the HTML output. They allow you to replace text selectively. Uses include automatic conversion of emoticons into graphics and filtering HTML content from users' submissions.";
+      break;
+    case "admin/system/help":
+      $output .= "<p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviours including visual and operational settings.</p>";
+      $output .= "<h3><a id=\"cron\">Cron</a></h3>". system_help_cron();
+      $output .= "<h3><a id=\"cache\">Cache</a></h3>". system_help_cache();
+      break;
+  }
+
   return t("$output");
 }
 
 function system_system($field) {
-  $system["description"] = t("Configuration system that lets administrators modify the workings of the site.");
+  $system["description"] = t("Configuration system that lets administrators modify the workings of the site."); // NOTE: we can't move this to the help function.
   return $system[$field];
 }
 
@@ -41,26 +58,26 @@ function system_link($type) {
     $help["modules"] = t("Modules are plugins for Drupal that extend its core functionality.  Here you can select which modules are enabled. On the left hand side click on the name of the module for their individual configurations.  Once a module is enabled, you will need to grant permissions to users in user management.");
     $help["filters"] = t("Filters fit between the raw text in a node and the HTML output. They allow you to replace text selectively. Uses include automatic conversion of emoticons into graphics and filtering HTML content from users' submissions.");
 
-    menu("admin/system", "site configuration", "system_admin", $help["general"], 3);
-    menu("admin/system/themes", "themes", "system_admin", $help["themes"], 2);
+    menu("admin/system", "site configuration", "system_admin", system_help("admin/system"), 3);
+    menu("admin/system/themes", "themes", "system_admin", system_help("admin/system/themes"), 2);
 
     foreach (theme_list(1) as $theme) {
       // NOTE: refresh the list because some themes might have been enabled/disabled.
       include_once "$theme->filename";
       $function = $theme->name ."_settings";
       if (function_exists($function)) {
-        menu("admin/system/themes/$theme->name", $theme->name, "system_admin", $theme->description);
+        menu("admin/system/themes/$theme->name", $theme->name, "system_admin");
       }
     }
 
-    menu("admin/system/modules", "modules", "system_admin", $help["modules"], 3);
+    menu("admin/system/modules", "modules", "system_admin", system_help("admin/system/modules"), 3);
     foreach (module_list(1) as $name) {
       // NOTE: refresh the list because some modules might have been enabled/disabled.
       if (module_hook($name, "settings")) {
         menu("admin/system/modules/$name", $name, "system_admin", module_invoke($name, "system", "admin_help"));
       }
     }
-    menu("admin/system/filters", "filters", "system_admin", $help["filters"], 4);
+    menu("admin/system/filters", "filters", "system_admin", system_help("admin/system/filters"), 4);
     menu("admin/system/help", "help", "system_help", NULL, 9);
   }
 }
