@@ -11,14 +11,14 @@
   @{
 **/
 
-/* $Id: theme.inc,v 1.155 2003/11/10 09:03:53 dries Exp $ */
+/* $Id: theme.inc,v 1.156 2003/11/10 09:49:05 kjartan Exp $ */
 
 /**
   Returns the theme header.
 
   @param $title (optional) override the page title.
 
-  @return a string contraining the \a header output.
+  @return a string containing the \a header output.
 **/
 function theme_header($title = "") {
   global $base_url;
@@ -47,9 +47,9 @@ function theme_header($title = "") {
   Returns themed set of links.
 
   @param $links an array of \a links to be themed.
-  @param $delimiter (optional) \a delimiter used to seperate the links.
+  @param $delimiter (optional) \a delimiter used to separate the links.
 
-  @return a string contraining the \a links output.
+  @return a string containing the \a links output.
 **/
 function theme_links($links, $delimiter = " | ") {
   return implode($delimiter, $links);
@@ -60,7 +60,7 @@ function theme_links($links, $delimiter = " | ") {
 
   @param $name the \a name of the image file.
 
-  @return a string contraining the \a image output.
+  @return a string containing the \a image output.
 **/
 function theme_image($name) {
   return "misc/$name";
@@ -71,7 +71,7 @@ function theme_image($name) {
 
   @param $breadcrumb an array containing the breadcrumb links.
 
-  @return a string contraining the \a breadcrumb output.
+  @return a string containing the \a breadcrumb output.
 **/
 function theme_breadcrumb($breadcrumb) {
   return "<div class=\"breadcrumb\">". implode($breadcrumb, " &raquo; ") ."</div>";
@@ -94,7 +94,7 @@ function theme_breadcrumb($breadcrumb) {
   @param $node the \a node to be themed.
   @param $main
 
-  @return a string contraining the \a node output.
+  @return a string containing the \a node output.
 **/
 function theme_node($node, $main) {
   if (module_exist("taxonomy")) {
@@ -127,9 +127,9 @@ function theme_node($node, $main) {
 
   @param $subject the \a subject of the box.
   @param $content the \a content of the box.
-  @param $requion the \a region of the box.
+  @param $region the \a region of the box.
 
-  @return a string contraining the \a box output.
+  @return a string containing the \a box output.
 **/
 function theme_box($subject, $content, $region = "main") {
   $output = "<h2>$subject</h2><p>$content</p>";
@@ -147,7 +147,7 @@ function theme_box($subject, $content, $region = "main") {
 
   @param $block object "indexed with" fields from database table 'blocks' ($block->module, $block->delta, $block->region, ...) and fields returned by <i>module</i>_block("view") ($block->subject, $block->content, ...).
 
-  @return a string contraining the \a box output.
+  @return a string containing the \a box output.
 **/
 function theme_block($block) {
   $output  = "<div class=\"block block-$block->module\" id=\"block-$block->module-$block->delta\">";
@@ -160,7 +160,7 @@ function theme_block($block) {
 /**
   Returns themed page footer.
 
-  @return a string contraining the \a footer output.
+  @return a string containing the \a footer output.
 **/
 function theme_footer() {
   $output = "</td></tr></table>";
@@ -172,7 +172,7 @@ function theme_footer() {
 /**
   Returns themed marker, useful for marking new comments or required form elements.
 
-  @return a string contraining the \a mark output.
+  @return a string containing the \a mark output.
 **/
 function theme_mark() {
   return "<span class=\"marker\">*</span>";
@@ -184,7 +184,7 @@ function theme_mark() {
   @param $items (optional) an array of the items to be displayed in a list.
   @param $title (optional) the title of the list.
 
-  @return a string contraining the \a list output.
+  @return a string containing the \a list output.
 **/
 function theme_item_list($items = array(), $title = NULL) {
   $output .= "<div class=\"item-list\">";
@@ -208,7 +208,7 @@ function theme_item_list($items = array(), $title = NULL) {
 
   @param $message the error message to be themed.
 
-  @return a string contraining the \a error output.
+  @return a string containing the \a error output.
 **/
 function theme_error($message) {
   return "<div class=\"error\">$message</div>";
@@ -219,7 +219,7 @@ function theme_error($message) {
 
   @param $main (optional)
 
-  @return a string contraining the \a error output.
+  @return a string containing the \a error output.
 **/
 function theme_head($main = 0) {
   global $base_url;
@@ -239,7 +239,7 @@ function theme_head($main = 0) {
 
   @param $main (optional)
 
-  @return a string contraining the \a cloasure output.
+  @return a string containing the \a closure output.
 **/
 function theme_closure($main = 0) {
   $footer = module_invoke_all("footer", $main);
@@ -252,7 +252,7 @@ function theme_closure($main = 0) {
 
   @param $theme_onloads (optional) addition onload directives.
 
-  @return a string contraining the \a onload output.
+  @return a string containing the \a onload output.
 **/
 function theme_onload_attribute($theme_onloads = array()) {
   if (!is_array($theme_onloads)) {
@@ -272,7 +272,7 @@ function theme_onload_attribute($theme_onloads = array()) {
 
   @param   $region   main|left|right
 
-  @return a string contraining the \a blocks output.
+  @return a string containing the \a blocks output.
  **/
 function render_blocks($region) {
   global $user;
@@ -296,7 +296,7 @@ function render_blocks($region) {
 
   @param section defines the \a section of the help to be returned.
 
-  @return a string contraining the help output.
+  @return a string containing the help output.
 **/
 function theme_help($section) {
   $ouptout = "";
@@ -310,11 +310,11 @@ function theme_help($section) {
 }
 
 /**
-  Provides a list of currently avalible themes.
+  Provides a list of currently available themes.
 
   @param $refresh
 
-  @return an array of the currently avalible themes.
+  @return an array of the currently available themes.
 **/
 function list_themes($refresh = 0) {
   static $list;
