@@ -1,4 +1,5 @@
 <?php
+// $Id: bloggerapi.module,v 1.26 2003/09/25 07:27:21 dries Exp $
 
 /*
 **  The Drupal Blogger API implementation.

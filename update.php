@@ -1,4 +1,5 @@
 <?php
+// $Id: update.php,v 1.104 2003/09/25 07:27:19 dries Exp $
 /*
 ** USAGE:
 **

@@ -1,4 +1,5 @@
 <?php
+// $Id: throttle.module,v 1.9 2003/09/25 07:27:21 dries Exp $
 
 function throttle_system($field) {
   $system["description"] = throttle_help("admin/system/modules");
