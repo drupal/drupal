@@ -71,7 +71,7 @@ function watchdog_overview() {
   $names['all'] = t('all messages');
   $queries['all'] = '';
   foreach (_watchdog_get_message_types() as $type) {
-    $names[$type] = t('%type messages', array('%type' => $type));
+    $names[$type] = t('%type messages', array('%type' => t($type)));
     $queries[$type] = "WHERE type = '". db_escape_string($type) ."'";
   }
 
@@ -103,7 +103,7 @@ function watchdog_overview() {
       array(
         // Cells
         $icons[$watchdog->severity],
-        $watchdog->type,
+        t($watchdog->type),
         format_date($watchdog->timestamp, 'small'),
         truncate_utf8($watchdog->message, 64),
         format_name($watchdog),
@@ -139,7 +139,7 @@ function watchdog_event($id) {
   $result = db_query('SELECT w.*, u.name, u.uid FROM {watchdog} w INNER JOIN {users} u ON w.uid = u.uid WHERE w.wid = %d', $id);
   if ($watchdog = db_fetch_object($result)) {
     $output .= '<table border="1" cellpadding="2" cellspacing="2">';
-    $output .= ' <tr><th>'. t('Type') ."</th><td>$watchdog->type</td></tr>";
+    $output .= ' <tr><th>'. t('Type') .'</th><td>' . t($watchdog->type) . '</td></tr>';
     $output .= ' <tr><th>'. t('Date') .'</th><td>'. format_date($watchdog->timestamp, 'large') .'</td></tr>';
     $output .= ' <tr><th>'. t('User') .'</th><td>'. format_name($watchdog) .'</td></tr>';
     $output .= ' <tr><th>'. t('Location') ."</th><td>". l($watchdog->location, $watchdog->location) ."</td></tr>";
