@@ -517,11 +517,11 @@ switch ($op) {
     break;
   case "login":
     account_session_start(check_input($userid), check_input($passwd));
-    if($HTTP_REFERER <> "") { 
+    if($HTTP_REFERER <> "") {
       header("Location: $HTTP_REFERER");
     }
-    else { 
-      header("Location: account.php?op=info"); 
+    else {
+      header("Location: account.php?op=info");
     }
     break;
   case "logout":
