@@ -199,14 +199,30 @@ function story_block() {
 */
 }
 
-function story_overview() {
-  return node_overview("type = 'story'");
+function story_query($type = "") {
+  global $status;
+  $queries =  array(0 => array("active stories", "WHERE n.type = 'story' ORDER BY n.timestamp DESC"), 1 => array("posted stories", "WHERE n.type = 'story' AND n.status = '$status[posted]' ORDER BY n.timestamp DESC"), 2 => array("queued stories", "WHERE n.type = 'story' AND n.status = '$status[queued]' ORDER BY n.timestamp DESC"), 3 => array("dumped stories", "WHERE n.type = 'story' AND n.status = '$status[dumped]' ORDER BY n.timestamp DESC"));
+  return ($queries[$type] ? $queries[$type] : $queries);
+}
+
+function story_listing() {
+  foreach (story_query() as $key=>$array) {
+    $output .= "<LI><A HREF=\"admin.php?mod=story&type=$key\">$array[0]</A></LI>\n";
+  }
+  return "<OL>$output</OL>\n";
+}
+
+
+function story_overview($query = array()) {
+  return node_overview($query);
 }
 
 function story_admin() {
-  global $id, $edit, $mod, $keys, $op, $theme, $user;
+  global $id, $edit, $mod, $keys, $op, $theme, $type, $user;
 
-  print "<SMALL><A HREF=\"admin.php?mod=story&op=add\">add new story</A> | <A HREF=\"admin.php?mod=story\">overview</A> | <A HREF=\"admin.php?mod=story&op=search\">search story</A> | <A HREF=\"admin.php?mod=story&op=help\">help</A></SMALL><HR>\n";
+  print "<SMALL><A HREF=\"admin.php?mod=story&op=add\">add new story</A> | <A HREF=\"admin.php?mod=story&op=listing\">story listing</A> | <A HREF=\"admin.php?mod=story&op=search\">search story</A> | <A HREF=\"admin.php?mod=story\">overview</A> | <A HREF=\"admin.php?mod=story&op=help\">help</A></SMALL><HR>\n";
+
+  $type = ($type ? $type : 0);
 
   switch ($op) {
     case "add":
@@ -214,13 +230,16 @@ function story_admin() {
       break;
     case "delete":
       print story_delete($id);
-      print story_overview();
+      print story_overview(story_query($type));
       break;
     case "edit":
       print story_form(node_get_array("nid", check_input($id)));
       break;
     case "help":
       story_help();
+      break;
+    case "listing":
+      print story_listing();
       break;
     case "search":
       print search_form($keys);
@@ -232,10 +251,9 @@ function story_admin() {
       break;
     case t("Submit"):
       story_save($edit);
-      print story_overview();
-      break;
+      // fall through:
     default:
-      print story_overview();
+      print story_overview(story_query($type));
   }
 }
 
