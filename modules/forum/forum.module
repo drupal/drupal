@@ -1,5 +1,20 @@
 <?php
-// $Id: forum.module,v 1.23 2001/11/01 11:00:48 dries Exp $
+// $Id: forum.module,v 1.24 2001/11/01 17:04:20 dries Exp $
+
+function forum_node($field) {
+  $info = array("name" => "discussion forum");
+
+  return $info[$field];
+}
+
+function forum_access($op, $node) {
+
+  if ($op == "view") {
+    return $node->nid && $node->status && !$node->moderate;
+  }
+
+  return user_access("adminster nodes");
+}
 
 function forum_link($type) {
   if ($type == "page" && user_access("access content")) {
@@ -24,18 +39,12 @@ function forum_form($node) {
 
 function forum_save() {
 
-  if (user_access("administer nodes")) {
-    if ($node->nid) {
-      return array();
-    }
-    else {
-      return array("promote" => 0, "moderate" => 0, "status" => 1);
-    }
+  if ($node->nid) {
+    return array();
   }
   else {
-    return 0;
+    return array("promote" => 0, "moderate" => 0, "status" => 1);
   }
-
 }
 
 function forum_num_comments($nid) {
