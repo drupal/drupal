@@ -35,7 +35,7 @@ function node_save($node) {
 
   $rows = array(nid, pid, lid, log, type, title, score, votes, author, status, timestamp);
 
-  if ($node[nid]) {
+  if ($node[nid] > 0) {
     $u1 = array();
     $u2 = array();
 
