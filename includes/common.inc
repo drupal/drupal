@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.211 2003/06/06 21:08:35 dries Exp $
+// $Id: common.inc,v 1.212 2003/06/06 21:37:08 dries Exp $
 
 function conf_init() {
 
@@ -493,10 +493,6 @@ function check_form($text) {
 }
 
 function check_query($text) {
-  return addslashes($text);
-}
-
-function check_input($text) {
   return addslashes($text);
 }
 

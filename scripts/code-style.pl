@@ -1,5 +1,5 @@
 #!/usr/bin/perl -w
-# $Id: code-style.pl,v 1.5 2002/11/06 13:54:08 kjartan Exp $
+# $Id: code-style.pl,v 1.6 2003/06/06 21:37:11 dries Exp $
 
 # Author: Alexander Schwartz (alexander.schwartz@gmx.net)
 # Licence: GPL
@@ -9,7 +9,7 @@
 # code.  This program tries to show as many improvements as possible with
 # no false positives.
 
-# $Id: code-style.pl,v 1.5 2002/11/06 13:54:08 kjartan Exp $
+# $Id: code-style.pl,v 1.6 2003/06/06 21:37:11 dries Exp $
 
 $comment = 0;
 $program = 0;
@@ -69,6 +69,16 @@ while (<>) {
   elsif (/<br>/i) {
     $msg = "'<br>' -> '<br />'";
   }
+  elsif (/HTTP_REFERER/i) {
+    $msg = "the use of HTTP_REFERER is prone to XSS exploits; use referer_uri() instead";
+  }
+  elsif (/QUERY_STRING/i) {
+    $msg = "the use of HTTP_REFERER is prone to XSS exploits; use referer_uri() instead";
+  }
+  elsif (/REQUEST_URI/i) {
+    $msg = "the use of HTTP_REFERER is prone to XSS exploits and does not work on IIS; use request_uri() instead";
+  }
+
   # XHTML compatibility mode suggests a blank before /
   # i.e. <br />
   elsif (/<[a-z][^>]*[^ >]\/>/i) {

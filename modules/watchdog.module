@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.57 2003/05/29 09:15:00 dries Exp $
+// $Id: watchdog.module,v 1.58 2003/06/06 21:37:09 dries Exp $
 
 function watchdog_help() {
 
@@ -96,7 +96,7 @@ function watchdog_admin() {
         watchdog_help();
         break;
       case "view":
-        print watchdog_view(check_input(arg(3)));
+        print watchdog_view(arg(3));
         break;
       default:
         print watchdog_overview(arg(2));
