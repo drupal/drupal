@@ -20,65 +20,6 @@ function moderate_3($sid, $mode, $order, $thold = 0) {
   echo "<INPUT TYPE=\"hidden\" NAME=\"sid\" VALUE=\"$sid\"><INPUT TYPE=\"hidden\" NAME=\"mode\" VALUE=\"$mode\"><INPUT TYPE=\"hidden\" NAME=\"order\" VALUE=\"$order\"><INPUT TYPE=\"hidden\" NAME=\"thold\" VALUE=\"$thold\"><INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Moderate\"></FORM>";
 }
 
-function displayControlBlock($sid, $title, $thold, $mode, $order) {
-  global $user, $theme;
-  dbconnect();
-  $query = mysql_query("SELECT sid FROM comments WHERE sid = $sid");
-
-  if (!$query) $count = 0; else $count = mysql_num_rows($query);
-  if (!isset($thold)) $thold = 0; 
-
- ?>
-  <TABLE WIDTH="100%" BORDER="0" CELLSPACING="1" CELLPADDING="2">
-   <TR>
-    <TD ALIGN="center" BGCOLOR="<? echo "$theme->bgcolor2"; ?>"><FONT COLOR="<? echo "$theme->bgcolor1" ?>" SIZE="+1"><B>Comment control</B></FONT></TD>
-   </TR>
-   <TR>
-    <TD ALIGN="center" BGCOLOR="<? echo "$theme->bgcolor1"; ?>">
-     <FORM METHOD="get" ACTION="article.php">
-      <FONT SIZE="2"> 
-      <SELECT NAME="thold">
-       <OPTION VALUE="-1" <? if ($thold == -1) { echo "SELECTED"; } ?>>Threshold: -1
-       <OPTION VALUE="0" <? if ($thold == 0) { echo "SELECTED"; } ?>>Threshold: 0
-       <OPTION VALUE="1" <? if ($thold == 1) { echo "SELECTED"; } ?>>Threshold: 1
-       <OPTION VALUE="2" <? if ($thold == 2) { echo "SELECTED"; } ?>>Threshold: 2
-       <OPTION VALUE="3" <? if ($thold == 3) { echo "SELECTED"; } ?>>Threshold: 3
-       <OPTION VALUE="4" <? if ($thold == 4) { echo "SELECTED"; } ?>>Threshold: 4
-       <OPTION VALUE="5" <? if ($thold == 5) { echo "SELECTED"; } ?>>Threshold: 5
-      </SELECT> 
-      <SELECT NAME="mode">
-       <OPTION VALUE="nocomments" <? if ($mode == 'nocomments') { echo "SELECTED"; } ?>>No comments
-       <OPTION VALUE="nested" <? if ($mode == 'nested') { echo "SELECTED"; } ?>>Nested
-       <OPTION VALUE="flat" <? if ($mode == 'flat') { echo "SELECTED"; } ?>>Flat
-       <OPTION VALUE="threaded" <? if (!isset($mode) || $mode=='threaded' || $mode=="") { echo "SELECTED"; } ?>>Threaded
-      </SELECT> 
-      <SELECT NAME="order">
-       <OPTION VALUE="0" <? if (!$order) { echo "SELECTED"; } ?>>Oldest first
-       <OPTION VALUE="1" <? if ($order==1) { echo "SELECTED"; } ?>>Newest first
-       <OPTION VALUE="2" <? if ($order==2) { echo "SELECTED"; } ?>>Highest scoring first
-      </SELECT> 
-      <INPUT TYPE="hidden" NAME="sid" VALUE="<? echo "$sid"; ?>"> <INPUT TYPE="submit" VALUE="Refresh">
-      <?
-       if (isset($user)) echo "<BR><CENTER><INPUT TYPE=\"checkbox\" NAME=\"save\"> Save preferences</CENTER>"; 
-      ?>
-      </FONT>
-     </FORM>
-    </TD>
-   </TR>
-   <?
-    $result = mysql_query("SELECT COUNT(tid) FROM comments WHERE sid = $sid AND score < $thold");
-    if ($result && $number = mysql_result($result, 0)) {
-   ?>
-     <TR>
-      <TD ALIGN="center" BGCOLOR="<? echo "$theme->bgcolor2"; ?>"><SMALL><FONT COLOR="<? echo "$theme->fgcolor2"; ?>">There are at least <? echo $number; ?> comments below your threshold.</FONT></SMALL></TD>
-     </TR>
-   <?
-    }
-   ?> 
-  </TABLE>
-<?
-}
-
 function displayKids ($tid, $mode, $order = 0, $thold = 0, $level = 0, $dummy = 0) {
   global $user, $cookie, $theme;
   include "config.inc";
@@ -203,7 +144,7 @@ function displayTopic ($sid, $pid = 0, $tid = 0, $mode = "threaded", $order = 0,
   
   $num_tid = mysql_num_rows($res);
 
-  displayControlBlock($sid, $title, $thold, $mode, $order);
+  $theme->commentControl($sid, $title, $thold, $mode, $order);
 
   moderate_1();
 
