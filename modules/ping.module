@@ -1,5 +1,5 @@
 <?php
-// $Id: ping.module,v 1.4 2003/05/29 09:14:59 dries Exp $
+// $Id: ping.module,v 1.5 2003/06/13 17:34:16 dries Exp $
 
 function ping_help() {
   $output = "<p>Drupal can pings sites automatically to notify them that your site has changed. It can ping the following sites :</p>";
@@ -34,7 +34,7 @@ function _ping_notify($name, $url) {
 }
 
 function ping_ping($name = "", $url = "") {
-  $feed = $url . url("node/feed");
+  $feed = url("node/feed");
 
   $client = new xmlrpc_client("/RPC2", "rpc.weblogs.com", 80);
 

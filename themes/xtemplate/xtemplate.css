@@ -80,7 +80,6 @@ img {
 #search .form-text {
   width: 8em;
   height: 1.4em;
-  margin-left: 1em;
   padding: 0 0.5em 0 0.5em;
   margin: 0 0 0.5em 0;
 }
@@ -102,7 +101,7 @@ img {
 #message, #main .node .content, .comment .content {
   line-height: 1.4;
 }
-#sidebar {
+#sidebar-left, #sidebar-right {
   background-color: #ddd;
   width: 16em;
   padding: 1em;
@@ -171,9 +170,6 @@ table {
   font-size: 0.8em;
   float: right;
   color: red;
-}
-.block .content, .box .content {
-  font-size: 0.9em/1.1em;
 }
 #tracker th {
   text-align: left;
