@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.116 2004/05/31 19:14:43 dries Exp $
+// $Id: taxonomy.module,v 1.117 2004/06/15 18:41:25 dries Exp $
 
 function taxonomy_feed($taxonomy) {
   global $id, $type;
@@ -392,7 +392,9 @@ function taxonomy_node_save($nid, $terms) {
 
   if ($terms) {
     foreach ($terms as $term) {
-      db_query("INSERT INTO {term_node} (nid, tid) VALUES (%d, %d)", $nid, $term);
+      if ($term) {
+        db_query("INSERT INTO {term_node} (nid, tid) VALUES (%d, %d)", $nid, $term);
+      }
     }
   }
 }
