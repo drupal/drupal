@@ -268,6 +268,9 @@ include_once "includes/theme.inc";
 include_once "includes/user.inc";
 include_once "includes/node.inc";
 
+// initialize configuration variables:
+$conf = variable_init();
+
 // initialize user session:
 user_init();
 
@@ -276,9 +279,6 @@ module_init();
 
 // initialize localization system:
 $locale = locale_init();
-
-// initialize configuration variables:
-$conf = variable_init();
 
 // initialize theme:
 $theme = theme_init();

@@ -279,6 +279,11 @@ ALTER TABLE users ADD role varchar(32) DEFAULT '' NOT NULL;
 ALTER TABLE users DROP access;
 UPDATE users SET role = 'authenticated user';
 
-#23/06/01
+# 23/06/01
 ALTER TABLE users CHANGE userid userid VARCHAR(32) DEFAULT '' NOT NULL;
 
+# 24/06/01
+CREATE TABLE referer (
+  url varchar(32) DEFAULT '' NOT NULL,
+  timestamp int(11) NOT NULL
+);
