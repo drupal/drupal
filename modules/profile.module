@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.85 2005/01/04 19:52:33 dries Exp $
+// $Id: profile.module,v 1.86 2005/01/24 21:39:58 dries Exp $
 
 /**
  * @file
@@ -438,7 +438,7 @@ function profile_admin_add($type) {
     // Validate the form:
     profile_validate_form($data);
 
-    if (db_result(db_query("SELECT fid FROM {profile_fields} WHERE title = '%s'", $data['title']))) {
+    if (db_result(db_query("SELECT fid FROM {profile_fields} WHERE title = '%s' AND category = '%s'", $data['title'], $data['category']))) {
       form_set_error('title', t('The specified title is already in use.'));
     }
 
