@@ -88,33 +88,24 @@ function page_link($type) {
   return $links;
 }
 
-function page_body($node) {
-  $op = $_POST["op"];
-
-  if ($node->format == 0) {
-    // HTML type
-    $output = check_output($node->body);
-  }
-  else {
-    // PHP type
-    ob_start();
-    eval($node->body);
-    $output = ob_get_contents();
-    ob_end_clean();
-  }
-
-  return $output;
-}
-
 function page_view($node, $main = 0) {
-
-
   /*
   ** Extract the page body.  If body is dynamic (using PHP code), the body
   ** will be generated.
   */
 
-  $node->teaser = $node->body = page_body($node);
+  if ($node->format == 0) {
+    // HTML type
+    $node->teaser = check_output($node->teaser);
+    $node->body = check_output($node->body);
+  }
+  else {
+    // PHP type
+    ob_start();
+    eval($node->body);
+    $node->teaser = $node->body = ob_get_contents();
+    ob_end_clean();
+  }
 
   if ($main) {
     theme("node", $node, $main);
@@ -149,7 +140,7 @@ function page_validate(&$node) {
   else {
     $node->format = 0;
     $node->body = filter($node->body);
-    $node->teaser = filter($node->body);
+    $node->teaser = filter($node->teaser);
   }
 }
 
