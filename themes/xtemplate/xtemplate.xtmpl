@@ -59,7 +59,7 @@
     <!-- BEGIN: title -->
     <h2 class="title"><a href="{link}">{title}</a></h2>
     <!-- END: title -->
-    <span class="submitted">Submitted by {author} on {date}.</span>
+    <span class="submitted">{submitted}</span>
     <!-- BEGIN: taxonomy -->
     <span class="taxonomy">{taxonomy}</span>
     <!-- END: taxonomy -->
@@ -72,8 +72,8 @@
 
 <!-- BEGIN: comment -->
   <div class="comment">
-    <h3 class="title">{title}</h3><!-- BEGIN: new --><span class="new">new</span><!-- END: new -->
-    <div class="submitted">Submitted by {author} on {date}.</div>
+    <h3 class="title">{title}</h3><!-- BEGIN: new --><span class="new">{new}</span><!-- END: new -->
+    <div class="submitted">{submitted}</div>
     <div class="content">{content}</div>
     <!-- BEGIN: links -->
     <div class="links">&raquo; {links}</div>
