@@ -310,6 +310,8 @@ function search_item($item, $type) {
  *   to", help text, etc).
  */
 function search_form($action = NULL, $keys = NULL, $options = NULL) {
+  $edit = $_POST['edit'];
+
   if (!$action) {
     $action = url("search");
   }
@@ -346,7 +348,7 @@ function search_data($keys = NULL) {
           $output .= "<p><strong>". t("Matching %names ranked in order of relevance:", array("%name" => $name)) ."</strong></p>";
         }
         else {
-          $output .= "<p><strong>". t("Matching $names") .":</strong></p>";
+          $output .= "<p><strong>". t("Matching {$name}s") .":</strong></p>";
         }
         foreach ($result as $entry) {
           $output .= search_item($entry, $name);
