@@ -102,16 +102,14 @@ function theme_morelink($theme, $node) {
 }
 
 function theme_moderation_results($theme, $node) {
-  global $user;
-
-  if ($user->id && $node->nid && ($user->id == $node->author || user_get($user, "history", "n$node->nid"))) {
-    $result = db_query("SELECT * FROM users WHERE history LIKE '%n$node->nid%'");
-    while ($account = db_fetch_object($result)) {
-      $output .= format_username($account->userid) ." voted '". user_get($account, "history", "n$node->nid") ."'.<BR>";
+  foreach (explode(";", $node->users) as $vote) {
+    if ($vote) {
+      $data = explode(":", $vote);
+      $output .= format_username($data[0]) ." voted '$data[1]'.<BR>";
     }
-
-    $theme->box(t("Moderation results"), ($output ? $output : t("This node has not been moderated yet.")));
   }
+
+  $theme->box(t("Moderation results"), ($output ? $output : t("This node has not been moderated yet.")));
 }
 
 /*

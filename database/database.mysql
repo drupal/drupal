@@ -75,6 +75,7 @@ CREATE TABLE category (
   expire int(3) DEFAULT '0' NOT NULL,
   comment int(2) unsigned DEFAULT '0' NOT NULL,
   submission int(2) unsigned DEFAULT '0' NOT NULL,
+  promote int(2) unsigned DEFAULT '0' NOT NULL,
   UNIQUE name (name),
   PRIMARY KEY (cid)
 );
@@ -112,6 +113,7 @@ CREATE TABLE comments (
   score int(6) DEFAULT '0' NOT NULL,
   votes int(6) DEFAULT '0' NOT NULL,
   link varchar(16) DEFAULT '' NOT NULL,
+  users text NOT NULL,
   PRIMARY KEY (cid),
   KEY lid (lid)
 );
@@ -128,6 +130,18 @@ CREATE TABLE crons (
 );
 
 #
+# Table structure for table 'cvs'
+#
+DROP TABLE IF EXISTS cvs;
+CREATE TABLE cvs (
+  user varchar(32) DEFAULT '' NOT NULL,
+  files text,
+  status int(2) DEFAULT '0' NOT NULL,
+  message text,
+  timestamp int(11) DEFAULT '0' NOT NULL
+);
+
+#
 # Table structure for table 'diaries'
 #
 DROP TABLE IF EXISTS diaries;
@@ -137,6 +151,17 @@ CREATE TABLE diaries (
   text text,
   timestamp int(11) DEFAULT '0' NOT NULL,
   PRIMARY KEY (id)
+);
+
+#
+# Table structure for table 'forum'
+#
+DROP TABLE IF EXISTS forum;
+CREATE TABLE forum (
+  lid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
+  nid int(10) unsigned DEFAULT '0' NOT NULL,
+  body text NOT NULL,
+  PRIMARY KEY (lid)
 );
 
 #
@@ -195,10 +220,8 @@ CREATE TABLE modules (
 DROP TABLE IF EXISTS node;
 CREATE TABLE node (
   nid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
-  lid int(10) unsigned DEFAULT '0' NOT NULL,
-  pid int(10) unsigned DEFAULT '0' NOT NULL,
-  cid int(10) unsigned DEFAULT '0' NOT NULL,
-  tid int(10) unsigned DEFAULT '0' NOT NULL,
+  lid int(10) DEFAULT '0' NOT NULL,
+  pid int(10) DEFAULT '0' NOT NULL,
   log text NOT NULL,
   type varchar(16) DEFAULT '' NOT NULL,
   title varchar(128) DEFAULT '' NOT NULL,
@@ -206,12 +229,19 @@ CREATE TABLE node (
   votes int(11) DEFAULT '0' NOT NULL,
   author int(6) DEFAULT '0' NOT NULL,
   status int(4) DEFAULT '1' NOT NULL,
-  comment int(2) DEFAULT '1' NOT NULL,
   timestamp int(11) DEFAULT '0' NOT NULL,
+  cid int(10) unsigned DEFAULT '0' NOT NULL,
+  tid int(10) unsigned DEFAULT '0' NOT NULL,
+  comment int(2) DEFAULT '1' NOT NULL,
+  promote int(2) DEFAULT '1' NOT NULL,
+  moderate text NOT NULL,
+  users text NOT NULL,
   KEY type (lid,type),
   KEY author (author),
   KEY title (title,type),
-  PRIMARY KEY (nid)
+  PRIMARY KEY (nid),
+  KEY promote (promote),
+  KEY status (status)
 );
 
 #
@@ -250,6 +280,33 @@ CREATE TABLE story (
 );
 
 #
+# Table structure for table 'testac'
+#
+DROP TABLE IF EXISTS testac;
+CREATE TABLE testac (
+  object_id int(11),
+  object_title varchar(64)
+);
+
+#
+# Table structure for table 'testad'
+#
+DROP TABLE IF EXISTS testad;
+CREATE TABLE testad (
+  object_id int(11),
+  object_title varchar(64)
+);
+
+#
+# Table structure for table 'testae'
+#
+DROP TABLE IF EXISTS testae;
+CREATE TABLE testae (
+  object_id int(11),
+  object_title varchar(64)
+);
+
+#
 # Table structure for table 'topic'
 #
 DROP TABLE IF EXISTS topic;
@@ -257,6 +314,7 @@ CREATE TABLE topic (
   tid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   pid int(10) unsigned DEFAULT '0' NOT NULL,
   name varchar(32) DEFAULT '' NOT NULL,
+  moderate text NOT NULL,
   UNIQUE name (name),
   PRIMARY KEY (tid)
 );
@@ -283,7 +341,6 @@ CREATE TABLE users (
   last_access int(10) unsigned,
   last_host varchar(255),
   status tinyint(4) DEFAULT '0' NOT NULL,
-  history text NOT NULL,
   hash varchar(12) DEFAULT '' NOT NULL,
   timezone varchar(8),
   rating decimal(8,2),

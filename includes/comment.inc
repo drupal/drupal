@@ -31,12 +31,12 @@ function comment_moderate($moderate) {
     $none = $comment_votes[key($comment_votes)];
 
     foreach ($moderate as $id=>$vote) {
-      if ($vote != $comment_votes[$none] && !user_get($user, "history", "c$id")) {
-        // update the comment's score:
-        $result = db_query("UPDATE comments SET score = score ". check_input($vote) .", votes = votes + 1 WHERE cid = '". check_input($id) ."'");
-
-        // update the user's history:
-        $user = user_set($user, "history", "c$id", $vote);
+      if ($vote != $comment_votes[$none]) {
+        $id = check_input($id); $vote = check_input($vote);
+        $comment = db_fetch_object(db_query("SELECT * FROM comments WHERE cid = '$id'"));
+        if ($comment && !field_get($comment, "users", $user->userid)) {
+          $result = db_query("UPDATE comments SET score = score $vote, votes = votes + 1, users = '". field_set($comment, "users", $user->userid, $vote) ."' WHERE cid = '$id'");
+        }
       }
     }
   }
@@ -162,7 +162,7 @@ function comment_moderation($comment) {
     // preview comment:
     $output .= "&nbsp;";
   }
-  else if ($user->id && $user->userid != $comment->userid && !user_get($user, "history", "c$comment->cid")) {
+  else if ($user->id && $user->userid != $comment->userid && !field_get($comment, "users", $user->userid)) {
     // comment hasn't been moderated yet:
     foreach ($comment_votes as $key=>$value) $options .= " <OPTION VALUE=\"$value\">$key</OPTION>\n";
     $output .= "<SELECT NAME=\"moderate[$comment->cid]\">$options</SELECT>\n";

@@ -199,6 +199,43 @@ function form_submit($value) {
   return "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". check_textfield($value) ."\">\n";
 }
 
+function field_get($object, $variable, $field) {
+  $data = explode(";", $object->$variable);
+  for (reset($data); current($data); next($data)) {
+    $entry = explode(":", current($data));
+    if (reset($entry) == $field) $rval = end($entry);
+  }
+  return $rval;
+}
+
+function field_set($object, $variable, $name, $value) {
+  $field = $object->$variable;
+
+  if (!$value) {
+    // remove entry:
+    $data = explode(";", $field);
+    for (reset($data); current($data); next($data)) {
+      $entry = explode(":", current($data));
+      if ($entry[0] != $name) $rval .= "$entry[0]:$entry[1];";
+    }
+  }
+  else if (strstr($field, "$name:")) {
+    // found: update exsisting entry:
+    $data = explode(";", $field);
+    for (reset($data); current($data); next($data)) {
+      $entry = explode(":", current($data));
+      if ($entry[0] == $name) $entry[1] = $value;
+      $rval .= "$entry[0]:$entry[1];";
+    }
+  }
+  else {
+    // not found:
+    $rval = "$field$name:$value;";
+  }
+
+  return $rval;
+}
+
 $conf = conf_init();
 
 include_once "includes/$conf.php";
