@@ -603,6 +603,14 @@ function taxonomy_get_term($tid) {
 function _taxonomy_term_select($title, $name, $value, $vocabulary_id, $description, $multiple, $blank, $exclude = array()) {
   $tree = taxonomy_get_tree($vocabulary_id);
 
+  // We store the last selected ID in a session variable:
+  if (!$value) {
+    $value = $_SESSION['vocabulary']["$vocabulary_id"];
+  }
+  else {
+    $_SESSION['vocabulary']["$vocabulary_id"] = $value;
+  }
+
   if ($blank) {
     $options[] = array("tid" => 0, "name" => $blank);
   }
