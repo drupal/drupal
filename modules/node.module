@@ -6,7 +6,7 @@ class Node {
     $this->uid = $node[uid] ? $node[uid] : $user->uid;
     $this->nid = $node[nid];
     $this->type = $node[type];
-    $this->comment = $node[comment] ? $node[comment] :
+    $this->comment = $node[comment] ? $node[comment] :  variable_get($node[type]."_comment", 0);
     $this->name = $node[name] ? $node[name] : $user->name;
     $this->title = $node[title];
     $this->attributes = $node[attributes];
@@ -36,6 +36,8 @@ function node_perm() {
 
 function node_conf_options() {
   $output .= form_select("Default number of nodes to display", "default_nodes_main", variable_get("default_nodes_main", 10), array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 =>  5, 6 => 6, 7 => 7, 8 => 8, 9 => 9, 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30), "The default maximum number of nodes to display on the main page.");
+  $output .= form_select("Prompt for confirmation when deleting nodes", "default_nodes_confirm_delete", variable_get("default_nodes_confirm_delete", 1), array("Disabled", "Enabled"), "Prompt for confirmation when deleting nodes.");
+
   return $output;
 }
 
@@ -102,7 +104,7 @@ function node_links($nid, $type) {
   $link[] = ($op == "option") ? "edit options" : "<A HREF=\"admin.php?mod=node&op=option&id=$nid\">edit options</A>";
   $link[] = ($op == "status") ? "edit status" : "<A HREF=\"admin.php?mod=node&op=status&id=$nid\">edit status</A>";
   $link[] = ($op == "attribute") ? "edit attribute" : "<A HREF=\"admin.php?mod=node&op=attribute&id=$nid\">edit attributes</A>";
-  $link[] = ($op == "delete") ? "delete node" : "<A HREF=\"admin.php?mod=node&op=delete&id=$nid\">delete node</A>";
+  $link[] = "<a href=\"admin.php?mod=node&op=". (variable_get("default_nodes_confirm_delete", 1) ? "confirm+" : "") ."delete&id=$nid\">delete node</a>";
   return $link;
 }
 
@@ -184,7 +186,20 @@ function node_save_content($edit, $type) {
 }
 
 function node_delete($id) {
-  return (node_del(array("nid" => $id)) ? "node has been deleted." : "failed to delete node: set node status to 'dumped' first.");
+  return (node_del(array("nid" => $id)) ? "node has been deleted." : "failed to delete node.");
+}
+  
+
+function node_delete_confirmation($id) {
+ 
+  $node = node_get_object(array("nid" => $id));
+
+  $form .= form_item(t("Do you really want to delete this node"), check_output($node->title));
+  $form .= form_submit("Delete node");
+  $form .= form_submit("Keep node");
+ 
+  return form("admin.php?mod=node&id=$node->nid", $form);
+
 }
 
 function node_query($type = -1) {
@@ -325,8 +340,11 @@ function node_admin() {
         print node_edit_content(node_get_array(array("nid" => $id)), $type);
         break;
       case "default":
-        print node_setting();
         break;
+      case "confirm delete":
+        print node_delete_confirmation($id);
+        break;
+      case "Delete node":
       case "delete":
         print status(node_delete($id));
         print node_overview($query);
