@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pear.inc,v 1.11 2002/11/09 20:02:41 dries Exp $
+// $Id: database.pear.inc,v 1.12 2002/11/09 20:58:16 dries Exp $
 
 require_once 'DB.php';
 
@@ -125,7 +125,9 @@ function db_affected_rows() {
  */
 
 function db_query_range($query, $from, $count) {
-  return DB::limitQuery($query, $from, $count);
+  global $db_handle;
+
+  return $db_handle->limitQuery($query, $from, $count);
 }
 
 ?>
