@@ -17,7 +17,7 @@ function book_node_name($node) {
  * Implementation of hook_perm().
  */
 function book_perm() {
-  return array('maintain books');
+  return array('maintain books', 'edit own book pages');
 }
 
 /**
@@ -31,7 +31,7 @@ function book_access($op, $node) {
     // are still waiting for approval or not.  We might not always want
     // to display pages that are waiting for approval, but we take care
     // of that problem in the book_content() function.
-    return $node->status;
+    return ($node->status ? $node->status : ($node->uid == $user->uid && user_access('edit own book pages')));
   }
 
   if ($op == 'create') {
@@ -48,7 +48,8 @@ function book_access($op, $node) {
     // revision"-bit is set.  That is, only updates that don't overwrite
     // the current or pending information are allowed.
 
-    return user_access('maintain books') && !$node->moderate && $node->revision;
+    return (user_access('maintain books') && !$node->moderate && $node->revision)
+      || ($node->uid == $user->uid && user_access('edit own book pages'));
   }
 }
 
