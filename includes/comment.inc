@@ -253,12 +253,12 @@ function comment_thread_min($cid, $threshold) {
 
   $result = db_query("SELECT c.*, u.* FROM comments c LEFT JOIN users u ON c.author = u.id WHERE c.pid = '$cid' ORDER BY c.timestamp, c.cid");
 
-  print "<UL>";
   while ($comment = db_fetch_object($result)) {
-    comment_view($comment);
+    print "<UL>";
+    print " <LI>". comment_view($comment) .</LI>\n";
     comment_thread_min($comment->cid, $threshold);
+    print "</UL>";
   }
-  print "</UL>";
 }
 
 function comment_thread_max($cid, $mode, $threshold, $level = 0, $dummy = 0) {
@@ -266,12 +266,12 @@ function comment_thread_max($cid, $mode, $threshold, $level = 0, $dummy = 0) {
 
   $result = db_query("SELECT c.*, u.* FROM comments c LEFT JOIN users u ON c.author = u.id WHERE c.pid = '$cid' ORDER BY c.timestamp, c.cid");
 
-  print "<UL>";
   while ($comment = db_fetch_object($result)) {
+  print "<UL>";
     comment_view($comment, (comment_visible($comment, $threshold) ? comment_link($comment, 0) : 0));
     comment_thread_max($comment->cid, $mode, $threshold, $level + 1, $dummy + 1);
-  }
   print "</UL>";
+  }
 }
 
 function comment_render($lid, $cid) {
