@@ -158,13 +158,13 @@ function system_view_filters() {
 
 function system_save_settings($edit = array()) {
 
-  if ($edit['type']) {
-    db_query("UPDATE system SET status = '0' WHERE type = '%s'", $edit['type']);
+  if ($edit["type"]) {
+    db_query("UPDATE system SET status = '0' WHERE type = '%s'", $edit["type"]);
     foreach ($edit["status"] as $filename => $status) {
       db_query("UPDATE system SET status = '%d' WHERE filename = '$filename'", $status);
     }
-    if ($edit['type'] == "theme")
-      variable_set("theme_default", $edit['theme_default']);
+    if ($edit["type"] == "theme")
+      variable_set("theme_default", $edit["theme_default"]);
   }
   else {
     foreach ($edit as $name => $value) {
@@ -296,24 +296,28 @@ function system_listing($type, $directory, $required = array()) {
 
   return $output;
 }
+
 function system_init() {
   global $HTTP_POST_VARS, $REQUEST_URI, $system_init_status;
+  
   session_register("system_init_status");
   if (user_access("administer site configuration")) {
-
-    if ($HTTP_POST_VARS['op'] == t("Reset to defaults"))
-      $system_init_status = status(system_reset_default($HTTP_POST_VARS['edit']));
-
-    else if ($HTTP_POST_VARS['op'] == t("Save configuration"))
-      $system_init_status = status(system_save_settings($HTTP_POST_VARS['edit']));
-
-    else
+    if (isset($HTTP_POST_VARS["op"]) && $HTTP_POST_VARS["op"] == t("Reset to defaults")) {
+      $system_init_status = status(system_reset_default($HTTP_POST_VARS["edit"]));
+    }
+    else if (isset($HTTP_POST_VARS["op"]) && $HTTP_POST_VARS["op"] == t("Save configuration")) {
+      $system_init_status = status(system_save_settings($HTTP_POST_VARS["edit"]));
+    }
+    else {
       return;
+    }
     drupal_goto("$REQUEST_URI");
   }
 }
+
 function system_admin() {
   global $HTTP_POST_VARS, $system_init_status;
+  
   if (user_access("administer site configuration")) {
     session_register("system_init_status");
     print $system_init_status;
