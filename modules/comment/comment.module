@@ -1344,6 +1344,7 @@ function comment_num_new($nid, $timestamp = 0) {
     if (!$timestamp) {
       $timestamp = node_last_viewed($nid);
     }
+    $timestamp = ($timestamp > NODE_NEW_LIMIT ? $timestamp : NODE_NEW_LIMIT);
 
     // Use the timestamp to retrieve the number of new comments.
     $result = db_result(db_query('SELECT COUNT(c.cid) FROM {node} n INNER JOIN {comments} c ON n.nid = c.nid WHERE n.nid = %d AND timestamp > %d AND c.status = 0', $nid, $timestamp));
