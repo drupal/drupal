@@ -5,9 +5,9 @@
    Theme: Goofy
    Author: UnConeD
    Email: unconed@drop.org
-   Description: Colourful, grahical, orange theme for high-resolutions.
-   Notes: Only boxes on the right for now, because all the graphcis
-          take up a lot of space.
+   Description: Colourful, graphical, orange theme for high-resolutions.
+   Notes: Only boxes on the right, because the graphcis take up a lot
+          of horizontal space.
    
   *********************************************************************/
 
@@ -20,37 +20,7 @@
  <html> 
   <head>
    <title><?php echo $site_name; ?></title>
-    <style type="text/css">
-     body { background-color: #FFFFFF; font-size: 10pt; font-family: tahoma,helvetica,arial; }
-     p,ul,li,div,form,em,blockquote,quote { font-size: 10pt; font-family: tahoma,helvetica,arial; }
-     td { font-family: tahoma,arial,helvetica; font-size: 10pt; }
-     td.oru { background: url("themes/goofy/images/or-u.png"); width: 100%; } 
-     td.ord { background: url("themes/goofy/images/or-d.png"); width: 100%; } 
-     td.orl { background: url("themes/goofy/images/or-l.png"); } 
-     td.orr { background: url("themes/goofy/images/or-r.png"); }
-     td.orcnt { background: #FBC636; width: 100%; font-family: tahoma,arial,helvetica; font-size: 10pt; font-weight: bold; text-align: center; } 
-     td.gru { background: url("themes/goofy/images/gr-u.png"); width: 100%; } 
-     td.grd { background: url("themes/goofy/images/gr-d.png"); width: 100%; } 
-     td.grl { background: url("themes/goofy/images/gr-l.png"); } 
-     td.grr { background: url("themes/goofy/images/gr-r.png"); }
-     td.grcnt { background: #C6C6C6; width: 100%; font-family: tahoma,arial,helvetica; font-size: 10pt; } 
-     td.lgu { background: url("themes/goofy/images/lg-u.png"); width: 100%; } 
-     td.lgd { background: url("themes/goofy/images/lg-d.png"); width: 100%; } 
-     td.lgl { background: url("themes/goofy/images/lg-l.png"); } 
-     td.lgr { background: url("themes/goofy/images/lg-r.png"); }
-     td.lgcnt { background: #E4E4E4; width: 100%; font-family: tahoma,arial,helvetica; font-size: 10pt; white-space: normal; }
-     
-     small { font-size: 8pt; }
-     big { font-size: 12pt; }
-     
-     hr { color: #404040; height: 1px; }
-     
-     a { color: #804000; text-decoration: none; }
-     a:link { color: #804000; }
-     a:visited { color #808000; }
-     a:active { color: #804000; }
-     
-    </style>
+   <link rel="stylesheet" type="text/css" href="themes/goofy/goofy.css" title="Goofy Stylesheet">
    </head>
    <body>
     <table border="0" cellspacing="3" cellpadding="0" width="100%">
@@ -69,19 +39,19 @@
     ?>
            <table border="0" cellspacing="0" cellpadding="0" width="100%">
         <tr>
-         <td><img src="themes/goofy/images/lg-ul.png"></td>
-         <td class="lgu" width="100%"><img src="themes/goofy/images/null.gif"></td>
-         <td><img src="themes/goofy/images/lg-ur.png"></td>
+         <td><img src="themes/goofy/images/lg-ul.png" alt=""></td>
+         <td class="lgu" width="100%"><img src="themes/goofy/images/null.gif" alt=""></td>
+         <td><img src="themes/goofy/images/lg-ur.png" alt=""></td>
         </tr>
         <tr>
-         <td class="lgl"><img src="themes/goofy/images/null.gif"></td>
+         <td class="lgl"><img src="themes/goofy/images/null.gif" alt=""></td>
          <td class="lgcnt" width="100%" valign="top"><div align="center"><big><a href="index.php">home</a> | <a href="module.php?mod=faq">faq</a> | <a href="module.php?mod=diary">diary</a> | <a href="search.php">search</a> | <a href="submit.php">submit news</a> | <a href="account.php">user account</a></big></div></td>
-         <td class="lgr"><img src="themes/goofy/images/null.gif"></td>
+         <td class="lgr"><img src="themes/goofy/images/null.gif" alt=""></td>
         </tr>
         <tr>
-         <td><img src="themes/goofy/images/lg-dl.png"></td>
-         <td class="lgd" width="100%"><img src="themes/goofy/images/null.gif"></td>
-         <td><img src="themes/goofy/images/lg-dr.png"></td>
+         <td><img src="themes/goofy/images/lg-dl.png" alt=""></td>
+         <td class="lgd" width="100%"><img src="themes/goofy/images/null.gif" alt=""></td>
+         <td><img src="themes/goofy/images/lg-dr.png" alt=""></td>
         </tr>
        </table>
    <?php
@@ -94,33 +64,33 @@
 
        <table border="0" cellspacing="0" cellpadding="0" width="100%">
         <tr>
-         <td><img src="themes/goofy/images/or-ul.png"></td>
-         <td class="oru" width="100%" colspan="2"><img src="themes/goofy/images/null.gif"></td>
-         <td><img src="themes/goofy/images/or-ur.png"></td>
+         <td><img src="themes/goofy/images/or-ul.png" alt=""></td>
+         <td class="oru" width="100%" colspan="2"><img src="themes/goofy/images/null.gif" alt=""></td>
+         <td><img src="themes/goofy/images/or-ur.png" alt=""></td>
         </tr>
         <tr>
-         <td class="orl"><img src="themes/goofy/images/null.gif"></td>
+         <td class="orl"><img src="themes/goofy/images/null.gif" alt=""></td>
          <td class="orcnt" width="100%" valign="top" colspan="2"><?php echo check_output($story->subject); ?></td>
-         <td class="orr"><img src="themes/goofy/images/null.gif"></td>
+         <td class="orr"><img src="themes/goofy/images/null.gif" alt=""></td>
         </tr>
         <tr>
-         <td class="orl"><img src="themes/goofy/images/null.gif"></td>
-         <td class="orcnt" width="100%" colspan="2"><img src="themes/goofy/images/null.gif" height="5"></td>
-         <td class="orr"><img src="themes/goofy/images/null.gif"></td>
+         <td class="orl"><img src="themes/goofy/images/null.gif" alt=""></td>
+         <td class="orcnt" width="100%" colspan="2"><img src="themes/goofy/images/null.gif" height="5" alt=""></td>
+         <td class="orr"><img src="themes/goofy/images/null.gif" alt=""></td>
         </tr>
         <tr>
-         <td class="lgl"><img src="themes/goofy/images/null.gif"></td>
-         <td class="lgcnt" width="100%" colspan="2"><img src="themes/goofy/images/null.gif" height="4"></td>
-         <td class="lgr"><img src="themes/goofy/images/null.gif"></td>
+         <td class="lgl"><img src="themes/goofy/images/null.gif" alt=""></td>
+         <td class="lgcnt" width="100%" colspan="2"><img src="themes/goofy/images/null.gif" height="4" alt=""></td>
+         <td class="lgr"><img src="themes/goofy/images/null.gif" alt=""></td>
         </tr>
         <tr>
-         <td class="lgl"><img src="themes/goofy/images/null.gif"></td>
+         <td class="lgl"><img src="themes/goofy/images/null.gif" alt=""></td>
          <td class="lgcnt"><small><?php echo strtr(t("$how by %a on %b"), array("%a" => format_username($story->userid), "%b" => format_date($story->timestamp, "large"))); ?></small></td>
          <td class="lgcnt" nowrap><div align="right"><?php echo "<A HREF=\"search.php?category=". urlencode($story->section) ."\">$story->section</A>"; ?></div></td>
-         <td class="lgr"><img src="themes/goofy/images/null.gif"></td>
+         <td class="lgr"><img src="themes/goofy/images/null.gif" alt=""></td>
         </tr>
         <tr>
-         <td class="lgl"><img src="themes/goofy/images/null.gif"></td>
+         <td class="lgl"><img src="themes/goofy/images/null.gif" alt=""></td>
          <td class="lgcnt" width="100%" colspan="2"><hr color="#404040" size="1">
          <?php
           echo check_output($story->abstract, 1) ."<br><br>";
@@ -136,12 +106,12 @@
           else
             echo $reply;
          ?></div></td>
-         <td class="lgr"><img src="themes/goofy/images/null.gif"></td>
+         <td class="lgr"><img src="themes/goofy/images/null.gif" alt=""></td>
         </tr>
         <tr>
-         <td><img src="themes/goofy/images/lg-dl.png"></td>
-         <td class="lgd" width="100%" colspan="2"><img src="themes/goofy/images/null.gif"></td>
-         <td><img src="themes/goofy/images/lg-dr.png"></td>
+         <td><img src="themes/goofy/images/lg-dl.png" alt=""></td>
+         <td class="lgd" width="100%" colspan="2"><img src="themes/goofy/images/null.gif" alt=""></td>
+         <td><img src="themes/goofy/images/lg-dr.png" alt=""></td>
         </tr>
        </table><br>
 <?php
@@ -164,12 +134,12 @@
 
        <table border="0" cellspacing="0" cellpadding="0" width="100%">
         <tr>
-         <td><img src="themes/goofy/images/or-ul.png"></td>
-         <td class="oru" width="100%" colspan="2"><img src="themes/goofy/images/null.gif"></td>
-         <td><img src="themes/goofy/images/or-ur.png"></td>
+         <td><img src="themes/goofy/images/or-ul.png" alt=""></td>
+         <td class="oru" width="100%" colspan="2"><img src="themes/goofy/images/null.gif" alt=""></td>
+         <td><img src="themes/goofy/images/or-ur.png" alt=""></td>
         </tr>
         <tr>
-         <td class="orl"><img src="themes/goofy/images/null.gif"></td>
+         <td class="orl"><img src="themes/goofy/images/null.gif" alt=""></td>
          <td class="orcnt" width="100%" valign="top" colspan="2"><?php
      echo "   <table border=\"0\" cellpadding=\"0\" cellspacing=\"1\" width=\"100%\">";
 
@@ -199,36 +169,36 @@
      echo "   </table>";
           
          ?></td>
-         <td class="orr"><img src="themes/goofy/images/null.gif"></td>
+         <td class="orr"><img src="themes/goofy/images/null.gif" alt=""></td>
         </tr>
         <tr>
-         <td class="orl"><img src="themes/goofy/images/null.gif"></td>
-         <td class="orcnt" width="100%" colspan="2"><img src="themes/goofy/images/null.gif" height="5"></td>
-         <td class="orr"><img src="themes/goofy/images/null.gif"></td>
+         <td class="orl"><img src="themes/goofy/images/null.gif" alt=""></td>
+         <td class="orcnt" width="100%" colspan="2"><img src="themes/goofy/images/null.gif" height="5" alt=""></td>
+         <td class="orr"><img src="themes/goofy/images/null.gif" alt=""></td>
         </tr>
         <tr>
-         <td class="lgl"><img src="themes/goofy/images/null.gif"></td>
-         <td class="lgcnt" width="100%" colspan="2"><img src="themes/goofy/images/null.gif" height="4"></td>
-         <td class="lgr"><img src="themes/goofy/images/null.gif"></td>
+         <td class="lgl"><img src="themes/goofy/images/null.gif" alt=""></td>
+         <td class="lgcnt" width="100%" colspan="2"><img src="themes/goofy/images/null.gif" height="4" alt=""></td>
+         <td class="lgr"><img src="themes/goofy/images/null.gif" alt=""></td>
         </tr>
         <?php
         if ($comment) { 
         ?>
         <tr>
-         <td class="lgl"><img src="themes/goofy/images/null.gif"></td>
+         <td class="lgl"><img src="themes/goofy/images/null.gif" alt=""></td>
          <td class="lgcnt" width="100%" colspan="2"><?php 
           echo check_output($comment->comment, 1);
           echo "<br><hr color=\"#404040\" size=\"1\"><div align=\"right\">[ $link ]</div>";
           ?></td>
-         <td class="lgr"><img src="themes/goofy/images/null.gif"></td>
+         <td class="lgr"><img src="themes/goofy/images/null.gif" alt=""></td>
         </tr>
         <?php
         }
         ?>
         <tr>
-         <td><img src="themes/goofy/images/lg-dl.png"></td>
-         <td class="lgd" width="100%" colspan="2"><img src="themes/goofy/images/null.gif"></td>
-         <td><img src="themes/goofy/images/lg-dr.png"></td>
+         <td><img src="themes/goofy/images/lg-dl.png" alt=""></td>
+         <td class="lgd" width="100%" colspan="2"><img src="themes/goofy/images/null.gif" alt=""></td>
+         <td><img src="themes/goofy/images/lg-dr.png" alt=""></td>
         </tr>
        </table><br>
        <?php
@@ -240,34 +210,34 @@
 ?>
        <table border="0" cellspacing="0" cellpadding="0" width="100%">
         <tr>
-         <td><img src="themes/goofy/images/or-ul.png"></td>
-         <td class="oru" width="100%"><img src="themes/goofy/images/null.gif"></td>
-         <td><img src="themes/goofy/images/or-ur.png"></td>
+         <td><img src="themes/goofy/images/or-ul.png" alt=""></td>
+         <td class="oru" width="100%"><img src="themes/goofy/images/null.gif" alt=""></td>
+         <td><img src="themes/goofy/images/or-ur.png" alt=""></td>
         </tr>
         <tr>
-         <td class="orl"><img src="themes/goofy/images/null.gif"></td>
+         <td class="orl"><img src="themes/goofy/images/null.gif" alt=""></td>
          <td class="orcnt" width="100%" valign="top"><?php echo $subject; ?></td>
-         <td class="orr"><img src="themes/goofy/images/null.gif"></td>
+         <td class="orr"><img src="themes/goofy/images/null.gif" alt=""></td>
         </tr>
         <tr>
-         <td class="orl"><img src="themes/goofy/images/null.gif"></td>
-         <td class="orcnt" width="100%"><img src="themes/goofy/images/null.gif" height="5"></td>
-         <td class="orr"><img src="themes/goofy/images/null.gif"></td>
+         <td class="orl"><img src="themes/goofy/images/null.gif" alt=""></td>
+         <td class="orcnt" width="100%"><img src="themes/goofy/images/null.gif" height="5" alt=""></td>
+         <td class="orr"><img src="themes/goofy/images/null.gif" alt=""></td>
         </tr>
         <tr>
-         <td class="lgl"><img src="themes/goofy/images/null.gif"></td>
-         <td class="lgcnt" width="100%"><img src="themes/goofy/images/null.gif" height="4"></td>
-         <td class="lgr"><img src="themes/goofy/images/null.gif"></td>
+         <td class="lgl"><img src="themes/goofy/images/null.gif" alt=""></td>
+         <td class="lgcnt" width="100%"><img src="themes/goofy/images/null.gif" height="4" alt=""></td>
+         <td class="lgr"><img src="themes/goofy/images/null.gif" alt=""></td>
         </tr>
         <tr>
-         <td class="lgl"><img src="themes/goofy/images/null.gif"></td>
+         <td class="lgl"><img src="themes/goofy/images/null.gif" alt=""></td>
          <td class="lgcnt" width="100%"><?php echo $content; ?></td>
-         <td class="lgr"><img src="themes/goofy/images/null.gif"></td>
+         <td class="lgr"><img src="themes/goofy/images/null.gif" alt=""></td>
         </tr>
         <tr>
-         <td><img src="themes/goofy/images/lg-dl.png"></td>
-         <td class="lgd" width="100%"><img src="themes/goofy/images/null.gif" width="150" height="1"></td>
-         <td><img src="themes/goofy/images/lg-dr.png"></td>
+         <td><img src="themes/goofy/images/lg-dl.png" alt=""></td>
+         <td class="lgd" width="100%"><img src="themes/goofy/images/null.gif" width="150" height="1" alt=""></td>
+         <td><img src="themes/goofy/images/lg-dr.png" alt=""></td>
         </tr>
        </table><br>
 
@@ -293,7 +263,6 @@
   </body>
  </html>
 <?
- exit;
     }
   }
 
