@@ -96,9 +96,8 @@ function validateUser($user) {
   if ($ban = ban_match($user[email], $type[addresses])) $rval = "the specified e-mail address is banned for the following reason: <I>$ban->reason</I>.";
 
   ### Verify whether username and e-mail address are unique:
-  dbconnect();
-  if (mysql_num_rows(mysql_query("SELECT userid FROM users WHERE LOWER(userid)=LOWER('$user[userid]')")) > 0) $rval = "the specified username is already taken.";
-  if (mysql_num_rows(mysql_query("SELECT email FROM users WHERE LOWER(email)=LOWER('$user[email]')")) > 0) $rval = "the specified e-mail address is already registered.";
+  if (db_num_rows(db_query("SELECT userid FROM users WHERE LOWER(userid)=LOWER('$user[userid]')")) > 0) $rval = "the specified username is already taken.";
+  if (db_num_rows(db_query("SELECT email FROM users WHERE LOWER(email)=LOWER('$user[email]')")) > 0) $rval = "the specified e-mail address is already registered.";
   return($rval);
 }
 

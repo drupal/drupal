@@ -5,10 +5,9 @@ $access = array("Administrator"	=> 0x00000001,
 
 class User {
   function User($userid, $passwd="") {
-    dbconnect();
-    $result = mysql_query("SELECT * FROM users WHERE LOWER(userid)=LOWER('$userid') && passwd=PASSWORD('$passwd') && STATUS=0") or die(sprintf("Critical error at line %d in %s: %s", __LINE__, __FILE__, mysql_error()));
-    if (mysql_num_rows($result) == 1) {
-      foreach (mysql_fetch_row($result) as $key=>$value) { $field = mysql_field_name($result, $key); $this->$field = stripslashes($value); $this->field[] = $field; }
+    $result = db_query("SELECT * FROM users WHERE LOWER(userid)=LOWER('$userid') && passwd=PASSWORD('$passwd') && STATUS=0");
+    if (db_num_rows($result) == 1) {
+      foreach (db_fetch_row($result) as $key=>$value) { $field = mysql_field_name($result, $key); $this->$field = stripslashes($value); $this->field[] = $field; }
     }
   }
   function save() {
@@ -17,13 +16,12 @@ class User {
     foreach ($this->field as $key=>$field) { $value = $this->$field; $query .= "$field = '". addslashes($value) ."', "; }
     $query .= " id = $this->id WHERE id = $this->id";
     ### Perform query:
-    mysql_query($query);
+    db_query($query);
   }
   function rehash() {
-    dbconnect();
-    $result = mysql_query("SELECT * FROM users WHERE id=$this->id") or die(sprintf("Critical error at line %d in %s: %s", __LINE__, __FILE__, mysql_error()));
-    if (mysql_num_rows($result) == 1) {
-      foreach (mysql_fetch_array($result) as $key=>$value) { $this->$key = stripslashes($value); }
+    $result = db_query("SELECT * FROM users WHERE id=$this->id");
+    if (db_num_rows($result) == 1) {
+      foreach (db_fetch_array($result) as $key=>$value) { $this->$key = stripslashes($value); }
     }
   }
   function valid($access=0) {
@@ -31,8 +29,7 @@ class User {
       $this->rehash();  // synchronisation purpose
       $this->last_access = time();
       $this->last_host = (!empty($GLOBALS[REMOTE_HOST]) ? $GLOBALS[REMOTE_HOST] : $GLOBALS[REMOTE_ADDR] );
-      dbconnect();
-      mysql_query("UPDATE users SET last_access='$this->last_access',last_host='$this->last_host' WHERE id=$this->id") or die(sprintf("Critical error at line %d in %s: %s", __LINE__, __FILE__, mysql_error()));
+      db_query("UPDATE users SET last_access='$this->last_access',last_host='$this->last_host' WHERE id=$this->id");
       if ($this->access & $access || $access == 0) return 1;
     }
     return 0;
