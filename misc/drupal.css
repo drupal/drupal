@@ -135,8 +135,8 @@ td.menu-disabled {
   margin-bottom: 1em;
 }
 tr.light .form-item, tr.dark .form-item {
-  margin-top: 0em;
-  margin-bottom: 0em;
+  margin-top: 0;
+  margin-bottom: 0;
   white-space: nowrap;
 }
 .form-item input.error, .form-item textarea.error {
@@ -305,6 +305,7 @@ tr.light .form-item, tr.dark .form-item {
 .calendar table {
   border-collapse: collapse;
   width: 100%;
+  border: 1px solid #000;
 }
 .calendar td, .calendar th {
   text-align: center;
@@ -313,11 +314,14 @@ tr.light .form-item, tr.dark .form-item {
   margin: 0;
   font-size: 0.8em;
 }
+.calendar td.day-blank {
+  border: 0;
+}
 .tips {
-  margin-top: 0px;
-  margin-bottom: 0px;
-  padding-top: 0px;
-  padding-bottom: 0px;
+  margin-top: 0;
+  margin-bottom: 0;
+  padding-top: 0;
+  padding-bottom: 0;
   font-size: 0.9em;
 }
 #forum .description {
@@ -366,7 +370,7 @@ tr.light .form-item, tr.dark .form-item {
 }
 .profile {
   clear: both;
-  margin: 1em 0em 1em 0em;
+  margin: 1em 0 1em 0;
 }
 .profile .picture {
   float: right;
@@ -450,7 +454,7 @@ tr.watchdog-error .active {
 /* Tab navigation */
 ul.primary {
   border-collapse: collapse;
-  padding: 0em 0em 0em 1em;
+  padding: 0 0 0 1em;
   white-space: nowrap;
   list-style: none;
   margin: 5px;
@@ -468,7 +472,7 @@ ul.primary li a {
   border-style: solid solid none solid;
   height: auto;
   margin-right: 0.5em;
-  padding: 0em 1em;
+  padding: 0 1em;
   text-decoration: none;
 }
 ul.primary li.active a {

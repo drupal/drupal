@@ -119,10 +119,10 @@ function archive_calendar($original = 0) {
 
   // Loop through all the days of the month:
   while ($nday <= $last) {
-    // Set up blank days for first week of the month:
+    // Set up blank days for first week of the month (allowing individual blank day styling):
     if ($first != $weekstart) {
       $blankdays = ($first - $weekstart + 7) % 7;
-      $output .= " <tr class=\"row-week\"><td class=\"day-blank\" colspan=\"$blankdays\">&nbsp;</td>\n";
+      $output .= " <tr class=\"row-week\">" . str_repeat("<td class=\"day-blank\">&nbsp;</td>\n", $blankdays);
       $first = $weekstart;
     }
     // Start every week on a new line:
@@ -164,10 +164,10 @@ function archive_calendar($original = 0) {
     $nday++;
   }
 
-  // Complete the calendar:
+  // Complete the calendar (allowing individual blank day styling):
   if ($sday != $weekstart) {
     $end = (7 - $sday + $weekstart) % 7;
-    $output .= "  <td class=\"day-blank\" colspan=\"$end\">&nbsp;</td>\n </tr>\n";
+    $output .= str_repeat("<td class=\"day-blank\">&nbsp;</td>\n", $end) . "</tr>\n";
   }
 
   $output .= "</table></div>\n\n";
