@@ -658,7 +658,7 @@ function system_theme_settings() {
   // System wide only settings.
   if (!$key) {
     // Menu settings
-    $group = form_textarea(t('Primary links'), "$var][primary_links", $settings['primary_links'], 70, 8, t('The HTML code for the primary links. If this field is empty, Drupal will automatically generate a set of links based on which modules are enabled.'));
+    $group = form_textarea(t('Primary links'), "$var][primary_links", $settings['primary_links'], 70, 8, t('The HTML code for the primary links.'));
     $group .= form_textarea(t('Secondary links'), "$var][secondary_links", $settings['secondary_links'], 70, 8, t('The HTML code for the secondary links.'));
     $form .= form_group(t('Menu Settings'), $group, t('Customize the menus that are displayed at the top and/or bottom of the page. This configuration screen is only available in the site wide display configuration.'));
 
