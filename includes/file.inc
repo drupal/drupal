@@ -1,5 +1,5 @@
 <?php
-/* $Id: file.inc,v 1.23 2004/09/09 05:51:08 dries Exp $ */
+/* $Id: file.inc,v 1.24 2004/09/13 23:30:58 unconed Exp $ */
 
 /**
  * @file
@@ -375,7 +375,7 @@ function file_save_data($data, $dest, $replace = 0) {
   fwrite($fp, $data);
   fclose($fp);
 
-  if (!file_move($file, $dest)) {
+  if (!file_move($file, $dest, $replace)) {
     return 0;
   }
 
