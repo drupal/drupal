@@ -4,8 +4,10 @@ Drupal x.x.x, xxxx-xx-xx
 - profile module:
     * made it possible to administer profile fields.
     * made it possible to browse the profiles by field.
-- menu module:
-    * made it possible to customize menus.
+- navigation:
+    * made it possible to add, delete, rename and move menu items.
+    * introduced tabs and subtabs for local tasks.
+    * reorganized the navigation menus.
 - user management:
     * added support for multiple roles per user.
 - refactored 403 (forbidden) handling and added support for custom 403 pages.
@@ -16,9 +18,8 @@ Drupal x.x.x, xxxx-xx-xx
     * refactored the categorization of syndicated news items.
 - database backend:
     * added support for mutiple database connections.
-- usability:
-    * introduced tabs and subtabs for local tasks.
-    * reorganized the navigation menus.
+- theme system:
+    * changed all GIFs to PNGs.
 - accessibility:
     * improved the accessibility of the archive module's calendar.
     * improved form handling.
