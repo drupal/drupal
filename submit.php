@@ -2,6 +2,8 @@
 
 include_once "includes/common.inc";
 
+if (variable_get(dev_timing, 0)) timer_start();
+
 $theme->header();
 
 if ($user->id) {
@@ -29,5 +31,7 @@ else {
 }
 
 $theme->footer();
+
+if (variable_get(dev_timing, 0)) timer_print();
 
 ?>

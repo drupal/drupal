@@ -7,7 +7,7 @@ function theme_init() {
     include_once $themes[$user->theme][0];
   }
   else {
-    include_once $themes[variable_get(theme_default, key($themes))][0];
+    include_once $themes[variable_get("theme_default", key($themes))][0];
   }
   return new Theme();
 }
@@ -32,7 +32,7 @@ function theme_account($theme) {
     // Display account settings:
     $content .= "<LI><A HREF=\"account.php?op=track&topic=comments\">". t("track your comments") ."</A></LI>\n";
     $content .= "<LI><A HREF=\"account.php?op=track&topic=nodes\">". t("track your nodes") ."</A></LI>\n";
-    $content .= "<LI><A HREF=\"account.php?op=track&topic=site\">". strtr(t("track %a"), array("%a" => variable_get(site_name, "drupal"))) ."</A></LI>\n";
+    $content .= "<LI><A HREF=\"account.php?op=track&topic=site\">". strtr(t("track %a"), array("%a" => variable_get("site_name", "drupal"))) ."</A></LI>\n";
     $content .= "<P>\n";
     $content .= "<LI><A HREF=\"account.php?op=edit&topic=user\">". t("edit your information") ."</A></LI>\n";
     $content .= "<LI><A HREF=\"account.php?op=edit&topic=site\">". t("edit your preferences") ."</A></LI>\n";
@@ -40,7 +40,7 @@ function theme_account($theme) {
     $content .= "<P>\n";
 
     if (user_access($user)) {
-      $content .= "<LI><A HREF=\"admin.php\">administer ". variable_get(site_name, "drupal") ."</A></LI>\n";
+      $content .= "<LI><A HREF=\"admin.php\">administer ". variable_get("site_name", "drupal") ."</A></LI>\n";
       $content .= "<P>\n";
     }
 
