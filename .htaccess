@@ -10,7 +10,7 @@
 
 # Set some options
 Options -Indexes
-Options FollowSymLinks
+Options +FollowSymLinks
 
 # Customized server error messages:
 ErrorDocument 404 /index.php
@@ -64,4 +64,4 @@ DirectoryIndex index.php
   RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
 </IfModule>
 
-# $Id: .htaccess,v 1.57 2004/08/20 07:51:22 dries Exp $
+# $Id: .htaccess,v 1.58 2004/10/09 20:41:49 dries Exp $
