@@ -79,7 +79,7 @@ function story_form($edit = array()) {
     $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[nid]\" VALUE=\"$edit[nid]\">\n";
   }
 
-  $duplicate = db_result(db_query("SELECT COUNT(nid) FROM node WHERE title = '$title'"));
+  $duplicate = db_result(db_query("SELECT COUNT(nid) FROM node WHERE title = '". check_input($title) ."' AND type = 'story'"));
 
   if (!$edit) {
     $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview") ."\">\n";
