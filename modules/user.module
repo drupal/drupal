@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.268 2003/12/04 20:53:19 dries Exp $
+// $Id: user.module,v 1.269 2003/12/05 08:20:28 dries Exp $
 
 /*** Common functions ******************************************************/
 
@@ -561,7 +561,8 @@ function user_login($edit = array(), $msg = "") {
     }
 
     /*
-    ** When possible, determine corresponding external auth source. Invoke source, and login user if successful:
+    ** When possible, determine corresponding external auth source. Invoke 
+    ** source, and login user if successful:
     */
 
     if (!$user->uid && $server && $result = user_get_authmaps("$name@$server")) {
@@ -574,8 +575,9 @@ function user_login($edit = array(), $msg = "") {
       }
     }
 
-     /*
-    ** Try each external authentication source in series. Register user if successful.
+    /*
+    ** Try each external authentication source in series. Register user if 
+    ** successful.
     */
 
     else if (!$user->uid && $server) {
@@ -698,11 +700,11 @@ function user_pass($edit = array()) {
   global $base_url;
 
   if ($edit["name"]) {
-    $account = db_fetch_object(db_query("SELECT uid, name, mail FROM {users} WHERE name = '%s'", $edit["name"]));
+    $account = db_fetch_object(db_query("SELECT uid, name, mail FROM {users} WHERE status = 1 AND name = '%s'", $edit["name"]));
     if (!$account) $error = t("Sorry. The username <i>%s</i> is not recognized.", array("%s" => $edit["name"]));
   }
   else if ($edit["mail"]) {
-    $account = db_fetch_object(db_query("SELECT uid, name, mail FROM {users} WHERE mail = '%s'", $edit["mail"]));
+    $account = db_fetch_object(db_query("SELECT uid, name, mail FROM {users} WHERE status = 1 AND mail = '%s'", $edit["mail"]));
     if (!$account) $error = t("Sorry. The e-mail address <i>%s</i> is not recognized.", array("%s" => $edit["mail"]));
   }
   if ($account) {
