@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.99 2003/01/23 09:24:20 dries Exp $
+// $Id: comment.module,v 1.100 2003/01/29 23:33:50 dries Exp $
 
 $GLOBALS["cmodes"] = array(1 => t("Flat list - collapsed"), 2 => t("Flat list - expanded"), 3 => t("Threaded list - collapsed"), 4 => t("Threaded list - expanded"));
 $GLOBALS["corder"] = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"));
@@ -694,7 +694,7 @@ function comment_page() {
     case t("Moderate comments"):
     case t("Moderate comment"):
       comment_moderate($edit);
-      drupal_goto("node/view/". $edit["nid"]);
+      drupal_goto(url("node/view/". $edit["nid"]));
       break;
     case "reply":
       $theme->header();
