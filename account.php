@@ -66,7 +66,7 @@ function account_session_start($userid, $passwd) {
 }
 
 function account_session_close() {
-  global $user;  
+  global $user;
   watchdog("message", "session closed for user `$user->userid'");
   session_unset();
   session_destroy();
@@ -141,7 +141,7 @@ function account_site_edit() {
   if ($user->id) {
     $output .= "<FORM ACTION=\"account.php\" METHOD=\"post\">\n";
     $output .= "<B>Theme:</B><BR>\n";
-    foreach ($themes as $key=>$value) { 
+    foreach ($themes as $key=>$value) {
       $options1 .= " <OPTION VALUE=\"$key\"". (($user->theme == $key) ? " SELECTED" : "") .">$key - $value[1]</OPTION>\n";
     }
     $output .= "<SELECT NAME=\"edit[theme]\">\n$options1</SELECT><BR>\n";
@@ -209,15 +209,15 @@ function account_content_edit() {
 
   if ($user->id) {
     $output .= "<FORM ACTION=\"account.php\" METHOD=\"post\">\n";
-  
+
     $output .= "<B>Blocks in side bars:</B><BR>\n";
 
     $result = db_query("SELECT * FROM blocks WHERE status = 1 ORDER BY module");
     while ($block = db_fetch_object($result)) {
       $entry = db_fetch_object(db_query("SELECT * FROM layout WHERE block = '$block->name' AND user = '$user->id'"));
       $output .= "<INPUT TYPE=\"checkbox\" NAME=\"edit[$block->name]\"". ($entry->user ? " CHECKED" : "") ."> $block->name<BR>\n";
-    } 
- 
+    }
+
     $output .= "<P><I>Enable the blocks you would like to see displayed in the side bars.</I></P>\n";
     $output .= "<P><INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save content settings\"></P>\n";
     $output .= "</FORM>\n";
@@ -295,7 +295,7 @@ function account_user($uname) {
     module_iterate("module", $uname);
     $theme->footer();
   }
-  else { 
+  else {
     // Display login form:
     $theme->header();
     $theme->box("Create user account", account_create());
@@ -324,10 +324,10 @@ function account_validate($user) {
 }
 
 function account_email_submit($userid, $email) {
-  global $theme, $site_name, $site_url; 
+  global $theme, $site_name, $site_url;
 
   $result = db_query("SELECT id FROM users WHERE userid = '". check_output($userid) ."' AND real_email = '". check_output($email) ."'");
-  
+
   if ($account = db_fetch_object($result)) {
     $passwd = account_password();
     $status = 1;
@@ -356,11 +356,11 @@ function account_email_submit($userid, $email) {
 
 function account_create_submit($userid, $email) {
   global $theme, $site_name, $site_url;
-  
+
   $new[userid] = trim($userid);
   $new[real_email] = trim($email);
-  
-  if ($error = account_validate($new)) { 
+
+  if ($error = account_validate($new)) {
     $theme->header();
     $theme->box("Create user account", account_create($new, $error));
     $theme->footer();
@@ -427,14 +427,14 @@ function account_password($min_length=6) {
 function account_track_comments() {
   global $theme, $user;
 
-  $msg = "<P>This page might be helpful in case you want to keep track of your recent comments in any of the current discussions.  You are presented an overview of your comments in each of the stories you participated in along with the number of replies each comment got.\n<P>\n"; 
+  $msg = "<P>This page might be helpful in case you want to keep track of your recent comments in any of the current discussions.  You are presented an overview of your comments in each of the stories you participated in along with the number of replies each comment got.\n<P>\n";
 
   $sresult = db_query("SELECT s.id, s.subject, COUNT(s.id) as count FROM comments c LEFT JOIN stories s ON c.lid = s.id WHERE c.author = $user->id GROUP BY s.id DESC LIMIT 5");
-  
+
   while ($story = db_fetch_object($sresult)) {
     $output .= "<LI>". format_plural($story->count, comment, comments) ." attached to story `<A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A>`:</LI>\n";
     $output .= " <UL>\n";
-   
+
     $cresult = db_query("SELECT * FROM comments WHERE author = $user->id AND lid = $story->id");
     while ($comment = db_fetch_object($cresult)) {
       $output .= "  <LI><A HREF=\"story.php?id=$story->id&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A> - replies: ". comment_num_replies($comment->cid) ." - score: ". comment_score($comment) ."</LI>\n";
@@ -452,10 +452,10 @@ function account_track_comments() {
 function account_track_stories() {
   global $theme, $user;
 
-  $msg = "<P>This page might be helpful in case you want to keep track of the stories you contributed.  You are presented an overview of your stories along with the number of replies each story got.\n<P>\n"; 
+  $msg = "<P>This page might be helpful in case you want to keep track of the stories you contributed.  You are presented an overview of your stories along with the number of replies each story got.\n<P>\n";
 
   $result = db_query("SELECT s.id, s.subject, s.timestamp, s.section, COUNT(c.cid) as count FROM stories s LEFT JOIN comments c ON c.lid = s.id WHERE s.status = 2 AND s.author = $user->id GROUP BY s.id DESC");
-  
+
   while ($story = db_fetch_object($result)) {
     $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Subject:</B></TD><TD><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A> (". format_plural($story->count, "comment", "comments") .")</TD></TR>\n";
@@ -483,10 +483,10 @@ function account_track_site() {
     $block1 .= "</TABLE>\n";
     $block1 .= "<P>\n";
   }
-  $block1 = ($block1) ? $block1 : "<CENTER>You have not posted any comments recently.</CENTER>\n";
+  $block1 = ($block1) ? $block1 : "<CENTER>There have not posted any comments recently.</CENTER>\n";
 
   $users_total = db_result(db_query("SELECT COUNT(id) FROM users"));
-  
+
   $stories_posted  = db_result(db_query("SELECT COUNT(id) FROM stories WHERE status = 2"));
   $stories_queued  = db_result(db_query("SELECT COUNT(id) FROM stories WHERE status = 1"));
   $stories_dumped = db_result(db_query("SELECT COUNT(id) FROM stories WHERE status = 0"));
@@ -494,7 +494,7 @@ function account_track_site() {
   $result = db_query("SELECT u.userid, COUNT(s.author) AS count FROM stories s LEFT JOIN users u ON s.author = u.id GROUP BY s.author ORDER BY count DESC LIMIT 10");
   while ($poster = db_fetch_object($result)) $stories_posters .= format_username($poster->userid) .", ";
 
-  $comments_total = db_result(db_query("SELECT COUNT(cid) FROM comments")); 
+  $comments_total = db_result(db_query("SELECT COUNT(cid) FROM comments"));
   $comments_score = db_result(db_query("SELECT TRUNCATE(AVG(score / votes), 2) FROM comments WHERE votes > 0"));
 
   $result = db_query("SELECT u.userid, COUNT(c.author) AS count FROM comments c LEFT JOIN users u ON c.author = u.id GROUP BY c.author ORDER BY count DESC LIMIT 10");
@@ -504,7 +504,7 @@ function account_track_site() {
 
   $result = db_query("SELECT u.userid, COUNT(d.author) AS count FROM diaries d LEFT JOIN users u ON d.author = u.id GROUP BY d.author ORDER BY count DESC LIMIT 10");
   while ($poster = db_fetch_object($result)) $diaries_posters .= format_username($poster->userid) .", ";
-  
+
   $block2 .= "<TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"1\">\n";
   $block2 .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Users:</B></TD><TD>$users_total users</TD></TR>\n";
   $block2 .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Stories:</B></TD><TD>$stories_posted posted, $stories_queued queued, $stories_dumped dumped<BR><I>[most frequent posters: $stories_posters ...]</I></TD></TR>\n";
@@ -586,7 +586,7 @@ switch ($op) {
         account_user_edit();
     }
     break;
-  default: 
+  default:
     account_user($user->userid);
 }
 
