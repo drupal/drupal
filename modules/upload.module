@@ -34,7 +34,7 @@ function upload_menu() {
   $items[] = array(
     'path' => 'admin/upload', 'title' => t('uploads'),
     'callback' => 'upload_admin',
-    'access' => true,
+    'access' => user_access('access administration pages'),
     'type' => MENU_NORMAL_ITEM
   );
   return $items;
@@ -86,7 +86,7 @@ function upload_nodeapi(&$node, $op, $arg) {
       $output[t('attachments')] = form_checkbox(NULL, "upload_$node->type", 1, variable_get("upload_$node->type", 1));
       break;
     case 'form param':
-      if (variable_get("upload_$node->type", 1)) {
+      if (variable_get("upload_$node->type", 1) && user_access('upload files')) {
         $output['options'] = array('enctype' => 'multipart/form-data');
       }
       break;
@@ -111,8 +111,8 @@ function upload_nodeapi(&$node, $op, $arg) {
           $node->list[$key] = $file->list;
         }
       }
-
-      if ($file = file_check_upload('upload')) {
+      
+      if (($file = file_check_upload('upload')) && user_access('upload files')) {
         global $user;
 
         $max_size = variable_get("upload_maxsize_total", 0);
@@ -146,14 +146,14 @@ function upload_nodeapi(&$node, $op, $arg) {
             $error['usersize']++;
           }
         }
-
-        if ($error['extension'] == count($user->roles)) {
+        
+        if ($error['extension'] == count($user->roles) && $user->uid != 1) {
           form_set_error('upload', t('Error attaching file %name: invalid extension', array('%name' => "<em>$file->filename</em>")));
         }
-        elseif ($error['uploadsize'] == count($user->roles)) {
+        elseif ($error['uploadsize'] == count($user->roles) && $user->uid != 1) {
           form_set_error('upload', t('Error attaching file %name: exceeds maximum file size', array('%name' => "<em>$file->filename</em>")));
         }
-        elseif ($error['usersize'] == count($user->roles)) {
+        elseif ($error['usersize'] == count($user->roles) && $user->uid != 1) {
           form_set_error('upload', t('Error attaching file %name: exceeds maximum file size', array('%name' => "<em>$file->filename</em>")));
         }
         else {
@@ -166,12 +166,12 @@ function upload_nodeapi(&$node, $op, $arg) {
       }
       break;
     case 'form post':
-      if (variable_get("upload_$node->type", 1) == 1) {
+      if (variable_get("upload_$node->type", 1) == 1 && user_access('upload files')) {
         $output = upload_form($node);
       }
       break;
     case 'load':
-      if (variable_get("upload_$node->type", 1) == 1) {
+      if (variable_get("upload_$node->type", 1) == 1 && user_access('upload files')) {
         $output->files = upload_load($node);
       }
       break;
@@ -219,7 +219,9 @@ function upload_nodeapi(&$node, $op, $arg) {
       break;
     case 'insert':
     case 'update':
-      upload_save($node);
+      if (user_access('upload files')) {
+        upload_save($node);
+      }
       break;
     case 'delete':
       upload_delete($node);
@@ -293,8 +295,10 @@ function upload_form($node) {
   if (count($node->files)) {
     $output = form_item('', theme('table', $header, $rows), t('Note: changes made to the attachments are not permanent until you save this post.'));
   }
-  $output .= form_file(t('Attach new file'), "upload", 40);
-  $output .= form_button(t('Attach'), 'fileop');
+  if (user_access('upload files')) {
+    $output .= form_file(t('Attach new file'), "upload", 40);
+    $output .= form_button(t('Attach'), 'fileop');
+  }
 
   return '<div class="attachments">'. form_group(t('Attachments'), $output) . '</div>';
 }
