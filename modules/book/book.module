@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.126 2002/11/10 10:36:22 dries Exp $
+// $Id: book.module,v 1.127 2002/11/15 18:58:34 dries Exp $
 
 function book_system($field){
   $system["description"] = t("Allows users to collaboratively author a book.");
@@ -454,7 +454,7 @@ function book_toc($parent = 0, $indent = "", $toc = array()) {
   */
 
   if (user_access("administer nodes")) {
-    $toc[0] = "<root>";
+    $toc[0] = "<". t("root") .">";
   }
 
   /*
