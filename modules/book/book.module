@@ -161,11 +161,6 @@ function book_load($node) {
     }
   }
 
-  // We set the revision field to indicate that we have to create
-  // a new revision when updating this book page.  We enable this
-  // always such that the "edit this page" links appear.
-  $book->revision = 1;
-
   return $book;
 }
 
