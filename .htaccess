@@ -1,13 +1,15 @@
 #
 # Apache/PHP/site settings:
-# $Id$
 #
 
 # Protect files and directories from prying eyes:
-<Files ~ "(class|conf|CVS|database|Entries|inc|modules|\.module|Repository|Root|script|sh|sql|theme)">
+<Files ~ "(\.(conf|inc|module|pl|sh|sql|theme)|Entries|Repositories|Root|scripts|updates)$">
   order deny,allow
   deny from all
 </Files>
+
+# Deny directory listings:
+Options -Indexes
 
 # Customized server error messages:
 ErrorDocument 400 /error.php
@@ -24,9 +26,6 @@ ErrorDocument 500 /error.php
    php_value magic_quotes_runtime    0
    php_value magic_quotes_sybase     0
    php_value session.auto_start      0
-   php_value session.cookie_lifetime 2000000
-   php_value session.gc_maxlifetime  2000000
-   php_value session.cache_expire    200000
    php_value session.save_handler    user 
 </IfModule>
 
@@ -35,3 +34,5 @@ ErrorDocument 500 /error.php
   RewriteEngine on
   RewriteRule ^blog/(.*) /module.php?mod=blog&op=view&name=$1 [R]
 </IfModule>
+
+# $Id$
