@@ -1,0 +1,104 @@
+CREATE TABLE bans (
+  id tinyint(4) DEFAULT '0' NOT NULL auto_increment,
+  mask varchar(255) DEFAULT '' NOT NULL,
+  type tinyint(2) DEFAULT '0' NOT NULL,
+  reason text NOT NULL,
+  timestamp int(11),
+  UNIQUE mask (mask),
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE channel (
+  id int(11) DEFAULT '0' NOT NULL auto_increment,
+  site varchar(255) DEFAULT '' NOT NULL,
+  file varchar(255) DEFAULT '' NOT NULL,
+  url varchar(255) DEFAULT '' NOT NULL,
+  contact varchar(255) DEFAULT '',
+  timestamp int(11),
+  UNIQUE site (site),
+  UNIQUE file (file),
+  UNIQUE url (url),
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE comments (
+  cid int(6) DEFAULT '0' NOT NULL auto_increment,
+  pid int(6) DEFAULT '0' NOT NULL,
+  sid int(6) DEFAULT '0' NOT NULL,
+  author int(6) DEFAULT '0' NOT NULL,
+  subject varchar(64) DEFAULT '' NOT NULL,
+  comment text NOT NULL,
+  hostname varchar(128) DEFAULT '' NOT NULL,
+  timestamp int(11) DEFAULT '0' NOT NULL,
+  score int(6) DEFAULT '0' NOT NULL,
+  votes int(6) DEFAULT '0' NOT NULL,
+  PRIMARY KEY (cid)
+);
+
+CREATE TABLE diaries (
+  id int(5) DEFAULT '0' NOT NULL auto_increment,
+  author int(6) DEFAULT '0' NOT NULL,
+  text text,
+  timestamp int(11) DEFAULT '0' NOT NULL,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE headlines (
+  id int(11) DEFAULT '0' NOT NULL,
+  title varchar(255) DEFAULT '' NOT NULL,
+  link varchar(255) DEFAULT '' NOT NULL,
+  number int(3) DEFAULT '0' NOT NULL,
+  UNIQUE title (title),
+  UNIQUE link (link)
+);
+
+CREATE TABLE stories (
+  id int(11) DEFAULT '0' NOT NULL auto_increment,
+  author int(6) DEFAULT '0' NOT NULL,
+  subject varchar(255) DEFAULT '' NOT NULL,
+  abstract text NOT NULL,
+  updates text NOT NULL,
+  article text NOT NULL,
+  category varchar(128) DEFAULT '' NOT NULL,
+  department varchar(128) DEFAULT '' NOT NULL,
+  timestamp int(11) DEFAULT '0' NOT NULL,
+  score int(11) DEFAULT '0' NOT NULL,
+  votes int(11) DEFAULT '0' NOT NULL,
+  status int(4) DEFAULT '1',
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE users (
+  id int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
+  name varchar(60) DEFAULT '' NOT NULL,
+  userid varchar(15) DEFAULT '' NOT NULL,
+  passwd varchar(20) DEFAULT '' NOT NULL,
+  real_email varchar(60) DEFAULT '' NOT NULL,
+  fake_email varchar(60) DEFAULT '' NOT NULL,
+  url varchar(100) DEFAULT '' NOT NULL,
+  stories tinyint(2) DEFAULT '10',
+  mode varchar(10) DEFAULT '',
+  sort tinyint(1) DEFAULT '0',
+  threshold tinyint(1) DEFAULT '0',
+  bio tinytext NOT NULL,
+  theme varchar(255) DEFAULT '' NOT NULL,
+  signature varchar(255) DEFAULT '' NOT NULL,
+  last_access int(10) unsigned,
+  last_host varchar(255),
+  permissions int(10) unsigned DEFAULT '0' NOT NULL,
+  status tinyint(4) DEFAULT '0' NOT NULL,
+  history text NOT NULL,
+  hash varchar(12) DEFAULT '' NOT NULL,
+  PRIMARY KEY (id)
+);
+
+CREATE TABLE watchdog (
+  id int(5) DEFAULT '0' NOT NULL auto_increment,
+  level int(2) DEFAULT '0' NOT NULL,
+  timestamp int(11) DEFAULT '0' NOT NULL,
+  user int(6) DEFAULT '0' NOT NULL,
+  message varchar(255) DEFAULT '' NOT NULL,
+  location varchar(255) DEFAULT '' NOT NULL,
+  hostname varchar(128) DEFAULT '' NOT NULL,
+  PRIMARY KEY (id)
+);
