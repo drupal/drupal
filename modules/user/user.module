@@ -874,7 +874,7 @@ function user_register($edit = array()) {
     drupal_goto('user/edit');
   }
 
-  if (!(is_null($edit['name']) && is_null($edit['mail']))) {
+  if ($edit) {
     if ($error = user_validate_name($edit['name'])) {
       form_set_error('name', $error);
     }
@@ -903,46 +903,46 @@ function user_register($edit = array()) {
         }
       }
     }
-  }
-
-  if (!form_has_errors()) {
-    $from = variable_get('site_mail', ini_get('sendmail_from'));
-    $pass = user_password();
-
-    // TODO: Is this necessary? Won't session_write() replicate this?
-    unset($edit['session']);
-    $account = user_save('', array_merge(array('name' => $edit['name'], 'pass' => $pass, 'init' => $edit['mail'], 'mail' => $edit['mail'], 'rid' => array(_user_authenticated_id()), 'status' => (variable_get('user_register', 1) == 1 ? 1 : 0)), $data));
-    watchdog('user', 'new user: "'. $edit['name'] .'" &lt;'. $edit['mail'] .'&gt;', l(t('edit user'), "admin/user/edit/$account->uid"));
-
-    $variables = array('%username' => $edit['name'], '%site' => variable_get('site_name', 'drupal'), '%password' => $pass, '%uri' => $base_url, '%uri_brief' => substr($base_url, strlen('http://')), '%mailto' => $edit['mail'], '%date' => format_date(time()), '%login_uri' => url('user/login', NULL, NULL, TRUE), '%edit_uri' => url('user/edit', NULL, NULL, TRUE));
-
-    // The first user may login immediately, and receives a customized welcome e-mail.
-    if ($account->uid == 1) {
-      user_mail($edit['mail'], t('drupal user account details for %s', array('%s' => $edit['name'])), strtr(t("%username,\n\nYou may now login to %uri using the following username and password:\n\n  username: %username\n  password: %password\n\n%edit_uri\n\n--drupal"), $variables), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
-      // This should not be t()'ed. No point as its only shown once in the sites lifetime, and it would be bad to store the password.
-      $output .= "<p>Welcome to Drupal. You are user #1, which gives you full and immediate access.  All future registrants will receive their passwords via e-mail, so please configure your e-mail settings using the Administration pages.</p><p> Your password is <strong>$pass</strong>. You may change your password on the next page.</p><p>Please login below.</p>";
-      $output .= form_hidden('destination', 'user/edit');
-      $output .= form_hidden('name', $account->name);
-      $output .= form_hidden('pass', $pass);
-      $output .= form_submit(t('Log in'));
-      return form($output);
-    }
-    else {
-      if ($account->status) {
-        // Create new user account, no administrator approval required.
-        $subject = _user_mail_text('welcome_subject', $variables);
-        $body = _user_mail_text('welcome_body', $variables);
-        user_mail($edit['mail'], $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
-        return t('Your password and further instructions have been sent to your e-mail address.');
+      
+    if (!form_has_errors()) {
+      $from = variable_get('site_mail', ini_get('sendmail_from'));
+      $pass = user_password();
+  
+      // TODO: Is this necessary? Won't session_write() replicate this?
+      unset($edit['session']);
+      $account = user_save('', array_merge(array('name' => $edit['name'], 'pass' => $pass, 'init' => $edit['mail'], 'mail' => $edit['mail'], 'rid' => array(_user_authenticated_id()), 'status' => (variable_get('user_register', 1) == 1 ? 1 : 0)), $data));
+      watchdog('user', 'new user: "'. $edit['name'] .'" &lt;'. $edit['mail'] .'&gt;', l(t('edit user'), "admin/user/edit/$account->uid"));
+  
+      $variables = array('%username' => $edit['name'], '%site' => variable_get('site_name', 'drupal'), '%password' => $pass, '%uri' => $base_url, '%uri_brief' => substr($base_url, strlen('http://')), '%mailto' => $edit['mail'], '%date' => format_date(time()), '%login_uri' => url('user/login', NULL, NULL, TRUE), '%edit_uri' => url('user/edit', NULL, NULL, TRUE));
+  
+      // The first user may login immediately, and receives a customized welcome e-mail.
+      if ($account->uid == 1) {
+        user_mail($edit['mail'], t('drupal user account details for %s', array('%s' => $edit['name'])), strtr(t("%username,\n\nYou may now login to %uri using the following username and password:\n\n  username: %username\n  password: %password\n\n%edit_uri\n\n--drupal"), $variables), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+        // This should not be t()'ed. No point as its only shown once in the sites lifetime, and it would be bad to store the password.
+        $output .= "<p>Welcome to Drupal. You are user #1, which gives you full and immediate access.  All future registrants will receive their passwords via e-mail, so please configure your e-mail settings using the Administration pages.</p><p> Your password is <strong>$pass</strong>. You may change your password on the next page.</p><p>Please login below.</p>";
+        $output .= form_hidden('destination', 'user/edit');
+        $output .= form_hidden('name', $account->name);
+        $output .= form_hidden('pass', $pass);
+        $output .= form_submit(t('Log in'));
+        return form($output);
       }
       else {
-        // Create new user account, administrator approval required.
-        $subject = _user_mail_text('approval_subject', $variables);
-        $body = _user_mail_text('approval_body', $variables);
+        if ($account->status) {
+          // Create new user account, no administrator approval required.
+          $subject = _user_mail_text('welcome_subject', $variables);
+          $body = _user_mail_text('welcome_body', $variables);
+          user_mail($edit['mail'], $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+          return t('Your password and further instructions have been sent to your e-mail address.');
+        }
+        else {
+          // Create new user account, administrator approval required.
+          $subject = _user_mail_text('approval_subject', $variables);
+          $body = _user_mail_text('approval_body', $variables);
 
-        user_mail($edit['mail'], $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
-        user_mail(variable_get('site_mail', ini_get('sendmail_from')), $subject, t("%u has applied for an account.\n\n%uri", array('%u' => $account->name, '%uri' => url("admin/user/edit/$account->uid", NULL, NULL, TRUE))), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
-        return t('Thank you for applying for an account. Your account is currently pending approval by the site administrator.<br />In the meantime, your password and further instructions have been sent to your e-mail address.');
+          user_mail($edit['mail'], $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+          user_mail(variable_get('site_mail', ini_get('sendmail_from')), $subject, t("%u has applied for an account.\n\n%uri", array('%u' => $account->name, '%uri' => url("admin/user/edit/$account->uid", NULL, NULL, TRUE))), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+          return t('Thank you for applying for an account. Your account is currently pending approval by the site administrator.<br />In the meantime, your password and further instructions have been sent to your e-mail address.');
+        }
       }
     }
   }
