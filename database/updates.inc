@@ -389,7 +389,7 @@ function update_59() {
   $result = db_query("SELECT DISTINCT(nid) FROM {comments} WHERE thread = ''");
 
   while ($node = db_fetch_object($result)) {
-    $result2 = db_query("SELECT cid, pid FROM {comments} where nid = '%d' ORDER BY timestamp", $node->nid);
+    $result2 = db_query("SELECT cid, pid FROM {comments} WHERE nid = '%d' ORDER BY timestamp", $node->nid);
     $comments = array();
     while ($comment = db_fetch_object($result2)) {
       $comments[$comment->cid] = $comment;
@@ -884,7 +884,7 @@ function update_80() {
   }
   db_query("ALTER TABLE {users} ADD picture varchar(255) NOT NULL DEFAULT ''");
 
-  $result = db_query("SELECT uid FROM {users}");
+  $result = db_query("SELECT uid FROM {users} WHERE uid > 0");
   while ($account = db_fetch_object($result)) {
     // Load the user record:
     $account = user_load(array('uid' => $account->uid));
@@ -918,7 +918,7 @@ function update_80() {
     unset($account->profile_avatar);
 
     // Save the update record:
-    user_save($account, $edit);
+    user_save($account, $edit, 'Personal information');
   }
 
   return $ret;
@@ -1515,7 +1515,7 @@ function update_102() {
 
 function update_103() {
   $ret = array();
-  $ret[] = update_sql("CREATE TABLE files (
+  $ret[] = update_sql("CREATE TABLE {files} (
     fid int(10) unsigned NOT NULL default '0',
     nid int(10) unsigned NOT NULL default '0',
     filename varchar(255) NOT NULL default '',
