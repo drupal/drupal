@@ -1,0 +1,161 @@
+<?php
+
+function jabber_info($field = 0) {
+  $info["name"] = "Jabber";
+  $info["protocol"] = "Jabber";
+
+  if ($field) {
+    return $info[$field];
+  }
+  else {
+    return $info;
+  }
+}
+
+function startElement($parser, $name, $attributes) {
+  global $jabber;
+
+  if ($attributes["ID"]) {
+    $jabber["jid"] = $attributes["ID"];
+  }
+
+  if (stristr($name, "error") || ($attributes["ERROR"])) {
+    $jabber["error"] = true;
+  }
+}
+
+function endElement($parser, $name) {
+}
+
+function characterData($parser, $data) {
+  global $jabber;
+
+  $jabber["data"] = $data;
+}
+
+function jabber_send($session, $message) {
+
+  // print "SEND: ". htmlentities($message) ."<br />";
+
+  fwrite($session, $message, strlen($message));
+}
+
+function jabber_recv($session, $timout = 50) {
+
+  /*
+  ** Returns a chunk of data, read from the socket descriptor '$session'.
+  ** If the call fails, or if no data is read after the specified timout,
+  ** false will be returned.
+  */
+
+  while ($count < $timout) {
+    $data = fread($session, 1);
+    if ($data) {
+      $message .= $data;
+    }
+    else {
+      usleep(100);
+      $count = $count + 1;
+    }
+  }
+
+  if ($message) {
+    // print "RECV: ". htmlentities($message) ."<br />";
+
+    return $message;
+  }
+  else {
+    return 0;
+  }
+}
+
+function jabber_auth($username, $password, $server) {
+  global $jabber;
+
+  watchdog("user", "starting jabber auth");
+
+  $session = fsockopen($server, 5222, &$errno, &$errstr, 5);
+
+  if ($session) {
+
+    $xml_parser = xml_parser_create();
+    xml_set_element_handler($xml_parser, "startElement", "endElement");
+    xml_set_character_data_handler($xml_parser, "characterData");
+
+    /*
+    ** Switch the given socket descriptor '$session' to non-blocking mode:
+    */
+
+    set_socket_blocking($session, false);
+
+    /*
+    ** A jabber session consists of two parallel XML streams, one from
+    ** the client to the server and one from the server to the client.
+    ** On connecting to a Jabber server, a Jabber client initiates the
+    ** client-to-server XML stream and the server responds by initiating
+    ** the server-to-client XML stream:
+    */
+
+    jabber_send($session, "<?xml version='1.0'?>");
+
+    jabber_send($session, "<stream:stream to='$server' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams'>");
+
+    $data = jabber_recv($session);
+
+    if (!xml_parse($xml_parser, $data, 0)) {
+      watchdog("error", "XML error: '". xml_error_string(xml_get_error_code($xml_parser)) ."' at line ". xml_get_current_line_number($xml_parser));
+      return 0;
+    }
+
+    if ($jabber["error"]) {
+      watchdog("error", "protocol error: ". $jabber["data"]);
+      return 0;
+    }
+
+    /*
+    ** Hash the password:
+    */
+
+    jabber_send($session, "<iq type='set' id='". $jabber["jid"] ."'><query xmlns='jabber:iq:auth'><username>$username</username><password>$password</password><resource>drupal</resource></query></iq>");
+
+    $data = jabber_recv($session);
+
+    if (!xml_parse($xml_parser, $data, 0)) {
+      watchdog("error", "XML error: '". xml_error_string(xml_get_error_code($xml_parser)) ."' at line ". xml_get_current_line_number($xml_parser));
+    }
+
+    if ($jabber["error"]) {
+      watchdog("error", "protocol error: ". $jabber["data"]);
+      return 0;
+    }
+
+    xml_parser_free($xml_parser);
+
+    return 1;
+  }
+  else {
+    watchdog("error", "failed to open socket to jabber server:\n  $errno, $errstr");
+
+    return 0;
+  }
+}
+
+function jabber_page() {
+  global $theme;
+
+  $theme->header();
+  $theme->box("Jabber", jabber_auth_help());
+  $theme->footer();
+}
+
+function jabber_auth_help() {
+  $site = variable_get("site_name", "this web site");
+
+  $output = "
+   <p>You may login to %s using a <b>Jabber ID</b>. The format of a Jabber ID is the same as an email address: <b>name</b><i>@server</i> An example of valid Jabber ID is <b>mwlily</b><i>@jabber.com</i>.</p>
+   <p>Jabber is an <a href=\"http://www.opensource.org\">open source</a> instant messaging system designed to give the power of choice and freedom back to the users of instant messaging. By creating an extensible and powerful server and protocol, Jabber has succeeded in this goal. Not only does Jabber allow its users to use (and create) clients for numerous platforms, but it allows people to communicate to whomever they want in the way which is most convenient for them.</p>";
+
+  return sprintf(t($output), $site);
+}
+
+?>
