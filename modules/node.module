@@ -28,7 +28,7 @@ function node_title_list($result, $title = NULL) {
   }
 
   while ($node = db_fetch_object($result)) {
-    $number = comment_num_all($node->nid);
+    $number = module_invoke("comment", "num_all", $node->nid);
     $name = strip_tags(format_name($node)); // required for anonymous users to work
     $items[] = l(check_output($node->title), array("id" => $node->nid), "node", "", array("title" => t("Author: %name, comments: %number", array("%name" => $name, "%number" => $number))));
   }
