@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.24 2004/08/21 06:42:35 dries Exp $
+// $Id: blogapi.module,v 1.25 2004/08/24 19:21:30 unconed Exp $
 
 /**
  * @file
@@ -539,7 +539,7 @@ function blogapi_blogapi() {
 function blogapi_rsd() {
   global $base_url;
 
-  $xmlrpc = $base_url . FILE_SEPARATOR . 'xmlrpc.php';
+  $xmlrpc = $base_url .'/'. 'xmlrpc.php';
   $base = url('', NULL, NULL, TRUE);
   $blogid = 1; # until we figure out how to handle multiple bloggers
 
