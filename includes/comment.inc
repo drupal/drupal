@@ -8,7 +8,6 @@ if (strstr($id, " ") || strstr($pid, " ") || strstr($lid, " ") || strstr($mode, 
 
 $cmodes = array(1 => "List - min", 2 => "List - max", 3 => "Threaded - min", 4 => "Threaded - max");
 $corder = array(1 => "Date - new", 2 => "Date - old", 3 => "Rate - high", 4 => "Rate - low");
-$link = ($mod) ? $mod : substr(strrchr($PHP_SELF, "/"), 1, strrchr($PHP_SELF, "/") - 4);
 
 class Comment {
   function Comment($userid, $subject, $comment, $timestamp, $url, $fake_email, $score, $votes, $cid, $lid) {
@@ -49,19 +48,13 @@ function comment_settings($mode, $order, $threshold) {
 }
 
 function comment_reply($pid, $id) {
-  global $allowed_html, $link, $REQUEST_URI, $theme, $user;
+  global $allowed_html, $REQUEST_URI, $theme, $user;
 
   if ($pid) {
     $item = db_fetch_object(db_query("SELECT comments.*, users.userid FROM comments LEFT JOIN users ON comments.author = users.id WHERE comments.cid = '$pid'"));
     comment_view(new Comment($item->userid, $item->subject, $item->comment, $item->timestamp, $item->url, $item->fake_email, comment_score($comment), $comment->votes, $item->cid, $item->lid), t("reply to this comment"));
   }
-  else {
-    $pid = 0;
-    if ($link == "story") {
-      $item = db_fetch_object(db_query("SELECT stories.*, users.userid FROM stories LEFT JOIN users ON stories.author = users.id WHERE stories.status != 0 AND stories.id = '$id'"));
-      $theme->story($item, "[ ". t("reply to this story") ." ]");
-    }
-  }
+  else $pid = 0;
 
   // Build reply form:
   $output .= "<FORM ACTION=\"$REQUEST_URI\" METHOD=\"post\">\n";
@@ -91,7 +84,7 @@ function comment_reply($pid, $id) {
 }
 
 function comment_preview($pid, $id, $subject, $comment) {
-  global $allowed_html, $link, $REQUEST_URI, $theme, $user;
+  global $allowed_html, $REQUEST_URI, $theme, $user;
 
   // Preview comment:
   comment_view(new Comment($user->userid, $subject, $comment, time(), $user->url, $user->fake_email, 0, 0, 0, 0), t("reply to this comment"));
@@ -129,10 +122,10 @@ function comment_preview($pid, $id, $subject, $comment) {
 }
 
 function comment_post($pid, $id, $subject, $comment) {
-  global $theme, $link, $user;
+  global $theme, $user;
 
   // Check for duplicate comments:
-  $duplicate = db_result(db_query("SELECT COUNT(cid) FROM comments WHERE link = '$link' AND pid = '$pid' AND lid = '$id' AND subject = '$subject' AND comment = '$comment'"), 0);
+  $duplicate = db_result(db_query("SELECT COUNT(cid) FROM comments WHERE pid = '$pid' AND lid = '$id' AND subject = '$subject' AND comment = '$comment'"), 0);
 
   if ($duplicate != 0) {
     watchdog("error", "comment: attempt to insert duplicate comment");
@@ -145,7 +138,7 @@ function comment_post($pid, $id, $subject, $comment) {
     watchdog("comment", "comment: added comment with subject '$subject'");
 
     // Add comment to database:
-    db_query("INSERT INTO comments (link, lid, pid, author, subject, comment, hostname, timestamp, score) VALUES ('$link', '$id', '$pid', '$user->id', '$subject', '$comment', '". getenv("REMOTE_ADDR") ."', '". time() ."', '". ($user->userid ? 1 : 0) ."')");
+    db_query("INSERT INTO comments (lid, pid, author, subject, comment, hostname, timestamp, score) VALUES ('$id', '$pid', '$user->id', '$subject', '$comment', '". getenv("REMOTE_ADDR") ."', '". time() ."', '". ($user->userid ? 1 : 0) ."')");
   }
 }
 
@@ -219,8 +212,8 @@ function comment_order($order) {
   return "<SELECT NAME=\"order\">$options</SELECT>\n";
 }
 
-function comment_query($link, $lid, $order, $pid = -1) {
-  $query .= "SELECT c.*, u.* FROM comments c LEFT JOIN users u ON c.author = u.id WHERE link = '$link' AND c.lid = '$lid'";
+function comment_query($lid, $order, $pid = -1) {
+  $query .= "SELECT c.*, u.* FROM comments c LEFT JOIN users u ON c.author = u.id WHERE c.lid = '$lid'";
   if ($pid >= 0) $query .= " AND pid = '$pid'";
   if ($order == 1) $query .= " ORDER BY c.timestamp DESC";
   else if ($order == 2) $query .= " ORDER BY c.timestamp";
@@ -236,19 +229,19 @@ function comment_visible($comment, $threshold = 0) {
 }
 
 function comment_uri($args = 0) {
-  global $link, $mod;
-  if ($args) return ($mod) ? "module.php?mod=$mod&$args" : $link .".php?$args";
-  else return ($mod) ? "module.php?mod=$mod" : $link .".php";
+  global $mod;
+  if ($args) return ($mod) ? "module.php?mod=$mod;$args" : "node.php?$args";
+  else return ($mod) ? "module.php?mod=$mod" : "node.php";
 }
 
 function comment_link($comment, $return = 1) {
-  global $link, $theme;
-  if ($return) return "<A HREF=\"". comment_uri("id=$comment->lid#$comment->cid") ."\"><FONT COLOR=\"$theme->link\">". t("return") ."</FONT></A> | <A HREF=\"". comment_uri("op=reply&id=$comment->lid&pid=$comment->cid") ."\"><FONT COLOR=\"$theme->link\">". t("reply to this comment") ."</FONT></A>";
-  else return "<A HREF=\"". comment_uri("op=reply&id=$comment->lid&pid=$comment->cid") ."\"><FONT COLOR=\"$theme->link\">". t("reply to this comment") ."</FONT></A>";
+  global $theme;
+  if ($return) return "<A HREF=\"". comment_uri("id=$comment->lid#$comment->cid") ."\"><FONT COLOR=\"$theme->type\">". t("return") ."</FONT></A> | <A HREF=\"". comment_uri("op=reply&id=$comment->lid&pid=$comment->cid") ."\"><FONT COLOR=\"$theme->type\">". t("reply to this comment") ."</FONT></A>";
+  else return "<A HREF=\"". comment_uri("op=reply&id=$comment->lid&pid=$comment->cid") ."\"><FONT COLOR=\"$theme->type\">". t("reply to this comment") ."</FONT></A>";
 }
 
 function comment_view($comment, $folded = 0) {
-  global $link, $theme;
+  global $theme;
 
   // calculate comment's score:
   $comment->score = comment_score($comment);
@@ -272,9 +265,9 @@ function comment_thread_min($cid, $threshold) {
 }
 
 function comment_thread_max($cid, $mode, $threshold, $level = 0, $dummy = 0) {
-  global $link, $user;
+  global $user;
 
-  $result = db_query("SELECT c.*, u.* FROM comments c LEFT JOIN users u ON c.author = u.id WHERE link = '$link' AND c.pid = '$cid' ORDER BY c.timestamp, c.cid");
+  $result = db_query("SELECT c.*, u.* FROM comments c LEFT JOIN users u ON c.author = u.id WHERE c.pid = '$cid' ORDER BY c.timestamp, c.cid");
 
   print "<UL>";
   while ($comment = db_fetch_object($result)) {
@@ -285,7 +278,7 @@ function comment_thread_max($cid, $mode, $threshold, $level = 0, $dummy = 0) {
 }
 
 function comment_render($lid, $cid) {
-  global $link, $theme, $REQUEST_URI, $user;
+  global $theme, $REQUEST_URI, $user;
 
   // Pre-process variables:
   $lid = empty($lid) ? 0 : $lid;
@@ -310,31 +303,31 @@ function comment_render($lid, $cid) {
   }
   else {
     if ($mode == 1) {
-      $result = comment_query($link, $lid, $order);
+      $result = comment_query($lid, $order);
       print "<TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
       print " <TR><TH>Subject</TH><TH>Author</TH><TH>Date</TH><TH>Score</TH></TR>\n";
       while ($comment = db_fetch_object($result)) {
         if (comment_visible($comment, $threshold)) {
-          print " <TR><TD><A HREF=\"". comment_uri("id=$comment->lid&cid=$comment->cid#$comment->cid") ."\">". check_output($comment->subject) ."</A></TD><TD>". format_username($comment->userid) ."</TD><TD>". format_date($comment->timestamp, "small") ."</TD><TD>". comment_score($comment) ."</TD></TR>\n";
+          print " <TR><TD><A HREF=\"". comment_uri("id=$comment->lid;cid=$comment->cid#$comment->cid") ."\">". check_output($comment->subject) ."</A></TD><TD>". format_username($comment->userid) ."</TD><TD>". format_date($comment->timestamp, "small") ."</TD><TD>". comment_score($comment) ."</TD></TR>\n";
         }
       }
       print "</TABLE>\n";
     }
     else if ($mode == 2) {
-      $result = comment_query($link, $lid, $order);
+      $result = comment_query($lid, $order);
       while ($comment = db_fetch_object($result)) {
         comment_view($comment, (comment_visible($comment, $threshold) ? comment_link($comment, 0) : 0));
       }
     }
     else if ($mode == 3) {
-      $result = comment_query($link, $lid, $order, 0);
+      $result = comment_query($lid, $order, 0);
       while ($comment = db_fetch_object($result)) {
         comment_view($comment);
         comment_thread_min($comment->cid, $threshold);
       }
     }
     else {
-      $result = comment_query($link, $lid, $order, 0);
+      $result = comment_query($lid, $order, 0);
       while ($comment = db_fetch_object($result)) {
         comment_view($comment, (comment_visible($comment, $threshold) ? comment_link($comment, 0) : 0));
         comment_thread_max($comment->cid, $mode, $threshold, $level + 1);
