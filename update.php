@@ -13,7 +13,7 @@ if (!get_cfg_var("safe_mode")) {
 
 // Define the various updates in an array("date : comment" => "function");
 $mysql_updates = array(
-  "2001-10-10: first update after Drupal 3.0.0 release" => "update_1",
+  "2001-10-10: first update since Drupal 3.0.0 release" => "update_1",
   "2001-10-12" => "update_2",
   "2001-10-14" => "update_3",
   "2001-10-16" => "update_4",
@@ -44,7 +44,7 @@ $mysql_updates = array(
   "2002-04-23" => "update_29",
   "2002-05-02" => "update_30",
   "2002-05-15" => "update_31",
-  "2002-06-22: first update after Drupal 4.0.0 release" => "update_32",
+  "2002-06-22: first update since Drupal 4.0.0 release" => "update_32",
   "2002-07-07" => "update_33",
   "2002-07-31" => "update_34",
   "2002-08-10" => "update_35",
@@ -58,7 +58,7 @@ $mysql_updates = array(
   "2002-10-26" => "update_43",
   "2002-11-08" => "update_44",
   "2002-11-20" => "update_45",
-  "2002-12-10" => "update_46",
+  "2002-12-10: first update since Drupal 4.1.0 release" => "update_46",
   "2002-12-22" => "update_47",
   "2002-12-29" => "update_48",
   "2003-01-03" => "update_49",
@@ -752,15 +752,16 @@ function update_page() {
     case "Update":
       // make sure we have updates to run.
       print "<html><h1>Drupal database update</h1>";
-      print "<b>&raquo; <a href=\"index.php\">home</a></b><br />\n";
-      print "<b>&raquo; ". l("administer", "admin"). "</b><br />\n";
+      print "<b>&raquo; <a href=\"index.php\">main page</a></b><br />\n";
+      print "<b>&raquo; <a href=\"index.php?q=admin\">administration pages</a></b><br />\n";
+        // NOTE: we can't use l() here because the URL would point to 'update.php?q=admin'.
       if ($edit["start"] == -1) {
         print "No updates to perform.";
       }
       else {
         update_data($edit["start"]);
       }
-      print "<br />Updates were attempted. If you see no failures above, you may proceed happily to the ". l("admin pages", "admin"). ".";
+      print "<br />Updates were attempted. If you see no failures above, you may proceed happily to the <a href=\"index.php?q=admin\">administration pages</a>.";
       print " Otherwise, you may need to update your database manually.";
       print "</html>";
       break;
