@@ -9,25 +9,31 @@ class BaseTheme {
     return "misc/$name";
   }
 
-  function user($region, $theme) {
+  function user($region, &$theme) {
     global $user;
 
     if ($user->uid) {
       // Display account settings:
 
+      $output .= "<div width=\"125\">\n";
+
       foreach (module_list() as $name) {
         if (module_hook($name, "link")) {
           $links = module_invoke($name, "link", "menu");
-          foreach ($links as $link) $content .= "$link<br />\n";
+          foreach ($links as $link) {
+            $output .= "$link<br />\n";
+          }
         }
       }
 
       if (user_access("access administration pages")) {
-        $content .= "<br />\n";
-        $content .= "<a href=\"admin.php\">". strtr(t("administer %a"), array("%a" => variable_get("site_name", "drupal"))) ."</a><BR>\n";
+        $output .= "<br />\n";
+        $output .= "<a href=\"admin.php\">". strtr(t("administer %a"), array("%a" => variable_get("site_name", "drupal"))) ."</a><BR>\n";
       }
 
-      $theme->box($user->name, $content, $region);
+      $output .= "</div>";
+
+      $theme->box($user->name, $output, $region);
     }
     else {
       $output .= "<div align=\"center\">\n";
@@ -45,10 +51,6 @@ class BaseTheme {
 
   function comment_controls($threshold = 1, $mode = 3, $order = 1) {
     global $user, $id;
-
-    if ($user->uid) {
-      $output .= form_item(t("Node rating"), node_moderation($id) ." <input type=\"submit\" name=\"op\" value=\"". t("Update ratings") ."\" />", t("Nodes and comments can be moderated by assigning them a score: content with a high rating is made more visible."));
-    }
 
     $output .= form_item(t("Comment viewing options"), comment_mode($mode) . comment_order($order) . comment_threshold($threshold) ." <input type=\"submit\" name=\"op\" value=\"". t("Update settings") ."\" />", t("Select your prefered way to display the comments and click 'Update settings' to active your changes."));
 
@@ -85,7 +87,7 @@ function theme_init() {
   return new Theme();
 }
 
-function theme_blocks($region, $theme) {
+function theme_blocks($region, &$theme) {
   global $id, $PHP_SELF, $user;
 
   switch (strrchr($PHP_SELF, "/")) {
@@ -108,7 +110,7 @@ function theme_blocks($region, $theme) {
   }
 }
 
-function theme_moderation_results($theme, $node, $region) {
+function theme_moderation_results(&$theme, $node, $region) {
   foreach (explode(",", $node->users) as $vote) {
     if ($vote) {
       $data = explode("=", $vote);
