@@ -57,7 +57,7 @@ function import_update() {
 function import_format_item($item, $feed = 0) {
   global $theme, $user;
 
-  if ($user->uid && user_access("post blogs")) {
+  if ($user->uid && user_access("post content")) {
     $output .= lm("<img src=\"". $theme->image("blog.gif") ."\" border=\"0\" width=\"12\" height=\"16\" alt=\"". t("Blog this item") ."\" />", array("mod" => "node", "op" => "add", "type" => "blog", "iid" => $item->iid), "", array("title" => t("Comment on this news item in your personal blog.")));
   }
 
