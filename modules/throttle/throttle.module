@@ -96,13 +96,6 @@ function _throttle_validate($value, $form) {
 }
 
 /**
- * Implementation of hook_perm().
- */
-function throttle_perm() {
-  return array('access throttle block');
-}
-
-/**
  * Implementation of hook_help().
  */
 function throttle_help($section) {
