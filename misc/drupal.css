@@ -150,6 +150,9 @@ li a.active {
 .form-item label {
   font-weight: bold;
 }
+.form-item label.option {
+  font-weight: normal;
+}
 .form-submit {
   margin: 0.5em 0;
 }
