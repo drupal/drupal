@@ -88,12 +88,13 @@ while (<>) {
   elsif (/^\s*{/ && $program) {
     $msg = "take '{' to previous line";
   }
-  elsif (/function ([a-zA-Z_][a-zA-Z_0-9]*[A-Z][a-zA-Z_0-9]*)\(/) {
-    $msg = "no mixedcase, use lowercase and _";
+  elsif (/([a-z])([A-Z])/) {
+    $msg = "no mixed case function or variable names, use lower case and _";
   }
-#  elsif (/<[\/]*[A-Z]+[^>]*>/) {
-#    $msg = "XHTML demands tags to be lowercase";
-#  }
+  elsif (/<[\/]*[A-Z]+[^>]*>/) {
+    $msg = "XHTML demands tags to be lowercase";
+  }
+
   # trying to recognize splitted lines
   # there are only a few valid last characters in programming mode,
   # only sometimes it is ( if you use if/else with a single statement
