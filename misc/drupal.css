@@ -126,10 +126,7 @@ img {
 .form-submit {
   margin: 0.5em 0;
 }
-#forum .name {
- font-size: 1.2em; margin: 0.5em;
-}
-#forum .description, #forum .navigation {
+#forum .description {
   font-size: 0.9em;
   margin: 0.5em;
 }
