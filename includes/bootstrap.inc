@@ -144,13 +144,8 @@ function drupal_page_header() {
       ** call all init() and exit() hooks without including all modules
       ** only use those hooks for critical operations
       */
-      foreach (module_list(0, 1) as $module) {
-        if (is_array($module) && $module['bootstrap']) {
-          include_once $module['filename'];
-          foreach (bootstrap_hooks() as $hook) {
-            module_invoke($module['name'], $hook);
-          }
-        }
+      foreach (bootstrap_hooks() as $hook) {
+        module_invoke_all($hook);
       }
       exit();
     }
