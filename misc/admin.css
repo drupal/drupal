@@ -127,22 +127,3 @@ dd {
 #update {
   padding: 1em 1em 1em 1em;
 }
-.node-form .admin {
-  float: none; width: auto; margin-top: 0;
-}
-.node-form .standard {
-  margin-right: 0;
-  clear: both;
-}
-.node-form .admin .form-item .title {
-  margin-top: 0;
-}
-.node-form .admin .authored .form-item {
-  margin-bottom: 1.1em;
-}
-.node-form .admin .authored, .node-form .admin .options, .node-form .admin .extra {
-  float: left; margin-right: 2em; margin-bottom: 1em;
-}
-.node-form .admin .form-item .form-text {
-  width: auto;
-}

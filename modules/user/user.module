@@ -211,6 +211,10 @@ function user_access($string) {
   global $user;
   static $perm;
 
+  if ($user->uid == 1) {
+    return 1;
+  }
+
   /*
   ** To reduce the number of SQL queries, we cache the user's permissions
   ** in a static variable.
@@ -225,13 +229,7 @@ function user_access($string) {
     }
   }
 
-  if ($user->uid == 1) {
-    return 1;
-  }
-  else {
-    return strstr($perm, $string);
-  }
-
+  return strstr($perm, $string);
 }
 
 function user_mail($mail, $subject, $message, $header) {
@@ -366,7 +364,6 @@ function user_block($op = "list", $delta = 0) {
         }
         break;
       case 2:
-
         $result = db_query_range("SELECT uid, name FROM users WHERE status != '0' ORDER BY uid DESC", 0, 5);
         while ($account = db_fetch_object($result)) {
           $items[] = l((strlen($account->name) > 15 ? substr($account->name, 0, 15) . '...' : $account->name), "user/view/$account->uid");

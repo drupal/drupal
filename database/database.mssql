@@ -1,3 +1,7 @@
+---
+--- Table definitions
+---
+
 CREATE TABLE [dbo].[access] (
   [aid] [smallint] NULL ,
   [mask] [varchar] (255) NOT NULL ,
@@ -460,13 +464,15 @@ INSERT INTO system VALUES ('themes/marvin/marvin.theme','marvin','theme','Intern
 INSERT INTO variable(name,value) VALUES('update_start', 's:10:"2002-05-15";');
 INSERT INTO variable(name,value) VALUES('theme_default','s:6:"marvin";');
 
-INSERT INTO blocks(module,delta,status) VALUES('user', '0', '1');
-INSERT INTO blocks(module,delta,status) VALUES('user', '1', '1');
+INSERT INTO blocks(module,delta,status,custom,region,weight,path) VALUES('user', 0, 1, 0, 1, 0, '');
+INSERT INTO blocks(module,delta,status,custom,region,weight,path) VALUES('user', 1, 1, 0, 1, 0, '');
+
 
 ---
 --- Functions. Functions first available in SQL Server 2000. GREATEST() used by forum.module, tracker.module at the moment.
 ---
 
+GO
 CREATE FUNCTION GREATEST (@a int, @b  int)
 RETURNS int AS
 BEGIN
@@ -476,4 +482,3 @@ BEGIN
   END
   RETURN @b;
 END
-

@@ -36,7 +36,7 @@ function _profile_init() {
   $GLOBALS["profile_months"] = array(0 => t("month"), 1 => t("January"), 2 => t("February"), 3 => t("March"), 4 => t("April"), 5 => t("May"), 6 => t("June"), 7 => t("July"), 8 => t("August"), 9 => t("September"), 10 => t("October"), 11 => t("November"), 12 => t("December"));
 }
 
-function profile_system($field){
+function profile_system($field) {
   $system["description"] = t("Support for configurable user profiles.");
   $system["admin_help"] = t("When a user creates an account you can ask them to give you some extra information about themselves, as well as letting them use a small picture, called an avatar.<br />Notes:<ul><li>In order for a user to <i>enter</i> information you <b>MUST</b> check \"enable\".</li><li>In order for other people too see the entered information you must make it \"public\"</li><li>If an item is \"public\" but not enabled then the user can never give it a value and it will never been seen. Public does <b>not</b> imply \"enable\"</li><li>If an item is enabled, but not shown in the registration form the a user will have to ". l("edit their account", "user/edit") ." to place information in the field.</ul>");
   return $system[$field];
@@ -113,8 +113,8 @@ function _profile_form($edit, $mode) {
 
   foreach ($profile_fields as $name => $field) {
     if ($field[0] && in_array($name, $reg_fields)) {
-      $f = "form_".$field[0];
-      $t = "profile_".$name;
+      $f = "form_". $field[0];
+      $t = "profile_". $name;
       $output .= $f((in_array($name, $required_fields) ? profile_required($field[1]) : $field[1]), $t, $edit[$t], $field[3], $field[4], $field[5], $field[6]);
     }
   }
@@ -143,11 +143,11 @@ function _profile_validate($edit, $mode, $user) {
   $enabled_fields = _profile_active_fields($mode);
 
   if (in_array("birthday", $enabled_fields) && ($birth_error = _profile_validate_birth($edit))) {
-    $error .= $birth_error."<br />";
+    $error .= $birth_error ."<br />";
   }
 
   if (in_array("avatar", $enabled_fields) && ($avatar_error = _profile_validate_avatar($edit, $user))) {
-    $error .= $avatar_error."<br />";
+    $error .= $avatar_error ."<br />";
   }
 
   foreach (array_keys($profile_fields) as $field) {
@@ -158,10 +158,10 @@ function _profile_validate($edit, $mode, $user) {
   }
 
   // now check for required fields
-  foreach(_profile_active_fields("required") as $required) {
+  foreach (_profile_active_fields("required") as $required) {
     if ($required != "0" && in_array($required, $enabled_fields)) {
-      if (!$edit["profile_".$required]) {
-        $error .= t("This required field is missing: %a", array("%a" => $profile_fields[$required][1]))."<br />";
+      if (!$edit["profile_". $required]) {
+        $error .= t("This required field is missing: %a", array("%a" => $profile_fields[$required][1])) ."<br />";
       }
     }
   }
@@ -174,14 +174,14 @@ function _profile_user_view(&$user, $mode) {
 
   foreach (_profile_active_fields($mode) as $name) {
     $field = $profile_fields[$name];
-    $t = "profile_".$name;
+    $t = "profile_". $name;
 
     if (!empty($user->$t)) {
       switch ($field[0]) {
         case "textfield":
         case "textarea":
         case "checkbox":
-          $value = ($t == "profile_homepage") ? "<a href=\"".check_output($user->$t)."\">".check_output($user->$t)."</a>" : check_output($user->$t);
+          $value = ($t == "profile_homepage") ? "<a href=\"". check_output($user->$t) ."\">". check_output($user->$t) ."</a>" : check_output($user->$t);
           $output .= form_item($field[1], $value);
           break;
         case "select":
@@ -224,17 +224,23 @@ function _profile_validate_avatar(&$edit, $user) {
     $extension = strtolower(strrchr($_FILES["edit"]["name"]["profile_avatar"], "."));
     $size = getimagesize($image_file);
     list($maxwidth, $maxheight) = explode("x", variable_get("profile_avatar_dimensions", "85x85"));
-    if ((!in_array($size[2], array(1,2,3))) || (!in_array($extension, array(".gif", ".jpg", ".png", ".jpeg")))) {
-      $error = t("the uploaded file was not an image.");
+    if ((!in_array($size[2], array(1, 2, 3))) || (!in_array($extension, array(".gif", ".jpg", ".png", ".jpeg")))) {
+      $error = t("The uploaded file was not an image.");
     }
-    else if (filesize($image_file) > (variable_get("profile_avatar_file_size", "30")*1000)) {
-      $error = t("the uploaded image is too large, maximum %a kB.", array("%a" => variable_get("profile_avatar_file_size", "30")));
+    else if (filesize($image_file) > (variable_get("profile_avatar_file_size", "30") * 1000)) {
+      $error = t("The uploaded image is too large; the maximum file size is %a kB.", array("%a" => variable_get("profile_avatar_file_size", "30")));
     }
     else if ($size[0] > $maxwidth || $size[1] > $maxheight) {
-      $error = t("the uploaded image is too large, maximum %a.", array("%a" => variable_get("profile_avatar_dimensions", "85x85")));
+      $error = t("The uploaded image is too large; the maximum dimensions are %a pixels.", array("%a" => variable_get("profile_avatar_dimensions", "85x85")));
+    }
+    else if (!is_dir(variable_get("profile_avatar_path", "misc/avatars/"))) {
+      $error = t("Failed to upload the avatar image; the '%directory' directory doesn't exist.", array("%directory" => variable_get("profile_avatar_path", "misc/avatars/")));
+    }
+    else if (!is_writeable(variable_get("profile_avatar_path", "misc/avatars/"))) {
+      $error = t("Failed to upload the avatar image; the webserver has no write permission to the '%directory' directory.", array("%directory" => variable_get("profile_avatar_path", "misc/avatars/")));
     }
     else if (!copy($image_file, variable_get("profile_avatar_path", "misc/avatars/").md5($user->uid).$extension)) {
-      $error = t("error in file upload");
+      $error = t("Failed to upload the avatar image; could not copy file '%filename' to directory '%directory'.", array("%filename" => $_FILES["edit"]["name"]["profile_avatar"], "%directory" => variable_get("profile_avatar_path", "misc/avatars/")));
     }
     else {
       $edit["profile_avatar"] = $extension;
@@ -272,7 +278,7 @@ function _profile_validate_birth(&$edit) {
     return;
   }
   else {
-    return t("The specified birthday is not valid.")."<br />";
+    return t("The specified birthday is not valid.") ."<br />";
   }
 }
 

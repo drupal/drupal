@@ -1197,7 +1197,7 @@ function comment_folded($comment) {
 function comment_flat_collapsed($comments, $threshold) {
   foreach ($comments as $comment) {
     if (comment_visible($comment, $threshold)) {
-      print comment_view($comment, "", 0);
+      comment_view($comment, "", 0);
     }
   }
 }
@@ -1218,7 +1218,7 @@ function comment_thread_min($comments, $threshold, $pid = 0) {
     #$comment = $comments[$n];
     if (($comment->pid == $pid) && (comment_visible($comment, $threshold))) {
       print "<ul>";
-      print comment_view($comment, "", 0);
+      comment_view($comment, "", 0);
       comment_thread_min($comments, $threshold, $comment->cid);
       print "</ul>";
     }

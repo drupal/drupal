@@ -489,7 +489,7 @@ function check_url($uri) {
 }
 
 function check_form($text) {
-  return drupal_specialchars($text);
+  return htmlspecialchars($text);
 }
 
 function check_query($text) {
