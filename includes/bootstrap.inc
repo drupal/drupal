@@ -273,6 +273,7 @@ function page_set_cache() {
           $data = gzencode($data, FORCE_GZIP);
         }
       }
+      ob_end_flush();
       cache_set($base_url . request_uri(), $data, CACHE_TEMPORARY, drupal_get_headers());
     }
   }
