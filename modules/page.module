@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.41 2001/11/12 22:17:52 dries Exp $
+// $Id: page.module,v 1.42 2001/11/26 18:27:34 kjartan Exp $
 
 $GLOBALS["format"] = array(0 => "HTML", 1 => "PHP", 2 => "text");
 
@@ -42,7 +42,7 @@ function page_update($node) {
   db_query("UPDATE page SET format = '$node->format', link = '$node->link' WHERE nid = '$node->nid'");
 }
 
-function page_delete($node) {
+function page_delete(&$node) {
   db_query("DELETE FROM page WHERE nid = '$node->nid'");
 }
 
@@ -77,7 +77,7 @@ function page_view($node, $main = 0) {
   }
 }
 
-function page_form($node, $help, $error) {
+function page_form(&$node, &$help, &$error) {
   global $format, $op;
 
   if ($op != t("Preview") && $format[$node->format] == "PHP") {

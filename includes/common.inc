@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.86 2001/11/24 15:10:36 dries Exp $
+// $Id: common.inc,v 1.87 2001/11/26 18:27:33 kjartan Exp $
 
 function conf_init() {
   global $HTTP_HOST, $REQUEST_URI;
@@ -133,6 +133,19 @@ function check_input($text) {
 
 function check_output($text, $nl2br = 0) {
   return ($text) ? ($nl2br ? nl2br(stripslashes($text)) : stripslashes($text)) : message_na();
+}
+
+function check_file($filename) {
+  if (is_uploaded_file($filename)) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
+function file_encode($filename) {
+  $edit[filedata] = base64_encode(fread($fd, filesize($edit[upload_file])));
 }
 
 function format_info($body, $block) {

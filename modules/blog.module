@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.49 2001/11/24 15:30:57 dries Exp $
+// $Id: blog.module,v 1.50 2001/11/26 18:27:34 kjartan Exp $
 
 function blog_conf_options() {
  $output .= form_textarea("Explanation or submission guidelines", "blog_help", variable_get("blog_help", ""), 55, 4, "This text will be displayed at the top of the blog submission form.  Useful for helping or instructing your users.");
@@ -225,7 +225,7 @@ function blog_page_last() {
   $theme->box(t("User blogs"), $output, "main");
 }
 
-function blog_form($node, $help, $error) {
+function blog_form(&$node, &$help, &$error) {
   global $nid, $iid;
 
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.29 2001/11/12 22:17:52 dries Exp $
+// $Id: forum.module,v 1.30 2001/11/26 18:27:34 kjartan Exp $
 
 function forum_node($field) {
   $info["name"] = t("discussion forum");
@@ -46,7 +46,7 @@ function forum_view($node) {
   $theme->box(t("Discussion forum"), $output);
 }
 
-function forum_form($node, $help, $error) {
+function forum_form(&$node, &$help, &$error) {
   $output .= form_textarea("Body", "body", $node->body, 60, 10);
 
   return $output;
