@@ -59,24 +59,15 @@ function search_menu($may_cache) {
       'callback' => 'search_help_page',
       'access' => user_access('search content'),
       'type' => MENU_SUGGESTED_ITEM);
-    $items[] = array('path' => 'search/search', 'title' => t('search'),
-      'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-    $items[] = array('path' => 'search/configure', 'title' => t('configure'),
-      'callback' => 'search_configure',
-      'access' => user_access('administer site configuration'),
-      'type' => MENU_LOCAL_TASK);
   }
 
   return $items;
 }
 
 /**
- * Menu callback; displays the search module settings page.
+ * Implementation of hook_settings().
  */
-function search_configure() {
-  if ($_POST) {
-    system_settings_save();
-  }
+function search_settings() {
 
   // Indexing settings:
   $group = form_textfield(t('Minimum word length to index'), 'minimum_word_size', variable_get('minimum_word_size', 2), 10, 10, t('The number of characters a word has to be to be indexed.  Words shorter than this will not be searchable.'));
@@ -88,7 +79,7 @@ function search_configure() {
   $group = form_radios(t('Help text position'), 'help_pos', variable_get('help_pos', 1), array('1' => t('Above search output'), '2' => t('Below search output'), '3' => t('Link from above search output'), '4' => t('Link from below search output')), t('Where to show the help text for users on the search page.'));
   $output .= form_group(t('Viewing options'), $group);
 
-  print theme('page', system_settings_form($output));
+  return $output;
 }
 
 /**
