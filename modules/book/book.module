@@ -66,8 +66,10 @@ function book_link($type, $node = 0, $main = 0) {
     $links[] = l(t("create book page"), "node/add/book", array("title" => t("Add a new book page.")));
   }
 
-  if ($type == "node" && $node->type == "book" && book_access("update", $node)) {
-    $links[] = l(t("edit this page"), "node/edit/$node->nid", array("title" => t("Suggest an update for this book page.")));
+  if ($type == "node" && $node->type == "book") {
+    if (book_access("update", $node)) {
+      $links[] = l(t("edit this page"), "node/edit/$node->nid", array("title" => t("Suggest an update for this book page.")));
+    }
     $links[] = l(t("printer-friendly version"), "book/print/$node->nid", array("title" => t("Show a printer-friendly version of this book page and its sub-pages.")));
   }
 
