@@ -5,7 +5,27 @@ $module = array("help" => "locale_help",
                 "locale" => "locale_locale");
 
 function locale_help() {
-  print "under construction";
+ ?>
+  <P>Normally programs are written and documented in English, and use English to interact with users.  This is true for a great deal of websites.  However, most people are less comfortable with English than with their own native language, and would prefer to use their mother tongue as much as possible.  Many people love see their website showing a lot less of English, and far more of their own language.</P>
+  <P>Therefore drupal provides a framework to setup a multi-lingual website, or to overwrite the default texts in English.  We explored the various alternatives to support internationalization and decided to design the framework in such a way that the impact of internationalization on drupal's sources is minimized, modular and that it doesn't require a HTML or PHP wizard to maintain translations.  Maintaining translations had to be simple so it became as easy as filling out forms on the administration page.  A side effect is that translation support adds significant overhead to the dynamic generation of your website.  If you don't need translation support, consider to turn it off.</P>
+
+  <H3>Adding a new language</H3>
+
+  <P>Adding a new language requires you to edit your configuration file and to edit your SQL database.  Assuming you want to support Dutch (ISO 639 code: "nl") and French (ISO 639 code: "fr"), you add the following line to your configuration file's <CODE>$languages</CODE>-variable:</P>
+  <PRE>
+    $languages = array("nl" => "Dutch / Nederlands", "fr" => "French / Francais");
+  </PRE>
+  <P>Note that the default language must come first and that if you want to overwrite the default text you can add an entry for English (ISO 639 code: "en"):</P>
+  <PRE>
+    $languages = array("en" => "English", "nl" => "Dutch / Nederlands", "fr" => "French / Francais");
+  </PRE>
+  <P>After having edited your configuration file, make sure your SQL table "locales" has the required database fields setup to host your new translations.  You can add the required rows to your "locales" table from the MySQL prompt:</P>
+  <PRE>
+    mysql> ALTER TABLE locales ADD en TEXT DEFAULT '' NOT NULL;
+    mysql> ALTER TABLE locales ADD nl TEXT DEFAULT '' NOT NULL;
+    mysql> ALTER TABLE locales ADD fr TEXT DEFAULT '' NOT NULL;
+  </PRE>
+ <?
 }
 
 function locale_delete($id) {
@@ -24,10 +44,10 @@ function locale_edit($id) {
   if ($translation = db_fetch_object($result)) {
     $output .= "<FORM ACTION=\"admin.php?mod=locale\" METHOD=\"post\">\n";
     $output .= "<B>Original string:</B><BR>\n";
-    $output .= check_output($translation->string) ."<P>";
+    $output .= "<PRE>". wordwrap(check_output($translation->string)) ."</PRE><P>";
     foreach ($languages as $code=>$language) {
       $output .= "<B>$language:</B><BR>";
-      $output .= "<INPUT TYPE=\"text\" NAME=\"edit[$code]\" VALUE=\"". check_textfield($translation->$code) ."\"><P>";
+      $output .= (strlen($translation->string) > 30) ? "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"edit[$code]\">". check_textarea($translation->$code) ."</TEXTAREA><P>" : "<INPUT TYPE=\"text\" NAME=\"edit[$code]\" SIZE=\"50\" VALUE=\"". check_textfield($translation->$code) ."\"><P>";
     }
     $output .= "<INPUT NAME=\"id\" TYPE=\"hidden\" VALUE=\"$id\">\n";
     $output .= "<INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"Save translations\">\n";
