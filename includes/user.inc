@@ -54,7 +54,7 @@ function user_save($account, $array) {
 
 function user_access($account, $section = 0) {
   global $user;
-  if ($section) return (field_get($account, "access", $section) || $account->id == 1);
+  if ($section) return (field_get($account->access, $section) || $account->id == 1);
   else return ($account->access || $account->id == 1);
 }
 
