@@ -793,6 +793,9 @@ function page_footer() {
   }
 }
 
+// set error handler:
+set_error_handler("error_handler");
+
 unset($conf);
 
 $config = conf_init();
@@ -807,16 +810,13 @@ include_once "includes/pager.inc";
 // initialize configuration variables, using values from conf.php if available:
 $conf = variable_init(isset($conf) ? $conf : array());
 
+// initialize installed modules:
+module_init();
+
 // initialize localization system:
 $locale = locale_init();
 
 // initialize theme:
 $theme = theme_init();
-
-// initialize installed modules:
-module_init();
-
-// set error handler:
-set_error_handler("error_handler");
 
 ?>
