@@ -47,7 +47,6 @@
         <h1 class="title">{title}</h1>
         <!-- BEGIN: tabs -->
         <div class="tabs">{tabs}</div>
-        <div class="clear-tabs"></div>
         <!-- END: tabs -->
         <!-- END: title -->
         <!-- BEGIN: help -->

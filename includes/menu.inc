@@ -1,5 +1,5 @@
 <?php
-/* $Id: menu.inc,v 1.44 2004/06/18 15:04:33 dries Exp $ */
+/* $Id: menu.inc,v 1.45 2004/06/19 08:24:13 dries Exp $ */
 
 /**
  * @defgroup menu Menu system
@@ -445,10 +445,10 @@ function theme_menu_local_tasks() {
         $output .= theme('menu_local_task', $mid, $active);
         $output .= implode($tabs);
         $output .= "</ul>\n";
+        $output .= theme('menu_local_subtasks', $mid);
       }
     }
   }
-
   return $output;
 }
 
@@ -462,7 +462,7 @@ function theme_menu_local_tasks() {
  */
 function theme_menu_local_task($mid, $active) {
   if ($active) {
-    return '<li class="active">'. theme('menu_item', $mid) . theme('menu_local_subtasks', $mid) ."</li>\n";
+    return '<li class="active">'. theme('menu_item', $mid)  ."</li>\n";
   }
   else {
     return '<li>'. theme('menu_item', $mid) ."</li>\n";

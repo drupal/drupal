@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.251 2004/06/18 15:04:35 dries Exp $
+// $Id: comment.module,v 1.252 2004/06/19 08:24:14 dries Exp $
 
 /**
  * Implementation of hook_help().
