@@ -62,7 +62,7 @@ function book_view($node, $page = 1) {
 function book_find($keys) {
   global $status, $user;
   $find = array();
-  $result = db_query("SELECT n.*, u.userid FROM nodes n LEFT JOIN book b ON n.nid = b.node LEFT JOIN users u ON n.author = u.id WHERE n.type = 'book' AND n.status = '$status[posted]' AND (n.title LIKE '%". check_input($keys) ."%' OR b.body LIKE '%". check_input($keys) ."%') ORDER BY n.timestamp DESC LIMIT 20", 1);
+  $result = db_query("SELECT n.*, u.userid FROM nodes n LEFT JOIN book b ON n.nid = b.node LEFT JOIN users u ON n.author = u.id WHERE n.type = 'book' AND n.status = '$status[posted]' AND (n.title LIKE '%". check_input($keys) ."%' OR b.body LIKE '%". check_input($keys) ."%') ORDER BY n.timestamp DESC LIMIT 20");
   while ($node = db_fetch_object($result)) {
     array_push($find, array("title" => check_output($node->title), "link" => (user_access($user, "book") ? "admin.php?mod=book&op=edit&id=$node->nid" : "node.php?id=$node->nid"), "user" => $node->userid, "date" => $node->timestamp));
   }
@@ -155,12 +155,12 @@ function book_form($edit = array()) {
 }
 
 function book_save($edit) {
-  $node = ($edit[nid] ? node_get_object("nid", $edit[nid]) : node_get_object("title", $edit[title]));
+  $node = node_get_object("nid", $edit[nid]);
   node_save(array_diff(array_merge($edit, array(nid => $node->nid, type => "book")), array(userid => $edit[userid])));
 }
 
 function book_delete($id) {
-  node_del_object("nid", $id);
+  return ($node = node_del("nid", $id) ? "book page has been deleted" : "failed to delete book page: change status to 'dumped' first");
 }
 
 function book_overview($parent = "", $offset = "") {
@@ -180,10 +180,24 @@ function book_overview($parent = "", $offset = "") {
   return $output;
 }
 
+function book_history() {
+  global $status;
+
+  $result = db_query("SELECT n.*, b.* FROM nodes n LEFT JOIN book b ON n.nid = b.node WHERE n.type = 'book' AND n.status != '$status[expired]' ORDER BY n.timestamp DESC");
+
+  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
+  $output .= " <TR><TH>node</TH><TH>status</TH><TH>date</TH><TH COLSPAN=\"3\">operations</TH></TR>\n";
+  while ($node = db_fetch_object($result)) {
+    $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD>$node->status</TD><TD>". format_date($node->timestamp, "small") ."</TD><TD><A HREF=\"node.php?id=$node->nid\">view</A></TD><TD><A HREF=\"admin.php?mod=book&op=edit&id=$node->nid\">edit</A></TD><TD><A HREF=\"admin.php?mod=book&op=delete&id=$node->nid\">delete</A></TD>";
+  }
+  $output .= "</TABLE>\n";
+  return $output;
+}
+
 function book_admin() {
   global $op, $id, $edit, $user;
 
-  print "<SMALL><A HREF=\"admin.php?mod=book&op=add\">add new page</A> | <A HREF=\"admin.php?mod=book&op=search\">search book</A> | <A HREF=\"admin.php?mod=book\">overview</A></SMALL><HR>\n";
+  print "<SMALL><A HREF=\"admin.php?mod=book&op=add\">add new page</A> | <A HREF=\"admin.php?mod=book&op=history\">history</A> | <A HREF=\"admin.php?mod=book&op=search\">search book</A> | <A HREF=\"admin.php?mod=book\">overview</A></SMALL><HR>\n";
 
   switch ($op) {
     case "add":
@@ -192,6 +206,9 @@ function book_admin() {
    case "delete":
       print book_delete($id);
       print book_overview();
+      break;
+   case "history":
+      print book_history();
       break;
     case "edit":
       print book_form(node_get_array(nid, $id));
