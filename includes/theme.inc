@@ -338,7 +338,7 @@ function theme_table($header, $rows) {
 /**
  * Returns themed box.
  *
- * @param $subject the @a subject of the box.
+ * @param $title the @a subject of the box.
  * @param $content the @a content of the box.
  * @param $region the @a region of the box.
  *
