@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.120 2002/06/14 13:48:34 kjartan Exp $
+// $Id: common.inc,v 1.121 2002/06/15 17:48:53 kjartan Exp $
 
 function conf_init() {
   global $HTTP_HOST;
@@ -674,7 +674,7 @@ function lm($text, $args = array(), $anchor = "", $attributes = array()) {
 }
 
 function field_get($string, $name) {
-  ereg(", $name=([^,]+)", ",$string", $regs);
+  ereg(",$name=([^,]+)", ",$string", $regs);
   return $regs[1];
 }
 
