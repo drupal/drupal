@@ -38,7 +38,7 @@ function theme_account($theme) {
     $content .= "<P>\n";
     $content .= "<LI><A HREF=\"account.php?op=edit&topic=user\">edit your information</A></LI>\n";
     $content .= "<LI><A HREF=\"account.php?op=edit&topic=site\">edit your preferences</A></LI>\n";
-    $content .= "<LI><A HREF=\"account.php?op=edit&topic=content\">edit site content</A></LI>\n";
+    $content .= "<LI><A HREF=\"account.php?op=edit&topic=content\">edit your content</A></LI>\n";
     $content .= "<P>\n";
 
     if (user_permission($user)) {

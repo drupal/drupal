@@ -222,7 +222,7 @@ function account_content_edit() {
     $output .= "</FORM>\n";
 
     $theme->header();
-    $theme->box("Edit site content", $output);
+    $theme->box("Edit your content", $output);
     $theme->footer();
   }
   else {
@@ -255,17 +255,16 @@ function account_user($uname) {
 
   if ($user->id && $user->userid == $uname) {
     $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>User ID:</B></TD><TD>$user->userid</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Name:</B></TD><TD>". format_data($user->name) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Username:</B></TD><TD>$user->userid</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>E-mail:</B></TD><TD>". format_email($user->fake_email) ."</A></TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>URL:</B></TD><TD>". format_url($user->url) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Homepage:</B></TD><TD>". format_url($user->url) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Bio:</B></TD><TD>". format_data($user->bio) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Signature:</B></TD><TD>". format_data($user->signature) ."</TD></TR>\n";
     $output .= "</TABLE>\n";
 
     // Display account information:
     $theme->header();
-    $theme->box("View user settings", $output);
+    $theme->box("Personal information", $output);
     $theme->footer();
   }
   elseif ($uname && $account = account_get_user($uname)) {
@@ -426,8 +425,6 @@ function account_password($min_length=6) {
 function account_track_comments() {
   global $theme, $user;
 
-  $msg = "<P>This page might be helpful in case you want to keep track of your recent comments in any of the current discussions.  You are presented an overview of your comments in each of the stories you participated in along with the number of replies each comment got.\n<P>\n";
-
   $sresult = db_query("SELECT s.id, s.subject, COUNT(s.id) as count FROM comments c LEFT JOIN stories s ON c.lid = s.id WHERE c.author = $user->id GROUP BY s.id DESC LIMIT 5");
 
   while ($story = db_fetch_object($sresult)) {
@@ -441,7 +438,7 @@ function account_track_comments() {
     $output .= " </UL>\n";
   }
 
-  $output = ($output) ? "$msg $output" : "$info <CENTER>You have not posted any comments recently.</CENTER>\n";
+  $output = ($output) ? "$output" : "$info <CENTER>You have not posted any comments recently.</CENTER>\n";
 
   $theme->header();
   $theme->box("Track your comments", $output);
@@ -450,8 +447,6 @@ function account_track_comments() {
 
 function account_track_stories() {
   global $theme, $user;
-
-  $msg = "<P>This page might be helpful in case you want to keep track of the stories you contributed.  You are presented an overview of your stories along with the number of replies each story got.\n<P>\n";
 
   $result = db_query("SELECT s.id, s.subject, s.timestamp, s.section, COUNT(c.cid) as count FROM stories s LEFT JOIN comments c ON c.lid = s.id WHERE s.status = 2 AND s.author = $user->id GROUP BY s.id DESC");
 
@@ -465,54 +460,29 @@ function account_track_stories() {
   }
 
   $theme->header();
-  $theme->box("Track your stories", ($output ? "$msg $output" : "$msg You have not posted any stories.\n"));
+  $theme->box("Track your stories", ($output ? "$output" : "You have not posted any stories.\n"));
   $theme->footer();
 }
 
 function account_track_site() {
   global $theme, $user, $site_name;
 
-  $result1 = db_query("SELECT c.cid, c.pid, c.lid, c.subject, u.userid, s.subject AS story FROM comments c LEFT JOIN users u ON u.id = c.author LEFT JOIN stories s ON s.id = c.lid WHERE s.status = 2 ORDER BY cid DESC LIMIT 10");
+  $period = 259200; // 3 days
 
-  while ($comment = db_fetch_object($result1)) {
-    $block1 .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
-    $block1 .= " <TR><TD ALIGN=\"right\"><B>Comment:</B></TD><TD><A HREF=\"story.php?id=$comment->lid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A></TD></TR>\n";
-    $block1 .= " <TR><TD ALIGN=\"right\"><B>Author:</B></TD><TD>". format_username($comment->userid) ."</TD></TR>\n";
-    $block1 .= " <TR><TD ALIGN=\"right\"><B>Story:</B></TD><TD><A HREF=\"story.php?id=$comment->lid\">". check_output($comment->story) ."</A></TD></TR>\n";
-    $block1 .= "</TABLE>\n";
-    $block1 .= "<P>\n";
+  $sresult = db_query("SELECT s.subject, s.id, COUNT(c.lid) AS count FROM comments c LEFT JOIN stories s ON c.lid = s.id WHERE s.status = 2 AND c.link = 'story' AND ". time() ." - c.timestamp < $period GROUP BY c.lid ORDER BY count DESC LIMIT 10");
+  while ($story = db_fetch_object($sresult)) {
+    $output .= "<LI>". format_plural($story->count, "new comment", "new comments") ." attached to story '<A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A>':</LI>";
+
+    $cresult = db_query("SELECT c.subject, c.cid, c.pid, u.userid FROM comments c LEFT JOIN users u ON u.id = c.author WHERE c.lid = $story->id AND c.link = 'story' ORDER BY timestamp DESC LIMIT $story->count");
+    $output .= "<UL>\n";
+    while ($comment = db_fetch_object($cresult)) {
+      $output .= " <LI>'<A HREF=\"story.php?id=$story->id&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A>' by ". format_username($comment->userid) ."</LI>\n";
+    }
+    $output .= "</UL>\n";
   }
-  $block1 = ($block1) ? $block1 : "<CENTER>There have not posted any comments recently.</CENTER>\n";
 
-  $users_total = db_result(db_query("SELECT COUNT(id) FROM users"));
-
-  $stories_posted  = db_result(db_query("SELECT COUNT(id) FROM stories WHERE status = 2"));
-  $stories_queued  = db_result(db_query("SELECT COUNT(id) FROM stories WHERE status = 1"));
-  $stories_dumped = db_result(db_query("SELECT COUNT(id) FROM stories WHERE status = 0"));
-
-  $result = db_query("SELECT u.userid, COUNT(s.author) AS count FROM stories s LEFT JOIN users u ON s.author = u.id GROUP BY s.author ORDER BY count DESC LIMIT 10");
-  while ($poster = db_fetch_object($result)) $stories_posters .= format_username($poster->userid) .", ";
-
-  $comments_total = db_result(db_query("SELECT COUNT(cid) FROM comments"));
-  $comments_score = db_result(db_query("SELECT TRUNCATE(AVG(score / votes), 2) FROM comments WHERE votes > 0"));
-
-  $result = db_query("SELECT u.userid, COUNT(c.author) AS count FROM comments c LEFT JOIN users u ON c.author = u.id GROUP BY c.author ORDER BY count DESC LIMIT 10");
-  while ($poster = db_fetch_object($result)) $comments_posters .= format_username($poster->userid) .", ";
-
-  $diaries_total = db_result(db_query("SELECT COUNT(id) FROM diaries"));
-
-  $result = db_query("SELECT u.userid, COUNT(d.author) AS count FROM diaries d LEFT JOIN users u ON d.author = u.id GROUP BY d.author ORDER BY count DESC LIMIT 10");
-  while ($poster = db_fetch_object($result)) $diaries_posters .= format_username($poster->userid) .", ";
-
-  $block2 .= "<TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"1\">\n";
-  $block2 .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Users:</B></TD><TD>$users_total users</TD></TR>\n";
-  $block2 .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Stories:</B></TD><TD>$stories_posted posted, $stories_queued queued, $stories_dumped dumped<BR><I>[most frequent posters: $stories_posters ...]</I></TD></TR>\n";
-  $block2 .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Comments:</B></TD><TD>$comments_total comments with an average score of $comments_score<BR><I>[most frequent posters: $comments_posters ...]</I></TD></TR>\n";
-  $block2 .= "</TABLE>\n";
-
-  $theme->header();
-  $theme->box("Recent comments", $block1);
-  $theme->box("Site statistics", $block2);
+  $theme->header();  
+  $theme->box("Track $site_name", $output);
   $theme->footer();
 }
 
