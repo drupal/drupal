@@ -170,8 +170,8 @@ function format_text($text) {
   return preg_replace($src, $dst, $text);
 }
 
-function form($action, $form, $method = "post") {
-  return "<FORM ACTION=\"$action\" METHOD=\"$method\">\n$form</FORM>\n";
+function form($action, $form, $method = "post", $options="") {
+  return "<FORM ACTION=\"$action\" METHOD=\"$method\"". (!empty($options) ? " $options" : "") .">\n$form</FORM>\n";
 }
 
 function form_item($title, $value, $description = 0) {
@@ -193,6 +193,10 @@ function form_select($title, $name, $value, $options, $description = 0) {
 
 function form_hidden($name, $value) {
   return "<INPUT TYPE=\"hidden\" NAME=\"edit[$name]\" VALUE=\"". check_textfield($value) ."\">\n";
+}
+
+function form_file($name) {
+  return "<INPUT TYPE=\"file\" NAME=\"edit[$name]\">\n";
 }
 
 function form_submit($value) {
