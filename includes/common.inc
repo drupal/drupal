@@ -621,7 +621,6 @@ function format_size($size) {
 
 function cache_get($key) {
   $cache = db_fetch_object(db_query("SELECT data, created FROM cache WHERE cid = '%s'", $key));
-  $created = $cache->created;
   return $cache->data ? $cache : 0;
 }
 
