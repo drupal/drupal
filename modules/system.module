@@ -84,13 +84,6 @@ function system_view_modules() {
   $output .= form_item(t("Default theme"), "<select name=\"edit[theme_default]\">$options</select>", t("The default theme as seen by visitors or anonymous users."));
   $output .= "<hr />\n";
 
-  // development settings:
-  $output .= "<h3>" . t("Development settings") . "</h3>\n";
-  $output .= form_select(t("Display timer information"), "dev_timer", variable_get("dev_timer", 0), array(t("Disabled"), t("Enabled")), t("Display the time it took to generate a page.  For Drupal development only."));
-  $output .= form_select(t("Display query log"), "dev_query", variable_get("dev_query", 0), array(t("Disabled"), t("Enabled")), t("Display a log of the database queries needed to generate the current page."));
-
-  $output .= "<hr />\n";
-
   foreach (module_list() as $name) {
     if (module_hook($name, "conf_options")) {
       $output .= "<h3><a name=\"$name\">". ucfirst(t("$name")) ." " . t("settings") . "</a></h3>". module_invoke($name, "conf_options") ."<hr />\n";
@@ -119,18 +112,33 @@ function system_view_filters() {
   return $output;
 }
 
-function system_save($edit = array()) {
+function system_save_settings($edit = array()) {
   foreach ($edit as $name => $value) {
     variable_set($name, $value);
   }
 
+  cache_clear_all();
+
   return t("the configuration options have been saved.");
 }
 
-function system_default($edit = array()) {
+function system_save_selector($type, $edit = array()) {
+  db_query("UPDATE system SET status = '0' WHERE type = '%s'", $type);
+  foreach ($edit["status"] as $filename => $status) {
+    db_query("UPDATE system SET status = '%d' WHERE filename = '$filename'", $status);
+  }
+
+  cache_clear_all();
+
+  return t("the configuration options have been saved.");
+}
+
+function system_reset_default($edit = array()) {
   foreach ($edit as $name => $value) {
     variable_del($name);
   }
+
+  cache_clear_all();
 
   return t("the configuration options have been reset to their default values.");
 }
@@ -182,20 +190,8 @@ function system_dirscan($dir, $mask, $nomask = array(".", "..", "CVS")) {
 }
 
 function system_listing($type, $directory, $required = array()) {
-  $op = arg(2);
-
   // Make sure we set $type correctly
   $type = $type != 'theme' ? "module" : "theme";
-
-  if ($op == t("Save $type settings")) {
-    db_query("UPDATE system SET status = '0' WHERE type = '%d'", $type);
-    foreach ($edit["status"] as $filename => $status) {
-      db_query("UPDATE system SET status = '%d' WHERE filename = '$filename'", $status);
-    }
-    cache_clear_all();
-
-    $message = t("the configuration options have been saved.");
-  }
 
   // Find files in the directory.
   $files = system_dirscan($directory, "\.$type$");
@@ -250,6 +246,10 @@ function system_admin() {
   global $op, $edit;
 
   if (user_access("administer site configuration")) {
+
+    // NOTE: changing this also requires changing module_init() @ "includes/module.inc".
+    $required = array("modules/admin.module", "modules/user.module", "modules/system.module", "modules/watchdog.module");
+
     if (empty($op)) {
       $op = arg(2);
     }
@@ -260,31 +260,35 @@ function system_admin() {
         break;
       case "modules":
         if (arg(3) == "settings") {
-          print status(system_view("modules"));
+          print system_view("modules");
         }
         else {
-          // NOTE: changing this also requires changing module_init() @ "includes/module.inc".
-          $required = array("modules/admin.module", "modules/user.module", "modules/system.module", "modules/watchdog.module");
-          print status(system_listing("module", "modules", $required));
+          print system_listing("module", "modules", $required);
         }
         break;
       case "themes":
         if (arg(3) == "settings") {
-          print status(system_view("themes"));
+          print system_view("themes");
         }
         else {
-          print status(system_listing("theme", "themes"));
+          print system_listing("theme", "themes");
         }
         break;
+      case t("Save module settings"):
+        print status(system_save_selector("module", $edit));
+        print system_listing("module", "modules", $required);
+        break;
+      case t("Save theme settings"):
+        print status(system_save_selector("theme", $edit));
+        print system_listing("theme", "themes");
+        break;
       case t("Reset to defaults"):
-        print status(system_default($edit));
+        print status(system_reset_default($edit));
         print system_view(arg(2));
-        cache_clear_all();
         break;
       case t("Save configuration"):
-        print status(system_save($edit));
+        print status(system_save_settings($edit));
         print system_view(arg(2));
-        cache_clear_all();
         break;
       default:
         print system_view(arg(2));

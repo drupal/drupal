@@ -1,35 +1,8 @@
 <?php
 // $Id$
 
-// Initialization hook, runs each time statistic module is loaded
 function statistics_init() {
-  global $user, $recent_activity;
-
-  if (variable_get("statistics_enable_node_counter", 0)) {
-    // node view counters are enabled
-    if ((arg(0) == "node") && (arg(1) == "view") && arg(2)) {
-      // a node has been viewed, so updated the node's counters
-      db_query("UPDATE statistics SET daycount = daycount + 1, totalcount = totalcount + 1, timestamp = '%s' WHERE nid = '%s'", time(), arg(2));
-      // if we affected 0 rows, this is the first time viewing the node
-      if (!db_affected_rows()) {
-        // must create a new row to store counter's for new node
-        db_query("INSERT INTO statistics (nid, daycount, totalcount) VALUES('%s', daycount + 1, totalcount + 1)", arg(2));
-      }
-    }
-  }
-
-  if ((variable_get("statistics_enable_access_log", 0)) && (throttle_status() < 5)) {
-    // statistical logs are enabled
-    $referrer = getenv("HTTP_REFERER");
-    $hostname = getenv("REMOTE_ADDR");
-    // log this page access
-    if ((arg(0) == "node") && (arg(1) == "view") && arg(2)) {
-      db_query("INSERT INTO accesslog (nid, url, hostname, uid, timestamp) values('%s', '%s', '%s', '%s', '%s')", arg(2), $referrer, $hostname, $user->uid, time());
-    }
-    else {
-      db_query("INSERT INTO accesslog (url, hostname, uid, timestamp) values('%s', '%s', '%s', '%s')", $referrer, $hostname, $user->uid, time());
-    }
-  }
+  global $recent_activity;
 
   /*
   ** The following logic determines what the current throttle level should
@@ -61,6 +34,36 @@ function statistics_init() {
   }
 }
 
+// Footer hook, runs at the end of every page request
+function statistics_exit() {
+  global $user;
+
+  if (variable_get("statistics_enable_node_counter", 0)) {
+    // node view counters are enabled
+    if ((arg(0) == "node") && (arg(1) == "view") && arg(2)) {
+      // a node has been viewed, so updated the node's counters
+      db_query("UPDATE statistics SET daycount = daycount + 1, totalcount = totalcount + 1, timestamp = '%s' WHERE nid = '%s'", time(), arg(2));
+      // if we affected 0 rows, this is the first time viewing the node
+      if (!db_affected_rows()) {
+        // must create a new row to store counter's for new node
+        db_query("INSERT INTO statistics (nid, daycount, totalcount) VALUES('%s', daycount + 1, totalcount + 1)", arg(2));
+      }
+    }
+  }
+
+  if ((variable_get("statistics_enable_access_log", 0)) && (throttle_status() < 5)) {
+    // statistical logs are enabled
+    $referrer = getenv("HTTP_REFERER");
+    $hostname = getenv("REMOTE_ADDR");
+    // log this page access
+    if ((arg(0) == "node") && (arg(1) == "view") && arg(2)) {
+      db_query("INSERT INTO accesslog (nid, url, hostname, uid, timestamp) values('%s', '%s', '%s', '%s', '%s')", arg(2), $referrer, $hostname, $user->uid, time());
+    }
+    else {
+      db_query("INSERT INTO accesslog (url, hostname, uid, timestamp) values('%s', '%s', '%s', '%s')", $referrer, $hostname, $user->uid, time());
+    }
+  }
+}
 
 /* System hook, sets description of module in admin page */
 function statistics_system($field) {

@@ -462,13 +462,7 @@ function check_input($text) {
 }
 
 function filter($text) {
-  foreach (module_list() as $name) {
-    if (module_hook($name, "filter")) {
-      $text = module_invoke($name, "filter", $text);
-    }
-  }
-
-  return $text;
+  return module_invoke_all("filter", $text);;
 }
 
 function rewrite_old_urls($text) {
@@ -808,42 +802,20 @@ function link_page() {
     return $custom_links;
   }
   else {
-    $links[] = "<a href=\"index.php\" title=\"". t("Return to the main page.") ."\">". t("home") ."</a>";
-
-    foreach (module_list() as $name) {
-      if (module_hook($name, "link")) {
-        $links = array_merge($links, module_invoke($name, "link", "page"));
-      }
-    }
-
+    $links = module_invoke_all("link", "page");
+    array_unshift($links, "<a href=\"index.php\" title=\"". t("Return to the main page.") ."\">". t("home") ."</a>");
     return $links;
   }
 }
 
 function link_node($node, $main = 0) {
-  $links = array();
-
-  foreach (module_list() as $name) {
-    if (module_hook($name, "link")) {
-      $links = array_merge($links, module_invoke($name, "link", "node", $node, $main));
-    }
-  }
-
-  return $links;
+  return module_invoke_all("link", "node", $node, $main);
 }
 
 function timer_start() {
   global $timer;
   list($usec, $sec) = explode(" ", microtime());
   $timer = (float)$usec + (float)$sec;
-}
-
-function timer_print() {
-  global $timer;
-  list($usec, $sec) = explode(" ", microtime());
-  $stop = (float)$usec + (float)$sec;
-  $diff = $stop - $timer;
-  print "<pre>execution time: $diff sec</pre>";
 }
 
 function query_print() {
@@ -877,17 +849,14 @@ function page_header() {
 }
 
 function page_footer() {
-  if (variable_get("dev_timer", 0)) {
-    timer_print();
-  }
-
-  if (variable_get("dev_query", 0)) {
-    query_print();
-  }
 
   if (variable_get("cache", 0)) {
     page_set_cache();
   }
+
+  // a hook for modules where modules may take action at the end of a request
+  // good uses include setting a cache, page logging, etc.
+  module_invoke_all("exit");
 }
 
 unset($conf);
