@@ -1,0 +1,3 @@
+<? 
+include "modules/$mod.module"; 
+?>
