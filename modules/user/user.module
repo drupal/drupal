@@ -179,13 +179,13 @@ function user_validate_name($name) {
   if (ereg('  ', $name)) return t('The username cannot contain multiple spaces in a row.');
   if (ereg('[^ [:alnum:]@_.-]', $name)) return t('The username contains an illegal character.');
   if (ereg('@', $name) && !eregi('@([0-9a-z](-?[0-9a-z])*.)+[a-z]{2}([zmuvtg]|fo|me)?$', $name)) return t('The username is not a valid authentication ID.');
-  if (strlen($name) > 56) return t('The username "%name" is too long: it must be less than 56 characters.', array('%name' => $name));
+  if (strlen($name) > 56) return t('The username %name is too long: it must be less than 56 characters.', array('%name' => "<em>$name</em>"));
 }
 
 function user_validate_mail($mail) {
   if (!$mail) return t('You must enter an e-mail address.');
   if (!valid_email_address($mail)) {
-    return t('The e-mail address "%mail" is not valid.', array('%mail' => $mail));
+    return t('The e-mail address %mail is not valid.', array('%mail' => "<em>$mail</em>"));
   }
 }
 
@@ -871,7 +871,7 @@ function user_pass($edit = array()) {
   }
   else if ($edit['mail']) {
     $account = user_load(array('mail' => $edit['mail'], 'status' => 1));
-    if (!$account) form_set_error('name', t('Sorry. The e-mail address %e-mail is not recognized.', array('%e-mail' => '<em>'. $edit['mail'] .'</em>')));
+    if (!$account) form_set_error('name', t('Sorry. The e-mail address %email is not recognized.', array('%email' => '<em>'. $edit['mail'] .'</em>')));
   }
   if ($account) {
 
@@ -889,11 +889,11 @@ function user_pass($edit = array()) {
       $mail_success = user_mail($account->mail, $subject, $body, $headers);
 
       if ($mail_success) {
-        watchdog('user', t('Password mailed to %name at %e-mail.', array('%name' => "<em>$account->name</em>" , '%e-mail' => "<em>$account->mail</em>")));
+        watchdog('user', t('Password mailed to %name at %email.', array('%name' => "<em>$account->name</em>" , '%email' => "<em>$account->mail</em>")));
         return t('Your password and further instructions have been sent to your e-mail address.');
       }
       else {
-        watchdog('error', t('Error mailing password to %name at %e-mail.', array('%name' => "<em>$account->name</em>", '%e-mail' => "<em>$account->mail</em>")));
+        watchdog('error', t('Error mailing password to %name at %email.', array('%name' => "<em>$account->name</em>", '%email' => "<em>$account->mail</em>")));
         return t('Unable to send mail. Please contact the site admin.');
       }
     }
@@ -926,7 +926,7 @@ function user_register($edit = array()) {
       // TODO: Is this necessary? Won't session_write() replicate this?
       unset($edit['session']);
       $account = user_save('', array_merge(array('name' => $edit['name'], 'pass' => $pass, 'init' => $edit['mail'], 'mail' => $edit['mail'], 'roles' => array(_user_authenticated_id()), 'status' => (variable_get('user_register', 1) == 1 ? 1 : 0)), $edit));
-      watchdog('user', t('New user: %name %e-mail.', array('%name' => '<em>'. $edit['name'] .'</em>', '%e-mail' => '<em>&lt;'. $edit['mail'] .'&gt;</em>')), l(t('edit'), 'user/'. $account->uid .'/edit'));
+      watchdog('user', t('New user: %name %email.', array('%name' => '<em>'. $edit['name'] .'</em>', '%email' => '<em>&lt;'. $edit['mail'] .'&gt;</em>')), l(t('edit'), 'user/'. $account->uid .'/edit'));
 
       $variables = array('%username' => $edit['name'], '%site' => variable_get('site_name', 'drupal'), '%password' => $pass, '%uri' => $base_url, '%uri_brief' => substr($base_url, strlen('http://')), '%mailto' => $edit['mail'], '%date' => format_date(time()), '%login_uri' => url('user', NULL, NULL, TRUE), '%edit_uri' => url('user/'. $account->uid .'/edit', NULL, NULL, TRUE));
 
@@ -1030,10 +1030,10 @@ function user_edit_validate($uid, &$edit) {
     form_set_error('mail', $error);
   }
   else if (db_num_rows(db_query("SELECT uid FROM {users} WHERE uid != %d AND LOWER(mail) = LOWER('%s')", $uid, $edit['mail'])) > 0) {
-    form_set_error('mail', t('The e-mail address %e-mail is already taken.', array('%e-mail' => '<em>'. $edit['mail'] .'</em>')));
+    form_set_error('mail', t('The e-mail address %email is already taken.', array('%email' => '<em>'. $edit['mail'] .'</em>')));
   }
   else if (user_deny('mail', $edit['mail'])) {
-    form_set_error('mail', t('The e-mail address %e-mail has been denied access.', array('%e-mail' => '<em>'. $edit['mail'] .'</em>')));
+    form_set_error('mail', t('The e-mail address %email has been denied access.', array('%email' => '<em>'. $edit['mail'] .'</em>')));
   }
 
   // Validate the roles
@@ -1250,7 +1250,7 @@ function user_admin_create($edit = array()) {
     user_module_invoke('validate', $edit, $edit, 'account');
 
     if (!form_get_errors()) {
-      watchdog('user', t('New user: %name %e-mail.', array('%name' => '<em>'. $edit['name'] .'</em>', '%e-mail' => '<em>&lt;'. $edit['mail'] .'&gt;</em>')));
+      watchdog('user', t('New user: %name %email.', array('%name' => '<em>'. $edit['name'] .'</em>', '%email' => '<em>&lt;'. $edit['mail'] .'&gt;</em>')));
 
       user_save('', array('name' => $edit['name'], 'pass' => $edit['pass'], 'init' => $edit['mail'], 'mail' => $edit['mail'], 'roles' => $edit['roles'], 'status' => 1));
 
@@ -1568,7 +1568,7 @@ function user_help($section) {
     case 'admin/user/account/create':
       return t('This web page allows the administrators to register a new users by hand.  Note that you cannot have a user where either the e-mail address or the username match another user in the system.');
     case 'admin/user/configure/access':
-      return t('Access rules allow Drupal administrators to choose usernames and e-mail address that are prevented from using drupal. To enter the mask for e-mail addresses click on <a href="%e-mail">e-mail rules</a>, for the username mask click on <a href="%username">name rules</a>.', array('%e-mail' => url('admin/user/configure/access/mail'), '%username' => url('admin/user/configure/access/user')));
+      return t('Access rules allow Drupal administrators to choose usernames and e-mail address that are prevented from using drupal. To enter the mask for e-mail addresses click on <a href="%email">e-mail rules</a>, for the username mask click on <a href="%username">name rules</a>.', array('%email' => url('admin/user/configure/access/mail'), '%username' => url('admin/user/configure/access/user')));
     case 'admin/user/configure/access/mail':
       return t('Setup and test the e-mail access rules. The access function checks if you match a deny and not an allow. If you match <strong>only</strong> a deny then it is denied. Any other case, such as both a deny and an allow pattern matching, allows the pattern.');
     case 'admin/user/configure/access/user':
