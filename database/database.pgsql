@@ -545,6 +545,7 @@ CREATE TABLE vocabulary (
   vid SERIAL,
   name varchar(255) NOT NULL default '',
   description text default '',
+  help varchar(255) NOT NULL default '',
   relations smallint NOT NULL default '0',
   hierarchy smallint NOT NULL default '0',
   multiple smallint NOT NULL default '0',

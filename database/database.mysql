@@ -595,6 +595,7 @@ CREATE TABLE vocabulary (
   vid int(10) unsigned NOT NULL auto_increment,
   name varchar(255) NOT NULL default '',
   description longtext,
+  help varchar(255) NOT NULL default '',
   relations tinyint(3) unsigned NOT NULL default '0',
   hierarchy tinyint(3) unsigned NOT NULL default '0',
   multiple tinyint(3) unsigned NOT NULL default '0',

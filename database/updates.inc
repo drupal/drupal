@@ -1,5 +1,5 @@
 <?php
-/* $Id: updates.inc,v 1.9 2004/04/24 07:50:39 dries Exp $ */
+/* $Id: updates.inc,v 1.10 2004/04/24 16:42:39 dries Exp $ */
 
 // Define the various updates in an array("date : comment" => "function");
 $sql_updates = array(
@@ -54,7 +54,8 @@ $sql_updates = array(
   "2004-03-11: first update since Drupal 4.4.0 release" => "update_80",
   "2004-02-20" => "update_81",
   "2004-02-27" => "update_82",
-  "2004-04-15" => "update_83"
+  "2004-04-15" => "update_83",
+  "2004-04-21" => "update_84"
 );
 
 function update_32() {
@@ -915,6 +916,17 @@ function update_83() {
       PRIMARY KEY  (mid)
      );");
     $ret[] = update_sql("INSERT INTO sequences (name, id) VALUES ('menu_mid', 1)");
+  }
+  else {
+    /* Needs PostgreSQL equivalent */
+  }
+  return $ret;
+}
+
+function update_84() {
+  $ret = array();
+  if ($GLOBALS["db_type"] == "mysql") {
+    $ret[] = update_sql("ALTER TABLE vocabulary ADD help VARCHAR(255) NOT NULL DEFAULT '' AFTER description;");
   }
   else {
     /* Needs PostgreSQL equivalent */
