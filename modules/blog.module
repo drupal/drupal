@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.164 2004/01/30 13:13:21 kjartan Exp $
+// $Id: blog.module,v 1.165 2004/02/02 01:55:08 unconed Exp $
 
 function blog_settings() {
   $output = form_textarea(t("Explanation or submission guidelines"), "blog_help", variable_get("blog_help", ""), 70, 4, t("This text is displayed at the top of the blog submission form.  It's useful for helping or instructing your users."));
@@ -62,7 +62,7 @@ function blog_help($section) {
       $output .= t("Enables keeping a blog or easily and regularly updated web page.");
       break;
     case 'admin/system/modules/blog':
-      $output .= t("A weblog is a running journal of a users ideas.  Enter the minimum word count for a single entry, and the text displayed on the entry submission form");
+      $output .= t("A weblog is a running journal of a user's ideas.  Enter the minimum word count for a single entry, and the text displayed on the entry submission form");
       break;
     case 'node/add/blog':
       $output = variable_get('blog_help', '');
