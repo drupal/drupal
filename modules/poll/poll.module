@@ -8,7 +8,7 @@ class Poll {
     $this->voters = $poll[voters];
     $this->choice = $poll[choice];
     $this->chvotes = $poll[chvotes];
-    $this->chid = $poll[chid];    
+    $this->chid = $poll[chid];
   }
 }
 
@@ -92,7 +92,7 @@ function poll_view($node, $main = 0, $block = 0) {
 
   if (($node->active) && (!field_get($node->voters, $user->userid))) $voting = 1;
   if ((!$voting) && ($op != "View")) $op = "View";
-  
+
   switch ($op) {
     case "Vote":
       if (($node->active) && (!field_get($node->voters, $user->userid))) {
@@ -104,15 +104,15 @@ function poll_view($node, $main = 0, $block = 0) {
           $node = node_get_object(array("nid" => $node->nid));
         }
       }
-      
+
     case "View":
       $node = poll_get_choices_obj($node);
-      
+
       $title = "<b>" . check_output($node->title) . "</b>";
       $footer = "<small>(" . format_plural($node->totalvotes ? $node->totalvotes : 0, "vote", "votes") . ")</small>";
-      
+
       $node->totalvotes = max(1, $node->totalvotes);
-      
+
       if (!$block) $output .= "<small>Posted by " . format_username($node->userid) . " on " . format_date($node->timestamp, "large") . "</small><br>\r\n";
       foreach ($node->choice as $key => $value) {
         if ($value) {
@@ -127,16 +127,16 @@ function poll_view($node, $main = 0, $block = 0) {
       $output .= "<div align=\"center\">" . $footer . "</div>";
       break;
 
-    default:  
+    default:
       $node = poll_get_choices_obj($node);
 
       $title = "<b>" . check_output($node->title) . "</b>";
       $footer = "<small>(" . format_plural($node->totalvotes ? $node->totalvotes : 0, "vote", "votes") . ")</small>";
-      
+
       $node->totalvotes = max(1, $node->totalvotes);
 
       if (!$block) $output .= "<small>Posted by " . format_username($node->userid) . " on " . format_date($node->timestamp, "large") . "</small><br><br>\r\n";
-      $output .= "<table align=\"center\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\"><tr><td align=\"left\">"; 
+      $output .= "<table align=\"center\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\"><tr><td align=\"left\">";
       foreach ($node->choice as $key => $value) {
         if ($value) {
           $output .= "<input type=\"radio\" name=\"chid\" value=\"" . $node->chid[$key] . "\">&nbsp;" . check_output($value) . "<br>\r\n";
@@ -148,7 +148,7 @@ function poll_view($node, $main = 0, $block = 0) {
    }
 
    if (!$block) $theme->box($title, $output);
-   return array("title" => $title, "content" => $output);   
+   return array("title" => $title, "content" => $output);
 }
 
 function poll_form($edit = array(), $nocheck = 0) {
@@ -157,12 +157,12 @@ function poll_form($edit = array(), $nocheck = 0) {
   $duration = array(0 => t("Unlimited"), 86400 => t("1 day"), 172800 => t("2 days"), 345600 => t("4 days"),
                     604800 => t("1 week"), 1209600 => t("2 weeks"), 2678400 => t("1 month"), 5356800 => t("2 months"),
                     10713600 => t("4 months"), 31536000 => t("1 year"));
-  
-  $active = array(0 => "Closed", 1 => "Active");
-                    
-  $admin = ($edit[nid] && user_access($user,"poll")) ? 1 : 0; 
 
-  /* Mini-form for number of choiceboxes */  
+  $active = array(0 => "Closed", 1 => "Active");
+
+  $admin = ($edit[nid] && user_access($user,"poll")) ? 1 : 0;
+
+  /* Mini-form for number of choiceboxes */
   $choices = $edit[choices]?$edit[choices]:5;
   for ($c = 2; $c <= 20; $c++) $opts[$c]=$c;
   $form .= form_select(t("Number of choices"), "choices", $choices, $opts, t("This box specifies the number of choiceboxes in this form, it doesn't affect the actual amount of choices in the poll."));
@@ -172,22 +172,22 @@ function poll_form($edit = array(), $nocheck = 0) {
   $form .= form_item(t("Your name"), format_username(($edit[userid] ? $edit[userid] : $user->userid)));
   $form .= form_hidden("userid", $edit[userid]);
   $form .= form_textfield(t("Question"), "title", $edit[title], 50, 127);
-  
+
   for ($a = 0; $a < $choices; $a++) {
     $form .= form_textfield(t("Choice"). " " . ($a + 1), "choice][$a", $edit[choice][$a], 50, 127);
-    if ($admin) $form .= form_textfield(strtr(t("Votes for choice %n"), array("%n" => ($a + 1))), "chvotes][$a", $edit[chvotes][$a] ? $edit[chvotes][$a] : 0, 7, 7);    
+    if ($admin) $form .= form_textfield(strtr(t("Votes for choice %n"), array("%n" => ($a + 1))), "chvotes][$a", $edit[chvotes][$a] ? $edit[chvotes][$a] : 0, 7, 7);
   }
-  
+
   $form .= form_select(t("Poll duration"), "runtime", $edit[runtime] ? $edit[runtime] : t("1 week"), $duration, t("After this period, the poll will automatically be closed."));
-  if ($admin) $form .= form_select(t("Poll status"), "active", $edit[active], $active);    
+  if ($admin) $form .= form_select(t("Poll status"), "active", $edit[active], $active);
   $form .= structure_form("poll", $edit);
-  
+
 
   // hidden fields:
   if ($edit[nid] > 0) {
     $form .= form_hidden("nid", $edit[nid]);
   }
-  
+
   if ((!$edit) || ($nocheck)) {
     $form .= form_submit(t("Preview"));
   }
@@ -214,20 +214,20 @@ function poll_save($edit) {
     $nid = node_save($edit, array(active => 1, author => $user->id, cid, comment => category_comment($edit[cid]), moderate => topic_moderate($edit[tid]), promote => category_promote($edit[cid]), runtime, score => 0, status => (category_submission($edit[cid]) ? $status[queued] : $status[posted]), tid, timestamp => time(), title, type => "poll", votes => 0, voters => ""));
   }
   else if (user_access($user)) {
-    $nid = node_save($edit, array(active, cid, tid, runtime, title, type => "poll"));    
-    db_query("DELETE FROM poll_choices WHERE nid='" . $nid . "'"); 
+    $nid = node_save($edit, array(active, cid, tid, runtime, title, type => "poll"));
+    db_query("DELETE FROM poll_choices WHERE nid='" . $nid . "'");
   }
   if ($nid) {
     foreach ($edit[choice] as $key => $value) {
       if ($value) {
         $v[] = "('" . $nid . "', '" . check_input($value) . "', '". check_input($edit[votes][$key]) ."', '". check_input($key) ."')";
-      } 
+      }
     }
     db_query("INSERT INTO poll_choices (nid, chtext, chvotes, chorder) VALUES " . implode(",", $v));
   }
 }
 
-function poll_block() {  
+function poll_block() {
   $poll = node_get_object(array("type" => "poll", "active" => 1));
   if ($poll) {
     $poll = poll_view($poll, 0, 1);

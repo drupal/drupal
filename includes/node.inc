@@ -4,13 +4,19 @@ $status = array(dumped => 0, expired => 1, queued => 2, posted => 3);
 $rstatus = array(0 => dumped, 1 => expired, 2 => queued, 3 => posted);
 
 function _node_get($conditions) {
-  foreach ($conditions as $key => $value) { 
-    $where[] = "$key = '$value'";
-	$nwhere[] = "n.$key = '$value'";
+  foreach ($conditions as $key=>$value) $cond[] = "n.$key = '$value'";
+  $where = implode(" AND ", $cond);
+
+  if ($conditions[type]) {
+    $type = $conditions[type];
   }
-  $result = db_query("SELECT lid, type FROM node WHERE " . implode(", ", $where));
-  if ($node = db_fetch_object($result)) {
-    return db_query("SELECT n.*, l.*, u.userid FROM node n LEFT JOIN $node->type l ON n.lid = l.lid AND n.nid = l.nid LEFT JOIN users u ON n.author = u.id WHERE " . implode(", ", $nwhere) . " ORDER BY n.timestamp DESC");
+  else {
+    $node = db_fetch_object(db_query("SELECT n.type FROM node n WHERE $where"));
+    $type = $node ? $node->type : 0;
+  }
+
+  if ($type) {
+    return db_query("SELECT n.*, l.*, u.userid FROM node n LEFT JOIN $type l ON n.lid = l.lid AND n.nid = l.nid LEFT JOIN users u ON n.author = u.id WHERE $where ORDER BY n.timestamp DESC");
   }
 }
 
@@ -41,7 +47,7 @@ function node_del($conditions) {
   global $status;
   if ($node = node_get_object($conditions)) {
     if ($node->status == $status[dumped]) {
-	  module_invoke($node->type, "delete", $node);
+      module_invoke($node->type, "delete", $node);
       db_query("DELETE FROM node WHERE nid = '$node->nid'");
       db_query("DELETE FROM $node->type WHERE lid = '$node->lid' AND nid = '$node->nid'");
       db_query("DELETE FROM comments WHERE lid = '$node->nid'");
