@@ -476,14 +476,19 @@ function rewrite_old_urls($text) {
   /*
   ** This is a *temporary* filter to rewrite old-style URLs to new-style
   ** URLs (clean URLs).  Currently, URLs are being rewritten dynamically
-  ** (ie. "on output"), however When these rewrite rules have been tested
-  ** enough, we will use them to permanently rewrite the links in node 
+  ** (ie. "on output"), however when these rewrite rules have been tested
+  ** enough, we will use them to permanently rewrite the links in node
   ** and comment bodies.
   */
 
-  // rewrite 'node.php?id=<number>[&cid=<number>]'
+  // rewrite 'node.php?id=<number>[&cid=<number>]' style URLs:
   $text = eregi_replace("(node)\.php\?id=([[:digit:]]+)(&cid=)?([[:digit:]]*)", "?q=\\1/view/\\2/\\4", $text);
-
+  
+  // rewrite 'module.php?mod=<name>{&<op>=<value>}' style URLs: 
+  $text = ereg_replace("module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "?q=\\2/\\4/\\6" , $text);
+  $text = ereg_replace("module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "?q=\\2/\\4" , $text);
+  $text = ereg_replace("module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))", "?q=\\2" , $text);
+  
   return $text;
 }
 
