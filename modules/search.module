@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.13 2002/03/05 20:15:17 kjartan Exp $
+// $Id: search.module,v 1.14 2002/04/05 18:11:42 kjartan Exp $
 
 function search_help() {
   $output = "<b>". t("Search hints") ."</b>";
@@ -408,7 +408,7 @@ function search_view() {
     }
 
     $theme->footer();
-	}
+  }
   else {
     $theme->header();
     $theme->box(t("Access denied"), message_access());
