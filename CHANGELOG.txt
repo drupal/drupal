@@ -5,7 +5,7 @@ Drupal x.x.x, xxxx-xx-xx
     * made it possible to administere profile fields.
     * made it possible to browse the profiles by field.
 
-Drupal 4.4.0, xxxx-xx-xx (release candidate)
+Drupal 4.4.0, 2004-04-01 (release candidate)
 --------------------------------------------
 
 - added support for the MetaWeblog API and MovableType extensions.
