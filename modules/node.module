@@ -127,14 +127,6 @@ function node_teaser($body) {
   }
 
   /*
-  ** If we have a short body, return the entire body:
-  */
-
-  if (strlen($body) < $size) {
-    return $body;
-  }
-
-  /*
   ** If a valid delimiter has been specified, use it to
   ** chop of the teaser.  The delimiter can be outside
   ** the allowed range but no more than a factor two.
@@ -143,6 +135,14 @@ function node_teaser($body) {
   $delimiter = strpos($body, "<!--break-->");
   if ($delimiter > 0) {
     return substr($body, 0, $delimiter);
+  }
+
+  /*
+  ** If we have a short body, return the entire body:
+  */
+
+  if (strlen($body) < $size) {
+    return $body;
   }
 
   /*
