@@ -617,6 +617,7 @@ function import_page_fd() {
   $result = db_query("SELECT * FROM feed ORDER BY title");
 
   $output .= "<?xml version=\"1.0\"?>\n\n";
+  $output .= "<rssfeeds version=\"0.1\">\n\n";
 
   while ($feed = db_fetch_object($result)) {
     $output .= "<channel>\n";
@@ -624,6 +625,8 @@ function import_page_fd() {
     $output .= " <link>". htmlentities($feed->url) ."</link>\n";
     $output .= "</channel>\n\n";
   }
+
+  $output .= "</rssfeeds>\n";
 
 
   print $output;
