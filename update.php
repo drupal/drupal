@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.133 2004/02/21 22:38:01 kjartan Exp $
+// $Id: update.php,v 1.134 2004/02/23 14:39:20 unconed Exp $
 /*
 ** USAGE:
 **
@@ -60,7 +60,7 @@ $mysql_updates = array(
   "2003-10-20" => "update_68",
   "2003-10-22" => "update_69",
   "2003-10-27" => "update_70",
-  "2003-11-17" => "update_71",
+  "2003-11-17: first update since Drupal 4.3.0 release" => "update_71",
   "2003-11-27" => "update_72",
   "2003-12-03" => "update_73",
   "2003-12-06" => "update_74",
