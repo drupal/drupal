@@ -255,7 +255,7 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
       db_query('INSERT INTO {node_comment_statistics} (nid, cid, last_comment_timestamp, last_comment_name, last_comment_uid, comment_count) VALUES (%d, 0, %d, NULL, %d, 0)', $node->nid, $node->created, $node->uid);
       break;
     case 'update':
-      db_queryd('UPDATE {node_comment_statistics} SET last_comment_timestamp = %d WHERE nid = %d AND cid = 0', $node->changed, $node->nid);
+      db_query('UPDATE {node_comment_statistics} SET last_comment_timestamp = %d WHERE nid = %d AND cid = 0', $node->changed, $node->nid);
       break;
     case 'delete':
       db_query('DELETE FROM {comments} WHERE nid = %d', $node->nid);
