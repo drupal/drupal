@@ -86,12 +86,12 @@ function poll_form(&$node, &$help, &$error) {
       }
 
       if ($node->chvotes[$i] < 0) {
-        $error["chvotes][$i"] = "<span style=\"color: red;\">". t("Negative values are not allowed.") ."</span>";
+        $error["chvotes][$i"] = theme_invoke("theme_error", t("Negative values are not allowed."));
       }
     }
 
     if ($actualchoices < 2) {
-      $error["choice][0"] = "<span style=\"color: red;\">". t("You must fill in at least two choices.") ."</span>";
+      $error["choice][0"] = theme_invoke("theme_error", t("You must fill in at least two choices."));
     }
   }
   else {
@@ -125,7 +125,8 @@ function poll_form(&$node, &$help, &$error) {
 }
 
 function poll_help() {
- ?><p>Drupal's poll module allows users with at least content posting privileges to submit multiple-choice questions that others can vote on.  Any user with sufficient privileges can vote.  Please note that this is fully controlled by Drupal's access control features.  For example, users might be required to login before voting (or even seeing the page where the voting occurs) or it could be open to the world.</p>
+ ?>
+  <p>Drupal's poll module allows users with at least content posting privileges to submit multiple-choice questions that others can vote on.  Any user with sufficient privileges can vote.  Please note that this is fully controlled by Drupal's access control features.  For example, users might be required to login before voting (or even seeing the page where the voting occurs) or it could be open to the world.</p>
  <?php
 }
 

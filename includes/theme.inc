@@ -75,6 +75,21 @@ class BaseTheme {
 
 }
 
+function theme_mark() {
+  /*
+  ** Return a marker.  Used to indicate new comments or required form
+  ** fields.
+  */
+  return "<span style=\"color: red;\">*</span>";
+}
+
+function theme_error($message) {
+  /*
+  ** Return an error message.
+  */
+  return "<div style=\"color: red;\">$message</div>";
+}
+
 function theme_list() {
   static $list;
 
@@ -125,12 +140,12 @@ function theme_blocks($region, &$theme) {
 function theme_invoke() {
   global $theme;
   $args = func_get_args();
-  
+
   $function = array_shift($args);
 
   if (method_exists($theme, $function)) {
     return call_user_method_array($function, $theme, $args);
-  } 
+  }
   else {
     return call_user_func_array($function, $args);
   }

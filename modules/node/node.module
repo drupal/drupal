@@ -727,7 +727,7 @@ function node_validate($node, &$error) {
   */
 
   if (isset($node->title) && !$node->title) {
-    $error["title"] = "<div style=\"color: red;\">". t("You have to specify a valid title.") ."</div>";
+    $error["title"] = theme_invoke("theme_error", t("You have to specify a valid title."));
   }
 
   if (user_access("administer nodes")) {
@@ -760,7 +760,7 @@ function node_validate($node, &$error) {
       $node->uid = $account->uid;
     }
     else {
-      $error["name"] = "<div style=\"color: red;\">". t("The name '%u' does not exist.", array ("%u" => $node->name)) ."</div>";
+      $error["name"] = theme_invoke("theme_error", t("The name '%u' does not exist.", array ("%u" => $node->name)));
     }
 
     /*
@@ -771,7 +771,7 @@ function node_validate($node, &$error) {
       $node->created = strtotime($node->date);
     }
     else {
-      $error["date"] = "<div style=\"color: red;\">". t("You have to specifiy a valid date.") ."</div>";
+      $error["date"] = theme_invoke("theme_error", t("You have to specifiy a valid date."));
     }
 
   }
@@ -933,7 +933,7 @@ function node_add($type) {
       if ($edit[$field]) {
         $node[$field] = check_input($edit[$field]);
       }
-    }     
+    }
     $output = node_form($node);
   }
   else {
