@@ -309,12 +309,13 @@ function system_theme_data() {
   // Remove all theme engines from the system table
   db_query("DELETE FROM {system} WHERE type = 'theme_engine'");
 
-  // Add templates to the site listing
   foreach ($engines as $engine) {
+    // Insert theme engine into system table
     drupal_get_filename('theme_engine', $engine->name, $engine->filename);
     drupal_load('theme_engine', $engine->name);
     db_query("INSERT INTO {system} (name, type, filename, status, throttle, bootstrap) VALUES ('%s', '%s', '%s', %d, %d, %d)", $engine->name, 'theme_engine', $engine->filename, 1, 0, 0);
 
+    // Add templates to the site listing
     foreach (call_user_func($engine->name . '_templates') as $template) {
       $template->template = TRUE;
       $template->name = basename(dirname($template->filename));
@@ -322,6 +323,12 @@ function system_theme_data() {
       $template->description = dirname($template->filename);
       $template->owner = $engine->filename;
       $template->prefix = $engine->name;
+      // do not double-insert templates with theme files in their directory
+      foreach ($themes as $theme) {
+        if (dirname($template->filename) == dirname($theme->filename)) {
+          continue 2;
+        }
+      }
       $themes[$template->name] = $template;
     }
   }
@@ -332,10 +339,11 @@ function system_theme_data() {
       // do not double-insert themes with css files in their directory
       if (dirname($style->filename) != dirname($theme->filename)) {
         $style->style = TRUE;
+        $style->template = $theme->template;
         $style->name = basename(dirname($style->filename));
         $style->description = dirname($style->filename);
         $style->owner = $theme->filename;
-        $style->prefix = $theme->name;
+        $style->prefix = $theme->template ? $theme->prefix : $theme->name;
         $themes[$style->name] = $style;
       }
     }
@@ -674,11 +682,13 @@ function system_theme_settings() {
     $function = $themes[$key]->prefix .'_settings';
     if (function_exists($function)) {
       $group = $function();
-      if (strpos($themes[$key]->description, '.theme') || ($themes[$key]->description == '')) {
-        $form .= form_group(t('Theme-specific settings'), $group, t('These settings only exist for the %theme theme and all the styles based on it.', array('%theme' => $themes[$key]->prefix)));
+      if ($themes[$key]->template) {
+        // file is a template or a style of a template
+        $form .= form_group(t('Engine-specific settings'), $group, t('These settings only exist for all the templates and styles based on the %engine theme engine.', array('%engine' => $themes[$key]->prefix)));
       }
       else {
-        $form .= form_group(t('Engine-specific settings'), $group, t('These settings only exist for all the templates and styles based on the %engine theme engine.', array('%engine' => $themes[$key]->prefix)));
+        // file is a theme or a style of a theme
+        $form .= form_group(t('Theme-specific settings'), $group, t('These settings only exist for the %theme theme and all the styles based on it.', array('%theme' => $themes[$key]->prefix)));
       }
     }
   }
