@@ -1,4 +1,4 @@
-/* $Id: xtemplate.css,v 1.15 2004/07/25 22:18:31 unconed Exp $ */
+/* $Id: xtemplate.css,v 1.16 2004/08/10 22:55:50 unconed Exp $ */
 
 /*
 ** HTML elements
@@ -62,6 +62,9 @@ table {
 }
 .links {
   margin-bottom: 2em;
+}
+.comment .links {
+  margin-bottom: 0em;
 }
 
 /*
