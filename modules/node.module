@@ -1165,7 +1165,7 @@ function node_feed($nodes = 0, $channel = array()) {
   }
 
   $channel_defaults = array(
-    'version'     => '0.92',
+    'version'     => '2.0',
     'title'       => variable_get('site_name', 'drupal') .' - '. variable_get('site_slogan', ''),
     'link'        => $base_url,
     'description' => variable_get('site_mission', ''),

@@ -10,6 +10,8 @@ Drupal x.x.x, xxxx-xx-xx
     * added search block.
 - syndication:
     * made the ping module ping pingomatic.com which, in turn, will ping all the major ping services.
+    * made Drupal generete RSS 2.0 feeds.
+    * made RSS feeds extensible.
     * added categories to RSS feeds.
     * added enclosures to RSS feeds.
 - flood control mechanism:
