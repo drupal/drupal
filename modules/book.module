@@ -258,8 +258,9 @@ function book_export_html($parent = "", $depth = 0) {
 }
 
 function book_export($uri) {
-  if ($uri[2] == "book") {
-    print book_export_html($uri[3], $depth = 1);
+  $uri = explode("&", $uri);
+  if ($uri[0] == "book") {
+    print book_export_html($uri[1], $depth = 1);
   }
 }
 
