@@ -2,103 +2,76 @@
 // $Id$
 
 function tracker_help() {
-  $output .= "<p>The tracker module is a handy module for displaying the most recent comments happenning all over your web site.  By following the <i>view new comments</i> link in the user block, a user may quickly review all recent comments.  When a user first arrives at the main tracker page, she sees all recent comments in reverse chronological order, grouped by post.  In addition, a self-centered user may choose to display only his own comments.</p>";
+  $output .= "<p>The tracker module is a handy module for displaying the most recent posts.  By following the <i>view recent posts</i> link in the user block, a user may quickly review all recent postings.</p>";
   return $output;
 }
 
 function tracker_system($field){
-  $system["description"] = t("Enables tracking of recent and new comments for users.");
+  $system["description"] = t("Enables tracking of recent posts for users.");
   return $system[$field];
 }
 
 function tracker_link($type) {
 
-  if ($type == "menu.view" && user_access("access comments")) {
-    $links[] = l(t("view new comments"), "tracker", array("title" => t("Display an overview of the recent comments.")));
+  if ($type == "menu.view" && user_access("access content")) {
+    $links[] = l(t("view recent posts"), "tracker", array("title" => t("Display an overview of the recent posts.")));
   }
 
   return $links ? $links : array();
 }
 
-function tracker_settings() {
-  $period = array(3600 => format_interval(3600), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200), 1000000000 => "All");
-  $output .= form_select("Show comments more recent than", "tracker_period", variable_get("tracker_period", 259200), $period, "Comments younger than this get displayed.");
-  return $output;
-}
-
-function tracker_comments($id = 0) {
-  $period = time() - variable_get("tracker_period", 259200);  // all comments of the past 3 days if not configured to a different value
+function tracker_posts($id = 0) {
 
   if ($id) {
-    $sresult = db_query("SELECT n.nid, n.title, COUNT(n.nid) AS comments, MAX(c.timestamp) AS last_comment FROM comments c LEFT JOIN node n ON c.nid = n.nid WHERE c.status = 0 AND c.timestamp > $period AND c.uid = '%s' GROUP BY n.nid, n.title ORDER BY last_comment DESC LIMIT 10", $id);
+    $sresult = db_query_range("SELECT n.nid, n.title, n.type, n.changed, n.uid, u.name, GREATEST(n.changed, c.timestamp) AS last_activity FROM node n LEFT JOIN comments c ON n.nid = c.nid LEFT JOIN users u ON n.uid = u.uid WHERE n.uid = '". check_query($id) ."' AND n.status = 1 GROUP BY n.nid, n.title, n.type, n.changed, n.nid, u.name ORDER BY last_activity DESC", 0, 15);
   }
   else {
-    $sresult = db_query("SELECT n.nid, n.title, COUNT(n.nid) AS comments, MAX(c.timestamp) AS last_comment FROM comments c LEFT JOIN node n ON c.nid = n.nid WHERE c.status = 0 AND c.timestamp > $period GROUP BY n.nid, n.title ORDER BY last_comment DESC LIMIT 10");
+    $sresult = db_query_range("SELECT n.nid, n.title, n.type, n.changed, n.uid, u.name, GREATEST(n.changed, c.timestamp) AS last_activity FROM node n LEFT JOIN comments c ON n.nid = c.nid LEFT JOIN users u ON n.uid = u.uid WHERE n.status = 1 GROUP BY n.nid, n.title, n.type, n.changed, n.nid, u.name ORDER BY last_activity DESC", 0, 15);
   }
 
   while ($node = db_fetch_object($sresult)) {
-    $output .= format_plural($node->comments, "1 comment", "%count comments") ." ". t("attached to node") ." ". l($node->title, "node/view/$node->nid") .":\n";
-
     if ($id) {
-      $cresult = db_query("SELECT c.*, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.timestamp > %d AND c.uid = '%d' AND c.nid = '%d' AND c.status = 0 ORDER BY cid DESC", $period, $id, $node->nid);
+      $cresult = db_query("SELECT c.*, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.timestamp > %d AND c.uid = '%d' AND c.nid = '%d' AND c.status = 0 ORDER BY cid DESC", time() - 259200, $id, $node->nid);
     }
     else {
-      $cresult = db_query("SELECT c.*, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.timestamp > %d AND c.nid = '%d'AND c.status = 0 ORDER BY cid DESC", $period, $node->nid);
+      $cresult = db_query("SELECT c.*, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.timestamp > %d AND c.nid = '%d' AND c.status = 0 ORDER BY cid DESC", time() - 259200, $node->nid);
     }
 
-    $output .= "<ul>";
+    $title = l($node->title, "node/view/$node->nid") ." ". (node_is_new($node->nid, $node->changed) ? theme("theme_mark") : "");
+    $type = module_invoke($node->type, "node", "name");
+
+    $comments = array();
     while ($comment = db_fetch_object($cresult)) {
-      $output .= " <li>". l($comment->subject, "node/view/$node->nid#$comment->cid") ." ". t("by") ." ". format_name($comment) ." (". t("replies") .": ". comment_num_replies($comment->cid) .") ". (comment_is_new($comment) ? theme("theme_mark") : "") ."</li>\n";
+      $comments[] = "<li>". l($comment->subject, "node/view/$node->nid#$comment->cid") ." ". t("by") ." ". format_name($comment) ." ". (node_is_new($comment->nid, $comment->timestamp) ? theme("theme_mark") : "") ."</li>\n";
     }
-    $output .= " </ul>\n";
+
+    $output .= "<p>". t("%type %title by %author", array("%type" => ucfirst($type), "%title" => $title, "%author" => format_name($node))) ."</p>";
+
+    if ($comments) {
+      $output .= "<ul>". implode("\n", $comments) ."</ul>";
+    }
   }
 
   return $output;
-}
-
-function tracker_menu() {
-  global $user;
-
-  $links[] = l(t("your recent comments"), "tracker/$user->uid", array("title" => t("Display an overview of your recent comments.")));
-  $links[] = l(t("all recent comments"), "tracker", array("title" => t("Display an overview of all the recent comments.")));
-
-  return "<div align=\"center\">". implode(" &middot; ", $links) ."</div>";
-}
-
-
-function tracker_page() {
-  global $user;
-
-  if (user_access("access comments")) {
-    if (arg(1) == $user->uid) {
-      theme("header", t("Your recent comments"));
-      theme("box", t("Tracker"), tracker_menu());
-      theme("box", t("Your recent comments"), tracker_comments(arg(1)));
-      theme("footer");
-    }
-    else if (arg(1)) {
-      $account = user_load(array("uid" => arg(1)));
-      theme("header", t("%u's recent comments", array("%u" => $account->name)));
-      theme("box", t("Tracker"), tracker_menu());
-      theme("box", t("%u's recent comments", array("%u" => $account->name)), tracker_comments(arg(1)));
-      theme("footer");
-    }
-    else {
-      theme("header", t("All recent comments"));
-      theme("box", t("Tracker"), tracker_menu());
-      theme("box", t("All recent comments"), tracker_comments());
-      theme("footer");
-    }
-  }
 }
 
 function tracker_user($type, &$edit, &$user) {
   switch ($type) {
     case "view_public":
-    case "view_private":
-      if (user_access("access comments")) {
-        return form_item(t("Comments"), l(t("view recent comments"), "tracker/$user->uid", array("title" => t("View recent comments."))));
+      if (user_access("access content")) {
+        return form_item(t("Recent posts"), l(t("view recent posts"), "tracker/$user->uid"));
       }
   }
 }
+
+function tracker_page() {
+  global $user;
+
+  if (user_access("access content")) {
+    theme("header", t("Recent activity"));
+    theme("box", t("Recent activity"), tracker_posts(arg(1)));
+    theme("footer");
+  }
+}
+
 ?>

@@ -8,7 +8,7 @@ function comment_help() {
   $output .= "<p>The comment module enables users to submit posts that are directly associated with a piece of content.  These associated posts are called <i>comments</i>.  Comments may be <i>threaded</i>, which means that Drupal keeps track of multiple subconversations around a piece of content.  Threading helps to keep the comment conversation more organized.  Users are presented with several ways to view the comment conversation, and if desired, users may easily choose a <i>flat</i> presentation of comments instead of threaded.  Further, users may choose to order their comments view by <i>newest first</i> or by <i>oldest first</i>.  Finally, users may view a folded list or an expanded list of comments.  Folded limits the comment display to <i>subject</i> only.  Drupal remembers the comment view preference of each registered user whenever he changes a view setting.</p>";
   $output .= "<p>Users may also choose to view a maximum number of comments; if there are more comments, navigation links are dispayed.</p>";
   $output .= "<p>Since a busy site generates lots of comments, Drupal takes care to present a personalized view of comments for each user.  The home page lists displays the number of read and unread comments for a given post for the current user.  Also, the tracker module (when installed) displays all recent comments on the site.  Finally, comments which the user has not yet read are highlighted with a red star (this graphic may depend on the current theme).</p>";
-  $output .= "<p>Comments behave like other user submissions in Drupal.  Specifically, ". l("filters", "admin/system&amp;type=filter") ." like smileys and HTML work fine if the administrator has enabled them.  Also, throttles are usually enabled to prevent a single user from spamming the web site with too many comments in a short period of time.</p>";
+  $output .= "<p>Comments behave like other user submissions in Drupal.  Specifically, ". l("filters", "admin/system/filters") ." like smileys and HTML work fine if the administrator has enabled them.  Also, throttles are usually enabled to prevent a single user from spamming the web site with too many comments in a short period of time.</p>";
   $output .= "<p>Administrators may control which persons are allowed to submit and administer comments.  These controls appear in the ". l("user permissions", "admin/user/permission") ." administration page.  Additionally, administrators may edit or search through comments on the ". l("comments admininistration page", "admin/comment") .", as well as set the default display view for new users. Administrators can also state whether a certain role will have their comments published immediately, or just put in a queue to be reviewed.</p>";
   $output .= "<p>If you really have a lot of comments, you can enable moderation. You assign moderation permissions to role(s), then setup some \"moderation votes\"; these votes will appear to moderators in a dropdown menu near the comment. You also have to assign, for every role and every vote, a value, which can be either positive or negative; use the moderation matrix to do this. This allows for some roles having greater \"weight\" in their moderation, if you wish. If you set a value to 0, that vote won't be available to that role. When a user moderates, the value of their vote is added or subtracted to the score of that comment. Finally, you may want to setup the comment thresholds: these are floor/ceiling values which users see in the comment control panel. Threshholds are useful for hiding poorly rated comments while reading your site.</p>";
 
@@ -357,7 +357,7 @@ function comment_view($comment, $links = "", $visible = 1) {
   ** Switch to folded/unfolded view of the comment
   */
 
-  if (comment_is_new($comment)) {
+  if (node_is_new($comment->nid, $comment->timestamp)) {
     $comment->new = 1;
     print "<a name=\"new\"></a>\n";
   }
@@ -594,11 +594,6 @@ function comment_render($node, $cid = 0) {
       theme("box", t("Post new comment"), comment_form(array("nid" => $nid)));
     }
 
-    /*
-    ** Tag the node's comments as being read:
-    */
-
-    comment_tag_new($nid);
   }
 }
 
@@ -658,8 +653,8 @@ function comment_link($type, $node = 0, $main = 0) {
   }
 
   if ($type == "admin" && user_access("administer comments")) {
-    $help["general"] = "To be written: description of comment module.  Anyone?";
-    $help["settings"] = "If you really have a lot of comments, you can enable moderation. You assign moderation permissions to role(s), then setup some 'moderation votes'; these votes will appear to moderators in a dropdown menu near the comment. You also have to assign, for every role and every vote, a value, which can be either positive or negative; use the moderation matrix to do this. This allows for some roles having greater 'weight' in their moderation, if you wish. If you set a value to 0, that vote won't be available to that role. When a user moderates, the value of their vote is added or subtracted to the score of that comment. Finally, you may want to setup the comment thresholds: these are floor/ceiling values which users see in the comment control panel. Threshholds are useful for hiding poorly rated comments while reading your site.";
+     $help["general"] = t("Comments let users give feedback to content authors.  Here you may review/approve/deny recent comments, and configure moderation if desired.");
++    $help["settings"] = t("If you really have a lot of comments, you can enable moderation.  You assign moderation permissions to role(s), then setup some 'moderation votes'; these votes will appear to moderators in a dropdown menu near the comment.  You also have to assign, for every role and every vote, a value, which can be either positive or negative; use the moderation matrix to do this.  This allows for some roles having greater 'weight' in their moderation, if you wish.  If you set a value to 0, that vote won't be available to that role.  When a user moderates, the value of their vote is added or subtracted to the score of that comment.  Finally, you may want to setup the comment thresholds: these are floor/ceiling values which users see in the comment control panel.  Threshholds are useful for hiding poorly rated comments while reading your site.");
 
     menu("admin/comment", "comment management", "comment_admin", $help["general"], 2);
     menu("admin/comment/0", "new or updated comments", "comment_admin");
@@ -806,7 +801,7 @@ function comment_admin_overview($status = 0) {
 
   $header = array(t("subject"), t("author"), t("status"), array("data" => t("operations"), "colspan" => 2));
   while ($comment = db_fetch_object($result)) {
-    $rows[] = array(l($comment->subject, "node/view/$comment->nid/$comment->cid#$comment->cid", array("title" => htmlentities(substr($comment->comment, 0, 128)))) ." ". (comment_is_new($comment) ? theme_mark() : ""), format_name($comment), ($comment->status == 0 ? t("published") : t("not published")) ."</td><td>". l(t("edit comment"), "admin/comment/edit/$comment->cid"), l(t("delete comment"), "admin/comment/delete/$comment->cid"));
+    $rows[] = array(l($comment->subject, "node/view/$comment->nid/$comment->cid#$comment->cid", array("title" => htmlentities(substr($comment->comment, 0, 128)))) ." ". (node_is_new($comment->nid, $comment->timestamp) ? theme_mark() : ""), format_name($comment), ($comment->status == 0 ? t("published") : t("not published")) ."</td><td>". l(t("edit comment"), "admin/comment/edit/$comment->cid"), l(t("delete comment"), "admin/comment/delete/$comment->cid"));
   }
 
   if ($pager = pager_display(NULL, 50, 0, "admin")) {
@@ -1339,7 +1334,7 @@ function comment_num_replies($id) {
 }
 
 /**
- * get number of new comments and id of first new
+ * get number of new comments for current user and specified node
  *
  * @param $nid       node-id to count comments for
  * @param $timestamp time to count from (defaults to time of last user access to node)
@@ -1354,13 +1349,11 @@ function comment_num_new($nid, $timestamp = 0) {
     */
 
     if (!$timestamp) {
-      $history = db_fetch_object(db_query("SELECT timestamp FROM history WHERE uid = '$user->uid' AND nid = '%d'", $nid));
-      $timestamp = $history->timestamp ? $history->timestamp : 0;
+      $timestamp = node_last_viewed($nid);
     }
 
     /*
-    ** Use the timestamp to retrieve the number of new comments and the
-    ** ID of first new comment.
+    ** Use the timestamp to retrieve the number of new comments
     */
 
     $result = db_result(db_query("SELECT COUNT(c.cid) FROM node n LEFT JOIN comments c ON n.nid = c.nid WHERE n.nid = '%d' AND timestamp > '%d' AND c.status = 0", $nid, $timestamp));
@@ -1371,44 +1364,6 @@ function comment_num_new($nid, $timestamp = 0) {
     return 0;
   }
 
-}
-
-function comment_tag_new($nid) {
-  global $user;
-
-  if ($user->uid) {
-    $nid = check_query($nid);
-
-    $result = db_query("SELECT timestamp FROM history WHERE uid = '$user->uid' AND nid = '%d'", $nid);
-    if (db_fetch_object($result)) {
-      db_query("UPDATE history SET timestamp = '%d' WHERE uid = '$user->uid' AND nid = '%d'", time(), $nid);
-    }
-    else {
-      db_query("INSERT INTO history (uid, nid, timestamp) VALUES ('%d', '%d', '%d')", $user->uid, $nid, time());
-    }
-  }
-}
-
-function comment_is_new($comment) {
-  global $user;
-  static $cache;
-
-  if (!$cache[$comment->nid]) {
-    if ($user->uid) {
-      $history = db_fetch_object(db_query("SELECT timestamp FROM history WHERE uid = '$user->uid' AND nid = '%d'", $comment->nid));
-      $cache[$comment->nid] = $history->timestamp ? $history->timestamp : 0;
-    }
-    else {
-      $cache[$comment->nid] = time();
-    }
-  }
-
-  if ($comment->timestamp > $cache[$comment->nid]) {
-    return 1;
-  }
-  else {
-    return 0;
-  }
 }
 
 function comment_thread_structure($comments, $pid, $depth, $structure) {

@@ -37,6 +37,62 @@ function node_title_list($result, $title = NULL) {
   return theme("theme_item_list", $items, $title);
 }
 
+// Update the 'last viewed' timestamp of the specified node for current user.
+function node_tag_new($nid) {
+  global $user;
+
+  if ($user->uid) {
+    $nid = check_query($nid);
+
+    $result = db_query("SELECT timestamp FROM history WHERE uid = '%d' AND nid = '%d'", $user->uid, $nid);
+    if (db_fetch_object($result)) {
+      db_query("UPDATE history SET timestamp = '%d' WHERE uid = '%d' AND nid = '%d'", time(), $user->uid, $nid);
+    }
+    else {
+      db_query("INSERT INTO history (uid, nid, timestamp) VALUES ('%d', '%d', '%d')", $user->uid, $nid, time());
+    }
+  }
+}
+
+/*
+** Retrieves the timestamp at which the current user last viewed the
+** specified node.
+*/
+function node_last_viewed($nid) {
+  global $user;
+
+  $history = db_fetch_object(db_query("SELECT timestamp FROM history WHERE uid = '$user->uid' AND nid = '%d'", $nid));
+  return ($history->timestamp ? $history->timestamp : 0);
+}
+
+/**
+ * Determines whether the supplied timestamp is newer than the user's last view of a given node
+ *
+ * @param $nid       node-id twhose history supplies the 'last viewed' timestamp
+ * @param $timestamp time which is compared against node's 'last veiwed' timestamp
+*/
+function node_is_new($nid, $timestamp) {
+  global $user;
+  static $cache;
+
+  if (!$cache[$nid]) {
+    if ($user->uid) {
+      $history = db_fetch_object(db_query("SELECT timestamp FROM history WHERE uid = '%d' AND nid = '%d'", $user->uid, $nid));
+      $cache[$nid] = $history->timestamp ? $history->timestamp : 0;
+    }
+    else {
+      $cache[$nid] = time();
+    }
+  }
+
+  if ($timestamp > $cache[$nid]) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
 function node_teaser($body) {
 
   $size = variable_get("teaser_length", 600);
@@ -299,6 +355,7 @@ function node_view($node, $main = 0) {
   }
 }
 
+
 function node_show($nid, $cid) {
   global $revision;
 
@@ -314,6 +371,12 @@ function node_show($nid, $cid) {
     if (function_exists("comment_render") && $node->comment) {
       comment_render($node, $cid);
     }
+
+    /*
+    ** Update the history table, stating that this user viewed this node.
+    */
+
+    node_tag_new($node->nid);
   }
 }
 
@@ -512,7 +575,7 @@ function node_admin_nodes() {
   $header = array(t("title"), t("type"), t("author"), t("status"), array("data" => t("operations"), "colspan" => 2));
 
   while ($node = db_fetch_object($result)) {
-    $rows[] = array(l($node->title, "node/view/$node->nid"), module_invoke($node->type, "node", "name"), format_name($node), ($node->status ? t("published") : t("not published")), l(t("edit node"), "admin/node/edit/$node->nid"), l(t("delete node"), "admin/node/delete/$node->nid"));
+    $rows[] = array(l($node->title, "node/view/$node->nid") ." ". (node_is_new($node->nid, $node->changed) ? theme_mark() : ""), module_invoke($node->type, "node", "name"), format_name($node), ($node->status ? t("published") : t("not published")), l(t("edit node"), "admin/node/edit/$node->nid"), l(t("delete node"), "admin/node/delete/$node->nid"));
   }
 
   if ($pager = pager_display(NULL, 50, 0, "admin")) {
