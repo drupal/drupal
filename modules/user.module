@@ -198,7 +198,7 @@ function user_validate_mail($mail) {
 }
 
 function user_validate_authmap($account, $authname, $module) {
-  $result = db_query("SELECT COUNT(*) from authmap WHERE uid != '$account->uid' && authname = '%s'", $authname);
+  $result = db_query("SELECT COUNT(*) from authmap WHERE uid != '$account->uid' AND authname = '%s'", $authname);
   if (db_result($result) > 0) {
     $name = module_invoke($module, "info", "name");
     return t("The %u ID %s is already taken.", array("%u" => ucfirst($name), "%s" => "<i>$authname</i>"));
@@ -421,7 +421,7 @@ function user_get_authname($account, $module) {
   **  Called by authentication modules in order to edit/view their authmap information.
   */
 
-  $result = db_query("SELECT authname FROM authmap WHERE uid = '$account->uid' && module = '$module'");
+  $result = db_query("SELECT authname FROM authmap WHERE uid = '$account->uid' AND module = '$module'");
   return db_result($result);
 }
 
@@ -449,16 +449,16 @@ function user_set_authmaps($account, $authmaps) {
   foreach ($authmaps as $key => $value) {
     $module = explode("_", $key, 2);
     if ($value) {
-      $result = db_query("SELECT COUNT(*) from authmap WHERE uid = '$account->uid' && module = '$module[1]'");
+      $result = db_query("SELECT COUNT(*) from authmap WHERE uid = '$account->uid' AND module = '$module[1]'");
       if (db_result($result) == 0) {
         $result = db_query("INSERT INTO authmap (authname, uid, module) VALUES ('%s', '%d', '%s')", $value, $account->uid, $module[1]);
       }
       else {
-        $result = db_query("UPDATE authmap SET authname = '%s' WHERE uid = '$account->uid' && module = '$module[1]'", $value);
+        $result = db_query("UPDATE authmap SET authname = '%s' WHERE uid = '$account->uid' AND module = '$module[1]'", $value);
       }
     }
     else {
-      $result = db_query("DELETE FROM authmap WHERE uid = '$account->uid' && module = '$module[1]'");
+      $result = db_query("DELETE FROM authmap WHERE uid = '$account->uid' AND module = '$module[1]'");
     }
   }
   return $result;
