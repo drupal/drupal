@@ -49,8 +49,26 @@ li a.active {
 #pager div {
   padding: 0.5em;
 }
-.breadcrumb {
-  padding-bottom: .5em
+.path {
+  padding-bottom: 0.7em;
+  font-size: 1.1em;
+}
+
+/*
+** Module specific styles
+*/
+#aggregator .feed img {
+  float: right;
+}
+#aggregator .news-item .date {
+  float: left;
+}
+#aggregator .news-item .body {
+  margin-top: 1em;
+  margin-left: 4em;
+}
+#aggregator .news-item .body .feed {
+  font-size: 0.9em;
 }
 .book {
   margin: 1em 0 1em 0;
@@ -95,10 +113,6 @@ li a.active {
 }
 .book .nav .up {
   text-align: center;
-}
-.block ul {
-  margin: 0;
-  padding: 0 0 0.25em 1em;
 }
 .calendar .row-week td a {
   display: block;
@@ -177,36 +191,6 @@ li a.active {
 }
 #tracker table {
   width: 100%;
-}
-.item-list .icon {
-  color: #555;
-  float: right;
-  padding-left: 0.25em;
-  clear: right;
-}
-.item-list .icon a {
-  color: #000;
-  text-decoration: none;
-}
-.item-list .icon a:hover {
-  color: #000;
-  text-decoration: none;
-}
-.item-list .title {
-  font-weight: bold;
-}
-.item-list ul {
-  margin: 0 0 0.75em 0;
-  padding: 0;
-}
-.item-list ul li {
-  margin: 0 0 0.25em 1.5em;
-  padding: 0;
-  list-style: disc;
-}
-.path {
-  padding-bottom: 0.7em;
-  font-size: 1.1em;
 }
 .poll .bar {
   height: 1em;
@@ -329,8 +313,4 @@ td.watchdog-httpd {
 td.watchdog-error {
   background: #e44;
   border: 1px solid #c22;
-}
-hr {
-  height: 1px;
-  border: 1px solid gray;
 }
