@@ -17,7 +17,7 @@ function book_node_name($node) {
  * Implementation of hook_perm().
  */
 function book_perm() {
-  return array('maintain books', 'edit own book pages');
+  return array('create book pages', 'maintain books', 'edit own book pages');
 }
 
 /**
@@ -37,7 +37,7 @@ function book_access($op, $node) {
   if ($op == 'create') {
     // Only registered users can create book pages.  Given the nature
     // of the book module this is considered to be a good/safe idea.
-    return user_access('maintain books');
+    return user_access('create book pages');
   }
 
   if ($op == 'update') {
@@ -48,8 +48,7 @@ function book_access($op, $node) {
     // revision"-bit is set.  That is, only updates that don't overwrite
     // the current or pending information are allowed.
 
-    return (user_access('maintain books') && !$node->moderate && $node->revision)
-      || ($node->uid == $user->uid && user_access('edit own book pages'));
+    return ((user_access('maintain books') && !$node->moderate && $node->revision) || ($node->uid == $user->uid && user_access('edit own book pages')));
   }
 }
 
@@ -81,7 +80,7 @@ function book_menu($may_cache) {
 
   if ($may_cache) {
     $items[] = array('path' => 'node/add/book', 'title' => t('book page'),
-      'access' => user_access('maintain books'));
+      'access' => user_access('create book pages'));
     $items[] = array('path' => 'admin/node/book', 'title' => t('books'),
       'callback' => 'book_admin',
       'access' => user_access('administer nodes'),
