@@ -5,7 +5,7 @@ function book_node($field) {
   global $user;
 
   $info["name"] = t("book page");
-  $info["description"] = t("A book is a collaborative effort on a certain subject. Users collaborate writing the pages of the book, positioning the pages in the right order, and reviewing or modifying pages previously written.  You can add a new book page or you can modify existing pages.");
+  $info["description"] = t("A book is a collaborative writing effort: users can collaborate writing the pages of the book, positioning the pages in the right order, and reviewing or modifying pages previously written.  So when you have some information to share or when you read a page of the book and you didn't like it, or if you think a certain page could have been written better, you can do something about it.");
 
   return $info[$field];
 }
@@ -107,7 +107,8 @@ function book_form($node, $help, $error) {
     ** Carry out some explanation or submission guidelines:
     */
 
-    $help = t("\"update book page\"-help: to be written!  It should explain the basic idea behind our collaborative book and how their update helps to improve the quality of the book.  Also mention that all updates are subject to moderation or review.  Any who can put this into a fluent English help text?");
+    $help = book_node("description");
+
 
     /*
     ** If a regular user updates a book page, we create a new revision
