@@ -115,10 +115,6 @@ function blog_feed_last() {
 function blog_page_user($uid) {
   $account = user_load(array((is_numeric($uid) ? "uid" : "name") => $uid, "status" => 1));
 
-  // Breadcrumb navigation:
-  $breadcrumb[] = l(t("Home"), "");
-  $breadcrumb[] = t("blogs");
-
   $title = t("%name's blog", array("%name" => $account->name));
   $output = "";
 
