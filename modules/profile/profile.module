@@ -150,7 +150,12 @@ function profile_load_profile(&$user) {
 }
 
 function profile_save_profile(&$edit, &$user, $category) {
-  $result = db_query("SELECT fid, name, type FROM {profile_fields} WHERE LOWER(category) = '%s'", strtolower($category));
+  if (($_GET['q'] == 'user/register') ? 1 : 0) {
+    $result = db_query('SELECT fid, name, type FROM {profile_fields} WHERE register = 1 ORDER BY category, weight');
+  }
+  else {
+    $result = db_query("SELECT fid, name, type FROM {profile_fields} WHERE LOWER(category) = '%s'", strtolower($category));
+  }
   while ($field = db_fetch_object($result)) {
     if (_profile_field_serialize($field->type)) {
        $edit[$field->name] = serialize($edit[$field->name]);
@@ -240,22 +245,29 @@ function _profile_form_explanation($field) {
 
 function profile_form_profile($edit, $user, $category) {
 
-  $result = db_query("SELECT * FROM {profile_fields} WHERE LOWER(category) = '%s' ORDER BY weight", strtolower($category));
+  if (($_GET['q'] == 'user/register') ? 1 : 0) {
+    $result = db_query('SELECT * FROM {profile_fields} WHERE register = 1 ORDER BY category, weight');
+  }
+  else {
+    $result = db_query("SELECT * FROM {profile_fields} WHERE LOWER(category) = '%s' ORDER BY weight", strtolower($category));
+  }
 
+  $fields = array();
   while ($field = db_fetch_object($result)) {
+    $category = $field->category;
     switch ($field->type) {
       case 'textfield':
       case 'url':
-        $output .= form_textfield($field->title, $field->name, $edit[$field->name], 70, 255, _profile_form_explanation($field), NULL, $field->required);
+        $fields[$category] .= form_textfield($field->title, $field->name, $edit[$field->name], 70, 255, _profile_form_explanation($field), NULL, $field->required);
         break;
       case 'textarea':
-        $output .= form_textarea($field->title, $field->name, $edit[$field->name], 60, 5, _profile_form_explanation($field), NULL, $field->required);
+        $fields[$category] .= form_textarea($field->title, $field->name, $edit[$field->name], 60, 5, _profile_form_explanation($field), NULL, $field->required);
         break;
       case 'list':
-        $output .= form_textarea($field->title, $field->name, $edit[$field->name], 60, 5, _profile_form_explanation($field), NULL, $field->required);
+        $fields[$category] .= form_textarea($field->title, $field->name, $edit[$field->name], 60, 5, _profile_form_explanation($field), NULL, $field->required);
         break;
       case 'checkbox':
-        $output .= form_checkbox($field->title, $field->name, 1, $edit[$field->name], _profile_form_explanation($field), NULL, $field->required);
+        $fields[$category] .= form_checkbox($field->title, $field->name, 1, $edit[$field->name], _profile_form_explanation($field), NULL, $field->required);
         break;
       case 'selection':
         $options = array('--');
@@ -266,16 +278,19 @@ function profile_form_profile($edit, $user, $category) {
           }
         }
 
-        $output .= form_select($field->title, $field->name, $edit[$field->name], $options, _profile_form_explanation($field), 0, 0, $field->required);
+        $fields[$category] .= form_select($field->title, $field->name, $edit[$field->name], $options, _profile_form_explanation($field), 0, 0, $field->required);
         break;
       case 'date':
-        $output .= _profile_date_field($field, $edit);
+        $fields[$category] .= _profile_date_field($field, $edit);
         break;
     }
   }
 
-  if ($output) {
-    return array(array('title' => $category, 'data' => $output));
+  if ($fields) {
+    foreach ($fields as $category => $data) {
+      $output[] = array('title' => $category, 'data' => $data);
+    }
+    return $output;
   }
 }
 
@@ -328,7 +343,13 @@ function _profile_map_month($month) {
 }
 
 function profile_validate_profile($edit, $category) {
-  $result = db_query("SELECT * FROM {profile_fields} WHERE LOWER(category) = '%s' ORDER BY weight", strtolower($category));
+
+  if (($_GET['q'] == 'user/register') ? 1 : 0) {
+    $result = db_query('SELECT * FROM {profile_fields} WHERE register = 1 ORDER BY category, weight');
+  }
+  else {
+    $result = db_query("SELECT * FROM {profile_fields} WHERE LOWER(category) = '%s' ORDER BY weight", strtolower($category));
+  }
 
   while ($field = db_fetch_object($result)) {
     if ($edit[$field->name]) {
@@ -361,6 +382,8 @@ function profile_user($type, &$edit, &$user, $category = NULL) {
   switch ($type) {
     case 'load':
       return profile_load_profile($user);
+    case 'register':
+      return profile_form_profile($edit, $user, $category);
     case 'update':
     case 'insert':
       return profile_save_profile($edit, $user, $category);
@@ -418,7 +441,7 @@ function profile_admin_add($type) {
     }
 
     if (!form_get_errors()) {
-      db_query("INSERT INTO {profile_fields} (title, name, explanation, category, type, weight, required, visibility, options, page) VALUES ('%s', '%s', '%s', '%s', '%s', %d, %d, %d, '%s', '%s')", $data['title'], $data['name'], $data['explanation'], $data['category'], $type, $data['weight'], $data['required'], $data['visibility'], $data['options'], $data['page']);
+      db_query("INSERT INTO {profile_fields} (title, name, explanation, category, type, weight, required, register, visibility, options, page) VALUES ('%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d, '%s', '%s')", $data['title'], $data['name'], $data['explanation'], $data['category'], $type, $data['weight'], $data['required'], $data['register'], $data['visibility'], $data['options'], $data['page']);
 
       drupal_set_message(t('The field has been created.'));
       drupal_goto('admin/user/configure/profile');
@@ -443,7 +466,7 @@ function profile_admin_edit($fid) {
     profile_validate_form($data);
 
     if (!form_get_errors()) {
-      db_query("UPDATE {profile_fields} SET title = '%s', name = '%s', explanation = '%s', category = '%s', weight = %d, required = %d, visibility = %d, options = '%s', page = '%s' WHERE fid = %d", $data['title'], $data['name'], $data['explanation'], $data['category'], $data['weight'], $data['required'], $data['visibility'], $data['options'], $data['page'], $fid);
+      db_query("UPDATE {profile_fields} SET title = '%s', name = '%s', explanation = '%s', category = '%s', weight = %d, required = %d, register = %d, visibility = %d, options = '%s', page = '%s' WHERE fid = %d", $data['title'], $data['name'], $data['explanation'], $data['category'], $data['weight'], $data['required'], $data['register'], $data['visibility'], $data['options'], $data['page'], $fid);
 
       drupal_set_message(t('The field has been updated.'));
       drupal_goto('admin/user/configure/profile');
@@ -483,7 +506,8 @@ Unless you know what you are doing, it is highly recommended that you prefix the
   else {
     $group .= form_textfield(t('Page title'), 'page', $edit['page'], 70, 128, t('The title of the page showing all users with the specified field.  Only applicable if the field is configured to be shown on member listings.'));
   }
-  $group .= form_checkbox(t('Required field.'), 'required', 1, $edit['required']);
+  $group .= form_checkbox(t('The user must enter a value.'), 'required', 1, $edit['required']);
+  $group .= form_checkbox(t('Visible in user registration form.'), 'register', 1, $edit['register']);
 
   $output  = form_group(t('Field settings'), $group);
   $output .= form_submit(t('Save field'));

@@ -455,6 +455,7 @@ CREATE TABLE profile_fields (
   type varchar(128) default NULL,
   weight smallint DEFAULT '0' NOT NULL,
   required smallint DEFAULT '0' NOT NULL,
+  register smallint DEFAULT '0' NOT NULL,
   visibility smallint DEFAULT '0' NOT NULL,
   overview smallint DEFAULT '0' NOT NULL,
   options text,

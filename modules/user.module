@@ -925,7 +925,7 @@ function user_register($edit = array()) {
 
       // TODO: Is this necessary? Won't session_write() replicate this?
       unset($edit['session']);
-      $account = user_save('', array('name' => $edit['name'], 'pass' => $pass, 'init' => $edit['mail'], 'mail' => $edit['mail'], 'roles' => array(_user_authenticated_id()), 'status' => (variable_get('user_register', 1) == 1 ? 1 : 0)));
+      $account = user_save('', array_merge(array('name' => $edit['name'], 'pass' => $pass, 'init' => $edit['mail'], 'mail' => $edit['mail'], 'roles' => array(_user_authenticated_id()), 'status' => (variable_get('user_register', 1) == 1 ? 1 : 0)), $edit));
       watchdog('user', t('New user: %name %e-mail.', array('%name' => '<em>'. $edit['name'] .'</em>', '%e-mail' => '<em>&lt;'. $edit['mail'] .'&gt;</em>')), l(t('edit'), 'user/'. $account->uid .'/edit'));
 
       $variables = array('%username' => $edit['name'], '%site' => variable_get('site_name', 'drupal'), '%password' => $pass, '%uri' => $base_url, '%uri_brief' => substr($base_url, strlen('http://')), '%mailto' => $edit['mail'], '%date' => format_date(time()), '%login_uri' => url('user', NULL, NULL, TRUE), '%edit_uri' => url('user/'. $account->uid .'/edit', NULL, NULL, TRUE));
@@ -969,8 +969,18 @@ function user_register($edit = array()) {
     $affiliates = implode(', ', $affiliates);
     $output .= '<p>'. t('Note: if you have an account with one of our affiliates (%s), you may <a href="%login_uri">login now</a> instead of registering.', array('%s' => $affiliates, '%login_uri' => url('user'))) .'</p>';
   }
-  $output .= form_textfield(t('Username'), 'name', $edit['name'], 30, 64, t('Your full name or your preferred username; only letters, numbers and spaces are allowed.'));
-  $output .= form_textfield(t('E-mail address'), 'mail', $edit['mail'], 30, 64, t('A password and instructions will be sent to this e-mail address, so make sure it is accurate.'));
+  $default = form_textfield(t('Username'), 'name', $edit['name'], 30, 64, t('Your full name or your preferred username; only letters, numbers and spaces are allowed.'));
+  $default .= form_textfield(t('E-mail address'), 'mail', $edit['mail'], 30, 64, t('A password and instructions will be sent to this e-mail address, so make sure it is accurate.'));
+  $extra = _user_forms($edit, $account, $category, 'register');
+  // Only display form_group around default fields if there are other groups.
+  if ($extra) {
+    $output .= form_group(t('Account information'), $default);
+    $output .= $extra;
+  }
+  else {
+    $output .= $default;
+  }
+
   $output .= form_submit(t('Create new account'));
 
   return form($output);
@@ -1654,10 +1664,10 @@ function _user_sort($a, $b) {
 /**
  * Retrieve a list of all form elements for the specified category.
  */
-function _user_forms(&$edit, $account, $category) {
+function _user_forms(&$edit, $account, $category, $hook = 'form') {
   $groups = array();
   foreach (module_list() as $module) {
-    if ($data = module_invoke($module, 'user', 'form', $edit, $account, $category)) {
+    if ($data = module_invoke($module, 'user', $hook, $edit, $account, $category)) {
       $groups = array_merge($data, $groups);
     }
   }
