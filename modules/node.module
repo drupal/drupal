@@ -1590,6 +1590,10 @@ function node_access($op, $node = NULL) {
     return TRUE;
   }
 
+  if (!user_access('access content')) {
+    return FALSE;
+  }
+
   // Can't use node_invoke(), because the access hook takes the $op parameter
   // before the $node parameter.
   $access = module_invoke(node_get_module_name($node), 'access', $op, $node);
