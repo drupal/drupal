@@ -341,7 +341,7 @@ function user_block($op = "list", $delta = 0) {
           $output .= theme_invoke("theme_item_list", $items);
 
           $block["subject"] = t("Log in");
-          $block["content"] = "<div style=\"{ width: 155; }\">$output</div>";
+          $block["content"] = "<div style=\"{ white-space: nowrap; }\">$output</div>";
           return $block;
         }
         break;
@@ -355,7 +355,7 @@ function user_block($op = "list", $delta = 0) {
           $output = implode($content, "<br />");
 
           $block["subject"] = $user->name;
-          $block["content"] = "<div style=\"{ width: 155; }\">$output</div>";
+          $block["content"] = "<div style=\"{ white-space: nowrap; }\">$output</div>";
           return $block;
         }
         break;
