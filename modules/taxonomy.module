@@ -331,7 +331,7 @@ function _taxonomy_confirm_del_term($tid) {
   $extra .= form_hidden('tid', $tid);
 
   $output = theme('confirm',
-                  t('Are you sure you want to delete the term %name?', array('%title' => '<em>'. $vocabulary->name .'</em>')),
+                  t('Are you sure you want to delete the term %title?', array('%title' => '<em>'. $term->name .'</em>')),
                   'admin/taxonomy',
                   t('Deleting a term will delete all its children if there are any. This action cannot be undone.'),
                   t('Delete'),
