@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.421 2005/02/01 14:09:31 dries Exp $ */
+/* $Id: common.inc,v 1.422 2005/02/01 16:27:43 dries Exp $ */
 
 /**
  * @file
@@ -1806,6 +1806,7 @@ include_once 'includes/menu.inc';
 include_once 'includes/tablesort.inc';
 include_once 'includes/file.inc';
 include_once 'includes/xmlrpc.inc';
+include_once 'includes/image.inc';
 
 // Set the Drupal custom error handler.
 set_error_handler('error_handler');

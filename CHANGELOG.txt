@@ -23,6 +23,7 @@ Drupal x.x.x, xxxx-xx-xx
     * added a simple contact module that allows users to contact each other using e-mail.
 - multi-site configuration:
     * made it possible to run multiple sites from a single code base.
+- added an image API: enables better image handling.
 - block system:
     * extended the block visibility settings.
 - theme system:
