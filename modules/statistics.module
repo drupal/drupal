@@ -242,7 +242,7 @@ function statistics_admin() {
       $links[] = la(t("who's online block"), array("mod" => "statistics", "op" => "whos online block"));
     }
     $links[] = la(t("help"), array("mod" => "statistics", "op" => "help"));
-    print "<small>". implode(" &middot; ", $links) ."</small><hr />";
+    print "<small>". implode(" | ", $links) ."</small><hr />";
 
     /* non-configuration admin pages */
     switch ($op) {

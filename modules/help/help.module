@@ -1,5 +1,5 @@
 <?php
-// $Id: help.module,v 1.10 2002/08/15 10:24:41 dries Exp $
+// $Id: help.module,v 1.11 2002/12/02 19:14:41 dries Exp $
 
 function help_system($field){
   $system["description"] = t("Manages displaying online help.");
@@ -22,7 +22,7 @@ function help_admin() {
     }
   }
 
-  print "<small>". implode(" - ", $links) ."</small><hr />";
+  print "<small>". implode(" | ", $links) ."</small><hr />";
 
   foreach (module_list() as $name) {
     if (module_hook($name, "help")) {

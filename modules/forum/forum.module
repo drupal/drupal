@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.61 2002/11/26 20:51:36 dries Exp $
+// $Id: forum.module,v 1.62 2002/12/02 19:14:41 dries Exp $
 
 function forum_system($field){
   $system["description"] = t("Enable threaded discussions about general topics.");
@@ -323,7 +323,7 @@ function forum_get_forums($tid = 0) {
 
   if (!$forums) {
     $forums = array();
-    taxonomy_get_tree(variable_get("forum_nav_vocabulary", ""), $_forums, $tid);
+    $_forums = taxonomy_get_tree(variable_get("forum_nav_vocabulary", ""), $tid);
     $n = 0;
     foreach ($_forums as $forum) {
       if (in_array($forum->tid, variable_get("forum_containers", array()))) {

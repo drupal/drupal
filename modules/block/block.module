@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.43 2002/11/20 10:13:42 kjartan Exp $
+// $Id: block.module,v 1.44 2002/12/02 19:14:41 dries Exp $
 
 function block_help() {
  ?>
@@ -272,7 +272,7 @@ function block_admin() {
     $links[] = la(t("preview"), array("mod" => "block", "op" => "preview"));
     $links[] = la(t("help"), array("mod" => "block", "op" => "help"));
 
-    print "<small>". $theme->links($links) ."</small><hr />";
+    print "<small>". implode(" | ", $links) ."</small><hr />";
 
     switch ($op) {
       case "help":

@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.128 2002/11/18 22:19:17 dries Exp $
+// $Id: book.module,v 1.129 2002/12/02 19:14:41 dries Exp $
 
 function book_system($field){
   $system["description"] = t("Allows users to collaboratively author a book.");
@@ -729,7 +729,7 @@ function book_admin() {
 
     $links = book_admin_links();
 
-    print "<small>". implode(" &middot; ", $links) ."</small><hr />";
+    print "<small>". implode(" | ", $links) ."</small><hr />";
 
     switch ($op) {
       case t("Edit book outline"):
