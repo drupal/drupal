@@ -22,9 +22,9 @@ function meta_form($type, $edit = array()) {
 function meta_save($type, $edit = array()) {
   $result = db_query("SELECT * FROM collection WHERE types LIKE '%". check_input($type) ."%'");
   while ($collection = db_fetch_object($result)) {
-    $output .= ", ". $edit[$collection->name];
+    $array[] = $edit[$collection->name];
   }
-  return $output;
+  return implode(", ", $array);
 }
 
 function meta_get_collection($cid) {
@@ -90,7 +90,7 @@ function meta_save_tag($edit) {
   }
 }
 
-function meta_verify() {
+function meta_preview() {
   foreach (module_list() as $name) {
     if (module_hook($name, "status") && $name != "node") {
       $output .= "<H3>". ucfirst($name) ." type</H3>";
@@ -127,7 +127,7 @@ function meta_overview() {
 function meta_admin() {
   global $edit, $type, $op, $id;
 
-  print "<SMALL><A HREF=\"admin.php?mod=meta&type=collection&op=add\">add new collection</A> | <A HREF=\"admin.php?mod=meta&type=tag&op=add\">add new meta-tag</A> | <A HREF=\"admin.php?mod=meta&op=verify\">verify node forms</A> | <A HREF=\"admin.php?mod=meta\">overview</A> | <A HREF=\"admin.php?mod=meta&op=help\">help</A></SMALL><HR>\n";
+  print "<SMALL><A HREF=\"admin.php?mod=meta&type=collection&op=add\">add new collection</A> | <A HREF=\"admin.php?mod=meta&type=tag&op=add\">add new meta-tag</A> | <A HREF=\"admin.php?mod=meta&op=preview\">preview node forms</A> | <A HREF=\"admin.php?mod=meta\">overview</A> | <A HREF=\"admin.php?mod=meta&op=help\">help</A></SMALL><HR>\n";
 
   switch ($op) {
     case "add":
@@ -145,8 +145,8 @@ function meta_admin() {
     case "help":
       print meta_help();
       break;
-    case "verify":
-      print meta_verify();
+    case "preview":
+      print meta_preview();
       break;
     case "Delete":
       $edit[name] = 0;

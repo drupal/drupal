@@ -68,7 +68,7 @@ function node_cron() {
 function node_link($nid, $type) {
   global $op;
 
-  $link[] = ($op == "view") ? "view node" : "<A HREF=\"node.php?id$nid\">view node</A>";
+  $link[] = ($op == "view") ? "view node" : "<A HREF=\"node.php?id=$nid\">view node</A>";
   $link[] = ($op == "content") ? "edit content" : "<A HREF=\"admin.php?mod=node&type=$type&op=content&id=$nid\">edit content</A>";
   $link[] = ($op == "option") ? "edit options" : "<A HREF=\"admin.php?mod=node&op=option&id=$nid\">edit options</A>";
   $link[] = ($op == "status") ? "edit status" : "<A HREF=\"admin.php?mod=node&op=status&id=$nid\">edit status</A>";
