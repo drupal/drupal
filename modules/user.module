@@ -645,15 +645,15 @@ function user_login($edit = array(), $msg = "") {
 
       if ($user->uid) {
         // update the user's session if it already exists
-        db_query("UPDATE sessions SET timestamp = '%d' WHERE sid = '%s'", time(), session_id());
+        db_query("UPDATE {sessions} SET timestamp = '%d' WHERE sid = '%s'", time(), session_id());
 
         // if no changes, this is a new session to be added
         if (!db_affected_rows()) {
-          db_query("INSERT INTO sessions (uid, sid, hostname, timestamp) values(%d, '%s', '%s', %d)", $user->uid, session_id(), $_SERVER["REMOTE_ADDR"], time());
+          db_query("INSERT INTO {sessions} (uid, sid, hostname, timestamp) values(%d, '%s', '%s', %d)", $user->uid, session_id(), $_SERVER["REMOTE_ADDR"], time());
         }
 
         // also update the user table timestamp noting user has logged in
-        db_query("UPDATE users SET timestamp = '%d' WHERE uid = '%s'", time(), $user->uid);
+        db_query("UPDATE {users} SET timestamp = '%d' WHERE uid = '%s'", time(), $user->uid);
       }
 
       /*
