@@ -136,7 +136,7 @@ function comments_reply($pid, $sid, $mode, $order, $thold) {
     $theme->comment($item->userid, $item->subject, $item->comment, $item->timestamp, $item->url, $item->femail, $item->score, $item->cid, "reply to this comment");
   }
   else {
-    $item = db_fetch_object(db_query("SELECT stories.*, users.userid FROM stories LEFT JOIN users ON stories.author = users.id WHERE stories.status = 2 AND stories.id = $sid"));
+    $item = db_fetch_object(db_query("SELECT stories.*, users.userid FROM stories LEFT JOIN users ON stories.author = users.id WHERE stories.status != 0 AND stories.id = $sid"));
     $theme->article($item, "");
   }
 
@@ -283,9 +283,9 @@ function comment_post($pid, $sid, $subject, $comment, $mode, $order, $thold) {
   }
 }
 
+include "functions.inc";
 include "config.inc";
 include "theme.inc";
-include "functions.inc";
 
 if ($save) {
   db_query("UPDATE users SET umode = '$mode', uorder = '$order', thold = '$thold' where id = '$user->id'");
