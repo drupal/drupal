@@ -196,7 +196,7 @@ function filter_default($text) {
 
 function filter_default_settings() {
   $group   = form_radios(t("Filter HTML tags"), "filter_html", variable_get("filter_html", FILTER_HTML_DONOTHING), array(FILTER_HTML_DONOTHING => t("Do not filter"), FILTER_HTML_STRIP => t("Strip tags"), FILTER_HTML_ESCAPE => t("Escape tags")), t("How to deal with HTML and PHP tags in user-contributed content. If set to \"Strip tags\", dangerous tags are removed (see below).  If set to \"Escape tags\", all HTML is escaped and presented as it was typed."));
-  $group  .= form_textfield(t("Allowed HTML tags"), "allowed_html", variable_get("allowed_html", "<a> <b> <dd> <dl> <dt> <i> <li> <ol> <u> <ul>"), 64, 255, t("If \"Strip tags\" is selected, optionally specify tags which should not be stripped.  'ON*' attributes and unclosed tags are always stripped."));
+  $group  .= form_textfield(t("Allowed HTML tags"), "allowed_html", variable_get("allowed_html", "<a> <b> <dd> <dl> <dt> <i> <li> <ol> <u> <ul>"), 64, 255, t("If \"Strip tags\" is selected, optionally specify tags which should not be stripped.  'ON*' attributes are always stripped."));
   $group  .= form_radios(t("HTML style attributes"), "filter_style", variable_get("filter_style", FILTER_STYLE_STRIP), array(FILTER_STYLE_ALLOW => t("Allowed"), FILTER_STYLE_STRIP => t("Removed")), t("If \"Strip tags\" is selected, you can choose whether 'STYLE' attributes are allowed or removed from input."));
   $output .= form_group(t("HTML filtering"), $group);
 
