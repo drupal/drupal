@@ -603,26 +603,14 @@ function book_export_html_recurse($parent = "", $depth = 1) {
 function book_admin_view_line($node, $depth = 0) {
 
   /*
-  ** Extract the revision number:
-  */
-
-  if ($list = node_revision_list($node)) {
-    $revision = end($list);
-  }
-  else {
-    $revision = 0;
-  }
-
-  /*
   ** Diplay the book page:
   */
 
   $output .= "<tr>";
-  $output .= " <td><div style=\"padding-left: ". (25 * $depth) ."px;\">". l(check_output($node->title), array("id" => $node->nid)) ."</div></td>";
-  $output .= " <td align=\"center\">$revision</td>";
+  $output .= " <td><div style=\"padding-left: ". (25 * $depth) ."px;\">". form_textfield(NULL, "$node->nid][title", $node->title, 64, 255) ."</div></td>";
+  $output .= " <td>". form_weight(NULL, "$node->nid][weight", $node->weight) ."</td>";
+  $output .= " <td>". l(t("view node"), array("id" => $node->nid)) ."</td>";
   $output .= " <td>". la(t("edit node"), array("mod" => "node", "op" => "edit", "id" => $node->nid)) ."</td>";
-  //TODO: get this link to work. Must pass $nid along so it is received by book_node_link()
-  //$output .= " <td>". la(t("edit book outline"), array("mod" => "book", "nid" => $node->nid, "op" => "Edit+book+outline")) ."</td>";
   $output .= " <td>". la(t("delete node"), array("mod" => "node", "op" => "delete", "id" => $node->nid)) ."</td>";
   $output .= "</tr>";
 
@@ -630,8 +618,6 @@ function book_admin_view_line($node, $depth = 0) {
 }
 
 function book_admin_view_book($nid, $depth = 1) {
-  $weight = array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30);
-
   $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE b.parent = '%d' ORDER BY b.weight, n.title", $nid);
 
   while ($node = db_fetch_object($result)) {
@@ -649,13 +635,44 @@ function book_admin_view($nid, $depth = 0) {
 
   $output .= "<h3>". check_output($node->title) ."</h3>";
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
-  //TODO: change colspan below to 3 after adding new link in book_admin_view_line()
-  $output .= " <tr><th>title</th><th>rev</th><th colspan=\"2\">operations</th></tr>";
+  $output .= " <tr><th>title</th><th>weight</th><th colspan=\"3\">operations</th></tr>";
   $output .= book_admin_view_line($node);
   $output .= book_admin_view_book($nid);
-  $output .= "</table>";
+  $output .= "</table><br />";
 
-  return $output;
+  $output .= form_submit(t("Save book pages"));
+
+  return form($output);
+}
+
+function book_admin_save($nid, $edit = array()) {
+
+  $book = node_load(array("nid" => $nid));
+
+  foreach ($edit as $nid => $value) {
+    /*
+    ** Check to see whether the title needs updating:
+    */
+
+    $title = db_result(db_query("SELECT title FROM node WHERE nid = '%d'", $nid));
+    if ($title != $value["title"]) {
+      db_query("UPDATE node SET title = '%s' WHERE nid = '%d'", $value["title"], $nid);
+    }
+
+    /*
+    ** Check to see whether the weight needs updating:
+    */
+
+    $weight = db_result(db_query("SELECT weight FROM book WHERE nid = '%d'", $nid));
+    if ($weight != $value["weight"]) {
+      db_query("UPDATE book SET weight = '%d' WHERE nid = '%d'", $value["weight"], $nid);
+    }
+  }
+
+  $message = t("updated book '%title'", array("%title" => $book->title));
+  watchdog("special", $message);
+
+  return $message;
 }
 
 function book_admin_orphan() {
@@ -692,7 +709,7 @@ function book_admin_links() {
 }
 
 function book_admin() {
-  global $id, $op;
+  global $id, $op, $edit;
 
   if (user_access("administer nodes")) {
 
@@ -714,6 +731,9 @@ function book_admin() {
       case "orphan":
         print book_admin_orphan();
         break;
+      case t("Save book pages");
+        print status(book_admin_save($id, $edit));
+        // fall through:
       case "view":
         print book_admin_view($id);
         break;
