@@ -222,7 +222,7 @@
        <TD VALIGN="top">
          <?
           theme_account($this);
-          theme_blocks("left", $this);
+          theme_blocks("all", $this);
          ?>
        </TD>
       </TR>
