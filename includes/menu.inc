@@ -1,5 +1,5 @@
 <?php
-/* $Id: menu.inc,v 1.42 2004/05/08 07:17:47 dries Exp $ */
+/* $Id: menu.inc,v 1.43 2004/06/01 21:58:45 dries Exp $ */
 
 /**
  * @defgroup menu Menu system
@@ -176,7 +176,7 @@ function menu_get_active_breadcrumb() {
 
   $links[] = l(t('Home'), '');
 
-  $trail = menu_get_trail($_GET['q']);
+  $trail = menu_get_trail(drupal_get_path_alias($_GET['q']));
 
   // The last item in the trail is the page title; don't display it here.
   array_pop($trail);
@@ -249,7 +249,7 @@ function menu_in_active_trail($mid) {
   static $trail;
 
   if (empty($trail)) {
-    $trail = menu_get_trail($_GET['q']);
+    $trail = menu_get_trail(drupal_get_path_alias($_GET['q']));
   }
 
   return in_array($mid, $trail);
