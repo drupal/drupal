@@ -221,7 +221,6 @@ function block_box_edit($bid = 0) {
       cache_clear_all();
       drupal_goto('admin/block');
 
-    case t('Cancel'):
     default:
       if ($bid) {
         $output = block_box_form(block_box_get($bid));
