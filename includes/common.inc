@@ -1173,7 +1173,7 @@ function drupal_page_header() {
       $etag = '"'. md5($date) .'"';
 
       // Check http headers:
-      $modified_since = isset($_SERVER["HTTP_IF_MODIFIED_SINCE"]) ? $_SERVER["HTTP_IF_MODIFIED_SINCE"] == $date : NULL
+      $modified_since = isset($_SERVER["HTTP_IF_MODIFIED_SINCE"]) ? $_SERVER["HTTP_IF_MODIFIED_SINCE"] == $date : NULL;
       $none_match = isset($_SERVER["HTTP_IF_NONE_MATCH"]) ? $_SERVER["HTTP_IF_NONE_MATCH"] == $etag : NULL;
 
       // The type checking here is very important, be careful when changing entries.
