@@ -173,7 +173,7 @@ function taxonomy_save_term($edit) {
     $data = array("name" => $edit["name"], "description" => $edit["description"], "weight" => $edit["weight"]);
 
     db_query("UPDATE term_data SET ". _prepare_update($data) ." WHERE tid = '%d'", $edit["tid"]);
-    $message = t("Term <b>%a</b> updated.", array("%a" => $edit["name"]));
+    $message = t("the term '%a' has been updated.", array("%a" => $edit["name"]));
   }
   else if ($edit["tid"]) {
     return taxonomy_del_term($edit["tid"]);
@@ -182,7 +182,6 @@ function taxonomy_save_term($edit) {
     $edit["tid"] = db_next_id("term_data");
     $data = array("tid" => $edit["tid"], "name" => $edit["name"], "description" => $edit["description"], "vid" => $edit["vid"], "weight" => $edit["weight"]);
     db_query("INSERT INTO term_data ". _prepare_insert($data, 1) ." VALUES ". _prepare_insert($data, 2));
-
     $message = t("created new term '%name'.", array("%name" => $edit["name"]));
   }
 
@@ -210,7 +209,6 @@ function taxonomy_save_term($edit) {
     db_query("INSERT INTO term_hierarchy (tid, parent) VALUES ('%d', '%d')", $edit["tid"], $edit["parent"][0]);
   }
 
-  // synonyms (very cool idea indeed)
   db_query("DELETE FROM term_synonym WHERE tid = '%d'", $edit["tid"]);
   if ($edit["synonyms"]) {
     foreach (explode ("\n", str_replace("\r", "", $edit["synonyms"])) as $synonym) {
@@ -255,30 +253,26 @@ function taxonomy_overview() {
   global $tree;
 
   $output .= "<h3>" . t("Vocabularies overview") . "</h3>";
-  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  $output .= " <tr><th>" . t("name") . "</th><th>" . t("node types") . "</th><th>" . t("operations") . "</th></tr>\n";
+
+  $header = array(t("name"), t("node types"), array("data" => t("operations"), "colspan" => 3));
 
   $vocabularies = taxonomy_get_vocabularies();
   foreach ($vocabularies as $vocabulary) {
     $links = array();
-    $links[] = la(t("edit vocabulary"), array("mod" => "taxonomy", "type" => "vocabulary", "op" => "edit", "id" => $vocabulary->vid));
-    $links[] = la(t("add term"), array("mod" => "taxonomy", "op" => "add", "type" => "leaf", "vocabulary_id" => $vocabulary->vid));
-    $links[] = la(t("preview form"), array("mod" => "taxonomy", "type" => "vocabulary", "op" => "preview", "id" => $vocabulary->vid));
 
-    $output .= " <tr><td>". check_output($vocabulary->name) ."</td><td align=\"center\">". check_output($vocabulary->types) ."</td><td>". implode(" | ", $links) ."</td></tr>\n";
+    $rows[] = array($vocabulary->name, array("data" => $vocabulary->types, "align" => "center"), la(t("edit vocabulary"), array("mod" => "taxonomy", "type" => "vocabulary", "op" => "edit", "id" => $vocabulary->vid)), la(t("add term"), array("mod" => "taxonomy", "op" => "add", "type" => "leaf", "vocabulary_id" => $vocabulary->vid)), la(t("preview form"), array("mod" => "taxonomy", "type" => "vocabulary", "op" => "preview", "id" => $vocabulary->vid)));
 
     $tree = taxonomy_get_tree($vocabulary->vid);
     if ($tree) {
-      $output .= "<tr><td colspan=\"3\"><table><tr><td>";
+      unset($data);
       foreach ($tree as $term) {
-        $output .= "<tr><td>". la(_taxonomy_depth($term->depth) . check_output($term->name), array("mod" => "taxonomy", "op" => "edit", "type" => "term", "id" => check_output($term->tid))) ."</td></tr>";
+        $data .= _taxonomy_depth($term->depth) ." ". $term->name ." (". la(t("edit term"), array("mod" => "taxonomy", "op" => "edit", "type" => "term", "id" => check_output($term->tid))) .")<br />";
       }
-      $output .= "</td></tr></table></td></tr>\n";
+      $rows[] = array(array("data" => $data, "colspan" => 5));
     }
   }
-  $output .= "</table>\n";
 
-  return $output;
+  return table($header, $rows);
 }
 
 function taxonomy_form($vocabulary_id, $value = 0) {
