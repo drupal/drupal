@@ -1,10 +1,36 @@
 <?php
 // $Id$
 
-function watchdog_help() {
+function watchdog_help($section = "admin/help") {
 
-  $output .= "<p>Watchdog module monitors your web site, capturing system events in a log to be reviewed by an authorized individual at a later time.  The Watchdog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information.  It is vital to ". l("check the Watchdog report", "admin/watchdog") ." on a regular basis as it is often the only way to tell what is going on.</p>";
-  $output .= "<p>To ease administration, the watchdog will automatically discard old log entries, ". l("as configured", "admin/system/modules/watchdog") .". Needs \"cron.php\" to discard the entries.</p>";
+  switch ($section) {
+    case "admin/help":
+      $output .= "<p>Watchdog module monitors your web site, capturing system events in a log to be reviewed by an authorized individual at a later time.  The Watchdog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information.  It is vital to ". l("check the Watchdog report", "admin/watchdog") ." on a regular basis as it is often the only way to tell what is going on.</p>";
+      $output .= "<p>To ease administration, the watchdog will automatically discard old log entries, ". l("as configured", "admin/system/modules/watchdog") .". Needs \"cron.php\" to discard the entries.</p>";
+      break;
+   case "admin/watchdog":
+     $output = "The watchdog module monitors your web site, captures system events in a log and records them to be reviewed by an authorized individual at a later time.  The watchdog log is simply a list of events recorded during operation and contains usage data, performance data, errors, warnings and operational information. It is vital to check the watchdog report on a regular basis as it is often the only way to tell what is going on.";
+     break;
+  case "admin/watchdog/user":
+     $output = "Watchdog events that have to do with users.";
+     break;
+  case "admin/watchdog/regular":
+    $output = "Watchdog events that are \"normal\" and have no other classification.";
+    break;
+  case "admin/watchdog/httpd":
+    $output = "Watchdog events that are from the web server.";
+    break;
+  case "admin/watchdog/special":
+    $output = "Watchdog events about adding, changing, and moderating nodes and comments.";
+    break;
+  case "admin/watchdog/error":
+    $output = "Watchdog general error events, such as invalid login, permission denied, and database errors.";
+    break;
+  case "admin/watchdog/warning":
+    $output = "Watchdog warning events. These events don't stop Drupal from running, but are things you should no to correct.";
+    break;
+  }
+
   return t($output);
 }
 
@@ -20,22 +46,14 @@ function watchdog_perm() {
 
 function watchdog_link($type) {
   if ($type == "admin" && user_access("administer watchdog")) {
-    $help["general"] = t("The watchdog module monitors your web site, captures system events in a log and records them to be reviewed by an authorized individual at a later time.  The watchdog log is simply a list of events recorded during operation and contains usage data, performance data, errors, warnings and operational information. It is vital to check the watchdog report on a regular basis as it is often the only way to tell what is going on.");
-    $help["user"] = t("Watchdog events that have to do with users. Most of these come from the user.module.");
-    $help["regular"] = t("Watchdog events that are \"normal\" and have no other classification.");
-    $help["httpd"] = t("Watchdog events that are from the web server.<br />Note: At this time this logging level is <b>not</b> used.");
-    $help["special"] = t("Watchdog events about adding, changing, and moderating nodes and comments.");
-    $help["error"] = t("Watchdog general error events, such as invalid login, permission denied, and database errors.");
-    $help["warning"] = t("Watchdog warning events. These events don't stop Drupal from running, but are things you should no to correct.");
-
-    menu("admin/watchdog", "site monitoring", "watchdog_admin", $help["general"], 6);
-    menu("admin/watchdog/user", "user messages", "watchdog_admin", $help["user"]);
-    menu("admin/watchdog/regular", "regular messages", "watchdog_admin", $help["regular"]);
-    menu("admin/watchdog/special", "special messages", "watchdog_admin", $help["special"]);
-    menu("admin/watchdog/warning", "warning messages", "watchdog_admin", $help["warning"]);
-    menu("admin/watchdog/error", "error messages", "watchdog_admin", $help["error"]);
-    menu("admin/watchdog/httpd", "httpd messages", "watchdog_admin", $help["http"]);
-    menu("admin/watchdog/view", "view details", "watchdog_admin", $help["general"], 0, 1); // hidden menu
+    menu("admin/watchdog", "site monitoring", "watchdog_admin", watchdog_help("admin/watchdog"), 6);
+    menu("admin/watchdog/user", "user messages", "watchdog_admin", watchdog_help("admin/watchdog/user"));
+    menu("admin/watchdog/regular", "regular messages", "watchdog_admin", watchdog_help("admin/watchdog/regular"));
+    menu("admin/watchdog/special", "special messages", "watchdog_admin", watchdog_help("admin/watchdog/special"));
+    menu("admin/watchdog/warning", "warning messages", "watchdog_admin", watchdog_help("admin/watchdog/warning"));
+    menu("admin/watchdog/error", "error messages", "watchdog_admin", watchdog_help("admin/watchdog/error"));
+    menu("admin/watchdog/httpd", "httpd messages", "watchdog_admin", watchdog_help("admin/watchdog/httpd"));
+    menu("admin/watchdog/view", "view details", "watchdog_admin", NULL, 0, 1); // hidden menu
   }
 }
 
