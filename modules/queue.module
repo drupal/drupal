@@ -1,5 +1,5 @@
 <?php
-// $Id: queue.module,v 1.41 2002/01/27 14:58:45 dries Exp $
+// $Id: queue.module,v 1.42 2002/01/30 18:15:02 dries Exp $
 
 function queue_conf_options() {
 
@@ -19,7 +19,7 @@ function queue_perm() {
 }
 
 function queue_link($type) {
-  if ($type == "menu" && user_access("access submission queue")) {
+  if ($type == "menu.view" && user_access("access submission queue")) {
     $links[] = "<a href=\"module.php?mod=queue\" title=\"". t("Moderate the content in the submission queue.") ."\">". t("submission queue") ."</a> (<span style=\"color: red;\">". queue_count() ."</span>)";
   }
 
