@@ -546,10 +546,10 @@ function theme_forum_display($forums, $topics, $parents, $tid, $sortby, $forum_p
 
     if (module_exist('tracker')) {
       if ($user->uid) {
-        $output .= ' <li>'. l(t('Track your forum discussions.'), "tracker/$user->uid") .'</li>';
+        $output .= ' <li>'. l(t('My forum discussions.'), "tracker/$user->uid") .'</li>';
       }
 
-      $output .= ' <li>'. l(t('Track active forum discussions.'), 'tracker') .'</li>';
+      $output .= ' <li>'. l(t('Active forum discussions.'), 'tracker') .'</li>';
     }
 
     if (user_access('create forum topics')) {
