@@ -694,7 +694,7 @@ function comment_page() {
     case t("Moderate comments"):
     case t("Moderate comment"):
       comment_moderate($edit);
-      drupal_goto("node/view/". $edit["nid"]);
+      drupal_goto(url("node/view/". $edit["nid"]));
       break;
     case "reply":
       $theme->header();
