@@ -1,5 +1,5 @@
 <?php
-// $Id: import.module,v 1.74 2003/02/20 22:44:51 dries Exp $
+// $Id: import.module,v 1.75 2003/03/05 18:56:57 dries Exp $
 
 function import_help() {
  ?>
@@ -452,10 +452,10 @@ function import_admin() {
 
     switch ($op) {
       case "add feed":
-        print import_form_bundle();
+        print import_form_feed();
         break;
       case "add bundle":
-        print import_form_feed();
+        print import_form_bundle();
         break;
       case "edit":
         if (arg(4) == "bundle") {
