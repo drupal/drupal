@@ -153,12 +153,12 @@ function system_view_general() {
   // file system:
   $directory_path = variable_get('file_directory_path', 'files');
   if (!file_check_directory($directory_path)) {
-    form_set_error('file_directory_path', t( "the directory '%name' does not exist, or is not writable.", array('%name' => $directory_path)));
+    form_set_error('file_directory_path', t("The directory '%name' does not exist, or is not writable.", array('%name' => $directory_path)));
   }
 
   $directory_temp = variable_get('file_directory_temp', (PHP_OS == 'WINNT' ? 'c:\\windows\\temp' : '/tmp'));
   if (!file_check_directory($directory_temp)) {
-    form_set_error('file_directory_temp', t("the directory '%name' does not exist, or is not writable.", array('%name' => $directory_temp)));
+    form_set_error('file_directory_temp', t("The directory '%name' does not exist, or is not writable.", array('%name' => $directory_temp)));
   }
 
   $group = form_textfield(t('File system path'), 'file_directory_path', $directory_path, 70, 255, t('A file system path where the files will be stored. This directory has to exist and be writable by Drupal. If the download method is set to public this directory has to be relative to Drupal installation directory, and be accessible over the web. When download method is set to private this directory should not be accessible over the web. Changing this location after the site has been in use will cause problems so only change this setting on an existing site if you know what you are doing.'));
@@ -306,7 +306,7 @@ function system_listing_save($edit = array()) {
 
     cache_clear_all();
 
-    drupal_set_message(t('the configuration options have been saved.'));
+    drupal_set_message(t('The configuration options have been saved.'));
     drupal_goto($_GET['q']);
   }
 }
@@ -326,13 +326,13 @@ function system_settings_save() {
     foreach ($edit as $name => $value) {
       variable_del($name);
     }
-    drupal_set_message(t('the configuration options have been reset to their default values.'));
+    drupal_set_message(t('The configuration options have been reset to their default values.'));
   }
   if ($op == t('Save configuration')) {
     foreach ($edit as $name => $value) {
       variable_set($name, $value);
     }
-    drupal_set_message(t('the configuration options have been saved.'));
+    drupal_set_message(t('The configuration options have been saved.'));
   }
   else {
     return;

@@ -244,11 +244,11 @@ function block_box_save($edit) {
 
   if ($edit['bid']) {
     db_query("UPDATE {boxes} SET title = '%s', body = '%s', info = '%s', format = %d WHERE bid = %d", $edit['title'], $edit['body'], $edit['info'], $edit['format'], $edit['bid']);
-    return t('the block has been updated.');
+    return t('The block has been updated.');
   }
   else {
     db_query("INSERT INTO {boxes} (title, body, info, format) VALUES  ('%s', '%s', '%s', %d)", $edit['title'], $edit['body'], $edit['info'], $edit['format']);
-    return t('the new block has been added.');
+    return t('The new block has been added.');
   }
 }
 
@@ -258,7 +258,7 @@ function block_box_save($edit) {
 function block_box_delete($bid = 0) {
   if ($bid) {
     db_query('DELETE FROM {boxes} WHERE bid = %d', $bid);
-    drupal_set_message(t('the block has been deleted.'));
+    drupal_set_message(t('The block has been deleted.'));
     cache_clear_all();
   }
   print theme('page', block_admin_display());

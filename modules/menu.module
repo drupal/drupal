@@ -107,7 +107,7 @@ function menu_reset() {
   switch ($op) {
     case t('Reset'):
       db_query('DELETE FROM {menu}');
-      drupal_set_message(t('all menu items reset.'));
+      drupal_set_message(t('All menu items reset.'));
       drupal_goto('admin/menu');
       break;
     case t('Cancel'):
@@ -153,7 +153,7 @@ function menu_reset_item($mid) {
   switch ($op) {
     case t('Reset'):
       db_query('DELETE FROM {menu} WHERE mid = %d', $mid);
-      drupal_set_message(t('menu item reset.'));
+      drupal_set_message(t('Menu item reset.'));
       drupal_goto('admin/menu');
       break;
     case t('Cancel'):
@@ -174,7 +174,7 @@ function menu_delete_item($mid) {
   switch ($op) {
     case t('Delete'):
       db_query('DELETE FROM {menu} WHERE mid = %d', $mid);
-      drupal_set_message(t('menu item deleted.'));
+      drupal_set_message(t('Menu item deleted.'));
       drupal_goto('admin/menu');
       break;
     case t('Cancel'):
@@ -197,7 +197,7 @@ function menu_disable_item($mid) {
   $type &= ~MENU_VISIBLE_IN_BREADCRUMB;
   $type |= MENU_MODIFIED_BY_ADMIN;
   db_query('UPDATE {menu} SET type = %d WHERE mid = %d', $type, $mid);
-  drupal_set_message(t('menu item disabled.'));
+  drupal_set_message(t('Menu item disabled.'));
   drupal_goto('admin/menu');
 }
 

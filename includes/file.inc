@@ -147,7 +147,7 @@ function file_copy(&$source, $dest = 0, $replace = 0) {
 
   // Make sure we at least have a valid directory.
   if ($basename === false) {
-    drupal_set_message(t('file copy failed: no directory configured, or it could not be accessed.'), 'error');
+    drupal_set_message(t('File copy failed: no directory configured, or it could not be accessed.'), 'error');
     return 0;
   }
 
@@ -162,7 +162,7 @@ function file_copy(&$source, $dest = 0, $replace = 0) {
 
   $source = realpath($source);
   if (!file_exists($source)) {
-    drupal_set_message(t('file copy failed: source file does not exist.'), 'error');
+    drupal_set_message(t('File copy failed: source file does not exist.'), 'error');
     return 0;
   }
 
@@ -190,7 +190,7 @@ function file_copy(&$source, $dest = 0, $replace = 0) {
   }
 
   if (!copy($source, $dest)) {
-    drupal_set_message(t('file copy failed.'), 'error');
+    drupal_set_message(t('File copy failed.'), 'error');
     return 0;
   }
 
@@ -211,7 +211,7 @@ function file_move(&$source, $dest = 0, $replace = 0) {
     if (unlink($path)) {
       return 1;
     }
-    drupal_set_message(t('removing original file failed.'), 'error');
+    drupal_set_message(t('Removing original file failed.'), 'error');
   }
   return 0;
 }
@@ -249,7 +249,7 @@ function file_save_upload($source, $dest = 0, $replace = 0) {
 
     if (!valid_input_data($file)) {
       watchdog('error', t('Possible exploit abuse: invalid data.'));
-      drupal_set_message(t("file upload failed: invalid data."), 'error');
+      drupal_set_message(t("File upload failed: invalid data."), 'error');
       return 0;
     }
 
@@ -259,14 +259,14 @@ function file_save_upload($source, $dest = 0, $replace = 0) {
         break;
       case 1: // UPLOAD_ERR_INI_SIZE
       case 2: // UPLOAD_ERR_FORM_SIZE
-        drupal_set_message(t("file upload failed: file size too big."), 'error');
+        drupal_set_message(t("File upload failed: file size too big."), 'error');
         return 0;
       case 3: // UPLOAD_ERR_PARTIAL
       case 4: // UPLOAD_ERR_NO_FILE
-        drupal_set_message(t("file upload failed: incomplete upload."), 'error');
+        drupal_set_message(t("File upload failed: incomplete upload."), 'error');
         return 0;
       default: // Unknown error
-        drupal_set_message(t("file upload failed: unknown error."), 'error');
+        drupal_set_message(t("File upload failed: unknown error."), 'error');
         return 0;
     }
 
@@ -299,14 +299,14 @@ function file_save_upload($source, $dest = 0, $replace = 0) {
 function file_save_data($data, $dest, $replace = 0) {
   if (!valid_input_data($data)) {
     watchdog('error', t('Possible exploit abuse: invalid data.'));
-    drupal_set_message(t("file upload failed: invalid data."), 'error');
+    drupal_set_message(t("File upload failed: invalid data."), 'error');
     return 0;
   }
 
   $temp = variable_get('file_directory_temp', (PHP_OS == 'WINNT' ? 'c:\\windows\\temp' : '/tmp'));
   $file = tempnam($temp, 'file');
   if (!$fp = fopen($file, 'w')) {
-    drupal_set_message(t('unable to create file.'), 'error');
+    drupal_set_message(t('Unable to create file.'), 'error');
     return 0;
   }
   fwrite($fp, $data);

@@ -737,7 +737,7 @@ function node_admin_nodes() {
       }
     }
 
-    drupal_set_message(t('the update has been performed.'));
+    drupal_set_message(t('The update has been performed.'));
   }
 
   $filter = $_SESSION['node_overview_filter'];
@@ -799,7 +799,7 @@ function node_default_settings() {
     foreach ($edit as $name => $value) {
       variable_set($name, $value);
     }
-    drupal_set_message(t('the content settings have been saved.'));
+    drupal_set_message(t('The content settings have been saved.'));
   }
 
   if ($op == t('Reset to defaults')) {
@@ -807,7 +807,7 @@ function node_default_settings() {
     foreach ($edit as $name => $value) {
       variable_del($name);
     }
-    drupal_set_message(t('the content settings have been reset to their default values.'));
+    drupal_set_message(t('The content settings have been reset to their default values.'));
   }
 
   $header = array_merge(array(t('type')), array_keys(node_invoke_nodeapi($node, 'settings')));
@@ -904,7 +904,7 @@ function node_revision_rollback($nid, $revision) {
 
     node_save($rev, $filter);
 
-    drupal_set_message(t('rolled back to revision #%revision of "%title"', array('%revision' => $revision, '%title' => $node->title)));
+    drupal_set_message(t('Rolled back to revision #%revision of "%title"', array('%revision' => $revision, '%title' => $node->title)));
     drupal_goto('node/'. $nid .'/revisions');
   }
 }
@@ -920,7 +920,7 @@ function node_revision_delete($nid, $revision) {
 
     node_save($node, array('nid', 'revisions'));
 
-    drupal_set_message(t('deleted revision #%revision of "%title"', array('%revision' => $revision, '%title' => $node->title)));
+    drupal_set_message(t('Deleted revision #%revision of "%title"', array('%revision' => $revision, '%title' => $node->title)));
     drupal_goto('node/'. $nid . (count($node->revisions) ? '/revisions' : ''));
   }
 }
@@ -1349,7 +1349,7 @@ function node_submit($node) {
     if (node_access('update', $node)) {
       $node->nid = node_save($node);
       watchdog('special', t('%node-type: updated "%node-title"', array('%node-type' => t($node->type), '%node-title' => $node->title)), l(t('view'), 'node/'. $node->nid));
-      $msg = t('the %name was updated.', array ('%name' => node_invoke($node, 'node_name')));
+      $msg = t('The %name was updated.', array ('%name' => node_invoke($node, 'node_name')));
     }
   }
   else {
@@ -1358,7 +1358,7 @@ function node_submit($node) {
     if (node_access('create', $node)) {
       $node->nid = node_save($node);
       watchdog('special', t('%node-type: added "%node-title"', array('%node-type' => t("$node->type"), '%node-title' => $node->title)), l(t('view'), "node/$node->nid"));
-      $msg = t('your %name was created.', array ('%name' => node_invoke($node, 'node_name')));
+      $msg = t('Your %name was created.', array ('%name' => node_invoke($node, 'node_name')));
     }
   }
 

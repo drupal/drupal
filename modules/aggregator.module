@@ -260,7 +260,7 @@ function aggregator_remove($feed) {
   }
   db_query('DELETE FROM {aggregator_item} WHERE fid = %d', $feed['fid']);
   db_query("UPDATE {aggregator_feed} SET checked = 0, etag = '', modified = 0 WHERE fid = %d", $feed['fid']);
-  drupal_set_message(t('removed news items from \'%site\'.', array('%site' => $feed['title'])));
+  drupal_set_message(t('Removed news items from \'%site\'.', array('%site' => $feed['title'])));
 }
 
 /**
@@ -340,7 +340,7 @@ function aggregator_refresh($feed) {
   switch ($result->code) {
     case 304:
       db_query('UPDATE {aggregator_feed} SET checked = %d WHERE fid = %d', time(), $feed['fid']);
-      drupal_set_message(t('no new syndicated content from "%site".', array('%site' => $feed['title'])));
+      drupal_set_message(t('No new syndicated content from "%site".', array('%site' => $feed['title'])));
       break;
     case 301:
       $feed['url'] = $result->redirect_url;
@@ -383,14 +383,12 @@ function aggregator_refresh($feed) {
         cache_clear_all();
 
         watchdog('regular', t('aggregator: syndicated content from "%site"', array('%site' => $feed[title])));
-        $message = t('syndicated content from "%site".', array('%site' => $feed['title']));
-        drupal_set_message($message);
+        drupal_set_message(t('Syndicated content from "%site".', array('%site' => $feed['title']));
       }
       break;
     default:
       watchdog('error', t('aggregator: failed to parse RSS feed "%site": %error', array('%site' => $feed['title'], '%error' => $result->code .' '. $result->error)));
-      $message = t('failed to parse RSS feed "%site": %error.', array('%site' => $feed['title'], '%error' => $result->code .' '. $result->error));
-      drupal_set_message($message);
+      drupal_set_message(t('Failed to parse RSS feed "%site": %error.', array('%site' => $feed['title'], '%error' => $result->code .' '. $result->error)));
   }
 }
 
@@ -447,8 +445,7 @@ function aggregator_parse_feed(&$data, $feed) {
 
   if (!xml_parse($xml_parser, $data, 1)) {
     watchdog('error', t('aggregator: failed to parse RSS feed "%site": %error at line %line.', array('%site' => $feed['title'], '%error' => xml_error_string(xml_get_error_code($xml_parser)), '%line' => xml_get_current_line_number($xml_parser))));
-    $message = t('failed to parse RSS feed "%site": %error at line %line.', array('%site' => $feed['title'], '%error' => xml_error_string(xml_get_error_code($xml_parser)), '%line' => xml_get_current_line_number($xml_parser)));
-    drupal_set_message($message, 'error');
+    drupal_set_message(t('Failed to parse RSS feed "%site": %error at line %line.', array('%site' => $feed['title'], '%error' => xml_error_string(xml_get_error_code($xml_parser)), '%line' => xml_get_current_line_number($xml_parser))), 'error');
     return 0;
   }
   xml_parser_free($xml_parser);
@@ -539,7 +536,7 @@ function aggregator_parse_feed(&$data, $feed) {
     }
 
     if (!valid_input_data($item['DESCRIPTION'])) {
-      drupal_set_message(t('failed to parse entry from "%site" feed: suspicious input data.', array('%site' => $feed['title'])), 'error');
+      drupal_set_message(t('Failed to parse entry from "%site" feed: suspicious input data.', array('%site' => $feed['title'])), 'error');
     }
     else {
       aggregator_save_item(array('iid' => $entry->iid, 'fid' => $feed['fid'], 'timestamp' => $timestamp, 'title' => $title, 'link' => $link, 'author' => $item['AUTHOR'], 'description' => $item['DESCRIPTION']));

@@ -980,7 +980,7 @@ function comment_delete($cid) {
   // We'll only delete if the user has confirmed the
   // deletion using the form in our else clause below.
   if ($comment->cid && $_POST['op'] == t('Delete comment')) {
-    drupal_set_message(t('the comment and all its replies have been deleted.'));
+    drupal_set_message(t('The comment and all its replies have been deleted.'));
 
     // Delete comment and its replies.
     _comment_delete_thread($comment);
@@ -992,13 +992,13 @@ function comment_delete($cid) {
 
   // Print a confirmation.
   else if ($comment->cid) {
-    drupal_set_message(t('do you want to delete this comment and all its replies?'));
+    drupal_set_message(t('Do you want to delete this comment and all its replies?'));
     $comment->comment = check_output($comment->comment, $comment->format);
     $output  = theme('comment', $comment);
     $output .= form_submit(t('Delete comment'));
   }
   else {
-    drupal_set_message(t('the comment no longer exists.'));
+    drupal_set_message(t('The comment no longer exists.'));
   }
 
   print theme('page', form($output));
@@ -1007,7 +1007,7 @@ function comment_delete($cid) {
 function comment_save($id, $edit) {
   db_query("UPDATE {comments} SET subject = '%s', comment = '%s', status = %d WHERE cid = %d", $edit['subject'], $edit['comment'], $edit['status'], $id);
   watchdog('special', t('comment: modified "%comment-subject"', array('%comment-subject' => $edit['subject'])));
-  drupal_set_message(t('the comment has been saved.'));
+  drupal_set_message(t('The comment has been saved.'));
 }
 
 /**
@@ -1060,7 +1060,7 @@ function comment_matrix_settings() {
         db_query('INSERT INTO {moderation_roles} (mid, rid, value) VALUES '. $sql);
       }
     }
-    drupal_set_message(t('the vote values have been saved.'));
+    drupal_set_message(t('The vote values have been saved.'));
   }
 
   $output .= '<h3>Moderation vote/value matrix</h3>';
@@ -1107,7 +1107,7 @@ function comment_role_settings() {
 
   if ($edit) {
     variable_set('comment_roles', $edit);
-    drupal_set_message(t('the comment scores have been saved.'));
+    drupal_set_message(t('The comment scores have been saved.'));
   }
 
   $start_values = variable_get('comment_roles', array());
@@ -1136,18 +1136,18 @@ function comment_vote_settings($mid = 0) {
   if ($op == t('Save vote')) {
     db_query("UPDATE {moderation_votes} SET vote = '%s', weight = %d WHERE mid = %d", $edit['vote'], $edit['weight'], $mid);
     $mid = 0; // zero it out so we return to the overview.
-    drupal_set_message(t('the vote has been saved.'));
+    drupal_set_message(t('The vote has been saved.'));
   }
   else if ($op == t('Delete vote')) {
     db_query('DELETE FROM {moderation_votes} WHERE mid = %d', $mid);
     db_query('DELETE FROM {moderation_roles} WHERE mid = %d', $mid);
     $mid = 0; // zero it out so we return to the overview.
-    drupal_set_message(t('the vote has been deleted.'));
+    drupal_set_message(t('The vote has been deleted.'));
   }
   else if ($op == t('Add new vote')) {
     db_query("INSERT INTO {moderation_votes} (vote, weight) VALUES ('%s', %d)", $edit['vote'], $edit['weight']);
     $mid = 0; // zero it out so we return to the overview.
-    drupal_set_message(t('the vote has been added.'));
+    drupal_set_message(t('The vote has been added.'));
   }
 
   $output .= '<h3>'. t('Moderation votes overview') .'</h3>';
@@ -1191,17 +1191,17 @@ function comment_threshold_settings($fid = 0) {
   if ($op == t('Save threshold')) {
     db_query("UPDATE {moderation_filters} SET filter = '%s', minimum = %d WHERE fid = %d", $edit['filter'], $edit['minimum'], $fid);
     $fid = 0; // zero it out so we return to the overview.
-    drupal_set_message(t('the threshold has been saved.'));
+    drupal_set_message(t('The threshold has been saved.'));
   }
   else if ($op == t('Delete threshold')) {
     db_query('DELETE FROM {moderation_filters} WHERE fid = %d', $fid);
     $fid = 0; // zero it out so we return to the overview.
-    drupal_set_message(t('the threshold has been deleted.'));
+    drupal_set_message(t('The threshold has been deleted.'));
   }
   else if ($op == t('Add new threshold')) {
     db_query("INSERT INTO {moderation_filters} (filter, minimum) VALUES ('%s', %d)", $edit['filter'], $edit['minimum']);
     $fid = 0; // zero it out so we return to the overview.
-    drupal_set_message(t('the threshold has been added.'));
+    drupal_set_message(t('The threshold has been added.'));
   }
 
   $output .= '<h3>Comment threshold overview</h3>';

@@ -866,7 +866,7 @@ function _locale_string_delete($lid) {
   db_query("DELETE FROM {locales_source} WHERE lid = %d", $lid);
   db_query("DELETE FROM {locales_target} WHERE lid = %d", $lid);
   locale_refresh_cache();
-  drupal_set_message(t("deleted string"));
+  drupal_set_message(t("Deleted string"));
 }
 
 /**
@@ -890,7 +890,7 @@ function _locale_string_save($lid) {
   // delete form data so it will remember where it came from
   $edit = '';
 
-  drupal_set_message(t("saved string"));
+  drupal_set_message(t("Saved string"));
 }
 
 /**

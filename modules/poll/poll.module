@@ -385,14 +385,14 @@ function poll_vote(&$node) {
         db_query("UPDATE {poll_choices} SET chvotes = chvotes + 1 WHERE nid = %d AND chorder = %d", $node->nid, $choice);
         $node->allowvotes = false;
         $node->choice[$choice]['chvotes']++;
-        drupal_set_message(t('your vote was recorded.'));
+        drupal_set_message(t('Your vote was recorded.'));
       }
       else {
-        drupal_set_message(t("you're not allowed to vote on this poll."), 'error');
+        drupal_set_message(t("You're not allowed to vote on this poll."), 'error');
       }
     }
     else {
-      drupal_set_message(t("you didn't specify a valid poll choice."), 'error');
+      drupal_set_message(t("You didn't specify a valid poll choice."), 'error');
     }
 
     drupal_goto('node/'. $nid);
