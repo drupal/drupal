@@ -178,11 +178,12 @@ function node_save($node, $filter) {
     ** Insert a new node:
     */
 
-    // set some required fields:
+    // Set some required fields:
     $node->created = time();
+    $node->changed = time();
     $node->nid = db_result(db_query("SELECT MAX(nid) + 1 FROM node"));
 
-    // prepare the query:
+    // Prepare the query:
     foreach ($node as $key => $value) {
       if (in_array($key, $fields)) {
         $k[] = check_query($key);
@@ -190,10 +191,10 @@ function node_save($node, $filter) {
       }
     }
 
-    // insert the node into the database:
+    // Insert the node into the database:
     db_query("INSERT INTO node (". implode(", ", $k) .") VALUES (". implode(", ", $v) .")");
 
-    // call the node specific callback (if any):
+    // Call the node specific callback (if any):
     module_invoke($node->type, "insert", $node);
   }
   else {
@@ -202,20 +203,20 @@ function node_save($node, $filter) {
     ** Update an existing node:
     */
 
-    // set some required fields:
+    // Set some required fields:
     $node->changed = time();
 
-    // prepare the query:
+    // Prepare the query:
     foreach ($node as $key => $value) {
       if (in_array($key, $fields)) {
         $q[] = check_query($key) ." = '". check_query($value) ."'";
       }
     }
 
-    // update the node in the database:
+    // Update the node in the database:
     db_query("UPDATE node SET ". implode(", ", $q) ." WHERE nid = '$node->nid'");
 
-    // call the node specific callback (if any):
+    // Call the node specific callback (if any):
     module_invoke($node->type, "update", $node);
 
   }
@@ -484,7 +485,7 @@ function node_admin_nodes() {
 
   $queries = array(array("ORDER BY n.created DESC", "new nodes"), array("ORDER BY n.changed DESC", "updated nodes"), array("WHERE n.status = 1 AND n.moderate = 0 ORDER BY n.nid DESC", "published nodes"), array("WHERE n.status = 0 AND n.moderate = 0 ORDER BY n.nid DESC", "non-published nodes"), array("WHERE n.status = 1 AND n.moderate = 1 ORDER BY n.nid DESC", "pending nodes"), array("WHERE n.status = 1 AND n.promote = 1 ORDER BY n.nid DESC", "promoted nodes"));
 
-  $result = db_query("SELECT n.*, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid ". $queries[$query ? $query : 0][0] ." LIMIT 50");
+  $result = db_query("SELECT n.*, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid ". $queries[$query ? $query : 1][0] ." LIMIT 50");
 
   foreach ($queries as $key => $value) {
     $links[] = "<a href=\"admin.php?mod=node&op=nodes&query=$key\">$value[1]</a>";
@@ -929,47 +930,53 @@ function node_edit($id) {
   return $output;
 }
 
-function node_preview($edit) {
+function node_preview($node) {
+
+  /*
+  ** Convert the array to an object:
+  */
+
+  $node = node_object($node);
 
   /*
   ** Load the user's name when needed:
   */
 
-  if (isset($edit["name"])) {
-      /*
-      ** The use of isset() is mandatory in the context of user IDs as uid
-      ** 0 denotes the anonymous user.
-      */
-    if ($user = user_load(array("name" => $edit["name"]))) {
-      $edit["uid"] = $user->uid;
+  if (isset($node->name)) {
+    /*
+    ** The use of isset() is mandatory in the context of user IDs as uid
+    ** 0 denotes the anonymous user.
+    */
+
+    if ($user = user_load(array("name" => $node->name))) {
+      $node->uid = $user->uid;
     }
     else {
-      $edit["uid"] = 0; // anonymous user
+      $node->uid = 0; // anonymous user
     }
   }
   else if ($edit["uid"]) {
-    $user = user_load(array("uid" => $edit["uid"]));
-    $edit["name"] = $user->name;
+    $user = user_load(array("uid" => $node->uid));
+    $node->name = $user->name;
   }
 
   /*
   ** Set the created time when needed:
   */
 
-  if (empty($edit["nid"])) {
-    $edit["created"] = time();
+  if (empty($node->nid)) {
+    $node->created = time();
   }
 
   /*
   ** Apply the required filters:
   */
 
-  foreach ($edit as $key => $value) {
-    $node->$key = check_output($value);
-      /*
-      ** NOTE: we can't do a check_query() or check_input() here as they
-      **       add slashes which results in breakage.
-      */
+  if ($node->nid) {
+    $node = array_merge($node, module_invoke($node->type, "save", "update", $node));
+  }
+  else {
+    $node = array_merge($node, module_invoke($node->type, "save", "create", $node));
   }
 
   /*
@@ -978,7 +985,7 @@ function node_preview($edit) {
 
   node_view($node);
 
-  return node_form($edit);
+  return node_form($node);
 }
 
 function node_submit($node) {

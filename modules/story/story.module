@@ -32,17 +32,12 @@ function story_save($op, $node) {
   }
 
   if ($op == "create") {
-    return array("moderate" => 1);
+    return array("body" => filter($node->body), "moderate" => 1);
   }
 
   if ($op == "decline") {
     return array("status" => 0, "promote" => 0);
   }
-
-  if ($op == "update") {
-    return array("status");
-  }
-
 }
 
 function story_help() {

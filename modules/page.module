@@ -65,16 +65,23 @@ function page_link($type) {
 function page_body($node) {
   global $theme, $op;
 
-  /*
-  ** Make sure only authorized users can preview static (PHP)
-  ** pages.
-  */
 
-  if ($op == t("Preview") && !user_access("adminster nodes")) {
-    return;
-  }
 
   if ($node->format) {
+    /*
+    ** Make sure only authorized users can preview static (PHP)
+    ** pages.
+    */
+
+    if ($op == t("Preview")) {
+      if (user_access("adminster nodes")) {
+        $node->body = stripslashes($node->body);  // see also page_form()
+      }
+      else {
+        return;
+      }
+    }
+
     ob_start();
     eval($node->body);
     $output = ob_get_contents();

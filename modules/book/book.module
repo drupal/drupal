@@ -310,8 +310,13 @@ function book_body($node) {
     ** Make sure only authorized users can preview PHP pages.
     */
 
-    if ($op == t("Preview") && !user_access("adminster nodes")) {
-      return;
+    if ($op == t("Preview")) {
+      if (user_access("adminster nodes")) {
+        $node->body = stripslashes($node->body);  // see also book_form()
+      }
+      else {
+        return;
+      }
     }
 
     ob_start();
