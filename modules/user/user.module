@@ -695,7 +695,7 @@ function user_logout() {
   global $user;
 
   if ($user->uid) {
-    watchdog("user", "session closed for user '$user->name'");
+    watchdog("user", "session closed for '$user->name'");
 
     /*
     ** Destroy the current session:
