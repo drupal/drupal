@@ -38,7 +38,7 @@ function taxonomy_link($type, $node = NULL) {
     }
   }
   else if ($type == "taxonomy terms" && $node != NULL) {
-
+    $links = array();
     if ($node->taxonomy) {
       foreach ($node->taxonomy as $tid) {
         $term = taxonomy_get_term($tid);
