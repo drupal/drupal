@@ -80,13 +80,17 @@ function book_save($op, $node) {
 
 }
 
-function book_link($type) {
+function book_link($type, $node = 0) {
   if ($type == "page" && user_access("access content")) {
     $links[] = "<a href=\"module.php?mod=book\">". t("collaborative book") ."</a>";
   }
 
   if ($type == "admin" && user_access("administer nodes")) {
     $links[] = "<a href=\"admin.php?mod=book\">". t("collaborative book") ."</a>";
+  }
+
+  if ($type == "node" && $node->type == "book") {
+    $links[] = "<a href=\"module.php?mod=node&op=edit&id=$node->nid\">". t("update this book page") ."</a>";
   }
 
   return $links ? $links : array();
@@ -245,7 +249,7 @@ function book_view($node, $main = 0) {
       $prev = db_fetch_object(db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.status = 1 AND b.parent = '$node->parent' AND (b.weight < '$node->weight' OR (b.weight = '$node->weight' AND n.title < '". check_query($node->title) ."')) AND (n.moderate = 0 OR n.revisions != '') ORDER BY b.weight DESC, n.title DESC"));
     }
 
-    $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n";
+    $output .= "<table border=\"0\" cellpadding=\"1\" cellspacing=\"1\" width=\"100%\">";
 
     if ($node->title) {
       foreach (book_location($node) as $level) {
@@ -253,7 +257,7 @@ function book_view($node, $main = 0) {
         $indent .= "-";
       }
 
-      $output .= " <tr><td colspan=\"2\">$location</td><td align=\"right\"><a href=\"module.php?mod=node&op=edit&id=$node->nid\">". t("update this book page") ."</a></td></tr>";
+      $output .= " <tr><td colspan=\"3\">$location</td></tr>";
       $output .= " <tr><td colspan=\"3\"><hr /></td></tr>";
       $output .= " <tr><td colspan=\"3\"><b><big>". check_output($node->title) ."</big></b>". ($node->body ? "<br /><small><i>". sprintf(t("Last updated by %s on %s"), format_name($node), format_date($node->created)) ."</i></small> " : "") ."</td></tr>";
     }
@@ -269,6 +273,8 @@ function book_view($node, $main = 0) {
     $output .= " <tr><td colspan=\"3\"><hr /></td></tr>";
     $output .= " <tr><td align=\"left\" width=\"33%\">". ($prev ? "<a href=\"node.php?id=$prev->nid\">". t("previous") ."</a>" : t("previous")) ."</td><td align=\"center\" width=\"34%\"><a href=\"module.php?mod=book\">index</a></td><td align=\"right\" width=\"33%\">". ($next ? "<a href=\"node.php?id=$next->nid\">". t("next") ."</a>" : t("next")) ."</td></tr>";
     $output .= " <tr><td align=\"left\" width=\"33%\">". ($prev ? "<small>". check_output($prev->title) ."</small>" : "&nbsp;") ."</td><td align=\"center\" width=\"34%\">". ($node->parent ? "<a href=\"node.php?id=$node->parent\">". t("up") ."</a>" : t("up")) ."</td><td align=\"right\" width=\"33%\">". ($next ? "<small>". check_output($next->title) ."</small>" : "&nbsp;") ."</td></tr>";
+    $output .= " <tr><td colspan=\"3\"><hr /></td></tr>";
+    $output .= " <tr><td colspan=\"3\" align=\"right\"><div style=\"margin: 10 10 10 10;\">". $theme->links(link_node($node, $main)) ."</div></td></tr>";
     $output .= "</table>";
 
     $theme->box(t("Handbook"), $output);
