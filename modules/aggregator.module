@@ -67,7 +67,7 @@ function import_format_item($item, $feed = 0) {
   }
 
   // external link
-  $output .= "<a href=\"$item->link\" target=\"new\">$item->title</a>";
+  $output .= "<a href=\"$item->link\" target=\"_new\">$item->title</a>";
 
   return $output ."<br />";
 }
@@ -116,13 +116,13 @@ function import_block($op, $delta) {
     $feed = db_fetch_object(db_query("SELECT * FROM feed WHERE fid = '%d'", $delta));
     if ($feed) {
       $block["subject"] = $feed->title;
-      $block["content"] = import_feed_block($feed) ."<p><div align=\"right\">". l(t("more"), "import/feed/$feed->fid", array("title" => t("View this feed's recent news."))) ."</div></p>";
+      $block["content"] = import_feed_block($feed) ."<div align=\"right\">". l(t("more"), "import/feed/$feed->fid", array("title" => t("View this feed's recent news."))) ."</div>";
     }
     else {
       // it was a bundle. this is NOT elegant
       $bundle = db_fetch_object(db_query("SELECT * FROM bundle WHERE bid = '%d'", $delta));
       $block["subject"] = $bundle->title;
-      $block["content"] = import_bundle_block($bundle->attributes) ."<p><div align=\"right\">". l(t("more"), "import/bundle/$bundle->bid", array("title" => t("View this bundle's recent news."))) ."</div></p>";
+      $block["content"] = import_bundle_block($bundle->attributes) ."<div align=\"right\">". l(t("more"), "import/bundle/$bundle->bid", array("title" => t("View this bundle's recent news."))) ."</div>";
     }
 
     return $block;
@@ -150,7 +150,7 @@ function import_get_feeds($attributes = 0) {
   $result = db_query("SELECT * FROM feed ORDER BY fid");
   while ($feed = db_fetch_object($result)) {
     $block[$feed->fid]["subject"] = $feed->title;
-    $block[$feed->fid]["content"] = import_feed_block($feed) ."<p><div align=\"right\">". l(t("more"), "import/feed/$feed->fid", array("title" => t("View this feed's recent news."))) ."</div></p>";
+    $block[$feed->fid]["content"] = import_feed_block($feed) ."<div align=\"right\">". l(t("more"), "import/feed/$feed->fid", array("title" => t("View this feed's recent news."))) ."</div>";
     $block[$feed->fid]["info"] = "$feed->title feed";
   }
 
@@ -200,18 +200,18 @@ function import_refresh($feed) {
 
     $channel = ereg_replace("<item([^s].*)</item>", "", $data);
 
-    eregi("<title>(.*)</title>", $channel, $title);
-    eregi("<link>(.*)</link>", $channel, $link);
-    eregi("<description>(.*)</description>", $channel, $description);
+    eregi("<title>([^<]*)</title>", $channel, $title);
+    eregi("<link>([^<]*)</link>", $channel, $link);
+    eregi("<description>([^<]*)</description>", $channel, $description);
 
     /*
     ** Strip invalid tags and provide default values (if required):
     */
 
-    $link = strip_tags($link[1]);
-    $description = filter(strtr($description[1], $tt));
+    $feed["link"] = strip_tags($link[1]);
+    $feed["description"] = filter(strtr($description[1], $tt));
 
-    db_query("UPDATE feed SET timestamp = '%s', link = '%s', description = '%s' WHERE fid = '%s'", time(), $link, $description, $feed["fid"]);
+    db_query("UPDATE feed SET timestamp = '%s', link = '%s', description = '%s' WHERE fid = '%s'", time(), $feed["link"], $feed["description"], $feed["fid"]);
 
     /*
     ** Extract and process individual items:
@@ -227,19 +227,37 @@ function import_refresh($feed) {
 
       $t = eregi("<title>(.*)</title>", $item, $title);
       $l = eregi("<link>(.*)</link>", $item, $link);
+      $g = eregi("<guid.*>(.*)</guid>", $item, $guid);
       $a = eregi("<author>(.*)</author>", $item, $author);
       $d = eregi("<description>(.*)</description>", $item, $description);
 
-      if ($t || $l || $a || $d) {
+      if ($t || $l || $g || $a || $d) {
 
         /*
         ** Strip invalid tags and provide default values (if required):
         */
 
-        $title = strip_tags(strtr($title[1] ? $title[1] : substr(strip_tags(strtr($description[1], $tt)), 0, 30), $tt));
-        $link = strip_tags($link[1] ? $link[1] : $feed["link"]);
-        $author = strip_tags($author[1]);
         $description = filter(strtr($description[1], $tt));
+  if ($title[1]) {
+    $title = strip_tags(strtr($title[1], $tt));
+  }
+  else {
+    /*
+          ** Use up to 40 characters of the $description, ending at
+          ** word boundary, but don't split potential entities.
+          */
+    $title = preg_replace('/^(.*)[^\w;&].*?$/', "\\1", substr(strip_tags($description), 0, 40));
+  }
+  if ($link[1]) {
+    $link = strip_tags($link[1]);
+  }
+  elseif ($guid[1] && (strncmp($guid[1], "http://", 7) == 0)) {
+    $link = strip_tags($guid[1]);
+  }
+  else {
+    $link = $feed["link"];
+  }
+        $author = strip_tags($author[1]);
 
         // print "<pre>title = ". htmlentities($title) ."\n\ndescription = ". htmlentities($description) ."\n\nlink = ". htmlentities($link) ."</pre><hr />";
 
