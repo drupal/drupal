@@ -1,9 +1,35 @@
 <?php
 // $Id$
 
-function poll_system($field){
-  $system["description"] = t("Enables submission of multiple choice questions for voting.");
-  return $system[$field];
+function poll_allowvotes(&$node) {
+  /*
+  ** Only accept votes on specific cases to prevent double voting and abuse.
+  ** We only need to determine this once for a poll, but we don't do this in
+  ** poll_load() (i.e. for every poll that is loaded) for speed reasons.
+  */
+  global $REMOTE_ADDR, $user;
+
+  if ($node->allowvotes != -1) {
+    return $node;
+  }
+
+  $node->allowvotes = 0;
+  if (user_access("vote on polls")) {
+    if ($user->uid) {
+      // Pad the UID with underscores to allow a simple strstr() search
+      $id = "_". $user->uid ."_";
+    }
+    else {
+      $id = $REMOTE_ADDR;
+    }
+    if (!strstr($node->voters, $id)) {
+      $node->allowvotes = $node->active;
+    }
+
+    // Save this for later
+    $node->polluserid = $id;
+  }
+  return $node;
 }
 
 function poll_access($op, $node) {
@@ -123,14 +149,45 @@ function poll_insert($node) {
   }
 }
 
-function poll_link($type) {
+function poll_link($type, $node = 0, $main) {
   if ($type == "menu.create" && user_access("post content")) {
     $links[] = lm(t("create poll"), array("mod" => "node", "op" => "add", "type" => "poll"), "", array("title" => t("Add a new poll.")));
   }
   else if ($type == "page" && user_access("access content")) {
     $links[] = lm(t("polls"), array("mod" => "poll"), "", array("title" => t("View the list of polls on this site.")));
   }
+  else if ($type == "node" && $node->type == "poll") {
+    /*
+    ** Add links to allow the user to switch between the results and the voting
+    ** form, if he/she hasn't voted yet.
+    */
 
+    // Make sure we have determined the 'allowvotes' flag
+    poll_allowvotes($node);
+
+    if ($node->allowvotes == 1) {
+      global $pollresults;
+
+      // Change the current URL: add/edit the value of pollresults[nid]
+      if ($pollresults[$node->nid]) {
+        // Disable
+        $url = eregi_replace("pollresults\[$node->nid\]=1", "pollresults[$node->nid]=0", request_uri());
+
+        $links[] = "<a href=\"$url\">". t("voting form") . "</a>";
+      }
+      else {
+        // Enable
+        if (strstr(request_uri(), "pollresults[$node->nid]=")) {
+          $url = eregi_replace("pollresults\[$node->nid\]=0", "pollresults[$node->nid]=1", request_uri());
+        }
+        else {
+          $url = request_uri() . (strstr(request_uri(), "?") ? "&amp;" : "?") ."pollresults[$node->nid]=1";
+        }
+
+        $links[] = "<a href=\"$url\">". t("view results") . "</a>";
+      }
+    }
+  }
   return $links ? $links : array();
 }
 
@@ -143,6 +200,9 @@ function poll_load($node) {
     $poll->choice[$choice->chorder]  = $choice->chtext;
     $poll->chvotes[$choice->chorder] = $choice->chvotes;
   }
+
+  // Reset allowvotes flag, will be filled in later on when needed.
+  $poll->allowvotes = -1;
   return $poll;
 }
 
@@ -155,7 +215,7 @@ function poll_node($field) {
 
 function poll_page() {
   global $theme;
-  
+
   $theme->header();
   $result = db_query("SELECT n.nid, n.title, p.active, SUM(c.chvotes) AS votes FROM node n LEFT JOIN poll p ON n.nid=p.nid LEFT JOIN poll_choices c ON n.nid=c.nid WHERE type='poll' AND status='1' AND moderate='0' GROUP BY n.nid ORDER BY n.created DESC");
   while ($node = db_fetch_object($result)) {
@@ -192,6 +252,11 @@ function poll_save($op, $node) {
   }
 }
 
+function poll_system($field){
+  $system["description"] = t("Enables submission of multiple choice questions for voting.");
+  return $system[$field];
+}
+
 function poll_teaser($node) {
   // Create a simple teaser that lists all the choices
   foreach ($node->choice as $k => $v) {
@@ -202,109 +267,128 @@ function poll_teaser($node) {
   return $teaser;
 }
 
+function poll_view_voting(&$node, $main, $block, $links) {
+  // Display the vote form
+  global $theme;
+
+  $url = request_uri();
+  $output .= "<form action=\"$url\" method=\"post\">";
+  $output .= "<table border=\"0\" align=\"center\"><tr><td>";
+
+  foreach ($node->choice as $key => $value) {
+    if ($value != "") {
+      $output .= "<input type=\"radio\" name=\"pollvote[$node->nid]\" value=\"$key\" /> $value<br />";
+    }
+  }
+
+  if ($block) {
+    $output .= "</td></tr><tr><td><div align=\"center\">". form_submit(t("Vote")) ."</div></td></tr></table>";
+  }
+  else {
+    $output .= "</td><td valign=\"middle\"><div align=\"right\">&nbsp;&nbsp;&nbsp;". form_submit(t("Vote")) ."</div></td></tr></table>";
+  }
+
+  $output .= $block ? "<div align=\"center\">". $theme->links($links) ."</div>" : "";
+  $output .= "</form>";
+
+  return $output;
+}
+
+function poll_view_results(&$node, $main, $block, $links) {
+  // Display the results
+  global $theme;
+
+  // Count the votes and find the maximum
+  foreach ($node->choice as $key => $value) {
+    $votestotal += $node->chvotes[$key];
+    $votesmax = max($votesmax, $node->chvotes[$key]);
+  }
+  $votesmax = max($votesmax, 1);
+
+  /*
+  ** Define CSS classes for the bars
+  ** (note: style is not allowed outside <head>, but the alternative is very
+  ** ugly and it seems to work in all browsers)
+  */
+  $output .= "<style type=\"text/css\">";
+  $output .= "td.pollfg { background-color: ". $theme->foreground ."; font-size: 5pt; }";
+  $output .= "td.pollbg { background-color: ". $theme->background ."; font-size: 5pt; }";
+  $output .= "</style>";
+
+  foreach ($node->choice as $key => $value) {
+    if ($value != "") {
+      $width = round($node->chvotes[$key] * 100 / $votesmax);
+      $percentage = round($node->chvotes[$key] * 100 / max($votestotal, 1));
+
+      $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"95%\" align=\"center\"><tr><td>$value</td><td><div align=\"right\"> $percentage%". (!$block ? " (". format_plural($node->chvotes[$key], "vote", "votes") .")" : "") ."</div></td></tr></table>";
+      if ($width == 0) {
+        $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"95%\" align=\"center\"><tr><td class=\"pollbg\" width=\"100%\">&nbsp;</td></tr></table>";
+      }
+      else if ($width == 100) {
+        $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"95%\" align=\"center\"><tr><td class=\"pollfg\" width=\"100%\">&nbsp;</td></tr></table>";
+      }
+      else {
+        $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"95%\" align=\"center\"><tr><td class=\"pollfg\" width=\"". $width ."%\">&nbsp;</td><td class=\"pollbg\" width=\"". (100 - $width) ."%\">&nbsp;</td></tr></table>";
+      }
+    }
+  }
+  $output .= "<br /><div align=\"center\">". t("Total votes") .": $votestotal";
+
+  $output .= ($block ? "<br />". $theme->links($links) : "") ."</div>";
+
+  return $output;
+}
+
+function poll_view_processvote(&$node) {
+  global $pollvote;
+
+  if (isset($pollvote[$node->nid]) && ($node->allowvotes == 1)) {
+    if (!empty($node->choice[$pollvote[$node->nid]])) {
+      $node->voters = $node->voters ? ($node->voters ." ". $node->polluserid) : $node->polluserid;
+      db_query("UPDATE poll SET voters='$node->voters' WHERE nid='$node->nid'");
+      db_query("UPDATE poll_choices SET chvotes = chvotes + 1 WHERE nid='$node->nid' AND chorder='". $pollvote[$node->nid] ."'");
+      $node->allowvotes = 0;
+      $node->chvotes[$pollvote[$node->nid]]++;
+    }
+  }
+}
+
 function poll_view(&$node, $main = 0, $block = 0) {
   global $theme, $user;
 
-  /* When a poll is displayed twice on the same page (e.g. on the front page and in the side bar)
-     we only want to vote on one of them. We keep count using $pollid */
-  global $pollidcount, $pollvote, $pollid, $REMOTE_ADDR;
-  $pollidcount++;
+  /*
+  ** When several polls are displayed on the same page (e.g. on the front page and in the side bar)
+  ** we distinguish between them using the nid as index into associative arrays:
+  ** $pollvote[nid]    - A user's vote
+  ** $pollresults[nid] - When a user hasn't voted, he can choose to see the voting form or the results
+  */
+  global $pollresults;
 
-  // Only accept votes on specific cases to prevent double voting
-  $allowvotes = false;
-  if (user_access("vote on polls")) {
-    if ($user->uid) {
-      // Pad the UID with underscores to allow a simple strstr() search
-      $id = "_". $user->uid ."_";
-    }
-    else {
-      $id = $REMOTE_ADDR;
-    }
-    if (!strstr($node->voters, $id)) {
-      $allowvotes = $node->active;
-    }
-  }
+  // Make sure we have determined the 'allowvotes' flag
+  poll_allowvotes($node);
 
-  if (($pollid == $pollidcount) && isset($pollvote) && ($allowvotes)) {
-    // The user has submitted a valid vote
-    if (!empty($node->choice[$pollvote])) {
-      $node->voters = $node->voters ? ($node->voters ." ". $id) : $id;
-      db_query("UPDATE poll SET voters='$node->voters' WHERE nid='$node->nid'");
-      db_query("UPDATE poll_choices SET chvotes = chvotes + 1 WHERE nid='$node->nid' AND chorder='$pollvote'");
-      $allowvotes = false;
-      $node->chvotes[$pollvote]++;
-    }
-  }
+  // Because the voting form is embedded in the node-display, we process the data here
+  poll_view_processvote($node);
 
-  if ($allowvotes) {
-    // Display the vote form
-    $url = request_uri() . (strstr(request_uri(), "?") ? "&amp;" : "?") ."pollid=". $pollidcount;
-    $output .= "<form action=\"$url\" method=\"post\">";
-    $output .= "<table border=\"0\" align=\"center\"><tr><td>";
+  // Add extra link pointing to the list of polls (side-block only)
+  if ($block) {
+    $node->body = $node->teaser = "";
 
-    foreach ($node->choice as $key => $value) {
-      if ($value != "") {
-        $output .= "<input type=\"radio\" name=\"pollvote\" value=\"$key\" /> $value<br />";
-      }
-    }
-    if ($block) {
-      $output .= "</td></tr><tr><td><div align=\"center\">". form_submit(t("Vote")) ."</div></td></tr></table>";
-    }
-    else {
-      $output .= "</td><td valign=\"middle\"><div align=\"right\">&nbsp;&nbsp;&nbsp;". form_submit(t("Vote")) ."</div></td></tr></table>";
-    }
     $links = link_node($node, $main);
     $links[] = lm(t("older polls"), array("mod" => "poll"), "", array("title" => t("View the list of polls on this site.")));
-    $output .= $block ? "<div align=\"center\">". $theme->links($links) ."</div>" : "";
-    $output .= "</form>";
+  }
+
+  if (($node->allowvotes == 1) && !$pollresults[$node->nid]) {
+    $output = poll_view_voting($node, $main, $block, $links);
   }
   else {
-    // Display the results
-
-    // Count the votes and find the maximum
-    foreach ($node->choice as $key => $value) {
-      $votestotal += $node->chvotes[$key];
-      $votesmax = max($votesmax, $node->chvotes[$key]);
-    }
-    $votesmax = max($votesmax, 1);
-
-    // Define CSS classes for the bars
-    $output .= "<style type=\"text/css\">";
-    $output .= "td.pollfg { background-color: ". $theme->foreground ."; font-size: 5pt; }";
-    $output .= "td.pollbg { background-color: ". $theme->background ."; font-size: 5pt; }";
-    $output .= "</style>";
-
-    foreach ($node->choice as $key => $value) {
-      if ($value != "") {
-        $width = round($node->chvotes[$key] * 100 / $votesmax);
-        $percentage = round($node->chvotes[$key] * 100 / max($votestotal, 1));
-
-        $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"95%\" align=\"center\"><tr><td>$value</td><td><div align=\"right\"> $percentage%". (!$block ? " (". format_plural($node->chvotes[$key], "vote", "votes") .")" : "") ."</div></td></tr></table>";
-        if ($width == 0) {
-          $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"95%\" align=\"center\"><tr><td class=\"pollbg\" width=\"100%\">&nbsp;</td></tr></table>";
-        }
-        else if ($width == 100) {
-          $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"95%\" align=\"center\"><tr><td class=\"pollfg\" width=\"100%\">&nbsp;</td></tr></table>";
-        }
-        else {
-          $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"95%\" align=\"center\"><tr><td class=\"pollfg\" width=\"". $width ."%\">&nbsp;</td><td class=\"pollbg\" width=\"". (100 - $width) ."%\">&nbsp;</td></tr></table>";
-        }
-      }
-    }
-    if ($block) {
-      // Prevent a 'read more' link in the side-block.
-      $node->body = $node->teaser = "";
-    }
-    $links = link_node($node, $main);
-    $links[] = lm(t("older polls"), array("mod" => "poll"), "", array("title" => t("View the list of polls on this site.")));
-    $output .= "<br /><div align=\"center\">Total votes: ". $votestotal . ($block ? "<br />". $theme->links($links) : "") ."</div>";
+    $output = poll_view_results($node, $main, $block, $links);
   }
-  // Force the output on both the mainpage and elsewhere
-  $node->body = $output;
-  $node->teaser = $output;
+
+  $node->body = $node->teaser = $output;
 
   // We also use poll_view() for the side-block
-  if ($block == 0) {
+  if (!$block) {
     $theme->node($node, $main);
   }
 }
