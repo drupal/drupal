@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.195 2004/05/31 09:40:55 dries Exp $ */
+/* $Id: theme.inc,v 1.196 2004/06/02 05:35:50 dries Exp $ */
 
 /**
  * @file
@@ -322,9 +322,7 @@ function theme_table($header, $rows, $attributes = NULL) {
     $ts = tablesort_init($header);
     $output .= " <tr>";
     foreach ($header as $cell) {
-      if (is_array($cell) && $cell['field']) {
-        $cell = tablesort($cell, $header);
-      }
+      $cell = tablesort_header($cell, $header, $ts);
       $output .= _theme_table_cell($cell, 1);
     }
     $output .= " </tr>\n";
@@ -345,14 +343,7 @@ function theme_table($header, $rows, $attributes = NULL) {
       }
 
       foreach ($row as $cell) {
-        if  ($header[$i]['data'] == $ts['name'] && $header[$i]['field']) {
-          if (is_array($cell)) {
-            $cell['class'] .= ' active';
-          }
-          else {
-            $cell = array('data' => $cell, 'class' => 'active');
-          }
-        }
+        $cell = tablesort_cell($cell, $header, $ts, $i);
         $output .= _theme_table_cell($cell, 0);
         $i++;
       }

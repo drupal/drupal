@@ -1,4 +1,4 @@
-/* $Id: xtemplate.css,v 1.10 2004/05/05 18:19:23 dries Exp $ */
+/* $Id: xtemplate.css,v 1.11 2004/06/02 05:35:51 dries Exp $ */
 
 /*
 ** HTML elements
@@ -23,12 +23,6 @@ h1 {
 img {
   display: block;
   border: 0;
-}
-tr.dark {
-  background-color: #ddd;
-}
-tr.light {
-  background-color: #eee;
 }
 tr.dark td, tr.light td {
   padding: 0.3em;

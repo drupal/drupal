@@ -1,4 +1,4 @@
-/* $Id: xtemplate.css,v 1.8 2004/05/20 10:23:52 dries Exp $ */
+/* $Id: xtemplate.css,v 1.9 2004/06/02 05:35:51 dries Exp $ */
 
 /*
 ** HTML elements
@@ -9,12 +9,6 @@ body {
   color: #000;
   background-color: #fff;
   font: 76% Verdana, Arial, Helvetica, sans-serif;
-}
-tr.dark {
-  background-color: #ddd;
-}
-tr.light {
-  background-color: #eee;
 }
 tr.dark td, tr.light td {
   padding: 0.3em;

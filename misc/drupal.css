@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.67 2004/05/31 09:40:56 dries Exp $ */
+/* $Id: drupal.css,v 1.68 2004/06/02 05:35:50 dries Exp $ */
 
 /*
 ** HTML elements
@@ -31,17 +31,18 @@ th {
   border-bottom: 3px solid #ccc;
   white-space: nowrap;
 }
-tr.dark {
-  background-color: #ddd;
+th.active img {
+  display: inline;
 }
-tr.light {
+tr.dark, tr.light {
   background-color: #eee;
+  border-bottom: 1px solid #ccc;
 }
 tr.dark td, tr.light td {
   padding: 0.1em 0.6em;
 }
-th.active img {
-  display: inline;
+td.active {
+  background-color: #ddd;
 }
 
 /*
