@@ -142,7 +142,7 @@ function book_load($node) {
 
   $book = db_fetch_object(db_query('SELECT parent, weight, log FROM {book} WHERE nid = %d', $node->nid));
 
-  if (arg(1) == 'edit' && !user_access('administer nodes')) {
+  if (arg(2) == 'edit' && !user_access('administer nodes')) {
     // If a user is about to update a book page, we overload some
     // fields to reflect the changes.
     if ($user->uid) {
