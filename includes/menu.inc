@@ -49,8 +49,8 @@ function menu_get_active_item() {
 }
 
 /**
-* Returns the title of the active menu item.
-*/
+ * Returns the title of the active menu item.
+ */
 function menu_get_active_title() {
   global $_list;
 
@@ -60,8 +60,8 @@ function menu_get_active_title() {
 }
 
 /**
-* Returns the help associated with the active menu item.
-*/
+ * Returns the help associated with the active menu item.
+ */
 function menu_get_active_help() {
   $path = $_GET["q"];
   $output = "";

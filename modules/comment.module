@@ -1531,8 +1531,9 @@ function comment_num_replies($pid) {
 /**
  * get number of new comments for current user and specified node
  *
- * @param $nid       node-id to count comments for
- * @param $timestamp time to count from (defaults to time of last user access to node)
+ * @param $nid node-id to count comments for
+ * @param $timestamp time to count from (defaults to time of last user access
+ *   to node)
  */
 function comment_num_new($nid, $timestamp = 0) {
   global $user;

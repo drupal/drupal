@@ -112,11 +112,13 @@ function node_last_viewed($nid) {
 }
 
 /**
- * Determines whether the supplied timestamp is newer than the user's last view of a given node
+ * Determines whether the supplied timestamp is newer than the user's last view
+ * of a given node
  *
- * @param $nid       node-id twhose history supplies the 'last viewed' timestamp
- * @param $timestamp time which is compared against node's 'last veiwed' timestamp
-*/
+ * @param $nid node-id twhose history supplies the 'last viewed' timestamp
+ * @param $timestamp time which is compared against node's 'last veiwed'
+ *   timestamp
+ */
 function node_is_new($nid, $timestamp) {
   global $user;
   static $cache;

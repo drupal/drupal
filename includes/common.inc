@@ -2,11 +2,11 @@
 // $Id$
 
 /**
-  @name drupal_title
-
-  Functions to get and set the title of the current page.
-  @{
-**/
+ * @name drupal_title
+ *
+ * Functions to get and set the title of the current page.
+ * @{
+ */
 function drupal_set_title($title = NULL) {
   static $stored_title;
 
@@ -28,11 +28,11 @@ function drupal_get_title() {
 // @}
 
 /**
-  @name drupal_message
-
-  Functions to get and set the message of the current page.
-  @{
-**/
+ * @name drupal_message
+ *
+ * Functions to get and set the message of the current page.
+ * @{
+ */
 function drupal_set_message($message = NULL, $type = "status") {
   static $stored_message;
 
@@ -50,14 +50,14 @@ function drupal_get_message() {
 // @}
 
 /**
-  @name drupal_breadcrumb
-
-  Functions to get and set the breadcrumb trail of the current page.
-
-  @param   $breadcrumb   array of links, starting with "home" and proceeding
-    up to but not including the current page.
-  @{
-**/
+ * @name drupal_breadcrumb
+ *
+ * Functions to get and set the breadcrumb trail of the current page.
+ *
+ * @param $breadcrumb array of links, starting with "home" and proceeding up
+ *   to but not including the current page.
+ * @{
+ */
 function drupal_set_breadcrumb($breadcrumb = NULL) {
   static $stored_breadcrumb;
 
@@ -80,8 +80,8 @@ function drupal_get_breadcrumb() {
 // @}
 
 /**
-  Build the alias/path array
-**/
+ * Build the alias/path array
+ */
 function drupal_get_path_map($action = "") {
 
   static $cache;
@@ -238,10 +238,10 @@ function drupal_specialchars($input, $quotes = ENT_NOQUOTES) {
 }
 
 /**
- * Verify the syntax of the given e-mail address.  Empty e-mail addresses
- * are allowed.  See RFC 2822 for details.
+ * Verify the syntax of the given e-mail address. Empty e-mail addresses are
+ * allowed. See RFC 2822 for details.
  *
- * @param $mail  a email address
+ * @param $mail a email address
  */
 function valid_email_address($mail) {
   $user = '[a-zA-Z0-9_\-\.\+\^!#\$%&*+\/\=\?\`\|\{\}~\']+';
@@ -260,7 +260,7 @@ function valid_email_address($mail) {
 /**
  * Verify the syntax of the given URL.
  *
- * @param $url  an URL
+ * @param $url an URL
  */
 function valid_url($url) {
 
@@ -275,10 +275,10 @@ function valid_url($url) {
 /**
  * Format a single result entry of a search query:
  *
- * @param $item  a single search result as returned by <i>module</i>_search of
+ * @param $item a single search result as returned by <i>module</i>_search of
  *   type array("count" => ..., "link" => ..., "title" => ..., "user" => ...,
- *              "date" => ..., "keywords" => ...)
- * @param $type  module type of this item
+ *   "date" => ..., "keywords" => ...)
+ * @param $type module type of this item
  */
 function search_item($item, $type) {
 
@@ -303,15 +303,14 @@ function search_item($item, $type) {
  * Render a generic search form.
  *
  * "Generic" means "universal usable" - that is, usable not only from
- * 'site.com/search', but also as a simple seach box (without
- * "Restrict search to", help text, etc) from theme's header etc.
- * This means: provide options to only conditionally render certain
- * parts of this form.
+ * 'site.com/search', but also as a simple seach box (without "Restrict search
+ * to", help text, etc) from theme's header etc. This means: provide options to
+ * only conditionally render certain parts of this form.
  *
- * @param $action  Form action. Defaults to 'site.com/search'.
- * @param $keys   string containing keywords for the search.
- * @param $options != 0: Render additional form fields/text
- *                 ("Restrict search to", help text, etc).
+ * @param $action Form action. Defaults to 'site.com/search'.
+ * @param $keys string containing keywords for the search.
+ * @param $options != 0: Render additional form fields/text ("Restrict search
+ *   to", help text, etc).
  */
 function search_form($action = NULL, $keys = NULL, $options = NULL) {
 
@@ -367,12 +366,12 @@ function search_data($keys = NULL) {
 /**
  * Display the search form and the resulting data.
  *
- * @param $type    If set, search only nodes of this type.
- *                 Otherwise, search all types.
- * @param $action  Form action. Defaults to 'site.com/search'.
- * @param $keys    Query string. Defaults to global $keys.
- * @param $options != 0: Render additional form fields/text
- *                 ("Restrict search to", help text, etc).
+ * @param $type If set, search only nodes of this type. Otherwise, search all
+ *   types.
+ * @param $action Form action. Defaults to 'site.com/search'.
+ * @param $keys Query string. Defaults to global $keys.
+ * @param $options != 0: Render additional form fields/text ("Restrict search
+ *   to", help text, etc).
  */
 function search_type($type, $action = NULL, $keys = NULL, $options = NULL) {
 
@@ -607,17 +606,16 @@ function format_rss_item($title, $link, $description, $args = array()) {
 
 /**
  * Formats a string with a count of items so that the string is pluralized
- * correctly.
- * format_plural calls t() by itself, make sure not to pass already localized
- * strings to it.
+ * correctly. format_plural calls t() by itself, make sure not to pass already
+ * localized strings to it.
  *
- * @param $count    The item count to display.
- * @param $singular The string for the singular case. Please make sure it's clear
- *                  this is singular, to ease translation. ("1 new comment" instead of
- *                  "1 new").
- * @param $plural   The string for the plrual case. Please make sure it's clear
- *                  this is plural, to ease translation. Use %count in places of the
- *                  item count, as in "%count new comments".
+ * @param $count The item count to display.
+ * @param $singular The string for the singular case. Please make sure it's
+ *   clear this is singular, to ease translation. ("1 new comment" instead of "1
+ *   new").
+ * @param $plural The string for the plrual case. Please make sure it's clear
+ *   this is plural, to ease translation. Use %count in places of the item
+ *   count, as in "%count new comments".
  */
 function format_plural($count, $singular, $plural) {
   return t($count == 1 ? $singular : $plural, array("%count" => $count));

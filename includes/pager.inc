@@ -2,41 +2,41 @@
 // $Id$
 
 /**
-  @defgroup pager_api Pager API
-  @{
-
-  Pager external functions (API).
- **/
+ * @defgroup pager_api Pager API
+ * @{
+ *
+ * Pager external functions (API).
+ */
 
 /**
- * Use this function when doing select queries you wish to be able to page.
- * The pager uses LIMIT-based queries to fetch only the records required
- * to render a certain page.  However, it has to learn the total number
- * of records returned by the query to (among others) compute the number
- * of pages (= number of all records / number of records per page).  This
- * is done by inserting "COUNT(*)" in the original query, ie. by rewriting
- * the original query, say "SELECT nid, type FROM node WHERE status = '1'
- * ORDER BY static DESC, created DESC" to read "SELECT COUNT(*) FROM node
- * WHERE status = '1' ORDER BY static DESC, created DESC".  Rewriting the
- * query is accomplished using a regular expression.
+ * Use this function when doing select queries you wish to be able to page. The
+ * pager uses LIMIT-based queries to fetch only the records required to render a
+ * certain page. However, it has to learn the total number of records returned
+ * by the query to (among others) compute the number of pages (= number of all
+ * records / number of records per page). This is done by inserting "COUNT(*)"
+ * in the original query, ie. by rewriting the original query, say "SELECT nid,
+ * type FROM node WHERE status = '1' ORDER BY static DESC, created DESC" to read
+ * "SELECT COUNT(*) FROM node WHERE status = '1' ORDER BY static DESC, created
+ * DESC". Rewriting the query is accomplished using a regular expression.
  *
- * Unfortunately, the rewrite rule does not always work as intended for
- * queries that (already) have a "COUNT(*)" or a "GROUP BY" clause, and
- * possibly for other complex queries.  In those cases, you can optionally
- * pass a query that will be used to count the records.
+ * Unfortunately, the rewrite rule does not always work as intended for queries
+ * that (already) have a "COUNT(*)" or a "GROUP BY" clause, and possibly for
+ * other complex queries. In those cases, you can optionally pass a query that
+ * will be used to count the records.
  *
- * For example, if you want to page this query: "SELECT COUNT(*), TYPE FROM
- * node GROUP BY TYPE", pager_query() would invoke the wrong query, being:
- * "SELECT COUNT(*) FROM node GROUP BY TYPE".  So instead, you should pass
- * "SELECT COUNT(DISTINCT(TYPE)) FROM node" as the optional $count_query
- * parameter.
+ * For example, if you want to page this query: "SELECT COUNT(*), TYPE FROM node
+ * GROUP BY TYPE", pager_query() would invoke the wrong query, being: "SELECT
+ * COUNT(*) FROM node GROUP BY TYPE". So instead, you should pass "SELECT
+ * COUNT(DISTINCT(TYPE)) FROM node" as the optional $count_query parameter.
  *
- * @param   $query        the SQL query that needs paging
- * @param   $limit        the number of rows per page
- * @param   $element      optional attribute to distringuish between multiple pagers on one page
- * @param   $count_query  an optional SQL query used to count records when rewriting the query would fail
+ * @param $query the SQL query that needs paging
+ * @param $limit the number of rows per page
+ * @param $element optional attribute to distringuish between multiple pagers
+ *   on one page
+ * @param $count_query an optional SQL query used to count records when
+ *   rewriting the query would fail
  *
- * @return  SQL query result
+ * @return SQL query result
  */
 function pager_query($query, $limit = 10, $element = 0, $count_query = "") {
   global $pager_from_array, $pager_total;
@@ -61,19 +61,21 @@ function pager_query($query, $limit = 10, $element = 0, $count_query = "") {
 /**
  * Use this function in your module or theme to display a pager.
  *
- * @param   $tags     defines your buttons; text or img.
- * @param   $limit    how many nodes are displayed per page
- * @param   $element  support for multiple pagers per page (specify which this is)
- * @param   $type     allows for distinction between pagers on main page and admin page, etc.
- *   Supported types are "default", "admin" and "simple".
- * @param   $attributes   extra html attributes for \<a href> (eg. title, onMouseOver, etc.)
+ * @param $tags defines your buttons; text or img.
+ * @param $limit how many nodes are displayed per page
+ * @param $element support for multiple pagers per page (specify which this
+ *   is)
+ * @param $type allows for distinction between pagers on main page and admin
+ *   page, etc. Supported types are "default", "admin" and "simple".
+ * @param $attributes extra html attributes for \<a href> (eg. title,
+ *   onMouseOver, etc.)
  *
- * @return  string  html of pager
+ * @return string html of pager
  */
 function pager_display($tags = "", $limit = 10, $element = 0, $type = "default", $attributes = array()) {
   return theme("pager_display_". $type, $tags, $limit, $element, $attributes);
 }
-/**  @} End of defgroup pager_api **/
+/** @} End of defgroup pager_api */
 
 /**
  * @addtogroup themeable
@@ -81,10 +83,9 @@ function pager_display($tags = "", $limit = 10, $element = 0, $type = "default",
  */
 
 /**
- * DEFAULT PAGER:
- *  When writing themes, you can rewrite this pager function in your
- *  theme.  This is the most common pager type, and thus the main one
- *  to re-write in your theme.
+ * DEFAULT PAGER: When writing themes, you can rewrite this pager function in
+ * your theme. This is the most common pager type, and thus the main one to
+ * re-write in your theme.
  *
  * @see pager_display
  */
@@ -104,10 +105,9 @@ function theme_pager_display_default($tags = "", $limit = 10, $element = 0, $att
 }
 
 /**
- * SIMPLE PAGER:
- *   When writing themes, you can rewrite this pager function in your
- *   theme. Keep in mind that the pager it defines is intended to have
- *   a "simple" look, possibly located in a table or block.
+ * SIMPLE PAGER: When writing themes, you can rewrite this pager function in
+ * your theme. Keep in mind that the pager it defines is intended to have a
+ * "simple" look, possibly located in a table or block.
  *
  * @see pager_display
  */
@@ -121,10 +121,9 @@ function theme_pager_display_simple($tags = "", $limit = 10, $element = 0, $attr
 }
 
 /**
- * ADMIN PAGER:
- *   When writing themes, you can rewrite this pager function in your
- *   theme.  Most themes will probably NOT re-write this function, as
- *   admin pages are not normally themed.
+ * ADMIN PAGER: When writing themes, you can rewrite this pager function in your
+ * theme. Most themes will probably NOT re-write this function, as admin pages
+ * are not normally themed.
  *
  * @see pager_display
  */
@@ -136,24 +135,25 @@ function theme_pager_display_admin($tags = "", $limit = 10, $element = 0, $attri
   */
   return theme_pager_display_default($tags, $limit, $element, $attributes);
 }
-/**  @} End of addtogroup themeable **/
+/** @} End of addtogroup themeable */
 
 /**
- * @name pager pieces
- * Use these pieces to construct your own custom pagers in your theme.  Note
- * that you should NOT modify this file to customize your pager.
+ * @name pager pieces Use these pieces to construct your own custom pagers in
+ *   your theme. Note that you should NOT modify this file to customize your
+ *   pager.
  * @{
  */
 
 /**
  * displays a "first-page" link
  *
- * @param   $text     defines the name (or image) of the link
- * @param   $limit    how many nodes are displayed per page
- * @param   $element  distinguish between multiple pagers on one page
- * @param   $attributes   extra html attributes for \<a href> (eg. title, onMouseOver, etc.)
+ * @param $text defines the name (or image) of the link
+ * @param $limit how many nodes are displayed per page
+ * @param $element distinguish between multiple pagers on one page
+ * @param $attributes extra html attributes for \<a href> (eg. title,
+ *   onMouseOver, etc.)
  *
- * @return  string  html of this pager piece
+ * @return string html of this pager piece
  */
 function pager_first($text, $limit, $element = 0, $attributes = array()) {
   global $pager_from_array;
@@ -170,13 +170,14 @@ function pager_first($text, $limit, $element = 0, $attributes = array()) {
 /**
  * displays a "previous-page" link
  *
- * @param   $text     defines the name (or image) of the link
- * @param   $limit    how many nodes are displayed per page
- * @param   $element  distinguish between multiple pagers on one page
- * @param   $n        how many pages we move back (defaults to 1)
- * @param   $attributes   extra html attributes for \<a href> (eg. title, onMouseOver, etc.)
+ * @param $text defines the name (or image) of the link
+ * @param $limit how many nodes are displayed per page
+ * @param $element distinguish between multiple pagers on one page
+ * @param $n how many pages we move back (defaults to 1)
+ * @param $attributes extra html attributes for \<a href> (eg. title,
+ *   onMouseOver, etc.)
  *
- * @return  string  html of this pager piece
+ * @return string html of this pager piece
  */
 function pager_previous($text, $limit, $element = 0, $n = 1, $attributes = array()) {
   global $pager_from_array;
@@ -190,13 +191,14 @@ function pager_previous($text, $limit, $element = 0, $n = 1, $attributes = array
 /**
  * displays a "next-page" link
  *
- * @param   $text     defines the name (or image) of the link
- * @param   $limit    how many nodes are displayed per page
- * @param   $element  distinguish between multiple pagers on one page
- * @param   $n        how many pages we move back (defaults to 1)
- * @param   $attributes   extra html attributes for \<a href> (eg. title, onMouseOver, etc.)
+ * @param $text defines the name (or image) of the link
+ * @param $limit how many nodes are displayed per page
+ * @param $element distinguish between multiple pagers on one page
+ * @param $n how many pages we move back (defaults to 1)
+ * @param $attributes extra html attributes for \<a href> (eg. title,
+ *   onMouseOver, etc.)
  *
- * @return  string  html of this pager piece
+ * @return string html of this pager piece
  */
 function pager_next($text, $limit, $element = 0, $n = 1, $attributes = array()) {
   global $pager_from_array, $pager_total;
@@ -210,12 +212,13 @@ function pager_next($text, $limit, $element = 0, $n = 1, $attributes = array()) 
 /**
  * displays a "last-page" link
  *
- * @param   $text     defines the name (or image) of the link
- * @param   $limit    how many nodes are displayed per page
- * @param   $element  distinguish between multiple pagers on one page
- * @param   $attributes   extra html attributes for \<a href> (eg. title, onMouseOver, etc.)
+ * @param $text defines the name (or image) of the link
+ * @param $limit how many nodes are displayed per page
+ * @param $element distinguish between multiple pagers on one page
+ * @param $attributes extra html attributes for \<a href> (eg. title,
+ *   onMouseOver, etc.)
  *
- * @return  string  html of this pager piece
+ * @return string html of this pager piece
  */
 function pager_last($text, $limit, $element = 0, $attributes = array()) {
   global $pager_from_array, $pager_total;
@@ -233,11 +236,11 @@ function pager_last($text, $limit, $element = 0, $attributes = array()) {
 /**
  * displays "%d through %d of $d" type detail about the cur page
  *
- * @param   $limit    how many nodes are displayed per page
- * @param   $element  distinguish between multiple pagers on one page
- * @param   $format   allows you to reword the format string
+ * @param $limit how many nodes are displayed per page
+ * @param $element distinguish between multiple pagers on one page
+ * @param $format allows you to reword the format string
  *
- * @return  string  html of this pager piece
+ * @return string html of this pager piece
  */
 function pager_detail($limit, $element = 0, $format = "%d through %d of %d.") {
   global $pager_from_array, $pager_total;
@@ -252,13 +255,14 @@ function pager_detail($limit, $element = 0, $format = "%d through %d of %d.") {
 /**
  * displays a list of nearby pages with additional nodes
  *
- * @param   $limit      how many nodes are displayed per page
- * @param   $element    distinguish between multiple pagers on one page
- * @param   $quantity   defines the length of the page list
- * @param   $text       optional text to display before the page list
- * @param   $attributes   extra html attributes for \<a href> (eg. title, onMouseOver, etc.)
+ * @param $limit how many nodes are displayed per page
+ * @param $element distinguish between multiple pagers on one page
+ * @param $quantity defines the length of the page list
+ * @param $text optional text to display before the page list
+ * @param $attributes extra html attributes for \<a href> (eg. title,
+ *   onMouseOver, etc.)
  *
- * @return  string  html of this pager piece
+ * @return string html of this pager piece
  */
 function pager_list($limit, $element = 0, $quantity = 5, $text = "", $attributes = array()) {
   global $pager_from_array, $pager_total;

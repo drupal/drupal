@@ -101,9 +101,11 @@ function block_admin_save($edit) {
 /**
  * update blocks db table with blocks currently exported by modules
  *
- * @param   $order_by   php <a href="http://www.php.net/manual/en/function.array-multisort.php">array_multisort()</a> style sort ordering, eg. "weight", SORT_ASC, SORT_STRING.
+ * @param $order_by php <a
+ *   href="http://www.php.net/manual/en/function.array-multisort.php">array_multisort()</a>
+ *   style sort ordering, eg. "weight", SORT_ASC, SORT_STRING.
  *
- * @return  blocks currently exported by modules, sorted by $order_by
+ * @return blocks currently exported by modules, sorted by $order_by
  */
 function _block_rehash($order_by = array("weight")) {
   $result = db_query("SELECT * FROM {blocks} ");
@@ -355,13 +357,13 @@ function block_user($type, &$edit, &$user) {
 /**
  * Return blocks available for current $user at $region.
  *
- * @param   $region   main|left|right
+ * @param $region main|left|right
  *
- * @return  array of block objects, indexed with <i>module</i>_<i>delta</i>
+ * @return array of block objects, indexed with <i>module</i>_<i>delta</i>
  *
- * @see     <a href="http://drupal.org/node/view/1042" target="_top">[feature]
+ * @see <a href="http://drupal.org/node/view/1042" target="_top">[feature]
  *   Generic template design difficult w/o block region "look-ahead"</a>
- * @todo    add a proper primary key (bid) to the blocks table so we don't have
+ * @todo add a proper primary key (bid) to the blocks table so we don't have
  *   to mess around with this <i>module</i>_<i>delta</i> construct. currently,
  *   "blocks" has no primary key defined (bad)!
  */
