@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.94 2003/01/09 21:50:04 dries Exp $
+// $Id: comment.module,v 1.95 2003/01/12 15:29:56 dries Exp $
 
 $GLOBALS["cmodes"] = array(1 => t("Flat list - collapsed"), 2 => t("Flat list - expanded"), 3 => t("Threaded list - collapsed"), 4 => t("Threaded list - expanded"));
 $GLOBALS["corder"] = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"));
@@ -1475,10 +1475,6 @@ function comment_update_index() {
   */
 
   return array("last_update" => "comment_cron_last", "node_type" => "comment", "select" => "SELECT c.cid as lno, c.subject as text1, c.comment as text2 FROM comments c WHERE c.status = 0 AND timestamp > ". variable_get("comment_cron_last", 1));
-}
-
-// backward compatibility with some themes
-function comment_moderation() {
 }
 
 ?>
