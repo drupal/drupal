@@ -60,10 +60,10 @@ function cloud_link($type) {
 
   if ($type == "system") {
     if (user_access("administer site cloud")) {
-      menu("admin/syndication", "content syndication", NULL, NULL, 5);
-      menu("admin/syndication/cloud", "site cloud", "cloud_admin", cloud_help("admin/syndication/cloud"));
-      menu("admin/syndication/cloud/add", "add new site", "cloud_admin", cloud_help("admin/syndication/cloud/add"));
-      menu("admin/syndication/cloud/help", "help", "cloud_help", NULL, 9);
+      menu("admin/syndication", t("content syndication"), NULL, NULL, 5);
+      menu("admin/syndication/cloud", t("site cloud"), "cloud_admin", cloud_help("admin/syndication/cloud"));
+      menu("admin/syndication/cloud/add", t("add new site"), "cloud_admin", cloud_help("admin/syndication/cloud/add"));
+      menu("admin/syndication/cloud/help", t("help"), "cloud_help", NULL, 9);
     }
   }
 
