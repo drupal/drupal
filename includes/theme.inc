@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.138 2003/06/08 16:50:04 dries Exp $
+// $Id: theme.inc,v 1.139 2003/06/11 18:16:31 dries Exp $
 
 /**
 * Basic theme
@@ -23,7 +23,6 @@ class BaseTheme {
 
     $output = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"DTD/xhtml1-transitional.dtd\">\n";
     $output .= "<html><head><title>". $title ? $title : variable_get(site_name, "drupal") ."</title>";
-    $output .= "<base href=\"$base_url/\" />";
     $output .= theme_head($main);
     $output .= "</head><body bgcolor=\"$this->background\" text=\"$this->foreground". theme_onload_attribute(). "\">";
     $output .= "<table border=\"0\" cellspacing=\"4\" cellpadding=\"4\"><tr><td valign=\"top\" width=\"170\">";

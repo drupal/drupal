@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.137 2003/06/08 01:19:37 unconed Exp $
+// $Id: comment.module,v 1.138 2003/06/11 18:16:32 dries Exp $
 
 $GLOBALS["cmodes"] = array(1 => t("Flat list - collapsed"), 2 => t("Flat list - expanded"), 3 => t("Threaded list - collapsed"), 4 => t("Threaded list - expanded"));
 $GLOBALS["corder"] = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"));
@@ -1197,7 +1197,7 @@ function comment_folded($comment) {
 function comment_flat_collapsed($comments, $threshold) {
   foreach ($comments as $comment) {
     if (comment_visible($comment, $threshold)) {
-      print comment_view($comment, "", 0);
+      comment_view($comment, "", 0);
     }
   }
 }
@@ -1218,7 +1218,7 @@ function comment_thread_min($comments, $threshold, $pid = 0) {
     #$comment = $comments[$n];
     if (($comment->pid == $pid) && (comment_visible($comment, $threshold))) {
       print "<ul>";
-      print comment_view($comment, "", 0);
+      comment_view($comment, "", 0);
       comment_thread_min($comments, $threshold, $comment->cid);
       print "</ul>";
     }
