@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.66 2002/05/29 17:16:27 kjartan Exp $
+// $Id: comment.module,v 1.67 2002/05/29 17:32:09 dries Exp $
 
 $GLOBALS["cmodes"] = array(1 => "Flat list - collapsed", 2 => "Flat list - expanded", 3 => "Threaded list - collapsed", 4 => "Threaded list - expanded");
 $GLOBALS["corder"] = array(1 => "Date - newest first", 2 => "Date - oldest first");
@@ -291,7 +291,7 @@ function comment_post($edit) {
   ** Redirect the user the node he commented on:
   */
 
-  drupal_goto(drupal_url(array("id" => $edit["nid"], "node")));
+  drupal_goto(drupal_url(array("id" => $edit["nid"]), "node"));
 
 }
 
