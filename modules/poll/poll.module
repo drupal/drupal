@@ -91,9 +91,9 @@ function poll_help() {
  <?php
 }
 
-function poll_graph($val) {
+function poll_graph($val, $clrfill = "#000000", $clrempty = "#ffffff") {
   $p = round($val * 100);
-  return "<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\"><tr>" . ($p ? "<td width=\"" . $p . "%\" style=\"background-color: #000000;\"><span style=\"font-size: 4pt;\">&nbsp;</span></td>" : "") . ($p < 100 ? "<td style=\"background-color: #ffffff;\" width=\"" . (100 - $p) . "%\"><span style=\"font-size: 4pt;\">&nbsp;</span></td>":"") . "</tr></table>";
+  return "<table width=\"100%\" cellspacing=\"0\" cellpadding=\"0\"><tr>" . ($p ? "<td width=\"" . $p . "%\" style=\"background-color: $clrfill;\"><span style=\"font-size: 4pt;\">&nbsp;</span></td>" : "") . ($p < 100 ? "<td style=\"background-color: $clrempty;\" width=\"" . (100 - $p) . "%\"><span style=\"font-size: 4pt;\">&nbsp;</span></td>":"") . "</tr></table>";
 }
 
 function poll_view($node, $main = 0, $block = 0) {
@@ -125,9 +125,9 @@ function poll_view($node, $main = 0, $block = 0) {
       foreach ($node->choice as $key => $value) {
         if ($value) {
           if ($block) {
-            $output .= (!$block ? "<br>" : "") . check_output($value) . "<br><table width=\"90%\" align=\"center\" cellspacing=\"1\" cellpadding=\"0\"><tr><td width=\"70%\" valign=\"middle\" align=\"left\">" . poll_graph($node->chvotes[$key] / $node->maxvotes) . "</td><td align=\"right\">" . round(($node->chvotes[$key] / $node->totalvotes) * 100) . "%</td></tr></table>";
+            $output .= (!$block ? "<br>" : "") . check_output($value) . "<br><table width=\"90%\" align=\"center\" cellspacing=\"1\" cellpadding=\"0\"><tr><td width=\"70%\" valign=\"middle\" align=\"left\">" . poll_graph($node->chvotes[$key] / $node->maxvotes, $theme->pollfill, $theme->pollempty) . "</td><td align=\"right\">" . round(($node->chvotes[$key] / $node->totalvotes) * 100) . "%</td></tr></table>";
           } else {
-            $output .= "<table cellspacing=\"1\" cellpadding=\"0\" width=\"100%\"><tr><td width=\"20%\" valign=\"middle\" align=\"left\">" . check_output($value) . "</td><td width=\"70%\">" . poll_graph($node->chvotes[$key] / $node->maxvotes) . "</td><td width=\"10%\" align=\"right\">" . round(($node->chvotes[$key] / $node->totalvotes) * 100) . "%</td></tr></table>";
+            $output .= "<table cellspacing=\"1\" cellpadding=\"0\" width=\"100%\"><tr><td width=\"20%\" valign=\"middle\" align=\"left\">" . check_output($value) . "</td><td width=\"70%\">" . poll_graph($node->chvotes[$key] / $node->maxvotes, $theme->pollfill, $theme->pollempty) . "</td><td width=\"10%\" align=\"right\">" . round(($node->chvotes[$key] / $node->totalvotes) * 100) . "%</td></tr></table>";
           }
         }
       }
