@@ -1,7 +1,7 @@
 <?php
-// $Id: example.theme,v 1.33 2001/11/01 11:00:49 dries Exp $
+// $Id: example.theme,v 1.34 2002/02/17 13:04:49 kjartan Exp $
 
-  class Theme extends BaseTheme {
+  class Theme_example extends BaseTheme {
 
   }
 

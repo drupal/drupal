@@ -1,5 +1,5 @@
 <?php
-// $Id: unconed.theme,v 1.73 2001/12/15 16:22:31 unconed Exp $
+// $Id: unconed.theme,v 1.74 2002/02/17 13:04:50 kjartan Exp $
 
   /*********************************************************************
 
@@ -11,7 +11,7 @@
 
   *********************************************************************/
 
- class Theme extends BaseTheme {
+ class Theme_unconed extends BaseTheme {
    var $foreground = "#000000";
    var $background = "#FFFFFF";
 
@@ -191,7 +191,6 @@
        </TD>
        <TD VALIGN="top" WIDTH="20%">
         <?php
-          $this->user("all");
           theme_blocks("all", $this);
         ?>
        </TD>

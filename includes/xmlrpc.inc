@@ -1,7 +1,7 @@
 <?php          // -*-c++-*-
 // by Edd Dumbill (C) 1999-2001
 // <edd@usefulinc.com>
-// $Id: xmlrpc.inc,v 1.5 2001/12/05 18:37:44 dries Exp $
+// $Id: xmlrpc.inc,v 1.6 2002/02/17 13:04:48 kjartan Exp $
 
 
 // Copyright (c) 1999,2000,2001 Edd Dumbill.
@@ -407,10 +407,10 @@ class xmlrpc_client {
     if ($port==0) $port=80;
     if($timeout>0)
       $fp=fsockopen($server, $port,
-        &$this->errno, &$this->errstr, $timeout);
+        $this->errno, $this->errstr, $timeout);
     else
       $fp=fsockopen($server, $port,
-        &$this->errno, &$this->errstr);
+        $this->errno, $this->errstr);
     if (!$fp) {
       return 0;
     }
