@@ -20,8 +20,8 @@ function check_textarea($message) {
 }
 
 function check_input($message) {
-  global $allowed_html, $submission_size;
-  return strip_tags(addslashes(stripslashes(substr($message, 0, $submission_size))), $allowed_html);
+  global $allowed_html;
+  return strip_tags(addslashes(stripslashes(substr($message, 0, variable_get(max_input_size, 10000)))), $allowed_html);
 }
 
 function check_code($message) {
