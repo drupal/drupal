@@ -522,13 +522,15 @@ function book_toc($exclude = 0) {
     array_push($children[$node->parent], $node);
   }
 
+  $toc = array();
+
   // If the user is an administrator, add the top-level book page;
   // only administrators can start new books.
   if (user_access('administer nodes')) {
     $toc[0] = '<'. t('top-level') .'>';
   }
 
-  $toc = book_toc_recurse(0, '', array(), $children, $exclude);
+  $toc = book_toc_recurse(0, '', $toc, $children, $exclude);
 
   return $toc;
 }
