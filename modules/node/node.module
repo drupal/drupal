@@ -77,7 +77,7 @@ function node_help_page() {
 function node_title_list($result, $title = NULL) {
   while ($node = db_fetch_object($result)) {
     $number = module_invoke('comment', 'num_all', $node->nid);
-    $items[] = l($node->title, "node/view/$node->nid", array('title' => format_plural($number, '%count comment', '%count comments')));
+    $items[] = l($node->title, "node/view/$node->nid", array('title' => format_plural($number, '1 comment', '%count comments')));
   }
 
   return theme('node_list', $items, $title);
