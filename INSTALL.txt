@@ -191,7 +191,8 @@ UPGRADING
 
 2. Log on as the user with user ID 1.
 
-3. Overwrite all the old Drupal files with the new Drupal files.
+3. Remove all the old Drupal files then unpack the new Drupal files
+   into the directory that you run Drupal from.
 
 4. Modify the new configuration file to make sure it has the
    correct information.
