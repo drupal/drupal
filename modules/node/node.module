@@ -94,7 +94,7 @@ function node_filter_line($text) {
   */
 
   if (strstr($text, "<br />") || strstr($text, "<p>")) {
-    $text = ereg_replace("[\r\n\t\v]", "", $text);
+    $text = ereg_replace("[\r\n]", "", $text);
   }
 
   /*
