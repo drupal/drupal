@@ -115,7 +115,7 @@ function user_save($account, $array = array(), $category = 'account') {
     if (is_array($array['roles'])) {
       db_query('DELETE FROM {users_roles} WHERE uid = %d', $account->uid);
 
-      foreach ($array['roles'] as $rid) {
+      foreach (array_keys($array['roles']) as $rid) {
         db_query('INSERT INTO {users_roles} (uid, rid) VALUES (%d, %d)', $account->uid, $rid);
       }
     }
@@ -1045,10 +1045,18 @@ function user_edit_validate($uid, &$edit) {
     form_set_error('mail', t('The e-mail address %email has been denied access.', array('%email' => '<em>'. $edit['mail'] .'</em>')));
   }
 
-  // Validate the roles
-  if (user_access('administer users') && !$edit['roles']) {
-    form_set_error('roles', t('You must select at least one role.'));
-    $edit['roles'] = array();
+  // Validate the user roles:
+  if (user_access('administer users')) {
+    if (!$edit['roles']) {
+      form_set_error('roles', t('You must select at least one role.'));
+      $edit['roles'] = array();
+    }
+    else {
+      // Before form submission, $edit['roles'] contains ('role id' => 'role name') tuples.
+      // After form submission, $edit['roles'] contains ('number' => 'role id') tuples.  We
+      // flip the array to always have the role id's in the keys.
+      $edit['roles'] = array_flip($edit['roles']);
+    }
   }
 
   // If required, validate the uploaded picture.
@@ -1091,7 +1099,7 @@ function user_edit($category = 'account') {
     if (!form_get_errors()) {
       // Validate input to ensure that non-privileged users can't alter protected data.
       if (!user_access('administer users') && array_intersect(array_keys($edit), array('uid', 'roles', 'init', 'session'))) {
-        watchdog('warning', t('Detected malicious attempt to alter a protected database field.'));
+        watchdog('warning', t('Detected malicious attempt to alter protected user fields.'));
       }
       else {
         user_save($account, $edit, $category);
