@@ -95,6 +95,15 @@ CREATE TABLE drupals (
   PRIMARY KEY (id)
 );
 
+CREATE TABLE faqs (
+  id int(11) DEFAULT '0' NOT NULL auto_increment,
+  question varchar(255) DEFAULT '' NOT NULL,
+  answer text NOT NULL,
+  weight tinyint(3) DEFAULT '0' NOT NULL,
+  UNIQUE question (question),
+  PRIMARY KEY (id)
+);
+
 CREATE TABLE headlines (
   id int(11) DEFAULT '0' NOT NULL,
   title varchar(255) DEFAULT '' NOT NULL,
