@@ -1,5 +1,5 @@
 <?php
-/* $Id: updates.inc,v 1.72 2004/11/07 21:53:54 dries Exp $ */
+/* $Id: updates.inc,v 1.73 2004/11/08 08:27:42 dries Exp $ */
 
 /**
  * @file
@@ -1971,6 +1971,7 @@ function update_111() {
   $ret = array();
 
   if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql('DELETE FROM {variable} WHERE name LIKE 'throttle_%';
     $ret[] = update_sql('ALTER TABLE {sessions} ADD PRIMARY KEY sid (sid)');
   }
 
