@@ -13,7 +13,9 @@ function xtemplate_init($template) {
     include_once(dirname(__FILE__) . '/xtemplate.inc');
   }
   $GLOBALS["xtemplate"] = new StdClass();
-  $GLOBALS['xtemplate']->template = new XTemplate(basename($template->filename), dirname($template->filename));
+  $dir = dirname($template->filename);
+  $GLOBALS['xtemplate']->template = new XTemplate(basename($template->filename), $dir);
+  $GLOBALS['xtemplate']->template->assign(array('directory' => $dir));
   $GLOBALS['xtemplate']->template->SetNullBlock(' ');  // '' doesn't work!
 }
 
