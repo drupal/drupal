@@ -1,5 +1,5 @@
 <?php
-/* $Id: path.module,v 1.23 2003/12/29 17:14:26 dries Exp $ */
+/* $Id: path.module,v 1.24 2004/01/07 19:52:10 dries Exp $ */
 
 function path_admin() {
   $op = $_POST["op"];
@@ -103,7 +103,6 @@ function path_form($edit = "", $error = "") {
 }
 
 function path_help($section = "admin/help#path") {
-  $output = "";
 
   switch ($section) {
     case "admin/system/modules#description":
@@ -116,10 +115,38 @@ function path_help($section = "admin/help#path") {
       $output = t("Enter the path you wish to create the alias for, followed by the name of the new alias. Each path can be associated with only one alias.");
       break;
     case "admin/help#path":
-      $output .= "<h3>Background</h3><p>A very powerful feature of Drupal is the ability to have control over all paths. The path module is the tool that provides this functionality and is part of the basic Drupal installation, although it is not enabled by default. Some examples of re-mapping paths are:<pre>user/login => login\n\nimage/tid/16 => store\n\ntaxonomy/page/or/7,19,20,21 => store/products/whirlygigs\n\nnode/view/3 => contact</pre></p>";
-      $output .= "<p>This functionality integrates seamlessly into node forms and also provides the administrator an interface to view all aliases that have been created.</p><p>Aliases have a 1 to 1 relationship with their original Drupal URLs. In other words you cannot have an alias map to more than one path. Likewise, a Drupal URL can't be mapped to more than one alias.</p>";
-      $output .= "<h3>Permissions</h3><p>Two new permissions are introduced for aliasing URLs: <i>create url aliases</i> and <i>administer url aliases</i>.</p><ol><li><strong>create url aliases</strong> - Allows users to create aliases for nodes. Enabling this permission will display a new path field to the user in any node form, allowing them to enter an alias for that node. They will be able to edit/delete the alias after it is created using the same form.</li><li><strong>administer url aliases</strong> - Allows users to access the alias administration interface.  They must also have the <i>access administration pages</i> permission set as well. This interface displays all aliases and provides a way to create and modify them. This is also the location to build aliases for things other than nodes.  For example, you can create an alias for a taxonomy URL or even re-map the admin path (although the original admin path will still be accessible since aliases do not cancel out original paths).</li></ol>";
-      $output = t($output);
+      $output = t("<h3>Background</h3>
+<p>A very powerful feature of Drupal is the ability to have control over all paths. The path module is the tool that provides this functionality and is part of the basic Drupal installation, although it is not enabled by default. Some examples of re-mapping paths are:</p>
+<pre>
+user/login => login
+
+image/tid/16 => store
+
+taxonomy/page/or/7,19,20,21 => store/products/whirlygigs
+
+node/view/3 => contact
+</pre>
+<p>This functionality integrates seamlessly into node forms and also provides the administrator an interface to view all aliases that have been created.</p>
+<p>Aliases have a 1 to 1 relationship with their original Drupal URLs. In other words you cannot have an alias map to more than one path. Likewise, a Drupal URL can't be mapped to more than one alias.</p>
+
+<h3>Permissions</h3>
+<p>Two permissions are related to URL aliasing: <i>create url aliases</i> and <i>administer url aliases</i>.</p>
+<ol><li><strong>create url aliases</strong> - Allows users to create aliases for nodes. Enabling this permission will display a path field to the user in any node form, allowing them to enter an alias for that node. They will be able to edit/delete the alias after it is created using the same form.</li><li><strong>administer url aliases</strong> - Allows users to access the alias administration interface. They must also have the <i>access administration pages</i> permission set as well. This interface displays all aliases and provides a way to create and modify them. This is also the location to build aliases for things other than nodes. For example, you can create an alias for a taxonomy URL or even re-map the admin path (although the original admin path will still be accessible since aliases do not cancel out original paths).</li></ol>
+
+<h3>Mass URL aliasing</h3>
+<p>Drupal also comes with user defined mass URL aliasing capabilities. You might like to see completely different URLs used by Drupal, or even URLs translated to the visitors' native language, in which case this feature is handy. Only an administrator with access to the website source code can set up this kind of aliases. You can define a <code>conf_url_rewrite</code> function in conf.php, following this example:</p>
+<pre>
+function conf_url_rewrite(\$path, \$mode = 'incoming') {
+  if (\$mode == 'incoming') { // URL coming from a client
+    return preg_replace('!^display/(\d+)$!', 'node/view/\1', \$path);
+  }
+  else { // URL going out to a client
+    return preg_replace('!^node/view/(\d+)$!', 'display/\1', \$path);
+  }
+}
+</pre>
+<p>This function will shorten every <code>node/view/\$node_id</code> type of URL to <code>display/\$node_id</code>. Individual URL aliases defined on the browser interface of Drupal take precedence, so if you have the 'contact' page alias from the example above, then the <code>display/3</code> alias will not be effective when outgoing links are created. Incoming URLs however always work with the mass URL aliased variant. Only the 'incoming' and 'outgoing' modes are supposed to be supported by your <code>conf_url_rewrite</code> function.</p>
+<p>You cannot only use this feature to shorten the URLs, or to translate them to you own language, but also to add completely new subURLs to an already existing module's URL space, or to compose a bunch of existing stuff together to a common URL space. You can create a <code>news</code> section for example aliasing nodes and taxonomy overview pages falling under a 'news' vocabulary, thus having <code>news/15</code> and <code>news/sections/3</code> instead of <code>node/view/15</code> and <code>taxonomy/view/or/3</code>.</p>");
       break;
   }
 

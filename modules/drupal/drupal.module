@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.70 2004/01/05 20:45:54 unconed Exp $
+// $Id: drupal.module,v 1.71 2004/01/07 19:52:10 dries Exp $
 
 function drupal_help($section = "admin/help#drupal") {
 
@@ -36,7 +36,7 @@ function drupal_settings() {
     $error["drupal_directory"] = theme("error", t("You must set your site's slogan at the <a href=\"%url\">site configuration</a>.", array("%url" => url("admin/system"))));
   else if (variable_get("site_mission", "") == "")
     $error["drupal_directory"] = theme("error", t("You must set your site's mission at the <a href=\"%url\">site configuration</a>.", array("%url" => url("admin/system"))));
-  
+
   $output = form_textfield(t("Drupal XML-RPC server"), "drupal_server", variable_get("drupal_server", "http://www.drupal.org/xmlrpc.php"), 55, 128, t("The URL of your root Drupal XML-RPC server."));
   $output .= form_radios(t("Drupal directory"), "drupal_directory", variable_get("drupal_directory", 0), array(t("Disabled"), t("Enabled")), t("If enabled, your Drupal site will make itself known to the Drupal directory at the specified Drupal XML-RPC server. For this to work properly, you must set your site's name, e-mail address, slogan and mission statement. When the \"%xml-rpc-server\" field is set to \"%drupal-xml-rpc\", your web site will get listed on the %drupal-sites page. Requires the cron feature to be enabled.", array("%xml-rpc-server" => t("Drupal XML-RPC server"), "%drupal-xml-rpc" => "http://www.drupal.org/xmlrpc.php", "%drupal-sites" => "<a href=\"http://www.drupal.org/sites\">".t("Drupal sites")."</a>")) . $error["drupal_directory"]);
 

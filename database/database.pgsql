@@ -154,10 +154,12 @@ CREATE TABLE feed (
   title varchar(255) NOT NULL default '',
   url varchar(255) NOT NULL default '',
   refresh integer NOT NULL default '0',
-  timestamp integer NOT NULL default '0',
+  checked integer NOT NULL default '0',
   attributes varchar(255) NOT NULL default '',
   link varchar(255) NOT NULL default '',
   description text NOT NULL default '',
+  etag varchar(255) NOT NULL default '',
+  modified integer NOT NULL default '0',
   PRIMARY KEY  (fid),
   UNIQUE (title),
   UNIQUE (url)

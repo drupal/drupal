@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.122 2003/12/29 17:14:26 dries Exp $
+// $Id: update.php,v 1.123 2004/01/07 19:52:09 dries Exp $
 /*
 ** USAGE:
 **
@@ -63,7 +63,8 @@ $mysql_updates = array(
   "2003-11-17" => "update_71",
   "2003-11-27" => "update_72",
   "2003-12-03" => "update_73",
-  "2003-12-06" => "update_74"
+  "2003-12-06" => "update_74",
+  "2004-01-06" => "update_75"
 );
 
 function update_32() {
@@ -588,6 +589,14 @@ function update_73() {
 
 function update_74() {
   update_sql("ALTER TABLE {system} ADD throttle tinyint(1) NOT NULL DEFAULT '0'");
+}
+
+function update_75() {
+  update_sql("ALTER TABLE {feed} ADD etag varchar(255) NOT NULL DEFAULT ''");
+  update_sql("ALTER TABLE {feed} ADD modified int(10) NOT NULL DEFAULT 0");
+  update_sql("ALTER TABLE {feed} CHANGE timestamp checked int(10) NOT NULL DEFAULT 0");
+  update_sql("UPDATE {blocks} SET module = 'aggregator' WHERE module = 'import'");
+  update_sql("UPDATE {system} SET filename = 'modules/aggregator.module', name = 'aggregator' WHERE filename = 'modules/import.module'");
 }
 
 /*

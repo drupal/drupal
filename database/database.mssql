@@ -104,10 +104,12 @@ CREATE TABLE [dbo].[feed] (
   [title] [varchar] (255) NOT NULL ,
   [url] [varchar] (255) NOT NULL ,
   [refresh] [int] NOT NULL ,
-  [timestamp] [int] NULL ,
+  [checked] [int] MOT NULL ,
   [attributes] [varchar] (255) NULL ,
   [link] [varchar] (255) NULL ,
-  [description] [varchar] (8000) NULL
+  [description] [varchar] (8000) NULL ,
+  [etag] [varchar] (255) NULL ,
+  [modified] [int] NOT NULL
 ) ON [PRIMARY]
 GO
 

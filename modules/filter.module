@@ -1,5 +1,5 @@
 <?php
-// $Id: filter.module,v 1.1 2004/01/05 19:19:05 unconed Exp $
+// $Id: filter.module,v 1.2 2004/01/07 19:52:10 dries Exp $
 
 function filter_help($section = "admin/help#filter") {
   switch ($section) {
@@ -85,7 +85,7 @@ function filter_default($text) {
   }
 
   if (variable_get("filter_html", 0) == 2) {
-    // Escape HTML    
+    // Escape HTML
     $text = htmlspecialchars($text);
   }
 
