@@ -1,5 +1,5 @@
 <?php
-/* $Id: file.inc,v 1.8 2004/01/29 11:39:22 kjartan Exp $ */
+/* $Id: file.inc,v 1.9 2004/02/15 15:40:06 dries Exp $ */
 
 /**
  * @defgroup file File interface
@@ -10,6 +10,13 @@
 define('FILE_DOWNLOADS_PUBLIC', 1);
 define('FILE_DOWNLOADS_PRIVATE', 2);
 define('FILE_SEPARATOR', PHP_OS == 'WINNT' ? '\\' : '/');
+
+// Required for file uploads to work with PHP 4.2
+define('UPLOAD_ERR_OK', 0);
+define('UPLOAD_ERR_INI_SIZE', 1);
+define('UPLOAD_ERR_FORM_SIZE', 2);
+define('UPLOAD_ERR_PARTIAL', 3);
+define('UPLOAD_ERR_NO_FILE', 4);
 
 /**
  * Create the download path to a file.
