@@ -61,7 +61,7 @@ function book_view($node, $main = 0) {
 
       $output .= " <TR><TD COLSPAN=\"2\">$location</TD><TD ALIGN=\"right\">". node_control($node) ."</TD></TR>\n";
       $output .= " <TR><TD COLSPAN=\"3\"><HR></TD></TR>";
-      $output .= " <TR><TD COLSPAN=\"3\"><B><BIG>". check_output($node->title) ."</BIG></B>". ($node->body ? "<BR><SMALL><I>Last updated by ". format_username($node->userid) ." on ". format_date($node->timestamp) ."</I></SMALL> " : "") ."</TD></TR>\n";
+      $output .= " <TR><TD COLSPAN=\"3\"><B><BIG>". check_output($node->title) ."</BIG></B>". ($node->body ? "<BR><SMALL><I>Last updated by ". format_username($node->userid, $node->name) ." on ". format_date($node->timestamp) ."</I></SMALL> " : "") ."</TD></TR>\n";
     }
 
     if ($node->body) {
