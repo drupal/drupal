@@ -250,15 +250,6 @@ CREATE TABLE moderation_votes (
 );
 
 --
--- Table structure for modules
---
-
-CREATE TABLE modules (
-  name varchar(64) NOT NULL default '',
-  PRIMARY KEY  (name)
-);
-
---
 -- Table structure for node
 --
 
