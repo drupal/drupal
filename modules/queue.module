@@ -188,33 +188,37 @@ function queue_page() {
 }
 
 function queue_block($op = "list", $delta = 0) {
+  global $user;
+
   if ($op == "list") {
     $blocks[0]["info"] = t("Moderation results");
     return $blocks;
   }
   else {
-    if (user_access("access submission queue") && (substr_count(request_uri(), url("queue")) || substr_count(request_uri(), url("node")))) {
-      global $user, $id;
+    if (user_access("access submission queue") && (arg(0) == "queue") || arg(0) == "node") {
       if ($user->uid) {
-        $node = node_load(array("nid" => $id));
-      }
-      if (($user->uid == $node->uid || field_get($node->users, $user->uid)) && $node->moderate == 1) {
-        foreach (explode(",", $node->users) as $vote) {
-          if ($vote) {
-            $data = explode("=", $vote);
-            $account = user_load(array("uid" => $data[0]));
-            $output .= format_name($account) ." voted '$data[1]'.<br />";
-          }
+        if (arg(0) == "queue") {
+          $id = arg(1);
         }
+        else {
+          $id = arg(2);
+        }
+        $node = node_load(array("nid" => $id));
+        if (($user->uid == $node->uid || field_get($node->users, $user->uid)) && $node->moderate == 1) {
+          foreach (explode(",", $node->users) as $vote) {
+            if ($vote) {
+              $data = explode("=", $vote);
+              $account = user_load(array("uid" => $data[0]));
+              $output .= format_name($account) ." voted '$data[1]'.<br />";
+            }
+          }
 
-        $block["subject"] = t("Moderation results");
-        $block["content"] = $output ? $output : t("This node has not yet been moderated.");
+          $block["subject"] = t("Moderation results");
+          $block["content"] = $output ? $output : t("This node has not yet been moderated.");
+
+        }
       }
     }
-    elseif ((user_access("access submission queue") || user_access("administer blocks")) && (substr_count(request_uri(), url("user")) || substr_count(request_uri(), url("admin")))) {
-      $block["subject"] = t("Moderation results");
-    }
-
     return $block;
   }
 }
