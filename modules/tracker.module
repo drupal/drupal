@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.45 2003/07/08 11:24:28 dries Exp $
+// $Id: tracker.module,v 1.46 2003/07/09 18:39:45 dries Exp $
 
 function tracker_help() {
   $output .= "<p>The tracker module is a handy module for displaying the most recent posts.  By following the <i>view recent posts</i> link in the user block, a user may quickly review all recent postings.</p>";
@@ -73,6 +73,7 @@ function tracker_posts($id = 0) {
 
 function tracker_user($type, &$edit, &$user) {
   switch ($type) {
+    case "view_private":
     case "view_public":
       if (user_access("access content")) {
         return form_item(t("Recent posts"), l(t("view recent posts"), "tracker/$user->uid"));
