@@ -1007,15 +1007,9 @@ function node_preview($node, $error = NULL) {
 }
 
 function node_submit($node) {
-  global $theme, $user, $tid;
-
-  if (!user_access("post content")) {
-    return message_access();
-  }
-
-  $context->tid = $tid;
-
-  if (user_access("post content", $context)) {
+  global $user, $theme;
+  
+  if (user_access("post content")) {
 
     /*
     ** Fixup the node when required:

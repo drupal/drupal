@@ -145,11 +145,9 @@ function comment_edit($cid) {
 }
 
 function comment_reply($pid, $nid) {
-  global $theme, $node;
+  global $theme;
 
-  // we must provide a taxonomy context for user_access()
-  $context->nid = $nid;
-  if (user_access("access comments", $context)) {
+  if (user_access("access comments")) {
     if ($pid) {
       $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.cid = '%s'", $pid));
       comment_view($comment, t("reply to this comment"));
