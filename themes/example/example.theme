@@ -1,0 +1,253 @@
+<?php
+
+  class Theme {
+
+    function header() {
+      global $site_name;
+
+?>
+
+      <HTML>
+   
+        <HEAD>
+          <TITLE><? echo $site_name; ?></TITLE>
+        </HEAD>
+  
+        <BODY>
+          <TABLE BORDER="1">
+            <TR>
+              <TD>
+              </TD>
+                Logo? <!-- I left a TD to add a logo of some kind -->
+              <TD>
+              </TD>  
+            </TR>
+            <TR>
+              <TD VALIGN="top">
+
+<?php
+                theme_blocks("left", $this);
+
+?>
+
+              </TD>
+              <TD>
+
+<?php
+
+    } // close header function
+
+    function story($story, $reply = 0) {
+      $timestamp = format_date($story->timestamp);
+
+?>
+
+              <TABLE BORDER="1">
+                <TR>
+                  <TD>
+                    <?php echo "". check_output($story->subject) .""; ?>
+                  </TD>
+                </TR>
+                <TR>
+                  <TD>
+
+<?php
+
+                     echo "". strtr(t("$how by %a on %b"), array("%a" => format_username($story->userid), "%b" => $timestamp, "large")) .";
+                   </TD>
+                   <TD>
+                     <A HREF=\"search.php?category=". urlencode($story->section) ."\">$story->section</A>";
+
+?>
+
+                   </TD>
+                 </TR>
+                 <TR>
+                   <TD>
+
+<?php
+ 
+                        echo "<P>". check_output($story->abstract, 1) ."</P>";
+                        if ($story->updates)
+                          echo "<P>". t("Editor's note by <A HREF=\"account.php?op=userinfo&uname=$story->editor\">$story->editor</A>") .":". check_output($story->updates, 1) ."</P>";
+                        if ($reply)
+                          echo "<P>". check_output($story->article, 1) ."</P>";                      
+
+?>
+                   </TD>
+                 </TR>
+                 <TR>
+                   <TD>
+
+<?php
+
+
+                     if (!$reply)
+                       echo theme_morelink($this, $story);
+                     else
+                       echo $reply;
+
+?>
+
+                   </TD>
+                </TR>
+              </TABLE>
+              <BR>
+
+<?php
+
+    } // close story function
+
+    function controls() {
+      echo comment_controls();
+    }
+
+    function comment($comment, $link = "", $thread = "") {
+      $timestamp = format_date($comment->timestamp);
+      echo "<A NAME=\"$comment->cid\"></A>\n";
+
+      // Create comment header:
+      echo "  <TABLE>";
+      echo "    <TR>";
+      echo "      <TD>";
+      echo "        <TABLE BORDER=\"1\">";
+      echo "          <TR>";
+      echo "            <TD>";
+      echo "              <TABLE>";
+      echo "                <TR>";
+      echo "                  <TD>";
+      echo "                    <TABLE BORDER=\"1\">";
+ 
+      // Subject:
+      echo "                      <TR>";
+      echo "                        <TD>";
+      echo "                          ". t("Subject") .":";
+      echo "                            </TD>";
+      echo "                            <TD >";
+      echo "                          ". check_output($comment->subject) ."";
+      echo "                        </TD>";
+ 
+      // Moderation:
+      echo "                        <TD>";
+      echo                              comment_moderation($comment);
+      echo "                        </TD>";
+      echo "                      </TR>";
+ 
+      // Author:
+      echo "                      <TR>";
+      echo "                        <TD>". t("Author") .":</FONT></TD><TD>". format_username($comment->userid) ."";
+
+      // Date:
+      echo "                          on ". $timestamp ."";
+      echo "                        </TD>";
+      echo "                      </TR>";
+ 
+      echo "                    </TABLE>";
+      echo "                  </TD>";
+      echo "                </TR>";
+ 
+      // Print body of comment:
+                  if ($comment) echo " <TR><TD>" . check_output($comment->comment, 1) ."</TD></TR>";
+ 
+      // Print thread (if any):
+                  if ($thread) echo " <TR><TD>$thread</TD></TR>";
+
+      // Print bottom link(s):
+      echo "                <TR><TD> $link</TD></TR>";
+      echo "              </TABLE>";
+      echo "            </TD>";
+      echo "          </TR>";
+      echo "        </TABLE>";
+      echo "      </TD>";
+      echo "    </TR>";
+      echo "  </TABLE>";
+      echo "  <BR>";
+ 
+    } // close comment function
+
+    function box($subject, $content, $options = "") {
+
+?>
+
+              <TABLE>
+                <TR>
+                  <TD></TD>
+                  <TD></TD>
+                  <TD></TD>
+                  <TD></TD>
+                  <TD></TD>
+                </TR>
+                <TR>
+                  <TD></TD>
+                  <TD>
+                    <? echo $subject; ?>
+                  </TD>
+                  <TD></TD>
+                </TR>
+                <TR>
+                  <TD></TD>
+                  <TD>
+                    <TABLE>
+                      <TR>
+                        <TD>
+                          <?php echo $content; ?>
+                        </TD>
+                      </TR>
+                    </TABLE>
+                  </TD>
+                  <TD></TD>
+                </TR>
+                <TR>
+                  <TD></TD>
+                  <TD></TD>
+                  <TD></TD>
+                </TR>
+              </TABLE>
+              <BR>
+
+<?php
+
+    } // close box function
+
+    function footer() {
+
+?>
+
+            </TD>
+            <TD VALIGN="top">
+
+<?php
+
+         global $PHP_SELF;
+
+           theme_account($this);
+           theme_blocks("right", $this);
+
+?>
+
+            </TD>
+          </TR>
+          <TR>
+            <TD></TD>
+            <TD>
+              <TABLE BORDER="1">
+                <TR>
+                  <TD></TD>
+                  <TD>
+                    <!-- These are just some links from my theme as an example. -->
+                    <A HREF="">Home</A><A HREF="module.php?mod=faq">Faq</A><A HREF="search.php">Search</A><A HREF="module.php?mod=diary">Diary</A><A HREF="submit.php">Submit news</A><A HREF="account.php">Account</A>
+                  </TD>
+                  <TD></TD>
+                </TR>
+              </TABLE>
+            </TD>
+            <TD></TD>
+          </TR>
+        </TABLE>
+      </BODY>
+   </HTML>
+<?
+    }
+  }
+
+?>
