@@ -139,7 +139,7 @@ function c(subject,mod,author,date,body) {document.writeln("<table border=\"0\" 
               </td>
               <td valign="top">
 <?php
-          theme_account("all", $this);
+          $this->user("all", $this);
           theme_blocks("all", $this);
 ?>
      </td>

@@ -190,7 +190,7 @@
        </TD>
        <TD VALIGN="top" WIDTH="20%">
         <?php
-          theme_account("all", $this);
+          $this->user("all", $this);
           theme_blocks("all", $this);
         ?>
        </TD>
