@@ -388,9 +388,6 @@ function book_next($node) {
   }
 }
 
-/**
- * Implementation of hook_content().
- */
 function book_content($node, $teaser = FALSE) {
   $op = $_POST['op'];
 

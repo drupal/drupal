@@ -128,10 +128,4 @@ function story_form(&$node) {
   return $output;
 }
 
-/**
- * Implementation of hook_content().
- */
-function story_content($node, $main = 0) {
-  return node_prepare($node, $main);
-}
 ?>

@@ -99,19 +99,10 @@ function page_menu($may_cache) {
 }
 
 /**
- * Implementation of hook_content().
- */
-function page_content($node, $teaser = FALSE) {
-  $node = node_prepare($node, $teaser);
-  return $node;
-}
-
-/**
  * Implementation of hook_view().
  */
 function page_view(&$node, $teaser = FALSE, $page = FALSE) {
-  // prepare the node content
-  $node = page_content($node, $teaser);
+  $node = node_prepare($node, $teaser);
 }
 
 /**

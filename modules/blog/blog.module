@@ -222,13 +222,6 @@ function blog_form(&$node) {
 }
 
 /**
- * Implementation of hook_content().
- */
-function blog_content($node, $teaser = FALSE) {
-  return node_prepare($node, $teaser);
-}
-
-/**
  * Implementation of hook_view().
  */
 function blog_view(&$node, $teaser = FALSE, $page = FALSE) {
@@ -239,8 +232,7 @@ function blog_view(&$node, $teaser = FALSE, $page = FALSE) {
     $breadcrumb[] = array('path' => 'node/'. $node->nid);
     menu_set_location($breadcrumb);
   }
-  // prepare the node content
-  $node = blog_content($node, $teaser);
+  $node = node_prepare($node, $teaser);;
 }
 
 /**
