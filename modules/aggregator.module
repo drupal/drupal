@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.127 2003/10/15 15:07:47 dries Exp $
+// $Id: aggregator.module,v 1.128 2003/10/22 13:03:31 dries Exp $
 
 
 function import_help($section = "admin/help#import") {
@@ -453,7 +453,7 @@ function import_save_bundle($edit) {
   }
   else if ($edit["title"]) {
     // a single unique id for bundles and feeds, to use in blocks
-    $next_id = db_next_id("bundle_bid");
+    $next_id = db_next_id("{bundle}_bid");
     db_query("INSERT INTO {bundle} (bid, title, attributes) VALUES (%d, '%s', '%s')", $next_id, $edit["title"], $edit["attributes"]);
   }
 }
@@ -492,7 +492,7 @@ function import_save_feed($edit) {
   }
   else if ($edit["title"]) {
     // a single unique id for bundles and feeds, to use in blocks
-    $next_id = db_next_id("feed_fid");
+    $next_id = db_next_id("{feed}_fid");
     db_query("INSERT INTO {feed} (fid, title, url, attributes, refresh) VALUES (%d, '%s', '%s', '%s', %d)", $next_id, $edit["title"], $edit["url"], $edit["attributes"], $edit["refresh"]);
   }
 }

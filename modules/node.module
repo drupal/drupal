@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.280 2003/10/21 18:34:54 dries Exp $
+// $Id: node.module,v 1.281 2003/10/22 13:03:32 dries Exp $
 
 function node_help($section = "admin/help#node") {
   global $mod;
@@ -317,7 +317,7 @@ function node_save($node) {
       $node->created = time();
     }
     $node->changed = time();
-    $node->nid = db_next_id("node_nid");
+    $node->nid = db_next_id("{node}_nid");
 
     // Prepare the query:
     foreach ($node as $key => $value) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.179 2003/10/20 21:35:35 dries Exp $
+// $Id: comment.module,v 1.180 2003/10/22 13:03:31 dries Exp $
 
 function comment_help($section = "admin/help#comment") {
   $output = "";
@@ -452,7 +452,7 @@ function comment_post($edit) {
         }
 
 
-        $edit["cid"] = db_next_id("comments_cid");
+        $edit["cid"] = db_next_id("{comments}_cid");
 
         db_query("INSERT INTO {comments} (cid, nid, pid, uid, subject, comment, hostname, timestamp, status, score, users, thread) VALUES (%d, %d, %d, %d, '%s', '%s', '%s', %d, %d, %d, '%s', '%s')", $edit["cid"], $edit["nid"], $edit["pid"], $user->uid, $edit["subject"], $edit["comment"], getenv("REMOTE_ADDR"), time(), $status, $score, $users, $thread);
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pear.inc,v 1.19 2003/10/14 21:56:41 dries Exp $
+// $Id: database.pear.inc,v 1.20 2003/10/22 13:03:27 dries Exp $
 
 require_once 'DB.php';
 
@@ -127,6 +127,7 @@ function db_error() {
 function db_next_id($name) {
   global $db_handle;
 
+  $name = db_prefix_tables($name);
   $result = $db_handle->nextID($name);
   if (DB::isError($result)) {
     watchdog("error", "database: ". $result->getMessage() ."\nsequence table: $name");
