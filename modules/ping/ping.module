@@ -1,5 +1,5 @@
 <?php
-// $Id: ping.module,v 1.26 2004/12/27 12:27:02 dries Exp $
+// $Id: ping.module,v 1.27 2004/12/27 12:29:33 dries Exp $
 
 /**
  * @file
@@ -14,7 +14,7 @@ function ping_help($section) {
     case 'admin/help#ping':
       $output .= t("
       <p>Drupal can automatically send notifications (called \"pings\") to the %pingomatic to tell them that your site has changed.  In turn pingomatic.com will ping other services like weblogs.com, Technorati, blo.gs, BlogRolling, Feedster.com, Moreover, etc.</p>
-      <p>The ping feature requires crontab.</p>", array('%pingomatic' => '<a href="http://pingomatic.com/">'));
+      <p>The ping feature requires crontab.</p>", array('%pingomatic' => '<a href="http://pingomatic.com/">http://pingomatic.com/</a>'));
       break;
 
     case 'admin/modules#description':
