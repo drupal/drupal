@@ -770,7 +770,7 @@ function taxonomy_select_nodes($tids = array(), $operator = 'or', $depth = 0, $p
     foreach ($tids as $index => $tid) {
       $term = taxonomy_get_term($tid);
       $tree = taxonomy_get_tree($term->vid, $tid, -1, $depth);
-      $descendant_tids[] = array_merge($tid, array_map('_taxonomy_get_tid_from_term', $tree));
+      $descendant_tids[] = array_merge(array($tid), array_map('_taxonomy_get_tid_from_term', $tree));
     }
 
     if ($operator == 'or') {
