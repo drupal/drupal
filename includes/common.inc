@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.373 2004/08/06 20:15:31 dries Exp $ */
+/* $Id: common.inc,v 1.374 2004/08/06 20:18:25 dries Exp $ */
 
 /**
  * @file
@@ -715,8 +715,8 @@ function search_form($action = NULL, $keys = NULL, $options = NULL) {
         $output .= ' <input type="checkbox" name="edit[type]['. $name .']" '. ($edit['type'][$name] ? ' checked="checked"' : '') .' /> '. t($name);
       }
     }
-    $output .= '</div>';
   }
+  $output .= '</div>';
 
   return form($output, 'post', $action);
 }
