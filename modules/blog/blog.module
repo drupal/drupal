@@ -71,11 +71,13 @@ function blog_page_user($name = 0, $date = 0) {
   $name = check_input($name ? $name : $user->userid);
   $date = check_input($date ? $date : time());
 
-  $result = db_query("SELECT n.nid, n.title, n.comment, n.timestamp, b.body FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.id WHERE u.userid = '$name' AND n.timestamp < '$date' AND n.timestamp > '". ($date - 2592000) ."' ORDER BY b.lid DESC LIMIT 20");
+  $result = db_query("SELECT n.nid, n.title, n.comment, COUNT(c.cid) AS comments, n.timestamp, b.body FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.id LEFT JOIN comments c ON n.nid = c.lid WHERE u.userid = '$name' AND n.timestamp < '$date' AND n.timestamp > '". ($date - 2592000) ."' GROUP BY n.nid ORDER BY n.nid DESC LIMIT 20");
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\">";
 
   while ($blog = db_fetch_object($result)) {
+
+    $links = array();
 
     if ($date != date("dny", $blog->timestamp)) {
       $date = date("dny", $blog->timestamp);
@@ -87,17 +89,15 @@ function blog_page_user($name = 0, $date = 0) {
     }
 
     if ($user->id && user_access("post blogs")) {
-      $links[] = "<a href=\"submit.php?mod=blog&type=blog&id=$blog->nid\">". t("blog") ."</a>";
+      $links[] = "<a href=\"submit.php?mod=blog&type=blog&id=$blog->nid\">". t("blog it") ."</a>";
     }
 
     if ($blog->comment) {
-      $links[] = "<a href=\"node.php?id=$blog->nid\">". t("discuss") ."</a>";
+      $links[] = "<a href=\"node.php?id=$blog->nid\">". format_plural($blog->comments, t("comment"), t("comments")) ."</a>";
     }
 
     $output .= "<tr><td><div style=\"margin-left: 20px;\"><b>". check_output($blog->title) ."</b></div></td><td align=\"right\">". $theme->links($links) ."</td></tr>";
     $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 40px;\">". check_output($blog->body, 1) ."</div><br /></td></tr>";
-
-    unset($links);
 
   }
 
@@ -110,11 +110,13 @@ function blog_page_user($name = 0, $date = 0) {
 function blog_page_last() {
   global $theme, $user;
 
-  $result = db_query("SELECT n.author, n.nid, n.title, n.comment, n.timestamp, b.body, u.userid FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.id ORDER BY b.lid DESC LIMIT 20");
+  $result = db_query("SELECT n.author, n.nid, n.title, n.comment, COUNT(c.cid) AS comments, n.timestamp, b.body, u.userid FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.id LEFT JOIN comments c ON n.nid = c.lid GROUP BY n.nid ORDER BY n.nid DESC LIMIT 20");
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\">";
 
   while ($blog = db_fetch_object($result)) {
+
+    $links = array();
 
     $links[] = "<a href=\"module.php?mod=blog&op=view&name=". urlencode($blog->userid) ."\">". strtr(t("%a's blog"), array("%a" => $blog->userid)) ."</a>";
 
@@ -123,17 +125,16 @@ function blog_page_last() {
     }
 
     if ($user->id && user_access("post blogs")) {
-      $links[] = "<a href=\"submit.php?mod=blog&type=blog&id=$blog->nid\">". t("blog") ."</a>";
+      $links[] = "<a href=\"submit.php?mod=blog&type=blog&id=$blog->nid\">". t("blog it") ."</a>";
     }
 
     if ($blog->comment) {
-      $links[] = "<a href=\"node.php?id=$blog->nid\">". t("discuss") ."</a>";
+      $links[] = "<a href=\"node.php?id=$blog->nid\">". format_plural($blog->comments, t("comment"), t("comments")) ."</a>";
     }
 
     $output .= "<tr><td><b>". check_output($blog->title) ."</b></td><td align=\"right\">". $theme->links($links) ."</td></tr>";
     $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 20px;\">". check_output($blog->body, 1) ."</div><br /></td></tr>";
 
-    unset($links);
   }
 
   $output .= "</table>";
