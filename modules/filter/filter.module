@@ -85,7 +85,7 @@ function filter_default($text) {
   }
 
   if (variable_get("filter_html", 0) == 2) {
-    // Escape HTML    
+    // Escape HTML
     $text = htmlspecialchars($text);
   }
 

@@ -4,6 +4,9 @@ Drupal x.x.x, xxxx-xx-xx
 - added support for the MetaWeblog API and MovableType extensions.
 - added a file API: enables better document management.
 - improved the watchdog and search module to log search keys.
+- news aggregator:
+    * added support for conditional GET.
+    * added OPML feed subscription list.
 - comment module:
     * made it possible to disable the "comment viewing controls".
 - performance:

@@ -187,6 +187,127 @@ function drupal_not_found() {
     print theme("page", '<h1>'. t('Page not found') .'</h1>');
   }
 }
+
+/**
+ * Flexible and powerful HTTP client implementation. Allows to GET, POST, PUT
+ * or any other HTTP requests. Handles redirects.
+ *
+ * @param $url A string containing a fully qualified URI.
+ * @param $headers An array containing a HTTP header => value pair.
+ * @param $method A string defining the HTTP request to use.
+ * @param $data A string containing data to include in the request.
+ * @param $retry An integer representing how many times to retry the request
+ *   in case of a redirect.
+ * @return An object containing the HTTP request headers, response code,
+ *   headers, data, and redirect status.
+ */
+function drupal_http_request($url, $headers = array(), $method = 'GET', $data = NULL, $retry = 3) {
+  // Parse the URL, and make sure we can handle the schema
+  $uri = parse_url($url);
+  switch ($uri['scheme']) {
+    case 'http':
+      $fp = @fsockopen($uri['host'], ($uri['port'] ? $uri['port'] : 80), $errno, $errstr, 15);
+      break;
+    case 'https':
+      // Note: only works for PHP 4.3 compiled with openssl
+      $fp = @fsockopen("ssl://$uri[host]", ($uri['port'] ? $uri['port'] : 443), $errno, $errstr, 20);
+      break;
+    default:
+      $result->error = "invalid schema $uri[scheme]";
+      return $result;
+  }
+
+  // Make sure the socket opened properly
+  if (!$fp) {
+    $result->error = trim("$errno $errstr");
+    return $result;
+  }
+
+  // Construct the path to act on
+  $path = $uri['path'] ? $uri['path'] : '/';
+  if ($uri['query']) {
+    $path .= "?$uri[query]";
+  }
+
+  // Create http request
+  $defaults = array(
+    'host' => "Host: $uri[host]",
+    'user-agent' => 'User-Agent: Drupal (+http://www.drupal.org/)',
+    'content-length' => 'Content-Length: '. strlen($data)
+  );
+
+  foreach ($headers as $header => $value) {
+    $defaults[$header] = "$header: $value";
+  }
+
+  $request = "$method $path HTTP/1.0\r\n";
+  $request .= implode("\r\n", $defaults);
+  $request .= "\r\n\r\n";
+  if ($data) {
+    $request .= "$data\r\n";
+  }
+  $result->request = $request;
+
+  fwrite($fp, $request);
+
+  // Fetch response.
+  while (!feof($fp) && $data = fgets($fp)) {
+    $response[] = $data;
+  }
+  fclose($fp);
+
+  // Parse response.
+  list($protocol, $code, $text) = explode(' ', trim(array_shift($response)), 3);
+  $result->headers = array();
+  $result->data = '';
+
+  // Parse headers.
+  while ($line = trim(array_shift($response))) {
+    if ($line == '') {
+      break;
+    }
+    list($header, $value) = explode(':', $line, 2);
+    $result->headers[$header] = trim($value);
+  }
+
+  $result->data = implode('', $response);
+
+  $responses = array(
+    100 => 'Continue', 101 => 'Switching Protocols',
+    200 => 'OK', 201 => 'Created', 202 => 'Accepted', 203 => 'Non-Authoritative Information', 204 => 'No Content', 205 => 'Reset Content', 206 => 'Partial Content',
+    300 => 'Multiple Choices', 301 => 'Moved Permanently', 302 => 'Found', 303 => 'See Other', 304 => 'Not Modified', 305 => 'Use Proxy', 307 => 'Temporary Redirect',
+    400 => 'Bad Request', 401 => 'Unauthorized', 402 => 'Payment Required', 403 => 'Forbidden', 404 => 'Not Found', 405 => 'Method Not Allowed', 406 => 'Not Acceptable', 407 => 'Proxy Authentication Required', 408 => 'Request Time-out', 409 => 'Conflict', 410 => 'Gone', 411 => 'Length Required', 412 => 'Precondition Failed', 413 => 'Request Entity Too Large', 414 => 'Request-URI Too Large', 415 => 'Unsupported Media Type', 416 => 'Requested range not satisfiable', 417 => 'Expectation Failed',
+    500 => 'Internal Server Error', 501 => 'Not Implemented', 502 => 'Bad Gateway', 503 => 'Service Unavailable', 504 => 'Gateway Time-out', 505 => 'HTTP Version not supported'
+  );
+  // RFC 2616 states that all unknown HTTP codes must be treated the same as
+  // the base code in their class:
+  if (!isset($responses[$code])) {
+    $code = floor($code / 100) * 100;
+  }
+
+  switch ($code) {
+    case 200: // OK
+    case 304: // Not modified
+      break;
+    case 301: // Moved permanently
+    case 302: // Moved temporarily
+    case 307: // Moved temporarily
+      $location = $result->headers['Location'];
+
+      if ($retry) {
+        $result = drupal_http_request($result->headers['Location'], $headers, $method, $data, --$retry);
+        $result->redirect_code = $result->code;
+      }
+      $result->redirect_url = $location;
+
+      break;
+    default:
+      $result->error = $text;
+  }
+
+  $result->code = $code;
+  return $result;
+}
 /* @} */
 
 function error_handler($errno, $message, $filename, $line, $variables) {
@@ -349,7 +470,7 @@ function drupal_specialchars($input, $quotes = ENT_NOQUOTES) {
  * allowed. See RFC 2822 for details.
  *
  * @param $mail A string containing an email address.
- * @return 
+ * @return
  */
 function valid_email_address($mail) {
   $user = '[a-zA-Z0-9_\-\.\+\^!#\$%&*+\/\=\?\`\|\{\}~\']+';
