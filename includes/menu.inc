@@ -701,28 +701,44 @@ function _menu_build() {
   if (module_exist('menu')) {
     $result = db_query('SELECT * FROM {menu} ORDER BY mid ASC');
     while ($item = db_fetch_object($result)) {
-      // Don't display non-custom menu items if no module declared them.
-      if (!($item->type & MENU_CREATED_BY_ADMIN) && array_key_exists($item->path, $_menu['path index'])) {
+      if (array_key_exists($item->path, $_menu['path index'])) {
+        // The path is already declared.
         $old_mid = $_menu['path index'][$item->path];
-        $_menu['items'][$item->mid] = $_menu['items'][$old_mid];
-        unset($_menu['items'][$old_mid]);
-        $_menu['path index'][$item->path] = $item->mid;
-        // If administrator has changed item position, reflect the change.
-        if ($item->type & MENU_MODIFIED_BY_ADMIN) {
-          $_menu['items'][$item->mid]['title'] = $item->title;
-          $_menu['items'][$item->mid]['description'] = $item->description;
-          $_menu['items'][$item->mid]['pid'] = $item->pid;
-          $_menu['items'][$item->mid]['weight'] = $item->weight;
-          $_menu['items'][$item->mid]['type'] = $item->type;
-        }
-      }
-      // Next, add any custom items added by the administrator.
-      else if ($item->type & MENU_CREATED_BY_ADMIN) {
-        $_menu['items'][$item->mid] = array('pid' => $item->pid, 'path' => $item->path, 'title' => $item->title, 'description' => $item->description, 'access' => TRUE, 'weight' => $item->weight, 'type' => $item->type, 'callback' => '', 'callback arguments' => array());
-
-        if (!empty($item->path) && !array_key_exists($item->path, $_menu['path index'])) {
+        if ($old_mid < 0) {
+          // It had a temporary ID, so use a permanent one.
+          $_menu['items'][$item->mid] = $_menu['items'][$old_mid];
+          unset($_menu['items'][$old_mid]);
           $_menu['path index'][$item->path] = $item->mid;
         }
+        else {
+          // It has a permanent ID. Only replace with non-custom menu items.
+          if ($item->type & MENU_CREATED_BY_ADMIN) {
+            $_menu['items'][$item->mid] = array('path' => $item->path, 'access' => TRUE, 'callback' => '', 'callback arguments' => array());
+          }
+          else {
+            // Leave the old item around as a shortcut to this one.
+            $_menu['items'][$item->mid] = $_menu['items'][$old_mid];
+            $_menu['path index'][$item->path] = $item->mid;
+          }
+        }
+      }
+      else {
+        // The path was not declared, so this is a custom item or an orphaned one.
+        if ($item->type & MENU_CREATED_BY_ADMIN) {
+          $_menu['items'][$item->mid] = array('path' => $item->path, 'access' => TRUE, 'callback' => '', 'callback arguments' => array());
+          if (!empty($item->path)) {
+            $_menu['path index'][$item->path] = $item->mid;
+          }
+        }
+      }
+
+      // If the administrator has changed the item, reflect the change.
+      if ($item->type & MENU_MODIFIED_BY_ADMIN) {
+        $_menu['items'][$item->mid]['title'] = $item->title;
+        $_menu['items'][$item->mid]['description'] = $item->description;
+        $_menu['items'][$item->mid]['pid'] = $item->pid;
+        $_menu['items'][$item->mid]['weight'] = $item->weight;
+        $_menu['items'][$item->mid]['type'] = $item->type;
       }
     }
   }
