@@ -6,6 +6,10 @@ function import_help() {
  <?php
 }
 
+function import_perm() {
+  return array("add and edit news feeds");
+}
+
 function import_cron() {
   $result = db_query("SELECT * FROM feed");
   while ($feed = db_fetch_array($result)) {
@@ -232,54 +236,60 @@ function import_view_item() {
 }
 
 function import_admin() {
-  global $op, $id, $type, $edit;
+  global $user, $op, $id, $type, $edit;
 
-  print "<SMALL><A HREF=\"admin.php?mod=import&type=bundle&op=add\">add new bundle</A> | <A HREF=\"admin.php?mod=import&type=feed&op=add\">add new feed</A> | <A HREF=\"admin.php?mod=import&type=bundle&op=view\">available bundles</A> | <A HREF=\"admin.php?mod=import&type=item&op=view\">available items</A> | <A HREF=\"admin.php?mod=import&op=view\">overview</A> | <A HREF=\"admin.php?mod=import&op=help\">help</A></SMALL><HR>";
+  if (user_access($user, "add and edit news feeds")) {
 
-  switch($op) {
-    case "help":
-      print import_help();
-      break;
-    case "add":
-      if ($type == "bundle")
-        print import_form_bundle();
-      else
-        print import_form_feed();
-      break;
-    case "edit":
-      if ($type == "bundle")
-        print import_form_bundle(import_get_bundle($id));
-      else
-        print import_form_feed(import_get_feed($id));
-      break;
-    case "remove":
-      print status(import_remove(import_get_feed($id)));
-      print import_view_feed();
-      break;
-    case "update":
-      print status(import_update(import_get_feed($id)));
-      print import_view_feed();
-      break;
-    case "Save attributes":
-      print status(import_save_attributes($edit));
-      print import_view_item();
-      break;
-    case "Delete":
-      $edit[title] = 0;
-      // fall through:
-    case "Submit":
-      if ($type == "bundle")
-        print status(import_save_bundle($edit));
-      else
-        print status(import_save_feed($edit));
-      // fall through:
-    default:
-      if ($type == "bundle")
-        print import_view_bundle();
-      else if ($type == "item")
-        print import_view_item();
-      else
+    print "<SMALL><A HREF=\"admin.php?mod=import&type=bundle&op=add\">add new bundle</A> | <A HREF=\"admin.php?mod=import&type=feed&op=add\">add new feed</A> | <A HREF=\"admin.php?mod=import&type=bundle&op=view\">available bundles</A> | <A HREF=\"admin.php?mod=import&type=item&op=view\">available items</A> | <A HREF=\"admin.php?mod=import&op=view\">overview</A> | <A HREF=\"admin.php?mod=import&op=help\">help</A></SMALL><HR>";
+
+    switch($op) {
+      case "help":
+        print import_help();
+        break;
+      case "add":
+        if ($type == "bundle")
+          print import_form_bundle();
+        else
+          print import_form_feed();
+        break;
+      case "edit":
+        if ($type == "bundle")
+          print import_form_bundle(import_get_bundle($id));
+        else
+          print import_form_feed(import_get_feed($id));
+        break;
+      case "remove":
+        print status(import_remove(import_get_feed($id)));
         print import_view_feed();
+        break;
+      case "update":
+        print status(import_update(import_get_feed($id)));
+        print import_view_feed();
+        break;
+      case "Save attributes":
+        print status(import_save_attributes($edit));
+        print import_view_item();
+        break;
+      case "Delete":
+        $edit[title] = 0;
+        // fall through:
+      case "Submit":
+        if ($type == "bundle")
+          print status(import_save_bundle($edit));
+        else
+          print status(import_save_feed($edit));
+        // fall through:
+      default:
+        if ($type == "bundle")
+          print import_view_bundle();
+        else if ($type == "item")
+          print import_view_item();
+        else
+          print import_view_feed();
+    }
+  }
+  else {
+    print message_access();
   }
 }
 

@@ -236,7 +236,7 @@ function node_index($node) {
 
 function node_visible($node) {
   global $user, $status;
-  return ($node->status == $status[posted]) || ($node->status == $status[queued] && $user->id) || user_access($user, $node->type) || user_access($user, "node");
+  return ($node->status == $status[posted]) || ($node->status == $status[queued] && $user->id) || user_access($user, $node->type) || user_access($user, "add and edit nodes");
 }
 
 function node_access($account, $node) {

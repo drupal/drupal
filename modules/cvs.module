@@ -1,5 +1,9 @@
 <?php
 
+function cvs_perm() {
+  return array("view CVS messages");
+}
+
 function cvs_cron() {
   if (time() - variable_get("cvs_cron_last", 0) > variable_get("cvs_cron_time", time())) {
     variable_set("cvs_cron_last", time());
@@ -22,20 +26,27 @@ function cvs_conf_options() {
 }
 
 function cvs_page() {
-  global $theme;
+  global $user, $theme;
 
-  $result = db_query("SELECT * FROM cvs ORDER BY timestamp DESC LIMIT 50");
+  if (user_access($user, "view CVS messages")) {
+    $result = db_query("SELECT * FROM cvs ORDER BY timestamp DESC LIMIT 50");
 
-  while ($cvs = db_fetch_object($result)) {
-    $output .= "<b>File:</b> $cvs->files<br />";
-    $output .= "<b>Date:</b> ". format_date($cvs->timestamp) ."<br />";
-    $output .= "<b>User:</b> $cvs->user<br />";
-    $output .= "\n". nl2br(htmlentities($cvs->message)) ."<hr />";
+    while ($cvs = db_fetch_object($result)) {
+      $output .= "<b>File:</b> $cvs->files<br />";
+      $output .= "<b>Date:</b> ". format_date($cvs->timestamp) ."<br />";
+      $output .= "<b>User:</b> $cvs->user<br />";
+      $output .= "\n". nl2br(htmlentities($cvs->message)) ."<hr />";
+    }
+
+    $theme->header();
+    $theme->box("CVS commit messages", "<div style=\"font-family: monospace;\">$output</div>");
+    $theme->footer();
   }
-
-  $theme->header();
-  $theme->box("CVS commit messages", "<div style=\"font-family: monospace;\">$output</div>");
-  $theme->footer();
+  else {
+    $theme->header();
+    $theme->box(t("Access denied"), message_access());
+    $theme->footer();
+  }
 }
 
 ?>

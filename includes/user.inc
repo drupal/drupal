@@ -3,14 +3,14 @@
 class User {
   function User($userid, $passwd = 0) {
     if ($passwd) {
-      $result = db_query("SELECT * FROM users WHERE LOWER(userid) = LOWER('$userid') && passwd = PASSWORD('$passwd') && STATUS = 2");
+      $result = db_query("SELECT u.*, r.perm FROM users u LEFT JOIN role r ON u.role = r.name WHERE LOWER(userid) = LOWER('$userid') && passwd = PASSWORD('$passwd') AND status = 2");
       if (db_num_rows($result) == 1) {
         foreach (db_fetch_row($result) as $key=>$value) { $field = mysql_field_name($result, $key); $this->$field = stripslashes($value); $this->field[] = $field; }
         db_query("UPDATE users SET last_access = '". time() ."', last_host = '$GLOBALS[REMOTE_ADDR]' WHERE id = $this->id");
       }
     }
     else {
-      $result = db_query("SELECT * FROM users WHERE userid = '$userid' && STATUS = 2");
+      $result = db_query("SELECT u.*, r.perm FROM users u LEFT JOIN role r ON u.role = r.name WHERE u.userid = '$userid' AND u.status = 2");
       if (db_num_rows($result) == 1) {
         foreach (db_fetch_row($result) as $key=>$value) { $field = mysql_field_name($result, $key); $this->$field = stripslashes($value); $this->field[] = $field; }
         db_query("UPDATE users SET last_access = '". time() ."', last_host = '$GLOBALS[REMOTE_ADDR]' WHERE id = $this->id");
@@ -52,10 +52,16 @@ function user_save($account, $array) {
   return user_load(($account->userid ? $account->userid : $array[userid]));
 }
 
-function user_access($account, $section = 0) {
-  global $user;
-  if ($section) return (field_get($account->access, $section) || $account->id == 1);
-  else return ($account->access || $account->id == 1);
+function user_access($account, $perm) {
+  if ($account->id == 1) {
+    return 1;
+  }
+  else if ($account->perm) {
+    return strstr($account->perm, $perm);
+  }
+  else {
+    return db_fetch_object(db_query("SELECT * FROM role WHERE name = 'anonymous user' AND perm LIKE '%$perm%'"));
+  }
 }
 
 function user_ban($mask, $type) {

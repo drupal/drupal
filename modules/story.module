@@ -16,7 +16,7 @@ function story_search($keys) {
   global $status, $user;
   $result = db_query("SELECT n.*, s.* FROM story s LEFT JOIN node n ON n.nid = s.nid AND n.lid = s.lid WHERE n.status = '$status[posted]' AND (n.title LIKE '%$keys%' OR s.abstract LIKE '%$keys%' OR s.body LIKE '%$keys%') LIMIT 20");
   while ($story = db_fetch_object($result)) {
-    $find[$i++] = array("title" => check_output($story->title), "link" => (user_access($user, "story") ? "admin.php?mod=node&type=story&op=edit&id=$story->nid" : "node.php?id=$story->nid"), "user" => $story->userid, "date" => $story->timestamp);
+    $find[$i++] = array("title" => check_output($story->title), "link" => (user_access($user, "add and edit nodes") ? "admin.php?mod=node&type=story&op=edit&id=$story->nid" : "node.php?id=$story->nid"), "user" => $story->userid, "date" => $story->timestamp);
   }
   return $find;
 }
@@ -75,7 +75,7 @@ function story_save($edit) {
   if (!$edit[nid]) {
     node_save($edit, array(abstract, attributes => node_attributes_save("story", $edit), author => $user->id, body, comment => variable_get("story_comment", 0), moderate => variable_get("story_moderate", ""), promote => variable_get("story_promote", 0), score => 0, status => variable_get("story_status", $status[queued]), timestamp => time(), title, type => "story", votes => 0));
   }
-  else if (user_access($user)) {
+  else if (user_access($user, "add and edit nodes")) {
     node_save($edit, array(abstract, attributes => node_attributes_save("story", $edit), body, title, type => "story"));
   }
 }

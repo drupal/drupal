@@ -26,6 +26,10 @@ function node_help() {
   }
 }
 
+function node_perm() {
+  return array("add and edit nodes");
+}
+
 function node_conf_options() {
   $output .= form_select(t("Default number of nodes to display"), "default_nodes_main", variable_get("default_nodes_main", 10), array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 =>  5, 6 => 6, 7 => 7, 8 => 8, 9 => 9, 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30), t("The default maximum number of nodes to display on the main page."));
   return $output;
@@ -260,77 +264,83 @@ function node_edit($node) {
 }
 
 function node_admin() {
-  global $op, $id, $edit, $query, $type, $keys;
+  global $user, $op, $id, $edit, $query, $type, $keys;
 
-  foreach (module_list() as $name) {
-    if (module_hook($name, "status") && $name != "node") {
-      $link[] = "<A HREF=\"admin.php?mod=node&type=$name&op=add\">add $name</A>";
+  if (user_access($user, "add and edit nodes")) {
+
+    foreach (module_list() as $name) {
+      if (module_hook($name, "status") && $name != "node") {
+        $link[] = "<A HREF=\"admin.php?mod=node&type=$name&op=add\">add $name</A>";
+      }
+    }
+
+    print "<SMALL>". implode(" | ", $link) ." | <A HREF=\"admin.php?mod=node&op=default\">node settings</A> | <A HREF=\"admin.php?mod=node&op=listing\">node listings</A> | <A HREF=\"admin.php?mod=node&op=search\">search node</A> | <A HREF=\"admin.php?mod=node\">overview</A> | <A HREF=\"admin.php?mod=node&op=help\">help</A></SMALL><HR>\n";
+
+    $id = check_input($edit[nid] ? $edit[nid] : $id);
+
+    switch ($op) {
+      case "add":
+        print module_invoke($type, "form");
+        break;
+      case "help":
+        print node_help();
+        break;
+      case "search":
+        print node_module_find($id);
+        print search_data($keys, $type);
+        break;
+      case "status":
+        print node_edit_status($id);
+        break;
+      case "option":
+        print node_edit_option($id);
+        break;
+      case "attribute":
+        print node_edit_attribute($id);
+        break;
+      case "content":
+        print node_edit_content(node_get_array(array("nid" => $id)), $type);
+        break;
+      case "default":
+        print node_setting();
+        break;
+      case "delete":
+        print status(node_delete($id));
+        print node_overview($query);
+        break;
+      case "listing":
+        print node_listing(node_query());
+        break;
+      case "Save settings":
+        print status(conf_save($edit));
+        print node_setting();
+        break;
+      case "Reset to defaults":
+        print status(conf_default($edit));
+        print node_setting();
+        break;
+      case "Save node":
+        print node_admin_save($edit);
+        print node_overview($query);
+        break;
+      case "edit":
+        print node_edit(node_get_object(array("nid" => $id)));
+        break;
+      case "view":
+        print node_module_view(node_get_array(array("nid" => $id)), $type);
+        break;
+      case "Preview":
+        print node_edit_content($edit, $type);
+        break;
+      case "Submit":
+         print status(node_save_content($edit, $type));
+        // fall through:
+      default:
+        print node_overview($query);
     }
   }
-
-  print "<SMALL>". implode(" | ", $link) ." | <A HREF=\"admin.php?mod=node&op=default\">node settings</A> | <A HREF=\"admin.php?mod=node&op=listing\">node listings</A> | <A HREF=\"admin.php?mod=node&op=search\">search node</A> | <A HREF=\"admin.php?mod=node\">overview</A> | <A HREF=\"admin.php?mod=node&op=help\">help</A></SMALL><HR>\n";
-
-  $id = check_input($edit[nid] ? $edit[nid] : $id);
-
-  switch ($op) {
-    case "add":
-      print module_invoke($type, "form");
-      break;
-    case "help":
-      print node_help();
-      break;
-    case "search":
-      print node_module_find($id);
-      print search_data($keys, $type);
-      break;
-    case "status":
-      print node_edit_status($id);
-      break;
-    case "option":
-      print node_edit_option($id);
-      break;
-    case "attribute":
-      print node_edit_attribute($id);
-      break;
-    case "content":
-      print node_edit_content(node_get_array(array("nid" => $id)), $type);
-      break;
-    case "default":
-      print node_setting();
-      break;
-    case "delete":
-      print status(node_delete($id));
-      print node_overview($query);
-      break;
-    case "listing":
-      print node_listing(node_query());
-      break;
-    case "Save settings":
-      print status(conf_save($edit));
-      print node_setting();
-      break;
-    case "Reset to defaults":
-      print status(conf_default($edit));
-      print node_setting();
-      break;
-    case "Save node":
-      print node_admin_save($edit);
-      print node_overview($query);
-      break;
-    case "edit":
-      print node_edit(node_get_object(array("nid" => $id)));
-      break;
-    case "view":
-      print node_module_view(node_get_array(array("nid" => $id)), $type);
-      break;
-    case "Preview":
-      print node_edit_content($edit, $type);
-      break;
-    case "Submit":
-      print status(node_save_content($edit, $type));
-      // fall through:
-    default:
-      print node_overview($query);
+  else {
+    print message_access();
   }
 }
 

@@ -5,6 +5,10 @@ function queue_conf_options() {
   $output .= form_select(t("Discard entries older than"), "queue_clear", variable_get("queue_clear", 604800), $period, t("The time nodes should be kept in the moderation queue.  Older entries will be automatically discarded.  Requires crontab."));  return $output;
 }
 
+function queue_perm() {
+  return array("access moderation queue");
+}
+
 function queue_cron() {
   global $status;
   db_query("UPDATE node SET status = '$status[dumped]' WHERE status = '$status[queued]' AND ". time() ." - timestamp > ". variable_get("queue_clear", 604800));
@@ -110,7 +114,7 @@ function queue_node($id) {
 function queue_page() {
   global $id, $op, $theme, $user, $vote;
 
-  if ($user->id) {
+  if ($user->id && user_access($user, "access moderation queue")) {
     switch($op) {
       case "Vote";
         queue_vote(check_input($id), check_input($vote));
@@ -125,7 +129,7 @@ function queue_page() {
   }
   else {
     $theme->header();
-    $theme->box(t("Moderation queue"), message_account());
+    $theme->box(t("Moderation queue"), message_access());
     $theme->footer();
   }
 }

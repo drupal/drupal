@@ -59,9 +59,9 @@ function theme_account($theme) {
     $content .= "<A HREF=\"account.php?op=edit&topic=content\">". t("edit your content") ."</A><BR>\n";
     $content .= "<P>\n";
 
-    if (user_access($user)) {
+    if (user_access($user, "access administration pages")) {
       $content .= "<A HREF=\"admin.php\">". strtr(t("administer %a"), array("%a" => variable_get("site_name", "drupal"))) ."</A><BR>\n";
-    $content .= "<P>\n";
+      $content .= "<P>\n";
     }
 
     foreach (module_list() as $name) {

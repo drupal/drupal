@@ -6,7 +6,7 @@ page_header();
 
 $theme->header();
 
-if ($user->id) {
+if (user_access($user, "post content")) {
   if ($mod) {
     module_invoke($mod, "user");
   }
@@ -25,7 +25,7 @@ if ($user->id) {
   }
 }
 else {
-  $theme->box("Submit", message_account());
+  $theme->box("Submit", message_access());
 }
 
 $theme->footer();

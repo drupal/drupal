@@ -4,9 +4,13 @@ function comment_search($keys) {
   global $user;
   $result = db_query("SELECT c.*, u.userid FROM comments c LEFT JOIN users u ON c.author = u.id WHERE c.subject LIKE '%$keys%' OR c.comment LIKE '%$keys%' ORDER BY c.timestamp DESC LIMIT 20");
   while ($comment = db_fetch_object($result)) {
-    $find[$i++] = array("title" => check_output($comment->subject), "link" => (user_access($user, "comment") ? "admin.php?mod=comment&op=edit&id=$comment->cid" : "node.php?id=$comment->lid&cid=$comment->cid"), "user" => $comment->userid, "date" => $comment->timestamp);
+    $find[$i++] = array("title" => check_output($comment->subject), "link" => (user_access($user, "edit user comments") ? "admin.php?mod=comment&op=edit&id=$comment->cid" : "node.php?id=$comment->lid&cid=$comment->cid"), "user" => $comment->userid, "date" => $comment->timestamp);
   }
   return $find;
+}
+
+function comment_perm() {
+  return array("view comments", "post comments", "edit comments");
 }
 
 function comment_edit($id) {
@@ -42,24 +46,30 @@ function comment_overview() {
 }
 
 function comment_admin() {
-  global $op, $id, $edit, $mod, $keys, $order;
+  global $user, $op, $id, $edit, $mod, $keys, $order;
 
-  print "<SMALL><A HREF=\"admin.php?mod=comment\">overview</A> | <A HREF=\"admin.php?mod=comment&op=search\">search comment</A></SMALL><HR>\n";
+  if (user_access($user, "edit comments")) {
 
-  switch ($op) {
-    case "edit":
-      print comment_edit($id);
-      break;
-    case "search":
-      print search_form($keys);
-      print search_data($keys, $mod);
-      break;
-    case t("Submit"):
-      print status(comment_save(check_input($id), $edit));
-      print comment_overview();
-      break;
-    default:
-      print comment_overview();
+    print "<SMALL><A HREF=\"admin.php?mod=comment\">overview</A> | <A HREF=\"admin.php?mod=comment&op=search\">search comment</A></SMALL><HR>\n";
+
+    switch ($op) {
+      case "edit":
+        print comment_edit($id);
+        break;
+      case "search":
+        print search_form($keys);
+        print search_data($keys, $mod);
+        break;
+      case t("Submit"):
+        print status(comment_save(check_input($id), $edit));
+        print comment_overview();
+        break;
+      default:
+        print comment_overview();
+    }
+  }
+  else {
+    print message_access();
   }
 }
 

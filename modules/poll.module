@@ -78,7 +78,7 @@ function poll_search($keys) {
   global $status, $user;
   $result = db_query("SELECT n.*, p.* FROM poll p LEFT JOIN node n ON n.nid = p.nid AND n.lid = p.lid WHERE n.status = '$status[posted]' AND (n.title LIKE '%$keys%') LIMIT 20");
   while ($poll = db_fetch_object($result)) {
-    $find[$i++] = array("title" => check_output($poll->title), "link" => (user_access($user, "poll") ? "admin.php?mod=poll&op=edit&id=$poll->nid" : "node.php?id=$poll->nid"), "user" => $poll->userid, "date" => $poll->timestamp);
+    $find[$i++] = array("title" => check_output($poll->title), "link" => (user_access($user, "add and edit nodes") ? "admin.php?mod=poll&op=edit&id=$poll->nid" : "node.php?id=$poll->nid"), "user" => $poll->userid, "date" => $poll->timestamp);
   }
   return $find;
 }
@@ -176,7 +176,7 @@ function poll_form($edit = array(), $nocheck = 0) {
 
   $active = array(0 => "Closed", 1 => "Active");
 
-  $admin = ($edit[nid] && user_access($user,"poll")) ? 1 : 0;
+  $admin = ($edit[nid] && user_access($user, "add and edit nodes")) ? 1 : 0;
 
   if ($edit[title]) {
     $form .= poll_view(new Poll(node_preview($edit)));
@@ -234,7 +234,7 @@ function poll_save($edit) {
   if (!$edit[nid]) {
     $nid = node_save($edit, array(active => 1, attributes => node_attributes_save("poll", $edit), author => $user->id, comment => variable_get("poll_comment", 0), moderate => variable_get("poll_moderate", ""), promote => variable_get("poll_promote", 0), runtime, score => 0, status => variable_get("poll_status", $status[queued]), timestamp => time(), title, type => "poll", votes => 0, voters => ""));
   }
-  else if (user_access($user)) {
+  else if (user_access($user, "add and edit nodes")) {
     $nid = node_save($edit, array(active, attributes => node_attributes_save("poll", $edit), runtime, title, type => "poll"));
     db_query("DELETE FROM poll_choices WHERE nid='" . $nid . "'");
   }

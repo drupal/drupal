@@ -9,6 +9,10 @@ function block_help() {
  <?php
 }
 
+function block_perm() {
+  return array("add and edit blocks");
+}
+
 function block_admin_save($edit) {
   foreach ($edit as $key=>$value) {
     db_query("UPDATE blocks SET region = '". check_input($value[region]) ."', status = '". check_input($value[status]) ."', weight = '". check_input($value[weight]) ."' WHERE name = '". check_input($key) ."'");
@@ -99,24 +103,28 @@ function block_admin_preview() {
 }
 
 function block_admin() {
-  global $op, $edit;
+  global $user, $op, $edit;
 
-  print "<SMALL><A HREF=\"admin.php?mod=block\">configure</A> | <A HREF=\"admin.php?mod=block&op=preview\">preview</A> | <A HREF=\"admin.php?mod=block&op=help\">help</A></SMALL><HR>\n";
+  if (user_access($user, "add and edit blocks")) {
+    print "<SMALL><A HREF=\"admin.php?mod=block\">configure</A> | <A HREF=\"admin.php?mod=block&op=preview\">preview</A> | <A HREF=\"admin.php?mod=block&op=help\">help</A></SMALL><HR>\n";
 
-  switch ($op) {
-    case "help":
-      block_help();
-      break;
-    case "preview":
-      block_admin_preview();
-      break;
-    case "Save blocks":
-      block_admin_save($edit);
-      // fall through
-    default:
-      block_admin_display();
+    switch ($op) {
+      case "help":
+        block_help();
+        break;
+      case "preview":
+        block_admin_preview();
+        break;
+      case "Save blocks":
+        block_admin_save($edit);
+        // fall through
+      default:
+        block_admin_display();
+    }
   }
-
+  else {
+    print message_access();
+  }
 }
 
 ?>

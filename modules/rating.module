@@ -1,5 +1,9 @@
 <?php
 
+function rating_perm() {
+  return array("view user ratings");
+}
+
 function rating_conf_options() {
   $period = array(3600 => format_interval(3600), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 1000000000 => t("Never"));
   $output .= form_select(t("Update interval"), "rating_cron_time" , variable_get("rating_cron_time", 86400), $period, t("The update interval for the user ratings.  Requires crontab."));
@@ -79,10 +83,18 @@ function rating_list($limit) {
 }
 
 function rating_page() {
-  global $theme;
-  $theme->header();
-  $theme->box("Top 100 users", rating_list(100));
-  $theme->footer();
+  global $user, $theme;
+
+  if (user_access($user, "view user ratings")) {
+    $theme->header();
+    $theme->box(t("Top 100 users"), rating_list(100));
+    $theme->footer();
+  }
+  else {
+    $theme->header();
+    $theme->box(t("Access denied"), message_access());
+    $theme->footer();
+  }
 }
 
 function rating_block() {

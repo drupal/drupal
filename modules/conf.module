@@ -12,6 +12,10 @@ function conf_help() {
  <?php
 }
 
+function conf_perm() {
+  return array("edit configuration options");
+}
+
 function conf_view_options() {
   global $conf, $cmodes, $corder, $themes;
 
@@ -97,24 +101,30 @@ function conf_view($type) {
 }
 
 function conf_admin() {
-  global $edit, $op, $type;
+  global $user, $edit, $op, $type;
 
-  print "<SMALL><A HREF=\"admin.php?mod=conf&type=options\">site settings</A> | <A HREF=\"admin.php?mod=conf&type=filter\">content filters</A> | <A HREF=\"admin.php?mod=conf&op=help\">help</A></SMALL><HR>\n";
+  if (user_access($user, "edit configuration options")) {
 
-  switch ($op) {
-    case "help":
-      conf_help();
-      break;
-    case "Reset to defaults":
-      print status(conf_default($edit));
-      print conf_view($type);
-      break;
-    case "Save configuration":
-      print status(conf_save($edit));
-      print conf_view($type);
-      break;
-    default:
-      print conf_view($type);
+    print "<SMALL><A HREF=\"admin.php?mod=conf&type=options\">site settings</A> | <A HREF=\"admin.php?mod=conf&type=filter\">content filters</A> | <A HREF=\"admin.php?mod=conf&op=help\">help</A></SMALL><HR>\n";
+
+    switch ($op) {
+      case "help":
+        conf_help();
+        break;
+      case "Reset to defaults":
+        print status(conf_default($edit));
+        print conf_view($type);
+        break;
+      case "Save configuration":
+        print status(conf_save($edit));
+        print conf_view($type);
+        break;
+      default:
+        print conf_view($type);
+    }
+  }
+  else {
+    print message_access();
   }
 }
 

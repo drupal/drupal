@@ -25,7 +25,7 @@ function watchdog($type, $message) {
 
 function throttle($type, $rate) {
   global $user;
-  if (!user_access($user)) {
+  if (!user_access($user, "access administration pages")) {
     if ($throttle = db_fetch_object(db_query("SELECT * FROM watchdog WHERE type = '$type' AND hostname = '". getenv("REMOTE_ADDR") ."' AND ". time() ." - timestamp < $rate"))) {
       watchdog("warning", "throttle: '". getenv("REMOTE_ADDR") ."' exceeded submission rate - $throttle->type");
       die(message_throttle());
@@ -46,8 +46,8 @@ function path_img() {
   return "./images/";
 }
 
-function message_account() {
-  return t("This page requires a valid user account.  Please <A HREF=\"account.php\">create a user account</A> and <A HREF=\"account.php\">login</A> prior to accessing it.");
+function message_access() {
+  return t("You are not authorized to access to this page.");
 }
 
 function message_throttle() {
@@ -136,7 +136,7 @@ function format_date($timestamp, $type = "medium", $format = "") {
 
 function format_username($username) {
   global $user;
-  if ($username) return (user_access($user, "account") ? "<A HREF=\"admin.php?mod=account&op=view&name=". urlencode($username) ."\">$username</A>" : "<A HREF=\"account.php?op=view&name=". urlencode($username) ."\">$username</A>");
+  if ($username) return (user_access($user, "add and edit user accounts") ? "<A HREF=\"admin.php?mod=account&op=view&name=". urlencode($username) ."\">$username</A>" : "<A HREF=\"account.php?op=view&name=". urlencode($username) ."\">$username</A>");
   else return variable_get(anonymous, "Anonymous");
 }
 

@@ -1,5 +1,9 @@
 <?php
 
+function moderate_perm() {
+  return array("access moderation pages");
+}
+
 function moderate_comment_access($cid) {
   global $user;
   return db_fetch_object(db_query("SELECT n.moderate FROM comments c LEFT JOIN node n ON c.lid = n.nid WHERE c.cid = '". check_input($cid) ."' AND n.moderate LIKE '%$user->userid%'"));
@@ -37,7 +41,7 @@ function moderate_node($edit, $name) {
     return node_invoke($edit, $name);
   }
   else {
-    return status(t("access denied"));
+    return status(message_access());
   }
 }
 
@@ -54,7 +58,7 @@ function moderate_comment_edit($id) {
     return comment_edit($id);
   }
   else {
-    return "access denied";
+    return status(message_access());
   }
 }
 
@@ -63,40 +67,46 @@ function moderate_comment_save($id, $edit) {
     return comment_save($id, $edit);
   }
   else {
-    return "access denied";
+    return status(message_access());
   }
 }
 
 function moderate_admin() {
-  global $op, $id, $edit, $type;
+  global $user, $op, $id, $edit, $type;
 
-   switch ($type) {
-    case "comment":
-      switch ($op) {
-        case "edit":
-          print moderate_comment_edit($id);
-          break;
-        case t("Submit"):
-          print status(moderate_comment_save($id, $edit));
-          // fall through:
-        default:
-          print moderate_overview();
+  if (user_access($user, "access moderation pages")) {
+
+    switch ($type) {
+      case "comment":
+        switch ($op) {
+          case "edit":
+            print moderate_comment_edit($id);
+            break;
+          case t("Submit"):
+            print status(moderate_comment_save($id, $edit));
+            // fall through:
+          default:
+            print moderate_overview();
+        }
+        break;
+      default:
+        switch ($op) {
+          case "edit":
+            print moderate_node_edit(node_get_array(array("nid" => $id)));
+            break;
+          case t("Preview"):
+            print moderate_node_edit($edit);
+            break;
+          case t("Submit"):
+            print status(moderate_node_save($edit));
+            // fall through:
+         default:
+           print moderate_overview();
       }
-      break;
-    default:
-      switch ($op) {
-        case "edit":
-          print moderate_node_edit(node_get_array(array("nid" => $id)));
-          break;
-        case t("Preview"):
-          print moderate_node_edit($edit);
-          break;
-        case t("Submit"):
-          print status(moderate_node_save($edit));
-          // fall through:
-       default:
-         print moderate_overview();
     }
+  }
+  else {
+    print message_access();
   }
 }
 
