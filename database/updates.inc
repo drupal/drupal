@@ -1,5 +1,5 @@
 <?php
-/* $Id: updates.inc,v 1.59 2004/09/14 21:13:01 unconed Exp $ */
+/* $Id: updates.inc,v 1.60 2004/09/15 20:34:34 unconed Exp $ */
 
 /**
  * @file
@@ -81,7 +81,8 @@ $sql_updates = array(
   "2004-08-12" => "update_102",
   "2004-08-17" => "update_103",
   "2004-08-19" => "update_104",
-  "2004-09-14" => "update_105"
+  "2004-09-14" => "update_105",
+  "2004-09-15" => "update_106"
 );
 
 function update_32() {
@@ -1795,6 +1796,19 @@ function update_105() {
 
   $ret[] = update_sql("DROP TABLE {forum_conv_temp}");
 
+  return $ret;
+}
+
+function update_106() {
+  $ret = array();
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql('ALTER TABLE {cache} ADD INDEX expire (expire)');
+  }
+  else if ($GLOBALS['db_type'] == 'pgsql') {
+    // TODO: needs PGSQL equivalent.
+  }
+
+  $ret[] = update_sql('DELETE FROM {cache}');
   return $ret;
 }
 

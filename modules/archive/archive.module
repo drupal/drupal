@@ -1,5 +1,5 @@
 <?php
-// $Id: archive.module,v 1.64 2004/09/12 17:18:36 dries Exp $
+// $Id: archive.module,v 1.65 2004/09/15 20:34:35 unconed Exp $
 
 /**
  * @file
@@ -169,7 +169,7 @@ function archive_calendar($original = 0) {
 
   $output .= "</table></div>\n\n";
 
-  cache_set("archive:calendar:$day-$month-$year", $output, 1);
+  cache_set("archive:calendar:$day-$month-$year", $output, CACHE_TEMPORARY);
 
   return $output;
 }
