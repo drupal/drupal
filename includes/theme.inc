@@ -62,24 +62,6 @@ class BaseTheme {
     print $output;
   }
 
-
-  function comment_controls($threshold = 1, $mode = 3, $order = 1) {
-    return form_item(t("Comment viewing options"), comment_mode($mode) . comment_order($order) . comment_threshold($threshold) ." <input type=\"submit\" name=\"op\" value=\"". t("Update settings") ."\" />", t("Select your prefered way to display the comments and click 'Update settings' to active your changes."));
-  }
-
-  function comment($comment, $link = 0) {
-    $output = "<a name=\"$comment->cid\"></a>";
-    $output .= "<div style=\"border: 1px solid; padding: 10px;\">";
-    $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">";
-    $output .= " <tr><td><div style=\"font-size: 110%; font-weight: bold;\">". check_output($comment->subject) ."</div></td><td align=\"right\" rowspan=\"2\" valign=\"top\">". comment_moderation($comment) ."</td></tr>";
-    $output .= " <tr><td><div style=\"margin-left: 10px; padding-bottom: 10px; font-size: 90%;\">". t("by %a on %b", array("%a" => format_name($comment), "%b" => format_date($comment->timestamp))) ."</div></td></tr>";
-    $output .= " <tr><td colspan=\"2\">". check_output($comment->comment, 1) ."</td></tr>";
-    $output .= " <tr><td align=\"right\" colspan=\"2\">$link</td></tr>";
-    $output .= "</table>";
-    $output .= "</div><br />";
-    print $output;
-  }
-
   function box($subject, $content, $region = "main") {
     $output = "<b>". check_output($subject) ."</b><br />". check_output($content) ."<p />";
     print $output;

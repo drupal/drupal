@@ -50,7 +50,8 @@ $mysql_updates = array(
   "2002-08-10" => "update_35",
   "2002-08-16" => "update_36",
   "2002-08-19" => "update_37",
-  "2002-08-26" => "update_38"
+  "2002-08-26" => "update_38",
+  "2002-09-15" => "update_39"
 );
 
 // Update functions
@@ -535,6 +536,49 @@ function update_37() {
 
 function update_38() {
   update_sql("ALTER TABLE watchdog CHANGE message message text NOT NULL default '';");
+}
+
+function update_39() {
+  update_sql("DROP TABLE moderate");
+
+  update_sql("ALTER TABLE comments ADD score MEDIUMINT NOT NULL;");
+  update_sql("ALTER TABLE comments ADD status TINYINT UNSIGNED NOT NULL;");
+  update_sql("ALTER TABLE comments ADD users MEDIUMTEXT;");
+
+  update_sql("CREATE TABLE moderation_votes (
+    mid INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    vote VARCHAR(255),
+    weight TINYINT NOT NULL
+  );");
+
+  update_sql("CREATE TABLE moderation_roles (
+    rid INT UNSIGNED NOT NULL,
+    mid INT UNSIGNED NOT NULL,
+    value TINYINT NOT NULL
+  );");
+
+  update_sql("ALTER TABLE moderation_roles ADD INDEX (rid);");
+  update_sql("ALTER TABLE moderation_roles ADD INDEX (mid);");
+
+  update_sql("CREATE TABLE moderation_filters (
+    fid INT UNSIGNED NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    filter VARCHAR(255) NOT NULL,
+    minimum SMALLINT NOT NULL
+  );");
+
+  update_sql("DELETE FROM moderation_votes;");
+  update_sql("INSERT INTO moderation_votes VALUES (1, '+1', 0);");
+  update_sql("INSERT INTO moderation_votes VALUES (2, '-1', 1);");
+
+  update_sql("DELETE FROM moderation_roles;");
+  update_sql("INSERT INTO moderation_roles VALUES (2, 1, 1);");
+  update_sql("INSERT INTO moderation_roles VALUES (2, 2, -1);");
+
+  update_sql("CREATE TABLE forum (
+    nid int unsigned not null primary key,
+    icon varchar(255) not null,
+    shadow int unsigned not null
+  );");
 }
 
 function update_upgrade3() {

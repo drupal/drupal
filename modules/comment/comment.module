@@ -1,93 +1,58 @@
 <?php
 // $Id$
 
-$GLOBALS["cmodes"] = array(1 => "Flat list - collapsed", 2 => "Flat list - expanded", 3 => "Threaded list - collapsed", 4 => "Threaded list - expanded");
-$GLOBALS["corder"] = array(1 => "Date - newest first", 2 => "Date - oldest first");
+$GLOBALS["cmodes"] = array(1 => t("Flat list - collapsed"), 2 => t("Flat list - expanded"), 3 => t("Threaded list - collapsed"), 4 => t("Threaded list - expanded"));
+$GLOBALS["corder"] = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"));
 
 function comment_help() {
   $output .= "<p>The comment module enables users to submit posts that are directly associated with a piece of content.  These associated posts are called <i>comments</i>.  Comments may be <i>threaded</i>, which means that Drupal keeps track of multiple subconversations around a piece of content.  Threading helps to keep the comment conversation more organized.  Users are presented with several ways to view the comment conversation, and if desired, users may easily choose a <i>flat</i> presentation of comments instead of threaded.  Further, users may choose to order their comments view by <i>newest first</i> or by <i>oldest first</i>.  Finally, users may view a folded list or an expanded list of comments.  Folded limits the comment display to <i>subject</i> only.  Drupal remembers the comment view preference of each user whenever he changes a view setting.</p>";
+  $output .= "<p>Users may also choose to view a maximum number of comments; if there are more comments, there will be a navigator to browse through pages.</p>";
   $output .= "<p>Since a busy site generates lots of comments, Drupal takes care to present a personalized view of comments for each user.  The home page lists displays the number of read and unread comments for a given post for the current user.  Also, the tracker module (when installed) displays all recent comments on the site.  Finally, comments which the user has not yet read are highlighted with a red star (this graphic may depend on the current theme).</p>";
   $output .= "<p>Comments behave like other user submissions in Drupal.  Specifically, ". la("filters", array("mod" => "system", "type" => "filter")) ." like smileys and HTML work fine if the administrator has enabled them.  Also, throttles are usually enabled to prevent a single user from spamming the web site with too many comments in a short period of time.</p>";
-  $output .= "<p>Administrators may control which persons are allowed to submit and administer comments.  These controls appear in the ". la("user permissions", array("mod" => "user", "op" => "permission")) ." administration page.  Additionally, administrators may edit or search through comments on the ". la("comments admininistration page", array("mod" => "comment")) .", as well as set the default display view for new users.</p>";
+  $output .= "<p>Administrators may control which persons are allowed to submit and administer comments.  These controls appear in the ". la("user permissions", array("mod" => "user", "op" => "permission")) ." administration page.  Additionally, administrators may edit or search through comments on the ". la("comments admininistration page", array("mod" => "comment")) .", as well as set the default display view for new users. Administrators can also state whether a certain role will have their comments published immediatly, or just put in a queue to be reviewed.</p>";
+  $output .= "<p>If you really have a lot of comments, you can enable moderation. You have to give some roles permission to moderate, then setup some \"moderation votes\"; these votes will appear to moderators on a select box near the comment. You also have to assign, for every role and every vote, a value, which can be either positive or negative; use the moderation matrix to do this. This way some roles will have more \"weight\" in their moderation, if any, if you want. If you set a value to 0, that vote won't be available to that role. When a user moderates, that value will be added or subtracted to the score of that comment. Finally, you have to setup the comment filters: these will be the threshold values users will see on the comment control panel.</p>";
 
   return $output;
 }
 
-function comment_system($field){
+function comment_system($field) {
   $system["description"] = t("Enables user to comment on content (nodes).");
   return $system[$field];
 }
 
-function comment_settings($mode, $order, $threshold) {
-  global $user;
+function comment_conf_options() {
+  global $cmodes, $corder;
 
-  if ($user->uid) {
-    $user = user_save($user, array("mode" => $mode, "sort" => $order, "threshold" => $threshold));
+  $output .= form_select("Default display mode", "comment_default_mode", variable_get("comment_default_mode", 4), $cmodes, "The default mode in which comments are displayed.");
+  $output .= form_select("Default display order", "comment_default_order", variable_get("comment_default_order", 1), $corder, "The default order in which comments are displayed.");
+  $output .= form_textfield("Default comments per page", "comment_default_per_page", variable_get("comment_default_per_page", "50"), 5, 5, "Default number of comments for each page; more comments are distributed in several pages.");
+
+  $result = db_query("SELECT fid, filter FROM moderation_filters");
+  while ($filter = db_fetch_object($result)) {
+    $thresholds[$filter->fid] = ($filter->filter);
   }
+
+  $output .= form_select("Default threshold", "comment_default_threshold", variable_get("comment_default_threshold", 0), $thresholds, "The default threshold in which comments are displayed.");
+
+  $output .= form_select("Preview comment", "comment_preview", variable_get("comment_preview", 1), array("optional", "required"), "Must users preview comments before submitting?");
+  $output .= form_select("New comment form", "comment_new_form", variable_get("comment_new_form", 0), array("disabled", "enabled"), "New comment form in the node page?");
+  $output .= form_select("Comment controls", "comment_controls", variable_get("comment_controls", 0), array("above comments", "below comments", "above and below"), "Position of the comment controls box.");
+
+  return $output;
 }
 
-function comment_num_all($nid) {
-  $comment = db_fetch_object(db_query("SELECT COUNT(c.nid) AS number FROM node n LEFT JOIN comments c ON n.nid = c.nid WHERE n.nid = '$nid' GROUP BY n.nid"));
-  return $comment->number ? $comment->number : 0;
-}
-
-function comment_num_new($nid) {
-  global $user;
-
-  if ($user->uid) {
-
-    /*
-    ** Retrieve the timestamp at which the current user last viewed
-    ** the specified node and use this timestamp to find the number
-    ** of new comments.
-    */
-
-    $history = db_fetch_object(db_query("SELECT timestamp FROM history WHERE uid = '$user->uid' AND nid = '%s'", $nid));
-    $comment = db_fetch_object(db_query("SELECT COUNT(c.nid) AS number FROM node n LEFT JOIN comments c ON n.nid = c.nid WHERE n.nid = '%s' AND timestamp > '". ($history->timestamp ? $history->timestamp : 0) ."' GROUP BY n.nid", $nid));
-
-    return $comment->number ? $comment->number : 0;
-  }
-  else {
-    return 0;
-  }
-
-}
-
-function comment_tag_new($nid) {
-  global $user;
-
-  if ($user->uid) {
-    $nid = check_query($nid);
-
-    $result = db_query("SELECT timestamp FROM history WHERE uid = '$user->uid' AND nid = '$nid'");
-    if (db_fetch_object($result)) {
-      db_query("UPDATE history SET timestamp = '". time() ."' WHERE uid = '$user->uid' AND nid = '$nid'");
-    }
-    else {
-      db_query("INSERT INTO history (uid, nid, timestamp) VALUES ('$user->uid', '$nid', '". time() ."')");
-    }
-  }
-}
-
-function comment_is_new($comment) {
-  global $user;
-  static $date;
-
-  if (!$date[$comment->nid]) {
-    if ($user->uid) {
-      $history = db_fetch_object(db_query("SELECT timestamp FROM history WHERE uid = '$user->uid' AND nid = '$comment->nid'"));
-      $date[$comment->nid] = $history->timestamp ? $history->timestamp : 0;
-    }
-    else {
-      $date[$comment->nid] = time();
-    }
-  }
-
-  if ($comment->timestamp > $date[$comment->nid]) {
-    return 1;
-  }
-  else {
-    return 0;
+function comment_user($type, $edit, &$user) {
+  switch ($type) {
+    case "view_public":
+      return form_item(t("Signature"), check_output($user->signature, 1));
+    case "view_private":
+      return form_item(t("Signature"), check_output($user->signature, 1));
+    case "edit_form":
+      // when user tries to edit his own data
+      return form_textarea(t("Signature"), "signature", $edit["signature"], 70, 3, t("Your signature will be publicly displayed at the end of your comments.") ."<br />". t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
+    case "edit_validate":
+      // validate user data editing
+      return array("signature" => filter($edit["signature"]));
   }
 }
 
@@ -128,7 +93,7 @@ function comment_form($edit) {
   $form .= form_hidden("pid", $edit["pid"]);
   $form .= form_hidden("nid", $edit["nid"]);
 
-  if (!$edit["comment"]) {
+  if (!$edit["comment"] && variable_get("comment_preview", 1)) {
     $form .= form_submit(t("Preview comment"));
   }
   else {
@@ -136,13 +101,13 @@ function comment_form($edit) {
     $form .= form_submit(t("Post comment"));
   }
 
-  return form($form);
+  return form($form, "post", drupal_url(array("mod" => "comment", "op" => "reply", "id" => $edit["nid"]), "module"));
 }
 
 function comment_edit($cid) {
   global $user;
 
-  $comment = db_fetch_object(db_query("SELECT c.*, u.name, u.uid FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.cid = '$cid'"));
+  $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name, u.data FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.cid = '%d' AND c.status != 2", $cid));
 
   if (comment_access("edit", $comment)) {
     comment_preview(object2array($comment));
@@ -153,14 +118,23 @@ function comment_reply($pid, $nid) {
   global $theme;
 
   if (user_access("access comments")) {
+
+    /*
+    ** Show comment
+    */
+
     if ($pid) {
-      $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.cid = '%s'", $pid));
-      comment_view($comment, t("reply to this comment"));
+      $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name, u.data FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.cid = '%d' AND c.status = 0", $pid));
+      comment_view($comment);
     }
     else {
       node_view(node_load(array("nid" => $nid)));
       $pid = 0;
     }
+
+    /*
+    ** If possible, show reply form
+    */
 
     if (node_comment_mode($nid) == 1) {
       $theme->box(t("Reply"), t("This discussion is closed: you can't post new comments."));
@@ -185,29 +159,24 @@ function comment_preview($edit) {
   }
 
   /*
-  ** Attach the user information:
+  ** Attach the user and time information:
   */
 
   $comment->uid = $user->uid;
   $comment->name = $user->name;
-
-  /*
-  ** Attach the time:
-  */
-
   $comment->timestamp = time();
 
   /*
   ** Preview the comment:
   */
 
-  comment_view($comment, t("reply to this comment"));
+  comment_view($comment);
 
   $theme->box(t("Reply"), comment_form($edit));
 
   if ($edit["pid"]) {
-    $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.cid = '%s'", $edit["pid"]));
-    comment_view($comment, t("reply to this comment"));
+    $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name, u.data FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.cid = '%d' AND c.status = 0", $edit["pid"]));
+    comment_view($comment);
   }
   else {
     node_view(node_load(array("nid" => $edit["nid"])));
@@ -216,10 +185,9 @@ function comment_preview($edit) {
 }
 
 function comment_post($edit) {
-  global $theme, $user;
+  global $user;
 
-  $context->nid = $edit["nid"];
-  if (user_access("post comments", $context) && node_comment_mode($edit["nid"]) == 2) {
+  if (user_access("post comments") && node_comment_mode($edit["nid"]) == 2) {
 
     /*
     ** Validate the comment's subject.  If not specified, extract
@@ -234,15 +202,20 @@ function comment_post($edit) {
 
     $edit["comment"] = filter($edit["comment"]);
 
+    if ($edit["comment"] == "") {
+      return array(t("Empty comment"), t("The comment you submitted is empty."));
+    }
+
     /*
     ** Check for duplicate comments.  Note that we have to use the
     ** validated/filtered data to perform such check.
     */
 
-    $duplicate = db_result(db_query("SELECT COUNT(cid) FROM comments WHERE pid = '%s' AND nid = '%s' AND subject = '%s' AND comment = '%s'", $edit["pid"], $edit["nid"], $edit["subject"], $edit["comment"]), 0);
+    $duplicate = db_result(db_query("SELECT COUNT(cid) FROM comments WHERE pid = '%d' AND nid = '%d' AND subject = '%s' AND comment = '%s'", $edit["pid"], $edit["nid"], $edit["subject"], $edit["comment"]), 0);
 
     if ($duplicate != 0) {
       watchdog("warning", "comment: duplicate '". $edit["subject"] ."'");
+      return array(t("Duplicate comment"), t("The comment you submitted has already been inserted."));
     }
     else {
 
@@ -254,7 +227,13 @@ function comment_post($edit) {
         ** user.
         */
 
-        db_query("UPDATE comments SET subject = '%s', comment = '%s' WHERE cid = '%s' AND uid = '$user->uid'", $edit["subject"], $edit["comment"], $edit["cid"]);
+        db_query("UPDATE comments SET subject = '%s', comment = '%s' WHERE cid = '%d' AND uid = '$user->uid'", $edit["subject"], $edit["comment"], $edit["cid"]);
+
+        /*
+        ** Fire a hook
+        */
+
+        module_invoke_all("comment", "update", $edit);
 
         /*
         ** Add entry to the watchdog log:
@@ -274,7 +253,20 @@ function comment_post($edit) {
         ** Add the comment to database:
         */
 
-        db_query("INSERT INTO comments (nid, pid, uid, subject, comment, hostname, timestamp) VALUES ('%s', '%s', '$user->uid', '%s', '%s', '%s', '%s')", $edit["nid"], $edit["pid"], $edit["subject"], $edit["comment"], getenv("REMOTE_ADDR"), time());
+        $status = user_access("post comments without approval") ? 0 : 1;
+        $roles = variable_get("comment_roles", array());
+        $score = $roles[$user->rid] ? $roles[$user->rid] : 0;
+        $users = serialize(array(0 => $score));
+
+        $edit["cid"] = db_next_id("comments");
+
+        db_query("INSERT INTO comments (cid, nid, pid, uid, subject, comment, hostname, timestamp, status, score, users) VALUES ('%d', '%d', '%d', '$user->uid', '%s', '%s', '%s', '%s', '%s', $score, '%s')", $edit["cid"], $edit["nid"], $edit["pid"], $edit["subject"], $edit["comment"], getenv("REMOTE_ADDR"), time(), $status, $users);
+
+        /*
+        ** Tell the other modules a new comment has been submitted:
+        */
+
+        module_invoke_all("comment", "insert", $edit);
 
         /*
         ** Add entry to the watchdog log:
@@ -289,92 +281,25 @@ function comment_post($edit) {
 
       cache_clear();
 
+      /*
+      ** TODO: we'd prefer to invalidate the page or pages with the newly
+      ** inserted comment.
+      **
+      ** db_query("DELETE FROM cache WHERE cid LIKE '%s'", "%id=".$edit["nid"]."%");
+      */
     }
+  }
+  else {
+    watchdog("error", "comment: unauthorized comment submitted or comment submitted to a closed node '". $edit["subject"] ."'");
+    return array(t("Error"), t("You are not authorized to post comments, or this node doesn't accept new comments."));
   }
 
   /*
-  ** Redirect the user the node he commented on:
+  ** Redirect the user the node he commented on, or explain queue
   */
 
-  drupal_goto(drupal_url(array("id" => $edit["nid"]), "node"));
-
-}
-
-function comment_num_replies($id) {
-
-  $result = db_query("SELECT COUNT(cid) FROM comments WHERE pid = '$id'");
-  return ($result) ? db_result($result, 0) : 0;
-
-}
-
-function comment_moderation($comment) {
-  global $user;
-
-  // XXX: disabled for now
-  return "";
-
-  $values = array("--", "1", "2", "3", "4", "5");
-
-  $moderate = db_fetch_object(db_query("SELECT * FROM moderate WHERE cid = '$comment->cid' AND uid = '$user->uid'"));
-
-  foreach ($values as $key => $value) {
-    $options .= " <option value=\"$key\"". ($moderate->score == $key ? " selected=\"selected\"" : "") .">$value</option>\n";
-  }
-
-  $output .= "<select name=\"moderate[comment][$comment->cid]\">$options</select><br />". ($comment->score ? $comment->score : "--") ." / $comment->votes";
-
-  return $output;
-}
-
-function comment_threshold($threshold) {
-  // XXX: disabled for now
-  return "";
-
-  for ($i = 0; $i < 6; $i++) $options .= " <option value=\"$i\"". ($threshold == $i ? " selected=\"selected\"" : "") .">". t("Visibility") ." - $i</option>";
-  return "<select name=\"threshold\">$options</select>\n";
-}
-
-function comment_mode($mode) {
-  global $cmodes;
-
-  foreach ($cmodes as $key => $value) $options .= " <option value=\"$key\"". ($mode == $key ? " selected=\"selected\"" : "") .">". t($value) ."</option>\n";
-  return "<select name=\"mode\">$options</select>\n";
-}
-
-function comment_order($order) {
-  global $corder;
-
-  foreach ($corder as $key=>$value) $options .= " <option value=\"$key\"". ($order == $key ? " selected=\"selected\"" : "") .">". t($value) ."</option>\n";
-  return "<select name=\"order\">$options</select>\n";
-}
-
-function comment_query($nid, $order, $pid = -1) {
-
-  $query .= "SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.nid = '$nid'";
-
-  if ($pid >= 0) {
-    $query .= " AND pid = '$pid'";
-  }
-
-  $query .= " GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name";
-
-  if ($order == 1) {
-    $query .= " ORDER BY c.timestamp DESC";
-  }
-  else if ($order == 2) {
-    $query .= " ORDER BY c.timestamp";
-  }
-
-  return db_query($query);
-
-}
-
-function comment_visible($comment, $threshold = 0) {
-  if ($comment->votes == 0 || $comment->score >= $threshold) {
-    return 1;
-  }
-  else {
-    return 0;
+  if ($status == 1) {
+    return array(t("Comment queued"), t("Your comment has been queued for moderation by site administrators and will be published after approval."));
   }
 }
 
@@ -383,66 +308,923 @@ function comment_links($comment, $return = 1) {
 
   $links = array();
 
+  /*
+  ** If we are viewing just this comment, we link back to the node
+  */
+
   if ($return) {
     $links[] = l("<span style=\"color: $theme->type;\">". t("return") ."</span>", array("id" => $comment->nid), "node", $comment->cid);
   }
+
+  /*
+  ** Admin link
+  */
 
   if (user_access("administer comments")) {
     $links[] = la("<span style=\"color: $theme->type;\">". t("administer") ."</span>", array("mod" => "comment", "op" => "edit", "id" => $comment->cid));
   }
 
   /*
-  ** Here we should check if this node has read-only comments, but we
-  ** already check on submit and this way we save a query.  It's just
-  ** a cosmetic issue. otherwise just uncomment the next line and
-  ** related bracket some lines below.
+  ** Possibly show edit and reply links
   */
 
-  //if (node_comment_mode($comment->nid)) {
-  if (user_access("post comments")) {
-    if (comment_access("edit", $comment)) {
-      $links[] = lm("<span style=\"color: $theme->type\">". t("edit your comment") ."</span>", array("mod" => "comment", "op" => "edit", "id" => $comment->cid), "", array("title" => t("Make changes to your comment.")));
-    }
-    else {
+  if (node_comment_mode($comment->nid) == 2) {
+    if (user_access("post comments")) {
+      if (comment_access("edit", $comment)) {
+        $links[] = lm("<span style=\"color: $theme->type\">". t("edit your comment") ."</span>", array("mod" => "comment", "op" => "edit", "id" => $comment->cid), "", array("title" => t("Make changes to your comment.")));
+      }
       $links[] = lm("<span style=\"color: $theme->type;\">". t("reply to this comment") ."</span>", array("mod" => "comment", "op" => "reply", "id" => $comment->nid, "pid" => $comment->cid), "", array("title" => t("Reply to this comment.")));
     }
+    else {
+      $links[] = comment_theme_invoke("comment_post_forbidden");
+    }
   }
-  //}
+
+  if ($moderation = comment_moderation_form($comment)) {
+    $links[] = $moderation;
+  }
 
   return $theme->links($links);
 }
 
-function comment_view($comment, $folded = 0) {
-  global $theme, $id;
+function comment_view($comment, $links = "", $visible = 1) {
+
+  /*
+  ** Switch to folded/unfolded view of the comment
+  */
 
   if (comment_is_new($comment)) {
-    $comment->subject = "$comment->subject <span style=\"color: red;\">*</span>";
+    $comment->new = 1;
   }
 
-  if ($folded) {
-    $theme->comment($comment, $folded);
+  print "<a name=\"$comment->cid\">\n";
+
+  if ($visible) {
+    comment_theme_invoke("comment", $comment, $links);
   }
   else {
-    print "<li>". l(check_output($comment->subject), array("id" => $comment->nid, "cid" => $comment->cid), "node", $comment->cid, array("title" => t("Read comment."))) ." ". t("by") ." ". format_name($comment) ."</li>\n";
+    comment_theme_invoke("comment_folded", $comment);
+  }
+}
+
+
+function comment_render($node, $cid = 0) {
+  global $user, $theme, $mode, $order, $threshold, $comment_page;
+
+  if (user_access("access comments")) {
+
+    /*
+    ** Pre-process variables:
+    */
+
+    $nid = $node->nid;
+    if (empty($nid)) {
+      $nid = 0;
+    }
+
+    if (empty($mode)) {
+      $mode = $user->mode ? $user->mode : variable_get("comment_default_mode", 4);
+    }
+
+    if (empty($order)) {
+      $order = $user->sort ? $user->sort : variable_get("comment_default_order", 1);
+    }
+
+    if (empty($threshold)) {
+      $threshold = $user->uid ? $user->threshold : variable_get("comment_default_threshold", 0);
+    }
+    $threshold_min = db_result(db_query("SELECT minimum FROM moderation_filters WHERE fid = '%d'", $threshold));
+
+    if (empty($comment_page)) {
+      $comment_page = 1;
+    }
+
+    $comments_per_page = $user->comments_per_page ? $user->comments_per_page : variable_get("comment_default_per_page", "50");
+
+    print "<a name=\"comment\"></a>\n";
+
+
+    if ($cid) {
+
+      /*
+      ** Single comment view
+      */
+
+      print "<form method=\"post\" action=\"". drupal_url(array("mod" => "comment"), "module") ."\">\n";
+      print form_hidden("nid", $nid);
+
+      $result = db_query("SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.cid = '%d' AND c.status = 0 GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users", $cid);
+
+      if ($comment = db_fetch_object($result)) {
+        comment_view($comment, comment_links($comment));
+      }
+
+      if ((user_access("administer comments") || comment_user_can_moderate($node)) && $user->uid != $comment->uid && !(comment_already_moderated($user->uid, $comment->users))) {
+        print "<div align=\"center\">". form_submit(t("Moderate comment")) ."</div><br />";
+      }
+      print "</form>";
+    }
+    else {
+
+      /*
+      ** Multiple comments view
+      */
+
+      $query .= "SELECT c.cid as cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.nid = '". check_query($nid) ."' AND c.status = 0";
+
+      if ($cid) {
+        $query .= " AND pid = '". check_query($cid) ."'";
+      }
+
+      $query .= " GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users";
+
+      if ($order == 1) {
+        $query .= " ORDER BY c.timestamp DESC";
+      }
+      else if ($order == 2) {
+        $query .= " ORDER BY c.timestamp";
+      }
+
+      /*
+      ** Start a form, to use with comment control and moderation
+      */
+
+      $result = db_query($query);
+      $comment_num = db_num_rows($result);
+
+      if ($comment_num && ((variable_get("comment_controls", 0) == 0) || (variable_get("comment_controls", 0) == 2))) {
+        print "<form method=\"post\" action=\"". drupal_url(array("mod" => "comment"), "module") ."\">\n";
+        $theme->box(t("Control panel"), comment_theme_invoke("comment_controls", $threshold, $mode, $order, $nid, $comment_page, $comment_num, $comments_per_page));
+        print form_hidden("nid", $nid);
+        print "</form>";
+      }
+
+      print "<form method=\"post\" action=\"". drupal_url(array("mod" => "comment"), "module") ."\">\n";
+      print form_hidden("nid", $nid);
+
+      if ($comment_num) {
+        if ($mode == 1) {
+          /*
+          ** Flat collapsed
+          */
+
+          while ($comment = db_fetch_object($result)) {
+            $comments[$comment->cid] = $comment;
+          }
+          comment_theme_invoke("comment_flat_collapsed", $comments, $threshold_min);
+        }
+        else if ($mode == 2) {
+          /*
+          ** Flat expanded
+          **
+          ** We page using PHP, not using SQL because otherwise we'd
+          ** have to use two queries; one for each comment and one for
+          ** the paged comments.  In method 1-3 we take all results
+          ** anyway, wheras in method 4 we need every result to create
+          ** proper pages.  It is here where we lose more, in fact for
+          ** higher pages we transfer unneeded data from the db and
+          ** the web server.
+          **
+          ** TODO: the comment above is a bit cryptic.  Mind to make it
+          **       a bit more verbose/explanatory?
+          */
+
+          $comment_num = 0;
+          $page = 1;
+          while ($comment = db_fetch_object($result)) {
+            if ($page == $comment_page) {
+              $comments[$comment->cid] = $comment;
+            }
+            $comment_num++;
+            if ($comment_num == $comments_per_page) {
+              if ($page == $comment_page) {
+                break;
+              }
+              else {
+                $comment_num = 0;
+                $page++;
+              }
+            }
+
+            if ($user->uid != $comment->uid && !(comment_already_moderated($user->uid, $comment->users))) {
+              $show_moderate_button = 1;
+            }
+          }
+
+          comment_theme_invoke("comment_flat_expanded", $comments, $threshold_min);
+
+          if (comment_user_can_moderate($node) && $show_moderate_button) {
+            print "<div align=\"center\">". form_submit(t("Moderate comments")) ."</div><br />";
+          }
+        }
+        else if ($mode == 3) {
+          /*
+          ** Threaded collapsed
+          */
+
+          while ($comment = db_fetch_object($result)) {
+            $comments[$comment->cid] = $comment;
+          }
+          if ($comments) {
+            comment_theme_invoke("comment_thread_min", $comments, $threshold_min);
+          }
+        }
+        else {
+          /*
+          ** Threaded expanded
+          */
+
+          while ($comment = db_fetch_object($result)) {
+            $comments[$comment->cid] = $comment;
+
+            if ($user->uid != $comment->uid && !(comment_already_moderated($user->uid, $comment->users))) {
+              $show_moderate_button = 1;
+            }
+          }
+
+          /*
+          ** Build the comment structure
+          */
+
+          $structure = comment_thread_structure($comments, 0, 0, array());
+
+          $comment_num = 0;
+          $page = 1;
+          foreach ($structure as $cid => $depth) {
+            if ($page == $comment_page) {
+              comment_theme_invoke("comment_thread_max", $comments[$cid], $threshold_min, $depth - 1);
+            }
+            $comment_num++;
+            if ($comment_num == $comments_per_page) {
+              if ($page == $comment_page) {
+                break;
+              }
+              else {
+                $comment_num = 0;
+                $page++;
+              }
+            }
+          }
+
+          if (comment_user_can_moderate($node) && $show_moderate_button) {
+            print "<div align=\"center\">". form_submit(t("Moderate comments")) ."</div><br />";
+          }
+        }
+      }
+
+      print "</form>";
+
+      if ($comment_num && ((variable_get("comment_controls", 0) == 1) || (variable_get("comment_controls", 0) == 2))) {
+        print "<form method=\"post\" action=\"". drupal_url(array("mod" => "comment"), "module") ."\">\n";
+        $theme->box(t("Control panel"), comment_theme_invoke("comment_controls", $threshold, $mode, $order, $nid, $comment_page, $comment_num, $comments_per_page));
+        print form_hidden("nid", $nid);
+        print "</form>";
+      }
+    }
+
+    /*
+    ** If enabled, show new comment form
+    */
+
+    if (user_access("post comments") && node_comment_mode($nid) == 2 && variable_get("comment_new_form", 0)) {
+      $theme->box("Post new comment", comment_form(array("nid" => $nid)));
+    }
+
+    /*
+    ** Tag the node's comments as being read:
+    */
+
+    comment_tag_new($nid);
+  }
+}
+
+function comment_perm() {
+  return array("access comments", "post comments", "administer comments", "moderate comments", "post comments without approval", "administer moderation");
+}
+
+function comment_link($type, $node = 0, $main = 0) {
+
+  if ($type == "admin" && user_access("administer comments")) {
+    $links[] = la(t("comments"), array("mod" => "comment"));
+  }
+
+  if ($type == "node" && $node->comment) {
+
+    if ($main) {
+
+      /*
+      ** Main page: display the number of comments that have been posted.
+      */
+
+      if (user_access("access comments")) {
+        $all = comment_num_all($node->nid);
+        $new = comment_num_new($node->nid); // array!
+
+        if ($all) {
+          $links[] = l(format_plural($all, 'comment', 'comments'), array("id" => $node->nid), "node", "comment", array("title" => t('Jump to first comment of this posting.')));
+
+          if ($new["count_new"]) {
+            $links[] = l($new["count_new"] ." ". t("new"), array("id" => $node->nid), "node", $new["id_first_new"], array("title" => t('Jump to first NEW comment of this posting.')));
+          }
+        }
+        else {
+          if (user_access("post comments")) {
+            $links[] = lm(t("add new comment"), array("mod" => "comment", "op" => "reply", "id" => $node->nid), "", array("title" => t("Add a new comment to this page.")));
+          }
+          else {
+            $links[] = comment_theme_invoke("comment_post_forbidden");
+          }
+        }
+      }
+    }
+    else {
+      /*
+      ** Node page: add a "post comment" link if the user is allowed to
+      ** post comments and if this node is not read-only
+      */
+
+      if ($node->comment == 2) {
+        if (user_access("post comments")) {
+          $links[] = lm(t("add new comment"), array("mod" => "comment", "op" => "reply", "id" => $node->nid), "comment", array("title" => t("Share your thoughts and opinions related to this posting.")));
+        }
+        else {
+          $links[] = comment_theme_invoke("comment_post_forbidden");
+        }
+      }
+      else {
+        $links[] = t("This discussion is closed: you can't post new comments.");
+      }
+    }
+  }
+
+  return $links ? $links : array();
+}
+
+function comment_page() {
+  global $theme, $op, $edit, $id, $pid, $cid;
+
+  switch ($op) {
+    case "edit":
+      $theme->header();
+      comment_edit(check_query($id));
+      $theme->footer();
+      break;
+    case t("Moderate comments"):
+    case t("Moderate comment"):
+      comment_moderate($edit);
+      drupal_goto(drupal_url(array("id" => $edit["nid"])));
+      break;
+    case "reply":
+      $theme->header();
+      comment_reply(check_query($pid), check_query($id));
+      $theme->footer();
+      break;
+    case t("Preview comment"):
+      $theme->header();
+      comment_preview($edit);
+      $theme->footer();
+      break;
+    case t("Post comment"):
+      list($error_title, $error_body) = comment_post($edit);
+      if ($error_body) {
+        $theme->header();
+        $theme->box($error_title, $error_body);
+        $theme->footer();
+      }
+      else {
+        drupal_goto(drupal_url(array("id" => $edit["nid"]), "node"));
+      }
+      break;
+    case t("Update settings"):
+      global $mode, $order, $threshold, $comments_per_page;
+      comment_settings(check_query($mode), check_query($order), check_query($threshold), check_query($comments_per_page));
+      drupal_goto(drupal_url(array("id" => $edit["nid"], "mode" => $mode, "order" => $order, "threshold" => $threshold, "comments_per_page" => $comments_per_page), "node"));
+      break;
+  }
+}
+
+/**
+*** admin functions
+**/
+
+function comment_node_link($node) {
+
+  if (user_access("administer comments") && comment_num_all($node->nid)) {
+
+    /*
+    ** Edit comments:
+    */
+
+    $result = db_query("SELECT c.cid, c.subject, u.uid, u.name FROM comments c LEFT JOIN users u ON u.uid = c.uid WHERE nid = '%d' AND c.status = 0 ORDER BY c.timestamp", $node->nid);
+
+    $output .= "<h3>". t("Edit comments") ."</h3>";
+    $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
+    $output .= " <tr><th>title</th><th>author</th><th colspan=\"3\">operations</th></tr>";
+
+    while ($comment = db_fetch_object($result)) {
+      $output .= "<tr><td>". l($comment->subject, array("id" => $node->nid, "cid" => $comment->cid), "node", $comment->cid) ."</td><td>". format_name($comment) ."</td><td>". l(t("view comment"), array("id" => $node->nid, "cid" => $comment->cid), "node", $comment->cid) ."</td><td>". la(t("edit comment"), array("mod" => "comment", "op" => "edit", "id" => $comment->cid)) ."</td><td>". la(t("delete comment"), array("mod" => "comment", "op" => "delete", "id" => $comment->cid)) ."</td></tr>";
+    }
+
+    $output .= "</table>";
+
+    return $output;
+  }
+}
+
+function comment_admin_edit($id) {
+
+  $result = db_query("SELECT c.*, u.name, u.uid FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.cid = '%d' AND c.status != 2", $id);
+  $comment = db_fetch_object($result);
+
+  // if a comment is "deleted", it's deleted
+  if ($comment) {
+    $form .= form_item(t("Author"), format_name($comment));
+    $form .= form_textfield(t("Subject"), "subject", $comment->subject, 70, 128);
+    $form .= form_textarea(t("Comment"), "comment", $comment->comment, 70, 15);
+    $form .= form_select(t("Status"), "status", $comment->status, array("published", "not published"));
+    $form .= form_hidden("cid", $id);
+    $form .= form_submit(t("Submit"));
+    $form .= form_submit(t("Delete"));
+
+    return form($form);
+  }
+}
+
+function comment_delete($edit) {
+
+  if ($edit["confirm"]) {
+    db_query("UPDATE comments SET status = 2 WHERE cid = '%d'", $edit["cid"]);
+    watchdog("special", "comment: deleted comment #". $edit["cid"]);
+    $output = "Comment deleted.";
+  }
+  else {
+    $output .= form_item(t("Confirm deletion"), "");
+    $output .= form_hidden("cid", $edit["cid"]);
+    $output .= form_hidden("confirm", 1);
+    $output .= form_submit(t("Delete"));
+    $output = form($output);
+  }
+
+  return $output;
+}
+
+function comment_save($id, $edit) {
+  db_query("UPDATE comments SET subject = '%s', comment = '%s', status = '%s' WHERE cid = '%d'", filter($edit["subject"]), filter($edit["comment"]), $edit["status"], $id);
+  watchdog("special", "comment: modified '". $edit["subject"] ."'");
+  return "Comment updated.";
+}
+
+function comment_admin_overview($status = 0, $comment_page = 0) {
+  global $comment_settings;
+
+  $comments_per_page = 50;
+
+  /*
+  ** Save location to come back here after a edit/delete
+  */
+
+  $comment_settings["status"] = $status;
+  $comment_settings["comment_page"] = $comment_page;
+  session_register("comment_settings");
+
+
+  /*
+  ** Now render the page
+  */
+
+  $start = $comment_page * $comments_per_page;
+
+  $output .= $status ? "<h3>Offline comments</h3>\n" : "<h3>Online comments</h3>";
+  $result = db_query("SELECT c.*, u.name, u.uid FROM comments c LEFT JOIN users u ON u.uid = c.uid WHERE c.status = '%d' ORDER BY timestamp DESC LIMIT $start, $comments_per_page", $status);
+
+  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
+  $output .= " <tr><th>subject</th><th>author</th><th>date</th><th>published</th><th colspan=\"2\">operations</th></tr>\n";
+  while ($comment = db_fetch_object($result)) {
+    $output .= " <tr><td>". l(check_output($comment->subject), array("id" => $comment->nid, "cid" => $comment->cid, "pid" => $comment->pid), "node", $comment->cid, array("title" => htmlentities($comment->comment))) ."</td><td>". format_name($comment) ."</td><td>". format_date($comment->timestamp, "small") ."</td><td>". ($comment->status == 0 ? "yes" : "no") ."</td><td>". la(t("edit comment"), array("mod" => "comment", "op" => "edit", "id" => $comment->cid)) ."</td><td>". la(t("delete comment"), array("mod" => "comment", "op" => "delete", "id" => $comment->cid)) ."</td></tr>\n";
+  }
+
+  if ($comment_page > 0) {
+    // show previous
+    $prev_link = la(t("previous comments"), array("mod" => "comment", "status" => $status, "comment_page" => ($comment_page - 1)));
+  }
+
+  if (db_num_rows($result) == $comments_per_page) {
+    // show next
+    $next_link = la(t("next comments"), array("mod" => "comment", "status" => $status, "comment_page" => ($comment_page + 1)));
+  }
+
+  $output .= "<tr><td>$prev_link</td><td></td><td></td><td></td><td></td><td>$next_link</td></tr>";
+  $output .= "</table>\n";
+
+  return $output;
+}
+
+function comment_mod_matrix($edit) {
+  global $tid, $rid;
+
+  $output .= "<h3>Moderators/vote values matrix</h3>";
+
+  if ($rid) {
+    db_query("DELETE FROM moderation_roles");
+    foreach ($rid as $role_id => $votes) {
+      foreach ($votes as $mid => $value) {
+        $sql[] = "('$mid', '$role_id', '$value')";
+      }
+    }
+    db_query("INSERT INTO moderation_roles (mid, rid, value) VALUES ". implode(", ", $sql));
+  }
+
+  $result = db_query("SELECT r.rid, r.name FROM role r, permission p WHERE r.rid = p.rid AND p.perm LIKE '%moderate comments%'");
+  $role_names = array();
+  while ($role = db_fetch_object($result)) {
+    $role_names[$role->rid] = $role->name;
+  }
+
+  $result = db_query("SELECT rid, mid, value FROM moderation_roles");
+  while ($role = db_fetch_object($result)) {
+    $mod_roles[$role->rid][$role->mid] = $role->value;
+  }
+
+  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
+  $output .= " <tr><th>votes</th><th>". implode("</th><th>", array_values($role_names)) ."</th></tr>";
+
+  $result = db_query("SELECT mid, vote FROM moderation_votes ORDER BY weight");
+  while ($vote = db_fetch_object($result)) {
+    $output .= "<tr><td>$vote->vote</td>";
+    foreach (array_keys($role_names) as $rid) {
+      $output .= "<td align=\"center\"><input maxlength=\"3\" name=\"rid[$rid][$vote->mid]\" size=\"4\" value=\"". $mod_roles[$rid][$vote->mid] ."\" /></td>";
+    }
+    $output .= "</tr>";
+  }
+  $output .= "</table>";
+  $output .= "<br />". form_submit(t("Submit votes"));
+
+  return form($output);
+}
+
+function comment_mod_roles($edit) {
+
+  $output .= "<h3>Initial comment scores</h3>";
+
+  if ($edit) {
+    variable_set("comment_roles", $edit);
+  }
+
+  $start_values = variable_get("comment_roles", array());
+
+  $result = db_query("SELECT r.rid, r.name FROM role r, permission p WHERE r.rid = p.rid AND p.perm LIKE '%post comments%'");
+
+  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
+  $output .= " <tr><th>user role</th><th>initial score</th></tr>";
+
+  while ($role = db_fetch_object($result)) {
+    $output .= "<tr><td>$role->name</td>";
+    $output .= "<td align=\"center\"><input maxlength=\"3\" name=\"edit[$role->rid]\" size=\"4\" value=\"". $start_values[$role->rid] ."\" /></td></tr>";
+  }
+
+  $output .= "</table>";
+  $output .= "<br />". form_submit(t("Save scores"));
+
+  return form($output);
+}
+
+function comment_mod_votes($edit) {
+  global $op, $mid, $tid;
+
+  if ($op == t("Save vote")) {
+    db_query("UPDATE moderation_votes SET vote = '%s', weight = '%d' WHERE mid = '%d'", $edit["vote"], $edit["weight"], $mid);
+    $mid = 0;
+  }
+  else if ($op == t("Delete vote")) {
+    db_query("DELETE FROM moderation_votes WHERE mid = '%d'", $mid);
+    db_query("DELETE FROM moderation_roles WHERE mid = '%d'", $mid);
+    $mid = 0;
+  }
+  else if ($op == t("Add new vote")) {
+    db_query("INSERT INTO moderation_votes (mid, vote, weight) VALUES (NULL, '%s', '%d')", $edit["vote"], $edit["weight"]);
+    $mid = 0;
+  }
+
+  $output .= "<h3>Moderation votes overview</h3>";
+  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
+  $output .= " <tr><th>votes</th><th>weight</th><th>operations</th></tr>";
+
+  $result = db_query("SELECT mid, vote, weight FROM moderation_votes ORDER BY weight");
+  while ($vote = db_fetch_object($result)) {
+    $output .= " <tr><td>$vote->vote</td><td align=\"center\">$vote->weight</td><td align=\"center\">". la(t("edit"), array("mod" => "comment", "op" => "votes", "mid" => $vote->mid)) ."</td></tr>";
+  }
+  $output .= "</table>";
+
+  if ($mid) {
+    $vote = db_fetch_object(db_query("SELECT vote, weight FROM moderation_votes WHERE mid = '%d'", $mid));
+  }
+
+  $output .= "<h3>Add new moderation option</h3>";
+  $form .= form_textfield(t("Vote"), "vote", $vote->vote, 32, 64, t("The name of this vote.  Example: 'offtopic', 'excellent', 'sucky'."));
+  $form .= form_textfield(t("Weight"), "weight", $vote->weight, 32, 64, t("Used to order votes; heavier sink."));
+  if ($mid) {
+    $form .= form_submit(t("Save vote"));
+    $form .= form_submit(t("Delete vote"));
+  }
+  else {
+    $form .= form_submit(t("Add new vote"));
+  }
+
+  $output .= form($form);
+
+  return $output;
+}
+
+function comment_mod_filters($edit) {
+  global $op, $fid, $tid;
+
+  if ($op == t("Save filter")) {
+    db_query("UPDATE moderation_filters SET filter = '%s', minimum = '%d' WHERE fid = '%d'", $edit["filter"], $edit["minimum"], $fid);
+    $fid = 0;
+  }
+  else if ($op == t("Delete filter")) {
+    db_query("DELETE FROM moderation_filters WHERE fid = '%d'", $fid);
+    $fid = 0;
+  }
+  else if ($op == t("Add new filter")) {
+    db_query("INSERT INTO moderation_filters (fid, filter, minimum) VALUES (NULL, '%s', '%d')", $edit["filter"], $edit["minimum"]);
+    $fid = 0;
+  }
+
+  $output .= "<h3>Comment filters overview</h3>";
+  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
+  $output .= " <tr><th>name</th><th>minimum score</th><th>operations</th></tr>";
+
+  $result = db_query("SELECT fid, filter, minimum FROM moderation_filters ORDER BY minimum");
+  while ($filter = db_fetch_object($result)) {
+    $output .= " <tr><td>$filter->filter</td><td align=\"center\">$filter->minimum</td><td align=\"center\">". la(t("edit"), array("mod" => "comment", "op" => "filters", "fid" => $filter->fid)) ."</td></tr>";
+  }
+  $output .= "</table>";
+
+  if ($fid) {
+    $filter = db_fetch_object(db_query("SELECT filter, fid, minimum FROM moderation_filters WHERE fid = '%d'", $fid));
+  }
+
+  $output .= "<h3>Add new filter</h3>";
+  $form .= form_textfield(t("Filter name"), "filter", $filter->filter, 32, 64, t("The name of this filter.  Example: 'good comments', '+1 comments', 'everything'."));
+  $form .= form_textfield(t("Minimum score"), "minimum", $filter->minimum, 32, 64, t("Show all comments whose score is larger or equal to the provided minimal score. Range: -127 + 128"));
+  if ($fid) {
+    $form .= form_submit(t("Save filter"));
+    $form .= form_submit(t("Delete filter"));
+  }
+  else {
+    $form .= form_submit(t("Add new filter"));
+  }
+
+  $output .= form($form);
+
+  return $output;
+}
+
+
+function comment_admin() {
+  global $op, $id, $edit, $mod, $keys, $order, $status, $comment_page, $comment_settings;
+
+  if (user_access("administer comments")) {
+
+    $links[] = la(t("online comments"), array("mod" => "comment", "status" => 0));
+    $links[] = la(t("offline comments"), array("mod" => "comment", "status" => 1));
+    $links[] = la(t("search comments"), array("mod" => "comment", "op" => "search"));
+    if (user_access("administer moderation")) {
+      $links[] = la(t("moderation votes"), array("mod" => "comment", "op" => "votes"));
+      $links[] = la(t("moderation matrix"), array("mod" => "comment", "op" => "matrix"));
+      $links[] = la(t("comment filters"), array("mod" => "comment", "op" => "filters"));
+      $links[] = la(t("initial comment scores"), array("mod" => "comment", "op" => "roles"));
+    }
+    $links[] = la(t("help"), array("mod" => "comment", "op" => "help"));
+
+    print "<small>".  implode(" | ", $links) ."</small><hr />\n";
+
+    switch ($op) {
+      case "help":
+        print comment_help();
+        break;
+      case "edit":
+        print comment_admin_edit($id);
+        break;
+      case "search":
+        print search_type("comment", drupal_url(array("mod" => "comment", "op" => "search"), "admin"));
+        break;
+      case "votes":
+      case t("Add new vote"):
+      case t("Delete vote"):
+      case t("Save vote"):
+        if (user_access("administer moderation")) {
+          print comment_mod_votes($edit);
+        }
+        break;
+      case "roles":
+      case t("Save scores"):
+        if (user_access("administer moderation")) {
+          print comment_mod_roles($edit);
+        }
+        break;
+      case "matrix":
+      case t("Submit votes"):
+        if (user_access("administer moderation")) {
+          print comment_mod_matrix($edit);
+        }
+        break;
+      case "filters":
+      case t("Add new filter"):
+      case t("Delete filter"):
+      case t("Save filter"):
+        if (user_access("administer moderation")) {
+          print comment_mod_filters($edit);
+        }
+        break;
+      case "delete":
+        print comment_delete(array("cid" => $id));
+        break;
+      case t("Delete"):
+        print status(comment_delete($edit));
+        if (session_is_registered("comment_settings")) {
+          $status = $comment_settings["status"];
+          $comment_page = $comment_settings["comment_page"];
+        }
+        print comment_admin_overview($status, $comment_page);
+        break;
+      case t("Submit"):
+        print status(comment_save(check_query($id), $edit));
+        if (session_is_registered("comment_settings")) {
+          $status = $comment_settings["status"];
+          $comment_page = $comment_settings["comment_page"];
+        }
+        print comment_admin_overview($status, $comment_page);
+        break;
+      default:
+        print comment_admin_overview($status, $comment_page);
+    }
+  }
+  else {
+    print message_access();
+  }
+}
+
+/*
+** Renderer or visualization functions this can be optionally
+** overridden by themes.
+*/
+
+function comment_mode_form($mode) {
+  global $cmodes;
+
+  foreach ($cmodes as $key => $value) {
+    $options .= " <option value=\"$key\"". ($mode == $key ? " selected=\"selected\"" : "") .">". t($value) ."</option>\n";
+  }
+
+  return "<select name=\"mode\">$options</select>\n";
+}
+
+function comment_order_form($order) {
+  global $corder;
+
+  foreach ($corder as $key=>$value) {
+    $options .= " <option value=\"$key\"". ($order == $key ? " selected=\"selected\"" : "") .">". t($value) ."</option>\n";
+  }
+
+  return "<select name=\"order\">$options</select>\n";
+}
+
+function comment_per_page_form($comments_per_page) {
+  for ($i = 10; $i < 100; $i = $i + 20) {
+    $options .= " <option value=\"$i\"". ($comments_per_page == $i ? " selected=\"selected\"" : "") .">". t("%a comments per page", array("%a" => $i)) ."</option>";
+  }
+  return "<select name=\"comments_per_page\">$options</select>\n";
+}
+
+function comment_threshold($threshold) {
+  $result = db_query("SELECT fid, filter FROM moderation_filters");
+  $options .= " <option value=\"0\">". t("-- threshold --") ."</option>";
+  while ($filter = db_fetch_object($result)) {
+    $filters .= " <option value=\"$filter->fid\"". ($threshold == $filter->fid ? " selected=\"selected\"" : "") .">". t($filter->filter) ."</option>";
+  }
+
+  return "<select name=\"threshold\">$filters</select>\n";
+}
+
+function comment_controls($threshold = 1, $mode = 3, $order = 1, $nid, $page = 0, $comment_num = 0, $comments_per_page = 50) {
+  static $output;
+
+  if (!$output) {
+    $output .= comment_mode_form($mode);
+    $output .= comment_order_form($order);
+    $output .= comment_per_page_form($comments_per_page);
+    $output .= comment_threshold($threshold);
+
+    $output .= " ". form_submit(t("Update settings"));
+
+    $output = form_item(t("Comment viewing options"), $output, t("Select your prefered way to display the comments and click 'Update settings' to active your changes."));
+
+    if (($mode == 2 || $mode == 4) && $comment_num > $comments_per_page) {
+      if ($page > 1) {
+        $p[] = l(t("previous"), array("id" => $nid, "comment_page" => $page - 1));
+      }
+      for ($n = 1; $n <= ceil($comment_num / $comments_per_page); $n++) {
+        $p[] = ($n == $page) ? "<b>&raquo;$n&laquo;</b>" : l($n, array("id" => $nid, "comment_page" => $n));
+      }
+      if ($page < ceil($comment_num / $comments_per_page)) {
+        $p[] = l(t("next"), array("id" => $nid, "comment_page" => $page + 1));
+      }
+      $output .= form_item(t("Browse %a comments", array("%a" => $comment_num)), implode("&nbsp;&#149;&nbsp;", $p), t("There are more than %a comments in this node. Use these links to navigate through them.", array("%a" => $comments_per_page)));
+    }
+  }
+
+  return $output;
+}
+
+function comment_moderation_form($comment) {
+  global $comment_votes, $op, $user, $node;
+  static $votes;
+
+  if ($op == "reply") {
+    // preview comment:
+    $output .= "&nbsp;";
+  }
+  else if ((user_access("administer comments") || comment_user_can_moderate($node)) && $user->uid != $comment->uid && !(comment_already_moderated($user->uid, $comment->users))) {
+    // comment hasn't been moderated yet:
+
+    if (!isset($votes)) {
+      $result = db_query("SELECT v.mid, v.vote, r.value FROM moderation_votes v, moderation_roles r WHERE v.mid = r.mid AND r.rid = '%d' ORDER BY weight", $user->rid);
+      $votes = array();
+      while ($vote = db_fetch_object($result)) {
+        if ($vote->value != 0) {
+          $votes[] = $vote;
+        }
+      }
+    }
+
+    $options .= " <option value=\"\">". t("-- moderation --") ."</option>\n";
+    if ($votes) {
+      foreach ($votes as $vote) {
+        $options .= " <option value=\"$vote->mid\">$vote->vote</option>\n";
+      }
+    }
+
+    if (user_access("administer comments")) {
+      $options .= " <option value=\"\">". t("---") ."</option>\n";
+      $options .= " <option value=\"offline\">". t("unpublish") ."</option>\n";
+    }
+    $output .= "<select name=\"moderation[$comment->cid]\">$options</select>\n";
+  }
+
+  return $output;
+}
+
+function comment($comment, $link = 0) {
+  $output .= "<a name=\"$comment->cid\"></a>";
+  $output .= "<div style=\"border: 1px solid; padding: 10px;\">";
+  $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">";
+  $output .= " <tr><td><div style=\"font-size: 110%; font-weight: bold;\">". check_output($comment->subject) . ($comment->new ?  " <span style=\"color: red;\">*</span>" : "") ."</div></td><td align=\"right\" rowspan=\"2\" valign=\"top\">". $comment->moderation ."</td></tr>";
+  $output .= " <tr><td><div style=\"margin-left: 10px; padding-bottom: 10px; font-size: 90%;\">". t("by %a on %b", array("%a" => format_name($comment), "%b" => format_date($comment->timestamp))) ."</div></td></tr>";
+  $output .= " <tr><td colspan=\"2\">". check_output($comment->comment, 1) ."</td></tr>";
+  $output .= " <tr><td align=\"right\" colspan=\"2\">$link</td></tr>";
+  $output .= "</table>";
+  $output .= "</div><br />";
+  print $output;
+}
+
+function comment_folded($comment) {
+  print l(check_output($comment->subject), array("id" => $comment->nid, "cid" => $comment->cid), "node", $comment->cid) ." ". t("by") . " " . format_name($comment) ."</small><p />";
+}
+
+function comment_flat_collapsed($comments, $threshold) {
+  foreach ($comments as $comment) {
+    if (comment_visible($comment, $threshold)) {
+      print comment_view($comment, "", 0);
+    }
+  }
+}
+
+function comment_flat_expanded($comments, $threshold) {
+  foreach ($comments as $comment) {
+    comment_view($comment, comment_links($comment, 0), comment_visible($comment, $threshold));
   }
 }
 
 function comment_thread_min($comments, $threshold, $pid = 0) {
-  global $user;
+  // this is an inner loop, so it's worth some optimization
+  // from slower to faster
 
   foreach ($comments as $comment) {
-    if ($comment->pid == $pid) {
+  #for ($n=0; $n<count($comments); $n++) {
+  #for ($n=0, $max = count($comments); $n<$max; $n++) {
+    #$comment = $comments[$n];
+    if (($comment->pid == $pid) && (comment_visible($comment, $threshold))) {
       print "<ul>";
-      print comment_view($comment);
+      print comment_view($comment, "", 0);
       comment_thread_min($comments, $threshold, $comment->cid);
       print "</ul>";
     }
   }
 }
 
-function comment_thread_max($comments, $threshold, $pid = 0, $level = 0) {
-  global $user;
-
+function comment_thread_max($comment, $threshold, $level = 0) {
   /*
   ** We had quite a few browser specific issues: expanded comments below
   ** the top level got truncated on the right hand side.  A range of
@@ -452,128 +1234,215 @@ function comment_thread_max($comments, $threshold, $pid = 0, $level = 0) {
   ** in terms of speed and size.
   */
 
-  foreach ($comments as $comment) {
-    if ($comment->pid == $pid) {
-      if ($level) {
-        print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr><td width=\"". ($level * 25) ."\">&nbsp;</td><td>\n";
-      }
-      comment_view($comment, comment_links($comment, 0));
-      if ($level) {
-        print "</td></tr></table>\n";
-      }
+  if ($level) {
+    print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr><td width=\"". ($level * 25) ."\">&nbsp;</td><td>\n";
+  }
 
-      comment_thread_max($comments, $threshold, $comment->cid, $level + 1);
-    }
+  comment_view($comment, comment_links($comment, 0), comment_visible($comment, $threshold));
+
+  if ($level) {
+    print "</td></tr></table>\n";
   }
 
 }
 
-function comment_render($nid, $cid = 0) {
-  global $user, $theme, $mode, $order, $threshold;
+function comment_post_forbidden() {
+  global $user;
+  if ($user->uid) {
+    return t("You can't post comments.");
+  }
+  else {
+    return t("Please %a, or %b, to add comments.", array("%a" => lm(t("login"), array("mod" => "user")), "%b" => lm(t("register"), array("mod" => "user", "op" => "register"))));
+  }
+}
 
-  if (user_access("access comments")) {
+/**
+*** misc functions: helpers, privates, history, search
+**/
 
-    /*
-    ** Pre-process variables:
-    */
 
-    if (empty($nid)) {
-      $nid = 0;
+function comment_visible($comment, $threshold = 0) {
+  if ($comment->score >= $threshold) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
+function comment_moderate() {
+  global $moderation, $user;
+
+  if ($moderation) {
+    $result = db_query("SELECT mid, value FROM moderation_roles WHERE rid = '%d'", $user->rid);
+    while ($mod = db_fetch_object($result)) {
+      $votes[$mod->mid] = $mod->value;
     }
 
-    if (empty($mode)) {
-      $mode = $user->uid ? $user->mode : variable_get("default_comment_mode", 4);
-    }
+    $node = node_load(array("nid" => db_result(db_query("SELECT nid FROM comments WHERE cid = '%d'", key($moderation)))));
 
-    if (empty($order)) {
-      $order = $user->uid ? $user->sort : variable_get("default_comment_order", 1);
-    }
+    if (user_access("administer comments") || comment_user_can_moderate($node)) {
+      foreach ($moderation as $cid => $vote) {
+        if ($vote) {
+          if (($vote == 'offline') && (user_access("administer comments"))) {
+            db_query("UPDATE comments SET status = 1 WHERE cid = '%s'", $cid);
+            watchdog("special", "comment: unpublished comment #". $cid);
 
-    if (empty($threshold)) {
-      // $threshold = $user->uid ? $user->threshold : variable_get("default_comment_threshold", 3);
-      $threshold = 0;
-    }
+            /*
+            ** Fire a hook
+            */
 
-    print "<a name=\"comment\"></a>\n";
-    print "<form method=\"post\" action=\"". drupal_url(array("mod" => "comment"), "module") ."\">\n";
-    print form_hidden("nid", $nid);
+            module_invoke_all("comment", "unpublish", $cid);
+          }
+          else {
+            $comment = db_fetch_object(db_query("SELECT * FROM comments WHERE cid = '%d'", $cid));
+            $users = unserialize($comment->users);
+            if ($user->uid != $comment->uid && !(comment_already_moderated($user->uid, $comment->users))) {
+              $users[$user->uid] = $vote;
+              $tot_score = 0;
+              foreach ($users as $uid => $vote) {
+                if ($uid) {
+                  $tot_score = $tot_score + $votes[$vote];
+                }
+                else {
+                  // vote 0 is the start value
+                  $tot_score = $tot_score + $vote;
+                }
+              }
+              $new_score = round($tot_score / count($users));
+              db_query("UPDATE comments SET score = '$new_score', users = '%s' WHERE cid = '%d'", serialize($users), $cid);
 
-    /*
-    ** Render control panel:
-    */
+              /*
+              ** Fire a hook
+              */
 
-    if (comment_num_all($nid)) {
-      $theme->box(t("Control panel"), $theme->comment_controls($threshold, $mode, $order));
-    }
-
-    if ($cid) {
-      $result = db_query("SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.cid = '$cid' GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name");
-      if ($comment = db_fetch_object($result)) {
-        comment_view($comment, comment_links($comment));
-      }
-    }
-
-    if ($cid) {
-      $result = comment_query($nid, $order, $cid);
-    }
-    else {
-      $result = comment_query($nid, $order);
-    }
-
-    if ($mode == 1) {
-      if (db_num_rows($result)) {
-        print "<table border=\"0\" cellpadding=\"2\" cellspacing=\"2\">\n";
-        print " <tr><th>". t("Subject") ."</th><th>". t("Author") ."</th><th>". t("Date") ."</th></tr>\n";
-        while ($comment = db_fetch_object($result)) {
-          if (comment_visible($comment, $threshold)) {
-            print " <tr><td>". l(check_output($comment->subject), array("id" => $comment->nid, "cid" => $comment->cid), "node", $comment->cid) ."</td><td>". format_name($comment) ."</td><td>". format_date($comment->timestamp, "small") ."</td></tr>\n";
+              module_invoke_all("comment", "moderate", $cid, $vote);
+            }
           }
         }
-        print "</table>\n";
       }
     }
-    else if ($mode == 2) {
-      while ($comment = db_fetch_object($result)) {
-        comment_view($comment, (comment_visible($comment, $threshold) ? comment_links($comment, 0) : 0));
-      }
-    }
-    else if ($mode == 3) {
-      while ($comment = db_fetch_object($result)) {
-        $comments[] = $comment;
-      }
+  }
+}
 
-      if ($comments) {
-        if ($cid) {
-          comment_thread_min($comments, $threshold, $cid, 1);
-        }
-        else {
-          comment_thread_min($comments, $threshold);
-        }
-      }
-    }
-    else {
-      while ($comment = db_fetch_object($result)) {
-        $comments[] = $comment;
-      }
+function comment_settings($mode, $order, $threshold, $comments_per_page) {
+  global $user;
 
-      if ($comments) {
-        if ($cid) {
-          comment_thread_max($comments, $threshold, $cid, 1);
-        }
-        else {
-          comment_thread_max($comments, $threshold, 0, 0);
-        }
-      }
-    }
+  if ($user->uid) {
+    $user = user_save($user, array("mode" => $mode, "sort" => $order, "threshold" => $threshold, "comments_per_page" => $comments_per_page));
+  }
+}
 
-    print "</form>";
+function comment_num_all($nid) {
+  $comment = db_fetch_object(db_query("SELECT COUNT(c.nid) AS number FROM node n LEFT JOIN comments c ON n.nid = c.nid WHERE n.nid = '%d' AND c.status = 0 GROUP BY n.nid", $nid));
+  return $comment->number ? $comment->number : 0;
+}
 
+function comment_num_replies($id) {
+  $result = db_query("SELECT COUNT(cid) FROM comments WHERE pid = '%d' AND status = 0", $id);
+  return ($result) ? db_result($result, 0) : 0;
+}
+
+/**
+ * get number of new comments and id of first new
+ *
+ * @param $nid       node-id to count comments for
+ * @param $timestamp time to count from (defaults to time of last user access to node)
+ *
+ * @return array("count_new" => $count_new, "id_first_new" => $id_first_new)
+ */
+function comment_num_new($nid, $timestamp = 0) {
+  global $user;
+
+  if ($user->uid) {
     /*
-    ** Tag the node's comments as being read:
+    ** Retrieve the timestamp at which the current user last viewed the
+    ** specified node.
     */
 
-    comment_tag_new($nid);
+    if (!$timestamp) {
+      $history = db_fetch_object(db_query("SELECT timestamp FROM history WHERE uid = '$user->uid' AND nid = '%d'", $nid));
+      $timestamp = $history->timestamp ? $history->timestamp : 0;
+    }
+
+    /*
+    ** Use the timestamp to retrieve the number of new comments and the
+    ** ID of first new comment.
+    */
+
+    $result = db_fetch_array(db_query("SELECT COUNT(c.cid) AS count_new, MIN(c.cid) AS id_first_new FROM node n LEFT JOIN comments c ON n.nid = c.nid WHERE n.nid = '%d' AND timestamp > '%d' AND c.status = 0", $nid, $timestamp));
+
+    return $result;
   }
+  else {
+    return array(0, 0);
+  }
+
+}
+
+function comment_tag_new($nid) {
+  global $user;
+
+  if ($user->uid) {
+    $nid = check_query($nid);
+
+    $result = db_query("SELECT timestamp FROM history WHERE uid = '$user->uid' AND nid = '%d'", $nid);
+    if (db_fetch_object($result)) {
+      db_query("UPDATE history SET timestamp = '%d' WHERE uid = '$user->uid' AND nid = '%d'", time(), $nid);
+    }
+    else {
+      db_query("INSERT INTO history (uid, nid, timestamp) VALUES ('$user->uid', '%d', '%d')", $nid, time());
+    }
+  }
+}
+
+function comment_is_new($comment) {
+  global $user;
+  static $date;
+
+  if (!$date[$comment->nid]) {
+    if ($user->uid) {
+      $history = db_fetch_object(db_query("SELECT timestamp FROM history WHERE uid = '$user->uid' AND nid = '%d'", $comment->nid));
+      $date[$comment->nid] = $history->timestamp ? $history->timestamp : 0;
+    }
+    else {
+      $date[$comment->nid] = time();
+    }
+  }
+
+  if ($comment->timestamp > $date[$comment->nid]) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
+function comment_thread_structure($comments, $pid, $depth, $structure) {
+  $depth++;
+
+  foreach ($comments as $key => $comment) {
+    if ($comment->pid == $pid) {
+      $structure[$comment->cid] = $depth;
+      $structure = comment_thread_structure($comments, $comment->cid, $depth, $structure);
+    }
+  }
+
+  return $structure;
+}
+
+function comment_user_can_moderate($node) {
+  global $user;
+  return (user_access("moderate comments"));
+  // TODO: || (($user->uid == $node->uid) && user_access("moderate comments in owned node")));
+}
+
+function comment_already_moderated($uid, $users) {
+  $comment_users = unserialize($users);
+  if (!$comment_users) {
+    $comment_users = array();
+  }
+  return in_array($uid, array_keys($comment_users));
 }
 
 function comment_search($keys) {
@@ -602,196 +1471,9 @@ function comment_search($keys) {
   ** identifier which is currently used byt the comment module.
   */
 
-  $find = do_search(array("keys" => $keys, "type" => "comment", "select" => "select s.lno as lno, c.nid as nid, c.subject as title, c.timestamp as created, u.uid as uid, u.name as name, s.count as count FROM search_index s, comments c LEFT JOIN users u ON c.uid = u.uid WHERE s.lno = c.cid AND s.type = 'comment' AND s.word like '%'"));
+  $find = do_search(array("keys" => $keys, "type" => "comment", "select" => "select s.lno as lno, c.nid as nid, c.subject as title, c.timestamp as created, u.uid as uid, u.name as name, s.count as count FROM search_index s, comments c LEFT JOIN users u ON c.uid = u.uid WHERE s.lno = c.cid AND s.type = 'comment' AND c.status = 0 AND s.word like '%'"));
 
   return $find;
-}
-
-function comment_perm() {
-  return array("access comments", "post comments", "administer comments");
-}
-
-function comment_link($type, $node = 0, $main = 0) {
-
-  if ($type == "admin" && user_access("administer comments")) {
-    $links[] = la(t("comments"), array("mod" => "comment"));
-  }
-
-  if ($type == "node" && $node->comment) {
-
-    if ($main) {
-
-      /*
-      ** Main page: display the number of comments that have been posted.
-      */
-
-      if (user_access("access comments")) {
-        $all = comment_num_all($node->nid);
-        $new = comment_num_new($node->nid);
-
-        $links[] = l(format_plural($all, "comment", "comments") . ($new ? ", $new ". t("new") : ""), array("id" => $node->nid), "node", "comment", array("title" => t("View this posting and all of its comments.")));
-      }
-    }
-    else {
-      /*
-      ** Node page: add a "post comment" link if the user is allowed to
-      ** post comments and if this node is not read-only
-      */
-
-      if (user_access("post comments")) {
-        if ($node->comment == 2) {
-          $links[] = lm(t("add new comment"), array("mod" => "comment", "op" => "reply", "id" => $node->nid), "comment", array("title" => t("Share your thoughts and opinions related to this posting.")));
-        }
-        else {
-          $links[] = t("This discussion is closed: you can't post new comments.");
-        }
-      }
-    }
-  }
-
-  return $links ? $links : array();
-}
-
-function comment_node_link($node) {
-
-  if (user_access("administer comments") && comment_num_all($node->nid)) {
-
-    /*
-    ** Edit comments:
-    */
-
-    $result = db_query("SELECT c.cid, c.subject, u.uid, u.name FROM comments c LEFT JOIN users u ON u.uid = c.uid WHERE nid = '$node->nid' ORDER BY c.timestamp");
-
-    $output .= "<h3>". t("Edit comments") ."</h3>";
-    $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
-    $output .= " <tr><th>title</th><th>author</th><th colspan=\"3\">operations</th></tr>";
-
-    while ($comment = db_fetch_object($result)) {
-      $output .= "<tr><td>". l($comment->subject, array("id" => $node->nid, "cid" => $comment->cid), "node", $comment->cid) ."</td><td>". format_name($comment) ."</td><td>". l(t("view comment"), array("id" => $node->nid, "cid" => $comment->cid), $comment->cid) ."</td><td>". la(t("edit comment"), array("mod" => "comment", "op" => "edit", "id" => $comment->cid)) ."</td><td>". la(t("delete comment"), array("mod" => "comment", "op" => "delete", "id" => $comment->cid)) ."</td></tr>";
-    }
-
-    $output .= "</table>";
-
-    return $output;
-  }
-}
-
-
-function comment_save($id, $edit) {
-  db_query("UPDATE comments SET subject = '%s', comment = '%s' WHERE cid = '$id'", filter($edit["subject"]), filter($edit["comment"]));
-  watchdog("special", "comment: modified '". $edit["subject"] ."'");
-}
-
-function comment_page() {
-  global $theme, $op, $edit, $id, $pid, $cid;
-
-  switch ($op) {
-    case "edit":
-      $theme->header();
-      comment_edit(check_query($id));
-      $theme->footer();
-      break;
-    case "reply":
-      $theme->header();
-      comment_reply(check_query($pid), check_query($id));
-      $theme->footer();
-      break;
-    case t("Preview comment"):
-      $theme->header();
-      comment_preview($edit);
-      $theme->footer();
-      break;
-    case t("Post comment"):
-      comment_post($edit);
-      break;
-    case t("Update settings"):
-      global $mode, $order, $threshold;
-      comment_settings(check_query($mode), check_query($order), check_query($threshold));
-      drupal_goto(drupal_url(array("id" => $edit["nid"], "mode" => $mode, "order" => $order), "node"));
-      break;
-    default:
-  }
-}
-
-function comment_admin_edit($id) {
-
-  $result = db_query("SELECT c.*, u.name, u.uid FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.cid = '$id'");
-  $comment = db_fetch_object($result);
-
-  $form .= form_item(t("Author"), format_name($comment));
-  $form .= form_textfield(t("Subject"), "subject", $comment->subject, 70, 128);
-  $form .= form_textarea(t("Comment"), "comment", $comment->comment, 70, 15);
-  $form .= form_hidden("cid", $id);
-  $form .= form_submit(t("Submit"));
-  $form .= form_submit(t("Delete"));
-
-  return form($form);
-}
-
-function comment_admin_overview() {
-  $result = db_query("SELECT c.*, u.name, u.uid FROM comments c LEFT JOIN users u ON u.uid = c.uid ORDER BY timestamp DESC LIMIT 50");
-
-  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  $output .= " <tr><th>subject</th><th>author</th><th>date</th><th colspan=\"2\">operations</th></tr>\n";
-  while ($comment = db_fetch_object($result)) {
-    $output .= " <tr><td>". l(check_output($comment->subject), array("id" => $comment->nid, "cid" => $comment->cid, "pid" => $comment->pid), "node", $comment->cid) ."</td><td>". format_name($comment) ."</td><td>". format_date($comment->timestamp, "small") ."</td><td>". la(t("edit comment"), array("mod" => comment, "op" => edit, "id" => $comment->cid)) ."</td><td>". la(t("delete comment"), array("mod" => "comment", "op" => "delete", "id" => $comment->cid)) ."</td></tr>\n";
-  }
-  $output .= "</table>\n";
-
-  return $output;
-}
-
-function comment_delete($edit) {
-
-  if ($edit["confirm"]) {
-    db_query("DELETE FROM comments WHERE cid = '%s'", $edit["cid"]);
-    watchdog("special", "comment: deleted comment #". $edit["cid"]);
-  }
-  else {
-    $output .= form_item(t("Confirm deletion"), "");
-    $output .= form_hidden("cid", $edit["cid"]);
-    $output .= form_hidden("confirm", 1);
-    $output .= form_submit(t("Delete"));
-    $output = form($output);
-  }
-
-  return $output;
-}
-
-function comment_admin() {
-  global $op, $id, $edit, $mod, $keys, $order;
-
-  if (user_access("administer comments")) {
-
-    print "<small>". la(t("overview"), array("mod" => "comment")) ." | ". la(t("search comment"), array("mod" => "comment", "op" => "search")) ." | ". la(t("help"), array("mod" => "comment", "op" => "help")) ."</small><hr />\n";
-
-    switch ($op) {
-      case "help":
-        print comment_help();
-        break;
-      case "edit":
-        print comment_admin_edit($id);
-        break;
-      case "search":
-        print search_type("comment", drupal_url(array("mod" => "comment", "op" => "search"), "admin"));
-        break;
-      case "delete":
-        print comment_delete(array("cid" => $id));
-        break;
-      case t("Delete"):
-        print comment_delete($edit);
-        break;
-      case t("Submit"):
-        print status(comment_save(check_query($id), $edit));
-        print comment_admin_overview();
-        break;
-      default:
-        print comment_admin_overview();
-    }
-  }
-  else {
-    print message_access();
-  }
 }
 
 function comment_update_index() {
@@ -811,7 +1493,25 @@ function comment_update_index() {
   ** last run date for the comments update.
   */
 
-  return array("last_update" => "comment_cron_last", "node_type" => "comment", "select" => "SELECT c.cid as lno, c.subject as text1, c.comment as text2 FROM comments c WHERE timestamp > ". variable_get("comment_cron_last", 1));
+  return array("last_update" => "comment_cron_last", "node_type" => "comment", "select" => "SELECT c.cid as lno, c.subject as text1, c.comment as text2 FROM comments c WHERE c.status = 0 AND timestamp > ". variable_get("comment_cron_last", 1));
 }
 
+// backward compatibility with some themes
+function comment_moderation() {
+}
+
+// this will go away as soon as theme_invoke is committed
+function comment_theme_invoke() {
+  global $theme;
+
+  $args = func_get_args();
+  $function = array_shift($args);
+
+  if (method_exists($theme, $function)) {
+    return call_user_method_array($function, $theme, $args);
+  }
+  else {
+    return call_user_func_array($function, $args);
+  }
+}
 ?>
