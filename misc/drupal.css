@@ -75,6 +75,7 @@ th                        { text-align: left; padding-right: 1em; border-bottom:
 .ok                       { color: #080; }
 
 .user-login-block         { text-align: center; }
+.user-page-menu           { text-align: center; }
 .user-login-block, .user-information-block { white-space: nowrap; }
 tr.dark                   { background-color: #ddd; }
 tr.light                  { background-color: #eee; }

@@ -1071,11 +1071,13 @@ function user_edit($edit = array()) {
 }
 
 function user_menu() {
+  global $theme;
+
   $links[] = l(t("view user information"), "user/view");
   $links[] = l(t("edit user information"), "user/edit");
   $links[] = l(t("delete account"), "user/delete");
 
-  return "<div style=\"text-align: center;\">". implode(" &middot; ", $links) ."</div>";
+  return "<div class=\"user-page-menu\">". $theme->links($links) ."</div>";
 }
 
 function user_view($uid = 0) {
