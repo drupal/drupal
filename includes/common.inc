@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.382 2004/08/20 07:51:24 dries Exp $ */
+/* $Id: common.inc,v 1.383 2004/08/21 16:44:05 dries Exp $ */
 
 /**
  * @file
@@ -1831,7 +1831,9 @@ function mime_header_encode($string, $charset = 'UTF-8') {
 function drupal_eval($code) {
   ob_start();
   print eval('?>'. $code);
-  return ob_get_clean();
+  $output = ob_get_contents();
+  ob_end_clean();
+  return $output;
 }
 
 include_once 'includes/theme.inc';
