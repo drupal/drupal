@@ -178,32 +178,38 @@ function queue_page() {
   }
 }
 
-function queue_block() {
-  if (user_access("access submission queue") && (substr_count(request_uri(), drupal_url(array("mod" => "queue"), "module")) || substr_count(request_uri(), drupal_url()))) {
-    global $user, $id;
-    if ($user->uid) {
-      $node = node_load(array("nid" => $id));
-    }
-    if (($user->uid == $node->uid || field_get($node->users, $user->uid)) && $node->moderate == 1) {
-      foreach (explode(",", $node->users) as $vote) {
-        if ($vote) {
-          $data = explode("=", $vote);
-          $account = user_load(array("uid" => $data[0]));
-          $output .= format_name($account) ." voted '$data[1]'.<br />";
-        }
+function queue_block($op = "list", $delta = 0) {
+  if ($op == "list") {
+    $blocks[0]["info"] = t("Moderation results");
+    return $blocks;
+  }
+  else {
+    if (user_access("access submission queue") && (substr_count(request_uri(), drupal_url(array("mod" => "queue"), "module")) || substr_count(request_uri(), drupal_url()))) {
+      global $user, $id;
+      if ($user->uid) {
+        $node = node_load(array("nid" => $id));
       }
+      if (($user->uid == $node->uid || field_get($node->users, $user->uid)) && $node->moderate == 1) {
+        foreach (explode(",", $node->users) as $vote) {
+          if ($vote) {
+            $data = explode("=", $vote);
+            $account = user_load(array("uid" => $data[0]));
+            $output .= format_name($account) ." voted '$data[1]'.<br />";
+          }
+        }
 
+        $block[0]["subject"] = t("Moderation results");
+        $block[0]["content"] = $output ? $output : t("This node has not been moderated yet.");
+        $block[0]["info"] = t("Moderation results");
+      }
+    }
+    elseif ((user_access("access submission queue") || user_access("administer blocks")) && (substr_count(request_uri(), drupal_url(array("mod" => "user"), "module")) || substr_count(request_uri(), drupal_url(array(), "admin")))) {
       $block[0]["subject"] = t("Moderation results");
-      $block[0]["content"] = $output ? $output : t("This node has not been moderated yet.");
       $block[0]["info"] = t("Moderation results");
     }
-  }
-  elseif ((user_access("access submission queue") || user_access("administer blocks")) && (substr_count(request_uri(), drupal_url(array("mod" => "user"), "module")) || substr_count(request_uri(), drupal_url(array(), "admin")))) {
-    $block[0]["subject"] = t("Moderation results");
-    $block[0]["info"] = t("Moderation results");
-  }
 
-  return $block;
+    return $block;
+  }
 }
 
 ?>

@@ -85,29 +85,41 @@ function forum_load($node) {
   return $forum;
 }
 
-function forum_block() {
-  if (user_access("access content")) {
-    $content .= "<b>". t("Active forum topics:") ."</b><br />";
-    $result = db_query("SELECT n.nid, n.title, n.body, GREATEST(n.created, MAX(c.timestamp)) AS sort FROM node n, forum f LEFT JOIN comments c ON c.nid = n.nid WHERE n.type = 'forum' AND n.nid = f.nid AND f.shadow = 0 AND n.status = 1 GROUP BY n.nid ORDER BY sort DESC LIMIT ". variable_get("forum_block_num", "5"));
-    while ($node = db_fetch_object($result)) {
-      $content .= "- ".l(check_output($node->title), array("id" => $node->nid), "node", "", array("title" => substr(strip_tags($node->body), 0, 100)."...")) ."<br />";
-    }
+function forum_block($op = "list", $delta = 0) {
+  if ($op == "list") {
+    $blocks[0]["info"] = t("Forum topics");
+  }
+  else {
+    if (user_access("access content")) {
+      if (variable_get("forum_cache", 0)) {
+        $content = cache_get("forum:block");
+      }
+      
+      if (!$content) {
+        $content = "<b>". t("Active forum topics:") ."</b><br />";
+        $result = db_query("SELECT n.nid, n.title, n.body, GREATEST(n.created, MAX(c.timestamp)) AS sort FROM node n, forum f LEFT JOIN comments c ON c.nid = n.nid WHERE n.type = 'forum' AND n.nid = f.nid AND f.shadow = 0 AND n.status = 1 GROUP BY n.nid ORDER BY sort DESC LIMIT ". variable_get("forum_block_num", "5"));
+        while ($node = db_fetch_object($result)) {
+          $content .= "- ". l(check_output($node->title), array("id" => $node->nid), "node", "", array("title" => substr(strip_tags($node->body), 0, 100)."...")) ."<br />";
+        }
 
-    $content .= "<br />";
-    $content .= "<b>". t("New forum topics:") ."</b><br />";
-    $result = db_query("SELECT n.nid, n.title, n.body FROM node n LEFT JOIN forum f ON n.nid = f.nid WHERE n.type = 'forum' ORDER BY n.nid DESC LIMIT ". variable_get("forum_block_num", "5"));
-    while ($node = db_fetch_object($result)) {
-      $content .= "- ".l(check_output($node->title), array("id" => $node->nid), "node", "", array("title" => substr(strip_tags($node->body), 0, 100)."...")) ."<br />";
-    }
+        $content .= "<br />";
+        $content .= "<b>". t("New forum topics:") ."</b><br />";
+        $result = db_query("SELECT n.nid, n.title, n.body FROM node n LEFT JOIN forum f ON n.nid = f.nid WHERE n.type = 'forum' ORDER BY n.nid DESC LIMIT ". variable_get("forum_block_num", "5"));
+        while ($node = db_fetch_object($result)) {
+          $content .= "- ". l(check_output($node->title), array("id" => $node->nid), "node", "", array("title" => substr(strip_tags($node->body), 0, 100)."...")) ."<br />";
+        }
+        
+        if ($content) {
+          $content .= "<div align=\"right\">". lm(t("more"), array("mod" => "forum")) ."</div>";
+        }
+        
+        cache_set("forum:block", $content, time() + 60 * 3);
+      }
 
-    if ($content) {
-      $content .= "<div align=\"right\">". lm(t("more"), array("mod" => "forum"))."</div>";
+      $blocks["subject"] = t("Forum topics");
+      $blocks["content"] = $content;
     }
   }
-
-  $blocks[0][subject] = t("Forum topics");
-  $blocks[0][content] = $content;
-  $blocks[0][info] = t("Forum topics");
 
   return $blocks;
 }
@@ -154,10 +166,6 @@ function forum_link($type, $node) {
     if ($next) {
       $links[] = l(t("next forum topic"), array("id" => $next->nid), "node", "", array("title" => $next->title .": ". substr(strip_tags($next->body), 0, 100)."..."));
     }
-  }
-
-  if ($type == "admin" && user_access("administer site configuration")) {
-    $links[] = la(t("forum"), array("mod" => "forum"));
   }
 
   return $links ? $links : array();
@@ -321,6 +329,7 @@ function forum_get_forums($tid = 0) {
   }
 
   if (!$forums) {
+    $forums = array();
     taxonomy_get_tree(variable_get("forum_nav_vocabulary", ""), $_forums, $tid);
     $n = 0;
     foreach ($_forums as $forum) {
