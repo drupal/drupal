@@ -116,7 +116,7 @@ function user_gravity($id) {
     $bonus -= $story->number;
   }
 
-  $r3 = db_query("SELECT score, votes FROM comments WHERE author = '$id' AND (". time() ." - timestamp < $period) ORDER BY timestamp LIMIT $number");
+  $r3 = db_query("SELECT score, votes FROM comments WHERE author = '$id' AND votes > 0 AND (". time() ." - timestamp < $period) ORDER BY timestamp LIMIT $number");
   while ($comment = db_fetch_object($r3)) {
     $weight++;
     $score += $weight * $comment->score;
@@ -125,8 +125,7 @@ function user_gravity($id) {
 
   $bonus += $weight / 5;
 
-  if ($votes > 0) return ($score + $weight) / $votes + $bonus;
-  else return 0;
+  return ($votes ? ($score + $weight) / $votes + $bonus : 0);
 }
 
 ?>
