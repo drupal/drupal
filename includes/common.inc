@@ -1273,16 +1273,34 @@ function drupal_xml_parser_create(&$data) {
 
   /*
    * Unsupported encodings are converted here into UTF-8.
-   * Requires iconv, see http://www.php.net/iconv
+   * Requires the iconv, GNU recode or mbstring PHP extension.
    */
   $php_supported = array('utf-8', 'iso-8859-1', 'us-ascii');
   if (!in_array(strtolower($encoding), $php_supported)) {
     if (function_exists('iconv')) {
-      $out = iconv($encoding, 'utf-8', $data);
+      $out = @iconv($encoding, 'utf-8', $data);
       if ($out !== false) {
         $data = $out;
         $encoding = 'utf-8';
       }
+    }
+    else if (function_exists('mb_convert_encoding')) {
+      $out = @mb_convert_encoding($data, 'utf-8', $encoding);
+      if ($out !== false) {
+        $data = $out;
+        $encoding = 'utf-8';
+      }
+    }
+    else if (function_exists('recode_string')) {
+      $out = @recode_string($encoding . '..utf-8', $data);
+      if ($out !== false) {
+        $data = $out;
+        $encoding = 'utf-8';
+      }
+    }
+    else {
+      watchdog(t("Unsupported XML encoding '%s'. Please install iconv, GNU recode or mbstring for PHP.", $encoding)); 
+      return 0;
     }
   }
 
