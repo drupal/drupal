@@ -94,20 +94,21 @@ function _locale_admin_import_screen() {
   unset($languages['en']);
 
   if (!count($languages)) {
-    drupal_set_message(t('You need to have at least one language set up to import translations.'), 'error');
+    $languages = _locale_prepare_iso_list();
   }
   else {
     $languages = array(
       t('Already added languages') => $languages,
       t('Languages not yet added') => _locale_prepare_iso_list()
     );
-
-    $form = form_file(t('Language file'), 'file', 50, t('A gettext Portable Object (.po) file.'));
-    $form .= form_select(t('Import into'), 'langcode', '', $languages, t('Choose the language you want to add strings into. If you choose a language which is not yet set up, then it will be added.'));
-    $form .= form_radios(t('Mode'), 'mode', 'overwrite', array("overwrite" => t('Strings in the uploaded file replace existing ones, new ones are added'), "keep" => t('Existing strings are kept, only new strings are added')));
-    $form .= form_submit(t('Import'));
-    $output = form($form, 'POST', url('admin/locale/language/import'), array('enctype' => 'multipart/form-data'));
   }
+
+  $form = form_file(t('Language file'), 'file', 50, t('A gettext Portable Object (.po) file.'));
+  $form .= form_select(t('Import into'), 'langcode', '', $languages, t('Choose the language you want to add strings into. If you choose a language which is not yet set up, then it will be added.'));
+  $form .= form_radios(t('Mode'), 'mode', 'overwrite', array("overwrite" => t('Strings in the uploaded file replace existing ones, new ones are added'), "keep" => t('Existing strings are kept, only new strings are added')));
+  $form .= '<p><strong>Note</strong>: Importing a translation file might take a while.</p>';
+  $form .= form_submit(t('Import'));
+  $output = form($form, 'POST', url('admin/locale/language/import'), array('enctype' => 'multipart/form-data'));
   return $output;
 }
 
@@ -119,6 +120,11 @@ function _locale_admin_import_screen() {
  * @param $mode should existing translations be replaced?
  */
 function _locale_import_po($file, $lang, $mode) {
+  // If not in 'safe mode', increase the maximum execution time:
+  if (!ini_get('safe_mode')) {
+    set_time_limit(240);
+  }  
+
   // Check if we have the language already in the database
   if (!db_fetch_object(db_query("SELECT locale FROM {locales_meta} WHERE locale = '%s'", $lang))) {
     drupal_set_message(t('Unsupported language selected for import.'), 'error');
