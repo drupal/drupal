@@ -11,7 +11,7 @@ Drupal x.x.x, xxxx-xx-xx
 - node system:
     * added support for node-level permissions.
 - comment module:
-    * made it possible to comment without having to register.
+    * made it possible to leave contact information without having to register.
 - forum module:
     * added support for sticky forum topics.
     * made it possible to track forum topics.
