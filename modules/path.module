@@ -19,11 +19,11 @@ function path_admin() {
     }
 
     switch ($op) {
-      case t("add"):
+      case "add":
         $output = path_form();
         break;
 
-      case t("edit"):
+      case "edit":
         $output = path_form(path_load(arg(3)));
         break;
 
@@ -31,13 +31,13 @@ function path_admin() {
         $output = path_help();
         break;
 
-      case t("delete"):
+      case "delete":
         $output  = status(path_delete(arg(3)));
         $output .= path_overview();
         break;
 
-      case t("create new alias"):
-      case t("update alias"):
+      case t("Create new alias"):
+      case t("Update alias"):
         $output .= status(path_save($edit));
         break;
 
@@ -265,7 +265,7 @@ function path_save($edit) {
     }
   }
 
-  return t("the alias has been created.") . path_overview();
+  return t("the alias has been saved.") . path_overview();
 }
 
 ?>
