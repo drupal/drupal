@@ -1,0 +1,226 @@
+<?php
+/* $Id: path.module,v 1.1 2003/09/30 17:03:29 dries Exp $ */
+
+function path_admin() {
+  $op = strtolower($_POST["op"]);
+  $edit = $_POST["edit"];
+
+  if (user_access("alias urls")) {
+
+    if (empty($op)) {
+      $op = arg(2);
+    }
+
+    switch ($op) {
+      case t("add"):
+        $output = path_form();
+        break;
+
+      case t("edit"):
+        $output = path_form(object2array(get_path_from_id(arg(3))));
+        break;
+
+      case t("delete"):
+        if ($edit["confirm"]) {
+          if (path_delete($edit['pid'])) {
+            $output .= status("Deleted path '". $edit['new'] ."'");
+          }
+        }
+        else {
+          $output .= path_confirm_delete(arg(3));
+        }
+        break;
+
+      case t("create new alias"):
+        $output = status(path_save($edit));
+        // fall-through
+
+      default:
+        $output = path_overview();
+    }
+
+    return $output;
+  }
+  else {
+    return message_access();
+  }
+}
+
+/**
+ * Returns a path that is acceptable as an url.
+ */
+function path_clean($path) {
+  global $base_url;
+
+  /*
+  ** Replace absolute URL for this site with relative URL.
+  */
+  $path = str_replace($base_url, "", $path);
+
+  /*
+  ** Only allow alpha numeric characters, slashes and underscores.
+  */
+  $path = preg_replace("'[^a-zA-Z0-9/_.]'", " ", $path);
+
+  /*
+  ** Remove all whitespace.
+  */
+  $path = str_replace(" ", "", $path);
+
+  /*
+  ** Replace two or more sequential slashes with only one slashes.
+  */
+  $path = preg_replace("'//*'","/",$path);
+
+  /*
+  ** Remove beginning and trailing slashes.
+  */
+  $path = trim($path, "/");
+
+  return $path;
+}
+
+function path_confirm_delete($id) {
+  $path = get_path_from_id($id);
+
+  $form .= form_hidden("confirm", 1);
+  $form .= form_hidden("pid", $id);
+  $form .= form_hidden("old", $path->old);
+  $form .= form_hidden("new", $path->new);
+  $form .= form_submit(t("Delete"));
+  $form .= form_submit(t("Cancel"));
+
+  return form(form_item(t("Delete alias '%new' that maps to '%old'", array("%new" => $path->new, "%old" => $path->old)), $form, t("Are you sure you want to delete this alias?")));
+}
+
+function path_delete($pid) {
+  return db_query("DELETE FROM {path} WHERE pid = '%d'", $pid);
+}
+
+function path_help($section = "admin/path/help") {
+  switch ($section) {
+    case "admin/system/modules":
+      $output = "Enables users to create custom URLs.";
+      break;
+    case "admin/system/modules/path":
+      $output = "Documentation yet to be written.";
+      break;
+    case "admin/path/help":
+      $output = "Documentation yet to be written.";
+      break;
+  }
+
+  return t($output);
+}
+
+function path_form($edit = "") {
+  $form .= form_textfield(t("Existing path"), "old", $edit["old"], 50, 64, t("Specify the existing path you wish to alias. For example: node/view/28, forum/1, taxonomy/page/or/1,2."));
+  $form .= form_textfield(t("New path alias"), "new", $edit["new"], 50, 64, t("Specify an alternative path by which this data can be accessed.  For example, type 'about' when writing an about page."));
+  $form .= form_hidden("pid", $edit["pid"]);
+  $form .= form_submit(t("Create new alias"));
+
+  if ($edit["pid"]) {
+    $form .= form_submit(t("Delete"));
+  }
+
+  return form($form);
+}
+
+function path_insert($edit) {
+  return db_query("INSERT INTO {path} SET old = '%s', new = '%s'", $edit["old"], $edit["new"]);
+}
+
+# DELETE
+function path_is_unique($path, $type) {
+  if ($type == "new") {
+    return !(get_old_url($path));
+  }
+  elseif ($type == "old") {
+    return !(get_url_alias($path));
+  }
+}
+
+function path_link($type, $node = NULL) {
+  if ($type == "system" && user_access("alias urls")) {
+    menu("admin/path", t("url aliasing"), "path_admin", "", 4);
+    menu("admin/path/add", t("new alias"), "path_admin", "");
+  }
+}
+
+function path_perm() {
+  return array("alias urls");
+}
+
+function path_overview() {
+  $sql = "SELECT * FROM {path}";
+  $header = array(
+    array ("data" => t("alias"), "field" => "new", "sort" => "asc"),
+    array ("data" => t("maps to"), "field" => "old"),
+    array("data" => t("operations"), "colspan" => 2)
+  );
+  $sql .= tablesort_sql($header);
+  $result = pager_query($sql, 50);
+
+  while ($data = db_fetch_object($result)) {
+    $rows[] = array($data->new, $data->old, l(t("edit"), "admin/path/edit/$data->pid"), l(t("delete"), "admin/path/delete/$data->pid"));
+  }
+
+  $pager = pager_display(NULL, 50, 0, "admin", tablesort_pager());
+  if (!empty($pager)) {
+    $rows[] = array(array("data" => $pager, "colspan" => 3));
+  }
+
+  return table($header, $rows);
+}
+
+function path_save($edit) {
+  $new = path_clean($edit["new"]);
+  $old = path_clean($edit["old"]);
+
+  if ($old == NULL || !valid_url($old)) {
+    return t("The specified path is not valid.");
+  }
+
+  if (db_result(db_query("SELECT COUNT(old) FROM {path} WHERE old = '%s'", $old))) {
+    return t("The specified path is already aliased.");
+  }
+
+  if ($new == NULL || !valid_url($new)) {
+    return t("The specified path alias is not valid.");
+  }
+
+  if (db_result(db_query("SELECT COUNT(new) FROM {path} WHERE new = '%s'", $new))) {
+    return t("The specified alias is already in use.");
+  }
+
+  if ($edit["pid"]) {
+    path_update($old, $new);
+  }
+  else { //Update the path
+    path_insert($edit);
+  }
+
+  return t("you may access %old via %new.", array("%old" => url($old), "%new" => l($new, url($new))));
+}
+
+function path_system($field) {
+  $system["description"] = path_help("admin/system/modules");
+  $system["admin_help"] =  path_help("admin/system/modules/path");
+
+  return $system[$field];
+}
+
+function path_update($edit) {
+  if ($edit["pid"]) {
+    return db_query("UPDATE {path} SET old = '%s', new = '%s' WHERE pid = '%d'", $edit["old"], $edit["new"], $edit["pid"]);
+  }
+  else { // intended for nodes
+    return db_query("UPDATE {path} SET new = '%s' WHERE old = '%s'", $edit["new"], $edit["old"]);
+  }
+}
+
+function get_path_from_id($id) {
+  return db_fetch_object(db_query("SELECT * FROM {path} WHERE pid = '%d'", $id));
+}
+
+?>
