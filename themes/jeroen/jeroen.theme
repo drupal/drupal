@@ -112,7 +112,7 @@ PHP?>
                                     case 12: $how = "Forged"; break;
                                     default: $how = "Sneaked through";
                                   }
-                                  echo "<FONT SIZE=\"-1\">". strtr(t("$how by %a on %b"), array("%a" => format_username($story->userid), "%b" => $timestamp, "large")) .";
+                                  echo "<FONT SIZE=\"-1\">". strtr(t("$how by %a on %b"), array("%a" => format_username($story->userid), "%b" => $timestamp, "large")) ."
                                 </FONT>
                               </TD>
                               <TD ALIGN=\"right\" BACKGROUND=\"themes/jeroen/images/menutitle.gif\" NOWRAP>
@@ -197,7 +197,7 @@ PHP?>
                                   }
 
                                   if ($story->userid) {
-                                    echo "<FONT SIZE=\"-1\">". strtr(t("$how by %a on %b"), array("%a" => format_username($story->userid), "%b" => $timestamp, "large")) .";
+                                    echo "<FONT SIZE=\"-1\">". strtr(t("$how by %a on %b"), array("%a" => format_username($story->userid), "%b" => $timestamp, "large")) ."
                                     </FONT>
                               </TD>
                               <TD ALIGN=\"right\" BACKGROUND=\"themes/jeroen/images/menutitle.gif\" NOWRAP>
