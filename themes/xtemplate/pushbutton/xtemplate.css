@@ -1,4 +1,4 @@
-/* $Id: xtemplate.css,v 1.12 2004/06/20 20:04:28 dries Exp $ */
+/* $Id: xtemplate.css,v 1.13 2004/07/08 16:04:07 dries Exp $ */
 
 /*
 ** HTML elements
@@ -177,7 +177,7 @@ td#home a:hover img {
 .breadcrumb {
   margin-bottom: .5em;
 }
-.message {
+.messages {
   background-color: #eee;
   border: 1px solid #ccc;
   padding: 0.3em;

@@ -1,5 +1,5 @@
 <?php
-// $Id: xtemplate.theme,v 1.63 2004/07/07 21:15:11 dries Exp $
+// $Id: xtemplate.theme,v 1.64 2004/07/08 16:04:06 dries Exp $
 
 if (!class_exists("XTemplate")) {
   include_once("themes/xtemplate/xtemplate.inc");
@@ -164,10 +164,8 @@ function xtemplate_page($content, $title = NULL, $breadcrumb = NULL) {
     $xtemplate->template->parse("header.help");
   }
 
-  foreach (drupal_get_messages() as $message) {
-    list($message, $type) = $message;
-    $xtemplate->template->assign("message", ucfirst($message));
-    $xtemplate->template->assign("type", $type);
+  if ($message = theme_status_messages()) {
+    $xtemplate->template->assign("message", $message);
     $xtemplate->template->parse("header.message");
   }
 

@@ -53,7 +53,7 @@
         <div id="help">{help}</div>
         <!-- END: help -->
         <!-- BEGIN: message -->
-        <div class="message {type}">{message}</div>
+        {message}
         <!-- END: message -->
 <!-- END: header -->
 
