@@ -407,7 +407,7 @@ function node_feed() {
   $output .= "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n";
   $output .= "<!DOCTYPE rss [<!ENTITY % HTMLlat1 PUBLIC \"-//W3C//ENTITIES Latin 1 for XHTML//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml-lat1.ent\">\n";
   $output .= "<rss version=\"0.91\">\n";
-  $output .= format_rss_channel(variable_get("site_name", "drupal"), path_uri() ."module.php?mod=node&op=feed", variable_get("site_slogan", ""), $items);
+  $output .= format_rss_channel(variable_get("site_name", "drupal"), path_uri(), variable_get("site_slogan", ""), $items);
   $output .= "</rss>\n";
 
   header("Content-Type: text/xml");
@@ -417,7 +417,7 @@ function node_feed() {
 }
 
 function node_page() {
-  global $op, $theme;
+  global $op, $theme, $meta, $date;
 
   if ($op == "feed") {
     node_feed();
