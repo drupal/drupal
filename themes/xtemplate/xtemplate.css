@@ -6,8 +6,8 @@ body {
   font-family: verdana, arial, helvetica, sans-serif;
   width: 100%;
 }
-body, td, tr {
-  font-size: 93%;
+body {
+  font-size: 85%;
 }
 h1 {
   font-size: 1.2em;
@@ -102,6 +102,9 @@ img {
   background-color: #eee;
   padding: 15px 10px 5px 10px;
   font-size: .7em;
+}
+table {
+  font-size: 1em;
 }
 table .node {
   padding-bottom: 25px;
