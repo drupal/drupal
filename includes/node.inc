@@ -10,6 +10,21 @@ function _node_get($field, $value) {
   }
 }
 
+function node_comment_status($index = -1) {
+  $status = array("disabled", "enabled");
+  return $index < 0 ? $status : $status[$index];
+}
+
+function node_promote_status($index = -1) {
+  $status = array("disabled", "enabled");
+  return $index < 0 ? $status : $status[$index];
+}
+
+function node_submission_status($index = -1) {
+  $status = array("auto-post new submissions", "moderate new submissions");
+  return $index < 0 ? $status : $status[$index];
+}
+
 function node_get_object($field, $value) {
   return db_fetch_object(_node_get($field, $value));
 }
@@ -39,7 +54,7 @@ function node_get_comments($nid) {
 function node_save($node) {
   global $user, $status;
 
-  $rows = array(nid, pid, lid, cid, tid, log, type, title, score, votes, author, status, comment, timestamp);
+  $rows = array(nid, pid, lid, cid, tid, log, type, title, score, votes, author, status, comment, promote, timestamp);
 
   if ($node[nid] > 0) {
     $n = node_get_object("nid", $node[nid]);
@@ -71,10 +86,11 @@ function node_save($node) {
       watchdog("warning", "node: duplicate '$node[title]'");
     }
     else {
+      // verify submission rate:
       throttle("post node", variable_get(max_node_rate, 900));
 
       // setup default values:
-      $node = array_merge(array(title => "?", author => $user->id, type => "?", pid => 0, cid => 0, tid => 0, log => "node created", status => $status[queued], score => 0, votes => 0, comment => 1, timestamp => time()), $node);
+      $node = array_merge(array(title => "?", author => $user->id, type => "?", pid => 0, cid => 0, tid => 0, log => "node created", status => (category_submission($node[cid]) ? $status[queued] : $status[posted]) , score => 0, votes => 0, comment => category_comment($node[cid]), promote => category_promote($node[cid]), timestamp => time()), $node);
 
       // prepare queries:
       $f1 = array();

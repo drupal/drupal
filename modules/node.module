@@ -27,7 +27,8 @@ function node_admin_view($id) {
   $output .= "<B>Title:</B><BR>". check_output($node->title) ."<P>\n";
   $output .= "<B>Author:</B><BR>". format_username($node->userid) ."<P>\n";
   $output .= "<B>Status:</B><BR>". $rstatus[$node->status] ."<P>\n";
-  $output .= "<B>Comment:</B><BR>". comment_status($node->comment) ."<P>\n";
+  $output .= "<B>Comment:</B><BR>". node_comment_status($node->comment) ."<P>\n";
+  $output .= "<B>Promote:</B><BR>". node_promote_status($node->promote) ."<P>\n";
   $output .= "<B>Date:</B><BR>". format_date($node->timestamp) ."<P>\n";
   $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Edit node\">\n";
   $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Delete node\">\n";
@@ -44,13 +45,15 @@ function node_admin_edit($id) {
   foreach (array($node->userid => $node->author, $user->userid => $user->id) as $value=>$key) $author .= " <OPTION VALUE=\"$key\"". (($node->author == $key) ? " SELECTED" : "") .">$value</OPTION>\n";
   foreach (array(format_date($node->timestamp) ." (original)" => $node->timestamp, format_date(time()) ." (current)" => time()) as $value=>$key) $timestamp .= " <OPTION VALUE=\"$key\"". (($node->timestamp == $key) ? " SELECTED" : "") .">$value</OPTION>\n";
   foreach (node_status($node) as $value) $display .= " <OPTION VALUE=\"". $status[$value] ."\"". (($node->status == $status[$value]) ? " SELECTED" : "") .">$value</OPTION>\n";
-  foreach (comment_status() as $key=>$value) $comment .= " <OPTION VALUE=\"$key\"". ($node->comment == $key ? " SELECTED" : "") .">$value</OPTION>\n";
+  foreach (node_comment_status() as $key=>$value) $comment .= " <OPTION VALUE=\"$key\"". ($node->comment == $key ? " SELECTED" : "") .">$value</OPTION>\n";
+  foreach (node_promote_status() as $key=>$value) $promote .= " <OPTION VALUE=\"$key\"". ($node->promote == $key ? " SELECTED" : "") .">$value</OPTION>\n";
 
   $output .= "<FORM ACTION=\"admin.php?mod=node&id=$node->nid\" METHOD=\"post\">\n";
   $output .= "<B>Title:</B><BR>". check_output($node->title) ."<P>\n";
   $output .= "<B>Author:</B><BR><SELECT NAME=\"edit[author]\">$author</SELECT><P>\n";
   $output .= "<B>Status:</B><BR><SELECT NAME=\"edit[status]\">$display</SELECT><P>\n";
   $output .= "<B>Comment:</B><BR><SELECT NAME=\"edit[comment]\">$comment</SELECT><P>\n";
+  $output .= "<B>Promote:</B><BR><SELECT NAME=\"edit[promote]\">$promote</SELECT><P>\n";
   $output .= "<B>Date:</B><BR><SELECT NAME=\"edit[timestamp]\">$timestamp</SELECT><P>\n";
   $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[nid]\" VALUE=\"$node->nid\">\n";
   $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"View node\">\n";

@@ -2,15 +2,13 @@
 
 $module = array("admin" => "structure_admin");
 
-$mstatus = array("post new submissions", "moderate new submissions");
-
 function content_types($name, $module) {
   global $types;
   if ($module[type]) $types[$name] = $name;
 }
 
 function category_form($edit = array()) {
-  global $types, $mstatus;
+  global $types;
 
   $threshold_post = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90, 100);
   $threshold_dump = array(-1, -2, -3, -4, -5, -6, -7, -8, -9, -10, -11, -12, -13, -14, -15, -20, -25, -30);
@@ -29,25 +27,26 @@ function category_form($edit = array()) {
   $output .= "<SELECT NAME=\"edit[type]\">$options1</SELECT><BR>\n";
   $output .= "<SMALL><I>The content type to bind or associate this category with.</I></SMALL><P>\n";
 
-  $output .= "<B>Comment settings:</B><BR>\n";
-  foreach (comment_status() as $key=>$value) $options2 .= "<OPTION VALUE=\"$key\"". ($edit[comment] == $key ? " SELECTED" : "") .">". check_select($value) ."</OPTION>";
+  $output .= "<B>Comment:</B><BR>\n";
+  foreach (node_comment_status() as $key=>$value) $options2 .= "<OPTION VALUE=\"$key\"". ($edit[comment] == $key ? " SELECTED" : "") .">". check_select($value) ."</OPTION>";
   $output .= "<SELECT NAME=\"edit[comment]\">$options2</SELECT><BR>\n";
-  $output .= "<SMALL><I>Allow or dissallow users to post comments in this category.</I></SMALL><P>\n";
+  $output .= "<SMALL><I>By default, allow or dissallow users to post comments in this category.</I></SMALL><P>\n";
 
-  $output .= "<B>Submission settings:</B><BR>\n";
-  foreach ($mstatus as $key=>$value) $options3 .= "<OPTION VALUE=\"$key\"". ($edit[submission] == $key ? " SELECTED" : "") .">". check_select($value) ."</OPTION>";
-  $output .= "<SELECT NAME=\"edit[submission]\">$options3</SELECT><BR>\n";
-  $output .= "<SMALL><I>What to do with new submissions in this category.</I></SMALL><P>\n";
+  $output .= "<B>Promote:</B><BR>\n";
+  foreach (node_promote_status() as $key=>$value) $options3 .= "<OPTION VALUE=\"$key\"". ($edit[promote] == $key ? " SELECTED" : "") .">". check_select($value) ."</OPTION>";
+  $output .= "<SELECT NAME=\"edit[promote]\">$options3</SELECT><BR>\n";
+  $output .= "<SMALL><I>By default, promote new submissions in this category to the front page.</I></SMALL><P>\n";
 
-  $output .= "<B>Post, dump and expiration threshold:</B><BR>\n";
-  foreach ($threshold_post as $value) $options4 .= "<OPTION VALUE=\"$value\"". ($edit[post] == $value ? " SELECTED" : "") .">". format_plural($value, "point", "points") ."</OPTION>";
-  $output .= "<SELECT NAME=\"edit[post]\">$options4</SELECT>\n";
-  foreach ($threshold_dump as $value) $options5 .= "<OPTION VALUE=\"$value\"". ($edit[dump] == $value ? " SELECTED" : "") .">". format_plural($value, "point", "points") ."</OPTION>";
-  $output .= "<SELECT NAME=\"edit[dump]\">$options5</SELECT>\n";
-  foreach ($threshold_expire as $value) $options6 .= "<OPTION VALUE=\"$value\"". ($edit[expire] == $value ? " SELECTED" : "") .">". format_plural($value, "vote", "votes") ."</OPTION>";
-  $output .= "<SELECT NAME=\"edit[expire]\">$options6</SELECT><BR>\n";
-
-  $output .= "<SMALL><I>Specify the post, dump and expiration threshold for moderation purpose.</I></SMALL><P>\n";
+  $output .= "<B>Submission:</B><BR>\n";
+  foreach (node_submission_status() as $key=>$value) $options4 .= "<OPTION VALUE=\"$key\"". ($edit[submission] == $key ? " SELECTED" : "") .">". check_select($value) ."</OPTION>";
+  $output .= "<SELECT NAME=\"edit[submission]\">$options4</SELECT><BR>\n";
+  foreach ($threshold_post as $value) $options5 .= "<OPTION VALUE=\"$value\"". ($edit[post] == $value ? " SELECTED" : "") .">". format_plural($value, "point", "points") ."</OPTION>";
+  $output .= "<SELECT NAME=\"edit[post]\">$options5</SELECT>\n";
+  foreach ($threshold_dump as $value) $options6 .= "<OPTION VALUE=\"$value\"". ($edit[dump] == $value ? " SELECTED" : "") .">". format_plural($value, "point", "points") ."</OPTION>";
+  $output .= "<SELECT NAME=\"edit[dump]\">$options6</SELECT>\n";
+  foreach ($threshold_expire as $value) $options7 .= "<OPTION VALUE=\"$value\"". ($edit[expire] == $value ? " SELECTED" : "") .">". format_plural($value, "vote", "votes") ."</OPTION>";
+  $output .= "<SELECT NAME=\"edit[expire]\">$options7</SELECT><BR>\n";
+  $output .= "<SMALL><I>What to do with new submissions in this category?<BR>Specify the post, dump and expiration threshold for moderation purpose.</I></SMALL><P>\n";
 
   if ($edit[cid]) {
     $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[cid]\" VALUE=\"$edit[cid]\">\n";
@@ -64,14 +63,12 @@ function category_form($edit = array()) {
 }
 
 function category_overview() {
-  global $mstatus;
-
   $result = db_query("SELECT * FROM category ORDER BY name");
 
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR><TH>name</TH><TH>type</TH><TH>comments</TH><TH>submissions</TH><TH>operations</TH></TR>\n";
+  $output .= " <TR><TH>name</TH><TH>type</TH><TH>comment</TH><TH>promote</TH><TH>submissions</TH><TH>operations</TH></TR>\n";
   while ($category = db_fetch_object($result)) {
-    $output .= " <TR><TD>". check_output($category->name) ."</TD><TD>". check_output($category->type) ."</TD><TD>". comment_status($category->comment) ."</TD><TD>". check_output($mstatus[$category->submission]) ."". ($category->submission ? "<BR><SMALL>post: $category->post, dump: $category->dump, expire: $category->expire</SMALL>" : "") ."</TD><TD><A HREF=\"admin.php?mod=structure&type=category&op=edit&id=$category->cid\">edit category</A></TD></TR>\n";
+    $output .= " <TR><TD>". check_output($category->name) ."</TD><TD>". check_output($category->type) ."</TD><TD>". node_comment_status($category->comment) ."</TD><TD>". node_promote_status($category->promote) ."</TD><TD>". node_submission_status($category->submission) ."". ($category->submission ? "<BR><SMALL>post: $category->post, dump: $category->dump, expire: $category->expire</SMALL>" : "") ."</TD><TD><A HREF=\"admin.php?mod=structure&type=category&op=edit&id=$category->cid\">edit category</A></TD></TR>\n";
   }
   $output .= "</TABLE>\n";
   return $output;
