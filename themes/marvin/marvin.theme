@@ -44,11 +44,9 @@
        </tr>
        <tr>
         <td colspan="2" style="text-align: right;">
-         <small>
          <?php
            print $this->links(link_page());
          ?>
-         </small>
         </td>
        </tr>
        <tr>
@@ -162,7 +160,7 @@
       <tr>
        <td colspan="2" style="text-align: center;">
         <?php
-          print "<p><small>". $this->links(link_page()) ."</small></p><p>". variable_get("site_footer", "") ."</p>\n";
+          print "<p>". $this->links(link_page()) ."</p><p>". variable_get("site_footer", "") ."</p>\n";
         ?>
        </td>
       </tr>

@@ -412,7 +412,7 @@ function book_view($node, $main = 0) {
     // build the tree from bottom to top to have the book index in $level for navigation later
     $path = book_location($node);
     $trail[] = l(t("Home"), "");
-    $trail[] = l(t("books"), "book");
+    $trail[] = l(t("Books"), "book");
     foreach ($path as $level) {
       $trail[] = l($level->title, "node/view/$level->nid");
     }

@@ -685,7 +685,7 @@ function comment_render($node, $cid = 0) {
 
       if ((variable_get("comment_controls", 0) == 0) || (variable_get("comment_controls", 0) == 2)) {
         print "<form method=\"post\" action=\"". url("comment") ."\"><div>\n";
-        theme("box", "", theme("comment_controls", $threshold, $mode, $order, $comments_per_page));
+        theme("comment_controls", $threshold, $mode, $order, $comments_per_page);
         print form_hidden("nid", $nid);
         print "</div></form>";
       }
@@ -726,7 +726,7 @@ function comment_render($node, $cid = 0) {
 
       if ((variable_get("comment_controls", 0) == 1) || (variable_get("comment_controls", 0) == 2)) {
         print "<form method=\"post\" action=\"". url("comment") ."\"><div>\n";
-        theme("box", "", theme("comment_controls", $threshold, $mode, $order, $comments_per_page));
+        theme("comment_controls", $threshold, $mode, $order, $comments_per_page);
         print form_hidden("nid", $nid);
         print "</div></form>";
       }
@@ -1268,10 +1268,10 @@ function comment_controls($threshold = 1, $mode = 3, $order = 1, $comments_per_p
 
     $output .= " ". form_submit(t("Save settings"));
 
-    $output = form_item(t("Comment viewing options"), $output, t("Select your preferred way to display the comments and click 'Save settings' to activate your changes."));
+    $output = form_item(NULL, $output, t("Select your preferred way to display the comments and click 'Save settings' to activate your changes."));
   }
 
-  return $output;
+  return theme("box", t("Comment viewing options"), $output);
 }
 
 function comment_moderation_form($comment) {

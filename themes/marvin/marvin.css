@@ -46,6 +46,14 @@ table {
 .calendar .row-week {
   color: #aaa;
 }
+.path, .path a, .path a:visited {
+  color: #888;
+}
+#forum .title {
+  font-weight: bold;
+  color: #404040;
+  padding-bottom: 1em;
+}
 a:link {
   color: #656
 }
