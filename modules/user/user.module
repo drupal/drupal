@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.387 2004/09/12 12:47:51 unconed Exp $
+// $Id: user.module,v 1.388 2004/09/13 09:00:27 dries Exp $
 
 /**
  * @file
@@ -509,9 +509,6 @@ function user_block($op = 'list', $delta = 0) {
           $guests = db_fetch_object(db_query('SELECT COUNT(DISTINCT(sid)) AS count FROM {sessions} WHERE timestamp >= %d AND uid = 0', time() - $time_period));
           $users = db_query('SELECT DISTINCT(uid), MAX(timestamp) AS max_timestamp FROM {sessions} WHERE timestamp >= %d AND uid != 0 GROUP BY uid ORDER BY max_timestamp DESC', time() - $time_period );
           $total_users = db_num_rows($users);
-
-          // Perform database queries to count all users
-          $all_users = db_fetch_object(db_query('SELECT COUNT(uid) AS count FROM {users} WHERE uid != 0 AND status != 0'));
 
           // Format the output with proper grammar.
           if ($total_users == 1 && $guests->count == 1) {
