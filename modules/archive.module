@@ -1,5 +1,5 @@
 <?php
-// $Id: archive.module,v 1.4 2002/05/11 16:21:48 kjartan Exp $
+// $Id: archive.module,v 1.5 2002/05/12 15:40:57 kjartan Exp $
 
 function archive_display($original = 0) {
 
@@ -109,7 +109,7 @@ function archive_block() {
 
 function archive_link($type) {
   if ($type == "page" && user_access("access content")) {
-    $links[] = lm(t("archives"), array("mod" => "archive"), t("Read the older content in our archive."));
+    $links[] = lm(t("archives"), array("mod" => "archive"), "", array("title" => t("Read the older content in our archive.")));
   }
 
   return $links ? $links : array();

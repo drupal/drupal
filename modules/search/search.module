@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.16 2002/04/20 11:52:50 dries Exp $
+// $Id: search.module,v 1.17 2002/05/12 15:40:57 kjartan Exp $
 
 function search_help() {
   $output = "<b>". t("Search hints") ."</b>";
@@ -29,7 +29,7 @@ function search_perm() {
  */
 function search_link($type) {
   if ($type == "page" && user_access("search content")) {
-    $links[] = lm(t("search"), array("mod" => "search"), t("Search for older content."));
+    $links[] = lm(t("search"), array("mod" => "search"), "", array("title" => t("Search for older content.")));
   }
 
   if ($type == "admin" && user_access("administer search")) {
