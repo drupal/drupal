@@ -372,7 +372,7 @@ roles:
   idea, and logs in with a username of joe@remote.delphiforums.com and his usual
   Delphi password. Drupal then communicates with remote.delphiforums.com (usually using <a href="http://www.xmlrpc.com/">XML-RPC</a>,
   <a href="http://www.w3.org/Protocols/">HTTP POST</a>, or <a href="http://www.soapware.org/">SOAP</a>) behind
-  the scenes and asks &quot;is the password for username=joe? If Delphi replies
+  the scenes and asks &quot;is this password for username=joe? If Delphi replies
   yes, then Drupal will create a new local account for joe and log joe into it.
   Joe may keep on logging into your Drupal instance in the same manner, and he
   will be logged into the same joe@remote.delphiforums.com account.</p>
@@ -383,8 +383,8 @@ roles:
   joe@remote.delphiforums.com (because Delphi says so), he looks up Joe's UID
   and logs Joe into that account.</p>
 <p>Drupal is setup so that it is very easy to add support for any external authentication
-  source. See the <a href="http://ww.drupal.org/">Drupal Handbook</a> for information
-  on authpring authentication modules. You currently have the following authentication modules installed ...</p>
+  source. See the <a href="http://www.drupal.org/">Drupal Handbook</a> for information
+  on authoring authentication modules. You currently have the following authentication modules installed ...</p>
   <?
     foreach (module_list() as $module) {
       if (module_hook($module, "auth")) {
@@ -592,10 +592,12 @@ function user_login($edit = array()) {
     */
 
     if (!$user && $server  && $result = user_get_authmaps("", "$name@$server")) {
-      // print "in external load for $name|$pass|$server|" . key($result);
       if (module_invoke(key($result), "auth", $name, $pass, $server)) {
         $user = user_external_load("$name@$server");
         watchdog("user", "external load: $name@$server, module: " . key($result));
+      }
+      else {
+        $error = sprintf(t("Invalid password for %s."), "<i>$name@$server</i>");
       }
     }
 
@@ -635,8 +637,15 @@ function user_login($edit = array()) {
       drupal_goto($url);
     }
     else {
-      watchdog("user", "failed to login for '". $name ."': invalid password");
-      $error = t("Authentication failed.");
+      if (!$error) {
+        $error = t("Authentication failed.");
+      }  
+      if ($server) {
+        watchdog("user", "failed login for '$name@$server': $error");
+      }  
+      else {
+        watchdog("user", "failed login for '$name': $error");
+      } 
     }
   }
 
