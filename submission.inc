@@ -26,8 +26,8 @@ function submission_vote($id, $vote) {
     ### Update story table (if required):
     $result = db_query("SELECT * FROM stories WHERE id = $id");  
     if ($submission = db_fetch_object($result)) {
-      if ($submission->score >= $submission_post_threshold) db_query("UPDATE stories SET status = 2 WHERE id = $id");
-      if ($submission->score <= $submission_dump_threshold) db_query("UPDATE stories SET status = 0 WHERE id = $id");
+      if ($submission->score >= $submission_post_threshold) db_query("UPDATE stories SET status = 2, timestamp = '". time() ."' WHERE id = $id");
+      if ($submission->score <= $submission_dump_threshold) db_query("UPDATE stories SET status = 0, timestamp = '". time() ."' WHERE id = $id");
     }
   }
 }
