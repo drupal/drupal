@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.60 2003/02/09 17:39:36 dries Exp $
+// $Id: system.module,v 1.61 2003/02/11 20:01:17 dries Exp $
 
 function system_help() {
   $output .= "<p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviors including visual and operational settings.</p>";
@@ -111,8 +111,8 @@ function system_view_modules() {
   $output .= "<hr />\n";
 
   foreach (module_list() as $name) {
-    if (module_hook($name, "conf_options")) {
-      $output .= "<h3><a name=\"$name\">". ucfirst(t("$name")) ." " . t("settings") . "</a></h3>". module_invoke($name, "conf_options") ."<hr />\n";
+    if (module_hook($name, "settings")) {
+      $output .= "<h3><a name=\"$name\">". ucfirst(t("$name")) ." " . t("settings") . "</a></h3>". module_invoke($name, "settings") ."<hr />\n";
     }
   }
 
@@ -120,9 +120,11 @@ function system_view_modules() {
 }
 
 function system_view_themes() {
-  foreach (theme_list() as $name) {
-    if (module_hook($name, "conf_options")) {
-      $output .= "<h3><a name=\"$name\">". ucfirst(t("$name")) ." " . t("settings") . "</a></h3>". module_invoke($name, "conf_options") ."<hr />\n";
+  foreach (theme_list() as $theme) {
+    include_once "$theme->filename";
+    $function = $theme->name ."_options";
+    if (function_exists($function)) {
+      $output .= "<h3><a name=\"$theme->name\">". ucfirst(t("$theme->name")) ." " . t("settings") . "</a></h3>". $function() ."<hr />\n";
     }
   }
 
@@ -182,7 +184,7 @@ function system_view($type) {
       break;
     default:
       foreach (module_list() as $name) {
-        if (module_hook($name, "conf_options")) {
+        if (module_hook($name, "settings")) {
           $links[] = "<a href=\"#$name\">". t("$name") ."</a>";
         }
       }

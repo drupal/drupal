@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.125 2003/02/09 17:39:35 dries Exp $
+// $Id: theme.inc,v 1.126 2003/02/11 20:01:16 dries Exp $
 
 /**
 * Basic theme
@@ -169,13 +169,13 @@ function theme_blocks($region) {
     if ((($block->status && (!$user->uid || !$block->custom)) || ($block->custom && $user->block[$block->module][$block->delta])) && (!$block->path || preg_match("|$block->path|", $PHP_SELF))) {
       $block_data = module_invoke($block->module, "block", "view", $block->delta);
       if ($block_data["content"]) {
-        theme_invoke("block", $block_data["subject"], $block_data["content"], $region);
+        theme("block", $block_data["subject"], $block_data["content"], $region);
       }
     }
   }
 }
 
-function theme_invoke() {
+function theme() {
   global $theme;
   $args = func_get_args();
 
