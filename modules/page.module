@@ -57,34 +57,6 @@ function page_access($op, $node) {
 }
 
 /**
- * Implementation of hook_insert().
- */
-function page_insert($node) {
-  db_query("INSERT INTO {page} (nid, link, description) VALUES (%d, '%s', '%s')", $node->nid, $node->link, $node->description);
-}
-
-/**
- * Implementation of hook_update().
- */
-function page_update($node) {
-  db_query("UPDATE {page} SET link = '%s', description = '%s' WHERE nid = %d", $node->link, $node->description, $node->nid);
-}
-
-/**
- * Implementation of hook_delete().
- */
-function page_delete(&$node) {
-  db_query('DELETE FROM {page} WHERE nid = %d', $node->nid);
-}
-
-/**
- * Implementation of hook_load().
- */
-function page_load($node) {
-  return db_fetch_object(db_query('SELECT link, description FROM {page} WHERE nid = %d', $node->nid));
-}
-
-/**
  * Implementation of hook_menu().
  */
 function page_menu($may_cache) {
@@ -96,13 +68,6 @@ function page_menu($may_cache) {
   }
 
   return $items;
-}
-
-/**
- * Implementation of hook_view().
- */
-function page_view(&$node, $teaser = FALSE, $page = FALSE) {
-  $node = node_prepare($node, $teaser);
 }
 
 /**

@@ -96,7 +96,8 @@ $sql_updates = array(
   "2005-01-18" => "update_117",
   "2005-01-19" => "update_118",
   "2005-01-20" => "update_119",
-  "2005-01-25" => "update_120"
+  "2005-01-25" => "update_120",
+  "2005-01-26" => "update_121"
 );
 
 function update_32() {
@@ -2155,6 +2156,15 @@ function update_120() {
       update_sql("UPDATE {url_alias} SET src = '%s' WHERE pid = '%s'", $new, $alias->pid);
     }
   }
+
+  return $ret;
+}
+
+function update_121() {
+  $ret = array();
+
+  // Remove the unused page table.
+  $ret[] = update_sql('DROP TABLE {page}');
 
   return $ret;
 }
