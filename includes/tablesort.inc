@@ -1,5 +1,5 @@
 <?php
-// $Id: tablesort.inc,v 1.26 2004/08/04 20:39:59 dries Exp $
+// $Id: tablesort.inc,v 1.27 2004/08/10 19:15:57 dries Exp $
 
 /**
  * @file
@@ -157,7 +157,6 @@ function tablesort_get_order($headers) {
     if ($header['sort'] == 'asc' || $header['sort'] == 'desc') {
       $default = array('name' => $header['data'], 'sql' => $header['field']);
     }
-    $i++;
   }
 
   if ($default) {
