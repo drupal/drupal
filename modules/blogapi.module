@@ -89,7 +89,7 @@ function blogapi_new_post($req_params) {
     return blogapi_error($user);
   }
 
-  $promote = variable_get("node_promote_blog", 0);
+  $promote = variable_get("node_promote_blog", 1);
   $comment = variable_get("node_comment_blog", 2);
   $moderate = variable_get("node_moderate_blog", 0);
   $revision = variable_get("node_revision_blog", 0);
