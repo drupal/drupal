@@ -728,6 +728,8 @@ function _menu_build() {
   if (module_exist('menu')) {
     $result = db_query('SELECT * FROM {menu} ORDER BY mid ASC');
     while ($item = db_fetch_object($result)) {
+      // Handle URL aliases if entered in menu administration.
+      $item->path = drupal_get_normal_path($item->path);
       if (array_key_exists($item->path, $_menu['path index'])) {
         // The path is already declared.
         $old_mid = $_menu['path index'][$item->path];
