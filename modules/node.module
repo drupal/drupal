@@ -14,13 +14,8 @@ function node_help() {
   }
 }
 
-// TODO: still used by themes, yet doesn't return anything at the moment
+// DEPRICATED: still used by themes, yet doesn't return anything at the moment
 function node_index() {
-}
-
-function node_get_comments($nid) {
-  $comment = db_fetch_object(db_query("SELECT COUNT(c.nid) AS number FROM node n LEFT JOIN comments c ON n.nid = c.nid WHERE n.nid = '$nid' GROUP BY n.nid"));
-  return $comment->number ? $comment->number : 0;
 }
 
 function node_teaser($body) {

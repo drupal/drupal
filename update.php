@@ -41,6 +41,7 @@ $mysql_updates = array(
   "2001-12-16" => "update_14",
   "2001-12-24" => "update_15",
   "2001-12-30" => "update_16",
+  "2001-12-31" => "update_17",
 );
 
 // Update functions
@@ -294,6 +295,15 @@ function update_15() {
 
 function update_16() {
   update_sql("ALTER TABLE comments CHANGE lid nid int(10) NOT NULL;");
+}
+
+function update_17() {
+  update_sql("CREATE TABLE history (
+    uid int(10) DEFAULT '0' NOT NULL,
+    nid int(10) DEFAULT '0' NOT NULL,
+    timestamp int(11) DEFAULT '0' NOT NULL,
+    PRIMARY KEY (uid, nid)
+  );");
 }
 
 // System functions

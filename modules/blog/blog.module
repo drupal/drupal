@@ -180,7 +180,7 @@ function blog_page_user($uid = 0, $date = 0) {
     }
 
     if ($blog->comment) {
-      $links[] = "<a href=\"node.php?id=$blog->nid\">". format_plural(node_get_comments($blog->nid), t("comment"), t("comments")) ."</a>";
+      $links[] = "<a href=\"node.php?id=$blog->nid\">". format_plural(comment_num_all($blog->nid), t("comment"), t("comments")) ."</a>";
     }
 
     $output .= "<tr><td><div style=\"margin-left: 20px;\"><b>". check_output($blog->title) ."</b></div></td><td align=\"right\">". $theme->links($links) ."</td></tr>";
@@ -217,7 +217,7 @@ function blog_page_last() {
     }
 
     if ($blog->comment) {
-      $links[] = "<a href=\"node.php?id=$blog->nid\">". format_plural(node_get_comments($blog->nid), t("comment"), t("comments")) ."</a>";
+      $links[] = "<a href=\"node.php?id=$blog->nid\">". format_plural(comment_num_all($blog->nid), t("comment"), t("comments")) ."</a>";
     }
 
     $output .= "<tr><td><b>". check_output($blog->title) ."</b></td><td align=\"right\">". $theme->links($links) ."</td></tr>";
