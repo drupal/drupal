@@ -30,13 +30,13 @@ function morelink_bytes($theme, $story) {
   ### Compose more-link:
   $morelink = "[ ";
   if ($story->article) {
-    $morelink .= "<A HREF=\"article.php?id=$story->id";
+    $morelink .= "<A HREF=\"discussion.php?id=$story->id";
     $morelink .= ($user->umode) ? "&mode=$user->umode" : "&mode=threaded";
     $morelink .= ($user->uorder) ? "&order=$user->uorder" : "&order=0";
     $morelink .= ($user->thold) ? "&thold=$user->thold" : "&thold=0";
     $morelink .= "\"><FONT COLOR=\"$theme->hlcolor2\"><B>read more</B></FONT></A> | $bytes bytes in body | "; 
   }
-  $morelink .= "<A HREF=\"article.php?id=$story->id";
+  $morelink .= "<A HREF=\"discussion.php?id=$story->id";
   $morelink .= ($user->umode) ? "&mode=$user->umode" : "&mode=threaded";
   $morelink .= ($user->uorder) ? "&order=$user->uorder" : "&order=0";
   $morelink .= ($user->thold) ? "&thold=$user->thold" : "&thold=0";
@@ -96,9 +96,32 @@ function addRefer($url) {
   }
 }
 
+function id2story($id) {
+  ### Perform query:
+  $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON s.author = u.id WHERE s.id = $id");
+  return db_fetch_object($result);
+}
+
+function displayModerationResults($theme, $story) {
+  global $user;
+
+  if ($user->id && $story->id && $vote = $user->getHistory("s$story->id")) {
+    $output .= "<P><B>You voted `$vote'.</B></P>\n";
+    $output .= "<P>\n";
+    $output .= "<B>Other people voted:</B><BR>\n";
+
+    $result = db_query("SELECT * FROM users WHERE history LIKE '%s$story->id%'");
+    while ($account = db_fetch_object($result)) {
+      $output .= "<A HREF=\"account.php?op=info&uname=$account->userid\">$account->userid</A> voted `". getHistory($account->history, "s$story->id") ."'.<BR>";
+    }
+    
+    $theme->box("Moderation results", $output);
+  }
+}
+
 function displayRelatedLinks($theme, $story) {
   ### Parse story for <A HREF="">-tags:
-  $text = "$story->abstract $story->editorial $story->article";
+  $text = "$story->abstract $story->updates $story->article";
   while ($text = stristr($text, "<A HREF=")) {
     $link = substr($text, 0, strpos(strtolower($text), "</a>") + 4);
     $text = stristr($text, "</A>");
@@ -125,14 +148,14 @@ function displayOldHeadlines($theme, $num = 10) {
     }
 
     if ($user->userid) {
-      $content .= "<LI><A HREF=\"article.php?id=$story->id";
+      $content .= "<LI><A HREF=\"discussion.php?id=$story->id";
       $content .= ($user->umode) ? "&mode=$user->umode" : "&mode=threaded";
       $content .= ($user->uorder) ? "&order=$user->uorder" : "&order=0";
       $content .= ($user->thold) ? "&thold=$user->thold" : "&thold=0";
       $content .= "\">$story->subject</A></LI>";
     }
     else {
-      $content .= "<LI><A HREF=\"article.php?id=$story->id&mode=threaded&order=1&thold=0\">$story->subject</A></LI>";
+      $content .= "<LI><A HREF=\"discussion.php?id=$story->id&mode=threaded&order=1&thold=0\">$story->subject</A></LI>";
     }
   }
   $content .= "<P ALIGN=\"right\">[ <A HREF=\"search.php\"><FONT COLOR=\"$theme->hlcolor2\">more</FONT></A> ]</P>";
@@ -147,14 +170,14 @@ function displayNewHeadlines($theme, $num = 10) {
   $result = db_query("SELECT id, subject FROM stories WHERE status = 2 ORDER BY id DESC LIMIT $num");
   while ($story = db_fetch_object($result)) {    
     if ($user->userid) {
-      $content .= "<LI><A HREF=\"article.php?id=$story->id";
+      $content .= "<LI><A HREF=\"discussion.php?id=$story->id";
       $content .= ($user->umode) ? "&mode=$user->umode" : "&mode=threaded";
       $content .= ($user->uorder) ? "&order=$user->uorder" : "&order=0";
       $content .= ($user->thold) ? "&thold=$user->thold" : "&thold=0";
       $content .= "\">$story->subject</A></LI>";
     }
     else {
-      $content .= "<LI><A HREF=\"article.php?id=$story->id&mode=threaded&order=1&thold=0\">$story->subject</A></LI>";
+      $content .= "<LI><A HREF=\"discussion.php?id=$story->id&mode=threaded&order=1&thold=0\">$story->subject</A></LI>";
     }
   }
   $content .= "<P ALIGN=\"right\">[ <A HREF=\"search.php\"><FONT COLOR=\"$theme->hlcolor2\">more</FONT></A> ]</P>";
