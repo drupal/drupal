@@ -902,7 +902,7 @@ function node_add($type) {
     foreach (module_list() as $name) {
       if (module_hook($name, "node") && node_access("create", array("type" => $name))) {
         $output .= "<li>";
-        $output .= " <a href=\"module.php?mod=node&op=add&type=$name\" title=\"". strtr(t("Add a new %s."), module_invoke($name, "node", "name")) ."\">". module_invoke($name, "node", "name") ."</a>";
+        $output .= " <a href=\"module.php?mod=node&op=add&type=$name\" title=\"". strtr(t("Add a new %s."), array("%s" => module_invoke($name, "node", "name"))) ."\">". module_invoke($name, "node", "name") ."</a>";
         $output .= " <div style=\"margin-left: 20px;\">". module_invoke($name, "node", "description") ."</div>";
         $output .= "</li>";
       }
