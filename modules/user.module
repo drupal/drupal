@@ -684,7 +684,8 @@ function user_menu($may_cache) {
 
     if ($user->uid) {
       $items[] = array('path' => 'user/'. $user->uid, 'title' => t('my account'),
-        'callback' => 'user_page', 'access' => TRUE);
+        'callback' => 'user_page', 'access' => TRUE,
+        'type' => MENU_DYNAMIC_ITEM);
     }
 
     $items[] = array('path' => 'logout', 'title' => t('log out'),
