@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pear.inc,v 1.10 2002/11/06 14:18:45 kjartan Exp $
+// $Id: database.pear.inc,v 1.11 2002/11/09 20:02:41 dries Exp $
 
 require_once 'DB.php';
 
@@ -110,6 +110,22 @@ function db_affected_rows() {
   global $db_handle;
 
   return $db_handle->affectedRows();
+}
+
+/**
+ * Generates a limited query
+ *
+ * @param string  $query query
+ * @param integer $from  the row to start to fetching
+ * @param integer $count the numbers of rows to fetch
+ *
+ * @return mixed a DB_Result object or a DB_Error
+ *
+ * @access public
+ */
+
+function db_query_range($query, $from, $count) {
+  return DB::limitQuery($query, $from, $count);
 }
 
 ?>
