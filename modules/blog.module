@@ -204,7 +204,7 @@ function blog_form(&$node, &$error) {
       $node->body = '<i>'. $blog->body .'</i> ['. l($blog->name, "node/view/$nid") .']';
     }
 
-    if ($iid && $item = db_fetch_object(db_query('SELECT i.*, f.title as ftitle, f.link as flink FROM {item} i, {feed} f WHERE i.iid = %d AND i.fid = f.fid', $iid))) {
+    if ($iid && $item = db_fetch_object(db_query('SELECT i.*, f.title as ftitle, f.link as flink FROM {aggregator_item} i, {aggregator_feed} f WHERE i.iid = %d AND i.fid = f.fid', $iid))) {
       $node->title = $item->title;
       $node->body = "<a href=\"$item->link\">$item->title</a> - <i>". check_output($item->description) ."</i> [<a href=\"$item->flink\">$item->ftitle</a>]\n";
     }
