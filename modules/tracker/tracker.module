@@ -30,10 +30,10 @@ function tracker_comments($id = 0) {
   $period = time() - variable_get("tracker_period", 259200);  // all comments of the past 3 days if not configured to a different value
 
   if ($id) {
-    $sresult = db_query("SELECT n.nid, n.title, COUNT(n.nid) AS comments, MAX(c.timestamp) AS last_comment FROM comments c LEFT JOIN node n ON c.nid = n.nid WHERE c.timestamp > $period AND c.uid = '%s' GROUP BY n.nid, n.title ORDER BY last_comment DESC LIMIT 10", $id);
+    $sresult = db_query("SELECT n.nid, n.title, COUNT(n.nid) AS comments, MAX(c.timestamp) AS last_comment FROM comments c LEFT JOIN node n ON c.nid = n.nid WHERE c.status = 0 AND c.timestamp > $period AND c.uid = '%s' GROUP BY n.nid, n.title ORDER BY last_comment DESC LIMIT 10", $id);
   }
   else {
-    $sresult = db_query("SELECT n.nid, n.title, COUNT(n.nid) AS comments, MAX(c.timestamp) AS last_comment FROM comments c LEFT JOIN node n ON c.nid = n.nid WHERE c.timestamp > $period GROUP BY n.nid, n.title ORDER BY last_comment DESC LIMIT 10");
+    $sresult = db_query("SELECT n.nid, n.title, COUNT(n.nid) AS comments, MAX(c.timestamp) AS last_comment FROM comments c LEFT JOIN node n ON c.nid = n.nid WHERE c.status = 0 AND c.timestamp > $period GROUP BY n.nid, n.title ORDER BY last_comment DESC LIMIT 10");
   }
 
   while ($node = db_fetch_object($sresult)) {
