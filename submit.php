@@ -52,7 +52,7 @@ function submit_preview($subject, $abstract, $article, $section) {
   $output .= format_username($user->userid) ."<P>";
 
   $output .= "<B>". t("Subject") .":</B><BR>\n";
-  $output .= "<INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" MAXLENGTH=\"60\" VALUE=\"". check_textfield($subject) ."\"><BR><P>\n";
+  $output .= "<INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" MAXLENGTH=\"60\" VALUE=\"". check_textfield($subject) ."\"><P>\n";
 
   $output .= "<B>". t("Section") .":</B><BR>\n";
   foreach ($sections = section_get() as $value) $options .= "  <OPTION VALUE=\"$value\"". ($section == $value ? " SELECTED" : "") .">$value</OPTION>\n";
@@ -66,12 +66,18 @@ function submit_preview($subject, $abstract, $article, $section) {
   $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"article\">". check_textarea($article) ."</TEXTAREA><BR>\n";
   $output .= "<SMALL><I>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</I></SMALL><P>\n";
 
+  $duplicate = db_result(db_query("SELECT COUNT(id) FROM stories WHERE subject = '$subject'"));
+
   if (empty($subject)) {
     $output .= "<FONT COLOR=\"red\">". t("Warning: you did not supply a subject.") ."</FONT><P>\n";
     $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview submission") ."\">\n";
   }
   else if (empty($abstract)) {
     $output .= "<FONT COLOR=\"red\">". t("Warning: you did not supply an abstract.") ."</FONT><P>\n";
+    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview submission") ."\">\n";
+  }
+  else if ($duplicate) {
+    $output .= "<FONT COLOR=\"red\">". t("Warning: there is already a story with that subject.") ."</FONT><P>\n";
     $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview submission") ."\">\n";
   }
   else {
