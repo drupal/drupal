@@ -11,10 +11,12 @@ function title_page() {
 
     $title = urldecode(arg(1));
     $result = db_query("SELECT n.*, u.name, u.uid FROM {node} n LEFT JOIN {users} u ON n.uid = u.uid WHERE n.title = '%s' AND n.status = 1 ORDER BY created DESC", $title);
+
     if (db_num_rows($result) == 0) {
       // No node with exact title found, try substring.
-      $result = db_query("SELECT n.* FROM {node} n WHERE n.title LIKE '%". check_query($title). "%' AND n.status = 1 ORDER BY created DESC");
+      $result = db_query("SELECT n.*, u.name, u.uid FROM {node} n LEFT JOIN {users} u ON n.uid = u.uid WHERE n.title LIKE '%". check_query($title). "%' AND n.status = 1 ORDER BY created DESC");
     }
+
     if (db_num_rows($result) == 0 && module_exist("search")) {
       // still no matches ... return a full text search
       search_view($title);
