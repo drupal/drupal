@@ -15,7 +15,7 @@ function poll_help($section) {
       <li>To view the results one needs the \"access content\" permission.</li>
       <li>To administer polls you need the \"administer nodes\" permission.</li>
       </ul>
-      <p>Creating a poll is much like creating any other node. Click \"create poll\" in your user box. The title of the poll should be the question, then enter the answers and the \"base\" vote counts. You can also choose the time period over which the vote will run.</p><p>The <a href=\"%poll\">Poll</a> item in the navigation links will take you to a page where you can see all the current polls, vote on them (if you haven't already) and view the results.</p>", array("%permissions" => url("admin/user/permission"), "%poll" => url("poll")));
+      <p>Creating a poll is much like creating any other node. Click \"create poll\" in your user box. The title of the poll should be the question, then enter the answers and the \"base\" vote counts. You can also choose the time period over which the vote will run.</p><p>The <a href=\"%poll\">Poll</a> item in the navigation links will take you to a page where you can see all the current polls, vote on them (if you haven't already) and view the results.</p>", array("%permissions" => url("admin/user/configure/permission"), "%poll" => url("poll")));
     case 'admin/modules#description':
       return t("Enables your site to capture votes on different topics in the form of multiple choice questions.");
     case 'node/add#poll':

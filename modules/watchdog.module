@@ -28,8 +28,8 @@ function watchdog_help($section = 'admin/help#watchdog') {
       return t('Watchdog warning events. These events don\'t stop Drupal from running, but are things you should know.');
     case 'admin/modules#description':
       return t('Logs and records system events.');
-    case 'admin/settings/watchdog':
-      return t('Watchdog logs your system events.  To see these events go to the <a href="%watchdog">logs</a>. Since these logs can grow out of control if kept around forever, below set how long an item should be kept in the log.  Note that to discard entries as set below you must run "cron.php" regularly.', array('%watchdog' => url('admin/logs')));
+//    case 'admin/settings/watchdog':
+//      return t('Watchdog logs your system events.  To see these events go to the <a href="%watchdog">logs</a>. Since these logs can grow out of control if kept around forever, below set how long an item should be kept in the log.  Note that to discard entries as set below you must run "cron.php" regularly.', array('%watchdog' => url('admin/logs')));
   }
 }
 

@@ -13,7 +13,7 @@ function forum_help($section) {
       <p>When you are happy with your vocabulary, go to <a href=\"%forums\">administer &raquo; configutation &raquo; modules &raquo; forum</a> and set <strong>Forum vocabulary</strong> to the one you have just created. There will now be fora active on the site. For users to access them they must have the \"access content\" <a href=\"%permission\">permission</a> and to create a topic they must have the \"create forum topics\" <a href=\"%permission\">permission</a>. These permissions can be set in the <a href=\"%permission\">permission</a> pages.</p>
       <h4>Icons</h4>
       <p>To disable icons, set the icon path as blank in <a href=\"%forums\">administer &raquo; configutation &raquo; modules &raquo; forum</a>.</p>
-      <p>All files in the icon directory are assumed to be images. You may use images of whatever size you wish, but it is recommended to use 15x15 or 16x16.</p>", array("%taxonomy" => url('admin/taxonomy/add/vocabulary'), '%taxo-terms' => url('admin/taxonomy'), '%forums' => url('admin/settings/forum'), '%permission' => url('admin/user/permission')));
+      <p>All files in the icon directory are assumed to be images. You may use images of whatever size you wish, but it is recommended to use 15x15 or 16x16.</p>", array("%taxonomy" => url('admin/taxonomy/add/vocabulary'), '%taxo-terms' => url('admin/taxonomy'), '%forums' => url('admin/settings/forum'), '%permission' => url('admin/user/configure/permission')));
     case 'admin/modules#description':
       return t('Enable threaded discussions about general topics.');
     case 'admin/settings/forum':

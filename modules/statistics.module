@@ -46,7 +46,7 @@ function statistics_help($section) {
       <li><em>administer statistics module</em> - enable for user roles that get to configure the statistics module.</li><li><em>administer statistics</em> - enable for user roles that get to view the referrer statistics.</li>
       </ul>
       <p>If '<em>administer statistics</em>' and '<em>access statistics</em>' are both enabled, the user will see a link from each node to that node's referrer statistics (if enabled).</p>",
-      array('%modules' => url('admin/modules'), '%permissions' => url('admin/user/permission'), '%referer' => url('admin/logs/referrer'), '%access' => url('admin/logs/access'), '%configuration' => url('admin/settings/statistics'), '%block' => url('admin/block')));
+      array('%modules' => url('admin/modules'), '%permissions' => url('admin/user/configure/permission'), '%referer' => url('admin/logs/referrer'), '%access' => url('admin/logs/access'), '%configuration' => url('admin/settings/statistics'), '%block' => url('admin/block')));
     case 'admin/modules#description':
       return t('Logs access statistics for your site.');
     case 'admin/settings/statistics':

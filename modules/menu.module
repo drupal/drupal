@@ -54,6 +54,8 @@ function menu_help($section) {
       return t('Select an operation from the list to move, change, or delete a menu item. To add a new menu, add a new menu item, or reset all menu items to default values, choose an option from the main menu.');
     case 'admin/menu/menu/add':
       return t('Enter the name for your new menu. Remember to enable the newly created block in the %blocks administration page.', array('%blocks' => l(t('blocks'), 'admin/block')));
+    case 'admin/menu/item/add':
+      return t('Enter the title, path, position and the weight for your new menu item.');
   }
 }
 

@@ -30,7 +30,7 @@ function node_help($section = 'admin/help#node') {
       <dt>Score</dt><dd>The score of the node is gotten by the votes it is given.</dd>
       <dt>Users</dt><dd>The list of users who have voted on a moderated node.</dd>
       <dt>Published</dt><dd>When using Drupal's moderation system a node remains unpublished -- unavailable to non-moderators -- until it is marked Published.</dd></dl>
-      <p>Now that you know what is in a node, here are some of the types of nodes available.</p>", array("%teaser" => url("admin/settings/node")));
+      <p>Now that you know what is in a node, here are some of the types of nodes available.</p>", array("%teaser" => url("admin/node/configure/settings")));
 
       if ($mod == 'admin') {
         foreach (node_list() as $type) {
@@ -43,7 +43,8 @@ function node_help($section = 'admin/help#node') {
     case 'admin/modules#description':
       $output = t('The core that allows content to be submitted to the site.');
       break;
-    case 'admin/settings/node':
+    case 'admin/node/configure':
+    case 'admin/node/configure/settings':
       $output = t('Settings for the core of Drupal. Almost everything is a node so these settings will affect most of the site.');
       break;
     case 'admin/node':
@@ -52,8 +53,8 @@ function node_help($section = 'admin/help#node') {
     case 'admin/node/search':
       $output = t("Enter a simple pattern to search for a post. This can include the wildcard character *.<br />For example, a search for \"br*\" might return \"bread bakers\", \"our daily bread\" and \"brenda\".");
       break;
-    case 'admin/settings/node/defaults':
-      $output = t('This page lets you set the defaults used during creation of nodes for all the different node types.<br /><strong>comment:</strong> Read/write setting for comments.<br /><strong>publish:</strong> Is this node publicly viewable, has it been published?<br /><strong>promote:</strong> Is this node to be promoted to the front page?<br /><strong>moderate:</strong> Does this node need approval before it can be viewed?<br /><strong>sticky:</strong> Is this node always visible at the top of lists?<br /><strong>revision:</strong> Will this node go into the revision system allowing multiple versions to be saved?');
+    case 'admin/node/configure/defaults':
+      $output = t('This page lets you set the defaults used during creation of nodes for all the different node types.<br /><em>comment:</em> Read/write setting for comments.<br /><em>publish:</em> Is this node publicly viewable, has it been published?<br /><em>promote:</em> Is this node to be promoted to the front page?<br /><em>moderate:</em> Does this node need approval before it can be viewed?<br /><em>sticky:</em> Is this node always visible at the top of lists?<br /><em>revision:</em> Will this node go into the revision system allowing multiple versions to be saved?');
       break;
 
   }
