@@ -1,5 +1,5 @@
 <?php
-/* $Id: file.inc,v 1.10 2004/02/27 11:25:13 kjartan Exp $ */
+/* $Id: file.inc,v 1.11 2004/03/24 18:58:36 dries Exp $ */
 
 /**
  * @defgroup file File interface
@@ -307,7 +307,7 @@ function file_transfer($source, $headers) {
   // Transfer file in 1024 byte chunks to save memory usage.
   $fd = fopen($source, 'rb');
   while (!feof($fd)) {
-    print fgets($fd);
+    print fgets($fd, 1024);
   }
   fclose($fd);
   exit();
