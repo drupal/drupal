@@ -307,12 +307,6 @@ function search_view() {
   global $edit, $type, $keys;
 
   if (user_access("search content")) {
-
-    // Verify the user input:
-    // TODO: is this necessary or is it / should it be done in search_{form|data}?
-    $type = check_input($type);
-    $keys = check_input($keys);
-
     // Construct the search form:
     $form = search_form(NULL, NULL, TRUE);
 
