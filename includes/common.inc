@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.246 2003/09/29 13:44:39 kjartan Exp $
+// $Id: common.inc,v 1.247 2003/09/29 14:36:48 kjartan Exp $
 
 function conf_init() {
 
@@ -31,10 +31,7 @@ function error_handler($errno, $message, $filename, $line, $variables) {
 
   if ($errno & E_ALL ^ E_NOTICE) {
     watchdog("error", $types[$errno] .": $message in $filename on line $line.");
-    foreach (debug_backtrace() as $trace) {
-      $functions[] = "$trace[function] ($trace[file]:$trace[line])" . $trace["args"][0];
-    }
-    print "<pre>$entry\n". implode(" -> ", $functions) ."</pre>";
+    print "<pre>$entry</pre>";
   }
 }
 
