@@ -14,9 +14,9 @@ function weblogs_help() {
 
 function weblogs_cron() {
 
-  if (variable_get("weblogs_ping", 0) && variable_get("site_name", 0) && variable_get("site_url", 0)) {
+  if (variable_get("weblogs_ping", 0) && variable_get("site_name", 0) && variable_get("site_slogan", 0)) {
     if (db_num_rows(db_query("SELECT nid FROM node WHERE status = 1 AND moderate = 0 AND (created > '". variable_get("weblogs_cron_last", time()) ."' OR changed > '". variable_get("weblogs_cron_last", time()) ."')"), 1)) {
-      weblogs_notify(variable_get("site_name", "") ." - ". variable_get("site_slogan", ""),  variable_get("site_url", ""));
+      weblogs_notify(variable_get("site_name", "") ." - ". variable_get("site_slogan", ""), path_uri());
     }
 
     variable_set("weblogs_cron_last", time());

@@ -217,7 +217,7 @@ function user_access($string) {
   ** To reduce the number of SQL queries, we cache the user's permissions
   ** in a static variable.
   */
-  
+
   if (!$perm) {
     if ($user->uid) {
       $perm = db_result(db_query("SELECT p.perm FROM role r, permission p WHERE r.rid = p.rid AND name = '$user->role'"), 0);
