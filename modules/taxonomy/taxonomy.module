@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.28 2002/12/30 12:03:53 dries Exp $
+// $Id: taxonomy.module,v 1.29 2002/12/31 12:33:59 dries Exp $
 
 function taxonomy_system($field){
   $system["description"] = t("Enables the organization of content into categories.");
@@ -276,7 +276,7 @@ function taxonomy_overview() {
     if ($tree) {
       unset($data);
       foreach ($tree as $term) {
-        $data .= _taxonomy_depth($term->depth) ." ". $term->name ." (". la(t("edit term"), array("mod" => "taxonomy", "op" => "edit", "type" => "term", "id" => check_output($term->tid))) .")<br />";
+        $data .= _taxonomy_depth($term->depth) ." ". $term->name ." (". la(t("edit term"), array("mod" => "taxonomy", "op" => "edit", "type" => "term", "id" => $term->tid)) .")<br />";
       }
       $rows[] = array(array("data" => $data, "colspan" => 5));
     }
