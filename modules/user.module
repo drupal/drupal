@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.421 2004/12/07 07:24:46 dries Exp $
+// $Id: user.module,v 1.422 2004/12/08 19:41:16 dries Exp $
 
 /**
  * @file
@@ -111,7 +111,8 @@ function user_save($account, $array = array(), $category = 'account') {
           $query .= "$key = '%s', ";
           $v[] = $value;
         }
-        else {
+        else if ($key != 'roles') { 
+          // Roles is a special case: it used below.
           if ($value === null) {
             // Setting a field to null deletes it from the data column.
             unset($data[$key]);
