@@ -3,7 +3,7 @@
 function system_help() {
  ?>
   <p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviors including visual and operational settings.</p>
-  <h>Cron</h3>
+  <h3>Cron</h3>
   <p>Some settings require a <i>cron</i> or <i>crontab</i>.  Cron (which stands for chronograph) is a periodic command scheduler: it executes commands at intervals specified in seconds.  It can be used to control the execution of daily, weekly and monthly jobs (or anything with a period of <i>n</i> seconds).   Automating tasks is one of the best ways to keep a system running smoothly, and if most of your administration does not require your direct involvement, cron is an ideal solution.</p>
   <p>Whenever <a href="<?php echo path_uri(); ?>cron.php"><?php echo path_uri(); ?>cron.php</a> is accessed, cron will run: it checks for the jobs cron controls, and their periods in seconds.  If a certain task wasn't executed in the last n seconds, where n is the period of that job, it will be executed.  When all the executed commands terminate, cron is done.</p>
   <p>The recommended way to setup your cron system is to setup a Unix/Linux crontab that frequently visits <a href="<?php echo path_uri(); ?>cron.php"><?php echo path_uri(); ?>cron.php</a>. Note that cron does not guarantee the commands will be executed at the specified interval.  However, Drupal will try his best and run the crons as close to the specified intervals as possible.  The more you visit cron.php, the more accurate cron will be.</p>
