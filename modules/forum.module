@@ -14,7 +14,7 @@ function forum_help($section) {
     case 'admin/forum':
       return t('Forums and containers are used to organize the threaded discussions.  Forums may be nested in each other.  A container is used to group like forums together with out allowing topics to be created in the container.  Containers can be nested just like forums.  To delete a forum or container choose the appropriate "edit" operation.');
     case 'admin/forum/add/container':
-      return t('When creating a contianer you are creating a group to contain multiple forums.  Users are not able to create topic inside container.  You can nest containers inside forums or other containers.');
+      return t('Containers help you organize your forum. The job of a container is to hold, or contain, other forums that have something in common. Containers are usually placed at the top level (root) of your forum but you can also place a container within another container or forum.');
     case 'admin/forum/add/forum':
       return t('When creating a forum you are creating an area for user to create similar topics for discussion. Forums may be nested underneath other forums or in containers.');
     case 'admin/modules#description':
