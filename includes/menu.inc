@@ -1,4 +1,5 @@
 <?php
+// $Id: menu.inc,v 1.12 2003/03/12 09:51:30 kjartan Exp $
 
 function menu_add() {
   trigger_error(t("The 'menu_add()' function is deprecated."), E_USER_ERROR);
