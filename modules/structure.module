@@ -56,7 +56,7 @@ function topic_form($edit = array()) {
   while ($topic = db_fetch_object($result)) {
     $topics[$topic->tid] = $topic->name;
   }
-  $topics[0] = "&nbsp;";
+  $topics[0] = " ";
 
   $form .= form_textfield(t("Name"), "name", $edit[name], 30, 55, t("A unique name for this topic like 'science', 'internet', 'culture', etc."));
   $form .= form_select(t("Parent"), "pid", $edit[pid], $topics, t("The parent topic this topic belongs in."));
