@@ -866,8 +866,8 @@ function user_register($edit = array()) {
         /*
         ** Create new user account, administrator approval required:
         */
-        $subject = strtr(variable_get("user_mail_welcome_approval_subject", _user_mail_text("welcome_approval_subject")), $variables);
-        $body = strtr(variable_get("user_mail_welcome_approval_body", _user_mail_text("welcome_approval_body")), $variables);
+        $subject = strtr(variable_get("user_mail_approval_subject", _user_mail_text("welcome_approval_subject")), $variables);
+        $body = strtr(variable_get("user_mail_approval_body", _user_mail_text("welcome_approval_body")), $variables);
         user_mail($edit["mail"], $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
         user_mail(variable_get("site_mail", ini_get("sendmail_from")), $subject, t("%u has applied for an account.\n\n%uri", array("%u" => $account->name, "%uri" => url("admin/user/edit/$account->uid"))), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
         return t("Thank you for applying for an account. Your account is currently pending approval by the site administrator.<br />In the meantime, your password and further instructions have been sent to your e-mail address.");
@@ -1199,9 +1199,9 @@ function user_settings() {
 
   $output .= form_textarea(t("Body of welcome e-mail"), "user_mail_welcome_body", variable_get("user_mail_welcome_body", _user_mail_text("welcome_body")), 70, 10, t("Customize the body of the welcome e-mail, which is sent to new members upon registering.") . " " . t("Available variables are:") . " " . "%username, %site, %password, %uri, %uri_brief, %mailto");
 
-  $output .= form_textfield(t("Subject of welcome e-mail (awaiting admin approval)"), "user_mail_welcome_approval_subject", variable_get("user_mail_welcome_approval_subject", _user_mail_text("welcome_approval_subject")), 70, 180, t("Customize the subject of your awaiting approval welcome e-mail, which is sent to new members upon registering.") . " " . t("Available variables are:") . " " . "%username, %site, %password, %uri, %uri_brief, %mailto, %date");
+  $output .= form_textfield(t("Subject of welcome e-mail (awaiting admin approval)"), "user_mail_approval_subject", variable_get("user_mail_approval_subject", _user_mail_text("welcome_approval_subject")), 70, 180, t("Customize the subject of your awaiting approval welcome e-mail, which is sent to new members upon registering.") . " " . t("Available variables are:") . " " . "%username, %site, %password, %uri, %uri_brief, %mailto, %date");
 
-  $output .= form_textarea(t("Body of welcome e-mail (awaiting admin approval)"), "user_mail_welcome_approval_body", variable_get("user_mail_welcome_approval_body", _user_mail_text("welcome_approval_body")), 70, 10, t("Customize the body of the awaiting approval welcome e-mail, which is sent to new members upon registering.") . " " . t("Available variables are:") . " " . "%username, %site, %password, %uri, %uri_brief, %mailto");
+  $output .= form_textarea(t("Body of welcome e-mail (awaiting admin approval)"), "user_mail_approval_body", variable_get("user_mail_approval_body", _user_mail_text("welcome_approval_body")), 70, 10, t("Customize the body of the awaiting approval welcome e-mail, which is sent to new members upon registering.") . " " . t("Available variables are:") . " " . "%username, %site, %password, %uri, %uri_brief, %mailto");
 
   $output .= form_textfield(t("Subject of password recovery e-mail"), "user_mail_pass_subject", variable_get("user_mail_pass_subject", _user_mail_text("pass_subject")), 70, 180, t("Customize the Subject of your forgotten password e-mail.") . " " . t("Available variables are:") . " " . "%username, %site, %password, %uri, %uri_brief, %mailto, %date");
 
