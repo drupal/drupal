@@ -322,8 +322,14 @@ function import_refresh($feed) {
       return t("failed to parse RSS feed '%site': suspicious input data.", array("%site" => $feed["title"]));
     }
 
+    // extract the XML file's encoding (the XML parser in PHP4 doesn't do this by itself):
+    $encoding = 'utf-8';
+    if (ereg('^<\?xml[^>]+encoding="([^"]+)"', $data, $match)) {
+      $encoding = $match[1];
+    }
+
     // parse the data:
-    $xml_parser = xml_parser_create();
+    $xml_parser = xml_parser_create($encoding);
     xml_set_element_handler($xml_parser, "import_element_start", "import_element_end");
     xml_set_character_data_handler($xml_parser, "import_element_data");
     xml_parser_set_option($xml_parser, XML_OPTION_TARGET_ENCODING, "utf-8");
