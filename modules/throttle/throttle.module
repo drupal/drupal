@@ -207,7 +207,7 @@ function _throttle_update($hits) {
       variable_set("throttle_cron_timestamp", time());
       /* log the change */
       if ($throttle_new < $throttle) {
-        watchdog("message", "message: '". $hits ."' hits in past minute; throttle decreased to level ". $throttle_new);
+        watchdog("regular", "message: '". $hits ."' hits in past minute; throttle decreased to level ". $throttle_new);
       }
       else {
         watchdog("warning", "warning: '". $hits ."' hits in past minute; throttle increased to level ". $throttle_new);

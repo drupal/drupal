@@ -18,5 +18,5 @@ if (!ini_get("safe_mode")) {
 
 module_invoke_all("cron");
 
-watchdog("message", "cron run completed");
+watchdog("regular", "cron run completed");
 ?>

@@ -25,6 +25,9 @@ function watchdog_help($section = "admin/help#watchdog") {
   case 'admin/watchdog/special':
     $output = t("Watchdog events about adding, changing, and moderating nodes and comments.");
     break;
+  case 'admin/watchdog/search':
+    $output = t("Watchdog events showing what users searched for.");
+    break;
   case 'admin/watchdog/error':
     $output = t("Watchdog events about PHP and database errors.");
     break;
@@ -50,13 +53,11 @@ function watchdog_link($type) {
   if ($type == "system") {
     if (user_access("administer watchdog")) {
       menu("admin/watchdog", t("messages"), "watchdog_admin", 6);
-      menu("admin/watchdog/user", t("user"), "watchdog_admin");
-      menu("admin/watchdog/regular", t("regular"), "watchdog_admin");
-      menu("admin/watchdog/special", t("special"), "watchdog_admin");
-      menu("admin/watchdog/warning", t("warning"), "watchdog_admin");
-      menu("admin/watchdog/error", t("error"), "watchdog_admin");
-      menu("admin/watchdog/httpd", t("httpd"), "watchdog_admin");
       menu("admin/watchdog/view", t("view details"), "watchdog_admin", 0, MENU_HIDE);
+
+      foreach (_watchdog_get_message_types() as $type) {
+        menu("admin/watchdog/$type", t($type), "watchdog_admin");
+      }
     }
   }
 }
@@ -72,7 +73,10 @@ function watchdog_cron() {
 }
 
 function watchdog_overview($type) {
-  $query = array("user" => "WHERE type = 'user'", "regular" => "WHERE type = 'message'", "special" => "WHERE type = 'special'", "warning" => "WHERE type = 'warning'", "error" => "WHERE type = 'error'", "httpd" => "WHERE type = 'httpd'", "actions" => "WHERE link != ''");
+  foreach (_watchdog_get_message_types() as $key) {
+    $query[$key] = "WHERE type = '". check_query($key) ."'";
+  }
+  $query['actions'] = "WHERE link != ''";
 
   $header = array(
     array("data" => t("date"), "field" => "w.timestamp", "sort" => "desc"),
@@ -141,6 +145,17 @@ function watchdog_admin() {
   else {
     print theme("page", message_access());
   }
+}
+
+function _watchdog_get_message_types() {
+  $types = array();
+
+  $result = db_query("SELECT DISTINCT(type) FROM {watchdog}");
+  while ($object = db_fetch_object($result)) {
+    $types[] = $object->type;
+  }
+
+  return $types;
 }
 
 ?>
