@@ -382,7 +382,7 @@ function poll_update($node) {
 }
 
 function poll_validate(&$node) {
-  $node ->teaser = poll_teaser($node);
+  $node->teaser = poll_teaser($node);
 }
 
 ?>
