@@ -12,7 +12,7 @@ function import_help() {
 }
 
 function import_system($field){
-  $system["description"] = t("Used to import syndicated content (ie. news)");
+  $system["description"] = t("Used to import syndicated content (ie. news feeds)");
   return $system[$field];
 }
 

@@ -13,7 +13,7 @@ function weblogs_help() {
 }
 
 function weblogs_system($field){
-  $system["description"] = t("Alerts weblogs.com that your site has updated.");
+  $system["description"] = t("Alerts weblogs.com whenever your site is updated.");
   return $system[$field];
 }
 

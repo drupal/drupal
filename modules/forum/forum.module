@@ -2,7 +2,7 @@
 // $Id$
 
 function forum_system($field){
-  $system["description"] = t("Enables threaded discussions.");
+  $system["description"] = t("Allows threaded discussions about general topics.");
   return $system[$field];
 }
 

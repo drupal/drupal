@@ -15,7 +15,7 @@ function search_help() {
 }
 
 function search_system($field){
-  $system["description"] = t("Enables site wide key word searching");
+  $system["description"] = t("Enables site wide keyword searching");
   return $system[$field];
 }
 
