@@ -22,6 +22,7 @@ function conf_view_system() {
   $output .= form_textfield(t("E-mail address"), "site_mail", variable_get("site_mail", "root@localhost"), 30, 55, t("A valid e-mail address for this website, used by the auto-mailer to create new user accounts."));
   $output .= form_textarea(t("Footer message"), "site_footer", variable_get("site_footer", ""), 55, 3, t("This text will be displayed at the bottom of each page.  Useful for adding a copyright notice to your pages."));
   $output .= form_textfield(t("Anonymous user"), "anonymous", variable_get("anonymous", "Anonymous"), 30, 55, t("The name used to indicate anonymous users."));
+  $output .= form_textfield(t("Allowed HTML"), "allowed_html", variable_get("allowed_html", "<A><B><BLOCKQUOTE><CODE><DD><DL><DT><EM><HR><I><LI><SMALL><OL><U><UL>"), 30, 55, t("Allowed HTML tags."));
   $output .= "<HR>\n";
 
   // node settings:
