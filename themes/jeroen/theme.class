@@ -1,0 +1,304 @@
+<?
+
+ class Theme {
+   ### color set #1:
+   var $bgcolor1 = "blue";   // background color
+   var $fgcolor1 = "red";   // table body color
+   var $hlcolor1 = "#AAAAAA";   // high-light color
+
+   ### color set #2:
+   var $bgcolor2 = "#EEEEEE";
+   var $fgcolor2 = "#666699";
+   var $hlcolor2 = "#666699";
+
+   ### color set #3:
+   var $bgcolor3 = "#EEEEEE";
+   var $fgcolor3 = "yellow";
+   var $hlcolor3 = "yellow";
+
+   ######
+   # Syntax.......: header($title);
+   # Description..: a function to draw the page header.
+   function header($title) {
+    ?>
+     <HTML>
+     <HEAD>
+      <TITLE><? include "config.inc"; echo $sitename; ?></TITLE>
+      <META NAME="description" CONTENT="drop.org">
+      <META NAME="keywords" CONTENT="drop, weblog, portal, community, news, article, announcements, stories, story, computer, science, space, hype, cult, geek, nerd, foo, bar">
+     </HEAD>
+     <STYLE type="text/css"> 
+      <!--
+       BODY,TD,P,UL,LI,DIV,FORM,EM,BLOCKQUOTE { font-size: 8pt; font-family: verdana,helvetica,arial; }
+      -->
+     </STYLE>
+     <BODY TEXT="#000000" BGCOLOR="#FFFFFF" ALINK="#CCCCCC" LINK="#444444" VLINK="#666666">
+      <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="2">
+       <TR>
+        <TD COLSPAN="3"><IMG SRC="/themes/default/images/logo.gif" ALT="drop.org logo"></TD>
+       </TR>
+       <TR><TD ALIGN="right" COLSPAN="3"><FONT SIZE="2"><A HREF="">home</A> | <A HREF="/faq.php">faq</A> | <A HREF="/search.php">search</A> | <A HREF="/submit.php">submit news</A> | <A HREF="/account.php">user account</A> | <A HREF="/webboard.php">webboard</A></FONT><HR></TD></TR>
+       <TR>
+        <TD VALIGN="top" WIDTH="120">
+         <?
+          dbconnect();
+
+          ### Display admin blocks:
+          displayAdminblock($this);
+
+         ### Display referring sites:
+         displayReferrals($this);
+        ?>
+       </TD>
+       <TD VALIGN="top" WIDTH="440">
+    <?
+   }
+
+   ######
+   # Syntax.......: abstract(...);
+   # Description..: a function to draw an abstract story box, that is the
+   #                boxes displayed on the main page.
+   function abstract($editor, $informant, $timestamp, $subject, $abstract, $comments, $category, $department, $link) {
+     $timestamp = date("l, F d, Y - h:i:s A", $timestamp);
+
+     include "config.inc";
+      ?>
+       <TABLE BORDER="0" CELLPADDING="4" WIDTH="100%">
+        <TR BGCOLOR="<? echo $this->bgcolor1; ?>"><TD COLSPAN="2"><FONT COLOR="<? echo $this->bgcolor2; ?>"><B><? echo $subject; ?></B></FONT></TD></TR>
+        <TR BGCOLOR="<? echo $this->bgcolor2; ?>">
+         <TD>
+         <?
+          if ($informant) {
+            print "<FONT SIZE=\"-1\">Posted by <A HREF=\"account.php?op=userinfo&uname=$informant\">$informant</A> on $timestamp"; ?><? if ($department) echo "<BR>from the $department dept."; ?><? print "</FONT></TD><TD ALIGN=\"center\" WIDTH=\"80\"><B><A HREF=\"search.php?category=$category\"><FONT COLOR=\"#83997A\">$category</FONT></A></B>";
+          }
+          else {
+            print "<FONT SIZE=\"-1\">Posted by $anonymous on $timestamp"; ?><? if ($department) echo "<BR>from the $department dept."; ?><? print "</FONT></TD><TD ALIGN=\"center\" WIDTH=\"80\"><A HREF=\"search.php?category=$category\">$category</A>";
+          }
+         ?>
+        </TD>
+       </TR>
+       <TR BGCOLOR="<? echo $this->bgcolor3; ?>">
+        <TD COLSPAN="2">
+        <?
+         if ($comments) {
+           echo "<P>$abstract</P><P><FONT COLOR=\"$this->bgcolor1\">Editor's note by <A HREF=\"account.php?op=userinfo&uname=$editor\">$editor</A>:</FONT> $comments</P>";
+         }
+         else {
+           echo $abstract;
+         }        
+        ?>
+        </TD>
+       </TR>
+      <TR BGCOLOR="<? echo $this->bgcolor2; ?>"><TD ALIGN="right" COLSPAN="2"><? echo $link ?></TD></TR>
+     </TABLE><BR>
+    <?	
+   }
+
+   ######
+   # Syntax.......: article(...);
+   # Description..: a function to dispay a complete article (without user 
+   #                comments).  It's what you get when you followed for
+   #                instance one of read-more links on the main page.
+   function article($editor, $informant, $timestamp, $subject, $department, $abstract, $comments, $article, $reply) {
+     $timestamp = date("l, F d, Y - h:i:s A", $timestamp);
+
+      include "config.inc";
+       ?>
+      <TABLE BORDER="0" CELLPADDING="4" WIDTH="100%">
+       <TR BGCOLOR="<? echo $this->bgcolor1; ?>"><TD><FONT COLOR="<? echo $this->bgcolor2; ?>"><B><? echo $subject; ?></B></FONT></TD></TR>
+       <TR BGCOLOR="<? echo $this->bgcolor2; ?>">
+        <TD>
+         <?
+          if ($informant) {
+            print "<FONT SIZE=\"-1\">Posted by <A HREF=\"account.php?op=userinfo&uname=$informant\">$informant</A> on $timestamp"; ?><? if ($department) echo "<BR>from the $department dept."; ?><? print "</FONT>";
+          }
+          else {
+            print "<FONT SIZE=\"-1\">Posted by $anonymous on $timestamp"; ?><? if ($department) echo "<BR>from the $department dept."; ?><? print "</FONT>";
+          }
+         ?>
+        </TD>
+       </TR>
+       <TR BGCOLOR="<? echo $this->bgcolor3; ?>">
+        <TD>
+         <? 
+          if ($abstract) echo "<P>$abstract<P>";
+          if ($comments) echo "<P><FONT COLOR=\"$this->bgcolor1\">Editor's note by <A HREF=\"account.php?op=userinfo&uname=$editor\">$editor</A>:</FONT> $comments</P>";
+          if ($article) echo "<P>$article</P>";
+         ?>
+        </TD>
+       </TR>
+      <TR BGCOLOR="<? echo $this->bgcolor2; ?>"><TD ALIGN="right"><? echo "$reply"; ?></TD></TR>
+     </TABLE><BR>
+    <? 
+   }
+
+   ######
+   # Syntax.......: comment(...);
+   # Description..: this function is used to theme user comments.
+   function comment($poster, $subject, $tid, $date, $url, $email, $score, $reason, $comment, $link, $thread = "") {
+     include "config.inc";
+
+     if (!eregi("[a-z0-9]",$poster)) $poster = $anonymous;
+     if (!eregi("[a-z0-9]",$subject)) $subject = "[no subject]";
+     echo "<A NAME=\"$tid\">";
+
+     ### Create comment header:
+     echo "<TABLE BORDER=\"0\" CELLPADDING=\"4\" CELLSPACING=\"2\" WIDTH=\"100%\">";
+     echo " <TR BGCOLOR=\"$this->bgcolor2\">";
+     echo "  <TD>";
+     echo "   <TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"2\"WIDTH=\"100%\">";
+
+     ### Subject:
+     echo "    <TR>";
+     echo "     <TD ALIGN=\"right\" WIDTH=\"5%\"><FONT COLOR=\"$this->bgcolor1\"><B>Subject:</B></FONT></TD><TD WIDTH=\"80%\">";
+     echo "      <B><FONT COLOR=\"$this->bgcolor1\">$subject</FONT></B>";
+     echo " &nbsp; <FONT SIZE=\"2\"> [Score: $score";
+     if (isset($reason)) echo ", $comments_meta_reasons[$reason]";
+     echo "]</FONT>";
+     echo "     </TD>";
+
+     ### Moderation:
+     echo "     <TD ALIGN=\"right\" ROWSPAN=\"3\" VALIGN=\"middle\" WIDTH=\"15%\">";
+     echo "      <SELECT NAME=\"meta:$tid\">";
+     echo "         <OPTION VALUE=\"-1\">Moderate</OPTION>\n";
+     for ($i = 0; $i < sizeof($comments_meta_reasons); $i++) {
+       echo "       <OPTION VALUE=\"$i\">$comments_meta_reasons[$i]</OPTION>\n";
+     }
+     echo "      </SELECT>";
+     echo "     </TD>";
+     echo "    </TR>";
+
+     ### Author:
+     echo "    <TR>";
+     echo "     <TD ALIGN=\"right\" VALIGN=\"top\">Author:</TD><TD><B>$poster</B> ";
+     if ($poster != $anonymous) {
+       ### Display extra information line:
+       $info .= "<A HREF=\"account.php?op=userinfo&uname=$poster\">user info</A>";
+       if ($email) $info .= " | <A HREF=\"mailto:$email\">$email</A>";
+       if (eregi("http://",$url)) $info .= " | <A HREF=\"$url\" TARGET=\"_new\">$url</A>";
+       echo "<BR><FONT SIZE=\"2\">[ $info ]</FONT>";
+     }
+     echo "     </TD>";
+     echo "    </TR>";
+
+     ### Date
+     echo "    <TR><TD ALIGN=\"right\">Date:</TD><TD>". formatTimestamp($date) ."</TD></TR>";
+
+     echo "   </TABLE>";
+     echo "  </TD>";
+     echo " </TR>";
+
+     ### Print body of comment:
+     if ($comment) echo " <TR><TD BGCOLOR=\"$this->bgcolor3\">$comment</TD></TR>";
+
+     ### Print thread (if any):
+     if ($thread) echo " <TR><TD BGCOLOR=\"$this->bgcolor2\">$thread</TD></TR>";
+
+     ### Print bottom link(s):
+     echo " <TR><TD ALIGN=\"right\" BGCOLOR=\"$this->bgcolor2\">[ $link ]</TD></TR>";
+     echo " </TABLE>";
+   }
+
+   ######
+   # Syntax.......: preview(...);
+   # Description..: this function is used to preview a story and is used at
+   #                different parts of the homepage: when a visitors sumbits
+   #                news, when an editor wants to post news, when people
+   #                check the entries in the sumbission queue, etc.
+   function preview($editor, $informant, $timestamp, $subject, $department, $abstract, $comments, $article) {
+     include "config.inc";
+     ?>
+      <TABLE BORDER="0" CELLPADDING="4" WIDTH="100%">
+       <TR BGCOLOR="<? echo $this->bgcolor1; ?>"><TD><FONT COLOR="<? echo $this->bgcolor2; ?>"><B><? echo $subject; ?></B></FONT></TD></TR>
+       <TR BGCOLOR="<? echo $this->bgcolor2; ?>">
+        <TD>
+         <?
+          if ($informant) {
+            print "<FONT SIZE=\"-1\">Posted by <A HREF=\"account.php?op=userinfo&uname=$informant\">$informant</A> on $timestamp"; ?><? if ($department) echo "<BR>from the $department dept."; ?><? print "</FONT>";
+          }
+          else {
+            print "<FONT SIZE=\"-1\">Posted by $anonymous on $timestamp"; ?><? if ($department) echo "<BR>from the $department dept."; ?><? print "</FONT>";
+          }
+         ?>
+        </TD>
+       </TR>
+       <TR BGCOLOR="<? echo $this->bgcolor3; ?>">
+        <TD>
+         <? 
+          if ($abstract) echo "<P>$abstract<P>";
+          if ($comments) echo "<P><FONT COLOR=\"$this->bgcolor1\">Editor's note by <A HREF=\"account.php?op=userinfo&uname=$editor\">$editor</A>:</FONT> $comments</P>";
+          if ($article) echo "<P>$article</P>";
+        ?>
+       </TD>
+      </TR>
+      <TR BGCOLOR="<? echo $this->bgcolor2; ?>"><TD ALIGN="right">&nbsp;</TD></TR>
+     </TABLE><BR>
+    <?
+   }
+ 
+   ######
+   # Syntax.......: box($title, $body);
+   # Description..: a function to draw a box/block.
+   function box($subject, $content) { 
+     include "config.inc";
+     print "<TABLE BORDER=\"0\" CELLPADDING=\"3\" CELLSPACING=\"3\" WIDTH=\"100%\">";
+     print " <TR><TD ALIGN=\"center\" BGCOLOR=\"$this->bgcolor1\" WIDTH=\"100%\"><FONT COLOR=\"$this->fgcolor1\"><B>$subject</B></FONT></TD></TR>";
+     print " <TR><TD BGCOLOR=\"$this->bgcolor2\">$content</TD></TR>";
+     print "</TABLE><BR>";
+   }
+
+   ######
+   # Syntax.......: footer();
+   # Description..: a function to draw the page footer.
+   function footer() {
+    ?>
+       </TD>
+       <TD VALIGN="top" WIDTH="150">
+         <?
+         global $PHP_SELF;  
+
+         if (strstr($PHP_SELF, "index.php")) {
+           global $user;
+
+           ### Display login box:
+           displayAccount($this);
+ 
+           ### Display voting poll:
+           displayPoll($this);
+
+           ### Display old headlines:
+           displayOldHeadlines($this);
+         }
+         elseif (strstr($PHP_SELF, "account.php")) {
+           ### Display account settings:
+           displayAccountSettings($this);
+         }
+         elseif (strstr($PHP_SELF, "article.php")) {
+           global $sid; 
+
+           ### Display related links:
+           displayRelatedLinks($this, $sid);
+
+           ### Display new headlines:
+           displayNewHeadlines($this);
+         }
+         else {
+           ### Display new headlines:
+           displayNewHeadlines($this);
+         }
+        ?>
+       </TD>
+      </TR>
+      <TR>
+       <TD ALIGN="center" COLSPAN="3">
+        <FONT SIZE="2">[ <A HREF="">home</A> | <A HREF="/faq.php">faq</A> | <A HREF="/search.php">search</A> | <A HREF="/submit.php">submit news</A> | <A HREF="/account.php">user account</A> | <A HREF="/webboard.php">webboard</A> ] </FONT>
+       </TD>
+      </TR>
+     </TABLE>
+    </BODY> 
+    </HTML>
+    <?
+   }
+ }
+
+?>
