@@ -49,7 +49,7 @@ function blogapi_get_users_blogs($req_params) {
 
   $user = blogapi_validate_user($params[1], $params[2]);
   if ($user->uid) {
-    $struct = new xmlrpcval(array('url' => new xmlrpcval(url('blog/' . $user->uid)),
+    $struct = new xmlrpcval(array('url' => new xmlrpcval(url('blog/' . $user->uid, NULL, NULL, true)),
                                   'blogid' => new xmlrpcval($user->uid),
                                   'blogName' => new xmlrpcval($user->name . "'s blog")),
                             'struct');
@@ -76,7 +76,7 @@ function blogapi_get_user_info($req_params) {
                                   'firstname' => new xmlrpcval($name[0], 'string'),
                                   'nickname' => new xmlrpcval($user->name, 'string'),
                                   'email' => new xmlrpcval($user->mail, 'string'),
-                                  'url' => new xmlrpcval(url('blog/view/' . $user->uid), 'string')),
+                                  'url' => new xmlrpcval(url('blog/view/' . $user->uid, NULL, NULL, true), 'string')),
                             'struct');
     return new xmlrpcresp($struct);
   }
