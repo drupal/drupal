@@ -38,6 +38,11 @@ function block_help() {
  <?php
 }
 
+function block_system($field){
+  $system["description"] = t("Displays content in small boxes, generally along the side of the page.");
+  return $system[$field];
+}
+
 function block_perm() {
   return array("administer blocks");
 }

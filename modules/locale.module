@@ -35,6 +35,11 @@ function locale_help() {
  <?php
 }
 
+function locale_system($field){
+  $system["description"] = t("Enables the translation of drupal messages to languages other than English.");
+  return $system[$field];
+}
+
 function locale_perm() {
   return array("administer locales");
 }

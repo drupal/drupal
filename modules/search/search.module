@@ -14,6 +14,11 @@ function search_help() {
   return $output;
 }
 
+function search_system($field){
+  $system["description"] = t("Enables site wide key word searching");
+  return $system[$field];
+}
+
 /**
  * Return an array of valid search access permissions
  */

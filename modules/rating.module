@@ -8,6 +8,11 @@ function rating_help() {
   return $output;
 }
 
+function rating_system($field){
+  $system["description"] = t("Enables ranking of users based on the rating of their submissions.");
+  return $system[$field];
+}
+
 function rating_perm() {
   return array("access user ratings");
 }

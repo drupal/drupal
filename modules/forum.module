@@ -1,6 +1,11 @@
 <?php
 // $Id$
 
+function forum_system($field){
+  $system["description"] = t("Enables threaded discussions.");
+  return $system[$field];
+}
+
 function forum_node($field) {
   $info["name"] = t("discussion forum");
   $info["description"] = t("A forum is a threaded discussion, enabling users to communicate about a particular topic.");

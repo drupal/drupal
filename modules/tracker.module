@@ -6,6 +6,11 @@ function tracker_help() {
   return $output;
 }
 
+function tracker_system($field){
+  $system["description"] = t("Enables tracking of recent and new comments for site readers.");
+  return $system[$field];
+}
+
 function tracker_link($type) {
 
   if ($type == "menu.view" && user_access("access comments")) {

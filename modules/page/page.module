@@ -7,6 +7,11 @@ function page_help() {
   return $output;
 }
 
+function page_system($field){
+  $system["description"] = t("Enables the creation of persistent site pages that can be added to the navigation system.");
+  return $system[$field];
+}
+
 function page_node($field) {
   $info["name"] = t("site page");
   $info["description"] = t("If you just want to add a page with a link in the menu to your site, this would be the best choice.  Unlike a story, a site page by-passes the submission queue.");

@@ -17,6 +17,11 @@ function cloud_help($type = "administrator") {
   return $output;
 }
 
+function cloud_system($field){
+  $system["description"] = t("Tracks other sites and displays last date changed.");
+  return $system[$field];
+}
+
 function cloud_cron() {
   $result = db_query("SELECT * FROM site WHERE timestamp = 0 OR timestamp + refresh < ". time());
 
@@ -64,7 +69,7 @@ function cloud_update($site) {
       $data .= fgets($fp, 128);
     }
 
-    if (abs($site["size"] - strlen($data)) > $site["threshold"]) {
+    if (abs($site["size"] - strlen($data)) >= $site["threshold"]) {
       db_query("UPDATE site SET size = '". strlen($data) ."', timestamp = '". time() ."' WHERE link = '%s'", $site["link"]);
     }
 
@@ -78,7 +83,7 @@ function cloud_update($site) {
 
 function cloud_form($edit = array()) {
   $period = array(900 => format_interval(900), 1800 => format_interval(1800), 3600 => format_interval(3600), 7200 => format_interval(7200), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 64800 => format_interval(64800), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200));
-  $threshold = array(0 => "0 bytes", 10 => "10 bytes", 20 => "20 bytes", 40 => "40 bytes", 60 => "60 bytes", 80 => "80 bytes", 160 => "160 bytes", 320 => "320 bytes", 640 => "640 bytes");
+  $threshold = array(1 => "1 byte", 10 => "10 bytes", 20 => "20 bytes", 40 => "40 bytes", 60 => "60 bytes", 80 => "80 bytes", 100 => "100 bytes", 120 => "120 bytes", 140 => "140 bytes", 160 => "160 bytes", 320 => "320 bytes", 640 => "640 bytes");
 
   $form .= form_textfield("Site name", "name", $edit["name"], 50, 128, "The name of the website you want to monitor for updates.");
   $form .= form_textfield("Site URL", "link", $edit["link"], 50, 255, "The URL of the website you want to monitor for updates.");

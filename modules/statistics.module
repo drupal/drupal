@@ -14,6 +14,11 @@ function statistics_help() {
   return $output;
 }
 
+function statistics_system($field){
+  $system["description"] = t("Gathers and displays site metrics.");
+  return $system[$field];
+}
+
 function statistics_cron() {
   db_query("DELETE FROM referrer WHERE ". time() ." - timestamp > ". variable_get("referrer_clear", 604800));
 }

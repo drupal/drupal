@@ -46,7 +46,9 @@ function module_list() {
     $result = db_query("SELECT name, filename FROM system WHERE type = 'module' AND status = '1' ORDER BY name");
     while ($module = db_fetch_object($result)) {
       $list[$module->name] = $module->name;
-      include_once "modules/$module->filename";
+      if (file_exists("modules/$module->filename")) {
+        include_once "modules/$module->filename";
+      }
     }
     asort($list);
   }

@@ -1,6 +1,11 @@
 <?php
 // $Id$
 
+function poll_system($field){
+  $system["description"] = t("Enables submission of multiple choice questions for voting.");
+  return $system[$field];
+}
+
 function poll_access($op, $node) {
   if ($op == "view") {
     return $node->status;

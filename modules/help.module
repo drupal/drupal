@@ -1,6 +1,11 @@
 <?php
 // $Id$
 
+function help_system($field){
+  $system["description"] = t("Manages displaying online help.");
+  return $system[$field];
+}
+
 function help_link($type) {
   if ($type == "admin") {
     $links[] = la(t("help"), array("mod" => "help"));

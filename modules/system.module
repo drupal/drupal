@@ -8,6 +8,11 @@ function system_help() {
   return $output;
 }
 
+function system_system($field){
+  $system["description"] = t("You'll need this.");
+  return $system[$field];
+}
+
 function system_help_cache() {
   $output .= "<p>Drupal has a caching mechanism that stores dynamically generated pages in a database.  By caching a page, Drupal does not have to generate the page each time it is requested.  Only pages requested by anonymous users are being cached.  When a cached page is accessed, Drupal will retrieve that page with minimal overhead using one SQL query only, thus reducing both the server load and the response time.</p>";
   $output .= "<p>Drupal's caching mechanism can be enabled and disabled by the site administrators from the 'settings' page.  He can also define how long cached pages should be kept.</p>";

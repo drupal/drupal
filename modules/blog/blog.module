@@ -1,6 +1,12 @@
 <?php
 // $Id$
 
+function blog_system($field){
+  $system["description"] = t("Enables keeping an online journal.");
+  return $system[$field];
+}
+
+
 function blog_conf_options() {
  $output .= form_textarea("Explanation or submission guidelines", "blog_help", variable_get("blog_help", ""), 55, 4, "This text will be displayed at the top of the blog submission form.  Useful for helping or instructing your users.");
  $output .= form_select(t("Minimum number of words in a node"), "minimum_blog_size", variable_get("minimum_blog_size", 0), array(0 => "0 words", 10 => "10 words", 25 => "25 words",  50 => "50 words", 75 => "75 words", 100 => "100 words", 125 => "125 words",  150 => "150 words", 175 => "175 words", 200 => "200 words"), t("The minimum number of words a personal blog entry should consist of.  This can be useful to rule out submissions that do not meet the site's standards, such as short test posts."));

@@ -12,6 +12,11 @@ function weblogs_help() {
   return $output;
 }
 
+function weblogs_system($field){
+  $system["description"] = t("Alerts weblogs.com that your site has updated.");
+  return $system[$field];
+}
+
 function weblogs_cron() {
 
   if (variable_get("weblogs_ping", 0) && variable_get("site_name", 0) && variable_get("site_slogan", 0)) {

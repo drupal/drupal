@@ -4,6 +4,11 @@
 session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
 session_start();
 
+function user_system($field){
+  $system["description"] = t("Enables a user registration system.");
+  return $system[$field];
+}
+
 /*** Session functions *****************************************************/
 
 function sess_open($save_path, $session_name) {
@@ -709,7 +714,7 @@ function user_login($edit = array(), $msg = "") {
     ** When possible, determine corrosponding external auth source. Invoke source, and login user if successful:
     */
 
-    if (!$user && $server  && $result = user_get_authmaps("$name@$server")) {
+    if (!$user && $server && $result = user_get_authmaps("$name@$server")) {
       if (module_invoke(key($result), "auth", $name, $pass, $server)) {
         $user = user_external_load("$name@$server");
         watchdog("user", "external load: $name@$server, module: " . key($result));

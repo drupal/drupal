@@ -1,6 +1,11 @@
 <?php
 // $Id$
 
+function archive_system($field){
+  $system["description"] = t("Displays calendar navigation to old content.");
+  return $system[$field];
+}
+
 function archive_display($original = 0) {
 
   // Prevent future dates:

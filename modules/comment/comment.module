@@ -13,6 +13,11 @@ function comment_help() {
   return $output;
 }
 
+function comment_system($field){
+  $system["description"] = t("Enables user commenting.");
+  return $system[$field];
+}
+
 function comment_settings($mode, $order, $threshold) {
   global $user;
 
@@ -516,7 +521,7 @@ function comment_render($nid, $cid = 0) {
     }
 
     if ($mode == 1) {
-      if (db_result($result)) {
+      if (db_num_rows($result)) {
         print "<table border=\"0\" cellpadding=\"2\" cellspacing=\"2\">\n";
         print " <tr><th>". t("Subject") ."</th><th>". t("Author") ."</th><th>". t("Date") ."</th></tr>\n";
         while ($comment = db_fetch_object($result)) {

@@ -8,6 +8,11 @@ function watchdog_help() {
  <?php
 }
 
+function watchdog_system($field){
+  $system["description"] = t("Logs and records system events.");
+  return $system[$field];
+}
+
 function watchdog_perm() {
   return array("administer watchdog");
 }

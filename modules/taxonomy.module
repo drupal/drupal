@@ -1,6 +1,11 @@
 <?php
 // $Id$
 
+function taxonomy_system($field){
+  $system["description"] = t("Enables the organization of content into categories and subcategories.");
+  return $system[$field];
+}
+
 function taxonomy_feed() {
   global $id, $or, $and, $type;
 

@@ -14,6 +14,11 @@ function node_help() {
   }
 }
 
+function node_system($field){
+  $system["description"] = t("You'll need this too.");
+  return $system[$field];
+}
+
 function node_teaser($body) {
 
   $size = 400;
