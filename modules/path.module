@@ -21,7 +21,7 @@ user/login => login
 
 image/tid/16 => store
 
-taxonomy/page/or/7,19,20,21 => store/products/whirlygigs
+taxonomy/term/7+19+20+21 => store/products/whirlygigs
 
 node/3 => contact
 </pre>
@@ -53,7 +53,7 @@ function conf_url_rewrite(\$path, \$mode = 'incoming') {
 }
 </pre>
 <p>This function will shorten every <code>node/\$node_id</code> type of URL to <code>display/\$node_id</code>. Individual URL aliases defined on the browser interface of Drupal take precedence, so if you have the 'contact' page alias from the example above, then the <code>display/3</code> alias will not be effective when outgoing links are created. Incoming URLs however always work with the mass URL aliased variant. Only the 'incoming' and 'outgoing' modes are supposed to be supported by your <code>conf_url_rewrite</code> function.</p>
-<p>You cannot only use this feature to shorten the URLs, or to translate them to you own language, but also to add completely new subURLs to an already existing module's URL space, or to compose a bunch of existing stuff together to a common URL space. You can create a <code>news</code> section for example aliasing nodes and taxonomy overview pages falling under a 'news' vocabulary, thus having <code>news/15</code> and <code>news/sections/3</code> instead of <code>node/15</code> and <code>taxonomy/view/or/3</code>. You need extensive knowledge of Drupal's inner workings and regular expressions though to make such advanced aliases.</p>");
+<p>You cannot only use this feature to shorten the URLs, or to translate them to you own language, but also to add completely new subURLs to an already existing module's URL space, or to compose a bunch of existing stuff together to a common URL space. You can create a <code>news</code> section for example aliasing nodes and taxonomy overview pages falling under a 'news' vocabulary, thus having <code>news/15</code> and <code>news/sections/3</code> instead of <code>node/15</code> and <code>taxonomy/term/3</code>. You need extensive knowledge of Drupal's inner workings and regular expressions though to make such advanced aliases.</p>");
   }
 }
 
@@ -165,7 +165,7 @@ function path_set_alias($path = NULL, $alias = NULL, $pid = NULL) {
  */
 function path_form($edit = '') {
 
-  $form .= form_textfield(t('Existing system path'), 'src', $edit['src'], 50, 64, t('Specify the existing path you wish to alias. For example: node/28, forum/1, taxonomy/page/or/1,2.'));
+  $form .= form_textfield(t('Existing system path'), 'src', $edit['src'], 50, 64, t('Specify the existing path you wish to alias. For example: node/28, forum/1, taxonomy/term/1+2.'));
   $form .= form_textfield(t('New path alias'), 'dst', $edit['dst'], 50, 64, t('Specify an alternative path by which this data can be accessed.  For example, type "about" when writing an about page.  Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'));
 
   if ($edit['pid']) {

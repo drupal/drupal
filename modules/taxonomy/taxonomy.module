@@ -1,22 +1,6 @@
 <?php
 // $Id$
 
-function taxonomy_feed($taxonomy) {
-  global $id, $type;
-
-  if ($type == 'voc') {
-    //TODO - vocabulary feed.
-  }
-  else {
-    $result = taxonomy_select_nodes($taxonomy, 0);
-    $term = taxonomy_get_term($taxonomy->tids[0]);
-    $channel['link'] = url("taxonomy/view/$taxonomy->operator/$taxonomy->str_tids", NULL, NULL, TRUE);
-    $channel['title'] = variable_get('site_name', 'drupal') .' - '. $term->name;
-    $channel['description'] = $term->description;
-    node_feed($result, $channel);
-  }
-}
-
 /**
  * Implementation of hook_perm().
  */
@@ -41,13 +25,13 @@ function taxonomy_link($type, $node = NULL) {
     if (array_key_exists('taxonomy', $node)) {
       foreach ($node->taxonomy as $tid) {
         $term = taxonomy_get_term($tid);
-        $links[] = l($term->name, "taxonomy/page/or/$term->tid", $term->description ? array ('title' => $term->description) : array());
+        $links[] = l($term->name, 'taxonomy/term/'. $term->tid, $term->description ? array ('title' => $term->description) : array());
       }
     }
     else {
       $links = array();
       foreach (taxonomy_node_get_terms($node->nid) as $term) {
-        $links[] = l($term->name, "taxonomy/page/or/$term->tid", $term->description ? array ('title' => $term->description) : array());
+        $links[] = l($term->name, 'taxonomy/term/'. $term->tid, $term->description ? array ('title' => $term->description) : array());
       }
 
     }
@@ -69,8 +53,9 @@ function taxonomy_menu() {
     'callback' => 'taxonomy_admin',
     'access' => user_access('administer taxonomy'),
     'type' => MENU_LOCAL_TASK);
-  $items[] = array('path' => 'taxonomy', 'title' => t('taxonomy'),
-    'callback' => 'taxonomy_page',
+
+  $items[] = array('path' => 'taxonomy/term', 'title' => t('taxonomy term'),
+    'callback' => 'taxonomy_term_page',
     'access' => user_access('access content'),
     'type' => MENU_CALLBACK);
   return $items;
@@ -90,7 +75,7 @@ function taxonomy_block($op = 'list', $delta = 0) {
     $result = db_query("SELECT d.tid, d.name, MAX(n.created) AS updated, COUNT(*) AS count FROM {term_data} d INNER JOIN {term_node} USING (tid) INNER JOIN {node} n USING (nid) WHERE n.status = 1 GROUP BY d.tid ORDER BY updated DESC, d.name");
     $items = array();
     while ($category = db_fetch_object($result)) {
-      $items[] = l("$category->name ($category->count)", "taxonomy/page/or/$category->tid") .'<br />'. format_interval(time() - $category->updated) .' '. t('ago');
+      $items[] = l("$category->name ($category->count)", 'taxonomy/term/'. $category->tid) .'<br />'. format_interval(time() - $category->updated) .' '. t('ago');
     }
 
     $block['subject'] = t('Categories');
@@ -130,7 +115,7 @@ function taxonomy_save_vocabulary($edit) {
 
   $data = array('name' => $edit['name'], 'nodes' => implode(',', $edit['nodes']), 'description' => $edit['description'], 'help' => $edit['help'], 'multiple' => $edit['multiple'], 'required' => $edit['required'], 'hierarchy' => $edit['hierarchy'], 'relations' => $edit['relations'], 'weight' => $edit['weight']);
   if ($edit['vid'] && $edit['name']) {
-    db_query('UPDATE {vocabulary} SET '. _prepare_update($data) .' WHERE vid = %d', $edit['vid']);
+    db_query('UPDATE {vocabulary} SET '. _taxonomy_prepare_update($data) .' WHERE vid = %d', $edit['vid']);
     module_invoke_all('taxonomy', 'update', 'vocabulary', $edit);
     $message = t('updated vocabulary "%name".', array('%name' => $edit['name']));
   }
@@ -139,7 +124,7 @@ function taxonomy_save_vocabulary($edit) {
   }
   else {
     $data['vid'] = $edit['vid'] = db_next_id('{vocabulary}_vid');
-    db_query('INSERT INTO {vocabulary} '. _prepare_insert($data, 1) .' VALUES '. _prepare_insert($data, 2));
+    db_query('INSERT INTO {vocabulary} '. _taxonomy_prepare_insert($data, 1) .' VALUES '. _taxonomy_prepare_insert($data, 2));
     module_invoke_all('taxonomy', 'insert', 'vocabulary', $edit);
     $message = t('created new vocabulary "%name".', array('%name' => $edit['name']));
   }
@@ -225,7 +210,7 @@ function taxonomy_save_term($edit) {
   if ($edit['tid'] && $edit['name']) {
     $data = array('name' => $edit['name'], 'description' => $edit['description'], 'weight' => $edit['weight']);
 
-    db_query('UPDATE {term_data} SET '. _prepare_update($data) .' WHERE tid = %d', $edit['tid']);
+    db_query('UPDATE {term_data} SET '. _taxonomy_prepare_update($data) .' WHERE tid = %d', $edit['tid']);
     module_invoke_all('taxonomy', 'update', 'term', $edit);
     $message = t('the term "%a" has been updated.', array('%a' => $edit['name']));
   }
@@ -235,7 +220,7 @@ function taxonomy_save_term($edit) {
   else {
     $edit['tid'] = db_next_id('{term_data}_tid');
     $data = array('tid' => $edit['tid'], 'name' => $edit['name'], 'description' => $edit['description'], 'vid' => $edit['vid'], 'weight' => $edit['weight']);
-    db_query('INSERT INTO {term_data} '. _prepare_insert($data, 1) .' VALUES '. _prepare_insert($data, 2));
+    db_query('INSERT INTO {term_data} '. _taxonomy_prepare_insert($data, 1) .' VALUES '. _taxonomy_prepare_insert($data, 2));
     module_invoke_all('taxonomy', 'insert', 'term', $edit);
     $message = t('created new term "%name".', array('%name' => $edit['name']));
   }
@@ -533,6 +518,9 @@ function taxonomy_get_children($tid, $vid = 0, $key = 'tid') {
  * @param $depth
  *   Internal use only.
  *
+ * @param $max_depth
+ *   The number of levels of the tree to return. Leave NULL to return all levels.
+ *
  * @return
  *   An array of all term objects in the tree. Each term object is extended
  *   to have "depth" and "parents" attributes in addition to its normal ones.
@@ -555,7 +543,7 @@ function taxonomy_get_tree($vid, $parent = 0, $depth = -1, $max_depth = NULL) {
     }
   }
 
-  $max_depth = ($max_depth == '') ? count($children[$vid]) : $max_depth;
+  $max_depth = (is_null($max_depth)) ? count($children[$vid]) : $max_depth;
   if ($children[$vid][$parent]) {
     foreach ($children[$vid][$parent] as $child) {
       if ($max_depth > $depth) {
@@ -730,7 +718,7 @@ function _taxonomy_depth($depth, $graphic = '--') {
   return $result;
 }
 
-function _prepare_update($data) {
+function _taxonomy_prepare_update($data) {
   foreach ($data as $key => $value) {
     $q[] = "$key = '". check_query($value) ."'";
   }
@@ -738,7 +726,7 @@ function _prepare_update($data) {
   return $result;
 }
 
-function _prepare_insert($data, $stage) {
+function _taxonomy_prepare_insert($data, $stage) {
   if ($stage == 1) {
     $result = implode(', ', array_keys($data));
   }
@@ -754,33 +742,46 @@ function _prepare_insert($data, $stage) {
 /**
  * Finds all nodes that match selected taxonomy conditions.
  *
- * @param $taxonomy
- *   An object containing the conditions to match. The attributes of this
- *   object are:
- *   - "tids": An array of term IDs to match.
- *   - "str_tids": A comma-separated list of the same IDs.
- *   - "operator": How to interpret multiple IDs in the array. Can be
- *     "or" or "and".
- *
+ * @param $tids
+ *   An array of term IDs to match.
+ * @param $operator
+ *   How to interpret multiple IDs in the array. Can be "or" or "and".
+ * @param $depth
+ *   How many levels deep to traverse the taxonomy tree. Can be a nonnegative
+ *   integer or "all".
  * @param $pager
  *   Whether the nodes are to be used with a pager (the case on most Drupal
  *   pages) or not (in an XML feed, for example).
- *
  * @return
  *   A resource identifier pointing to the query results.
  */
-function taxonomy_select_nodes($taxonomy, $pager = TRUE) {
-  if ($taxonomy->str_tids) {
-    if ($taxonomy->operator == 'or') {
-      $sql = "SELECT DISTINCT(n.nid), n.title, n.type, n.created, n.changed, n.uid, n.sticky, n.created, u.name FROM {node} n ". node_access_join_sql() ." INNER JOIN {term_node} r ON n.nid = r.nid INNER JOIN {users} u ON n.uid = u.uid WHERE r.tid IN ($taxonomy->str_tids) AND n.status = 1 AND ". node_access_where_sql() .' ORDER BY sticky DESC, created DESC';
-      $sql_count = "SELECT COUNT(DISTINCT(n.nid)) FROM {node} n ". node_access_join_sql() ." INNER JOIN {term_node} r ON n.nid = r.nid INNER JOIN {users} u ON n.uid = u.uid WHERE r.tid IN ($taxonomy->str_tids) AND n.status = 1 AND ". node_access_where_sql();
+function taxonomy_select_nodes($tids = array(), $operator = 'or', $depth = 0, $pager = TRUE) {
+  if (count($tids) > 0) {
+    // For each term ID, generate an array of descendant term IDs to the right depth.
+    $descendant_tids = array();
+    if ($depth === 'all') {
+      $depth = NULL;
+    }
+    foreach ($tids as $index => $tid) {
+      $term = taxonomy_get_term($tid);
+      $tree = taxonomy_get_tree($term->vid, $tid, -1, $depth);
+      $descendant_tids[] = array_merge($tid, array_map('_taxonomy_get_tid_from_term', $tree));
+    }
+
+    if ($operator == 'or') {
+      $str_tids = implode(',', call_user_func_array('array_merge', $descendant_tids));
+      $sql = 'SELECT DISTINCT(n.nid) FROM {node} n '. node_access_join_sql() .' INNER JOIN {term_node} tn ON n.nid = tn.nid WHERE tn.tid IN ('. $str_tids .') AND n.status = 1 AND '. node_access_where_sql() .' ORDER BY n.sticky DESC, n.created DESC';
+      $sql_count = 'SELECT COUNT(DISTINCT(n.nid)) FROM {node} n '. node_access_join_sql() .' INNER JOIN {term_node} tn ON n.nid = tn.nid WHERE tn.tid IN ('. $str_tids .') AND n.status = 1 AND '. node_access_where_sql();
     }
     else {
-      $sql = "SELECT DISTINCT(n.nid), n.title, n.type, n.created, n.changed, n.uid, u.name FROM {node} n ". node_access_join_sql() ." INNER JOIN {term_node} r ON n.nid = r.nid INNER JOIN {users} u ON n.uid = u.uid WHERE r.tid IN ($taxonomy->str_tids) AND n.status = 1 AND ". node_access_where_sql() ." GROUP BY n.nid, n.title, n.type, n.created, n.changed, n.uid, u.name HAVING COUNT(n.nid) = ". count($taxonomy->tids) ." ORDER BY sticky DESC, created DESC";
-
-      // Special trick as we could not find anything better:
-      $count = db_num_rows(db_query("SELECT DISTINCT(n.nid) FROM {node} n ". node_access_join_sql() ." INNER JOIN {term_node} r ON n.nid = r.nid WHERE r.tid IN ($taxonomy->str_tids) AND n.status = 1 AND ". node_access_where_sql() ." GROUP BY n.nid HAVING COUNT(n.nid) = ". count($taxonomy->tids)));
-      $sql_count = "SELECT $count";
+      $joins = '';
+      $wheres = '';
+      foreach ($descendant_tids as $index => $tids) {
+        $joins .= ' INNER JOIN {term_node} tn'. $index .' ON n.nid = tn'. $index .'.nid';
+        $wheres .= ' AND tn'. $index .'.tid IN ('. implode(',', $tids) .')';
+      }
+      $sql = 'SELECT DISTINCT(n.nid) FROM {node} n '. node_access_join_sql() . $joins .' WHERE n.status = 1 AND '. node_access_where_sql() . $wheres .' ORDER BY n.sticky DESC, n.created DESC';
+      $sql_count = 'SELECT COUNT(DISTINCT(n.nid)) FROM {node} n '. node_access_join_sql() . $joins .' WHERE n.status = 1 AND '. node_access_where_sql() . $wheres;
     }
 
     if ($pager) {
@@ -801,7 +802,7 @@ function taxonomy_select_nodes($taxonomy, $pager = TRUE) {
 function taxonomy_render_nodes($result) {
 
   while ($node = db_fetch_object($result)) {
-    $output .= node_view(node_load(array('nid' => $node->nid, 'type' => $node->type)), 1);
+    $output .= node_view(node_load(array('nid' => $node->nid)), 1);
   }
   $output .= theme('pager', NULL, variable_get('default_nodes_main', 10), 0);
   return $output;
@@ -824,45 +825,61 @@ function taxonomy_nodeapi($node, $op, $arg = 0) {
   }
 }
 
-function taxonomy_page() {
+/**
+ * Menu callback; displays all nodes associated with a term.
+ */
+function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
+  if (preg_match('/^([0-9]+[+ ])+[0-9]+$/', $str_tids)) {
+    $operator = 'or';
+    // The '+' character in a query string may be parsed as ' '.
+    $tids = preg_split('/[+ ]/', $str_tids);
+  }
+  else if (preg_match('/^([0-9]+,)*[0-9]+$/', $str_tids)) {
+    $operator = 'and';
+    $tids = explode(',', $str_tids);
+  }
+  else {
+    drupal_not_found();
+  }
 
-  $taxonomy->operator = arg(2);
-  $taxonomy->str_tids = check_query(arg(3));
-  $taxonomy->tids = explode(',', $taxonomy->str_tids);
+  // Build title:
+  $result = db_query('SELECT name FROM {term_data} WHERE tid IN (%s)', implode(',', $tids));
+  $names = array();
+  while ($term = db_fetch_object($result)) {
+    $names[] = $term->name;
+  }
+  $title = implode(', ', $names);
 
-  if (ereg('^([0-9]+,){0,}[0-9]+$', $taxonomy->str_tids)) {
-    switch (arg(1)) {
-      case 'feed':
-        taxonomy_feed($taxonomy);
-      break;
-      default:
-      // Build title:
-      $sql = 'SELECT name FROM {term_data} WHERE tid IN (%s)';
-      $result = db_query($sql, $taxonomy->str_tids);
-      $names = array();
-      while ($term = db_fetch_object($result)) {
-        $names[] = $term->name;
-      }
-
+  switch ($op) {
+    case 'page':
       // Build breadcrumb based on first hierarchy of first term:
-      $current->tid = $taxonomy->tids[0];
+      $current->tid = $tids[0];
       $breadcrumbs = array(array('path' => $_GET['q']));
       while ($parents = taxonomy_get_parents($current->tid)) {
         $current = array_shift($parents);
-        $breadcrumbs[] = array('path' => 'taxonomy/view/or/'. $current->tid, 'title' => $current->name);
+        $breadcrumbs[] = array('path' => 'taxonomy/term/'. $current->tid, 'title' => $current->name);
       }
       $breadcrumbs = array_reverse($breadcrumbs);
       menu_set_location($breadcrumbs);
 
-      drupal_set_html_head('<link rel="alternate" type="application/rss+xml" title="RSS - '. implode(' : ', $names) .'" href="'. url("taxonomy/feed/or/$taxonomy->str_tids") .'" />');
+      drupal_set_html_head('<link rel="alternate" type="application/rss+xml" title="RSS - '. $title .'" href="'. url('taxonomy/term/'. $str_tids .'/'. $depth .'/feed') .'" />');
 
-      $output = taxonomy_render_nodes(taxonomy_select_nodes($taxonomy));
-      print theme('page', $output, implode(', ', $names));
+      $output = taxonomy_render_nodes(taxonomy_select_nodes($tids, $operator, $depth, TRUE));
+      print theme('page', $output, $title);
       break;
-    }
-  }
-  else {
-    drupal_not_found();
+
+    case 'feed':
+      $term = taxonomy_get_term($tids[0]);
+      $channel['link'] = url('taxonomy/term/'. $str_tids .'/'. $depth, NULL, NULL, TRUE);
+      $channel['title'] = variable_get('site_name', 'drupal') .' - '. $title;
+      $channel['description'] = $term->description;
+
+      $result = taxonomy_select_nodes($tids, $operator, $depth, FALSE);
+      node_feed($result, $channel);
+      break;
+
+    default:
+      drupal_not_found();
   }
 }
 
@@ -939,41 +956,49 @@ function taxonomy_help($section = 'admin/help#taxonomy') {
     case 'admin/taxonomy':
       return t('The taxonomy module allows you to classify content into categories and subcategories; it allows multiple lists of categories for classification (controlled vocabularies) and offers the possibility of creating thesauri (controlled vocabularies that indicate the relationship of terms) and taxonomies (controlled vocabularies where relationships are indicated hierarchically). To delete a term choose "edit term". To delete a vocabulary, and all its terms, choose "edit vocabulary".');
     case 'admin/taxonomy/add/vocabulary':
-      return t("When you create a controlled vocabulary you are creating a set of terms to use for describing content (known as descriptors in indexing lingo).  Drupal allows you to describe each node type (blog, story, etc.) using one or many of these terms. For simple implementations, you might create a set of categories without subcategories, similar to Slashdot.org's or Kuro5hin.org's sections. For more complex implementations, you might create a hierarchical list of categories.");
+      return t("When you create a controlled vocabulary you are creating a set of terms to use for describing content (known as descriptors in indexing lingo).  Drupal allows you to describe each piece of content (blog, story, etc.) using one or many of these terms. For simple implementations, you might create a set of categories without subcategories, similar to Slashdot.org's or Kuro5hin.org's sections. For more complex implementations, you might create a hierarchical list of categories.");
     case 'admin/help#taxonomy':
-      return t("
+      return t('
       <h3>Background</h3>
-      <p>Taxonomy is the study of classification. Drupal's taxonomy module allows you to define categories which are used to classify content. The module supports hierarchical classification and association between terms, allowing for truly flexible information retrieval and classification. For more details about <a href=\"%classification-types\">classification types</a> and insight into the development of the <em>taxonomy.module</em>, see this <a href=\"%drupal-dis\">drupal.org discussion</a>.</p>
+      <p>Taxonomy is the study of classification. Drupal\'s taxonomy module allows you to define vocabularies which are used to classify content. The module supports hierarchical classification and association between terms, allowing for truly flexible information retrieval and classification. For more details about <a href="%classification-types">classification types</a> and insight into the development of the taxonomy module, see this <a href="%drupal-dis">drupal.org discussion</a>.</p>
       <h3>An example taxonomy: food</h3>
       <ul><li>Dairy<ul><li>Milk</li></ul></li><li>Drink<ul><li>Alcohol<ul><li>Beer</li><li>Wine</li></ul></li><li>Pop</li><li>Milk</li></ul></li><li>Meat<ul><li>Beef</li><li>Chicken</li><li>Lamb</li></ul></li><li>Spices<ul><li>Sugar</li></ul></li></ul>
-      <p><strong>Notes</strong></p><ul><li>The term <em>Milk</em> appears within both <em>Dairy</em> and <em>Drink</em>.  This is an example of <em>multiple parents</em> for a term.</li><li>In Drupal the order of siblings (e.g. <em>Beef</em>, <em>Chicken</em>, <em>Lamb</em>) in a taxonomy may be controlled with the <em>weight</em> parameter.</li></ul>
+      <p><strong>Notes</strong></p><ul><li>The term <em>Milk</em> appears within both <em>Dairy</em> and <em>Drink</em>.  This is an example of <em>multiple parents</em> for a term.</li><li>In Drupal the order of siblings (e.g. <em>Beef</em>, <em>Chicken</em>, <em>Lamb</em>) in a vocabulary may be controlled with the <em>weight</em> parameter.</li></ul>
       <h3>Vocabularies</h3>
-      <p>When you create a controlled vocabulary you are creating a set of terms to use for describing content (known as descriptors in indexing lingo). Drupal allows you to describe each node of content (blog, story, etc.) using one or many of these terms. For simple implementations, you might create a set of categories without subcategories, similar to <a href=\"%slashdot\">Slashdot</a>'s sections.  For more complex implementations, you might create a hierarchical list of categories such as <em>Food</em> taxonomy shown above.</p>
+      <p>When you create a controlled vocabulary you are creating a set of terms to use for describing content (known as descriptors in indexing lingo). Drupal allows you to describe each piece of content (blog, story, etc.) using one or many of these terms. For simple implementations, you might create a set of categories without subcategories, similar to <a href="%slashdot">Slashdot</a>\'s sections.  For more complex implementations, you might create a hierarchical list of categories such as <em>Food</em> taxonomy shown above.</p>
       <h4>Setting up a vocabulary</h4>
-      <p>When setting up a controlled vocabulary, if you select the <em>hierarchy</em> option, you will be defining a taxonomy or a thesaurus. If you select the <em>related terms</em> option, you are allowing the definition of related terms, think <em>see also</em>, as in a thesaurus. Selecting <em>multiple select</em> will allow you to describe a node using more than one term. That node will then appear in each term's page, thus increasing the chance that a user will find it.</p>
+      <p>When setting up a controlled vocabulary, if you select the <em>hierarchy</em> option, you will be defining a tree structure of terms, as in a thesaurus. If you select the <em>related terms</em> option, you are allowing the definition of related terms (think <em>see also</em>), as in a thesaurus. Selecting <em>multiple select</em> will allow you to describe a piece of content using more than one term. That content will then appear on each term\'s page, increasing the chance that a user will find it.</p>
       <p>When setting up a controlled vocabulary you are asked for: <ul>
-      <li><strong>Vocabulary name</strong> -- The name for this vocabulary. Example: <em>Dairy</em>.</li>
-      <li><strong>Description</strong> -- Description of the vocabulary, this can be used by modules and feeds.</li>
-      <li><strong>Types</strong> -- The list of node types you want to associate this vocabulary with. Some available types are: blog, book, forum, page, story.</li>
-      <li><a id=\"related-terms\"></a><strong>Related terms</strong> -- Allows relationships between terms within this vocabulary. Think of these as <em>see also</em>-references.</li>
-      <li><a id=\"hierarchy\"></a><strong>Hierarchy</strong> -- Allows a tree-like taxonomy, as in our <em>Foods</em> example above</li>
-      <li><strong>Multiple select</strong> -- Allows nodes to be described using more than one term. Nodes may then appear on multiple taxonomy pages.</li>
-      <li><strong>Required</strong> -- Each node has to have a term in this vocabulary associated with it.</li>
-      <li><strong>Weight</strong> -- The over all weight for this vocabulary in listings with multiple vocabularies.</li>
+      <li><strong>Vocabulary name</strong>: The name for this vocabulary. Example: <em>Dairy</em>.</li>
+      <li><strong>Description</strong>: Description of the vocabulary. This can be used by modules and feeds.</li>
+      <li><strong>Types</strong>: The list of content types you want to associate this vocabulary with. Some available types are blog, book, forum, page, and story.</li>
+      <li><a id="related-terms"></a><strong>Related terms</strong>: Allows relationships between terms within this vocabulary. Think of these as <em>see also</em> references.</li>
+      <li><a id="hierarchy"></a><strong>Hierarchy</strong>: Allows a tree-like vocabulary, as in our <em>Foods</em> example above.</li>
+      <li><strong>Multiple select</strong>: Allows pieces of content to be described using more than one term. Content may then appear on multiple taxonomy pages.</li>
+      <li><strong>Required</strong>: If selected, each piece of content must have a term in this vocabulary associated with it.</li>
+      <li><strong>Weight</strong>: The overall weight for this vocabulary in listings with multiple vocabularies.</li>
       </ul></p>
       <h4>Adding terms to a vocabulary</h4>
       <p>Once done defining the vocabulary, you have to add terms to it to make it useful. The options you see when adding a term to a vocabulary will depend on what you selected for <em>related terms</em>, <em>hierarchy</em> and <em>multiple select</em>. These options are:</p>
       <p><ul>
-      <li><strong>Term name</strong> -- The name for this term. Example: <em>Milk</em></li>
-      <li><strong>Description</strong> -- Description of the term that may be used by modules and feeds.  This is synonymous with a 'scope note'.</li>
-      <li><strong><a id=\"parent\"></a>Parent</strong> -- Select the term under which this term is a subset -- the branch of the hierarchy that this term belongs under. This is also known as the \"Broader term\" indicator used in thesauri.</li>
-      <li><strong><a id=\"synonyms\"></a>Synonyms</strong> -- Enter synonyms for this term, one synonym per line. Synonyms can be used for variant spellings, acronyms, and other terms that have the same meaning as the added term, but which are not explicitly listed in this thesaurus (i.e. <em>unauthorized terms</em>)</li>
-      <li><strong>Weight</strong> -- The weight is used to sort the terms of this vocabulary.</li>
+      <li><strong>Term name</strong>: The name for this term. Example: <em>Milk</em>.</li>
+      <li><strong>Description</strong>: Description of the term that may be used by modules and feeds.  This is synonymous with a "scope note".</li>
+      <li><strong><a id="parent"></a>Parent</strong>: Select the term under which this term is a subset -- the branch of the hierarchy that this term belongs under. This is also known as the "Broader term" indicator used in thesauri.</li>
+      <li><strong><a id="synonyms"></a>Synonyms</strong>: Enter synonyms for this term, one synonym per line. Synonyms can be used for variant spellings, acronyms, and other terms that have the same meaning as the added term, but which are not explicitly listed in this vocabulary (i.e. <em>unauthorized terms</em>).</li>
+      <li><strong>Weight</strong>: The weight is used to sort the terms of this vocabulary.</li>
       </ul></p>
-      <h3><a id=\"taxonomy-url\"></a>Displaying nodes organized by term(s)</h3>
-      <p>In order to view the nodes associated with a term or a collection of terms, you should browse to a properly formed Taxonomy URL. For example, <a href=\"%taxo-example\">taxonomy/page/or/1,2</a>.  Taxonomy URLs always contain one or more term IDs (tid) at the end of the URL (a.k.a the <em>querystring</em>). You may learn the term ID for a given term by hovering over that term in the <a href=\"%taxo-overview\">taxonomy overview</a> page and noting the number at the end or the URL.  To build a Taxonomy URL start with \"taxonomy/page\". Now add the querystring parameter, either <em>or</em>, which chooses nodes tagged with <strong>any</strong> of the given term IDs, or <em>and</em>, which chooses nodes tagged with <strong>all</strong> of the given Term IDs. Thus <em>or</em> is less specific than <em>and</em>. Finally add a comma separated list of term IDs.</p>
+      <h3><a id="taxonomy-url"></a>Displaying content organized by terms</h3>
+      <p>In order to view the content associated with a term or a collection of terms, you should browse to a properly formed Taxonomy URL. For example, <a href="%taxo-example">taxonomy/term/1+2</a>.  Taxonomy URLs always contain one or more term IDs at the end of the URL. You may learn the term ID for a given term by hovering over that term in the <a href="%taxo-overview">taxonomy overview</a> page and noting the number at the end or the URL.  To build a Taxonomy URL start with "taxonomy/term/". Then list the term IDs, separated by "+" to choose content tagged with <strong>any</strong> of the given term IDs, or separated by "," to choose content tagged with <strong>all</strong> of the given term IDs. In other words, "+" is less specific than ",". Finally, you may optionally specify a "depth" in the vocabulary hierarchy. This defaults to "0", which means only the explicitly listed terms are searched. A positive number indicates the number of additional levels of the tree to search. You may also use the value "all", which means that all descendant terms are searched.</p>
       <h3>RSS feeds</h3>
-      <p>Every term, or collection of terms, provides an <a href=\"%userland-rss\">RSS</a> feed to which interested users may subscribe. The URL format for a sample RSS feed is <a href=\"%sample-rss\">node/feed/or/1,2</a>. Built like a Taxonomy URL, <a href=\"%taxo-help\">see above</a> it starts with \"node/feed\", then has the querystring parameter, and finally the Term IDs.</p>", array('%classification-types' => 'http://www.eleganthack.com/archives/002165.html#002165', '%drupal-dis' => 'http://www.drupal.org/node/55', '%slashdot' => 'http://www.slashdot.com/', '%taxo-example' => url('taxonomy/page/or/1,2'), '%taxo-overview' => url('admin/taxonomy'), '%userland-rss' => 'http://backend.userland.com/stories/rss', '%sample-rss' => url('node/feed/or/1,2'), '%taxo-help' => url('admin/taxonomy/help', NULL, 'taxonomy-url')));
+      <p>Every term, or collection of terms, provides an <a href="%userland-rss">RSS</a> feed to which interested users may subscribe. The URL format for a sample RSS feed is <a href="%sample-rss">taxonomy/term/1+2/0/feed</a>. These are built just like <a href="%taxo-help">Taxonomy URLs</a>, but are followed by the word "feed".</p>', array('%classification-types' => 'http://www.eleganthack.com/archives/002165.html#002165', '%drupal-dis' => 'http://www.drupal.org/node/55', '%slashdot' => 'http://www.slashdot.com/', '%taxo-example' => url('taxonomy/term/1+2'), '%taxo-overview' => url('admin/taxonomy'), '%userland-rss' => 'http://backend.userland.com/stories/rss', '%sample-rss' => url('taxonomy/term/1+2/feed'), '%taxo-help' => url('admin/taxonomy/help', NULL, 'taxonomy-url')));
   }
 }
+
+/**
+ * Helper function for array_map purposes.
+ */
+function _taxonomy_get_tid_from_term($term) {
+  return $term->tid;
+}
+
 ?>
