@@ -53,7 +53,7 @@
  $output .= "  <TD>";
    
  ### Compose query:
- $query = "SELECT DISTINCT s.sid, s.aid, s.subject, s.time FROM stories s, authors a WHERE s.sid != 0 ";
+ $query = "SELECT DISTINCT s.sid, s.aid, s.informant, s.subject, s.time FROM stories s, authors a WHERE s.sid != 0 ";
      // Note: s.sid is a dummy clause used to enforce the WHERE-tag.
  if ($terms != "") $query .= "AND (s.subject LIKE '%$terms%' OR s.abstract LIKE '%$terms%' OR s.comments LIKE '%$terms%') ";
  if ($author != "") $query .= "AND s.aid = '$author' ";
@@ -66,7 +66,7 @@
  
  ### Display search results:
  $output .= "<HR>";
- while (list($sid, $aid, $subject, $time) = mysql_fetch_row($result)) {
+ while (list($sid, $aid, $informant, $subject, $time) = mysql_fetch_row($result)) {
    $num++;
 
    if ($user) {
@@ -80,7 +80,7 @@
      $link = "<A HREF=\"article.php?sid=$sid&mode=threaded&order=1&thold=0\">$subject</A>";
    }
  
-   $output .= "<P>$num) <B>$link</B><BR><SMALL>by <B><A HREF=\"account.php?op=userinfo&uname=$aid\">$aid</A></B>, posted on ". date("l, F d, Y - H:i A", $time) .".</SMALL></P>\n";
+   $output .= "<P>$num) <B>$link</B><BR><SMALL>by <B><A HREF=\"account.php?op=userinfo&uname=$informant\">$informant</A></B>, posted on ". date("l, F d, Y - H:i A", $time) .".</SMALL></P>\n";
  }
 
  if ($num == 0) $output .= "<P>Your search did <B>not</B> match any articles in our database: <UL><LI>Try using fewer words.</LI><LI>Try using more general keywords.</LI><LI>Try using different keywords.</LI></UL></P>";

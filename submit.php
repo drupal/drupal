@@ -6,6 +6,12 @@ function submit_enter() {
   
   global $user;
 
+  ### Guidlines:
+  $output .= "<P>Got some news or some thoughts you would like to share?  Fill out this form and they will automatically get whisked away to our submission queue where our moderators will frown at it, poke at it and hopefully post it.  Every registered user is automatically a moderator and can vote whether or not your sumbission should be carried to the front page for discussion.</P>\n";
+  $output .= "<P>Note that we do not revamp or extend your submission so it is totally up to you to make sure it is well-written: if you don't care enough to be clear and complete, your submission is likely to be moderated down by our army of moderators.  Try to be complete, aim for clarity, organize and structure your text, and try to carry out your statements with examples.  It is also encouraged to extend your submission with arguments that flow from your unique intellectual capability and experience: offer some insight or explanation as to why you think your submission is interesting.  Make sure your submission has some meat on it!</P>\n";
+  $output .= "<P>However, if you have bugs to report, complaints, personal questions or anything besides a public submission, we would prefer you to mail us instead, or your message is likely to get lost.</P><BR>\n";
+
+  ### Submission form:
   $output .= "<FORM ACTION=\"submit.php\" METHOD=\"post\">\n";
 
   $output .= "<P>\n <B>Your name:</B><BR>\n";
@@ -43,10 +49,6 @@ function submit_enter() {
  
   $output .= "<P>\n";
   $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Preview submission\"> (You must preview at least once before you can submit.)\n";
-  $output .= "</P>\n";
-
-  $output .= "<P>\n";
-  $output .= " <SMALL><B>Important:</B> remember to include the exact URL of your <U>source</U> in case you refer to a story found on another website or your submission might be rejected!</SMALL>\n";
   $output .= "</P>\n";
  
   $output .= "</FORM>\n";
@@ -102,10 +104,6 @@ function submit_preview($name, $address, $subject, $abstract, $story, $category)
   $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Preview submission\"> <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Submit submission\">\n";
   $output .= "</P>\n";
 
-  $output .= "<P>\n";
-  $output .= " <SMALL><B>Important:</B> remember to include the exact URL of your <U>source</U> in case you refer to a story found on another website or your submission might be rejected!</SMALL>\n";
-  $output .= "</P>\n";
-
   $output .= "</FORM>\n";
   
   $theme->header();
@@ -138,7 +136,7 @@ function submit_submit($name, $address, $subject, $abstract, $article, $category
 
   db_query("INSERT INTO submissions (uid, uname, subject, article, timestamp, category, abstract, score, votes) VALUES ('$uid', '$name', '$subject', '$article', '". time() ."', '$category', '$abstract', '0', '0')");
   
-  ### Send notification mail (if required):
+  ### Send e-mail notification (if enabled):
   if ($notify) {
     $message = "New submission:\n\nsubject...: $subject\nauthor....: $name\ncategory..: $category\nabstract..:\n$abstract\n\narticle...:\n$article";
     mail($notify_email, "$notify_subject $subject", $message, "From: $notify_from\nX-Mailer: PHP/" . phpversion());
