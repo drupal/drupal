@@ -83,11 +83,19 @@
    }
 
    function node($node, $main = 0) {
+     $terms = array();
+
+     if (function_exists("taxonomy_node_get_terms")) {
+       foreach (taxonomy_node_get_terms($node->nid) as $term) {
+         $terms[] = l($term->name, array("or" => $term->tid), "index");
+       }
+     }
+
      print "\n<!-- node: \"$node->title\" -->\n";
      print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">\n";
      print " <tr><td colspan=\"2\"><img src=\"themes/marvin/images/drop.gif\" alt=\"\" /> &nbsp; <b>". check_output($node->title) ."</b></td></tr>\n";
      print " <tr valign=\"bottom\"><td colspan=\"2\" bgcolor=\"#000000\" width=\"100%\"><img src=\"themes/marvin/images/pixel.gif\" width=\"1\" height=\"1\" alt=\"\" /></td></tr>\n";
-     print " <tr><td nowrap=\"nowrap\"><font color=\"#7C7C7C\"><small>". t("Submitted by %a on %b", array("%a" => format_name($node), "%b" => format_date($node->created, "large"))); ?><?php print "</small></font></td><td align=\"right\" valign=\"top\" nowrap=\"nowrap\"><small>". node_index($node) ."</small></td></tr>\n";
+     print " <tr><td nowrap=\"nowrap\"><font color=\"#7C7C7C\"><small>". t("Submitted by %a on %b", array("%a" => format_name($node), "%b" => format_date($node->created, "large"))); ?><?php print "</small></font></td><td align=\"right\" valign=\"top\" nowrap=\"nowrap\"><small>". $this->links($terms) ."</small></td></tr>\n";
      print " <tr><td colspan=\"2\">&nbsp;</td></tr>\n";
 
      if ($main && $node->teaser) {
@@ -164,7 +172,7 @@
      print " <tr>\n";
      print "  <td>\n";
      print "   <table border=\"0\" cellpadding=\"5\" cellspacing=\"1\" width=\"100%\">\n";
-     print "    <tr><td align=\"center\" bgcolor=\"#eaeaea\" nowrap=\"nowrap\"><font color=\"#404040\"><b>$subject</b></font></td></tr>\n";
+     print "    <tr><td align=\"center\" bgcolor=\"#eaeaea\"><font color=\"#404040\"><b>$subject</b></font></td></tr>\n";
      print "    <tr><td bgcolor=\"#ffffff\" valign=\"top\">$content</td></tr>\n";
      print "   </table>\n";
      print "  </td>\n";
