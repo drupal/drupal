@@ -84,7 +84,7 @@ hr {
 }
 #menu li {
   margin: 0;
-  padding: .25em .25em .4em 0;
+  padding: .5em .25em 0 0;
 }
 #menu li a {
   display: block;
