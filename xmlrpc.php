@@ -1,4 +1,5 @@
 <?php
+// $Id: xmlrpc.php,v 1.3 2001/10/20 20:45:05 kjartan Exp $
 
 include_once "includes/xmlrpcs.inc";
 include_once "includes/common.inc";
