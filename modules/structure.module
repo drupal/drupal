@@ -1,0 +1,190 @@
+<?php
+
+$module = array("admin" => "structure_admin");
+
+$cstatus = array("disabled", "enabled: incl. anonymous", "enabled: excl. anonymous");
+$mstatus = array("post new submissions", "queue new submissions");
+
+include "includes/structure.inc";
+
+
+function content_types($name, $module) {
+  global $types;
+  if ($module[type]) $types[$name] = $name;
+}
+
+function category_form($edit = array()) {
+  global $types, $cstatus, $mstatus;
+
+  $threshold_post = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90, 100);
+  $threshold_dump = array(-1, -2, -3, -4, -5, -6, -7, -8, -9, -10, -11, -12, -13, -14, -15, -20, -25, -30);
+  $threshold_expire = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90, 100);
+
+  module_iterate("content_types");
+
+  $output .= "<FORM ACTION=\"admin.php?mod=structure&type=category\" METHOD=\"post\">\n";
+
+  $output .= "<B>Name:</B><BR>\n";
+  $output .= "<INPUT NAME=\"edit[name]\" SIZE=\"55\" VALUE=\"". check_textfield($edit[name]) ."\"><BR>\n";
+  $output .= "<SMALL><I>A unique name for this category like 'announcement', 'article', 'column', 'review', etc.</I></SMALL><P>\n";
+
+  $output .= "<B>Content type:</B><BR>\n";
+  foreach ($types as $key=>$value) $options1 .= "<OPTION VALUE=\"$key\"". ($edit[type] == $value ? " SELECTED" : "") .">". check_select($value) ."</OPTION>";
+  $output .= "<SELECT NAME=\"edit[type]\">$options1</SELECT><BR>\n";
+  $output .= "<SMALL><I>The content type to bind or associate this category with.</I></SMALL><P>\n";
+
+  $output .= "<B>Comment settings:</B><BR>\n";
+  foreach ($cstatus as $key=>$value) $options2 .= "<OPTION VALUE=\"$key\"". ($edit[comment] == $key ? " SELECTED" : "") .">". check_select($value) ."</OPTION>";
+  $output .= "<SELECT NAME=\"edit[comment]\">$options2</SELECT><BR>\n";
+  $output .= "<SMALL><I>Allow or dissallow users to post comments in this category.</I></SMALL><P>\n";
+
+  $output .= "<B>Submission settings:</B><BR>\n";
+  foreach ($mstatus as $key=>$value) $options3 .= "<OPTION VALUE=\"$key\"". ($edit[submission] == $key ? " SELECTED" : "") .">". check_select($value) ."</OPTION>";
+  $output .= "<SELECT NAME=\"edit[submission]\">$options3</SELECT><BR>\n";
+  $output .= "<SMALL><I>What to do with new submissions in this category.</I></SMALL><P>\n";
+
+  $output .= "<B>Post, dump and expiration threshold:</B><BR>\n";
+  foreach ($threshold_post as $value) $options4 .= "<OPTION VALUE=\"$value\"". ($edit[post] == $value ? " SELECTED" : "") .">". format_plural($value, "point", "points") ."</OPTION>";
+  $output .= "<SELECT NAME=\"edit[post]\">$options4</SELECT>\n";
+  foreach ($threshold_dump as $value) $options5 .= "<OPTION VALUE=\"$value\"". ($edit[dump] == $value ? " SELECTED" : "") .">". format_plural($value, "point", "points") ."</OPTION>";
+  $output .= "<SELECT NAME=\"edit[dump]\">$options5</SELECT>\n";
+  foreach ($threshold_expire as $value) $options6 .= "<OPTION VALUE=\"$value\"". ($edit[expire] == $value ? " SELECTED" : "") .">". format_plural($value, "vote", "votes") ."</OPTION>";
+  $output .= "<SELECT NAME=\"edit[expire]\">$options6</SELECT><BR>\n";
+
+  $output .= "<SMALL><I>Specify the post, dump and expiration threshold for moderation purpose.</I></SMALL><P>\n";
+
+  if ($edit[cid]) {
+    $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[cid]\" VALUE=\"$edit[cid]\">\n";
+    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save category\">\n";
+    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Delete category\">\n";
+  }
+  else {
+    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save category\">\n";
+  }
+
+  $output .= "</FORM>\n";
+
+  return $output;
+}
+
+function category_overview() {
+  global $cstatus, $mstatus;
+
+  $result = db_query("SELECT * FROM category ORDER BY name");
+
+  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
+  $output .= " <TR><TH>name</TH><TH>type</TH><TH>comments</TH><TH>submissions</TH><TH>thresholds</TH><TH>operations</TH></TR>\n";
+  while ($category = db_fetch_object($result)) {
+    $output .= " <TR><TD>". check_output($category->name) ."</TD><TD>". check_output($category->type) ."</TD><TD>". check_output($cstatus[$category->comment]) ."</TD><TD>". check_output($mstatus[$category->submission]) ."</TD><TD>post: $category->post, dump: $category->dump, expire: $category->expire</TD><TD><A HREF=\"admin.php?mod=structure&type=category&op=edit&id=$category->cid\">edit category</A></TD></TR>\n";
+  }
+  $output .= "</TABLE>\n";
+  return $output;
+}
+
+// ---- topic ----
+
+function topic_form($edit = array()) {
+
+  $output .= "<FORM ACTION=\"admin.php?mod=structure&type=topic\" METHOD=\"post\">\n";
+
+  $output .= "<B>Name:</B><BR>\n";
+  $output .= "<INPUT NAME=\"edit[name]\" SIZE=\"55\" VALUE=\"". check_textfield($edit[name]) ."\"><P>\n";
+  $output .= "<SMALL><I>A unique name for this topic like 'science', 'internet', 'culture', etc.</I></SMALL><P>\n";
+
+  $output .= "<B>Parent:</B><BR>\n";
+  foreach (topic_tree() as $key=>$value) $options .= "<OPTION VALUE=\"$key\"". ($edit[pid] == $key ? " SELECTED" : "") .">". check_select($value) ."</OPTION>";
+  $output .= "<SELECT NAME=\"edit[pid]\"><OPTION VALUE=\"0\">&nbsp;</OPTION>$options</SELECT><BR>\n";
+  $output .= "<SMALL><I>The parent topic this topic belongs in.</I></SMALL><P>\n";
+
+  if ($edit[tid]) {
+    $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[tid]\" VALUE=\"$edit[tid]\">\n";
+    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save topic\">\n";
+    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Delete topic\">\n";
+  }
+  else {
+    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save topic\">\n";
+  }
+
+  return $output;
+}
+
+function topic_overview() {
+  $tree = topic_tree();
+
+  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
+  $output .= " <TR><TH>name</TH><TH>operations</TH></TR>\n";
+  foreach ($tree as $id=>$name) {
+    $output .= " <TR><TD>". check_output($name) ."</TD><TD><A HREF=\"admin.php?mod=structure&type=topic&op=edit&id=$id\">edit topic</A></TD></TR>\n";
+  }
+  $output .= "</TABLE>\n";
+  return $output;
+}
+
+// ----- structure -----
+
+function structure_overview() {
+  $output .= "<H3>Categories</H3>\n";
+  $output .= category_overview();
+  $output .= "<H3>Topics</H3>\n";
+  $output .= topic_overview();
+  return $output;
+}
+
+function structure_admin() {
+  global $id, $op, $type, $edit;
+
+  print "<SMALL><A HREF=\"admin.php?mod=structure&type=category&op=add\">add new category</A> | <A HREF=\"admin.php?mod=structure&type=topic&op=add\">add new topic</A> | <A HREF=\"admin.php?mod=structure&type=category\">categories</A> | <A HREF=\"admin.php?mod=structure&type=topic\">topics</A> | <A HREF=\"admin.php?mod=structure\">overview</A></SMALL><HR>\n";
+
+  switch ($type) {
+    case "category":
+      switch ($op) {
+        case "add":
+        print category_form();
+        break;
+      case "edit":
+        print category_form(category_get_array("cid", $id));
+        break;
+      case "view":
+        print category_view($id);
+        break;
+      case "Delete category":
+        print status(category_del($edit[cid]));
+        print category_overview();
+        break;
+      case "Save category":
+        print status(category_save($edit));
+        print category_overview();
+        break;
+      default:
+        print category_overview();
+      }
+      break;
+   case "topic":
+      switch ($op) {
+        case "add":
+        print topic_form();
+        break;
+      case "edit":
+        print topic_form(topic_get_array("tid", $id));
+        break;
+      case "view":
+        print topic_view($id);
+        break;
+      case "Delete topic":
+        print status(topic_del($edit[tid]));
+        print topic_overview();
+        break;
+      case "Save topic":
+        print status(topic_save($edit));
+        print topic_overview();
+        break;
+      default:
+        print topic_overview();
+      }
+      break;
+   default:
+      print structure_overview();
+   }
+}
+
+?>
