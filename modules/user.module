@@ -884,7 +884,7 @@ function user_pass($edit = array()) {
       $pass = user_password();
 
       // Save new password:
-      user_save($account, array_merge(object2array($account), array('pass' => $pass)));
+      user_save($account, array('pass' => $pass));
 
       // Mail new password:
       $variables = array('%username' => $account->name, '%site' => variable_get('site_name', 'drupal'), '%password' => $pass, '%uri' => $base_url, '%uri_brief' => substr($base_url, strlen('http://')), '%mailto' => $account->mail, '%date' => format_date(time()), '%login_uri' => url('user/login', NULL, NULL, TRUE), '%edit_uri' => url('user/edit', NULL, NULL, TRUE));
