@@ -40,7 +40,7 @@ function meta_save($type, $edit = array()) {
   while ($collection = db_fetch_object($result)) {
     $array[] = $edit[$collection->name];
   }
-  return implode(", ", $array);
+  return $array ? implode(", ", $array) : "";
 }
 
 function meta_get_collection($cid) {
