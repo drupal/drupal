@@ -21,6 +21,12 @@
   deny from all
 </Files>
 
+# Protect theme directories:
+<Files *themes>
+  order deny,allow
+  deny from all
+</Files>
+
 # Customized server error messages:
 ErrorDocument 400 /error.php
 ErrorDocument 402 /error.php
