@@ -18,7 +18,7 @@ function node_help($section = 'admin/help#node') {
       <dt>A Teaser</dt><dd>A small block of text that is meant to get you interested in the rest of node. Drupal will automatically pull a small amount of the body of the node to make the teaser (To configure how long the teaser will be <a href=\"%teaser\">click here</a>). The teaser can be changed if you don't like what Drupal grabs.</dd>
       <dt>The Body</dt><dd>The main text that comprises your content.</dd>
       <dt>A Type</dt><dd>What kind of node is this? Blog, book, forum, comment, unextended, etc.</dd>
-      <dt>An Author</dt><dd>The author's name. It will either be \"anonymous\" or a valid user. You <i>cannot</i> set it to an arbitrary value.</dd>
+      <dt>An Author</dt><dd>The author's name. It will either be \"anonymous\" or a valid user. You <em>cannot</em> set it to an arbitrary value.</dd>
       <dt>Authored on</dt><dd>The date the node was written.</dd>
       <dt>Changed</dt><dd>The last time this node was changed.</dd>
       <dt>Static on front page</dt><dd>The front page is configured to show the teasers from only a few of the total nodes you have on your site (To configure how many teasers <a href=\"%teaser\">click here</a>), but if you think a node is important enough that you want it to stay on the front page enable this.</dd>
@@ -1369,7 +1369,7 @@ function node_preview($node, $error = NULL) {
     if ($node->teaser && $node->teaser != $node->body) {
       $output = '<h3>'. t('Preview trimmed version') .'</h3>';
       $output .= node_view($node, 1);
-      $output .= '<p><i>'. t("The trimmed version of your post shows how your post looks like when promoted to the main page or when exported for syndication.  You can insert a delimiter '&lt;!--break--&gt' (without the quotes) to fine-tune where your post gets split.") .'</i></p>';
+      $output .= '<p><em>'. t("The trimmed version of your post shows how your post looks like when promoted to the main page or when exported for syndication. You can insert a delimiter '&lt;!--break--&gt' (without the quotes) to fine-tune where your post gets split.") .'</em></p>';
       $output .= '<h3>'. t('Preview full version') .'</h3>';
       $output .= node_view($node, 0);
     }

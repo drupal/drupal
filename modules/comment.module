@@ -11,16 +11,16 @@ function comment_help($section = "admin/help#comment") {
       <h3>User control of comment display</h3>
       <p>Attached to each comment board is a control panel for customizing the way that comments are displayed. Users can control the chronological ordering of posts (newest or oldest first) and the number of posts to display on each page. Additional settings include:</p>
       <ul>
-      <li><strong>Threaded</strong> -- Displays the posts grouped according to conversations and subconversations, much like the subject view of an email client.</li>
+      <li><strong>Threaded</strong> -- Displays the posts grouped according to conversations and subconversations, much like the subject view of an e-mail client.</li>
       <li><strong>Flat</strong> --  Displays the posts in chronological order, in the order in which they are posted.</li>
       <li><strong>Expanded</strong> -- Displays the title and text for each post.</li>
       <li><strong>Collapsed</strong> -- Displays only the title for each post.</li>
       </ul>
-      <p>When a user chooses <i>save settings</i>, the comments are then redisplayed using the user's new choices. Administrators can set the default settings for the comment control panel, along with other comment defaults, in <a href=\"%comment-config\">administer &raquo; configuration &raquo; modules &raquo; comment</a>.</p>
+      <p>When a user chooses <em>save settings</em>, the comments are then redisplayed using the user's new choices. Administrators can set the default settings for the comment control panel, along with other comment defaults, in <a href=\"%comment-config\">administer &raquo; configuration &raquo; modules &raquo; comment</a>.</p>
       <p>NOTE: When comment moderation is enabled, users will have another control panel option to control thresholds (see below).</p>
 
       <h3>Additional comment configurations</h3>
-      <p>Comments behave like other user submissions in Drupal. Filters, smileys and HTML that work in nodes will also work with content. To prevent a single user from spamming the web site with too many comments, administrators can set a comment throttle in <a href=\"%site-config\">administer &raquo; configuration</a> under <i>Submission settings</i>.</p>
+      <p>Comments behave like other user submissions in Drupal. Filters, smileys and HTML that work in nodes will also work with content. To prevent a single user from spamming the web site with too many comments, administrators can set a comment throttle in <a href=\"%site-config\">administer &raquo; configuration</a> under <em>Submission settings</em>.</p>
       <p>Administrators can control access to various comment module functions through <a href=\"%user-permissions\">administer &raquo; accounts &raquo; permissions</a>. Know that in a new Drupal installation, all comment permissions are disabled by default. The choice of which permissions to grant to which roles (groups of users) is left up to the site administrator.</p>
       <p>The following permissions can be enabled for anonymous users, authenticated users, or any other user roles that the administrator chooses to define:</p>
       <ul>
@@ -35,8 +35,8 @@ function comment_help($section = "admin/help#comment") {
       <p>Drupal provides specific features to inform site members when new comments have been posted:</p>
       <ul>
       <li>On the home page, Drupal displays the total number of comments attached to each node, and tracks comments read by individual site members. Members which have logged in will see a notice accompanying nodes which contain comments that they have not read.</li>
-      <li>The <i>tracker</i> module, disabled by default, displays all the site's recent posts.  There is a link to the <a href=\"%tracker\">recent posts</a> page in the navigation block.  This page is a useful way to browse new or updated nodes and comments. Content which the user has not yet read is tagged with a red star (this graphic depends on the current theme). Visit the comment board for any node, and Drupal will display a red <i>new</i> label beside the text of unread comments.</li>
-      <li>Some administrators may want to <a href=\"%download-notify\">download</a>, install and configure the notify module. Users can then request that Drupal send them an email when new comments are posted (the notify module requires that cron.php be configured properly).</li>
+      <li>The <em>tracker</em> module, disabled by default, displays all the site's recent posts.  There is a link to the <a href=\"%tracker\">recent posts</a> page in the navigation block.  This page is a useful way to browse new or updated nodes and comments. Content which the user has not yet read is tagged with a red star (this graphic depends on the current theme). Visit the comment board for any node, and Drupal will display a red <em>\"new\"</em> label beside the text of unread comments.</li>
+      <li>Some administrators may want to <a href=\"%download-notify\">download</a>, install and configure the notify module. Users can then request that Drupal send them an e-mail when new comments are posted (the notify module requires that cron.php be configured properly).</li>
       </ul>
 
       <h3>Comment moderation</h3>
@@ -45,7 +45,7 @@ function comment_help($section = "admin/help#comment") {
       <p>To enable moderation, the administrator must grant <a href=\"%permission\">moderate comments</a> permissions. Then, a number of options in <a href=\"%comment-moderation\">administer &raquo; comments &raquo; moderation</a> must be configured.</p>
 
       <h4>Moderation votes</h4>
-      <p>The first step is to create moderation labels which allow users to rate a comment.  Go to <a href=\"%comment-votes\">administer &raquo; comments &raquo; moderation &raquo; votes</a>. In the <i>vote</i> field, enter the textual labels which users will see when casting their votes. Some examples are</p>
+      <p>The first step is to create moderation labels which allow users to rate a comment.  Go to <a href=\"%comment-votes\">administer &raquo; comments &raquo; moderation &raquo; votes</a>. In the <em>vote</em> field, enter the textual labels which users will see when casting their votes. Some examples are</p>
       <ul>
       <li>Excellent +3</li>
       <li>Insightful +2</li>
@@ -63,11 +63,11 @@ function comment_help($section = "admin/help#comment") {
       <p>NOTE: Comment ratings are calculated by averaging user votes with the initial rating.</p>
       <h4>Creating comment thresholds</h4>
       <p>In <a href=\"%comment-thresholds\">administer &raquo; comments &raquo; moderation &raquo; thresholds</a>, you'll have to create some comment thresholds to make the comment rating system useful. When comment moderation is enabled and the thresholds are created, users will find another comment control panel option for selecting their thresholds. They'll use the thresholds you enter here to filter out comments with low ratings. Consequently, you'll probably want to create more than one threshold to give users some flexibility in filtering comments.</p>
-      <p>When creating the thresholds, note that the <i>Minimum score</i> is asking you for the lowest rating that a comment can have in order to be displayed.</p>
+      <p>When creating the thresholds, note that the <em>Minimum score</em> is asking you for the lowest rating that a comment can have in order to be displayed.</p>
       <p>To see a common example of how thresholds work, you might visit <a href=\"%slashdot\">Slashdot</a> and view one of their comment boards associated with a story. You can reset the thresholds in their comment control panel.</p>
 
       <h4>Initial comment scores</h4>
-      <p>Finally, you may want to enter some <i>initial comment scores</i>. In <a href=\"%comment-initial\">administer &raquo; comments &raquo; initial comment scores</a> you can assign a beginning rating for all comments posted by a particular permission role. If you do not assign any initial scores, Drupal will assign a rating of <strong>0</strong> as the default.</p>", array("%comment-config" => url("admin/system/modules/comment"), "%site-config" => url("admin/system"), "%user-permissions" => url("admin/user/permission"), "%tracker" => url("tracker"), "%download-notify" => "http://drupal.org/project/releases", "%permission" => url("admin/user/permission"), "%comment-moderation" => url("admin/comment/moderation"), "%comment-votes" => url("admin/comment/moderation/votes"), "%comment-matrix" => url("admin/comment/moderation/matrix"), "%comment-thresholds" => url("admin/comment/moderation/filters"), "%slashdot" => " http://slashdot.org", "%comment-initial" => url("admin/comment/moderation/roles")));
+      <p>Finally, you may want to enter some <em>initial comment scores</em>. In <a href=\"%comment-initial\">administer &raquo; comments &raquo; initial comment scores</a> you can assign a beginning rating for all comments posted by a particular permission role. If you do not assign any initial scores, Drupal will assign a rating of <strong>0</strong> as the default.</p>", array("%comment-config" => url("admin/system/modules/comment"), "%site-config" => url("admin/system"), "%user-permissions" => url("admin/user/permission"), "%tracker" => url("tracker"), "%download-notify" => "http://drupal.org/project/releases", "%permission" => url("admin/user/permission"), "%comment-moderation" => url("admin/comment/moderation"), "%comment-votes" => url("admin/comment/moderation/votes"), "%comment-matrix" => url("admin/comment/moderation/matrix"), "%comment-thresholds" => url("admin/comment/moderation/filters"), "%slashdot" => " http://slashdot.org", "%comment-initial" => url("admin/comment/moderation/roles")));
       break;
     case 'admin/system/modules#description':
       $output = t("Enables user to comment on content (nodes).");
@@ -97,7 +97,7 @@ function comment_help($section = "admin/help#comment") {
       $output = t("Here is where you assign a value to each item in the dropdown menu. This value is added to the vote total, which is then divided by the number of users who have voted and rounded off to the nearest integer.<br />Notes:<ul><li>In order to use comment moderation, every text box on this page should be populated.</li><li>You must assign the <strong>moderate comments</strong> permission to at least one role in order to use this page.</li><li>Every box not filled in will have a value of zero, which will have the effect of <strong>lowering</strong> a comments over all score.</li></ul>");
       break;
     case 'admin/comment/moderation/filters':
-      $output = t("<i>Optional</i> Here you can setup the name and minimum \"cut off\" score to help your users hide comments that they don't want too see. These thresholds appear in the Comment Control Panel. Click \"edit\" to edit the values of an already exsisting threashold. To <strong>delete</strong> a threshold click on \"edit\".");
+      $output = t("<em>Optional</em> Here you can setup the name and minimum \"cut off\" score to help your users hide comments that they don't want too see. These thresholds appear in the Comment Control Panel. Click \"edit\" to edit the values of an already exsisting threashold. To <strong>delete</strong> a threshold click on \"edit\".");
       break;
     case 'admin/comment/moderation/roles':
       $output = t("Here you can setup the <strong>initial</strong> vote value of a comment posted by each user role. This value is used before any other users vote on the comment.<br />Note: Blank entries are valued at zero");

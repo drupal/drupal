@@ -83,7 +83,7 @@ function throttle_help($section = "admin/help#throttle") {
       <p>Don't forget to <a href=\"%throttle-block-enable\">enable the block</a>.</p>
       <h3>Permissions</h3>
       <p>This module has one permission that needs to be configured in <a href=\"%permissions\">user permissions</a>.</p>
-      <ul><li><i>access throttle block</i> - enable for user roles that get to view the throttle block.</li></ul>
+      <ul><li><em>access throttle block</em> - enable for user roles that get to view the throttle block.</li></ul>
       <h3>For programmers: throttle_status()</h3>
       <p>The function <code>throttle_status()</code> will return a number from 0 to 5.  0 means that there is no throttle enabled at this time.  Each number above that is a progressively more throttled system...  To disable a feature when a site first begins to get busy, disable it at a throttle of 2 or 3.  To hold on to the bitter end, wait until 4 or 5.</p>
       <p>To implement the throttle, you should do something like this:
