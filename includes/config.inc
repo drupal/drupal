@@ -11,16 +11,16 @@
 #$dbname = "droporg";
 
 ### http://beta.drop.org/:
-#$dbhost = "zind.net";
-#$dbuname = "dries";
-#$dbpass = "Abc123";
-#$dbname = "dries";
+$dbhost = "zind.net";
+$dbuname = "dries";
+$dbpass = "Abc123";
+$dbname = "dries";
 
 ### http://dione/:
-$dbhost = "";
-$dbuname = "dries";
-$dbpass = "oakley";
-$dbname = "dries";
+#$dbhost = "";
+#$dbuname = "dries";
+#$dbpass = "oakley";
+#$dbname = "dries";
 
 #
 # Name of the site
