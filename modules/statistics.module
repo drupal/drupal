@@ -40,7 +40,7 @@ function statistics_exit() {
   **  referred to in the admin page as the 'probability limiter', roughly
   **  limiting throttle related database calls to 1 in N.
   */
-  if ((variable_get("statistics_enable_auto_throttle", 0)) && (!rand(0, variable_get("statistics_probability_limiter", 9)))) {
+  if ((variable_get("throttle_enable", 0)) && (!rand(0, variable_get("throttle_probability_limiter", 9)))) {
     /*
     ** Note:  The rand() function is supported by PHP 3+.  However, prior to
     ** PHP 4.2.0 it needs to be seeded with a call to srand().  It is important
@@ -52,7 +52,7 @@ function statistics_exit() {
     $throttle = throttle_status();
     // if we're at throttle level 5, we don't do anything
     if ($throttle < 5) {
-      $multiplier = variable_get("statistics_throttle_multiplier", 60);
+      $multiplier = variable_get("throttle_multiplier", 60);
       // count all hits in past sixty seconds
       $result = db_query("SELECT COUNT(timestamp) AS hits FROM {accesslog} WHERE timestamp >= %d", (time() - 60));
       $recent_activity = db_fetch_array($result);
@@ -473,11 +473,11 @@ function statistics_cron() {
   /* clean expired access logs */
   db_query("DELETE FROM {accesslog} WHERE ". time() ." - timestamp > ". variable_get("statistics_flush_accesslog_timer", 259200));
 
-  $throttle = variable_get("statistics_throttle_level", 0);
+  $throttle = variable_get("throttle_level", 0);
   /* check if throttle is currently on and if it's time to drop level */
-  if (($throttle) && ((time() - variable_get("statistics_throttle_cron_timer", 10800)) > variable_get("statistics_throttle_cron_timestamp", 0))) {
+  if (($throttle) && ((time() - variable_get("throttle_cron_timer", 10800)) > variable_get("statistics_throttle_cron_timestamp", 0))) {
     /* If throttle is on, back off one notch to test server load */
-    variable_set("statistics_throttle_level", $throttle - 1);
+    variable_set("throttle_level", $throttle - 1);
     variable_set("statistics_throttle_cron_timestamp", time());
     watchdog("warning", t("cron: decreasing throttle to level '%level' to test server load.", array("%level" => ($throttle - 1))));
   }
@@ -610,7 +610,7 @@ function statistics_nodeapi(&$node, $op, $arg = 0) {
 /* internal throttle function - do not call from other modules */
 function _throttle_update($recent_activity) {
   $throttle = throttle_status();
-  $multiplier = variable_get("statistics_throttle_multiplier", 60);
+  $multiplier = variable_get("throttle_multiplier", 60);
 
   for ($i = 0; $i <= 5; $i++) {
     if (($i * $multiplier) <= $recent_activity) {
@@ -626,7 +626,7 @@ function _throttle_update($recent_activity) {
     */
     if (($throttle_new < ($throttle - 2)) || ($throttle_new > $throttle)) {
       /* update throttle level */
-      variable_set("statistics_throttle_level", $throttle_new);
+      variable_set("throttle_level", $throttle_new);
       /*
       ** update the global timestamp, preventing cron.php from jumping in
       ** too quickly, allowing for user defined period to first pass.
@@ -649,11 +649,12 @@ function _throttle_update($recent_activity) {
 
 /* external throttle functions - call this from other modules, themes, etc */
 function throttle_status() {
-  static $throttle;
-
-  $throttle = variable_get("statistics_throttle_level", 0);
-
-  return $throttle;
+  if (variable_get("throttle_enable", 0)) {
+    return variable_get("throttle_level", 0);
+  }
+  else {
+    return 0;
+  }
 }
 
 ?>
