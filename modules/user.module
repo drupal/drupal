@@ -280,6 +280,7 @@ function user_mail_encode($string, $charset = "UTF-8") {
   ** http://www.rfc-editor.org/rfc/rfc2047.txt
   **
   ** Notes:
+  **   - Only encode strings that contain non-ASCII characters.
   **   - The chunks come in groupings of 4 bytes when using base64
   **     encoded.
   **   - trim() is used to ensure that no extra spacing is added by
@@ -287,10 +288,12 @@ function user_mail_encode($string, $charset = "UTF-8") {
   **   - Using \n as the chunk separator may cause problems on some
   **     systems and may have to be changed to \r\n or \r.
   */
-  $chunk_size = 75 - 7 - strlen($charset);
-  $chunk_size -= $chunk_size % 4;
-  $string = trim(chunk_split(base64_encode($string), $chunk_size, "\n"));
-  $string = trim(preg_replace('/^(.*)$/m', " =?$charset?B?\\1?=", $string));
+  if (!preg_match('/^[\x20-\x7E]*$/', $string)) {
+    $chunk_size = 75 - 7 - strlen($charset);
+    $chunk_size -= $chunk_size % 4;
+    $string = trim(chunk_split(base64_encode($string), $chunk_size, "\n"));
+    $string = trim(preg_replace('/^(.*)$/m', " =?$charset?B?\\1?=", $string));
+  }
   return $string;
 }
 
