@@ -15,7 +15,7 @@ function book_perm() {
 
 function book_link($type) {
   if ($type == "admin" && user_access("administer book")) {
-     $links[] = "<a href=\"admin.php?mod=book\">". t("collaborative book") ."</a>";
+     $links[] = "<a href=\"admin.php?mod=book\">collaborative book</a>";
   }
 
   if ($type == "page" && user_access("access content")) {
