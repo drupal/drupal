@@ -21,7 +21,7 @@
       <TABLE BORDER="0" CELLPADDING="8" CELLSPACING="0">
        <TR>
         <TD WIDTH="30" ROWSPAN="3">&nbsp;</TD>
-        <TD><A HREF=""><IMG SRC="themes/marvin/images/logo.gif" ALT="" BORDER="0"></A></TD>
+        <TD><A HREF="index.php"><IMG SRC="themes/marvin/images/logo.gif" ALT="" BORDER="0"></A></TD>
         <TD>&nbsp;</TD>
        </TR>
        <TR>
@@ -49,8 +49,8 @@
      print " <TR><TD COLSPAN=\"2\">&nbsp;</TD></TR>\n";
      print " <TR>\n";
      print "  <TD COLSPAN=\"2\">\n";
-     if ($story->abstract) print "   <P>". check_output($story->abstract, 1) ."</P>\n";
-     if ($story->updates) print "   <P><FONT COLOR=\"#666699\">". t("Editor's note") .":</FONT> ". check_output($story->updates, 1) ."</P>\n";
+     if ($story->abstract) print "<P>". check_output($story->abstract, 1) ."</P>\n";
+     if ($story->updates) print "<P><FONT COLOR=\"#666699\">". t("Editor's note") .":</FONT> ". check_output($story->updates, 1) ."</P>\n";
      print "  </TD>\n";
      print " </TR>\n";
      print " <TR><TD COLSPAN=\"2\">&nbsp;</TD></TR>\n";
