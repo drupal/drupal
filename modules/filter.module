@@ -37,7 +37,7 @@ function filter_help($section) {
     case 'admin/filters/#':
       return t('
 <p>Every <em>filter</em> performs one particular change on the user input, for example stripping out malicious HTML or making URLs clickable. Choose which filters you want to apply to text in this input format.</p>
-<p>If you notice some filters are causing conflicts in the output, you can <a href="%order">rearrange them</a>.', array('%configure' => url('admin/filters/'. arg(2) .'/configure'), '%order' => url('admin/filters/'. arg(2) .'/order')));
+<p>If you notice some filters are causing conflicts in the output, you can <a href="%order">rearrange them</a>.</p>', array('%configure' => url('admin/filters/'. arg(2) .'/configure'), '%order' => url('admin/filters/'. arg(2) .'/order')));
 
     case 'admin/filters/#/configure':
       return t('
