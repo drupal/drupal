@@ -1,179 +1,199 @@
 <?php
-// $Id: xtemplate.theme,v 1.30 2003/10/31 19:34:03 dries Exp $
+// $Id: xtemplate.theme,v 1.31 2003/11/08 11:56:33 dries Exp $
+
+class Theme_xtemplate extends BaseTheme {
+}
+
+if (!class_exists("XTemplate")) {
+  include_once("themes/xtemplate/xtemplate.inc");
+}
+
+$GLOBALS["xtemplate"]->sidebar = variable_get("xtemplate_sidebar", "right");
+$GLOBALS["xtemplate"]->template = new XTemplate("themes/xtemplate/xtemplate.xtmpl");
+$GLOBALS["xtemplate"]->template->SetNullBlock(" ");  // "" doesnt work!
 
 function xtemplate_settings() {
-  $output  = form_select(t("Sidebar placement"), "xtemplate_sidebar", variable_get("xtemplate_sidebar", "left"), array("none" => t("No sidebars"), "left" => t("Sidebar on the left"), "right" => t("Sidebar on the right"), "both" => t("Sidebar on the left and the right")));
+  $output  = form_radios(t("Sidebar placement"), "xtemplate_sidebar", variable_get("xtemplate_sidebar", "left"), array("none" => t("No sidebars"), "left" => t("Sidebar on the left"), "right" => t("Sidebar on the right"), "both" => t("Sidebar on the left and the right")));
   $output .= form_textarea(t("Message on front page"), "xtemplate_message", variable_get("xtemplate_message", "edit message"), 70, 6, t("This text will be displayed on the front page.  It can be used to display a mission statement, announcement or site description.."));
   $output .= form_textfield(t("Stylesheet URL"), "xtemplate_stylesheet", variable_get("xtemplate_stylesheet", "themes/xtemplate/xtemplate.css"), 100, 300, t("The URL for your theme's cascading stylesheet."));
   $output .= form_textarea(t("Logo"), "xtemplate_logo", variable_get("xtemplate_logo", "<img src=\"themes/xtemplate/images/druplicon.gif\" alt=\"Druplicon\" />"), 70, 4, t("The HTML code for displaying the logo."));
   $output .= form_textarea(t("Primary links"), "xtemplate_primary_links", variable_get("xtemplate_primary_links", l("edit primary links", "admin/system/themes/xtemplate")), 70, 8, t("The HTML code for the primary links."));
   $output .= form_textarea(t("Secondary links"), "xtemplate_secondary_links", variable_get("xtemplate_secondary_links", l("edit secondary links", "admin/system/themes/xtemplate")), 70, 8, t("The HTML code for the secondary links."));
-  $output .= form_select(t("Search box"), "xtemplate_search_box", variable_get("xtemplate_search_box", 0), array(t("Disabled"), t("Enabled")), t("Show a search box in the upper right corner."));
+  $output .= form_radios(t("Search box"), "xtemplate_search_box", variable_get("xtemplate_search_box", 0), array(t("Disabled"), t("Enabled")), t("Show a search box in the upper right corner."));
  return $output;
 }
 
-class Theme_xtemplate extends BaseTheme {
+function xtemplate_help($section) {
 
-  function system($field) {
-    $system["name"] = "xtemplate";
-    $system["description"] = "a template driven theme";
+  $ouptout = "";
 
-    return $system[$field];
+  switch ($section) {
+    case 'admin/system/themes#description':
+      $output = t("A template driven theme");
+      break;
   }
 
-  function Theme_xtemplate() {
-    if (!class_exists("XTemplate")) {
-      include_once("themes/xtemplate/xtemplate.inc");
-    }
+  return $output;
+}
 
-    $this->sidebar = variable_get("xtemplate_sidebar", "right");
+function xtemplate_node($node, $main = 0) {
 
-    $this->template = new XTemplate("themes/xtemplate/xtemplate.xtmpl");
-    $this->template->SetNullBlock(" ");  // "" doesnt work!
+  $xtemplate = $GLOBALS["xtemplate"];
+
+  $xtemplate->template->assign(array(
+        "link"      => url("node/view/$node->nid"),
+        "title"     => ucfirst($node->title),
+        "author"    => format_name($node),
+        "date"      => format_date($node->created),
+        "content"   => ($main && $node->teaser) ? $node->teaser : $node->body));
+
+  if (module_exist("taxonomy") && ($taxonomy = taxonomy_link("taxonomy terms", $node))) {
+    $xtemplate->template->assign("taxonomy", theme_links($taxonomy));
+  }
+  else {
+    $xtemplate->template->assign("taxonomy", "");
   }
 
-  function node($node, $main = 0) {
-
-    $this->template->assign(array(
-       "link"      => url("node/view/$node->nid"),
-       "title"     => ucfirst($node->title),
-       "author"    => format_name($node),
-       "date"      => format_date($node->created),
-       "content"   => ($main && $node->teaser) ? $node->teaser : $node->body));
-
-    if (module_exist("taxonomy") && ($taxonomy = taxonomy_link("taxonomy terms", $node))) {
-      $this->template->assign("taxonomy", $this->links($taxonomy));
-    }
-    else {
-      $this->template->assign("taxonomy", "");
-    }
-
-    if ($links = link_node($node, $main)) {
-      $this->template->assign("links", $this->links($links));
-    }
-    else {
-      $this->template->assign("links", "");
-    }
-
-    $this->template->parse("node");
-    print $this->template->text("node");
-    $this->template->reset("node");
+  if ($links = link_node($node, $main)) {
+    $xtemplate->template->assign("links", theme_links($links));
+  }
+  else {
+    $xtemplate->template->assign("links", "");
   }
 
-  function comment($comment, $link = 0) {
-    $this->template->assign(array (
+  $xtemplate->template->parse("node");
+  print $xtemplate->template->text("node");
+  $xtemplate->template->reset("node");
+}
+
+function xtemplate_comment($comment, $link = 0) {
+
+  $xtemplate = $GLOBALS["xtemplate"];
+
+  $xtemplate->template->assign(array (
         "title"     => ucfirst($comment->subject),
         "author"    => format_name($comment),
         "date"      => format_date($comment->timestamp),
         "content"   => $comment->comment,
         "links"     => $link));
 
-    if ($comment->new) {
-      $this->template->parse("comment_new");
-      print $this->template->text("comment_new");
-      $this->template->reset("comment_new");
-    }
-    else {
-      $this->template->parse("comment_old");
-      print $this->template->text("comment_old");
-      $this->template->reset("comment_old");
-    }
+  if ($comment->new) {
+    $xtemplate->template->parse("comment_new");
+    print $xtemplate->template->text("comment_new");
+    $xtemplate->template->reset("comment_new");
   }
-
-  function header($title = "") {
-    $this->template->assign(array(
-      "title" => ($title ? $title." | ". variable_get("site_name", "drupal") : variable_get("site_name", "drupal") ." | ". variable_get("site_slogan", "")),
-      "head" => theme_head(),
-      "stylesheet" => variable_get("xtemplate_stylesheet", "themes/xtemplate/xtemplate.css"),
-      "onload_attributes" => theme_onload_attribute(),
-      "logo" => variable_get("xtemplate_logo", "<img src=\"themes/xtemplate/images/druplicon.gif\" />"),
-      "primary_links" => variable_get("xtemplate_primary_links", l("edit primary links", "admin/system/themes/xtemplate")),
-      "secondary_links" => variable_get("xtemplate_secondary_links", l("edit secondary links", "admin/system/themes/xtemplate"))
-    ));
-
-    if (variable_get("xtemplate_search_box", 1)) {
-      $this->template->assign(array(
-        //"search" => search_form(),
-        "search_url" => url("search"),
-        "search_button_text" => t("Search")
-      ));
-      $this->template->parse("header.search_box");
-    }
-
-    // only parse the message block if we are on the frontpage ...
-    if ($_GET["q"] == variable_get("site_frontpage", "node") && ($message = variable_get("xtemplate_message", "edit message"))) {
-      $this->template->assign("header_message", $message);
-      $this->template->parse("header.message");
-    }
-
-    ob_start();
-
-    if ($this->sidebar == "left") {
-      theme_blocks("all");
-    }
-    else if ($this->sidebar == "both") {
-      theme_blocks("left");
-    }
-
-    if ($blocks = ob_get_contents()) {
-      $this->template->assign("blocks", $blocks);
-      $this->template->parse("header.blocks");
-    }
-
-    ob_end_clean();
-
-    $this->template->parse("header");
-    print $this->template->text("header");
-  }
-
-  function block(&$block) {
-    // create template variables for all block variables (module, delta, region, subject, content, ...)
-    foreach ($block as $key => $value) {
-      $this->template->assign($key, $value);
-    }
-    $this->template->parse("block");
-    print $this->template->text("block");
-    $this->template->reset("block");
-  }
-
-  function box($title, $content, $region = "main") {
-    $this->template->assign(array(
-      "subject" => $title,
-      "content" => $content));
-
-    $this->template->parse("box");
-    print $this->template->text("box");
-    $this->template->reset("box");
-  }
-
-  function footer() {
-
-    ob_start();
-
-    if ($this->sidebar == "right") {
-      theme_blocks("all");
-    }
-    else if ($this->sidebar == "both") {
-      theme_blocks("right");
-    }
-
-    if ($blocks = ob_get_contents()) {
-      $this->template->assign("blocks", $blocks);
-      $this->template->parse("footer.blocks");
-    }
-
-    ob_end_clean();
-
-    // only parse the footer block if site_footer is set
-    if ($footer_message = variable_get("site_footer", FALSE)) {
-      $this->template->assign("footer_message", $footer_message);
-      $this->template->parse("footer.message");
-    }
-
-    $this->template->assign("footer", theme_footer());
-    $this->template->parse("footer");
-
-    print $this->template->text("footer");
+  else {
+    $xtemplate->template->parse("comment_old");
+    print $xtemplate->template->text("comment_old");
+    $xtemplate->template->reset("comment_old");
   }
 }
+
+function xtemplate_header($title = "") {
+
+  $xtemplate = $GLOBALS["xtemplate"];
+
+  $xtemplate->template->assign(array(
+        "title" => ($title ? $title." | ". variable_get("site_name", "drupal") : variable_get("site_name", "drupal") ." | ". variable_get("site_slogan", "")),
+        "head" => theme_head(),
+        "stylesheet" => variable_get("xtemplate_stylesheet", "themes/xtemplate/xtemplate.css"),
+        "onload_attributes" => theme_onload_attribute(),
+        "logo" => variable_get("xtemplate_logo", "<img src=\"themes/xtemplate/images/druplicon.gif\" />"),
+        "primary_links" => variable_get("xtemplate_primary_links", l("edit primary links", "admin/system/themes/xtemplate")),
+        "secondary_links" => variable_get("xtemplate_secondary_links", l("edit secondary links", "admin/system/themes/xtemplate"))
+        ));
+
+  if (variable_get("xtemplate_search_box", 1)) {
+    $xtemplate->template->assign(array(
+          //"search" => search_form(),
+          "search_url" => url("search"),
+          "search_button_text" => t("Search")
+          ));
+    $xtemplate->template->parse("header.search_box");
+  }
+
+  // only parse the message block if we are on the frontpage ...
+  if ($_GET["q"] == variable_get("site_frontpage", "node") && ($message = variable_get("xtemplate_message", "edit message"))) {
+    $xtemplate->template->assign("header_message", $message);
+    $xtemplate->template->parse("header.message");
+  }
+
+  ob_start();
+
+  if ($xtemplate->sidebar == "left") {
+    theme_blocks("all");
+  }
+  else if ($xtemplate->sidebar == "both") {
+    theme_blocks("left");
+  }
+
+  if ($blocks = ob_get_contents()) {
+    $xtemplate->template->assign("blocks", $blocks);
+    $xtemplate->template->parse("header.blocks");
+  }
+
+  ob_end_clean();
+
+  $xtemplate->template->parse("header");
+  print $xtemplate->template->text("header");
+}
+
+function xtemplate_block(&$block) {
+
+  $xtemplate = $GLOBALS["xtemplate"];
+
+  // create template variables for all block variables (module, delta, region, subject, content, ...)
+  foreach ($block as $key => $value) {
+    $xtemplate->template->assign($key, $value);
+  }
+  $xtemplate->template->parse("block");
+  print $xtemplate->template->text("block");
+  $xtemplate->template->reset("block");
+}
+
+function xtemplate_box($title, $content, $region = "main") {
+
+  $xtemplate = $GLOBALS["xtemplate"];
+
+  $xtemplate->template->assign(array(
+        "subject" => $title,
+        "content" => $content));
+
+  $xtemplate->template->parse("box");
+  print $xtemplate->template->text("box");
+  $xtemplate->template->reset("box");
+}
+
+function xtemplate_footer() {
+
+  $xtemplate = $GLOBALS["xtemplate"];
+
+  ob_start();
+
+  if ($xtemplate->sidebar == "right") {
+    theme_blocks("all");
+  }
+  else if ($xtemplate->sidebar == "both") {
+    theme_blocks("right");
+  }
+
+  if ($blocks = ob_get_contents()) {
+    $xtemplate->template->assign("blocks", $blocks);
+    $xtemplate->template->parse("footer.blocks");
+  }
+
+  ob_end_clean();
+
+  // only parse the footer block if site_footer is set
+  if ($footer_message = variable_get("site_footer", FALSE)) {
+    $xtemplate->template->assign("footer_message", $footer_message);
+    $xtemplate->template->parse("footer.message");
+  }
+
+  $xtemplate->template->assign("footer", theme_closure());
+  $xtemplate->template->parse("footer");
+
+  print $xtemplate->template->text("footer");
+}
+
 ?>

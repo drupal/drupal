@@ -1,5 +1,18 @@
 <?php
-// $Id: unconed.theme,v 1.102 2003/10/20 17:13:07 dries Exp $
+// $Id: unconed.theme,v 1.103 2003/11/08 11:56:32 dries Exp $
+
+function unconed_help($section) {
+
+  $ouptout = "";
+
+  switch ($section) {
+    case 'admin/system/themes#description':
+      $output = t("A PHP theme");
+      break;
+  }
+
+  return $output;
+}
 
  class Theme_unconed extends BaseTheme {
    var $foreground = "#000000";
@@ -57,7 +70,7 @@
        </tr>
        <tr>
         <td colspan="2" style="text-align: center;">
-         <table border="0" cellspacing="0" cellpadding="0" style="background-color: <?php echo $this->brcolor1; ?>; width: 100%;"><tr><td style="text-align: center;"><table border="0" cellspacing="1" cellpadding="4" style="width: 100%;"><tr><td style="background-color: <?php echo $this->bgcolor2; ?>; text-align: center;"><?php print $this->links(link_page()); ?></td></tr></table></td></tr></table>
+         <table border="0" cellspacing="0" cellpadding="0" style="background-color: <?php echo $this->brcolor1; ?>; width: 100%;"><tr><td style="text-align: center;"><table border="0" cellspacing="1" cellpadding="4" style="width: 100%;"><tr><td style="background-color: <?php echo $this->bgcolor2; ?>; text-align: center;"><?php print theme_links(link_page()); ?></td></tr></table></td></tr></table>
         </td>
        </tr>
        <tr><td colspan="2"><?php
@@ -86,7 +99,7 @@
             if (module_exist("taxonomy")) {
               $terms = taxonomy_link("taxonomy terms", $node);
             }
-            $taxo = $this->links($terms);
+            $taxo = theme_links($terms);
             print "<td style=\"background-color: $this->bgcolor2; width: 70%;\"><small>" . t("Submitted by %a on %b", array("%a" => format_name($node), "%b" => format_date($node->created, "large"))) . "</small></td><td style=\"background-color: $this->bgcolor2; width: 30%; text-align: center;\"><b>". $taxo ."</b>";
            ?>
           </td>
@@ -105,7 +118,7 @@
          </tr>
          <?php
            if ($links = link_node($node, $main)) {
-             echo "<tr style=\"background-color: ". $this->bgcolor3 .";\"><td style=\"background-color: ". $this->bgcolor3 ."; text-align: right;\" colspan=\"2\">[ ". $this->links($links) ." ]</td></tr>";
+             echo "<tr style=\"background-color: ". $this->bgcolor3 .";\"><td style=\"background-color: ". $this->bgcolor3 ."; text-align: right;\" colspan=\"2\">[ ". theme_links($links) ." ]</td></tr>";
            }
          ?>
        </table></td></tr></table><br />
@@ -192,13 +205,13 @@
        ?></td></tr>
       <tr>
        <td colspan="2">
-        <table border="0" cellspacing="0" cellpadding="0" style="background-color: <?php echo $this->brcolor1; ?>; width: 100%;"><tr><td style="text-align: center;"><table border="0" cellspacing="1" cellpadding="4" style="width: 100%;"><tr><td style="background-color: <?php echo $this->bgcolor2; ?>; text-align: center;"><?php print $this->links(link_page()); ?></td></tr></table></td></tr></table>
+        <table border="0" cellspacing="0" cellpadding="0" style="background-color: <?php echo $this->brcolor1; ?>; width: 100%;"><tr><td style="text-align: center;"><table border="0" cellspacing="1" cellpadding="4" style="width: 100%;"><tr><td style="background-color: <?php echo $this->bgcolor2; ?>; text-align: center;"><?php print theme_links(link_page()); ?></td></tr></table></td></tr></table>
        </td>
       </tr>
      </table>
     </td><td style="background-color: <?php print $this->clc0; ?>;"><img src="<?php print $this->path; ?>/images/null.gif" width="4" alt="" title="" /></td><td  style="background-color: <?php print $this->cl00; ?>;"><img src="<?php print $this->path; ?>/images/null.gif" width="10" alt="" title="" /></td></tr>
     </table>
-    <?php print theme_footer();  ?>
+    <?php print theme_closure();  ?>
     </body>
     </html>
     <?php

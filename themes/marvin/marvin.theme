@@ -1,14 +1,20 @@
 <?php
-// $Id: marvin.theme,v 1.109 2003/10/06 12:21:04 kjartan Exp $
+// $Id: marvin.theme,v 1.110 2003/11/08 11:56:32 dries Exp $
 
- class Theme_marvin extends BaseTheme {
-   function system($field) {
-     $system["name"] = "Marvin";
-     $system["author"] = "Dries";
-     $system["description"] = "Internet explorer, Netscape, Opera";
+function marvin_help($section) {
 
-     return $system[$field];
-   }
+  $ouptout = "";
+
+  switch ($section) {
+    case 'admin/system/themes#description':
+      $output = t("A PHP theme");
+      break;
+  }
+
+  return $output;
+}
+
+class Theme_marvin extends BaseTheme {
 
    function header($title = "") {
     ?>
@@ -166,7 +172,7 @@
        </td>
       </tr>
      </table>
-     <?php print theme_footer(); ?>
+     <?php print theme_closure(); ?>
     </body>
     </html>
     <?php
