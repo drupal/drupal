@@ -164,7 +164,7 @@ function cloud_page() {
 
 function cloud_block() {
   $block[0]["subject"] = t("Site cloud");
-  $block[0]["content"] = cloud_list(20) ."<br /><div align=\"right\">". lm(t("more"), array("mod" => "cloud"), "", array("title", t("Monitor other sites in the cloud."))) ."</div>";
+  $block[0]["content"] = cloud_list(20) ."<br /><div align=\"right\">". lm(t("more"), array("mod" => "cloud"), "", array("title" => t("Monitor other sites in the cloud."))) ."</div>";
   $block[0]["info"] = t("Site cloud");
   return $block;
 }
