@@ -1263,8 +1263,8 @@ function _locale_get_iso639_list() {
     "yi" => array("Yiddish"),
     "yo" => array("Yoruba", "Yorùbá"),
     "za" => array("Zhuang"),
-    "zh_hans" => array("Chinese, Simplified", "简体中文"),
-    "zh_hant" => array("Chinese, Traditional", "繁體中文"),
+    "zh-hans" => array("Chinese, Simplified", "简体中文"),
+    "zh-hant" => array("Chinese, Traditional", "繁體中文"),
     "zu" => array("Zulu", "isiZulu"),
   );
 }
