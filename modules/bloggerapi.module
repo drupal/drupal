@@ -39,7 +39,8 @@ function bloggerapi_newPost($params) {
       if ($nid) {
         watchdog("special", "$node->type: added '$node->title', via Blogger API");
         return new xmlrpcresp(new xmlrpcval("$nid", "string"));
-      } else {
+      }
+      else {
         $error = bloggerapi_error("Error posting node");
         return $error->error_resp;
       }
@@ -58,7 +59,8 @@ function bloggerapi_editPost($params) {
     if ($nid) {
       watchdog("special", "$node->type: updated '$node->title', via Blogger API");
       return new xmlrpcresp(new xmlrpcval($nid, "string"));
-    } else {
+    }
+    else {
 #      $error = bloggerapi_error("Error updating node: $node->nid");
       return $node->error_resp;
     }
@@ -67,25 +69,15 @@ function bloggerapi_editPost($params) {
 }
 
 function bloggerapi_getUsersBlogs($params) {
-
   $resp = bloggerapi_driver("getUsersBlogs", $params);
 
-  if (!$resp->error) {
-    return new xmlrpcresp($resp);
-  } else {
-    return $resp->error_resp;
-  }
+  return $resp->error ? $resp->error_resp : new xmlrpcresp($resp);
 }
 
 function bloggerapi_getUserInfo($params) {
-
   $resp = bloggerapi_driver("getUserInfo", $params);
 
-  if (!$resp->error) {
-    return new xmlrpcresp($resp);
-  } else {
-    return $resp->error_resp;
-  }
+  return $resp->error ? $resp->error_resp : new xmlrpcresp($resp);
 }
 
 function bloggerapi_getTemplate($params) {
@@ -99,37 +91,21 @@ function bloggerapi_setTemplate($params) {
 }
 
 function bloggerapi_getPost($params) {
-
   $resp = bloggerapi_driver("getPost", $params);
 
-  if (!$resp->error) {
-    return new xmlrpcresp($resp);
-  } else {
-    return $resp->error_resp;
-  }
+  return $resp->error ? $resp->error_resp : new xmlrpcresp($resp);
 }
 
 function bloggerapi_getRecentPosts($params) {
-
   $resp = bloggerapi_driver("getRecentPosts", $params);
 
-  if (!$resp->error) {
-    return new xmlrpcresp($resp);
-  }
-  else {
-    return $resp->error_resp;
-  }
+  return $resp->error ? $resp->error_resp : new xmlrpcresp($resp);
 }
 
 function bloggerapi_deletePost($params) {
   $resp = bloggerapi_driver("deletePost", $params);
 
-  if (!$resp->error) {
-    return new xmlrpcresp($resp);
-  }
-  else {
-    return $resp->error_resp;
-  }
+  return $resp->error ? $resp->error_resp : new xmlrpcresp($resp);
 }
 
 function bloggerapi_driver($method, $params = 0, $error = 0) {
@@ -173,8 +149,7 @@ function bloggerapi_driver($method, $params = 0, $error = 0) {
 
     switch ($method) {
       case "newPost":
-        return array("type" => "blog", "name" => $user->name, "title" => $title, "body" => $cparams[4], "status" => 1, "moderate" => 0, "comment" => 2, "promote" => 0, "revision" => 0);
-        break;
+        return array("type" => "blog", "uid" => $user->uid, "name" => $user->name, "title" => $title, "body" => $cparams[4], "status" => 1, "moderate" => 0, "comment" => 2, "promote" => 0, "revision" => 0);
       case "editPost":
         $node = node_load(array("nid" => $cparams[1]));
         if ($node->uid == $user->uid) {
@@ -183,27 +158,20 @@ function bloggerapi_driver($method, $params = 0, $error = 0) {
         else {
           return bloggerapi_error("Error updating node");
         }
-        break;
       case "getUsersBlogs":
         return bloggerapi_user_blogs();
-        break;
       case "getUserInfo":
         return bloggerapi_user_info();
-        break;
       case "getPost":
         return bloggerapi_node_load($cparams[1]);
-        break;
       case "getRecentPosts":
         return bloggerapi_node_recent($cparams[4]);
-        break;
       case "deletePost":
         return bloggerapi_node_delete($cparams[1]);
-        break;
       case "distribute":
         break;
       default:
         return bloggerapi_error("Error in the authentication process");
-        break;
     }
   }
   else {
