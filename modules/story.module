@@ -26,7 +26,7 @@ function story_help($section) {
     case 'node/add/story':
       return variable_get('story_help', '');
     case 'node/add#story':
-      return t("A story is similar to a newspaper article. If stories are moderated, the post will be submitted to the attention of other users and be queued in the submission queue.  Users and moderators vote on the posts they like or dislike, promoting or demoting them.  When a post gets above a certain threshold it automatically gets promoted to the front page.");
+      return t('A story is similar to an article and usually gets promoted to the front page after approval or moderation.');
   }
 }
 
@@ -72,22 +72,6 @@ function story_access($op, $node) {
 }
 
 /**
- * Implementation of hook_link().
- */
-function story_link($type, $node = 0, $main) {
-  $links = array();
-
-  if ($type == 'node' && $node->type == 'story') {
-    // Don't display a redundant edit link if they are node administrators.
-    if (story_access('update', $node) && !user_access('administer nodes')) {
-      $links[] = l(t('edit this story'), "node/$node->nid/edit");
-    }
-  }
-
-  return $links;
-}
-
-/**
  * Implementation of hook_menu().
  */
 function story_menu($may_cache) {
@@ -95,7 +79,7 @@ function story_menu($may_cache) {
 
   if ($may_cache) {
     $items[] = array('path' => 'node/add/story', 'title' => t('story'),
-      'access' => story_access('create', NULL));
+      'access' => user_access('create stories'));
   }
 
   return $items;
