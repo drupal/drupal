@@ -34,7 +34,8 @@
        <TABLE WIDTH="750" ALIGN="left" BORDER="0" CELLPADDING="0" CELLSPACING="6">
         <TR>
          <TD COLSPAN="2">
-	  <IMG SRC="themes/Jeroen/images/logo.gif" ALT="drop.org logo"><BR><BR>
+	  <? if (rand(0,150) == 75) $img = "logo2.gif"; else $img = "logo.gif"; ?>
+	  <IMG SRC="themes/Jeroen/images/<? echo $img; ?>" ALT="drop.org logo"><BR><BR>
 	 </TD>
          <TD WIDTH="160" VALIGN="top" ALIGN="left">
           <?  
@@ -78,7 +79,8 @@
             <? if (rand(0,1) == 0) $img = "news2.gif"; else $img = "news4.gif"; if (rand(0,100) == 50) $img = "news5.gif"; ?><IMG SRC="themes/Jeroen/images/<? echo $img; ?>" WIDTH="20" HEIGHT="20" ALT=""></TD>
           </TR>
           <TR>
-           <TD ALIGN="left" VALIGN="bottom" HEIGHT="20" BACKGROUND="themes/Jeroen/images/newsboxleft.gif" ><IMG SRC="themes/Jeroen/images/newsboxleft.gif" WIDTH="20" HEIGHT="20" ALT="">
+           <TD ALIGN="left" VALIGN="bottom" HEIGHT="20" BACKGROUND="themes/Jeroen/images/newsboxleft.gif">
+            &nbsp;
            </TD>
            <TD COLSPAN="2" ALIGN="left" WIDTH="100%" BGCOLOR="#6C6C6C" HEIGHT="20" BACKGROUND="themes/Jeroen/images/menutitle.gif">
             &nbsp;<FONT COLOR="<? echo $this->fgcolor2; ?>">
@@ -113,7 +115,7 @@
              ?></FONT>
            </TD>
            <TD ALIGN="right" VALIGN="bottom" WIDTH="20" HEIGHT="20" BACKGROUND="themes/Jeroen/images/newsboxright.gif">
-            <IMG SRC="themes/Jeroen/images/newsboxright.gif" width="20" height="20" alt="">
+            &nbsp;
            </TD>
           </TR>
           <TR>
@@ -443,25 +445,25 @@
     <TABLE WIDTH="100%" ALIGN="center" CELLPADDING="0" CELLSPACING="0" BORDER="0">
      <TR>
       <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20">
-       <IMG SRC="themes/Jeroen/images/boxtopleft.gif" WIDTH="20=" HEIGHT="20" ALT=""></TD>
-      <TD ALIGN="center" VALIGN="bottom" HEIGHT="20" WIDTH="<? echo $width; ?>" BACKGROUND="themes/Jeroen/images/boxtop.gif">
-       <IMG SRC="themes/Jeroen/images/boxtop.gif" WIDTH="1" HEIGHT="1" ALT=""></TD>
-      <TD ALIGN="left" VALIGN="bottom" HEIGHT="20" WIDTH="20" BACKGROUND="themes/Jeroen/images/boxtopmiddle.gif">
-       <IMG SRC="themes/Jeroen/images/boxtop.gif" WIDTH="1" HEIGHT="1" ALT=""></TD>
-      <TD ALIGN="center" VALIGN="bottom" HEIGHT="20" BACKGROUND="themes/Jeroen/images/boxtop.gif">
-       <IMG SRC="themes/Jeroen/images/boxtop.gif" WIDTH="1" HEIGHT="1" ALT=""></TD>
-      <TD ALIGN="right" VALIGN="bottom" WIDTH="20" HEIGHT="20">
-       <IMG SRC="themes/Jeroen/images/boxtopright.gif" WIDTH="20" HEIGHT="20" ALT=""></TD>
+       <IMG SRC="themes/Jeroen/images/boxtopleft.gif" WIDTH="20" HEIGHT="20" ALT=""></TD>
+      <TD HEIGHT="20" WIDTH="<? echo $width; ?>" BACKGROUND="themes/Jeroen/images/boxtop.gif">&nbsp;</TD>
+      <TD HEIGHT="20" WIDTH="20" BACKGROUND="themes/Jeroen/images/boxtopmiddle.gif">
+       &nbsp;
+      </TD>
+      <TD VALIGN="bottom" HEIGHT="20" BACKGROUND="themes/Jeroen/images/boxtop.gif">&nbsp;</TD>
+      <TD ALIGN="right" VALIGN="bottom" WIDTH="20" HEIGHT="20" BACKGROUND="themes/Jeroen/images/boxtopright.gif">
+      &nbsp;
+      </TD>
      </TR>
      <TR>
-      <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20" BACKGROUND="themes/Jeroen/images/boxtopleftside1.gif">
-       <IMG SRC="themes/Jeroen/images/<? echo $img2; ?>" WIDTH="20" HEIGHT="20" ALT="">
+      <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20" BACKGROUND="themes/Jeroen/images/<? echo $img2; ?>">
+       &nbsp;
       </TD>
       <TD COLSPAN="3" ALIGN="center" BGCOLOR="#6C6C6C" HEIGHT="20" BACKGROUND="themes/Jeroen/images/menutitle.gif">
        <FONT COLOR="<? echo $this->fgcolor2; ?>"><?  echo $subject; ?></FONT>
       </TD>
       <TD ALIGN="right" VALIGN="bottom" WIDTH="20" HEIGHT="20" BACKGROUND="themes/Jeroen/images/boxtoprightside.gif">
-       <IMG SRC="themes/Jeroen/images/boxtoprightside.gif" WIDTH="20" HEIGHT="20" ALT="">
+       &nbsp;
       </TD>
      </TR>
      <TR>
@@ -478,8 +480,9 @@
       <TD ALIGN="right" BACKGROUND="themes/Jeroen/images/boxright.gif" WIDTH="20">&nbsp;</TD>
      </TR>
      <TR>
-      <TD ALIGN="left" VALIGN=TOP WIDTH="20" HEIGHT="20">
-       <IMG SRC="themes/Jeroen/images/boxbottomleft.gif" WIDTH="20" HEIGHT="20" ALT=""></TD>
+      <TD ALIGN="left" VALIGN=TOP WIDTH="20" HEIGHT="20" BACKGROUND="themes/Jeroen/images/boxbottomleft.gif">
+       &nbsp;
+      </TD>
       <TD COLSPAN="3" ALIGN="center" HEIGHT="20" VALIGN="top" BACKGROUND="themes/Jeroen/images/boxbottom.gif">
        &nbsp;</TD>
       <TD ALIGN="right" VALIGN="top" WIDTH="20" HEIGHT="20">
@@ -503,7 +506,7 @@
 	 $this->box("Drop where?", "<TD ALIGN=\"left\" VALIGN=\"top\"><A HREF=\"index.php\">home</A><BR><A HREF=\"faq.php\">faq</A><BR><A HREF=\"search.php\">search</A></TD><TD ALIGN=\"right\" VALIGN=\"top\"><A HREF=\"submit.php\">submit news</A><BR><A HREF=\"account.php\">your account</A><BR><A HREF=\"webboard.php\">webboard</A></TD>");
          
           if (strstr($PHP_SELF, "index.php")) {
-           global $user; $date;
+            global $user, $date;
 
            ### Display login box:
            displayAccount($this);
