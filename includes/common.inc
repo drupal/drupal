@@ -88,7 +88,16 @@ function path_uri($brief = 0) {
 }
 
 function request_uri() {
-  return getenv("REQUEST_URI");
+  // since request_uri() is only available on apache, we generate equivalent using other environment vars.
+
+  global $REQUEST_URI, $PATH_INFO, $QUERY_STRING;
+
+  if ($REQUEST_URI) {
+    return $REQUEST_URI;
+  }
+  else {
+    return $PATH_INFO . "?" . $QUERY_STRING;
+  }
 }
 
 function path_img() {
@@ -169,9 +178,20 @@ function variable_del($name) {
  * @param $type  module type of this item
  */
 function search_item($item, $type) {
-  $output .= " <b>". $item["count"] . "&nbsp;&nbsp;<u><a href=\"". $item["link"] . "\">". $item["title"] ."</a></u></b><br />";
-  $output .= " <small>$type ". ($item["user"] ? " - ". $item["user"] : "") ."". ($item["date"] ? " - ". format_date($item["date"], "small") : "") ."</small>";
-  $output .= "<br /><br />";
+
+  /*
+  ** Modules may implement the "search_item" hook in order to overwrite
+  ** the default function to display search results.
+  */
+
+  if (module_hook($type, "search_item")) {
+    $output = module_invoke($type, "search_item", $item);
+  }
+  else {
+    $output .= " <b>". $item["count"] ."&nbsp;&nbsp;<u><a href=\"". $item["link"] ."\">". $item["title"] ."</a></u></b><br />";
+    $output .= " <small>$type ". ($item["user"] ? " - ". $item["user"] : "") ."". ($item["date"] ? " - ". format_date($item["date"], "small") : "") ."</small>";
+    $output .= "<br /><br />";
+  }
 
   return $output;
 }
@@ -272,21 +292,6 @@ function search_type($type = 0, $action = 0, $query = 0, $options = 0) {
   return search_form($action, $query, $options) . search_data();
 }
 
-function drupal_str_replace($from, $to, $subject) {
-
-  /*
-  ** Multiple item replace which works for *all* PHP versions
-  ** (PHP 4.05+ supports this natively using similar syntax).
-  ** $from and $to should be same sized arrays, $subject is the
-  ** source text.
-  */
-
-  for ($i = 0; $i < count($from); $i++) {
-    $subject = str_replace($from[$i], $to[$i], $subject);
-  }
-
-  return $subject;
-}
 
 function drupal_goto($url) {
 
@@ -394,23 +399,33 @@ function format_info($body, $block) {
   return "<table><tr><td><table align=\"right\" border=\"1\" width=\"180\"><tr><td>$block</td></tr></table>$body</td></tr></table>\n";
 }
 
-function format_rss_channel($title, $link, $description, $items, $language = "en") {
+function format_rss_channel($title, $link, $description, $items, $language = "en", $args = array()) {
+  // arbitrary elements may be added using the $args associative array
+
   $output .= "<channel>\n";
   $output .= " <title>". htmlentities(strip_tags($title)) ."</title>\n";
   $output .= " <link>". htmlentities(strip_tags($link)) ."</link>\n";
   $output .= " <description>". htmlentities($description) ."</description>\n";
   $output .= " <language>". htmlentities(strip_tags($language)) ."</language>\n";
+  foreach ($args as $key => $value) {
+    $output .= "<$key>" . htmlentities(strip_tags($value)) . "</$key>";
+  }
   $output .= $items;
   $output .= "</channel>\n";
 
   return $output;
 }
 
-function format_rss_item($title, $link, $description) {
+function format_rss_item($title, $link, $description, $args = array()) {
+  // arbitrary elements may be added using the $args associative array
+
   $output .= "<item>\n";
   $output .= " <title>". htmlentities(strip_tags($title)) ."</title>\n";
   $output .= " <link>". htmlentities(strip_tags($link)) ."</link>\n";
   $output .= " <description>". htmlentities($description) ."</description>\n";
+  foreach ($args as $key => $value) {
+    $output .= "<$key>" . htmlentities(strip_tags($value)) . "</$key>";
+  }
   $output .= "</item>\n";
 
   return $output;
@@ -622,22 +637,35 @@ function drupal_url($args = array(), $script = "node") {
  * to another drupal page
  *
  * @param $args        dictionary of arguments to be passed to the script
- * @param $linktext    text of the link
+ * @param $text        text of the link
  * @param $title       optional, popup title
  * @param $script      script to be invoked; optional, defaults to node
+ * @param $attributes  optional, dictionary of attributes for the <a> tag such as 'target', 'name', 'class', etc.
  */
-function l($linktext, $args = array(), $title = "", $script = "node") {
-  return "<a href=\"". drupal_url($args, $script) ."\" title=\"$title\">$linktext</a>";
+function l($text, $args = array(), $title = "", $script = "node", $attributes = array()) {
+  $t = array();
+  foreach ($attributes as $key => $value) {
+    $t[] = "$key=\"$value\"";
+  }
+  return "<a href=\"". drupal_url($args, $script) ."\" title=\"$title\" ". implode($t, " ")  .">$text</a>";
 }
 
-function la($linktext, $args = array(), $title = "") {
+function la($text, $args = array(), $title = "", $attributes = array()) {
   // we don't call l() to avoid another duplication of the array
-  return "<a href=\"". drupal_url($args, "admin") ."\" title=\"$title\">$linktext</a>";
+  $t = array();
+  foreach ($attributes as $key => $value) {
+    $t[] = "$key=\"$value\"";
+  }
+  return "<a href=\"". drupal_url($args, "admin") ."\" title=\"$title\" ". implode($t, " ")  .">$text</a>";
 }
 
-function lm($linktext, $args = array(), $title = "") {
+function lm($text, $args = array(), $title = "", $attributes = array()) {
   // we don't call l() to avoid another duplication of the array
-  return "<a href=\"". drupal_url($args, "module") ."\" title=\"$title\">$linktext</a>";
+  $t = array();
+  foreach ($attributes as $key => $value) {
+    $t[] = "$key=\"$value\"";
+  }
+  return "<a href=\"". drupal_url($args, "module") ."\" title=\"$title\" ". implode($t, " ")  .">$text</a>";
 }
 
 function field_get($string, $name) {
@@ -674,6 +702,7 @@ function link_page() {
         $links = array_merge($links, module_invoke($name, "link", "page"));
       }
     }
+
     return $links;
   }
 }
