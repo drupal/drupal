@@ -98,6 +98,10 @@ function forum_link($type, $node = 0, $main = 0) {
     $links[] = l(t("forums"), "forum");
   }
 
+  if ($type == "system" && user_access("create forum topics")) {
+      menu("node/add/forum",t("forum topic"), "forum_page");
+  }
+
   if (!$main && $type == "node" && $node->type == "forum") {
     // get previous and next topic
 
