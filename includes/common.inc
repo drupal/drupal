@@ -444,16 +444,16 @@ function format_plural($count, $singular, $plural) {
 }
 
 function format_size($size) {
-  $suffix = "bytes";
+  $suffix = t("bytes");
   if ($size > 1024) {
     $size = round($size / 1024, 2);
-    $suffix = "KB";
+    $suffix = t("KB");
   }
   if ($size > 1024) {
     $size = round($size / 1024, 2);
-    $suffix = "MB";
+    $suffix = t("MB");
   }
-  return "$size $suffix";
+  return t("%size %suffix", array("%size" => $size, "%suffix" => $suffix));
 }
 
 function cache_get($key) {
@@ -512,7 +512,7 @@ function format_interval($timestamp) {
       $timestamp %= $value;
     }
   }
-  return ($output) ? $output : "0 sec";
+  return ($output) ? $output : t("0 sec");
 }
 
 function format_date($timestamp, $type = "medium", $format = "") {
@@ -561,7 +561,7 @@ function format_name($object) {
     }
   }
   else {
-    $output = variable_get(anonymous, "Anonymous");
+    $output = t(variable_get(anonymous, "Anonymous"));
   }
 
   return $output;
