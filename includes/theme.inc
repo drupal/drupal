@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.209 2004/08/20 07:51:24 dries Exp $ */
+/* $Id: theme.inc,v 1.210 2004/08/20 09:34:52 dries Exp $ */
 
 /**
  * @file
@@ -78,7 +78,7 @@ function init_theme() {
       call_user_func($theme_engine .'_init', $themes[$theme]);
     }
   }
-  
+
   return $theme;
 }
 
@@ -192,7 +192,7 @@ function path_to_theme() {
 /**
  * Retrieve an associative array containing the settings for a theme.
  *
- * The final settings are arrived at by merging the default settings, 
+ * The final settings are arrived at by merging the default settings,
  * the site-wide settings, and the settings defined for the specific theme.
  * If no $key was specified, only the site-wide theme defaults are retrieved.
  *
@@ -272,7 +272,7 @@ function drupal_get_theme_setting($setting_name, $refresh = FALSE) {
 
     if ($settings['toggle_logo']) {
       if ($settings['default_logo']) {
-        $settings['logo'] = dirname($theme_object->filename) .'/logo.png'; 
+        $settings['logo'] = dirname($theme_object->filename) .'/logo.png';
       }
       elseif ($settings['logo_path']) {
         $settings['logo'] = $settings['logo_path'];
@@ -421,7 +421,7 @@ function theme_links($links, $delimiter = ' | ') {
  * @param $title
  *   The title text is displayed when the image is hovered in some popular browsers.
  * @param $attr
- *   Attributes placed in the img tag. 
+ *   Attributes placed in the img tag.
  * @param $getsize
  *   If set to true, the image's dimension are fetched and added as width/height attributes.
  * @return
@@ -657,7 +657,7 @@ function theme_mark() {
 
 /**
  * Import a stylesheet using @import.
- * 
+ *
  * @param $stylesheet
  *  The filename to point the link at.
  *

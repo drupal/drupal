@@ -33,7 +33,7 @@ class XTemplate {
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-  $Id: xtemplate.inc,v 1.1 2004/08/20 07:51:26 dries Exp $
+  $Id: xtemplate.inc,v 1.2 2004/08/20 09:34:53 dries Exp $
 
 */
 
