@@ -152,6 +152,11 @@ table {
   font-size: 1.3em;
   color: #777;
 }
+.static-node {
+  background: #eee;
+  border: solid 1px #ddd;
+  padding: 1em;
+}
 .form-item label {
   font-size: 1em;
   color: #222;
