@@ -725,7 +725,7 @@ function taxonomy_page() {
   $taxonomy->str_tids = check_query(arg(3));
   $taxonomy->tids = explode(",", $taxonomy->str_tids);
 
-  if (ereg("^([0-9],){0,}[0-9]+$", $taxonomy->str_tids)) {
+  if (ereg("^([0-9]+,){0,}[0-9]+$", $taxonomy->str_tids)) {
     switch (arg(1)) {
       case "feed":
         taxonomy_feed($taxonomy);
