@@ -668,11 +668,11 @@ function node_admin() {
       case "delete":
         print node_delete(array("nid" => $id));
         break;
-      case "rollback revision":
+      case "rollback+revision":
         print node_revision_rollback(node_load(array("nid" => $id)), $revision);
         print node_admin_edit($id);
         break;
-      case "delete revision":
+      case "delete+revision":
         print node_revision_delete(node_load(array("nid" => $id)), $revision);
         print node_admin_edit($id);
         break;
