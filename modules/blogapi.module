@@ -424,7 +424,7 @@ function blogapi_validate_user($username, $password) {
   $user = user_load(array('name' => $username, 'pass' => $password, 'status' => 1));
 
   if ($user->uid) {
-    if (user_access('maintain personal blog')) {
+    if (user_access('edit own blog')) {
       return $user;
     }
     else {

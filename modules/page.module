@@ -12,7 +12,7 @@ function page_help($section) {
       <p>If you enable the <strong>create PHP content</strong> permission for a role, pages may consist of PHP code in addition to HTML and text.</p>
       <h3>User access permissions for pages</h3>
       <p><strong>create pages:</strong> Allows a role to create pages. They cannot edit or delete pages, even if they are the authors. You must enable this permission to in order for a role to create a page.</p>
-      <p><strong>maintain personal pages:</strong> Allows a role to add/edit pages if they own the page. Use this permission if you want users to be able to edit and maintain their own pages.</p>
+      <p><strong>edit own pages:</strong> Allows a role to add/edit pages if they own the page. Use this permission if you want users to be able to edit and maintain their own pages.</p>
       ");
     case 'admin/modules#description':
       return t('Enables the creation of pages that can be added to the navigation system.');
@@ -25,7 +25,7 @@ function page_help($section) {
  * Implementation of hook_perm().
  */
 function page_perm() {
-  return array('create pages', 'maintain personal pages');
+  return array('create pages', 'edit own pages');
 }
 
 /**
@@ -50,11 +50,11 @@ function page_access($op, $node) {
   }
 
   if ($op == 'update') {
-    return user_access('maintain personal pages') && ($user->uid == $node->uid);
+    return user_access('edit own pages') && ($user->uid == $node->uid);
   }
 
   if ($op == 'delete') {
-    return user_access('maintain personal pages') && ($user->uid == $node->uid);
+    return user_access('edit own pages') && ($user->uid == $node->uid);
   }
 }
 

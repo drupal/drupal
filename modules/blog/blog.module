@@ -21,7 +21,7 @@ function blog_node_name($node) {
  * Implementation of hook_perm().
  */
 function blog_perm() {
-  return array('maintain personal blog');
+  return array('edit own blog');
 }
 
 /**
@@ -35,15 +35,15 @@ function blog_access($op, $node) {
   }
 
   if ($op == 'create') {
-    return user_access('maintain personal blog') && $user->uid;
+    return user_access('edit own blog') && $user->uid;
   }
 
   if ($op == 'update') {
-    return user_access('maintain personal blog') && ($user->uid == $node->uid);
+    return user_access('edit own blog') && ($user->uid == $node->uid);
   }
 
   if ($op == 'delete') {
-    return user_access('maintain personal blog') && ($user->uid == $node->uid);
+    return user_access('edit own blog') && ($user->uid == $node->uid);
   }
 
 }
@@ -52,7 +52,7 @@ function blog_access($op, $node) {
  * Implementation of hook_user().
  */
 function blog_user($type, &$edit, &$user) {
-  if ($type == 'view' && user_access('maintain personal blog', $user)) {
+  if ($type == 'view' && user_access('edit own blog', $user)) {
     return array(t('History') => form_item(t('Blog'), l(t('view recent blog entries'), "blog/$user->uid", array('title' => t("Read %username's latest blog entries.", array('%username' => $user->name))))));
   }
 }
@@ -268,13 +268,13 @@ function blog_menu() {
 
   $items = array();
   $items[] = array('path' => 'node/add/blog', 'title' => t('blog entry'),
-    'access' => user_access('maintain personal blog'));
+    'access' => user_access('edit own blog'));
   $items[] = array('path' => 'blog', 'title' => t('blogs'),
     'callback' => 'blog_page',
     'access' => user_access('access content'),
     'type' => MENU_SUGGESTED_ITEM);
   $items[] = array('path' => 'blog/'. $user->uid, 'title' => t('my blog'),
-    'access' => user_access('maintain personal blog'),
+    'access' => user_access('edit own blog'),
     'type' => MENU_DYNAMIC_ITEM);
   $items[] = array('path' => 'blog/feed', 'title' => t('RSS feed'),
     'callback' => 'blog_feed',

@@ -16,7 +16,7 @@ function story_help($section) {
       In <a href=\"%story-config\">administer &raquo; settings &raquo; story</a> you can set up an introductory text for story authors, and a floor on the number of words which may be included in a story. This is designed to help discourage the submission of trivially short stories.</p>
       <h3>User access permissions for stories</h3>
       <p><strong>create stories:</strong> Allows a role to create stories. They cannot edit or delete stories, even if they are the authors. You must enable this permission to in order for a role to create a story.</p>
-      <p><strong>maintain personal stories:</strong> Allows a role to add/edit stories if they own the story. Use this permission if you want users to be able to edit and maintain their own stories.</p>
+      <p><strong>edit own stories:</strong> Allows a role to add/edit stories if they own the story. Use this permission if you want users to be able to edit and maintain their own stories.</p>
       ", array('%story-config' => url('admin/settings/story')));
     case 'node/add/story':
       return variable_get('story_help', '');
@@ -46,7 +46,7 @@ function story_node_name($node) {
  * Implementation of hook_perm().
  */
 function story_perm() {
-  return array('create stories', 'maintain personal stories');
+  return array('create stories', 'edit own stories');
 }
 
 /**
@@ -64,11 +64,11 @@ function story_access($op, $node) {
   }
 
   if ($op == 'update') {
-    return user_access('maintain personal stories') && ($user->uid == $node->uid);
+    return user_access('edit own stories') && ($user->uid == $node->uid);
   }
 
   if ($op == 'delete') {
-    return user_access('maintain personal stories') && ($user->uid == $node->uid);
+    return user_access('edit own stories') && ($user->uid == $node->uid);
   }
 }
 
