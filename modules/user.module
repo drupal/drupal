@@ -643,12 +643,12 @@ function user_login($edit = array(), $msg = "") {
     $output .= "<p>$msg</p>";
   }
   if (count(user_auth_help_links()) > 0) {
-    $output .= form_textfield(t("Username"), "name", $edit["name"], 20, 64, t("Enter your %s username, or an ID from one of our affiliates: %a.", array("%s" => variable_get("site_name", "local"), "%a" => implode(", ", user_auth_help_links()))));
+    $output .= form_textfield(t("Username"), "name", $edit["name"], 30, 64, t("Enter your %s username, or an ID from one of our affiliates: %a.", array("%s" => variable_get("site_name", "local"), "%a" => implode(", ", user_auth_help_links()))));
   }
   else {
-    $output .= form_textfield(t("Username"), "name", $edit["name"], 20, 64, t("Enter your %s username.", array("%s" => variable_get("site_name", "local"))));
+    $output .= form_textfield(t("Username"), "name", $edit["name"], 30, 64, t("Enter your %s username.", array("%s" => variable_get("site_name", "local"))));
   }
-  $output .= form_password(t("Password"), "pass", $pass, 20, 64, t("Enter the password that accompanies your username."));
+  $output .= form_password(t("Password"), "pass", $pass, 30, 64, t("Enter the password that accompanies your username."));
   $output .= form_checkbox(t("Remember me"), "remember_me", 1, 0, 0);
   $output .= form_submit(t("Log in"));
   $output .= "<p>&raquo; ". l(t("Request new password"), "user/password"). "<br />";
