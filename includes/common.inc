@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.153 2003/01/09 20:06:00 dries Exp $
+// $Id: common.inc,v 1.154 2003/01/11 10:46:11 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST, $PHP_SELF;
@@ -719,7 +719,7 @@ function form_weight($title = NULL, $name = "weight", $value = 0, $delta = 10, $
   return form_select($title, $name, $value, $weights, $description, $extra);
 }
 
-function url($url, $query = NULL) {
+function url($url = NULL, $query = NULL) {
 
   if (isset($url)) {
     if (isset($query)) {
@@ -732,6 +732,9 @@ function url($url, $query = NULL) {
   else {
     if (isset($query)) {
       return "?$query";
+    }
+    else {
+      return "";
     }
   }
 }
