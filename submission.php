@@ -1,11 +1,9 @@
 <?
-include "submission.inc";
-include "theme.inc";
+include "includes/submission.inc";
+include "includes/theme.inc";
 
 function submission_displayMain() {
   global $PHP_SELF, $theme, $user;
-
-  include "config.inc";
 
   ### Perform query:
   $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON s.author = u.id WHERE s.status = 1 ORDER BY s.id");
@@ -25,14 +23,12 @@ function submission_displayMain() {
 }
 
 function submission_displayItem($id) {
-  global $PHP_SELF, $theme, $user;
+  global $PHP_SELF, $theme, $user, $submission_votes;
 
   if ($vote = user_getHistory($user->history, "s$id")) {
     header("Location: discussion.php?id=$id");
   }
   else {
-    include "config.inc";
- 
     $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON s.author = u.id WHERE s.id = $id");
     $submission = db_fetch_object($result);
 

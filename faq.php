@@ -1,5 +1,5 @@
 <?
-include "theme.inc";
+include "includes/theme.inc";
 
 $output = "
   <DL>
@@ -44,6 +44,9 @@ $output = "
 
    <DT><B>Can I syndicate content from this site?</B></DT>
    <DD>--- under construction ---<P></DD>
+
+   <DT><B>I found a bug or encountered a problem, what do I do?</B></DT>
+   <DD>Write us a bugreport or send us a patch!  Writing a good bug report takes patience, but doing it right the first time saves time for us and for you.  It is most helpful when a good description of the problem is included in the bug report. That is, a good example of all the things you did that led to the problem and the problem itself exactly described. The best reports are those that include a full example showing how to reproduce the bug or problem.<P></DD>
 
    <DT><B>Is the source code of this site available?</B></DT>
    <DD>This site is powered by <A HREF=\"http://www.fsf.org/\">Free Software</A>; including <A HREF=\"http://www.apache.org/\">Apache</A>, <A HREF=\"http://www.php.net/\">PHP</A>, <A HREF=\"http://www.mysql.com/\">MySQL</A> and <A HREF=\"http://www.linux.com/\">Linux</A>, and is inspired by several <A HREF=\"http://www.fsf.org/\">Free Software</A> projects.  Therefor we have decided to make the software engine of this site available under terms of GPL.<P>However, the sources are <B>not</B> available yet at this time, but will be released as soon we have a first, well-rounded source tree that has proven to be stable.  If you can't wait or in case you have big plans (like `total domination') with the engine, don't hesitate to contact us and we might grant you CVS access.<P></DD>

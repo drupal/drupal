@@ -1,6 +1,6 @@
 <?
 
- include "theme.inc";
+ include "includes/theme.inc";
 
  $theme->header();
 

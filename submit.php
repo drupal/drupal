@@ -146,7 +146,7 @@ function submit_submit($subject, $abstract, $article, $category) {
   watchdog(1, "added new submission with subject `$subject'.");
 }
 
-include "theme.inc";
+include "includes/theme.inc";
 
 switch($op) {
   case "Preview submission":
