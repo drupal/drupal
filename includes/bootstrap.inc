@@ -95,7 +95,7 @@ function page_get_cache() {
   global $user;
 
   $cache = NULL;
-  
+
   /*
    * Note, we do not serve cached pages when status messages are waiting (from
    * a redirected form submission which was completed).

@@ -61,7 +61,8 @@ $sql_updates = array(
   "2004-05-18" => "update_87",
   "2004-06-11" => "update_88",
   "2004-06-18" => "update_89",
-  "2004-06-27" => "update_90"
+  "2004-06-27" => "update_90",
+  "2004-06-30" => "update_91"
 );
 
 function update_32() {
@@ -1125,6 +1126,19 @@ function update_90() {
   $ret[] = update_sql("ALTER TABLE {profile_fields} CHANGE overview visibility INT(1) UNSIGNED DEFAULT '0' NOT NULL");
   $ret[] = update_sql("UPDATE {profile_fields} SET visibility = 2 WHERE visibility = 1");
   $ret[] = update_sql("UPDATE {profile_fields} SET visibility = 1 WHERE visibility = 0");
+  return $ret;
+}
+
+function update_91() {
+  $ret = array();
+  if ($GLOBALS["db_type"] == "pgsql") {
+    $ret[] = update_sql("CREATE INDEX node_created ON {node} (created)");
+    $ret[] = update_sql("CREATE INDEX node_changed ON {node} (changed)");
+  }
+  else {
+    $ret[] = update_sql("ALTER TABLE {node} ADD INDEX node_created (created)");
+    $ret[] = update_sql("ALTER TABLE {node} ADD INDEX node_changed (changed)");
+  }
   return $ret;
 }
 
