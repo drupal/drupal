@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.57 2004/09/09 05:51:08 dries Exp $
+// $Id: module.inc,v 1.58 2004/10/15 10:47:54 dries Exp $
 
 /**
  * @file
@@ -149,7 +149,7 @@ function module_load_all() {
   $list = module_list();
   $status = true;
   foreach ($list as $module) {
-    $status = $status && module_load($module);
+    $status &= module_load($module);
   }
   return $status;
 }
