@@ -6,7 +6,7 @@ $theme->header();
 
 if ($user->id) {
   if ($mod) {
-    module_execute($mod, "user");
+    module_invoke($mod, "user");
   }
   else {
     $result = db_query("SELECT * FROM category");

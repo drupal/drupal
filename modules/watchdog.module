@@ -1,9 +1,5 @@
 <?php
 
-$module = array("help" => "watchdog_help",
-                "cron" => "watchdog_cron",
-                "admin" => "watchdog_admin");
-
 function watchdog_help() {
  ?>
   <P>The watchdog module monitors your website, captures system events in a log and records them to be reviewed by an authorized individual at a later time.  The watchdog log is simply a list of events recorded during operation and contains usage data, performance data, errors, warnings and operational information.  It is vital to check the watchdog report on a regular basis as it is often the only way to tell what is going on.</P>

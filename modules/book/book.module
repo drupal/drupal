@@ -1,20 +1,11 @@
 <?php
 
-$module = array("find" => "book_find",
-                "page" => "book_page",
-                "user" => "book_user",
-                "admin" => "book_admin",
-                "export" => "book_export");
-
 class Book {
-  function Book($nid, $userid, $title, $body, $parent, $weight, $timestamp) {
-    $this->nid = $nid;
-    $this->userid = $userid;
-    $this->title = $title;
-    $this->body = $body;
-    $this->parent = $parent;
-    $this->weight = $weight;
-    $this->timestamp = $timestamp;
+  function Book($book) {
+    $this = new Node($book);
+    $this->body = $book[body];
+    $this->parent = $book[parent];
+    $this->weight = $book[weight];
   }
 }
 
@@ -184,7 +175,7 @@ function book_admin() {
       print book_tree();
       break;
     case t("Preview"):
-      book_view(new Book(($edit[nid] ? $edit[nid] : -1), ($edit[userid] ? $edit[userid] : $user->userid), $edit[title], $edit[body], $edit[parent], $edit[weight], ($edit[timestamp] ? $edit[timestamp] : time())));
+      book_view(new Book($edit));
       print book_form($edit);
       break;
     case t("Submit"):
@@ -235,7 +226,7 @@ function book_user() {
       $theme->box($title, book_update($id));
       break;
     case t("Preview"):
-      book_view(new Book(($edit[nid] ? $edit[nid] : -1), $user->userid, $edit[title], $edit[body], $edit[parent], $edit[weight], ($edit[timestamp] ? $edit[timestamp] : time())));
+      book_view(new Book($edit));
       $theme->box($title, book_form($edit));
       break;
     case t("Submit"):

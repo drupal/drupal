@@ -1,12 +1,5 @@
 <?php
 
-// RSS 1.0 headline exporter (v0.1)
-//
-// Kristjan Jansen -- kika@sloleht.ee
-
-$module = array("export" => "headlineRSS10_export");
-
-include_once "includes/common.inc";
 include_once "modules/backend.class";
 
 function headlineRSS10_export($uri) {

@@ -186,13 +186,6 @@ function account_content_save($edit) {
 function account_user($uname) {
   global $user, $status, $theme;
 
-  function module($name, $module, $username) {
-    global $theme;
-    if ($module[account] && $block = $module[account]($username, "account", "view")) {
-      if ($block[content]) $theme->box($block[subject], $block[content]);
-    }
-  }
-
   if ($user->id && $user->userid == $uname) {
     $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>". t("Username") .":</B></TD><TD>$user->userid</TD></TR>\n";
@@ -208,17 +201,16 @@ function account_user($uname) {
     $theme->footer();
   }
   elseif ($uname && $account = account_get_user($uname)) {
-    $block1 .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
-    $block1 .= " <TR><TD ALIGN=\"right\"><B>". t("Username") .":</B></TD><TD>$account->userid</TD></TR>\n";
-    $block1 .= " <TR><TD ALIGN=\"right\"><B>". t("E-mail") .":</B></TD><TD>". format_email($account->fake_email) ."</TD></TR>\n";
-    $block1 .= " <TR><TD ALIGN=\"right\"><B>". t("Homepage") .":</B></TD><TD>". format_url($account->url) ."</TD></TR>\n";
-    $block1 .= " <TR><TD ALIGN=\"right\"><B>". t("Bio") .":</B></TD><TD>". check_output($account->bio) ."</TD></TR>\n";
-    $block1 .= "</TABLE>\n";
+    $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>". t("Username") .":</B></TD><TD>$account->userid</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>". t("E-mail") .":</B></TD><TD>". format_email($account->fake_email) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>". t("Homepage") .":</B></TD><TD>". format_url($account->url) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>". t("Bio") .":</B></TD><TD>". check_output($account->bio) ."</TD></TR>\n";
+    $output .= "</TABLE>\n";
 
     // Display account information:
     $theme->header();
-    if ($block1) $theme->box(strtr(t("%a's user information"), array("%a" => $uname)), $block1);
-    module_iterate("module", $uname);
+    $theme->box(strtr(t("%a's user information"), array("%a" => $uname)), $output);
     $theme->footer();
   }
   else {

@@ -1,8 +1,5 @@
 <?php
 
-$module = array("help" => "module_help",
-                "admin" => "module_admin");
-
 function module_help() {
  ?>
   The module administration page provide you a list of all available modules.  Moreover, it allows you to "rehash" modules.  Whenever you install a new module or when an existing module has been changed or updated, it requires "rehashing": when you rehash a module, the module is registered to the engine and properly initialized.
@@ -10,34 +7,24 @@ function module_help() {
 }
 
 function module_admin_rehash() {
-  global $repository;
-
   $result = db_query("SELECT * FROM modules");
   while ($module = db_fetch_object($result)) {
     module_rehash($module->name);
   }
 
-  foreach ($repository as $name=>$module) {
+  foreach (module_list() as $name) {
     module_rehash($name);
   }
 }
 
-function module_admin_display() {
-  global $output;
-
-  function module_row($name, $module) {
-    global $output;
-
-    $view = ($module["page"]) ? "<A HREF=\"module.php?mod=$name\">view</A>" : "&nbsp;";
-    $admin = ($module["admin"]) ? "<A HREF=\"admin.php?mod=$name\">admin</A>" : "&nbsp;";
-    $output .= " <TR><TD>$name</TD><TD>$view</TD><TD>$admin</TD><TD><A HREF=\"admin.php?mod=module&op=rehash&name=$name\">rehash</A></TD></TR>\n";
-  }
-
+function module_admin_overview() {
   $output .= "<FORM ACTION=\"admin.php?mod=module\" METHOD=\"post\">\n";
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR><TH>module</TH><TH COLSPAN=\"3\">operations</TH></TR>\n";
 
-  module_iterate("module_row");
+  foreach (module_list() as $name) {
+    $output .= " <TR><TD>$name</TD><TD>". (module_hook($name, "page") ? "<A HREF=\"module.php?mod=$name\">view</A>" : "&nbsp;") ."</TD><TD>". (module_hook($name, "admin") ? "<A HREF=\"admin.php?mod=$name\">admin</A>" : "&nbsp;") ."</TD><TD><A HREF=\"admin.php?mod=module&op=rehash&name=$name\">rehash</A></TD></TR>\n";
+  }
 
   $output .= "</TABLE>\n";
   $output .= "<INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"Rehash modules\">\n";
@@ -56,14 +43,14 @@ function module_admin() {
       break;
     case "rehash":
       module_rehash($name);
-      module_admin_display();
+      module_admin_overview();
       break;
     case "Rehash modules":
       module_admin_rehash();
-      module_admin_display();
+      module_admin_overview();
       break;
     default:
-      module_admin_display();
+      module_admin_overview();
   }
 }
 

@@ -1,15 +1,5 @@
 <?php
 
-$module = array("find" => "diary_find",
-                "help" => "diary_help",
-                "menu" => "diary_menu",
-                "page"  => "diary_page",
-                "admin" => "diary_admin",
-                "block" => "diary_block",
-                "export" => "diary_export");
-
-include_once "includes/common.inc";
-
 function diary_find($keys) {
   global $user;
   $find = array();

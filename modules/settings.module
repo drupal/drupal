@@ -1,7 +1,5 @@
 <?php
 
-$module = array("admin" => "settings_admin");
-
 function settings_conf() {
   global $conf, $cmodes, $corder, $themes;
 
@@ -66,12 +64,12 @@ function settings_default() {
   return "all settings have been reset.";
 }
 
-function settings_module($name, $module) {
+function settings_module($name) {
   global $settings;
 
-  if ($module["conf"]) {
+  if (module_hook($name, "conf")) {
     $settings .= "<H3>". ucfirst($name) ." module</H3>\n";
-    $settings .= $module["conf"]();
+    $settings .= module_invoke($name, "conf");
     $settings .= "<HR>\n";
   }
 }

@@ -10,9 +10,6 @@ $queue_votes = array("neutral (+0)" => "+ 0",
                           "post it (+1)" => "+ 1",
                           "dump it (-1)" => "- 1");
 
-$module = array("menu" => "queue_menu",
-                "page" => "queue_page");
-
 function queue_menu() {
   return array("<A HREF=\"module.php?mod=queue\">". t("moderation queue") ."</A> (<FONT COLOR=\"red\">". queue_count() ."</FONT>)");
 }

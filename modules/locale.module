@@ -1,9 +1,5 @@
 <?php
 
-$module = array("help" => "locale_help",
-                "admin" => "locale_admin",
-                "locale" => "locale_locale");
-
 function locale_help() {
  ?>
   <P>Normally programs are written and documented in English, and use English to interact with users.  This is true for a great deal of websites.  However, most people are less comfortable with English than with their own native language, and would prefer to use their mother tongue as much as possible.  Many people love see their website showing a lot less of English, and far more of their own language.</P>

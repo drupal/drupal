@@ -1,8 +1,5 @@
 <?php
 
-$module = array("page" => "forum_page",
-                "admin" => "forum_admin");
-
 $format = array(0 => HTML, 1 => PHP, 2 => text);
 
 function forum_status() {

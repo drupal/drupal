@@ -13,31 +13,22 @@ function theme_init() {
 }
 
 function theme_link($separator = " | ") {
-  global $repository;
   $links[] = "<A HREF=\"index.php\">". t("home") ."</A>";
   $links[] = "<A HREF=\"search.php\">". t("search") ."</A>";
   $links[] = "<A HREF=\"submit.php\">". t("submit") ."</A>";
-  if ($repository[forum]) $links[] = "<A HREF=\"module.php?mod=forum\">".t("forum") ."</A>";
-  if ($repository[diary]) $links[] = "<A HREF=\"module.php?mod=diary\">". t("diary") ."</A>";
   $links[] = "<A HREF=\"account.php\">". t("account") ."</A>";
-  if ($repository[book]) $links[] = "<A HREF=\"module.php?mod=book\">". t("handbook") ."</A>";
+  if (module_exist("forum")) $links[] = "<A HREF=\"module.php?mod=forum\">".t("forum") ."</A>";
+  if (module_exist("diary")) $links[] = "<A HREF=\"module.php?mod=diary\">". t("diary") ."</A>";
+  if (module_exist("book")) $links[] = "<A HREF=\"module.php?mod=book\">". t("handbook") ."</A>";
 
   return implode($separator, $links);
 }
 
-function theme_menu($name, $module) {
-  global $menu;
-  if ($module["menu"]) $menu = ($menu) ? array_merge($menu, $module["menu"]()) : $module["menu"]();
-}
 
 function theme_account($theme) {
-  global $user, $links, $menu;
+  global $user;
 
   if ($user->id) {
-
-
-    module_iterate("theme_menu");
-
     // Display account settings:
     $content .= "<LI><A HREF=\"account.php?op=track&topic=comments\">". t("track your comments") ."</A></LI>\n";
     $content .= "<LI><A HREF=\"account.php?op=track&topic=nodes\">". t("track your nodes") ."</A></LI>\n";
@@ -53,10 +44,12 @@ function theme_account($theme) {
       $content .= "<P>\n";
     }
 
-    if ($menu) {
-      foreach ($menu as $link) $content .= "<LI>$link</LI>\n";
-      $content .= "<P>\n";
+    foreach (module_list() as $name) {
+      if ($links = module_invoke($name, "menu")) {
+        foreach ($links as $link) $content .= "<LI>$link</LI>\n";
+      }
     }
+    if ($link) $content .= "<P>\n";
 
     $content .= "<LI><A HREF=\"account.php?op=logout\">". t("logout") ."</A></LI>\n";
 
@@ -92,7 +85,7 @@ function theme_blocks($region, $theme) {
       if ($user->id) $result = db_query("SELECT * FROM blocks b LEFT JOIN layout l ON b.name = l.block WHERE (b.status = 2 OR (b.status = 1 AND l.user = '$user->id'))". (($region == "left" || $region == "right") ? ($region == "left" ? " AND b.region = 0" : " AND b.region = 1") : "") ." ORDER BY weight");
       else $result = db_query("SELECT * FROM blocks WHERE status = 2". (($region == "left" || $region == "right") ? ($region == "left" ? " AND region = 0" : " AND region = 1") : "") ." ORDER BY weight");
       while ($block = db_fetch_object($result)) {
-        $blocks = module_execute($block->module, "block");
+        $blocks = module_invoke($block->module, "block");
         $theme->box(t($blocks[$block->offset]["subject"]), $blocks[$block->offset]["content"]);
       }
       break;

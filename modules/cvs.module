@@ -1,9 +1,5 @@
 <?php
 
-$module = array("cron" => "cvs_cron",
-                "conf" => "cvs_conf",
-                "page" => "cvs_page");
-
 function cvs_cron() {
   $result = db_query("SELECT * FROM cvs WHERE status = '0' ORDER BY timestamp DESC LIMIT 50");
 

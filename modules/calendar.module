@@ -1,7 +1,5 @@
 <?php
 
-$module = array("block" => "calendar_block");
-
 function calendar_block() {
   global $date;
 

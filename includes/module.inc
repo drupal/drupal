@@ -1,28 +1,60 @@
 <?php
 
-// applies function $function to every known module:
+// initialize modules:
+function module_init() {
+  module_list();
+}
+
+// apply function $function to every known module:
 function module_iterate($function, $argument = "") {
-  global $repository;
-  foreach ($repository as $name=>$module) {
-    $function($name, $module, $argument);
+  foreach (module_list() as $name) $function($name, $argument);
+}
+
+// invoke hook $hook of module $name with optional arguments:
+function module_invoke($name, $hook, $argument = "") {
+  $function = $name ."_". $hook;
+  if (function_exists($function)) return $function($argument);
+}
+
+// return true if module $name supports hook $hook, and false otherwise:
+function module_is_hook($name, $hook) {
+  return function_exists($name ."_". $hook);
+}
+
+// return an array of module names (includes lazy module loading):
+function module_list() {
+  static $list;
+
+  if (!$list) {
+    $handle = opendir("modules");
+    $list = array();
+    while ($file = readdir($handle)) {
+      if (".module" == substr($file, -7)) {
+        $filename = substr($file, 0, -7);
+        include "modules/$filename.module";
+        $list[$filename] = $filename;
+      }
+    }
+    closedir($handle);
   }
+
+  return $list;
 }
 
-// executes hook $hook of module $module with optional arguments:
-function module_execute($module, $hook, $argument = "") {
-  global $repository;
-  return ($repository[$module][$hook]) ? $repository[$module][$hook]($argument) : "";
+// return 1 if module $name exists, 0 otherwise:
+function module_exist($name) {
+  $list = module_list();
+  return ($list[$name]) ? 1 : 0;
 }
 
-// returns true if module $module supports hook $hook, and false otherwise:
-function module_hook($module, $hook) {
-  global $repository;
-  return $repository[$module][$hook];
+// return 1 if module $name implements hook $hook, 0 otherwise:
+function module_hook($name, $hook) {
+  return function_exists($name ."_". $hook);
 }
 
-// rehashes the crons:
-function module_rehash_crons($name, $module) {
-  if ($module["cron"]) {
+// rehash module-exported crons:
+function module_rehash_crons($name) {
+  if (module_hook($name, "cron")) {
     if (!db_fetch_object(db_query("SELECT * FROM crons WHERE module = '$name'"))) {
       db_query("INSERT INTO crons (module, scheduled, timestamp) VALUES ('$name', '172800', '0')");
     }
@@ -32,10 +64,10 @@ function module_rehash_crons($name, $module) {
   }
 }
 
-// rehashes the blocks:
-function module_rehash_blocks($name, $module) {
+// rehash module-exported blocks:
+function module_rehash_blocks($name) {
   db_query("UPDATE blocks SET remove = '1' WHERE module = '$name'");
-  if ($module["block"] && $blocks = $module["block"]()) {
+  if ($blocks = module_invoke($name, "block")) {
     foreach ($blocks as $offset=>$block) {
       foreach ($block as $item=>$data) {
         $block[$item] = addslashes($data);
@@ -51,22 +83,20 @@ function module_rehash_blocks($name, $module) {
   db_query("DELETE FROM blocks WHERE module = '$name' AND remove = '1'");
 }
 
-// rehashes a module:
+// rehash a module:
 function module_rehash($name) {
-  global $repository;
-
-  if ($module = $repository[$name]) {
+  if (module_exist($name)) {
     $result = db_query("SELECT * FROM modules WHERE name = '$name'");
 
     if (!$object = db_fetch_object($result)) {
       db_query("INSERT INTO modules (name) VALUES ('$name')");
     }
 
-    // rehash crons (if necessary):
-    module_rehash_crons($name, $module);
+    // rehash module-exported crons (if necessary):
+    module_rehash_crons($name);
 
-    // rehash blocks (if necessary):
-    module_rehash_blocks($name, $module);
+    // rehash module-exported blocks (if necessary):
+    module_rehash_blocks($name);
   }
   else {
     // remove all reference to module:
@@ -75,17 +105,5 @@ function module_rehash($name) {
     db_query("DELETE FROM crons WHERE module = '$name'");
   }
 }
-
-// load modules into repository:
-$handle = opendir("modules");
-$repository = array();
-while ($file = readdir($handle)) {
-  if (".module" == substr($file, -7)) {
-    $filename = substr($file, 0, -7);
-    include "modules/$filename.module";
-    $repository[$filename] = $module;
-  }
-}
-closedir($handle);
 
 ?>

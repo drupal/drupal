@@ -1,8 +1,5 @@
 <?php
 
-$module = array("help" => "cron_help",
-                "admin" => "cron_admin");
-
 function cron_help() {
  ?>
   <P>Cron (which stands for chronograph) is a periodic command scheduler: it executes commands at intervals specified in seconds.  It can be used to control the execution of daily, weekly and monthly jobs (or anything with a period of <i>n</i> seconds).   Automating tasks is one of the best ways to keep a system running smoothly, and if most of your administration does not require your direct involvement, cron is an ideal solution.</P>
@@ -18,9 +15,8 @@ function cron_save($edit) {
 }
 
 function cron_execute($name) {
-  global $repository;
   watchdog("message", "cron: executed '". $name ."_cron()'");
-  $repository[$name]["cron"]();
+  module_invoke($name, "cron");
   db_query("UPDATE crons SET timestamp = ". time() ." WHERE module = '$name'");
 }
 

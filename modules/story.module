@@ -1,22 +1,10 @@
 <?php
 
-$module = array("help" => "story_help",
-                "find" => "story_find",
-                "user" => "story_user",
-                "queue" => "story_queue",
-                "admin" => "story_admin",
-                "block" => "story_block");
-
 class Story {
   function Story($story) {
-    global $user;
-    $this->userid = $story[userid] ? $story[userid] : $user->userid;
-    $this->title = $story[title];
+    $this = new Node($story);
     $this->abstract = $story[abstract];
     $this->body = $story[body];
-    $this->timestamp = $story[timestamp] ? $story[timestamp] : time();
-    $this->cid = $story[cid];
-    $this->tid = $story[tid];
   }
 }
 

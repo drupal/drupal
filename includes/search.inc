@@ -11,7 +11,7 @@ function search_form($keys) {
 
 function search_data($keys, $type) {
   if ($keys && $type) {
-    $result = module_execute($type, "find", check_input($keys));
+    $result = module_invoke($type, "find", check_input($keys));
     foreach ($result as $entry) {
       $output .= "<P>\n";
       $output .= " <B><U><A HREF=\"$entry[link]\">$entry[title]</A></U></B><BR>";
