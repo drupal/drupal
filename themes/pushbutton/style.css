@@ -127,6 +127,73 @@ td#home a:hover img {
 #secondary-menu .secondary-links {
   font-size: 0.85em;
 }
+.tabs {
+  margin: 15px 0 15px 0;
+}
+.tabs ul.primary {
+  border-collapse: collapse;
+  padding: 0 0 3px 10px;
+  white-space: nowrap;
+  list-style: none;
+  margin: 0 0 0 0;
+  height: auto;
+  line-height: normal;
+  border-bottom: 2px solid #336699;
+}
+.tabs ul.primary li {
+  display: inline;
+}
+.tabs ul.primary li a {
+  padding: 3px 10px 3px 10px;
+  background: #fff url(tabs-off.png) left top no-repeat;
+  border-color: #6699CC;
+  border-width: 2px;
+  border-style: none solid none none;
+  height: auto;
+  margin-right: 10px;
+  text-decoration: none;
+  text-transform: lowercase;
+}
+.tabs ul.primary li.active a {
+  background: #336699 url(tabs-on.png) left top no-repeat;
+  border-right: 2px solid #336699;
+  color: #fff;
+}
+.tabs ul.primary li a:hover {
+  background-color: #fffaf0;
+  color: #ff4500;
+}
+.tabs ul.secondary {
+  border-collapse: collapse;
+  padding: 10px 0 10px 0px;
+  margin: 0 0 0 0;
+  white-space: nowrap;
+  list-style: none;
+  height: auto;
+  line-height: normal;
+  border-bottom: none;
+}
+.tabs ul.secondary li {
+  display: inline;
+  height: auto;
+  padding: 0 0 0 10px;
+  text-decoration: none;
+  border-right: none;
+}
+.tabs ul.secondary li a {
+  background: #fff url(tabs-option-off.png) left center no-repeat;
+  padding: 10px 0 10px 25px;
+  margin: 0 0 0 0;
+}
+.tabs ul.secondary li a.active {
+  background: #fff url(tabs-option-on.png) left center no-repeat;
+  color: #369;
+  border-bottom: none;
+}
+.tabs ul.secondary li a:hover {
+  background: #fff url(tabs-option-hover.png) left center no-repeat;
+  color: #FF4500
+}
 #content {
   background-color: #fff;
 }
