@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.196 2003/12/08 18:30:20 dries Exp $
+// $Id: comment.module,v 1.197 2003/12/09 20:15:18 dries Exp $
 
 function comment_help($section = "admin/help#comment") {
   $output = "";
@@ -127,7 +127,7 @@ function comment_settings() {
   $output .= form_select(t("Default threshold"), "comment_default_threshold", variable_get("comment_default_threshold", 0), $thresholds, t("Thresholds are values below which comments are hidden. These thresholds are useful for busy sites which want to hide poor comments from most users."));
 
   $output .= form_radios(t("Preview comment"), "comment_preview", variable_get("comment_preview", 1), array(t("Optional"), t("Required")), t("Must users preview comments before submitting?"));
-  $output .= form_radios(t("Location of comment submission form"), "comment_form_location", variable_get("comment_form_location", 0), array(t("Display below post or comments"), t("Display on separate page")), t("The location of the comment submission form."));
+  $output .= form_radios(t("Location of comment submission form"), "comment_form_location", variable_get("comment_form_location", 0), array(t("Display on separate page"), t("Display below post or comments")), t("The location of the comment submission form."));
   $output .= form_radios(t("Comment controls"), "comment_controls", variable_get("comment_controls", 0), array(t("Display above the comments"), t("Display below the comments"), t("Display above and below the comments"), t("Do not display")), t("Position of the comment controls box."));
 
   return $output;
@@ -219,12 +219,13 @@ function comment_edit($cid) {
   $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status != 2", $cid));
 
   if (comment_access("edit", $comment)) {
-    comment_preview(object2array($comment));
+    return comment_preview(object2array($comment));
   }
 }
 
 function comment_reply($pid, $nid) {
 
+  $output = "";
 
   if (user_access("access comments")) {
 
@@ -234,10 +235,10 @@ function comment_reply($pid, $nid) {
 
     if ($pid) {
       $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0", $pid));
-      print theme("comment_view", $comment);
+      $output .= theme("comment_view", $comment);
     }
     else if (user_access("access content")) {
-      print node_view(node_load(array("nid" => $nid)));
+      $output .= node_view(node_load(array("nid" => $nid)));
       $pid = 0;
     }
 
@@ -246,22 +247,26 @@ function comment_reply($pid, $nid) {
     */
 
     if (node_comment_mode($nid) != 2) {
-      print theme("box", t("Reply"), t("This discussion is closed: you can't post new comments."));
+      $output .= theme("box", t("Reply"), t("This discussion is closed: you can't post new comments."));
     }
     else if (user_access("post comments")) {
-      print theme("box", t("Reply"), comment_form(array("pid" => $pid, "nid" => $nid)));
+      $output .= theme("box", t("Reply"), comment_form(array("pid" => $pid, "nid" => $nid)));
     }
     else {
-      print theme("box", t("Reply"), t("You are not authorized to post comments."));
+      $output .= theme("box", t("Reply"), t("You are not authorized to post comments."));
     }
   }
   else {
-    print theme("box", t("Reply"), t("You are not authorized to view comments."));
+    $output .= theme("box", t("Reply"), t("You are not authorized to view comments."));
   }
+
+  return $output;
 }
 
 function comment_preview($edit) {
   global $user;
+
+  $output = "";
 
   foreach ($edit as $key => $value) {
     $comment->$key = $value;
@@ -279,18 +284,19 @@ function comment_preview($edit) {
   ** Preview the comment:
   */
 
-  print theme("comment_view", $comment, t("reply to this comment"));
-
-  print theme("box", t("Reply"), comment_form($edit));
+  $output .= theme("comment_view", $comment, comment_links($comment));
+  $output .= theme("box", t("Reply"), comment_form($edit));
 
   if ($edit["pid"]) {
     $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0", $edit["pid"]));
-    print theme("comment_view", $comment);
+    $output .= theme("comment_view", $comment);
   }
   else {
-    print node_view(node_load(array("nid" => $edit["nid"])));
+    $output .= node_view(node_load(array("nid" => $edit["nid"])));
     $edit["pid"] = 0;
   }
+
+  return $output;
 }
 
 function comment_post($edit) {
@@ -863,9 +869,7 @@ function comment_page() {
 
   switch ($op) {
     case "edit":
-      print theme("header");
-      comment_edit(check_query(arg(2)));
-      print theme("footer");
+      print theme("page", comment_edit(check_query(arg(2))), t("Edit comment"));;
       break;
     case t("Moderate comments"):
     case t("Moderate comment"):
@@ -873,14 +877,10 @@ function comment_page() {
       drupal_goto(url(comment_referer_load()));
       break;
     case "reply":
-      print theme("header");
-      comment_reply(check_query(arg(3)), check_query(arg(2)));
-      print theme("footer");
+      print theme("page", comment_reply(check_query(arg(3)), check_query(arg(2))), t("Add new comment"));
       break;
     case t("Preview comment"):
-      print theme("header");
-      comment_preview($edit);
-      print theme("footer");
+      print theme("page", comment_preview($edit), t("Preview comment"));
       break;
     case t("Post comment"):
       list($error_title, $error_body) = comment_post($edit);
