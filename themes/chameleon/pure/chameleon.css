@@ -1,4 +1,4 @@
-/* $Id: chameleon.css,v 1.1 2004/02/15 14:21:37 dries Exp $ */
+/* $Id: chameleon.css,v 1.2 2004/02/21 21:31:22 dries Exp $ */
 
 /* HTML styles */
 
@@ -10,7 +10,7 @@ a:visited {
 }
 body {
   padding: 5em 0 0 3em;
-  background-image: url(pure/background.gif);
+  background-image: url(background.gif);
   background-repeat: repeat-x;
   font-family: tahoma, verdana, arial, helvetica;
   border-top: 10px solid gray;
