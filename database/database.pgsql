@@ -165,10 +165,12 @@ CREATE TABLE feed (
 
 CREATE TABLE forum (
   nid integer NOT NULL default '0',
+  tid integer NOT NULL default '0',
   icon varchar(255) NOT NULL default '',
   shadow integer NOT NULL default '0',
   PRIMARY KEY  (nid)
 );
+CREATE INDEX forum_tid_idx ON forum(tid);
 
 --
 -- Table structure for history
