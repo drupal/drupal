@@ -5,8 +5,6 @@ include_once "includes/bootstrap.inc";
 drupal_page_header();
 include_once "includes/common.inc";
 
-drupal_page_header();
-
 fix_gpc_magic();
 
 menu_build("system");
