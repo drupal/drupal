@@ -494,6 +494,7 @@ function node_view($node, $main = 0, $page = 0) {
 }
 
 function node_prepare($node, $main = 0) {
+  $node->readmore = (strlen($node->teaser) < strlen($node->body));
   if ($main == 0) {
     $node->body = check_output($node->body);
   }
@@ -597,7 +598,7 @@ function node_link($type, $node = 0, $main = 0) {
       $links = $node->links;
     }
 
-    if ($main == 1 && $node->teaser && strlen($node->teaser) != strlen($node->body)) {
+    if ($main == 1 && $node->teaser && $node->readmore) {
       $links[] = l(t('read more'), "node/view/$node->nid", array('title' => t('Read the rest of this posting.'), 'class' => 'read-more'));
     }
 
