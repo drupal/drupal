@@ -366,7 +366,7 @@ function user_fields() {
  * Implementation of hook_perm().
  */
 function user_perm() {
-  return array('administer users', 'access user list');
+  return array('administer users', 'access users');
 }
 
 /**
@@ -532,7 +532,7 @@ function user_block($op = 'list', $delta = 0) {
             $output = t('There are currently %members and %visitors online.', array('%members' => format_plural($total_users, '1 user', '%count users'), '%visitors' => format_plural($guests->count, '1 guest', '%count guests')));
           }
 
-          if (user_access('access user list') && $total_users) {
+          if (user_access('access users') && $total_users) {
 
             // Display a list of currently online users.
             $max_users = variable_get('user_block_max_list_count', 10);
@@ -1143,17 +1143,22 @@ function user_view($uid = 0) {
   }
   else {
     if ($account = user_load(array('uid' => $uid, 'status' => 1))) {
-      // Retrieve and merge all profile fields:
-      $fields = array();
-      foreach (module_list() as $module) {
-        if ($data = module_invoke($module, 'user', 'view', '', $account)) {
-          foreach ($data as $category => $content) {
-            $fields[$category] .= $content;
+      if (user_access('access users')) {
+        // Retrieve and merge all profile fields:
+        $fields = array();
+        foreach (module_list() as $module) {
+          if ($data = module_invoke($module, 'user', 'view', '', $account)) {
+            foreach ($data as $category => $content) {
+              $fields[$category] .= $content;
+            }
           }
         }
-      }
 
-      print theme('page', theme('user_profile', $account, $fields), $account->name);
+        print theme('page', theme('user_profile', $account, $fields), $account->name);
+      }
+      else {
+        drupal_access_denied();
+      }
     }
     else {
       drupal_not_found();
