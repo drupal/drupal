@@ -30,13 +30,10 @@ ErrorDocument 404 /index.php
    php_value magic_quotes_runtime    0
    php_value magic_quotes_sybase     0
    php_value arg_separator.output    "&amp;"
-   php_value session.cache_expire    200000
-   php_value session.gc_maxlifetime  200000
-   php_value session.cookie_lifetime 2000000
    php_value session.auto_start      0
-   php_value session.save_handler    user
-   php_value session.cache_limiter   none
    php_value allow_call_time_pass_reference  On
+   # Session and site-specific PHP settings are applied
+   # in /sites/default/settings.php
 </IfModule>
 
 # Various rewrite rules
