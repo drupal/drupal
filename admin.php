@@ -20,8 +20,8 @@ function admin_page($mod) {
    <HEAD><TITLE><? echo $site_name; ?> administration center</TITLE></HEAD>
    <STYLE>
     body { font-family: helvetica, arial; }
-    h1   { font-size: 14pt; font-weight: bold; color: #990000; }
-    h2   { font-family: helvetica, arial; font-size: 12pt; font-weight: bold; }
+    h1   { font-size: 18pt; font-weight: bold; color: #990000; }
+    h2   { font-family: helvetica, arial; font-size: 18pt; font-weight: bold; }
     h3   { font-family: helvetica, arial; font-size: 14pt; font-weight: bold; }
     th	 { font-family: helvetica, arial; text-align: center; background-color: #CCCCCC; color: #995555; }
     td	 { font-family: helvetica, arial; }
@@ -29,7 +29,8 @@ function admin_page($mod) {
    <BODY BGCOLOR="#FFFFFF" LINK="#005599" VLINK="#004499" ALINK="#FF0000">
     <H1>Administration center</H1>
  <?
-  
+
+  ksort($repository);  
   module_iterate("module");
  
  ?> 
@@ -39,8 +40,8 @@ function admin_page($mod) {
   module_execute($mod, "admin");
 
  ?>
-   </BODY>
-  </HTML>
+  </BODY>
+ </HTML>
  <?
 }
 

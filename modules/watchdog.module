@@ -15,7 +15,7 @@ function watchdog_display($order = "date") {
   $result = db_query("SELECT l.*, u.userid FROM watchdog l LEFT JOIN users u ON l.user = u.id ORDER BY l.$fields[$order]");
  
   ### Generate output:
-  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
+  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR>\n";
   $output .= "  <TH ALIGN=\"right\" COLSPAN=\"4\">\n";
   $output .= "   <FORM ACTION=\"admin.php?mod=watchdog\" METHOD=\"post\">\n";

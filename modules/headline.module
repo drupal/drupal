@@ -69,12 +69,14 @@ function headline_block() {
   $result = db_query("SELECT * FROM channel");
   while ($channel = db_fetch_object($result)) {
     $backend = new Backend($channel->id);
-  
     $content = "";
-    for (reset($backend->headline); $headline = current($backend->headline); next($backend->headline)) {
-      $content .= "<LI>$headline</LI>\n";
+    
+    if ($backend->headline) {
+      for (reset($backend->headline); $headline = current($backend->headline); next($backend->headline)) {
+        $content .= "<LI>$headline</LI>\n";
+      }
     }
-
+ 
     $blocks[$channel->id]["subject"] = $backend->site;
     $blocks[$channel->id]["content"] = $content;
     $blocks[$channel->id]["info"] = "$backend->site headline";
@@ -142,7 +144,6 @@ function headline_admin() {
       break;
     case "delete":
       $backend = new backend($id);
-      $backend->dump();
       $backend->delete();
       headline_admin_main();
       break;
@@ -159,6 +160,8 @@ function headline_export($uri) {
   global $site_name, $site_url;
   
   if ($uri[2] == "headlines.rdf") {
+
+    watchdog("message", "grabbed 'headlines.rdf'");
 
     header("Content-Type: text/plain");
 
