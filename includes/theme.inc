@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.170 2003/12/13 17:46:44 dries Exp $ */
+/* $Id: theme.inc,v 1.171 2003/12/13 17:52:50 dries Exp $ */
 
 /**
  * @file
@@ -246,14 +246,14 @@ function theme_node($node, $main = 0, $page = 0) {
   }
 
   if ($page == 0) {
-    $output = "<h2>$node->title</h2> by ". format_name($node);
+    $output = "<h2 class=\"title\">$node->title</h2> by ". format_name($node);
   }
   else {
     $output = "by ". format_name($node);
   }
 
   if (count($terms)) {
-    $output .= " <small>(". print theme("links", $terms) .")</small><br />";
+    $output .= " <small>(". theme("links", $terms) .")</small><br />";
   }
 
   if ($main && $node->teaser) {
@@ -264,9 +264,8 @@ function theme_node($node, $main = 0, $page = 0) {
   }
 
   if ($links = link_node($node, $main)) {
-    $output .= "<br />[ ". print theme("links", $links) ." ]";
+    $output .= "<div class=\"links\">". theme("links", $links) ."</div>";
   }
-  $output .= "<hr />";
 
   return $output;
 }
