@@ -1787,7 +1787,7 @@ function user_help_devel_da() {
 <pre>function blogger_info($field = NULL) {
   $info["name"] = "Blogger";
   $info["protocol"] = "XML-RPC";
-  $info["link"] = "<a href=\"module.php?mod=user&op=da_help#blogger\">Blogger</a>";
+  $info["link"] = "<a href=\"module.php?mod=user&op=help#blogger\">Blogger</a>";
   $info["maintainer"] = "Moshe Weitzman";
   $info["maintaineremail"] = "weitzman at tejasa.com";
 
