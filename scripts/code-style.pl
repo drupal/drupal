@@ -8,7 +8,7 @@
 # code.  This program tries to show as many improvements as possible with
 # no false positives.
 
-# $Id: code-style.pl,v 1.3 2001/10/23 18:20:43 dries Exp $
+# $Id: code-style.pl,v 1.4 2001/11/17 15:44:21 kjartan Exp $
 
 $comment = 0;
 $program = 0;
@@ -121,11 +121,14 @@ while (<>) {
     $msg = "missing space before '{'";
   }
   # there should be a space after ','
-  elsif (/[,][^ ]/ && $program) {
+  elsif (/[,][^ \n\r]/ && $program) {
     $msg = "missing space after ','";
   }
   # spaces before and after, only foreach may use $foo=>bar
-  elsif (/[^ =](\+|\-|\*|==|\.=|=>|=|\|\|)[^ =>]/ && $program && !/foreach/) {
+  elsif (/[^ =|-|\+](\+|\-)[^ =>|-|\+]/ && $program && !/foreach/) {
+    $msg = "'$1' -> ' $1 '";
+  }
+  elsif (/[^ =](\*|==|\.=|=>|=|\|\|)[^ =>]/ && $program && !/foreach/) {
     $msg = "'$1' -> ' $1 '";
   }
   # ensure $bar["foo"] and $bar[$foo] and $bar[0]
