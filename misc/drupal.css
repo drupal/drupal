@@ -39,6 +39,7 @@ th                        { text-align: left; padding-right: 1em; border-bottom:
 .form-submit              { margin: 0.5em 0; }
 
 .item-list .icon          { color: #555; float: right; padding-left: 0.25em; clear: right; }
+.item-list .icon img      { border: 0; }
 .item-list .icon a        { color: #000; text-decoration: none; }
 .item-list .icon a:hover  { color: #000; text-decoration: none; }
 .item-list .title         { font-weight: bold; }
