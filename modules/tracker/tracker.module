@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.27 2002/06/27 09:41:55 kjartan Exp $
+// $Id: tracker.module,v 1.28 2002/10/09 20:20:49 dries Exp $
 
 function tracker_help() {
   $output .= "The tracker module is a handy module for displaying the most recent comments happenning all over your web site.  By following the <i>view new comments</i> link in the user block, a user may quickly review all recent comments.  When a user first arrives at the main tracker page, she sees all recent comments in reverse chronological order, grouped by post.  In addition, a self-centered user may choose to display only his own comments.</p>";
@@ -30,10 +30,10 @@ function tracker_comments($id = 0) {
   $period = time() - variable_get("tracker_period", 259200);  // all comments of the past 3 days if not configured to a different value
 
   if ($id) {
-    $sresult = db_query("SELECT n.nid, n.title, COUNT(n.nid) AS comments, MAX(c.timestamp) AS last_comment FROM comments c LEFT JOIN node n ON c.nid = n.nid WHERE c.timestamp > $period AND c.uid = '%s' GROUP BY n.nid, n.title ORDER BY last_comment DESC LIMIT 10", $id);
+    $sresult = db_query("SELECT n.nid, n.title, COUNT(n.nid) AS comments, MAX(c.timestamp) AS last_comment FROM comments c LEFT JOIN node n ON c.nid = n.nid WHERE c.status = 0 AND c.timestamp > $period AND c.uid = '%s' GROUP BY n.nid, n.title ORDER BY last_comment DESC LIMIT 10", $id);
   }
   else {
-    $sresult = db_query("SELECT n.nid, n.title, COUNT(n.nid) AS comments, MAX(c.timestamp) AS last_comment FROM comments c LEFT JOIN node n ON c.nid = n.nid WHERE c.timestamp > $period GROUP BY n.nid, n.title ORDER BY last_comment DESC LIMIT 10");
+    $sresult = db_query("SELECT n.nid, n.title, COUNT(n.nid) AS comments, MAX(c.timestamp) AS last_comment FROM comments c LEFT JOIN node n ON c.nid = n.nid WHERE c.status = 0 AND c.timestamp > $period GROUP BY n.nid, n.title ORDER BY last_comment DESC LIMIT 10");
   }
 
   while ($node = db_fetch_object($sresult)) {
