@@ -305,6 +305,7 @@ function drupal_goto($url) {
   /*
   ** Translate &amp; to simply &
   */
+
   $url = str_replace ("&amp;", "&", $url);
 
   /*
@@ -313,14 +314,16 @@ function drupal_goto($url) {
   ** is compiled with "--enable-trans-sid".
   */
 
-  if (SID == "" || strstr($url, SID)) {
+  $sid = session_name() . "=" . session_id();
+
+  if (!session_id() || strstr($url, $sid)) {
     header("Location: $url");
   }
-  else if (strstr($url, "?") && !strstr($url, SID)) {
-    header("Location: $url&". SID);
+  else if (strstr($url, "?") && !strstr($url, $sid)) {
+    header("Location: $url&". $sid);
   }
   else {
-    header("Location: $url?". SID);
+    header("Location: $url?". $sid);
   }
 
   /*
