@@ -48,6 +48,9 @@ function user_load($array = array()) {
     if ($key == 'pass') {
       $query .= "u.$key = '". md5($value) ."' AND ";
     }
+    else if ($key == 'uid') {
+      $query .= "u.uid = ". check_query($value) ." AND ";
+    }
     else {
       $query .= "LOWER(u.$key) = '". strtolower(check_query($value)) ."' AND ";
     }
