@@ -73,7 +73,7 @@ function archive_calendar($original = 0) {
   $next = mktime(23, 59, 59, $month + 1, min(date('t', $nextmonth), $day), $year);
 
   $sql = 'SELECT n.nid, n.created FROM {node} n WHERE n.status = 1 AND n.created > %d AND n.created < %d ORDER BY n.created';
-  $sql = node_rewrite_sql($sql);
+  $sql = db_rewrite_sql($sql);
   $result = db_query($sql, $start_of_month, $end_of_month);
 
   $days_with_posts = array();
@@ -242,7 +242,7 @@ function archive_page($year = 0, $month = 0, $day = 0) {
   if ($year && $month && $day) {
     // Fetch nodes for the selected date, if one was specified.
     $sql = 'SELECT n.nid, n.created FROM {node} n WHERE n.status = 1 AND n.created > %d AND n.created < %d ORDER BY n.created';
-    $sql = node_rewrite_sql($sql);
+    $sql = db_rewrite_sql($sql);
     $result = db_query_range($sql, $date, $date_end, 0, 20);
 
     while ($nid = db_fetch_object($result)) {

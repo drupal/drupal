@@ -103,7 +103,7 @@ function taxonomy_block($op = 'list', $delta = 0) {
     return $blocks;
   }
   else if ($op == 'view' && user_access('access content')) {
-    $result = db_query(node_rewrite_sql('SELECT d.tid, d.name, MAX(n.created) AS updated, COUNT(*) AS count FROM {term_data} d INNER JOIN {term_node} USING (tid) INNER JOIN {node} n USING (nid) WHERE n.status = 1 GROUP BY d.tid, d.name ORDER BY updated DESC, d.name'));
+    $result = db_query(db_rewrite_sql('SELECT d.tid, d.name, MAX(n.created) AS updated, COUNT(*) AS count FROM {term_data} d INNER JOIN {term_node} USING (tid) INNER JOIN {node} n USING (nid) WHERE n.status = 1 GROUP BY d.tid, d.name ORDER BY updated DESC, d.name'));
     $items = array();
     while ($category = db_fetch_object($result)) {
       $items[] = l($category->name .' ('. $category->count .')', 'taxonomy/term/'. $category->tid) .'<br />'. t('%time ago', array('%time' => format_interval(time() - $category->updated)));
@@ -664,10 +664,10 @@ function taxonomy_term_count_nodes($tid, $type = 0) {
   if (!isset($count[$type])) {
     // $type == 0 always evaluates true is $type is a string
     if (is_numeric($type)) {
-      $result = db_query(node_rewrite_sql('SELECT t.tid, COUNT(n.nid) AS c FROM {term_node} t INNER JOIN {node} n ON t.nid = n.nid WHERE n.status = 1 GROUP BY t.tid'));
+      $result = db_query(db_rewrite_sql('SELECT t.tid, COUNT(n.nid) AS c FROM {term_node} t INNER JOIN {node} n ON t.nid = n.nid WHERE n.status = 1 GROUP BY t.tid'));
     }
     else {
-      $result = db_query(node_rewrite_sql("SELECT t.tid, COUNT((n.nid) AS c FROM {term_node} t, {node} n WHERE t.nid = n.nid AND n.status = 1 AND n.type = '%s' GROUP BY t.tid"), $type);
+      $result = db_query(db_rewrite_sql("SELECT t.tid, COUNT((n.nid) AS c FROM {term_node} t, {node} n WHERE t.nid = n.nid AND n.status = 1 AND n.type = '%s' GROUP BY t.tid"), $type);
     }
     while ($term = db_fetch_object($result)) {
       $count[$type][$term->tid] = $term->c;
@@ -841,8 +841,8 @@ function taxonomy_select_nodes($tids = array(), $operator = 'or', $depth = 0, $p
       $sql = 'SELECT n.nid, n.sticky, n.created FROM {node} n '. $joins .' WHERE n.status = 1 '. $wheres .' ORDER BY n.sticky DESC, n.created DESC';
       $sql_count = 'SELECT COUNT(n.nid) FROM {node} n '. $joins .' WHERE n.status = 1 ' . $wheres;
     }
-    $sql = node_rewrite_sql($sql);
-    $sql_count = node_rewrite_sql($sql_count);
+    $sql = db_rewrite_sql($sql);
+    $sql_count = db_rewrite_sql($sql_count);
     if ($pager) {
       $result = pager_query($sql, variable_get('default_nodes_main', 10), 0, $sql_count);
     }

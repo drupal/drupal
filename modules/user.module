@@ -1392,7 +1392,7 @@ function user_admin_access_edit($op = NULL, $aid = 0) {
         $output .= form_hidden('aid', $edit->aid);
         $output .= form_hidden('confirm', 1);
         $output .= form_submit(t('Delete'));
-        $output = form($output); 
+        $output = form($output);
         print theme('page', $output);
       }
       return;

@@ -131,7 +131,7 @@ function aggregator_menu($may_cache) {
     $items[] = array('path' => 'admin/aggregator/add/category', 'title' => t('add category'),
       'callback' => 'aggregator_admin_edit_category', 'access' => $edit,
       'type' => MENU_LOCAL_TASK);
-    $items[] = array('path' => 'admin/aggregator/configure', 'title' => t('configure'),
+    $items[] = array('path' => 'admin/settings/aggregator', 'title' => t('configure'),
       'callback' => 'aggregator_configure', 'access' => $edit,
       'type' => MENU_LOCAL_TASK);
 

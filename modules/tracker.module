@@ -74,16 +74,16 @@ function tracker_page($uid = 0) {
 
   if ($uid) {
     $sql = 'SELECT n.nid, n.title, n.type, n.changed, n.uid, u.name, l.last_comment_timestamp AS last_post, l.comment_count FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid INNER JOIN {users} u ON n.uid = u.uid LEFT JOIN {comments} c ON n.nid = c.nid AND (c.status = 0 OR c.status IS NULL) WHERE n.status = 1 AND (n.uid = %d OR c.uid = %d) ORDER BY last_post DESC';
-    $sql = node_rewrite_sql($sql);
+    $sql = db_rewrite_sql($sql);
     $sql_count = 'SELECT COUNT(DISTINCT(n.nid)) FROM {node} n LEFT JOIN {comments} c ON n.nid = c.nid AND (c.status = 0 OR c.status IS NULL) WHERE n.status = 1 AND (n.uid = %d OR c.uid = %d)';
-    $sql_count = node_rewrite_sql($sql_count);
+    $sql_count = db_rewrite_sql($sql_count);
     $result = pager_query($sql, 25, 0, $sql_count, $uid, $uid);
   }
   else {
     $sql = 'SELECT n.nid, n.title, n.type, n.changed, n.uid, u.name, l.last_comment_timestamp AS last_post, l.comment_count FROM {node} n INNER JOIN {users} u ON n.uid = u.uid INNER JOIN {node_comment_statistics} l ON n.nid = l.nid WHERE n.status = 1 ORDER BY last_post DESC';
-    $sql = node_rewrite_sql($sql);
+    $sql = db_rewrite_sql($sql);
     $sql_count = 'SELECT COUNT(n.nid) FROM {node} n WHERE n.status = 1';
-    $sql_count = node_rewrite_sql($sql_count);
+    $sql_count = db_rewrite_sql($sql_count);
     $result = pager_query($sql, 25, 0, $sql_count);
   }
 
