@@ -60,7 +60,7 @@ function theme_account($theme) {
     $content .= "<P>\n";
 
     if (user_access($user)) {
-      $content .= "<LI><A HREF=\"admin.php\">administer ". variable_get("site_name", "drupal") ."</A></LI>\n";
+      $content .= "<LI><A HREF=\"admin.php\">". strtr(t("administer %a"), array("%a" => variable_get("site_name", "drupal"))) ."</A></LI>\n";
       $content .= "<P>\n";
     }
 
