@@ -8,56 +8,32 @@ function content_types($name) {
 function category_form($edit = array()) {
   global $types;
 
-  $threshold_post = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90, 100);
-  $threshold_dump = array(-1, -2, -3, -4, -5, -6, -7, -8, -9, -10, -11, -12, -13, -14, -15, -20, -25, -30);
-  $threshold_expire = array(1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 20, 25, 30, 35, 40, 45, 50, 60, 70, 80, 90, 100);
+  $threshold_post = array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => 7, 8 => 8, 9 => 9, 10 => 10, 11 => 11, 12 => 12, 13 => 13, 14 => 14, 15 => 15, 20 => 20, 25 => 25, 30 => 30, 35 => 35, 40 => 40, 45 => 45, 50 => 50, 60 => 60, 70 => 70, 80 => 80, 90 => 90, 100 => 100);
+  $threshold_dump = array(-1 => -1, -2 => -2, -3 => -3, -4 => -4, -5 => -5, -6 => -6, -7 => -7, -8 => -8, -9 => -9, -10 => -10, -11 => -11, -12 => -12, -13 => -13, -14 => -14, -15 => -15, -20 => -20, -25 => -25, -30 => -30);
+  $threshold_expire = array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 => 5, 6 => 6, 7 => 7, 8 => 8, 9 => 9, 10 => 10, 11 => 11, 12 => 12, 13 => 13, 14 => 14, 15 => 15, 20 => 20, 25 => 25, 30 => 30, 35 => 35, 40 => 40, 45 => 45, 50 => 50, 60 => 60, 70 => 70, 80 => 80, 90 => 90, 100 => 100);
 
   module_iterate("content_types");
 
-  $output .= "<FORM ACTION=\"admin.php?mod=structure&type=category\" METHOD=\"post\">\n";
+  $form .= form_textfield(t("Name"), "name", $edit[name], 30, 55, t("A unique name for this category like 'announcement', 'article', 'column', 'review', etc."));
+  $form .= form_select(t("Content type"), "type", $edit[type], $types, t("The content type to bind or associate this category with."));
+  $form .= form_select(t("Comment"), "comment", $edit[comment], node_comment_status(), t("By default, allow or dissallow users to post comments in this category."));
+  $form .= form_select(t("Promote"), "promote", $edit[promote], node_promote_status(), t("By default, promote new submissions in this category to the front page."));
 
-  $output .= "<B>Name:</B><BR>\n";
-  $output .= "<INPUT NAME=\"edit[name]\" SIZE=\"55\" VALUE=\"". check_textfield($edit[name]) ."\"><BR>\n";
-  $output .= "<SMALL><I>A unique name for this category like 'announcement', 'article', 'column', 'review', etc.</I></SMALL><P>\n";
-
-  $output .= "<B>Content type:</B><BR>\n";
-  foreach ($types as $key=>$value) $options1 .= "<OPTION VALUE=\"$key\"". ($edit[type] == $value ? " SELECTED" : "") .">". check_select($value) ."</OPTION>";
-  $output .= "<SELECT NAME=\"edit[type]\">$options1</SELECT><BR>\n";
-  $output .= "<SMALL><I>The content type to bind or associate this category with.</I></SMALL><P>\n";
-
-  $output .= "<B>Comment:</B><BR>\n";
-  foreach (node_comment_status() as $key=>$value) $options2 .= "<OPTION VALUE=\"$key\"". ($edit[comment] == $key ? " SELECTED" : "") .">". check_select($value) ."</OPTION>";
-  $output .= "<SELECT NAME=\"edit[comment]\">$options2</SELECT><BR>\n";
-  $output .= "<SMALL><I>By default, allow or dissallow users to post comments in this category.</I></SMALL><P>\n";
-
-  $output .= "<B>Promote:</B><BR>\n";
-  foreach (node_promote_status() as $key=>$value) $options3 .= "<OPTION VALUE=\"$key\"". ($edit[promote] == $key ? " SELECTED" : "") .">". check_select($value) ."</OPTION>";
-  $output .= "<SELECT NAME=\"edit[promote]\">$options3</SELECT><BR>\n";
-  $output .= "<SMALL><I>By default, promote new submissions in this category to the front page.</I></SMALL><P>\n";
-
-  $output .= "<B>Submission:</B><BR>\n";
-  foreach (node_submission_status() as $key=>$value) $options4 .= "<OPTION VALUE=\"$key\"". ($edit[submission] == $key ? " SELECTED" : "") .">". check_select($value) ."</OPTION>";
-  $output .= "<SELECT NAME=\"edit[submission]\">$options4</SELECT><BR>\n";
-  foreach ($threshold_post as $value) $options5 .= "<OPTION VALUE=\"$value\"". ($edit[post] == $value ? " SELECTED" : "") .">". format_plural($value, "point", "points") ."</OPTION>";
-  $output .= "<SELECT NAME=\"edit[post]\">$options5</SELECT>\n";
-  foreach ($threshold_dump as $value) $options6 .= "<OPTION VALUE=\"$value\"". ($edit[dump] == $value ? " SELECTED" : "") .">". format_plural($value, "point", "points") ."</OPTION>";
-  $output .= "<SELECT NAME=\"edit[dump]\">$options6</SELECT>\n";
-  foreach ($threshold_expire as $value) $options7 .= "<OPTION VALUE=\"$value\"". ($edit[expire] == $value ? " SELECTED" : "") .">". format_plural($value, "vote", "votes") ."</OPTION>";
-  $output .= "<SELECT NAME=\"edit[expire]\">$options7</SELECT><BR>\n";
-  $output .= "<SMALL><I>What to do with new submissions in this category?<BR>Specify the post, dump and expiration threshold for moderation purpose.</I></SMALL><P>\n";
+  $form .= form_select(t("Submission"), "submission", $edit[submission], node_submission_status(), t("What to do with new submissions in this category?"));
+  $form .= form_select(t("Post threshold"), "post", $edit[post], $threshold_post, t("If new submissions are subject to moderation, select a post threshold."));
+  $form .= form_select(t("Dump threshold"), "dump", $edit[dump], $threshold_dump, t("If new submissions are subject to moderation, select a dump threshold."));
+  $form .= form_select(t("Expiration threshold"), "expire", $edit[expire], $threshold_expire, t("If new submissions are subject to moderation, select a expiration threshold."));
 
   if ($edit[cid]) {
-    $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[cid]\" VALUE=\"$edit[cid]\">\n";
-    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save category\">\n";
-    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Delete category\">\n";
+    $form .= form_hidden("cid", $edit[cid]);
+    $form .= form_submit(t("Save category"));
+    $form .= form_submit(t("Delete category"));
   }
   else {
-    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save category\">\n";
+    $form .= form_submit(t("Save category"));
   }
 
-  $output .= "</FORM>\n";
-
-  return $output;
+  return form("admin.php?mod=structure&type=category", $form);
 }
 
 function category_overview() {
@@ -76,36 +52,36 @@ function category_overview() {
 
 function topic_form($edit = array()) {
 
-  $output .= "<FORM ACTION=\"admin.php?mod=structure&type=topic\" METHOD=\"post\">\n";
+  $result = db_query("SELECT * FROM topic WHERE name != '$edit[name]' ORDER BY name DESC");
+  while ($topic = db_fetch_object($result)) {
+    $topics[$topic->tid] = $topic->name;
+  }
+  $topics[0] = "&nbsp;";
 
-  $output .= "<B>Name:</B><BR>\n";
-  $output .= "<INPUT NAME=\"edit[name]\" SIZE=\"55\" VALUE=\"". check_textfield($edit[name]) ."\"><BR>\n";
-  $output .= "<SMALL><I>A unique name for this topic like 'science', 'internet', 'culture', etc.</I></SMALL><P>\n";
-
-  $output .= "<B>Parent:</B><BR>\n";
-  foreach (topic_tree() as $key=>$value) $options .= "<OPTION VALUE=\"$key\"". ($edit[pid] == $key ? " SELECTED" : "") .">". check_select($value) ."</OPTION>";
-  $output .= "<SELECT NAME=\"edit[pid]\"><OPTION VALUE=\"0\">&nbsp;</OPTION>$options</SELECT><BR>\n";
-  $output .= "<SMALL><I>The parent topic this topic belongs in.</I></SMALL><P>\n";
+  $form .= form_textfield(t("Name"), "name", $edit[name], 30, 55, t("A unique name for this topic like 'science', 'internet', 'culture', etc."));
+  $form .= form_select(t("Parent"), "pid", $edit[pid], $topics, t("The parent topic this topic belongs in."));
+  $form .= form_textfield("Moderate", "moderate", $edit[moderate], 35, 255, t("Provide a comma-seperated list of the moderators their usernames."));
 
   if ($edit[tid]) {
-    $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[tid]\" VALUE=\"$edit[tid]\">\n";
-    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save topic\">\n";
-    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Delete topic\">\n";
+    $form .= form_hidden("tid", $edit[tid]);
+    $form .= form_submit(t("Save topic"));
+    $form .= form_submit(t("Delete topic"));
   }
   else {
-    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save topic\">\n";
+    $form .= form_submit(t("Save topic"));
   }
 
-  return $output;
+  return form("admin.php?mod=structure&type=topic", $form);
 }
 
 function topic_overview() {
   $tree = topic_tree();
 
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR><TH>name</TH><TH>operations</TH></TR>\n";
+  $output .= " <TR><TH>name</TH><TH>moderators</TH><TH>operations</TH></TR>\n";
   foreach ($tree as $id=>$name) {
-    $output .= " <TR><TD>". check_output($name) ."</TD><TD><A HREF=\"admin.php?mod=structure&type=topic&op=edit&id=$id\">edit topic</A></TD></TR>\n";
+    $topic = topic_get_object("tid", $id);
+    $output .= " <TR><TD>". check_output($name) ."</TD><TD>". check_output($topic->moderate) ."</TD><TD><A HREF=\"admin.php?mod=structure&type=topic&op=edit&id=$topic->tid\">edit topic</A></TD></TR>\n";
   }
   $output .= "</TABLE>\n";
   return $output;
