@@ -45,7 +45,7 @@ function module_list() {
   static $list;
 
   if (!$list) {
-    $list = array("drupal" => "drupal", "system" => "system", "user" => "user", "watchdog" => "watchdog");
+    $list = array("system" => "system", "user" => "user", "watchdog" => "watchdog");
     $result = db_query("SELECT name, filename FROM system WHERE type = 'module' AND status = '1' ORDER BY name");
     while ($module = db_fetch_object($result)) {
       if (file_exists($module->filename)) {
