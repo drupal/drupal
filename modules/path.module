@@ -1,44 +1,111 @@
 <?php
 /* $Id$ */
 
-function path_admin() {
-  $op = $_POST["op"];
-  $edit = $_POST["edit"];
+/**
+ * Implementation of hook_help().
+ */
+function path_help($section) {
+  switch ($section) {
+    case 'admin/system/modules#description':
+      return t('Enables users to create custom URLs.');
+    case 'admin/path':
+      return t('Drupal provides users complete control over URLs through aliasing. While the original Drupal URLs are always created and accessible, advanced users have the option to override these normal paths.');
+    case 'admin/path/add':
+      return t('Enter the path you wish to create the alias for, followed by the name of the new alias. Each path can be associated with only one alias.');
+    case 'admin/help#path':
+      return t("
+<h3>Background</h3>
+<p>A very powerful feature of Drupal is the ability to have control over all paths. The path module is the tool that provides this functionality and is part of the basic Drupal installation, although it is not enabled by default. Some examples of re-mapping paths are:</p>
+<pre>
+user/login => login
 
-  if (empty($op)) {
-    $op = arg(2);
+image/tid/16 => store
+
+taxonomy/page/or/7,19,20,21 => store/products/whirlygigs
+
+node/view/3 => contact
+</pre>
+<p>This functionality integrates seamlessly into node forms and also provides the administrator an interface to view all aliases that have been created.</p>
+<p>Aliases have a 1 to 1 relationship with their original Drupal URLs. In other words you cannot have an alias map to more than one path. Likewise, a Drupal URL can't be mapped to more than one alias.</p>
+
+<h3>Permissions</h3>
+<p>Two permissions are related to URL aliasing: <em>create url aliases</em> and <em>administer url aliases</em>.</p>
+<ol><li><strong>create url aliases</strong> - Allows users to create aliases for nodes. Enabling this permission will display a path field to the user in any node form, allowing them to enter an alias for that node. They will be able to edit/delete the alias after it is created using the same form.</li><li><strong>administer url aliases</strong> - Allows users to access the alias administration interface. They must also have the <em>access administration pages</em> permission set as well. This interface displays all aliases and provides a way to create and modify them. This is also the location to build aliases for things other than nodes. For example, you can create an alias for a taxonomy URL or even re-map the admin path (although the original admin path will still be accessible since aliases do not cancel out original paths).</li></ol>
+
+<h3>Mass URL aliasing</h3>
+<p>Drupal also comes with user defined mass URL aliasing capabilities. You might like to see completely different URLs used by Drupal, or even URLs translated to the visitors' native language, in which case this feature is handy. Only an administrator with access to the website source code can set up this kind of aliases. You can define a <code>conf_url_rewrite</code> function in conf.php, following this example:</p>
+<pre>
+function conf_url_rewrite(\$path, \$mode = 'incoming') {
+  if (\$mode == 'incoming') { // URL coming from a client
+    return preg_replace('!^display/(\\d+)\$!', 'node/view/\\1', \$path);
   }
-
-  switch ($op) {
-    case "add":
-      $output = path_form();
-      break;
-
-    case "edit":
-      $output = path_form(path_load(arg(3)));
-      break;
-
-    case "help":
-      $output = path_help();
-      break;
-
-    case "delete":
-      path_delete(arg(3));
-      $output .= path_overview();
-      break;
-
-    case t("Create new alias"):
-    case t("Update alias"):
-      $output = path_save($edit);
-      break;
-
-    default:
-      $output .= path_overview();
+  else { // URL going out to a client
+    \$aliased = preg_replace('!^node/view/(\\d+)\$!', 'display/\\1', \$path);
+    if (\$aliased != \$path) { return \$aliased; }
   }
-
-  print theme("page", $output);
+}
+</pre>
+<p>This function will shorten every <code>node/view/\$node_id</code> type of URL to <code>display/\$node_id</code>. Individual URL aliases defined on the browser interface of Drupal take precedence, so if you have the 'contact' page alias from the example above, then the <code>display/3</code> alias will not be effective when outgoing links are created. Incoming URLs however always work with the mass URL aliased variant. Only the 'incoming' and 'outgoing' modes are supposed to be supported by your <code>conf_url_rewrite</code> function.</p>
+<p>You cannot only use this feature to shorten the URLs, or to translate them to you own language, but also to add completely new subURLs to an already existing module's URL space, or to compose a bunch of existing stuff together to a common URL space. You can create a <code>news</code> section for example aliasing nodes and taxonomy overview pages falling under a 'news' vocabulary, thus having <code>news/15</code> and <code>news/sections/3</code> instead of <code>node/view/15</code> and <code>taxonomy/view/or/3</code>. You need extensive knowledge of Drupal's inner workings and regular expressions though to make such advanced aliases.</p>");
+  }
 }
 
+/**
+ * Implementation of hook_link().
+ */
+function path_link($type, $node = NULL) {
+  if ($type == 'system') {
+    menu('admin/path', t('url aliasing'), user_access('administer url aliases') ? 'path_admin' : MENU_DENIED, 4);
+    menu('admin/path/add', t('new alias'), user_access('administer url aliases') ? 'path_admin_edit' : MENU_DENIED);
+    menu('admin/path/edit', t('edit alias'), user_access('administer url aliases') ? 'path_admin_edit' : MENU_DENIED, 0, MENU_HIDE, MENU_LOCKED);
+    menu('admin/path/delete', t('delete alias'), user_access('administer url aliases') ? 'path_admin_delete' : MENU_DENIED, 0, MENU_HIDE, MENU_LOCKED);
+    menu('admin/path/help', t('help'), user_access('administer url aliases') ? 'path_admin_help' : MENU_DENIED, 9);
+  }
+}
+
+/**
+ * Menu callback; presents an overview of all URL aliases.
+ */
+function path_admin() {
+  print theme('page', path_overview());
+}
+
+/**
+ * Menu callback; handles pages for creating and editing URL aliases.
+ */
+function path_admin_edit($pid = 0) {
+  if ($_POST['op'] == t('Create new alias') || $_POST['op'] == t('Update alias')) {
+    $output = path_save($_POST['edit']);
+  }
+  else {
+    if ($pid) {
+      $output = path_form(path_load($pid));
+    }
+    else {
+      $output = path_form();
+    }
+  }
+  print theme('page', $output);
+}
+
+/**
+ * Menu callback; handles deletion of an URL alias.
+ */
+function path_admin_delete($pid = 0) {
+  path_delete($pid);
+  print theme('page', path_overview());
+}
+
+/**
+ * Menu callback; presents the path-specific information from admin/help.
+ */
+function path_admin_help() {
+  print theme('page', path_help('admin/help#path'));
+}
+
+/**
+ * Set an aliased path for a given Drupal path, preventing duplicates.
+ */
 function path_set_alias($path = NULL, $alias = NULL) {
   if ($path && !$alias) {
     db_query("DELETE FROM {url_alias} WHERE src = '%s'", $path);
@@ -74,91 +141,36 @@ function path_set_alias($path = NULL, $alias = NULL) {
   }
 }
 
-function path_form($edit = "", $error = "") {
+/**
+ * Return a form for editing or creating an individual URL alias.
+ */
+function path_form($edit = '') {
 
-  $form .= form_textfield(t("Existing path"), "src", $edit["src"], 50, 64, t("Specify the existing path you wish to alias. For example: node/view/28, forum/1, taxonomy/page/or/1,2."));
-  $form .= form_textfield(t("New path alias"), "dst", $edit["dst"], 50, 64, t("Specify an alternative path by which this data can be accessed.  For example, type 'about' when writing an about page.  Use a relative path and don't add a trailing slash or the URL alias won't work."));
+  $form .= form_textfield(t('Existing path'), 'src', $edit['src'], 50, 64, t('Specify the existing path you wish to alias. For example: node/view/28, forum/1, taxonomy/page/or/1,2.'));
+  $form .= form_textfield(t('New path alias'), 'dst', $edit['dst'], 50, 64, t('Specify an alternative path by which this data can be accessed.  For example, type "about" when writing an about page.  Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.'));
 
-  if ($edit["pid"]) {
-    $form .= form_hidden("pid", $edit["pid"]);
-    $form .= form_submit(t("Update alias"));
+  if ($edit['pid']) {
+    $form .= form_hidden('pid', $edit['pid']);
+    $form .= form_submit(t('Update alias'));
   }
   else {
-    $form .= form_submit(t("Create new alias"));
+    $form .= form_submit(t('Create new alias'));
   }
 
   return form($form);
 }
 
-function path_help($section = "admin/help#path") {
-
-  switch ($section) {
-    case "admin/system/modules#description":
-      $output = t("Enables users to create custom URLs.");
-      break;
-    case "admin/path":
-      $output = t("Drupal provides users complete control over URLs through aliasing. While the original Drupal URLs are always created and accessible, advanced users have the option to override these normal paths.");
-      break;
-    case "admin/path/add":
-      $output = t("Enter the path you wish to create the alias for, followed by the name of the new alias. Each path can be associated with only one alias.");
-      break;
-    case "admin/help#path":
-      $output = t("
-<h3>Background</h3>
-<p>A very powerful feature of Drupal is the ability to have control over all paths. The path module is the tool that provides this functionality and is part of the basic Drupal installation, although it is not enabled by default. Some examples of re-mapping paths are:</p>
-<pre>
-user/login => login
-
-image/tid/16 => store
-
-taxonomy/page/or/7,19,20,21 => store/products/whirlygigs
-
-node/view/3 => contact
-</pre>
-<p>This functionality integrates seamlessly into node forms and also provides the administrator an interface to view all aliases that have been created.</p>
-<p>Aliases have a 1 to 1 relationship with their original Drupal URLs. In other words you cannot have an alias map to more than one path. Likewise, a Drupal URL can't be mapped to more than one alias.</p>
-
-<h3>Permissions</h3>
-<p>Two permissions are related to URL aliasing: <em>create url aliases</em> and <em>administer url aliases</em>.</p>
-<ol><li><strong>create url aliases</strong> - Allows users to create aliases for nodes. Enabling this permission will display a path field to the user in any node form, allowing them to enter an alias for that node. They will be able to edit/delete the alias after it is created using the same form.</li><li><strong>administer url aliases</strong> - Allows users to access the alias administration interface. They must also have the <em>access administration pages</em> permission set as well. This interface displays all aliases and provides a way to create and modify them. This is also the location to build aliases for things other than nodes. For example, you can create an alias for a taxonomy URL or even re-map the admin path (although the original admin path will still be accessible since aliases do not cancel out original paths).</li></ol>
-
-<h3>Mass URL aliasing</h3>
-<p>Drupal also comes with user defined mass URL aliasing capabilities. You might like to see completely different URLs used by Drupal, or even URLs translated to the visitors' native language, in which case this feature is handy. Only an administrator with access to the website source code can set up this kind of aliases. You can define a <code>conf_url_rewrite</code> function in conf.php, following this example:</p>
-<pre>
-function conf_url_rewrite(\$path, \$mode = 'incoming') {
-  if (\$mode == 'incoming') { // URL coming from a client
-    return preg_replace('!^display/(\\d+)\$!', 'node/view/\\1', \$path);
-  }
-  else { // URL going out to a client
-    \$aliased = preg_replace('!^node/view/(\\d+)\$!', 'display/\\1', \$path);
-    if (\$aliased != \$path) { return \$aliased; }
-  }
-}
-</pre>
-<p>This function will shorten every <code>node/view/\$node_id</code> type of URL to <code>display/\$node_id</code>. Individual URL aliases defined on the browser interface of Drupal take precedence, so if you have the 'contact' page alias from the example above, then the <code>display/3</code> alias will not be effective when outgoing links are created. Incoming URLs however always work with the mass URL aliased variant. Only the 'incoming' and 'outgoing' modes are supposed to be supported by your <code>conf_url_rewrite</code> function.</p>
-<p>You cannot only use this feature to shorten the URLs, or to translate them to you own language, but also to add completely new subURLs to an already existing module's URL space, or to compose a bunch of existing stuff together to a common URL space. You can create a <code>news</code> section for example aliasing nodes and taxonomy overview pages falling under a 'news' vocabulary, thus having <code>news/15</code> and <code>news/sections/3</code> instead of <code>node/view/15</code> and <code>taxonomy/view/or/3</code>. You need extensive knowledge of Drupal's inner workings and regular expressions though to make such advanced aliases.</p>");
-      break;
-  }
-
-  return $output;
-}
-
 /**
- * Implementation of hook_link().
+ * Implementation of hook_nodeapi().
+ *
+ * Allows URL aliases for nodes to be specified at node edit time rather
+ * than through the administrative interface.
  */
-function path_link($type, $node = NULL) {
-  if ($type == 'system') {
-    menu('admin/path', t('url aliasing'), user_access('administer url aliases') ? 'path_admin' : MENU_DENIED, 4);
-    menu('admin/path/add', t('new alias'), user_access('administer url aliases') ? 'path_admin' : MENU_DENIED);
-    menu('admin/path/help', t('help'), user_access('administer url aliases') ? 'path_admin' : MENU_DENIED, 9);
-  }
-}
-
 function path_nodeapi(&$node, $op, $arg) {
-  if (user_access("create url aliases") || user_access("administer url aliases")) {
+  if (user_access('create url aliases') || user_access('administer url aliases')) {
 
     switch ($op) {
-      case "validate":
+      case 'validate':
         // is_null provides a mechanism for us to determine if this is the first
         // viewing of the form.  If it is the first time, load the alias, if it isn't
         // (i.e., user has clicked preview) let them work with their current form alias.
@@ -168,33 +180,31 @@ function path_nodeapi(&$node, $op, $arg) {
         else {
           $node->path = trim($node->path);
           if ($node->path && !valid_url($node->path)) {
-            $error["path"] = t("The path is invalid.");
+            $error['path'] = t('The path is invalid.');
             return $error;
           }
           else if (db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE dst = '%s' AND src != '%s'", $node->path, "node/view/$node->nid"))) {
-            $error["path"] = t("The path is already in use.");
+            $error['path'] = t('The path is already in use.');
             return $error;
           }
         }
         break;
 
-      case "form pre":
-        return form_textfield(t("Path alias"), "path", $node->path, 60, 250, t("Optionally specify an alternative URL by which this node can be accessed.  For example, type 'about' when writing an about page.  Use a relative path and don't add a trailing slash or the URL alias won't work.") . theme_error($arg["path"]));
+      case 'form pre':
+        return form_textfield(t('Path alias'), 'path', $node->path, 60, 250, t('Optionally specify an alternative URL by which this node can be accessed.  For example, type "about" when writing an about page.  Use a relative path and don\'t add a trailing slash or the URL alias won\'t work.') . theme_error($arg['path']));
 
-      case "insert":
-        /*
-        ** Don't try to insert if path is NULL.  We may have already set
-        ** the alias ahead of time.
-        */
+      case 'insert':
+        // Don't try to insert if path is NULL.  We may have already set
+        // the alias ahead of time.
         if ($node->path) {
           path_set_alias("node/view/$node->nid", $node->path);
         }
         break;
-      case "update":
+      case 'update':
         path_set_alias("node/view/$node->nid", $node->path);
         break;
 
-      case "delete":
+      case 'delete':
         if ($alias = drupal_get_path_alias("node/view/$node->nid")) {
           path_set_alias("node/view/$node->nid");
         }
@@ -203,63 +213,78 @@ function path_nodeapi(&$node, $op, $arg) {
   }
 }
 
+/**
+ * Implementation of hook_perm().
+ */
 function path_perm() {
-  return array("create url aliases", "administer url aliases");
+  return array('create url aliases', 'administer url aliases');
 }
 
+/**
+ * Return a listing of all defined URL aliases.
+ */
 function path_overview() {
-  $sql = "SELECT * FROM {url_alias}";
+  $sql = 'SELECT * FROM {url_alias}';
   $header = array(
-    array("data" => t("alias"), "field" => "dst", "sort" => "asc"),
-    array("data" => t("normal"), "field" => "src"),
-    array("data" => t("operations"), "colspan" => 2)
+    array('data' => t('alias'), 'field' => 'dst', 'sort' => 'asc'),
+    array('data' => t('normal'), 'field' => 'src'),
+    array('data' => t('operations'), 'colspan' => 2)
   );
   $sql .= tablesort_sql($header);
   $result = pager_query($sql, 50);
 
   while ($data = db_fetch_object($result)) {
-    $rows[] = array($data->dst, $data->src, l(t("edit"), "admin/path/edit/$data->pid"), l(t("delete"), "admin/path/delete/$data->pid"));
+    $rows[] = array($data->dst, $data->src, l(t('edit'), "admin/path/edit/$data->pid"), l(t('delete'), "admin/path/delete/$data->pid"));
   }
 
-  if ($pager = theme("pager", NULL, 50, 0, tablesort_pager())) {
-    $rows[] = array(array("data" => $pager, "colspan" => "4"));
+  if ($pager = theme('pager', NULL, 50, 0, tablesort_pager())) {
+    $rows[] = array(array('data' => $pager, 'colspan' => '4'));
   }
 
   if (!$rows) {
-    $rows[] = array(array("data" => t("No URL aliases available."), "colspan" => "4"));
+    $rows[] = array(array('data' => t('No URL aliases available.'), 'colspan' => '4'));
   }
 
-  return theme("table", $header, $rows);
+  return theme('table', $header, $rows);
 }
 
+/**
+ * Fetch a specific URL alias from the database.
+ */
 function path_load($pid) {
-  return db_fetch_array(db_query("SELECT * FROM {url_alias} WHERE pid = '%d'", $pid));
+  return db_fetch_array(db_query('SELECT * FROM {url_alias} WHERE pid = %d', $pid));
 }
 
+/**
+ * Remove an URL alias from the database.
+ */
 function path_delete($pid) {
-  db_query("DELETE FROM {url_alias} WHERE pid = '%d'", $pid);
-  drupal_set_message(t("the alias has been deleted."));
+  db_query('DELETE FROM {url_alias} WHERE pid = %d', $pid);
+  drupal_set_message(t('the alias has been deleted.'));
 }
 
+/**
+ * Verify that a new URL alias is valid, and save it to the database.
+ */
 function path_save($edit) {
-  $src = $edit["src"];
-  $dst = $edit["dst"];
-  $pid = $edit["pid"];
+  $src = $edit['src'];
+  $dst = $edit['dst'];
+  $pid = $edit['pid'];
 
   if (!valid_url($src)) {
-    $error = t("the normal path '%src' is invalid.", array("%src" => $src));
+    $error = t('the normal path "%src" is invalid.', array('%src' => $src));
   }
 
-  if (db_result(db_query("SELECT COUNT(src) FROM {url_alias} WHERE pid != '%d' AND src = '%s'", $pid, $src))) {
-    $error = t("the normal path '%src' is already aliased.", array("%src" => $src));
+  if (db_result(db_query("SELECT COUNT(src) FROM {url_alias} WHERE pid != %d AND src = '%s'", $pid, $src))) {
+    $error = t('the normal path "%src" is already aliased.', array('%src' => $src));
   }
 
   if (!valid_url($dst)) {
-    $error = t("the alias '%dst' is invalid.", array("%dst" => $dst));
+    $error = t('the alias "%dst" is invalid.', array('%dst' => $dst));
   }
 
-  if (db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE pid != '%d' AND dst = '%s'", $pid, $dst))) {
-    $error = t("the alias '%dst' is already in use.", array("%dst" => $dst));
+  if (db_result(db_query("SELECT COUNT(dst) FROM {url_alias} WHERE pid != %d AND dst = '%s'", $pid, $dst))) {
+    $error = t('the alias "%dst" is already in use.', array('%dst' => $dst));
   }
 
   if ($error) {
@@ -267,14 +292,12 @@ function path_save($edit) {
     return path_form($edit, $error);
   }
   else {
-    /*
-    ** Normally, you would use path_set_alias to update the paths table,
-    ** but this is a special case.  We want to modify a specific row and the only
-    ** way to do that is with pid.
-    */
+    // Normally, you would use path_set_alias() to update the paths table,
+    // but this is a special case.  We want to modify a specific row and the only
+    // way to do that is with pid.
 
     if ($pid) {
-      db_query("UPDATE {url_alias} SET src = '%s', dst = '%s' WHERE pid = '%d'", $src, $dst, $pid);
+      db_query("UPDATE {url_alias} SET src = '%s', dst = '%s' WHERE pid = %d", $src, $dst, $pid);
     }
     else {
       path_set_alias($src, $dst);

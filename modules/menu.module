@@ -62,7 +62,7 @@ function menu_perm() {
 }
 
 /**
- * Present the main menu management page.
+ * Menu callback; present the main menu management page.
  */
 function menu_overview() {
   menu_rebuild();
@@ -71,7 +71,7 @@ function menu_overview() {
 }
 
 /**
- * Clear the database, resetting the menu to factory defaults.
+ * Menu callback; clear the database, resetting the menu to factory defaults.
  */
 function menu_reset() {
   $op = $_POST['op'];
@@ -93,7 +93,7 @@ function menu_reset() {
 }
 
 /**
- * Handle the adding of a new menu.
+ * Menu callback; handle the adding of a new menu.
  */
 function menu_add_menu() {
   $op = $_POST['op'];
@@ -115,7 +115,7 @@ function menu_add_menu() {
 }
 
 /**
- * Reset a single modified item.
+ * Menu callback; reset a single modified item.
  */
 function menu_reset_item($mid) {
   $op = $_POST['op'];
@@ -137,7 +137,7 @@ function menu_reset_item($mid) {
 }
 
 /**
- * Delete a single custom item.
+ * Menu callback; delete a single custom item.
  */
 function menu_delete_item($mid) {
   $op = $_POST['op'];
@@ -159,17 +159,17 @@ function menu_delete_item($mid) {
 }
 
 /**
- * Hide a menu item.
+ * Menu callback; hide a menu item.
  */
 function menu_disable_item($mid) {
-  db_query("UPDATE {menu} SET visibility = %d, status = %d WHERE mid = %d", MENU_HIDE, MENU_MODIFIED, $mid);
+  db_query('UPDATE {menu} SET visibility = %d, status = %d WHERE mid = %d', MENU_HIDE, MENU_MODIFIED, $mid);
   menu_rebuild();
   drupal_set_message(t('menu item disabled.'));
   print theme('page', menu_overview_tree());
 }
 
 /**
- * Dispatch to the appropriate menu item edit function.
+ * Menu callback; dispatch to the appropriate menu item edit function.
  */
 function menu_edit_item($mid) {
   $op = $_POST['op'];
