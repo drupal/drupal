@@ -55,10 +55,11 @@ img {
   float: left;
 }
 .menu #primary {
-  padding-top: 15px;
+  padding: 5px 10px 5px 0px;
   position: absolute;
   text-align: right;
-  font-size: 1.1em;
+  font-size: 1.0em;
+  float: right;
   color: #9cf;
   left: 225px;
 }
@@ -67,9 +68,11 @@ img {
   color: #fff;
 }
 .menu #secondary {
+  padding: 0px 10px 5px 0px;
   position: absolute;
   text-align: right;
-  font-size: 0.9em;
+  font-size: 0.8em;
+  float: right;
   color: #9cf;
   left: 225px;
 }
