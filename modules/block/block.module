@@ -52,9 +52,9 @@ function block_link($type) {
    $help["block"] = "Blocks are the boxes visible in the side bars on the left- and right-hand side of the website.  They are either exported by the Drupal or by any of the active modules.  Adminstrators can enable or disable block, as well control the block placement by assigning them a region and/or by assigning each block (within a region) a weight to sort them vertically.  The path setting lets you define which pages you want the specific blocks to be shown.";
 
     menu_add("block management", "admin.php?mod=block", "Block management", $help["block"], NULL, 2);
-     menu_add("add new block", "admin.php?mod=block&op=add", "Create a new block", $help["block"], "block management", 2);
-     menu_add("preview placement", "admin.php?mod=block&op=preview", "Preview the block placement", $help["block"], "block management", 3);
-     menu_add("help", "admin.php?mod=block&op=help", "More information about blocks", NULL, "block management", 5);
+    menu_add("add new block", "admin.php?mod=block&op=add", "Create a new block", $help["block"], "block management", 2);
+    menu_add("preview placement", "admin.php?mod=block&op=preview", "Preview the block placement", $help["block"], "block management", 3);
+    menu_add("help", "admin.php?mod=block&op=help", "More information about blocks", NULL, "block management", 5);
   }
 }
 
@@ -144,6 +144,10 @@ function block_admin_display() {
     if ($block["module"] == "block") {
       $edit = la(t("edit"), array("mod" => "block", "op" => "edit", "id" => $block["delta"]));
       $delete = la(t("delete"), array("mod" => "block", "op" => "delete", "id" => $block["delta"]));
+    }
+    else {
+      $edit = "";
+      $delete = "";
     }
 
     $rows[] = array($block["info"], array("data" => form_checkbox(NULL, $block["module"]."][".$block["delta"]."][status", 1, $block["status"]), "align" => "center"), array("data" => form_checkbox(NULL, $block["module"]."][".$block["delta"]."][custom", 1, $block["custom"]), "align" => "center"), form_weight(NULL, $block["module"]."][".$block["delta"]."][weight", $block["weight"]), form_select(NULL, $block["module"]."][".$block["delta"]."][region", $block["region"], array("left", "right")), form_textfield(NULL, $block["module"]."][".$block["delta"]."][path", $block["path"], 10, 255), $edit, $delete);
