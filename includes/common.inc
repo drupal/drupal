@@ -317,7 +317,7 @@ function search_item($item, $type) {
     $output = module_invoke($type, "search_item", $item);
   }
   else {
-    $output .= " <b>". $item["count"] ."&nbsp;&nbsp;<u><a href=\"". $item["link"] ."\">". $item["title"] ."</a></u></b><br />";
+    $output .= " <b><u><a href=\"". $item["link"] ."\">". $item["title"] ."</a></u></b><br />";
     $output .= " <small>$type ". ($item["user"] ? " - ". $item["user"] : "") ."". ($item["date"] ? " - ". format_date($item["date"], "small") : "") ."</small>";
     $output .= "<br /><br />";
   }
@@ -335,19 +335,14 @@ function search_item($item, $type) {
  * parts of this form.
  *
  * @param $action  Form action. Defaults to 'site.com/search'.
- * @param $query   Query string. Defaults to global $keys.
+ * @param $keys   string containing keywords for the search.
  * @param $options != 0: Render additional form fields/text
  *                 ("Restrict search to", help text, etc).
  */
-function search_form($action = 0, $query = 0, $options = 0) {
-  $keys = $_POST["keys"];
+function search_form($action = 0, $keys = 0, $options = 0) {
 
   if (!$action) {
     $action = url("search");
-  }
-
-  if (!$query) {
-    $query = $keys;
   }
 
   $output .= " <br /><input type=\"text\" size=\"50\" value=\"". check_form($keys) ."\" name=\"keys\" />";
@@ -372,9 +367,8 @@ function search_form($action = 0, $query = 0, $options = 0) {
 /*
  * Collect the search results:
  */
-function search_data() {
+function search_data($keys = NULL) {
 
-  $keys = $_POST["keys"];
   $edit = $_POST["edit"];
 
   if (isset($keys)) {
@@ -391,9 +385,6 @@ function search_data() {
         }
       }
     }
-    if (!$output) {
-      $output .= t("Your search yielded no results.");
-    }
   }
 
   return $output;
@@ -409,13 +400,13 @@ function search_data() {
  * @param $options != 0: Render additional form fields/text
  *                 ("Restrict search to", help text, etc).
  */
-function search_type($type = 0, $action = 0, $query = 0, $options = 0) {
+function search_type($type = 0, $action = 0, $keys = 0, $options = 0) {
 
   if (isset($type)) {
     $_POST["edit"]["type"][$type] = "on";
   }
 
-  return search_form($action, $query, $options) . search_data();
+  return search_form($action, $keys, $options) . "<br />". search_data($keys);
 }
 
 
