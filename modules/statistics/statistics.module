@@ -27,7 +27,7 @@ function statistics_init() {
     if ($throttle < 5) {
       $multiplier = variable_get("statistics_throttle_multiplier", 60);
       // count all hits in past sixty seconds
-      $result = db_query("SELECT COUNT(timestamp) AS hits FROM accesslog WHERE timestamp >= %s", (time() - 60));
+      $result = db_query("SELECT COUNT(timestamp) AS hits FROM accesslog WHERE timestamp >= %d", (time() - 60));
       $recent_activity = db_fetch_array($result);
       throttle_update($recent_activity["hits"]);
     }
@@ -42,11 +42,11 @@ function statistics_exit() {
     // node view counters are enabled
     if ((arg(0) == "node") && (arg(1) == "view") && arg(2)) {
       // a node has been viewed, so updated the node's counters
-      db_query("UPDATE statistics SET daycount = daycount + 1, totalcount = totalcount + 1, timestamp = '%s' WHERE nid = '%s'", time(), arg(2));
+      db_query("UPDATE statistics SET daycount = daycount + 1, totalcount = totalcount + 1, timestamp = '%d' WHERE nid = '%d'", time(), arg(2));
       // if we affected 0 rows, this is the first time viewing the node
       if (!db_affected_rows()) {
         // must create a new row to store counter's for new node
-        db_query("INSERT INTO statistics (nid, daycount, totalcount) VALUES('%s', statistics.daycount + 1, statistics.totalcount + 1)", arg(2));
+        db_query("INSERT INTO statistics (nid, daycount, totalcount) VALUES('%d', statistics.daycount + 1, statistics.totalcount + 1)", arg(2));
       }
     }
   }
@@ -57,10 +57,10 @@ function statistics_exit() {
     $hostname = getenv("REMOTE_ADDR");
     // log this page access
     if ((arg(0) == "node") && (arg(1) == "view") && arg(2)) {
-      db_query("INSERT INTO accesslog (nid, url, hostname, uid, timestamp) values('%s', '%s', '%s', '%d', '%s')", arg(2), $referrer, $hostname, $user->uid, time());
+      db_query("INSERT INTO accesslog (nid, url, hostname, uid, timestamp) values('%d', '%s', '%s', '%d', '%d')", arg(2), $referrer, $hostname, $user->uid, time());
     }
     else {
-      db_query("INSERT INTO accesslog (url, hostname, uid, timestamp) values('%s', '%s', '%d', '%s')", $referrer, $hostname, $user->uid, time());
+      db_query("INSERT INTO accesslog (url, hostname, uid, timestamp) values('%s', '%s', '%d', '%d')", $referrer, $hostname, $user->uid, time());
     }
   }
 }
@@ -122,6 +122,9 @@ function statistics_link($type, $node = 0, $main = 0) {
     menu("admin/statistics/referrers/internal", "internal referrers only", "statistics_admin", $help["referrers"]);
     menu("admin/statistics/referrers/external", "external referrers only", "statistics_admin", $help["referrers"]);
     menu("admin/statistics/log", "access log", "statistics_admin", $help["access"]);
+    menu("admin/statistics/log/node", "track node", "statistics_admin", $help["access"], 0, 1);
+    menu("admin/statistics/log/user", "track user", "statistics_admin", $help["access"], 0, 1);
+    menu("admin/statistics/log/host", "track host", "statistics_admin", $help["access"], 0, 1);
     menu("admin/statistics/top nodes page", "configure 'top nodes' page", "statistics_admin", $help["top nodes page"], 5);
     menu("admin/statistics/help", "help", "statistics_help", NULL, 9);
 
@@ -337,51 +340,50 @@ function statistics_admin_count_table($dbfield, $dbrows) {
 
 function statistics_admin_accesslog_table($type, $id) {
 
-  /* overview limit */
-  $limit0 = 50;
-  /* detail limit */
-  $limit1 = 500;
-
   if ($type == 1) {
     /* retrieve user access logs */
     if ($id) {
       /* retrieve recent access logs for user $id */
-      $result = db_query_range("SELECT nid, url, hostname, uid, timestamp FROM accesslog WHERE uid = '%s' ORDER BY timestamp DESC", $id, 0, $limit1);
+      $result = pager_query("SELECT nid, url, hostname, uid, timestamp FROM accesslog WHERE uid = '". check_query($id) ."' ORDER BY timestamp DESC", 50);
     }
     else {
       /* retrieve recent access logs for all users */
-      $result = db_query_range("SELECT nid, url, hostname, uid, MAX(timestamp) AS timestamp FROM accesslog WHERE uid <> '0' GROUP BY uid, nid, url, hostname ORDER BY timestamp DESC", 0, $limit1);
+      $result = pager_query("SELECT nid, url, hostname, uid, MAX(timestamp) AS timestamp FROM accesslog WHERE uid <> '0' GROUP BY uid, nid, url, hostname ORDER BY timestamp DESC", 50);
     }
   }
   else if ($type == 2) {
     /* retrieve recent access logs for node $id */
-    $result = db_query_range("SELECT nid, url, hostname, uid, timestamp FROM accesslog WHERE nid = '%s' ORDER BY timestamp DESC", $id, 0, $limit1);
+    $result = pager_query("SELECT nid, url, hostname, uid, timestamp FROM accesslog WHERE nid = '". check_query($id) ."' ORDER BY timestamp DESC", 50);
   }
   else if ($type == 3) {
     /* retrieve recent access logs for hostname $id */
-    $result = db_query_range("SELECT nid, url, hostname, uid, timestamp FROM accesslog WHERE hostname = '%s' ORDER BY timestamp DESC %s", $id, 0, $limit1);
+    $result = pager_query("SELECT nid, url, hostname, uid, timestamp FROM accesslog WHERE hostname = '". check_query($id) ."' ORDER BY timestamp DESC", 50);
   }
   else {
     /* retrieve all recent access logs */
-    $result = db_query_range("SELECT nid, url, hostname, uid, timestamp FROM accesslog ORDER BY timestamp DESC", 0, $limit0);
+    $result = pager_query("SELECT nid, url, hostname, uid, timestamp FROM accesslog ORDER BY timestamp DESC", 50);
   }
 
-  $header = array(t("timestamp"), t("title"), t("user"), t("hostname"), t("referrer"));
+  $header = array(t("timestamp"), t("post"), t("user"), t("hostname"), t("referrer"), array("data" => t("operations"), "colspan" => "3"));
 
-  while ($log = db_fetch_array($result)) {
-    if (!$node = node_load(array("nid" => $log["nid"]))) {
+  while ($log = db_fetch_object($result)) {
+    if (!$node = node_load(array("nid" => $log->nid))) {
       $node->nid = 0;
     }
-    $user = user_load(array("uid" => $log["uid"]));
+    $user = user_load(array("uid" => $log->uid));
 
-    if ($log["url"]) {
-      $url = "<a href=\"$log[url]\" title=\"$log[url]\">". (strlen($log["url"]) > 28 ? substr($log["url"], 0, 28) . '...' : $log["url"]) ."</a>";
+    if ($log->url) {
+      $url = "<a href=\"$log->url\" title=\"$log->url\">". (strlen($log->url) > 28 ? substr($log->url, 0, 28) . '...' : $log->url) ."</a>";
     }
     else {
       $url = message_na();
     }
 
-    $rows[] = array(array("data" => format_date($log["timestamp"], "small"), "nowrap" => "nowrap"), ($node->nid ? l($node->title, "statistics/log/$node->nid") : message_na()), ($user->name ? l((strlen($user->name) > 18 ? substr($user->name, 0, 18) . '...' : $user->name), "admin/statistics/log/$user->uid") : message_na()), ($log["hostname"] ? l($log["hostname"], "admin/statistics/log/". $log["hostname"]) : message_na()), $url);
+    $rows[] = array(array("data" => format_date($log->timestamp, "small"), "nowrap" => "nowrap"), ($node->nid ? l($node->title, "statistics/log/$node->nid") : message_na()), format_name($user), $log->hostname ? $log->hostname : message_na(), $url, ($log->nid ? l("track node", "admin/statistics/log/node/$log->nid") : ""), ($user->uid ? l("track user", "admin/statistics/log/user/$user->uid") : ""), ($log->hostname ? l("track host", "admin/statistics/log/host/$log->hostname") : ""));
+  }
+
+  if ($pager = pager_display(NULL, 50, 0, "admin")) {
+    $rows[] = array(array("data" => $pager, "colspan" => 8));
   }
 
   return table($header, $rows);
@@ -515,33 +517,28 @@ function statistics_admin_displaycounts() {
 
 
 function statistics_admin_displaylog() {
-  global $uid, $nid, $hostname;
-    // TODO: this is broken due to the URL changes
 
-  if ($uid) {
-    $user = user_load(array("uid" => $uid));
-    $output = "<h3>". t("Recent access logs for '%name'", array("%name" => $user->name)) ."</h3>\n";
-    $output .= statistics_admin_accesslog_table(1, $user->uid);
-  }
-  else if ($nid) {
-    $node = node_load(array("nid" => $nid));
-    $output = "<h3>". t("Recent access logs for '%title'", array("%title" => $node->title)) ."</h3>\n";
-    $output .= statistics_admin_accesslog_table(2, $node->nid);
-  }
-  else if ($hostname) {
-    $output = "<h3>". t("Recent access logs for '%hostname'", array("%hostname" => $hostname)) ."</h3>\n";
-    $output .= statistics_admin_accesslog_table(3, $hostname);
-  }
-  else {
-    $output = "<h3>". t("Recent access logs") ."</h3>\n";
-    $output .= statistics_admin_accesslog_table(0, 0);
+  $type = arg(3);
+  $value = arg(4);
 
-    $output .= "<br />";
-
-    $output .= "<h3>". t("Recent user logs") ."</h3>\n";
-    $output .= statistics_admin_accesslog_table(1, 0);
-
-    $output .= "<br />";
+  switch ($type) {
+    case "user":
+      $user = user_load(array("uid" => $value));
+      $output = "<h3>". t("Recent access logs for '%name'", array("%name" => $user->name)) ."</h3>\n";
+      $output .= statistics_admin_accesslog_table(1, $user->uid);
+      break;
+    case "node":
+      $node = node_load(array("nid" => $value));
+      $output = "<h3>". t("Recent access logs for '%title'", array("%title" => $node->title)) ."</h3>\n";
+      $output .= statistics_admin_accesslog_table(2, $node->nid);
+      break;
+    case "host":
+      $output = "<h3>". t("Recent access logs for '%hostname'", array("%hostname" => $value)) ."</h3>\n";
+      $output .= statistics_admin_accesslog_table(3, $value);
+      break;
+    default:
+      $output = "<h3>". t("Recent access logs") ."</h3>\n";
+      $output .= statistics_admin_accesslog_table(0, 0);
   }
 
   return $output;
@@ -737,7 +734,7 @@ function statistics_display_online_block() {
     ** This call gathers all the info we need on users/guests in a single
     ** database call, thus is quite efficient.
     */
-    $result = db_query("SELECT COUNT(DISTINCT hostname) AS count, uid, MAX(timestamp) AS max_timestamp FROM accesslog WHERE timestamp >= '%s' GROUP BY uid ORDER BY max_timestamp DESC", (time() - $time_period));
+    $result = db_query("SELECT COUNT(DISTINCT hostname) AS count, uid, MAX(timestamp) AS max_timestamp FROM accesslog WHERE timestamp >= '%d' GROUP BY uid ORDER BY max_timestamp DESC", (time() - $time_period));
 
     $users = $guests = 0;
     /* Count number of users & guests currently online based on db query */
@@ -801,7 +798,7 @@ function statistics_get($nid) {
 
   if ($nid > 0) {
     /* retrieves an array with both totalcount and daycount */
-    $statistics = db_fetch_array(db_query("SELECT totalcount, daycount, timestamp FROM statistics WHERE nid = '%s'", $nid));
+    $statistics = db_fetch_array(db_query("SELECT totalcount, daycount, timestamp FROM statistics WHERE nid = '%d'", $nid));
   }
 
   return $statistics;
