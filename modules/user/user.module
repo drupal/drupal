@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.449 2005/03/04 03:43:41 unconed Exp $
+// $Id: user.module,v 1.450 2005/03/05 18:03:16 unconed Exp $
 
 /**
  * @file
@@ -1769,7 +1769,7 @@ function _user_categories() {
   $categories = array();
 
   foreach (module_list() as $module) {
-    if ($data = module_invoke($module, 'user', 'categories', NULL, NULL)) {
+    if ($data = module_invoke($module, 'user', 'categories', NULL, NULL, '')) {
       $categories = array_merge($data, $categories);
     }
   }
