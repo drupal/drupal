@@ -8,7 +8,7 @@ Drupal x.x.x, xxxx-xx-xx
     * improved search indexing.
     * improved search output.
 - syndication:
-    * added support for RSS ping-notifications of http://technorati.com/.
+    * added support for RSS ping-notifications of http://yahoo.com/.
 - flood control mechanism:
     * added a mechanism to throttle certain operations.
 - usability:
