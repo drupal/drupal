@@ -105,10 +105,10 @@ function import_feed_block($feed) {
 }
 
 function import_block() {
-  return import_block_bundle();
+  return import_get_bundles();
 }
 
-function import_block_bundle($attributes = 0) {
+function import_get_bundles($attributes = 0) {
 
   if ($attributes) {
     $keys = explode(",", $attributes);
@@ -131,7 +131,6 @@ function import_block_bundle($attributes = 0) {
 
   while ($bundle = db_fetch_object($result)) {
     $i++;
-
     $blocks[$i][subject] = format_url("module.php?mod=import&op=bundle&id=$bundle->bid", $bundle->title);
     $blocks[$i][content] = import_bundle_block($bundle->attributes);
     $blocks[$i][info] = "$bundle->title bundle";
@@ -140,15 +139,15 @@ function import_block_bundle($attributes = 0) {
   return $blocks;
 }
 
-function import_block_feed($attributes = 0) {
+function import_get_feeds($attributes = 0) {
 
   if ($attributes) {
     $keys = explode(",", $attributes);
     foreach ($keys as $key) $where[] = "attributes LIKE '%". trim($key) ."%'";
-    $result = db_query("SELECT * FROM feed WHERE ". implode(" OR ", $where) ." ORDER BY fid LIMIT ". variable_get("import_block_limit", 15));
+    $result = db_query("SELECT * FROM feed WHERE ". implode(" OR ", $where) ." ORDER BY fid");
   }
   else {
-    $result = db_query("SELECT * FROM feed ORDER BY fid LIMIT ". variable_get("import_block_limit", 15));
+    $result = db_query("SELECT * FROM feed ORDER BY fid");
   }
 
   $i = 0;
@@ -505,16 +504,16 @@ function import_page_bundle($bid) {
 }
 
 function import_page_bundles() {
-  import_page_blocks(import_block_bundle());
+  import_page_blocks(import_get_bundles());
 }
 
 function import_page_feeds() {
-  import_page_blocks(import_block_feed());
+  import_page_blocks(import_get_feeds());
 }
 
 function import_page_bundle_feeds($bid) {
   $bundle = db_fetch_object(db_query("SELECT * FROM bundle WHERE bid = '". check_input($bid) ."'"));
-  import_page_blocks(import_block_feed($bundle->attributes));
+  import_page_blocks(import_get_feeds($bundle->attributes));
 }
 
 function import_page_blocks($blocks) {

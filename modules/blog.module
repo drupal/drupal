@@ -97,7 +97,7 @@ function blog_page_day($userid = 0, $date = 0) {
     $output .= "<p>". blog_format_link($blog) . check_output($blog->body, 1) ."</p>\n";
   }
 
-  if ($userid == $user->userid) {
+  if ($user->id && $user->userid == $userid) {
     $output .= "<p>[ <a href=\"submit.php?mod=blog&op=edit&id=$first\">". t("edit") ."</a> ]</p>";
   }
 
@@ -122,7 +122,7 @@ function blog_format_link($blog) {
   global $user;
 
   if ($user && user_access("post blogs")) {
-    return "<a href=\"submit.php?mod=blog&type=blog&id=$blog->nid\"><img src=\"misc/blog.gif\" border=\"0\" width=\"12\" height=\"16\" alt=\"". t("Blog this item") ."\"></a>";
+    return "<a href=\"submit.php?mod=blog&type=blog&id=$blog->nid\"><img src=\"misc/blog.gif\" border=\"0\" width=\"12\" height=\"16\" alt=\"". t("Blog this item") ."\"></a> ";
   }
 }
 
@@ -148,7 +148,7 @@ function blog_form($edit = array()) {
   global $REQUEST_URI, $id, $mod, $type, $user, $theme;
 
   if ($user->id) {
-  
+
     if ($mod == "node" || $edit[type] == "blog") {
     }
     else if ($type == "blog") {
@@ -165,12 +165,12 @@ function blog_form($edit = array()) {
     if ($edit[title]) {
       $form .= blog_view(new Blog(node_preview($edit)));
     }
- 
+
     $form .= form_textfield(t("Subject"), "title", $edit["title"], 50, 64);
     $form .= form_textarea(t("Body"), "body", $edit["body"], 70, 15, t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
 
     $form .= form_hidden("type", "blog");
- 
+
     if ($edit["nid"] > 0) {
       $form .= form_hidden("nid", $edit["nid"]);
     }
@@ -187,9 +187,9 @@ function blog_form($edit = array()) {
       $form .= form_submit(t("Preview"));
       $form .= form_submit(t("Submit"));
     }
- 
+
     $output .= form($REQUEST_URI, $form);
- 
+
     return $output;
   }
   else {
