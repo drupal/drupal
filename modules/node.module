@@ -172,15 +172,15 @@ function node_teaser($body) {
   ** we try to split at paragraph boundaries.
   */
 
+  if ($length = strpos($body, "</p>", $size)) {
+    return substr($body, 0, $length + 4);
+  }
+
   if ($length = strpos($body, "<br />", $size)) {
     return substr($body, 0, $length);
   }
 
   if ($length = strpos($body, "<br>", $size)) {
-    return substr($body, 0, $length);
-  }
-
-  if ($length = strpos($body, "</p>", $size)) {
     return substr($body, 0, $length);
   }
 
