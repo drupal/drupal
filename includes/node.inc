@@ -1,5 +1,7 @@
 <?php
 
+$status = array(dumped => 0, expired => 1, queued => 2, posted => 3, scheduled => 4);
+
 function _node_get($field, $value) {
   $result = db_query("SELECT lid, type FROM nodes WHERE $field = '$value'");
   if ($node = db_fetch_object($result)) {
@@ -32,9 +34,9 @@ function node_del_array($field, $value) {
 }
 
 function node_save($node) {
-  global $user;
+  global $user, $status;
 
-  $rows = array(nid, lid, type, title, score, votes, author, status, timestamp);
+  $rows = array(nid, pid, lid, log, type, title, score, votes, author, status, timestamp);
 
   // insert or update node:
   if ($node[nid]) {
@@ -55,10 +57,12 @@ function node_save($node) {
 
     db_query("UPDATE nodes SET $u1 WHERE nid = '$node[nid]'");
     db_query("UPDATE $node[type] SET $u2 WHERE node = '$node[nid]'");
+
+    watchdog("message", "modified node '$node[title]'");
   }
   else {
     // setup default values:
-    $node = array_merge(array(type => "?", title => "?", score => 0, votes => 0, author => $user->id, status => 1, timestamp => time()), $node);
+    $node = array_merge(array(title => "?", author => $user->id, type => "?", pid => 0, log => "node created", status => $status[queued], score => 0, votes => 0, timestamp => time()), $node);
 
     // prepare queries:
     $f1 = array();
@@ -82,28 +86,36 @@ function node_save($node) {
     $f2 = implode(", ", $f2);
     $v2 = implode(", ", $v2);
 
-//  if (!_node_get("title = $node[title] AND timestamp < ". time() ." - 60")) {
-      db_query("INSERT INTO nodes ($f1) VALUES ($v1)");
-      if ($nid = db_insert_id()) {
-        $lid = db_query("INSERT INTO $node[type] ($f2, node) VALUES ($v2, $nid)");
-        if ($lid = db_insert_id()) {
-          db_query("UPDATE nodes SET lid = '$lid' WHERE nid = '$nid'");
-        }
-        else {
-          db_query("DELETE FROM nodes WHERE nid = '$nid'");
-        }
+    db_query("INSERT INTO nodes ($f1) VALUES ($v1)");
+    if ($nid = db_insert_id()) {
+      $lid = db_query("INSERT INTO $node[type] ($f2, node) VALUES ($v2, $nid)");
+      if ($lid = db_insert_id()) {
+        db_query("UPDATE nodes SET lid = '$lid' WHERE nid = '$nid'");
       }
-//  }
+      else {
+        db_query("DELETE FROM nodes WHERE nid = '$nid'");
+      }
+    }
+
+    watchdog("message", "added node '$node[title]'");
+  }
+
+  if (($node[pid]) && ($node[status] == $status[posted])) {
+    db_query("UPDATE nodes SET status = '$status[expired]' WHERE nid = '$node[pid]'");
   }
 }
 
-function node_view($node, $page = 0) {
+function node_view($node, $page) {
   if ($node->type) {
     $function = $node->type ."_view";
-    $function($node);
+    return $function($node, $page);
   }
-  else {
-    print "not found";
+}
+
+function node_form($node) {
+  if ($node[type]) {
+    $function = $node[type] ."_form";
+    return $function($node);
   }
 }
 
@@ -122,7 +134,7 @@ function node_info($node) {
   </SCRIPT>
  <?php
 
-  $choices = array("/node.php?id=$node->nid" => t("view node"), "/node.php?op=update&id=$node->nid" => t("suggest update"), "/node.php?op=history&id=$node->nid" => t("view history"), "/node.php?op=referer&id=$node->nid" => t("view referers"));
+  $choices = array("/node.php?id=$node->nid" => t("view node"), "/submit.php?mod=$node->type&op=update&id=$node->nid" => t("suggest update"), "/node.php?op=history&id=$node->nid" => t("view history"));
 
   $output .= "<FORM METHOD=\"get\" ACTION=\"\">\n";
   foreach ($choices as $key => $value) $options .= "<OPTION VALUE=\"$key\"". ($key == $REQUEST_URI ? " SELECTED" : "") .">". check_select($value) ."</OPTION>\n";
@@ -133,8 +145,8 @@ function node_info($node) {
 }
 
 function node_visible($node) {
-  global $user;
-  return ($node->status == 2) || ($node->status == 1 && $user->id) || user_access($user, "node");
+  global $user, $status;
+  return ($node->status == $status[posted]) || ($node->status == $status[queued] && $user->id) || user_access($user, "node");
 }
 
 function node_post_threshold($node, $threshold = 5) {

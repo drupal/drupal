@@ -58,18 +58,18 @@ function account_blocks($id) {
   return $output;
 }
 
-function account_stories($id) {
-  $result = db_query("SELECT * FROM stories WHERE author = $id ORDER BY timestamp DESC");
-  while ($story = db_fetch_object($result)) {
-    $output .= "<LI><A HREF=\"story.php?id=$story->id\">$story->subject</A></LI>\n";
+function account_nodes($id) {
+  $result = db_query("SELECT * FROM nodes WHERE author = $id ORDER BY timestamp DESC");
+  while ($node = db_fetch_object($result)) {
+    $output .= "<LI><A HREF=\"node.php?id=$node->nid\">$node->title</A> ($node->type)</LI>\n";
   }
   return $output;
 }
 
 function account_comments($id) {
-  $result = db_query("SELECT * FROM comments WHERE link = 'story' AND author = '$id' ORDER BY timestamp DESC");
+  $result = db_query("SELECT * FROM comments WHERE author = '$id' ORDER BY timestamp DESC");
   while ($comment = db_fetch_object($result)) {
-    $output .= "<LI><A HREF=\"story.php?id=$comment->lid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">$comment->subject</A></LI>\n";
+    $output .= "<LI><A HREF=\"node.php?id=$comment->lid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">$comment->subject</A></LI>\n";
   }
   return $output;
 }
@@ -153,7 +153,7 @@ function account_view($name) {
     $output .= " <TR><TH>Theme:</TH><TD>". check_output($account->theme) ."</TD></TR>\n";
     $output .= " <TR><TH>Timezone:</TH><TD>". check_output($account->timezone / 3600) ."</TD></TR>\n";
     $output .= " <TR><TH>Selected blocks:</TH><TD>". check_output(account_blocks($account->id)) ."</TD></TR>\n";
-    $output .= " <TR><TH>Submitted stories:</TH><TD>". check_output(account_stories($account->id)) ."</TD></TR>\n";
+    $output .= " <TR><TH>Submitted nodes:</TH><TD>". check_output(account_nodes($account->id)) ."</TD></TR>\n";
     $output .= " <TR><TH>Submitted comments:</TH><TD>". check_output(account_comments($account->id)) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"2\"><INPUT TYPE=\"hidden\" NAME=\"name\" VALUE=\"$account->userid\"><INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Edit account\"><INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Delete account\"></TD></TR>\n";
     $output .= "</TABLE>\n";

@@ -4,13 +4,15 @@ $module = array("menu" => "moderation_menu",
                 "page" => "moderation_page");
 
 include_once "includes/common.inc";
+include_once "includes/node.inc";
 
 function moderation_menu() {
   return array("<A HREF=\"module.php?mod=moderation\">". t("moderation queue") ."</A> (<FONT COLOR=\"red\">". moderation_count() ."</FONT>)");
 }
 
 function moderation_count() {
-  $result = db_query("SELECT COUNT(nid) FROM nodes WHERE status = 1");
+  global $status;
+  $result = db_query("SELECT COUNT(nid) FROM nodes WHERE status = '$status[queued]'");
   return ($result) ? db_result($result, 0) : 0;
 }
 
@@ -20,7 +22,7 @@ function moderation_score($id) {
 }
 
 function moderation_vote($id, $vote) {
-  global $user;
+  global $status, $user;
 
   if (!user_get($user, "history", "n$id")) {
     // Update submission's score- and votes-field:
@@ -29,28 +31,27 @@ function moderation_vote($id, $vote) {
     // Update user's history record:
     $user = user_set($user, "history", "n$id", $vote);
 
-    $result = db_query("SELECT * FROM nodes WHERE nid = $id");
-    if ($node = db_fetch_object($result)) {
+    if ($node = node_get_object(nid, $id)) {
       if (node_post_threshold($node) <= $node->score) {
-        db_query("UPDATE nodes SET status = 2, timestamp = '". time() ."' WHERE nid = $id");
-        watchdog("message", "posted node '$node->subject'");
+        node_save(array(nid => $id, pid => $node->pid, type => $node->type, status => $status[posted]));
+        watchdog("message", "posted node '$node->title'");
       }
       else if (node_dump_threshold($node) >= $node->score) {
-        db_query("UPDATE nodes SET status = 0, timestamp = '". time() ."' WHERE nid = $id");
-        watchdog("message", "dumped node '$node->subject'");
+        node_save(array(nid => $id, pid => $node->pid, type => $node->type, status => $status[dumped]));
+        watchdog("message", "dumped node '$node->title'");
       }
       else if (node_timout_threshold($node) <= $node->votes) {
-        db_query("UPDATE nodes SET status = 0, timestamp = '". time() ."' WHERE nid = $id");
-        watchdog("message", "expired node '$node->subject'");
+        node_save(array(nid => $id, pid => $node->pid, type => $node->type, status => $status[expired]));
+        watchdog("message", "expired node '$node->title'");
       }
     }
   }
 }
 
 function moderation_overview() {
-  global $theme, $user;
+  global $status, $theme, $user;
 
-  $result = db_query("SELECT n.*, u.userid FROM nodes n LEFT JOIN users u ON n.author = u.id WHERE n.status = 1");
+  $result = db_query("SELECT n.*, u.userid FROM nodes n LEFT JOIN users u ON n.author = u.id WHERE n.status = '$status[queued]'");
 
   $content .= "<TABLE BORDER=\"0\" CELLSPACING=\"4\" CELLPADDING=\"4\">\n";
   $content .= " <TR BGCOLOR=\"$bgcolor1\"><TH>". t("Subject") ."</TH><TH>". t("Author") ."</TH><TH>". t("Type") ."</TH><TH>". t("Score") ."</TH></TR>\n";
@@ -74,6 +75,11 @@ function moderation_node($id) {
     header("Location: node.php?id=$node->nid");
   }
   else {
+    if ($node->pid && $n = node_get_object("nid", $node->pid)) {
+      if ($node->pid) $output .= " ". t("The above node is a suggested update for an existing node:") ." \"<A HREF=\"node.php?id=$n->nid\">". check_output($n->title) ."</A>\".";
+      if ($node->log) $output .= " ". t("The log message to accompany this update is given below:") ."<P>". check_output($node->log, 1) ."</P>";
+    }
+
     // moderation form:
     $output .= "<FORM ACTION=\"module.php?mod=moderation\" METHOD=\"post\">\n";
     foreach ($moderation_votes as $key=>$value) $options .= "  <OPTION VALUE=\"$value\">$key</OPTION>\n";
@@ -83,7 +89,7 @@ function moderation_node($id) {
     $output .= "</FORM>\n";
 
     $theme->header();
-    node_view($node, 1);
+    node_view($node, 0);
     $theme->box(t("Moderate"), $output);
     $theme->footer();
   }

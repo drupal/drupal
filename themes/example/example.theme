@@ -128,7 +128,7 @@
 
       // Author and date:
       echo "    <TR>";
-      echo "      <TD>";      
+      echo "      <TD>";
       echo         t("Author") .":";
       echo "      </TD>";
       echo "      <TD COLSPAN=\"2\">";
