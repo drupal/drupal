@@ -27,15 +27,18 @@ function theme_account($theme) {
     $content .= "<LI><A HREF=\"account.php?op=edit&topic=user\">edit your information</A></LI>\n";
     $content .= "<LI><A HREF=\"account.php?op=edit&topic=site\">edit your preferences</A></LI>\n";
     $content .= "<LI><A HREF=\"account.php?op=edit&topic=content\">edit site content</A></LI>\n";
-		if (($user->id) && ($user->permissions == 1 || $user->id == 1)) {
-      $content .= "<P>\n";
-      $content .= "<LI><A HREF=\"admin.php\">administrate " . $site_name . "</A></LI>\n";
-		}
     $content .= "<P>\n";
-    if (ksort($menu)) {
+
+    if (($user->id) && ($user->permissions == 1 || $user->id == 1)) {
+      $content .= "<LI><A HREF=\"admin.php\">administrate ". $site_name ."</A></LI>\n";
+      $content .= "<P>\n";
+    }
+
+    if ($menu && ksort($menu)) {
       foreach ($menu as $link=>$url) $content .= "<LI><A HREF=\"$url\">$link</A></LI>\n";
       $content .= "<P>\n";
     }
+
     $content .= "<LI><A HREF=\"account.php?op=logout\">logout</A></LI>\n";
 
     $theme->box("$user->userid's configuration", "$content");
@@ -127,16 +130,16 @@ function theme_related_links($theme, $story) {
   $theme->box("Related links", $content);
 }
 
-function theme_comment_moderation($id, $author, $score, $votes) {
+function theme_comment_moderation($comment) {
   global $user, $comment_votes;
   
-  if ($user->id && $user->userid != $author && !user_getHistory($user->history, "c$id")) {
-    $output .= "<SELECT NAME=\"moderate[$id]\">\n";
+  if ($user->id && $user->userid != $comment->userid && !user_getHistory($user->history, "c$comment->cid")) {
+    $output .= "<SELECT NAME=\"moderate[$comment->cid]\">\n";
     foreach ($comment_votes as $key=>$value) $output .= " <OPTION VALUE=\"$value\">$key</OPTION>\n";
     $output .= "</SELECT>\n";
   }
   else {
-    $output .= "<TABLE BORDER=\"0\" CELLSPACING=\"1\" CELLPADDING=\"0\"><TR><TD>score:</TD><TD>". format_data($score) ."</TD></TR><TR><TD>votes:</TD><TD>". format_data($votes) ."</TR></TABLE>";
+    $output .= "<TABLE BORDER=\"0\" CELLSPACING=\"1\" CELLPADDING=\"1\"><TR><TD>score:</TD><TD>". format_data($comment->score) ."</TD></TR><TR><TD>votes:</TD><TD>". format_data($comment->votes) ."</TR></TABLE>";
   }
 
   return $output;
