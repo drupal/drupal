@@ -3,10 +3,12 @@
 
 function block_help() {
  ?>
-  <P>Blocks are the boxes visible in the side bars on the left- and right-hand side of the website.  They are either exported by the engine or by any of the active modules.  To really get your teeth into a drupal website, you are going to have to deal with blocks and administering blocks in a fairly sophisticated fashion.  This means you will need to understand how the block placement strategy works.</P>
-  <P>The placement of blocks is delegated to the administrator. In most cases (i.e., the "custom" blocks), the user has complete control -- using preferences -- over whether or not they are enabled.</P>
-  <P>An administrator can lay out and arrange the available blocks to fit in two regions: "left" and "right".  Regions simply contain blocks.  In addition, an administrator can assign each block (within a region) a weight to sort them vertically.  The heavier blocks will sink and the lighter blocks will be positioned nearer the top.</P>
-  <P>As mentioned, blocks may be arranged to fit in two regions: left and right.  For theme builders, each region is identified by a corresponding constant: "left" and "right".</P>
+  <p>Blocks are the boxes visible in the side bars on the left- and right-hand side of the website.  They are either exported by the engine or by any of the active modules.  To really get your teeth into a drupal website, you are going to have to deal with blocks and administering blocks in a fairly sophisticated fashion.  This means you will need to understand how the block placement strategy works.</p>
+  <p>The placement of blocks is delegated to the administrator. In most cases (i.e., the "custom" blocks), the user has complete control -- using preferences -- over whether or not they are enabled.</p>
+  <p>An administrator can lay out and arrange the available blocks to fit in two regions: "left" and "right".  Regions simply contain blocks.  In addition, an administrator can assign each block (within a region) a weight to sort them vertically.  The heavier blocks will sink and the lighter blocks will be positioned nearer the top.</p>
+  <p>As mentioned, blocks may be arranged to fit in two regions: left and right.  For theme builders, each region is identified by a corresponding constant: "left" and "right".</p>
+  <p>The path setting lets you define which pages you want the specific blocks to be shown. If you leave the path blank it will show on all pages. The path uses a regular expression syntax so remember to escape special characters!<br />Examples:
+  <ul><li>Only show on node pages: ^/node\.php</li><li>Only show on the user page: ^/module\.php\?mod=user</li><li>Show in main page and blog page: ^/(index\.php|module\.php\?mod=blog)</li></ul>
  <?php
 }
 
@@ -24,7 +26,7 @@ function block_link($type) {
 
 function block_admin_save($edit) {
   foreach ($edit as $key=>$value) {
-    db_query("UPDATE blocks SET region = '". check_input($value[region]) ."', status = '". check_input($value[status]) ."', weight = '". check_input($value[weight]) ."' WHERE name = '". check_input($key) ."'");
+    db_query("UPDATE blocks SET region = '". check_input($value[region]) ."', status = '". check_input($value[status]) ."', path = '". check_input($value[path]) ."', weight = '". check_input($value[weight]) ."' WHERE name = '". check_input($key) ."'");
   }
 }
 
@@ -32,40 +34,38 @@ function block_admin_display() {
   $result = db_query("SELECT * FROM blocks ORDER BY module");
 
   // Generate output:
-  $output .= "<FORM ACTION=\"admin.php?mod=block\" METHOD=\"post\">\n";
-  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR><TH>block</TH><TH>module</TH><TH>status</TH><TH>weight</TH><TH>region</TH></TR>\n";
+  $output .= "<form action=\"admin.php?mod=block\" method=\"post\">\n";
+  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
+  $output .= " <tr><th>block</th><th>module</th><th>status</th><th>weight</th><th>region</th><th>path</th></tr>\n";
 
   while ($block = db_fetch_object($result)) {
     $module = module_hook($block->module, "admin") ? "<A HREF=\"admin.php?mod=$block->module\">$block->module</A>" : $block->module;
 
-    $status .= "<SELECT NAME=\"edit[$block->name][status]\">\n";
-    $status .= " <OPTION VALUE=\"2\"". (($block->status == 2) ? " SELECTED" : "") .">enabled: always</OPTION>\n";
-    $status .= " <OPTION VALUE=\"1\"". (($block->status == 1) ? " SELECTED" : "") .">enabled: custom</OPTION>\n";
-    $status .= " <OPTION VALUE=\"0\"". (($block->status == 0) ? " SELECTED" : "") .">disabled</OPTION>\n";
-    $status .= "</SELECT>\n";
+    $status = "<select name=\"edit[$block->name][status]\">\n";
+    $status .= " <option value=\"2\"". (($block->status == 2) ? " selected" : "") .">enabled: always</option>\n";
+    $status .= " <option value=\"1\"". (($block->status == 1) ? " selected" : "") .">enabled: custom</option>\n";
+    $status .= " <option value=\"0\"". (($block->status == 0) ? " selected" : "") .">disabled</option>\n";
+    $status .= "</select>\n";
 
-    $weight .= "<SELECT NAME=\"edit[$block->name][weight]\">\n";
+    $weight = "<select name=\"edit[$block->name][weight]\">\n";
     for ($count = 0; $count < 10; $count++) {
-      $weight .= "<OPTION VALUE=\"$count\"". (($block->weight == $count) ? " SELECTED" : "") .">$count</OPTION>\n";
+      $weight .= "<option value=\"$count\"". (($block->weight == $count) ? " selected" : "") .">$count</option>\n";
     }
-    $weight .= "</SELECT>\n";
+    $weight .= "</select>\n";
 
-    $region .= "<SELECT NAME=\"edit[$block->name][region]\">\n";
-    $region .= " <OPTION VALUE=\"0\"". (($block->region == 0) ? " SELECTED" : "") .">left</OPTION>\n";
-    $region .= " <OPTION VALUE=\"1\"". (($block->region == 1) ? " SELECTED" : "") .">right</OPTION>\n";
-    $region .= "</SELECT>\n";
+    $region = "<select name=\"edit[$block->name][region]\">\n";
+    $region .= " <option value=\"0\"". (($block->region == 0) ? " selected" : "") .">left</option>\n";
+    $region .= " <option value=\"1\"". (($block->region == 1) ? " selected" : "") .">right</option>\n";
+    $region .= "</select>\n";
+    
+    $path = "<input name=\"edit[$block->name][path]\" value=\"$block->path\">\n";
 
-    $output .= " <TR><TD>". $block->name ."</TD><TD ALIGN=\"center\">$module</TD><TD>$status</TD><TD>$weight</TD><TD>$region</TD></TR>\n";
-
-    unset($status);
-    unset($weight);
-    unset($region);
+    $output .= " <tr><td>". $block->name ."</td><td align=\"center\">$module</td><td>$status</td><td>$weight</td><td>$region</td><td>$path</td></tr>\n";
   }
 
-  $output .= "</TABLE>\n";
-  $output .= "<INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"Save blocks\">\n";
-  $output .= "</FORM>\n";
+  $output .= "</table>\n";
+  $output .= "<input name=\"op\" type=\"submit\" value=\"Save blocks\">\n";
+  $output .= "</form>\n";
 
   print $output;
 }
