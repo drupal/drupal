@@ -113,8 +113,8 @@ function headline_admin_display() {
     $backend = new backend($channel->id);
 
     $output .= "<TR>\n";
-    $output .= " <TD><A HREF=\"$backend->url\">$backend->site</A></TD>\n";
-    $output .= " <TD><A HREF=\"mailto:$backend->contact\">$backend->contact</A></TD>\n";
+    $output .= " <TD>". format_url($backend->url, $backend->site) ."</TD>\n";
+    $output .= " <TD>". format_email($backend->contact) ."</TD>\n";
     $output .= " <TD ALIGN=\"center\">". ($backend->timestamp == 1 ? "failed" : format_interval(time() - $backend->timestamp) ." ago") ."</TD>\n";
     $output .= " <TD ALIGN=\"center\"><A HREF=\"admin.php?mod=headline&op=refresh&id=$backend->id\">refresh</A></TD>\n";
     $output .= " <TD ALIGN=\"center\"><A HREF=\"admin.php?mod=headline&op=delete&id=$backend->id\">delete</A></TD>\n";
