@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.228 2003/06/15 19:06:22 dries Exp $
+// $Id: node.module,v 1.229 2003/06/24 18:26:32 dries Exp $
 
 function node_help() {
   global $mod;
@@ -984,11 +984,6 @@ function node_validate($node, &$error) {
     $node->static = variable_get("node_static_$node->type", 0);
     $node->revision = variable_get("node_revision_$node->type", 0);
     unset($node->created);
-  }
-
-  // Workflow:
-  if ($node->moderate == 1) {
-    $node->promote = 0;
   }
 
   /*
