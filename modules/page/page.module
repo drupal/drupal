@@ -10,21 +10,31 @@ class Page {
   }
 }
 
+function page_link($type) {
+  if ($type == "page" && user_access("access content")) {
+    $result = db_query("SELECT nid,link FROM page WHERE link != '' ORDER BY link");
+    while ($page = db_fetch_object($result)) {
+      $links[] = "<a href=\"node.php?id=$page->nid\">$page->link</a>";
+    }
+  }
+  
+  return $links ? $links : array();
+}
+
 function page_view($node, $main = 0) {
-  global $format;
+  global $format, $theme;
 
   switch ($format[$node->format]) {
     case "PHP":
-      $output = eval($node->body);
+      print eval($node->body);
       break;
     case "text":
-      $output = nl2br(htmlentities($node->body));
+      $theme->box($node->title, nl2br(htmlentities($node->body)));
       break;
     default:
-      $output = check_output($node->body, 1);
+      $theme->box($node->title, check_output($node->body, 1));
   }
 
-  print $output;
 }
 
 function page_status() {
@@ -39,10 +49,12 @@ function page_form($edit = array()) {
   }
 
   if ($edit[title]) {
+    print "<!-- Don't ask:\n$edit[body] -->\n";
     $form = page_view(new Page(node_preview($edit)));
   }
 
   $form .= form_textfield("Subject", "title", $edit[title], 50, 64);
+  $form .= form_textfield("Link", "link", $edit[link], 50, 64);
   $form .= form_textarea("Body", "body", $edit[body], 70, 30);
   $form .= form_select("Type", "format", $edit[format], $format);
   $form .= form_hidden("nid", $edit[nid]);
@@ -61,7 +73,7 @@ function page_form($edit = array()) {
 function page_save($edit) {
   global $status, $user;
 
-  node_save($edit, array(author => $user->id, body, comment => variable_get("page_comment", 0), format, moderate => variable_get("page_moderate", ""), promote => variable_get("page_promote", 0), score => 0, status => $status[posted], timestamp => time(), title, type => "page", votes => 0));
+  node_save($edit, array(author => $user->id, link, body, comment => variable_get("page_comment", 0), format, moderate => variable_get("page_moderate", ""), promote => variable_get("page_promote", 0), score => 0, status => $status[posted], timestamp => time(), title, type => "page", votes => 0));
 }
 
 ?>
