@@ -25,42 +25,56 @@ function admin_page($mod) {
     h3   { font-family: helvetica, arial; font-size: 14pt; font-weight: bold; color: #006600; }
     th   { font-family: helvetica, arial; font-size: 12pt; text-align: center; vertical-align: top; background-color: #CCCCCC; color: #995555; }
     td   { font-family: helvetica, arial; font-size: 12pt; }
+    #header { float: top; margin: 0; padding: 0; border-bottom: 1px solid #ccc; }
+    #tree { float: left; width: 230px; border-right: 1px solid #ccc; z-index: 1; overflow: hidden; }
+    #main { margin-left: 240px; padding: 20px 20px 20px 20px; z-index: 2; }
+    #menu { padding-bottom: 18px; text-align: right; }
+    #help { padding-bottom: 18px; }
    </style>
    <body bgcolor="#FFFFFF" link="#005599" vlink="#004499" alink="#FF0000">
     <?php
       module_invoke_all("link", "admin");
 
-      print "<img align=\"right\" src=\"misc/druplicon-small.gif\" tag=\"Druplicon - Drupal logo\" />";
+      /*
+      ** Header:
+      */
 
-      if ($mod) {
-        /*
-        ** Generate the admin page's header.
-        */
+      print "<div id=\"header\">";
+      print "<a href=\"index.php\"><img align=\"right\" src=\"misc/druplicon-small.gif\" tag=\"Druplicon - Drupal logo\" /></a>";
 
-        if ($path = menu_path()) {
-          print "<h2>". la(t("Administration")) ." > $path</h2>";
-        }
-        else {
-          print "<h2>". t("Administration") ."</h2>";
-        }
-        if ($data) {
-          print "<hr />". implode("<hr />", $data) ."<hr />";
-        }
-        if ($menu = menu_menu()) {
-          print $menu;
-        }
-        if ($help = menu_help()) {
-          print "<hr />$help";
-        }
-        print "<hr />";
-
-        module_invoke($mod, "admin");
+      if ($path = menu_path()) {
+        print "<h2>". la(t("Administration")) ." > $path</h2>";
       }
       else {
         print "<h2>". t("Administration") ."</h2>";
-        print "<hr />";
-        print menu_tree();
       }
+
+      print "</div>";
+
+      /*
+      ** Menu:
+      */
+
+      print "<div id=\"tree\">";
+      print menu_tree();
+      print "</div>";
+
+      /*
+      ** Body:
+      */
+
+      print "<div id=\"main\">";
+
+      if ($menu = menu_menu()) {
+        print "<div id=\"menu\">$menu</div>";
+      }
+
+      if ($help = menu_help()) {
+        print "<div id=\"help\">$help</div>";
+      }
+
+      module_invoke($mod, "admin");
+      print "</div>";
 
       db_query("DELETE FROM menu");
     ?>
