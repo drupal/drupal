@@ -1,5 +1,5 @@
 <?php
-/* $Id: path.module,v 1.32 2004/05/31 11:51:21 dries Exp $ */
+/* $Id: path.module,v 1.33 2004/05/31 19:14:43 dries Exp $ */
 
 /**
  * Implementation of hook_help().
@@ -303,7 +303,7 @@ function path_save($edit) {
     }
 
     drupal_set_message(t('the alias has been saved.'));
-   
+
     return  path_overview();
   }
 }

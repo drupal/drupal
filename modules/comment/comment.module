@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.245 2004/05/31 12:46:03 dries Exp $
+// $Id: comment.module,v 1.246 2004/05/31 19:14:43 dries Exp $
 
 function comment_help($section = "admin/help#comment") {
   $output = "";
@@ -225,7 +225,7 @@ function comment_reply($pid, $nid) {
 
 function comment_validate_form($edit) {
   global $user;
-  
+
   /*
   ** Validate the comment's body.
   */
