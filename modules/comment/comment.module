@@ -254,7 +254,7 @@ function comment_preview($edit) {
   ** Preview the comment:
   */
 
-  $output .= theme("comment_view", $comment, comment_links($comment));
+  $output .= theme("comment_view", $comment, theme('links', module_invoke_all('link', 'comment', $comment, 1)));
   $output .= theme("comment_form", $edit, t("Reply"));
 
   if ($edit["pid"]) {
@@ -506,7 +506,7 @@ function comment_links($comment, $return = 1) {
     $links[] = $moderation;
   }
 
-  return theme("links", $links);
+  return $links;
 }
 
 function comment_render($node, $cid = 0) {
@@ -569,7 +569,7 @@ function comment_render($node, $cid = 0) {
       $result = db_query("SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0 GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users", $cid);
 
       if ($comment = db_fetch_object($result)) {
-        $output .= theme("comment_view", $comment, comment_links($comment));
+        $output .= theme("comment_view", $comment, theme('links', module_invoke_all('link', 'comment', $comment, 1)));
       }
 
       if ((comment_user_can_moderate($node)) && $user->uid != $comment->uid && !(comment_already_moderated($user->uid, $comment->users))) {
@@ -793,6 +793,10 @@ function comment_link($type, $node = 0, $main = 0) {
         }
       }
     }
+  }
+
+  if ($type == "comment") {
+    $links = comment_links($node, $main);
   }
 
   if ($type == "system") {
@@ -1415,7 +1419,7 @@ function theme_comment_flat_collapsed($comment, $threshold) {
 }
 
 function theme_comment_flat_expanded($comment, $threshold) {
-  return theme("comment_view", $comment, comment_links($comment, 0), comment_visible($comment, $threshold));
+  return theme("comment_view", $comment, theme('links', module_invoke_all('link', 'comment', $comment, 0)), comment_visible($comment, $threshold));
 }
 
 function theme_comment_thread_min($comment, $threshold, $pid = 0) {
@@ -1433,7 +1437,7 @@ function theme_comment_thread_max($comment, $threshold, $level = 0) {
     $output .= "<div style=\"margin-left:". ($comment->depth * 25) ."px;\">\n";
   }
 
-  $output .= theme("comment_view", $comment, comment_links($comment, 0), comment_visible($comment, $threshold));
+  $output .= theme("comment_view", $comment, theme('links', module_invoke_all('link', 'comment', $comment, 0)), comment_visible($comment, $threshold));
 
   if ($comment->depth) {
     $output .= "</div>\n";
