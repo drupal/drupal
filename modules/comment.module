@@ -138,16 +138,15 @@ function comment_settings() {
 
 function comment_user($type, $edit, &$user) {
   switch ($type) {
-    case "view_public":
-    case "view_private":
+    case "view":
       if ($user->signature) {
         return form_item(t("Signature"), check_output($user->signature));
       }
       break;
-    case "edit_form":
+    case "edit":
       // when user tries to edit his own data
       return array(t('Personal information') => form_textarea(t("Signature"), "signature", $user->signature, 70, 3, t("Your signature will be publicly displayed at the end of your comments.") ."<br />". filter_tips_short()));
-    case "edit_validate":
+    case "edit":
       // validate user data editing
       return array("signature" => $edit["signature"]);
   }
@@ -203,7 +202,7 @@ function comment_reply($pid, $nid) {
     */
 
     if ($pid) {
-      $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0", $pid));
+      $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name, u.picture, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0", $pid));
       $comment = drupal_unpack($comment);
       $output .= theme("comment_view", $comment);
     }
@@ -258,7 +257,7 @@ function comment_preview($edit) {
   $output .= theme("comment_form", $edit, t("Reply"));
 
   if ($edit["pid"]) {
-    $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0", $edit["pid"]));
+    $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name, u.picture, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0", $edit["pid"]));
     $comment = drupal_unpack($comment);
     $output .= theme("comment_view", $comment);
   }
@@ -559,7 +558,7 @@ function comment_render($node, $cid = 0) {
       $output .= "<form method=\"post\" action=\"". url("comment") ."\"><div>\n";
       $output .= form_hidden("nid", $nid);
 
-      $result = db_query("SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0 GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users", $cid);
+      $result = db_query("SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.picture, u.data, c.score, c.users FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0 GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.picture, u.data, c.score, c.users", $cid);
 
       if ($comment = db_fetch_object($result)) {
         $output .= theme("comment_view", $comment, theme('links', module_invoke_all('link', 'comment', $comment, 1)));
@@ -576,9 +575,9 @@ function comment_render($node, $cid = 0) {
       ** Multiple comments view
       */
 
-      $query .= "SELECT c.cid as cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users, c.thread FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.nid = '". check_query($nid) ."' AND c.status = 0";
+      $query .= "SELECT c.cid as cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.picture, u.data, c.score, c.users, c.thread FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.nid = '". check_query($nid) ."' AND c.status = 0";
 
-      $query .= " GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users, c.thread";
+      $query .= " GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.picture, u.data, c.score, c.users, c.thread";
 
       /*
       ** We want to use the standard pager, but threads would need every

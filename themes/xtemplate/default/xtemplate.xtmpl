@@ -56,9 +56,9 @@
 
 <!-- BEGIN: node -->
   <div class="node {static}">
-    <!-- BEGIN: avatar -->
-    <div class="avatar">{avatar}</div>
-    <!-- END: avatar -->
+    <!-- BEGIN: picture -->
+    {picture}
+    <!-- END: picture -->
     <!-- BEGIN: title -->
     <h2 class="title"><a href="{link}">{title}</a></h2>
     <!-- END: title -->
@@ -75,9 +75,9 @@
 
 <!-- BEGIN: comment -->
   <div class="comment">
-    <!-- BEGIN: avatar -->
-    <div class="avatar">{avatar}</div>
-    <!-- END: avatar -->
+    <!-- BEGIN: picture -->
+    {picture}
+    <!-- END: picture -->
     <h3 class="title">{title}</h3><!-- BEGIN: new --><span class="new">{new}</span><!-- END: new -->
     <div class="submitted">{submitted}</div>
     <div class="content">{content}</div>

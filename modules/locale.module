@@ -74,7 +74,7 @@ function locale_link($type) {
 
 function locale_user($type, &$edit, &$user) {
   global $languages;
-  if ($type == "edit_form" && count($languages) > 1) {
+  if ($type == 'edit' && count($languages) > 1) {
     return array(t('Locale settings') => form_radios(t("Language"), 'language', $user->language, $languages, t("Selecting a different language will change the language of the site.")));
   }
 }

@@ -222,7 +222,7 @@ table {
   font-size: 0.8em;
   padding: 1.5em;
 }
-.node .avatar {
+.node .picture {
   border: 1px solid #ddd;
   float: right;
   margin: 0.5em;
@@ -242,7 +242,7 @@ table {
   float: right;
   color: red;
 }
-.comment .avatar {
+.comment .picture {
   border: 1px solid #abc;
   float: right;
   margin: 0.5em;

@@ -312,7 +312,7 @@ table#footer-links {
   font-size: 0.83em;
   padding: 1.5em;
 }
-.node .avatar {
+.node .picture {
   border: 1px solid #fff;
   float: right;
   margin: 0.5em;
@@ -334,7 +334,7 @@ table#footer-links {
   float: right;
   color: red;
 }
-.comment .avatar {
+.comment .picture {
   border: 1px solid #fff;
   float: right;
   margin: 0.5em;

@@ -185,22 +185,4 @@ function drupal_login($arguments) {
   }
 }
 
-function drupal_user($type, $edit, $user) {
-
-  $module = "drupal";
-  $name = module_invoke($module, "info", "name");
-  switch ($type) {
-    case "view_private":
-      $result = user_get_authname($user, $module);
-      $title = t("%name ID", array("%name" => $name));
-      if ($result) {
-        return form_item($title, $result);
-      }
-      else {
-        // TODO: use a variation of $base_url instead of $HTTP_HOST below
-        return form_item($title, "$user->name@". $_SERVER["HTTP_HOST"]);
-      }
-  }
-}
-
 ?>

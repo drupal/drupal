@@ -50,7 +50,8 @@ $sql_updates = array(
   "2004-01-11" => "update_76",
   "2004-01-13" => "update_77",
   "2004-02-03" => "update_78",
-  "2004-02-21" => "update_79"
+  "2004-02-21" => "update_79",
+  "2004-03-11: first update since Drupal 4.4.0 release" => "update_80"
 );
 
 function update_32() {
@@ -758,6 +759,126 @@ function update_79() {
   $ret[] = update_sql("ALTER TABLE {node} DROP attributes");
   $ret[] = update_sql("ALTER TABLE {comments} DROP link");
   return $ret;
+}
+
+function update_80() {
+
+  // Add a 'created' field to the users table:
+  update_sql('ALTER TABLE {users} ADD created INT(11) NOT NULL');
+  update_sql('ALTER TABLE {users} CHANGE timestamp changed INT(11) NOT NULL');
+
+  // Add some indices to speed up the update process:
+  update_sql('ALTER TABLE {comments} ADD index (timestamp)');
+  update_sql('ALTER TABLE {node} ADD index (created)');
+
+  // Assign everyone a created timestamp to begin with:
+  update_sql("UPDATE {users} SET created = changed WHERE created = ''");
+
+  // Print a status message:"
+  print '<p>Note: this might take a while ...</p>';
+
+  // Try updating the user records using the comment table:
+  $result = db_query('SELECT DISTINCT(u.uid) FROM {comments} c LEFT JOIN {users} u ON c.uid = u.uid WHERE c.timestamp < u.created');
+  while ($account = db_fetch_object($result)) {
+    // Retrieve the proper timestamp:
+    $timestamp = db_result(db_query('SELECT MIN(timestamp) FROM {comments} WHERE uid = %d', $account->uid));
+
+    // Update this user record as well as older records with an older timestamp:
+    db_query('UPDATE {users} SET created = %d WHERE created > %d AND uid <= %d', $timestamp, $timestamp, $account->uid);
+  }
+
+  // Try updating the user records using the node table:
+  $result = db_query('SELECT DISTINCT(u.uid) FROM {node} n LEFT JOIN {users} u ON n.uid = u.uid WHERE n.created < u.created');
+  while ($account = db_fetch_object($result)) {
+    // Retrieve the proper timestamp:
+    $timestamp = db_result(db_query('SELECT MIN(created) FROM {node} WHERE uid = %d', $account->uid));
+
+    // Update this user record as well as older records with an older timestamp:
+    db_query('UPDATE {users} SET created = %d WHERE created > %d AND uid <= %d', $timestamp, $timestamp, $account->uid);
+  }
+
+  // Add profile module related tables:
+  update_sql("CREATE TABLE {profile_fields} (
+    fid int(10) NOT NULL auto_increment,
+    title varchar(255) default NULL,
+    name varchar(128) default NULL,
+    explanation TEXT default NULL,
+    category varchar(255) default NULL,
+    type varchar(128) default NULL,
+    weight tinyint(1) DEFAULT '0' NOT NULL,
+    overview tinyint(1) DEFAULT '0' NOT NULL,
+    options text,
+    KEY category (category),
+    UNIQUE KEY name (name),
+    PRIMARY KEY (fid)
+   );");
+
+  update_sql("CREATE TABLE {profile_values} (
+    fid int(11) unsigned default '0',
+    uid int(11) unsigned default '0',
+    value text,
+    KEY uid (uid),
+    KEY fid (fid)
+   );");
+
+  // Migrate the old profile data to the new scheme:
+  $fields = array(
+    array("Name", "realname", "textfield", NULL, 0),
+    array("Address", "address", "textfield", NULL, 0),
+    array("City", "city", "textfield", NULL, 0),
+    array("State, province or region", "state", "textfield", NULL, 0),
+    array("Zip or postal code", "zip", "textfield", NULL, 0),
+    array("Country", "country", "textfield", NULL, 1),
+    array("Gender", "gender", "selection", "male\nfemale", 1),
+    array("Job title", "job", "textfield", NULL, 0),
+    array("ICQ messenger ID", "icq", "textfield", NULL, 0),
+    array("MSN messenger ID", "msn", "textfield", NULL, 0),
+    array("Yahoo messenger ID", "yahoo", "textfield", NULL, 0),
+    array("AIM messenger ID", "aim", "textfield", NULL, 0),
+    array("URL of homepage", "homepage", "textfield", NULL, 1),
+    array("Biography", "biography", "textarea", NULL, 0),
+    array("Interests", "interests", "textarea", NULL, 0),
+    array("Public key", "publickey", "textarea", NULL, 0)
+  );
+
+  // Remove existing data (debug mode):
+  db_query('DELETE FROM {profile_fields}');
+  db_query('DELETE FROM {profile_values}');
+
+  foreach ($fields as $field) {
+    db_query("INSERT INTO {profile_fields} (title, name, type, category, options, overview) VALUES ('%s', '%s', '%s', 'Personal information', '%s', %d)", $field[0], $field[1], $field[2], $field[3], $field[4]);
+  }
+  db_query("ALTER TABLE {users} ADD picture varchar(255) NOT NULL DEFAULT ''");
+
+  $result = db_query("SELECT uid FROM {users}");
+  while ($account = db_fetch_object($result)) {
+    // Load the user record:
+    $account = user_load(array('uid' => $account->uid));
+    $edit = array();
+
+    // Modify the user record:
+    foreach ($fields as $field) {
+      $old = "profile_". $field[1];
+      $new = $field[1];
+      if ($account->$old) {
+        $edit[$new] = $account->$old;
+      }
+      unset($account->$old);
+    }
+
+    // Gender specific changes:
+    if ($edit['gender'] == 'f') $edit['gender'] = 'female';
+    if ($edit['gender'] == 'm') $edit['gender'] = 'male';
+
+    // Avatar specific changes:
+    if ($account->profile_avatar) {
+      $edit['picture'] = $account->profile_avatar;
+    }
+    unset($account->profile_avatar);
+
+    // Save the update record:
+    user_save($account, $edit);
+  }
 }
 
 function update_sql($sql) {

@@ -77,7 +77,7 @@ function system_link($type) {
 }
 
 function system_user($type, $edit, &$user) {
-  if ($type == "edit_form") {
+  if ($type == 'edit') {
     $options = "<option value=\"\">". t("Default theme") ."</option>\n";
     if (count($themes = list_themes()) > 1) {
       foreach ($themes as $key => $value) {

@@ -37,12 +37,8 @@ function blog_access($op, $node) {
 }
 
 function blog_user($type, &$edit, &$user) {
-  switch ($type) {
-    case "view_public":
-    case "view_private":
-      if (user_access("maintain personal blog", $user)) {
-        return form_item(t("Blog"), l(t("view recent blog entries"), "blog/$user->uid", array("title" => t("Read %username's latest blog entries.", array("%username" => $user->name)))));
-      }
+  if ($type == 'view' && user_access("maintain personal blog", $user)) {
+    return form_item(t("Blog"), l(t("view recent blog entries"), "blog/$user->uid", array("title" => t("Read %username's latest blog entries.", array("%username" => $user->name)))));
   }
 }
 

@@ -32,7 +32,8 @@ function xtemplate_settings() {
   $group .= form_radios(t('Search box'), 'xtemplate_search_box', variable_get('xtemplate_search_box', 0), array(t('Disabled'), t('Enabled')), t('Show a search box in the upper right corner.'));
   $output .= form_group(t('Header settings'), $group);
 
-  $group = form_checkbox(t('Display avatars with posts'), 'xtemplate_avatar_node', 1, variable_get('xtemplate_avatar_node', 0), t('Display individualized pictures identifying users with posts they start.')) . form_checkbox(t('Display avatars with comments'), 'xtemplate_avatar_comment', 1, variable_get('xtemplate_avatar_comment', 0), t('Display individualized pictures identifying users with their comments.')) . form_textfield(t('Default avatar'), 'xtemplate_avatar_default', variable_get('xtemplate_avatar_default', ''), 70, 300, t('URL of avatar to display for users with no custom avatar selected. Leave blank for none.'));
+  $group = form_checkbox(t('Display pictures with posts'), 'xtemplate_picture_node', 1, variable_get('xtemplate_picture_node', 0), t('Display individualized pictures identifying users with posts they start.'));
+  $gourp .= form_checkbox(t('Display pictures with comments'), 'xtemplate_picture_comment', 1, variable_get('xtemplate_picture_comment', 0), t('Display individualized pictures identifying users with their comments.'));
   $output .= form_group(t('Avatar settings'), $group);
 
   return $output;
@@ -69,22 +70,9 @@ function xtemplate_node($node, $main = 0, $page = 0) {
     $xtemplate->template->parse("node.title");
   }
 
-  if (module_exist("profile") && variable_get("xtemplate_avatar_node", 0)) {
-    $avatar = $node->profile_avatar;
-    if (empty($avatar) || !file_exists($avatar)) {
-      $avatar = variable_get("xtemplate_avatar_default", "");
-    }
-    else {
-      $avatar = file_create_url($avatar);
-    }
-    if ($avatar) {
-      $avatar = "<img src=\"$avatar\" alt=\"" . t("%user's avatar", array("%user" => $node->name ? $node->name : t(variable_get("anonymous", "Anonymous")))) . "\" />";
-      if ($node->uid) {
-        $avatar = l($avatar, "user/view/$node->uid", array("title" => t("View user profile.")));
-      }
-      $xtemplate->template->assign("avatar", $avatar);
-      $xtemplate->template->parse("node.avatar");
-    }
+  if ($picture = theme('user_picture', $node)) {
+    $xtemplate->template->assign("picture", $picture);
+    $xtemplate->template->parse("node.picture");
   }
 
   if (module_exist("taxonomy") && ($taxonomy = taxonomy_link("taxonomy terms", $node))) {
@@ -121,22 +109,9 @@ function xtemplate_comment($comment, $links = 0) {
     $xtemplate->template->parse("comment.new");
   }
 
-  if (module_exist("profile") && variable_get("xtemplate_avatar_comment", 0)) {
-    $avatar = $comment->profile_avatar;
-    if (empty($avatar) || !file_exists($avatar)) {
-      $avatar = variable_get("xtemplate_avatar_default", "");
-    }
-    else {
-      $avatar = file_create_url($avatar);
-    }
-    if ($avatar) {
-      $avatar = "<img src=\"$avatar\" alt=\"" . t("%user's avatar", array("%user" => $comment->name ? $comment->name : t(variable_get("anonymous", "Anonymous")))) . "\" />";
-      if ($comment->uid) {
-        $avatar = l($avatar, "user/view/$comment->uid", array("title" => t("View user profile.")));
-      }
-      $xtemplate->template->assign("avatar", $avatar);
-      $xtemplate->template->parse("comment.avatar");
-    }
+  if ($picture = theme('user_picture', $comment)) {
+    $xtemplate->template->assign("picture", $picture);
+    $xtemplate->template->parse("comment.picture");
   }
 
   if ($links) {
