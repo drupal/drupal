@@ -986,10 +986,10 @@ function comment_mod_matrix($edit) {
     db_query("DELETE FROM {moderation_roles} ");
     foreach ($edit as $role_id => $votes) {
       foreach ($votes as $mid => $value) {
-        $sql[] = "('$mid', '$role_id', '". ($value ? $value : 0) ."')";
+        $sql = "('$mid', '$role_id', '". ($value ? $value : 0) ."')";
+   db_query("INSERT INTO {moderation_roles} (mid, rid, value) VALUES ". $sql);
       }
     }
-    db_query("INSERT INTO {moderation_roles} (mid, rid, value) VALUES ". implode(", ", $sql));
     drupal_set_message(t("the vote values have been saved."));
   }
 
