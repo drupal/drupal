@@ -22,7 +22,7 @@ th {
 .calendar .row-week td a:hover { background-color: #888; color: #fff; }
 .calendar a               { text-decoration: none; }
 .calendar a:hover         { text-decoration: none; }
-.calendar table           { border-collapse: collapse; }
+.calendar table           { border-collapse: collapse; width: 100%; }
 .calendar td              { text-align: center; border: 1px solid #000; padding: 1px; margin: 0; font-size: 0.8em; }
 
 .container-inline div     { display: inline; }
