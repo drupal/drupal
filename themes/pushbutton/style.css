@@ -231,7 +231,7 @@ td#home a:hover img {
 }
 #site-info {
   background-color: #bdd3ea;
-  background-image: none;
+  background-image: url('header-c.png');
   font-family: "Trebuchet MS", Geneva, Arial, Helvetica, SunSans-Regular, Verdana, sans-serif;
 }
 .site-name {
