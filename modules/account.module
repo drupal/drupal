@@ -169,36 +169,36 @@ function account_save($edit, &$name) {
       }
     }
     db_query("UPDATE users SET $query access = '' WHERE userid = '$name'");
-  
+
     if ($edit[access]) {
       foreach ($edit[access] as $key=>$value) {
         $account = user_load($name);
         db_query("UPDATE users SET access = '". field_set($account->access, $value, 1) ."' WHERE id = $account->id");
       }
     }
-  
+
     watchdog("account", "account: modified user '$name'");
   }
   else {
     $edit[userid] = trim($edit[userid]);
     $edit[real_email] = trim($edit[real_email]);
     $edit[name] = $edit[realname];
-  
+
     if ($error = account_validate($edit)) {
       return $error;
     }
     else {
       $edit[passwd] = account_password();
       $edit[hash] = substr(md5("$edit[userid]. ". time()), 0, 12);
-  
+
       $user = user_save("", array("userid" => $edit[userid], "real_email" => $edit[real_email], "passwd" => $edit[passwd], "status" => 1, "hash" => $edit[hash]));
-  
+
       $link = path_uri() ."account.php?op=confirm&name=$edit[userid]&hash=$edit[hash]";
       $subject = strtr(t("Account details for %a"), array("%a" => variable_get(site_name, "drupal")));
       $message = strtr(t("%a,\n\n\nsomeone signed up for a user account on %b and supplied this e-mail address as their contact.  If it wasn't you, don't get your panties in a knot and simply ignore this mail.  If this was you, you will have to confirm your account first or you will not be able to login.  To confirm your account visit the URL below:\n\n   %c\n\nOnce confirmed you can login using the following username and password:\n\n   username: %a\n   password: %d\n\n\n-- %b team\n"), array("%a" => $edit[userid], "%b" => variable_get(site_name, "drupal"), "%c" => $link, "%d" => $edit[passwd]));
-  
+
       watchdog("account", "new account: `$edit[userid]' &lt;$edit[real_email]&gt;");
-  
+
       mail($edit[real_email], $subject, $message, "From: noreply");
       $name = $edit[userid];
     }

@@ -24,7 +24,7 @@ function account_email() {
 
 function account_create($error = "") {
   global $theme;
-  
+
   if ($error) {
     $output .= "<P><FONT COLOR=\"red\">". t("Failed to create account") .": ". check_output($error) .".</FONT></P>\n";
     watchdog("account", "failed to create account: $error.");

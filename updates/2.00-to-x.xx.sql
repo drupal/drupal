@@ -259,14 +259,9 @@ CREATE TABLE collection (
   PRIMARY KEY (cid)
 );
 
-# test data:
-
-INSERT INTO collection (name, types) VALUES ('Software', 'story, book, poll');
-INSERT INTO collection (name, types) VALUES ('Hardware', 'story');
-
-INSERT INTO tag (collections, name) VALUES ('Software', 'ThatWare');
-INSERT INTO tag (collections, name) VALUES ('Software', 'phpWeblog');
-INSERT INTO tag (collections, name) VALUES ('Software', 'PHP-Nuke');
-INSERT INTO tag (collections, name) VALUES ('Software', 'Drupal');
-INSERT INTO tag (collections, name) VALUES ('Hardware', 'ARM CPU');
-INSERT INTO tag (collections, name) VALUES ('Hardware', 'x86 CPU');
+# 17/06/01
+ALTER TABLE book ADD pid int(10) DEFAULT '0' NOT NULL;
+ALTER TABLE book ADD log text NOT NULL;
+ALTER TABLE node DROP pid;
+ALTER TABLE node DROP log;
+DROP TABLE headlines;

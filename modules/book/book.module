@@ -116,10 +116,8 @@ function book_form($edit = array()) {
   $form .= form_hidden(userid, $edit[userid]);
   $form .= form_textfield(t("Subject"), "title", $edit[title], 50, 64);
 
-  if ($edit[pid]) {
-    $node = node_get_object(array("nid" => $edit[pid]));
-    $form .= form_item(t("Parent"), "<A HREF=\"node.php?id=$node->id\">". check_output($node->title) ."</A>", t("The parent subject or category the page belongs in."));
-    $form .= form_hidden("parent", $edit[parent]);
+  if ($edit[pid] > 0) {
+    $form .= form_hidden("pid", $edit[pid]);
   }
   else {
     $form .= form_select(t("Parent"), "parent", $edit[parent], book_toc(), t("The parent subject or category the page belongs in."));
@@ -133,11 +131,10 @@ function book_form($edit = array()) {
   }
 
   if ($edit[nid] > 0) {
-    $form .= form_hidden("pid", $edit[pid]);
     $form .= form_hidden("nid", $edit[nid]);
   }
 
-  if (!$edit[title]) {
+  if ($edit && !$edit[title]) {
     $form .= "<FONT COLOR=\"red\">". t("Warning: you did not supply a title.") ."</FONT><P>\n";
     $form .= form_submit(t("Preview"));
   }
@@ -153,10 +150,28 @@ function book_save($edit) {
   global $status, $user;
 
   if (!$edit[nid]) {
-    node_save($edit, array(author => $user->id, body, comment => variable_get("book_comment", 0), log, moderate => variable_get("book_moderate", ""), parent, promote => variable_get("book_promote", 0), score => 0, status => variable_get("book_status", $status[queued]), timestamp => time(), title, type => "book", votes => 0, weight));
+    node_save($edit, array(author => $user->id, body, comment => variable_get("book_comment", 0), log, moderate => variable_get("book_moderate", ""), parent, pid, promote => variable_get("book_promote", 0), score => 0, status => variable_get("book_status", $status[queued]), timestamp => time(), title, type => "book", votes => 0, weight));
   }
   else if (user_access($user)) {
     node_save($edit, array(body, log, parent, title, type => "book", weight));
+  }
+}
+
+function book_delete($node) {
+  if ($node->pid && $node->status == node_status("posted")) {
+    db_query("UPDATE node SET status = '". node_status("posted") ."' WHERE nid = '$node->pid'");
+  }
+}
+
+function book_insert($node) {
+  if ($node->pid && $node->status == node_status("posted")) {
+    db_query("UPDATE node SET status = '". node_status("expired") ."' WHERE nid = '$node->pid'");
+  }
+}
+
+function book_update($node) {
+  if ($node->pid && $node->status == node_status("posted")) {
+    db_query("UPDATE node SET status = '". node_status("expired") ."' WHERE nid = '$node->pid'");
   }
 }
 
@@ -206,7 +221,7 @@ function book_page() {
   $theme->footer();
 }
 
-function book_update($id) {
+function book_edit($id) {
   global $status;
 
   if ($node = node_get_object(array("nid" => $id))) {
@@ -229,7 +244,7 @@ function book_user() {
 
   switch($op) {
     case "update":
-      $theme->box($title, book_update($id));
+      $theme->box($title, book_edit($id));
       break;
     case t("Preview"):
       $theme->box($title, book_form($edit));
