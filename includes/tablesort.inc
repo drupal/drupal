@@ -41,6 +41,10 @@ function tablesort($cell, $header) {
   }
 
   $cell['data'] = l($cell['data'] . $image, $_GET['q'], array("title" => $title), "sort=". $ts['sort']. "&order=". urlencode($cell['data']). $ts['query_string']);
+
+  unset($cell['field']);
+  unset($cell['sort']);
+    
   return $cell;
 }
 
