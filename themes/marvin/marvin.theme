@@ -39,7 +39,7 @@
       <TABLE BORDER="0" CELLPADDING="8" CELLSPACING="0">
        <TR>
         <TD WIDTH="30" ROWSPAN="3">&nbsp;</TD>
-        <TD WIDTH="470"><A HREF=""><IMG SRC="themes/marvin/images/logo.gif" ALT="drop.org" BORDER="0"></A></TD>
+        <TD WIDTH="440"><A HREF=""><IMG SRC="themes/marvin/images/logo.gif" ALT="drop.org" BORDER="0"></A></TD>
         <TD WIDTH="180">
          <LI>Create an <A HREF="account.php?op=register">account</A> and <A HREF="submit.php">submit</A> new stories.</LI>
          <LI>Send your questions, feedback and bug reports to <A HREF="mailto:info@drop.org">info@drop.org</A>.</LI>
@@ -49,7 +49,7 @@
         <TD ALIGN="right" COLSPAN="2"><SMALL><A HREF="">home</A> | <A HREF="faq.php">faq</A> | <A HREF="diary.php">diary</A> | <A HREF="search.php">search</A> | <A HREF="submit.php">submit news</A> | <A HREF="account.php">user account</A></SMALL></TD>
        </TR>
        <TR>
-        <TD VALIGN="top">
+        <TD VALIGN="top" WIDTH="440">
     <?
    }
 
@@ -156,16 +156,9 @@
            </FORM>
           </TD>
          </TR>
-         <?
-          $result = db_query("SELECT COUNT(cid) FROM comments WHERE sid = $sid AND score < $threshold");
-          if ($result && $number = db_result($result, 0)) {
-         ?>
          <TR>
-          <TD ALIGN="center" BGCOLOR="<? echo "$this->bgcolor2"; ?>"><SMALL><FONT COLOR="<? echo "$this->fgcolor2"; ?>">There are at least <? echo $number; ?> comments below your threshold.</FONT></SMALL></TD>
+          <TD ALIGN="center" BGCOLOR="<? echo "$this->bgcolor2"; ?>"><SMALL><FONT COLOR="#C0C0C0">At least <? echo format_plural(discussion_num_filtered($sid, $pid), "comment", "comments"); ?> below your threshold.</FONT></SMALL></TD>
          </TR>
-         <?
-          }
-         ?> 
         </TABLE>
        </TD>
       </TR>
@@ -253,7 +246,7 @@
    function footer() {
      ?>
        </TD>
-       <TD VALIGN="top">
+       <TD VALIGN="top" WIDTH="180">
          <?
          global $PHP_SELF;  
 
