@@ -1257,10 +1257,10 @@ function update_98() {
     if ($page == 'feed' || $page == 'page') {
       switch ($op) {
         case 'or':
-          $new = 'taxonomy/terms/'. str_replace(',', '+', $terms);
+          $new = 'taxonomy/term/'. str_replace(',', '+', $terms);
           break;
         case 'and':
-          $new = 'taxonomy/terms/'. $terms;
+          $new = 'taxonomy/term/'. $terms;
           break;
       }
       if ($new) {
