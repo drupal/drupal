@@ -1,6 +1,6 @@
 <?php
 
-$status = array(dumped => 0, expired => 1, queued => 2, posted => 3, scheduled => 4);
+$status = array(dumped => 0, expired => 1, queued => 2, posted => 3);
 
 function _node_get($field, $value) {
   $result = db_query("SELECT lid, type FROM node WHERE $field = '$value'");
