@@ -76,6 +76,7 @@ CREATE TABLE users (
   real_email varchar(60) DEFAULT '' NOT NULL,
   fake_email varchar(60) DEFAULT '' NOT NULL,
   url varchar(100) DEFAULT '' NOT NULL,
+  timezone varchar(8) DEFAULT '' NOT NULL,
   stories tinyint(2) DEFAULT '10',
   mode varchar(10) DEFAULT '',
   sort tinyint(1) DEFAULT '0',
