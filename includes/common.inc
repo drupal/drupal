@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.239 2003/08/22 21:35:23 dries Exp $
+// $Id: common.inc,v 1.240 2003/09/05 13:19:00 kjartan Exp $
 
 function conf_init() {
 
@@ -1018,7 +1018,7 @@ function field_set($string, $name, $value) {
 function link_page() {
   global $custom_links;
 
-  if (0 && is_array($custom_links)) {
+  if (is_array($custom_links)) {
     return $custom_links;
   }
   else {
