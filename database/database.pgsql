@@ -590,7 +590,6 @@ CREATE TABLE sessions (
   session text,
   PRIMARY KEY (sid)
 );
-ALTER TABLE {sessions} ADD UNIQUE(sid);
 
 --
 -- Table structure for sequences
