@@ -79,7 +79,12 @@ function drupal_goto($url) {
   ** is compiled with "--enable-trans-sid".
   */
 
-  header("Location: $url&". SID);
+  if (strstr($url, "?")) {
+    header("Location: $url&". SID);
+  }
+  else {
+    header("Location: $url?". SID);
+  }
 }
 
 function check_form($text) {
