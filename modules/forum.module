@@ -174,15 +174,10 @@ function forum_content($node, $main = 0) {
 function forum_view($node, $main = 0, $page = 0) {
 
   if ($page) {
-    $term_data = array_shift(taxonomy_node_get_terms($node->nid));
-    if (!$term_data) {
-      // we are previewing
-      $term_data = taxonomy_get_term($node->taxonomy[0]);
-    }
-
+    $vocabulary = taxonomy_get_vocabulary(variable_get('forum_nav_vocabulary', ''));
     // Breadcrumb navigation
-    $breadcrumb = array(l(t("Home"), NULL), l(t("forum"), "forum"));
-    if ($parents = taxonomy_get_parents_all($term_data->tid)) {
+    $breadcrumb = array(l(t("Home"), NULL), l($vocabulary->name, "forum"));
+    if ($parents = taxonomy_get_parents_all($node->tid)) {
       $parents = array_reverse($parents);
       foreach ($parents as $p) {
         $breadcrumb[] = l($p->name, "forum/$p->tid");
@@ -198,27 +193,25 @@ function forum_validate(&$node) {
   // Make sure all fields are set properly:
   $node->icon = $node->icon ? $node->icon : "";
   $node->shadow = $node->shadow ? $node->shadow : 0;
-  $node->tid = $node->tid ? $node->tid : 0;
-  // We use the validate hook to remember the old taxonomy terms:
-  if ($node->tid) {
-    $node->taxonomy = array_keys(taxonomy_node_get_terms($node->nid));
-    if (!in_array($node->tid[0], $node->taxonomy)) {
-      $node->taxonomy[] = $node->tid[0];
+
+  if ($node->taxonomy) {
+    // Extract the node's proper topic ID.
+    $vocabulary = variable_get("forum_nav_vocabulary", "");
+    foreach ($node->taxonomy as $term) {
+      if (db_result(db_query("SELECT COUNT(*) FROM {term_data} WHERE tid = %d AND vid = %d", $term, $vocabulary))) {
+        $node->tid = $term;
+      }
     }
   }
 }
 
 function forum_form(&$node, &$error) {
-  if ($node->tid) {
-    // editing
-    $tid = $node->tid;
-  }
-  else {
+  if (!$node->taxonomy) {
     // new topic
-    $tid = arg(3);
+    $node->taxonomy[] = arg(3);
   }
 
-  $output .= _taxonomy_term_select(t("Forum"), "tid", $tid, variable_get("forum_nav_vocabulary", ""), "", 0, "", variable_get("forum_containers", array()));
+  $output = implode("", taxonomy_node_form("forum", $node));
 
   if ($node->nid) {
     // if editing, give option to leave shadows
@@ -231,11 +224,11 @@ function forum_form(&$node, &$error) {
 }
 
 function forum_insert($node) {
-  db_query("INSERT INTO {forum} (nid, shadow, tid) VALUES (%d, %d, %d)", $node->nid, $node->shadow, $node->tid[0]);
+  db_query("INSERT INTO {forum} (nid, shadow, tid) VALUES (%d, %d, %d)", $node->nid, $node->shadow, $node->tid);
 }
 
 function forum_update($node) {
-  db_query("UPDATE {forum} SET shadow = %d, tid = %d WHERE nid = %d", $node->shadow, $node->tid[0], $node->nid);
+  db_query("UPDATE {forum} SET shadow = %d, tid = %d WHERE nid = %d", $node->shadow, $node->tid, $node->nid);
 }
 
 function forum_delete(&$node) {
@@ -277,7 +270,7 @@ function forum_get_forums($tid = 0) {
 
   if (empty($cache)) {
     $forums = array();
-    $_forums = taxonomy_get_tree(variable_get("forum_nav_vocabulary", ""), $tid);
+    $_forums = taxonomy_get_tree(variable_get('forum_nav_vocabulary', ''), $tid);
     $n = 0;
     foreach ($_forums as $forum) {
       if (in_array($forum->tid, variable_get("forum_containers", array()))) {
@@ -483,7 +476,8 @@ function forum_page() {
 function theme_forum_display($forums, $topics, $parents, $tid, $sortby, $forum_per_page, $offset) {
   // forum list, topics list, topic browser and "add new topic" link
 
-  $title = t("forums");
+  $vocabulary = taxonomy_get_vocabulary(variable_get('forum_nav_vocabulary', ''));
+  $title = $vocabulary->name;
 
   /*
   ** Breadcrumb navigation:
