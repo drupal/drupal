@@ -1,5 +1,5 @@
 <?php
-// $Id: tablesort.inc,v 1.9 2003/10/27 21:45:55 dries Exp $
+// $Id: tablesort.inc,v 1.10 2003/10/27 21:50:16 kjartan Exp $
 
 function tablesort_init($header) {
   static $ts;
@@ -71,7 +71,7 @@ function tablesort_get_order($headers) {
   }
   else {
     // The first column specified is initial 'order by' field unless otherwise specified
-    $first = reset($header);
+    $first = reset($headers);
     return $first['data'];
   }
 }
