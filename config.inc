@@ -66,6 +66,6 @@ $anonymous = "Anonymous Chicken";
 #   Set to '1' if you are using Windows so the engine won't try
 #   to send out mails and such.  When using Unix or Linux, set
 #   to '0'
-$system = 0;
+$system = 1;
 
 ?>

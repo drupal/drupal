@@ -21,7 +21,7 @@ function moderate_3($sid, $mode, $order, $thold = 0) {
 }
 
 function displayKids ($tid, $mode, $order = 0, $thold = 0, $level = 0, $dummy = 0) {
-  global $user, $cookie, $theme;
+  global $user, $theme;
   include "config.inc";
   $comments = 0;
   cookiedecode($user);
@@ -66,7 +66,7 @@ function displayKids ($tid, $mode, $order = 0, $thold = 0, $level = 0, $dummy = 
 }
 
 function displayBabies ($tid, $level = 0, $dummy = 0, $thread) {
-  global $datetime, $theme, $user, $cookie;
+  global $datetime, $theme, $user;
 
   include "config.inc";
 
@@ -87,9 +87,9 @@ function displayBabies ($tid, $level = 0, $dummy = 0, $thread) {
     if ($user) {
       ### Make sure to respect the user preferences:
       $thread .= "<LI><A HREF=\"comments.php?op=showreply&tid=$r_tid&pid=$r_pid&sid=$r_sid";
-      if (isset($cookie[4])) { $thread .= "&mode=$cookie[4]"; } else { $thread .= "&mode=threaded"; }
-      if (isset($cookie[5])) { $thread .= "&order=$cookie[5]"; } else { $thread .= "&order=0"; }
-      if (isset($cookie[6])) { $thread .= "&thold=$cookie[6]"; } else { $thread .= "&thold=0"; }
+      if (isset($user->umode)) { $thread .= "&mode=$user->umode"; } else { $thread .= "&mode=threaded"; }
+      if (isset($user->uorder)) { $thread .= "&order=$user->uorder"; } else { $thread .= "&order=0"; }
+      if (isset($user->thold)) { $thread .= "&thold=$user->thold"; } else { $thread .= "&thold=0"; }
       $thread .= "\">$r_subject</A> by $r_name <FONT SIZE=\"2\">(". formatTimestamp($r_date) .")</FONT></LI>";
     }
     else {
@@ -106,7 +106,7 @@ function displayBabies ($tid, $level = 0, $dummy = 0, $thread) {
 }
 
 function displayTopic ($sid, $pid = 0, $tid = 0, $mode = "threaded", $order = 0, $thold = 0, $level = 0, $nokids = 0) {
-  global $user, $cookie, $theme, $functions;
+  global $user, $theme, $functions;
 
   ### include required files:
   if ($functions) {
@@ -187,7 +187,7 @@ function reply($pid, $sid, $mode, $order, $thold) {
   include "functions.inc";
   include "theme.inc";
   
-  global $user, $cookie;
+  global $user;
   dbconnect();
 
   $theme->header();
@@ -228,7 +228,7 @@ function reply($pid, $sid, $mode, $order, $thold) {
   echo "<B>Your name:</B><BR> ";
   if ($user) {
     cookiedecode($user);
-    echo "<A HREF=\"account.php\">$cookie[1]</A> &nbsp; &nbsp; <FONT SIZE=\"2\">[ <A HREF=\"account.php?op=logout\">logout</A> ]</FONT>";
+    echo "<A HREF=\"account.php\">$user->userid</A> &nbsp; &nbsp; <FONT SIZE=\"2\">[ <A HREF=\"account.php?op=logout\">logout</A> ]</FONT>";
   } 
   else {
     echo "$anonymous"; 
@@ -270,7 +270,7 @@ function replyPreview ($pid, $sid, $subject, $comment, $postanon, $mode, $order,
   include "functions.inc";
   include "theme.inc" ;
 
-  global $user, $cookie, $bgcolor1, $bgcolor2;
+  global $user, $bgcolor1, $bgcolor2;
 
   cookiedecode($user);
   $subject = stripslashes($subject);
@@ -281,7 +281,7 @@ function replyPreview ($pid, $sid, $subject, $comment, $postanon, $mode, $order,
   ### Display preview:
   echo "<TABLE WIDTH=\"100%\" BORDER=\"0\">";
   if ($user) {
-    echo " <TR BGCOLOR=\"$bgcolor1\"><TD><B>$subject</B><BR>by $cookie[1].</TD></TR>";
+    echo " <TR BGCOLOR=\"$bgcolor1\"><TD><B>$subject</B><BR>by $user->userid.</TD></TR>";
   } 
   else {
     echo " <TR BGCOLOR=\"$bgcolor1\"><TD><B>$subject</B><BR>by $anonymous.</TD></TR>";
@@ -304,7 +304,7 @@ function replyPreview ($pid, $sid, $subject, $comment, $postanon, $mode, $order,
   echo "<B>Your name:</B><BR> ";
   if ($user) {
     cookiedecode($user);
-    echo "<A HREF=\"account.php\">$cookie[1]</A> &nbsp; &nbsp; <FONT SIZE=\"2\">[ <A HREF=\"account.php?op=logout\">logout</A> ]</FONT>";
+    echo "<A HREF=\"account.php\">$user->userid</A> &nbsp; &nbsp; <FONT SIZE=\"2\">[ <A HREF=\"account.php?op=logout\">logout</A> ]</FONT>";
   } else {
     echo "$anonymous"; 
     $postanon = 2;
@@ -348,7 +348,7 @@ function replyPreview ($pid, $sid, $subject, $comment, $postanon, $mode, $order,
 }
 
 function postComment($postanon, $subject, $comment, $pid, $sid, $host_name, $mode, $order, $thold, $posttype) {
-  global $user, $userinfo, $cookie;
+  global $user, $userinfo;
   include "functions.inc";
   include "config.inc";
   dbconnect();
@@ -401,9 +401,9 @@ function postComment($postanon, $subject, $comment, $pid, $sid, $host_name, $mod
     ### Compose header:
     if ($user) {
       $header = "article.php?sid=$sid";
-      if (isset($cookie[4])) { $header .= "&mode=$cookie[4]"; } else { $header .= "&mode=threaded"; }
-      if (isset($cookie[5])) { $header .= "&order=$cookie[5]"; } else { $header .= "&order=0"; }    
-      if (isset($cookie[6])) { $header .= "&thold=$cookie[6]"; } else { $header .= "&thold=1"; }
+      if (isset($user->umode)) { $header .= "&mode=$user->umode"; } else { $header .= "&mode=threaded"; }
+      if (isset($user->uorder)) { $header .= "&order=$user->uorder"; } else { $header .= "&order=0"; }    
+      if (isset($user->thold)) { $header .= "&thold=$user->thold"; } else { $header .= "&thold=1"; }
     }
     else {
       $header .= "article.php?sid=$sid&mode=threaded&order=1&thold=0";

@@ -1,17 +1,10 @@
 <?
-  global $user;
+global $user;
+### Verify theme:
+if (isset($user->theme) && file_exists("themes/$user->theme/theme.class")) {
+  include "themes/$user->theme/theme.class";	
+}
+else include "themes/default/theme.class";
 
-  ### Decode user cookie:
-  if (isset($user)) $cookie = explode(":", base64_decode($user));
-
-  ### Verify theme:
-  if (isset($cookie[9])) {
-   if (file_exists("themes/$cookie[9]/theme.class")) {
-     include "themes/$cookie[9]/theme.class";
-   }
-   else include "themes/default/theme.class";
-  }
-  else include "themes/default/theme.class";
-
-  $theme = new Theme();
+$theme = new Theme();
 ?>

@@ -9,10 +9,8 @@
 
  if ($save) {
    cookiedecode($user);
-   mysql_query("UPDATE users SET umode='$mode', uorder='$order', thold='$thold' where uid='$cookie[0]'");
-   getusrinfo($user);
-   $info = base64_encode("$userinfo[uid]:$userinfo[uname]:$userinfo[pass]:$userinfo[storynum]:$userinfo[umode]:$userinfo[uorder]:$userinfo[thold]:$userinfo[noscore]");
-   setcookie("user","$info",time() + 15552000);
+   mysql_query("UPDATE testusers SET umode='$mode', uorder='$order', thold='$thold' where id='$user->id'");
+   $user->update();
  }
 
  if($op == "reply") Header("Location: comments.php?op=reply&pid=0&sid=$sid&mode=$mode&order=$order&thold=$thold");

@@ -71,9 +71,9 @@ $terms = stripslashes($terms);
 
       if ($user) {
         $link = "<A HREF=\"article.php?sid=$sid";
-        if (isset($cookie[4])) { $link .= "&mode=$cookie[4]"; } else { $link .= "&mode=threaded"; }
-        if (isset($cookie[5])) { $link .= "&order=$cookie[5]"; } else { $link .= "&order=0"; }
-        if (isset($cookie[6])) { $link .= "&thold=$cookie[6]"; } else { $link .= "&thold=0"; }
+        if (isset($user->umode)) { $link .= "&mode=$user->umode"; } else { $link .= "&mode=threaded"; }
+        if (isset($user->uorder)) { $link .= "&order=$user->uorder"; } else { $link .= "&order=0"; }
+        if (isset($user->thold)) { $link .= "&thold=$user->thold"; } else { $link .= "&thold=0"; }
         $link .= "\">$subject</A>";
       }
       else {
