@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.32 2003/12/26 23:03:21 dries Exp $
+// $Id: profile.module,v 1.33 2003/12/27 14:28:23 kjartan Exp $
 
 function _profile_init() {
   /*
@@ -219,8 +219,27 @@ function _profile_user_view(&$user, $mode) {
 }
 
 function profile_file_download($file) {
-  if (strpos($file, variable_get("profile_avatar_path", "avatars")) === 0) {
-    return array("Content-type: $mime");
+  if (strpos($file, variable_get("profile_avatar_path", "avatars") . FILE_SEPARATOR . 'avatar-') === 0) {
+    list($width, $height, $type, $attr) = getimagesize(file_create_path($file));
+    $types = array(
+      IMAGETYPE_GIF => 'image/gif',
+      IMAGETYPE_JPEG => 'image/jpeg',
+      IMAGETYPE_PNG => 'image/png',
+      IMAGETYPE_SWF => 'application/x-shockwave-flash',
+      IMAGETYPE_PSD => 'image/psd',
+      IMAGETYPE_BMP => 'image/bmp',
+      IMAGETYPE_TIFF_II => 'image/tiff',
+      IMAGETYPE_TIFF_MM  => 'image/tiff',
+      IMAGETYPE_JPC => 'application/octet-stream',
+      IMAGETYPE_JP2 => 'image/jp2',
+      IMAGETYPE_JPX => 'application/octet-stream',
+      IMAGETYPE_JB2 => 'application/octet-stream',
+      IMAGETYPE_SWC => 'application/x-shockwave-flash',
+      IMAGETYPE_IFF => 'image/iff',
+      IMAGETYPE_WBMP => 'image/vnd.wap.wbmp',
+      IMAGETYPE_XBM => 'image/xbm'
+    );
+    return array('Content-type: '. $types[$type]);
   }
 }
 
