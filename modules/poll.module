@@ -178,7 +178,7 @@ function poll_form($edit = array(), $nocheck = 0) {
   if ($admin && !is_array($edit[choices])) $edit = poll_get_choices_array($edit);
 
   /* Mini-form for number of choiceboxes */
-  $choices = $edit[choices]?$edit[choices]:max(5,sizeof($edit[choice]));
+  $choices = $edit[choices] ? $edit[choices] : max(5, count($edit[choice]));
   for ($c = 2; $c <= 20; $c++) $opts[$c]=$c;
   $form .= form_select(t("Number of choices"), "choices", $choices, $opts, t("This box only specifies the number of boxes in this form, it doesn't have to equal the actual amount of choices in the poll."));
   $form .= form_submit(t("Preview")) . "<br><br><br>";
@@ -235,7 +235,7 @@ function poll_save($edit) {
   if ($nid) {
     foreach ($edit[choice] as $key => $value) {
       if ($value) {
-        $v[] = "('" . $nid . "', '" . check_input($value) . "', '". check_input($edit[votes][$key]) ."', '". check_input($key) ."')";
+        $v[] = "('" . $nid . "', '" . check_input($value) . "', '". check_input($edit[chvotes][$key]) ."', '". check_input($key) ."')";
       }
     }
     db_query("INSERT INTO poll_choices (nid, chtext, chvotes, chorder) VALUES " . implode(",", $v));
@@ -243,9 +243,10 @@ function poll_save($edit) {
 }
 
 function poll_block() {
+  global $status;
   $result = _node_get(array("type" => "poll"));
   while ($poll = db_fetch_object($result)) {
-    if ($poll->active) {
+    if (($poll->active) && ($poll->status == $status[posted])) {
       $content = poll_view($poll, 0, 1);
       $output = "<b>" . $content[title] . "</b><br>" . $content[content] . "<br><div align=\"center\">[ <a href=\"node.php?id=" . $poll->nid . "\">" . t("Read more") . "</a> ]</div>";
       break;
