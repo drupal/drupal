@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.54 2003/03/16 07:02:19 dries Exp $
+// $Id: locale.module,v 1.55 2003/04/22 20:10:23 dries Exp $
 
 function locale_help() {
  ?>
@@ -48,7 +48,7 @@ function locale_link($type) {
   global $languages;
 
   if ($type == "admin" && user_access("administer locales")) {
-    $help["general"] = "To be written: description of locale module.  Anyone?";
+    $help["general"] = "The locale module handles translations into new languages.  It also enables you to add jargon, slang or other special language as fits the website.  For each language you want to support, a line needs to be added to your configuration file.";
 
     menu("admin/locale", "localization", NULL, $help["general"], 5);
     menu("admin/locale/search", "search string", "locale_admin", NULL, 8);
