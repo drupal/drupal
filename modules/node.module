@@ -200,7 +200,7 @@ function node_query($type = -1) {
       $statuses = module_invoke($name, "status");
       if (is_array($statuses)) {
         foreach (array_reverse($statuses) as $key=>$status) {
-          $queries[] = array("$name: status set to '$status'", "WHERE type = '$name' AND status = '". node_status($status) ."' ORDER BY timestamp DESC");
+          $queries[] = array("$name: status set to '$status'", "WHERE type = '$name' AND n.status = '". node_status($status) ."' ORDER BY timestamp DESC");
         }
         $queries[] = array("$name: scheduled to be posted", "WHERE type = '$name' AND timestamp_posted > 0 ORDER BY timestamp DESC");
         $queries[] = array("$name: scheduled to be queued", "WHERE type = '$name' AND timestamp_queued > 0 ORDER BY timestamp DESC");
