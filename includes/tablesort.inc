@@ -1,5 +1,5 @@
 <?php
-// $Id: tablesort.inc,v 1.13 2004/01/29 06:42:03 dries Exp $
+// $Id: tablesort.inc,v 1.14 2004/02/01 10:39:23 dries Exp $
 
 function tablesort_init($header) {
   static $ts;
@@ -32,7 +32,7 @@ function tablesort($cell, $header) {
   // special formatting for the currently sorted column header
   if ($cell['data'] == $ts['order']) {
     $cell['class'] = 'cell-highlight';
-    $image = "&nbsp;<img border=\"0\" src=\"". theme('image', "arrow-". $ts['sort']. ".gif"). "\"></img>";
+    $image = '&nbsp;<img src="' . theme('image', 'arrow-' . $ts['sort'] . '.gif"') . ' alt="'. t('sort icon') .'" />';
     $dir = array("asc" => "ascending", "desc" => "descending");
     $title = t("sort ". $dir[$ts['sort']]);
   } else {
@@ -40,11 +40,11 @@ function tablesort($cell, $header) {
     $ts['sort'] = "asc";
   }
 
-  $cell['data'] = l($cell['data'] . $image, $_GET['q'], array("title" => $title), "sort=". $ts['sort']. "&order=". urlencode($cell['data']). $ts['query_string']);
+  $cell['data'] = l($cell['data'] . $image, $_GET['q'], array("title" => $title), "sort=". $ts['sort']. "&amp;order=". urlencode($cell['data']). $ts['query_string']);
 
   unset($cell['field']);
   unset($cell['sort']);
-    
+
   return $cell;
 }
 
@@ -52,7 +52,7 @@ function tablesort_get_querystring() {
   $cgi = $_SERVER['REQUEST_METHOD'] == 'GET' ? $_GET : $_POST;
   foreach ($cgi as $key => $val) {
     if ($key != 'order' && $key != 'sort' && $key != 'q') {
-      $query_string .= "&" . $key . "=" . $val;
+      $query_string .= "&amp;". $key ."=". $val;
     }
   }
   return $query_string;
