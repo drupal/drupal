@@ -110,11 +110,6 @@ function system_view_general() {
   $output .= form_select(t("Clean URLs"), "clean_url", variable_get("clean_url", 0), array(t("Disabled"), t("Enabled")), t("Enable or disable clean URLs.  If enabled, you'll need <code>ModRewrite</code> support.  See also the <code>.htaccess</code> file in Drupal's top-level directory."));
   $output .= "<hr />\n";
 
-  // cron:
-  $output .= "<h3>". t("Cron settings") ."</h3>\n";
-  $output .= form_select(t("Cron support"), "cron", variable_get("cron", 1), array(t("Disabled"), t("Enabled")), t("Enable or disable cron support.  Enable this setting if you have set up a cron job.  Check the %documentation for information on setting up a cron job.", array("%documentation" => l(t("cron documentation"), "admin/system/help#cron"))));
-  $output .= "<hr />\n";
-
   // caching:
   $output .= "<h3>". t("Cache settings") ."</h3>\n";
   $output .= form_select(t("Cache support"), "cache", variable_get("cache", 0), array(t("Disabled"), t("Enabled")), t("Enable or disable the caching of rendered pages.  When caching is enabled, Drupal will flush the cache when required to make sure updates take effect immediately.  Check the %documentation for information on Drupal's cache system.", array("%documentation" => l(t("cache documentation"), "admin/system/help#cache"))));
