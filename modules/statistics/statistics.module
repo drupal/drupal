@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.84 2003/07/01 21:45:25 dries Exp $
+// $Id: statistics.module,v 1.85 2003/07/08 09:55:47 dries Exp $
 
 function statistics_init() {
   global $recent_activity;
@@ -314,7 +314,7 @@ function statistics_admin_accesslog_table($type, $id) {
       $url = message_na();
     }
 
-    $rows[] = array(array("data" => format_date($log->timestamp, "small"), "nowrap" => "nowrap"), ($node->nid ? l($node->title, "node/view/$node->nid") : message_na()), format_name($user), $log->hostname ? $log->hostname : message_na(), $url, ($log->nid ? l("track node", "admin/statistics/log/node/$log->nid") : ""), ($user->uid ? l("track user", "admin/statistics/log/user/$user->uid") : ""), ($log->hostname ? l("track host", "admin/statistics/log/host/$log->hostname") : ""));
+    $rows[] = array(array("data" => format_date($log->timestamp, "small"), "nowrap" => "nowrap"), ($node->nid ? l($node->title, "node/view/$node->nid") : message_na()), format_name($user), $log->hostname ? $log->hostname : message_na(), $url, ($log->nid ? l(t("track node"), "admin/statistics/log/node/$log->nid") : ""), ($user->uid ? l(t("track user"), "admin/statistics/log/user/$user->uid") : ""), ($log->hostname ? l(t("track host"), "admin/statistics/log/host/$log->hostname") : ""));
   }
 
   if ($pager = pager_display(NULL, 50, 0, "admin")) {
