@@ -12,7 +12,7 @@ function theme_account($theme) {
 
     function menu($name, $module) {
       global $menu;
-      if ($module["menu"]) $menu = array_merge($menu, $module["menu"]());
+      if ($module["menu"]) $menu = ($menu) ? array_merge($menu, $module["menu"]()) : $module["menu"]();
     }
 
     module_iterate("menu");
