@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.186 2004/01/29 06:47:19 dries Exp $ */
+/* $Id: theme.inc,v 1.187 2004/01/31 21:07:54 dries Exp $ */
 
 /**
  * @file
@@ -306,9 +306,9 @@ function theme_form_element($title, $value, $description = NULL, $id = NULL) {
  * @return a string containing the @a node output.
  */
 
-function theme_table($header, $rows) {
+function theme_table($header, $rows, $attributes = NULL) {
 
-  $output = "<table>\n";
+  $output = "<table ". drupal_attributes($attributes) .">\n";
 
   /*
   ** Emit the table header:
