@@ -1,6 +1,6 @@
 <?php
 
-$GLOBALS[format] = array(0 => "HTML", 1 => "PHP", 2 => "text");
+$GLOBALS["format"] = array(0 => "HTML", 1 => "PHP", 2 => "text");
 
 class Page {
   function Page($page) {
