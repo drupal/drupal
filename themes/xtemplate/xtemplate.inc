@@ -5,7 +5,7 @@ class XTemplate {
 /*
   xtemplate class 0.3pre
   html generation with templates - fast & easy
-  copyright (c) 2000-2001 Barnabás Debreceni [cranx@users.sourceforge.net]
+  copyright (c) 2000-2001 Barnabas Debreceni [cranx@users.sourceforge.net]
 
   contributors:
   Ivar Smolin <okul@linux.ee> (14-march-2001)
@@ -181,7 +181,7 @@ function parse ($bname) {
       $var=(!isset($var))?$nul:$var;
       if ($var=="")
         $copy=preg_replace("/^\s*\{".$v."\}\s*\n/m","",$copy);
-      $copy=preg_replace("/\{".$v."\}/","$var",$copy);
+      $copy=str_replace("\{$v}","$var",$copy);
     }
   }
   $this->parsed_blocks[$bname].=$copy;
@@ -477,6 +477,14 @@ function r_getfile($file) {
 
 /*
     $Log$
+    Revision 1.3  2003/04/04 06:08:53  dries
+    Patch by Ax:
+
+    - Bugfix: xtemplate.inc removed "$xx" from content.
+
+    - Improvement: changed a high ascii char to low ascii to be able to debug
+      xtemplate.inc.
+
     Revision 1.2  2003/02/01 19:54:19  dries
 
     Patch by Ax:
