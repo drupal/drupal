@@ -273,12 +273,12 @@ function update_58() {
 
 function update_59() {
 
-  update_sql("ALTER TABLE comments ADD thread VARCHAR(255) NOT NULL");
+  update_sql("ALTER TABLE {comments} ADD thread VARCHAR(255) NOT NULL");
 
-  $result = db_query("SELECT DISTINCT(nid) FROM comments WHERE thread = ''");
+  $result = db_query("SELECT DISTINCT(nid) FROM {comments} WHERE thread = ''");
 
   while ($node = db_fetch_object($result)) {
-    $result2 = db_query("SELECT cid, pid FROM comments where nid = '%d' ORDER BY timestamp", $node->nid);
+    $result2 = db_query("SELECT cid, pid FROM {comments} where nid = '%d' ORDER BY timestamp", $node->nid);
     $comments = array();
     while ($comment = db_fetch_object($result2)) {
       $comments[$comment->cid] = $comment;
@@ -302,7 +302,7 @@ function update_59() {
       }
       $thread = implode(".", $new_parts);
 
-      db_query("UPDATE comments SET thread = '%s' WHERE cid = '%d'", $thread."/", $comments[$cid]->cid);
+      db_query("UPDATE {comments} SET thread = '%s' WHERE cid = '%d'", $thread."/", $comments[$cid]->cid);
     }
   }
 }
