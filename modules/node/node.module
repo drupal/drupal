@@ -107,7 +107,7 @@ function node_filter_line($text) {
   $text = eregi_replace("<br />", "\n", $text);
 
   /*
-  ** Replace "\r\n" by "\n": 
+  ** Replace "\r\n" by "\n":
   */
 
   $text = ereg_replace("\r\n", "\n", $text);
@@ -119,7 +119,7 @@ function node_filter_line($text) {
   while (strpos($text, "\n\n\n")) {
     $text = ereg_replace("\n\n\n", "\n\n", $text);
   }
- 
+
   return trim($text);
 }
 
@@ -480,7 +480,7 @@ function node_validate($node, $error = array()) {
   ** Validate the title field:
   */
 
-  if (isset($node->title) && $node->title == "") {
+  if (isset($node->title) && !$node->title) {
     $error["title"] = "<div style=\"color: red;\">". t("You have to specify a valid title.") ."</div>";
   }
 
@@ -489,10 +489,6 @@ function node_validate($node, $error = array()) {
     /*
     ** Setup default values if required:
     */
-
-    if (!$node->name) {
-      $node->name = $user->name;
-    }
 
     if (!$node->created) {
       $node->created = time();
@@ -506,7 +502,15 @@ function node_validate($node, $error = array()) {
     ** Validate the "authored by"-field:
     */
 
-    if ($account = user_load(array("name" => $node->name))) {
+    if (empty($node->name)) {
+      /*
+      ** The use of empty() is mandatory in the context of usernames
+      ** as the empty string denotes the anonymous user.  In case we
+      ** are dealing with an anomymous user we set the user ID to 0.
+      */
+      $node->uid = 0;
+    }
+    else if ($account = user_load(array("name" => $node->name))) {
       $node->uid = $account->uid;
     }
     else {
@@ -555,7 +559,6 @@ function node_form($edit) {
     $form .= $function(&$edit, &$help, &$error);
   }
 
-
   /*
   ** Add the help text:
   */
@@ -596,7 +599,11 @@ function node_form($edit) {
     $output .= form_hidden("nid", $edit->nid);
   }
 
-  if ($edit->uid) {
+  if (isset($edit->uid)) {
+      /*
+      ** The use of isset() is mandatory in the context of user IDs as uid
+      ** 0 denotes the anonymous user.
+      */
     $output .= form_hidden("uid", $edit->uid);
   }
 
@@ -625,7 +632,7 @@ function node_form($edit) {
   */
 
   if (user_access("administer nodes")) {
-    $output .= "</td><td valign=\"top\">";
+    $output .= "</td><td align=\"left\" valign=\"top\">";
 
     $output .= form_textfield(t("Authored by"), "name", $edit->name, 20, 25, $error["name"]);
     $output .= form_textfield(t("Authored on"), "date", $edit->date, 20, 25, $error["date"]);
@@ -647,11 +654,13 @@ function node_add($type) {
   global $user;
 
   if ($type) {
-    $output = node_form(array("uid" => $user->uid, "type" => $type));
+    $output = node_form(array("uid" => $user->uid, "name" => $user->name, "type" => $type));
   }
   else {
-    $links = array();
 
+    /*
+    ** Compile a list with the different node types and their explanation:
+    */
 
     foreach (module_list() as $name) {
       if (module_hook($name, "node") && node_access("create", array("type" => $name))) {
@@ -690,9 +699,17 @@ function node_preview($edit) {
   ** Load the user's name when needed:
   */
 
-  if ($edit["name"]) {
-    $user = user_load(array("name" => $edit["name"]));
-    $edit["uid"] = $user->uid;
+  if (isset($edit["name"])) {
+      /*
+      ** The use of isset() is mandatory in the context of user IDs as uid
+      ** 0 denotes the anonymous user.
+      */
+    if ($user = user_load(array("name" => $edit["name"]))) {
+      $edit["uid"] = $user->uid;
+    }
+    else {
+      $edit["uid"] = 0; // anonymous user
+    }
   }
   else if ($edit["uid"]) {
     $user = user_load(array("uid" => $edit["uid"]));
