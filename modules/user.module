@@ -825,7 +825,7 @@ function user_register($edit = array()) {
     else if (db_num_rows(db_query("SELECT name FROM users WHERE LOWER(name) = LOWER('%s')", $edit["name"])) > 0) {
       $error = t("The name '%s' is already taken.", array("%s" => $edit["name"]));
     }
-    else if (db_num_rows(db_query("SELECT mail FROM users WHERE LOWER(mail) = LOWER('%s')", $edit["mail"])) > 0) {
+    else if (db_num_rows(db_query("SELECT mail FROM users WHERE LOWER(mail) = LOWER('%s') OR LOWER(init) = LOWER('%s')", $edit["mail"], $edit["mail"])) > 0) {
       $error = t("The e-mail address '%s' is already taken.", array("%s" => $edit["mail"]));
     }
     else if (variable_get("user_register", 1) == 0) {
