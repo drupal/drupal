@@ -24,6 +24,11 @@ function conf_view_system() {
   $output .= form_textfield(t("Anonymous user"), "anonymous", variable_get("anonymous", "Anonymous"), 30, 55, t("The name used to indicate anonymous users."));
   $output .= "<HR>\n";
 
+  // account settings:
+  $output .= "<H3>Account settings</H3>\n";
+  $output .= form_select(t("Allow registrations"), "account_reg_allow", variable_get("account_reg_allow", 1), array("Disabled", "Enabled"));
+  $output .= "<HR>\n";
+
   // node settings:
   $output .= "<H3>Node settings</H3>\n";
   $output .= form_select(t("Default number of nodes to display"), "default_nodes_main", variable_get("default_nodes_main", 10), array(10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30), t("The default maximum number of nodes to display on the main page."));
