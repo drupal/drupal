@@ -22,7 +22,7 @@
        <div style="background: #336699; color: #ffffff; border-top: 2px solid; border-bottom: 2px solid;">
          <table border="0" cellspacing="0" cellpadding="0">
           <tr>
-           <td align="left" valign="top"><a href="<?php echo path_uri(); ?>"><img src="themes/trillian/images/logo.png" alt="" border="0" /></a></td>
+           <td align="left" valign="top"><a href="<?php echo path_uri(); ?>"><img src="themes/trillian/images/logo.gif" alt="" border="0" /></a></td>
            <td align="left" valign="middle"><div style="font-size: 200%; font-weight: bold;"><?php echo variable_get("site_name", "Drupal"); ?></div><i><?php echo variable_get("site_slogan", ""); ?></i></td>
           </tr>
          </table>
