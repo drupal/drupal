@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.146 2003/12/30 06:41:24 unconed Exp $
+// $Id: aggregator.module,v 1.147 2004/01/05 19:50:43 unconed Exp $
 
 
 function import_help($section = "admin/help#import") {
@@ -361,7 +361,7 @@ function import_refresh($feed) {
 
       // Prepare the item:
       foreach ($item as $key => $value) {
-        $item[$key] = node_filter(strtr(trim($value), $tt));
+        $item[$key] = filter_default(strtr(trim($value), $tt));
       }
 
       if ($item["TITLE"]) {
