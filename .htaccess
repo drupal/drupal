@@ -20,7 +20,7 @@ ErrorDocument 500 /error.php
 
 # Overload PHP variables:
 <IfModule mod_php4.c>
-   php_value php_register_globals    1
+   php_value register_globals    1
    php_value track_vars              1
    php_value magic_quotes_gpc        1
    php_value magic_quotes_runtime    0
