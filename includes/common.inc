@@ -840,18 +840,29 @@ function form_weight($title = NULL, $name = "weight", $value = 0, $delta = 10, $
 function url($url = NULL, $query = NULL) {
   global $base_url;
 
+  static $script;
+
+  if (empty($script)) {
+    /*
+    ** On some webservers such as IIS we can't omit "index.php".  As such we
+    ** generate "index.php?q=foo" instead of "?q=foo" on anything that is not
+    ** Apache.
+    */
+    $script = (strpos($_SERVER["SERVER_SOFTWARE"], "Apache") === false) ? "index.php" : "";
+  }
+
   if (variable_get("clean_url", "0") == "0") {
     if (isset($url)) {
       if (isset($query)) {
-        return "$base_url/index.php?q=$url&amp;$query";
+        return "$base_url/$script?q=$url&amp;$query";
       }
       else {
-        return "$base_url/index.php?q=$url";
+        return "$base_url/$script?q=$url";
       }
     }
     else {
       if (isset($query)) {
-        return "$base_url/index.php?$query";
+        return "$base_url/$script?$query";
       }
       else {
         return "$base_url/";
@@ -869,7 +880,7 @@ function url($url = NULL, $query = NULL) {
     }
     else {
       if (isset($query)) {
-        return "$base_url/index.php?$query";
+        return "$base_url/$script?$query";
       }
       else {
         return "$base_url/";
