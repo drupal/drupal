@@ -72,8 +72,7 @@ function archive_calendar($original = 0) {
   $nextmonth = mktime(23, 59, 59, $month + 1, 1, $year);
   $next = mktime(23, 59, 59, $month + 1, min(date('t', $nextmonth), $day), $year);
 
-
-  $result = db_query("SELECT created FROM {node} WHERE status = 1 AND created > $start_of_month AND created < $end_of_month");
+  $result = db_query('SELECT DISTINCT(n.nid), n.created FROM {node} n '. node_access_join_sql() .' WHERE n.status = 1 AND n.created > %d AND n.created < %d AND '. node_access_where_sql() .' ORDER BY n.created', $start_of_month, $end_of_month);
 
   $days_with_posts = array();
   while ($day_with_post = db_fetch_object($result)) {
