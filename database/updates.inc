@@ -101,7 +101,8 @@ $sql_updates = array(
   "2005-01-27" => "update_122",
   "2005-01-28" => "update_123",
   "2005-02-11" => "update_124",
-  "2005-02-23" => "update_125"
+  "2005-02-23" => "update_125",
+  "2005-03-03" => "update_126"
 );
 
 function update_32() {
@@ -2303,6 +2304,12 @@ function update_125() {
 
   return $ret;
 }
+
+function update_126() {
+  $ret[] = update_sql("DELETE FROM {variable} WHERE name LIKE 'forum_block_%'");
+  return $ret;
+}
+
 function update_sql($sql) {
   $edit = $_POST["edit"];
   $result = db_query($sql);

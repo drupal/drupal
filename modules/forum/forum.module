@@ -308,29 +308,27 @@ function forum_block($op = 'list', $delta = 0, $edit = array()) {
       return $blocks;
 
     case 'configure':
-      $output = form_select(t('Number of topics in block'), 'forum_block_num', variable_get('forum_block_num', '5'), drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)));
+      $output = form_select(t('Number of topics'), 'forum_block_num_'. $delta, variable_get('forum_block_num_'. $delta, '5'), drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)));
       return $output;
 
     case 'save':
-      variable_set('forum_block_num', $edit['forum_block_num']);
+      variable_set('forum_block_num_'. $delta, $edit['forum_block_num_'. $delta]);
       break;
 
     case 'view':
       if (user_access('access content')) {
         switch ($delta) {
           case 0:
-           $title = t('Active forum topics');
-           $sql = "SELECT n.nid, n.title, l.last_comment_timestamp, l.comment_count FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid WHERE n.status = 1 AND n.type='forum' ORDER BY l.last_comment_timestamp DESC";
-           $sql = db_rewrite_sql($sql);
-           $content  = node_title_list(db_query_range($sql, 0, variable_get('forum_block_num', '5')));
-           break;
+            $title = t('Active forum topics');
+            $sql = db_rewrite_sql("SELECT n.nid, n.title, l.last_comment_timestamp, l.comment_count FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid WHERE n.status = 1 AND n.type='forum' ORDER BY l.last_comment_timestamp DESC");
+            $content = node_title_list(db_query_range($sql, 0, variable_get('forum_block_num_0', '5')));
+            break;
 
           case 1:
-           $title = t('New forum topics');
-           $sql = "SELECT n.nid, n.title, l.comment_count FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid WHERE n.type = 'forum' AND n.status = 1 ORDER BY n.nid DESC";
-           $sql = db_rewrite_sql($sql);
-           $content .= node_title_list(db_query_range($sql, 0, variable_get('forum_block_num', '5')));
-           break;
+            $title = t('New forum topics');
+            $sql = db_rewrite_sql("SELECT n.nid, n.title, l.comment_count FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid WHERE n.type = 'forum' AND n.status = 1 ORDER BY n.nid DESC");
+            $content = node_title_list(db_query_range($sql, 0, variable_get('forum_block_num_1', '5')));
+            break;
         }
 
         if ($content) {
