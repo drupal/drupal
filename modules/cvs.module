@@ -2,9 +2,6 @@
 
 function cvs_cron() {
   if (time() - variable_get("cvs_cron_last", 0) > variable_get("cvs_cron_time", time())) {
-
-    print "cvs cron ran";
-
     variable_set("cvs_cron_last", time());
 
     $result = db_query("SELECT * FROM cvs WHERE status = '0' ORDER BY timestamp DESC LIMIT 50");
