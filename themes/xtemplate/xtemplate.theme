@@ -33,7 +33,7 @@ function xtemplate_settings() {
   $output .= form_group(t('Header settings'), $group);
 
   $group = form_checkbox(t('Display pictures with posts'), 'xtemplate_picture_node', 1, variable_get('xtemplate_picture_node', 0), t('Display individualized pictures identifying users with posts they start.'));
-  $gourp .= form_checkbox(t('Display pictures with comments'), 'xtemplate_picture_comment', 1, variable_get('xtemplate_picture_comment', 0), t('Display individualized pictures identifying users with their comments.'));
+  $group .= form_checkbox(t('Display pictures with comments'), 'xtemplate_picture_comment', 1, variable_get('xtemplate_picture_comment', 0), t('Display individualized pictures identifying users with their comments.'));
   $output .= form_group(t('Avatar settings'), $group);
 
   return $output;
