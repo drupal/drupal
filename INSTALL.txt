@@ -255,7 +255,7 @@ UPGRADING
 ---------
 
 1. Backup your database and Drupal directory - especially your
-   configuration file (www.example.com.conf or includes/conf.php).
+   configuration file.
 
 2. Log on as the user with user ID 1.
 
