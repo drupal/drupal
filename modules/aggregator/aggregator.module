@@ -82,7 +82,6 @@ function aggregator_settings() {
   $number = drupal_map_assoc(array(5, 10, 15, 20, 25, 30, 35, 40, 45, 50, 55, 60, 65, 70, 75, 80, 85, 90, 95, 100));
   $items = array(0 => t('none'), 3 => t('3 items'), 5 => t('5 items'), 10 => t('10 items'), 15 => t('15 items'), 20 => t('20 items'), 25 => t('25 items'));
 
-  $output .= form_select(t('Items per page'), 'aggregator_page_limit', variable_get('aggregator_page_limit', 75), $number, t('The maximum number of news items displayed on one page.'));
   $output .= form_select(t('Items shown in sources and categories pages'), 'aggregator_summary_items', variable_get('aggregator_summary_items', 3), $items, t('The number of items which will be shown with each feed or category in the feed and category summary pages.'));
   $output .= form_radios(t('Category selection type'), 'aggregator_category_selector', variable_get('aggregator_category_selector', 'check'), array('check' => t('checkboxes'), 'select' => t('multiple selector')), t('The type of category selection widget which is shown on categorization pages. Checkboxes are easier to use; a multiple selector is good for working with large numbers of categories.'));
 
@@ -457,21 +456,19 @@ function aggregator_parse_feed(&$data, $feed) {
   }
 
   /*
-  ** Remove all the old, expired items:
+  ** Remove all items that are older than 3 months:
   */
 
-  unset($items);
+  $age = time() - 1209600; // 3 month
+  $result = db_query('SELECT iid FROM {aggregator_item} WHERE fid = %d AND timestamp < %d', $feed['fid'], $age);
 
-  $result = db_query('SELECT iid FROM {aggregator_item} WHERE fid = %d ORDER BY timestamp', $feed['fid']);
-
+  $items = array();
   while ($item = db_fetch_object($result)) {
     $items[] = "iid = '$item->iid'";
   }
-
-  if (sizeof($items) > 50) {
-    db_query('DELETE FROM {aggregator_item} WHERE '. implode(' OR ', array_slice($items, 0, - 50)));
-    db_query('DELETE FROM {aggregator_category_item} WHERE '. implode(' OR ', array_slice($items, 0, -50)));
-  }
+  $where = implode(' OR ', $items);
+  db_query('DELETE FROM {aggregator_category_item} WHERE '. implode(' OR ', $items));
+  db_query('DELETE FROM {aggregator_item} WHERE fid = %d AND timestamp < %d', $feed['fid'], $age);
 
   return 1;
 }
@@ -702,7 +699,7 @@ function aggregator_admin_overview() {
  * Menu callback. Displays the most recent items gathered from any feed.
  */
 function aggregator_page_last() {
-  _aggregator_page_list(db_query_range('SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_item} i INNER JOIN {aggregator_feed} f ON i.fid = f.fid ORDER BY i.timestamp DESC, i.iid DESC', 0, variable_get('aggregator_page_limit', 75)), arg(1));
+  _aggregator_page_list('SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_item} i INNER JOIN {aggregator_feed} f ON i.fid = f.fid ORDER BY i.timestamp DESC, i.iid DESC', arg(1));
 }
 
 /**
@@ -712,7 +709,7 @@ function aggregator_page_source() {
   $feed = db_fetch_object(db_query('SELECT * FROM {aggregator_feed} WHERE fid = %d', arg(2)));
   $info = theme('aggregator_feed', $feed);
 
-  _aggregator_page_list(db_query_range('SELECT * FROM {aggregator_item} WHERE fid = %d ORDER BY timestamp DESC, iid DESC', $feed->fid, 0, variable_get('aggregator_page_limit', 75)), arg(1), "<div class=\"feed\">$info</div>");
+  _aggregator_page_list('SELECT * FROM {aggregator_item} WHERE fid = '. $feed->fid .' ORDER BY timestamp DESC, iid DESC', arg(1), "<div class=\"feed\">$info</div>");
 }
 
 /**
@@ -721,14 +718,14 @@ function aggregator_page_source() {
 function aggregator_page_category() {
   $category = db_fetch_object(db_query('SELECT cid, title FROM {aggregator_category} WHERE cid = %d', arg(2)));
 
-  _aggregator_page_list(db_query_range('SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_category_item} c LEFT JOIN {aggregator_item} i ON c.iid = i.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE cid = %d ORDER BY timestamp DESC, iid DESC', $category->cid, 0, variable_get('aggregator_page_limit', 75)), arg(1));
+  _aggregator_page_list('SELECT i.*, f.title AS ftitle, f.link AS flink FROM {aggregator_category_item} c LEFT JOIN {aggregator_item} i ON c.iid = i.iid LEFT JOIN {aggregator_feed} f ON i.fid = f.fid WHERE cid = '. $category->cid .' ORDER BY timestamp DESC, iid DESC', arg(1));
 }
 
 /**
  * Prints an aggregator page listing a number of feed items. Various
  * menu callbacks use this function to print their feeds.
  */
-function _aggregator_page_list($result, $op, $header = '') {
+function _aggregator_page_list($sql, $op, $header = '') {
   if (user_access('administer news feeds') && $op == 'categorize') {
     if ($edit = $_POST['edit']) {
       foreach ($edit['categories'] as $iid => $selection) {
@@ -756,6 +753,9 @@ function _aggregator_page_list($result, $op, $header = '') {
   if ($links) {
     $output .= theme('links', $links);
   }
+
+  $result = pager_query($sql, 20);
+
   $rows = array();
   $categories = array();
   while ($item = db_fetch_object($result)) {
@@ -790,6 +790,11 @@ function _aggregator_page_list($result, $op, $header = '') {
     $output .= form(theme('table', array('', t('categorize')), $rows) . form_submit(t('Save categories')));
   }
   $output .= '</div>';
+
+  if ($pager = theme('pager', NULL, 20, 0)) {
+    $output .= $pager;
+  }
+
   print theme('page', $output);
 }
 

@@ -11,9 +11,9 @@ Drupal x.x.x, xxxx-xx-xx
 - refactored 403 (forbidden) handling and added support for custom 403 pages.
 - syndication:
     * added support for RSS ping-notifications of http://technorati.com/.
+    * refactored the categorization of syndicated news items.
 - database backend:
     * added support for mutiple database connections.
-    * refactored the categorization of news items.
 - usability:
     * slightly reorganized navigation menus.
 - accessibility:

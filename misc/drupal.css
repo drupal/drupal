@@ -196,11 +196,12 @@ td.menu-disabled {
 #aggregator .feed img {
   float: right;
 }
-#aggregator .news-item .date {
-  float: left;
-}
 #aggregator .news-item {
   clear: both;
+  padding-bottom: 1em;
+}
+#aggregator .news-item .date {
+  float: left;
 }
 #aggregator .news-item .body {
   margin-top: 1em;
