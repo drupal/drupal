@@ -7,7 +7,7 @@ function node_help() {
   if ($mod == "node") {
     foreach (module_list() as $name) {
       if (module_hook($name, "node") && $name != "node") {
-        print "<h3>". ucfirst($name) ." type</h3>";
+        print "<h3>". t("%module type", array("%module" => ucfirst(module_invoke($name, "node", "name")))). "</h3>";
         print module_invoke($name, "help");
       }
     }
@@ -292,10 +292,10 @@ function node_conf_options() {
 }
 
 function node_conf_filters() {
-  $output .= form_select(t("Enable HTML tags"), "filter_html", variable_get("filter_html", 0), array("Disabled", "Enabled"), t("Allow HTML and PHP tags in user-contributed content."));
+  $output .= form_select(t("Enable HTML tags"), "filter_html", variable_get("filter_html", 0), array(t("Disabled"), t("Enabled")), t("Allow HTML and PHP tags in user-contributed content."));
   $output .= form_textfield(t("Allowed HTML tags"), "allowed_html", variable_get("allowed_html", "<a> <b> <dd> <dl> <dt> <i> <li> <ol> <u> <ul>"), 64, 255, t("If enabled, optionally specify tags which should not be stripped.  'STYLE' attributes, 'ON' attributes and unclosed tags are always stripped."));
   $output .= "<hr />";
-  $output .= form_select(t("Enable link tags"), "filter_link", variable_get("filter_link", 0), array("Disabled", "Enabled"), t("Substitute special [[nodesubject|text]] tags. Your browser will display 'text', and when you click on it your browser will open the node with the subject 'nodesubject'. Please be aware that you'll need to copy the subject of the target node exactly in order to use this feature."));
+  $output .= form_select(t("Enable link tags"), "filter_link", variable_get("filter_link", 0), array(t("Disabled"), t("Enabled")), t("Substitute special [[nodesubject|text]] tags. Your browser will display 'text', and when you click on it your browser will open the node with the subject 'nodesubject'. Please be aware that you'll need to copy the subject of the target node exactly in order to use this feature."));
   $output .= "<hr />";
   return $output;
 }
@@ -431,7 +431,7 @@ function node_admin_settings($edit = array()) {
 
   foreach (module_list() as $name) {
     if (module_hook($name, "conf_options") && module_hook($name, "node")) {
-      $output .= "<h3>". ucfirst(module_invoke($name, "node", "name") ." settings") ."</h3>";
+      $output .= "<h3>". t("%module settings", array("%module" => ucfirst(module_invoke($name, "node", "name")))) ."</h3>";
       $output .= module_invoke($name, "conf_options");
     }
   }
@@ -452,7 +452,7 @@ function node_admin_edit($node) {
   ** Edit node:
   */
 
-  $output .= "<h3>". t("Edit") ." ". module_invoke($node->type, "node", "name") ."</h3>";
+  $output .= "<h3>". t("Edit %module", array("%module" => module_invoke($node->type, "node", "name"))) ."</h3>";
 
   $output .= node_form($node);
 
@@ -463,7 +463,7 @@ function node_admin_edit($node) {
   if ($node->revisions) {
     $output .= "<h3>". t("Edit revisions") ."</h3>";
     $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
-    $output .= " <tr><th>older revisions</th><th colspan=\"3\">operations</th></tr>";
+    $output .= " <tr><th>". t("older revisions") ."</th><th colspan=\"3\">". t("operations") ."</th></tr>";
     foreach ($node->revisions as $key => $revision) {
       $output .= " <tr><td>". t("revision #%r revised by %u on %d", array("%r" => $key, "%u" => format_name(user_load(array("uid" => $revision["uid"]))), "%d" => format_date($revision["timestamp"], "small"))) . ($revision["history"] ? "<br /><small>". $revision["history"] ."</small>" : "") ."</td><td>". l(t("view revision"), array("id" => $node->nid, "revision" => $key)) ."</td><td>". la(t("rollback revision"), array("mod" => "node", "op" => "rollback+revision", "id" => $node->nid, "revision" => $key)) ."</td><td>". la(t("delete revision"), array("mod" => "node", "op" => "delete+revision", "id" => $node->nid, "revision" => $key)) ."</td></tr>";
     }
@@ -496,7 +496,7 @@ function node_admin_nodes() {
   $output .= "<small>". implode(" :: ", $links) ."</small><hr />";
 
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  $output .= " <tr><th>title</th><th>type</th><th>author</th><th>status</th><th colspan=\"2\">operations</th></tr>\n";
+  $output .= " <tr><th>". t("title") ."</th><th>type</th><th>". t("author") ."</th><th>". t("status") ."</th><th colspan=\"2\">". t("operations") ."</th></tr>\n";
   while ($node = db_fetch_object($result)) {
     $output .= "<tr><td>". l(check_output($node->title), array("id" => $node->nid)) ."</td><td>". module_invoke($node->type, "node", "name") ."</td><td nowrap=\"nowrap\">". format_name($node) ."</td><td>". ($node->status ? t("published") : t("not published")) ."</td><td nowrap=\"nowrap\">". la(t("edit node"), array("mod" => "node", "op" => "edit", "id" => $node->nid)) ."</td><td nowrap=\"nowrap\">". la(t("delete node"), array("mod" => "node", "op" => "delete", "id" => $node->nid)) ."</td></tr>";
   }
@@ -888,18 +888,18 @@ function node_form($edit, $error = NULL) {
     $output .= form_textfield(t("Authored by"), "name", $edit->name, 20, 25, $error["name"]);
     $output .= form_textfield(t("Authored on"), "date", $edit->date, 20, 25, $error["date"]);
     $output .= "<br />";
-    $output .= form_select(t("Set public/published"), "status", $edit->status, array("Disabled", "Enabled"));
+    $output .= form_select(t("Set public/published"), "status", $edit->status, array(t("Disabled"), t("Enabled")));
     // TODO: move this to the queue.module
     if (module_exist("queue")) {
-      $output .= form_select(t("Queue for moderation"), "moderate", $edit->moderate, array("Disabled", "Enabled"));
+      $output .= form_select(t("Queue for moderation"), "moderate", $edit->moderate, array(t("Disabled"), t("Enabled")));
     }
-    $output .= form_select(t("Promote to front page"), "promote", $edit->promote, array("Disabled", "Enabled"));
-    $output .= form_select(t("Static on front page"), "static", $edit->static, array("Disabled", "Enabled"));
+    $output .= form_select(t("Promote to front page"), "promote", $edit->promote, array(t("Disabled"), t("Enabled")));
+    $output .= form_select(t("Static on front page"), "static", $edit->static, array(t("Disabled"), t("Enabled")));
     // TODO: move this to the comment.module
     if (module_exist("comment")) {
-      $output .= form_select(t("Allow users comments"), "comment", $edit->comment, array("Disabled", "Read only", "Read/Write"));
+      $output .= form_select(t("Allow users comments"), "comment", $edit->comment, array(t("Disabled"), t("Read only"), t("Read-write")));
     }
-    $output .= form_select(t("Create new revision"), "revision", $edit->revision, array("Disabled", "Enabled"));
+    $output .= form_select(t("Create new revision"), "revision", $edit->revision, array(t("Disabled"), t("Enabled")));
   }
 
   $output .= "  </td>";
