@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.131 2004/02/21 19:16:48 kjartan Exp $
+// $Id: update.php,v 1.132 2004/02/21 19:21:25 kjartan Exp $
 /*
 ** USAGE:
 **
@@ -678,7 +678,7 @@ function update_79() {
   }
   else {
     update_sql("ALTER TABLE {node} DROP attributes");
-    update_sql("ALTER TABLE {comment} DROP link";
+    update_sql("ALTER TABLE {comment} DROP link");
   }
 }
 
