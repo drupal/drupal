@@ -326,10 +326,8 @@ switch ($op) {
       $data[signature] = $edit[signature];
       dbsave("users", $data, $user->id);
       user_rehash();
-
       header("account.php");
     }
-    showUser($user->userid);
     break;
   default: 
     showUser($user->userid);
