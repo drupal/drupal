@@ -8,7 +8,7 @@ function comment_find($keys) {
   $find = array();
   $result = db_query("SELECT c.*, u.userid FROM comments c LEFT JOIN users u ON c.author = u.id WHERE c.subject LIKE '%$keys%' OR c.comment LIKE '%$keys%' ORDER BY c.timestamp DESC LIMIT 20");
   while ($comment = db_fetch_object($result)) {
-    array_push($find, array("subject" => check_output($comment->subject), "link" => (user_access($user, "comment") ? "admin.php?mod=comment&op=edit&id=$comment->cid" : "story.php?id=$comment->lid&cid=$comment->cid"), "user" => $story->userid, "date" => $comment->timestamp));
+    array_push($find, array("title" => check_output($comment->subject), "link" => (user_access($user, "comment") ? "admin.php?mod=comment&op=edit&id=$comment->cid" : "node.php?id=$comment->lid&cid=$comment->cid"), "user" => $story->userid, "date" => $comment->timestamp));
   }
   return $find;
 }
@@ -75,7 +75,7 @@ function comment_display($order = "date") {
   $output .= " </TR>\n";
 
   while ($comment = db_fetch_object($result)) {
-    $output .= " <TR><TD>". ($comment->link == "story" ? "<A HREF=\"story.php?id=$comment->lid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A>" : check_output($comment->subject)) ."</TD><TD>". format_username($comment->userid) ."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=comment&op=edit&id=$comment->cid\">edit</A></TD></TR>\n";
+    $output .= " <TR><TD>". ($comment->link == "story" ? "<A HREF=\"node.php?id=$comment->lid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A>" : check_output($comment->subject)) ."</TD><TD>". format_username($comment->userid) ."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=comment&op=edit&id=$comment->cid\">edit</A></TD></TR>\n";
   }
 
   $output .= "</TABLE>\n";
