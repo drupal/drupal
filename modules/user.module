@@ -1707,7 +1707,7 @@ roles:
   Changes made here take effect immediately. Also, administrators may make profile and preferences changes in the Admin Center on behalf of their users.</p>
   <p>Module developers are provided several hooks for adding custom fields to the user view/edit pages. These hooks are described in the Developer section of the <A href="http://www.drupal.org">Drupal Handbook</a>. For an example, see the <code>jabber_user()</code> function in <i>/modules/jabber.module</i>.
 </p>
- <?
+ <?php
 }
 
 function user_help_admin_da() {
@@ -1746,7 +1746,7 @@ install, that means removing/disabling <i>jabber.module</i> and <i>drupal.module
 </p>
 <p>Drupal is setup so that it is very easy to add support for any external authentication
   source. You currently have the following authentication modules installed ...</p>
-  <?
+  <?php
     foreach (module_list() as $module) {
       if (module_hook($module, "auth")) {
         print "<h4>" . module_invoke($module, "info", "name") . "</h4>";
@@ -1918,7 +1918,7 @@ function user_help_devel_da() {
   and Drupal_support mailing lists</a>. You might also want to post a story on
   <a href="http://www.drop.org">Drop.org</a>.<br>
 </p>
-  <?
+  <?php
 }
 
 function user_help_devel_userhook() {
@@ -1962,6 +1962,6 @@ function julia_user($type, $edit, &$user) {
     }
   }
 </pre>
-  <?
+  <?php
 }
 ?>
