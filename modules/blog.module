@@ -283,8 +283,14 @@ function blog_user() {
         blog_page_user($user->name, time());
         break;
       case "edit":
-        $theme->box(t("Submit a blog"), blog_form(node_get_array(array("nid" => $id, "type" => "blog"))), "main");
-        $theme->box(t("Older blogs"), blog_edit_history($id), "main");
+        $node = node_get_array(array("nid" => $id, "type" => "blog"));
+        if ($node[author] == $user->id) {
+          $theme->box(t("Submit a blog"), blog_form($node), "main");
+          $theme->box(t("Older blogs"), blog_edit_history($id), "main");
+        }
+        else {
+          $theme->box(t("Submit"), message_access());
+        }
         break;
       case t("Preview"):
         $theme->box(t("Preview Blog"), blog_form($edit), "main");
