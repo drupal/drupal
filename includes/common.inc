@@ -946,13 +946,13 @@ $conf = variable_init(isset($conf) ? $conf : array());
 // set error handler:
 set_error_handler("error_handler");
 
+// initialize installed modules:
+module_init();
+
 // initialize localization system:
 $locale = locale_init();
 
 // initialize theme:
 $theme = theme_init();
-
-// initialize installed modules:
-module_init();
 
 ?>
