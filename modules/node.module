@@ -149,7 +149,7 @@ function node_save($node, $filter) {
     $node->created = time();
     $node->changed = time();
     $node->nid = db_result(db_query("SELECT MAX(nid) + 1 FROM node"));
-    $node->nid = empty($node->nid) ? 1 : $node->nid; 
+    $node->nid = empty($node->nid) ? 1 : $node->nid;
 
     // Prepare the query:
     foreach ($node as $key => $value) {
@@ -361,6 +361,10 @@ function node_filter_line($text) {
   $text = preg_replace(array("/\n\s*<([\/])($list)/", "/($list)>\s*\n/"), array("<$1$2", "$1>"), $text);
 
   return trim($text);
+}
+
+function node_comment_mode($nid) {
+  return db_result(db_query("SELECT comment FROM node WHERE nid = '".check_query($nid)."'"));
 }
 
 function node_filter($text) {
@@ -867,7 +871,7 @@ function node_form($edit) {
     $output .= form_select(t("Queue for moderation"), "moderate", $edit->moderate, array("Disabled", "Enabled"));
     $output .= form_select(t("Promote to front page"), "promote", $edit->promote, array("Disabled", "Enabled"));
     $output .= form_select(t("Static on front page"), "static", $edit->static, array("Disabled", "Enabled"));
-    $output .= form_select(t("Allow users comments"), "comment", $edit->comment, array("Disabled", "Enabled"));
+    $output .= form_select(t("Allow users comments"), "comment", $edit->comment, array("Disabled", "Read only", "Read/Write"));
     $output .= form_select(t("Create new revision"), "revision", $edit->revision, array("Disabled", "Enabled"));
   }
 
@@ -985,9 +989,10 @@ function node_preview($node) {
 }
 
 function node_submit($node) {
-  global $theme, $user;
+  global $theme, $user, $tid;
 
-  if (user_access("post content")) {
+  $context->tid = $tid;
+  if (user_access("post content", $context)) {
 
     /*
     ** Fixup the node when required:
@@ -1024,6 +1029,12 @@ function node_submit($node) {
 
         $nid = node_save($node, array_merge($fields, module_invoke($node->type, "save", "update", $node)));
 
+        /*
+        ** Update terms of the node
+        */
+
+        taxonomy_node_save($nid, $node->taxonomy);
+
         watchdog("special", "$node->type: updated '$node->title'");
         $output = t("The node has been updated.");
       }
@@ -1055,13 +1066,19 @@ function node_submit($node) {
         */
 
         if (user_access("administer nodes")) {
-          $fields = array("uid", "body", "comment" => 1, "promote", "moderate", "status" => 1, "teaser", "title", "type" => $node->type);
+          $fields = array("uid", "body", "comment" => 2, "promote", "moderate", "status" => 1, "teaser", "title", "type" => $node->type);
         }
         else {
-          $fields = array("uid" => ($user->uid ? $user->uid : 0), "body", "comment" => 1, "teaser", "title", "type" => $node->type);
+          $fields = array("uid" => ($user->uid ? $user->uid : 0), "body", "comment" => 2, "teaser", "title", "type" => $node->type);
         }
 
         $nid = node_save($node, array_merge($fields, module_invoke($node->type, "save", "create", $node)));
+
+        /*
+        ** Insert terms of the node
+        */
+
+        taxonomy_node_save($nid, $node->taxonomy);
 
         watchdog("special", "$node->type: added '$node->title'");
         $output = t("Thanks for your submission.");
@@ -1120,6 +1137,12 @@ function node_delete($edit) {
       db_query("DELETE FROM comments WHERE nid = '$node->nid'");
 
       /*
+      ** Delete any taxonomy terms
+      */
+
+      taxonomy_node_delete($node->nid);
+
+      /*
       ** Call the node specific callback (if any):
       */
 
@@ -1145,7 +1168,7 @@ function node_delete($edit) {
 }
 
 function node_page() {
-  global $op, $id, $user, $edit, $type, $theme, $meta;
+  global $op, $id, $user, $edit, $type, $theme, $or, $and;
 
   if ($op == "feed") {
     node_feed();
@@ -1185,11 +1208,31 @@ function node_page() {
       $theme->box($title, node_delete($edit));
       break;
     default:
-      $result = db_query("SELECT nid, type FROM node WHERE ". ($meta ? "attributes LIKE '%". check_input($meta) ."%' AND " : "") . ($id ? "nid = '$id'" : "promote = '1'") ." AND status = '1' ORDER BY static DESC, created DESC LIMIT ". ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
+      // prepare query
+      if ($or) {
+        foreach ((explode(",", $or)) as $t) {
+          $terms[] = "'".check_query($t)."'";
+        }
+      } else if ($and) {
+        foreach ((explode(",", $and)) as $t) {
+          $terms[] = "'".check_query($t)."'";
+        }
+      }
+
+      if ($or) {
+        // this is an OR of terms
+        $result = db_query("SELECT DISTINCT(n.nid), type FROM node n LEFT JOIN term_node r ON n.nid = r.nid WHERE tid IN (".implode(",", $terms).") AND ". ($id ? "nid = '$id'" : "promote = '1'") ." AND status = '1' ORDER BY static DESC, created DESC LIMIT ". ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
+      } else if ($and) {
+        // this is an AND
+        $result = db_query("SELECT n.nid, type, count(*) AS c FROM node n LEFT JOIN term_node r ON n.nid = r.nid WHERE tid IN (".implode(",", $terms).")  AND ". ($id ? "nid = '$id'" : "promote = '1'") ." AND status = '1' GROUP BY n.nid HAVING c = ".count($terms)." ORDER BY static DESC, created DESC LIMIT ". ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
+      } else {
+        $result = db_query("SELECT nid, type FROM node WHERE ". ($id ? "nid = '$id'" : "promote = '1'") ." AND status = '1' ORDER BY static DESC, created DESC LIMIT ". ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
+      }
+
       while ($node = db_fetch_object($result)) {
         node_view(node_load(array("nid" => $node->nid, "type" => $node->type)), 1);
       }
-  }
+    }
 
   $theme->footer();
 }

@@ -78,9 +78,13 @@ function object2array($node) {
   return $array;
 }
 
-function path_uri() {
+function path_uri($brief = 0) {
   global $HTTP_HOST, $REQUEST_URI;
-  return "http://". $HTTP_HOST . substr($REQUEST_URI, 0, strrpos($REQUEST_URI, "/")) ."/";
+  $path = $HTTP_HOST . substr($REQUEST_URI, 0, strrpos($REQUEST_URI, "/")) ."/";
+  if (!$brief) {
+    $path = "http://". $path;
+  }
+  return $path;
 }
 
 function path_img() {
@@ -148,7 +152,7 @@ function variable_del($name) {
  * Format a single result entry of a search query:
  *
  * @param $item  a single search result as returned by <module>_search of type
- *               array("count" => ..., "link" => ..., "title" => ..., 
+ *               array("count" => ..., "link" => ..., "title" => ...,
  *               "user" => ..., "date" => ..., "keywords" => ...)
  * @param $type  module type of this item
  */
@@ -164,14 +168,14 @@ function search_item($item, $type) {
  * Render a generic search form.
  *
  * "Generic" means "universal usable" - that is, usable not only from
- * module.php?mod=search, but also as a simple seach box (without 
- * "Restrict search to", help text, etc) from theme's header etc. 
- * This means: provide options to only conditionally render certain 
+ * module.php?mod=search, but also as a simple seach box (without
+ * "Restrict search to", help text, etc) from theme's header etc.
+ * This means: provide options to only conditionally render certain
  * parts of this form.
  *
  * @param $action  Form action. Defaults to module.php?mod=search.
  * @param $query   Query string. Defaults to global $keys.
- * @param $options != 0: Render additional form fields/text 
+ * @param $options != 0: Render additional form fields/text
  *                 ("Restrict search to", help text, etc).
  */
 function search_form($action = 0, $query = 0, $options = 0) {
@@ -239,11 +243,11 @@ function search_data() {
 /**
  * Display the search form and the resulting data.
  *
- * @param $type    If set, search only nodes of this type. 
+ * @param $type    If set, search only nodes of this type.
  *                 Otherwise, search all types.
  * @param $action  Form action. Defaults to module.php?mod=search.
  * @param $query   Query string. Defaults to global $keys.
- * @param $options != 0: Render additional form fields/text 
+ * @param $options != 0: Render additional form fields/text
  *                 ("Restrict search to", help text, etc).
  */
 function search_type($type = 0, $action = 0, $query = 0, $options = 0) {
@@ -254,6 +258,22 @@ function search_type($type = 0, $action = 0, $query = 0, $options = 0) {
   }
 
   return search_form($action, $query, $options) . search_data();
+}
+
+function drupal_str_replace($from, $to, $subject) {
+
+  /*
+  ** Multiple item replace which works for *all* PHP versions
+  ** (PHP 4.05+ supports this natively using similar syntax).
+  ** $from and $to should be same sized arrays, $subject is the
+  ** source text.
+  */
+
+  for ($i = 0; $i < count($from); $i++) {
+    $subject = str_replace($from[$i], $to[$i], $subject);
+  }
+
+  return $subject;
 }
 
 function drupal_goto($url) {
@@ -551,12 +571,12 @@ function form_textarea($title, $name, $value, $cols, $rows, $description = 0) {
   return form_item($title, "<textarea wrap=\"virtual\" cols=\"$cols\" rows=\"$rows\" name=\"edit[$name]\">". check_form($value) ."</textarea>", $description);
 }
 
-function form_select($title, $name, $value, $options, $description = 0, $extra = 0) {
+function form_select($title, $name, $value, $options, $description = 0, $extra = 0, $multiple = 0) {
   if (count($options) > 0) {
-    foreach ($options as $key => $choice) {
+    foreach ($options as $key=>$choice) {
       $select .= "<option value=\"$key\"". (is_array($value) ? (in_array($key, $value) ? " selected=\"selected\"" : "") : ($key == $value ? " selected=\"selected\"" : "")) .">". check_form($choice) ."</option>";
     }
-    return form_item($title, "<select name=\"edit[$name]\"". ($extra ? " $extra" : "") .">$select</select>", $description);
+    return form_item($title, "<select name=\"edit[$name]".($multiple ? "[]" : "")."\"" .($multiple ? " multiple " : "").($extra ? " $extra" : "") .">$select</select>", $description);
   }
 }
 
@@ -595,20 +615,20 @@ function field_merge($a, $b) {
 
 function link_page() {
   global $custom_links;
-  
+
   if (is_array($custom_links)) {
     return $custom_links;
   }
   else {
     $links[] = "<a href=\"index.php\">". t("home") ."</a>";
-    foreach (module_list() as $name) {    
+    foreach (module_list() as $name) {
       if (module_hook($name, "link")) {
         $links = array_merge($links, module_invoke($name, "link", "page"));
-      }  
+      }
     }
     return $links;
   }
-}  
+}
 
 function link_node($node, $main = 0) {
   foreach (module_list() as $name) {

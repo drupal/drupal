@@ -106,22 +106,22 @@ function page_view($node, $main = 0) {
   global $theme;
 
   if ($main) {
-    $theme->node($node, $main);    
+    $theme->node($node, $main);
   }
   else {
     /*
     ** Extract the page body.  If body is dynamic (using PHP code), the body
     ** will be generated.
     */
-  
+
     $output .= page_body($node);
-  
+
     /*
     ** Add the node specific links:
     */
-  
+
     $output .= "<div align=\"right\">". $theme->links(link_node($node, $main)) ."</div>";
-  
+
     $theme->box($node->title, $output);
   }
 }

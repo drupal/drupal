@@ -41,7 +41,7 @@
      $system["name"] = "UnConeD";
      $system["author"] = "Steven Wittens";
      $system["description"] = "Internet explorer, Netscape, Opera";
-     
+
      return $system[$field];
    }
 

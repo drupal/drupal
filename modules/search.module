@@ -12,7 +12,7 @@ function search_help() {
   $output .= "<p>". t("Some words which commonly occur are filtered out by the searching process, these are commonly called 'noisewords'. Examples are 'a, at, and, are, as, ask', and the list goes on. Words shorter than ". variable_get("minimum_word_size", 2) ." letters are also filtered from the search index.");
   $output .= "<p>". t("These words will never be matched when specified, even if they appear in the node you are searching for.");
   return $output;
-} 
+}
 
 /**
  * Return an array of valid search access permissions
@@ -66,7 +66,7 @@ function search_admin() {
 }
 
 /**
- * perform a regularly run action across all modules that have the 
+ * perform a regularly run action across all modules that have the
  * <module>_update_index function in them.
  *
  */
@@ -86,10 +86,10 @@ function search_cron() {
  *
  * Search function called by each node that supports the indexed search
  *
- * @param $search_array  an array as returned from <module>_search 
- *                       of type array("keys" => ..., 
+ * @param $search_array  an array as returned from <module>_search
+ *                       of type array("keys" => ...,
  *                       "type" => ..., "select" => ...)
- *                       see node_search in node.module for an 
+ *                       see node_search in node.module for an
  *                       explanation of array items
  */
 function do_search($search_array) {
@@ -107,7 +107,7 @@ function do_search($search_array) {
 
   foreach ($words as $word) {
 
-    // If the word is too short, and we've got it set to skip them, 
+    // If the word is too short, and we've got it set to skip them,
     // loop
     if (strlen($word) < variable_get("remove_short", 0)) {
       continue;
@@ -131,8 +131,8 @@ function do_search($search_array) {
     // If we got any results
     if (db_num_rows($result) != 0) {
       $found = 1;
-      
-      // Create an in memory array of the results, 
+
+      // Create an in memory array of the results,
       while ($row = db_fetch_array($result)) {
         $lno       = $row["lno"];
         $nid       = $row["nid"];
@@ -170,7 +170,7 @@ function do_search($search_array) {
           }
         }
       }
-    } 
+    }
   }
 
   if ($found) {
@@ -208,10 +208,10 @@ function do_search($search_array) {
 /**
  * Update the search_index table
  *
- * @param $search_array  an array as returned from <module>_update_index 
- *                       of type array("last_update" => ..., 
+ * @param $search_array  an array as returned from <module>_update_index
+ *                       of type array("last_update" => ...,
  *                       "node_type" => ..., "select" => ...)
- *                       see node_update_index in node.module for an 
+ *                       see node_update_index in node.module for an
  *                       explanation of array items
  */
 function update_index($search_array) {
@@ -227,12 +227,12 @@ function update_index($search_array) {
   if (db_num_rows($result)) {
     // Wohoo, found some, look through the nodes we just selected
     while ($node = db_fetch_array ($result)) {
-      
+
       // Trash any existing entries in the search index for this node,
       // in case its a modified node.
       db_query("DELETE from search_index where lno = '". $node["lno"] ."' and type = '". $node_type ."'");
 
-      // Build the wordlist, teaser not included, as it then gives a 
+      // Build the wordlist, teaser not included, as it then gives a
       // false count of the number of hist, and doesn't show up
       // when clicking on a node from the search interface anyway.
       $wordlist = $node["text1"] . $node["text2"];
@@ -244,7 +244,7 @@ function update_index($search_array) {
       $wordlist = preg_replace("'[0-9]'", "", $wordlist);
 
       // Remove punctuation and stuff
-      $wordlist = preg_replace("'(!|%|,|:|;|\(|\)|\&|\"|\'|\.|-|\/|\?|\\\)'", 
+      $wordlist = preg_replace("'(!|%|,|:|;|\(|\)|\&|\"|\'|\.|-|\/|\?|\\\)'",
                                "",
                                $wordlist);
 
@@ -276,14 +276,14 @@ function update_index($search_array) {
         if (strlen($word) > $minimum_word_size) {
           if ($newwords[$word]) {
             $newwords[$word]++;
-          } 
+          }
           else {
             $newwords[$word] = 1;
           }
         }
       }
 
-      // Walk through the weighted words array, inserting them into 
+      // Walk through the weighted words array, inserting them into
       // the search index
       foreach ($newwords as $key => $value) {
         $inputword = ("INSERT INTO search_index VALUES('$key', ". $node["lno"] .", '$node_type', $value)");
@@ -338,7 +338,7 @@ function search_invalidate() {
 /**
  * Save the values entered by the administrator for the search module
  *
- * @param $edit  An array of fields as setup via calling form_textfield, 
+ * @param $edit  An array of fields as setup via calling form_textfield,
  *               form_textarea etc
  */
 function search_save($edit) {
@@ -352,7 +352,7 @@ function search_view() {
   global $theme, $edit, $type, $keys;
 
   if (user_access("search content")) {
-  
+
     /*
     ** Verify the user input:
     */

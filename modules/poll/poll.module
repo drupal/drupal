@@ -29,9 +29,9 @@ function poll_block() {
 function poll_cron() {
   // Close polls that have exceeded their allowed runtime
   $result = db_query("SELECT p.lid FROM poll p LEFT JOIN node n ON p.nid=n.nid WHERE (n.created + p.runtime) < '" . time() . "' AND p.active = '1' AND p.runtime != '0'");
-  while ($poll = db_fetch_object($result)) {  
+  while ($poll = db_fetch_object($result)) {
     db_query("UPDATE poll SET active='0' WHERE lid='$poll->lid'");
-  } 
+  }
 }
 
 function poll_delete($node) {
@@ -103,7 +103,7 @@ function poll_insert($node) {
   }
 
   db_query("INSERT INTO poll (nid, runtime, voters, active) VALUES ('$node->nid', '$node->runtime', '', '$node->active')");
-  
+
   for ($i = 0; $i < $node->choices; $i++) {
     $choice->chtext = filter($node->choice[$i]);
     $choice->chvotes = (int)$node->chvotes[$i];
@@ -126,7 +126,7 @@ function poll_link($type) {
 function poll_load($node) {
   // Load the appropriate choices into the $node object
   $poll = db_fetch_object(db_query("SELECT runtime, voters, active FROM poll WHERE nid = '$node->nid'"));
-  
+
   $result = db_query("SELECT chtext, chvotes, chorder FROM poll_choices WHERE nid='$node->nid' ORDER BY chorder");
   while ($choice = db_fetch_object($result)) {
     $poll->choice[$choice->chorder]  = $choice->chtext;
@@ -181,12 +181,12 @@ function poll_teaser($node) {
 
 function poll_view(&$node, $main = 0, $block = 0) {
   global $theme, $user;
-  
+
   /* When a poll is displayed twice on the same page (e.g. on the front page and in the side bar)
-     we only want to vote on one of them. We keep count using $pollid */  
+     we only want to vote on one of them. We keep count using $pollid */
   global $pollidcount, $pollvote, $pollid, $REMOTE_ADDR, $REQUEST_URI;
   $pollidcount++;
-  
+
   // Only accept votes on specific cases to prevent double voting
   $allowvotes = false;
   if (user_access("vote on polls")) {
@@ -200,11 +200,11 @@ function poll_view(&$node, $main = 0, $block = 0) {
     if (!strstr($node->voters, $id)) {
       $allowvotes = $node->active;
     }
-  } 
+  }
 
   if (($pollid == $pollidcount) && isset($pollvote) && ($allowvotes)) {
     // The user has submitted a valid vote
-    if (!empty($node->choice[$pollvote])) {   
+    if (!empty($node->choice[$pollvote])) {
       $node->voters = $node->voters ? ($node->voters . " " . $id) : $id;
       db_query("UPDATE poll SET voters='$node->voters' WHERE nid='$node->nid'");
       db_query("UPDATE poll_choices SET chvotes = chvotes + 1 WHERE nid='$node->nid' AND chorder='$pollvote'");
@@ -212,10 +212,10 @@ function poll_view(&$node, $main = 0, $block = 0) {
       $node->chvotes[$pollvote]++;
     }
   }
-  
+
   if ($allowvotes) {
     // Display the vote form
-    $url = $REQUEST_URI . (strstr($REQUEST_URI, "?") ? "&" : "?") . "pollid=" . $pollidcount; 
+    $url = $REQUEST_URI . (strstr($REQUEST_URI, "?") ? "&" : "?") . "pollid=" . $pollidcount;
     $output .= "<form action=\"$url\" method=\"post\">";
     $output .= "<table border=\"0\" align=\"center\"><tr><td>";
 
@@ -231,22 +231,22 @@ function poll_view(&$node, $main = 0, $block = 0) {
     }
     $output .= "</form>";
   }
-  else {    
+  else {
     // Display the results
-    
+
     // Count the votes and find the maximum
     foreach ($node->choice as $key => $value) {
       $votestotal += $node->chvotes[$key];
       $votesmax = max($votesmax, $node->chvotes[$key]);
     }
     $votesmax = max($votesmax, 1);
-    
+
     // Define CSS classes for the bars
     $output .= "<style type=\"text/css\">";
     $output .= "td.pollfg { background-color: " . $theme->foreground . "; font-size: 5pt; }";
     $output .= "td.pollbg { background-color: " . $theme->background . "; font-size: 5pt; }";
     $output .= "</style>";
-        
+
     foreach ($node->choice as $key => $value) {
       if ($value != "") {
         $width = round($node->chvotes[$key] * 100 / $votesmax);
@@ -254,7 +254,7 @@ function poll_view(&$node, $main = 0, $block = 0) {
 
         $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"95%\" align=\"center\"><tr><td>$value</td><td><div align=\"right\"> $percentage%" . (!$block ? " (" . $node->chvotes[$key] . " votes)" : "") . "</div></td></tr></table>";
         if ($width == 0) {
-          $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"95%\" align=\"center\"><tr><td class=\"pollbg\" width=\"100%\">&nbsp;</td></tr></table>"; 
+          $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"95%\" align=\"center\"><tr><td class=\"pollbg\" width=\"100%\">&nbsp;</td></tr></table>";
         }
         else if ($width == 100) {
           $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"95%\" align=\"center\"><tr><td class=\"pollfg\" width=\"100%\">&nbsp;</td></tr></table>";
@@ -283,7 +283,7 @@ function poll_update($node) {
   for ($i = 0; $i < $node->choices; $i++) {
     $choice->chtext = filter($node->choice[$i]);
     $choice->chvotes = (int)$node->chvotes[$i];
-    $choice->chorder = $i;    
+    $choice->chorder = $i;
 
     if ($choice->chtext != "") {
       db_query("INSERT INTO poll_choices (nid, chtext, chvotes, chorder) VALUES ('$node->nid', '$choice->chtext', '$choice->chvotes', '$choice->chorder')");
