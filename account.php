@@ -51,9 +51,9 @@ function newUser($user = "", $error="") {
   print("<FORM ACTION=\"account.php\" METHOD=post>\n");
   print("<TABLE BORDER=0 CELLPADDING=2 CELLSPACING=2>\n");
   if (!empty($error)) { print("<TR><TD COLSPAN=2>$error</TD></TR>\n"); }
-  print("<TR><TH>Name:</TH><TD><INPUT NAME=\"new[name]\" VALUE=\"$user[name]\"></TD></TR>\n");
-  print("<TR><TH>User ID:</TR><TD><INPUT NAME=\"new[userid]\" VALUE=\"$user[userid]\"></TD></TR>\n");
-  print("<TR><TH>E-mail:</TH><TD><INPUT NAME=\"new[email]\" VALUE=\"$user[email]\"></TD></TR>\n");
+  print("<TR><TH>Name:</TH><TD><INPUT NAME=\"new[name]\" VALUE=\"$new[name]\"></TD></TR>\n");
+  print("<TR><TH>User ID:</TR><TD><INPUT NAME=\"new[userid]\" VALUE=\"$new[userid]\"></TD></TR>\n");
+  print("<TR><TH>E-mail:</TH><TD><INPUT NAME=\"new[email]\" VALUE=\"$new[email]\"></TD></TR>\n");
   print("<TR><TD ALIGN=right COLSPAN=2><INPUT NAME=act TYPE=submit VALUE=\"Register\"></TD></TR>\n");
   print("</TABLE>\n");
   print("</FORM>\n");
