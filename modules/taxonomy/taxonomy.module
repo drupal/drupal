@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.189 2005/04/01 15:55:01 dries Exp $
+// $Id: taxonomy.module,v 1.190 2005/04/03 09:27:01 dries Exp $
 
 /**
  * @file
@@ -769,7 +769,7 @@ function _taxonomy_term_select($title, $name, $value, $vocabulary_id, $descripti
     }
   }
 
-  return form_select($title, $name .'][', $value, $options, $description, $multiple ? 'size="'. min(12, count($options)) .'"' : 0, $multiple);
+  return form_select($title, $name . ($multiple ? '' : ']['), $value, $options, $description, $multiple ? 'size="'. min(12, count($options)) .'"' : 0, $multiple);
 }
 
 function _taxonomy_depth($depth, $graphic = '--') {
