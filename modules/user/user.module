@@ -469,13 +469,13 @@ function user_block() {
     $block[0]["subject"] = t("Log in");
 
     $output .= "<div align=\"center\">\n";
-    $output .= " <form action=\"module.php?mod=user&op=login\" method=\"post\">\n";
-    $output .= "  <b>". t("Username") .":</b><br /><input name=\"edit[name]\" size=\"15\" /><p />\n";
-    $output .= "  <b>". t("Password") .":</b><br /><input name=\"edit[pass]\" size=\"15\" type=\"password\" /><br />\n";
-    $output .= form_checkbox(t("Remember me"), "remember_me", 1, 0);
-    $output .= "  <input type=\"submit\" value=\"". t("Log in") ."\" /><br />\n";
+    $output .= "<form action=\"module.php?mod=user&op=login\" method=\"post\">\n";
+    $output .= "<b>". t("Username") .":</b><br /><input name=\"edit[name]\" size=\"15\" /><br />\n";
+    $output .= "<b>". t("Password") .":</b><br /><input name=\"edit[pass]\" size=\"15\" type=\"password\" /><br />\n";
+    $output .=  "<input name=\"edit[remember_me]\" type=\"checkbox\" />". t("Remember me") ."<br />\n";
+    $output .= "<input type=\"submit\" value=\"". t("Log in") ."\" /><br />\n";
     if (variable_get("account_register", 1)) $output .= "  <a href=\"module.php?mod=user\" title=\"". t("Create a new user account.") ."\">". t("REGISTER") ."</a>\n";
-    $output .= " </form>\n";
+    $output .= "</form>\n";
     $output .= "</div>\n";
   }
   $block[0]["content"] = $output;
