@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.66 2003/11/25 19:26:21 dries Exp $
+// $Id: search.module,v 1.67 2003/11/30 10:39:15 dries Exp $
 
 function search_help($section = "admin/help#search") {
   $output = "";
@@ -40,14 +40,6 @@ function search_link($type) {
 
   if ($type == "page" && user_access("search content")) {
     $links[] = l(t("search"), "search", array("title" => t("Search for older content.")));
-  }
-
-  if ($type == "system" && user_access("search content")) {
-    menu("search", t("search"), "search_page", 0, 1);
-  }
-
-  if ($type == "system" && user_access("search content")) {
-    menu("search", t("search"), "search_page", 0, 1);
   }
 
   if ($type == "system" && user_access("search content")) {
