@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.118 2003/11/28 20:03:00 dries Exp $
+// $Id: update.php,v 1.119 2003/12/03 14:35:02 dries Exp $
 /*
 ** USAGE:
 **
@@ -61,7 +61,8 @@ $mysql_updates = array(
   "2003-10-22" => "update_69",
   "2003-10-27" => "update_70",
   "2003-11-17" => "update_71",
-  "2003-11-27" => "update_72"
+  "2003-11-27" => "update_72",
+  "2003-12-03" => "update_73"
 );
 
 function update_32() {
@@ -555,6 +556,33 @@ function update_71() {
 
 function update_72() {
   update_sql("ALTER TABLE {blocks} ADD throttle tinyint(1) NOT NULL DEFAULT '0'");
+}
+
+function update_73() {
+  if ($GLOBALS["db_type"] == "mysql") {
+    update_sql("ALTER TABLE {book} CHANGE log log longtext");
+    update_sql("ALTER TABLE {boxes} CHANGE body body longtext");
+    update_sql("ALTER TABLE {cache} CHANGE data data longtext");
+    update_sql("ALTER TABLE {comments} CHANGE comment comment longtext");
+    update_sql("ALTER TABLE {comments} CHANGE users users longtext");
+    update_sql("ALTER TABLE {directory} CHANGE slogan slogan longtext");
+    update_sql("ALTER TABLE {directory} CHANGE mission mission longtext");
+    update_sql("ALTER TABLE {feed} CHANGE description description longtext");
+    update_sql("ALTER TABLE {item} CHANGE description description longtext");
+    update_sql("ALTER TABLE {node} CHANGE users users longtext");
+    update_sql("ALTER TABLE {node} CHANGE teaser teaser longtext");
+    update_sql("ALTER TABLE {node} CHANGE body body longtext");
+    update_sql("ALTER TABLE {node} CHANGE revisions revisions longtext");
+    update_sql("ALTER TABLE {permission} CHANGE perm perm longtext");
+    update_sql("ALTER TABLE {poll} CHANGE voters voters longtext");
+    update_sql("ALTER TABLE {sessions} CHANGE session session longtext");
+    update_sql("ALTER TABLE {term_data} CHANGE description description longtext");
+    update_sql("ALTER TABLE {users} CHANGE data data longtext");
+    update_sql("ALTER TABLE {variable} CHANGE value value longtext");
+    update_sql("ALTER TABLE {vocabulary} CHANGE description description longtext");
+    update_sql("ALTER TABLE {vocabulary} CHANGE nodes nodes longtext");
+    update_sql("ALTER TABLE {watchdog} CHANGE message message longtext");
+  }
 }
 
 /*
