@@ -2,9 +2,9 @@
 .item-list ul      { margin: 0 0 0.75em 0; padding: 0; }
 .item-list ul li   { margin: 0 0 0.25em 1.5em; padding: 0; list-style: disc; }
 
-.blog-it           { color: #555; float: right; padding-left: 0.25em; }
-.blog-it a         { color: #000; text-decoration: none; }
-.blog-it a:hover   { color: #000; text-decoration: none; }
+.item-list .icon         { color: #555; float: right; padding-left: 0.25em; }
+.item-list .icon a       { color: #000; text-decoration: none; }
+.item-list .icon a:hover { color: #000; text-decoration: none; }
 
 .poll-foreground   { background-color: #000; float: left; height: 1em; }
 .poll-background   { background-color: #ddd; float: left; height: 1em; }

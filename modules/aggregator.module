@@ -72,7 +72,7 @@ function import_format_item($item, $feed = 0) {
 
   if ($user->uid && user_access("maintain personal blog")) {
 //    $output .= "&nbsp;". l("<img src=\"". theme("image", "blog.gif") ."\" border=\"0\" width=\"12\" height=\"16\" alt=\"". t("Blog this item") ."\" />", "node/add/blog&amp;iid=$item->iid", array("title" => t("Comment on this news item in your personal blog.")));
-    $output .= "<div class=\"blog-it\">(". l("b", "node/add/blog&amp;iid=$item->iid", array("title" => t("Comment on this news item in your personal blog."))) .")</div>";
+    $output .= "<div class=\"icon\">(". l("b", "node/add/blog&amp;iid=$item->iid", array("title" => t("Comment on this news item in your personal blog."))) .")</div>";
   }
 
   // external link
@@ -90,22 +90,29 @@ function import_bundle_block($attributes) {
     $result = db_query_range("SELECT * FROM item WHERE ". implode(" OR ", $where) ." ORDER BY iid DESC", 0, variable_get("import_block_limit", 15));
   }
 
-  $output = "<div class=\"item-list\"><ul>";
+  $items = array();
   while ($item = db_fetch_object($result)) {
-    $output .= "<li>". import_format_item($item) ."</li>";
+    $items[] = import_format_item($item);
   }
-  $output .= "</ul></div>";
+
+  $output = "<div class=\"import-block\"><div class=\"bundle\">";
+  $output .= theme("theme_item_list", $items);
+  $output .= "</div></div>";
 
   return $output;
 }
 
 function import_feed_block($feed) {
   $result = db_query_range("SELECT * FROM item WHERE fid = %d ORDER BY iid DESC ", $feed->fid, 0, variable_get("import_block_limit", 15));
-  $output = "<div class=\"item-list\"><ul>";
+
+  $items = array();
   while ($item = db_fetch_object($result)) {
-    $output .= "<li>". import_format_item($item) ."</li>";
+    $items[] = import_format_item($item);
   }
-  $output .= "</ul></div>";
+
+  $output = "<div class=\"import-block\"><div class=\"feed\">";
+  $output .= theme("theme_item_list", $items);
+  $output .= "</div></div>";
 
   return $output;
 }
