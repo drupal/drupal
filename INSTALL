@@ -3,11 +3,11 @@
 REQUIREMENTS
 ------------
 
-Drupal requires a webserver, PHP4 (http://www.php.net/) and a database
-server supported by the PHP PEAR API (pear.php.net)
+Drupal requires a web server, PHP4 (http://www.php.net/) and MySQL or a
+database server supported by the PHP PEAR API (http://pear.php.net/)
 
-NOTE: The Apache webserver and MySQL database are strongly recommended;
-other webserver and database combinations such as IIS and PostgreSQL
+NOTE: The Apache web server and MySQL database are strongly recommended;
+other web server and database combinations such as IIS and PostgreSQL
 are possible but tested to a lesser extend.
 
 SERVER CONFIGURATION
@@ -42,7 +42,7 @@ INSTALLATION
 
 1. DOWNLOAD DRUPAL
 
-   You can obtain the latest Drupal release from http://www.drupal.org/.
+   You can obtain the latest Drupal release from http://drupal.org/.
    Download the current tar.gz format and extract the files:
 
      $ wget http://drupal.org/drupal/drupal-x.x.x.tgz
@@ -50,7 +50,7 @@ INSTALLATION
 
    This will create a new directory drupal-x.x.x/ containing all
    Drupal files and directories.  Move the contents of that directory
-   into a directory within your webserver's document root or your
+   into a directory within your web server's document root or your
    public HTML directory:
 
      $ mv drupal-x.x.x /var/www/html
@@ -60,9 +60,12 @@ INSTALLATION
 
 2. CREATE THE DRUPAL DATABASE
 
+   These instructions are for MySQL if you are using anything else
+   check the database documentation.
+
    First, you must create a new database for your Drupal site:
 
-     $ mysqladmin -u root -p create dupal
+     $ mysqladmin -u root -p create drupal
 
    MySQL will prompt for the root database password and then create
    the initial database files.  Next you must login and set the access
@@ -74,12 +77,13 @@ INSTALLATION
    MySQL prompt, enter following command:
 
      GRANT ALL PRIVILEGES ON drupal.*
-        TO nobody@localhost IDENTIFIED BY 'PASSWORD';
+        TO nobody@localhost IDENTIFIED BY 'password';
 
    where
 
     'drupal' is the name of your database
-    'nobody@localhost' is the userid of your webserver MySQL account.
+    'nobody@localhost' is the userid of your webserver MySQL account
+    'password' is the password required to log in as the MySQL user
 
    If successful, MySQL will reply with
 
@@ -95,7 +99,7 @@ INSTALLATION
 
    Once you have a database, you must load the required tables:
 
-    $ mysql -u nobody -p drupal < database/database.mysql
+     $ mysql -u nobody -p drupal < database/database.mysql
 
 4. CONNECTING DRUPAL
 
@@ -108,14 +112,15 @@ INSTALLATION
 
    where www.yourserver.com is your website's URL.
 
-   Before you can run Drupal, you must set the database URL option.
-   Copy conf.php to hostname.php and edit the $db_url line to match
-   the database defined in the previous steps:
+   Before you can run Drupal, you must set the database URL and the
+   base URL to the web site.  Open the configuration file and edit the
+   $db_url line to match the database defined in the previous steps:
 
      $db_url = "mysql://username:password@localhost/drupal";
 
-   Also set your site's $base_url as explained in the configuration
-   file.
+   Set $base_url to match the address to your web site:
+
+     $base_url = "http://localhost";
 
    NOTE: for more information about multiple virtual hosts or the
    configuration settings, consult the Drupal handbook at drupal.org.
@@ -129,7 +134,7 @@ INSTALLATION
 
 6. CRON TASKS
 
-   Many drupal modules have periodic tasks that must be triggered by a
+   Many Drupal modules have periodic tasks that must be triggered by a
    cron job.  To activate these tasks, you must call the cron page;
    this will pass control to the modules and the modules will decide
    if and what they must do.
@@ -137,7 +142,7 @@ INSTALLATION
    The following example crontab line will activate the cron script
    on the hour:
 
-   0    *   *   *   *   wget -O /dev/null http://HOSTNAME/cron.php
+   0    *   *   *   *   wget -O - -q http://HOSTNAME/cron.php
 
    More information about the cron scripts are available in the admin
    help pages and in the Drupal handbook at drupal.org.  Example
@@ -160,12 +165,12 @@ Now that your server is running, you will want to customize the look
 of your site.  Several sample themes are included in the Drupal
 installation and more can be downloaded from drupal.org.
 
-Customizing each theme depends on the theme. In general, each theme
+Customizing each theme depends on the theme.  In general, each theme
 contains a PHP file themename.theme which defines a function header()
 that can be changed to reference your own logos.
 
 Most themes also contain stylesheets or PHP configuration files to
-tune the colours and layouts; check the themes/ directory for README
+tune the colors and layouts; check the themes/ directory for README
 files describing each alternate theme.
 
 MORE INFORMATION
@@ -173,6 +178,6 @@ MORE INFORMATION
 
 For platform specific configuration issues and other installation and
 administration assistance, please consult the Drupal handbook at
-http://www.drupal.org/.  You can also find support at the Drupal
-support forum or through the Drupal mailing lists.
+http://drupal.org/.  You can also find support at the Drupal support
+forum or through the Drupal mailing lists.
 
