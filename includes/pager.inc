@@ -31,13 +31,13 @@ function pager_display($tags = "", $limit = 10, $element = 0, $type = "default",
 function pager_display_default($tags = "", $limit = 10, $element = 0, $attributes = array()) {
   global $pager_total;
   if ($pager_total[$element] > $limit) {
-    $output .= "<div align=\"center\"><table cellpadding=\"10\"><tbody><tr>";
-    $output .= "<td align=\"center\">". pager_first(($tags[0] ? $tags[0] : t("first page")), $limit, $element, $attributes) ."</td>";
-    $output .= "<td align=\"center\">". pager_previous(($tags[1] ? $tags[1] : t("previous page")), $limit, $element, 1, $attributes) ."</td>";
-    $output .= "<td align=\"center\">". pager_list($limit, $element, ($tags[2] ? $tags[2] : 9 ), "", $attributes) ."</td>";
-    $output .= "<td align=\"center\">". pager_next(($tags[3] ? $tags[3] : t("next page")), $limit, $element, 1, $attributes) ."</td>";
-    $output .= "<td align=\"center\">". pager_last(($tags[4] ? $tags[4] : t("last page")), $limit, $element, $attributes) ."</td>";
-    $output .= "</tr></tbody></table></div>";
+    $output .= "<div id=\"pager\" class=\"container-inline\">";
+    $output .= "<div>". pager_first(($tags[0] ? $tags[0] : t("first page")), $limit, $element, $attributes) ."</div>";
+    $output .= "<div>". pager_previous(($tags[1] ? $tags[1] : t("previous page")), $limit, $element, 1, $attributes) ."</div>";
+    $output .= "<div>". pager_list($limit, $element, ($tags[2] ? $tags[2] : 9 ), "", $attributes) ."</div>";
+    $output .= "<div>". pager_next(($tags[3] ? $tags[3] : t("next page")), $limit, $element, 1, $attributes) ."</div>";
+    $output .= "<div>". pager_last(($tags[4] ? $tags[4] : t("last page")), $limit, $element, $attributes) ."</div>";
+    $output .= "</div>";
 
     return $output;
   }

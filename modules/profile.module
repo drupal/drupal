@@ -25,7 +25,7 @@ function _profile_init() {
     "biography"     => array("textarea", t("Biography"), "", 64, 4, ""),
     "interests"     => array("textarea", t("Interests"), "", 64, 4, t("What you like.")),
     "publickey"     => array("textarea", t("Public key"), "", 64, 4, ""),
-    "avatar"        => array("", t("Avatar or picture"), t("Your virtual face or picture.  Maximum dimensions are %dimensions and the maximum size is %size kb.", array("%dimensions" => variable_get("profile_avatar_dimensions", "85x85"), "%size" => variable_get("profile_avatar_file_size", "30"))))
+    "avatar"        => array("", t("Avatar or picture"), t("Your virtual face or picture.  Maximum dimensions are %dimensions and the maximum size is %size kB.", array("%dimensions" => variable_get("profile_avatar_dimensions", "85x85"), "%size" => variable_get("profile_avatar_file_size", "30"))))
   );
 
   $GLOBALS["profile_days"][0] = t("day");
@@ -67,7 +67,7 @@ function profile_settings() {
 
   $output .= form_textfield(t("Avatar image path"), "profile_avatar_path", variable_get("profile_avatar_path", "misc/avatars/"), 30, 255, t("Path for avatar directory; it must be writable and visible from the web."));
   $output .= form_textfield(t("Avatar maximum dimensions"), "profile_avatar_dimensions", variable_get("profile_avatar_dimensions", "85x85"), 10, 10, t("Maximum dimensions for avatars."));
-  $output .= form_textfield(t("Avatar maximum file size"), "profile_avatar_file_size", variable_get("profile_avatar_file_size", "30"), 10, 10, t("Maximum file size for avatars, in kb."));
+  $output .= form_textfield(t("Avatar maximum file size"), "profile_avatar_file_size", variable_get("profile_avatar_file_size", "30"), 10, 10, t("Maximum file size for avatars, in kB."));
 
   return $output;
 }
@@ -211,7 +211,7 @@ function _profile_user_view(&$user, $mode) {
 
 function _profile_validate_avatar(&$edit) {
   global $user;
-  // check that uploaded file is an image, with a max file size and max height/width
+  // check that uploaded file is an image, with a maximum file size and maximum height/width
 
   unset($edit["profile_avatar"]);
 
@@ -226,13 +226,13 @@ function _profile_validate_avatar(&$edit) {
     $size = getimagesize($image_file);
     list($maxwidth, $maxheight) = explode("x", variable_get("profile_avatar_dimensions", "85x85"));
     if ((!in_array($size[2], array(1,2,3))) || (!in_array($extension, array(".gif", ".jpg", ".png", ".jpeg")))) {
-      $error = t("uploaded file was not an image.");
+      $error = t("the uploaded file was not an image.");
     }
     else if (filesize($image_file) > (variable_get("profile_avatar_file_size", "30")*1000)) {
-      $error = t("uploaded image is too large, max %a kb.", array("%a" => variable_get("profile_avatar_file_size", "30")));
+      $error = t("the uploaded image is too large, maximum %a kB.", array("%a" => variable_get("profile_avatar_file_size", "30")));
     }
     else if ($size[0] > $maxwidth || $size[1] > $maxheight) {
-      $error = t("uploaded image is too large, max %a.", array("%a" => variable_get("profile_avatar_dimensions", "85x85")));
+      $error = t("the uploaded image is too large, maximum %a.", array("%a" => variable_get("profile_avatar_dimensions", "85x85")));
     }
     else if (!copy($image_file, variable_get("profile_avatar_path", "misc/avatars/").md5($user->uid).$extension)) {
       $error = t("error in file upload");

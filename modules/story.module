@@ -59,7 +59,7 @@ function story_form(&$node, &$help, &$error) {
     */
 
     if (count(explode(" ", $node->body)) < variable_get("minimum_story_size", 0)) {
-      $error["body"] = "<div style=\"color: red;\">". t("The body of your story is too short.") ."</div>";
+      $error["body"] = "<div class=\"error\">". t("The body of your story is too short.") ."</div>";
     }
 
   }

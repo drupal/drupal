@@ -256,26 +256,20 @@ function poll_view_voting(&$node, $main, $block, $links) {
 
 
   $url = request_uri();
-  $output .= "<form action=\"$url\" method=\"post\">";
-  $output .= "<table border=\"0\" align=\"center\"><tr><td>";
+  $output .= "<div class=\"poll\"><form action=\"$url\" method=\"post\">";
 
+  $output .= "<div class=\"vote-form\">";
+  $output .= "<div class=\"choices\">";
   if ($node->choice) {
     foreach ($node->choice as $key => $value) {
       if ($value != "") {
-        $output .= "<input type=\"radio\" name=\"pollvote[$node->nid]\" value=\"$key\" />". filter($value) ."<br />";
+        $output .= "<div><input type=\"radio\" name=\"pollvote[$node->nid]\" value=\"$key\" />". filter($value) ."</div>";
       }
     }
   }
-
-  if ($block) {
-    $output .= "</td></tr><tr><td><div align=\"center\">". form_submit(t("Vote")) ."</div></td></tr></table>";
-  }
-  else {
-    $output .= "</td><td valign=\"middle\"><div align=\"right\">&nbsp;&nbsp;&nbsp;". form_submit(t("Vote")) ."</div></td></tr></table>";
-  }
-
-  $output .= $block ? "<div align=\"center\">". theme("links", $links) ."</div>" : "";
-  $output .= "</form>";
+  $output .= "</div>". form_submit(t("Vote")) ."</div>";
+  $output .= $block ? "<div class=\"links\">". theme("links", $links) ."</div>" : "";
+  $output .= "</form></div>";
 
   return $output;
 }

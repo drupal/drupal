@@ -36,23 +36,25 @@ table {
 }
 th {
   text-align: left;
+  padding-right: 1em;
   color: #006;
   border-bottom: 1px solid #ccc;
 }
-tr.dark {
-  background-color: #ddd;
-}
-tr.light {
-  background-color: #eee;
-}
 td {
   padding: 5px;
-  font-size: 90%;
+  font-size: 0.9em;
 }
 hr {
+  clear: both;
   margin: .5em 0;
   height: 1px;
   color: #ccc;
+}
+dt {
+  font-weight: bold;
+}
+dd {
+  margin-bottom: 0.5em;
 }
 #menu {
   position: absolute;
@@ -114,6 +116,13 @@ hr {
   margin: 0 0 0 16em;
   padding: 1em 1em 1em 0;
   z-index: 2;
+}
+#logo {
+  padding: 1em 1em 0 1em;
+  float: right;
+}
+#logo img {
+  border: 0;
 }
 #update {
   padding: 1em 1em 1em 1em;

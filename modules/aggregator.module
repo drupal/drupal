@@ -711,8 +711,8 @@ function import_page_fd() {
 
   while ($feed = db_fetch_object($result)) {
     $output .= "<channel>\n";
-    $output .= " <title>". htmlentities($feed->title) ."</title>\n";
-    $output .= " <link>". htmlentities($feed->url) ."</link>\n";
+    $output .= " <title>". htmlspecialchars($feed->title) ."</title>\n";
+    $output .= " <link>". htmlspecialchars($feed->url) ."</link>\n";
     $output .= "</channel>\n\n";
   }
 

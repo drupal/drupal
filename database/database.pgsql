@@ -530,7 +530,7 @@ CREATE TABLE vocabulary (
   hierarchy smallint NOT NULL default '0',
   multiple smallint NOT NULL default '0',
   required smallint NOT NULL default '0',
-  types text default '',
+  nodes text default '',
   weight smallint NOT NULL default '0',
   PRIMARY KEY  (vid)
 );

@@ -76,7 +76,7 @@ function taxonomy_form_vocabulary($edit = array()) {
 
   $form .= form_textfield(t("Vocabulary name"), "name", $edit["name"], 50, 64, t("Required") . ". " . t("The name for this vocabulary.  Example: 'Topic'") . ".");
   $form .= form_textarea(t("Description"), "description", $edit["description"], 60, 5, t("Optional") . ". " . t("Description of the vocabulary, can be used by modules."));
-  $form .= form_select(t("Types"), "types", explode(",", $edit["types"]), $nodetypes, t("Required") . ". " . t("A list of node types you want to associate this vocabulary with."), "", 1);
+  $form .= form_select(t("Types"), "nodes", explode(",", $edit["nodes"]), $nodetypes, t("Required") . ". " . t("A list of node types you want to associate this vocabulary with."), "", 1);
   $form .= form_checkbox(t("Related terms"), "relations", 1, $edit["relations"], t("Optional") . ". " . t("Allows ". l("related terms", "admin/taxonomy/help#relatedterms") ." in this vocabulary."));
   $form .= form_select(t("Hierarchy"), "hierarchy", $edit["hierarchy"], array(t("Disabled"), t("Single"), t("Multiple")), t("Optional") . ". ". t("Allows ". l("a tree-like hierarchy", "admin/taxonomy/help#hierarchy") ." between terms of this vocabulary."), "", 0);
   $form .= form_checkbox(t("Multiple select"), "multiple", 1, $edit["multiple"], t("Optional") . ". " . t("Allows nodes to have more than one term in this vocabulary."));
@@ -93,11 +93,11 @@ function taxonomy_form_vocabulary($edit = array()) {
 }
 
 function taxonomy_save_vocabulary($edit) {
-  if (!$edit["types"]) {
-    $edit["types"] = array();
+  if (!$edit["nodes"]) {
+    $edit["nodes"] = array();
   }
 
-  $data = array("name" => $edit["name"], "types" => implode(",", $edit["types"]), "description" => $edit["description"], "multiple" => $edit["multiple"], "required" => $edit["required"], "hierarchy" => $edit["hierarchy"], "relations" => $edit["relations"], "weight" => $edit["weight"]);
+  $data = array("name" => $edit["name"], "nodes" => implode(",", $edit["nodes"]), "description" => $edit["description"], "multiple" => $edit["multiple"], "required" => $edit["required"], "hierarchy" => $edit["hierarchy"], "relations" => $edit["relations"], "weight" => $edit["weight"]);
   if ($edit["vid"] && $edit["name"]) {
     db_query("UPDATE vocabulary SET ". _prepare_update($data) ." WHERE vid = %d", $edit["vid"]);
     module_invoke_all("taxonomy", "update", "vocabulary", $edit);
@@ -281,7 +281,7 @@ function taxonomy_overview() {
   $vocabularies = taxonomy_get_vocabularies();
   foreach ($vocabularies as $vocabulary) {
     $links = array();
-    $rows[] = array($vocabulary->name, array("data" => $vocabulary->types, "align" => "center"), l(t("edit vocabulary"), "admin/taxonomy/edit/vocabulary/$vocabulary->vid"), l(t("add term"), "admin/taxonomy/add/term/$vocabulary->vid"), l(t("preview form"), "admin/taxonomy/preview/vocabulary/$vocabulary->vid"));
+    $rows[] = array($vocabulary->name, array("data" => $vocabulary->nodes, "align" => "center"), l(t("edit vocabulary"), "admin/taxonomy/edit/vocabulary/$vocabulary->vid"), l(t("add term"), "admin/taxonomy/add/term/$vocabulary->vid"), l(t("preview form"), "admin/taxonomy/preview/vocabulary/$vocabulary->vid"));
 
     $tree = taxonomy_get_tree($vocabulary->vid);
     if ($tree) {
@@ -325,7 +325,7 @@ function taxonomy_form($vocabulary_id, $value = 0) {
 // return array of vocabularies, as objects
 function taxonomy_get_vocabularies($type = '', $key = "vid") {
   if ($type) {
-    $result = db_query("SELECT * FROM vocabulary WHERE types LIKE '%%%s%%' ORDER BY weight, name", $type);
+    $result = db_query("SELECT * FROM vocabulary WHERE nodes LIKE '%%%s%%' ORDER BY weight, name", $type);
   }
   else {
     $result = db_query("SELECT * FROM vocabulary ORDER BY weight, name");
@@ -351,7 +351,7 @@ function taxonomy_node_form($type, $node = '') {
     $terms = $node->taxonomy;
   }
 
-  $c = db_query("SELECT * FROM vocabulary WHERE types LIKE '%%%s%%' ORDER BY weight, name", $type);
+  $c = db_query("SELECT * FROM vocabulary WHERE nodes LIKE '%%%s%%' ORDER BY weight, name", $type);
   while ($vocabulary = db_fetch_object($c)) {
     $result[] .= taxonomy_form($vocabulary->vid, $terms);
   }

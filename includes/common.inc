@@ -453,11 +453,8 @@ function drupal_goto($url) {
 */
 
 function referer_save() {
-  global $referer;
-
   if (!strstr($_SERVER["HTTP_REFERER"], request_uri())) {
-    $referer = $_SERVER["HTTP_REFERER"];
-    session_register("referer");
+    $_SESSION["referer"] = $_SERVER["HTTP_REFERER"];
   }
 }
 
@@ -466,10 +463,8 @@ function referer_save() {
 */
 
 function referer_load() {
-  global $referer;
-
-  if (session_is_registered("referer")) {
-    return $referer;
+  if (isset($_SESSION["referer"])) {
+    return $_SESSION["referer"];
   }
   else {
     return 0;
@@ -608,12 +603,12 @@ function format_rss_channel($title, $link, $description, $items, $language = "en
   // arbitrary elements may be added using the $args associative array
 
   $output .= "<channel>\n";
-  $output .= " <title>". htmlentities(strip_tags($title)) ."</title>\n";
-  $output .= " <link>". htmlentities(strip_tags($link)) ."</link>\n";
-  $output .= " <description>". htmlentities($description) ."</description>\n";
-  $output .= " <language>". htmlentities(strip_tags($language)) ."</language>\n";
+  $output .= " <title>". htmlspecialchars(strip_tags($title)) ."</title>\n";
+  $output .= " <link>". htmlspecialchars(strip_tags($link)) ."</link>\n";
+  $output .= " <description>". htmlspecialchars($description) ."</description>\n";
+  $output .= " <language>". htmlspecialchars(strip_tags($language)) ."</language>\n";
   foreach ($args as $key => $value) {
-    $output .= "<$key>". htmlentities(strip_tags($value)) ."</$key>";
+    $output .= "<$key>". htmlspecialchars(strip_tags($value)) ."</$key>";
   }
   $output .= $items;
   $output .= "</channel>\n";
@@ -625,11 +620,11 @@ function format_rss_item($title, $link, $description, $args = array()) {
   // arbitrary elements may be added using the $args associative array
 
   $output .= "<item>\n";
-  $output .= " <title>". htmlentities(strip_tags($title)) ."</title>\n";
-  $output .= " <link>". htmlentities(strip_tags($link)) ."</link>\n";
-  $output .= " <description>". htmlentities(check_output($description)) ."</description>\n";
+  $output .= " <title>". htmlspecialchars(strip_tags($title)) ."</title>\n";
+  $output .= " <link>". htmlspecialchars(strip_tags($link)) ."</link>\n";
+  $output .= " <description>". htmlspecialchars(check_output($description)) ."</description>\n";
   foreach ($args as $key => $value) {
-    $output .= "<$key>". htmlentities(strip_tags($value)) ."</$key>";
+    $output .= "<$key>". htmlspecialchars(strip_tags($value)) ."</$key>";
   }
   $output .= "</item>\n";
 
@@ -1003,6 +998,9 @@ $conf = variable_init(isset($conf) ? $conf : array());
 
 // set error handler:
 set_error_handler("error_handler");
+
+// spit out the correct charset http header
+header("Content-Type: text/html; charset=". variable_get("charset", "iso-8859-1"));
 
 // initialize installed modules:
 module_init();

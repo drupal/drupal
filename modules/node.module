@@ -4,18 +4,30 @@
 function node_help() {
   global $mod;
 
-  $output .= "<h3>Nodes</h3>The core of the Drupal system is the node. All of the contents of the system are placed in nodes, or extensions of nodes.";
-  $output .= "A base node contains:<ul><li>A Title - Up to 128 characters of text that titles the node.</li><li>A Teaser - A small block of text that is ment to get you interested in the rest of node. Drupal automatically pulls a small amount of the body of the node to make the teaser (To configure how long the teaser will be ". l("click here","admin/system/modules/node") ."). The teaser can be changed if you don't like what Drupal grabs</li><li>The Body - This is it, the heart of the matter. Your text, what we want to read.</li><li>A Type - What kind of node is this? Blog, book, forum, comment, unextended, etc.</li><li>An Author - The author's name. It will either be \"anonymous\" or a valid user. You <i>cannot</i> set it to an arbitrary value.</li>";
-  $output .= "<li>Authored on - The date it was written on.</li><li>Changed - The last time this node was changed</li><li>Static on front page - The front page is configured to show the teaser's from only a few of the total nodes you have on your site (To configure how many teaser ". l("click here","admin/system/modules/node") ."), but if you think a node is important enough that you want it to stay on the front page enable this.</li><li>Allow user comments - A node can have comments, which are other nodes. These comments can be written by other users (Read-write), or only by admins (Read-only).</li>";
-  $output .= "<li>Attributes - A way to sort nodes.</li><li>revisions - Drupal has a revision system so that you can \"roll back\" to an older version of a node if the new version is not what you want.</li><li>Promote to front page - To get people to look at the new stuff on your site you want to move it to the front page. So promote it too the front page.</li>";
-  $output .= "<li>Moderation Status - Drupal has a moderation system. If it is active, a node is in one of three states. Approved and Published, Approved and UnPublished, and Awaiting Approval. If you are <b>not</b> moderating a node it should be Approved</li><li>votes - If you are moderating a node this counts how many votes the node has gotten. Once a node gets a certain number of vote if will either be Approved, or Dropped (To setup the number of votes needed and the promote and dump scores ". l("click here","admin/system/modules/queue") .".)</a>.</li><li>score - The score of the node is gotten by the votes it is given.</li>";
-  $output .= "<li>users - The list of users who have voted on a moderated node.</li><li>Public/Published - When using Drupal's moderation system a node remains UnPublished -- unavaliable to non-moderators -- until it is marked Public/Published.</li></ul>";
-  $output .= "Now that you know what is in a node, here are some of the types of nodes avalible:";
+  $output .= "<h3>Nodes</h3>The core of the Drupal system is the node. All of the contents of the system are placed in nodes, or extensions of nodes. ";
+  $output .= "A base node contains:<dl>";
+  $output .= "<dt>A Title</dt><dd>Up to 128 characters of text that titles the node.</dd>";
+  $output .= "<dt>A Teaser</dt><dd>A small block of text that is meant to get you interested in the rest of node. Drupal automatically pulls a small amount of the body of the node to make the teaser (To configure how long the teaser will be ". l("click here","admin/system/modules/node") ."). The teaser can be changed if you don't like what Drupal grabs.</dd>";
+  $output .= "<dt>The Body</dt><dd>The main text that comprises your content.</dd>";
+  $output .= "<dt>A Type</dt><dd>What kind of node is this? Blog, book, forum, comment, unextended, etc.</dd>";
+  $output .= "<dt>An Author</dt><dd>The author's name. It will either be \"anonymous\" or a valid user. You <i>cannot</i> set it to an arbitrary value.</dd>";
+  $output .= "<dt>Authored on</dt><dd>The date it was written on.</dd>";
+  $output .= "<dt>Changed</dt><dd>The last time this node was changed.</dd>";
+  $output .= "<dt>Static on front page</dt><dd>The front page is configured to show the teasers from only a few of the total nodes you have on your site (To configure how many teasers ". l("click here","admin/system/modules/node") ."), but if you think a node is important enough that you want it to stay on the front page enable this.</dd>";
+  $output .= "<dt>Allow user comments</dt><dd>A node can have comments, which are other nodes. These comments can be written by other users (Read-write), or only by admins (Read-only).</dd>";
+  $output .= "<dt>Attributes</dt><dd>A way to sort nodes.</dd><dt>Revisions</dt><dd>Drupal has a revision system so that you can \"roll back\" to an older version of a node if the new version is not what you want.</dd>";
+  $output .= "<dt>Promote to front page</dt><dd>To get people to look at the new stuff on your site you can choose to move it to the front page.</dd>";
+  $output .= "<dt>Approved</dt><dd>Drupal has a moderation system. If it is active, a node is in one of three states: approved and published, approved and unpublished, and awaiting approval. If you are <b>not</b> moderating a node it should be approved.</dd>";
+  $output .= "<dt>Votes</dt><dd>If you are moderating a node this counts how many votes the node has gotten. Once a node gets a certain number of vote if will either be Approved, or Dropped (To setup the number of votes needed and the promote and dump scores ". l("click here","admin/system/modules/queue") .".)</a>.</dd>";
+  $output .= "<dt>Score</dt><dd>The score of the node is gotten by the votes it is given.</dd>";
+  $output .= "<dt>Users</dt><dd>The list of users who have voted on a moderated node.</dd>";
+  $output .= "<dt>Published</dt><dd>When using Drupal's moderation system a node remains unpublished -- unavaliable to non-moderators -- until it is marked Published.</dd></dl>";
+  $output .= "<p>Now that you know what is in a node, here are some of the types of nodes available.</p>";
 
   if ($mod == "admin") {
     foreach (module_list() as $name) {
       if (module_hook($name, "node") && $name != "node") {
-        $output .= "<h3>". t("%module type", array("%module" => ucfirst(module_invoke($name, "node", "name")))). "</h3>";
+        $output .= "<h3>". t("Node type: %module", array("%module" => module_invoke($name, "node", "name"))). "</h3>";
         $output .= module_invoke($name, "help");
 
       }
@@ -461,7 +473,7 @@ function node_search($keys) {
 }
 
 function node_settings() {
-  $output .= form_select(t("Number of posts on main page"), "default_nodes_main", variable_get("default_nodes_main", 10), array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 =>  5, 6 => 6, 7 => 7, 8 => 8, 9 => 9, 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30), t("The default maximum number of posts to display on overview pages such as the main page."));
+  $output .= form_select(t("Number of posts on main page"), "default_nodes_main", variable_get("default_nodes_main", 10), array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 =>  5, 6 => 6, 7 => 7, 8 => 8, 9 => 9, 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30), t("The default maximum number of posts to display per page on overview pages such as the main page."));
   $output .= form_select(t("Length of trimmed posts"), "teaser_length", variable_get("teaser_length", 600), array(0 => t("Unlimited"), 200 => t("200 characters"), 400 => t("400 characters"), 600 => t("600 characters"), 800 => t("800 characters"), 1000 => t("1000 characters"), 1200 => t("1200 characters"), 1400 => t("1400 characters"), 1600 => t("1600 characters"), 1800 => t("1800 characters"), 2000 => t("2000 characters")), t("The maximum number of characters used in the trimmed version of a post.  Drupal will use this setting to determine at which offset long posts should be trimmed.  The trimmed version of a post is typically used as a teaser when displaying the post on the main page, in XML feeds, etc.  To disable teasers, set to 'Unlimited'."));
   $output .= form_select(t("Preview post"), "node_preview", variable_get("node_preview", 0), array(t("Optional"), t("Required")), t("Must users preview posts before submitting?"));
   return $output;
@@ -469,7 +481,7 @@ function node_settings() {
 
 function node_conf_filters() {
   $output .= form_select(t("Filter HTML tags"), "filter_html", variable_get("filter_html", 0), array(t("Disabled"), t("Enabled")), t("Filter HTML and PHP tags in user-contributed content."));
-  $output .= form_textfield(t("Allowed HTML tags"), "allowed_html", variable_get("allowed_html", "<a> <b> <dd> <dl> <dt> <i> <li> <ol> <u> <ul>"), 64, 255, t("If enabled, optionally specify tags which should not be stripped.  'STYLE' attributes, 'ON' attributes and unclosed tags are always stripped."));
+  $output .= form_textfield(t("Allowed HTML tags"), "allowed_html", variable_get("allowed_html", "<a> <b> <dd> <dl> <dt> <i> <li> <ol> <u> <ul>"), 64, 255, t("If enabled, optionally specify tags which should not be stripped.  'STYLE' attributes, 'ON*' attributes and unclosed tags are always stripped."));
   $output .= form_select(t("Rewrite old URLs"), "rewrite_old_urls", variable_get("rewrite_old_urls", 0), array(t("Disabled"), t("Enabled")), t("The introduction of 'clean URLs' in Drupal 4.2.0 breaks internal URLs that date back from Drupal 4.1.0 and before.  If enabled, this filter will attempt to rewrite the old style URLs to avoid broken links.  If <code>mod_rewrite</code> is available on your system, use the rewrite rules in Drupal's <code>.htaccess</code> file instead as these will also correct external referrers."));
   $output .= "<hr />";
   return $output;
@@ -533,12 +545,12 @@ function node_link($type, $node = 0, $main = 0) {
   }
 
   if ($type == "admin" && user_access("administer nodes")) {
--    $help["overview"] = t("Below is a list of all of the nodes in your site. Other content, such as ". l("comments", "admin/comment") .", are delt with in other areas.<br />Click on a node title to view the node, the author name to edit the author's user information.<br />Other work with nodes can be done with the menu on the left.");
--    $help["post-overview"] = t("Click on <a href=\"%nup\">new or updated posts</a> to see your latest nodes, or <a href=\"%queue\">approval queue</a> to approve new messages.", array("%nup" => url("admin/nodes/0"), "%queue" => url("admin/nodes/1")));
--    $help["new-update"] = t("Below is a list of the latest nodes in your site. Click on a node title to see the node, the author name to edit the author's user information , \"edit node\" to edit the node, and \"delete node\" to remove the node.");
--    $help["queue"] = t("Below is a list of the node in your site that need <b>approval</b>. To approve a node click on <b>\"edit node\"</b> and then change it's <b>moderation status</b> to Approved.<br />Click on a node title to see the node, the author name to edit the author's user information, \"edit node\" to edit the node, and \"delete node\" to remove the node.");
--    $help["search"] = t("Enter a simple pattern ( '*' maybe used as a wildcard match) to search for a post.  For example, one may search for 'br' and Drupal might return 'bread brakers', 'our daily bread' and 'brenda'.");
--    $help["setting"] = t("The default settings for the different node types.<br /><b>content type</b> - the node type. <b>comment</b> - What kind of comments are associated with the node. <b>publish</b> - is this node publicly viewable, has it been published. <b>promote</b> - Is this node to be promoted to the front page. <b>moderate</b> - Does this node need approval before it can be viewed. <b>static</b> - Is this node to stay on the front page. <b>revision</b> - Will this node go into the revision system allowing multiple versions to be saved.");
+    $help["overview"] = t("Below is a list of all of the nodes in your site. Other forms of content are listed elsewhere (e.g. ". l("comments", "admin/comment") .").<br />Clicking a title views that node, while clicking an author's name edits their user information.<br />Other node-related tasks are available from the menu on the left.");
+    $help["post-overview"] = t("Click on <a href=\"%nup\">new or updated posts</a> to see your latest nodes, or <a href=\"%queue\">approval queue</a> to approve new messages.", array("%nup" => url("admin/nodes/0"), "%queue" => url("admin/nodes/1")));
+    $help["new-update"] = t("Below is a list of the latest nodes in your site. Clicking a title views that node, while clicking an author's name edits their user information.");
+    $help["queue"] = t("Below is a list of the node in your site that await approval. To approve a node click on <b>edit node</b> and then change its moderation status to <b>approved</b>.<br />Clicking a title views that node, while clicking an author's name edits their user information.");
+    $help["search"] = t("Enter a simple pattern to search for a post. This can include the wildcard character *.<br />For example, a search for \"br*\" might return \"bread bakers\", \"our daily bread\" and \"brenda\".");
+    $help["setting"] = t("This pages lets you set the defaults used during creation of nodes for all the different node types.<br /><b>comment:</b> Read/write setting for comments.<br /><b>publish:</b> Is this node publicly viewable, has it been published?<br /><b>promote:</b> Is this node to be promoted to the front page?<br /><b>moderate:</b> Does this node need approval before it can be viewed?<br /><b>static:</b> Is this node always visible on the front page?<br /><b>revision:</b> Will this node go into the revision system allowing multiple versions to be saved?");
 
     menu("admin/node", "content management", "node_admin", $help["overview"]);
     menu("admin/node/nodes", "post overview", NULL, $help["post-overview"]);
@@ -642,7 +654,7 @@ function node_admin_settings($edit) {
     $output = status(t("the content settings have been reset to their default values."));
   }
 
-  $header = array_merge(array(t("content type")), array_keys(node_invoke_all($node, "nodeapi", "settings")));
+  $header = array_merge(array(t("type")), array_keys(node_invoke_all($node, "nodeapi", "settings")));
   foreach (module_list() as $name) {
     if (module_hook($name, "node")) {
       $node->type = $name;
@@ -815,7 +827,7 @@ function node_admin() {
         break;
       case t("Preview"):
         $edit = node_validate($edit, $error);
-        print node_preview($edit);
+        print node_preview($edit, $error);
         break;
       case t("Submit"):
         print node_submit($edit);

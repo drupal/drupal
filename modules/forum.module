@@ -63,7 +63,7 @@ function forum_settings() {
 
 function forum_taxonomy($op, $type, $object) {
   if ($type == "vocabulary" && ($op == "insert" || $op == "update")) {
-    if (variable_get("forum_nav_vocabulary", "") == "" && in_array("forum", $object["types"])) {
+    if (variable_get("forum_nav_vocabulary", "") == "" && in_array("forum", $object["nodes"])) {
       // since none is already set, silently set this vocabulary as the navigation vocabulary
       variable_set("forum_nav_vocabulary", $object["vid"]);
     }
@@ -452,11 +452,10 @@ function _forum_message_taxonomy() {
 function forum_page() {
   global $sortby, $forum_per_page, $from, $user;
   $op = $_POST["op"];
-
+print "WOOOT";
   if (user_access("access content")) {
     if (module_exist("taxonomy")) {
       $tid = arg(1);
-
       if ($op == "Update settings" && $user->uid) {
         $user = user_save($user, array("sortby" => $sortby, "forum_per_page" => $forum_per_page));
       }
@@ -477,7 +476,9 @@ function forum_page() {
 
       $offset = ($from / $forum_per_page) + 1;
 
+
       $forums = forum_get_forums($tid);
+
       $parents = forum_get_parents($tid);
       if ($tid && !in_array($tid, variable_get("forum_containers", array()))) {
         $topics = forum_get_topics($tid, $sortby, $forum_per_page);

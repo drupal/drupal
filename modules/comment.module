@@ -823,7 +823,7 @@ function comment_admin_overview($status = 0) {
 
   $header = array(t("subject"), t("author"), t("status"), array("data" => t("operations"), "colspan" => 2));
   while ($comment = db_fetch_object($result)) {
-    $rows[] = array(l($comment->subject, "node/view/$comment->nid/$comment->cid#$comment->cid", array("title" => htmlentities(substr($comment->comment, 0, 128)))) ." ". (node_is_new($comment->nid, $comment->timestamp) ? theme_mark() : ""), format_name($comment), ($comment->status == 0 ? t("published") : t("not published")) ."</td><td>". l(t("edit comment"), "admin/comment/edit/$comment->cid"), l(t("delete comment"), "admin/comment/delete/$comment->cid"));
+    $rows[] = array(l($comment->subject, "node/view/$comment->nid/$comment->cid#$comment->cid", array("title" => htmlspecialchars(substr($comment->comment, 0, 128)))) ." ". (node_is_new($comment->nid, $comment->timestamp) ? theme_mark() : ""), format_name($comment), ($comment->status == 0 ? t("published") : t("not published")) ."</td><td>". l(t("edit comment"), "admin/comment/edit/$comment->cid"), l(t("delete comment"), "admin/comment/delete/$comment->cid"));
   }
 
   if ($pager = pager_display(NULL, 50, 0, "admin")) {
@@ -996,8 +996,6 @@ function comment_mod_filters($edit) {
 
 
 function comment_admin() {
-  global  $id, $mod, $keys, $order, $status, $comment_page, $comment_settings;
-
   $op = $_POST["op"];
   $edit = $_POST["edit"];
 
@@ -1050,18 +1048,10 @@ function comment_admin() {
         break;
       case t("Delete"):
         print status(comment_delete($edit));
-        if (session_is_registered("comment_settings")) {
-          $status = $comment_settings["status"];
-          $comment_page = $comment_settings["comment_page"];
-        }
         print comment_admin_overview(0);
         break;
       case t("Submit"):
         print status(comment_save(check_query(arg(3)), $edit));
-        if (session_is_registered("comment_settings")) {
-          $status = $comment_settings["status"];
-          $comment_page = $comment_settings["comment_page"];
-        }
         print comment_admin_overview(0);
         break;
       default:
@@ -1189,20 +1179,19 @@ function comment_moderation_form($comment) {
   return $output;
 }
 
-function comment($comment, $link = 0) {
-  $output .= "<div style=\"border: 1px solid; padding: 10px;\">";
-  $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">";
-  $output .= " <tr><td><div style=\"font-size: 110%; font-weight: bold;\">$comment->subject ". ($comment->new ? theme("theme_mark") : "") ."</div></td><td align=\"right\" rowspan=\"2\" valign=\"top\">". $comment->moderation ."</td></tr>";
-  $output .= " <tr><td><div style=\"margin-left: 10px; padding-bottom: 10px; font-size: 90%;\">". t("by %a on %b", array("%a" => format_name($comment), "%b" => format_date($comment->timestamp))) ."</div></td></tr>";
-  $output .= " <tr><td colspan=\"2\">". check_output($comment->comment) ."</td></tr>";
-  $output .= " <tr><td align=\"right\" colspan=\"2\">$link</td></tr>";
-  $output .= "</table>";
-  $output .= "</div><br />";
+function comment($comment, $links = 0) {
+  $output .= "<div class=\"comment\">";
+  $output .= "<div class=\"subject\">$comment->subject". ($comment->new ? " ". theme("theme_mark") : "") ."</div>";
+  $output .= "<div class=\"moderation\">". $comment->moderation ."</div>";
+  $output .= "<div class=\"credit\">". t("by %a on %b", array("%a" => format_name($comment), "%b" => format_date($comment->timestamp))) ."</div>";
+  $output .= "<div class=\"body\">". check_output($comment->comment) ."</div";
+  $output .= "<div class=\"links\">$links</div>";
+  $output .= "</div>";
   print $output;
 }
 
 function comment_folded($comment) {
-  print "<p>". l($comment->subject, "node/view/$comment->nid/$comment->cid#$comment->cid") ." <small>". t("by") . " " . format_name($comment) ."</small></p>";
+  print "<div class=\"comment-folded\"><span class=\"subject\">". l($comment->subject, "node/view/$comment->nid/$comment->cid#$comment->cid") ."</span> <span class=\"credit\">". t("by") . " " . format_name($comment) ."</span></div>";
 }
 
 function comment_flat_collapsed($comments, $threshold) {

@@ -92,7 +92,7 @@ function theme_mark() {
   ** Return a marker.  Used to indicate new comments or required form
   ** fields.
   */
-  return "<span style=\"color: red;\">*</span>";
+  return "<span class=\"marker\">*</span>";
 }
 
 function theme_item_list($items = array(), $title = NULL) {
@@ -119,7 +119,7 @@ function theme_error($message) {
   /*
   ** Return an error message.
   */
-  return "<div style=\"color: red;\">$message</div>";
+  return "<div class=\"error\">$message</div>";
 }
 
 function theme_list($refresh = 0) {
@@ -144,6 +144,7 @@ function theme_list($refresh = 0) {
 
 function theme_head($main = 0) {
   global $base_url;
+  $output .= "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=". variable_get("site_charset", "iso-8859-1") ."\" />";
   $output .= "<base href=\"$base_url/\" />\n";
   $output .= "<style type=\"text/css\">\n";
   $output .= "@import url(misc/drupal.css);\n";
