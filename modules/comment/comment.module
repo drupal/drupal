@@ -670,15 +670,13 @@ function comment_post($edit) {
       // Clear the cache so an anonymous user can see his comment being added.
       cache_clear_all();
 
-      /*
-      ** Redirect the user the node he commented on, or explain queue
-      */
-
+      // Explain the moderation queue if necessary, and then
+      // redirect the user to the node he's commenting on.
       if ($status == 1) {
-        print theme('page', t('Your comment has been queued for moderation by site administrators and will be published after approval.'));
+        drupal_set_message(t('Your comment has been queued for moderation by site administrators and will be published after approval.'));
+        drupal_goto('node/'. $edit['nid']);
       }
       else {
-        // Redirect the user to his comment:
         drupal_goto('node/'. $edit['nid'] .'#comment-'. $edit['cid']);
       }
     }
