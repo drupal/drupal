@@ -1,0 +1,9 @@
+
+# 20/01/2001: comment/discussion code rewrite:
+alter table users modify mode tinyint(1) DEFAULT '' NOT NULL;
+alter table comments change sid lid int(6) DEFAULT '0' NOT NULL;
+alter table comments add link varchar(16) DEFAULT '' NOT NULL;
+update comments set link = 'article';
+
+# 21/01/2001: section manager
+alter table stories change category section varchar(64) DEFAULT '' NOT NULL;
