@@ -106,16 +106,10 @@ function do_search($search_array) {
 
   foreach ($words as $word) {
 
-    /*
-    ** If the word is too short, and we've got it set to skip them,
-    ** loop
-    */
-
+    // If the word is too short, and we've got it set to skip them, loop
     if (strlen($word) < variable_get("remove_short", 0)) {
       continue;
     }
-    // All words are required
-    $reqcount++;
 
     // Put the next search word into the query and do the query
     $query = preg_replace("'\%'", $word, $select);
@@ -145,20 +139,14 @@ function do_search($search_array) {
           $results[$lno]["created"] = $created;
           $results[$lno]["uid"] = $uid;
           $results[$lno]["name"] = $name;
-
-          // Set it to "valid"
-          $results[$lno]["valid"] = 1;
         }
         else {
-    /*
-    ** Different word, but existing "lno", increase the count of
-    ** matches against this "lno" by the number of times this
-    ** word appears in the text
-    */
+          /*
+          ** Different word, but existing "lno", increase the count of
+          ** matches against this "lno" by the number of times this
+          ** word appears in the text
+          */
           $results[$lno]["count"] = $results[$lno]["count"] + $count;
-
-          // Another match, increase valid
-          $results[$lno]["valid"]++;
         }
       }
     }
@@ -177,9 +165,6 @@ function do_search($search_array) {
       $uid       = $value["uid"];
       $name      = $value["name"];
       $count     = $value["count"];
-      if ($value["valid"] != $reqcount) {
-        continue;
-      }
       switch ($type) {
       case "node":
         $find[$i++] = array("count" => $count, "title" => $title, "link" => (strstr($PHP_SELF, "admin.php") ? drupal_url(array("mod" => "node", "type" => "node", "op" => "edit", "id" => $lno), "admin") : drupal_url(array("id" => $lno))), "user" => $name, "date" => $created, "keywords" => implode("|", $words));
@@ -325,30 +310,18 @@ function search_view() {
 
   if (user_access("search content")) {
 
-    /*
-    ** Verify the user input:
-    */
+    // Verify the user input:
     // TODO: is this necessary or is it / should it be done in search_{form|data}?
-
     $type = check_input($type);
     $keys = check_input($keys);
 
-    /*
-    ** Construct the search form:
-    */
-
+    // Construct the search form:
     $form = search_form(NULL, NULL, TRUE);
 
-    /*
-    ** Collect the search results:
-    */
-
+    // Collect the search results:
     $output = search_data();
 
-    /*
-    ** Display form and search results:
-    */
-
+    // Display form and search results:
     $help_link = lm(t("search help"), array("mod" => "search", "op" => "help"));
     switch (variable_get("help_pos", 1)) {
       case "1":
