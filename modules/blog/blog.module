@@ -155,23 +155,23 @@ function blog_page_user($uid = 0) {
     $account = $user;
   }
 
-  $result = pager_query("SELECT nid FROM node WHERE type = 'blog' AND uid = '$account->uid' AND status = 1 ORDER BY nid DESC", $user->nodes ? $user->nodes : variable_get("default_nodes_main", 10));
+  $result = pager_query("SELECT nid FROM node WHERE type = 'blog' AND uid = '$account->uid' AND status = 1 ORDER BY nid DESC", variable_get("default_nodes_main", 10));
   while ($node = db_fetch_object($result)) {
     node_view(node_load(array("nid" => $node->nid)), 1);
   }
-  print pager_display(NULL, ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
+  print pager_display(NULL, variable_get("default_nodes_main", 10));
   print l("<img align=\"right\" src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" border=\"0\" alt=\"\" />", "blog/feed/$account->uid", array("title" => t("View the XML version of %username's blog", array ("%username" => $account->name))));
 }
 
 function blog_page_last() {
   global $user, $theme;
 
-  $result = pager_query("SELECT nid FROM node WHERE type = 'blog' AND status = 1 ORDER BY nid DESC", $user->nodes ? $user->nodes : variable_get("default_nodes_main", 10));
+  $result = pager_query("SELECT nid FROM node WHERE type = 'blog' AND status = 1 ORDER BY nid DESC", variable_get("default_nodes_main", 10));
 
   while ($node = db_fetch_object($result)) {
     $output = node_view(node_load(array("nid" => $node->nid)), 1);
   }
-  $output .= pager_display(NULL, ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
+  $output .= pager_display(NULL, variable_get("default_nodes_main", 10));
   $output .= l("<img align=\"right\" src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" border=\"0\" alt=\"\" />", "blog/feed", array("title" => t("Read the XML version of all blogs.")));
   return $output;
 }

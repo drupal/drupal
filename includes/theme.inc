@@ -40,16 +40,16 @@ class BaseTheme {
   }
 
   function node($node, $main) {
-    if (function_exists("taxonomy_node_get_terms")) {
-      foreach (taxonomy_node_get_terms($node->nid) as $term) {
-        $terms[] = l($term->name, NULL, array(), "or=$term->tid");
-      }
+    if (module_exist("taxonomy")) {
+      $terms = taxonomy_link("taxonomy terms", $node);
     }
 
     $output = "<b>$node->title</b> by ". format_name($node) ."<br />";
+
     if (count($terms)) {
       $output .= "<small>(". $this->links($terms) .")</small><br />";
     }
+
     if ($main && $node->teaser) {
       $output .= check_output($node->teaser);
     }

@@ -6,35 +6,18 @@ function taxonomy_system($field){
   return $system[$field];
 }
 
-function taxonomy_feed() {
-  global $id, $or, $and, $type;
+function taxonomy_feed($taxonomy) {
+  global $id, $type;
 
   if ($type == "voc") {
-    //TODO - vocabulary feed. How to represent an outline in XML?
+    //TODO - vocabulary feed.
   }
   else {
-    if ($or) {
-      foreach ((explode(",", $or)) as $t) {
-        $terms[] = "'". check_query($t) ."'";
-      }
-      $result = db_query("SELECT DISTINCT(n.nid), type FROM node n LEFT JOIN term_node r ON n.nid = r.nid WHERE tid IN (". implode(",", $terms) .") AND status = '1' ORDER BY static DESC, created DESC LIMIT 15");
-      $term = taxonomy_get_term($or);
-    }
-    else if ($and) {
-      foreach ((explode(",", $and)) as $t) {
-        $terms[] = "'". check_query($t) ."'";
-      }
-      $result = db_query("SELECT n.nid, type, count(*) AS c FROM node n LEFT JOIN term_node r ON n.nid = r.nid WHERE tid IN (". implode(",", $terms) .") AND status = '1' GROUP BY n.nid, n.type HAVING c = ". count($terms) ." ORDER BY static DESC, created DESC LIMIT 15");
-      $term = taxonomy_get_term($and);
-    }
-    else {
-      return node_feed();
-    }
-
+    $result = taxonomy_select_nodes($taxonomy, 0);
+    $term = taxonomy_get_term($taxonomy->tids[0]);
+    $channel["link"] = path_uri(). url("taxonomy/view/$taxonomy->operator/$taxonomy->str_tids");
     $channel["title"] = variable_get("site_name", "drupal") ." - ". $term->name;
-    $channel["link"] = path_uri() ."?or=$or";
     $channel["description"] = $term->description;
-
     node_feed($result, $channel);
   }
 }
@@ -43,7 +26,7 @@ function taxonomy_perm() {
   return array("administer taxonomy");
 }
 
-function taxonomy_link($type) {
+function taxonomy_link($type, $node = NULL) {
   if ($type == "admin" && user_access("administer taxonomy")) {
     $help["taxonomy"] = "The taxonomy module allows you to classify post into categories and subcategories; it allows multiple lists of categories for classification (controlled vocabularies) and offers the possibility of creating thesauri (controlled vocabularies that indicate the relationship of terms) and taxonomies (controlled vocabularies where relationships are indicated hierarchically).";
     $help["vocabulary"] = "When you create a controlled vocabulary you are creating a set of terms to use for describing content (known as descriptors in indexing lingo).  Drupal allows you to describe each node of content (blog, story, etc.) using one or many of these terms. For simple implementations, you might create a set of categories without subcategories, similar to Slashdot.org's or Kuro5hin.org's sections. For more complex implementations, you might create a hierarchical list of categories.";
@@ -51,6 +34,23 @@ function taxonomy_link($type) {
     menu_add("taxonomy", url("admin/taxonomy"), "Administer taxonomies.", $help["taxonomy"], "content management", 1);
     menu_add("add new vocabulary", url("admin/taxonomy/add/vocabulary"), "Add a new vocabulary.", $help["vocabulary"], "taxonomy");
     menu_add("help", url("admin/taxonomy/help"), "More information about taxonomies.", NULL, "taxonomy", 9);
+  }
+  else if ($type == "taxonomy terms" && $node != NULL) {
+    /*
+    ** Themes can print taxonomy links with:
+    **
+    ** if (module_exist("taxonomy")) {
+    **   $this->links(taxonomy_link("taxonomy terms", $node));
+    ** }
+    */
+
+    $links = array();
+
+    foreach (taxonomy_node_get_terms($node->nid) as $term) {
+      $links[] = l($term->name, "taxonomy/page/or/$term->tid", $term->description ? array("title" => $term->description) : array());
+    }
+
+    return $links;
   }
 }
 
@@ -265,7 +265,6 @@ function _taxonomy_confirm_del_term($tid) {
 }
 
 function taxonomy_overview() {
-  global $tree;
 
   $output .= "<h3>" . t("Vocabularies overview") . "</h3>";
 
@@ -641,14 +640,66 @@ function _prepare_insert($data, $stage) {
   return "($result)";
 }
 
+/*
+** Accepts taxonomy conditions and returns a resource identifier.  If
+** you intend to use the nodes without a pager (eg. in a XML feed),
+** then set $pager to false.
+*/
+function taxonomy_select_nodes($taxonomy, $pager = 1) {
+  global $user;
+
+  if ($taxonomy->operator == "or") {
+    $sql = "SELECT DISTINCT(n.nid), n.title, n.type, n.created, n.changed, n.uid, u.name FROM node n LEFT JOIN term_node r ON n.nid = r.nid LEFT JOIN users u ON n.uid = u.uid WHERE tid IN ($taxonomy->str_tids) AND n.status = '1' ORDER BY static DESC, created DESC";
+    $sql_count = "SELECT COUNT(DISTINCT(n.nid)) FROM node n LEFT JOIN term_node r ON n.nid = r.nid LEFT JOIN users u ON n.uid = u.uid WHERE tid IN ($taxonomy->str_tids) AND n.status = '1'";
+  }
+  else {
+    $sql = "SELECT n.nid, n.title, n.type, n.created, n.changed, n.uid, u.name FROM node n LEFT JOIN term_node r ON n.nid = r.nid LEFT JOIN users u ON n.uid = u.uid WHERE tid IN ($taxonomy->str_tids) AND n.status = '1' GROUP BY n.nid, n.title, n.type, n.created, n.changed, n.uid, u.name HAVING COUNT(n.nid) = ".count($taxonomy->tids)." ORDER BY static DESC, created DESC";
+
+    // Special trick as we could not find anything better:
+    $count = db_num_rows(db_query("SELECT n.nid FROM node n LEFT JOIN term_node r ON n.nid = r.nid WHERE tid IN ($taxonomy->str_tids) AND n.status = '1' GROUP BY n.nid HAVING COUNT(n.nid) = ". count($taxonomy->tids)));
+    $sql_count = "SELECT $count";
+  }
+
+  if ($pager) {
+    $result = pager_query($sql, variable_get("default_nodes_main", 10) , 0, $sql_count);
+  }
+  else {
+    $result = db_query($sql ." LIMIT 15");
+  }
+
+  return $result;
+}
+
+/*
+** Accepts the result of a db_query() and formats each node along
+** with a pager.
+*/
+function taxonomy_render_nodes($result) {
+
+  while ($node = db_fetch_object($result)) {
+    node_view(node_load(array("nid" => $node->nid, "type" => $node->type)), 1);
+  }
+  print pager_display_default(NULL, variable_get("default_nodes_main", 10), 0);
+}
+
 function taxonomy_page() {
+  global $theme;
+
+  // taxonomy querystring always parsed here
+  // TODO: support term *names* in URL (e.g. taxonomy/view/or/milk,beer,red+wine)
+  $taxonomy->operator = arg(2);
+  $taxonomy->str_tids = check_query(arg(3));
+  $taxonomy->tids = explode(",", $taxonomy->str_tids);
 
   switch (arg(1)) {
     case "feed":
-      taxonomy_feed();
+      taxonomy_feed($taxonomy);
       break;
     default:
-       // TODO: pretty display of all vocabularies
+      $theme->header();
+      taxonomy_render_nodes(taxonomy_select_nodes($taxonomy));
+      $theme->footer();
+      break;
   }
 }
 

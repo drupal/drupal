@@ -101,15 +101,10 @@
           <TR><TD COLSPAN="2" BGCOLOR="<?php echo $this->bgcolor1; ?>" WIDTH="100%"><table width="100%" cellpadding="0" cellspacing="0"><tr><td width="100%"><FONT COLOR="<?php echo $this->fgcolor1; ?>"><B><?php echo "$node->title"; ?></B></FONT></td><td valign="middle" align="center"><IMG SRC="<?php print $this->path; ?>/images/icon.gif" valign="middle"></td></tr></table></TD></TR>
           <TR BGCOLOR="<?php echo $this->bgcolor2; ?>">
            <?php
-            if (function_exists("taxonomy_node_get_terms")) {
-              if ($terms = taxonomy_node_get_terms($node->nid)) {
-                $taxlinks = array();
-                foreach ($terms as $term) {
-                  $taxlinks[] = l($term->name, NULL, array(), "or=$term->tid");
-                }
-                $taxo = $this->links($taxlinks);
-              }
+            if (module_exist("taxonomy")) {
+              $terms = taxonomy_link("taxonomy terms", $node);
             }
+            $taxo = $this->links($terms);
             print "<TD WIDTH=\"70%\" BGCOLOR=\"$this->bgcolor2\"><SMALL>" . t("Submitted by %a on %b", array("%a" => format_name($node), "%b" => format_date($node->created, "large"))) . "</TD><TD WIDTH=\"30%\" BGCOLOR=\"$this->bgcolor2\" ALIGN=\"center\" NOWRAP><B>". $taxo ."</B>";
            ?>
           </TD>

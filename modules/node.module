@@ -19,18 +19,19 @@ function node_system($field){
   return $system[$field];
 }
 
-// accepts a db result object which includes nid and title from node table, and name from the user table
-// returns an HTML list suitable as content for a block, and eventually other uses.
+/*
+** Accepts a DB result object which can be used to fetch node objects.
+** Returns an HTML list suitable as content for a block.
+*/
 function node_title_list($result, $title = NULL) {
   // no queries if site is in distress
-  if (module_exist("statistics") && throttle_status() > 4) {
+  if (module_exist("statistics") && throttle_status() > 3) {
     return;
   }
 
   while ($node = db_fetch_object($result)) {
     $number = module_invoke("comment", "num_all", $node->nid);
-    $name = strip_tags(format_name($node)); // required for anonymous users to work
-    $items[] = l($node->title, "node/view/$node->nid", array("title" => t("Author: %name, comments: %number", array("%name" => $name, "%number" => $number))));
+    $items[] = l($node->title, "node/view/$node->nid", array("title" => t("Comments: %number", array("%number" => $number))));
   }
 
   return theme_invoke("theme_item_list", $items, $title);
@@ -280,7 +281,7 @@ function node_view($node, $main = 0) {
 
   /*
   ** Remove the delimiter (if any) that seperates the teaser from the
-  ** body.
+  ** body. TODO: this strips legitimate uses of --- also.
   */
 
   $node->body = str_replace("---", "", $node->body);
@@ -385,7 +386,7 @@ function node_search($keys) {
 }
 
 function node_conf_options() {
-  $output .= form_select(t("Number of posts on main page"), "default_nodes_main", variable_get("default_nodes_main", 10), array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 =>  5, 6 => 6, 7 => 7, 8 => 8, 9 => 9, 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30), t("The default maximum number of posts to display on the main page."));
+  $output .= form_select(t("Number of posts on main page"), "default_nodes_main", variable_get("default_nodes_main", 10), array(1 => 1, 2 => 2, 3 => 3, 4 => 4, 5 =>  5, 6 => 6, 7 => 7, 8 => 8, 9 => 9, 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30), t("The default maximum number of posts to display on overview pages such as the main page."));
   $output .= form_select(t("Length of trimmed posts"), "teaser_length", variable_get("teaser_length", 600), array(0 => t("Unlimited"), 200 => t("200 characters"), 400 => t("400 characters"), 600 => t("600 characters"), 800 => t("800 characters"), 1000 => t("1000 characters"), 1200 => t("1200 characters"), 1400 => t("1400 characters"), 1600 => t("1600 characters"), 1800 => t("1800 characters"), 2000 => t("2000 characters")), t("The maximum number of characters used in the trimmed version of a post.  Drupal will use this setting to determine at which offset long posts should be trimmed.  The trimmed version of a post is typically used as a teaser when displaying the post on the main page, in XML feeds, etc.  To disable teasers, set to 'Unlimited'."));
   return $output;
 }
@@ -712,7 +713,7 @@ function node_feed($nodes = 0, $channel = array()) {
 
   $output .= "<?xml version=\"1.0\" ". t("encoding=\"ISO-8859-1\""). "?>\n";
   $output .= "<!DOCTYPE rss [<!ENTITY % HTMLlat1 PUBLIC \"-//W3C//ENTITIES Latin 1 for XHTML//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml-lat1.ent\">]>\n";
-    // NOTE: &eacute; - for example - is the correct ISO-8859-1 translation of é (e acute) but apparently XML parsers don't (have to) understand it.  To solve this problem, we use a DTD that defines commonly used entity such as &eacute;.
+    // NOTE: &eacute; - for example - is the correct ISO-8859-1 translation of  (e acute) but apparently XML parsers don't (have to) understand it.  To solve this problem, we use a DTD that defines commonly used entity such as &eacute;.
   if (!$channel["version"]) $channel["version"] = "0.91";
   if (!$channel["title"]) $channel["title"] = variable_get("site_name", "drupal") ." - ". variable_get("site_slogan", "");
   if (!$channel["link"]) $channel["link"] = path_uri();
@@ -1264,35 +1265,12 @@ function node_page() {
         $theme->box(t("Delete post"), node_delete($edit));
         break;
       default:
-        // prepare query
-        if ($or) {
-          foreach ((explode(",", $or)) as $t) {
-            $terms[] = "'".check_query($t)."'";
-          }
-        }
-        else if ($and) {
-          foreach ((explode(",", $and)) as $t) {
-            $terms[] = "'".check_query($t)."'";
-          }
-        }
-
-        if ($or) {
-          // this is an OR of terms
-          $result = pager_query("SELECT DISTINCT(n.nid), type FROM node n LEFT JOIN term_node r ON n.nid = r.nid WHERE tid IN (".implode(",", $terms).") AND status = '1' ORDER BY static DESC, created DESC", ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
-        }
-        else if ($and) {
-          // this is an AND
-          $result = pager_query("SELECT n.nid, n.type FROM node n LEFT JOIN term_node r ON n.nid = r.nid WHERE tid IN (".implode(",", $terms).") AND status = '1' GROUP BY n.nid, n.type, n.status, n.static, n.created HAVING COUNT(n.nid) = ".count($terms)." ORDER BY static DESC, created DESC", ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
-        }
-        else {
-          $result = pager_query("SELECT nid, type FROM node WHERE promote = '1' AND status = '1' ORDER BY static DESC, created DESC", ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
-        }
+        $result = pager_query("SELECT nid, type FROM node WHERE promote = '1' AND status = '1' ORDER BY static DESC, created DESC", variable_get("default_nodes_main", 10));
 
         while ($node = db_fetch_object($result)) {
           node_view(node_load(array("nid" => $node->nid, "type" => $node->type)), 1);
         }
-
-        print pager_display(NULL, ($user->nodes ? $user->nodes : variable_get("default_nodes_main", 10)));
+        print pager_display(NULL, variable_get("default_nodes_main", 10));
     }
   }
   else {
