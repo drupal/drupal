@@ -86,7 +86,7 @@ function block_block($op = 'list', $delta = 0, $edit = array()) {
     case 'list':
       $result = db_query('SELECT bid, title, info FROM {boxes} ORDER BY title');
       while ($block = db_fetch_object($result)) {
-        $blocks[$block->bid]['info'] = $block->info;
+        $blocks[$block->bid]['info'] = $block->info ? $block->info : $block->title;
       }
       return $blocks;
 
@@ -333,7 +333,7 @@ function block_box_form($edit = array()) {
   $output = form_textfield(t('Block title'), 'title', $edit['title'], 50, 64, t('The title of the block as shown to the user.'));
   $output .= filter_form('format', $edit['format']);
   $output .= form_textarea(t('Block body'), 'body', $edit['body'], 70, 10, t('The content of the block as shown to the user.'));
-  $output .= form_textfield(t('Block description'), 'info', $edit['info'], 50, 64, t('A brief description of your block.  Used on the <a href="%overview">block overview page</a>.', array('%overview' => url('admin/block'))));
+  $output .= form_textfield(t('Block description'), 'info', $edit['info'], 50, 64, t('A brief description of your block. Used on the <a href="%overview">block overview page</a>.', array('%overview' => url('admin/block'))));
 
   return $output;
 }
