@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.204 2004/01/02 16:30:09 dries Exp $
+// $Id: book.module,v 1.205 2004/01/11 20:16:26 dries Exp $
 
 function book_node($field) {
   global $user;
@@ -342,7 +342,7 @@ function book_next($node) {
   }
 }
 
-function book_content($node) {
+function book_content($node, $main = 0) {
   $op = $_POST["op"];
 
   /*
@@ -376,14 +376,14 @@ function book_content($node) {
     ob_end_clean();
   }
   else {
-    $node = node_prepare($node);
+    $node = node_prepare($node, $main);
   }
 
   return $node;
 }
 
 function book_view($node, $main = 0, $page = 0) {
-  $node = book_content($node);
+  $node = book_content($node, $main);
   /*
   ** Display the node.  If not displayed on the main page, we render
   ** the node as a page in the book with extra links to the previous

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.312 2004/01/11 15:05:21 dries Exp $
+// $Id: node.module,v 1.313 2004/01/11 20:16:26 dries Exp $
 
 function node_help($section = "admin/help#node") {
   global $mod;
@@ -411,18 +411,16 @@ function node_view($node, $main = 0, $page = 0) {
     ** Default behavior:
     */
 
-    return theme("node", node_prepare($node), $main, $page);
+    return theme("node", node_prepare($node, $main), $main, $page);
   }
 }
 
-function node_prepare($node) {
-  if ($node->teaser == $node->body) {
-    // Only invoke check_output() once for performance's sake:
-    $node->teaser = $node->body = check_output($node->teaser);
+function node_prepare($node, $main = 0) {
+  if ($main == 0) {
+    $node->body = check_output($node->body);
   }
   else {
     $node->teaser = check_output($node->teaser);
-    $node->body = check_output($node->body);
   }
   return $node;
 }

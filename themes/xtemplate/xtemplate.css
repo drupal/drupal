@@ -1,4 +1,4 @@
-/* $Id: xtemplate.css,v 1.46 2004/01/10 16:17:23 dries Exp $ */
+/* $Id: xtemplate.css,v 1.47 2004/01/11 20:16:26 dries Exp $ */
 
 /*
 ** HTML elements
@@ -242,7 +242,7 @@ table {
 /*
 ** Module specific styles
 */
-#aggregator .info {
+#aggregator .feed {
   background-color: #eee;
   border: 1px solid #ccc;
   padding: 1em;

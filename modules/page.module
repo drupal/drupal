@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.104 2004/01/02 16:30:09 dries Exp $
+// $Id: page.module,v 1.105 2004/01/11 20:16:26 dries Exp $
 
 function page_help($section = "admin/help#page") {
   $output = "";
@@ -96,7 +96,7 @@ function page_link($type) {
   return $links;
 }
 
-function page_content($node) {
+function page_content($node, $main = 0) {
   /*
   ** Extract the page body.  If body is dynamic (using PHP code), the body
   ** will be generated.
@@ -104,7 +104,7 @@ function page_content($node) {
 
   if ($node->format == 0) {
     // HTML type
-    $node = node_prepare($node);
+    $node = node_prepare($node, $main);
   }
   else {
     // PHP type
@@ -118,7 +118,7 @@ function page_content($node) {
 
 function page_view($node, $main = 0, $page = 0) {
   // prepare the node content
-  $node = page_content($node);
+  $node = page_content($node, $main);
   // print the node
   return theme("node", $node, $main, $page);
 }

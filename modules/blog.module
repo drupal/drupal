@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.156 2004/01/11 15:05:21 dries Exp $
+// $Id: blog.module,v 1.157 2004/01/11 20:16:26 dries Exp $
 
 function blog_settings() {
   $output = form_textarea(t("Explanation or submission guidelines"), "blog_help", variable_get("blog_help", ""), 70, 4, t("This text is displayed at the top of the blog submission form.  It's useful for helping or instructing your users."));
@@ -219,8 +219,8 @@ function blog_page() {
 
 }
 
-function blog_content($node) {
-  return node_prepare($node);
+function blog_content($node, $main = 0) {
+  return node_prepare($node, $main);
 }
 
 function blog_view($node, $main = 0, $page = 0) {
@@ -233,7 +233,7 @@ function blog_view($node, $main = 0, $page = 0) {
     drupal_set_breadcrumb($breadcrumb);
   }
   // prepare the node content
-  $node = blog_content($node);
+  $node = blog_content($node, $main);
   // print the node
   return theme("node", $node, $main, $page);
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.151 2004/01/02 16:30:09 dries Exp $
+// $Id: forum.module,v 1.152 2004/01/11 20:16:26 dries Exp $
 
 function forum_node($field) {
   $info["name"] = t("forum topic");
@@ -140,8 +140,8 @@ function forum_link($type, $node = 0, $main = 0) {
   return $links;
 }
 
-function forum_content($node) {
-  return node_prepare($node);
+function forum_content($node, $main = 0) {
+  return node_prepare($node, $main);
 }
 
 function forum_view($node, $main = 0, $page = 0) {
@@ -164,7 +164,7 @@ function forum_view($node, $main = 0, $page = 0) {
     drupal_set_breadcrumb($breadcrumb);
   }
 
-  return theme("node", forum_content($node), $main, $page);
+  return theme("node", forum_content($node, $main), $main, $page);
 }
 
 function forum_validate(&$node) {
