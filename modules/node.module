@@ -395,7 +395,7 @@ function node_link($type, $node = 0, $main = 0) {
       $links = $node->links;
     }
 
-    if ($main == 1 && $node->teaser != $node->body) {
+    if ($main == 1 && $node->teaser && $node->teaser != $node->body) {
       $links[] = l(t("read more"), array("id" => $node->nid), "node", "", array("title" => t("Read the rest of this posting.")));
     }
 
