@@ -1,6 +1,8 @@
 /* $Id$ */
 
-/* HTML tags */
+/*
+** HTML elements
+*/
 a, a:link, a:active {
   font-weight: bold;
   text-decoration: none;
@@ -56,7 +58,9 @@ br {
   line-height: 0.6em;
 }
 
-/* regions */
+/*
+** Page layout blocks / IDs
+*/
 #header {
   margin-bottom: 2em;
 }
@@ -75,7 +79,10 @@ br {
  padding-top: 2em;
  text-align: center;
 }
-/* region-specific tags */
+
+/*
+** Common declarations for child classes of node, comment, block, box etc
+*/
 .title {
   margin: 0 0 .25em 0;
 }
@@ -90,7 +97,13 @@ br {
   width: 180px;
 }
 
-/* modules definitions */
+/*
+** Module specific styles
+*/
 .form-item textarea {
   font-size: 1em;
+}
+#aggregator .feed {
+  border: 1px solid gray;
+  padding: 1em;
 }
