@@ -17,19 +17,15 @@ function node_get_array($field, $value) {
   return db_fetch_array(_node_get($field, $value));
 }
 
-function node_del_object($field, $value) {
+function node_del($field, $value) {
+  global $status;
   if ($node = node_get_object($field, $value)) {
-    db_query("DELETE FROM nodes WHERE nid = '$node->nid'");
-    db_query("DELETE FROM $node->type WHERE node = '$node->nid'");
-    return $node;
-  }
-}
-
-function node_del_array($field, $value) {
-  if ($node = node_get_array($field, $value)) {
-    db_query("DELETE FROM nodes WHERE nid = '$node[nid]'");
-    db_query("DELETE FROM $node[type] WHERE node = '$node[nid]'");
-    return $node;
+    if ($node->status == $status[dumped]) {
+      db_query("DELETE FROM nodes WHERE nid = '$node->nid'");
+      db_query("DELETE FROM $node->type WHERE node = '$node->nid'");
+      watchdog("message", "deleted node '$node->title'");
+      return $node;
+    }
   }
 }
 
