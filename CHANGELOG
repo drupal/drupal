@@ -4,17 +4,19 @@ Drupal x.x.x, xxxx-xx-xx (to be released)
 - added support for configurable URLs.
 - added support for sortable table columns.
 - database backend:
-    * added support for database table prefxing.
+    * added support for selective database table prefixing.
 - performance improvements:
     * optimized many SQL queries for speed by converting left joins to inner joins.
 - comment module:
-    * changed the comment module to use the standard pager and rewrote the
-      comment housekeeping code to be much more efficient.
+    * rewrote the comment housekeeping code to be much more efficient and scalable.
+    * changed the comment module to use the standard pager.
 - user module:
     * added support for multiple sessions per user.
     * added support for anonymous user sessions.
 - forum module:
     * improved the forum views and the themability thereof.
+- book module:
+    * improved integration of non-book nodes in the book outline.
 - usability improvements:
     * added support for "mass node operations" to ease repetitive tasks.
     * added support for breadcrumb navigation to several modules' user pages.
@@ -31,7 +33,7 @@ Drupal 4.2.0, 2003-08-01
     * improved the look and feel.
     * added context-sensitive help.
 - database backend:
-    * fixed numereous SQL queries to make Drupal ANSI compliant.
+    * fixed numerous SQL queries to make Drupal ANSI compliant.
     * added MSSQL database scheme.
 - search module:
     * changed the search module to use implicit AND'ing instead of implicit OR'ing.
@@ -41,7 +43,7 @@ Drupal 4.2.0, 2003-08-01
         + improved teasers: teasers are now optional, teaser length can be configured, teaser and body are edited in a single textarea, users will no longer be bothered with teasers when the post is too short for one.
         + added the ability to preview both the short and the full version of your posts.
     * extended the node API which allows for better integration.
-    * added default node settings to control the behaviour for promotion, moderation and other options.
+    * added default node settings to control the behavior for promotion, moderation and other options.
 - themes:
     * replaced theme "Goofy" by "Xtemplate", a template driven theme.
 - removed the 'register_globals = on' requirement.
@@ -147,9 +149,9 @@ Drupal 3.0.0, 2001-09-15
 - rewrote headline code and renamed it to import.module and export.module:
     * added various improvements, including a better parser, bundles and better control over individual feeds.
 - rewrote section code and renamed it to meta.module:
-    * supports unlimeted amount of nested topics.  Topics can be nested to create a multi-level hierarchy.
+    * supports unlimited amount of nested topics.  Topics can be nested to create a multi-level hierarchy.
 - rewrote configuration file resolving:
-    * Drupal tries to locate a configuration file that matches your domainname or uses conf.php if the former failed.  Note also that the configuration files got renamed from .conf to .php for security's sake on mal-configured Drupal sites.
+    * Drupal tries to locate a configuration file that matches your domain name or uses conf.php if the former failed.  Note also that the configuration files got renamed from .conf to .php for security's sake on mal-configured Drupal sites.
 - added caching support which makes Drupal extremely scalable.
 - added access.module:
     * allows you to setup 'roles' (groups) and to bind a set of permissions to each group.
