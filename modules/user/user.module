@@ -216,7 +216,7 @@ function user_access($string) {
 }
 
 function user_mail($mail, $subject, $message, $header) {
-  print "<pre>subject: $subject<hr />header: $header<hr />$message</pre>";
+  // print "<pre>subject: $subject<hr />header: $header<hr />$message</pre>";
   if (variable_get("smtp_library", "") && file_exists(variable_get("smtp_library", ""))) {
     include_once variable_get("smtp_library", "");
     user_mail_wrapper($mail, $subject, $message, $header);
