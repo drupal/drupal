@@ -109,7 +109,7 @@ function theme_moderation_results($theme, $node) {
       $output .= format_username($account->userid) ." voted '". user_get($account, "history", "n$node->nid") ."'.<BR>";
     }
 
-    $theme->box(t("Moderation results"), ($output ? $output : t("This story has not been moderated yet.")));
+    $theme->box(t("Moderation results"), ($output ? $output : t("This node has not been moderated yet.")));
   }
 }
 

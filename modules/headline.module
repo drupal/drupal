@@ -212,7 +212,7 @@ function headline_export($uri) {
     while ($node = db_fetch_object($result)) {
       print "<item>\n";
       print " <title>". check_export($node->title) ."</title>\n";
-      print " <link>". $site_url ."node.php?id=$node->id</link>\n";
+      print " <link>". $site_url ."node.php?id=$node->nid</link>\n";
       print "</item>\n";
     }
 

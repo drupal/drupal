@@ -2,7 +2,6 @@
 
 $na = "<I>na</I>";
 
-
 function check_textfield($message) {
   return strip_tags(str_replace("\"", "&quot;", stripslashes($message)));
 }
@@ -17,7 +16,8 @@ function check_export($message) {
 
 function check_textarea($message) {
   global $allowed_html;
-  return htmlspecialchars(strip_tags(stripslashes($message), $allowed_html));
+  return strip_tags(stripslashes($message), $allowed_html);
+  // return htmlspecialchars(strip_tags(stripslashes($message), $allowed_html));
 }
 
 function check_input($message) {
@@ -102,9 +102,9 @@ function format_tag($link, $text) {
 
 function format_text($text) {
 
-  $src = array("/(<\/?)(\w+)([^>]*>)/e",             // convert HTML to lower case
+  $src = array( // "/(<\/?)(\w+)([^>]*>)/e",             // convert HTML to lower case
                "/\[(([^\|]*?)(\|([^\|]*?))?)\]/e");  // [link|description]
-  $dst = array("'\\1'. strtolower('\\2') .'\\3'",    // convert HTML to lower case
+  $dst = array( // "'\\1'. strtolower('\\2') .'\\3'",    // convert HTML to lower case
                format_tag('\\2', '\\4'));            // [link|description]
 
   return preg_replace($src, $dst, $text);
