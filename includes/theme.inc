@@ -247,7 +247,7 @@ function theme_box($subject, $content, $region = "main") {
 **/
 function theme_block($block) {
   $output  = "<div class=\"block block-$block->module\" id=\"block-$block->module-$block->delta\">";
-  $output .= " <h3>$block->subject</h3>";
+  $output .= " <h2>$block->subject</h2>";
   $output .= " <div class=\"content\">$block->content</div>";
   $output .= "</div>";
   return $output;
