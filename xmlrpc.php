@@ -1,4 +1,5 @@
 <?php
+// $Id$
 
 include_once "includes/xmlrpcs.inc";
 include_once "includes/common.inc";
