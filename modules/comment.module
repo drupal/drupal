@@ -494,7 +494,8 @@ function comment_render($nid, $cid) {
     }
 
     print "<a name=\"comment\"></a>\n";
-    print "<form method=\"post\" action=\"". request_uri() ."\">\n";
+    print "<form method=\"post\" action=\"". drupal_url(array("mod" => "comment"), "module") ."\">\n";
+    print form_hidden("nid", $nid);
 
     /*
     ** Render control panel:
@@ -685,7 +686,9 @@ function comment_page() {
       comment_post($edit);
       break;
     case t("Update settings"):
+      global $mode, $order, $threshold;
       comment_settings(check_query($mode), check_query($order), check_query($threshold));
+      drupal_goto(drupal_url(array("id" => $edit["nid"]), "node"));
       break;
     default:
   }
