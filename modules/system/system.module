@@ -289,7 +289,7 @@ function system_listing($type) {
 
     $row = array($info->name, $info->description, array("data" => (in_array($filename, $required) ? form_hidden("status][$filename", 1) . t("required") : form_checkbox("", "status][$filename", 1, $file->status)), "align" => "center"));
     if ($type == "module") {
-      $row[] = array("data" => (in_array($filename, $throttle_required) ? form_hidden("throttle][$filename", 0) . t("required") : form_checkbox(NULL, "throttle][$filename", 1, $file->throttle, NULL, variable_get("throttle_enable", 0) ? NULL : array("disabled" => "disabled"))), "align" => "center");
+      $row[] = array("data" => (in_array($filename, $throttle_required) ? form_hidden("throttle][$filename", 0) . t("required") : form_checkbox(NULL, "throttle][$filename", 1, $file->throttle, NULL, module_exist('throttle') ? NULL : array("disabled" => "disabled"))), "align" => "center");
     }
     else if ($type == "theme") {
       $row[] = array("data" => form_radio("", "theme_default", $info->name, (variable_get("theme_default",0) == $info->name) ? 1 : 0), "align" => "center");
