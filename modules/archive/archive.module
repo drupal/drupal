@@ -161,7 +161,7 @@ function archive_block($op = "list", $delta = 0) {
     $blocks[0]["info"] = t("Calendar to browse archives");
     return $blocks;
   }
-  else {
+  else if (user_access("access content")) {
     switch ($delta) {
       case 0:
         $block["subject"] = t("Browse archives");

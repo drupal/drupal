@@ -710,7 +710,7 @@ function statistics_block($op = "list", $delta = 0) {
     }
     return $blocks;
   }
-  else {
+  else if (user_access("access content")) {
     switch($delta) {
       case 0:
         $block["subject"] = variable_get("statistics_block_top_title", t("Popular content"));
