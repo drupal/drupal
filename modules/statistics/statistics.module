@@ -29,10 +29,21 @@ function statistics_conf_options() {
   return $output;
 }
 
-function statistics_referer_internal() {
-  $result = db_query("SELECT url, COUNT(url) AS count FROM referer WHERE url LIKE '". path_uri() ."%' GROUP BY url ORDER BY count DESC");
+function statistics_table_1($query) {
+  $result = db_query($query);
 
-  $output .= "<P>Internal referers of the last ". format_interval(variable_get("referer_clear", 604800)) .":</P>\n";
+  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
+  $output .= " <TR><TH>URL</TH><TH>date</TH></TR>\n";
+  while ($referer = db_fetch_object($result)) {
+    $output .= "<TR><TD><A HREF=\"". check_output($referer->url) ."\">". substr(check_output($referer->url), 0, 100) ."</A></TD><TD>". format_date($referer->timestamp, "small") ."</TD></TR>";
+  }
+  $output .= "</TABLE>\n";
+
+  return $output;
+}
+
+function statistics_table_2($query) {
+  $result = db_query($query);
 
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
   $output .= " <TR><TH>URL</TH><TH>number</TH></TR>\n";
@@ -44,17 +55,24 @@ function statistics_referer_internal() {
   return $output;
 }
 
+function statistics_referer_internal() {
+  $output .= "<H3>Most recent referers</H3>\n";
+  $output .= statistics_table_1("SELECT url, timestamp FROM referer WHERE url LIKE '". path_uri() ."%' ORDER BY timestamp DESC LIMIT 15");
+
+  $output .= "<H3>Referers of the last ". format_interval(variable_get("referer_clear", 604800)) ."</H3>\n";
+  $output .= statistics_table_2("SELECT url, COUNT(url) AS count FROM referer WHERE url LIKE '". path_uri() ."%' GROUP BY url ORDER BY count DESC");
+
+  return $output;
+}
+
 function statistics_referer_external() {
   $result = db_query("SELECT url, COUNT(url) AS count FROM referer WHERE url NOT LIKE '". path_uri() ."%' GROUP BY url ORDER BY count DESC");
 
-  $output .= "<P>External referers of the last ". format_interval(variable_get("referer_clear", 604800)) .":</P>\n";
+  $output .= "<H3>Most recent referers</H3>\n";
+  $output .= statistics_table_1("SELECT url, timestamp FROM referer WHERE url NOT LIKE '". path_uri() ."%' ORDER BY timestamp DESC LIMIT 15");
 
-  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
-  $output .= " <TR><TH>URL</TH><TH>number</TH></TR>\n";
-  while ($referer = db_fetch_object($result)) {
-    $output .= "<TR><TD><A HREF=\"". check_output($referer->url) ."\">". substr(check_output($referer->url), 0, 100) ."</A></TD><TD>". check_output($referer->count) ."</TD></TR>";
-  }
-  $output .= "</TABLE>\n";
+  $output .= "<H3>Referers of the last ". format_interval(variable_get("referer_clear", 604800)) ."</H3>\n";
+  $output .= statistics_table_2("SELECT url, COUNT(url) AS count FROM referer WHERE url NOT LIKE '". path_uri() ."%' GROUP BY url ORDER BY count DESC");
 
   return $output;
 }

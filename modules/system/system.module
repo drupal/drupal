@@ -13,12 +13,12 @@ function system_help() {
 }
 
 function system_perm() {
-  return array("administer system settings");
+  return array("administer settings and filters");
 }
 
 function system_link($type) {
-  if ($type == "admin" && user_access("administer system settings")) {
-    $links[] = "<a href=\"admin.php?mod=system\">system settings</a>";
+  if ($type == "admin" && user_access("administer settings and filters")) {
+    $links[] = "<a href=\"admin.php?mod=system\">settings and filters</a>";
   }
 
   return $links ? $links : array();
@@ -129,7 +129,7 @@ function system_modules() {
 function system_admin() {
   global $edit, $op, $type;
 
-  if (user_access("administer system settings")) {
+  if (user_access("administer settings and filters")) {
 
     print "<SMALL><A HREF=\"admin.php?mod=system&type=options\">site settings</A> | <A HREF=\"admin.php?mod=system&type=filter\">content filters</A> | <A HREF=\"admin.php?mod=system&op=modules\">modules</A> | <A HREF=\"admin.php?mod=system&op=help\">help</A></SMALL><HR>\n";
 
