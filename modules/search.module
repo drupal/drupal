@@ -51,10 +51,7 @@ function search_link($type) {
 function search_admin() {
   global $op, $id, $edit;
 
-  /*
-  ** Only allow people with sufficient access.
-  */
-
+  // Only allow people with sufficient access.
   if (user_access("administer search")) {
     switch ($op) {
     case "Submit":
@@ -106,14 +103,10 @@ function do_search($search_array) {
   $type = $search_array["type"];
   $select = $search_array["select"];
 
-  /*
-  ** Replace wildcards with mysql wildcards
-  */
+  // Replace wildcards with mysql wildcards
   $keys = str_replace("*", "%", $keys);
 
-  /*
-  ** Split the words entered into an array
-  */
+  // Split the words entered into an array
   $words = explode(" ", $keys);
 
   foreach ($words as $word) {
@@ -126,12 +119,10 @@ function do_search($search_array) {
     if (strlen($word) < variable_get("remove_short", 0)) {
       continue;
     }
-
     /*
     ** If the word is proceeded by a "+", then this word is required, and
     ** pages that match other words, but not this one will be removed
     */
-
     if (substr($word, 0, 1) == "+") {
       $word = substr($word, 1);
       $required = 1;
@@ -142,24 +133,15 @@ function do_search($search_array) {
       $required = 0;
     }
 
-    /*
-    ** Put the next search word into the query and do the query
-    */
-
+    // Put the next search word into the query and do the query
     $query = preg_replace("'\%'", $word, $select);
     $result = db_query($query);
 
-    /*
-    ** If we got any results
-    */
-
+    // If we got any results
     if (db_num_rows($result) != 0) {
       $found = 1;
 
-      /*
-      ** Create an in memory array of the results,
-      */
-
+      // Create an in memory array of the results,
       while ($row = db_fetch_array($result)) {
         $lno       = $row["lno"];
         $nid       = $row["nid"];
@@ -169,10 +151,7 @@ function do_search($search_array) {
         $name      = $row["name"];
         $count     = $row["count"];
 
-        /*
-        ** If the just fetched row is not already in the table
-        */
-
+        // If the just fetched row is not already in the table
         if ($results[$lno]["lno"] != $lno) {
           $results[$lno]["count"] = $count;
 
@@ -183,28 +162,20 @@ function do_search($search_array) {
           $results[$lno]["uid"] = $uid;
           $results[$lno]["name"] = $name;
 
-          /*
-          ** If this is a required word, set it to "valid"
-          */
-
+          // If this is a required word, set it to "valid"
           if ($required == 1) {
             $results[$lno]["valid"] = 1;
           }
         }
         else {
-
-          /*
-          ** Different word, but existing "lno", increase the count of
-          ** matches against this "lno" by the number of times this
-          ** word appears in the text
-          */
-
+	  /*
+	  ** Different word, but existing "lno", increase the count of
+           ** matches against this "lno" by the number of times this
+	  ** word appears in the text
+	  */
           $results[$lno]["count"] = $results[$lno]["count"] + $count;
 
-          /*
-          ** Another match on the a required word, increase valid
-          */
-
+          // Another match on the a required word, increase valid
           if ($required == 1) {
             $results[$lno]["valid"]++;
           }
@@ -214,17 +185,10 @@ function do_search($search_array) {
   }
 
   if ($found) {
-
-    /*
-    ** Black magic here to sort the results
-    */
-
+    // Black magic here to sort the results
     array_multisort($results, SORT_DESC);
 
-    /*
-    ** OK, time to output the results.
-    */
-
+    // OK, time to output the results.
     foreach ($results as $key => $value) {
       $lno       = $value["lno"];
       $nid       = $value["nid"];
@@ -272,25 +236,21 @@ function update_index($search_array) {
   $result = db_query($select);
 
   if (db_num_rows($result)) {
-    /*
-    ** Wohoo, found some, look through the nodes we just selected
-    */
+    // Wohoo, found some, look through the nodes we just selected
     while ($node = db_fetch_array ($result)) {
 
       /*
       ** Trash any existing entries in the search index for this node,
       ** in case its a modified node.
       */
-
       db_query("DELETE from search_index where lno = '". $node["lno"] ."' and type = '". $node_type ."'");
 
       /*
       ** Build the wordlist, teaser not included, as it then gives a
-      ** false count of the number of hits, and doesn't show up
+      ** false count of the number of hist, and doesn't show up
       ** when clicking on a node from the search interface anyway.
       */
-
-      $wordlist = $node["text1"] ." ". $node["text2"];
+      $wordlist = $node["text1"] . $node["text2"];
 
       // Strip heaps of stuff out of it
       $wordlist = preg_replace("'<[\/\!]*?[^<>]*?>'si", "", $wordlist);
@@ -314,8 +274,8 @@ function update_index($search_array) {
       $wordlist = strtolower($wordlist);
 
       // Remove "noisewords"
-      $noise = explode("\r\n", variable_get("noisewords", ""));
-       foreach ($noise as $word) {
+      $noise = explode(",", variable_get("noisewords", ""));
+      foreach ($noise as $word) {
         $wordlist = preg_replace("' $word '", " ", $wordlist);
       }
 
@@ -329,7 +289,6 @@ function update_index($search_array) {
       ** walk through the array, giving a "weight" to each word, based on
       ** the number of times it appears in a page.
       */
-
       foreach ($eachword as $word) {
         if (strlen($word) > $minimum_word_size) {
           if ($newwords[$word]) {
@@ -345,7 +304,6 @@ function update_index($search_array) {
       ** Walk through the weighted words array, inserting them into
       ** the search index
       */
-
       foreach ($newwords as $key => $value) {
         db_query("INSERT INTO search_index VALUES('$key', ". $node["lno"] .", '$node_type', $value)");
       }
@@ -371,7 +329,7 @@ function update_index($search_array) {
 function search_display($edit) {
   $form = form_textfield(t("Minimum word length to index"), "minimum_word_size", $edit["minimum_word_size"], 10, 10, t("The number of characters a word has to be to be indexed.  Words shorter than this will not be searchable."));
   $form .= form_textfield(t("Minimum word length to search for"), "remove_short", $edit["remove_short"], 10, 10, t("The number of characters a word has to be to be searched for."));
-  $form .= form_textarea(t("Noise words"), "noisewords", $edit["noisewords"], 70, 10, t("These words will not be indexed, enter one word per line.  Example: and, or, not, a, to, I, it, ..."));
+  $form .= form_textarea(t("Noise words"), "noisewords", $edit["noisewords"], 70, 10, t("These words will not be indexed, enter comma separated list, linebreaks and whitespace do not matter.  Example: and, or, not, a, to, I, it, ..."));
   $form .= form_select(t("Help text position"), "help_pos", $edit["help_pos"], array("1" => t("Above search form"), "2" => t("Below search form"), "3" => t("Link from above search form"), "4" => t("Link from below search form")), t("Where to show the help text for users on the search page."));
   $form .= form_submit("Submit");
 
@@ -403,7 +361,10 @@ function search_invalidate() {
  */
 function search_save($edit) {
   variable_set("minimum_word_size", $edit["minimum_word_size"]);
-  variable_set("noisewords", $edit["noisewords"]);
+  
+  $data = strtr($edit["noisewords"], "\n\r\t", "   ");
+  $data = str_replace(" ", "", $data);
+  variable_set("noisewords", $data);
   variable_set("help_pos", $edit["help_pos"]);
   variable_set("remove_short", $edit["remove_short"]);
 }
