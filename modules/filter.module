@@ -430,7 +430,7 @@ function filter_admin_order() {
 function filter_admin_order_save($format, $weights) {
   foreach ($weights as $id => $weight) {
     list($module, $delta) = explode('/', $id);
-    db_query("UPDATE filters SET weight = %d WHERE format = %d AND module = '%s' AND delta = %d", $weight, $format, $module, $delta);
+    db_query("UPDATE {filters} SET weight = %d WHERE format = %d AND module = '%s' AND delta = %d", $weight, $format, $module, $delta);
   }
   drupal_set_message(t('The filter weights have been saved.'));
 
@@ -648,7 +648,7 @@ function filter_form($name, $value = FILTER_FORMAT_DEFAULT) {
     // Only one format available: use a hidden form item and only show tips.
     $format = array_shift($formats);
     $output = form_hidden($name, $format->format);
-    $tips = _filter_tips(variable_get('filter_default_format', 0), false);
+    $tips = _filter_tips(variable_get('filter_default_format', 1), false);
     $output .= form_item(t('Formatting guidelines'), theme('filter_tips', $tips, $extra), $extra);
     return $output;
   }
