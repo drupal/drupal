@@ -1,10 +1,14 @@
 <?php
 
+function diary_perm() {
+  return array("view diary entries", "edit diary entries");
+}
+
 function diary_search($keys) {
   global $user;
   $result = db_query("SELECT d.*, u.userid FROM diaries d LEFT JOIN users u ON d.author = u.id WHERE d.text LIKE '%$keys%' ORDER BY d.timestamp DESC LIMIT 20");
   while ($diary = db_fetch_object($result)) {
-    $find[$i++] = array("title" => "$diary->userid's diary", "link" => (user_access($user, "diary") ? "admin.php?mod=diary&op=edit&id=$diary->id" : "module.php?mod=diary&op=view&name=$diary->userid"), "user" => $diary->userid, "date" => $diary->timestamp);
+    $find[$i++] = array("title" => "$diary->userid's diary", "link" => (user_access($user, "edit diary entries") ? "admin.php?mod=diary&op=edit&id=$diary->id" : "module.php?mod=diary&op=view&name=$diary->userid"), "user" => $diary->userid, "date" => $diary->timestamp);
   }
   return $find;
 
@@ -13,25 +17,31 @@ function diary_search($keys) {
 function diary_page_overview($num = 20) {
   global $theme, $user;
 
-  $result = db_query("SELECT d.*, u.userid FROM diaries d LEFT JOIN users u ON d.author = u.id ORDER BY d.timestamp DESC LIMIT $num");
+  if (user_access($user, "view diary entries")) {
+    $result = db_query("SELECT d.*, u.userid FROM diaries d LEFT JOIN users u ON d.author = u.id ORDER BY d.timestamp DESC LIMIT $num");
 
-  while ($diary = db_fetch_object($result)) {
-    if ($time != date("F jS", $diary->timestamp)) {
-      $output .= "<B>". $date = t(date("l", $diary->timestamp)) .", ". t(date("F", $diary->timestamp)) ." ". date("j", $diary->timestamp) ."</B>\n";
-      $time = date("F jS", $diary->timestamp);
+    while ($diary = db_fetch_object($result)) {
+      if ($time != date("F jS", $diary->timestamp)) {
+        $output .= "<B>". $date = t(date("l", $diary->timestamp)) .", ". t(date("F", $diary->timestamp)) ." ". date("j", $diary->timestamp) ."</B>\n";
+        $time = date("F jS", $diary->timestamp);
+      }
+      $output .= "<DL>\n";
+      $output .= " <DD><P><B>$diary->userid ". t("wrote") .":</B></P></DD>\n";
+      $output .= " <DL>\n";
+      $output .= "  <DD><P>". check_output($diary->text, 1) ."</P><P>[ <A HREF=\"module.php?mod=diary&op=view&name=$diary->userid\">". t("more") ."</A> ]</P></DD>\n";
+      $output .= " </DL>\n";
+      $output .= "</DL>\n";
     }
-    $output .= "<DL>\n";
-    $output .= " <DD><P><B>$diary->userid ". t("wrote") .":</B></P></DD>\n";
-    $output .= " <DL>\n";
-    $output .= "  <DD><P>". check_output($diary->text, 1) ."</P><P>[ <A HREF=\"module.php?mod=diary&op=view&name=$diary->userid\">". t("more") ."</A> ]</P></DD>\n";
-    $output .= " </DL>\n";
-    $output .= "</DL>\n";
+
+    $theme->header();
+    $theme->box(t("Online diary"), $output);
+    $theme->footer();
   }
-
-  $theme->header();
-  $theme->box(t("Online diary"), $output);
-  $theme->footer();
-
+  else {
+    $theme->header();
+    $theme->box(t("Access denied"), message_access());
+    $theme->footer();
+  }
 }
 
 function diary_page_entry($timestamp, $text, $id = 0) {
@@ -177,7 +187,7 @@ function diary_page() {
       diary_page_delete(check_input($id));
       diary_page_display(check_input($name));
       break;
-   case "edit":
+    case "edit":
       diary_page_edit(check_input($id));
       break;
     case "view":
@@ -299,40 +309,40 @@ function diary_admin_display($order = "date") {
 
 
 function diary_admin() {
-  global $op, $id, $mod, $keys, $text, $order;
+  global $user, $op, $id, $mod, $keys, $text, $order;
 
-  print "<SMALL><A HREF=\"admin.php?mod=diary\">overview</A> | <A HREF=\"admin.php?mod=diary&op=search\">search diary</A> | <A HREF=\"admin.php?mod=diary&op=help\">help</A></SMALL><HR>\n";
+  if (user_access($user, "edit diary entries")) {
 
-  switch ($op) {
-    case "delete":
-      diary_admin_delete(check_input($id));
-      diary_admin_display();
-      break;
-    case "edit":
-      diary_admin_edit(check_input($id));
-      break;
-    case "help":
-      diary_help();
-      break;
-    case "search":
-      print search_form($keys);
-      print search_data($keys, $mod);
-      break;
-    case "Save diary entry":
-      diary_admin_save(check_input($id), check_input($text));
-      diary_admin_display();
-      break;
-    case "Update":
-      diary_admin_display(check_input($order));
-      break;
-    default:
-      diary_admin_display();
+    print "<SMALL><A HREF=\"admin.php?mod=diary\">overview</A> | <A HREF=\"admin.php?mod=diary&op=search\">search diary</A> | <A HREF=\"admin.php?mod=diary&op=help\">help</A></SMALL><HR>\n";
+
+    switch ($op) {
+      case "delete":
+        diary_admin_delete(check_input($id));
+        diary_admin_display();
+        break;
+      case "edit":
+        diary_admin_edit(check_input($id));
+        break;
+      case "help":
+        diary_help();
+        break;
+      case "search":
+        print search_form($keys);
+        print search_data($keys, $mod);
+        break;
+      case "Save diary entry":
+        diary_admin_save(check_input($id), check_input($text));
+        diary_admin_display();
+        break;
+      case "Update":
+        diary_admin_display(check_input($order));
+        break;
+      default:
+        diary_admin_display();
+    }
   }
-}
-
-function diary_export($uri) {
-  if ($uri[2] == "diary") {
-    print "TODO: export diary for user $uri[3]";
+  else {
+    print message_access();
   }
 }
 

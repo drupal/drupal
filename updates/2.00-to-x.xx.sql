@@ -265,3 +265,16 @@ ALTER TABLE book ADD log text NOT NULL;
 ALTER TABLE node DROP pid;
 ALTER TABLE node DROP log;
 DROP TABLE headlines;
+
+# 20/06/01
+CREATE TABLE role (
+  rid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
+  name varchar(32) DEFAULT '' NOT NULL,
+  perm text DEFAULT '' NOT NULL,
+  UNIQUE name (name),
+  PRIMARY KEY (rid)
+);
+
+ALTER TABLE users ADD role varchar(32) DEFAULT '' NOT NULL;
+ALTER TABLE users DROP access;
+UPDATE users SET role = 'registered user';

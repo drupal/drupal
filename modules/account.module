@@ -32,6 +32,10 @@ function account_help() {
  <?php
 }
 
+function account_perm() {
+  return array("add and edit user accounts");
+}
+
 function account_conf_options() {
   $output .= form_select(t("Public accounts"), "account_register", variable_get("account_register", 1), array("Disabled", "Enabled"), "If enabled, everyone can create a new user account.  If disabled, new user accounts can only be created by site administrators.");
   return $output;
@@ -41,7 +45,7 @@ function account_search($keys) {
   global $user;
   $result = db_query("SELECT * FROM users WHERE userid LIKE '%$keys%' LIMIT 20");
   while ($account = db_fetch_object($result)) {
-    $find[$i++] = array("title" => $account->userid, "link" => (user_access($user, "account") ? "admin.php?mod=account&op=view&name=". urlencode($account->userid) : "account.php?op=view&name=". urlencode($account->userid)), "user" => $account->userid);
+    $find[$i++] = array("title" => $account->userid, "link" => (user_access($user, "add and edit user accounts") ? "admin.php?mod=account&op=view&name=". urlencode($account->userid) : "account.php?op=view&name=". urlencode($account->userid)), "user" => $account->userid);
   }
   return $find;
 }
@@ -99,15 +103,6 @@ function account_overview($query = array()) {
   return $output;
 }
 
-function account_access($account) {
-  $data = explode(",", $account->access);
-  foreach ($data as $array) {
-    $access = explode("=", $array);
-    if ($access[0]) $output .= " $access[0]";
-  }
-  return $output;
-}
-
 function account_blocks($id) {
   $result = db_query("SELECT * FROM layout WHERE user = '$id'");
   while ($layout = db_fetch_object($result)) {
@@ -143,24 +138,11 @@ function account_delete($name) {
 }
 
 function account_form($account = 0) {
-  global $access;
-
-  function access($name) {
-    global $access, $account;
-    if (module_hook($name, "admin")) $access[$name] = $name;
-  }
-  module_iterate("access");
-
-  $account->access = explode(",", $account->access);
-  foreach ($account->access as $key=>$value) {
-    $account->access[$key] = substr($value, 0, -2);
-  }
 
   $form .= $account->id ? form_item("ID", $account->id) . form_hidden("id", $account->id) : "";
   $form .= $account->userid ? form_item(t("Username"), check_output($account->userid)) . form_hidden("userid", $account->userid) : form_textfield(t("Username"), "userid", $account->userid, 15, 15);
-  $form .= form_select(t("Status"), "status", ($account->status ? $account->status : 1), array("blocked", "not confirmed", "open"));
-  $form .= form_select(t("Administrator access"), "access", $account->access, $access, 0, "multiple=\"true\" size=\"10\"");
-//  $form .= form_item(t("Administrator access"), "<SELECT NAME=\"edit[access][]\" MULTIPLE=\"true\" SIZE=\"10\">$access</SELECT>");
+  $form .= form_select(t("Status"), "status", $account->status, array("blocked", "not confirmed", "open"));
+  $form .= form_select(t("Role"), "role", $account->role, access_get_roles());
   $form .= form_textfield(t("Real name"), "name", $account->name, 30, 55);
   $form .= form_textfield(t("Real e-mail address"), "real_email", $account->real_email, 30, 55);
   $form .= form_textfield(t("Fake e-mail address"), "fake_email", $account->fake_email, 30, 55);
@@ -179,18 +161,8 @@ function account_save($edit) {
   if ($edit[id]) {
     // Updating existing account
     foreach ($edit as $key=>$value) {
-      if ($key != "access") {
         $query .= "$key = '". addslashes($value) ."', ";
-      }
     }
-
-    if ($edit[access]) {
-      foreach ($edit[access] as $key=>$value) {
-        $access = field_set($access, $value, 1);
-      }
-    }
-    $query .= "access = '$access'";
-
     db_query("UPDATE users SET $query WHERE id = $edit[id]");
     watchdog("account", "account: modified user '$edit[userid]'");
     return $edit[userid];
@@ -208,14 +180,7 @@ function account_save($edit) {
       $edit[passwd] = user_password();
       $edit[hash] = substr(md5("$edit[userid]. ". time()), 0, 12);
 
-      if ($edit[access]) {
-        foreach ($edit[access] as $key=>$value) {
-          $access = field_set($access, $value, 1);
-        }
-        $edit[access] = $access;
-      }
-
-      $user = user_save("", array("userid" => $edit[userid], "access" => $edit[access], "real_email" => $edit[real_email], "passwd" => $edit[passwd], "status" => $edit[status], "hash" => $edit[hash]));
+      $user = user_save("", array("userid" => $edit[userid], "role" => $edit[role], "real_email" => $edit[real_email], "passwd" => $edit[passwd], "status" => $edit[status], "hash" => $edit[hash]));
 
       $link = path_uri() ."account.php?op=confirm&name=". urlencode($edit[userid]) ."&hash=$edit[hash]";
       $subject = strtr(t("Account details for %a"), array("%a" => variable_get(site_name, "drupal")));
@@ -231,8 +196,6 @@ function account_save($edit) {
 }
 
 function account_edit($name) {
-  $status = array("blocked", "not confirmed", "open");
-
   $result = db_query("SELECT * FROM users WHERE userid = '$name'");
 
   if ($account = db_fetch_object($result)) {
@@ -258,7 +221,7 @@ function account_view($name) {
     $output .= " <TR><TH>ID:</TH><TD>$account->id</TD></TR>\n";
     $output .= " <TR><TH>Username:</TH><TD>$account->userid</TD></TR>\n";
     $output .= " <TR><TH>Status:</TH><TD>". $status[$account->status] ."</TD></TR>\n";
-    $output .= " <TR><TH>Access:</TH><TD>". check_output(account_access($account)) ."</TD></TR>\n";
+    $output .= " <TR><TH>Role:</TH><TD>". check_output($account->role) ."</TD></TR>\n";
     $output .= " <TR><TH>Real name:</TH><TD>". check_output($account->name) ."</TD></TR>\n";
     $output .= " <TR><TH>Real e-mail address:</TH><TD>". format_email($account->real_email) ."</TD></TR>\n";
     $output .= " <TR><TH>Fake e-mail address:</TH><TD>". check_output($account->fake_email) ."</TD></TR>\n";
@@ -280,72 +243,77 @@ function account_view($name) {
 }
 
 function account_query($type = "") {
-  $queries = array(array("users recently visiting", "ORDER BY last_access DESC"), array("users recently joining", "ORDER BY id DESC"), array("users with access rights", "WHERE access != '' ORDER BY last_access DESC"), array("users with pending accounts", "WHERE status = 1 ORDER BY last_access DESC"), array("users with blocked accounts", "WHERE status = 0 ORDER BY last_access DESC"));
+  $queries = array(array("users recently visiting", "ORDER BY last_access DESC"), array("users recently joining", "ORDER BY id DESC"), array("users with pending accounts", "WHERE status = 1 ORDER BY last_access DESC"), array("users with blocked accounts", "WHERE status = 0 ORDER BY last_access DESC"));
   return ($queries[$type] ? $queries[$type] : $queries);
 }
 
 function account_admin() {
-  global $op, $edit, $id, $mod, $keys, $order, $name, $query;
+  global $user, $op, $edit, $id, $mod, $keys, $order, $name, $query;
 
-  print "<SMALL><A HREF=\"admin.php?mod=account&op=access\">access control</A> | <A HREF=\"admin.php?mod=account&op=add\">add new account</A> | <A HREF=\"admin.php?mod=account&op=listing\">account listings</A> | <A HREF=\"admin.php?mod=account&op=search\">search account</A> | <A HREF=\"admin.php?mod=account\">overview</A> | <A HREF=\"admin.php?mod=account&op=help\">help</A></SMALL><HR>";
+  if (user_access($user, "add and edit user accounts")) {
+    print "<SMALL><A HREF=\"admin.php?mod=account&op=access\">access control</A> | <A HREF=\"admin.php?mod=account&op=add\">add new account</A> | <A HREF=\"admin.php?mod=account&op=listing\">account listings</A> | <A HREF=\"admin.php?mod=account&op=search\">search account</A> | <A HREF=\"admin.php?mod=account\">overview</A> | <A HREF=\"admin.php?mod=account&op=help\">help</A></SMALL><HR>";
 
-  $query = $query ? $query : 0;
-  $name = $name ? $name : $edit[name];
+    $query = $query ? $query : 0;
+    $name = $name ? $name : $edit[name];
 
-  switch ($op) {
-    case "access":
-      print account_ac();
-      break;
-    case "Add rule":
-      print status(account_ac_add($edit));
-      print account_ac();
-      break;
-    case "Check":
-      print status(account_ac_check($edit));
-      print account_ac();
-      break;
-    case "delete":
-      print status(account_ac_del($id));
-      print account_ac();
-      break;
-    case "Delete account":
-      print status(account_delete($name));
-      print account_overview(account_query($query));
-      break;
-    case "add":
-      print account_add();
-      break;
-    case "Edit account":
-    case "edit":
-      print account_edit($name);
-      break;
-    case "help":
-      print account_help();
-      break;
-    case "listing":
-      print node_listing(account_query());
-      break;
-    case "search":
-      print search_form($keys);
-      print search_data($keys, $mod);
-      break;
-    case "Save account":
-      $name = account_save($edit);
-      if ($name)
-        print account_view($name);
-      else {
-        foreach ($edit as $key=>$value) {
-          $account->$key = $value;
+    switch ($op) {
+      case "access":
+        print account_ac();
+        break;
+      case "Add rule":
+        print status(account_ac_add($edit));
+        print account_ac();
+        break;
+      case "Check":
+        print status(account_ac_check($edit));
+        print account_ac();
+        break;
+      case "delete":
+        print status(account_ac_del($id));
+        print account_ac();
+        break;
+      case "Delete account":
+        print status(account_delete($name));
+        print account_overview(account_query($query));
+        break;
+      case "add":
+        print account_add();
+        break;
+      case "Edit account":
+      case "edit":
+        print account_edit($name);
+        break;
+      case "help":
+        print account_help();
+        break;
+      case "listing":
+        print node_listing(account_query());
+        break;
+      case "search":
+        print search_form($keys);
+        print search_data($keys, $mod);
+        break;
+      case "Save account":
+        $name = account_save($edit);
+        if ($name)
+          print account_view($name);
+        else {
+          foreach ($edit as $key=>$value) {
+            $account->$key = $value;
+          }
+          print account_form($account);
         }
-        print account_form($account);
-      }
-      break;
-    case "View account":
-    case "view":
-      print account_view($name);
-      break;
-    default:
-      print account_overview(account_query($query));
+        break;
+      case "View account":
+      case "view":
+        print account_view($name);
+        break;
+      default:
+        print account_overview(account_query($query));
+    }
+  }
+  else {
+    print message_access();
   }
 }
 

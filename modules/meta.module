@@ -6,6 +6,10 @@ function meta_help() {
   <?php
 }
 
+function meta_conf() {
+  return array("add and edit meta tags");
+}
+
 function meta_form($type, $edit = array()) {
   $c = db_query("SELECT * FROM collection WHERE types LIKE '%". check_input($type) ."%'");
   while ($collection = db_fetch_object($c)) {
@@ -125,40 +129,46 @@ function meta_overview() {
 }
 
 function meta_admin() {
-  global $edit, $type, $op, $id;
+  global $user, $edit, $type, $op, $id;
 
-  print "<SMALL><A HREF=\"admin.php?mod=meta&type=collection&op=add\">add new collection</A> | <A HREF=\"admin.php?mod=meta&type=tag&op=add\">add new meta-tag</A> | <A HREF=\"admin.php?mod=meta&op=preview\">preview node forms</A> | <A HREF=\"admin.php?mod=meta\">overview</A> | <A HREF=\"admin.php?mod=meta&op=help\">help</A></SMALL><HR>\n";
+  if (user_access($user, "add and edit meta tags")) {
 
-  switch ($op) {
-    case "add":
-      if ($type == "collection")
-        print meta_form_collection();
-      else
-        print meta_form_tag();
-      break;
-    case "edit":
-      if ($type == "collection")
-        print meta_form_collection(meta_get_collection($id));
-      else
-        print meta_form_tag(meta_get_tag($id));
-      break;
-    case "help":
-      print meta_help();
-      break;
-    case "preview":
-      print meta_preview();
-      break;
-    case "Delete":
-      $edit[name] = 0;
-      // fall through:
-    case "Submit":
-      if ($type == "collection")
-        print status(meta_save_collection($edit));
-      else
-        print status(meta_save_tag($edit));
-      // fall through:
-    default:
-      print meta_overview();
+    print "<SMALL><A HREF=\"admin.php?mod=meta&type=collection&op=add\">add new collection</A> | <A HREF=\"admin.php?mod=meta&type=tag&op=add\">add new meta-tag</A> | <A HREF=\"admin.php?mod=meta&op=preview\">preview node forms</A> | <A HREF=\"admin.php?mod=meta\">overview</A> | <A HREF=\"admin.php?mod=meta&op=help\">help</A></SMALL><HR>\n";
+
+    switch ($op) {
+      case "add":
+        if ($type == "collection")
+          print meta_form_collection();
+        else
+          print meta_form_tag();
+        break;
+      case "edit":
+        if ($type == "collection")
+          print meta_form_collection(meta_get_collection($id));
+        else
+          print meta_form_tag(meta_get_tag($id));
+        break;
+      case "help":
+        print meta_help();
+        break;
+      case "preview":
+        print meta_preview();
+        break;
+      case "Delete":
+        $edit[name] = 0;
+        // fall through:
+      case "Submit":
+        if ($type == "collection")
+          print status(meta_save_collection($edit));
+        else
+          print status(meta_save_tag($edit));
+        // fall through:
+      default:
+        print meta_overview();
+    }
+  }
+  else {
+    print message_access();
   }
 }
 

@@ -6,6 +6,10 @@ function module_help() {
  <?php
 }
 
+function module_perm() {
+  return array("install and uninstall modules");
+}
+
 function module_admin_rehash() {
   $result = db_query("SELECT * FROM modules");
   while ($module = db_fetch_object($result)) {
@@ -33,24 +37,30 @@ function module_admin_overview() {
 }
 
 function module_admin() {
-  global $op, $name;
+  global $user, $op, $name;
 
-  print "<SMALL><A HREF=\"admin.php?mod=module\">overview</A> | <A HREF=\"admin.php?mod=module&op=help\">help</A></SMALL><HR>\n";
+  if (user_access($user, "install and uninstall modules")) {
 
-  switch ($op) {
-    case "help":
-      module_help();
-      break;
-    case "rehash":
-      module_rehash($name);
-      module_admin_overview();
-      break;
-    case "Rehash modules":
-      module_admin_rehash();
-      module_admin_overview();
-      break;
-    default:
-      module_admin_overview();
+    print "<SMALL><A HREF=\"admin.php?mod=module\">overview</A> | <A HREF=\"admin.php?mod=module&op=help\">help</A></SMALL><HR>\n";
+
+    switch ($op) {
+      case "help":
+        module_help();
+        break;
+      case "rehash":
+        module_rehash($name);
+        module_admin_overview();
+        break;
+      case "Rehash modules":
+        module_admin_rehash();
+        module_admin_overview();
+        break;
+      default:
+        module_admin_overview();
+    }
+  }
+  else {
+    print message_access();
   }
 }
 

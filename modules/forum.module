@@ -24,9 +24,7 @@ function forum_form($edit = array()) {
 function forum_save($edit) {
   global $user, $status;
 
-  if (user_access($user)) {
-    node_save($edit, array(author => $user->id, body, comment => variable_get("forum_comment", 0), moderate => variable_get("forum_moderate", ""), promote => variable_get("forum_promote", 0), score => 0, status => $status[posted], timestamp => time(), title, type => "forum", votes => 0));
-  }
+  node_save($edit, array(author => $user->id, body, comment => variable_get("forum_comment", 0), moderate => variable_get("forum_moderate", ""), promote => variable_get("forum_promote", 0), score => 0, status => $status[posted], timestamp => time(), title, type => "forum", votes => 0));
 }
 
 function forum_num_comments($nid) {
@@ -40,21 +38,28 @@ function forum_last_comment($nid) {
 }
 
 function forum_page() {
-  global $theme;
+  global $user, $theme;
 
-  $result = db_query("SELECT nid FROM node WHERE type = 'forum' ORDER BY title");
+  if (user_access($user, "view content")) {
+    $result = db_query("SELECT nid FROM node WHERE type = 'forum' ORDER BY title");
 
-  $output .= "<TABLE BORDER=\"0\" CELLSPACING=\"4\" CELLPADDING=\"4\">\n";
-  $output .= " <TR><TH>". t("Forum") ."</TH><TH>". t("Comments") ."</TH><TH>". t("Last comment") ."</TH><TH>". t("Moderators") ."</TH></TR>";
-  while ($node = db_fetch_object($result)) {
-    $node = node_get_object(array("nid" => $node->nid));
-    $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A><BR><SMALL>". check_output($node->body, 1) ."</SMALL></TD><TD ALIGN=\"center\">". forum_num_comments($node->nid) ."</TD><TD ALIGN=\"center\">". forum_last_comment($node->nid) ."</TD><TD ALIGN=\"center\"><SMALL>". check_output($node->moderate) ."</SMALL></TD></TR>";
+    $output .= "<TABLE BORDER=\"0\" CELLSPACING=\"4\" CELLPADDING=\"4\">\n";
+    $output .= " <TR><TH>". t("Forum") ."</TH><TH>". t("Comments") ."</TH><TH>". t("Last comment") ."</TH><TH>". t("Moderators") ."</TH></TR>";
+    while ($node = db_fetch_object($result)) {
+      $node = node_get_object(array("nid" => $node->nid));
+      $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A><BR><SMALL>". check_output($node->body, 1) ."</SMALL></TD><TD ALIGN=\"center\">". forum_num_comments($node->nid) ."</TD><TD ALIGN=\"center\">". forum_last_comment($node->nid) ."</TD><TD ALIGN=\"center\"><SMALL>". check_output($node->moderate) ."</SMALL></TD></TR>";
+    }
+    $output .= "</TABLE>\n";
+
+    $theme->header();
+    $theme->box(t("Discussion forum"), $output);
+    $theme->footer();
   }
-  $output .= "</TABLE>\n";
-
-  $theme->header();
-  $theme->box(t("Discussion forum"), $output);
-  $theme->footer();
+  else {
+    $theme->header();
+    $theme->box(t("Access denied"), message_access());
+    $theme->footer();
+  }
 }
 
 ?>

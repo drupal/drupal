@@ -50,16 +50,16 @@ function comment_settings($mode, $order, $threshold) {
 function comment_form($edit) {
   global $REQUEST_URI, $user;
 
-  // Name field:
+  // name field:
   $form .= form_item(t("Your name"), format_username($user->userid));
 
-  // Subject field:
+  // subject field:
   $form .= form_textfield(t("Subject"), "subject", check_input($edit[subject]), 50, 60);
 
-  // Comment field:
+  // comment field:
   $form .= form_textarea(t("Comment"), "comment", check_input($edit[comment]), 50, 10, t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
 
-  // Preview button:
+  // preview button:
   $form .= form_hidden("pid", check_input($edit[pid]));
   $form .= form_hidden("id", check_input($edit[id]));
 
@@ -87,7 +87,12 @@ function comment_reply($pid, $id) {
     $pid = 0;
   }
 
-  $theme->box(t("Reply"), comment_form(array(pid=>$pid, id=>$id)));
+  if (user_access($user, "post comments")) {
+    $theme->box(t("Reply"), comment_form(array(pid=>$pid, id=>$id)));
+  }
+  else {
+    $theme->box(t("Reply"), t("You are not authorized to post comments."));
+  }
 }
 
 function comment_preview($edit) {
@@ -102,24 +107,26 @@ function comment_preview($edit) {
 function comment_post($edit) {
   global $theme, $user;
 
-  // check comment submission rate:
-  throttle("post comment", variable_get(max_comment_rate, 60));
+  if (user_access($user, "post comments")) {
+    // check comment submission rate:
+    throttle("post comment", variable_get(max_comment_rate, 60));
 
-  // check for duplicate comments:
-  $duplicate = db_result(db_query("SELECT COUNT(cid) FROM comments WHERE pid = '". check_input($edit[pid]) ."' AND lid = '". check_input($edit[id]) ."' AND subject = '". check_input($edit[subject]) ."' AND comment = '". check_input($edit[comment]) ."'"), 0);
+    // check for duplicate comments:
+    $duplicate = db_result(db_query("SELECT COUNT(cid) FROM comments WHERE pid = '". check_input($edit[pid]) ."' AND lid = '". check_input($edit[id]) ."' AND subject = '". check_input($edit[subject]) ."' AND comment = '". check_input($edit[comment]) ."'"), 0);
 
-  if ($duplicate != 0) {
-    watchdog("warning", "comment: duplicate '$subject'");
-  }
-  else {
-    // validate subject:
-    $subject = ($subject) ? $subject : substr($comment, 0, 29);
+    if ($duplicate != 0) {
+      watchdog("warning", "comment: duplicate '$subject'");
+    }
+    else {
+      // validate subject:
+      $subject = ($subject) ? $subject : substr($comment, 0, 29);
 
-    // add watchdog entry:
-    watchdog("special", "comment: added '$subject'");
+      // add watchdog entry:
+      watchdog("special", "comment: added '$subject'");
 
-    // add comment to database:
-    db_query("INSERT INTO comments (lid, pid, author, subject, comment, hostname, timestamp, score) VALUES ('". check_input($edit[id]) ."', '". check_input($edit[pid]) ."', '$user->id', '". check_input($edit[subject]) ."', '". check_input($edit[comment]) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."', '". ($user->userid ? 1 : 0) ."')");
+      // add comment to database:
+      db_query("INSERT INTO comments (lid, pid, author, subject, comment, hostname, timestamp, score) VALUES ('". check_input($edit[id]) ."', '". check_input($edit[pid]) ."', '$user->id', '". check_input($edit[subject]) ."', '". check_input($edit[comment]) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."', '". ($user->userid ? 1 : 0) ."')");
+    }
   }
 }
 
@@ -250,68 +257,71 @@ function comment_thread_max($cid, $mode, $threshold, $level = 0, $dummy = 0) {
 }
 
 function comment_render($lid, $cid) {
-  global $theme, $REQUEST_URI, $user;
+  global $user, $theme, $REQUEST_URI;
 
-  // Pre-process variables:
-  $lid = empty($lid) ? 0 : $lid;
-  $cid = empty($cid) ? 0 : $cid;
-  $mode  = ($user->id) ? $user->mode : variable_get(default_comment_mode, 4);
-  $order = ($user->id) ? $user->sort : variable_get(default_comment_order, 1);
-  $threshold = ($user->id) ? $user->threshold : variable_get(default_comment_threshold, 3);
+  if (user_access($user, "view comments")) {
 
-  if ($user->id) {
-    // Comment control:
-    $theme->box(t("Comment control"), comment_controls($threshold, $mode, $order));
+    // Pre-process variables:
+    $lid = empty($lid) ? 0 : $lid;
+    $cid = empty($cid) ? 0 : $cid;
+    $mode  = ($user->id) ? $user->mode : variable_get(default_comment_mode, 4);
+    $order = ($user->id) ? $user->sort : variable_get(default_comment_order, 1);
+    $threshold = ($user->id) ? $user->threshold : variable_get(default_comment_threshold, 3);
 
-    // Print moderation form:
-    print "<FORM METHOD=\"post\" ACTION=\"$REQUEST_URI\">\n";
-  }
+    if ($user->id) {
+      // Comment control:
+      $theme->box(t("Comment control"), comment_controls($threshold, $mode, $order));
 
-  if ($cid > 0) {
-    $result = db_query("SELECT c.*, u.* FROM comments c LEFT JOIN users u ON c.author = u.id WHERE cid = '$cid'");
-    if ($comment = db_fetch_object($result)) {
-      comment_view($comment, comment_link($comment));
+      // Print moderation form:
+      print "<FORM METHOD=\"post\" ACTION=\"$REQUEST_URI\">\n";
     }
-  }
-  else {
-    if ($mode == 1) {
-      $result = comment_query($lid, $order);
-      print "<TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-      print " <TR><TH>Subject</TH><TH>Author</TH><TH>Date</TH><TH>Score</TH></TR>\n";
-      while ($comment = db_fetch_object($result)) {
-        if (comment_visible($comment, $threshold)) {
-          print " <TR><TD><A HREF=\"". comment_uri("id=$comment->lid&cid=$comment->cid#$comment->cid") ."\">". check_output($comment->subject) ."</A></TD><TD>". format_username($comment->userid) ."</TD><TD>". format_date($comment->timestamp, "small") ."</TD><TD>". comment_score($comment) ."</TD></TR>\n";
-        }
-      }
-      print "</TABLE>\n";
-    }
-    else if ($mode == 2) {
-      $result = comment_query($lid, $order);
-      while ($comment = db_fetch_object($result)) {
-        comment_view($comment, (comment_visible($comment, $threshold) ? comment_link($comment, 0) : 0));
-      }
-    }
-    else if ($mode == 3) {
-      $result = comment_query($lid, $order, 0);
-      while ($comment = db_fetch_object($result)) {
-        comment_view($comment);
-        comment_thread_min($comment->cid, $threshold);
+
+    if ($cid > 0) {
+      $result = db_query("SELECT c.*, u.* FROM comments c LEFT JOIN users u ON c.author = u.id WHERE cid = '$cid'");
+      if ($comment = db_fetch_object($result)) {
+        comment_view($comment, comment_link($comment));
       }
     }
     else {
-      $result = comment_query($lid, $order, 0);
-      while ($comment = db_fetch_object($result)) {
-        comment_view($comment, (comment_visible($comment, $threshold) ? comment_link($comment, 0) : 0));
-        comment_thread_max($comment->cid, $mode, $threshold, $level + 1);
+      if ($mode == 1) {
+        $result = comment_query($lid, $order);
+        print "<TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
+        print " <TR><TH>Subject</TH><TH>Author</TH><TH>Date</TH><TH>Score</TH></TR>\n";
+        while ($comment = db_fetch_object($result)) {
+          if (comment_visible($comment, $threshold)) {
+            print " <TR><TD><A HREF=\"". comment_uri("id=$comment->lid&cid=$comment->cid#$comment->cid") ."\">". check_output($comment->subject) ."</A></TD><TD>". format_username($comment->userid) ."</TD><TD>". format_date($comment->timestamp, "small") ."</TD><TD>". comment_score($comment) ."</TD></TR>\n";
+          }
+        }
+        print "</TABLE>\n";
+      }
+      else if ($mode == 2) {
+        $result = comment_query($lid, $order);
+        while ($comment = db_fetch_object($result)) {
+          comment_view($comment, (comment_visible($comment, $threshold) ? comment_link($comment, 0) : 0));
+        }
+      }
+      else if ($mode == 3) {
+        $result = comment_query($lid, $order, 0);
+        while ($comment = db_fetch_object($result)) {
+          comment_view($comment);
+          comment_thread_min($comment->cid, $threshold);
+        }
+      }
+      else {
+        $result = comment_query($lid, $order, 0);
+        while ($comment = db_fetch_object($result)) {
+          comment_view($comment, (comment_visible($comment, $threshold) ? comment_link($comment, 0) : 0));
+          comment_thread_max($comment->cid, $mode, $threshold, $level + 1);
+        }
       }
     }
-  }
 
-  if ($user->id) {
-    // Print moderation form:
-    print "  <INPUT TYPE=\"hidden\" NAME=\"id\" VALUE=\"$lid\">\n";
-    print "  <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Moderate comments") ."\">\n";
-    print "</FORM>\n";
+    if ($user->id) {
+      // Print moderation form:
+      print "  <INPUT TYPE=\"hidden\" NAME=\"id\" VALUE=\"$lid\">\n";
+      print "  <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Moderate comments") ."\">\n";
+      print "</FORM>\n";
+    }
   }
 }
 

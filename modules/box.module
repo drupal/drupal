@@ -29,6 +29,10 @@ function box_help() {
  <?php
 }
 
+function box_perm() {
+  return array("add and edit boxes");
+}
+
 function box_block() {
   $result = db_query("SELECT * FROM boxes ORDER BY subject");
   $i = 0;
@@ -142,36 +146,42 @@ function box_admin_save($id, $subject, $content, $info, $link, $type) {
 }
 
 function box_admin() {
-  global $op, $id, $subject, $content, $info, $link, $type;
+  global $user, $op, $id, $subject, $content, $info, $link, $type;
 
-  print "<SMALL><A HREF=\"admin.php?mod=box&op=add\">add new box</A> | <A HREF=\"admin.php?mod=box\">overview</A> | <A HREF=\"admin.php?mod=box&op=help\">help</A></SMALL><HR>\n";
+  if (user_access($user, "add and edit boxes")) {
 
-  switch ($op) {
-    case "Add box":
-      box_admin_add(check_input($subject), check_code($content), check_input($info), check_input($link), check_input($type));
-      box_admin_display();
-      box_admin_rehash();
-      break;
-    case "Save box":
-      box_admin_save(check_input($id), check_input($subject), check_code($content), check_input($info), check_input($link), check_input($type));
-      box_admin_display();
-      box_admin_rehash();
-      break;
-    case "help":
-      box_help();
-      break;
-    case "add":
-      box_admin_new();
-      break;
-    case "edit":
-      box_admin_edit(check_input($id));
-      break;
-    case "delete":
-      box_admin_delete(check_input($id));
-      box_admin_rehash();
-       // fall through
-    default:
-      box_admin_display();
+    print "<SMALL><A HREF=\"admin.php?mod=box&op=add\">add new box</A> | <A HREF=\"admin.php?mod=box\">overview</A> | <A HREF=\"admin.php?mod=box&op=help\">help</A></SMALL><HR>\n";
+
+    switch ($op) {
+      case "Add box":
+        box_admin_add(check_input($subject), check_code($content), check_input($info), check_input($link), check_input($type));
+        box_admin_display();
+        box_admin_rehash();
+        break;
+      case "Save box":
+        box_admin_save(check_input($id), check_input($subject), check_code($content), check_input($info), check_input($link), check_input($type));
+        box_admin_display();
+        box_admin_rehash();
+        break;
+      case "help":
+        box_help();
+        break;
+      case "add":
+        box_admin_new();
+        break;
+      case "edit":
+        box_admin_edit(check_input($id));
+        break;
+      case "delete":
+        box_admin_delete(check_input($id));
+        box_admin_rehash();
+         // fall through
+      default:
+        box_admin_display();
+    }
+  }
+  else {
+    print message_access();
   }
 }
 

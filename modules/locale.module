@@ -24,6 +24,10 @@ function locale_help() {
  <?php
 }
 
+function locale_perm() {
+  return array("add and edit locales");
+}
+
 function locale_conf_options() {
   return form_select(t("Locale support"), "locale", variable_get("locale", 0), array("Disabled", "Enabled"), t("Disable locale support if your site does not require translation or internationalization support."));
 }
@@ -83,26 +87,31 @@ function locale_overview() {
 }
 
 function locale_admin() {
-  global $id, $edit, $op;
+  global $user, $id, $edit, $op;
 
-  print "<SMALL><A HREF=\"admin.php?mod=locale\">overview</A> | <A HREF=\"admin.php?mod=locale&op=help\">help</A></SMALL><HR>\n";
+  if (user_access($user, "add and edit locales")) {
+    print "<SMALL><A HREF=\"admin.php?mod=locale\">overview</A> | <A HREF=\"admin.php?mod=locale&op=help\">help</A></SMALL><HR>\n";
 
-  switch ($op) {
-    case "delete":
-      print status(locale_delete(check_input($id)));
-      print locale_overview();
-      break;
-    case "help":
-      print locale_help();
-      break;
-    case "edit":
-      print locale_edit(check_input($id));
-      break;
-    case "Save translations":
-      print locale_save(check_input($id), $edit);
-      // fall through
-    default:
-      print locale_overview();
+    switch ($op) {
+      case "delete":
+        print status(locale_delete(check_input($id)));
+        print locale_overview();
+        break;
+      case "help":
+        print locale_help();
+        break;
+      case "edit":
+        print locale_edit(check_input($id));
+        break;
+      case "Save translations":
+        print locale_save(check_input($id), $edit);
+        // fall through
+      default:
+        print locale_overview();
+    }
+  }
+  else {
+    print message_access();
   }
 }
 

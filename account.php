@@ -269,7 +269,7 @@ function account_create_submit($userid, $email) {
     $new[passwd] = user_password();
     $new[hash] = substr(md5("$new[userid]. ". time()), 0, 12);
 
-    $user = user_save("", array("userid" => $new[userid], "real_email" => $new[real_email], "passwd" => $new[passwd], "status" => 1, "hash" => $new[hash]));
+    $user = user_save("", array("userid" => $new[userid], "real_email" => $new[real_email], "passwd" => $new[passwd], "role" => "authenticated user", "status" => 1, "hash" => $new[hash]));
 
     $link = path_uri() ."account.php?op=confirm&name=$new[userid]&hash=$new[hash]";
     $subject = strtr(t("Account details for %a"), array("%a" => variable_get(site_name, "drupal")));
