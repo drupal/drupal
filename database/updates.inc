@@ -1,5 +1,5 @@
 <?php
-/* $Id: updates.inc,v 1.8 2004/04/15 20:49:40 dries Exp $ */
+/* $Id: updates.inc,v 1.9 2004/04/24 07:50:39 dries Exp $ */
 
 // Define the various updates in an array("date : comment" => "function");
 $sql_updates = array(
@@ -747,7 +747,7 @@ function update_78() {
     $ret[] = update_sql("CREATE TABLE {filters} (
       module varchar(64) NOT NULL default '',
       weight tinyint(2) DEFAULT '0' NOT NULL,
-      KEY weight (weight)
+      KEY module (module)
     )");
   }
   else {

@@ -173,7 +173,7 @@ CREATE TABLE feed (
 CREATE TABLE filters (
   module varchar(64) NOT NULL default '',
   weight smallint DEFAULT '0' NOT NULL,
-  PRIMARY KEY (weight)
+  PRIMARY KEY (module)
 );
 
 --
