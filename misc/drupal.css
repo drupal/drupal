@@ -76,4 +76,4 @@ th                        { text-align: left; padding-right: 1em; border-bottom:
 
 tr.dark                   { background-color: #ddd; }
 tr.light                  { background-color: #eee; }
-
+pre                       { white-space: pre-wrap; white-space: -moz-pre-wrap; white-space: -o-pre-wrap; white-space: -pre-wrap;}
