@@ -1782,7 +1782,7 @@ function node_nodeapi(&$node, $op, $arg = 0) {
  * In node listings, the process above is followed except that
  * hook_access() is not called on each node for performance reasons and for
  * proper functioning of the pager system. When adding a node listing to your
- * module, be sure to use node_access_join_sql() and node_access_where_sql() to add
+ * module, be sure to use db_rewrite_sql() to add
  * the appropriate clauses to your query for access checks.
  *
  * To see how to write a node access module of your own, see
@@ -1864,7 +1864,7 @@ function node_access_join_sql($node_alias = 'n', $node_access_alias = 'na') {
   }
 
   $sql = 'INNER JOIN {node_access} '. $node_access_alias;
-  $sql .= ' ON ('. $node_access_alias .'.nid = 0 OR '. $node_access_alias .'.nid = '. $node_alias .'.nid)';
+  $sql .= ' ON '. $node_access_alias .'.nid = '. $node_alias .'.nid';
   return $sql;
 }
 
@@ -1881,10 +1881,7 @@ function node_access_join_sql($node_alias = 'n', $node_access_alias = 'na') {
  */
 function node_access_where_sql($op = 'view', $node_access_alias = 'na', $uid = NULL) {
   if (!module_implements('node_grants') || user_access('administer nodes')) {
-    // This number is being used in a SQL query as a boolean.
-    // It is "'1'" instead of "1" for database compatibility, as both
-    // PostgreSQL and MySQL treat it as boolean in this case.
-    return "'1'";
+    return;
   }
 
   $sql = $node_access_alias .'.grant_'. $op .' = 1 AND CONCAT('. $node_access_alias .'.realm, '. $node_access_alias .'.gid) IN (';
@@ -1927,19 +1924,41 @@ function node_access_grants($op, $uid = NULL) {
 }
 
 /**
- * @} End of "defgroup node_access".
+ * Determine whether the user has a global viewing grant for all nodes.
  */
+function node_access_view_all_nodes() {
+  static $access;
+
+  if (!isset($access)) {
+    $sql = 'SELECT COUNT(*) FROM {node_access} WHERE nid = 0 AND CONCAT(realm, gid) IN (';
+    $grants = array();
+    foreach (node_access_grants('view') as $realm => $gids) {
+      foreach ($gids as $gid) {
+        $grants[] = "'". $realm . $gid ."'";
+      }
+    }
+    $sql .= implode(',', $grants) .') AND grant_view = 1';
+    $result = db_query($sql, $node->nid);
+    $access = db_result($result);
+  }
+
+  return $access;
+}
 
 /**
  * Implementation of hook_db_rewrite_sql
  */
 function node_db_rewrite_sql($query, $primary_table, $primary_field) {
-  if ($primary_field == 'nid') {
+  if ($primary_field == 'nid' && !node_access_view_all_nodes()) {
     $return['join'] = node_access_join_sql();
     $return['where'] = node_access_where_sql();
     $return['distinct'] = !empty($return['join']);
     return $return;
   }
 }
+
+/**
+ * @} End of "defgroup node_access".
+ */
 
 ?>
