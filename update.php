@@ -46,7 +46,8 @@ $mysql_updates = array(
   "2002-05-15" => "update_31",
   "2002-06-22" => "update_32",
   "2002-07-07" => "update_33",
-  "2002-07-31" => "update_34"
+  "2002-07-31" => "update_34",
+  "2002-08-10" => "update_35"
 );
 
 // Update functions
@@ -495,6 +496,10 @@ function update_33() {
 function update_34() {
   update_sql("ALTER TABLE feed MODIFY refresh int(10) NOT NULL default '0';");
   update_sql("ALTER TABLE feed MODIFY timestamp int (10) NOT NULL default '0';");
+}
+
+function update_35() {
+  update_sql("ALTER TABLE poll_choices ADD INDEX (nid);");
 }
 
 function update_upgrade3() {
