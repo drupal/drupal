@@ -1,9 +1,12 @@
 <?php
-// $Id: tracker.module,v 1.51 2003/08/15 16:41:53 dries Exp $
+// $Id: tracker.module,v 1.52 2003/08/20 21:06:51 dries Exp $
 
-function tracker_help() {
-  $output .= "<p>The tracker module is a handy module for displaying the most recent posts.  By following the <i>view recent posts</i> link in the user block, a user may quickly review all recent postings.</p>";
-  return $output;
+function tracker_help($section = "admin/tracker/help") {
+
+  switch ($section) {
+    case "admin/tracker/help":
+     return t("<p>The tracker module is a handy module for displaying the most recent posts.  By following the <i>view recent posts</i> link in the user block, a user may quickly review all recent postings.</p>");
+  }
 }
 
 function tracker_system($field) {
