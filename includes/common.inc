@@ -928,13 +928,13 @@ $conf = variable_init(isset($conf) ? $conf : array());
 // initialize installed modules:
 module_init();
 
+// set error handler:
+set_error_handler("error_handler");
+
 // initialize localization system:
 $locale = locale_init();
 
 // initialize theme:
 $theme = theme_init();
-
-// set error handler:
-set_error_handler("error_handler");
 
 ?>
