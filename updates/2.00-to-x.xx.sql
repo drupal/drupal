@@ -13,6 +13,13 @@ CREATE TABLE variable (
   PRIMARY KEY (name)
 );
 
+CREATE TABLE rating (
+  user int(6) DEFAULT '0' NOT NULL,
+  new int(6) DEFAULT '0' NOT NULL,
+  old int(6) DEFAULT '0' NOT NULL,
+  PRIMARY KEY (user)
+);
+
 CREATE TABLE watchdog (
   id int(5) DEFAULT '0' NOT NULL auto_increment,
   user int(6) DEFAULT '0' NOT NULL,
@@ -24,6 +31,8 @@ CREATE TABLE watchdog (
   timestamp int(11) DEFAULT '0' NOT NULL,
   PRIMARY KEY (id)
 );
+
+ALTER TABLE users CHANGE rating rating decimal(8,2);
 
 # 01/04/2001:
 

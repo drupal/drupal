@@ -219,10 +219,18 @@ CREATE TABLE users (
   history text NOT NULL,
   hash varchar(12) DEFAULT '' NOT NULL,
   timezone varchar(8),
-  rating decimal(8,4),
+  rating decimal(8,2),
   language char(2) DEFAULT '' NOT NULL,
   access varchar(255) DEFAULT '' NOT NULL,
   PRIMARY KEY (id)
+);
+
+DROP TABLE IF EXISTS rating;
+CREATE TABLE rating (
+  user int(6) DEFAULT '0' NOT NULL,
+  new int(6) DEFAULT '0' NOT NULL,
+  old int(6) DEFAULT '0' NOT NULL,
+  PRIMARY KEY (user)
 );
 
 DROP TABLE IF EXISTS variable;

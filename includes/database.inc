@@ -6,16 +6,9 @@ function db_connect($host, $user, $pass, $name) {
   // NOTE: we are using a persistent connection!
 }
 
-function db_query($query, $debug = false) {
-  // perform query:
-  $qid = mysql_query($query);
-
-  // debug output (if required):
-  if ($debug) print "<PRE>query: ". htmlspecialchars($query) ."<BR>error message: ". mysql_error() ."</PRE>";
-  if (!$qid) watchdog("error", "database: ". mysql_error() ."<BR>query: ". htmlspecialchars($query) ."");
-
-  // return result from query:
-  return $qid;
+function db_query($query) {
+  if ($result = mysql_query($query)) return $result;
+  else watchdog("error", "database: ". mysql_error() ."<BR>query: ". htmlspecialchars($query));
 }
 
 function db_fetch_object($qid) {
