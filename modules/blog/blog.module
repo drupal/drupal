@@ -121,15 +121,14 @@ function blog_feed_last() {
   node_feed($result, $channel);
 }
 
-function blog_page_user($uid = 0) {
-  global $user;
+function blog_page_user($uid) {
+  $account = user_load(array((is_numeric($uid) ? "uid" : "name") => $uid, "status" => 1));
 
-  if ($uid) {
-    $account = user_load(array((is_numeric($uid) ? "uid" : "name") => $uid, "status" => 1));
-  }
-  else {
-    $account = $user;
-  }
+  // Breadcrumb navigation:
+  $trail[] = l(t("Home"), NULL);
+  $trail[] = l(t("Blogs"), "blog");
+  $trail[] = l(t("%name's blog", array("%name" => $account->name)), "blog/$account->uid");
+  theme("path", $trail, $trail);
 
   $result = pager_query("SELECT nid FROM {node} WHERE type = 'blog' AND uid = '$account->uid' AND status = 1 ORDER BY nid DESC", variable_get("default_nodes_main", 10));
   while ($node = db_fetch_object($result)) {
@@ -224,6 +223,18 @@ function blog_page() {
     theme("footer");
   }
 
+}
+
+function blog_view($node, $main = 0) {
+  if ($main == 0) {
+    // Breadcrumb navigation:
+    $trail[] = l(t("Home"), NULL);
+    $trail[] = l(t("%name's blog", array("%name" => $node->name)), "blog/$node->uid");
+
+    theme("path", $trail, $trail);
+  }
+
+  theme("node", $node, $main);
 }
 
 function blog_link($type, $node = 0, $main) {
