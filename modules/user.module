@@ -1298,7 +1298,7 @@ function user_admin_create($edit = array()) {
 
       user_save('', array('name' => $edit['name'], 'pass' => $edit['pass'], 'init' => $edit['mail'], 'mail' => $edit['mail'], 'rid' => array(_user_authenticated_id()), 'status' => 1));
 
-      drupal_set_message(t('Created a new user account.  No e-mail has been sent.'));
+      drupal_set_message(t('created a new user account.  No e-mail has been sent.'));
 
       return;
     }
@@ -1316,19 +1316,19 @@ function user_admin_create($edit = array()) {
 }
 
 function user_admin_access($edit = array()) {
-  $type = arg(3);
+  $type = arg(4);
 
   if (empty($type)) {
     return;
   }
 
   $op = $_POST['op'];
-  $id = arg(4);
+  $id = arg(5);
 
   if ($op == t('Add rule')) {
     $aid = db_next_id('{access}_aid');
     db_query("INSERT INTO {access} (aid, mask, type, status) VALUES ('%s', '%s', '%s', %d)", $aid, $edit['mask'], $type, $edit['status']);
-    drupal_set_message(t('access rule added.'));
+    drupal_set_message(t('the access rule has been added.'));
   }
   else if ($op == t('Check')) {
     if (user_deny($type, $edit['test'])) {
@@ -1340,18 +1340,18 @@ function user_admin_access($edit = array()) {
   }
   else if ($id) {
     db_query('DELETE FROM {access} WHERE aid = %d', $id);
-    drupal_set_message(t('access rule deleted.'));
+    drupal_set_message(t('the access rule has been deleted.'));
   }
 
   $header = array(t('type'), t('mask'), t('operations'));
   $result = db_query("SELECT * FROM {access} WHERE type = '%s' AND status = 1 ORDER BY mask", $type);
   while ($rule = db_fetch_object($result)) {
-    $rows[] = array(t('Allow'), $rule->mask, array('data' => l(t('delete rule'), "admin/user/access/$type/$rule->aid"), 'align' => 'center'));
+    $rows[] = array(t('Allow'), $rule->mask, array('data' => l(t('delete rule'), "admin/user/configure/access/$type/$rule->aid"), 'align' => 'center'));
   }
 
   $result = db_query("SELECT * FROM {access} WHERE type = '%s' AND status = 0 ORDER BY mask", $type);
   while ($rule = db_fetch_object($result)) {
-    $rows[] = array(t('Deny'), $rule->mask, l(t('delete rule'), "admin/user/access/$type/$rule->aid"));
+    $rows[] = array(t('Deny'), $rule->mask, l(t('delete rule'), "admin/user/configure/access/$type/$rule->aid"));
   }
 
   $options = array('1' => t('Allow'), '0' => t('Deny'));
@@ -1549,7 +1549,7 @@ function user_admin_edit() {
       unset($edit['pass1'], $edit['pass2']);
       if (!form_has_errors()) {
         $account = user_save($account, array_merge($edit, $data));
-        drupal_set_message(t('user information changes have been saved.'));
+        drupal_set_message(t('the user information changes have been saved.'));
       }
     }
     else if ($op == t('Delete account')) {
@@ -1563,7 +1563,7 @@ function user_admin_edit() {
         return;
       }
       else {
-        drupal_set_message(t('Failed to delete account: the account has to be blocked first.'), 'error');
+        drupal_set_message(t('failed to delete account: the account has to be blocked first.'), 'error');
       }
     }
 
@@ -1651,7 +1651,7 @@ function user_configure() {
       $output = user_admin_access($edit);
       break;
     case t('Save permissions'):
-      drupal_set_message(t('user permissions saved.'));
+      drupal_set_message(t('the user permissions have been saved.'));
     case 'permission':
       $output = user_admin_perm($edit);
       break;
