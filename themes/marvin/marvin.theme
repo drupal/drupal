@@ -1,5 +1,5 @@
 <?php
-// $Id: marvin.theme,v 1.107 2003/08/23 10:11:10 dries Exp $
+// $Id: marvin.theme,v 1.108 2003/10/06 10:03:14 kjartan Exp $
 
  class Theme_marvin extends BaseTheme {
    var $link = "#666699";
@@ -64,7 +64,7 @@
      print "<table cellpadding=\"0\" cellspacing=\"0\" style=\"border 0px; width: 100%;\">\n";
      print " <tr><td colspan=\"2\"><img src=\"$this->path/images/drop.gif\" alt=\"\" title=\"\" /> &nbsp; <b>$node->title</b></td></tr>\n";
      print " <tr style=\"vertical-align: bottom;\"><td colspan=\"2\" style=\"background-color: #000000; width: 100%;\"><img src=\"$this->path/images/pixel.gif\" width=\"1\" height=\"1\" alt=\"\" title=\"\" /></td></tr>\n";
-     print " <tr><td><div style=\"color: #7c7c7c;\"><small>". t("Submitted by %a on %b", array("%a" => format_name($node), "%b" => format_date($node->created, "large"))); ?><?php print "</small></div></td><td style=\"text-align: right; vertical-align: top;\"><small>". $this->links($terms) ."</small></td></tr>\n";
+     print " <tr><td><div style=\"color: #7c7c7c;\"><small>". t("Submitted by %a on %b", array("%a" => format_name($node), "%b" => format_date($node->created, "large"))); ?><?php print "</small></div></td><td style=\"text-align: right; vertical-align: top;\"><small>". ($terms ? $this->links($terms) : "") ."</small></td></tr>\n";
      print " <tr><td colspan=\"2\">&nbsp;</td></tr>\n";
 
      if ($main && $node->teaser) {
