@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.115 2005/02/27 18:39:18 unconed Exp $
+// $Id: search.module,v 1.116 2005/02/27 23:31:47 unconed Exp $
 
 /**
  * @file
@@ -494,7 +494,9 @@ function do_search($keys, $type, $join = '', $where = '1') {
     }
   }
   // Tell the user which words were excluded
-  drupal_set_message(t('The following word(s) were not included because they were too short: %words', array('%words' => '<em>'. implode(', ', $refused) .'</em>')));
+  if (count($refused)) {
+    drupal_set_message(t('The following word(s) were not included because they were too short: %words', array('%words' => '<em>'. implode(', ', $refused) .'</em>')));
+  }
 
   if (count($words) == 0) {
     return array();
