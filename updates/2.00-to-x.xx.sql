@@ -299,3 +299,15 @@ CREATE TABLE cache (
   timestamp int(11) NOT NULL,
   PRIMARY KEY (url)
 );
+
+# 08/06/01
+CREATE TABLE site (
+  sid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
+  title varchar(128) DEFAULT '' NOT NULL,
+  url varchar(255) DEFAULT '' NOT NULL,
+  size text NOT NULL,
+  timestamp int(11) NOT NULL,
+  UNIQUE (title),
+  UNIQUE (url),
+  PRIMARY KEY (sid)
+);
