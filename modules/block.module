@@ -366,7 +366,7 @@ function block_list($region) {
       if ($block['custom'] && $user->uid && !isset($user->block[$block['module']][$block['delta']])) {
         $user->block[$block['module']][$block['delta']] = $block['status'];
       }
-      if ((($block['status'] && (!$user->uid || !$block['custom'])) || ($block['custom'] && $user->block[$block['module']][$block['delta']])) && (!$block['path'] || preg_match($block['path'], "/" . $_GET["q"]))) {
+      if ((($block['status'] && (!$user->uid || !$block['custom'])) || ($block['custom'] && $user->block[$block['module']][$block['delta']])) && (!$block['path'] || preg_match($block['path'], str_replace('?q=', '/', request_uri())))) {
 
         /*
         ** Check the current throttle status and see if block should be displayed
