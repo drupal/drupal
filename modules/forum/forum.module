@@ -92,7 +92,7 @@ function forum_block($op = "list", $delta = 0) {
         $content .= node_title_list(db_query_range("SELECT n.nid, n.title, u.uid, u.name FROM node n LEFT JOIN forum f ON n.nid = f.nid LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'forum' ORDER BY n.nid DESC", 0, variable_get("forum_block_num", "5")), t("New forum topics:"));
 
         if ($content) {
-          $content .= "<div id=\"forum_more\" align=\"right\">". l(t("more"), "forum", array("title" => t("Read the latest forum topics."))) ."</div>";
+          $content .= "<div id=\"forum_more\" style=\"text-align: right;\">". l(t("more"), "forum", array("title" => t("Read the latest forum topics."))) ."</div>";
         }
 
         cache_set("forum:block", $content, time() + variable_get("cache_clear", 120));
@@ -214,7 +214,7 @@ function forum_form(&$node, &$help, &$error) {
         while($icon = readdir($dir)) {
           if ($icon == '.' || $icon == '..') {continue;}
           if ($node->icon == $icon) {$checked = "checked";} else {$checked = "";}
-          $radio .= "<input type=\"radio\" name=\"edit[icon_num]\" value=\"$icon_num\" $checked /><img src=\"$icon_path$icon\" alt=\"\" /> \n";
+          $radio .= "<input type=\"radio\" name=\"edit[icon_num]\" value=\"$icon_num\" $checked /><img src=\"$icon_path$icon\" alt=\"\" title=\"\" /> \n";
           $icon_num++;
         }
         closedir($dir);
@@ -226,7 +226,7 @@ function forum_form(&$node, &$help, &$error) {
         while($icon = readdir($dir)) {
           if ($icon == '.' || $icon == '..') {continue;}
           if ($node->icon_num == $icon_num) {$checked = "checked";} else {$checked = "";}
-          $radio .= "<input type=\"radio\" name=\"edit[icon_num]\" value=\"$icon_num\" $checked /><img src=\"$icon_path$icon\" alt=\"\" /> \n";
+          $radio .= "<input type=\"radio\" name=\"edit[icon_num]\" value=\"$icon_num\" $checked /><img src=\"$icon_path$icon\" alt=\"\" title=\"\" /> \n";
           $icon_num++;
         }
         closedir($dir);
@@ -535,7 +535,7 @@ function forum_theme_list($forums, $parents, $tid) {
   $t[] = l(t("Discussion forum"), "forum");
 
   $output .= "<table border=\"0\" cellpadding=\"5\">\n";
-  $output .= " <tr><th colspan=\"3\" align=\"left\">".implode(" : ", array_reverse($t)) ."</th>";
+  $output .= " <tr><th colspan=\"3\" style=\"text-align: left;\">".implode(" : ", array_reverse($t)) ."</th>";
   if ($forums) {
     $output .= "<th>". t("topics") ."</th><th>". t("posts") ."</th><th>". t("last post") ."</th></tr>";
 
@@ -548,7 +548,7 @@ function forum_theme_list($forums, $parents, $tid) {
         if ($user->uid) $new_topics = $forum->num_topics - $forum->old_topics;
         $icon = _forum_get_folder_icon($new_topics);
         $output .= " <tr><td>&nbsp;</td><td>$icon</td>";
-        $output .= "<td><table border=\"0\"><tr><td width=\"". ($forum->depth * 20) ."\">&nbsp;</td><td>". l($forum->name, "forum/$forum->tid") ."<div style=\"padding-top: 5px;\">". check_output($forum->description);
+        $output .= "<td><table border=\"0\"><tr><td style=\"width: ". ($forum->depth * 20) ."px;\">&nbsp;</td><td>". l($forum->name, "forum/$forum->tid") ."<div style=\"padding-top: 5px;\">". check_output($forum->description);
 
         $links = array();
         if ($forum->last_post) {
@@ -563,7 +563,7 @@ function forum_theme_list($forums, $parents, $tid) {
         }
 
         $output .= "</div></td></tr></table></td>";
-        $output .= "<td align=\"center\">".$forum->num_topics.($new_topics ? "<br />(".t("%a new", array("%a" => $new_topics)).")" : "")."</td><td align=\"center\">".$forum->num_posts."</td><td align=\"center\">"._forum_format($forum->last_post)."</td></tr>";
+        $output .= "<td style=\"text-align: center;\">".$forum->num_topics.($new_topics ? "<br />(".t("%a new", array("%a" => $new_topics)).")" : "")."</td><td style=\"text-align: center;\">".$forum->num_posts."</td><td style=\"text-align: center;\">"._forum_format($forum->last_post)."</td></tr>";
       }
     }
   }
@@ -615,8 +615,8 @@ function forum_theme_topic_list($tid, $topics, $sortby, $forum_per_page, $offset
           <tr>
             <td>"._forum_get_folder_icon($topic->new, $topic->num_comments, $topic->comment_mode)."</td>
             <td>"._forum_get_icon($topic)."</td>
-            <td valign=\"top\">$topic->title</td>
-            <td align=\"center\" valign=\"top\" colspan=\"3\">". l(t("This topic has been moved"), "forum/$topic->tid")."</td>
+            <td style=\"vertical-align: top;\">$topic->title</td>
+            <td style=\"text-align: center; vertical-align: top;\" colspan=\"3\">". l(t("This topic has been moved"), "forum/$topic->tid")."</td>
           </tr>";
       }
       else {
@@ -624,10 +624,10 @@ function forum_theme_topic_list($tid, $topics, $sortby, $forum_per_page, $offset
           <tr>
             <td>"._forum_get_folder_icon($topic->new, $topic->num_comments, $topic->comment_mode)."</td>
             <td>"._forum_get_icon($topic)."</td>
-            <td valign=\"top\">". l($topic->title, "node/view/$topic->nid") ."</td>
-            <td align=\"center\" valign=\"top\" nowrap=\"nowrap\">".$topic->num_comments.($topic->new_replies ? " (".t("%a new", array("%a" => $topic->new_replies)).")" : "")."</td>
-            <td align=\"center\">"._forum_format($topic)."</td>
-            <td align=\"center\">"._forum_format($topic->last_reply)."</td>
+            <td style=\"vertical-align: top;\">". l($topic->title, "node/view/$topic->nid") ."</td>
+            <td style=\"text-align: center; vertical-align: top;\">".$topic->num_comments.($topic->new_replies ? " (".t("%a new", array("%a" => $topic->new_replies)).")" : "")."</td>
+            <td style=\"text-align: center;\">"._forum_format($topic)."</td>
+            <td style=\"text-align: center;\">"._forum_format($topic->last_reply)."</td>
           </tr>";
       }
     }
@@ -636,12 +636,12 @@ function forum_theme_topic_list($tid, $topics, $sortby, $forum_per_page, $offset
   }
   $output .= "<hr />";
 
-  $output .= "<div align=\"center\">" .t("%a topics, %b topics per page, page %c of %d", array("%a" => $pager_total[0], "%b" => $forum_per_page, "%c" => $offset, "%d" => ceil($pager_total[0]/$forum_per_page))) ."</div>";
+  $output .= "<div style=\"text-align: center;\">" .t("%a topics, %b topics per page, page %c of %d", array("%a" => $pager_total[0], "%b" => $forum_per_page, "%c" => $offset, "%d" => ceil($pager_total[0]/$forum_per_page))) ."</div>";
 
   $output .= (($pager = pager_display(NULL, $forum_per_page, 0, "default")) ? "$pager" : "");
 
   if (user_access("create forum topics")) {
-    $output .= "<div align=\"center\" style=\"font-style: bold;\">". l(t("create new forum topic"), "node/add/forum/$tid") ."</div>";
+    $output .= "<div style=\"text-align: center; font-style: bold;\">". l(t("create new forum topic"), "node/add/forum/$tid") ."</div>";
   }
 
   return $output;
@@ -677,7 +677,7 @@ function _forum_get_folder_icon($new_posts, $num_posts = 0, $comment_mode = 0) {
     // default
     $file = $base_path."/".$icon.".gif";
 
-    return "<img src=\"$file\" alt=\"\" />";
+    return "<img src=\"$file\" alt=\"\" title=\"\" />";
   }
   else {
     return "&nbsp;";

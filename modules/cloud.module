@@ -198,7 +198,7 @@ function cloud_block($op = "list", $delta = 0) {
   }
   else {
     $block["subject"] = t("Site cloud");
-    $block["content"] = cloud_list(20) ."<div align=\"right\">". l(t("more"), "cloud", array("title" => t("Monitor other sites in the cloud."))) ."</div>";
+    $block["content"] = cloud_list(20) ."<div style=\"text-align: right;\">". l(t("more"), "cloud", array("title" => t("Monitor other sites in the cloud."))) ."</div>";
     return $block;
   }
 }

@@ -47,7 +47,7 @@ function help_admin() {
 
   foreach (module_list() as $name) {
     if (module_hook($name, "help")) {
-      print "<h2><a name=\"$name\">". ucfirst($name) ." module</a></h2>";
+      print "<h2><a id=\"$name\">". ucfirst($name) ." module</a></h2>";
       print module_invoke($name, "help");
     }
   }

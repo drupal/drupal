@@ -57,10 +57,10 @@ function profile_settings() {
   $output .= "<tr><th>field</th><th>enable</th><th>public</th><th>required</th><th>show in registration form</th></tr>\n";
   foreach ($profile_fields as $key => $field) {
     $output .= "<tr><td>$field[1]</td>";
-    $output .= "<td align=\"center\">". form_checkbox("", "profile_private_fields][", $key, in_array($key, $profile_private_fields)) ."</td>";
-    $output .= "<td align=\"center\">". form_checkbox("", "profile_public_fields][", $key, in_array($key, $profile_public_fields)) ."</td>";
-    $output .= "<td align=\"center\">". form_checkbox("", "profile_required_fields][", $key, in_array($key, $profile_required_fields)) ."</td>";
-    $output .= "<td align=\"center\">". form_checkbox("", "profile_register_fields][", $key, in_array($key, $profile_register_fields)) ."</td>";
+    $output .= "<td style=\"text-align: center;\">". form_checkbox("", "profile_private_fields][", $key, in_array($key, $profile_private_fields)) ."</td>";
+    $output .= "<td style=\"text-align: center;\">". form_checkbox("", "profile_public_fields][", $key, in_array($key, $profile_public_fields)) ."</td>";
+    $output .= "<td style=\"text-align: center;\">". form_checkbox("", "profile_required_fields][", $key, in_array($key, $profile_required_fields)) ."</td>";
+    $output .= "<td style=\"text-align: center;\">". form_checkbox("", "profile_register_fields][", $key, in_array($key, $profile_register_fields)) ."</td>";
     $output .= "</tr>\n";
   }
   $output .= "</table>\n";
@@ -127,7 +127,7 @@ function _profile_form($edit, $mode) {
     if ($edit["profile_avatar"] && $edit["uid"]) {
       $file = profile_avatar_path($edit["uid"], $edit["profile_avatar"]);
       if ($file) {
-        $output .= "<img src=\"$file\" alt=\"\" /><br />";
+        $output .= "<img src=\"$file\" alt=\"\" title=\"\" /><br />";
       }
     }
     $output .= form_file($profile_fields["avatar"][1], "profile_avatar", 64, $profile_fields["avatar"][2]);
@@ -192,7 +192,7 @@ function _profile_user_view(&$user, $mode) {
           if ($t == "profile_avatar") {
             $file = profile_avatar_path($user->uid, $user->profile_avatar);
             if (file_exists($file)) {
-              $output .= form_item(t("Avatar"), "<img src=\"$file\" alt=\"\" />");
+              $output .= form_item(t("Avatar"), "<img src=\"$file\" alt=\"\" title=\"\" />");
             }
           }
 
@@ -264,7 +264,7 @@ function _profile_edit_birth($edit = "") {
   $output .= "&nbsp;";
   $output .= _profile_select("profile_birthmonth", $edit->profile_birthmonth, $profile_months);
   $output .= "&nbsp;";
-  $output .= "<input maxlength=\"4\" name=\"edit[profile_birthyear]\" size=\"5\" value=\"$edit->profile_birthyear\" />";
+  $output .= "<input type=\"text\" maxlength=\"4\" name=\"edit[profile_birthyear]\" size=\"5\" value=\"$edit->profile_birthyear\" />";
   return $output;
 }
 

@@ -808,7 +808,7 @@ function form($form, $method = "post", $action = 0, $options = 0) {
   if (!$action) {
     $action = request_uri();
   }
-  return "<form action=\"$action\" method=\"$method\"". ($options ? " $options" : "") .">\n$form</form>\n";
+  return "<form action=\"$action\" method=\"$method\"". ($options ? " $options" : "") .">\n$form\n</form>\n";
 }
 
 function form_item($title, $value, $description = 0) {
@@ -825,7 +825,7 @@ function form_checkbox($title, $name, $value = 1, $checked = 0, $description = 0
 
 function form_textfield($title, $name, $value, $size, $maxlength, $description = 0) {
   $size = $size ? " size=\"$size\"" : "";
-  return form_item($title, "<input maxlength=\"$maxlength\" class=\"form-text\" name=\"edit[$name]\"$size value=\"". check_form($value) ."\" />", $description);
+  return form_item($title, "<input type=\"text\" maxlength=\"$maxlength\" class=\"form-text\" name=\"edit[$name]\"$size value=\"". check_form($value) ."\" />", $description);
 }
 
 function form_password($title, $name, $value, $size, $maxlength, $description = 0) {

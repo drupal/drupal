@@ -3,8 +3,8 @@
 
 function system_help() {
   $output .= "<p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviours including visual and operational settings.</p>";
-  $output .= "<h3><a name=\"cron\">Cron</a></h3>". system_help_cron();
-  $output .= "<h3><a name=\"cache\">Cache</a></h3>". system_help_cache();
+  $output .= "<h3><a id=\"cron\">Cron</a></h3>". system_help_cron();
+  $output .= "<h3><a id=\"cache\">Cache</a></h3>". system_help_cache();
   return t("$output");
 }
 
@@ -134,7 +134,7 @@ function system_view_general() {
 
 function system_view_module($name) {
   if (module_hook($name, "settings")) {
-      $output .= "<h3><a name=\"$name\">". ucfirst(t("$name")) ." ". t("settings") ."</a></h3>". module_invoke($name, "settings") ."<hr />\n";
+      $output .= "<h3><a id=\"$name\">". ucfirst(t("$name")) ." ". t("settings") ."</a></h3>". module_invoke($name, "settings") ."<hr />\n";
   }
   return $output;
 }

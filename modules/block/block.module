@@ -163,7 +163,7 @@ function block_admin_preview() {
   while ($block = db_fetch_object($result)) {
     $block_data = module_invoke($block->module, "block", "list");
     $name = $block_data[$block->delta]["info"];
-    $lblocks .= " <tr><td nowrap=\"nowrap\">". ($block->status == 2 ? "<b>$name</b>" : $name) ."</td><td>$block->weight</td></tr>\n";
+    $lblocks .= " <tr><td>". ($block->status == 2 ? "<b>$name</b>" : $name) ."</td><td>$block->weight</td></tr>\n";
   }
   $lblocks .= "</table>\n";
 
@@ -178,9 +178,9 @@ function block_admin_preview() {
 
   $output .= "<h3>". t("Themes with both left and right sidebars") .":</h3>\n";
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  $output .= " <tr><td align=\"center\" colspan=\"3\">header</td></tr>\n";
-  $output .= " <tr><td>\n". ($lblocks ? $lblocks : "&nbsp;") ."</td><td width=\"300\">&nbsp;</td><td>\n". ($rblocks ? $rblocks : "&nbsp;") ."</td></tr>\n";
-  $output .= " <tr><td align=\"center\" colspan=\"3\">footer</td></tr>\n";
+  $output .= " <tr><td colspan=\"3\" style=\"text-align: center;\">header</td></tr>\n";
+  $output .= " <tr><td>\n". ($lblocks ? $lblocks : "&nbsp;") ."</td><td style=\"width: 300px;\">&nbsp;</td><td>\n". ($rblocks ? $rblocks : "&nbsp;") ."</td></tr>\n";
+  $output .= " <tr><td colspan=\"3\" style=\"text-align: center;\">footer</td></tr>\n";
   $output .= "</table>\n";
 
   $result = db_query("SELECT * FROM blocks WHERE status > 0 ORDER BY weight");
@@ -194,16 +194,16 @@ function block_admin_preview() {
 
   $output .= "<h3>". t("Themes with right-sidebar only") .":</h3>\n";
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  $output .= " <tr><td align=\"center\" colspan=\"2\">header</td></tr>\n";
-  $output .= " <tr><td width=\"400\">&nbsp;</td><td>\n". ($blocks ? $blocks : "&nbsp;") ."</td></tr>\n";
-  $output .= " <tr><td align=\"center\" colspan=\"2\">footer</td></tr>\n";
+  $output .= " <tr><td colspan=\"2\" style=\"text-align: center;\">header</td></tr>\n";
+  $output .= " <tr><td style=\"width: 400px;\">&nbsp;</td><td>\n". ($blocks ? $blocks : "&nbsp;") ."</td></tr>\n";
+  $output .= " <tr><td colspan=\"2\" style=\"text-align: center;\">footer</td></tr>\n";
   $output .= "</table>\n";
 
   $output .= "<h3>". t("Themes with left-sidebar only") .":</h3>\n";
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  $output .= " <tr><td align=\"center\" colspan=\"2\">header</td></tr>\n";
-  $output .= " <tr><td>\n". ($blocks ? $blocks : "&nbsp;") ."</td><td width=\"400\">&nbsp;</td></tr>\n";
-  $output .= " <tr><td align=\"center\" colspan=\"2\">footer</td></tr>\n";
+  $output .= " <tr><td colspan=\"2\" style=\"text-align: center;\">header</td></tr>\n";
+  $output .= " <tr><td>\n". ($blocks ? $blocks : "&nbsp;") ."</td><td style=\"width: 400px;\">&nbsp;</td></tr>\n";
+  $output .= " <tr><td colspan=\"2\" style=\"text-align: center;\">footer</td></tr>\n";
   $output .= "</table>\n";
 
   print $output;

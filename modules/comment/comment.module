@@ -140,7 +140,7 @@ function comment_access($op, $comment) {
 function comment_form($edit) {
   global $user;
 
-  $form .= "<a name=\"comment\"></a>\n";
+  $form .= "<a id=\"comment\"></a>\n";
 
   // name field:
   $form .= form_item(t("Your name"), format_name($user));
@@ -414,10 +414,10 @@ function comment_view($comment, $links = "", $visible = 1) {
 
   if (node_is_new($comment->nid, $comment->timestamp)) {
     $comment->new = 1;
-    print "<a name=\"new\"></a>\n";
+    print "<a id=\"new\"></a>\n";
   }
 
-  print "<a name=\"$comment->cid\"></a>\n";
+  print "<a id=\"$comment->cid\"></a>\n";
 
   if ($visible) {
     $comment->comment = check_output($comment->comment);
@@ -469,7 +469,7 @@ function comment_render($node, $cid = 0) {
       $comments_per_page = $user->comments_per_page ? $user->comments_per_page : variable_get("comment_default_per_page", "50");
     }
 
-    print "<a name=\"comment\"></a>\n";
+    print "<a id=\"comment\"></a>\n";
 
 
     if ($cid) {
@@ -478,7 +478,7 @@ function comment_render($node, $cid = 0) {
       ** Single comment view
       */
 
-      print "<form method=\"post\" action=\"". url("comment") ."\">\n";
+      print "<form method=\"post\" action=\"". url("comment") ."\"><div>\n";
       print form_hidden("nid", $nid);
 
       $result = db_query("SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0 GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users", $cid);
@@ -488,9 +488,9 @@ function comment_render($node, $cid = 0) {
       }
 
       if ((comment_user_can_moderate($node)) && $user->uid != $comment->uid && !(comment_already_moderated($user->uid, $comment->users))) {
-        print "<div align=\"center\">". form_submit(t("Moderate comment")) ."</div><br />";
+        print "<div style=\"text-align: center;\">". form_submit(t("Moderate comment")) ."</div><br />";
       }
-      print "</form>";
+      print "</div></form>";
     }
     else {
 
@@ -521,13 +521,13 @@ function comment_render($node, $cid = 0) {
       $comment_num = db_num_rows($result);
 
       if ($comment_num && ((variable_get("comment_controls", 0) == 0) || (variable_get("comment_controls", 0) == 2))) {
-        print "<form method=\"post\" action=\"". url("comment") ."\">\n";
+        print "<form method=\"post\" action=\"". url("comment") ."\"><div>\n";
         theme("box", "", theme("comment_controls", $threshold, $mode, $order, $nid, $comment_page, $comment_num, $comments_per_page));
         print form_hidden("nid", $nid);
-        print "</form>";
+        print "</div></form>";
       }
 
-      print "<form method=\"post\" action=\"". url("comment") ."\">\n";
+      print "<form method=\"post\" action=\"". url("comment") ."\"><div>\n";
       print form_hidden("nid", $nid);
 
       if ($comment_num) {
@@ -582,7 +582,7 @@ function comment_render($node, $cid = 0) {
           theme("comment_flat_expanded", $comments, $threshold_min);
 
           if (comment_user_can_moderate($node) && $show_moderate_button) {
-            print "<div align=\"center\">". form_submit(t("Moderate comments")) ."</div><br />";
+            print "<div style=\"text-align: center;\">". form_submit(t("Moderate comments")) ."</div><br />";
           }
         }
         else if ($mode == 3) {
@@ -635,18 +635,18 @@ function comment_render($node, $cid = 0) {
           }
 
           if (comment_user_can_moderate($node) && $show_moderate_button) {
-            print "<div align=\"center\">". form_submit(t("Moderate comments")) ."</div><br />";
+            print "<div style=\"text-align: center;\">". form_submit(t("Moderate comments")) ."</div><br />";
           }
         }
       }
 
-      print "</form>";
+      print "</div></form>";
 
       if ($comment_num && ((variable_get("comment_controls", 0) == 1) || (variable_get("comment_controls", 0) == 2))) {
-        print "<form method=\"post\" action=\"". url("comment") ."\">\n";
+        print "<form method=\"post\" action=\"". url("comment") ."\"><div>\n";
         theme("box", t("Control panel"), theme("comment_controls", $threshold, $mode, $order, $nid, $comment_page, $comment_num, $comments_per_page));
         print form_hidden("nid", $nid);
-        print "</form>";
+        print "</div></form>";
       }
     }
 
@@ -1293,7 +1293,7 @@ function comment_thread_max($comment, $threshold, $level = 0) {
   */
 
   if ($level) {
-    print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr><td width=\"". ($level * 25) ."\">&nbsp;</td><td>\n";
+    print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr><td style=\"width: ". ($level * 25) ."px;\">&nbsp;</td><td>\n";
   }
 
   comment_view($comment, comment_links($comment, 0), comment_visible($comment, $threshold));

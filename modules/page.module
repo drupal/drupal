@@ -115,7 +115,7 @@ function page_view($node, $main = 0) {
     ** Add the node specific links:
     */
 
-    theme("box", $node->title, "$node->body<div align=\"right\">". theme("links", link_node($node, $main)) ."</div>");
+    theme("box", $node->title, "$node->body<div style=\"text-align: right;\">". theme("links", link_node($node, $main)) ."</div>");
   }
 }
 

@@ -1044,7 +1044,7 @@ function user_menu() {
   $links[] = l(t("edit user information"), "user/edit");
   $links[] = l(t("delete account"), "user/delete");
 
-  return "<div align=\"center\">". implode(" &middot; ", $links) ."</div>";
+  return "<div style=\"text-align: center;\">". implode(" &middot; ", $links) ."</div>";
 }
 
 function user_view($uid = 0) {
@@ -1312,7 +1312,7 @@ function user_admin_access($edit = array()) {
     $output .= "<h3>" . t("Check username") . "</h3>";
   }
 
-  $output .= "$message<input size=\"32\" maxlength=\"64\" name=\"edit[test]\" value=\"". $edit["test"] ."\" /><input type=\"submit\" name=\"op\" value=\"" . t("Check") . "\" />";
+  $output .= "$message<input type=\"text\" size=\"32\" maxlength=\"64\" name=\"edit[test]\" value=\"". $edit["test"] ."\" /><input type=\"submit\" name=\"op\" value=\"" . t("Check") . "\" />";
 
   return form($output);
 }
@@ -1436,7 +1436,7 @@ function user_admin_role($edit = array()) {
     while ($role = db_fetch_object($result)) {
       $rows[] = array($role->name, array("data" => l(t("edit role"), "admin/user/role/$role->rid"), "align" => "center"));
     }
-    $rows[] = array("<input size=\"32\" maxlength=\"64\" name=\"edit[name]\" />", "<input type=\"submit\" name=\"op\" value=\"". t("Add role") ."\" />");
+    $rows[] = array("<input type=\"text\" size=\"32\" maxlength=\"64\" name=\"edit[name]\" />", "<input type=\"submit\" name=\"op\" value=\"". t("Add role") ."\" />");
 
     $output = table($header, $rows);
     $output = form($output);
@@ -1641,7 +1641,7 @@ function user_help_users_da() {
   $site = "<i>". variable_get("site_name", "this website"). "</i>";
 
   $output = "
-   <h3>Distributed authentication<a name=\"da\"></a></h3>
+   <h3>Distributed authentication<a id=\"da\"></a></h3>
    <p>One of the more tedious moments in visiting a new website is filling out the
     registration form. Here at %s, you do not have to fill out a registration form
     if you are already a member of ";
@@ -1669,7 +1669,7 @@ function user_help_users_da() {
 
   foreach (module_list() as $module) {
     if (module_hook($module, "auth")) {
-      $output .= "<h4><a name=\"$module\"></a>" . module_invoke($module, "info", "name") . "</h4>";
+      $output .= "<h4><a id=\"$module\"></a>" . module_invoke($module, "info", "name") . "</h4>";
       $output .= module_invoke($module, "auth_help");
     }
   }
@@ -1698,7 +1698,7 @@ function user_help_admin() {
 
 function user_help_admin_da() {
 
-  $output .= "<h3>Distributed authentication<a name=\"da\"> </a></h3><p>One of the more tedious moments in visiting a new website is filling out the registration form. The reg form provides helpful information to the website owner, but not much value for the user. The value for the end user is usually the ability to post a messages or receive personalized news, etc. Distributed authentication (DA) gives the user what they want without having to fill out the reg form. Removing this obstacle yields more registered and active users for the website.</p>";
+  $output .= "<h3>Distributed authentication<a id=\"da\"> </a></h3><p>One of the more tedious moments in visiting a new website is filling out the registration form. The reg form provides helpful information to the website owner, but not much value for the user. The value for the end user is usually the ability to post a messages or receive personalized news, etc. Distributed authentication (DA) gives the user what they want without having to fill out the reg form. Removing this obstacle yields more registered and active users for the website.</p>";
   $output .= "<p>DA enables a new user to input a username and password into the login box and immediately be recognized, even if that user never registered on your site. This works because Drupal knows how to communicate with external registration databases. For example, lets say that your new user 'Joe' is already a registered member of Delphi Forums. If your Drupal has delphi.module installed, then Drupal will inform Joe on the registration and login screens that he may login with his Delphi ID instead of registering with your Drupal instance. Joe likes that idea, and logs in with a username of joe@remote.delphiforums.com and his usual Delphi password. Drupal then communicates with remote.delphiforums.com (usually using ". l("XML-RPC","www.xmlrpc.com") ." ". l("HTTP POST", "www.w3.org/Protocols/") .", or ". l("SOAP", "www.soapware.org") .") behind the scenes and asks &quot;is this password for username=joe?&quot; If Delphi replies yes, then Drupal will create a new local account for joe and log joe into it. Joe may keep on logging into your Drupal instance in the same manner, and he will be logged into the same joe@remote.delphiforums.com account.</p>";
   $output .= "<p>One key element of DA is the 'authmap' table, which maps a user's authname (e.g. joe@remote.delphiforums.com) to his local UID (i.e. universal identification number). This map is checked whenever a user successfully logs into an external authentication source. Once Drupal knows that the current user is definately joe@remote.delphiforums.com (because Delphi says so), he looks up Joe's UID and logs Joe into that account.</p>";
   $output .= "<p>To disable distributed authentication, simply ". l("disable", "admin/system/modules") ." or remove all DA modules. For a virgin install, that means removing/disabling <i>jabber.module</i> and <i>drupal.module</i></p>";
@@ -1749,7 +1749,7 @@ function user_help_devel_da() {
   }
 }</pre>";
   $output .= "<p>The <i>_auth</i> function is the heart of any authentication module. This function is called whenever a user is attempting to login using your authentication module. For successful authentications, this function returns TRUE. Otherwise, it returns FALSE. This function always accepts 3 parameters, as shown above. These parameters are passed by the user system (user.module). The user system parses the username as typed by the user into 2 substrings - \$name and \$server. The parsing rules are:</p>";
-  $output .= "<table width=\"80%\" border=\"0\" cellspacing=\"4\" cellpadding=\"4\" align=\"center\"><tr><th colspan=\"2\" align=\"left\">_auth function parameters</th></tr><tr><th>\$name</th><td>The substring before the final <i>'@'</i> character in the username field</td></tr><tr><th>\$pass</th><td>The whole string submitted by the user in the password field</td></tr><tr><th>\$server</th><td>The substring after the final <i>'@'</i> symbol in the username field</td></tr></table>";
+  $output .= "<table border=\"0\" cellspacing=\"4\" cellpadding=\"4\" style=\"margin: auto; width: 80%;\"><tr><th colspan=\"2\" style=\"text-align: left;\">_auth function parameters</th></tr><tr><th>\$name</th><td>The substring before the final <i>'@'</i> character in the username field</td></tr><tr><th>\$pass</th><td>The whole string submitted by the user in the password field</td></tr><tr><th>\$server</th><td>The substring after the final <i>'@'</i> symbol in the username field</td></tr></table>";
   $output .= "<p>So now lets use that \$name, \$pass, and \$server which was passed to our <i>_auth</i> function. Blogger authenticates users via ". l("XML-RPC", "www.xmlrpc.org") .". Your module may authenticate using a different technique. Drupal doesn't reallly care how your module communicates with its registration source. It just <b>trusts</b> the module.</p>";
   $output .= "<p>The lines above illustrate a typical ". l("XML-RPC", "www.xmlrpc.org") ." method call. Here we build up a message and send it to Blogger, storing the response in a variable called <i>\$response</i>. The message we pass conforms to the published ". l("Blogger XML-RPC Application Programmers Interface (API)", "plant.blogger.com/API") .". Your module will no doubt implement a different API. One peculiarity of this module is that we don't actually use the $server parameter. Blogger only accepts authentication at <i>plant.blogger.com</i>, so we hard-code that value into the <i>xmlrpc_client()</i> function. A more typical example might be the jabber module, which uses the <i>\$server</i> parameter to determine where to send the authentication request. Also of note is the '5' parameter in the <i>\$client-&gt;send\(\)</i> call. This is a timeout value in seconds. All authentication modules should implement a timeout on their external calls. This makes sure to return control to the user.module if your registration database has become inoperable or unreachable.</p>";
   $output .= "<pre>
@@ -1790,7 +1790,7 @@ function user_help_devel_da() {
 
 function user_help_devel_userhook() {
 
-  $output .= "<h3><a name=\"userhook\">module_user()</a></h3><p>The <b>_user()</b> hook provides a mechanism for inserting text and form fields into the ". l("registration","user/register") .", ". l("user account view/edit", "user") .", and ". l("administer users", "admin/user") ." pages. This is useful if you want to add a custom field for your particular community. This is best illustrated by the ". l("profile.module", "cvs.drupal.org/viewcvs/drupal/modules/profile.module") .". The profile.module is meant to be customized for your needs. Please download it and hack away until it does what you need.</p>";
+  $output .= "<h3><a id=\"userhook\">module_user()</a></h3><p>The <b>_user()</b> hook provides a mechanism for inserting text and form fields into the ". l("registration","user/register") .", ". l("user account view/edit", "user") .", and ". l("administer users", "admin/user") ." pages. This is useful if you want to add a custom field for your particular community. This is best illustrated by the ". l("profile.module", "cvs.drupal.org/viewcvs/drupal/modules/profile.module") .". The profile.module is meant to be customized for your needs. Please download it and hack away until it does what you need.</p>";
 
   $output .= "<p>Consider this simpler example from a fictional recipe community web site called Julia's Kitchen. Julia customizes her Drupal powered site by creating a new file called <i>julia.module</i>. That file does the following:<ul><li>new members must agree to Julia's Privacy Policy on the reg page.</li><li>members may list their favorite ingredients on their public user profile page</li></ul></p>";
 

@@ -761,7 +761,7 @@ function statistics_page_user($uid = 0, $date = 0, $all = 0) {
 
 
   if ($displaycount = variable_get("statistics_userpage_all_cnt", "10")) {
-    $output = "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\" width=\100%\">";
+    $output = "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\" width=\"100%\">";
     $output .= statistics_summary("totalcount", $displaycount);
     $output .= "</table>";
 
@@ -769,7 +769,7 @@ function statistics_page_user($uid = 0, $date = 0, $all = 0) {
   }
 
   if ($displaycount = variable_get("statistics_userpage_last_cnt", "10")) {
-    $output = "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\" width=\100%\">";
+    $output = "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\" width=\"100%\">";
     $output .= statistics_summary("timestamp", $displaycount);
     $output .= "</table>";
 
@@ -787,9 +787,9 @@ function statistics_summary($dbfield, $dbrows) {
     $content = node_load(array("nid" => $nid["nid"]));
     $links = link_node($content, 1);
 
-    $output .= "<tr><td><b>". l($nid["title"], "node/view/". $nid["nid"], array("title" => t("View this posting."))) ."</b></td><td align=\"right\"><small>". t("Submitted by %a on %b", array("%a" => format_name($content), "%b" => format_date($content->created, "large"))) ."</small></td></tr>";
+    $output .= "<tr><td><b>". l($nid["title"], "node/view/". $nid["nid"], array("title" => t("View this posting."))) ."</b></td><td style=\"text-align: right;\"><small>". t("Submitted by %a on %b", array("%a" => format_name($content), "%b" => format_date($content->created, "large"))) ."</small></td></tr>";
     $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 20px;\">". check_output($content->teaser) ."</div></td></tr>";
-    $output .= "<tr><td align=\"right\" colspan=\"2\">[ ". theme("links", $links) ." ]<br /><br /></td></tr>";
+    $output .= "<tr><td style=\"text-align: right;\" colspan=\"2\">[ ". theme("links", $links) ." ]<br /><br /></td></tr>";
   }
 
   return $output;

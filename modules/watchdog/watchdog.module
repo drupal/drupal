@@ -57,14 +57,14 @@ function watchdog_overview($type) {
 
   while ($watchdog = db_fetch_object($result)) {
     if ($background = $color[$watchdog->type]) {
-      $data .= " <tr bgcolor=\"$background\"><td nowrap=\"nowrap\">". format_date($watchdog->timestamp, "small") ."</td><td>". substr(strip_tags($watchdog->message), 0, 64) ."</td><td align=\"center\">". format_name($watchdog) ."</td><td align=\"center\">$watchdog->link</td><td align=\"center\">". l(t("view details"), "admin/watchdog/view/$watchdog->wid") ."</td></tr>";
+      $data .= " <tr bgcolor=\"$background\"><td>". format_date($watchdog->timestamp, "small") ."</td><td>". substr(strip_tags($watchdog->message), 0, 64) ."</td><td style=\"text-align: center;\">". format_name($watchdog) ."</td><td style=\"text-align: center;\">$watchdog->link</td><td style=\"text-align: center;\">". l(t("view details"), "admin/watchdog/view/$watchdog->wid") ."</td></tr>";
     }
   }
 
   $output .= "<table>";
   $output .= " <tr><th>" . t("date") . "</th><th>" . t("event") . "</th><th>" . t("user") . "</th><th colspan=\"2\">" . t("operations") . "</th></tr>";
-  $output .= ($data ? $data : "<tr><td align=\"center\" colspan=\"4\" nowrap=\"nowrap\">". t("No system messages currently available.") ."</td></tr>");
-  $output .= (($pager = pager_display(NULL, 50, 0, "admin")) ? "<tr><td align=\"center\" colspan=\"4\">$pager</td></tr>" : "");
+  $output .= ($data ? $data : "<tr><td style=\"text-align: center;\" colspan=\"4\">". t("No system messages currently available.") ."</td></tr>");
+  $output .= (($pager = pager_display(NULL, 50, 0, "admin")) ? "<tr><td style=\"text-align: center;\" colspan=\"4\">$pager</td></tr>" : "");
   $output .= "</table>";
 
   return $output;

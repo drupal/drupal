@@ -71,7 +71,7 @@ function import_format_item($item, $feed = 0) {
   global $user;
 
   if ($user->uid && user_access("maintain personal blog")) {
-    $output .= "<div class=\"icon\">". l("<img src=\"". theme("image", "blog.gif") ."\" border=\"0\" width=\"12\" height=\"12\" alt=\"". t("blog it") ."\" />", "node/add/blog&amp;iid=$item->iid", array("title" => t("Comment on this news item in your personal blog."), "class" => "blog-it")) ."</div>";
+    $output .= "<div class=\"icon\">". l("<img src=\"". theme("image", "blog.gif") ."\" width=\"12\" height=\"12\" alt=\"". t("blog it") ."\" title=\"". t("blog it") ."\" style=\"border: 0px; />", "node/add/blog&amp;iid=$item->iid", array("title" => t("Comment on this news item in your personal blog."), "class" => "blog-it")) ."</div>";
   }
 
   // external link
@@ -136,13 +136,13 @@ function import_block($op, $delta) {
       case "feed":
         $feed = db_fetch_object(db_query("SELECT * FROM feed WHERE fid = %d", $id));
         $block["subject"] = $feed->title;
-        $block["content"] .= import_feed_block($feed) ."<div align=\"right\">".  l(t("more"), "import/feed/$feed->fid", array("title" => t("View this feed's recent news."))) ."</div>";
+        $block["content"] .= import_feed_block($feed) ."<div style=\"text-align: right;\">".  l(t("more"), "import/feed/$feed->fid", array("title" => t("View this feed's recent news."))) ."</div>";
         break;
 
       case "bundle":
         $bundle = db_fetch_object(db_query("SELECT * FROM bundle WHERE bid = %d", $id));
         $block["subject"] = $bundle->title;
-        $block["content"] .= import_bundle_block($bundle->attributes) ."<div align=\"right\">". l(t("more"), "import/bundle/$bundle->bid", array("title" => t("View this bundle's recent news."))) ."</div>";
+        $block["content"] .= import_bundle_block($bundle->attributes) ."<div style=\"text-align: right;\">". l(t("more"), "import/bundle/$bundle->bid", array("title" => t("View this bundle's recent news."))) ."</div>";
         break;
     }
 
@@ -157,7 +157,7 @@ function import_get_bundles($attributes = 0) {
   $result = db_query("SELECT * FROM bundle ORDER BY title");
   while ($bundle = db_fetch_object($result)) {
     $block["bundle:$bundle->bid"]["subject"] = $bundle->title;
-    $block["bundle:$bundle->bid"]["content"] = import_bundle_block($bundle->attributes) ."<div align=\"right\">".
+    $block["bundle:$bundle->bid"]["content"] = import_bundle_block($bundle->attributes) ."<div style=\"text-align: right;\">".
                                                 l(t("more"), "import/bundle/$bundle->bid", array("title" => t("View this bundle's recent news.")))
                                                 ."</div>";
     $block["bundle:$bundle->bid"]["info"] = "$bundle->title bundle";
@@ -173,7 +173,7 @@ function import_get_feeds($attributes = 0) {
   $result = db_query("SELECT * FROM feed ORDER BY fid");
   while ($feed = db_fetch_object($result)) {
     $block["feed:$feed->fid"]["subject"] = $feed->title;
-    $block["feed:$feed->fid"]["content"] = import_feed_block($feed) ."<div align=\"right\">".
+    $block["feed:$feed->fid"]["content"] = import_feed_block($feed) ."<div style=\"text-align: right;\">".
                                             l(t("more"), "import/feed/$feed->fid", array("title" => t("View this feed's recent news.")))
                                             ."</div>";
     $block["feed:$feed->fid"]["info"] = "$feed->title feed";
@@ -574,7 +574,7 @@ function import_page_info() {
     $links[] = l(t("administer news feeds"), "admin/syndication/news", array("title" => t("View the news feed administrative pages.")));
   }
 
-  return "<div align=\"center\">". theme("links", $links) ."</div>";
+  return "<div style=\"text-align: center;\">". theme("links", $links) ."</div>";
 }
 
 function import_page_last() {
@@ -590,7 +590,7 @@ function import_page_last() {
     $links[] = l(t("feed"), "import/feed/$item->fid", array("title" => t("Read more syndicated news from this feed.")));
 
     if ($item->link) {
-      $output .= "<tr><td><a href=\"$item->link\">$item->title</a> &middot; ". l($item->ftitle, "import/feed/$item->fid", array("title" => t("View more information about this feed."))) ."</td><td align=\"right\" nowrap=\"nowrap\" valign=\"top\">". theme("links", $links) ."</td></tr>\n";
+      $output .= "<tr><td><a href=\"$item->link\">$item->title</a> &middot; ". l($item->ftitle, "import/feed/$item->fid", array("title" => t("View more information about this feed."))) ."</td><td style=\"text-align: right; vertical-align: top;\">". theme("links", $links) ."</td></tr>\n";
     }
 
     if ($item->description) {
@@ -614,7 +614,7 @@ function import_page_feed($fid) {
 
   $header .= "<p><b>". t("Website") .":</b><div style=\"margin-left: 20px;\"><a href=\"$feed->link\">$feed->link</a></div></p>";
   $header .= "<p><b>". t("Description") .":</b><div style=\"margin-left: 20px;\">$feed->description</div></p>";
-  $header .= "<p><b>". t("Last update") .":</b><div style=\"margin-left: 20px;\">". format_interval(time() - $feed->timestamp) ." ". t("ago") ." <a href=\"$feed->url\"><img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" alt=\"\" /></a><br /><br /></div></p>\n";
+  $header .= "<p><b>". t("Last update") .":</b><div style=\"margin-left: 20px; text-align: right;\">". format_interval(time() - $feed->timestamp) ." ". t("ago") ." <a href=\"$feed->url\"><img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" alt=\"\" title=\"\" /></a><br /><br /></div></p>\n";
 
   $result = db_query_range("SELECT * FROM item WHERE fid = %d ORDER BY iid DESC", $fid, 0, variable_get("import_page_limit", 75));
 
@@ -626,7 +626,7 @@ function import_page_feed($fid) {
     $links[] = "<a href=\"$item->link\">". t("visit") ."</a>";
 
     if ($item->link) {
-      $output .= "<tr><td><a href=\"$item->link\">$item->title</a></td><td align=\"right\" nowrap=\"nowrap\" valign=\"top\">". theme("links", $links) ."</td></tr>\n";
+      $output .= "<tr><td><a href=\"$item->link\">$item->title</a></td><td style=\"text-align: right; vertical-align: top;\">". theme("links", $links) ."</td></tr>\n";
     }
     if ($item->description) {
       $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 20px;\">$item->description</div><br /></td></tr>";
@@ -664,7 +664,7 @@ function import_page_bundle($bid) {
     $links[] = "<a href=\"$item->link\">". t("visit") ."</a>";
 
     if ($item->link) {
-      $output .= "<tr><td><a href=\"$item->link\">$item->title</a> &middot; ". l($item->ftitle, "import/feed/$item->fid", array("title" => t("View more information about this feed."))) ."</td><td align=\"right\" nowrap=\"nowrap\" valign=\"top\">". theme("links", $links) ."</td></tr>\n";
+      $output .= "<tr><td><a href=\"$item->link\">$item->title</a> &middot; ". l($item->ftitle, "import/feed/$item->fid", array("title" => t("View more information about this feed."))) ."</td><td style=\"text-align: right; vertical-align: top;\">". theme("links", $links) ."</td></tr>\n";
     }
 
     if ($item->description) {
@@ -693,7 +693,7 @@ function import_page_sources() {
     $output .= "<div style=\"margin-left: 20px;\">$feed->description</div><br />";
   }
 
-  $output .= l("<img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" />", "import/fd", array("title" => t("View the list of syndicated web sites in XML format."))) ."<br />";
+  $output .= "<div style=\"text-align: right\">" . l("<img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" />", "import/fd", array("title" => t("View the list of syndicated web sites in XML format."))) . "</div><br />";
 
   theme("header");
   theme("box", t("News feeds"), import_page_info());
@@ -740,7 +740,7 @@ function import_page_blocks($blocks) {
 
   for ($t = 0; $t < 3; $t++) {
     $i = 1;
-    print "  <td width=\"33%\" valign=\"top\">\n";
+    print "  <td style=\"vertical-align: top; width: 33%;\">\n";
     while ($block = each($blocks)) {
       theme("box", $block["value"]["subject"], $block["value"]["content"]);
       if ($i == ceil(count($blocks) / 3)) {
