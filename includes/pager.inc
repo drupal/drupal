@@ -44,7 +44,7 @@ function pager_query($query, $limit = 10, $element = 0, $count_query = "") {
 
   // count the total number of records in this query:
   if ($count_query == "") {
-    $pager_total[$element] = db_result(db_query(preg_replace(array("/SELECT.*FROM/i", "/ORDER BY .*/"), array("SELECT COUNT(*) FROM", ""), $query)));
+    $pager_total[$element] = db_result(db_query(preg_replace(array("/SELECT.*FROM/is", "/ORDER BY .*/"), array("SELECT COUNT(*) FROM", ""), $query)));
 
   }
   else {
