@@ -27,15 +27,15 @@ function profile_menu() {
     'access' => user_access('administer users'),
     'type' => MENU_LOCAL_SUBTASK);
   $items[] = array('path' => 'admin/user/configure/profile/add', 'title' => t('add field'),
-    'callback' => 'profile_browse',
+    'callback' => 'profile_admin_add',
     'access' => user_access('administer users'),
     'type' => MENU_CALLBACK);
   $items[] = array('path' => 'admin/user/configure/profile/edit', 'title' => t('edit field'),
-    'callback' => 'profile_browse',
+    'callback' => 'profile_admin_edit',
     'access' => user_access('administer users'),
     'type' => MENU_CALLBACK);
   $items[] = array('path' => 'admin/user/configure/profile/delete', 'title' => t('delete field'),
-    'callback' => 'profile_browse',
+    'callback' => 'profile_admin_delete',
     'access' => user_access('administer users'),
     'type' => MENU_CALLBACK);
   return $items;
@@ -173,7 +173,7 @@ function profile_edit_profile($edit, $user) {
         $fields[$field->category] .= form_textarea($field->title, $field->name, $edit[$field->name], 60, 5, $field->explanation, NULL, $field->required);
         break;
       case 'list':
-        $fields[$field->category] .= form_textarea($field->title, $field->name, $edit[$field->name], 60, 5, $field->explanation .' '. t('Put each entry on a separate line.  No HTML allowed.'), NULL, $field->required);
+        $fields[$field->category] .= form_textarea($field->title, $field->name, $edit[$field->name], 60, 5, $field->explanation .' '. t('Put each item on a separate line.  No HTML allowed.'), NULL, $field->required);
         break;
       case 'checkbox':
         $fields[$field->category] .= form_checkbox($field->title, $field->name, 1, $edit[$field->name], $field->explanation, NULL, $field->required);
@@ -280,6 +280,7 @@ function profile_admin_add($type) {
       db_query("INSERT INTO {profile_fields} (title, name, explanation, category, type, weight, required, overview, options, page) VALUES ('%s', '%s', '%s', '%s', '%s', %d, %d, %d, '%s', '%s')", $data['title'], $data['name'], $data['explanation'], $data['category'], $type, $data['weight'], $data['required'], $data['overview'], $data['options'], $data['page']);
 
       drupal_set_message(t('the field has been created.'));
+      drupal_goto('admin/user/configure/profile');
     }
   }
   else {
@@ -304,13 +305,14 @@ function profile_admin_edit($fid) {
       db_query("UPDATE {profile_fields} SET title = '%s', name = '%s', explanation = '%s', category = '%s', weight = %d, required = %d, overview = %d, options = '%s', page = '%s' WHERE fid = %d", $data['title'], $data['name'], $data['explanation'], $data['category'], $data['weight'], $data['required'], $data['overview'], $data['options'], $data['page'], $fid);
 
       drupal_set_message(t('the field has been updated.'));
+      drupal_goto('admin/user/configure/profile');
     }
   }
   else {
     $data = db_fetch_array(db_query('SELECT * FROM {profile_fields} WHERE fid = %d', $fid));
   }
 
-  print theme('page', _profile_field_form($data['type'], $data), t('Edit %type', array('%type' => $edit['type'])));
+  print theme('page', _profile_field_form($data['type'], $data), t('Edit %type', array('%type' => $data['type'])));
 }
 
 /**
@@ -319,7 +321,7 @@ function profile_admin_edit($fid) {
 function profile_admin_delete($fid) {
   db_query('DELETE FROM {profile_fields} WHERE fid = %d', $fid);
   drupal_set_message(t('the field has been deleted.'));
-  print theme('page', '', t('Delete field'));
+  drupal_goto('admin/user/configure/profile');
 }
 
 function _profile_field_form($type, $edit = array()) {
