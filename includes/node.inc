@@ -1,5 +1,5 @@
 <?php
-// $Id: node.inc,v 1.77 2001/11/04 23:30:37 dries Exp $
+// $Id: node.inc,v 1.78 2001/11/12 20:06:02 dries Exp $
 
 // TODO: still used by themes, yet doesn't return anything at the moment
 function node_index() {
@@ -157,13 +157,6 @@ function node_save($node, $filter) {
   }
 
   if (empty($node->nid)) {
-
-    /*
-    ** Verify a user's submission rate and avoid duplicate nodes being
-    ** inserted:
-    */
-
-    throttle("node", variable_get("max_node_rate", 900));
 
     /*
     ** Insert a new node:

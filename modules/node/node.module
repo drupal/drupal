@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.80 2001/11/07 18:14:46 dries Exp $
+// $Id: node.module,v 1.81 2001/11/12 20:06:02 dries Exp $
 
 function node_help() {
   global $mod;
@@ -681,8 +681,14 @@ function node_preview($edit) {
 }
 
 function node_submit($node) {
-
   global $user;
+
+  /*
+  ** Verify a user's submission rate and avoid duplicate nodes being
+  ** inserted:
+  */
+
+  throttle("node", variable_get("max_node_rate", 900));
 
   /*
   ** Fixup the node when required:
