@@ -7,15 +7,18 @@ function variable_init($conf = array()) {
 }
 
 function handler_post_threshold($node, $default) {
-  return ($threshold = category_post_threshold($node->cid) ? $threshold : $default);
+  $threshold = category_post_threshold($node->cid);
+  return $threshold ? $threshold : $default;
 }
 
 function handler_dump_threshold($node, $default) {
-  return ($threshold = category_dump_threshold($node->cid) ? $threshold : $default);
+  $threshold = category_dump_threshold($node->cid);
+  return $threshold ? $threshold : $default;
 }
 
 function handler_expire_threshold($node, $default) {
-  return ($threshold = category_expire_threshold($node->cid) ? $threshold : $default);
+  $threshold = category_expire_threshold($node->cid);
+  return $threshold ? $threshold : $default;
 }
 
 function variable_get($name, $default, $object = 0) {

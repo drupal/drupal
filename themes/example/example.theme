@@ -47,7 +47,7 @@
 
     } // close header function
 
-    function story($story, $reply = 0) {
+    function story($story, $main = 0) {
 ?>
 
               <TABLE BORDER="1" CELLSPACING="0" CELLPADDING="3" WIDTH="100%">
@@ -74,27 +74,18 @@
                  </TR>
                  <TR>
                    <TD COLSPAN="2">
-
 <?php
-
                         echo "<P>". check_output($story->abstract, 1) ."</P>";
-                        if ($reply && $story->body)
+                        if (!$main && $story->body)
                           echo "<P>". check_output($story->body, 1) ."</P>";
-
 ?>
                    </TD>
                  </TR>
                  <TR>
                    <TD COLSPAN="2">
-
 <?php
-
-
-                     if (!$reply)
+                     if ($main)
                        echo theme_morelink($this, $story);
-                     else
-                       echo $reply;
-
 ?>
 
                    </TD>

@@ -106,7 +106,7 @@
 
     } // close header function
 
-    function story($story, $reply = 0) {
+    function story($story, $main = 0) {
 
       switch ($story->tid) {
         case 0: $color = "#c4a2a2"; $img = "square2.gif"; break;
@@ -135,17 +135,15 @@
 <?php
 
                       echo "<br />". check_output($story->abstract, 1) ."<br />";
-                      if ($reply && $story->body)
+                      if (!$main && $story->body)
                         echo "<br />". check_output($story->body, 1) ."<br />";
              echo"  </td>
                   </tr>
                   <tr>
                     <td align=\"right\">
                       <font color=\"". $color ."\">";
-                      if (!$reply)
+                      if ($main)
                         echo "". theme_morelink($this, $story) ."";
-                      else
-                        echo "". $reply ."";
                       echo"</font>";
 
 ?>

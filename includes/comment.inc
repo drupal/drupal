@@ -32,10 +32,10 @@ function comment_moderate($moderate) {
 
     foreach ($moderate as $id=>$vote) {
       if ($vote != $comment_votes[$none] && !user_get($user, "history", "c$id")) {
-        // Update the comment's score:
+        // update the comment's score:
         $result = db_query("UPDATE comments SET score = score ". check_input($vote) .", votes = votes + 1 WHERE cid = '". check_input($id) ."'");
 
-        // Update the user's history:
+        // update the user's history:
         $user = user_set($user, "history", "c$id", $vote);
       }
     }
@@ -124,22 +124,23 @@ function comment_preview($pid, $id, $subject, $comment) {
 function comment_post($pid, $id, $subject, $comment) {
   global $theme, $user;
 
+  // check comment submission rate:
   throttle("post comment", variable_get(max_comment_rate, 60));
 
-  // Check for duplicate comments:
+  // check for duplicate comments:
   $duplicate = db_result(db_query("SELECT COUNT(cid) FROM comments WHERE pid = '$pid' AND lid = '$id' AND subject = '$subject' AND comment = '$comment'"), 0);
 
   if ($duplicate != 0) {
     watchdog("warning", "comment: duplicate '$subject'");
   }
   else {
-    // Validate subject:
+    // validate subject:
     $subject = ($subject) ? $subject : substr($comment, 0, 29);
 
-    // Add watchdog entry:
+    // add watchdog entry:
     watchdog("special", "comment: added '$subject'");
 
-    // Add comment to database:
+    // add comment to database:
     db_query("INSERT INTO comments (lid, pid, author, subject, comment, hostname, timestamp, score) VALUES ('$id', '$pid', '$user->id', '$subject', '$comment', '". getenv("REMOTE_ADDR") ."', '". time() ."', '". ($user->userid ? 1 : 0) ."')");
   }
 }
@@ -191,6 +192,7 @@ function comment_controls($threshold = 1, $mode = 3, $order = 1) {
   $output .= comment_order(($user->id ? $user->sort : $order));
   $output .= comment_threshold(($user->id ? $user->threshold : $threshold));
   $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Update settings") ."\">\n";
+  $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Add comment") ."\">\n";
   $output .= "</FORM>\n";
   return $output;
 }

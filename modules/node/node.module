@@ -5,13 +5,13 @@ $module = array("admin" => "node_admin");
 function node_overview($query = array()) {
   global $user, $rstatus;
 
-  $result = db_query("SELECT n.*, u.userid FROM node n LEFT JOIN users u ON n.author = u.id $query[1] LIMIT 50");
+  $result = db_query("SELECT n.*, u.userid, c.name AS category FROM node n LEFT JOIN users u ON n.author = u.id LEFT JOIN category c ON n.cid = c.cid $query[1] LIMIT 50");
 
   $output .= status($query[0]);
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR><TH>title</TH><TH>type</TH><TH>status</TH><TH>author</TH><TH>date</TH><TH COLSPAN=\"3\">operations</TH></TR>\n";
+  $output .= " <TR><TH>title</TH><TH>category</TH><TH>status</TH><TH>author</TH><TH>date</TH><TH COLSPAN=\"3\">operations</TH></TR>\n";
   while ($node = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">$node->type</TD><TD>". $rstatus[$node->status] ."</TD><TD>". format_username($node->userid) ."</TD><TD>". format_date($node->timestamp, "small") ."</TD><TD>". (user_access($user, "node") ? "<A HREF=\"admin.php?mod=node&op=view&id=$node->nid\">view node</A></TD>" : "view node") ."</TD><TD>". (user_access($user, "node") ? "<A HREF=\"admin.php?mod=node&op=edit&id=$node->nid\">edit node</A></TD>" : "edit node") ."</TD><TD>". (user_access($user, $node->type) ? "<A HREF=\"admin.php?mod=$node->type&op=edit&id=$node->nid\">edit $node->type</A></TD>" : "edit $node->type") ."</TD></TR>\n";
+    $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">". check_output($node->category ? $node->category : $node->type) ."</TD><TD>". $rstatus[$node->status] ."</TD><TD>". format_username($node->userid) ."</TD><TD>". format_date($node->timestamp, "small") ."</TD><TD>". (user_access($user, "node") ? "<A HREF=\"admin.php?mod=node&op=view&id=$node->nid\">view node</A></TD>" : "view node") ."</TD><TD>". (user_access($user, "node") ? "<A HREF=\"admin.php?mod=node&op=edit&id=$node->nid\">edit node</A></TD>" : "edit node") ."</TD><TD>". (user_access($user, $node->type) ? "<A HREF=\"admin.php?mod=$node->type&op=edit&id=$node->nid\">edit $node->type</A></TD>" : "edit $node->type") ."</TD></TR>\n";
   }
   $output .= "</TABLE>\n";
 

@@ -4,6 +4,61 @@ include "includes/common.inc";
 
 if (variable_get(dev_timing, 0)) timer_start();
 
+function node_render($node) {
+  global $id, $cid, $op, $moderate, $pid, $subject, $comment, $theme, $mode, $order, $threshold, $PHP_SELF;
+
+  if ($node->comment) {
+    switch($op) {
+      case t("Preview comment"):
+        $theme->header();
+        comment_preview(check_input($pid), check_input($id), $subject, $comment);
+        $theme->footer();
+        break;
+      case t("Post comment"):
+        comment_post(check_input($pid), check_input($id), check_input($subject), check_input($comment));
+        $theme->header();
+        node_view($node);
+        comment_render($id, $cid);
+        $theme->footer();
+        break;
+      case t("Add comment"):
+        $theme->header();
+        comment_reply(check_input($cid), check_input($id));
+        $theme->footer();
+        break;
+      case "reply":
+        $theme->header();
+        comment_reply(check_input($pid), check_input($id));
+        $theme->footer();
+        break;
+      case t("Update settings"):
+        comment_settings(check_input($mode), check_input($order), check_input($threshold));
+        $theme->header();
+        node_view($node);
+        comment_render($id, $cid);
+        $theme->footer();
+        break;
+      case t("Moderate comments"):
+        comment_moderate($moderate);
+        $theme->header();
+        node_view($node);
+        comment_render($id, $cid);
+        $theme->footer();
+        break;
+      default:
+        $theme->header();
+        node_view($node);
+        comment_render($id, $cid);
+        $theme->footer();
+    }
+  }
+  else {
+    $theme->header();
+    node_view($node);
+    $theme->footer();
+  }
+}
+
 function node_failure() {
   global $theme;
   $theme->header();
@@ -48,7 +103,7 @@ elseif ($number) {
         break;
       default:
         user_rehash();
-        node_view($node, 1);
+        node_render($node);
     }
   }
   else {

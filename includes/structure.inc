@@ -28,19 +28,19 @@ function category_del($cid) {
   db_query("UPDATE node SET cid = 0 WHERE cid = '". check_input($cid) ."'");
 }
 
-function category_post_threshold($cid, $default) {
+function category_post_threshold($cid) {
   $category = db_fetch_object(db_query("SELECT post AS threshold FROM category WHERE cid = '". check_input($cid) ."'"));
-  return $category->threshold ? $category->threshold : $default;
+  return $category->threshold;
 }
 
-function category_dump_threshold($cid, $default) {
+function category_dump_threshold($cid) {
   $category = db_fetch_object(db_query("SELECT dump AS threshold FROM category WHERE cid = '". check_input($cid) ."'"));
-  return $category->threshold ? $category->threshold : $default;
+  return $category->threshold;
 }
 
-function category_expire_threshold($cid, $default) {
+function category_expire_threshold($cid) {
   $category = db_fetch_object(db_query("SELECT expire AS threshold FROM category WHERE cid = '". check_input($cid) ."'"));
-  return $category->threshold ? $category->threshold : $default;
+  return $category->threshold;
 }
 
 function category_form_select($type, $edit = array(), $size = 1) {

@@ -47,57 +47,9 @@ function story_type() {
   return array("story", t("story"));
 }
 
-function story_view($node, $page = 1) {
-  global $id, $cid, $op, $moderate, $pid, $subject, $comment, $theme, $mode, $order, $threshold, $PHP_SELF;
-
-  if ($page == 1) {
-    switch($op) {
-      case t("Preview comment"):
-        $theme->header();
-        comment_preview(check_input($pid), check_input($id), $subject, $comment);
-        $theme->footer();
-        break;
-      case t("Post comment"):
-        comment_post(check_input($pid), check_input($id), check_input($subject), check_input($comment));
-        $theme->header();
-        $theme->story($node, "[ <A HREF=\"node.php?op=reply&id=$node->nid&pid=0\">". t("reply to this story") ."</A> ]");
-        comment_render($id, $cid);
-        $theme->footer();
-        break;
-      case "reply":
-        $theme->header();
-        comment_reply(check_input($pid), check_input($id));
-        $theme->footer();
-        break;
-      case t("Update settings"):
-        comment_settings(check_input($mode), check_input($order), check_input($threshold));
-        $theme->header();
-        $theme->story($node, "[ <A HREF=\"node.php?op=reply&id=$node->nid&pid=0\">". t("reply to this story") ."</A> ]");
-        comment_render($id, $cid);
-        $theme->footer();
-        break;
-      case t("Moderate comments"):
-        comment_moderate($moderate);
-        $theme->header();
-        $theme->story($node, "[ <A HREF=\"node.php?op=reply&id=$node->nid&pid=0\">". t("reply to this story") ."</A> ]");
-        comment_render($id, $cid);
-        $theme->footer();
-        break;
-      case "reply":
-        $theme->header();
-        comment_reply(check_input($pid), check_input($id));
-        $theme->footer();
-        break;
-      default:
-        $theme->header();
-        $theme->story($node, "[ <A HREF=\"node.php?op=reply&id=$node->nid&pid=0\">". t("reply to this story") ."</A> ]");
-        comment_render($id, $cid);
-        $theme->footer();
-    }
-  }
-  else {
-    $theme->story($node, ($PHP_SELF == "/node.php" ? "[ <A HREF=\"node.php?op=reply&id=$node->nid&pid=0\">". t("reply to this story") ."</A> ]" : 0));
-  }
+function story_view($node, $main = 0) {
+  global $theme;
+  $theme->story($node, $main);
 }
 
 function story_form($edit = array()) {
@@ -226,7 +178,7 @@ function story_admin() {
       print search_data($keys, $mod);
       break;
     case t("Preview"):
-      story_view(new Story($edit),0);
+      story_view(new Story($edit));
       print story_form($edit);
       break;
     case t("Submit"):
@@ -243,7 +195,7 @@ function story_user() {
 
   switch($op) {
     case t("Preview"):
-      story_view(new Story($edit), 0);
+      story_view(new Story($edit));
       $theme->box(t("Submit"), story_form($edit));
       break;
     case t("Submit"):
