@@ -1,5 +1,5 @@
 <?php
-/* $Id: updates.inc,v 1.84 2005/01/24 21:17:58 dries Exp $ */
+/* $Id: updates.inc,v 1.85 2005/01/25 20:38:03 dries Exp $ */
 
 /**
  * @file
@@ -95,7 +95,8 @@ $sql_updates = array(
   "2005-01-14" => "update_116",
   "2005-01-18" => "update_117",
   "2005-01-19" => "update_118",
-  "2005-01-20" => "update_119"
+  "2005-01-20" => "update_119",
+  "2005-01-25" => "update_120"
 );
 
 function update_32() {
@@ -2137,6 +2138,24 @@ function update_119() {
     variable_del('node_promote_'. $type);
     variable_del('node_sticky_'. $type);
     variable_del('node_revision_'. $type);
+  }
+
+  return $ret;
+}
+
+function update_120() {
+  // Add column to the blocks table.
+  $ret = array();
+  $ret[] = update_sql("ALTER TABLE {blocks} ADD types varchar(16)");
+
+  // Rewrite old URL aliases.  Works for both PostgreSQL and MySQL
+  $result = db_query("SELECT pid, src FROM {url_alias} WHERE src LIKE 'blog/%%'");
+  while ($alias = db_fetch_object($result)) {
+    list(, $page, $op, $uid) = explode('/', $alias->src);
+    if ($page == 'feed') {
+      $new = "blog/$uid/feed";
+      update_sql("UPDATE {url_alias} SET src = '%s' WHERE pid = '%s'", $new, $alias->pid);
+    }
   }
 
   return $ret;
