@@ -1,120 +1,1063 @@
 <?php
-// $Id$
+  /*********************************************************************
+   * Description:  This module provides simple statistics for your site:
+   *                - access counts for each node
+   *                - referrer logs to see where web traffic originates
+   *                - number of users/guests accessing your site
+   *               It also generates a block displaying and user page
+   *                displaying:
+   *                - top viewed nodes over last 24 hour period
+   *                - top viewed nodes over all time
+   *                - last nodes viewed
+   *               It also displays a block displaying how many users
+   *                and guest are currently accessing your site
+   *               It also provides a throttling mechanism
+   *               This module is highly configurable.  Once installed
+   *                review the 'help' page for more details.
+   * Created:  July 13, 2002 - Jeremy Andrews - jeremy@kerneltrap.org
+   *********************************************************************/
 
-if (variable_get("referrer", 0) && $referrer = getenv("HTTP_REFERER")) {
-  db_query("INSERT INTO referrer (URL, timestamp) values ('%s', '%s')", $referrer, time());
+global $id, $mod, $nid, $user, $recent_activity;
+
+if (variable_get("stats enable node counts", 0)) {
+  /* node counters are enabled */
+  if ($id > 0 && (!$mod)) {
+    /* a node has been viewed, so updated the node's counters */
+    @db_query("UPDATE statistics SET daycount=daycount+1,totalcount=totalcount+1,timestamp='%s' WHERE nid = '%s'", time(), $id);
+    /* if we affected 0 rows, this is the first time viewing the node */
+    if (!mysql_affected_rows()) { // Drupal needs generic db_affected_rows()
+      /* must create a new row to store counter's for new node */
+      db_query("INSERT INTO statistics (nid,daycount,totalcount) VALUES('%s',daycount+1,totalcount+1)", $id);
+    }
+  }
 }
 
-function statistics_help() {
-  $output .= "<p>The statistics module gathers and presents useful log information from your Drupal site. Currently, the statistics module is limited to internal and external referrals display, but other analysis capabilities might be added in future.</p>";
-  $output .= "<p>1. The external referrer log indicates which other sites are linking your website and how many visitors they refer. Each link made to your site - when a user on another site clicks on a link to your site - generates a referral entry in the log.</p>";
-  $output .= "<p>2. The internal referrer log indicates the referrals within the domain of your site.  This log is useful for assessing and evaluating the structure of your website, to learn which pages are being accessed, and to gain insight into the way users are navigating your site.</p>";
-  $output .= "<p>Drupal automatically rotates the referrer logs after a set period of time. The life-time of the accumulated data can be configured via the <i>site configuration</i> option under site administration.</p>";
-  $output .= "<p>Warning: Drupal gets the referrer information from the HTTP_REFERER environment variable. This is not always set properly by web browsers.</p>";
-  return $output;
+if (variable_get("stats enable log", 0)) {
+  /* statistical logs are enabled */
+  $referrer = getenv("HTTP_REFERER");
+  $hostname = getenv("REMOTE_ADDR");
+  /* log this page access */
+  db_query("INSERT INTO accesslog (nid,url,hostname,uid,timestamp) values('%s','%s','%s','%s','%s')", $id, $referrer, $hostname, $user->uid, time());
 }
 
-function statistics_system($field){
-  $system["description"] = t("Gathers and displays referers.");
+/* The following logic determines what the current throttle level should
+    be, and can be disabled by the admin.  If enabled, the rand() function
+    returns a number between 0 and N, N being specified by the admin. If
+    0 is returned, the throttle logic is run, adding on additional database
+    query.  Otherwise, the following logic is skipped.  This mechanism is
+    referred to in the admin page as the 'probability limiter', roughly
+    limiting throttle related database calls to 1 in N.  */
+if ((variable_get("stats enable throttle", 0)) && (!rand(0, variable_get("stats probability limiter", 9)))) {
+    /* Note:  The rand() function is supported by PHP 3+.  However, prior to
+       PHP 4.2.0 it needs to be seeded with a call to srand().  It is important
+       that this only happens once, so this should be managed by the Drupal
+       engine, not this module.  Perhaps Drupal could detect pre-4.2.0 systems,
+       or if not, this could be made a configurable option. */
+  /* see if we need to adjust the throttle */
+  $throttle = throttle_status();
+
+  /* if we're at throttle level 5, we don't do anything */
+  if ($throttle < 5) {
+    $multiplier = variable_get("stats throttle multiplier", 60);
+    /* count all hits in past sixty seconds */
+    $result = db_query("SELECT COUNT(timestamp) AS hits FROM accesslog WHERE timestamp >= %s", (time() - 60));
+    $recent_activity = db_fetch_array($result);
+    throttle_update($recent_activity["hits"]);
+  }
+}
+
+
+/* System hook, sets description of module in admin page */
+function statistics_system($field) {
+  $system["description"] = t("Logs access statistics for your site.");
   return $system[$field];
 }
 
-function statistics_cron() {
-  db_query("DELETE FROM referrer WHERE ". time() ." - timestamp > ". variable_get("referrer_clear", 604800));
-}
 
+/* Permissions hook, defines module's permissions */
 function statistics_perm() {
-  return array("administer statistics");
+  /* administer statistics module - full administrative control of module
+     administer stats             - view statistics / referrers
+     access statistics            - see counts per node (if enabled)
+     access userlist              - see list of online users */
+  return array("administer statistics module", "administer stats", "access statistics", "access userlist");
 }
 
-function statistics_link($type) {
-  if ($type == "admin" && user_access("administer statistics")) {
+
+/* Link hook, defines module's links */
+function statistics_link($type, $node = 0, $main = 0) {
+  global $id;
+
+  if ($type == "admin" && (user_access("administer statistics module") || (user_access("administer stats")))) {
     $links[] = la(t("statistics"), array("mod" => "statistics"));
+  }
+
+  if ($type == "node" && user_access("access statistics") && variable_get("statistics display status", 0)) {
+    $statistics = statistics_get($node->nid);
+    if ($statistics) {
+      if (user_access("administer stats")) {
+        $links[] = la(format_plural($statistics[totalcount], "read", "reads"), array("mod" => "statistics", "op" => "referrers", "nid" => $node->nid));
+      }
+      else {
+        $links[] = format_plural($statistics[totalcount], "read", "reads");
+      }
+    }
+  }
+
+  if ($type == "page" && user_access("access content")) {
+    $userlink = variable_get("statistics up link", "");
+    if ($userlink) {
+      $links[] = lm(t($userlink), array("mod" => "statistics"), "", array("title" => "View the top nodes for this site"));
+    }
   }
 
   return $links ? $links : array();
 }
 
-function statistics_conf_options() {
-  $period = array(3600 => format_interval(3600), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200), 4838400 => format_interval(4838400), 9676800 => format_interval(9676800));
-  $output .= form_select("Track referrers", "referrer", variable_get("referrer", 0), array("Disabled", "Enabled"), "If enabled, Drupal will count how many times your website is referred to by other websites.");
-  $output .= form_select("Discard referrers older than", "referrer_clear", variable_get("referrer_clear", 604800), $period, "The time referrer entries should be kept.  Older entries will be automatically discarded.  Requires crontab.");
-  return $output;
+
+/* Administrative help page */
+function statistics_help() {
+  ?>
+  <h3>Introduction</h3>
+
+  <p>This Drupal module keeps track of numerous statistics for your site.  Be warned, statistical collection does cause a little overhead, thus everything is disabled by default when this module is first installed.</p>
+
+  <p>The statistics module counts how many times each of your nodes is viewed, also tracking where each link to the node came from (HTTP referrer).  The number of times a node has been viewed can be displayed in the node's link section (next to "# comments" etc).</p>
+
+  <p>This module also adds a configurable block that can display the day's top stories, the all time top stories, and the last stories read.  Each of these supports a configurable header and number of stories.</p>
+
+  <p>This module also adds a configurable user page that can display the day's top stories, the all time top stories, and the last stories read.  Each of these supports a configurable header and number of stories.</p>
+
+  <p>This module also adds a configurable block that displays counts of how many users and guests are currently accessing your site, as well as a list of the names of the users currently accessing your site.</p>
+
+  <p>This module also adds an admin viewable block that displays the current status of the throttle.  You must have "administer site configuration" priveleges to view the block.</p>
+
+  <p>If you enable the node counters, this adds 1 database query for each node that is viewed (2 queries if it's the first time the node has ever been viewed).</p>
+
+  <p>If you enable the access log, this adds 1 database query for each page that Drupal displays.  Logged information includes:  HTTP referrer (if any), node being accessed (if any), user ID (if any), the IP address of the user, and the time the page was viewed.</p>
+
+  <p>If you enable the auto-throttle, this adds 1 database query for each page that is displayed (until the maximum throttle is reached, then the query is automatically disabled until the site is less busy).  This requires cron.</p>
+
+  <p><b>For efficiency, the statistics module requires the <code>mysql_affected_rows()</code> function, currently tieing it to MySQL.</b></p>
+
+  <p>As with any new module, <i>statistics.module</i> needs to be enabled <?php print l("here", array("mod" => "system", "op" => "modules"), "admin"); ?> before you can use it.  Also refer to the permissions section below, as this module supports four separate permissions.</p>
+
+  <h3>MySQL table</h3>
+
+  <p>To use this module you need to create the 'statistics' and 'accesslog' MySQL tables.  The easiest way to do this is with the included 'statistics.mysql' script.  Type something like:
+<pre>    mysql -u&lt;username&gt; -p&lt;password&gt; &lt;database&gt; &lt; statistics.mysql</pre></p>
+
+  <p>If you'd prefer to add the table manually, you can cut and paste the following lines into the MySQL command line:
+<pre>      DROP TABLE IF EXISTS statistics;
+     CREATE TABLE statistics (
+        nid int(11) NOT NULL,
+        totalcount bigint UNSIGNED DEFAULT '0' NOT NULL,
+        daycount mediumint UNSIGNED DEFAULT '0' NOT NULL,
+        timestamp int(11) UNSIGNED DEFAULT '0' NOT NULL,
+        PRIMARY KEY (nid),
+        INDEX (totalcount),
+        INDEX (daycount),
+        INDEX (timestamp)
+    );
+
+     DROP TABLE IF EXISTS accesslog;
+     CREATE TABLE accesslog (
+        nid int(11) UNSIGNED DEFAULT '0',
+        url varchar(255),
+        hostname varchar(128),
+        uid int(10) UNSIGNED DEFAULT '0',
+        timestamp int(11) UNSIGNED NOT NULL
+     );</pre></p>
+
+  <h3>View statistics</h3>
+
+  <p>This admin page gives you an at-a-glance look at your top nodes.  It is useful for understanding what content on your Drupal site is the most popular.  Also on this page are links to the referrer statistics for each listed node.</p>
+
+  <h3>View referrers</h3>
+
+  <p>This admin page shows you site-wide referrer statistics.  You can see '<i>all</i>' stats, '<i>external</i>' statistics or '<i>internal</i>' stats. (Default is 'external')</p>
+
+  <h3>Configuring the statistics module</h3>
+
+  <p>There are a couple of configuration options added to the main <?php print l("site configuration", array("mod" => "system"), "admin"); ?> admin page.
+
+  <p>The first option, <i>enable access log</i>, allows you to turn the access log on and off.  This log is used to store things like referrers and who's online.  Enabling the log adds one database call per page displayed by Drupal.</p>
+
+  <p>The second option, <i>discard access logs older than</i>, allows you to configure how long an access log entry is saved, after which time it is deleted from the database table.</p>
+
+  <p>The third option, <i>enable auto-throttle</i>, allows you to turn the auto-throttle feature on and off.  The access log must also be enabled for the auto-throttle to function.</p>
+
+  <p>The next option, <i>auto-throttle multiplier</i>, selects a multiplier to calculate each auto-throttle level.  For example, with a multiplier of '10', level one starts when 10 users hit your site in 60 seconds, level 2 starts when 20 users hit your site in 60 seconds, so on up to level 5 which starts when 50 users hit your site in 60 seconds.</p>
+
+  <p>The next option, <i>auto-throttle probability limiter</i>, allows you to specify roughly how often the throttle level is updated.  Each time it gets updated, it adds a database query to that pages generation, so it's a good idea to keep the probability limiter down at 20% or lower.</p>
+
+  <p>The next option, <i>enable node counter</i>, allows you to turn on and off the node-counting functionality of this module.  If it is turned on, an extra database query is added for each node displayed, as a counter is incremented with each node view.</p>
+
+  <p>The next option, <i>display node counters</i>, allows you to globally disable the displaying of node counters.  Additionally, a user group must have 'access statistics' permissions to view the counters.</p>
+
+  <p>The final option is to <i>reset the day counter</i>.  Every twenty four hours, all the day's totals are automatically reset to 0, and started again.  Whatever time you click this link is the time each day that the day's totals will be reset.  This requires cron.  Note that clicking this link will reload the site configuration page <i>without</i> saving any other changes you might have made.</p>
+
+  <h3>Top nodes block</h3>
+
+  <p>This module creates a block that can display the day's top viewed nodes, the all time top viewed nodes and the last nodes viewed.  Each of these links can be enabled or disabled individually, and the number of nodes displayed for each can be configured with a drop down menu.  If you disable all sections of this block, it will not appear.</p>
+
+  <p>The administrative "top nodes block" screen also allows you to assign a name to the block.</p>
+
+  <p>Don't forget to enable the block <?php print l("here", array("mod" => "block"), "admin"); ?>.</p>
+
+  <h3>Top nodes page</h3>
+
+  <p>This module creates a user page that can display summaries of the day's top viewed nodes, the all time top nodes and the last nodes viewed.  Each of these summaries can be enabled or disabled individually, and the number of nodes displayed for each can be configured with a drop down menu.</p>
+
+  <p>The administrative "top nodes page" screen also allows you to assign a name for the automatically generated link to the user page.  If no name is set, the link will not be displayed.</p>
+
+  <h3>Who's online block</h3>
+
+  <p>This module creates a block that can display how many user's and guests are currently online.  You are able to configure the name of the block, the name of a sub-block for displaying names of user's currently online, how recently a user must have been active to be considered online, the maximum characters to display from a user's name and the maximum number of user names to display.</p>
+
+  <p>Don't forget to enable the block <?php print l("here", array("mod" => "block"), "admin"); ?>.</p>
+
+<h3>Permissions</h3>
+<p>This module has four permissions that need to be configured in
+<?php print l("user permissions", array("mod" => "user", "op" => "permission"), "admin"); ?>.</p>
+<ul>
+  <li><i>access statistics</i> - enable for user roles that get to see individual node counts.  (This does not define access to the block)</li>
+  <li><i>access userlist</i> - enable for user roles that get to see the list of user's that are currently online within the "Who's online" block.</li>
+  <li><i>administer statistics module</i> - enable for user roles that get to configure the statistics module.</li>
+  <li><i>administer stats</i> - enable for user roles that get to view the referrer statistics.</li>
+</ul>
+If '<i>administer stats</i>' and '<i>access statistics</i>' are both enabled, the user will see a link from each node to that node's referrer statistics (if enabled).
+<hr>
+
+<h2>Statistics for developers</h2>
+
+<h3>Accessing statistics</h3>
+<p>To get a node's view statistics make a call to the function <i>statistics_get($nid)</i>.  When you pass in a $nid, the function returns an array with three entires:  [0]=totalcount, [1]=daycount, [2]=timestamp.  For example, you could use this function call to add node view counts to your theme.</p>
+<ul>
+  <li>The <i>totalcount</i> is a count of the total number of times that node has been viewed.</li>
+  <li>The <i>daycount</i> is a count of the total number of times that node has been viewed "today".  For the daycount to be reset, cron must be enabled.</li>
+  <li>The <i>timestamp</i> is a timestamp of when that node was last viewed.</li>
+</ul>
+<p>The module automatically adds '# reads' to each node's link section (if enabled).</p>
+
+<h3>Top stories</h3>
+<p>The statistics.module provides a function '<i>statistics_display_ltitle($type)</i>' to return a linked title of any of the following:  the top viewed node of all time, the top viewed node of today, the last viewed node.  You can pass in:
+<ul>
+  <li><i>totalcount</i> - This will return a link to the top viewed node of all time.<br />
+  Example:  <code>statistics_display_ltitle("totalcount");</code><br /><br /></li>
+  <li><i>daycount</i> - This will return a link to the top viewed node for today.<br />
+  Example:  <code>statistics_display_ltitle("daycount");</code><br /><br /></li>
+  <li><i>timestamp</i> - This will return a link to the last viewed node.<br />
+  Example:  <code>statistics_display_ltitle("timestamp");</code></li>
+</ul>
+
+<h3>Throttle</h3>
+<p>The function <code>throttle_status()</code> will return a number from 0 to 5.  0 means that there is no throttle enabled at this time.  Each number above that is a progressively more throttled system...  To disable a feature when a site first begins to get busy, disable it at a throttle of 2 or 3.  To hold on to the bitter end, wait until 4 or 5.</p>
+<p>To implement the throttle, you should do something like this:
+<pre>       $throttle = 0;
+       /* verify that the statitistics module is installed */
+       if (function_exists(throttle_status) {
+         $throttle = throttle_status()
+       }
+       if ($throttle >= $my_throttle_value) {
+         // throttle limit reached, disable stuff
+       }
+       else {
+         // throttle limit not reached, execute normally
+       }</pre></p>
+
+  <?php
 }
 
-function statistics_table_1($query) {
-  $result = db_query($query);
 
-  $output .= "<table border=\"1\" cellpadding=\"3\" cellspacing=\"0\">\n";
-  $output .= " <tr><th>URL</th><th>date</th></tr>\n";
-  while ($referrer = db_fetch_object($result)) {
-    $output .= "<tr><td><a href=\"". check_output($referrer->url) ."\">". substr(check_output($referrer->url), 0, 100) ."</a></td><td>". format_date($referrer->timestamp, "small") ."</td></tr>";
-  }
-  $output .= "</table>\n";
-
-  return $output;
-}
-
-function statistics_table_2($query) {
-  $result = db_query($query);
-
-  $output .= "<table border=\"1\" cellpadding=\"3\" cellspacing=\"0\">\n";
-  $output .= " <tr><th>URL</th><th>number</th></tr>\n";
-  while ($referrer = db_fetch_object($result)) {
-    $output .= "<tr><td><a href=\"". check_output($referrer->url) ."\">". substr(check_output($referrer->url), 0, 100) ."</a></td><td>". check_output($referrer->count) ."</td></tr>";
-  }
-  $output .= "</table>\n";
-
-  return $output;
-}
-
-function statistics_referrer_internal() {
-  global $HTTP_HOST;
-
-  $output .= "<h3>Most recent internal referrers</h3>\n";
-  $output .= statistics_table_1("SELECT url, timestamp FROM referrer WHERE url LIKE '%". check_input($HTTP_HOST) ."%' ORDER BY timestamp DESC LIMIT 15");
-
-  $output .= "<h3>Internal referrers of the last ". format_interval(variable_get("referrer_clear", 604800)) ."</h3>\n";
-  $output .= statistics_table_2("SELECT url, COUNT(url) AS count FROM referrer WHERE url LIKE '%". check_input($HTTP_HOST) ."%' GROUP BY url ORDER BY count DESC");
-
-  return $output;
-}
-
-function statistics_referrer_external() {
-  global $HTTP_HOST;
-
-  $output .= "<h3>Most recent external referrers</h3>\n";
-  $output .= statistics_table_1("SELECT url, timestamp FROM referrer WHERE url NOT LIKE '%". check_input($HTTP_HOST) ."%' ORDER BY timestamp DESC LIMIT 15");
-
-  $output .= "<h3>External referrers of the last ". format_interval(variable_get("referrer_clear", 604800)) ."</h3>\n";
-  $output .= statistics_table_2("SELECT url, COUNT(url) AS count FROM referrer WHERE url NOT LIKE '%". check_input($HTTP_HOST) ."%' GROUP BY url ORDER BY count DESC");
-
-  return $output;
-}
-
+/* Administration hook, defines module's administrative page */
 function statistics_admin() {
-  global $op, $type;
+  global $op, $id, $edit, $nid;
 
-  if (user_access("administer statistics")) {
+  /* Only allow people with sufficient access. */
+  if ((user_access("administer statistics module")) || (user_access("administer stats"))) {
 
-    print "<small>". la(t("internal referrers"), array("mod" => "statistics", "type" => "internal referrer")) ." | ". la(t("external referrers"), array("mod" => "statistics", "type" => "external referrer")) ." | ". la(t("help"), array("mod" => "statistics", "op" => "help")) ."</small><hr />\n";
+    /* Display the second level admin links */
+    $links[] = la(t("view statistics"), array("mod" => "statistics", "op" => "statistics"));
+    $links[] = la(t("view referrers"), array("mod" => "statistics", "op" => "referrers"));
+    $links[] = la(t("view access log"), array("mod" => "statistics", "op" => "log"));
+    if (user_access("administer statistics module")) {
+      $links[] = la(t("top nodes block"), array("mod" => "statistics", "op" => "block0"));
+      $links[] = la(t("top nodes page"), array("mod" => "statistics", "op" => "page0"));
+      $links[] = la(t("who's online block"), array("mod" => "statistics", "op" => "block1"));
+    }
+    $links[] .= la(t("help"), array("mod" => "statistics", "op" => "help"));
+    print "<small>". implode(" &middot; ", $links) ."</small><hr />";
 
+    /* non-configuration admin pages */
     switch ($op) {
       case "help":
         print statistics_help();
+        exit;
+      case "statistics":
+        print statistics_admin_displaycounts();
+        exit;
+      case "referrers":
+        print statistics_recent_refer($nid);
+        print statistics_top_refer($nid);
+        exit;
+      case "log":
+        print statistics_admin_displaylog();
+        exit;
+    }
+
+    /* configuration admin pages */
+    if (user_access("administer statistics module")) {
+      $op = stripslashes($op);
+      switch ($op) {
+        case "Submit \"top nodes\" block changes":
+          print status(statistics_save_block0($edit));
+          break;
+        case "Submit \"who's online\" block changes":
+          print status(statistics_save_block1($edit));
+          break;
+        case "Submit \"top nodes\" page changes":
+          print status(statistics_save_userconfig($edit));
+          break;
+        case "block0":
+          print statistics_config_block0(array(
+            "stats b0 title0" => variable_get("stats b0 title0", "Top nodes"),
+            "stats b0 days head" => variable_get("stats b0 days head", "<b>Today's top:</b>"),
+            "stats b0 days top" => variable_get("stats b0 days top", 0),
+            "stats b0 alltime head" => variable_get("stats b0 alltime head", "<b>All time top:</b>"),
+            "stats b0 alltime top" => variable_get("stats b0 alltime top", 0),
+            "stats b0 last head" => variable_get("stats b0 last head" ,"<b>Last:</b>"),
+            "stats b0 last top" => variable_get("stats b0 last top", 0)
+         ));
+          break;
+        case "block1":
+          print statistics_config_block1(array(
+            "stats b1 title0" => variable_get("stats b1 title0", "Who's online"),
+            "stats b1 title1" => variable_get("stats b1 title1", "Online users:"),
+            "stats b1 time" => variable_get("stats b1 time", 2700),
+            "stats b1 maxname len" => variable_get("stats b1 maxname len", 15),
+            "stats b1 max names" => variable_get("stats b1 max names", 10)
+         ));
+          break;
+        case "page0":
+          print statistics_display_userconfig(array(
+            "statistics up link" => variable_get("statistics up link", ""),
+            "statistics up days head" => variable_get("statistics up days head", "Today's top"),
+            "statistics up days top" => variable_get("statistics up days top", 0),
+            "statistics up alltime head" => variable_get("statistics up alltime head", 0),
+            "statistics up alltime top" => variable_get("statistics up alltime top", "All time top"),
+            "statistics up last head" => variable_get("statistics up last head", 0),
+            "statistics up last top" => variable_get("statistics up last top", "Last")
+         ));
+          break;
+        case "submit statistics config":
+          print status(statistics_save_statistics($edit));
+          break;
         break;
-      default:
-        switch ($type) {
-          case "internal referrer":
-            print statistics_referrer_internal();
-            break;
-          case "external referrer":
-            // fall through:
-          default:
-            print statistics_referrer_external();
-        }
+        case "reset day counter":
+          db_query("UPDATE statistics SET daycount='0'");
+          variable_set("statistics timestamp", time());
+          break;
+        default:
+          print statistics_admin_displaycounts();
+          break;
+      }
     }
   }
+}
+
+
+/* Displays the various admin tables */
+function statistics_admin_table0($dbfield, $dbrows) {
+  $result = db_query("SELECT statistics.nid,statistics.daycount,statistics.totalcount,statistics.timestamp,node.title FROM statistics LEFT JOIN node USING (nid) ORDER BY statistics.%s DESC LIMIT %s", $dbfield, $dbrows);
+
+  $output .= "<table border=\"1\" cellpadding=\"3\" cellspacing =\"0\"><tr><th>title</th><th>today</th><th>all time</th><th>last hit</th><th>referrers</th></tr>\n";
+
+  while ($nid = db_fetch_array($result)) {
+    $output .= "<tr><td>". l($nid["title"], array("id" => $nid["nid"]), "node", "", array("title" => t("View this story and all of its comments."))) ."</td><td>". $nid["daycount"] ."</td><td>". $nid["totalcount"] ."</td><td>". format_date($nid["timestamp"], "small") ."</td><td><center>";
+    $output .= la("view", array("mod" => "statistics", "op" => "referrers", "nid" => $nid["nid"], "title" => "$nid[title]"));
+    $output .= "</center></td></tr>";
+  }
+  $output .= "</table>\n";
+
+  return $output;
+}
+
+
+function statistics_admin_table1($type, $id) {
+  /* overview limit */
+  $limit0 = 50;
+  /* detail limit */
+  $limit1 = 500;
+
+  if ($type == 1) {
+    /* retrieve user access logs */
+    if ($id) {
+      /* retrieve recent access logs for user $id */
+      $result = db_query("SELECT nid,url,hostname,uid,timestamp FROM accesslog WHERE uid = '%s' ORDER BY timestamp DESC LIMIT %s", $id, $limit1);
+    }
+    else {
+      /* retrieve recent access logs for all users */
+      $result = db_query("SELECT nid,url,hostname,uid,MAX(timestamp) AS timestamp FROM accesslog WHERE uid != '0' GROUP BY uid ORDER BY timestamp DESC LIMIT %s", $limit1);
+    }
+  }
+  else if ($type == 2) {
+    /* retrieve recent access logs for node $id */
+    $result = db_query("SELECT nid,url,hostname,uid,timestamp FROM accesslog WHERE nid = '%s' ORDER BY timestamp DESC LIMIT %s", $id, $limit1);
+
+  }
+  else if ($type == 3) {
+    /* retrieve recent access logs for hostname $id */
+    $result = db_query("SELECT nid,url,hostname,uid,timestamp FROM accesslog WHERE hostname = '%s' ORDER BY timestamp DESC LIMIT %s", $id, $limit1);
+
+  }
+  else {
+    /* retrieve all recent access logs */
+    $result = db_query("SELECT nid,url,hostname,uid,timestamp FROM accesslog ORDER BY timestamp DESC LIMIT %s", $limit0);
+  }
+
+  $output .= "<table border=\"1\" cellpadding=\"3\" cellspacing =\"0\"><tr><th>timestamp</th><th>title</th><th>user</th><th>hostname</th><th>referrer</th></tr>\n";
+
+  while ($log = db_fetch_array($result)) {
+    if (!$node = node_load(array("nid" => $log["nid"]))) {
+      $node->nid = 0;
+    }
+    $user = user_load(array("uid" => $log["uid"]));
+    $output .= "<tr><td>". format_date($log["timestamp"], "small") ."</td><td>". la(($node->nid ? $node->title : ""), array("mod" => "statistics", "op" => "log", "nid" => $node->nid), "") ."</td><td>". la((strlen($user->name) > 18 ? substr($user->name, 0, 18) . '...' : $user->name), array("mod" => "statistics", "op" => "log", "uid" => $user->uid), "") ."</td><td>". la($log["hostname"], array("mod" => "statistics", "op" => "log", "hostname" => $log["hostname"]), "") ."</td><td><a href=\"$log[url]\" title=\"$log[url]\">". ($log["url"] ? (strlen($log["url"]) > 28 ? substr($log["url"], 0, 28) . '...' : $log["url"]) : "") ."</a></td></tr>";
+  }
+
+  $output .= "</table>";
+
+  return $output;
+}
+
+
+function statistics_recent_refer($nid = 0) {
+  global $HTTP_HOST, $view;
+
+  $node = node_load(array("nid" => $nid));
+
+  /* allow viewing of all, internal or external referrers */
+  $links[] .= la(t("all"), array("mod" => "statistics", "op" => "referrers", "view" => "all", "nid" => "$nid"));
+  $links[] .= la(t("external"), array("mod" => "statistics", "op" => "referrers", "view" => "external", "nid" => "$nid"));
+  $links[] .= la(t("internal"), array("mod" => "statistics", "op" => "referrers", "view" => "internal", "nid" => "$nid"));
+  print "<small>". implode(" :: ", $links) ."</small><hr />";
+
+  if ($nid > 0) {
+    if ($view == "all") {
+      $query = "SELECT url,timestamp FROM accesslog WHERE nid='$nid' AND url != '' ORDER BY timestamp DESC LIMIT 15";
+    }
+    elseif ($view == "internal") {
+      $query = "SELECT url,timestamp FROM accesslog WHERE nid='$nid' AND url LIKE '%". check_input($HTTP_HOST) ."%' ORDER BY timestamp DESC LIMIT 15";
+      $describe = "internal ";
+    }
+    else {
+      /* default to external referrers */
+      $query = "SELECT url,timestamp FROM accesslog WHERE nid='$nid' AND url NOT LIKE '%". check_input($HTTP_HOST) ."%' AND url != '' ORDER BY timestamp DESC LIMIT 15";
+      $describe = "external ";
+    }
+
+    $result = db_query($query);
+    $output = "<h3>Most recent ". $describe ."referrers for node \"". l($node->title, array("id" => "$nid"), "node", "", array("title" => t("View this story and all of its comments."))) ."\"</h3>";
+  }
+  else {
+    if ($view == "all") {
+      $query = "SELECT url,timestamp FROM accesslog WHERE url != '' ORDER BY timestamp DESC LIMIT 15";
+    }
+    elseif ($view == "internal") {
+      $query = "SELECT url,timestamp FROM accesslog WHERE url LIKE '%". check_input($HTTP_HOST) ."%' ORDER BY timestamp DESC LIMIT 15";
+      $describe = "internal ";
+    }
+    else {
+      $query = "SELECT url,timestamp FROM accesslog WHERE url NOT LIKE '%". check_input($HTTP_HOST) ."%' AND url != '' ORDER BY timestamp DESC LIMIT 15";
+      $describe = "external ";
+    }
+
+    $result = db_query($query);
+    $output = "<h3>Most recent ". $describe ."referrers</h3>";
+  }
+
+  $output .= "<table border=\"1\" cellpadding=\"3\" cellspacing=\"0\">\n";
+  $output .= " <tr><th>URL</th><th>date</th></tr>\n";
+  while ($referrer = db_fetch_array($result)) {
+    $output .= "<tr><td><a href=\"". check_output($referrer["url"]) ."\">". substr(check_output($referrer["url"]), 0, 100) ."</a></td><td>". format_date($referrer["timestamp"], "small") ."</td></tr>";
+  }
+  $output .= "</table>\n";
+
+  return $output;
+
+}
+
+
+function statistics_top_refer($nid = 0) {
+  global $HTTP_HOST, $view;
+
+  $node = node_load(array("nid" => $nid));
+
+  if ($nid > 0) {
+    if ($view == "all") {
+      $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE nid='$nid' AND url != '' GROUP BY url ORDER BY count DESC";
+    }
+    elseif ($view == "internal") {
+      $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE nid='$nid' AND url LIKE '%". check_input($HTTP_HOST) ."%' GROUP BY url ORDER BY count DESC";
+      $describe = "internal ";
+    }
+    else {
+      /* default to external */
+      $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE nid='$nid' AND url NOT LIKE '%". check_input($HTTP_HOST) ."%' AND url != '' GROUP BY url ORDER BY count DESC";
+      $describe = "external ";
+    }
+
+    $output = "<h3>Top ". $describe ."referrers of the past ". format_interval(variable_get("stats flush log", 259200)) ." for node \"". l($node->title, array("id" => "$nid"), "node", "", array("title" => t("View this story and all of its comments."))) ."\"</h3>";
+  }
+  else {
+    if ($view == "all") {
+      $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE url != '' GROUP BY url ORDER BY count DESC";
+    }
+    elseif ($view == "internal") {
+      $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE url LIKE '%". check_input($HTTP_HOST) ."%' GROUP BY url ORDER BY count DESC";
+      $describe = "internal ";
+    }
+    else {
+      /* default to external */
+      $query = "SELECT url, COUNT(url) AS count FROM accesslog WHERE url NOT LIKE '%". check_input($HTTP_HOST) ."%' AND url != '' GROUP BY url ORDER BY count DESC";
+      $describe = "external ";
+    }
+
+    $output = "<h3>Top ". $describe ."referrers of the past ". format_interval(variable_get("stats flush log", 259200)) ."</h3>";
+  }
+
+  $result = db_query($query);
+
+  $output .= "<table border=\"1\" cellpadding=\"3\" cellspacing=\"0\">\n";
+  $output .= " <tr><th>URL</th><th>count</th></tr>\n";
+  while ($referrer = db_fetch_array($result)) {
+    $output .= "<tr><td><a href=\"". check_output($referrer["url"]) ."\">". substr(check_output($referrer["url"]), 0, 100) ."</a></td><td>". $referrer["count"] ."</td></tr>";
+  }
+  $output .= "</table>\n";
+
+  return $output;
+
+}
+
+
+function statistics_admin_displaycounts() {
+
+  $output .= "<h3>Today's top nodes</h3>\n";
+  $output .= statistics_admin_table0("daycount", 15);
+
+  $output .= "<br />";
+
+  $output .= "<h3>All time top nodes</h3>\n";
+  $output .= statistics_admin_table0("totalcount", 15);
+
+  $output .= "<br />";
+
+  $output .= "<h3>Last nodes viewed</h3>\n";
+  $output .= statistics_admin_table0("timestamp", 15);
+
+  return $output;
+}
+
+
+function statistics_admin_displaylog() {
+  global $uid, $nid, $hostname;
+
+  if ($uid) {
+    $user = user_load(array("uid" => $uid));
+    $output .= "<h3>Recent access logs for '$user->name'</h3>\n";
+    $output .= statistics_admin_table1(1, $user->uid);
+  }
+  else if ($nid) {
+    $node = node_load(array("nid" => $nid));
+    $output .= "<h3>Recent access logs for '$node->title'</h3>\n";
+    $output .= statistics_admin_table1(2, $node->nid);
+  }
+  else if ($hostname) {
+    $output .= "<h3>Recent access logs for '$hostname'</h3>\n";
+    $output .= statistics_admin_table1(3, $hostname);
+  }
+  else {
+    $output .= "<h3>Recent access logs</h3>\n";
+    $output .= statistics_admin_table1(0, 0);
+
+    $output .= "<br />";
+
+    $output .= "<h3>Recent users</h3>\n";
+    $output .= statistics_admin_table1(1, 0);
+
+    $output .= "<br />";
+  }
+
+  return $output;
+}
+
+
+/* Displays the block configuration administration form */
+function statistics_config_block0($edit) {
+
+  $form = form_textfield(t("Block name"), "stats b0 title0", $edit["stats b0 title0"], 20, 40, "This module generates a block with top nodes. You may assign a name for this block.");
+
+  $form .= "<hr />";
+
+  $form .= form_textfield(t("Today's top nodes title"), "stats b0 days head", $edit["stats b0 days head"], 20, 40, "Specify a name for the \"day's top\" section of the block generated by this module. (HTML tags permitted)");
+  $form .= form_select(t("Number of day's top views to display"), "stats b0 days top", $edit["stats b0 days top"], array("0" => t("disabled"), "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "25" => "25", "30" => "30", "40" => "40"), "Set how many \"today's top\" nodes to display on the block generated by this module.");
+
+  $form .= "<hr />";
+
+  $form .= form_textfield(t("All time top nodes title"), "stats b0 alltime head", $edit["stats b0 alltime head"], 20, 40, "Specify a name for the \"all time top\" section of the block generated by this module. (HTML tags permitted)");
+  $form .= form_select(t("Number of all time views to display"), "stats b0 alltime top", $edit["stats b0 alltime top"], array("0" => t("disabled"), "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "25" => "25", "30" => "30", "40" => "40"), "Set how many \"all time top\" nodes to display on the block generated by this module.");
+
+  $form .= "<hr>";
+
+  $form .= form_textfield(t("Most recent views heading"), "stats b0 last head", $edit["stats b0 last head"], 20, 40, "Specify a name for the \"last views\" section of the block generated by this module. (HTML tags permitted)");
+  $form .= form_select(t("Number of most recent views to display"), "stats b0 last top", $edit["stats b0 last top"], array("0" => t("disabled"), "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "25" => "25", "30" => "30", "40" => "40"), "Set how many \"last viewed\" nodes to display on the block generated by this module.");
+
+  $form .= "<hr>";
+
+  $form .= form_submit("Submit \"top nodes\" block changes");
+
+  $output .= form($form);
+
+  return $output;
+}
+
+
+/* Displays the block configuration administration form */
+function statistics_config_block1($edit) {
+
+  $form .= form_textfield(t("Block name"), "stats b1 title0", $edit["stats b1 title0"], 20, 40, "This module generates a block displaying how many users/guests are online.  You may assign a name for this block.");
+  $form .= form_textfield(t("Sub-block name"), "stats b1 title1", $edit["stats b1 title1"], 20, 40, "This module generates a sub-block listing the names of currently online users.  You may assign a name for this block.");
+
+  $period = array(30 => format_interval(30), 60 => format_interval(60), 120 => format_interval(120), 180 => format_interval(180), 300 => format_interval(300), 600 => format_interval(600), 900 => format_interval(900), 1800 => format_interval(1800), 2700 => format_interval(2700), 3600 => format_interval(3600), 5400 => format_interval(5400), 7200 => format_interval(7200), 10800 => format_interval(10800), 21600 => format_interval(21600), 43200 => format_interval(43200), 86400 => format_interval(86400));
+  $form .= form_select(t("Activity trheshold"), "stats b1 time", $edit["stats b1 time"], $period, "How long ago a user (or guest) must have been active to be considered online.");
+  $form .= form_select(t("Maximum characters of user's name to display"), "stats b1 maxname len", $edit["stats b1 maxname len"], array("1" => "1", "5" => "5", "10" => "10", "15" => "15", "20" => "20", "25" => "25", "30" => "30", "35" => "35", "40" => "40", "45" => "45", "50" => "50", "55" => "55", "60" => "60"), "What is the maximum characters of a user's name to to display in the sub-block.");
+  $form .= form_select(t("How many online users to list"), "stats b1 max names", $edit["stats b1 max names"], array("0" => "0", "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "50" => "50", "100" => "100"), "How many online user's names to display in the sub-block.");
+
+  $form .= form_submit("Submit \"who's online\" block changes");
+
+  $output .= form($form);
+  return $output;
+}
+
+
+/* Displays the user page configuration administration form */
+function statistics_display_userconfig($edit) {
+
+  $form = form_textfield(t("Name for link to user page"), "statistics up link", $edit["statistics up link"], 20, 40, "This node generates a user page with top nodes.  If you wish a link added automatically, specify a name.");
+  $form .= "<hr />";
+
+  $form .= form_textfield(t("Today's top nodes title"), "statistics up days head", $edit["statistics up days head"], 20, 40, "Specify a name for the \"day's top\" section of the user page generated by this module.");
+  $form .= form_select(t("Number of nodes to display for \"day's top\""), "statistics up days top", $edit["statistics up days top"], array("0" => t("disabled"), "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "25" => "25"), "Set how many \"day's top\" nodes to display on the user page generated by this module.");
+  $form .= "<hr />";
+
+  $form .= form_textfield(t("All time top nodes title"), "statistics up alltime head", $edit["statistics up alltime head"], 20, 40, "Specify a name for the \"all time top\" section of the user page generated by this module.");
+  $form .= form_select(t("Number of nodes to display for \"all time\""), "statistics up alltime top", $edit["statistics up alltime top"], array("0" => t("disabled"), "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "25" => "25"), "Set how many \"all time top\" nodes to display on the user page generated by this module.");
+  $form .= "<hr />";
+
+  $form .= form_textfield(t("Last viewed nodes title"), "statistics up last head", $edit["statistics up last head"], 20, 40, "Specify a name for the \"last viewed\" section of the user page generated by this module.");
+  $form .= form_select(t("Number of nodes to display for \"last views\""), "statistics up last top", $edit["statistics up last top"], array("0" => t("disabled"), "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "25" => "25"), "Set how many \"last viewed\" nodes to display on the user page generated by this module.");
+  $form .= "<hr />";
+
+  $form .= form_submit("Submit \"top nodes\" page changes");
+
+  $output .= form($form);
+
+  return $output;
+}
+
+
+/* Adds configure option to the main configure site admin page */
+function statistics_conf_options() {
+  /* access log options */
+  $output .= "<h4>[ access log: ]</h4>";
+  $output .= form_select(t("enable access log"), "stats enable log", variable_get("stats enable log", 0), array("1" => t("enabled"), "0" => t("disabled")), "Log each page access. (required for referrer statistics and auto-throttling)");
+  $period = array(3600 => format_interval(3600), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200), 4838400 => format_interval(4838400), 9676800 => format_interval(9676800));
+  $output .= form_select(t("discard access logs older than"), "stats flush log", variable_get("stats flush log", 259200), $period, "Older access log entries (including referrer statistics) will be automatically discarded.  Requires crontab.");
+
+  $output .= "<h4>[ auto-throttle: ]</h4>";
+  $output .= form_select(t("enable auto-throttle"), "stats enable throttle", variable_get("stats enable throttle", 0), array("1" => t("enabled"), "0" => t("disabled")), "Throttle (minimize) site when receiving too many hits. (requires that 'access log' be enabled)");
+  $throttles = array(1 => "1 (0,1,2,3,4,5)", 5 => "5 (0,5,10,15,20,25)", 10 => "10 (0,10,20,30,40,50)", 20 => "20 (0,20,40,60,80,100)", 30 => "30 (0,30,60,90,120,150)", 50 => "50 (0,50,100,150,200,250)", 60 => "60 (0,60,120,180,240,300)", 100 => "100 (0,100,200,300,400,500", 500 => "500 (0,500,1000,1500,2000,2500", 1000 => "1000 (0,1000,2000,3000,4000,5000)");
+  $output .= form_select(t("auto-throttle multiplier"), "stats throttle multiplier", variable_get("stats throttle multiplier", 60), $throttles, "Multiplier to define the number of page accesses made in past minute to trigger each throttle level (0-5).");
+  $probabilities = array(0 => "100%", 1 => "50%", 2 => "33.3%", 3 => "25%", 4 => "20%", 5 => "16.6%", 7 => "12.5%", 9 => "10%", 19 => "5%", 99 => "1%");
+  $output .= form_select(t("auto-throttle probability limiter"), "stats probability limiter", variable_get("stats probability limiter", 9), $probabilities, "Probability based efficiency mechanism.  Specify the approximate % of hits that will update the throttle level. (Updates add one DB query)");
+
+  $output .= "<h4>[ node view counters: ]</h4>";
+  $output .= form_select(t("enable node counters"), "stats enable node counts", variable_get("stats enable node counts", 0), array("1" => t("enabled"), "0" => t("disabled")), "Increment node counter each time node is viewed.");
+  $output .= form_select(t("display node counters"), "statistics display status", variable_get("statistics display status", ""), array("1" => t("enabled"), "0" => t("disabled")), "Display how many times each node has been viewed.  User must have 'access statistics' permissions.");
+
+  $output .= "<b>day counter last reset on:</b><br />". format_date(variable_get("statistics timestamp", "large")) ."<br /><br />";
+  $output .= la(t("<b>reset day counter</b>"), array("mod" => "statistics", "op" => "reset day counter"));
+  $output .= "<br /><i>Clicking this link will reload this page without saving any other changes you've made.  It will reset the day counter to now.</i>";
+  return $output;
+}
+
+
+/* Saves the values entered in the "blockconfig" administration form */
+function statistics_save_block0($edit) {
+  variable_set("stats b0 title0", $edit["stats b0 title0"]);
+  variable_set("stats b0 days head", $edit["stats b0 days head"]);
+  variable_set("stats b0 days top", $edit["stats b0 days top"]);
+  variable_set("stats b0 alltime head", $edit["stats b0 alltime head"]);
+  variable_set("stats b0 alltime top", $edit["stats b0 alltime top"]);
+  variable_set("stats b0 last head", $edit["stats b0 last head"]);
+  variable_set("stats b0 last top", $edit["stats b0 last top"]);
+}
+
+
+/* Saves the values entered in the "blockconfig" administration form */
+function statistics_save_block1($edit) {
+  variable_set("stats b1 title0", $edit["stats b1 title0"]);
+  variable_set("stats b1 title1", $edit["stats b1 title1"]);
+  variable_set("stats b1 time", $edit["stats b1 time"]);
+  variable_set("stats b1 maxname len", $edit["stats b1 maxname len"]);
+  variable_set("stats b1 max names", $edit["stats b1 max names"]);
+}
+
+
+/* Saves the values entered in the "userpage" administration form */
+function statistics_save_userconfig($edit) {
+  variable_set("statistics up link", $edit["statistics up link"]);
+  variable_set("statistics up days head", $edit["statistics up days head"]);
+  variable_set("statistics up days top", $edit["statistics up days top"]);
+  variable_set("statistics up alltime head", $edit["statistics up alltime head"]);
+  variable_set("statistics up alltime top", $edit["statistics up alltime top"]);
+  variable_set("statistics up last head", $edit["statistics up last head"]);
+  variable_set("statistics up last top", $edit["statistics up last top"]);
+}
+
+
+/* Saves the values entered in the "config statistics" administration form */
+function statistics_save_statistics($edit) {
+  variable_set("statistics display status", $edit["statistics display status"]);
+}
+
+
+/* cron hook, performs automatic functions */
+function statistics_cron() {
+  $statistics_timestamp = variable_get("statistics timestamp", "");
+
+  if ((time() - $statistics_timestamp) >= 86400) {
+    /* reset day counts */
+    db_query("UPDATE statistics SET daycount='0'");
+    variable_set("statistics timestamp", time());
+  }
+
+  /* clean expired access logs */
+  db_query("DELETE FROM accesslog WHERE ". time() ." - timestamp > ". variable_get("stats flush log", 259200));
+
+  $throttle = variable_get("stats throttle", 5);
+  /* check if throttle is currently on */
+  if ($throttle) {
+    /* If throttle is on, back off one notch to test server load */
+    variable_set("stats throttle", $throttle - 1);
+    if (function_exists("watchdog")) {
+      watchdog("warning", "cron: decreasing throttle to level '". ($throttle - 1) ."' to test server load.");
+    }
+  }
+}
+
+
+/* Displays the "Top nodes" block */
+function statistics_displayblock0() {
+  global $id;
+
+  $daytop = variable_get("stats b0 days top", "");
+  if ($daytop) {
+    $dayheading = variable_get("stats b0 days head", "");
+    if ($dayheading) {
+      $output .= "". $dayheading ."<br />";
+    }
+    $output .= "". statistics_display_ltitle("daycount", $daytop) ."<br />";
+  }
+  $alltimetop = variable_get("stats b0 alltime top", "");
+  if ($alltimetop) {
+    $alltimeheading = variable_get("stats b0 alltime head", "");
+    if ($alltimeheading) {
+      $output .= "". $alltimeheading ."<br />";
+    }
+    $output .= "". statistics_display_ltitle("totalcount", $alltimetop) ."<br />";
+  }
+  $lasttop = variable_get("stats b0 last top", "");
+  if ($lasttop) {
+    $lastheading = variable_get("stats b0 last head", "");
+    if ($lastheading) {
+      $output .= "". $lastheading ."<br />";
+    }
+    $output .= "". statistics_display_ltitle("timestamp", $lasttop);
+  }
+  return $output;
+}
+
+
+/* This displays the "Who's online" block */
+function statistics_displayblock1() {
+  global $id, $recent_activity;
+
+  $throttle = throttle_status();
+  $multiplier = variable_get("stats throttle multiplier", 60);
+
+  /* don't do any database lookups if on maximum throttle */
+  if ($throttle < 5) {
+    /* count users with activity in the past defined period */
+    $time_period = variable_get("stats b1 time", 2700);
+
+    /*
+     * This call gathers all the info we need on users/guests in a single
+     * database call, thus is quite efficient.
+     */
+    $result = db_query("SELECT COUNT(DISTINCT hostname) AS count,uid,MAX(timestamp) as timestamp FROM accesslog WHERE timestamp >= '%s' GROUP BY uid ORDER BY timestamp DESC", (time() - $time_period));
+
+    $users = $guests = 0;
+    /* Count number of users & guests currently online based on db query */
+    while ($users_online = db_fetch_array($result)) {
+      if ($users_online["uid"]) {
+        /* Has uid, so is a registered user */
+        $user_list[$users] = $users_online[uid];
+        $users++;
+      }
+      else {
+        /*
+         * There's only going to be one return with a uid of 0, and that's the guest.
+         * Hence, the count of this field is the total number of guests currently online.
+         */
+        $guests = $users_online["count"];
+      }
+    }
+    /* format the output with proper grammar */
+    if ($users == 1) {
+      $output = "There is currently ";
+    }
+    else {
+      $output = "There are currently ";
+    }
+    $output .= format_plural($users, " user", " users");
+    $output .= " and ";
+    $output .= format_plural($guests, " guest", " guests");
+    $output .= " online.";
+
+    if (user_access("access userlist") && $users) {
+      /* Display a list of currently online users */
+      $max_users = variable_get("stats b1 max names", 10);
+      $max_name_len = variable_get("stats b1 maxname len", 15);
+      $output .= "<br /><br />\n<b>". variable_get("stats b1 title1", "Online users:") ."</b><br />\n";
+      $uid = reset($user_list);
+      while (($uid) && ($max_users)) {
+        $user = user_load(array("uid" => $uid));
+        /* When displaying name, be sure it's not more than defined max length */
+        $output .= " - ". lm((strlen($user->name) > $max_name_len ? substr($user->name, 0, $max_name_len) . '...' : $user->name), array("mod" => "user", "op" => "view", "id" => $user->uid)) ."<br />";
+        $uid = next($user_list);
+        /* When $max_users reaches zero, we break out even if there are more online */
+        $max_users--;
+      }
+    }
+  }
+  else {
+    /* default message when fully throttled */
+    $output = "This site is currently sustaining more than ". ($throttle * $multiplier) ." page views a minute!";
+  }
+  return $output;
+}
+
+
+/* This displays admin oriented "Throttle status" block */
+function statistics_displayblock2() {
+  global $recent_activity;
+
+  /* information in this block is only for the admin of the site */
+  if (user_access("administer site configuration")) {
+    if (variable_get("stats enable throttle", 0)) {
+      /* the throttle is enabled:  display the status of all throttle config */
+      $throttle = throttle_status();
+      $multiplier = variable_get("stats throttle multiplier", 60);
+      $minimum = $throttle * $multiplier;
+      $limiter = variable_get("stats probability limiter", 9);
+      /* calculate probability limiter's odds of updating throttle */
+      $probability = substr((($limiter / ($limiter + 1) * 100) - 100) * -1, 0, 4);
+
+      $output .= "Throttle: ". l("Enabled", array("mod" => "system"), "admin", "statistics") ."<br />\n";
+      if ($throttle < 5) {
+        $maximum = (($throttle + 1) * $multiplier) - 1;
+        $output .= "Current Level: $throttle ($minimum - $maximum)<br />\n";
+      }
+      else {
+        $output .= "Current Level: $throttle ($minimum+)<br />\n";
+      }
+      $output .= "Probability: $probability%<br />\n";
+      if ($recent_activity["hits"]) {
+        $output .= "<br />This site has served ";
+        $output .= format_plural($recent_activity["hits"] , " page", " pages");
+        $output .= " in the past minute.";
+      }
+    }
+    else {
+      $output .= "Throttle: ". l("Disabled", array("mod" => "system"), "admin", "statistics") ."<br />\n";
+    }
+  }
+  return $output;
+}
+
+/* Display linked title based on field name */
+function statistics_display_ltitle($dbfield, $dbrows) {
+  /* valid dbfields: totalcount, daycount, timestamp */
+
+  $result = db_query("SELECT statistics.nid,node.title FROM statistics LEFT JOIN node ON statistics.nid = node.nid ORDER BY %s DESC LIMIT %s", $dbfield, $dbrows);
+  while ($nid = db_fetch_array($result)) {
+    $output .= " - ". l($nid["title"], array("id" => $nid["nid"]), "node", "", array("title" => t("View this story and all of its comments."))) ."<br />";
+  }
+
+  return $output;
+}
+
+
+/* Function to retreive current page counter value. */
+function statistics_get($nid) {
+
+  if ($nid > 0) {
+    /* retrieves an array with both totalcount and daycount */
+    $statistics = db_fetch_array(db_query("SELECT totalcount,daycount,timestamp FROM statistics WHERE nid = '%s'", $nid));
+  }
+
+  return $statistics;
+
+}
+
+
+/* Block hook */
+function statistics_block() {
+
+  $block[0]["subject"] = variable_get("stats b0 title0", "Top nodes");
+  $block[0]["content"] = statistics_displayblock0();
+  $block[0]["info"] = "Top nodes";
+
+  $block[1]["subject"] = variable_get("stats b1 title0", "Who's online");
+  $block[1]["content"] = statistics_displayblock1();
+  $block[1]["info"] = "Who's online";
+
+  $block[2]["subject"] = "Throttle status";
+  $block[2]["content"] = statistics_displayblock2();
+  $block[2]["info"] = "Throttle status";
+
+  return $block;
+}
+
+
+function statistics_page() {
+  global $theme;
+
+  if (user_access("access content")) {
+    $theme->header();
+    statistics_page_user();
+    $theme->footer();
+  }
+  else {
+    $theme->header();
+    $theme->box(t("Access denied"), message_access());
+    $theme->footer();
+  }
+}
+
+
+/* Generates the statistics user page */
+function statistics_page_user($uid = 0, $date = 0, $all = 0) {
+  global $theme;
+
+  if (!$date) {
+    $date = time();
+  }
+
+  $displaycount = variable_get("statistics up days top", 10);
+  if ($displaycount) {
+    $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\" width=\"100%\">";
+    $output .= statistics_storysummary("daycount", $displaycount);
+    $output .= "</table>";
+
+    $theme->box(t(variable_get("statistics up days head", "")), $output, "main");
+  }
+
+
+  $displaycount = variable_get("statistics up alltime top", "10");
+  if ($displaycount) {
+    $output = "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\" width=\100%\">";
+    $output .= statistics_storysummary("totalcount", $displaycount);
+    $output .= "</table>";
+
+    $theme->box(t(variable_get("statistics up alltime head", "")), $output, "main");
+  }
+
+  $displaycount = variable_get("statistics up last top", "10");
+  if ($displaycount) {
+    $output = "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\" width=\100%\">";
+    $output .= statistics_storysummary("timestamp", $displaycount);
+    $output .= "</table>";
+
+    $theme->box(t(variable_get("statistics up last head", "")), $output, "main");
+  }
+}
+
+
+function statistics_storysummary($dbfield, $dbrows) {
+  /* valid dbfields: totalcount, daycount, timestamp */
+  global $theme;
+
+  $result = db_query("SELECT statistics.nid,node.title FROM statistics LEFT JOIN node ON statistics.nid = node.nid ORDER BY %s DESC LIMIT %s", $dbfield, $dbrows);
+  while ($nid = db_fetch_array($result)) {
+    $content = node_load(array("nid" => $nid["nid"]));
+    $links = link_node($content, 1);
+
+    $output .= "<tr><td><b>". l($nid["title"], array("id" => $nid["nid"]), "node", "", array("title" => t("View this story and all of its comments."))) ."</b></td><td align=\"right\"><small>". t("Submitted by %a on %b", array("%a" => format_name($content), "%b" => format_date($content->created, "large"))) ."</td></tr>";
+    $output .= "</small><tr><td colspan=\"2\"><div style=\"margin-left: 20px;\">". check_output($content->teaser, 1) ."</div></td></tr>";
+    $output .= "<tr><td align=\"right\" colspan=\"2\">[ ". $theme->links($links) ." ]<br /><br /></td></tr>";
+  }
+
+  return $output;
+
+}
+
+/* internal throttle function - do not call from other modules */
+function throttle_update($recent_activity) {
+  $throttle = throttle_status();
+  $multiplier = variable_get("stats throttle multiplier", 60);
+
+  for ($i = 0; $i <= 5; $i++) {
+    if (($i * $multiplier) <= $recent_activity) {
+      $throttle_new = $i;
+    }
+  }
+
+  if ($throttle_new != $throttle) {
+    /*
+     * reduce throttle if new throttle would be 3+ less than current throttle,
+     * (all other throttle reduction done by _cron hook), increase throttle if
+     *  new throttle would be greater than current throttle.
+     */
+    if (($throttle_new < ($throttle - 2)) || ($throttle_new > $throttle)) {
+      /* update throttle level */
+      variable_set("stats throttle", $throttle_new);
+      /* log the change */
+      if (function_exists(watchdog)) {
+        if ($throttle_new < $throttle) {
+          watchdog("message", "message: '". $recent_activity ."' hits in past minute; throttle decreased to level ". $throttle_new);
+        }
+        else {
+          watchdog("warning", "warning: '". $recent_activity ."' hits in past minute; throttle increased to level ". $throttle_new);
+        }
+      }
+    }
+  }
+}
+
+/***********************
+ *  Auto-throttle API  *
+ ***********************/
+
+/* external throttle functions - call this from other modules, themes, etc */
+function throttle_status() {
+  static $throttle;
+
+  $throttle = variable_get("stats throttle", 0);
+
+  return $throttle;
 }
 
 ?>
