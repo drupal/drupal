@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.179 2003/03/08 21:10:22 dries Exp $
+// $Id: common.inc,v 1.180 2003/03/08 21:15:10 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST, $PHP_SELF;
@@ -467,8 +467,6 @@ function rewrite_old_urls($text) {
   global $base_url;
 
   $end = substr($base_url, 12);
-
-  print "$end";
 
   /*
   ** This is a *temporary* filter to rewrite old-style URLs to new-style
