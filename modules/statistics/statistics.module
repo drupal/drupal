@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.102 2003/10/03 14:55:27 dries Exp $
+// $Id: statistics.module,v 1.103 2003/10/04 16:44:54 dries Exp $
 
 function statistics_init() {
   global $recent_activity;
@@ -705,7 +705,12 @@ function statistics_display_online_block() {
       }
 
       /* format the output with proper grammar */
-      $output .= t("There %verb currently %members and %visitors online.", array("%verb" => (($users == 1) && ($guests == 1) ? "is" : "are"), "%members" => format_plural($users, "1 user", "%count users"), "%visitors" => format_plural($guests, "1 guest", "%count guests")));
+      if ($users == 1 && $guests == 1) {
+        $output .= t("There is currently %members and %visitors online.", array("%members" => format_plural($users, "1 user", "%count users"), "%visitors" => format_plural($guests, "1 guest", "%count guests")));
+      }
+      else {
+        $output .= t("There are currently %members and %visitors online.", array("%members" => format_plural($users, "1 user", "%count users"), "%visitors" => format_plural($guests, "1 guest", "%count guests")));
+      }
 
       if (user_access("access userlist") && $users) {
         /* Display a list of currently online users */
