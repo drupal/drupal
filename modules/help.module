@@ -1,5 +1,5 @@
 <?php
-// $Id: help.module,v 1.41 2004/10/19 18:02:24 dries Exp $
+// $Id: help.module,v 1.42 2004/11/08 22:27:34 dries Exp $
 
 /**
  * @file
@@ -67,7 +67,7 @@ function help_links_as_list() {
   foreach (module_list() as $name) {
     if (module_hook($name, 'help')) {
       if (module_invoke($name, 'help', "admin/help#$name")) {
-        $output .= '<li>' . t("<a href=\"%url\">$name</a>", array('%url' => url("admin/help/$name"))) . '</li>';
+        $output .= '<li><a href="' . url("admin/help/$name") . '">' . t($name) . '</a></li>';
       }
     }
   }
