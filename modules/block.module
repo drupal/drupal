@@ -321,7 +321,7 @@ function block_admin() {
   }
 }
 
-function block_user($type, &$edit, &$user) {
+function block_user($type, $edit, &$user) {
   switch ($type) {
     case "edit_form":
       $result = db_query("SELECT * FROM {blocks} WHERE custom = %d ORDER BY module, delta", 1);
