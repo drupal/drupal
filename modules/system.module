@@ -3,8 +3,8 @@
 
 function system_help() {
   $output .= "<p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviors including visual and operational settings.</p>";
-  $output .= "<h3>Cache</h3>". system_help_cache();
-  $output .= "<h3>Cron</h3>". system_help_cron();
+  $output .= "<h3><a name=\"cron\">Cron</a></h3>". system_help_cron();
+  $output .= "<h3><a name=\"cache\">Cache</a></h3>". system_help_cache();
   return $output;
 }
 
@@ -15,7 +15,6 @@ function system_system($field) {
 
 function system_help_cache() {
   $output .= "<p>Drupal has a caching mechanism that stores dynamically generated pages in a database.  By caching a page, Drupal does not have to generate the page each time it is requested.  Only pages requested by anonymous users are being cached.  When a cached page is accessed, Drupal will retrieve that page with minimal overhead using one SQL query only, thus reducing both the server load and the response time.</p>";
-  $output .= "<p>Drupal's caching mechanism can be enabled and disabled by the site administrators from the 'settings' page.  Site administrators can also define how long cached pages should be kept.</p>";
   return $output;
 }
 
@@ -81,10 +80,16 @@ function system_view_general() {
   $output .= form_select(t("Clean URLs"), "clean_url", variable_get("clean_url", 0), array(t("Disabled"), t("Enabled")), t("Enable or disable clean URLs.  If enabled, you'll need <code>ModRewrite</code> support.  See also the <code>.htaccess</code> file in Drupal's top-level directory."));
   $output .= "<hr />\n";
 
+  // cron:
+  $output .= "<h3>". t("Cron settings") ."</h3>\n";
+  $output .= form_select(t("Cron support"), "cron", variable_get("cron", 1), array(t("Disabled"), t("Enabled")), t("Enable or disable cron support.  Enable this setting if you have setup a cron job.  Check the ". l("cron documentation", "admin/system/help#cron") ." for information on setting up a cron job."));
+  $output .= "<hr />\n";
+
   // caching:
   $output .= "<h3>". t("Cache settings") ."</h3>\n";
-  $output .= form_select(t("Cache support"), "cache", variable_get("cache", 0), array(t("Disabled"), t("Enabled")), t("Enable or disable the caching of rendered pages.  When caching is enabled, Drupal will flush the cache when required to make sure updates take effect immediately."));
+  $output .= form_select(t("Cache support"), "cache", variable_get("cache", 0), array(t("Disabled"), t("Enabled")), t("Enable or disable the caching of rendered pages.  When caching is enabled, Drupal will flush the cache when required to make sure updates take effect immediately.   Check the ". l("cache documentation", "admin/system/help#cache") ." for information on Drupal's cache system."));
   $output .= "<hr />\n";
+
 
   // submission settings:
   $output .= "<h3>". t("Submission settings") ."</h3>\n";
