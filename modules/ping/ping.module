@@ -75,5 +75,18 @@ function ping_ping($name = "", $url = "") {
     watchdog("error", "failed to notify 'blo.gs' ");
   }
 
+  unset($client);
+
+  $client = new xmlrpc_client("/rpc/ping", "rpc.technorati.com", 80);
+
+  $message = new xmlrpcmsg("weblogUpdates.ping", array(new xmlrpcval($name), new xmlrpcval($url)));
+
+  $result = $client->send($message);
+
+  if (!$result || $result->faultCode()) {
+    watchdog("error", "failed to notify 'technorati.com'");
+  }
+
+
 }
 ?>
