@@ -96,9 +96,9 @@ function forum_block() {
       $content .= "<p><div align=\"center\">".lm(t("browse forums"), array("mod" => "forum"))."</div></p>";
     }
   }
-  $blocks[0][subject] = t("Forum active topics");
+  $blocks[0][subject] = t("Most active forum topics");
   $blocks[0][content] = $content;
-  $blocks[0][info] = t("Forum active topics");
+  $blocks[0][info] = t("Most active forum topics");
 
   return $blocks;
 }
@@ -293,7 +293,7 @@ function _forum_last_reply($nid) {
 
 function _forum_format($topic) {
   if ($topic) {
-    return format_date($topic->timestamp, "small")."<br>".t("by")." ". format_name($topic);
+    return "<small>". format_date($topic->timestamp, "small")."<br>".t("by")." ". format_name($topic) ."</small>";
   }
   else {
     return message_na();
@@ -527,9 +527,9 @@ function forum_forum_list($forums, $parents, $tid) {
       }
     }
   }
-  $t[] = lm(t("forum"), array("mod" => "forum"));
+  $t[] = lm(t("Discussion forum"), array("mod" => "forum"));
 
-  $output .= "<table border=\"0\" width=\"100%\">\n";
+  $output .= "<table border=\"0\" cellpadding=\"5\" width=\"100%\">\n";
   $output .= " <tr><th colspan=\"3\" align=\"left\">".implode(" : ", array_reverse($t)) ."</th>";
   if ($forums) {
     $output .= "<th>". t("topics") ."</th><th>". t("posts") ."</th><th>". t("last post") ."</th></tr>";
@@ -537,26 +537,26 @@ function forum_forum_list($forums, $parents, $tid) {
 
     foreach ($forums as $forum) {
       if ($forum->container) {
-        $output .= " <tr><td colspan=\"5\">".lm(check_output($forum->name), array("mod" => "forum", "tid" => $forum->tid))."<br><small>". ($forum->description ? check_output($forum->description, 1) : "") ."</small></td></tr>";
+        $output .= " <tr><td colspan=\"5\">".lm(check_output($forum->name), array("mod" => "forum", "tid" => $forum->tid))."<br /><small>". ($forum->description ? check_output($forum->description, 1) : "") ."</small></td></tr>";
       } else {
         if ($user->uid) $new_topics = $forum->num_topics - $forum->old_topics;
         $icon = _forum_get_folder_icon($new_topics);
         $output .= " <tr><td>&nbsp;</td><td>$icon</td>";
-        $output .= "<td><table><tr><td width=\"".($forum->depth*20)."\">&nbsp;</td><td>".lm(check_output($forum->name), array("mod" => "forum", "tid" => $forum->tid))."<br><small>". check_output($forum->description, 1);
+        $output .= "<td><table border=\"0\"><tr><td width=\"". ($forum->depth * 20) ."\">&nbsp;</td><td>".lm(check_output($forum->name), array("mod" => "forum", "tid" => $forum->tid))."<div style=\"padding-top: 5px; font-size: 80%;\">". check_output($forum->description, 1);
 
         $links = array();
         if ($forum->last_post) {
-          $links[] = l(t("last topic"), array("nid" => $forum->last_post->nid));
+          $links[] = l(t("the most recent topic"), array("nid" => $forum->last_post->nid));
         }
         if ($new_topics) {
-          $links[] = lm(t("first new topic"), array("mod" => "forum", "op" => "first_new", "tid" => $forum->tid));
+          $links[] = lm(t("the first new topic"), array("mod" => "forum", "op" => "first_new", "tid" => $forum->tid));
         }
 
         if ($links) {
-          $output .= "<br>(".implode(", ", $links).")";
+          $output .= "<br />Jump to: ".implode(", ", $links);
         }
 
-        $output .= "</small></td></tr></table></td>";
+        $output .= "</div></td></tr></table></td>";
         $output .= "<td align=\"center\">".$forum->num_topics.($new_topics ? "<br>(".t("%a new", array("%a" => $new_topics)).")" : "")."</td><td align=\"center\">".$forum->num_posts."</td><td align=\"center\">"._forum_format($forum->last_post)."</td></tr>";
       }
     }
@@ -598,10 +598,10 @@ function forum_topic_browser() {
 function forum_topic_list($topics, $num_topics, $sortby, $forum_per_page, $offset) {
   global $theme, $id, $status, $tid, $user;
 
-  $output .= "<div align=\"center\"><small>(".t("%a topics, %b topics per page, page %c of %d", array("%a" => $num_topics, "%b" => $forum_per_page, "%c" => ceil(($offset + 1)/$forum_per_page), "%d" => ceil($num_topics/$forum_per_page))).")</small></div>";
+  $output .= "<div style=\"margin-left: 20px; margin-top: 5px; margin-bottom: 10px;\">" .t("%a topics, %b topics per page, page %c of %d", array("%a" => $num_topics, "%b" => $forum_per_page, "%c" => ceil(($offset + 1)/$forum_per_page), "%d" => ceil($num_topics/$forum_per_page))) ."</div>";
 
   if ($topics) {
-    $output .= "<table border=\"0\" width=\"100%\">\n";
+    $output .= "<table border=\"0\" cellpadding=\"5\" cellspacing=\"5\" width=\"100%\">\n";
     $output .= " <tr><th>&nbsp;</th><th>&nbsp;</th><th>". t("topic") ."</th><th>". t("replies") ."</th><th>". t("posted") ."</th><th>". t("last reply") ."</th></tr>";
 
     foreach ($topics as $topic) {
@@ -611,8 +611,8 @@ function forum_topic_list($topics, $num_topics, $sortby, $forum_per_page, $offse
           <tr>
             <td>"._forum_get_folder_icon($topic->new, $topic->num_comments, $topic->comment_mode)."</td>
             <td>"._forum_get_icon($topic)."</td>
-            <td>". check_output($topic->title) ."</td>
-            <td align=\"center\" colspan=\"3\">".lm(t("This topic has been moved"), array("mod" => "forum", "tid" => $topic->shadow))."</td>
+            <td valign=\"top\">". check_output($topic->title) ."</td>
+            <td align=\"center\" valign=\"top\" colspan=\"3\">".lm(t("This topic has been moved"), array("mod" => "forum", "tid" => $topic->shadow))."</td>
           </tr>";
       }
       else {
@@ -620,8 +620,8 @@ function forum_topic_list($topics, $num_topics, $sortby, $forum_per_page, $offse
           <tr>
             <td>"._forum_get_folder_icon($topic->new, $topic->num_comments, $topic->comment_mode)."</td>
             <td>"._forum_get_icon($topic)."</td>
-            <td>".l(check_output($topic->title), array("id" => $topic->nid))."</td>
-            <td align=\"center\">".$topic->num_comments.($topic->new_replies ? " (".t("%a new", array("%a" => $topic->new_replies)).")" : "")."</td>
+            <td valign=\"top\">".l(check_output($topic->title), array("id" => $topic->nid))."</td>
+            <td align=\"center\" valign=\"top\" nowrap=\"nowrap\">".$topic->num_comments.($topic->new_replies ? " (".t("%a new", array("%a" => $topic->new_replies)).")" : "")."</td>
             <td align=\"center\">"._forum_format($topic)."</td>
             <td align=\"center\">"._forum_format($topic->last_reply)."</td>
           </tr>";
@@ -630,22 +630,22 @@ function forum_topic_list($topics, $num_topics, $sortby, $forum_per_page, $offse
 
     $output .= "</table></blockquote>\n";
   }
-
+  $output .= "<hr />";
   $output .= "<table width=\"100%\" border=\"0\" cellspacing=\"0\" cellpadding=\"0\"><tr>";
 
   if ($offset > 0) {
-    $output .= "<td width=\"33%\"><div align=\"left\"><h4>".lm(t("Previous topics"), array("mod" => "forum", "tid" => $tid, "offset" => ($offset-$forum_per_page)))."</h4></div></td>";
+    $output .= "<td width=\"33%\"><div align=\"left\" style=\"font-style: bold;\">". lm(t("previous topics"), array("mod" => "forum", "tid" => $tid, "offset" => ($offset-$forum_per_page))) ."</div></td>";
   }
   else {
     $output .= "<td width=\"33%\">&nbsp;</td>";
   }
 
   if (user_access("post content")) {
-    $output .= "<td width=\"33%\"><div align=\"center\"><h4>".lm(t("Start new topic"), array("mod" => "node", "op" => "add", "type" => "forum", "tid" => $tid))."</h4></div></td>";
+    $output .= "<td width=\"33%\"><div align=\"center\" style=\"font-style: bold;\">". lm(t("start new topic"), array("mod" => "node", "op" => "add", "type" => "forum", "tid" => $tid)) ."</div></td>";
   }
 
   if (count($topics) >= $forum_per_page) {
-    $output .= "<td width=\"33%\"><div align=\"right\"><h4>".lm(t("Next topics"), array("mod" => "forum", "tid" => $tid, "offset" => ($offset+$forum_per_page)))."</h4></div></td>";
+    $output .= "<td width=\"33%\"><div align=\"right\" style=\"font-style: bold;\">". lm(t("next topics"), array("mod" => "forum", "tid" => $tid, "offset" => ($offset+$forum_per_page))) ."</div></td>";
   }
   else {
     $output .= "<td width=\"33%\">&nbsp;</td>";
