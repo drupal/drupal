@@ -32,7 +32,9 @@ function blog_page_all($num = 20) {
   $result = db_query("SELECT n.timestamp, n.title, u.userid, n.nid, b.body FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.id ORDER BY b.lid DESC LIMIT $num");
 
   while ($blog = db_fetch_object($result))  {
-    $output .= "<a href=\"submit.php?mod=blog&type=blog&id=$blog->nid\"><img src=\"misc/blog.gif\" border=\"0\" width=\"12\" height=\"16\" alt=\"". t("Blog this item") ."\" /></a> <a href=\"module.php?mod=blog&name=". urlencode($blog->userid) ."\"><img src=\"misc/earth.gif\" border= \"0\" width=\"11\" height=\"11\" alt=\"". t("This blog") ."\" /></a> ". format_username($blog->userid) ." ". t("on") ." ". format_date($blog->timestamp) .":<br />";
+    $output .= blog_format_link($blog->nid) ." ";
+    $output .= "<a href=\"module.php?mod=blog&name=". urlencode($blog->userid) ."\"><img src=\"misc/earth.gif\" border= \"0\" width=\"11\" height=\"11\" alt=\"". t("This blog") ."\" /></a> ";
+    $output .= format_username($blog->userid) ." ". t("on") ." ". format_date($blog->timestamp) .":<br />";
     $output .= "<blockquote><b>". check_input($blog->title) ."</b><br />" . check_output($blog->body, 1) ."</blockquote>\n";
   }
 
@@ -92,7 +94,7 @@ function blog_page_day($userid = 0, $date = 0) {
 
   while ($blog = db_fetch_object($result)) {
     if (!$first) $first = $blog->nid;
-    $output .= "<p><a href=\"submit.php?mod=blog&type=blog&id=$blog->nid\"><img src=\"misc/blog.gif\" border=\"0\" width=\"12\" height=\"16\" alt=\"". t("Blog this item") ."\"></a> ". check_output($blog->body, 1) ."</p>\n";
+    $output .= "<p>". blog_format_link($blog) . check_output($blog->body, 1) ."</p>\n";
   }
 
   if ($userid == $user->userid) {
@@ -113,6 +115,14 @@ function blog_remove($nid) {
   $blog = node_get_object(array(type => "blog", nid => "$nid"));
   if ((user_access("administer blogs")) or ($blog->userid == $user->userid)) {
     node_del(array(type => "blog", nid => $nid, lid => $blog->lid));
+  }
+}
+
+function blog_format_link($blog) {
+  global $user;
+
+  if ($user && user_access("post blogs")) {
+    return "<a href=\"submit.php?mod=blog&type=blog&id=$blog->nid\"><img src=\"misc/blog.gif\" border=\"0\" width=\"12\" height=\"16\" alt=\"". t("Blog this item") ."\"></a>";
   }
 }
 
@@ -137,58 +147,66 @@ function blog_view($node) {
 function blog_form($edit = array()) {
   global $REQUEST_URI, $id, $mod, $type, $user, $theme;
 
-  if ($mod == "node" || $edit[type] == "blog") {
-  }
-  else if ($type == "blog") {
-    $item = node_get_object(array(type => "blog", nid => $id));
-    $edit["title"] = $item->title;
-    $edit["body"] = $item->body ." [<a href=\"module.php?mod=blog&name=". urlencode($item->userid) ."&date=$item->timestamp\">$item->userid</a>]";
-  }
-  else if ($type == "import") {
-    $item = db_fetch_object(db_query("SELECT i.*, f.title as ftitle, f.link as flink FROM item i, feed f WHERE i.iid = '". check_input($id) ."' AND i.fid = f.fid"));
-    $edit["title"] = $item->title;
-    $edit["body"] = "<a href=\"$item->link\">$item->title</a> - ". check_output($item->description) ." [<a href=\"$item->flink\">$item->ftitle</a>]\n";
-  }
+  if ($user->id) {
+  
+    if ($mod == "node" || $edit[type] == "blog") {
+    }
+    else if ($type == "blog") {
+      $item = node_get_object(array(type => "blog", nid => $id));
+      $edit["title"] = $item->title;
+      $edit["body"] = $item->body ." [<a href=\"module.php?mod=blog&name=". urlencode($item->userid) ."&date=$item->timestamp\">$item->userid</a>]";
+    }
+    else if ($type == "import") {
+      $item = db_fetch_object(db_query("SELECT i.*, f.title as ftitle, f.link as flink FROM item i, feed f WHERE i.iid = '". check_input($id) ."' AND i.fid = f.fid"));
+      $edit["title"] = $item->title;
+      $edit["body"] = "<a href=\"$item->link\">$item->title</a> - ". check_output($item->description) ." [<a href=\"$item->flink\">$item->ftitle</a>]\n";
+    }
 
-  if ($edit[title]) {
-    $form .= blog_view(new Blog(node_preview($edit)));
-  }
+    if ($edit[title]) {
+      $form .= blog_view(new Blog(node_preview($edit)));
+    }
+ 
+    $form .= form_textfield(t("Subject"), "title", $edit["title"], 50, 64);
+    $form .= form_textarea(t("Body"), "body", $edit["body"], 70, 15, t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
 
-  $form .= form_textfield(t("Subject"), "title", $edit["title"], 50, 64);
-  $form .= form_textarea(t("Body"), "body", $edit["body"], 70, 15, t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
+    $form .= form_hidden("type", "blog");
+ 
+    if ($edit["nid"] > 0) {
+      $form .= form_hidden("nid", $edit["nid"]);
+    }
 
-  $form .= form_hidden("type", "blog");
-
-  if ($edit["nid"] > 0) {
-    $form .= form_hidden("nid", $edit["nid"]);
-  }
-
-  if ($edit && !$edit["title"]) {
-    $form .= "<font color=\"red\">". t("Warning: you did not supply a subject.") ."</font><p>\n";
-    $form .= form_submit(t("Preview"));
-  }
-  else if ($edit && !$edit["body"]) {
-    $form .= "<font color=\"red\">". t("Warning: you did not supply any text.") ."</font><p>\n";
-    $form .= form_submit(t("Preview"));
+    if ($edit && !$edit["title"]) {
+      $form .= "<font color=\"red\">". t("Warning: you did not supply a subject.") ."</font><p>\n";
+      $form .= form_submit(t("Preview"));
+    }
+    else if ($edit && !$edit["body"]) {
+      $form .= "<font color=\"red\">". t("Warning: you did not supply any text.") ."</font><p>\n";
+      $form .= form_submit(t("Preview"));
+    }
+    else {
+      $form .= form_submit(t("Preview"));
+      $form .= form_submit(t("Submit"));
+    }
+ 
+    $output .= form($REQUEST_URI, $form);
+ 
+    return $output;
   }
   else {
-    $form .= form_submit(t("Preview"));
-    $form .= form_submit(t("Submit"));
+    return message_access();
   }
-
-  $output .= form($REQUEST_URI, $form);
-
-  return $output;
 }
 
 function blog_save($edit) {
   global $status, $user;
 
-  if (!$edit["nid"]) {
-    node_save($edit, array(author => $user->id, body, status => variable_get("blog_status", $status[posted]), timestamp => time(), title, type => "blog"));
-  }
-  else if (user_access("administer blogs")) {
-    node_save($edit, array(attributes => node_attributes_save("blog", $edit), body, title, type => "blog"));
+  if ($user->id && (user_access("administer blogs") || user_access("post blogs"))) {
+    if (!$edit["nid"]) {
+      node_save($edit, array(author => $user->id, body, status => variable_get("blog_status", $status[posted]), timestamp => time(), title, type => "blog"));
+    }
+    else {
+      node_save($edit, array(title, body, type => "blog"));
+    }
   }
 }
 
@@ -226,6 +244,9 @@ function blog_page() {
     else {
       blog_page_all();
     }
+  }
+  else {
+    print message_access();
   }
 }
 

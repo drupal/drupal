@@ -53,7 +53,9 @@ function import_update() {
 }
 
 function import_format_item($item, $feed = 0, $description = 0) {
-  if (module_hook("blog", "page")) {
+  global $user;
+
+  if ($user->id && user_access("post blogs")) {
     $output .= "<a href=\"submit.php?mod=blog&type=import&id=$item->iid\"><img src=\"misc/blog.gif\" border=\"0\" width=\"12\" height=\"16\" alt=\"" . t("Blog this item") . "\" /></a> ";
   }
 
