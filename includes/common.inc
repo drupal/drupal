@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.402 2004/11/21 20:17:44 dries Exp $ */
+/* $Id: common.inc,v 1.403 2004/11/23 23:11:58 dries Exp $ */
 
 /**
  * @file
@@ -1593,15 +1593,6 @@ function link_page() {
     array_unshift($links, l(t('home'), '', array('title' => t('Return to the main page.'))));
     return $links;
   }
-}
-
-/**
- * Fetch a set of links to display after a given node.
- *
- * The links are gathered by calls to hook_link('node') in each module.
- */
-function link_node($node, $main = 0) {
-  return module_invoke_all('link', 'node', $node, $main);
 }
 
 /**

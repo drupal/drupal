@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.217 2004/10/14 02:38:32 unconed Exp $ */
+/* $Id: theme.inc,v 1.218 2004/11/23 23:11:58 dries Exp $ */
 
 /**
  * @file
@@ -519,8 +519,8 @@ function theme_node($node, $teaser = FALSE, $page = FALSE) {
     $output .= $node->body;
   }
 
-  if ($links = link_node($node, $teaser)) {
-    $output .= '<div class="links">'. theme('links', $links) .'</div>';
+  if ($node->links) {
+    $output .= '<div class="links">'. theme('links', $node->links) .'</div>';
   }
 
   return $output;
