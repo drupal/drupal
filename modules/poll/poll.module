@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.101 2003/07/12 22:21:55 dries Exp $
+// $Id: poll.module,v 1.102 2003/07/24 12:33:57 dries Exp $
 
 function poll_allowvotes(&$node) {
   /*
@@ -369,7 +369,7 @@ function poll_update($node) {
   db_query("UPDATE {poll} SET runtime = %d, active = %d WHERE nid = %d", $node->runtime, $node->active, $node->nid);
 
   db_query("DELETE FROM {poll_choices} WHERE nid = %d", $node->nid);
-  for ($i = 0; $i < $node->choices; $i++) {
+  for ($i = 0; $i < count($node->choice); $i++) {
     $choice->chtext = $node->choice[$i];
     $choice->chvotes = (int)$node->chvotes[$i];
     $choice->chorder = $i;
