@@ -105,7 +105,7 @@
               if ($terms = taxonomy_node_get_terms($node->nid)) {
                 $taxlinks = array();
                 foreach ($terms as $term) {
-                  $taxlinks[] = "<a href=\"index.php?or=$term->tid\">". check_output($term->name) ."</a>";
+                  $taxlinks[] = l($term->name, array("or" => $term->tid), "index");
                 }
                 $taxo = $this->links($taxlinks);
               }

@@ -120,7 +120,7 @@ function c(subject,mod,author,date,body) {document.writeln("<table border=\"0\" 
         if ($terms = taxonomy_node_get_terms($node->nid)) {
           $taxlinks = array();
           foreach ($terms as $term) {
-            $taxlinks[] = "<a href=\"index.php?or=$term->tid\">". check_output($term->name) ."</a>";
+            $taxlinks[] = l($term->name, array("or" => $term->tid), "index");
           }
           $subright = $this->links($taxlinks);
         }
