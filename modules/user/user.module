@@ -423,8 +423,8 @@ function user_search($op = 'search', $keys = null) {
     case 'search':
       $find = array();
       // Replace wildcards with MySQL/PostgreSQL wildcards.
-      $keys = str_replace('*', '%', $keys);
-      $result = db_query_range("SELECT * FROM {users} WHERE LOWER(name) LIKE '%%%s%%'", strtolower($keys), 0, 20);
+      $keys = preg_replace('!\*+!', '%', $keys);
+      $result = pager_query("SELECT * FROM {users} WHERE LOWER(name) LIKE LOWER('%%%s%%')", 15, 0, NULL, $keys);
       while ($account = db_fetch_object($result)) {
         $find[] = array('title' => $account->name, 'link' => url("user/$account->uid/view"));
       }

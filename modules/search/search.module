@@ -70,6 +70,22 @@ function search_perm() {
 }
 
 /**
+ * Implementation of hook_block().
+ */
+function search_block($op = 'list', $delta = 0) {
+  global $user;
+  if ($op == 'list') {
+    $blocks[0]['info'] = t('Search form');
+    return $blocks;
+  }
+  else if ($op == 'view' && user_access('search content') && arg(0) != 'search') {
+    $block['content'] = search_form('', '', null, '');
+    $block['subject'] = t('Search');
+    return $block;
+  }
+}
+
+/**
  * Implementation of hook_menu().
  */
 function search_menu($may_cache) {
@@ -81,23 +97,29 @@ function search_menu($may_cache) {
       'access' => user_access('search content'),
       'type' => MENU_SUGGESTED_ITEM);
 
-    foreach (module_list() as $name) {
-      if (module_hook($name, 'search')) {
-        $items[] = array('path' => 'search/'. $name, 'title' => module_invoke($name, 'search', 'name'),
-          'callback' => 'search_view',
-          'access' => user_access('search content'),
-          'type' => $name == 'node' ? MENU_DEFAULT_LOCAL_TASK : MENU_LOCAL_TASK);
-      }
-    }
-
     $items[] = array('path' => 'admin/settings/search', 'title' => t('search'),
       'callback' => 'search_admin',
       'type' => MENU_NORMAL_ITEM,
       'access' => user_access('administer site configuration'));
   }
+  else if (arg(0) == 'search') {
+    // To remember the user's search keywords when switching across tabs,
+    // we dynamically add the keywords to the search tabs' paths.
+    $keys = search_get_keys();
+    $keys = strlen($keys) ? '/'. $keys : '';
+    foreach (module_list() as $name) {
+      if (module_hook($name, 'search')) {
+        $items[] = array('path' => 'search/'. $name . $keys, 'title' => module_invoke($name, 'search', 'name'),
+          'callback' => 'search_view',
+          'access' => user_access('search content'),
+          'type' => MENU_LOCAL_TASK);
+      }
+    }
+  }
 
   return $items;
 }
+
 
 /**
  * Menu callback; displays the search module settings page.
@@ -371,6 +393,7 @@ function search_index($sid, $type, $text) {
         foreach ($words as $word) {
           // Check wordlength
           if (string_length($word) >= $minimum_word_size) {
+            // Note: strtolower can be used because the value is only used internally.
             $word = strtolower($word);
             if ($link) {
               if (!isset($results[$linknid])) {
@@ -443,32 +466,36 @@ function search_index($sid, $type, $text) {
  */
 function do_search($keys, $type, $join = '', $where = '1') {
   // Note, we replace the wildcards with U+FFFD (Replacement character) to pass
-  // through the keyword extractor.
-  $keys = str_replace('*', '�', $keys);
+  // through the keyword extractor. Multiple wildcards are collapsed into one.
+  $keys = preg_replace('!\*+!', '�', $keys);
 
   // Split into words
   $keys = search_keywords_split($keys);
-  // Lowercase
-  foreach ($keys as $k => $v) {
-    $keys[$k] = strtolower($v);
-  }
 
   $words = array();
   $arguments = array();
+  $refused = array();
   // Build WHERE clause
   foreach ($keys as $word) {
     if (string_length($word) < variable_get('remove_short', 3)) {
+      if ($word != '') {
+        $refused[] = str_replace('�', '*', $word);
+      }
       continue;
     }
     if (strpos($word, '�') !== false) {
+      // Note: strtolower can be used because the value is only used internally.
       $words[] = "i.word LIKE '%s'";
-      $arguments[] = str_replace('�', '%', $word);
+      $arguments[] = str_replace('�', '%', strtolower($word));
     }
     else {
       $words[] = "i.word = '%s'";
-      $arguments[] = $word;
+      $arguments[] = strtolower($word);
     }
   }
+  // Tell the user which words were excluded
+  drupal_set_message(t('The following word(s) were not included because they were too short: %words', array('%words' => '<em>'. implode(', ', $refused) .'</em>')));
+
   if (count($words) == 0) {
     return array();
   }
@@ -494,11 +521,34 @@ function do_search($keys, $type, $join = '', $where = '1') {
 }
 
 /**
+ * Helper function for grabbing search keys.
+ */
+function search_get_keys() {
+  // Extract keys as remainder of path
+  // Note: support old GET format of searches for existing links.
+  $path = explode('/', $_GET['q'], 3);
+  return count($path) == 3 ? $path[2] : $_REQUEST['keys'];
+}
+
+/**
  * Menu callback; presents the search form and/or search results.
  */
 function search_view() {
-  $keys = isset($_GET['keys']) ? $_GET['keys'] : $_POST['edit']['keys'];
-  $type = arg(1) ? arg(1) : (isset($_GET['type']) ? $_GET['type'] : ($_POST['edit']['type'] ? $_POST['edit']['type'] : 'node'));
+  $type = arg(1);
+
+  // Search form submits with POST but redirects to GET. This way we can keep
+  // the search query URL clean as a whistle:
+  // search/type/keyword+keyword
+  if ($_POST['edit']['keys']) {
+    drupal_goto('search/'. $type .'/'. urlencode($_POST['edit']['keys']));
+  }
+  else if ($type == '') {
+    // Note: search/node can not be a default tab because it would take on the
+    // path of its parent (search). It would prevent remembing keywords when
+    // switching tabs. This is why we drupal_goto to it from the parent instead.
+    drupal_goto('search/node');
+  }
+  $keys = search_get_keys();
 
   if (user_access('search content')) {
     // Only perform search if there is non-whitespace search term:
@@ -526,7 +576,7 @@ function search_view() {
 
     // Construct the search form.
     // Note, we do this last because of the form_set_error() above.
-    $output = search_form(NULL, $keys, $type, TRUE);
+    $output = search_form(NULL, $keys, $type);
 
     $output .= $results;
 
@@ -535,7 +585,6 @@ function search_view() {
   else {
     drupal_access_denied();
   }
-
 }
 
 /**
@@ -576,10 +625,12 @@ function search_view() {
  * @param $type
  *   The type of search to render the node for. Must be the name of module
  *   which implements hook_search(). Defaults to 'node'.
+ * @param $prompt
+ *   A piece of text to put before the form (e.g. "Enter your keywords")
  * @return
  *   An HTML string containing the search form.
  */
-function search_form($action = '', $keys = '', $type = null) {
+function search_form($action = '', $keys = '', $type = null, $prompt = null) {
   $edit = $_POST['edit'];
 
   if (!$action) {
@@ -588,14 +639,16 @@ function search_form($action = '', $keys = '', $type = null) {
   if (!$type) {
     $type = 'node';
   }
+  if (is_null($prompt)) {
+    $prompt = t('Enter your keywords');
+  }
 
   $output = ' <div class="search-form">';
   $box = '<div class="container-inline">';
   $box .= form_textfield('', 'keys', $keys, 40, 255);
-  $box .= form_submit(t('Search'));;
+  $box .= form_submit(t('Search'));
   $box .= '</div>';
-  $output .= form_item(t('Enter your keywords'), $box);
-  $output .= form_hidden('type', $type);
+  $output .= form_item($prompt, $box);
   $output .= '</div>';
 
   return form($output, 'post', $action);
@@ -616,7 +669,7 @@ function search_data($keys = NULL, $type = 'node') {
           $output .= theme('search_item', $entry, $type);
         }
         $output .= '</dl>';
-        $output .= theme('pager', NULL, 15, 0, array('keys' => $keys, 'type' => $type));
+        $output .= theme('pager', NULL, 15, 0);
       }
     }
   }
