@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pear.inc,v 1.3 2001/12/23 21:47:02 dries Exp $
+// $Id: database.pear.inc,v 1.4 2002/04/22 09:05:35 kjartan Exp $
 
 require_once 'DB.php';
 
@@ -9,7 +9,7 @@ function db_connect($url) {
   $db_handle = DB::connect($url);
 
   if (DB::isError($db_handle)) {
-    die ("Database problem: ". $db_handle->getMessage());
+    die("Database problem: ". $db_handle->getMessage());
   }
 
   $db_handle->setFetchMode(DB_FETCHMODE_ASSOC);

@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.16 2002/04/20 11:52:50 dries Exp $
+// $Id: statistics.module,v 1.17 2002/04/22 09:05:36 kjartan Exp $
 
 if (variable_get("referrer", 0) && $referrer = getenv("HTTP_REFERER")) {
   db_query("INSERT INTO referrer (URL, timestamp) values ('%s', '%s')", $referrer, time());
@@ -92,7 +92,7 @@ function statistics_admin() {
 
   if (user_access("administer statistics")) {
 
-    print "<small>".la(t("internal referrers"), array("mod" => "statistics", "type" => "internal+referrer"))." | ".la(t("external referrers"), array("mod" => "statistics", "type" => "external+referrer"))." | ".la(t("help"), array("mod" => "statistics", "op" => "help"))."</small><hr />\n";
+    print "<small>". la(t("internal referrers"), array("mod" => "statistics", "type" => "internal+referrer")) ." | ". la(t("external referrers"), array("mod" => "statistics", "type" => "external+referrer")) ." | ". la(t("help"), array("mod" => "statistics", "op" => "help")) ."</small><hr />\n";
 
     switch ($op) {
       case "help":
