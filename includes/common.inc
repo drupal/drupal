@@ -483,9 +483,13 @@ function xss_check_input_data($data) {
     ** Detect evil input data.
     */
 
+    // check strings:
+    $match += preg_match("/\Wjavascript\s*:/i", $data);
+    $match += preg_match("/\Wexpression\s*\(/i", $data);
+    $match += preg_match("/\Walert\s*\(/i", $data);
+
     // check attributes:
     $match  = preg_match("/\W(dynsrc|datasrc|data|lowsrc|on[a-z]+)\s*=[^>]+?>/i", $data);
-    $match += preg_match("/\Wjavascript\s*:/i", $data);
 
     // check tags:
     $match += preg_match("/<\s*(applet|script|object|style|embed|form|blink|meta|html|frame|iframe|layer|ilayer|head|frameset|xml)/i", $data);
