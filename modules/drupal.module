@@ -127,6 +127,8 @@ function drupal_xmlrpc() {
  * Sends a ping to the Drupal directory server.
  */
 function drupal_notify($server) {
+  include_once 'includes/xmlrpc.inc';
+
   global $base_url;
 
   $url = parse_url($server);
@@ -162,6 +164,7 @@ function drupal_info($field = 0) {
  * Implementation of hook_auth().
  */
 function drupal_auth($username, $password, $server) {
+  include_once 'includes/xmlrpc.inc';
 
   $message = new xmlrpcmsg('drupal.login', array(new xmlrpcval($username, 'string'), new xmlrpcval($password, 'string')));
 
@@ -201,6 +204,8 @@ function drupal_page_help() {
  * Remote clients are usually other Drupal instances.
  */
 function drupal_login($arguments) {
+  include_once 'includes/xmlrpc.inc';
+
   $argument = $arguments->getparam(0);
   $username = $argument->scalarval();
   $argument = $arguments->getparam(1);

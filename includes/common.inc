@@ -1768,7 +1768,6 @@ function truncate_utf8($string, $len) {
 include_once 'includes/theme.inc';
 include_once 'includes/pager.inc';
 include_once 'includes/menu.inc';
-include_once 'includes/xmlrpc.inc';
 include_once 'includes/tablesort.inc';
 include_once 'includes/file.inc';
 

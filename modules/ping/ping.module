@@ -54,6 +54,8 @@ function _ping_notify($name, $url) {
  * Notifies weblogs.com, blo.gs, and technorati.com of changes at this site.
  */
 function ping_ping($name = '', $url = '') {
+  include_once 'includes/xmlrpc.inc';
+
   $feed = url('node/feed');
 
   $client = new xmlrpc_client('/RPC2', 'rpc.weblogs.com', 80);
