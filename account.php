@@ -155,12 +155,16 @@ switch ($op) {
     $theme->header();
     print("<FORM ACTION=\"account.php\" METHOD=post>\n");
     print("<B>Theme:</B><BR>\n");
-    include "themes/list.php";
-    for ($i = 0; $i < count($themelist); $i++) {
-      if ($themelist[$i] != "") {
-        $options .= "<OPTION VALUE=\"$themelist[$i]\"". (((!empty($userinfo[theme])) && ($themelist[$i] == $cfg_theme)) || ($user->theme == $themelist[$i]) ? " SELECTED" : "") .">$themelist[$i]</OPTION>";
+
+    ### Loop (dynamically) through all available themes:
+    $handle = opendir('themes');
+    while ($file = readdir($handle)) {
+      if(!ereg("^\.",$file) && file_exists("themes/$file/theme.class")) {
+        $options .= "<OPTION VALUE=\"$file\"". (((!empty($userinfo[theme])) && ($file == $cfg_theme)) || ($user->theme == $file) ? " SELECTED" : "") .">$file</OPTION>";
       }
     }
+    closedir($handle);
+
     if ($userinfo[theme]=="") $userinfo[theme] = $cfg_theme;
     print("<SELECT NAME=\"edit[theme]\">$options</SELECT><BR>\n");
     print("<I>Changes the look and feel of the site.</I><P>\n");
