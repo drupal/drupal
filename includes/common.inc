@@ -40,17 +40,22 @@ function drupal_get_title() {
  * @{
  */
 function drupal_set_message($message = NULL, $type = "status") {
-  static $stored_message = array();
-
-  if (isset($message)) {
-    $stored_message[] = array($message, $type);
+  if (!isset($_SESSION['messages'])) {
+    $_SESSION['messages'] = array();
   }
 
-  return $stored_message;
+  if (isset($message)) {
+    $_SESSION['messages'][] = array($message, $type);
+  }
+
+  return $_SESSION['messages'];
 }
 
 function drupal_get_messages() {
-  return drupal_set_message();
+  $messages = drupal_set_message();
+  $_SESSION['messages'] = array();
+
+  return $messages;
 }
 /* @} */
 
