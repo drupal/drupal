@@ -1,7 +1,5 @@
 <?php
 
-$module = array("admin" => "moderate_admin");
-
 function moderate_comment_access($cid) {
   global $user;
   return db_fetch_object(db_query("SELECT n.moderate FROM comments c LEFT JOIN node n ON c.lid = n.nid WHERE c.cid = '". check_input($cid) ."' AND n.moderate LIKE '%$user->userid%'"));
@@ -30,29 +28,25 @@ function moderate_overview($query = array()) {
   return $output;
 }
 
-function moderate_node_edit($id) {
-  global $user;
-
-  $node = node_get_array("nid", $id);
-  if ($node && strstr($node[moderate], $user->userid)) {
-    return node_form($node);
-  }
-  else {
-    return "access denied";
-  }
-}
-
-function moderate_node_save($edit) {
+function moderate_node($edit, $name) {
   global $user;
 
   $node = node_get_array("nid", $edit[nid]);
   if ($node && strstr($node[moderate], $user->userid)) {
     $edit[type] = $node[type];
-    return node_invoke($edit, "save");
+    return node_invoke($edit, $name);
   }
   else {
-    return "access denied";
+    return status(t("access denied"));
   }
+}
+
+function moderate_node_edit($edit) {
+  return moderate_node($edit, "form");
+}
+
+function moderate_node_save($edit) {
+  return moderate_node($edit, "save");
 }
 
 function moderate_comment_edit($id) {
@@ -92,7 +86,10 @@ function moderate_admin() {
     default:
       switch ($op) {
         case "edit":
-          print moderate_node_edit($id);
+          print moderate_node_edit(node_get_array("nid", $id));
+          break;
+        case t("Preview"):
+          print moderate_node_edit($edit);
           break;
         case t("Submit"):
           print status(moderate_node_save($edit));

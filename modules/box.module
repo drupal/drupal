@@ -1,10 +1,5 @@
 <?php
 
-$module = array("help" => "box_help",
-                "block" => "box_block",
-                "admin" => "box_admin");
-
-
 function box_help() {
  ?>
   <P>The content of the site can be almost entirely altered through <I>boxes</I>.  Simply put, boxes are small bits of text, HTML or PHP code which will get plugged into the site just like any other block.  Boxes are typically used to add custom blocks to the site.</P>
@@ -96,8 +91,7 @@ function box_admin_delete($id) {
 }
 
 function box_admin_rehash() {
-  global $repository;
-  module_rehash_blocks("box", $repository["box"]);
+  module_rehash_blocks("box");
 }
 
 function box_admin_edit($id) {

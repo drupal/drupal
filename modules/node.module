@@ -1,6 +1,15 @@
 <?php
 
-$module = array("admin" => "node_admin");
+class Node {
+  function Node($node) {
+    global $user;
+    $this->userid = $node[userid] ? $node[userid] : $user->userid;
+    $this->title = $node[title];
+    $this->timestamp = $node[timestamp] ? $node[timestamp] : time();
+    $this->cid = $node[cid];
+    $this->tid = $node[tid];
+  }
+}
 
 function node_overview($query = array()) {
   global $user;

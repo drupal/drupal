@@ -1,10 +1,8 @@
 <?php
 
-$module = array("admin" => "structure_admin");
-
-function content_types($name, $module) {
+function content_types($name) {
   global $types;
-  if ($module[type]) $types[$name] = $name;
+  if (function_exists($name ."_status")) $types[$name] = $name;
 }
 
 function category_form($edit = array()) {

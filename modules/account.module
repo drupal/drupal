@@ -1,9 +1,5 @@
 <?php
 
-$module = array("help" => "account_help",
-                "find" => "account_find",
-                "admin" => "account_admin");
-
 function account_help() {
  ?>
   <P>The account-module is responsible for maintaining the user database. It automatically handles tasks like registration, authentication, access control, password retrieval, user settings and much more.</P>
@@ -153,9 +149,9 @@ function account_edit_save($name, $edit) {
 function account_edit($name) {
   global $access, $account;
 
-  function access($name, $module) {
+  function access($name) {
     global $access, $account;
-    if ($module["admin"]) $access .= "<OPTION VALUE=\"$name\"". (user_access($account, $name) ? " SELECTED" : "") .">$name</OPTION>";
+    if (module_hook($name, "admin")) $access .= "<OPTION VALUE=\"$name\"". (user_access($account, $name) ? " SELECTED" : "") .">$name</OPTION>";
   }
 
   $status = array("blocked", "not confirmed", "open");

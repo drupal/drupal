@@ -1,10 +1,5 @@
 <?php
 
-$module = array("cron" => "rating_cron",
-                "help" => "rating_help",
-                "page" => "rating_page",
-                "block" => "rating_block");
-
 function rating_cron() {
   $r1 = db_query("SELECT id FROM users ORDER BY rating DESC");
   while ($account = db_fetch_object($r1)) {

@@ -2,9 +2,9 @@
 
 include_once "includes/common.inc";
 
-function export($name, $module) {
+function export($name) {
   global $REQUEST_URI;
-  module_execute($name, "export", explode("/", $REQUEST_URI));
+  module_invoke($name, "export", explode("/", $REQUEST_URI));
 }
 
 module_iterate("export");

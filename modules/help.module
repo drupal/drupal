@@ -1,11 +1,10 @@
 <?php
 
-$module = array("admin" => "help_admin");
-
-function help_module($name, $module) {
-  print "<H2><A NAME=\"$name\">". ucfirst($name) ." module</A></H2>";
-  if ($module["help"]) $module["help"]();
-  else print "<I>No documentation available for module '$name'.</I>";
+function help_module($name) {
+  if (module_hook($name, "help")) {
+    print "<H2><A NAME=\"$name\">". ucfirst($name) ." module</A></H2>";
+    print module_invoke($name, "help");
+  }
 }
 
 function help_admin() {

@@ -1,8 +1,5 @@
 <?php
 
-$module = array("find" => "comment_find",
-                "admin" => "comment_admin");
-
 function comment_find($keys) {
   global $user;
   $find = array();

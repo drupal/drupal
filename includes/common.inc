@@ -24,7 +24,7 @@ function throttle($type, $rate) {
     if ($throttle = db_fetch_object(db_query("SELECT * FROM watchdog WHERE type = '$type' AND hostname = '". getenv("REMOTE_ADDR") ."' AND ". time() ." - timestamp < $rate"))) {
       watchdog("warning", "throttle: '". getenv("REMOTE_ADDR") ."' exceeded submission rate - $throttle->type");
       header("Location: error.php?op=throttle");
-      exit();
+      die("submission rate exceeded");
     }
     else {
       watchdog($type, "throttle control");
@@ -196,6 +196,7 @@ include_once "includes/user.inc";
 include_once "includes/node.inc";
 
 user_init();
+module_init();
 $locale = locale_init();
 $conf = variable_init();
 $theme = theme_init();

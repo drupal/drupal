@@ -10,11 +10,11 @@ function status($message) {
 }
 
 function admin_page($mod) {
-  global $repository, $menu, $modules, $user;
+  global $menu, $user;
 
-  function module($name, $module) {
-    global $menu, $modules, $user;
-    if ($module["admin"] && user_access($user, $name)) $output .= "<A HREF=\"admin.php?mod=$name\">$name</A> | ";
+  function module($name) {
+    global $menu, $user;
+    if (function_exists($name. "_admin") && user_access($user, $name)) $output .= "<A HREF=\"admin.php?mod=$name\">$name</A> | ";
     $menu .= $output;
   }
 
@@ -32,18 +32,9 @@ function admin_page($mod) {
    </STYLE>
    <BODY BGCOLOR="#FFFFFF" LINK="#005599" VLINK="#004499" ALINK="#FF0000">
     <H1>Administration</H1>
- <?php
-
-  ksort($repository);
-  module_iterate("module");
-
- ?>
+    <?php module_iterate("module"); ?>
     <HR><?php echo $menu; ?><A HREF="index.php">home</A><HR>
- <?php
-
-  if (user_access($user, $mod)) module_execute($mod, "admin");
-
- ?>
+    <?php if (user_access($user, $mod)) module_invoke($mod, "admin"); ?>
   </BODY>
  </HTML>
  <?php

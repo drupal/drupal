@@ -1,9 +1,5 @@
 <?php
 
-$module = array("page" => "block_page",
-                "help" => "block_help",
-                "admin" => "block_admin");
-
 function block_help() {
  ?>
   <P>Blocks are the boxes visible in the side bars on the left- and right-hand side of the website.  They are either exported by the engine or by any of the active modules.  To really get your teeth into a drupal website, you are going to have to deal with blocks and administering blocks in a fairly sophisticated fashion.  This means you will need to understand how the block placement strategy works.</P>
@@ -23,7 +19,7 @@ function block_page() {
   while ($block = db_fetch_object($result)) {
     if ($state % 3 == 0) print " <TR>\n";
     print "  <TD ALIGN=\"center\" VALIGN=\"top\" WIDTH=\"33%\">\n";
-    $blocks = module_execute($block->module, "block");
+    $blocks = module_invoke($block->module, "block");
     $theme->box($blocks[$block->offset]["subject"], $blocks[$block->offset]["content"]);
     print " </TD>\n";
     if ($state % 3 == 2) print " </TR>\n";
@@ -40,8 +36,6 @@ function block_admin_save($edit) {
 }
 
 function block_admin_display() {
-  global $repository;
-
   $result = db_query("SELECT * FROM blocks ORDER BY module");
 
   // Generate output:
@@ -50,7 +44,7 @@ function block_admin_display() {
   $output .= " <TR><TH>block</TH><TH>module</TH><TH>status</TH><TH>weight</TH><TH>region</TH></TR>\n";
 
   while ($block = db_fetch_object($result)) {
-    $module = ($repository[$block->module]["admin"]) ? "<A HREF=\"admin.php?mod=$block->module\">$block->module</A>" : $block->module;
+    $module = module_hook($block->module, "admin") ? "<A HREF=\"admin.php?mod=$block->module\">$block->module</A>" : $block->module;
 
     $status .= "<SELECT NAME=\"edit[$block->name][status]\">\n";
     $status .= " <OPTION VALUE=\"2\"". (($block->status == 2) ? " SELECTED" : "") .">enabled: always</OPTION>\n";
