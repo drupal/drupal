@@ -8,16 +8,6 @@ CREATE TABLE access (
   PRIMARY KEY (id)
 );
 
-DROP TABLE IF EXISTS affiliates;
-CREATE TABLE affiliates (
-  id int(11) DEFAULT '0' NOT NULL auto_increment,
-  link varchar(255) DEFAULT '' NOT NULL,
-  name varchar(255) DEFAULT '' NOT NULL,
-  contact varchar(255) DEFAULT '' NOT NULL,
-  UNIQUE link (link),
-  PRIMARY KEY (id)
-);
-
 DROP TABLE IF EXISTS blocks;
 CREATE TABLE blocks (
   name varchar(64) DEFAULT '' NOT NULL,
@@ -98,16 +88,6 @@ CREATE TABLE diaries (
   author int(6) DEFAULT '0' NOT NULL,
   text text,
   timestamp int(11) DEFAULT '0' NOT NULL,
-  PRIMARY KEY (id)
-);
-
-DROP TABLE IF EXISTS drupals;
-CREATE TABLE drupals (
-  id int(11) DEFAULT '0' NOT NULL auto_increment,
-  link varchar(255) DEFAULT '' NOT NULL,
-  name varchar(255) DEFAULT '' NOT NULL,
-  contact varchar(255) DEFAULT '' NOT NULL,
-  UNIQUE link (link),
   PRIMARY KEY (id)
 );
 
