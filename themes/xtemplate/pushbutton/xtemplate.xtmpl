@@ -9,14 +9,14 @@
 <body bgcolor="#ffffff" {onload_attributes}>
 
 <div class="hide"><a href="#content" title="Skip navigation." accesskey="2">Skip navigation</a>.</div>
-  
+
 <table id="primary-links-table" summary="Navigation elements." border="0" cellpadding="0" cellspacing="0" width="100%">
   <tr>
-    <td id="home" width="10%"><a href="./" title="Home"><img src="{directory}/images/logo.gif" alt="Home" width="144" height="63" border="0" /></a></td>
-    <td id="primary-links" width="90%"  align="center" valign="middle">{primary_links}</td>        
+    <td id="home" width="10%"><a href="./" title="Home"><img src="{directory}/logo.gif" alt="Home" width="144" height="63" border="0" /></a></td>
+    <td id="primary-links" width="90%"  align="center" valign="middle">{primary_links}</td>
   </tr>
 </table>
-  
+
 <table id="secondary-links-table" summary="Navigation elements." border="0" cellpadding="0" cellspacing="0" width="100%">
   <tr>
     <td id="secondary-links" width="75%"  align="center" valign="middle">
@@ -120,7 +120,7 @@
     <td align="center" valign="middle">
       {primary_links}<br />
       {secondary_links}
-    </td>       
+    </td>
   </tr>
 </table>
 
