@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.20 2004/08/19 15:41:55 dries Exp $
+// $Id: locale.inc,v 1.21 2004/08/20 14:36:07 dries Exp $
 /**
  * @file
  *
@@ -41,7 +41,7 @@ function _locale_admin_manage_screen() {
   $edit = &$_POST['edit'];
   $languages = locale_supported_languages(TRUE, TRUE);
 
-  $header = array(array('data' => t('Code')), array('data' => t('English name')), array('data' => t('Enabled')), array('data' => t('default')), array('data' => t('translated')), array('data' => t('Operations')));
+  $header = array(array('data' => t('Code')), array('data' => t('English name')), array('data' => t('Enabled')), array('data' => t('Default')), array('data' => t('Translated')), array('data' => t('Operations')));
 
   foreach ($languages['name'] as $key => $lang) {
 
