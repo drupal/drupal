@@ -20,7 +20,8 @@ Drupal x.x.x, xxxx-xx-xx
     * made all theme functions return their output.
     * migrated away from using the BaseTheme class.
     * added many new theme functions and refactored existing theme functions.
-    * replaced theme "UnConeD" by "Chameleon".
+    * added avatar support to 'Xtemplate'.
+    * replaced theme 'UnConeD' by 'Chameleon'.
 - usability:
     * added breadcrumb navigation to all pages.
     * made it possible to add context-sensitive help to all pages.
@@ -36,8 +37,6 @@ Drupal x.x.x, xxxx-xx-xx
     * added PHPDoc/Doxygen comments.
 - improved the filter system to prevent conflicts between filters:
     * made it possible to change the order in which filters are applied.
-    * extra step for resolving conflicts with content that looks like HTML (e.g.
-      PHP code).
 
 Drupal 4.3.2, 2004-01-01
 ------------------------

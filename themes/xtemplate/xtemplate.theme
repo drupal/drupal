@@ -1,5 +1,5 @@
 <?php
-// $Id: xtemplate.theme,v 1.50 2004/02/01 21:37:50 dries Exp $
+// $Id: xtemplate.theme,v 1.51 2004/02/11 19:11:59 dries Exp $
 
 if (!class_exists("XTemplate")) {
   include_once("themes/xtemplate/xtemplate.inc");
@@ -15,6 +15,7 @@ function xtemplate_settings() {
   $output .= form_textarea(t("Primary links"), "xtemplate_primary_links", variable_get("xtemplate_primary_links", l("edit primary links", "admin/system/themes/xtemplate")), 70, 8, t("The HTML code for the primary links."));
   $output .= form_textarea(t("Secondary links"), "xtemplate_secondary_links", variable_get("xtemplate_secondary_links", l("edit secondary links", "admin/system/themes/xtemplate")), 70, 8, t("The HTML code for the secondary links."));
   $output .= form_radios(t("Search box"), "xtemplate_search_box", variable_get("xtemplate_search_box", 0), array(t("Disabled"), t("Enabled")), t("Show a search box in the upper right corner."));
+  $output .= form_group(t("Avatars"), form_checkbox(t("Display avatars with posts"), "xtemplate_avatar_node", 1, variable_get("xtemplate_avatar_node", 0), t("Display individualized pictures identifying users with posts they start.")) . form_checkbox(t("Display avatars with comments"), "xtemplate_avatar_comment", 1, variable_get("xtemplate_avatar_comment", 0), t("Display individualized pictures identifying users with their comments.")) . form_textfield(t("Default avatar"), "xtemplate_avatar_default", variable_get("xtemplate_avatar_default", ""), 70, 300, t("URL of avatar to display for users with no custom avatar selected. Leave blank for none.")));
   return $output;
 }
 
@@ -47,6 +48,20 @@ function xtemplate_node($node, $main = 0, $page = 0) {
 
   if ($page == 0) {
     $xtemplate->template->parse("node.title");
+  }
+
+  if (module_exist("profile") && variable_get("xtemplate_avatar_node", 0)) {
+    $avatar = $node->profile_avatar;
+    if (empty($avatar) || !file_exists($avatar)) {
+      $avatar = variable_get("xtemplate_avatar_default", "");
+    }
+    else {
+      $avatar = file_create_url($avatar);
+    }
+    if ($avatar) {
+      $xtemplate->template->assign("avatar", "<img src=\"$avatar\" alt=\"" . t("%user's avatar", array("%user" => $comment->name ? $comment->name : t(variable_get("anonymous", "Anonymous")))) . "\" />");
+      $xtemplate->template->parse("node.avatar");
+    }
   }
 
   if (module_exist("taxonomy") && ($taxonomy = taxonomy_link("taxonomy terms", $node))) {
@@ -82,10 +97,26 @@ function xtemplate_comment($comment, $links = 0) {
   if ($comment->new) {
     $xtemplate->template->parse("comment.new");
   }
+
+  if (module_exist("profile") && variable_get("xtemplate_avatar_comment", 0)) {
+    $avatar = $comment->profile_avatar;
+    if (empty($avatar) || !file_exists($avatar)) {
+      $avatar = variable_get("xtemplate_avatar_default", "");
+    }
+    else {
+      $avatar = file_create_url($avatar);
+    }
+    if ($avatar) {
+      $xtemplate->template->assign("avatar", "<img src=\"$avatar\" alt=\"" . t("%user's avatar", array("%user" => $comment->name ? $comment->name : t(variable_get("anonymous", "Anonymous")))) . "\" />");
+      $xtemplate->template->parse("comment.avatar");
+    }
+  }
+
   if ($links) {
     $xtemplate->template->assign("links", $links);
     $xtemplate->template->parse("comment.links");
   }
+
   $xtemplate->template->parse("comment");
   $output = $xtemplate->template->text("comment");
   $xtemplate->template->reset("comment");
