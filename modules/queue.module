@@ -116,7 +116,7 @@ function queue_node($id) {
 }
 
 function queue_page() {
-  global $id, $op, $theme, $vote;
+  global $user, $id, $op, $theme, $vote;
 
   if ($user->id && user_access("access submission queue")) {
     switch($op) {
