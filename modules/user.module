@@ -15,7 +15,6 @@ function user_external_load($authname) {
 }
 
 function user_load($array = array()) {
-
   /*
   ** Dynamically compose a SQL query:
   */
@@ -121,7 +120,6 @@ function user_save($account, $array = array()) {
 }
 
 function user_validate_name($name) {
-
   /*
   ** Verify the syntax of the given name:
   */
@@ -150,7 +148,6 @@ function user_validate_authmap($account, $authname, $module) {
 }
 
 function user_password($length = 10) {
-
   /*
   ** Generate a random alphanumeric password.
   */
@@ -650,7 +647,6 @@ function user_logout() {
   }
 
   drupal_goto(url());
-
 }
 
 function user_pass($edit = array()) {

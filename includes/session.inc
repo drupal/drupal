@@ -16,7 +16,14 @@ function sess_close() {
 function sess_read($key) {
   global $user;
 
-  $result = db_query_range("SELECT u.*, s.*, r.name AS role FROM {users} u INNER JOIN {role} r ON u.rid = r.rid INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = '". check_query($key) ."' AND u.status < 3", 0, 1);
+  if ($key) {
+    $result = db_query_range("SELECT u.*, s.*, r.name AS role FROM {users} u INNER JOIN {role} r ON u.rid = r.rid INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = '%s' AND u.status < 3", $key, 0, 1);
+  }
+
+  if (!db_num_rows($result)) {
+    $result = db_query("SELECT u.*, r.name AS role FROM {users} u INNER JOIN {role} r ON u.rid = r.rid WHERE u.uid = 0");
+  }
+
   $user = db_fetch_object($result);
   if ($user->data && $data = unserialize($user->data)) {
     foreach ($data as $key => $value) {
@@ -32,7 +39,7 @@ function sess_read($key) {
 function sess_write($key, $value) {
   global $user;
 
-  db_query("UPDATE {sessions} SET uid = %d, hostname = '%s', session = '%s', timestamp = %d WHERE sid = '$key'", $user->uid, $_SERVER["REMOTE_ADDR"], $value, time());
+  db_query("UPDATE {sessions} SET uid = %d, hostname = '%s', session = '%s', timestamp = %d WHERE sid = '%s'", $user->uid, $_SERVER["REMOTE_ADDR"], $value, time(), $key);
 
   if (!db_affected_rows()) {
     db_query("INSERT INTO {sessions} (uid, sid, hostname, session, timestamp) values(%d, '%s', '%s', '%s', %d)", $user->uid, $key, $_SERVER["REMOTE_ADDR"], $value, time());
@@ -61,6 +68,5 @@ function sess_gc($lifetime) {
   return 1;
 
 }
-
 
 ?>
