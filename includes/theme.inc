@@ -22,44 +22,6 @@ class BaseTheme {
   }
 
   function user($region) {
-    global $user;
-
-    if ($user->uid) {
-      // Display account settings:
-
-      $output .= "<div style=\"width: 125;\">\n";
-
-      foreach (module_list() as $name) {
-        if (module_hook($name, "link")) {
-          $links = module_invoke($name, "link", "menu");
-          foreach ($links as $link) {
-            $output .= "$link<br />\n";
-          }
-        }
-      }
-
-      if (user_access("access administration pages")) {
-        $output .= "<br />\n";
-        $output .= "<a href=\"admin.php\">". strtr(t("administer %a"), array("%a" => variable_get("site_name", "drupal"))) ."</a><BR>\n";
-      }
-
-      $output .= "</div>";
-
-      $this->box($user->name, $output, $region);
-    }
-    else {
-      $output .= "<div align=\"center\">\n";
-      $output .= " <form action=\"module.php?mod=user&op=login\" method=\"post\">\n";
-      $output .= "  <b>". t("Username") .":</b><br /><input name=\"edit[name]\" size=\"15\"><p />\n";
-      $output .= "  <b>". t("Password") .":</b><br /><input name=\"edit[pass]\" size=\"15\" TYPE=\"password\"><br />\n";
-      $output .= form_checkbox(t("Remember me"), "remember_me", 1, 0);
-      $output .= "  <input type=\"submit\" value=\"". t("Log in") ."\"><br />\n";
-      if (variable_get("account_register", 1)) $output .= "  <a href=\"module.php?mod=user\" title=\"". t("Create a new user account.") ."\">". t("REGISTER") ."</a>\n";
-      $output .= " </form>\n";
-      $output .= "</div>\n";
-
-      $this->box(t("Log in"), $output, $region);
-    }
   }
 
   function node($node, $main) {
@@ -124,34 +86,18 @@ function theme_init() {
 function theme_blocks($region, &$theme) {
   global $id, $PHP_SELF, $REQUEST_URI, $user;
 
-  switch (strrchr($PHP_SELF, "/")) {
-    case "/node.php":
-      if ($region != "left") {
-        if ($user->uid) $node = db_fetch_object(db_query("SELECT * FROM node WHERE nid = '$id'"));
-        if ($node->moderate == 1) theme_moderation_results($theme, $node, $region);
-      }
-    default:
-      if ($user->uid) $result = db_query("SELECT * FROM blocks b LEFT JOIN layout l ON b.name = l.block WHERE (b.status = 2 OR (b.status = 1 AND l.uid = '$user->uid'))". (($region == "left" OR $region == "right") ? ($region == "left" ? " AND b.region = 0" : " AND b.region = 1") : "") ." AND (b.path = '' OR '". strrchr($REQUEST_URI, "/") ."' RLIKE b.path) ORDER BY weight");
-      else $result = db_query("SELECT * FROM blocks WHERE status = 2". (($region == "left" OR $region == "right") ? ($region == "left" ? " AND region = 0" : " AND region = 1") : "") ." ORDER BY weight");
-      while ($result && ($block = db_fetch_object($result))) {
-        $blocks = module_invoke($block->module, "block");
-        if ($blocks[$block->delta]["content"])
-          $theme->box(t($blocks[$block->delta]["subject"]), $blocks[$block->delta]["content"], $region);
-      }
-      break;
+  if ($user->uid) {
+    $result = db_query("SELECT * FROM blocks b LEFT JOIN layout l ON b.name = l.block WHERE (b.status = 2 OR (b.status = 1 AND l.uid = '$user->uid'))". (($region == "left" OR $region == "right") ? ($region == "left" ? " AND b.region = 0" : " AND b.region = 1") : "") ." AND (b.path = '' OR '". strrchr($REQUEST_URI, "/") ."' RLIKE b.path) ORDER BY weight");
   }
-}
-
-function theme_moderation_results(&$theme, $node, $region) {
-  foreach (explode(",", $node->users) as $vote) {
-    if ($vote) {
-      $data = explode("=", $vote);
-      $account = user_load(array("uid" => $data[0]));
-      $output .= format_name($account) ." voted '$data[1]'.<br />";
+  else {
+    $result = db_query("SELECT * FROM blocks WHERE status = 2". (($region == "left" OR $region == "right") ? ($region == "left" ? " AND region = 0" : " AND region = 1") : "") ." ORDER BY weight");
+  }
+  while ($result && ($block = db_fetch_object($result))) {
+    $blocks = module_invoke($block->module, "block");
+    if ($blocks[$block->delta]["content"]) {
+      $theme->box(t($blocks[$block->delta]["subject"]), $blocks[$block->delta]["content"], $region);
     }
   }
-
-  $theme->box(t("Moderation results"), ($output ? $output : t("This node has not been moderated yet.")), $region);
 }
 
 ?>

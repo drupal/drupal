@@ -170,4 +170,33 @@ function queue_page() {
   }
 }
 
+function queue_block() {
+  global $PHP_SELF;
+  if (strrchr($PHP_SELF, "/") == "/node.php") {
+    global $user, $id;
+    if ($user->uid) {
+      $node = db_fetch_object(db_query("SELECT * FROM node WHERE nid = '$id'"));
+    }
+    if ($node->moderate == 1) {
+		  foreach (explode(",", $node->users) as $vote) {
+		    if ($vote) {
+		      $data = explode("=", $vote);
+		      $account = user_load(array("uid" => $data[0]));
+		      $output .= format_name($account) ." voted '$data[1]'.<br />";
+		    }
+		  }
+		
+		  $block[0]["subject"] = t("Moderation results");
+      $block[0]["content"] = $output ? $output : t("This node has not been moderated yet.");
+      $block[0]["info"] = t("Moderation results");
+    }
+  }
+  elseif (strrchr($PHP_SELF, "/") == "/admin.php") {
+    $block[0]["subject"] = t("Moderation results");
+    $block[0]["info"] = t("Moderation results");
+  }
+
+  return $block;
+}
+
 ?>
