@@ -882,7 +882,7 @@ $config = conf_init();
 
 include_once "includes/$config.php";
 include_once "includes/database.inc";
-//include_once "includes/xmlrpc.inc";
+include_once "includes/xmlrpc.inc";
 include_once "includes/module.inc";
 include_once "includes/theme.inc";
 include_once "includes/pager.inc";
