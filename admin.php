@@ -16,12 +16,12 @@ function admin_page($mod) {
     <title><?php echo variable_get(site_name, "drupal"); ?> administration pages</title>
    </head>
    <style>
-    body { font-family: helvetica, arial; }
+    body { font-family: helvetica, arial; font-size: 12pt; }
     h1   { font-famile: helvetica, arial; font-size: 18pt; font-weight: bold; color: #660000; }
     h2   { font-family: helvetica, arial; font-size: 18pt; font-weight: bold; color: #000066; }
     h3   { font-family: helvetica, arial; font-size: 14pt; font-weight: bold; color: #006600; }
-    th   { font-family: helvetica, arial; text-align: center; vertical-align: top; background-color: #CCCCCC; color: #995555; }
-    td   { font-family: helvetica, arial; }
+    th   { font-family: helvetica, arial; font-size: 12pt; text-align: center; vertical-align: top; background-color: #CCCCCC; color: #995555; }
+    td   { font-family: helvetica, arial; font-size: 12pt; }
    </style>
    <body bgcolor="#FFFFFF" link="#005599" vlink="#004499" alink="#FF0000">
     <h1>Administration</h1>
