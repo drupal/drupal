@@ -31,7 +31,7 @@
        -->
       </STYLE>
       <BODY TEXT="#202020" BGCOLOR="#FEFEFE" BACKGROUND="themes/Jeroen/images/background.gif" ALINK="#000000" LINK="#000000" VLINK="#000000">
-       <TABLE WIDTH="750" ALIGN="left" BORDER="0" CELLPADDING="0" CELLSPACING="6">
+       <TABLE WIDTH="770" ALIGN="left" BORDER="0" CELLPADDING="0" CELLSPACING="6">
         <TR>
          <TD COLSPAN="2">
 	  <? if (rand(0,150) == 75) $img = "logo2.gif"; else $img = "logo.gif"; ?>
@@ -499,7 +499,7 @@
    function footer() {
     ?>
         </TD>
-        <TD WIDTH="160" VALIGN="top" ALIGN="right">
+        <TD WIDTH="180" VALIGN="top" ALIGN="right">
          <?
          global $PHP_SELF; 
  
