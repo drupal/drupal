@@ -15,8 +15,8 @@ function documentation() {
   
   <H1>Chapter 1: introduction</H1>
 
-  <P>Drupal (is the English pronounciation for the dutch word 'druppel' which stands for 'drop') is a full-featured content management/discussion engine suitable to setup a news-driven community or portal site.  Drupal aims towards easy installation, exessive configuration and fine-grained maintainance capabilities.  Due to its modular design layer is flexibel and easy to adapt.</P>
-  <P>Drupal is written by Dries Buytaert (dries_at_drop.org) and build after Slash (<A HREF="http://slashcode.com/">http://slashcode.com/</A>) and Scoop (<A HREF="http://scoop.kuro5hin.org/">http://scoop.kuro5hin.org/</A>).</P>
+  <P>Drupal is the English pronounciation for the dutch word 'druppel' which stands for 'drop'.  Drupal is a full-featured content management/discussion engine suitable to setup a news-driven community or portal site.  Drupal aims towards easy installation, excessive configuration and fine-grained maintainance capabilities.  Due to its modular design drupal is flexibel and easy to adapt or extend.</P>
+  <P>Drupal is primarily written by Dries Buytaert (dries_at_drop.org) and build after Slash (<A HREF="http://slashcode.com/">http://slashcode.com/</A>) and Scoop (<A HREF="http://scoop.kuro5hin.org/">http://scoop.kuro5hin.org/</A>).</P>
 
   <H1>Chapter 2: installation</H1>
 
@@ -28,27 +28,27 @@ function documentation() {
 
   <H2>Installation process</H2>
 
-  <P><B>1.</B> We assume that you have some working experience with Apache, MySQL and PHP.  If you still need to install Apache, MySQL or PHP, please install them now.  The installation of these required packages is beyond the scope of this document but make sure your Apache is setup to allow <CODE>.htaccess</CODE> files so that drupal can override Apache options from within the drupal directories.</P>
-  <P><B>2.</B> Unzip the distribution tarball into the directory you want to serve web files from:</P>
+  <P>1. We assume that you have some working experience with Apache, MySQL and PHP.  If you still need to install Apache, MySQL or PHP, please install them now.  The installation of these required packages is beyond the scope of this document but make sure your Apache is setup to allow <CODE>.htaccess</CODE> files so that drupal can override Apache options from within the drupal directories.</P>
+  <P>2. Unzip the distribution tarball into the directory you want to serve web files from:</P>
   <BLOCKQUOTE>$ tar -zxvf drupal-x.x.x.tar.gz</BLOCKQUOTE>
-  <P><B>3.</B> Create a MySQL database for your drupal site (if not already done so):</P>
+  <P>3. Create a MySQL database for your drupal site (if not already done so):</P>
   <BLOCKQUOTE>$ mysqladmin create &lt;database&gt;</BLOCKQUOTE>
-  <P>Make sure to check the MySQL documentation on how to setup the right access rights and permissions in your MySQL grant table.</P>
-  <P><B>4.</B> Once you have a proper database, dump the required tables into your database:</P>
+  <P>Make sure to check the MySQL documentation on how to setup the correct access rights and permissions in your MySQL grant tables.</P>
+  <P>4. Once you have a proper database, dump the required tables into your database:</P>
   <BLOCKQUOTE>$ mysql -h &lt;hostname&gt; -u &lt;username&gt; -p&lt;password&gt; &lt;database&gt; < database/database.mysql </BLOCKQUOTE>
-  <P><B>5.</B> Copy the file <CODE>includes/hostname.conf</CODE> to match your server's hostname:</P>
+  <P>5. Copy the file <CODE>includes/hostname.conf</CODE> to match your server's hostname:</P>
   <BLOCKQUOTE>$ cp includes/hostname.conf includes/www.yourdomain.com.conf</BLOCKQUOTE>
-  <P><B>6.</B> Edit your configuration file to set the required settings such as the database options and to customize your site to your likings.</P>
-  <P><B>7.</B> Launch your browser and point it to http://yourdomain.com/, create an account, log in and head on to http://yourdomain.com/admin.php.  The first user will automatically have administrator permissions.  Play with it for a bit and spend some time getting used to the administration interfaces.</P>
-  <P><B>8. (optional)</B> Optionally (yet recommended for smooth operation) setup a crontab to periodically visit http://yourdomain.com/cron.php.</P>
+  <P>6. Edit your configuration file to set the required settings such as the database options and to customize your site to your likings.</P>
+  <P>7. Launch your browser and point it to http://yourdomain.com/, create an account, log in and head on to http://yourdomain.com/admin.php.  The first user will automatically have administrator permissions.  Play with it for a bit and spend some time getting used to the administration interfaces.</P>
+  <P>8. (optional) Optionally (yet recommended for smooth operation) setup a crontab to periodically visit http://yourdomain.com/cron.php.</P>
   <P>Use a browser like lynx or wget but make sure the process terminates: either use /usr/bin/lynx -source http://yourdomain.com/cron.php or /usr/bin/wget -O /dev/null http://yourdomain.com/cron.php. Take a look at the example scripts in the <CODE>scripts</CODE>-directory and make sure to adjust them to your needs.</P>
   <P>A good crontab-line to run the cron-script once every hour would be:</P>
   <PRE>
     00 * * * * /home/www/drupal/scripts/cron-lynx
   </PRE>
-  <P><B>9. (optional)</B> Create your site's theme or at least customize the existing themes.  To get started, head on to the <CODE>themes</CODE>-directory and make a custom logo for each theme.
-  <P><B>10. (optional)</B> Add and remove modules to customize the functionality of your site.  Adding and removing modules is plain easy.  You can add a module by copying the files into the <CODE>modules</CODE>-directory and you can remove a module by removing a module's file from the <CODE>modules</CODE>-directory.  The drupal engine will then automatically include or exclude this module.  If for some reason, this seems to fail, "manually" rehash the modules list from http://yourdomain.com/admin.php?mod=module.</P>
-  <P><B>11.</B> If you get is to run, let us know at <A HREF="mailto:info@drop.org">info@drop.org</A> so we can add your site to our list of drupal sites.  If you can't get it to run, you can find support at the drupal site or you can contact us by e-mail at <A HREF="mailto:info@drop.org">info@drop.org</A>.</P>
+  <P>9. (optional) Create your site's theme or at least customize the existing themes.  To get started, head on to the <CODE>themes</CODE>-directory and make a custom logo for each theme.
+  <P>10. (optional) Add and remove modules to customize the functionality of your site.  Adding and removing modules is plain easy.  You can add a module by copying the files into the <CODE>modules</CODE>-directory and you can remove a module by removing a module's file from the <CODE>modules</CODE>-directory.  The drupal engine will then automatically include or exclude this module.  If for some reason, this seems to fail, "manually" rehash the modules list from http://yourdomain.com/admin.php?mod=module.</P>
+  <P>11. If you get is to run, let us know at <A HREF="mailto:info@drop.org">info@drop.org</A> so we can add your site to our list of drupal sites.  If you can't get it to run, you can find support at the drupal site or you can contact us by e-mail at <A HREF="mailto:info@drop.org">info@drop.org</A>.</P>
 
   <H2>More than one (sub)domain on one machine</H2>
 

@@ -20,7 +20,6 @@ function wishlist_page() {
  
    <H3>Adminstration</H3>
     <UL>
-     <LI>enhance user administration</LI>
      <LI>auto. backup functionality</LI>
      <LI>auto. clean-up functionality (e.g. user's history field)</LI>
     </UL>
@@ -58,10 +57,8 @@ function wishlist_page() {
  
    <H3>Public release</H3>
     <UL>
-     <LI>write minimum amount of documentation like installation guidelines, administrator guide, and so on</LI>
-     <LI>make (or find and install) a "task manager / todo list / progress meter / bug report"-tool so we can get ourselves and the project somewhat organized</LI>
+     <LI>make (or find and install) a "task manager / todo list / progress meter / bug report"-tool so we can get ourselves and the project somewhat organized.  Ideally we would have a "project module".</LI>
      <LI>setup a developers mailing list</LI>
-     <LI>integration and testing with latest version of PHP (just to avoid bug reports that could have been easily avoided)</LI>
      <LI>code revision to close possible security holes</LI>
     </UL>
  
