@@ -245,7 +245,7 @@ function displayAccount($theme) {
 
   if ($user && $user->userid) {
     ### Display account settings:
-    $content .= "<LI><A HREF=\"submission.php\">moderate submissions</A> (". submission_count() .")</LI>";
+    $content .= "<LI><A HREF=\"submission.php\">moderate submissions</A> (<FONT COLOR=\"red\">". submission_count() ."</FONT>)</LI>";
     $theme->box("$user->userid's account", "$content");
   }
 }
