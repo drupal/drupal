@@ -24,7 +24,7 @@ function forum_form($edit = array()) {
   $form .= form_textfield("Subject", "title", $edit[title], 50, 64);
   $form .= form_textarea("Body", "body", $edit[body], 70, 10);
   $form .= form_hidden("nid", $edit[nid]);
-  $form .= form_submit("Submit");
+  $form .= form_submit(t("Submit"));
 
   return form($REQUEST_URI, $form);
 }
