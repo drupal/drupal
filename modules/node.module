@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.448 2005/01/23 15:45:38 dries Exp $
+// $Id: node.module,v 1.449 2005/01/23 16:20:10 dries Exp $
 
 /**
  * @file
@@ -1725,7 +1725,7 @@ function node_access($op, $node = NULL, $uid = NULL) {
  *   An SQL join clause.
  */
 function node_access_join_sql($node_alias = 'n', $node_access_alias = 'na') {
-  if (empty(module_implements('node_grants')) || user_access('administer nodes')) {
+  if (!module_implements('node_grants') || user_access('administer nodes')) {
     return '';
   }
 
@@ -1746,7 +1746,7 @@ function node_access_join_sql($node_alias = 'n', $node_access_alias = 'na') {
  *   An SQL where clause.
  */
 function node_access_where_sql($op = 'view', $node_access_alias = 'na', $uid = NULL) {
-  if (empty(module_implements('node_grants')) || user_access('administer nodes')) {
+  if (!module_implements('node_grants') || user_access('administer nodes')) {
     // This number is being used in a SQL query as a boolean.
     // It is "'1'" instead of "1" for database compatibility, as both
     // PostgreSQL and MySQL treat it as boolean in this case.
