@@ -15,6 +15,7 @@ include_once "includes/$conf.conf";
 include_once "includes/database.inc";
 include_once "includes/watchdog.inc";
 include_once "includes/function.inc";
+include_once "includes/comment.inc";
 include_once "includes/module.inc";
 include_once "includes/locale.inc";
 include_once "includes/search.inc";
