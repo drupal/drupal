@@ -24,7 +24,7 @@ function taxonomy_perm() {
 function taxonomy_link($type, $node = NULL) {
   if ($type == "system") {
     if (user_access("administer taxonomy")) {
-      menu("admin/taxonomy", t("taxonomy"), "taxonomy_admin", 3);
+      menu("admin/taxonomy", t("categories"), "taxonomy_admin", 3);
       menu("admin/taxonomy/add/vocabulary", t("create new vocabulary"), "taxonomy_admin");
       menu("admin/taxonomy/help", t("help"), "taxonomy_admin", 9);
     }
