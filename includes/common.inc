@@ -256,6 +256,26 @@ function table($header, $rows) {
 }
 
 /**
+ * Verify the syntax of the given e-mail address.  Empty e-mail addresses
+ * are allowed.  See RFC 2822 for details.
+ *
+ * @param $mail  a email address
+ */
+function validate_email_address($mail) {
+  $user = '[a-zA-Z0-9_\-\.\+\^!#\$%&*+\/\=\?\`\|\{\}~\']+';
+  $domain = '(?:[a-zA-Z0-9]|[a-zA-Z0-9][a-zA-Z0-9\-]*[a-zA-Z0-9]\.?)+';
+  $ipv4 = '[0-9]{1,3}(\.[0-9]{1,3}){3}';
+  $ipv6 = '[0-9a-fA-F]{1,4}(\:[0-9a-fA-F]{1,4}){7}';
+
+  if (preg_match("/^$user@($domain|(\[($ipv4|$ipv6)\]))$/", $mail)) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
+/**
  * Format a single result entry of a search query:
  *
  * @param $item  a single search result as returned by <module>_search of type
