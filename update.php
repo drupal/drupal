@@ -6,7 +6,14 @@
 ** - Point your browser to "http://www.site.com/update.php" and follow
 **   the instructions.
 **
+** - If you are not logged in as administrator, you will need to modify the
+**   statement below. Change the 1 into a 0 to disable the access check.
+**   After finishing the upgrade, open this file and change the 0 back into
+**   a 1!
 */
+
+// Disable access checking?
+$access_check = 1;
 
 if (!get_cfg_var("safe_mode")) {
   set_time_limit(180);
@@ -614,12 +621,12 @@ if (isset($_GET["op"])) {
   include_once "includes/common.inc";
 
   // Access check:
-  if ($user->uid == 1) {
+  if (($access_check == 0) || ($user->uid == 1)) {
     update_page();
   }
   else {
     print update_page_header("Access denied");
-    print "Access denied.  You are not authorized to access to this page.  Please log in as the user with user ID #1 or edit <code>update.php</code> to by-pass this access check; search for <code>\$user->uid == 1</code> near the bottom of the file.";
+    print "Access denied.  You are not authorized to access to this page.  Please log in as the user with user ID #1. If you cannot log-in, you will have to edit <code>update.php</code> to by-pass this access check; in that case, open <code>update.php</code> in a text editor and follow the instructions at the top.";
     print update_page_footer();
   }
 }
