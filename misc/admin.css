@@ -3,7 +3,6 @@ body {
   margin: 0;
   background-color: #fff;
 }
-/* text */
 body, th, td, h1, h2, h3, h4, #menu, #main {
   font-family: helvetica, arial;
 }
@@ -35,16 +34,20 @@ h3 {
   padding: 0 0 .5em 0;
 }
 th {
-  font-size: 90%;
-  text-align: left;
-  vertical-align: top;
-  background-color: #CCCCCC;
-  color: #995555;
+  text-align: center;
+  color: #994444;
+  border-bottom: 1px solid #000;
+}
+tr.dark {
+  background-color: #ccc;
+}
+tr.light {
+  background-color: #ddd;
 }
 td {
   font-size: 90%;
+  padding: 5px;
 }
-/* layout */
 #menu {
   position: absolute;
   left: 0px;

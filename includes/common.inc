@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.140 2002/12/26 12:16:09 dries Exp $
+// $Id: common.inc,v 1.141 2002/12/29 12:03:05 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST;
@@ -180,6 +180,66 @@ function variable_del($name) {
   db_query("DELETE FROM variable WHERE name = '%s'", $name);
 
   unset($conf[$name]);
+}
+
+function table_cell($cell, $header = 0) {
+  if (is_array($cell)) {  
+    $data = $cell["data"];
+    foreach ($cell as $key => $value) {
+      if ($key != "data")  {
+        $attributes .= " $key=\"$value\"";
+      }
+    }
+  }
+  else {
+    $data = $cell;
+  }
+
+  if ($header) {
+    $output = "<th$attributes>$data</th>";
+  }
+  else {
+    $output = "<td$attributes>$data</td>";
+  }
+
+  return $output;
+}
+
+function table($header, $rows) {
+
+  $output .= "<table>";
+
+  /*
+  ** Emit the table header:
+  */
+
+  $output .= " <tr>";
+  foreach ($header as $cell) {
+   $output .= table_cell($cell, 1);
+  }
+  $output .= " </tr>";
+
+  /*
+  ** Emit the table rows:
+  */
+
+  foreach ($rows as $number => $row) {
+    if ($number % 2 == 1) {
+      $output .= " <tr class=\"light\">";
+    }
+    else {
+      $output .= " <tr class=\"dark\">";
+    }
+
+    foreach ($row as $cell) {
+      $output .= table_cell($cell, 0);
+    }
+    $output .= " </tr>";
+  }
+
+  $output .= "</table>";
+
+  return $output;
 }
 
 /**
