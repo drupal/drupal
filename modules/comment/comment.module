@@ -388,9 +388,12 @@ function comment_links($comment, $return = 1) {
     $links[] = la("<span style=\"color: $theme->type;\">". t("administer") ."</span>", array("mod" => "comment", "op" => "edit", "id" => $comment->cid));
   }
 
-  // here we should check if this node has read-only comments, but we already check on submit
-  // and this way we save a query. it's just a cosmetic issue. otherwise just uncomment next
-  // line and related bracket some lines below
+  /*
+  ** Here we should check if this node has read-only comments, but we
+  ** already check on submit and this way we save a query.  It's just
+  ** a cosmetic issue. otherwise just uncomment the next line and
+  ** related bracket some lines below.
+  */
 
   //if (node_comment_mode($comment->nid)) {
   if (user_access("post comments")) {
@@ -402,7 +405,6 @@ function comment_links($comment, $return = 1) {
     }
   }
   //}
-
 
   return $theme->links($links);
 }
@@ -476,10 +478,6 @@ function comment_render($nid, $cid) {
       $nid = 0;
     }
 
-    if (empty($cid)) {
-      $cid = 0;
-    }
-
     if (empty($mode)) {
       $mode = $user->uid ? $user->mode : variable_get("default_comment_mode", 4);
     }
@@ -503,15 +501,22 @@ function comment_render($nid, $cid) {
 
     $theme->box(t("Control panel"), $theme->comment_controls($threshold, $mode, $order));
 
-    if ($cid > 0) {
+    if (isset($cid)) {
       $result = db_query("SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.cid = '$cid' GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name");
       if ($comment = db_fetch_object($result)) {
         comment_view($comment, comment_links($comment));
       }
     }
+
+    if ($cid) {
+      $result = comment_query($nid, $order, $cid);
+    }
     else {
-      if ($mode == 1) {
-        $result = comment_query($nid, $order);
+      $result = comment_query($nid, $order);
+    }
+
+    if ($mode == 1) {
+      if (db_result($result)) {
         print "<table border=\"0\" cellpadding=\"2\" cellspacing=\"2\">\n";
         print " <tr><th>Subject</th><th>Author</th><th>Date</th><th>Score</th></tr>\n";
         while ($comment = db_fetch_object($result)) {
@@ -521,30 +526,37 @@ function comment_render($nid, $cid) {
         }
         print "</table>\n";
       }
-      else if ($mode == 2) {
-        $result = comment_query($nid, $order);
-        while ($comment = db_fetch_object($result)) {
-          comment_view($comment, (comment_visible($comment, $threshold) ? comment_links($comment, 0) : 0));
-        }
+    }
+    else if ($mode == 2) {
+      while ($comment = db_fetch_object($result)) {
+        comment_view($comment, (comment_visible($comment, $threshold) ? comment_links($comment, 0) : 0));
       }
-      else if ($mode == 3) {
-        $result = comment_query($nid, $order);
-        while ($comment = db_fetch_object($result)) {
-          $comments[] = $comment;
-        }
+    }
+    else if ($mode == 3) {
+      while ($comment = db_fetch_object($result)) {
+        $comments[] = $comment;
+      }
 
-        if ($comments) {
+      if ($comments) {
+        if (isset($cid)) {
+          comment_thread_min($comments, $threshold, $cid, 1);
+        }
+        else {
           comment_thread_min($comments, $threshold);
         }
       }
-      else {
-        $result = comment_query($nid, $order);
-        while ($comment = db_fetch_object($result)) {
-          $comments[] = $comment;
-        }
+    }
+    else {
+      while ($comment = db_fetch_object($result)) {
+        $comments[] = $comment;
+      }
 
-        if ($comments) {
-          comment_thread_max($comments, $threshold);
+      if ($comments) {
+        if ($cid) {
+          comment_thread_max($comments, $threshold, $cid, 1);
+        }
+        else {
+          comment_thread_max($comments, $threshold, (isset($cid) ? $cid : 0), isset($cid));
         }
       }
     }
@@ -562,27 +574,29 @@ function comment_render($nid, $cid) {
 function comment_search($keys) {
   global $PHP_SELF;
 
-  // Return the results of performing a search using the indexed search
-  // for this particular type of node.
-  //
-  // Pass an array to the "do_search" function which dictates what it
-  // will search through, and what it will search for
-  //
-  // "keys"'s value is the keywords entered by the user
-  //
-  // "type"'s value is used to identify the node type in the search
-  // index.
-  //
-  // "select"'s value is used to relate the data from the specific nodes
-  // table to the data that the search_index table has in it, and the the
-  // do_search functino will rank it.
-  //
-  // The select must always provide the following fields - lno, title,
-  // created, uid, name, count
-  //
-  // The select statement may optionally provide "nid", which is a secondary
-  // identifier which is currently used byt the comment module.
-  //
+  /*
+  ** Return the results of performing a search using the indexed search
+  ** for this particular type of node.
+  **
+  ** Pass an array to the "do_search" function which dictates what it
+  ** will search through, and what it will search for
+  **
+  ** "keys"'s value is the keywords entered by the user
+  **
+  ** "type"'s value is used to identify the node type in the search
+  ** index.
+  **
+  ** "select"'s value is used to relate the data from the specific nodes
+  ** table to the data that the search_index table has in it, and the the
+  ** do_search functino will rank it.
+  **
+  ** The select must always provide the following fields - lno, title,
+  ** created, uid, name, count
+  **
+  ** The select statement may optionally provide "nid", which is a secondary
+  ** identifier which is currently used byt the comment module.
+  */
+
   $find = do_search(array("keys" => $keys, "type" => "comment", "select" => "select s.lno as lno, c.nid as nid, c.subject as title, c.timestamp as created, u.uid as uid, u.name as name, s.count as count FROM search_index s, comments c LEFT JOIN users u ON c.uid = u.uid WHERE s.lno = c.cid AND s.type = 'comment' AND s.word like '%'"));
 
   return $find;
@@ -774,18 +788,21 @@ function comment_admin() {
 
 function comment_update_index() {
 
-  // Return an array of values to dictate how to update the search index
-  // for this particular type of node.
-  //
-  // "last_update"'s value is used with variable_set to set the
-  // last time this node type (comment) had an index update run.
-  //
-  // "node_type"'s value is used to identify the node type in the search
-  // index (commentt in this case).
-  //
-  // "select"'s value is used to select the node id and text fields from
-  // the table we are indexing. In this case, we also check against the
-  // last run date for the comments update.
+  /*
+  ** Return an array of values to dictate how to update the search index
+  ** for this particular type of node.
+  **
+  ** "last_update"'s value is used with variable_set to set the
+  ** last time this node type (comment) had an index update run.
+  **
+  ** "node_type"'s value is used to identify the node type in the search
+  ** index (commentt in this case).
+  **
+  ** "select"'s value is used to select the node id and text fields from
+  ** the table we are indexing. In this case, we also check against the
+  ** last run date for the comments update.
+  */
+
   return array("last_update" => "comment_cron_last", "node_type" => "comment", "select" => "SELECT c.cid as lno, c.subject as text1, c.comment as text2 FROM comments c WHERE timestamp > ". variable_get("comment_cron_last", 1));
 }
 
