@@ -1,5 +1,5 @@
 <?php
-// $Id: conf.php,v 1.11 2001/11/01 11:00:47 dries Exp $
+// $Id: conf.php,v 1.12 2001/12/24 08:15:46 kjartan Exp $
 
 #
 # Database settings:
@@ -8,7 +8,7 @@
 # $db_url = "pgsql://user:password@hostname/database";
 # $db_url = "mysql://user:password@hostname/database";
 
-$db_url = "mysql://drop:drop@localhost/drop";
+$db_url = "mysql://drupal:drupal@localhost/drupal";
 
 #
 # PHP settings:
