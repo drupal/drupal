@@ -310,10 +310,10 @@ function menu_overview_tree_rows($pid = 0, $depth = 0) {
       $title = '';
       if ($pid == 0) {
         // Top-level items are menu names, and don't have an associated path.
-        $title .= t($menu['items'][$mid]['title']);
+        $title .= $menu['items'][$mid]['title'];
       }
       else {
-        $title .= l(t($menu['items'][$mid]['title']), $menu['items'][$mid]['path']);
+        $title .= l($menu['items'][$mid]['title'], $menu['items'][$mid]['path']);
       }
       if ($depth > 0) {
         $title = '-&nbsp;'. $title;
