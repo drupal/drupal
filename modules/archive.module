@@ -182,7 +182,7 @@ function archive_block($op = 'list', $delta = 0) {
     $blocks[0]['info'] = t('Calendar to browse archives');
     return $blocks;
   }
-  else if (user_access('access content')) {
+  else if ($op == 'view' && user_access('access content')) {
     $block['subject'] = t('Browse archives');
     $block['content'] = archive_calendar();
     return $block;

@@ -86,7 +86,7 @@ $sql_updates = array(
   "2004-09-17" => "update_107",
   "2004-10-16" => "update_108",
   "2004-10-18" => "update_109",
-  "2004-10-28: first update since Drupal 4.5.0 release" => "update_110"
+  "2004-10-31: first update since Drupal 4.5.0 release" => "update_110"
 );
 
 function update_32() {
@@ -1927,6 +1927,10 @@ function update_110() {
 
   // TODO: needs PGSQL version
   if ($GLOBALS['db_type'] == 'mysql') {
+    /*
+    ** Search
+    */
+
     $ret[] = update_sql('DROP TABLE {search_index}');
     $ret[] = update_sql("CREATE TABLE {search_index} (
       word varchar(50) NOT NULL default '',
@@ -1946,7 +1950,17 @@ function update_110() {
       ) TYPE=MyISAM");
 
     $ret[] = update_sql("DELETE FROM {variable} WHERE name = 'node_cron_last'");
+
+    /*
+    ** Blocks
+    */
+
+    $ret[] = update_sql('ALTER TABLE {blocks} DROP path');
+    $ret[] = update_sql('ALTER TABLE {blocks} ADD visibility tinyint(1) NOT NULL');
+    $ret[] = update_sql('ALTER TABLE {blocks} ADD pages text NOT NULL');
   }
+
+  $ret[] = update_sql('UPDATE {blocks} SET status = 1, custom = 2 WHERE status = 0 AND custom = 1');
 
   return $ret;
 }

@@ -78,9 +78,6 @@ function forum_settings() {
       $group .= form_select(t('Topics per page'), 'forum_per_page', variable_get('forum_per_page', 25), drupal_map_assoc(array(10, 25, 50, 75, 100)), t('The default number of topics displayed per page; links to browse older messages are automatically being displayed.'));
       $group .= form_radios(t('Default order'), 'forum_order', variable_get('forum_order', '1'), array(1 => t('Date - newest first'), 2 => t('Date - oldest first'), 3 => t('Posts - most active first'), 4=> t('Posts - least active first')), t('The default display order for topics.'));
       $output .= form_group(t('Forum viewing options'), $group);
-
-      $group = form_select(t('Number of topics in block'), 'forum_block_num', variable_get('forum_block_num', '5'), drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)), t('The number of topics to show in the "Forum topics" block.  To enable the block, go to the <a href="%block-administration">block administration</a> page.', array('%block-administration' => url('admin/block'))));
-      $output .= form_group(t('"Forum topic" block settings'), $group);
     }
   }
 
@@ -114,27 +111,36 @@ function forum_load($node) {
  * Generates a block containing the currently active forum topics and the
  * most recently added forum topics.
  */
-function forum_block($op = 'list', $delta = 0) {
+function forum_block($op = 'list', $delta = 0, $edit = array()) {
+  switch ($op) {
+    case 'list':
+      $blocks[0]['info'] = t('Forum topics');
+      return $blocks;
 
-  if ($op == 'list') {
-    $blocks[0]['info'] = t('Forum topics');
-  }
-  else {
-    if (user_access('access content')) {
-      $content  = node_title_list(db_query_range("SELECT n.nid, n.title, l.last_comment_timestamp FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid ". node_access_join_sql() ." WHERE n.status = 1 AND n.type='forum' AND ". node_access_where_sql() ." ORDER BY l.last_comment_timestamp DESC", 0, variable_get('forum_block_num', '5')), t('Active forum topics:'));
+    case 'configure':
+      $output = form_select(t('Number of topics in block'), 'forum_block_num', variable_get('forum_block_num', '5'), drupal_map_assoc(array(2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20)));
+      return $output;
 
-      $content .= node_title_list(db_query_range("SELECT n.nid, n.title FROM {node} n ". node_access_join_sql() ." WHERE n.type = 'forum' AND n.status = 1 AND ". node_access_where_sql() ." ORDER BY n.nid DESC", 0, variable_get('forum_block_num', '5')), t('New forum topics:'));
+    case 'save':
+      variable_set('forum_block_num', $edit['forum_block_num']);
+      break;
 
-      if ($content) {
-        $content .= '<div class="more-link">'. l(t('more'), 'forum', array('title' => t('Read the latest forum topics.'))) .'</div>';
+    case 'view':
+      if (user_access('access content')) {
+        $content  = node_title_list(db_query_range("SELECT n.nid, n.title, l.last_comment_timestamp FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid ". node_access_join_sql() ." WHERE n.status = 1 AND n.type='forum' AND ". node_access_where_sql() ." ORDER BY l.last_comment_timestamp DESC", 0, variable_get('forum_block_num', '5')), t('Active forum topics:'));
+
+        $content .= node_title_list(db_query_range("SELECT n.nid, n.title FROM {node} n ". node_access_join_sql() ." WHERE n.type = 'forum' AND n.status = 1 AND ". node_access_where_sql() ." ORDER BY n.nid DESC", 0, variable_get('forum_block_num', '5')), t('New forum topics:'));
+
+        if ($content) {
+          $content .= '<div class="more-link">'. l(t('more'), 'forum', array('title' => t('Read the latest forum topics.'))) .'</div>';
+        }
+
+        $block['subject'] = t('Forum topics');
+        $block['content'] = $content;
+
+        return $block;
       }
-
-      $blocks['subject'] = t('Forum topics');
-      $blocks['content'] = $content;
-    }
   }
-
-  return $blocks;
 }
 
 /**

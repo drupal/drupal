@@ -49,7 +49,7 @@ function poll_block($op = 'list', $delta = 0) {
       $blocks[0]['info'] = t('Most recent poll');
       return $blocks;
     }
-    else {
+    else if ($op == 'view') {
       // Retrieve the latest poll.
       $timestamp = db_result(db_query('SELECT MAX(n.created) FROM {node} n '. node_access_join_sql() ." WHERE n.type = 'poll' AND n.status = 1 AND ". node_access_where_sql() .' AND n.moderate = 0'));
       if ($timestamp) {

@@ -220,7 +220,7 @@ function queue_block($op = 'list', $delta = 0) {
     $blocks[0]['info'] = t('Moderation results');
     return $blocks;
   }
-  else {
+  else if ($op == 'view') {
     if (user_access('access submission queue') && (arg(0) == 'queue') || arg(0) == 'node') {
       if ($user->uid) {
         if (arg(0) == 'queue') {

@@ -158,7 +158,7 @@ function throttle_block($op = 'list', $delta = 0) {
     $blocks[0]['info'] = t('Throttle status');
     return $blocks;
   }
-  else {
+  else if ($op == 'view') {
     $block['subject'] = t('Throttle status');
     $block['content'] = throttle_display_throttle_block();
     return $block;

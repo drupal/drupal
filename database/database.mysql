@@ -121,9 +121,10 @@ CREATE TABLE blocks (
   status tinyint(2) DEFAULT '0' NOT NULL,
   weight tinyint(1) DEFAULT '0' NOT NULL,
   region tinyint(1) DEFAULT '0' NOT NULL,
-  path varchar(255) DEFAULT '' NOT NULL,
   custom tinyint(2) DEFAULT '0' NOT NULL,
-  throttle tinyint(1) DEFAULT '0' NOT NULL
+  throttle tinyint(1) DEFAULT '0' NOT NULL,
+  visibility tinyint(1) DEFAULT '0' NOT NULL,
+  pages text NOT NULL
 ) TYPE=MyISAM;
 
 --

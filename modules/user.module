@@ -471,7 +471,7 @@ function user_user($type, &$edit, &$user, $category = NULL) {
 /**
  * Implementation of hook_block().
  */
-function user_block($op = 'list', $delta = 0) {
+function user_block($op = 'list', $delta = 0, $edit = array()) {
   global $user;
 
   if ($op == 'list') {
@@ -482,7 +482,18 @@ function user_block($op = 'list', $delta = 0) {
 
      return $blocks;
   }
-  else {
+  else if ($op == 'configure' && $delta == 3) {
+    $period = drupal_map_assoc(array(30, 60, 120, 180, 300, 600, 900, 1800, 2700, 3600, 5400, 7200, 10800, 21600, 43200, 86400), 'format_interval');
+    $output = form_select(t('User activity'), 'user_block_seconds_online', variable_get('user_block_seconds_online', 900), $period, t('A user is considered online for this long after they have last viewed a page.'));
+    $output .= form_select(t('User list length'), 'user_block_max_list_count', variable_get('user_block_max_list_count', 10), drupal_map_assoc(array(0, 5, 10, 15, 20, 25, 30, 40, 50, 75, 100)), t('Maximum number of currently online users to display.'));
+
+    return $output;
+  }
+  else if ($op == 'save' && $delta == 3) {
+    variable_set('user_block_seconds_online', $edit['user_block_seconds_online']);
+    variable_set('user_block_max_list_count', $edit['user_block_max_list_count']);
+  }
+  else if ($op == 'view') {
     $block = array();
 
     switch ($delta) {
@@ -1286,12 +1297,6 @@ function user_configure_settings() {
   $group .= form_textarea(t('Picture guidelines'), 'user_picture_guidelines', variable_get('user_picture_guidelines', ''), 70, 4, t('This text is displayed at the picture upload form in addition to the default guidelines.  It\'s useful for helping or instructing your users.'));
 
   $output .= form_group(t('Pictures'), $group);
-
-  // "Who's online" block settings.
-  $period = drupal_map_assoc(array(30, 60, 120, 180, 300, 600, 900, 1800, 2700, 3600, 5400, 7200, 10800, 21600, 43200, 86400), 'format_interval');
-  $group = form_select(t('User activity'), 'user_block_seconds_online', variable_get('user_block_seconds_online', 900), $period, t('Affects "Who\'s online" block.  A user is considered online for this long after they have last viewed a page.'));
-  $group .= form_select(t('User list length'), 'user_block_max_list_count', variable_get('user_block_max_list_count', 10), drupal_map_assoc(array(0, 5, 10, 15, 20, 25, 30, 40, 50, 75, 100)), t('Affects "Who\'s online" block.  Maximum number of currently online users to display.'));
-  $output .= form_group(t('"Who\'s online" block settings'), $group);
 
   return $output;
 }

@@ -231,7 +231,7 @@ function aggregator_block($op, $delta) {
         $block['feed:'. $feed->fid]['info'] = t('%title feed latest items', array('%title' => $feed->title));
       }
     }
-    else {
+    else if ($op == 'view') {
       list($type, $id) = split(':', $delta);
       switch ($type) {
         case 'feed':

@@ -102,7 +102,7 @@ function taxonomy_block($op = 'list', $delta = 0) {
     $blocks[0]['info'] = t('Categories');
     return $blocks;
   }
-  else if (user_access('access content')) {
+  else if ($op == 'view' && user_access('access content')) {
     $result = db_query("SELECT d.tid, d.name, MAX(n.created) AS updated, COUNT(*) AS count FROM {term_data} d INNER JOIN {term_node} USING (tid) INNER JOIN {node} n USING (nid) WHERE n.status = 1 GROUP BY d.tid, d.name ORDER BY updated DESC, d.name");
     $items = array();
     while ($category = db_fetch_object($result)) {

@@ -12,20 +12,29 @@
 function block_help($section) {
   switch ($section) {
     case 'admin/help#block':
-      return t("
+      return t('
 <p>Blocks are the boxes visible in the sidebar(s) of your web site. These are usually generated automatically by modules (e.g. recent forum topics), but you can also create your own blocks.</p>
-<p>The sidebar each block appears in depends on both which theme you're using (some are left-only, some right, some both), and on the settings in block management.</p><p>Whether a block is visible in the first place depends on four things:</p><ul><li>It must have its \"enabled\" box checked in block management.</li><li>If it has its \"custom\" box checked in block management, the user must have chosen to display it in their user preferences.</li><li>If the \"path\" field in block management is set, the visitor must be on a page that matches the path specification (more on this later).</li><li>If the block has its throttle box checked, the user will only see the block if the site throttle level is low.</li></ul>
-<p>The block management screen also lets you specify the vertical sort-order of the blocks within a sidebar. You do this by assigning a <strong>weight</strong> to each block. Lighter blocks (smaller weight) \"float up\" towards the top of the sidebar. Heavier ones \"sink down\" towards the bottom of it.</p>
-<p>The path setting lets you define the pages on which a specific block is visible. If you leave the path blank it will appear on all pages. The path uses a regular expression syntax so remember to escape special characters! The path expression is matched against the relative URL of a Drupal page, e.g. <code>book</code>, <code>node/12</code>, <code>admin</code>.</p>
-<p>In case you do not know what a regular expression is, you should read about them in the PHP manual. The chapter to look at is the one on <a href=\"%pcre\">Perl-Compatible Regular Expressions (PCRE)</a>.</p>
-<p>However, for basic tasks it is sufficient to look at the following examples:</p>
-<p>If the block should only show up on blog pages, use &lt;^blog&gt;.  To display on all node views use &lt;^node&gt;.  The angular brackets are used as delimiters of the regular expression.  To show up on either forum or book pages use &lt;^(forum|book)&gt;.  The round brackets form a group of expressions, divided by the | character. It matches if any of the expressions in it match.  A more complicated example is &lt;^node/add/(story|blog|image)&gt;. Blocks which have their paths set to this expression will show up on story, block, or image composition pages.  If you want to show a block an all pages, but not the search page, use &lt;^(?!search)&gt;.</p>
-<h3>Administrator Defined Blocks</h3>
-<p>An administrator defined block contains content supplied by you (as opposed to being generated automatically by a module). Each admin-defined block consists of a title, a description, and a body which can be as long as you wish. The Drupal engine will 'render' the content of the block.</p>", array('%pcre' => 'http://php.net/pcre/'));
+<p>The sidebar each block appears in depends on both which theme you are using (some are left-only, some right, some both), and on the settings in block management.</p>
+<p>The block management screen lets you specify the vertical sort-order of the blocks within a sidebar. You do this by assigning a weight to each block. Lighter blocks (smaller weight) "float up" towards the top of the sidebar. Heavier ones "sink down" towards the bottom of it.</p>
+<p>A block\'s visibility depends on:</p>
+<ul>
+<li>Its enabled checkbox. Disabled blocks are never shown.</li>
+<li>Its throttle checkbox. Throttled blocks are hidden during high server loads.</li>
+<li>Its path options. Blocks can be configured to only show/hide on certain pages</li>.
+<li>User settings. You can choose to let your users decide whether to show/hide certain blocks.</li>
+<li>Its function. Dynamic blocks (such as those defined by modules) may be empty on certain pages and will not be shown.</li>
+</ul>
+
+<h3>Administrator defined blocks</h3>
+<p>An administrator defined block contains content supplied by you (as opposed to being generated automatically by a module). Each admin-defined block consists of a title, a description, and a body which can be as long as you wish. The Drupal engine will render the content of the block.</p>');
     case 'admin/modules#description':
       return t('Controls the boxes that are displayed around the main content.');
     case 'admin/block':
-      return t("Blocks are the boxes in the left- and right- side bars of the web site, depending on the chosen theme.  They are made available active modules or created manually. The \"enabled\" checkbox sets the default status of the block. Only enabled blocks are shown. When the \"custom\" checkbox is checked, your users can show or hide the block using their account settings. In that case, the 'enabled' checkbox signifies the block's default status. You can assign the block's placement by giving it a region and a weight. The region specifies which side of the page the block is on, and the weight sorts blocks within a region. Lighter (smaller weight value) blocks \"float up\" towards the top of the page. The path setting lets you define which pages you want a block to be shown on.  Blocks can automatically be temporarily disabled to reduce server load when your site becomes extremely busy by checking throttle.  The auto-throttle functionality must be enabled on the <a href=\"%throttle\">throttle configuration page</a> after having enabled the throttle module.", array('%throttle' => url('admin/settings/throttle')));
+      return t("
+<p>Blocks are the boxes in the left and right side bars of the web site. They are made available by modules or created manually.</p>
+<p>Only enabled blocks are shown. You can position the blocks by deciding which side of the page they will show up on (region) and in which order they appear (weight).</p>
+<p>If you want certain blocks to disable themselves temporarily during high server loads, check the 'Throttle' box. You will need to enable the auto-throttle on the <a href=\"%throttle\">throttle configuration page</a> after having enabled the throttle module.
+", array('%throttle' => url('admin/settings/throttle')));
     case 'admin/block/add':
       return t("Here you can create a new block. Once you have created this block you must make it active and give it a place on the page using <a href=\"%overview\">blocks</a>. The title is used when displaying the block. The description is used in the \"block\" column on the <a href=\"%overview\">blocks</a> page.", array('%overview' => url('admin/block')));
   }
@@ -57,13 +66,17 @@ function block_menu($may_cache) {
       'callback' => 'block_admin');
     $items[] = array('path' => 'admin/block/list', 'title' => t('list'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-    $items[] = array('path' => 'admin/block/edit', 'title' => t('edit block'),
+    $items[] = array('path' => 'admin/block/configure', 'title' => t('configure block'),
       'access' => user_access('administer blocks'),
-      'callback' => 'block_box_edit',
+      'callback' => 'block_admin_configure',
+      'type' => MENU_CALLBACK);
+    $items[] = array('path' => 'admin/block/delete', 'title' => t('delete block'),
+      'access' => user_access('administer blocks'),
+      'callback' => 'block_box_delete',
       'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/block/add', 'title' => t('add'),
       'access' => user_access('administer blocks'),
-      'callback' => 'block_box_edit',
+      'callback' => 'block_box_add',
       'type' => MENU_LOCAL_TASK);
   }
 
@@ -75,31 +88,43 @@ function block_menu($may_cache) {
  *
  * Generates the administrator-defined blocks for display.
  */
-function block_block($op = 'list', $delta = 0) {
-  if ($op == 'list') {
-    $result = db_query('SELECT bid, title, info FROM {boxes} ORDER BY title');
-    while ($block = db_fetch_object($result)) {
-      $blocks[$block->bid]['info'] = $block->info;
-    }
-    return $blocks;
-  }
-  else {
-    $block = db_fetch_object(db_query('SELECT * FROM {boxes} WHERE bid = %d', $delta));
-    $data['subject'] = $block->title;
-    $data['content'] = check_output($block->body, $block->format);
-    return $data;
+function block_block($op = 'list', $delta = 0, $edit = array()) {
+  switch ($op) {
+    case 'list':
+      $result = db_query('SELECT bid, title, info FROM {boxes} ORDER BY title');
+      while ($block = db_fetch_object($result)) {
+        $blocks[$block->bid]['info'] = $block->info;
+      }
+      return $blocks;
+
+    case 'configure':
+      $box = block_box_get($delta);
+      if (filter_access($box['format'])) {
+        return block_box_form($box);
+      }
+      break;
+
+    case 'save':
+      block_box_save($edit, $delta);
+      break;
+
+    case 'view':
+      $block = db_fetch_object(db_query('SELECT * FROM {boxes} WHERE bid = %d', $delta));
+      $data['subject'] = $block->title;
+      $data['content'] = check_output($block->body, $block->format);
+      return $data;
   }
 }
 
 function block_admin_save($edit) {
   foreach ($edit as $module => $blocks) {
     foreach ($blocks as $delta => $block) {
-      db_query("UPDATE {blocks} SET region = %d, status = %d, custom = %d, path = '%s', weight = %d, throttle = %d WHERE module = '%s' AND delta = '%s'",
-                $block['region'], $block['status'], $block['custom'], $block['path'], $block['weight'], $block['throttle'], $module, $delta);
+      db_query("UPDATE {blocks} SET region = %d, status = %d, weight = %d, throttle = %d WHERE module = '%s' AND delta = '%s'",
+                $block['region'], $block['status'], $block['weight'], $block['throttle'], $module, $delta);
     }
   }
 
-  return t('the block settings have been updated.');
+  return t('The block settings have been updated.');
 }
 
 /**
@@ -130,18 +155,19 @@ function _block_rehash($order_by = array('weight')) {
           $block['status'] = $old_blocks[$module][$delta]->status;
           $block['weight'] = $old_blocks[$module][$delta]->weight;
           $block['region'] = $old_blocks[$module][$delta]->region;
-          $block['path']   = $old_blocks[$module][$delta]->path;
+          $block['visibility'] = $old_blocks[$module][$delta]->visibility;
+          $block['pages'] = $old_blocks[$module][$delta]->pages;
           $block['custom'] = $old_blocks[$module][$delta]->custom;
           $block['throttle'] = $old_blocks[$module][$delta]->throttle;
         }
         else {
           $block['status'] = $block['weight'] = $block['region'] = $block['custom'] = 0;
-          $block['path']   = '';
+          $block['pages']   = '';
         }
 
         // reinsert blocks into table
-        db_query("INSERT INTO {blocks} (module, delta, status, weight, region, path, custom, throttle) VALUES ('%s', '%s', %d, %d, %d, '%s', %d, %d)",
-                  $block['module'], $block['delta'], $block['status'], $block['weight'], $block['region'], $block['path'], $block['custom'], $block['throttle']);
+        db_query("INSERT INTO {blocks} (module, delta, status, weight, region, visibility, pages, custom, throttle) VALUES ('%s', '%s', %d, %d, %d, %d, '%s', %d, %d)",
+                  $block['module'], $block['delta'], $block['status'], $block['weight'], $block['region'], $block['visibility'], $block['pages'], $block['custom'], $block['throttle']);
 
         $blocks[] = $block;
 
@@ -161,27 +187,19 @@ function _block_rehash($order_by = array('weight')) {
  * Prepare the main block administration form.
  */
 function block_admin_display() {
-
   $blocks = _block_rehash();
 
-  // Fetch input formats used by admin-defined boxes.
-  $formats = array();
-  $result = db_query('SELECT bid, format FROM {boxes}');
-  while ($box = db_fetch_object($result)) {
-    $formats[$box->bid] = $box->format;
-  }
-
-  $header = array(t('Block'), t('Enabled'), t('Custom'), t('Throttle'), t('Weight'), t('Region'), t('Path'), array('data' => t('Operations')));
+  $header = array(t('Block'), t('Enabled'), t('Throttle'), t('Weight'), t('Region'), array('data' => t('Operations'), 'colspan' => 2));
 
   foreach ($blocks as $block) {
-    if ($block['module'] == 'block' && filter_access($formats[$block['delta']])) {
-      $edit = l(t('edit block'), 'admin/block/edit/'. $block['delta']);
+    if ($block['module'] == 'block') {
+      $operation = l(t('delete'), 'admin/block/delete/'. $block['delta']);
     }
     else {
-      $edit = '';
+      $operation = '';
     }
 
-    $rows[] = array($block['info'], array('data' => form_checkbox(NULL, $block['module'] .']['. $block['delta'] .'][status', 1, $block['status']), 'align' => 'center'), array('data' => form_checkbox(NULL, $block['module'] .']['. $block['delta'] .'][custom', 1, $block['custom']), 'align' => 'center'), array('data' => form_checkbox(NULL, $block['module'] .']['. $block['delta'] .'][throttle', 1, $block['throttle'], NULL, module_exist('throttle') ? NULL : array('disabled' => 'disabled')), 'align' => 'center'), form_weight(NULL, $block['module'] .']['. $block['delta'] .'][weight', $block['weight']), form_radios(NULL, $block['module'] .']['. $block['delta'] .'][region', $block['region'], array(t('left'), t('right'))), form_textfield(NULL, $block['module'] .']['. $block['delta'] .'][path', $block['path'], 10, 255), $edit);
+    $rows[] = array($block['info'], array('data' => form_checkbox(NULL, $block['module'] .']['. $block['delta'] .'][status', 1, $block['status']), 'align' => 'center'), array('data' => form_checkbox(NULL, $block['module'] .']['. $block['delta'] .'][throttle', 1, $block['throttle'], NULL, module_exist('throttle') ? NULL : array('disabled' => 'disabled')), 'align' => 'center'), form_weight(NULL, $block['module'] .']['. $block['delta'] .'][weight', $block['weight']), form_radios(NULL, $block['module'] .']['. $block['delta'] .'][region', $block['region'], array(t('left'), t('right'))), l(t('configure'), 'admin/block/configure/'. $block['module'] .'/'. $block['delta']), $operation);
   }
 
   $output = theme('table', $header, $rows);
@@ -195,39 +213,89 @@ function block_box_get($bid) {
 }
 
 /**
- * Menu callback; displays the block editing form.
- *
- * On edit, saves changes and displays the block overview.
+ * Menu callback; displays the block configuration form.
  */
-function block_box_edit($bid = 0) {
+function block_admin_configure($module = NULL, $delta = 0) {
   $edit = $_POST['edit'];
   $op = $_POST['op'];
 
   switch ($op) {
     case t('Save block'):
-      drupal_set_message(block_box_save($edit));
-      cache_clear_all();
-      drupal_goto('admin/block');
-
-    case t('Delete block'):
-      $form = '<p>'. t('Are you sure you want to delete the block %name?', array('%name' => '<em>'. $edit['info'] .'</em>')) ."</p>\n";
-      $form .= form_submit(t('Delete'));
-      $output = form($form);
-      break;
-
-    case t('Delete'):
-      db_query('DELETE FROM {boxes} WHERE bid = %d', $bid);
-      drupal_set_message(t('The block has been deleted.'));
+      db_query("UPDATE {blocks} SET visibility = %d, pages = '%s', custom = %d WHERE module = '%s' AND delta = '%s'", $edit['visibility'], $edit['pages'], $edit['custom'], $module, $delta);
+      module_invoke($module, 'block', 'save', $delta, $edit);
+      drupal_set_message('The block configuration has been saved.');
       cache_clear_all();
       drupal_goto('admin/block');
 
     default:
-      if ($bid) {
-        $output = block_box_form(block_box_get($bid));
+      // Always evaluates to TRUE, but a validation step may be added later.
+      if (!$edit) {
+        $edit = db_fetch_array(db_query("SELECT pages, visibility, custom FROM {blocks} WHERE module = '%s' AND delta = '%s'", $module, $delta));
       }
-      else {
-        $output = block_box_form();
+
+      // Module-specific block configurations.
+      if ($settings = module_invoke($module, 'block', 'configure', $delta)) {
+        $form = form_group(t('Block-specific settings'), $settings);
       }
+
+      // Get the block subject for the page title.
+      $info = module_invoke($module, 'block', 'list');
+      drupal_set_title(t("'%name' block", array('%name' => $info[$delta]['info'])));
+
+      // Standard block configurations.
+      $group = form_radios(t('Show on specific pages'), 'visibility', $edit['visibility'], array(t('Show on every page except the listed pages.'), t('Show on only the listed pages.')));
+      $group .= form_textarea(t('Pages'), 'pages', $edit['pages'], 40, 5, t("Enter one page per line as Drupal paths. The '*' character is a wildcard. Example paths are '<em>blog</em>' for the blog page and '<em>blog/*</em>' for every personal blog. '<em>&lt;front&gt;</em>' is the front page. "));
+
+      $group .= form_radios(t('User options'), 'custom', $edit['custom'], array(t('Users may not turn on or off this block.'), t('Users may turn this block on or off, on by default.'), t('Users may turn this block on or off, off by default.')), t('Users can decide which blocks they want on or off on their account editing page.'));
+
+      $form .= form_group(t('Visibility settings'), $group);
+
+      $form .= form_submit(t('Save block'));
+
+      print theme('page', form($form));
+  }
+}
+
+/**
+ * Menu callback; displays the block creation form.
+ */
+function block_box_add() {
+  $edit = $_POST['edit'];
+  $op = $_POST['op'];
+
+  switch ($op) {
+    case t('Save block'):
+      block_box_save($edit);
+      drupal_set_message(t('The new block has been added.'));
+      drupal_goto('admin/block');
+
+    default:
+      $form = block_box_form();
+      $form .= form_submit(t('Save block'));
+      $output .= form($form);
+  }
+
+  print theme('page', $output);
+}
+
+/**
+ * Menu callback; confirm and delete custom blocks.
+ */
+function block_box_delete($bid = 0) {
+  $op = $_POST['op'];
+  $box = block_box_get($bid);
+
+  switch ($op) {
+    case t('Delete'):
+      db_query('DELETE FROM {boxes} WHERE bid = %d', $bid);
+      drupal_set_message(t('The block %name has been deleted.', array('%name' => '<em>'. $box['info'] .'</em>')));
+      cache_clear_all();
+      drupal_goto('admin/block');
+
+    default:
+      $form = '<p>'. t('Are you sure you want to delete the block %name?', array('%name' => '<em>'. $box['info'] .'</em>')) ."</p>\n";
+      $form .= form_submit(t('Delete'));
+      $output = form($form);
   }
 
   print theme('page', $output);
@@ -239,30 +307,19 @@ function block_box_form($edit = array()) {
   $output .= form_textarea(t('Block body'), 'body', $edit['body'], 70, 10, t('The content of the block as shown to the user.'));
   $output .= form_textfield(t('Block description'), 'info', $edit['info'], 50, 64, t('A brief description of your block.  Used on the <a href="%overview">block overview page</a>.', array('%overview' => url('admin/block'))));
 
-  if ($edit['bid']) {
-    $output .= form_hidden('bid', $edit['bid']);
-  }
-
-  $output .= form_submit(t('Save block'));
-  if ($edit['bid']) {
-    $output .= form_submit(t('Delete block'));
-  }
-
-  return form($output);
+  return $output;
 }
 
-function block_box_save($edit) {
+function block_box_save($edit, $delta = NULL) {
   if (!filter_access($edit['format'])) {
     $edit['format'] = FILTER_FORMAT_DEFAULT;
   }
 
-  if ($edit['bid']) {
-    db_query("UPDATE {boxes} SET title = '%s', body = '%s', info = '%s', format = %d WHERE bid = %d", $edit['title'], $edit['body'], $edit['info'], $edit['format'], $edit['bid']);
-    return t('The block has been updated.');
+  if (isset($delta)) {
+    db_query("UPDATE {boxes} SET title = '%s', body = '%s', info = '%s', format = %d WHERE bid = %d", $edit['title'], $edit['body'], $edit['info'], $edit['format'], $delta);
   }
   else {
     db_query("INSERT INTO {boxes} (title, body, info, format) VALUES  ('%s', '%s', '%s', %d)", $edit['title'], $edit['body'], $edit['info'], $edit['format']);
-    return t('The new block has been added.');
   }
 }
 
@@ -291,12 +348,12 @@ function block_user($type, $edit, &$user, $category = NULL) {
   switch ($type) {
     case 'form':
       if ($category == 'account') {
-        $result = db_query('SELECT * FROM {blocks} WHERE custom = %d ORDER BY module, delta', 1);
+        $result = db_query('SELECT * FROM {blocks} WHERE status = 1 AND custom != 0 ORDER BY weight, module, delta');
 
         while ($block = db_fetch_object($result)) {
           $data = module_invoke($block->module, 'block', 'list');
           if ($data[$block->delta]['info']) {
-            $form .= form_checkbox($data[$block->delta]['info'], "block][$block->module][$block->delta", 1, isset($user->block[$block->module][$block->delta]) ? $user->block[$block->module][$block->delta] : $block->status);
+            $form .= form_checkbox($data[$block->delta]['info'], 'block]['. $block->module .']['. $block->delta, 1, isset($user->block[$block->module][$block->delta]) ? $user->block[$block->module][$block->delta] : ($block->custom == 1));
           }
         }
 
@@ -333,35 +390,38 @@ function block_list($region) {
 
   if (!isset($blocks[$region])) {
     $blocks[$region] = array();
-    $result = db_query('SELECT * FROM {blocks} WHERE (status = 1 OR custom = 1) '. ($region != 'all' ? 'AND region = %d ' : '') .'ORDER BY weight, module', $region == 'left' ? 0 : 1);
+    $result = db_query('SELECT * FROM {blocks} WHERE status = 1 '. ($region != 'all' ? 'AND region = %d ' : '') .'ORDER BY weight, module', $region == 'left' ? 0 : 1);
 
     while ($result && ($block = db_fetch_array($result))) {
-      // When the user's account setting is empty, we use the block's regular 'status' (which is the default)
-      if ($block['custom'] && $user->uid && !isset($user->block[$block['module']][$block['delta']])) {
-        $user->block[$block['module']][$block['delta']] = $block['status'];
+      // Use the user's block visibility setting, if necessary
+      if ($block['custom'] != 0) {
+        if ($user->uid && isset($user->block[$block['module']][$block['delta']])) {
+          $enabled = $user->block[$block['module']][$block['delta']];
+        }
+        else {
+          $enabled = ($block['custom'] == 1);
+        }
+      }
+      else {
+        $enabled = TRUE;
       }
 
-      // Determine block visibility
-      $enabled = $block['status'] && (!$user->uid || !$block['custom']);
-      $custom = $block['custom'] && $user->block[$block['module']][$block['delta']];
-
       // Match path if necessary
-      if ($block['path']) {
+      if ($block['pages']) {
         $base = parse_url($base_url);
         $session = session_name() .'='. session_id();
         $url = str_replace(array($base['path'], '?'. $session), '', request_uri());
         $url = ereg_replace('^/(\?q=)?', '', $url);
-        $matched = preg_match($block['path'], $url);
+        $regexp = '/^('. preg_replace(array('/(\r\n?|\n)/', '/\\\\\*/', '/(^|\|)\\\\<front\\\\>($|\|)/'), array('|', '.*', '\1\2'), preg_quote($block['pages'], '/')) .')$/';
+        $matched = !($block['visibility'] xor preg_match($regexp, $url));
       }
       else {
-        $matched = true;
+        $matched = TRUE;
       }
 
-      if (($enabled || $custom) && $matched) {
-        /*
-        ** Check the current throttle status and see if block should be displayed
-        ** based on server load.
-        */
+      if ($enabled && $matched) {
+        // Check the current throttle status and see if block should be displayed
+        // based on server load.
         if (!($block['throttle'] && (module_invoke('throttle', 'status') > 4))) {
           $array = module_invoke($block['module'], 'block', 'view', $block['delta']);
           if (is_array($array)) {

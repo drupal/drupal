@@ -84,7 +84,7 @@ function menu_block($op = 'list', $delta = 0) {
     }
     return $blocks;
   }
-  else {
+  else if ($op == 'view') {
     $data['subject'] = $menu['items'][$delta]['title'];
     $data['content'] = '<div class="menu">'. theme('menu_tree', $delta) .'</div>' ;
     return $data;

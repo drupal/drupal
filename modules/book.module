@@ -135,8 +135,9 @@ function book_block($op = 'list', $delta = 0) {
   $block = array();
   if ($op == 'list') {
     $block[0]['info'] = t('Book navigation');
+    return $block;
   }
-  else {
+  else if ($op == 'view') {
     // Only display this block when the user is browsing a book:
     if (arg(0) == 'node' && is_numeric(arg(1))) {
       $result = db_query('SELECT n.nid, n.title, b.parent FROM {node} n '. node_access_join_sql() .' INNER JOIN {book} b ON n.nid = b.nid WHERE '. node_access_where_sql() .' AND n.nid = %d', arg(1));
@@ -155,9 +156,9 @@ function book_block($op = 'list', $delta = 0) {
         $block['content'] = book_tree($expand[0], 5, $expand);
       }
     }
-  }
 
-   return $block;
+    return $block;
+  }
 }
 
 /**

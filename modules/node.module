@@ -968,7 +968,7 @@ function node_block($op = 'list', $delta = 0) {
     $blocks[0]['info'] = t('Syndicate');
     return $blocks;
   }
-  else {
+  else if ($op == 'view') {
     $block['subject'] = t('Syndicate');
     $block['content'] = theme('xml_icon', url('node/feed'));
 
