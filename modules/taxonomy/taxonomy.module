@@ -134,19 +134,11 @@ function _taxonomy_confirm_del_vocabulary($vid) {
 }
 
 function taxonomy_form_term($edit = array()) {
-  $vocabulary_id = arg(3);
-
-  if (!$vocabulary_id) {
-    $vocabulary_id = $edit["vid"];
-  }
+  $vocabulary_id = isset($edit["vid"]) ? $edit["vid"] : arg(3);
   $vocabulary = taxonomy_get_vocabulary($vocabulary_id);
 
   $form = form_textfield(t("Term name"), "name", $edit["name"], 50, 64, t("Required") . ". " . t("The name for this term.  Example: 'Linux'."));
   $form .= form_textarea(t("Description"), "description", $edit["description"], 60, 5, t("Optional") . ". " . t("A description of the term."));
-
-  if ($vocabulary->relations) {
-    $form .= _taxonomy_term_select(t("Related terms"), "relations", array_keys(taxonomy_get_related($edit["tid"])), $vocabulary_id, t("Optional") . ". ", 1, "<" . t("none") . ">", array($edit["tid"]));
-  }
 
   if ($vocabulary->hierarchy) {
     $parent = array_keys(taxonomy_get_parents($edit["tid"]));
@@ -164,6 +156,10 @@ function taxonomy_form_term($edit = array()) {
     elseif ($vocabulary->hierarchy == 2) {
       $form .= _taxonomy_term_select(t("Parents"), "parent", $parent, $vocabulary_id, t("Required") . ". ". l(t("Parent terms"), "admin/taxonomy/help#parent") .".", 1, "<" . t("root") . ">", $exclude);
     }
+  }
+
+  if ($vocabulary->relations) {
+    $form .= _taxonomy_term_select(t("Related terms"), "relations", array_keys(taxonomy_get_related($edit["tid"])), $vocabulary_id, t("Optional") . ". ", 1, "<" . t("none") . ">", array($edit["tid"]));
   }
 
   $form .= form_textarea(t("Synonyms"), "synonyms", implode("\n", taxonomy_get_synonyms($edit["tid"])), 30, 5, t("Optional") . ". ". t(l("Synonyms", "admin/taxonomy/help#synonyms") ." of this term, one synonym per line."));
