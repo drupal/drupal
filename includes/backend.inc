@@ -104,13 +104,13 @@ class backend {
             $title = ereg_replace("</title>.*", "", $title); 
 
             ### Clean headlines:
-            $title = stripslashes(check_input($title));
+            $title = stripslashes($title);
            
             ### Count the number of stories:
             $number += 1;
 
             ### Insert item in database:
-            $result = db_query("INSERT INTO headlines (id, title, link, number) VALUES('$this->id', '$title', '$link', '$number')");
+            $result = db_query("INSERT INTO headlines (id, title, link, number) VALUES('$this->id', '". stripslashes($title) ."', '". stripslashes($link) ."', '$number')");
           }
  
           ### Mark channels as being updated:
