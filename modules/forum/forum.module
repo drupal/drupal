@@ -24,7 +24,7 @@ function forum_form($edit = array()) {
 function forum_save($edit) {
   global $user, $status;
 
-  node_save($edit, array(author => $user->id, body, comment => 1, moderate => variable_get("forum_moderate", ""), promote => variable_get("forum_promote", 0), score => 0, status => $status[posted], timestamp => time(), title, type => "forum", votes => 0));
+  node_save($edit, array(author => $user->id, body, comment => 1, moderate => 0, promote => 0, score => 0, status => $status[posted], timestamp => time(), title, type => "forum", votes => 0));
 }
 
 function forum_num_comments($nid) {

@@ -168,13 +168,13 @@ function book_delete($node) {
 
 function book_insert($node) {
   if ($node->pid && $node->status == node_status("posted")) {
-    db_query("UPDATE node SET status = '". node_status("expired") ."' WHERE nid = '$node->pid'", 1);
+    db_query("UPDATE node SET status = '". node_status("expired") ."' WHERE nid = '$node->pid'");
   }
 }
 
 function book_update($node) {
   if ($node->pid && $node->status == node_status("posted")) {
-    db_query("UPDATE node SET status = '". node_status("expired") ."' WHERE nid = '$node->pid'", 1);
+    db_query("UPDATE node SET status = '". node_status("expired") ."' WHERE nid = '$node->pid'");
   }
 }
 
