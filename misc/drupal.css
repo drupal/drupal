@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.43 2003/12/06 16:39:40 dries Exp $ */
+/* $Id: drupal.css,v 1.44 2003/12/16 07:41:40 dries Exp $ */
 
 form {
   margin: 0;
@@ -11,6 +11,7 @@ th {
 }
 fieldset {
   margin-bottom: 1em;
+  padding: .5em;
 }
 #tracker table {
   border-collapse: collapse;
@@ -256,6 +257,10 @@ tr.dark {
 tr.light {
   background-color: #eee;
 }
+tr.dark td, tr.light td {
+  padding-left: .4em;
+  padding-right: .4em;
+}
 pre {
   white-space: pre-wrap;
   white-space: -moz-pre-wrap;
@@ -315,8 +320,8 @@ td.watchdog-message {
   border: 1px solid #ddd;
 }
 td.watchdog-special {
-  background: #a9f;
-  border: 1px solid #87d;
+  background: #ccf;
+  border: 1px solid #99c;
 }
 td.watchdog-warning {
   background: #fa2;
@@ -330,4 +335,7 @@ td.watchdog-error {
   background: #e44;
   border: 1px solid #c22;
 }
-
+hr {
+  height: 1px;
+  border: 1px solid gray;
+}

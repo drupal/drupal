@@ -1,4 +1,4 @@
-/* $Id: default.css,v 1.1 2003/12/15 20:47:18 dries Exp $ */
+/* $Id: default.css,v 1.2 2003/12/16 07:41:40 dries Exp $ */
 
 /* HTML tags */
 a, a:link, a:active {
@@ -22,10 +22,6 @@ table {
   margin: 0;
   padding: .5em;
   border-collapse: collapse;
-}
-hr {
-  height: 1px;
-  border: 1px solid gray;
 }
 code, pre {
  font-size: 1em;
