@@ -1,5 +1,5 @@
 <?php
-// $Id: cloud.module,v 1.35 2002/12/29 16:59:45 dries Exp $
+// $Id: cloud.module,v 1.36 2002/12/30 16:31:55 dries Exp $
 
 function cloud_help($type = "administrator") {
   if ($type == "user") {
@@ -124,7 +124,7 @@ function cloud_save($edit) {
 function cloud_display() {
   $result = db_query("SELECT * FROM site ORDER BY name");
 
-  $header = array(t("site"), t("last update"), t("operations"));
+  $header = array(t("site"), t("last update"), array("data" => t("operations"), "colspan" => 2));
   while ($site = db_fetch_object($result)) {
     $rows[] = array("<a href=\"$site->link\">$site->name</a>", ($site->timestamp ? format_interval(time() - $site->timestamp) ." ago" : "never"), la(t("edit site"), array("mod" => "cloud", "op" => "edit", "id" => $site->sid)), la(t("update site"), array("mod" => "cloud", "op" => "update", "id" => $site->sid)));
   }
