@@ -1498,7 +1498,8 @@ function node_page() {
         node_feed();
         return;
       case 'add':
-        print theme('page', node_add(arg(2)));
+        // When a module defines multiple node types, the URL is of the form 'foo/bar':
+        print theme('page', node_add(arg(3) ? arg(2) ."/". arg(3) : arg(2)));
         break;
       case 'edit':
         print theme('page', node_edit(arg(2)));
