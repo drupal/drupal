@@ -43,6 +43,8 @@ function forum_link($type) {
 function forum_view($node) {
   global $theme;
   $output .= "<p><a href=\"module.php?mod=forum\">". t("Forum") ."</a> / <b><a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a></b>:</p><p>". check_output($node->body) ."</p>";
+  $output .= "<p>". $theme->links(link_node($node, $main)) ."</p>";
+
   $theme->box(t("Discussion forum"), $output);
 }
 
