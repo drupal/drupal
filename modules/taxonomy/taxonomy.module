@@ -344,7 +344,7 @@ function taxonomy_overview() {
         $types[] = $node_type ? $node_type : $type;
       }
 
-      $rows[] = array($vocabulary->name, array('data' => implode(', ', $types), 'align' => 'center'), l(t('edit vocabulary'), "admin/taxonomy/edit/vocabulary/$vocabulary->vid"), l(t('add term'), "admin/taxonomy/add/term/$vocabulary->vid"), l(t('preview form'), "admin/taxonomy/preview/vocabulary/$vocabulary->vid"));
+      $rows[] = array($vocabulary->name, implode(', ', $types), l(t('edit vocabulary'), "admin/taxonomy/edit/vocabulary/$vocabulary->vid"), l(t('add term'), "admin/taxonomy/add/term/$vocabulary->vid"), l(t('preview form'), "admin/taxonomy/preview/vocabulary/$vocabulary->vid"));
 
       $tree = taxonomy_get_tree($vocabulary->vid);
       if ($tree) {
@@ -381,9 +381,9 @@ function taxonomy_form($vid, $value = 0, $help = NULL, $name = 'taxonomy') {
 }
 
 /**
-* Generate a set of options for selecting a term from all vocabularies. Can be
-* passed to form_select.
-*/
+ * Generate a set of options for selecting a term from all vocabularies. Can be
+ * passed to form_select.
+ */
 function taxonomy_form_all($value = 0, $help = NULL, $name = 'taxonomy') {
   $vocabularies = taxonomy_get_vocabularies();
   $options = array();
@@ -406,12 +406,11 @@ function taxonomy_form_all($value = 0, $help = NULL, $name = 'taxonomy') {
  *   If set, return only those vocabularies associated with this node type.
  */
 function taxonomy_get_vocabularies($type = NULL) {
-
   if ($type) {
-    $result = db_query("SELECT v.*, n.type FROM {vocabulary_node_types} n INNER JOIN {vocabulary} v ON v.vid = n.vid WHERE n.type = '%s' ORDER BY v.weight, v.name", $type);
+    $result = db_query("SELECT v.*, n.type FROM {vocabulary} v LEFT JOIN {vocabulary_node_types} n ON v.vid = n.vid WHERE n.type = '%s' ORDER BY v.weight, v.name", $type);
   }
   else {
-    $result = db_query('SELECT v.*, n.type FROM {vocabulary_node_types} n INNER JOIN {vocabulary} v ON v.vid = n.vid ORDER BY v.weight, v.name');
+    $result = db_query('SELECT v.*, n.type FROM {vocabulary} v LEFT JOIN {vocabulary_node_types} n ON v.vid = n.vid ORDER BY v.weight, v.name');
   }
 
   $vocabularies = array();
@@ -711,7 +710,7 @@ function taxonomy_get_term_by_name($name) {
  * Return the vocabulary object matching a vocabulary ID.
  */
 function taxonomy_get_vocabulary($vid) {
-  $result = db_query('SELECT v.*, n.type FROM {vocabulary_node_types} n INNER JOIN {vocabulary} v ON v.vid = n.vid WHERE v.vid = %d ORDER BY v.weight, v.name', $vid);
+  $result = db_query('SELECT v.*, n.type FROM {vocabulary} v LEFT JOIN {vocabulary_node_types} n ON v.vid = n.vid WHERE v.vid = %d ORDER BY v.weight, v.name', $vid);
   $node_types = array();
   while ($voc = db_fetch_object($result)) {
     $node_types[] = $voc->type;
