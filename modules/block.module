@@ -135,7 +135,7 @@ function block_admin_display() {
 
   $blocks = _block_rehash();
 
-  $header = array(t("block"), t("enabled"), t("custom"), t("weight"), t("region"), t("path"), array("data" => "operations", "colspan" => 2));
+  $header = array(t("block"), t("enabled"), t("custom"), t("weight"), t("region"), t("path"), array("data" => t("operations"), "colspan" => 2));
 
   foreach ($blocks as $block) {
     if ($block["module"] == "block") {
@@ -147,11 +147,11 @@ function block_admin_display() {
       $delete = "";
     }
 
-    $rows[] = array($block["info"], array("data" => form_checkbox(NULL, $block["module"]."][".$block["delta"]."][status", 1, $block["status"]), "align" => "center"), array("data" => form_checkbox(NULL, $block["module"]."][".$block["delta"]."][custom", 1, $block["custom"]), "align" => "center"), form_weight(NULL, $block["module"]."][".$block["delta"]."][weight", $block["weight"]), form_select(NULL, $block["module"]."][".$block["delta"]."][region", $block["region"], array("left", "right")), form_textfield(NULL, $block["module"]."][".$block["delta"]."][path", $block["path"], 10, 255), $edit, $delete);
+    $rows[] = array($block["info"], array("data" => form_checkbox(NULL, $block["module"]."][".$block["delta"]."][status", 1, $block["status"]), "align" => "center"), array("data" => form_checkbox(NULL, $block["module"]."][".$block["delta"]."][custom", 1, $block["custom"]), "align" => "center"), form_weight(NULL, $block["module"]."][".$block["delta"]."][weight", $block["weight"]), form_select(NULL, $block["module"]."][".$block["delta"]."][region", $block["region"], array(t("left"), t("right"))), form_textfield(NULL, $block["module"]."][".$block["delta"]."][path", $block["path"], 10, 255), $edit, $delete);
   }
 
   $output = table($header, $rows);
-  $output .= form_submit("Save blocks");
+  $output .= form_submit(t("Save blocks"));
 
   print form($output);
 }
@@ -178,9 +178,9 @@ function block_admin_preview() {
 
   $output .= "<h3>". t("Themes with both left and right sidebars") .":</h3>\n";
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  $output .= " <tr><td colspan=\"3\" style=\"text-align: center;\">header</td></tr>\n";
+  $output .= " <tr><td colspan=\"3\" style=\"text-align: center;\">". t("header") ."</td></tr>\n";
   $output .= " <tr><td>\n". ($lblocks ? $lblocks : "&nbsp;") ."</td><td style=\"width: 300px;\">&nbsp;</td><td>\n". ($rblocks ? $rblocks : "&nbsp;") ."</td></tr>\n";
-  $output .= " <tr><td colspan=\"3\" style=\"text-align: center;\">footer</td></tr>\n";
+  $output .= " <tr><td colspan=\"3\" style=\"text-align: center;\">". t("footer") ."</td></tr>\n";
   $output .= "</table>\n";
 
   $result = db_query("SELECT * FROM blocks WHERE status > 0 ORDER BY weight");
@@ -194,16 +194,16 @@ function block_admin_preview() {
 
   $output .= "<h3>". t("Themes with right-sidebar only") .":</h3>\n";
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  $output .= " <tr><td colspan=\"2\" style=\"text-align: center;\">header</td></tr>\n";
+  $output .= " <tr><td colspan=\"2\" style=\"text-align: center;\">". t("header") ."</td></tr>\n";
   $output .= " <tr><td style=\"width: 400px;\">&nbsp;</td><td>\n". ($blocks ? $blocks : "&nbsp;") ."</td></tr>\n";
-  $output .= " <tr><td colspan=\"2\" style=\"text-align: center;\">footer</td></tr>\n";
+  $output .= " <tr><td colspan=\"2\" style=\"text-align: center;\">". t("footer") ."</td></tr>\n";
   $output .= "</table>\n";
 
   $output .= "<h3>". t("Themes with left-sidebar only") .":</h3>\n";
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  $output .= " <tr><td colspan=\"2\" style=\"text-align: center;\">header</td></tr>\n";
+  $output .= " <tr><td colspan=\"2\" style=\"text-align: center;\">". t("header") ."</td></tr>\n";
   $output .= " <tr><td>\n". ($blocks ? $blocks : "&nbsp;") ."</td><td style=\"width: 400px;\">&nbsp;</td></tr>\n";
-  $output .= " <tr><td colspan=\"2\" style=\"text-align: center;\">footer</td></tr>\n";
+  $output .= " <tr><td colspan=\"2\" style=\"text-align: center;\">". t("footer") ."</td></tr>\n";
   $output .= "</table>\n";
 
   print $output;
@@ -216,18 +216,18 @@ function block_box_get($bid) {
 function block_box_form($edit = array()) {
   $type = array(0 => "HTML", 1 => "PHP");
 
-  $form = form_textfield("Title", "title", $edit["title"], 50, 64);
-  $form .= form_textfield("Description", "info", $edit["info"], 50, 64);
-  $form .= form_textarea("Body", "body", $edit["body"], 70, 10);
+  $form = form_textfield(t("Title"), "title", $edit["title"], 50, 64);
+  $form .= form_textfield(t("Description"), "info", $edit["info"], 50, 64);
+  $form .= form_textarea(t("Body"), "body", $edit["body"], 70, 10);
   if (user_access("create php content")) {
-    $form .= form_select("Type", "type", $edit["type"], $type);
+    $form .= form_select(t("Type"), "type", $edit["type"], $type);
   }
 
   if ($edit["bid"]) {
     $form .= form_hidden("bid", $edit["bid"]);
   }
 
-  $form .= form_submit("Save block");
+  $form .= form_submit(t("Save block"));
 
   print form($form);
 }
@@ -279,12 +279,12 @@ function block_admin() {
         cache_clear_all();
         block_admin_display();
         break;
-      case "Save block":
+      case t("Save block"):
         print status(block_box_save($edit));
         cache_clear_all();
         block_admin_display();
         break;
-      case "Save blocks":
+      case t("Save blocks"):
         print status(block_admin_save($edit));
         cache_clear_all();
         // fall through

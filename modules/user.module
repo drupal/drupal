@@ -318,7 +318,7 @@ function user_block($op = "list", $delta = 0) {
   $edit = $_POST["edit"];
 
   if ($op == "list") {
-     $blocks[0]["info"] = t("Log in");
+     $blocks[0]["info"] = t("User login");
      $blocks[1]["info"] = t("User information");
      $blocks[2]["info"] = t("Who's new");
 
@@ -1444,7 +1444,12 @@ function user_admin_role($edit = array()) {
 
     $header = array(t("name"), t("operations"));
     while ($role = db_fetch_object($result)) {
-      $rows[] = array($role->name, array("data" => l(t("edit role"), "admin/user/role/$role->rid"), "align" => "center"));
+      if ($role->name != "anonymous user" && $role->name != "authenticated user") {
+        $rows[] = array($role->name, array("data" => l(t("edit role"), "admin/user/role/$role->rid"), "align" => "center"));
+      }
+      else {
+        $rows[] = array($role->name, array("data" => "<span class=\"disabled\">". t("locked") ."</span>", "align" => "center"));
+      }
     }
     $rows[] = array("<input type=\"text\" size=\"32\" maxlength=\"64\" name=\"edit[name]\" />", "<input type=\"submit\" name=\"op\" value=\"". t("Add role") ."\" />");
 

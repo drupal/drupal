@@ -173,7 +173,7 @@ function blog_form(&$node, &$help, &$error) {
   if (function_exists("taxonomy_node_form")) {
     $output .= implode("", taxonomy_node_form("blog", $node));
   }
-  $output .= form_textarea(t("Body"), "body", $node->body, 60, 15, $error["body"] ? $error["body"] : t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
+  $output .= form_textarea(t("Body"), "body", $node->body, 60, 15, $error["body"] ? $error["body"] : form_allowed_tags_text());
 
   return $output;
 }
