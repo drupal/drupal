@@ -12,8 +12,9 @@ include_once "includes/common.inc";
 ** - If you upgrade from Drupal 3.00, you have to update your watchdog
 **   table manually before executing/starting this script.  Simply do:
 **
-**   sql> ALTER TABLE watchdog CHANGE user uid int(10) DEFAULT '0' NOT NULL;
-**   sql> ALTER TABLE watchdog CHANGE id wid int(5) DEFAULT '0' NOT NULL auto_increment;
+**   ALTER TABLE watchdog CHANGE user uid int(10) DEFAULT '0' NOT NULL;
+**   ALTER TABLE watchdog CHANGE id wid int(5) DEFAULT '0' NOT NULL auto_increment;
+**   CREATE TABLE system (filename varchar(255) NOT NULL default '', name varchar(255) NOT NULL default '', type varchar(255) NOT NULL default '', description varchar(255) NOT NULL default '', status int(2) NOT NULL default '0', PRIMARY KEY (filename));
 **
 **   You'll also have to by-pass the access check near the bottom such
 **   that you can gain access to the form: search for "user_access()".
@@ -351,10 +352,6 @@ function update_24() {
 
 function update_25() {
   update_sql("CREATE TABLE `system` (filename varchar(255) NOT NULL default '', name varchar(255) NOT NULL default '', type varchar(255) NOT NULL default '', description varchar(255) NOT NULL default '', status int(2) NOT NULL default '0', PRIMARY KEY  (filename));");
-  update_sql("REPLACE system SET name = 'drupal', type = 'module', filename = 'drupal.module', status = '1';");
-  update_sql("REPLACE system SET name = 'system', type = 'module', filename = 'system.module', status = '1';");
-  update_sql("REPLACE system SET name = 'user', type = 'module', filename = 'user.module', status = '1';");
-  update_sql("REPLACE system SET name = 'watchdog', type = 'module', filename = 'watchdog.module', status = '1';");
   update_sql("UPDATE users SET theme = LOWER(theme);");
 }
 
