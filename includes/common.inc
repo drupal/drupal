@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.204 2003/05/30 05:45:35 dries Exp $
+// $Id: common.inc,v 1.205 2003/05/30 11:01:56 dries Exp $
 
 function conf_init() {
 
@@ -404,7 +404,7 @@ function drupal_goto($url) {
   ** Translate &amp; to simply &
   */
 
-  $url = str_replace("&amp;", "&amp;", $url);
+  $url = str_replace("&amp;", "&", $url);
 
   /*
   ** It is advised to use "drupal_goto()" instead of PHP's "header()" as
