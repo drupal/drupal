@@ -244,6 +244,7 @@ class xmlrpc_server {
     xml_parser_free($parser);
     $m=new xmlrpcmsg($_xh[$parser]['method']);
     // now add parameters in
+    $plist="";
     for($i=0; $i<sizeof($_xh[$parser]['params']); $i++) {
       //print "<!-- " . $_xh[$parser]['params'][$i]. "-->\n";
       $plist.="$i - " .  $_xh[$parser]['params'][$i]. " \n";

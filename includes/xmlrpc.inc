@@ -92,7 +92,7 @@ $xmlrpcstr["curl_fail"]="CURL error";
 $xmlrpc_defencoding="UTF-8";
 
 $xmlrpcName="XML-RPC for PHP";
-$xmlrpcVersion="1.01";
+$xmlrpcVersion="1.02";
 
 // let user errors start at 800
 $xmlrpcerruser=800;
@@ -407,10 +407,10 @@ class xmlrpc_client {
     if ($port==0) $port=80;
     if($timeout>0)
       $fp=fsockopen($server, $port,
-        $this->errno, $this->errstr, $timeout);
+        &$this->errno, &$this->errstr, $timeout);
     else
       $fp=fsockopen($server, $port,
-        $this->errno, $this->errstr);
+        &$this->errno, &$this->errstr);
     if (!$fp) {
       return 0;
     }
@@ -634,6 +634,8 @@ class xmlrpcmsg {
   $_xh[$parser]['isf']=0;
   $_xh[$parser]['ac']="";
   $_xh[$parser]['qt']="";
+  $_xh[$parser]['ha']="";
+  $_xh[$parser]['ac']="";
 
   xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, true);
   xml_set_element_handler($parser, "xmlrpc_se", "xmlrpc_ee");
@@ -641,7 +643,6 @@ class xmlrpcmsg {
   xml_set_default_handler($parser, "xmlrpc_dh");
   $xmlrpc_value=new xmlrpcval;
 
-  $hdrfnd=0;
   if ($this->debug)
     print "<PRE>---GOT---\n" . htmlspecialchars($data) .
     "\n---END---\n</PRE>";
@@ -663,10 +664,25 @@ class xmlrpcmsg {
     xml_parser_free($parser);
     return $r;
   }
-  // gotta get rid of headers here
-  if ((!$hdrfnd) && ereg("^(.*)\r\n\r\n",$data,$_xh[$parser]['ha'])) {
-    $data=ereg_replace("^.*\r\n\r\n", "", $data);
-    $hdrfnd=1;
+
+  // if using HTTP, then gotta get rid of HTTP headers here
+  // and we store them in the 'ha' bit of our data array
+  if (ereg("^HTTP", $data)) {
+    $ar=explode("\r\n", $data);
+    $newdata="";
+    $hdrfnd=0;
+    for ($i=0; $i<sizeof($ar); $i++) {
+      if (!$hdrfnd) {
+        if (strlen($ar[$i])>0) {
+          $_xh[$parser]['ha'].=$ar[$i]. "\r\n";
+        } else {
+          $hdrfnd=1;
+        }
+      } else {
+        $newdata.=$ar[$i] . "\r\n";
+      }
+    }
+    $data=$newdata;
   }
 
   if (!xml_parse($parser, $data, sizeof($data))) {
@@ -706,7 +722,7 @@ class xmlrpcmsg {
     $r=new xmlrpcresp($v);
     }
   }
-  $r->hdrs=split("\r?\n", $_xh[$parser]['ha'][1]);
+  $r->hdrs=split("\r?\n", $_xh[$parser]['ha']);
   return $r;
   }
 
