@@ -40,6 +40,12 @@ table {
 .calendar .day-blank {
   background-color: #ddd;
 }
+.calendar .day-link a {
+  color: #000;
+}
+.calendar .row-week {
+  color: #aaa;
+}
 a:link {
   color: #656
 }
