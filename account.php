@@ -208,7 +208,6 @@ function account_user($name) {
 
   if ($user->id && $user->name == $name) {
     $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>". t("Username") .":</B></TD><TD>$user->userid</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>". t("Name") .":</B></TD><TD>". check_output($user->name) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>". t("E-mail") .":</B></TD><TD>". format_email($user->fake_email) ."</A></TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>". t("Homepage") .":</B></TD><TD>". format_url($user->url) ."</TD></TR>\n";
@@ -226,7 +225,6 @@ function account_user($name) {
 
     // Display account information:
     $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>". t("Username") .":</B></TD><TD>". check_output($account->userid) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>". t("Name") .":</B></TD><TD>". check_output($account->name) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>". t("E-mail") .":</B></TD><TD>". format_email($account->fake_email) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>". t("Homepage") .":</B></TD><TD>". format_url($account->url) ."</TD></TR>\n";
