@@ -258,6 +258,10 @@ function form_textfield($title, $name, $value, $size, $maxlength, $description =
   return form_item($title, "<input maxlength=\"$maxlength\" name=\"edit[$name]\" size=\"$size\" value=\"". check_form($value) ."\" />", $description);
 }
 
+function form_password($title, $name, $value, $size, $maxlength, $description = 0) {
+  return form_item($title, "<input type=\"password\" maxlength=\"$maxlength\" name=\"edit[$name]\" size=\"$size\" value=\"". check_form($value) ."\" />", $description);
+}
+
 function form_textarea($title, $name, $value, $cols, $rows, $description = 0) {
   return form_item($title, "<textarea wrap=\"virtual\" cols=\"$cols\" rows=\"$rows\" name=\"edit[$name]\">". check_form($value) ."</textarea>", $description);
 }
