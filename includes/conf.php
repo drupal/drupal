@@ -50,4 +50,19 @@ $base_url = "http://localhost";
 # If required, update PHP's include path to include your PEAR directory:
 // ini_set("include_path", ".:/path/to/pear");
 
+#
+# Variable overrides:
+#
+#   To override specific entries in the 'variable' table for this site,
+#   set them here.  You usually don't need to use this feature.  This is
+#   useful when used in a configuration file for a vhost or directory,
+#   rather than the default conf.php. Any configuration setting from the
+#   variable table can be given a new value.
+#
+# $conf = array(
+#      'site_name' => 'My Drupal site',
+#      'theme_default' => 'pushbutton',
+#      'anonymous' => 'Visitor'
+# );
+
 ?>
