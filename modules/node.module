@@ -1,0 +1,93 @@
+<?php
+
+$module = array("admin" => "node_admin");
+
+
+$nstatus = array(0 => dumped, 1 => expired, 2 => queued, 3 => posted);
+
+function node_overview($query = 0) {
+  global $user, $nstatus;
+
+  $result = db_query("SELECT n.*, u.userid FROM node n LEFT JOIN users u ON n.author = u.id". ($query ? " WHERE $query" : ""));
+
+  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
+  $output .= " <TR><TH>title</TH><TH>type</TH><TH>status</TH><TH>author</TH><TH>date</TH><TH COLSPAN=\"3\">operations</TH></TR>\n";
+  while ($node = db_fetch_object($result)) {
+    $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">$node->type</TD><TD>". $nstatus[$node->status] ."</TD><TD>". format_username($node->userid) ."</TD><TD>". format_date($node->timestamp) ."</TD><TD>". (user_access($user, "node") ? "<A HREF=\"admin.php?mod=node&op=view&id=$node->nid\">view node</A></TD>" : "view node") ."</TD><TD>". (user_access($user, "node") ? "<A HREF=\"admin.php?mod=node&op=edit&id=$node->nid\">edit node</A></TD>" : "edit node") ."</TD><TD>". (user_access($user, $node->type) ? "<A HREF=\"admin.php?mod=$node->type&op=edit&id=$node->nid\">edit $node->type</A></TD>" : "edit $node->type") ."</TD></TR>\n";
+  }
+  $output .= "</TABLE>\n";
+
+  return $output;
+}
+
+function node_admin_view($id) {
+  global $nstatus;
+
+  $node = node_get_object("nid", $id);
+
+  $output .= "<FORM ACTION=\"admin.php?mod=node&id=$node->nid\" METHOD=\"post\">\n";
+  $output .= "<B>Title:</B><BR>". check_output($node->title) ."<P>\n";
+  $output .= "<B>Author:</B><BR>". format_username($node->userid) ."<P>\n";
+  $output .= "<B>Status:</B><BR>". $nstatus[$node->status] ."<P>\n";
+  $output .= "<B>Date:</B><BR>". format_date($node->timestamp) ."<P>\n";
+  $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Edit node\">\n";
+  $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Delete node\">\n";
+  $output .= "</FORM>\n";
+
+  return $output;
+}
+
+function node_admin_edit($id) {
+  global $status, $user;
+
+  $node = node_get_object("nid", $id);
+
+  foreach (array($node->userid => $node->author, $user->userid => $user->id) as $value=>$key) $author .= " <OPTION VALUE=\"$key\"". (($node->author == $key) ? " SELECTED" : "") .">$value</OPTION>\n";
+  foreach (array(format_date($node->timestamp) ." (original)" => $node->timestamp, format_date(time()) ." (current)" => time()) as $value=>$key) $timestamp .= " <OPTION VALUE=\"$key\"". (($node->timestamp == $key) ? " SELECTED" : "") .">$value</OPTION>\n";
+  foreach ($status as $value=>$key) $statuz .= " <OPTION VALUE=\"$key\"". (($node->status == $key) ? " SELECTED" : "") .">$value</OPTION>\n";
+
+  $output .= "<FORM ACTION=\"admin.php?mod=node&id=$node->nid\" METHOD=\"post\">\n";
+  $output .= "<B>Title:</B><BR>". check_output($node->title) ."<P>\n";
+  $output .= "<B>Author:</B><BR><SELECT NAME=\"edit[author]\">$author</SELECT><P>\n";
+  $output .= "<B>Status:</B><BR><SELECT NAME=\"edit[status]\">$statuz</SELECT><P>\n";
+  $output .= "<B>Date:</B><BR><SELECT NAME=\"edit[timestamp]\">$timestamp</SELECT><P>\n";
+  $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[nid]\" VALUE=\"$node->nid\">\n";
+  $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"View node\">\n";
+  $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save node\">\n";
+  $output .= "</FORM>\n";
+
+  return $output;
+}
+
+function node_delete($id) {
+  return (node_del("nid", $id) ? "failed to delete node: node must be dumped first." : "node has been deleted.");
+}
+
+function node_admin() {
+  global $op, $id, $edit;
+
+  $id = check_input($edit[nid] ? $edit[nid] : $id);
+
+  switch ($op) {
+    case "Edit node":
+    case "edit":
+      print node_admin_edit($id);
+      break;
+    case "Delete node":
+      print status(node_delete($id));
+      print node_overview();
+      break;
+    case "Save node":
+      print status(node_save($edit));
+      print node_overview();
+      break;
+    case "View node":
+    case "view":
+      print node_admin_view($id);
+      break;
+    default:
+      print node_overview();
+  }
+}
+
+?>

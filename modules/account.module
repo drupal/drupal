@@ -6,9 +6,33 @@ $module = array("help" => "account_help",
 
 function account_help() {
  ?>
-  <P>The account-module is responsible for maintaining the user database. It automatically handles tasks like registration, authentication, access rights, password retrieval, user settings and much more.</P>
+  <P>The account-module is responsible for maintaining the user database. It automatically handles tasks like registration, authentication, access control, password retrieval, user settings and much more.</P>
   <P>The required administration can be accomplished through the "account" interface of the administration section.  From here administrators can get a quick overview of all registered users and view/edit specific accounts using the links provided.  Some useful operations include blocking specific accounts (e.g. a troublesome user) and giving/taking administration permissions.  Note that you should only give these permissions to people you trust!</P>
   <P>Check the documentation page for detailed information about user management.</P>
+  <H3>Regular expressions</H3>
+  <P>A <I>regular expression</I> (or <I>regexp</I>, or <I>pattern</I>) is a text string that describes some (mathematical) set of strings.  A regexp <CODE>R</CODE> "matches" a string <CODE>S</CODE> if <CODE>S</CODE> is in the set of strings described by <CODE>R</CODE>.</P>
+  <P>Regular expressions are very powerful but often get complicated and nothing in this write-up can change that.
+  <P>A complete explanation of regular expressions is beyond the scope of this help system.  A regular expression may use any of the following special characters/constructs:</P>
+  <TABLE BORDER="1">
+   <TR><TD>^</TD><TD>Matches the beginning of a string.<TD></TR>
+   <TR><TD>$</TD><TD>Matches the end of a string.<TD></TR>
+   <TR><TD>.</TD><TD>Matches any character (including newline). For example the regular expression a.c would match the strings abc, adb, axb, but not axxc.<TD></TR>
+   <TR><TD>a*</TD><TD>Matches any sequence of zero or more a characters.</TD></TR>
+   <TR><TD>a+</TD><TD>Matches any sequence of one or more a characters.</TD></TR>
+   <TR><TD>a?</TD><TD>Matches either zero or one a character.</TD></TR>
+   <TR><TD>ab|cd</TD><TD>Matches either of the sequences "ab" or "cd".</TD></TR>
+   <TR><TD>(abc)*</TD><TD>Matches zero or more instances of the sequence abc.</TD></TR>
+   <TR><TD>[abc]</TD><TD>Matches any one of the characters between the brackets: a, b or c.  Ranges of characters can specified by using a hyphen. For example, the regular expression [0-9] means match any digit.  Multiple ranges can be specified as well. The regular expression [A-Za-z] means match any upper or lower case letter. To match any character except those in the range, the complement range, use the caret as the first character after the opening bracket.  For example, the expression [^269A-Z] will match any characters except 2, 6, 9, and upper case letters.</TD></TR>
+   <TR><TD>{num}</TD><TD>Matches the preceding element num times.</TD></TR>
+   <TR><TD>{min, max}</TD><TD>Matches the preceding element at least min times, but not more than max times.</TD></TR>
+  </TABLE>
+  <P><B>Examples:</B></P>
+  <TABLE BORDER="1">
+   <TR><TD>apple</TD><TD>Matches any string that has the text "apple" in it.<TD></TR>
+   <TR><TD>^apple$</TD><TD>Matches the exact string "apple".<TD></TR>
+   <TR><TD>^apple</TD><TD>Matches any string that starts with "apple".<TD></TR>
+   <TR><TD>domain\.com$</TD><TD>Matches any string that ends with "@domain.com".  Note that you have to escape the dot in domain.com.</TD></TR>
+  </TABLE>
  <?php
 }
 
@@ -28,17 +52,55 @@ function account_search() {
   print search_data($keys, $mod);
 }
 
-function account_display($order = "username") {
+function account_ac_add($edit) {
+  db_query("INSERT INTO access (mask, type, reason) VALUES ('". check_input($edit[mask]) ."', '". check_input($edit[type]) ."', '". check_input($edit[reason]) ."')", 1);
+}
+
+function account_ac_del($id) {
+  db_query("DELETE FROM access WHERE id = '$id'");
+}
+
+function account_ac_check($edit) {
+  return "\"$edit[text]\" ". (($rule = user_ban($edit[text], $edit[category])) ? "matched with access rule '$rule->mask'" : "did not match any of the existing access rules") .".";
+}
+
+function account_ac() {
+  $access = array("e-mail address", "hostname", "username");
+
+  $result = db_query("SELECT * FROM access");
+
+  foreach ($access as $value) $type .= " <OPTION VALUE=\"$value\">$value</OPTION>\n";
+
+  $output .= "<FORM ACTION=\"admin.php?mod=account&op=access\" METHOD=\"post\">\n";
+  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
+  $output .= " <TR><TH>mask</TH><TH>type</TH><TH>reason</TH><TH>oparations</TH></TR>\n";
+  while ($rule = db_fetch_object($result)) {
+    $output .= " <TR><TD>$rule->mask</TD><TD ALIGN=\"center\">$rule->type</TD><TD>". check_output($rule->reason) ."</TD><TD><A HREF=\"admin.php?mod=account&op=delete+rule&id=$rule->id\">delete rule</A></TD></TR>\n";
+  }
+  $output .= " <TR><TD><INPUT TYPE=\"text\" NAME=\"edit[mask]\"></TD><TD><SELECT NAME=\"edit[type]\">\n$type</SELECT></TD><TD><INPUT TYPE=\"text\" NAME=\"edit[reason]\"></TD><TD><INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"Add rule\"></TD></TR>\n";
+  $output .= " <TR><TD COLSPAN=\"4\"><SMALL><I>Use <A HREF=\"admin.php?mod=account&op=help\">regular expressions</A> (regexs) to specify the mask pattern.</I></SMALL></TD></TR>\n";
+  $output .= "</TABLE>\n";
+  $output .= "<BR><BR>\n";
+  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
+  $output .= " <TR><TH COLSPAN=\"3\">check access rules</TH></TR>\n";
+  $output .= " <TR><TD><INPUT TYPE=\"text\" NAME=\"edit[text]\"></TD><TD><SELECT NAME=\"edit[category]\">\n$type</SELECT></TD><TD><INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"Check\"></TD></TR>\n";
+  $output .= "</TABLE>\n";
+  $output .= "</FORM>\n";
+
+  return $output;
+}
+
+function account_overview() {
   $result = db_query("SELECT id, userid, last_access FROM users ORDER BY last_access DESC LIMIT 50");
 
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR><TH>username</TH><TH>last access</TH><TH COLSPAN=\"3\">operations</TH></TR>\n";
+  $output .= " <TR><TH>username</TH><TH>last access</TH><TH COLSPAN=\"2\">operations</TH></TR>\n";
   while ($account = db_fetch_object($result)) {
-    $output .= " <TR><TD>". format_username($account->userid) ."</TD><TD>". format_date($account->last_access) ."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=account&op=view&name=$account->userid\">view</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=account&op=edit&name=$account->userid\">edit</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=account&op=delete&name=$account->userid\">delete</A></TD></TR>\n";
+    $output .= " <TR><TD>". format_username($account->userid) ."</TD><TD>". format_date($account->last_access) ."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=account&op=view&name=$account->userid\">view account</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=account&op=edit&name=$account->userid\">edit account</A></TD></TR>\n";
   }
   $output .= "</TABLE>\n";
 
-  print $output;
+  return $output;
 }
 
 function account_access($account) {
@@ -80,7 +142,7 @@ function account_delete($name) {
     db_query("DELETE FROM users WHERE id = '$account->id'");
   }
   else {
-    print "<P>Failed to delete account '". format_username($name) ."': the account must be blocked first.</P>";
+    return "failed to delete account '". format_username($name) ."': the account must be blocked first.";
   }
 }
 
@@ -126,7 +188,7 @@ function account_edit($name) {
     $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"View account\">\n";
     $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save account\">\n";
     $output .= "</FORM>\n";
-    print "$output";
+    return $output;
   }
 }
 
@@ -158,41 +220,56 @@ function account_view($name) {
     $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"2\"><INPUT TYPE=\"hidden\" NAME=\"name\" VALUE=\"$account->userid\"><INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Edit account\"><INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Delete account\"></TD></TR>\n";
     $output .= "</TABLE>\n";
     $output .= "</FORM>\n";
-    print "$output";
+    return $output;
   }
 }
 
 function account_admin() {
-  global $op, $edit, $order, $name;
+  global $op, $edit, $id, $order, $name;
 
-  print "<SMALL><A HREF=\"admin.php?mod=account\">overview</A> | <A HREF=\"admin.php?mod=account&op=search\">search account</A> | <A HREF=\"admin.php?mod=account&op=help\">help</A></SMALL><HR>\n";
+  print "<SMALL> <A HREF=\"admin.php?mod=account&op=access\">access control</A> | <A HREF=\"admin.php?mod=account&op=search\">search account</A> | <A HREF=\"admin.php?mod=account\">overview</A> | <A HREF=\"admin.php?mod=account&op=help\">help</A></SMALL><HR>\n";
 
   switch ($op) {
+    case "access":
+      print account_ac();
+      break;
+    case "Add rule":
+      print status(account_ac_add($edit));
+      print account_ac();
+      break;
+    case "Check":
+      print status(account_ac_check($edit));
+      print account_ac();
+      break;
+    case "delete rule":
+      print status(account_ac_del($id));
+      print account_ac();
+      break;
     case "Delete account":
     case "delete":
-      account_delete(check_input($name));
-      account_display();
+      print status(account_delete(check_input($name)));
+      print account_overview();
       break;
     case "Edit account":
     case "edit":
-      account_edit(check_input($name));
+      print account_edit(check_input($name));
       break;
     case "help":
-      account_help();
+      print account_help();
       break;
     case "search":
-      account_search();
+      print account_search();
       break;
     case "View account":
     case "view":
-      account_view($name);
+      print account_view($name);
       break;
     case "Save account":
-      account_edit_save(check_input($name), $edit);
-      account_view(check_input($name));
+      print status(account_edit_save(check_input($name), $edit));
+      print account_view(check_input($name));
       break;
     default:
-      account_display();
+      print account_overview();
   }
 }
 

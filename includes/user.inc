@@ -95,4 +95,9 @@ function user_access($account, $section = 0) {
   else return ($account->access || $account->id == 1);
 }
 
+function user_ban($mask, $type) {
+  $result = db_query("SELECT * FROM access WHERE type = '$type' AND '$mask' REGEXP mask");
+  return db_fetch_object($result);
+}
+
 ?>
