@@ -340,8 +340,6 @@ function search_form($action = 0, $query = 0, $options = 0) {
 function search_data() {
   global $keys, $edit;
 
-  $keys = check_input($keys);
-
   if (isset($keys)) {
     foreach (module_list() as $name) {
       if (module_hook($name, "search") && (!$edit["type"] || $edit["type"][$name]) && ($result = module_invoke($name, "search", check_query($keys)))) {
@@ -451,15 +449,15 @@ function referer_load() {
 }
 
 function check_form($text) {
-  return htmlspecialchars(stripslashes($text));
+  return htmlspecialchars($text);
 }
 
 function check_query($text) {
-  return addslashes(stripslashes($text));
+  return addslashes($text);
 }
 
 function check_input($text) {
-  return addslashes(stripslashes($text));
+  return addslashes($text);
 }
 
 function filter($text) {
@@ -510,8 +508,6 @@ function check_output($text) {
 
     // temporary: for development purpose
     $text = rewrite_old_urls($text);
-
-    $text = stripslashes($text);
 
     if (strip_tags($text, "<a><i><b><u><tt><code><cite><strong><img>") == $text) {
       $text = nl2br($text);

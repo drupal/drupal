@@ -200,12 +200,6 @@ function book_form(&$node, &$help, &$error) {
 
   $output = form_select(t("Parent"), "parent", $node->parent, book_toc(), t("The parent subject or category the page belongs in."));
 
-  if ($node->format) {
-    if ($op != t("Preview")) {
-      $node->body = addslashes($node->body);
-    }
-  }
-
   if (function_exists("taxonomy_node_form")) {
     $output .= implode("", taxonomy_node_form("book", $node));
   }
@@ -341,17 +335,9 @@ function book_body($node) {
   global $op;
 
   if ($node->format == 1) {
-    /*
-    ** Make sure only authorized users can preview PHP pages.
-    */
-
-    if ($op == t("Preview")) {
-      if (user_access("create php content")) {
-        $node->body = stripslashes($node->body);  // see also book_form()
-      }
-      else {
-        return;
-      }
+    // Make sure only authorized users can preview PHP pages.
+    if ($op == t("Preview") && !user_access("create php content")) {
+      return;
     }
 
     ob_start();
