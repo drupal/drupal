@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.411 2004/11/02 12:20:59 unconed Exp $
+// $Id: user.module,v 1.412 2004/11/03 22:39:55 dries Exp $
 
 /**
  * @file
@@ -806,11 +806,6 @@ function user_login($edit = array(), $msg = '') {
       db_query("UPDATE {users} SET changed = '%d' WHERE uid = '%s'", time(), $user->uid);
 
       user_module_invoke('login', $edit, $user);
-
-      // If the user wants to be remembered, set the proper cookie such
-      // that the session won't expire.
-      $path = preg_replace("/.+\/\/[^\/]+(.*)/", "\$1/", $base_url);
-      setcookie(session_name(), session_id(), FALSE, $path);
 
       // Redirect the user to the page he logged on from.
       drupal_goto($edit['destination']);
