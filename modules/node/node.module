@@ -213,7 +213,7 @@ function node_admin_save($edit) {
   }
 }
 
-function node_search() {
+function node_module_find() {
   global $REQUEST_URI;
 
   foreach (module_list() as $name) {
@@ -262,7 +262,7 @@ function node_admin() {
       print node_help();
       break;
     case "search":
-      print node_search($id);
+      print node_module_find($id);
       print search_data($keys, $type);
       break;
     case "status":
