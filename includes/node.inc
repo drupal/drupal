@@ -1,5 +1,5 @@
 <?php
-// $Id: node.inc,v 1.75 2001/11/04 15:57:42 dries Exp $
+// $Id: node.inc,v 1.76 2001/11/04 16:14:11 dries Exp $
 
 // TODO: still used by themes, yet doesn't return anything at the moment
 function node_index() {
@@ -103,7 +103,6 @@ function node_load($conditions) {
   */
 
   if ($node->revisions) {
-    unset($node->revisions);
     $node->revisions = unserialize($node->revisions);
   }
 
