@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.388 2004/09/09 13:36:00 unconed Exp $ */
+/* $Id: common.inc,v 1.389 2004/09/15 09:54:32 dries Exp $ */
 
 /**
  * @file
@@ -503,6 +503,11 @@ function message_na() {
  */
 function locale_initialize() {
   global $user;
+
+  if (function_exists('i18n_get_lang')) {
+    return i18n_get_lang();
+  }
+
   if (function_exists('locale')) {
     $languages = locale_supported_languages();
     $languages = $languages['name'];
