@@ -504,7 +504,7 @@ function book_tree($parent = 0, $depth = 3) {
 function book_render() {
   global $theme;
 
-  $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE b.parent = 0 AND n.status = 1 AND (n.moderate = 0 OR n.revisions != '') ORDER BY b.weight");
+  $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE b.parent = 0 AND n.status = 1 AND (n.moderate = 0 OR n.revisions != '') ORDER BY b.weight, n.title");
 
   while ($page = db_fetch_object($result)) {
     // load the node:
