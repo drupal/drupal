@@ -32,7 +32,7 @@ function tablesort($cell, $header) {
   // special formatting for the currently sorted column header
   if ($cell['data'] == $ts['order']) {
     $cell['class'] = 'cell-highlight';
-    $image = '&nbsp;<img src="' . theme('image', 'arrow-' . $ts['sort'] . '.gif"') . ' alt="'. t('sort icon') .'" />';
+    $image = '&nbsp;<img src="' . theme('image', 'arrow-' . $ts['sort'] . '.gif') . '" alt="'. t('sort icon') .'" />';
     $title = ($ts['sort'] == 'asc' ? t("sort ascending") : t("sort descending"));
   } else {
     // If the user clicks a different header, we want to sort ascending initially.
