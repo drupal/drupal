@@ -107,7 +107,7 @@ function import_update($feed) {
       db_query("UPDATE feed SET timestamp = '". time() ."' WHERE fid = '". $feed[fid] ."'");
     }
     else {
-      watchdog("error", "failed to syndicate from '$feed[title]'");
+      watchdog("error", "import: failed to syndicate from '$feed[title]'");
     }
   }
 
@@ -213,7 +213,7 @@ function import_view_feed() {
 
   $output .= "<h3>Feed overview</h3>";
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  $output .= " <tr><th>title</th><th>attributes</th><th>items</th><th>last update</th><th>next update</th><th colspan=\"3\">operations</th></tr>\n";
+  $output .= " <tr><th>site</th><th>attributes</th><th>items</th><th>last update</th><th>next update</th><th colspan=\"3\">operations</th></tr>\n";
   while ($feed = db_fetch_object($result)) {
     $output .= " <tr><td>". check_output($feed->title) ."</td><td>". check_output($feed->attributes) ."</td><td>". format_plural($feed->items, "item", "items") ."</td><td>". ($feed->timestamp ? format_interval(time() - $feed->timestamp) ." ago" : "never") ."</td><td>". ($feed->timestamp ? format_interval($feed->timestamp + $feed->refresh - time()) ." left" : "never") ."</td><td><a href=\"admin.php?mod=import&type=feed&op=edit&id=$feed->fid\">edit feed</a></td><td><a href=\"admin.php?mod=import&type=feed&op=remove&id=$feed->fid\">remove items</a></td><td><a href=\"admin.php?mod=import&type=feed&op=update&id=$feed->fid\">update items</a></td></tr>\n";
   }
