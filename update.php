@@ -420,20 +420,20 @@ function update_30() {
 
 function update_31() {
   include_once("modules/taxonomy.module");
-  
+
   print "Wiping tables.<br />";
   db_query("DELETE FROM vocabulary");
   db_query("DELETE FROM term_data");
   db_query("DELETE FROM term_node");
   db_query("DELETE FROM term_hierarchy");
-  
+
   print "Creating collections.<br />";
   $result = db_query("SELECT * FROM collection");
   while ($c = db_fetch_object($result)) {
     $collections[$c->name] = count($collections) + 1;
     db_query("INSERT INTO vocabulary SET vid = '". count($collections) ."', name = '$c->name', types = '". str_replace(" ", "", $c->types) ."'");
   }
-  
+
   print "Creating terms.<br />";
   $result = db_query("SELECT * FROM tag");
   $i = 1;
@@ -447,7 +447,7 @@ function update_31() {
       }
     }
   }
-  
+
   print "Linking nodes with terms.<br />";
   $result = db_query("SELECT nid,attributes FROM node WHERE attributes != ''");
   while ($node = db_fetch_object($result)) {
@@ -462,12 +462,12 @@ function update_31() {
       }
     }
   }
-   
+
   if (count($errors)) {
     asort($errors);
     print "<br /><br />Terms not found:<br /><pre>  ". implode("\n  ", $errors) ."</pre>";
   }
-  
+
   // Clean up meta tag system
   update_sql("DROP TABLE collection");
   update_sql("DROP TABLE tag");

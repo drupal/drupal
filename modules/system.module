@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.34 2002/05/19 23:05:05 kjartan Exp $
+// $Id: system.module,v 1.35 2002/05/20 07:34:38 dries Exp $
 
 function system_help() {
   $output .= "<p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviors including visual and operational settings.</p>";
@@ -37,7 +37,7 @@ function system_link($type) {
 
 function system_view_options() {
   global $conf, $cmodes, $corder;
-  
+
   // general settings:
   $output .= "<h3>General settings</h3>\n";
   $output .= form_textfield("Name", "site_name", variable_get("site_name", "drupal"), 55, 55, "The name of this website.");
@@ -124,12 +124,12 @@ function system_view($type) {
       $form = system_view_filters();
       break;
     default:
-			foreach (module_list() as $name) {
-			  if (module_hook($name, "conf_options")) {
-			    $links[] = la($name, array("mod" => "system"), $name);
-			  }
-			}
-    
+      foreach (module_list() as $name) {
+        if (module_hook($name, "conf_options")) {
+          $links[] = la($name, array("mod" => "system"), $name);
+        }
+      }
+
       $output = "<small>". implode(" :: ", $links) ."</small><hr />";
       $form = system_view_options();
   }

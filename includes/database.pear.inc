@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pear.inc,v 1.5 2002/05/01 21:31:05 kjartan Exp $
+// $Id: database.pear.inc,v 1.6 2002/05/20 07:34:38 dries Exp $
 
 require_once 'DB.php';
 
@@ -20,7 +20,7 @@ function db_connect($url) {
  *
  * @param $query sql query
  * @param $type  module type of this item
- * @return sql result resource 
+ * @return sql result resource
  */
 function db_query($query) {
   $args = func_get_args();
