@@ -498,7 +498,10 @@ function node_admin_nodes() {
   while ($node = db_fetch_object($result)) {
     $rows[] = array(l(check_output($node->title), array("id" => $node->nid)), module_invoke($node->type, "node", "name"), format_name($node), ($node->status ? t("published") : t("not published")), la(t("edit node"), array("mod" => "node", "op" => "edit", "id" => $node->nid)), la(t("delete node"), array("mod" => "node", "op" => "delete", "id" => $node->nid)));
   }
-//  $output .= "<tr><td colspan=\"6\">". pager_display(NULL, 50, 0, "admin") ."</td></tr></table>";
+ 
+  if ($pager = pager_display(NULL, 50, 0, "admin")) {
+    $rows[] = array(array("data" => $pager, "colspan" => 6));
+  }
 
   return table($header, $rows);
 }
