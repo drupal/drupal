@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.39 2002/11/29 05:53:40 dries Exp $
+// $Id: module.inc,v 1.40 2002/12/21 19:10:47 dries Exp $
 
 // initialize modules:
 function module_init() {
@@ -30,11 +30,9 @@ function module_invoke($name, $hook, $a1 = NULL, $a2 = NULL, $a3 = NULL, $a4 = N
 function module_invoke_all($hook, $a1 = NULL, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
   $return = array();
   foreach (module_list() as $name) {
-    if (module_hook($name, $hook)) {
-      $result = module_invoke($name, $hook, $a1, $a2, $a3, $a4);
-      if (isset($result)) {
-        $return = array_merge($return, $result);
-      }
+    $result = module_invoke($name, $hook, $a1, $a2, $a3, $a4);
+    if (isset($result)) {
+      $return = array_merge($return, $result);
     }
   }
 
