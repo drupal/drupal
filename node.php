@@ -1,5 +1,5 @@
 <?php
-// $Id: node.php,v 1.38 2001/12/02 21:46:12 dries Exp $
+// $Id: node.php,v 1.39 2001/12/30 16:16:38 dries Exp $
 
 include_once "includes/common.inc";
 
@@ -10,56 +10,16 @@ function node_render($node) {
 
   if (user_access("access content")) {
 
+    $theme->header(check_output($node->title));
+
+    node_view($node);
+
     if ($node->comment) {
-      switch($op) {
-        case t("Preview comment"):
-          $theme->header();
-          comment_preview($edit);
-          $theme->footer();
-          break;
-        case t("Post comment"):
-          comment_post($edit);
-          $theme->header(check_output($node->title));
-          node_view($node);
-          comment_render($edit[id], $cid);
-          $theme->footer();
-          break;
-        case "comment":
-          $theme->header();
-          comment_reply(check_query($cid), check_query($id));
-          $theme->footer();
-          break;
-        case "reply":
-          $theme->header();
-          comment_reply(check_query($pid), check_query($id));
-          $theme->footer();
-          break;
-        case t("Update settings"):
-          comment_settings(check_query($mode), check_query($order), check_query($threshold));
-          $theme->header(check_output($node->title));
-          node_view($node);
-          comment_render($id, $cid);
-          $theme->footer();
-          break;
-        case t("Update ratings"):
-          comment_moderate($moderate["comment"]);
-          $theme->header(check_output($node->title));
-          node_view($node);
-          comment_render($id, $cid);
-          $theme->footer();
-          break;
-        default:
-          $theme->header(check_output($node->title));
-          node_view($node);
-          comment_render($id, $cid);
-          $theme->footer();
-      }
+      comment_render($id, $cid);
     }
-    else {
-      $theme->header();
-      node_view($node);
-      $theme->footer();
-    }
+
+    $theme->footer();
+
   }
   else {
     $theme->header();

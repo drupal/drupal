@@ -40,6 +40,7 @@ $mysql_updates = array(
   "2001-12-09" => "update_13",
   "2001-12-16" => "update_14",
   "2001-12-24" => "update_15",
+  "2001-12-30" => "update_16",
 );
 
 // Update functions
@@ -289,6 +290,10 @@ function update_14() {
 
 function update_15() {
   update_sql("ALTER TABLE feed DROP uncache;");
+}
+
+function update_16() {
+  update_sql("ALTER TABLE comments CHANGE lid nid int(10) NOT NULL;");
 }
 
 // System functions

@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.91 2001/12/15 16:22:28 unconed Exp $
+// $Id: theme.inc,v 1.92 2001/12/30 16:16:38 dries Exp $
 
 class BaseTheme {
 
@@ -27,7 +27,7 @@ class BaseTheme {
     if ($user->uid) {
       // Display account settings:
 
-      $output .= "<div width=\"125\">\n";
+      $output .= "<div style=\"width: 125;\">\n";
 
       foreach (module_list() as $name) {
         if (module_hook($name, "link")) {
