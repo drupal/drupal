@@ -809,12 +809,6 @@ function node_admin_nodes() {
   foreach ($node_types as $k => $v) {
     $node_types[$k] = node_invoke($v, 'node_name');
   }
-  // Merge all vocabularies into one for retrieving $value below
-  $taxonomy = taxonomy_form_all();
-  $terms = array();
-  foreach ($taxonomy as $key => $value) {
-    $terms = $terms + $value;
-  }
   // Regular filters
   $filters = array(
     'status'   => array('title' => t('status'),
@@ -822,10 +816,17 @@ function node_admin_nodes() {
                                            'moderate-1' => t('in moderation'), 'moderate-0' => t('not in moderation'),
                                            'promote-1'  => t('promoted'),      'promote-0' => t('not promoted'),
                                            'sticky-1'   => t('sticky'),        'sticky-0' => t('not sticky'))),
-    'type'     => array('title' => t('type'),              'where' => "n.type = '%s'",
-                        'options' => $node_types),
-    'category' => array('title' => t('category'),          'where' => 'tn.tid = %d',
-                        'options' => $terms, 'join' => 'INNER JOIN {term_node} tn ON n.nid = tn.nid'));
+    'type'     => array('title' => t('type'), 'where' => "n.type = '%s'",
+                        'options' => $node_types));
+  // Merge all vocabularies into one for retrieving $value below
+  if ($taxonomy = module_invoke('taxonomy', 'form_all')) {
+    $terms = array();
+    foreach ($taxonomy as $key => $value) {
+      $terms = $terms + $value;
+    }
+    $filters['category'] = array('title' => t('category'), 'where' => 'tn.tid = %d',
+                                 'options' => $terms, 'join' => 'INNER JOIN {term_node} tn ON n.nid = tn.nid');
+  }
 
   // Initialize/reset filters
   if (!isset($_SESSION['node_overview_filter']) || !is_array($_SESSION['node_overview_filter']) || $op == t('Reset')) {
@@ -859,7 +860,9 @@ function node_admin_nodes() {
   }
 
   // New filter form
-  $filters['category']['options'] = $taxonomy;
+  if (isset($filters['category'])) {
+    $filters['category']['options'] = $taxonomy;
+  }
   $values = '';
   $options = array();
   foreach ($filters as $key => $value) {
