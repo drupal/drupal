@@ -21,7 +21,7 @@ function sess_close() {
 
 function sess_read($key) {
   global $user;
-  $uid = (isset($user->uid)) ? $user-uid : 0;
+  $uid = (isset($user->uid)) ? $user->uid : 0;
   $result = db_query_range("SELECT u.*, s.* FROM {users} u INNER JOIN {sessions} s ON u.uid = s.uid WHERE s.sid = '%s' AND u.status < 3", $key, 0, 1);
 
   if (!db_num_rows($result)) {
