@@ -255,15 +255,19 @@ function taxonomy_save_term($edit) {
 
   db_query('DELETE FROM {term_hierarchy} WHERE tid = %d', $edit['tid']);
   if (!isset($edit['parent'])) {
-    $edit['parent'] = 0;
+    $edit['parent'] = array(0);
   }
   if (is_array($edit['parent'])) {
     foreach ($edit['parent'] as $parent) {
-      db_query('INSERT INTO {term_hierarchy} (tid, parent) VALUES (%d, %d)', $edit['tid'], $parent);
+      if (is_array($parent)) {
+        foreach ($parent as $tid) {
+          db_query('INSERT INTO {term_hierarchy} (tid, parent) VALUES (%d, %d)', $edit['tid'], $tid);
+        }
+      }
+      else {
+        db_query('INSERT INTO {term_hierarchy} (tid, parent) VALUES (%d, %d)', $edit['tid'], $parent);
+      }
     }
-  }
-  else {
-    db_query('INSERT INTO {term_hierarchy} (tid, parent) VALUES (%d, %d)', $edit['tid'], $edit['parent'][0]);
   }
 
   db_query('DELETE FROM {term_synonym} WHERE tid = %d', $edit['tid']);
@@ -306,7 +310,7 @@ function taxonomy_del_term($tid) {
       db_query('DELETE FROM {term_node} WHERE tid = %d', $tid);
 
       module_invoke_all('taxonomy', 'delete', 'term', $term);
-      drupal_set_message(t('Deleted term "%name".', array('%name' => $term->name)));
+      drupal_set_message(t('Deleted term %name.', array('%name' => '<em>'. $term->name .'</em>')));
     }
 
     $tids = $orphans;
@@ -482,8 +486,15 @@ function taxonomy_node_get_terms($nid, $key = 'tid') {
 function taxonomy_node_save($nid, $terms) {
   taxonomy_node_delete($nid);
 
-  if ($terms) {
+  if (is_array($terms)) {
     foreach ($terms as $term) {
+      if (is_array($term)) {
+        foreach ($term as $tid) {
+          if ($tid) {
+            db_query('INSERT INTO {term_node} (nid, tid) VALUES (%d, %d)', $nid, $tid);
+          }
+        }
+      }
       if ($term) {
         db_query('INSERT INTO {term_node} (nid, tid) VALUES (%d, %d)', $nid, $term);
       }
@@ -732,13 +743,15 @@ function taxonomy_get_term($tid) {
 
 function _taxonomy_term_select($title, $name, $value, $vocabulary_id, $description, $multiple, $blank, $exclude = array()) {
   $tree = taxonomy_get_tree($vocabulary_id);
+  $options = array();
+
   if ($blank) {
-    $options[] = array('tid' => 0, 'name' => $blank);
+    $options[0] = $blank;
   }
   if ($tree) {
     foreach ($tree as $term) {
       if (!in_array($term->tid, $exclude)) {
-        $options[] = array('tid' => $term->tid, 'name' => _taxonomy_depth($term->depth, '-').$term->name);
+        $options[$term->tid] = _taxonomy_depth($term->depth, '-') . $term->name;
       }
     }
     if (!$blank && !$value) {
@@ -747,15 +760,7 @@ function _taxonomy_term_select($title, $name, $value, $vocabulary_id, $descripti
     }
   }
 
-  if (count($options) > 0) {
-    foreach ($options as $option) {
-      $select .= '<option value="'. $option['tid'] .'"'. (is_array($value) ? (in_array($option['tid'], $value) ? ' selected="selected"' : '') : ($option['tid'] == $value ? ' selected="selected"' : '')) .'>'. check_form($option['name']) .'</option>';
-    }
-
-    $size = min(12, count($options));
-
-    return form_item($title, "<select name=\"edit[$name][]\"". ($multiple ? " multiple=\"multiple\" size=\"$size\"" : '') . ($extra ? " $extra" : '') .' class="'. _form_get_class('', false, _form_get_error($name)) ."\">$select</select>", $description, NULL, false, _form_get_error($name));
-  }
+  return form_select($title, $name .'][', $value, $options, $description, $multiple ? 'size="'. min(12, count($options)) .'"' : 0, $multiple);
 }
 
 function _taxonomy_depth($depth, $graphic = '--') {
