@@ -11,7 +11,7 @@ class Page {
 }
 
 function page_link($type) {
-  if ($type == "page" && user_access("access content")) {
+  if ($type == "page") {
     $result = db_query("SELECT nid,link FROM page WHERE link != '' ORDER BY link");
     while ($page = db_fetch_object($result)) {
       $links[] = "<a href=\"node.php?id=$page->nid\">$page->link</a>";
