@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.101 2003/06/15 19:06:22 dries Exp $
+// $Id: aggregator.module,v 1.102 2003/06/15 19:41:13 dries Exp $
 
 function import_help() {
   $output .= "<p>**REWRITE** In Drupal you have <i>feeds</i> and <i>bundles</i>.   Feeds define news sources and bundles categorize syndicated content by source, topic or any other heuristic.   Bundles provide a generalized way of creating composite feeds.  They allow you, for example, to combine various sport-related feeds into one bundle called \"Sport\".</p>";
@@ -71,7 +71,7 @@ function import_format_item($item, $feed = 0) {
   global $user;
 
   if ($user->uid && user_access("maintain personal blog")) {
-    $output .= "<div class=\"icon\">". l("<img src=\"". theme("image", "blog.gif") ."\" width=\"12\" height=\"12\" alt=\"". t("blog it") ."\" title=\"". t("blog it") ."\" style=\"border: 0px; />", "node/add/blog&amp;iid=$item->iid", array("title" => t("Comment on this news item in your personal blog."), "class" => "blog-it")) ."</div>";
+    $output .= "<div class=\"icon\">". l("<img src=\"". theme("image", "blog.gif") ."\" alt=\"". t("blog it") ."\" title=\"". t("blog it") ."\" />", "node/add/blog&amp;iid=$item->iid", array("title" => t("Comment on this news item in your personal blog."), "class" => "blog-it")) ."</div>";
   }
 
   // external link
