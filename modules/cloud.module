@@ -23,7 +23,7 @@ function cloud_system($field){
 }
 
 function cloud_cron() {
-  $result = db_query("SELECT * FROM site WHERE timestamp = 0 OR timestamp + refresh < ". time());
+  $result = db_query("SELECT * FROM site WHERE checked = 0 OR checked + refresh < %d", time());
 
   while ($site = db_fetch_array($result)) {
     cloud_update($site);
@@ -78,7 +78,10 @@ function cloud_update($site) {
     }
 
     if (abs($site["size"] - strlen($data)) >= $site["threshold"]) {
-      db_query("UPDATE site SET size = '". strlen($data) ."', timestamp = '". time() ."' WHERE link = '%s'", $site["link"]);
+      db_query("UPDATE site SET size = %d, changed = %d, checked = %d WHERE link = '%s'", strlen($data), time(), time(), $site["link"]);
+    }
+    else {
+      db_query("UPDATE site SET checked = %d WHERE link = '%s'", time(), $site["link"]);
     }
 
     fclose($fp);
@@ -130,22 +133,22 @@ function cloud_display() {
 
   $header = array(t("site"), t("last update"), array("data" => t("operations"), "colspan" => 2));
   while ($site = db_fetch_object($result)) {
-    $rows[] = array("<a href=\"$site->link\">$site->name</a>", ($site->timestamp ? format_interval(time() - $site->timestamp) ." ago" : "never"), l(t("edit site"), "admin/syndication/cloud/edit/$site->sid"), l(t("update site"), "admin/syndication/cloud/update/$site->sid"));
+    $rows[] = array("<a href=\"$site->link\">$site->name</a>", ($site->changed ? format_interval(time() - $site->changed) ." ago" : "never"), l(t("edit site"), "admin/syndication/cloud/edit/$site->sid"), l(t("update site"), "admin/syndication/cloud/update/$site->sid"));
   }
 
   return table($header, $rows);
 }
 
 function cloud_list($limit = 10) {
-  $result = db_query_range("SELECT * FROM site WHERE timestamp > ". (time() - 604800) ." ORDER BY timestamp DESC", 0, $limit);
+  $result = db_query_range("SELECT * FROM site WHERE changed > ". (time() - 604800) ." ORDER BY changed DESC", 0, $limit);
 
   $hour = -1;
   $list = -1;
   $inlist = false;
   $output .= "<div class=\"item-list\">";
   while ($site = db_fetch_object($result)) {
-    if ($hour != floor((time() - $site->timestamp) / 3600)) {
-      $hour = floor((time() - $site->timestamp) / 3600);
+    if ($hour != floor((time() - $site->changed) / 3600)) {
+      $hour = floor((time() - $site->changed) / 3600);
       if ($hour < 12) {
         if ($inlist) {
           $output .= "</ul>";
