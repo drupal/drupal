@@ -66,7 +66,7 @@ CREATE TABLE book (
   parent int(10) NOT NULL default '0',
   weight tinyint(3) NOT NULL default '0',
   format tinyint(2) default '0',
-  log text,
+  log longtext,
   PRIMARY KEY  (nid),
   KEY nid (nid),
   KEY parent (parent)
@@ -79,7 +79,7 @@ CREATE TABLE book (
 CREATE TABLE boxes (
   bid tinyint(4) NOT NULL auto_increment,
   title varchar(64) NOT NULL default '',
-  body text,
+  body longtext,
   info varchar(128) NOT NULL default '',
   type tinyint(2) NOT NULL default '0',
   PRIMARY KEY  (bid),
@@ -105,7 +105,7 @@ CREATE TABLE bundle (
 
 CREATE TABLE cache (
   cid varchar(255) NOT NULL default '',
-  data mediumtext,
+  data longtext,
   expire int(11) NOT NULL default '0',
   created int(11) NOT NULL default '0',
   PRIMARY KEY  (cid)
@@ -121,14 +121,14 @@ CREATE TABLE comments (
   nid int(10) NOT NULL default '0',
   uid int(10) NOT NULL default '0',
   subject varchar(64) NOT NULL default '',
-  comment text NOT NULL,
+  comment longtext NOT NULL,
   hostname varchar(128) NOT NULL default '',
   timestamp int(11) NOT NULL default '0',
   link varchar(16) NOT NULL default '',
   score mediumint(9) NOT NULL default '0',
   status tinyint(3) unsigned NOT NULL default '0',
   thread varchar(255) NOT NULL,
-  users mediumtext,
+  users longtext,
   PRIMARY KEY  (cid),
   KEY lid (nid)
 ) TYPE=MyISAM;
@@ -141,8 +141,8 @@ CREATE TABLE directory (
   link varchar(255) NOT NULL default '',
   name varchar(128) NOT NULL default '',
   mail varchar(128) NOT NULL default '',
-  slogan text NOT NULL,
-  mission text NOT NULL,
+  slogan longtext NOT NULL,
+  mission longtext NOT NULL,
   timestamp int(11) NOT NULL default '0',
   PRIMARY KEY  (link)
 ) TYPE=MyISAM;
@@ -159,7 +159,7 @@ CREATE TABLE feed (
   timestamp int(10) NOT NULL default '0',
   attributes varchar(255) NOT NULL default '',
   link varchar(255) NOT NULL default '',
-  description text NOT NULL,
+  description longtext NOT NULL,
   PRIMARY KEY  (fid),
   UNIQUE KEY link (url),
   UNIQUE KEY title (title)
@@ -198,7 +198,7 @@ CREATE TABLE item (
   title varchar(255) NOT NULL default '',
   link varchar(255) NOT NULL default '',
   author varchar(255) NOT NULL default '',
-  description text NOT NULL,
+  description longtext NOT NULL,
   timestamp int(11) default NULL,
   attributes varchar(255) NOT NULL default '',
   PRIMARY KEY  (iid)
@@ -273,12 +273,12 @@ CREATE TABLE node (
   comment int(2) NOT NULL default '0',
   promote int(2) NOT NULL default '0',
   moderate int(2) NOT NULL default '0',
-  users text NOT NULL,
+  users longtext NOT NULL,
   attributes varchar(255) NOT NULL default '',
-  teaser text NOT NULL,
-  body mediumtext NOT NULL,
+  teaser longtext NOT NULL,
+  body longtext NOT NULL,
   changed int(11) NOT NULL default '0',
-  revisions text NOT NULL,
+  revisions longtext NOT NULL,
   static int(2) NOT NULL default '0',
   PRIMARY KEY  (nid),
   KEY node_type (type(4)),
@@ -321,7 +321,7 @@ CREATE TABLE url_alias (
 
 CREATE TABLE permission (
   rid int(10) unsigned NOT NULL default '0',
-  perm text,
+  perm longtext,
   tid int(10) unsigned NOT NULL default '0',
   KEY rid (rid)
 ) TYPE=MyISAM;
@@ -333,7 +333,7 @@ CREATE TABLE permission (
 CREATE TABLE poll (
   nid int(10) unsigned NOT NULL default '0',
   runtime int(10) NOT NULL default '0',
-  voters text NOT NULL,
+  voters longtext NOT NULL,
   active int(2) unsigned NOT NULL default '0',
   PRIMARY KEY  (nid)
 ) TYPE=MyISAM;
@@ -386,7 +386,7 @@ CREATE TABLE sessions (
   sid varchar(32) NOT NULL default '',
   hostname varchar(128) NOT NULL default '',
   timestamp int(11) NOT NULL default '0',
-  session text,
+  session longtext,
   KEY uid (uid),
   KEY sid (sid(4)),
   KEY timestamp (timestamp)
@@ -439,7 +439,7 @@ CREATE TABLE term_data (
   tid int(10) unsigned NOT NULL auto_increment,
   vid int(10) unsigned NOT NULL default '0',
   name varchar(255) NOT NULL default '',
-  description text,
+  description longtext,
   weight tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (tid),
   KEY vid (vid)
@@ -508,7 +508,7 @@ CREATE TABLE users (
   timezone varchar(8) default NULL,
   language char(2) NOT NULL default '',
   init varchar(64) default '',
-  data text,
+  data longtext,
   rid int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (uid),
   UNIQUE KEY name (name),
@@ -521,7 +521,7 @@ CREATE TABLE users (
 
 CREATE TABLE variable (
   name varchar(48) NOT NULL default '',
-  value text NOT NULL,
+  value longtext NOT NULL,
   PRIMARY KEY  (name)
 ) TYPE=MyISAM;
 
@@ -532,12 +532,12 @@ CREATE TABLE variable (
 CREATE TABLE vocabulary (
   vid int(10) unsigned NOT NULL auto_increment,
   name varchar(255) NOT NULL default '',
-  description text,
+  description longtext,
   relations tinyint(3) unsigned NOT NULL default '0',
   hierarchy tinyint(3) unsigned NOT NULL default '0',
   multiple tinyint(3) unsigned NOT NULL default '0',
   required tinyint(3) unsigned NOT NULL default '0',
-  nodes text,
+  nodes longtext,
   weight tinyint(4) NOT NULL default '0',
   PRIMARY KEY  (vid)
 ) TYPE=MyISAM;
@@ -550,7 +550,7 @@ CREATE TABLE watchdog (
   wid int(5) NOT NULL auto_increment,
   uid int(10) NOT NULL default '0',
   type varchar(16) NOT NULL default '',
-  message text NOT NULL,
+  message longtext NOT NULL,
   link varchar(255) NOT NULL default '',
   location varchar(128) NOT NULL default '',
   hostname varchar(128) NOT NULL default '',
