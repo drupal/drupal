@@ -15,7 +15,6 @@ function load_theme() {
   else {
     include $themes[key($themes)][0];
   }
- 
   return new Theme();
 }
 
@@ -41,13 +40,16 @@ function discussion_num_replies($id, $count = 0) {
 
 function discussion_num_filtered($sid, $pid) {
   global $user;
+
   $threshold = ($user->id) ? $user->threshold  : "0"; 
+  $pid = ($pid) ? $pid : 0;
+
   $result = db_query("SELECT COUNT(cid) FROM comments WHERE sid = $sid AND pid = $pid AND (votes != 0 AND score / votes < $threshold)");
   return ($result) ? db_result($result, 0) : 0;
 }
 
-function format_plural($count, $one, $more) {
-  return ($count == 1) ? "$count $one" : "$count $more";
+function format_plural($count, $singular, $plural) {
+  return ($count == 1) ? "$count $singular" : "$count $plural";
 }
 
 function format_date($timestamp, $type = "medium") {

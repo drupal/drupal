@@ -110,7 +110,7 @@ class backend {
             $number += 1;
 
             ### Insert item in database:
-            $result = db_query("INSERT INTO headlines (id, title, link, number) VALUES('$this->id', '". stripslashes($title) ."', '". stripslashes($link) ."', '$number')");
+            $result = db_query("INSERT INTO headlines (id, title, link, number) VALUES('". check_input($this->id) ."', '". check_input($title) ."', '". check_input($link) ."', '". check_input($number) ."')");
           }
  
           ### Mark channels as being updated:
@@ -195,7 +195,7 @@ class backend {
   #
   function add() {
     ### Add channel:    
-    $result = db_query("INSERT INTO channel (site, file, url, contact, timestamp) VALUES ('$this->site', '$this->file', '$this->url', '$this->contact', 42)");
+    $result = db_query("INSERT INTO channel (site, file, url, contact, timestamp) VALUES ('". check_input($this->site) ."', '". check_input($this->file) ."', '". check_input($this->url) ."', '". check_input($this->contact) ."', 42)");
   }
 
 
