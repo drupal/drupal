@@ -51,6 +51,7 @@
        BODY { margin: 10px; font-size: 10pt; font-family: verdana,helvetica,arial; }
        SMALL { font-size: 8pt; }
        BIG { font-size: 12pt; }
+       HR { height: 1px; color: #000000; }
       -->
      </STYLE>
      <BODY TEXT="#000000" BGCOLOR="<?php print $this->clc0; ?>" ALINK="#000000" LINK="#404040" VLINK="#404040" MARGINHEIGHT="10" MARGINWIDTH="10">
