@@ -12,7 +12,7 @@ function display_moderation_results($theme, $story) {
     $output .= "<P>\n";
     $output .= "<B>Other people voted:</B><BR>\n";
 
-    $result = db_query("SELECT * FROM users WHERE history LIKE '%s$story->id%'");
+    $result = db_query("SELECT * FROM users WHERE id != $user->id AND history LIKE '%s$story->id%'");
     while ($account = db_fetch_object($result)) {
       $output .= "". format_username($account->userid) ." voted `". user_getHistory($account->history, "s$story->id") ."'.<BR>";
     }
@@ -98,7 +98,7 @@ function display_new_headlines($theme, $num = 10) {
 
 function display_calendar($theme, $date) {
   include "includes/calendar.inc";
-  $calendar = new calendar($date);
+  $calendar = new Calendar($date);
   $theme->box("Browse archives", $calendar->display());
 }
 

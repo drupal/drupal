@@ -1,6 +1,6 @@
 <?
 
-class calendar {
+class Calendar {
   var $date;
 
   function calendar($date) {

@@ -58,6 +58,8 @@ function submit_enter() {
 function submit_preview($subject, $abstract, $article, $category) {
   global $categories, $allowed_html, $theme, $user;
 
+  include "includes/story.inc";
+
   $output .= "<FORM ACTION=\"submit.php\" METHOD=\"post\">\n";
 
   $output .= "<P>\n";
@@ -118,7 +120,7 @@ function submit_preview($subject, $abstract, $article, $category) {
   $output .= "</FORM>\n";
   
   $theme->header();
-  $theme->preview($user->userid, check_output($subject), check_output($abstract), "", check_output($article), format_date(time(), "extra large"), check_output($category), "we-hate-typoes");
+  $theme->article(new Story($user->userid, check_output($subject), check_output($abstract), check_output($article), check_output($category), time()));
   $theme->box("Submit a story", $output);
   $theme->footer();
 }

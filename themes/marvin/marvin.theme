@@ -38,7 +38,7 @@
      <BODY TEXT="#000000" BGCOLOR="#FFFFFF" ALINK="#CCCCCC" LINK="#665555" VLINK="#665555">
       <TABLE BORDER="0" CELLPADDING="8" CELLSPACING="0">
        <TR>
-        <TD ROWSPAN="3" WIDTH="30">&nbsp;</TD>
+        <TD WIDTH="30" ROWSPAN="3">&nbsp;</TD>
         <TD WIDTH="470"><A HREF=""><IMG SRC="themes/marvin/images/logo.gif" ALT="drop.org" BORDER="0"></A></TD>
         <TD WIDTH="180">
          <LI>Create an <A HREF="account.php?op=register">account</A> and <A HREF="submit.php">submit</A> new stories.</LI>
@@ -64,7 +64,7 @@
      print " <TR VALIGN=\"bottom\"><TD COLSPAN=\"2\" BGCOLOR=\"#000000\" WIDTH=\"100%\"><IMG SRC=\"themes/marvin/images/pixel.gif\" WIDTH=\"1\" HEIGHT=\"0\" ALT=\"\"></TD></TR>\n";
      print " <TR>\n";
      print "  <TD>\n";
-     print "   <FONT COLOR=\"#7C7C7C\"><SMALL>Posted by ". format_username($story->userid) ." on ". format_date($story->timestamp, "extra large"). ""; ?><? if ($story->department) print "<BR>from the $story->department dept."; ?><? print "</SMALL></FONT></TD><TD ALIGN=\"right\" VALIGN=\"top\" NOWRAP><SMALL><A HREF=\"search.php?category=". urlencode($story->category) ."\"><FONT COLOR=\"#83997A\">$story->category</FONT></A></SMALL>\n";
+     print "   <FONT COLOR=\"#7C7C7C\"><SMALL>Submitted by ". format_username($story->userid) ." on ". format_date($story->timestamp, "extra large"). ""; ?><? if ($story->department) print "<BR>from the $story->department dept."; ?><? print "</SMALL></FONT></TD><TD ALIGN=\"right\" VALIGN=\"top\" NOWRAP><SMALL><A HREF=\"search.php?category=". urlencode($story->category) ."\"><FONT COLOR=\"#83997A\">$story->category</FONT></A></SMALL>\n";
      print "  </TD>\n";
      print " </TR>\n";
      print " <TR><TD COLSPAN=\"2\">&nbsp;</TD></TR>\n";
@@ -86,13 +86,13 @@
    #                comments).  It's what you get when you followed for
    #                instance one of read-more links on the main page.
    function article($story, $reply) {
-     print "\n<!-- story: \"$story->subject\" -->\n";     
+     print "\n<!-- story: \"$story->subject\" -->\n";
      print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"2\" WIDTH=\"100%\">\n";
      print " <TR><TD COLSPAN=\"2\"><IMG SRC=\"themes/marvin/images/drop.gif\" ALT=\"\"> &nbsp; <B>$story->subject</B></TD></TR>\n";
      print " <TR VALIGN=\"bottom\"><TD COLSPAN=\"2\" BGCOLOR=\"#000000\" WIDTH=\"100%\"><IMG SRC=\"themes/marvin/images/pixel.gif\" WIDTH=\"1\" HEIGHT=\"0\" ALT=\"\"></TD></TR>\n";
      print " <TR>\n";
      print "  <TD>\n";
-     print "   <FONT COLOR=\"#7C7C7C\"><SMALL>Posted by ". format_username($story->userid) ." on ". format_date($story->timestamp, "extra large") .""; ?><? if ($story->department) print "<BR>from the $story->department dept."; ?><? print "</SMALL></FONT></TD><TD ALIGN=\"right\" VALIGN=\"top\" NOWRAP><SMALL><A HREF=\"search.php?category=". urlencode($story->category) ."\"><FONT COLOR=\"#83997A\">$story->category</FONT></A></SMALL>\n"; 
+     print "   <FONT COLOR=\"#7C7C7C\"><SMALL>Submitted by ". format_username($story->userid) ." on ". format_date($story->timestamp, "extra large") .""; ?><? if ($story->department) print "<BR>from the $story->department dept."; ?><? print "</SMALL></FONT></TD><TD ALIGN=\"right\" VALIGN=\"top\" NOWRAP><SMALL><A HREF=\"search.php?category=". urlencode($story->category) ."\"><FONT COLOR=\"#83997A\">$story->category</FONT></A></SMALL>\n"; 
      print "  </TD>\n";
      print " </TR>\n";
      print " <TR><TD COLSPAN=\"2\">&nbsp;</TD></TR>\n";
@@ -230,35 +230,6 @@
      print "<BR>\n\n";
    }
 
-   ######
-   # Syntax.......: preview(...);
-   # Description..: this function is used to preview a story and is used at
-   #                different parts of the homepage: when a visitors sumbits
-   #                news, when an editor wants to post news, when people
-   #                check the entries in the sumbission queue, etc.
-   function preview($author, $subject, $abstract, $updates, $article, $timestamp, $category, $department) {
-     print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"2\" WIDTH=\"100%\">";
-     print " <TR><TD COLSPAN=\"2\"><B>$subject</B></TD></TR>";
-     print " <TR VALIGN=\"bottom\"><TD COLSPAN=\"2\" BGCOLOR=\"#000000\" WIDTH=\"100%\"><IMG SRC=\"themes/marvin/images/pixel.gif\" WIDTH=\"1\" HEIGHT=\"0\" ALT=\"\"></TD></TR>";
-     print " <TR>";
-     print "  <TD>";
-     print "   <FONT COLOR=\"#7C7C7C\"><SMALL>Posted by ". format_username($author) ." on $timestamp"; ?><? if ($department) print "<BR>from the $department dept."; ?><? print "</SMALL></FONT></TD><TD ALIGN=\"right\" VALIGN=\"top\" NOWRAP><SMALL><A HREF=\"search.php?category=". urlencode($category) ."\"><FONT COLOR=\"#83997A\">$category</FONT></A></SMALL>\n";
-     print "  </TD>";
-     print " </TR>";
-     print " <TR><TD COLSPAN=\"2\">&nbsp;</TD></TR>";
-     print " <TR>";
-     print "  <TD COLSPAN=\"2\">";
-     if ($abstract) print "<P>". check_output($abstract, 1) ."</P>";
-     if ($comments) print "<P><FONT COLOR=\"$this->bgcolor2\">Editor's note:</FONT> ". check_output($comments, 1) ."</P>";
-     if ($article) print "<P>". check_output($article, 1) ."</P>";
-     print "  </TD>";
-     print " </TR>";
-     print " <TR><TD COLSPAN=\"2\">&nbsp;</TD></TR>";
-     print " <TR><TD COLSPAN=\"2\">$link</TD></TR>";
-     print "</TABLE>";
-     print "<BR><BR>";
-   }
- 
    ######
    # Syntax.......: box($subject, $body);
    # Description..: a function to draw a box/block.

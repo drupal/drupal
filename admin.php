@@ -1,28 +1,13 @@
 <?
 
-// TEMPORARY SECURITY PATCH:
-// if ($user->userid != "Dries") exit();
-  if(!$PHP_AUTH_USER) {
-      Header("WWW-Authenticate: Basic realm=\"Admin Area\"");
-      Header("HTTP/1.0 401 Unauthorized");
-      echo "The cow says: Moo! You can't come in!\n";
-      exit;
-  } else {
-    if ($PHP_AUTH_PW != "mOo!")
-    {
-      Header("WWW-Authenticate: Basic realm=\"Admin Area\"");
-      Header("HTTP/1.0 401 Unauthorized");
-      echo "The cow says: Moo! You can't come in!\n";
-      exit;
-    }
-  }
+ // TEMPORARY SOLUTION:
+ if ($user->id > 4) exit;
 
 /*
  * Account administration:
  */
-
 function account_display($order = "username") {
-  $sort = array("ID" => "id", "fake e-mail address" => "fake_email", "homepage" => "url", "hostname" => "last_host", "last access date" => "last_access", "real e-mail address" => "real_email", "real name" => "name", "status" => "status", "theme" => "theme", "username" => "userid");
+  $sort = array("ID" => "id", "fake e-mail address" => "fake_email", "homepage" => "url", "hostname" => "last_host", "last access date" => "last_access", "real e-mail address" => "real_email", "real name" => "name", "status" => "status", "theme" => "theme", "timezone" => "timezone", "username" => "userid");
   $show = array("ID" => "id", "username" => "userid", "$order" => "$sort[$order]", "status" => "status");
   $stat = array(0 => "blocked", 1 => "not confirmed", 2 => "open");
 
@@ -63,6 +48,9 @@ function account_display($order = "username") {
 	case "status":         
           $output .= "  <TD ALIGN=\"center\">". $stat[$account[$value]] ."</TD>\n";
           break;
+        case "timezone":
+          $output .= "  <TD ALIGN=\"center\">". format_data($account[$value] / 3600) ."</TD>\n";
+          break;
         case "url":
           $output .= "  <TD>". format_url($account[$value]) ."</TD>\n";
           break;
@@ -84,7 +72,7 @@ function account_display($order = "username") {
 function account_stories($id) {
   $result = db_query("SELECT * FROM stories WHERE author = $id ORDER BY timestamp DESC");
   while ($story = db_fetch_object($result)) {
-    $output .= "<LI><A HREF=\"discussion.php?id=$story->id\">$story->subject</A></LI>\n";
+    $output .= "<LI><A HREF=\"discussion.php?id=$story->id\">". check_output($story->subject) ."</A></LI>\n";
   }
   return $output;
 }
@@ -92,7 +80,7 @@ function account_stories($id) {
 function account_comments($id) {
   $result = db_query("SELECT * FROM comments WHERE author = $id ORDER BY timestamp DESC");
   while ($comment = db_fetch_object($result)) {
-    $output .= "<LI><A HREF=\"discussion.php?id=$comment->sid&cid=$comment->cid&pid=$comment->pid\">$comment->subject</A></LI>\n";
+    $output .= "<LI><A HREF=\"discussion.php?id=$comment->sid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A></LI>\n";
   }
   return $output;
 }
@@ -115,6 +103,7 @@ function account_view($name) {
     $output .= " <TR><TD ALIGN=\"right\"><B>Bio information:</B></TD><TD>". format_data($account->bio) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Signature:</B></TD><TD>". format_data($account->signature) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Theme:</B></TD><TD>". format_data($account->theme) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Timezone:</B></TD><TD>". format_data($account->timezone / 3600) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Submitted stories:</B></TD><TD>". format_data(account_stories($account->id)) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Submitted comments:</B></TD><TD>". format_data(account_comments($account->id)) ."</TD></TR>\n";
     $output .= "</TABLE>\n";
@@ -123,9 +112,9 @@ function account_view($name) {
 }
 
 /*
- * Log administration:
+ * Watchdog administration:
  */
-function log_display($order = "date") {
+function watchdog_display($order = "date") {
   $colors = array("#FFFFFF", "#FFFFFF", "#90EE90", "#CD5C5C");
   $fields = array("date" => "id DESC", "username" => "user", "location" => "location", "message" => "message DESC", "level" => "level DESC");
 
@@ -136,7 +125,7 @@ function log_display($order = "date") {
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
   $output .= " <TR>\n";
   $output .= "  <TH ALIGN=\"right\" COLSPAN=\"4\">\n";
-  $output .= "   <FORM ACTION=\"admin.php?section=logs\" METHOD=\"post\">\n";
+  $output .= "   <FORM ACTION=\"admin.php?section=watchdog\" METHOD=\"post\">\n";
   $output .= "    <SELECT NAME=\"order\">\n";
   foreach ($fields as $key=>$value) {
     $output .= "     <OPTION VALUE=\"$key\"". ($key == $order ? " SELECTED" : "") .">Sort by $key</OPTION>\n";
@@ -148,13 +137,13 @@ function log_display($order = "date") {
   $output .= " </TR>\n";
   $output .= " <TR>\n";
   $output .= "  <TH>date</TH>\n";
-  $output .= "  <TH>user</TH>\n";
   $output .= "  <TH>message</TH>\n";
+  $output .= "  <TH>user</TH>\n";
   $output .= "  <TH>operations</TH>\n";
   $output .= " </TR>\n";
 
-  while ($log = db_fetch_object($result)) {
-    $output .= " <TR BGCOLOR=\"". $colors[$log->level] ."\"><TD>". format_date($log->timestamp) ."</TD><TD ALIGN=\"center\">". format_username($log->userid, 1) ."</A></TD><TD>". substr($log->message, 0, 44) ."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?section=logs&op=view&id=$log->id\">more</A></TD></TR>\n";
+  while ($watchdog = db_fetch_object($result)) {
+    $output .= " <TR BGCOLOR=\"". $colors[$watchdog->level] ."\"><TD>". format_date($watchdog->timestamp) ."</TD><TD>". substr(check_output($watchdog->message), 0, 44) ."</TD><TD ALIGN=\"center\">". format_username($watchdog->userid, 1) ."</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?section=watchdog&op=view&id=$watchdog->id\">more</A></TD></TR>\n";
   }
 
   $output .= "</TABLE>\n";
@@ -162,17 +151,17 @@ function log_display($order = "date") {
   print $output;
 }
 
-function log_view($id) {
+function watchdog_view($id) {
   $result = db_query("SELECT l.*, u.userid FROM watchdog l LEFT JOIN users u ON l.user = u.id WHERE l.id = $id");
 
-  if ($log = db_fetch_object($result)) {
+  if ($watchdog = db_fetch_object($result)) {
     $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Level:</B></TD><TD>$log->level</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Date:</B></TD><TD>". format_date($log->timestamp, "extra large") ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>User:</B></TD><TD>". format_username($log->userid, 1) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Location:</B></TD><TD>$log->location</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Message:</B></TD><TD>$log->message</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Hostname:</B></TD><TD>$log->hostname</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Level:</B></TD><TD>$watchdog->level</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Date:</B></TD><TD>". format_date($watchdog->timestamp, "extra large") ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>User:</B></TD><TD>". format_username($watchdog->userid, 1) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Location:</B></TD><TD>$watchdog->location</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Message:</B></TD><TD>$watchdog->message</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Hostname:</B></TD><TD>$watchdog->hostname</TD></TR>\n";
     $output .= "</TABLE>\n";
     print $output;
   }
@@ -331,7 +320,7 @@ function comment_display($order = "date") {
   $output .= " </TR>\n";
 
   while ($comment = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"discussion.php?id=$comment->sid&cid=$comment->cid&pid=$comment->pid\">$comment->subject</A></TD><TD>". format_username($comment->userid, 1) ."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?section=comments&op=edit&id=$comment->cid\">edit</A></TD></TR>\n";
+    $output .= " <TR><TD><A HREF=\"discussion.php?id=$comment->sid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A></TD><TD>". format_username($comment->userid, 1) ."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?section=comments&op=edit&id=$comment->cid\">edit</A></TD></TR>\n";
   }
 
   $output .= "</TABLE>\n";
@@ -562,7 +551,7 @@ function story_display($order = "date") {
   $output .= " </TR>\n";
 
   while ($story = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"discussion.php?id=$story->id\">$story->subject</A></TD><TD>". format_username($story->userid, 1) ."</TD><TD>$story->category</TD><TD ALIGN=\"center\">". $status[$story->status] ."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?section=stories&op=edit&id=$story->id\">edit</A></TD></TR>\n";
+    $output .= " <TR><TD><A HREF=\"discussion.php?id=$story->id\">". check_output($story->subject) ."</A></TD><TD>". format_username($story->userid, 1) ."</TD><TD>$story->category</TD><TD ALIGN=\"center\">". $status[$story->status] ."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?section=stories&op=edit&id=$story->id\">edit</A></TD></TR>\n";
   }
 
   $output .= "</TABLE>\n";
@@ -675,16 +664,16 @@ switch ($section) {
         ban_display($category);
     }
     break;
-  case "logs":
+  case "watchdog":
     switch ($op) {
       case "view":
-        log_view($id);
+        watchdog_view($id);
         break;
       case "Update":
-        log_display($order);
+        watchdog_display($order);
         break;
       default:
-        log_display();
+        watchdog_display();
     }
     break;
   case "stats":
