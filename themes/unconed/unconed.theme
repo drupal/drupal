@@ -197,7 +197,7 @@
              <OPTION VALUE="1" <? if ($order==1) { echo "SELECTED"; } ?>>Newest first
              <OPTION VALUE="2" <? if ($order==2) { echo "SELECTED"; } ?>>Highest scoring first
             </SELECT> 
-            <INPUT TYPE="hidden" NAME="sid" VALUE="<? echo "$sid"; ?>"> <INPUT TYPE="submit" VALUE="Refresh">
+            <INPUT TYPE="hidden" NAME="sid" VALUE="<? echo "$sid"; ?>"> <INPUT TYPE="submit" VALUE="Save">
             <?
              if (isset($user)) echo "<BR><CENTER><INPUT TYPE=\"checkbox\" NAME=\"save\"> Save preferences</CENTER>"; 
             ?>
@@ -256,7 +256,7 @@
      echo "     <TD ALIGN=\"right\" VALIGN=\"top\">Author:</TD><TD><B>" . format_username($poster) . "</B> ";
      if ($poster != $anonymous) {
        ### Display extra information line:
-       if ($email) $info .= format_email_address($email);
+       if ($email) $info .= format_email($email);
        if (eregi("http://",$url)) $info .= " | " . format_url($url);
        echo "<BR>[ $info ]";
      }
