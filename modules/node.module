@@ -887,10 +887,11 @@ function node_validate($node, &$error) {
   ** Validate the title field:
   */
 
-  $node->title = strip_tags($node->title);
-
-  if (isset($node->title) && !$node->title) {
-    $error["title"] = theme("theme_error", t("You have to specify a valid title."));
+  if (isset($node->title)) {
+    $node->title = strip_tags($node->title);
+    if (!$node->title) {
+      $error["title"] = theme("theme_error", t("You have to specify a valid title."));
+    }
   }
 
   /*
