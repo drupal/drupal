@@ -137,7 +137,8 @@ function blog_page_last() {
 }
 
 function blog_form(&$node, &$help, &$error) {
-  global $nid, $iid;
+  global $nid;
+  $iid = $_GET["iid"];
   if (empty($node->body)) {
 
     /*
