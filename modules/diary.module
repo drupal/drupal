@@ -1,4 +1,4 @@
-<?
+<?php
 
 $module = array("find" => "diary_find",
                 "help" => "diary_help",
@@ -217,7 +217,7 @@ function diary_page() {
 function diary_help() {
  ?>
   <P>Drupal's diary module allows registered users to maintain an online diary.  It provides easy-to-write and easy-to-read online diaries or journals that can be filled with daily thoughts, poetry, boneless blabber, spiritual theories, intimate details, valuable experiences, cynical rants, semi-coherent comments, writing experiments, artistic babblings, critics on current facts, fresh insights, diverse dreams, chronicles and mumbling madness available for public consumption.</P>
- <?
+ <?php
 }
 
 function diary_user($username, $section, $operation) {

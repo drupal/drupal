@@ -1,4 +1,4 @@
-<?
+<?php
 
 function search_form($keys) {
   global $REQUEST_URI;

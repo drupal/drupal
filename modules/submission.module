@@ -1,4 +1,4 @@
-<?
+<?php
 
 $module = array("menu" => "submission_menu",
                 "page" => "submission_page");

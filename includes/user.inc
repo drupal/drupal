@@ -1,4 +1,4 @@
-<?
+<?php
 
 class User {
   function User($userid, $passwd = 0) {

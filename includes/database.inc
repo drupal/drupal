@@ -1,4 +1,4 @@
-<?
+<?php
 
 function db_connect($host, $user, $pass, $name) {
   mysql_pconnect($host, $user, $pass) or die(mysql_Error());

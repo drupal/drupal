@@ -1,4 +1,4 @@
-<?
+<?php
 
 class Story {
   function Story($userid, $subject, $abstract, $article, $section, $timestamp) {

@@ -1,4 +1,4 @@
-<?
+<?php
 
 function locale_init() {
   global $languages, $user;

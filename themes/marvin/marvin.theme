@@ -1,4 +1,4 @@
-<?
+<?php
 
  class Theme {
    var $link = "#666699";
@@ -9,7 +9,7 @@
      <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
      <HTML>
      <HEAD>
-      <TITLE><? print $site_name; ?></TITLE>
+      <TITLE><?php print $site_name; ?></TITLE>
      </HEAD>
      <STYLE type="text/css">
       <!--
@@ -26,14 +26,14 @@
        </TR>
        <TR>
         <TD ALIGN="right" COLSPAN="2">
-         <?
+         <?php
            print "<SMALL><A HREF=\"index.php\">". t("home") ."</A> | <A HREF=\"module.php?mod=faq\">". t("faq") ."</A> | <A HREF=\"module.php?mod=diary\">". t("diary") ."</A> | <A HREF=\"search.php\">". t("search") ."</A> | <A HREF=\"submit.php\">". t("submit news") ."</A> | <A HREF=\"account.php\">". t("user account") ."</A></SMALL>\n";
          ?>
         </TD>
        </TR>
        <TR>
         <TD VALIGN="top" WIDTH="85%">
-    <?
+    <?php
    }
 
    function story($story, $reply = 0) {
@@ -44,7 +44,7 @@
        print " <TR VALIGN=\"bottom\"><TD COLSPAN=\"2\" BGCOLOR=\"#000000\" WIDTH=\"100%\"><IMG SRC=\"themes/marvin/images/pixel.gif\" WIDTH=\"1\" HEIGHT=\"0\" ALT=\"\"></TD></TR>\n";
        print " <TR>\n";
        print "  <TD>\n";
-       print "   <FONT COLOR=\"#7C7C7C\"><SMALL>". strtr(t("Submitted by %a on %b"), array("%a" => format_username($story->userid), "%b" => format_date($story->timestamp, "large"))); ?><? if ($story->department) print "<BR>from the $story->department dept."; ?><? print "</SMALL></FONT></TD><TD ALIGN=\"right\" VALIGN=\"top\" NOWRAP><SMALL><A HREF=\"?section=". urlencode($story->section) ."\"><FONT COLOR=\"#83997A\">$story->section</FONT></A></SMALL>\n";
+       print "   <FONT COLOR=\"#7C7C7C\"><SMALL>". strtr(t("Submitted by %a on %b"), array("%a" => format_username($story->userid), "%b" => format_date($story->timestamp, "large"))); ?><?php if ($story->department) print "<BR>from the $story->department dept."; ?><?php print "</SMALL></FONT></TD><TD ALIGN=\"right\" VALIGN=\"top\" NOWRAP><SMALL><A HREF=\"?section=". urlencode($story->section) ."\"><FONT COLOR=\"#83997A\">$story->section</FONT></A></SMALL>\n";
        print "  </TD>\n";
        print " </TR>\n";
        print " <TR><TD COLSPAN=\"2\">&nbsp;</TD></TR>\n";
@@ -64,7 +64,7 @@
        print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"2\" WIDTH=\"100%\">\n";
        print " <TR><TD COLSPAN=\"2\"><IMG SRC=\"themes/marvin/images/drop.gif\" ALT=\"\"> &nbsp; <B>". check_output($story->subject) ."</B></TD></TR>\n";
        print " <TR VALIGN=\"bottom\"><TD COLSPAN=\"2\" BGCOLOR=\"#000000\" WIDTH=\"100%\"><IMG SRC=\"themes/marvin/images/pixel.gif\" WIDTH=\"1\" HEIGHT=\"0\" ALT=\"\"></TD></TR>\n";
-       print " <TR><TD><FONT COLOR=\"#7C7C7C\"><SMALL>". strtr(t("Submitted by %a on %b"), array("%a" => format_username($story->userid), "%b" => format_date($story->timestamp, "large"))); ?><? if ($story->department) print "<BR>from the $story->department dept."; ?><? print "</SMALL></FONT></TD><TD ALIGN=\"right\" VALIGN=\"top\" NOWRAP><SMALL><A HREF=\"index.php?section=". urlencode($story->section) ."\"><FONT COLOR=\"#83997A\">$story->section</FONT></A></SMALL></TD></TR>\n";
+       print " <TR><TD><FONT COLOR=\"#7C7C7C\"><SMALL>". strtr(t("Submitted by %a on %b"), array("%a" => format_username($story->userid), "%b" => format_date($story->timestamp, "large"))); ?><?php if ($story->department) print "<BR>from the $story->department dept."; ?><?php print "</SMALL></FONT></TD><TD ALIGN=\"right\" VALIGN=\"top\" NOWRAP><SMALL><A HREF=\"index.php?section=". urlencode($story->section) ."\"><FONT COLOR=\"#83997A\">$story->section</FONT></A></SMALL></TD></TR>\n";
        print " <TR><TD COLSPAN=\"2\">&nbsp;</TD></TR>\n";
        print " <TR>\n";
        print "  <TD COLSPAN=\"2\">\n";
@@ -157,7 +157,7 @@
      ?>
        </TD>
        <TD VALIGN="top" WIDTH=\"200\">
-         <?
+         <?php
           theme_account($this);
           theme_blocks("all", $this);
          ?>
@@ -165,16 +165,15 @@
       </TR>
       <TR>
        <TD ALIGN="center" COLSPAN="3">
-        <?
+        <?php
           print "<SMALL>[ <A HREF=\"index.php\">". t("home") ."</A> | <A HREF=\"module.php?mod=faq\">". t("faq") ."</A> | <A HREF=\"module.php?mod=diary\">". t("diary") ."</A> | <A HREF=\"search.php\">". t("search") ."</A> | <A HREF=\"submit.php\">". t("submit news") ."</A> | <A HREF=\"account.php\">". t("user account") ."</A> ]</SMALL><P>\n";
         ?>
-        <CENTER><SMALL><I><FONT COLOR="#7C7C7C">Powered by <A HREF="http://drop.org/module.php?mod=drupal">drupal</A>.</FONT></I></SMALL></CENTER>
        </TD>
       </TR>
      </TABLE>
     </BODY>
     </HTML>
-    <?
+    <?php
    }
  }
 

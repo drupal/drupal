@@ -1,4 +1,4 @@
-<?
+<?php
 class backend {
 
   // Channel properties:
@@ -68,7 +68,7 @@ class backend {
           $result = db_query("DELETE FROM headlines WHERE id = '$this->id'");
 
           // Strip all 'junk':
-          $data = ereg_replace("<?xml.*/image>", "", $data);
+          $data = ereg_replace("<?phpxml.*/image>", "", $data);
           $data = ereg_replace("</rdf.*", "", $data);
           $data = chop($data);
 

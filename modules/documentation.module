@@ -1,4 +1,4 @@
-<?
+<?php
 
 $module = array("page"  => "documentation",
                 "admin" => "documentation");
@@ -269,7 +269,7 @@ function documentation() {
 
   <H1><A NAME="c4">Chapter 4: modules</A></H1>
 
-  <?
+  <?php
    module_iterate("documentation_module");
   ?>
 
@@ -342,6 +342,6 @@ function documentation() {
   <P>3. <B>Describe your changes:</B><BR>Describe the technical detail of the change(s) your patch includes and try to be as specific as possible.  Note that we prefer technical reasoning above marketing: give us clear reasons why "this way" is good.  Justify your changes and try to carry enough weight.  It is important to note the version to which this patch applies.</P>
   <P>4. <B>Separate your changes:</B><BR>Separate each logical change into its own patch.  For example, if your changes include both bug fixes and performance enhancements, separate those changes into two or more patches.  If your changes include an API update, and a new module which  uses that new API, separate those into two patches.</P>
   <P>5. <B>Mail or submit the patch:</B><BR>Remember: no MIME, no HTML mail, no links, no compression, no attachments.  Just plain text.</P>
- <?
+ <?php
  }
 ?>
