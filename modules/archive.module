@@ -8,11 +8,13 @@ function archive_system($field){
 }
 
 function archive_calendar($original = 0) {
+  global $user;
   $edit = $_POST["edit"];
 
   // Extract today's date:
-  $start_of_today = mktime(0, 0, 0, date("n", time()), date("d", time()), date("Y", time()));
-  $end_of_today = mktime(23, 59, 59, date("n", time()), date("d", time()), date("Y", time()));
+  $offset = time() + $user->timezone;
+  $start_of_today = mktime(0, 0, 0, date("n", $offset), date("d", $offset), date("Y", $offset)) + $user->timezone;
+  $end_of_today = mktime(23, 59, 59, date("n", $offset), date("d", $offset), date("Y", $offset)) + $user->timezone;
 
   // Extract the requested date:
   if ($edit["year"] && $edit["month"] && $edit["day"]) {
@@ -20,21 +22,21 @@ function archive_calendar($original = 0) {
     $month = $edit["month"];
     $day = $edit["day"];
 
-    $requested = mktime(0, 0, 0, $month, $day, $year);
+    $requested = mktime(0, 0, 0, $month, $day, $year) + $user->timezone;
   }
   else if (arg(0) == "archive" && arg(3)) {
     $year = arg(1);
     $month = arg(2);
     $day = arg(3);
 
-    $requested = mktime(0, 0, 0, $month, $day, $year);
+    $requested = mktime(0, 0, 0, $month, $day, $year) + $user->timezone;
   }
   else {
     $year = date("Y", time());
     $month  = date("n", time());
     $day = date("d", time());
 
-    $requested = $end_of_today;
+    $requested = $end_of_today + $user->timezone;
   }
 
   $start_of_month = mktime(0, 0, 0, $month, 1, $year);
@@ -64,7 +66,7 @@ function archive_calendar($original = 0) {
 
   $days_with_posts = array();
   while ($day_with_post = db_fetch_object($result)) {
-    $days_with_posts[] = date("j", $day_with_post->created);
+    $days_with_posts[] = date("j", $day_with_post->created + $user->timezone);
   }
   $days_with_posts = array_unique($days_with_posts);
 
@@ -107,7 +109,7 @@ function archive_calendar($original = 0) {
     }
 
     // Print one cell:
-    $date = mktime(0, 0, 0, $month, $nday, $year);
+    $date = mktime(0, 0, 0, $month, $nday, $year) + $user->timezone;
     if (in_array($nday, $days_with_posts)) {
       $daytext = l($nday, "archive/$year/$month/$nday");
       $dayclass = "day-link";
@@ -181,7 +183,7 @@ function archive_link($type) {
 }
 
 function archive_page() {
-  global $date, $month, $year, $meta;
+  global $date, $month, $year, $meta, $user;
 
   $op = $_POST["op"];
   $edit = $_POST["edit"];
@@ -200,7 +202,7 @@ function archive_page() {
       $day = arg(3);
     }
 
-    $date = mktime(0, 0, 0, $month, $day, $year);
+    $date = mktime(0, 0, 0, $month, $day, $year) - $user->timezone;
 
     /*
     ** Prepare the values of the form fields:
