@@ -353,7 +353,7 @@ CREATE TABLE node_access (
   PRIMARY KEY  (nid,gid,realm)
 ) TYPE=MyISAM;
 
--
+--
 -- Table structure for table 'page'
 --
 
