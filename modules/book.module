@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.258 2004/10/09 06:29:16 dries Exp $
+// $Id: book.module,v 1.259 2004/10/10 11:11:38 dries Exp $
 
 /**
  * @file
@@ -767,12 +767,6 @@ function book_admin($nid = 0) {
   $edit = $_POST['edit'];
 
   switch ($op) {
-    case t('Edit book outline'):
-    case t('Add to book outline'):
-    case t('Remove from book outline'):
-    case t('Update book outline'):
-      $output = book_node_link();
-      break;
     case t('Save book pages'):
       drupal_set_message(book_admin_save($nid, $edit));
       // fall through:
