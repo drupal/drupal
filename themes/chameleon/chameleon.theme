@@ -5,7 +5,6 @@ function chameleon_features() {
   return array(
        'logo',
        'toggle_name',
-       'toggle_search',
        'toggle_slogan',
        'toggle_primary_links',
        'toggle_secondary_links');

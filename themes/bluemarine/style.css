@@ -61,7 +61,7 @@ table {
   color: #222;
 }
 .links {
-  margin-bottom: 2em;
+  margin-bottom: 0em;
 }
 .comment .links {
   margin-bottom: 0em;
@@ -222,7 +222,7 @@ table {
   font-size: 1.1em;
 }
 .node {
-  margin: .5em 0 1em 0;
+  margin: .5em 0 2em 0;
 }
 .sticky {
   padding: .5em;
