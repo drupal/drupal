@@ -30,33 +30,34 @@ function submission_displayMain() {
 function submission_displayItem($id) {
   global $PHP_SELF, $theme, $user;
 
-  include "config.inc";
- 
-  $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON s.author = u.id WHERE s.id = $id");
-  $submission = db_fetch_object($result);
-
-  $theme->header();
-  $theme->article($submission, "[ <A HREF=\"$PHP_SELF\"><FONT COLOR=\"$theme->hlcolor2\">back</FONT></A> ]");
-
-  if ($vote = getHistory($user->history, "s$submission->id")) {
-    print "<P><B>You voted `$vote' for this story!</B><BR><B>Score:</B> $submission->score<BR><B>Votes:</B> $submission->votes</P>\n";
-    print "<P>\n";
-    print "<B>Other people voted:</B><BR>\n";
-
-    $result = db_query("SELECT * FROM users WHERE history LIKE '%s$submission->id%'");
-    while ($account = db_fetch_object($result)) {
-      print "<A HREF=\"account.php?op=userinfo&uname=$account->userid\">$account->userid</A> voted `". getHistory($account->history, "s$submission->id") ."'.<BR>";
-    }
+  if ($vote = getHistory($user->history, "s$id")) {
+    header("Location: discussion.php?id=$id");
   }
   else {
+    include "config.inc";
+ 
+    $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON s.author = u.id WHERE s.id = $id");
+    $submission = db_fetch_object($result);
+
+    $theme->header();
+    $theme->article($submission, "[ <A HREF=\"$PHP_SELF\"><FONT COLOR=\"$theme->hlcolor2\">back</FONT></A> ]");
+   
     print "<FORM ACTION=\"$PHP_SELF\" METHOD=\"post\">\n";
+
+    print "<P>\n";
+    print " <B>Vote:</B><BR>\n";
     print " <SELECT NAME=\"vote\">\n";
-    foreach ($submission_votes as $key=>$value) {
-      print "  <OPTION VALUE=\"$value\">". $key ."</OPTION>\n";
-    }
+    foreach ($submission_votes as $key=>$value) print "  <OPTION VALUE=\"$value\">". $key ."</OPTION>\n";
     print " </SELECT>\n";
-    print " <INPUT TYPE=\"hidden\" NAME=\"id\" VALUE=\"$submission->id\">\n";
-    print " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Vote\">\n";
+    print "</P>\n";
+
+    print "<P>\n";
+    print " <B>Comment:</B><BR>\n";
+    print " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"7\" NAME=\"comment\"></TEXTAREA>\n";
+    print "</P>\n";
+
+    print "<INPUT TYPE=\"hidden\" NAME=\"id\" VALUE=\"$submission->id\">\n";
+    print "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Vote\">\n";
     print "</FORM>\n";
   }
 
@@ -69,7 +70,7 @@ if ($user) {
       submission_displayItem($id);
       break;
     case "Vote";
-      submission_vote($id, $vote);
+      submission_vote($id, $vote, $comment);
       submission_displayItem($id);
       break;
     default:

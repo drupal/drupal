@@ -57,14 +57,14 @@
    $num++;
 
    if ($user) {
-     $link = "<A HREF=\"article.php?id=$entry->id";
+     $link = "<A HREF=\"discussion.php?id=$entry->id";
      if (isset($user->umode)) { $link .= "&mode=$user->umode"; } else { $link .= "&mode=threaded"; }
      if (isset($user->uorder)) { $link .= "&order=$user->uorder"; } else { $link .= "&order=0"; }
      if (isset($user->thold)) { $link .= "&thold=$user->thold"; } else { $link .= "&thold=0"; }
      $link .= "\">$entry->subject</A>";
    }
    else {
-     $link = "<A HREF=\"article.php?id=$entry->id&mode=threaded&order=1&thold=0\">$entry->subject</A>";
+     $link = "<A HREF=\"discussion.php?id=$entry->id&mode=threaded&order=1&thold=0\">$entry->subject</A>";
    }
  
    $output .= "<P>$num) <B>$link</B><BR><SMALL>by <B><A HREF=\"account.php?op=info&uname=$entry->userid\">$entry->userid</A></B>, posted on ". date("l, F d, Y - H:i A", $entry->timestamp) .".</SMALL></P>\n";

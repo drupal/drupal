@@ -7,10 +7,6 @@
  * just adjust the handlers to your needs.
  */
 
-///////////////////////////////////////////////////////////////////////////
-// NOTE: these functions are under construction and in no way finilized! //
-///////////////////////////////////////////////////////////////////////////
-
 function db_connect() {
   include "config.inc";
   mysql_pconnect($dbhost, $dbuname, $dbpass) or die(mysql_Error());
