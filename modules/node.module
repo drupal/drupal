@@ -363,7 +363,11 @@ function node_filter_line($text) {
 }
 
 function node_comment_mode($nid) {
-  return db_result(db_query("SELECT comment FROM node WHERE nid = '%s'", $nid));
+  static $comment_mode;
+  if (!isset($comment_mode[$nid])) {
+    $comment_mode[$nid] = db_result(db_query("SELECT comment FROM node WHERE nid = '%s'", $nid));
+  }
+  return $comment_mode[$nid];
 }
 
 function node_filter($text) {
