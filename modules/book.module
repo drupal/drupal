@@ -326,7 +326,7 @@ function book_revision_load($page, $conditions = array()) {
  * Return the path (call stack) to a certain book page.
  */
 function book_location($node, $nodes = array()) {
-  $parent = db_fetch_object(db_query('SELECT n.nid, n.title, b.parent FROM {node} n '. node_access_join_sql() .' INNER JOIN {book} b ON n.nid = b.nid WHERE '. node_access_where_sql() .' AND n.nid = %d', $node->parent));
+  $parent = db_fetch_object(db_query('SELECT n.nid, n.title, b.parent, b.weight FROM {node} n '. node_access_join_sql() .' INNER JOIN {book} b ON n.nid = b.nid WHERE '. node_access_where_sql() .' AND n.nid = %d', $node->parent));
   if ($parent->title) {
     $nodes = book_location($parent, $nodes);
     array_push($nodes, $parent);
@@ -335,7 +335,7 @@ function book_location($node, $nodes = array()) {
 }
 
 function book_location_down($node, $nodes = array()) {
-  $last_direct_child = db_fetch_object(db_query('SELECT n.nid, n.title, b.parent FROM {node} n '. node_access_join_sql() .' INNER JOIN {book} b ON n.nid = b.nid WHERE '. node_access_where_sql() .' AND b.parent = %d ORDER BY b.weight DESC, n.title DESC', $node->nid));
+  $last_direct_child = db_fetch_object(db_query('SELECT n.nid, n.title, b.parent, b.weight FROM {node} n '. node_access_join_sql() .' INNER JOIN {book} b ON n.nid = b.nid WHERE '. node_access_where_sql() .' AND b.parent = %d ORDER BY b.weight DESC, n.title DESC', $node->nid));
   if ($last_direct_child) {
     array_push($nodes, $last_direct_child);
     $nodes = book_location_down($last_direct_child, $nodes);
