@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.432 2004/12/20 14:34:41 unconed Exp $
+// $Id: node.module,v 1.433 2004/12/23 23:26:14 dries Exp $
 
 /**
  * @file
@@ -1027,6 +1027,9 @@ function node_feed($nodes = 0, $channel = array()) {
     else {
       $item = node_prepare($item, TRUE);
     }
+
+    // Allow modules to change $node->body before viewing.
+    node_invoke_nodeapi($item, 'view', false, false);
 
     $items .= format_rss_item($item->title, $link, $item->teaser, array('pubDate' => date('r', $item->changed)));
   }
