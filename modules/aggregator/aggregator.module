@@ -356,7 +356,7 @@ function import_view_bundle() {
 function import_view_item() {
   global $REQUEST_URI;
 
-  $result = db_query("SELECT i.*, f.title AS feed FROM item i LEFT JOIN feed f ON i.fid = f.fid ORDER BY i.timestamp DESC LIMIT 50");
+  $result = db_query("SELECT i.*, f.title AS feed FROM item i LEFT JOIN feed f ON i.fid = f.fid ORDER BY i.iid DESC LIMIT 50");
 
   $output .= "<form action=\"$REQUEST_URI\" method=\"post\">\n";
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
