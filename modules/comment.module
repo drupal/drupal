@@ -1237,7 +1237,7 @@ function comment($comment, $links = 0) {
   $output .= "<div class=\"subject\">$comment->subject". ($comment->new ? " ". theme("theme_mark") : "") ."</div>";
   $output .= "<div class=\"moderation\">". $comment->moderation ."</div>";
   $output .= "<div class=\"credit\">". t("by %a on %b", array("%a" => format_name($comment), "%b" => format_date($comment->timestamp))) ."</div>";
-  $output .= "<div class=\"body\">". check_output($comment->comment) ."</div";
+  $output .= "<div class=\"body\">". check_output($comment->comment) ."</div>";
   $output .= "<div class=\"links\">$links</div>";
   $output .= "</div>";
   print $output;
