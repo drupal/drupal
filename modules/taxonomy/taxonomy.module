@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.177 2005/02/27 15:40:35 dries Exp $
+// $Id: taxonomy.module,v 1.178 2005/03/01 20:43:59 dries Exp $
 
 /**
  * @file
@@ -90,29 +90,6 @@ function taxonomy_menu($may_cache) {
   }
 
   return $items;
-}
-
-/**
- * Implementation of hook_block().
- *
- * Generates a block with all categories.
- */
-function taxonomy_block($op = 'list', $delta = 0) {
-  if ($op == 'list') {
-    $blocks[0]['info'] = t('Categories');
-    return $blocks;
-  }
-  else if ($op == 'view' && user_access('access content')) {
-    $result = db_query(db_rewrite_sql('SELECT d.tid, d.name, MAX(n.created) AS updated, COUNT(*) AS count FROM {term_data} d INNER JOIN {term_node} USING (tid) INNER JOIN {node} n USING (nid) WHERE n.status = 1 GROUP BY d.tid, d.name ORDER BY updated DESC, d.name'));
-    $items = array();
-    while ($category = db_fetch_object($result)) {
-      $items[] = l($category->name .' ('. $category->count .')', 'taxonomy/term/'. $category->tid) .'<br />'. t('%time ago', array('%time' => format_interval(time() - $category->updated)));
-    }
-
-    $block['subject'] = t('Categories');
-    $block['content'] = theme('item_list', $items);
-    return $block;
-  }
 }
 
 function taxonomy_form_vocabulary($edit = array()) {
