@@ -1,5 +1,5 @@
 <?php
-// $Id: help.module,v 1.23 2003/10/03 14:55:27 dries Exp $
+// $Id: help.module,v 1.24 2003/10/05 08:41:48 dries Exp $
 
 function help_system($field){
   $output = "";
@@ -47,7 +47,7 @@ function help_admin($section = "admin/help") {
     case 'admin/help':
       foreach (module_list() as $name) {
         if (module_hook($name, "help")) {
-          $temp = module_invoke($name, "help", "admin/".$name."/help");
+          $temp = module_invoke($name, "help", "admin/$name/help");
           if (!empty($temp)) {
             $links[] = l($name, "admin/help#$name");
             $output .= "<h2><a id=\"$name\">". ucfirst($name) ." module</a></h2>";
