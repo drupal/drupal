@@ -199,6 +199,7 @@ function profile_user($type, $edit, &$user) {
     case 'load':
       return profile_load_profile($user);
     case 'update':
+    case 'insert':
       return profile_save_profile($edit, $user);
     case 'view':
       return profile_view_profile($user);

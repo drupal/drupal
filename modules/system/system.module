@@ -79,7 +79,7 @@ function system_link($type) {
 }
 
 function system_user($type, $edit, &$user) {
-  if ($type == 'edit') {
+  if ($type == 'form') {
     $options = "<option value=\"\">". t("Default theme") ."</option>\n";
     if (count($themes = list_themes()) > 1) {
       foreach ($themes as $key => $value) {
@@ -88,7 +88,7 @@ function system_user($type, $edit, &$user) {
       $data[t('Theme settings')] = form_item(t("Theme"), "<select name=\"edit[theme]\">$options</select>", t("Selecting a different theme will change the look and feel of the site."));
     }
 
-    if (variable_get("sitewide_timezone", 0)) {
+    if (!variable_get("sitewide_timezone", 0)) {
       $timestamp = time();
       $zonelist = array(-11, -10, -9.5, -9, -8, -7, -6, -5, -4, -3.5, -3, -2, -1, 0, 1, 2, 3, 3.5, 4, 5, 5.5, 5.75, 6, 6.5, 7, 8, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.75, 13, 14);
       foreach ($zonelist as $offset) {
@@ -96,8 +96,8 @@ function system_user($type, $edit, &$user) {
         $zones[$zone] = format_date($timestamp, 'custom', variable_get('date_format_long', 'l, F j, Y - H:i') . ' O', $zone);
       }
       $data[t('Locale settings')] = form_select(t("Time zone"), "timezone", $edit["timezone"], $zones, t("Select what time you currently have and your time zone settings will be set appropriate."));
-      return $data;
     }
+    return $data;
   }
   else if ($type == 'view') {
     // do nothing
@@ -173,7 +173,7 @@ function system_view_general() {
   }
 
   $group  = form_select(t("Time zone"), "date_default_timezone", variable_get('date_default_timezone', 0), $zones, t("Select the default site timezone."));
-  $group .= form_radios(t("Use sitewide timezone"), "sitewide timezone", variable_get("sitewide_timezone", 0), array(t("Disabled"), t("Enabled")), t("Enable or disable the sidewide timezone feature. Disabled means that users could choose their own timezone."));
+  $group .= form_radios(t("Use sitewide timezone"), "sitewide_timezone", variable_get("sitewide_timezone", 0), array(t("Disabled"), t("Enabled")), t("Enable or disable the sidewide timezone feature. Disabled means that users could choose their own timezone."));
   $group .= form_select(t("Date format (short)"), "date_format_short", variable_get("date_format_short", $dateshort[0]), $dateshortchoices, t("The short format of date display."));
   $group .= form_select(t("Date format (medium)"), "date_format_medium", variable_get("date_format_medium", $datemedium[0]), $datemediumchoices, t("The medium sized date display."));
   $group .= form_select(t("Date format (long)"), "date_format_long", variable_get("date_format_long", $datelong[0]), $datelongchoices, t("Longer date format used for detailed display."));

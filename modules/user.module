@@ -1120,7 +1120,6 @@ function _user_profile($edit, $account) {
       }
     }
   }
-
   $output = '';
   foreach ($groups as $title => $form) {
     $output .= form_group($title, $form);
