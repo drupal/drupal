@@ -1413,8 +1413,9 @@ function user_admin_perm($edit = array()) {
       }
     }
 
-    // Clear the cache, as we might have changed the anonymous user's
-    // permissions.
+    drupal_set_message(t('The changes have been saved.'));
+
+    // Clear the cached pages and menus:
     cache_clear_all();
     menu_rebuild();
 
@@ -1463,7 +1464,13 @@ function user_admin_role($edit = array()) {
   $id = arg(4);
 
   if ($op == t('Save role')) {
-    db_query("UPDATE {role} SET name = '%s' WHERE rid = %d", $edit['name'], $id);
+    if ($edit['name']) {
+      db_query("UPDATE {role} SET name = '%s' WHERE rid = %d", $edit['name'], $id);
+      drupal_set_message(t('The changes have been saved.'));
+    }
+    else {
+      form_set_error('name', t('You must specify a valid role name.'));
+    }
   }
   else if ($op == t('Delete role')) {
     db_query('DELETE FROM {role} WHERE rid = %d', $id);
@@ -1483,9 +1490,17 @@ function user_admin_role($edit = array()) {
 
     // Users with only the deleted role are put back in the authenticated users pool.
     db_query('UPDATE {users_roles} SET rid = %d WHERE rid = %d', _user_authenticated_id(), $id);
+
+    drupal_set_message(t('The role has been deleted.'));
   }
   else if ($op == t('Add role')) {
-    db_query("INSERT INTO {role} (name) VALUES ('%s')", $edit['name']);
+    if ($edit['name']) {
+      db_query("INSERT INTO {role} (name) VALUES ('%s')", $edit['name']);
+      drupal_set_message(t('The role has been added.'));
+    }
+    else {
+      form_set_error('name', t('You must specify a valid role name.'));
+    }
   }
   else if ($id) {
     // Display the role form.
@@ -1567,14 +1582,12 @@ function user_configure() {
       $output = user_admin_access($edit);
       break;
     case t('Save permissions'):
-      drupal_set_message(t('The user permissions have been saved.'));
     case 'permission':
       $output = user_admin_perm($edit);
       break;
     case t('Add role'):
     case t('Delete role'):
     case t('Save role'):
-      drupal_set_message(t('Your role changes were saved.'));
     case 'role':
       $output = user_admin_role($edit);
       break;
