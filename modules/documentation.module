@@ -13,13 +13,32 @@ function documentation() {
   ?>
   <SMALL><I>$Id$</I></SMALL>
 
-  <H1>Chapter 1: introduction</H1>
+  <H2>Table of contents</H2>
+  <UL>
+   <LI><A HREF="#c1">Chapter 1: introduction</A></LI>
+   <LI><A HREF="#c2">Chapter 2: installation</A></LI>
+   <LI><A HREF="#c3">Chapter 3: engine</A></LI>
+   <LI><A HREF="#c4">Chapter 4: modules</A></LI>
+   <LI><A HREF="#c5">Chapter 5: development</A></LI>
+  </UL>
+
+  <H1><A NAME="c1">Chapter 1: introduction</A></H1>
 
   <P>Drupal is the English pronunciation for the Dutch word 'druppel' which means 'drop'.  Drupal is a fully-featured content management/discussion engine suitable to setup a news-driven community or portal site.  Drupal aims to provide easy installation, excessive configuration and fine-grained maintenance capabilities.  Due to its modular design, drupal is flexible and easy to adapt or extend.</P>
-  <P>Drupal is primarily written by Dries Buytaert (dries_at_drop.org) and built after Slash (<A HREF="http://slashcode.com/">http://slashcode.com/</A>) and Scoop (<A HREF="http://scoop.kuro5hin.org/">http://scoop.kuro5hin.org/</A>).  Drupal is released under the GNU General Public License (GPL) so if you are interested in helping out the drupal project in any way, drop me an e-mail.</P>
-  <P>Everybody can download, use and modify drupal to suit his or her needs.  Everybody can freely distribute modified or unmodified versions of it, provided that they too are licensed under the GNU GPL.  Drupal is maintained by volunteer effort at a best effort basis but you can always contact me or other drupal developers for consulting services related to drupal.</P>
+  <P>Drupal is primarily written by Dries Buytaert (dries_at_drop.org) and built after Slash (<A HREF="http://slashcode.com/">http://slashcode.com/</A>) and Scoop (<A HREF="http://scoop.kuro5hin.org/">http://scoop.kuro5hin.org/</A>).  You can download drupal from <A HREF="http://drop.org/module.php?mod=drupal">http://drop.org/module.php?mod=drupal</A>: the source code behind drupal is released under the GNU General Public License (GPL).  Everybody can download, use and modify drupal to suit his or her needs.  Everybody can freely distribute modified or unmodified versions of it, provided that they too are licensed under the GNU GPL.</P>
+  <P>Drupal is free software maintained by volunteer effort at a best effort basis so if you are interested in helping out the drupal project in any way, drop me an e-mail.  If you use drupal for commercial projects, you might be able and willing to boost the pace of development by means of fundings or donations, or you can support further development by contracting me or other drupal developers for consulting services related to drupal.</P>
 
-  <H1>Chapter 2: installation</H1>
+  <H2>Bugreports</H2>
+
+  <P>If you found a bug, mail me and we will fix it provided you include enough diagnostic information for me to go on.  Your bug reports play an essential role in making drupal reliable.</P>
+  <P>The first thing I will do when you report a bug is tell you to upgrade to the newest version of drupal, and then see if the problem reproduces. So you'll probably save us both time if you upgrade and test with the latest version before sending in a bug report.</P>
+
+  <H2>Mailing list</H2>
+
+  <P>There is a mailing list (drupal-support_at_drop.org) for people who want to discuss drupal development.  All submissions relevant to that, such as bug reports, enhancement ideas, patches or reports that a patch fixed a bug are appropriate.</P>
+  <P>To subscribe to the drupal-support_at_drop.org mailing list, send an e-mail to drupal-support-request_at_drop.org with no subject and put subscribe in the body of your message.  Similarly, "unsubscribe" in the Subject line unsubscribes you, and "help" returns general list help.</P>
+
+  <H1><A NAME="c2">Chapter 2: installation</A></H1>
 
   <H2>System requirements</H2>
 
@@ -29,29 +48,56 @@ function documentation() {
 
   <H2>Installation process</H2>
 
-  <P>1. Download the distribution tar-ball and unzip it into the directory you want to serve web files from:</P>
-  <BLOCKQUOTE>$ tar -zxvf drupal-x.x.x.tar.gz</BLOCKQUOTE>
-  <P>2. We assume that you have some working experience with Apache, MySQL and PHP.  In order to set up your drupal site correctly, you'll first have to get Apache, MySQL and PHP working together.  So if you still need to install Apache, MySQL or PHP, please install them now.  Otherwise, head on to point 3.  The installation of these required packages is beyond the scope of this document but what follows are some brief guidelines to get you started.</P>
-  <P>Installing MySQL shouldn't be too much of a burden, when using a Linux distribution that can handle RPMs.  All you have to do is grab the RPMs from the MySQL website.  Please do note that you'll also need the MySQL client RPM, not only the MySQL server one.  Once MySQL has been installed, download Apache and PHP, and unpack them in the same directory.  To install Apache together with PHP and MySQL, follow the "quick install"-instructions in the <CODE>INSTALL</CODE>-file located in your PHP directory.  When configuring PHP do not forget to replace '<I>apache_1.3.x</I>' with your version of Apache.  This may sound silly but it got me twice.</P>
-  <P>After the compilation process you have to set the <CODE>DocumentRoot</CODE> in Apache's <CODE>httpd.conf</CODE> to the path of your <CODE>drupal</CODE>-directory.  Make sure your Apache is setup to allow <CODE>.htaccess</CODE> files so drupal can override Apache options from within the drupal directories.  Therefore, set <CODE>AllowOverride</CODE> to "All" instead of "None".  Somewhat down <CODE>httpd.conf</CODE> they ask you to set <CODE>Directory</CODE> to whatever you set <CODE>DocumentRoot</CODE> to. The last thing to do is to add <CODE>index.php</CODE> in <CODE>IfModule mod_dir.c</CODE> behind <CODE>DirectoryIndex</CODE>.  Apache will then look for <CODE>index.php</CODE> in the <CODE>DocumentRoot</CODE> and will display it as its main page.</P>
-  <P>3. Create a MySQL database for your drupal site (if you haven't already):</P>
-  <BLOCKQUOTE>$ mysqladmin create <I>&lt;database&gt;</I></BLOCKQUOTE>
-  <P>Make sure to consult the MySQL documentation on how to setup the correct access rights and permissions in your MySQL grant tables.</P>
-  <P>4. Once you have a proper database, dump the required tables into your database:</P>
-  <BLOCKQUOTE>$ mysql -h <I>&lt;hostname&gt;</I> -u <I>&lt;username&gt;</I> -p<I>&lt;password&gt; &lt;database&gt;</I> < database/database.mysql</BLOCKQUOTE>
-  <P>5. Rename the configuration file <CODE>includes/hostname.conf</CODE> to match your server's hostname:</P>
-  <BLOCKQUOTE>$ cp includes/hostname.conf includes/www.yourdomain.com.conf</BLOCKQUOTE>
-  <P><CODE>/</CODE>'s and <CODE>:</CODE>'s are translated to <CODE>.</CODE>'s.  So if the URI of your drupal site would be <CODE>http://www.yourdomain.com:80/foo/</CODE> your configuration file should be named <CODE>www.yourdomain.com.80.foo.conf</CODE>.</P>
-  <P>6. Edit your configuration file to set the required settings such as the database options and to customize your site to your likings.</P>
-  <P>7. Launch your browser and point it to http://yourdomain.com/, create an account, log in and head on to http://yourdomain.com/admin.php.  The first user will automatically have administrator permissions.  Play with it for a bit and spend some time getting used to the administration interfaces.</P>
-  <P>8. Optionally (yet recommended for smooth operation) edit the <CODE>.htaccess</CODE> file and set the values of the PHP variables to your likings: <CODE>session.name</CODE>, <CODE>session.cookie_lifetime</CODE>, <CODE>session.gc_maxlifetime</CODE>, <CODE>session.cache_expire</CODE> and <CODE>session.save_path</CODE>.  Check your PHP reference manual for the exact purpose of each variable mentioned.</P>
-  <P>9. Optionally (yet recommended for smooth operation) setup a crontab to periodically visit http://yourdomain.com/cron.php.</P>
-  <P>Use a browser like lynx or wget but make sure the process terminates: either use /usr/bin/lynx -source http://yourdomain.com/cron.php or /usr/bin/wget -O /dev/null http://yourdomain.com/cron.php. Take a look at the example scripts in the <CODE>scripts</CODE>-directory and make sure to adjust them to your needs.</P>
-  <P>A good crontab-line to run the cron-script once every hour would be:</P>
-  <PRE>  00 * * * * /home/www/drupal/scripts/cron-lynx</PRE>
-  <P>10. Optionally create your site's theme or at least customize the existing themes.  To get started, head on to the <CODE>themes</CODE>-directory and make a custom logo for each theme.
-  <P>11. Optionally add and remove modules to customize the functionality of your site.  Adding and removing modules is plain easy.  You can add a module by copying the files into the <CODE>modules</CODE>-directory and you can remove a module by removing a module's file from the <CODE>modules</CODE>-directory.  The drupal engine will then automatically include or exclude this module.  If for some reason, this seems to fail, "manually" rehash the modules list from http://yourdomain.com/admin.php?mod=module.</P>
-  <P>12. If you get it to run, let us know at <A HREF="mailto:info@drop.org">info@drop.org</A> so we can add your site to our list of drupal sites.  If you can't get it to run, you can find support at the drupal site or you can contact us by e-mail at <A HREF="mailto:info@drop.org">info@drop.org</A>.</P>
+  <P>Here is the procedure for installing drupal on a Linux or Unix system.  This chapter describes the generic installation procedure for drupal as well as detailing some installation instructions for specific configurations.</P>
+  <OL>
+   <LI>
+    <P>Download the distribution tar-ball and unzip it into the directory you want to serve web files from:</P>
+    <BLOCKQUOTE>$ tar -zxvf drupal-x.x.x.tar.gz</BLOCKQUOTE>
+   </LI>
+   <LI>
+    <P>We assume that you have some working experience with Apache, MySQL and PHP.  In order to set up your drupal site correctly, you'll first have to get Apache, MySQL and PHP working together.  So if you still need to install Apache, MySQL or PHP, please install them now.  Otherwise, head on to point 3.  The installation of these required packages is beyond the scope of this document but what follows are some brief guidelines to get you started.</P>
+    <P>Installing MySQL shouldn't be too much of a burden, when using a Linux distribution that can handle RPMs.  All you have to do is grab the RPMs from the MySQL website.  Please do note that you'll also need the MySQL client RPM, not only the MySQL server one.  Once MySQL has been installed, download Apache and PHP, and unpack them in the same directory.  To install Apache together with PHP and MySQL, follow the "quick install"-instructions in the <CODE>INSTALL</CODE>-file located in your PHP directory.  When configuring PHP do not forget to replace '<I>apache_1.3.x</I>' with your version of Apache.  This may sound silly but it got me twice.</P>
+    <P>After the compilation process you have to set the <CODE>DocumentRoot</CODE> in Apache's <CODE>httpd.conf</CODE> to the path of your <CODE>drupal</CODE>-directory.  Make sure your Apache is setup to allow <CODE>.htaccess</CODE> files so drupal can override Apache options from within the drupal directories.  Therefore, set <CODE>AllowOverride</CODE> to "All" instead of "None".  Somewhat down <CODE>httpd.conf</CODE> they ask you to set <CODE>Directory</CODE> to whatever you set <CODE>DocumentRoot</CODE> to. The last thing to do is to add <CODE>index.php</CODE> in <CODE>IfModule mod_dir.c</CODE> behind <CODE>DirectoryIndex</CODE>.  Apache will then look for <CODE>index.php</CODE> in the <CODE>DocumentRoot</CODE> and will display it as its main page.</P>
+   </LI>
+   <LI>
+    <P>Create a MySQL database for your drupal site (if you haven't already):</P>
+    <BLOCKQUOTE>$ mysqladmin create <I>&lt;database&gt;</I></BLOCKQUOTE>
+    <P>Make sure to consult the MySQL documentation on how to setup the correct access rights and permissions in your MySQL grant tables.</P>
+   </LI>
+   <LI>
+    <P>Once you have a proper database, dump the required tables into your database:</P>
+    <BLOCKQUOTE>$ mysql -h <I>&lt;hostname&gt;</I> -u <I>&lt;username&gt;</I> -p<I>&lt;password&gt; &lt;database&gt;</I> < database/database.mysql</BLOCKQUOTE>
+   </LI>
+   <LI>
+    <P>Rename the configuration file <CODE>includes/hostname.conf</CODE> to match your server's hostname:</P>
+    <BLOCKQUOTE>$ cp includes/hostname.conf includes/www.yourdomain.com.conf</BLOCKQUOTE>
+    <P><CODE>/</CODE>'s and <CODE>:</CODE>'s are translated to <CODE>.</CODE>'s.  So if the URI of your drupal site would be <CODE>http://www.yourdomain.com:80/foo/</CODE> your configuration file should be named <CODE>www.yourdomain.com.80.foo.conf</CODE>.</P>
+   </LI>
+   <LI>
+    <P>Edit your configuration file to set the required settings such as the database options and to customize your site to your likings.</P>
+   </LI>
+   <LI>
+    <P>Launch your browser and point it to http://yourdomain.com/, create an account, log in and head on to http://yourdomain.com/admin.php.  The first user will automatically have administrator permissions.  Play with it for a bit and spend some time getting used to the administration interfaces.</P>
+   </LI>
+   <LI>
+    <P>Optionally (yet recommended for smooth operation) edit the <CODE>.htaccess</CODE> file and set the values of the PHP variables to your likings: <CODE>session.name</CODE>, <CODE>session.cookie_lifetime</CODE>, <CODE>session.gc_maxlifetime</CODE>, <CODE>session.cache_expire</CODE> and <CODE>session.save_path</CODE>.  Check your PHP reference manual for the exact purpose of each variable mentioned.</P>
+   </LI>
+   <LI>
+    <P>Optionally (yet recommended for smooth operation) setup a crontab to periodically visit http://yourdomain.com/cron.php.</P>
+    <P>Use a browser like lynx or wget but make sure the process terminates: either use /usr/bin/lynx -source http://yourdomain.com/cron.php or /usr/bin/wget -O /dev/null http://yourdomain.com/cron.php. Take a look at the example scripts in the <CODE>scripts</CODE>-directory and make sure to adjust them to your needs.</P>
+    <P>A good crontab-line to run the cron-script once every hour would be:</P>
+    <PRE>  00 * * * * /home/www/drupal/scripts/cron-lynx</PRE>
+   </LI>
+   <LI>
+    <P>Optionally create your site's theme or at least customize the existing themes.  To get started, head on to the <CODE>themes</CODE>-directory and make a custom logo for each theme.</P>
+   </LI>
+   <LI>
+    <P>Optionally add and remove modules to customize the functionality of your site.  Adding and removing modules is plain easy.  You can add a module by copying the files into the <CODE>modules</CODE>-directory and you can remove a module by removing a module's file from the <CODE>modules</CODE>-directory.  The drupal engine will then automatically include or exclude this module.  If for some reason, this seems to fail, "manually" rehash the modules list from http://yourdomain.com/admin.php?mod=module.</P>
+   </LI>
+   <LI>
+    <P>If you get it to run, let us know at <A HREF="mailto:info@drop.org">info@drop.org</A> so we can add your site to our list of drupal sites.  If you can't get it to run, you can find support at the drupal site or you can contact us by e-mail at <A HREF="mailto:info@drop.org">info@drop.org</A>.</P>
+   </LI>
+  </OL>
 
   <H2>More then one drupal site on one machine</H2>
 
@@ -102,7 +148,7 @@ function documentation() {
    &lt;/VirtualHost&gt;
   </PRE>
 
-  <H1>Chapter 3: drupal engine</H1>
+  <H1><A NAME="c3">Chapter 3: engine</A></H1>
 
   <P>While we in no way consider the design and implementation of the drupal engine to be finished, we feel that our own accompanying intensive experience has given us a fairly stable and well-proven design.  The following provides a brief over-view of the different aspects of drupal's core engine and features.</P>
 
@@ -221,13 +267,13 @@ function documentation() {
   <P>Authenticated users can themselves select entirely different appearances for the site, utilizing their own preferences for how the pages are structured, how navigation lists and other page components are presented and much more.</P>
   <P>An important feature of drupal is that any user can be granted administrator rights.  The ability to share maintenance responsibility with volunteers from across the globe can be considered valuable for most community-based projects.</P>
 
-  <H1>Chapter 4: drupal modules</H1>
+  <H1><A NAME="c4">Chapter 4: modules</A></H1>
 
   <?
    module_iterate("documentation_module");
   ?>
 
-  <H1>Chapter 5: development</H1>
+  <H1><A NAME="c5">Chapter 5: development</A></H1>
 
   <P>The drupal engine is open source.  It is possible for each and every user to become a contributor.  The fact remains that most drupal users, even those skilled in programming arts, have never contributed to the code even though most of us had days where we thought to ourselves: "I wish drupal could do this or that ...".  Through this page, we hope to make drupal programming more accessible to at least a small percentage of people.</P>
   <P>We use diff and patch for content control even though we distribute our code via CVS.  Why?  Because diff and patch provide an immense amount of control.  Patches can be submitted via e-mail and in plain text; maintainers can read and judge the patch before it ever gets near a tree.  It allows maintainers to look at changes easily without blindly integrating them.</P>
