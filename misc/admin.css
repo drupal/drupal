@@ -22,7 +22,7 @@ h2 {
   font-weight: bold;
   color: #006;
   margin: 0;
-  padding: 0 0 0.5em 0;
+  padding: 0.5em 0 0 0;
 }
 h3 {
   font-size: 1.2em;
@@ -55,6 +55,9 @@ dt {
 }
 dd {
   margin-bottom: 0.5em;
+}
+code, pre {
+  font-size: 12px;
 }
 #menu {
   position: absolute;
