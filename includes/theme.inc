@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.185 2004/01/29 06:42:03 dries Exp $ */
+/* $Id: theme.inc,v 1.186 2004/01/29 06:47:19 dries Exp $ */
 
 /**
  * @file
@@ -151,9 +151,6 @@ function theme_page($content, $title = NULL, $breadcrumb = NULL) {
   $output .= "<head>";
   $output .= " <title>". (drupal_get_title() ? drupal_get_title() : variable_get('site_name', "drupal")) ."</title>";
   $output .= drupal_get_html_head();
-  $output .= " <style type=\"text/css\" media=\"all\">";
-  $output .= "  @import url(misc/drupal.css);";
-  $output .= " </style>";
 
   $output .= " </head>";
   $output .= " <body style=\"background-color: #fff; color: #000;\"". theme("onload_attribute"). "\">";

@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.316 2004/01/27 22:10:47 dries Exp $ */
+/* $Id: common.inc,v 1.317 2004/01/29 06:47:19 dries Exp $ */
 
 /**
  * @defgroup common Core functions
@@ -107,9 +107,9 @@ function drupal_set_html_head($data = NULL) {
 function drupal_get_html_head() {
   global $base_url;
 
-  $output = "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />";
+  $output = "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=utf-8\" />\n";
   $output .= "<base href=\"$base_url/\" />\n";
-  $output .= "<style type=\"text/css\">\n";
+  $output .= "<style type=\"text/css\" media=\"all\">\n";
   $output .= "@import url(misc/drupal.css);\n";
   $output .= "</style>\n";
 
