@@ -1,7 +1,7 @@
-﻿<?php          // -*-c++-*-
+<?php
 // by Edd Dumbill (C) 1999-2001
 // <edd@usefulinc.com>
-// $Id: xmlrpc.inc,v 1.10 2003/12/29 17:14:26 dries Exp $
+// $Id: xmlrpc.inc,v 1.11 2003/12/29 17:47:12 dries Exp $
 
 
 // Copyright (c) 1999,2000,2001 Edd Dumbill.
@@ -37,7 +37,7 @@
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
 if (!function_exists('xml_parser_create')) {
-// Win 32 fix. From: "Leo West" <lwest@imaginet.fr>
+  // Win 32 fix. From: "Leo West" <lwest@imaginet.fr>
   if($WINDIR) {
     dl("php3_xml.dll");
   } else {
@@ -57,20 +57,20 @@ $xmlrpcStruct="struct";
 
 
 $xmlrpcTypes=array($xmlrpcI4 => 1,
-           $xmlrpcInt => 1,
-           $xmlrpcBoolean => 1,
-           $xmlrpcString => 1,
-           $xmlrpcDouble => 1,
-           $xmlrpcDateTime => 1,
-           $xmlrpcBase64 => 1,
-           $xmlrpcArray => 2,
-           $xmlrpcStruct => 3);
+    $xmlrpcInt => 1,
+    $xmlrpcBoolean => 1,
+    $xmlrpcString => 1,
+    $xmlrpcDouble => 1,
+    $xmlrpcDateTime => 1,
+    $xmlrpcBase64 => 1,
+    $xmlrpcArray => 2,
+    $xmlrpcStruct => 3);
 
 $xmlEntities=array(   "amp" => "&",
-                   "quot" => '"',
-                   "lt" => "<",
-                   "gt" => ">",
-                   "apos" => "'");
+    "quot" => '"',
+    "lt" => "<",
+    "gt" => ">",
+    "apos" => "'");
 
 $xmlrpcerr["unknown_method"]=1;
 $xmlrpcstr["unknown_method"]="Unknown method";
@@ -121,17 +121,17 @@ function xmlrpc_entity_decode($string) {
   $op="";
   $i=0;
   while($i<sizeof($top)) {
-  if (ereg("^([#a-zA-Z0-9]+);", $top[$i], $regs)) {
-    $op.=ereg_replace("^[#a-zA-Z0-9]+;",
-            xmlrpc_lookup_entity($regs[1]),
-                      $top[$i]);
-  } else {
-    if ($i==0)
-    $op=$top[$i];
-    else
-    $op.="&" . $top[$i];
-  }
-  $i++;
+    if (ereg("^([#a-zA-Z0-9]+);", $top[$i], $regs)) {
+      $op.=ereg_replace("^[#a-zA-Z0-9]+;",
+          xmlrpc_lookup_entity($regs[1]),
+          $top[$i]);
+    } else {
+      if ($i==0)
+        $op=$top[$i];
+      else
+        $op.="&" . $top[$i];
+    }
+    $i++;
   }
   return $op;
 }
@@ -140,9 +140,9 @@ function xmlrpc_lookup_entity($ent) {
   global $xmlEntities;
 
   if (isset($xmlEntities[strtolower($ent)]))
-  return $xmlEntities[strtolower($ent)];
+    return $xmlEntities[strtolower($ent)];
   if (ereg("^#([0-9]+)$", $ent, $regs))
-  return chr($regs[1]);
+    return chr($regs[1]);
   return "?";
 }
 
@@ -150,26 +150,26 @@ function xmlrpc_se($parser, $name, $attrs) {
   global $_xh, $xmlrpcDateTime, $xmlrpcString;
 
   switch($name) {
-  case "STRUCT":
-  case "ARRAY":
-    $_xh[$parser]['st'].="array(";
+    case "STRUCT":
+      case "ARRAY":
+      $_xh[$parser]['st'].="array(";
     $_xh[$parser]['cm']++;
     // this last line turns quoting off
     // this means if we get an empty array we'll
     // simply get a bit of whitespace in the eval
     $_xh[$parser]['qt']=0;
     break;
-  case "NAME":
-    $_xh[$parser]['st'].="'"; $_xh[$parser]['ac']="";
+    case "NAME":
+      $_xh[$parser]['st'].="'"; $_xh[$parser]['ac']="";
     break;
-  case "FAULT":
-    $_xh[$parser]['isf']=1;
+    case "FAULT":
+      $_xh[$parser]['isf']=1;
     break;
-  case "PARAM":
-    $_xh[$parser]['st']="";
+    case "PARAM":
+      $_xh[$parser]['st']="";
     break;
-  case "VALUE":
-    $_xh[$parser]['st'].="new xmlrpcval(";
+    case "VALUE":
+      $_xh[$parser]['st'].="new xmlrpcval(";
     $_xh[$parser]['vt']=$xmlrpcString;
     $_xh[$parser]['ac']="";
     $_xh[$parser]['qt']=0;
@@ -179,14 +179,14 @@ function xmlrpc_se($parser, $name, $attrs) {
     // by implication and we need to add in a quote
     break;
 
-  case "I4":
-  case "INT":
-  case "STRING":
-  case "BOOLEAN":
-  case "DOUBLE":
-  case "DATETIME.ISO8601":
-  case "BASE64":
-    $_xh[$parser]['ac']=""; // reset the accumulator
+    case "I4":
+      case "INT":
+      case "STRING":
+      case "BOOLEAN":
+      case "DOUBLE":
+      case "DATETIME.ISO8601":
+      case "BASE64":
+      $_xh[$parser]['ac']=""; // reset the accumulator
 
     if ($name=="DATETIME.ISO8601" || $name=="STRING") {
       $_xh[$parser]['qt']=1;
@@ -201,10 +201,10 @@ function xmlrpc_se($parser, $name, $attrs) {
       $_xh[$parser]['qt']=0;
     }
     break;
-  case "MEMBER":
-    $_xh[$parser]['ac']="";
+    case "MEMBER":
+      $_xh[$parser]['ac']="";
     break;
-  default:
+    default:
     break;
   }
 
@@ -215,62 +215,62 @@ function xmlrpc_ee($parser, $name) {
   global $_xh,$xmlrpcTypes,$xmlrpcString;
 
   switch($name) {
-  case "STRUCT":
-  case "ARRAY":
-    if ($_xh[$parser]['cm'] && substr($_xh[$parser]['st'], -1) ==',') {
-    $_xh[$parser]['st']=substr($_xh[$parser]['st'],0,-1);
-    }
+    case "STRUCT":
+      case "ARRAY":
+      if ($_xh[$parser]['cm'] && substr($_xh[$parser]['st'], -1) ==',') {
+        $_xh[$parser]['st']=substr($_xh[$parser]['st'],0,-1);
+      }
     $_xh[$parser]['st'].=")";
     $_xh[$parser]['vt']=strtolower($name);
     $_xh[$parser]['cm']--;
     break;
-  case "NAME":
-    $_xh[$parser]['st'].= $_xh[$parser]['ac'] . "' => ";
+    case "NAME":
+      $_xh[$parser]['st'].= $_xh[$parser]['ac'] . "' => ";
     break;
-  case "BOOLEAN":
-    // special case here: we translate boolean 1 or 0 into PHP
-    // constants true or false
-    if ($_xh[$parser]['ac']=='1')
-      $_xh[$parser]['ac']="true";
-    else
-      $_xh[$parser]['ac']="false";
+    case "BOOLEAN":
+      // special case here: we translate boolean 1 or 0 into PHP
+      // constants true or false
+      if ($_xh[$parser]['ac']=='1')
+        $_xh[$parser]['ac']="true";
+      else
+        $_xh[$parser]['ac']="false";
     $_xh[$parser]['vt']=strtolower($name);
     // Drop through intentionally.
-  case "I4":
-  case "INT":
-  case "STRING":
-  case "DOUBLE":
-  case "DATETIME.ISO8601":
-  case "BASE64":
-    if ($_xh[$parser]['qt']==1) {
-      // we use double quotes rather than single so backslashification works OK
-      $_xh[$parser]['st'].="\"". $_xh[$parser]['ac'] . "\"";
-    } else if ($_xh[$parser]['qt']==2) {
-      $_xh[$parser]['st'].="base64_decode('". $_xh[$parser]['ac'] . "')";
-    } else if ($name=="BOOLEAN") {
-      $_xh[$parser]['st'].=$_xh[$parser]['ac'];
-    } else {
-      // we have an I4, INT or a DOUBLE
-      // we must check that only 0123456789-.<space> are characters here
-      if (!ereg("^\-?[0123456789 \t\.]+$", $_xh[$parser]['ac'])) {
-        // TODO: find a better way of throwing an error
-        // than this!
-        error_log("XML-RPC: non numeric value received in INT or DOUBLE");
-        $_xh[$parser]['st'].="ERROR_NON_NUMERIC_FOUND";
-      } else {
-        // it's ok, add it on
+    case "I4":
+      case "INT":
+      case "STRING":
+      case "DOUBLE":
+      case "DATETIME.ISO8601":
+      case "BASE64":
+      if ($_xh[$parser]['qt']==1) {
+        // we use double quotes rather than single so backslashification works OK
+        $_xh[$parser]['st'].="\"". $_xh[$parser]['ac'] . "\"";
+      } else if ($_xh[$parser]['qt']==2) {
+        $_xh[$parser]['st'].="base64_decode('". $_xh[$parser]['ac'] . "')";
+      } else if ($name=="BOOLEAN") {
         $_xh[$parser]['st'].=$_xh[$parser]['ac'];
+      } else {
+        // we have an I4, INT or a DOUBLE
+        // we must check that only 0123456789-.<space> are characters here
+        if (!ereg("^\-?[0123456789 \t\.]+$", $_xh[$parser]['ac'])) {
+          // TODO: find a better way of throwing an error
+          // than this!
+          error_log("XML-RPC: non numeric value received in INT or DOUBLE");
+          $_xh[$parser]['st'].="ERROR_NON_NUMERIC_FOUND";
+        } else {
+          // it's ok, add it on
+          $_xh[$parser]['st'].=$_xh[$parser]['ac'];
+        }
       }
-    }
     $_xh[$parser]['ac']=""; $_xh[$parser]['qt']=0;
     $_xh[$parser]['lv']=3; // indicate we've found a value
     break;
-  case "VALUE":
-    // deal with a string value
-    if (strlen($_xh[$parser]['ac'])>0 &&
-        $_xh[$parser]['vt']==$xmlrpcString) {
-      $_xh[$parser]['st'].="\"". $_xh[$parser]['ac'] . "\"";
-    }
+    case "VALUE":
+      // deal with a string value
+      if (strlen($_xh[$parser]['ac'])>0 &&
+          $_xh[$parser]['vt']==$xmlrpcString) {
+        $_xh[$parser]['st'].="\"". $_xh[$parser]['ac'] . "\"";
+      }
     // This if() detects if no scalar was inside <VALUE></VALUE>
     // and pads an empty "".
     if($_xh[$parser]['st'][strlen($_xh[$parser]['st'])-1] == '(') {
@@ -279,29 +279,29 @@ function xmlrpc_ee($parser, $name) {
     $_xh[$parser]['st'].=", '" . $_xh[$parser]['vt'] . "')";
     if ($_xh[$parser]['cm']) $_xh[$parser]['st'].=",";
     break;
-  case "MEMBER":
-    $_xh[$parser]['ac']=""; $_xh[$parser]['qt']=0;
-   break;
-  case "DATA":
-    $_xh[$parser]['ac']=""; $_xh[$parser]['qt']=0;
+    case "MEMBER":
+      $_xh[$parser]['ac']=""; $_xh[$parser]['qt']=0;
     break;
-  case "PARAM":
-    $_xh[$parser]['params'][]=$_xh[$parser]['st'];
+    case "DATA":
+      $_xh[$parser]['ac']=""; $_xh[$parser]['qt']=0;
     break;
-  case "METHODNAME":
-    $_xh[$parser]['method']=ereg_replace("^[\n\r\t ]+", "",
-                                         $_xh[$parser]['ac']);
+    case "PARAM":
+      $_xh[$parser]['params'][]=$_xh[$parser]['st'];
     break;
-  case "BOOLEAN":
-    // special case here: we translate boolean 1 or 0 into PHP
-    // constants true or false
-    if ($_xh[$parser]['ac']=='1')
-      $_xh[$parser]['ac']="true";
-    else
-      $_xh[$parser]['ac']="false";
+    case "METHODNAME":
+      $_xh[$parser]['method']=ereg_replace("^[\n\r\t ]+", "",
+          $_xh[$parser]['ac']);
+    break;
+    case "BOOLEAN":
+      // special case here: we translate boolean 1 or 0 into PHP
+      // constants true or false
+      if ($_xh[$parser]['ac']=='1')
+        $_xh[$parser]['ac']="true";
+      else
+        $_xh[$parser]['ac']="false";
     $_xh[$parser]['vt']=strtolower($name);
     break;
-  default:
+    default:
     break;
   }
   // if it's a valid type name, set the type
@@ -328,11 +328,11 @@ function xmlrpc_cd($parser, $data)
       // and say we've found a value
       $_xh[$parser]['lv']=2;
     }
-  // replace characters that eval would
-  // do special things with
-  $_xh[$parser]['ac'].=str_replace('$', '\$',
-    str_replace('"', '\"', str_replace(chr(92),
-      $xmlrpc_backslash, $data)));
+    // replace characters that eval would
+    // do special things with
+    $_xh[$parser]['ac'].=str_replace('$', '\$',
+        str_replace('"', '\"', str_replace(chr(92),
+            $xmlrpc_backslash, $data)));
   }
 }
 
@@ -346,7 +346,7 @@ function xmlrpc_dh($parser, $data)
     }
     $_xh[$parser]['ac'].=str_replace('$', '\$',
         str_replace('"', '\"', str_replace(chr(92),
-          $xmlrpc_backslash, $data)));
+            $xmlrpc_backslash, $data)));
   }
 }
 
@@ -390,27 +390,27 @@ class xmlrpc_client {
 
     if ($method == 'https') {
       return $this->sendPayloadHTTPS($msg,
-             $this->server,
-             $this->port, $timeout,
-             $this->username, $this->password,
-             $this->cert,
-             $this->certpass);
+          $this->server,
+          $this->port, $timeout,
+          $this->username, $this->password,
+          $this->cert,
+          $this->certpass);
     } else {
       return $this->sendPayloadHTTP10($msg, $this->server, $this->port,
-              $timeout, $this->username,
-              $this->password);
+          $timeout, $this->username,
+          $this->password);
     }
   }
 
   function sendPayloadHTTP10($msg, $server, $port, $timeout=0,
-           $username="", $password="") {
+      $username="", $password="") {
     if ($port==0) $port=80;
     if($timeout>0)
       $fp=fsockopen($server, $port,
-        $this->errno, $this->errstr, $timeout);
+          $this->errno, $this->errstr, $timeout);
     else
       $fp=fsockopen($server, $port,
-        $this->errno, $this->errstr);
+          $this->errno, $this->errstr);
     if (!$fp) {
       return 0;
     }
@@ -422,7 +422,7 @@ class xmlrpc_client {
     $credentials="";
     if ($username!="") {
       $credentials="Authorization: Basic " .
-  base64_encode($username . ":" . $password) . "\r\n";
+        base64_encode($username . ":" . $password) . "\r\n";
     }
 
     $op= "POST " . $this->path. " HTTP/1.0\r\nUser-Agent: PHP XMLRPC 1.0\r\n" .
@@ -444,8 +444,8 @@ class xmlrpc_client {
   // contributed by Justin Miller <justin@voxel.net>
   // requires curl to be built into PHP
   function sendPayloadHTTPS($msg, $server, $port, $timeout=0,
-          $username="", $password="", $cert="",
-          $certpass="") {
+      $username="", $password="", $cert="",
+      $certpass="") {
     global $xmlrpcerr, $xmlrpcstr;
     if ($port == 0) $port = 443;
 
@@ -454,12 +454,12 @@ class xmlrpc_client {
 
     if (!function_exists("curl_init")) {
       $r=new xmlrpcresp(0, $xmlrpcerr["no_ssl"],
-      $xmlrpcstr["no_ssl"]);
+          $xmlrpcstr["no_ssl"]);
       return $r;
     }
 
     $curl = curl_init("https://" . $server . ':' . $port .
-          $this->path);
+        $this->path);
 
     curl_setopt($curl, CURLOPT_RETURNTRANSFER, 1);
     // results into variable
@@ -477,24 +477,24 @@ class xmlrpc_client {
     curl_setopt($curl, CURLOPT_HTTPHEADER, array('Content-Type: text/xml'));
     // required for XMLRPC
     if ($timeout) curl_setopt($curl, CURLOPT_TIMEOUT, $timeout == 1 ? 1 :
-            $timeout - 1);
+        $timeout - 1);
     // timeout is borked
     if ($username && $password) curl_setopt($curl, CURLOPT_USERPWD,
-              "$username:$password");
+        "$username:$password");
     // set auth stuff
     if ($cert) curl_setopt($curl, CURLOPT_SSLCERT, $cert);
     // set cert file
     if ($certpass) curl_setopt($curl, CURLOPT_SSLCERTPASSWD,
-               $certpass);
+        $certpass);
     // set cert password
 
     $result = curl_exec($curl);
 
     if (!$result) {
       $resp=new xmlrpcresp(0,
-         $xmlrpcerr["curl_fail"],
-         $xmlrpcstr["curl_fail"]. ": ".
-         curl_error($curl));
+          $xmlrpcerr["curl_fail"],
+          $xmlrpcstr["curl_fail"]. ": ".
+          curl_error($curl));
     } else {
       $resp = $msg->parseResponse($result);
     }
@@ -532,28 +532,28 @@ class xmlrpcresp {
   function value() { return $this->xv; }
 
   function serialize() {
-  $rs="<methodResponse>\n";
-  if ($this->fn) {
-    $rs.="<fault>
-  <value>
-    <struct>
-      <member>
+    $rs="<methodResponse>\n";
+    if ($this->fn) {
+      $rs.="<fault>
+        <value>
+        <struct>
+        <member>
         <name>faultCode</name>
         <value><int>" . $this->fn . "</int></value>
-      </member>
-      <member>
+        </member>
+        <member>
         <name>faultString</name>
         <value><string>" . $this->fs . "</string></value>
-      </member>
-    </struct>
-  </value>
-</fault>";
-  } else {
-    $rs.="<params>\n<param>\n" . $this->xv->serialize() .
-    "</param>\n</params>";
-  }
-  $rs.="\n</methodResponse>";
-  return $rs;
+        </member>
+        </struct>
+        </value>
+        </fault>";
+    } else {
+      $rs.="<params>\n<param>\n" . $this->xv->serialize() .
+        "</param>\n</params>";
+    }
+    $rs.="\n</methodResponse>";
+    return $rs;
   }
 }
 
@@ -572,34 +572,34 @@ class xmlrpcmsg {
   }
 
   function xml_header() {
-  return "<?xml version=\"1.0\"?>\n<methodCall>\n";
+    return "<?xml version=\"1.0\"?>\n<methodCall>\n";
   }
 
   function xml_footer() {
-  return "</methodCall>\n";
+    return "</methodCall>\n";
   }
 
   function createPayload() {
-  $this->payload=$this->xml_header();
-  $this->payload.="<methodName>" . $this->methodname . "</methodName>\n";
-  //  if (sizeof($this->params)) {
+    $this->payload=$this->xml_header();
+    $this->payload.="<methodName>" . $this->methodname . "</methodName>\n";
+    //  if (sizeof($this->params)) {
     $this->payload.="<params>\n";
     for($i=0; $i<sizeof($this->params); $i++) {
-    $p=$this->params[$i];
-    $this->payload.="<param>\n" . $p->serialize() .
-      "</param>\n";
+      $p=$this->params[$i];
+      $this->payload.="<param>\n" . $p->serialize() .
+        "</param>\n";
     }
     $this->payload.="</params>\n";
-  // }
-  $this->payload.=$this->xml_footer();
-  $this->payload=str_replace("\n", "\r\n", $this->payload);
+    // }
+    $this->payload.=$this->xml_footer();
+    $this->payload=str_replace("\n", "\r\n", $this->payload);
   }
 
   function method($meth="") {
-  if ($meth!="") {
-    $this->methodname=$meth;
-  }
-  return $this->methodname;
+    if ($meth!="") {
+      $this->methodname=$meth;
+    }
+    return $this->methodname;
   }
 
   function serialize() {
@@ -612,119 +612,119 @@ class xmlrpcmsg {
   function getNumParams() { return sizeof($this->params); }
 
   function parseResponseFile($fp) {
-  $ipd="";
+    $ipd="";
 
-  while($data=fread($fp, 32768)) {
-    $ipd.=$data;
-  }
-  return $this->parseResponse($ipd);
+    while($data=fread($fp, 32768)) {
+      $ipd.=$data;
+    }
+    return $this->parseResponse($ipd);
   }
 
   function parseResponse($data="") {
-  global $_xh,$xmlrpcerr,$xmlrpcstr;
-  global $xmlrpc_defencoding;
+    global $_xh,$xmlrpcerr,$xmlrpcstr;
+    global $xmlrpc_defencoding;
 
 
-  $parser = xml_parser_create($xmlrpc_defencoding);
+    $parser = xml_parser_create($xmlrpc_defencoding);
 
-  $_xh[$parser]=array();
+    $_xh[$parser]=array();
 
-  $_xh[$parser]['st']="";
-  $_xh[$parser]['cm']=0;
-  $_xh[$parser]['isf']=0;
-  $_xh[$parser]['ac']="";
-  $_xh[$parser]['qt']="";
-  $_xh[$parser]['ha']="";
-  $_xh[$parser]['ac']="";
+    $_xh[$parser]['st']="";
+    $_xh[$parser]['cm']=0;
+    $_xh[$parser]['isf']=0;
+    $_xh[$parser]['ac']="";
+    $_xh[$parser]['qt']="";
+    $_xh[$parser]['ha']="";
+    $_xh[$parser]['ac']="";
 
-  xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, true);
-  xml_set_element_handler($parser, "xmlrpc_se", "xmlrpc_ee");
-  xml_set_character_data_handler($parser, "xmlrpc_cd");
-  xml_set_default_handler($parser, "xmlrpc_dh");
-  $xmlrpc_value=new xmlrpcval;
+    xml_parser_set_option($parser, XML_OPTION_CASE_FOLDING, true);
+    xml_set_element_handler($parser, "xmlrpc_se", "xmlrpc_ee");
+    xml_set_character_data_handler($parser, "xmlrpc_cd");
+    xml_set_default_handler($parser, "xmlrpc_dh");
+    $xmlrpc_value=new xmlrpcval;
 
-  if ($this->debug)
-    ##print "<pre>---GOT---\n" . htmlspecialchars($data) .  "\n---END---\n</pre>";
-    ##print "<p>---GOT---\n" . nl2br(htmlspecialchars($data)) .  "\n---END---\n</p>";
-    print "<p>---GOT---\n" . nl2br($data) .  "\n---END---\n</p>";
-  if ($data=="") {
-    error_log("No response received from server.");
-    $r=new xmlrpcresp(0, $xmlrpcerr["no_data"],
+    if ($this->debug)
+##print "<pre>---GOT---\n" . htmlspecialchars($data) .  "\n---END---\n</pre>";
+##print "<p>---GOT---\n" . nl2br(htmlspecialchars($data)) .  "\n---END---\n</p>";
+      print "<p>---GOT---\n" . nl2br($data) .  "\n---END---\n</p>";
+    if ($data=="") {
+      error_log("No response received from server.");
+      $r=new xmlrpcresp(0, $xmlrpcerr["no_data"],
           $xmlrpcstr["no_data"]);
-    xml_parser_free($parser);
-    return $r;
-  }
-  // see if we got an HTTP 200 OK, else bomb
-  // but only do this if we're using the HTTP protocol.
-  if (ereg("^HTTP",$data) &&
-      !ereg("^HTTP/[0-9\.]+ 200 ", $data)) {
-    $errstr= substr($data, 0, strpos($data, "\n")-1);
-    error_log("HTTP error, got response: " .$errstr);
-    $r=new xmlrpcresp(0, $xmlrpcerr["http_error"],
+      xml_parser_free($parser);
+      return $r;
+    }
+    // see if we got an HTTP 200 OK, else bomb
+    // but only do this if we're using the HTTP protocol.
+    if (ereg("^HTTP",$data) &&
+        !ereg("^HTTP/[0-9\.]+ 200 ", $data)) {
+      $errstr= substr($data, 0, strpos($data, "\n")-1);
+      error_log("HTTP error, got response: " .$errstr);
+      $r=new xmlrpcresp(0, $xmlrpcerr["http_error"],
           $xmlrpcstr["http_error"]. " (" . $errstr . ")");
-    xml_parser_free($parser);
-    return $r;
-  }
+      xml_parser_free($parser);
+      return $r;
+    }
 
-  // if using HTTP, then gotta get rid of HTTP headers here
-  // and we store them in the 'ha' bit of our data array
-  if (ereg("^HTTP", $data)) {
-    $ar=explode("\r\n", $data);
-    $newdata="";
-    $hdrfnd=0;
-    for ($i=0; $i<sizeof($ar); $i++) {
-      if (!$hdrfnd) {
-        if (strlen($ar[$i])>0) {
-          $_xh[$parser]['ha'].=$ar[$i]. "\r\n";
+    // if using HTTP, then gotta get rid of HTTP headers here
+    // and we store them in the 'ha' bit of our data array
+    if (ereg("^HTTP", $data)) {
+      $ar=explode("\r\n", $data);
+      $newdata="";
+      $hdrfnd=0;
+      for ($i=0; $i<sizeof($ar); $i++) {
+        if (!$hdrfnd) {
+          if (strlen($ar[$i])>0) {
+            $_xh[$parser]['ha'].=$ar[$i]. "\r\n";
+          } else {
+            $hdrfnd=1;
+          }
         } else {
-          $hdrfnd=1;
+          $newdata.=$ar[$i] . "\r\n";
         }
+      }
+      $data=$newdata;
+    }
+
+    if (!xml_parse($parser, $data, sizeof($data))) {
+      // thanks to Peter Kocks <peter.kocks@baygate.com>
+      if((xml_get_current_line_number($parser)) == 1)
+        $errstr = "XML error at line 1, check URL";
+      else
+        $errstr = sprintf("XML error: %s at line %d",
+            xml_error_string(xml_get_error_code($parser)),
+            xml_get_current_line_number($parser));
+      error_log($errstr);
+      $r=new xmlrpcresp(0, $xmlrpcerr["invalid_return"],
+          $xmlrpcstr["invalid_return"]);
+      xml_parser_free($parser);
+      return $r;
+    }
+    xml_parser_free($parser);
+    if ($this->debug) {
+      print "<pre>---EVALING---[" .
+        strlen($_xh[$parser]['st']) . " chars]---\n" .
+        htmlspecialchars($_xh[$parser]['st']) . ";\n---END---</pre>";
+    }
+    if (strlen($_xh[$parser]['st'])==0) {
+      // then something odd has happened
+      // and it's time to generate a client side error
+      // indicating something odd went on
+      $r=new xmlrpcresp(0, $xmlrpcerr["invalid_return"],
+          $xmlrpcstr["invalid_return"]);
+    } else {
+      eval('$v=' . $_xh[$parser]['st'] . '; $allOK=1;');
+      if ($_xh[$parser]['isf']) {
+        $f=$v->structmem("faultCode");
+        $fs=$v->structmem("faultString");
+        $r=new xmlrpcresp($v, $f->scalarval(),
+            $fs->scalarval());
       } else {
-        $newdata.=$ar[$i] . "\r\n";
+        $r=new xmlrpcresp($v);
       }
     }
-    $data=$newdata;
-  }
-
-  if (!xml_parse($parser, $data, sizeof($data))) {
-    // thanks to Peter Kocks <peter.kocks@baygate.com>
-    if((xml_get_current_line_number($parser)) == 1)
-      $errstr = "XML error at line 1, check URL";
-    else
-      $errstr = sprintf("XML error: %s at line %d",
-                        xml_error_string(xml_get_error_code($parser)),
-                        xml_get_current_line_number($parser));
-    error_log($errstr);
-    $r=new xmlrpcresp(0, $xmlrpcerr["invalid_return"],
-                      $xmlrpcstr["invalid_return"]);
-    xml_parser_free($parser);
+    $r->hdrs=split("\r?\n", $_xh[$parser]['ha']);
     return $r;
-  }
-  xml_parser_free($parser);
-  if ($this->debug) {
-    print "<pre>---EVALING---[" .
-    strlen($_xh[$parser]['st']) . " chars]---\n" .
-    htmlspecialchars($_xh[$parser]['st']) . ";\n---END---</pre>";
-  }
-  if (strlen($_xh[$parser]['st'])==0) {
-    // then something odd has happened
-    // and it's time to generate a client side error
-    // indicating something odd went on
-    $r=new xmlrpcresp(0, $xmlrpcerr["invalid_return"],
-            $xmlrpcstr["invalid_return"]);
-  } else {
-    eval('$v=' . $_xh[$parser]['st'] . '; $allOK=1;');
-    if ($_xh[$parser]['isf']) {
-    $f=$v->structmem("faultCode");
-    $fs=$v->structmem("faultString");
-    $r=new xmlrpcresp($v, $f->scalarval(),
-              $fs->scalarval());
-    } else {
-    $r=new xmlrpcresp($v);
-    }
-  }
-  $r->hdrs=split("\r?\n", $_xh[$parser]['ha']);
-  return $r;
   }
 
 }
@@ -742,8 +742,8 @@ class xmlrpcval {
       if ($xmlrpcTypes[$type]==1) {
         $this->addScalar($val,$type);
       }
-    else if ($xmlrpcTypes[$type]==2)
-      $this->addArray($val);
+      else if ($xmlrpcTypes[$type]==2)
+        $this->addArray($val);
       else if ($xmlrpcTypes[$type]==3)
         $this->addStruct($val);
     }
@@ -765,7 +765,7 @@ class xmlrpcval {
     if ($type==$xmlrpcBoolean) {
       if (strcasecmp($val,"true")==0 ||
           $val==1 || ($val==true &&
-                      strcasecmp($val,"false"))) {
+            strcasecmp($val,"false"))) {
         $val=1;
       } else {
         $val=0;
@@ -799,91 +799,91 @@ class xmlrpcval {
   }
 
   function addStruct($vals) {
-  global $xmlrpcTypes;
-  if ($this->mytype!=0) {
-    echo "<strong>xmlrpcval</strong>: already initialized as a [" .
-    $this->kindOf() . "]<br />";
-    return 0;
-  }
-  $this->mytype=$xmlrpcTypes["struct"];
-  $this->me["struct"]=$vals;
-  return 1;
+    global $xmlrpcTypes;
+    if ($this->mytype!=0) {
+      echo "<strong>xmlrpcval</strong>: already initialized as a [" .
+        $this->kindOf() . "]<br />";
+      return 0;
+    }
+    $this->mytype=$xmlrpcTypes["struct"];
+    $this->me["struct"]=$vals;
+    return 1;
   }
 
   function dump($ar) {
-  reset($ar);
-  while ( list( $key, $val ) = each( $ar ) ) {
-    echo "$key => $val<br />";
-    if ($key == 'array')
-    while ( list( $key2, $val2 ) = each( $val ) ) {
-      echo "-- $key2 => $val2<br />";
+    reset($ar);
+    while ( list( $key, $val ) = each( $ar ) ) {
+      echo "$key => $val<br />";
+      if ($key == 'array')
+        while ( list( $key2, $val2 ) = each( $val ) ) {
+          echo "-- $key2 => $val2<br />";
+        }
     }
-  }
   }
 
   function kindOf() {
-  switch($this->mytype) {
-  case 3:
-    return "struct";
-    break;
-  case 2:
-    return "array";
-    break;
-  case 1:
-    return "scalar";
-    break;
-  default:
-    return "undef";
-  }
+    switch($this->mytype) {
+      case 3:
+        return "struct";
+        break;
+      case 2:
+        return "array";
+        break;
+      case 1:
+        return "scalar";
+        break;
+      default:
+        return "undef";
+    }
   }
 
   function serializedata($typ, $val) {
     $rs="";
     global $xmlrpcTypes, $xmlrpcBase64, $xmlrpcString,
-      $xmlrpcBoolean;
+    $xmlrpcBoolean;
     switch($xmlrpcTypes[$typ]) {
-    case 3:
-      // struct
-      $rs.="<struct>\n";
-      reset($val);
-      while(list($key2, $val2)=each($val)) {
-        $rs.="<member><name>${key2}</name>\n";
-        $rs.=$this->serializeval($val2);
-        $rs.="</member>\n";
-      }
-      $rs.="</struct>";
-      break;
-    case 2:
-      // array
-      $rs.="<array>\n<data>\n";
-      for($i=0; $i<sizeof($val); $i++) {
-        $rs.=$this->serializeval($val[$i]);
-      }
-      $rs.="</data>\n</array>";
-      break;
-    case 1:
-      switch ($typ) {
-      case $xmlrpcBase64:
-        $rs.="<${typ}>" . base64_encode($val) . "</${typ}>";
+      case 3:
+        // struct
+        $rs.="<struct>\n";
+        reset($val);
+        while(list($key2, $val2)=each($val)) {
+          $rs.="<member><name>${key2}</name>\n";
+          $rs.=$this->serializeval($val2);
+          $rs.="</member>\n";
+        }
+        $rs.="</struct>";
         break;
-      case $xmlrpcBoolean:
-        $rs.="<${typ}>" . ($val ? "1" : "0") . "</${typ}>";
-          break;
-      case $xmlrpcString:
-        $rs.="<${typ}>" . htmlspecialchars($val). "</${typ}>";
+      case 2:
+        // array
+        $rs.="<array>\n<data>\n";
+        for($i=0; $i<sizeof($val); $i++) {
+          $rs.=$this->serializeval($val[$i]);
+        }
+        $rs.="</data>\n</array>";
+        break;
+      case 1:
+        switch ($typ) {
+          case $xmlrpcBase64:
+            $rs.="<${typ}>" . base64_encode($val) . "</${typ}>";
+            break;
+          case $xmlrpcBoolean:
+            $rs.="<${typ}>" . ($val ? "1" : "0") . "</${typ}>";
+            break;
+          case $xmlrpcString:
+            $rs.="<${typ}>" . htmlspecialchars($val). "</${typ}>";
+            break;
+          default:
+            $rs.="<${typ}>${val}</${typ}>";
+        }
         break;
       default:
-        $rs.="<${typ}>${val}</${typ}>";
-      }
-      break;
-    default:
-      break;
+        break;
     }
     return $rs;
   }
 
   function serialize() {
-  return $this->serializeval($this);
+    return $this->serializeval($this);
   }
 
   function serializeval($o) {
@@ -999,7 +999,7 @@ function iso8601_decode($idate, $utc=0) {
   // return a timet in the localtime, or UTC
   $t=0;
   if (ereg("([0-9]{4})([0-9]{2})([0-9]{2})T([0-9]{2}):([0-9]{2}):([0-9]{2})",
-           $idate, $regs)) {
+        $idate, $regs)) {
     if ($utc) {
       $t=gmmktime($regs[4], $regs[5], $regs[6], $regs[2], $regs[3], $regs[1]);
     } else {
@@ -1010,93 +1010,93 @@ function iso8601_decode($idate, $utc=0) {
 }
 
 /*****************************************************************
-* _xmlrpc_decode takes a message in PHP xmlrpc object format and *
-* tranlates it into native PHP types.                            *
-*                                                                *
-* author: Dan Libby (dan@libby.com)                              *
-*****************************************************************/
+ * _xmlrpc_decode takes a message in PHP xmlrpc object format and *
+ * tranlates it into native PHP types.                            *
+ *                                                                *
+ * author: Dan Libby (dan@libby.com)                              *
+ *****************************************************************/
 function _xmlrpc_decode($xmlrpc_val) {
-   $kind = $xmlrpc_val->kindOf();
+  $kind = $xmlrpc_val->kindOf();
 
-   if($kind == "scalar") {
-      return $xmlrpc_val->scalarval();
-   }
-   else if($kind == "array") {
-      $size = $xmlrpc_val->arraysize();
-      $arr = array();
+  if($kind == "scalar") {
+    return $xmlrpc_val->scalarval();
+  }
+  else if($kind == "array") {
+    $size = $xmlrpc_val->arraysize();
+    $arr = array();
 
-      for($i = 0; $i < $size; $i++) {
-         $arr[]=_xmlrpc_decode($xmlrpc_val->arraymem($i));
-      }
-      return $arr;
-   }
-   else if($kind == "struct") {
-      $xmlrpc_val->structreset();
-      $arr = array();
+    for($i = 0; $i < $size; $i++) {
+      $arr[]=_xmlrpc_decode($xmlrpc_val->arraymem($i));
+    }
+    return $arr;
+  }
+  else if($kind == "struct") {
+    $xmlrpc_val->structreset();
+    $arr = array();
 
-      while(list($key,$value)=$xmlrpc_val->structeach()) {
-         $arr[$key] = _xmlrpc_decode($value);
-      }
-      return $arr;
-   }
+    while(list($key,$value)=$xmlrpc_val->structeach()) {
+      $arr[$key] = _xmlrpc_decode($value);
+    }
+    return $arr;
+  }
 }
 
 /****************************************************************
-* _xmlrpc_encode takes native php types and encodes them into   *
-* xmlrpc PHP object format.                                     *
-* BUG: All sequential arrays are turned into structs.  I don't  *
-* know of a good way to determine if an array is sequential     *
-* only.                                                         *
-*                                                               *
-* feature creep -- could support more types via optional type   *
-* argument.                                                     *
-*                                                               *
-* author: Dan Libby (dan@libby.com)                             *
-****************************************************************/
+ * _xmlrpc_encode takes native php types and encodes them into   *
+ * xmlrpc PHP object format.                                     *
+ * BUG: All sequential arrays are turned into structs.  I don't  *
+ * know of a good way to determine if an array is sequential     *
+ * only.                                                         *
+ *                                                               *
+ * feature creep -- could support more types via optional type   *
+ * argument.                                                     *
+ *                                                               *
+ * author: Dan Libby (dan@libby.com)                             *
+ ****************************************************************/
 function _xmlrpc_encode($php_val) {
-   global $xmlrpcInt;
-   global $xmlrpcDouble;
-   global $xmlrpcString;
-   global $xmlrpcArray;
-   global $xmlrpcStruct;
-   global $xmlrpcBoolean;
+  global $xmlrpcInt;
+  global $xmlrpcDouble;
+  global $xmlrpcString;
+  global $xmlrpcArray;
+  global $xmlrpcStruct;
+  global $xmlrpcBoolean;
 
-   $type = gettype($php_val);
-   $xmlrpc_val = new xmlrpcval;
+  $type = gettype($php_val);
+  $xmlrpc_val = new xmlrpcval;
 
-   switch($type) {
-      case "array":
+  switch($type) {
+    case "array":
       case "object":
-         $arr = array();
-         while (list($k,$v) = each($php_val)) {
-            $arr[$k] = _xmlrpc_encode($v);
-         }
-         $xmlrpc_val->addStruct($arr);
-         break;
-      case "integer":
-         $xmlrpc_val->addScalar($php_val, $xmlrpcInt);
-         break;
-      case "double":
-         $xmlrpc_val->addScalar($php_val, $xmlrpcDouble);
-         break;
-      case "string":
-         $xmlrpc_val->addScalar($php_val, $xmlrpcString);
-         break;
-// <G_Giunta_2001-02-29>
-// Add support for encoding/decoding of booleans, since they are supported in PHP
-      case "boolean":
-         $xmlrpc_val->addScalar($php_val, $xmlrpcBoolean);
-         break;
-// </G_Giunta_2001-02-29>
-      case "unknown type":
-      default:
-  // giancarlo pinerolo <ping@alt.it>
-  // it has to return
-        // an empty object in case (which is already
-  // at this point), not a boolean.
-  break;
-   }
-   return $xmlrpc_val;
+      $arr = array();
+    while (list($k,$v) = each($php_val)) {
+      $arr[$k] = _xmlrpc_encode($v);
+    }
+    $xmlrpc_val->addStruct($arr);
+    break;
+    case "integer":
+      $xmlrpc_val->addScalar($php_val, $xmlrpcInt);
+    break;
+    case "double":
+      $xmlrpc_val->addScalar($php_val, $xmlrpcDouble);
+    break;
+    case "string":
+      $xmlrpc_val->addScalar($php_val, $xmlrpcString);
+    break;
+    // <G_Giunta_2001-02-29>
+    // Add support for encoding/decoding of booleans, since they are supported in PHP
+    case "boolean":
+      $xmlrpc_val->addScalar($php_val, $xmlrpcBoolean);
+    break;
+    // </G_Giunta_2001-02-29>
+    case "unknown type":
+    default:
+      // giancarlo pinerolo <ping@alt.it>
+      // it has to return
+      // an empty object in case (which is already
+      // at this point), not a boolean.
+      break;
+  }
+  return $xmlrpc_val;
 }
 
 ?>
