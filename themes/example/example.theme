@@ -12,13 +12,11 @@
   class Theme {
 
     function header() {
-      global $site_name;
-
 ?>
 
       <HTML>
         <HEAD>
-          <TITLE><? echo $site_name; ?></TITLE>
+          <TITLE><? echo variable_get(site_name, "drupal"); ?></TITLE>
         </HEAD>
         <BODY>
           <TABLE BORDER="1">

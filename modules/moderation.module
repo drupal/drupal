@@ -82,9 +82,12 @@ function moderation_node($id) {
     header("Location: node.php?id=$node->nid");
   }
   else {
-    if ($node->pid && $n = node_get_object("nid", $node->pid)) {
-      if ($node->pid) $output .= " ". t("The above node is a suggested update for an existing node:") ." \"<A HREF=\"node.php?id=$n->nid\">". check_output($n->title) ."</A>\".";
-      if ($node->log) $output .= " ". t("The log message to accompany this update is given below:") ."<P><I>". check_output($node->log, 1) ."</I></P>";
+    if ($n = node_get_object("nid", $node->pid)) {
+      $output .= " ". t("The above node is a proposed update of an existing node:") ." \"<A HREF=\"node.php?id=$n->nid\">". check_output($n->title) ."</A>\".";
+    }
+
+    if ($node->log) {
+      $output .= " ". t("The log message to accompany this submission is given below:") ."<P><I>". check_output($node->log, 1) ."</I></P>";
     }
 
     // moderation form:

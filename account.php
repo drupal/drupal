@@ -311,7 +311,7 @@ function account_validate($user) {
 }
 
 function account_email_submit($userid, $email) {
-  global $theme, $site_name, $site_url;
+  global $theme;
 
   $result = db_query("SELECT id FROM users WHERE userid = '$userid' AND real_email = '$email'");
 
@@ -322,9 +322,9 @@ function account_email_submit($userid, $email) {
 
     db_query("UPDATE users SET passwd = PASSWORD('$passwd'), hash = '$hash', status = '$status' WHERE userid = '$userid'");
 
-    $link = $site_url ."account.php?op=confirm&name=$userid&hash=$hash";
-    $subject = strtr(t("Account details for %a"), array("%a" => $site_name));
-    $message = strtr(t("%a,\n\n\nyou requested us to e-mail you a new password for your account at %b.  You will need to re-confirm your account or you will not be able to login.  To confirm your account updates visit the URL below:\n\n   %c\n\nOnce confirmed you can login using the following username and password:\n\n   username: %a\n   password: %d\n\n\n-- %b team"), array("%a" => $userid, "%b" => $site_name, "%c" => $link, "%d" => $passwd));
+    $link = variable_get(site_url, "http://drupal/") ."account.php?op=confirm&name=$userid&hash=$hash";
+    $subject = strtr(t("Account details for %a"), array("%a" => variable_get(site_name, "drupal")));
+    $message = strtr(t("%a,\n\n\nyou requested us to e-mail you a new password for your account at %b.  You will need to re-confirm your account or you will not be able to login.  To confirm your account updates visit the URL below:\n\n   %c\n\nOnce confirmed you can login using the following username and password:\n\n   username: %a\n   password: %d\n\n\n-- %b team"), array("%a" => $userid, "%b" => variable_get(site_name, "drupal"), "%c" => $link, "%d" => $passwd));
 
     watchdog("message", "new password: `$userid' &lt;$email&gt;");
 
@@ -343,7 +343,7 @@ function account_email_submit($userid, $email) {
 }
 
 function account_create_submit($userid, $email) {
-  global $theme, $site_name, $site_url;
+  global $theme;
 
   $new[userid] = trim($userid);
   $new[real_email] = trim($email);
@@ -359,9 +359,9 @@ function account_create_submit($userid, $email) {
 
     $user = user_save("", array("userid" => $new[userid], "real_email" => $new[real_email], "passwd" => $new[passwd], "status" => 1, "hash" => $new[hash]));
 
-    $link = $site_url ."account.php?op=confirm&name=$new[userid]&hash=$new[hash]";
-    $subject = strtr(t("Account details for %a"), array("%a" => $site_name));
-    $message = strtr(t("%a,\n\n\nsomeone signed up for a user account on %b and supplied this e-mail address as their contact.  If it wasn't you, don't get your panties in a knot and simply ignore this mail.  If this was you, you will have to confirm your account first or you will not be able to login.  To confirm your account visit the URL below:\n\n   %c\n\nOnce confirmed you can login using the following username and password:\n\n   username: %a\n   password: %d\n\n\n-- %b team\n"), array("%a" => $new[userid], "%b" => $site_name, "%c" => $link, "%d" => $new[passwd]));
+    $link = variable_get(site_url, "http://drupal/") ."account.php?op=confirm&name=$new[userid]&hash=$new[hash]";
+    $subject = strtr(t("Account details for %a"), array("%a" => variable_get(site_name, "drupal")));
+    $message = strtr(t("%a,\n\n\nsomeone signed up for a user account on %b and supplied this e-mail address as their contact.  If it wasn't you, don't get your panties in a knot and simply ignore this mail.  If this was you, you will have to confirm your account first or you will not be able to login.  To confirm your account visit the URL below:\n\n   %c\n\nOnce confirmed you can login using the following username and password:\n\n   username: %a\n   password: %d\n\n\n-- %b team\n"), array("%a" => $new[userid], "%b" => variable_get(site_name, "drupal"), "%c" => $link, "%d" => $new[passwd]));
 
     watchdog("message", "new account: `$new[userid]' &lt;$new[real_email]&gt;");
 
@@ -453,7 +453,7 @@ function account_track_nodes() {
 }
 
 function account_track_site() {
-  global $nstatus, $status, $theme, $user, $site_name;
+  global $nstatus, $status, $theme, $user;
 
   $period = 259200; // 3 days
 

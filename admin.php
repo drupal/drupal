@@ -10,7 +10,7 @@ function status($message) {
 }
 
 function admin_page($mod) {
-  global $repository, $site_name, $menu, $modules, $user;
+  global $repository, $menu, $modules, $user;
 
   function module($name, $module) {
     global $menu, $modules, $user;
@@ -21,7 +21,7 @@ function admin_page($mod) {
  ?>
   <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
   <HTML>
-   <HEAD><TITLE><?php echo $site_name; ?> administration</TITLE></HEAD>
+   <HEAD><TITLE><?php echo variable_get(site_name, "drupal"); ?> administration</TITLE></HEAD>
    <STYLE>
     body { font-family: helvetica, arial; }
     h1   { font-size: 18pt; font-weight: bold; color: #990000; }

@@ -2,7 +2,6 @@
 
 $module = array("help" => "watchdog_help",
                 "cron" => "watchdog_cron",
-                "conf" => "watchdog_conf",
                 "admin" => "watchdog_admin");
 
 function watchdog_help() {
@@ -13,44 +12,24 @@ function watchdog_help() {
 }
 
 function watchdog_cron() {
-  watchdog_clean();
+  db_query("DELETE FROM watchdog WHERE ". time() ." - timestamp > ". variable_get(watchdog_clear, "302400"));
 }
 
 function watchdog_overview($order = "date") {
-  $colors = array("#D8BFD8", "#6495ED", "#6A5ADF", "#FFFFFF", "#FFA500", "#FF3C3C");
-  $fields = array("date" => "id DESC", "username" => "user", "location" => "location", "message" => "message DESC", "level" => "level DESC");
+  $colors = array(message => "#FFFFFF", special => "#836FFF", warning => "#FFAA22", error => "#EE2C2C");
 
-  // Perform query:
-  $result = db_query("SELECT l.*, u.userid FROM watchdog l LEFT JOIN users u ON l.user = u.id ORDER BY l.$fields[$order]");
+  $result = db_query("SELECT w.*, u.userid FROM watchdog w LEFT JOIN users u ON w.user = u.id");
 
-  // Generate output:
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR>\n";
-  $output .= "  <TH ALIGN=\"right\" COLSPAN=\"4\">\n";
-  $output .= "   <FORM ACTION=\"admin.php?mod=watchdog\" METHOD=\"post\">\n";
-  $output .= "    <SELECT NAME=\"order\">\n";
-  foreach ($fields as $key=>$value) {
-    $output .= "     <OPTION VALUE=\"$key\"". ($key == $order ? " SELECTED" : "") .">Sort by $key</OPTION>\n";
-  }
-  $output .= "    </SELECT>\n";
-  $output .= "    <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Update\">\n";
-  $output .= "   </FORM>\n";
-  $output .= "  </TH>\n";
-  $output .= " </TR>\n";
-  $output .= " <TR>\n";
-  $output .= "  <TH>date</TH>\n";
-  $output .= "  <TH>message</TH>\n";
-  $output .= "  <TH>user</TH>\n";
-  $output .= "  <TH>operations</TH>\n";
-  $output .= " </TR>\n";
-
+  $output .= " <TR><TH>date</TH><TH>type</TH><TH>message</TH><TH>user</TH><TH>operations</TH></TR>\n";
   while ($watchdog = db_fetch_object($result)) {
-    $output .= " <TR BGCOLOR=\"". $colors[$watchdog->level] ."\"><TD>". format_date($watchdog->timestamp) ."</TD><TD>". substr(check_output($watchdog->message), 0, 44) ."</TD><TD ALIGN=\"center\">". format_username($watchdog->userid) ."</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=watchdog&op=view&id=$watchdog->id\">details</A></TD></TR>\n";
+    if ($color = $colors[$watchdog->type]) {
+      $output .= " <TR BGCOLOR=\"$color\"><TD>". format_date($watchdog->timestamp) ."</TD><TD ALIGN=\"center\">$watchdog->link</TD><TD>". substr(check_output($watchdog->message), 0, 50) ."</TD><TD ALIGN=\"center\">". format_username($watchdog->userid) ."</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=watchdog&op=view&id=$watchdog->id\">details</A></TD></TR>\n";
+    }
   }
-
   $output .= "</TABLE>\n";
 
-  print $output;
+  return $output;
 }
 
 function watchdog_view($id) {
@@ -58,33 +37,16 @@ function watchdog_view($id) {
 
   if ($watchdog = db_fetch_object($result)) {
     $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
-    $output .= " <TR><TH>Level:</TH><TD>". check_output($watchdog->level) ."</TD></TR>\n";
+    $output .= " <TR><TH>Type:</TH><TD>". check_output($watchdog->type) ."</TD></TR>\n";
     $output .= " <TR><TH>Date:</TH><TD>". format_date($watchdog->timestamp, "large") ."</TD></TR>\n";
     $output .= " <TR><TH>User:</TH><TD>". format_username($watchdog->userid) ."</TD></TR>\n";
     $output .= " <TR><TH>Location:</TH><TD>". check_output($watchdog->location). "</TD></TR>\n";
     $output .= " <TR><TH>Message:</TH><TD>". check_output($watchdog->message) ."</TD></TR>\n";
     $output .= " <TR><TH>Hostname:</TH><TD>". check_output($watchdog->hostname) ."</TD></TR>\n";
     $output .= "</TABLE>\n";
-    print $output;
+
+    return $output;
   }
-}
-
-function watchdog_conf() {
-  global $conf;
-
-  $rate = array(1 => "maximum 1 every second", 5 => "maximum 1 every 5 seconds", 15 => "maximum 1 every 15 seconds", 30 => "maximum 1 every 30 seconds", 60 => "maximum 1 every minute", 300 => "maximum 1 every 5 minutes", 900 => "maximum 1 every 15 minutes", 1800 => "maximum 1 every 30 minutes", 3600 => "maximum 1 every hour", 21600 => "maximum 1 every 6 hour", 43200 => "maximum 1 every 12 hour");
-
-  $output .= "<B>Maximum node rate:</B><BR>\n";
-  foreach ($rate as $key=>$value) $options1 .= " <OPTION VALUE=\"$key\"". (($conf[max_node_rate] == $key) ? " SELECTED" : "") .">$value</OPTION>\n";
-  $output .= "<SELECT NAME=\"edit[max_node_rate]\">$options1</SELECT><BR>\n";
-  $output .= "<I><SMALL>The maximum submission rate for nodes.  Its purpose is to stop denial of service attacks.</SMALL></I><P>\n";
-
-  $output .= "<B>Maximum comment rate:</B><BR>\n";
-  foreach ($rate as $key=>$value) $options2 .= " <OPTION VALUE=\"$key\"". (($conf[max_comment_rate] == $key) ? " SELECTED" : "") .">$value</OPTION>\n";
-  $output .= "<SELECT NAME=\"edit[max_comment_rate]\"$options2</SELECT><BR>\n";
-  $output .= "<I><SMALL>The maximum submission rate for comments.  Its purpose is to stop denial of service attacks.</SMALL></I><P>\n";
-
-  return $output;
 }
 
 function watchdog_admin() {
@@ -97,13 +59,10 @@ function watchdog_admin() {
       watchdog_help();
       break;
     case "view":
-      watchdog_view(check_input($id));
-      break;
-    case "Update":
-      watchdog_overview(check_input($order));
+      print watchdog_view(check_input($id));
       break;
     default:
-      watchdog_overview();
+      print watchdog_overview();
   }
 }
 

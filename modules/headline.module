@@ -189,7 +189,7 @@ function headline_admin() {
 }
 
 function headline_export($uri) {
-  global $site_name, $site_url, $status, $HTTP_REFERER, $HTTP_USER_AGENT;
+  global $status, $HTTP_REFERER, $HTTP_USER_AGENT;
 
   if ($uri[1] == "headlines.rdf") {
     watchdog("message", "grabbed 'headlines.rdf' - referring url: $HTTP_REFERER - user agent: $HTTP_USER_AGENT");
@@ -202,9 +202,9 @@ function headline_export($uri) {
     print " xmlns=\"http://my.netscape.com/rdf/simple/0.9/\">\n";
 
     print "<channel>\n";
-    print " <title>$site_name</title>\n";
-    print " <link>$site_url</link>\n";
-    print " <description>$site_name</description>\n";
+    print " <title>". variable_get(site_name, "drupal") ."</title>\n";
+    print " <link>". variable_get(site_url, "http://drupal/") ."</link>\n";
+    print " <description>". variable_get(site_name, "drupal") ."</description>\n";
     print "</channel>\n";
 
     $result = db_query("SELECT * FROM node WHERE type = 'story' AND status = '$status[posted]' ORDER BY timestamp DESC LIMIT 10");
@@ -212,7 +212,7 @@ function headline_export($uri) {
     while ($node = db_fetch_object($result)) {
       print "<item>\n";
       print " <title>". check_export($node->title) ."</title>\n";
-      print " <link>". $site_url ."node.php?id=$node->nid</link>\n";
+      print " <link>". variable_get(site_url, "http://drupal/") ."node.php?id=$node->nid</link>\n";
       print "</item>\n";
     }
 

@@ -10,6 +10,9 @@ drupal x.xx, xx/xx/xxxx
     * allows collaborative book writing
 - removed ban module and integrated it in account.module as "access control":
     * access control is based on much more powerful regular expressions (regex) now rather than on MySQL pattern matching.
+- rewrote watchdog and submission throttle
+- added settings.module:
+    * moved most configuration options to the administration section
 - various updates:
     * added preview functionality when submitting new content (such as a story) from the administration pages.
     * made the administration section only show those links a user has access to.

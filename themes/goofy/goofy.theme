@@ -14,12 +14,11 @@
   class Theme {
 
     function header() {
-      global $site_name;
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
  <html>
   <head>
-   <title><?php echo $site_name; ?></title>
+   <title><?php echo variable_get(site_name, "drupal"); ?></title>
    <style type="text/css">
    <!--
      body { background-color: #FFFFFF; font-size: 10pt; font-family: tahoma,helvetica,arial; }
@@ -57,7 +56,7 @@
    <body>
     <table border="0" cellspacing="3" cellpadding="0" width="100%">
      <tr>
-      <td colspan="2" width="100%"><img src="themes/goofy/images/logo.png" alt="<?php echo $site_name; ?> logo"><br>
+      <td colspan="2" width="100%"><img src="themes/goofy/images/logo.png" alt=""><br>
        <?php $this->linksbar(); ?>
       </td>
      </tr>
@@ -173,7 +172,7 @@
      // Author:
      echo "    <tr>";
      echo "     <td valign=\"top\"><div align=\"right\">" . t("Author") . ":&nbsp;</div></td><td><b>" . format_username($comment->userid) . "</b>";
-     if ($comment->userid != $anonymous) {
+     if ($comment->userid) {
        // Display extra information line:
        if ($comment->fake_email) $info .= format_email($comment->fake_email);
        if (eregi("http://",$comment->url)) $info .= ($info?" | ":"") . format_url($comment->url);

@@ -1,9 +1,20 @@
 # 05/04/2001:
-
 CREATE TABLE variable (
   name varchar(32) DEFAULT '' NOT NULL,
   value varchar(128) DEFAULT '' NOT NULL,
   PRIMARY KEY (name)
+);
+
+CREATE TABLE watchdog (
+  id int(5) DEFAULT '0' NOT NULL auto_increment,
+  user int(6) DEFAULT '0' NOT NULL,
+  type varchar(16) DEFAULT '' NOT NULL,
+  link varchar(16) DEFAULT '' NOT NULL,
+  message varchar(255) DEFAULT '' NOT NULL,
+  location varchar(128) DEFAULT '' NOT NULL,
+  hostname varchar(128) DEFAULT '' NOT NULL,
+  timestamp int(11) DEFAULT '0' NOT NULL,
+  PRIMARY KEY (id)
 );
 
 # 01/04/2001:
@@ -11,7 +22,6 @@ CREATE TABLE variable (
 CREATE TABLE access (
   id tinyint(10) DEFAULT '0' NOT NULL auto_increment,
   mask varchar(255) DEFAULT '' NOT NULL,
-  type varchar(16) DEFAULT '' NOT NULL,
   reason text NOT NULL,
   UNIQUE mask (mask),
   PRIMARY KEY (id)

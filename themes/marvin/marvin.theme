@@ -14,12 +14,11 @@
    var $link = "#666699";
 
    function header() {
-     global $site_name;
     ?>
      <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
      <HTML>
      <HEAD>
-      <TITLE><?php print $site_name; ?></TITLE>
+      <TITLE><?php print variable_get(site_name, "drupal"); ?></TITLE>
      </HEAD>
      <STYLE type="text/css">
       <!--

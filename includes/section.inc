@@ -7,19 +7,19 @@ function section_get() {
   return $array;
 }
 
-function section_post_threshold($section, $threshold = 5) {
-  $result = db_query("SELECT post FROM sections WHERE name = '". check_input($section) ."'");
-  return ($result) ? db_result($result, 0) : $threshold;
+function section_post_threshold($section, $default) {
+  $section = db_fetch_object(db_query("SELECT post AS threshold FROM sections WHERE name = '". check_input($section) ."'"));
+  return $section->threshold ? $section->threshold : $default;
 }
 
-function section_dump_threshold($section, $threshold = - 3) {
-  $result = db_query("SELECT dump FROM sections WHERE name = '". check_input($section) ."'");
-  return ($result) ? db_result($result, 0) : $threshold;
+function section_dump_threshold($section, $default) {
+  $section = db_fetch_object(db_query("SELECT dump AS threshold FROM sections WHERE name = '". check_input($section) ."'"));
+  return $section->threshold ? $section->threshold : $default;
 }
 
-function section_timout_threshold($section, $threshold = 10) {
-  $result = db_query("SELECT timout FROM sections WHERE name = '". check_input($section) ."'");
-  return ($result) ? db_result($result, 0) : $threshold;
+function section_timout_threshold($section, $default) {
+  $section = db_fetch_object(db_query("SELECT timout AS threshold FROM sections WHERE name = '". check_input($section) ."'"));
+  return $section->threshold ? $section->threshold : $default;
 }
 
 ?>

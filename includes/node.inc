@@ -52,7 +52,7 @@ function node_save($node) {
 
     if ($u1 = implode(", ", $u1)) db_query("UPDATE node SET $u1 WHERE nid = '$node[nid]'");
     if ($u2 = implode(", ", $u2)) db_query("UPDATE $n->type SET $u2 WHERE nid = '$node[nid]'");
-    if ($n->pid && ($node[status] == $status[posted])) db_query("UPDATE node SET status = '$status[expired]' WHERE nid = '$node[pid]'");
+    if ($n->pid && ($node[status] == $status[posted])) db_query("UPDATE node SET status = '$status[expired]' WHERE nid = '$n->pid'");
 
     watchdog("message", "node: modified '$n->title'");
   }
@@ -63,6 +63,8 @@ function node_save($node) {
       watchdog("warning", "node: duplicate '$node[title]'");
     }
     else {
+      throttle("post node", variable_get(max_node_rate, 900));
+
       // setup default values:
       $node = array_merge(array(title => "?", author => $user->id, type => "?", pid => 0, log => "node created", status => $status[queued], score => 0, votes => 0, timestamp => time()), $node);
 

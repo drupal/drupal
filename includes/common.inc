@@ -9,12 +9,30 @@ function conf_init() {
   return $file;
 }
 
+function watchdog($type, $message) {
+  global $user, $watchdog, $PHP_SELF;
+  $link = ($mod) ? $mod : substr(strrchr($PHP_SELF, "/"), 1, strrchr($PHP_SELF, "/") - 4);
+  db_query("INSERT INTO watchdog (user, type, link, message, location, hostname, timestamp) VALUES ('$user->id', '". check_input($type) ."', '". check_input($link) ."', '". check_input($message) ."', '". check_input(getenv("REQUEST_URI")) ."', '". check_input(getenv("REMOTE_ADDR")) ."', '". time() ."')");
+}
+
+function throttle($type, $rate) {
+  if (!(user_access($user, "watchdog") || user_access($user, "comment") || user_access($user, "node"))) {
+    if ($throttle = db_fetch_object(db_query("SELECT * FROM watchdog WHERE type = '$type' AND hostname = '". getenv("REMOTE_ADDR") ."' AND ". time() ." - timestamp < $rate"))) {
+      watchdog("warning", "throttle: '". getenv("REMOTE_ADDR") ."' exceeded submission rate - $throttle->type");
+      header("Location: error.php?op=throttle");
+      exit();
+    }
+    else {
+      watchdog($type, "throttle control");
+    }
+  }
+}
+
 $conf = conf_init();
 
 include_once "includes/$conf.conf";
 include_once "includes/database.inc";
 include_once "includes/variable.inc";
-include_once "includes/watchdog.inc";
 include_once "includes/function.inc";
 include_once "includes/comment.inc";
 include_once "includes/module.inc";

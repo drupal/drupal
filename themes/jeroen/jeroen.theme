@@ -22,15 +22,13 @@
     */
 
     function header() {
-      global $site_name;
-
 ?>
 
       <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
       <html>
 
         <head>
-          <title><?php echo $site_name; ?> - Tears of technology</title>
+          <title><?php echo variable_get(site_name, "drupal"); ?> - Tears of technology</title>
           <style type="text/css">
             <!--
               BODY,P,DIV,LI,UL,td,EM,FONT,BLOCKQUOTE,FORM{font-size: 10pt; font-family:Helvetica,Lucida,sans-serif;}
@@ -207,7 +205,7 @@
       // Author:
       echo "                        <tr>";
       echo "                          <td align=\"right\"><FONT COLOR=\"#FEFEFE\">". t("Author") .":</FONT></td><td><B>". format_username($comment->userid) ."</B> ";
-                                        if ($comment->userid != $anonymous) {
+                                        if ($comment->userid) {
       // Display extra information line:
                                           if ($comment->fake_email) $info .= format_email($comment->fake_email);
                                           if (eregi("http://",$comment->url)) $info .= " | " . format_url($comment->url);

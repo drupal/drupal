@@ -46,8 +46,6 @@ class backend {
   }
 
   function url2sql($timout = 10) {
-    global $site_name;
-
     if ($this->file) {
       // Decode URL:
       $url = parse_url($this->file);
@@ -57,7 +55,7 @@ class backend {
 
       if ($fp) {
         // Request data via URL:
-        fputs($fp, "GET $url[path]?$url[query] HTTP/1.0\nUser-Agent: $site_name\nHost: $url[host]\nAccept: */*\n\n");
+        fputs($fp, "GET $url[path]?$url[query] HTTP/1.0\nUser-Agent: ". variable_get(site_name, "drupal") ."\nHost: $url[host]\nAccept: */*\n\n");
 
         // Read data from socket:
         while(!feof($fp)) $data .= fgets($fp, 128);
