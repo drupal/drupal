@@ -375,7 +375,7 @@ function file_save_data($data, $dest, $replace = 0) {
   fwrite($fp, $data);
   fclose($fp);
 
-  if (!file_move($file, $dest)) {
+  if (!file_move($file, $dest, $replace)) {
     return 0;
   }
 
