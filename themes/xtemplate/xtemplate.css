@@ -1,4 +1,4 @@
-/* $Id: xtemplate.css,v 1.44 2003/12/22 15:31:54 dries Exp $ */
+/* $Id: xtemplate.css,v 1.45 2004/01/10 15:31:26 dries Exp $ */
 
 /*
 ** HTML elements
@@ -23,13 +23,13 @@ h1, h2, h3, h4, h5, h6 {
   margin: 0;
 }
 h1 {
-  font-size: 1.2em;
+  font-size: 1.3em;
 }
 h2 {
-  font-size: 1.1em;
+  font-size: 1.2em;
 }
 h3, h4, h5, h6 {
-  font-size: 1em;
+  font-size: 1.1em;
 }
 a {
   text-decoration: none;
@@ -242,6 +242,23 @@ table {
 /*
 ** Module specific styles
 */
+#aggregator .info {
+  background-color: #eee;
+  border: 1px solid #ccc;
+  padding: 1em;
+  margin: 1em 0 1em 0;
+}
+#aggregator .news-item .source {
+  color: #999;
+  font-style: italic;
+  font-size: 0.9em;
+}
+#aggregator .title {
+  font-size: 0.5em;
+}
+#aggregator h3 {
+  margin-top: 1em;
+}
 #tracker th {
   text-align: left;
   border-bottom: 1px solid #ddd;

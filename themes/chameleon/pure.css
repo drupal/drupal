@@ -1,4 +1,4 @@
-/* $Id: pure.css,v 1.1 2003/12/15 20:47:18 dries Exp $ */
+/* $Id: pure.css,v 1.2 2004/01/10 15:31:26 dries Exp $ */
 
 /* HTML styles */
 
@@ -43,6 +43,15 @@ ul {
 }
 #header .title a:hover {
   color: #930;
+}
+#aggregator .source {
+  color: #777;
+  font-style: italic;
+  font-size: 0.9em;
+}
+#aggregator .info {
+  border: 1px dashed #000;
+  padding: 1em;
 }
 .item-list ul li {
   list-style: square;

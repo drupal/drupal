@@ -1,5 +1,5 @@
 <?php
-/* $Id: aggregator.module,v 1.151 2004/01/08 19:29:10 kjartan Exp $ */
+/* $Id: aggregator.module,v 1.152 2004/01/10 15:31:25 dries Exp $ */
 
 function aggregator_help($section) {
   switch ($section) {
@@ -123,19 +123,6 @@ function aggregator_update() {
   }
 }
 
-function theme_aggregator_format_item($item, $feed = 0) {
-  global $user;
-
-  if ($user->uid && module_exist("blog") && user_access("maintain personal blog")) {
-    $output .= "<div class=\"icon\">". l("<img src=\"". theme("image", "blog.gif") ."\" alt=\"". t("blog it") ."\" title=\"". t("blog it") ."\" />", "node/add/blog", array("title" => t("Comment on this news item in your personal blog."), "class" => "blog-it"), "iid=$item->iid") ."</div>";
-  }
-
-  // external link
-  $output .= "<a href=\"$item->link\">$item->title</a>";
-
-  return $output;
-}
-
 function aggregator_bundle_block($attributes) {
   if ($attributes) {
     $keys = explode(",", $attributes);
@@ -148,7 +135,7 @@ function aggregator_bundle_block($attributes) {
 
   $items = array();
   while ($item = db_fetch_object($result)) {
-    $items[] = theme("aggregator_format_item", $item);
+    $items[] = theme("aggregator_block_item", $item);
   }
 
   return theme("item_list", $items);
@@ -159,7 +146,7 @@ function aggregator_feed_block($feed) {
 
   $items = array();
   while ($item = db_fetch_object($result)) {
-    $items[] = theme("aggregator_format_item", $item);
+    $items[] = theme("aggregator_block_item", $item);
   }
 
   return theme("item_list", $items);
@@ -622,23 +609,11 @@ function aggregator_admin() {
 function aggregator_page_last() {
   $result = db_query_range("SELECT i.*, f.title AS ftitle, f.link AS flink FROM {item} i INNER JOIN {feed} f ON i.fid = f.fid ORDER BY i.timestamp DESC", 0, variable_get("aggregator_page_limit", 75));
 
-  $output = "<table border=\"0\" cellpadding=\"4\" cellspacing=\"2\">";
+  $output = "<div id=\"aggregator\">";
   while ($item = db_fetch_object($result)) {
-    $links = array(format_date($item->timestamp));
-    if (module_exist("blog") && user_access("maintain personal blog")) {
-      $links[] = l(t("blog it"), "node/add/blog", array("title" => t("Comment on this news item in your personal blog.")), "iid=$item->iid");
-    }
-    $links[] = l(t("feed"), "aggregator/feed/$item->fid", array("title" => t("Read more syndicated news from this feed.")));
-
-    if ($item->link) {
-      $output .= "<tr><td><a href=\"$item->link\">$item->title</a> &middot; ". l($item->ftitle, "aggregator/feed/$item->fid", array("title" => t("View more information about this feed."))) ."</td><td style=\"text-align: right; vertical-align: top;\">". theme("links", $links) ."</td></tr>\n";
-    }
-
-    if ($item->description) {
-      $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 20px;\">$item->description</div><br /></td></tr>";
-    }
+    $output .= theme('aggregator_page_item', $item);
   }
-  $output .= "</table>\n";
+  $output .= "</div>";
 
   print theme("page", $output);
 }
@@ -646,69 +621,36 @@ function aggregator_page_last() {
 function aggregator_page_feed($fid) {
   $feed = db_fetch_object(db_query("SELECT * FROM {feed} WHERE fid = %d", $fid));
 
-  $header = "<p><strong>". t("Website") .":</strong><div style=\"margin-left: 20px;\"><a href=\"$feed->link\">$feed->link</a></div></p>";
-  $header .= "<p><strong>". t("Description") .":</strong><div style=\"margin-left: 20px;\">$feed->description</div></p>";
-  $header .= "<p><strong>". t("Last update") .":</strong><div style=\"margin-left: 20px; text-align: right;\">". t("%time ago", array("%time" => format_interval(time() - $feed->checked))) ." <a href=\"$feed->url\"><img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" alt=\"\" title=\"\" /></a><br /><br /></div></p>\n";
+  $info  = $feed->description;
+  $info .= "<h3>". t("URL") ."</h3><a href=\"$feed->link\">$feed->link</a> <a href=\"$feed->url\"><img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" alt=\"\" title=\"\" /></a>\n";
+  $info .= "<h3>". t("Last update") ."</h3>". t("%time ago", array("%time" => format_interval(time() - $feed->checked)));
 
   $result = db_query_range("SELECT * FROM {item} WHERE fid = %d ORDER BY timestamp DESC", $fid, 0, variable_get("aggregator_page_limit", 75));
-
-  $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"2\">";
   while ($item = db_fetch_object($result)) {
-    $links = array();
-    if (module_exist("blog") && user_access("maintain personal blog")) {
-      $links[] = l(t("blog it"), "node/add/blog", array("title" => t("Comment on this news item in your personal blog.")), "iid=$item->iid");
-    }
-    $links[] = "<a href=\"$item->link\">". t("visit") ."</a>";
-
-    if ($item->link) {
-      $output .= "<tr><td><a href=\"$item->link\">$item->title</a></td><td style=\"text-align: right; vertical-align: top;\">". theme("links", $links) ."</td></tr>\n";
-    }
-    if ($item->description) {
-      $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 20px;\">$item->description</div><br /></td></tr>";
-    }
+    $content .= theme('aggregator_page_item', $item);
   }
-  $output .= "</table>\n";
 
-  print theme("header");
-  print theme("box", $feed->title, $header);
-  print theme("box", t("Latest news"), $output);
-  print theme("footer");
+  $output = "<div id=\"aggregator\"><div class=\"info\">$info</div><div class=\"content\">$content</div></div>";
+
+  print theme("page", $output, $feed->title, array(l(t('Home'), NULL), l(t('news aggregator'), 'aggregator'), l(t('news by source'), 'aggregator/feeds')));
 }
 
 function aggregator_page_bundle($bid) {
   $bundle = db_fetch_object(db_query("SELECT * FROM {bundle} WHERE bid = %d", $bid));
 
-  $header .= "<p><strong>". t("Website") .":</strong><div style=\"margin-left: 20px;\">". l($bundle->title, "aggregator/bundle/$bundle->bid") ."</div></p>";
-  $header .= "<p><strong>". t("Description") .":</strong><div style=\"margin-left: 20px;\">". t("A composite news feed about") ." $bundle->attributes.</div></p>";
+  $info = t("A composite news feed about") ." $bundle->attributes.";
 
   $keys = explode(",", $bundle->attributes);
   foreach ($keys as $key) $where[] = "i.attributes LIKE '%". trim($key) ."%'";
   $result = db_query_range("SELECT i.*, f.title AS ftitle, f.link AS flink FROM {item} i, {feed} f WHERE (". implode(" OR ", $where) .") AND i.fid = f.fid ORDER BY timestamp DESC", 0, variable_get("aggregator_page_limit", 75));
 
-  $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"2\">";
   while ($item = db_fetch_object($result)) {
-    if (module_exist("blog") && user_access("maintain personal blog")) {
-      $links[] = l(t("blog it"), "node/add/blog", array("title" => t("Comment on this news item in your personal blog.")), "iid=$item->iid");
-    }
-    $links[] = l(t("feed"), "aggregator/feed/$item->fid", array("title" => t("Read more syndicated news from this feed.")));
-    $links[] = "<a href=\"$item->link\">". t("visit") ."</a>";
-
-    if ($item->link) {
-      $output .= "<tr><td><a href=\"$item->link\">$item->title</a> &middot; ". l($item->ftitle, "aggregator/feed/$item->fid", array("title" => t("View more information about this feed."))) ."</td><td style=\"text-align: right; vertical-align: top;\">". theme("links", $links) ."</td></tr>\n";
-    }
-
-    if ($item->description) {
-      $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 20px;\">$item->description</div><br /></td></tr>";
-    }
-
-    unset($links);
+    $content .= theme('aggregator_page_item', $item);
   }
-  $output .= "</table>\n";
 
-  print theme("header");
-  print theme("box", $bundle->title, $header);
-  print theme("box", t("Latest news"), $output);
-  print theme("footer");
+  $output = "<div id=\"aggregator\"><div class=\"info\">$info</div><div class=\"content\">$content</div></div>";
+
+  print theme("page", $output, $bundle->title, array(l(t('Home'), NULL), l(t('news aggregator'), 'aggregator'), l(t('news by topic'), 'aggregator/bundles')));
 }
 
 function aggregator_page_sources() {
@@ -804,5 +746,51 @@ function aggregator_page() {
     }
   }
 }
+
+/**
+ * @addtogroup themeable
+ * @{
+ */
+
+function theme_aggregator_block_item($item, $feed = 0) {
+  global $user;
+
+  if ($user->uid && module_exist("blog") && user_access("maintain personal blog")) {
+    $output .= "<div class=\"icon\">". l("<img src=\"". theme("image", "blog.gif") ."\" alt=\"". t("blog it") ."\" title=\"". t("blog it") ."\" />", "node/add/blog", array("title" => t("Comment on this news item in your personal blog."), "class" => "blog-it"), "iid=$item->iid") ."</div>";
+  }
+
+  // external link
+  $output .= "<a href=\"$item->link\">$item->title</a>";
+
+  return $output;
+}
+
+function theme_aggregator_page_item($item) {
+
+  static $last;
+
+  $date = date("Ymd", $item->timestamp);
+  if ($date != $last) {
+    $last = $date;
+    $output .= "<h3>". date("F j, Y", $item->timestamp) ."</h3>\n";
+  }
+
+  $output .= "<div class=\"news-item\">\n";
+  $output .= " <div class=\"date\">". date("H:i", $item->timestamp) ."</div>\n";
+  $output .= " <div class=\"body\">\n";
+  $output .= "  <div class=\"title\"><a href=\"$item->link\">$item->title</a></div>\n";
+  if ($item->description) {
+    $output .= "  <div class=\"description\">$item->description</div>\n";
+  }
+  if ($item->ftitle && $item->fid) {
+    $output .= "  <div class=\"source\">". t('Source') .": ". l($item->ftitle, "aggregator/feed/$item->fid") ."</div>\n";
+  }
+  $output .= " </div>\n";
+  $output .= "</div>\n";
+
+  return $output;
+}
+
+/** @} End of addtogroup themeable */
 
 ?>
