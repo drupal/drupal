@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.78 2002/05/20 21:12:17 kjartan Exp $
+// $Id: blog.module,v 1.79 2002/05/22 23:28:48 kjartan Exp $
 
 function blog_conf_options() {
  $output .= form_textarea("Explanation or submission guidelines", "blog_help", variable_get("blog_help", ""), 55, 4, "This text will be displayed at the top of the blog submission form.  Useful for helping or instructing your users.");
@@ -204,6 +204,12 @@ function blog_page_last() {
 
 function blog_form(&$node, &$help, &$error) {
   global $nid, $iid;
+
+  if (!$node->status) {
+    $node->status = 1;
+    $node->moderate = 1;
+    $node->comment = 2;
+  }
 
   if (isset($node->body)) {
 
