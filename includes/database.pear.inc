@@ -112,4 +112,20 @@ function db_affected_rows() {
   return $db_handle->affectedRows();
 }
 
+/**
+ * Generates a limited query
+ *
+ * @param string  $query query
+ * @param integer $from  the row to start to fetching
+ * @param integer $count the numbers of rows to fetch
+ *
+ * @return mixed a DB_Result object or a DB_Error
+ *
+ * @access public
+ */
+
+function db_query_range($query, $from, $count) {
+  return DB::limitQuery($query, $from, $count);
+}
+
 ?>
