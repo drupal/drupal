@@ -92,7 +92,7 @@ function import_bundle_block($attributes) {
 }
 
 function import_feed_block($feed) {
-  $result = db_query_range("SELECT * FROM item WHERE fid = '%s' ORDER BY iid DESC ", 0, variable_get("import_block_limit", 15), $feed->fid);
+  $result = db_query_range("SELECT * FROM item WHERE fid = '%s' ORDER BY iid DESC ", $feed->fid, 0, variable_get("import_block_limit", 15));
 
   while ($item = db_fetch_object($result)) {
     $output .= import_format_item($item);
@@ -162,17 +162,47 @@ function import_get_feeds($attributes = 0) {
 
 function import_remove($feed) {
   db_query("DELETE FROM item WHERE fid = '%s'", $feed["fid"]);
-  return "feed '". $feed["title"] ."' reset.";
+  return t("removed news items from '%site'.", array("%site" => $feed["title"]));
 }
 
+// Call-back function used by XML parser:
+function import_element_start($parser, $name, $attributes) {
+  global $item, $tag;
+
+  if ($name == "ITEM") {
+    $item += 1;
+  }
+
+  $tag = $name;
+}
+
+// Call-back function used by XML parser:
+function import_element_end($parser, $name) {
+}
+
+// Call-back function used by XML parser:
+function import_element_data($parser, $data) {
+  global $channel, $items, $item, $tag;
+
+  if ($item) {
+    $items[$item][$tag] .= $data;
+  }
+  else {
+    $channel[$tag] .= $data;
+  }
+}
+
+
 function import_refresh($feed) {
+
+  global $items, $channel;
 
   /*
   ** Check whether the feed is properly configured:
   */
 
   if (!ereg("^http://|ftp://", $feed["url"])) {
-    watchdog("warning", "import: invalid or missing URL for '". $feed["title"] ."'");
+    return t("failed to parse RSS feed '%site': incorrect or missing URL.", array("%side" => $feed["title"]));
   }
 
   /*
@@ -186,100 +216,80 @@ function import_refresh($feed) {
     }
     fclose($fp);
 
+    $xml_parser = xml_parser_create();
+    xml_set_element_handler($xml_parser, "import_element_start", "import_element_end");
+    xml_set_character_data_handler($xml_parser, "import_element_data");
+    if (!xml_parse($xml_parser, $data, 1)) {
+      return t("failed to parse RSS feed '%site': %error at line %line.", array("%site" => $feed["title"], "%error" => xml_error_string(xml_get_error_code($xml_parser)), "%line" => xml_get_current_line_number($xml_parser)));
+    }
+    xml_parser_free($xml_parser);
+
     // initialize the translation table:
     $tt = array_flip(get_html_translation_table(HTML_ENTITIES));
     $tt["&apos;"] = "'";
 
     /*
-    ** Remove unsupported tags or sub-elements:
-    */
-
-    $data = ereg_replace("<textinput([^s].*)/>", "", $data);
-    $data = ereg_replace("<textinput([^s].*)</textinput>", "", $data);
-    $data = ereg_replace("<image([^s].*)</image>", "", $data);
-
-    /*
-    ** Extract and process channel information:
-    */
-
-    $channel = ereg_replace("<item([^s].*)</item>", "", $data);
-
-    eregi("<title>([^<]*)</title>", $channel, $title);
-    eregi("<link>([^<]*)</link>", $channel, $link);
-    eregi("<description>([^<]*)</description>", $channel, $description);
-
-    /*
     ** Strip invalid tags and provide default values (if required):
     */
 
-    $feed["link"] = strip_tags($link[1]);
-    $feed["description"] = filter(strtr($description[1], $tt));
+    $feed["link"] = strip_tags($channel["LINK"]);
+    $feed["description"] = filter(strtr($channel["DESCRIPTION"], $tt));
 
-    db_query("UPDATE feed SET timestamp = '%s', link = '%s', description = '%s' WHERE fid = '%s'", time(), $feed["link"], $feed["description"], $feed["fid"]);
+    db_query("UPDATE feed SET timestamp = '%d', link = '%s', description = '%s' WHERE fid = '%d'", time(), $feed["link"], $feed["description"], $feed["fid"]);
 
     /*
-    ** Extract and process individual items:
+    ** We reverse the array such that we store the first item last,
+    ** and the last item first.  In the database, the newest item
+    ** should be at the top.
     */
 
-    eregi("<item([^s].*)</item>", $data, $data);
-    // print "<pre>". htmlentities($data[0]) ."</pre>";
-
-    $items = array_reverse(explode("</item>", $data[0]));
+    $items = array_reverse($items);
 
     foreach ($items as $item) {
       unset($title, $link, $author, $description);
 
-      $t = eregi("<title>(.*)</title>", $item, $title);
-      $l = eregi("<link>(.*)</link>", $item, $link);
-      $g = eregi("<guid.*>(.*)</guid>", $item, $guid);
-      $a = eregi("<author>(.*)</author>", $item, $author);
-      $d = eregi("<description>(.*)</description>", $item, $description);
+      // Prepare the description:
+      $description = filter(strtr($item["DESCRIPTION"], $tt));
 
-      if ($t || $l || $g || $a || $d) {
-
-        /*
-        ** Strip invalid tags and provide default values (if required):
-        */
-
-        $description = filter(strtr($description[1], $tt));
-  if ($title[1]) {
-    $title = strip_tags(strtr($title[1], $tt));
-  }
-  else {
-    /*
-          ** Use up to 40 characters of the $description, ending at
-          ** word boundary, but don't split potential entities.
-          */
-    $title = preg_replace('/^(.*)[^\w;&].*?$/', "\\1", substr(strip_tags($description), 0, 40));
-  }
-  if ($link[1]) {
-    $link = strip_tags($link[1]);
-  }
-  elseif ($guid[1] && (strncmp($guid[1], "http://", 7) == 0)) {
-    $link = strip_tags($guid[1]);
-  }
-  else {
-    $link = $feed["link"];
-  }
-        $author = strip_tags($author[1]);
-
-        // print "<pre>title = ". htmlentities($title) ."\n\ndescription = ". htmlentities($description) ."\n\nlink = ". htmlentities($link) ."</pre><hr />";
-
-        /*
-        ** Save this item.  Try to avoid duplicate entries as much as
-        ** possible.  If we find a duplicate entry, we resolve it and
-        ** pass along its ID such that we can update it (when needed).
-        */
-
-        if ($link && $link != $feed["link"] && $link != $feed["url"]) {
-          $entry = db_fetch_object(db_query("SELECT iid FROM item WHERE fid = '%s' AND link = '%s'", $feed["fid"], $link));
-        }
-        else {
-          $entry = db_fetch_object(db_query("SELECT iid FROM item WHERE fid = '%s' AND title = '%s'", $feed["fid"], $title));
-        }
-
-        import_save_item(array(iid => $entry->iid, fid => $feed["fid"], title => $title, link => $link, author => $author, description => $description, attributes => $feed["attributes"]));
+      // Prepare the title:
+      if ($item["TITLE"]) {
+        $title = strip_tags(strtr($item["TITLE"], $tt));
       }
+      else {
+        /*
+         ** Use up to 40 characters of the $description, ending at
+         ** word boundary, but don't split potential entities.
+         */
+        $title = preg_replace('/^(.*)[^\w;&].*?$/', "\\1", substr(strip_tags($description), 0, 40));
+      }
+      if ($item["LINK"]) {
+        $link = strip_tags($item["LINK"]);
+      }
+      elseif ($item["GUID"] && (strncmp($item["GUID"], "http://", 7) == 0)) {
+        $link = strip_tags($item["GUID"]);
+      }
+      else {
+        $link = $feed["link"];
+      }
+
+      $author = strip_tags($item["AUTHOR"]);
+
+      // print "<pre>title = ". htmlentities($title) ."\n\ndescription = ". htmlentities($description) ."\n\nlink = ". htmlentities($link) ."</pre><hr />";
+
+      /*
+       ** Save this item.  Try to avoid duplicate entries as much as
+       ** possible.  If we find a duplicate entry, we resolve it and
+       ** pass along its ID such that we can update it (when needed).
+       */
+
+      if ($link && $link != $feed["link"] && $link != $feed["url"]) {
+        $entry = db_fetch_object(db_query("SELECT iid FROM item WHERE fid = '%s' AND link = '%s'", $feed["fid"], $link));
+      }
+      else {
+        $entry = db_fetch_object(db_query("SELECT iid FROM item WHERE fid = '%s' AND title = '%s'", $feed["fid"], $title));
+      }
+
+      import_save_item(array(iid => $entry->iid, fid => $feed["fid"], title => $title, link => $link, author => $author, description => $description, attributes => $feed["attributes"]));
     }
 
     /*
@@ -300,10 +310,10 @@ function import_refresh($feed) {
 
   }
   else {
-    watchdog("warning", "import: failed to syndicate from '". $feed["title"] ."'". ($errstr ? ": $errstr" : ""));
+    return t("failed to parse RSS feed '%site': no data.", array("%site" => $feed["tite"]));
   }
 
-  return "feed '". $feed["title"] ."' updated.";
+  return t("syndicated content from '%site'.", array("%site" => $feed["title"]));
 }
 
 function import_save_item($edit) {
@@ -555,7 +565,7 @@ function import_page_feed($fid) {
   $header .= "<p><b>". t("Description") .":</b><div style=\"margin-left: 20px;\">$feed->description</div></p>";
   $header .= "<p><b>". t("Last update") .":</b><div style=\"margin-left: 20px;\">". format_interval(time() - $feed->timestamp) ." ". t("ago") ." <a href=\"$feed->url\"><img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" alt=\"\" /></a><br /><br /></div></p>\n";
 
-  $result = db_query_range("SELECT * FROM item WHERE fid = '%s' ORDER BY iid DESC", 0, variable_get("import_page_limit", 75), $fid);
+  $result = db_query_range("SELECT * FROM item WHERE fid = '%s' ORDER BY iid DESC", $fid, 0, variable_get("import_page_limit", 75));
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"2\">";
   while ($item = db_fetch_object($result)) {
