@@ -544,7 +544,7 @@ function comment_link($type, $node = 0, $main = 0) {
 
 function comment_node_link($node) {
 
-  if (user_access("administer comments") && comments_all($node->nid)) {
+  if (user_access("administer comments") && comment_all($node->nid)) {
 
     /*
     ** Edit comments:
