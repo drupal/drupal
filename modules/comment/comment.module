@@ -122,18 +122,25 @@ function comment_menu($may_cache) {
       'callback' => 'comment_vote_settings', 'access' => $access,'type' => MENU_LOCAL_TASK);
 
     $access = user_access('post comments');
-    $items[] = array('path' => 'comment/reply', 'title' => t('reply to comment'),
-      'callback' => 'comment_reply', 'access' => $access, 'type' => MENU_CALLBACK);
     $items[] = array('path' => 'comment/edit', 'title' => t('edit comment'),
       'callback' => 'comment_edit', 'access' => $access, 'type' => MENU_CALLBACK);
 
     $items[] = array('path' => 'comment', 'title' => t('reply to comment'),
       'callback' => 'comment_save_settings', 'access' => 1, 'type' => MENU_CALLBACK);
   }
-  else if ((arg(0) == 'node') && is_numeric(arg(1)) && is_numeric(arg(2))) {
-    $items[] = array('path' => ('node/'. arg(1) .'/'. arg(2)), 'title' => t('view'),
-      'callback' => 'node_page',
-      'type' => MENU_CALLBACK);
+  else {
+    if (arg(0) == 'comment' && arg(1) == 'reply' && is_numeric(arg(2))) {
+      $node = node_load(array('nid' => arg(2)));
+      if ($node->nid) {
+        $items[] = array('path' => 'comment/reply', 'title' => t('reply to comment'),
+          'callback' => 'comment_reply', 'access' => node_access('view', $node), 'type' => MENU_CALLBACK);
+      }
+    }
+    if ((arg(0) == 'node') && is_numeric(arg(1)) && is_numeric(arg(2))) {
+      $items[] = array('path' => ('node/'. arg(1) .'/'. arg(2)), 'title' => t('view'),
+        'callback' => 'node_page',
+        'type' => MENU_CALLBACK);
+    }
   }
 
   return $items;
