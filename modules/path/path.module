@@ -1,11 +1,18 @@
 <?php
 /* $Id$ */
 
+function path_system($field) {
+  $system["description"] = path_help("admin/system/modules");
+  $system["admin_help"] =  path_help("admin/system/modules/path");
+
+  return $system[$field];
+}
+
 function path_admin() {
   $op = strtolower($_POST["op"]);
   $edit = $_POST["edit"];
 
-  if (user_access("alias urls")) {
+  if (user_access("administer url aliases")) {
 
     if (empty($op)) {
       $op = arg(2);
@@ -17,23 +24,22 @@ function path_admin() {
         break;
 
       case t("edit"):
-        $output = path_form(object2array(get_path_from_id(arg(3))));
+        $output = path_form(path_load(arg(3)));
+        break;
+
+      case "help":
+        $output = path_help();
         break;
 
       case t("delete"):
-        if ($edit["confirm"]) {
-          if (path_delete($edit['pid'])) {
-            $output .= status("Deleted path '". $edit['dst'] ."'");
-          }
-        }
-        else {
-          $output .= path_confirm_delete(arg(3));
-        }
+        $output  = status(path_delete(arg(3)));
+        $output .= path_overview();
         break;
 
       case t("create new alias"):
-        $output = status(path_save($edit));
-        // fall-through
+      case t("update alias"):
+        $output .= status(path_save($edit));
+        break;
 
       default:
         $output .= path_overview();
@@ -46,55 +52,62 @@ function path_admin() {
   }
 }
 
-/**
- * Returns a path that is acceptable as an url.
- */
-function path_clean($path) {
-  global $base_url;
+function path_set_alias($path = NULL, $alias = NULL) {
 
-  /*
-  ** Replace absolute URL for this site with relative URL.
-  */
-  $path = str_replace($base_url, "", $path);
+  if ($path && !$alias) {
+    db_query("DELETE FROM {path} WHERE src = '%s'", $path);
+    drupal_rebuild_path_map();
+  }
+  else if (!$path && $alias) {
+    db_query("DELETE FROM {path} WHERE dst = '%s'", $alias);
+    drupal_rebuild_path_map();
+  }
+  else if ($path && $alias) {
+    $path_count = db_result(db_query("SELECT COUNT(src) FROM {path} WHERE src = '%s'", $path));
+    $alias_count = db_result(db_query("SELECT COUNT(dst) FROM {path} WHERE dst = '%s'", $alias));
 
-  /*
-  ** Only allow alpha numeric characters, slashes and underscores.
-  */
-  $path = preg_replace("'[^a-zA-Z0-9/_.]'", " ", $path);
-
-  /*
-  ** Remove all whitespace.
-  */
-  $path = str_replace(" ", "", $path);
-
-  /*
-  ** Replace two or more sequential slashes with only one slashes.
-  */
-  $path = preg_replace("'//*'","/",$path);
-
-  /*
-  ** Remove beginning and trailing slashes.
-  */
-  $path = trim($path, "/");
-
-  return $path;
+    // We have an insert:
+    if ($path_count == 0 && $alias_count == 0) {
+      db_query("INSERT INTO {path} SET src = '%s', dst = '%s'", $path, $alias);
+      drupal_rebuild_path_map();
+    }
+    else if ($path_count == 1 && $alias_count == 0) {
+      db_query("UPDATE {path} SET dst = '%s' WHERE src = '%s'", $alias, $path);
+      drupal_rebuild_path_map();
+    }
+    else if ($path_count == 0 && $alias_count == 1) {
+      db_query("UPDATE {path} SET src = '%s' WHERE dst = '%s'", $path, $alias);
+      drupal_rebuild_path_map();
+    }
+    else if ($path_count == 1 && $alias_count == 1) {
+      // This will delete the path that alias was originally pointing to:
+      path_set_alias(NULL, $alias);
+      path_set_alias($path);
+      path_set_alias($path, $alias);
+    }
+  }
 }
 
-function path_confirm_delete($id) {
-  $path = get_path_from_id($id);
+function path_form($edit = "", $error = "") {
 
-  $form .= form_hidden("confirm", 1);
-  $form .= form_hidden("pid", $id);
-  $form .= form_hidden("src", $path->src);
-  $form .= form_hidden("dst", $path->dst);
-  $form .= form_submit(t("Delete"));
-  $form .= form_submit(t("Cancel"));
+  if ($error) {
+    foreach ($error as $message) {
+      $form .= theme("theme_error", $message);
+    }
+  }
 
-  return form(form_item(t("Delete alias '%dst' that maps to '%src'", array("%dst" => $path->dst, "%src" => $path->src)), $form, t("Are you sure you want to delete this alias?")));
-}
+  $form .= form_textfield(t("Existing path"), "src", $edit["src"], 50, 64, t("Specify the existing path you wish to alias. For example: node/view/28, forum/1, taxonomy/page/or/1,2."));
+  $form .= form_textfield(t("New path alias"), "dst", $edit["dst"], 50, 64, t("Specify an alternative path by which this data can be accessed.  For example, type 'about' when writing an about page.  Use a relative path and don't add a trailing slash or the URL alias won't work."));
 
-function path_delete($pid) {
-  return db_query("DELETE FROM {path} WHERE pid = '%d'", $pid);
+  if ($edit["pid"]) {
+    $form .= form_hidden("pid", $edit["pid"]);
+    $form .= form_submit(t("Update alias"));
+  }
+  else {
+    $form .= form_submit(t("Create new alias"));
+  }
+
+  return form($form);
 }
 
 function path_help($section = "admin/path/help") {
@@ -102,61 +115,89 @@ function path_help($section = "admin/path/help") {
     case "admin/system/modules":
       $output = "Enables users to create custom URLs.";
       break;
-    case "admin/system/modules/path":
-      $output = "Documentation yet to be written.";
+
+    case "admin/path":
+      $output = "Drupal provides users complete control over URLs through aliasing. While the original Drupal URLs are always created and accessible, advanced users have the option to override these normal paths.";
       break;
+
+    case "admin/path/add":
+      $output = "Enter the path you wish to create the alias for, followed by the name of the new alias. Each path can be associated with only one alias.";
+      break;
+
     case "admin/path/help":
-      $output = "Documentation yet to be written.";
+      $output .= "<h3>Background</h3><p>URL aliasing gives users the ability to have control over all Drupal paths. This functionality will integrate seamlessly into node forms and also provide the administrator an interface to view all aliases that have been created.</p><p>Aliases have a 1 to 1 relationship with their original Drupal URLs. In otherwards you cannot have an alias map to more than one path. Likewise, a Drupal URL can't be mapped to more than one alias.</p>";
+      $output .= "<h3>Permissions</h3><p>Two new permissions are introduced for aliasing URLs: <i>create url aliases</i> and <i>administer url aliases</i>.</p>";
+      $output .= "<ol><li><b>create url aliases</b> - Allows users to create aliases for nodes. Enabling this permission will display a new path field to the user in any node form, allowing them to enter an alias for that node. They will be able to edit/delete the alias after it is created using the same form.</li><li><b>administer url aliases</b> - Allows users to access the alias administration interface.  They must also have the <i>access administration pages</i> permission set as well. This interface displays all aliases and provides a way to create and modify them as well. This is also the location to build aliases for things other than nodes.  For example, you can create an alias for a taxonomy URL or even re-map the admin path (although the original admin path will still be accessible since aliases do not cancel out original paths).</li></ol>";
       break;
   }
 
   return t($output);
 }
 
-function path_form($edit = "") {
-  $form .= form_textfield(t("Existing path"), "src", $edit["src"], 50, 64, t("Specify the existing path you wish to alias. For example: node/view/28, forum/1, taxonomy/page/or/1,2."));
-  $form .= form_textfield(t("New path alias"), "dst", $edit["dst"], 50, 64, t("Specify an alternative path by which this data can be accessed.  For example, type 'about' when writing an about page."));
-  $form .= form_hidden("pid", $edit["pid"]);
-  $form .= form_submit(t("Create new alias"));
-
-  if ($edit["pid"]) {
-    $form .= form_submit(t("Delete"));
-  }
-
-  return form($form);
-}
-
-function path_insert($edit) {
-  return db_query("INSERT INTO {path} SET src = '%s', dst = '%s'", $edit["src"], $edit["dst"]);
-}
-
-# DELETE
-function path_is_unique($path, $type) {
-  if ($type == "dst") {
-    return !(get_src_url($path));
-  }
-  elseif ($type == "src") {
-    return !(get_url_alias($path));
-  }
-}
-
 function path_link($type, $node = NULL) {
-  if ($type == "system" && user_access("alias urls")) {
-    menu("admin/path", t("url aliasing"), "path_admin", "", 4);
-    menu("admin/path/add", t("new alias"), "path_admin", "");
+  if ($type == "system" && user_access("administer url aliases")) {
+    menu("admin/path", t("url aliasing"), "path_admin", path_help("admin/path"), 4);
+    menu("admin/path/add", t("new alias"), "path_admin", path_help("admin/path/add"));
+    menu("admin/path/help", t("help"), "path_admin", NULL, 9);
+   }
+}
+
+function path_nodeapi($node, $op, $arg) {
+  global $error;
+  $edit = $_POST["edit"];
+
+  if (user_access("create url aliases") || user_access("administer url aliases")) {
+
+    switch ($op) {
+      case "validate":
+        // is_null provides a mechanism for us to determine if this is the first
+        // viewing of the form.  If it is the first time, load the alias, if it isn't
+        // (i.e., user has clicked preview) let them work with their current form alias.
+        if (is_null($edit["path"])) {
+          $_POST["edit"]["path"] = drupal_get_path_alias("node/view/$node->nid");
+        }
+        else {
+          if ($_POST["edit"]["path"] && !valid_url($_POST["edit"]["path"])) {
+            $error["path"] = theme("theme_error", t("The path is invalid."));
+            return $error;
+          }
+          else if (db_result(db_query("SELECT COUNT(dst) FROM {path} WHERE dst = '%s' AND src != '%s'", $_POST["edit"]["path"], "node/view/$node->nid"))) {
+            $error["path"] = theme("theme_error", t("The path is already in use."));
+            return $error;
+          }
+
+          $edit["path"] = $_POST["edit"]["path"];
+        }
+        break;
+
+      case "form pre":
+        return form_textfield(t("Path alias"), "path", $edit["path"], 60, 250, $error["path"] ? $error["path"] : t("Optionally specify an alternative URL by which this node can be accessed.  For example, type 'about' when writing an about page.  Use a relative path and don't add a trailing slash or the URL alias won't work."));
+        break;
+
+      case "insert":
+      case "update":
+        path_set_alias("node/view/$node->nid", $edit["path"]);
+        break;
+
+      case "delete":
+        if ($alias = drupal_get_path_alias("node/view/$node->nid")) {
+          path_set_alias("node/view/$node->nid");
+        }
+        break;
+    }
   }
 }
 
 function path_perm() {
-  return array("alias urls");
+  return array("create url aliases", "administer url aliases");
 }
 
 function path_overview() {
   $sql = "SELECT * FROM {path}";
   $header = array(
     array ("data" => t("alias"), "field" => "dst", "sort" => "asc"),
-    array ("data" => t("maps to"), "field" => "src"),
-    array("data" => t("operations"), "colspan" => 2)
+    array ("data" => t("normal"), "field" => "src"),
+    array ("data" => t("operations"), "colspan" => 2)
   );
   $sql .= tablesort_sql($header);
   $result = pager_query($sql, 50);
@@ -165,62 +206,66 @@ function path_overview() {
     $rows[] = array($data->dst, $data->src, l(t("edit"), "admin/path/edit/$data->pid"), l(t("delete"), "admin/path/delete/$data->pid"));
   }
 
-  $pager = pager_display(NULL, 50, 0, "admin", tablesort_pager());
-  if (!empty($pager)) {
+  if ($pager = pager_display(NULL, 50, 0, "admin", tablesort_pager())) {
     $rows[] = array(array("data" => $pager, "colspan" => 3));
+  }
+
+  if (!$rows) {
+    $rows[] = array(array("data" => t("No URL aliases available."), "colspan" => "3"));
   }
 
   return table($header, $rows);
 }
 
+function path_load($pid) {
+  return db_fetch_array(db_query("SELECT * FROM {path} WHERE pid = '%d'", $pid));
+}
+
+function path_delete($pid) {
+  db_query("DELETE FROM path WHERE pid = '%d'", $pid);
+  return t("the alias has been deleted.");
+}
+
 function path_save($edit) {
-  $dst = path_clean($edit["dst"]);
-  $src = path_clean($edit["src"]);
+  $src = $edit["src"];
+  $dst = $edit["dst"];
+  $pid = $edit["pid"];
 
-  if ($src == NULL || !valid_url($src)) {
-    return t("the specified path is not valid.");
+  if (!valid_url($src)) {
+    $error[] = t("the normal path '%src' is invalid.", array("%src" => $src));
   }
 
-  if (db_result(db_query("SELECT COUNT(src) FROM {path} WHERE src = '%s'", $src))) {
-    return t("the specified path is already aliased.");
+  if (db_result(db_query("SELECT COUNT(src) FROM {path} WHERE pid != '%d' AND src = '%s'", $pid, $src))) {
+    $error[] = t("the normal path '%src' is already aliased.", array("%src" => $src));
   }
 
-  if ($dst == NULL || !valid_url($dst)) {
-    return t("the specified path alias is not valid.");
+  if (!valid_url($dst)) {
+    $error[] = t("the alias '%dst' is invalid.", array("%dst" => $dst));
   }
 
-  if (db_result(db_query("SELECT COUNT(dst) FROM {path} WHERE dst = '%s'", $dst))) {
-    return t("the specified alias is already in use.");
+  if (db_result(db_query("SELECT COUNT(dst) FROM {path} WHERE pid != '%d' AND dst = '%s'", $pid, $dst))) {
+    $error[] = t("the alias '%dst' is already in use.", array("%dst" => $dst));
   }
 
-  if ($edit["pid"]) {
-    path_update($src, $dst);
+  if ($error) {
+    return path_form($edit, $error);
   }
-  else { //Update the path
-    path_insert($edit);
+  else {
+    /*
+    ** Normally, you would use path_set_alias to update the paths table,
+    ** but this is a special case.  We want to modify a specific row and the only
+    ** way to do that is with pid.
+    */
+
+    if ($pid) {
+      db_query("UPDATE {path} SET src = '%s', dst = '%s' WHERE pid = '%d'", $src, $dst, $pid);
+    }
+    else {
+      path_set_alias($src, $dst);
+    }
   }
 
-  return t("you may access %src via %dst.", array("%src" => url($src), "%dst" => l($dst, url($dst))));
-}
-
-function path_system($field) {
-  $system["description"] = path_help("admin/system/modules");
-  $system["admin_help"] =  path_help("admin/system/modules/path");
-
-  return $system[$field];
-}
-
-function path_update($edit) {
-  if ($edit["pid"]) {
-    return db_query("UPDATE {path} SET src = '%s', dst = '%s' WHERE pid = '%d'", $edit["src"], $edit["dst"], $edit["pid"]);
-  }
-  else { // intended for nodes
-    return db_query("UPDATE {path} SET dst = '%s' WHERE src = '%s'", $edit["dst"], $edit["src"]);
-  }
-}
-
-function get_path_from_id($id) {
-  return db_fetch_object(db_query("SELECT * FROM {path} WHERE pid = '%d'", $id));
+  return t("the alias has been created.") . path_overview();
 }
 
 ?>
