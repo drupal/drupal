@@ -16,12 +16,12 @@ function rating_cron() {
   while ($rating = db_fetch_object($r1)) {
     unset($bonus); unset($votes); unset($score); unset($value); unset($weight);
 
-    $r2 = db_query("SELECT COUNT(nid) AS number FROM nodes WHERE author = '$rating->id' AND (". time() ." - timestamp < $period) AND status = '$status[posted]'");
+    $r2 = db_query("SELECT COUNT(nid) AS number FROM node WHERE author = '$rating->id' AND (". time() ." - timestamp < $period) AND status = '$status[posted]'");
     if ($story = db_fetch_object($r2)) {
       $bonus += $story->number / 2;
     }
 
-    $r3 = db_query("SELECT COUNT(nid) AS number FROM nodes WHERE author = '$rating->id' AND (". time() ." - timestamp < $period) AND status = '$status[dumped]'");
+    $r3 = db_query("SELECT COUNT(nid) AS number FROM node WHERE author = '$rating->id' AND (". time() ." - timestamp < $period) AND status = '$status[dumped]'");
     if ($story = db_fetch_object($r3)) {
       $bonus -= $story->number / 2;
     }

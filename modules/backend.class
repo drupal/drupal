@@ -53,7 +53,7 @@ class backend {
       $url = parse_url($this->file);
 
       // Retrieve data from website:
-      $fp = fsockopen($url[host], ($url[port] ? $url[port] : 80), &$errno, &$errstr, $timout);
+      $fp = fsockopen($url[host], ($url[port] ? $url[port] : 80), $errno, $errstr, $timout);
 
       if ($fp) {
         // Request data via URL:

@@ -207,7 +207,7 @@ function headline_export($uri) {
     print " <description>$site_name</description>\n";
     print "</channel>\n";
 
-    $result = db_query("SELECT * FROM nodes WHERE type = 'story' AND status = '$status[posted]' ORDER BY timestamp DESC LIMIT 10");
+    $result = db_query("SELECT * FROM node WHERE type = 'story' AND status = '$status[posted]' ORDER BY timestamp DESC LIMIT 10");
 
     while ($node = db_fetch_object($result)) {
       print "<item>\n";

@@ -29,7 +29,7 @@ function ban_help() {
 }
 
 function ban_admin_new($mask, $category, $reason) {
-  ban_add($mask, $category, $reason, &$message);
+  ban_add($mask, $category, $reason, $message);
   $output .= "$message\n";
   print $output;
 }

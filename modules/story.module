@@ -22,16 +22,16 @@ class Story {
 
 function story_cron() {
   global $status;
-  $result = db_query("SELECT * FROM nodes WHERE status = '$status[scheduled]' AND timestamp <= ". time() ."");
+  $result = db_query("SELECT * FROM node WHERE status = '$status[scheduled]' AND timestamp <= ". time() ."");
   while ($story = db_fetch_object($result)) {
-    db_query("UPDATE nodes SET status = '$status[queued]', timestamp = '". time() ."' WHERE nid = '$story->nid' AND type = 'story'");
+    db_query("UPDATE node SET status = '$status[queued]', timestamp = '". time() ."' WHERE nid = '$story->nid' AND type = 'story'");
   }
 }
 
 function story_find($keys) {
   global $status, $user;
   $find = array();
-  $result = db_query("SELECT n.*, s.* FROM story s LEFT JOIN nodes n ON s.node = n.nid WHERE n.status = '$status[posted]' AND (n.title LIKE '%". check_input($keys) ."%' OR s.abstract LIKE '%". check_input($keys) ."%' OR s.body LIKE '%$keys%') LIMIT 20");
+  $result = db_query("SELECT n.*, s.* FROM story s LEFT JOIN node n ON n.nid = s.nid AND n.lid = s.lid WHERE n.status = '$status[posted]' AND (n.title LIKE '%$keys%' OR s.abstract LIKE '%$keys%' OR s.body LIKE '%$keys%') LIMIT 20");
   while ($story = db_fetch_object($result)) {
     array_push($find, array("title" => check_output($story->title), "link" => (user_access($user, "story") ? "admin.php?mod=story&op=edit&id=$story->nid" : "node.php?id=$story->nid"), "user" => $story->userid, "date" => $story->timestamp));
   }
@@ -142,7 +142,7 @@ function story_form($edit = array()) {
     $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[nid]\" VALUE=\"$edit[nid]\">\n";
   }
 
-  $duplicate = db_result(db_query("SELECT COUNT(nid) FROM nodes WHERE title = '$title'"));
+  $duplicate = db_result(db_query("SELECT COUNT(nid) FROM node WHERE title = '$title'"));
 
   if (!$edit) {
     $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview") ."\">\n";
@@ -188,7 +188,7 @@ function story_block() {
   // disabled for now
   //
   global $status;
-  $result = db_query("SELECT s.id, COUNT(c.cid) AS comments, s.title FROM story s LEFT JOIN comments c ON s.id = c.lid WHERE s.status = '$status[posted]' AND c.link = 'story' GROUP BY s.id ORDER BY comments DESC LIMIT 10");
+  $result = db_query("SELECT s.lid, COUNT(c.cid) AS comments, s.title FROM story s LEFT JOIN comments c ON s.lid = c.lid WHERE s.status = '$status[posted]' AND c.link = 'story' GROUP BY s.lid ORDER BY comments DESC LIMIT 10");
   while ($story = db_fetch_object($result)) {
     $content .= "<LI><A HREF=\"node.php?id=$story->id\">". check_output($story->title) ."</A><BR><SMALL>(". format_plural($story->comments, "comment", "comments") .")</SMALL></LI>\n";
   }
@@ -199,7 +199,7 @@ function story_block() {
 
   unset($content);
 
-  $result = db_query("SELECT s.id, COUNT(c.cid) AS comments, s.title FROM story s LEFT JOIN comments c ON s.id = c.lid WHERE s.status = '$status[posted]' AND c.link = 'story' AND ". time() ." - s.timestamp < 2419200 GROUP BY s.id ORDER BY comments DESC LIMIT 10");
+  $result = db_query("SELECT s.lid, COUNT(c.cid) AS comments, s.title FROM story s LEFT JOIN comments c ON s.lid = c.lid WHERE s.status = '$status[posted]' AND c.link = 'story' AND ". time() ." - s.timestamp < 2419200 GROUP BY s.lid ORDER BY comments DESC LIMIT 10");
   while ($story = db_fetch_object($result)) {
     $content .= "<LI><A HREF=\"node.php?id=$story->id\">". check_output($story->title) ."</A><BR><SMALL>(". format_plural($story->comments, "comment", "comments") .")</SMALL></LI>\n";
   }
@@ -218,28 +218,28 @@ function story_overview() {
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
 
   // Queued stories:
-  $result = db_query("SELECT n.*, u.userid FROM nodes n LEFT JOIN users u ON n.author = u.id WHERE n.type = 'story' AND n.status = '$status[queued]' ORDER BY timestamp DESC");
+  $result = db_query("SELECT n.*, u.userid FROM node n LEFT JOIN users u ON n.author = u.id WHERE n.type = 'story' AND n.status = '$status[queued]' ORDER BY timestamp DESC");
   $output .= " <TR><TH COLSPAN=\"6\">queued stories</TH></TR>\n";
   while ($node = db_fetch_object($result)) {
     $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD>". format_username($node->userid) ."</TD><TD>votes: $node->votes, score: $node->score</TD><TD><A HREF=\"node.php?id=$node->nid\">view</A></TD><TD><A HREF=\"admin.php?mod=story&op=edit&id=$node->nid\">edit</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=delete&id=$node->nid\">delete</A></TD></TR>\n";
   }
 
   // Scheduled stories:
-  $result = db_query("SELECT n.*, u.userid FROM nodes n LEFT JOIN users u ON n.author = u.id WHERE n.type = 'story' AND n.status = '$status[scheduled]' ORDER BY timestamp DESC");
+  $result = db_query("SELECT n.*, u.userid FROM node n LEFT JOIN users u ON n.author = u.id WHERE n.type = 'story' AND n.status = '$status[scheduled]' ORDER BY timestamp DESC");
   $output .= " <TR><TH COLSPAN=\"6\">scheduled stories</TH></TR>\n";
   while ($node = db_fetch_object($result)) {
     $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD>". format_username($node->userid) ."</TD><TD>". format_date($node->timestamp, "small") ."<BR><SMALL>(". format_interval($node->timestamp - time()) ." left)</SMALL></TD><TD><A HREF=\"node.php?id=$node->nid\">view</A></TD><TD><A HREF=\"admin.php?mod=story&op=edit&id=$node->nid\">edit</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=delete&id=$node->nid\">delete</A></TD></TR>\n";
   }
 
   // Dumped stories:
-  $result = db_query("SELECT n.*, u.userid FROM nodes n LEFT JOIN users u ON n.author = u.id WHERE n.type = 'story' AND n.status = '$status[dumped]' ORDER BY timestamp DESC LIMIT 5");
+  $result = db_query("SELECT n.*, u.userid FROM node n LEFT JOIN users u ON n.author = u.id WHERE n.type = 'story' AND n.status = '$status[dumped]' ORDER BY timestamp DESC LIMIT 5");
   $output .= " <TR><TH COLSPAN=\"6\">dumped stories</TH></TR>\n";
   while ($node = db_fetch_object($result)) {
     $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD>". format_username($node->userid) ."</TD><TD>". format_date($node->timestamp, "small") ."</TD><TD><A HREF=\"node.php?id=$node->nid\">view</A></TD><TD><A HREF=\"admin.php?mod=story&op=edit&id=$node->nid\">edit</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=delete&id=$node->nid\">delete</A></TD></TR>\n";
   }
 
   // Posted stories:
-  $result = db_query("SELECT n.*, u.userid FROM nodes n LEFT JOIN users u ON n.author = u.id WHERE n.type = 'story' AND n.status = '$status[posted]' ORDER BY timestamp DESC LIMIT 15");
+  $result = db_query("SELECT n.*, u.userid FROM node n LEFT JOIN users u ON n.author = u.id WHERE n.type = 'story' AND n.status = '$status[posted]' ORDER BY timestamp DESC LIMIT 15");
   $output .= " <TR><TH COLSPAN=\"6\">posted stories</TH></TR>\n";
   while ($node = db_fetch_object($result)) {
     $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD>". format_username($node->userid) ."</TD><TD>". format_date($node->timestamp, "small") ."</TD><TD><A HREF=\"node.php?id=$node->nid\">view</A></TD><TD><A HREF=\"admin.php?mod=story&op=edit&id=$node->nid\">edit</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=story&op=delete&id=$node->nid\">delete</A></TD></TR>\n";

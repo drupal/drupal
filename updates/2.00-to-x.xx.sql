@@ -1,27 +1,27 @@
-# 25/03/2001:
+# 30/03/2001:
 CREATE TABLE book (
-  id int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
-  node int(10) unsigned DEFAULT '0' NOT NULL,
+  lid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
+  nid int(10) unsigned DEFAULT '0' NOT NULL,
   body text NOT NULL,
   section int(10) DEFAULT '0' NOT NULL,
   parent int(10) DEFAULT '0' NOT NULL,
   weight tinyint(3) DEFAULT '0' NOT NULL,
-  PRIMARY KEY (id)
+  PRIMARY KEY (lid)
 );
 
 CREATE TABLE story (
-  id int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
-  node int(10) unsigned DEFAULT '0' NOT NULL,
+  lid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
+  nid int(10) unsigned DEFAULT '0' NOT NULL,
   abstract text NOT NULL,
   body text NOT NULL,
   section varchar(64) DEFAULT '' NOT NULL,
-  PRIMARY KEY (id)
+  PRIMARY KEY (lid)
 );
 
-CREATE TABLE nodes (
+CREATE TABLE node (
   nid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
-  lid int(6) DEFAULT '0' NOT NULL,
-  pid int(6) DEFAULT '0' NOT NULL,
+  lid int(10) DEFAULT '0' NOT NULL,
+  pid int(10) DEFAULT '0' NOT NULL,
   log text NOT NULL,
   type varchar(16) DEFAULT '' NOT NULL,
   title varchar(128) DEFAULT '' NOT NULL,

@@ -128,14 +128,14 @@ function comment_post($pid, $id, $subject, $comment) {
   $duplicate = db_result(db_query("SELECT COUNT(cid) FROM comments WHERE pid = '$pid' AND lid = '$id' AND subject = '$subject' AND comment = '$comment'"), 0);
 
   if ($duplicate != 0) {
-    watchdog("error", "comment: attempt to insert duplicate comment");
+    watchdog("warning", "comment: duplicate '$subject'");
   }
   else {
     // Validate subject:
     $subject = ($subject) ? $subject : substr($comment, 0, 29);
 
     // Add watchdog entry:
-    watchdog("comment", "comment: added comment with subject '$subject'");
+    watchdog("comment", "comment: added '$subject'");
 
     // Add comment to database:
     db_query("INSERT INTO comments (lid, pid, author, subject, comment, hostname, timestamp, score) VALUES ('$id', '$pid', '$user->id', '$subject', '$comment', '". getenv("REMOTE_ADDR") ."', '". time() ."', '". ($user->userid ? 1 : 0) ."')");

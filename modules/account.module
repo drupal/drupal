@@ -59,7 +59,7 @@ function account_blocks($id) {
 }
 
 function account_nodes($id) {
-  $result = db_query("SELECT * FROM nodes WHERE author = $id ORDER BY timestamp DESC");
+  $result = db_query("SELECT * FROM node WHERE author = $id ORDER BY timestamp DESC");
   while ($node = db_fetch_object($result)) {
     $output .= "<LI><A HREF=\"node.php?id=$node->nid\">$node->title</A> ($node->type)</LI>\n";
   }

@@ -33,10 +33,10 @@ function cron_display() {
   // Generate output:
   $output .= "<FORM ACTION=\"admin.php?mod=cron\" METHOD=\"post\">\n";
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR><TH>module</TH><TH>period</TH><TH>last execution</TH><TH>operations</TH></TR>\n";
+  $output .= " <TR><TH>module</TH><TH>period</TH><TH>last run</TH><TH>next run</TH><TH>operations</TH></TR>\n";
   while ($cron = db_fetch_object($result)) {
     foreach ($intervals as $value) $period .= "<OPTION VALUE=\"$value\"". (($cron->scheduled == $value) ? " SELECTED" : "") .">every ". format_interval($value) ."</OPTION>\n";
-    $output .= " <TR><TD>". check_output($cron->module) ."</TD><TD><SELECT NAME=\"edit[$cron->module]\">$period</SELECT></TD><TD ALIGN=\"center\">". ($cron->timestamp ? format_interval(time() - $cron->timestamp) ." ago" : "never" )."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=cron&op=execute&name=$cron->module\">execute</A></TD></TR>\n";
+    $output .= " <TR><TD>". check_output($cron->module) ."</TD><TD><SELECT NAME=\"edit[$cron->module]\">$period</SELECT></TD><TD>". ($cron->timestamp ? format_interval(time() - $cron->timestamp) ." ago" : "never") ."</TD><TD>". ($cron->timestamp ? format_interval($cron->timestamp + $cron->scheduled - time()) ." left" : "never") ."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=cron&op=execute&name=$cron->module\">execute</A></TD></TR>\n";
     unset($period);
   }
   $output .= "</TABLE>\n";
