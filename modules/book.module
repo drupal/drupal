@@ -10,7 +10,7 @@ class Book {
 }
 
 function book_perm() {
-  return array("maintain book structure");
+  return array("edit book");
 }
 
 function book_status() {
@@ -209,7 +209,7 @@ function book_tree($parent = "", $depth = 0) {
 
 function book_admin() {
   global $user;
-  if (user_access($user, "maintain book structure")) {
+  if (user_access($user, "edit book")) {
     print book_tree();
   }
   else {
