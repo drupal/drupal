@@ -869,7 +869,7 @@ function node_get_alias($path) {
 }
 
 function node_url($node) {
-  if ($node->path) {
+  if ($node->path != NULL) {
     return $node->path;
   }
   else {
