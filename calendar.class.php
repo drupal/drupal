@@ -47,8 +47,8 @@ class calendar {
     
       ### Print one cell:
       $date = mktime(0, 0, 0, $month, $nday, $year);
-      if ($nday > $day) $output .= "<TD ALIGN=\"center\">$nday</TD>";
-      else if ($nday == $day) $output .= "<TD ALIGN=\"center\"><B>$nday</B></TD>";
+      if ($nday == $day) $output .= "<TD ALIGN=\"center\"><B>$nday</B></TD>";
+      else if ($date > time()) $output .= "<TD ALIGN=\"center\">$nday</TD>";
       else $output .= "<TD ALIGN=\"center\"><A HREF=\"$PHP_SELF?date=$date\">$nday</A></TD>";
      
       ### Start every week on a new line:
