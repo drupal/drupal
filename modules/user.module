@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.45 2002/02/18 16:42:24 unconed Exp $
+// $Id: user.module,v 1.46 2002/02/19 19:48:05 dries Exp $
 
 session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
 session_start();
@@ -58,6 +58,8 @@ function user_load($array = array()) {
   /*
   ** Dynamically compose a SQL query:
   */
+
+  $query = "";
 
   foreach ($array as $key => $value) {
     if ($key == "pass") {
@@ -456,7 +458,7 @@ function user_block() {
     // Display account settings:
     $block[0]["subject"] = $user->name;
 
-    $output .= "<div style=\"width: 125;\">\n";
+    $output .= "<div style=\"{ width: 155; }\">\n";
 
     $links = array_merge(module_invoke_all("link", "menu.create"), array(""), module_invoke_all("link", "menu.view"), array(""), module_invoke_all("link", "menu.settings"), array(""), module_invoke_all("link", "menu.misc"));
     $output .= @implode("<br />\n", $links);
