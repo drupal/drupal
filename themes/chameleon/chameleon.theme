@@ -62,7 +62,7 @@ function chameleon_page($content, $title = NULL, $breadcrumb = NULL) {
     $output .= " </div>\n";
   }
 
-  $output .= " <table>\n";
+  $output .= " <table id=\"content\">\n";
   $output .= "  <tr>\n";
 
   if ($blocks = theme_blocks("left")) {

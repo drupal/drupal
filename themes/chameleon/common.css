@@ -66,6 +66,9 @@ br {
 #help {
   font-size: 0.8em;
 }
+#content {
+  clear: both;
+}
 #sidebar-left, #sidebar-right {
   vertical-align: top;
   padding: 10px;
@@ -115,6 +118,7 @@ br {
 */
 .navlinks {
   padding: 0em 0.5em 1.5em 0em;
+  clear: both;
 }
 .primary a {
   font-size: 1.0em;
@@ -130,7 +134,7 @@ br {
 */
 #header img {
   float: left;
-  padding: 0em 2em 0em 0em;
+  padding: 0em 2em .5em 0em;
 }
 #header {
   clear: both;
