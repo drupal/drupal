@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.51 2004/01/26 18:55:43 dries Exp $
+// $Id: module.inc,v 1.52 2004/01/27 18:14:25 dries Exp $
 
 // initialize modules:
 function module_init() {
@@ -71,7 +71,7 @@ function module_list($refresh = 0, $bootstrap = 0) {
         }
       }
     }
-    sort($list);
+    asort($list);
   }
   return $list;
 }
