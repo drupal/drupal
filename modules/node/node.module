@@ -312,12 +312,12 @@ function node_invoke(&$node, $hook, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
   }
 }
 
-function node_invoke_nodeapi(&$node, $op, $arg = 0) {
+function node_invoke_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
   $return = array();
   foreach (module_list() as $name) {
     $function = $name .'_nodeapi';
     if (function_exists($function)) {
-      $result = $function($node, $op, $arg);
+      $result = $function($node, $op, $a3, $a4);
       if (isset($result)) {
         $return = array_merge($return, $result);
       }
@@ -357,6 +357,12 @@ function node_load($conditions, $revision = -1) {
   */
 
   if ($extra = node_invoke($node, 'load')) {
+    foreach ($extra as $key => $value) {
+      $node->$key = $value;
+    }
+  }
+
+  if ($extra = node_invoke_nodeapi($node, 'load')) {
     foreach ($extra as $key => $value) {
       $node->$key = $value;
     }
@@ -476,6 +482,9 @@ function node_view($node, $main = 0, $page = 0) {
   */
 
   $node->body = str_replace('<!--break-->', '', $node->body);
+
+  // Allow modules to change $node->body before viewing.
+  node_invoke_nodeapi($node, 'view', $main, $page);
 
   /*
   ** The 'view' hook can be implemented to overwrite the default function
@@ -779,24 +788,6 @@ function node_admin_settings($edit) {
   }
 
   $output .= theme('table', $header, $rows);
-
-  /* This is an idea for the future.
-  foreach (node_list() as $type) {
-    $node->type = $type;
-
-      // Create theme('table', ) data:
-      $header = array_keys(node_invoke_nodeapi($node, 'settings'));
-      $cols = array();
-      foreach (node_invoke_nodeapi($node, 'settings') as $setting) {
-        $cols[] = array('data' => $setting, 'align' => 'center', 'width' => 75);
-      }
-
-      $output .= '<h2>'. node_invoke($node, 'node_name') .'</h2>';
-      $output .= theme('table', $header, array($cols));
-      $output .= '<br /><br />';
-    }
-  }
-  */
 
   $output .= form_submit(t('Save configuration'));
   $output .= form_submit(t('Reset to defaults'));
@@ -1188,7 +1179,7 @@ function node_form($edit, $error = NULL) {
     $output .= form_group(t('Options'), $options);
     $output .= "</div>\n";
 
-    $extras .= implode("</div><div class=\"extra\">", node_invoke_nodeapi($edit, 'form admin'));
+    $extras .= implode("</div><div class=\"extra\">", node_invoke_nodeapi($edit, 'form admin', $error));
     $output .= $extras ? "<div class=\"extra\">$extras</div></div>" : "</div>";
   }
 
@@ -1246,6 +1237,16 @@ function node_form($edit, $error = NULL) {
   }
 
   $output .= "</div></div>";
+
+  $extra = node_invoke_nodeapi($edit, "form param");
+  foreach ($extra as $key => $value) {
+    if (is_array($value)) {
+      $param[$key] = array_merge($param[$key], $value);
+    }
+    else {
+      $param[$key] = $value;
+    }
+  }
 
   return form($output, ($param['method'] ? $param['method'] : 'post'), $param['action'], array_merge($param['options'], array('id' => 'node-form')));
 }
