@@ -24,7 +24,6 @@ function displayKids ($tid, $mode, $order = 0, $thold = 0, $level = 0, $dummy = 
   global $user, $theme;
   include "config.inc";
   $comments = 0;
-  cookiedecode($user);
 
   $result = mysql_query("SELECT tid, pid, sid, date, name, email, url, host_name, subject, comment, score, reason FROM comments WHERE pid = $tid ORDER BY date, tid");
 
@@ -125,7 +124,6 @@ function displayTopic ($sid, $pid = 0, $tid = 0, $mode = "threaded", $order = 0,
   dbconnect();
 
   $count_times = 0;
-  cookiedecode($user);
 
   $q = "SELECT tid, pid, sid, date, name, email, url, host_name, subject, comment, score, reason FROM comments WHERE sid = $sid AND pid = $pid";
 
@@ -227,7 +225,6 @@ function reply($pid, $sid, $mode, $order, $thold) {
 
   echo "<B>Your name:</B><BR> ";
   if ($user) {
-    cookiedecode($user);
     echo "<A HREF=\"account.php\">$user->userid</A> &nbsp; &nbsp; <FONT SIZE=\"2\">[ <A HREF=\"account.php?op=logout\">logout</A> ]</FONT>";
   } 
   else {
@@ -272,7 +269,6 @@ function replyPreview ($pid, $sid, $subject, $comment, $postanon, $mode, $order,
 
   global $user, $bgcolor1, $bgcolor2;
 
-  cookiedecode($user);
   $subject = stripslashes($subject);
   $comment = stripslashes($comment);
 
@@ -303,7 +299,6 @@ function replyPreview ($pid, $sid, $subject, $comment, $postanon, $mode, $order,
 
   echo "<B>Your name:</B><BR> ";
   if ($user) {
-    cookiedecode($user);
     echo "<A HREF=\"account.php\">$user->userid</A> &nbsp; &nbsp; <FONT SIZE=\"2\">[ <A HREF=\"account.php?op=logout\">logout</A> ]</FONT>";
   } else {
     echo "$anonymous"; 
