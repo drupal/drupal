@@ -1,7 +1,6 @@
 <?php
 
 $status = array(dumped => 0, expired => 1, queued => 2, posted => 3);
-$rstatus = array(0 => dumped, 1 => expired, 2 => queued, 3 => posted);
 
 function _node_get($conditions) {
   foreach ($conditions as $key=>$value) {
@@ -164,7 +163,9 @@ function node_form($node) {
 }
 
 function node_status($value) {
-  $status = array(dumped, expired, queued, posted);
+
+  $status = array("dumped", "expired", "queued", "posted");
+
   if (module_exist($value)) {
     return array_intersect($status, node_invoke($value, "status"));
   }
