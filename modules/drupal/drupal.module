@@ -211,7 +211,7 @@ function drupal_login($arguments) {
   $argument = $arguments->getparam(1);
   $password = $argument->scalarval();
 
-  if ($user = user_load(array(name => $username, 'pass' => $password, 'status' => 1))) {
+  if ($user = user_load(array('name' => $username, 'pass' => $password, 'status' => 1))) {
     return new xmlrpcresp(new xmlrpcval($user->uid, 'int'));
   }
   else {
