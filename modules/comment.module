@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.144 2003/06/22 06:47:08 dries Exp $
+// $Id: comment.module,v 1.145 2003/06/30 19:18:45 dries Exp $
 
 $GLOBALS["cmodes"] = array(1 => t("Flat list - collapsed"), 2 => t("Flat list - expanded"), 3 => t("Threaded list - collapsed"), 4 => t("Threaded list - expanded"));
 $GLOBALS["corder"] = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"));
@@ -1066,7 +1066,7 @@ function comment_admin() {
         print comment_admin_edit(arg(3));
         break;
       case "search":
-        print search_type("comment", url("admin/comment/search"));
+        print search_type("comment", url("admin/comment/search"), $_POST["keys"]);
         break;
       case "votes":
       case t("Add new vote"):
