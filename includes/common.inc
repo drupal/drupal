@@ -1,6 +1,7 @@
 <?
 
-include_once "includes/". getenv("HTTP_HOST") .".conf";
+$cf = strtr($HTTP_HOST ."". substr($REQUEST_URI, 0, strrpos($REQUEST_URI, "/")), "/:", "..");
+include_once "includes/$cf.conf";
 include_once "includes/database.inc";
 include_once "includes/watchdog.inc";
 include_once "includes/function.inc";
