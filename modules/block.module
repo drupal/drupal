@@ -8,7 +8,7 @@ function block_help($section) {
   switch ($section) {
     case 'admin/help#block':
       return t("
-<p>Blocks are the boxes visible in the sidebar(s) of your web site. These are usually generated automatically by modules (e.g. recent forum topics), but you can also create your own blocks using either static HTML or dynamic PHP content.</p>
+<p>Blocks are the boxes visible in the sidebar(s) of your web site. These are usually generated automatically by modules (e.g. recent forum topics), but you can also create your own blocks.</p>
 <p>The sidebar each block appears in depends on both which theme you're using (some are left-only, some right, some both), and on the settings in block management.</p><p>Whether a block is visible in the first place depends on four things:</p><ul><li>It must have its \"enabled\" box checked in block management.</li><li>If it has its \"custom\" box checked in block management, the user must have chosen to display it in their user preferences.</li><li>If the \"path\" field in block management is set, the visitor must be on a page that matches the path specification (more on this later).</li><li>If the block has its throttle box checked, the user will only see the block if the site throttle level is low.</li></ul>
 <p>The block management screen also lets you specify the vertical sort-order of the blocks within a sidebar. You do this by assigning a <strong>weight</strong> to each block. Lighter blocks (smaller weight) \"float up\" towards the top of the sidebar. Heavier ones \"sink down\" towards the bottom of it.</p>
 <p>The path setting lets you define the pages on which a specific block is visible. If you leave the path blank it will appear on all pages. The path uses a regular expression syntax so remember to escape special characters! The path expression is matched against the relative URL of a Drupal page, e.g. <code>book</code>, <code>node/12</code>, <code>admin</code>.</p>
@@ -16,26 +16,7 @@ function block_help($section) {
 <p>However, for basic tasks it is sufficient to look at the following examples:</p>
 <p>If the block should only show up on blog pages, use &lt;^blog&gt;.  To display on all node views use &lt;^node&gt;.  The angular brackets are used as delimiters of the regular expression.  To show up on either forum or book pages use &lt;^(forum|book)&gt;.  The round brackets form a group of expressions, divided by the | character. It matches if any of the expressions in it match.  A more complicated example is &lt;^node/add/(story|blog|image)&gt;. Blocks which have their paths set to this expression will show up on story, block, or image composition pages.  If you want to show a block an all pages, but not the search page, use &lt;^(?!search)&gt;.</p>
 <h3>Administrator Defined Blocks</h3>
-<p>An administrator defined block contains HTML, text or PHP content supplied by you (as opposed to being generated automatically by a module). Each admin-defined block consists of a title, a description, and a body containing text, HTML, or PHP code which can be as long as you wish. The Drupal engine will 'render' the content of the block.</p>
-<h4>PHP in admin-defined blocks</h4>
-<p>If you know how to script in PHP, Drupal gives you the power to embed any script you like inside a block. It will be executed when the page is viewed and dynamically embedded into the page. This gives you amazing flexibility and power, but of course with that comes danger and insecurity if you don't write good code. If you are not familiar with PHP, SQL or with the site engine, avoid experimenting with PHP blocks because you can corrupt your database or render your site insecure or even unusable! If you don't plan to do fancy stuff with your blocks then you're probably better off with straight HTML.</p>
-<p>Remember that the code within each PHP block must be valid PHP code - including things like correctly terminating statements with a semicolon so that the parser won't die. It is highly recommended that you develop your blocks separately using a simple test script on top of a test database before migrating to your production environment.</p>
-<p>Notes:</p><ul><li>You can use global variables, such as configuration parameters, within the scope of a PHP box but remember that variables which have been given values in a PHP box will retain these values in the engine or module afterwards.</li><li>register_globals is now set to <strong>off</strong> by default. If you need form information you need to get it from the \"superglobals\" \$_POST, \$_GET, etc.</li><li>You should use the <code>return</code> statement to return the actual content for your block.</li></ul>
-<p>A basic example:</p>
-<blockquote><p>You want to have a box with the title \"Welcome\" that you use to greet your visitors. The content for this box could be created by going:</p>
-<pre>
-  return t(\"Welcome visitor, ... welcome message goes here ...\");
-</pre>
-<p>If we are however dealing with a registered user, we can customize the message by using:</p>
-<pre>
-  if (\$user->uid) {
-    return t(\"Welcome \$user->name, ... welcome message goes here ...\");
-  }
-  else {
-    return t(\"Welcome visitor, ... welcome message goes here ...\");
-  }
-</pre></blockquote>
-<p>For more in-depth examples, we recommend that you check the existing boxes and use them as a starting point.</p>", array('%pcre' => 'http://php.net/pcre/'));
+<p>An administrator defined block contains content supplied by you (as opposed to being generated automatically by a module). Each admin-defined block consists of a title, a description, and a body which can be as long as you wish. The Drupal engine will 'render' the content of the block.</p>", array('%pcre' => 'http://php.net/pcre/'));
     case 'admin/modules#description':
       return t('Controls the boxes that are displayed around the main content.');
     case 'admin/block':
@@ -101,7 +82,7 @@ function block_block($op = 'list', $delta = 0) {
   else {
     $block = db_fetch_object(db_query('SELECT * FROM {boxes} WHERE bid = %d', $delta));
     $data['subject'] = $block->title;
-    $data['content'] = ($block->type == 1) ? eval($block->body) : $block->body;
+    $data['content'] = check_output($block->body, $block->format);
     return $data;
   }
 }
@@ -179,11 +160,20 @@ function block_admin_display() {
 
   $blocks = _block_rehash();
 
+  // Fetch input formats used by admin-defined boxes.
+  $formats = array();
+  $result = db_query('SELECT bid, format FROM {boxes}');
+  while ($box = db_fetch_object($result)) {
+    $formats[$box->bid] = $box->format;
+  }
+
   $header = array(t('block'), t('enabled'), t('custom'), t('throttle'), t('weight'), t('region'), t('path'), array('data' => t('operations'), 'colspan' => 2));
 
   foreach ($blocks as $block) {
     if ($block['module'] == 'block') {
-      $edit = l(t('edit'), 'admin/block/edit/'. $block['delta']);
+      if (filter_access($formats[$block['delta']])) {
+        $edit = l(t('edit'), 'admin/block/edit/'. $block['delta']);
+      }
       $delete = l(t('delete'), 'admin/block/delete/'. $block['delta']);
     }
     else {
@@ -232,14 +222,10 @@ function block_box_edit($bid = 0) {
 }
 
 function block_box_form($edit = array()) {
-  $type = array(0 => 'HTML', 1 => 'PHP');
-
   $group = form_textfield(t('Block title'), 'title', $edit['title'], 50, 64, t('The title of the block as shown to the user.'));
+  $group .= filter_form('format', $edit['format']);
   $group .= form_textarea(t('Block body'), 'body', $edit['body'], 70, 10, t('The content of the block as shown to the user.'));
   $group .= form_textfield(t('Block description'), 'info', $edit['info'], 50, 64, t('A brief description of your block.  Used on the <a href="%overview">block overview page</a>.', array('%overview' => url('admin/block'))));
-  if (user_access('create php content')) {
-    $group .= form_radios(t('Block type'), 'type', $edit['type'], $type, t("If you would like to use PHP code inside your block, set the above option to 'PHP' instead of 'HTML'."));
-  }
 
   if ($edit['bid']) {
     $group .= form_hidden('bid', $edit['bid']);
@@ -252,16 +238,16 @@ function block_box_form($edit = array()) {
 }
 
 function block_box_save($edit) {
-  if (!user_access('create php content')) {
-    $edit['type'] = 0;
+  if (!filter_access($edit['format'])) {
+    $edit['format'] = FILTER_FORMAT_DEFAULT;
   }
 
   if ($edit['bid']) {
-    db_query("UPDATE {boxes} SET title = '%s', body = '%s', info = '%s', type = %d WHERE bid = %d", $edit['title'], $edit['body'], $edit['info'], $edit['type'], $edit['bid']);
+    db_query("UPDATE {boxes} SET title = '%s', body = '%s', info = '%s', format = %d WHERE bid = %d", $edit['title'], $edit['body'], $edit['info'], $edit['format'], $edit['bid']);
     return t('the block has been updated.');
   }
   else {
-    db_query("INSERT INTO {boxes} (title, body, info, type) VALUES  ('%s', '%s', '%s', %d)", $edit['title'], $edit['body'], $edit['info'], $edit['type']);
+    db_query("INSERT INTO {boxes} (title, body, info, format) VALUES  ('%s', '%s', '%s', %d)", $edit['title'], $edit['body'], $edit['info'], $edit['format']);
     return t('the new block has been added.');
   }
 }

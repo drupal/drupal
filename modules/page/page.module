@@ -9,7 +9,6 @@ function page_help($section) {
     case 'admin/help#page':
       return t("
       <p>The page module is used when you want to create content that optionally inserts a link into your navigation system. You can also, however, create pages that don't have this link by skipping the link text field in the page form. At this time, not all themes support the link insertion behavior. Some themes, like xtemplate, provide alternative mechanisms for link creation. Pages are also unique in that they shortcut the typical lifecycle of user generated content (i.e. submit -&gt; moderate -&gt; post -&gt; comment). </p>
-      <p>If you enable the <strong>create PHP content</strong> permission for a role, pages may consist of PHP code in addition to HTML and text.</p>
       <h3>User access permissions for pages</h3>
       <p><strong>create pages:</strong> Allows a role to create pages. They cannot edit or delete pages, even if they are the authors. You must enable this permission to in order for a role to create a page.</p>
       <p><strong>edit own pages:</strong> Allows a role to add/edit pages if they own the page. Use this permission if you want users to be able to edit and maintain their own pages.</p>
@@ -56,14 +55,14 @@ function page_access($op, $node) {
  * Implementation of hook_insert().
  */
 function page_insert($node) {
-  db_query("INSERT INTO {page} (nid, format, link, description) VALUES (%d, %d, '%s', '%s')", $node->nid, $node->format, $node->link, $node->description);
+  db_query("INSERT INTO {page} (nid, link, description) VALUES (%d, '%s', '%s')", $node->nid, $node->link, $node->description);
 }
 
 /**
  * Implementation of hook_update().
  */
 function page_update($node) {
-  db_query("UPDATE {page} SET format = %d, link = '%s', description = '%s' WHERE nid = %d", $node->format, $node->link, $node->description, $node->nid);
+  db_query("UPDATE {page} SET link = '%s', description = '%s' WHERE nid = %d", $node->link, $node->description, $node->nid);
 }
 
 /**
@@ -77,7 +76,7 @@ function page_delete(&$node) {
  * Implementation of hook_load().
  */
 function page_load($node) {
-  return db_fetch_object(db_query('SELECT format, link, description FROM {page} WHERE nid = %d', $node->nid));
+  return db_fetch_object(db_query('SELECT link, description FROM {page} WHERE nid = %d', $node->nid));
 }
 
 /**
@@ -92,23 +91,9 @@ function page_menu() {
 
 /**
  * Implementation of hook_content().
- *
- * If body is dynamic (using PHP code), the body will be generated.
  */
 function page_content($node, $teaser = FALSE) {
-  if ($node->format == 1) {
-    // PHP type
-    ob_start();
-    eval($node->body);
-    $node->body = ob_get_contents();
-    ob_end_clean();
-    $node->teaser = node_teaser($node->body);
-    $node->readmore = (strlen($node->teaser) < strlen($node->body));
-  }
-  else {
-    // Assume HTML type by default
-    $node = node_prepare($node, $teaser);
-  }
+  $node = node_prepare($node, $teaser);
   return $node;
 }
 
@@ -128,38 +113,12 @@ function page_form(&$node) {
     $output .= implode('', taxonomy_node_form('page', $node));
   }
 
-  if (($node->format == 1) && (!user_access('create php content'))) {
-    drupal_set_message(t('the body contents of this page are written in PHP and you do not have sufficient permissions to make changes to the body. You can edit the other elements of the page.'));
-    $output .= form_hidden('format', $node->format);
-    $hide_types = true;
-  }
-  else {
-    $output .= form_textarea(t('Body'), 'body', $node->body, 60, 20, filter_tips_short(), NULL, TRUE);
-  }
+  $output .= form_textarea(t('Body'), 'body', $node->body, 60, 20, '', NULL, TRUE);
 
   $output .= form_textfield(t('Link name'), 'link', $node->link, 60, 64, t('To make the page show up in the navigation links, enter the name of the link. Otherwise, leave this blank.'));
   $output .= form_textfield(t('Link description'), 'description', $node->description, 60, 64, t("The description displayed when hovering over the page's link.  Leave blank when you don't want a description."));
-  $content_type = (user_access('create php content')) ? array(0 => 'HTML', 1 => 'PHP') : false;
-  if (!$hide_types && $content_type) {
-    $output .= form_radios(t('Type'), 'format', $node->format, $content_type);
-  }
 
   return $output;
-}
-
-/**
- * Implementation of hook_validate().
- */
-function page_validate(&$node) {
-  if ($node->format && user_access('create php content')) {
-    // Do not filter PHP code, do not auto-extract a teaser
-    $node->teaser = $node->body;
-  }
-
-  if (($node->format == 1) && (!user_access('create php content'))) {
-    /* Overwrite the submitted node body since they don't have sufficient privileges. */
-    $node->body = db_result(db_query('SELECT body FROM {node} WHERE nid = %d', $node->nid));
-  }
 }
 
 ?>

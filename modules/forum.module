@@ -268,7 +268,7 @@ function forum_form(&$node) {
     $output .= form_checkbox(t('Leave shadow copy'), 'shadow', 1, $node->shadow, t('If you move this topic, you can leave a link in the old forum to the new forum.'));
   }
 
-  $output .= form_textarea(t('Body'), 'body', $node->body, 60, 10, filter_tips_short());
+  $output .= form_textarea(t('Body'), 'body', $node->body, 60, 10, '');
 
   return $output;
 }

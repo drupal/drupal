@@ -69,7 +69,8 @@ $sql_updates = array(
   "2004-07-30" => "update_95",
   "2004-08-04" => "update_96",
   "2004-08-06" => "update_97",
-  "2004-08-07" => "update_98"
+  "2004-08-07" => "update_98",
+  "2004-08-09" => "update_99"
 );
 
 function update_32() {
@@ -1307,6 +1308,159 @@ function update_98() {
 
   return array();
 }
+
+function update_99() {
+  // Filter patch - Multiple input formats
+  $ret = array();
+
+  /*
+  ** Load the list of PHP book and page nodes.
+  */
+  $php_nodes = array();
+  $res = db_query("SELECT nid FROM {book} WHERE format = 1");
+  while ($book = db_fetch_object($res)) {
+    $php_nodes[] = $book->nid;
+  }
+  $res = db_query("SELECT nid FROM {page} WHERE format = 1");
+  while ($page = db_fetch_object($res)) {
+    $php_nodes[] = $page->nid;
+  }
+
+  /*
+  ** Apply database changes
+  */
+  if ($GLOBALS['db_type'] == 'mysql') {
+    // Filters table
+    $ret[] = update_sql("ALTER TABLE {filters} ADD format int(4) NOT NULL default '0'");
+    $ret[] = update_sql("ALTER TABLE {filters} ADD delta tinyint(2) NOT NULL default '0'");
+
+    // Filter_formats table
+    $ret[] = update_sql("CREATE TABLE {filter_formats} (
+      format int(4) NOT NULL auto_increment,
+      name varchar(255) NOT NULL default '',
+      roles varchar(255) NOT NULL default '',
+      cache tinyint(2) NOT NULL default '1',
+      PRIMARY KEY  (format)
+    )");
+
+    // Store formats in nodes, comments and boxes
+    $ret[] = update_sql("ALTER TABLE {boxes} CHANGE type format int(4) NOT NULL default '0'");
+    $ret[] = update_sql("ALTER TABLE {comments} ADD format int(4) NOT NULL default '0'");
+    $ret[] = update_sql("ALTER TABLE {node} ADD format int(4) NOT NULL default '0'");
+
+    // Get rid of the old book/page type info
+    $ret[] = update_sql("ALTER TABLE {book} DROP format");
+    $ret[] = update_sql("ALTER TABLE {page} DROP format");
+  }
+  else if ($GLOBALS['db_type'] == 'pgsql') {
+    // TODO: add pgsql equivalent. Whoever does this should pay attention that
+    // the keys/indices for the 'filters' table are correct. There was some
+    // inconsistency between the MySQL and PGSQL version before.
+  }
+
+  // Initialize all nodes and comments to the legacy format (see below)
+  $ret[] = update_sql("UPDATE {node} SET format = 1");
+  $ret[] = update_sql("UPDATE {comments} SET format = 1");
+
+  // Set format to PHP for the old PHP book/page nodes.
+  if (count($php_nodes)) {
+    $ret[] = update_sql("UPDATE {node} SET format = 2 WHERE nid IN (". implode(',', $php_nodes) .")");
+  }
+
+  // Boxes now use the filtering system as well.
+  // Type 0 (HTML) maps to Format 3 (Full HTML).
+  // Type 1 (PHP) maps to Format 2 (PHP).
+  $ret[] = update_sql("UPDATE {boxes} SET format = 3 - format");
+
+  /*
+  ** Update PHP content to use <?php ?> tags.
+  */
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql("UPDATE {node} SET teaser = CONCAT('<?php ', teaser) WHERE format = 2");
+    $ret[] = update_sql("UPDATE {node} SET body = CONCAT('<?php ', body) WHERE format = 2");
+    $ret[] = update_sql("UPDATE {boxes} SET body = CONCAT('<?php ', body) WHERE format = 2");
+  }
+  else if ($GLOBALS['db_type'] == 'pgsql') {
+    // TODO: someone needs to verify if this works.
+    $ret[] = update_sql("UPDATE {node} SET teaser = '<?php ' || teaser WHERE format = 2");
+    $ret[] = update_sql("UPDATE {node} SET body = '<?php ' || body WHERE format = 2");
+    $ret[] = update_sql("UPDATE {boxes} SET body = '<?php ' || body WHERE format = 2");
+  }
+
+
+  /*
+  ** We now set up some input formats. One of these is a 'legacy' format which
+  ** tries to preserve as much settings as possible from before the patch.
+  ** The other two are 'PHP code' and 'Full HTML'.
+  */
+
+  // We pick an appropriate name for the legacy format.
+  $old_html_filter = variable_get('filter_html', 0);
+  if ($old_html_filter == FILTER_HTML_ESCAPE) {
+    $default = 'Plain text';
+  }
+  else {
+    $default = 'Filtered HTML';
+  }
+  // Make sure the legacy format is accessible to all roles
+  $all_roles = array_keys(user_roles());
+  $ret[] = update_sql("INSERT INTO {filter_formats} VALUES (1,'$default',',". implode(',', $all_roles) .",',1)");
+
+  // Determine which roles have the old 'create php content' permission.
+  $res = db_query("SELECT rid FROM {permission} WHERE perm LIKE '%create php content%'");
+  $php_roles = array();
+  while ($role = db_fetch_object($res)) {
+    $php_roles[] = $role->rid;
+  }
+  $ret[] = update_sql("INSERT INTO {filter_formats} VALUES (2,'PHP code','". implode(',', $php_roles) .",',0)");
+
+  // This is a 'Full HTML' format which allows all HTML without restrictions.
+  $ret[] = update_sql("INSERT INTO {filter_formats} VALUES (3,'Full HTML','',1)");
+
+  // Set the default format to the legacy format
+  variable_set('filter_default_format', 1);
+
+  // Put the old filters into the legacy format
+  $ret[] = update_sql("UPDATE {filters} SET format = 1");
+
+  // Add filter.module's standard filters (these used to be hardcoded).
+  if (!variable_get('rewrite_old_urls', 0)) {
+    $ret[] = update_sql("DELETE FROM {filters} WHERE module = 'filter'");
+  }
+  else {
+    $ret[] = update_sql("UPDATE {filters} SET delta = 2 WHERE module ='filter'");
+  }
+  if ($old_html_filter != 0) {
+    $ret[] = update_sql("INSERT INTO {filters} (format, module, delta, weight) VALUES (1,'filter',0,0)"); // HTML tag/style filter
+  }
+  $ret[] = update_sql("INSERT INTO {filters} (format, module, delta, weight) VALUES (1,'filter',3,1)"); // Linebreak filter
+  $ret[] = update_sql("INSERT INTO {filters} (format, module, delta, weight) VALUES (2,'filter',1,0)"); // PHP evaluator
+  $ret[] = update_sql("INSERT INTO {filters} (format, module, delta, weight) VALUES (3,'filter',3,0)"); // Linebreak filter
+
+  // Migrate the settings for all core/contrib filtering modules into the legacy
+  // format.
+  $migrate = array('filter_html', // filter.module
+                   'allowed_html',
+                   'filter_style',
+                   'anyfilter_regexps', // anyfilter.module
+                   'htmlcorrector_smartclose', // htmlcorrector.module
+                   'htmlcorrector_xhtmlify',
+                   'htmlcorrector_valueentities',
+                   'project_filter', // project.module
+                   'latex_filter_link' // latex.module
+                   );
+
+  foreach ($migrate as $variable) {
+    $value = variable_get($variable, NULL);
+    if ($value != NULL) {
+      variable_set($variable .'_1', $value);
+      variable_del($variable);
+    }
+  }
+
+  return $ret;
+}
+
 
 function update_sql($sql) {
   $edit = $_POST["edit"];

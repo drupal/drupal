@@ -319,6 +319,13 @@ tr.light .form-item, tr.dark .form-item {
   margin: 0;
   font-size: 0.8em;
 }
+.tips {
+  margin-top: 0px;
+  margin-bottom: 0px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  font-size: 0.9em;
+}
 #forum .description {
   font-size: 0.9em;
   margin: 0.5em;

@@ -813,7 +813,7 @@ function format_rss_item($title, $link, $description, $args = array()) {
   $output = "<item>\n";
   $output .= ' <title>'. drupal_specialchars(strip_tags($title)) ."</title>\n";
   $output .= ' <link>'. drupal_specialchars(strip_tags($link)) ."</link>\n";
-  $output .= ' <description>'. drupal_specialchars(check_output($description)) ."</description>\n";
+  $output .= ' <description>'. drupal_specialchars($description) ."</description>\n";
   foreach ($args as $key => $value) {
     $output .= ' <'. $key .'>'. drupal_specialchars(strip_tags($value)) ."</$key>\n";
   }
@@ -1768,6 +1768,20 @@ function truncate_utf8($string, $len) {
   }
   while (ord($string[--$len]) < 0xC0) {};
   return substr($string, 0, $len);
+}
+
+/**
+ * Wrapper around PHP's eval(). Uses output buffering to capture both returned
+ * and printed text. Unlike eval(), we require code to be surrounded by <?php ?>
+ * tags (in other words, we evaluate the code as if it were a stand-alone PHP
+ * file).
+ *
+ * @param $code The code to evaluate
+ */
+function drupal_eval($code) {
+  ob_start();
+  print eval('?>'. $code);
+  return ob_get_clean();
 }
 
 include_once 'includes/theme.inc';

@@ -168,6 +168,11 @@ function node_teaser($body) {
     return $body;
   }
 
+  // If the body contains PHP code, do not split it up to prevent parse errors.
+  if (strpos($body, '<?') != false) {
+    return $body;
+  }
+
   // If a valid delimiter has been specified, use it to chop of the teaser.
   if ($delimiter > 0) {
     return substr($body, 0, $delimiter);
@@ -511,10 +516,10 @@ function node_view($node, $teaser = FALSE, $page = FALSE) {
 function node_prepare($node, $teaser = FALSE) {
   $node->readmore = (strlen($node->teaser) < strlen($node->body));
   if ($teaser == FALSE) {
-    $node->body = check_output($node->body);
+    $node->body = check_output($node->body, $node->format);
   }
   else {
-    $node->teaser = check_output($node->teaser);
+    $node->teaser = check_output($node->teaser, $node->format);
   }
   return $node;
 }
@@ -999,7 +1004,7 @@ function node_feed($nodes = 0, $channel = array()) {
     // Load the specified node:
     $item = node_load(array('nid' => $node->nid));
     $link = url("node/$node->nid", NULL, NULL, 1);
-    $items .= format_rss_item($item->title, $link, ($item->teaser ? $item->teaser : $item->body), array('pubDate' => date('r', $item->changed)));
+    $items .= format_rss_item($item->title, $link, check_output($item->teaser ? $item->teaser : $item->body, $item->format), array('pubDate' => date('r', $item->changed)));
   }
 
   $channel_defaults = array(
@@ -1096,6 +1101,11 @@ function node_validate($node) {
   node_invoke($node, 'validate');
   node_invoke_nodeapi($node, 'validate');
 
+  // Check input format access
+  if (!filter_access($node->format)) {
+    form_set_error('format', t('The supplied input format is invalid.'));
+  }
+
   $node->validated = TRUE;
 
   return $node;
@@ -1155,6 +1165,10 @@ function node_form($edit) {
 
   $output .= '<div class="standard">';
   $output .= form_textfield(t('Title'), 'title', $edit->title, 60, 128, NULL, NULL, TRUE);
+
+  // Add filter format selector / filter tips
+
+  $output .= filter_form('format', $edit->format);
 
   // Add the node-type-specific fields.
 
@@ -1516,7 +1530,7 @@ function node_nodeapi(&$node, $op, $arg = 0) {
       $output[t('revision')] = form_checkbox('', "node_revision_$node->type", 1, variable_get("node_revision_$node->type", 0));
       return $output;
     case 'fields':
-      return array('nid', 'uid', 'type', 'title', 'teaser', 'body', 'revisions', 'status', 'promote', 'moderate', 'sticky', 'created', 'changed');
+      return array('nid', 'uid', 'type', 'title', 'teaser', 'body', 'revisions', 'status', 'promote', 'moderate', 'sticky', 'created', 'changed', 'format');
   }
 }
 
@@ -1568,12 +1582,17 @@ function node_nodeapi(&$node, $op, $arg = 0) {
  *   TRUE if the operation may be performed.
  */
 function node_access($op, $node = NULL) {
+  // Convert the node to an object if necessary:
+  $node = array2object($node);
+
+  // If the node is in a restricted format, disallow editing.
+  if ($op == 'update' && !filter_access($node->format)) {
+    return FALSE;
+  }
+
   if (user_access('administer nodes')) {
     return TRUE;
   }
-
-  // Convert the node to an object if necessary:
-  $node = array2object($node);
 
   // Can't use node_invoke(), because the access hook takes the $op parameter
   // before the $node parameter.

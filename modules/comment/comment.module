@@ -319,7 +319,7 @@ function comment_update_index() {
 function comment_user($type, $edit, &$user, $category = NULL) {
   if ($type == 'form' && $category == 'account') {
     // when user tries to edit his own data
-    return array(array('title' => t('Comment settings'), 'data' => form_textarea(t('Signature'), 'signature', $user->signature, 64, 3, t('Your signature will be publicly displayed at the end of your comments.') .'<br />'. filter_tips_short()), 'weight' => 2));
+    return array(array('title' => t('Comment settings'), 'data' => form_textarea(t('Signature'), 'signature', $user->signature, 64, 3, t('Your signature will be publicly displayed at the end of your comments.')), 'weight' => 2));
   }
   if ($type == 'validate') {
     // validate user data editing
@@ -453,6 +453,13 @@ function comment_validate_form($edit) {
 
   if ($edit['comment'] == '') {
     form_set_error('comment', t('The body of your comment is empty.'));
+  }
+
+  /*
+  ** Validate filter format
+  */
+  if (!filter_access($edit['format'])) {
+    form_set_error('format', t('The supplied input format is invalid.'));
   }
 
   /*
@@ -953,7 +960,7 @@ function comment_admin_edit($cid) {
   if ($comment) {
     $form .= form_item(t('Author'), format_name($comment));
     $form .= form_textfield(t('Subject'), 'subject', $comment->subject, 70, 128);
-    $form .= form_textarea(t('Comment'), 'comment', $comment->comment, 70, 15, filter_tips_short());
+    $form .= form_textarea(t('Comment'), 'comment', $comment->comment, 70, 15, '');
     $form .= form_radios(t('Status'), 'status', $comment->status, array('published', 'not published'));
     $form .= form_hidden('cid', $cid);
     $form .= form_submit(t('Submit'));
@@ -986,7 +993,7 @@ function comment_delete($cid) {
   // Print a confirmation.
   else if ($comment->cid) {
     drupal_set_message(t('do you want to delete this comment and all its replies?'));
-    $comment->comment = check_output($comment->comment);
+    $comment->comment = check_output($comment->comment, $comment->format);
     $output  = theme('comment', $comment);
     $output .= form_submit(t('Delete comment'));
   }
@@ -1406,8 +1413,11 @@ function theme_comment_form($edit, $title) {
     $form .= form_textfield(t('Subject'), 'subject', $edit['subject'], 50, 64);
   }
 
+  // format selector
+  $form .= filter_form('format', $edit['format']);
+
   // comment field:
-  $form .= form_textarea(t('Comment'), 'comment', $edit['comment'] ? $edit['comment'] : $user->signature, 70, 10, filter_tips_short(), NULL, TRUE);
+  $form .= form_textarea(t('Comment'), 'comment', $edit['comment'] ? $edit['comment'] : $user->signature, 70, 10, '', NULL, TRUE);
 
   // preview button:
   $form .= form_hidden('cid', $edit['cid']);
@@ -1438,7 +1448,7 @@ function theme_comment_view($comment, $links = '', $visible = 1) {
 
   // Switch to folded/unfolded view of the comment
   if ($visible) {
-    $comment->comment = check_output($comment->comment);
+    $comment->comment = check_output($comment->comment, $comment->format);
     $output .= theme('comment', $comment, $links);
   }
   else {

@@ -133,13 +133,22 @@ function cache_set($cid, $data, $expire = 0, $headers = NULL) {
  * @param $cid
  *   If set, the cache ID to delete. Otherwise, all cache entries that can expire
  *   are deleted.
+ *
+ * @param $wildcard
+ *   If set to true, the $cid is treated as a substring to match rather than a
+ *   complete ID.
  */
-function cache_clear_all($cid = NULL) {
+function cache_clear_all($cid = NULL, $wildcard = false) {
   if (empty($cid)) {
     db_query("DELETE FROM {cache} WHERE expire <> 0");
   }
   else {
-    db_query("DELETE FROM {cache} WHERE cid = '%s'", $cid);
+    if ($wildcard) {
+      db_query("DELETE FROM {cache} WHERE cid LIKE '%%%s%%'", $cid);
+    }
+    else {
+      db_query("DELETE FROM {cache} WHERE cid = '%s'", $cid);
+    }
   }
 }
 

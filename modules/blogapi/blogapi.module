@@ -130,6 +130,7 @@ function blogapi_new_post($req_params) {
                               'promote' => $promote,
                               'comment' => $comment,
                               'moderate' => $moderate,
+                              'format' => FILTER_DEFAULT_FORMAT,
                               'revision' => $revision
                               ));
 

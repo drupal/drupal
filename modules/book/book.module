@@ -39,10 +39,11 @@ function book_access($op, $node) {
     // Only registered users can update book pages.  Given the nature
     // of the book module this is considered to be a good/safe idea.
     // One can only update a book page if there are no suggested updates
-    // of that page waiting for approval, it is not a PHP page, and
-    // the "create new revision" bit is set.  That is, only updates that
-    // don't overwrite the current or pending information are allowed.
-    return user_access('maintain books') && !$node->moderate && !$node->format && $node->revision;
+    // of that page waiting for approval and as long as the "create new
+    // revision"-bit is set.  That is, only updates that don't overwrite
+    // the current or pending information are allowed.
+
+    return user_access('maintain books') && !$node->moderate && $node->revision;
   }
 }
 
@@ -139,7 +140,7 @@ function book_block($op = 'list', $delta = 0) {
 function book_load($node) {
   global $user;
 
-  $book = db_fetch_object(db_query('SELECT format, parent, weight, log FROM {book} WHERE nid = %d', $node->nid));
+  $book = db_fetch_object(db_query('SELECT parent, weight, log FROM {book} WHERE nid = %d', $node->nid));
 
   if (arg(1) == 'edit' && !user_access('administer nodes')) {
     // If a user is about to update a book page, we overload some
@@ -166,14 +167,14 @@ function book_load($node) {
  * Implementation of hook_insert().
  */
 function book_insert($node) {
-  db_query("INSERT INTO {book} (nid, format, parent, weight, log) VALUES (%d, %d, %d, %d, '%s')", $node->nid, $node->format, $node->parent, $node->weight, $node->log);
+  db_query("INSERT INTO {book} (nid, parent, weight, log) VALUES (%d, %d, %d, '%s')", $node->nid, $node->parent, $node->weight, $node->log);
 }
 
 /**
  * Implementation of hook_update().
  */
 function book_update($node) {
-  db_query("UPDATE {book} SET format = %d, parent = %d, weight = %d, log = '%s' WHERE nid = %d", $node->format, $node->parent, $node->weight, $node->log, $node->nid);
+  db_query("UPDATE {book} SET parent = %d, weight = %d, log = '%s' WHERE nid = %d", $node->parent, $node->weight, $node->log, $node->nid);
 }
 
 /**
@@ -187,17 +188,8 @@ function book_delete(&$node) {
  * Implementation of hook_validate().
  */
 function book_validate(&$node) {
-  if ($node->format && user_access('create php content')) {
-    // Do not filter PHP code. Do not auto-extract a teaser.
-    $node->teaser = $node->body;
-  }
-  else {
-    $node->format = 0;
-  }
-
   // Set default values for non-administrators.
   if (!user_access('administer nodes')) {
-    $node->format = 0;
     $node->weight = 0;
     $node->revision = 1;
   }
@@ -216,14 +208,11 @@ function book_form(&$node) {
     $output .= implode('', taxonomy_node_form('book', $node));
   }
 
-  $output .= form_textarea(t('Body'), 'body', $node->body, 60, 20, filter_tips_short(), NULL, TRUE);
+  $output .= form_textarea(t('Body'), 'body', $node->body, 60, 20, '', NULL, TRUE);
   $output .= form_textarea(t('Log message'), 'log', $node->log, 60, 5, t('An explanation of the additions or updates being made to help the group understand your motivations.'));
 
   if (user_access('administer nodes')) {
     $output .= form_weight(t('Weight'), 'weight', $node->weight, 15, t('The heavier pages will sink and the lighter pages will be positioned nearer the top.'));
-    if (user_access('create php content')) {
-      $output .= form_radios(t('Type'), 'format', $node->format, array(0 => 'HTML / text', 1 => 'PHP'));
-    }
   }
   else {
     // If a regular user updates a book page, we create a new revision
@@ -401,24 +390,8 @@ function book_content($node, $teaser = FALSE) {
     }
   }
 
-  // Extract the page body.  If body is dynamic (using PHP code), the body
-  // will be generated.
-  if ($node->format == 1) {
-    // Make sure only authorized users can preview PHP pages.
-    if ($op == t('Preview') && !user_access('create php content')) {
-      return;
-    }
-
-    ob_start();
-    eval($node->body);
-    $node->body = ob_get_contents();
-    ob_end_clean();
-    $node->teaser = node_teaser($node->body);
-    $node->readmore = (strlen($node->teaser) < strlen($node->body));
-  }
-  else {
-    $node = node_prepare($node, $teaser);
-  }
+  // Extract the page body.
+  $node = node_prepare($node, $teaser);
 
   return $node;
 }
