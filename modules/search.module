@@ -23,7 +23,7 @@ function search_page() {
     // build options list:
     foreach (module_list() as $name) {
       if (module_hook($name, "search")) {
-        $options .= "<option value=\"$name\"". ($name == $type ? " selected" : "") .">$name</option>\n";
+        $options .= "<option value=\"$name\"". ($name == $type ? " selected" : "") .">". t($name) ."</option>\n";
       }
     }
 
