@@ -14,11 +14,20 @@ function upload_help($section) {
       return t('Users with the <a href="%permissions"><em>upload files</em> permission</a> can upload attachments. You can choose which node types can take attachments on the <a href="%workflow">workflow settings</a> page.', array('%permissions' => url('admin/user/configure/permission'), '%workflow' => url('admin/node/configure/defaults')));
     case 'admin/node/configure/defaults':
       return t('<p>If you want users to be able to attach files to nodes, check the <em>attachments</em> column in the appropriate column.</p>');
+    case 'admin/help#upload':
+      return t('
+<h3>Background</h3>
+<p>The upload module allows users to upload attachments. You can choose which node types can take attachments on the <a href="%workflow">workflow settings</a> page.</p>
+<h3>Permissions</h3>
+<p>Two permissions are related to uploads: <em>upload files</em> and <em>view uploaded files</em>.</p>
+<ol><li><strong>upload files</strong> - Allows users to upload attachments.</li><li><strong>view uploaded files</strong> - Allows users to view and download attachments. Keep in mind that if you are using the <a href="%settings">public download method</a>, anyone will be able to access uploaded files with a direct URL regardless of this permission.</li></ol>
+<p>Lastly, users with the <em>administer site configuration</em> permission will be able to configure <a href="%upload">role-specific upload settings</a> such as allowed file types, maximum file size per upload and total file size per user.</p>
+', array('%settings' => url('admin/settings'), '%workflow' => url('admin/node/configure/defaults'), '%upload' => url('admin/upload')));
   }
 }
 
 function upload_perm() {
-  return array('upload files');
+  return array('upload files', 'view uploaded files');
 }
 
 function upload_menu($may_cache) {
@@ -28,7 +37,7 @@ function upload_menu($may_cache) {
     $items[] = array(
       'path' => 'admin/upload', 'title' => t('uploads'),
       'callback' => 'upload_admin',
-      'access' => user_access('access administration pages'),
+      'access' => user_access('administer site configuration'),
       'type' => MENU_NORMAL_ITEM
     );
   }
@@ -40,7 +49,7 @@ function upload_menu($may_cache) {
         $items[] = array(
           'path' => $filename, 'title' => t('file download'),
           'callback' => 'upload_download',
-          'access' => TRUE,
+          'access' => user_access('view uploaded files'),
           'type' => MENU_CALLBACK
         );
         $_SESSION['file_uploads'][$key]->_filename = $filename;
@@ -79,15 +88,17 @@ function upload_download() {
 }
 
 function upload_file_download($file) {
-  $file = file_create_path($file);
-  $result = db_query("SELECT * from {files} WHERE filepath = '%s'", $file);
-  if ($file = db_fetch_object($result)) {
-    $name = mime_header_encode($file->filename);
-    // Serve images and text inline for the browser to display rather than download.
-    $disposition = ereg('^(text/|image/)', $file->filemime) ? 'inline' : 'attachment';
-    return array('Content-Type: '. $file->filemime .'; name='. $name,
-                 'Content-Length: '. $file->filesize,
-                 'Content-Disposition: '. $disposition .'; filename='. $name);
+  if (user_access('view uploaded files')) {
+    $file = file_create_path($file);
+    $result = db_query("SELECT * from {files} WHERE filepath = '%s'", $file);
+    if ($file = db_fetch_object($result)) {
+      $name = mime_header_encode($file->filename);
+      // Serve images and text inline for the browser to display rather than download.
+      $disposition = ereg('^(text/|image/)', $file->filemime) ? 'inline' : 'attachment';
+      return array('Content-Type: '. $file->filemime .'; name='. $name,
+                   'Content-Length: '. $file->filesize,
+                   'Content-Disposition: '. $disposition .'; filename='. $name);
+    }
   }
 }
 
@@ -129,7 +140,6 @@ function upload_nodeapi(&$node, $op, $arg) {
         $max_size = variable_get("upload_maxsize_total", 0);
         $total_size = upload_count_size() + $filesize;
         $total_usersize = upload_count_size($user->uid) + $filesize;
-
 
         if ($maxsize && $total_size > $maxsize) {
           form_set_error('upload', t('Error attaching file %name: total file size exceeded', array('%name' => "<em>$file->filename</em>")));
@@ -193,12 +203,12 @@ function upload_nodeapi(&$node, $op, $arg) {
       }
       break;
     case 'load':
-      if (variable_get("upload_$node->type", 1) == 1 && user_access('upload files')) {
+      if (variable_get("upload_$node->type", 1) == 1) {
         $output['files'] = upload_load($node);
       }
       break;
     case 'view':
-      if ($node->files) {
+      if ($node->files && user_access('view uploaded files')) {
         $header = array(t('Attachment'), t('Size'));
         $rows = array();
         $previews = array();
