@@ -1,5 +1,5 @@
 <?php
-// $Id: pager.inc,v 1.8 2003/01/20 19:54:11 dries Exp $
+// $Id: pager.inc,v 1.9 2003/01/21 22:57:43 dries Exp $
 
 /* ***************************************************
  *            external functions (API)
@@ -29,13 +29,13 @@ function pager_display($tags = "", $limit = 10, $element = 0, $type = "default",
  * @see pager_display
  */
 function pager_display_default($tags = "", $limit = 10, $element = 0, $attributes = array()) {
-  $output .= "<center><table cellpadding=\"10\"><tbody><tr>";
+  $output .= "<div align=\"center\"><table cellpadding=\"10\"><tbody><tr>";
   $output .= "<td align=\"center\">". pager_first(($tags[0] ? $tags[0] : t("first page")), $limit, $element, $attributes) ."</td>";
   $output .= "<td align=\"center\">". pager_previous(($tags[1] ? $tags[1] : t("previous page")), $limit, $element, 1, $attributes) ."</td>";
   $output .= "<td align=\"center\">". pager_list($limit, $element, ($tags[2] ? $tags[2] : 9 ), "", $attributes) ."</td>";
   $output .= "<td align=\"center\">". pager_next(($tags[3] ? $tags[3] : t("next page")), $limit, $element, 1, $attributes) ."</td>";
   $output .= "<td align=\"center\">". pager_last(($tags[4] ? $tags[4] : t("last page")), $limit, $element, $attributes) ."</td>";
-  $output .= "</tr></tbody></table></center>";
+  $output .= "</tr></tbody></table></div>";
 
   return "$output";
 }

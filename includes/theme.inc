@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.122 2003/01/06 21:43:05 dries Exp $
+// $Id: theme.inc,v 1.123 2003/01/21 22:57:43 dries Exp $
 
 /**
 * Basic theme
@@ -65,7 +65,7 @@ class BaseTheme {
   }
 
   function box($subject, $content, $region = "main") {
-    $output = "<b>$subject</b><br />$content<p />";
+    $output = "<p><b>$subject</b><br />$content</p>";
     print $output;
   }
 
