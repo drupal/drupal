@@ -1,11 +1,41 @@
 <?php
 // $Id$
 
+function story_node($field) {
+  $info = array("name" => "story");
+
+  return $info[$field];
+}
+
+function story_access($op, $node) {
+
+  if ($op == "view") {
+    return $node->nid && $node->status && !$node->moderate;
+  }
+
+  if ($op == "create") {
+    return 1;
+  }
+
+  if ($op == "update") {
+    return user_access("administer nodes");
+  }
+
+  if ($op == "delete") {
+    return user_access("adminster nodes");
+  }
+
+}
+
 function story_help() {
  ?>
-  <P>Queued stories: user-contributed stories are automatically whisked away to a submission queue for moderators (i.e. registered user) to frown at.  Moderators vote whether or not a story should be posted to the front page for discussion.</P>
-  <P>Posted stories: published stories accessible to all visitors.</P>
-  <P>Dumped stories: rejected stories that are no longer available to visitors.</P>
+/*
+  // TODO: update documentation, outdated
+
+  <p>Queued stories: user-contributed stories are automatically whisked away to a submission queue for moderators (i.e. registered user) to frown at.  Moderators vote whether or not a story should be posted to the front page for discussion.</p>
+  <p>Posted stories: published stories accessible to all visitors.</p>
+  <p>Dumped stories: rejected stories that are no longer available to visitors.</p>
+*/
  <?php
 }
 
@@ -17,21 +47,14 @@ function story_form($node) {
 }
 
 function story_save($node) {
+
   if ($node->nid) {
-    if (user_access("administer nodes")) {
-      return array();
-    }
-    else {
-      return 0;
-    }
+    return array();
   }
   else {
-    /*
-    ** By default, stories get promoted to the front page and they are
-    ** subject to moderation.
-    */
     return array("promote" => 1, "moderate" => 1);
   }
+
 }
 
 ?>

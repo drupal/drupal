@@ -1,6 +1,35 @@
 <?php
 // $Id$
 
+function blog_node($field) {
+  global $user;
+
+  $info = array("name" => "personal blog");
+
+  return $info[$field];
+}
+
+function blog_access($op, $node) {
+  global $user;
+
+  if ($op == "view") {
+    return $node->nid && $node->status && !$node->moderate;
+  }
+
+  if ($op == "create") {
+    return $user->uid;
+  }
+
+  if ($op == "update") {
+    return user_access("administer nodes") || ($user->uid == $node->uid);
+  }
+
+  if ($op == "delete") {
+    return user_access("administer nodes") || ($user->uid == $node->uid);
+  }
+
+}
+
 function blog_help() {
  ?>
   <p>Drupal's blog module allows registered users to maintain an online blog or diary.  It provides easy-to-write and easy-to-read online diaries or journals that can be filled with daily thoughts, poetry, boneless blabber, spiritual theories, intimate details, valuable experiences, cynical rants, semi-coherent comments, writing experiments, artistic babblings, critics on current facts, fresh insights, diverse dreams, chronicles and mumbling madness available for public consumption.</p>
@@ -94,7 +123,7 @@ function blog_page_user($uid = 0, $date = 0) {
     }
 
     if ($user->uid && user_access("post blogs")) {
-      $links[] = "<a href=\"module.php?mod=blog&op=blog&id=$blog->nid\">". t("blog it") ."</a>";
+      $links[] = "<a href=\"module.php?mod=node&op=add&type=blog&nid=$blog->nid\">". t("blog it") ."</a>";
     }
 
     if ($blog->comment) {
@@ -131,7 +160,7 @@ function blog_page_last() {
     }
 
     if ($user->uid && user_access("post blogs")) {
-      $links[] = "<a href=\"module.php?mod=blog&op=blog&id=$blog->nid\">". t("blog it") ."</a>";
+      $links[] = "<a href=\"module.php?mod=node&op=add&type=blog&nid=$blog->nid\">". t("blog it") ."</a>";
     }
 
     if ($blog->comment) {
@@ -150,6 +179,17 @@ function blog_page_last() {
 }
 
 function blog_form($edit) {
+  global $nid, $iid;
+
+  if (!$edit->body) {
+    if ($nid && $blog = node_load(array("nid" => $nid))) {
+      $edit->body = "<i>". $blog->body ."</i> [<a href=\"module.php?mod=blog&id=$blog->uid&date=$blog->created\">$blog->name</a>]";
+    }
+
+    if ($iid && $item = db_fetch_object(db_query("SELECT i.*, f.title as ftitle, f.link as flink FROM item i, feed f WHERE i.iid = '". check_input($iid) ."' AND i.fid = f.fid"))) {
+      $edit->body = "<a href=\"$item->link\">$item->title</a> - <i>". check_output($item->description) ."</i> [<a href=\"$item->flink\">$item->ftitle</a>]\n";
+    }
+  }
 
   $output = form_textarea(t("Body"), "body", $edit->body, 60, 15, t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
 
@@ -157,30 +197,14 @@ function blog_form($edit) {
 }
 
 function blog_save($node) {
-  global $user;
 
   if ($node->nid) {
-
-    /*
-    ** Load the original blog from the database to make sure that only
-    ** original author can update his blog.
-    */
-
-    $blog = node_load(array("nid" => $node->nid));
-
-    if ($user->uid && $user->uid == $node->uid && $user->uid == $blog->uid) {
-      return array();
-    }
-    else if (user_access("adminster nodes")) {
-      return array();
-    }
-    else {
-      return 0;
-    }
+    return array();
   }
   else {
     return array("promote" => 0, "moderate" => 0, "status" => 1);
   }
+
 }
 
 function blog_page() {

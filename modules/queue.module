@@ -79,7 +79,7 @@ function queue_overview() {
   $theme->footer();
 }
 
-function queue_node($id) {
+function queue_view($id) {
   global $theme, $user;
 
   $node = node_load(array(nid => $id));
@@ -130,7 +130,7 @@ function queue_page() {
         queue_vote(check_input($id), check_input($vote));
         // fall through:
       case "view":
-        queue_node(check_input($id));
+        queue_view(check_input($id));
         break;
       default:
         queue_overview();

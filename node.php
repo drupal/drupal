@@ -71,7 +71,7 @@ function node_render($node) {
 function node_failure() {
   global $theme;
   $theme->header();
-  $theme->box(t("Not found"), t("The node you are looking for does not exist yet or is no longer accessible.") ."\n");
+  $theme->box(t("Not found"), t("The node you are looking for does no longer exist or is not accessible without the proper access rights.") ."\n");
   $theme->footer();
 }
 
@@ -82,7 +82,7 @@ if ($number > 1) {
   $result = db_query("SELECT n.*, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.title = '$title' AND n.status = 1 ORDER BY created DESC");
 
   while ($node = db_fetch_object($result)) {
-    if (node_access($node)) {
+    if (node_access("view", $node)) {
       $output .= "<p><b><a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a></b><br /><small>$node->type - ". format_name($node) ." - ". format_date($node->ccreated, "small") ."</small></p>";
     }
   }
@@ -93,7 +93,7 @@ if ($number > 1) {
 }
 elseif ($number) {
   $node = ($title ? node_load(array("title" => $title, "status" => 1)) : node_load(array("nid" => ($edit[id] ? $edit[id] : $id))));
-  if ($node && node_access($node)) {
+  if (node_access("view", $node)) {
     node_render($node);
   }
   else {

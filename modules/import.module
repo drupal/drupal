@@ -497,7 +497,7 @@ function import_page_last() {
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"2\">";
   while ($item = db_fetch_object($result)) {
-    $links[] = "<a href=\"submit.php?mod=blog&type=import&id=$item->iid\">". t("blog it") ."</a>";
+    $links[] = "<a href=\"module.php?mod=node&op=add&type=blog&iid=$item->iid\">". t("blog it") ."</a>";
     $links[] = "<a href=\"module.php?mod=import&op=feed&id=$item->fid\">". t("feed") ."</a>";
 
     if ($item->link) {
@@ -530,7 +530,7 @@ function import_page_feed($fid) {
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"2\">";
   while ($item = db_fetch_object($result)) {
-    $links[] = "<a href=\"submit.php?mod=blog&type=import&id=$item->iid\">". t("blog it") ."</a>";
+    $links[] = "<a href=\"module.php?mod=node&op=add&type=blog&iid=$item->iid\">". t("blog it") ."</a>";
     $links[] = "<a href=\"$item->link\">". t("visit") ."</a>";
 
     if ($item->link) {
@@ -564,7 +564,7 @@ function import_page_bundle($bid) {
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"2\">";
   while ($item = db_fetch_object($result)) {
-    $links[] = "<a href=\"submit.php?mod=blog&type=import&id=$item->iid\">". t("blog it") ."</a>";
+    $links[] = "<a href=\"module.php?mod=node&op=add&type=blog&iid=$item->iid\">". t("blog it") ."</a>";
     $links[] = "<a href=\"module.php?mod=import&op=feed&id=$item->fid\">". t("feed") ."</a>";
     $links[] = "<a href=\"$item->link\">". t("visit") ."</a>";
 

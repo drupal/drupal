@@ -14,6 +14,30 @@ function node_help() {
   }
 }
 
+function node_access($op, $node = 0) {
+
+  /*
+  ** Convert the node to an object if necessary:
+  */
+
+  if (is_array($node)) {
+    $node = node_object($node);
+  }
+
+  /*
+  ** Construct a function:
+  */
+
+  $function = $node->type ."_access";
+
+  if (function_exists($function)) {
+    return $function($op, $node);
+  }
+  else {
+    return 0;
+  }
+}
+
 function node_perm() {
   return array("administer nodes", "access content", "post content");
 }
@@ -375,7 +399,7 @@ function node_form($edit) {
     $output .= form_submit(t("Submit"));
   }
 
-  if ($edit->nid && user_access("administer nodes")) {
+  if ($edit->nid && node_access("delete", $edit)) {
     $output .= form_submit(t("Delete"));
   }
 
@@ -407,15 +431,13 @@ function node_add($type) {
   }
   else {
     // TODO: make building a node list generic and find an easy way to associate post permissions with them
-    if (user_access("adminster nodes")) {
-      $nodes = array("book" => "book page", "blog" => "personal blog entry", "poll" => "online survey", "story" => "story", "page" => "static page", "forum" => "discussion forum");
-    }
-    else {
-      $nodes = array("book" => "book page", "blog" => "personal blog entry", "poll" => "online survey", "story" => "story");
-    }
 
-    foreach ($nodes as $type => $name) {
-      $links[] = "<a href=\"module.php?mod=node&op=add&type=$type\">". t($name) ."</a>";
+    $links = array();
+
+    foreach (module_list() as $name) {
+      if (($info = module_invoke($name, "node", "name")) && node_access("create", array("type" => $name))) {
+        $links[] = "<a href=\"module.php?mod=node&op=add&type=$name\">". t($info) ."</a>";
+      }
     }
 
     $output .= sprintf(t("Submit a %s."), implode(", ", $links));
@@ -430,7 +452,14 @@ function node_edit($id) {
   $node = node_load(array("nid" => $id));
     // TODO: make this generic for all node types - temporary solution
 
-  return node_form($node);
+  if (node_access("update", $node)) {
+    $output = node_form($node);
+  }
+  else {
+    $output = message_access();
+  }
+
+  return $output;
 }
 
 function node_preview($edit) {
@@ -465,7 +494,7 @@ function node_preview($edit) {
   return node_form($edit);
 }
 
-function node_submit($edit) {
+function node_submit($node) {
 
   global $user;
 
@@ -473,51 +502,68 @@ function node_submit($edit) {
   ** Fixup the node when required:
   */
 
-  node_fixup(&$edit);
+  node_fixup(&$node);
 
-  if ($edit->nid) {
+  if ($node->nid) {
+
     /*
-    ** Compile a list of the node fields and their default values that users
-    ** and administrators are allowed to save when updating a node.
+    ** Check whether the current user has the proper access rights to
+    ** perform this operation:
     */
 
-    if (user_access("administer nodes")) {
-      $fields = array("nid", "uid", "body", "comment", "promote", "moderate", "status", "teaser", "title", "created", "type" => $edit->type);
+    if (node_access("update", $node)) {
+
+      /*
+      ** Compile a list of the node fields and their default values that users
+      ** and administrators are allowed to save when updating a node.
+      */
+
+      if (user_access("administer nodes")) {
+        $fields = array("nid", "uid", "body", "comment", "promote", "moderate", "status", "teaser", "title", "created", "type" => $node->type);
+      }
+      else {
+        $fields = array("nid", "uid" => $user->uid, "body", "teaser", "title", "type" => $node->type);
+      }
+
+      node_save($node, array_merge($fields, module_invoke($node->type, "save", $node)));
+
+      $output = t("The node has been updated.");
     }
     else {
-      $fields = array("nid", "uid" => $user->uid, "body", "teaser", "title", "type" => $edit->type);
+      watchdog("warning", "node: not authorized to update node");
+      $output = t("You are not authorized to update this node.");
     }
 
-    $output = t("The node has been updated.");
   }
   else {
+
     /*
-    ** Compile a list of the node fields and their default values that users
-    ** and administrators are allowed to save when inserting a new node.
+    ** Check whether the current user has the proper access rights to
+    ** perform this operation:
     */
 
-    if (user_access("administer nodes")) {
-      $fields = array("uid", "body", "comment" => 1, "promote", "moderate", "status" => 1, "teaser", "title", "type" => $edit->type);
+    if (node_access("create", $node)) {
+
+      /*
+      ** Compile a list of the node fields and their default values that users
+      ** and administrators are allowed to save when inserting a new node.
+      */
+
+      if (user_access("administer nodes")) {
+        $fields = array("uid", "body", "comment" => 1, "promote", "moderate", "status" => 1, "teaser", "title", "type" => $node->type);
+      }
+      else {
+        $fields = array("uid" => $user->uid, "body", "comment" => 1, "teaser", "title", "type" => $node->type);
+      }
+
+      node_save($node, array_merge($fields, module_invoke($node->type, "save", $node)));
+
+      $output = t("Thanks for your submission.");
     }
     else {
-      $fields = array("uid" => $user->uid, "body", "comment" => 1, "teaser", "title", "type" => $edit->type);
+      watchdog("warning", "node: not authorized to create node");
+      $output = t("You are not authorized to create this node.");
     }
-
-    $output = t("Thanks for your submission.");
-  }
-
-  /*
-  ** Check whether we are allowed to save the node and if so, whether
-  ** there are more default values to add.
-  */
-
-  $defaults = module_invoke($edit->type, "save", $edit);
-
-  if (is_array($defaults)) {
-    node_save($edit, array_merge($fields, $defaults));
-  }
-  else {
-    $output = t("Could not save or process the specified submission.");
   }
 
   return $output;
@@ -525,17 +571,25 @@ function node_submit($edit) {
 
 function node_remove($edit) {
 
-  if ($edit["confirm"]) {
-    node_delete(array(nid => $edit["nid"]));
+  $node = node_load(array("nid" => $edit["nid"]));
 
-    $output = node_admin_nodes();
+  if (node_access("delete", $node)) {
+    if ($edit["confirm"]) {
+      node_delete($node);
+
+      $output = t("The node has been deleted.");
+    }
+    else {
+      $output .= form_item(t("Confirm removal of"), check_output($node->title));
+      $output .= form_hidden("nid", $node->nid);
+      $output .= form_hidden("confirm", 1);
+      $output .= form_submit(t("Delete"));
+      $output = form($output, "post", "admin.php?mod=node");
+    }
   }
   else {
-    $output .= form_item(t("Confirm removal of"), check_output($edit["title"]));
-    $output .= form_hidden("nid", $edit["nid"]);
-    $output .= form_hidden("confirm", 1);
-    $output .= form_submit(t("Delete"));
-    $output = form($output, "post", "admin.php?mod=node");
+    watchdog("warning", "node: not authorized to remove node");
+    $output = t("You are not authorized to remove this node.");
   }
 
   return $output;
@@ -563,6 +617,9 @@ function node_page() {
       break;
     case t("Submit"):
       $theme->box(t("Node"), node_submit($edit));
+      break;
+    case t("Delete"):
+      print node_remove($edit);
       break;
     default:
       $result = db_query("SELECT nid, type FROM node WHERE ". ($meta ? "attributes LIKE '%". check_input($meta) ."%' AND " : "") ." promote = '1' AND status = '1' AND created <= '". ($date > 0 ? check_input($date) : time()) ."' ORDER BY created DESC LIMIT ". ($user->nodes ? $user->nodes : variable_get(default_nodes_main, 10)));

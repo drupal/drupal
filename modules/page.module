@@ -3,6 +3,33 @@
 
 $GLOBALS["format"] = array(0 => "HTML", 1 => "PHP", 2 => "text");
 
+function page_node($field) {
+  $info = array("name" => "static page");
+
+  return $info[$field];
+}
+
+function page_access($op, $node) {
+
+  if ($op == "view") {
+    return $node->nid && $node->status && !$node->moderate;
+  }
+
+  return user_access("administer nodes");
+}
+
+function page_insert($node) {
+  db_query("INSERT INTO page (nid, format, link) VALUES ('$node->nid', '$node->format', '$node->link')");
+}
+
+function page_update($node) {
+  db_query("UPDATE page SET format = '$node->format', link = '$node->link' WHERE nid = '$node->nid'");
+}
+
+function page_delete($node) {
+  db_query("DELETE FROM page WHERE nid = '$node->nid'");
+}
+
 function page_link($type) {
   if ($type == "page") {
     $result = db_query("SELECT nid,link FROM page WHERE link != '' ORDER BY link");
@@ -42,7 +69,8 @@ function page_form($node) {
     $node->body = addslashes($node->body);
   }
 
-  $output .= form_textarea("Body", "body", $node->body, 60, 30);
+  $output .= form_textarea("Body", "body", $node->body, 60, 20);
+  $output .= form_textfield("Link", "link", $node->link, 60, 64);
   $output .= form_select("Type", "format", $node->format, $format);
 
   return $output;
@@ -50,16 +78,11 @@ function page_form($node) {
 
 function page_save() {
 
-  if (user_access("administer nodes")) {
-    if ($node->nid) {
-      return array();
-    }
-    else {
-      return array("promote" => 0, "moderate" => 0, "status" => 1);
-    }
+  if ($node->nid) {
+    return array("format", "link");
   }
   else {
-    return 0;
+    return array("format", "link", "promote" => 0, "moderate" => 0, "status" => 1);
   }
 
 }

@@ -1,29 +1,8 @@
 <?php
 // $Id$
 
-/*
-** Loading and storing nodes:
-**   - load: called when a node is being loaded
-**   - save: called before a node gets saved and used to define default
-**           values
-**   - insert: called when inserting a node to the node table
-**   - delete: called when deleting a node from the node table
-**   - update: called when updating a node in the noe table
-**
-** Viewing and editing nodes:
-**   - view: called to display a node on the screen
-**   - form: called to display a node's form
-**
-**   - status
-*/
-
 // TODO: still used by themes, yet doesn't return anything at the moment
 function node_index() {
-}
-
-function node_access($node) {
-  global $user;
-  return ($node->status == 1) || user_access("administer nodes");
 }
 
 function node_get_comments($nid) {
@@ -210,21 +189,21 @@ function node_save($node, $filter) {
 
 }
 
-function node_delete($conditions) {
+function node_delete($node) {
 
-  if ($node = node_load($conditions)) {
-
-    // delete the node and its comments:
-    db_query("DELETE FROM node WHERE nid = '$node->nid'");
-    db_query("DELETE FROM comments WHERE lid = '$node->nid'");
-    db_query("DELETE FROM moderate WHERE nid = '$node->nid'");
-
-    // call the node specific callback (if any):
-    module_invoke($node->type, "delete", &$node);
-
-    watchdog("special", "node: deleted '$node->title'");
+  if (is_array($node)) {
+    $node = node_object($node);
   }
 
+  // delete the node and its comments:
+  db_query("DELETE FROM node WHERE nid = '$node->nid'");
+  db_query("DELETE FROM comments WHERE lid = '$node->nid'");
+  db_query("DELETE FROM moderate WHERE nid = '$node->nid'");
+
+  // call the node specific callback (if any):
+  module_invoke($node->type, "delete", &$node);
+
+  watchdog("special", "node: deleted '$node->title'");
 }
 
 function node_view($node, $main = 0) {

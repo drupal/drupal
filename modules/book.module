@@ -1,6 +1,35 @@
 <?php
 // $Id$
 
+function book_node($field) {
+  global $user;
+
+  $info = array("name" => "book page");
+
+  return $info[$field];
+}
+
+function book_access($op, $node) {
+  global $user;
+
+  if ($op == "view") {
+    return $node->nid && $node->status && !$node->moderate;
+  }
+
+  if  ($op == "create") {
+    return 1;
+  }
+
+  if ($op == "update") {
+    return 1;
+  }
+
+  if ($op == "delete") {
+    return user_access("adminster nodes");
+  }
+
+}
+
 function book_link($type) {
   if ($type == "page" && user_access("access content")) {
     $links[] = "<a href=\"module.php?mod=book\">". t("collaborative book") ."</a>";
@@ -36,17 +65,11 @@ function book_delete($node) {
 }
 
 function book_save($node) {
-  if ($node->nid) {
-    if (user_access("administer nodes")) {
-      return array("moderate" => 1, "promote" => 0, "status" => 0, "log", "parent", "weight");
-    }
-    else {
-      // TODO: temporay disabled book page updates by regular users
-      return 0;
-    }
+  if ($node->nid && user_access("administer nodes")) {
+    return array("pid", "log", "parent", "weight");
   }
   else {
-    return array("pid", "log", "parent", "weight");
+    return array("moderate" => 1, "promote" => 0, "status" => 0, "log", "parent", "weight");
   }
 }
 
@@ -80,8 +103,7 @@ function book_view($node, $main = 0) {
         $indent .= "-";
       }
 
-      $output .= " <TR><TD COLSPAN=\"3\">$location</TD></TR>";
-// TODO: <TD ALIGN=\"right\">". node_control($node) ."</TD></TR>\n";
+      $output .= " <TR><TD COLSPAN=\"2\">$location</TD><TD ALIGN=\"right\"><A HREF=\"module.php?mod=node&op=edit&id=$node->nid\">update</A></TD></TR>\n";
       $output .= " <TR><TD COLSPAN=\"3\"><HR></TD></TR>";
       $output .= " <TR><TD COLSPAN=\"3\"><B><BIG>". check_output($node->title) ."</BIG></B>". ($node->body ? "<BR><SMALL><I>Last updated by ". format_name($node) ." on ". format_date($node->created) ."</I></SMALL> " : "") ."</TD></TR>\n";
     }
