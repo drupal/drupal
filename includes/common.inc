@@ -6,6 +6,7 @@ function conf_init() {
   while ($file && !file_exists("includes/$file.conf")) {
     $file = substr($file, 0, strrpos($file, "."));
   }
+  if (empty($file) && file_exists("includes/default.conf")) $file = "default";
   return $file;
 }
 
