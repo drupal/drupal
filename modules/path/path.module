@@ -1,5 +1,5 @@
 <?php
-/* $Id: path.module,v 1.25 2004/01/23 18:42:43 dries Exp $ */
+/* $Id: path.module,v 1.26 2004/02/01 10:52:25 dries Exp $ */
 
 function path_admin() {
   $op = $_POST["op"];
@@ -139,15 +139,16 @@ node/view/3 => contact
 <pre>
 function conf_url_rewrite(\$path, \$mode = 'incoming') {
   if (\$mode == 'incoming') { // URL coming from a client
-    return preg_replace('!^display/(\d+)$!', 'node/view/\1', \$path);
+    return preg_replace('!^display/(\\d+)\$!', 'node/view/\\1', \$path);
   }
   else { // URL going out to a client
-    return preg_replace('!^node/view/(\d+)$!', 'display/\1', \$path);
+    \$aliased = preg_replace('!^node/view/(\\d+)\$!', 'display/\\1', \$path);
+    if (\$aliased != \$path) { return \$aliased; }
   }
 }
 </pre>
 <p>This function will shorten every <code>node/view/\$node_id</code> type of URL to <code>display/\$node_id</code>. Individual URL aliases defined on the browser interface of Drupal take precedence, so if you have the 'contact' page alias from the example above, then the <code>display/3</code> alias will not be effective when outgoing links are created. Incoming URLs however always work with the mass URL aliased variant. Only the 'incoming' and 'outgoing' modes are supposed to be supported by your <code>conf_url_rewrite</code> function.</p>
-<p>You cannot only use this feature to shorten the URLs, or to translate them to you own language, but also to add completely new subURLs to an already existing module's URL space, or to compose a bunch of existing stuff together to a common URL space. You can create a <code>news</code> section for example aliasing nodes and taxonomy overview pages falling under a 'news' vocabulary, thus having <code>news/15</code> and <code>news/sections/3</code> instead of <code>node/view/15</code> and <code>taxonomy/view/or/3</code>.</p>");
+<p>You cannot only use this feature to shorten the URLs, or to translate them to you own language, but also to add completely new subURLs to an already existing module's URL space, or to compose a bunch of existing stuff together to a common URL space. You can create a <code>news</code> section for example aliasing nodes and taxonomy overview pages falling under a 'news' vocabulary, thus having <code>news/15</code> and <code>news/sections/3</code> instead of <code>node/view/15</code> and <code>taxonomy/view/or/3</code>. You need extensive knowledge of Drupal's inner workings and regular expressions though to make such advanced aliases.</p>");
       break;
   }
 
