@@ -5,7 +5,7 @@ $module = array("page" => "faq_page");
 include "includes/common.inc";
 
 function faq_page() {
-  global $theme;
+  global $theme, $site_name, $site_email;
 
   $output = "
   <DL>
@@ -22,7 +22,7 @@ function faq_page() {
    <DD>$site_name is a news and discussion forum.  It is a <I>tool</I>.  And as a tool, it aims to create an environment to make discussions possible.  $site_name is not an organization, but a non-profit hobby project instead.<P>People log in to the site, read the news, select one or more items and start to discuss and post their reactions.  $site_name is a community site that relies solely on reader-contributed content.<P>First off, we strive towards discussion rather then to deliver news on its own: discussion can really make a story considerably better as user comments frequently `upstage' the story itself.<P>Secondly, we aim towards a high quality of content and content posters by using and experimenting with several techniques and systems such as trust metrics, scoring, moderation and collaborative filtering.<P></DD>
 
    <DT><B>Who runs $site_name?</B></DT>
-   <DD><P>$site_name was originally created by ". format_username("Dries") ." and is written primarily by ". format_username("Dries"). " with help from others like ". format_username("Jeroen") ." and ". format_username("UnConeD") ." who helped creating themes.  The bandwidth and hardware are donated by ". format_username("Natrak") .".  Together we are $site_name and if you want to get in touch with the $site_name team, you can contact us at <A HREF=\"mailto:$site_email\">$site_email</A>.<P></DD>
+   <DD><P>$site_name is powered by our engine \"drupal\" which was originally created by ". format_username("Dries") ." and is written primarily by ". format_username("Dries"). " with some help from others like ". format_username("Jeroen") ." and ". format_username("UnConeD") ." who helped creating themes.  The bandwidth and hardware are donated by ". format_username("Natrak") .".  Together we are $site_name and if you want to get in touch with the $site_name team, you can contact us at <A HREF=\"mailto:$site_email\">$site_email</A>.<P></DD>
 
    <DT><B>Isn't $site_name similar to slashdot.org and kuro5hin.org?</B></DT>
    <DD>To some extend, yes.  Credit where credit is due: we borrowed many ideas (like the interface and moderation) from <A HREF=\"http://slashdot.org/\">slashdot.org</A> and <A HREF=\"http://kuro5hin.org/\">kuro5hin.org</A> because they have many good ideas about discussion forums.  We do not use their code or any permutation thereof as $site_name has been written entirely from scratch.  Our goal was to create a similar base initially, and to go from there and to transform $site_name into something different by adding new and unique features.<P></DD>

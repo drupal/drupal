@@ -323,6 +323,8 @@ function account_user($uname) {
 }
 
 function account_validate($user) {
+  global $type2index;
+
   // Verify username and e-mail address:
   if (empty($user[real_email]) || (!eregi("^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3}$", $user[real_email]))) $error .= "<LI>the specified e-mail address is not valid.</LI>\n";
   if (empty($user[userid]) || (ereg("[^a-zA-Z0-9_-]", $user[userid]))) $error .= "<LI>the specified username is not valid.</LI>\n";

@@ -195,7 +195,7 @@ function diary_page() {
 
 function diary_help() {
  ?>
-  <P>drupal's diary module allows registered users to maintain an online diary.</P>
+  <P>Drupal's diary module allows registered users to maintain an online diary.</P>
  <?
 }
 

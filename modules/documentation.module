@@ -15,7 +15,7 @@ function documentation() {
   
   <H1>Chapter 1: introduction</H1>
 
-  <P>Drupal (is the English pronounciation for the dutch word 'druppel' which stands for 'drop') is a full-featured content management/discussion engine suitable to setup a news-driven community or portal site.  Drupal aims towards easy installation, exessive configuration and fine-grained maintainance capabilities.</P>
+  <P>Drupal (is the English pronounciation for the dutch word 'druppel' which stands for 'drop') is a full-featured content management/discussion engine suitable to setup a news-driven community or portal site.  Drupal aims towards easy installation, exessive configuration and fine-grained maintainance capabilities.  Due to its modular design layer is flexibel and easy to adapt.</P>
   <P>Drupal is written by Dries Buytaert (dries_at_drop.org) and build after Slash (<A HREF="http://slashcode.com/">http://slashcode.com/</A>) and Scoop (<A HREF="http://scoop.kuro5hin.org/">http://scoop.kuro5hin.org/</A>).</P>
 
   <H1>Chapter 2: installation</H1>
@@ -28,19 +28,19 @@ function documentation() {
 
   <H2>Installation process</H2>
 
-  <P><B>1.</B> We assume that you have some working experience with Apache, MySQL and PHP.  If you still need to install Apache, MySQL or PHP, please install them now.  The installation of these required packages is beyond the scope of this document but make sure your Apache is setup to allow <CODE>.htaccess</CODE> files so that we can override Apache options from within the drupal directories.</P>
+  <P><B>1.</B> We assume that you have some working experience with Apache, MySQL and PHP.  If you still need to install Apache, MySQL or PHP, please install them now.  The installation of these required packages is beyond the scope of this document but make sure your Apache is setup to allow <CODE>.htaccess</CODE> files so that drupal can override Apache options from within the drupal directories.</P>
   <P><B>2.</B> Unzip the distribution tarball into the directory you want to serve web files from:</P>
   <BLOCKQUOTE>$ tar -zxvf drupal-x.x.x.tar.gz</BLOCKQUOTE>
   <P><B>3.</B> Create a MySQL database for your drupal site (if not already done so):</P>
   <BLOCKQUOTE>$ mysqladmin create &lt;database&gt;</BLOCKQUOTE>
   <P>Make sure to check the MySQL documentation on how to setup the right access rights and permissions in your MySQL grant table.</P>
   <P><B>4.</B> Once you have a proper database, dump the required tables into your database:</P>
-  <BLOCKQUOTE>$ mysql -h &lt;hostname&gt; -u &lt;username&gt; -p&lt;password&gt; &lt;database&gt; < ./database/databasy.mysql </BLOCKQUOTE>
+  <BLOCKQUOTE>$ mysql -h &lt;hostname&gt; -u &lt;username&gt; -p&lt;password&gt; &lt;database&gt; < database/database.mysql </BLOCKQUOTE>
   <P><B>5.</B> Copy the file <CODE>includes/hostname.conf</CODE> to match your server's hostname:</P>
-  <BLOCKQUOTE>$ cp ./includes/hostname.conf ./includes/www.yourdomain.com.conf</BLOCKQUOTE>
+  <BLOCKQUOTE>$ cp includes/hostname.conf includes/www.yourdomain.com.conf</BLOCKQUOTE>
   <P><B>6.</B> Edit your configuration file to set the required settings such as the database options and to customize your site to your likings.</P>
   <P><B>7.</B> Launch your browser and point it to http://yourdomain.com/, create an account, log in and head on to http://yourdomain.com/admin.php.  The first user will automatically have administrator permissions.  Play with it for a bit and spend some time getting used to the administration interfaces.</P>
-  <P><B>8. (optional)</B> Optionally (yet recommended for a smooth operation) setup a crontab to periodically visit http://yourdomain.com/cron.php.</P>
+  <P><B>8. (optional)</B> Optionally (yet recommended for smooth operation) setup a crontab to periodically visit http://yourdomain.com/cron.php.</P>
   <P>Use a browser like lynx or wget but make sure the process terminates: either use /usr/bin/lynx -source http://yourdomain.com/cron.php or /usr/bin/wget -O /dev/null http://yourdomain.com/cron.php. Take a look at the example scripts in the <CODE>scripts</CODE>-directory and make sure to adjust them to your needs.</P>
   <P>A good crontab-line to run the cron-script once every hour would be:</P>
   <PRE>
@@ -85,7 +85,7 @@ function documentation() {
 
   <H1>Chapter 3: drupal engine</H1>
 
-  <P>While we in no way consider the design and implementation of the drupal engine to be finished, we feel that it is evolution and our own accompanying intensive experience has given us a fairly stable and well-proven design. The following provides a brief over-view of the different aspects of drupal's core engine and features.</P> 
+  <P>While we in no way consider the design and implementation of the drupal engine to be finished, we feel that our own accompanying intensive experience has given us a fairly stable and well-proven design. The following provides a brief over-view of the different aspects of drupal's core engine and features.</P> 
 
   <H2>Blocks</H2>
   
@@ -106,15 +106,35 @@ function documentation() {
 
   <H2>Database abstraction</H2>
 
-  <P>The maintenance of all databases is handled by surprisingly simple code.  Access to to the database is done by facilities of drupal's database abstraction layer.  The purpose of drupal's database abstraction layer is to make it possible to run a drupal site on top of different databases like MySQL, Oracle, Postgres and so on.  However, the only supported database is MySQL for the time being.  In fact, we haven't even bothered or tried to migrate to another database so our database abstraction layer might even contain undiscovered flaws.  Nevertless, moving to another database shouldn't be much of a problem.</P>
+  <P>The maintenance of all databases is handled by surprisingly simple code.  Access to to the database is done by facilities of drupal's database abstraction layer.  The purpose of drupal's database abstraction layer is to make it possible to run a drupal site on top of different databases like MySQL, Oracle, Postgres and so on.</P>
+  <P>However, currently the only supported database is MySQL.  In fact, we haven't even bothered or tried to migrate to another database so our database abstraction layer might even contain undiscovered flaws.  Nevertless, moving to another database shouldn't be much of a problem.</P>
   <P>Take a look at <CODE>includes/database.inc</CODE> to see what database functions are supported.</P>
+  
+  <H2>Moderation, collaborative rating</H2>
+
+  <P>We like to experiment with moderation, trust metrics and collaborative filtering.  Why?  To help individuals and communities address the challenges of information overload.</P>
+  <P>As each new piece of information competes for attention, people quickly tend to become overwhelmed and seek assistance in identifying the most interesting, worthwhile, valuable or enteraining items.  Not to mention the fact, reader-contributed content and other levels of interactivity tend to become chaotic, bloated and disreputable.</P>
+  <P>Therefore, we decided to develop a public system powered by a community that aims to bring quality content to everyone's attention and to filter out all junk: to <I>sort the wheat from the chaff</I>.  The output should be something clean and homogenized featuring quality content, and should slide down the gullet far more easily.</P>
+  
+  <H3>Open submission queue</H3>
+  <P>Anyone who happens by, and has some news or some thoughts they'd like to share, can submit new content for consideration.  After someone has submitted something, their story is added to a queue.  All registered users can access this list of pending stories, that is, stories that have been submitted, but do not yet appear on the public front page. Those registered users can vote whether they think the story should be posted or not. When enough people vote to post a story, the story is pushed over the threshold and up it goes on the public page. On the other hand, when too many people voted to drop a story, the story will get trashed.</P>
+
+  <H3>Comment rating</H3>
+  
+  <P>Anyone with a user account will be able to moderate comments.  This lets people assign a score to a comment on how good they think the comment is or how visible they think it should be.  When more then one person rates a comment, the overall rating is just a simple average of all ratings.  Comments with a high ratings are more visible then comments with a lower rating.  Like that, comments that gain the approbation of participants will gradually move up through statistical effects and pointless comments will sink into oblivion.</P>
+  <P>Hence, the purpose of comment moderation is two-fold:</P>
+  <UL>
+   <LI>To bring the really good comments to everyone's attention.</LI>
+   <LI>To hide or get get rid of spam, flamebait and trolls.</LI>
+  </UL>
+  <P>In the latter, comment moderation provides a technical solution to a social problem.</P>
 
   <H2>Modules</H2>
     
   <P>When developing drupal it became clear that we wanted to have a system which is as modular as possible. A modular design will provide flexibility, adaptability, and continuity which in turn allows people to customize the site to their needs and likings.</P>
   <P>A drupal module is simply a file containing a set of routines written in PHP.  When used, the module code executes entirely within the context of the site.  Hence it can use all the functions and access all variables and structures of the main engine.  In fact, a module is not any different from any other PHP file: it is more of a notion that automatically leads to good design principles and a good development model. Modularity better suits the open-source development model, because otherwise you can't easily have people working in parallel without risk of interference.</P>
   <P>The idea is to be able to run random code at given places in the engine.  This random code should then be able to do whatever needed to enhance the functionality.  The places where code can be executed are called "hooks" and are defined by a fixed interface.</P>
-  <P>In places where hooks are made available, the engine calls each module's exported functions.  This is done by iterating through the <CODE>modules</CODE> directory where all modules must reside.  Say your module is named <CODE>foo</CODE> (i.e. <CODE>./modules/foo.module</CODE>) and if there was a hook called <CODE>bar</CODE>, the engine will call <CODE>foo_bar()</CODE> if this was exported by your module.</P>
+  <P>In places where hooks are made available, the engine calls each module's exported functions.  This is done by iterating through the <CODE>modules</CODE> directory where all modules must reside.  Say your module is named <CODE>foo</CODE> (i.e. <CODE>modules/foo.module</CODE>) and if there was a hook called <CODE>bar</CODE>, the engine will call <CODE>foo_bar()</CODE> if this was exported by your module.</P>
   <P>Each module has to declare an associative array named <CODE>$module</CODE> that serves as the list of hooks that a module wants to export or carry out.  Each entry in the array contains the name of a hook followed by the name of the exported function.</P>
   <P>In our above example, our associative array <CODE>$module</CODE> would look like:</P>
   <PRE>
@@ -130,16 +150,20 @@ function documentation() {
     <TD VALIGN="top">If a module requires a spot in the administrator section it should implement <CODE>module_admin</CODE>.  The engine will automatically add a link to the administration menus and will call <CODE>module_admin</CODE> when this link is followed.  In order to make virtually any module maintainer's life easier, you don't have to worry about access rights or permissions for that matter.  The engine will only allow priveleged users to call exported <CODE>admin</CODE> functions.</TD>
    </TR>
    <TR>
+    <TD VALIGN="top"><CODE>block</CODE></TD>
+    <TD VALIGN="top">Any module can export block to be displayed by making the block function return an associative array of blocks.  Each block in the array requires a "subject", "content", "info" and "link" field.</TD>
+   </TR>
+   <TR>
     <TD VALIGN="top"><CODE>cron</CODE></TD>
     <TD VALIGN="top">Modules that require to schedule some commands to be executed on regular intervals can implement the <CODE>cron</CODE> interface: the engine will then call <CODE>module_cron</CODE> at the appropriate intervals defined by the administrator.  This interface is particulary handy to implement timers or to automate certain tasks like for instance database maintainance, recalculation of settings or parameters, automatic mailings and so on.</TD>
    </TR>
    <TR>
     <TD VALIGN="top"><CODE>help<CODE></TD>
-    <TD VALIGN="top">By implementing the help hook a module can make documentation available to the engine or other modules.</TD>
+    <TD VALIGN="top">By implementing the help hook a module can make documentation available to the engine or to other modules.</TD>
    </TR>
    <TR>
     <TD VALIGN="top"><CODE>export</CODE></TD>
-    <TD VALIGN="top">The export hook allows a module to export data and to function as a XML/RDF/RSS backend.  All you have to do in your export function is examine the array with string and figure out where you're at.  This hook is typically used to export news headlines, but can be used to export virtually anything ranging from diary entries, reviews, rapports to entire discussions.</TD>
+    <TD VALIGN="top">The export hook allows a module to export data and to function as a XML/RDF/RSS backend.  All you have to do in your export function is examine the array of strings containing the URI and figure out where you're at.  This hook is typically used to export news headlines, but can be used to export virtually anything ranging from diary entries, reviews, rapports to entire discussions.</TD>
    </TR>
    <TR>
     <TD VALIGN="top"><CODE>page</CODE></TD>
@@ -150,8 +174,8 @@ function documentation() {
 
   <H2>Theme system</H2>
   
-  <P>Drupal's theme system is simple, elegant, flexible and powerful.  You can accommodate rather major changes in overall appearance and significant structural changes.  Moreover, you control all aspects of your drupal site in terms of colors, markup, layout and even the position of most blocks (or boxes).  You can leave blocks out, move them from right to left, up and down until it fit your needs.</P>
-  <P>In order to accomplish this, drupal uses a theme class that has a handful of functions. The drupal engine dynamically loads the correct theme class, instantiates it and then calls these class' functions where approriate.</P>
+  <P>Drupal's theme system is simple, elegant, flexible and powerful.  You can accommodate rather major changes in overall appearance and significant structural changes.  Moreover, you control all aspects of your drupal site in terms of colors, markup, layout and even the position of most blocks (or boxes).  You can leave blocks out, move them from right to left, up and down until it fits your needs.</P>
+  <P>In order to accomplish this, drupal uses a theme class that has a handful of functions. The drupal engine dynamically loads the correct theme class, instantiates it and then calls this class' functions where appropriate.</P>
   <P>Let's illustrate this with an easy example. Say, to generate the main page, the drupal engine would use something like:</P>
   <PRE>
    $theme = new Theme(); 
@@ -170,8 +194,10 @@ function documentation() {
   <H2>User management</H2>
 
   <P>drupal's user management system is capable of handling registrations, confirmation emails, account updates, authentication, access rights and user-based permissions among various other things.</P>
+  <P>No participant can use his own name or handle to post comments until they sign up and submit their e-mail address.  Those who do not may participate as anonymous users, but they will suffer numerous disadvantages, not the least that their posts begin at a lower score.</P>
+  <P>In contrast, those with a user account can use their own name or handle and are granted various priveleges: the most important are probably the ability to moderate new submissions, to rate comments and to fine-tune the site to their personal liking.</P>
   <P>Registered users need to authenticate by supplying a username and password.  The username and password are kept in your database, where the password is hashed so that no one can read nor use it.  When a username and password need to be checked the system goes down the list of registered users till it finds a matching username, and then hashes the password that was supplied and compares it to the listed value.  If they match then that means the username and password supplied were correct.</P>
-  <P>Once a user authenticated a session is started and until that session is over they won't have to re-authenticate.  To keep track of individual session, drupal relies on PHP's session support.  A visitor accessing your web site is assigned an unique id, the so-called session id which is stored in a cookie.  The cookie does not contain personal information but acts as a key to retrieve the information stored on the server side.  When a visitor accesses your site, drupal will check whether a specific session id has been sent with the request.  If this is the case, the prior saved environment is recreated.</P>
+  <P>Once a user authenticated a session is started and until that session is over they won't have to re-authenticate.  To keep track of the individual sessions, drupal relies on PHP's session support.  A visitor accessing your web site is assigned an unique id, the so-called session id which is stored in a cookie.  For security's sake, the cookie does not contain personal information but acts as a key to retrieve the information stored on your server's side.  When a visitor accesses your site, drupal will check whether a specific session id has been sent with the request.  If this is the case, the prior saved environment is recreated.</P>
   <P>Drupal allows you to control who is allowed to get authenticated and who is not.  To accomplish this, you can ban certain hostnames, IPs, IP-ranges, e-mail address and usernames.  Any user that matches any of the given ban criteria will not be able to authenticate or to register as a new user.</P>
   <P>Authenticated users can themselves select entirely different appearances for the site, utilizing their own preferences for how the pages are structured, how navigation lists and other page components are presented and much more.</P>
   <P>An important feature of drupal is that any user can be granted administrator rights.  The ability to share maintainance responsibility with volunteers from across the globe can be considered valuable for most community-based projects.</P> 
