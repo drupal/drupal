@@ -79,7 +79,7 @@ function section_display() {
   $dump = $_section[dump];
 
   // Perform query:
-  $result = db_query("SELECT * FROM sections");
+  $result = db_query("SELECT * FROM sections ORDER BY name");
  
   // Generate output:
   $output .= "<FORM ACTION=\"admin.php?mod=section\" METHOD=\"post\">\n";
