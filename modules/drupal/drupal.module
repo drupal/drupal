@@ -1,7 +1,7 @@
 <?php
 
 function drupal_system($field){
-  $system["description"] = t("You'll need this :-)");
+  $system["description"] = t("Lets users log in using a Drupal ID and can notify drupal.org about your site.");
   return $system[$field];
 }
 

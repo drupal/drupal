@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.64 2002/06/04 03:55:17 unconed Exp $
+// $Id: poll.module,v 1.65 2002/06/08 16:17:28 kjartan Exp $
 
 function poll_allowvotes(&$node) {
   /*
@@ -253,7 +253,7 @@ function poll_save($op, $node) {
 }
 
 function poll_system($field){
-  $system["description"] = t("Enables submission of multiple choice questions for voting.");
+  $system["description"] = t("Allows users to submit multiple choice questions for voting.");
   return $system[$field];
 }
 

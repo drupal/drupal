@@ -1,5 +1,5 @@
 <?php
-// $Id: story.module,v 1.106 2002/06/01 21:57:29 kjartan Exp $
+// $Id: story.module,v 1.107 2002/06/08 16:17:29 kjartan Exp $
 
 function story_help() {
   $output .= "<p>The story module enables to users to submit thoughful, cohesive posts for consideration by the rest of the community.  Stories usually follow a specific content flow: <i>submit -&gt; moderate -&gt; post to home page -&gt; comment</i>.  Administrators are able to shortcut this flow as desired.</p>";
@@ -8,7 +8,7 @@ function story_help() {
 }
 
 function story_system($field){
-  $system["description"] = t("Enables users to submit stories.  These stories are not part of their blogs.");
+  $system["description"] = t("Enables users to submit stories, articles or similar content.");
   return $system[$field];
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.70 2002/06/08 14:30:05 dries Exp $
+// $Id: comment.module,v 1.71 2002/06/08 16:17:28 kjartan Exp $
 
 $GLOBALS["cmodes"] = array(1 => "Flat list - collapsed", 2 => "Flat list - expanded", 3 => "Threaded list - collapsed", 4 => "Threaded list - expanded");
 $GLOBALS["corder"] = array(1 => "Date - newest first", 2 => "Date - oldest first");
@@ -14,7 +14,7 @@ function comment_help() {
 }
 
 function comment_system($field){
-  $system["description"] = t("Enables user commenting.");
+  $system["description"] = t("Enables user to comment on content (nodes).");
   return $system[$field];
 }
 

@@ -1,8 +1,8 @@
 <?php
-// $Id: taxonomy.module,v 1.12 2002/06/01 21:57:29 kjartan Exp $
+// $Id: taxonomy.module,v 1.13 2002/06/08 16:17:29 kjartan Exp $
 
 function taxonomy_system($field){
-  $system["description"] = t("Enables the organization of content into categories and subcategories.");
+  $system["description"] = t("Enables the organization of content into categories.");
   return $system[$field];
 }
 

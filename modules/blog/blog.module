@@ -1,8 +1,8 @@
 <?php
-// $Id: blog.module,v 1.84 2002/06/08 13:22:33 dries Exp $
+// $Id: blog.module,v 1.85 2002/06/08 16:17:28 kjartan Exp $
 
 function blog_system($field){
-  $system["description"] = t("Enables keeping an online journal.");
+  $system["description"] = t("Enables users to keep a blog or online journal.");
   return $system[$field];
 }
 

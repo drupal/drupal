@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.20 2002/06/01 21:57:29 kjartan Exp $
+// $Id: statistics.module,v 1.21 2002/06/08 16:17:28 kjartan Exp $
 
 if (variable_get("referrer", 0) && $referrer = getenv("HTTP_REFERER")) {
   db_query("INSERT INTO referrer (URL, timestamp) values ('%s', '%s')", $referrer, time());
@@ -15,7 +15,7 @@ function statistics_help() {
 }
 
 function statistics_system($field){
-  $system["description"] = t("Gathers and displays site metrics.");
+  $system["description"] = t("Gathers and displays referers.");
   return $system[$field];
 }
 

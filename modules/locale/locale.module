@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.40 2002/06/08 10:05:19 dries Exp $
+// $Id: locale.module,v 1.41 2002/06/08 16:17:28 kjartan Exp $
 
 function locale_help() {
  ?>
@@ -36,7 +36,7 @@ function locale_help() {
 }
 
 function locale_system($field){
-  $system["description"] = t("Enables the translation of drupal messages to languages other than English.");
+  $system["description"] = t("Enables the translation of the user interface to languages other than English.");
   return $system[$field];
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.39 2002/06/08 14:13:11 dries Exp $
+// $Id: system.module,v 1.40 2002/06/08 16:17:29 kjartan Exp $
 
 function system_help() {
   $output .= "<p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviors including visual and operational settings.</p>";
@@ -9,7 +9,7 @@ function system_help() {
 }
 
 function system_system($field){
-  $system["description"] = t("You'll need this.");
+  $system["description"] = t("Configuration system that lets site admins modify the workings of the site.");
   return $system[$field];
 }
 
