@@ -25,3 +25,6 @@ table {
   font-size: 1em;
 }
 
+a:link { color: #404040 }
+a:visited { color: #404040 }
+a:active { color: #000000 }
