@@ -48,13 +48,13 @@ function node_help($section = 'admin/help#node') {
       $output = t('Settings for the core of Drupal. Almost everything is a node so these settings will affect most of the site.');
       break;
     case 'admin/node':
-      $output = t("Below is a list of all of the nodes in your site. Other forms of content are listed elsewhere (e.g. <a href=\"%comments\">comments</a>).<br />Clicking a title views that node, while clicking an author's name edits their user information.<br />Other node-related tasks are available from the menu on the left.", array('%comments' => url('admin/comment')));
+      $output = t("Below is a list of all of the posts on your site. Other forms of content are listed elsewhere (e.g. <a href=\"%comments\">comments</a>).<br />Clicking a title views the post, while clicking an author's name edits their user information.<br />Other post-related tasks are available from the menu.", array('%comments' => url('admin/comment')));
       break;
     case 'admin/node/search':
       $output = t("Enter a simple pattern to search for a post. This can include the wildcard character *.<br />For example, a search for \"br*\" might return \"bread bakers\", \"our daily bread\" and \"brenda\".");
       break;
     case 'admin/node/configure/defaults':
-      $output = t('This page lets you set the defaults used during creation of nodes for all the different node types.<br /><em>comment:</em> Read/write setting for comments.<br /><em>publish:</em> Is this node publicly viewable, has it been published?<br /><em>promote:</em> Is this node to be promoted to the front page?<br /><em>moderate:</em> Does this node need approval before it can be viewed?<br /><em>sticky:</em> Is this node always visible at the top of lists?<br /><em>revision:</em> Will this node go into the revision system allowing multiple versions to be saved?');
+      $output = t('This page lets you set the defaults used during creation of nodes for all the different node types.<br /><em>comment:</em> Read/write setting for comments.<br /><em>publish:</em> Is this post publicly viewable, has it been published?<br /><em>promote:</em> Is this post to be promoted to the front page?<br /><em>moderate:</em> Does this post need approval before it can be viewed?<br /><em>sticky:</em> Is this post always visible at the top of lists?<br /><em>revision:</em> Will this post go into the revision system allowing multiple versions to be saved?');
       break;
 
   }
@@ -810,7 +810,7 @@ function node_admin_nodes() {
   $header = array(NULL, t('title'), t('type'), t('author'), t('status'), array('data' => t('operations'), 'colspan' => 2));
 
   while ($node = db_fetch_object($result)) {
-    $rows[] = array(form_checkbox(NULL, "status][$node->nid", 1, 0), l($node->title, "node/$node->nid") .' '. (node_is_new($node->nid, $node->changed) ? theme_mark() : ''), node_invoke($node, 'node_name'), format_name($node), ($node->status ? t('published') : t('not published')), l(t('edit node'), "node/$node->nid/edit"), l(t('delete node'), "admin/node/delete/$node->nid"));
+    $rows[] = array(form_checkbox(NULL, "status][$node->nid", 1, 0), l($node->title, "node/$node->nid") .' '. (node_is_new($node->nid, $node->changed) ? theme_mark() : ''), node_invoke($node, 'node_name'), format_name($node), ($node->status ? t('published') : t('not published')), l(t('edit %post', array('%post' => t($node->type))), "node/$node->nid/edit"), l(t('delete %post', array('%post' => t($node->type))), "admin/node/delete/$node->nid"));
   }
 
   if ($pager = theme('pager', NULL, 50, 0)) {
