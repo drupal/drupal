@@ -406,7 +406,7 @@ function comment_reply($nid, $pid = NULL) {
     $edit = $_POST['edit'];
     comment_validate_form($edit);
     print theme('page', comment_preview($edit), t('Preview comment'));
-
+    return;
   }
 
   // or are we merely showing the form?
