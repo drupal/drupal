@@ -1,5 +1,5 @@
 <?php
-// $Id: xtemplate.theme,v 1.55 2004/02/19 20:12:04 dries Exp $
+// $Id: xtemplate.theme,v 1.56 2004/03/06 11:07:16 dries Exp $
 
 if (!class_exists("XTemplate")) {
   include_once("themes/xtemplate/xtemplate.inc");
@@ -78,7 +78,7 @@ function xtemplate_node($node, $main = 0, $page = 0) {
       $avatar = file_create_url($avatar);
     }
     if ($avatar) {
-      $avatar = "<img src=\"$avatar\" alt=\"" . t("%user's avatar", array("%user" => $comment->name ? $comment->name : t(variable_get("anonymous", "Anonymous")))) . "\" />";
+      $avatar = "<img src=\"$avatar\" alt=\"" . t("%user's avatar", array("%user" => $node->name ? $node->name : t(variable_get("anonymous", "Anonymous")))) . "\" />";
       if ($node->uid) {
         $avatar = l($avatar, "user/view/$node->uid", array("title" => t("View user profile.")));
       }
