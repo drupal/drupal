@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.352 2004/06/02 19:01:40 dries Exp $
+// $Id: node.module,v 1.353 2004/06/10 14:40:55 unconed Exp $
 
 define('NODE_NEW_LIMIT', time() - 30 * 24 * 60 * 60);
 
@@ -206,6 +206,18 @@ function node_teaser($body) {
   }
 
   if ($length = strpos($body, '? ', $size)) {
+    return substr($body, 0, $length + 1);
+  }
+
+  if ($length = strpos($body, '。', $size)) {
+    return substr($body, 0, $length + 1);
+  }
+
+  if ($length = strpos($body, '、', $size)) {
+    return substr($body, 0, $length + 1);
+  }
+
+  if ($length = strpos($body, '؟ ', $size)) {
     return substr($body, 0, $length + 1);
   }
 
