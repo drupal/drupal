@@ -86,7 +86,7 @@ function c(subject,mod,author,date,body) {document.writeln("<table border=\"0\" 
         </tr>
         <tr>
          <td class="lgl"><img src="themes/goofy/images/null.gif" alt=""></td>
-         <td class="lgcnt" width="100%" valign="top"><div align="center"><big><?php print $this->links(link_page()); ?></big></div></td>
+         <td class="lgcnt" width="100%" valign="top"><div align="center"><?php print $this->links(link_page()); ?></div></td>
          <td class="lgr"><img src="themes/goofy/images/null.gif" alt=""></td>
         </tr>
         <tr>
