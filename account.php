@@ -171,6 +171,9 @@ switch ($op) {
   case "view":
     showUser($name);
     break;
+  case "info":
+    showUser($user->userid);
+    break;
   case "discussion":
     $theme->header();
     $theme->box("Track your comments", account_track_comments());
@@ -326,8 +329,8 @@ switch ($op) {
       $data[signature] = $edit[signature];
       dbsave("users", $data, $user->id);
       user_rehash();
-      header("Location: account.php");
     }
+    header("Location: account.php?op=info");
     break;
   default: 
     showUser($user->userid);
