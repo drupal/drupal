@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.226 2003/09/30 21:48:32 dries Exp $
+// $Id: user.module,v 1.227 2003/10/03 07:09:34 dries Exp $
 
 session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
 session_start();
@@ -263,7 +263,9 @@ function user_access($string) {
 
   global $user;
   static $perm;
+  static $cache;
 
+  // User #1 has all priveleges:
   if ($user->uid == 1) {
     return 1;
   }
@@ -273,13 +275,20 @@ function user_access($string) {
   ** in a static variable.
   */
 
-  if (!$perm) {
+  if (!$cache) {
     if ($user->uid) {
       $perm = db_result(db_query("SELECT p.perm FROM {role} r, {permission} p WHERE r.rid = p.rid AND name = '%s'", $user->role), 0);
     }
     else {
       $perm = db_result(db_query("SELECT p.perm FROM {role} r, {permission} p WHERE r.rid = p.rid AND name = 'anonymous user'"), 0);
     }
+
+    /*
+    ** We use a separate $cache variable because $perm might be empty when a
+    ** user has no access rights.
+    */
+
+    $cache = 1;
   }
 
   return strstr($perm, $string);
