@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.142 2003/06/16 17:09:14 dries Exp $
+// $Id: theme.inc,v 1.143 2003/06/26 19:26:27 dries Exp $
 
 /**
 * Basic theme
@@ -192,7 +192,7 @@ function theme_blocks($region) {
   $result = db_query("SELECT * FROM blocks WHERE (status = '1' OR custom = '1') ". ($region != "all" ? "AND region = %d " : "") ."ORDER BY weight, module", $region == "left" ? 0 : 1);
 
   while ($result && ($block = db_fetch_object($result))) {
-    if ((($block->status && (!$user->uid || !$block->custom)) || ($block->custom && $user->block[$block->module][$block->delta])) && (!$block->path || preg_match(str_replace('/', '\/', $block->path), str_replace("?q=", "", request_uri())))) {
+    if ((($block->status && (!$user->uid || !$block->custom)) || ($block->custom && $user->block[$block->module][$block->delta])) && (!$block->path || preg_match($block->path, str_replace("?q=", "", request_uri())))) {
       $block_data = module_invoke($block->module, "block", "view", $block->delta);
       if ($block_data["content"]) {
         theme("block", $block_data["subject"], $block_data["content"], $region);
