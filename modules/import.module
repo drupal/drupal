@@ -1,5 +1,5 @@
 <?php
-// $Id: import.module,v 1.145 2003/12/30 06:28:01 unconed Exp $
+// $Id: import.module,v 1.146 2003/12/30 06:41:24 unconed Exp $
 
 
 function import_help($section = "admin/help#import") {
@@ -326,6 +326,7 @@ function import_refresh($feed) {
     }
 
     // extract the XML file's encoding (the XML parser in PHP4 doesn't do this by itself):
+    $encoding = 'utf-8';
     if (ereg('^<\?xml[^>]+encoding="([^"]+)"', $data, $match)) {
       $encoding = $match[1];
     }
