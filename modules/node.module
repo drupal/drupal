@@ -411,8 +411,14 @@ function node_view($node, $main = 0, $page = 0) {
     ** Default behavior:
     */
 
-    $node->teaser = check_output($node->teaser);
-    $node->body = check_output($node->body);
+    if ($node->teaser == $node->body) {
+      // Only invoke check_output() once for performance's sake:
+      $node->teaser = $node->body = check_output($node->teaser);
+    }
+    else {
+      $node->teaser = check_output($node->teaser);
+      $node->body = check_output($node->body);
+    }
 
     return theme("node", $node, $main, $page);
   }
