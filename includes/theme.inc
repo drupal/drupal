@@ -20,7 +20,9 @@ class BaseTheme {
 
   function header($title = "") {
     $output = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"DTD/xhtml1-transitional.dtd\">\n";
-    $output .= "<html><head><title>". variable_get(site_name, "drupal") ."</title></head><body bgcolor=\"$this->background\" text=\"$this->foreground\">";
+    $output .= "<html><head><title>". variable_get(site_name, "drupal") ."</title>";
+    $output .= theme_head($main);
+    $output .= "</head><body bgcolor=\"$this->background\" text=\"$this->foreground\">";
     $output .= "<table border=\"0\" cellspacing=\"4\" cellpadding=\"4\"><tr><td valign=\"top\" width=\"170\">";
 
     print $output;
@@ -120,6 +122,11 @@ function theme_list() {
   }
 
   return $list;
+}
+
+function theme_head($main = 0) {
+  $head = module_invoke_all("head", $main);
+  return "\n". implode($head, "\n"). "\n";
 }
 
 function theme_init() {

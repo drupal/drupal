@@ -50,6 +50,7 @@
     ?>
      <HTML>
      <HEAD>
+      <?php print theme_head($main); ?>
       <TITLE><?php echo ($title ? ($title . " - ") : "") . variable_get(site_name, "drupal"); ?></TITLE>
       <STYLE type="text/css">
        <!--

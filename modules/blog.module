@@ -6,7 +6,6 @@ function blog_system($field){
   return $system[$field];
 }
 
-
 function blog_conf_options() {
   $output = form_textarea(t("Explanation or submission guidelines"), "blog_help", variable_get("blog_help", ""), 55, 4, t("This text is displayed at the top of the blog submission form.  It's useful for helping or instructing your users."));
   $words = t("words");
@@ -43,6 +42,16 @@ function blog_access($op, $node) {
     return ($user->uid == $node->uid);
   }
 
+}
+
+function blog_head($main = 0) {
+  global $id, $mod;
+
+  if ($mod && $id) {
+    $account = user_load(array("uid" => $id));
+    $output[] = "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"RSS - ". $account->name. "'s blog\" href=\"". path_uri(). "module.php?mod=blog&op=view&id=$id\" />";
+  }
+  return $output ? $output : array();
 }
 
 function blog_user($type, &$edit, &$user) {
@@ -92,7 +101,6 @@ function blog_save($op, $node) {
 
 }
 
-
 function blog_help() {
  ?>
   <p>Drupal's blog module allows registered users to maintain an online blog, often referred to as an online journal or diary.  They can be filled with daily thoughts, poetry, boneless blabber, spiritual theories, intimate details, valuable experiences, cynical rants, semi-coherent comments, writing experiments, artistic babblings, critics on current facts, fresh insights, diverse dreams, chronicles and mumbling madness available for public consumption.  It is made up of individual entries that are timestamped and are typically viewed by day as you would a diary.  Blogs often contain links to things you've seen, or agree/disagree with.  A typical example of a long term blog can be seen at <a href="http://www.scripting.com/">http://www.scripting.com/</a>.</p>
@@ -117,37 +125,21 @@ function blog_feed_user($uid = 0, $date = 0) {
   }
 
   $result = db_query("SELECT n.nid, n.title, n.teaser, n.created, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'blog' AND u.uid = '$uid' AND n.created > '". ($date - 2592000) ."' ORDER BY n.nid DESC LIMIT 15");
-  while ($blog = db_fetch_object($result)) {
-    $items .= format_rss_item($blog->title, path_uri() . drupal_url(array("id" => $blog->nid)), $blog->teaser);
-  }
 
-  $output .= "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n";
-  // $output .= "<!DOCTYPE rss [<!ENTITY % HTMLlat1 PUBLIC \"-//W3C//ENTITIES Latin 1 for XHTML//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml-lat1.ent\">\n";
-  $output .= "<rss version=\"0.91\">\n";
-  $output .= format_rss_channel("$account->name's blog", path_uri() . drupal_url(array("mod" => "blog", "op" => "view", "id" => $account->uid), "module"), "$account->name's blog", $items);
-  $output .= "</rss>\n";
-
-  header("Content-Type: text/xml");
-
-  print $output;
+  $channel["title"] = $account->name. "'s blog";
+  $channel["link"] = path_uri(). drupal_url(array ("mod" => "blog", "op" => "view", "id" => $uid), "module");
+  $channel["description"] = $term->description;
+  node_feed($result, $channel);
 
 }
 
 function blog_feed_last() {
   $result = db_query("SELECT n.nid, n.title, n.teaser, n.created, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'blog' ORDER BY n.nid DESC LIMIT 15");
 
-  while ($blog = db_fetch_object($result)) {
-    $items .= format_rss_item($blog->title, path_uri() . drupal_url(array("id" => $blog->nid)), $blog->teaser);
-  }
-
-  $output .= "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n";
-  $output .= "<rss version=\"0.91\">\n";
-  $output .= format_rss_channel(variable_get("site_name", "drupal") .": user blogs", path_uri() . drupal_url(array("mod" => "blog"), "module"), "Recently updated blogs.", $items);
-  $output .= "</rss>\n";
-
-  header("Content-Type: text/xml");
-
-  print $output;
+  $channel["title"] = variable_get("site_name", "drupal"). "blogs";
+  $channel["link"] = path_uri(). drupal_url(array ("mod" => "blog", "op" => "view"), "module");
+  $channel["description"] = $term->description;
+  node_feed($result, $channel);
 
 }
 
