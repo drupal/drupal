@@ -183,11 +183,11 @@ table {
   border-bottom: 1px solid #ddd;
 }
 .calendar td {
-  padding: 0;
+  padding: 0.2em;
   border-color: #888;
 }
 .calendar .row-week td a {
-  padding: 2px;
+  padding: 0.2em;
 }
 .calendar .day-today {
   background-color: #69c;
