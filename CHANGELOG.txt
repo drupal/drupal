@@ -1,3 +1,9 @@
+Drupal 4.4.1, 2004-05-01
+------------------------
+
+- fixed bugs: no critical bugs were identified.
+
+
 Drupal 4.4.0, 2004-04-01
 ------------------------
 
