@@ -37,7 +37,7 @@ function queue_count() {
 }
 
 function queue_score($id) {
-  $result = db_query("SELECT score FROM node WHERE nid = '%d'", $id);
+  $result = db_query("SELECT score FROM node WHERE nid = %d", $id);
   return ($result) ? db_result($result, 0) : 0;
 }
 

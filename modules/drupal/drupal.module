@@ -72,7 +72,7 @@ function drupal_directory_ping($arguments) {
 
   if ($link && $name && $mail && $slogan && $mission) {
     db_query("DELETE FROM directory WHERE link = '%s' OR mail = '%s'", $link, $mail);
-    db_query("INSERT INTO directory (link, name, mail, slogan, mission, timestamp) VALUES ('%s', '%s', '%s', '%s', '%s', '%s')", $link, $name, $mail, $slogan, $mission, time());
+    db_query("INSERT INTO directory (link, name, mail, slogan, mission, timestamp) VALUES ('%s', '%s', '%s', '%s', '%s', %d)", $link, $name, $mail, $slogan, $mission, time());
 
     watchdog("message", "directory: ping from '$name' ($link)");
 

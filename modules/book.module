@@ -96,7 +96,7 @@ function book_link($type, $node = 0, $main = 0) {
 function book_load($node) {
   global $user;
 
-  $book = db_fetch_object(db_query("SELECT format, parent, weight, log FROM book WHERE nid = '%d'", $node->nid));
+  $book = db_fetch_object(db_query("SELECT format, parent, weight, log FROM book WHERE nid = %d", $node->nid));
 
   if (strstr(request_uri(), "node/edit")) {
 
@@ -129,15 +129,15 @@ function book_load($node) {
 }
 
 function book_insert($node) {
-  db_query("INSERT INTO book (nid, format, parent, weight, log) VALUES ('%d', '%d', '%d', '%d', '%s')", $node->nid, $node->format, $node->parent, $node->weight, $node->log);
+  db_query("INSERT INTO book (nid, format, parent, weight, log) VALUES (%d, %d, %d, %d, '%s')", $node->nid, $node->format, $node->parent, $node->weight, $node->log);
 }
 
 function book_update($node) {
-  db_query("UPDATE book SET format = '%d', parent = '%d', weight = '%d', log = '%s' WHERE nid = '%d'", $node->format, $node->parent, $node->weight, $node->log, $node->nid);
+  db_query("UPDATE book SET format = %d, parent = %d, weight = %d, log = '%s' WHERE nid = %d", $node->format, $node->parent, $node->weight, $node->log, $node->nid);
 }
 
 function book_delete(&$node) {
-  db_query("DELETE FROM book WHERE nid = '%d'", $node->nid);
+  db_query("DELETE FROM book WHERE nid = %d", $node->nid);
 }
 
 function book_validate(&$node) {
@@ -206,24 +206,24 @@ function book_node_link($node = 0) {
     }
 
     if ($op == t("Add to book outline")) {
-      db_query("INSERT INTO book (nid, parent, weight) VALUES ('%d', '%s', '%s')", $node->nid, $edit["parent"], $edit["weight"]);
+      db_query("INSERT INTO book (nid, parent, weight) VALUES (%d, %d, %d)", $node->nid, $edit["parent"], $edit["weight"]);
       $output .= status(t("added the node to the book."));
     }
 
     if ($op == t("Update book outline")) {
-      db_query("UPDATE book SET parent = '%s', weight = '%s' WHERE nid = '%d'", $edit["parent"], $edit["weight"], $node->nid);
+      db_query("UPDATE book SET parent = %d, weight = %d WHERE nid = %d", $edit["parent"], $edit["weight"], $node->nid);
       $output .= status(t("updated the book outline."));
     }
 
     if ($op == t("Remove from book outline")) {
-      db_query("DELETE FROM book WHERE nid = '%d'", $node->nid);
+      db_query("DELETE FROM book WHERE nid = %d", $node->nid);
       $output .= status(t("removed the node form the book."));
     }
 
     $output .= "<h3>". t("Edit book outline for node <i>") . "$node->title</i></h3>";
 
     if ($edit["nid"]) {
-      $page = db_fetch_object(db_query("SELECT * FROM book WHERE nid = '%d'", $node->nid));
+      $page = db_fetch_object(db_query("SELECT * FROM book WHERE nid = %d", $node->nid));
 
       $output .= form_select(t("Parent"), "parent", $page->parent, book_toc(), t("The parent subject or category the page belongs in."));
       $output .= form_weight(t("Weight"), "weight", $node->weight, 15, t("The heavier pages will sink and the lighter pages will be positioned nearer the top."));
@@ -286,7 +286,7 @@ function book_revision_load($page, $conditions = array()) {
 ** Return the path (call stack) to a certain book page.
 */
 function book_location($node, $nodes = array()) {
-  $parent = db_fetch_object(db_query("SELECT n.nid, n.title, b.parent FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.nid = '%d'", $node->parent));
+  $parent = db_fetch_object(db_query("SELECT n.nid, n.title, b.parent FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.nid = %d", $node->parent));
   if ($parent->title) {
     $nodes = book_location($parent, $nodes);
     array_push($nodes, $parent);
@@ -561,7 +561,7 @@ function book_page() {
 }
 
 function book_print($id = "", $depth = 1) {
-  $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.status = 1 AND n.nid = '%d' AND (n.moderate = 0 OR n.revisions IS NOT NULL) ORDER BY b.weight, n.title", $id);
+  $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.status = 1 AND n.nid = %d AND (n.moderate = 0 OR n.revisions IS NOT NULL) ORDER BY b.weight, n.title", $id);
 
   while ($page = db_fetch_object($result)) {
     // load the node:
@@ -622,7 +622,7 @@ function book_admin_view_line($node, $depth = 0) {
 }
 
 function book_admin_view_book($nid, $depth = 1) {
-  $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE b.parent = '%d' ORDER BY b.weight, n.title", $nid);
+  $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE b.parent = %d ORDER BY b.weight, n.title", $nid);
 
   while ($node = db_fetch_object($result)) {
     $node = node_load(array("nid" => $node->nid));
@@ -658,18 +658,18 @@ function book_admin_save($nid, $edit = array()) {
     ** Check to see whether the title needs updating:
     */
 
-    $title = db_result(db_query("SELECT title FROM node WHERE nid = '%d'", $nid));
+    $title = db_result(db_query("SELECT title FROM node WHERE nid = %d", $nid));
     if ($title != $value["title"]) {
-      db_query("UPDATE node SET title = '%s' WHERE nid = '%d'", $value["title"], $nid);
+      db_query("UPDATE node SET title = '%s' WHERE nid = %d", $value["title"], $nid);
     }
 
     /*
     ** Check to see whether the weight needs updating:
     */
 
-    $weight = db_result(db_query("SELECT weight FROM book WHERE nid = '%d'", $nid));
+    $weight = db_result(db_query("SELECT weight FROM book WHERE nid = %d", $nid));
     if ($weight != $value["weight"]) {
-      db_query("UPDATE book SET weight = '%d' WHERE nid = '%d'", $value["weight"], $nid);
+      db_query("UPDATE book SET weight = %d WHERE nid = %d", $value["weight"], $nid);
     }
   }
 

@@ -66,13 +66,13 @@ function poll_cron() {
   // Close polls that have exceeded their allowed runtime
   $result = db_query("SELECT p.nid FROM poll p LEFT JOIN node n ON p.nid=n.nid WHERE (n.created + p.runtime) < '". time() ."' AND p.active = '1' AND p.runtime != '0'");
   while ($poll = db_fetch_object($result)) {
-    db_query("UPDATE poll SET active='0' WHERE nid = '%d'", $poll->nid);
+    db_query("UPDATE poll SET active='0' WHERE nid = %d", $poll->nid);
   }
 }
 
 function poll_delete($node) {
-  db_query("DELETE FROM poll WHERE nid='%d'", $node->nid);
-  db_query("DELETE FROM poll_choices WHERE nid = '%d'", $node->nid);
+  db_query("DELETE FROM poll WHERE nid=%d", $node->nid);
+  db_query("DELETE FROM poll_choices WHERE nid = %d", $node->nid);
 }
 
 function poll_form(&$node, &$help, &$error) {
@@ -142,11 +142,11 @@ function poll_insert($node) {
     $node->active = 1;
   }
 
-  db_query("INSERT INTO poll (nid, runtime, voters, active) VALUES ('%d', '%d', '', '%d')", $node->nid, $node->runtime, $node->active);
+  db_query("INSERT INTO poll (nid, runtime, voters, active) VALUES (%d, %d, '', %d)", $node->nid, $node->runtime, $node->active);
 
   for ($i = 0; $i < $node->choices; $i++) {
     if ($node->choice[$i] != "") {
-      db_query("INSERT INTO poll_choices (nid, chtext, chvotes, chorder) VALUES ('%d', '%s', '%d', '%d')", $node->nid, filter($node->choice[$i]), $node->chvotes[$i], $i);
+      db_query("INSERT INTO poll_choices (nid, chtext, chvotes, chorder) VALUES (%d, '%s', %d, %d)", $node->nid, filter($node->choice[$i]), $node->chvotes[$i], $i);
     }
   }
 }
@@ -198,9 +198,9 @@ function poll_link($type, $node = 0, $main) {
 
 function poll_load($node) {
   // Load the appropriate choices into the $node object
-  $poll = db_fetch_object(db_query("SELECT runtime, voters, active FROM poll WHERE nid = '%d'", $node->nid));
+  $poll = db_fetch_object(db_query("SELECT runtime, voters, active FROM poll WHERE nid = %d", $node->nid));
 
-  $result = db_query("SELECT chtext, chvotes, chorder FROM poll_choices WHERE nid='%d' ORDER BY chorder", $node->nid);
+  $result = db_query("SELECT chtext, chvotes, chorder FROM poll_choices WHERE nid=%d ORDER BY chorder", $node->nid);
   while ($choice = db_fetch_object($result)) {
     $poll->choice[$choice->chorder]  = $choice->chtext;
     $poll->chvotes[$choice->chorder] = $choice->chvotes;
@@ -326,8 +326,8 @@ function poll_view_processvote(&$node) {
   if (isset($pollvote[$node->nid]) && ($node->allowvotes == 1)) {
     if (!empty($node->choice[$pollvote[$node->nid]])) {
       $node->voters = $node->voters ? ($node->voters ." ". $node->polluserid) : $node->polluserid;
-      db_query("UPDATE poll SET voters='%s' WHERE nid = '%d'", $node->voters, $node->nid);
-      db_query("UPDATE poll_choices SET chvotes = chvotes + 1 WHERE nid = '%d' AND chorder = '%d'", $node->nid, $pollvote[$node->nid]);
+      db_query("UPDATE poll SET voters='%s' WHERE nid = %d", $node->voters, $node->nid);
+      db_query("UPDATE poll_choices SET chvotes = chvotes + 1 WHERE nid = %d AND chorder = %d", $node->nid, $pollvote[$node->nid]);
       $node->allowvotes = 0;
       $node->chvotes[$pollvote[$node->nid]]++;
     }
@@ -375,16 +375,16 @@ function poll_view(&$node, $main = 0, $block = 0) {
 }
 
 function poll_update($node) {
-  db_query("UPDATE poll SET runtime = '%d', active = '%d' WHERE nid = '%d'", $node->runtime, $node->active, $node->nid);
+  db_query("UPDATE poll SET runtime = %d, active = %d WHERE nid = %d", $node->runtime, $node->active, $node->nid);
 
-  db_query("DELETE FROM poll_choices WHERE nid = '%d'", $node->nid);
+  db_query("DELETE FROM poll_choices WHERE nid = %d", $node->nid);
   for ($i = 0; $i < $node->choices; $i++) {
     $choice->chtext = filter($node->choice[$i]);
     $choice->chvotes = (int)$node->chvotes[$i];
     $choice->chorder = $i;
 
     if ($choice->chtext != "") {
-      db_query("INSERT INTO poll_choices (nid, chtext, chvotes, chorder) VALUES ('%d', '%s', '%d', '%d')", $node->nid, $choice->chtext, $choice->chvotes, $choice->chorder);
+      db_query("INSERT INTO poll_choices (nid, chtext, chvotes, chorder) VALUES (%d, '%s', %d, %d)", $node->nid, $choice->chtext, $choice->chvotes, $choice->chorder);
     }
   }
 }

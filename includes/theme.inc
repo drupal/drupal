@@ -181,7 +181,7 @@ function theme_init() {
 function theme_blocks($region) {
   global $user, $REQUEST_URI;
 
-  $result = db_query("SELECT * FROM blocks WHERE (status = '1' OR custom = '1') ". ($region != "all" ? "AND region = '%s' " : "") ."ORDER BY weight, module", $region == "left" ? 0 : 1);
+  $result = db_query("SELECT * FROM blocks WHERE (status = '1' OR custom = '1') ". ($region != "all" ? "AND region = %d " : "") ."ORDER BY weight, module", $region == "left" ? 0 : 1);
 
   while ($result && ($block = db_fetch_object($result))) {
     if ((($block->status && (!$user->uid || !$block->custom)) || ($block->custom && $user->block[$block->module][$block->delta])) && (!$block->path || preg_match('/'. str_replace('/', '\/', $block->path) .'/', request_uri()))) {

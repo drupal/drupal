@@ -109,18 +109,18 @@ function cloud_form($edit = array()) {
 }
 
 function cloud_get_site($sid) {
-  return db_fetch_array(db_query("SELECT * FROM site WHERE sid = '%d'", $sid));
+  return db_fetch_array(db_query("SELECT * FROM site WHERE sid = %d", $sid));
 }
 
 function cloud_save($edit) {
   if ($edit["sid"] && $edit["name"]) {
-    db_query("UPDATE site SET name = '%s', link = '%s', feed = '%s', refresh = '%s', threshold = '%s' WHERE sid = '%d'", $edit["name"], $edit["link"], $edit["feed"], $edit["refresh"], $edit["threshold"], $edit["sid"]);
+    db_query("UPDATE site SET name = '%s', link = '%s', feed = '%s', refresh = %d, threshold = %d WHERE sid = %d", $edit["name"], $edit["link"], $edit["feed"], $edit["refresh"], $edit["threshold"], $edit["sid"]);
   }
   else if ($edit["sid"]) {
-    db_query("DELETE FROM site WHERE sid = '%d'", $edit["sid"]);
+    db_query("DELETE FROM site WHERE sid = %d", $edit["sid"]);
   }
   else {
-    db_query("INSERT INTO site (name, link, feed, refresh, threshold) VALUES  ('%s', '%s', '%s', '%s', '%s')", $edit["name"], $edit["link"], $edit["feed"], $edit["refresh"], $edit["threshold"]);
+    db_query("INSERT INTO site (name, link, feed, refresh, threshold) VALUES  ('%s', '%s', '%s', %d, %d)", $edit["name"], $edit["link"], $edit["feed"], $edit["refresh"], $edit["threshold"]);
   }
 }
 

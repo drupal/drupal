@@ -359,7 +359,7 @@ function import_save_item($edit) {
     db_query("DELETE FROM item WHERE iid = %d", $edit["iid"]);
   }
   else if ($edit["title"] && $edit["link"]) {
-    db_query("INSERT INTO item (fid, title, link, author, description, attributes, timestamp) VALUES ('%s', '%s', '%s', '%s', '%s', '%s', '%s')", $edit["fid"], $edit["title"], $edit["link"], $edit["author"], $edit["description"], $edit["attributes"], time());
+    db_query("INSERT INTO item (fid, title, link, author, description, attributes, timestamp) VALUES (%d, '%s', '%s', '%s', '%s', '%s', %d)", $edit["fid"], $edit["title"], $edit["link"], $edit["author"], $edit["description"], $edit["attributes"], time());
   }
 }
 
@@ -417,7 +417,7 @@ function import_form_feed($edit = array()) {
 
 function import_save_feed($edit) {
   if ($edit["fid"] && $edit["title"]) {
-    db_query("UPDATE feed SET title = '%s', url = '%s', attributes = '%s', refresh = '%s' WHERE fid = %d", $edit["title"], $edit["url"], $edit["attributes"], $edit["refresh"], $edit["fid"]);
+    db_query("UPDATE feed SET title = '%s', url = '%s', attributes = '%s', refresh = %d WHERE fid = %d", $edit["title"], $edit["url"], $edit["attributes"], $edit["refresh"], $edit["fid"]);
     db_query("DELETE FROM item WHERE fid = %d", $edit["fid"]);
   }
   else if ($edit["fid"]) {
@@ -427,7 +427,7 @@ function import_save_feed($edit) {
   else if ($edit["title"]) {
     // a single unique id for bundles and feeds, to use in blocks
     $next_id = db_next_id("feed_fid");
-    db_query("INSERT INTO feed (fid, title, url, attributes, refresh) VALUES (%d, '%s', '%s', '%s', '%s')", $next_id, $edit["title"], $edit["url"], $edit["attributes"], $edit["refresh"]);
+    db_query("INSERT INTO feed (fid, title, url, attributes, refresh) VALUES (%d, '%s', '%s', '%s', %d)", $next_id, $edit["title"], $edit["url"], $edit["attributes"], $edit["refresh"]);
   }
 }
 

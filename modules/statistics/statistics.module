@@ -42,11 +42,11 @@ function statistics_exit() {
     // node view counters are enabled
     if ((arg(0) == "node") && (arg(1) == "view") && arg(2)) {
       // a node has been viewed, so updated the node's counters
-      db_query("UPDATE statistics SET daycount = daycount + 1, totalcount = totalcount + 1, timestamp = '%d' WHERE nid = '%d'", time(), arg(2));
+      db_query("UPDATE statistics SET daycount = daycount + 1, totalcount = totalcount + 1, timestamp = %d WHERE nid = %d", time(), arg(2));
       // if we affected 0 rows, this is the first time viewing the node
       if (!db_affected_rows()) {
         // must create a new row to store counter's for new node
-        db_query("INSERT INTO statistics (nid, daycount, totalcount) VALUES('%d', daycount + 1, totalcount + 1)", arg(2));
+        db_query("INSERT INTO statistics (nid, daycount, totalcount) VALUES(%d, daycount + 1, totalcount + 1)", arg(2));
       }
     }
   }
@@ -57,10 +57,10 @@ function statistics_exit() {
     $hostname = getenv("REMOTE_ADDR");
     // log this page access
     if ((arg(0) == "node") && (arg(1) == "view") && arg(2)) {
-      db_query("INSERT INTO accesslog (nid, url, hostname, uid, timestamp) values('%d', '%s', '%s', '%d', '%d')", arg(2), $referrer, $hostname, $user->uid, time());
+      db_query("INSERT INTO accesslog (nid, url, hostname, uid, timestamp) values(%d, '%s', '%s', %d, %d)", arg(2), $referrer, $hostname, $user->uid, time());
     }
     else {
-      db_query("INSERT INTO accesslog (url, hostname, uid, timestamp) values('%s', '%s', '%d', '%d')", $referrer, $hostname, $user->uid, time());
+      db_query("INSERT INTO accesslog (url, hostname, uid, timestamp) values('%s', '%s', %d, %d)", $referrer, $hostname, $user->uid, time());
     }
   }
 }
@@ -736,7 +736,7 @@ function statistics_display_online_block() {
     ** This call gathers all the info we need on users/guests in a single
     ** database call, thus is quite efficient.
     */
-    $result = db_query("SELECT COUNT(DISTINCT hostname) AS count, uid, MAX(timestamp) AS max_timestamp FROM accesslog WHERE timestamp >= '%d' GROUP BY uid ORDER BY max_timestamp DESC", (time() - $time_period));
+    $result = db_query("SELECT COUNT(DISTINCT hostname) AS count, uid, MAX(timestamp) AS max_timestamp FROM accesslog WHERE timestamp >= %d GROUP BY uid ORDER BY max_timestamp DESC", (time() - $time_period));
 
     $users = $guests = 0;
     /* Count number of users & guests currently online based on db query */
@@ -800,7 +800,7 @@ function statistics_get($nid) {
 
   if ($nid > 0) {
     /* retrieves an array with both totalcount and daycount */
-    $statistics = db_fetch_array(db_query("SELECT totalcount, daycount, timestamp FROM statistics WHERE nid = '%d'", $nid));
+    $statistics = db_fetch_array(db_query("SELECT totalcount, daycount, timestamp FROM statistics WHERE nid = %d", $nid));
   }
 
   return $statistics;
@@ -904,7 +904,7 @@ function statistics_nodeapi(&$node, $op, $arg = 0) {
   switch ($op) {
     case "delete":
     // clean up statistics table when node is deleted
-    db_query("DELETE FROM statistics WHERE nid = '%d'", $node->nid);
+    db_query("DELETE FROM statistics WHERE nid = %d", $node->nid);
   }
 }
 

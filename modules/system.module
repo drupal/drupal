@@ -168,7 +168,7 @@ function system_save_settings($edit = array()) {
   if ($edit["type"]) {
     db_query("UPDATE system SET status = '0' WHERE type = '%s'", $edit["type"]);
     foreach ($edit["status"] as $filename => $status) {
-      db_query("UPDATE system SET status = '%d' WHERE filename = '$filename'", $status);
+      db_query("UPDATE system SET status = %d WHERE filename = '$filename'", $status);
     }
     if ($edit["type"] == "theme") {
       variable_set("theme_default", $edit["theme_default"]);

@@ -65,7 +65,7 @@ function watchdog_overview($type) {
 
 function watchdog_view($id) {
 
-  $result = db_query("SELECT w.*, u.name, u.uid FROM watchdog w LEFT JOIN users u ON w.uid = u.uid WHERE w.wid = '%d'", $id);
+  $result = db_query("SELECT w.*, u.name, u.uid FROM watchdog w LEFT JOIN users u ON w.uid = u.uid WHERE w.wid = %d", $id);
 
   if ($watchdog = db_fetch_object($result)) {
     $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";

@@ -270,7 +270,7 @@ function comment_post($edit) {
 
         $edit["cid"] = db_next_id("comments_cid");
 
-        db_query("INSERT INTO comments (cid, nid, pid, uid, subject, comment, hostname, timestamp, status, score, users) VALUES (%d, %d, %d, %d, '%s', '%s', '%s', '%s', '%s', '%s', '%s')", $edit["cid"], $edit["nid"], $edit["pid"], $user->uid, $edit["subject"], $edit["comment"], getenv("REMOTE_ADDR"), time(), $status, $score, $users);
+        db_query("INSERT INTO comments (cid, nid, pid, uid, subject, comment, hostname, timestamp, status, score, users) VALUES (%d, %d, %d, %d, '%s', '%s', '%s', %d, %d, %d, '%s')", $edit["cid"], $edit["nid"], $edit["pid"], $user->uid, $edit["subject"], $edit["comment"], getenv("REMOTE_ADDR"), time(), $status, $score, $users);
 
         /*
         ** Tell the other modules a new comment has been submitted:
@@ -790,7 +790,7 @@ function comment_delete($edit) {
 }
 
 function comment_save($id, $edit) {
-  db_query("UPDATE comments SET subject = '%s', comment = '%s', status = '%s' WHERE cid = %d", filter($edit["subject"]), filter($edit["comment"]), $edit["status"], $id);
+  db_query("UPDATE comments SET subject = '%s', comment = '%s', status = %d WHERE cid = %d", filter($edit["subject"]), filter($edit["comment"]), $edit["status"], $id);
   watchdog("special", "comment: modified '". $edit["subject"] ."'");
   return "updated comment.";
 }

@@ -38,7 +38,7 @@ function error_handler($errno, $message, $filename, $line, $variables) {
 
 function watchdog($type, $message, $link = NULL) {
   global $user;
-  db_query("INSERT INTO watchdog (uid, type, message, link, location, hostname, timestamp) VALUES ('%d', '%s', '%s', '%s', '%s', '%s', '%s')", $user->uid, $type, $message, $link, request_uri(), getenv("REMOTE_ADDR"), time());
+  db_query("INSERT INTO watchdog (uid, type, message, link, location, hostname, timestamp) VALUES (%d, '%s', '%s', '%s', '%s', '%s', %d)", $user->uid, $type, $message, $link, request_uri(), getenv("REMOTE_ADDR"), time());
 }
 
 function throttle($type, $rate) {
@@ -659,7 +659,7 @@ function cache_clear_all($cid = NULL) {
     db_query("DELETE FROM cache WHERE expire <> 0");
   }
   else {
-    db_query("DELETE FROM cache WHERE cid = '%d'", $cid);
+    db_query("DELETE FROM cache WHERE cid = %d", $cid);
   }
 }
 
