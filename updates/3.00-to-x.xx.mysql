@@ -102,4 +102,4 @@ ALTER TABLE story ADD KEY nid (nid);
 ALTER TABLE blog ADD KEY nid (nid);
 ALTER TABLE page ADD KEY nid (nid);
 ALTER TABLE forum ADD KEY nid (nid);
-ALTER TABLE book um ADD KEY nid (nid);
+ALTER TABLE book ADD KEY nid (nid);
