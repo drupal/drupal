@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.module,v 1.4 2004/05/18 19:15:14 dries Exp $
+// $Id: menu.module,v 1.5 2004/05/26 18:43:39 dries Exp $
 
 /**
  * Implementation of hook_link().
@@ -171,7 +171,7 @@ function menu_disable_item($mid) {
 /**
  * Menu callback; dispatch to the appropriate menu item edit function.
  */
-function menu_edit_item($mid) {
+function menu_edit_item($mid = 0) {
   $op = $_POST['op'];
   $edit = $_POST['edit'];
   $output = '';
