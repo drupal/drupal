@@ -814,7 +814,9 @@ function comment_admin_overview($status = 0, $comment_page = 0) {
     $next_link = la(t("next comments"), array("mod" => "comment", "status" => $status, "comment_page" => ($comment_page + 1)));
   }
 
-  $output .= "<tr><td>$prev_link</td><td></td><td></td><td></td><td></td><td>$next_link</td></tr>";
+  if ($prev_link || $next_link) {
+    $output .= "<tr><td>$prev_link</td><td></td><td></td><td></td><td></td><td>$next_link</td></tr>";
+  }
   $output .= "</table>\n";
 
   return $output;
