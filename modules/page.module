@@ -5,8 +5,8 @@ $GLOBALS["format"] = array(0 => "HTML", 1 => "PHP", 2 => "text");
 class Page {
   function Page($page) {
     $this = new Node($page);
-    $this->body = $page[body];
-    $this->format = $page[format];
+    $this->body = $page["body"];
+    $this->format = $page["format"];
   }
 }
 
@@ -44,22 +44,21 @@ function page_status() {
 function page_form($edit = array()) {
   global $format, $op;
 
-  if ($op != t("Preview") && $format[$edit[format]] == "PHP") {
-    $edit[body] = addslashes($edit[body]);
+  if ($op != t("Preview") && $format[$edit["format"]] == "PHP") {
+    $edit["body"] = addslashes($edit["body"]);
   }
 
-  if ($edit[title]) {
-    print "<!-- Don't ask:\n$edit[body] -->\n";
+  if ($edit["title"]) {
     $form = page_view(new Page(node_preview($edit)));
   }
 
-  $form .= form_textfield("Subject", "title", $edit[title], 50, 64);
-  $form .= form_textfield("Link", "link", $edit[link], 50, 64);
-  $form .= form_textarea("Body", "body", $edit[body], 70, 30);
-  $form .= form_select("Type", "format", $edit[format], $format);
-  $form .= form_hidden("nid", $edit[nid]);
+  $form .= form_textfield("Subject", "title", $edit["title"], 50, 64);
+  $form .= form_textfield("Link", "link", $edit["link"], 50, 64);
+  $form .= form_textarea("Body", "body", $edit["body"], 70, 30);
+  $form .= form_select("Type", "format", $edit["format"], $format);
+  $form .= form_hidden("nid", $edit["nid"]);
 
-  if ($edit[title]) {
+  if ($edit["title"]) {
     $form .= form_submit(t("Preview"));
     $form .= form_submit(t("Submit"));
   }
@@ -73,7 +72,7 @@ function page_form($edit = array()) {
 function page_save($edit) {
   global $status, $user;
 
-  node_save($edit, array(author => $user->uid, link, body, comment => variable_get("page_comment", 0), format, moderate => variable_get("page_moderate", ""), promote => variable_get("page_promote", 0), score => 0, status => $status[posted], timestamp => time(), title, type => "page", votes => 0));
+  node_save($edit, array(author => $user->uid, link, body, comment => variable_get("page_comment", 0), format, moderate => variable_get("page_moderate", ""), promote => variable_get("page_promote", 0), score => 0, status => $status["posted"], timestamp => time(), title, type => "page", votes => 0));
 }
 
 ?>
