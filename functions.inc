@@ -146,7 +146,7 @@ function displayUserblock($theme) {
   global $user;
   dbconnect();
   if ($user->ublockon) {
-    $content .= "<P ALIGN=\"right\">[ <A HREF=\"account.php?act=edithome\"><FONT COLOR=\"$theme->hlcolor2\">edit</FONT></A> | <A HREF=\"account.php?act=logout\"><FONT COLOR=\"$theme->hlcolor2\">logout</FONT></A> ]</P>";
+    $content .= "<P ALIGN=\"right\">[ <A HREF=\"account.php?op=edithome\"><FONT COLOR=\"$theme->hlcolor2\">edit</FONT></A> | <A HREF=\"account.php?op=logout\"><FONT COLOR=\"$theme->hlcolor2\">logout</FONT></A> ]</P>";
     $theme->box("$user->userid's box", $user->content);
   }
 }
@@ -164,7 +164,7 @@ function displayAccount($theme) {
     $content .= "<P>Password:<BR> <INPUT TYPE=password NAME=passwd MAXLENGTH=25 SIZE=12></P>\n";
     $content .= "<INPUT TYPE=submit NAME=act VALUE=\"Login\">\n";
     $content .= "</FORM>\n";
-    $content .= "<P><A HREF=\"account.php?act=new\">Register</A> as new user.<BR><A HREF=\"account.php?act=forgot\">Forgot</A> your password?</P></CENTER>";
+    $content .= "<P><A HREF=\"account.php?op=new\">Register</A> as new user.<BR><A HREF=\"account.php?op=forgot\">Forgot</A> your password?</P></CENTER>";
     $theme->box("Login", $content);
   }
 }
@@ -176,9 +176,9 @@ function displayAccountSettings($theme) {
   if ($user) { 
     ### Display account settings:
     $content  = "<LI><A HREF=\"account.php\">User info</A></LI>";
-    $content .= "<LI><A HREF=\"account.php?act=edituser\">Edit user info</A></LI>";
-    $content .= "<LI><A HREF=\"account.php?act=editpage\">Customize page</A></LI>";
-    $content .= "<LI><A HREF=\"account.php?act=logout\">Logout</A></LI>";
+    $content .= "<LI><A HREF=\"account.php?op=edituser\">Edit user info</A></LI>";
+    $content .= "<LI><A HREF=\"account.php?op=editpage\">Customize page</A></LI>";
+    $content .= "<LI><A HREF=\"account.php?op=logout\">Logout</A></LI>";
 
     $theme->box("$user->userid's account", "$content");
   }
