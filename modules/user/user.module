@@ -1,0 +1,1170 @@
+<?php
+
+session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
+session_start();
+
+/*** Session functions *****************************************************/
+
+function sess_open($save_path, $session_name) {
+  return 1;
+}
+
+function sess_close() {
+  return 1;
+}
+
+function sess_read($key) {
+  global $user;
+  $user = user_load(array("session" => $key, "status" => 1));
+  return $user;
+}
+
+function sess_write($key, $value) {
+  db_query("UPDATE user SET hostname = '". getenv("REMOTE_ADDR") ."', timestamp = '". time() ."' WHERE session = '$key'");
+}
+
+function sess_destroy($key) {
+  db_query("UPDATE user SET hostname = '". getenv("REMOTE_ADDR") ."', timestamp = '". time() ."', session = '' WHERE session = '$key'");
+}
+
+function sess_gc($lifetime) {
+  return 1;
+}
+
+/*** Common functions ******************************************************/
+
+function user_load($array = array()) {
+
+  /*
+  ** Dynamically compose a SQL query:
+  */
+
+  foreach ($array as $key => $value) {
+    if ($key == "pass") {
+      $query .= "u.$key = PASSWORD('". addslashes($value) ."') AND ";
+    }
+    else {
+      $query .= "u.$key = '". addslashes($value) ."' AND ";
+    }
+  }
+
+  $result = db_query("SELECT u.*, r.perm FROM user u LEFT JOIN role r ON u.role = r.name WHERE $query u.status < 3");
+
+  return db_fetch_object($result);
+
+}
+
+function user_save($account, $array = array()) {
+
+  /*
+  ** Dynamically compose a SQL query:
+  */
+
+  foreach ($array as $key => $value) {
+    if ($key == "pass") {
+      $query .= "$key = PASSWORD('". addslashes($value) ."'), ";
+    }
+    else {
+      $query .= "$key = '". addslashes($value) ."', ";
+    }
+  }
+
+  /*
+  ** Update existing or insert new user account:
+  */
+
+  if ($account->uid) {
+    db_query("UPDATE user SET $query timestamp = '". time() ."' WHERE uid = '$account->uid'");
+    return user_load(array("uid" => $account->uid));
+  }
+  else {
+    db_query("INSERT INTO user SET $query timestamp = '". time() ."'");
+    return user_load(array("name" => $array["name"]));
+  }
+
+}
+
+function user_set($account, $key, $value) {
+  $account->data[$key] = $value;
+  return $account;
+}
+
+function user_get($account, $key) {
+  return $account->data[$key];
+}
+
+function user_validate_name($name) {
+
+  /*
+  ** Verify the syntax of the given name:
+  */
+
+  if (!$name) return t("You must enter a name.");
+  if (eregi("^ ", $name)) return t("The name can not begin with a space.");
+  if (eregi(" \$", $name)) return t("The name can not end with a space.");
+  if (eregi("  ", $name)) return t("The name can not contain multiple spaces in a row.");
+  if (eregi("[^a-zA-Z0-9 ]", $name)) return t("The name contains an illegal character.");
+  if (strlen($name) > 32) return t("The name '$name' is too long: it must be less than 32 characters.");
+}
+
+function user_validate_mail($mail) {
+
+  /*
+  ** Verify the syntax of the given e-mail address:
+  */
+
+  if (!$mail) return t("Your must enter an e-mail address.");
+  if (!eregi("^[_+\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3}$", $mail)) return t("The e-mail address '$mail' is not valid.");
+}
+
+function user_password($min_length = 6) {
+
+  /*
+  ** Generate a human-readable password:
+  */
+
+  mt_srand((double)microtime() * 1000000);
+  $words = explode(",", variable_get("user_password", "foo,bar,guy,neo,tux,moo,sun,asm,dot,god,axe,geek,nerd,fish,hack,star,mice,warp,moon,hero,cola,girl,fish,java,perl,boss,dark,sith,jedi,drop,mojo"));
+  while (strlen($password) < $min_length) $password .= trim($words[mt_rand(0, count($words))]);
+  return $password;
+}
+
+function user_access($perm) {
+  global $user;
+
+  if ($user->uid == 1) {
+    return 1;
+  }
+  else if ($user->perm) {
+    return strstr($user->perm, $perm);
+  }
+  else {
+    return db_fetch_object(db_query("SELECT * FROM role WHERE name = 'anonymous user' AND perm LIKE '%$perm%'"));
+  }
+}
+
+function user_mail($subject, $message, $header) {
+  // print "<pre>subject: $subject<hr />header: $header<hr />$message</pre>";
+  mail($mail, $subject, $message, $header);
+}
+
+function user_deny($type, $mask) {
+  $allow = db_fetch_object(db_query("SELECT * FROM access WHERE status = '1' AND type = '$type' AND LOWER('$mask') LIKE LOWER(mask)"));
+
+  $deny = db_fetch_object(db_query("SELECT * FROM access WHERE status = '0' AND type = '$type' AND LOWER('$mask') LIKE LOWER(mask)"));
+
+  if ($deny && !$allow) {
+    return 1;
+  }
+  else {
+    return 0;
+  }
+}
+
+/*** Module hooks **********************************************************/
+
+function user_help() {
+ ?>
+
+  <p>The user system is responsible for maintaining the user database.  It automatically handles tasks like registration, authentication, access control, password retrieval, user settings and much more.</p>
+
+  <h3>User management</h3>
+  <p>No participant can use his own name or handle to post comments until they sign up and submit their e-mail address.  Those who do not may participate as anonymous users, but they will suffer numerous disadvantages, for example their posts beginning at a lower score.</p>
+  <p>In contrast, those with a user account can use their own name or handle and are granted various privileges: the most important are probably the ability to post content, to rate comments and to fine-tune the site to their personal liking.</p>
+  <p>Registered users need to authenticate by supplying a username and password, or alternatively, by supplying a valid Drupal ID or Jabber ID.  The username and password are kept in the database, where the password is hashed so that no one can read nor use it.  When a username and password needs to be checked the system goes down the list of registered users till it finds a matching username, and then hashes the password that was supplied and compares it to the listed value.  If they match then that means the username and password supplied were correct.</p>
+  <p>Once a user authenticated a session is started and until that session is over they won't have to re-authenticate.  To keep track of the individual sessions, drupal relies on PHP's session support.  A visitor accessing your web site is assigned an unique ID, the so-called session ID, which is stored in a cookie.  For security's sake, the cookie does not contain personal information but acts as a key to retrieve the information stored on your server's side.  When a visitor accesses your site, drupal will check whether a specific session ID has been sent with the request.  If this is the case, the prior saved environment is recreated.</p>
+  <p>Drupal allows you to control who is allowed to get authenticated and who is not.  To accomplish this, you can ban certain hostnames, IPs, IP-ranges, e-mail address and usernames.  Any user that matches any of the given ban criteria will not be able to authenticate or to register as a new user.</p>
+  <p>Authenticated users can themselves select entirely different appearances for the site, utilizing their own preferences for how the pages are structured, how navigation lists and other page components are presented and much more.</p>
+  <p>An important feature of drupal is that any user can be granted administrator rights.  The ability to share maintenance responsibility with volunteers from across the globe can be considered valuable for most community-based projects.</p>
+
+  <h3>Access rules</h3>
+  <p>The access rules allows you to describe which e-mail addresses or usernames will or will not be granted access using a flexible wild-card system.  Examples are given below.  If no access rules are provided, access control is turned off and everybody will be able to access your website.  For each category, zero or more access rules can be specified.  The 'allow' rules are processed prior to the 'deny' rules and are thus considered to be stronger.</p>
+  <p>To do describe access rules you can use the following wild-card characters:</p>
+  <ul>
+   <li>&nbsp;% : matches any number of characters, including zero characters.</li>
+   <li>&nbsp;_ : matches exactly one character.</li>
+  </UL>
+  <p><u>Examples:</u></p>
+  <ul>
+   <li>E-mail address bans <code>%@hotmail.com</code>, <code>%@altavista.%</code>, <code>%@usa.net</code>, etc.  Used to prevent users from using free email accounts, which might be used to cause trouble.</li>
+   <li>Username bans <code>root</code>, <code>webmaster</code>, <code>admin%</code>, etc.  Used to prevent administrator impersonators.</li>
+  </ul>
+
+  <h3>User roles</h3>
+  <p>Users have roles that define what kinds of actions they can take.  Roles define classes of users such as <i>anonymous user</i>, <i>authenticated user</I>, <I>moderator</i>, <i>administrator</i> and so on.  Every user can have one role.</p>
+  <p>Roles make it easier for you to manage security.  Instead of defining what every single user can do, you can simply set a couple different permissions for different user roles.</p>
+  <p>Drupal comes with three built-in roles:</p>
+  <ul>
+   <li>Anonymous user: this role is used for users that don't have a user account or that are not authenticated.</li>
+   <li>Registered user: this role is assigned automatically to authenticated users.  Most users will belong to this user role unless specified otherwise.</li>
+  </uL>
+  <p>For basic Drupal sites you can get by with <i>anonymous user</i> and <i>authenticated user</i> but for more complex sites where you want other users to be able to perform maintainance or administrative duties, you may want to create your own roles to classify your users into different groups.</p>
+
+  <h3>User permissions</h3>
+  <p>Each Drupal's permission describes a fine-grained logical operation such as <i>access administration pages</i> or <i>add and modify user accounts</i>.  You could say a permission represents access granted to a user to perform a set of operations.</p>
+  <p>Roles tie users to permissions.  The combination of roles and permissions represent a way to tie user authorization to the performance of actions, which is how Drupal can determine what users can do.</p>
+
+ <?php
+}
+
+function user_link($type) {
+  if ($type == "page") {
+    $links[] = "<a href=\"module.php?mod=user\">". t("user account") ."</a>";
+  }
+
+  if ($type == "menu") {
+    $links[] = "<a href=\"module.php?mod=user&op=view\">". t("your account") ."</a>";
+  }
+
+  if ($type == "admin") {
+    $links[] = "<a href=\"admin.php?mod=user\">user system</a>";
+  }
+
+  return $links ? $links : array();
+}
+
+function drupal_login($arguments) {
+  $argument = $arguments->getparam(0);
+  $username = $argument->scalarval();
+  $argument = $arguments->getparam(1);
+  $password = $argument->scalarval();
+
+  if ($user = user_load(array(name => "$username", "pass" => $password, "status" => 1))) {
+    return new xmlrpcresp(new xmlrpcval($user->uid, "int"));
+  }
+  else {
+    return new xmlrpcresp(new xmlrpcval(0, "int"));
+  }
+}
+
+
+function user_xmlrpc() {
+   return array("drupal.login" => array("function" => "drupal_login"));
+}
+
+/*** Authentication methods ************************************************/
+
+function startElement($parser, $name, $attributes) {
+  global $jabber;
+
+  if ($attributes["ID"]) {
+    $jabber["jid"] = $attributes["ID"];
+  }
+
+  if (stristr($name, "error") || ($attributes["ERROR"])){
+    $jabber["error"] = true;
+  }
+}
+
+function endElement($parser, $name) {
+}
+
+function characterData($parser, $data) {
+  global $jabber;
+
+  $jabber["data"] = $data;
+}
+
+function jabber_send($session, $message) {
+
+  // print "SEND: ". htmlentities($message) ."<br />";
+
+  fwrite($session, $message, strlen($message));
+}
+
+function jabber_recv($session, $timout = 50) {
+
+  /*
+  ** Returns a chunk of data, read from the socket descriptor '$session'.
+  ** If the call fails, or if no data is read after the specified timout,
+  ** false will be returned.
+  */
+
+  while ($count < $timout) {
+    $data = fread($session, 1);
+    if ($data) {
+      $message .= $data;
+    }
+    else {
+      usleep(100);
+      $count = $count + 1;
+    }
+  }
+
+  if ($message) {
+
+    // print "RECV: ". htmlentities($message) ."<br />";
+
+    return $message;
+  }
+  else {
+    return false;
+  }
+}
+
+function jabber_auth($username, $password, $server, $port = 5222) {
+  global $jabber;
+
+  // print "username = $username, pasword = $password, server = $server<br />";
+
+  $session = fsockopen($server, $port, &$errno, &$errstr, 5);
+
+  if ($session) {
+
+    $xml_parser = xml_parser_create();
+    xml_set_element_handler($xml_parser, "startElement", "endElement");
+    xml_set_character_data_handler($xml_parser, "characterData");
+
+    /*
+    ** Switch the given socket descriptor '$session' to non-blocking mode:
+    */
+
+    set_socket_blocking($session, false);
+
+    /*
+    ** A jabber session consists of two parallel XML streams, one from
+    ** the client to the server and one from the server to the client.
+    ** On connecting to a Jabber server, a Jabber client initiates the
+    ** client-to-server XML stream and the server responds by initiating
+    ** the server-to-client XML stream:
+    */
+
+    jabber_send($session, "<?xml version='1.0'?>");
+
+    jabber_send($session, "<stream:stream to='$server' xmlns='jabber:client' xmlns:stream='http://etherx.jabber.org/streams'>");
+
+    $data = jabber_recv($session);
+
+    if (!xml_parse($xml_parser, $data, 0)) {
+      watchdog("error", "XML error: '". xml_error_string(xml_get_error_code($xml_parser)) ."' at line ". xml_get_current_line_number($xml_parser));
+      return 0;
+    }
+
+    if ($jabber["error"]) {
+      watchdog("error", "protocol error: ". $jabber["data"]);
+      return 0;
+    }
+
+    jabber_send($session, "<iq type='set' id='". $jabber["jid"] ."'><query xmlns='jabber:iq:auth'><username>$username</username><password>$password</password><resource>drupal</resource></query></iq>");
+
+    $data = jabber_recv($session);
+
+    if (!xml_parse($xml_parser, $data, 0)) {
+       watchdog("error", "XML error: '". xml_error_string(xml_get_error_code($xml_parser)) ."' at line ". xml_get_current_line_number($xml_parser));
+    }
+
+    if ($jabber["error"]) {
+      watchdog("error", "protocol error: ". $jabber["data"]);
+      return 0;
+    }
+
+    xml_parser_free($xml_parser);
+
+    return 1;
+  }
+  else {
+    watchdog("error", "failed to open socket to jabber server:\n  $errno, $errstr");
+    return 0;
+  }
+}
+
+function drupal_auth($username, $password, $server) {
+
+  $message = new xmlrpcmsg("drupal.login", array(new xmlrpcval($username, "string"), new xmlrpcval($password, "string")));
+
+  // print "username = $username, pasword = $password, server = $server<br />";
+  // print "<pre>" . htmlentities($message->serialize()) . "</pre>";
+
+  $client = new xmlrpc_client("/xmlrpc.php", $server, 80);
+
+  $result = $client->send($message);
+
+  if ($result && !$result->faultCode()) {
+    $value = $result->value();
+    $login = $value->scalarval();
+  }
+
+  return $login;
+}
+
+/*** User features *********************************************************/
+
+function user_login($edit = array()) {
+  global $user, $REQUEST_URI;
+
+  if (user_deny("user", $edit["name"])) {
+    $error = sprintf(t("The name '%s' has been denied access."), $edit["name"]);
+  }
+  else if ($edit["name"] && $edit["pass"]) {
+
+    /*
+    ** Strip name and server from ID:
+    */
+
+    if ($pos = strpos($edit["name"], "@")) {
+      $server = check_input(substr($edit["name"], $pos + 1, strlen($edit["name"])));
+      $name = check_input(substr($edit["name"], 0, $pos));
+      $pass = check_input($edit["pass"]);
+    }
+    else {
+      $name = check_input($edit["name"]);
+      $pass = check_input($edit["pass"]);
+    }
+
+    /*
+    ** Try to log on the user locally:
+    */
+
+    if (!$user) {
+      $user = user_load(array("name" => $name, "pass" => $pass, "status" => 1));
+    }
+
+    /*
+    ** Try to log on the user through Drupal:
+    */
+
+    if (!$user && variable_get("user_drupal", 1) == 1 && $id = drupal_auth($name, $pass, $server)) {
+      $user = user_load(array("drupal" => "$id@$server", "status" => 1));
+
+      if (!$user && variable_get("user_register", 1) == 1 && !user_load(array("name" => $name))) {
+        watchdog("user", "new user: '$name' &lt;$name@$server&gt; (Drupal ID)");
+        $user = user_save("", array("name" => $name, "pass" => user_password(), "init" => "$id@$server", "drupal" => "$id@$server", "role" => "authenticated user", "status" => 1));
+      }
+    }
+
+    /*
+    ** Try to log on the user through Jabber:
+    */
+
+    if (!$user && variable_get("user_jabber", 1) == 1 && jabber_auth($name, $pass, $server)) {
+      $user = user_load(array("jabber" => "$name@$server", "status" => 1));
+      if (!$user && variable_get("user_register", 1) == 1 && !user_load(array("name" => "$name"))) {
+        watchdog("user", "new user: '$name' &lt;$name@$server&gt; (Jabber ID)");
+        $user = user_save("", array("name" => $name, "pass" => user_password(), "init" => "$name@$server", "jabber" => "$name@$server", "role" => "authenticated user", "status" => 1));
+      }
+    }
+
+    if ($user->uid) {
+
+      watchdog("user", "session opened for '$user->name'");
+
+      /*
+      ** Write session ID to database:
+      */
+
+      user_save($user, array("session" => session_id()));
+
+      /*
+      ** Redirect the user to his personal information page:
+      */
+
+      header("Location: module.php?mod=user");
+    }
+    else {
+      watchdog("user", "failed to login for '". $name ."': invalid password");
+
+      $error = t("Authentication failed.");
+    }
+  }
+
+  /*
+  ** Display error message (if any):
+  */
+
+  if ($error) {
+    $output .= "<p><font color=\"red\">". check_output($error) ."</font></p>";
+  }
+
+  /*
+  ** Display login form:
+  */
+
+  $output .= form_textfield(t("Username"), "name", $edit["name"], 20, 64, t("Enter yourlocal  username, a Drupal ID or a Jabber ID."));
+  $output .= form_password(t("Password"), "pass", $pass, 20, 64, t("Enter the password that accompanies your username."));
+  $output .= form_hidden("type", "local");
+  $output .= form_submit(t("Log in"));
+
+  return form($REQUEST_URI, $output);
+
+}
+
+function user_logout() {
+  global $user;
+
+  if ($user->uid) {
+    watchdog("user", "session closed for user '$user->name'");
+
+    /*
+    ** Destroy the current session:
+    */
+
+    session_destroy();
+    unset($user);
+
+    /*
+    ** Redirect the user to his personal information page:
+    */
+
+    header("Location: module.php?mod=user");
+  }
+}
+
+function user_pass($edit = array()) {
+  global $REQUEST_URI;
+
+  if ($edit["name"] && $edit["mail"]) {
+    if ($account = db_fetch_object(db_query("SELECT uid FROM user WHERE name = '". check_input($edit["name"]) ."' AND mail = '". check_input($edit["mail"]) ."'"))) {
+
+      $from = variable_get("site_mail", "root@localhost");
+      $pass = user_password();
+
+      /*
+      ** Save new password:
+      */
+
+      user_save($account, array("pass" => $pass));
+
+      /*
+      ** Mail new passowrd:
+      */
+
+      user_mail($edit["mail"], t("user account details"), sprintf(t("%s,\n\nyou requested us to e-mail you a new password for your account at %s.  You can now login using the following username and password:\n\n  username: %s\n  password: %s\n\n\n-- %s team"), $edit["name"], variable_get("site_name", "drupal"), $edit["name"], $pass, variable_get("site_name", "drupal")), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+
+      watchdog("user", "mail password: '". $edit["name"] ."' &lt;". $edit["mail"] ."&gt;");
+
+      return t("Your password and further instructions have been sent to your e-mail address.");
+    }
+    else {
+      watchdog("user", "mail password: '". $edit["name"] ."' and &lt;". $edit["mail"] ."&gt; do not match");
+
+      return t("Could not sent password: no match for the specified username and e-mail address.");
+    }
+  }
+  else {
+
+    /*
+    ** Display form:
+    */
+
+    $output .= form_textfield(t("Username"), "name", $edit["name"], 30, 64);
+    $output .= form_textfield(t("E-mail address"), "mail", $edit["mail"], 30, 64);
+    $output .= form_submit(t("E-mail new password"));
+
+    return form($REQUEST_URI, $output);
+  }
+}
+
+function user_register($edit = array()) {
+  global $REQUEST_URI;
+
+  if ($edit["name"] && $edit["mail"]) {
+    if ($error = user_validate_name($edit["name"])) {
+      // do nothing
+    }
+    else if ($error = user_validate_mail($edit["mail"])) {
+      // do nothing
+    }
+    else if (user_deny("user", $edit["name"])) {
+      $error = sprintf(t("The name '%s' has been denied access."), $edit["name"]);
+    }
+    else if (user_deny("mail", $edit["mail"])) {
+      $error = sprintf(t("The e-mail address '%s' has been denied access."), $edit["mail"]);
+    }
+    else if (db_num_rows(db_query("SELECT name FROM user WHERE LOWER(name) = LOWER('". $edit["name"] ."')")) > 0) {
+      $error = sprintf(t("The name '%s' is already taken."), $edit["name"]);
+    }
+    else if (db_num_rows(db_query("SELECT mail FROM user WHERE LOWER(mail) = LOWER('". $edit["mail"] ."')")) > 0) {
+      $error = sprintf(t("The e-mail address '%s' is already taken."), $edit["mail"]);
+    }
+    else if (variable_get("user_register", 1) == 0) {
+      $error = t("Public registrations have been disabled by the site administrator.");
+    }
+    else {
+      $success = 1;
+    }
+  }
+
+  if ($success) {
+
+    watchdog("user", "new user: '". $edit["name"] ."' &lt;". $edit["mail"] ."&gt;");
+
+    $from = variable_get("site_mail", "root@localhost");
+    $pass = user_password();
+
+    if (variable_get("user_register", 1) == 1) {
+      /*
+      ** Create new user account, no administrator approval required:
+      */
+
+
+      user_mail($edit["mail"], t("user account details"), sprintf(t("%s,\n\nsomoneone signed up for a user account on %s and supplied this e-mail address as their contact.  If it wasn't you, just ignore this mail but if it was you, you can now login using the following username and password:\n\n  username: %s\n  password: %s\n\n\n-- %s team"), $edit["name"], variable_get("site_name", "drupal"), $edit["name"], $pass, variable_get("site_name", "drupal")), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+    }
+    else {
+      /*
+      ** Create new user account, administrator approval required:
+      */
+
+      user_save("", array("name" => $edit["name"], "pass" => $pass, "init" => $edit["mail"], "mail" => $edit["mail"], "role" => "authenticated user", "status" => 0));
+
+      user_mail($edit["mail"], t("user account details"), sprintf(t("%s,\n\nsomoneone signed up for a user account on %s and supplied this e-mail address as their contact.  If it wasn't you, just ignore this mail but if it was you, you can login as soon a site administrator approved your request using the following username and password:\n\n  username: %s\n  password: %s\n\n\n-- %s team"), $edit["name"], variable_get("site_name", "drupal"), $edit["name"], $pass, variable_get("site_name", "drupal")), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+    }
+
+    return t("Your password and further instructions have been sent to your e-mail address.");
+  }
+  else {
+
+    if ($error) {
+      $output .= "<p><font color=\"red\">". check_output($error) ."</font></p>";
+    }
+
+    $output .= form_textfield(t("Username"), "name", $edit["name"], 30, 64, t("Your full name or your prefered username: only letters, numbers and spaces are allowed."));
+    $output .= form_textfield(t("E-mail address"), "mail", $edit["mail"], 30, 64, t("Your e-mail address: a password and instructions will be sent to this e-mail address so make sure it is accurate."));
+    $output .= form_submit(t("Create new account"));
+
+    return form($REQUEST_URI, $output);
+  }
+}
+
+function user_edit($edit = array()) {
+  global $REQUEST_URI, $HTTP_HOST, $themes, $user;
+
+  if ($user->uid) {
+    if ($edit["name"]) {
+      if ($error = user_validate_name($edit["name"])) {
+        // do nothing
+      }
+      else if ($error = user_validate_mail($edit["mail"])) {
+        // do nothing
+      }
+      else if (db_num_rows(db_query("SELECT uid FROM user WHERE uid != '$user->uid' AND LOWER(name) = LOWER('". $edit["name"] ."')")) > 0) {
+        $error = sprintf(t("The name '%s' is already taken."), $edit["name"]);
+      }
+      else if ($edit["mail"] && db_num_rows(db_query("SELECT uid FROM user WHERE uid != '$user->uid' AND LOWER(mail) = LOWER('". $edit["mail"] ."')")) > 0) {
+        $error = sprintf(t("The e-mail address '%s' is already taken."), $edit["mail"]);
+      }
+      else if ($edit["jabber"] && db_num_rows(db_query("SELECT uid FROM user WHERE uid != '$user->uid' AND LOWER(jabber) = LOWER('". $edit["jabber"] ."')")) > 0) {
+        $error = sprintf(t("The Jabber ID '%s' is already taken."), $edit["jabber"]);
+      }
+      else if ($user->uid) {
+
+        /*
+        ** Save user information:
+        */
+
+        $user = user_save($user, array("name" => $edit["name"], "mail" => $edit["mail"], "jabber" => $edit["jabber"], "theme" => $edit["theme"], "timezone" => $edit["timezone"], "homepage" => $edit["homepage"], "signature" => $edit["signature"]));
+
+        /*
+        ** Save new password (if required):
+        */
+
+        if ($edit[pass1] && $edit[pass1] == $edit[pass2]) {
+          $user = user_save($user, array("pass" => $edit[pass1]));
+        }
+
+        /*
+        ** Redirect the user to his personal information page:
+        */
+
+        header("Location: module.php?mod=user&op=view");
+      }
+    }
+
+    if ($error) {
+      $output .= "<p><font color=\"red\">". check_output($error) ."</font></p>";
+    }
+
+    $output .= form_textfield(t("Username"), "name", $user->name, 30, 55, t("Your full name or your prefered username: only letters, numbers and spaces are allowed."));
+    $output .= form_textfield(t("E-mail address"), "mail", $user->mail, 30, 55, t("Insert a valid e-mail address.  All emails from the system will be sent to this address. The email address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by email."));
+    $output .= form_textfield(t("Jabber ID"), "jabber", $user->jabber, 30, 55, t("Insert a valid Jabber ID.  If you are using your Jabber ID to log in,  it must be correct.  Your Jabber ID is not made public and is only used to log in or to authenticate for affilliate services."));
+    $output .= form_textfield(t("Homepage"), "homepage", $user->homepage, 30, 55, t("Optional") .". ". t("Make sure you enter a fully qualified URL: remember to include \"http://\"."));
+    foreach ($themes as $key=>$value) $options .= "<OPTION VALUE=\"$key\"". (($user->theme == $key) ? " SELECTED" : "") .">$key - $value[1]</OPTION>\n";
+    $output .= form_item(t("Theme"), "<SELECT NAME=\"edit[theme]\">$options</SELECT>", t("Selecting a different theme will change the look and feel of the site."));
+    for ($zone = -43200; $zone <= 46800; $zone += 3600) $zones[$zone] = date("l, F dS, Y - h:i A", time() - date("Z") + $zone) ." (GMT ". $zone / 3600 .")";
+    $output .= form_select(t("Timezone"), "timezone", $user->timezone, $zones, t("Select what time you currently have and your timezone settings will be set appropriate."));
+    $output .= form_select(t("Language"), "language", $user->language, $languages, t("Selecting a different language will change the language of the site."));
+    $output .= form_textarea(t("Signature"), "signature", $user->signature, 70, 3, t("Your signature will be publicly displayed at the end of your comments.") ."<br />". t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
+    $output .= form_item(t("Password"), "<input type=\"password\" name=\"edit[pass1]\" size=\"12\" maxlength=\"24\"> <input type=\"password\" name=\"edit[pass2]\" size=\"12\" maxlength=\"24\">", t("Enter your new password twice if you want to change your current password or leave it blank if you are happy with your current password."));
+    $output .= form_submit(t("Save user information"));
+  }
+
+  return form($REQUEST_URI, $output);
+}
+
+function user_menu() {
+  $links[] = "<a href=\"module.php?mod=user&op=view\">view user information</a>";
+  $links[] = "<a href=\"module.php?mod=user&op=edit\">edit user information</a>";
+  $links[] = "<a href=\"module.php?mod=user&op=logout\">logout</a>";
+
+  return "<div align=\"center\">". implode(" &middot; ", $links) ."</div>";
+}
+
+function user_view($uid = 0) {
+  global $theme, $user, $HTTP_HOST;
+
+  if (!$uid) {
+    $uid = $user->uid;
+  }
+
+  if ($user->uid && $user->uid == $uid) {
+    $output .= form_item(t("Name"), check_output("$user->name ($user->init)"));
+    $output .= form_item(t("E-mail address"), check_output($user->mail));
+    $output .= form_item(t("Drupal ID"), strtolower(urlencode($user->name) ."@$HTTP_HOST"));
+    $output .= form_item(t("Jabber ID"), check_output($user->jabber));
+    $output .= form_item(t("Homepage"), format_url($user->homepage));
+    $output .= form_item(t("Signature"), check_output($user->signature, 1));
+
+    $theme->header();
+    $theme->box(t("User account"), user_menu());
+    $theme->box(t("View user information"), $output);
+    $theme->footer();
+  }
+  else if ($uid && $account = user_load(array("uid" => $uid, "status" => 1))) {
+    $output .= form_item(t("Name"), check_output($account->name));
+    $output .= form_item(t("Homepage"), format_url($account->homepage));
+
+    $theme->header();
+    $theme->box(t("View user information"), $output);
+    $theme->footer();
+  }
+  else {
+    $theme->header();
+    $theme->box(t("Log in"), user_login());
+    $theme->box(t("Create new user account"), user_register());
+    $theme->box(t("E-mail new password"), user_pass());
+    $theme->footer();
+  }
+}
+
+function user_page() {
+  global $edit, $op, $id, $theme;
+
+  switch ($op) {
+    case t("E-mail new password");
+    case "password":
+      $theme->header();
+      $theme->box(t("E-mail new password"), user_pass($edit));
+      $theme->footer();
+      break;
+    case t("Create new account"):
+    case "register":
+      $theme->header();
+      $theme->box(t("Create new account"), user_register($edit));
+      $theme->footer();
+      break;
+    case t("Log in"):
+    case "login":
+      $output = user_login($edit);
+      $theme->header();
+      $theme->box(t("Log in"), $output);
+      $theme->footer();
+      break;
+    case t("Save user information"):
+    case "edit":
+      $output = user_edit($edit);
+      $theme->header();
+      $theme->box(t("User account"), user_menu());
+      $theme->box(t("Edit user information"), $output);
+      $theme->footer();
+      break;
+    case "view":
+      user_view($id);
+      break;
+    case t("Logout"):
+    case "logout":
+      print user_logout();
+      break;
+    default:
+      print user_view();
+  }
+
+}
+
+/*** Administrative features ***********************************************/
+
+function user_conf_options() {
+  $output .= form_select("Allow authentication with Drupal IDs", "user_drupal", variable_get("user_drupal", 1), array("Disabled", "Enabled"), "Allow people to authenticate with their Drupal ID and password from other Drupal sites.");
+  $output .= form_select("Allow authentication with Jabber IDs", "user_jabber", variable_get("user_jabber", 1), array("Disabled", "Enabled"), "Allow people to authenticate with their Jabber ID.");
+  $output .= form_select("Public registrations", "user_register", variable_get("user_register", 1), array("Only site administrators can create new user accounts.", "Visitors can create accounts but administrator approval is required.", "Visitors can create accounts and no administrator approval is required."));
+  $output .= form_textfield("Password words", "user_password", variable_get("user_password", "foo,bar,guy,neo,tux,moo,sun,asm,dot,god,axe,geek,nerd,fish,hack,star,mice,warp,moon,hero,cola,girl,fish,java,perl,boss,dark,sith,jedi,drop,mojo"), 55, 256, "A comma separated list of short words that can be concatenated to generate human-readable passwords.");
+
+  return $output;
+}
+
+function user_admin_settings($edit = array()) {
+  global $op, $REQUEST_URI;
+
+  if ($op == "Save configuration") {
+    /*
+    ** Save the configuration options:
+    */
+
+    foreach ($edit as $name => $value) variable_set($name, $value);
+  }
+
+  if ($op == "Reset to defaults") {
+    /*
+    ** Reset the configuration options to their default value:
+    */
+
+    foreach ($edit as $name=>$value) variable_del($name);
+  }
+
+  $output .= user_conf_options();
+  $output .= form_submit("Save configuration");
+  $output .= form_submit("Reset to defaults");
+
+  return form($REQUEST_URI, $output);
+
+}
+
+function user_admin_create($edit = array()) {
+  global $REQUEST_URI;
+
+  if ($edit["name"] || $edit["mail"]) {
+    if ($error = user_validate_name($edit["name"])) {
+      // do nothing
+    }
+    else if ($error = user_validate_mail($edit["mail"])) {
+      // do nothing
+    }
+    else if (db_num_rows(db_query("SELECT name FROM user WHERE LOWER(name) = LOWER('". $edit["name"] ."')")) > 0) {
+      $error = sprintf(t("The name '%s' is already taken."), $edit["name"]);
+    }
+    else if (db_num_rows(db_query("SELECT mail FROM user WHERE LOWER(mail) = LOWER('". $edit["mail"] ."')")) > 0) {
+      $error = sprintf(t("The e-mail address '%s' is already taken."), $edit["mail"]);
+    }
+    else {
+      $success = 1;
+    }
+  }
+
+  if ($success) {
+
+    watchdog("user", "new user: '". $edit["name"] ."' &lt;". $edit["mail"] ."&gt;");
+
+    user_save("", array("name" => $edit["name"], "pass" => $edit["pass"], "init" => $edit["mail"], "mail" => $edit["mail"], "role" => "authenticated user", "status" => 1));
+
+    return "Created a new user '". $edit["name"] ."'.  No e-mail has been sent.";
+  }
+  else {
+
+    if ($error) {
+      $output .= "<p><font color=\"red\">". check_output($error) ."</font></p>";
+    }
+
+    $output .= form_textfield("Username", "name", $edit["name"], 30, 55);
+    $output .= form_textfield("E-mail address", "mail", $edit["mail"], 30, 55);
+    $output .= form_textfield("Password", "pass", $edit["pass"], 30, 55);
+    $output .= form_submit("Create account");
+
+    return form($REQUEST_URI, $output);
+  }
+}
+
+function user_admin_access($edit = array()) {
+  global $op, $id, $type, $REQUEST_URI;
+
+  $output .= "<small><a href=\"admin.php?mod=user&op=access&type=mail\">e-mail rules</a>, <a href=\"admin.php?mod=user&op=access&type=user\">username rules</a></small><hr />";
+
+  if ($type != "user") {
+    $output .= "<h3>E-mail rules</h3>";
+    $type = "mail";
+  }
+  else {
+    $output .= "<h3>Username rules</h3>";
+  }
+
+  if ($op == "Add rule") {
+    db_query("INSERT INTO access (mask, type, status) VALUES ('". check_input($edit["mask"]) ."', '". check_input($type) ."', '". check_input($edit["status"]) ."')");
+  }
+  else if ($op == "Check") {
+    if (user_deny($type, $edit["test"])) {
+      $message = "<b>'". $edit["test"] ."' is not allowed.</b><p />";
+    }
+    else {
+      $message = "<b>'". $edit["test"] ."' is allowed.</b><p />";
+    }
+  }
+  else if ($id) {
+    db_query("DELETE FROM access WHERE aid = '$id'");
+  }
+
+  $output .= "<form action=\"$REQUEST_URI\" method=\"post\">";
+  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
+  $output .= " <tr><th>type</th><th>mask</th><th>operations</th></tr>";
+
+  $result = db_query("SELECT * FROM access WHERE type = '". check_input($type) ."' AND status = '1' ORDER BY mask");
+
+  while ($rule = db_fetch_object($result)) {
+    $output .= "<tr><td align=\"center\">allow</td><td>". check_output($rule->mask) ."</td><td><a href=\"admin.php?mod=user&op=access&type=$type&id=$rule->aid\">delete rule</a></td></tr>";
+  }
+
+  $result = db_query("SELECT * FROM access WHERE type = '". check_input($type) ."' AND status = '0' ORDER BY mask");
+
+  while ($rule = db_fetch_object($result)) {
+    $output .= "<tr><td align=\"center\">deny</td><td>". check_output($rule->mask) ."</td><td><a href=\"admin.php?mod=user&op=access&type=$type&id=$rule->aid\">delete rule</a></td></tr>";
+  }
+
+  $output .= " <tr><td><select name=\"edit[status]\"><option value=\"1\">allow</option><option value=\"0\">deny</option></select></td><td><input size=\"32\" maxlength=\"64\" name=\"edit[mask]\" /></td><td><input type=\"submit\" name=\"op\" value=\"Add rule\" /></td></tr>";
+  $output .= "</table>";
+  $output .= "<p><small>%: matches any number of characters, even zero characters.<br />_: matches exactly one character.</small></p>";
+
+  if ($type != "user") {
+    $output .= "<h3>Check e-mail address</h3>";
+  }
+  else {
+    $output .= "<h3>Check username</h3>";
+  }
+
+  $output .= "$message<input size=\"32\" maxlength=\"64\" name=\"edit[test]\" value=\"". $edit["test"] ."\" /><input type=\"submit\" name=\"op\" value=\"Check\" />";
+
+  $output .= "</form>";
+
+  return $output;
+
+}
+
+function user_admin_perm($edit = array()) {
+  global $REQUEST_URI;
+
+  if ($edit) {
+
+    /*
+    ** Save permissions:
+    */
+
+    $result = db_query("SELECT * FROM role");
+    while ($role = db_fetch_object($result)) {
+      $perm = $edit[$role->name] ? implode(", ", array_keys($edit[$role->name])) : "";
+      db_query("UPDATE role SET perm = '$perm' WHERE name = '$role->name'");
+    }
+  }
+
+  /*
+  ** Compile permission array:
+  */
+
+  foreach (module_list() as $name) {
+    if (module_hook($name, "perm")) {
+      $perms = array_merge($perms, module_invoke($name, "perm"));
+    }
+  }
+  asort($perms);
+
+  /*
+  ** Compile role array:
+  */
+
+  $result = db_query("SELECT * FROM role ORDER BY name");
+  while ($role = db_fetch_object($result)) {
+    $roles[$role->name] = $role->perm;
+  }
+
+  /*
+  ** Render roles / permission overview:
+  */
+
+  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
+  $output .= " <tr><th>&nbsp;</th><th>". implode("</th><th>", array_keys($roles)) ."</th></tr>";
+  foreach ($perms as $perm) {
+    $output .= " <tr>";
+    $output .= "  <td>". check_output($perm) ."</td>";
+    foreach ($roles as $name => $value) {
+      $output .= "  <td align=\"center\"><input type=\"checkbox\" name=\"edit[$name][$perm]\"". (strstr($value, $perm) ? " checked=\"checked\"" : "") ."></td>";
+    }
+    $output .= " </tr>";
+  }
+  $output .= "</table>";
+  $output .= form_submit("Save permissions");
+
+  return form($REQUEST_URI, $output);
+
+}
+
+function user_admin_role($edit = array()) {
+  global $op, $id, $REQUEST_URI;
+
+  if ($op == "Save role") {
+    db_query("UPDATE role SET name = '". $edit["name"] ."' WHERE rid = '$id'");
+  }
+  else if ($op == "Delete role") {
+    db_query("DELETE FROM role WHERE rid = '$id'");
+  }
+  else if ($op == "Add role") {
+    db_query("INSERT INTO role (name) VALUES ('". $edit["name"] ."')");
+  }
+  else if ($id) {
+
+    /*
+    ** Display role form:
+    */
+
+    $role = db_fetch_object(db_query("SELECT * FROM role WHERE rid = '$id'"));
+
+    $output .= form_textfield("Role name", "name", $role->name, 32, 64, "The name for this role.  Example: 'moderator', 'editorial board', 'site architect'.");
+    $output .= form_submit("Save role");
+    $output .= form_submit("Delete role");
+
+    $output = form($REQUEST_URI, $output);
+  }
+
+  if (!$output) {
+    /*
+    ** Render role overview:
+    */
+
+    $result = db_query("SELECT * FROM role ORDER BY name");
+
+    $output .= "<form action=\"$REQUEST_URI\" method=\"post\">";
+    $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
+    $output .= " <tr><th>name</th><th>operations</th></tr>";
+    while ($role = db_fetch_object($result)) {
+      $output .= "<tr><td>". check_output($role->name) ."</td><td><a href=\"admin.php?mod=user&op=role&id=$role->rid\">edit role</a></td></tr>";
+    }
+    $output .= " <tr><td><input size=\"32\" maxlength=\"64\" name=\"edit[name]\" /></td><td><input type=\"submit\" name=\"op\" value=\"Add role\" /></td></tr>";
+    $output .= "</form>";
+    $output .= "</table>";
+  }
+
+  return $output;
+}
+
+function user_admin_edit($edit = array()) {
+  global $op, $id, $REQUEST_URI, $HTTP_HOST;
+
+  if ($account = user_load(array("uid" => $id))) {
+    if ($op == "Save account") {
+      $account = user_save($account, $edit);
+    }
+    else if ($op == "Delete account") {
+      if ($edit["status"] == 0) {
+        db_query("DELETE FROM user WHERE uid = '$account->uid'");
+        $output .= "The account has been deleted.";
+      }
+      else {
+        $output .= "Failed to delete account: the account has to be blocked first.";
+      }
+    }
+
+    if (!$output) {
+
+      /*
+      ** Display user form:
+      */
+
+      $output .= form_item("User ID", check_output($account->uid));
+      $output .= form_item(t("Name"), check_output("$account->name ($account->init)"));
+      $output .= form_item(t("E-mail address"), format_email($account->mail));
+      $output .= form_item(t("Drupal ID"), strtolower(urlencode($account->name) ."@$HTTP_HOST"));
+      $output .= form_item(t("Jabber ID"), check_output($account->jabber));
+      $output .= form_select("Status", "status", $account->status, array("blocked", "active"));
+      $output .= form_select("Role", "role", $account->role, access_get_roles());
+
+      $output .= form_submit("Save account");
+      $output .= form_submit("Delete account");
+
+      $output = form($REQUEST_URI, $output);
+    }
+  }
+  else {
+    $output = "no such user";
+  }
+
+  return $output;
+}
+
+function user_admin_account() {
+  global $query;
+
+  $queries = array(array("ORDER BY timestamp DESC", "active users"), array("ORDER BY uid DESC", "new users"), array("WHERE status = 0 ORDER BY uid DESC", "blocked users"), array("WHERE role != 'authenticated user' ORDER BY uid DESC", "special users"));
+
+  $result = db_query("SELECT uid, name, timestamp FROM user ". $queries[$query ? $query : 0][0] ." LIMIT 50");
+
+  foreach ($queries as $key => $value) {
+    $links[] = "<a href=\"admin.php?mod=user&op=account&query=$key\">$value[1]</a>";
+  }
+
+  $output .= "<small>". implode(" :: ", $links) ."</small><hr />";
+
+  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
+  $output .= " <tr><th>username</th><th>last access</th><th>operations</th></tr>";
+  while ($account = db_fetch_object($result)) {
+    $output .= " <tr><td>". format_name($account) ."</td><td>". format_date($account->timestamp, "small") ."</td><td align=\"center\"><a href=\"admin.php?mod=user&op=edit&id=$account->uid\">edit account</a></td></tr>";
+  }
+  $output .= "</table>";
+
+  return $output;
+
+}
+
+function admin_access_init() {
+  $role = db_fetch_object(db_query("SELECT * FROM role WHERE name = 'anonymous user'"));
+  if (!$role) db_query("INSERT INTO role (name) VALUES ('anonymous user')");
+
+  $role = db_fetch_object(db_query("SELECT * FROM role WHERE name = 'authenticated user'"));
+  if (!$role) db_query("INSERT INTO role (name) VALUES ('authenticated user')");
+}
+
+
+function user_admin() {
+  global $edit, $id, $op, $user;
+
+  /*
+  ** Initialize all the roles and permissions:
+  */
+
+  admin_access_init();
+
+  /*
+  ** Compile all the administrative links:
+  */
+
+  $links[] = "<a href=\"admin.php?mod=user&op=create\">add new user</a>";
+  $links[] = "<a href=\"admin.php?mod=user&op=access\">access rules</a>";
+  $links[] = "<a href=\"admin.php?mod=user&op=account\">user accounts</a>";
+  $links[] = "<a href=\"admin.php?mod=user&op=role\">user roles</a>";
+  $links[] = "<a href=\"admin.php?mod=user&op=permission\">user permissions</a>";
+  $links[] = "<a href=\"admin.php?mod=user&op=settings\">settings</a>";
+  $links[] = "<a href=\"admin.php?mod=user&op=help\">help</a>";
+
+  print "<small>". implode(" &middot; ", $links) ."</small><hr />";
+
+  switch ($op) {
+    case "help":
+      print user_help();
+      break;
+    case "Save configuration":
+    case "Reset to defaults":
+    case "settings":
+      print user_admin_settings($edit);
+      break;
+    case "Add rule":
+    case "Check":
+    case "access":
+      print user_admin_access($edit);
+      break;
+    case "Save permissions":
+    case "permission":
+      print user_admin_perm($edit);
+      break;
+    case "Create account":
+    case "create":
+      print user_admin_create($edit);
+      break;
+    case "Add role":
+    case "Delete role":
+    case "Save role":
+    case "role":
+      print user_admin_role($edit);
+      break;
+    case "Delete account":
+    case "Save account":
+    case "edit":
+      print user_admin_edit($edit);
+      break;
+    default:
+      print user_admin_account();
+  }
+}
+
+?>
