@@ -108,12 +108,12 @@ function import_link($type) {
   if ($type == "system") {
     if (user_access("administer news feeds")) {
 
-      menu("admin/node/syndication", "syndication", NULL, NULL, 5);
-      menu("admin/node/syndication/news", "feeds", "import_admin", import_help("admin/node/syndication/news") );
-      menu("admin/node/syndication/news/add/feed", "new feed", "import_admin", import_help("admin/node/syndication/news/add/feed"), 2);
-      menu("admin/node/syndication/news/add/bundle", "new bundle", "import_admin", import_help("admin/node/syndication/news/add/bundle"), 3);
-      menu("admin/node/syndication/news/tag", "tag items", "import_admin", import_help("admin/node/syndication/news/tag"), 4);
-      menu("admin/node/syndication/news/help", "help", "import_help", NULL, 9);
+      menu("admin/node/syndication", t("syndication"), NULL, NULL, 5);
+      menu("admin/node/syndication/news", t("feeds"), "import_admin", import_help("admin/node/syndication/news") );
+      menu("admin/node/syndication/news/add/feed", t("new feed"), "import_admin", import_help("admin/node/syndication/news/add/feed"), 2);
+      menu("admin/node/syndication/news/add/bundle", t("new bundle"), "import_admin", import_help("admin/node/syndication/news/add/bundle"), 3);
+      menu("admin/node/syndication/news/tag", t("tag items"), "import_admin", import_help("admin/node/syndication/news/tag"), 4);
+      menu("admin/node/syndication/news/help", t("help"), "import_help", NULL, 9);
     }
   }
 

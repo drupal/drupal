@@ -470,7 +470,7 @@ function user_link($type) {
       menu("user/logout", t("log out"), NULL, NULL, 10);
     }
     if (user_access("administer users")) {
-      menu("admin/user", "accounts", "user_admin", user_help("admin/user"), 2);
+      menu("admin/user", t("accounts"), "user_admin", user_help("admin/user"), 2);
       menu("admin/user/create", t("new user"), "user_admin", user_help("admin/user/create"), 1);
       menu("admin/user/account", t("users"), "user_admin", user_help("admin/user/account"), 2);
       menu("admin/user/access", t("access rules"), NULL, user_help("admin/user/access"), 3);
@@ -485,7 +485,7 @@ function user_link($type) {
 
       $i = 2;
       foreach (user_roles(1) as $key => $value) {
-        menu("admin/user/account/". $i++, "users with role '$value'", "user_admin", NULL, 4);
+        menu("admin/user/account/". $i++, t("users with role '%role'", array("%role" => $value)), "user_admin", NULL, 4);
       }
     }
   }

@@ -137,7 +137,7 @@ function menu_tree($parent = "") {
         $style = ($_list[$item]["children"] ? (menu_in_active_trail($item)  ? "expanded" : "collapsed") : "leaf");
         $output .= "<li class=\"$style\">";
         $output .= _render_item($item);
-        if (menu_in_active_trail($item, $trail)) {
+        if (menu_in_active_trail($item)) {
           $output .= menu_tree($item);
         }
         $output .= "</li>\n";
