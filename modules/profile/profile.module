@@ -27,7 +27,7 @@ function profile_menu() {
   global $user;
 
   $items = array();
-  $items[] = array('path' => 'profile', 'title' => t('browse'),
+  $items[] = array('path' => 'profile', 'title' => t('user list'),
     'callback' => 'profile_browse',
     'access' => TRUE,
     'type' => MENU_SUGGESTED_ITEM);
@@ -61,7 +61,7 @@ function profile_browse() {
 
   $field = db_fetch_object(db_query("SELECT DISTINCT(fid), type, title, page FROM {profile_fields} WHERE name = '%s'", $name));
 
-  if ($field->fid) {
+  if ($name && $field->fid) {
     // Compile a list of fields to show
     $fields = array();
     $result = db_query('SELECT name, title, type FROM {profile_fields} WHERE fid != %d AND visibility = %d', $field->fid, PROFILE_PUBLIC_LISTINGS);
@@ -101,8 +101,28 @@ function profile_browse() {
 
     print theme('page', $output, $title);
   }
-  else {
+  else if ($name && !$field->id) {
     drupal_not_found();
+  }
+  else {
+    // Compile a list of fields to show
+    $fields = array();
+    $result = db_query('SELECT name, title, type FROM {profile_fields} WHERE visibility = %d', PROFILE_PUBLIC_LISTINGS);
+    while ($record = db_fetch_object($result)) {
+      $fields[] = $record;
+    }
+
+    // Extract the affected users:
+    $result = pager_query("SELECT uid FROM {users} WHERE uid > 0 ORDER BY changed DESC", 20, 0, NULL);
+
+    $output = '<div id="profile">';
+    while ($account = db_fetch_object($result)) {
+      $output .= theme('profile_profile', user_load(array('uid' => $account->uid)), $fields);
+    }
+    $output .= '</div>';
+    $output .= theme('pager', NULL, 20);
+
+    print theme('page', $output, t('user list'));
   }
 }
 
