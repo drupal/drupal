@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.15 2002/06/14 04:30:30 dries Exp $
+// $Id: taxonomy.module,v 1.16 2002/08/16 07:21:01 dries Exp $
 
 function taxonomy_system($field){
   $system["description"] = t("Enables the organization of content into categories.");
@@ -513,8 +513,7 @@ function _taxonomy_term_select($title, $name, $value, $vocabulary_id, $descripti
       $select .= "<option value=\"$key\"". (is_array($value) ? (in_array($key, $value) ? " selected=\"selected\"" : "") : ($key == $value ? " selected=\"selected\"" : "")) .">". check_form($choice) ."</option>";
     }
 
-    // min 8, possibly options/3 (set max too?)
-    $size = max(8, round(count($options)) / 3);
+    $size = min(12, count($options));
 
     return form_item($title, "<select name=\"edit[$name][]\"". ($multiple ? " multiple size=\"$size\"" : "") . ($extra ? " $extra" : "") .">$select</select>", $description);
   }
