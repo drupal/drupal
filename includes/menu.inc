@@ -133,7 +133,12 @@ function menu_tree($parent = "") {
     $output = "\n<ul>\n";
     usort($_list[$parent]["children"], "_menu_sort");
     foreach ($_list[$parent]["children"] as $item) {
-      if ($_list[$item]["hidden"] == 0) {
+      /*
+      ** Don't render the menu when it is hidden, or when it has no call-back
+      ** nor children.  The latter check avoids that useless links are being
+      ** rendered.
+      */
+      if ($_list[$item]["hidden"] == 0 && ($_list[$item]["callback"] || $_list[$item]["children"])) {
         $style = ($_list[$item]["children"] ? (menu_in_active_trail($item)  ? "expanded" : "collapsed") : "leaf");
         $output .= "<li class=\"$style\">";
         $output .= _render_item($item);

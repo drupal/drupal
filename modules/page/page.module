@@ -97,7 +97,7 @@ function page_link($type) {
 
   if ($type == "system") {
     if (user_access("maintain static pages")) {
-      menu("node/add/page", t("static page"), NULL, NULL, 0);
+      menu("node/add/page", t("static page"), "page_page", NULL, 0);
     }
   }
 
