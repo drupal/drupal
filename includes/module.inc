@@ -71,7 +71,7 @@ function module_list($refresh = 0, $bootstrap = 0) {
         }
       }
     }
-    sort($list);
+    asort($list);
   }
   return $list;
 }
