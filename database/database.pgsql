@@ -11,7 +11,6 @@ CREATE TABLE access (
   type varchar(255) NOT NULL default '',
   status smallint NOT NULL default '0',
   PRIMARY KEY (aid),
-  UNIQUE (mask)
 );
 
 --
