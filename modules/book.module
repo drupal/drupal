@@ -223,7 +223,7 @@ function book_form(&$node) {
   global $user;
 
   $op = $_POST['op'];
-  $output = form_select(t('Parent'), 'parent', $node->parent, book_toc($node->nid), t('The parent subject or category the page belongs in.'));
+  $output = form_select(t('Parent'), 'parent', $node->parent, book_toc($node->nid), t('The parent that this page belongs in. Note that pages whose parent is &lt;top-level&gt; are regarded as independent, top-level books.'));
 
   if (function_exists('taxonomy_node_form')) {
     $output .= implode('', taxonomy_node_form('book', $node));
@@ -231,10 +231,10 @@ function book_form(&$node) {
 
   $output .= form_textarea(t('Body'), 'body', $node->body, 60, 20, '', NULL, TRUE);
   $output .= filter_form('format', $node->format);
-  $output .= form_textarea(t('Log message'), 'log', $node->log, 60, 5, t('An explanation of the additions or updates being made to help the group understand your motivations.'));
+  $output .= form_textarea(t('Log message'), 'log', $node->log, 60, 5, t('An explanation of the additions or updates being made to help other authors understand your motivations.'));
 
   if (user_access('administer nodes')) {
-    $output .= form_weight(t('Weight'), 'weight', $node->weight, 15, t('The heavier pages will sink and the lighter pages will be positioned nearer the top.'));
+    $output .= form_weight(t('Weight'), 'weight', $node->weight, 15, t('Pages at a given level are ordered first by weight and then by title.'));
   }
   else {
     // If a regular user updates a book page, we create a new revision
@@ -279,7 +279,7 @@ function book_outline() {
         $page = db_fetch_object(db_query('SELECT * FROM {book} WHERE nid = %d', $node->nid));
 
         $output  = form_select(t('Parent'), 'parent', $page->parent, book_toc($node->nid), t('The parent page in the book.'));
-        $output .= form_weight(t('Weight'), 'weight', $page->weight, 15, t('The heavier pages will sink and the lighter pages will be positioned nearer the top.'));
+        $output .= form_weight(t('Weight'), 'weight', $node->weight, 15, t('Pages at a given level are ordered first by weight and then by title.'));
 
         if ($page->nid) {
           $output .= form_submit(t('Update book outline'));
