@@ -263,7 +263,7 @@ function block_admin_configure($module = NULL, $delta = 0) {
       $group_2 .= form_textarea(t('Pages'), 'pages', $edit['pages'], 40, 5, t("Enter one page per line as Drupal paths. The '*' character is a wildcard. Example paths are '<em>blog</em>' for the blog page and '<em>blog/*</em>' for every personal blog. '<em>&lt;front&gt;</em>' is the front page."));
       $group_3 = form_checkboxes(t('Restrict block to specific content types'), 'types', explode(',', $edit['types']), $content_types, t('Selecting one or more content types will cause this block to only be shown on pages of the selected types. This feature works alone or in conjunction with page specific visibility settings. For example, you can specify that a block only appear on book pages in the \'FAQ\' path.'), NULL, FALSE);
 
-      $form  = form_group(t('User specific visibility settings'), $group_1);
+      $form .= form_group(t('User specific visibility settings'), $group_1);
       $form .= form_group(t('Page specific visibility settings'), $group_2);
       $form .= form_group(t('Content specific visibility settings'), $group_3);
 
