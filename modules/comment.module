@@ -2,7 +2,7 @@
 // $Id$
 
 $GLOBALS["cmodes"] = array(1 => "Flat list - collapsed", 2 => "Flat list - expanded", 3 => "Threaded list - collapsed", 4 => "Threaded list - expanded");
-$GLOBALS["corder"] = array(1 => "Date - oldest first", 2 => "Date - newest first");
+$GLOBALS["corder"] = array(1 => "Date - newest first", 2 => "Date - oldest first");
 
 function comment_settings($mode, $order, $threshold) {
   global $user;
@@ -43,6 +43,8 @@ function comment_tag_new($nid) {
   global $user;
 
   if ($user->uid) {
+    $nid = check_query($nid);
+
     $result = db_query("SELECT timestamp FROM history WHERE uid = '$user->uid' AND nid = '$nid'");
     if (db_fetch_object($result)) {
       db_query("UPDATE history SET timestamp = '". time() ."' WHERE uid = '$user->uid' AND nid = '$nid'");
@@ -50,6 +52,28 @@ function comment_tag_new($nid) {
     else {
       db_query("INSERT INTO history (uid, nid, timestamp) VALUES ('$user->uid', '$nid', '". time() ."')");
     }
+  }
+}
+
+function comment_is_new($comment) {
+  global $user;
+  static $date;
+ 
+  if (!$date) {
+    if ($user->uid) {
+      $history = db_fetch_object(db_query("SELECT timestamp FROM history WHERE uid = '$user->uid' AND nid = '$comment->nid'"));
+      $date = $history->timestamp ? $history->timestamp : 0;
+    }
+    else {
+      $date = time();
+    }
+  }
+
+  if ($comment->timestamp > $date) {
+    return 1;
+  }
+  else {
+    return 0;
   }
 }
 
@@ -350,7 +374,11 @@ function comment_links($comment, $return = 1) {
 }
 
 function comment_view($comment, $folded = 0) {
-  global $theme;
+  global $theme, $id;
+
+  if (comment_is_new($comment)) {
+    $comment->subject = "$comment->subject <font color=\"red\">*</font>";
+  }
 
   if ($folded) {
     $theme->comment($comment, $folded);
@@ -467,7 +495,7 @@ function comment_render($nid, $cid) {
         }
 
         if ($comments) {
-          comment_thread_min(array_reverse($comments), $threshold);
+          comment_thread_min($comments, $threshold);
         }
       }
       else {
@@ -477,13 +505,18 @@ function comment_render($nid, $cid) {
         }
 
         if ($comments) {
-          comment_thread_max(array_reverse($comments), $threshold);
+          comment_thread_max($comments, $threshold);
         }
       }
     }
 
     print "</form>";
 
+    /*
+    ** Tag the node's comments as being read:
+    */
+
+    comment_tag_new($nid);
   }
 }
 
@@ -522,12 +555,6 @@ function comment_link($type, $node = 0, $main = 0) {
       }
     }
     else {
-      /*
-      ** Tag the node's comments as read:
-      */
-
-      comment_tag_new($node->nid);
-
       /*
       ** Node page: add a "post comment" link if the user is allowed to
       ** post comments.
