@@ -1,12 +1,11 @@
 <?php
-// $Id: locale.module,v 1.79 2003/10/07 18:16:41 dries Exp $
+// $Id: locale.module,v 1.80 2003/10/09 18:53:21 dries Exp $
 
-function locale_help($section = "admin/locale/help") {
+function locale_help($section = "admin/help#locale") {
   $output = "";
 
   switch ($section) {
-    case 'admin/help':
-    case 'admin/locale/help':
+    case 'admin/help#locale':
       $output .= "<p>Most programs are written and documented in English, and use English to interact with users.  This is also true for a great deal of web sites.  However, most people are less comfortable with English than with their native language, and would prefer to use their mother tongue as much as possible.  Many people love see their web site showing a lot less English, and far more of their own language.</p>";
       $output .= "<p>Therefore Drupal provides a framework to setup a multi-lingual web site, or to overwrite the default English texts.  We explored the various alternatives to support internationalization (I18N) and decided to design the framework in such a way that the impact of internationalization on drupal's sources is minimized, modular and doesn't require a HTML or PHP wizard to maintain translations.  Maintaining translations had to be simple so it became as easy as filling out forms on the administration page.</p>";
       $output .= "<h3>How to translate texts</h3>";
@@ -65,16 +64,16 @@ function locale_link($type) {
   if ($type == "system") {
     if (user_access("administer locales")) {
 
-      menu("admin/locale", t("localization"), NULL, locale_help("admin/locale"), 5);
-      menu("admin/locale/search", t("search string"), "locale_admin", locale_help("admin/locale/search"), 8);
-      menu("admin/locale/help", t("help"), "locale_help", NULL, 9);
-      menu("admin/locale/edit", t("edit string"), "locale_admin", NULL, 0, 1); // hidden menu
-      menu("admin/locale/delete", t("delete string"), "locale_admin", NULL, 0, 1); // hidden menu
+      menu("admin/locale", t("localization"), NULL, 5);
+      menu("admin/locale/search", t("search string"), "locale_admin", 8);
+      menu("admin/locale/help", t("help"), "locale_help", 9);
+      menu("admin/locale/edit", t("edit string"), "locale_admin", 0, 1); // hidden menu
+      menu("admin/locale/delete", t("delete string"), "locale_admin", 0, 1); // hidden menu
 
       foreach ($languages as $key => $value) {
-        menu("admin/locale/$key", "$value", NULL, locale_help("admin/locale"));
-        menu("admin/locale/$key/translated", t("translated strings"), "locale_admin", locale_help("admin/locale/translated"));
-        menu("admin/locale/$key/untranslated", t("untranslated strings"), "locale_admin", locale_help("admin/locale/untranslated"));
+        menu("admin/locale/$key", "$value", NULL);
+        menu("admin/locale/$key/translated", t("translated strings"), "locale_admin");
+        menu("admin/locale/$key/untranslated", t("untranslated strings"), "locale_admin");
       }
     }
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: poll.module,v 1.113 2003/10/07 18:16:41 dries Exp $
+// $Id: poll.module,v 1.114 2003/10/09 18:53:21 dries Exp $
 
 function poll_allowvotes(&$node) {
   /*
@@ -137,12 +137,12 @@ function poll_form(&$node, &$help, &$error) {
   return $output;
 }
 
-function poll_help($section = "admin/poll/help") {
+function poll_help($section = "admin/help#poll") {
   $output = "";
 
   switch ($section) {
 
-    case 'admin/poll/help':
+    case 'admin/help#poll':
       $output .= "<p>Users with the correct %permissions can create and/or vote on polls.</p>";
       $output .= "<ul>";
       $output .= "<li> To create a poll a user needs the \"create polls\" permission.</li>";
@@ -182,7 +182,7 @@ function poll_link($type, $node = 0, $main) {
 
   if ($type == "system") {
     if (user_access("create polls")) {
-      menu("node/add/poll", t("poll"), "poll_page", NULL, 0);
+      menu("node/add/poll", t("poll"), "poll_page", 0);
     }
   }
   else if ($type == "page" && user_access("access content")) {

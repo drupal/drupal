@@ -1,13 +1,12 @@
 <?php
-// $Id: import.module,v 1.125 2003/10/07 18:16:41 dries Exp $
+// $Id: import.module,v 1.126 2003/10/09 18:53:21 dries Exp $
 
 
-function import_help($section = "admin/import/help") {
+function import_help($section = "admin/help#import") {
   $output = "";
 
   switch ($section) {
-    case 'admin/help':
-    case 'admin/import/help':
+    case 'admin/help#import':
       $output .= "<p>Thousands of web sites, especially news sites and weblogs, syndicate their most recent site content for others to display. The syndicated content always includes titles, also known as headlines, for the newest published stories.  Each headline acts as a direct link to the stories on the remote site. Along with the headline, most sites typically provide either the first few paragraphs of the story or a short summary. Many individuals use client-based news aggregators on their personal computer to aggregate content, such as %amphetadesk</p>";
       $output .= "<p>Drupal also has a news aggregator built in as a standard feature. With it, you can subscribe to feeds from other sites and display their content for your site users. Simply enable the import module in site administration and enter the feeds that you choose.</p>";
       $output .= "<h3>What do I need to subscribe to a feed?</h3>";
@@ -99,12 +98,12 @@ function import_link($type) {
   if ($type == "system") {
     if (user_access("administer news feeds")) {
 
-      menu("admin/node/syndication", t("syndication"), NULL, NULL, 5);
-      menu("admin/node/syndication/news", t("RSS/RDF"), "import_admin", import_help("admin/node/syndication/news"));
-      menu("admin/node/syndication/news/add/feed", t("new feed"), "import_admin", import_help("admin/node/syndication/news/add/feed"), 2);
-      menu("admin/node/syndication/news/add/bundle", t("new bundle"), "import_admin", import_help("admin/node/syndication/news/add/bundle"), 3);
-      menu("admin/node/syndication/news/tag", t("tag items"), "import_admin", import_help("admin/node/syndication/news/tag"), 4);
-      menu("admin/node/syndication/news/help", t("help"), "import_help", NULL, 9);
+      menu("admin/node/syndication", t("syndication"), NULL, 5);
+      menu("admin/node/syndication/news", t("RSS/RDF"), "import_admin");
+      menu("admin/node/syndication/news/add/feed", t("new feed"), "import_admin", 2);
+      menu("admin/node/syndication/news/add/bundle", t("new bundle"), "import_admin", 3);
+      menu("admin/node/syndication/news/tag", t("tag items"), "import_admin", 4);
+      menu("admin/node/syndication/news/help", t("help"), "import_help", 9);
     }
   }
 

@@ -1,12 +1,11 @@
 <?php
-// $Id: drupal.module,v 1.58 2003/10/07 18:16:41 dries Exp $
+// $Id: drupal.module,v 1.59 2003/10/09 18:53:21 dries Exp $
 
-function drupal_help($section = "admin/drupal/help") {
+function drupal_help($section = "admin/help#drupal") {
   $output = "";
 
   switch ($section) {
-    case 'admin/help':
-    case 'admin/drupal/help':
+    case 'admin/help#drupal':
       $output .= "<p>The \"Drupal\" module features a capability whereby other drupal sites  may <i>call home</i> to report their existence.  In turn, this enables a pod of Drupal sites to find, cooperate and advertise each other.</p>";
       $output .= "<p>Currently, the main application of this feature is the %drupal-sites.  By default, fresh Drupal installations can use %Drupal as their <i>directory server</i> and report their existence.  This reporting occurs via scheduled %xml-rpc pings.</p>";
       $output .= "<p>Drupal administrators should simply enable this feature to get listed on the %drupal-sites; just set your site's name, e-mail address, slogan and mission statement.  Then make sure that the field called <i>Drupal XML-RPC server</i> on the %drupal-settings page is set to http://www.drupal.org/xmlrpc.php, and enable this feature using the dropdown directly below.</p>";
@@ -20,7 +19,7 @@ function drupal_help($section = "admin/drupal/help") {
     case 'admin/system/modules/drupal':
       $output = t("Using this your Drupal site can \"call home\" and add itself to the Drupal directory. If you want it to add itself to a different directory server you can change the %Drupal-setting setting -- but the directory server has to be able to handle Drupal XML. To get a full site listing go to the %general and set:<ul><li>The site name,</li><li>The site E-Mail address,</li><li>The site slogan, and</li><li>The site mission statement.</li></ul>", array("%Drupal-setting" => l(t("Drupal XML-RPC server"), "admin/system/modules/drupal"), "%general" => l(t("site configuration"), "admin/system")));
       break;
-    case 'user/help':
+    case 'user/help#drupal':
       $site = variable_get("site_name", "this web site");
 
       $output = "<p>%drupal is the name of the software which powers %site. There are Drupal web sites all over the world, and many of them share their registration databases so that users may freely login to any Drupal site using a single <b>Drupal ID</b>.</p>\n";
@@ -159,7 +158,7 @@ function drupal_auth($username, $password, $server) {
 function drupal_page() {
 
   theme("header");
-  theme("box", "Drupal", drupal_help("user/help"));
+  theme("box", "Drupal", drupal_help("user/help#drupal"));
   theme("footer");
 }
 

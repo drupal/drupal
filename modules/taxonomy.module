@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.70 2003/10/07 18:16:41 dries Exp $
+// $Id: taxonomy.module,v 1.71 2003/10/09 18:53:22 dries Exp $
 
 function taxonomy_feed($taxonomy) {
   global $id, $type;
@@ -24,9 +24,9 @@ function taxonomy_perm() {
 function taxonomy_link($type, $node = NULL) {
   if ($type == "system") {
     if (user_access("administer taxonomy")) {
-      menu("admin/taxonomy", t("taxonomy"), "taxonomy_admin", taxonomy_help("admin/taxonomy"), 3);
-      menu("admin/taxonomy/add/vocabulary", t("create new vocabulary"), "taxonomy_admin", taxonomy_help("admin/taxonomy/add/vocabulary"));
-      menu("admin/taxonomy/help", t("help"), "taxonomy_admin", NULL, 9);
+      menu("admin/taxonomy", t("taxonomy"), "taxonomy_admin", 3);
+      menu("admin/taxonomy/add/vocabulary", t("create new vocabulary"), "taxonomy_admin");
+      menu("admin/taxonomy/help", t("help"), "taxonomy_admin", 9);
     }
   }
   else if ($type == "taxonomy terms" && $node != NULL) {
@@ -795,7 +795,7 @@ function taxonomy_admin() {
   return $output;
 }
 
-function taxonomy_help($section = "admin/taxonomy/help") {
+function taxonomy_help($section = "admin/help#taxonomy") {
   $output = "";
 
   switch ($section) {
@@ -808,7 +808,7 @@ function taxonomy_help($section = "admin/taxonomy/help") {
     case 'admin/taxonomy/add/vocabulary':
       $output = t("When you create a controlled vocabulary you are creating a set of terms to use for describing content (known as descriptors in indexing lingo).  Drupal allows you to describe each node type (blog, story, etc.) using one or many of these terms. For simple implementations, you might create a set of categories without subcategories, similar to Slashdot.org's or Kuro5hin.org's sections. For more complex implementations, you might create a hierarchical list of categories.");
       break;
-    case 'admin/taxonomy/help':
+    case 'admin/help#taxonomy':
       $output .= "<h3>Background</h3><p>Taxonomy is the study of classification. Drupal's taxonomy module allows you to define categories which are used to classify content. The module supports hierarchical classification and association between terms, allowing for truly flexible information retrieval and classification. For more details about %classification-types and insight into the development of the <i>taxonomy.module</i>, see this %drupal-dis.</p>";
       $output .= "<h3>An example taxonomy: food</h3><ul><li>Dairy<ul><li>Milk</li></ul></li><li>Drink<ul><li>Alchohol<ul><li>Beer</li><li>Wine</li></ul></li><li>Pop</li><li>Milk</li></ul></li><li>Meat<ul><li>Beef</li><li>Chicken</li><li>Lamb</li></ul></li><li>Spices<ul><li>Sugar</li></ul></li></ul>";
       $output .= "<p><b>Notes</b></p><ul><li>The term <i>Milk</i> appears within both <i>Dairy</i> and <i>Drink</i>.  This is an example of <i>multiple parents</i> for a term.</li><li>In Drupal the order of siblings (e.g. <i>Beef</i>, <i>Chicken</i>, <i>Lamb</i>) in a taxonomy may be controlled with the <i>weight</i> parameter.</li></ul>";

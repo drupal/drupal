@@ -1,5 +1,5 @@
 <?php
-// $Id: bloggerapi.module,v 1.28 2003/10/07 18:16:40 dries Exp $
+// $Id: bloggerapi.module,v 1.29 2003/10/09 18:53:21 dries Exp $
 
 /*
 **  The Drupal Blogger API implementation.
@@ -337,8 +337,7 @@ function bloggerapi_help($section) {
   $output = "";
 
   switch ($section) {
-    case 'admin/bloggerapi/help':
-    case 'admin/help':
+    case 'admin/help#bloggerapi':
       $output  = "<h3>Introduction</h3>";
       $output .= "<p>%blogger-com, the well-known public weblog service, provides an application programing interface (API) to allow remote procedure calls (RPC) to the Blogger service.  Drupal supports this %blogger-api, which means that many remote clients (e.g. %client-radio, %client-blogbuddy, %client-w_bloggar, and %client-textrouter) may post to Drupal. These clients provide a bevy of interesting capabilities like offline composing, spellcheck, and WYSIWYG editing; many folks prefer to blog with a client application over typical web forms. By supporting the Blogger API, Drupal grows grander than a web site engine, it's a <i>content accepting machine</i>&trade;.</p>";
       $output .= "<p>The %blogger_api uses the %xml-rpc protocol for communicating with the outside world. %xml-rpc, originally developed by Dave Winer of %userland-software, is a simple XML-based RPC specification ideally suited to the web. Drupal also uses %xml-rpc for several other tasks (e.g. notifiying %weblogs-com of blog updates and making/accepting %dist-auth requests)</p>";

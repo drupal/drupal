@@ -1,12 +1,11 @@
 <?php
-// $Id: search.module,v 1.58 2003/10/07 18:16:41 dries Exp $
+// $Id: search.module,v 1.59 2003/10/09 18:53:22 dries Exp $
 
-function search_help($section = "admin/search/help") {
+function search_help($section = "admin/help#search") {
   $output = "";
 
   switch ($section) {
-    case 'admin/help':
-    case 'admin/search/help':
+    case 'admin/help#search':
       $output = "<b>Search guidelines</b>";
       $output .= "<p>The search page allows you to search the web site's content.  You can specify multiple words, and they will all be searched for.  You can also use wildcards, so 'walk*' will match 'walk', 'walking', 'walker', 'walkable' and so on.  Furthermore, searches are not case sensitive so searching for 'walk', 'Walk' or 'WALK' will yield exactly the same results.</p>";
       $output .= "<b>Words excluded from the search</b>";

@@ -1,5 +1,5 @@
 <?php
-// $Id: throttle.module,v 1.11 2003/10/07 18:16:41 dries Exp $
+// $Id: throttle.module,v 1.12 2003/10/09 18:53:22 dries Exp $
 
 function throttle_perm() {
   /*
@@ -9,7 +9,7 @@ function throttle_perm() {
   return array("access throttle box");
 }
 
-function throttle_help($section = "admin/throttle/help") {
+function throttle_help($section = "admin/help#throttle") {
 
   switch ($section) {
     case "admin/system/modules#description":
@@ -17,7 +17,7 @@ function throttle_help($section = "admin/throttle/help") {
       break;
     case "admin/system/modules/throttle":
       return t("If your site gets popular, or comes under a \"Denial of Service\" (DOS) attack, your hardware might become overwhelmed. These settings allow you to \"slow down\" the access to your site. To use throttle you need to have the %access enabled. For Drupal to preform throttling it needs to do an extra database query. This extra query happens on page displays. <b>Auto-throttle probability limiter</b> tells Drupal to do this extra DB query once every \"x\" page displays, where \"x\" is the percentage. So if it is set to 10%, the default, then for every 100 web pages it displays, it will preform the extra query ten time. ", array("%access" => l(t("access log"), "admin/system/modules/statistics")));
-    case "admin/throttle/help":
+    case "admin/help#throttle":
       $output .= "<h3>Introduction</h3><p>This Drupal module allows you to enable and configure the auto-throttle congestion control mechanism offered by the %stats-mod.  The auto-throttle mechanism allows your site to automatically adapt to different server levels.</p>";
       $output .= "<p>This module also adds a block that displays the current status of the throttle.  You must have \"%throttle-block\" privileges to view the block.  As a general rule of thumb, only site administrators should be granted access to this block.</p>";
       $output .= "<p>The auto-throttle mechanism performs an extra database query in order to determine what the current throttle level should be.  Fortunately the throttle can be tuned so these database queries only occur on a fraction of all pages geenrated by your site, reducing the overhead to an insignificant amount.  Additionally, when the top-most throttle level is reached, all throttle queries are suspended for a configurable period of time.  More detail follows.</p>";
