@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.76 2003/02/15 11:39:56 dries Exp $
+// $Id: page.module,v 1.77 2003/03/07 22:11:44 kjartan Exp $
 
 function page_help() {
   $output .= "<p>The page module is used to create a <i>static page</i>.  Unlike a story, a static page is a persistent web page on your site which usually shortcuts the typical lifecycle of user generated content (i.e. submit -&gt; moderate -&gt; post -&gt; comment).  A static page is usually linked from the main navigation bar, using whatever text the author wishes.  To create a static page without this navigation link, simply skip the form field which requests link text.</p>";
@@ -43,31 +43,12 @@ function page_access($op, $node) {
 }
 
 function page_save($op, $node) {
-
   if ($op == "approve") {
     return array("status" => 1);
   }
 
-  if ($op == "create") {
-    if ($node->format) {  // do not filter PHP code, do not auto-extract a teaser
-      return array("teaser" => $node->body, "format", "link", "description");
-    }
-    else {
-      return array("body" => filter($node->body), "teaser" => filter($node->teaser), "format", "link", "description");
-    }
-  }
-
   if ($op == "decline") {
     return array("status" => 0);
-  }
-
-  if ($op == "update") {
-    if ($node->format) {  // do not filter PHP code, do not auto-extract a teaser
-      return array("teaser" => $node->body, "format", "link", "description");
-    }
-    else {
-      return array("body" => filter($node->body), "teaser" => filter($node->teaser), "format", "link", "description");
-    }
   }
 }
 
@@ -154,6 +135,18 @@ function page_form(&$node, &$help, &$error) {
   $output .= form_select(t("Type"), "format", $node->format, array(0 => "HTML", 1 => "PHP"));
 
   return $output;
+}
+
+function page_validate(&$node) {
+  if ($node->format && user_access("create php content")) {  
+    // Do not filter PHP code, do not auto-extract a teaser
+    $node->teaser = $node->body;
+  }
+  else {
+    $node->format = 0;
+    $node->body = filter($node->body);
+    $node->teaser = filter($node->body);
+  }
 }
 
 ?>

@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.108 2003/03/07 06:37:30 dries Exp $
+// $Id: blog.module,v 1.109 2003/03/07 22:11:44 kjartan Exp $
 
 function blog_system($field){
   $system["description"] = t("Enables keeping a blog or easily and regularly updated web page.");
@@ -65,50 +65,6 @@ function blog_user($type, &$edit, &$user) {
     case "view_private":
       return form_item(t("Blog"), l(t("view recent blog entries"), "blog/$user->uid"));
   }
-}
-
-function blog_save($op, $node) {
-  if ($op == "approve") {
-    return array("promote" => 1);
-  }
-
-  if ($op == "create") {
-    if (user_access("administer nodes")) {
-      /*
-      ** When an administrator creates blog entries through the admin
-      ** pages, they will not be changed unless explicitly specified.
-      */
-
-      return array("body" => filter($node->body), "teaser" => filter($node->teaser));
-    }
-    else {
-      return array("body" => filter($node->body), "teaser" => filter($node->teaser), "promote" => 0, "moderate" => 1, "status" => 1);
-    }
-  }
-
-  if ($op == "decline") {
-    return array("promote" => 0);
-  }
-
-  if ($op == "update") {
-    if (user_access("administer nodes")) {
-      /*
-      ** When an administrator updates blog entries through the admin
-      ** pages, they will not be changed unless explicitly specified.
-      */
-
-      return array("body" => filter($node->body), "teaser" => filter($node->teaser));
-    }
-    else {
-      /*
-      ** Updating your own blog entry will demote it (if promoted),
-      ** and will queue it in the moderation queue for promotion.
-      */
-
-      return array("body" => filter($node->body), "teaser" => filter($node->teaser), "promote" => 0, "moderate" => 1, "score" => 0, "votes" => 0, "users" => 0);
-    }
-  }
-
 }
 
 function blog_help() {
@@ -294,6 +250,12 @@ function blog_block($op = "list", $delta = 0) {
     }
     return $block;
   }
+}
+
+function blog_validate(&$node) {
+  // Make sure all fields are set properly:
+  $node->body = filter($node->body);
+  $node->teaser = filter($node->teaser);
 }
 
 ?>

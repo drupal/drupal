@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.110 2003/03/06 08:19:01 dries Exp $
+// $Id: comment.module,v 1.111 2003/03/07 22:11:44 kjartan Exp $
 
 $GLOBALS["cmodes"] = array(1 => t("Flat list - collapsed"), 2 => t("Flat list - expanded"), 3 => t("Threaded list - collapsed"), 4 => t("Threaded list - expanded"));
 $GLOBALS["corder"] = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"));
@@ -671,7 +671,7 @@ function comment_link($type, $node = 0, $main = 0) {
     // comment settings:
     if (user_access("administer moderation")) {
       menu("admin/comment/votes", "comment moderation votes", "comment_admin", $help["settings"], 5);
-      menu("admin/comment/matrix", "ccomment moderation matrix", "comment_admin", $help["settings"], 5);
+      menu("admin/comment/matrix", "comment moderation matrix", "comment_admin", $help["settings"], 5);
       menu("admin/comment/filters", "comment moderation thresholds", "comment_admin", $help["settings"], 5);
       menu("admin/comment/roles", "initial comment scores", "comment_admin", $help["settings"], 5);
     }
@@ -1491,13 +1491,21 @@ function comment_update_index() {
 
 function comment_nodeapi(&$node, $op, $arg = 0) {
   switch ($op) {
-    case "form":
-      if ($arg == "admin" && user_access("administer comments")) {
-        return form_select(t("Allow user comments"), "comment", $node->comment, array(t("Disabled"), t("Read only"), t("Read-write")));
-      }
-      break;
+    case "conf":
+      $output[t("Comment")] = form_select("", "comment_$node->type", variable_get("comment_$node->type", 2), array("Disabled", "Read only", "Read/Write"));
+      return $output;
     case "fields":
       return array("comment");
+    case "form admin":
+      if (user_access("administer comments")) {
+        return form_select(t("Allow user comments"), "comment", isset($node->comment) ? $node->comment : variable_get("comment_$node->type", 2), array(t("Disabled"), t("Read only"), t("Read-write")));
+      }
+      break;
+    case "validate":
+      if (!user_access("administer nodes")) {
+        unset($node->comment);
+      }
+      break;
   }
 }
 

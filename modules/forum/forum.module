@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.81 2003/03/04 15:32:26 dries Exp $
+// $Id: forum.module,v 1.82 2003/03/07 22:11:44 kjartan Exp $
 
 function forum_system($field){
   $system["description"] = t("Enable threaded discussions about general topics.");
@@ -66,24 +66,6 @@ function forum_taxonomy($op, $type, $object) {
       // since none is already set, silently set this vocabulary as the navigation vocabulary
       variable_set("forum_nav_vocabulary", $object["vid"]);
     }
-  }
-}
-
-function forum_save($op, $node) {
-  if ($op == "approve") {
-    return array("status" => 1);
-  }
-
-  if ($op == "create") {
-    return array("body" => filter($node->body), "teaser" => filter($node->teaser), "moderate" => 0, "status" => 1, "tid", "icon_num", "shadow" => 0);
-  }
-
-  if ($op == "decline") {
-    return array("status" => 0);
-  }
-
-  if ($op == "update") {
-    return array("body" => filter($node->body), "teaser" => filter($node->teaser), "tid", "icon_num", "shadow");
   }
 }
 
@@ -185,13 +167,20 @@ function forum_view($node, $main = 0) {
   theme("node", $node, $main);
 }
 
-function forum_validate($node) {
-  // we use the validate hook to remember the old taxonomy terms
-  $node->taxonomy = array_keys(taxonomy_node_get_terms($node->nid));
-  if (!in_array($node->tid[0], $node->taxonomy)) {
-    $node->taxonomy[] = $node->tid[0];
+function forum_validate(&$node) {
+  // Make sure all fields are set properly:
+  $node->body = filter($node->body);
+  $node->teaser = filter($node->teaser);
+  $node->icon = $node->icon ? $node->icon : "";
+  $node->shadow = $node->shadow ? $node->shadow : 0;
+  $node->tid = $node->tid ? $node->tid : 0;  
+  // We use the validate hook to remember the old taxonomy terms:
+  if ($node->tid) {
+    $node->taxonomy = array_keys(taxonomy_node_get_terms($node->nid));
+    if (!in_array($node->tid[0], $node->taxonomy)) {
+      $node->taxonomy[] = $node->tid[0];
+    }
   }
-  return $node;
 }
 
 function forum_form(&$node, &$help, &$error) {
