@@ -34,6 +34,10 @@ Drupal x.x.x, xxxx-xx-xx
 - refactored 404 (file not found) handling to support custom 404 pages.
 - documentation:
     * added PHPDoc/Doxygen comments.
+- improved the filter system to prevent conflicts between filters:
+    * made it possible to change the order in which filters are applied.
+    * extra step for resolving conflicts with content that looks like HTML (e.g.
+      PHP code).
 
 Drupal 4.3.2, 2004-01-01
 ------------------------
