@@ -1,6 +1,6 @@
 <?
 
-include "modules/$mod.module"; 
-if ($function = $module["page"]) $function();
+include_once "includes/theme.inc";
+module_execute($mod, "page");
 
 ?>

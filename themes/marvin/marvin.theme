@@ -256,14 +256,11 @@
            ### Display account:
            display_account($this);
 
-           ### Display calendar:
+           ### Display old headlines:
            display_old_headlines($this);
 
-           ### Display calendar:
-           $this->box("Browse archives", droplet_get("calendar"));
-
-           ### Display new diary entries:
-           display_new_diaries($this);           
+           ### Display module blocks:
+           display_module_blocks();
          }
          elseif (strstr($PHP_SELF, "account.php")) {
            ### Display account:

@@ -1,39 +1,50 @@
 <?
 
-// temporary permission solution:
+// validate user permission:
 if (!$user->id || ($user->permissions != 1 && $user->id > 1)) exit();
 
-include "includes/admin.inc";
-include "includes/cron.inc";
+include_once "includes/theme.inc";
+include_once "includes/cron.inc";
 
-// display admin header:
-admin_header();
+function admin_page($mod) {  
+  global $repository, $menu, $modules;
 
-// generate administrator menu:
-$handle = opendir("modules");
-while ($file = readdir($handle)) {
-  if ($filename = substr($file, 0, strpos($file, ".module"))) {
-    if ($filename == $mod) {
-      $output .= "$filename | ";
-    }
-    else {
-      include_once "modules/$filename.module";
-      if ($module["cron"] && !cron_get($filename)) cron_set($filename, 172800); 
-      if ($module["admin"]) $output .= "<A HREF=\"admin.php?mod=$filename\">$filename</A> | ";
-    }
+  function module($name, $module) {
+    global $menu, $modules;
+    if ($module["admin"]) $output .= "<A HREF=\"admin.php?mod=$name\">$name</A> | ";
+    $menu .= $output;
   }
-}
-closedir($handle);
+
+ ?>
+  <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+  <HTML>
+   <HEAD><TITLE><? echo $site_name; ?> administration center</TITLE></HEAD>
+   <STYLE>
+    body { font-family: helvetica, arial; }
+    h1   { font-size: 14pt; font-weight: bold; color: #990000; }
+    h2   { font-family: helvetica, arial; font-size: 12pt; font-weight: bold; }
+    h3   { font-family: helvetica, arial; font-size: 14pt; font-weight: bold; }
+    th	 { font-family: helvetica, arial; text-align: center; background-color: #CCCCCC; color: #995555; }
+    td	 { font-family: helvetica, arial; }
+   </STYLE>
+   <BODY BGCOLOR="#FFFFFF" LINK="#005599" VLINK="#004499" ALINK="#FF0000">
+    <H1>Administration center</H1>
+ <?
   
-print "<HR>$output <A HREF=\"\">home</A><HR>";
+  module_iterate("module");
+ 
+ ?> 
+    <HR><? echo $menu; ?><A HREF="">home</A><HR>
+ <?
 
-// display administrator body:
-if ($mod) {
-  include "modules/$mod.module";
-  if ($function = $module["admin"]) $function();
+  module_execute($mod, "admin");
+
+ ?>
+   </BODY>
+  </HTML>
+ <?
 }
 
-// display admin footer:
-admin_footer();
+admin_page($mod);
 
 ?>
