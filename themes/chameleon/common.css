@@ -64,6 +64,9 @@ br {
 #header {
   margin-bottom: 2em;
 }
+#help {
+  font-size: 0.8em;
+}
 #sidebar-left, #sidebar-right {
   vertical-align: top;
   padding: 10px;
@@ -95,6 +98,18 @@ br {
 }
 .block {
   width: 180px;
+}
+.message {
+  padding: 0.3em;
+  margin: 1em 0em 1em 0em;
+}
+.status {
+  border: 1px solid #696;
+  color: #696;
+}
+.error, form-item input.error {
+  border: 1px solid #930;
+  color: #930;
 }
 
 /*
