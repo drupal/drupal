@@ -210,7 +210,7 @@ function book_form(&$node) {
   global $user;
 
   $op = $_POST['op'];
-  $output = form_select(t('Parent'), 'parent', $node->parent, book_toc(), t('The parent subject or category the page belongs in.'));
+  $output = form_select(t('Parent'), 'parent', $node->parent, book_toc($node->nid), t('The parent subject or category the page belongs in.'));
 
   if (function_exists('taxonomy_node_form')) {
     $output .= implode('', taxonomy_node_form('book', $node));
@@ -269,7 +269,7 @@ function book_node_link($node = 0) {
     if ($edit['nid']) {
       $page = db_fetch_object(db_query('SELECT * FROM {book} WHERE nid = %d', $node->nid));
 
-      $output .= form_select(t('Parent'), 'parent', $page->parent, book_toc(), t('The parent subject or category the page belongs in.'));
+      $output .= form_select(t('Parent'), 'parent', $page->parent, book_toc($node->nid), t('The parent subject or category the page belongs in.'));
       $output .= form_weight(t('Weight'), 'weight', $node->weight, 15, t('The heavier pages will sink and the lighter pages will be positioned nearer the top.'));
 
       if ($page->nid) {
@@ -520,20 +520,23 @@ function book_navigation($node) {
   return $node;
 }
 
-function book_toc_recurse($nid, $indent, $toc, $children) {
-
+function book_toc_recurse($nid, $indent, $toc, $children, $exclude) {
   if ($children[$nid]) {
     foreach ($children[$nid] as $foo => $node) {
-      $toc[$node->nid] = $indent .' '. $node->title;
-      $toc = book_toc_recurse($node->nid, $indent .'--', $toc, $children);
+      if (!$exclude || $exclude != $node->nid) {
+        $toc[$node->nid] = $indent .' '. $node->title;
+        $toc = book_toc_recurse($node->nid, $indent .'--', $toc, $children, $exclude);
+      }
     }
   }
 
   return $toc;
 }
 
-function book_toc($parent = 0, $indent = '', $toc = array()) {
+function book_toc($exclude = 0, $parent = 0, $indent = '', $toc = array()) {
   $result = db_query('SELECT DISTINCT(n.nid), n.title, b.parent FROM {node} n '. node_access_join_sql() .' INNER JOIN {book} b ON n.nid = b.nid WHERE n.status = 1 AND '. node_access_where_sql() .' ORDER BY b.weight, n.title');
+
+  print "Exclude: ". $exclude;
 
   while ($node = db_fetch_object($result)) {
     if (!$children[$node->parent]) {
@@ -548,7 +551,7 @@ function book_toc($parent = 0, $indent = '', $toc = array()) {
     $toc[0] = '<'. t('top-level') .'>';
   }
 
-  $toc = book_toc_recurse($parent, $indent, $toc, $children);
+  $toc = book_toc_recurse($parent, $indent, $toc, $children, $exclude);
 
   return $toc;
 }
