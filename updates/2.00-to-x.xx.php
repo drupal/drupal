@@ -26,4 +26,6 @@ while ($faq = db_fetch_object($result)) {
 
 db_query("update users set history = ''");
 
+print "Your database has been upgraded!  Do NOT reload this page!";
+
 ?>
