@@ -70,7 +70,11 @@ br {
   vertical-align: top;
   width: 60%;
 }
-
+#footer {
+ font-size: 0.8em;
+ padding-top: 2em;
+ text-align: center;
+}
 /* region-specific tags */
 .title {
   margin: 0 0 .25em 0;
