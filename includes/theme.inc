@@ -9,7 +9,7 @@ class BaseTheme {
 
     print $output;
     $this->box(t("Navigation"), implode("<br />", link_page())); $this->user("all", $this); theme_blocks("all", $this);
-    print "</td><td valgin=\"top\">";
+    print "</td><td valign=\"top\">";
 
   }
 
