@@ -70,6 +70,7 @@ function taxonomy_form_vocabulary($edit = array()) {
 
   $form .= form_textfield(t("Vocabulary name"), "name", $edit["name"], 50, 64, t("Required") .". ". t("The name for this vocabulary.  Example: 'Topic'") .".");
   $form .= form_textarea(t("Description"), "description", $edit["description"], 60, 5, t("Optional") .". ". t("Description of the vocabulary, can be used by modules."));
+  $form .= form_textfield(t("Help text"), "help", $edit["help"], 50, 255, t("Optional") .". ". t("Instructions to present to the user when choosing a term.") .".");
   $form .= form_select(t("Types"), "nodes", explode(",", $edit["nodes"]), $nodetypes, t("Required") .". ". t("A list of node types you want to associate this vocabulary with."), "", 1);
   $form .= form_checkbox(t("Related terms"), "relations", 1, $edit["relations"], t("Optional") .". ". t("Allows <a href=\"%help-url\">related terms</a> in this vocabulary.", array("%help-url" => url("admin/taxonomy/help", NULL, NULL, "related-terms"))));
   $form .= form_radios(t("Hierarchy"), "hierarchy", $edit["hierarchy"], array(t("Disabled"), t("Single"), t("Multiple")), t("Optional") .". ". t("Allows <a href=\"%help-url\">a tree-like hierarchy</a> between terms of this vocabulary.", array("%help-url" => url("admin/taxonomy/help", NULL, NULL, "hierarchy"))), "", 0);
@@ -91,7 +92,7 @@ function taxonomy_save_vocabulary($edit) {
     $edit["nodes"] = array();
   }
 
-  $data = array("name" => $edit["name"], "nodes" => implode(",", $edit["nodes"]), "description" => $edit["description"], "multiple" => $edit["multiple"], "required" => $edit["required"], "hierarchy" => $edit["hierarchy"], "relations" => $edit["relations"], "weight" => $edit["weight"]);
+  $data = array("name" => $edit["name"], "nodes" => implode(",", $edit["nodes"]), "description" => $edit["description"], "help" => $edit["help"], "multiple" => $edit["multiple"], "required" => $edit["required"], "hierarchy" => $edit["hierarchy"], "relations" => $edit["relations"], "weight" => $edit["weight"]);
   if ($edit["vid"] && $edit["name"]) {
     db_query("UPDATE {vocabulary} SET ". _prepare_update($data) ." WHERE vid = %d", $edit["vid"]);
     module_invoke_all("taxonomy", "update", "vocabulary", $edit);
@@ -298,22 +299,19 @@ function taxonomy_overview() {
   return theme("table", $header, $rows);
 }
 
-function taxonomy_form($vocabulary_id, $value = 0, $error = array()) {
+function taxonomy_form($vocabulary_id, $value = 0, $error = array(), $help = NULL) {
   $vocabulary = taxonomy_get_vocabulary($vocabulary_id);
+  $help = ($help) ? $help : $vocabulary->help;
   if ($vocabulary->required) {
-    $descriptions = array(t("You must choose one term for this node."), t("You must choose one or more terms for this node."));
     $blank = 0;
   }
   else {
-    $descriptions = array(t("You can choose one term for this node."), t("You can choose one or more terms for this node."));
     $blank = "<". t("none") .">";
   }
 
-  $multiple = intval($vocabulary->multiple);
+  $help .= $error['taxonomy'];
 
-  $description = $descriptions[$multiple] . $error['taxonomy'];
-
-  return _taxonomy_term_select($vocabulary->name, 'taxonomy', $value, $vocabulary_id, $description, $multiple, $blank);
+  return _taxonomy_term_select($vocabulary->name, 'taxonomy', $value, $vocabulary_id, $help, intval($vocabulary->multiple), $blank);
 }
 
 /*
