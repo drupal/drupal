@@ -1,7 +1,9 @@
 <?php
-
 // $Id$
 
+/**
+ * Implementation of hook_help().
+ */
 function blogapi_help($section) {
   switch ($section) {
     case 'admin/help#blogapi':
@@ -11,6 +13,9 @@ function blogapi_help($section) {
   }
 }
 
+/**
+ * Implementation of hook_xmlrpc().
+ */
 function blogapi_xmlrpc() {
   $methods = array('blogger.getUsersBlogs' => array('function' => 'blogapi_get_users_blogs'),
                    'blogger.getUserInfo' => array('function' => 'blogapi_get_user_info'),
@@ -22,7 +27,7 @@ function blogapi_xmlrpc() {
                    'metaWeblog.editPost' => array('function' => 'blogapi_edit_post'),
                    'metaWeblog.getPost' => array('function' => 'blogapi_get_post'),
                    'metaWeblog.newMediaObject' => array('function' => 'blogapi_new_media_object'),
-                   'metaWeblog.getCategories' => array('function' => 'blogapi_get_categories'),
+                   'metaWeblog.getCategories' => array('function' => 'blogapi_get_category_list'),
                    'metaWeblog.getRecentPosts' => array('function' => 'blogapi_get_recent_posts'),
                    'mt.getCategoryList' => array('function' => 'blogapi_get_category_list'),
                    'mt.getPostCategories' => array('function' => 'blogapi_get_post_categories'),
@@ -32,8 +37,9 @@ function blogapi_xmlrpc() {
   return $methods;
 }
 
-/** api functions */
-
+/**
+ * Blogging API callback. Finds the URL of a user's blog.
+ */
 function blogapi_get_users_blogs($req_params) {
   $params = blogapi_convert($req_params);
   // Remove unused appkey from bloggerAPI.
@@ -47,7 +53,7 @@ function blogapi_get_users_blogs($req_params) {
                                   'blogid' => new xmlrpcval($user->uid),
                                   'blogName' => new xmlrpcval($user->name . "'s blog")),
                             'struct');
-    $resp = new xmlrpcval(array($struct), "array");
+    $resp = new xmlrpcval(array($struct), 'array');
     return new xmlrpcresp($resp);
   }
   else {
@@ -55,6 +61,9 @@ function blogapi_get_users_blogs($req_params) {
   }
 }
 
+/**
+ * Blogging API callback. Returns profile information about a user.
+ */
 function blogapi_get_user_info($req_params) {
   $params = blogapi_convert($req_params);
 
@@ -76,6 +85,9 @@ function blogapi_get_user_info($req_params) {
   }
 }
 
+/**
+ * Blogging API callback. Inserts a new blog post as a node.
+ */
 function blogapi_new_post($req_params) {
   $params = blogapi_convert($req_params);
 
@@ -89,10 +101,10 @@ function blogapi_new_post($req_params) {
     return blogapi_error($user);
   }
 
-  $promote = variable_get("node_promote_blog", 0);
-  $comment = variable_get("node_comment_blog", 2);
-  $moderate = variable_get("node_moderate_blog", 0);
-  $revision = variable_get("node_revision_blog", 0);
+  $promote = variable_get('node_promote_blog', 0);
+  $comment = variable_get('node_comment_blog', 2);
+  $moderate = variable_get('node_moderate_blog', 0);
+  $revision = variable_get('node_revision_blog', 0);
 
   // check for bloggerAPI vs. metaWeblogAPI
   if (is_array($params[3])) {
@@ -105,7 +117,7 @@ function blogapi_new_post($req_params) {
   }
 
   if (!valid_input_data($title, $body)) {
-    return blogapi_error(t("Terminated request because of suspicious input data."));
+    return blogapi_error(t('Terminated request because of suspicious input data.'));
   }
 
   $node = node_validate(array('type' => 'blog',
@@ -124,19 +136,22 @@ function blogapi_new_post($req_params) {
     return blogapi_error($error);
   }
 
-  if (!node_access("create", $node)) {
+  if (!node_access('create', $node)) {
     return blogapi_error(message_access());
   }
 
   $nid = node_save($node);
   if ($nid) {
-    watchdog("special", "$node->type: added '$node->title' using blog API", l(t("view post"), "node/view/$nid"));
+    watchdog('special', "$node->type: added '$node->title' using blog API", l(t('view post'), "node/view/$nid"));
     return new xmlrpcresp(new xmlrpcval($nid, 'string'));
   }
 
   return blogapi_error(t('error storing post'));
 }
 
+/**
+ * Blogging API callback. Modifies the specified blog node.
+ */
 function blogapi_edit_post($req_params) {
   $params = blogapi_convert($req_params);
   if (count($params) == 6) {
@@ -169,7 +184,7 @@ function blogapi_edit_post($req_params) {
   }
 
   if (!valid_input_data($title, $body)) {
-    return blogapi_error(t("Terminated request because of suspicious input data."));
+    return blogapi_error(t('Terminated request because of suspicious input data.'));
   }
 
   $node->title = $title;
@@ -187,13 +202,16 @@ function blogapi_edit_post($req_params) {
   }
   $nid = node_save($node);
   if ($nid) {
-    watchdog("special", "$node->type: updated '$node->title' using blog API", l(t("view post"), "node/view/$nid"));
-    return new xmlrpcresp(new xmlrpcval(true, "boolean"));
+    watchdog('special', "$node->type: updated '$node->title' using blog API", l(t('view post'), "node/view/$nid"));
+    return new xmlrpcresp(new xmlrpcval(true, 'boolean'));
   }
 
   return blogapi_error(t('error storing node'));
 }
 
+/**
+ * Blogging API callback. Returns a specified blog node.
+ */
 function blogapi_get_post($req_params) {
   $params = blogapi_convert($req_params);
   $user = blogapi_validate_user($params[1], $params[2]);
@@ -203,7 +221,7 @@ function blogapi_get_post($req_params) {
 
   $node = node_load(array('nid' => $params[0]));
   $blog = new xmlrpcval(array('userid' => new xmlrpcval($node->name, 'string'),
-                              'dateCreated' => new xmlrpcval(iso8601_encode($node->created), "dateTime.iso8601"),
+                              'dateCreated' => new xmlrpcval(iso8601_encode($node->created), 'dateTime.iso8601'),
                               'title' => new xmlrpcval($node->title, 'string'),
                               'description' => new xmlrpcval($node->body, 'string'),
                               'postid' => new xmlrpcval($node->nid, 'string')),
@@ -212,6 +230,9 @@ function blogapi_get_post($req_params) {
   return new xmlrpcresp($blog);
 }
 
+/**
+ * Blogging API callback. Removes the specified blog node.
+ */
 function blogapi_delete_post($req_params) {
   $params = blogapi_convert($req_params);
 
@@ -221,13 +242,22 @@ function blogapi_delete_post($req_params) {
   }
 
   $ret = node_delete(array('nid' => $params[1], 'confirm' => 1));
-  return new xmlrpcresp(new xmlrpcval(true, "boolean"));
+  return new xmlrpcresp(new xmlrpcval(true, 'boolean'));
 }
 
+/**
+ * Blogging API callback. Inserts a file into Drupal.
+ *
+ * This has yet to be implemented.
+ */
 function blogapi_new_media_object($req_params) {
   return blogapi_error('not implemented');
 }
 
+/**
+ * Blogging API callback. Returns a list of the taxonomy terms that can be
+ * associated with a blog node.
+ */
 function blogapi_get_category_list($req_params) {
   $vocabularies = module_invoke('taxonomy', 'get_vocabularies', 'blog', 'vid');
   $categories = array();
@@ -245,9 +275,13 @@ function blogapi_get_category_list($req_params) {
       }
     }
   }
-  return new xmlrpcresp(new xmlrpcval($categories, "array"));
+  return new xmlrpcresp(new xmlrpcval($categories, 'array'));
 }
 
+/**
+ * Blogging API callback. Returns a list of the taxonomy terms that are
+ * assigned to a particular node.
+ */
 function blogapi_get_post_categories($req_params) {
   $params = blogapi_convert($req_params);
   $user = blogapi_validate_user($params[1], $params[2]);
@@ -267,9 +301,12 @@ function blogapi_get_post_categories($req_params) {
                                         'isPrimary' => new xmlrpcval(true, 'boolean')),
                                   'struct');
   }
-  return new xmlrpcresp(new xmlrpcval($categories, "array"));
+  return new xmlrpcresp(new xmlrpcval($categories, 'array'));
 }
 
+/**
+ * Blogging API callback. Assigns taxonomy terms to a particular node.
+ */
 function blogapi_set_post_categories($req_params) {
   $params = blogapi_convert($req_params);
   $user = blogapi_validate_user($params[1], $params[2]);
@@ -286,6 +323,9 @@ function blogapi_set_post_categories($req_params) {
   return new xmlrpcresp(new xmlrpcval(true, 'boolean'));
 }
 
+/**
+ * Blogging API callback. Returns the latest few postings in a user's blog.
+ */
 function blogapi_get_recent_posts($req_params) {
   $params = blogapi_convert($req_params);
 
@@ -301,18 +341,19 @@ function blogapi_get_recent_posts($req_params) {
   $result = db_query_range("SELECT n.nid, n.title, n.body, n.created, u.name FROM {node} n, {users} u WHERE n.uid=u.uid AND n.type = 'blog' AND n.uid = %d ORDER BY n.created DESC",  $user->uid, 0, $params[3]);
   while ($blog = db_fetch_object($result)) {
     $blogs[] = new xmlrpcval(array('userid' => new xmlrpcval($blog->name, 'string'),
-                                   'dateCreated' => new xmlrpcval(iso8601_encode($blog->created), "dateTime.iso8601"),
+                                   'dateCreated' => new xmlrpcval(iso8601_encode($blog->created), 'dateTime.iso8601'),
                                    'content' => new xmlrpcval("<title>$blog->title</title>$blog->body", 'string'),
                                    'title' => new xmlrpcval($blog->title, 'string'),
                                    'description' => new xmlrpcval($blog->body, 'string'),
                                    'postid' => new xmlrpcval($blog->nid, 'string')),
                              'struct');
   }
-  return new xmlrpcresp(new xmlrpcval($blogs, "array"));
+  return new xmlrpcresp(new xmlrpcval($blogs, 'array'));
 }
 
-/** helper functions */
-
+/**
+ * Process the parameters to an XMLRPC callback, and return them as an array.
+ */
 function blogapi_convert($params) {
   $cparams = array();
   $num_params= $params->getNumParams();
@@ -325,6 +366,9 @@ function blogapi_convert($params) {
   return $cparams;
 }
 
+/**
+ * Prepare an error message for returning to the XMLRPC caller.
+ */
 function blogapi_error($message) {
   global $xmlrpcusererr;
 
@@ -335,6 +379,9 @@ function blogapi_error($message) {
   return new xmlrpcresp(0, $xmlrpcusererr + 1, strip_tags($message));
 }
 
+/**
+ * Ensure that the given user has permission to edit a blog.
+ */
 function blogapi_validate_user($username, $password) {
   global $user;
 
@@ -353,10 +400,13 @@ function blogapi_validate_user($username, $password) {
   }
 }
 
+/**
+ * For the blogger API, extract the node title from the contents field.
+ */
 function blogapi_blogger_title(&$contents) {
-  if (eregi("<title>([^<]*)</title>", $contents, $title)) {
+  if (eregi('<title>([^<]*)</title>', $contents, $title)) {
     $title = strip_tags($title[0]);
-    $contents = ereg_replace("<title>[^<]*</title>", "", $contents);
+    $contents = ereg_replace('<title>[^<]*</title>', '', $contents);
   }
   else {
     list($title, $rest) = explode("\n", $contents, 2);
