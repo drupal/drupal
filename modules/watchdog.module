@@ -25,7 +25,7 @@ function watchdog_link($type) {
     menu("admin/watchdog/user", "user messages", "watchdog_admin", $help);
     menu("admin/watchdog/regular", "regular messages", "watchdog_admin", $help);
     menu("admin/watchdog/special", "special messages", "watchdog_admin", $help);
-    menu("admin/watchdog/warning", "warning messagess", "watchdog_admin", $help);
+    menu("admin/watchdog/warning", "warning messages", "watchdog_admin", $help);
     menu("admin/watchdog/error", "error messages", "watchdog_admin", $help);
     menu("admin/watchdog/httpd", "httpd messages", "watchdog_admin", $help);
     menu("admin/watchdog/view", "view details", "watchdog_admin", $help, 0, 1); // hidden menu
