@@ -1,0 +1,295 @@
+<?php
+
+  /*********************************************************************
+  
+   Theme: Goofy
+   Author: UnConeD
+   Email: unconed@drop.org
+   Description: Colourful, grahical, orange theme for high-resolutions.
+   Notes: Only boxes on the right for now, because all the graphcis
+          take up a lot of space.
+   
+  *********************************************************************/
+
+  class Theme {
+
+    function header() {
+      global $site_name;
+?>
+ <html> 
+  <head>
+   <title><?php echo $site_name; ?></title>
+    <style type="text/css">
+     td { font-family: tahoma,arial,helvetica; font-size: 10pt; }
+     td.oru { background: url("themes/goofy/images/or-u.png"); width: 100%; } 
+     td.ord { background: url("themes/goofy/images/or-d.png"); width: 100%; } 
+     td.orl { background: url("themes/goofy/images/or-l.png"); } 
+     td.orr { background: url("themes/goofy/images/or-r.png"); }
+     td.orcnt { background: #FBC636; width: 100%; font-family: tahoma,arial,helvetica; font-size: 10pt; font-weight: bold; text-align: center; } 
+     td.gru { background: url("themes/goofy/images/gr-u.png"); width: 100%; } 
+     td.grd { background: url("themes/goofy/images/gr-d.png"); width: 100%; } 
+     td.grl { background: url("themes/goofy/images/gr-l.png"); } 
+     td.grr { background: url("themes/goofy/images/gr-r.png"); }
+     td.grcnt { background: #C6C6C6; width: 100%; font-family: tahoma,arial,helvetica; font-size: 10pt; } 
+     td.lgu { background: url("themes/goofy/images/lg-u.png"); width: 100%; } 
+     td.lgd { background: url("themes/goofy/images/lg-d.png"); width: 100%; } 
+     td.lgl { background: url("themes/goofy/images/lg-l.png"); } 
+     td.lgr { background: url("themes/goofy/images/lg-r.png"); }
+     td.lgcnt { background: #E4E4E4; width: 100%; font-family: tahoma,arial,helvetica; font-size: 10pt; }
+     
+     small { font-size: 8pt; }
+     big { font-size: 12pt; }
+     
+     hr { color: #404040; height: 1px; }
+     
+     a { color: #804000; text-decoration: none; }
+     a:link { color: #804000; }
+     a:visited { color #808000; }
+     a:active { color: #804000; }
+     
+    </style>
+   </head>
+   <body>
+    <table border="0" cellspacing="3" cellpadding="0" width="100%">
+     <tr>
+      <td colspan="2" width="100%"><img src="themes/goofy/images/logo.png" alt="<?php echo $site_name; ?> logo"><br>
+       <?php $this->linksbar(); ?>
+      </td>
+     </tr>
+     <tr>
+      <td valign="top" width="77%">
+<?php
+
+    } // close header function
+    
+    function linksbar() {
+    ?>
+           <table border="0" cellspacing="0" cellpadding="0" width="100%">
+        <tr>
+         <td><img src="themes/goofy/images/lg-ul.png"></td>
+         <td class="lgu" width="100%"><img src="themes/goofy/images/null.gif"></td>
+         <td><img src="themes/goofy/images/lg-ur.png"></td>
+        </tr>
+        <tr>
+         <td class="lgl"><img src="themes/goofy/images/null.gif"></td>
+         <td class="lgcnt" width="100%" valign="top"><div align="center"><big><a href="index.php">home</a> | <a href="module.php?mod=faq">faq</a> | <a href="module.php?mod=diary">diary</a> | <a href="search.php">search</a> | <a href="submit.php">submit news</a> | <a href="account.php">user account</a></big></div></td>
+         <td class="lgr"><img src="themes/goofy/images/null.gif"></td>
+        </tr>
+        <tr>
+         <td><img src="themes/goofy/images/lg-dl.png"></td>
+         <td class="lgd" width="100%"><img src="themes/goofy/images/null.gif"></td>
+         <td><img src="themes/goofy/images/lg-dr.png"></td>
+        </tr>
+       </table>
+   <?php
+    }
+
+    function story($story, $reply = 0) {
+    
+    echo "\n<!-- story: \"$story->subject\" -->\n";
+?>
+
+       <table border="0" cellspacing="0" cellpadding="0" width="100%">
+        <tr>
+         <td><img src="themes/goofy/images/or-ul.png"></td>
+         <td class="oru" width="100%" colspan="2"><img src="themes/goofy/images/null.gif"></td>
+         <td><img src="themes/goofy/images/or-ur.png"></td>
+        </tr>
+        <tr>
+         <td class="orl"><img src="themes/goofy/images/null.gif"></td>
+         <td class="orcnt" width="100%" valign="top" colspan="2"><?php echo check_output($story->subject); ?></td>
+         <td class="orr"><img src="themes/goofy/images/null.gif"></td>
+        </tr>
+        <tr>
+         <td class="orl"><img src="themes/goofy/images/null.gif"></td>
+         <td class="orcnt" width="100%" colspan="2"><img src="themes/goofy/images/null.gif" height="5"></td>
+         <td class="orr"><img src="themes/goofy/images/null.gif"></td>
+        </tr>
+        <tr>
+         <td class="lgl"><img src="themes/goofy/images/null.gif"></td>
+         <td class="lgcnt" width="100%" colspan="2"><img src="themes/goofy/images/null.gif" height="4"></td>
+         <td class="lgr"><img src="themes/goofy/images/null.gif"></td>
+        </tr>
+        <tr>
+         <td class="lgl"><img src="themes/goofy/images/null.gif"></td>
+         <td class="lgcnt" width="100%"><small><?php echo strtr(t("$how by %a on %b"), array("%a" => format_username($story->userid), "%b" => format_date($story->timestamp, "large"))); ?></small></td>
+         <td class="lgcnt" width="100%"><div align="right"><?php echo "<A HREF=\"search.php?category=". urlencode($story->section) ."\">$story->section</A>"; ?></div></td>
+         <td class="lgr"><img src="themes/goofy/images/null.gif"></td>
+        </tr>
+        <tr>
+         <td class="lgl"><img src="themes/goofy/images/null.gif"></td>
+         <td class="lgcnt" width="100%" colspan="2"><hr color="#404040" size="1"><?php
+          echo check_output($story->abstract, 1) ."<br><br>";
+          if ($story->updates)
+            echo t("Editor's note by <A HREF=\"account.php?op=userinfo&uname=$story->editor\">$story->editor</A>") .":". check_output($story->updates, 1) ."<br><br>";
+          if ($reply)
+            echo check_output($story->article, 1);
+         ?><hr><div align="right">
+         <?php                                
+          if (!$reply)
+            echo theme_morelink($this, $story);
+          else
+            echo $reply;
+         ?></div></td>
+         <td class="lgr"><img src="themes/goofy/images/null.gif"></td>
+        </tr>
+        <tr>
+         <td><img src="themes/goofy/images/lg-dl.png"></td>
+         <td class="lgd" width="100%" colspan="2"><img src="themes/goofy/images/null.gif"></td>
+         <td><img src="themes/goofy/images/lg-dr.png"></td>
+        </tr>
+       </table><br>
+<?php
+/*
+                     if (!$reply)
+                       echo theme_morelink($this, $story);
+                     else
+                       echo $reply;
+*/
+
+    } // close story function
+
+    function controls() {
+      $this->box("Comment Control","<div align=\"center\">".comment_controls()."</div>");
+    }
+
+    function comment($comment, $link = "") {
+      echo "<A NAME=\"$comment->cid\"></A>\n";
+      ?>
+
+       <table border="0" cellspacing="0" cellpadding="0" width="100%">
+        <tr>
+         <td><img src="themes/goofy/images/or-ul.png"></td>
+         <td class="oru" width="100%" colspan="2"><img src="themes/goofy/images/null.gif"></td>
+         <td><img src="themes/goofy/images/or-ur.png"></td>
+        </tr>
+        <tr>
+         <td class="orl"><img src="themes/goofy/images/null.gif"></td>
+         <td class="orcnt" width="100%" valign="top" colspan="2"><?php
+     echo "   <table border=\"0\" cellpadding=\"0\" cellspacing=\"1\" width=\"100%\">";
+
+     // Subject:
+     echo "    <tr>";
+     echo "     <td valign=\"top\" width=\"5%\"><div align=\"right\"><b>" . t("Subject") . ":</b>&nbsp;</div></td><td width=\"80%\"><b>" . check_output($comment->subject) . "</b></td>";
+
+     // Moderation:
+     echo "     <td rowspan=\"3\" valign=\"middle\" width=\"15%\"><div align=\"right\">" . comment_moderation($comment) . "</div></td>";
+     echo "    </tr>";
+
+     // Author:
+     echo "    <tr>";
+     echo "     <td valign=\"top\"><div align=\"right\">" . t("Author") . ":&nbsp;</div></td><td><b>" . format_username($comment->userid) . "</b>";
+     if ($comment->userid != $anonymous) {
+       // Display extra information line:
+       if ($comment->fake_email) $info .= format_email($comment->fake_email);
+       if (eregi("http://",$comment->url)) $info .= ($info?" | ":"") . format_url($comment->url);
+       if ($info) echo "<br>[ $info ]";
+     }
+     echo "     </td>";
+     echo "    </tr>";
+
+     // Date
+     echo "    <tr><td><div align=\"right\">" . t("Date:") . "&nbsp;</div></td><td>". format_date($comment->timestamp) ."</td></tr>";
+
+     echo "   </table>";
+          
+         ?></td>
+         <td class="orr"><img src="themes/goofy/images/null.gif"></td>
+        </tr>
+        <tr>
+         <td class="orl"><img src="themes/goofy/images/null.gif"></td>
+         <td class="orcnt" width="100%" colspan="2"><img src="themes/goofy/images/null.gif" height="5"></td>
+         <td class="orr"><img src="themes/goofy/images/null.gif"></td>
+        </tr>
+        <tr>
+         <td class="lgl"><img src="themes/goofy/images/null.gif"></td>
+         <td class="lgcnt" width="100%" colspan="2"><img src="themes/goofy/images/null.gif" height="4"></td>
+         <td class="lgr"><img src="themes/goofy/images/null.gif"></td>
+        </tr>
+        <?php
+        if ($comment) { 
+        ?>
+        <tr>
+         <td class="lgl"><img src="themes/goofy/images/null.gif"></td>
+         <td class="lgcnt" width="100%" colspan="2"><?php 
+          echo check_output($comment->comment, 1);
+          echo "<br><hr color=\"#404040\" size=\"1\"><div align=\"right\">[ $link ]</div>";
+          ?></td>
+         <td class="lgr"><img src="themes/goofy/images/null.gif"></td>
+        </tr>
+        <?php
+        }
+        ?>
+        <tr>
+         <td><img src="themes/goofy/images/lg-dl.png"></td>
+         <td class="lgd" width="100%" colspan="2"><img src="themes/goofy/images/null.gif"></td>
+         <td><img src="themes/goofy/images/lg-dr.png"></td>
+        </tr>
+       </table><br>
+       <?php
+  
+    } // close comment function
+
+    function box($subject, $content, $options = "") {
+
+?>
+       <table border="0" cellspacing="0" cellpadding="0" width="100%">
+        <tr>
+         <td><img src="themes/goofy/images/or-ul.png"></td>
+         <td class="oru" width="100%"><img src="themes/goofy/images/null.gif"></td>
+         <td><img src="themes/goofy/images/or-ur.png"></td>
+        </tr>
+        <tr>
+         <td class="orl"><img src="themes/goofy/images/null.gif"></td>
+         <td class="orcnt" width="100%" valign="top"><?php echo $subject; ?></td>
+         <td class="orr"><img src="themes/goofy/images/null.gif"></td>
+        </tr>
+        <tr>
+         <td class="orl"><img src="themes/goofy/images/null.gif"></td>
+         <td class="orcnt" width="100%"><img src="themes/goofy/images/null.gif" height="5"></td>
+         <td class="orr"><img src="themes/goofy/images/null.gif"></td>
+        </tr>
+        <tr>
+         <td class="lgl"><img src="themes/goofy/images/null.gif"></td>
+         <td class="lgcnt" width="100%"><img src="themes/goofy/images/null.gif" height="4"></td>
+         <td class="lgr"><img src="themes/goofy/images/null.gif"></td>
+        </tr>
+        <tr>
+         <td class="lgl"><img src="themes/goofy/images/null.gif"></td>
+         <td class="lgcnt" width="100%"><?php echo $content; ?></td>
+         <td class="lgr"><img src="themes/goofy/images/null.gif"></td>
+        </tr>
+        <tr>
+         <td><img src="themes/goofy/images/lg-dl.png"></td>
+         <td class="lgd" width="100%"><img src="themes/goofy/images/null.gif"></td>
+         <td><img src="themes/goofy/images/lg-dr.png"></td>
+        </tr>
+       </table><br>
+
+<?php
+
+    } // close box function
+
+    function footer() {
+?>
+              </td>
+              <td valign="top" width="23%">
+<?php
+         global $PHP_SELF;
+
+          theme_account($this);
+          theme_blocks("all", $this);
+          print "<img src=\"themes/goofy/images/null.gif\" width=\"140\" height=\"1\">";          
+          
+?>    
+     </td>
+    </tr>   
+    <tr><td colspan="2"><?php $this->linksbar(); ?></td></tr>          
+   </table>
+  </body>
+ </html>
+<?
+    }
+  }
+
+?>
