@@ -1,8 +1,35 @@
 <?php
-// $Id: statistics.module,v 1.124 2003/11/26 16:11:47 dries Exp $
+// $Id: statistics.module,v 1.125 2003/11/27 06:32:42 dries Exp $
 
-function statistics_init() {
-  global $recent_activity;
+// Exit hook, runs at the end of every page request
+function statistics_exit() {
+  global $user, $recent_activity;
+
+  if (variable_get("statistics_count_content_views", 0)) {
+    // we are counting content views
+    if ((arg(0) == "node") && (arg(1) == "view") && arg(2)) {
+      // a node has been viewed, so updated the node's counters
+      db_query("UPDATE {node_counter} SET daycount = daycount + 1, totalcount = totalcount + 1, timestamp = %d WHERE nid = %d", time(), arg(2));
+      // if we affected 0 rows, this is the first time viewing the node
+      if (!db_affected_rows()) {
+        // must create a new row to store counter's for new node
+        db_query("INSERT INTO {node_counter} (nid, daycount, totalcount, timestamp) VALUES(%d, 1, 1, %d)", arg(2), time());
+      }
+    }
+  }
+
+  if ((variable_get("statistics_enable_access_log", 0)) && (throttle_status() < 5)) {
+    // statistical logs are enabled
+    $referrer = referer_uri();
+    $hostname = getenv("REMOTE_ADDR");
+    // log this page access
+    if ((arg(0) == "node") && (arg(1) == "view") && arg(2)) {
+      db_query("INSERT INTO {accesslog} (nid, url, hostname, uid, timestamp) values(%d, '%s', '%s', %d, %d)", arg(2), $referrer, $hostname, $user->uid, time());
+    }
+    else {
+      db_query("INSERT INTO {accesslog} (url, hostname, uid, timestamp) values('%s', '%s', %d, %d)", $referrer, $hostname, $user->uid, time());
+    }
+  }
 
   /*
   ** The following logic determines what the current throttle level should
@@ -29,38 +56,7 @@ function statistics_init() {
       // count all hits in past sixty seconds
       $result = db_query("SELECT COUNT(timestamp) AS hits FROM {accesslog} WHERE timestamp >= %d", (time() - 60));
       $recent_activity = db_fetch_array($result);
-      throttle_update($recent_activity["hits"]);
-    }
-  }
-}
-
-// Exit hook, runs at the end of every page request
-function statistics_exit() {
-  global $user;
-
-  if (variable_get("statistics_count_content_views", 0)) {
-    // we are counting content views
-    if ((arg(0) == "node") && (arg(1) == "view") && arg(2)) {
-      // a node has been viewed, so updated the node's counters
-      db_query("UPDATE {node_counter} SET daycount = daycount + 1, totalcount = totalcount + 1, timestamp = %d WHERE nid = %d", time(), arg(2));
-      // if we affected 0 rows, this is the first time viewing the node
-      if (!db_affected_rows()) {
-        // must create a new row to store counter's for new node
-        db_query("INSERT INTO {node_counter} (nid, daycount, totalcount, timestamp) VALUES(%d, 1, 1, %d)", arg(2), time());
-      }
-    }
-  }
-
-  if ((variable_get("statistics_enable_access_log", 0)) && (throttle_status() < 5)) {
-    // statistical logs are enabled
-    $referrer = referer_uri();
-    $hostname = getenv("REMOTE_ADDR");
-    // log this page access
-    if ((arg(0) == "node") && (arg(1) == "view") && arg(2)) {
-      db_query("INSERT INTO {accesslog} (nid, url, hostname, uid, timestamp) values(%d, '%s', '%s', %d, %d)", arg(2), $referrer, $hostname, $user->uid, time());
-    }
-    else {
-      db_query("INSERT INTO {accesslog} (url, hostname, uid, timestamp) values('%s', '%s', %d, %d)", $referrer, $hostname, $user->uid, time());
+      _throttle_update($recent_activity["hits"]);
     }
   }
 }
@@ -449,7 +445,6 @@ function statistics_settings() {
   $group .= form_select(t("Number of day's top views to display"), "statistics_userpage_day_cnt", variable_get("statistics_userpage_day_cnt", 0), array("0" => t("Disabled"), "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "25" => "25"), t("How many content items to display in the \"day\" list.  Requires enabled content viewing counters."));
   $group .= form_select(t("Number of all time top views to display"), "statistics_userpage_all_cnt", variable_get("statistics_userpage_all_cnt", 0), array("0" => t("Disabled"), "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "25" => "25"), t("How many content items to display in the \"all time\" list.  Requires enabled content viewing counters."));
   $group .= form_select(t("Number of most recent views to display"), "statistics_userpage_last_cnt", variable_get("statistics_userpage_last_cnt", 0), array("0" => t("Disabled"), "1" => "1", "2" => "2", "3" => "3", "4" => "4", "5" => "5", "6" => "6", "7" => "7", "8" => "8", "9" => "9", "10" => "10", "15" => "15", "20" => "20", "25" => "25"), t("How many posts to display in the \"recently viewed\" list.  Requires enabled content viewing counters."));
-
   $output .= form_group(t("\"Popular content\" page settings"), $group);
 
   return $output;
@@ -486,8 +481,6 @@ function statistics_cron() {
 }
 
 
-
-
 /* Display linked title based on field name */
 function statistics_title_list($dbfield, $dbrows) {
   /* valid dbfields: totalcount, daycount, timestamp */
@@ -504,7 +497,6 @@ function statistics_get($nid) {
   }
 
   return $statistics;
-
 }
 
 
@@ -523,17 +515,17 @@ function statistics_block($op = "list", $delta = 0) {
 
         $daytop = variable_get("statistics_block_top_day_num", "");
         if ($daytop) {
-          $content[] = node_title_list(statistics_title_list("daycount", $daytop), variable_get("statistics_block_top_day_head", ""));
+          $content[] = node_title_list(statistics_title_list("daycount", $daytop), t("Today's:"));
         }
 
         $alltimetop = variable_get("statistics_block_top_all_num", "");
         if ($alltimetop) {
-          $content[] = node_title_list(statistics_title_list("totalcount", $alltimetop), variable_get("statistics_block_top_all_head", ""));
+          $content[] = node_title_list(statistics_title_list("totalcount", $alltimetop), t("All time:"));
         }
 
         $lasttop = variable_get("statistics_block_top_last_num", "");
         if ($lasttop) {
-          $content[] = node_title_list(statistics_title_list("timestamp", $lasttop), variable_get("statistics_block_top_last_head", ""));
+          $content[] = node_title_list(statistics_title_list("timestamp", $lasttop), t("Last viewed:"));
         }
         $output = implode($content, "<br />");
 
@@ -548,8 +540,6 @@ function statistics_block($op = "list", $delta = 0) {
 
 
 function statistics_page() {
-
-
   if (user_access("access content")) {
     $output = "";
 
@@ -615,7 +605,7 @@ function statistics_nodeapi(&$node, $op, $arg = 0) {
 }
 
 /* internal throttle function - do not call from other modules */
-function throttle_update($recent_activity) {
+function _throttle_update($recent_activity) {
   $throttle = throttle_status();
   $multiplier = variable_get("statistics_throttle_multiplier", 60);
 
