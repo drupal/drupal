@@ -187,12 +187,12 @@ function node_delete($id) {
 
 function node_query($type = -1) {
   $queries[] = array("all nodes: recent additions", "ORDER BY timestamp DESC");
-  $queries[] = array("all nodes: status set to 'posted'", "WHERE status = ". node_status("posted") ." ORDER BY timestamp DESC");
-  $queries[] = array("all nodes: status set to 'queued'", "WHERE status = ". node_status("queued") ." ORDER BY timestamp DESC");
-  $queries[] = array("all nodes: status set to 'dumped'", "WHERE status = ". node_status("dumped") ." ORDER BY timestamp DESC");
-  $queries[] = array("all nodes: scheduled to be posted", "WHERE timestamp_posted > 0 ORDER BY timestamp DESC");
-  $queries[] = array("all nodes: scheduled to be queued", "WHERE timestamp_queued > 0 ORDER BY timestamp DESC");
-  $queries[] = array("all nodes: scheduled to be hidden", "WHERE timestamp_hidden > 0 ORDER BY timestamp DESC");
+  $queries[] = array("all nodes: status set to 'posted'", "WHERE n.status = ". node_status("posted") ." ORDER BY n.timestamp DESC");
+  $queries[] = array("all nodes: status set to 'queued'", "WHERE n.status = ". node_status("queued") ." ORDER BY n.timestamp DESC");
+  $queries[] = array("all nodes: status set to 'dumped'", "WHERE n.status = ". node_status("dumped") ." ORDER BY n.timestamp DESC");
+  $queries[] = array("all nodes: scheduled to be posted", "WHERE timestamp_posted > 0 ORDER BY n.timestamp DESC");
+  $queries[] = array("all nodes: scheduled to be queued", "WHERE timestamp_queued > 0 ORDER BY n.timestamp DESC");
+  $queries[] = array("all nodes: scheduled to be hidden", "WHERE timestamp_hidden > 0 ORDER BY n.timestamp DESC");
 
   foreach (module_list() as $name) {
     if (module_hook($name, "status")) {
