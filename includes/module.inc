@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.49 2004/01/05 19:19:04 unconed Exp $
+// $Id: module.inc,v 1.50 2004/01/19 22:11:46 dries Exp $
 
 // initialize modules:
 function module_init() {
@@ -59,7 +59,7 @@ function module_list($refresh = 0, $bootstrap = 0) {
         **  loaded based on server load.  We have to directly access the
         **  throttle variables as the throttle.module may not be loaded yet.
         */
-        $throttle = (variable_get("throttle_enable", 0) && $module->throttle && (variable_get("throttle_level", 0) >= 5));
+        $throttle = ($module->throttle && variable_get("throttle_level", 0) > 4);
         if ($bootstrap && !$throttle) {
           $list[$module->name] = array("name"=> $module->name, "bootstrap" => $module->bootstrap, "filename" => $module->filename);
         }

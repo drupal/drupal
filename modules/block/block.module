@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.99 2004/01/17 11:33:58 dries Exp $
+// $Id: block.module,v 1.100 2004/01/19 22:11:46 dries Exp $
 
 function block_help($section = "admin/help#block") {
   $output = "";
@@ -168,7 +168,7 @@ function block_admin_display() {
       $delete = "";
     }
 
-    $rows[] = array($block["info"], array("data" => form_checkbox(NULL, $block["module"] ."][". $block["delta"] ."][status", 1, $block["status"]), "align" => "center"), array("data" => form_checkbox(NULL, $block["module"] ."][". $block["delta"] ."][custom", 1, $block["custom"]), "align" => "center"), array("data" => form_checkbox(NULL, $block["module"] ."][". $block["delta"] ."][throttle", 1, $block["throttle"], NULL, variable_get("throttle_enable", 0) ? NULL : array("disabled" => "disabled")), "align" => "center"), form_weight(NULL, $block["module"] ."][". $block["delta"] ."][weight", $block["weight"]), form_radios(NULL, $block["module"] ."][". $block["delta"] ."][region", $block["region"], array(t("left"), t("right"))), form_textfield(NULL, $block["module"] ."][". $block["delta"] ."][path", $block["path"], 10, 255),
+    $rows[] = array($block["info"], array("data" => form_checkbox(NULL, $block["module"] ."][". $block["delta"] ."][status", 1, $block["status"]), "align" => "center"), array("data" => form_checkbox(NULL, $block["module"] ."][". $block["delta"] ."][custom", 1, $block["custom"]), "align" => "center"), array("data" => form_checkbox(NULL, $block["module"] ."][". $block["delta"] ."][throttle", 1, $block["throttle"], NULL, module_exist('throttle') ? NULL : array("disabled" => "disabled")), "align" => "center"), form_weight(NULL, $block["module"] ."][". $block["delta"] ."][weight", $block["weight"]), form_radios(NULL, $block["module"] ."][". $block["delta"] ."][region", $block["region"], array(t("left"), t("right"))), form_textfield(NULL, $block["module"] ."][". $block["delta"] ."][path", $block["path"], 10, 255),
     $edit, $delete);
   }
 
@@ -382,7 +382,7 @@ function block_list($region) {
         ** Check the current throttle status and see if block should be displayed
         ** based on server load.
         */
-        if (!($block['throttle'] && (module_invoke("throttle", "status") >= 5))) {
+        if (!($block['throttle'] && (module_invoke("throttle", "status") > 4))) {
           $block = array_merge($block, module_invoke($block['module'], 'block', 'view', $block['delta']));
         }
         if (isset($block['content']) && $block['content']) {
