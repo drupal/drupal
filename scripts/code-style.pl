@@ -8,7 +8,7 @@
 # code.  This program tries to show as many improvements as possible with
 # no false positives.
 
-# $id$
+# $Id$
 
 $comment = 0;
 $program = 0;
@@ -24,7 +24,7 @@ while (<>) {
   s/\\["']//g;
   # please don't use nested comments for now... thanks!
   # handles comments // style, but don't mess with http://
-  s/\/\/[^:]*//;
+  s/\/\/[^:].*//;
   # handles comments /**/ on a single line
   s/\/\*.*\*\///g;
   # handles comments /**/ over several lines
@@ -65,8 +65,8 @@ while (<>) {
     $msg = "'. \"' -> '.\"'";
   }
   # XHTML requires closing tag
-  elsif (/[<]br[>]/i) {
-    $msg = "'<b"."r>' -> '<b"."r />'";
+  elsif (/<br>/i) {
+    $msg = "'<br>' -> '<br />'";
   }
   # XHTML compatibility mode suggests a blank before /
   # i.e. <br />
@@ -80,9 +80,9 @@ while (<>) {
   elsif (/function ([a-zA-Z_][a-zA-Z_0-9]*[A-Z][a-zA-Z_0-9]*)\(/) {
     $msg = "no mixedcase, use lowercase and _";
   }
-  elsif (/<[\/]*[A-Z]+[^>]*>/) {
-    $msg = "XHTML demands tags to be lowercase";
-  }
+#  elsif (/<[\/]*[A-Z]+[^>]*>/) {
+#    $msg = "XHTML demands tags to be lowercase";
+#  }
   # trying to recognize splitted lines
   # there are only a few valid last characters in programming mode,
   # only sometimes it is ( if you use if/else with a single statement
@@ -93,7 +93,7 @@ while (<>) {
 
   # it should be 'if (' all the time
   if (/(^|[^a-zA-Z])(if|else|elseif|while|foreach|switch|return|for)\(/) {
-    $msg = "'$1(' -> '$1 ('";
+    $msg = "'(' -> ' ('";
   }
   elsif (/[^;{}:\s\n]\s*\n*$/ && $program && !/^[\s}]*(if|else)/) {
     $msg = "don't split lines";
@@ -117,7 +117,7 @@ while (<>) {
     }
   }
   # there should be a space before '{'
-  if (/[^ ][{]/ && $program) {
+  if (/[^ ]{/ && $program) {
     $msg = "missing space before '{'";
   }
   # there should be a space after ','
@@ -125,8 +125,16 @@ while (<>) {
     $msg = "missing space after ','";
   }
   # spaces before and after, only foreach may use $foo=>bar
-  elsif (/[^ =](==|\.=|=>|=|\|\|)[^ =>]/ && $program && !/foreach/) {
-    $msg = "'$1' -> ' $1 '"
+  elsif (/[^ =](\+|\-|\*|==|\.=|=>|=|\|\|)[^ =>]/ && $program && !/foreach/) {
+    $msg = "'$1' -> ' $1 '";
+  }
+  # ensure $bar["foo"] and $bar[$foo] and $bar[0]
+  elsif (/\[[^#][^\]]*\]/ && !/\[[0-9\$][^\]]*\]/ && !/\[\]/) {
+    $msg = "only [\"foo\"], [\$foo] or [0] is allowed";
+  }
+  # first try to find missing quotes after = in (X)HTML tags
+  elsif (/<[^>]*=[a-zA-Z0-9][^>]*>/) {
+    $msg = "=... -> =\"...\"";
   }
   if (defined $msg) {
     if ($debug==0) {
