@@ -307,21 +307,27 @@ pre, code {
   list-style-image: url(menu-leaf.gif);
 }
 td.watchdog-user {
-  background: #ffeeaa;
+  background: #fea;
+  border: 1px solid #dc8;
 }
 td.watchdog-message {
-  background: #ffffff;
+  background: #fff;
+  border: 1px solid #ddd;
 }
 td.watchdog-special {
-  background: #a49fff;
+  background: #a9f;
+  border: 1px solid #87d;
 }
 td.watchdog-warning {
-  background: #ffaa22;
+  background: #fa2;
+  border: 1px solid #d80;
 }
 td.watchdog-httpd {
-  background: #99dd99;
+  background: #9d9;
+  border: 1px solid #7b7;
 }
 td.watchdog-error {
-  background: #ee4c4c;
+  background: #e44;
+  border: 1px solid #c22;
 }
 
