@@ -65,13 +65,6 @@ function node_cron() {
 }
 
 /**
- * Menu callback; presents node-specific information from "admin/help".
- */
-function node_help_page() {
-  print theme('page', node_help('admin/help#node'));
-}
-
-/**
  * Gather a listing of links to nodes.
  *
  * @param $result

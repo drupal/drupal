@@ -43,13 +43,6 @@ function system_help($section) {
 }
 
 /**
- * Menu callback; presents system-specific help text from admin/help.
- */
-function system_help_page() {
-  print theme('page', system_help('admin/help#system'));
-}
-
-/**
  * Implementation of hook_perm().
  */
 function system_perm() {

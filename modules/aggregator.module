@@ -70,13 +70,6 @@ function aggregator_help($section) {
   }
 }
 
-/**
- * Menu callback; displays the aggregator-specific information from admin/help.
- */
-function aggregator_help_page() {
-  print theme('page', aggregator_help('admin/help#aggregator'));
-}
-
 function aggregator_configure() {
   if ($_POST) {
     system_settings_save();

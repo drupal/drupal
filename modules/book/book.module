@@ -812,8 +812,4 @@ function book_help($section) {
   }
 }
 
-function book_help_page() {
-  print theme('page', book_help('admin/help#book'));
-}
-
 ?>

@@ -41,13 +41,6 @@ function block_help($section) {
 }
 
 /**
- * Menu callback; presents the block-specific information from admin/help.
- */
-function block_help_page() {
-  print theme('page', block_help('admin/help#block'));
-}
-
-/**
  * Implementation of hook_perm().
  */
 function block_perm() {

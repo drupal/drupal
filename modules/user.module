@@ -111,7 +111,7 @@ function user_save($account, $array = array(), $category = 'account') {
           $query .= "$key = '%s', ";
           $v[] = $value;
         }
-        else if ($key != 'roles') { 
+        else if ($key != 'roles') {
           // Roles is a special case: it used below.
           if ($value === null) {
             // Setting a field to null deletes it from the data column.

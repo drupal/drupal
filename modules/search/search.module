@@ -78,10 +78,6 @@ function search_menu($may_cache) {
       'callback' => 'search_view',
       'access' => user_access('search content'),
       'type' => MENU_SUGGESTED_ITEM);
-    $items[] = array('path' => 'search/help', 'title' => t('search help'),
-      'callback' => 'search_help_page',
-      'access' => user_access('search content'),
-      'type' => MENU_SUGGESTED_ITEM);
     $items[] = array('path' => 'search/search', 'title' => t('search'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
     $items[] = array('path' => 'admin/settings/search', 'title' => t('search'),
@@ -506,13 +502,6 @@ function search_view() {
     drupal_access_denied();
   }
 
-}
-
-/**
- * Menu callback; prints the search engine help page.
- */
-function search_help_page() {
-  print theme('page', search_help());
 }
 
 /**
