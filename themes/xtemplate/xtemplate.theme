@@ -88,7 +88,7 @@ class Theme_xtemplate extends BaseTheme {
       $this->template->parse("header.search_box");
     }
 
-    if (!arg(0)) {
+    if ($_GET["q"] == variable_get("site_frontpage", "node")) {
       $this->template->assign("header_message", variable_get("xtemplate_message", l("edit message", "admin/system/themes/xtemplate")));
       $this->template->parse("header.message");
     }
