@@ -167,6 +167,16 @@ CREATE TABLE feed (
 );
 
 --
+-- Table structure for table 'filters'
+--
+
+CREATE TABLE filters (
+  module varchar(64) NOT NULL default '',
+  weight smallint DEFAULT '0' NOT NULL,
+  PRIMARY KEY (weight)
+);
+
+--
 -- Table structure for table 'forum'
 --
 

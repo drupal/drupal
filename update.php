@@ -634,7 +634,6 @@ function update_75() {
     update_sql("ALTER TABLE {feed} ALTER COLUMN modified SET NOT NULL");
 
     update_sql("ALTER TABLE {feed} RENAME timestamp TO checked");
-
     update_sql("UPDATE {blocks} SET module = 'aggregator' WHERE module = 'import'");
     update_sql("UPDATE {system} SET filename = 'modules/aggregator.module', name = 'aggregator' WHERE filename = 'modules/import.module'");
   }
@@ -668,18 +667,18 @@ function update_78() {
     )");
   }
   else {
-    /* Needs PGSQL/MSSQL equivalent */
+    update_sql("CREATE TABLE {filters} (
+      module varchar(64) NOT NULL default '',
+      weight smallint DEFAULT '0' NOT NULL,
+      PRIMARY KEY (weight)
+    )");
   }
 }
 
 function update_79() {
-  if ($GLOBALS["db_type"] == "pgsql") {
-    // Taking no action.  PostgreSQL is not always capable of dropping columns.
-  }
-  else {
-    update_sql("ALTER TABLE {node} DROP attributes");
-    update_sql("ALTER TABLE {comments} DROP link");
-  }
+  // Works for both mysql and postgresql
+  update_sql("ALTER TABLE {node} DROP attributes");
+  update_sql("ALTER TABLE {comments} DROP link");
 }
 
 /*
@@ -784,7 +783,26 @@ function update_info() {
   print "</ol>";
   print "Notes:";
   print "<ol>";
-  print " <li>If you upgrade from Drupal 4.2.0, you have to create the <code>sessions</code> table manually before upgrading.  After you created the table, you'll want to log in and immediately continue the upgrade.  To create the <code>sessions</code> table, issue the following SQL command (MySQL specific example):<pre>CREATE TABLE sessions (
+  print " <li>If you <strong>upgrade from Drupal 4.3.x</strong>, you have will need to add the <code>bootstrap</code> and <code>throttle</code> fields to the <code>system</code> table manually before upgrading. To add the required fields, issue the following SQL commands:
+
+  <p>MySQL specific example:
+  <pre>
+  ALTER TABLE system ADD throttle tinyint(1) NOT NULL DEFAULT '0';
+  ALTER TABLE system ADD bootstrap int(2);
+  </pre>
+  </p>
+
+  <p>PostgreSQL specific example:
+  <pre>
+  ALTER TABLE system ADD throttle smallint;
+  ALTER TABLE system ALTER COLUMN throttle SET DEFAULT '0';
+  UPDATE system SET throttle = 0;
+  ALTER TABLE system ALTER COLUMN throttle SET NOT NULL;
+  ALTER TABLE system ADD bootstrap integer;
+  </pre>
+  </p>
+  </li>";
+  print " <li>If you <strong>upgrade from Drupal 4.2.0</strong>, you have to create the <code>sessions</code> table manually before upgrading.  After you created the table, you'll want to log in and immediately continue the upgrade.  To create the <code>sessions</code> table, issue the following SQL command (MySQL specific example):<pre>CREATE TABLE sessions (
   uid int(10) unsigned NOT NULL,
   sid varchar(32) NOT NULL default '',
   hostname varchar(128) NOT NULL default '',
