@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.27 2003/10/14 18:08:33 dries Exp $
+// $Id: menu.inc,v 1.28 2003/11/08 09:56:22 dries Exp $
 
 /**
  * Register a menu item with the menu system.
@@ -108,6 +108,14 @@ function menu_execute_active_handler() {
       return call_user_func_array($_list[$path]["callback"], explode("/", $arg));
     }
   }
+}
+
+function menu_active_handler_exists() {
+  global $_list;
+
+  $path = menu_get_active_item();
+
+  return function_exists($_list[$path]["callback"]);
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.194 2003/11/07 19:03:34 dries Exp $
+// $Id: book.module,v 1.195 2003/11/08 09:56:22 dries Exp $
 
 function book_node($field) {
   global $user;
@@ -71,7 +71,7 @@ function book_link($type, $node = 0, $main = 0) {
 
   if ($type == "system") {
     if (user_access("maintain books")) {
-      menu("node/add/book", t("book page"), "book_page", 0);
+      menu("node/add/book", t("book page"), "page", 0);
     }
     if (user_access("administer nodes")) {
       menu("admin/node/book", t("books"), "book_admin", 4);

@@ -1,5 +1,5 @@
 <?php
-// $Id: index.php,v 1.69 2003/10/31 19:34:01 dries Exp $
+// $Id: index.php,v 1.70 2003/11/08 09:56:21 dries Exp $
 
 include_once "includes/common.inc";
 
@@ -9,18 +9,34 @@ fix_gpc_magic();
 
 menu_build("system");
 
-$mod = arg(0);
+if (menu_active_handler_exists()) {
+  $breadcrumb = menu_get_active_breadcrumb();
+  array_pop($breadcrumb);
+  $title = menu_get_active_title();
 
-if (isset($mod) && module_hook($mod, "page")) {
-  module_invoke($mod, "page");
+  theme("header");
+  theme("breadcrumb", $breadcrumb);
+  if ($help = menu_get_active_help()) {
+    $contents = "<small>$help</small><hr />";
+  }
+  $contents .= menu_execute_active_handler();
+  theme("box", $title, $contents);
+  theme("footer");
 }
 else {
-  if (module_hook(variable_get("site_frontpage", "node"), "page")) {
-    module_invoke(variable_get("site_frontpage", "node"), "page");
+  $mod = arg(0);
+
+  if (isset($mod) && module_hook($mod, "page")) {
+    module_invoke($mod, "page");
   }
   else {
-    theme("header");
-    theme("footer");
+    if (module_hook(variable_get("site_frontpage", "node"), "page")) {
+      module_invoke(variable_get("site_frontpage", "node"), "page");
+    }
+    else {
+      theme("header");
+      theme("footer");
+    }
   }
 }
 
