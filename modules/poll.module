@@ -293,28 +293,25 @@ function poll_view_results(&$node, $main, $block, $links) {
     $votesmax = max($votesmax, 1);
   }
 
-  /*
-  ** Define CSS classes for the bars
-  ** (note: style is not allowed outside <head>, but the alternative is very
-  ** ugly and it seems to work in all browsers)
-  */
-
+  // Output the divs for the text, bars and percentages
+  $output .= "<div class=\"poll\">";
   if ($node->choice) {
     foreach ($node->choice as $key => $value) {
       if ($value != "") {
         $width = round($node->chvotes[$key] * 100 / $votesmax);
         $percentage = round($node->chvotes[$key] * 100 / max($votestotal, 1));
-
-        $output .= "<div class=\"poll-text\">". filter($value) ."</div>";
-        $output .= "<div style=\"width:". $width ."%;\" class=\"poll-foreground\"></div>";
-        $output .= "<div style=\"width:". (100 - $width) ."%;\" class=\"poll-background\"></div>";
-        $output .= "<div align=\"right\"> $percentage%". (!$block ? " (". format_plural($node->chvotes[$key], "1 vote", "%count votes") .")" : "") ."</div>";
+        $output .= "<div class=\"text\">". filter($value) ."</div>";
+        $output .= "<div class=\"bar\">";
+        $output .= "<div style=\"width: ". $width ."%;\" class=\"foreground\"></div>";
+        $output .= "<div style=\"width: ". (100 - $width) ."%;\" class=\"background\"></div>";
+        $output .= "</div>";
+        $output .= "<div class=\"percent\"> $percentage%". (!$block ? " (". format_plural($node->chvotes[$key], "1 vote", "%count votes") .")" : "") ."</div>";
       }
     }
   }
-  $output .= "<br /><div align=\"center\">". t("Total votes") .": $votestotal";
+  $output .= "<div class=\"total\">". t("Total votes") .": $votestotal</div>";
 
-  $output .= ($block ? "<br />". theme("links", $links) : "") ."</div>";
+  $output .= ($block ? "<div class=\"links\" />". theme("links", $links) ."</div>" : "") ."</div>";
 
   return $output;
 }
