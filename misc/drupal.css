@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.80 2004/08/20 08:14:38 dries Exp $ */
+/* $Id: drupal.css,v 1.81 2004/09/11 13:57:02 dries Exp $ */
 
 /*
 ** HTML elements
@@ -444,7 +444,6 @@ ul.primary li a {
   margin-right: 0.5em;
   padding: 0em 1em;
   text-decoration: none;
-  text-transform: lowercase;
 }
 ul.primary li.active a {
   background-color: #fff;
