@@ -10,12 +10,15 @@
 ** - If you have any troubles running the updates you might have to run
 **   these queries manually:
 **
-**   ALTER TABLE watchdog CHANGE user uid int(10) DEFAULT '0' NOT NULL;
-**   ALTER TABLE watchdog CHANGE id wid int(5) DEFAULT '0' NOT NULL auto_increment;
-**   CREATE TABLE system (filename varchar(255) NOT NULL default '', name varchar(255) NOT NULL default '', type varchar(255) NOT NULL default '', description varchar(255) NOT NULL default '', status int(2) NOT NULL default '0', PRIMARY KEY (filename));
-**   CREATE TABLE permission (rid INT UNSIGNED NOT NULL, perm TEXT, tid INT UNSIGNED NOT NULL, KEY (rid));
-**   INSERT INTO permission (rid, perm) SELECT rid, perm FROM role;
-**   ALTER TABLE users ADD rid INT UNSIGNED NOT NULL;
+     ALTER TABLE watchdog CHANGE user uid int(10) DEFAULT '0' NOT NULL;
+     ALTER TABLE watchdog CHANGE id wid int(5) DEFAULT '0' NOT NULL auto_increment;
+     ALTER TABLE users ADD sid varchar(32) DEFAULT '' NOT NULL;
+     ALTER TABLE users CHANGE last_host hostname varchar(128) DEFAULT '' NOT NULL;
+     ALTER TABLE users CHANGE last_access timestamp int(11) DEFAULT '0' NOT NULL;
+     CREATE TABLE system (filename varchar(255) NOT NULL default '', name varchar(255) NOT NULL default '', type varchar(255) NOT NULL default '', description varchar(255) NOT NULL default '', status int(2) NOT NULL default '0', PRIMARY KEY (filename));
+     CREATE TABLE permission (rid INT UNSIGNED NOT NULL, perm TEXT, tid INT UNSIGNED NOT NULL, KEY (rid));
+     INSERT INTO permission (rid, perm) SELECT rid, perm FROM role;
+     ALTER TABLE users ADD rid INT UNSIGNED NOT NULL;
 **
 **   You'll also have to by-pass the access check near the bottom such
 **   that you can gain access to the form: search for "user_access()".
@@ -62,26 +65,22 @@ $mysql_updates = array(
 
 // Update functions
 function update_1() {
-  update_sql("ALTER TABLE users RENAME AS user;");
-  update_sql("ALTER TABLE user DROP INDEX real_email;");
-  update_sql("ALTER TABLE user DROP fake_email;");
-  update_sql("ALTER TABLE user DROP nodes;");
-  update_sql("ALTER TABLE user DROP bio;");
-  update_sql("ALTER TABLE user DROP hash;");
-  update_sql("ALTER TABLE user ADD session varchar(32) DEFAULT '' NOT NULL;");
-  update_sql("ALTER TABLE user ADD jabber varchar(128) DEFAULT '' NULL;");
-  update_sql("ALTER TABLE user ADD drupal varchar(128) DEFAULT '' NULL;");
-  update_sql("ALTER TABLE user ADD init varchar(64) DEFAULT '' NULL;");
-  update_sql("ALTER TABLE user CHANGE passwd pass varchar(24) DEFAULT '' NOT NULL;");
-  update_sql("ALTER TABLE user CHANGE real_email mail varchar(64) DEFAULT '' NULL;");
-  update_sql("ALTER TABLE user CHANGE last_access timestamp int(11) DEFAULT '0' NOT NULL;");
-  update_sql("ALTER TABLE user CHANGE last_host hostname varchar(128) DEFAULT '' NOT NULL;");
-  update_sql("ALTER TABLE user CHANGE id uid int(10) unsigned DEFAULT '0' NOT NULL auto_increment;");
-  update_sql("ALTER TABLE user CHANGE url homepage varchar(128) DEFAULT '' NOT NULL;");
-  update_sql("UPDATE user SET status = 1 WHERE status = 2;");
-  update_sql("UPDATE user SET name = userid;");
-  update_sql("ALTER TABLE user DROP userid;");
-  update_sql("UPDATE user SET init = mail;");
+  update_sql("ALTER TABLE users DROP INDEX real_email;");
+  update_sql("ALTER TABLE users DROP fake_email;");
+  update_sql("ALTER TABLE users DROP nodes;");
+  update_sql("ALTER TABLE users DROP bio;");
+  update_sql("ALTER TABLE users DROP hash;");
+  update_sql("ALTER TABLE users ADD jabber varchar(128) DEFAULT '' NULL;");
+  update_sql("ALTER TABLE users ADD drupal varchar(128) DEFAULT '' NULL;");
+  update_sql("ALTER TABLE users ADD init varchar(64) DEFAULT '' NULL;");
+  update_sql("ALTER TABLE users CHANGE passwd pass varchar(24) DEFAULT '' NOT NULL;");
+  update_sql("ALTER TABLE users CHANGE real_email mail varchar(64) DEFAULT '' NULL;");
+  update_sql("ALTER TABLE users CHANGE id uid int(10) unsigned DEFAULT '0' NOT NULL auto_increment;");
+  update_sql("ALTER TABLE users CHANGE url homepage varchar(128) DEFAULT '' NOT NULL;");
+  update_sql("UPDATE users SET status = 1 WHERE status = 2;");
+  update_sql("UPDATE users SET name = userid;");
+  update_sql("ALTER TABLE users DROP userid;");
+  update_sql("UPDATE users SET init = mail;");
   update_sql("DROP TABLE access;");
   update_sql("CREATE TABLE access (aid tinyint(10) DEFAULT '0' NOT NULL auto_increment, mask varchar(255) DEFAULT '' NOT NULL, type varchar(255) DEFAULT '' NOT NULL, status tinyint(2) DEFAULT '0' NOT NULL, UNIQUE mask (mask), PRIMARY KEY (aid));");
   update_sql("CREATE TABLE moderate (cid int(10) DEFAULT '0' NOT NULL, nid int(10) DEFAULT '0' NOT NULL, uid int(10) DEFAULT '0' NOT NULL, score int(2) DEFAULT '0' NOT NULL, timestamp int(11) DEFAULT '0' NOT NULL, INDEX (cid), INDEX (nid) );");
@@ -91,9 +90,7 @@ function update_1() {
 }
 
 function update_2() {
-  update_sql("ALTER TABLE user RENAME AS users;");
   update_sql("ALTER TABLE users CHANGE pass pass varchar(32) DEFAULT '' NOT NULL;");
-  update_sql("ALTER TABLE watchdog CHANGE user userid int(10) DEFAULT '0' NOT NULL;");
   update_sql("ALTER TABLE rating CHANGE user userid int(10) DEFAULT '0' NOT NULL;");
   update_sql("ALTER TABLE layout CHANGE user userid int(10) DEFAULT '0' NOT NULL;");
   update_sql("ALTER TABLE blocks CHANGE offset delta tinyint(2) DEFAULT '0' NOT NULL;");
@@ -112,35 +109,33 @@ function update_2() {
 }
 
 function update_3() {
-  update_sql("ALTER TABLE watchdog CHANGE id wid int(5) DEFAULT '0' NOT NULL auto_increment;");
   update_sql("ALTER TABLE locales CHANGE id lid int(10) DEFAULT '0' NOT NULL auto_increment;");
-  update_sql("ALTER TABLE watchdog CHANGE userid uid int(10) DEFAULT '0' NOT NULL;");
   update_sql("ALTER TABLE layout CHANGE userid uid int(10) DEFAULT '0' NOT NULL;");
   update_sql("ALTER TABLE rating CHANGE userid uid int(10) DEFAULT '0' NOT NULL;");
 }
 
 function update_4() {
-  print 'remove the "auto_increment"s\:n';
+  print "remove the \"auto_increment\"s\:n";
   update_sql("ALTER TABLE story CHANGE nid nid int(10) unsigned DEFAULT '0' NOT NULL;");
   update_sql("ALTER TABLE blog CHANGE nid nid int(10) unsigned DEFAULT '0' NOT NULL;");
   update_sql("ALTER TABLE page CHANGE nid nid int(10) unsigned DEFAULT '0' NOT NULL;");
   update_sql("ALTER TABLE forum CHANGE nid nid int(10) unsigned DEFAULT '0' NOT NULL;");
   update_sql("ALTER TABLE book CHANGE nid nid int(10) unsigned DEFAULT '0' NOT NULL;");
 
-  print 'drop the "lid"s:\n';
+  print "drop the \"lid\"s:\n";
   update_sql("ALTER TABLE story DROP lid;");
   update_sql("ALTER TABLE blog DROP lid;");
   update_sql("ALTER TABLE page DROP lid;");
   update_sql("ALTER TABLE forum DROP lid;");
   update_sql("ALTER TABLE book DROP lid;");
 
-  print 'rename "author" to "uid":\n';
+  print "rename \"author\" to \"uid\":\n";
   update_sql("ALTER TABLE comments CHANGE author uid int(10) DEFAULT '0' NOT NULL;");
   update_sql("ALTER TABLE node CHANGE author uid int(10) DEFAULT '0' NOT NULL;");
   update_sql("ALTER TABLE node DROP KEY author;");
   update_sql("ALTER TABLE node ADD KEY uid (uid);");
 
-  print 'resize some "id"s:\n';
+  print "resize some \"id\"s:\n";
   update_sql("ALTER TABLE feed CHANGE fid fid int(10) NOT NULL auto_increment;");
   update_sql("ALTER TABLE bundle CHANGE bid bid int(10) NOT NULL auto_increment;");
   update_sql("ALTER TABLE item CHANGE iid iid int(10) NOT NULL auto_increment;");
@@ -151,7 +146,7 @@ function update_4() {
 }
 
 function update_5() {
-  print 'add primary keys:\n';
+  print "add primary keys:\n";
   update_sql("ALTER TABLE story ADD PRIMARY KEY nid (nid);");
   update_sql("ALTER TABLE blog ADD PRIMARY KEY nid (nid);");
   update_sql("ALTER TABLE page ADD PRIMARY KEY nid (nid);");
@@ -161,7 +156,7 @@ function update_5() {
 }
 
 function update_6() {
-  print 'add new field to blocks:\n';
+  print "add new field to blocks:\n";
   update_sql("ALTER TABLE blocks ADD path varchar(255) NOT NULL DEFAULT '';");
 }
 
@@ -170,14 +165,14 @@ function update_7() {
   update_sql("UPDATE story SET body = CONCAT(abstract, '\n\n', body)");
   update_sql("ALTER TABLE story DROP abstract");
 
-  print 'rename the body fields:\n';
+  print "rename the body fields:\n";
   update_sql("ALTER TABLE story CHANGE body body_old TEXT DEFAULT '' NOT NULL;");
   update_sql("ALTER TABLE page CHANGE body body_old TEXT DEFAULT '' NOT NULL;");
   update_sql("ALTER TABLE blog CHANGE body body_old TEXT DEFAULT '' NOT NULL;");
   update_sql("ALTER TABLE forum CHANGE body body_old TEXT DEFAULT '' NOT NULL;");
   update_sql("ALTER TABLE book CHANGE body body_old TEXT DEFAULT '' NOT NULL;");
 
-  print 'update the node table:\n';
+  print "update the node table:\n";
   update_sql("ALTER TABLE node DROP lid;");
   update_sql("ALTER TABLE node ADD teaser TEXT DEFAULT '' NOT NULL;");
   update_sql("ALTER TABLE node ADD body TEXT DEFAULT '' NOT NULL;");
@@ -193,10 +188,12 @@ function update_7() {
   update_sql("UPDATE node SET status = 0 WHERE status = 2;");
   update_sql("UPDATE node SET status = 1 WHERE status = 3;");
 
-  $result = db_query("SELECT nid FROM node");
+  $result = db_query("SELECT nid,type FROM node WHERE type = 'story' OR type = 'page' OR type = 'blog' OR type = 'forum' OR type = 'book'");
+  include_once("modules/node.module");
 
   while ($object = db_fetch_object($result)) {
 
+    include_once("modules/$object->type.module");
     $node = node_load(array("nid" => $object->nid));
 
     $body = db_result(db_query("SELECT body_old FROM $node->type WHERE nid = $node->nid"), 0);
@@ -219,7 +216,6 @@ function update_7() {
   }
 
   update_sql("ALTER TABLE book DROP section;");
-  update_sql("ALTER TABLE users CHANGE session sid varchar(32) DEFAULT '' NOT NULL;");
 }
 
 function update_8() {
@@ -355,7 +351,6 @@ function update_24() {
 }
 
 function update_25() {
-  update_sql("CREATE TABLE `system` (filename varchar(255) NOT NULL default '', name varchar(255) NOT NULL default '', type varchar(255) NOT NULL default '', description varchar(255) NOT NULL default '', status int(2) NOT NULL default '0', PRIMARY KEY  (filename));");
   update_sql("UPDATE users SET theme = LOWER(theme);");
 }
 
@@ -418,15 +413,7 @@ function update_28() {
 }
 
 function update_29() {
-  update_sql("CREATE TABLE permission (
-    rid INT UNSIGNED NOT NULL,
-    perm TEXT,
-    tid INT UNSIGNED NOT NULL,
-    KEY (rid)
-  )");
-
   update_sql("INSERT INTO permission (rid, perm) SELECT rid, perm FROM role");
-  update_sql("ALTER TABLE users ADD rid INT UNSIGNED NOT NULL");
 
   $result = db_query("SELECT rid, name FROM role");
   while ($role = db_fetch_object($result)) {
@@ -505,7 +492,7 @@ function update_page() {
 
 print "<html><h1>Drupal update</h1>";
 // Security check:
-if (user_access(NULL)) {
+if (!user_access(NULL)) {
   update_page();
 }
 else {
