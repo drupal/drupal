@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.407 2004/10/09 16:27:59 dries Exp $
+// $Id: node.module,v 1.408 2004/10/10 11:17:24 dries Exp $
 
 /**
  * @file
@@ -689,19 +689,6 @@ function node_menu($may_cache) {
   }
 
   return $items;
-}
-
-function node_admin_edit($node) {
-  if (is_numeric($node)) {
-    $node = node_load(array('nid' => $node));
-  }
-
-  $output .= node_form($node);
-
-  // Display the node form extensions:
-  $output .= implode("\n", module_invoke_all('node_link', $node));
-
-  return $output;
 }
 
 /**
