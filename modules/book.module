@@ -1,0 +1,189 @@
+<?php
+
+$module = array("find" => "book_find",
+                "page" => "book_page",
+                "admin" => "book_admin");
+
+function book_navigation($node) {
+  if ($node->nid) {
+    $next = db_fetch_object(db_query("SELECT n.nid, n.title FROM nodes n LEFT JOIN book b ON n.nid = b.node WHERE b.parent = '$node->parent' AND b.weight > $node->weight ORDER BY b.weight ASC"));
+    $prev = db_fetch_object(db_query("SELECT n.nid, n.title FROM nodes n LEFT JOIN book b ON n.nid = b.node WHERE b.parent = '$node->parent' AND b.weight < $node->weight ORDER BY b.weight DESC"));
+  }
+
+  $output .= "<HR>";
+  $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"0\" WIDTH=\"100%\">\n";
+  $output .= " <TR><TD ALIGN=\"left\" WIDTH=\"33%\">". ($prev ? "<A HREF=\"node.php?id=$prev->nid\">". t("previous") ."</A>" : t("previous")) ."</TD><TD ALIGN=\"center\" WIDTH=\"34%\"><A HREF=\"module.php?mod=book\">index</A></TD><TD ALIGN=\"right\" WIDTH=\"33%\">". ($next ? "<A HREF=\"node.php?id=$next->nid\">". t("next") ."</A>" : t("next")) ."</TD></TR>\n";
+  $output .= " <TR><TD ALIGN=\"left\" WIDTH=\"33%\">". ($prev ? "<SMALL>". check_output($prev->title) ."</SMALL>" : "") ."</TD><TD ALIGN=\"center\" WIDTH=\"34%\">". ($node->parent ? "<A HREF=\"node.php?id=$node->parent\">". t("up") ."</A>" : t("up")) ."</TD><TD ALIGN=\"right\" WIDTH=\"33%\">". ($next ? "<SMALL>". check_output($next->title) ."</SMALL>" : "") ."</TD></TR>\n";
+  $output .= "</TABLE>\n";
+
+  return $output;
+
+}
+
+function book_update($node) {
+  return ($node->nid ? "<A HREF=\"module.php?mod=book&op=update&id=$node->nid\">". t("update") ."</A>" : t("update"));
+}
+
+function theme_book($node, $small = 0) {
+  global $theme;
+
+  if ($small) {
+    print "<A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A>";
+  }
+  else {
+    if ($node->title && $node->body) {
+      $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"0\" WIDTH=\"100%\">\n";
+      $output .= " <TR><TD><B><BIG>". check_output($node->title) ."</BIG></B><BR><SMALL><I>Last updated by ". format_username($node->userid) ." on ". format_date($node->timestamp) ."</I></SMALL></TD><TD ALIGN=\"right\">". node_info($node) ."</TD></TR>\n";
+      $output .= "</TABLE>\n";
+      $output .= "<P>". check_output($node->body, 1) ."</P>";
+    }
+
+    $theme->box(t("Documentation book"), $output ."". book_overview($node->nid) ."". book_navigation($node));
+  }
+}
+
+function book_view($node) {
+  global $op;
+
+  if ($op == "view") {
+    theme_book($node);
+  }
+  else {
+    global $theme;
+    $theme->header();
+    theme_book($node);
+    $theme->footer();
+  }
+}
+
+function book_find($keys) {
+  global $user;
+  $find = array();
+  $result = db_query("SELECT n.*, u.userid FROM nodes n LEFT JOIN users u ON n.author = u.id WHERE n.status = 2 AND n.title LIKE '%". check_input($keys) ."%' ORDER BY n.timestamp DESC LIMIT 20");
+  while ($node = db_fetch_object($result)) {
+    array_push($find, array("title" => check_output($node->title), "link" => (user_access($user, "book") ? "admin.php?mod=book&op=edit&id=$node->nid" : "node.php?id=$node->nid"), "user" => $node->userid, "date" => $node->timestamp));
+  }
+  return $find;
+}
+
+function book_search() {
+  global $keys, $mod;
+  print search_form($keys);
+  print search_data($keys, $mod);
+}
+
+function book_form($edit = array()) {
+  global $allowed_html, $PHP_SELF, $theme, $user;
+
+  $output .= "<FORM ACTION=\"$PHP_SELF?mod=book\" METHOD=\"post\">\n";
+
+  $output .= "<B>". t("Author") .":</B><BR>\n";
+  $output .= format_username(($edit[userid] ? $edit[userid] : $user->userid)) ."<P>\n";
+
+  $output .= "<B>". t("Category") .":</B><BR>\n";
+  $result = db_query("SELECT nid, title FROM nodes WHERE type = 'book'");
+  while ($node = db_fetch_object($result)) $options .= "<OPTION VALUE=\"$node->nid\"". ($edit[parent] == $node->nid ? " SELECTED" : "") .">". check_select($node->title) ."</OPTION>";
+  if (user_access($user, "book")) $options .= "<OPTION VALUE=\"0\"". ($edit[parent] == 0 ? " SELECTED" : "") .">&nbsp;</OPTION>";
+  $output .= "<SELECT NAME=\"edit[parent]\">$options</SELECT><BR>\n";
+  $output .= "<SMALL><I>". t("The parent subject or category the book belongs in.") ."</I></SMALL><P>\n";
+
+  $output .= "<B>". t("Subject") .":</B><BR>\n";
+  $output .= "<INPUT TYPE=\"text\" NAME=\"edit[title]\" SIZE=\"50\" MAXLENGTH=\"128\" VALUE=\"". check_textfield($edit[title]) ."\"><P>\n";
+
+  $output .= "<B>". t("Content") .":</B><BR>\n";
+  $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"edit[body]\" MAXLENGTH=\"20\">". check_textarea($edit[body]) ."</TEXTAREA><BR>\n";
+  $output .= "<SMALL><I>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</I></SMALL><P>\n";
+
+  if (user_access($user, "book")) {
+    $status = array(2 => "posted", 1 => "queued", 0 => "dumped");
+
+    $output .= "<B>". t("Weight") .":</B><BR>\n";
+    for ($count = 0; $count < 25; $count++) $weight .= "<OPTION VALUE=\"$count\"". ($edit[weight] == $count ? " SELECTED" : "") .">$count</OPTION>";
+    $output .= "<SELECT NAME=\"edit[weight]\">$weight</SELECT><BR>\n";
+    $output .= "<SMALL><I>". t("The heavier nodes will sink and the lighter nodes will be positioned nearer the top.") ."</I></SMALL><P>\n";
+
+    $output .= "<B>". t("Status") .":</B><BR>\n";
+    foreach ($status as $key=>$value) $status .= "<OPTION VALUE=\"$key\"". ($edit[status] == $key ? " SELECTED" : "") .">$value</OPTION>";
+    $output .= "<SELECT NAME=\"edit[status]\">$status</SELECT><P>\n";
+  }
+
+  if (!$edit) {
+    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview") ."\">\n";
+  }
+  else if (!$edit[title]) {
+    $output .= "<FONT COLOR=\"red\">". t("Warning: you did not supply a title.") ."</FONT><P>\n";
+    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview") ."\">\n";
+  }
+  else {
+    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview") ."\">\n";
+    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Submit") ."\">\n";
+  }
+
+  $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[nid]\" VALUE=\"$edit[nid]\">\n";
+  $output .= "</FORM>\n";
+
+  return $output;
+}
+
+function book_save($edit) {
+  node_save(array_merge($edit, array(type => "book")));
+}
+
+function book_delete($id) {
+  node_del_object("nid", $id);
+}
+
+function book_overview($parent = "", $offset = "") {
+  global $PHP_SELF;
+
+  $result = db_query("SELECT n.*, b.* FROM nodes n LEFT JOIN book b ON n.nid = b.node WHERE n.type = 'book' AND b.parent = '$parent' ORDER BY b.weight");
+
+  $output .= "<DL>";
+  while ($node = db_fetch_object($result)) {
+    $number++;
+    if ($offset) $output .= "<DT>$offset$number. <A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A>\n";
+    else $output .= "<DT><P>$number. <B><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></B>\n";
+    if ($PHP_SELF == "/admin.php") $output .= " <SMALL>(<A HREF=\"admin.php?mod=book&op=edit&id=$node->nid\">edit</A> | <A HREF=\"admin.php?mod=book&op=delete&id=$node->nid\">delete</A>)</SMALL>";
+    $output .= book_overview($node->nid, "$offset$number.");
+  }
+  $output .= "</DL>";
+  return $output;
+}
+
+function book_admin() {
+  global $op, $id, $edit;
+
+  print "<SMALL><A HREF=\"admin.php?mod=book&op=add\">add new entry</A> | <A HREF=\"admin.php?mod=book&op=search\">search documenation</A> | <A HREF=\"admin.php?mod=book\">overview</A></SMALL><HR>\n";
+
+  switch ($op) {
+    case "add":
+      print book_form();
+      break;
+   case "delete":
+      print book_delete($id);
+      print book_overview();
+      break;
+    case "edit":
+      print book_form(node_get_array(nid, $id));
+      break;
+    case "search":
+      book_search();
+      break;
+    case t("Preview"):
+      print book_form($edit);
+      break;
+    case t("Submit"):
+      book_save($edit);
+      print book_overview();
+      break;
+    default:
+      print book_overview();
+  }
+}
+
+function book_page($id = 0) {
+  global $theme;
+  book_view(node_get_object("nid", $nid));
+}
+
+?>
