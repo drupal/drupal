@@ -85,17 +85,19 @@ function taxonomy_save_vocabulary($edit) {
 
   if ($edit["vid"] && $edit["name"]) {
     db_query("UPDATE vocabulary SET ". _prepare_update($data) ." WHERE vid = '". check_query($edit["vid"]) ."'");
-    return t("update vocabulary '%name'.", array("%name" => $edit["name"]));
+    $message = t("updated vocabulary '%name'.", array("%name" => $edit["name"]));
   }
   else if ($edit["vid"]) {
-    return taxonomy_del_vocabulary($edit["vid"]);
+    $message = taxonomy_del_vocabulary($edit["vid"]);
   }
   else {
     db_query("INSERT INTO vocabulary ". _prepare_insert($data, 1) ." VALUES ". _prepare_insert($data, 2));
-    return t("created new vocabulary '%name'.", array("%name" => $edit["name"]));
+    $message = t("created new vocabulary '%name'.", array("%name" => $edit["name"]));
   }
 
   cache_clear_all();
+
+  return $message;
 }
 
 function taxonomy_del_vocabulary($vid) {
