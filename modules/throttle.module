@@ -1,5 +1,5 @@
 <?php
-// $Id: throttle.module,v 1.21 2004/01/02 16:28:45 dries Exp $
+// $Id: throttle.module,v 1.22 2004/01/05 22:18:48 dries Exp $
 
 /*  Call the throttle_status() function from your own modules, themes, blocks,
  * etc, to determine the current throttle status.  For example, in your theme
@@ -56,9 +56,9 @@ function throttle_exit() {
 function throttle_perm() {
   /*
   ** throttle module defines the following permissions:
-  **   access throttle box          - see throttle statistics
+  **   access throttle block - see throttle statistics
   */
-  return array("access throttle box");
+  return array("access throttle block");
 }
 
 function throttle_help($section = "admin/help#throttle") {
