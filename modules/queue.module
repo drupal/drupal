@@ -1,5 +1,5 @@
 <?php
-// $Id: queue.module,v 1.102 2004/01/21 18:08:17 dries Exp $
+// $Id: queue.module,v 1.103 2004/02/08 20:56:24 kjartan Exp $
 
 function queue_help($section) {
   $output = "";
@@ -242,16 +242,28 @@ function queue_block($op = "list", $delta = 0) {
 
 function queue_nodeapi(&$node, $op, $arg = 0) {
   switch ($op) {
-    case "fields":
-      return array("score", "users", "votes");
-    case "validate":
+    case 'fields':
+      return array('score', 'users', 'votes');
+    case 'validate':
       if ($node->nid && $node->moderate) {
         // Reset votes when node is updated:
         $node->score = 0;
-        $node->users = "";
+        $node->users = '';
         $node->votes = 0;
       }
       break;
-  }
+    case 'insert':
+    case 'update':
+      if ($node->moderate && user_access("access submission queue")) {
+        drupal_set_message(t('The post is queued for approval. You can check the votes in the <a href="%queue">submission queue</a>.', array('%queue' => url('queue'))));
+      }
+      else if ($node->moderate) {
+        drupal_set_message(t('The post is queued for approval. The editors will decide whether it should be published.'));
+      }
+      else {
+        drupal_set_message(t('The post is published.'));
+      }
+      break;
+   }
 }
 ?>
