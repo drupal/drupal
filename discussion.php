@@ -8,25 +8,27 @@ function discussion_score($comment) {
 function discussion_moderate($moderate) {
   global $user, $comment_votes;
 
-  $na = $comment_votes[key($comment_votes)];
+  if ($user->id && $moderate) {
+    $na = $comment_votes[key($comment_votes)];
 
-  foreach ($moderate as $id=>$vote) {
-    if ($user->id && $vote != $comment_votes[$na] && !user_getHistory($user->history, "c$id")) {
-      ### Update the comment's score:
-      $result = db_query("UPDATE comments SET score = score $vote, votes = votes + 1 WHERE cid = $id");
+    foreach ($moderate as $id=>$vote) {
+      if ($vote != $comment_votes[$na] && !user_getHistory($user->history, "c$id")) {
+        ### Update the comment's score:
+        $result = db_query("UPDATE comments SET score = score $vote, votes = votes + 1 WHERE cid = $id");
 
-      ### Update the user's history:
-      user_setHistory($user, "c$id", $vote);
+        ### Update the user's history:
+        user_setHistory($user, "c$id", $vote);
+      }
     }
   }
 }
 
-function discussion_kids($cid, $mode, $level = 0, $dummy = 0) {
+function discussion_kids($cid, $mode, $thold, $level = 0, $dummy = 0) {
   global $user, $theme;
 
   $comments = 0;
 
-  $result = db_query("SELECT c.*, u.* FROM comments c LEFT JOIN users u ON c.author = u.id WHERE c.pid = $cid ORDER BY c.timestamp, c.cid");
+  $result = db_query("SELECT c.*, u.* FROM comments c LEFT JOIN users u ON c.author = u.id WHERE c.pid = $cid AND (c.votes = 0 OR c.score / c.votes >= $thold) ORDER BY c.timestamp, c.cid");
 
   if ($mode == "nested") {
     while ($comment = db_fetch_object($result)) {
@@ -37,33 +39,30 @@ function discussion_kids($cid, $mode, $level = 0, $dummy = 0) {
         $link = "<A HREF=\"discussion.php?op=reply&sid=$comment->sid&pid=$comment->cid\"><FONT COLOR=\"$theme->hlcolor2\">reply to this comment</FONT></A>";
         $theme->comment($comment->userid, stripslashes($comment->subject), stripslashes($comment->comment), $comment->timestamp, stripslashes($comment->url), stripslashes($comment->femail), discussion_score($comment), $comment->votes, $comment->cid, $link);
         
-        discussion_kids($comment->cid, $mode, $level + 1, $dummy + 1);
+        discussion_kids($comment->cid, $mode, $thold, $level + 1, $dummy + 1);
       }
     }
   } 
-  elseif ($mode == "flat") {
+  else {  // mode == 'flat'
     while ($comment = db_fetch_object($result)) {
       if ($comment->score >= $thold) {
         $link = "<A HREF=\"discussion.php?op=reply&sid=$comment->sid&pid=$comment->cid\"><FONT COLOR=\"$theme->hlcolor2\">reply to this comment</FONT></A>";
         $theme->comment($comment->userid, check_output($comment->subject), check_output($comment->comment), $comment->timestamp, $comment->url, $comment->femail, discussion_score($comment), $comment->votes, $comment->cid, $link);
       } 
-      discussion_kids($comment->cid, $mode);
+      discussion_kids($comment->cid, $mode, $thold);
     }
   } 
-  else {
-    print "ERROR: we should not get here!";
-  }
   
   if ($level && $comments) {
     print "</UL>";
   }
 }
 
-function discussion_childs($cid, $level = 0, $thread) {
+function discussion_childs($cid, $thold, $level = 0, $thread) {
   global $theme, $user;
 
   ### Perform SQL query:
-  $result = db_query("SELECT c.*, u.* FROM comments c LEFT JOIN users u ON c.author = u.id WHERE c.pid = $cid ORDER BY c.timestamp, c.cid");
+  $result = db_query("SELECT c.*, u.* FROM comments c LEFT JOIN users u ON c.author = u.id WHERE c.pid = $cid AND (c.votes = 0 OR c.score / c.votes >= $thold) ORDER BY c.timestamp, c.cid");
   
   if ($level == 0) $thread = "";
   $comments = 0;
@@ -79,7 +78,7 @@ function discussion_childs($cid, $level = 0, $thread) {
     $thread .= "<LI><A HREF=\"discussion.php?id=$comment->sid&cid=$comment->cid&pid=$comment->pid\">". check_output($comment->subject) ."</A> by ". format_username($comment->userid) ." <SMALL>(". discussion_score($comment) .")<SMALL></LI>";
 
     ### Recursive:
-    discussion_childs($comment->cid, $level + 1, &$thread);
+    discussion_childs($comment->cid, $thold, $level + 1, &$thread);
   } 
 
   if ($level && $comments) {
@@ -113,27 +112,17 @@ function discussion_display($sid, $pid, $cid, $level = 0) {
   $story = db_fetch_object($result);
 
   ### Display story:
-  if ($story->status == 1) {
-    $theme->article($story, "[ <A HREF=\"submission.php\"><FONT COLOR=\"$theme->hlcolor2\">submission queue</FONT></A> | <A HREF=\"discussion.php?op=reply&sid=$story->id&pid=0\"><FONT COLOR=\"$theme->hlcolor2\">add a comment</FONT></A> ]");
-  }
-  else {
-    $theme->article($story, "[ <A HREF=\"\"><FONT COLOR=\"$theme->hlcolor2\">home</FONT></A> | <A HREF=\"discussion.php?op=reply&sid=$story->id&pid=0\"><FONT COLOR=\"$theme->hlcolor2\">add a comment</FONT></A> ]");
-  }
+  if ($story->status == 1) $theme->article($story, "[ <A HREF=\"submission.php\"><FONT COLOR=\"$theme->hlcolor2\">submission queue</FONT></A> | <A HREF=\"discussion.php?op=reply&sid=$story->id&pid=0\"><FONT COLOR=\"$theme->hlcolor2\">add a comment</FONT></A> ]");
+  else $theme->article($story, "[ <A HREF=\"\"><FONT COLOR=\"$theme->hlcolor2\">home</FONT></A> | <A HREF=\"discussion.php?op=reply&sid=$story->id&pid=0\"><FONT COLOR=\"$theme->hlcolor2\">add a comment</FONT></A> ]");
 
   ### Display `comment control'-box:
-  if ($user->id) {
-    $theme->commentControl($sid, $title, $thold, $mode, $order);
-  }
+  if ($user->id) $theme->commentControl($sid, $title, $thold, $mode, $order);
 
   ### Compose query:
-  $query = "SELECT c.*, u.* FROM comments c LEFT JOIN users u ON c.author = u.id WHERE c.sid = $sid AND c.pid = $pid";
-  if ($mode == 'threaded' || mode == 'nested') {
-    if ($thold != "") $query .= " AND c.score >= $thold";
-    else $query .= " AND c.score >= 0"; 
-  }
+  $query .= "SELECT c.*, u.* FROM comments c LEFT JOIN users u ON c.author = u.id WHERE c.sid = $sid AND c.pid = $pid AND (c.votes = 0 OR c.score / c.votes >= $thold)";
   if ($order == 1) $query .= " ORDER BY c.timestamp DESC";
   if ($order == 2) $query .= " ORDER BY c.score DESC";
-  $result = db_query("$query");
+  $result = db_query($query);
 
   print "<FORM METHOD=\"post\" ACTION=\"discussion.php\">\n";
 
@@ -141,7 +130,7 @@ function discussion_display($sid, $pid, $cid, $level = 0) {
   while ($comment = db_fetch_object($result)) {
     ### Dynamically compose the `reply'-link:
     if ($pid != 0) {
-      list($pid) = mysql_fetch_row(mysql_query("SELECT pid FROM comments WHERE cid = $comment->pid"));
+      list($pid) = db_fetch_row(db_query("SELECT pid FROM comments WHERE cid = $comment->pid"));
       $link = "<A HREF=\"discussion.php?id=$comment->sid&pid=$pid\"><FONT COLOR=\"$theme->hlcolor2\">return to parent</FONT></A> | <A HREF=\"discussion.php?op=reply&sid=$comment->sid&pid=$comment->cid\"><FONT COLOR=\"$theme->hlcolor2\">reply to this comment</FONT></A>";
     }
     else {
@@ -150,12 +139,12 @@ function discussion_display($sid, $pid, $cid, $level = 0) {
 
     ### Display the comments:
     if (empty($mode) || $mode == "threaded") {
-      $thread = discussion_childs($comment->cid);
+      $thread = discussion_childs($comment->cid, $thold);
       $theme->comment($comment->userid, check_output($comment->subject), check_output($comment->comment), $comment->timestamp, $comment->url, $comment->femail, discussion_score($comment), $comment->votes, $comment->cid, $link, $thread);
     }
     else {
       $theme->comment($comment->userid, check_output($comment->subject), check_output($comment->comment), $comment->timestamp, $comment->url, $comment->femail, discussion_score($comment), $comment->votes, $comment->cid, $link);
-      discussion_kids($comment->cid, $mode, $level);
+      discussion_kids($comment->cid, $mode, $thold, $level);
     }
   }
 
