@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.inc,v 1.30 2004/09/19 00:08:50 unconed Exp $
+// $Id: locale.inc,v 1.31 2004/09/20 19:37:18 dries Exp $
 
 /**
  * @file
@@ -973,7 +973,7 @@ function _locale_string_language_list($translation) {
 function _locale_string_seek_query() {
   static $query = NULL;
 
-  if (is_null($query) && isset($_REQUEST['edit'])) {
+  if (is_null($query)) {
     $fields = array('string', 'language', 'searchin');
     $query = new StdClass;
     if (is_array($_REQUEST['edit'])) {
