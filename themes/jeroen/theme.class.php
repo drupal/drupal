@@ -63,17 +63,17 @@
    # Syntax.......: abstract(...);
    # Description..: a function to draw an abstract story box, that is the
    #                boxes displayed on the main page.
-   function abstract($editor, $informant, $timestamp, $subject, $abstract, $comments, $category, $department, $link) {
-     $timestamp = date("l, F d, Y - h:i:s A", $timestamp);
-
+   function abstract($story) {
      include "config.inc";
+
+      $story->timestamp = date("l, F d, Y - h:i:s A", $story->timestamp);
      ?>
          <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0" BORDER="0">
           <TR>
            <TD ALIGN="left" VALIGN="bottom" HEIGHT="20">
             <? if (rand(0,1) == 0) $img = "news1.gif"; else $img = "news3.gif"; ?><IMG SRC="themes/Jeroen/images/<? echo $img; ?>" WIDTH="20" HEIGHT="20" ALT=""></TD>
            <TD colspan="3" ALIGN="center" VALIGN="center" HEIGHT="20" BACKGROUND="themes/Jeroen/images/newsmiddle.gif">
-            <B><? echo $subject; ?></B>
+            <B><? echo $story->subject; ?></B>
            </TD>
            <TD ALIGN="right" VALIGN="bottom" HEIGHT="20">
             <? if (rand(0,1) == 0) $img = "news2.gif"; else $img = "news4.gif"; if (rand(0,100) == 50) $img = "news5.gif"; ?><IMG SRC="themes/Jeroen/images/<? echo $img; ?>" WIDTH="20" HEIGHT="20" ALT=""></TD>
@@ -101,16 +101,16 @@
 		default: $how = "Sneaked through";
               }
 
-              if ($informant) {
-               print "<FONT SIZE=\"-1\">$how by <A HREF=\"account.php?op=userinfo&uname=$informant\">$informant</A> on $timestamp"; ?><? print "</FONT>
+              if ($story->userid) {
+               print "<FONT SIZE=\"-1\">$how by <A HREF=\"account.php?op=userinfo&uname=$story->userid\">$story->userid</A> on $story->timestamp"; ?><? print "</FONT>
            </TD>
            <TD ALIGN=\"right\" BGCOLOR=\"#6C6C6C\" BACKGROUND=\"themes/Jeroen/images/menutitle.gif\">
-            <B><A HREF=\"search.php?category=$category\"><FONT COLOR=\"<? $this->fgcolor3; ?>\">$category</FONT></A></B>&nbsp;";
+            <B><A HREF=\"search.php?category=$story->category\"><FONT COLOR=\"<? $this->fgcolor3; ?>\">$story->category</FONT></A></B>&nbsp;";
               }
               else {
-               print "<FONT SIZE=\"-1\">Reported to us by $anonymous on $timestamp"; ?><? print "</FONT>
+               print "<FONT SIZE=\"-1\">Reported to us by $anonymous on $story->timestamp"; ?><? print "</FONT>
            </TD>
-           <TD ALIGN=\"right\" WIDTH=\"65\"><A HREF=\"search.php?category=$category\"><FONT COLOR=\"<? $this->fgcolor3; ?>\">$category</FONT></A>";
+           <TD ALIGN=\"right\" WIDTH=\"65\"><A HREF=\"search.php?category=$story->category\"><FONT COLOR=\"<? $this->fgcolor3; ?>\">$story->category</FONT></A>";
               }
              ?></FONT>
            </TD>
@@ -127,11 +127,11 @@
              <TR>
               <TD>
                <?
-                if ($comments) {
-                 echo "<P>$abstract</P><P><FONT COLOR=\"$this->hlcolor1\">Editor's note by <A HREF=\"account.php?op=userinfo&uname=$editor\">$editor</A>:</FONT>$comments</P>";
+                if ($story->updates) {
+                 echo "<P>$story->abstract</P><P><FONT COLOR=\"$this->hlcolor1\">Editor's note by <A HREF=\"account.php?op=userinfo&uname=$story->editor\">$story->editor</A>:</FONT>$story->updates</P>";
                 }
                 else {
-                 echo $abstract;
+                 echo $story->abstract;
                 }
                ?>
                <TR>
@@ -161,17 +161,17 @@
    # Description..: a function to dispay a complete article (without user 
    #                comments).  It's what you get when you followed for
    #                instance one of read-more links on the main page.
-   function article($editor, $informant, $timestamp, $subject, $department, $abstract, $comments, $article, $reply) {
-     $timestamp = date("l, F d, Y - h:i:s A", $timestamp);
+   function article($story, $reply) {
+     include "config.inc";
 
-      include "config.inc";
+     $story->timestamp = date("l, F d, Y - h:i:s A", $story->timestamp);
       ?>
          <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0" BORDER="0">
           <TR>
            <TD ALIGN="right" VALIGN="bottom" WIDTH="20" HEIGHT="20">
             <? if (rand(0,1) == 0) $img = "news1.gif"; else $img = "news3.gif"; ?><IMG SRC="themes/Jeroen/images/<? echo $img; ?>" WIDTH="20" HEIGHT="20" ALT=""></TD>
            <TD colspan="3" ALIGN="center" VALIGN="center" HEIGHT="20" BACKGROUND="themes/Jeroen/images/newsmiddle.gif">
-            <IMG SRC="themes/Jeroen/images/newsmiddle.gif" width="1" height="1" alt=""><B><? echo $subject; ?></B></TD>
+            <IMG SRC="themes/Jeroen/images/newsmiddle.gif" width="1" height="1" alt=""><B><? echo $story->subject; ?></B></TD>
            <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20">
             <? if (rand(0,1) == 0) $img = "news2.gif"; else $img = "news4.gif"; ?><IMG SRC="themes/Jeroen/images/<? echo $img; ?>" WIDTH="20" HEIGHT="20" ALT=""></TD>
           </TR>
@@ -198,17 +198,17 @@
 	     default: $how = "Sneaked through";
              }
 
-             if ($informant) {
-              print "<FONT SIZE=\"-1\">$how by <A HREF=\"account.php?op=userinfo&uname=$informant\">$informant</A> on $timestamp"; ?><? print "</FONT>
+             if ($story->userid) {
+              print "<FONT SIZE=\"-1\">$how by <A HREF=\"account.php?op=userinfo&uname=$story->userid\">$story->userid</A> on $story->timestamp"; ?><? print "</FONT>
            </TD>
            <TD ALIGN=\"right\" WIDTH=\"80\" BGOLOR=\"6C6C6C\" BACKGROUND=\"themes/Jeroen/images/menutitle.gif\">
-            <B><A HREF=\"search.php?category=$category\"><FONT COLOR=\"<? $this->fgcolor3; ?>\">$category</FONT></A></B>&nbsp;";
+            <B><A HREF=\"search.php?category=$story->category\"><FONT COLOR=\"<? $this->fgcolor3; ?>\">$story->category</FONT></A></B>&nbsp;";
              }
              else {
-              print "<FONT SIZE=\"-1\">Reported to us by $anonymous on $timestamp"; ?><? print "</FONT>
+              print "<FONT SIZE=\"-1\">Reported to us by $anonymous on $story->timestamp"; ?><? print "</FONT>
            </TD>
            <TD ALIGN=\"center\" WIDTH=\"80\" BGOLOR=\"6C6C6C\" BACKGROUND=\"themes/Jeroen/images/menutitle.gif\">
-            <A HREF=\"search.php?category=$category\"><FONT COLOR=\"<? $this->fgcolor3; ?>\">$category</FONT></A>";
+            <A HREF=\"search.php?category=$category\"><FONT COLOR=\"<? $this->fgcolor3; ?>\">$story->category</FONT></A>";
              }
             ?></FONT>
            </TD>
@@ -224,13 +224,13 @@
              <TR>
               <TD>
                <?
-                if ($comments) {
-                 echo "<P>$abstract</P><P><FONT COLOR=\"$this->hlcolor1\">Editor's note by <A HREF=\"account.php?op=userinfo&uname=$editor\">$editor</A>:</FONT>$comments</P>";
+                if ($story->updates) {
+                 echo "<P>$story->abstract</P><P><FONT COLOR=\"$this->hlcolor1\">Editor's note by <A HREF=\"account.php?op=userinfo&uname=$story->editor\">$story->editor</A>:</FONT>$story->updates</P>";
                 }
                 else {
-                 echo $abstract;
+                 echo $story->abstract;
                 }
-	        if ($article) echo "<P>$article</P>";
+	        if ($story->article) echo "<P>$story->article</P>";
                ?>
                <TR>
                 <TD ALIGN="right">
