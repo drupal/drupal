@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.306 2004/01/11 20:31:24 dries Exp $ */
+/* $Id: common.inc,v 1.307 2004/01/12 22:53:43 dries Exp $ */
 
 /**
  * @defgroup common Core functions
@@ -985,7 +985,7 @@ function drupal_attributes($attributes = NULL) {
 }
 
 function l($text, $url, $attributes = array(), $query = NULL, $fragment = NULL) {
-  return "<a href=\"". url($url, $query, $fragment) ."\"". drupal_attributes($attributes) .">$text</a>";
+  return "<a href=\"". url($url, $query, $fragment) ."\"". ($url == $_GET['q'] ? ' class="active"' : NULL) . drupal_attributes($attributes) .">$text</a>";
 }
 
 function field_get($string, $name) {
