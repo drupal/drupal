@@ -67,7 +67,6 @@ function story_validate(&$node) {
   */
 
   if (isset($node->body) && count(explode(" ", $node->body)) < variable_get("minimum_story_size", 0)) {
-print "body : $node->body";
     $error["body"] = "<div class=\"error\">". t("The body of your story is too short.") ."</div>";
   }
 
