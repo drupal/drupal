@@ -1,5 +1,5 @@
 <?php
-// $Id: archive.module,v 1.29 2003/06/27 17:48:20 dries Exp $
+// $Id: archive.module,v 1.30 2003/06/30 18:34:02 dries Exp $
 
 function archive_system($field){
   $system["description"] = t("Displays a calendar to navigate old content.");
@@ -150,7 +150,7 @@ function archive_calendar($original = 0) {
 
   $output .= "</table></div>\n\n";
 
-  cache_set("archive:calendar:$first", $output, time() + variable_get("cache_clear", 120));
+  cache_set("archive:calendar:$start_of_month", $output, time() + variable_get("cache_clear", 120));
 
   return $output;
 }
