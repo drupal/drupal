@@ -719,34 +719,6 @@ function form_weight($title = NULL, $name = "weight", $value = 0, $delta = 10, $
   return form_select($title, $name, $value, $weights, $description, $extra);
 }
 
-/**
- * Parse an URL; this function must be follow the changes of a clean url implementation
- *
- * @param   string  $url     optional, url to parse; default to request_uri()
- * @return  array   $result  associative array:
- *                             script => index/node/module/admin
- *                             query => GET variables
- *
- */
-function drupal_parse_url($url = NULL) {
-  global $PHP_SELF;
-  static $cache;
-
-  if ($url == NULL) {
-    $url = $PHP_SELF ."?". getenv("QUERY_STRING");
-  }
-
-  if (!$cache[$url]) {
-    $parts = parse_url($url);
-    preg_match("/(\w+?)\.php/", $parts["path"], $found);
-    $cache[$url]["script"] = $found[1];
-    parse_str($parts["query"], $cache[$url]["query"]);
-    $cache[$url]["anchor"] = $parts["fragment"];
-  }
-
-  return $cache[$url];
-}
-
 function url($url, $query = NULL) {
 
   if ($url) {
@@ -765,10 +737,6 @@ function url($url, $query = NULL) {
 }
 
 function l($text, $url, $attributes = array(), $query = NULL) {
-
-  if (!is_array($attributes)) {
-    print "$text - $url";
-  }
 
   $t = array();
   foreach ($attributes as $key => $value) {

@@ -282,21 +282,19 @@ function pager_query($query, $limit = 10, $element = 0) {
 }
 
 function pager_link($from_new, $attributes = array()) {
-  $url = drupal_parse_url();
 
-  if (count($from_new) == 0 || (count($from_new) == 1 && $from_new[0] == 0)) {
-    unset($url["query"]["from"]);
-  }
-  else {
-    $url["query"]["from"] = implode(",", $from_new);
+  foreach($attributes as $key => $value) {
+    $query[] = "$key=$value";
   }
 
   if (count($attributes)) {
-    $url["query"] = array_merge($url["query"], $attributes);
+    $url = url("", "from=". $from_new[0] ."&". implode("&", $query));
+  }
+  else {
+    $url = url("", "from=". $from_new[0]);
   }
 
-  // TODO: should use 'url()':
-  // return drupal_url($url["query"], $url["script"]);
+  return $url;
 }
 
 function pager_load_array($value, $element, $old_array) {
