@@ -68,8 +68,8 @@
      print " <TR><TD COLSPAN=\"2\">&nbsp;</TD></TR>\n";
      print " <TR>\n";
      print "  <TD COLSPAN=\"2\">\n";
-     if ($story->abstract) print "   <P>$story->abstract</P>\n";
-     if ($story->updates) print "   <P><FONT COLOR=\"$this->bgcolor2\">Editor's note:</FONT> $story->updates</P>\n";
+     if ($story->abstract) print "   <P>". nl2br($story->abstract) ."</P>\n";
+     if ($story->updates) print "   <P><FONT COLOR=\"$this->bgcolor2\">Editor's note:</FONT> ". nl2br($story->updates) ."</P>\n";
      print "  </TD>\n";
      print " </TR>\n";
      print " <TR><TD COLSPAN=\"2\">&nbsp;</TD></TR>\n";
@@ -98,9 +98,9 @@
      print " <TR><TD COLSPAN=\"2\">&nbsp;</TD></TR>\n";
      print " <TR>\n";
      print "  <TD COLSPAN=\"2\">\n";
-     if ($story->abstract) print "   <P>$story->abstract</P>\n";
-     if ($story->updates) print "   <P><FONT COLOR=\"$this->bgcolor2\">Editor's note:</FONT> $story->updates</P>\n";
-     if ($story->article) print "   <P>$story->article</P>\n";
+     if ($story->abstract) print "   <P>". nl2br($story->abstract) ."</P>\n";
+     if ($story->updates) print "   <P><FONT COLOR=\"$this->bgcolor2\">Editor's note:</FONT>". nl2br($story->updates) ."</P>\n";
+     if ($story->article) print "   <P>". nl2br($story->article) ."</P>\n";
      print "  </TD>\n";
      print " </TR>\n";
      print " <TR><TD COLSPAN=\"2\">&nbsp;</TD></TR>\n";
@@ -216,7 +216,7 @@
      print "    </TR>\n";
 
      ### Print body of comment:
-     if ($comment) print "    <TR><TD BGCOLOR=\"#FFFFFF\">$comment</TD></TR>\n";
+     if ($comment) print "    <TR><TD BGCOLOR=\"#FFFFFF\">". nl2br($comment) ."</TD></TR>\n";
 
      ### Print thread (if any):
      if ($thread) print "    <TR><TD BGCOLOR=\"$this->bgcolor1\">$thread</TD></TR>\n";
@@ -248,9 +248,9 @@
      print " <TR><TD COLSPAN=\"2\">&nbsp;</TD></TR>";
      print " <TR>";
      print "  <TD COLSPAN=\"2\">";
-     if ($abstract) print "<P>$abstract</P>";
-     if ($comments) print "<P><FONT COLOR=\"$this->bgcolor2\">Editor's note:</FONT> $comments</P>";
-     if ($article) print "<P>$article</P>";
+     if ($abstract) print "<P>". nl2br($abstract) ."</P>";
+     if ($comments) print "<P><FONT COLOR=\"$this->bgcolor2\">Editor's note:</FONT> ". nl2br($comments) ."</P>";
+     if ($article) print "<P>". nl2br($article) ."</P>";
      print "  </TD>";
      print " </TR>";
      print " <TR><TD COLSPAN=\"2\">&nbsp;</TD></TR>";
