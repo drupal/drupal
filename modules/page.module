@@ -139,8 +139,6 @@ function page_validate(&$node) {
   }
   else {
     $node->format = 0;
-    $node->body = filter($node->body);
-    $node->teaser = filter($node->teaser);
   }
 }
 

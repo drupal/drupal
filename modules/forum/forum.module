@@ -171,8 +171,6 @@ function forum_view($node, $main = 0) {
 
 function forum_validate(&$node) {
   // Make sure all fields are set properly:
-  $node->body = filter($node->body);
-  $node->teaser = filter($node->teaser);
   $node->icon = $node->icon ? $node->icon : "";
   $node->shadow = $node->shadow ? $node->shadow : 0;
   $node->tid = $node->tid ? $node->tid : 0;

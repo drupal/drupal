@@ -81,10 +81,4 @@ function story_form(&$node, &$help, &$error) {
   return $output;
 }
 
-
-function story_validate(&$node) {
-  // Make sure all fields are set properly:
-  $node->body = filter($node->body);
-  $node->teaser = filter($node->teaser);
-}
 ?>

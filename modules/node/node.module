@@ -125,7 +125,7 @@ function node_teaser($body) {
   */
 
   $delimiter = strpos($body, "<!--break-->");
-  if ($delimiter > 0 && $delimiter < $size * 2) {
+  if ($delimiter > 0) {
     return substr($body, 0, $delimiter);
   }
 
@@ -884,6 +884,8 @@ function node_validate($node, &$error) {
   ** Validate the title field:
   */
 
+  $node->title = strip_tags($node->title);
+
   if (isset($node->title) && !$node->title) {
     $error["title"] = theme("theme_error", t("You have to specify a valid title."));
   }
@@ -1222,7 +1224,7 @@ function node_preview($node, $error = NULL) {
     if ($view->teaser && $view->teaser != $view->body) {
       print "<h3>". t("Preview trimmed version") ."</h3>";
       node_view($view, 1);
-      print "<p><i>". t("The trimmed version of your post shows how your post looks like when promoted to the main page or when exported for syndication.  You can insert a delimiter '&lt;!--break--&gt' (without the quotes) to fine-tune where your post gets split.  However note that delimiter will be ignored when misplaced.") ."</i></p>";
+      print "<p><i>". t("The trimmed version of your post shows how your post looks like when promoted to the main page or when exported for syndication.  You can insert a delimiter '&lt;!--break--&gt' (without the quotes) to fine-tune where your post gets split.") ."</i></p>";
       print "<h3>". t("Preview full version") ."</h3>";
       node_view($view, 0);
     }

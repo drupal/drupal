@@ -149,8 +149,6 @@ function book_validate(&$node) {
   }
   else {
     $node->format = 0;
-    $node->body = filter($node->body);
-    $node->teaser = filter($node->teaser);
   }
 
   // Set default values for non administrators:
@@ -363,7 +361,7 @@ function book_body($node) {
     ob_end_clean();
   }
   else {
-    $output = check_output(filter($node->body));
+    $output = check_output($node->body);
   }
 
   return $output;

@@ -555,6 +555,10 @@ function rewrite_old_urls($text) {
 
 function check_output($text) {
   if (isset($text)) {
+    // filter content on output:
+    $text = filter($text);
+
+    // get the line breaks right:
     if (strip_tags($text, "<a><i><b><u><tt><code><cite><strong><img>") == $text) {
       $text = nl2br($text);
     }

@@ -58,7 +58,7 @@ function comment_user($type, $edit, &$user) {
       return form_textarea(t("Signature"), "signature", $edit["signature"], 70, 3, t("Your signature will be publicly displayed at the end of your comments.") ."<br />". t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "<a> <b> <dd> <dl> <dt> <i> <li> <ol> <u> <ul>")));
     case "edit_validate":
       // validate user data editing
-      return array("signature" => filter($edit["signature"]));
+      return array("signature" => $edit["signature"]);
   }
 }
 
@@ -160,10 +160,6 @@ function comment_reply($pid, $nid) {
 function comment_preview($edit) {
   global $user;
 
-  foreach ($edit as $key => $value) {
-    $comment->$key = filter($value);
-  }
-
   /*
   ** Attach the user and time information:
   */
@@ -209,8 +205,6 @@ function comment_post($edit) {
     /*
     ** Validate the comment's body.
     */
-
-    $edit["comment"] = filter($edit["comment"]);
 
     if ($edit["comment"] == "") {
       return array(t("Empty comment"), t("The comment you submitted is empty."));
@@ -791,7 +785,7 @@ function comment_delete($edit) {
 }
 
 function comment_save($id, $edit) {
-  db_query("UPDATE comments SET subject = '%s', comment = '%s', status = %d WHERE cid = %d", filter($edit["subject"]), filter($edit["comment"]), $edit["status"], $id);
+  db_query("UPDATE comments SET subject = '%s', comment = '%s', status = %d WHERE cid = %d", $edit["subject"], $edit["comment"], $edit["status"], $id);
   watchdog("special", "comment: modified '". $edit["subject"] ."'");
   return "updated comment.";
 }
