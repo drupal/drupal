@@ -185,8 +185,7 @@ function system_listing($type, $directory, $required = array()) {
 
   ksort($files);
 
-  $output = "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  $output .= "<tr><th>" . t("name") . "</th><th>" . t("description") . "</th><th>" . t("enabled") . "</th></tr>\n";
+  $header = array(t("name"), t("description"), t("status"));
 
   foreach ($files as $filename => $file) {
     include_once($filename);
@@ -210,14 +209,10 @@ function system_listing($type, $directory, $required = array()) {
     db_query("DELETE FROM system WHERE filename = '%s' AND type = '%s'", $filename, $type);
     db_query("INSERT INTO system (name, description, type, filename, status) VALUES ('%s', '%s', '%s', '%s', %d)", $info->name, $info->description, $type, $filename, $file->status);
 
-    $output .= "<tr>";
-    $output .= "<td>$info->name</td>";
-    $output .= "<td>$info->description</td>";
-    $output .= "<td align=\"center\">". (in_array($filename, $required) ? form_hidden("status][$filename", 1) . t("required") : form_checkbox("", "status][$filename", 1, $file->status)) ."</td>";
-    $output .= "</tr>\n";
+    $rows[] = array($info->name, $info->description, array("data" => (in_array($filename, $required) ? form_hidden("status][$filename", 1) . t("required") : form_checkbox("", "status][$filename", 1, $file->status)), "align" => "center"));
   }
-  $output .= "</table><br />\n";
-  $output .= form_submit(t("Save $type settings"));
+
+  $output = table($header, $rows) . form_submit(t("Save $type settings"));
 
   return form($output);
 }
