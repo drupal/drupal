@@ -1158,7 +1158,6 @@ function update_93() {
   else {
     $ret[] = update_sql('ALTER TABLE {url_alias} DROP INDEX src');
   }
-  $ret[] = update_sql("INSERT INTO {url_alias} (src, dst) VALUES ('node/feed', 'index.rdf')");
   $ret[] = update_sql("INSERT INTO {url_alias} (src, dst) VALUES ('node/feed', 'rss.xml')");
   return $ret;
 }
