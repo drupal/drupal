@@ -16,6 +16,9 @@ $output = "
    <DT><B>What is $site_name all about?</B></DT>
    <DD>$site_name is a news and discussion forum.  It is a <I>tool</I>.  And as a tool, it aims to create an environment to make discussions possible.  $site_name is not an organization, but a non-profit hobby project instead.<P>People log in to the site, read the news, select one or more items and start to discuss and post their reactions.  $site_name is a community site that relies solely on reader-contributed content.<P>First off, we strive towards discussion rather then to deliver news on its own: discussion can really make a story considerably better as user comments frequently `upstage' the story itself.<P>Secondly, we aim towards a high quality of content and content posters by using and experimenting with several techniques and systems such as trust metrics, scoring, moderation and collaborative filtering.<P></DD>
 
+   <DT><B>Who runs $site_name?</B></DT>
+   <DD><P>$site_name was originally created by ". format_username("Dries") ." and is written primarily by ". format_username("Dries"). " with help from others like ". format_username("Jeroen") ." and ". format_username("UnConeD") ." who helped creating themes.  The bandwidth and hardware are donated by ". format_username("Natrak") .".  Together we are $site_name and if you want to get in touch with the $site_name team, you can contact us at <A HREF=\"mailto:$site_email\">$site_email</A>.<P></DD>
+
    <DT><B>Isn't $site_name similar to slashdot.org and kuro5hin.org?</B></DT>
    <DD>To some extend, yes.  Credit where credit is due: we borrowed many ideas (like the interface and moderation) from <A HREF=\"http://slashdot.org/\">slashdot.org</A> and <A HREF=\"http://kuro5hin.org/\">kuro5hin.org</A> because they have many good ideas about discussion forums.  We do not use their code or any permutation thereof as $site_name has been written entirely from scratch.  Our goal was to create a similar base initially, and to go from there and to transform $site_name into something different by adding new and unique features.<P></DD>
 
@@ -32,7 +35,7 @@ $output = "
    <DD>No $site_name participant can use his own name or handle to post comments until they sign up and submit their e-mail address.  Those who do not may participate as `$anonymous', but they will suffer numerous disadvantages, not the least that their posts begin at a lower score.<P>In contrast, those with a user account can use their own name or handle and are granted various priveleges: the most important is probably the ability to moderate new submissions and to rate comments.  Also, registered users can tune the site to their personal needs.  For instance: they can select one of the available themes to alter the look-and-feel of the site or they can fine-tune the values of various settings to their likings.<P></DD>
 
    <DT><B>I forgot my password, what do I do?</B></DT>
-   <DD>--- under construction ---<P></DD>
+   <DD>You should be able to get it from the <A HREF=\"account.php\">account page</A>.  Just type in your username, hit the 'E-mail password' button and your password will be whisked off to your e-mail address.  If, however, this doesn't seem to be working, contact us at <A HREF=\"mailto:$site_email\">$site_email</A>.<P></DD>
 
    <DT><B>I have a cool story that you should post, what do I do?</B></DT>
    <DD>Check out the <A HREF=\"submit.php\">submission form</A>.  If you fill out that form, your contribution gets shipped off to the submission queue for evaluation, <A HREF=\"#moderation\">moderation</A>, and possibly even posting.<P></DD>
@@ -53,14 +56,13 @@ $output = "
    <DD>
     <LI>A theme system: the entire website is fully themable in terms of colors, layout, look-and-feel and markup.</LI>
     <LI>A user account system with session management, secure authentication, human-readable password generator, user and page preferences, comment tracker and so on.</LI>
-    <LI>A discussion system: supports different display (<I>threaded</I>, <I>flat</I>, <I>netsted</I>) and order (<I>newest first</I>, <I>oldest first</I>, <I>highest scorings first</I>), comment moderation, customable HTML-support, etc.</LI>
-    <LI>A submission queue and submission moderation.</LI>
+    <LI>A discussion system: supports different display modes (<I>threaded</I>, <I>flat</I>, <I>netsted</I>), order modes (<I>newest first</I>, <I>oldest first</I>, <I>highest scorings first</I>), comment moderation, customable HTML-support, etc.</LI>
+    <LI>An open submission queue and submission moderation.</LI>
     <LI>An embedded diary system.</LI>
     <LI>Anonymous reader/poster support across the entire site in case visitors prefers to remain anonymous or in case cookies are disabled.</LI>
     <LI>An administrator section which is considered the control center of the website.</LI>
     <LI>A database abstraction layer: allows the website to run on top of different database systems.</LI>
     <LI>A RDF/RSS backend which allows third party websites to become <I>channels</I> in your website with a minimum of extra work.</LI>
-    <LI>...</LI>
     <P>
    </DD>
 
@@ -70,7 +72,7 @@ $output = "
    <DT><B>What are your terms and conditions?</B></DT>
    <DD>
     This website includes threaded discussion groups and discussion forums which allow feedback to $site_name and real-time interaction between the persons who use this service.  The responsibility for any opinions, advice, statements or other information contained in any messages posted or transmitted by any third party on this website resides solely with the author.<P>
-    <U>1. When using the discussion forums, you may NOT:</U><UL><LI>Keep any other person from using and enjoying the discussion forums.</LI><LI>Post or transmit any messages (or content in general) that would constitute or encourage conduct that would constitute a criminal offense, give rise to civil liability or otherwise violate any local, state, national or international law, including any threatening, abusive libelous, defamatory, obscene, vulgar, pornographic, profane or indecent messages of any kind.</LI><LI>Post or transmit any information, software or other materials which violate or infringe upon the rights of others, including their privacy or publicity rights, or which is protected by copyright, trademark or other proprietary rights, without first obtaining permission from the person who owns or holds that right.</LI><LI>Use the discussion forum in any way for solicitations or other commercial purposes.</LI></UL><P>
+    <U>1. When using the discussion forums, you may NOT:</U><BR><I>a.</I> Keep any other person from using and enjoying the discussion forums.<BR><I>b.</I> Post or transmit any messages (or content in general) that would constitute or encourage conduct that would constitute a criminal offense, give rise to civil liability or otherwise violate any local, state, national or international law, including any threatening, abusive libelous, defamatory, obscene, vulgar, pornographic, profane or indecent messages of any kind.<BR><I>c.</I> Post or transmit any information, software or other materials which violate or infringe upon the rights of others, including their privacy or publicity rights, or which is protected by copyright, trademark or other proprietary rights, without first obtaining permission from the person who owns or holds that right.<BR><I>d.</I> Use the discussion forum in any way for solicitations or other commercial purposes.<P>
     <U>2. $site_name's right to monitor the discussion forums:</U><BR>You understand that $site_name has no obligation to monitor the discussion forum.  However $site_name reserves the right at all times to edit, refuse to post or to remove any information or materials, in whole or in part, that in $site_name's sole discretion are objectionable or in violation of these terms and conditions and to disclose any information necessary to satisfy or governmental request.<P>
    </DD>
   </DL>";

@@ -15,7 +15,44 @@ function account_login() {
   $output .= "  <TR><TD ALIGN=\"right\" COLSPAN=\"2\"><INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"Login\"></TD></TR>\n";
   $output .= " </TABLE>\n";
   $output .= "</FORM>\n";
-  $output .= "You don't have an account yet?  <A HREF=\"account.php?op=register\">Register</A> as new user.\n";
+
+  return $output;
+}
+
+function account_email() {
+  $output .= "<P>Lost your password?  Fill out your username and e-mail address, and your password will be mailed to you.</P>\n";
+  $output .= "<FORM ACTION=\"account.php\" METHOD=\"post\">\n";
+  $output .= " <TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
+  $output .= "  <TR><TH ALIGN=\"right\">Username:</TH><TD><INPUT NAME=\"userid\"></TD></TR>\n";
+  $output .= "  <TR><TH ALIGN=\"right\">E-mail addres:</TH><TD><INPUT NAME=\"email\"></TD></TR>\n";
+  $output .= "  <TR><TD ALIGN=\"right\" COLSPAN=\"2\"><INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"E-mail password\"></TD></TR>\n";
+  $output .= " </TABLE>\n";
+  $output .= "</FORM>\n";
+
+  return $output;
+}
+
+function account_create($user = "", $error = "") {
+  global $theme;
+
+  if ($error) $output .= "<B><FONT COLOR=\"red\">Failed to register.</FONT>$error</B>\n";
+  else $output .= "<P>Registering allows you to comment on stories, to moderate comments and pending stories, to maintain an online diary, to customize the look and feel of the site and generally helps you interact with the site more efficiently.</P><P>To create an account, simply fill out this form an click the `Create account' button below.  An e-mail will then be sent to you with instructions on how to validate your account.</P>\n";
+
+  $output .= "<FORM ACTION=\"account.php\" METHOD=\"post\">\n";
+  $output .= "<P>\n";
+  $output .= " <B>Username:</B><BR>\n";
+  $output .= " <INPUT NAME=\"userid\" VALUE=\"$userid\"><BR>\n";
+  $output .= " <SMALL><I>Enter your desired username: only letters, numbers and common special characters are allowed.</I></SMALL><BR>\n";
+  $output .= "</P>\n";
+  $output .= "<P>\n";
+  $output .= " <B>E-mail address:</B><BR>\n";
+  $output .= " <INPUT NAME=\"email\" VALUE=\"$email\"><BR>\n";
+  $output .= " <SMALL><I>You will be sent instructions on how to validate your account via this e-mail address - please make sure it is accurate.</I></SMALL><BR>\n";
+  $output .= "</P>\n";
+  $output .= "<P>\n";
+  $output .= " <INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"Create account\">\n";
+  $output .= "</P>\n";
+  $output .= "</FORM>\n";
 
   return $output;
 }
@@ -83,6 +120,8 @@ function account_user_edit() {
   else {
     $theme->header();
     $theme->box("Login", account_login()); 
+    $theme->box("E-mail password", account_email());
+    $theme->box("Create new account", account_create());
     $theme->footer();
   }
 }
@@ -157,6 +196,8 @@ function account_page_edit() {
   else {
     $theme->header();
     $theme->box("Login", account_login()); 
+    $theme->box("E-mail password", account_email());
+    $theme->box("E-mail password", account_create());
     $theme->footer();
   }
 }
@@ -229,6 +270,8 @@ function account_user($uname) {
     ### Display login form:
     $theme->header();
     $theme->box("Login", account_login()); 
+    $theme->box("E-mail password", account_email());
+    $theme->box("Create new account", account_create());
     $theme->footer();
   }
 }
@@ -237,7 +280,6 @@ function account_validate($user) {
   include "includes/ban.inc";
 
   ### Verify username and e-mail address:
-  $user[userid] = trim($user[userid]);
   if (empty($user[real_email]) || (!eregi("^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3}$", $user[real_email]))) $error .= "<LI>the specified e-mail address is not valid.</LI>\n";
   if (empty($user[userid]) || (ereg("[^a-zA-Z0-9_-]", $user[userid]))) $error .= "<LI>the specified username is not valid.</LI>\n";
   if (strlen($user[userid]) > 15) $error .= "<LI>the specified username is too long: it must be less than 15 characters.</LI>\n";
@@ -253,38 +295,48 @@ function account_validate($user) {
   return $error;
 }
 
-function account_register_enter($user = "", $error = "") {
-  global $theme;
+function account_email_submit($userid, $email) {
+  global $theme, $site_name, $site_url; 
 
-  if ($error) $output .= "<B><FONT COLOR=\"red\">Failed to register.</FONT>$error</B>\n";
-  else $output .= "<P>Registering allows you to comment on stories, to moderate comments and pending stories, to maintain an online diary, to customize the look and feel of the site and generally helps you interact with the site more efficiently.</P><P>To create an account, simply fill out this form an click the `Register' button below.  An e-mail will then be sent to you with instructions on how to validate your account.</P>\n";
+  $result = db_query("SELECT id FROM users WHERE userid = '". check_output($userid) ."' AND real_email = '". check_output($email) ."'");
+  
+  if ($account = db_fetch_object($result)) {
+    $new[userid] = $userid;
+    $new[passwd] = account_password();
+    $new[status] = 1;
+    $new[hash] = substr(md5("$new[userid]. ". time() .""), 0, 12);
 
-  $output .= "<FORM ACTION=\"account.php\" METHOD=\"post\">\n";
-  $output .= "<P>\n";
-  $output .= " <B>Username:</B><BR>\n";
-  $output .= " <INPUT NAME=\"new[userid]\" VALUE=\"$new[userid]\"><BR>\n";
-  $output .= " <SMALL><I>Enter your desired username: only letters, numbers and common special characters are allowed.</I></SMALL><BR>\n";
-  $output .= "</P>\n";
-  $output .= "<P>\n";
-  $output .= " <B>E-mail address:</B><BR>\n";
-  $output .= " <INPUT NAME=\"new[real_email]\" VALUE=\"$new[real_email]\"><BR>\n";
-  $output .= " <SMALL><I>You will be sent instructions on how to validate your account via this e-mail address - please make sure it is accurate.</I></SMALL><BR>\n";
-  $output .= "</P>\n";
-  $output .= "<P>\n";
-  $output .= " <INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"Register\">\n";
-  $output .= "</P>\n";
-  $output .= "</FORM>\n";
+    user_save($new, 1);
+
+    $link = $site_url ."account.php?op=confirm&name=$new[userid]&hash=$new[hash]";
+    $message = "$new[userid],\n\n\nyou requested us to e-mail you a new password for your $site_name account.  Note that you will need to re-activate your account before you can login.  You can do so simply by visiting the URL below:\n\n    $link\n\nVisiting this URL will automatically re-activate your account.  Once activated you can login using the following information:\n\n    username: $new[userid]\n    password: $new[passwd]\n\n\n-- $site_name crew\n";
+
+    watchdog("message", "new password: `$userid' &lt;$email&gt;");
+
+    mail($email, "Account details for $site_name", $message, "From: noreply@$site_url");
+
+    $output = "Your password and further instructions have been sent to your e-mail address.";
+  }
+  else {
+    watchdog("warning", "new password: '$userid' and &lt;$email&gt; do not match");
+    $output = "Could not sent password: no match for the specified username and e-mail address.";
+  }
 
   $theme->header();
-  $theme->box("Register as new user", $output);
+  $theme->box("E-mail password", $output);
   $theme->footer();
 }
 
-function account_register_submit($new) {
-  global $theme, $mail, $site_name, $site_url;
+function account_create_submit($userid, $email) {
+  global $theme, $site_name, $site_url;
+  
+  $new[userid] = $userid;
+  $new[real_email] = $email;
   
   if ($rval = account_validate($new)) { 
-    account_register_enter($new, "$rval");
+    $theme->header();
+    $theme->box("Create new account", account_create($new, $rval));
+    $theme->footer();
   }
   else {
     $new[passwd] = account_password();
@@ -296,17 +348,17 @@ function account_register_submit($new) {
     $link = $site_url ."account.php?op=confirm&name=$new[userid]&hash=$new[hash]";
     $message = "$new[userid],\n\n\nsomeone signed up for a user account on $site_name and supplied this email address as their contact.  If it wasn't you, don't get your panties in a knot and simply ignore this mail.\n\nIf this was you, you have to activate your account first before you can login.  You can do so simply by visiting the URL below:\n\n    $link\n\nVisiting this URL will automatically activate your account.  Once activated you can login using the following information:\n\n    username: $new[userid]\n    password: $new[passwd]\n\n\n-- $site_name crew\n";
 
+    watchdog("message", "new account: `$new[userid]' &lt;$new[real_email]&gt;");
+
     mail($new[real_email], "Account details for $site_name", $message, "From: noreply@$site_url");
 
-    watchdog("message", "new user `$new[userid]' &lt;$new[real_email]&gt;");
-
     $theme->header();
-    $theme->box("Account details", "Congratulations!  Your member account has been sucessfully created and further instructions on how to activate your account have been sent to your e-mail address.");
+    $theme->box("Create new account", "Congratulations!  Your member account has been sucessfully created and further instructions on how to activate your account have been sent to your e-mail address.");
     $theme->footer();
   }
 }
 
-function account_register_confirm($name, $hash) {
+function account_create_confirm($name, $hash) {
   global $theme;
 
   $result = db_query("SELECT userid, hash, status FROM users WHERE userid = '$name'");
@@ -320,17 +372,17 @@ function account_register_confirm($name, $hash) {
       }
       else {
         $output .= "Confirmation failed: invalid confirmation hash.\n";
-        watchdog("error", "$name: invalid confirmation hash");
+        watchdog("warning", "$name: invalid confirmation hash");
       }
     }
     else {
       $output .= "Confirmation failed: your account has already been confirmed.  You can click <A HREF=\"account.php?op=login\">here</A> to login.\n";
-      watchdog("error", "$name: attempt to re-confirm account");
+      watchdog("warning", "$name: attempt to re-confirm account");
     }
   }
   else {
     $output .= "Confirmation failed: no such account found.<BR>";
-    watchdog("error", "$name: attempt to confirm non-existing account");
+    watchdog("warning", "$name: attempt to confirm non-existing account");
   }
 
   $theme->header();
@@ -381,20 +433,11 @@ switch ($op) {
     account_session_start($userid, $passwd);
     header("Location: account.php?op=info");
     break;
-  case "register":
-    account_register_enter();
-    break;
   case "confirm":
-    account_register_confirm($name, $hash);
-    break;
-  case "Register":
-    account_register_submit($new);
+    account_create_confirm($name, $hash);
     break;
   case "view":
     account_user($name);
-    break;
-  case "info":
-    account_user($user->userid);
     break;
   case "discussion":
     account_comments();
@@ -403,8 +446,11 @@ switch ($op) {
     account_session_close();
     header("Location: account.php");
     break;
-  case "Register":
-    account_register_submit($new);
+  case "E-mail password":
+    account_email_submit($userid, $email);
+    break;
+  case "Create account":
+    account_create_submit($userid, $email);
     break;
   case "user":
     account_user_edit();
