@@ -453,6 +453,15 @@ function theme_error($message) {
 }
 
 /**
+ * Returns code that emits an XML-icon.
+ *
+ * @return a string containing the @a output.
+ */
+function theme_xml_icon($url) {
+  return "<div class=\"xml-icon\"><a href=\"$url\"><img src=\"misc/xml.gif\" width=\"36\" height=\"14\" alt=\"". t('XML feed') ."\" /></a></div>";
+}
+
+/**
  * Execute hook _head which is run at the start of the page, and output should
  * be in the head tags.
  *

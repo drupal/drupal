@@ -52,18 +52,18 @@ function aggregator_help($section) {
       $output .= "<h3>Technical details</h3>";
       $output .= "<p>When fetching feeds Drupal supports conditional GETs, this reduces the bandwidth usage for feeds that have not been updated since the last check.</p>";
       $output .= "<p>If a feed is permanently moved to a new location Drupal will automatically update the feed URL to the new address.</p>";
-      return t($output, array("%amphetadesk" => "<a href=\"http://www.disobey.com/amphetadesk/\">AmphetaDesk</a>", "%rss" => "<a href=\"http://groups.yahoo.com/group/rss-dev/files/specification.html\">Rich Site Summary</a>", "%slashdot-rss" => "<a href=\"http://slashdot.org/slashdot.rdf\">http://slashdot.org/slashdot.rdf</a>", "%syndic8" => "<a href=\"http://www.syndic8.com/\">Syndic8</a>", "%rss-what" => "<a href=\"http://www.xml.com/pub/a/2002/12/18/dive-into-xml.html\">What is RSS</a>", "%rss-evolution" => "<a href=\"http://www.webreference.com/authoring/languages/xml/rss/1/\">The Evolution of RSS</a>", "%admin-news" => l(t("RSS/RDF"), "admin/node/syndication/news"), "%new-feed" => l(t("new feed"), "admin/node/syndication/news/add/feed"), "%update-items" => l(t("update items"), "admin/node/syndication/news")));
+      return t($output, array("%amphetadesk" => "<a href=\"http://www.disobey.com/amphetadesk/\">AmphetaDesk</a>", "%rss" => "<a href=\"http://groups.yahoo.com/group/rss-dev/files/specification.html\">Rich Site Summary</a>", "%slashdot-rss" => "<a href=\"http://slashdot.org/slashdot.rdf\">http://slashdot.org/slashdot.rdf</a>", "%syndic8" => "<a href=\"http://www.syndic8.com/\">Syndic8</a>", "%rss-what" => "<a href=\"http://www.xml.com/pub/a/2002/12/18/dive-into-xml.html\">What is RSS</a>", "%rss-evolution" => "<a href=\"http://www.webreference.com/authoring/languages/xml/rss/1/\">The Evolution of RSS</a>", "%admin-news" => l(t("RSS/RDF"), "admin/syndication/news"), "%new-feed" => l(t("new feed"), "admin/syndication/news/add/feed"), "%update-items" => l(t("update items"), "admin/syndication/news")));
     case 'admin/system/modules#description':
       return t("Used to aggregate syndicated content (RSS and RDF).");
     case 'admin/system/modules/aggregator':
       return t("Drupal's news aggregator controls how many RSS/RDF items from a single source are displayed in a \"Block\", and on the page that goes with that block.");
-    case 'admin/node/syndication/news':
-      return t("Several web sites, especially news related sites, syndicate parts of their site's content for other web sites to display. Usually, the syndicated content includes the latest headlines with a direct link to that story on the remote site. Some syndicated content also includes a description of the headline. The standard method of syndication is using the XML based Rich Site Summary (RSS). To get a feed to work you <strong>must</strong> run \"cron.php\". To display the feed in a block you must turn on the %block. <br /><ul><li>To delete a feed choose \"edit feed\"</li><li>To clear all of the entries from a feed choose \"Remove items\"</li><li>To check whether a feed is working, and to get new items <strong>now</strong> click on \"update items\"</li></ul><ul><li>To delete a bundle choose \"edit bundle\".</li></ul>", array("%block" => l(t("feed's block"), "admin/system/block")));
-    case 'admin/node/syndication/news/add/feed':
-      return t("Add a site that has an RSS/RDF feed. The URL is the full path to the RSS feed file. For the feed to update automatically you must run \"cron.php\". The \"Attributes\" are used to bundle this feed with other feeds (See %bundle), and to tag articles from this feed.<br />Note: If you already have a feed with the URL you are planning to use, the system will not accept another feed with the same URL.", array("%bundle" => l(t("add new bundle"), "admin/node/syndication/news/add/bundle")));
-    case 'admin/node/syndication/news/add/bundle':
-      return t("Bundles provide a generalized way of creating composite feeds. They allow you, for example, to combine various sport-related feeds into one bundle called <i>Sport</i>. If an article from a feed has been \"tag\"-ged (See %tag too look at and change tags.) with a matching \"Attribute\" then it will be added to the bundle.", array("%tag" => l(t("tag news item"), "admin/node/syndication/news/tag")));
-    case 'admin/node/syndication/news/tag':
+    case 'admin/syndication/news':
+      return t("Several web sites, especially news related sites, syndicate parts of their site's content for other web sites to display. Usually, the syndicated content includes the latest headlines with a direct link to that story on the remote site. Some syndicated content also includes a description of the headline. The standard method of syndication is using the XML based Rich Site Summary (RSS) or Resource Description Framework (RDF).  To get a feed to work you <strong>must</strong> run \"cron.php\". To display the feed in a block you must turn on the %block.", array("%block" => l(t("feed's block"), "admin/system/block")));
+    case 'admin/syndication/news/add/feed':
+      return t("Add a site that has an RSS/RDF feed. The URL is the full path to the RSS feed file. For the feed to update automatically you must run \"cron.php\". The \"Attributes\" are used to bundle this feed with other feeds (See %bundle), and to tag articles from this feed.<br />Note: If you already have a feed with the URL you are planning to use, the system will not accept another feed with the same URL.", array("%bundle" => l(t("add new bundle"), "admin/syndication/news/add/bundle")));
+    case 'admin/syndication/news/add/bundle':
+      return t("Bundles provide a generalized way of creating composite feeds. They allow you, for example, to combine various sport-related feeds into one bundle called <i>Sport</i>. If an article from a feed has been \"tag\"-ged (See %tag too look at and change tags.) with a matching \"Attribute\" then it will be added to the bundle.", array("%tag" => l(t("tag news item"), "admin/syndication/news/tag")));
+    case 'admin/syndication/news/tag':
       return t("This allows you to see and change an news item's \"tag\". All articles are originally tagged with the \"Attributes\" of their feed.");
   }
 }
@@ -92,12 +92,12 @@ function aggregator_link($type) {
 
   if ($type == 'system') {
     if (user_access('administer news feeds')) {
-      menu('admin/node/syndication', t('syndication'), NULL, 5);
-      menu('admin/node/syndication/news', t('RSS/RDF'), 'aggregator_admin');
-      menu('admin/node/syndication/news/add/feed', t('new feed'), 'aggregator_admin', 2);
-      menu('admin/node/syndication/news/add/bundle', t('new bundle'), 'aggregator_admin', 3);
-      menu('admin/node/syndication/news/tag', t('tag items'), 'aggregator_admin', 4);
-      menu('admin/node/syndication/news/help', t('help'), 'aggregator_help_page', 9);
+      menu('admin/syndication', t('syndication'), NULL, 5);
+      menu('admin/syndication/news', t('RSS/RDF'), 'aggregator_admin');
+      menu('admin/syndication/news/add/feed', t('new feed'), 'aggregator_admin', 2);
+      menu('admin/syndication/news/add/bundle', t('new bundle'), 'aggregator_admin', 3);
+      menu('admin/syndication/news/tag', t('tag items'), 'aggregator_admin', 4);
+      menu('admin/syndication/news/help', t('help'), 'aggregator_help_page', 9);
     }
 
     if (user_access('access news feeds')) {
@@ -249,18 +249,19 @@ function aggregator_element_end($parser, $name) {
 
 // Call-back function used by XML parser:
 function aggregator_element_data($parser, $data) {
-  global $channel, $element, $items, $item, $tag;
+  global $channel, $element, $items, $item, $image, $tag;
 
   switch ($element) {
     case "ITEM":
       $items[$item][$tag] .= $data;
       break;
     case "IMAGE":
+      $image[$tag] .= $data;
+      break;
     case "TEXTINPUT":
       /*
-      ** The sub-elements "image" and "textinput" are not supported
-      ** but we have recognize them or their content will end up in
-      ** the items-array.
+      ** The sub-element is not supported but we have recognize
+      ** it or its content will end up in the items-array.
       */
       break;
     default:
@@ -269,6 +270,10 @@ function aggregator_element_data($parser, $data) {
 }
 
 function aggregator_refresh($feed) {
+  global $channel, $image;
+
+  $headers = array();
+/* ENABLE ME AGAIN:
   // Generate conditional GET headers.
   $headers = array();
   if ($feed['etag']) {
@@ -277,6 +282,7 @@ function aggregator_refresh($feed) {
   if ($feed['modified']) {
     $headers['If-Modified-Since'] = gmdate("D, d M Y H:i:s", $feed['modified']) ." GMT";
   }
+*/
 
   // Request feed.
   $result = drupal_http_request($feed['url'], $headers);
@@ -297,31 +303,51 @@ function aggregator_refresh($feed) {
         return t("failed to parse RSS feed '%site': suspicious input data.", array("%site" => $feed["title"]));
       }
 
-      $channel = aggregator_parse_feed($result->data, $feed);
+      aggregator_parse_feed($result->data, $feed);
 
-      if (is_array($channel)) {
-        if ($result->headers['Last-Modified']) {
-          $modified = strtotime($result->headers['Last-Modified']);
-        }
+// print "<pre>"; print_r($image); print "</pre>";
 
-        db_query("UPDATE {feed} SET url = '%s', checked = %d, link = '%s', description = '%s', etag = '%s', modified = %d WHERE fid = %d", $feed['url'], time(), $channel["LINK"], $channel["DESCRIPTION"], $result->headers['ETag'], $modified, $feed["fid"]);
-
-        return t("syndicated content from '%site'.", array("%site" => $feed["title"]));
+      if ($result->headers['Last-Modified']) {
+        $modified = strtotime($result->headers['Last-Modified']);
       }
-      else {
-        return $channel;
+
+      /*
+      ** Prepare the image data (if any):
+      */
+
+      foreach ($image as $key => $value) {
+        $image[$key] = trim($value);
       }
+
+      if ($image['LINK'] && $image['URL'] && $image['TITLE']) {
+        $image = "<a href=\"". $image['LINK'] ."\"><img src=\"". $image['URL'] ."\" alt=\"". $image['TITLE'] ."\" /></a>";
+      }
+
+      /*
+      ** Update the feed data:
+      */
+
+      db_query("UPDATE {feed} SET url = '%s', checked = %d, link = '%s', description = '%s', image = '%s', etag = '%s', modified = %d WHERE fid = %d", $feed['url'], time(), $channel['LINK'], $channel['DESCRIPTION'], $image, $result->headers['ETag'], $modified, $feed['fid']);
+
+      /*
+      ** Clear the cache:
+      */
+
+      cache_clear_all();
+
+      return t("syndicated content from '%site'.", array("%site" => $feed["title"]));
     default:
       return t("failed to parse RSS feed '%site': %error.", array('%site' => $feed['title'], '%error' => $result->code .' '. $result->error));
   }
 }
 
 function aggregator_parse_feed(&$data, $feed) {
-  global $items, $channel;
+  global $items, $image, $channel;
 
   // Unset the global variables before we use them:
   unset($GLOBALS["element"], $GLOBALS["item"], $GLOBALS["tag"]);
   $items = array();
+  $image = array();
   $channel = array();
 
   // parse the data:
@@ -354,16 +380,22 @@ function aggregator_parse_feed(&$data, $feed) {
       $item[$key] = filter_default(strtr(trim($value), $tt));
     }
 
+    /*
+    ** Resolve the item's title.  If no title is found, we use
+    ** up to 40 characters of the description ending at a word
+    ** boundary but not splitting potential entities.
+    */
+
     if ($item["TITLE"]) {
       $title = $item["TITLE"];
     }
     else {
-      /*
-       ** Use up to 40 characters of the description, ending at
-       ** word boundary, but don't split potential entities.
-       */
       $title = preg_replace('/^(.*)[^\w;&].*?$/', "\\1", substr($item["DESCRIPTION"], 0, 40));
     }
+
+    /*
+    ** Resolve the items link.
+    */
 
     if ($item["LINK"]) {
       $link = $item["LINK"];
@@ -375,7 +407,30 @@ function aggregator_parse_feed(&$data, $feed) {
       $link = $feed["link"];
     }
 
-    if (!$timestamp = strtotime($item['PUBDATE'])) {
+    /*
+    ** Try to resolve and parse the item's publication date.  If no
+    ** date is found, we use the current date instead.
+    */
+
+    if ($item['PUBDATE']) $date = $item['PUBDATE'];                        // RSS 2.0
+    else if ($item['DC:DATE']) $date = $item['DC:DATE'];                   // Dublin core
+    else if ($item['DCTERMS:ISSUED']) $date = $item['DCTERMS:ISSUED'];     // Dublin core
+    else if ($item['DCTERMS:CREATED']) $date = $item['DCTERMS:CREATED'];   // Dublin core
+    else if ($item['DCTERMS:MODIFIED']) $date = $item['DCTERMS:MODIFIED']; // Dublin core
+
+    $timestamp = strtotime($date);  // strtotime() returns -1 on failure
+
+    if ($timestamp < 0) {
+      /*
+      ** The Dublin core's default data format uses ISO 8601 which can't
+      ** be parsed directly using PHP's strtotime().  It is not the only
+      ** valid format so this might fail nonetheless ...
+      */
+      list($year, $month, $day, $hour, $minute, $second) = sscanf($date, "%4d-%2d-%2dT%2d:%2d:%2d");
+      $timestamp = strtotime("$year-$month-$day $hour:$minute:$second");
+    }
+
+    if ($timestamp < 0) {
       $timestamp = time();
     }
 
@@ -394,6 +449,7 @@ function aggregator_parse_feed(&$data, $feed) {
 
     aggregator_save_item(array('iid' => $entry->iid, 'fid' => $feed["fid"], 'timestamp' => $timestamp, 'title' => $title, 'link' => $link, 'author' => $item["AUTHOR"], 'description' => $item["DESCRIPTION"], 'attributes' => $feed["attributes"]));
   }
+
   /*
   ** Remove all the old, expired items:
   */
@@ -409,10 +465,6 @@ function aggregator_parse_feed(&$data, $feed) {
   if (sizeof($items) > 50) {
     db_query("DELETE FROM {item} WHERE ". implode(" OR ", array_slice($items, 0, - 50)));
   }
-
-  cache_clear_all();
-
-  return $channel;
 }
 
 function aggregator_save_item($edit) {
@@ -516,7 +568,7 @@ function aggregator_view() {
   $header = array(t("title"), t("attributes"), t("items"), t("last update"), t("next update"), array("data" => t("operations"), "colspan" => 3));
   $rows = array();
   while ($feed = db_fetch_object($result)) {
-    $rows[] = array($feed->title, $feed->attributes, format_plural($feed->items, "1 item", "%count items"), ($feed->checked ? t("%time ago", array("%time" => format_interval(time() - $feed->checked))) : t("never")), ($feed->checked ? t("%time left", array("%time" => format_interval($feed->checked + $feed->refresh - time()))) : t("never")), l(t("edit feed"), "admin/node/syndication/news/edit/feed/$feed->fid"), l(t("remove items"), "admin/node/syndication/news/remove/$feed->fid"), l(t("update items"), "admin/node/syndication/news/update/$feed->fid"));
+    $rows[] = array(l($feed->title, "aggregator/feed/$feed->fid"), $feed->attributes, format_plural($feed->items, "1 item", "%count items"), ($feed->checked ? t("%time ago", array("%time" => format_interval(time() - $feed->checked))) : t("never")), ($feed->checked ? t("%time left", array("%time" => format_interval($feed->checked + $feed->refresh - time()))) : t("never")), l(t("edit feed"), "admin/syndication/news/edit/feed/$feed->fid"), l(t("remove items"), "admin/syndication/news/remove/$feed->fid"), l(t("update items"), "admin/syndication/news/update/$feed->fid"));
   }
   $output .= theme("table", $header, $rows);
 
@@ -527,7 +579,7 @@ function aggregator_view() {
   $header = array(t("title"), t("attributes"), t("operations"));
   $rows = array();
   while ($bundle = db_fetch_object($result)) {
-    $rows[] = array($bundle->title, $bundle->attributes, l(t("edit bundle"), "admin/node/syndication/news/edit/bundle/$bundle->bid"));
+    $rows[] = array(l($bundle->title, "aggregator/bundle/$bundle->bid"), $bundle->attributes, l(t("edit bundle"), "admin/syndication/news/edit/bundle/$bundle->bid"));
   }
   $output .= theme("table", $header, $rows);
 
@@ -539,7 +591,7 @@ function aggregator_tag() {
 
   $header = array(t("date"), t("feed"), t("news item"));
   while ($item = db_fetch_object($result)) {
-    $rows[] = array(array("data" => format_date($item->timestamp, "small"), "nowrap" => "nowrap", "valign" => "top"), array("data" => l($item->feed, "admin/node/syndication/news/edit/feed/$item->fid"), "valign" => "top"), "<a href=\"$item->link\">$item->title</a>". ($item->description ? "<br /><small><i>$item->description</i></small>" : "") ."<br /><input type=\"text\" name=\"edit[$item->iid]\" value=\"". check_form($item->attributes) ."\" size=\"50\" />");
+    $rows[] = array(array("data" => format_date($item->timestamp, "small"), "nowrap" => "nowrap", "valign" => "top"), array("data" => l($item->feed, "admin/syndication/news/edit/feed/$item->fid"), "valign" => "top"), "<a href=\"$item->link\">$item->title</a>". ($item->description ? "<br /><small><i>$item->description</i></small>" : "") ."<br /><input type=\"text\" name=\"edit[$item->iid]\" value=\"". check_form($item->attributes) ."\" size=\"50\" />");
   }
 
   $output .= theme("table", $header, $rows);
@@ -553,9 +605,9 @@ function aggregator_admin() {
 
   if (user_access("administer news feeds")) {
 
-    switch ($_POST["op"] ? $_POST["op"] : arg(4)) {
+    switch ($_POST["op"] ? $_POST["op"] : arg(3)) {
       case "add":
-        if (arg(5) == "bundle") {
+        if (arg(4) == "bundle") {
           $output = aggregator_form_bundle();
         }
         else {
@@ -563,19 +615,19 @@ function aggregator_admin() {
         }
         break;
       case "edit":
-        if (arg(5) == "bundle") {
-          $output = aggregator_form_bundle(aggregator_get_bundle(arg(6)));
+        if (arg(4) == "bundle") {
+          $output = aggregator_form_bundle(aggregator_get_bundle(arg(5)));
         }
         else {
-          $output = aggregator_form_feed(aggregator_get_feed(arg(6)));
+          $output = aggregator_form_feed(aggregator_get_feed(arg(5)));
         }
         break;
       case "remove":
-        drupal_set_message(aggregator_remove(aggregator_get_feed(arg(5))));
+        drupal_set_message(aggregator_remove(aggregator_get_feed(arg(4))));
         $output .= aggregator_view();
         break;
       case "update":
-        drupal_set_message(aggregator_refresh(aggregator_get_feed(arg(5))));
+        drupal_set_message(aggregator_refresh(aggregator_get_feed(arg(4))));
         $output .= aggregator_view();
         break;
       case "tag":
@@ -589,7 +641,7 @@ function aggregator_admin() {
         $edit["title"] = 0;
         // fall through:
       case t("Submit"):
-        if (arg(5) == "bundle") {
+        if (arg(4) == "bundle") {
           drupal_set_message(aggregator_save_bundle($edit));
         }
         else {
@@ -621,16 +673,14 @@ function aggregator_page_last() {
 function aggregator_page_feed($fid) {
   $feed = db_fetch_object(db_query("SELECT * FROM {feed} WHERE fid = %d", $fid));
 
-  $info  = $feed->description;
-  $info .= "<h3>". t("URL") ."</h3><a href=\"$feed->link\">$feed->link</a> <a href=\"$feed->url\"><img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" alt=\"\" title=\"\" /></a>\n";
-  $info .= "<h3>". t("Last update") ."</h3>". t("%time ago", array("%time" => format_interval(time() - $feed->checked)));
+  $info = theme('aggregator_feed', $feed);
 
   $result = db_query_range("SELECT * FROM {item} WHERE fid = %d ORDER BY timestamp DESC", $fid, 0, variable_get("aggregator_page_limit", 75));
   while ($item = db_fetch_object($result)) {
     $content .= theme('aggregator_page_item', $item);
   }
 
-  $output = "<div id=\"aggregator\"><div class=\"info\">$info</div><div class=\"content\">$content</div></div>";
+  $output = "<div id=\"aggregator\"><div class=\"feed\">$info</div><div class=\"content\">$content</div></div>";
 
   print theme("page", $output, $feed->title, array(l(t('Home'), NULL), l(t('news aggregator'), 'aggregator'), l(t('news by source'), 'aggregator/feeds')));
 }
@@ -648,7 +698,7 @@ function aggregator_page_bundle($bid) {
     $content .= theme('aggregator_page_item', $item);
   }
 
-  $output = "<div id=\"aggregator\"><div class=\"info\">$info</div><div class=\"content\">$content</div></div>";
+  $output = "<div id=\"aggregator\"><div class=\"feed\">$info</div><div class=\"content\">$content</div></div>";
 
   print theme("page", $output, $bundle->title, array(l(t('Home'), NULL), l(t('news aggregator'), 'aggregator'), l(t('news by topic'), 'aggregator/bundles')));
 }
@@ -661,7 +711,7 @@ function aggregator_page_sources() {
     $output .= "<div style=\"margin-left: 20px;\">$feed->description</div><br />";
   }
 
-  $output .= "<div style=\"xml-icon\">". l("<img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" />", "aggregator/opml", array("title" => t("View the list of syndicated web sites in XML format."))) ."</div><br />";
+  $output .= theme('xml_icon', url('aggregator/opml'));
 
   print theme("page", $output);
 }
@@ -751,6 +801,31 @@ function aggregator_page() {
  * @addtogroup themeable
  * @{
  */
+
+function theme_aggregator_feed($feed) {
+
+  $output  = "";
+
+  if ($feed->image) {
+    $output .= $feed->image;
+  }
+
+  $output .= $feed->description;
+  $output .= "<h3>". t("URL") ."</h3>\n";
+  $output .= theme('xml_icon', $feed->url);
+  $output .= "<a href=\"$feed->link\">$feed->link</a>\n";
+  $output .= "<h3>". t('Last update') ."</h3>\n";
+  $updated = t("%time ago", array("%time" => format_interval(time() - $feed->checked)));
+
+  if (user_access('administer news feeds')) {
+    $output .= l($updated, 'admin/syndication/news');
+  }
+  else {
+    $output .= $updated;
+  }
+
+  return $output;
+}
 
 function theme_aggregator_block_item($item, $feed = 0) {
   global $user;

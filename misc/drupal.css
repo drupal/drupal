@@ -126,14 +126,17 @@ img {
 .form-submit {
   margin: 0.5em 0;
 }
-.news-item .date {
+#aggregator .feed img {
+  float: right;
+}
+#aggregator .news-item .date {
   float: left;
 }
-.news-item .body {
+#aggregator .news-item .body {
   margin-top: 1em;
   margin-left: 4em;
 }
-.news-item .body .feed {
+#aggregator .news-item .body .feed {
   font-size: 0.9em;
 }
 #forum .description {

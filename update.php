@@ -64,7 +64,8 @@ $mysql_updates = array(
   "2003-11-27" => "update_72",
   "2003-12-03" => "update_73",
   "2003-12-06" => "update_74",
-  "2004-01-06" => "update_75"
+  "2004-01-06" => "update_75",
+  "2004-01-11" => "update_76"
 );
 
 function update_32() {
@@ -597,6 +598,10 @@ function update_75() {
   update_sql("ALTER TABLE {feed} CHANGE timestamp checked int(10) NOT NULL DEFAULT 0");
   update_sql("UPDATE {blocks} SET module = 'aggregator' WHERE module = 'import'");
   update_sql("UPDATE {system} SET filename = 'modules/aggregator.module', name = 'aggregator' WHERE filename = 'modules/import.module'");
+}
+
+function update_76() {
+  update_sql("ALTER TABLE {feed} ADD image longtext");
 }
 
 /*
