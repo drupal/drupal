@@ -1422,8 +1422,9 @@ function user_admin_edit($edit = array()) {
     }
   }
 
+  $options = "<option value=\"\"". (("" == $key) ? " selected=\"selected\"" : "") .">". t("Default theme") ."</option>\n";
   foreach (theme_list() as $key => $value) {
-    $options .= "$value[type]<option value=\"$key\"". (($account->theme == $key) ? " selected=\"selected\"" : "") .">$key - $value->description</option>\n";
+    $options .= "<option value=\"$key\"". (($edit["theme"] == $key) ? " selected=\"selected\"" : "") .">$key - $value->description</option>\n";
   }
   $output .= form_item(t("Theme"), "<select name=\"edit[theme]\">$options</select>", t("Selecting a different theme will change the look and feel of the site."));
   for ($zone = -43200; $zone <= 46800; $zone += 3600) $zones[$zone] = date("l, F dS, Y - h:i A", time() - date("Z") + $zone) ." (GMT ". $zone / 3600 .")";
