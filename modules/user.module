@@ -663,17 +663,17 @@ function user_menu($may_cache) {
     $items[] = array('path' => 'admin/access/rules/list', 'title' => t('list'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
     $items[] = array('path' => 'admin/access/rules/add', 'title' => t('add rule'),
-      'callback' => 'user_admin_access_edit', 'access' => $access,
+      'callback' => 'user_admin_access_add', 'access' => $access,
       'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'admin/access/rules/check', 'title' => t('check rules'),
       'callback' => 'user_admin_access_check', 'access' => $access,
       'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'admin/access/rules/edit', 'title' => t('edit rule'),
       'callback' => 'user_admin_access_edit', 'access' => $access,
-      'type' => MENU_CALLBACK, 'callback arguments' => array('edit'));
+      'type' => MENU_CALLBACK);
     $items[] = array('path' => 'admin/access/rules/delete', 'title' => t('delete rule'),
-      'callback' => 'user_admin_access_edit', 'access' => $access,
-      'type' => MENU_CALLBACK, 'callback arguments' => array('delete'));
+      'callback' => 'user_admin_access_delete', 'access' => $access,
+      'type' => MENU_CALLBACK);
 
     if (module_exist('search')) {
       $items[] = array('path' => 'admin/user/search', 'title' => t('search'),
@@ -1330,67 +1330,67 @@ function user_admin_access_check() {
 }
 
 /**
- * Menu callback: add/edit an access rule
+ * Menu callback: add an access rule
  */
-function user_admin_access_edit($op = NULL, $aid = 0) {
-  if ($_POST['op']) {
-    $op = $_POST['op'];
-  }
-  $edit = $_POST['edit'];
-
-  switch ($op) {
-    case t('Add rule'):
-      if (!$edit['mask']) {
-        form_set_error('mask', t('You must enter a mask.'));
-      }
-      else {
-        $aid = db_next_id('{access}_aid');
-        db_query("INSERT INTO {access} (aid, mask, type, status) VALUES ('%s', '%s', '%s', %d)", $aid, $edit['mask'], $edit['type'], $edit['status']);
-        drupal_set_message(t('The access rule has been added.'));
-        drupal_goto('admin/access/rules');
-      }
-      break;
-
-    case t('Delete'):
-    case 'delete':
-      if ($edit['confirm']) {
-        db_query('DELETE FROM {access} WHERE aid = %d', $aid);
-        drupal_set_message(t('The access rule has been deleted.'));
-        drupal_goto('admin/access/rules');
-      }
-      else {
-        $access_types = array('user' => t('username'), 'mail' => t('e-mail'));
-        $edit = db_fetch_object(db_query('SELECT aid, type, status, mask FROM {access} WHERE aid = %d', $aid));
-        $output .= form_item(t('Confirm deletion'), $edit->mask .' ('. $access_types[$edit->type] .')');
-        $output .= form_hidden('aid', $edit->aid);
-        $output .= form_hidden('confirm', 1);
-        $output .= form_submit(t('Delete'));
-        $output = form($output);
-        print theme('page', $output);
-      }
-      return;
-
-    case t('Save rule'):
-      if (!form_get_errors()) {
-        db_query("UPDATE {access} SET mask = '%s', type = '%s', status = '%s' WHERE aid = %d", $edit['mask'], $edit['type'], $edit['status'], $aid);
-        drupal_set_message(t('The access rule has been saved.'));
-        drupal_goto('admin/access/rules');
-      }
-      // Fall through to the edit form if there are errors.
-    case 'edit':
-      if (!$edit) {
-        $edit = db_fetch_array(db_query('SELECT aid, type, status, mask FROM {access} WHERE aid = %d', $aid));
-      }
-      $form = _user_admin_access_form($edit);
-      $form .= form_submit(t('Save rule'));
-      print theme('page', form($form, 'post', NULL, array('id' => 'access-rules')));
+function user_admin_access_add() {
+  if ($edit = $_POST['edit']) {
+    if (!$edit['mask']) {
+      form_set_error('mask', t('You must enter a mask.'));
+    }
+    else {
+      $aid = db_next_id('{access}_aid');
+      db_query("INSERT INTO {access} (aid, mask, type, status) VALUES ('%s', '%s', '%s', %d)", $aid, $edit['mask'], $edit['type'], $edit['status']);
+      drupal_set_message(t('The access rule has been added.'));
+      drupal_goto('admin/access/rules');
+    }
   }
 
   $form = _user_admin_access_form($edit);
   $form .= form_submit(t('Add rule'));
-  $output .= form($form, 'post', NULL, array('id' => 'access-rules'));
 
-  print theme('page', $output);
+  print theme('page', form($form, 'post', NULL, array('id' => 'access-rules')));
+}
+
+/**
+ * Menu callback: delete an access rule
+ */
+function user_admin_access_delete($aid = 0) {
+  if ($_POST['edit']['confirm']) {
+    db_query('DELETE FROM {access} WHERE aid = %d', $aid);
+    drupal_set_message(t('The access rule has been deleted.'));
+    drupal_goto('admin/access/rules');
+  }
+  else {
+    $access_types = array('user' => t('username'), 'mail' => t('e-mail'));
+    $edit = db_fetch_object(db_query('SELECT aid, type, status, mask FROM {access} WHERE aid = %d', $aid));
+    $output = '<p>'. t('Are you sure you want to delete the %type rule for %rule?', array('%type' => $access_types[$edit->type], '%rule' => '<em>'. $edit->mask .'</em>')) .'</p>';
+    $output .= form_hidden('confirm', 1);
+    $output .= form_submit(t('Delete'));
+    $output = form($output);
+    print theme('page', $output);
+  }
+}
+
+/**
+ * Menu callback: edit an access rule
+ */
+function user_admin_access_edit($aid = 0) {
+  if ($edit = $_POST['edit']) {
+    if (!$edit['mask']) {
+      form_set_error('mask', t('You must enter a mask.'));
+    }
+    else {
+      db_query("UPDATE {access} SET mask = '%s', type = '%s', status = '%s' WHERE aid = %d", $edit['mask'], $edit['type'], $edit['status'], $aid);
+      drupal_set_message(t('The access rule has been saved.'));
+      drupal_goto('admin/access/rules');
+    }
+  }
+  else {
+    $edit = db_fetch_array(db_query('SELECT aid, type, status, mask FROM {access} WHERE aid = %d', $aid));
+  }
+  $form = _user_admin_access_form($edit);
+  $form .= form_submit(t('Save rule'));
+  print theme('page', form($form, 'post', NULL, array('id' => 'access-rules')));
 }
 
 function _user_admin_access_form($edit) {
