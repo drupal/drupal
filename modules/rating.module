@@ -1,0 +1,78 @@
+<?
+
+$module = array("cron" => "rating_cron",
+                "help" => "rating_help",
+                "page" => "rating_page",
+                "block" => "rating_block");
+
+function rating_cron() {
+  $period = 5184000;  // 60 days
+  $number = 30;       // 30 comments
+  $offset = 5;        // 5 comments
+
+  $r1 = db_query("SELECT id, userid FROM users");
+  while ($rating = db_fetch_object($r1)) {
+    unset($bonus); unset($votes); unset($score); unset($value); unset($weight);
+
+    $r2 = db_query("SELECT COUNT(id) AS number FROM stories WHERE author = $rating->id AND (". time() ." - timestamp < $period) AND status = 2");
+    if ($story = db_fetch_object($r2)) {
+      $bonus = $story->number;
+    }
+
+    $r3 = db_query("SELECT score, votes FROM comments WHERE author = $rating->id AND (". time() ." - timestamp < $period) ORDER BY timestamp LIMIT $number");
+    while ($comment = db_fetch_object($r3)) {
+      $weight++;
+      $score += $weight * $comment->score;
+      $votes += $weight * $comment->votes;
+    }
+
+    if ($weight >= $offset && $votes > 0) {
+      $value = ($score + $weight) / $votes + $bonus;
+      db_query("UPDATE users SET rating = '$value' WHERE id = $rating->id");
+    }
+  }
+
+}
+
+function rating_help() {
+ ?>
+  <H3>User rating</H3>
+  <P>The rating cron will periodically calculate an overall rating of each user's contributed value that is a time-weighted average of his or her comments ratings with an additional bonus for the stories he or she contributed.  The system can be best compared with <A HREF="http://slashcode.com/">SlashCode</A>'s karma and is - in fact - even more similar to <A HREF="http://scoop.kuro5hin.org/">Scoop</A>'s mojo implementation.</P>
+  <P>I won't elaborate on all the funny math involved and it suffices to say that the actual weighting is done in such a way:</P>
+  <OL>
+   <LI>that comments with a lot of votes count more then comments with only one or two votes.</LI>
+   <LI>that newer comments count for more then older comments.</LI>
+  </OL>
+  <P>The idea of (1) is that it favors comments that more people voted on, and thus whose rating is more likely to be accurate or justified.</P>
+  <P>The latter (2) makes the user rating that comes out of the calulations temporary, based on users' most recent activity and responsive to their current state.  This is accomplished by taking each user's last 30 comments, or however many he or she posted in the last 60 days - whatever comes first.</P>
+  <P>Additionally, users that posted one or more succesful stories in the last 60 days gain extra bonus points which will boost up their overall rating.</P>
+ <?
+}
+
+function rating_list($limit) {
+  $result = db_query("SELECT userid, rating FROM users ORDER BY rating DESC LIMIT $limit");
+
+  $output .= "<TABLE CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
+  $output .= "<TR><TH>Username</TH><TH>Rating</TH></TR>\n";
+  while ($account = db_fetch_object($result)) {
+    $output .= "<TR><TD>". format_username($account->userid) ."</TD><TD>". check_output($account->rating) ."</TD></TR>";
+  }
+  $output .= "</TABLE>\n";
+  return $output;
+}
+
+function rating_page() {
+  global $theme;
+  $theme->header();
+  $theme->box("Top 100 users", rating_list(100));
+  $theme->footer();
+}
+
+function rating_block() {
+  $block[0]["subject"] = "Top 10:<BR>users";
+  $block[0]["content"] = rating_list(10);
+  $block[0]["info"] = "Top 10: users";
+  return $block;
+}
+
+?>
