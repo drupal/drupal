@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.147 2003/01/06 19:50:59 dries Exp $
+// $Id: common.inc,v 1.148 2003/01/06 20:58:31 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST, $PHP_SELF;
@@ -37,7 +37,7 @@ function error_handler($errno, $message, $filename, $line, $variables) {
 
 function watchdog($type, $message, $link = NULL) {
   global $user;
-  db_query("INSERT INTO watchdog (uid, type, message, link, location, hostname, timestamp) VALUES ('$user->uid', '%s', '%s', '%s', '%s', '%s', '%s')", $type, $message, $link, $uri, getenv("REMOTE_ADDR"), time());
+  db_query("INSERT INTO watchdog (uid, type, message, link, location, hostname, timestamp) VALUES ('$user->uid', '%s', '%s', '%s', '%s', '%s', '%s')", $type, $message, $link, request_uri(), getenv("REMOTE_ADDR"), time());
 }
 
 function throttle($type, $rate) {
