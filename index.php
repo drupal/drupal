@@ -14,14 +14,14 @@ if (menu_active_handler_exists()) {
   array_pop($breadcrumb);
   $title = menu_get_active_title();
 
-  theme("header");
-  theme("breadcrumb", $breadcrumb);
+  print theme("header");
+  print theme("breadcrumb", $breadcrumb);
   if ($help = menu_get_active_help()) {
     $contents = "<small>$help</small><hr />";
   }
   $contents .= menu_execute_active_handler();
-  theme("box", $title, $contents);
-  theme("footer");
+  print theme("box", $title, $contents);
+  print theme("footer");
 }
 else {
   $mod = arg(0);
@@ -34,8 +34,8 @@ else {
       module_invoke(variable_get("site_frontpage", "node"), "page");
     }
     else {
-      theme("header");
-      theme("footer");
+      print theme("header");
+      print theme("footer");
     }
   }
 }
