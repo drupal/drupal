@@ -157,7 +157,7 @@ function node_admin() {
     case "listing":
       print node_listing(node_query());
       break;
-    case "Save defaults":
+    case "Save settings":
       print status(conf_save($edit));
       print node_default();
       break;
