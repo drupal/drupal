@@ -62,18 +62,18 @@ function taxonomy_form_vocabulary($edit = array()) {
     }
   }
 
-  $form .= form_textfield("Vocabulary name", "name", $edit["name"], 50, 64, "Required.  The name for this vocabulary.  Example: 'Topic'.");
-  $form .= form_textarea("Description", "description", $edit["description"], 60, 5, "Optional.  Description of the vocabulary, can be used by modules.");
-  $form .= form_select("Types", "types", explode(",", $edit["types"]), $nodetypes, "Required.  A list of node types you want to associate this vocabulary with.", "", 1);
-  $form .= form_checkbox("Related terms", "relations", 1, $edit["relations"], "Optional. Allows ". la("related terms", array("mod" => "taxonomy", "op" => "help"), "relatedterms") ." in this vocabulary.");
-  $form .= form_select("Hierarchy", "hierarchy", $edit["hierarchy"], array("Disabled", "Single", "Multiple"), "Optional. Allows ". la("a tree-like hierarchy", array("mod" => "taxonomy", "op" => "help"), "hierarchy") ." between terms of this vocabulary.", "", 0);
-  $form .= form_checkbox("Multiple select", "multiple", 1, $edit["multiple"], "Optional. Allows nodes to have more than one term in this vocabulary.");
-  $form .= form_checkbox("Required", "required", 1, $edit["required"], "If enabled every node <b>must</b> have at least one term in this vocabulary");
-  $form .= form_textfield("Weight", "weight", $edit["weight"], 3, 3, "Optional. In listings, the heavier vocabularies will sink and the lighter vocabularies will be positioned nearer the top.");
-  $form .= form_submit("Submit");
+  $form .= form_textfield(t("Vocabulary name"), "name", $edit["name"], 50, 64, t("Required") . ". " . t("The name for this vocabulary.  Example: 'Topic'") . ".");
+  $form .= form_textarea(t("Description"), "description", $edit["description"], 60, 5, t("Optional") . ". " . t("Description of the vocabulary, can be used by modules."));
+  $form .= form_select(t("Types"), "types", explode(",", $edit["types"]), $nodetypes, t("Required") . ". " . t("A list of node types you want to associate this vocabulary with."), "", 1);
+  $form .= form_checkbox(t("Related terms"), "relations", 1, $edit["relations"], t("Optional") . ". " . t("Allows ". la("related terms", array("mod" => "taxonomy", "op" => "help"), "relatedterms") ." in this vocabulary."));
+  $form .= form_select(t("Hierarchy"), "hierarchy", $edit["hierarchy"], array(t("Disabled"), t("Single"), t("Multiple")), t("Optional") . ". ". t("Allows ". la("a tree-like hierarchy", array("mod" => "taxonomy", "op" => "help"), "hierarchy") ." between terms of this vocabulary."), "", 0);
+  $form .= form_checkbox(t("Multiple select"), "multiple", 1, $edit["multiple"], t("Optional") . ". " . t("Allows nodes to have more than one term in this vocabulary."));
+  $form .= form_checkbox(t("Required"), "required", 1, $edit["required"], t("If enabled every node <b>must</b> have at least one term in this vocabulary"));
+  $form .= form_textfield(t("Weight"), "weight", $edit["weight"], 3, 3, t("Optional") . ". " . t("In listings, the heavier vocabularies will sink and the lighter vocabularies will be positioned nearer the top."));
+  $form .= form_submit(t("Submit"));
 
   if ($edit["vid"]) {
-    $form .= form_submit("Delete");
+    $form .= form_submit(t("Delete"));
     $form .= form_hidden("vid", $edit["vid"]);
   }
 
@@ -108,11 +108,11 @@ function taxonomy_form_term($edit = array()) {
     $vocabulary_id = $edit["vid"];
   }
   $vocabulary = taxonomy_get_vocabulary($vocabulary_id);
-  $form = form_textfield("Term name", "name", $edit["name"], 50, 64, "Required.  The name for this term.  Example: 'Linux'.");
-  $form .= form_textarea("Description", "description", $edit["description"], 60, 5, "Optional.  Description of the term, can be used by modules.");
+  $form = form_textfield(t("Term name"), "name", $edit["name"], 50, 64, t("Required") . "." . t("The name for this term.  Example: 'Linux'."));
+  $form .= form_textarea(t("Description"), "description", $edit["description"], 60, 5, t("Optional") . "." . t("A description of the term."));
 
   if ($vocabulary->relations) {
-    $form .= _taxonomy_term_select("Related terms", "relations", array_keys(taxonomy_get_related($edit["tid"])), $vocabulary_id, "Optional.", 1, "<none>", array($edit["tid"]));
+    $form .= _taxonomy_term_select(t("Related terms"), "relations", array_keys(taxonomy_get_related($edit["tid"])), $vocabulary_id, t("Optional") . ".", 1, "<" . t("none") . ">", array($edit["tid"]));
   }
 
 
@@ -123,20 +123,20 @@ function taxonomy_form_term($edit = array()) {
     $exclude = array_keys($children);
     $exclude[] = $edit["tid"];
     if ($vocabulary->hierarchy == 1) {
-      $form .= _taxonomy_term_select("Parent", "parent", $parent, $vocabulary_id, "Required. ". la("Parent term", array("mod" => "taxonomy", "op" => "help"), "parent") .".", 0, "<root>", $exclude);
+      $form .= _taxonomy_term_select(t("Parent"), "parent", $parent, $vocabulary_id, t("Required") . "." . " " . la(t("Parent term"), array("mod" => "taxonomy", "op" => "help"), "parent") .".", 0, "<" . t("root") . ">", $exclude);
     }
     elseif ($vocabulary->hierarchy == 2) {
-      $form .= _taxonomy_term_select("Parents", "parent", $parent, $vocabulary_id, "Required. ". la("Parent terms", array("mod" => "taxonomy", "op" => "help"), "parent") .".", 1, "<root>", $exclude);
+      $form .= _taxonomy_term_select(t("Parents"), "parent", $parent, $vocabulary_id, t("Required") . "." . " ". la(t("Parent terms"), array("mod" => "taxonomy", "op" => "help"), "parent") .".", 1, "<" . t("root") . ">", $exclude);
     }
   }
 
-  $form .= form_textarea("Synonyms", "synonyms", implode("\n", taxonomy_get_synonyms($edit["tid"])), 30, 5, "Optional. ". la("Synonyms", array("mod" => "taxonomy", "op" => "help"), "synonyms") ." of this term, one synonym per line.");
-  $form .= form_textfield("Weight", "weight", $edit["weight"], 3, 3, "Optional. In listings, the heavier terms will sink and the lighter terms will be positioned nearer the top.");
+  $form .= form_textarea(t("Synonyms"), "synonyms", implode("\n", taxonomy_get_synonyms($edit["tid"])), 30, 5, t("Optional") . "." . " ". la(t("Synonyms", array("mod" => "taxonomy", "op" => "help"), "synonyms") ." of this term, one synonym per line."));
+  $form .= form_textfield(t("Weight"), "weight", $edit["weight"], 3, 3, t("Optional") . "." . " " . t("In listings, the heavier terms will sink and the lighter terms will be positioned nearer the top."));
   $form .= form_hidden("vid", $vocabulary->vid);
-  $form .= form_submit("Submit");
+  $form .= form_submit(t("Submit"));
 
   if ($edit["tid"]) {
-    $form .= form_submit("Delete");
+    $form .= form_submit(t("Delete"));
     $form .= form_hidden("tid", $edit["tid"]);
   }
 
@@ -202,9 +202,9 @@ function taxonomy_del_term($tid) {
 function taxonomy_overview() {
   global $tree;
 
-  $output .= "<h3>Vocabularies overview</h3>";
+  $output .= "<h3>" . t("Vocabularies overview") . "</h3>";
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  $output .= " <tr><th>name</th><th>node types</th><th>operations</th></tr>\n";
+  $output .= " <tr><th>" . t("name") . "</th><th>" . t("node types") . "</th><th>" . t("operations") . "</th></tr>\n";
 
   $vocabularies = taxonomy_get_vocabularies();
   foreach ($vocabularies as $vocabulary) {
@@ -213,7 +213,7 @@ function taxonomy_overview() {
     $links[] = la(t("add term"), array("mod" => "taxonomy", "op" => "add", "type" => "leaf", "vocabulary_id" => $vocabulary->vid));
     $links[] = la(t("preview form"), array("mod" => "taxonomy", "type" => "vocabulary", "op" => "preview", "id" => $vocabulary->vid));
 
-    $output .= " <tr><td>". check_output($vocabulary->name) ."</td><td>". check_output($vocabulary->types) ."</td><td>". implode(" | ", $links) ."</td></tr>\n";
+    $output .= " <tr><td>". check_output($vocabulary->name) ."</td><td align=\"center\">". check_output($vocabulary->types) ."</td><td>". implode(" | ", $links) ."</td></tr>\n";
 
     unset($tree);
     taxonomy_get_tree($vocabulary->vid, $tree);
@@ -238,7 +238,7 @@ function taxonomy_form($vocabulary_id, $value = 0) {
   }
   else {
     $verb = "can";
-    $blank = t("<none>");
+    $blank = "<" . t("none") . ">";
   }
 
   if ($vocabulary->multiple) {
@@ -584,10 +584,10 @@ function taxonomy_admin() {
       case "help":
         print taxonomy_help();
         break;
-      case "Delete":
+      case t("Delete"):
         $edit["name"] = 0;
         // fall through:
-      case "Submit":
+      case t("Submit"):
         if ($type == "vocabulary") {
           print status(taxonomy_save_vocabulary($edit));
         }
