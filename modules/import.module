@@ -1,5 +1,5 @@
 <?php
-// $Id: import.module,v 1.54 2002/06/01 21:57:29 kjartan Exp $
+// $Id: import.module,v 1.55 2002/06/04 11:44:23 unconed Exp $
 
 function import_help() {
  ?>
@@ -12,7 +12,7 @@ function import_help() {
 }
 
 function import_system($field){
-  $system["description"] = t("Used to import syndicated content (ie. news)");
+  $system["description"] = t("Used to import syndicated content (ie. news feeds)");
   return $system[$field];
 }
 
