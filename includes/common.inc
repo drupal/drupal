@@ -377,7 +377,7 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
  *  2 = Log errors to database and to screen.
  */
 function error_handler($errno, $message, $filename, $line, $variables) {
-  if ($errno & E_ALL ^ E_NOTICE) {
+  if ($errno & (E_ALL ^ E_NOTICE)) {
     $types = array(1 => 'error', 2 => 'warning', 4 => 'parse error', 8 => 'notice', 16 => 'core error', 32 => 'core warning', 64 => 'compile error', 128 => 'compile warning', 256 => 'user error', 512 => 'user warning', 1024 => 'user notice', 2048 => 'strict warning');
     $entry = $types[$errno] .': '. $message .' in '. $filename .' on line '. $line .'.';
 
@@ -1864,6 +1864,9 @@ if (version_compare(phpversion(), '5.0') < 0) {
   ');
 }
 
+// Set the Drupal custom error handler.
+set_error_handler('error_handler');
+
 include_once 'includes/theme.inc';
 include_once 'includes/pager.inc';
 include_once 'includes/menu.inc';
@@ -1871,9 +1874,6 @@ include_once 'includes/tablesort.inc';
 include_once 'includes/file.inc';
 include_once 'includes/xmlrpc.inc';
 include_once 'includes/image.inc';
-
-// Set the Drupal custom error handler.
-set_error_handler('error_handler');
 
 // Emit the correct charset HTTP header.
 drupal_set_header('Content-Type: text/html; charset=utf-8');
