@@ -538,6 +538,7 @@ CREATE TABLE watchdog (
   uid int(10) NOT NULL default '0',
   type varchar(16) NOT NULL default '',
   message text NOT NULL,
+  link varchar(255) NOT NULL default '',
   location varchar(128) NOT NULL default '',
   hostname varchar(128) NOT NULL default '',
   timestamp int(11) NOT NULL default '0',
