@@ -402,6 +402,9 @@ function user_link($type) {
       menu("user/edit", t("edit account"), "user_page", 0);
       menu("user/logout", t("log out"), "user_page", 10);
     }
+    else {
+      menu("user", t("my account"), "user_page", 8, 1);
+    }
 
     if (user_access("administer users")) {
       menu("admin/user", t("accounts"), "user_admin", 2);
