@@ -52,11 +52,11 @@ function story_form($edit = array()) {
     $form .= form_submit(t("Preview"));
   }
   else if (!$edit[title]) {
-    $output .= "<FONT COLOR=\"red\">". t("Warning: you did not supply a subject.") ."</FONT><P>\n";
+    $form .= "<FONT COLOR=\"red\">". t("Warning: you did not supply a subject.") ."</FONT><P>\n";
     $form .= form_submit(t("Preview"));
   }
   else if (!$edit[abstract]) {
-    $output .= "<FONT COLOR=\"red\">". t("Warning: you did not supply an abstract.") ."</FONT><P>\n";
+    $form .= "<FONT COLOR=\"red\">". t("Warning: you did not supply an abstract.") ."</FONT><P>\n";
     $form .= form_submit(t("Preview"));
   }
   else {
