@@ -151,11 +151,6 @@ function import_refresh($feed) {
     $tt["&apos;"] = "'";
 
     /*
-    ** Remove expired items:
-    */
-    db_query("DELETE FROM item WHERE fid = '$feed[fid]' AND timestamp < ". (time() - $feed[uncache]));
-
-    /*
     ** Remove unsupported tags or sub-elements:
     */
 
@@ -210,6 +205,23 @@ function import_refresh($feed) {
         import_save_item(array(fid => $feed[fid], title => $title, link => $link, author => $author[1], description => $description, attributes => $feed[attributes]));
       }
     }
+
+    /*
+    ** Remove expired items:
+    */
+
+    unset($items);
+
+    $result = db_query("SELECT iid FROM item WHERE fid = '". $feed["fid"] ."' ORDER BY timestamp");
+
+    while ($item = db_fetch_object($result)) {
+      $items[] = "iid = '$item->iid'";
+    }
+
+    if ($items) {
+      db_query("DELETE FROM item WHERE ". implode(" OR ", array_slice($items, 0, - 50)));
+    }
+
   }
   else {
     watchdog("warning", "import: failed to syndicate from '$feed[title]'". ($errstr ? ": $errstr" : ""));
@@ -266,13 +278,11 @@ function import_form_feed($edit = array()) {
   $period = array(900 => format_interval(900), 1800 => format_interval(1800), 3600 => format_interval(3600), 7200 => format_interval(7200), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 64800 => format_interval(64800), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200));
 
   if ($edit[refresh] == "") $edit[refresh] = 3600;
-  if ($edit[uncache] == "") $edit[uncache] = 2419200;
 
   $form .= form_textfield("Title", "title", $edit[title], 50, 64, "The name of the feed; typically the name of the website you syndicate content from.");
   $form .= form_textfield("Url", "url", $edit[url], 50, 128, "The fully-qualified URL of the feed.");
   $form .= form_textfield("Attributes", "attributes", $edit[attributes], 50, 128, "A comma-seperated list of keywords describing the feed.");
   $form .= form_select("Update interval", "refresh", $edit[refresh], $period, "The refresh interval indicating how often you want to update this feed.  Requires crontab.");
-  $form .= form_select("Expiration time", "uncache", $edit[uncache], $period, "The time cached items should be kept.  Older items will be automatically discarded.  Requires crontab.");
 
   $form .= form_submit("Submit");
 
@@ -286,7 +296,7 @@ function import_form_feed($edit = array()) {
 
 function import_save_feed($edit) {
   if ($edit[fid] && $edit[title]) {
-    db_query("UPDATE feed SET title = '". check_input($edit[title]) ."', url = '". check_input($edit[url]) ."', attributes = '". check_input($edit[attributes]) ."', refresh = '". check_input($edit[refresh]) ."', uncache = '". check_input($edit[uncache]) ."' WHERE fid = '". check_input($edit[fid]) ."'");
+    db_query("UPDATE feed SET title = '". check_input($edit[title]) ."', url = '". check_input($edit[url]) ."', attributes = '". check_input($edit[attributes]) ."', refresh = '". check_input($edit[refresh]) ."' WHERE fid = '". check_input($edit[fid]) ."'");
     db_query("DELETE FROM item WHERE fid = '". check_input($edit[fid]) ."'");
   }
   else if ($edit[fid]) {
@@ -294,7 +304,7 @@ function import_save_feed($edit) {
     db_query("DELETE FROM item WHERE fid = '". check_input($edit[fid]) ."'");
   }
   else if ($edit[title]) {
-    db_query("INSERT INTO feed (title, url, attributes, refresh, uncache) VALUES ('". check_input($edit[title]) ."', '". check_input($edit[url]) ."', '". check_input($edit[attributes]) ."', '". check_input($edit[refresh]) ."', '". check_input($edit[uncache]) ."')");
+    db_query("INSERT INTO feed (title, url, attributes, refresh) VALUES ('". check_input($edit[title]) ."', '". check_input($edit[url]) ."', '". check_input($edit[attributes]) ."', '". check_input($edit[refresh]) ."')");
   }
 }
 
@@ -314,7 +324,7 @@ function import_get_bundle($bid) {
 }
 
 function import_view() {
-  $result = db_query("SELECT f.*, COUNT(i.iid) AS items FROM feed f LEFT JOIN item i ON f.fid = i.fid GROUP BY f.fid, f.title, f.url, f.refresh, f.uncache, f.timestamp, f.attributes, f.link, f.description ORDER BY f.title");
+  $result = db_query("SELECT f.*, COUNT(i.iid) AS items FROM feed f LEFT JOIN item i ON f.fid = i.fid GROUP BY f.fid, f.title, f.url, f.refresh, f.timestamp, f.attributes, f.link, f.description ORDER BY f.title");
 
   $output .= "<h3>Feed overview</h3>";
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
@@ -391,7 +401,7 @@ function import_fd_collect($edit) {
 function import_fd_import($edit) {
   if ($edit) {
     foreach ($edit as $title => $link) {
-      import_save_feed(array("title" => $title, "url" => $link, "refresh" => 3600, "uncache" => 2419200));
+      import_save_feed(array("title" => $title, "url" => $link, "refresh" => 3600));
     }
   }
 }
