@@ -31,6 +31,7 @@ function tablesort($cell, $header) {
 
   // special formatting for the currently sorted column header
   if ($cell['data'] == $ts['order']) {
+    $ts['sort'] = (($ts['sort'] == 'asc') ? 'desc' : 'asc');
     $cell['class'] = 'cell-highlight';
     $image = '&nbsp;<img src="' . theme('image', 'arrow-' . $ts['sort'] . '.gif') . '" alt="'. t('sort icon') .'" />';
     $title = ($ts['sort'] == 'asc' ? t("sort ascending") : t("sort descending"));
@@ -89,7 +90,7 @@ function tablesort_get_order_sql($header, $order) {
 
 function tablesort_get_sort($headers) {
   if ($_GET['sort']) {
-    return ($_GET['sort'] == 'desc') ? 'asc' : 'desc';
+    return ($_GET['sort'] == 'desc') ? 'desc' : 'asc';
   }
   // user has not specified a sort.  check module for default and if none, use 'asc'
   else {
