@@ -11,7 +11,7 @@ function module_iterate($function, $argument = "") {
 }
 
 // invoke hook $hook of module $name with optional arguments:
-function module_invoke($name, $hook, $argument = "") {
+function module_invoke($name, $hook, $argument = 0) {
   $function = $name ."_". $hook;
   return function_exists($function) ? $function($argument) : $argument;
 }

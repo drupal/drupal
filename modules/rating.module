@@ -1,7 +1,15 @@
 <?php
 
 function rating_perm() {
-  return array("view user ratings");
+  return array("access user ratings");
+}
+
+function rating_link($type) {
+  if ($type == "page" && user_access("access user ratings")) {
+    $links[] = "<a href=\"module.php?mod=rating\">". t("user ratings") ."</a>";
+  }
+
+  return $links ? $links : array();
 }
 
 function rating_conf_options() {
@@ -85,7 +93,7 @@ function rating_list($limit) {
 function rating_page() {
   global $user, $theme;
 
-  if (user_access($user, "view user ratings")) {
+  if (user_access($user, "access user ratings")) {
     $theme->header();
     $theme->box(t("Top 100 users"), rating_list(100));
     $theme->footer();

@@ -6,9 +6,18 @@ function meta_help() {
   <?php
 }
 
-function meta_conf() {
-  return array("add and edit meta tags");
+function meta_perm() {
+  return array("administer meta tags");
 }
+
+function meta_link($type) {
+  if ($type == "admin" && user_access("administer meta tags")) {
+    $links[] = "<a href=\"admin.php?mod=meta\">meta tags</a>";
+  }
+
+  return $links ? $links : array();
+}
+
 
 function meta_form($type, $edit = array()) {
   $c = db_query("SELECT * FROM collection WHERE types LIKE '%". check_input($type) ."%'");
@@ -129,9 +138,9 @@ function meta_overview() {
 }
 
 function meta_admin() {
-  global $user, $edit, $type, $op, $id;
+  global $edit, $type, $op, $id;
 
-  if (user_access($user, "add and edit meta tags")) {
+  if (user_access("administer meta tags")) {
 
     print "<SMALL><A HREF=\"admin.php?mod=meta&type=collection&op=add\">add new collection</A> | <A HREF=\"admin.php?mod=meta&type=tag&op=add\">add new meta-tag</A> | <A HREF=\"admin.php?mod=meta&op=preview\">preview node forms</A> | <A HREF=\"admin.php?mod=meta\">overview</A> | <A HREF=\"admin.php?mod=meta&op=help\">help</A></SMALL><HR>\n";
 

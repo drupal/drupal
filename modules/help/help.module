@@ -1,5 +1,13 @@
 <?php
 
+function help_link($type) {
+  if ($type == "admin") {
+    $links[] = "<a href=\"admin.php?mod=help\">help</a>";
+  }
+
+  return $links ? $links : array();
+}
+
 function help_admin() {
   foreach (module_list() as $name) {
     if (module_hook($name, "help")) {

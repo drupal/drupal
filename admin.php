@@ -7,13 +7,7 @@ function status($message) {
 }
 
 function admin_page($mod) {
-  global $menu, $user;
-
-  function module($name) {
-    global $menu, $user;
-    if (module_hook($name, "admin")) $output .= "<A HREF=\"admin.php?mod=$name\">$name</A> | ";
-    $menu .= $output;
-  }
+  global $user;
 
  ?>
   <html>
@@ -31,10 +25,11 @@ function admin_page($mod) {
    <body bgcolor="#FFFFFF" link="#005599" vlink="#004499" alink="#FF0000">
     <h1>Administration</h1>
     <?php
+
+      $links[] = "<a href=\index.php\">home</a>";
       foreach (module_list() as $name) {
-        if (module_hook($name, "admin")) $links[] = "<a href=\"admin.php?mod=$name\">$name</a>";
+        if (module_hook($name, "link")) $links = array_merge($links, module_invoke($name, "link", "admin"));
       }
-      $links[] = "<a href=\"index.php\">home</a>";
 
       print implode(" | ", $links) ."<hr />";
 
@@ -45,7 +40,7 @@ function admin_page($mod) {
  <?php
 }
 
-if (user_access($user, "access administration pages")) {
+if (user_access("access administration pages")) {
   user_rehash();
   admin_page($mod);
 }

@@ -152,7 +152,7 @@ function account_content_edit() {
     // construct form:
     $result = db_query("SELECT * FROM blocks WHERE status = 1 ORDER BY module");
     while ($block = db_fetch_object($result)) {
-      $entry = db_fetch_object(db_query("SELECT * FROM layout WHERE block = '$block->name' AND user = '$user->id'"));
+      $entry = db_fetch_object(db_query("SELECT * FROM layout WHERE block = '". check_input($block->name) ."' AND user = '$user->id'"));
       $options .= "<INPUT TYPE=\"checkbox\" NAME=\"edit[$block->name]\"". ($entry->user ? " CHECKED" : "") ."> ". t($block->name) ."<BR>\n";
     }
 

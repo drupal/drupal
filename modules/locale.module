@@ -35,7 +35,15 @@ function locale_help() {
 }
 
 function locale_perm() {
-  return array("add and edit locales");
+  return array("administer locales");
+}
+
+function locale_link($type) {
+  if ($type == "admin" && user_access("administer locales")) {
+    $links[] = "<a href=\"admin.php?mod=locale\">locales</a>";
+  }
+
+  return $links ? $links : array();
 }
 
 function locale_conf_options() {
@@ -97,9 +105,9 @@ function locale_overview() {
 }
 
 function locale_admin() {
-  global $user, $id, $edit, $op;
+  global $id, $edit, $op;
 
-  if (user_access($user, "add and edit locales")) {
+  if (user_access("administer locales")) {
     print "<SMALL><A HREF=\"admin.php?mod=locale\">overview</A> | <A HREF=\"admin.php?mod=locale&op=help\">help</A></SMALL><HR>\n";
 
     switch ($op) {

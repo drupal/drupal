@@ -33,7 +33,15 @@ function account_help() {
 }
 
 function account_perm() {
-  return array("add and edit user accounts");
+  return array("administer users");
+}
+
+function account_link($type) {
+  if ($type == "admin" && user_access("administer users")) {
+    $links[] = "<a href=\"admin.php?mod=account\">user accounts</a>";
+  }
+
+  return $links ? $links : array();
 }
 
 function account_conf_options() {
@@ -42,10 +50,9 @@ function account_conf_options() {
 }
 
 function account_search($keys) {
-  global $user;
   $result = db_query("SELECT * FROM users WHERE userid LIKE '%$keys%' LIMIT 20");
   while ($account = db_fetch_object($result)) {
-    $find[$i++] = array("title" => $account->userid, "link" => (user_access($user, "add and edit user accounts") ? "admin.php?mod=account&op=view&name=". urlencode($account->userid) : "account.php?op=view&name=". urlencode($account->userid)), "user" => $account->userid);
+    $find[$i++] = array("title" => $account->userid, "link" => (user_access("administer users") ? "admin.php?mod=account&op=view&name=". urlencode($account->userid) : "account.php?op=view&name=". urlencode($account->userid)), "user" => $account->userid);
   }
   return $find;
 }
@@ -248,9 +255,9 @@ function account_query($type = "") {
 }
 
 function account_admin() {
-  global $user, $op, $edit, $id, $mod, $keys, $order, $name, $query;
+  global $op, $edit, $id, $mod, $keys, $order, $name, $query;
 
-  if (user_access($user, "add and edit user accounts")) {
+  if (user_access("administer users")) {
     print "<SMALL><A HREF=\"admin.php?mod=account&op=access\">access control</A> | <A HREF=\"admin.php?mod=account&op=add\">add new account</A> | <A HREF=\"admin.php?mod=account&op=listing\">account listings</A> | <A HREF=\"admin.php?mod=account&op=search\">search account</A> | <A HREF=\"admin.php?mod=account\">overview</A> | <A HREF=\"admin.php?mod=account&op=help\">help</A></SMALL><HR>";
 
     $query = $query ? $query : 0;

@@ -4,6 +4,15 @@ function forum_status() {
   return array(dumped, posted);
 }
 
+
+function forum_link($type) {
+  if ($type == "page" && user_access("access content")) {
+    $links[] = "<a href=\"module.php?mod=forum\">". t("forum") ."</a>";
+  }
+
+  return $links ? $links : array();
+}
+
 function forum_view($node) {
   global $theme;
   $output .= "<P><A HREF=\"module.php?mod=forum\">". t("Forum") ."</A> / <B><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></B>:</P><P>". check_output($node->body) ."</P>";
@@ -38,9 +47,9 @@ function forum_last_comment($nid) {
 }
 
 function forum_page() {
-  global $user, $theme;
+  global $theme;
 
-  if (user_access($user, "view content")) {
+  if (user_access("access content")) {
     $result = db_query("SELECT nid FROM node WHERE type = 'forum' ORDER BY title");
 
     $output .= "<TABLE BORDER=\"0\" CELLSPACING=\"4\" CELLPADDING=\"4\">\n";

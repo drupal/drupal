@@ -21,7 +21,15 @@ function access_help() {
 }
 
 function access_perm() {
-  return array("access administration pages", "view content", "search content", "post content", "edit roles and permissions");
+  return array("access administration pages", "access content", "search content", "post content", "administer roles and permissions");
+}
+
+function access_link($type) {
+  if ($type == "admin" && user_access("administer roles and permissions")) {
+    $links[] = "<a href=\"admin.php?mod=access\">roles and permissions</a>";
+  }
+
+  return $links ? $links : array();
 }
 
 function access_get_role($rid) {
@@ -125,9 +133,9 @@ function access_init() {
 }
 
 function access_admin() {
-  global $user, $edit, $op, $id;
+  global $edit, $op, $id;
 
-  if (user_access($user, "edit roles and permissions")) {
+  if (user_access("administer roles and permissions")) {
 
     print "<SMALL><A HREF=\"admin.php?mod=access&op=add\">add new role</A> | <A HREF=\"admin.php?mod=access&op=role\">role overview</A> | <A HREF=\"admin.php?mod=access&op=perm\">permission overview</A> | <A HREF=\"admin.php?mod=access&op=help\">help</A></SMALL><HR>\n";
 

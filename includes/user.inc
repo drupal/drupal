@@ -52,12 +52,14 @@ function user_save($account, $array) {
   return user_load(($account->userid ? $account->userid : $array[userid]));
 }
 
-function user_access($account, $perm) {
-  if ($account->id == 1) {
+function user_access($perm) {
+  global $user;
+
+  if ($user->id == 1) {
     return 1;
   }
-  else if ($account->perm) {
-    return strstr($account->perm, $perm);
+  else if ($user->perm) {
+    return strstr($user->perm, $perm);
   }
   else {
     return db_fetch_object(db_query("SELECT * FROM role WHERE name = 'anonymous user' AND perm LIKE '%$perm%'"));

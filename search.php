@@ -4,7 +4,7 @@ include_once "includes/common.inc";
 
 page_header();
 
-if (user_access($user, "search content")) {
+if (user_access("search content")) {
   // verify input:
   $type = check_input($type);
   $keys = check_input($keys);

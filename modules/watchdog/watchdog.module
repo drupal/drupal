@@ -11,6 +11,14 @@ function watchdog_perm() {
   return array("access watchdog");
 }
 
+function watchdog_link($type) {
+  if ($type == "admin" && user_access("access watchdog")) {
+    $links[] = "<a href=\"admin.php?mod=watchdog\">watchdog</a>";
+  }
+
+  return $links ? $links : array();
+}
+
 function watchdog_conf_options() {
   $period = array(3600 => format_interval(3600), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200), 1000000000 => t("Never"));
   $output .= form_select(t("Discard entries older than"), "watchdog_clear", variable_get("watchdog_clear", 604800), $period, t("The time watchdog entries should be kept.  Older entries will be automatically discarded.  Requires crontab."));
@@ -57,9 +65,9 @@ function watchdog_view($id) {
 }
 
 function watchdog_admin() {
-  global $user, $op, $id, $type, $order;
+  global $op, $id, $type, $order;
 
-  if (user_access($user, "access watchdog")) {
+  if (user_access("access watchdog")) {
 
     print "<SMALL><A HREF=\"admin.php?mod=watchdog&type=account\">account messages</A> | <A HREF=\"admin.php?mod=watchdog&type=regular\">regular messages</A> | <A HREF=\"admin.php?mod=watchdog&type=special\">special messages</A> | <A HREF=\"admin.php?mod=watchdog&type=warning\">warning messages</A> | <A HREF=\"admin.php?mod=watchdog&type=error\">error messages</A> | <A HREF=\"admin.php?mod=watchdog&type=httpd\">httpd messages</A> | <A HREF=\"admin.php?mod=watchdog\">overview</A> | <A HREF=\"admin.php?mod=watchdog&op=help\">help</A></SMALL><HR>\n";
 

@@ -6,7 +6,7 @@ page_header();
 
 $theme->header();
 
-if (user_access($user, "post content")) {
+if (user_access("post content")) {
   if ($mod) {
     module_invoke($mod, "user");
   }

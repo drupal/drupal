@@ -14,6 +14,14 @@ function statistics_perm() {
   return array("access statistics");
 }
 
+function statistics_link($type) {
+  if ($type == "admin" && user_access("access statistics")) {
+    $links[] = "<a href=\"admin.php?mod=statistics\">statistics</a>";
+  }
+
+  return $links ? $links : array();
+}
+
 function statistics_conf_options() {
   $period = array(3600 => format_interval(3600), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200), 1000000000 => t("Never"));
   $output .= form_select(t("Track referers"), "referer", variable_get("referer", 0), array("Disabled", "Enabled"), "If enabled, Drupal will count how many times your website is referred to by other websites.");

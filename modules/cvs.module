@@ -1,7 +1,15 @@
 <?php
 
 function cvs_perm() {
-  return array("view CVS messages");
+  return array("access cvs messages");
+}
+
+function cvs_link($type) {
+  if ($type == "page" && user_access("access cvs messages")) {
+    $links[] = "<a href=\"module.php?mod=cvs\">cvs messages</a>";
+  }
+
+  return $links ? $links : array();
 }
 
 function cvs_cron() {
@@ -14,7 +22,7 @@ function cvs_cron() {
     }
     $result = db_query("UPDATE cvs SET status = '1'");
 
-    if ($body) mail(variable_get(cvs_mail, "root@localhost"), "CVS log messages", $body, "From: no-reply");
+    if ($body) mail(variable_get(cvs_mail, "root@localhost"), "cvs log messages", $body, "From: no-reply");
   }
 }
 
@@ -26,9 +34,9 @@ function cvs_conf_options() {
 }
 
 function cvs_page() {
-  global $user, $theme;
+  global $theme;
 
-  if (user_access($user, "view CVS messages")) {
+  if (user_access("access cvs messages")) {
     $result = db_query("SELECT * FROM cvs ORDER BY timestamp DESC LIMIT 50");
 
     while ($cvs = db_fetch_object($result)) {

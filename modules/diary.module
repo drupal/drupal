@@ -1,14 +1,13 @@
 <?php
 
 function diary_perm() {
-  return array("view diary entries", "edit diary entries");
+  return array("administer diary entries", "access diary entries", "post diary entries");
 }
 
 function diary_search($keys) {
-  global $user;
   $result = db_query("SELECT d.*, u.userid FROM diaries d LEFT JOIN users u ON d.author = u.id WHERE d.text LIKE '%$keys%' ORDER BY d.timestamp DESC LIMIT 20");
   while ($diary = db_fetch_object($result)) {
-    $find[$i++] = array("title" => "$diary->userid's diary", "link" => (user_access($user, "edit diary entries") ? "admin.php?mod=diary&op=edit&id=$diary->id" : "module.php?mod=diary&op=view&name=$diary->userid"), "user" => $diary->userid, "date" => $diary->timestamp);
+    $find[$i++] = array("title" => "$diary->userid's diary", "link" => (user_access("administer diary entries") ? "admin.php?mod=diary&op=edit&id=$diary->id" : "module.php?mod=diary&op=view&name=$diary->userid"), "user" => $diary->userid, "date" => $diary->timestamp);
   }
   return $find;
 
@@ -17,7 +16,7 @@ function diary_search($keys) {
 function diary_page_overview($num = 20) {
   global $theme, $user;
 
-  if (user_access($user, "view diary entries")) {
+  if (user_access("access diary entries")) {
     $result = db_query("SELECT d.*, u.userid FROM diaries d LEFT JOIN users u ON d.author = u.id ORDER BY d.timestamp DESC LIMIT $num");
 
     while ($diary = db_fetch_object($result)) {
@@ -212,8 +211,22 @@ function diary_help() {
  <?php
 }
 
-function diary_menu() {
-  return array("<A HREF=\"module.php?mod=diary&op=add\">". t("edit your diary") ."</A>", "<A HREF=\"module.php?mod=diary&op=view\">". t("view your diary") ."</A>");
+function diary_link($type) {
+
+  if ($type == "admin" && user_access("adminsiter diary entries")) {
+    $links[] = "<a href=\"admin.php?mod=diary\">online diaries</a>";
+  }
+
+  if ($type == "page" && user_access("access diary entries")) {
+    $links[] = "<a href=\"module.php?mod=diary\">". t("online diaries") ."</a>";
+  }
+
+  if ($type == "menu" && user_access("post diary entries")) {
+    $links[] = "<a href=\"module.php?mod=diary&op=add\">". t("edit your diary") ."</a>";
+    $links[] = "<a href=\"module.php?mod=diary&op=view\">". t("view your diary") ."</a>";
+  }
+
+  return $links ? $links : array();
 }
 
 function diary_block() {
@@ -309,9 +322,9 @@ function diary_admin_display($order = "date") {
 
 
 function diary_admin() {
-  global $user, $op, $id, $mod, $keys, $text, $order;
+  global $op, $id, $mod, $keys, $text, $order;
 
-  if (user_access($user, "edit diary entries")) {
+  if (user_access("administer diary entries")) {
 
     print "<SMALL><A HREF=\"admin.php?mod=diary\">overview</A> | <A HREF=\"admin.php?mod=diary&op=search\">search diary</A> | <A HREF=\"admin.php?mod=diary&op=help\">help</A></SMALL><HR>\n";
 
