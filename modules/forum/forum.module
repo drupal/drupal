@@ -54,7 +54,7 @@ function forum_conf_options() {
   else {
     $output .= _forum_message_taxonomy();
   }
- 
+
   return $output;
 }
 
@@ -207,7 +207,7 @@ function forum_form(&$node, &$help, &$error) {
     }
     //$output .= implode("<p>", taxonomy_node_form("forum", $node));
     $output .= "<input type=\"hidden\" name=\"edit[old_container]\" value=\"".implode(",", array_keys(taxonomy_node_get_terms($node->nid)))."\">";
-    $output .= form_checkbox(t("Leave shadow?"), "shadow", 1, 1, t("If you move this topic, you can leave a link in the old forum to the new forum."));
+    $output .= form_checkbox(t("Leave shadow copy"), "shadow", 1, $node->shadow, t("If you move this topic, you can leave a link in the old forum to the new forum."));
   }
   else {
     if ($node->taxonomy) {
@@ -495,11 +495,11 @@ function forum_page() {
       if (empty($sortby)) {
         $sortby = isset($user->sortby) ? $user->sortby : variable_get("forum_order",1);
       }
-      
+
       if (empty($forum_per_page)) {
         $forum_per_page = isset($user->forum_per_page) ? $user->forum_per_page : variable_get("forum_per_page", 25);
       }
-      
+
       if (empty($offset)) {
         $offset = 0;
       }
