@@ -670,7 +670,7 @@ function search_item($item, $type) {
  * Render a generic search form.
  *
  * "Generic" means "universal usable" - that is, usable not only from
- * 'site.com/search', but also as a simple seach box (without "Restrict search
+ * 'site.com/search', but also as a simple search box (without "Restrict search
  * to", help text, etc) from theme's header etc. This means: provide options to
  * only conditionally render certain parts of this form.
  *

@@ -266,7 +266,7 @@ function file_save_upload($source, $dest = 0, $replace = 0) {
         drupal_set_message(t("file upload failed: incomplete upload."), 'error');
         return 0;
       default: // Unknown error
-        drupal_set_message(t("file upload failed: unkown error."), 'error');
+        drupal_set_message(t("file upload failed: unknown error."), 'error');
         return 0;
     }
 

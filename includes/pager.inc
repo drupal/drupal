@@ -31,7 +31,7 @@
  *
  * @param $query the SQL query that needs paging
  * @param $limit the number of rows per page
- * @param $element optional attribute to distringuish between multiple pagers
+ * @param $element optional attribute to distinguish between multiple pagers
  *   on one page
  * @param $count_query an optional SQL query used to count records when
  *   rewriting the query would fail
@@ -227,7 +227,7 @@ function pager_list($limit, $element = 0, $quantity = 5, $text = "", $attributes
   $pager_first = (int)$pager_current - (int)$pager_middle + 1;
   // last is the last page listed by this pager piece (re quantity)
   $pager_last = (int)$pager_current + (int)$quantity - (int)$pager_middle;
-  // max is the maximum number of pages content can is devided into
+  // max is the maximum number of pages content can is divided into
   if (!$pager_max = (ceil($pager_total[$element] / $limit))) {
     $pager_max = 1;
   }

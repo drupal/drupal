@@ -21,7 +21,7 @@ function node_help($section = 'admin/help#node') {
       <dt>An Author</dt><dd>The author's name. It will either be \"anonymous\" or a valid user. You <em>cannot</em> set it to an arbitrary value.</dd>
       <dt>Authored on</dt><dd>The date the node was written.</dd>
       <dt>Changed</dt><dd>The last time this node was changed.</dd>
-      <dt>Sticky at top of lists</dt><dd>In listings such as the frontpage or a taxonomy overview the teasers of a slected amount of nodes is displayed. If you want to force a node to appear on the top of such a listing, you must set it to 'sticky'. This way it will float to the top of a listing, and it will not be pushed down by newer content.
+      <dt>Sticky at top of lists</dt><dd>In listings such as the frontpage or a taxonomy overview the teasers of a selected amount of nodes is displayed. If you want to force a node to appear on the top of such a listing, you must set it to 'sticky'. This way it will float to the top of a listing, and it will not be pushed down by newer content.
       <dt>Allow user comments</dt><dd>A node can have comments. These comments can be written by other users (Read-write), or only by admins (Read-only).</dd>
       <dt>Revisions</dt><dd>Drupal has a revision system so that you can \"roll back\" to an older version of a post if the new version is not what you want.</dd>
       <dt>Promote to front page</dt><dd>To get people to look at the new stuff on your site you can choose to move it to the front page. The front page is configured to show the teasers from only a few of the total nodes you have on your site (To configure how many teasers <a href=\"%teaser\">click here</a>).</dd>

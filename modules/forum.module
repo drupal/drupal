@@ -63,7 +63,7 @@ function forum_settings() {
     }
 
     if ($voc) {
-      $group  = form_select(t('Forum vocabulary'), 'forum_nav_vocabulary', variable_get('forum_nav_vocabulary', ''), $vocs, t("The taxonomy vocabulary that will be used as the navigation tree.  The vacabulary's terms define the forums."));
+      $group  = form_select(t('Forum vocabulary'), 'forum_nav_vocabulary', variable_get('forum_nav_vocabulary', ''), $vocs, t("The taxonomy vocabulary that will be used as the navigation tree.  The vocabulary's terms define the forums."));
       $group .= _taxonomy_term_select(t('Containers'), 'forum_containers', variable_get('forum_containers', array()), variable_get('forum_nav_vocabulary', ''), t('You can choose forums which will not have topics, but will be just containers for other forums.  This lets you both group and nest forums.'), 1, '<'. t('none') .'>');
 
       $output = form_group(t('Forum structure settings'), $group);

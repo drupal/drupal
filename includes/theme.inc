@@ -42,7 +42,7 @@ function init_theme() {
   $themes = list_themes();
 
   /*
-  ** Only select the user selected theme if it is availible in the
+  ** Only select the user selected theme if it is available in the
   ** list of enabled themes.
   */
 
