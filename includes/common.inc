@@ -1,11 +1,12 @@
 <?php
-// $Id: common.inc,v 1.270 2003/11/25 19:26:20 dries Exp $
+// $Id: common.inc,v 1.271 2003/11/26 16:17:13 dries Exp $
 
 /**
- * @name drupal_title
- * Functions to get and set the title of the current page.
- * @{
- */
+  @name drupal_title
+
+  Functions to get and set the title of the current page.
+  @{
+**/
 function drupal_set_title($title = NULL) {
   static $stored_title;
 
@@ -27,12 +28,14 @@ function drupal_get_title() {
 // @}
 
 /**
- * @name drupal_breadcrumb
- * Functions to get and set the breadcrumb trail of the current page. The
- * breadcrumb trail is represented as an array of links, starting with
- * "home" and proceeding up to but not including the current page.
- * @{
- */
+  @name drupal_breadcrumb
+
+  Functions to get and set the breadcrumb trail of the current page.
+
+  @param   $breadcrumb   array of links, starting with "home" and proceeding
+    up to but not including the current page.
+  @{
+**/
 function drupal_set_breadcrumb($breadcrumb = NULL) {
   static $stored_breadcrumb;
 
@@ -55,8 +58,8 @@ function drupal_get_breadcrumb() {
 // @}
 
 /**
- * Build the alias/path array
- */
+  Build the alias/path array
+**/
 function drupal_get_path_map($action = "") {
 
   static $cache;
