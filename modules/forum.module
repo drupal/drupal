@@ -14,25 +14,22 @@ function forum_status() {
   return array(dumped, posted);
 }
 
+function forum_view($node) {
+  global $theme;
+  $output .= "<P><A HREF=\"module.php?mod=forum\">Forum</A> / <B><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></B>:</P><P>". check_output($node->body) ."</P>";
+  $theme->box(t("Discussion forum"), $output);
+}
+
 function forum_form($edit = array()) {
   global $format;
 
-  $output .= "<FORM ACTION=\"admin.php?mod=forum\" METHOD=\"post\">\n";
+  $form .= form_textfield(t("Subject"), "title", $edit[title], 50, 64);
+  $form .= structure_form("forum", $edit);
+  $form .= form_textarea(t("Body"), "body", $edit[body], 50, 10);
+  $form .= form_hidden("nid", $edit[nid]);
+  $form .= form_submit("Save forum");
 
-  $output .= "<B>Subject:</B><BR>\n";
-  $output .= "<INPUT NAME=\"edit[title]\" SIZE=\"55\" VALUE=\"". check_textfield($edit[title]) ."\"><P>\n";
-
-  $output .= structure_form("forum", $edit);
-
-  $output .= "<B>Body:</B><BR>\n";
-  $output .= "<TEXTAREA NAME=\"edit[body]\" COLS=\"55\" ROWS=\"10\" WRAP=\"virtual\">". check_textarea($edit[body]) ."</TEXTAREA><P>\n";
-
-  $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[nid]\" VALUE=\"$edit[nid]\">\n";
-
-  $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save forum\">\n";
-  $output .= "</FORM>\n";
-
-  return $output;
+  return form("admin.php?mod=forum", $form);
 }
 
 function forum_save($edit) {

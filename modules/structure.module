@@ -105,9 +105,9 @@ function topic_overview() {
   $tree = topic_tree();
 
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR><TH>name</TH><TH>read access</TH><TH>write access</TH><TH>operations</TH></TR>\n";
+  $output .= " <TR><TH>name</TH><TH>operations</TH></TR>\n";
   foreach ($tree as $id=>$name) {
-    $output .= " <TR><TD>". check_output($name) ."</TD><TD ALIGN=\"center\">all</TD><TD ALIGN=\"center\">all</TD><TD><A HREF=\"admin.php?mod=structure&type=topic&op=edit&id=$id\">edit topic</A></TD></TR>\n";
+    $output .= " <TR><TD>". check_output($name) ."</TD><TD><A HREF=\"admin.php?mod=structure&type=topic&op=edit&id=$id\">edit topic</A></TD></TR>\n";
   }
   $output .= "</TABLE>\n";
   return $output;

@@ -164,7 +164,7 @@ function node_status($node, $index = -1) {
 }
 
 function node_control($node) {
-  global $REQUEST_URI;
+  global $user, $REQUEST_URI;
 
  ?>
   <SCRIPT>
@@ -178,10 +178,12 @@ function node_control($node) {
   </SCRIPT>
  <?php
 
-  if ($user->id)
+  if ($user->id) {
     $choices = array("node.php?id=$node->nid" => t("view node"), "submit.php?mod=$node->type" => t("add node"), "submit.php?mod=$node->type&op=update&id=$node->nid" => t("update node"),  "node.php?op=history&id=$node->nid" => t("view history"));
-  else
+  }
+  else {
     $choices = array("node.php?id=$node->nid" => t("view node"), "node.php?op=history&id=$node->nid" => t("view history"));
+  }
 
   $output .= "<FORM METHOD=\"get\" ACTION=\"\">\n";
   foreach ($choices as $key => $value) $options .= "<OPTION VALUE=\"$key\"". (strstr($REQUEST_URI,"/$key") ? " SELECTED" : "") .">". check_select($value) ."</OPTION>\n";
@@ -193,7 +195,7 @@ function node_control($node) {
 
 function node_visible($node) {
   global $user, $status;
-  return ($node->status == $status[posted]) || ($node->status == $status[queued] && $user->id) || user_access($user, "node");
+  return ($node->status == $status[posted]) || ($node->status == $status[queued] && $user->id) || user_access($user, $node->type) || user_access($user, "node");
 }
 
 ?>

@@ -39,21 +39,16 @@ function locale_save($id, $edit) {
 }
 
 function locale_edit($id) {
-  global $languages;
+  global $languages, $REQUEST_URI;
+
   $result = db_query("SELECT * FROM locales WHERE id = '$id'");
   if ($translation = db_fetch_object($result)) {
-    $output .= "<FORM ACTION=\"admin.php?mod=locale\" METHOD=\"post\">\n";
-    $output .= "<B>Original string:</B><BR>\n";
-    $output .= "<PRE>". wordwrap(check_output($translation->string)) ."</PRE><P>";
-    foreach ($languages as $code=>$language) {
-      $output .= "<B>$language:</B><BR>";
-      $output .= (strlen($translation->string) > 30) ? "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"edit[$code]\">". check_textarea($translation->$code) ."</TEXTAREA><P>" : "<INPUT TYPE=\"text\" NAME=\"edit[$code]\" SIZE=\"50\" VALUE=\"". check_textfield($translation->$code) ."\"><P>";
-    }
-    $output .= "<INPUT NAME=\"id\" TYPE=\"hidden\" VALUE=\"$id\">\n";
-    $output .= "<INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"Save translations\">\n";
-    $output .= "</FORM>\n";
+    $form .= form_item(t("Original text"), "<PRE>". wordwrap(check_output($translation->string)) ."</PRE>");
+    foreach ($languages as $code=>$language) $form .= (strlen($translation->string) > 30) ? form_textarea($language, $code, $translation->$code, 50, 10) : form_textfield($language, $code, $translation->$code, 50, 128);
+    $form .= form_hidden("id", $id);
+    $form .= form_submit("Save translations");
 
-    print $output;
+    return form($REQUEST_URI, $form);
   }
 }
 
@@ -67,6 +62,7 @@ function locale_languages($translation) {
 
 function locale_overview() {
   $result = db_query("SELECT * FROM locales ORDER BY string");
+
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR><TH>string</TH><TH>languages</TH><TH COLSPAN=\"2\">operations</TH><TR>\n";
   while ($locale = db_fetch_object($result)) {
@@ -74,7 +70,8 @@ function locale_overview() {
     $output .= " <TR><TD>". check_output($locale->string) ."<BR><SMALL><I>$locale->location</I></SMALL></TD><TD ALIGN=\"center\">$languages</TD><TD><A HREF=\"admin.php?mod=locale&op=edit&id=$locale->id\">edit</A></TD><TD><A HREF=\"admin.php?mod=locale&op=delete&id=$locale->id\">delete</A></TD></TR>";
   }
   $output .= "</TABLE>\n";
-  print $output;
+
+  return $output;
 }
 
 function locale_admin() {
@@ -84,20 +81,20 @@ function locale_admin() {
 
   switch ($op) {
     case "delete":
-      locale_delete(check_input($id));
-      locale_overview();
+      print status(locale_delete(check_input($id)));
+      print locale_overview();
       break;
     case "help":
-      locale_help();
+      print locale_help();
       break;
     case "edit":
-      locale_edit(check_input($id));
+      print locale_edit(check_input($id));
       break;
     case "Save translations":
-      locale_save(check_input($id), $edit);
+      print locale_save(check_input($id), $edit);
       // fall through
     default:
-      locale_overview();
+      print locale_overview();
   }
 }
 
