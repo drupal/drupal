@@ -66,7 +66,8 @@ CREATE TABLE book (
   format tinyint(2) default '0',
   log text,
   PRIMARY KEY  (nid),
-  KEY nid (nid)
+  KEY nid (nid),
+  KEY parent (parent)
 ) TYPE=MyISAM;
 
 --

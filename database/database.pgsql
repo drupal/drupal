@@ -66,6 +66,7 @@ CREATE TABLE book (
   PRIMARY KEY (nid)
 );
 CREATE INDEX book_nid_idx ON book(nid);
+CREATE INDEX book_parent ON book(parent);
 
 --
 -- Table structure for boxes
