@@ -741,7 +741,7 @@ function user_login($edit = array()) {
     }
     else {
       if (!$error) {
-        $error = sprintf(t("Sorry. Unrecognized username or password. Have you %sforgotten your password%s?"),"<a href=\"/module.php?mod=user&op=password\">","</a>");
+        $error = sprintf(t("Sorry. Unrecognized username or password. Have you %sforgotten your password%s?"),"<a href=\"module.php?mod=user&op=password\">","</a>");
       }
       if ($server) {
         watchdog("user", "failed login for '$name@$server': $error");
