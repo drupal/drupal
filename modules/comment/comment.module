@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.167 2003/09/29 19:11:39 dries Exp $
+// $Id: comment.module,v 1.168 2003/10/03 11:42:52 dries Exp $
 
 $GLOBALS["cmodes"] = array(1 => t("Flat list - collapsed"), 2 => t("Flat list - expanded"), 3 => t("Threaded list - collapsed"), 4 => t("Threaded list - expanded"));
 $GLOBALS["corder"] = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"));
@@ -1470,7 +1470,7 @@ function comment_num_all($nid) {
   static $cache;
 
   if (!isset($cache[$nid])) {
-    $comment = db_fetch_object(db_query("SELECT COUNT(c.nid) AS number FROM {node} n INNER JOIN {comments} c ON n.nid = c.nid WHERE n.nid = %d AND c.status = 0 GROUP BY n.nid", $nid));
+    $comment = db_fetch_object(db_query("SELECT COUNT(nid) AS number FROM {comments} WHERE nid = %d AND status = 0 GROUP BY nid", $nid));
     $cache[$nid] = $comment->number ? $comment->number : 0;
   }
   return $cache[$nid];
