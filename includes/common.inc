@@ -913,7 +913,7 @@ function query_print() {
   print "</pre>";
 }
 
-function page_header() {
+function drupal_page_header() {
   if (variable_get("dev_timer", 0)) {
     timer_start();
   }
@@ -940,8 +940,7 @@ function page_header() {
   }
 }
 
-function page_footer() {
-
+function drupal_page_footer() {
   if (variable_get("cache", 0)) {
     page_set_cache();
   }

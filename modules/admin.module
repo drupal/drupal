@@ -28,8 +28,7 @@ function admin_page() {
   global $base_url;
 
   if (user_access("access administration pages")) {
-    page_header();
-
+    drupal_page_header();
    ?>
     <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
     <html>
@@ -89,12 +88,12 @@ function admin_page() {
         echo "<h1><a href=\"index.php\">". variable_get("site_name", "drupal") ."</a></h1>";
         print menu_tree("admin") ;
         print "</div>";
-  print theme_footer();
+        print theme_footer();
       ?>
     </body>
    </html>
    <?php
-    page_footer();
+    drupal_page_footer();
   }
   else {
     print message_access();

@@ -9,15 +9,15 @@ if (isset($_GET["q"])) {
 
 if (isset($mod) && module_hook($mod, "page")) {
   if ($mod != "admin") {
-    page_header();
+    drupal_page_header();
   }
   module_invoke($mod, "page");
   if ($mod != "admin") {
-    page_footer();
+    drupal_page_footer();
   }
 }
 else {
-  page_header();
+  drupal_page_header();
 
   check_php_setting("magic_quotes_gpc", 0);
 
@@ -29,7 +29,7 @@ else {
     theme("footer");
   }
 
-  page_footer();
+  drupal_page_footer();
 }
 
 ?>
