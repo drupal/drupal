@@ -53,7 +53,7 @@ function module_list() {
         include_once $module->filename;
       }
     }
-    asort($list);
+    natcasesort($list);
   }
 
   return $list;
