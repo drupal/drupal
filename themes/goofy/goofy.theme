@@ -17,6 +17,10 @@
     var $foreground = "#000000";
     var $background = "#FFFFFF";
 
+    function Theme_goofy($filename) {
+      $this->path = dirname($filename);
+    }
+
     function system($field) {
       $system["name"] = "Goofy";
       $system["author"] = "Steven Wittens";
@@ -38,20 +42,20 @@
      p,ul,li,div,form,em,blockquote,quote { font-size: 10pt; font-family: tahoma,helvetica,arial; font-weight: normal; }
      td { font-family: tahoma,arial,helvetica; font-size: 10pt; font-weight: normal; }
      td.left { font-family: tahoma,arial,helvetica; font-size: 10pt; text-align: left; }
-     td.oru { background: url("themes/goofy/images/or-u.png"); width: 100%; }
-     td.ord { background: url("themes/goofy/images/or-d.png"); width: 100%; }
-     td.orl { background: url("themes/goofy/images/or-l.png"); }
-     td.orr { background: url("themes/goofy/images/or-r.png"); }
+     td.oru { background: url("<?php echo $this->path; ?>/images/or-u.png"); width: 100%; }
+     td.ord { background: url("<?php echo $this->path; ?>/images/or-d.png"); width: 100%; }
+     td.orl { background: url("<?php echo $this->path; ?>/images/or-l.png"); }
+     td.orr { background: url("<?php echo $this->path; ?>/images/or-r.png"); }
      td.orcnt { background: #FBC636; width: 100%; font-family: tahoma,arial,helvetica; font-size: 10pt; font-weight: bold; text-align: center; }
-     td.gru { background: url("themes/goofy/images/gr-u.png"); width: 100%; }
-     td.grd { background: url("themes/goofy/images/gr-d.png"); width: 100%; }
-     td.grl { background: url("themes/goofy/images/gr-l.png"); }
-     td.grr { background: url("themes/goofy/images/gr-r.png"); }
+     td.gru { background: url("<?php echo $this->path; ?>/images/gr-u.png"); width: 100%; }
+     td.grd { background: url("<?php echo $this->path; ?>/images/gr-d.png"); width: 100%; }
+     td.grl { background: url("<?php echo $this->path; ?>/images/gr-l.png"); }
+     td.grr { background: url("<?php echo $this->path; ?>/images/gr-r.png"); }
      td.grcnt { background: #C6C6C6; width: 100%; font-family: tahoma,arial,helvetica; font-size: 10pt; }
-     td.lgu { background: url("themes/goofy/images/lg-u.png"); width: 100%; }
-     td.lgd { background: url("themes/goofy/images/lg-d.png"); width: 100%; }
-     td.lgl { background: url("themes/goofy/images/lg-l.png"); }
-     td.lgr { background: url("themes/goofy/images/lg-r.png"); }
+     td.lgu { background: url("<?php echo $this->path; ?>/images/lg-u.png"); width: 100%; }
+     td.lgd { background: url("<?php echo $this->path; ?>/images/lg-d.png"); width: 100%; }
+     td.lgl { background: url("<?php echo $this->path; ?>/images/lg-l.png"); }
+     td.lgr { background: url("<?php echo $this->path; ?>/images/lg-r.png"); }
      td.lgcnt { background: #E4E4E4; width: 100%; font-family: tahoma,arial,helvetica; font-size: 10pt; white-space: normal; }
      td.lgcntnw { background: #E4E4E4; width: 100%; font-family: tahoma,arial,helvetica; font-size: 10pt; white-space: nowrap; }
 
@@ -70,16 +74,16 @@
    -->
    </style>
    <script language="JavaScript" type="text/javascript"><!--
-function b(title,content) {document.writeln("<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\"><tr><td><img src=\"themes/goofy/images/or-ul.png\" alt=\"\"></td><td class=\"oru\" width=\"100%\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td><img src=\"themes/goofy/images/or-ur.png\" alt=\"\"></td></tr><tr><td class=\"orl\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td class=\"orcnt\" width=\"100%\" valign=\"top\">" + title + "</td><td class=\"orr\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td></tr><tr><td class=\"orl\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td class=\"orcnt\" width=\"100%\"><img src=\"themes/goofy/images/null.gif\" height=\"5\" alt=\"\"></td><td class=\"orr\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td></tr><tr><td class=\"lgl\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td class=\"lgcnt\" width=\"100%\"><img src=\"themes/goofy/images/null.gif\" height=\"4\" alt=\"\"></td><td class=\"lgr\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td></tr><tr><td class=\"lgl\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td class=\"lgcnt\" width=\"100%\">" + content + "</td><td class=\"lgr\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td></tr><tr><td><img src=\"themes/goofy/images/lg-dl.png\" alt=\"\"></td><td class=\"lgd\" width=\"100%\"><img src=\"themes/goofy/images/null.gif\" width=\"150\" height=\"1\" alt=\"\"></td><td><img src=\"themes/goofy/images/lg-dr.png\" alt=\"\"></td></tr></table><br>");}
-function s(title,subleft,subright,body) {document.writeln("<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\"><tr><td><img src=\"themes/goofy/images/or-ul.png\" alt=\"\"></td><td class=\"oru\" width=\"100%\" colspan=\"2\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td><img src=\"themes/goofy/images/or-ur.png\" alt=\"\"></td></tr><tr><td class=\"orl\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td class=\"orcnt\" width=\"100%\" valign=\"top\" colspan=\"2\">" + title + "</td><td class=\"orr\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td></tr><tr><td class=\"orl\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td class=\"orcnt\" width=\"100%\" colspan=\"2\"><img src=\"themes/goofy/images/null.gif\" height=\"5\" alt=\"\"></td><td class=\"orr\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td></tr><tr><td class=\"lgl\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td class=\"lgcnt\" width=\"100%\" colspan=\"2\"><img src=\"themes/goofy/images/null.gif\" height=\"4\" alt=\"\"></td><td class=\"lgr\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td></tr><tr><td class=\"lgl\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td class=\"lgcnt\"><small>" + subleft + "</small></td><td class=\"lgcntnw\"><div align=\"right\">" + subright + "</div></td><td class=\"lgr\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td></tr><tr><td class=\"lgl\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td class=\"lgcnt\" width=\"100%\" colspan=\"2\"><hr color=\"#404040\" size=\"1\">" + body + "</div></td><td class=\"lgr\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td></tr><tr><td><img src=\"themes/goofy/images/lg-dl.png\" alt=\"\"></td><td class=\"lgd\" width=\"100%\" colspan=\"2\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td><img src=\"themes/goofy/images/lg-dr.png\" alt=\"\"></td></tr></table><br>");}
-function c(subject,mod,author,date,body) {document.writeln("<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\"><tr><td><img src=\"themes/goofy/images/or-ul.png\" alt=\"\"></td><td class=\"oru\" width=\"100%\" colspan=\"2\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td><img src=\"themes/goofy/images/or-ur.png\" alt=\"\"></td></tr><tr><td class=\"orl\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td class=\"orcnt\" width=\"100%\" valign=\"top\" colspan=\"2\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"1\" width=\"100%\"><tr><td valign=\"top\" width=\"5%\"><div align=\"right\"><b><?php echo t("Subject");  ?>:</b>&nbsp;</div></td><td width=\"80%\" class=\"left\"><b>" + subject + "</b></td><td rowspan=\"3\" valign=\"middle\" width=\"15%\"><div align=\"right\">" + mod + "</div></td></tr><tr><td valign=\"top\"><div align=\"right\"><?php echo t("Author"); ?>:&nbsp;</div></td><td class=\"left\">" + author + "</td></tr><tr><td><div align=\"right\"><?php echo t("Date"); ?>:&nbsp;</div></td><td class=\"left\">" + date + "</td></tr></table></td><td class=\"orr\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td></tr><tr><td class=\"orl\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td class=\"orcnt\" width=\"100%\" colspan=\"2\"><img src=\"themes/goofy/images/null.gif\" height=\"5\" alt=\"\"></td><td class=\"orr\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td></tr><tr><td class=\"lgl\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td class=\"lgcnt\" width=\"100%\" colspan=\"2\"><img src=\"themes/goofy/images/null.gif\" height=\"4\" alt=\"\"></td><td class=\"lgr\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td></tr>");if(body){document.writeln("<tr><td class=\"lgl\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td class=\"lgcnt\" width=\"100%\" colspan=\"2\">" + body + "</td><td class=\"lgr\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td></tr>");};document.writeln("<tr><td><img src=\"themes/goofy/images/lg-dl.png\" alt=\"\"></td><td class=\"lgd\" width=\"100%\" colspan=\"2\"><img src=\"themes/goofy/images/null.gif\" alt=\"\"></td><td><img src=\"themes/goofy/images/lg-dr.png\" alt=\"\"></td></tr></table><br>");}
+function b(title,content) {document.writeln("<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\"><tr><td><img src=\"<?php echo $this->path; ?>/images/or-ul.png\" alt=\"\"></td><td class=\"oru\" width=\"100%\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" alt=\"\"></td><td><img src=\"<?php echo $this->path; ?>/images/or-ur.png\" alt=\"\"></td></tr><tr><td class=\"orl\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" alt=\"\"></td><td class=\"orcnt\" width=\"100%\" valign=\"top\">" + title + "</td><td class=\"orr\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" alt=\"\"></td></tr><tr><td class=\"orl\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" alt=\"\"></td><td class=\"orcnt\" width=\"100%\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" height=\"5\" alt=\"\"></td><td class=\"orr\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" alt=\"\"></td></tr><tr><td class=\"lgl\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" alt=\"\"></td><td class=\"lgcnt\" width=\"100%\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" height=\"4\" alt=\"\"></td><td class=\"lgr\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" alt=\"\"></td></tr><tr><td class=\"lgl\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" alt=\"\"></td><td class=\"lgcnt\" width=\"100%\">" + content + "</td><td class=\"lgr\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" alt=\"\"></td></tr><tr><td><img src=\"<?php echo $this->path; ?>/images/lg-dl.png\" alt=\"\"></td><td class=\"lgd\" width=\"100%\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" width=\"150\" height=\"1\" alt=\"\"></td><td><img src=\"<?php echo $this->path; ?>/images/lg-dr.png\" alt=\"\"></td></tr></table><br>");}
+function s(title,subleft,subright,body) {document.writeln("<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\"><tr><td><img src=\"<?php echo $this->path; ?>/images/or-ul.png\" alt=\"\"></td><td class=\"oru\" width=\"100%\" colspan=\"2\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" alt=\"\"></td><td><img src=\"<?php echo $this->path; ?>/images/or-ur.png\" alt=\"\"></td></tr><tr><td class=\"orl\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" alt=\"\"></td><td class=\"orcnt\" width=\"100%\" valign=\"top\" colspan=\"2\">" + title + "</td><td class=\"orr\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" alt=\"\"></td></tr><tr><td class=\"orl\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" alt=\"\"></td><td class=\"orcnt\" width=\"100%\" colspan=\"2\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" height=\"5\" alt=\"\"></td><td class=\"orr\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" alt=\"\"></td></tr><tr><td class=\"lgl\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" alt=\"\"></td><td class=\"lgcnt\" width=\"100%\" colspan=\"2\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" height=\"4\" alt=\"\"></td><td class=\"lgr\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" alt=\"\"></td></tr><tr><td class=\"lgl\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" alt=\"\"></td><td class=\"lgcnt\"><small>" + subleft + "</small></td><td class=\"lgcntnw\"><div align=\"right\">" + subright + "</div></td><td class=\"lgr\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" alt=\"\"></td></tr><tr><td class=\"lgl\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" alt=\"\"></td><td class=\"lgcnt\" width=\"100%\" colspan=\"2\"><hr color=\"#404040\" size=\"1\">" + body + "</div></td><td class=\"lgr\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" alt=\"\"></td></tr><tr><td><img src=\"<?php echo $this->path; ?>/images/lg-dl.png\" alt=\"\"></td><td class=\"lgd\" width=\"100%\" colspan=\"2\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" alt=\"\"></td><td><img src=\"<?php echo $this->path; ?>/images/lg-dr.png\" alt=\"\"></td></tr></table><br>");}
+function c(subject,mod,author,date,body) {document.writeln("<table border=\"0\" cellspacing=\"0\" cellpadding=\"0\" width=\"100%\"><tr><td><img src=\"<?php echo $this->path; ?>/images/or-ul.png\" alt=\"\"></td><td class=\"oru\" width=\"100%\" colspan=\"2\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" alt=\"\"></td><td><img src=\"<?php echo $this->path; ?>/images/or-ur.png\" alt=\"\"></td></tr><tr><td class=\"orl\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" alt=\"\"></td><td class=\"orcnt\" width=\"100%\" valign=\"top\" colspan=\"2\"><table border=\"0\" cellpadding=\"0\" cellspacing=\"1\" width=\"100%\"><tr><td valign=\"top\" width=\"5%\"><div align=\"right\"><b><?php echo t("Subject");  ?>:</b>&nbsp;</div></td><td width=\"80%\" class=\"left\"><b>" + subject + "</b></td><td rowspan=\"3\" valign=\"middle\" width=\"15%\"><div align=\"right\">" + mod + "</div></td></tr><tr><td valign=\"top\"><div align=\"right\"><?php echo t("Author"); ?>:&nbsp;</div></td><td class=\"left\">" + author + "</td></tr><tr><td><div align=\"right\"><?php echo t("Date"); ?>:&nbsp;</div></td><td class=\"left\">" + date + "</td></tr></table></td><td class=\"orr\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" alt=\"\"></td></tr><tr><td class=\"orl\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" alt=\"\"></td><td class=\"orcnt\" width=\"100%\" colspan=\"2\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" height=\"5\" alt=\"\"></td><td class=\"orr\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" alt=\"\"></td></tr><tr><td class=\"lgl\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" alt=\"\"></td><td class=\"lgcnt\" width=\"100%\" colspan=\"2\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" height=\"4\" alt=\"\"></td><td class=\"lgr\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" alt=\"\"></td></tr>");if(body){document.writeln("<tr><td class=\"lgl\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" alt=\"\"></td><td class=\"lgcnt\" width=\"100%\" colspan=\"2\">" + body + "</td><td class=\"lgr\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" alt=\"\"></td></tr>");};document.writeln("<tr><td><img src=\"<?php echo $this->path; ?>/images/lg-dl.png\" alt=\"\"></td><td class=\"lgd\" width=\"100%\" colspan=\"2\"><img src=\"<?php echo $this->path; ?>/images/null.gif\" alt=\"\"></td><td><img src=\"<?php echo $this->path; ?>/images/lg-dr.png\" alt=\"\"></td></tr></table><br>");}
    //-->
    </script>
    </head>
    <body>
     <table border="0" cellspacing="3" cellpadding="0" width="100%">
      <tr>
-      <td colspan="2" width="100%"><table border="0" cellspacing="0" cellpadding="0" width="100%"><tr><td align="left"><img src="themes/goofy/images/logo.png" alt=""></td><td align="right"><img src="themes/goofy/images/drupal.png" alt="Powered by Drupal"></td></tr></table>
+      <td colspan="2" width="100%"><table border="0" cellspacing="0" cellpadding="0" width="100%"><tr><td align="left"><img src="<?php echo $this->path; ?>/images/logo.png" alt=""></td><td align="right"><img src="<?php echo $this->path; ?>/images/drupal.png" alt="Powered by Drupal"></td></tr></table>
 <?php $this->linksbar(); ?>
       </td>
      </tr>
@@ -94,19 +98,19 @@ function c(subject,mod,author,date,body) {document.writeln("<table border=\"0\" 
 ?>
        <table border="0" cellspacing="0" cellpadding="0" width="100%">
         <tr>
-         <td><img src="themes/goofy/images/lg-ul.png" alt=""></td>
-         <td class="lgu" width="100%"><img src="themes/goofy/images/null.gif" alt=""></td>
-         <td><img src="themes/goofy/images/lg-ur.png" alt=""></td>
+         <td><img src="<?php echo $this->path; ?>/images/lg-ul.png" alt=""></td>
+         <td class="lgu" width="100%"><img src="<?php echo $this->path; ?>/images/null.gif" alt=""></td>
+         <td><img src="<?php echo $this->path; ?>/images/lg-ur.png" alt=""></td>
         </tr>
         <tr>
-         <td class="lgl"><img src="themes/goofy/images/null.gif" alt=""></td>
+         <td class="lgl"><img src="<?php echo $this->path; ?>/images/null.gif" alt=""></td>
          <td class="lgcnt" width="100%" valign="top"><div align="center"><?php print $this->links(link_page()); ?></div></td>
-         <td class="lgr"><img src="themes/goofy/images/null.gif" alt=""></td>
+         <td class="lgr"><img src="<?php echo $this->path; ?>/images/null.gif" alt=""></td>
         </tr>
         <tr>
-         <td><img src="themes/goofy/images/lg-dl.png" alt=""></td>
-         <td class="lgd" width="100%"><img src="themes/goofy/images/null.gif" alt=""></td>
-         <td><img src="themes/goofy/images/lg-dr.png" alt=""></td>
+         <td><img src="<?php echo $this->path; ?>/images/lg-dl.png" alt=""></td>
+         <td class="lgd" width="100%"><img src="<?php echo $this->path; ?>/images/null.gif" alt=""></td>
+         <td><img src="<?php echo $this->path; ?>/images/lg-dr.png" alt=""></td>
         </tr>
        </table>
 <?php

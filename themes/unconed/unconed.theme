@@ -37,6 +37,10 @@
    var $bgcolor3 = "#D7D7D7";
    var $fgcolor3 = "#000000";
 
+   function Theme_unconed($filename) {
+     $this->path = dirname($filename);
+   }
+
    function system($field) {
      $system["name"] = "UnConeD";
      $system["author"] = "Steven Wittens";
@@ -66,12 +70,12 @@
      </HEAD>
      <BODY TEXT="#000000" BGCOLOR="<?php print $this->clc0; ?>" ALINK="#000000" LINK="#404040" VLINK="#404040" MARGINHEIGHT="10" MARGINWIDTH="10">
      <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" ALIGN="CENTER" WIDTH="100%">
-     <TR><TD BGCOLOR="<?php print $this->cl00; ?>"><IMG SRC="themes/<?php print $this->themename; ?>/images/null.gif" WIDTH="10"></TD><TD BGCOLOR="<?php print $this->clc0; ?>"><IMG SRC="themes/<?php print $this->themename; ?>/images/null.gif" WIDTH="4"></TD>
+     <TR><TD BGCOLOR="<?php print $this->cl00; ?>"><IMG SRC="<?php print $this->path; ?>/images/null.gif" WIDTH="10"></TD><TD BGCOLOR="<?php print $this->clc0; ?>"><IMG SRC="<?php print $this->path; ?>/images/null.gif" WIDTH="4"></TD>
      <TD BGCOLOR="<?php print $this->cl80; ?>">
       <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="9" BGCOLOR="<?php print $this->cl80; ?>">
        <TR>
         <TD COLSPAN="2">
-         <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0" BGCOLOR="<?php echo $this->brcolor1; ?>"><TR><TD ALIGN="CENTER"><TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="4"><TR><TD ALIGN="CENTER" BGCOLOR="<?php echo $this->bgcolor2; ?>"><IMG SRC="themes/<?php print $this->themename; ?>/images/logo.png" ALT="logo"></TD></TR></TABLE></TD></TR></TABLE>
+         <TABLE BORDER="0" WIDTH="100%" CELLSPACING="0" CELLPADDING="0" BGCOLOR="<?php echo $this->brcolor1; ?>"><TR><TD ALIGN="CENTER"><TABLE BORDER="0" WIDTH="100%" CELLSPACING="1" CELLPADDING="4"><TR><TD ALIGN="CENTER" BGCOLOR="<?php echo $this->bgcolor2; ?>"><IMG SRC="<?php print $this->path; ?>/images/logo.png" ALT="logo"></TD></TR></TABLE></TD></TR></TABLE>
         </TD>
        </TR>
        <TR>
@@ -83,7 +87,7 @@
             print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"0\" BGCOLOR=\"$this->brcolor1;\" WIDTH=\"100%\">";
             print "<TR><TD>";
             print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"1\" WIDTH=\"100%\">";
-            print "<TR><TD ALIGN=\"center\" BGCOLOR=\"$this->bgcolor2\"><FONT COLOR=\"$this->fgcolor1\"><IMG SRC=\"themes/" . $this->themename . "/images/null.gif\" WIDTH=\"2\" HEIGHT=\"2\"></FONT></TD></TR>";
+            print "<TR><TD ALIGN=\"center\" BGCOLOR=\"$this->bgcolor2\"><FONT COLOR=\"$this->fgcolor1\"><IMG SRC=\"" . $this->path . "/images/null.gif\" WIDTH=\"2\" HEIGHT=\"2\"></FONT></TD></TR>";
             print "</TABLE>";
             print "</TD></TR></TABLE>";
        ?></TD></TR>
@@ -99,7 +103,7 @@
         <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" BGCOLOR="<?php echo $this->brcolor1; ?>" WIDTH="100%">
         <TR><TD>
          <TABLE BORDER="0" CELLPADDING="4" CELLSPACING="1" WIDTH="100%">
-          <TR><TD COLSPAN="2" BGCOLOR="<?php echo $this->bgcolor1; ?>" WIDTH="100%"><table width="100%" cellpadding="0" cellspacing="0"><tr><td width="100%"><FONT COLOR="<?php echo $this->fgcolor1; ?>"><B><?php echo "". check_output($node->title) .""; ?></B></FONT></td><td valign="middle" align="center"><IMG SRC="themes/<?php print $this->themename; ?>/images/icon.gif" valign="middle"></td></tr></table></TD></TR>
+          <TR><TD COLSPAN="2" BGCOLOR="<?php echo $this->bgcolor1; ?>" WIDTH="100%"><table width="100%" cellpadding="0" cellspacing="0"><tr><td width="100%"><FONT COLOR="<?php echo $this->fgcolor1; ?>"><B><?php echo "". check_output($node->title) .""; ?></B></FONT></td><td valign="middle" align="center"><IMG SRC="<?php print $this->path; ?>/images/icon.gif" valign="middle"></td></tr></table></TD></TR>
           <TR BGCOLOR="<?php echo $this->bgcolor2; ?>">
            <?php
             if (function_exists("taxonomy_node_get_terms")) {
@@ -217,7 +221,7 @@
             print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"0\" BGCOLOR=\"$this->brcolor1;\" WIDTH=\"100%\">";
             print "<TR><TD>";
             print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"1\" WIDTH=\"100%\">";
-            print "<TR><TD ALIGN=\"center\" BGCOLOR=\"$this->bgcolor2\"><FONT COLOR=\"$this->fgcolor1\"><IMG SRC=\"themes/" . $this->themename . "/images/null.gif\" WIDTH=\"2\" HEIGHT=\"2\"></FONT></TD></TR>";
+            print "<TR><TD ALIGN=\"center\" BGCOLOR=\"$this->bgcolor2\"><FONT COLOR=\"$this->fgcolor1\"><IMG SRC=\"" . $this->path . "/images/null.gif\" WIDTH=\"2\" HEIGHT=\"2\"></FONT></TD></TR>";
             print "</TABLE>";
             print "</TD></TR></TABLE>";
        ?></TD></TR>
@@ -227,7 +231,7 @@
        </TD>
       </TR>
      </TABLE>
-    </TD><TD BGCOLOR="<?php print $this->clc0; ?>"><IMG SRC="themes/<?php print $this->themename; ?>/images/null.gif" WIDTH="4"></TD><TD BGCOLOR="<?php print $this->cl00; ?>"><IMG SRC="themes/<?php print $this->themename; ?>/images/null.gif" WIDTH="10"></TD></TR>
+    </TD><TD BGCOLOR="<?php print $this->clc0; ?>"><IMG SRC="<?php print $this->path; ?>/images/null.gif" WIDTH="4"></TD><TD BGCOLOR="<?php print $this->cl00; ?>"><IMG SRC="<?php print $this->path; ?>/images/null.gif" WIDTH="10"></TD></TR>
     </TABLE>
     </BODY>
     </HTML>
