@@ -1,5 +1,5 @@
 <?php
-/* $Id: updates.inc,v 1.62 2004/09/20 17:58:14 dries Exp $ */
+/* $Id: updates.inc,v 1.63 2004/09/27 19:56:51 dries Exp $ */
 
 /**
  * @file
@@ -1072,6 +1072,11 @@ function update_85() {
       cid int(10) NOT NULL,
       PRIMARY KEY (iid, cid)
      )");
+    $ret[] = update_sql("ALTER TABLE {aggregator_category} ALTER COLUMN description DROP NOT NULL");
+    $ret[] = update_sql("ALTER TABLE {aggregator_item} ALTER COLUMN description DROP NOT NULL");
+    $ret[] = update_sql("ALTER TABLE {aggregator_feed} ALTER COLUMN description DROP NOT NULL");
+    $ret[] = update_sql("ALTER TABLE {aggregator_feed} ALTER COLUMN image DROP NOT NULL");
+
   }
   else {
     $ret[] = update_sql("ALTER TABLE {bundle} RENAME TO {aggregator_category}");

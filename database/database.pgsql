@@ -92,7 +92,7 @@ CREATE TABLE boxes (
 CREATE TABLE aggregator_category (
   cid serial,
   title varchar(255) NOT NULL default '',
-  description text NOT NULL,
+  description text,
   block smallint NOT NULL default '0',
   PRIMARY KEY  (cid),
   UNIQUE (title)
@@ -129,8 +129,8 @@ CREATE TABLE aggregator_feed (
   refresh integer NOT NULL default '0',
   checked integer NOT NULL default '0',
   link varchar(255) NOT NULL default '',
-  description text NOT NULL,
-  image text NOT NULL,
+  description text,
+  image text,
   etag varchar(255) NOT NULL default '',
   modified integer NOT NULL default '0',
   block smallint NOT NULL default '0',
@@ -149,7 +149,7 @@ CREATE TABLE aggregator_item (
   title varchar(255) NOT NULL default '',
   link varchar(255) NOT NULL default '',
   author varchar(255) NOT NULL default '',
-  description text NOT NULL,
+  description text,
   timestamp integer default NULL,
   PRIMARY KEY  (iid)
 );
