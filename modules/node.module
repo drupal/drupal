@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.369 2004/07/13 20:44:13 dries Exp $
+// $Id: node.module,v 1.370 2004/07/30 13:37:26 dries Exp $
 
 define('NODE_NEW_LIMIT', time() - 30 * 24 * 60 * 60);
 
@@ -490,17 +490,18 @@ function node_view($node, $teaser = FALSE, $page = FALSE) {
   // TODO: this strips legitimate uses of '<!--break-->' also.
   $node->body = str_replace('<!--break-->', '', $node->body);
 
-  // Allow modules to change $node->body before viewing.
-  node_invoke_nodeapi($node, 'view', $teaser, $page);
-
   // The 'view' hook can be implemented to overwrite the default function
   // to display nodes.
   if (node_hook($node, 'view')) {
-    return node_invoke($node, 'view', $teaser, $page);
+    node_invoke($node, 'view', $teaser, $page);
   }
   else {
-    return theme('node', node_prepare($node, $teaser), $teaser, $page);
+    $node = node_prepare($node, $teaser);
   }
+  // Allow modules to change $node->body before viewing.
+  node_invoke_nodeapi($node, 'view', $teaser, $page);
+
+  return theme('node', $node, $teaser, $page);
 }
 
 /**

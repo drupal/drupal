@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.119 2004/07/13 21:52:35 dries Exp $
+// $Id: page.module,v 1.120 2004/07/30 13:37:26 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -121,11 +121,9 @@ function page_content($node, $teaser = FALSE) {
 /**
  * Implementation of hook_view().
  */
-function page_view($node, $teaser = FALSE, $page = FALSE) {
+function page_view(&$node, $teaser = FALSE, $page = FALSE) {
   // prepare the node content
   $node = page_content($node, $teaser);
-  // print the node
-  return theme('node', $node, $teaser, $page);
 }
 
 /**
