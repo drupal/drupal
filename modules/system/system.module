@@ -112,7 +112,7 @@ function system_view_general() {
 
   // submission settings:
   $output .= "<h3>". t("Submission settings") ."</h3>\n";
-  $rate = array(-10000 => "Disabled", 1 => "Maximum 1 every second", 5 => "Maximum 1 every 5 seconds", 15 => "Maximum 1 every 15 seconds", 30 => "Maximum 1 every 30 seconds", 60 => "Maximum 1 every minute", 300 => "Maximum 1 every 5 minutes", 900 => "Maximum 1 every 15 minutes", 1800 => "Maximum 1 every 30 minutes", 3600 => "Maximum 1 every hour", 21600 => "Maximum 1 every 6 hours", 43200 => "Maximum 1 every 12 hours");
+  $rate = array(-10000 => t("Disabled"), 1 => t("Maximum 1 every second"), 5 => t("Maximum 1 every 5 seconds"), 15 => t("Maximum 1 every 15 seconds"), 30 => t("Maximum 1 every 30 seconds"), 60 => t("Maximum 1 every minute"), 300 => t("Maximum 1 every 5 minutes"), 900 => t("Maximum 1 every 15 minutes"), 1800 => t("Maximum 1 every 30 minutes"), 3600 => t("Maximum 1 every hour"), 21600 => t("Maximum 1 every 6 hours"), 43200 => t("Maximum 1 every 12 hours"));
   $output .= form_select(t("Maximum node rate"), "max_node_rate", variable_get("max_node_rate", 900), $rate, t("The maximum submission rate for nodes.  Its purpose is to stop potential abuse or denial of service attacks."));
   $output .= form_select(t("Maximum comment rate"), "max_comment_rate", variable_get("max_comment_rate", 120), $rate, t("The maximum submission rate for comments.  Its purpose is to stop potential abuse or denial of service attacks."));
   $output .= "<hr />\n";
@@ -169,7 +169,7 @@ function system_view_theme($name) {
     }
   }
   else {
-    $output = "Invalid theme specified";
+    $output = t("Invalid theme specified");
   }
   return $output;
 }
