@@ -289,7 +289,7 @@ function search_item($item, $type) {
     $output = module_invoke($type, "search_item", $item);
   }
   else {
-    $output = " <b><u><a href=\"". $item["link"] ."\">". $item["title"] ."</a></u></b><br />";
+    $output = " <strong><u><a href=\"". $item["link"] ."\">". $item["title"] ."</a></u></strong><br />";
     $output .= " <small>" . t($type) . ($item["user"] ? " - ". $item["user"] : "") ."". ($item["date"] ? " - ". format_date($item["date"], "small") : "") ."</small>";
     $output .= "<br /><br />";
   }
@@ -344,10 +344,10 @@ function search_data($keys = NULL) {
     foreach (module_list() as $name) {
       if (module_hook($name, "search") && (!$edit["type"] || $edit["type"][$name]) && ($result = module_invoke($name, "search", $keys))) {
         if ($name == "node" || $name == "comment") {
-          $output .= "<p><b>". t("Matching ". $name ."s ranked in order of relevance") .":</b></p>";
+          $output .= "<p><strong>". t("Matching %names ranked in order of relevance:", array("%name" => $name)) ."</strong></p>";
         }
         else {
-          $output .= "<p><b>". t("Matching ". $name ."s") .":</b></p>";
+          $output .= "<p><strong>". t("Matching ". $name .") .":</strong></p>";
         }
         foreach ($result as $entry) {
           $output .= search_item($entry, $name);

@@ -612,7 +612,7 @@ function update_data($start) {
   global $mysql_updates;
   $mysql_updates = array_slice($mysql_updates, ($start-- ? $start : 0));
   foreach ($mysql_updates as $date => $func) {
-    print "<b>$date</b><br />\n<pre>\n";
+    print "<strong>$date</strong><br />\n<pre>\n";
     $func();
     variable_set("update_start", $date);
     print "</pre>\n";
@@ -685,7 +685,7 @@ function update_page() {
 function update_info() {
   print update_page_header("Drupal database update");
   print "<ol>\n";
-  print "<li>Use this script to <b>upgrade an existing Drupal installation</b>.  You don't need this script when installing Drupal from scratch.</li>";
+  print "<li>Use this script to <strong>upgrade an existing Drupal installation</strong>.  You don't need this script when installing Drupal from scratch.</li>";
   print "<li>Before doing anything, backup your database. This process will change your database and its values, and some things might get lost.</li>\n";
   print "<li>Update your Drupal sources, check the notes below and <a href=\"update.php?op=update\">run the database upgrade script</a>.  Don't upgrade your database twice as it may cause problems.</p></li>\n";
   print "<li>Go through the various administration pages to change the existing and new settings to your liking.</li>\n";

@@ -414,7 +414,7 @@ function get_error()  {
 
 
 function set_error($str)  {
-  $this->ERROR="<b>[XTemplate]</b>&nbsp;<i>".$str."</i>";
+  $this->ERROR="<strong>[XTemplate]</strong>&nbsp;<i>".$str."</i>";
   trigger_error($this->get_error());
 }
 
@@ -452,7 +452,7 @@ function getfile($file) {
       fclose($fh);
     } else {
       $this->set_error("[$file] does not exist");
-      $file_text="<b>__XTemplate fatal error: file [$file] does not exist__</b>";
+      $file_text="<strong>__XTemplate fatal error: file [$file] does not exist__</strong>";
     }
     $this->filecache[$file]=$file_text;
   }

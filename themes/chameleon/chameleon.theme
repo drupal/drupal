@@ -67,7 +67,7 @@ function chameleon_header($title = "") {
   }
 
   if ($message = drupal_get_message()) {
-    $output .= "<b>". t("Status") ."</b>: ". $message->message ."<hr />";
+    $output .= "<strong>". t("Status") ."</strong>: ". $message->message ."<hr />";
   }
 
   return $output;

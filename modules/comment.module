@@ -10,10 +10,10 @@ function comment_help($section = "admin/help#comment") {
       $output .= "<h3>User control of comment display</h3>";
       $output .= "<p>Attached to each comment board is a control panel for customizing the way that comments are displayed. Users can control the chronological ordering of posts (newest or oldest first) and the number of posts to display on each page. Additional settings include:</p>";
       $output .= "<ul>";
-      $output .= "<li><b>Threaded</b> -- Displays the posts grouped according to conversations and subconversations, much like the subject view of an email client.</li>";
-      $output .= "<li><b>Flat</b> --  Displays the posts in chronological order, in the order in which they are posted.</li>";
-      $output .= "<li><b>Expanded</b> -- Displays the title and text for each post.</li>";
-      $output .= "<li><b>Collapsed</b> -- Displays only the title for each post.</li>";
+      $output .= "<li><strong>Threaded</strong> -- Displays the posts grouped according to conversations and subconversations, much like the subject view of an email client.</li>";
+      $output .= "<li><strong>Flat</strong> --  Displays the posts in chronological order, in the order in which they are posted.</li>";
+      $output .= "<li><strong>Expanded</strong> -- Displays the title and text for each post.</li>";
+      $output .= "<li><strong>Collapsed</strong> -- Displays only the title for each post.</li>";
       $output .= "</ul>";
       $output .= "<p>When a user chooses <i>save settings</i>, the comments are then redisplayed using the user's new choices. Administrators can set the default settings for the comment control panel, along with other comment defaults, in %comment-config.</p>";
       $output .= "<p>NOTE: When comment moderation is enabled, users will have another control panel option to control thresholds (see below).</p>";
@@ -23,11 +23,11 @@ function comment_help($section = "admin/help#comment") {
       $output .= "<p>Administrators can control access to various comment module functions through %user-permissions. Know that in a new Drupal installation, all comment permissions are disabled by default. The choice of which permissions to grant to which roles (groups of users) is left up to the site administrator.</p>";
       $output .= "<p>The following permissions can be enabled for anonymous users, authenticated users, or any other user roles that the administrator chooses to define:</p>";
       $output .= "<ul>";
-      $output .= "<li><b>Access comments</b> -- Allows users to view comments.</li>";
-      $output .= "<li><b>Administrate comments</b> -- Allows users complete control over configuring, editing and deleting all comments on the site. Best reserved for <b>very</b> trusted users.</li>";
-      $output .= "<li><b>Moderate comments</b> -- Allows users to rate comment postings (see more on moderation below).</li>";
-      $output .= "<li><b>Post comments</b> -- Allows users to post comments into an administrator moderation queue. Administrators then post the comment to the site.</li>";
-      $output .= "<li><b>Post comments without approval</b> -- Allows users to directly post comments. This bypasses the administrator moderation queue.</li>";
+      $output .= "<li><strong>Access comments</strong> -- Allows users to view comments.</li>";
+      $output .= "<li><strong>Administrate comments</strong> -- Allows users complete control over configuring, editing and deleting all comments on the site. Best reserved for <strong>very</strong> trusted users.</li>";
+      $output .= "<li><strong>Moderate comments</strong> -- Allows users to rate comment postings (see more on moderation below).</li>";
+      $output .= "<li><strong>Post comments</strong> -- Allows users to post comments into an administrator moderation queue. Administrators then post the comment to the site.</li>";
+      $output .= "<li><strong>Post comments without approval</strong> -- Allows users to directly post comments. This bypasses the administrator moderation queue.</li>";
       $output .= "</ul>";
 
       $output .= "<h3>Notification of new comments</h3>";
@@ -66,7 +66,7 @@ function comment_help($section = "admin/help#comment") {
       $output .= "<p>To see a common example of how thresholds work, you might visit %slashdot and view one of their comment boards associated with a story. You can reset the thresholds in their comment control panel.</p>";
 
       $output .= "<h4>Initial comment scores</h4>";
-      $output .= "<p>Finally, you may want to enter some <i>initial comment scores</i>. In %comment-inital you can assign a beginning rating for all comments posted by a particular permission role. If you do not assign any initial scores, Drupal will assign a rating of <b>0</b> as the default.</p>";
+      $output .= "<p>Finally, you may want to enter some <i>initial comment scores</i>. In %comment-inital you can assign a beginning rating for all comments posted by a particular permission role. If you do not assign any initial scores, Drupal will assign a rating of <strong>0</strong> as the default.</p>";
       $output = t($output, array("%comment-config" => l(t("administer") ." &raquo; ". t("configuration") ." &raquo; ". t("modules") ." &raquo; ". t("comment"), "admin/system/modules/comment"), "%site-config" => l(t("administer") ." &raquo; ". t("configuration"), "admin/system"), "%user-permissions" => l(t("administer") ." &raquo; ". t("accounts") ." &raquo; ". t("permissions"), "admin/user/permission"), "%tracker" => l(t("recent posts"), "tracker"), "%download-notify" => "<a href=\"http://drupal.org/project/releases\">". t("download") ."</a>", "%permission" => l(t("moderate comments"), "admin/user/permissions"), "%comment-moderation" => l(t("administer") ." &raquo; ". t("comments") ." &raquo; ". t("moderation"), "admin/comment/moderation"), "%comment-votes" => l(t("administer") ." &raquo; ". t("comments") ." &raquo; ". t("moderation") ." &raquo; ". t("votes"), "admin/comment/moderation/votes"), "%comment-matrix" => l(t("administer") ." &raquo; ". t("comments") ." &raquo; ". t("moderation") ." &raquo; ". t("matrix"), "admin/comment/moderation/matrix"), "%comment-thresholds" => l(t("administer") ." &raquo; ". t("comments") ." &raquo; ". t("moderation") ." &raquo; ". t("thresholds"), "admin/comment/moderation/thresholds"), "%slashdot" => "<a href=\"http://slashdot.org/\">Slashdot</a>", "%comment-inital" => l(t("administer") ." &raquo; ". t("comments") ." &raquo; ". t("initial comment scores"), "admin/comments/moderation/roles")));
       break;
     case 'admin/system/modules#description':
@@ -85,22 +85,22 @@ function comment_help($section = "admin/help#comment") {
       $output = t("Below is a list of the latest comments posted your site. Click on a subject to see the comment, the author's name to edit the author's user information , \"edit comment\" to edit the comment, and \"delete comment\" to remove the comment.");
       break;
     case 'admin/comment/comments/1':
-      $output = t("Below is a list of the comments posted to your site that need approval. To approve a comment click on <b>\"edit comment\"</b> and then change it's <b>moderation status</b> to Approved.<br />Click on a subject to see the comment, the author's name to edit the author's user information, \"edit comment\" to edit the comment, and \"delete comment\" to remove the comment.");
+      $output = t("Below is a list of the comments posted to your site that need approval. To approve a comment click on <strong>\"edit comment\"</strong> and then change it's <strong>moderation status</strong> to Approved.<br />Click on a subject to see the comment, the author's name to edit the author's user information, \"edit comment\" to edit the comment, and \"delete comment\" to remove the comment.");
       break;
     case 'admin/comments/moderation':
       $output = t("If you have a get a lot of comments, you can enable comment moderation. Once moderation is enabled users can vote on a comment based on dropdown menus. %votes sets up the names in the dropdown menu, and the order in which they appear, using weights. %matrix sets up the value of each user's vote, and %threshold sets up the levels at which a comment will be displayed.", array("%votes" => l(t("Votes"), "admin/comment/moderation/votes"), "%matrix" => l(t("Matrix"), "admin/comment/moderation/matrix"), "%threshold" => l(t("threshold"), "admin/comment/moderation/threshold")));
       break;
     case 'admin/comment/moderation/votes':
-      $output = t("Here is where you setup the names of each type of vote. Weight lets you set the order of the drop down menu. Click <b>edit</b> to edit a current vote weight.<br />Notes: <ul><li>you can have more than one type with the same name. The system does not protect you from this.</li><li>To <b>delete</b> a name/weight combiniation go to the <b>edit</b> area.</li></ul>");
+      $output = t("Here is where you setup the names of each type of vote. Weight lets you set the order of the drop down menu. Click <strong>edit</strong> to edit a current vote weight.<br />Notes: <ul><li>you can have more than one type with the same name. The system does not protect you from this.</li><li>To <strong>delete</strong> a name/weight combiniation go to the <strong>edit</strong> area.</li></ul>");
       break;
     case 'admin/comment/moderation/matrix':
-      $output = t("Here is where you assign a value to each item in the dropdown menu. This value is added to the vote total, which is then divided by the number of users who have voted and rounded off to the nearest integer.<br />Notes:<ul><li>In order to use comment moderation, every text box on this page should be populated.</li><li>You must assign the <b>moderate comments</b> permission to at least one role in order to use this page.</li><li>Every box not filled in will have a value of zero, which will have the effect of <b>lowering</b> a comments over all score.</li></ul>");
+      $output = t("Here is where you assign a value to each item in the dropdown menu. This value is added to the vote total, which is then divided by the number of users who have voted and rounded off to the nearest integer.<br />Notes:<ul><li>In order to use comment moderation, every text box on this page should be populated.</li><li>You must assign the <strong>moderate comments</strong> permission to at least one role in order to use this page.</li><li>Every box not filled in will have a value of zero, which will have the effect of <strong>lowering</strong> a comments over all score.</li></ul>");
       break;
     case 'admin/comment/moderation/filters':
-      $output = t("<i>Optional</i> Here you can setup the name and minimum \"cut off\" score to help your users hide comments that they don't want too see. These thresholds appear in the Comment Control Panel. Click \"edit\" to edit the values of an already exsisting threashold. To <b>delete</b> a threshold click on \"edit\".");
+      $output = t("<i>Optional</i> Here you can setup the name and minimum \"cut off\" score to help your users hide comments that they don't want too see. These thresholds appear in the Comment Control Panel. Click \"edit\" to edit the values of an already exsisting threashold. To <strong>delete</strong> a threshold click on \"edit\".");
       break;
     case 'admin/comment/moderation/roles':
-      $output = t("Here you can setup the <b>initial</b> vote value of a comment posted by each user role. This value is used before any other users vote on the comment.<br />Note: Blank entries are valued at zero");
+      $output = t("Here you can setup the <strong>initial</strong> vote value of a comment posted by each user role. This value is used before any other users vote on the comment.<br />Note: Blank entries are valued at zero");
       break;
     case ' admin/comment/search':
       $output = t("Enter a simple pattern ( '*' maybe used as a wildcard match) to search for a comment.  For example, one may search for 'br' and Drupal might return 'bread brakers', 'our daily bread' and 'brenda'.");

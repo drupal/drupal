@@ -759,7 +759,7 @@ function user_pass($edit = array()) {
     ** Display form:
     */
 
-    $output .= "<p>". sprintf(t("Enter your username %sor%s your e-mail address."), "<b><i>", "</i></b>") ."</p>";
+    $output .= "<p>". sprintf(t("Enter your username %sor%s your e-mail address."), "<strong><i>", "</i></strong>") ."</p>";
     $output .= form_textfield(t("Username"), "name", $edit["name"], 30, 64);
     $output .= form_textfield(t("E-mail address"), "mail", $edit["mail"], 30, 64);
     $output .= form_submit(t("E-mail new password"));
@@ -843,7 +843,7 @@ function user_register($edit = array()) {
     if ($account->uid == 1) {
       user_mail($edit["mail"], t("drupal user account details for %s", array("%s" => $edit["name"])), strtr(t("%username,\n\nYou may now login to %uri using the following username and password:\n\n  username: %username\n  password: %password\n\n". url("user/edit") ."\n\n--drupal"), $variables), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
       // This should not be t()'ed. No point as its only shown once in the sites lifetime, and it would be bad to store the password
-      $output .= "<p>Welcome to Drupal. You are user #1, which gives you full and immediate access.  All future registrants will receive their passwords via e-mail, so please configure your e-mail settings using the Administration pages.</p><p> Your password is <b>$pass</b>. You may change your password on the next page.</p><p>Please login below.</p>";
+      $output .= "<p>Welcome to Drupal. You are user #1, which gives you full and immediate access.  All future registrants will receive their passwords via e-mail, so please configure your e-mail settings using the Administration pages.</p><p> Your password is <strong>$pass</strong>. You may change your password on the next page.</p><p>Please login below.</p>";
       $output .= form_hidden("destination", url("user/edit"));
       $output .= form_hidden("name", $account->name);
       $output .= form_hidden("pass", $pass);
@@ -1588,16 +1588,16 @@ function user_help($section = "admin/help#user") {
       $output .= t("Access rules allow Drupal administrators to choose usernames and e-mail address that are prevented from using drupal. To enter the mask for e-mail addresses click on %e-mail, for the username mask click on %username.", array("%e-mail" => l(t("e-mail rules"), "admin/user/access/mail"), "%username" => l(t("name rules"), "admin/user/access/user")));
       break;
     case 'admin/user/access/mail':
-      $output .= t("Setup and test the e-mail access rules. The access function checks if you match a deny and <b>not</b> an allow. If you match <b>only</b> a deny then it is denied. Any other case, such as both a deny and an allow pattern matching, allows the pattern.<br />Notes: <ul><li>To delete a rule click on \"delete rule\".</li><li>The order of the rules does <b>not</b> matter.</li></ul>");
+      $output .= t("Setup and test the e-mail access rules. The access function checks if you match a deny and <strong>not</strong> an allow. If you match <strong>only</strong> a deny then it is denied. Any other case, such as both a deny and an allow pattern matching, allows the pattern.<br />Notes: <ul><li>To delete a rule click on \"delete rule\".</li><li>The order of the rules does <strong>not</strong> matter.</li></ul>");
       break;
     case 'admin/user/access/user':
-      $output .= t("Setup and test the Username access rules. The access function checks if you match a deny and <b>not</b> an allow. If you do then it is denied. Any other case, such as a deny pattern and an allow pattern, allows the pattern.<br />Notes: <ul><li>To delete a rule click on \"delete rule\".</li><li>The order of the rules does <b>not</b> matter.</li></ul>");
+      $output .= t("Setup and test the Username access rules. The access function checks if you match a deny and <strong>not</strong> an allow. If you do then it is denied. Any other case, such as a deny pattern and an allow pattern, allows the pattern.<br />Notes: <ul><li>To delete a rule click on \"delete rule\".</li><li>The order of the rules does <strong>not</strong> matter.</li></ul>");
       break;
     case 'admin/user/permission':
-      $output .= t("In this area you will define the <b>permissions</b> for each user role (role names are defined on the %role). Each permission describes a fine-grained logical operation, such as being able to access the administration pages, or adding/modifying a user account. You could say a permission represents access granted to a user to perform a set of operations.", array("%role" => l(t("user roles page"), "admin/user/role")));
+      $output .= t("In this area you will define the <strong>permissions</strong> for each user role (role names are defined on the %role). Each permission describes a fine-grained logical operation, such as being able to access the administration pages, or adding/modifying a user account. You could say a permission represents access granted to a user to perform a set of operations.", array("%role" => l(t("user roles page"), "admin/user/role")));
       break;
     case 'admin/user/role':
-      $output .= "Roles allow you to fine tune the security and administration of drupal.  A role defines a group of users that have certain privileges as defined in %permission.  Examples of roles include: anonymous user, authenticated user, moderator, administrator and so on. In this area you will define the <b>names</b> of the various roles. To delete a role choose \"edit role\".<br />By default, Drupal comes with two user roles:";
+      $output .= "Roles allow you to fine tune the security and administration of drupal.  A role defines a group of users that have certain privileges as defined in %permission.  Examples of roles include: anonymous user, authenticated user, moderator, administrator and so on. In this area you will define the <strong>names</strong> of the various roles. To delete a role choose \"edit role\".<br />By default, Drupal comes with two user roles:";
       $output .= "<ul>";
       $output .= "<li>Anonymous user: this role is used for users that don't have a user account or that are not authenticated.</li>";
       $output .= "<li>Authenticated user: this role is assigned automatically to authenticated users.  Most registered users will belong to this user role unless specified otherwise.</li>";
@@ -1684,7 +1684,7 @@ function user_help($section = "admin/help#user") {
 }</pre>";
       $output .= "<p>The <i>_auth</i> function is the heart of any authentication module. This function is called whenever a user is attempting to login using your authentication module. For successful authentications, this function returns TRUE. Otherwise, it returns FALSE. This function always accepts 3 parameters, as shown above. These parameters are passed by the user system (user module). The user system parses the username as typed by the user into 2 substrings - \$name and \$server. The parsing rules are:</p>";
       $output .= "<table border=\"0\" cellspacing=\"4\" cellpadding=\"4\" style=\"margin: auto; width: 80%;\"><tr><th colspan=\"2\" style=\"text-align: left;\">_auth function parameters</th></tr><tr><th>\$name</th><td>The substring before the final <i>'@'</i> character in the username field</td></tr><tr><th>\$pass</th><td>The whole string submitted by the user in the password field</td></tr><tr><th>\$server</th><td>The substring after the final <i>'@'</i> symbol in the username field</td></tr></table>";
-      $output .= "<p>So now lets use that \$name, \$pass, and \$server which was passed to our <i>_auth</i> function. Blogger authenticates users via %xml. Your module may authenticate using a different technique. Drupal doesn't reallly care how your module communicates with its registration source. It just <b>trusts</b> the module.</p>";
+      $output .= "<p>So now lets use that \$name, \$pass, and \$server which was passed to our <i>_auth</i> function. Blogger authenticates users via %xml. Your module may authenticate using a different technique. Drupal doesn't reallly care how your module communicates with its registration source. It just <strong>trusts</strong> the module.</p>";
       $output .= "<p>The lines above illustrate a typical %xml method call. Here we build up a message and send it to Blogger, storing the response in a variable called <i>\$response</i>. The message we pass conforms to the published %blogger-api. Your module will no doubt implement a different API. One peculiarity of this module is that we don't actually use the \$server parameter. Blogger only accepts authentication at <i>plant.blogger.com</i>, so we hard-code that value into the <i>xmlrpc_client()</i> function. A more typical example might be the jabber module, which uses the <i>\$server</i> parameter to determine where to send the authentication request. Also of note is the '5'th parameter in the <i>\$client-&gt;send\(\)</i> call. This is a timeout value in seconds. All authentication modules should implement a timeout on their external calls. This makes sure to return control to the user module if your registration database has become inoperable or unreachable.</p>";
       $output .= "<pre>
   if (\$result &amp;&amp; !stristr(\$result-&gt;serialize(), &quot;fault&quot;)) {
@@ -1726,7 +1726,7 @@ function user_help($section = "admin/help#user") {
       // end of user_help_devel_da
 
       // start of user_help_devel_userhook
-      $output .= "<h3><a id=\"userhook\">module_user()</a></h3><p>The <b>_user()</b> hook provides a mechanism for inserting text and form fields into the %registration, %user-acct, and %user-admin pages. This is useful if you want to add a custom field for your particular community. This is best illustrated by the %profile-module. The profile module is meant to be customized for your needs. Please download it and hack away until it does what you need.</p>";
+      $output .= "<h3><a id=\"userhook\">module_user()</a></h3><p>The <strong>_user()</strong> hook provides a mechanism for inserting text and form fields into the %registration, %user-acct, and %user-admin pages. This is useful if you want to add a custom field for your particular community. This is best illustrated by the %profile-module. The profile module is meant to be customized for your needs. Please download it and hack away until it does what you need.</p>";
 
       $output .= "<p>Consider this simpler example from a fictional recipe community web site called Julia's Kitchen. Julia customizes her Drupal powered site by creating a new file called <i>julia.module</i>. That file does the following:<ul>";
       $output .= "<li>new members must agree to Julia's Privacy Policy on the reg page.</li>";
