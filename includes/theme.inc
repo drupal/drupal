@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.177 2003/12/22 22:54:59 dries Exp $ */
+/* $Id: theme.inc,v 1.178 2004/01/02 16:24:28 dries Exp $ */
 
 /**
  * @file
@@ -32,7 +32,7 @@ function theme_help($section) {
 }
 
 /**
- * Initialized the theme system.
+ * Initialize the theme system by loading the theme.
  *
  * @return the name of the currently selected theme.
  */
@@ -40,16 +40,15 @@ function init_theme() {
   global $user;
 
   $themes = list_themes();
-  $name = $user->theme ? $user->theme : variable_get("theme_default", 0);
 
-  $theme->path = "";
-  $theme->name = "";
+  /*
+  ** Only select the user selected theme if it is availible in the
+  ** list of enabled themes.
+  */
 
-  if (is_object($themes[$name])) {
-    include_once($themes[$name]->filename);
-    $theme->path = dirname($themes[$name]->filename);
-    $theme->name = $name;
-  }
+  $theme = $themes[$user->theme] ? $user->theme : variable_get("theme_default", 0);
+
+  include_once($themes[$theme]->filename);
 
   return $theme;
 }
@@ -97,8 +96,8 @@ function theme() {
   $args = func_get_args();
   $function = array_shift($args);
 
-  if (($theme->name != "") && (function_exists($theme->name ."_". $function))) {
-    return call_user_func_array($theme->name ."_". $function, $args);
+  if (($theme != "") && (function_exists($theme ."_". $function))) {
+    return call_user_func_array($theme ."_". $function, $args);
   }
   elseif (function_exists("theme_". $function)){
     return call_user_func_array("theme_". $function, $args);
@@ -112,7 +111,10 @@ function theme() {
  */
 function path_to_theme() {
   global $theme;
-  return $theme->path;
+
+  $themes = list_themes();
+
+  return dirname($themes[$theme]->filename);
 }
 
 /**
