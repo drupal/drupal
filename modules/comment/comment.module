@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.126 2003/05/13 18:36:35 dries Exp $
+// $Id: comment.module,v 1.127 2003/05/18 07:01:37 dries Exp $
 
 $GLOBALS["cmodes"] = array(1 => t("Flat list - collapsed"), 2 => t("Flat list - expanded"), 3 => t("Threaded list - collapsed"), 4 => t("Threaded list - expanded"));
 $GLOBALS["corder"] = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"));
@@ -1033,7 +1033,7 @@ function comment_admin() {
           $status = $comment_settings["status"];
           $comment_page = $comment_settings["comment_page"];
         }
-        print comment_admin_overview(0, $comment_page);
+        print comment_admin_overview(0);
         break;
       case t("Submit"):
         print status(comment_save(check_query(arg(3)), $edit));
@@ -1041,10 +1041,15 @@ function comment_admin() {
           $status = $comment_settings["status"];
           $comment_page = $comment_settings["comment_page"];
         }
-        print comment_admin_overview(0, $comment_page);
+        print comment_admin_overview(0);
         break;
       default:
-        print comment_admin_overview(arg(2), $comment_page);
+        if (arg(2) == 1) {
+          print comment_admin_overview(1);
+        }
+        else {
+          print comment_admin_overview(0);
+        }
     }
   }
   else {
