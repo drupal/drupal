@@ -465,7 +465,7 @@ function comment_thread_max($comments, $threshold, $pid = 0, $level = 0) {
 
 }
 
-function comment_render($nid, $cid) {
+function comment_render($nid, $cid = 0) {
   global $user, $theme, $mode, $order, $threshold;
 
   if (user_access("access comments")) {
@@ -501,7 +501,7 @@ function comment_render($nid, $cid) {
 
     $theme->box(t("Control panel"), $theme->comment_controls($threshold, $mode, $order));
 
-    if (isset($cid)) {
+    if ($cid) {
       $result = db_query("SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.cid = '$cid' GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name");
       if ($comment = db_fetch_object($result)) {
         comment_view($comment, comment_links($comment));
@@ -538,7 +538,7 @@ function comment_render($nid, $cid) {
       }
 
       if ($comments) {
-        if (isset($cid)) {
+        if ($cid) {
           comment_thread_min($comments, $threshold, $cid, 1);
         }
         else {
@@ -556,7 +556,7 @@ function comment_render($nid, $cid) {
           comment_thread_max($comments, $threshold, $cid, 1);
         }
         else {
-          comment_thread_max($comments, $threshold, (isset($cid) ? $cid : 0), isset($cid));
+          comment_thread_max($comments, $threshold, 0, 0);
         }
       }
     }
