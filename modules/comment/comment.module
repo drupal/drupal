@@ -2,95 +2,83 @@
 // $Id$
 
 /**
+ * @file
+ *
+ * Enables user to comment on published content.
+ *
+ * When enabled, the Drupal comment module creates a discussion
+ * board for each Drupal node. Users can post comments to discuss
+ * a forum topic, weblog post, story, collaborative book page, etc.
+ */
+
+/**
  * Implementation of hook_help().
  */
-function comment_help($section) {
+function comment_help($section = "admin/help#comment") {
   switch ($section) {
     case 'admin/help#comment':
       return t("
-      <p>When enabled, the Drupal comment module creates a discussion board for each Drupal node. Users can post comments to discuss a forum topic, weblog post, collaborative book page, etc.</p>
+      <p>When enabled, the Drupal comment module creates a discussion board for each Drupal node. Users can post comments to discuss a forum topic, weblog post, story, collaborative book page, etc. An administrator can give comment permissions to user groups, and users can (optionally) edit their last comment, assuming no others have been posted since.</p>
+
       <h3>User control of comment display</h3>
       <p>Attached to each comment board is a control panel for customizing the way that comments are displayed. Users can control the chronological ordering of posts (newest or oldest first) and the number of posts to display on each page. Additional settings include:</p>
-      <ul>
-      <li><strong>Threaded</strong> -- Displays the posts grouped according to conversations and subconversations, much like the subject view of an e-mail client.</li>
-      <li><strong>Flat</strong> --  Displays the posts in chronological order, in the order in which they are posted.</li>
-      <li><strong>Expanded</strong> -- Displays the title and text for each post.</li>
-      <li><strong>Collapsed</strong> -- Displays only the title for each post.</li>
-      </ul>
-      <p>When a user chooses <em>save settings</em>, the comments are then redisplayed using the user's new choices. Administrators can set the default settings for the comment control panel, along with other comment defaults, in <a href=\"%comment-config\">administer &raquo; comments &raquo; configure</a>.</p>
-      <p>NOTE: When comment moderation is enabled, users will have another control panel option to control thresholds (see below).</p>
+      <ul><li><strong>Threaded</strong> &mdash; Displays the posts grouped according to conversations and subconversations.</li>
+      <li><strong>Flat</strong> &mdash;  Displays the posts in chronological order, with no threading whatsoever.</li>
+      <li><strong>Expanded</strong> &mdash; Displays the title and text for each post.</li>
+      <li><strong>Collapsed</strong> &mdash; Displays only the title for each post.</li></ul>
+      <p>When a user chooses <em>save settings</em>, the comments are then redisplayed using the user's new choices. Administrators can set the default settings for the comment control panel, along with other comment defaults, in <a href=\"%comment-config\">administer &raquo; comments &raquo; configure</a>. NOTE: When comment moderation is enabled, users will have another control panel option to control thresholds (see below).</p>
 
       <h3>Additional comment configurations</h3>
-      <p>Comments behave like other user submissions in Drupal. Filters, smileys and HTML that work in nodes will also work with content. To prevent a single user from spamming the web site with too many comments, administrators can set a comment throttle in <a href=\"%site-config\">administer &raquo; configuration</a> under <em>Submission settings</em>.</p>
-      <p>Administrators can control access to various comment module functions through <a href=\"%user-permissions\">administer &raquo; users &raquo; configure &raquo; permissions</a>. Know that in a new Drupal installation, all comment permissions are disabled by default. The choice of which permissions to grant to which roles (groups of users) is left up to the site administrator.</p>
-      <p>The following permissions can be enabled for anonymous users, authenticated users, or any other user roles that the administrator chooses to define:</p>
-      <ul>
-      <li><strong>Access comments</strong> -- Allows users to view comments.</li>
-      <li><strong>Administrate comments</strong> -- Allows users complete control over configuring, editing and deleting all comments on the site. Best reserved for <strong>very</strong> trusted users.</li>
-      <li><strong>Moderate comments</strong> -- Allows users to rate comment postings (see more on moderation below).</li>
-      <li><strong>Post comments</strong> -- Allows users to post comments into an administrator moderation queue. Administrators then post the comment to the site.</li>
-      <li><strong>Post comments without approval</strong> -- Allows users to directly post comments. This bypasses the administrator moderation queue.</li>
-      </ul>
+      <p>Comments behave like other user submissions in Drupal. Filters, smileys and HTML that work in nodes will also work with comments. Administrators can control access to various comment module functions through <a href=\"%user-permissions\">administer &raquo; users &raquo; configure &raquo; permissions</a>. Know that in a new Drupal installation, all comment permissions are disabled by default. The choice of which permissions to grant to which roles (groups of users) is left up to the site administrator. The following permissions:</p>
+      <ul><li><strong>Access comments</strong> &mdash; Allows users to view comments.</li>
+      <li><strong>Administrate comments</strong> &mdash; Allows users complete control over configuring, editing and deleting all comments.</li>
+      <li><strong>Moderate comments</strong> &mdash; Allows users to rate comment postings (see more on moderation below).</li>
+      <li><strong>Post comments</strong> &mdash; Allows users to post comments into an administrator moderation queue.</li>
+      <li><strong>Post comments without approval</strong> &mdash; Allows users to directly post comments, bypassing the moderation queue.</li></ul>
 
       <h3>Notification of new comments</h3>
-      <p>Drupal provides specific features to inform site members when new comments have been posted:</p>
-      <ul>
-      <li>On the home page, Drupal displays the total number of comments attached to each node, and tracks comments read by individual site members. Members which have logged in will see a notice accompanying nodes which contain comments that they have not read.</li>
-      <li>The <em>tracker</em> module, disabled by default, displays all the site's recent posts.  There is a link to the <a href=\"%tracker\">recent posts</a> page in the navigation block.  This page is a useful way to browse new or updated nodes and comments. Content which the user has not yet read is tagged with a red star (this graphic depends on the current theme). Visit the comment board for any node, and Drupal will display a red <em>\"new\"</em> label beside the text of unread comments.</li>
-      <li>Some administrators may want to <a href=\"%download-notify\">download</a>, install and configure the notify module. Users can then request that Drupal send them an e-mail when new comments are posted (the notify module requires that cron.php be configured properly).</li>
-      </ul>
+      <p>Drupal provides specific features to inform site members when new comments have been posted.</p>
+      <p>Drupal displays the total number of comments attached to each node, and tracks comments read by individual site members. Members which have logged in will see a notice accompanying nodes which contain comments they have not read. Some administrators may want to <a href=\"%download-notify\">download, install and configure the notify module</a>. Users can then request that Drupal send them an e-mail when new comments are posted (the notify module requires that cron.php be configured properly).</p>
+      <p>The <em>tracker</em> module, disabled by default, displays all the site's recent posts.  There is a link to the <a href=\"%tracker\">recent posts</a> page in the navigation block.  This page is a useful way to browse new or updated nodes and comments. Content which the user has not yet read is tagged with a red star (this graphic depends on the current theme). Visit the comment board for any node, and Drupal will display a red <em>\"new\"</em> label beside the text of unread comments.</p>
 
       <h3>Comment moderation</h3>
       <p>On sites with active commenting from users, the administrator can turn over comment moderation to the community. </p>
-      <p>With comment moderation, each comment is automatically assigned an initial rating. As users read comments, they can apply a vote which affects the comment rating. At the same time, users have an additional option in the control panel which allows them to set a threshold for the comments they wish to view. Those comments with ratings lower than the set threshold will not be shown.</p>
-      <p>To enable moderation, the administrator must grant <a href=\"%permission\">moderate comments</a> permissions. Then, a number of options in <a href=\"%comment-moderation\">administer &raquo; comments &raquo; configure</a> must be configured.</p>
+      <p>With comment moderation, each comment is automatically assigned an initial rating. As users read comments, they can apply a vote which affects the comment rating. At the same time, users have an additional option in the control panel which allows them to set a threshold for the comments they wish to view. Those comments with ratings lower than the set threshold will not be shown. To enable moderation, the administrator must grant <a href=\"%user-permissions\">moderate comments</a> permissions. Then, a number of options in <a href=\"%comment-config\">administer &raquo; comments &raquo; configure</a> must be configured.</p>
 
       <h4>Moderation votes</h4>
       <p>The first step is to create moderation labels which allow users to rate a comment.  Go to <a href=\"%comment-votes\">administer &raquo; comments &raquo; configure &raquo; moderation votes</a>. In the <em>vote</em> field, enter the textual labels which users will see when casting their votes. Some examples are</p>
-      <ul>
-      <li>Excellent +3</li>
-      <li>Insightful +2</li>
-      <li>Caught My Attention +1</li>
-      <li>Useful +1</li>
-      <li>Redundant -1</li>
-      <li>Flame -3</li>
-      </ul>
-      <p>So that users know how their votes affect the comment, these examples include the vote value as part of the label, although that is optional.</p>
-      <p>Using the weight option, you can control the order in which the votes appear to users. Setting the weight heavier (positive numbers) will make the vote label appear at the bottom of the list. Lighter (a negative number) will push it to the top. To encourage positive voting, a useful order might be higher values, positive votes, at the top, with negative votes at the bottom.</p>
+      <ul><li>Excellent +3</li><li>Insightful +2</li><li>Useful +1</li><li>Redundant -1</li><li>Flame -3</li></ul>
+      <p>So that users know how their votes affect the comment, these examples include the vote value as part of the label, although that is optional. Using the weight option, you can control the order in which the votes appear to users. Setting the weight heavier (positive numbers) will make the vote label appear at the bottom of the list. Lighter (a negative number) will push it to the top. To encourage positive voting, a useful order might be higher values, positive votes, at the top, with negative votes at the bottom.</p>
 
       <h4>Moderator vote/values matrix</h4>
+      <p>Next go to <a href=\"%comment-matrix\">administer &raquo; comments &raquo; configure &raquo; moderation matrix</a>. Enter the values for the vote labels for each permission role in the vote matrix. The values entered here will be used to create the rating for each comment. NOTE: Comment ratings are calculated by averaging user votes with the initial rating.</p>
 
-      <p>Next go to <a href=\"%comment-matrix\">administer &raquo; comments &raquo; configure &raquo; moderation matrix</a>. Enter the values for the vote labels for each permission role in the vote matrix. The values entered here will be used to create the rating for each comment.</p>
-      <p>NOTE: Comment ratings are calculated by averaging user votes with the initial rating.</p>
       <h4>Creating comment thresholds</h4>
       <p>In <a href=\"%comment-thresholds\">administer &raquo; comments &raquo; configure &raquo; moderation thresholds</a>, you'll have to create some comment thresholds to make the comment rating system useful. When comment moderation is enabled and the thresholds are created, users will find another comment control panel option for selecting their thresholds. They'll use the thresholds you enter here to filter out comments with low ratings. Consequently, you'll probably want to create more than one threshold to give users some flexibility in filtering comments.</p>
-      <p>When creating the thresholds, note that the <em>Minimum score</em> is asking you for the lowest rating that a comment can have in order to be displayed.</p>
-      <p>To see a common example of how thresholds work, you might visit <a href=\"%slashdot\">Slashdot</a> and view one of their comment boards associated with a story. You can reset the thresholds in their comment control panel.</p>
+      <p>When creating the thresholds, note that the <em>Minimum score</em> is asking you for the lowest rating that a comment can have in order to be displayed. To see a common example of how thresholds work, you might visit <a href=\"%slashdot\">Slashdot</a> and view one of their comment boards associated with a story. You can reset the thresholds in their comment control panel.</p>
 
       <h4>Initial comment scores</h4>
-      <p>Finally, you may want to enter some <em>initial comment scores</em>. In <a href=\"%comment-initial\">administer &raquo; comments &raquo; configure &raquo; moderation roles</a> you can assign a beginning rating for all comments posted by a particular permission role. If you do not assign any initial scores, Drupal will assign a rating of <strong>0</strong> as the default.</p>", array('%comment-config' => url('admin/comment/configure'), '%site-config' => url('admin'), '%user-permissions' => url('admin/user/configure/permission'), '%tracker' => url('tracker'), '%download-notify' => 'http://drupal.org/project/releases', '%permission' => url('admin/user/configure/permission'), '%comment-moderation' => url('admin/comment/configure'), '%comment-votes' => url('admin/comment/configure/votes'), '%comment-matrix' => url('admin/comment/configure/matrix'), '%comment-thresholds' => url('admin/comment/configure/thresholds'), '%slashdot' => ' http://slashdot.org', '%comment-initial' => url('admin/comment/configure/roles')));
-    case 'admin/modules#description':
-      return t('Enables user to comment on content (nodes).');
-    case 'admin/comment/configure':
-    case 'admin/comment/configure/settings':
-      return t("Comments can be attached to any node. Below are the settings for comments. The display comes in two types, a \"flat list\" where everything is flush to the left side, and comments come in chronological order, and a \"threaded list\" where comments to other comments are placed immediately below and slightly indented forming an outline. They also come in two styles: \"expanded\", where you see both the title and the contents, and \"collapsed\" where you only see the title. To set the default threshold you first have to set up thresholds in the <a href=\"%threshold\">administer &raquo; comments &raquo; configure &raquo; moderation thresholds</a> area. Preview comment forces a user to look at their comment by clicking on a \"Preview\" button before they can actually add the comment. If \"New comment form\" is enabled then at the bottom of every comment page there will be a form too add a new comment.", array('%threshold' => url('admin/comment/configure/thresholds')));
+      <p>Finally, you may want to enter some <em>initial comment scores</em>. In <a href=\"%comment-initial\">administer &raquo; comments &raquo; configure &raquo; moderation roles</a> you can assign a beginning rating for all comments posted by a particular permission role. If you do not assign any initial scores, Drupal will assign a rating of <strong>0</strong> as the default.</p>", array('%comment-config' => url('admin/comment/configure'), '%user-permissions' => url('admin/user/configure/permission'), '%tracker' => url('tracker'), '%download-notify' => 'http://drupal.org/project/releases', '%comment-votes' => url('admin/comment/configure/votes'), '%comment-matrix' => url('admin/comment/configure/matrix'), '%comment-thresholds' => url('admin/comment/configure/thresholds'), '%slashdot' => ' http://slashdot.org', '%comment-initial' => url('admin/comment/configure/roles')));
     case 'admin/comment':
     case 'admin/comment/new':
-      return t("Below is a list of the latest comments posted your site. Click on a subject to see the comment, the author's name to edit the author's user information , \"edit comment\" to edit the comment, and \"delete comment\" to remove the comment.");
+      return t("Below is a list of the latest comments posted your site. Click on a subject to see the comment, the author's name to edit the author's user information , \"edit comment\" to modify the text, and \"delete comment\" to remove their submission.");
     case 'admin/comment/approval':
-      return t("Below is a list of the comments posted to your site that need approval. To approve a comment click on \"edit comment\" and then change its \"moderation status\" to Approved.<br />Click on a subject to see the comment, the author's name to edit the author's user information, \"edit comment\" to edit the comment, and \"delete comment\" to remove the comment.");
-//    case 'admin/settings/comment':
-//      return t("If you get a lot of comments, you can enable comment moderation. Once moderation is enabled, users can vote on a comment based on dropdown menus. <a href=\"%votes\">Votes</a> sets up the names in the dropdown menu, and the order in which they appear, using weights. <a href=\"%matrix\">Matrix</a> sets up the value of each user's vote, and <a href=\"%threshhold\">threshhold</a> sets up the levels at which a comment will be displayed.", array('%votes' => url('admin/comment/configure/votes'), '%matrix' => url('admin/comment/configure/matrix'), '%threshhold' => url('admin/comment/configure/thresholds')));
+      return t("Below is a list of the comments posted to your site that need approval. To approve a comment, click on \"edit comment\" and then change its \"moderation status\" to Approved. Click on a subject to see the comment, the author's name to edit the author's user information, \"edit comment\" to modify the text, and \"delete comment\" to remove their submission.");
+    case 'admin/comment/configure':
+    case 'admin/comment/configure/settings':
+      return t("Comments can be attached to any node, and their settings are below. The display comes in two types: a \"flat list\" where everything is flush to the left side, and comments come in chronological order, and a \"threaded list\" where replies to other comments are placed immediately below and slightly indented, forming an outline. They also come in two styles: \"expanded\", where you see both the title and the contents, and \"collapsed\" where you only see the title. Preview comment forces a user to look at their comment by clicking on a \"Preview\" button before they can actually add the comment.");
     case 'admin/comment/configure/matrix':
-      return t("Here is where you assign a value to each item in the dropdown menu. This value is added to the vote total, which is then divided by the number of users who have voted and rounded off to the nearest integer.<br />Notes:<ul><li>In order to use comment moderation, every text box on this page should be populated.</li><li>You must assign the \"moderate comments\" permission to at least one role in order to use this page.</li><li>Every box not filled in will have a value of zero, which will have the effect of lowering a comments over all score.</li></ul>");
-    case 'admin/comment/configure/thresholds':
-      return t("Here you can setup the name and minimum \"cut off\" score to help your users hide comments that they don't want too see. These thresholds appear in the Comment Control Panel. Click \"edit\" to edit the values of an already existing threshold. To delete a threshold click on \"edit\".");
-    case 'admin/comment/configure/votes':
-      return t('Here is where you set up the name of each type of vote. "Weight" lets you set the order of the drop down menu. Click "edit" to edit a current vote weight.<br />Notes: <ul><li>you can have more than one type with the same name. The system does not protect you from this.</li><li>To delete a name/weight combination go to the "edit" area.</li></ul>');
+      return t("Here you assign a value to each item in the comment moderation dropdown menu. This value is added to the vote total, which is then divided by the number of users who have voted and rounded off to the nearest integer. <ul><li>In order to use comment moderation, every text box on this page should be populated.</li><li>You must assign the \"moderate comments\" permission to at least one role in order to use this page.</li><li>Every box not filled in will have a value of zero, which will have the effect of lowering a comments overall score.</li></ul>");
     case 'admin/comment/configure/roles':
-      return t("Here you can setup the initial vote value of a comment posted by each user role. This value is used before any other users vote on the comment.<br />Note: Blank entries are valued at zero");
+      return t("You can setup the initial vote value of a comment posted by each user role using these forms. This value is used before any other users vote on the comment. Blank entries are valued at zero.");
+    case 'admin/comment/configure/thresholds':
+      return t("Use these forms to setup the name and minimum \"cut off\" score to help your users hide comments they don't want to see. These thresholds appear in the user's comment control panel. Click \"edit threshold\" to modify the values of an already existing configuration. To delete a setting, \"edit\" it first, and then choose \"delete threshold\".");
+    case 'admin/comment/configure/votes':
+      return t("Create and control the possible comment moderation votes here. \"Weight\" lets you set the order of the drop down menu. Click \"edit\" to edit a current vote weight. To delete a name/weight combination go to the \"edit\" area. To delete a setting, \"edit\" it first, and then choose \"delete vote\".");
     case 'admin/comment/search':
-      return t("Enter a simple pattern ( '*' maybe used as a wildcard match) to search for a comment.  For example, one may search for 'br' and Drupal might return 'bread brakers', 'our daily bread' and 'brenda'.");
+      return t("Enter a simple pattern ('*' may be used as a wildcard match) to search for a comment.  For example, one may search for 'br' and Drupal might return 'bread brakers', 'our daily bread' and 'brenda'.");
+    case 'admin/modules#description':
+      return t('Enables user to comment on published content.');
    }
 }
 
@@ -99,56 +87,51 @@ function comment_help($section) {
  */
 function comment_menu() {
   $items = array();
-  $access = user_access('administer comments');
 
+  $access = user_access('administer comments');
   $items[] = array('path' => 'admin/comment', 'title' => t('comments'),
-    'callback' => 'comment_admin', 'access' => $access);
+    'callback' => 'comment_admin_overview', 'access' => $access);
   $items[] = array('path' => 'admin/comment/edit', 'title' => t('edit comment'),
-    'callback' => 'comment_admin', 'access' => $access,
-    'type' => MENU_CALLBACK);
+    'callback' => 'comment_admin_edit', 'access' => $access, 'type' => MENU_CALLBACK);
   $items[] = array('path' => 'admin/comment/delete', 'title' => t('delete comment'),
-    'callback' => 'comment_admin', 'access' => $access,
-    'type' => MENU_CALLBACK);
+    'callback' => 'comment_delete', 'access' => $access, 'type' => MENU_CALLBACK);
 
   // Tabs:
   $items[] = array('path' => 'admin/comment/configure', 'title' => t('configure'),
-    'callback' => 'comment_configure', 'access' => $access,
-    'type' => MENU_LOCAL_TASK);
+    'callback' => 'comment_configure', 'access' => $access, 'type' => MENU_LOCAL_TASK);
   if (module_exist('search')) {
     $items[] = array('path' => 'admin/comment/search', 'title' => t('search'),
-      'callback' => 'comment_admin', 'access' => $access,
-      'type' => MENU_LOCAL_TASK);
+      'callback' => 'comment_search', 'access' => $access, 'type' => MENU_LOCAL_TASK);
   }
 
   // Subtabs:
   $items[] = array('path' => 'admin/comment/new', 'title' => t('new comments'),
-    'callback' => 'comment_admin', 'access' => $access,
-    'type' => MENU_LOCAL_SUBTASK);
+    'callback' => 'comment_admin_overview', 'access' => $access, 'type' => MENU_LOCAL_SUBTASK);
   $items[] = array('path' => 'admin/comment/approval', 'title' => t('approval queue'),
-    'callback' => 'comment_admin', 'access' => $access,
-    'type' => MENU_LOCAL_SUBTASK);
+    'callback' => 'comment_admin_overview', 'access' => $access, 'type' => MENU_LOCAL_SUBTASK);
+
   $items[] = array('path' => 'admin/comment/configure/settings', 'title' => t('settings'),
     'callback' => 'comment_configure', 'access' => $access,
-    'type' => MENU_LOCAL_SUBTASK);
+    'type' => MENU_LOCAL_SUBTASK, 'weight' => -1);
+
   $access = user_access('administer comments') && user_access('administer moderation');
   $items[] = array('path' => 'admin/comment/configure/matrix', 'title' => t('moderation matrix'),
-    'callback' => 'comment_matrix_settings', 'access' => $access,
-    'type' => MENU_LOCAL_SUBTASK);
+    'callback' => 'comment_matrix_settings', 'access' => $access, 'type' => MENU_LOCAL_SUBTASK);
   $items[] = array('path' => 'admin/comment/configure/thresholds', 'title' => t('moderation thresholds'),
-    'callback' => 'comment_threshold_settings', 'access' => $access,
-    'type' => MENU_LOCAL_SUBTASK);
-  $items[] = array('path' => 'admin/comment/configure/votes', 'title' => t('moderation votes'),
-    'callback' => 'comment_vote_settings', 'access' => $access,
-    'type' => MENU_LOCAL_SUBTASK,
-    'weight' => 6);
+    'callback' => 'comment_threshold_settings', 'access' => $access, 'type' => MENU_LOCAL_SUBTASK);
   $items[] = array('path' => 'admin/comment/configure/roles', 'title' => t('moderation roles'),
-    'callback' => 'comment_role_settings', 'access' => $access,
-    'type' => MENU_LOCAL_SUBTASK,
-    'weight' => 6);
+    'callback' => 'comment_role_settings', 'access' => $access, 'type' => MENU_LOCAL_SUBTASK);
+  $items[] = array('path' => 'admin/comment/configure/votes', 'title' => t('moderation votes'),
+    'callback' => 'comment_vote_settings', 'access' => $access,'type' => MENU_LOCAL_SUBTASK);
 
-  $items[] = array('path' => 'comment', 'title' => t('comments'),
-    'callback' => 'comment_page', 'access' => $access,
-    'type' => MENU_CALLBACK);
+  $access = user_access('post comments');
+  $items[] = array('path' => 'comment/reply', 'title' => t('reply to comment'),
+    'callback' => 'comment_reply', 'access' => $access, 'type' => MENU_CALLBACK);
+  $items[] = array('path' => 'comment/edit', 'title' => t('edit your comment'),
+    'callback' => 'comment_edit', 'access' => $access, 'type' => MENU_CALLBACK);
+
+  $items[] = array('path' => 'comment', 'title' => t('reply to comment'),
+    'callback' => 'comment_save_settings', 'access' => 1, 'type' => MENU_CALLBACK);
 
   return $items;
 }
@@ -301,10 +284,16 @@ function comment_node_link($node) {
  * calling do_search(). The "nid" identifier in the select is used to
  * present search results in the context of their associated node.
  */
-function comment_search($keys) {
-  $find = do_search(array("keys" => $keys, "type" => 'comment', "select" => "select s.lno as lno, c.nid as nid, c.subject as title, c.timestamp as created, u.uid as uid, u.name as name, s.count as count FROM {search_index} s, {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE s.lno = c.cid AND s.type = 'comment' AND c.status = 0 AND s.word like '%'"));
-
-  return array(t('Matching comments ranked in order of relevance'), $find);
+function comment_search($keys = NULL) {
+  if (!$keys) {
+    // if there are no keys, we've been called from our menu callback,
+    // so we hook into the search.module to pass the $keys back to us.
+    print theme('page', search_type('comment', url('admin/comment/search'), $_POST['keys']));
+  }
+  else if ($keys) {
+    $find = do_search(array("keys" => $keys, "type" => 'comment', "select" => "select s.lno as lno, c.nid as nid, c.subject as title, c.timestamp as created, u.uid as uid, u.name as name, s.count as count FROM {search_index} s, {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE s.lno = c.cid AND s.type = 'comment' AND c.status = 0 AND s.word like '%'"));
+    return array(t('Matching comments ranked in order of relevance'), $find);
+  }
 }
 
 /**
@@ -334,13 +323,6 @@ function comment_user($type, $edit, &$user, $category = NULL) {
 }
 
 /**
- * Menu callback; prints the comment-specific help text from admin/help.
- */
-function comment_help_page() {
-  print theme('page', comment_help('admin/help#comment'));
-}
-
-/**
  * Menu callback; presents the comment settings page.
  */
 function comment_configure() {
@@ -354,7 +336,7 @@ function comment_configure() {
   $group .= form_radios(t('Comment controls'), 'comment_controls', variable_get('comment_controls', 0), array(t('Display above the comments'), t('Display below the comments'), t('Display above and below the comments'), t('Do not display')), t('Position of the comment controls box.  The comment controls let the user change the default display mode and display order of comments.'));
   $output = form_group(t('Comment viewing options'), $group);
 
-  $group  = form_radios(t('Anonymous poster settings'), 'comment_anonymous', variable_get('comment_anonymous', 0), array(t('Anonymous posters may not enter their contact information'), t('Anonymous posters may leave their contact information'), t('Anonymous posters must leave their contact information')), t('This feature is only useful if you allow anonymous users to post comments.  See the <a href="%url">permissions page</a>.'), array('%url' => url('user/admin/permission')));
+  $group  = form_radios(t('Anonymous poster settings'), 'comment_anonymous', variable_get('comment_anonymous', 0), array(t('Anonymous posters may not enter their contact information'), t('Anonymous posters may leave their contact information'), t('Anonymous posters must leave their contact information')), t('This feature is only useful if you allow anonymous users to post comments.  See the <a href="%url">permissions page</a>.', array('%url' => url('user/admin/permission'))));
   $group .= form_radios(t('Comment subject field'), 'comment_subject_field', variable_get('comment_subject_field', 1), array(t('Disabled'), t('Enabled')), t('Must users provide a subject for their comments?'));
   $group .= form_radios(t('Preview comment'), 'comment_preview', variable_get('comment_preview', 1), array(t('Optional'), t('Required')), t('Must users preview comments before submitting?'));
   $group .= form_radios(t('Location of comment submission form'), 'comment_form_location', variable_get('comment_form_location', 0), array(t('Display on separate page'), t('Display below post or comments')), t('The location of the comment submission form.'));
@@ -391,7 +373,7 @@ function comment_access($op, $comment) {
 }
 
 function comment_node_url() {
-  return arg(0) .'/'. arg(1) .'/'. arg(2);
+  return arg(0) .'/'. arg(1);
 }
 
 function comment_edit($cid) {
@@ -401,20 +383,33 @@ function comment_edit($cid) {
   $comment = drupal_unpack($comment);
   $comment->name = $comment->registered_name ? $comment->registered_name : $comment->name;
   if (comment_access('edit', $comment)) {
-    return comment_preview(object2array($comment));
+    print theme('page', comment_preview(object2array($comment)), t('Edit comment'));
   }
 }
 
-function comment_reply($pid, $nid) {
+function comment_reply($nid, $pid = NULL) {
 
   $output = '';
 
+  // are we posting or previewing a reply?
+  if ($_POST['op'] == t('Post comment')) {
+    $edit = $_POST['edit'];
+    comment_validate_form($edit);
+    print theme('page', comment_post($edit), t('Post comment'));
+    return;
+  }
+  else if ($_POST['op'] == t('Preview comment')) {
+    $edit = $_POST['edit'];
+    comment_validate_form($edit);
+    print theme('page', comment_preview($edit), t('Preview comment'));
+
+  }
+
+  // or are we merely showing the form?
   if (user_access('access comments')) {
 
-    /*
-    ** Show comment
-    */
-
+    // if this is a reply to another comment, show that comment first
+    // else, we'll just show the user the node they're commenting on.
     if ($pid) {
       $comment = db_fetch_object(db_query('SELECT c.*, u.uid, u.name AS registered_name, u.picture, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0', $pid));
       $comment = drupal_unpack($comment);
@@ -426,10 +421,7 @@ function comment_reply($pid, $nid) {
       $pid = 0;
     }
 
-    /*
-    ** If possible, show reply form
-    */
-
+    // should we show the reply box?
     if (node_comment_mode($nid) != 2) {
       $output .= theme('box', t('Reply'), t("This discussion is closed: you can't post new comments."));
     }
@@ -444,7 +436,7 @@ function comment_reply($pid, $nid) {
     $output .= theme('box', t('Reply'), t('You are not authorized to view comments.'));
   }
 
-  return $output;
+  print theme('page', $output, t('Add new comment'));
 }
 
 function comment_validate_form($edit) {
@@ -937,52 +929,19 @@ function comment_render($node, $cid = 0) {
   return $output;
 }
 
-/**
- * Menu callback; dispatches to the correct comment function.
- */
-function comment_page() {
-  $op = $_POST['op'];
-  $edit = $_POST['edit'];
+function comment_admin_edit($cid) {
 
-  if (empty($op)) {
-    $op = arg(1);
+  // comment edits need to be saved.
+  if ($_POST['op'] == t('Submit')) {
+    $edit = $_POST['edit'];
+    $output  = comment_save($edit['cid'], $edit);
+    $output .= comment_admin_overview();
+    print theme('page', $output);
+    return;
   }
 
-  switch ($op) {
-    case 'edit':
-      print theme('page', comment_edit(check_query(arg(2))), t('Edit comment'));;
-      break;
-    case t('Moderate comments'):
-    case t('Moderate comment'):
-      comment_moderate($edit);
-      drupal_goto('node/'. $edit['nid'] .'#comment');
-      break;
-    case 'reply':
-      print theme('page', comment_reply(check_query(arg(3)), check_query(arg(2))), t('Add new comment'));
-      break;
-    case t('Preview comment'):
-      comment_validate_form($edit);
-      print theme('page', comment_preview($edit), t('Preview comment'));
-      break;
-    case t('Post comment'):
-      comment_validate_form($edit);
-      print theme('page', comment_post($edit));
-      break;
-    case t('Save settings'):
-      $mode = $_POST['mode'];
-      $order = $_POST['order'];
-      $threshold = $_POST['threshold'];
-      $comments_per_page = $_POST['comments_per_page'];
-
-      comment_save_settings(check_query($mode), check_query($order), check_query($threshold), check_query($comments_per_page));
-      drupal_goto('node/'. $edit['nid'] .'#comment');
-      break;
-  }
-}
-
-function comment_admin_edit($id) {
-
-  $result = db_query('SELECT c.*, u.name AS registered_name, u.uid FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status != 2', $id);
+  // if we're not saving our changes above, we're editing it.
+  $result = db_query('SELECT c.*, u.name AS registered_name, u.uid FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status != 2', $cid);
   $comment = db_fetch_object($result);
   $comment->name = $comment->registered_name ? $comment->registered_name : $comment->name;
   $comment = drupal_unpack($comment);
@@ -992,40 +951,42 @@ function comment_admin_edit($id) {
     $form .= form_textfield(t('Subject'), 'subject', $comment->subject, 70, 128);
     $form .= form_textarea(t('Comment'), 'comment', $comment->comment, 70, 15, filter_tips_short());
     $form .= form_radios(t('Status'), 'status', $comment->status, array('published', 'not published'));
-    $form .= form_hidden('cid', $id);
+    $form .= form_hidden('cid', $cid);
     $form .= form_submit(t('Submit'));
-
-    return form($form);
+    print theme('page', form($form));
   }
 }
 
-function comment_delete($cid, $confirmed = 0) {
+function comment_delete($cid) {
   $comment = db_fetch_object(db_query('SELECT c.*, u.name AS registered_name, u.uid FROM {comments} c INNER JOIN {users} u ON u.uid = c.uid WHERE c.cid = %d', $cid));
   $comment->name = $comment->registered_name ? $comment->registered_name : $comment->name;
 
-  if ($comment->cid) {
-    if ($confirmed) {
-      drupal_set_message(t('the comment and all its replies have been deleted.'));
+  $output = '';
 
-      // Delete the comment and all of its replies.
-      _comment_delete_thread($comment);
+  // we'll only delete if the user has confirmed the
+  // deletion using the form in our else clause below.
+  if ($comment->cid && $_POST['op'] == t('Delete comment')) {
+    drupal_set_message(t('the comment and all its replies have been deleted.'));
 
-      // Clear the cache so an anonymous user can see his comment being added.
-      cache_clear_all();
-    }
-    else {
-      drupal_set_message(t('do you want to delete this comment and all its replies?'));
+    // Delete comment and its replies.
+    _comment_delete_thread($comment);
 
-      // Print a confirmation screen.
-      $output  = theme('comment', $comment);
-      $output .= form_submit(t('Delete comment'));
+    // Clear the cache so an anonymous user
+    // can see his comment being added.
+    cache_clear_all();
+  }
 
-      return form($output);
-    }
+  // Print a confirmation.
+  else if ($comment->cid) {
+    drupal_set_message(t('do you want to delete this comment and all its replies?'));
+    $output  = theme('comment', $comment);
+    $output .= form_submit(t('Delete comment'));
   }
   else {
     drupal_set_message(t('the comment no longer exists.'));
   }
+
+  print theme('page', form($output));
 }
 
 function comment_save($id, $edit) {
@@ -1065,27 +1026,26 @@ function comment_admin_overview() {
     $rows[] = array(array('data' => $pager, 'colspan' => 6));
   }
 
-  return theme('table', $header, $rows);
+  print theme('page', theme('table', $header, $rows));
 }
 
 /**
  * Menu callback; presents the moderation vote matrix.
  */
 function comment_matrix_settings() {
-  $edit = $_POST['edit'];
 
-  $output .= '<h3>Moderation vote/value matrix</h3>';
-
-  if ($edit) {
+  if ($edit = $_POST['edit']) {
     db_query('DELETE FROM {moderation_roles} ');
     foreach ($edit as $role_id => $votes) {
       foreach ($votes as $mid => $value) {
         $sql = "('$mid', '$role_id', '". ($value ? $value : 0) ."')";
-   db_query('INSERT INTO {moderation_roles} (mid, rid, value) VALUES '. $sql);
+        db_query('INSERT INTO {moderation_roles} (mid, rid, value) VALUES '. $sql);
       }
     }
     drupal_set_message(t('the vote values have been saved.'));
   }
+
+  $output .= '<h3>Moderation vote/value matrix</h3>';
 
   $result = db_query("SELECT r.rid, r.name FROM {role} r, {permission} p WHERE r.rid = p.rid AND p.perm LIKE '%moderate comments%'");
   $role_names = array();
@@ -1104,12 +1064,16 @@ function comment_matrix_settings() {
   while ($vote = db_fetch_object($result)) {
     $row = array($vote->vote);
     foreach (array_keys($role_names) as $rid) {
-      $row[] = array('data' => form_textfield(NULL, "$rid][$vote->mid", $mod_roles[$rid][$vote->mid], 4, 3), 'align' => 'center');
+      $row[] = array('data' => form_textfield(NULL, "$rid][$vote->mid", $mod_roles[$rid][$vote->mid], 4, 3));
     }
     $rows[] = $row;
   }
+  if (!$rows) {
+    $rows[] = array(array('data' => t('No votes have been defined.'), 'colspan' => '5'));
+  }
+
   $output .= theme('table', $header, $rows);
-  $output .= '<br />'. form_submit(t('Submit votes'));
+  if ($rows) { $output .= '<br />'. form_submit(t('Submit votes')); }
 
   print theme('page', form($output));
 }
@@ -1147,39 +1111,41 @@ function comment_role_settings() {
 /**
  * Menu callback; displays page for assigning names to vote values.
  */
-function comment_vote_settings() {
-  $op = $_POST['op'];
+function comment_vote_settings($mid = 0) {
+  $op   = $_POST['op'];
   $edit = $_POST['edit'];
-
-  $mid = arg(4);
 
   if ($op == t('Save vote')) {
     db_query("UPDATE {moderation_votes} SET vote = '%s', weight = %d WHERE mid = %d", $edit['vote'], $edit['weight'], $mid);
-    $mid = 0;
+    $mid = 0; // zero it out so we return to the overview.
     drupal_set_message(t('the vote has been saved.'));
   }
   else if ($op == t('Delete vote')) {
     db_query('DELETE FROM {moderation_votes} WHERE mid = %d', $mid);
     db_query('DELETE FROM {moderation_roles} WHERE mid = %d', $mid);
-    $mid = 0;
+    $mid = 0; // zero it out so we return to the overview.
     drupal_set_message(t('the vote has been deleted.'));
   }
   else if ($op == t('Add new vote')) {
     db_query("INSERT INTO {moderation_votes} (vote, weight) VALUES ('%s', %d)", $edit['vote'], $edit['weight']);
-    $mid = 0;
+    $mid = 0; // zero it out so we return to the overview.
     drupal_set_message(t('the vote has been added.'));
   }
 
   $output .= '<h3>'. t('Moderation votes overview') .'</h3>';
-  $header = array(t('votes'), t('weight'), t('operations'));
 
+  // load up and show any vote types previously defined.
+  $header = array(t('votes'), t('weight'), t('operations'));
   $result = db_query('SELECT mid, vote, weight FROM {moderation_votes} ORDER BY weight');
   while ($vote = db_fetch_object($result)) {
-    $rows[] = array($vote->vote, array('data' => $vote->weight, 'align' => 'center'), array('data' => l(t('edit'), "admin/settings/comment/votes/$vote->mid"), 'align' => 'center'));
+    $rows[] = array($vote->vote, array('data' => $vote->weight), array('data' => l(t('edit'), "admin/comment/configure/votes/$vote->mid")));
+  }
+  if (!$rows) {
+    $rows[] = array(array('data' => t('No vote types have been defined.'), 'colspan' => '3'));
   }
   $output .= theme('table', $header, $rows);
 
-  if ($mid) {
+  if ($mid) { // if we're not saving, deleting, or adding, we must be editing, so prefill the form fields.
     $vote = db_fetch_object(db_query('SELECT vote, weight FROM {moderation_votes} WHERE mid = %d', $mid));
   }
 
@@ -1194,50 +1160,51 @@ function comment_vote_settings() {
     $form .= form_submit(t('Add new vote'));
   }
 
-  print theme('page', form($form));
+  print theme('page', $output . form($form));
 }
 
 /**
  * Menu callback; displays settings for thresholds at which comments are displayed.
  */
-function comment_threshold_settings() {
-  $op = $_POST['op'];
+function comment_threshold_settings($fid = 0) {
+  $op   = $_POST['op'];
   $edit = $_POST['edit'];
-
-  $fid = arg(4);
 
   if ($op == t('Save threshold')) {
     db_query("UPDATE {moderation_filters} SET filter = '%s', minimum = %d WHERE fid = %d", $edit['filter'], $edit['minimum'], $fid);
-    $fid = 0;
+    $fid = 0; // zero it out so we return to the overview.
     drupal_set_message(t('the threshold has been saved.'));
   }
   else if ($op == t('Delete threshold')) {
     db_query('DELETE FROM {moderation_filters} WHERE fid = %d', $fid);
-    $fid = 0;
+    $fid = 0; // zero it out so we return to the overview.
     drupal_set_message(t('the threshold has been deleted.'));
   }
   else if ($op == t('Add new threshold')) {
     db_query("INSERT INTO {moderation_filters} (filter, minimum) VALUES ('%s', %d)", $edit['filter'], $edit['minimum']);
-    $fid = 0;
+    $fid = 0; // zero it out so we return to the overview.
     drupal_set_message(t('the threshold has been added.'));
   }
 
   $output .= '<h3>Comment threshold overview</h3>';
 
+  // load up and show any thresholds previously defined.
   $header = array(t('name'), t('minimum score'), t('operations'));
-
   $result = db_query('SELECT fid, filter, minimum FROM {moderation_filters} ORDER BY minimum');
   while ($filter = db_fetch_object($result)) {
-    $rows[] = array($filter->filter, array('data' => $filter->minimum, 'align' => 'center'), array('data' => l(t('edit'), "admin/settings/comment/thresholds/$filter->fid"), 'align' => 'center'));
+    $rows[] = array($filter->filter, array('data' => $filter->minimum), array('data' => l(t('edit'), "admin/comment/configure/thresholds/$filter->fid")));
+  }
+  if (!$rows) {
+    $rows[] = array(array('data' => t('No thresholds have been defined.'), 'colspan' => '3'));
   }
   $output .= theme('table', $header, $rows);
 
-  if ($fid) {
+  if ($fid) { // if we're not saving, deleting, or adding, we must be editing, so prefill the form fields.
     $filter = db_fetch_object(db_query('SELECT filter, fid, minimum FROM {moderation_filters} WHERE fid = %d', $fid));
   }
 
   $output .= '<br /><h3>'. (isset($fid) ? 'Edit' : 'Add new') .' threshold</h3>';
-  $form .= form_textfield(t('Threshold name'), 'filter', $filter->filter, 32, 64, t('The name of this threshold.  Example: "good comments", "+1 comments", "everything".'));
+  $form .= form_textfield(t('Threshold name'), 'filter', $filter->filter, 32, 64, t('The name of this threshold. Example: "good comments", "+1 comments", "everything".'));
   $form .= form_textfield(t('Minimum score'), 'minimum', $filter->minimum, 32, 64, t('Show all comments whose score is larger or equal to the provided minimal score. Range: -127 +128'));
   if ($fid) {
     $form .= form_submit(t('Save threshold'));
@@ -1247,38 +1214,7 @@ function comment_threshold_settings() {
     $form .= form_submit(t('Add new threshold'));
   }
 
-  print theme('page', form($form));
-}
-
-function comment_admin() {
-  $op = $_POST['op'];
-  $edit = $_POST['edit'];
-
-  if (empty($op)) {
-    $op = arg(2);
-  }
-
-  switch ($op) {
-    case 'edit':
-      $output = comment_admin_edit(arg(3));
-      break;
-    case 'search':
-      $output = search_type('comment', url('admin/comment/search'), $_POST['keys']);
-      break;
-    case 'delete':
-      $output = comment_delete(arg(3), 0);
-      break;
-    case t('Delete comment'):
-      $output = comment_delete(arg(3), 1);
-      break;
-    case t('Submit'):
-      $output  = comment_save(check_query(arg(3)), $edit);
-      $output .= comment_admin_overview();
-      break;
-    default:
-      $output = comment_admin_overview();
-  }
-  print theme('page', $output);
+  print theme('page', $output . form($form));
 }
 
 /**
@@ -1340,10 +1276,22 @@ function comment_moderate() {
   }
 }
 
-function comment_save_settings($mode, $order, $threshold, $comments_per_page) {
-  global $user;
+function comment_save_settings() {
+  $mode              = check_query($_POST['mode']);
+  $order             = check_query($_POST['order']);
+  $threshold         = check_query($_POST['threshold']);
+  $comments_per_page = check_query($_POST['comments_per_page']);
 
-  if ($user->uid) {
+  global $user;
+  $edit = $_POST['edit'];
+
+  // this functions perform doubletime: it either saves the
+  // user's comment viewing options, or it handles comment
+  // moderation. let's figure out which one we're using, eh?
+  if ($_POST['moderation']) {
+    comment_moderate($edit); // include code inline?
+  }
+  else if ($user->uid) {
     $user = user_save($user, array('mode' => $mode, 'sort' => $order, 'threshold' => $threshold, 'comments_per_page' => $comments_per_page));
   }
   else {
@@ -1352,6 +1300,8 @@ function comment_save_settings($mode, $order, $threshold, $comments_per_page) {
     $_SESSION['comment_threshold'] = $threshold;
     $_SESSION['comment_comments_per_page'] = $comments_per_page;
   }
+
+  drupal_goto('node/'. $edit['nid'] .'#comment');
 }
 
 function comment_num_all($nid) {
@@ -1600,7 +1550,7 @@ function theme_comment($comment, $links = 0) {
 
 function theme_comment_folded($comment) {
   $output  = "<div class=\"comment-folded\">\n";
-  $output .= ' <span class="subject">'. l($comment->subject, comment_node_url() ."/$comment->cid", NULL, NULL, "comment-$comment->cid") . ($comment->new ? ' '. theme('mark') : '') .'</span> ';
+  $output .= ' <span class="subject">'. l($comment->subject, comment_node_url() .'/'. $comment->cid, NULL, NULL, "comment-$comment->cid") . ($comment->new ? ' '. theme('mark') : '') .'</span> ';
   $output .= '<span class="credit">'. t('by') .' '. format_name($comment) ."</span>\n";
   $output .= "</div>\n";
   return $output;
