@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.17 2003/05/13 18:36:33 dries Exp $
+// $Id: menu.inc,v 1.18 2003/06/08 08:20:39 dries Exp $
 
 function menu($path, $title, $callback = NULL, $help = NULL, $weight = 0, $hidden = 0) {
   global $_gmenu;
@@ -96,7 +96,7 @@ function _menu_sort($a, $b) {
   global $_gmenu;
   $a = &$_gmenu[$a];
   $b = &$_gmenu[$b];
-  return $a["weight"] < $b["weight"] ? -11 : ($a["weight"] > $b["weight"] ? 1 : ($a["name"] < $b["name"] ? -1 : 1));
+  return $a["weight"] < $b["weight"] ? -1 : ($a["weight"] > $b["weight"] ? 1 : ($a["title"] < $b["title"] ? -1 : 1));
 }
 
 function menu_tree($parent = "") {
