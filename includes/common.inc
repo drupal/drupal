@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.334 2004/03/24 18:58:36 dries Exp $ */
+/* $Id: common.inc,v 1.335 2004/03/27 09:32:12 dries Exp $ */
 
 /**
  * @defgroup common Core functions
@@ -563,10 +563,10 @@ function valid_email_address($mail) {
  */
 function valid_url($url, $absolute = false) {
   if ($absolute) {
-    return preg_match("/^http:\/\/[a-zA-z0-9\/:_\-_\.,]+$/", $url);
+    return preg_match("/^(http|https|ftp):\/\/[a-z0-9\/:_\-_\.\?,~=#&]+$/i", $url);
   }
   else {
-    return preg_match("/^[a-zA-z0-9\/:_\-_\.,]+$/", $url);
+    return preg_match("/^[a-z0-9\/:_\-_\.,]+$/i", $url);
   }
 }
 
