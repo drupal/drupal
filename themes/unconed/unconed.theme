@@ -1,5 +1,5 @@
 <?php
-// $Id: unconed.theme,v 1.79 2002/05/20 11:48:24 unconed Exp $
+// $Id: unconed.theme,v 1.80 2002/05/20 18:52:21 unconed Exp $
 
   /*********************************************************************
 
@@ -105,7 +105,7 @@
               if ($terms = taxonomy_node_get_terms($node->nid)) {
                 $taxlinks = array();
                 foreach ($terms as $term) {
-                  $taxlinks[] = "<a href=\"index.php?or=$term->tid\">". check_output($term->name) ."</a>";
+                  $taxlinks[] = l($term->name, array("or" => $term->tid), "index");
                 }
                 $taxo = $this->links($taxlinks);
               }
