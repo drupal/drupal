@@ -333,9 +333,9 @@ function user_search($keys) {
   return array(t("Matching users"), $find);
 }
 
-function user_user($type, &$edit, &$user) {  
+function user_user($type, &$edit, &$user) {
   if ($type == 'view') {
-    return array(t('History') => form_item(t('Member for'), format_interval(time() - $account->created)));
+    return array(t('History') => form_item(t('Member for'), format_interval(time() - $user->created)));
   }
 }
 
