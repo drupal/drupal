@@ -230,16 +230,19 @@ function aggregator_block($op, $delta = 0, $edit = array()) {
       list($type, $id) = split(':', $delta);
       switch ($type) {
         case 'feed':
-          $feed = db_fetch_object(db_query('SELECT fid, title, block FROM {aggregator_feed} WHERE fid = %d', $id));
-          $block['subject'] = $feed->title;
-          $result = db_query_range('SELECT * FROM {aggregator_item} WHERE fid = %d ORDER BY timestamp DESC, iid DESC', $feed->fid, 0, $feed->block);
-          $block['content'] = '<div class="more-link">'. l(t('more'), 'aggregator/sources/'. $feed->fid, array('title' => t('View this feed\'s recent news.'))) .'</div>';
+          if ($feed = db_fetch_object(db_query('SELECT fid, title, block FROM {aggregator_feed} WHERE fid = %d', $id))) {
+            $block['subject'] = $feed->title;
+            $result = db_query_range('SELECT * FROM {aggregator_item} WHERE fid = %d ORDER BY timestamp DESC, iid DESC', $feed->fid, 0, $feed->block);
+            $block['content'] = '<div class="more-link">'. l(t('more'), 'aggregator/sources/'. $feed->fid, array('title' => t('View this feed\'s recent news.'))) .'</div>';
+          }
           break;
+
         case 'category':
-          $category = db_fetch_object(db_query('SELECT cid, title, block FROM {aggregator_category} WHERE cid = %d', $id));
-          $block['subject'] = $category->title;
-          $result = db_query_range('SELECT i.* FROM {aggregator_category_item} ci LEFT JOIN {aggregator_item} i ON ci.iid = i.iid WHERE ci.cid = %d ORDER BY i.timestamp DESC, i.iid DESC', $category->cid, 0, $category->block);
-          $block['content'] = '<div class="more-link">'. l(t('more'), 'aggregator/categories/'. $category->cid, array('title' => t('View this category\'s recent news.'))) .'</div>';
+          if ($category = db_fetch_object(db_query('SELECT cid, title, block FROM {aggregator_category} WHERE cid = %d', $id))) {
+            $block['subject'] = $category->title;
+            $result = db_query_range('SELECT i.* FROM {aggregator_category_item} ci LEFT JOIN {aggregator_item} i ON ci.iid = i.iid WHERE ci.cid = %d ORDER BY i.timestamp DESC, i.iid DESC', $category->cid, 0, $category->block);
+            $block['content'] = '<div class="more-link">'. l(t('more'), 'aggregator/categories/'. $category->cid, array('title' => t('View this category\'s recent news.'))) .'</div>';
+          }
           break;
       }
       $items = array();
