@@ -88,7 +88,7 @@
       <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" BGCOLOR="<? echo $this->brcolor1; ?>" WIDTH="100%">
       <TR><TD>
        <TABLE BORDER="0" CELLPADDING="4" CELLSPACING="1" WIDTH="100%">
-        <TR><TD BGCOLOR="<? echo $this->bgcolor1; ?>" COLSPAN="2"><FONT COLOR="<? echo $this->fgcolor1; ?>"><B><? echo $story->subject; ?></B></FONT></TD></TR>
+        <TR><TD BGCOLOR="<? echo $this->bgcolor1; ?>" COLSPAN="2"><FONT COLOR="<? echo $this->fgcolor1; ?>"><B><? echo "". check_output($story->subject, 1) .""; ?></B></FONT></TD></TR>
         <TR BGCOLOR="<? echo $this->bgcolor2; ?>">
          <?
 				  if ($story->category) { print "<TD BGCOLOR=\"$this->bgcolor2\">"; }
@@ -104,9 +104,9 @@
        <TR BGCOLOR="<? echo $this->bgcolor2; ?>">
         <TD BGCOLOR="<? echo $this->bgcolor2 ?>" COLSPAN="2">
         <?
-         echo "<P>" . $story->abstract . "</P>";
+         echo "<P>" . check_output($story->abstract, 1) ."</P>";
          if ($story->updates) {
-           echo "<P><FONT COLOR=\"$this->fgcolor3\">Editor's note by " . format_username($editor) . ":</FONT> ". $story->updates . "</P>";
+           echo "<P><FONT COLOR=\"$this->fgcolor3\">Editor's note by " . format_username($editor) . ":</FONT> ". check_output($story->updates, 1) ."</P>";
          }
         ?>
         </TD>
@@ -144,9 +144,9 @@
        <TR BGCOLOR="<? echo $this->bgcolor2; ?>">
         <TD COLSPAN="2" BGCOLOR="<? echo $this->bgcolor2 ?>" >
          <? 
-          if ($story->abstract) print "<P>$story->abstract</P>\n";
-          if ($story->updates) print "<P><FONT COLOR=\"$this->bgcolor2\">Editor's note:</FONT> $story->updates</P>\n";
-          if ($story->article) print "<P>$story->article</P>\n";
+          if ($story->abstract) print "<P>". check_output($story->abstract, 1) ."</P>\n";
+          if ($story->updates) print "<P><FONT COLOR=\"$this->bgcolor2\">Editor's note:</FONT> ". check_output($story->updates, 1) ."</P>\n";
+          if ($story->article) print "<P>". check_output($story->article, 1) ."</P>\n";
          ?>
         </TD>
        </TR>
@@ -268,7 +268,7 @@
      echo " </TR>";
 
      ### Print body of comment:
-     if ($comment) echo " <TR><TD BGCOLOR=\"$this->bgcolor2\">" . nl2br($comment) . "</TD></TR>";
+     if ($comment) echo " <TR><TD BGCOLOR=\"$this->bgcolor2\">". check_output($comment, 1) ."</TD></TR>";
 
      ### Print thread (if any):
      if ($thread) echo " <TR><TD BGCOLOR=\"$this->bgcolor3\">$thread</TD></TR>";
@@ -306,9 +306,9 @@
        <TR BGCOLOR="<? echo $this->bgcolor2; ?>">
         <TD COLSPAN="2">
          <? 
-          if ($abstract) echo "<P>$abstract<P>";
-          if ($comments) echo "<P><FONT COLOR=\"$this->fgcolor1\">Editor's note:</FONT> $comments</P>";
-          if ($article) echo "<P>$article</P>";
+          if ($abstract) echo "<P>". check_output($abstract, 1) ."<P>";
+          if ($comments) echo "<P><FONT COLOR=\"$this->fgcolor1\">Editor's note:</FONT> ". check_output($comments, 1) ."</P>";
+          if ($article) echo "<P>". check_output($article, 1) ."</P>";
         ?>
        </TD>
       </TR>
