@@ -9,6 +9,18 @@
 # $db_url = "mysql://userer:password@hostname/database";
 
 #
+# PHP settings:
+#
+
+# Avoid "page has expired" problems when browsing from your cache or history
+# after having filled out a form:
+// ini_set("session.cache_limiter", "");
+
+# If required, update PHP's include path to include your PEAR directory:
+// ini_set("include_path", ".:/path/to/pear");
+
+
+#
 # Themes:
 #
 $themes = array("UnConeD" => array(
