@@ -64,7 +64,7 @@ $sql_updates = array(
   "2004-06-27" => "update_90",
   "2004-06-30" => "update_91",
   "2004-07-07" => "update_92",
-  "2004-07-10" => "update_93",
+  "2004-07-11" => "update_93",
 );
 
 function update_32() {
@@ -1158,6 +1158,8 @@ function update_93() {
   else {
     $ret[] = update_sql('ALTER TABLE {url_alias} DROP INDEX src');
   }
+  $ret[] = update_sql("INSERT INTO {url_alias} (src, dst) VALUES ('node/feed', 'index.rdf')");
+  $ret[] = update_sql("INSERT INTO {url_alias} (src, dst) VALUES ('node/feed', 'rss.xml')");
   return $ret;
 }
 
