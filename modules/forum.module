@@ -152,7 +152,7 @@ function forum_link($type, $node = 0, $main = 0) {
   if (!$main && $type == 'node' && $node->type == 'forum') {
     // get previous and next topic
 
-    $result = db_query('SELECT n.nid, n.title, GREATEST(n.created, MAX(c.timestamp)) AS date_sort, COUNT(c.nid) AS num_comments FROM {node} n INNER JOIN {forum} f ON n.nid = f.nid INNER JOIN {comments} c ON n.nid = c.nid WHERE n.nid = f.nid AND f.tid = %d AND n.status = 1 GROUP BY n.nid, n.title, n.created ORDER BY '. _forum_get_topic_order(isset($user->sortby) ? $user->sortby : variable_get('forum_order', 1)), $node->tid);
+    $result = db_query('SELECT n.nid, n.title, GREATEST(n.created, MAX(c.timestamp)) AS date_sort, COUNT(c.nid) AS num_comments FROM {node} n INNER JOIN {forum} f ON n.nid = f.nid INNER JOIN {comments} c ON n.nid = c.nid WHERE n.nid = f.nid AND f.tid = %d AND n.status = 1 GROUP BY n.nid, n.title, n.created ORDER BY n.sticky DESC, '. _forum_get_topic_order(isset($user->sortby) ? $user->sortby : variable_get('forum_order', 1)), $node->tid);
 
     while ($topic = db_fetch_object($result)) {
       if ($stop == 1) {
@@ -411,8 +411,8 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
   // show topics with the correct tid, or in the forum but with shadow = 1
   // @TODO: this is not ANSI SQL! ("user error: 'n.created' isn't in GROUP BY")
   // @TODO: timestamp is a sql reserved word. are there more?
-  $sql = "SELECT n.nid, n.title, u.name AS name, u.uid AS uid, n.created AS timestamp, GREATEST(n.created, MAX(c.timestamp)) AS date_sort, COUNT(c.nid) AS num_comments, n.comment AS comment_mode, f.tid FROM {node} n INNER JOIN {term_node} r ON n.nid = r.nid INNER JOIN {users} u ON n.uid = u.uid LEFT JOIN {comments} c ON n.nid = c.nid INNER JOIN {forum} f ON n.nid = f.nid WHERE n.nid = r.nid AND ((r.tid = $check_tid AND f.shadow = 1) OR f.tid = $check_tid) AND n.status = 1 AND n.type = 'forum' GROUP BY n.nid, n.title, u.name, u.uid, n.created, n.comment, f.tid";
-  $sql .= tablesort_sql($forum_topic_list_header);
+  $sql = "SELECT n.nid, n.title, n.sticky, u.name AS name, u.uid AS uid, n.created AS timestamp, GREATEST(n.created, MAX(c.timestamp)) AS date_sort, COUNT(c.nid) AS num_comments, n.comment AS comment_mode, f.tid FROM {node} n INNER JOIN {term_node} r ON n.nid = r.nid INNER JOIN {users} u ON n.uid = u.uid LEFT JOIN {comments} c ON n.nid = c.nid INNER JOIN {forum} f ON n.nid = f.nid WHERE n.nid = r.nid AND ((r.tid = $check_tid AND f.shadow = 1) OR f.tid = $check_tid) AND n.status = 1 AND n.type = 'forum' GROUP BY n.nid, n.title, u.name, u.uid, n.created, n.comment, f.tid";
+  $sql .= tablesort_sql($forum_topic_list_header, 'n.sticky DESC,');
 
   $sql_count = "SELECT COUNT(DISTINCT(n.nid)) FROM {node} n INNER JOIN {forum} f ON n.nid = f.nid INNER JOIN {term_node} r ON n.nid = r.nid WHERE n.nid = r.nid AND ( (r.tid = $check_tid AND f.shadow = 1) OR f.tid = $check_tid) AND n.status = 1 AND n.type = 'forum'";
 
@@ -661,14 +661,14 @@ function theme_forum_topic_list($tid, $topics, $sortby, $forum_per_page, $offset
       // folder is new if topic is new or there are new comments since last visit
       if ($topic->tid != $tid) {
         $rows[] = array(
-          array('data' => _forum_icon($topic->new, $topic->num_comments, $topic->comment_mode), 'class' => 'icon'),
+          array('data' => _forum_icon($topic->new, $topic->num_comments, $topic->comment_mode, $topic->sticky), 'class' => 'icon'),
           array('data' => $topic->title, 'class' => 'title'),
           array('data' => l(t('This topic has been moved'), "forum/$topic->tid"), 'colspan' => '3')
         );
       }
       else {
         $rows[] = array(
-          array('data' => _forum_icon($topic->new, $topic->num_comments, $topic->comment_mode), 'class' => 'icon'),
+          array('data' => _forum_icon($topic->new, $topic->num_comments, $topic->comment_mode, $topic->sticky), 'class' => 'icon'),
           array('data' => l($topic->title, "node/$topic->nid"), 'class' => 'topic'),
           array('data' => $topic->num_comments . ($topic->new_replies ? '<br />'. l(t('%a new', array('%a' => $topic->new_replies)), "node/$topic->nid", NULL, NULL, 'new') : ''), 'class' => 'replies'),
           array('data' => _forum_format($topic), 'class' => 'created'),
@@ -689,7 +689,7 @@ function theme_forum_topic_list($tid, $topics, $sortby, $forum_per_page, $offset
 
 /** @} End of addtogroup themeable */
 
-function _forum_icon($new_posts, $num_posts = 0, $comment_mode = 0) {
+function _forum_icon($new_posts, $num_posts = 0, $comment_mode = 0, $sticky = 0) {
 
   $base_path = variable_get('forum_icon_path', '');
   if ($base_path) {
@@ -702,6 +702,10 @@ function _forum_icon($new_posts, $num_posts = 0, $comment_mode = 0) {
 
     if ($comment_mode == 1) {
       $icon = 'closed';
+    }
+
+    if ($sticky == 1) {
+      $icon = 'sticky';
     }
 
     // default
