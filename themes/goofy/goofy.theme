@@ -127,7 +127,7 @@
          <?php
           echo check_output($story->abstract, 1) ."<br><br>";
           if ($reply)
-            echo check_output($story->article, 1);
+            echo $story->article?check_output($story->article, 1):"";
          ?>
          <hr color="#404040" size="1"><div align="right">
          <?php
