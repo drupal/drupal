@@ -1386,18 +1386,22 @@ function theme_comment_moderation_form($comment) {
 }
 
 function theme_comment($comment, $links = 0) {
-  $output .= "<div class=\"comment\">";
-  $output .= "<div class=\"subject\">$comment->subject". ($comment->new ? " ". theme("mark") : "") ."</div>";
-  $output .= "<div class=\"moderation\">". $comment->moderation ."</div>";
-  $output .= "<div class=\"credit\">". t("by %a on %b", array("%a" => format_name($comment), "%b" => format_date($comment->timestamp))) ."</div>";
-  $output .= "<div class=\"body\">". check_output($comment->comment) ."</div>";
-  $output .= "<div class=\"links\">$links</div>";
-  $output .= "</div>";
+  $output  = "<div class=\"comment\">\n";
+  $output .= "<div class=\"subject\">$comment->subject". ($comment->new ? ' '. theme('mark') : '') ."</div>\n";
+  $output .= "<div class=\"moderation\">". $comment->moderation ."</div>\n";
+  $output .= "<div class=\"credit\">". t("by %a on %b", array("%a" => format_name($comment), "%b" => format_date($comment->timestamp))) ."</div>\n";
+  $output .= "<div class=\"body\">". check_output($comment->comment) ."</div>\n";
+  $output .= "<div class=\"links\">$links</div>\n";
+  $output .= "</div>\n";
   return $output;
 }
 
 function theme_comment_folded($comment) {
-  return "<div class=\"comment-folded\"><span class=\"subject\">". l($comment->subject, comment_referer_load() ."/$comment->cid", NULL, NULL, "comment-$comment->cid") ."</span> <span class=\"credit\">". t("by") ." ". format_name($comment) ."</span></div>";
+  $output  = "<div class=\"comment-folded\">\n";
+  $output .= " <span class=\"subject\">". l($comment->subject, comment_referer_load() ."/$comment->cid", NULL, NULL, "comment-$comment->cid") . ($comment->new ? ' '. theme('mark') : '') ."</span> ";
+  $output .= "<span class=\"credit\">". t("by") ." ". format_name($comment) ."</span>\n";
+  $output .= "</div>\n";
+  return $output;
 }
 
 function theme_comment_flat_collapsed($comment, $threshold) {
