@@ -1,4 +1,5 @@
 <?php
+// $Id: error.php,v 1.28 2001/10/20 18:57:07 kjartan Exp $
 
 include_once "includes/common.inc";
 

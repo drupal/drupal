@@ -1,4 +1,5 @@
 <?php
+// $Id: theme.inc,v 1.86 2001/10/20 18:57:07 kjartan Exp $
 
 class BaseTheme {
 

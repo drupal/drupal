@@ -1,4 +1,5 @@
 <?php
+// $Id: conf.php,v 1.9 2001/10/20 18:57:07 kjartan Exp $
 
 #
 # Database settings:

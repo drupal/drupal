@@ -1,4 +1,5 @@
-<?
+<?php
+// $Id: common.inc,v 1.81 2001/10/20 18:57:07 kjartan Exp $
 
 function conf_init() {
   global $HTTP_HOST, $REQUEST_URI;

@@ -1,4 +1,5 @@
 <?php
+// $Id: forum.module,v 1.22 2001/10/20 18:57:07 kjartan Exp $
 
 function forum_status() {
   return array(dumped, posted);

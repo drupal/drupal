@@ -1,4 +1,5 @@
 <?php
+// $Id: module.inc,v 1.22 2001/10/20 18:57:07 kjartan Exp $
 
 // initialize modules:
 function module_init() {

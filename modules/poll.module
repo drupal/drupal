@@ -1,4 +1,5 @@
 <?php
+// $Id: poll.module,v 1.40 2001/10/20 18:57:07 kjartan Exp $
 
 class Poll {
   function Poll($poll) {

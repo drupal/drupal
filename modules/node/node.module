@@ -1,4 +1,5 @@
 <?php
+// $Id: node.module,v 1.72 2001/10/20 18:57:07 kjartan Exp $
 
 class Node {
   function Node($node) {
