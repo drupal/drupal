@@ -55,14 +55,14 @@ function comment_form($edit) {
   $form .= form_item(t("Your name"), format_username($user->userid));
 
   // subject field:
-  $form .= form_textfield(t("Subject"), "subject", check_output($edit[subject]), 50, 60);
+  $form .= form_textfield(t("Subject"), "subject", $edit[subject], 50, 64);
 
   // comment field:
-  $form .= form_textarea(t("Comment"), "comment", check_output($edit[comment] ? $edit[comment] : $user->signature), 50, 10, t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
+  $form .= form_textarea(t("Comment"), "comment", $edit[comment] ? $edit[comment] : $user->signature, 70, 10, t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
 
   // preview button:
-  $form .= form_hidden("pid", check_output($edit[pid]));
-  $form .= form_hidden("id", check_output($edit[id]));
+  $form .= form_hidden("pid", $edit[pid]);
+  $form .= form_hidden("id", $edit[id]);
 
   if (!$edit[comment]) {
     $form .= form_submit(t("Preview comment"));
