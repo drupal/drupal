@@ -84,7 +84,7 @@ function comment_help($section) {
     case 'admin/comment/configure/matrix':
       return t("Here is where you assign a value to each item in the dropdown menu. This value is added to the vote total, which is then divided by the number of users who have voted and rounded off to the nearest integer.<br />Notes:<ul><li>In order to use comment moderation, every text box on this page should be populated.</li><li>You must assign the \"moderate comments\" permission to at least one role in order to use this page.</li><li>Every box not filled in will have a value of zero, which will have the effect of lowering a comments over all score.</li></ul>");
     case 'admin/comment/configure/thresholds':
-      return t("Optional. Here you can setup the name and minimum \"cut off\" score to help your users hide comments that they don't want too see. These thresholds appear in the Comment Control Panel. Click \"edit\" to edit the values of an already existing threshold. To delete a threshold click on \"edit\".");
+      return t("Here you can setup the name and minimum \"cut off\" score to help your users hide comments that they don't want too see. These thresholds appear in the Comment Control Panel. Click \"edit\" to edit the values of an already existing threshold. To delete a threshold click on \"edit\".");
     case 'admin/comment/configure/votes':
       return t('Here is where you set up the name of each type of vote. "Weight" lets you set the order of the drop down menu. Click "edit" to edit a current vote weight.<br />Notes: <ul><li>you can have more than one type with the same name. The system does not protect you from this.</li><li>To delete a name/weight combination go to the "edit" area.</li></ul>');
     case 'admin/comment/configure/roles':
@@ -1255,9 +1255,14 @@ function theme_comment_form($edit, $title) {
   if ($user->uid) {
     $form .= form_item(t('Your name'), format_name($user));
   }
-  else if (variable_get('comment_anonymous', 0) > 0) {
+  else if (variable_get('comment_anonymous', 0) == 1) {
     $form .= form_textfield(t('Your name'), 'name', $edit['name'] ? $edit['name'] : variable_get('anonymous', 'Anonymous') , 20, 40);
     $form .= form_textfield(t('E-mail'), 'mail', $edit['mail'], 20, 40);
+    $form .= form_textfield(t('Homepage'), 'homepage', $edit['homepage'], 20, 40);
+  }
+  else if (variable_get('comment_anonymous', 0) == 2) {
+    $form .= form_textfield(t('Your name'), 'name', $edit['name'] ? $edit['name'] : variable_get('anonymous', 'Anonymous') , 20, 40, NULL, NULL, TRUE);
+    $form .= form_textfield(t('E-mail'), 'mail', $edit['mail'], 20, 40, NULL, NULL, TRUE);
     $form .= form_textfield(t('Homepage'), 'homepage', $edit['homepage'], 20, 40);
   }
 
@@ -1267,7 +1272,7 @@ function theme_comment_form($edit, $title) {
   }
 
   // comment field:
-  $form .= form_textarea(t('Comment'), 'comment', $edit['comment'] ? $edit['comment'] : $user->signature, 70, 10, filter_tips_short());
+  $form .= form_textarea(t('Comment'), 'comment', $edit['comment'] ? $edit['comment'] : $user->signature, 70, 10, filter_tips_short(), NULL, TRUE);
 
   // preview button:
   $form .= form_hidden('cid', $edit['cid']);

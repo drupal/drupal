@@ -102,15 +102,15 @@ function taxonomy_form_vocabulary($edit = array()) {
     $nodetypes[$type] = node_invoke($type, 'node_name');
   }
 
-  $form .= form_textfield(t('Vocabulary name'), 'name', $edit['name'], 50, 64, t('Required') .'. '. t('The name for this vocabulary.  Example: "Topic"') .'.');
-  $form .= form_textarea(t('Description'), 'description', $edit['description'], 60, 5, t('Optional') .'. '. t('Description of the vocabulary; can be used by modules.'));
-  $form .= form_textfield(t('Help text'), 'help', $edit['help'], 50, 255, t('Optional') .'. '. t('Instructions to present to the user when choosing a term.') .'.');
-  $form .= form_checkboxes(t('Types'), 'nodes', explode(',', $edit['nodes']), $nodetypes, t('Required') .'. '. t('A list of node types you want to associate with this vocabulary.'));
-  $form .= form_checkbox(t('Related terms'), 'relations', 1, $edit['relations'], t('Optional') .'. '. t('Allows <a href="%help-url">related terms</a> in this vocabulary.', array('%help-url' => url('admin/taxonomy/help', NULL, NULL, 'related-terms'))));
-  $form .= form_radios(t('Hierarchy'), 'hierarchy', $edit['hierarchy'], array(t('Disabled'), t('Single'), t('Multiple')), t('Optional') .'. '. t('Allows <a href="%help-url">a tree-like hierarchy</a> between terms of this vocabulary.', array('%help-url' => url('admin/taxonomy/help', NULL, NULL, 'hierarchy'))), '');
-  $form .= form_checkbox(t('Multiple select'), 'multiple', 1, $edit['multiple'], t('Optional') .'. '. t('Allows nodes to have more than one term in this vocabulary.'));
+  $form .= form_textfield(t('Vocabulary name'), 'name', $edit['name'], 50, 64, t('The name for this vocabulary.  Example: "Topic".'), NULL, TRUE);
+  $form .= form_textarea(t('Description'), 'description', $edit['description'], 60, 5, t('Description of the vocabulary; can be used by modules.'));
+  $form .= form_textfield(t('Help text'), 'help', $edit['help'], 50, 255, t('Instructions to present to the user when choosing a term.'));
+  $form .= form_checkboxes(t('Types'), 'nodes', explode(',', $edit['nodes']), $nodetypes, t('A list of node types you want to associate with this vocabulary.'), NULL, TRUE);
+  $form .= form_checkbox(t('Related terms'), 'relations', 1, $edit['relations'], t('Allows <a href="%help-url">related terms</a> in this vocabulary.', array('%help-url' => url('admin/taxonomy/help', NULL, NULL, 'related-terms'))));
+  $form .= form_radios(t('Hierarchy'), 'hierarchy', $edit['hierarchy'], array(t('Disabled'), t('Single'), t('Multiple')), t('Allows <a href="%help-url">a tree-like hierarchy</a> between terms of this vocabulary.', array('%help-url' => url('admin/taxonomy/help', NULL, NULL, 'hierarchy'))));
+  $form .= form_checkbox(t('Multiple select'), 'multiple', 1, $edit['multiple'], t('Allows nodes to have more than one term in this vocabulary.'));
   $form .= form_checkbox(t('Required'), 'required', 1, $edit['required'], t('If enabled, every node <strong>must</strong> have at least one term in this vocabulary.'));
-  $form .= form_weight(t('Weight'), 'weight', $edit['weight'], 10, t('Optional. In listings, the heavier vocabularies will sink and the lighter vocabularies will be positioned nearer the top.'));
+  $form .= form_weight(t('Weight'), 'weight', $edit['weight'], 10, t('In listings, the heavier vocabularies will sink and the lighter vocabularies will be positioned nearer the top.'));
   $form .= form_submit(t('Submit'));
 
   if ($edit['vid']) {
@@ -180,8 +180,8 @@ function taxonomy_form_term($edit = array()) {
   $vocabulary_id = isset($edit['vid']) ? $edit['vid'] : arg(4);
   $vocabulary = taxonomy_get_vocabulary($vocabulary_id);
 
-  $form = form_textfield(t('Term name'), 'name', $edit['name'], 50, 64, t('Required') .'. '. t('The name for this term.  Example: "Linux".'));
-  $form .= form_textarea(t('Description'), 'description', $edit['description'], 60, 5, t('Optional') .'. '. t('A description of the term.'));
+  $form = form_textfield(t('Term name'), 'name', $edit['name'], 50, 64, t('The name for this term.  Example: "Linux".'), NULL, TRUE);
+  $form .= form_textarea(t('Description'), 'description', $edit['description'], 60, 5, t('A description of the term.'));
 
   if ($vocabulary->hierarchy) {
     $parent = array_keys(taxonomy_get_parents($edit['tid']));
@@ -194,19 +194,19 @@ function taxonomy_form_term($edit = array()) {
     $exclude[] = $edit['tid'];
 
     if ($vocabulary->hierarchy == 1) {
-      $form .= _taxonomy_term_select(t('Parent'), 'parent', $parent, $vocabulary_id, t('Required') .'. '. l(t('Parent term'), 'admin/taxonomy/help', NULL, NULL, 'parent') .'.', 0, '<'. t('root') .'>', $exclude);
+      $form .= _taxonomy_term_select(t('Parent'), 'parent', $parent, $vocabulary_id, l(t('Parent term'), 'admin/taxonomy/help', NULL, NULL, 'parent') .'.', 0, '<'. t('root') .'>', $exclude);
     }
     elseif ($vocabulary->hierarchy == 2) {
-      $form .= _taxonomy_term_select(t('Parents'), 'parent', $parent, $vocabulary_id, t('Required') .'. '. l(t('Parent terms'), 'admin/taxonomy/help', NULL, NULL, 'parent') .'.', 1, '<'. t('root') .'>', $exclude);
+      $form .= _taxonomy_term_select(t('Parents'), 'parent', $parent, $vocabulary_id, l(t('Parent terms'), 'admin/taxonomy/help', NULL, NULL, 'parent') .'.', 1, '<'. t('root') .'>', $exclude);
     }
   }
 
   if ($vocabulary->relations) {
-    $form .= _taxonomy_term_select(t('Related terms'), 'relations', array_keys(taxonomy_get_related($edit['tid'])), $vocabulary_id, t('Optional') .'. ', 1, '<'. t('none') .'>', array($edit['tid']));
+    $form .= _taxonomy_term_select(t('Related terms'), 'relations', array_keys(taxonomy_get_related($edit['tid'])), $vocabulary_id, NULL, 1, '<'. t('none') .'>', array($edit['tid']));
   }
 
-  $form .= form_textarea(t('Synonyms'), 'synonyms', implode("\n", taxonomy_get_synonyms($edit['tid'])), 30, 5, t('Optional') . '. '. t('<a href="%help-url">Synonyms</a> of this term, one synonym per line.', array('%help-url' => url('admin/taxonomy/help', NULL, NULL, 'synonyms'))));
-  $form .= form_weight(t('Weight'), 'weight', $edit['weight'], 10, t('Optional. In listings, the heavier terms will sink and the lighter terms will be positioned nearer the top.'));
+  $form .= form_textarea(t('Synonyms'), 'synonyms', implode("\n", taxonomy_get_synonyms($edit['tid'])), 30, 5, t('<a href="%help-url">Synonyms</a> of this term, one synonym per line.', array('%help-url' => url('admin/taxonomy/help', NULL, NULL, 'synonyms'))));
+  $form .= form_weight(t('Weight'), 'weight', $edit['weight'], 10, t('In listings, the heavier terms will sink and the lighter terms will be positioned nearer the top.'));
   $form .= form_hidden('vid', $vocabulary->vid);
   $form .= form_submit(t('Submit'));
 
@@ -955,9 +955,9 @@ function taxonomy_help($section = 'admin/help#taxonomy') {
       <h4>Setting up a vocabulary</h4>
       <p>When setting up a controlled vocabulary, if you select the <em>hierarchy</em> option, you will be defining a taxonomy or a thesaurus. If you select the <em>related terms</em> option, you are allowing the definition of related terms, think <em>see also</em>, as in a thesaurus. Selecting <em>multiple select</em> will allow you to describe a node using more than one term. That node will then appear in each term's page, thus increasing the chance that a user will find it.</p>
       <p>When setting up a controlled vocabulary you are asked for: <ul>
-      <li><strong>Vocabulary name</strong> (Required) -- The name for this vocabulary. Example: <em>Dairy</em>.</li>
-      <li><strong>Description</strong> (Optional) -- Description of the vocabulary, this can be used by modules and feeds.</li>
-      <li><strong>Types</strong> (Required) -- The list of node types you want to associate this vocabulary with. Some available types are: blog, book, forum, page, story.</li>
+      <li><strong>Vocabulary name</strong> -- The name for this vocabulary. Example: <em>Dairy</em>.</li>
+      <li><strong>Description</strong> -- Description of the vocabulary, this can be used by modules and feeds.</li>
+      <li><strong>Types</strong> -- The list of node types you want to associate this vocabulary with. Some available types are: blog, book, forum, page, story.</li>
       <li><a id=\"related-terms\"></a><strong>Related terms</strong> -- Allows relationships between terms within this vocabulary. Think of these as <em>see also</em>-references.</li>
       <li><a id=\"hierarchy\"></a><strong>Hierarchy</strong> -- Allows a tree-like taxonomy, as in our <em>Foods</em> example above</li>
       <li><strong>Multiple select</strong> -- Allows nodes to be described using more than one term. Nodes may then appear on multiple taxonomy pages.</li>
@@ -967,11 +967,11 @@ function taxonomy_help($section = 'admin/help#taxonomy') {
       <h4>Adding terms to a vocabulary</h4>
       <p>Once done defining the vocabulary, you have to add terms to it to make it useful. The options you see when adding a term to a vocabulary will depend on what you selected for <em>related terms</em>, <em>hierarchy</em> and <em>multiple select</em>. These options are:</p>
       <p><ul>
-      <li><strong>Term name</strong> (Required) -- The name for this term. Example: <em>Milk</em></li>
-      <li><strong>Description</strong> (Optional) -- Description of the term that may be used by modules and feeds.  This is synonymous with a 'scope note'.</li>
-      <li><strong><a id=\"parent\"></a>Parent</strong> (Required) -- Select the term under which this term is a subset -- the branch of the hierarchy that this term belongs under. This is also known as the \"Broader term\" indicator used in thesauri.</li>
-      <li><strong><a id=\"synonyms\"></a>Synonyms</strong> (Optional) -- Enter synonyms for this term, one synonym per line. Synonyms can be used for variant spellings, acronyms, and other terms that have the same meaning as the added term, but which are not explicitly listed in this thesaurus (i.e. <em>unauthorized terms</em>)</li>
-      <li><strong>Weight</strong> (Optional) -- The weight is used to sort the terms of this vocabulary.</li>
+      <li><strong>Term name</strong> -- The name for this term. Example: <em>Milk</em></li>
+      <li><strong>Description</strong> -- Description of the term that may be used by modules and feeds.  This is synonymous with a 'scope note'.</li>
+      <li><strong><a id=\"parent\"></a>Parent</strong> -- Select the term under which this term is a subset -- the branch of the hierarchy that this term belongs under. This is also known as the \"Broader term\" indicator used in thesauri.</li>
+      <li><strong><a id=\"synonyms\"></a>Synonyms</strong> -- Enter synonyms for this term, one synonym per line. Synonyms can be used for variant spellings, acronyms, and other terms that have the same meaning as the added term, but which are not explicitly listed in this thesaurus (i.e. <em>unauthorized terms</em>)</li>
+      <li><strong>Weight</strong> -- The weight is used to sort the terms of this vocabulary.</li>
       </ul></p>
       <h3><a id=\"taxonomy-url\"></a>Displaying nodes organized by term(s)</h3>
       <p>In order to view the nodes associated with a term or a collection of terms, you should browse to a properly formed Taxonomy URL. For example, <a href=\"%taxo-example\">taxonomy/page/or/1,2</a>.  Taxonomy URLs always contain one or more term IDs (tid) at the end of the URL (a.k.a the <em>querystring</em>). You may learn the term ID for a given term by hovering over that term in the <a href=\"%taxo-overview\">taxonomy overview</a> page and noting the number at the end or the URL.  To build a Taxonomy URL start with \"taxonomy/page\". Now add the querystring parameter, either <em>or</em>, which chooses nodes tagged with <strong>any</strong> of the given term IDs, or <em>and</em>, which chooses nodes tagged with <strong>all</strong> of the given Term IDs. Thus <em>or</em> is less specific than <em>and</em>. Finally add a comma separated list of term IDs.</p>

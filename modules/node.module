@@ -1116,7 +1116,7 @@ function node_validate($node) {
   node_invoke($node, 'validate');
   node_invoke_nodeapi($node, 'validate');
 
-  $node->validated = true;
+  $node->validated = TRUE;
 
   return $node;
 }
@@ -1151,7 +1151,7 @@ function node_form($edit) {
     $output .= '<div class="admin">';
 
     $author = form_textfield(t('Authored by'), 'name', $edit->name, 20, 60);
-    $author .= form_textfield(t('Authored on'), 'date', $edit->date, 20, 25);
+    $author .= form_textfield(t('Authored on'), 'date', $edit->date, 20, 25, NULL, NULL, TRUE);
 
     $output .= '<div class="authored">';
     $output .= form_group(t('Authoring information'), $author);
@@ -1174,7 +1174,7 @@ function node_form($edit) {
   // Add the default fields.
 
   $output .= '<div class="standard">';
-  $output .= form_textfield(t('Title'), 'title', $edit->title, 60, 128);
+  $output .= form_textfield(t('Title'), 'title', $edit->title, 60, 128, NULL, NULL, TRUE);
 
   // Add the node-type-specific fields.
 

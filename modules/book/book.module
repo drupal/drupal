@@ -238,7 +238,7 @@ function book_form(&$node) {
     $output .= implode('', taxonomy_node_form('book', $node));
   }
 
-  $output .= form_textarea(t('Body'), 'body', $node->body, 60, 20, filter_tips_short());
+  $output .= form_textarea(t('Body'), 'body', $node->body, 60, 20, filter_tips_short(), NULL, TRUE);
   $output .= form_textarea(t('Log message'), 'log', $node->log, 60, 5, t('An explanation of the additions or updates being made to help the group understand your motivations.'));
 
   if (user_access('administer nodes')) {
