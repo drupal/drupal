@@ -1005,6 +1005,9 @@ function user_register($edit = array()) {
   $output .= form_submit(t("Create new account"));
   $output .= "<p>&#187; ". lm(t("E-mail new password"), array("mod" => "user", "op" => "password")). "<br />";
   $output .= "&#187; " .lm(t("Log in"), array("mod" => "user", "op" => "login")). "</p>";
+
+  unset($user);
+
   return form($output);
 }
 
@@ -1089,8 +1092,12 @@ function user_edit($edit = array()) {
       $output .= "<p><span style=\"color: red;\" class=\"error\">". check_output($error) ."</span></p>";
     }
 
-    $output .= form_textfield(t("Username"), "name", $user->name, 30, 55, t("Your full name or your prefered username: only letters, numbers and spaces are allowed."));
-    $output .= form_textfield(t("E-mail address"), "mail", $user->mail, 30, 55, t("Insert a valid e-mail address.  All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail."));
+    if (!$edit) {
+      $edit = object2array($user);
+    }
+
+    $output .= form_textfield(t("Username"), "name", $edit["name"], 30, 55, t("Your full name or your prefered username: only letters, numbers and spaces are allowed."));
+    $output .= form_textfield(t("E-mail address"), "mail", $edit["mail"], 30, 55, t("Insert a valid e-mail address.  All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail."));
 
     foreach (module_list() as $module) {
       if (module_hook($module, "user")) {
@@ -1098,15 +1105,15 @@ function user_edit($edit = array()) {
       }
     }
 
-    $output .= form_textfield(t("Homepage"), "homepage", $user->homepage, 30, 55, t("Optional") .". ". t("Make sure you enter a fully qualified URL: remember to include \"http://\"."));
+    $output .= form_textfield(t("Homepage"), "homepage", $edit["homepage"], 30, 55, t("Optional") .". ". t("Make sure you enter a fully qualified URL: remember to include \"http://\"."));
     foreach (theme_list() as $key => $value) {
-      $options .= "$value[type]<option value=\"$key\"". (($user->theme == $key) ? " selected=\"selected\"" : "") .">$key - $value->description</option>\n";
+      $options .= "$value[type]<option value=\"$key\"". (($edit["theme"] == $key) ? " selected=\"selected\"" : "") .">$key - $value->description</option>\n";
     }
     $output .= form_item(t("Theme"), "<select name=\"edit[theme]\">$options</select>", t("Selecting a different theme will change the look and feel of the site."));
     for ($zone = -43200; $zone <= 46800; $zone += 3600) $zones[$zone] = date("l, F dS, Y - h:i A", time() - date("Z") + $zone) ." (GMT ". $zone / 3600 .")";
-    $output .= form_select(t("Timezone"), "timezone", $user->timezone, $zones, t("Select what time you currently have and your timezone settings will be set appropriate."));
-    $output .= form_select(t("Language"), "language", $user->language, $languages, t("Selecting a different language will change the language of the site."));
-    $output .= form_textarea(t("Signature"), "signature", $user->signature, 70, 3, t("Your signature will be publicly displayed at the end of your comments.") ."<br />". t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
+    $output .= form_select(t("Timezone"), "timezone", $edit["timezone"], $zones, t("Select what time you currently have and your timezone settings will be set appropriate."));
+    $output .= form_select(t("Language"), "language", $edit["language"], $languages, t("Selecting a different language will change the language of the site."));
+    $output .= form_textarea(t("Signature"), "signature", $edit["signature"], 70, 3, t("Your signature will be publicly displayed at the end of your comments.") ."<br />". t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
     $output .= form_item(t("Password"), "<input type=\"password\" name=\"edit[pass1]\" size=\"12\" maxlength=\"24\" /> <input type=\"password\" name=\"edit[pass2]\" size=\"12\" maxlength=\"24\" />", t("Enter your new password twice if you want to change your current password or leave it blank if you are happy with your current password."));
     $output .= form_submit(t("Save user information"));
 
