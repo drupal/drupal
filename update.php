@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.145 2005/01/16 23:16:19 unconed Exp $
+// $Id: update.php,v 1.146 2005/02/07 14:25:17 dries Exp $
 
 /**
  * @file
@@ -89,7 +89,7 @@ function update_page() {
       // NOTE: We need the following five lines in order to fix a bug with
       //       database.mysql (issue #15337).  We should be able to remove
       //       this work around in the future.
-      $result = db_query("SELECT * FROM variable WHERE name = 'update_start' AND value LIKE '%;\"'");
+      $result = db_query("SELECT * FROM {variable} WHERE name = 'update_start' AND value LIKE '%;\"'");
       if ($variable = db_fetch_object($result)) {
         $variable->value = unserialize(substr($variable->value, 0, -2) .'";');
         variable_set('update_start', $variable->value);
