@@ -1,5 +1,5 @@
 <?php
-// $Id: ping.module,v 1.2 2003/01/06 19:51:00 dries Exp $
+// $Id: ping.module,v 1.3 2003/03/07 06:37:30 dries Exp $
 
 function ping_help() {
   $output = "<p>Drupal can pings sites automatically to notify them that your site has changed. It can ping the following sites :</p>";
@@ -18,9 +18,11 @@ function ping_system($field){
 }
 
 function ping_cron() {
+  global $base_url;
+
   if (variable_get("site_name", 0) && variable_get("site_slogan", 0)) {
     if (db_num_rows(db_query("SELECT nid FROM node WHERE status = 1 AND moderate = 0 AND (created > '". variable_get("ping_cron_last", time()) ."' OR changed > '". variable_get("ping_cron_last", time()) ."')"), 1)) {
-      _ping_notify(variable_get("site_name", "") ." - ". variable_get("site_slogan", ""), path_uri());
+      _ping_notify(variable_get("site_name", "") ." - ". variable_get("site_slogan", ""), $base_url);
     }
 
     variable_set("ping_cron_last", time());

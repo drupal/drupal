@@ -223,10 +223,7 @@ function bloggerapi_user_blogs() {
   global $user;
 
   if ($user->uid) {
-    $struct = new xmlrpcval(array("url" => new xmlrpcval(path_uri() . url("blog/view". urlencode($user->uid))),
-                                  "blogid" => new xmlrpcval($user->uid),
-                                  "blogName" => new xmlrpcval($user->name . "'s blog at ". variable_get("site_name", "drupal"))
-                                  ),"struct");
+    $struct = new xmlrpcval(array("url" => new xmlrpcval(url("blog/view". urlencode($user->uid))), "blogid" => new xmlrpcval($user->uid), "blogName" => new xmlrpcval($user->name . "'s blog at ". variable_get("site_name", "drupal"))),"struct");
     return new xmlrpcval(array($struct), "array");
   }
   else {
@@ -240,7 +237,7 @@ function bloggerapi_user_info() {
   if ($user->uid) {
     return new xmlrpcval(array("nickname" => new xmlrpcval($user->name, "string"),
                                "userid" => new xmlrpcval($user->id, "string"),
-                               "url" => new xmlrpcval(path_uri() . url("blog/view/". urlencode($user->uid)), "string"),
+                               "url" => new xmlrpcval(url("blog/view/". urlencode($user->uid)), "string"),
                                "email" => new xmlrpcval($user->mail, "string"),
                                "lastname" => new xmlrpcval(substr($user->name, strrpos($user->name," ")+1), "string"),
                                "firstname" => new xmlrpcval(substr($user->name, 0, strrpos($user->name," ")), "string"),

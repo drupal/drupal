@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.174 2003/03/04 17:44:37 dries Exp $
+// $Id: common.inc,v 1.175 2003/03/07 06:37:29 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST, $PHP_SELF;
@@ -96,19 +96,6 @@ function object2array($node) {
   }
 
   return $array;
-}
-
-function path_uri($brief = 0) {
-  global $HTTP_HOST, $PHP_SELF;
-
-  $uri = $PHP_SELF;
-  $path = $HTTP_HOST . substr($uri, 0, strrpos($uri, "/")) ."/";
-
-  if (!$brief) {
-    $path = "http://". $path;
-  }
-
-  return $path;
 }
 
 function request_uri() {
@@ -786,18 +773,18 @@ function url($url = NULL, $query = NULL) {
   if (variable_get("clean_url", "0") == "0") {
     if (isset($url)) {
       if (isset($query)) {
-        return "?q=$url&amp;$query";
+        return "$base_url/?q=$url&amp;$query";
       }
       else {
-        return "?q=$url";
+        return "$base_url/?q=$url";
       }
     }
     else {
       if (isset($query)) {
-        return "?$query";
+        return "$base_url/?$query";
       }
       else {
-        return "";
+        return "$base_url/";
       }
     }
   }
@@ -815,7 +802,7 @@ function url($url = NULL, $query = NULL) {
         return "$base_url/?$query";
       }
       else {
-        return "$base_url";
+        return "$base_url/";
       }
     }
   }
