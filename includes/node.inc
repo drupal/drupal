@@ -74,8 +74,8 @@ function node_save($node, $filter) {
     $u2 = array();
 
     foreach ($node as $field=>$value) {
-      if (in_array($field, $filter)) {
-        if (in_array($field, $rows)) {
+      if (in_array("$field", $filter)) {
+        if (in_array("$field", $rows)) {
           array_push($u1, check_input($field) ." = '". check_input($value) ."'");
         }
         else {
