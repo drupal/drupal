@@ -152,5 +152,39 @@ CREATE TABLE entry (
   name varchar(32) DEFAULT '' NOT NULL,
   keyword varchar(255) DEFAULT '' NOT NULL,
   collection varchar(32) DEFAULT '' NOT NULL,
+  UNIQUE name (name, collection),
   PRIMARY KEY (eid)
+);
+
+CREATE TABLE bundle (
+  bid int(11) DEFAULT '0' NOT NULL auto_increment,
+  title varchar(255) DEFAULT '' NOT NULL,
+  attribute varchar(255) DEFAULT '' NOT NULL,
+  UNIQUE (title),
+  PRIMARY KEY (bid)
+);
+
+CREATE TABLE feed (
+  fid int(11) DEFAULT '0' NOT NULL auto_increment,
+  title varchar(255) DEFAULT '' NOT NULL,
+  link varchar(255) DEFAULT '' NOT NULL,
+  refresh int(11),
+  uncache int(11),
+  timestamp int(11),
+  attribute varchar(255) DEFAULT '' NOT NULL,
+  UNIQUE (title),
+  UNIQUE (link),
+  PRIMARY KEY (fid)
+);
+
+CREATE TABLE item (
+  iid int(11) DEFAULT '0' NOT NULL auto_increment,
+  fid int(11) DEFAULT '0' NOT NULL,
+  title varchar(255) DEFAULT '' NOT NULL,
+  link varchar(255) DEFAULT '' NOT NULL,
+  author varchar(255) DEFAULT '' NOT NULL,
+  description TEXT DEFAULT '' NOT NULL,
+  timestamp int(11),
+  attribute varchar(255) DEFAULT '' NOT NULL,
+  PRIMARY KEY (iid)
 );

@@ -74,7 +74,7 @@ function forum_admin() {
     case "edit":
       print forum_form(node_get_array(array(nid => $id)));
       break;
-   case t("Submit"):
+    case t("Submit"):
       print status(forum_save($edit));
       // fall through:
     default:

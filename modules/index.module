@@ -1,7 +1,10 @@
 <?php
 
+
+// entries => attributes
+
 function index_get_array($id) {
-  return db_fetch_array(db_query("SELECT * FROM entry WHERE eid = '$id'"));
+  return db_fetch_array(db_query("SELECT * FROM entry WHERE eid = '". check_input($id) ."'"));
 }
 
 function index_collection_form($name) {
@@ -29,9 +32,9 @@ function index_help() {
 function index_form($edit = array()) {
   global $REQUEST_URI;
 
-  $form .= form_textfield(t("Entry name"), "name", $edit[name], 35, 55, t("The name of this entry.  Example: 'Apache'."));
-  $form .= form_textfield(t("Collection"), "collection", $edit[collection], 35, 55, t("The collection or group this entry belgons to.  Example: 'Software'."));
-  $form .= form_textfield(t("Keywords"), "keyword", $edit[keyword], 35, 55, htmlentities("Format: <type>:<value>;<type>:<value>;.  Example: 'software:apache;type:webserver;os:linux;'."));
+  $form .= form_textfield(t("Entry name"), "name", $edit[name], 55, 64, t("The name of this entry.  Example: 'Apache'."));
+  $form .= form_textfield(t("Collection"), "collection", $edit[collection], 55, 64, t("The collection or group this entry belgons to.  Example: 'Software'."));
+  $form .= form_textfield(t("Keywords"), "keyword", $edit[keyword], 55, 64, htmlentities("Format: <type>:<value>;<type>:<value>;.  Example: 'software:apache;type:webserver;os:linux;'."));
   $form .= form_submit(t("Submit"));
 
   if ($edit[eid]) {
@@ -73,7 +76,7 @@ function index_test_1() {
   while ($entry = db_fetch_object($result)) {
     $form .= index_collection_form($entry->collection);
   }
-  $form .= "Select around and click the buttom below:<BR>";
+  $form .= "Select around and click the button below:<BR>";
   $form .= form_submit("Click to test");
 
   return form($REQUEST_URI, $form);
