@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.28 2002/04/20 11:52:50 dries Exp $
+// $Id: system.module,v 1.29 2002/04/24 21:04:37 dries Exp $
 
 function system_help() {
   $output .= "<p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviors including visual and operational settings.</p>";
@@ -66,6 +66,11 @@ function system_view_options() {
   $rate = array(1 => "Maximum 1 every second", 5 => "Maximum 1 every 5 seconds", 15 => "Maximum 1 every 15 seconds", 30 => "Maximum 1 every 30 seconds", 60 => "Maximum 1 every minute", 300 => "Maximum 1 every 5 minutes", 900 => "Maximum 1 every 15 minutes", 1800 => "Maximum 1 every 30 minutes", 3600 => "Maximum 1 every hour", 21600 => "Maximum 1 every 6 hours", 43200 => "Maximum 1 every 12 hours");
   $output .= form_select("Maximum node rate", "max_node_rate", variable_get("max_node_rate", 900), $rate, "The maximum submission rate for nodes.  Its purpose is to stop potential abuse or denial of service attacks.");
   $output .= form_select("Maximum comment rate", "max_comment_rate", variable_get("max_comment_rate", 120), $rate, "The maximum submission rate for comments.  Its purpose is to stop potential abuse or denial of service attacks.");
+  $output .= "<hr />\n";
+
+  // date settings:
+  $output .= "<h3>Date format setting</h3>\n";
+  $output .= form_select("Date format", "date_format", variable_get("date_format", "m/d/Y - H:i"), array("m/d/Y - H:i" => "m/d/Y - H:i", "d/m/Y - H:i" => "d/m/Y - H:i", "Y/m/d - H:i" => "Y/m/d - H:i"), "The format in which dates are displayed");
   $output .= "<hr />\n";
 
   // comment settings:
