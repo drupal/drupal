@@ -18,12 +18,15 @@ CREATE TABLE access (
 --
 
 CREATE TABLE accesslog (
+  aid SERIAL,
+  mask varchar(255) NOT NULL default '',
   title varchar(255) default NULL,
   path varchar(255) default NULL,
   url varchar(255) default NULL,
   hostname varchar(128) default NULL,
   uid integer default '0',
-  timestamp integer NOT NULL default '0'
+  timestamp integer NOT NULL default '0',
+  PRIMARY KEY (aid)
 );
 CREATE INDEX accesslog_timestamp_idx ON accesslog (timestamp);
 

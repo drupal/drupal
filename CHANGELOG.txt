@@ -12,6 +12,7 @@ Drupal x.x.x, xxxx-xx-xx
 - flood control mechanism:
     * added a mechanism to throttle certain operations.
 - usability:
+    * refactored the statistics and log pages.
     * refactored the throttle module configuration.
     * added a 'add child page' link to book pages.
 - multi-site configuration:
