@@ -139,7 +139,7 @@ function theme_pager($tags = array(), $limit = 10, $element = 0, $attributes = a
  */
 function theme_pager_first($text, $limit, $element = 0, $attributes = array()) {
   global $pager_from_array;
-  $output = '<div>';
+  $output = '<div class="pager-first">';
 
   if ($pager_from_array[$element]) {
     $output .= '<a href="'. pager_link(pager_load_array(0, $element, $pager_from_array), $element, $attributes) .'">'. $text .'</a>';
@@ -171,7 +171,7 @@ function theme_pager_first($text, $limit, $element = 0, $attributes = array()) {
  */
 function theme_pager_previous($text, $limit, $element = 0, $interval = 1, $attributes = array()) {
   global $pager_from_array;
-  $output = '<div>';
+  $output = '<div class="pager-previous">';
   $from_new = pager_load_array(((int)$pager_from_array[$element] - ((int)$limit * (int)$interval)), $element, $pager_from_array);
   if ($from_new[$element] < 1) {
     $output .= theme('pager_first', $text, $limit, $element, $attributes);
@@ -203,7 +203,7 @@ function theme_pager_previous($text, $limit, $element = 0, $interval = 1, $attri
  */
 function theme_pager_next($text, $limit, $element = 0, $interval = 1, $attributes = array()) {
   global $pager_from_array, $pager_total;
-  $output = '<div>';
+  $output = '<div class="pager-next">';
   $from_new = pager_load_array(((int)$pager_from_array[$element] + ((int)$limit * (int)$interval)), $element, $pager_from_array);
   if ($from_new[$element] < $pager_total[$element]) {
     $output .= '<a href="'. pager_link($from_new, $element, $attributes) .'">'. $text .'</a>';
@@ -234,7 +234,7 @@ function theme_pager_next($text, $limit, $element = 0, $interval = 1, $attribute
 function theme_pager_last($text, $limit, $element = 0, $attributes = array()) {
   global $pager_from_array, $pager_total;
 
-  $output = '<div>';
+  $output = '<div class="pager-last">';
   $last_num = (($pager_total[$element] % $limit) ? ($pager_total[$element] % $limit) : $limit);
   $from_new = pager_load_array(($pager_total[$element] - $last_num), $element, $pager_from_array);
   if ($from_new[$element] < ($pager_from_array[$element] + $limit)) {
@@ -267,7 +267,7 @@ function theme_pager_last($text, $limit, $element = 0, $attributes = array()) {
 function theme_pager_detail($limit, $element = 0, $format = '%d through %d of %d.') {
   global $pager_from_array, $pager_total;
 
-  $output = '<div>';
+  $output = '<div class="pager-detail">';
   if ($pager_total[$element] > (int)$pager_from_array[$element] + 1) {
     $output .= sprintf($format, (int)$pager_from_array[$element] + 1, ((int)$pager_from_array[$element] + $limit <= $pager_total[$element] ? (int)$pager_from_array[$element] + $limit : $pager_total[$element]), $pager_total[$element]);
   }
@@ -296,8 +296,8 @@ function theme_pager_detail($limit, $element = 0, $format = '%d through %d of %d
  */
 function theme_pager_list($limit, $element = 0, $quantity = 5, $text = '', $attributes = array()) {
   global $pager_from_array, $pager_total;
-  $output = '<div>';
 
+  $output = '<div class="pager-list">';
   // Calculate various markers within this pager piece:
   // Middle is used to "center" pages around the current page.
   $pager_middle = ceil((int)$quantity / 2);
@@ -340,7 +340,7 @@ function theme_pager_list($limit, $element = 0, $quantity = 5, $text = '', $attr
   if ($i != $pager_max) {
     $output .= $text;
     if ($i > 1) {
-      $output .= '... ';
+      $output .= '<div class="pager-list-dots-left>... </div>';
     }
 
     // Now generate the actual pager piece.
@@ -357,7 +357,7 @@ function theme_pager_list($limit, $element = 0, $quantity = 5, $text = '', $attr
     }
 
     if ($i < $pager_max) {
-      $output .= '...';
+      $output .= '<div class="pager-list-dots-right">...</div>';
     }
   }
   $output .= '</div>';
