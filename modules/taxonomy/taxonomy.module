@@ -326,7 +326,7 @@ function taxonomy_del_term($tid) {
       db_query('DELETE FROM {term_node} WHERE tid = %d', $tid);
 
       module_invoke_all('taxonomy', 'delete', 'term', $term);
-      drupal_set_message(t('deleted term "%name".', array('%name' => $term->name)));
+      drupal_set_message(t('Deleted term "%name".', array('%name' => $term->name)));
     }
 
     $tids = $orphans;
