@@ -464,6 +464,12 @@ function filter($text) {
 
 function rewrite_old_urls($text) {
 
+  global $base_url;
+
+  $end = substr($base_url, 12);
+
+  print "$end";
+
   /*
   ** This is a *temporary* filter to rewrite old-style URLs to new-style
   ** URLs (clean URLs).  Currently, URLs are being rewritten dynamically
@@ -473,23 +479,55 @@ function rewrite_old_urls($text) {
   */
 
   if (variable_get("clean_url", "0") == "0") {
+    /*
+    ** Relative URLs:
+    */
+
     // rewrite 'node.php?id=<number>[&cid=<number>]' style URLs:
-    $text = eregi_replace("(node)\.php\?id=([[:digit:]]+)(&cid=)?([[:digit:]]*)", "?q=\\1/view/\\2/\\4", $text);
+    $text = eregi_replace("\"(node)\.php\?id=([[:digit:]]+)(&cid=)?([[:digit:]]*)", "\"?q=\\1/view/\\2/\\4", $text);
 
     // rewrite 'module.php?mod=<name>{&<op>=<value>}' style URLs:
-    $text = ereg_replace("module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "?q=\\2/\\4/\\6" , $text);
-    $text = ereg_replace("module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "?q=\\2/\\4" , $text);
-    $text = ereg_replace("module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))", "?q=\\2" , $text);
+    $text = ereg_replace("\"module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "\"?q=\\2/\\4/\\6" , $text);
+    $text = ereg_replace("\"module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "\"?q=\\2/\\4", $text);
+    $text = ereg_replace("\"module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))", "\"?q=\\2", $text);
+
+    /*
+    ** Absolute URLs:
+    */
+
+    // rewrite 'node.php?id=<number>[&cid=<number>]' style URLs:
+    $text = eregi_replace("$end/(node)\.php\?id=([[:digit:]]+)(&cid=)?([[:digit:]]*)", "$end/?q=\\1/view/\\2/\\4", $text);
+
+    // rewrite 'module.php?mod=<name>{&<op>=<value>}' style URLs:
+    $text = ereg_replace("$end/module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "$end/?q=\\2/\\4/\\6" , $text);
+    $text = ereg_replace("$end/module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "$end/?q=\\2/\\4", $text);
+    $text = ereg_replace("$end/module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))", "\"$end/?q=\\2", $text);
   }
   else {
+    /*
+    ** Relative URLs:
+    */
+
     // rewrite 'node.php?id=<number>[&cid=<number>]' style URLs:
-    $text = eregi_replace("(node)\.php\?id=([[:digit:]]+)(&cid=)?([[:digit:]]*)", "\\1/view/\\2/\\4", $text);
+    $text = eregi_replace("\"(node)\.php\?id=([[:digit:]]+)(&cid=)?([[:digit:]]*)", "\"\\1/view/\\2/\\4", $text);
 
     // rewrite 'module.php?mod=<name>{&<op>=<value>}' style URLs:
-    $text = ereg_replace("module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "\\2/\\4/\\6" , $text);
-    $text = ereg_replace("module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "\\2/\\4" , $text);
-    $text = ereg_replace("module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))", "\\2" , $text);
-  }
+    $text = ereg_replace("\"module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "\"\\2/\\4/\\6", $text);
+    $text = ereg_replace("\"module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "\"\\2/\\4", $text);
+    $text = ereg_replace("\"module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))", "\"\\2", $text);
+
+    /*
+    ** Absolute URLs:
+    */
+
+    // rewrite 'node.php?id=<number>[&cid=<number>]' style URLs:
+    $text = eregi_replace("$end/(node)\.php\?id=([[:digit:]]+)(&cid=)?([[:digit:]]*)", "$end/\\1/view/\\2/\\4", $text);
+
+    // rewrite 'module.php?mod=<name>{&<op>=<value>}' style URLs:
+    $text = ereg_replace("$end/module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "$end/\\2/\\4/\\6", $text);
+    $text = ereg_replace("$end/module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))(&?[[:alpha:]]+=([[:alnum:]]+))", "$end/\\2/\\4", $text);
+    $text = ereg_replace("$end/module\.php\?(&?[[:alpha:]]+=([[:alnum:]]+))", "$end/\\2", $text);
+}
 
   return $text;
 }
