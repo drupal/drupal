@@ -1608,7 +1608,12 @@ function theme_comment_post_forbidden() {
     return t("you can't post comments");
   }
   else {
-    return t('<a href="%login">login</a> or <a href="%register">register</a> to post comments', array('%login' => url('user/login'), '%register' => url('user/register')));
+    if (variable_get('user_register', 1)) {
+      return t('<a href="%login">login</a> or <a href="%register">register</a> to post comments', array('%login' => url('user/login'), '%register' => url('user/register')));
+    }
+    else {
+      return t('<a href="%login">login</a> to post comments', array('%login' => url('user/login')));
+    }
   }
 }
 
