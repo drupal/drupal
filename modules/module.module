@@ -25,13 +25,13 @@ function module_admin_display() {
     $admin = ($module["admin"]) ? "<A HREF=\"admin.php?mod=$name\">admin</A>" : "&nbsp;";
     $output .= " <TR><TD>$name</TD><TD>$view</TD><TD>$admin</TD><TD><A HREF=\"admin.php?mod=module&op=rehash&name=$name\">rehash</A></TD></TR>\n";
   }
- 
+
   $output .= "<FORM ACTION=\"admin.php?mod=module\" METHOD=\"post\">\n";
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR><TH>module</TH><TH COLSPAN=\"3\">operations</TH></TR>\n";
-  
+
   module_iterate("module_row");
- 
+
   $output .= "</TABLE>\n";
   $output .= "<INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"Rehash modules\">\n";
   $output .= "</FORM>\n";
@@ -40,7 +40,7 @@ function module_admin_display() {
 
 function module_admin() {
   global $op, $name;
-  
+
   switch ($op) {
     case "Rehash modules":
       module_admin_rehash();

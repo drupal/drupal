@@ -16,7 +16,7 @@ function story_render($id, $cid) {
   }
 }
 
-switch($op) {  
+switch($op) {
   case "Preview comment":
     $theme->header();
     comment_preview($pid, $id, $subject, $comment);

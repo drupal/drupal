@@ -1,5 +1,5 @@
 <?
- 
+
  class Theme {
    // color set #1:
    var $bgcolor1 = "#EAEAEA";   // background color
@@ -19,14 +19,14 @@
    function header() {
      global $site_name;
     ?>
-     <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd"> 
+     <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0//EN" "http://www.w3.org/TR/REC-html40/strict.dtd">
      <HTML>
      <HEAD>
       <TITLE><? print $site_name; ?></TITLE>
       <META NAME="description" CONTENT="drop.org">
       <META NAME="keywords" CONTENT="drop, weblog, portal, community, news, article, announcements, stories, story, computer, science, space, hype, cult, geek, nerd, foo, bar">
      </HEAD>
-     <STYLE type="text/css"> 
+     <STYLE type="text/css">
       <!--
        BODY,TD,P,UL,LI,DIV,FORM,EM,BLOCKQUOTE { font-size: 10pt; font-family: Lucida,Verdana,Helvetica,Arial; }
        TH { font-size: 10pt; font-family: Lucida,Verdana,Helvetica,Arial; }
@@ -48,7 +48,7 @@
    }
 
    function abstract($story) {
-     print "\n<!-- story: \"$story->subject\" -->\n";     
+     print "\n<!-- story: \"$story->subject\" -->\n";
      print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"2\" WIDTH=\"100%\">\n";
      print " <TR><TD COLSPAN=\"2\"><IMG SRC=\"themes/marvin/images/drop.gif\" ALT=\"\"> &nbsp; <B>". check_output($story->subject) ."</B></TD></TR>\n";
      print " <TR VALIGN=\"bottom\"><TD COLSPAN=\"2\" BGCOLOR=\"#000000\" WIDTH=\"100%\"><IMG SRC=\"themes/marvin/images/pixel.gif\" WIDTH=\"1\" HEIGHT=\"0\" ALT=\"\"></TD></TR>\n";
@@ -77,7 +77,7 @@
      print " <TR VALIGN=\"bottom\"><TD COLSPAN=\"2\" BGCOLOR=\"#000000\" WIDTH=\"100%\"><IMG SRC=\"themes/marvin/images/pixel.gif\" WIDTH=\"1\" HEIGHT=\"0\" ALT=\"\"></TD></TR>\n";
      print " <TR>\n";
      print "  <TD>\n";
-     print "   <FONT COLOR=\"#7C7C7C\"><SMALL>Submitted by ". format_username($story->userid) ." on ". format_date($story->timestamp, "extra large") .""; ?><? if ($story->department) print "<BR>from the $story->department dept."; ?><? print "</SMALL></FONT></TD><TD ALIGN=\"right\" VALIGN=\"top\" NOWRAP><SMALL><A HREF=\"index.php?section=". urlencode($story->section) ."\"><FONT COLOR=\"#83997A\">$story->section</FONT></A></SMALL>\n"; 
+     print "   <FONT COLOR=\"#7C7C7C\"><SMALL>Submitted by ". format_username($story->userid) ." on ". format_date($story->timestamp, "extra large") .""; ?><? if ($story->department) print "<BR>from the $story->department dept."; ?><? print "</SMALL></FONT></TD><TD ALIGN=\"right\" VALIGN=\"top\" NOWRAP><SMALL><A HREF=\"index.php?section=". urlencode($story->section) ."\"><FONT COLOR=\"#83997A\">$story->section</FONT></A></SMALL>\n";
      print "  </TD>\n";
      print " </TR>\n";
      print " <TR><TD COLSPAN=\"2\">&nbsp;</TD></TR>\n";
@@ -155,7 +155,7 @@
      print "<BR>\n\n";
    }
 
-   function box($subject, $content, $options = "") { 
+   function box($subject, $content, $options = "") {
      print "\n<!-- box: \"$subject\" -->\n";
      print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"0\" BGCOLOR=\"#000000\" WIDTH=\"100%\">\n";
      print " <TR>\n";
@@ -186,7 +186,7 @@
        </TD>
       </TR>
      </TABLE>
-    </BODY> 
+    </BODY>
     </HTML>
     <?
    }

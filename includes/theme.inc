@@ -4,7 +4,7 @@ function theme_load() {
   global $user, $themes;
 
   if ($user->theme && file_exists($themes[$user->theme][0])) {
-    include_once $themes[$user->theme][0];     
+    include_once $themes[$user->theme][0];
   }
   else {
     include_once $themes[key($themes)][0];
@@ -14,8 +14,8 @@ function theme_load() {
 
 function theme_account($theme) {
   global $user, $site_name, $links, $menu;
-  
-  if ($user->id) { 
+
+  if ($user->id) {
 
     function submission_number() {
       $result = db_query("SELECT COUNT(id) FROM stories WHERE status = 1");
@@ -72,7 +72,7 @@ function theme_account($theme) {
 
 function theme_blocks($region, $theme) {
   global $id, $PHP_SELF, $user;
- 
+
   switch (strrchr($PHP_SELF, "/")) {
     case "/story.php":
       if ($user->id) $story = db_fetch_object(db_query("SELECT * FROM stories WHERE id = '$id'"));
@@ -84,7 +84,7 @@ function theme_blocks($region, $theme) {
       else $result = db_query("SELECT * FROM blocks WHERE status = 2 ORDER BY weight");
       while ($block = db_fetch_object($result)) {
         $blocks = module_execute($block->module, "block");
-        $theme->box($blocks[$block->offset]["subject"], $blocks[$block->offset]["content"]);     
+        $theme->box($blocks[$block->offset]["subject"], $blocks[$block->offset]["content"]);
       }
       break;
   }
@@ -102,7 +102,7 @@ function theme_moderation_results($theme, $story) {
     while ($account = db_fetch_object($result)) {
       $output .= format_username($account->userid) ." voted `". user_getHistory($account->history, "s$story->id") ."'.<BR>";
     }
-    
+
     $theme->box("Moderation results", ($output ? $output : "This story has not been moderated yet."));
   }
 }
@@ -116,7 +116,7 @@ function theme_related_links($theme, $story) {
     if (!stristr($link, "mailto:")) $content .= "<LI>$link</LI>";
   }
 
-  // Stories in the same section: 
+  // Stories in the same section:
   $content .= " <LI>More about <A HREF=\"index.php?section=". urlencode($story->section) ."\">$story->section</A>.</LI>";
 
   // Stories from the same author:
@@ -137,11 +137,11 @@ function theme_new_headlines($theme, $num = 10) {
 
 function theme_old_headlines($theme, $num = 10) {
   global $user;
-  
+
   if ($user->stories) $result = db_query("SELECT id, subject, timestamp FROM stories WHERE status = 2 ORDER BY timestamp DESC LIMIT $user->stories, $num");
   else $result = db_query("SELECT id, subject, timestamp FROM stories WHERE status = 2 ORDER BY timestamp DESC LIMIT $num, $num");
 
-  while ($story = db_fetch_object($result)) {    
+  while ($story = db_fetch_object($result)) {
     if ($time != date("F jS", $story->timestamp)) {
       $content .= "<P><B>". date("l, M jS", $story->timestamp) ."</B></P>\n";
       $time = date("F jS", $story->timestamp);

@@ -29,7 +29,7 @@ function drupal_block() {
   $content .= " </SELECT>\n";
   $content .= "</FORM>\n";
   $content .= "</CENTER>\n";
- 
+
   $blocks[0]["subject"] = "Drupal sites";
   $blocks[0]["content"] = $content;
   $blocks[0]["info"] = "Drupal sites (selection)";
@@ -44,7 +44,7 @@ function drupal_block() {
   $blocks[1]["subject"] = "Drupal sites";
   $blocks[1]["content"] = $content;
   $blocks[1]["info"] = "Drupal sites (sequential)";
- 
+
   return $blocks;
 }
 

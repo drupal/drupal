@@ -12,7 +12,7 @@ function calendar_block() {
   $block[0]["subject"] = "Browse archives";
   $block[0]["content"] = $calendar->display();
   $block[0]["info"] = "Calendar to browse archives";
- 
+
   return $block;
 }
 

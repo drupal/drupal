@@ -28,7 +28,7 @@ function comment_edit($id) {
   $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save comment\">\n";
   $output .= "</P>\n";
   $output .= "</FORM>\n";
-  
+
   print $output;
 }
 
@@ -43,7 +43,7 @@ function comment_display($order = "date") {
 
   // Perform SQL query:
   $result = db_query("SELECT c.*, u.userid FROM comments c LEFT JOIN users u ON u.id = c.author ORDER BY c.$fields[$order] LIMIT 50");
-   
+
   // Display comments:
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR>\n";
@@ -70,7 +70,7 @@ function comment_display($order = "date") {
   }
 
   $output .= "</TABLE>\n";
- 
+
   print $output;
 }
 

@@ -6,7 +6,7 @@
    var $cl80 = "#8B8E95";
    var $clc0 = "#c8c8d0";
    var $cl00 = "#000000";
-   
+
    // color set #1:
    var $brcolor1 = "#000000";   // border color
    var $bgcolor1 = "#B5BECE";
@@ -34,8 +34,8 @@
       <META NAME="description" CONTENT="drop.org">
       <META NAME="keywords" CONTENT="drop, weblog, portal, community, news, article, announcements, stories, story, computer, science, space, hype, cult, geek, nerd, foo, bar">
      </HEAD>
-     <STYLE type="text/css"> 
-      <!-- 
+     <STYLE type="text/css">
+      <!--
        TABLE { border-width: 0; }
        TD { border-width: 0; font-size: 9pt; font-family: verdana,helvetica,arial; }
        P,UL,LI,DIV,FORM,EM,BLOCKQUOTE { font-size: 9pt; font-family: verdana,helvetica,arial; }
@@ -73,7 +73,7 @@
    function abstract($story) {
      $timestamp = format_date($story->timestamp);
 
-      print "\n<!-- story: \"$story->subject\" -->\n";     
+      print "\n<!-- story: \"$story->subject\" -->\n";
       ?>
       <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" BGCOLOR="<? echo $this->brcolor1; ?>" WIDTH="100%">
       <TR><TD>
@@ -103,7 +103,7 @@
        </TR>
       <TR BGCOLOR="<? echo $this->bgcolor3; ?>"><TD BGCOLOR="<? echo $this->bgcolor3 ?>" ALIGN="right" COLSPAN="2"><? echo theme_morelink($this, $story) ?></TD></TR>
      </TABLE></TD></TR></TABLE><BR>
-    <?  
+    <?
    }
 
    function article($story, $reply = "") {
@@ -128,7 +128,7 @@
        </TR>
        <TR BGCOLOR="<? echo $this->bgcolor2; ?>">
         <TD COLSPAN="2" BGCOLOR="<? echo $this->bgcolor2 ?>" >
-         <? 
+         <?
           if ($story->abstract) print "<P>". check_output($story->abstract, 1) ."</P>\n";
           if ($story->updates) print "<P><FONT COLOR=\"$this->bgcolor2\">Editor's note:</FONT> ". check_output($story->updates, 1) ."</P>\n";
           if ($story->article) print "<P>". check_output($story->article, 1) ."</P>\n";
@@ -137,7 +137,7 @@
        </TR>
       <TR BGCOLOR="<? echo $this->bgcolor3; ?>"><TD COLSPAN="2" BGCOLOR="<? echo $this->bgcolor3 ?>" ALIGN="right"><? echo "$reply"; ?></TD></TR>
      </TABLE></TD></TR></TABLE><BR>
-    <? 
+    <?
    }
 
    function controls() {
@@ -205,7 +205,7 @@
      ?></TD></TR></TABLE><BR><?
    }
 
-   function box($subject, $content) { 
+   function box($subject, $content) {
      ?>
       <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" BGCOLOR="<? echo $this->brcolor1; ?>" WIDTH="100%">
       <TR><TD>
@@ -220,7 +220,7 @@
       </TD></TR>
       </TABLE><BR>
      <?
-    
+
    }
 
    function footer() {
@@ -249,7 +249,7 @@
      </TABLE>
     </TD><TD BGCOLOR="<? print $this->clc0; ?>"><IMG SRC="themes/<? print $this->themename; ?>/images/null.gif" WIDTH="4"></TD><TD BGCOLOR="<? print $this->cl00; ?>"><IMG SRC="themes/<? print $this->themename; ?>/images/null.gif" WIDTH="10"></TD></TR>
     </TABLE>
-    </BODY> 
+    </BODY>
     </HTML>
     <?
    }

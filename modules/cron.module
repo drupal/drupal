@@ -22,7 +22,7 @@ function cron_display() {
 
   // Perform query:
   $result = db_query("SELECT * FROM crons");
- 
+
   // Generate output:
   $output .= "<FORM ACTION=\"admin.php?mod=cron\" METHOD=\"post\">\n";
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";

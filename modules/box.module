@@ -50,9 +50,9 @@ function box_block() {
 
 function box_admin_display() {
   $type = array(0 => "ASCII", 1 => "HTML", 2 => "PHP");
-  
+
   $result = db_query("SELECT * FROM boxes");
-  
+
   while ($block = db_fetch_object($result)) {
     $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
     $output .= " <TR><TH>Subject:</TH><TD>". format_data($block->subject) ."</TD></TR>\n";
@@ -89,7 +89,7 @@ function box_admin_new() {
 }
 
 function box_admin_add($subject, $content, $info, $link, $type) {
-  db_query("INSERT INTO boxes (subject, content, info, link, type) VALUES ('". check_input($subject) ."', '". check_code($content) ."', '". check_input($info) ."', '". check_input($link) ."', '". check_input($type) ."')"); 
+  db_query("INSERT INTO boxes (subject, content, info, link, type) VALUES ('". check_input($subject) ."', '". check_code($content) ."', '". check_input($info) ."', '". check_input($link) ."', '". check_input($type) ."')");
 }
 
 function box_admin_delete($id) {
@@ -108,7 +108,7 @@ function box_admin_edit($id) {
 
   if ($block = db_fetch_object($result)) {
     $output .= "<FORM ACTION=\"admin.php?mod=box\" METHOD=\"post\">\n";
-    
+
     $output .= "<P>\n";
     $output .= " <B>Subject:</B><BR>\n";
     $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" VALUE=\"". check_textfield($block->subject) ."\">\n";

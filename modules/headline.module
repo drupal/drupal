@@ -13,7 +13,7 @@ include "modules/backend.class";
 
 function headline_blocks() {
   global $theme;
- 
+
   // Get channel info:
   $result = db_query("SELECT * FROM channel ORDER BY id");
 
@@ -24,12 +24,12 @@ function headline_blocks() {
     if ($state % 3 == 0) print " <TR>\n";
 
     print "  <TD ALIGN=\"center\" VALIGN=\"top\" WIDTH=\"33%\">\n";
-    
+
     // Load backend from database:
     $backend = new backend($channel->id);
 
     if ($backend->headlines) {
-      unset($content);    
+      unset($content);
       foreach ($backend->headlines as $headline) $content .= "<LI>$headline</LI>\n";
     }
     else {
@@ -43,7 +43,7 @@ function headline_blocks() {
     if ($state % 3 == 2) print " </TR>\n";
 
     $state += 1;
-  }  
+  }
   print "</TABLE>\n";
 
   $theme->footer();
@@ -81,7 +81,7 @@ function headline_block() {
   $result = db_query("SELECT * FROM channel");
   while ($channel = db_fetch_object($result)) {
     $backend = new Backend($channel->id);
-    
+
     if ($backend->headlines) {
       unset($content);
       foreach ($backend->headlines as $headline) {
@@ -91,7 +91,7 @@ function headline_block() {
     else {
       $content = "no headlines available";
     }
- 
+
     $blocks[$channel->id]["subject"] = $backend->site;
     $blocks[$channel->id]["content"] = $content;
     $blocks[$channel->id]["info"] = "$backend->site headlines";
@@ -112,7 +112,7 @@ function headline_admin_display() {
   while ($channel = db_fetch_object($result)) {
     // Load backend from database:
     $backend = new backend($channel->id);
-    
+
     $output .= "<TR>\n";
     $output .= " <TD><A HREF=\"$backend->url\">$backend->site</A></TD>\n";
     $output .= " <TD><A HREF=\"mailto:$backend->contact\">$backend->contact</A></TD>\n";
@@ -120,10 +120,10 @@ function headline_admin_display() {
     $output .= " <TD ALIGN=\"center\"><A HREF=\"admin.php?mod=headline&op=refresh&id=$backend->id\">refresh</A></TD>\n";
     $output .= " <TD ALIGN=\"center\"><A HREF=\"admin.php?mod=headline&op=delete&id=$backend->id\">delete</A></TD>\n";
     $output .= "</TR>\n";
-  }  
+  }
 
   $output .= "</TABLE>\n";
-  
+
   print $output;
 }
 
@@ -147,13 +147,13 @@ function headline_admin_add() {
   $output .= "  </P>\n";
   $output .= "  <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Add backend\">\n";
   $output .= " </FORM>\n";
- 
+
   print $output;
 }
 
 function headline_admin() {
   global $op, $id, $site, $url, $backend, $contact;
-  
+
   print "<SMALL><A HREF=\"admin.php?mod=headline&op=add\">add new channel</A> | <A HREF=\"admin.php?mod=headline\">overview</A> | <A HREF=\"admin.php?mod=headline&op=help\">help</A></SMALL><HR>";
 
   switch($op) {
@@ -184,7 +184,7 @@ function headline_admin() {
 
 function headline_export($uri) {
   global $site_name, $site_url, $HTTP_REFERER, $HTTP_USER_AGENT;
-  
+
   if ($uri[2] == "headlines.rdf") {
 
     watchdog("message", "grabbed 'headlines.rdf' - referring url: $HTTP_REFERER - user agent: $HTTP_USER_AGENT");
@@ -203,7 +203,7 @@ function headline_export($uri) {
     print "</channel>\n";
 
     $result = db_query("SELECT * FROM stories WHERE status = 2 ORDER BY timestamp DESC LIMIT 10");
-  
+
     while ($story = db_fetch_object($result)) {
       print "<item>\n";
       print " <title>$story->subject</title>\n";

@@ -16,7 +16,7 @@ function module_rehash_crons($name, $module) {
   if ($module["cron"]) {
     if (!db_fetch_object(db_query("SELECT * FROM crons WHERE module = '$name'"))) {
       db_query("INSERT INTO crons (module, scheduled, timestamp) VALUES ('". check_input($name) ."', '172800', '0')");
-    }    
+    }
   }
   else {
     db_query("DELETE FROM crons WHERE module = '$name'");
@@ -24,7 +24,7 @@ function module_rehash_crons($name, $module) {
 }
 
 function module_rehash_blocks($name, $module) {
-  db_query("DELETE FROM blocks WHERE module = '$name'");  
+  db_query("DELETE FROM blocks WHERE module = '$name'");
   if ($module["block"] && $blocks = $module["block"]()) {
     foreach ($blocks as $offset=>$block) {
       db_query("INSERT INTO blocks (name, module, offset) VALUES ('". check_input($block["info"]) ."', '". check_input($name) ."', '". check_input($offset) ."')");
@@ -34,7 +34,7 @@ function module_rehash_blocks($name, $module) {
 
 function module_rehash($name) {
   global $repository;
-  
+
   if ($module = $repository[$name]) {
     $result = db_query("SELECT * FROM modules WHERE name = '$name'");
 

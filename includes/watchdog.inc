@@ -12,8 +12,8 @@ function watchdog($id, $message) {
 
   if ($watchdog[$id][1] && !($user->permissions == 1 || $user->id == 1)) {
     if ($log = db_fetch_object(db_query("SELECT * FROM watchdog WHERE hostname = '". getenv("REMOTE_ADDR") ."' AND level = '". $watchdog[$id][0] ."'"))) {
-      if (time() - $log->timestamp < $watchdog[$id][1]) { 
-        watchdog("warning", "'". getenv("REMOTE_ADDR") ."' exceeded '$id' submission rate"); 
+      if (time() - $log->timestamp < $watchdog[$id][1]) {
+        watchdog("warning", "'". getenv("REMOTE_ADDR") ."' exceeded '$id' submission rate");
         header("Location: error.php?op=flood");
         exit();
       }
@@ -28,5 +28,5 @@ function watchdog_clean($history = 302400) {
   $timestamp = time() - $history;
   db_query("DELETE FROM watchdog WHERE timestamp < $timestamp");
 }
- 
+
 ?>

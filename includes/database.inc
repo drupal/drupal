@@ -20,8 +20,8 @@ function db_query($query, $debug = false) {
   // debug output (if required):
   if ($debug) print "<PRE>query: ". htmlspecialchars($query) ."<BR>error message: ". mysql_error() ."</PRE>";
   if (!$qid) watchdog("error", "database: ". mysql_error() ."<BR>query: ". htmlspecialchars($query) ."");
- 
-  // return result from query: 
+
+  // return result from query:
   return $qid;
 }
 

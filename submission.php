@@ -35,7 +35,7 @@ function submission_display_item($id) {
   else {
     $theme->header();
     $theme->article($submission, "[ <A HREF=\"submission.php\"><FONT COLOR=\"$theme->hlcolor2\">back</FONT></A> ]");
-   
+
     print "<FORM ACTION=\"submission.php\" METHOD=\"post\">\n";
 
     print "<P>\n";
@@ -52,7 +52,7 @@ function submission_display_item($id) {
     print "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Vote\">\n";
     print "</FORM>\n";
 
-    $theme->footer(); 
+    $theme->footer();
   }
 }
 

@@ -12,7 +12,7 @@ function documentation_module($name, $module) {
 function documentation() {
   ?>
   <SMALL><I>$Id$</I></SMALL>
-  
+
   <H1>Chapter 1: introduction</H1>
 
   <P>Drupal is the English pronunciation for the Dutch word 'druppel' which means 'drop'.  Drupal is a fully-featured content management/discussion engine suitable to setup a news-driven community or portal site.  Drupal aims to provide easy installation, excessive configuration and fine-grained maintenance capabilities.  Due to its modular design, drupal is flexible and easy to adapt or extend.</P>
@@ -88,10 +88,10 @@ function documentation() {
 
   <H1>Chapter 3: drupal engine</H1>
 
-  <P>While we in no way consider the design and implementation of the drupal engine to be finished, we feel that our own accompanying intensive experience has given us a fairly stable and well-proven design. The following provides a brief over-view of the different aspects of drupal's core engine and features.</P> 
+  <P>While we in no way consider the design and implementation of the drupal engine to be finished, we feel that our own accompanying intensive experience has given us a fairly stable and well-proven design. The following provides a brief over-view of the different aspects of drupal's core engine and features.</P>
 
   <H2>Cron</H2>
- 
+
   <P>Cron (which stands for chronograph) is a periodic command scheduler: it executes commands at intervals specified in seconds.  It can be used to control the execution of daily, weekly and monthly jobs (or anything with a period of n seconds).   Automating tasks is one of the best ways to keep a system running smoothly, and if most of your administration does not require your direct involvement, cron is an ideal solution.</P>
   <P>Note that cron does not guarantee that the commands will be executed at the specified interval.  However, the engine will make sure that the commands are run at the specified intervals as closely as possible.</P>
   <P>Whenever <CODE>http://yourdomain.com/cron.php</CODE> is accessed, cron will run: it queries the database for the jobs cron controls, and their periods in seconds.  If a certain task wasn't executed in the last n seconds, where n is the period of that job, it will be executed.  It then records the date in the database so it can know when to run it again.  When all the executed commands terminate, cron is done.</P>
@@ -108,18 +108,18 @@ function documentation() {
   <P>The maintenance of all databases is handled by surprisingly simple code.  Access to to the database is done by facilities of drupal's database abstraction layer.  The purpose of drupal's database abstraction layer is to make it possible to run a drupal site on top of different databases like MySQL, Oracle, Postgres and so on.</P>
   <P>However, currently the only supported database is MySQL.  In fact, we haven't even bothered or tried to migrate to another database so our database abstraction layer might even contain undiscovered flaws.  Nevertless, moving to another database shouldn't be much of a problem.</P>
   <P>Take a look at <CODE>includes/database.inc</CODE> to see what database functions are supported.</P>
-  
+
   <H2>Moderation, collaborative rating</H2>
 
   <P>We like to experiment with moderation, trust metrics and collaborative filtering.  Why?  To help individuals and communities address the challenges of information overload.</P>
   <P>As each new piece of information competes for attention, people quickly tend to become overwhelmed and seek assistance in identifying the most interesting, worthwhile, valuable or entertaining items.  Not to mention the fact that reader-contributed content and other levels of interactivity tend to become chaotic, bloated and disreputable.</P>
   <P>Therefor, we decided to develop a public system powered by a community that aims to bring quality content to everyone's attention and to filter out all junk: to <I>sort the wheat from the chaff</I>.  The output should be something clean and homogenized featuring quality content, and should slide down the gullet far more easily.</P>
-  
+
   <H3>Open submission queue</H3>
   <P>Anyone who visits and has some news or some thoughts they'd like to share, can submit new content for consideration.  After someone has submitted something, their story is added to a queue.  All registered users can access this list of pending stories, that is, stories that have been submitted, but do not yet appear on the public front page. Those registered users can vote whether they think the story should be posted or not. When enough people vote to post a story, the story is pushed over the threshold and up it goes on the public page. On the other hand, when too many people voted to drop a story, the story will get trashed.</P>
 
   <H3>Comment rating</H3>
-  
+
   <P>Anyone with a user account will be able to moderate comments.  This lets people assign a score to a comment on how good they think the comment is or how visible they think it should be.  When more than one person rates a comment, the overall rating is just a simple average of all ratings.  Comments with high ratings are more visible than comments with a lower rating.  That way, comments that gain the approval of participants will gradually move up through statistical effects and pointless comments will sink into oblivion.</P>
   <P>Hence, the purpose of comment moderation is two-fold:</P>
   <UL>
@@ -129,7 +129,7 @@ function documentation() {
   <P>In the latter, comment moderation provides a technical solution to a social problem.</P>
 
   <H2>Modules</H2>
-    
+
   <P>When developing drupal it became clear that we wanted to have a system which is as modular as possible. A modular design will provide flexibility, adaptability, and continuity which in turn allows people to customize the site to their needs and likings.</P>
   <P>A drupal module is simply a file containing a set of routines written in PHP.  When used, the module code executes entirely within the context of the site.  Hence it can use all the functions and access all variables and structures of the main engine.  In fact, a module is not any different from a regular PHP file: it is more of a notion that automatically leads to good design principles and a good development model. Modularity better suits the open-source development model, because otherwise you can't easily have people working in parallel without risk of interference.</P>
   <P>The idea is to be able to run random code at given places in the engine.  This random code should then be able to do whatever needed to enhance the functionality.  The places where code can be executed are called "hooks" and are defined by a fixed interface.</P>
@@ -138,7 +138,7 @@ function documentation() {
   <P>In our above example, our associative array <CODE>$module</CODE> would look like:</P>
   <PRE>
     $module = array("bar" => "foo_bar");
-  </PRE>  
+  </PRE>
   <TABLE BORDER="1">
    <TR>
     <TH>Hook name</TH>
@@ -176,19 +176,19 @@ function documentation() {
   <P>Even though we aim towards modularity, a basic rule is to avoid defined interfaces.  We are exceptionally careful when it comes down to adding hooks because once you give a hook to developers they will start coding to it and once somebody's using it, you are stuck with it.</P>
 
   <H2>Theme system</H2>
-  
+
   <P>Drupal's theme system is simple, elegant, flexible and powerful.  You can accommodate rather major changes in overall appearance and significant structural changes.  Moreover, you control all aspects of your drupal site in terms of colors, mark-up, layout and even the position of most blocks (or boxes).  You can leave blocks out, move them from right to left, up and down until it fits your needs.</P>
   <P>In order to accomplish this, drupal uses a theme class that has a handful of functions. The drupal engine dynamically loads the correct theme class, instantiates it and then calls this class' functions where appropriate.</P>
   <P>Let's illustrate this with an easy example. Say, to generate the main page, the drupal engine would use something like:</P>
   <PRE>
-   $theme = new Theme(); 
-   $theme->header();   
+   $theme = new Theme();
+   $theme->header();
      // displays the header of a page
-   for each $article to be displayed { 
-      $theme->article($article); 
+   for each $article to be displayed {
+      $theme->article($article);
         // displays a themed article or story
-   } 
-   $theme->footer(); 
+   }
+   $theme->footer();
      // displays the footer of a page
   </PRE>
   <P>We have similar functions for things like comments (i.e. <CODE>$theme->comment($comment)</CODE>), generic boxes (i.e. <CODE>$theme->box($topic, $body)</CODE>) and so on.  To create your own theme, you simply need to provide a new implementation of these functions.</P>
@@ -203,8 +203,8 @@ function documentation() {
   <P>Once a user authenticated a session is started and until that session is over they won't have to re-authenticate.  To keep track of the individual sessions, drupal relies on PHP's session support.  A visitor accessing your web site is assigned an unique ID, the so-called session ID, which is stored in a cookie.  For security's sake, the cookie does not contain personal information but acts as a key to retrieve the information stored on your server's side.  When a visitor accesses your site, drupal will check whether a specific session ID has been sent with the request.  If this is the case, the prior saved environment is recreated.</P>
   <P>Drupal allows you to control who is allowed to get authenticated and who is not.  To accomplish this, you can ban certain hostnames, IPs, IP-ranges, e-mail address and usernames.  Any user that matches any of the given ban criteria will not be able to authenticate or to register as a new user.</P>
   <P>Authenticated users can themselves select entirely different appearances for the site, utilizing their own preferences for how the pages are structured, how navigation lists and other page components are presented and much more.</P>
-  <P>An important feature of drupal is that any user can be granted administrator rights.  The ability to share maintenance responsibility with volunteers from across the globe can be considered valuable for most community-based projects.</P> 
-   
+  <P>An important feature of drupal is that any user can be granted administrator rights.  The ability to share maintenance responsibility with volunteers from across the globe can be considered valuable for most community-based projects.</P>
+
   <H1>Chapter 4: drupal modules</H1>
 
   <?
@@ -219,7 +219,7 @@ function documentation() {
   <H2>CVS</H2>
 
   <H3>Introduction</H3>
- 
+
   <P>CVS is a tool to manage software revisions and release control in a multi-developer, multi-directory, multi-group environment.  It comes in very handy to maintain local modifications.</P>
   <P>Thus, CVS helps you if you are part of a group of people working on the same project.  In large software development projects, it's usually necessary for more then one software developer to be modifying modules of the code at the same time.  Without CVS, it is all too easy to overwrite each others' changes unless you are extremely careful.</P>
   <P>In addition, CVS helps to keep track of all changes.  Therefor, the CVS server has been setup to mail all CVS commits to all maintainers.  Thus, it does not require any effort to inform the other people about the work you have done, and by reading the mails everyone is kept up to date.</P>

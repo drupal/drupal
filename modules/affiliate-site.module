@@ -36,7 +36,7 @@ function affiliate_block() {
   $content .= " </SELECT>\n";
   $content .= "</FORM>\n";
   $content .= "</CENTER>\n";
- 
+
   $blocks[0]["subject"] = "Affiliate sites";
   $blocks[0]["content"] = $content;
   $blocks[0]["info"] = "Affiliate sites (selection)";
@@ -51,7 +51,7 @@ function affiliate_block() {
   $blocks[1]["subject"] = "Affiliate sites";
   $blocks[1]["content"] = $content;
   $blocks[1]["info"] = "Affiliate sites (sequential)";
- 
+
   return $blocks;
 }
 
