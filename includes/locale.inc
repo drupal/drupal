@@ -1,9 +1,12 @@
 <?
 
+function locale_load() {
+  global $languages, $user;
+  return ($user->language) ? $user->language : key($languages);
+}
+
 function t($string) {
-  $result = db_query("SELECT id FROM locales WHERE english = '". addslashes($string) ."'");
-  if (!db_fetch_object($result)) db_query("INSERT INTO locales (english, location) VALUES ('". addslashes($string) ."', '". check_input(getenv("REQUEST_URI")) ."')");
-  return $string;
+  return locale($string);
 }
 
 ?>

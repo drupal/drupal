@@ -56,7 +56,6 @@ function comment_settings($mode, $order, $threshold) {
 function comment_reply($pid, $id) {
   global $allowed_html, $link, $REQUEST_URI, $theme, $user;
 
-  // Extract parent-information/data:
   if ($pid) {
     $item = db_fetch_object(db_query("SELECT comments.*, users.userid FROM comments LEFT JOIN users ON comments.author = users.id WHERE comments.cid = $pid"));
     $theme->comment(new Comment($item->userid, $item->subject, $item->comment, $item->timestamp, $item->url, $item->fake_email, comment_score($comment), $comment->votes, $item->cid, $item->lid), "reply to this comment");
@@ -73,31 +72,23 @@ function comment_reply($pid, $id) {
   $output .= "<FORM ACTION=\"$REQUEST_URI\" METHOD=\"post\">\n";
 
   // Name field:
-  $output .= "<P>\n";
-  $output .= " <B>Your name:</B><BR>\n";
-  $output .= format_username($user->userid);
-  $output .= "</P>\n";
+  $output .= "<B>". t("Your name") .":</B><BR>\n";
+  $output .= format_username($user->userid) ."<P>\n";
 
   // Subject field:
-  $output .= "<P>\n";
-  $output .= " <B>Subject:</B><BR>\n";
-  $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" MAXLENGTH=\"60\">\n";
-  $output .= "</P>\n";
+  $output .= "<B>". t("Subject") .":</B><BR>\n";
+  $output .= "<INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" MAXLENGTH=\"60\"><P>\n";
 
   // Comment field:
-  $output .= "<P>\n";
-  $output .= " <B>Comment:</B><BR>\n";
-  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"comment\">". check_textarea($user->signature) ."</TEXTAREA><BR>\n";
-  $output .= " <SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL>\n";
-  $output .= "</P>\n";
+  $output .= "<B>".t("Comment") .":</B><BR>\n";
+  $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"comment\">". check_textarea($user->signature) ."</TEXTAREA><BR>\n";
+  $output .= "<SMALL><I>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</I></SMALL><P>\n";
 
   // Preview button:
-  $output .= "<P>\n";
-  $output .= " <SMALL><I>You must preview at least once before you can submit:</I></SMALL><BR>\n";
-  $output .= " <INPUT TYPE=\"hidden\" NAME=\"pid\" VALUE=\"$pid\">\n";
-  $output .= " <INPUT TYPE=\"hidden\" NAME=\"id\" VALUE=\"$id\">\n";
-  $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Preview comment\"><BR>\n";
-  $output .= "</P>\n";
+  $output .= "<SMALL><I>". t("You must preview at least once before you can submit") .":</I></SMALL><BR>\n";
+  $output .= "<INPUT TYPE=\"hidden\" NAME=\"pid\" VALUE=\"$pid\">\n";
+  $output .= "<INPUT TYPE=\"hidden\" NAME=\"id\" VALUE=\"$id\">\n";
+  $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview comment") ."\"><BR>\n";
 
   $output .= "</FORM>\n";
 
@@ -114,42 +105,32 @@ function comment_preview($pid, $id, $subject, $comment) {
   $output .= "<FORM ACTION=\"$REQUEST_URI\" METHOD=\"post\">\n";
 
   // Name field:
-  $output .= "<P>\n";
-  $output .= " <B>Your name:</B><BR>\n";
-  $output .= format_username($user->userid);
-  $output .= "</P>\n";
+  $output .= "<B>". t("Your name") .":</B><BR>\n";
+  $output .= format_username($user->userid) ."<P>\n";
 
   // Subject field:
-  $output .= "<P>\n";
-  $output .= " <B>Subject:</B><BR>\n";
-  $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" MAXLENGTH=\"60\" VALUE=\"". check_textfield($subject) ."\">\n";
-  $output .= "</P>\n";
+  $output .= "<B>". t("Subject") .":</B><BR>\n";
+  $output .= "<INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" MAXLENGTH=\"60\" VALUE=\"". check_textfield($subject) ."\"><P>\n";
 
   // Comment field:
-  $output .= "<P>\n";
-  $output .= " <B>Comment:</B><BR>\n";
-  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"comment\">". check_textarea($comment) ."</TEXTAREA><BR>\n";
-  $output .= " <SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL>\n";
-  $output .= "</P>\n";
+  $output .= "<B>". t("Comment") .":</B><BR>\n";
+  $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"comment\">". check_textarea($comment) ."</TEXTAREA><BR>\n";
+  $output .= "<SMALL><I>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</I></SMALL><P>\n";
 
   // Hidden fields:
   $output .= "<INPUT TYPE=\"hidden\" NAME=\"pid\" VALUE=\"$pid\">\n";
   $output .= "<INPUT TYPE=\"hidden\" NAME=\"id\" VALUE=\"$id\">\n";
 
   if (empty($subject)) {
-    $output .= "<P>\n";
-    $output .= " <FONT COLOR=\"red\"><B>Warning:</B></FONT> you did not supply a <U>subject</U>.\n";
-    $outout .= "</P>\n";
+    $output .= "<FONT COLOR=\"red\">". t("Warning: you did not supply a subject.") ."</FONT><P>\n";
   }
 
   // Preview and submit button:
-  $output .= "<P>\n";
-  $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Preview comment\">\n";
-  $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Post comment\">\n";
-  $output .= " </FORM>\n";
-  $output .= "</P>\n";
+  $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview comment") ."\">\n";
+  $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Post comment") ."\">\n";
+  $output .= "</FORM>\n";
 
-  $theme->box("Reply", $output);
+  $theme->box(t("Reply"), $output);
 }
 
 function comment_post($pid, $id, $subject, $comment) {
@@ -205,7 +186,7 @@ function comment_moderation($comment) {
     $output .= "</SELECT>\n";
   }
   else {
-    $output .= "<TABLE BORDER=\"0\" CELLSPACING=\"1\" CELLPADDING=\"1\"><TR><TD>score:</TD><TD>". check_output($comment->score) ."</TD></TR><TR><TD>votes:</TD><TD>". check_output($comment->votes) ."</TR></TABLE>\n";
+    $output .= "<TABLE BORDER=\"0\" CELLSPACING=\"1\" CELLPADDING=\"1\"><TR><TD>". t("score") .":</TD><TD>". check_output($comment->score) ."</TD></TR><TR><TD>". t("votes") .":</TD><TD>". check_output($comment->votes) ."</TR></TABLE>\n";
   }
 
   return $output;
@@ -218,8 +199,8 @@ function comment_controls($threshold = 1, $mode = 3, $order = 1) {
   $output .= comment_mode(($user->id ? $user->mode : $mode));
   $output .= comment_order(($user->id ? $user->sort : $order));
   $output .= comment_threshold(($user->id ? $user->threshold : $threshold));
-  $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Update settings\">\n";
-  $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Add comment\">\n";
+  $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Update settings") ."\">\n";
+  $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Add comment") ."\">\n";
   $output .= "</FORM>\n";
   $output .= "</FONT>\n";
   return $output;
@@ -228,7 +209,7 @@ function comment_controls($threshold = 1, $mode = 3, $order = 1) {
 function comment_threshold($threshold) {
   $output .= "<SELECT NAME=\"threshold\">\n";
   for ($i = -1; $i < 6; $i++) {
-    $output .= " <OPTION VALUE=\"$i\"". ($threshold == $i ? " SELECTED" : "") .">Filter - $i</OPTION>";
+    $output .= " <OPTION VALUE=\"$i\"". ($threshold == $i ? " SELECTED" : "") .">". t("Filter") ." - $i</OPTION>";
   }
   $output .= "</SELECT>\n";
   return $output;
@@ -313,9 +294,8 @@ function comment_thread_max($cid, $mode, $threshold, $level = 0, $dummy = 0) {
       $theme->comment($comment, comment_link($comment, 0));
     }
     else {
-      print "<P>";
       comment_comment($comment);
-      print "</P>";
+      print "<P>";
     }
     comment_thread_max($comment->cid, $mode, $threshold, $level + 1, $dummy + 1);
   }
@@ -385,7 +365,7 @@ function comment_render($lid, $cid) {
   if ($user->id) {
     // Print moderation form:
     print " <INPUT TYPE=\"hidden\" NAME=\"id\" VALUE=\"$lid\">\n";
-    print " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Moderate comments\">\n";
+    print " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Moderate comments") ."\">\n";
     print "</FORM>\n";
   }
 }

@@ -10,17 +10,11 @@ function account_get_user($uname) {
 function account_email() {
   $output .= "<P>". t("Lost your password?  Fill out your username and e-mail address, and your password will be mailed to you.") ."</P>\n";
   $output .= "<FORM ACTION=\"account.php\" METHOD=\"post\">\n";
-  $output .= "<P>\n";
-  $output .= " <B>". t("Username") .":</B><BR>\n";
-  $output .= " <INPUT NAME=\"userid\"><BR>\n";
-  $output .= "</P>\n";
-  $output .= "<P>\n";
-  $output .= " <B>". t("E-mail address") .":</B><BR>\n";
-  $output .= " <INPUT NAME=\"email\"><BR>\n";
-  $output .= "</P>\n";
-  $output .= "<P>\n";
-  $output .= " <INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"E-mail new password\">\n";
-  $output .= "</P>\n";
+  $output .= "<B>". t("Username") .":</B><BR>\n";
+  $output .= "<INPUT NAME=\"userid\"><P>\n";
+  $output .= "<B>". t("E-mail address") .":</B><BR>\n";
+  $output .= "<INPUT NAME=\"email\"><P>\n";
+  $output .= "<INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"". t("E-mail new password") ."\">\n";
   $output .= "</FORM>\n";
 
   return $output;
@@ -29,7 +23,7 @@ function account_email() {
 function account_create($user = "", $error = "") {
   global $theme;
 
-  if ($error) $output .= "<B><FONT COLOR=\"red\">Failed to create account:</FONT>$error</B>\n";
+  if ($error) $output .= "<P><FONT COLOR=\"red\">". t("Failed to create account: $error.") ."</FONT></P>\n";
   else $output .= "<P>". t("Registering allows you to comment on stories, to moderate comments and pending stories, to customize the look and feel of the site and generally helps you interact with the site more efficiently.") ."</P><P>". t("To create an account, simply fill out this form an click the 'Create account' button below.  An e-mail will then be sent to you with instructions on how to validate your account.") ."</P>\n";
 
   $output .= "<FORM ACTION=\"account.php\" METHOD=\"post\">\n";
@@ -39,7 +33,7 @@ function account_create($user = "", $error = "") {
   $output .= "<B>". t("E-mail address") .":</B><BR>\n";
   $output .= "<INPUT NAME=\"email\"><BR>\n";
   $output .= "<SMALL><I>". t("You will be sent instructions on how to validate your account via this e-mail address: make sure it is accurate.") ."</I></SMALL><P>\n";
-  $output .= "<INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"Create account\">\n";
+  $output .= "<INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"". t("Create account") ."\">\n";
   $output .= "</FORM>\n";
 
   return $output;
@@ -72,31 +66,40 @@ function account_user_edit() {
   if ($user->id) {
     // Generate output/content:
     $output .= "<FORM ACTION=\"account.php\" METHOD=\"post\">\n";
+
     $output .= "<B>". t("Username") .":</B><BR>\n";
     $output .= "&nbsp; $user->userid<P>\n";
     $output .= "<I>". t("Required, unique, and can not be changed.") ."</I><P>\n";
+
     $output .= "<B>". t("Real name") .":</B><BR>\n";
     $output .= "<INPUT NAME=\"edit[name]\" MAXLENGTH=\"55\" SIZE=\"30\" VALUE=\"$user->name\"><BR>\n";
-    $output .= "<I>". t("Optional.") ."</I><P>\n";
+    $output .= "<I>". t("Optional") .".</I><P>\n";
+
     $output .= "<B>". t("Real e-mail address") .":</B><BR>\n";
     $output .= "&nbsp; $user->real_email<P>\n";
     $output .= "<I>". t("Required, unique, can not be changed.") ." ". t("Your real e-mail address is never displayed publicly: only needed in case you lose your password.") ."</I><P>\n";
+
     $output .= "<B>". t("Fake e-mail address") .":</B><BR>\n";
     $output .= "<INPUT NAME=\"edit[fake_email]\" MAXLENGTH=\"55\" SIZE=\"30\" VALUE=\"$user->fake_email\"><BR>\n";
-    $output .= "<I>". t("Optional.") ." ". t("Displayed publicly so you may spam proof your real e-mail address if you want.") ."</I><P>\n";
+    $output .= "<I>". t("Optional") .". ". t("Displayed publicly so you may spam proof your real e-mail address if you want.") ."</I><P>\n";
+
     $output .= "<B>". t("Homepage") .":</B><BR>\n";
     $output .= "<INPUT NAME=\"edit[url]\" MAXLENGTH=\"55\" SIZE=\"30\" VALUE=\"$user->url\"><BR>\n";
-    $output .= "<I>". t("Optional.") ." ". t("Make sure you enter fully qualified URLs only.  That is, remember to include \"http://\".") ."</I><P>\n";
+    $output .= "<I>". t("Optional") .". ". t("Make sure you enter fully qualified URLs only.  That is, remember to include \"http://\".") ."</I><P>\n";
+
     $output .= "<B>". t("Bio") .":</B> (". t("maximal 255 characters") .")<BR>\n";
     $output .= "<TEXTAREA NAME=\"edit[bio]\" COLS=\"35\" ROWS=\"5\" WRAP=\"virtual\">$user->bio</TEXTAREA><BR>\n";
-    $output .= "<I>". t("Optional.") ." ". t("This biographical information is publicly displayed on your user page.") ."<BR>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</I><P>\n";
+    $output .= "<I>". t("Optional") .". ". t("This biographical information is publicly displayed on your user page.") ."<BR>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</I><P>\n";
+
     $output .= "<B>". t("Signature") .":</B> (". t("maximal 255 characters") .")<BR>\n";
     $output .= "<TEXTAREA NAME=\"edit[signature]\" COLS=\"35\" ROWS=\"5\" WRAP=\"virtual\">$user->signature</TEXTAREA><BR>\n";
-    $output .= "<I>". t("Optional.") ." ". t("This information will be publicly displayed at the end of your comments.") ."<BR>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</I><P>\n";
+    $output .= "<I>". t("Optional") .". ". t("This information will be publicly displayed at the end of your comments.") ."<BR>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</I><P>\n";
+
     $output .= "<B>". t("Password") .":</B><BR>\n";
     $output .= "<INPUT TYPE=\"password\" NAME=\"edit[pass1]\" SIZE=\"10\" MAXLENGTH=\"20\"> <INPUT TYPE=\"password\" NAME=\"edit[pass2]\" SIZE=\"10\" MAXLENGTH=\"20\"><BR>\n";
     $output .= "<I>". t("Enter your new password twice if you want to change your current password or leave it blank if you are happy with your current password.") ."</I><P>\n";
-    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save user information\"><BR>\n";
+
+    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Save user information") ."\"><BR>\n";
     $output .= "</FORM>\n";
 
     // Display output/content:
@@ -129,34 +132,46 @@ function account_user_save($edit) {
 }
 
 function account_site_edit() {
-  global $cmodes, $corder, $theme, $themes, $user;
+  global $cmodes, $corder, $theme, $themes, $languages, $user;
 
   if ($user->id) {
     $output .= "<FORM ACTION=\"account.php\" METHOD=\"post\">\n";
+
     $output .= "<B>". t("Theme" ) .":</B><BR>\n";
     foreach ($themes as $key=>$value) $options1 .= " <OPTION VALUE=\"$key\"". (($user->theme == $key) ? " SELECTED" : "") .">$key - $value[1]</OPTION>\n";
     $output .= "<SELECT NAME=\"edit[theme]\">\n$options1</SELECT><BR>\n";
     $output .= "<I>". t("Selecting a different theme will change the look and feel of the site.") ."</I><P>\n";
+
     $output .= "<B>". t("Timezone") .":</B><BR>\n";
     $date = time() - date("Z");
     for ($zone = -43200; $zone <= 46800; $zone += 3600) $options2 .= " <OPTION VALUE=\"$zone\"". (($user->timezone == $zone) ? " SELECTED" : "") .">". date("l, F dS, Y - h:i A", $date + $zone) ." (GMT ". $zone / 3600 .")</OPTION>\n";
     $output .= "<SELECT NAME=\"edit[timezone]\">\n$options2</SELECT><BR>\n";
     $output .= "<I>". t("Select what time you currently have and your timezone settings will be set appropriate.") ."</I><P>\n";
+
+    $output .= "<B>". t("Language" ) .":</B><BR>\n";
+    foreach ($languages as $key=>$value) $options3 .= " <OPTION VALUE=\"$key\"". (($user->language == $key) ? " SELECTED" : "") .">$value - $key</OPTION>\n";
+    $output .= "<SELECT NAME=\"edit[language]\">\n$options3</SELECT><BR>\n";
+    $output .= "<I>". t("Selecting a different language will change the language the site.") ."</I><P>\n";
+
     $output .= "<B>". t("Maximum number of stories to display") .":</B><BR>\n";
-    for ($stories = 10; $stories <= 30; $stories += 5) $options3 .= "<OPTION VALUE=\"$stories\"". (($user->stories == $stories) ? " SELECTED" : "") .">$stories</OPTION>\n";
-    $output .= "<SELECT NAME=\"edit[stories]\">\n$options3</SELECT><BR>\n";
+    for ($stories = 10; $stories <= 30; $stories += 5) $options4 .= "<OPTION VALUE=\"$stories\"". (($user->stories == $stories) ? " SELECTED" : "") .">$stories</OPTION>\n";
+    $output .= "<SELECT NAME=\"edit[stories]\">\n$options4</SELECT><BR>\n";
     $output .= "<I>". t("The maximum number of stories that will be displayed on the main page.") ."</I><P>\n";
-    foreach ($cmodes as $key=>$value) $options4 .= "<OPTION VALUE=\"$key\"". ($user->mode == $key ? " SELECTED" : "") .">$value</OPTION>\n";
+    foreach ($cmodes as $key=>$value) $options5 .= "<OPTION VALUE=\"$key\"". ($user->mode == $key ? " SELECTED" : "") .">$value</OPTION>\n";
+
     $output .= "<B>". t("Comment display mode") .":</B><BR>\n";
-    $output .= "<SELECT NAME=\"edit[mode]\">$options4</SELECT><P>\n";
-    foreach ($corder as $key=>$value) $options5 .= "<OPTION VALUE=\"$key\"". ($user->sort == $key ? " SELECTED" : "") .">$value</OPTION>\n";
+    $output .= "<SELECT NAME=\"edit[mode]\">$options5</SELECT><P>\n";
+    foreach ($corder as $key=>$value) $options6 .= "<OPTION VALUE=\"$key\"". ($user->sort == $key ? " SELECTED" : "") .">$value</OPTION>\n";
+
     $output .= "<B>". t("Comment sort order") .":</B><BR>\n";
-    $output .= "<SELECT NAME=\"edit[sort]\">$options5</SELECT><P>\n";
-    for ($i = -1; $i < 6; $i++) $options6 .= " <OPTION VALUE=\"$i\"". ($user->threshold == $i ? " SELECTED" : "") .">Filter - $i</OPTION>";
+    $output .= "<SELECT NAME=\"edit[sort]\">$options6</SELECT><P>\n";
+    for ($i = -1; $i < 6; $i++) $options7 .= " <OPTION VALUE=\"$i\"". ($user->threshold == $i ? " SELECTED" : "") .">Filter - $i</OPTION>";
+
     $output .= "<B>". t("Comment filter") .":</B><BR>\n";
-    $output .= "<SELECT NAME=\"edit[threshold]\">$options6</SELECT><BR>\n";
+    $output .= "<SELECT NAME=\"edit[threshold]\">$options7</SELECT><BR>\n";
     $output .= "<I>". t("Comments that scored less than this threshold setting will be ignored.  Anonymous comments start at 0, comments of people logged on start at 1 and moderators can add and subtract points.") ."</I><P>\n";
-    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save site settings\"><BR>\n";
+
+    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Save site settings") ."\"><BR>\n";
     $output .= "</FORM>\n";
 
     $theme->header();
@@ -177,6 +192,7 @@ function account_site_save($edit) {
   if ($user->id) {
     $data[theme] = $edit[theme];
     $data[timezone] = $edit[timezone];
+    $data[language] = $edit[language];
     $data[stories] = $edit[stories];
     $data[mode] = $edit[mode];
     $data[sort] = $edit[sort];
@@ -197,7 +213,7 @@ function account_content_edit() {
       $output .= "<INPUT TYPE=\"checkbox\" NAME=\"edit[$block->name]\"". ($entry->user ? " CHECKED" : "") ."> ". t($block->name) ."<BR>\n";
     }
     $output .= "<P><I>". t("Enable the blocks you would like to see displayed in the side bars.") ."</I></P>\n";
-    $output .= "<P><INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save content settings\"></P>\n";
+    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Save content settings") ."\">\n";
     $output .= "</FORM>\n";
 
     $theme->header();
@@ -243,7 +259,7 @@ function account_user($uname) {
 
     // Display account information:
     $theme->header();
-    $theme->box("Personal information", $output);
+    $theme->box(t("Personal information"), $output);
     $theme->footer();
   }
   elseif ($uname && $account = account_get_user($uname)) {
@@ -285,17 +301,17 @@ function account_validate($user) {
   global $type2index;
 
   // Verify username and e-mail address:
-  if (empty($user[real_email]) || (!eregi("^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3}$", $user[real_email]))) $error .= "<LI>". t("the specified e-mail address is not valid") .".</LI>\n";
-  if (empty($user[userid]) || (ereg("[^a-zA-Z0-9_-]", $user[userid]))) $error .= "<LI>". t("the specified username is not valid") .".</LI>\n";
-  if (strlen($user[userid]) > 15) $error .= "<LI>". t("the specified username is too long: it must be less than 15 characters") .".</LI>\n";
+  if (empty($user[real_email]) || (!eregi("^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3}$", $user[real_email]))) $error = t("the specified e-mail address is not valid");
+  if (empty($user[userid]) || (ereg("[^a-zA-Z0-9_-]", $user[userid]))) $error = t("the specified username is not valid");
+  if (strlen($user[userid]) > 15) $error = t("the specified username is too long: it must be less than 15 characters");
 
   // Check to see whether the username or e-mail address are banned:
-  if ($ban = ban_match($user[userid], $type2index[usernames])) $error .= "<LI>". t("the specified username is banned  for the following reason") .": <I>$ban->reason</I>.</LI>\n";
-  if ($ban = ban_match($user[real_email], $type2index[addresses])) $error .= "<LI>". t("the specified e-mail address is banned for the following reason") .": <I>$ban->reason</I>.</LI>\n";
+  if ($ban = ban_match($user[userid], $type2index[usernames])) $error = t("the specified username is banned") .": <I>$ban->reason</I>";
+  if ($ban = ban_match($user[real_email], $type2index[addresses])) $error = t("the specified e-mail address is banned") .": <I>$ban->reason</I>.";
 
   // Verify whether username and e-mail address are unique:
-  if (db_num_rows(db_query("SELECT userid FROM users WHERE LOWER(userid) = LOWER('$user[userid]')")) > 0) $error .= "<LI>". t("the specified username is already taken") .".</LI>\n";
-  if (db_num_rows(db_query("SELECT real_email FROM users WHERE LOWER(real_email)=LOWER('$user[real_email]')")) > 0) $error .= "<LI>". t("the specified e-mail address is already registered") .".</LI>\n";
+  if (db_num_rows(db_query("SELECT userid FROM users WHERE LOWER(userid) = LOWER('$user[userid]')")) > 0) $error = t("the specified username is already taken");
+  if (db_num_rows(db_query("SELECT real_email FROM users WHERE LOWER(real_email)=LOWER('$user[real_email]')")) > 0) $error = t("the specified e-mail address is already used for another account");
 
   return $error;
 }
@@ -463,7 +479,7 @@ function account_track_site() {
   }
 
   $theme->header();
-  $theme->box(t("Track $site_name"), $output);
+  $theme->box(strtr(t("Track %a"), array("%a" => $site_name)), ($output ? $output : t("No comments or stories posted recently.")));
   $theme->footer();
 }
 
@@ -474,30 +490,30 @@ if (strstr($name, " ") || strstr($hash, " ")) {
 }
 
 switch ($op) {
-  case "Login":
-    account_session_start($userid, $passwd);
-    header("Location: account.php?op=info");
-    break;
-  case "E-mail new password":
+  case t("E-mail new password"):
     account_email_submit($userid, $email);
     break;
-  case "Create account":
+  case t("Create account"):
     account_create_submit($userid, $email);
+    break;
+  case t("Save user information"):
+    account_user_save($edit);
+    account_user($user->userid);
+    break;
+  case t("Save site settings"):
+    account_site_save($edit);
+    header("Location: account.php?op=info");
+    break;
+  case t("Save content settings"):
+    account_content_save($edit);
+    account_user($user->userid);
     break;
   case "confirm":
     account_create_confirm($name, $hash);
     break;
-  case "Save user information":
-    account_user_save($edit);
-    account_user($user->userid);
-    break;
-  case "Save site settings":
-    account_site_save($edit);
+  case "login":
+    account_session_start($userid, $passwd);
     header("Location: account.php?op=info");
-    break;
-  case "Save content settings":
-    account_content_save($edit);
-    account_user($user->userid);
     break;
   case "logout":
     account_session_close();

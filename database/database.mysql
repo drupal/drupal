@@ -110,8 +110,16 @@ CREATE TABLE layout (
 
 CREATE TABLE locales (
   id int(11) DEFAULT '0' NOT NULL auto_increment,
-  english TEXT DEFAULT '' NOT NULL,
   location varchar(128) DEFAULT '' NOT NULL,
+  string TEXT DEFAULT '' NOT NULL,
+  da TEXT DEFAULT '' NOT NULL,
+  fi TEXT DEFAULT '' NOT NULL,
+  fr TEXT DEFAULT '' NOT NULL,
+  en TEXT DEFAULT '' NOT NULL,
+  es TEXT DEFAULT '' NOT NULL,
+  nl TEXT DEFAULT '' NOT NULL,
+  no TEXT DEFAULT '' NOT NULL,
+  sw TEXT DEFAULT '' NOT NULL,
   PRIMARY KEY (id)
 );
 
@@ -168,6 +176,7 @@ CREATE TABLE users (
   hash varchar(12) DEFAULT '' NOT NULL,
   rating decimal(8,4) DEFAULT '0' NOT NULL,
   timezone varchar(8) DEFAULT '0' NOT NULL,
+  language varchar(2) DEFAULT '0' NOT NULL,
   PRIMARY KEY (id)
 );
 

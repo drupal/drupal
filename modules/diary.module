@@ -35,7 +35,7 @@ function diary_page_overview($num = 20) {
 
   while ($diary = db_fetch_object($result)) {
     if ($time != date("F jS", $diary->timestamp)) {
-      $output .= "<B>". date("l, F jS", $diary->timestamp) ."</B>\n";
+      $output .= "<B>". $date = t(date("l", $timestamp)) .", ". t(date("F", $timestamp)) ." ". date("j", $diary->timestamp) ."</B>\n";
       $time = date("F jS", $diary->timestamp);
     }
     $output .= "<DL>\n";
@@ -55,13 +55,13 @@ function diary_page_overview($num = 20) {
 function diary_page_entry($timestamp, $text, $id = 0) {
   if ($id) {
     $output .= "<DL>\n";
-    $output .= " <DT><B>". date("l, F jS", $timestamp) .":</B> </DT>\n";
+    $output .= " <DT><B>". format_date($timestamp, "large") .":</B></DT>\n";
     $output .= " <DD><P>[ <A HREF=\"module.php?mod=diary&op=edit&id=$id\">". t("edit") ."</A> ]</P><P>". check_output($text, 1) ."</P></DD>\n";
     $output .= "</DL>\n";
   }
   else {
     $output .= "<DL>\n";
-    $output .= " <DT><B>". date("l, F jS", $timestamp) .":</B></DT>\n";
+    $output .= " <DT><B>". format_date($timestamp, "large") .":</B></DT>\n";
     $output .= " <DD><P>". check_output($text, 1) ."</P></DD>\n";
     $output .= "</DL>\n";
   }
@@ -215,7 +215,7 @@ function diary_user($username, $section, $operation) {
   if ($section == "user" && $operation == "view") {
     $result = db_query("SELECT d.* FROM diaries d LEFT JOIN users u ON u.id = d.author WHERE u.userid = '$username' AND d.timestamp > ". (time() - 1209600) ." ORDER BY id DESC LIMIT 2");
     while ($diary = db_fetch_object($result)) {
-      $content .= "<DL><DT><B>". date("l, F jS", $diary->timestamp) .":</B></DT><DD><P>". check_output($diary->text) ."</P><P>[ <A HREF=\"module.php?mod=diary&op=view&name=$username\">more</A> ]</P></DD></DL>\n";
+      $content .= "<DL><DT><B>". format_date($diary->timestamp, "large") .":</B></DT><DD><P>". check_output($diary->text) ."</P><P>[ <A HREF=\"module.php?mod=diary&op=view&name=$username\">more</A> ]</P></DD></DL>\n";
       $diaries++;
     }
 
@@ -236,7 +236,7 @@ function diary_block() {
 
   while ($diary = db_fetch_object($result)) {
     if ($time != date("F jS", $diary->timestamp)) {
-      $content .= "<P><B>". date("l, M jS", $diary->timestamp) ."</B></P>\n";
+      $content .= "<P><B>". t(date("l", $diary->timestamp)) ."</B> (". date("m/d/Y", $diary->timestamp) .")</P>\n";
       $time = date("F jS", $diary->timestamp);
     }
     $content .= "<LI><A HREF=\"module.php?mod=diary&op=view&name=$diary->userid\">$diary->userid</A></LI>\n";

@@ -1,5 +1,7 @@
 <?
 
+include_once "includes/common.inc";
+
 function submit_enter() {
   global $anonymous, $allowed_html, $theme, $user;
 
@@ -11,44 +13,31 @@ function submit_enter() {
   // Submission form:
   $output .= "<FORM ACTION=\"submit.php\" METHOD=\"post\">\n";
 
-  $output .= "<P>\n";
-  $output .= " <B>". t("Your name") .":</B><BR>\n";
-  $output .= format_username($user->userid);
-  $output .= "</P>\n";
+  $output .= "<B>". t("Your name") .":</B><BR>\n";
+  $output .= format_username($user->userid) ."<P>\n";
 
-  $output .= "<P>\n";
-  $output .= " <B>". t("Subject") .":</B><BR>\n";
-  $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" MAXLENGTH=\"60\"><BR>\n";
-  $output .= "</P>\n";
+  $output .= "<B>". t("Subject") .":</B><BR>\n";
+  $output .= "<INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" MAXLENGTH=\"60\"><P>\n";
 
-  $output .= "<P>\n";
-  $output .= " <B>". t("Section") .":</B><BR>\n";
-  $output .= " <SELECT NAME=\"section\">\n";
-  foreach ($sections = section_get() as $value) $output .= "  <OPTION VALUE=\"$value\">$value</OPTION>\n";
-  $output .= " </SELECT>\n";
-  $output .= "</P>\n";
+  $output .= "<B>". t("Section") .":</B><BR>\n";
+  foreach ($sections = section_get() as $value) $options .= "  <OPTION VALUE=\"$value\">$value</OPTION>\n";
+  $output .= "<SELECT NAME=\"section\">$options</SELECT><P>\n";
 
-  $output .= "<P>\n";
-  $output .= " <B>". t("Abstract") .":</B><BR>\n";
-  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"abstract\" MAXLENGTH=\"20\"></TEXTAREA><BR>\n";
-  $output .= " <SMALL><I>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</I></SMALL>\n";
-  $output .= "</P>\n";
+  $output .= "<B>". t("Abstract") .":</B><BR>\n";
+  $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"abstract\" MAXLENGTH=\"20\"></TEXTAREA><BR>\n";
+  $output .= "<SMALL><I>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</I></SMALL><P>\n";
 
-  $output .= "<P>\n";
-  $output .= " <B>". t("Extended story") .":</B><BR>\n";
-  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"article\"></TEXTAREA><BR>\n";
-  $output .= " <SMALL><I>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</I></SMALL>\n";
-  $output .= "</P>\n";
+  $output .= "<B>". t("Extended story") .":</B><BR>\n";
+  $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"article\"></TEXTAREA><BR>\n";
+  $output .= "<SMALL><I>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</I></SMALL><P>\n";
 
-  $output .= "<P>\n";
-  $output .= " <SMALL><I>". t("You must preview at least once before you can submit") .":</I></SMALL><BR>\n";
-  $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Preview submission\">\n";
-  $output .= "</P>\n";
+  $output .= "<SMALL><I>". t("You must preview at least once before you can submit") .":</I></SMALL><BR>\n";
+  $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview submission") ."\"><P>\n";
 
   $output .= "</FORM>\n";
 
   $theme->header();
-  $theme->box(t("Submit a story"), $output);
+  $theme->box(t("New submission"), $output);
   $theme->footer();
 }
 
@@ -59,54 +48,35 @@ function submit_preview($subject, $abstract, $article, $section) {
 
   $output .= "<FORM ACTION=\"submit.php\" METHOD=\"post\">\n";
 
-  $output .= "<P>\n";
-  $output .= " <B>". t("Your name") .":</B><BR>\n";
-  $output .= format_username($user->userid);
-  $output .= "</P>\n";
+  $output .= "<B>". t("Your name") .":</B><BR>\n";
+  $output .= format_username($user->userid) ."<P>";
 
-  $output .= "<P>\n";
-  $output .= " <B>". t("Subject") .":</B><BR>\n";
-  $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" MAXLENGTH=\"60\" VALUE=\"". check_output(check_textfield($subject)) ."\"><BR>\n";
-  $output .= "</P>\n";
+  $output .= "<B>". t("Subject") .":</B><BR>\n";
+  $output .= "<INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" MAXLENGTH=\"60\" VALUE=\"". check_textfield($subject) ."\"><BR><P>\n";
 
-  $output .= "<P>\n";
-  $output .= " <B>". t("Section") .":</B><BR>\n";
-  $output .= " <SELECT NAME=\"section\">\n";
-  foreach ($sections = section_get() as $value) $output .= "  <OPTION VALUE=\"$value\"". ($section == $value ? " SELECTED" : "") .">$value</OPTION>\n";
-  $output .= "</SELECT>\n";
-  $output .= "</P>\n";
+  $output .= "<B>". t("Section") .":</B><BR>\n";
+  foreach ($sections = section_get() as $value) $options .= "  <OPTION VALUE=\"$value\"". ($section == $value ? " SELECTED" : "") .">$value</OPTION>\n";
+  $output .= "<SELECT NAME=\"section\">$options</SELECT><P>\n";
 
-  $output .= "<P>\n";
   $output .= "<B>". t("Abstract") .":</B><BR>\n";
-  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"abstract\">". check_textarea($abstract) ."</TEXTAREA><BR>\n";
-  $output .= " <SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL>\n";
-  $output .= "</P>\n";
+  $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"abstract\">". check_textarea($abstract) ."</TEXTAREA><BR>\n";
+  $output .= "<SMALL><I>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</I></SMALL><P>\n";
 
-  $output .= "<P>\n";
-  $output .= " <B>". t("Extended story") .":</B><BR>\n";
-  $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"article\">". check_textarea($article) ."</TEXTAREA><BR>\n";
-  $output .= " <SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL>\n";
-  $output .= "</P>\n";
+  $output .= "<B>". t("Extended story") .":</B><BR>\n";
+  $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"article\">". check_textarea($article) ."</TEXTAREA><BR>\n";
+  $output .= "<SMALL><I>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</I></SMALL><P>\n";
 
   if (empty($subject)) {
-    $output .= "<P><FONT COLOR=\"red\">". t("Warning: you did not supply a subject.") ."</FONT></P>\n";
-    $output .= "<P>\n";
-    $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Preview submission\">\n";
-    $output .= "</P>\n";
+    $output .= "<FONT COLOR=\"red\">". t("Warning: you did not supply a subject.") ."</FONT><P>\n";
+    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview submission") ."\">\n";
   }
   else if (empty($abstract)) {
-    $output .= "<P>\n";
-    $output .= " <FONT COLOR=\"red\">". t("Warning: you did not supply an abstract.") ."\n";
-    $outout .= "</P>\n";
-    $output .= "<P>\n";
-    $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Preview submission\">\n";
-    $output .= "</P>\n";
+    $output .= "<FONT COLOR=\"red\">". t("Warning: you did not supply an abstract.") ."</FONT><P>\n";
+    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview submission") ."\">\n";
   }
   else {
-    $output .= "<P>\n";
-    $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Preview submission\">\n";
-    $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Submit submission\">\n";
-    $output .= "</P>\n";
+    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview submission") ."\">\n";
+    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Submit submission") ."\">\n";
   }
   $output .= "</FORM>\n";
 
@@ -127,17 +97,15 @@ function submit_submit($subject, $abstract, $article, $section) {
 
   // Display confirmation message:
   $theme->header();
-  $theme->box("Thank you for your submission.", "Thank you for your submission. Your submission has been whisked away to our submission queue where our registered users will frown at it, poke at it and hopefully carry it to the front page for discussion.");
+  $theme->box(t("Submission completed"), t("Thank you for your submission. Your submission has been whisked away to our submission queue where our registered users will frown at it, poke at it and hopefully carry it to the front page for discussion."));
   $theme->footer();
 }
 
-include_once "includes/common.inc";
-
 switch($op) {
-  case "Preview submission":
+  case t("Preview submission"):
     submit_preview($subject, $abstract, $article, $section);
     break;
-  case "Submit submission":
+  case t("Submit submission"):
     submit_submit($subject, $abstract, $article, $section);
     break;
   default:
