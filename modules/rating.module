@@ -1,5 +1,5 @@
 <?php
-// $Id: rating.module,v 1.38 2001/12/12 09:41:55 dries Exp $
+// $Id: rating.module,v 1.39 2001/12/12 10:14:58 dries Exp $
 
 function rating_help() {
   $output .= "<p>Drupal uses <i>gravity</i> as an indication for each user's contributed value.  The system can be compared with <a href=\"http://www.slashcode.com/\">SlashCode</a>'s Karma and is - in fact - even more similar to <a href=\"http://scoop.kuro5hin.org/\">Scoop</a>'s Mojo.</p>";
@@ -14,7 +14,7 @@ function rating_perm() {
 
 function rating_link($type) {
   if ($type == "page" && user_access("access user ratings")) {
-    $links[] = "<a href=\"module.php/mod/rating\">". t("user ratings") ."</a>";
+    $links[] = "<a href=\"module.php?mod=rating\">". t("user ratings") ."</a>";
   }
 
   return $links ? $links : array();
