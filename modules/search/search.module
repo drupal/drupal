@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.86 2004/09/16 07:17:55 dries Exp $
+// $Id: search.module,v 1.87 2004/09/21 18:35:30 dries Exp $
 
 /**
  * @file
@@ -376,7 +376,7 @@ function search_view() {
     // Only perform search if there is non-whitespace search term:
     if (trim($keys)) {
       // Log the search keys:
-      watchdog('search', t('Search: %keys.', array('%keys' => "<em>$keys</em>")), l(t('view results'), 'search', NULL, 'keys='. urlencode($keys)));
+      watchdog('search', t('Search: %keys.', array('%keys' => "<em>$keys</em>")), l(t('results'), 'search', NULL, 'keys='. urlencode($keys)));
 
       // Collect the search results:
       $results = search_data($keys);
