@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.78 2002/10/22 18:39:56 dries Exp $
+// $Id: comment.module,v 1.79 2002/10/24 14:29:00 kjartan Exp $
 
 $GLOBALS["cmodes"] = array(1 => t("Flat list - collapsed"), 2 => t("Flat list - expanded"), 3 => t("Threaded list - collapsed"), 4 => t("Threaded list - expanded"));
 $GLOBALS["corder"] = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"));
@@ -814,7 +814,9 @@ function comment_admin_overview($status = 0, $comment_page = 0) {
     $next_link = la(t("next comments"), array("mod" => "comment", "status" => $status, "comment_page" => ($comment_page + 1)));
   }
 
-  $output .= "<tr><td>$prev_link</td><td></td><td></td><td></td><td></td><td>$next_link</td></tr>";
+  if ($prev_link || $next_link) {
+    $output .= "<tr><td>$prev_link</td><td></td><td></td><td></td><td></td><td>$next_link</td></tr>";
+  }
   $output .= "</table>\n";
 
   return $output;
