@@ -194,6 +194,7 @@ function import_refresh($feed) {
     ** Remove unsupported tags or sub-elements:
     */
 
+    $data = ereg_replace("<textinput([^s].*)/>", "", $data);
     $data = ereg_replace("<textinput([^s].*)</textinput>", "", $data);
     $data = ereg_replace("<image([^s].*)</image>", "", $data);
 
