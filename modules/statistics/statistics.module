@@ -812,8 +812,12 @@ function statistics_get($nid) {
 /* Block hook */
 function statistics_block($op = "list", $delta = 0) {
   if ($op == "list") {
-    $blocks[0]["info"] = t("Top nodes");
-    $blocks[1]["info"] = t("Who's online");
+    if (variable_get("statistics_enable_node_counter", 0)) {
+      $blocks[0]["info"] = t("Top nodes");
+    }
+    if (variable_get("statistics_enable_access_log", 0)) {
+      $blocks[1]["info"] = t("Who's online");
+    }
     return $blocks;
   }
   else {
