@@ -340,6 +340,16 @@ tr.light .form-item, tr.dark .form-item {
 #permissions td.permission {
   padding-left: 2em;
 }
+#access-rules .access-type, #access-rules .rule-type {
+  margin-right: 1em;
+  float: left;
+}
+#access-rules .access-type .form-item, #access-rules .rule-type .form-item {
+  margin-top: 0;
+}
+#access-rules .mask {
+  clear: both;
+}
 .poll .bar {
   height: 1em;
   margin: 1px 0;

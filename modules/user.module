@@ -667,13 +667,7 @@ function user_menu($may_cache) {
     $items[] = array('path' => 'admin/user/configure/settings', 'title' => t('settings'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
     $items[] = array('path' => 'admin/user/configure/access', 'title' => t('access rules'),
-      'callback' => 'user_configure', 'access' => $access,
-      'type' => MENU_LOCAL_TASK);
-    $items[] = array('path' => 'admin/user/configure/access/mail', 'title' => t('e-mail rules'),
-      'callback' => 'user_configure', 'access' => $access,
-      'type' => MENU_LOCAL_TASK);
-    $items[] = array('path' => 'admin/user/configure/access/user', 'title' => t('name rules'),
-      'callback' => 'user_configure', 'access' => $access,
+      'callback' => 'user_admin_access', 'access' => $access,
       'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'admin/user/configure/role', 'title' => t('roles'),
       'callback' => 'user_configure', 'access' => $access,
@@ -1311,60 +1305,99 @@ function user_admin_create($edit = array()) {
   return form($output);
 }
 
-function user_admin_access($edit = array()) {
-  $type = arg(4);
+function user_admin_access($op = NULL, $aid = 0) {
+  if ($_POST['op']) {
+    $op = $_POST['op'];
+  }
+  $edit = $_POST['edit'];
 
-  if (empty($type)) {
-    return;
+  // If a non-checking form was submitted, then it needs to have a mask.
+  if ($edit && !$edit['test'] && !$edit['mask']) {
+    form_set_error('mask', t('You must enter a mask.'));
   }
 
-  $op = $_POST['op'];
-  $id = arg(5);
+  switch ($op) {
+    case t('Add rule'):
+      if (!form_get_errors()) {
+        $aid = db_next_id('{access}_aid');
+        db_query("INSERT INTO {access} (aid, mask, type, status) VALUES ('%s', '%s', '%s', %d)", $aid, $edit['mask'], $edit['type'], $edit['status']);
+        drupal_set_message(t('The access rule has been added.'));
+        // Since we are not refreshing the page we need to clear out $edit.
+        $edit = array();
+      }
+      break;
 
-  if ($op == t('Add rule')) {
-    $aid = db_next_id('{access}_aid');
-    db_query("INSERT INTO {access} (aid, mask, type, status) VALUES ('%s', '%s', '%s', %d)", $aid, $edit['mask'], $type, $edit['status']);
-    drupal_set_message(t('The access rule has been added.'));
-  }
-  else if ($op == t('Check')) {
-    if (user_deny($type, $edit['test'])) {
-      drupal_set_message(t('%test is not allowed.', array('%test' => '<em>' .$edit['test'] .'</em>')));
-    }
-    else {
-      drupal_set_message(t('%test is allowed.', array('%test' => '<em>'. $edit['test'] .'</em>')));
-    }
-  }
-  else if ($id) {
-    db_query('DELETE FROM {access} WHERE aid = %d', $id);
-    drupal_set_message(t('The access rule has been deleted.'));
+    case 'delete':
+      db_query('DELETE FROM {access} WHERE aid = %d', $aid);
+      drupal_set_message(t('The access rule has been deleted.'));
+      drupal_goto('admin/user/configure/access');
+
+    case t('Save rule'):
+      if (!form_get_errors()) {
+        db_query("UPDATE {access} SET mask = '%s', type = '%s', status = '%s' WHERE aid = %d", $edit['mask'], $edit['type'], $edit['status'], $aid);
+        drupal_set_message(t('The access rule has been saved.'));
+        drupal_goto('admin/user/configure/access');
+      }
+      // Fall through to the edit form if there are errors.
+    case 'edit':
+      if (!$edit) {
+        $edit = db_fetch_array(db_query('SELECT aid, type, status, mask FROM {access} WHERE aid = %d', $aid));
+      }
+      $form = _user_admin_access_form($edit);
+      $form .= form_submit(t('Save rule'));
+      print theme('page', form($form, 'post', NULL, array('id' => 'access-rules')));
+      return;
+
+    case t('Check username'):
+    case t('Check e-mail'):
+      if (user_deny($edit['type'], $edit['test'])) {
+        drupal_set_message(t('%test is not allowed.', array('%test' => '<em>'. $edit['test'] .'</em>')));
+      }
+      else {
+        drupal_set_message(t('%test is allowed.', array('%test' => '<em>'. $edit['test'] .'</em>')));
+      }
+      break;
   }
 
-  $header = array(t('Type'), t('Mask'), t('Operations'));
-  $result = db_query("SELECT * FROM {access} WHERE type = '%s' AND status = 1 ORDER BY mask", $type);
+  $header = array(array('data' => t('Access type'), 'field' => 'status'), array('data' => t('Rule type'), 'field' => 'type'), array('data' =>t('Mask'), 'field' => 'mask'), array('data' => t('Operations'), 'colspan' => 2));
+  $result = db_query("SELECT aid, type, status, mask FROM {access}". tablesort_sql($header));
+  $access_types = array('user' => t('username'), 'mail' => t('e-mail'));
+  $rows = array();
   while ($rule = db_fetch_object($result)) {
-    $rows[] = array(t('Allow'), $rule->mask, array('data' => l(t('delete'), "admin/user/configure/access/$type/$rule->aid"), 'align' => 'center'));
+    $rows[] = array($rule->status ? t('allow') : t('deny'), $access_types[$rule->type], $rule->mask, l(t('edit'), 'admin/user/configure/access/edit/'. $rule->aid), l(t('delete'), 'admin/user/configure/access/delete/'. $rule->aid));
   }
-
-  $result = db_query("SELECT * FROM {access} WHERE type = '%s' AND status = 0 ORDER BY mask", $type);
-  while ($rule = db_fetch_object($result)) {
-    $rows[] = array(t('Deny'), $rule->mask, l(t('delete'), "admin/user/configure/access/$type/$rule->aid"));
+  if (count($rows) == 0) {
+    $rows[] = array(array('data' => '<em>'. t('There are currently no access rules.') .'</em>', 'colspan' => 5));
   }
-
-  $options = array('1' => t('Allow'), '0' => t('Deny'));
-  $rows[] = array(form_radios(NUll, 'status', $edit['status'], $options), form_textfield(NULL, 'mask', $edit['mask'], 32, 64), form_submit(t('Add rule')));
   $output .= theme('table', $header, $rows);
 
-  $output .= '<p><small>%: '. t('Matches any number of characters, even zero characters') .'.<br />_: '. t('Matches exactly one character.') .'</small></p>';
+  $output .= '<h3>'. t('Add new rule') ."</h3>\n";
 
-  if ($type != 'user') {
-    $title = t('Check e-mail address');
-  }
-  else {
-    $title = t('Check username');
-  }
-  $output .= form_textfield($title, 'test', $edit['test'], 32, 64). form_submit(t('Check'));
+  $form = _user_admin_access_form($edit);
+  $form .= form_submit(t('Add rule'));
+  $output .= form($form, 'post', NULL, array('id' => 'access-rules'));
 
-  return form($output);
+  $output .= '<h3>'. t('Check rules') .'</h3>';
+
+  $form = form_textfield(t('Username'), 'test', '', 32, 64, t('Enter a username to check if it will be denied or allowed.'));
+  $form .= form_hidden('type', 'user');
+  $form .= form_submit('Check username');
+  $output .= form($form);
+
+  $form = form_textfield(t('E-mail'), 'test', '', 32, 64, t('Enter an e-mail address to check if it will be denied or allowed.'));
+  $form .= form_hidden('type', 'mail');
+  $form .= form_submit('Check e-mail');
+  $output .= form($form);
+
+  print theme('page', $output);
+}
+
+function _user_admin_access_form($edit) {
+  $output = '<div class="access-type">'. form_radios(t('Access type'), 'status', $edit['status'], array('1' => t('Allow'), '0' => t('Deny'))) .'</div>';
+  $output .= '<div class="rule-type">'. form_radios(t('Rule type'), 'type', $edit['type'] ? $edit['type'] : 'user', array('user' => t('Username'), 'mail' => t('E-mail'))) .'</div>';
+  $output .= '<div class="mask">'. form_textfield(t('Mask'), 'mask', $edit['mask'], 32, 64, '%: '. t('Matches any number of characters, even zero characters') .'.<br />_: '. t('Matches exactly one character.'), NULL, TRUE) .'</div>';
+
+  return $output;
 }
 
 function user_roles($membersonly = 0, $permission = 0) {
@@ -1565,11 +1598,6 @@ function user_configure() {
   }
 
   switch ($op) {
-    case t('Add rule'):
-    case t('Check'):
-    case 'access':
-      $output = user_admin_access($edit);
-      break;
     case t('Save permissions'):
     case 'permission':
       $output = user_admin_perm($edit);
@@ -1623,11 +1651,7 @@ function user_help($section) {
     case 'admin/user/account/create':
       return t('<p>This web page allows the administrators to register a new users by hand.  Note that you cannot have a user where either the e-mail address or the username match another user in the system.</p>');
     case 'admin/user/configure/access':
-      return t('<p>Access rules allow Drupal administrators to choose usernames and e-mail address that are prevented from using drupal. To enter the mask for e-mail addresses click on <a href="%email">e-mail rules</a>, for the username mask click on <a href="%username">name rules</a>.</p>', array('%email' => url('admin/user/configure/access/mail'), '%username' => url('admin/user/configure/access/user')));
-    case 'admin/user/configure/access/mail':
-      return t('<p>Setup and test the e-mail access rules. The access function checks if you match a deny and not an allow. If you match <strong>only</strong> a deny then it is denied. Any other case, such as both a deny and an allow pattern matching, allows the pattern.</p>');
-    case 'admin/user/configure/access/user':
-      return t('<p>Setup and test the username access rules. The access function checks if you match a deny and not an allow. If you do then it is denied. Any other case, such as a deny pattern and an allow pattern, allows the pattern.</p>');
+      return '<p>'. t('Set up username and e-mail address access rules for new accounts. If a username or email address for a new account matches any deny rule, but not an allow rule, then the new account will not be allowed to be created.') .'</p>';
     case 'admin/user/configure/permission':
       return t('<p>In this area you will define the permissions for each user role (role names are defined on the <a href="%role">user roles page</a>). Each permission describes a fine-grained logical operation, such as being able to access the administration pages, or adding/modifying a user account. You could say a permission represents access granted to a user to perform a set of operations.</p>', array('%role' => url('admin/user/configure/role')));
     case 'admin/user/configure/role':
