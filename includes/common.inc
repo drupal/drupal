@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.416 2005/01/09 09:22:38 dries Exp $ */
+/* $Id: common.inc,v 1.417 2005/01/10 20:25:34 dries Exp $ */
 
 /**
  * @file
@@ -186,7 +186,7 @@ function drupal_not_found() {
  */
 function drupal_access_denied() {
   header('HTTP/1.0 403 Forbidden');
-  watchdog('access denied', t('%page denied access.', array('%page' => '<em>'. db_escape_string($_GET['q']) .'</em>')), WATCHDOG_WARNING);
+  watchdog('access denied', t('%page denied access.', array('%page' => '<em>'. db_escape_string($_GET['q']) .'</em>')), WATCHDOG_WARNING, l(t('view'), $_GET['q']));
 
   $path = drupal_get_normal_path(variable_get('site_403', ''));
   $status = MENU_NOT_FOUND;
