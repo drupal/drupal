@@ -44,52 +44,52 @@ function system_view_options() {
   global $conf, $cmodes, $corder;
 
   // general settings:
-  $output .= "<h3>General settings</h3>\n";
-  $output .= form_textfield("Name", "site_name", variable_get("site_name", "drupal"), 55, 55, "The name of this website.");
-  $output .= form_textfield("E-mail address", "site_mail", variable_get("site_mail", ini_get("sendmail_from")), 55, 128, "A valid e-mail address for this website, used by the auto-mailer during registration, new password requests, notifications, etc.");
-  $output .= form_textfield("Slogan", "site_slogan", variable_get("site_slogan", ""), 55, 128, "The slogan of this website. Some themes display a slogan when available.");
-  $output .= form_textarea("Mission", "site_mission", variable_get("site_mission", ""), 55, 5, "Your site's mission statement or focus.");
-  $output .= form_textarea("Footer message", "site_footer", variable_get("site_footer", ""), 55, 5, "This text will be displayed at the bottom of each page.  Useful for adding a copyright notice to your pages.");
-  $output .= form_textfield("Anonymous user", "anonymous", variable_get("anonymous", "Anonymous"), 55, 55, "The name used to indicate anonymous users.");
+  $output .= "<h3>" . t("General settings") . "</h3>\n";
+  $output .= form_textfield(t("Name"), "site_name", variable_get("site_name", "drupal"), 55, 55, t("The name of this website."));
+  $output .= form_textfield(t("E-mail address"), "site_mail", variable_get("site_mail", ini_get("sendmail_from")), 55, 128, t("A valid e-mail address for this website, used by the auto-mailer during registration, new password requests, notifications, etc."));
+  $output .= form_textfield(t("Slogan"), "site_slogan", variable_get("site_slogan", ""), 55, 128, t("The slogan of this website. Some themes display a slogan when available."));
+  $output .= form_textarea(t("Mission"), "site_mission", variable_get("site_mission", ""), 55, 5, t("Your site's mission statement or focus."));
+  $output .= form_textarea(t("Footer message"), "site_footer", variable_get("site_footer", ""), 55, 5, t("This text will be displayed at the bottom of each page.  Useful for adding a copyright notice to your pages."));
+  $output .= form_textfield(t("Anonymous user"), "anonymous", variable_get("anonymous", "Anonymous"), 55, 55, t("The name used to indicate anonymous users."));
   foreach (module_list() as $name) { if (module_hook($name, "page")) $pages[$name] = $name; }
-  $output .= form_select("Default front page", "site_frontpage", variable_get("site_frontpage", "node"), $pages, "The home page displays content from this module (usually <b>node</b>).");
+  $output .= form_select(t("Default front page"), "site_frontpage", variable_get("site_frontpage", "node"), $pages, t("The home page displays content from this module (usually node)."));
   $output .= "<hr />\n";
 
   // caching:
-  $output .= "<h3>Cache settings</h3>\n";
+  $output .= "<h3>" . t("Cache settings") . "</h3>\n";
   $period = array(10 => format_interval(10), 20 => format_interval(20), 30 => format_interval(30), 40 => format_interval(40), 50 => format_interval(50), 50 => format_interval(50), 60 => format_interval(60), 90 => format_interval(90), 120 => format_interval(120), 150 => format_interval(150), 180 => format_interval(180), 210 => format_interval(210), 240 => format_interval(240), 270 => format_interval(270), 300 => format_interval(300), 360 => format_interval(360), 420 => format_interval(420), 480 => format_interval(480), 540 => format_interval(540), 600 => format_interval(600), 1800 => format_interval(1800), 3600 => format_interval(3600), 7200 => format_interval(7200));
-  $output .= form_select("Cache support", "cache", variable_get("cache", 0), array("Disabled", "Enabled"), "Enable or disable the caching of pages.");
-  $output .= form_select("Discard cached pages older than", "cache_clear", variable_get("cache_clear", 30), $period, "The time cached pages should be kept.  Older pages are automatically refreshed.");
+  $output .= form_select(t("Cache support"), "cache", variable_get("cache", 0), array(t("Disabled"), t("Enabled")), t("Enable or disable the caching of pages."));
+  $output .= form_select(t("Discard cached pages older than"), "cache_clear", variable_get("cache_clear", 30), $period, t("The time cached pages should be kept.  Older pages are automatically refreshed."));
   $output .= "<hr />\n";
 
   // submission settings:
-  $output .= "<h3>Submission settings</h3>\n";
+  $output .= "<h3>" . t("Submission settings") . "</h3>\n";
   $rate = array(1 => "Maximum 1 every second", 5 => "Maximum 1 every 5 seconds", 15 => "Maximum 1 every 15 seconds", 30 => "Maximum 1 every 30 seconds", 60 => "Maximum 1 every minute", 300 => "Maximum 1 every 5 minutes", 900 => "Maximum 1 every 15 minutes", 1800 => "Maximum 1 every 30 minutes", 3600 => "Maximum 1 every hour", 21600 => "Maximum 1 every 6 hours", 43200 => "Maximum 1 every 12 hours");
-  $output .= form_select("Maximum node rate", "max_node_rate", variable_get("max_node_rate", 900), $rate, "The maximum submission rate for nodes.  Its purpose is to stop potential abuse or denial of service attacks.");
-  $output .= form_select("Maximum comment rate", "max_comment_rate", variable_get("max_comment_rate", 120), $rate, "The maximum submission rate for comments.  Its purpose is to stop potential abuse or denial of service attacks.");
+  $output .= form_select(t("Maximum node rate"), "max_node_rate", variable_get("max_node_rate", 900), $rate, t("The maximum submission rate for nodes.  Its purpose is to stop potential abuse or denial of service attacks."));
+  $output .= form_select(t("Maximum comment rate"), "max_comment_rate", variable_get("max_comment_rate", 120), $rate, t("The maximum submission rate for comments.  Its purpose is to stop potential abuse or denial of service attacks."));
   $output .= "<hr />\n";
 
   // date settings:
-  $output .= "<h3>Date format setting</h3>\n";
-  $output .= form_select("Date format", "date_format", variable_get("date_format", "m/d/Y - H:i"), array("m/d/Y - H:i" => "m/d/Y - H:i", "d/m/Y - H:i" => "d/m/Y - H:i", "Y/m/d - H:i" => "Y/m/d - H:i"), "The format in which dates are displayed");
+  $output .= "<h3>" . t("Date format setting") . "</h3>\n";
+  $output .= form_select(t("Date format"), "date_format", variable_get("date_format", "m/d/Y - H:i"), array("m/d/Y - H:i" => "m/d/Y - H:i", "d/m/Y - H:i" => "d/m/Y - H:i", "Y/m/d - H:i" => "Y/m/d - H:i"), t("The format in which dates are displayed"));
   $output .= "<hr />\n";
 
   // layout settings:
-  $output .= "<h3>Layout settings</h3>\n";
+  $output .= "<h3>" . t("Layout settings") . "</h3>\n";
   foreach (theme_list() as $key => $value) $options .= "<option value=\"$key\"". (variable_get("theme_default", 0) == $key ? " selected=\"selected\"" : "") .">$key</option>\n";
-  $output .= form_item("Default theme", "<select name=\"edit[theme_default]\">$options</select>", "The default theme as seen by visitors or anonymous users.");
+  $output .= form_item(t("Default theme"), "<select name=\"edit[theme_default]\">$options</select>", t("The default theme as seen by visitors or anonymous users."));
   $output .= "<hr />\n";
 
   // development settings:
-  $output .= "<h3>Development settings</h3>\n";
-  $output .= form_select("Display timer information", "dev_timer", variable_get("dev_timer", 0), array("Disabled", "Enabled"), "Display the time it took to generate a page.  For Drupal development only.");
-  $output .= form_select("Display query log", "dev_query", variable_get("dev_query", 0), array("Disabled", "Enabled"), "Display a log of the database queries needed to generate the current page.");
+  $output .= "<h3>" . t("Development settings") . "</h3>\n";
+  $output .= form_select(t("Display timer information"), "dev_timer", variable_get("dev_timer", 0), array(t("Disabled"), t("Enabled")), t("Display the time it took to generate a page.  For Drupal development only."));
+  $output .= form_select(t("Display query log"), "dev_query", variable_get("dev_query", 0), array(t("Disabled"), t("Enabled")), t("Display a log of the database queries needed to generate the current page."));
 
   $output .= "<hr />\n";
 
   foreach (module_list() as $name) {
     if (module_hook($name, "conf_options")) {
-      $output .= "<h3><a name=\"$name\">". ucfirst($name) ." settings</a></h3>". module_invoke($name, "conf_options") ."<hr />\n";
+      $output .= "<h3><a name=\"$name\">". ucfirst(t("$name")) ." " . t("settings") . "</a></h3>". module_invoke($name, "conf_options") ."<hr />\n";
     }
   }
   return $output;
@@ -106,12 +106,12 @@ function system_view_filters() {
 
 function system_save($edit = array()) {
   foreach ($edit as $name => $value) variable_set($name, $value);
-  return "the configuration options have been saved.";
+  return t("The configuration options have been saved.");
 }
 
 function system_default($edit = array()) {
   foreach ($edit as $name => $value) variable_del($name);
-  return "the configuration options have been reset to their default values.";
+  return t("The configuration options have been reset to their default values.");
 }
 
 function system_view($type) {
@@ -123,7 +123,7 @@ function system_view($type) {
     default:
       foreach (module_list() as $name) {
         if (module_hook($name, "conf_options")) {
-          $links[] = la($name, array("mod" => "system"), $name);
+          $links[] = la(t("$name"), array("mod" => "system"), $name);
         }
       }
 
@@ -131,8 +131,8 @@ function system_view($type) {
       $form = system_view_options();
   }
 
-  $form .= form_submit("Save configuration");
-  $form .= form_submit("Reset to defaults");
+  $form .= form_submit(t("Save configuration"));
+  $form .= form_submit(t("Reset to defaults"));
 
   return $output . form($form);
 }
@@ -177,7 +177,7 @@ function system_listing($type, $directory, $required = array()) {
   ksort($files);
 
   $output = "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  $output .= "<tr><th>name</th><th>description</th><th>enabled</th></tr>\n";
+  $output .= "<tr><th>" . t("name") . "</th><th>" . t("description") . "</th><th>" . t("enabled") . "</th></tr>\n";
 
   foreach ($files as $filename => $file) {
     include_once($filename);
@@ -204,11 +204,11 @@ function system_listing($type, $directory, $required = array()) {
     $output .= "<tr>";
     $output .= "<td>$info->name</td>";
     $output .= "<td>$info->description</td>";
-    $output .= "<td align=\"center\">". (in_array($filename, $required) ? form_hidden("status][$filename", 1) ."required" : form_checkbox("", "status][$filename", 1, $file->status)) ."</td>";
+    $output .= "<td align=\"center\">". (in_array($filename, $required) ? form_hidden("status][$filename", 1) . t("required") : form_checkbox("", "status][$filename", 1, $file->status)) ."</td>";
     $output .= "</tr>\n";
   }
   $output .= "</table><br />\n";
-  $output .= form_submit("Save $type settings");
+  $output .= form_submit(t("Save $type settings"));
 
   return form($output);
 }
@@ -233,7 +233,7 @@ function system_admin() {
       case "help":
         print system_help();
         break;
-      case "Save module settings":
+      case t("Save module settings"):
         db_query("UPDATE system SET status = '0' WHERE type = 'module'");
         foreach ($edit["status"] as $filename => $status) {
           db_query("UPDATE system SET status = %d WHERE filename = '$filename'", $status);
@@ -243,7 +243,7 @@ function system_admin() {
         $required = array("modules/user.module", "modules/system.module", "modules/watchdog.module");
         print system_listing("module", "modules", $required);
         break;
-      case "Save theme settings":
+      case t("Save theme settings"):
         db_query("UPDATE system SET status = '0' WHERE type = 'theme'");
         foreach ($edit["status"] as $filename => $status) {
           db_query("UPDATE system SET status = %d WHERE filename = '$filename'", $status);
@@ -251,11 +251,11 @@ function system_admin() {
       case "themes":
         print system_listing("theme", "themes");
         break;
-      case "Reset to defaults":
+      case t("Reset to defaults"):
         print status(system_default($edit));
         print system_view($type);
         break;
-      case "Save configuration":
+      case t("Save configuration"):
         print status(system_save($edit));
         print system_view($type);
         break;
