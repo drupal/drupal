@@ -13,7 +13,7 @@ if (menu_active_handler_exists()) {
   menu_execute_active_handler();
 }
 else {
-  print theme("page", "");
+  drupal_not_found();
 }
 
 drupal_page_footer();

@@ -162,8 +162,10 @@ function forum_view($node, $main = 0, $page = 0) {
     // print the breadcrumb
     drupal_set_breadcrumb($breadcrumb);
   }
+
   // prepare the node content
   $node = forum_content($node);
+
   // print the node
   $output .= theme("node", $node, $main, $page);
 

@@ -168,9 +168,9 @@ function referer_uri() {
 }
 
 function arg($index) {
-  static $arguments;
+  static $arguments, $q;
 
-  if (empty($arguments)) {
+  if (empty($arguments) || $q != $_GET["q"]) {
     $arguments = explode("/", $_GET["q"]);
   }
 

@@ -34,18 +34,28 @@ function menu_get_trail($path) {
  * Returns the path of the active menu item.
  */
 function menu_get_active_item() {
-  global $_list;
-  static $path;
+  return menu_set_active_item();
+}
 
-  if (empty($path)) {
-    $path = $_GET["q"];
+function menu_set_active_item($path = NULL) {
+  global $_list;
+  static $stored_path;
+
+  if (is_null($stored_path) || !empty($path)) {
+    if (empty($path)) {
+      $path = $_GET["q"];
+    }
+    else {
+      $_GET['q'] = $path;
+    }
 
     while ($path && !$_list[$path]) {
       $path = substr($path, 0, strrpos($path, "/"));
     }
+    $stored_path = $path;
   }
 
-  return $path;
+  return $stored_path;
 }
 
 /**

@@ -15,13 +15,6 @@ Options FollowSymLinks
 # Set the default handler to index.php:
 DirectoryIndex index.php
 
-# Customized server error messages:
-ErrorDocument 400 /error.php
-ErrorDocument 402 /error.php
-ErrorDocument 403 /error.php
-ErrorDocument 404 /error.php
-ErrorDocument 500 /error.php
-
 # Overload PHP variables:
 <IfModule mod_php4.c>
    # If you are using Apache 2, you have to use <IfModule sapi_apache2.c>

@@ -103,6 +103,24 @@ function drupal_rebuild_path_map() {
   drupal_get_path_map("rebuild");
 }
 
+function drupal_not_found() {
+  header("HTTP/1.0 404 Not Found");
+  watchdog("httpd", "404 error: ". $_GET['q'] ." not found");
+
+  $path = drupal_get_normal_path(variable_get('site_404', ''));
+
+  if ($path) {
+    menu_set_active_item($path);
+  }
+
+  if ($path && menu_active_handler_exists()) {
+    menu_execute_active_handler();
+  }
+  else {
+    print theme("page", '<h1>'. t('Page not found') .'</h1>');
+  }
+}
+
 function error_handler($errno, $message, $filename, $line, $variables) {
   $types = array(1 => "error", 2 => "warning", 4 => "parse error", 8 => "notice", 16 => "core error", 32 => "core warning", 64 => "compile error", 128 => "compile warning", 256 => "user error", 512 => "user warning", 1024 => "user notice");
   $entry = $types[$errno] .": $message in $filename on line $line.";

@@ -131,13 +131,11 @@ function path_to_theme() {
  * @return a string containing the @a header output.
  */
 function theme_header() {
-  global $base_url;
-
   $output = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
   $output .= "<html xmlns=\"http://www.w3.org/1999/xhtml\">";
   $output .= "<head>";
   $output .= " <title>". drupal_get_title() ? drupal_get_title() : variable_get(site_name, "drupal") ."</title>";
-  $output .= theme_head($main);
+  $output .= theme_head();
   $output .= " <style type=\"text/css\" media=\"all\">";
   $output .= "  @import url(misc/drupal.css);";
   $output .= " </style>";
@@ -366,10 +364,10 @@ function theme_box($title, $content, $region = "main") {
  * @return a string containing the @a box output.
  */
 function theme_block($block) {
-  $output  = "<div class=\"block block-$block->module\" id=\"block-$block->module-$block->delta\">";
-  $output .= " <h2 class=\"title\">$block->subject</h2>";
-  $output .= " <div class=\"content\">$block->content</div>";
-  $output .= "</div>";
+  $output  = "<div class=\"block block-$block->module\" id=\"block-$block->module-$block->delta\">\n";
+  $output .= " <h2 class=\"title\">$block->subject</h2>\n";
+  $output .= " <div class=\"content\">$block->content</div>\n";
+  $output .= "</div>\n";
   return $output;
 }
 
