@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.188 2003/11/13 19:52:54 dries Exp $
+// $Id: comment.module,v 1.189 2003/11/15 10:03:31 dries Exp $
 
 function comment_help($section = "admin/help#comment") {
   $output = "";
@@ -230,7 +230,7 @@ function comment_reply($pid, $nid) {
 
     if ($pid) {
       $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0", $pid));
-      comment_view($comment);
+      print theme("comment_view", $comment);
     }
     else if (user_access("access content")) {
       node_view(node_load(array("nid" => $nid)));
@@ -275,13 +275,13 @@ function comment_preview($edit) {
   ** Preview the comment:
   */
 
-  comment_view($comment, t("reply to this comment"));
+  print theme("comment_view", $comment, t("reply to this comment"));
 
   print theme("box", t("Reply"), comment_form($edit));
 
   if ($edit["pid"]) {
     $comment = db_fetch_object(db_query("SELECT c.*, u.uid, u.name, u.data FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0", $edit["pid"]));
-    comment_view($comment);
+    print theme("comment_view", $comment);
   }
   else {
     node_view(node_load(array("nid" => $edit["nid"])));
@@ -535,27 +535,7 @@ function comment_links($comment, $return = 1) {
   return theme("links", $links);
 }
 
-function comment_view($comment, $links = "", $visible = 1) {
 
-  /*
-  ** Switch to folded/unfolded view of the comment
-  */
-
-  if (node_is_new($comment->nid, $comment->timestamp)) {
-    $comment->new = 1;
-    print "<a id=\"new\"></a>\n";
-  }
-
-  print "<a id=\"$comment->cid\"></a>\n";
-
-  if ($visible) {
-    $comment->comment = check_output($comment->comment);
-    print theme("comment", $comment, $links);
-  }
-  else {
-    print theme("comment_folded", $comment);
-  }
-}
 
 function comment_render($node, $cid = 0) {
   global $user;
@@ -615,7 +595,7 @@ function comment_render($node, $cid = 0) {
       $result = db_query("SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0 GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, u.uid, u.name, u.data, c.score, c.users", $cid);
 
       if ($comment = db_fetch_object($result)) {
-        comment_view($comment, comment_links($comment));
+        print theme("comment_view",$comment, comment_links($comment));
       }
 
       if ((comment_user_can_moderate($node)) && $user->uid != $comment->uid && !(comment_already_moderated($user->uid, $comment->users))) {
@@ -1263,6 +1243,29 @@ function comment_admin() {
 ** overridden by themes.
 */
 
+function theme_comment_view($comment, $links = "", $visible = 1) {
+
+  /*
+  ** Switch to folded/unfolded view of the comment
+  */
+  $output = "";
+  if (node_is_new($comment->nid, $comment->timestamp)) {
+    $comment->new = 1;
+    $output .= "<a id=\"new\"></a>\n";
+  }
+
+  $output .= "<a id=\"$comment->cid\"></a>\n";
+
+  if ($visible) {
+    $comment->comment = check_output($comment->comment);
+    $output .= theme("comment", $comment, $links);
+  }
+  else {
+    $output .= theme("comment_folded", $comment);
+  }
+  return $output;
+}
+
 function theme_comment_mode_form($mode) {
 
   $modes = _comment_get_modes();
@@ -1367,30 +1370,31 @@ function theme_comment($comment, $links = 0) {
   $output .= "<div class=\"body\">". check_output($comment->comment) ."</div>";
   $output .= "<div class=\"links\">$links</div>";
   $output .= "</div>";
-  print $output;
+  return $output;
 }
 
 function theme_comment_folded($comment) {
-  print "<div class=\"comment-folded\"><span class=\"subject\">". l($comment->subject, comment_referer_load() ."/$comment->cid#$comment->cid") ."</span> <span class=\"credit\">". t("by") ." ". format_name($comment) ."</span></div>";
+  return "<div class=\"comment-folded\"><span class=\"subject\">". l($comment->subject, comment_referer_load() ."/$comment->cid#$comment->cid") ."</span> <span class=\"credit\">". t("by") ." ". format_name($comment) ."</span></div>";
 }
 
 function theme_comment_flat_collapsed($comment, $threshold) {
   if (comment_visible($comment, $threshold)) {
-    print comment_view($comment, "", 0);
+    return theme("comment_view", $comment, "", 0);
   }
+  return "";
 }
 
 function theme_comment_flat_expanded($comment, $threshold) {
-  comment_view($comment, comment_links($comment, 0), comment_visible($comment, $threshold));
+  return theme("comment_view", $comment, comment_links($comment, 0), comment_visible($comment, $threshold));
 }
 
 function theme_comment_thread_min($comment, $threshold, $pid = 0) {
   if (comment_visible($comment, $threshold)) {
-    print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr><td width=\"". ($comment->depth * 25) ."\"><br /></td><td>\n";
-    print comment_view($comment, "", 0);
-
-    print "</td></tr></table>\n";
+    $output  = "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr><td width=\"". ($comment->depth * 25) ."\"><br /></td><td>\n";
+    $output .= theme("comment_view", $comment, "", 0);
+    $output .= "</td></tr></table>\n";
   }
+  return $output;
 }
 
 function theme_comment_thread_max($comment, $threshold, $level = 0) {
@@ -1402,16 +1406,17 @@ function theme_comment_thread_max($comment, $threshold, $level = 0) {
   ** for slow rendering and cluttered HTML.  This is the best work-around
   ** in terms of speed and size.
   */
-
+  $output = "";
   if ($comment->depth) {
-    print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr><td width=\"". ($comment->depth * 25) ."\">&nbsp;</td><td>\n";
+    $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr><td width=\"". ($comment->depth * 25) ."\">&nbsp;</td><td>\n";
   }
 
-  comment_view($comment, comment_links($comment, 0), comment_visible($comment, $threshold));
+  $output .= theme("comment_view", $comment, comment_links($comment, 0), comment_visible($comment, $threshold));
 
   if ($comment->depth) {
-    print "</td></tr></table>\n";
+    $output .= "</td></tr></table>\n";
   }
+  return $output;
 }
 
 function theme_comment_post_forbidden() {
