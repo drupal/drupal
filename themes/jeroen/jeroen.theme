@@ -41,7 +41,7 @@
 
 <?php
 
-                $this->box("Drop where?", "<TR>
+                $this->box("Drop where?", "
                                              <TD ALIGN=\"left\" VALIGN=\"top\">
                                                <A HREF=\"index.php\">home</A><BR>
                                                <A HREF=\"module.php?mod=faq\">faq</A><BR>
@@ -51,8 +51,8 @@
                                                <A HREF=\"module.php?mod=diary\">diary</A><BR>
                                                <A HREF=\"submit.php\">submit news</A><BR>
                                                <A HREF=\"account.php\">account</A>
-                                            </TD>
-                                         </TR>");
+                                             </TD>
+                                           ");
 
 ?>
 
@@ -78,84 +78,84 @@
 
 ?>
 
-              <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0" BORDER="0">
-                <TR>
-                  <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20" BACKGROUND="themes/jeroen/images/<?php echo (rand(0, 1) ? "news1.gif" : "news3.gif"); ?>" NOWRAP>&nbsp;</TD>
-                  <TD ALIGN="center" VALIGN="top" WIDTH="100%" BACKGROUND="themes/jeroen/images/newsmiddle.gif" NOWRAP>
-                    <B><?php echo "". check_output($story->subject) .""; ?></B>
-                  </TD>
-                  <TD ALIGN="right" VALIGN="bottom" WIDTH="20" BACKGROUND="themes/jeroen/images/<?php echo (rand(0, 1) == 0) ? "news2.gif" : "news4.gif"; if (rand(0,100) == 50) "news5.gif"; ?>" NOWRAP>&nbsp;</TD>
-                </TR>
-                <TR>
-                  <TD></TD>
-                  <TD>
-                    <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0" BGCOLOR="#000000" WIDTH="100%">
-                      <TR>
-                        <TD>
-                          <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="0" WIDTH="100%" BGCOLOR="#E7E7E7" BACKGROUND="themes/jeroen/images/sketch.gif">
-                            <TR>
-                              <TD ALIGN="left" BACKGROUND="themes/jeroen/images/menutitle.gif" NOWRAP>
-                                <FONT COLOR="#FEFEFE">
+                <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0" BORDER="0">
+                  <TR>
+                    <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20" BACKGROUND="themes/jeroen/images/<?php echo (rand(0, 1) ? "news1.gif" : "news3.gif"); ?>" NOWRAP>&nbsp;</TD>
+                    <TD ALIGN="center" VALIGN="top" WIDTH="100%" BACKGROUND="themes/jeroen/images/newsmiddle.gif" NOWRAP>
+                      <B><?php echo "". check_output($story->subject) .""; ?></B>
+                    </TD>
+                    <TD ALIGN="right" VALIGN="bottom" WIDTH="20" BACKGROUND="themes/jeroen/images/<?php echo (rand(0, 1) == 0) ? "news2.gif" : "news4.gif"; if (rand(0,100) == 50) "news5.gif"; ?>" NOWRAP>&nbsp;</TD>
+                  </TR>
+                  <TR>
+                    <TD></TD>
+                    <TD>
+                      <TABLE BORDER="0" CELLPADDING="1" CELLSPACING="0" BGCOLOR="#000000" WIDTH="100%">
+                        <TR>
+                          <TD>
+                            <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="0" WIDTH="100%" BGCOLOR="#E7E7E7" BACKGROUND="themes/jeroen/images/sketch.gif">
+                              <TR>
+                                <TD ALIGN="left" BACKGROUND="themes/jeroen/images/menutitle.gif" NOWRAP>
+                                  <FONT COLOR="#FEFEFE">
 
 <?php
 
-                                  switch (rand(0,13)) {
-                                    case 0: $how = "Yelled"; break;         case 1: $how = "Whispered"; break;
-                                    case 2: $how = "Reported"; break;       case 3: $how = "Posted"; break;
-                                    case 4: $how = "Beamed through"; break; case 5: $how = "Faxed"; break;
-                                    case 6: $how = "Tossed"; break;         case 7: $how = "Morsed"; break;
-                                    case 8: $how = "Flagged"; break;        case 9: $how = "Written"; break;
-                                    case 10: $how = "Made up"; break;       case 11: $how = "Uploaded"; break;
-                                    case 12: $how = "Forged"; break;
-                                    default: $how = "Sneaked through";
-                                  }
-                                  echo "<FONT SIZE=\"-1\">". strtr(t("$how by %a on %b"), array("%a" => format_username($story->userid), "%b" => $timestamp, "large")) ."
-                                </FONT>
-                              </TD>
-                              <TD ALIGN=\"right\" BACKGROUND=\"themes/jeroen/images/menutitle.gif\" NOWRAP>
-                                <B><A HREF=\"search.php?category=". urlencode($story->section) ."\"><FONT COLOR=\"#000000\">$story->section</FONT></A></B>";
+                                    switch (rand(0,13)) {
+                                      case 0: $how = "Yelled"; break;         case 1: $how = "Whispered"; break;
+                                      case 2: $how = "Reported"; break;       case 3: $how = "Posted"; break;
+                                      case 4: $how = "Beamed through"; break; case 5: $how = "Faxed"; break;
+                                      case 6: $how = "Tossed"; break;         case 7: $how = "Morsed"; break;
+                                      case 8: $how = "Flagged"; break;        case 9: $how = "Written"; break;
+                                      case 10: $how = "Made up"; break;       case 11: $how = "Uploaded"; break;
+                                      case 12: $how = "Forged"; break;
+                                      default: $how = "Sneaked through";
+                                    }
+                                    echo "<FONT SIZE=\"-1\">". strtr(t("$how by %a on %b"), array("%a" => format_username($story->userid), "%b" => $timestamp, "large")) ."</FONT>
+                                  </FONT>
+                                </TD>
+                                <TD ALIGN=\"right\" BACKGROUND=\"themes/jeroen/images/menutitle.gif\" NOWRAP>
+                                  <B><A HREF=\"search.php?category=". urlencode($story->section) ."\"><FONT COLOR=\"#000000\">$story->section</FONT></A></B>";
 
 ?>
 
-                              </TD>
-                            </TR>
-                            <TR>
-                              <TD COLSPAN="2" VALIGN="top" WIDTH="100%">
+                                </TD>
+                              </TR>
+                              <TR>
+                                <TD COLSPAN="2" VALIGN="top" WIDTH="100%">
 
 <?php
 
-                                echo "<P>". check_output($story->abstract, 1) ."</P>";
-                                if ($story->updates)
-                                  echo "<P><FONT COLOR=\"#E09226\">". t("Editor's note by <A HREF=\"account.php?op=userinfo&uname=$story->editor\">$story->editor</A>") .":</FONT>". check_output($story->updates, 1) ."</P>";
-                                if ($reply)
-                                  echo "<P>". check_output($story->article, 1) ."</P>";
+                                  echo "<P>". check_output($story->abstract, 1) ."</P>";
+                                  if ($story->updates)
+                                    echo "<P><FONT COLOR=\"#E09226\">". t("Editor's note by <A HREF=\"account.php?op=userinfo&uname=$story->editor\">$story->editor</A>") .":</FONT>". check_output($story->updates, 1) ."</P>";
+                                  if ($reply)
+                                    echo "<P>". check_output($story->article, 1) ."</P>";
 
 ?>
 
-                              </TD>
-                            </TR>
-                            <TR>
-                              <TD COLSPAN="2" ALIGN="right">
-
+                                </TD>
+                              </TR>
+                              <TR>
+                                <TD COLSPAN="2" ALIGN="right">
+ 
 <?php
 
-                                if (!$reply)
-                                  echo "<FONT COLOR=\"#E09226\">". theme_morelink($this, $story) ."</FONT>";
-                                else
-                                  echo "<FONT COLOR=\"#E09226\">". $reply ."</FONT>";
-
+                                  if (!$reply)
+                                    echo "<FONT COLOR=\"#E09226\">". theme_morelink($this, $story) ."</FONT>";
+                                  else
+                                    echo "<FONT COLOR=\"#E09226\">". $reply ."</FONT>";
+  
 ?>
-
-                              </TD>
-                            </TR>
-                          </TABLE>
-                        </TD>
-                      </TR>
-                    </TABLE>
-                  </TD>
-                </TR>
-              </TABLE>
-              <BR>
+ 
+                                </TD>
+                              </TR>
+                            </TABLE>
+                          </TD>
+                        </TR>
+                      </TABLE>
+                    </TD>
+                  </TR>
+                </TABLE>
+                <BR>
 
 <?php
 
@@ -169,65 +169,69 @@
       echo "<A NAME=\"$comment->cid\"></A>\n";
 
       // Create comment header:
-      echo "  <TABLE BORDER=\"0\" CELLPADDING=\"4\" CELLSPACING=\"0\" WIDTH=\"100%\">";
-      echo "    <TR>";
-      echo "      <TD>";
-      echo "        <TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"0\" BGCOLOR=\"#000000\" WIDTH=\"100%\">";
-      echo "          <TR>";
-      echo "            <TD>";
-      echo "              <TABLE BACKGROUND=\"themes/jeroen/images/menutitle.gif\" BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"0\" WIDTH=\"100%\">";
-      echo "                <TR>";
-      echo "                  <TD>";
-      echo "                    <TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"0\" WIDTH=\"100%\">";
+      echo "    <TABLE BORDER=\"0\" CELLPADDING=\"4\" CELLSPACING=\"0\" WIDTH=\"100%\">";
+      echo "      <TR>";
+      echo "        <TD>";
+      echo "          <TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"0\" BGCOLOR=\"#000000\" WIDTH=\"100%\">";
+      echo "            <TR>";
+      echo "              <TD>";
+      echo "                <TABLE BACKGROUND=\"themes/jeroen/images/menutitle.gif\" BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"0\" WIDTH=\"100%\">";
+      echo "                  <TR>";
+      echo "                    <TD>";
+      echo "                      <TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"0\" WIDTH=\"100%\">";
 
       // Subject:
-      echo "                      <TR>";
-      echo "                        <TD ALIGN=\"right\" WIDTH=\"5%\">";
-      echo "                          <FONT COLOR=\"#FEFEFE\"><B>". t("Subject") .":</B>";
-      echo "                            </TD>";
-      echo "                            <TD WIDTH=\"80%\">";
-      echo "                          <B>". check_output($comment->subject) ."</B>";
-      echo "                          </FONT>";
-      echo "                        </TD>";
+      echo "                        <TR>";
+      echo "                          <TD ALIGN=\"right\" WIDTH=\"5%\">";
+      echo "                            <FONT COLOR=\"#FEFEFE\"><B>". t("Subject") .":</B>";
+      echo "                          </TD>";
+      echo "                          <TD WIDTH=\"80%\">";
+      echo "                            <B>". check_output($comment->subject) ."</B>";
+      echo "                            </FONT>";
+      echo "                          </TD>";
 
       // Moderation:
-      echo "                        <TD BGCOLOR=\"#6C6C6C\" BACKGROUND=\"themes/jeroen/images/menutitle.gif\" ALIGN=\"right\" ROWSPAN=\"2\" VALIGN=\"middle\" WIDTH=\"15%\">";
-      echo "                          <FONT COLOR=\"#000000\">";
-      echo                              comment_moderation($comment);
-      echo "                          </FONT>";
-      echo "                        </TD>";
-      echo "                      </TR>";
+      echo "                          <TD BGCOLOR=\"#6C6C6C\" BACKGROUND=\"themes/jeroen/images/menutitle.gif\" ALIGN=\"right\" ROWSPAN=\"2\" VALIGN=\"middle\" WIDTH=\"15%\">";
+      echo "                            <FONT COLOR=\"#000000\">";
+      echo                                comment_moderation($comment);
+      echo "                            </FONT>";
+      echo "                          </TD>";
+      echo "                        </TR>";
 
       // Author:
-      echo "                      <TR>";
-      echo "                        <TD ALIGN=\"right\"><FONT COLOR=\"#FEFEFE\">". t("Author") .":</FONT></TD><TD><B>" .format_username($comment->userid) . "</B> ";
-                                      if ($comment->userid != $anonymous) {
+      echo "                        <TR>";
+      echo "                          <TD ALIGN=\"right\"><FONT COLOR=\"#FEFEFE\">". t("Author") .":</FONT></TD><TD><B>" .format_username($comment->userid) . "</B> ";
+                                        if ($comment->userid != $anonymous) {
       // Display extra information line:
-                                        if ($comment->fake_email) $info .= format_email($comment->fake_email);
-                                        if (eregi("http://",$comment->url)) $info .= " | " . format_url($comment->url);
-                                      }
+                                          if ($comment->fake_email) $info .= format_email($comment->fake_email);
+                                          if (eregi("http://",$comment->url)) $info .= " | " . format_url($comment->url);
+                                        }
       // Date:
-      echo "                          <FONT COLOR=\"#FEFEFE\">on ". format_date($comment->timestamp) ."</FONT>";
-      echo "                        </TD>";
-      echo "                      </TR>";
+      echo "                            <FONT COLOR=\"#FEFEFE\">on ". format_date($comment->timestamp) ."</FONT>";
+      echo "                          </TD>";
+      echo "                        </TR>";
 
-      echo "                    </TABLE>";
-      echo "                  </TD>";
-      echo "                </TR>";
+      echo "                      </TABLE>";
+      echo "                    </TD>";
+      echo "                  </TR>";
 
       // Print body of comment:
-                  if ($comment) echo " <TR><TD BGCOLOR=\"#E7E7E7\" BACKGROUND=\"themes/jeroen/images/sketch.gif\">" . check_output($comment->comment, 1) ."</TD></TR>";
+                  if ($comment) echo " 
+                              <TR>
+                                <TD BGCOLOR=\"#E7E7E7\" BACKGROUND=\"themes/jeroen/images/sketch.gif\">" . check_output($comment->comment, 1) ."
+                                </TD>
+                              </TR>";
 
       // Print bottom link(s):
-      echo "                <TR><TD ALIGN=\"right\" BGCOLOR=\"#E7E7E7\" BACKGROUND=\"themes/jeroen/images/sketch.gif\"><FONT COLOR=\"#E09226\">[</FONT> $link <FONT COLOR=\"#E09226\">]</FONT></TD></TR>";
-      echo "              </TABLE>";
-      echo "            </TD>";
-      echo "          </TR>";
-      echo "        </TABLE>";
-      echo "      </TD>";
-      echo "    </TR>";
-      echo "  </TABLE>";
-      echo "  <BR>";
+      echo "                  <TR><TD ALIGN=\"right\" BGCOLOR=\"#E7E7E7\" BACKGROUND=\"themes/jeroen/images/sketch.gif\"><FONT COLOR=\"#E09226\">[</FONT> $link <FONT COLOR=\"#E09226\">]</FONT></TD></TR>";
+      echo "                </TABLE>";
+      echo "              </TD>";
+      echo "            </TR>";
+      echo "          </TABLE>";
+      echo "        </TD>";
+      echo "      </TR>";
+      echo "    </TABLE>";
+      echo "    <BR>";
 
     } // close comment function
 
@@ -238,41 +242,41 @@
 
 ?>
 
-              <TABLE WIDTH="100%" ALIGN="center" CELLPADDING="0" CELLSPACING="0" BORDER="0">
-                <TR>
-                  <TD WIDTH="20" HEIGHT="20" BACKGROUND="themes/jeroen/images/boxtopleft.gif" NOWRAP>&nbsp;</TD>
-                  <TD WIDTH="<?php echo $width; ?>" BACKGROUND="themes/jeroen/images/boxtop.gif">&nbsp;</TD>
-                  <TD BACKGROUND="themes/jeroen/images/boxtopmiddle.gif">&nbsp;</TD>
-                  <TD BACKGROUND="themes/jeroen/images/boxtop.gif">&nbsp;</TD>
-                  <TD WIDTH="20" BACKGROUND="themes/jeroen/images/boxtopright.gif" NOWRAP>&nbsp;</TD>
-                </TR>
-                <TR>
-                  <TD BACKGROUND="themes/jeroen/images/<?php echo $img2; ?>" HEIGHT="20">&nbsp;</TD>
-                  <TD ALIGN="center" WIDTH="100%" COLSPAN="3" BACKGROUND="themes/jeroen/images/menutitle.gif" NOWRAP>
-                    <FONT COLOR="#FEFEFE"><?php echo $subject; ?></FONT>
-                  </TD>
-                  <TD BACKGROUND="themes/jeroen/images/boxtoprightside.gif">&nbsp;</TD>
-                </TR>
-                <TR>
-                  <TD BACKGROUND="themes/jeroen/images/boxleft.gif" NOWRAP>&nbsp;</TD>
-                  <TD COLSPAN="3" ALIGN="center" BGCOLOR="#E7E7E7" BACKGROUND="themes/jeroen/images/sketch.gif">
-                    <TABLE>
-                      <TR>
-                        <TD>
-                          <?php echo $content; ?>
-                        </TD>
-                      </TR>
-                    </TABLE>
-                  </TD>
-                  <TD BACKGROUND="themes/jeroen/images/boxright.gif" NOWRAP>&nbsp;</TD>
-                </TR>
-                <TR>
-                  <TD BACKGROUND="themes/jeroen/images/boxbottomleft.gif" HEIGHT="20" NOWRAP>&nbsp;</TD>
-                  <TD COLSPAN="3" BACKGROUND="themes/jeroen/images/boxbottom.gif">&nbsp;</TD>
-                  <TD BACKGROUND="themes/jeroen/images/<?php echo $img; ?>" NOWRAP>&nbsp;</TD>
-                </TR>
-              </TABLE>
-              <BR>
+                <TABLE WIDTH="100%" ALIGN="center" CELLPADDING="0" CELLSPACING="0" BORDER="0">
+                  <TR>
+                    <TD WIDTH="20" HEIGHT="20" BACKGROUND="themes/jeroen/images/boxtopleft.gif" NOWRAP>&nbsp;</TD>
+                    <TD WIDTH="<?php echo $width; ?>" BACKGROUND="themes/jeroen/images/boxtop.gif">&nbsp;</TD>
+                    <TD BACKGROUND="themes/jeroen/images/boxtopmiddle.gif">&nbsp;</TD>
+                    <TD BACKGROUND="themes/jeroen/images/boxtop.gif">&nbsp;</TD>
+                    <TD WIDTH="20" BACKGROUND="themes/jeroen/images/boxtopright.gif" NOWRAP>&nbsp;</TD>
+                  </TR>
+                  <TR>
+                    <TD BACKGROUND="themes/jeroen/images/<?php echo $img2; ?>" HEIGHT="20">&nbsp;</TD>
+                    <TD ALIGN="center" WIDTH="100%" COLSPAN="3" BACKGROUND="themes/jeroen/images/menutitle.gif" NOWRAP>
+                      <FONT COLOR="#FEFEFE"><?php echo $subject; ?></FONT>
+                    </TD>
+                    <TD BACKGROUND="themes/jeroen/images/boxtoprightside.gif">&nbsp;</TD>
+                  </TR>
+                  <TR>
+                    <TD BACKGROUND="themes/jeroen/images/boxleft.gif" NOWRAP>&nbsp;</TD>
+                    <TD COLSPAN="3" ALIGN="center" BGCOLOR="#E7E7E7" BACKGROUND="themes/jeroen/images/sketch.gif">
+                      <TABLE>
+                        <TR>
+                          <TD>
+                            <?php echo $content; ?>
+                          </TD>
+                        </TR>
+                      </TABLE>
+                    </TD>
+                    <TD BACKGROUND="themes/jeroen/images/boxright.gif" NOWRAP>&nbsp;</TD>
+                  </TR>
+                  <TR>
+                    <TD BACKGROUND="themes/jeroen/images/boxbottomleft.gif" HEIGHT="20" NOWRAP>&nbsp;</TD>
+                    <TD COLSPAN="3" BACKGROUND="themes/jeroen/images/boxbottom.gif">&nbsp;</TD>
+                    <TD BACKGROUND="themes/jeroen/images/<?php echo $img; ?>" NOWRAP>&nbsp;</TD>
+                  </TR>
+                </TABLE>
+                <BR>
 
 <?php
 
@@ -282,8 +286,8 @@
 
 ?>
 
-            </TD>
-            <TD WIDTH="20%" VALIGN="top" ALIGN="right">
+              </TD>
+              <TD WIDTH="20%" VALIGN="top" ALIGN="right">
 
 <?php
 
@@ -294,26 +298,26 @@
 
 ?>
 
-            </TD>
-          </TR>
-          <TR>
-            <TD></TD>
-            <TD>
-              <TABLE WIDTH="100%" CELLSPACING="0" CELLPADDING="0" BORDER="0">
-                <TR>
-                  <TD ALIGN="left" WIDTH="20" HEIGHT="20" BACKGROUND="themes/jeroen/images/footerleft.gif" NOWRAP>&nbsp;</TD>
-                  <TD WIDTH="100%" BACKGROUND="themes/jeroen/images/footer.gif" ALIGN="center" VALIGN="middle">
-                    <FONT COLOR="#E09226" SIZE="2">[ <A HREF="">Home</A> | <A HREF="module.php?mod=faq">Faq</A> | <A HREF="search.php">Search</A> | <A HREF="module.php?mod=diary">Diary</A>| <A HREF="submit.php">Submit news</A> | <A HREF="account.php">Account</A> ] </FONT>
-                  </TD>
-                  <TD ALIGN="right" WIDTH="20" BACKGROUND="themes/jeroen/images/footerright.gif" NOWRAP>&nbsp;</TD>
-                </TR>
-              </TABLE>
-            </TD>
-            <TD></TD>
-          </TR>
-        </TABLE>
-      </BODY>
-   </HTML>
+              </TD>
+            </TR>
+            <TR>
+              <TD></TD>
+              <TD>
+                <TABLE WIDTH="100%" CELLSPACING="0" CELLPADDING="0" BORDER="0">
+                  <TR>
+                    <TD ALIGN="left" WIDTH="20" HEIGHT="20" BACKGROUND="themes/jeroen/images/footerleft.gif" NOWRAP>&nbsp;</TD>
+                    <TD WIDTH="100%" BACKGROUND="themes/jeroen/images/footer.gif" ALIGN="center" VALIGN="middle">
+                      <FONT COLOR="#E09226" SIZE="2">[ <A HREF="">Home</A> | <A HREF="module.php?mod=faq">Faq</A> | <A HREF="search.php">Search</A> | <A HREF="module.php?mod=diary">Diary</A>| <A HREF="submit.php">Submit news</A> | <A HREF="account.php">Account</A> ] </FONT>
+                    </TD>
+                    <TD ALIGN="right" WIDTH="20" BACKGROUND="themes/jeroen/images/footerright.gif" NOWRAP>&nbsp;</TD>
+                  </TR>
+                </TABLE>
+              </TD>
+              <TD></TD>
+            </TR>
+          </TABLE>
+        </BODY>
+      </HTML>
 
 <?php
 
