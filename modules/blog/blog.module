@@ -187,7 +187,7 @@ function blog_view($node, $main = 0) {
 }
 
 function blog_form($edit = array()) {
-  global $REQUEST_URI, $id, $mod, $type, $user, $theme;
+  global $id, $mod, $type, $user, $theme;
 
   if ($user->uid && (user_access("administer blogs") || user_access("post blogs"))) {
     if ($mod == "node" || $edit[type] == "blog") {
@@ -233,7 +233,7 @@ function blog_form($edit = array()) {
       $form .= form_submit(t("Submit"));
     }
 
-    return form($REQUEST_URI, $form);
+    return form($form);
   }
   else {
     return message_access();

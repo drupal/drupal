@@ -100,7 +100,7 @@ function poll_graph($val) {
 }
 
 function poll_view($node, $main = 0, $block = 0) {
-  global $theme, $op, $user, $chid, $REQUEST_URI;
+  global $theme, $op, $user, $chid;
 
   $pollop = $op;
 
@@ -158,7 +158,7 @@ function poll_view($node, $main = 0, $block = 0) {
       } else {
         $output .= "</td><td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td align=\"center\"><br><div align=\"center\">" . form_submit("Vote") . "<br>" . $footer  . "</div></td></tr></table>";
       }
-      $output = form($REQUEST_URI, $output);
+      $output = form($output);
    }
 
 
@@ -170,7 +170,7 @@ function poll_view($node, $main = 0, $block = 0) {
 }
 
 function poll_form($edit = array(), $nocheck = 0) {
-  global $REQUEST_URI, $user;
+  global $user;
 
   $duration = array(0 => t("Unlimited"), 86400 => format_interval(86400), 172800 => format_interval(172800), 345600 => format_interval(345600), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200), 4838400 => format_interval(4838400), 9676800 => format_interval(9676800), 31536000 => format_interval(31536000));
   $active = array(0 => "Closed", 1 => "Active");
@@ -220,7 +220,7 @@ function poll_form($edit = array(), $nocheck = 0) {
     $form .= form_submit(t("Submit"));
   }
 
-  return form($REQUEST_URI, $form);
+  return form($form);
 }
 
 function poll_save($edit) {

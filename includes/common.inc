@@ -244,8 +244,10 @@ function format_tag($link, $text) {
   return "'<a href=\"node.php?title='. urlencode('$link') .'\">'. ('$text' ? '$text' : '$link') .'</a>'";
 }
 
-function form($action, $form, $method = "post", $options = 0) {
-  return "<form action=\"$action\" method=\"$method\"". ($options ? " $options" : "") .">\n$form</form>\n";
+function form($form, $method = "post", $action = 0, $options = 0) {
+  global $REQUEST_URI;
+
+  return "<form action=\"". ($action ? $action : $REQUEST_URI) ."\" method=\"$method\"". ($options ? " $options" : "") .">\n$form</form>\n";
 }
 
 function form_item($title, $value, $description = 0) {

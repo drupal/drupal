@@ -68,7 +68,6 @@ function cloud_update($site) {
 
 
 function cloud_form($edit = array()) {
-  global $REQUEST_URI;
 
   $form .= form_textfield("Site name", "name", $edit["name"], 50, 128, "The name of the website you want to monitor for updates.");
   $form .= form_textfield("Site URL", "link", $edit["link"], 50, 255, "The URL of the website you want to monitor for updates.");
@@ -81,7 +80,7 @@ function cloud_form($edit = array()) {
     $form .= form_hidden("sid", $edit["sid"]);
   }
 
-  return form($REQUEST_URI, $form);
+  return form($form);
 }
 
 function cloud_get_site($sid) {

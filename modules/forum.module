@@ -19,14 +19,13 @@ function forum_view($node) {
 }
 
 function forum_form($edit = array()) {
-  global $REQUEST_URI;
 
   $form .= form_textfield("Subject", "title", $edit[title], 50, 64);
   $form .= form_textarea("Body", "body", $edit[body], 70, 10);
   $form .= form_hidden("nid", $edit[nid]);
   $form .= form_submit(t("Submit"));
 
-  return form($REQUEST_URI, $form);
+  return form($form);
 }
 
 function forum_save($edit) {

@@ -411,7 +411,7 @@ function drupal_auth($username, $password, $server) {
 /*** User features *********************************************************/
 
 function user_login($edit = array()) {
-  global $user, $REQUEST_URI, $HTTP_REFERER;
+  global $user, $HTTP_REFERER;
 
   if (user_deny("user", $edit["name"])) {
     $error = sprintf(t("The name '%s' has been denied access."), $edit["name"]);
@@ -508,7 +508,7 @@ function user_login($edit = array()) {
   $output .= form_password(t("Password"), "pass", $pass, 20, 64, t("Enter the password that accompanies your username."));
   $output .= form_submit(t("Log in"));
 
-  return form($REQUEST_URI, $output);
+  return form($output);
 
 }
 
@@ -534,7 +534,6 @@ function user_logout() {
 }
 
 function user_pass($edit = array()) {
-  global $REQUEST_URI;
 
   if ($edit["name"] && $edit["mail"]) {
     if ($account = db_fetch_object(db_query("SELECT uid FROM user WHERE name = '". check_input($edit["name"]) ."' AND mail = '". check_input($edit["mail"]) ."'"))) {
@@ -574,12 +573,11 @@ function user_pass($edit = array()) {
     $output .= form_textfield(t("E-mail address"), "mail", $edit["mail"], 30, 64);
     $output .= form_submit(t("E-mail new password"));
 
-    return form($REQUEST_URI, $output);
+    return form($output);
   }
 }
 
 function user_register($edit = array()) {
-  global $REQUEST_URI;
 
   if ($edit["name"] && $edit["mail"]) {
     if ($error = user_validate_name($edit["name"])) {
@@ -646,12 +644,12 @@ function user_register($edit = array()) {
     $output .= form_textfield(t("E-mail address"), "mail", $edit["mail"], 30, 64, t("Your e-mail address: a password and instructions will be sent to this e-mail address so make sure it is accurate."));
     $output .= form_submit(t("Create new account"));
 
-    return form($REQUEST_URI, $output);
+    return form($output);
   }
 }
 
 function user_edit($edit = array()) {
-  global $REQUEST_URI, $HTTP_HOST, $themes, $user, $languages;
+  global $HTTP_HOST, $themes, $user, $languages;
 
   if ($user->uid) {
     if ($edit["name"]) {
@@ -710,9 +708,11 @@ function user_edit($edit = array()) {
     $output .= form_textarea(t("Signature"), "signature", $user->signature, 70, 3, t("Your signature will be publicly displayed at the end of your comments.") ."<br />". t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
     $output .= form_item(t("Password"), "<input type=\"password\" name=\"edit[pass1]\" size=\"12\" maxlength=\"24\"> <input type=\"password\" name=\"edit[pass2]\" size=\"12\" maxlength=\"24\">", t("Enter your new password twice if you want to change your current password or leave it blank if you are happy with your current password."));
     $output .= form_submit(t("Save user information"));
+
+    $output = form($output);
   }
 
-  return form($REQUEST_URI, $output);
+  return $output;
 }
 
 function user_menu() {
@@ -816,7 +816,7 @@ function user_conf_options() {
 }
 
 function user_admin_settings($edit = array()) {
-  global $op, $REQUEST_URI;
+  global $op;
 
   if ($op == "Save configuration") {
     /*
@@ -838,12 +838,11 @@ function user_admin_settings($edit = array()) {
   $output .= form_submit("Save configuration");
   $output .= form_submit("Reset to defaults");
 
-  return form($REQUEST_URI, $output);
+  return form($output);
 
 }
 
 function user_admin_create($edit = array()) {
-  global $REQUEST_URI;
 
   if ($edit["name"] || $edit["mail"]) {
     if ($error = user_validate_name($edit["name"])) {
@@ -882,12 +881,12 @@ function user_admin_create($edit = array()) {
     $output .= form_textfield("Password", "pass", $edit["pass"], 30, 55);
     $output .= form_submit("Create account");
 
-    return form($REQUEST_URI, $output);
+    return form($output);
   }
 }
 
 function user_admin_access($edit = array()) {
-  global $op, $id, $type, $REQUEST_URI;
+  global $op, $id, $type;
 
   $output .= "<small><a href=\"admin.php?mod=user&op=access&type=mail\">e-mail rules</a> :: <a href=\"admin.php?mod=user&op=access&type=user\">username rules</a></small><hr />";
 
@@ -914,7 +913,6 @@ function user_admin_access($edit = array()) {
     db_query("DELETE FROM access WHERE aid = '$id'");
   }
 
-  $output .= "<form action=\"$REQUEST_URI\" method=\"post\">";
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
   $output .= " <tr><th>type</th><th>mask</th><th>operations</th></tr>";
 
@@ -943,9 +941,7 @@ function user_admin_access($edit = array()) {
 
   $output .= "$message<input size=\"32\" maxlength=\"64\" name=\"edit[test]\" value=\"". $edit["test"] ."\" /><input type=\"submit\" name=\"op\" value=\"Check\" />";
 
-  $output .= "</form>";
-
-  return $output;
+  return form($output);
 
 }
 
@@ -958,7 +954,6 @@ function user_roles() {
 }
 
 function user_admin_perm($edit = array()) {
-  global $REQUEST_URI;
 
   if ($edit) {
 
@@ -1010,12 +1005,12 @@ function user_admin_perm($edit = array()) {
   $output .= "</table>";
   $output .= form_submit("Save permissions");
 
-  return form($REQUEST_URI, $output);
+  return form($output);
 
 }
 
 function user_admin_role($edit = array()) {
-  global $op, $id, $REQUEST_URI;
+  global $op, $id;
 
   if ($op == "Save role") {
     db_query("UPDATE role SET name = '". $edit["name"] ."' WHERE rid = '$id'");
@@ -1038,7 +1033,7 @@ function user_admin_role($edit = array()) {
     $output .= form_submit("Save role");
     $output .= form_submit("Delete role");
 
-    $output = form($REQUEST_URI, $output);
+    $output = form($output);
   }
 
   if (!$output) {
@@ -1048,22 +1043,22 @@ function user_admin_role($edit = array()) {
 
     $result = db_query("SELECT * FROM role ORDER BY name");
 
-    $output .= "<form action=\"$REQUEST_URI\" method=\"post\">";
     $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
     $output .= " <tr><th>name</th><th>operations</th></tr>";
     while ($role = db_fetch_object($result)) {
       $output .= "<tr><td>". check_output($role->name) ."</td><td><a href=\"admin.php?mod=user&op=role&id=$role->rid\">edit role</a></td></tr>";
     }
     $output .= " <tr><td><input size=\"32\" maxlength=\"64\" name=\"edit[name]\" /></td><td><input type=\"submit\" name=\"op\" value=\"Add role\" /></td></tr>";
-    $output .= "</form>";
     $output .= "</table>";
+
+    $output = form($output);
   }
 
   return $output;
 }
 
 function user_admin_edit($edit = array()) {
-  global $op, $id, $REQUEST_URI, $HTTP_HOST;
+  global $op, $id, $HTTP_HOST;
 
   if ($account = user_load(array("uid" => $id))) {
     if ($op == "Save account") {
@@ -1090,13 +1085,14 @@ function user_admin_edit($edit = array()) {
       $output .= form_item(t("E-mail address"), format_email($account->mail));
       $output .= form_item(t("Drupal ID"), strtolower(urlencode($account->name) ."@$HTTP_HOST"));
       $output .= form_item(t("Jabber ID"), check_output($account->jabber));
+      $output .= form_item(t("Theme"), check_output("$account->theme"));
       $output .= form_select("Status", "status", $account->status, array("blocked", "active"));
       $output .= form_select("Role", "role", $account->role, user_roles());
 
       $output .= form_submit("Save account");
       $output .= form_submit("Delete account");
 
-      $output = form($REQUEST_URI, $output);
+      $output = form($output);
     }
   }
   else {

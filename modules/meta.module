@@ -60,7 +60,6 @@ function meta_get_tag($tid) {
 }
 
 function meta_form_collection($edit = array()) {
-  global $REQUEST_URI;
 
   $form .= form_textfield("Collection name", "name", $edit[name], 50, 64, "Required.  The name for this group or collection of meta-tags.  Example: 'Software'.");
   $form .= form_textfield("Types", "types", $edit[types], 50, 64, "Required.  A comma-seperated list of node types you want to associate this collection with.  Example: 'story, book'.");
@@ -71,11 +70,10 @@ function meta_form_collection($edit = array()) {
     $form .= form_hidden("cid", $edit[cid]);
   }
 
-  return form($REQUEST_URI, $form);
+  return form($form);
 }
 
 function meta_form_tag($edit = array()) {
-  global $REQUEST_URI;
 
   $form .= form_textfield("Meta-tag name", "name", $edit[name], 50, 64, "Required.  The name for this meta-tag.  Example: 'Apache'.");
   $form .= form_textfield("Attributes", "attributes", $edit[attributes], 50, 64, "Required.  A comma-seperated list of keywords you want to associate this meta-tag with.  Example: 'Computers, Software, Webservers'.");
@@ -87,7 +85,7 @@ function meta_form_tag($edit = array()) {
     $form .= form_hidden("tid", $edit[tid]);
   }
 
-  return form($REQUEST_URI, $form);
+  return form($form);
 }
 
 function meta_save_collection($edit) {
@@ -121,7 +119,7 @@ function meta_preview() {
       $output .= meta_form($name) ."<HR>";
     }
   }
-  return form("", $output);
+  return form($output);
 }
 
 function meta_overview() {

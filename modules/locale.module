@@ -61,7 +61,7 @@ function locale_save($id, $edit) {
 }
 
 function locale_edit($id) {
-  global $languages, $REQUEST_URI;
+  global $languages;
   $result = db_query("SELECT * FROM locales WHERE id = '$id'");
   if ($translation = db_fetch_object($result)) {
     $form .= form_item(t("Original text"), "<PRE>". wordwrap(check_output($translation->string)) ."</PRE>");
@@ -69,7 +69,7 @@ function locale_edit($id) {
     $form .= form_hidden("id", $id);
     $form .= form_submit("Save translations");
 
-    return form($REQUEST_URI, $form);
+    return form($form);
   }
 }
 
@@ -138,7 +138,7 @@ function locale_untranslated($language) {
 }
 
 function locale_seek() {
-  global $edit, $languages, $REQUEST_URI, $op, $locale_settings;
+  global $edit, $languages, $op, $locale_settings;
 
   if ($edit[id] && session_is_registered("locale_settings")) {
     $edit = $locale_settings;
@@ -184,7 +184,7 @@ function locale_seek() {
   $form .= form_textfield("String", "string", $edit[string], 30, 30, "Leave blank to show all strings. This is treated as a regular expression.");
   $form .= form_submit("Search");
 
-  $output .= form($REQUEST_URI, $form);
+  $output .= form($form);
 
   return $output;
 }

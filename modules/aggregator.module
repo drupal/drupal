@@ -232,7 +232,6 @@ function import_save_item($edit) {
 }
 
 function import_form_bundle($edit = array()) {
-  global $REQUEST_URI;
 
   $form .= form_textfield("Title", "title", $edit[title], 50, 64, "The name of the bundle.");
   $form .= form_textfield("Attributes", "attributes", $edit[attributes], 50, 128, "A comma-seperated list of keywords describing the bundle.");
@@ -244,7 +243,7 @@ function import_form_bundle($edit = array()) {
     $form .= form_hidden("bid", $edit[bid]);
   }
 
-  return form($REQUEST_URI, $form);
+  return form($form);
 }
 
 function import_save_bundle($edit) {
@@ -262,7 +261,6 @@ function import_save_bundle($edit) {
 }
 
 function import_form_feed($edit = array()) {
-  global $REQUEST_URI;
 
   $period = array(900 => format_interval(900), 1800 => format_interval(1800), 3600 => format_interval(3600), 7200 => format_interval(7200), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 64800 => format_interval(64800), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200));
 
@@ -282,7 +280,7 @@ function import_form_feed($edit = array()) {
     $form .= form_hidden("fid", $edit[fid]);
   }
 
-  return form($REQUEST_URI, $form);
+  return form($form);
 }
 
 function import_save_feed($edit) {
@@ -339,16 +337,14 @@ function import_view() {
 }
 
 function import_fd_form() {
-  global $REQUEST_URI;
 
   $form .= form_textfield("Feed directory file", "url", "http://", 64, 128, "The fully-qualified URL of the feed directory file.");
   $form .= form_submit("Collect feeds");
 
-  return form($REQUEST_URI, $form);
+  return form($form);
 }
 
 function import_fd_collect($edit) {
-  global $REQUEST_URI;
 
   set_time_limit(180);
 
@@ -364,8 +360,6 @@ function import_fd_collect($edit) {
     $tt["&apos;"] = "'";
 
     $items = explode("</channel>", $data);
-
-    $output .= "<form action=\"$REQUEST_URI\" method=\"POST\">\n";
 
     foreach ($items as $item) {
       unset ($link, $title);
@@ -385,9 +379,8 @@ function import_fd_collect($edit) {
     }
 
     $output .= "<input type=\"submit\" name=\"op\" value=\"Import feeds\" />\n";
-    $output .= "</form>";
 
-    return $output;
+    return form($output);
   }
   else {
     print status("failed to open '$edit[url]': $errstr.");
@@ -403,11 +396,9 @@ function import_fd_import($edit) {
 }
 
 function import_tag() {
-  global $REQUEST_URI;
 
   $result = db_query("SELECT i.*, f.title AS feed FROM item i LEFT JOIN feed f ON i.fid = f.fid ORDER BY i.iid DESC LIMIT 50");
 
-  $output .= "<form action=\"$REQUEST_URI\" method=\"post\">\n";
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
   $output .= " <tr><th>time</th><th>feed</th><th>item</th></tr>\n";
   while ($item = db_fetch_object($result)) {
@@ -415,9 +406,8 @@ function import_tag() {
   }
   $output .= "</table>\n";
   $output .= "<input type=\"submit\" name=\"op\" value=\"Save attributes\" />\n";
-  $output .= "</form>\n";
 
-  return $output;
+  return form($output);
 }
 
 function import_admin() {

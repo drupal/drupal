@@ -48,7 +48,7 @@ function comment_settings($mode, $order, $threshold) {
 }
 
 function comment_form($edit) {
-  global $REQUEST_URI, $user;
+  global $user;
 
   // name field:
   $form .= form_item(t("Your name"), format_name($user));
@@ -71,7 +71,7 @@ function comment_form($edit) {
     $form .= form_submit(t("Post comment"));
   }
 
-  return form($REQUEST_URI, $form);
+  return form($form);
 }
 
 function comment_reply($pid, $id) {
@@ -95,7 +95,7 @@ function comment_reply($pid, $id) {
 }
 
 function comment_preview($edit) {
-  global $REQUEST_URI, $theme, $user;
+  global $theme, $user;
 
   // Preview comment:
   comment_view(new Comment($user->uid, $user->name, check_preview($edit[subject]), check_preview($edit[comment]), time(), check_preview($user->homepage), 0, 0, 0, 0), t("reply to this comment"));
@@ -301,7 +301,6 @@ function comment_render($lid, $cid) {
     }
 
     print "<form method=\"post\" action=\"$REQUEST_URI\">\n";
-    // print "  <INPUT TYPE=\"hidden\" NAME=\"id\" value=\"$lid\">\n";
 
     /*
     ** Render control panel:
