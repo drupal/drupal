@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.110 2002/01/07 22:08:52 dries Exp $
+// $Id: node.module,v 1.111 2002/01/11 22:09:11 dries Exp $
 
 function node_help() {
   global $mod;
@@ -358,7 +358,7 @@ function node_link($type, $node = 0, $main = 0) {
   }
 
   if ($type == "page" && user_access("post content")) {
-    $links[] = "<a href=\"module.php?mod=node&op=add\" title=\"". t("Submit a contribution.") ."\">". t("submit") ."</a>";
+    $links[] = "<a href=\"module.php?mod=node&op=add\" title=\"". t("Submit or suggest new content.") ."\">". t("submit") ."</a>";
   }
 
   if ($type == "node") {
