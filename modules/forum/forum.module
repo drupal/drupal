@@ -35,6 +35,7 @@ function forum_conf_options() {
     }
 
     if ($voc) {
+      $output .= form_textarea("Explanation or submission guidelines", "forum_help", variable_get("forum_help", ""), 55, 4, t("This text will be displayed at the top of the forum submission form.  Useful for helping or instructing your users."));
       $output .= form_select("Forum vocabulary", "forum_nav_vocabulary", variable_get("forum_nav_vocabulary", ""), $vocs, t("The taxonomy vocabulary that will be used as the navigation tree."));
       $output .= _taxonomy_term_select("Containers", "forum_containers", variable_get("forum_containers", array()), variable_get("forum_nav_vocabulary", ""), t("You can choose forums which will not have topics, but will be just containers for other forums."), 1, t("<none>"));
 
@@ -202,6 +203,9 @@ function forum_form(&$node, &$help, &$error) {
     // new topic
     $tid = arg(3);
   }
+
+  // outputs the compose guidelines
+  $help = variable_get("forum_help", "");
 
   $output .= _taxonomy_term_select("Forum", "tid", $tid, variable_get("forum_nav_vocabulary", ""), "", 0, "", variable_get("forum_containers", array()));
 
