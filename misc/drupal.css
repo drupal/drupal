@@ -481,7 +481,7 @@ tr.watchdog-content .active {
 tr.watchdog-page-not-found, tr.watchdog-access-denied {
   background: #dfd;
 }
-tr.watchdog-pagenot-found .active, tr.watchdog-access-denied .active {
+tr.watchdog-page-not-found .active, tr.watchdog-access-denied .active {
   background: #cec;
 }
 tr.watchdog-error {
