@@ -27,3 +27,9 @@ ErrorDocument 500 /error.php
    php_value session.gc_maxlifetime  2000000
    php_value session.cache_expire    200000
 </IfModule>
+
+# Various rewrite rules
+<IfModule mod_rewrite.c>
+  RewriteEngine on
+  RewriteRule ^blog/(.*) /module.php?mod=blog&op=view&name=$1 [R]
+</IfModule>
