@@ -232,10 +232,11 @@ function comment_link($type, $node = 0, $main = 0) {
 function comment_nodeapi(&$node, $op, $arg = 0) {
   switch ($op) {
     case 'settings':
-      $output[t('comment')] = form_select('', "comment_$node->type", variable_get("comment_$node->type", 2), array(t('Disabled'), t('Read only'), t('Read/Write')));
-      return $output;
+      return form_radios(t('Default comment setting'), 'comment_'. $node->type, variable_get('comment_'. $node->type, 2), array(t('Disabled'), t('Read only'), t('Read/Write')), t('Users with the <em>administer comments</em> permission will be able to override this setting.'));
+
     case 'fields':
       return array('comment');
+
     case 'form admin':
       if (user_access('administer comments')) {
         $selected = isset($node->comment) ? $node->comment : variable_get("comment_$node->type", 2);
@@ -243,6 +244,7 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
         return form_group(t('User comments'), $output);
       }
       break;
+
     case 'load':
       return db_fetch_array(db_query("SELECT last_comment_timestamp, last_comment_name, last_comment_name, comment_count, cid as last_comment_cid FROM {node_comment_statistics} WHERE nid = %d", $node->nid));
     case 'validate':
@@ -251,9 +253,11 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
         $node->comment = variable_get("comment_$node->type", 2);
       }
       break;
+
     case 'insert':
       db_query('INSERT INTO {node_comment_statistics} (nid, cid, last_comment_timestamp, last_comment_name, last_comment_uid, comment_count) VALUES (%d, 0, %d, NULL, %d, 0)', $node->nid, $node->created, $node->uid);
       break;
+
     case 'update':
       db_query('UPDATE {node_comment_statistics} SET last_comment_timestamp = %d WHERE nid = %d AND cid = 0', $node->changed, $node->nid);
       break;
@@ -261,6 +265,7 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
       db_query('DELETE FROM {comments} WHERE nid = %d', $node->nid);
       db_query('DELETE FROM {node_comment_statistics} WHERE nid = %d', $node->nid);
       break;
+
     case 'update index':
       $text = '';
       $comments = db_query('SELECT subject, comment, format FROM {comments} WHERE nid = %d AND status = 0', $node->nid);
@@ -268,6 +273,7 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
         $text .= '<h2>'. $comment->subject .'</h2>'. check_output($comment->comment, $comment->format);
       }
       return $text;
+
     case 'search result':
       $comments = db_result(db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = %d', $node->nid));
       return format_plural($comments, '1 comment', '%count comments');

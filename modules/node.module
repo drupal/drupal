@@ -48,8 +48,6 @@ function node_help($section) {
       return t('<p>Below is a list of all of the posts on your site. Other forms of content are listed elsewhere (e.g. <a href="%comments">comments</a>).<br />Clicking a title views the post, while clicking an author\'s name edits their user information.<br />Other post-related tasks are available from the menu.</p>', array('%comments' => url('admin/comment')));
     case 'admin/node/search':
       return t('<p>Enter a simple pattern to search for a post. This can include the wildcard character *.<br />For example, a search for "br*" might return "bread bakers", "our daily bread" and "brenda".</p>');
-    case 'admin/node/configure/defaults':
-      return t('<p>This page lets you set the defaults used during creation of nodes for all the different node types.<br /><em>comment:</em> Read/write setting for comments.<br /><em>publish:</em> Is this post publicly viewable, has it been published?<br /><em>promote:</em> Is this post to be promoted to the front page?<br /><em>moderate:</em> Does this post need approval before it can be viewed?<br /><em>sticky:</em> Is this post always visible at the top of lists?<br /><em>revision:</em> Will this post go into the revision system allowing multiple versions to be saved?</p>');
   }
 
   if (arg(0) == 'node' && is_numeric(arg(1)) && arg(2) == 'revisions') {
@@ -664,8 +662,8 @@ function node_menu($may_cache) {
       'type' => MENU_LOCAL_TASK);
     $items[] = array('path' => 'admin/node/configure/settings', 'title' => t('settings'),
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-    $items[] = array('path' => 'admin/node/configure/defaults', 'title' => t('default workflow'),
-      'callback' => 'node_default_settings',
+    $items[] = array('path' => 'admin/node/configure/types', 'title' => t('content types'),
+      'callback' => 'node_types',
       'access' => user_access('administer nodes'),
       'type' => MENU_LOCAL_TASK);
     if (module_exist('search')) {
@@ -709,6 +707,13 @@ function node_menu($may_cache) {
             'type' => MENU_LOCAL_TASK);
         }
       }
+    }
+    else if (arg(0) == 'admin' && arg(1) == 'node' && arg(2) == 'configure' && arg(3) == 'types' && is_string(arg(4))) {
+      $items[] = array('path' => 'admin/node/configure/types/'. arg(4),
+        'title' => t("'%name' content type", array('%name' => node_invoke(arg(4), 'node_name'))),
+        'callback' => 'node_types_configure',
+        'access' => user_access('administer nodes'),
+        'type' => MENU_CALLBACK);
     }
   }
 
@@ -809,46 +814,27 @@ function node_admin_nodes() {
   return form($output);
 }
 
-/**
- * Menu callback; presents the interface for setting node defaults.
- */
-function node_default_settings() {
-  $op = $_POST['op'];
-  $edit = $_POST['edit'];
+function node_types() {
+  $header = array(t('Type'), t('Operations'));
 
-  if ($op == t('Save configuration')) {
-    // Save the configuration options:
-    foreach ($edit as $name => $value) {
-      variable_set($name, $value);
-    }
-    drupal_set_message(t('The content settings have been saved.'));
-  }
-
-  if ($op == t('Reset to defaults')) {
-    // Reset the configuration options to their default value:
-    foreach ($edit as $name => $value) {
-      variable_del($name);
-    }
-    drupal_set_message(t('The content settings have been reset to their default values.'));
-  }
-
-  $header = array_merge(array(t('type')), array_keys(node_invoke_nodeapi($node, 'settings')));
+  $rows = array();
   foreach (node_list() as $type) {
-    $node = new StdClass();
-    $node->type = $type;
-    $cols = array();
-    foreach (node_invoke_nodeapi($node, 'settings') as $setting) {
-      $cols[] = array('data' => $setting, 'align' => 'center', 'width' => 55);
-    }
-    $rows[] = array_merge(array(node_invoke($node, 'node_name')), $cols);
+    $rows[] = array(node_invoke($type, 'node_name'), l(t('configure'), 'admin/node/configure/types/'. $type));
   }
 
-  $output .= theme('table', $header, $rows);
+  print theme('page', theme('table', $header, $rows));
+}
 
-  $output .= form_submit(t('Save configuration'));
-  $output .= form_submit(t('Reset to defaults'));
+function node_types_configure($type = NULL) {
+  // Go to the listing page when we submit this form, system_settings_save() calls drupal_goto().
+  if ($_POST['op']) {
+    $_GET['q'] = 'admin/node/configure/types';
+  }
+  system_settings_save();
 
-  print theme('page', form($output));
+  $output .= implode('', node_invoke_nodeapi($type, 'settings'));
+
+  print theme('page', system_settings_form($output));
 }
 
 /**
@@ -1121,11 +1107,12 @@ function node_validate($node) {
     // Validate for normal users:
     $node->uid = $user->uid ? $user->uid : 0;
     // Force defaults in case people modify the form:
-    $node->status = variable_get("node_status_$node->type", 1);
-    $node->promote = variable_get("node_promote_$node->type", 1);
-    $node->moderate = variable_get("node_moderate_$node->type", 0);
-    $node->sticky = variable_get("node_sticky_$node->type", 0);
-    $node->revision = variable_get("node_revision_$node->type", 0);
+    $node_options = variable_get('node_options_'. $edit->type, array('status', 'promote'));
+    $node->status = in_array('status', $node_options);
+    $node->moderate = in_array('moderate', $node_options);
+    $node->promote = in_array('promote', $node_options);
+    $node->sticky = in_array('sticky', $node_options);
+    $node->revision = in_array('revision', $node_options);
     unset($node->created);
   }
 
@@ -1182,11 +1169,12 @@ function node_form($edit) {
     $output .= form_group(t('Authoring information'), $author);
     $output .= "</div>\n";
 
-    $options .= form_checkbox(t('Published'), 'status', 1, isset($edit->status) ? $edit->status : variable_get('node_status_'. $edit->type, 1));
-    $options .= form_checkbox(t('In moderation queue'), 'moderate', 1, isset($edit->moderate) ? $edit->moderate : variable_get('node_moderate_'. $edit->type, 0));
-    $options .= form_checkbox(t('Promoted to front page'), 'promote', 1, isset($edit->promote) ? $edit->promote : variable_get('node_promote_'. $edit->type, 1));
-    $options .= form_checkbox(t('Sticky at top of lists'), 'sticky', 1, isset($edit->sticky) ? $edit->sticky : variable_get('node_sticky_'. $edit->type, 0));
-    $options .= form_checkbox(t('Create new revision'), 'revision', 1, isset($edit->revision) ? $edit->revision : variable_get('node_revision_'. $edit->type, 0));
+    $node_options = variable_get('node_options_'. $edit->type, array('status', 'promote'));
+    $options .= form_checkbox(t('Published'), 'status', 1, isset($edit->status) ? $edit->status : in_array('status', $node_options));
+    $options .= form_checkbox(t('In moderation queue'), 'moderate', 1, isset($edit->moderate) ? $edit->moderate : in_array('moderate', $node_options));
+    $options .= form_checkbox(t('Promoted to front page'), 'promote', 1, isset($edit->promote) ? $edit->promote : in_array('promote', $node_options));
+    $options .= form_checkbox(t('Sticky at top of lists'), 'sticky', 1, isset($edit->sticky) ? $edit->sticky : in_array('sticky', $node_options));
+    $options .= form_checkbox(t('Create new revision'), 'revision', 1, isset($edit->revision) ? $edit->revision : in_array('revision', $node_options));
 
     $output .= '<div class="options">';
     $output .= form_group(t('Options'), $options);
@@ -1611,12 +1599,8 @@ function node_update_index() {
 function node_nodeapi(&$node, $op, $arg = 0) {
   switch ($op) {
     case 'settings':
-      $output[t('publish')] = form_checkbox('', "node_status_$node->type", 1, variable_get("node_status_$node->type", 1));
-      $output[t('promote')] = form_checkbox('', "node_promote_$node->type", 1, variable_get("node_promote_$node->type", 1));
-      $output[t('moderate')] = form_checkbox('', "node_moderate_$node->type", 1, variable_get("node_moderate_$node->type", 0));
-      $output[t('sticky')] = form_checkbox('', "node_sticky_$node->type", 1, variable_get("node_sticky_$node->type", 0));
-      $output[t('revision')] = form_checkbox('', "node_revision_$node->type", 1, variable_get("node_revision_$node->type", 0));
-      return $output;
+      return form_checkboxes(t('Default options'), 'node_options_'. $node->type, variable_get('node_options_'. $node->type, array('status', 'promote')), array('status' => t('Published'), 'moderate' => t('In moderation queue'), 'promote' => t('Promoted to front page'), 'sticky' => t('Sticky at top of lists'), 'revision' => t('Create new revision')), t('Users with the <em>administer nodes</em> permission will be able to override these options.'));
+
     case 'fields':
       return array('nid', 'uid', 'type', 'title', 'teaser', 'body', 'revisions', 'status', 'promote', 'moderate', 'sticky', 'created', 'changed', 'format');
   }

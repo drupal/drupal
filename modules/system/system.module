@@ -539,7 +539,7 @@ function system_settings_save() {
     }
     drupal_set_message(t('The configuration options have been reset to their default values.'));
   }
-  if ($op == t('Save configuration')) {
+  else if ($op == t('Save configuration')) {
     if (is_array($edit)) {
       foreach ($edit as $name => $value) {
         variable_set($name, $value);

@@ -105,13 +105,14 @@ function upload_file_download($file) {
 function upload_nodeapi(&$node, $op, $arg) {
   switch ($op) {
     case 'settings':
-      $output[t('attachments')] = form_checkbox(NULL, "upload_$node->type", 1, variable_get("upload_$node->type", 1));
-      break;
+      return form_radios(t('Attachments'), 'upload_'. $node->type, variable_get('upload_'. $node->type, 1), array(t('Disabled'), t('Enabled')));
+
     case 'form param':
       if (variable_get("upload_$node->type", 1) && user_access('upload files')) {
         $output['options'] = array('enctype' => 'multipart/form-data');
       }
       break;
+
     case 'validate':
       $node->files = upload_load($node);
 
@@ -197,16 +198,19 @@ function upload_nodeapi(&$node, $op, $arg) {
         }
       }
       break;
+
     case 'form post':
       if (variable_get("upload_$node->type", 1) == 1 && user_access('upload files')) {
         $output = upload_form($node);
       }
       break;
+
     case 'load':
       if (variable_get("upload_$node->type", 1) == 1) {
         $output['files'] = upload_load($node);
       }
       break;
+
     case 'view':
       if ($node->files && user_access('view uploaded files')) {
         $header = array(t('Attachment'), t('Size'));
@@ -248,12 +252,14 @@ function upload_nodeapi(&$node, $op, $arg) {
         }
       }
       break;
+
     case 'insert':
     case 'update':
       if (user_access('upload files')) {
         upload_save($node);
       }
       break;
+
     case 'delete':
       upload_delete($node);
       break;

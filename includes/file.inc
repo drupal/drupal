@@ -133,7 +133,7 @@ function file_check_upload($source) {
     }
   }
   elseif ($_FILES["edit"]["name"][$source] && is_uploaded_file($_FILES["edit"]["tmp_name"][$source])) {
-    $file = new stdClass();
+    $file = new StdClass();
     $file->filename = trim(basename($_FILES["edit"]["name"][$source]), '.');
     $file->filemime = $_FILES["edit"]["type"][$source];
     $file->filepath = $_FILES["edit"]["tmp_name"][$source];

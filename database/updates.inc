@@ -94,7 +94,8 @@ $sql_updates = array(
   "2005-01-07" => "update_115",
   "2005-01-14" => "update_116",
   "2005-01-18" => "update_117",
-  "2005-01-19" => "update_118"
+  "2005-01-19" => "update_118",
+  "2005-01-20" => "update_119"
 );
 
 function update_32() {
@@ -2107,6 +2108,37 @@ function update_118() {
     }
   }
   $ret[] = update_sql("ALTER TABLE {vocabulary} DROP nodes");
+  return $ret;
+}
+
+function update_119() {
+  $ret = array();
+
+  foreach (node_list() as $type) {
+    $node_options = array();
+    if (variable_get('node_status_'. $type, 1)) {
+      $node_options[] = 'status';
+    }
+    if (variable_get('node_moderate_'. $type, 0)) {
+      $node_options[] = 'moderate';
+    }
+    if (variable_get('node_promote_'. $type, 1)) {
+      $node_options[] = 'promote';
+    }
+    if (variable_get('node_sticky_'. $type, 0)) {
+      $node_options[] = 'sticky';
+    }
+    if (variable_get('node_revision_'. $type, 0)) {
+      $node_options[] = 'revision';
+    }
+    variable_set('node_options_'. $type, $node_options);
+    variable_del('node_status_'. $type);
+    variable_del('node_moderate_'. $type);
+    variable_del('node_promote_'. $type);
+    variable_del('node_sticky_'. $type);
+    variable_del('node_revision_'. $type);
+  }
+
   return $ret;
 }
 
