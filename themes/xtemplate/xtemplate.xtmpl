@@ -39,15 +39,18 @@
       </td>
     <!-- END: blocks -->
     <td valign="top">
-      <!-- BEGIN: message -->
-        <div id="message">{header_message}</div>
-      <!-- END: message -->
+      <!-- BEGIN: mission -->
+       <div id="mission">{mission}</div>
+      <!-- END: mission -->
      <div id="main">
        {breadcrumb}
        <h1>{body_title}</h1>
        <!-- BEGIN: help -->
-        <small>{help}</small><hr />
+        <div id="help">{help}</div>
        <!-- END: help -->
+       <!-- BEGIN: message -->
+        <div class="{class}">{message}</div>
+       <!-- END: message -->
 <!-- END: header -->
 
 <!-- BEGIN: node -->

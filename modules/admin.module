@@ -1,12 +1,6 @@
 <?php
 // $Id$
 
-function status($message) {
-  if ($message) {
-    return "<strong>Status:</strong> $message<hr />\n";
-  }
-}
-
 function admin_help($section) {
   switch ($section) {
     case "admin/system/modules#description":

@@ -62,6 +62,10 @@ function marvin_header() {
     $output .= "<small>$help</small><hr />";
   }
 
+  if ($message = drupal_get_message()) {
+    $output .= "<b>". t("Status") ."</b>: ". $message->message ."<hr />";
+  }
+
   return $output;
 }
 

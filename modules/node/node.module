@@ -643,7 +643,7 @@ function node_admin_nodes() {
       }
     }
 
-    $output = status(t("the update has been performed."));
+    drupal_set_message(t("the update has been performed."));
   }
 
   $filter = $_SESSION["node_overview_filter"];
@@ -709,7 +709,7 @@ function node_admin_settings($edit) {
     foreach ($edit as $name => $value) {
       variable_set($name, $value);
     }
-    $output = status(t("the content settings have been saved."));
+    drupal_set_message(t("the content settings have been saved."));
   }
 
   if ($op == t("Reset to defaults")) {
@@ -720,7 +720,7 @@ function node_admin_settings($edit) {
     foreach ($edit as $name => $value) {
       variable_del($name);
     }
-    $output = status(t("the content settings have been reset to their default values."));
+    drupal_set_message(t("the content settings have been reset to their default values."));
   }
 
   $header = array_merge(array(t("type")), array_keys(node_invoke_nodeapi($node, "settings")));
@@ -856,7 +856,7 @@ function node_revision_rollback($nid, $revision) {
 
     node_save($rev, $filter);
 
-    return status(t("rollbacked to revision #%revision of '%title'", array("%revision" => $revision, "%title" => $node->title)));
+    drupal_set_message(t("rollbacked to revision #%revision of '%title'", array("%revision" => $revision, "%title" => $node->title)));
   }
 }
 
@@ -873,7 +873,7 @@ function node_revision_delete($nid, $revision) {
 
     node_save($node, array("nid", "revisions"));
 
-    return status(t("deleted revision #%revision of '%title'", array("%revision" => $revision, "%title" => $node->title)));
+    drupal_set_message(t("deleted revision #%revision of '%title'", array("%revision" => $revision, "%title" => $node->title)));
   }
 }
 
@@ -1518,14 +1518,12 @@ function node_page() {
         print theme("page", node_revision_overview(arg(2)), t("Revisions"));
         break;
       case "rollback-revision":
-        $output  = node_revision_rollback(arg(2), arg(3));
-        $output .= node_revision_overview(arg(2));
-        print theme("page", $output, t("Revisions"));
+        node_revision_rollback(arg(2), arg(3));
+        print theme("page", node_revision_overview(arg(2)), t("Revisions"));
         break;
       case "delete-revision":
-        $output  = node_revision_delete(arg(2), arg(3));
-        $output .= node_revision_overview(arg(2));
-        print theme("page", $output, t("Revisions"));
+        node_revision_delete(arg(2), arg(3));
+        print theme("page", node_revision_overview(arg(2)), t("Revisions"));
         break;
       case t("Preview"):
         $edit = node_validate($edit, $error);

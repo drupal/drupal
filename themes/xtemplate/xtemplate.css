@@ -96,12 +96,12 @@ img {
 #search .form-submit {
   height: 1.5em;
 }
-#message {
+#mission {
   background-color: #369;
   padding: 1.5em 2em;
   color: #fff;
 }
-#message a, #message a:visited {
+#mission a, #mission a:visited {
   color: #9cf;
   font-weight: bold;
 }
@@ -109,8 +109,24 @@ img {
   /* padding in px not ex because IE messes up 100% width tables otherwise */
   padding: 10px;
 }
-#message, #main .node .content, .comment .content {
+#mission, #main .node .content, .comment .content {
   line-height: 1.4;
+}
+#help {
+  font-size: 0.9em;
+  margin-bottom: 1em;
+}
+.error-message {
+  background-color: #eee;
+  border: 1px solid red;
+  padding: 0.3em;
+  margin-bottom: 1em;
+}
+.status-message {
+  background-color: #eee;
+  border: 1px solid #ccc;
+  padding: 0.3em;
+  margin-bottom: 1em;
 }
 #sidebar-left, #sidebar-right {
   background-color: #ddd;
@@ -153,7 +169,7 @@ table {
   color: #777;
 }
 .static-node {
-  background: #eee;
+  background-color: #eee;
   border: solid 1px #ddd;
   padding: 1em;
 }

@@ -208,7 +208,7 @@ fieldset {
   display: block;
   width: 95%;
 }
-node-form .standard {
+.node-form .standard {
   clear: both;
 }
 .node-form textarea {

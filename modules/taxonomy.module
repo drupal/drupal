@@ -112,7 +112,8 @@ function taxonomy_save_vocabulary($edit) {
 
   cache_clear_all();
 
-  return $message;
+  drupal_set_message($message);
+  return $edit;
 }
 
 function taxonomy_del_vocabulary($vid) {
@@ -239,7 +240,8 @@ function taxonomy_save_term($edit) {
 
   cache_clear_all();
 
-  return $message;
+  drupal_set_message($status);
+  return $edit;
 }
 
 function taxonomy_del_term($tid) {
@@ -775,10 +777,10 @@ function taxonomy_admin() {
         }
       case t("Submit"):
         if (arg(3) == "vocabulary") {
-          $output .= status(taxonomy_save_vocabulary($edit));
+          taxonomy_save_vocabulary($edit);
         }
         else {
-          $output .= status(taxonomy_save_term($edit));
+          taxonomy_save_term($edit);
           if (!$edit["tid"]) {
             // if INSERT show form again
             $output .= taxonomy_form_term();

@@ -25,13 +25,13 @@ function path_admin() {
         break;
 
       case "delete":
-        $output  = status(path_delete(arg(3)));
+        drupal_set_message(path_delete(arg(3)));
         $output .= path_overview();
         break;
 
       case t("Create new alias"):
       case t("Update alias"):
-        $output .= status(path_save($edit));
+        drupal_set_message(path_save($edit));
         break;
 
       default:

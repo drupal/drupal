@@ -77,8 +77,13 @@ function unconed_header() {
   <?php
   print theme("breadcrumb", drupal_get_breadcrumb());
   print "<h1>" . drupal_get_title() . "</h1>";
+
   if ($help = menu_get_active_help()) {
     print "<small>$help</small><hr />";
+  }
+
+  if ($message = drupal_get_message()) {
+    $output .= "<b>". t("Status") ."</b>: ". $message->message ."<hr />";
   }
 }
 

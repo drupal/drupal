@@ -1012,7 +1012,7 @@ function comment_mod_matrix($edit) {
       }
     }
     db_query("INSERT INTO {moderation_roles} (mid, rid, value) VALUES ". implode(", ", $sql));
-    $output = status("Vote values saved");
+    drupal_set_message("Vote values saved");
   }
 
   $result = db_query("SELECT r.rid, r.name FROM {role} r, {permission} p WHERE r.rid = p.rid AND p.perm LIKE '%moderate comments%'");
@@ -1048,7 +1048,7 @@ function comment_mod_roles($edit) {
 
   if ($edit) {
     variable_set("comment_roles", $edit);
-    $output = status("Comment scores saved");
+    drupal_set_message("Comment scores saved");
   }
 
   $start_values = variable_get("comment_roles", array());
@@ -1075,18 +1075,18 @@ function comment_mod_votes($edit) {
   if ($op == t("Save vote")) {
     db_query("UPDATE {moderation_votes} SET vote = '%s', weight = %d WHERE mid = %d", $edit["vote"], $edit["weight"], $mid);
     $mid = 0;
-    $output = status("Vote saved");
+    drupal_set_message("Vote saved");
   }
   else if ($op == t("Delete vote")) {
     db_query("DELETE FROM {moderation_votes} WHERE mid = %d", $mid);
     db_query("DELETE FROM {moderation_roles} WHERE mid = %d", $mid);
     $mid = 0;
-    $output = status("Vote deleted");
+    drupal_set_message("Vote deleted");
   }
   else if ($op == t("Add new vote")) {
     db_query("INSERT INTO {moderation_votes} (vote, weight) VALUES ('%s', %d)", $edit["vote"], $edit["weight"]);
     $mid = 0;
-    $output = status("Vote added");
+    drupal_set_message("Vote added");
   }
 
   $output .= "<h3>". t("Moderation votes overview") ."</h3>";
@@ -1126,17 +1126,17 @@ function comment_mod_filters($edit) {
   if ($op == t("Save threshold")) {
     db_query("UPDATE {moderation_filters} SET filter = '%s', minimum = %d WHERE fid = %d", $edit["filter"], $edit["minimum"], $fid);
     $fid = 0;
-    $output = status("Saved threshold");
+    drupal_set_message("Saved threshold");
   }
   else if ($op == t("Delete threshold")) {
     db_query("DELETE FROM {moderation_filters} WHERE fid = %d", $fid);
     $fid = 0;
-    $output = status("Deleted threshold");
+    drupal_set_message("Deleted threshold");
   }
   else if ($op == t("Add new threshold")) {
     db_query("INSERT INTO {moderation_filters} (filter, minimum) VALUES ('%s', %d)", $edit["filter"], $edit["minimum"]);
     $fid = 0;
-    $output = status("Added threshold");
+    drupal_set_message("Added threshold");
   }
 
   $output .= "<h3>Comment threshold overview</h3>";
@@ -1222,11 +1222,11 @@ function comment_admin() {
         $output = comment_delete(array("cid" => arg(3)));
         break;
       case t("Delete"):
-        $output = status(comment_delete($edit));
+        drupal_set_message(comment_delete($edit));
         $output .= comment_admin_overview(0);
         break;
       case t("Submit"):
-        $output = status(comment_save(check_query(arg(3)), $edit));
+        drupal_set_message(comment_save(check_query(arg(3)), $edit));
         $output .= comment_admin_overview(0);
         break;
       default:

@@ -28,6 +28,28 @@ function drupal_get_title() {
 // @}
 
 /**
+  @name drupal_message
+
+  Functions to get and set the message of the current page.
+  @{
+**/
+function drupal_set_message($message = NULL, $type = "status") {
+  static $stored_message;
+
+  if (isset($message)) {
+    $stored_message->message = $message;
+    $stored_message->type = $type;
+  }
+
+  return $stored_message;
+}
+
+function drupal_get_message() {
+  return drupal_set_message();
+}
+// @}
+
+/**
   @name drupal_breadcrumb
 
   Functions to get and set the breadcrumb trail of the current page.

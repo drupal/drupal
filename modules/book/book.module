@@ -207,17 +207,17 @@ function book_node_link($node = 0) {
 
     if ($op == t("Add to book outline")) {
       db_query("INSERT INTO {book} (nid, parent, weight) VALUES (%d, %d, %d)", $node->nid, $edit["parent"], $edit["weight"]);
-      $output .= status(t("added the node to the book."));
+      drupal_set_message(t("added the node to the book."));
     }
 
     if ($op == t("Update book outline")) {
       db_query("UPDATE {book} SET parent = %d, weight = %d WHERE nid = %d", $edit["parent"], $edit["weight"], $node->nid);
-      $output .= status(t("updated the book outline."));
+      drupal_set_message(t("updated the book outline."));
     }
 
     if ($op == t("Remove from book outline")) {
       db_query("DELETE FROM {book} WHERE nid = %d", $node->nid);
-      $output .= status(t("removed the node form the book."));
+      drupal_set_message(t("removed the node form the book."));
     }
 
     $output .= "<h3>". t("Edit book outline for node <i>%booktitle</i>", array("%booktitle" => $node->title)) ."</h3>";
@@ -834,7 +834,7 @@ function book_admin() {
         $output = book_admin_orphan();
         break;
       case t("Save book pages"):
-        $output = status(book_admin_save(arg(3), $edit));
+        drupal_set_message(book_admin_save(arg(3), $edit));
         // fall through:
       default:
         $output .= book_admin_view(arg(3));

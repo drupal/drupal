@@ -206,7 +206,7 @@ function system_save_settings($edit = array()) {
   }
   cache_clear_all();
 
-  return t("the configuration options have been saved.");
+  drupal_set_message(t("the configuration options have been saved."));
 }
 
 function system_reset_default($edit = array()) {
@@ -216,7 +216,7 @@ function system_reset_default($edit = array()) {
 
   cache_clear_all();
 
-  return t("the configuration options have been reset to their default values.");
+  drupal_set_message(t("the configuration options have been reset to their default values."));
 }
 
 function system_view($type, $arg = "") {
@@ -348,14 +348,14 @@ function system_admin() {
 
   if (user_access("administer site configuration")) {
     if ($op == t("Reset to defaults")) {
-      $output = status(system_reset_default($edit));
+      system_reset_default($edit);
     }
 
     if ($op == t("Save configuration")) {
-      $output = status(system_save_settings($edit));
+      system_save_settings($edit);
     }
 
-    $output .= system_view(arg(2), arg(3));
+    $output = system_view(arg(2), arg(3));
     print theme("page", $output);
   }
   else {
