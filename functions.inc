@@ -106,8 +106,8 @@ function displayRelatedLinks($theme, $story) {
   }
 
   ### Default related links: 
-  $content .= " <LI>More about <A HREF=\"search.php?category=$story->category\">$story->category</A>.</LI>";
-  $content .= " <LI>Also by <A HREF=\"search.php?author=$story->aid\">$story->userid</A>.</LI>";
+  $content .= " <LI>More about <A HREF=\"search.php?category=". urlencode($story->category) ."\">$story->category</A>.</LI>";
+  $content .= " <LI>Also by <A HREF=\"search.php?author=". urlencode($story->userid) ."\">$story->userid</A>.</LI>";
 
   $theme->box("Related links", $content);
 }
