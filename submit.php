@@ -12,7 +12,7 @@ function submit_enter() {
   $output .= "<FORM ACTION=\"submit.php\" METHOD=\"post\">\n";
 
   $output .= "<P>\n <B>Your name:</B><BR>\n";
-  if ($user) $output .= " <A HREF=\"account.php\">$user->userid</A> &nbsp; &nbsp; <SMALL>[ <A HREF=\"account.php?op=logout\">logout</A> ]</SMALL>\n";
+  if ($user->id) $output .= " <A HREF=\"account.php\">$user->userid</A> &nbsp; &nbsp; <SMALL>[ <A HREF=\"account.php?op=logout\">logout</A> ]</SMALL>\n";
   else $output .= " $anonymous &nbsp; &nbsp; <SMALL>[ <A HREF=\"account.php\">login</A> | <A HREF=\"account.php\">create an account</A> ]</SMALL>\n"; 
   $output .= "</P>\n";
  
@@ -62,7 +62,7 @@ function submit_preview($subject, $abstract, $story, $category) {
 
   $output .= "<P>\n";
   $output .= " <B>Your name:</B><BR>\n";
-  if ($user) $output .= " <A HREF=\"account.php\">$user->userid</A> &nbsp; &nbsp; <SMALL> [ <A HREF=\"account.php?op=logout\">logout</A> ]</SMALL>\n";
+  if ($user->id) $output .= " <A HREF=\"account.php\">$user->userid</A> &nbsp; &nbsp; <SMALL> [ <A HREF=\"account.php?op=logout\">logout</A> ]</SMALL>\n";
   else $output .= " $anonymous &nbsp; &nbsp; <SMALL>[ <A HREF=\"account.php\">login</A> | <A HREF=\"account.php\">create an account</A> ]</SMALL>\n";
   $output .= "</P>\n";
 
