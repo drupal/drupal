@@ -451,17 +451,16 @@ function update_31() {
   print "Linking nodes with terms.<br />";
   $result = db_query("SELECT nid,attributes FROM node WHERE attributes != ''");
   while ($node = db_fetch_object($result)) {
-    foreach (explode(",", $node->attributes) as $t) {
-      $t = trim($t);
-      if ($t) {
-        if ($terms[$t]) {
-          db_query("INSERT INTO term_node SET nid = '$node->nid', tid = '$terms[$t]'");
-        }
-        else {
-          $errors[$t] = "$t";
-        }
+    $tag = db_fetch_object(db_query("SELECT name FROM tag WHERE attributes = '$node->attributes'"));
+    $tag = trim($tag->name);
+    if ($tag) {
+      if ($terms[$tag]) {
+        db_query("INSERT INTO term_node SET nid = '$node->nid', tid = '$terms[$tag]'");
       }
-    }    
+      else {
+        $errors[$tag] = "$tag";
+      }
+    }
   }
    
   if (count($errors)) {
@@ -631,7 +630,7 @@ function update_info() {
 
 if ($op) {
   include_once "includes/common.inc";
-  if (!user_access(NULL)) {
+  if (user_access(NULL)) {
     update_page();
   }
   else {
