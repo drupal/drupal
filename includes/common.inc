@@ -581,7 +581,7 @@ function format_url($address, $description = 0) {
 }
 
 function format_tag($link, $text) {
-  return l(('$text' ? '$text' : '$link'), array("title" => urlencode('$link')));
+  return l(($text ? $text : $link), array("title" => $link));
 }
 
 function form($form, $method = "post", $action = 0, $options = 0) {
@@ -639,7 +639,7 @@ function form_submit($value) {
 function drupal_url($args = array(), $script = "node") {
   $t = array();
   foreach ($args as $key => $value) {
-    $t[] = "$key=$value";
+    $t[] = "$key=". urlencode($value);
   }
   return "$script.php?". implode("&amp;", $t);
 }

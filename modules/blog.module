@@ -46,7 +46,7 @@ function blog_save($op, $node) {
 
   if ($op == "create") {
     if (user_access("administer nodes")) {
-      return array();
+      return array("body" => filter($node->body), "teaser" => filter($node->teaser));
     }
     else {
       return array("body" => filter($node->body), "promote" => 0, "moderate" => 1, "status" => 1, "teaser" => filter($node->teaser));
@@ -64,7 +64,7 @@ function blog_save($op, $node) {
       ** pages, they will not be changed unless explicitly specified.
       */
 
-      return array();
+      return array("body" => filter($node->body), "teaser" => filter($node->teaser));
     }
     else {
       /*
