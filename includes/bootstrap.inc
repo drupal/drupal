@@ -137,7 +137,18 @@ function drupal_page_header() {
       // Send appropriate response:
       header("Last-Modified: $date");
       header("ETag: $etag");
-      header($cache->headers);
+
+      /*
+      ** Send the original request's headers.  We send them one after
+      ** another so PHP's header() function can deal with duplicate
+      ** headers.
+      */
+
+      $headers = explode('\n', $cache->headers);
+      foreach ($headers as $header) {
+        header($header);
+      }
+
       print $cache->data;
 
       /*
