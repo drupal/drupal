@@ -82,7 +82,7 @@ function user_validate_name($name) {
   if (eregi(" \$", $name)) return t("the username can not end with a space.");
   if (eregi("  ", $name)) return t("the username can not contain multiple spaces in a row.");
   if (eregi("[^a-zA-Z0-9 ]", $name)) return t("the username contains an illegal character.");
-  if (strlen($name) > 15) return t("the username '$name' is too long: it must be less than 15 characters.");
+  if (strlen($name) > 32) return t("the username '$name' is too long: it must be less than 32 characters.");
 }
 
 function user_validate_mail($mail) {

@@ -278,3 +278,7 @@ CREATE TABLE role (
 ALTER TABLE users ADD role varchar(32) DEFAULT '' NOT NULL;
 ALTER TABLE users DROP access;
 UPDATE users SET role = 'authenticated user';
+
+#23/06/01
+ALTER TABLE users CHANGE userid userid VARCHAR(32) DEFAULT '' NOT NULL;
+

@@ -27,7 +27,7 @@ function theme_init() {
 }
 
 function theme_link() {
-  global $theme;
+  global $user, $theme;
   $links[] = array("index.php",  t("home"));
   $links[] = array("search.php",  t("search"));
   $links[] = array("submit.php",  t("submit"));
@@ -36,10 +36,6 @@ function theme_link() {
   foreach (module_list() as $name) {
     if (module_hook($name, "page")) $links[] = array("module.php?mod=$name", t($name));
   }
-
-//  if (module_exist("forum")) $links[] = "<A HREF=\"module.php?mod=forum\">".t("forum") ."</A>";
-//  if (module_exist("diary")) $links[] = "<A HREF=\"module.php?mod=diary\">". t("diary") ."</A>";
-//  if (module_exist("book")) $links[] = "<A HREF=\"module.php?mod=book\">". t("handbook") ."</A>";
 
   return $theme->links($links, 2);
 }
