@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.77 2002/05/20 21:03:07 kjartan Exp $
+// $Id: blog.module,v 1.78 2002/05/20 21:12:17 kjartan Exp $
 
 function blog_conf_options() {
  $output .= form_textarea("Explanation or submission guidelines", "blog_help", variable_get("blog_help", ""), 55, 4, "This text will be displayed at the top of the blog submission form.  Useful for helping or instructing your users.");
@@ -303,10 +303,11 @@ function blog_link($type, $node = 0, $main) {
   }
 
   if ($type == "node" && $node->type == "blog") {
+    global $mod, $op, $id;
     if (blog_access("update", $node)) {
       $links[] = lm(t("edit this blog"), array("mod" => "node", "op" => "edit", "id" => $node->nid), "", array("title" => t("Edit this blog entry.")));
     }
-    else {
+    elseif ($mod == "blog" && $op != "view" && !$id) {
       $links[] = lm(t("%u's blog", array("%u" => $node->name)), array("mod" => "blog", "op" => "view", "id" => $node->uid), "", array("title" => t("Read %u's latest blog entries.", array("%u" => $node->name))));
     }
   }
