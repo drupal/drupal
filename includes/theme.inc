@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.216 2004/09/14 20:00:51 unconed Exp $ */
+/* $Id: theme.inc,v 1.217 2004/10/14 02:38:32 unconed Exp $ */
 
 /**
  * @file
@@ -231,6 +231,11 @@ function theme_get_settings($key = NULL) {
 
   if ($key) {
     $settings = array_merge($settings, variable_get(str_replace('/', '_', 'theme_'. $key .'_settings'), array()));
+  }
+
+  // Only offer search box if search.module is enabled.
+  if (!module_exist('search')) {
+    $settings['toggle_search'] = 0;
   }
 
   return $settings;
