@@ -71,7 +71,6 @@ function node_cron() {
  *
  * @param $result
  *   A DB result object from a query to fetch node objects.  If your query joins the <code>node_comment_statistics</code> table so that the <code>comment_count</code> field is available, a title attribute will be added to show the number of comments.
- * field to be set.
  * @param $title
  *   A heading for the resulting list.
  *
