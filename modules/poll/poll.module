@@ -186,21 +186,6 @@ function poll_link($type, $node = 0, $main) {
   if ($type == 'page' && user_access('access content')) {
     $links[] = l(t('polls'), 'poll', array('title' => t('View the list of polls on this site.')));
   }
-  else if ($type == 'node' && $node->type == 'poll') {
-    /*
-    ** Add links to allow the user to switch between the results and the voting
-    ** form, if he/she hasn't voted yet.
-    */
-
-    if ($node->allowvotes) {
-      if (arg(3) == 'results') {
-        $links[] = l(t('voting form'), 'node/'. $node->nid);
-      }
-      else {
-        $links[] = l(t('view results'), 'node/'. $node->nid .'/results');
-      }
-    }
-  }
 
   return $links;
 }
@@ -216,6 +201,25 @@ function poll_menu() {
     'callback' => 'poll_page',
     'access' => user_access('access content'),
     'type' => MENU_SUGGESTED_ITEM);
+
+  $items[] = array('path' => 'poll/vote',
+    'title' => t('vote'),
+    'callback' => 'poll_vote',
+    'access' => user_access('vote on polls'),
+    'type' => MENU_CALLBACK);
+
+  if (arg(0) == 'node' && is_numeric(arg(1))) {
+    $node = node_load(array('nid' => arg(1)));
+
+    if ($node->type == 'poll' && $node->allowvotes) {
+      $items[] = array('path' => 'node/'. arg(1) .'/results',
+        'title' => t('results'),
+        'callback' => 'poll_results',
+        'access' => user_access('access content'),
+        'weight' => 3,
+        'type' => MENU_LOCAL_TASK);
+    }
+  }
   return $items;
 }
 
@@ -315,7 +319,7 @@ function poll_view_voting(&$node, $main, $page, $block) {
   $form .= form_hidden('nid', $node->nid);
   $form .= form_submit(t('Vote'), 'vote') .'</div>';
 
-  $output .= form($form, 'post', url('node/'. $node->nid));
+  $output .= form($form, 'post', url('poll/vote/'. $node->nid));
   $output .= '</div>';
 
   return $output;
@@ -355,12 +359,28 @@ function poll_view_results(&$node, $main, $page, $block) {
   return $output;
 }
 
-function poll_view_processvote(&$node) {
-  $edit = $_POST['edit'];
-  $choice = $edit['choice'];
-  $vote = $_POST['vote'];
+/**
+ * Callback for the 'results' tab for polls you can vote on
+ */
+function poll_results() {
+  if ($node = node_load(array('nid' => arg(1)))) {
+    print theme('page', node_show($node, 0), $node->title);
+  }
+  else {
+    drupal_not_found();
+  }
+}
 
-  if ($vote == t('Vote')) {
+/**
+ * Callback for processing a vote
+ */
+function poll_vote(&$node) {
+  $nid = arg(2);
+  if ($node = node_load(array('nid' => $nid))) {
+    $edit = $_POST['edit'];
+    $choice = $edit['choice'];
+    $vote = $_POST['vote'];
+
     if (isset($choice) && isset($node->choice[$choice])) {
       if ($node->allowvotes) {
         $id = poll_uid();
@@ -378,6 +398,11 @@ function poll_view_processvote(&$node) {
     else {
       drupal_set_message(t("You didn't specify a valid poll choice."), 'error');
     }
+
+    drupal_goto('node/'. $nid);
+  }
+  else {
+    drupal_not_found();
   }
 }
 
@@ -391,12 +416,7 @@ function poll_view_processvote(&$node) {
 function poll_view(&$node, $main = 0, $page = 0, $block = 0) {
   global $user;
 
-  if (!$block) {
-    // Because the voting form is embedded in the node-display, we process the data here
-    poll_view_processvote($node);
-  }
-
-  if ($node->allowvotes && (arg(2) != $node->nid || arg(3) != 'results')) {
+  if ($node->allowvotes && ($block || arg(2) != 'results')) {
     $output .= poll_view_voting($node, $main, $page, $block);
   }
   else {
@@ -410,6 +430,9 @@ function poll_view(&$node, $main = 0, $page = 0, $block = 0) {
 
     $links = link_node($node, $main);
     $links[] = l(t('older polls'), 'poll', array('title' => t('View the list of polls on this site.')));
+    if ($node->allowvotes && $block) {
+      $links[] = l(t('results'), 'node/'. $node->nid .'/results', array('title' => t('View the current poll results.')));
+    }
 
     $output .= '<div class="links">'. theme("links", $links) .'</div>';
   }
