@@ -32,8 +32,8 @@ function node_title_list($result, $title = NULL) {
     $name = strip_tags(format_name($node)); // required for anonymous users to work
     $items[] = l(check_output($node->title), array("id" => $node->nid), "node", "", array("title" => t("Author: %name, comments: %number", array("%name" => $name, "%number" => $number))));
   }
-  return theme_invoke("theme_item_list", $items, $title);
 
+  return theme_invoke("theme_item_list", $items, $title);
 }
 
 function node_teaser($body) {
@@ -1155,7 +1155,7 @@ function node_submit($node) {
         */
 
         if (user_access("administer nodes")) {
-          $fields = array("uid", "body", "comment" => 2, "created", "promote", "moderate", "status" => 1, "teaser", "title", "type" => $node->type);
+          $fields = array("uid", "body", "comment", "created", "promote", "static", "moderate", "status", "teaser", "title", "type" => $node->type);
         }
         else {
           $fields = array("uid" => ($user->uid ? $user->uid : 0), "body", "comment" => 2, "teaser", "title", "type" => $node->type);
