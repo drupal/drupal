@@ -194,6 +194,21 @@ CREATE TABLE comments (
 ) TYPE=MyISAM;
 
 --
+-- Table structre for table 'node_last_comment'
+--
+
+CREATE TABLE node_comment_statistics (
+  nid int(10) unsigned NOT NULL auto_increment,
+  cid int(10) unsigned NOT NULL default '0',
+  last_comment_timestamp int(11) NOT NULL default '0',
+  last_comment_name varchar(60)  default NULL,
+  last_comment_uid int(10) NOT NULL default '0',
+  comment_count int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY (nid),
+  KEY node_comment_timestamp (last_comment_timestamp)
+) TYPE=MyISAM;
+
+--
 -- Table structure for table 'directory'
 --
 
@@ -227,7 +242,7 @@ CREATE TABLE files (
 --
 
 CREATE TABLE filter_formats (
-  format int(4) NOT NULL default '0' auto_increment,
+  format int(4) NOT NULL auto_increment,
   name varchar(255) NOT NULL default '',
   roles varchar(255) NOT NULL default '',
   cache tinyint(2) NOT NULL default '0',
@@ -252,8 +267,7 @@ CREATE TABLE filters (
 
 CREATE TABLE forum (
   nid int(10) unsigned NOT NULL default '0',
-  tid int(10) unsigned NOT NULL default '0',
-  shadow int(10) unsigned NOT NULL default '0',
+  tid int(10) unsigned NOT NULL default  '0',
   PRIMARY KEY  (nid),
   KEY tid (tid)
 ) TYPE=MyISAM;
@@ -390,7 +404,8 @@ CREATE TABLE node (
   KEY node_moderate (moderate),
   KEY node_promote_status (promote, status),
   KEY node_created (created),
-  KEY node_changed (changed)
+  KEY node_changed (changed),
+  KEY node_status_type (status, type, nid)
 ) TYPE=MyISAM;
 
 --
@@ -537,7 +552,7 @@ CREATE TABLE sessions (
   timestamp int(11) NOT NULL default '0',
   session longtext,
   KEY uid (uid),
-  KEY sid (sid(4)),
+  KEY sid (sid),
   KEY timestamp (timestamp)
 ) TYPE=MyISAM;
 
