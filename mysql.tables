@@ -1,3 +1,14 @@
+DROP TABLE authors;
+DROP TABLE stories;
+DROP TABLE blocks;
+DROP TABLE channel;
+DROP TABLE comments;
+DROP TABLE headlines;
+DROP TABLE poll;
+DROP TABLE queue;
+DROP TABLE users;
+DROP TABLE webboard;
+
 # MySQL dump 7.1
 #
 # Host: zind.net    Database: dries
@@ -48,12 +59,13 @@ INSERT INTO blocks VALUES (1,'','Development','<P>These links point to pages or 
 CREATE TABLE channel (
   id int(11) DEFAULT '0' NOT NULL auto_increment,
   site varchar(255) DEFAULT '' NOT NULL,
+  file varchar(255) DEFAULT '' NOT NULL,
   url varchar(255) DEFAULT '' NOT NULL,
-  rdf varchar(255) DEFAULT '' NOT NULL,
+  contact varchar(255) DEFAULT '',
   timestamp int(11),
   UNIQUE site (site),
+  UNIQUE file (file),
   UNIQUE url (url),
-  UNIQUE rdf (rdf),
   PRIMARY KEY (id)
 );
 
