@@ -119,7 +119,7 @@ function blogapi_new_post($req_params) {
   $edit['comment'] = variable_get('node_comment_blog', 2);
   $edit['moderate'] = variable_get('node_moderate_blog', 0);
   $edit['revision'] = variable_get('node_revision_blog', 0);
-  $edit['format'] = FILTER_DEFAULT_FORMAT;
+  $edit['format'] = FILTER_FORMAT_DEFAULT;
   $edit['status'] = $params[4];
 
   // check for bloggerAPI vs. metaWeblogAPI
