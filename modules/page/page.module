@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.118 2004/07/13 20:40:46 dries Exp $
+// $Id: page.module,v 1.119 2004/07/13 21:52:35 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -106,8 +106,10 @@ function page_content($node, $teaser = FALSE) {
     // PHP type
     ob_start();
     eval($node->body);
-    $node->teaser = $node->body = ob_get_contents();
+    $node->body = ob_get_contents();
     ob_end_clean();
+    $node->teaser = node_teaser($node->body);
+    $node->readmore = (strlen($node->teaser) < strlen($node->body));
   }
   else {
     // Assume HTML type by default

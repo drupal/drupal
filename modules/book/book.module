@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.230 2004/07/08 15:24:30 dries Exp $
+// $Id: book.module,v 1.231 2004/07/13 21:52:35 dries Exp $
 
 /**
  * Implementation of hook_node_name().
@@ -452,8 +452,10 @@ function book_content($node, $teaser = FALSE) {
 
     ob_start();
     eval($node->body);
-    $node->teaser = $node->body = ob_get_contents();
+    $node->body = ob_get_contents();
     ob_end_clean();
+    $node->teaser = node_teaser($node->body);
+    $node->readmore = (strlen($node->teaser) < strlen($node->body));
   }
   else {
     $node = node_prepare($node, $teaser);
