@@ -23,7 +23,7 @@ function system_help($section) {
       $theme = array_pop(explode('.', arg(3), 2));
       return t('These options control the display settings for the <code>%template</code> theme. When your site is displayed using this theme, these settings will be used. By clicking "Reset to defaults," you can choose to use the <a href="%global">global settings</a> for this theme.', array('%template' => $theme, '%global' => url('admin/themes/settings')));
     case 'admin/modules':
-      return t("Modules are plugins for Drupal that extend its core functionality.  Here you can select which modules are enabled.  Click on the name of the module in the navigation menu for their individual configuration pages.  Once a module is enabled, new <a href=\"%permissions\">permissions</a> might be made available.  Modules can automatically be temporarily disabled to reduce server load when your site becomes extremely busy by checking throttle.  The auto-throttle functionality must be enabled on the <a href=\"%throttle\">throttle configuration page</a> after having enabled the throttle module.", array('%permissions' => url('admin/user/configure/permission'), '%throttle' => url('admin/settings/throttle')));
+      return t("Modules are plugins for Drupal that extend its core functionality.  Here you can select which modules are enabled.  Click on the name of the module in the navigation menu for their individual configuration pages.  Once a module is enabled, new <a href=\"%permissions\">permissions</a> might be made available.  Modules can automatically be temporarily disabled to reduce server load when your site becomes extremely busy by enabling the throttle.module and checking throttle.  The auto-throttle functionality must be enabled on the <a href=\"%throttle\">throttle configuration page</a> after having enabled the throttle module.", array('%permissions' => url('admin/user/configure/permission'), '%throttle' => url('admin/settings/throttle')));
     case 'admin/help#system':
       return t("
       <p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviours including visual and operational settings.</p>
@@ -472,7 +472,10 @@ function system_module_listing() {
   $required = array('modules/admin.module', 'modules/block.module', 'modules/filter.module', 'modules/system.module', 'modules/user.module', 'modules/watchdog.module');
   $throttle_required = array_merge($required, array('modules/throttle.module'));
 
-  $header = array(t('Name'), t('Description'), t('Enabled'), t('Throttle'));
+  $header = array(t('Name'), t('Description'), t('Enabled'));
+  if (module_exist('throttle')) {
+    $header[] = t('Throttle');
+  }
 
   foreach ($files as $filename => $file) {
     module_set_filename($file->name, $filename);
@@ -495,7 +498,9 @@ function system_module_listing() {
     db_query('INSERT INTO {system} (name, description, type, filename, status, throttle, bootstrap) VALUES (\'%s\', \'%s\', \'%s\', \'%s\', %d, %d, %d)', $info->name, $info->description, 'module', $filename, $file->status, $file->throttle, $bootstrap);
 
     $row = array($info->name, $info->description, array('data' => (in_array($filename, $required) ? form_hidden('status]['. $filename, 1) . t('required') : form_checkbox('', 'status]['. $filename, 1, $file->status)), 'align' => 'center'));
-    $row[] = array('data' => (in_array($filename, $throttle_required) ? form_hidden('throttle]['. $filename, 0) . t('required') : form_checkbox(NULL, 'throttle]['. $filename, 1, $file->throttle, NULL, module_exist('throttle') ? NULL : array('disabled' => 'disabled'))), 'align' => 'center');
+    if (module_exist('throttle')) {
+      $row[] = array('data' => (in_array($filename, $throttle_required) ? form_hidden('throttle]['. $filename, 0) . t('required') : form_checkbox(NULL, 'throttle]['. $filename, 1, $file->throttle, NULL)), 'align' => 'center');
+    }
     $rows[] = $row;
   }
 

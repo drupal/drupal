@@ -189,7 +189,12 @@ function _block_rehash($order_by = array('weight')) {
 function block_admin_display() {
   $blocks = _block_rehash();
 
-  $header = array(t('Block'), t('Enabled'), t('Throttle'), t('Weight'), t('Region'), array('data' => t('Operations'), 'colspan' => 2));
+  $header = array(t('Block'), t('Enabled'), t('Weight'), t('Region'));
+  if (module_exist('throttle')) {
+    $header[] = t('Throttle');
+  }
+  $header[] = array('data' => t('Operations'), 'colspan' => 2);
+
 
   foreach ($blocks as $block) {
     if ($block['module'] == 'block') {
@@ -199,7 +204,14 @@ function block_admin_display() {
       $operation = '';
     }
 
-    $rows[] = array($block['info'], array('data' => form_checkbox(NULL, $block['module'] .']['. $block['delta'] .'][status', 1, $block['status']), 'align' => 'center'), array('data' => form_checkbox(NULL, $block['module'] .']['. $block['delta'] .'][throttle', 1, $block['throttle'], NULL, module_exist('throttle') ? NULL : array('disabled' => 'disabled')), 'align' => 'center'), form_weight(NULL, $block['module'] .']['. $block['delta'] .'][weight', $block['weight']), form_radios(NULL, $block['module'] .']['. $block['delta'] .'][region', $block['region'], array(t('left'), t('right'))), l(t('configure'), 'admin/block/configure/'. $block['module'] .'/'. $block['delta']), $operation);
+    $row = array($block['info'], array('data' => form_checkbox(NULL, $block['module'] .']['. $block['delta'] .'][status', 1, $block['status']), 'align' => 'center'), form_weight(NULL, $block['module'] .']['. $block['delta'] .'][weight', $block['weight']), form_radios(NULL, $block['module'] .']['. $block['delta'] .'][region', $block['region'], array(t('left'), t('right'))));
+
+    $row = array($block['info'], array('data' => form_checkbox(NULL, $block['module'] .']['. $block['delta'] .'][status', 1, $block['status']), 'align' => 'center'), form_weight(NULL, $block['module'] .']['. $block['delta'] .'][weight', $block['weight']), form_radios(NULL, $block['module'] .']['. $block['delta'] .'][region', $block['region'], array(t('left'), t('right'))));
+    if (module_exist('throttle')) {
+      $row[] = array('data' => form_checkbox(NULL, $block['module'] .']['. $block['delta'] .'][throttle', 1, $block['throttle']), 'align' => 'center');
+    }
+    $row[] = array('data' => l(t('configure'), 'admin/block/configure/'. $block['module'] .'/'. $block['delta']), $operation);
+    $rows[] = $row;
   }
 
   $output = theme('table', $header, $rows);
