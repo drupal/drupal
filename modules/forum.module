@@ -14,7 +14,7 @@ function forum_help($section) {
     case 'admin/help#forum':
       return t("
       <h3>Creating a forum</h3>
-      <p>The forum module uses taxonomy to organize itself. To create a forum you first have to create a <a href=\"%taxonomy\">taxonomy vocabulary</a>. When doing this, choose a sensible name for it (such as \"fora\") and make sure under \"Types\" that \"forum\" is selected. Once you have done this, <a href=\"%taxo-terms\">add some terms</a> to it. Each term will become a forum. If you fill in the description field, users will be given additonal information about the forum on the main forum page. For example: \"troubleshooting\" - \"Please ask your questions here.\"</p>
+      <p>The forum module uses taxonomy to organize itself. To create a forum you first have to create a <a href=\"%taxonomy\">taxonomy vocabulary</a>. When doing this, choose a sensible name for it (such as \"fora\") and make sure under \"Types\" that \"forum\" is selected. Once you have done this, <a href=\"%taxo-terms\">add some terms</a> to it. Each term will become a forum. If you fill in the description field, users will be given additional information about the forum on the main forum page. For example: \"troubleshooting\" - \"Please ask your questions here.\"</p>
       <p>When you are happy with your vocabulary, go to <a href=\"%forums\">administer &raquo; settings &raquo; forum</a> and set <strong>Forum vocabulary</strong> to the one you have just created. There will now be fora active on the site. For users to access them they must have the \"access content\" <a href=\"%permission\">permission</a> and to create a topic they must have the \"create forum topics\" <a href=\"%permission\">permission</a>. These permissions can be set in the <a href=\"%permission\">permission</a> pages.</p>
       <h4>Icons</h4>
       <p>To disable icons, set the icon path as blank in <a href=\"%forums\">administer &raquo; settings &raquo; forum</a>.</p>
@@ -315,7 +315,7 @@ function forum_delete(&$node) {
 /**
  * Formats a topic for display
  *
- * @TODO Give a better description. Not sure where this funciton is used yet.
+ * @TODO Give a better description. Not sure where this function is used yet.
  */
 function _forum_format($topic) {
   if ($topic && $topic->timestamp) {
@@ -329,7 +329,7 @@ function _forum_format($topic) {
 /**
  * Returns a list of all forums for a given taxonomy id
  *
- * Forum objects containt the following fields
+ * Forum objects contain the following fields
  * -num_topics Number of topics in the forum
  * -num_posts Total number of posts in all topics
  * -last_post Most recent post for the forum

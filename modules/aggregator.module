@@ -414,7 +414,7 @@ function aggregator_refresh($feed) {
  * Origionally from MagpieRSS (http://magpierss.sourceforge.net/).
  *
  * @param $date_str A string with a potentially W3C DTF date.
- * @return A timestamp if parsed sucessfully or -1 if not.
+ * @return A timestamp if parsed successfully or -1 if not.
  */
 function aggregator_parse_w3cdtf($date_str) {
   if (preg_match('/(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})(:(\d{2}))?(?:([-+])(\d{2}):?(\d{2})|(Z))?/', $date_str, $match)) {

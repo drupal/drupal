@@ -30,14 +30,14 @@ function locale_help($section = "admin/help#locale") {
     case 'admin/locale/language/export':
       return t("<p>This page allows you to export Drupal strings. The first option is to export a translation so it can be shared. The second option is to generate a translation template, which contains all Drupal strings, but without their translations. You can use this template to start a new translation using a specialized desktop application.</p>");
     case 'admin/locale/string/search':
-      return t("<p>It is often more convinient to get the strings of your setup on the <a href=\"%export\">export page</a>, and start with a desktop Gettext translation editor though. Here you can search in the translated and untranslated strings, and the default English texts provided by Drupal.</p>", array("%export" => url("admin/locale/language/export")));
+      return t("<p>It is often more convenient to get the strings of your setup on the <a href=\"%export\">export page</a>, and start with a desktop Gettext translation editor though. Here you can search in the translated and untranslated strings, and the default English texts provided by Drupal.</p>", array("%export" => url("admin/locale/language/export")));
 
     case 'admin/help#locale':
       return t("
       <p>Most programs are written and documented in English, and primarily use English to interact with users. This is also true for a great deal of web sites. However, most people are less comfortable with English than with their native language, and would prefer to use their mother tongue as much as possible. Many people love to see their web site showing a lot less English, and far more of their own language. Therefore Drupal provides a framework to setup a multi-lingual web site, or to overwrite the default English texts.</p>
       <h3>How to interface translation works</h3>
       <p>Whenever Drupal encounters an interface string which needs to be displayed, it tries to translate it into the currently selected language. If a translation is not available, then the string is remembered, so you can look up untranslated strings easily.</p>
-      <p>Drupal provides two options to translate these strings. First is the integrated web interface, where you can search for untranslated strings, and specify their translations via simple web forms. An easier, and much less time consuming method is to import translations already done for your language. This is achieved by the use of GNU gettext Portable Object files. These are editable with quite convinient desktop editors specifically architected for supporting your work with GNU Gettext files. The import feature allows you to add strings from such files into the site database. The export functionality enables you to share your translations with others, generating Portable Object files from your site strings.");
+      <p>Drupal provides two options to translate these strings. First is the integrated web interface, where you can search for untranslated strings, and specify their translations via simple web forms. An easier, and much less time consuming method is to import translations already done for your language. This is achieved by the use of GNU gettext Portable Object files. These are editable with quite convenient desktop editors specifically architected for supporting your work with GNU Gettext files. The import feature allows you to add strings from such files into the site database. The export functionality enables you to share your translations with others, generating Portable Object files from your site strings.");
       break;
 
       // TODO: integrate a rewritten version of this help into the big help screen above
@@ -268,7 +268,7 @@ function locale_get_plural($count) {
 }
 
 // ---------------------------------------------------------------------------------
-// Language management functionality (admininstration only)
+// Language management functionality (administration only)
 
 /**
  * Page handler for the language management screen
@@ -367,7 +367,7 @@ function locale_admin_manage_add() {
 }
 
 // ---------------------------------------------------------------------------------
-// Gettext Portable Object import functionality (admininstration only)
+// Gettext Portable Object import functionality (administration only)
 
 /**
  * Page handler for the translation import screen
@@ -417,7 +417,7 @@ function locale_admin_export() {
 
 
 // ---------------------------------------------------------------------------------
-// String search and editing functionality (admininstration only)
+// String search and editing functionality (administration only)
 
 /**
  * Page handler for the string search and administration screen

@@ -77,7 +77,7 @@ function _locale_admin_manage_add_screen() {
   $edit = &$_POST['edit'];
   $output .= '<h2>'. t('Custom language') .'</h2>';
   $form = form_textfield(t('Language code'), 'langcode', $edit['langcode'], 70, 12, t("Commonly this is an <a href=\"%iso-codes\">ISO 639 language code</a> with an optional country code for regional variants. Examples include 'en', 'en-US' and 'zh-cn'.", array('%iso-codes' => 'http://www.w3.org/WAI/ER/IG/ert/iso639.htm')));
-  $form .= form_textfield(t('Language name in English'), 'langname', $edit['langname'], 70, 64, t('Name of the language. Will be availabale for translation in all languages.'));
+  $form .= form_textfield(t('Language name in English'), 'langname', $edit['langname'], 70, 64, t('Name of the language. Will be available for translation in all languages.'));
   $form .= form_submit(t('Add language'));
   $output .= form($form);
 
@@ -249,7 +249,7 @@ function _locale_import_po($file, $lang, $mode) {
     }
   }
 
-  // Successfull import
+  // Successful import
   // rebuild locale cache
   cache_clear_all("locale:$lang");
 

@@ -49,7 +49,7 @@ function help_main() {
   <dt>Approved</dt><dd>A moderated post which has been accepted by the moderators for publication. (See published).</dd>
   <dt>Waiting</dt><dd>A moderated post which is still being voted on to be accepted for publication. (See published.)</dd>
   <dt>Moderators</dt><dd>The group of Drupal users that reviews posts before they are published. These users have the \"access submission queue\" permission. (See Published).</dd></dl></dd>
-  <dt>Node</dt><dd>The basic data unit in Drupal. Everything is a node or an extention of a node.</dd>
+  <dt>Node</dt><dd>The basic data unit in Drupal. Everything is a node or an extension of a node.</dd>
   <dt>Public</dt><dd>See published.</dd>
   <dt>Published</dt><dd>A node that is viewable by everyone. (See unpublished.)</dd>
   <dt>Role</dt><dd>A classification users are placed into for the purpose of setting users' permissions.</dd>

@@ -307,7 +307,7 @@ function user_access($string, $account = NULL) {
   global $user;
   static $perm = array();
 
-  // User #1 has all priveleges:
+  // User #1 has all privileges:
   if ($user->uid == 1) {
     return 1;
   }
@@ -340,7 +340,7 @@ function user_mail($mail, $subject, $message, $header) {
   else {
     /*
     ** Note: if you are having problems with sending mail, or mails look wrong
-    ** when they are recieved you may have to modify the str_replace to suit
+    ** when they are received you may have to modify the str_replace to suit
     ** your systems.
     **  - \r\n will work under dos and windows.
     **  - \n will work for linux, unix and BSDs.

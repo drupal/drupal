@@ -106,7 +106,7 @@ function drupal_directory_ping($arguments) {
 }
 
 /**
- * Formats a list of all sites indexed in the ddirectory.
+ * Formats a list of all sites indexed in the directory.
  *
  * This function may be called from a custom page on sites that are
  * Drupal directory servers.
