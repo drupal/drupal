@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.409 2004/10/12 20:01:25 dries Exp $
+// $Id: node.module,v 1.410 2004/10/16 07:22:26 dries Exp $
 
 /**
  * @file
@@ -1449,9 +1449,8 @@ function node_page() {
   $op = $_POST['op'] ? $_POST['op'] : arg(1);
   $edit = $_POST['edit'];
 
-  // Temporary solution for backward compatibility.
   if (is_numeric($op)) {
-    $op = arg(2) ? arg(2) : 'view';
+    $op = (arg(2) && !is_numeric(arg(2))) ? arg(2) : 'view';
   }
 
   switch ($op) {
