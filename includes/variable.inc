@@ -8,7 +8,7 @@ function variable_init($conf = array()) {
 
 function variable_get($name, $default, $object = 0) {
   global $conf;
-  return $conf[$name] ? $conf[$name] : $default;
+  return isset($conf[$name]) ? $conf[$name] : $default;
 }
 
 function variable_set($name, $value) {
