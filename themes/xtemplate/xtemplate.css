@@ -1,6 +1,6 @@
 body {
-  margin: 0px;
-  padding: 0px;
+  margin: 0;
+  padding: 0;
   color: #000000;
   background-color: #fff;
   font-family: verdana, arial, helvetica, sans-serif;
@@ -47,11 +47,11 @@ img {
 }
 .header .menu {
   background-color: #69c;
-  padding: 5px 5px 0px 5px;
+  padding: 5px 5px 0 5px;
 }
 .menu #logo {
   vertical-align: bottom;
-  border: 0px;
+  border: 0;
 }
 .menu #primary {
   font-size: 1.0em;
@@ -99,11 +99,12 @@ img {
   font-weight: bold;
 }
 #main {
-  margin: 10px 10px 10px 10px;
-  padding: 15px 15px 0px 15px;
+  padding: 10px;
 }
 #sidebar {
   background-color: #ddd;
+  width: 200px;
+  padding: 10px;
 }
 #footer {
   background-color: #eee;
@@ -113,17 +114,13 @@ img {
 table {
   font-size: 1em;
 }
-table .node {
-  padding-bottom: 25px;
+.node, .block, .box {
+  padding: 0 0 20px 0;
 }
-table .block, table .box {
-  padding: 15px 15px 15px 15px;
-  margin: 5px 0px 5px 0px;
-}
-table .comment {
+.comment {
   border: 1px solid #ccc;
   padding: 15px 15px 15px 15px;
-  margin: 5px 0px 5px 0px;
+  margin: 5px 0 5px 0;
 }
 .node .title, .block .title, .box .title, .node .title a, .box .title a {
   padding-bottom: 5px;
