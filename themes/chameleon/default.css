@@ -23,10 +23,6 @@ table {
   padding: .5em;
   border-collapse: collapse;
 }
-hr {
-  height: 1px;
-  border: 1px solid gray;
-}
 code, pre {
  font-size: 1em;
 }
