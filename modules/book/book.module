@@ -588,7 +588,7 @@ function book_render() {
 
     if ($node) {
       // Take the most recent approved revision, extract the page and check output:
-      $node = book_content($node);
+      $node = book_content($node, TRUE);
       // Output the content:
       $output .= '<div class="book">';
       $output .= '<div class="title">'. l($node->title, 'node/'. $node->nid) .'</div>';
