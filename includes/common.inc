@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.127 2002/10/20 11:59:34 kjartan Exp $
+// $Id: common.inc,v 1.128 2002/10/20 19:17:17 kjartan Exp $
 
 function conf_init() {
   global $HTTP_HOST;
@@ -765,10 +765,9 @@ function page_footer() {
   }
 }
 
-// Load configuration variables, overriding values set in conf.php
-$conf = variable_init(isset($conf) ? $conf : array());
-
 unset($conf);
+
+$config = conf_init();
 
 include_once "includes/$config.php";
 include_once "includes/database.inc";
@@ -776,8 +775,8 @@ include_once "includes/xmlrpc.inc";
 include_once "includes/module.inc";
 include_once "includes/theme.inc";
 
-// initialize configuration variables:
-$conf = variable_init($conf);
+// initialize configuration variables, using values from conf.php if available:
+$conf = variable_init(isset($conf) ? $conf : array());
 
 // initialize installed modules:
 module_init();
