@@ -484,7 +484,7 @@ function forum_page() {
         $topics = forum_get_topics($tid, $sortby, $forum_per_page);
       }
 
-      theme("forum_render", $forums, $topics, $parents, $tid, $sortby, $forum_per_page, $offset);
+      theme("forum_theme_display", $forums, $topics, $parents, $tid, $sortby, $forum_per_page, $offset);
     }
     else {
       theme("header");
@@ -500,27 +500,27 @@ function forum_page() {
 }
 
 /*
-** Render functions.
+** Theme functions
 */
 
-function forum_render($forums, $topics, $parents, $tid, $sortby, $forum_per_page, $offset) {
+function forum_theme_display($forums, $topics, $parents, $tid, $sortby, $forum_per_page, $offset) {
   // forum list, topics list, topic browser and "add new topic" link
 
 
-  $output .= theme("forum_forum_list", $forums, $parents, $tid);
+  $output .= theme("forum_theme_list", $forums, $parents, $tid);
   if ($tid && !in_array($tid, variable_get("forum_containers", array()))) {
-    $output .= theme("forum_topic_list", $tid, $topics, $sortby, $forum_per_page, $offset);
+    $output .= theme("forum_theme_topic_list", $tid, $topics, $sortby, $forum_per_page, $offset);
   }
 
   theme("header");
   theme("box", t("Discussion forum"), $output);
   if ($tid && !in_array($tid, variable_get("forum_containers", array()))) {
-    theme("box", t("Control panel"), theme("forum_topic_browser", $sortby, $forum_per_page, $offset));
+    theme("box", t("Control panel"), theme("forum_theme_topic_browser", $sortby, $forum_per_page, $offset));
   }
   theme("footer");
 }
 
-function forum_forum_list($forums, $parents, $tid) {
+function forum_theme_list($forums, $parents, $tid) {
   global $user;
   if ($parents) {
     foreach($parents as $p) {
@@ -572,7 +572,7 @@ function forum_forum_list($forums, $parents, $tid) {
   return $output;
 }
 
-function forum_topic_browser() {
+function forum_theme_topic_browser() {
   global $tid, $sortby, $forum_per_page, $offset;
 
   if (empty($sortby)) {
@@ -601,7 +601,7 @@ function forum_topic_browser() {
   return form(form_item(t("Topic viewing options"), $output, t("Select your preferred way to display the topics and click 'Update settings'.")));
 }
 
-function forum_topic_list($tid, $topics, $sortby, $forum_per_page, $offset) {
+function forum_theme_topic_list($tid, $topics, $sortby, $forum_per_page, $offset) {
   global $id, $status, $user, $pager_total;
 
   if ($topics) {

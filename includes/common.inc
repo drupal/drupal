@@ -202,8 +202,8 @@ function variable_del($name) {
   unset($conf[$name]);
 }
 
-function drupal_specialchars($input) {
-  return htmlspecialchars($input, ENT_NOQUOTES, "utf-8");
+function drupal_specialchars($input, $quotes = ENT_NOQUOTES) {
+  return htmlspecialchars($input, $quotes, "utf-8");
 }
 
 function table_cell($cell, $header = 0) {
@@ -489,7 +489,7 @@ function check_url($uri) {
 }
 
 function check_form($text) {
-  return htmlspecialchars($text);
+  return drupal_specialchars($text, 0);
 }
 
 function check_query($text) {

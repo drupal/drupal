@@ -410,40 +410,55 @@ function book_view($node, $main = 0) {
       $next = book_next($node);
     }
 
-    $output .= "<table border=\"0\" cellpadding=\"1\" cellspacing=\"1\" width=\"100%\">";
-
-    if ($node->title) {
-      // build the tree from bottom to top to have the book index in $level for navigation later
-      $path = array_reverse(book_location($node));
-      $i = count($path);
-      foreach ($path as $level) {
-        $indent = str_repeat("-", --$i);
-        $location = "$indent ". l($level->title, "node/view/$level->nid") ."<br />". $location;
-      }
-
-      $output .= " <tr><td colspan=\"3\">$location</td></tr>";
-      $output .= " <tr><td colspan=\"3\"><hr /></td></tr>";
-      $output .= " <tr><td colspan=\"3\"><b><big>$node->title</big></b>". ($node->body ? "<br /><small><i>". t("Last updated by %u on %d", array("%u" => format_name($node), "%d" => format_date($node->created))) ."</i></small> " : "") ."</td></tr>";
+    // build the tree from bottom to top to have the book index in $level for navigation later
+    $path = book_location($node);
+    foreach ($path as $level) {
+      $trail[] = l($level->title, "node/view/$level->nid");
     }
 
-    if ($node->body) {
-      $output .= " <tr><td colspan=\"3\"><br />$node->body</td></tr>";
+    $output .= "<div class=\"book\">";
+    if ($trail) {
+      $output .= "<div class=\"location\">". implode($trail, " &raquo; ") ."</div><hr />";
     }
+    $output .= "<div class=\"title\">$node->title</div>";
+    $output .= "<div class=\"last-updated\">". t("Last updated by %u on %d", array("%u" => format_name($node), "%d" => format_date($node->changed))) ."</div>";
+
+    $output .= "<div class=\"body\">$node->body</div>";
 
     if ($node->moderate) {
-      $output .= " <tr><td colspan=\"3\"><hr /><b>". t("Log") .":</b><br />$node->log</td></tr>";
+      $output .= "<div class=\"log\"><div class=\"title\">". t("Log") .":</div>$node->log</div>";
     }
 
     if ($node->nid) {
-      $output .= " <tr><td colspan=\"3\"><br />". book_tree($node->nid) ."</td></tr>";
+      $output .= "<div class=\"tree\">". book_tree($node->nid) ."</div>";
+      if ($prev) {
+        $links .= "<div class=\"prev\">";
+        $links .= l(t("previous"), "node/view/$prev->nid", array("title" => t("View the previous page in this book.")));
+        $links .= "</div>";
+        $titles .= "<div class=\"prev\">$prev->title</div>";
+      }
+      if ($next) {
+        $links .= "<div class=\"next\">";
+        $links .= l(t("next"), "node/view/$next->nid", array("title" => t("View the next page in this book.")));
+        $links .= "</div>";
+        $titles .= "<div class=\"next\">$next->title</div>";
+      }
+      if ($node->parent) {
+        $links .= "<div class=\"up\">";
+        $links .= l(t("up"), "node/view/$node->parent", array("title" => t("View this page's parent section.")));
+        if ($node->parent != $level->nid) {
+          $links .= " | ";
+          $links .= l(t("index"), "node/view/$level->nid", array("title" => t("View this book's table of contents.")));
+        }
+        $links .= "</div>";
+      }
+      $output .= "<div class=\"nav\">";
+      $output .= "<div class=\"links\">$links</div>";
+      $output .= "<div class=\"titles\">$titles</div>";
+      $output .= "</div>";
     }
-
-    $output .= " <tr><td colspan=\"3\"><hr /></td></tr>";
-    $output .= " <tr><td align=\"left\" width=\"33%\">". ($prev ? l(t("previous"), "node/view/$prev->nid", array("title" => t("View the previous page in this book."))) : "&nbsp;") ."</td><td align=\"center\" width=\"34%\">". ($node->parent ? l(t("up"), "node/view/$node->parent", array("title" => t("View this page's parent section."))) : "&nbsp;") ."</td><td align=\"right\" width=\"33%\">". ($next ? l(t("next"), "node/view/$next->nid", array("title" => t("View the next page in this book."))) : "&nbsp;") ."</td></tr>";
-    $output .= " <tr><td align=\"left\" width=\"33%\">". ($prev ? "<small>$prev->title</small>" : "&nbsp;") ."</td><td align=\"center\" width=\"34%\">". ($node->parent && $node->parent != $level->nid ? l(t("index"), "node/view/$level->nid", array("title" => t("View this book's table of contents."))) : "&nbsp;") ."</td><td align=\"right\" width=\"33%\">". ($next ? "<small>$next->title</small>" : "&nbsp;") ."</td></tr>";
-    $output .= " <tr><td colspan=\"3\"><hr /></td></tr>";
-    $output .= " <tr><td colspan=\"3\" align=\"right\"><div style=\"margin: 10 10 10 10;\">". theme("links", link_node($node, $main)) ."</div></td></tr>";
-    $output .= "</table>";
+    $output .= "<div class=\"links\">". theme("links", link_node($node, $main)) ."</div>";
+    $output .= "</div>";
 
     theme("box", t("Handbook"), $output);
   }
@@ -541,12 +556,15 @@ function book_render() {
 
     if ($node) {
       // output the content:
-      $output .= "<dt>". l($node->title, "node/view/$node->nid") ."</dt><dd>". book_body($node) ."<br /><br /></dd>";
+      $output .= "<div class=\"book\">";
+      $output .= "<div class=\"title\">". l($node->title, "node/view/$node->nid") ."</div>";
+      $output .= "<div class=\"body\">". book_body($node) ."</div>";
+      $output .= "</div>";
     }
   }
 
   theme("header");
-  theme("box", t("Handbook"), "<dl>$output</dl>");
+  theme("box", t("Handbook"), "$output");
   theme("footer");
 }
 
@@ -570,6 +588,7 @@ function book_page() {
 }
 
 function book_print($id = "", $depth = 1) {
+  global $base_url;
   $result = db_query("SELECT n.nid FROM node n INNER JOIN book b ON n.nid = b.nid WHERE n.status = 1 AND n.nid = %d AND (n.moderate = 0 OR n.revisions IS NOT NULL) ORDER BY b.weight, n.title", $id);
 
   while ($page = db_fetch_object($result)) {
@@ -583,17 +602,22 @@ function book_print($id = "", $depth = 1) {
 
     if ($node) {
       // output the content:
-      $output .= "<h$depth>$node->title</h$depth>";
+      $output .= "<h1 id=\"$node->nid\" name=\"$node->nid\" class=\"book-h$depth\">$node->title</h1>";
 
       if ($node->body) {
-        $output .= "<ul>". book_body($node) ."</ul>";
+        $output .= book_body($node);
       }
     }
   }
 
   $output .= book_print_recurse($id, $depth);
 
-  return $output;
+  $html = "<html><head><title>$node->title</title>";
+  $html .= "<base href=\"$base_url/\" />";
+  $html .= "<style type=\"text/css\">\n@import url(misc/print.css);\n</style>";
+  $html .= "</head><body>". $output ."</body></html>";
+
+  return $html;
 }
 
 function book_print_recurse($parent = "", $depth = 1) {
@@ -610,7 +634,7 @@ function book_print_recurse($parent = "", $depth = 1) {
 
     if ($node) {
       // output the content:
-      $output .= "<h$depth>$node->title</h$depth>";
+      $output .= "<h1 id=\"$node->nid\" name=\"$node->nid\" class=\"book-h$depth\">$node->title</h1>";
 
       if ($node->body) {
         $output .= "<ul>". book_body($node) ."</ul>";

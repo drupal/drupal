@@ -103,7 +103,7 @@ function locale_edit($lid) {
   $result = db_query("SELECT * FROM locales WHERE lid = '$lid'");
   if ($translation = db_fetch_object($result)) {
 
-   $form .= form_item(t("Original text"), wordwrap(htmlspecialchars($translation->string)));
+    $form .= form_item(t("Original text"), wordwrap(drupal_specialchars($translation->string, 0)));
 
     foreach ($languages as $code=>$language) {
       $form .= (strlen($translation->string) > 30) ? form_textarea($language, $code, $translation->$code, 50, 10) : form_textfield($language, $code, $translation->$code, 50, 128);
