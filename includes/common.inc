@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.199 2003/05/20 04:41:36 dries Exp $
+// $Id: common.inc,v 1.200 2003/05/23 17:59:24 dries Exp $
 
 function conf_init() {
 
@@ -317,7 +317,7 @@ function search_item($item, $type) {
  *                 ("Restrict search to", help text, etc).
  */
 function search_form($action = 0, $query = 0, $options = 0) {
-  global $keys;
+  $keys = $_POST["keys"];
 
   if (!$action) {
     $action = url("search");
@@ -350,8 +350,8 @@ function search_form($action = 0, $query = 0, $options = 0) {
  * Collect the search results:
  */
 function search_data() {
-  global $keys;
 
+  $keys = $_POST["keys"];
   $edit = $_POST["edit"];
 
   if (isset($keys)) {

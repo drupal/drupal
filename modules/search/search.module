@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.42 2003/05/18 20:21:35 dries Exp $
+// $Id: search.module,v 1.43 2003/05/23 17:59:25 dries Exp $
 
 function search_help() {
   $output = "<b>". t("Search guidelines") ."</b>";
@@ -358,7 +358,7 @@ function search_view($keys = NULL) {
 }
 
 function search_page() {
-  global $keys;
+  $keys = $_POST["keys"];
 
   switch (arg(1)) {
     case "help":
