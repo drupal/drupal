@@ -731,7 +731,7 @@ function comment_page() {
 
 function comment_node_link($node) {
 
-  if (user_access("administer comments") && comment_num_all($node->nid)) {
+  if (user_access("administer comments")) {
 
     /*
     ** Edit comments:
@@ -739,15 +739,17 @@ function comment_node_link($node) {
 
     $result = db_query("SELECT c.cid, c.subject, u.uid, u.name FROM comments c LEFT JOIN users u ON u.uid = c.uid WHERE nid = '%d' AND c.status = 0 ORDER BY c.timestamp", $node->nid);
 
-    $output .= "<h3>". t("Edit comments") ."</h3>";
-    $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
-    $output .= " <tr><th>title</th><th>author</th><th colspan=\"3\">operations</th></tr>";
+
+    $header = array(t("title"), t("author"), array("data" => t("operations"), "colspan" => 3));
 
     while ($comment = db_fetch_object($result)) {
-      $output .= "<tr><td>". l($comment->subject, "node/view/$node->nid#$comment->cid") ."</td><td>". format_name($comment) ."</td><td>". l(t("view comment"), "node/view/$node->nid#$comment->cid") ."</td><td>". l(t("edit comment"), "admin/comment/edit/$comment->cid") ."</td><td>". l(t("delete comment"), "admin/comment/delete/$comment->cid") ."</td></tr>";
+      $rows[] = array(l($comment->subject, "node/view/$node->nid#$comment->cid"), format_name($comment), l(t("view comment"), "node/view/$node->nid#$comment->cid"), l(t("edit comment"), "admin/comment/edit/$comment->cid"), l(t("delete comment"), "admin/comment/delete/$comment->cid"));
     }
 
-    $output .= "</table>";
+    if ($rows) {
+      $output  = "<h3>". t("Edit comments") ."</h3>";
+      $output .= table($header, $rows);
+    }
 
     return $output;
   }
