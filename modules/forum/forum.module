@@ -14,13 +14,14 @@ function forum_access($op, $node) {
   }
 }
 
-function forum_save() {
+function forum_save($op, $node) {
+
   if ($op == "approve") {
     return array("status" => 1);
   }
 
   if ($op == "create") {
-    return array("promote" => 0, "moderate" => 0, "status" => 1);
+    return array("promote" => 0, "moderate" => 0, "status" => 1, "teaser" => $node->body);
   }
 
   if ($op == "update") {
@@ -28,7 +29,7 @@ function forum_save() {
   }
 
   if ($op == "update") {
-    return array("status" => 0);
+    return array("status" => 0, "teaser" => $node->body);
   }
 }
 
