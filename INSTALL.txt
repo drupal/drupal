@@ -8,7 +8,7 @@ database server supported by the PHP PEAR API (http://pear.php.net/)
 
 NOTE: The Apache web server and MySQL database are strongly recommended;
 other web server and database combinations such as IIS and PostgreSQL
-are possible but tested to a lesser extend.
+are possible but tested to a lesser extent.
 
 SERVER CONFIGURATION
 --------------------
@@ -52,10 +52,7 @@ INSTALLATION
    into a directory within your web server's document root or your
    public HTML directory:
 
-     $ mv drupal-x.x.x /var/www/html
-
-   NOTE: when copying files, ensure you also copy the hidden .htaccess
-   file.
+     $ mv drupal-x.x.x/* drupal-x.x.x/.htaccess /var/www/html
 
 2. CREATE THE DRUPAL DATABASE
 
