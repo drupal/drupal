@@ -1503,7 +1503,8 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
       break;
     case "validate":
       if (!user_access("administer nodes")) {
-        unset($node->comment);
+        // Force default for normal users:
+        $node->comment = variable_get("comment_$node->type", 2);
       }
       break;
   }
