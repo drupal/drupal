@@ -1,4 +1,4 @@
-drupal x.xx, xx/xx/xxxx (CVS, unstable)
+drupal 3.00, 15/09/2001
 -----------------------
 - major overhaul of the entire underlying design:
     * everything is based on nodes: nodes are a conceptual "black box" to couple and manage different types of content and that promotes reusing existing code, thus reducing the complexity and size of drupal as well as improving long-term stability.
@@ -17,6 +17,7 @@ drupal x.xx, xx/xx/xxxx (CVS, unstable)
 - added caching support which makes Drupal extremely scalable.
 - added access.module:
     * allows you to setup 'roles' (groups) and to bind a set of permissions to each group.
+- added blog.module.
 - added poll.module.
 - added system.module:
     * moved most of the configuration options from hostname.conf to the new administration section.
