@@ -426,7 +426,7 @@ function user_block($op = "list", $delta = 0) {
         return $block;
       case 1:
         $block["subject"] = $user->uid ? $user->name : t("Navigation");
-        $block["content"] = "<div class=\"menu\">". menu_tree() ."</div>";
+        $block["content"] = "<div id=\"menu\">". menu_tree() ."</div>";
         return $block;
       case 2:
         if (user_access("access content")) {
