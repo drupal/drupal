@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.216 2004/02/07 10:57:27 dries Exp $
+// $Id: comment.module,v 1.217 2004/02/07 16:18:46 dries Exp $
 
 function comment_help($section = "admin/help#comment") {
   $output = "";
@@ -146,7 +146,7 @@ function comment_user($type, $edit, &$user) {
       break;
     case "edit_form":
       // when user tries to edit his own data
-      return form_textarea(t("Signature"), "signature", $user->signature, 70, 3, t("Your signature will be publicly displayed at the end of your comments.") ."<br />". filter_tips_short());
+      return array(t('Personal information') => form_textarea(t("Signature"), "signature", $user->signature, 70, 3, t("Your signature will be publicly displayed at the end of your comments.") ."<br />". filter_tips_short()));
     case "edit_validate":
       // validate user data editing
       return array("signature" => $edit["signature"]);

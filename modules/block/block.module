@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.102 2004/01/23 18:42:43 dries Exp $
+// $Id: block.module,v 1.103 2004/02/07 16:18:46 dries Exp $
 
 function block_help($section = "admin/help#block") {
   $output = "";
@@ -323,26 +323,18 @@ function block_admin() {
 
 function block_user($type, &$edit, &$user) {
   switch ($type) {
-    case "register_form":
-      $result = db_query("SELECT * FROM {blocks} WHERE custom = %d ORDER BY module, delta", 1);
-
-      while ($block = db_fetch_object($result)) {
-        $form .= form_hidden("block][$block->module][$block->delta", $block->status);
-      }
-
-      return $form;
     case "edit_form":
       $result = db_query("SELECT * FROM {blocks} WHERE custom = %d ORDER BY module, delta", 1);
 
       while ($block = db_fetch_object($result)) {
         $data = module_invoke($block->module, "block", "list");
         if ($data[$block->delta]["info"]) {
-          $form .= "<tr><td>". $data[$block->delta]["info"] ."</td><td>". form_checkbox(NULL, "block][$block->module][$block->delta", 1, $user->block[$block->module][$block->delta]) ."</td></tr>\n";
+          $form .= form_checkbox($data[$block->delta]['info'], "block][$block->module][$block->delta", 1, $user->block[$block->module][$block->delta]);
         }
       }
 
       if (isset($form)) {
-        return form_item(t("Block configuration"), "<table border=\"0\" cellpadding=\"2\" cellspacing=\"2\">". $form ."</table>", t("Enable the blocks you would like to see displayed in the side bars."));
+        return array(t('Block configuration') => $form);
       }
 
       break;
