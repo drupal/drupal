@@ -124,18 +124,6 @@ CREATE TABLE comments (
 ) TYPE=MyISAM;
 
 #
-# Table structure for table 'cvs'
-#
-
-CREATE TABLE cvs (
-  user varchar(32) NOT NULL default '',
-  files text,
-  status int(2) NOT NULL default '0',
-  message text,
-  timestamp int(11) NOT NULL default '0'
-) TYPE=MyISAM;
-
-#
 # Table structure for table 'directory'
 #
 
