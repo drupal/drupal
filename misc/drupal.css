@@ -334,6 +334,35 @@ tr.light .form-item, tr.dark .form-item {
 #forum td.posts, #forum td.topics, #forum td.replies, #forum td.pager {
   text-align: center;
 }
+#node-admin-filter ul {
+  list-style-type: none;
+  padding: 0px;
+  margin: 0px;
+  width: 100%;
+}
+#node-admin-buttons {
+  float: left;
+  margin-left: 0.5em;
+  clear: right;
+}
+dl.multiselect dd.b, dl.multiselect dd.b .form-item, dl.multiselect dd.b select {
+  font-family: inherit;
+  font-size: inherit;
+  width: 14em;
+}
+dl.multiselect dd.a, dl.multiselect dd.a .form-item {
+  width: 8em;
+}
+dl.multiselect dt, dl.multiselect dd {
+  float: left;
+  line-height: 1.75em;
+  padding: 0px;
+  margin: 0px 1em 0px 0px;
+}
+dl.multiselect .form-item {
+  height: 1.75em;
+  margin: 0px;
+}
 #permissions td.module {
   font-weight: bold;
 }
