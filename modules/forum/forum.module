@@ -44,8 +44,16 @@ function forum_node_name($node) {
  * Implementation of hook_access().
  */
 function forum_access($op, $node) {
+  global $user;
+
   if ($op == 'create') {
     return user_access('create forum topics');
+  }
+
+  if ($op == 'update' || $op == 'delete') {
+    if (user_access('edit own forum topics') && ($user->uid == $node->uid)) {
+      return TRUE;
+    }
   }
 }
 
@@ -53,7 +61,7 @@ function forum_access($op, $node) {
  * Implementation of hook_perm().
  */
 function forum_perm() {
-  return array('create forum topics');
+  return array('create forum topics', 'edit own forum topics');
 }
 
 /**
