@@ -4,7 +4,8 @@
 $GLOBALS["format"] = array(0 => "HTML", 1 => "PHP", 2 => "text");
 
 function page_node($field) {
-  $info = array("name" => "static page");
+  $info["name"] = t("static page");
+  $info["description"] = t("If you just want to add a static page with a link in the menu to your site, this would be the best choice.  Unlike a story, a page by-passes the submission queue.");
 
   return $info[$field];
 }

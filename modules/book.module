@@ -4,7 +4,8 @@
 function book_node($field) {
   global $user;
 
-  $info = array("name" => "book page");
+  $info["name"] = t("book page");
+  $info["description"] = t("A book is a collaborative effort on a certain subject. Users collaborate writing the pages of the book, positioning the pages in the right order, and reviewing or modifying pages previously written.  You can add a new book page or you can modify existing pages.");
 
   return $info[$field];
 }

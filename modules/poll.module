@@ -1,6 +1,9 @@
 <?php
 // $Id$
 
+// description:
+//   A multiple choice Poll allows you to submit a question to other users to which anyone can answer. To be published on Tipic, the Poll has to be approved by the moderators.
+
 /*
 
 class Poll {

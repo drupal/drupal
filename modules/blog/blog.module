@@ -12,7 +12,8 @@ function blog_conf_options() {
 function blog_node($field) {
   global $user;
 
-  $info = array("name" => "personal blog");
+  $info["name"] = t("personal blog");
+  $info["description"] = t("A blog is your personal diary or journal.  It is made up of individual entries that are time stamped and are typically arranged by the day, as normal a diary. Blogs often contain links to things you've seen, or on which you agree/disagree.  Since a Blog is your personal, you and only you have full control on what you publish.  The most insteresting blogs, or those blogs that fits the site's topic might get promoted to the front page.");
 
   return $info[$field];
 }

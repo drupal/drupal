@@ -2,7 +2,8 @@
 // $Id$
 
 function forum_node($field) {
-  $info = array("name" => "discussion forum");
+  $info["name"] = t("discussion forum");
+  $info["description"] = t("A forum is a threaded discussion, enabling users to communicate about a particular topic.");
 
   return $info[$field];
 }
