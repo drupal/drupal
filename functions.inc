@@ -25,18 +25,21 @@ function dbconnect() {
 }
 
 function morelink_bytes($theme, $story) {
+  global $user;
+
   ### Compose more-link:
   $morelink = "[ ";
   if ($story->article) {
     $morelink .= "<A HREF=\"article.php?id=$story->id";
-    if (isset($user->umode)) { $morelink .= "&mode=$user->umode"; } else { $morelink .= "&mode=threaded"; }
-    if (isset($user->uorder)) { $morelink .= "&order=$user->uorder"; } else { $morelink .= "&order=0"; }    $bytes = strlen($story->article);
+    $morelink .= ($user->umode) ? "&mode=$user->umode" : "&mode=threaded";
+    $morelink .= ($user->uorder) ? "&order=$user->uorder" : "&order=0";
+    $morelink .= ($user->thold) ? "&thold=$user->thold" : "&thold=0";
     $morelink .= "\"><FONT COLOR=\"$theme->hlcolor2\"><B>read more</B></FONT></A> | $bytes bytes in body | "; 
   }
   $morelink .= "<A HREF=\"article.php?id=$story->id";
-  if (isset($user->umode)) { $morelink .= "&mode=$user->umode"; } else { $morelink .= "&mode=threaded"; }
-  if (isset($user->uorder)) { $morelink .= "&order=$user->uorder"; } else { $morelink .= "&order=0"; }
-  if (isset($user->thold)) { $morelink .= "&thold=$user->thold"; } else { $morelink .= "&thold=0"; }
+  $morelink .= ($user->umode) ? "&mode=$user->umode" : "&mode=threaded";
+  $morelink .= ($user->uorder) ? "&order=$user->uorder" : "&order=0";
+  $morelink .= ($user->thold) ? "&thold=$user->thold" : "&thold=0";
   $morelink .= "\"><FONT COLOR=\"$theme->hlcolor2\">$story->comments comments</FONT></A> ]";
 
   return $morelink;
@@ -121,11 +124,11 @@ function displayOldHeadlines($theme, $num = 10) {
       $time = date("F jS", $story->timestamp);
     }
 
-    if ($user) {
+    if ($user->userid) {
       $content .= "<LI><A HREF=\"article.php?id=$story->id";
-      if (isset($user->umode)) { $content .= "&mode=$user->umode"; } else { $content .= "&mode=threaded"; }
-      if (isset($user->uorder)) { $content .= "&order=$user->uorder"; } else { $content .= "&order=0"; }    
-      if (isset($user->thold)) { $content .= "&thold=$user->thold"; } else { $content .= "&thold=0"; }
+      $content .= ($user->umode) ? "&mode=$user->umode" : "&mode=threaded";
+      $content .= ($user->uorder) ? "&order=$user->uorder" : "&order=0";
+      $content .= ($user->thold) ? "&thold=$user->thold" : "&thold=0";
       $content .= "\">$story->subject</A></LI>";
     }
     else {
@@ -143,11 +146,11 @@ function displayNewHeadlines($theme, $num = 10) {
   $content = "";
   $result = db_query("SELECT id, subject FROM stories WHERE status = 2 ORDER BY id DESC LIMIT $num");
   while ($story = db_fetch_object($result)) {    
-    if ($user) {
+    if ($user->userid) {
       $content .= "<LI><A HREF=\"article.php?id=$story->id";
-      if (isset($user->umode)) { $content .= "&mode=$user->umode"; } else { $content .= "&mode=threaded"; }
-      if (isset($user->uorder)) { $content .= "&order=$user->uorder"; } else { $content .= "&order=0"; }
-      if (isset($user->thold)) { $content .= "&thold=$user->thold"; } else { $content .= "&thold=0"; }
+      $content .= ($user->umode) ? "&mode=$user->umode" : "&mode=threaded";
+      $content .= ($user->uorder) ? "&order=$user->uorder" : "&order=0";
+      $content .= ($user->thold) ? "&thold=$user->thold" : "&thold=0";
       $content .= "\">$story->subject</A></LI>";
     }
     else {
@@ -168,7 +171,7 @@ function displayAdminblock($theme) {
 function displayUserblock($theme) {
   global $user;
 
-  if ($user->ublockon) {
+  if ($user && $user->ublockon) {
     $content .= "<P ALIGN=\"right\">[ <A HREF=\"account.php?op=edithome\"><FONT COLOR=\"$theme->hlcolor2\">edit</FONT></A> | <A HREF=\"account.php?op=logout\"><FONT COLOR=\"$theme->hlcolor2\">logout</FONT></A> ]</P>";
     $theme->box("$user->userid's box", $user->content);
   }
@@ -177,7 +180,7 @@ function displayUserblock($theme) {
 function displayLogin($theme) {
   global $user;
   
-  if ($user) { 
+  if ($user && $user->userid) { 
     ### Display userblock if any:
     displayUserblock();
   }
@@ -201,7 +204,7 @@ function displayCalendar($theme, $date) {
 function displayAccountSettings($theme) {
   global $user;
   
-  if ($user) { 
+  if ($user && $user->userid) { 
     ### Display account settings:
     $content  = "<LI><A HREF=\"account.php\">User info</A></LI>";
     $content .= "<LI><A HREF=\"account.php?op=edituser\">Edit user info</A></LI>";
@@ -217,7 +220,7 @@ function displayAccount($theme) {
  
   include "submission.inc";
 
-  if ($user) {
+  if ($user && $user->userid) {
     ### Display account settings:
     $content .= "<LI><A HREF=\"submission.php\">moderate submissions</A> (". submission_count() .")</LI>";
     $theme->box("$user->userid's account", "$content");
