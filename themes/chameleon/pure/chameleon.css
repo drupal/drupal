@@ -1,7 +1,8 @@
 /* $Id$ */
 
-/* HTML styles */
-
+/*
+** HTML elements
+*/
 a, a:link, a:active {
   color: #930;
 }
@@ -12,15 +13,16 @@ body {
   padding: 5em 0 0 3em;
   background-image: url(background.gif);
   background-repeat: repeat-x;
-  font-family: tahoma, verdana, arial, helvetica;
+  font-family: trebuchet ms, tahoma, verdana, arial, helvetica;
   border-top: 10px solid gray;
 }
 ul {
   list-style-type: disc;
 }
 
-/* Regions */
-
+/*
+** Page layout blocks / IDs
+*/
 #main {
   width: 500px;
 }
@@ -30,6 +32,10 @@ ul {
 #sidebar-right {
   border-left: 1px solid gray;
 }
+
+/*
+** Common declarations for child classes of node, comment, block, box etc
+*/
 #header .title {
   font-size: 2em;
   font-weight: bold;
@@ -43,18 +49,6 @@ ul {
 }
 #header .title a:hover {
   color: #930;
-}
-#aggregator .source {
-  color: #777;
-  font-style: italic;
-  font-size: 0.9em;
-}
-#aggregator .feed {
-  border: 1px dashed #000;
-  padding: 1em;
-}
-.item-list ul li {
-  list-style: square;
 }
 .node .title {
   font-size: 1.2em;
@@ -81,4 +75,16 @@ ul {
 }
 .block .title {
   font-size: 1em;
+}
+
+/*
+** Module specific styles
+*/
+.item-list ul li {
+  list-style: square;
+}
+#aggregator .source {
+  color: gray;
+  font-style: italic;
+  font-size: 0.9em;
 }
