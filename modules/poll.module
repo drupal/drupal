@@ -13,7 +13,7 @@ class Poll {
 }
 
 function poll_cron() {
-  $result = _node_get(array("type" => "poll"));
+/*  $result = _node_get(array("type" => "poll"));
   while ($poll = db_fetch_array($result)) {
     if ($poll[active]) {
       if (($poll[timestamp] + $poll[runtime]) < time()) {
@@ -21,7 +21,7 @@ function poll_cron() {
         node_save($poll, array(active));
       }
     }
-  }
+  }*/
 }
 
 function poll_get_choices_array($poll) {
