@@ -1,5 +1,5 @@
 <?php
-/* $Id: bootstrap.inc,v 1.6 2003/12/18 13:56:57 kjartan Exp $ */
+/* $Id: bootstrap.inc,v 1.7 2004/01/13 19:25:36 dries Exp $ */
 
 function conf_init() {
 
@@ -159,6 +159,22 @@ function drupal_page_header() {
 // critical hooks called even when serving a cached page
 function bootstrap_hooks() {
   return array('init', 'exit');
+}
+
+/*
+** Unserializes and appends elements from a serialized string
+** $obj is the object to which we shall append
+** $field is the element whose value is a serialized string
+*/
+function drupal_unpack($obj, $field = 'data') {
+  if ($obj->$field && $data = unserialize($obj->$field)) {
+    foreach ($data as $key => $value) {
+      if (!isset($obj->$key)) {
+        $obj->$key = $value;
+      }
+    }
+  }
+  return $obj;
 }
 
 function referer_uri() {

@@ -1,5 +1,5 @@
 <?php
-// $Id: session.inc,v 1.4 2004/01/11 20:03:36 dries Exp $
+// $Id: session.inc,v 1.5 2004/01/13 19:25:36 dries Exp $
 
 session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
 session_start();
@@ -25,13 +25,7 @@ function sess_read($key) {
   }
 
   $user = db_fetch_object($result);
-  if ($user->data && $data = unserialize($user->data)) {
-    foreach ($data as $key => $value) {
-      if (!isset($user->$key)) {
-        $user->$key = $value;
-      }
-    }
-  }
+  $user = drupal_unpack($user);
 
   return !empty($user->session) ? $user->session : '';
 }
