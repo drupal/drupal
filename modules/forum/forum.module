@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.80 2003/02/17 22:33:31 dries Exp $
+// $Id: forum.module,v 1.81 2003/03/04 15:32:26 dries Exp $
 
 function forum_system($field){
   $system["description"] = t("Enable threaded discussions about general topics.");
@@ -249,7 +249,7 @@ function forum_form(&$node, &$help, &$error) {
 
 function forum_insert($node) {
   $node->icon = _forum_decode_icon($node);
-  db_query("INSERT INTO forum (nid, icon, shadow, tid) VALUES ('%d', '%s', '%d', '%d')", $node->nid, $node->icon, $node->shadow, $node->tid);
+  db_query("INSERT INTO forum (nid, icon, shadow, tid) VALUES ('%d', '%s', '%d', '%d')", $node->nid, $node->icon, $node->shadow, $node->tid[0]);
 }
 
 function forum_update($node) {
