@@ -25,15 +25,13 @@ function tablesort_sql($header) {
 }
 
 function tablesort($cell, $header) {
-  global $theme;
-
   $ts = tablesort_init($header);
   $title = t("sort by %s", array("%s" => $cell["data"]));
 
   // special formatting for the currently sorted column header
   if ($cell["data"] == $ts["order"]) {
     $cell["class"] = "cell-highlight";
-    $image = "&nbsp;<img border=\"0\" src=\"". $theme->image("arrow-". $ts["sort"]. ".gif"). "\"></img>";
+    $image = "&nbsp;<img border=\"0\" src=\"". theme("image", "arrow-". $ts["sort"]. ".gif"). "\"></img>";
     $dir = array("asc" => "ascending", "desc" => "descending");
     $title = t("sort ". $dir[$ts["sort"]]);
   }
