@@ -240,7 +240,7 @@ function taxonomy_save_term($edit) {
 
   cache_clear_all();
 
-  drupal_set_message($status);
+  drupal_set_message($message);
   return $edit;
 }
 
