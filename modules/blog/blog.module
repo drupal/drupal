@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.135 2003/09/20 15:11:41 dries Exp $
+// $Id: blog.module,v 1.136 2003/09/20 16:08:57 dries Exp $
 
 function blog_system($field){
   $output = "";
@@ -155,17 +155,30 @@ function blog_page_last() {
   print "<div style=\"text-align: right;\">". l("<img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" alt=\"\" title=\"\" />", "blog/feed", array("title" => t("Read the XML version of all blogs."))) ."</div>";
 }
 
+function blog_validate(&$node) {
+
+  /*
+  ** Validate the size of the blog:
+  */
+
+  if (isset($node->body) && count(explode(" ", $node->body)) < variable_get("minimum_blog_size", 0)) {
+    $error["body"] = theme("theme_error", t("The body of your blog is too short."));
+  }
+
+  return $error;
+}
+
 function blog_form(&$node, &$help, &$error) {
   global $nid;
   $iid = $_GET["iid"];
+
+  /*
+  ** Carry out some explanation or submission guidelines:
+  */
+
+  $help = variable_get("blog_help", "");
+
   if (empty($node->body)) {
-
-    /*
-    ** Carry out some explanation or submission guidelines:
-    */
-
-    $help = variable_get("blog_help", "");
-
     /*
     ** If the user clicked a "blog it" link, we load the data from the
     ** database and quote it in the blog:
@@ -180,19 +193,11 @@ function blog_form(&$node, &$help, &$error) {
       $node->body = "<a href=\"$item->link\">$item->title</a> - <i>". check_output($item->description) ."</i> [<a href=\"$item->flink\">$item->ftitle</a>]\n";
     }
   }
-  else {
-    /*
-    ** Validate the size of the blog:
-    */
-
-    if (count(explode(" ", $node->body)) < variable_get("minimum_blog_size", 0)) {
-      $error["body"] = theme("theme_error", t("The body of your blog is too short."));
-    }
-  }
 
   if (function_exists("taxonomy_node_form")) {
     $output .= implode("", taxonomy_node_form("blog", $node));
   }
+
   $output .= form_textarea(t("Body"), "body", $node->body, 60, 15, $error["body"] ? $error["body"] : form_allowed_tags_text());
 
   return $output;
