@@ -32,7 +32,7 @@ function blog_page_all($num = 20) {
   $result = db_query("SELECT n.timestamp, n.title, u.userid, n.nid, b.body FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.id ORDER BY b.lid DESC LIMIT $num");
 
   while ($blog = db_fetch_object($result))  {
-    $output .= blog_format_link($blog->nid) ." ";
+    $output .= blog_format_link($blog) ." ";
     $output .= "<a href=\"module.php?mod=blog&name=". urlencode($blog->userid) ."\"><img src=\"misc/earth.gif\" border= \"0\" width=\"11\" height=\"11\" alt=\"". t("This blog") ."\" /></a> ";
     $output .= format_username($blog->userid) ." ". t("on") ." ". format_date($blog->timestamp) .":<br />";
     $output .= "<blockquote><b>". check_input($blog->title) ."</b><br />" . check_output($blog->body, 1) ."</blockquote>\n";
