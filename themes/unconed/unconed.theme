@@ -175,34 +175,31 @@
      print " <TR><TD BGCOLOR=\"$this->bgcolor2\">";
 
      ?> 
-            <FORM METHOD="post" ACTION="discussion.php">
+           <FORM METHOD="post" ACTION="discussion.php">
             <FONT SIZE="2"> 
-            <INPUT TYPE="hidden" NAME="id" VALUE="<? echo "$sid"; ?>">
             <SELECT NAME="threshold">
-             <OPTION VALUE="-1" <? if ($threshold == -1) { echo "SELECTED"; } ?>>Threshold: -1
-             <OPTION VALUE="0" <? if ($threshold == 0) { echo "SELECTED"; } ?>>Threshold: 0
-             <OPTION VALUE="1" <? if ($threshold == 1) { echo "SELECTED"; } ?>>Threshold: 1
-             <OPTION VALUE="2" <? if ($threshold == 2) { echo "SELECTED"; } ?>>Threshold: 2
-             <OPTION VALUE="3" <? if ($threshold == 3) { echo "SELECTED"; } ?>>Threshold: 3
-             <OPTION VALUE="4" <? if ($threshold == 4) { echo "SELECTED"; } ?>>Threshold: 4
-             <OPTION VALUE="5" <? if ($threshold == 5) { echo "SELECTED"; } ?>>Threshold: 5
+             <OPTION VALUE="-1" <? if ($threshold == -1) { echo "SELECTED"; } ?>>Threshold: -1</OPTION>
+             <OPTION VALUE="0" <? if ($threshold == 0) { echo "SELECTED"; } ?>>Threshold: 0</OPTION>
+             <OPTION VALUE="1" <? if ($threshold == 1) { echo "SELECTED"; } ?>>Threshold: 1</OPTION>
+             <OPTION VALUE="2" <? if ($threshold == 2) { echo "SELECTED"; } ?>>Threshold: 2</OPTION>
+             <OPTION VALUE="3" <? if ($threshold == 3) { echo "SELECTED"; } ?>>Threshold: 3</OPTION>
+             <OPTION VALUE="4" <? if ($threshold == 4) { echo "SELECTED"; } ?>>Threshold: 4</OPTION>
+             <OPTION VALUE="5" <? if ($threshold == 5) { echo "SELECTED"; } ?>>Threshold: 5</OPTION>
             </SELECT> 
             <SELECT NAME="mode">
-             <OPTION VALUE="nested" <? if ($mode == 'nested') { echo "SELECTED"; } ?>>Nested
-             <OPTION VALUE="flat" <? if ($mode == 'flat') { echo "SELECTED"; } ?>>Flat
-             <OPTION VALUE="threaded" <? if (!isset($mode) || $mode=='threaded' || $mode=="") { echo "SELECTED"; } ?>>Threaded
+             <OPTION VALUE="nested" <? if ($mode == 'nested') { echo "SELECTED"; } ?>>Nested</OPTION>
+             <OPTION VALUE="flat" <? if ($mode == 'flat') { echo "SELECTED"; } ?>>Flat</OPTION>
+             <OPTION VALUE="threaded" <? if (!isset($mode) || $mode=='threaded' || $mode=="") { echo "SELECTED"; } ?>>Threaded</OPTION>
             </SELECT> 
             <SELECT NAME="order">
-             <OPTION VALUE="0" <? if (!$order) { echo "SELECTED"; } ?>>Oldest first
-             <OPTION VALUE="1" <? if ($order==1) { echo "SELECTED"; } ?>>Newest first
-             <OPTION VALUE="2" <? if ($order==2) { echo "SELECTED"; } ?>>Highest scoring first
-            </SELECT> 
-            <INPUT TYPE="hidden" NAME="sid" VALUE="<? echo "$sid"; ?>"> <INPUT TYPE="submit" VALUE="Save">
-            <?
-             if (isset($user)) echo "<BR><CENTER><INPUT TYPE=\"checkbox\" NAME=\"save\"> Save preferences</CENTER>"; 
-            ?>
+             <OPTION VALUE="0" <? if (!$order) { echo "SELECTED"; } ?>>Oldest first</OPTION>
+             <OPTION VALUE="1" <? if ($order == 1) { echo "SELECTED"; } ?>>Newest first</OPTION>
+             <OPTION VALUE="2" <? if ($order == 2) { echo "SELECTED"; } ?>>Highest scoring first</OPTION>
+            </SELECT>
+            <INPUT TYPE="hidden" NAME="id" VALUE="<? echo "$sid"; ?>"> 
+            <INPUT TYPE="submit" NAME="op" VALUE="Save">
             </FONT>
-           </FORM>
+
       <?
        $result = mysql_query("SELECT COUNT(tid) FROM comments WHERE sid = $sid AND score < $threshold");
        if ($result && $number = mysql_result($result, 0)) {
