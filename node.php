@@ -1,6 +1,6 @@
 <?php
 
-include "includes/common.inc";
+include_once "includes/common.inc";
 
 if (variable_get(dev_timing, 0)) timer_start();
 
