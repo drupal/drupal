@@ -411,13 +411,27 @@ function book_view($node, $main = 0) {
   }
 }
 
+function book_toc_recurse($nid, $indent, $toc, $children) {
+
+  if ($children[$nid]) {
+    foreach ($children[$nid] as $foo => $node) {
+      $toc[$node->nid] = "$indent $node->title";
+      $toc = book_toc_recurse($node->nid, "$indent--", $toc, $children);
+    }
+  }
+
+  return $toc;
+}
+
 function book_toc($parent = "", $indent = "", $toc = array()) {
 
-  /*
-  ** Select all child nodes:
-  */
+  $result = db_query("SELECT n.nid, n.title, b.parent FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.type = 'book' AND n.status = '1' ORDER BY b.weight, n.title");
 
-  $result = db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.status = 1 AND b.parent = '$parent' AND (n.moderate = 0 OR n.revisions != '') ORDER BY b.weight");
+  while ($node = db_fetch_object($result)) {
+    $list = $children[$node->parent] ? $children[$node->parent] : array();
+    array_push($list, $node);
+    $children[$node->parent] = $list;
+  }
 
   /*
   ** If the user is an administrator, add the root node; only
@@ -429,13 +443,10 @@ function book_toc($parent = "", $indent = "", $toc = array()) {
   }
 
   /*
-  ** Build the table of contents:
+  ** Iterate root book nodes:
   */
 
-  while ($node = db_fetch_object($result)) {
-    $toc[$node->nid] = "$indent $node->title";
-    $toc = book_toc($node->nid, "$indent-", $toc);
-  }
+  $toc = book_toc_recurse(0, $indent, $toc, $children, $titles);
 
   return $toc;
 }
@@ -541,12 +552,12 @@ function book_export_html($id = "", $depth = 1) {
     }
   }
 
-  $output .= book_export_html_recursive($id, $depth);
+  $output .= book_export_html_recurse($id, $depth);
 
   return $output;
 }
 
-function book_export_html_recursive($parent = "", $depth = 1) {
+function book_export_html_recurse($parent = "", $depth = 1) {
   $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.status = 1 AND b.parent = '$parent' AND (n.moderate = 0 OR n.revisions != '') ORDER BY b.weight");
 
   while ($page = db_fetch_object($result)) {
@@ -566,7 +577,7 @@ function book_export_html_recursive($parent = "", $depth = 1) {
         $output .= "<ul>". book_body($node) ."</ul>";
       }
 
-      $output .= book_export_html_recursive($node->nid, $depth + 1);
+      $output .= book_export_html_recurse($node->nid, $depth + 1);
     }
   }
 
