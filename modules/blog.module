@@ -12,7 +12,7 @@ function blog_node_name($node) {
 }
 
 function blog_perm() {
-  return array("maintain personal blog");
+  return array("edit own blog");
 }
 
 function blog_access($op, $node) {
@@ -23,15 +23,15 @@ function blog_access($op, $node) {
   }
 
   if ($op == "create") {
-    return user_access("maintain personal blog") && $user->uid;
+    return user_access("edit own blog") && $user->uid;
   }
 
   if ($op == "update") {
-    return user_access("maintain personal blog") && ($user->uid == $node->uid);
+    return user_access("edit own blog") && ($user->uid == $node->uid);
   }
 
   if ($op == "delete") {
-    return user_access("maintain personal blog") && ($user->uid == $node->uid);
+    return user_access("edit own blog") && ($user->uid == $node->uid);
   }
 
 }
@@ -40,7 +40,7 @@ function blog_user($type, &$edit, &$user) {
   switch ($type) {
     case "view_public":
     case "view_private":
-      if (user_access("maintain personal blog", $user)) {
+      if (user_access("edit own blog", $user)) {
         return form_item(t("Blog"), l(t("view recent blog entries"), "blog/$user->uid", array("title" => t("Read %username's latest blog entries.", array("%username" => $user->name)))));
       }
   }
@@ -221,7 +221,7 @@ function blog_link($type, $node = 0, $main) {
   $links = array();
 
   if ($type == "system") {
-    if (user_access("maintain personal blog")) {
+    if (user_access("edit own blog")) {
       menu("node/add/blog", t("blog entry"), "node_page", 0);
       menu("blog/". $user->uid, t("my blog"), "blog_page", 1);
     }

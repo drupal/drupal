@@ -285,7 +285,7 @@ function theme_form_element($title, $value, $description = NULL, $id = NULL) {
   }
   else {
     if ($id) {
-      $title = "<label for=\"$id\" />";
+      $title = "<label for=\"$id\"></label>";
       // TODO: does this make sense to do?
     }
   }
