@@ -28,7 +28,7 @@ function meta_form($type, $edit = array()) {
   while ($collection = db_fetch_object($c)) {
     unset($array);
 
-    $t = db_query("SELECT * FROM tag WHERE collections LIKE '%$collection->name%'");
+    $t = db_query("SELECT * FROM tag WHERE collections LIKE '%$collection->name%' ORDER BY name");
 
     while ($tag = db_fetch_object($t)) {
       if (strstr($edit[attributes], $tag->attributes)) {
