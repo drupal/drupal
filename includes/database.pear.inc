@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pear.inc,v 1.9 2002/10/13 12:00:50 dries Exp $
+// $Id: database.pear.inc,v 1.10 2002/11/06 14:18:45 kjartan Exp $
 
 require_once 'DB.php';
 

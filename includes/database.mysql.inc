@@ -1,5 +1,5 @@
 <?php
-// $Id: database.mysql.inc,v 1.9 2002/10/24 17:44:39 dries Exp $
+// $Id: database.mysql.inc,v 1.10 2002/11/06 14:18:45 kjartan Exp $
 
 function db_connect($url) {
   $url = parse_url($url);
