@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.199 2003/11/23 10:41:03 dries Exp $
+// $Id: book.module,v 1.200 2003/11/23 12:13:08 dries Exp $
 
 function book_node($field) {
   global $user;
@@ -544,9 +544,10 @@ function book_toc($parent = 0, $indent = "", $toc = array()) {
   $result = db_query("SELECT n.nid, n.title, b.parent FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE n.status = '1' ORDER BY b.weight, n.title");
 
   while ($node = db_fetch_object($result)) {
-    $list = $children[$node->parent] ? $children[$node->parent] : array();
-    array_push($list, $node);
-    $children[$node->parent] = $list;
+    if (!$children[$node->parent]) {
+      $children[$node->parent] = array();
+    }
+    array_push($children[$node->parent], $node);
   }
 
   /*
