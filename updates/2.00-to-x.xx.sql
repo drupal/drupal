@@ -237,3 +237,6 @@ ALTER TABLE node CHANGE attribute attributes varchar(255) DEFAULT '' NOT NULL;
 ALTER TABLE bundle CHANGE attribute attributes varchar(255) DEFAULT '' NOT NULL;
 ALTER TABLE feed CHANGE attribute attributes varchar(255) DEFAULT '' NOT NULL;
 ALTER TABLE item CHANGE attribute attributes varchar(255) DEFAULT '' NOT NULL;
+
+# 12/06/01
+ALTER TABLE watchdog DROP link;

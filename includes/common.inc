@@ -19,21 +19,19 @@ function error_handler($errno, $message, $filename, $line, $variables) {
 }
 
 function watchdog($type, $message) {
-  global $user, $watchdog, $PHP_SELF;
-  $link = ($mod) ? $mod : substr(strrchr($PHP_SELF, "/"), 1, strrchr($PHP_SELF, "/") - 4);
-  db_query("INSERT INTO watchdog (user, type, link, message, location, hostname, timestamp) VALUES ('$user->id', '". check_input($type) ."', '". check_input($link) ."', '". check_input($message) ."', '". check_input(getenv("REQUEST_URI")) ."', '". check_input(getenv("REMOTE_ADDR")) ."', '". time() ."')");
+  global $user;
+  db_query("INSERT INTO watchdog (user, type, message, location, hostname, timestamp) VALUES ('$user->id', '". check_input($type) ."', '". check_input($message) ."', '". check_input(getenv("REQUEST_URI")) ."', '". check_input(getenv("REMOTE_ADDR")) ."', '". time() ."')");
 }
 
 function throttle($type, $rate) {
   global $user;
-  if (!(user_access($user, "watchdog") || user_access($user, "comment") || user_access($user, "node"))) {
+  if (!user_access($user)) {
     if ($throttle = db_fetch_object(db_query("SELECT * FROM watchdog WHERE type = '$type' AND hostname = '". getenv("REMOTE_ADDR") ."' AND ". time() ." - timestamp < $rate"))) {
       watchdog("warning", "throttle: '". getenv("REMOTE_ADDR") ."' exceeded submission rate - $throttle->type");
-      header("Location: error.php?op=throttle");
-      die("submission rate exceeded");
+      die(message_throttle());
     }
     else {
-      watchdog($type, "throttle control");
+      watchdog($type, "throttle");
     }
   }
 }
@@ -48,8 +46,12 @@ function path_img() {
   return "./images/";
 }
 
-function notice_account() {
+function message_account() {
   return t("This page requires a valid user account.  Please <A HREF=\"account.php\">create a user account</A> and <A HREF=\"account.php\">login</A> prior to accessing it.");
+}
+
+function message_throttle() {
+  return t("You exceeded the submission rate exceeded.  Please wait a few minutes and try again.");
 }
 
 function check_form($text) {
