@@ -163,7 +163,7 @@ function poll_link($type, $node = 0, $main) {
 
   if ($type == "system") {
     if (user_access("create polls")) {
-      menu("node/add/poll",t("create poll"), NULL, NULL, 0);
+      menu("node/add/poll",t("poll"), NULL, NULL, 0);
     }
   }
   else if ($type == "page" && user_access("access content")) {

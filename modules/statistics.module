@@ -117,7 +117,7 @@ function statistics_link($type, $node = 0, $main = 0) {
   if ($type == "system") {
     if ((user_access("administer statistics module") || (user_access("administer statistics")))) {
 
-      menu("admin/statistics", "site statistics", "statistics_admin", statistics_help("admin/statistics"), 6);
+      menu("admin/statistics", "statistics", "statistics_admin", statistics_help("admin/statistics"), 6);
       menu("admin/statistics/referrers", "referrer log", "statistics_admin", statistics_help("admin/statistics/referrers") );
       menu("admin/statistics/referrers/internal", "internal referrers only", "statistics_admin", statistics_help("admin/statistics/referrers/internal") );
       menu("admin/statistics/referrers/external", "external referrers only", "statistics_admin", statistics_help("admin/statistics/referrers/external") );
@@ -129,8 +129,8 @@ function statistics_link($type, $node = 0, $main = 0) {
       menu("admin/statistics/help", "help", "statistics_help", NULL, 9);
 
       // block configuration:
-      menu("admin/block/top nodes block", "configure 'top nodes' block", "statistics_admin", statistics_help("admin/block/top nodes/block"), 5);
-      menu("admin/block/whos online block", "configure 'who is online' block", "statistics_admin", statistics_help("admin/block/whos online block"), 5);
+      menu("admin/system/block/top nodes block", "configure 'top nodes' block", "statistics_admin", statistics_help("admin/system/block/top nodes/block"), 5);
+      menu("admin/system/block/whos online block", "configure 'who is online' block", "statistics_admin", statistics_help("admin/system/block/whos online block"), 5);
     }
   }
 
@@ -172,13 +172,13 @@ function statistics_help($section = "admin/statistics/help") {
       $output .= "<h3>Top nodes block</h3>";
       $output .= "<p>This module creates a block that can display the day's top viewed nodes, the all time top viewed nodes and the last nodes viewed.  Each of these links can be enabled or disabled individually, and the number of nodes displayed for each can be configured with a drop down menu.  If you disable all sections of this block, it will not appear.</p>";
       $output .= "<p>The administrative \"top nodes block\" screen also allows you to assign a name to the block.</p>";
-      $output .= strtr("<p>Don't forget to enable the block %here.</p>",array("%here" => l(t("here"), "admin/block") ));
+      $output .= strtr("<p>Don't forget to enable the block %here.</p>",array("%here" => l(t("here"), "admin/system/block") ));
 
       $output .= "<h3>Top nodes page</h3>";
       $output .= "<p>This module creates a user page that can display summaries of the day's top viewed nodes, the all time top nodes and the last nodes viewed.  Each of these summaries can be enabled or disabled individually, and the number of nodes displayed for each can be configured with a drop down menu.</p>";
       $output .= "<p>The administrative \"top nodes page\" screen also allows you to assign a name for the automatically generated link to the user page.  If no name is set, the link will not be displayed.</p>";
       $output .= "<h3>Who's online block</h3><p>This module creates a block that can display how many user's and guests are currently online.  You are able to configure the name of the block, the name of a sub-block for displaying names of user's currently online, how recently a user must have been active to be considered online, the maximum characters to display from a user's name and the maximum number of user names to display.</p>";
-      $output .= strtr("<p>Don't forget to enable the block %here.</p>",array("%here" => l(t("here"), "admin/block") ));
+      $output .= strtr("<p>Don't forget to enable the block %here.</p>",array("%here" => l(t("here"), "admin/system/block") ));
       $output .= strtr("<h3>Permissions</h3><p>This module has four permissions that need to be configured in %permissions.</p>",array("%permissions" => l(t("user permissions"), "admin/user/permission") ));
       $output .= "<ul>";
       $output .= "<li><i>access statistics</i> - enable for user roles that get to see individual node counts.  (This does not define access to the block)</li>";
@@ -241,10 +241,10 @@ function statistics_help($section = "admin/statistics/help") {
     case 'admin/statistics/top nodes page':
       $output = "The statistics module creates a user page that can display summaries of the day's top viewed nodes, the all time top nodes and the last nodes viewed.  Each of these summaries can be enabled or disabled individually, and the number of nodes displayed for each can be configured with a drop down menu.";
       break;
-    case 'admin/block/top nodes block':
+    case 'admin/system/block/top nodes block':
       $output = "The statistics module exports a block that can display the top viewed nodes of the day, the all time top viewed nodes and the last nodes viewed.  Each of these links can be enabled or disabled individually, and the number of nodes displayed for each can be configured with a drop down menu. If you disable all sections of this block, it will not appear.";
       break;
-    case 'admin/block/whos online block':
+    case 'admin/system/block/whos online block':
       $output = "The statistics module exports a block that can display how many user's and guests are currently online.  You can configure the name of the block, the name of a sub-block for displaying names of user's currently online, how recently a user must have been active to be considered online, the maximum characters to display from a user's name and the maximum number of user names to display.";
       break;
   }

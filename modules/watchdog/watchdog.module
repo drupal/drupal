@@ -47,13 +47,13 @@ function watchdog_perm() {
 function watchdog_link($type) {
   if ($type == "system") {
     if (user_access("administer watchdog")) {
-      menu("admin/watchdog", "site monitoring", "watchdog_admin", watchdog_help("admin/watchdog"), 6);
-      menu("admin/watchdog/user", "user messages", "watchdog_admin", watchdog_help("admin/watchdog/user"));
-      menu("admin/watchdog/regular", "regular messages", "watchdog_admin", watchdog_help("admin/watchdog/regular"));
-      menu("admin/watchdog/special", "special messages", "watchdog_admin", watchdog_help("admin/watchdog/special"));
-      menu("admin/watchdog/warning", "warning messages", "watchdog_admin", watchdog_help("admin/watchdog/warning"));
-      menu("admin/watchdog/error", "error messages", "watchdog_admin", watchdog_help("admin/watchdog/error"));
-      menu("admin/watchdog/httpd", "httpd messages", "watchdog_admin", watchdog_help("admin/watchdog/httpd"));
+      menu("admin/watchdog", "messages", "watchdog_admin", watchdog_help("admin/watchdog"), 6);
+      menu("admin/watchdog/user", "user", "watchdog_admin", watchdog_help("admin/watchdog/user"));
+      menu("admin/watchdog/regular", "regular", "watchdog_admin", watchdog_help("admin/watchdog/regular"));
+      menu("admin/watchdog/special", "special", "watchdog_admin", watchdog_help("admin/watchdog/special"));
+      menu("admin/watchdog/warning", "warning", "watchdog_admin", watchdog_help("admin/watchdog/warning"));
+      menu("admin/watchdog/error", "error", "watchdog_admin", watchdog_help("admin/watchdog/error"));
+      menu("admin/watchdog/httpd", "httpd", "watchdog_admin", watchdog_help("admin/watchdog/httpd"));
       menu("admin/watchdog/view", "view details", "watchdog_admin", NULL, 0, 1); // hidden menu
     }
   }

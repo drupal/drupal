@@ -59,16 +59,16 @@ function import_help($section = "admin/import/help") {
     case 'admin/system/modules/import':
       $output = "Drupal's news aggregator controls how many RSS/RDF items from a single source are displayed in a \"Block\", and on the page that goes with that block.";
       break;
-    case 'admin/syndication/news':
+    case 'admin/node/syndication/news':
       $output = strtr("Several web sites, especially news related sites, syndicate parts of their site's content for other web sites to display. Usually, the syndicated content includes the latest headlines with a direct link to that story on the remote site. Some syndicated content also includes a description of the headline. The standard method of syndication is using the XML based Rich Site Summary (RSS). To get a feed to work you <b>must</b> run \"cron.php\". To display the feed in a block you must turn on the %block. <br /><ul><li>To delete a feed choose \"edit feed\"</li><li>To clear all of the entries from a feed choose \"Remove items\"</li><li>To check whether a feed is working, and to get new items <b>now</b> click on \"update items\"</li></ul><ul><li>To delete a bundle choose \"edit bundle\".</li></ul>", array("%block" => l(t("feed's block"), "admin/block") ));
       break;
-    case 'admin/syndication/news/add/feed':
+    case 'admin/node/syndication/news/add/feed':
       $output = strtr("Add a site that has an RSS/RDF feed. The URL is the full path to the RSS feed file. For the feed to update automatically you must run \"cron.php\". The \"Attributes\" are used to bundle this feed with other feeds (See %bundle), and to tag articles from this feed.<br />Note: If you already have a feed with the URL you are planning to use, the system will not accept another feed with the same URL.", array("%bundle" => l(t("add new bundle"), "admin/syndication/news/add/bundle") ));
       break;
-    case 'admin/syndication/news/add/bundle':
+    case 'admin/node/syndication/news/add/bundle':
       $output = strtr("Bundles provide a generalized way of creating composite feeds. They allow you, for example, to combine various sport-related feeds into one bundle called <i>Sport</i>. If an article from a feed has been \"tag\"-ged (See %tag too look at and change tags.) with a matching \"Attribute\" then it will be added to the bundle.", array("%tag" => l(t("tag news item"), "admin/syndication/news/tag") ));
       break;
-    case 'admin/syndication/news/tag':
+    case 'admin/node/syndication/news/tag':
       $output = "This allows you to see and change an news item's \"tag\". All articles are originally tagged with the \"Attributes\" of their feed.";
       break;
   }
@@ -108,12 +108,12 @@ function import_link($type) {
   if ($type == "system") {
     if (user_access("administer news feeds")) {
 
-      menu("admin/syndication", "content syndication", NULL, NULL, 5);
-      menu("admin/syndication/news", "news aggregation", "import_admin", import_help("admin/syndication/news") );
-      menu("admin/syndication/news/add/feed", "add new feed", "import_admin", import_help("admin/syndication/news/add/feed"), 2);
-      menu("admin/syndication/news/add/bundle", "add new bundle", "import_admin", import_help("admin/syndication/news/add/bundle"), 3);
-      menu("admin/syndication/news/tag", "tag news items", "import_admin", import_help("admin/syndication/news/tag"), 4);
-      menu("admin/syndication/news/help", "help", "import_help", NULL, 9);
+      menu("admin/node/syndication", "syndication", NULL, NULL, 5);
+      menu("admin/node/syndication/news", "feeds", "import_admin", import_help("admin/node/syndication/news") );
+      menu("admin/node/syndication/news/add/feed", "new feed", "import_admin", import_help("admin/node/syndication/news/add/feed"), 2);
+      menu("admin/node/syndication/news/add/bundle", "new bundle", "import_admin", import_help("admin/node/syndication/news/add/bundle"), 3);
+      menu("admin/node/syndication/news/tag", "tag items", "import_admin", import_help("admin/node/syndication/news/tag"), 4);
+      menu("admin/node/syndication/news/help", "help", "import_help", NULL, 9);
     }
   }
 

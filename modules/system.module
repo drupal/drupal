@@ -59,7 +59,7 @@ function system_link($type) {
       $help["modules"] = t("Modules are plugins for Drupal that extend its core functionality.  Here you can select which modules are enabled. On the left hand side click on the name of the module for their individual configurations.  Once a module is enabled, you will need to grant permissions to users in user management.");
       $help["filters"] = t("Filters fit between the raw text in a node and the HTML output. They allow you to replace text selectively. Uses include automatic conversion of emoticons into graphics and filtering HTML content from users' submissions.");
 
-      menu("admin/system", "site configuration", "system_admin", system_help("admin/system"), 3);
+      menu("admin/system", "configuration", "system_admin", system_help("admin/system"), 3);
       menu("admin/system/themes", "themes", "system_admin", system_help("admin/system/themes"), 2);
 
       foreach (theme_list(1) as $theme) {

@@ -571,12 +571,13 @@ function node_link($type, $node = 0, $main = 0) {
   }
 
   if ($type == "system") {
+    menu("node/add", t("create content"), NULL, NULL, 1);
     if (user_access("administer nodes")) {
-      menu("admin/node", "content management", "node_admin", node_help("admin/node"));
-      menu("admin/node/search", "search posts", "node_admin", node_help("admin/node/search"), 8);
+      menu("admin/node", "content", "node_admin", node_help("admin/node"));
+      menu("admin/node/search", "search", "node_admin", node_help("admin/node/search"), 8);
       menu("admin/node/help", "help", "node_help", NULL, 9);
       menu("admin/node/edit", "edit node", "node_admin", NULL, 0, 1);
-      menu("admin/node/settings", "content settings", "node_admin", node_help("admin/node/settings"), 8);
+      menu("admin/node/settings", "settings", "node_admin", node_help("admin/node/settings"), 8);
     }
   }
 
