@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.72 2004/08/14 11:54:31 unconed Exp $
+// $Id: profile.module,v 1.73 2004/08/18 19:57:27 dries Exp $
 
 /**
  * Flags to define the visibility of a profile field.
@@ -327,12 +327,12 @@ function profile_validate_profile($edit, $category) {
     if ($edit[$field->name]) {
       if ($field->type == 'url') {
         if (!valid_url($edit[$field->name], true)) {
-          form_set_error($field->name, t('The value provided for "%field" is not a valid URL.', array('%field' => $field->title)));
+          form_set_error($field->name, t('The value provided for %field is not a valid URL.', array('%field' => "<em>$field->title</em>")));
          }
       }
     }
     else if ($field->required && !user_access('administer users')) {
-      form_set_error($field->name, t('The field "%field" is required.', array('%field' => $field->title)));
+      form_set_error($field->name, t('The field %field is required.', array('%field' => "<em>$field->title</em>")));
     }
   }
 
