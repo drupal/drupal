@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.168 2004/02/15 20:09:46 dries Exp $
+// $Id: forum.module,v 1.169 2004/02/15 20:16:24 dries Exp $
 
 function forum_help($section = 'admin/help#forum') {
   $output = '';
@@ -214,7 +214,7 @@ function forum_validate(&$node) {
 }
 
 function forum_form(&$node, &$error) {
-  if (!$node->taxonomy) {
+  if (!$node->nid) {
     // new topic
     $node->taxonomy[] = arg(3);
   }
