@@ -13,8 +13,8 @@ if (!get_cfg_var("safe_mode")) {
 
 // Define the various updates in an array("date : comment" => "function");
 $mysql_updates = array(
-  "2001-10-10" => "update_1",
-  "2001-10-12 : pearification" => "update_2",
+  "2001-10-10: first update after Drupal 3.0.0 release" => "update_1",
+  "2001-10-12" => "update_2",
   "2001-10-14" => "update_3",
   "2001-10-16" => "update_4",
   "2001-10-17" => "update_5",
@@ -22,7 +22,7 @@ $mysql_updates = array(
   "2001-11-01" => "update_7",
   "2001-11-02" => "update_8",
   "2001-11-04" => "update_9",
-  "2001-11-17 : distributed authentication" => "update_10",
+  "2001-11-17" => "update_10",
   "2001-12-01" => "update_11",
   "2001-12-06" => "update_12",
   "2001-12-09" => "update_13",
@@ -37,14 +37,14 @@ $mysql_updates = array(
   "2002-02-19" => "update_22",
   "2002-03-05" => "update_23",
   "2002-04-08" => "update_24",
-  "2002-04-14 : modules/themes web config" => "update_25",
-  "2002-04-14 : new taxonomy system" => "update_26",
+  "2002-04-14" => "update_25",
+  "2002-04-14" => "update_26",
   "2002-04-16" => "update_27",
   "2002-04-20" => "update_28",
-  "2002-04-23 : roles cleanup" => "update_29",
+  "2002-04-23" => "update_29",
   "2002-05-02" => "update_30",
   "2002-05-15" => "update_31",
-  "2002-06-22" => "update_32",
+  "2002-06-22: first update after Drupal 4.0.0 release" => "update_32",
   "2002-07-07" => "update_33",
   "2002-07-31" => "update_34",
   "2002-08-10" => "update_35",
@@ -506,6 +506,7 @@ function update_33() {
 function update_34() {
   update_sql("ALTER TABLE feed MODIFY refresh int(10) NOT NULL default '0'");
   update_sql("ALTER TABLE feed MODIFY timestamp int (10) NOT NULL default '0'");
+  update_sql("ALTER TABLE users CHANGE session session TEXT");
 }
 
 function update_35() {
@@ -740,7 +741,7 @@ function update_page() {
           $selected = $i;
         }
       }
-      $dates[$i] = "None";
+      $dates[$i] = "No updates available";
 
       // make update form and output it.
       $form .= form_select("Perform updates since", "start", (isset($selected) ? $selected : -1), $dates);
