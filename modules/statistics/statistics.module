@@ -46,7 +46,7 @@ function statistics_exit() {
       // if we affected 0 rows, this is the first time viewing the node
       if (!db_affected_rows()) {
         // must create a new row to store counter's for new node
-        db_query("INSERT INTO {node_counter} (nid, daycount, totalcount) VALUES(%d, 1, 1)", arg(2));
+        db_query("INSERT INTO {node_counter} (nid, daycount, totalcount, timestamp) VALUES(%d, 1, 1, %d)", arg(2), time());
       }
     }
   }
