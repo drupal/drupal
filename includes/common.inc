@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.193 2003/04/23 18:58:43 dries Exp $
+// $Id: common.inc,v 1.194 2003/04/29 22:02:02 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST, $PHP_SELF;
@@ -962,10 +962,7 @@ include_once "includes/module.inc";
 include_once "includes/theme.inc";
 include_once "includes/pager.inc";
 include_once "includes/menu.inc";
-
-if (!function_exists("xmlrpc_decode")) {
-  include_once "includes/xmlrpc.inc";
-}
+include_once "includes/xmlrpc.inc";
 
 // initialize configuration variables, using values from conf.php if available:
 $conf = variable_init(isset($conf) ? $conf : array());
