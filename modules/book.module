@@ -1,15 +1,6 @@
 <?php
 // $Id$
 
-function book_help() {
-  $output .= "<h3>Maintain a FAQ with <i>Collaborative book</i></h3>";
-  $output .= "<p>The collaborative book (i.e. <code>book.module</code>) in Drupal is a terrific way to easily manage an FAQ (Frequently Asked Questions) section of your web site. The main benefit for an administrator is that you don't have to write all the questions/answers by yourself.  Let the community do it for you!</p>";
-  $output .= "<p>In order to setup the FAQ, you have to create a new <i>book</i> which will hold all your content.  To do so, click on <i>create book page</i> in your user box.  Give it a thoughtful title and body.  A title like \"Estonia Travel - FAQ\" is nice.  You may always edit these fields later.  You will probably want to designate <i><root></i> as the parent of this page.  Leave the <i>log message</i> and <i>type</i> fields blank for now.  After you've submitted this book page, you are ready to begin filling up your book with questions that are frequently asked.</p>";
-  $output .= "<p>Whenever you come across a post which you want to include in your FAQ, click on the <i>administer</i> link.  Then click on the <i>edit book outline</i> button at the bottom of the page. Then place the relevant post wherever is most appropriate in your book by selecting a <i>parent</i>.  Books are quite flexible. They can have sections like <i>Flying to Estonia</i>, <i>Eating in Estonia</i> and so on.  As you get more experienced with the <i>Collaborative book</i>, you can reorganize posts in your book so that it stays organized.</p>";
-  $output .= "<p>Notes:</p><ul><li>Any comments attached to those relevant posts which you designate as book pages will also be transported into your book.  This is a great feature, since much wisdom is shared via comments. And remember that all future comments and edits will automatically be reflected in your book.</li><li>You may wish to edit the title and teaser of posts when adding them to your FAQ.  This is done on the same page as the <i>edit book outline</i> button.  Clear titles help users navigate quickly to the information that they seek.</li><li>Book pages may come from any content type (blog, story, page, etc.).  If you are creating a post solely for inclusion in your book, then use the <i>create book page</i> link.</li><li>If you don't see the <i>administer</i> link, then you probably have insufficient <a href=\"admin.php?mod=user&op=permission\">permissions</a>.</li><li>If you want to get really fancy, note that Books are one of the few content types which allow raw PHP in their <i>body</i>.  So you've got lots of geeky possibilities there.</li></ul>";
-  return $output;
-}
-
 function book_node($field) {
   global $user;
 
@@ -435,7 +426,7 @@ function book_toc_recurse($nid, $indent, $toc, $children) {
 
 function book_toc($parent = 0, $indent = "", $toc = array()) {
 
-  $result = db_query("SELECT n.nid, n.title, b.parent FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.type = 'book' AND n.status = '1' ORDER BY b.weight, n.title");
+  $result = db_query("SELECT n.nid, n.title, b.parent FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.status = '1' ORDER BY b.weight, n.title");
 
   while ($node = db_fetch_object($result)) {
     $list = $children[$node->parent] ? $children[$node->parent] : array();
@@ -482,7 +473,7 @@ function book_tree_recurse($nid, $depth, $children) {
 
 function book_tree($parent = 0, $depth = 3) {
 
-  $result = db_query("SELECT n.nid, n.title, b.parent FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.type = 'book' AND n.status = '1' ORDER BY b.weight, n.title");
+  $result = db_query("SELECT n.nid, n.title, b.parent FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.status = '1' ORDER BY b.weight, n.title");
 
   while ($node = db_fetch_object($result)) {
     $list = $children[$node->parent] ? $children[$node->parent] : array();
@@ -615,8 +606,10 @@ function book_admin_view_line($node, $depth = 0) {
   $output .= "<tr>";
   $output .= " <td><div style=\"padding-left: ". (25 * $depth) ."px;\"><a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a></div></td>";
   $output .= " <td align=\"center\">$revision</td>";
-  $output .= " <td><a href=\"admin.php?mod=node&op=edit&id=$node->nid\">". t("edit page") ."</td>";
-  $output .= " <td><a href=\"admin.php?mod=node&op=delete&id=$node->nid\">". t("delete page") ."</td>";
+  $output .= " <td><a href=\"admin.php?mod=node&op=edit&id=$node->nid\">". t("edit node") ."</td>";
+  //TODO: get this link to work. Must pass $nid along so it is received by book_node_link()  
+  //$output .= " <td><a href=\"admin.php?mod=book&nid=$node->nid&op=Edit+book+outline\">". t("edit book outline") ."</td>";
+  $output .= " <td><a href=\"admin.php?mod=node&op=delete&id=$node->nid\">". t("delete node") ."</td>";
   $output .= "</tr>";
 
   return $output;
@@ -642,6 +635,7 @@ function book_admin_view($nid, $depth = 0) {
 
   $output .= "<h3>". check_output($node->title) ."</h3>";
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
+  //TODO: change colspan below to 3 after adding new link in book_admin_view_line()   
   $output .= " <tr><th>title</th><th>rev</th><th colspan=\"2\">operations</th></tr>";
   $output .= book_admin_view_line($node);
   $output .= book_admin_view_book($nid);
@@ -676,7 +670,9 @@ function book_admin_links() {
   while ($book = db_fetch_object($result)) {
     $links[] = "<a href=\"admin.php?mod=book&op=view&id=$book->nid\">". t("book") .": <i>". check_output($book->title) ."</i></a>";
   }
-
+  $links[] = "<a href=\"admin.php?mod=book&op=orphan\">". t("orphan pages") ."</a>";
+  $links[] = "<a href=\"module.php?mod=book&op=feed\" title=\"" . t("display all books in a single HTML page") . ".\">" . t("export to HTML") . "</a>";
+  $links[] = "<a href=\"admin.php?mod=book&op=help\">" . t("help") . "</a>";
   return $links;
 }
 
@@ -690,8 +686,7 @@ function book_admin() {
     */
 
     $links = book_admin_links();
-    $links[] = "<a href=\"admin.php?mod=book&op=orphan\">". t("orphan pages") ."</a>";
-
+    
     print "<small>". implode(" &middot; ", $links) ."</small><hr />";
 
     switch ($op) {
@@ -707,9 +702,96 @@ function book_admin() {
       case "view":
         print book_admin_view($id);
         break;
+      case "help":
+        book_help();
+        break;
       default:
     }
   }
 }
 
+function book_help() {
+  ?>
+  
+<p>The Collaborative Book is a magnificient mechanism for organizing content authored by many users.
+You may use it to organize a Manual (e.g. <a href="http://www.drupal.org">Drupal Handbook</a>),
+to <a href="#faq">maintain an FAQ</a>, or to manage any outline-like content. Books can have
+Chapters, Sections, etc. In fact, books can have an arbitrarily deep nesting strucuture.</p>
+
+<p>Under the covers, a Book is only an organization of nodes. These nodes are often of type <i>book page</i>,
+but can be of any content type. Every node in the book has a <i>Parent</i>. The Parent is the node
+which "contains" the child node. This is how book.module establishes its hierarchy. On any given level
+in the hierarchy, a book can contain many nodes. Book uses the Weight field to order these sibling nodes.</p>
+
+<p>Book pages are a special, powerful node type. These nodes are specifically designed to be included in a book.
+Their special power comes from the bilility to embed PHP within the body of the page. This capability is only offerred
+to Administrators, since malicious users could abuse this power. In addiiton, book pages contain a 'Log Message'
+field which helps your users understand the motivation behind an edit of a book page. Each edited version of a book
+page is usually stored as a new revision of a node. This capability makes it easy to revert to an old version of a page,
+should that become desirable.</p>
+
+<p>Like other node types, Book submissions and edits may be subject to moderation, depending on your configuration.
+Similarly, Books use <a href="/admin.php?mod=user&op=permission">permissions</a> to determine who may
+read and write to them. Only Administrators are allowed to create new books, which are really just nodes whose
+Parent is <i>&lt;root&gt;</i>. To include an existing node in your book, click on the Administer link in that node.
+At the bottom of this Admin page, click on the <i>Edit Book Outline</i> button. This enables you to place the node
+wherever you'd like within the book hierarchy. To add a new node into your book, use the <i>create book page</i> link.</p>
+
+<p>Administrators may review the hierarchy of their books by clicking on the <a href="/admin.php?mod=book">Collaborative Book link</a>
+in the Admin center. There, nodes may be edited, reorganized, removed from book, and deleted. This behavior may change in the future. When a Parent node is deleted, he may leave behind child nodes.
+These nodes are now <i>orphans</i>. Administrators should periodically <a href="/admin.php?mod=book&op=orphan">
+review their books for orphans</a> and reaffiliate those pages as desired. Finally, administrators may also
+<a href="/admin.php?mod=book&op=feed">export their books</a> to a single, flat HTML page which is suitable for printing.</p>
+
+<a name="faq"></a><h3>Maintain an FAQ with <i>Collaborative Book</i></h3>
+
+<p>The Collaborative Book (i.e. <code>book.module</code>) in Drupal is a
+terrific way to easily manage an FAQ (Frequently Asked Questions) section of
+your web site. The main benefit for an administrator is that you don't have
+to write all the questions/answers by yourself. Let the community do it for
+you!</p>
+
+<p>In order to setup the FAQ, you have to create a new <i>Book</i> which will
+hold all your content. To do so, click on <i>Create Book Page</i> in your
+user box. Give it a thoughtful Title, and Body. A title like "Estonia
+Travel - FAQ" is nice. You may always edit these fields later. You will
+probably want to designate <i><root></i> as the Parent of this page. Leave
+the <i>Log Message</i> and <i>Type</i> fields blank for now. After you've
+submitted this book page, you are ready to begin filling up your book with
+Questions that are Frequently Asked.</p>
+
+<p>Whenever you come across a post which you want to include in your FAQ,
+click on the <i>administer</i> link. Then click on the <i>Edit book
+outline</i> button at the bottom of the page. Then place the relevant post
+wherever is most appropriate in your book by selecting a <i>Parent</i>. Books
+are quite flexible. They can have sections like <i>Flying to Estonia</i>,
+<i>Eating in Estonia</i> and so on. As you get more experienced with the
+<i>Collaborative Book</i>, you can reorganize posts in your book so that it
+stays organized.</p>
+
+<p>Notes:</p>
+<ul>
+<li>any comments attached to those relevant posts which you designate as book
+pages will also be transported into your book. This is a great feature, since
+much wisdom is shared via comments. And remember that all future comments and
+edits will automatically be reflected in your book.</li>
+<li>You may wish to edit the title and teaser of posts when adding them to
+your FAQ. This is done on the same page as the <i>Edit book outline</i>
+button. Clear titles help users navigate quickly to the information that they
+seek.
+</li>
+<li>Book pages may come from any content type (blog, story, page, etc.). If
+you are creating a post solely for inclusion in your book, then use the
+<i>Create book page</i> link.</li>
+<li>If you don't see the <i>administer</i> link, then you probably have
+insufficient <a
+href="/admin.php?mod=user&op=permission">permissions</a>.</li>
+<li>If you want to get really fancy, note that Books are one of the few
+content types which allow raw PHP in their <i>body</i>. So you've got lots of
+geeky possibilities there.</li>
+</ul>
+
+  <?php
+  
+}  
 ?>

@@ -464,9 +464,10 @@ function user_block() {
     $output .= @implode("<br />\n", $links);
 
     $output .= "</div>";
+    $block[0]["content"] = $output;
   }
   else {
-    $block[0]["subject"] = t("Log in");
+    $block[1]["subject"] = t("Log in");
 
     $output .= "<div align=\"center\">\n";
     $output .= "<form action=\"module.php?mod=user&op=login\" method=\"post\">\n";
@@ -477,10 +478,14 @@ function user_block() {
     if (variable_get("account_register", 1)) $output .= "  <a href=\"module.php?mod=user\" title=\"". t("Create a new user account.") ."\">". t("REGISTER") ."</a>\n";
     $output .= "</form>\n";
     $output .= "</div>\n";
+    $block[1]["content"] = $output;
   }
-  $block[0]["content"] = $output;
+
   $block[0]["info"] = t("User information");
   $block[0]["link"] = "module.php?mod=user";
+
+  $block[1]["info"] = t("Log in");
+  $block[1]["link"] = "module.php?mod=user";
 
   // Who's online block
   $time = 60 * 60; // minutes * seconds
@@ -494,10 +499,10 @@ function user_block() {
       $output .= '<li><a href="module.php?mod=user&op=view&id='. $account->uid .'">'. (strlen($account->name) > 10 ? substr($account->name, 0, 10) . '...' : $account->name) .'</a></li>';
     }
     $output .= "</ol>";
-    $block[1]["content"] = $output;
+    $block[2]["content"] = $output;
   }
-  $block[1]["subject"] = t("Who's online");
-  $block[1]["info"] = t("Who's online");
+  $block[2]["subject"] = t("Who's online");
+  $block[2]["info"] = t("Who's online");
 
   return $block;
 }

@@ -45,4 +45,13 @@ $themes = array("UnConeD" => array(
 #   appropriately.
 $languages = array("en" => "English");
 
+# Custom Navigation Links override the standard page links
+# offerred by most Drupal modules. Administrators may
+# add/remove/reorder nav links here. These links are typically
+# displayed in a row near the top of every page.
+# $custom_links = array(
+#  "<a href=\"\index.php\">home</a>",
+#  "<a href=\"\module.php?mod=user\">school</a>",
+#  "<a href=\"\module.php?mod=blog\">work</a>");
+
 ?>

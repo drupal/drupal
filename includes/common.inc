@@ -594,18 +594,21 @@ function field_merge($a, $b) {
 }
 
 function link_page() {
-
-  $links[] = "<a href=\"index.php\">". t("home") ."</a>";
-
-  foreach (module_list() as $name) {
-    if (module_hook($name, "link")) {
-      $links = array_merge($links, module_invoke($name, "link", "page"));
-    }
+  global $custom_links;
+  
+  if (is_array($custom_links)) {
+    return $custom_links;
   }
-
-
-  return $links;
-}
+  else {
+    $links[] = "<a href=\"index.php\">". t("home") ."</a>";
+    foreach (module_list() as $name) {    
+      if (module_hook($name, "link")) {
+        $links = array_merge($links, module_invoke($name, "link", "page"));
+      }  
+    }
+    return $links;
+  }
+}  
 
 function link_node($node, $main = 0) {
   foreach (module_list() as $name) {
