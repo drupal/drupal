@@ -1,5 +1,5 @@
 <?php
-// $Id: admin.module,v 1.2 2003/01/06 20:51:39 dries Exp $
+// $Id: admin.module,v 1.3 2003/01/14 20:58:14 dries Exp $
 
 include_once "includes/common.inc";
 
@@ -55,15 +55,17 @@ function admin_page($mod) {
           print "<h2>". t("Administration") ."</h2>";
         }
 
+        /*
         if ($menu = menu_menu()) {
           print "$menu<br />";
         }
-
-        print "<br /><hr /><br />";
+        */
 
         if ($help = menu_help()) {
-          print "<small>$help</small><br /><br />";
+          print "<small>$help</small>";
         }
+
+        print "<hr /><br />";
 
         if (arg(1)) {
           print module_invoke(arg(1), "admin");
