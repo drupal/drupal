@@ -35,7 +35,7 @@ function upload_menu($may_cache) {
 
   if ($may_cache) {
     $items[] = array(
-      'path' => 'admin/upload', 'title' => t('uploads'),
+      'path' => 'admin/settings/upload', 'title' => t('uploads'),
       'callback' => 'upload_admin',
       'access' => user_access('administer site configuration'),
       'type' => MENU_NORMAL_ITEM
