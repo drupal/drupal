@@ -1402,12 +1402,12 @@ function comment_num_all($nid) {
 function comment_num_replies($id) {
   static $cache;
 
-  if (!isset($cache[$nid])) {
+  if (!isset($cache[$id])) {
     $result = db_query("SELECT COUNT(cid) FROM comments WHERE pid = %d AND status = 0", $id);
-    $cache[$nid] = $result ? db_result($result, 0) : 0;
+    $cache[$id] = $result ? db_result($result, 0) : 0;
   }
 
-  return $cache[$nid];
+  return $cache[$id];
 }
 
 /**
