@@ -45,17 +45,29 @@ function queue_vote($id, $vote) {
 
       $node = node_load(array(nid => $id, type => $node->type));
 
-      if (variable_get($node->type ."_post", 4) <= $node->score) {
+      if (variable_get($node->type ."_post", 3) <= $node->score) {
         node_save($node, array("nid", "status" => 1, "moderate" => 0));
-        watchdog("special", "node: posted '$node->title' - moderation");
+        watchdog("special", "moderation: posted '$node->title'");
       }
       else if (variable_get($node->type ."_dump", -2) >= $node->score) {
-        node_save($node, array("nid", "status" => 1, "moderate" => 0));
-        watchdog("special", "node: dumped '$node->title' - moderation");
+        if ($node->revisions) {
+          node_revision_rollback($node->nid, node_revision_previous($node));
+          watchdog("special", "moderation: dumped '$node->title' (rollback)");
+        }
+        else {
+          node_save($node, array("nid", "status" => 0, "moderate" => 0));
+          watchdog("special", "moderation: dumped '$node->title'");
+        }
       }
-      else if (variable_get($node->type ."_expire", 8) <= $node->votes) {
-        node_save($node, array("nid", "status" => 0, "moderate" => 0));
-        watchdog("special", "node: expired '$node->title' - moderation");
+      else if (variable_get($node->type ."_expire", 6) <= $node->votes) {
+        if ($node->revisions) {
+          node_revision_rollback($node->nid,  node_revision_previous($node));
+          watchdog("special", "moderation: expired '$node->title' (rollback)");
+        }
+        else {
+          node_save($node, array("nid", "status" => 0, "moderate" => 0));
+          watchdog("special", "moderation: expired '$node->title'");
+        }
       }
     }
   }

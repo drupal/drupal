@@ -123,7 +123,7 @@ function node_load($conditions) {
 
 function node_save($node, $filter) {
 
-  $fields = array("nid", "uid", "type", "title", "teaser", "body", "revisions", "status", "comment", "promote", "moderate", "created", "changed");
+  $fields = array("nid", "uid", "type", "title", "teaser", "body", "revisions", "score", "status", "comment", "promote", "moderate", "created", "changed", "users", "votes");
 
   foreach ($filter as $key => $value) {
     /*
@@ -186,8 +186,6 @@ function node_save($node, $filter) {
 
     // call the node specific callback (if any):
     module_invoke($node->type, "insert", $node);
-
-    watchdog("special", "node: added '$node->title'");
   }
   else {
 
@@ -211,7 +209,6 @@ function node_save($node, $filter) {
     // call the node specific callback (if any):
     module_invoke($node->type, "update", $node);
 
-    watchdog("special", "node: updated '$node->title'");
   }
 
   /*
@@ -238,6 +235,11 @@ function node_view($node, $main = 0) {
     node_invoke($node, "view", $main);
   }
   else {
+
+    /*
+    ** Default behavior:
+    */
+
     $theme->node($node, $main);
   }
 }

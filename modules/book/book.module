@@ -10,9 +10,17 @@ function book_node($field) {
 }
 
 function book_access($op, $node) {
+  global $user;
 
   if ($op == "view") {
-    return ($node->nid && $node->status && !$node->moderate);
+    /*
+    ** Everyone can access all published book pages whether these pages
+    ** are still waiting for approval or not.  We might not always want
+    ** to display pages that are waiting for approval, but we take care
+    ** of that problem in the book_view() function.
+    */
+
+    return $node->status;
   }
 
   if  ($op == "create") {
@@ -22,12 +30,13 @@ function book_access($op, $node) {
   if ($op == "update") {
 
     /*
-    ** Everyone can upate a book page if the "create new revision"-bit
-    ** is set: that is, only updates that don't overwrite the previous
-    ** conent will be allowed.
+    ** Everyone can upate a book page if there are no suggested updates
+    ** of that page waiting for approval and as long as the "create new
+    ** revision"-bit is set; that is, only updates that don't overwrite
+    ** the current or pending information are allowed.
     */
 
-    return $node->revision;
+    return !$node->moderate && $node->revision;
   }
 }
 
@@ -40,7 +49,7 @@ function book_link($type) {
 }
 
 function book_load($node) {
-  $book = db_fetch_object(db_query("SELECT parent, weight FROM book WHERE nid = '$node->nid'"));
+  $book = db_fetch_object(db_query("SELECT parent, weight, revision FROM book WHERE nid = '$node->nid'"));
   return $book;
 }
 
@@ -61,7 +70,7 @@ function book_save($node) {
     if (user_access("administer nodes")) {
       /*
       ** If a node administrator updates a book page, we don't create a
-      ** new revision unless explicitly specified.
+      ** new revision unless we are explicitly instructed to.
       */
 
       return array("parent", "weight");
@@ -69,8 +78,8 @@ function book_save($node) {
     else {
       /*
       ** If a regular user updates a book page, we always create a new
-      ** revision.  These new revisions are subject to moderation, and
-      ** are not or no longer being automatically promoted.
+      ** revision.  All new revisions have to be approved (moderation)
+      ** and are not promoted by derault.
       */
 
       return array("created" => time(), "moderate" => 1, "parent", "promote" => 0, "score" => 0, "status" => 1, "users" => "", "revisions", "votes" => 0, "weight");
@@ -106,7 +115,7 @@ function book_form($node, $help, $error) {
 
     $output .= form_hidden("revision", 1);
 
-    $node->uid = $user->uid; // passed by reference
+    $node->uid = $user->uid;    // $node is passed by reference
     $node->name = $user->name;
 
   }
@@ -124,7 +133,23 @@ function book_location($node, $nodes = array()) {
 }
 
 function book_view($node, $main = 0) {
-  global $theme;
+  global $theme, $mod;
+
+  /*
+  ** Always display the most recently approved revision of a node
+  ** unless we have to display it in the context of the moderation
+  ** queue.
+  */
+
+  if ($node->moderate && $mod != "queue") {
+    $node = $node->revisions[sizeof($node->revisions) - 1]["node"];
+  }
+
+  /*
+  ** Display the node.  If not displayed on the main page, we render
+  ** the node as a page in the book with extra links to the previous
+  ** and the next page.
+  */
 
   if ($main) {
     $theme->node($node, $main);
@@ -196,14 +221,28 @@ function book_toc($parent = "", $indent = "", $toc = array()) {
 function book_tree($parent = "", $depth = 0) {
 
   if ($depth < 3) {
-    // select all child nodes:
-    $result = db_query("SELECT n.*, b.* FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.type = 'book' AND b.parent = '$parent' ORDER BY b.weight, n.title");
+    /*
+    ** Select all child nodes and render them into a table of contents:
+    */
 
-    // render output:
-    while ($node = db_fetch_object($result)) {
+    $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.type = 'book' AND b.parent = '$parent' ORDER BY b.weight, n.title");
+
+    while ($page = db_fetch_object($result)) {
+      // load the node:
+      $node = node_load(array("nid" => $page->nid));
+
+      // take the most recent approved revision:
+      if ($node->moderate) {
+        $node = $node->revisions[sizeof($node->revisions) - 1]["node"];
+      }
+
+      // output the content:
       $output .= "<li><a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a></li>";
+
+      // build the sub-tree of each child:
       $output .= book_tree($node->nid, $depth + 1);
     }
+
     $output = "<ul>$output</ul>";
   }
 
@@ -213,9 +252,18 @@ function book_tree($parent = "", $depth = 0) {
 function book_render() {
   global $theme;
 
-  $result = db_query("SELECT n.*, b.* FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE b.parent = 0 AND n.status = 1 ORDER BY b.weight");
+  $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE b.parent = 0 AND n.status = 1 ORDER BY b.weight");
 
-  while ($node = db_fetch_object($result)) {
+  while ($page = db_fetch_object($result)) {
+    // load the node:
+    $node = node_load(array("nid" => $page->nid));
+
+    // take the most recent approved revision:
+    if ($node->moderate) {
+      $node = $node->revisions[sizeof($node->revisions) - 1]["node"];
+    }
+
+    // output the content:
     $output .= "<dt><a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a></dt><dd>". check_output($node->body, 1) ."<br /><br /></dd>";
   }
 
@@ -228,7 +276,6 @@ function book_page() {
   global $op, $id, $theme;
 
   if (user_access("access content")) {
-
     switch ($op) {
       case "feed":
         print book_export_html($id, $depth = 1);
@@ -245,24 +292,49 @@ function book_page() {
 }
 
 function book_export_html($id = "", $depth = 1) {
+  $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.type = 'book' AND n.status = 1 AND n.nid = '". check_input($id) ."'");
 
-  $result = db_query("SELECT n.*, b.* FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.type = 'book' AND n.status = 1 AND n.nid = '". check_input($id) ."'");
+  while ($page = db_fetch_object($result)) {
+    // load the node:
+    $node = node_load(array("nid" => $page->nid));
 
-  while ($node = db_fetch_object($result)) {
+    // take the most recent approved revision:
+    if ($node->moderate) {
+      $node = $node->revisions[sizeof($node->revisions) - 1]["node"];
+    }
+
+    // output the content:
     $output .= "<h$depth>". check_output($node->title) ."</h$depth>";
-    if ($node->body) $output .= "<blockquote>". check_output($node->body, 1) ."</blockquote>";
+
+    if ($node->body) {
+      $output .= "<blockquote>". check_output($node->body, 1) ."</blockquote>";
+    }
   }
+
   $output .= book_export_html_recursive($id, $depth);
 
   return $output;
 }
 
 function book_export_html_recursive($parent = "", $depth = 1) {
-  $result = db_query("SELECT n.*, b.* FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.type = 'book' AND n.status = 1 AND b.parent = '$parent' ORDER BY b.weight");
+  $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.type = 'book' AND n.status = 1 AND b.parent = '$parent' ORDER BY b.weight");
 
-  while ($node = db_fetch_object($result)) {
+  while ($page = db_fetch_object($result)) {
+    // load the node:
+    $node = node_load(array("nid" => $page->nid));
+
+    // take the most recent approved revision:
+    if ($node->moderate) {
+      $node = $node->revisions[sizeof($node->revisions) - 1]["node"];
+    }
+
+    // output the content:
     $output .= "<h$depth>". check_output($node->title) ."</h$depth>";
-    if ($node->body) $output .= "<blockquote>". check_output($node->body, 1) ."</blockquote>";
+
+    if ($node->body) {
+      $output .= "<blockquote>". check_output($node->body, 1) ."</blockquote>";
+    }
+
     $output .= book_export_html_recursive($node->nid, $depth + 1);
   }
 

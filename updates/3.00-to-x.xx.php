@@ -48,7 +48,7 @@ if ($part == 2) {
   while ($object = db_fetch_object($result)) {
 
     $node = node_load(array("nid" => $object->nid));
- 
+
     $body = db_result(db_query("SELECT body_old FROM $node->type WHERE nid = $node->nid"), 0);
 
     switch ($node->type) {
@@ -63,7 +63,7 @@ if ($part == 2) {
       default:
         print "unknown node $node->nid '$node->title' ($node->type)<br />";
     }
- 
+
     unset($node);
     unset($body);
   }

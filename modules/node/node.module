@@ -237,6 +237,11 @@ function node_admin_nodes() {
 function node_revision_create($node) {
   global $user;
 
+  /*
+  ** 'revision' is the name of the field used to indicicate that we
+  ** have to create a new revision of a node.
+  */
+
   if ($node->nid && $node->revision) {
     $prev = node_load(array("nid" => $node->nid));
     $node->revisions = $prev->revisions;
@@ -290,14 +295,21 @@ function node_revision_rollback($nid, $revision) {
 
   node_save($rev, $filter);
 
-  watchdog("message", "node: rolled-back '$node->title'");
+  watchdog("special", "node: rollbacked to revision #$revision of '$node->title'");
 }
 
 function node_revision_delete($nid, $revision) {
   $node = node_load(array("nid" => $nid));
 
   unset($node->revisions[$revision]);
+
   node_save($node, array("nid", "revisions"));
+
+  watchdog("special", "node: removed revision #$revision of '$node->title'");
+}
+
+function node_revision_previous($node) {
+  return end(array_keys($node->revisions));
 }
 
 function node_admin() {
@@ -670,6 +682,7 @@ function node_submit($node) {
 
       node_save($node, array_merge($fields, module_invoke($node->type, "save", $node)));
 
+      watchdog("special", "node: updated '$node->title'");
       $output = t("The node has been updated.");
     }
     else {
@@ -701,6 +714,7 @@ function node_submit($node) {
 
       node_save($node, array_merge($fields, module_invoke($node->type, "save", $node)));
 
+      watchdog("special", "node: added '$node->title'");
       $output = t("Thanks for your submission.");
     }
     else {

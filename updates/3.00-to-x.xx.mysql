@@ -145,6 +145,11 @@ ALTER TABLE users CHANGE session sid varchar(32) DEFAULT '' NOT NULL;
 # 02/11/01:
 ALTER TABLE node ADD revisions TEXT DEFAULT '' NOT NULL;
 
+# 04/11/01:
+ALTER TABLE book ADD revision int(2) DEFAULT '1' NOT NULL;
+ALTER TABLE book DROP log;
+ALTER TABLE book DROP pid;
+
 #
 # Run the third part of updates/3.00-to-x.xx.php:
 #   visit http://www.yoursite.com/3.00-to-x.xx.php?part=3
