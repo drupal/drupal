@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.252 2003/10/03 14:10:05 dries Exp $
+// $Id: common.inc,v 1.253 2003/10/07 10:22:33 kjartan Exp $
 
 function conf_init() {
 
@@ -509,69 +509,6 @@ function referer_load() {
   }
 }
 
-
-/*
-** Save a common file
-*/
-function drupal_file_save($file) {
-  global $user;
-  // TODO: extend to support filesystem storage
-  if (variable_get("file_save", "database")) {
-    if ($file->fid) {
-      if ($file->tmp_name) {
-        $data = fread(fopen($file->tmp_name, "rb"), $file->size);
-        db_query("UPDATE {file} SET uid = %d, filename = '%s', type = '%s', size = %d, counter = %d, data = '%s', temporary = %d WHERE fid = %d", $file->uid, $file->filename, $file->type, $file->size, $file->counter, base64_encode($data), $file->temporary, $file->fid);
-      }
-      else {
-        db_query("UPDATE {file} SET uid = %d, filename = '%s', type = '%s', size = %d, counter = %d, temporary = %d WHERE fid = %d", $file->uid, $file->filename, $file->type, $file->size, $file->counter, $file->temporary, $file->fid);
-      }
-    }
-    else {
-      if ($file->tmp_name) {
-        $file->fid = db_next_id("file_fid");
-        $data = fread(fopen($file->tmp_name, "rb"), $file->size);
-        db_query("INSERT INTO {file} SET fid = %d, uid = %d, created = %d, filename = '%s', type = '%s', size = %d, counter = 0, data = '%s', temporary = %d", $file->fid, $user->uid, time(), $file->filename, $file->type, $file->size, base64_encode($data), $file->temporary);
-      }
-      else {
-        return 0;
-      }
-    }
-  }
-  return $file->fid;
-}
-
-/*
-** Load a common file
-*/
-function drupal_file_load($fid, $data = 0) {
-  // TODO: extend to support filesystem storage
-  if (variable_get("file_save", "database")) {
-    if ($data) {
-      $file = db_fetch_object(db_query("SELECT * FROM {file} WHERE fid = %d", $fid));
-    }
-    else {
-      $file = db_fetch_object(db_query("SELECT fid, uid, filename, created, type, size, counter, temporary FROM {file} WHERE fid = %d", $fid));
-    }
-
-    if ($file->data) {
-      $file->data = base64_decode($file->data);
-    }
-    return $file;
-  }
-}
-
-/*
-** Generate the HTTP headers and dump the data
-*/
-function drupal_file_send($fid) {
-  if (($file = drupal_file_load($fid, 1))) {
-    header("Content-type: $file->type");
-    header("Content-length: $file->size");
-    header("Content-Disposition: inline; filename=$file->filename");
-    print $file->data;
-  }
-}
-
 function valid_input_data($data) {
 
   if (is_array($data) || is_object($data)) {
@@ -739,65 +676,9 @@ function check_output($text) {
   return $text;
 }
 
-/**
-* Checks if a file is valid and correct.
-*
-* @param $name the name of the form_file item
-* @param $type restrict to mime types
-* @param $size restrict file size
-* @param $paranoid flag to make sure file belongs to the current user
-*
-* @returns mixed file object, or error object, or false if there is no file
-*/
-function check_file($name, $type = "/.+/", $size = 0) {
-  // Make sure we don't have a file stored temporarily
-  if ($_POST["edit"]["__file"][$name]) {
-    $file = drupal_file_load($_POST["edit"]["__file"][$name]);
-    if (!$file->temporary) {
-      unset($file);
-    }
-  }
 
-  // make sure $name exists in $_FILES
-  if ($_FILES["edit"]["name"][$name]) {
-
-    // populate $file object to make further testing simpler
-    $file->filename = $_FILES["edit"]["name"][$name];
-    $file->type = $_FILES["edit"]["type"][$name];
-    $file->tmp_name = $_FILES["edit"]["tmp_name"][$name];
-    $file->error = $_FILES["edit"]["error"][$name];
-    $file->size = $_FILES["edit"]["size"][$name];
-
-    if (!valid_input_data($file)) {
-      $return->error = t("possible exploit abuse");
-    }
-
-    // make sure the file is a valid upload
-    if (!is_uploaded_file($file->tmp_name) || $file->error == UPLOAD_ERR_PARTIAL || $file->error == UPLOAD_ERR_NO_FILE) {
-      $return->error = t("invalid file upload");
-    }
-
-    // validate the file type uploaded
-    if (!preg_match($type, $file->filename)) {
-      $return->error = t("invalid file type");
-    }
-
-    // check the file size to make sure the file isn't too big
-    if (($size && $file->size > $size) || $file->error == UPLOAD_ERR_INI_SIZE || $file->error == UPLOAD_ERR_FORM_SIZE) {
-      $return->error = t("file size too big");
-    }
-
-    if (!$return->error) {
-      $file->temporary = 1;
-      $file->fid = drupal_file_save($file);
-    }
-  }
-
-  if ($return->error) {
-    return $return;
-  }
-
-  return $file ? $file : false;
+function check_file($filename) {
+  return is_uploaded_file($filename);
 }
 
 function format_rss_channel($title, $link, $description, $items, $language = "en", $args = array()) {
@@ -1051,11 +932,8 @@ function form_radios($title, $name, $value, $options, $description = 0) {
   }
 }
 
-function form_file($title, $name, $size, $description = 0, $fid = 0) {
-  if ($fid) { // Include file upload in case of preview
-    $extra = form_hidden("__file][$name", $fid);
-  }
-  return $extra . form_item($title, "<input type=\"file\" class=\"form-file\" name=\"edit[$name]\" size=\"$size\" />\n", $description);
+function form_file($title, $name, $size, $description = 0) {
+  return form_item($title, "<input type=\"file\" class=\"form-file\" name=\"edit[$name]\" size=\"$size\" />\n", $description);
 }
 
 function form_hidden($name, $value) {
