@@ -19,6 +19,7 @@ class BaseTheme {
   }
 
   function header($title = "") {
+    $output = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"DTD/xhtml1-transitional.dtd\">\n";
     $output .= "<html><head><title>". variable_get(site_name, "drupal") ."</title></head><body bgcolor=\"$this->background\" text=\"$this->foreground\">";
     $output .= "<table border=\"0\" cellspacing=\"4\" cellpadding=\"4\"><tr><td valign=\"top\" width=\"170\">";
 
@@ -67,7 +68,7 @@ class BaseTheme {
   }
 
   function comment($comment, $link = 0) {
-    $output .= "<a name=\"$comment->cid\"></a>";
+    $output = "<a name=\"$comment->cid\"></a>";
     $output .= "<div style=\"border: 1px solid; padding: 10px;\">";
     $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">";
     $output .= " <tr><td><div style=\"font-size: 110%; font-weight: bold;\">". check_output($comment->subject) ."</div></td><td align=\"right\" rowspan=\"2\" valign=\"top\">". comment_moderation($comment) ."</td></tr>";
@@ -80,12 +81,12 @@ class BaseTheme {
   }
 
   function box($subject, $content, $region = "main") {
-    $output .= "<b>". check_output($subject) ."</b><br />". check_output($content) ."<p />";
+    $output = "<b>". check_output($subject) ."</b><br />". check_output($content) ."<p />";
     print $output;
   }
 
   function footer() {
-    $output .= "</td></tr></table>";
+    $output = "</td></tr></table>";
     $output .= "</body></html>";
     print $output;
   }
