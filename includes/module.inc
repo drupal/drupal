@@ -1,10 +1,9 @@
 <?php
-// $Id: module.inc,v 1.30 2002/06/01 21:57:28 kjartan Exp $
+// $Id: module.inc,v 1.31 2002/06/27 09:43:30 kjartan Exp $
 
 // initialize modules:
 function module_init() {
   require_once "modules/user.module";
-  require_once "modules/drupal.module";
   require_once "modules/system.module";
   require_once "modules/watchdog.module";
   module_list();
