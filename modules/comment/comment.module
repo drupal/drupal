@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.177 2003/10/16 17:29:26 dries Exp $
+// $Id: comment.module,v 1.178 2003/10/17 16:10:48 dries Exp $
 
 function comment_help($section = "admin/help#comment") {
   $output = "";
@@ -996,7 +996,7 @@ function comment_admin_overview($status = 0) {
     array("data" => t("subject"), "field" => "subject"),
     array("data" => t("author"), "field" => "u.name"),
     array("data" => t("status"), "field" => "status"),
-    array("data" => t("time"), "field" => "timestamp", "sort" => "desc"),
+    array("data" => t("time"), "field" => "c.timestamp", "sort" => "desc"),
     array("data" => t("operations"), "colspan" => 2)
   );
 
