@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.120 2003/12/07 18:25:09 dries Exp $
+// $Id: update.php,v 1.121 2003/12/29 11:25:02 dries Exp $
 /*
 ** USAGE:
 **
@@ -15,7 +15,7 @@
 // Disable access checking?
 $access_check = 1;
 
-if (!get_cfg_var("safe_mode")) {
+if (!ini_get("safe_mode")) {
   set_time_limit(180);
 }
 

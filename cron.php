@@ -1,5 +1,5 @@
 <?php
-// $Id: cron.php,v 1.18 2003/11/18 19:44:35 dries Exp $
+// $Id: cron.php,v 1.19 2003/12/29 11:25:02 dries Exp $
 
 include_once "includes/bootstrap.inc";
 include_once "includes/common.inc";
@@ -8,7 +8,7 @@ include_once "includes/common.inc";
 ** If not in 'safe mode', increase the maximum execution time:
 */
 
-if (!get_cfg_var("safe_mode")) {
+if (!ini_get("safe_mode")) {
   set_time_limit(240);
 }
 
