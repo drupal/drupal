@@ -178,19 +178,19 @@ function db_queryd($query) {
  *   Query to be rewritten.
  * @param $primary_table
  *   Name or alias of the table which has the primary key field for this query. Possible values are: comments, forum, node, term_data, vocabulary.
- * @param $primary_key
- *   Name of the primary key field.
+ * @param $primary_field
+ *   Name of the primary field.
  * @param $args
  *   Array of additional arguments.
  * @return
  *   An array: join statements, where statements, field or DISTINCT(field).
  */
-function _db_rewrite_sql($query = '', $primary_table = 'n', $primary_key = 'nid', $args = array()) {
+function _db_rewrite_sql($query = '', $primary_table = 'n', $primary_field = 'nid', $args = array()) {
   $where = array();
   $join = array();
   $distinct = FALSE;
   foreach (module_implements('db_rewrite_sql') as $module) {
-    $result = module_invoke($module, 'db_rewrite_sql', $query, $primary_table, $primary_key, $args);
+    $result = module_invoke($module, 'db_rewrite_sql', $query, $primary_table, $primary_field, $args);
     if (is_array($result)) {
       if (isset($result['where'])) {
         $where[] .= $result['where'];
@@ -209,9 +209,8 @@ function _db_rewrite_sql($query = '', $primary_table = 'n', $primary_key = 'nid'
 
   $where = empty($where) ? '' : '('. implode(') AND (',$where).')';
   $join = empty($join) ? '' : implode(' ',$join);
-  $field = $primary_table .'.'. $primary_key;
 
-  return array($join, $where, $distinct ? 'DISTINCT('. $field .')' : $field);
+  return array($join, $where, $distinct );
 }
 
 /**
@@ -221,42 +220,51 @@ function _db_rewrite_sql($query = '', $primary_table = 'n', $primary_key = 'nid'
  *   Query to be rewritten.
  * @param $primary_table
  *   Name or alias of the table which has the primary key field for this query. Possible values are: comments, forum, node, term_data, vocabulary.
- * @param $primary_key
- *   Name of the primary key field.
+ * @param $primary_field
+ *   Name of the primary field.
  * @param $args
  *   An array of arguments, passed to the implementations of hook_db_rewrite_sql.
  * @return
  *   The original query with JOIN and WHERE statements inserted from hook_db_rewrite_sql implementations. nid is rewritten if needed.
  */
-function db_rewrite_sql($query, $primary_table = 'n', $primary_key = 'nid',  $args = array()) {
-  list($join, $where, $field_to_select) = _db_rewrite_sql($query, $primary_table, $primary_key, $args);
+function db_rewrite_sql($query, $primary_table = 'n', $primary_field = 'nid',  $args = array()) {
+  list($join, $where, $distinct) = _db_rewrite_sql($query, $primary_table, $primary_field, $args);
 
-  // (?<!text) is a negative look-behind (no need to rewrite queries that already use DISTINCT).
-  $query = preg_replace('/(SELECT.*)('. $primary_table .'\.)?(?<!DISTINCT\()(?<!DISTINCT\('. $primary_table .'\.)'. $primary_key .'(.*FROM)/AUsi', '\1'. $field_to_select .'\3', $query);
+  if ($distinct) {
+    $field_to_select = 'DISTINCT($primary_table .'.'. $primary_field)';
+    // (?<!text) is a negative look-behind (no need to rewrite queries that already use DISTINCT).
+    $query = preg_replace('/(SELECT.*)('. $primary_table .'\.)?(?<!DISTINCT\()(?<!DISTINCT\('. $primary_table .'\.)'. $primary_field .'(.*FROM)/AUsi', '\1'. $field_to_select .'\3', $query);
+  }
 
-  $query = preg_replace('|FROM[^[:upper:]/,]+|','\0 '. $join .' ', $query);
-  if (strpos($query, 'WHERE')) {
-    $replace = 'WHERE';
-    $add = 'AND';
+  if (!empty($join)) {
+    $query = preg_replace('|FROM[^[:upper:]/,]+|','\0 '. $join .' ', $query);
   }
-  elseif (strpos($query, 'GROUP')) {
-    $replace = 'GROUP';
-    $add = 'GROUP';
+
+  if (!empty($where)) {
+    if (strpos($query, 'WHERE')) {
+      $replace = 'WHERE';
+      $add = 'AND';
+    }
+    elseif (strpos($query, 'GROUP')) {
+      $replace = 'GROUP';
+      $add = 'GROUP';
+    }
+    elseif (strpos($query, 'ORDER')) {
+      $replace = 'ORDER';
+      $add = 'ORDER';
+    }
+    elseif (strpos($query, 'LIMIT')) {
+      $replace = 'LIMIT';
+      $add = 'LIMIT';
+    }
+    else {
+      $query .= ' WHERE '. $where;
+    }
+    if (isset($replace)) {
+      $query = str_replace($replace, 'WHERE  '. $where .' '. $add .' ', $query);
+    }
   }
-  elseif (strpos($query, 'ORDER')) {
-    $replace = 'ORDER';
-    $add = 'ORDER';
-  }
-  elseif (strpos($query, 'LIMIT')) {
-    $replace = 'LIMIT';
-    $add = 'LIMIT';
-  }
-  else {
-    $query .= ' WHERE '. $where;
-  }
-  if (isset($replace)) {
-    $query = str_replace($replace, 'WHERE  '. $where .' '. $add .' ', $query);
-  }
+
   return $query;
 }
 

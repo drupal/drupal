@@ -1814,8 +1814,8 @@ function node_access_grants($op, $uid = NULL) {
 /**
  * Implementation of hook_db_rewrite_sql
  */
-function node_db_rewrite_sql($query, $primary_table) {
-  if ($primary_table=='n') {
+function node_db_rewrite_sql($query, $primary_table, $primary_field) {
+  if ($primary_field == 'nid') {
     $return['join'] = node_access_join_sql();
     $return['where'] = node_access_where_sql();
     $return['distinct'] = !empty($return['join']);
