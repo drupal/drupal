@@ -85,7 +85,7 @@ function tablesort_header($cell, $header, $ts) {
       $ts['sort'] = 'asc';
     }
     $title = t('sort by %s', array('%s' => $cell['data']));
-    $cell['data'] = l($cell['data'] . $image, $_GET['q'], array('title' => $title), 'sort="'. $ts['sort'] .'&amp;order='. urlencode($cell['data']). $ts['query_string']);
+    $cell['data'] = l($cell['data'] . $image, $_GET['q'], array('title' => $title), 'sort='. $ts['sort'] .'&amp;order='. urlencode($cell['data']). $ts['query_string']);
 
     unset($cell['field'], $cell['sort']);
   }
