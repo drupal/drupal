@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.43 2005/03/31 21:18:08 dries Exp $
+// $Id: bootstrap.inc,v 1.44 2005/04/05 19:00:24 dries Exp $
 
 /**
  * @file
@@ -273,6 +273,7 @@ function page_set_cache() {
           $data = gzencode($data, FORCE_GZIP);
         }
       }
+      ob_end_flush();
       cache_set($base_url . request_uri(), $data, CACHE_TEMPORARY, drupal_get_headers());
     }
   }
