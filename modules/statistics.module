@@ -846,7 +846,7 @@ function statistics_block($op = "list", $delta = 0) {
     return $blocks;
   }
   else {
-    switch($op) {
+    switch($delta) {
       case 0:
         $block["subject"] = variable_get("statistics_block_top_title", "Popular content");
         $block["content"] = statistics_display_topnodes_block();
