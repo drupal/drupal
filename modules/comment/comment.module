@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.175 2003/10/09 19:41:09 dries Exp $
+// $Id: comment.module,v 1.176 2003/10/14 18:08:33 dries Exp $
 
 function comment_help($section = "admin/help#comment") {
   $output = "";
@@ -578,20 +578,20 @@ function comment_render($node, $cid = 0) {
     }
 
     if (empty($mode)) {
-      $mode = $user->mode ? $user->mode : variable_get("comment_default_mode", 4);
+      $mode = $user->mode ? $user->mode : ($_SESSION["comment_mode"] ? $_SESSION["comment_mode"] : variable_get("comment_default_mode", 4));
     }
 
     if (empty($order)) {
-      $order = $user->sort ? $user->sort : variable_get("comment_default_order", 1);
+      $order = $user->sort ? $user->sort : ($_SESSION["comment_sort"] ? $_SESSION["comment_sort"] : variable_get("comment_default_order", 1));
     }
 
     if (empty($threshold)) {
-      $threshold = $user->uid ? $user->threshold : variable_get("comment_default_threshold", 0);
+      $threshold = $user->threshold ? $user->threshold : ($_SESSION["comment_threshold"] ? $_SESSION["comment_threshold"] : variable_get("comment_default_threshold", 0));
     }
     $threshold_min = db_result(db_query("SELECT minimum FROM {moderation_filters} WHERE fid = %d", $threshold));
 
     if (empty($comments_per_page)) {
-      $comments_per_page = $user->comments_per_page ? $user->comments_per_page : variable_get("comment_default_per_page", "50");
+      $comments_per_page = $user->comments_per_page ? $user->comments_per_page : ($_SESSION["comment_comments_per_page"] ? $_SESSION["comment_comments_per_page"] : variable_get("comment_default_per_page", "50"));
     }
 
     print "<a id=\"comment\"></a>\n";
@@ -720,7 +720,7 @@ function comment_render($node, $cid = 0) {
 
       $result = pager_query($query, $comments_per_page, 0, "SELECT COUNT(*) FROM {comments} WHERE nid = '". check_query($nid) ."'");
 
-      if ((variable_get("comment_controls", 0) == 0) || (variable_get("comment_controls", 0) == 2)) {
+      if (db_num_rows($result) && (variable_get("comment_controls", 0) == 0 || variable_get("comment_controls", 0) == 2)) {
         print "<form method=\"post\" action=\"". url("comment") ."\"><div>\n";
         theme("comment_controls", $threshold, $mode, $order, $comments_per_page);
         print form_hidden("nid", $nid);
@@ -755,13 +755,13 @@ function comment_render($node, $cid = 0) {
         print $pager;
       }
 
-      if (comment_user_can_moderate($node)) {
+      if (db_num_rows($result) && comment_user_can_moderate($node)) {
         print "<div align=\"center\">". form_submit(t("Moderate comments")) ."</div><br />";
       }
 
       print "</div></form>";
 
-      if ((variable_get("comment_controls", 0) == 1) || (variable_get("comment_controls", 0) == 2)) {
+      if (db_num_rows($result) && (variable_get("comment_controls", 0) == 1 || variable_get("comment_controls", 0) == 2)) {
         print "<form method=\"post\" action=\"". url("comment") ."\"><div>\n";
         theme("comment_controls", $threshold, $mode, $order, $comments_per_page);
         print form_hidden("nid", $nid);
@@ -1276,8 +1276,8 @@ function comment_mode_form($mode) {
 
 function comment_order_form($order) {
 
-  $order = _comment_get_orders();
-  foreach ($order as $key=>$value) {
+  $orders = _comment_get_orders();
+  foreach ($orders as $key=>$value) {
     $options .= " <option value=\"$key\"". ($order == $key ? " selected=\"selected\"" : "") .">$value</option>\n";
   }
 
@@ -1489,6 +1489,12 @@ function comment_save_settings($mode, $order, $threshold, $comments_per_page) {
 
   if ($user->uid) {
     $user = user_save($user, array("mode" => $mode, "sort" => $order, "threshold" => $threshold, "comments_per_page" => $comments_per_page));
+  }
+  else {
+    $_SESSION["comment_mode"] = $mode;
+    $_SESSION["comment_sort"] = $order;
+    $_SESSION["comment_threshold"] = $threshold;
+    $_SESSION["comment_comments_per_page"] = $comments_per_page;
   }
 }
 

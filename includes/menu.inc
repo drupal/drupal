@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.26 2003/10/09 19:24:09 dries Exp $
+// $Id: menu.inc,v 1.27 2003/10/14 18:08:33 dries Exp $
 
 /**
  * Register a menu item with the menu system.
@@ -135,7 +135,8 @@ function menu_tree($parent = "") {
   }
 
   if ($_list[$parent]["children"]) {
-    $output = "\n<ul>\n";
+    $output = "";
+
     usort($_list[$parent]["children"], "_menu_sort");
     foreach ($_list[$parent]["children"] as $item) {
       /*
@@ -153,7 +154,10 @@ function menu_tree($parent = "") {
         $output .= "</li>\n";
       }
     }
-    $output .= "</ul>\n";
+
+    if ($output != '') {
+      $output  = "\n<ul>\n$output\n</ul>\n";
+    }
   }
 
   return $output;
