@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.165 2004/02/11 19:21:14 dries Exp $
+// $Id: forum.module,v 1.166 2004/02/12 19:04:20 dries Exp $
 
 function forum_help($section = 'admin/help#forum') {
   $output = '';
@@ -197,12 +197,20 @@ function forum_validate(&$node) {
   if ($node->taxonomy) {
     // Extract the node's proper topic ID.
     $vocabulary = variable_get('forum_nav_vocabulary', '');
+    $containers = variable_get('forum_containers', array());
     foreach ($node->taxonomy as $term) {
       if (db_result(db_query('SELECT COUNT(*) FROM {term_data} WHERE tid = %d AND vid = %d', $term, $vocabulary))) {
-        $node->tid = $term;
+        if (in_array($term, $containers)) {
+          $term = taxonomy_get_term($term);
+          $error['taxonomy'] = theme('error', t('The item \'%forum\' is only a container for forums. Please select one of the forums below it.', array('%forum' => $term->name)));
+        }
+        else {
+          $node->tid = $term;
+        }
       }
     }
   }
+  return $error;
 }
 
 function forum_form(&$node, &$error) {
@@ -211,7 +219,7 @@ function forum_form(&$node, &$error) {
     $node->taxonomy[] = arg(3);
   }
 
-  $output = implode('', taxonomy_node_form('forum', $node));
+  $output = implode('', taxonomy_node_form('forum', $node, $error));
 
   if ($node->nid) {
     // if editing, give option to leave shadows

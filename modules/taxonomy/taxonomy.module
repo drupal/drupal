@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.101 2004/02/08 11:08:28 dries Exp $
+// $Id: taxonomy.module,v 1.102 2004/02/12 19:04:20 dries Exp $
 
 function taxonomy_feed($taxonomy) {
   global $id, $type;
@@ -299,7 +299,7 @@ function taxonomy_overview() {
   return theme("table", $header, $rows);
 }
 
-function taxonomy_form($vocabulary_id, $value = 0) {
+function taxonomy_form($vocabulary_id, $value = 0, $error = array()) {
   $vocabulary = taxonomy_get_vocabulary($vocabulary_id);
   if ($vocabulary->required) {
     $descriptions = array(t("You must choose one term for this node."), t("You must choose one or more terms for this node."));
@@ -312,7 +312,9 @@ function taxonomy_form($vocabulary_id, $value = 0) {
 
   $multiple = intval($vocabulary->multiple);
 
-  return _taxonomy_term_select($vocabulary->name, "taxonomy", $value, $vocabulary_id, $descriptions[$multiple], $multiple, $blank);
+  $description = $descriptions[$multiple] . $error['taxonomy'];
+
+  return _taxonomy_term_select($vocabulary->name, 'taxonomy', $value, $vocabulary_id, $description, $multiple, $blank);
 }
 
 /*
@@ -336,7 +338,7 @@ function taxonomy_get_vocabularies($type = '', $key = "vid") {
 }
 
 // return form with current term
-function taxonomy_node_form($type, $node = '') {
+function taxonomy_node_form($type, $node = '', $error = array()) {
   if (!$node->taxonomy) {
     if ($node->nid) {
       $terms = array_keys(taxonomy_node_get_terms($node->nid));
@@ -351,7 +353,7 @@ function taxonomy_node_form($type, $node = '') {
 
   $c = db_query("SELECT * FROM {vocabulary} WHERE nodes LIKE '%%%s%%' ORDER BY weight, name", $type);
   while ($vocabulary = db_fetch_object($c)) {
-    $result[] .= taxonomy_form($vocabulary->vid, $terms);
+    $result[] .= taxonomy_form($vocabulary->vid, $terms, $error);
   }
   return $result ? $result : array();
 }
