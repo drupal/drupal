@@ -259,12 +259,40 @@ pre, code {
   color: red;
 }
 
-#menu                     {  padding: 0 0 0 0.5em; }
-#menu ul                  {  list-style: none;  margin: 0;  padding: 0 0 0.25em 1em;  border: none; text-align:left;}
-#menu li                  {  margin: 0;  padding: 0.2em 0.5em 0 0; }
-#menu li a                {  display: block;  width: 100%;  text-decoration: none; }
-#menu li a.current        {  color: #000; }
-#menu li a:hover          {  color: #009; }
-#menu li.expanded         {  list-style-image: url(menu-expanded.gif); }
-#menu li.collapsed        {  list-style-image: url(menu-collapsed.gif); }
-#menu li.leaf             {  list-style-image: url(menu-leaf.gif); }
+#menu {
+  padding: 0 0 0 0.5em;
+}
+#menu ul {
+  list-style: none;
+  margin: 0;
+  padding: 0 0 0.25em 1em;
+  border: none;
+  text-align:left;
+}
+#menu li {
+  margin: 0;
+  padding: 0.2em 0.5em 0 0;
+}
+#menu li a {
+  display: block;
+  width: 100%;
+  text-decoration: none;
+}
+#menu li a.current {
+  color: #000;
+}
+#menu li a:hover {
+  color: #009;
+}
+#menu li.expanded {
+  list-style-type: circle;
+  list-style-image: url(menu-expanded.gif);
+}
+#menu li.collapsed {
+  list-style-type: disc;
+  list-style-image: url(menu-collapsed.gif);
+}
+#menu li.leaf {
+  list-style-type: square;
+  list-style-image: url(menu-leaf.gif);
+}

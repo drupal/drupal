@@ -7,7 +7,7 @@ function help_system($field){
 }
 
 function help_link($type) {
-  if ($type == "system") {
+  if ($type == "system" && user_access("access administration pages")) {
     menu("admin/help/glossary", "glossary", "help_glossary", NULL, 8);
     menu("admin/help", "help", "help_admin", NULL, 9);
   }

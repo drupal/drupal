@@ -373,7 +373,10 @@ function user_block($op = "list", $delta = 0) {
   else {
     switch ($delta) {
       case 0:
-        if (!$user->uid) {
+        if ($user->uid) {
+          $block["subject"] = $user->name;
+        }
+        else {
           /*
           ** For usability's sake, avoid showing two login forms on one
           ** page.
@@ -422,18 +425,11 @@ function user_block($op = "list", $delta = 0) {
 
           $block["subject"] = t("User login");
           $block["content"] = "<div class=\"user-login-link\">$output</div>";
-          return $block;
         }
-        break;
-      case 1:
-        if ($user->uid) {
 
-          $block["subject"] = $user->name;
-          menu_build("system");
-          $block["content"] .= "<div id=\"menu\">". menu_tree()."</div>";
-
-          return $block;
-        }
+        menu_build("system");
+        $block["content"] .= "<div id=\"menu\">". menu_tree()."</div>";
+        return $block;
         break;
       case 2:
         if (user_access("access content")) {
@@ -469,8 +465,11 @@ function user_link($type) {
   }
 
   if ($type == "system") {
-    menu("user/edit", t("edit account"), NULL, NULL, 8);
-    menu("user/logout", t("logout"), NULL, NULL, 10);
+    global $user;
+    if ($user->uid) {
+      menu("user/edit", t("edit account"), NULL, NULL, 8);
+      menu("user/logout", t("logout"), NULL, NULL, 10);
+    }
     if (user_access("administer users")) {
       menu("admin/user", "user management", "user_admin", user_help("admin/user"), 2);
       menu("admin/user/create", "create new account", "user_admin", user_help("admin/user/create"), 1);
