@@ -43,10 +43,9 @@
         if ($date != date("dny", $node->timestamp)) {
           $date = date("dny", $node->timestamp);
 
-          print "<br />";
           print "<table width=\"100%\" cellspacing=\"1\" cellpadding=\"0\" border=\"0\">";
           print "<tr><td align=\"left\"> &nbsp; <div style=\"font-weight: bold;\">". format_date($node->timestamp, "custom", "l, F d, Y") ."</div></td><td align=\"right\"><img src=\"themes/trillian/images/icon.gif\" alt=\"\" /></td><tr>";
-          print " <tr valign=\"bottom\"><td colspan=\"2\" bgcolor=\"#000000\" width=\"100%\"><spacer type=\"block\" height=\"100\" /></td></tr>\n";
+          print " <tr valign=\"bottom\"><td colspan=\"2\" bgcolor=\"green\" width=\"100%\"><spacer type=\"block\" height=\"100\" /></td></tr>\n";
           print "</table>";
           print "<br />";
         }

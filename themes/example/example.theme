@@ -169,7 +169,7 @@
 
          global $PHP_SELF;
 
-           theme_account("right", $this);
+           $this->user("right", $this);
            theme_blocks("right", $this);
 
 ?>

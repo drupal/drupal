@@ -9,6 +9,40 @@ class BaseTheme {
     return "misc/$name";
   }
 
+  function user($region, $theme) {
+    global $user;
+
+    if ($user->uid) {
+      // Display account settings:
+
+      foreach (module_list() as $name) {
+        if (module_hook($name, "link")) {
+          $links = module_invoke($name, "link", "menu");
+          foreach ($links as $link) $content .= "$link<br />\n";
+        }
+      }
+
+      if (user_access("access administration pages")) {
+        $content .= "<br />\n";
+        $content .= "<a href=\"admin.php\">". strtr(t("administer %a"), array("%a" => variable_get("site_name", "drupal"))) ."</a><BR>\n";
+      }
+
+      $theme->box($user->name, $content, $region);
+    }
+    else {
+      $output .= "<div align=\"center\">\n";
+      $output .= " <form action=\"module.php?mod=user&op=login\" method=\"post\">\n";
+      $output .= "  <b>". t("Username") .":</b><br /><input name=\"edit[name]\" size=\"15\"><p />\n";
+      $output .= "  <b>". t("Password") .":</b><br /><input name=\"edit[pass]\" size=\"15\" TYPE=\"password\"><br />\n";
+      $output .= "  <input type=\"submit\" value=\"". t("Log in") ."\"><br />\n";
+      if (variable_get("account_register", 1)) $output .= "  <a href=\"module.php?mod=user\">". t("REGISTER") ."</a>\n";
+      $output .= " </form>\n";
+      $output .= "</div>\n";
+
+      $theme->box(t("Log in"), $output, $region);
+    }
+  }
+
   function comment_controls($threshold = 1, $mode = 3, $order = 1) {
     global $user, $id;
 
@@ -25,6 +59,18 @@ class BaseTheme {
     return $output;
   }
 
+  function comment($comment, $link = 0) {
+    $output .= "<a name=\"$comment->cid\"></a>";
+    $output .= "<div style=\"border: 1px solid; padding: 10px;\">";
+    $output .= "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\">";
+    $output .= " <tr><td><div style=\"font-size: 110%; font-weight: bold;\">". check_output($comment->subject) ."</div></td><td align=\"right\" rowspan=\"2\" valign=\"top\">". comment_moderation($comment) ."</td></tr>";
+    $output .= " <tr><td><div style=\"margin-left: 10px; padding-bottom: 10px; font-size: 90%;\">". sprintf(t("by %s on %s"), format_name($comment), format_date($comment->timestamp)) ."</div></td></tr>";
+    $output .= " <tr><td colspan=\"2\">". check_output($comment->comment, 1) ."</td></tr>";
+    $output .= " <tr><td align=\"right\" colspan=\"2\">$link</td></tr>";
+    $output .= "</table>";
+    $output .= "</div><br />";
+    print $output;
+  }
 }
 
 function theme_init() {
@@ -37,44 +83,6 @@ function theme_init() {
     include_once $themes[variable_get("theme_default", key($themes))][0];
   }
   return new Theme();
-}
-
-function theme_account($region, $theme) {
-  global $user;
-
-  if ($user->uid) {
-    // Display account settings:
-    $content .= "<table><tr><td nowrap=\"nowrap\">\n";
-
-    foreach (module_list() as $name) {
-      if (module_hook($name, "link")) {
-        $links = module_invoke($name, "link", "menu");
-        foreach ($links as $link) $content .= "$link<br />\n";
-      }
-    }
-
-    if (user_access("access administration pages")) {
-      $content .= "<p />\n";
-      $content .= "<a href=\"admin.php\">". strtr(t("administer %a"), array("%a" => variable_get("site_name", "drupal"))) ."</a><BR>\n";
-    }
-
-    $content .= "</td></tr></table>\n";
-
-    $theme->box($user->name, $content, $region);
-  }
-  else {
-    $output .= "<div align=\"center\">\n";
-    $output .= " <form action=\"module.php?mod=user&op=login\" method=\"post\">\n";
-    $output .= "  <b>". t("Username") .":</b><br /><input name=\"edit[name]\" size=\"15\"><p />\n";
-    $output .= "  <b>". t("Password") .":</b><br /><input name=\"edit[pass]\" size=\"15\" TYPE=\"password\"><br />\n";
-    $output .= "  <input type=\"submit\" value=\"". t("Log in") ."\"><br />\n";
-    if (variable_get("account_register", 1)) $output .= "  <a href=\"module.php?mod=user\">". t("REGISTER") ."</a>\n";
-    $output .= " </form>\n";
-    $output .= "</div>\n";
-
-    $theme->box(t("Log in"), $output, $region);
-  }
-
 }
 
 function theme_blocks($region, $theme) {

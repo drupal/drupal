@@ -150,9 +150,7 @@ function comment_moderation($comment) {
     $options .= " <option value=\"$key\"". ($moderate->score == $key ? " selected=\"selected\"" : "") .">$value</option>\n";
   }
 
-  $output .= "<div align=\"center\">";
-  $output .= " <select name=\"moderate[comment][$comment->cid]\">$options</select><br />". ($comment->score ? $comment->score : "--") ." / $comment->votes";
-  $output .= "</div>";
+  $output .= "<select name=\"moderate[comment][$comment->cid]\">$options</select><br />". ($comment->score ? $comment->score : "--") ." / $comment->votes";
 
   return $output;
 }

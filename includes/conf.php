@@ -22,6 +22,9 @@ $themes = array("UnConeD" => array(
                   "Internet explorer, Netscape, Opera, Lynx"),
                 "Goofy"  => array(
                   "themes/goofy/goofy.theme",
+                  "Internet explorer, Netscape, Opera"),
+                "Trillian"  => array(
+                  "themes/trillian/trillian.theme",
                   "Internet explorer, Netscape, Opera"));
 
 #

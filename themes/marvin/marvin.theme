@@ -140,7 +140,7 @@
        </td>
        <td valign="top" width="200">
          <?php
-          theme_account("all", $this);
+          $this->user("all", $this);
           theme_blocks("all", $this);
          ?>
        </td>
