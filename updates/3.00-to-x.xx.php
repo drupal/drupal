@@ -1,4 +1,5 @@
 <?php
+// $Id$
 
 /*
 ** Move this file to the root of your Drupal tree and access it (execute

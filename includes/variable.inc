@@ -1,4 +1,5 @@
 <?php
+// $Id$
 
 function variable_init($conf = array()) {
   $result = db_query("SELECT * FROM variable");

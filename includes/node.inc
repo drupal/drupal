@@ -1,4 +1,5 @@
 <?php
+// $Id$
 
 $status = array(dumped => 0, expired => 1, queued => 2, posted => 3);
 

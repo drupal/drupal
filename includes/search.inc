@@ -1,4 +1,5 @@
 <?php
+// $Id$
 
 /*
 ** Format a single result entry of a search query:

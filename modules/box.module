@@ -1,4 +1,6 @@
 <?php
+// $Id$
+// $Id$
 
 function box_help() {
  ?>
@@ -137,5 +139,5 @@ function box_admin() {
     print message_access();
   }
 }
-
+
 ?>
