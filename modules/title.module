@@ -14,18 +14,18 @@ function title_page() {
     if (db_num_rows($result) == 0) {
       // No node with exact title found, try substring.
       $result = db_query("SELECT n.* FROM node n WHERE n.title LIKE '%". check_query($title). "%' AND n.status = 1 ORDER BY created DESC");
-    }  
-    if (db_num_rows($result) == 0 && module_exist("search")) { 
+    }
+    if (db_num_rows($result) == 0 && module_exist("search")) {
       // still no matches ... return a full text search
       search_view($title);
     }
-    else if (db_num_rows($result) == 1) { 
+    else if (db_num_rows($result) == 1) {
       $node = db_fetch_object($result);
-      
+
       theme("header");
       print node_show($node->nid, NULL);
       theme("footer");
-    }  
+    }
     else {
       $header = array(t("Type"), t("Title"), t("Author"));
       while ($node = db_fetch_object($result)) {
@@ -34,8 +34,8 @@ function title_page() {
         $author = format_name($node);
         $rows[] = array(array("data" => $type, "class" => "type"), array("data" => $title, "class" => "content"), array("data" => $author, "class" => "author"));
       }
-      
-      $output  = "<div id=\"title\">";      
+
+      $output  = "<div id=\"title\">";
       $output .= table($header, $rows);
       $output .= "</div>";
 
@@ -73,6 +73,6 @@ function title_compose_tips() {
   if (variable_get("title_filter_link", 0)) {
     return array(t("You may quickly link to another node using this syntax: <i>[node title|text]</i>. This will generate a link labeled 'text' to the node with the title 'node title'. If you omit '|text', the label becomes 'node title'."));
   }
-}  
+}
 
 ?>
