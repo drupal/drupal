@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.88 2003/09/14 18:33:16 dries Exp $
+// $Id: system.module,v 1.89 2003/09/19 07:41:55 dries Exp $
 
 function system_help($section = "admin/system/help") {
   switch ($section) {
@@ -238,7 +238,7 @@ function system_view($type, $arg = "") {
   $form .= form_submit(t("Save configuration"));
   $form .= form_submit(t("Reset to defaults"));
 
-  print form($form);
+  return form($form);
 }
 
 function system_dirscan($dir, $mask, $nomask = array(".", "..", "CVS")) {
@@ -329,17 +329,18 @@ function system_admin() {
 
   if (user_access("administer site configuration")) {
     if ($op == t("Reset to defaults")) {
-      print status(system_reset_default($edit));
+      $output = status(system_reset_default($edit));
     }
 
     if ($op == t("Save configuration")) {
-      print status(system_save_settings($edit));
+      $output = status(system_save_settings($edit));
     }
 
-    print system_view(arg(2), arg(3));
+    $output .= system_view(arg(2), arg(3));
+    return $output;
   }
   else {
-    print message_access();
+    return message_access();
   }
 }
 

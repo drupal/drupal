@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.160 2003/09/15 15:58:19 dries Exp $
+// $Id: comment.module,v 1.161 2003/09/19 07:41:54 dries Exp $
 
 $GLOBALS["cmodes"] = array(1 => t("Flat list - collapsed"), 2 => t("Flat list - expanded"), 3 => t("Threaded list - collapsed"), 4 => t("Threaded list - expanded"));
 $GLOBALS["corder"] = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"));
@@ -1174,29 +1174,29 @@ function comment_admin() {
   if (user_access("administer comments")) {
     switch ($op) {
      case "edit":
-        print comment_admin_edit(arg(3));
+        $output = comment_admin_edit(arg(3));
         break;
       case "search":
-        print search_type("comment", url("admin/comment/search"), $_POST["keys"]);
+        $output = search_type("comment", url("admin/comment/search"), $_POST["keys"]);
         break;
       case "votes":
       case t("Add new vote"):
       case t("Delete vote"):
       case t("Save vote"):
         if (user_access("administer moderation")) {
-          print comment_mod_votes($edit);
+          $output = comment_mod_votes($edit);
         }
         break;
       case "roles":
       case t("Save scores"):
         if (user_access("administer moderation")) {
-          print comment_mod_roles($edit);
+          $output = comment_mod_roles($edit);
         }
         break;
       case "matrix":
       case t("Submit votes"):
         if (user_access("administer moderation")) {
-          print comment_mod_matrix($edit);
+          $output = comment_mod_matrix($edit);
         }
         break;
       case "filters":
@@ -1204,31 +1204,32 @@ function comment_admin() {
       case t("Delete threshold"):
       case t("Save threshold"):
         if (user_access("administer moderation")) {
-          print comment_mod_filters($edit);
+          $output = comment_mod_filters($edit);
         }
         break;
       case "delete":
-        print comment_delete(array("cid" => arg(3)));
+        $output = comment_delete(array("cid" => arg(3)));
         break;
       case t("Delete"):
-        print status(comment_delete($edit));
-        print comment_admin_overview(0);
+        $output = status(comment_delete($edit));
+        $output .= comment_admin_overview(0);
         break;
       case t("Submit"):
-        print status(comment_save(check_query(arg(3)), $edit));
-        print comment_admin_overview(0);
+        $output = status(comment_save(check_query(arg(3)), $edit));
+        $output .= comment_admin_overview(0);
         break;
       default:
         if (arg(3) == 1) {
-          print comment_admin_overview(1);
+          $output = comment_admin_overview(1);
         }
         else {
-          print comment_admin_overview(0);
+          $output = comment_admin_overview(0);
         }
     }
+    return $output;
   }
   else {
-    print message_access();
+    return message_access();
   }
 }
 

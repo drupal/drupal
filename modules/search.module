@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.55 2003/09/16 15:04:02 dries Exp $
+// $Id: search.module,v 1.56 2003/09/19 07:41:55 dries Exp $
 
 function search_help($section = "admin/search/help") {
   $output = "";
@@ -74,9 +74,10 @@ function search_admin() {
   if (user_access("administer search")) {
     if ($op == "reindex") {
       search_invalidate();
-      print t("index invalidated") ."<br />\n";
+      $output = t("index invalidated") ."<br />\n";
       search_cron();
-      print t("index recreated") ."<br /><hr />\n";
+      $output .= t("index recreated") ."<br /><hr />\n";
+      return $output;
     }
   }
 }

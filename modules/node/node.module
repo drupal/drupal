@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.261 2003/09/16 18:34:39 dries Exp $
+// $Id: node.module,v 1.262 2003/09/19 07:41:54 dries Exp $
 
 function node_help($section = "admin/node/help") {
   global $mod;
@@ -767,7 +767,7 @@ function node_admin_settings($edit) {
   $output .= form_submit(t("Save configuration"));
   $output .= form_submit(t("Reset to defaults"));
 
-  print form($output);
+  return form($output);
 
 }
 
@@ -886,43 +886,44 @@ function node_admin() {
     */
     switch ($op) {
       case "search":
-        print search_type("node", url("admin/node/search"), $_POST["keys"]);
+        $output = search_type("node", url("admin/node/search"), $_POST["keys"]);
         break;
       case "edit":
-        print node_admin_edit(arg(3));
+        $output = node_admin_edit(arg(3));
         break;
       case "delete":
-        print node_delete(array("nid" => arg(3)));
+        $output = node_delete(array("nid" => arg(3)));
         break;
       case "rollback revision":
-        print node_revision_rollback(node_load(array("nid" => arg(3))), arg(4));
-        print node_admin_edit(arg(3));
+        $output = node_revision_rollback(node_load(array("nid" => arg(3))), arg(4));
+        $output .= node_admin_edit(arg(3));
         break;
       case "delete revision":
-        print node_revision_delete(node_load(array("nid" => arg(3))), arg(4));
-        print node_admin_edit(arg(3));
+        $output = node_revision_delete(node_load(array("nid" => arg(3))), arg(4));
+        $output .= node_admin_edit(arg(3));
         break;
       case t("Preview"):
         $edit = node_validate($edit, $error);
-        print node_preview($edit, $error);
+        $output = node_preview($edit, $error);
         break;
       case t("Submit"):
-        print node_submit($edit);
+        $output = node_submit($edit);
         break;
       case t("Delete"):
-        print node_delete($edit);
+        $output = node_delete($edit);
         break;
       case t("Save configuration"):
       case t("Reset to defaults"):
       case "settings":
-        print node_admin_settings($edit);
+        $output = node_admin_settings($edit);
         break;
       default:
-        print node_admin_nodes();
+        $output = node_admin_nodes();
     }
+    return $output;
   }
   else {
-    print message_access();
+    return message_access();
   }
 }
 

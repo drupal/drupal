@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.212 2003/09/14 18:33:16 dries Exp $
+// $Id: user.module,v 1.213 2003/09/19 07:41:55 dries Exp $
 
 session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
 session_start();
@@ -1648,35 +1648,36 @@ function user_admin() {
 
     switch ($op) {
       case "search":
-        print search_type("user", url("admin/user/search"), $_POST["keys"]);
+        $output = search_type("user", url("admin/user/search"), $_POST["keys"]);
         break;
       case t("Add rule"):
       case t("Check"):
       case "access":
-        print user_admin_access($edit);
+        $output = user_admin_access($edit);
         break;
       case t("Save permissions"):
       case "permission":
-        print user_admin_perm($edit);
+        $output = user_admin_perm($edit);
         break;
       case t("Create account"):
       case "create":
-        print user_admin_create($edit);
+        $output = user_admin_create($edit);
         break;
       case t("Add role"):
       case t("Delete role"):
       case t("Save role"):
       case "role":
-        print user_admin_role($edit);
+        $output = user_admin_role($edit);
         break;
       case t("Delete account"):
       case t("Save account"):
       case "edit":
-        print user_admin_edit($edit);
+        $output = user_admin_edit($edit);
         break;
       default:
-        print user_admin_account();
+        $output = user_admin_account();
     }
+    return $output;
   }
 }
 // this help is for end users
