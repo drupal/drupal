@@ -187,8 +187,8 @@ function block_admin_display() {
 
   foreach ($blocks as $block) {
     if ($block['module'] == 'block') {
-      $edit = l(t('edit'), 'admin/block/edit/'. $block['delta']);
-      $delete = l(t('delete'), 'admin/block/delete/'. $block['delta']);
+      $edit = l(t('edit block'), 'admin/block/edit/'. $block['delta']);
+      $delete = l(t('delete block'), 'admin/block/delete/'. $block['delta']);
     }
     else {
       $edit = '';
@@ -293,20 +293,21 @@ function block_box_edit($bid = 0) {
 function block_box_form($edit = array()) {
   $type = array(0 => 'HTML', 1 => 'PHP');
 
-  $form = form_textfield(t('Title'), 'title', $edit['title'], 50, 64);
-  $form .= form_textfield(t('Description'), 'info', $edit['info'], 50, 64);
-  $form .= form_textarea(t('Body'), 'body', $edit['body'], 70, 10);
+  $group = form_textfield(t('Block title'), 'title', $edit['title'], 50, 64, t('The title of the block as shown to the user.'));
+  $group .= form_textarea(t('Block body'), 'body', $edit['body'], 70, 10, t('The content of the block as shown to the user.'));
+  $group .= form_textfield(t('Block description'), 'info', $edit['info'], 50, 64, t('A brief description of your block.  Used on the <a href="%overview">block overview page</a>.', array('%overview' => url('admin/block'))));
   if (user_access('create php content')) {
-    $form .= form_select(t('Type'), 'type', $edit['type'], $type);
+    $group .= form_radios(t('Block type'), 'type', $edit['type'], $type, t("If you would like to use PHP code inside your block, set the above option to 'PHP' instead of 'HTML'."));
   }
 
   if ($edit['bid']) {
-    $form .= form_hidden('bid', $edit['bid']);
+    $group .= form_hidden('bid', $edit['bid']);
   }
 
-  $form .= form_submit(t('Save block'));
+  $group .= form_submit(t('Save block'));
 
-  return form($form);
+  $output = form_group(t('Add a new block'), $group);
+  return form($output);
 }
 
 function block_box_save($edit) {
