@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.397 2004/10/31 03:03:23 dries Exp $ */
+/* $Id: common.inc,v 1.398 2004/11/15 10:47:18 dries Exp $ */
 
 /**
  * @file
@@ -65,6 +65,7 @@ function drupal_get_breadcrumb() {
 
 /**
  * Add output to the head tag of the HTML page.
+ * This function can be called as long the headers aren't sent.
  */
 function drupal_set_html_head($data = NULL) {
   static $stored_head = '';
