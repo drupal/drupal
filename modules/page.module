@@ -120,17 +120,7 @@ function page_view($node, $main = 0) {
     $node->teaser = $node->body = ob_get_contents();
     ob_end_clean();
   }
-
-  if ($main) {
-    theme("node", $node, $main);
-  }
-  else {
-    /*
-    ** Add the node specific links:
-    */
-
-    theme("box", $node->title, "$node->body<div style=\"text-align: right;\">". theme("links", link_node($node, $main)) ."</div>");
-  }
+  theme("node", $node, $main);
 }
 
 function page_form(&$node, &$help, &$error) {
