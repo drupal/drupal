@@ -1,5 +1,5 @@
 <?php
-/* $Id: upload.module,v 1.20 2005/01/24 21:20:16 dries Exp $ */
+/* $Id: upload.module,v 1.21 2005/01/29 08:31:17 dries Exp $ */
 
 /**
  * @file
@@ -35,7 +35,7 @@ function upload_menu($may_cache) {
 
   if ($may_cache) {
     $items[] = array(
-      'path' => 'admin/upload', 'title' => t('uploads'),
+      'path' => 'admin/settings/upload', 'title' => t('uploads'),
       'callback' => 'upload_admin',
       'access' => user_access('administer site configuration'),
       'type' => MENU_NORMAL_ITEM
