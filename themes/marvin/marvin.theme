@@ -63,7 +63,7 @@
      print " <TR>\n";
      print "  <TD COLSPAN=\"2\">\n";
      if ($story->abstract) print "   <P>". check_output($story->abstract, 1) ."</P>\n";
-     if ($story->updates) print "   <P><FONT COLOR=\"$this->bgcolor2\">Editor's note:</FONT> ". check_output($story->updates, 1) ."</P>\n";
+     if ($story->updates) print "   <P><FONT COLOR=\"$this->bgcolor2\">". t("Editor's note") .":</FONT> ". check_output($story->updates, 1) ."</P>\n";
      print "  </TD>\n";
      print " </TR>\n";
      print " <TR><TD COLSPAN=\"2\">&nbsp;</TD></TR>\n";
@@ -77,16 +77,12 @@
      print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"2\" WIDTH=\"100%\">\n";
      print " <TR><TD COLSPAN=\"2\"><IMG SRC=\"themes/marvin/images/drop.gif\" ALT=\"\"> &nbsp; <B>". check_output($story->subject) ."</B></TD></TR>\n";
      print " <TR VALIGN=\"bottom\"><TD COLSPAN=\"2\" BGCOLOR=\"#000000\" WIDTH=\"100%\"><IMG SRC=\"themes/marvin/images/pixel.gif\" WIDTH=\"1\" HEIGHT=\"0\" ALT=\"\"></TD></TR>\n";
-     print " <TR>\n";
-     print "  <TD>\n";
-     print "   <FONT COLOR=\"#7C7C7C\"><SMALL>". strtr(t("Submitted by %a on %b"), array("%a" => format_username($story->userid), "%b" => format_date($story->timestamp, "large"))); ?><? if ($story->department) print "<BR>from the $story->department dept."; ?><? print "</SMALL></FONT></TD><TD ALIGN=\"right\" VALIGN=\"top\" NOWRAP><SMALL><A HREF=\"index.php?section=". urlencode($story->section) ."\"><FONT COLOR=\"#83997A\">$story->section</FONT></A></SMALL>\n";
-     print "  </TD>\n";
-     print " </TR>\n";
+     print " <TR><TD><FONT COLOR=\"#7C7C7C\"><SMALL>". strtr(t("Submitted by %a on %b"), array("%a" => format_username($story->userid), "%b" => format_date($story->timestamp, "large"))); ?><? if ($story->department) print "<BR>from the $story->department dept."; ?><? print "</SMALL></FONT></TD><TD ALIGN=\"right\" VALIGN=\"top\" NOWRAP><SMALL><A HREF=\"index.php?section=". urlencode($story->section) ."\"><FONT COLOR=\"#83997A\">$story->section</FONT></A></SMALL></TD></TR>\n";
      print " <TR><TD COLSPAN=\"2\">&nbsp;</TD></TR>\n";
      print " <TR>\n";
      print "  <TD COLSPAN=\"2\">\n";
      if ($story->abstract) print "   <P>". check_output($story->abstract, 1) ."</P>\n";
-     if ($story->updates) print "   <P><FONT COLOR=\"$this->bgcolor2\">Editor's note:</FONT>". check_output($story->updates, 1) ."</P>\n";
+     if ($story->updates) print "   <P><FONT COLOR=\"$this->bgcolor2\">". t("Editor's note") .":</FONT>". check_output($story->updates, 1) ."</P>\n";
      if ($story->article) print "   <P>". check_output($story->article, 1) ."</P>\n";
      print "  </TD>\n";
      print " </TR>\n";
@@ -105,7 +101,7 @@
      print "</TABLE>";
    }
 
-   function comment($comment, $link = "", $thread = "") {
+   function comment($comment, $link = "") {
      print "<A NAME=\"$comment->cid\">\n";
 
      // Create comment header:
@@ -144,9 +140,6 @@
 
      // Print body of comment:
      if ($comment->comment) print "    <TR><TD BGCOLOR=\"#FFFFFF\">". check_output($comment->comment, 1) ."</TD></TR>\n";
-
-     // Print thread (if any):
-     if ($thread) print "    <TR><TD BGCOLOR=\"$this->bgcolor1\">$thread</TD></TR>\n";
 
      // Print bottom link(s):
      print "    <TR><TD ALIGN=\"right\" BGCOLOR=\"$this->bgcolor1\">[ $link ]</TD></TR>\n";

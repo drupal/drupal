@@ -129,7 +129,7 @@ PHP?>
                                     <TD>
 
 <?PHP
- 
+
                                       if ($story->updates)
                                         echo "<P><FONT COLOR=\"$this->hlc2\">Editor's note:</FONT>". check_output($story->updates, 1) ."</P>";
                                       if ($story->abstract)
@@ -224,7 +224,7 @@ PHP?>
 
                                       if ($story->updates)
                                         echo "<P>check_output($story->abstract, 1)</P><P><FONT COLOR=\"$this->hlc2\">Editor's note by <A HREF=\"account.php?op=userinfo&uname=$story->editor\">$story->editor</A>:</FONT>$story->updates</P>";
-                                      else 
+                                      else
                                         echo check_output($story->abstract, 1);
                                       if ($story->article)
                                         echo "<P>". check_output($story->article, 1) ."</P>";
@@ -272,7 +272,7 @@ PHP?>
       echo "                <TR>";
       echo "                  <TD>";
       echo "                    <TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"0\"WIDTH=\"100%\">";
- 
+
       // Subject:
       echo "                      <TR>";
       echo "                        <TD ALIGN=\"right\" WIDTH=\"5%\">";
@@ -280,13 +280,13 @@ PHP?>
       echo "                            <B>". check_output($subject) ."</B>";
       echo "                          </FONT>";
       echo "                        </TD>";
- 
+
       // Moderation:
       echo "                        <TD BGCOLOR=\"#6C6C6C\" BACKGROUND=\"themes/jeroen/images/menutitle.gif\" ALIGN=\"right\"ROWSPAN=\"2\" VALIGN=\"middle\" WIDTH=\"15%\">";
                                       echo comment_moderation($comment);
       echo "                        </TD>";
       echo "                      </TR>";
- 
+
       // Author:
       echo "                      <TR>";
       echo "                        <TD ALIGN=\"right\"><FONT COLOR=\"#FEFEFE\">Author:</FONT></TD><TD><B>" .format_username($comment->userid) . "</B> ";
@@ -299,14 +299,14 @@ PHP?>
       echo "                          <FONT COLOR=\"#FEFEFE\">on ". format_date($comment->timestamp) ."</FONT>";
       echo "                        </TD>";
       echo "                      </TR>";
- 
+
       echo "                    </TABLE>";
       echo "                  </TD>";
       echo "                </TR>";
- 
+
       // Print body of comment:
                   if ($comment) echo " <TR><TD BGCOLOR=\"#E7E7E7\" BACKGROUND=\"themes/jeroen/images/sketch.gif\">" . check_output($comment->comment, 1) ."</TD></TR>";
- 
+
       // Print thread (if any):
                   if ($thread) echo " <TR><TD BGCOLOR=\"#E7E7E7\" BACKGROUND=\"themes/jeroen/images/sketch.gif\">$thread</TD></TR>";
 
@@ -320,7 +320,7 @@ PHP?>
       echo "    </TR>";
       echo "  </TABLE>";
       echo "  <BR>";
- 
+
     } // close comment function
 
     function box($subject, $content, $options = "") {
