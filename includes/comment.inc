@@ -268,10 +268,12 @@ function comment_render($lid, $cid) {
     $order = ($user->id) ? $user->sort : variable_get(default_comment_order, 1);
     $threshold = ($user->id) ? $user->threshold : variable_get(default_comment_threshold, 3);
 
-    if ($user->id) {
+    if (user_access("post comments")) {
       // Comment control:
       $theme->box(t("Comment control"), $theme->comment_controls($threshold, $mode, $order));
+    }
 
+    if ($user->id) {
       // Print moderation form:
       print "<FORM METHOD=\"post\" ACTION=\"$REQUEST_URI\">\n";
     }
