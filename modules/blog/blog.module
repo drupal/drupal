@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.148 2003/11/25 19:26:21 dries Exp $
+// $Id: blog.module,v 1.149 2003/12/03 18:43:41 dries Exp $
 
 function blog_settings() {
   $output = form_textarea(t("Explanation or submission guidelines"), "blog_help", variable_get("blog_help", ""), 70, 4, t("This text is displayed at the top of the blog submission form.  It's useful for helping or instructing your users."));
@@ -114,10 +114,6 @@ function blog_feed_last() {
 
 function blog_page_user($uid) {
   $account = user_load(array((is_numeric($uid) ? "uid" : "name") => $uid, "status" => 1));
-
-  // Breadcrumb navigation:
-  $breadcrumb[] = l(t("Home"), "");
-  $breadcrumb[] = t("blogs");
 
   $title = t("%name's blog", array("%name" => $account->name));
   $output = "";
