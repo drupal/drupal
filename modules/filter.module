@@ -149,6 +149,12 @@ function filter_list($force = 0) {
  */
 function check_output($text) {
   if (isset($text)) {
+
+    // Convert all Windows and Mac newlines to a single newline,
+    // so filters only need to deal with this one
+    $text = str_replace(array("\r\n", "\r"), "\n", $text);
+
+    // Get complete list of filters ordered properly
     $filters = filter_list();
 
     // Give filters the chance to escape HTML-like data such as code or formulas.

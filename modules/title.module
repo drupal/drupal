@@ -8,6 +8,10 @@ function title_help($section) {
   switch ($section) {
     case 'admin/system/modules#description':
       return t('Enables users to link to stories, articles or similar content by title.');
+    case 'filter#short-tip' :
+      return t('<a href=\"%title-help\">Link to content</a> on this site using <em>[title|text]</em>.', array("%title-help" => url('filter/tips', NULL, 'filter-title')));
+    case 'filter#long-tip' :
+      return '<p>' . t('You may quickly link to content on the site using this syntax: <em>[title|text]</em>. This will generate a link labeled "text" to the content with the title "title". If you omit "|text", the label becomes "title".') . '</p>';
   }
 }
 
@@ -63,7 +67,7 @@ function title_page($query) {
 /**
  * Implementation of hook_filter().
  */
-function title_filter($op, $text = '') {
+function title_filter($op, $text = '', $node = NULL) {
   switch ($op) {
     case 'name':
       return t('Title filter');
@@ -90,10 +94,6 @@ function _title_filter_process($text) {
 
 function _title_filter_settings() {
   return form_group(t('Title filter'), t('Wiki-like [node title|text] links are enabled. These shortcuts generate a link labeled "text" to the node with the title "node title". If you omit "|text", the label becomes "node title". You may use a substring of a node title if desired. When multiple matching titles are found, a list of matching nodes will be displayed. If no matching titles are found, a full-text search is returned.'));
-}
-
-function title_compose_tips() {
-  return array(t('You may quickly link to another node using this syntax: <em>[node title|text]</em>. This will generate a link labeled "text" to the node with the title "node title". If you omit "|text", the label becomes "node title".'));
 }
 
 ?>
