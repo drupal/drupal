@@ -1050,10 +1050,32 @@ function form_textarea($title, $name, $value, $cols, $rows, $description = NULL,
   return theme("form_element", $title, "<textarea wrap=\"virtual\"$cols rows=\"$rows\" name=\"edit[$name]\" id=\"$name\"". drupal_attributes($attributes) .">". check_form($value) ."</textarea>", $description, $name, $required);
 }
 
+/**
+ * Outputs a form select item.
+ *
+ * @param $options Array containing the options to choose from. The basic format
+ *                 is "value" => "label". If you want to group options together
+ *                 (with <optgroup> tags), the format becomes "group name" =>
+ *                 $options, where $options is an array of "value" => "label"
+ *                 pairs.
+ *
+ *                 Examples:
+ *                 @verbatim $flavor = array(1 => "Vanilla", 2 => "Chocolate", 3 => "Strawberry"); @endverbatim
+ *                 @verbatim $order = array("Food" => array(1 => "Ice cream", 2 => "Hamburger"), "Drink" => array(1 => "Cola", 2 => "Water")); @endverbatim
+ */
 function form_select($title, $name, $value, $options, $description = NULL, $extra = 0, $multiple = 0, $required = FALSE) {
   $select = '';
   foreach ($options as $key => $choice) {
-    $select .= "<option value=\"$key\"". (is_array($value) ? (in_array($key, $value) ? " selected=\"selected\"" : "") : ($value == $key ? " selected=\"selected\"" : "")) .">". check_form($choice) ."</option>";
+    if (is_array($choice)) {
+      $select .= "<optgroup label=\"$key\">";
+      foreach ($choice as $key => $choice) {
+        $select .= "<option value=\"$key\"". (is_array($value) ? (in_array($key, $value) ? " selected=\"selected\"" : "") : ($value == $key ? " selected=\"selected\"" : "")) .">". check_form($choice) ."</option>";
+      }
+      $select .= "</optgroup>";
+    }
+    else {
+      $select .= "<option value=\"$key\"". (is_array($value) ? (in_array($key, $value) ? " selected=\"selected\"" : "") : ($value == $key ? " selected=\"selected\"" : "")) .">". check_form($choice) ."</option>";
+    }
   }
   return theme("form_element", $title, "<select name=\"edit[$name]". ($multiple ? "[]" : "") ."\"". ($multiple ? " multiple=\"multiple\" " : "") . ($extra ? " $extra" : "") ." id=\"$name\">$select</select>", $description, $name, $required);
 }
