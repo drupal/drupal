@@ -411,7 +411,7 @@ function import_tag() {
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
   $output .= " <tr><th>time</th><th>feed</th><th>item</th></tr>\n";
   while ($item = db_fetch_object($result)) {
-    $output .= " <tr><td valign=\"top\" nowrap=\"nowrap\">". format_date($item->timestamp, "custom", "m/d/y") ."<br />".format_date($item->timestamp, "custom", "H:i") ."</td><td align=\"center\" valign=\"top\" nowrap=\"nowrap\"><a href=\"admin.php?mod=import&type=feed&op=edit&id=$item->fid\">". check_output($item->feed) ."</a></td><td><a href=\"". check_output($item->link) ."\">". check_output($item->title) ."</a>". ($item->description ? "<br /><small><i>". check_output($item->description) ."</i></small>" : "") ."<br /><input type=\"text\" name=\"edit[$item->iid]\" value=\"". check_form($item->attributes) ."\" size=\"50\" /></td></tr>\n";
+    $output .= " <tr><td valign=\"top\" nowrap=\"nowrap\">". format_date($item->timestamp, "custom", "m/d/y") ."<br />".format_date($item->timestamp, "custom", "H:i") ."</td><td align=\"center\" valign=\"top\" nowrap=\"nowrap\"><a href=\"admin.php?mod=import&type=feed&op=edit&id=$item->fid\">". check_output($item->feed) ."</a></td><td><a href=\"". check_output($item->link) ."\">". check_output($item->title) ."</a>". ($item->description ? "<br /><small><i>". check_output($item->description, 1) ."</i></small>" : "") ."<br /><input type=\"text\" name=\"edit[$item->iid]\" value=\"". check_form($item->attributes) ."\" size=\"50\" /></td></tr>\n";
   }
   $output .= "</table>\n";
   $output .= "<input type=\"submit\" name=\"op\" value=\"Save attributes\" />\n";
@@ -513,7 +513,7 @@ function import_page_last() {
       $output .= "<tr><td>". format_url($item->link, $item->title) ." &middot; <a href=\"module.php?mod=import&op=feed&id=$item->fid\">$item->ftitle</a></td><td align=\"right\" nowrap=\"nowrap\" valign=\"top\">". $theme->links($links) ."</td></tr>\n";
     }
     if ($item->description) {
-      $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 20px;\">". check_output($item->description) ."</div><br /></td></tr>";
+      $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 20px;\">". check_output($item->description, 1) ."</div><br /></td></tr>";
     }
 
     unset($links);
@@ -532,7 +532,7 @@ function import_page_feed($fid) {
   $feed = db_fetch_object(db_query("SELECT * FROM feed WHERE fid = '". check_input($fid) ."'"));
 
   $header .= "<p><b>". t("Website") .":</b><div style=\"margin-left: 20px;\">". format_url($feed->link) ."</div></p>";
-  $header .= "<p><b>". t("Description") .":</b><div style=\"margin-left: 20px;\">". check_output($feed->description) ."</div></p>";
+  $header .= "<p><b>". t("Description") .":</b><div style=\"margin-left: 20px;\">". check_output($feed->description, 1) ."</div></p>";
   $header .= "<p><b>". t("Last update") .":</b><div style=\"margin-left: 20px;\">". format_interval(time() - $feed->timestamp) ." ". t("ago") ."<a href=\"$feed->url\"><img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" /></a><br /><br /></div></p>\n";
 
   $result = db_query("SELECT * FROM item WHERE fid = '". check_input($fid) ."' ORDER BY iid DESC LIMIT ". variable_get("import_page_limit", 75));
@@ -546,7 +546,7 @@ function import_page_feed($fid) {
       $output .= "<tr><td>". format_url($item->link, $item->title) ."</td><td align=\"right\" nowrap=\"nowrap\" valign=\"top\">". $theme->links($links) ."</td></tr>\n";
     }
     if ($item->description) {
-      $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 20px;\">". check_output($item->description) ."</div><br /></td></tr>";
+      $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 20px;\">". check_output($item->description, 1) ."</div><br /></td></tr>";
     }
 
     unset($links);
@@ -581,7 +581,7 @@ function import_page_bundle($bid) {
       $output .= "<tr><td>". format_url($item->link, $item->title) ." &middot; <a href=\"module.php?mod=import&op=feed&id=$item->fid\">$item->ftitle</a></td><td align=\"right\" nowrap=\"nowrap\" valign=\"top\">". $theme->links($links) ."</td></tr>\n";
     }
     if ($item->description) {
-      $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 20px;\">". check_output($item->description) ."</div><br /></td></tr>";
+      $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 20px;\">". check_output($item->description, 1) ."</div><br /></td></tr>";
     }
 
     unset($links);
@@ -602,7 +602,7 @@ function import_page_sources() {
 
   while ($feed = db_fetch_object($result)) {
     $output .= format_url("module.php?mod=import&op=feed&id=$feed->fid", $feed->title);
-    $output .= "<p><div style=\"margin-left: 20px;\">". check_output($feed->description) ."</div></p>";
+    $output .= "<p><div style=\"margin-left: 20px;\">". check_output($feed->description, 1) ."</div></p>";
   }
 
   $output .= "<a href=\"module.php?mod=import&op=fd\"><img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" /></a><br />\n";
