@@ -371,7 +371,7 @@ function referer_load() {
 }
 
 function check_form($text) {
-  return htmlspecialchars(stripslashes($text));
+  return htmlspecialchars($text);
 }
 
 function check_export($text) {
@@ -387,7 +387,7 @@ function check_preview($text) {
 }
 
 function check_query($text) {
-  return addslashes(stripslashes($text));
+  return addslashes($text);
 }
 
 function filter($text) {
@@ -802,7 +802,7 @@ $config = conf_init();
 
 include_once "includes/$config.php";
 include_once "includes/database.inc";
-include_once "includes/xmlrpc.inc";
+// include_once "includes/xmlrpc.inc";
 include_once "includes/module.inc";
 include_once "includes/theme.inc";
 include_once "includes/pager.inc";
