@@ -46,12 +46,6 @@ function account_find($keys) {
   return $find;
 }
 
-function account_search() {
-  global $keys, $mod;
-  print search_form($keys);
-  print search_data($keys, $mod);
-}
-
 function account_ac_add($edit) {
   db_query("INSERT INTO access (mask, type, reason) VALUES ('". check_input($edit[mask]) ."', '". check_input($edit[type]) ."', '". check_input($edit[reason]) ."')", 1);
 }
@@ -225,7 +219,7 @@ function account_view($name) {
 }
 
 function account_admin() {
-  global $op, $edit, $id, $order, $name;
+  global $op, $edit, $id, $mod, $keys, $order, $name;
 
   print "<SMALL> <A HREF=\"admin.php?mod=account&op=access\">access control</A> | <A HREF=\"admin.php?mod=account&op=search\">search account</A> | <A HREF=\"admin.php?mod=account\">overview</A> | <A HREF=\"admin.php?mod=account&op=help\">help</A></SMALL><HR>\n";
 
@@ -258,7 +252,8 @@ function account_admin() {
       print account_help();
       break;
     case "search":
-      print account_search();
+      print search_form($keys);
+      print search_data($keys, $mod);
       break;
     case "View account":
     case "view":

@@ -6,37 +6,10 @@ $module = array("cron" => "rating_cron",
                 "block" => "rating_block");
 
 function rating_cron() {
-  global $status;
+  $result = db_query("SELECT id FROM users");
 
-  $period = 5184000;  // 60 days
-  $number = 30;       // 30 comments
-  $offset = 5;        // 5 comments
-
-  $r1 = db_query("SELECT id, userid FROM users");
-  while ($rating = db_fetch_object($r1)) {
-    unset($bonus); unset($votes); unset($score); unset($value); unset($weight);
-
-    $r2 = db_query("SELECT COUNT(nid) AS number FROM node WHERE author = '$rating->id' AND (". time() ." - timestamp < $period) AND status = '$status[posted]'");
-    if ($story = db_fetch_object($r2)) {
-      $bonus += $story->number / 2;
-    }
-
-    $r3 = db_query("SELECT COUNT(nid) AS number FROM node WHERE author = '$rating->id' AND (". time() ." - timestamp < $period) AND status = '$status[dumped]'");
-    if ($story = db_fetch_object($r3)) {
-      $bonus -= $story->number / 2;
-    }
-
-    $r4 = db_query("SELECT score, votes FROM comments WHERE author = '$rating->id' AND (". time() ." - timestamp < $period) ORDER BY timestamp LIMIT $number");
-    while ($comment = db_fetch_object($r4)) {
-      $weight++;
-      $score += $weight * $comment->score;
-      $votes += $weight * $comment->votes;
-    }
-
-    if ($weight >= $offset && $votes > 0) {
-      $value = ($score + $weight) / $votes + $bonus;
-      db_query("UPDATE users SET rating = '$value' WHERE id = '$rating->id'");
-    }
+  while ($account = db_fetch_object($result)) {
+    db_query("UPDATE users SET rating = '". user_gravity($account->id) ."' WHERE id = '$account->id'");
   }
 }
 
