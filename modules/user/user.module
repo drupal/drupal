@@ -1087,7 +1087,7 @@ function user_menu() {
   $links[] = l(t("edit user information"), "user/edit");
   $links[] = l(t("delete account"), "user/delete");
 
-  return "<div class=\"user-page-menu\">". $theme->links($links) ."</div>";
+  return "<div class=\"user-page-menu\">". theme("links", $links) ."</div>";
 }
 
 function user_view($uid = 0) {
@@ -1107,7 +1107,7 @@ function user_view($uid = 0) {
       }
     }
 
-    theme("header");
+    theme("header", $user->name);
     theme("box", t("User account"), user_menu());
     theme("box", $user->name, $output);
     theme("footer");
@@ -1125,13 +1125,13 @@ function user_view($uid = 0) {
       $output .= form_item(t("Administration"), l(t("edit account"), "admin/user/edit/$account->uid"));
     }
 
-    theme("header");
+    theme("header", $account->name);
     theme("box", $account->name, $output);
     theme("footer");
   }
   else {
     $output = user_login();
-    theme("header");
+    theme("header", t("User login"));
     theme("box", t("User login"), $output);
     if (variable_get("user_register", 1)) {
       theme("box", t("Create new user account"), user_register());
@@ -1153,14 +1153,14 @@ function user_page() {
   switch ($op) {
     case t("E-mail new password"):
     case "password":
-      theme("header");
+      theme("header", t("E-mail new password"));
       theme("box", t("E-mail new password"), user_pass($edit));
       theme("footer");
       break;
     case t("Create new account"):
     case "register":
       $output = user_register($edit);
-      theme("header");
+      theme("header", t("Create new account"));
       if (variable_get("user_register", 1)) {
         theme("box", t("Create new account"), $output);
       }
@@ -1172,14 +1172,14 @@ function user_page() {
     case t("Log in"):
     case "login":
       $output = user_login($edit);
-      theme("header");
+      theme("header", t("Log in"));
       theme("box", t("Log in"), $output);
       theme("footer");
       break;
     case t("Delete account"):
     case "delete":
       $output = user_delete();
-      theme("header");
+      theme("header", t("Delete account"));
       theme("box", t("User account"), user_menu());
       theme("box", t("Delete account"), $output);
       theme("footer");
@@ -1188,7 +1188,7 @@ function user_page() {
     case "edit":
       $output = user_edit($edit);
       $GLOBALS["theme"] = theme_init();
-      theme("header");
+      theme("header", t("Edit user information"));
       theme("box", t("User account"), user_menu());
       theme("box", t("Edit user information"), $output);
       theme("footer");
