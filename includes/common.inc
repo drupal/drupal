@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.346 2004/05/05 15:58:26 unconed Exp $ */
+/* $Id: common.inc,v 1.347 2004/05/15 15:42:47 dries Exp $ */
 
 /**
  * @defgroup common Core functions
@@ -1032,6 +1032,19 @@ function form_checkbox($title, $name, $value = 1, $checked = 0, $description = N
     $element = "<label class=\"option\">$element $title</label>";
   }
   return form_hidden($name, 0) . theme('form_element', NULL, $element, $description, $required);
+}
+
+function form_checkboxes($title, $name, $values, $options, $description = NULL, $required = FALSE) {
+  if (count($options) > 0) {
+    if (!isset($values)) {
+      $values = array();
+    }
+    $choices = '';
+    foreach ($options as $key => $choice) {
+      $choices .= "<label class=\"option\"><input type=\"checkbox\" class=\"form-checkbox\" name=\"edit[$name][]\" value=\"$key\"". (in_array($key, $values) ? " checked=\"checked\"" : "") ." /> $choice</label><br />";
+    }
+    return theme('form_element', $title, $choices, $description, $required);
+  }
 }
 
 function form_textfield($title, $name, $value, $size, $maxlength, $description = NULL, $attributes = NULL, $required = FALSE) {
