@@ -850,7 +850,6 @@ function statistics_page() {
 /* Generates the statistics user page */
 function statistics_page_user($uid = 0, $date = 0, $all = 0) {
 
-
   if (!$date) {
     $date = time();
   }
@@ -885,9 +884,8 @@ function statistics_page_user($uid = 0, $date = 0, $all = 0) {
 function statistics_summary($dbfield, $dbrows) {
   /* valid dbfields: totalcount, daycount, timestamp */
 
-
   $output = "";
-  $result = db_query_range("SELECT statistics.nid,node.title FROM statistics LEFT JOIN node ON statistics.nid = node.nid ORDER BY %s DESC LIMIT", $dbfield, 0, $dbrows);
+  $result = db_query_range("SELECT n.nid, n.title FROM statistics s LEFT JOIN node n ON s.nid = n.nid ORDER BY %s DESC", $dbfield, 0, $dbrows);
   while ($nid = db_fetch_array($result)) {
     $content = node_load(array("nid" => $nid["nid"]));
     $links = link_node($content, 1);
