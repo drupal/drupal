@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.188 2004/02/08 21:04:08 dries Exp $ */
+/* $Id: theme.inc,v 1.189 2004/02/10 19:28:39 dries Exp $ */
 
 /**
  * @file
@@ -270,7 +270,7 @@ function theme_node($node, $main = 0, $page = 0) {
  * @param $description the form element's description or explanation
  * @param $id the form element's ID used by the &lt;label&gt; tag
  *
- * @return a string containing the @a node output.
+ * @return a string representing the form element
  */
 
 function theme_form_element($title, $value, $description = NULL, $id = NULL) {
@@ -300,10 +300,11 @@ function theme_form_element($title, $value, $description = NULL, $id = NULL) {
 /**
  * Returns themed table.
  *
- * @param $header
- * @param $rows
+ * @param $header array of table header strings
+ * @param $rows array of arrays containing the table cells
+ * @param $attributes attribute array for the table tag
  *
- * @return a string containing the @a node output.
+ * @return a string representing the table.
  */
 
 function theme_table($header, $rows, $attributes = NULL) {
