@@ -1,7 +1,7 @@
 <?php
 // by Edd Dumbill (C) 1999-2001
 // <edd@usefulinc.com>
-// $Id: xmlrpc.inc,v 1.13 2004/10/19 18:02:22 dries Exp $
+// $Id: xmlrpc.inc,v 1.14 2004/11/15 12:00:32 dries Exp $
 
 
 // Copyright (c) 1999,2000,2001 Edd Dumbill.
@@ -37,12 +37,7 @@
 // OF THE POSSIBILITY OF SUCH DAMAGE.
 
 if (!function_exists('xml_parser_create')) {
-  // Win 32 fix. From: "Leo West" <lwest@imaginet.fr>
-  if($WINDIR) {
-    dl("php3_xml.dll");
-  } else {
-    dl("xml.so");
-  }
+  dl("xml.so");
 }
 
 $xmlrpcI4="i4";
