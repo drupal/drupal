@@ -628,7 +628,7 @@ function system_theme_settings() {
   // Logo settings
   if ((!$key) || in_array('logo', $features)) {
     $group = form_checkbox(t('Use the default logo'), "$var][default_logo", 1, $settings['default_logo'], t('Check here if you want the theme to use the logo supplied with it.'));
-    $group .= form_textfield(t('Path to custom logo'), "$var][logo_path", $settings['logo_path'], 50, 60, t('The path to the file you would like to use as your logo file instead of the default logo.'));
+    $group .= form_textfield(t('Path to custom logo'), "$var][logo_path", $settings['logo_path'], 50, 128, t('The path to the file you would like to use as your logo file instead of the default logo.'));
 
     file_check_directory(variable_get('file_directory_path', 'files'), FILE_CREATE_DIRECTORY, 'file_directory_path');
     $group .= form_file(t('Upload logo image'), 'logo_upload', 40, t("If you don't have direct file access to the server, use this field to upload your logo."));
