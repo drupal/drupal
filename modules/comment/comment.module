@@ -514,22 +514,15 @@ function comment_links($comment, $return = 1) {
     $links[] = l(t("parent"), comment_referer_load() ."#$comment->cid");
   }
 
-  /*
-  ** Admin link
-  */
-
-  if (user_access("administer comments") && user_access("access administration pages")) {
-    $links[] = l(t("administer"), "admin/comment/edit/$comment->cid");
-  }
-
-  /*
-  ** Possibly show edit and reply links
-  */
-
   if (node_comment_mode($comment->nid) == 2) {
-    if (user_access("post comments")) {
+    if (user_access("administer comments") && user_access("access administration pages")) {
+      $links[] = l(t("delete comment"), "admin/comment/delete/$comment->cid");
+      $links[] = l(t("edit comment"), "admin/comment/edit/$comment->cid");
+      $links[] = l(t("reply to this comment"), "comment/reply/$comment->nid/$comment->cid");
+    }
+    else if (user_access("post comments")) {
       if (comment_access("edit", $comment)) {
-        $links[] = l(t("edit your comment"), "comment/edit/$comment->cid", array("title" => t("Make changes to your comment.")));
+        $links[] = l(t("edit your comment"), "comment/edit/$comment->cid");
       }
       $links[] = l(t("reply to this comment"), "comment/reply/$comment->nid/$comment->cid");
     }
@@ -544,8 +537,6 @@ function comment_links($comment, $return = 1) {
 
   return theme("links", $links);
 }
-
-
 
 function comment_render($node, $cid = 0) {
   global $user;
@@ -843,6 +834,7 @@ function comment_link($type, $node = 0, $main = 0) {
       menu("admin/comment/search", t("search"), "comment_admin", 8);
       menu("admin/comment/help", t("help"), "comment_help_page", 9);
       menu("admin/comment/edit", t("edit comment"), "comment_admin", 0, MENU_HIDE);
+      menu("admin/comment/delete", t("delete comment"), "comment_admin", 0, MENU_HIDE);
 
       // comment settings:
       if (user_access("administer moderation")) {
@@ -938,42 +930,72 @@ function comment_admin_edit($id) {
   $result = db_query("SELECT c.*, u.name, u.uid FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status != 2", $id);
   $comment = db_fetch_object($result);
 
-  // if a comment is "deleted", it's deleted
   if ($comment) {
     $form .= form_item(t("Author"), format_name($comment));
     $form .= form_textfield(t("Subject"), "subject", $comment->subject, 70, 128);
     $form .= form_textarea(t("Comment"), "comment", $comment->comment, 70, 15);
-    $form .= form_select(t("Status"), "status", $comment->status, array("published", "not published"));
+    $form .= form_radios(t("Status"), "status", $comment->status, array("published", "not published"));
     $form .= form_hidden("cid", $id);
     $form .= form_submit(t("Submit"));
-    $form .= form_submit(t("Delete"));
 
     return form($form);
   }
 }
 
-function comment_delete($edit) {
+function _comment_delete_thread($comment) {
+  // Delete the comment:
+  db_query("DELETE FROM {comments} WHERE cid = %d", $comment->cid);
+  watchdog("special", "comment: deleted '$comment->subject'");
 
-  if ($edit["confirm"]) {
-    db_query("UPDATE {comments} SET status = 2 WHERE cid = %d", $edit["cid"]);
-    watchdog("special", "comment: deleted comment #". $edit["cid"]);
-    $output = "deleted comment.";
+  // Delete the comment's replies:
+  $result = db_query("SELECT cid, subject FROM {comments} WHERE pid = %d", $comment->cid);
+  while ($comment = db_fetch_object($result)) {
+    comment_delete_thread($comment);
+  }
+}
+
+function comment_delete($cid, $confirmed = 0) {
+  $comment = db_fetch_object(db_query("SELECT c.*, u.name, u.uid FROM {comments} c INNER JOIN {users} u ON u.uid = c.uid WHERE c.cid = %d", $cid));
+
+  if ($comment->cid) {
+    if ($confirmed) {
+      drupal_set_message(t("the comment and all its replies have been deleted."));
+
+      /*
+      ** Delete the comment and all of its replies:
+      */
+
+      _comment_delete_thread($comment);
+
+      /*
+      ** Clear the cache so an anonymous user can see his comment being
+      ** added.
+      */
+
+      cache_clear_all();
+    }
+    else {
+      drupal_set_message(t("do you want to delete this comment and all its replies?"));
+
+      /*
+      ** Print a confirmation screen:
+      */
+
+      $output  = theme("comment", $comment);
+      $output .= form_submit(t("Delete comment"));
+
+      return form($output);
+    }
   }
   else {
-    $output .= form_item(t("Confirm deletion"), "");
-    $output .= form_hidden("cid", $edit["cid"]);
-    $output .= form_hidden("confirm", 1);
-    $output .= form_submit(t("Delete"));
-    $output = form($output);
+    drupal_set_message(t("the comment no longer exists."));
   }
-
-  return $output;
 }
 
 function comment_save($id, $edit) {
   db_query("UPDATE {comments} SET subject = '%s', comment = '%s', status = %d WHERE cid = %d", $edit["subject"], $edit["comment"], $edit["status"], $id);
   watchdog("special", "comment: modified '". $edit["subject"] ."'");
-  return "updated comment.";
+  drupal_set_message(t("the comment has been saved."));
 }
 
 function comment_admin_overview($status = 0) {
@@ -1013,7 +1035,7 @@ function comment_mod_matrix($edit) {
       }
     }
     db_query("INSERT INTO {moderation_roles} (mid, rid, value) VALUES ". implode(", ", $sql));
-    drupal_set_message("Vote values saved");
+    drupal_set_message(t("the vote values have been saved."));
   }
 
   $result = db_query("SELECT r.rid, r.name FROM {role} r, {permission} p WHERE r.rid = p.rid AND p.perm LIKE '%moderate comments%'");
@@ -1049,7 +1071,7 @@ function comment_mod_roles($edit) {
 
   if ($edit) {
     variable_set("comment_roles", $edit);
-    drupal_set_message("Comment scores saved");
+    drupal_set_message(t("the comment scores have been saved."));
   }
 
   $start_values = variable_get("comment_roles", array());
@@ -1076,18 +1098,18 @@ function comment_mod_votes($edit) {
   if ($op == t("Save vote")) {
     db_query("UPDATE {moderation_votes} SET vote = '%s', weight = %d WHERE mid = %d", $edit["vote"], $edit["weight"], $mid);
     $mid = 0;
-    drupal_set_message("Vote saved");
+    drupal_set_message(t("the vote has been saved."));
   }
   else if ($op == t("Delete vote")) {
     db_query("DELETE FROM {moderation_votes} WHERE mid = %d", $mid);
     db_query("DELETE FROM {moderation_roles} WHERE mid = %d", $mid);
     $mid = 0;
-    drupal_set_message("Vote deleted");
+    drupal_set_message(t("the vote has been deleted."));
   }
   else if ($op == t("Add new vote")) {
     db_query("INSERT INTO {moderation_votes} (vote, weight) VALUES ('%s', %d)", $edit["vote"], $edit["weight"]);
     $mid = 0;
-    drupal_set_message("Vote added");
+    drupal_set_message(t("the vote has been added."));
   }
 
   $output .= "<h3>". t("Moderation votes overview") ."</h3>";
@@ -1127,17 +1149,17 @@ function comment_mod_filters($edit) {
   if ($op == t("Save threshold")) {
     db_query("UPDATE {moderation_filters} SET filter = '%s', minimum = %d WHERE fid = %d", $edit["filter"], $edit["minimum"], $fid);
     $fid = 0;
-    drupal_set_message("Saved threshold");
+    drupal_set_message(t("the threshold has been saved."));
   }
   else if ($op == t("Delete threshold")) {
     db_query("DELETE FROM {moderation_filters} WHERE fid = %d", $fid);
     $fid = 0;
-    drupal_set_message("Deleted threshold");
+    drupal_set_message(t("the threshold has been deleted."));
   }
   else if ($op == t("Add new threshold")) {
     db_query("INSERT INTO {moderation_filters} (filter, minimum) VALUES ('%s', %d)", $edit["filter"], $edit["minimum"]);
     $fid = 0;
-    drupal_set_message("Added threshold");
+    drupal_set_message(t("the threshold has been added."));
   }
 
   $output .= "<h3>Comment threshold overview</h3>";
@@ -1220,14 +1242,13 @@ function comment_admin() {
         }
         break;
       case "delete":
-        $output = comment_delete(array("cid" => arg(3)));
+        $output = comment_delete(arg(3), 0);
         break;
-      case t("Delete"):
-        drupal_set_message(comment_delete($edit));
-        $output .= comment_admin_overview(0);
+      case t("Delete comment"):
+        $output = comment_delete(arg(3), 1);
         break;
       case t("Submit"):
-        drupal_set_message(comment_save(check_query(arg(3)), $edit));
+        $output  = comment_save(check_query(arg(3)), $edit);
         $output .= comment_admin_overview(0);
         break;
       default:
@@ -1421,7 +1442,7 @@ function theme_comment_thread_max($comment, $threshold, $level = 0) {
 function theme_comment_post_forbidden() {
   global $user;
   if ($user->uid) {
-    return t("You can't post comments.");
+    return t("you can't post comments");
   }
   else {
     return t("%login or %register to post comments", array("%login" => l(t("login"), "user/login"), "%register" => l(t("register"), "user/register")));
