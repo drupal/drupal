@@ -30,7 +30,7 @@ function user_load($array = array()) {
   $query = "";
 
   foreach ($array as $key => $value) {
-    if ($key == "pass") {
+    if ($key == 'pass') {
       $query .= "u.$key = '". md5($value) ."' AND ";
     }
     else {
@@ -59,7 +59,7 @@ function user_save($account, $array = array()) {
 
     $data = unserialize(db_result(db_query("SELECT data FROM {users} WHERE uid = %d", $account->uid)));
     foreach ($array as $key => $value) {
-      if ($key == "pass") {
+      if ($key == 'pass') {
         $query .= "$key = '%s', ";
         $v[] = md5($value);
       }
@@ -80,14 +80,14 @@ function user_save($account, $array = array()) {
 
     db_query("UPDATE {users} SET $query timestamp = %d WHERE uid = %d", array_merge($v, array(time(), $account->uid)));
 
-    $user = user_load(array("uid" => $account->uid));
+    $user = user_load(array('uid' => $account->uid));
   }
   else {
-    $array["timestamp"] = time();
-    $array["uid"] = db_next_id("{users}_uid");
+    $array['timestamp'] = time();
+    $array['uid'] = db_next_id("{users}_uid");
 
     foreach ($array as $key => $value) {
-      if ($key == "pass") {
+      if ($key == 'pass') {
         $fields[] = check_query($key);
         $values[] = md5($value);
         $s[] = "'%s'";
@@ -110,9 +110,9 @@ function user_save($account, $array = array()) {
 
     db_query("INSERT INTO {users} (". implode(", ", $fields) .") VALUES (". implode(", ", $s) .")", $values);
 
-    $user = user_load(array("name" => $array["name"]));
+    $user = user_load(array('name' => $array['name']));
 
-    module_invoke_all("user", "insert", $array, $user);
+    module_invoke_all('user', "insert", $array, $user);
   }
 
   foreach ($array as $key => $value) {
@@ -152,7 +152,7 @@ function user_validate_mail($mail) {
 function user_validate_authmap($account, $authname, $module) {
   $result = db_query("SELECT COUNT(*) from {authmap} WHERE uid != %d AND authname = '%s'", $account->uid, $authname);
   if (db_result($result) > 0) {
-    $name = module_invoke($module, "info", "name");
+    $name = module_invoke($module, 'info', 'name');
     return t("The %u ID %s is already taken.", array("%u" => ucfirst($name), "%s" => "<i>$authname</i>"));
   }
 }
@@ -281,7 +281,7 @@ function user_fields() {
     }
     else {
       // Make sure we return the default fields at least
-      $fields = array("uid", "name", "pass", "mail", "mode", "sort", "threshold", "theme", "signature", "timestamp", "status", "timezone", "language", "init", "data", "rid");
+      $fields = array('uid', 'name', 'pass', "mail", "mode", "sort", "threshold", "theme", "signature", "timestamp", "status", "timezone", "language", "init", "data", "rid");
     }
   }
 
@@ -298,7 +298,7 @@ function user_search($keys) {
   $find = array();
   $result = db_query_range("SELECT * FROM {users} WHERE name LIKE '%%%s%%'", $keys, 0, 20);
   while ($account = db_fetch_object($result)) {
-    $find[] = array("title" => $account->name, "link" => (strstr(request_uri(), "admin") ? url("admin/user/edit/$account->uid") : url("user/view/$account->uid")), "user" => $account->name);
+    $find[] = array("title" => $account->name, "link" => (strstr(request_uri(), "admin") ? url("admin/user/edit/$account->uid") : url("user/view/$account->uid")), 'user' => $account->name);
   }
   return array(t("Matching users"), $find);
 }
@@ -307,10 +307,10 @@ function user_block($op = "list", $delta = 0) {
   global $user;
 
   if ($op == "list") {
-     $blocks[0]["info"] = t("User login");
-     $blocks[1]["info"] = t("Navigation");
-     $blocks[2]["info"] = t("Who's new");
-     $blocks[3]["info"] = t("Who's online");
+     $blocks[0]['info'] = t("User login");
+     $blocks[1]['info'] = t("Navigation");
+     $blocks[2]['info'] = t("Who's new");
+     $blocks[3]['info'] = t("Who's online");
 
      return $blocks;
   }
@@ -326,7 +326,7 @@ function user_block($op = "list", $delta = 0) {
           ** page.
           */
 
-          if (arg(0) == "user" && arg(1) != "view") {
+          if (arg(0) == 'user' && arg(1) != "view") {
             return;
           }
 
@@ -346,8 +346,8 @@ function user_block($op = "list", $delta = 0) {
           // NOTE: special care needs to be taken because on pages with forms, such as node and comment submission pages, the $edit variable might already be set.
 
           $output .= form_hidden("destination", $edit["destination"]);
-          $output .= form_textfield(t("Username"), "name", $edit["name"], 15, 64);
-          $output .= form_password(t("Password"), "pass", $pass, 15, 64);
+          $output .= form_textfield(t("Username"), 'name', $edit['name'], 15, 64);
+          $output .= form_password(t("Password"), 'pass', $pass, 15, 64);
 
           if (variable_get("user_remember", 0) == 0) {
             $output .= form_checkbox(t("Remember me"), "remember_me");
@@ -417,7 +417,7 @@ function user_block($op = "list", $delta = 0) {
               $items = array();
 
               while ($max_users-- && $uid = db_fetch_object($users)) {
-                $items[] = format_name(user_load(array("uid" => $uid->uid)));
+                $items[] = format_name(user_load(array('uid' => $uid->uid)));
               }
 
               if ($items) {
@@ -445,12 +445,12 @@ function user_link($type) {
 
   if ($type == "system") {
     if ($user->uid) {
-      menu("user", t("my account"), "user_page", 8);
+      menu('user', t("my account"), "user_page", 8);
       menu("user/edit", t("edit account"), "user_page", 0);
       menu("user/logout", t("log out"), "user_page", 10);
     }
     else {
-      menu("user", t("my account"), "user_page", 8, MENU_HIDE);
+      menu('user', t("my account"), "user_page", 8, MENU_HIDE);
     }
 
     if (user_access("administer users")) {
@@ -519,7 +519,7 @@ function user_auth_help_links() {
   $links = array();
   foreach (module_list() as $module) {
     if (module_hook($module, "auth")) {
-      $links[] = l(module_invoke($module, "info", "name"), "user/help#$module");
+      $links[] = l(module_invoke($module, 'info', 'name'), "user/help#$module");
     }
   }
   return $links;
@@ -535,32 +535,32 @@ function user_login($edit = array(), $msg = "") {
   */
 
   if ($user->uid) {
-    drupal_goto(url("user"));
+    drupal_goto(url('user'));
   }
 
-  if (user_deny("user", $edit["name"])) {
-    $error = t("The name '%s' has been denied access.", array("%s" => $edit["name"]));
+  if (user_deny('user', $edit['name'])) {
+    $error = t("The name '%s' has been denied access.", array("%s" => $edit['name']));
   }
-  else if ($edit["name"] && $edit["pass"]) {
+  else if ($edit['name'] && $edit['pass']) {
 
     /*
     ** Try to log in the user locally:
     */
 
     if (!$user->uid) {
-      $name = $edit["name"];
-      $pass = $edit["pass"];
-      $user = user_load(array("name" => $name, "pass" => $pass, "status" => 1));
+      $name = $edit['name'];
+      $pass = $edit['pass'];
+      $user = user_load(array('name' => $name, 'pass' => $pass, "status" => 1));
     }
 
     /*
     ** Strip name and server from ID:
     */
 
-    if ($server = strrchr($edit["name"], "@")) {
-      $name = substr($edit["name"], 0, strlen($edit["name"]) - strlen($server));
+    if ($server = strrchr($edit['name'], "@")) {
+      $name = substr($edit['name'], 0, strlen($edit['name']) - strlen($server));
       $server = substr($server, 1);
-      $pass = $edit["pass"];
+      $pass = $edit['pass'];
     }
 
     /*
@@ -571,7 +571,7 @@ function user_login($edit = array(), $msg = "") {
     if (!$user->uid && $server && $result = user_get_authmaps("$name@$server")) {
       if (module_invoke(key($result), "auth", $name, $pass, $server)) {
         $user = user_external_load("$name@$server");
-        watchdog("user", "external load: $name@$server, module: ". key($result));
+        watchdog('user', "external load: $name@$server, module: ". key($result));
       }
       else {
         $error = t("Invalid password for %s.", array("%s" => "<i>$name@$server</i>"));
@@ -587,9 +587,9 @@ function user_login($edit = array(), $msg = "") {
       foreach (module_list() as $module) {
         if (module_hook($module, "auth")) {
           if (module_invoke($module, "auth", $name, $pass, $server)) {
-            if (variable_get("user_register", 1) == 1 && !user_load(array("name" => "$name@$server"))) { //register this new user
-              $user = user_save("", array("name" => "$name@$server", "pass" => user_password(), "init" => "$name@$server", "status" => 1, "authname_$module" => "$name@$server", "rid" => _user_authenticated_id()));
-              watchdog("user", "new user: $name@$server ($module ID)", l(t("edit user"), "admin/user/edit/$user->uid"));
+            if (variable_get("user_register", 1) == 1 && !user_load(array('name' => "$name@$server"))) { //register this new user
+              $user = user_save("", array('name' => "$name@$server", 'pass' => user_password(), "init" => "$name@$server", "status" => 1, "authname_$module" => "$name@$server", "rid" => _user_authenticated_id()));
+              watchdog('user', "new user: $name@$server ($module ID)", l(t("edit user"), "admin/user/edit/$user->uid"));
               break;
             }
           }
@@ -598,7 +598,7 @@ function user_login($edit = array(), $msg = "") {
     }
 
     if ($user->uid) {
-      watchdog("user", "session opened for '$user->name'");
+      watchdog('user', "session opened for '$user->name'");
 
       // update the user table timestamp noting user has logged in
       db_query("UPDATE {users} SET timestamp = '%d' WHERE uid = '%s'", time(), $user->uid);
@@ -629,10 +629,10 @@ function user_login($edit = array(), $msg = "") {
         $error = t("Sorry.  Unrecognized username or password.") ." ". l(t("Have you forgotten your password?"), "user/password");
       }
       if ($server) {
-        watchdog("user", "failed login for '$name@$server': $error");
+        watchdog('user', "failed login for '$name@$server': $error");
       }
       else {
-        watchdog("user", "failed login for '$name': $error");
+        watchdog('user', "failed login for '$name': $error");
       }
     }
   }
@@ -663,12 +663,12 @@ function user_login($edit = array(), $msg = "") {
     $output .= "<p>$msg</p>";
   }
   if (count(user_auth_help_links()) > 0) {
-    $output .= form_textfield(t("Username"), "name", $edit["name"], 30, 64, t("Enter your %s username, or an ID from one of our affiliates: %a.", array("%s" => variable_get("site_name", "local"), "%a" => implode(", ", user_auth_help_links()))));
+    $output .= form_textfield(t("Username"), 'name', $edit['name'], 30, 64, t("Enter your %s username, or an ID from one of our affiliates: %a.", array("%s" => variable_get("site_name", "local"), "%a" => implode(", ", user_auth_help_links()))));
   }
   else {
-    $output .= form_textfield(t("Username"), "name", $edit["name"], 30, 64, t("Enter your %s username.", array("%s" => variable_get("site_name", "local"))));
+    $output .= form_textfield(t("Username"), 'name', $edit['name'], 30, 64, t("Enter your %s username.", array("%s" => variable_get("site_name", "local"))));
   }
-  $output .= form_password(t("Password"), "pass", $pass, 30, 64, t("Enter the password that accompanies your username."));
+  $output .= form_password(t("Password"), 'pass', $pass, 30, 64, t("Enter the password that accompanies your username."));
   $output .= form_checkbox(t("Remember me"), "remember_me");
   $output .= form_submit(t("Log in"));
   $items[] = l(t("Request new password"), "user/password");
@@ -679,7 +679,7 @@ function user_login($edit = array(), $msg = "") {
 
   $output  = form_group(t('User login'), $output);
 
-  return form($output, "post", url("user"));
+  return form($output, "post", url('user'));
 }
 
 function _user_authenticated_id() {
@@ -690,14 +690,14 @@ function user_logout() {
   global $user;
 
   if ($user->uid) {
-    watchdog("user", "session closed for '$user->name'");
+    watchdog('user', "session closed for '$user->name'");
 
     /*
     ** Destroy the current session:
     */
 
     session_destroy();
-    module_invoke_all("user", "logout", NULL, $user);
+    module_invoke_all('user', "logout", NULL, $user);
     unset($user);
   }
 
@@ -707,13 +707,13 @@ function user_logout() {
 function user_pass($edit = array()) {
   global $base_url;
 
-  if ($edit["name"]) {
-    $account = db_fetch_object(db_query("SELECT uid, name, mail FROM {users} WHERE status = 1 AND name = '%s'", $edit["name"]));
-    if (!$account) $error = t("Sorry. The username <i>%s</i> is not recognized.", array("%s" => $edit["name"]));
+  if ($edit['name']) {
+    $account = db_fetch_object(db_query("SELECT uid, name, mail FROM {users} WHERE status = 1 AND name = '%s'", $edit['name']));
+    if (!$account) $error = t("Sorry. The username <i>%s</i> is not recognized.", array("%s" => $edit['name']));
   }
-  else if ($edit["mail"]) {
-    $account = db_fetch_object(db_query("SELECT uid, name, mail FROM {users} WHERE status = 1 AND mail = '%s'", $edit["mail"]));
-    if (!$account) $error = t("Sorry. The e-mail address <i>%s</i> is not recognized.", array("%s" => $edit["mail"]));
+  else if ($edit['mail']) {
+    $account = db_fetch_object(db_query("SELECT uid, name, mail FROM {users} WHERE status = 1 AND mail = '%s'", $edit['mail']));
+    if (!$account) $error = t("Sorry. The e-mail address <i>%s</i> is not recognized.", array("%s" => $edit['mail']));
   }
   if ($account) {
 
@@ -724,7 +724,7 @@ function user_pass($edit = array()) {
       ** Save new password:
       */
 
-      user_save($account, array("pass" => $pass));
+      user_save($account, array('pass' => $pass));
 
       /*
       ** Mail new password:
@@ -737,11 +737,11 @@ function user_pass($edit = array()) {
       $mail_success = user_mail($account->mail, $subject, $body, $headers);
 
       if ($mail_success) {
-        watchdog("user", "mail password: '". $account->name ."' &lt;". $account->mail ."&gt;");
+        watchdog('user', "mail password: '". $account->name ."' &lt;". $account->mail ."&gt;");
         return t("Your password and further instructions have been sent to your e-mail address.");
       }
       else {
-        watchdog("error", "error mailing new password: '". $account->name ."' &lt;". $account->mail ."&gt;");
+        watchdog('error', "error mailing new password: '". $account->name ."' &lt;". $account->mail ."&gt;");
         return t("Unable to send mail. Please contact the site admin.");
       }
     }
@@ -757,8 +757,8 @@ function user_pass($edit = array()) {
     */
 
     $output .= "<p>". sprintf(t("Enter your username %sor%s your e-mail address."), "<strong><i>", "</i></strong>") ."</p>";
-    $output .= form_textfield(t("Username"), "name", $edit["name"], 30, 64);
-    $output .= form_textfield(t("E-mail address"), "mail", $edit["mail"], 30, 64);
+    $output .= form_textfield(t("Username"), 'name', $edit['name'], 30, 64);
+    $output .= form_textfield(t("E-mail address"), "mail", $edit['mail'], 30, 64);
     $output .= form_submit(t("E-mail new password"));
     $items[] = l(t("Log in"), "user/login");
     if (variable_get("user_register", 1)) {
@@ -766,7 +766,7 @@ function user_pass($edit = array()) {
     }
     $output .= theme("item_list", $items);
     $output  = form_group(t('Request new password'), $output);
-    return form($output, "post", url("user"));
+    return form($output, "post", url('user'));
   }
 }
 
@@ -781,32 +781,32 @@ function user_register($edit = array()) {
     drupal_goto(url("user/edit"));
   }
 
-  if (!(is_null($edit["name"]) && is_null($edit["mail"]))) {
-    if ($error = user_validate_name($edit["name"])) {
+  if (!(is_null($edit['name']) && is_null($edit['mail']))) {
+    if ($error = user_validate_name($edit['name'])) {
       // do nothing
     }
-    else if ($error = user_validate_mail($edit["mail"])) {
+    else if ($error = user_validate_mail($edit['mail'])) {
       // do nothing
     }
-    else if (user_deny("user", $edit["name"])) {
-      $error = t("The name '%s' has been denied access.", array("%s" => $edit["name"]));
+    else if (user_deny('user', $edit['name'])) {
+      $error = t("The name '%s' has been denied access.", array("%s" => $edit['name']));
     }
-    else if (user_deny("mail", $edit["mail"])) {
-      $error = t("The e-mail address '%s' has been denied access.", array("%s" => $edit["mail"]));
+    else if (user_deny("mail", $edit['mail'])) {
+      $error = t("The e-mail address '%s' has been denied access.", array("%s" => $edit['mail']));
     }
-    else if (db_num_rows(db_query("SELECT name FROM {users} WHERE LOWER(name) = LOWER('%s')", $edit["name"])) > 0) {
-      $error = t("The name '%s' is already taken.", array("%s" => $edit["name"]));
+    else if (db_num_rows(db_query("SELECT name FROM {users} WHERE LOWER(name) = LOWER('%s')", $edit['name'])) > 0) {
+      $error = t("The name '%s' is already taken.", array("%s" => $edit['name']));
     }
-    else if (db_num_rows(db_query("SELECT mail FROM {users} WHERE LOWER(mail) = LOWER('%s') OR LOWER(init) = LOWER('%s')", $edit["mail"], $edit["mail"])) > 0) {
-      $error = t("The e-mail address '%s' is already taken.", array("%s" => $edit["mail"]));
+    else if (db_num_rows(db_query("SELECT mail FROM {users} WHERE LOWER(mail) = LOWER('%s') OR LOWER(init) = LOWER('%s')", $edit['mail'], $edit['mail'])) > 0) {
+      $error = t("The e-mail address '%s' is already taken.", array("%s" => $edit['mail']));
     }
     else if (variable_get("user_register", 1) == 0) {
       $error = t("Public registrations have been disabled by the site administrator.");
     }
     else {
       foreach (module_list() as $module) {
-        if (module_hook($module, "user")) {
-          $result = module_invoke($module, "user", "register_validate", $edit, $user);
+        if (module_hook($module, 'user')) {
+          $result = module_invoke($module, 'user', "register_validate", $edit, $user);
           if (is_array($result)) {
             $data = array_merge($data, $result);
           }
@@ -829,19 +829,19 @@ function user_register($edit = array()) {
 
     // TODO: is this necessary? Won't session_write replicate this?
     unset($edit["session"]);
-    $account = user_save("", array_merge(array("name" => $edit["name"], "pass" => $pass, "init" => $edit["mail"], "mail" => $edit["mail"], "rid" => _user_authenticated_id(), "status" => (variable_get("user_register", 1) == 1 ? 1 : 0)), $data));
-    watchdog("user", "new user: '". $edit["name"] ."' &lt;". $edit["mail"] ."&gt;", l(t("edit user"), "admin/user/edit/$account->uid"));
+    $account = user_save("", array_merge(array('name' => $edit['name'], 'pass' => $pass, "init" => $edit['mail'], "mail" => $edit['mail'], "rid" => _user_authenticated_id(), "status" => (variable_get("user_register", 1) == 1 ? 1 : 0)), $data));
+    watchdog('user', "new user: '". $edit['name'] ."' &lt;". $edit['mail'] ."&gt;", l(t("edit user"), "admin/user/edit/$account->uid"));
 
-    $variables = array("%username" => $edit["name"], "%site" => variable_get("site_name", "drupal"), "%password" => $pass, "%uri" => $base_url, "%uri_brief" => substr($base_url, strlen("http://")), "%mailto" => $edit["mail"], "%date" => format_date(time()));
+    $variables = array("%username" => $edit['name'], "%site" => variable_get("site_name", "drupal"), "%password" => $pass, "%uri" => $base_url, "%uri_brief" => substr($base_url, strlen("http://")), "%mailto" => $edit['mail'], "%date" => format_date(time()));
 
     //the first user may login immediately, and receives a customized welcome e-mail.
     if ($account->uid == 1) {
-      user_mail($edit["mail"], t("drupal user account details for %s", array("%s" => $edit["name"])), strtr(t("%username,\n\nYou may now login to %uri using the following username and password:\n\n  username: %username\n  password: %password\n\n". url("user/edit") ."\n\n--drupal"), $variables), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+      user_mail($edit['mail'], t("drupal user account details for %s", array("%s" => $edit['name'])), strtr(t("%username,\n\nYou may now login to %uri using the following username and password:\n\n  username: %username\n  password: %password\n\n". url("user/edit") ."\n\n--drupal"), $variables), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
       // This should not be t()'ed. No point as its only shown once in the sites lifetime, and it would be bad to store the password
       $output .= "<p>Welcome to Drupal. You are user #1, which gives you full and immediate access.  All future registrants will receive their passwords via e-mail, so please configure your e-mail settings using the Administration pages.</p><p> Your password is <strong>$pass</strong>. You may change your password on the next page.</p><p>Please login below.</p>";
       $output .= form_hidden("destination", url("user/edit"));
-      $output .= form_hidden("name", $account->name);
-      $output .= form_hidden("pass", $pass);
+      $output .= form_hidden('name', $account->name);
+      $output .= form_hidden('pass', $pass);
       $output .= form_submit(t("Log in"));
       return form($output);
     }
@@ -853,7 +853,7 @@ function user_register($edit = array()) {
 
         $subject = strtr(variable_get("user_mail_welcome_subject", _user_mail_text("welcome_subject")), $variables);
         $body = strtr(variable_get("user_mail_welcome_body", _user_mail_text("welcome_body")), $variables);
-        user_mail($edit["mail"], $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+        user_mail($edit['mail'], $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
         return t("Your password and further instructions have been sent to your e-mail address.");
       }
       else {
@@ -862,7 +862,7 @@ function user_register($edit = array()) {
         */
         $subject = strtr(variable_get("user_mail_approval_subject", _user_mail_text("welcome_approval_subject")), $variables);
         $body = strtr(variable_get("user_mail_approval_body", _user_mail_text("welcome_approval_body")), $variables);
-        user_mail($edit["mail"], $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+        user_mail($edit['mail'], $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
         user_mail(variable_get("site_mail", ini_get("sendmail_from")), $subject, t("%u has applied for an account.\n\n%uri", array("%u" => $account->name, "%uri" => url("admin/user/edit/$account->uid"))), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
         return t("Thank you for applying for an account. Your account is currently pending approval by the site administrator.<br />In the meantime, your password and further instructions have been sent to your e-mail address.");
       }
@@ -879,13 +879,13 @@ function user_register($edit = array()) {
   $affiliates = user_auth_help_links();
   if (count($affiliates) > 0) {
     $affiliates = implode(", ", $affiliates);
-    $output .= "<p>". t("Note: If you have an account with one of our affiliates (%s), you may ". l("login now", "user/login") ." instead of registering.", array("%s" => $affiliates)) ."</p>";
+    $output .= "<p>". t("Note: if you have an account with one of our affiliates (%s), you may ". l("login now", "user/login") ." instead of registering.", array("%s" => $affiliates)) ."</p>";
   }
-  $output .= form_textfield(t("Username"), "name", $edit["name"], 30, 64, t("Your full name or your preferred username: only letters, numbers and spaces are allowed."));
-  $output .= form_textfield(t("E-mail address"), "mail", $edit["mail"], 30, 64, t("A password and instructions will be sent to this e-mail address, so make sure it is accurate."));
+  $output .= form_textfield(t("Username"), 'name', $edit['name'], 30, 64, t("Your full name or your preferred username: only letters, numbers and spaces are allowed."));
+  $output .= form_textfield(t("E-mail address"), "mail", $edit['mail'], 30, 64, t("A password and instructions will be sent to this e-mail address, so make sure it is accurate."));
   foreach (module_list() as $module) {
-    if (module_hook($module, "user")) {
-      $output .= module_invoke($module, "user", "register_form", $edit, $user);
+    if (module_hook($module, 'user')) {
+      $output .= module_invoke($module, 'user', "register_form", $edit, $user);
     }
   }
   $output .= form_submit(t("Create new account"));
@@ -901,18 +901,18 @@ function user_edit($edit = array()) {
   global $user;
 
   if ($user->uid) {
-    if (!(is_null($edit["name"]) && is_null($edit["mail"]))) {
-      if ($error = user_validate_name($edit["name"])) {
+    if (!(is_null($edit['name']) && is_null($edit['mail']))) {
+      if ($error = user_validate_name($edit['name'])) {
         // do nothing
       }
-      else if ($error = user_validate_mail($edit["mail"])) {
+      else if ($error = user_validate_mail($edit['mail'])) {
         // do nothing
       }
-      else if (db_num_rows(db_query("SELECT uid FROM {users} WHERE uid != '$user->uid' AND LOWER(name) = LOWER('%s')", $edit["name"])) > 0) {
-        $error = t("The name '%s' is already taken.", array("%s" => $edit["name"]));
+      else if (db_num_rows(db_query("SELECT uid FROM {users} WHERE uid != '$user->uid' AND LOWER(name) = LOWER('%s')", $edit['name'])) > 0) {
+        $error = t("The name '%s' is already taken.", array("%s" => $edit['name']));
       }
-      else if ($edit["mail"] && db_num_rows(db_query("SELECT uid FROM {users} WHERE uid != '$user->uid' AND LOWER(mail) = LOWER('%s')", $edit["mail"])) > 0) {
-        $error = t("The e-mail address '%s' is already taken.", array("%s" => $edit["mail"]));
+      else if ($edit['mail'] && db_num_rows(db_query("SELECT uid FROM {users} WHERE uid != '$user->uid' AND LOWER(mail) = LOWER('%s')", $edit['mail'])) > 0) {
+        $error = t("The e-mail address '%s' is already taken.", array("%s" => $edit['mail']));
       }
       else if ($user->uid) {
         /*
@@ -920,15 +920,15 @@ function user_edit($edit = array()) {
         ** add new password to $edit.
         */
 
-        if ($edit["pass1"]) {
-          if ($edit["pass1"] == $edit["pass2"]) {
-            $edit["pass"] = $edit["pass1"];
+        if ($edit['pass1']) {
+          if ($edit['pass1'] == $edit['pass2']) {
+            $edit['pass'] = $edit['pass1'];
           }
           else {
             $error = t("The specified passwords do not match.");
           }
         }
-        unset($edit["pass1"], $edit["pass2"]);
+        unset($edit['pass1'], $edit['pass2']);
 
         /*
         ** Validate input fields to make sure users don't submit
@@ -951,8 +951,8 @@ function user_edit($edit = array()) {
         */
 
         foreach (module_list() as $module) {
-          if (module_hook($module, "user")) {
-            $result = module_invoke($module, "user", "edit_validate", $edit, $user);
+          if (module_hook($module, 'user')) {
+            $result = module_invoke($module, 'user', "edit_validate", $edit, $user);
           }
           if (is_array($result)) {
             $data = array_merge($data, $result);
@@ -983,10 +983,10 @@ function user_edit($edit = array()) {
       $edit = object2array($user);
     }
 
-    $output .= form_textfield(t("Username"), "name", $edit["name"], 30, 55, t("Your full name or your preferred username: only letters, numbers and spaces are allowed."));
-    $output .= form_textfield(t("E-mail address"), "mail", $edit["mail"], 30, 55, t("Insert a valid e-mail address.  All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail."));
+    $output .= form_textfield(t("Username"), 'name', $edit['name'], 30, 55, t("Your full name or your preferred username: only letters, numbers and spaces are allowed."));
+    $output .= form_textfield(t("E-mail address"), "mail", $edit['mail'], 30, 55, t("Insert a valid e-mail address.  All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail."));
 
-    $output .= implode("\n", module_invoke_all("user", "edit_form", $edit, $user));
+    $output .= implode("\n", module_invoke_all('user', "edit_form", $edit, $user));
 
     $output .= form_item(t("Password"), "<input type=\"password\" name=\"edit[pass1]\" size=\"12\" maxlength=\"24\" /> <input type=\"password\" name=\"edit[pass2]\" size=\"12\" maxlength=\"24\" />", t("Enter your new password twice if you want to change your current password or leave it blank if you are happy with your current password."));
     $output .= form_submit(t("Save user information"));
@@ -1012,20 +1012,20 @@ function user_view($uid = 0) {
     $output = form_item(t("Name"), "$user->name ($user->init)");
     $output .= form_item(t("E-mail address"), $user->mail, t("Please note that only you can see your own e-mail address - it is not publicly visible."));
 
-    $output .= implode("\n", module_invoke_all("user", "view_private", "", $user));
+    $output .= implode("\n", module_invoke_all('user', "view_private", "", $user));
 
-    print theme("page", $output, $user->name);
+    print theme('page', $output, $user->name);
   }
-  else if ($uid && $account = user_load(array("uid" => $uid, "status" => 1))) {
+  else if ($uid && $account = user_load(array('uid' => $uid, "status" => 1))) {
     $output = form_item(t("Name"), $account->name);
 
-    $output .= implode("\n", module_invoke_all("user", "view_public", "", $account));
+    $output .= implode("\n", module_invoke_all('user', "view_public", "", $account));
 
     if (user_access("administer users")) {
       $output .= form_item(t("Administration"), l(t("edit account"), "admin/user/edit/$account->uid"));
     }
 
-    print theme("page", $output, $account->name);
+    print theme('page', $output, $account->name);
   }
   else {
     $output = user_login();
@@ -1034,7 +1034,7 @@ function user_view($uid = 0) {
     }
     $output .= user_pass();
 
-    print theme("page", $output, t("User login"));
+    print theme('page', $output, t("User login"));
   }
 }
 
@@ -1050,28 +1050,28 @@ function user_page() {
   switch ($op) {
     case t("E-mail new password"):
     case "password":
-      print theme("page", user_pass($edit), t("E-mail new password"));
+      print theme('page', user_pass($edit), t("E-mail new password"));
       break;
     case t("Create new account"):
     case "register":
       $output = user_register($edit);
       if (variable_get("user_register", 1)) {
-        print theme("page", $output, t("Create new account"));
+        print theme('page', $output, t("Create new account"));
       }
       else {
-        print theme("page", message_access());
+        print theme('page', message_access());
       }
       break;
     case t("Log in"):
     case "login":
       $output = user_login($edit);
-      print theme("page", $output, t("Log in"));
+      print theme('page', $output, t("Log in"));
       break;
     case t("Save user information"):
     case "edit":
       $output = user_edit($edit);
       $GLOBALS["theme"] = init_theme();
-      print theme("page", $output, t("Edit account"));
+      print theme('page', $output, t("Edit account"));
       break;
     case "view":
       user_view(arg(2));
@@ -1081,7 +1081,7 @@ function user_page() {
       print user_logout();
       break;
     case "help":
-      print theme("page", user_help("user/help#user"), t("Distributed authentication"));
+      print theme('page', user_help("user/help#user"), t("Distributed authentication"));
       break;
     default:
       print user_view();
@@ -1139,18 +1139,18 @@ function user_settings() {
 }
 
 function user_admin_create($edit = array()) {
-  if ($edit["name"] || $edit["mail"]) {
-    if ($error = user_validate_name($edit["name"])) {
+  if ($edit['name'] || $edit['mail']) {
+    if ($error = user_validate_name($edit['name'])) {
       // do nothing
     }
-    else if ($error = user_validate_mail($edit["mail"])) {
+    else if ($error = user_validate_mail($edit['mail'])) {
       // do nothing
     }
-    else if (db_num_rows(db_query("SELECT name FROM {users} WHERE LOWER(name) = LOWER('%s')", $edit["name"])) > 0) {
-      $error = t("The name '%s' is already taken.", array("%s" => $edit["name"]));
+    else if (db_num_rows(db_query("SELECT name FROM {users} WHERE LOWER(name) = LOWER('%s')", $edit['name'])) > 0) {
+      $error = t("The name '%s' is already taken.", array("%s" => $edit['name']));
     }
-    else if (db_num_rows(db_query("SELECT mail FROM {users} WHERE LOWER(mail) = LOWER('%s')", $edit["mail"])) > 0) {
-      $error = t("The e-mail address '%s' is already taken.", array("%s" => $edit["mail"]));
+    else if (db_num_rows(db_query("SELECT mail FROM {users} WHERE LOWER(mail) = LOWER('%s')", $edit['mail'])) > 0) {
+      $error = t("The e-mail address '%s' is already taken.", array("%s" => $edit['mail']));
     }
     else {
       $success = 1;
@@ -1158,11 +1158,11 @@ function user_admin_create($edit = array()) {
   }
 
   if ($success) {
-    watchdog("user", "new user: '". $edit["name"] ."' &lt;". $edit["mail"] ."&gt;");
+    watchdog('user', "new user: '". $edit['name'] ."' &lt;". $edit['mail'] ."&gt;");
 
-    user_save("", array("name" => $edit["name"], "pass" => $edit["pass"], "init" => $edit["mail"], "mail" => $edit["mail"], "rid" => _user_authenticated_id(), "status" => 1));
+    user_save("", array('name' => $edit['name'], 'pass' => $edit['pass'], "init" => $edit['mail'], "mail" => $edit['mail'], "rid" => _user_authenticated_id(), "status" => 1));
 
-    return "Created a new user '". $edit["name"] ."'.  No e-mail has been sent.";
+    drupal_set_message("Created a new user '". $edit['name'] ."'.  No e-mail has been sent.");
   }
   else {
 
@@ -1170,10 +1170,12 @@ function user_admin_create($edit = array()) {
       drupal_set_message($error, 'error');
     }
 
-    $output .= form_textfield(t("Username"), "name", $edit["name"], 30, 55, t("Provide the username of the new account."));
-    $output .= form_textfield(t("E-mail address"), "mail", $edit["mail"], 30, 55, t("Provide the e-mail address associated with the new account."));
-    $output .= form_textfield(t("Password"), "pass", $edit["pass"], 30, 55, t("Provide a password for the new account."));
+    $output  = form_textfield(t("Username"), 'name', $edit['name'], 30, 55, t("Provide the username of the new account."));
+    $output .= form_textfield(t("E-mail address"), "mail", $edit['mail'], 30, 55, t("Provide the e-mail address associated with the new account."));
+    $output .= form_textfield(t("Password"), 'pass', $edit['pass'], 30, 55, t("Provide a password for the new account."));
     $output .= form_submit(t("Create account"));
+
+    $output = form_group(t('Create new user account'), $output);
 
     return form($output);
   }
@@ -1191,7 +1193,7 @@ function user_admin_access($edit = array()) {
 
   if ($op == t("Add rule")) {
     $aid = db_next_id("{access}_aid");
-    db_query("INSERT INTO {access} (aid, mask, type, status) VALUES ('%s', '%s', '%s', %d)", $aid, $edit["mask"], $type, $edit["status"]);
+    db_query("INSERT INTO {access} (aid, mask, type, status) VALUES ('%s', '%s', '%s', %d)", $aid, $edit["mask"], $type, $edit['status']);
     drupal_set_message(t("access rule added."));
   }
   else if ($op == t("Check")) {
@@ -1219,12 +1221,12 @@ function user_admin_access($edit = array()) {
   }
 
   $options = array("1" => t("Allow"), "0" => t("Deny"));
-  $rows[] = array(form_radios(NUll, "status", $edit["status"], $options), form_textfield(NULL, "mask", $edit["mask"], 32, 64), form_submit(t("Add rule")));
+  $rows[] = array(form_radios(NUll, "status", $edit['status'], $options), form_textfield(NULL, "mask", $edit["mask"], 32, 64), form_submit(t("Add rule")));
   $output .= theme("table", $header, $rows);
 
   $output .= "<p><small>%: ". t("Matches any number of characters, even zero characters") .".<br />_: ". t("Matches exactly one character.") ."</small></p>";
 
-  if ($type != "user") {
+  if ($type != 'user') {
     $title = t("Check e-mail address");
   }
   else {
@@ -1318,7 +1320,7 @@ function user_admin_role($edit = array()) {
   $id = arg(3);
 
   if ($op == t("Save role")) {
-    db_query("UPDATE {role} SET name = '%s' WHERE rid = %d", $edit["name"], $id);
+    db_query("UPDATE {role} SET name = '%s' WHERE rid = %d", $edit['name'], $id);
   }
   else if ($op == t("Delete role")) {
     db_query("DELETE FROM {role} WHERE rid = %d", $id);
@@ -1329,7 +1331,7 @@ function user_admin_role($edit = array()) {
     db_query("UPDATE {users} SET rid = %d WHERE rid = %d", $aid, $id);
   }
   else if ($op == t("Add role")) {
-    db_query("INSERT INTO {role} (name) VALUES ('%s')", $edit["name"]);
+    db_query("INSERT INTO {role} (name) VALUES ('%s')", $edit['name']);
   }
   else if ($id) {
     /*
@@ -1338,7 +1340,7 @@ function user_admin_role($edit = array()) {
 
     $role = db_fetch_object(db_query("SELECT * FROM {role} WHERE rid = %d", $id));
 
-    $output .= form_textfield(t("Role name"), "name", $role->name, 32, 64, t("The name for this role.  Example: 'moderator', 'editorial board', 'site architect'."));
+    $output .= form_textfield(t("Role name"), 'name', $role->name, 32, 64, t("The name for this role.  Example: 'moderator', 'editorial board', 'site architect'."));
     $output .= form_submit(t("Save role"));
     $output .= form_submit(t("Delete role"));
 
@@ -1352,7 +1354,7 @@ function user_admin_role($edit = array()) {
 
     $result = db_query("SELECT * FROM {role} ORDER BY name");
 
-    $header = array(t("name"), t("operations"));
+    $header = array(t('name'), t("operations"));
     while ($role = db_fetch_object($result)) {
       if ($role->name != "anonymous user" && $role->name != "authenticated user") {
         $rows[] = array($role->name, array("data" => l(t("edit role"), "admin/user/role/$role->rid"), "align" => "center"));
@@ -1374,12 +1376,12 @@ function user_admin_edit($edit = array()) {
   $op = $_POST["op"];
   $id = arg(3);
 
-  if ($account = user_load(array("uid" => $id))) {
+  if ($account = user_load(array('uid' => $id))) {
 
     if ($op == t("Save account")) {
       foreach (module_list() as $module) {
-        if (module_hook($module, "user")) {
-          $result = module_invoke($module, "user", "edit_validate", $edit, $account);
+        if (module_hook($module, 'user')) {
+          $result = module_invoke($module, 'user', "edit_validate", $edit, $account);
         }
         if (is_array($result)) {
           $data = array_merge($data, $result);
@@ -1391,17 +1393,17 @@ function user_admin_edit($edit = array()) {
       }
 
       // TODO: this display/edit/validate should be moved to a new profile module implementing the _user hooks
-      if ($error = user_validate_name($edit["name"])) {
+      if ($error = user_validate_name($edit['name'])) {
         // do nothing
       }
-      else if ($error = user_validate_mail($edit["mail"])) {
+      else if ($error = user_validate_mail($edit['mail'])) {
         // do nothing
       }
-      else if (db_num_rows(db_query("SELECT uid FROM {users} WHERE uid != %d AND LOWER(name) = LOWER('%s')", $account->uid, $edit["name"])) > 0) {
-        $error = t("The name '%s' is already taken.", array("%s" => $edit["name"]));
+      else if (db_num_rows(db_query("SELECT uid FROM {users} WHERE uid != %d AND LOWER(name) = LOWER('%s')", $account->uid, $edit['name'])) > 0) {
+        $error = t("The name '%s' is already taken.", array("%s" => $edit['name']));
       }
-      else if ($edit["mail"] && db_num_rows(db_query("SELECT uid FROM {users} WHERE uid != %d AND LOWER(mail) = LOWER('%s')", $account->uid, $edit["mail"])) > 0) {
-        $error = t("The e-mail address '%s' is already taken.", array("%s" => $edit["mail"]));
+      else if ($edit['mail'] && db_num_rows(db_query("SELECT uid FROM {users} WHERE uid != %d AND LOWER(mail) = LOWER('%s')", $account->uid, $edit['mail'])) > 0) {
+        $error = t("The e-mail address '%s' is already taken.", array("%s" => $edit['mail']));
       }
 
       /*
@@ -1409,16 +1411,16 @@ function user_admin_edit($edit = array()) {
       ** add new password to $edit.
       */
 
-      if ($edit["pass1"]) {
-        if ($edit["pass1"] == $edit["pass2"]) {
-          $edit["pass"] = $edit["pass1"];
+      if ($edit['pass1']) {
+        if ($edit['pass1'] == $edit['pass2']) {
+          $edit['pass'] = $edit['pass1'];
         }
         else {
           $error = t("The specified passwords do not match.");
         }
       }
 
-      unset($edit["pass1"], $edit["pass2"]);
+      unset($edit['pass1'], $edit['pass2']);
       if (!$error) {
         $account = user_save($account, array_merge($edit, $data));
         drupal_set_message(t("user information changes have been saved."));
@@ -1428,11 +1430,11 @@ function user_admin_edit($edit = array()) {
       }
     }
     else if ($op == t("Delete account")) {
-      if ($edit["status"] == 0) {
+      if ($edit['status'] == 0) {
         db_query("DELETE FROM {users} WHERE uid = %d", $account->uid);
         db_query("DELETE FROM {authmap} WHERE uid = %d", $account->uid);
         drupal_set_message(t("the account has been deleted."));
-        module_invoke_all("user", "delete", $account, $user);
+        module_invoke_all('user', "delete", $account, $user);
       }
       else {
         $error = t("Failed to delete account: the account has to be blocked first.");
@@ -1449,10 +1451,10 @@ function user_admin_edit($edit = array()) {
     */
 
     $output .= form_item(t("User ID"), $account->uid);
-    $output .= form_textfield(t("Username"), "name", $account->name, 30, 55, t("Your full name or your preferred username: only letters, numbers and spaces are allowed."));
+    $output .= form_textfield(t("Username"), 'name', $account->name, 30, 55, t("Your full name or your preferred username: only letters, numbers and spaces are allowed."));
     $output .= form_textfield(t("E-mail address"), "mail", $account->mail, 30, 55, t("Insert a valid e-mail address.  All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail."));
 
-    $output .= implode("\n", module_invoke_all("user", "edit_form", $edit, $account));
+    $output .= implode("\n", module_invoke_all('user', "edit_form", $edit, $account));
 
     $output .= form_item(t("Password"), "<input type=\"password\" name=\"edit[pass1]\" size=\"12\" maxlength=\"24\" /> <input type=\"password\" name=\"edit[pass2]\" size=\"12\" maxlength=\"24\" />", t("Enter a new password twice if you want to change the current password for this user or leave it blank if you are happy with the current password."));
     $output .= form_radios(t("Status"), "status", $account->status, array(t("blocked"), t("active")));
@@ -1506,7 +1508,7 @@ function user_admin() {
 
     switch ($op) {
       case "search":
-        $output = search_type("user", url("admin/user/search"), $_POST["keys"]);
+        $output = search_type('user', url("admin/user/search"), $_POST["keys"]);
         break;
       case t("Add rule"):
       case t("Check"):
@@ -1535,17 +1537,12 @@ function user_admin() {
         $output = user_admin_edit($edit);
         break;
       default:
-        if ($op == "account" && arg(3) == "create") {
-          $output = user_admin_create($edit);
-        }
-        else {
-          $output = user_admin_account();
-        }
+        $output = user_admin_account();
     }
-    print theme("page", $output);
+    print theme('page', $output);
   }
   else {
-    print theme("page", message_access());
+    print theme('page', message_access());
   }
 }
 // the following functions comprise help for admins and developers
@@ -1555,12 +1552,10 @@ function user_help($section = "admin/help#user") {
   switch ($section) {
     case 'admin/user':
       $output .= t("<p>Drupal allows users to register, login, logout, maintain user profiles, etc.  No participant can use his own name to post content until he signs up for a user account.</p>");
-      $output .= t("<p>Click on either the <i>username</i> or <i>edit account</i> to edit a user's information.</p>");
-      $output .= t("<p>Sort accounts by registration time by clicking on the <i>ID</i> header.</p>");
       break;
     case 'admin/user/create':
     case 'admin/user/account/create':
-      $output .= t("This web page allows the administrators to register a new users by hand.<br />Note:<ul><li>You cannot have a user where either the e-mail address or the username match another user in the system.</li></ul>");
+      $output .= t('This web page allows the administrators to register a new users by hand.  Note that you cannot have a user where either the e-mail address or the username match another user in the system.');
       break;
     case 'admin/user/access':
       $output .= t("Access rules allow Drupal administrators to choose usernames and e-mail address that are prevented from using drupal. To enter the mask for e-mail addresses click on <a href=\"%e-mail\">e-mail rules</a>, for the username mask click on <a href=\"%username\">name rules</a>.", array("%e-mail" => url("admin/user/access/mail"), "%username" => url("admin/user/access/user")));
@@ -1601,7 +1596,7 @@ function user_help($section = "admin/help#user") {
 
         foreach (module_list() as $module) {
           if (module_hook($module, "auth")) {
-            $output .= "<h4><a id=\"$module\"></a>". module_invoke($module, "info", "name") ."</h4>";
+            $output .= "<h4><a id=\"$module\"></a>". module_invoke($module, 'info', 'name') ."</h4>";
             $output .= module_invoke($module, "help", "user/help#$module");
           }
         }
@@ -1749,11 +1744,11 @@ function user_help($section = "admin/help#user") {
             return user_save(\$user, array(\"julia_favingredient\" => \$edit[\"julia_favingredient\"]));
         }
       }
-    </pre>", array("%user-role" => url("admin/user/role"), "%user-permission" => url("admin/user/permission"), "%jabber" => "http://www.jabber.org", "%delphiforums" => "http://www.delphiforums.com", "%drupal" => "http://www.drupal.org", "%da-auth" => url("user/help#da"), "%php-sess" => "http://www.php.net/manual/en/ref.session.php", "%user-prefs" => url("user/edit"), "%admin-user" => url("admin/user"), "%da-devel" => "http://www.drupal.org/node/view/316", "%xml" => "http://www.xmlrpc.org", "%http-post" => "http://www.w3.org/Protocols/", "%soap" => "http://www.soapware.org", "%dis-module" => url("admin/system/modules"), "%blogger" => "http://www.blogger.com", "%blogger-source" => "http://cvs.drupal.org/viewcvs.cgi/contributions/modules/authentication/Bloggar/?cvsroot=contrib", "%contrib-cvs" => "http://cvs.drupal.org/viewcvs/contributions/?cvsroot=contrib", "%blogger-api" => "http://plant.blogger.com/API", "%cvs" => "http://cvs.drupal.org/viewcvs.cgi/contributions/README?rev=HEAD&amp;cvsroot=contrib&amp;content-type=text/vnd.viewcvs-markup", "%drupal-lists" => "http://drupal.org/mailing-lists", "%drupal-org" => "http://www.drupal.org", "%registration" => url("user/register"), "%user-acct" => url("user"), "%user-admin" => url("admin/user"), "%profile-module" => "http://cvs.drupal.org/viewcvs/drupal/modules/profile.module"));
+    </pre>", array("%user-role" => url("admin/user/role"), "%user-permission" => url("admin/user/permission"), "%jabber" => "http://www.jabber.org", "%delphiforums" => "http://www.delphiforums.com", "%drupal" => "http://www.drupal.org", "%da-auth" => url("user/help#da"), "%php-sess" => "http://www.php.net/manual/en/ref.session.php", "%user-prefs" => url("user/edit"), "%admin-user" => url("admin/user"), "%da-devel" => "http://www.drupal.org/node/view/316", "%xml" => "http://www.xmlrpc.org", "%http-post" => "http://www.w3.org/Protocols/", "%soap" => "http://www.soapware.org", "%dis-module" => url("admin/system/modules"), "%blogger" => "http://www.blogger.com", "%blogger-source" => "http://cvs.drupal.org/viewcvs.cgi/contributions/modules/authentication/Bloggar/?cvsroot=contrib", "%contrib-cvs" => "http://cvs.drupal.org/viewcvs/contributions/?cvsroot=contrib", "%blogger-api" => "http://plant.blogger.com/API", "%cvs" => "http://cvs.drupal.org/viewcvs.cgi/contributions/README?rev=HEAD&amp;cvsroot=contrib&amp;content-type=text/vnd.viewcvs-markup", "%drupal-lists" => "http://drupal.org/mailing-lists", "%drupal-org" => "http://www.drupal.org", "%registration" => url("user/register"), "%user-acct" => url('user'), "%user-admin" => url("admin/user"), "%profile-module" => "http://cvs.drupal.org/viewcvs/drupal/modules/profile.module"));
 
       foreach (module_list() as $module) {
         if (module_hook($module, "auth")) {
-          $output = strtr($output, array("%module-list" => "<h4>". module_invoke($module, "info", "name") ."</h4>\n%module-list"));
+          $output = strtr($output, array("%module-list" => "<h4>". module_invoke($module, 'info', 'name') ."</h4>\n%module-list"));
           $output = strtr($output, array("%module-list" => module_invoke($module, "help", "user/help") . "\n%module-list"));
         }
       }
@@ -1765,7 +1760,7 @@ function user_help($section = "admin/help#user") {
 }
 
 function user_help_page() {
-  print theme("page", user_help());
+  print theme('page', user_help());
 }
 
 ?>
