@@ -26,6 +26,41 @@ function blog_status() {
   return array(dumped, posted);
 }
 
+function blog_feed_user($name = 0, $date = 0) {
+  global $user;
+
+  $name = check_input($name ? $name : $user->userid);
+  $date = check_input($date ? $date : time());
+
+  $result = db_query("SELECT n.nid, n.title, n.timestamp, b.body FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.id WHERE u.userid = '$name' AND n.timestamp > '". ($date - 2592000) ."' ORDER BY b.lid DESC LIMIT 15");
+  while ($blog = db_fetch_object($result)) {
+    $items .= format_rss_item($blog->title, path_uri() ."node.php?id=$blog->nid", $blog->body);
+  }
+
+  $output .= "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n";
+  $output .= "<rss version=\"0.91\">\n";
+  $output .= format_rss_channel("$name's blog", path_uri() ."module.php?mod=blog&op=view&name=". urlencode($name), "$name's blog", $items);
+  $output .= "</rss>\n";
+
+  print $output;
+
+}
+
+function blog_feed_last() {
+  $result = db_query("SELECT n.nid, n.title, n.timestamp, b.body, u.userid FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.id ORDER BY b.lid DESC LIMIT 15");
+  while ($blog = db_fetch_object($result)) {
+    $items .= format_rss_item($blog->title, path_uri() ."module.php?mod=blog&op=view&name=". urlencode($blog->userid), $blog->body);
+  }
+
+  $output .= "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n";
+  $output .= "<rss version=\"0.91\">\n";
+  $output .= format_rss_channel(variable_get("site_name", "drupal") .": user blogs", path_uri() ."module.php?mod=blog", "Recently updated blogs.", $items);
+  $output .= "</rss>\n";
+
+  print $output;
+
+}
+
 function blog_page_user($name = 0, $date = 0) {
   global $theme, $user;
 
@@ -49,17 +84,17 @@ function blog_page_user($name = 0, $date = 0) {
     $output .= "<tr><td colspan=\"2\" style=\"margin-left: 20px;\">". check_output($blog->body, 1) ."</td></tr>";
   }
   $output .= "</table>";
-
+  $output .= "<a href=\"module.php?mod=blog&op=feed&name=". urlencode($name) ."\"><img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" /></a>\n";
 
   $theme->header();
   $theme->box(strtr(t("%a's blog"), array("%a" => $name)), $output, "main");
   $theme->footer();
 }
 
-function blog_page_view($num = 20) {
-  global $theme, $user;
+function blog_page_last($num = 20) {
+  global $theme;
 
-  $result = db_query("SELECT n.timestamp, n.title, u.userid, n.nid, b.body FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.id ORDER BY b.lid DESC LIMIT $num");
+  $result = db_query("SELECT n.nid, n.title, n.timestamp, b.body, u.userid FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.id ORDER BY b.lid DESC LIMIT $num");
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\">";
   while ($blog = db_fetch_object($result)) {
@@ -72,6 +107,7 @@ function blog_page_view($num = 20) {
     unset($links);
   }
   $output .= "</table>";
+  $output .= "<a href=\"module.php?mod=blog&op=feed\"><img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" /></a>\n";
 
   $theme->header();
   $theme->box(t("User blogs"), $output, "main");
@@ -89,14 +125,6 @@ function blog_remove($nid) {
   }
 }
 
-function blog_format_link($blog) {
-  global $user;
-
-  if ($user->id && user_access("post blogs")) {
-    return "<a href=\"submit.php?mod=blog&type=blog&id=$blog->nid\"><img src=\"misc/blog.gif\" border=\"0\" width=\"12\" height=\"16\" alt=\"". t("blog this item") ."\" /></a> ";
-  }
-}
-
 function blog_view($node, $main = 0) {
   global $theme;
 
@@ -106,8 +134,7 @@ function blog_view($node, $main = 0) {
 function blog_form($edit = array()) {
   global $REQUEST_URI, $id, $mod, $type, $user, $theme;
 
-  if ($user->id) {
-
+  if ($user->id && (user_access("administer blogs") || user_access("post blogs"))) {
     if ($mod == "node" || $edit[type] == "blog") {
       // do nothing
     }
@@ -171,16 +198,6 @@ function blog_save($edit) {
 function blog_edit_history($nid) {
   global $user;
 
-  // DB: changed this to 15 older blog entries rather than today's entries
-  //     as there was no way to edit entries older than a day.  The notion
-  //     of a day can be quite annoying when bloging around midnight.  All
-  //     entries are accessible now.
-  //
-  //  $blog = node_get_object(array(nid => $nid, type => "blog"));
-  //  $sdate = mktime(0, 0, 0, date("m", $blog->timestamp), date("d", $blog->timestamp), date("Y", $blog->timestamp));
-  //  $edate = mktime(23, 59, 59, date("m", $blog->timestamp), date("d", $blog->timestamp), date("Y", $blog->timestamp));
-  //  $result = db_query("SELECT n.title, b.body, n.timestamp, n.nid FROM blog b LEFT JOIN node n ON b.nid = n.nid WHERE n.author = '$user->id' AND n.timestamp > '$sdate' AND n.timestamp < '$edate' ORDER BY b.lid DESC LIMIT 100");
-
   $result = db_query("SELECT n.nid, n.title, n.timestamp, b.body FROM blog b LEFT JOIN node n ON b.nid = n.nid WHERE n.author = '". check_input($user->id) ."' AND n.nid <= '". check_input($nid) ."' ORDER BY b.lid DESC LIMIT 15");
 
   $output .= "<table cellpadding=\"3\" cellspacing=\"3\" border=\"0\" width=\"100%\">";
@@ -196,11 +213,22 @@ function blog_page() {
   global $op, $name, $date;
 
   if (user_access("access blogs")) {
-    if ($name) {
-      blog_page_user($name, $date);
-    }
-    else {
-      blog_page_view();
+    switch ($op) {
+      case "feed":
+        if ($name) {
+          blog_feed_user($name, $date);
+        }
+        else {
+          blog_feed_last();
+        }
+        break;
+      default:
+        if ($name) {
+          blog_page_user($name, $date);
+        }
+        else {
+          blog_page_last();
+        }
     }
   }
   else {
@@ -263,9 +291,9 @@ function blog_block() {
     $output .= "<a href=\"module.php?mod=blog&op=view&name=". urlencode($node->userid) ."\">". check_output($node->title) ."<br />\n";
   }
 
-  $block[0]["subject"] = "<a href=\"module.php?mod=blog\">". t("Latest blogs") ."</a>";
+  $block[0]["subject"] = "<a href=\"module.php?mod=blog\">". t("User blogs") ."</a>";
   $block[0]["content"] = $output;
-  $block[0]["info"] = t("Latest blogs");
+  $block[0]["info"] = t("User blogs");
   $block[0]["link"] = "module.php?mod=blog";
 
   $date = $data ? $data : time();
@@ -291,7 +319,6 @@ function blog_search($keys) {
   }
   return $find;
 }
-
 
 class BlogCalendar {
   var $date;

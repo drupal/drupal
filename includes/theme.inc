@@ -5,8 +5,8 @@ class BaseTheme {
     return implode($delimiter, $links);
   }
 
-  function images($name) {
-    return $name;
+  function image($name) {
+    return "misc/$name";
   }
 }
 
