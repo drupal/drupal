@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.120 2004/07/30 13:37:26 dries Exp $
+// $Id: page.module,v 1.121 2004/07/31 09:30:09 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -41,20 +41,14 @@ function page_node_name($node) {
 function page_access($op, $node) {
   global $user;
 
-  if ($op == 'view') {
-    return $node->status;
-  }
-
   if ($op == 'create') {
     return user_access('create pages');
   }
 
-  if ($op == 'update') {
-    return user_access('edit own pages') && ($user->uid == $node->uid);
-  }
-
-  if ($op == 'delete') {
-    return user_access('edit own pages') && ($user->uid == $node->uid);
+  if ($op == 'update' || $op == 'delete') {
+    if (user_access('edit own pages') && ($user->uid == $node->uid)) {
+      return TRUE;
+    }
   }
 }
 

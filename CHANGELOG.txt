@@ -1,6 +1,5 @@
 Drupal x.x.x, xxxx-xx-xx
 ------------------------
-
 - navigation:
     * made it possible to add, delete, rename and move menu items.
     * introduced tabs and subtabs for local tasks.
@@ -8,7 +7,9 @@ Drupal x.x.x, xxxx-xx-xx
 - user management:
     * added support for multiple roles per user.
     * made it possible to add custom profile fields.
-    * made it possible to browse the profiles by field.
+    * made it possible to browse user profiles by field.
+- node system:
+    * added support for node-level permissions.
 - comment module:
     * made it possible to comment without having to register.
 - forum module:
@@ -17,7 +18,8 @@ Drupal x.x.x, xxxx-xx-xx
 - syndication:
     * added support for RSS ping-notifications of http://technorati.com/.
     * refactored the categorization of syndicated news items.
-    * added URL aliases for 'rss.xml' and 'index.rdf'.
+    * added an URL alias for 'rss.xml'.
+    * improved date parsing.
 - database backend:
     * added support for multiple database connections.
 - theme system:
@@ -27,8 +29,6 @@ Drupal x.x.x, xxxx-xx-xx
     * added 'categories' block.
 - blogger API:
     * added support for auto-discovery of blogger API via RSD.
-- news aggregator:
-    * improved date parsing.
 - performance:
     * added support for sending gzip compressed pages.
 - accessibility:
@@ -38,22 +38,16 @@ Drupal x.x.x, xxxx-xx-xx
 - documentation:
     * added PHPDoc/Doxygen comments.
 
-
 Drupal 4.4.2, 2004-07-04
 ------------------------
-
 - fixed bugs: no critical bugs were identified.
-
 
 Drupal 4.4.1, 2004-05-01
 ------------------------
-
 - fixed bugs: no critical bugs were identified.
-
 
 Drupal 4.4.0, 2004-04-01
 ------------------------
-
 - added support for the MetaWeblog API and MovableType extensions.
 - added a file API: enables better document management.
 - improved the watchdog and search module to log search keys.
@@ -92,22 +86,16 @@ Drupal 4.4.0, 2004-04-01
 - documentation:
     * added PHPDoc/Doxygen comments.
 
-
 Drupal 4.3.2, 2004-01-01
 ------------------------
-
 - fixed bugs: no critical bugs were identified.
-
 
 Drupal 4.3.1, 2003-12-01
 ------------------------
-
 - fixed bugs: no critical bugs were identified.
-
 
 Drupal 4.3.0, 2003-11-01
 ------------------------
-
 - added support for configurable URLs.
 - added support for sortable table columns.
 - database backend:
@@ -131,7 +119,6 @@ Drupal 4.3.0, 2003-11-01
 
 Drupal 4.2.0, 2003-08-01
 ------------------------
-
 - added support for clean URLs.
 - added textarea hook and support for onload attributes: enables integration of WYSIWYG editors.
 - rewrote the RSS/RDF parser:
@@ -159,7 +146,6 @@ Drupal 4.2.0, 2003-08-01
 
 Drupal 4.1.0, 2003-02-01
 ------------------------
-
 - collaboratively revised and expanded the Drupal documentation.
 - rewrote comment.module:
     * reintroduced comment rating/moderation.
@@ -214,12 +200,11 @@ Drupal 4.0.0, 2002-06-15
     * blocks can be set to only show up on some pages.
     * merged box module with block module.
 - node system:
-    * fixed node retrieval based on titles.
     * blogs can be updated.
     * teasers (abstracts) on all node types.
     * improved error checking.
-    * usability improvements.
     * content versioning support.
+    * usability improvements.
 - improved book module to support text, HTML and PHP pages.
 - improved comment module to mark new comments.
 - added a general outliner which will let any node type be linked to a book.
