@@ -63,8 +63,7 @@ function comment_form($edit) {
   $form .= form_hidden("pid", check_input($edit[pid]));
   $form .= form_hidden("id", check_input($edit[id]));
 
-  if (empty($edit[subject])) {
-    $form .= "<FONT COLOR=\"red\">". t("Warning: you did not supply a subject.") ."</FONT><P>\n";
+  if (!$edit[comment]) {
     $form .= form_submit(t("Preview comment"));
   }
   else {
@@ -72,7 +71,7 @@ function comment_form($edit) {
     $form .= form_submit(t("Post comment"));
   }
 
-  return form($REQUEST_URL, $form);
+  return form($REQUEST_URI, $form);
 }
 
 function comment_reply($pid, $id) {
