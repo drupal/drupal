@@ -49,7 +49,7 @@ $categories = array('Announcements', 'Coding', 'Geeking', 'Drop.org', 'Gaming', 
 #   Set to '1' to receive an e-mail when news has been submitted
 #   through submit.php
 #
-$notify = 1; 
+$notify = 1;
 
 # 
 # Allowed HTML tags:
@@ -66,6 +66,6 @@ $anonymous = "Anonymous Chicken";
 #   Set to '1' if you are using Windows so the engine won't try
 #   to send out mails and such.  When using Unix or Linux, set
 #   to '0'
-$system = 1;
+$system = 0;
 
 ?>
