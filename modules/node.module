@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.425 2004/11/23 23:11:58 dries Exp $
+// $Id: node.module,v 1.426 2004/11/27 10:02:06 dries Exp $
 
 /**
  * @file
@@ -54,6 +54,10 @@ function node_help($section) {
       return t('<p>Enter a simple pattern to search for a post. This can include the wildcard character *.<br />For example, a search for "br*" might return "bread bakers", "our daily bread" and "brenda".</p>');
     case 'admin/node/configure/defaults':
       return t('<p>This page lets you set the defaults used during creation of nodes for all the different node types.<br /><em>comment:</em> Read/write setting for comments.<br /><em>publish:</em> Is this post publicly viewable, has it been published?<br /><em>promote:</em> Is this post to be promoted to the front page?<br /><em>moderate:</em> Does this post need approval before it can be viewed?<br /><em>sticky:</em> Is this post always visible at the top of lists?<br /><em>revision:</em> Will this post go into the revision system allowing multiple versions to be saved?</p>');
+  }
+
+  if (arg(0) == 'node' && is_numeric(arg(1)) && arg(2) == 'revisions') {
+    return t('The revisions let you track differences between multiple versions of a post.');
   }
 }
 
