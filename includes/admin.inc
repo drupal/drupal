@@ -34,7 +34,7 @@ function admin_header() {
        admin_icon("accounts");
        admin_icon("misc");
        admin_icon("bans");
-       admin_icon("logs");
+       admin_icon("watchdog");
        admin_icon("stats");
        admin_icon("info");
        admin_icon("home");

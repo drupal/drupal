@@ -152,7 +152,7 @@ function discussion_display($sid, $pid, $cid, $level = 0) {
 }
 
 function discussion_reply($pid, $sid) {
-  global $user, $theme;
+  global $user, $theme, $allowed_html;
 
   ### Extract parent-information/data:
   if ($pid) {
@@ -183,6 +183,7 @@ function discussion_reply($pid, $sid) {
   $output .= "<P>\n";
   $output .= " <B>Comment:</B><BR>\n";
   $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"comment\">". check_output(check_field($user->signature)) ."</TEXTAREA><BR>\n";
+  $output .= " <SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL>\n";
   $output .= "</P>\n";
  
   ### Hidden fields:
@@ -197,7 +198,7 @@ function discussion_reply($pid, $sid) {
 }
 
 function comment_preview($pid, $sid, $subject, $comment) {
-  global $user, $theme;
+  global $user, $theme, $allowed_html;
 
   ### Preview comment:
   $theme->comment($user->userid, check_output($subject), check_output($comment), time(), check_output($user->url), check_output($user->fake_email), "", "", "", "reply to this comment");
@@ -221,6 +222,7 @@ function comment_preview($pid, $sid, $subject, $comment) {
   $output .= "<P>\n";
   $output .= " <B>Comment:</B><BR>\n";
   $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"comment\">". check_output(check_field($comment)) ."</TEXTAREA><BR>\n";
+  $output .= " <SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL>\n";
   $output .= "</P>\n";
   
   ### Hidden fields:
