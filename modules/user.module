@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.210 2003/09/13 15:24:04 dries Exp $
+// $Id: user.module,v 1.211 2003/09/14 08:57:16 dries Exp $
 
 session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
 session_start();
@@ -351,7 +351,7 @@ function user_perm() {
 
 function user_search($keys) {
 
-  $result = db_query_range("SELECT * FROM {users} WHERE name LIKE '%$keys%'", 0, 20);
+  $result = db_query_range("SELECT * FROM {users} WHERE name LIKE '%". check_query($keys) ."%'", 0, 20);
   while ($account = db_fetch_object($result)) {
     $find[$i++] = array("title" => $account->name, "link" => (strstr(request_uri(), "admin") ? url("admin/user/edit/$account->uid") : url("user/view/$account->uid")), "user" => $account->name);
   }
