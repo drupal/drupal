@@ -24,6 +24,13 @@ function poll_cron() {
   }
 }
 
+function poll_delete($node) {
+  if ($node->nid)
+  {
+    db_query("DELETE FROM poll_choices WHERE nid='" . $node->nid . "'");
+  }  
+}
+
 function poll_get_choices_array($poll) {
   if (!is_array($poll[choice])) {
     $result = db_query("SELECT * FROM poll_choices WHERE nid='" . $poll[nid] . "'");
@@ -78,7 +85,9 @@ function poll_search($keys) {
 
 function poll_help() {
  ?>
-   <i>No help available.</i>
+   <p>Poll.module allows you to run simple multiple choice polls on your site. After creating the necessary categories, you can add a poll through this administration interface.</p>
+   <p>The poll.module also has a block to show the latest poll. If you combine it with a poll category that doesn't promote to the mainpage, you'll get a side-block only poll system.</p>
+   <p>If you want to set a limit on the duration of a poll, use the <i>Poll Duration</i> setting. After the specified interval, the poll will automatically be closed, preventing anymore voting.</p> 
  <?php
 }
 
@@ -163,14 +172,16 @@ function poll_form($edit = array(), $nocheck = 0) {
                     10713600 => t("4 months"), 31536000 => t("1 year"));
 
   $active = array(0 => "Closed", 1 => "Active");
-
+  
   $admin = ($edit[nid] && user_access($user,"poll")) ? 1 : 0;
+  
+  if ($admin && !is_array($edit[choices])) $edit = poll_get_choices_array($edit);
 
   /* Mini-form for number of choiceboxes */
   $choices = $edit[choices]?$edit[choices]:max(5,sizeof($edit[choice]));
   for ($c = 2; $c <= 20; $c++) $opts[$c]=$c;
-  $form .= form_select(t("Number of choices"), "choices", $choices, $opts, t("This box specifies the number of choiceboxes in this form, it doesn't affect the actual amount of choices in the poll."));
-  $form .= form_submit(t("Refresh")) . "<br><br><br>";
+  $form .= form_select(t("Number of choices"), "choices", $choices, $opts, t("This box only specifies the number of boxes in this form, it doesn't have to equal the actual amount of choices in the poll."));
+  $form .= form_submit(t("Preview")) . "<br><br><br>";
 
   /* Main form */
   $form .= form_item(t("Your name"), format_username(($edit[userid] ? $edit[userid] : $user->userid)));
@@ -235,66 +246,16 @@ function poll_block() {
   $result = _node_get(array("type" => "poll"));
   while ($poll = db_fetch_object($result)) {
     if ($poll->active) {
-      $poll = poll_view($poll, 0, 1);
-      $output = "<b>" . $poll[title] . "</b><br>" . $poll[content];
+      $content = poll_view($poll, 0, 1);
+      $output = "<b>" . $content[title] . "</b><br>" . $content[content] . "<br><div align=\"center\">[ <a href=\"node.php?id=" . $poll->nid . "\">" . t("Read more") . "</a> ]</div>";
       break;
     }
   }
   $blocks[0][subject] = "Latest poll";
   $blocks[0][content] = $output ? $output : "No active polls.";
-  $blocks[0][info] = "Display the latest active poll.";
+  $blocks[0][info] = "Latest active poll.";
   $blocks[0][link] = "index.php";
   return $blocks;
-}
-
-function poll_query($type = "") {
-  global $status;
-  $queries = array(array("recent polls", "WHERE n.type = 'poll' ORDER BY n.timestamp DESC"), array("active polls", "WHERE n.type = 'poll' AND n.status = '$status[posted]' ORDER BY n.timestamp DESC"), array("queued polls", "WHERE n.type = 'poll' AND n.status = '$status[queued]' ORDER BY n.timestamp DESC"), array("dumped polls", "WHERE n.type = 'poll' AND n.status = '$status[dumped]' ORDER BY n.timestamp DESC"), array("polls without category (integrity)", "WHERE n.type = 'poll' AND n.cid = '0' ORDER BY n.timestamp DESC"), array("polls without topic (integrity)", "WHERE n.type = 'poll' AND n.tid = '0' ORDER BY n.timestamp DESC"));
-  return ($queries[$type] ? $queries[$type] : $queries);
-}
-
-function poll_overview($query = array()) {
-  return node_overview($query);
-}
-
-function poll_admin() {
-  global $id, $edit, $mod, $keys, $op, $theme, $type, $user;
-
-  print "<SMALL><A HREF=\"admin.php?mod=poll&op=add\">add new poll</A> | <A HREF=\"admin.php?mod=poll&op=listing\">poll listing</A> | <A HREF=\"admin.php?mod=poll&op=search\">search poll</A> | <A HREF=\"admin.php?mod=poll\">overview</A> | <A HREF=\"admin.php?mod=poll&op=help\">help</A></SMALL><HR>\n";
-
-  $type = ($type ? $type : 0);
-
-  switch ($op) {
-    case "delete":
-      print poll_delete($id);
-      print poll_overview(poll_query($type));
-      break;
-    case "edit":
-      print poll_form(poll_get_choices_array(node_get_array(array("nid" => $id))));
-      break;
-    case "help":
-      poll_help();
-      break;
-    case "listing":
-      print node_listing(poll_query());
-      break;
-    case "search":
-      print search_form($keys);
-      print search_data($keys, $mod);
-      break;
-    case t("Refresh"):
-      $refresh = 1;
-    case t("Preview"):
-      poll_view(new Poll(node_preview($edit)));
-    case "add":
-      print poll_form($edit, $refresh);
-      break;
-    case t("Submit"):
-      poll_save($edit);
-      // fall through:
-    default:
-      print poll_overview(poll_query($type));
-  }
 }
 
 
