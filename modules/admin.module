@@ -1,5 +1,5 @@
 <?php
-// $Id: admin.module,v 1.1 2003/01/06 19:51:00 dries Exp $
+// $Id: admin.module,v 1.2 2003/01/06 20:51:39 dries Exp $
 
 include_once "includes/common.inc";
 
@@ -69,6 +69,7 @@ function admin_page($mod) {
           print module_invoke(arg(1), "admin");
         }
         else {
+          print "<h2>". t("System messages") ."</h2>";
           print watchdog_overview("actions");
         }
 
