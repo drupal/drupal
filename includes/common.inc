@@ -869,7 +869,7 @@ function format_rss_item($title, $link, $description, $args = array()) {
  *   A translated string.
  */
 function format_plural($count, $singular, $plural) {
-  if ($count == 1) return t($singular);
+  if ($count == 1) return t($singular, array("%count" => $count));
 
   // get the plural index through the gettext formula
   $index = (function_exists('locale')) ? locale_get_plural($count) : -1;
@@ -879,7 +879,7 @@ function format_plural($count, $singular, $plural) {
   else {
     switch ($index) {
       case "0":
-        return t($singular);
+        return t($singular, array("%count" => $count));
       case "1":
         return t($plural, array("%count" => $count));
       default:
