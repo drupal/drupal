@@ -31,10 +31,22 @@ $comment_votes = array("none" => "none",
 #
 $themes = array("UnConeD" => array(
                   "themes/unconed/unconed.theme",
-                  "modern theme, gray and blue, high coolness factor"),
+                  "Internet explorer, Netscape, Opera"),
                 "Marvin"  => array(
                   "themes/marvin/marvin.theme",
-                  "classic theme, white, basic design with a fresh look"));
+                  "Internet explorer, Netscape, Opera"),
+                "Jeroen"  => array(
+                  "themes/jeroen/jeroen.theme",
+                  "Internet explorer, Netscape"),
+                "Stone Age"  => array(
+                  "themes/example/example.theme",
+                  "Internet explorer, Netscape, Opera, Lynx"),
+                "Goofy"  => array(
+                  "themes/goofy/goofy.theme",
+                  "Internet explorer, Netscape, Opera"),
+                "Yaroon" => array(
+                  "themes/yaroon/yaroon.theme",
+                  "Internet explorer, Netscape, Opera"));
 
 #
 # Languages / translation / internationalization:
