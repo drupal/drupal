@@ -79,8 +79,15 @@ function block_admin_save($edit) {
   }
 }
 
-function block_rehash() {
-  $result = db_query("SELECT * FROM blocks ORDER BY weight");
+/**
+ * update blocks db table with blocks currently exported by modules
+ * 
+ * @param   array   $order_by   php array_multisort() style sort ordering, eg. "weight", SORT_ASC, SORT_STRING. see {@link http://www.php.net/manual/en/function.array-multisort.php}
+ * @return  array   blocks currently exported by modules, sorted by $order_by
+ * @access  private
+ */
+function _block_rehash($order_by = array("weight")) {
+  $result = db_query("SELECT * FROM blocks");
   while ($old_block = db_fetch_object($result)) {
     $old_blocks[$old_block->module][$old_block->delta] = $old_block;
   }
@@ -109,9 +116,15 @@ function block_rehash() {
         db_query("INSERT INTO blocks (module, delta, status, weight, region, path, custom) VALUES ('%s', '%d', '%d', '%d', '%d', '%s', '%d')", $block["module"], $block["delta"], $block["status"], $block["weight"], $block["region"], $block["path"], $block["custom"]);
 
         $blocks[] = $block;
+        
+        // build array to sort on
+        $order[$order_by[0]][] = $block[$order_by[0]];
       }
     }
   }
+
+  // sort
+  array_multisort($order[$order_by[0]], $order_by[1] ? $order_by[1] : SORT_ASC, $order_by[2] ? $order_by[2] : SORT_REGULAR, $blocks);
 
   return $blocks;
 }
@@ -121,7 +134,7 @@ function block_admin_display() {
   $output = "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
   $output .= "<tr><th>block</th><th>module</th><th>enabled</th><th>custom</th><th>weight</th><th>region</th><th>path</th><th colspan=\"2\">operations</th></tr>\n";
 
-  $blocks = block_rehash();
+  $blocks = _block_rehash();
 
   foreach ($blocks as $block) {
     $output .= "<tr>";
