@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.190 2003/04/13 13:42:41 dries Exp $
+// $Id: common.inc,v 1.191 2003/04/13 14:12:43 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST, $PHP_SELF;
@@ -640,7 +640,7 @@ function format_size($size) {
 }
 
 function cache_get($key) {
-  $cache = db_fetch_object(db_query("SELECT data, created FROM cache WHERE cid = '%d'", $key));
+  $cache = db_fetch_object(db_query("SELECT data, created FROM cache WHERE cid = '%s'", $key));
   return $cache->data ? $cache : 0;
 }
 
