@@ -13,8 +13,6 @@ function archive_help($section) {
   switch ($section) {
     case 'admin/modules#description':
       return t('Displays a calendar to navigate old content.');
-    case 'admin/settings/archive':
-      return t('Choose the starting "day of the week" for the displayed calendar block.');
   }
 }
 
