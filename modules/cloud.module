@@ -124,14 +124,12 @@ function cloud_save($edit) {
 function cloud_display() {
   $result = db_query("SELECT * FROM site ORDER BY name");
 
-  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  $output .= " <tr><th>site</th><th>last update</th><th colspan=\"2\">operations</th></tr>\n";
+  $header = array(t("site"), t("last update"), t("operations"));
   while ($site = db_fetch_object($result)) {
-    $output .= " <tr><td><a href=\"". check_output($site->link) ."\">". check_output($site->name) ."</a></td><td>". ($site->timestamp ? format_interval(time() - $site->timestamp) ." ago" : "never") ."</td><td>". la(t("edit site"), array("mod" => "cloud", "op" => "edit", "id" => $site->sid)) ."</td><td>". la(t("update site"), array("mod" => "cloud", "op" => "update", "id" => $site->sid)) ."</td></tr>\n";
+    $rows[] = array("<a href=\"$site->link\">$site->name</a>", ($site->timestamp ? format_interval(time() - $site->timestamp) ." ago" : "never"), la(t("edit site"), array("mod" => "cloud", "op" => "edit", "id" => $site->sid)), la(t("update site"), array("mod" => "cloud", "op" => "update", "id" => $site->sid)));
   }
-  $output .= "</table>\n";
 
-  return $output;
+  return table($header, $rows);
 }
 
 function cloud_list($limit = 10) {
@@ -187,8 +185,6 @@ function cloud_admin() {
   global $op, $id, $edit;
 
   if (user_access("administer site cloud")) {
-    print "<small>". la(t("add new site"), array("mod" => "cloud", "op" => "add")) ." | ". la(t("overview"), array("mod" => "cloud")) ." | ". la(t("help"), array("mod" => "cloud", "op" => "help")) ."</small><hr />\n";
-
     switch ($op) {
       case "add":
         print cloud_form();
