@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.83 2003/06/18 21:21:30 dries Exp $
+// $Id: system.module,v 1.84 2003/07/01 17:54:22 dries Exp $
 
 function system_help() {
   $output .= "<p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviours including visual and operational settings.</p>";
@@ -31,7 +31,7 @@ function system_help_cron() {
 }
 
 function system_perm() {
-  return array("administer site configuration", "access administration pages", "create php content");
+  return array("administer site configuration", "access administration pages", "bypass input data check", "create php content");
 }
 
 function system_link($type) {

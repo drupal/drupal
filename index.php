@@ -1,5 +1,5 @@
 <?php
-// $Id: index.php,v 1.63 2003/06/18 21:21:29 dries Exp $
+// $Id: index.php,v 1.64 2003/07/01 17:54:20 dries Exp $
 
 include_once "includes/common.inc";
 
@@ -12,17 +12,12 @@ else {
 }
 
 if (isset($mod) && module_hook($mod, "page")) {
-  if ($mod != "admin") {
-    drupal_page_header();
-  }
+  drupal_page_header();
   module_invoke($mod, "page");
-  if ($mod != "admin") {
-    drupal_page_footer();
-  }
+  drupal_page_footer();
 }
 else {
   drupal_page_header();
-
   check_php_setting("magic_quotes_gpc", 0);
 
   if (module_hook(variable_get("site_frontpage", "node"), "page")) {
@@ -32,7 +27,6 @@ else {
     theme("header");
     theme("footer");
   }
-
   drupal_page_footer();
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.231 2003/06/30 19:18:45 dries Exp $
+// $Id: node.module,v 1.232 2003/07/01 17:54:22 dries Exp $
 
 function node_help() {
   global $mod;
@@ -1217,6 +1217,7 @@ function node_preview($node, $error = NULL) {
     if (empty($node->created)) {
       $node->created = time();
     }
+    $node->changed = time();
 
     /*
     ** Extract a teaser:
