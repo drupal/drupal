@@ -550,9 +550,6 @@ the rest of this posting."), "class" => "read-more"));
     $help["setting"] = t("This pages lets you set the defaults used during creation of nodes for all the different node types.<br /><b>comment:</b> Read/write setting for comments.<br /><b>publish:</b> Is this node publicly viewable, has it been published?<br /><b>promote:</b> Is this node to be promoted to the front page?<br /><b>moderate:</b> Does this node need approval before it can be viewed?<br /><b>static:</b> Is this node always visible on the front page?<br /><b>revision:</b> Will this node go into the revision system allowing multiple versions to be saved?");
 
     menu("admin/node", "content management", "node_admin", $help["overview"]);
-    menu("admin/node/nodes", "post overview", NULL, $help["post-overview"]);
-    menu("admin/node/nodes/0", "new or updated posts", "node_admin", $help["new-update"], 0);
-    menu("admin/node/nodes/1", "approval queue", "node_admin", $help["queue"], 1);
     menu("admin/node/search", "search posts", "node_admin", $help["search"], 8);
     menu("admin/node/help", "help", "node_help", NULL, 9);
     menu("admin/node/edit", "edit node", "node_admin", NULL, 0, 1);
@@ -603,13 +600,84 @@ function node_admin_edit($node) {
 }
 
 function node_admin_nodes() {
+  $filters = array(
+    array(t("View posts that are new or updated"), "ORDER BY n.changed DESC"),
+    array(t("View posts that need approval"), "WHERE n.status = 0 OR n.moderate = 1 ORDER BY n.changed DESC"),
+    array(t("View posts that are promoted"), "WHERE n.status = 1 AND n.promote = 1 ORDER BY n.changed DESC"),
+    array(t("View posts that are not promoted"), "WHERE n.status = 1 AND n.promote = 0 ORDER BY n.changed DESC"),
+    array(t("View posts that are static"), "WHERE n.status = 1 AND n.static = 1 ORDER BY n.changed DESC"),
+    array(t("View posts that are unpublished"), "WHERE n.status = 0 AND n.moderate = 0 ORDER BY n.changed DESC")
+   );
 
-  $query = arg(3);
-  $queries = array("ORDER BY n.changed DESC", "WHERE n.status = 0 OR n.moderate = 1 ORDER BY n.changed DESC");
+  $operations = array(
+    array(t("Approve the selected posts"), "UPDATE {node} SET status = 1, moderate = 1 WHERE nid = %d"),
+    array(t("Promote the selected posts"), "UPDATE {node} SET status = 1, promote = 1 WHERE nid = %d"),
+    array(t("Make the selected posts static"), "UPDATE {node} SET status = 1, static = 1 WHERE nid = %d"),
+    array(t("Demote the selected posts"), "UPDATE {node} SET promote = 0 WHERE nid = %d"),
+    array(t("Unpublish the selected posts"), "UPDATE {node} SET status = 1 WHERE nid = %d")
+  );
 
-  $result = pager_query("SELECT n.*, u.name, u.uid FROM {node} n LEFT JOIN {users} u ON n.uid = u.uid ". $queries[$query ? $query : 0], 50);
+  /*
+  ** Handle operations:
+  */
 
-  $header = array(t("title"), t("type"), t("author"), t("status"), array("data" => t("operations"), "colspan" => 2));
+  if (empty($_SESSION["node-overview-filter"])) {
+    $_SESSION["node-overview-filter"] = 0;
+  }
+
+  if ($_POST["edit"]["filter"]) {
+    $_SESSION["node-overview-filter"] = $_POST["edit"]["filter"];
+  }
+
+  if ($_POST["edit"]["operation"]) {
+    $operation = $operations[$_POST["edit"]["operation"]][1];
+    foreach ($_POST["edit"]["status"] as $nid => $value) {
+      if ($value) {
+        db_query($operation, $nid);
+      }
+    }
+
+    $output = status(t("the update has been performed."));
+  }
+
+  $filter = $_SESSION["node-overview-filter"];
+
+  /*
+  ** Render filter form:
+  */
+
+  $options = array();
+  foreach ($filters as $key => $value) {
+    $options[] = $value[0];
+  }
+
+  $form  = form_select(NULL, "filter", $filter, $options);
+  $form .= form_submit(t("Go"));
+
+  $output .= "<h3>". t("Filter options") ."</h3>";
+  $output .= "<div class=\"container-inline\">$form</div>";
+
+  /*
+  ** Render operations form:
+  */
+
+  $options = array();
+  foreach ($operations as $key => $value) {
+    $options[] = $value[0];
+  }
+
+  $form = form_select(NULL, "operation", 0, $options);
+  $form .= form_submit(t("Go"));
+
+  $output .= "<h3>". t("Update options") ."</h3>";
+  $output .= "<div class=\"container-inline\">$form</div>";
+
+  /*
+  ** Overview table:
+  */
+
+  $result = pager_query("SELECT n.*, u.name, u.uid FROM {node} n LEFT JOIN {users} u ON n.uid = u.uid ". $filters[$filter][1], 50);
+  $header = array(NULL, t("title"), t("type"), t("author"), t("status"), t("operations"));
 
   while ($node = db_fetch_object($result)) {
     $rows[] = array(l($node->title, node_url($node)) ." ". (node_is_new($node->nid, $node->changed) ? theme_mark() : ""), module_invoke($node->type, "node", "name"), format_name($node), ($node->status ? t("published") : t("not published")), l(t("edit node"), "admin/node/edit/$node->nid"), l(t("delete node"), "admin/node/delete/$node->nid"));
@@ -619,12 +687,10 @@ function node_admin_nodes() {
     $rows[] = array(array("data" => $pager, "colspan" => 6));
   }
 
-  return table($header, $rows);
+  $output .= "<h3>". $filters[$filter][0] ."</h3>";
+  $output .= table($header, $rows);
+  return form($output);
 }
-
-/*
-**
-*/
 
 function node_admin_settings($edit) {
   $op = $_POST["op"];
