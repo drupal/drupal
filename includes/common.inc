@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.308 2004/01/14 22:30:08 dries Exp $ */
+/* $Id: common.inc,v 1.309 2004/01/14 22:41:15 dries Exp $ */
 
 /**
  * @defgroup common Core functions
@@ -967,6 +967,8 @@ function drupal_get_normal_path($path) {
 }
 
 function url($url = NULL, $query = NULL, $fragment = NULL) {
+  global $base_url;
+  
   static $script;
 
   if (empty($script)) {
@@ -989,36 +991,36 @@ function url($url = NULL, $query = NULL, $fragment = NULL) {
   if (variable_get("clean_url", "0") == "0") {
     if (isset($url)) {
       if (isset($query)) {
-        return "$script?q=$url&amp;$query$fragment";
+        return "$base_url/$script?q=$url&amp;$query$fragment";
       }
       else {
-        return "$script?q=$url$fragment";
+        return "$base_url/$script?q=$url$fragment";
       }
     }
     else {
       if (isset($query)) {
-        return "$script?$query$fragment";
+        return "$base_url/$script?$query$fragment";
       }
       else {
-        return "$fragment";
+        return "$base_url/$fragment";
       }
     }
   }
   else {
     if (isset($url)) {
       if (isset($query)) {
-        return "$url?$query$fragment";
+        return "$base_url/$url?$query$fragment";
       }
       else {
-        return "$url$fragment";
+        return "$base_url/$url$fragment";
       }
     }
     else {
       if (isset($query)) {
-        return "$script?$query$fragment";
+        return "$base_url/$script?$query$fragment";
       }
       else {
-        return "$fragment";
+        return "$base_url/$fragment";
       }
     }
   }
