@@ -457,10 +457,6 @@ function user_login($edit = array()) {
       $user = user_load(array("name" => $name, "pass" => $pass, "status" => 1));
     }
 
-print "user = $user->uid, $user->name<br />";
-
-die("foo");
-
     /*
     ** Try to log on the user through Drupal:
     */
@@ -695,7 +691,7 @@ function user_edit($edit = array()) {
         ** Save user information:
         */
 
-        $user = user_save($user, array("name" => $edit["name"], "mail" => $edit["mail"], "jabber" => $edit["jabber"], "theme" => $edit["theme"], "timezone" => $edit["timezone"], "homepage" => $edit["homepage"], "signature" => $edit["signature"]));
+        $user = user_save($user, array("name" => $edit["name"], "mail" => $edit["mail"], "jabber" => $edit["jabber"], "theme" => $edit["theme"], "timezone" => $edit["timezone"], "homepage" => $edit["homepage"], "signature" => $edit["signature"], "language" => $edit["language"]));
 
         /*
         ** Save new password (if required):
