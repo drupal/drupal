@@ -3,7 +3,7 @@
 
 /**
  * @file
- * Database interface code for MySQL database servers.
+ * Database interface code for postgresql database servers.
  */
 
 /**
@@ -14,7 +14,7 @@
 /**
  * Initialize a database connection.
  *
- * Note that you can change the mysql_connect() call to mysql_pconnect() if you
+ * Note that you can change the pg_connect() call to pg_pconnect() if you
  * want to use persistent connections. This is not recommended on shared hosts,
  * and might require additional database/webserver tuning. It can increase
  * performance, however, when the overhead to connect to your database is high
@@ -23,13 +23,8 @@
 function db_connect($url) {
   $url = parse_url($url);
 
-  // Allow for non-standard MySQL port.
-  if (isset($url['port'])) {
-     $url['host'] = $url['host'] .':'. $url['port'];
-  }
-
-  $connection = mysql_connect($url['host'], $url['user'], $url['pass']) or die(mysql_error());
-  mysql_select_db(substr($url['path'], 1)) or die('unable to select database');
+  $conn_string = ' user='. $url['user'] .' dbname='. substr($url['path'], 1) .' password='. $url['pass'];
+  $connection = pg_connect($conn_string) or die(pg_last_error());
 
   return $connection;
 }
@@ -97,7 +92,7 @@ function db_queryd($query) {
  * Helper function for db_query().
  */
 function _db_query($query, $debug = 0) {
-  global $active_db;
+  global $active_db, $last_result;
   global $queries;
 
   if (variable_get('dev_query', 0)) {
@@ -105,7 +100,7 @@ function _db_query($query, $debug = 0) {
     $timer = (float)$usec + (float)$sec;
   }
 
-  $result = mysql_query($query, $active_db);
+  $last_result = pg_query($active_db, $query);
 
   if (variable_get('dev_query', 0)) {
     list($usec, $sec) = explode(' ', microtime());
@@ -115,14 +110,14 @@ function _db_query($query, $debug = 0) {
   }
 
   if ($debug) {
-    print '<p>query: '. $query .'<br />error:'. mysql_error() .'</p>';
+    print '<p>query: '. $query .'<br />error:'. pg_last_error() .'</p>';
   }
 
-  if (!mysql_errno()) {
-    return $result;
+  if ($last_result !== FALSE) {
+    return $last_result;
   }
   else {
-    trigger_error(mysql_error() ."\nquery: ". htmlspecialchars($query), E_USER_ERROR);
+    trigger_error(pg_last_error() ."\nquery: ". htmlspecialchars($query), E_USER_ERROR);
   }
 }
 
@@ -137,7 +132,7 @@ function _db_query($query, $debug = 0) {
  */
 function db_fetch_object($result) {
   if ($result) {
-    return mysql_fetch_object($result);
+    return pg_fetch_object($result);
   }
 }
 
@@ -153,7 +148,7 @@ function db_fetch_object($result) {
  */
 function db_fetch_array($result) {
   if ($result) {
-    return mysql_fetch_array($result, MYSQL_ASSOC);
+    return pg_fetch_assoc($result);
   }
 }
 
@@ -167,7 +162,7 @@ function db_fetch_array($result) {
  */
 function db_num_rows($result) {
   if ($result) {
-    return mysql_num_rows($result);
+    return pg_num_rows($result);
   }
 }
 
@@ -185,8 +180,10 @@ function db_num_rows($result) {
  *   The resulting field.
  */
 function db_result($result, $row = 0) {
-  if ($result && mysql_num_rows($result) > $row) {
-    return mysql_result($result, $row);
+  if ($result && pg_num_rows($result) > $row) {
+    $res = pg_fetch_row($result, $row);
+
+    return $res[0];
   }
 }
 
@@ -194,7 +191,7 @@ function db_result($result, $row = 0) {
  * Determine whether the previous query caused an error.
  */
 function db_error() {
-  return mysql_errno();
+  return pg_last_error();
 }
 
 /**
@@ -206,12 +203,7 @@ function db_error() {
  * will be created.
  */
 function db_next_id($name) {
-  $name = db_prefix_tables($name);
-  db_query('LOCK TABLES {sequences} WRITE');
-  $id = db_result(db_query("SELECT id FROM {sequences} WHERE name = '%s'", $name)) + 1;
-  db_query("REPLACE INTO {sequences} VALUES ('%s', %d)", $name, $id);
-  db_query('UNLOCK TABLES');
-
+  $id = db_result(db_query("SELECT nextval('public.%s_seq')", db_prefix_tables($name)));
   return $id;
 }
 
@@ -219,7 +211,8 @@ function db_next_id($name) {
  * Determine the number of rows changed by the preceding query.
  */
 function db_affected_rows() {
-  return mysql_affected_rows();
+  global $last_result;
+  return pg_affected_rows($last_result);
 }
 
 /**
@@ -257,7 +250,7 @@ function db_query_range($query) {
     $query = func_get_arg(0);
     $query = db_prefix_tables($query);
   }
-  $query .= ' LIMIT '. $from .', '. $count;
+  $query .= ' LIMIT '. $count .' OFFSET '. $from;
   return _db_query($query);
 }
 
@@ -270,7 +263,7 @@ function db_query_range($query) {
  *  Encoded data.
  */
 function db_encode_blob($data) {
-  return $data;
+  return pg_escape_bytea($data);
 }
 
 /**
@@ -282,7 +275,7 @@ function db_encode_blob($data) {
  *  Decoded data.
  */
 function db_decode_blob($data) {
-  return $data;
+  return stripcslashes($data);
 }
 
 /**

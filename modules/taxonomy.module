@@ -77,7 +77,7 @@ function taxonomy_block($op = 'list', $delta = 0) {
     return $blocks;
   }
   else if (user_access('access content')) {
-    $result = db_query("SELECT d.tid, d.name, MAX(n.created) AS updated, COUNT(*) AS count FROM {term_data} d INNER JOIN {term_node} USING (tid) INNER JOIN {node} n USING (nid) WHERE n.status = 1 GROUP BY d.tid ORDER BY updated DESC, d.name");
+    $result = db_query("SELECT d.tid, d.name, MAX(n.created) AS updated, COUNT(*) AS count FROM {term_data} d INNER JOIN {term_node} USING (tid) INNER JOIN {node} n USING (nid) WHERE n.status = 1 GROUP BY d.tid, d.name ORDER BY updated DESC, d.name");
     $items = array();
     while ($category = db_fetch_object($result)) {
       $items[] = l("$category->name ($category->count)", 'taxonomy/term/'. $category->tid) .'<br />'. format_interval(time() - $category->updated) .' '. t('ago');

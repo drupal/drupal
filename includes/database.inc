@@ -108,7 +108,7 @@ function db_set_active($name = 'default') {
       include_once 'includes/database.mysql.inc';
     }
     else {
-      include_once 'includes/database.pear.inc';
+      include_once 'includes/database.pgsql.inc';
     }
 
     $db_conns[$name] = db_connect($connect_url);

@@ -141,7 +141,7 @@ function blog_page_user($uid) {
   $title = t("%name's blog", array('%name' => $account->name));
   $output = '';
 
-  $result = pager_query('SELECT DISTINCT(n.nid) FROM {node} n '. node_access_join_sql() ." WHERE type = 'blog' AND n.uid = %d AND n.status = 1 AND ". node_access_where_sql() .' ORDER BY n.sticky DESC, n.created DESC', variable_get('default_nodes_main', 10), 0, NULL, $account->uid);
+  $result = pager_query('SELECT DISTINCT(n.nid), n.sticky, n.created FROM {node} n '. node_access_join_sql() ." WHERE type = 'blog' AND n.uid = %d AND n.status = 1 AND ". node_access_where_sql() .' ORDER BY n.sticky DESC, n.created DESC', variable_get('default_nodes_main', 10), 0, NULL, $account->uid);
   while ($node = db_fetch_object($result)) {
     $output .= node_view(node_load(array('nid' => $node->nid)), 1);
   }
@@ -160,7 +160,7 @@ function blog_page_last() {
 
   $output = '';
 
-  $result = pager_query('SELECT DISTINCT(n.nid) FROM {node} n '. node_access_join_sql() ." WHERE n.type = 'blog' AND n.status = 1 AND ". node_access_where_sql() .' ORDER BY n.created DESC', variable_get('default_nodes_main', 10));
+  $result = pager_query('SELECT DISTINCT(n.nid), n.created FROM {node} n '. node_access_join_sql() ." WHERE n.type = 'blog' AND n.status = 1 AND ". node_access_where_sql() .' ORDER BY n.created DESC', variable_get('default_nodes_main', 10));
 
   while ($node = db_fetch_object($result)) {
     $output .= node_view(node_load(array('nid' => $node->nid)), 1);
@@ -292,7 +292,7 @@ function blog_block($op = 'list', $delta = 0) {
   }
   else {
     if (user_access('access content')) {
-      $block['content'] = node_title_list(db_query_range('SELECT DISTINCT(n.nid), n.title FROM {node} n '. node_access_join_sql() ." WHERE n.type = 'blog' AND n.status = 1 AND ". node_access_where_sql() .' ORDER BY n.created DESC', 0, 10));
+      $block['content'] = node_title_list(db_query_range('SELECT DISTINCT(n.nid), n.title, n.created FROM {node} n '. node_access_join_sql() ." WHERE n.type = 'blog' AND n.status = 1 AND ". node_access_where_sql() .' ORDER BY n.created DESC', 0, 10));
       $block['content'] .= '<div class="more-link">'. l(t('more'), 'blog', array('title' => t('Read the latest blog entries.'))) .'</div>';
       $block['subject'] = t('Recent blog posts');
     }

@@ -366,7 +366,7 @@ function block_list($region) {
         */
         if (!($block['throttle'] && (module_invoke('throttle', 'status') > 4))) {
           $array = module_invoke($block['module'], 'block', 'view', $block['delta']);
-          if (is_array($array)) { 
+          if (is_array($array)) {
             $block = array_merge($block, $array);
           }
         }

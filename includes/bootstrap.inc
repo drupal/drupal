@@ -121,10 +121,12 @@ function cache_get($key) {
  *   A string containing HTTP header information for cached pages.
  */
 function cache_set($cid, $data, $expire = 0, $headers = NULL) {
-  db_query("UPDATE {cache} SET data = '%s', created = %d, expire = %d, headers = '%s' WHERE cid = '%s'", $data, time(), $expire, $headers, $cid);
+  $data = db_encode_blob($data);
+
+  db_query("UPDATE {cache} SET data = '$data', created = " . time() . ", expire = $expire, headers = '$headers' WHERE cid = '$cid'");
   if (!db_affected_rows()) {
-    db_query("INSERT INTO {cache} (cid, data, created, expire, headers) VALUES('%s', '%s', %d, %d, '%s')", $cid, $data, time(), $expire, $headers);
-  }
+   db_query("INSERT INTO {cache} (cid, data, created, expire, headers) VALUES('$cid', '$data', " . time() . ", $expire, '$headers')");
+ }
 }
 
 /**
@@ -250,7 +252,7 @@ function drupal_page_header() {
         header($header);
       }
 
-      print $cache->data;
+      print db_decode_blob($cache->data);
 
       // Call all init() and exit() hooks without including all modules.
       // Only use those hooks for critical operations.

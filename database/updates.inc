@@ -795,17 +795,30 @@ function update_79() {
 }
 
 function update_80() {
+  if ($GLOBALS['db_type'] == 'mysql') {
+    // Add a 'created' field to the users table:
+    $ret[] = update_sql('ALTER TABLE {users} ADD created INT(11) NOT NULL');
+    $ret[] = update_sql('ALTER TABLE {users} CHANGE timestamp changed INT(11) NOT NULL');
 
-  // Add a 'created' field to the users table:
-  $ret[] = update_sql('ALTER TABLE {users} ADD created INT(11) NOT NULL');
-  $ret[] = update_sql('ALTER TABLE {users} CHANGE timestamp changed INT(11) NOT NULL');
+    // Add some indices to speed up the update process:
+    $ret[] = update_sql('ALTER TABLE {comments} ADD index (timestamp)');
+    $ret[] = update_sql('ALTER TABLE {node} ADD index (created)');
 
-  // Add some indices to speed up the update process:
-  $ret[] = update_sql('ALTER TABLE {comments} ADD index (timestamp)');
-  $ret[] = update_sql('ALTER TABLE {node} ADD index (created)');
+    // Assign everyone a created timestamp to begin with:
+    $ret[] = update_sql("UPDATE {users} SET created = changed WHERE created = ''");
 
-  // Assign everyone a created timestamp to begin with:
-  $ret[] = update_sql("UPDATE {users} SET created = changed WHERE created = ''");
+  }
+  else {
+    // Add a 'created' field to the users table:
+    $ret[] = update_sql('ALTER TABLE {users} ADD created INTEGER');
+    $ret[] = update_sql("ALTER TABLE {users} ALTER COLUMN created SET DEFAULT '0'");
+    $ret[] = update_sql("UPDATE {users} SET created = 0");
+    $ret[] = update_sql("ALTER TABLE {users} ALTER COLUMN created SET NOT NULL");
+
+    $ret[] = update_sql('ALTER TABLE {users} RENAME timestamp TO changed');
+
+    $ret[] = update_sql("UPDATE {users} SET created = changed WHERE created = 0");
+  }
 
   // Print a status message:"
   print '<p>Note: this might take a while ...</p>';
@@ -830,29 +843,63 @@ function update_80() {
     db_query('UPDATE {users} SET created = %d WHERE created > %d AND uid <= %d', $timestamp, $timestamp, $account->uid);
   }
 
-  // Add profile module related tables:
-  $ret[] = update_sql("CREATE TABLE {profile_fields} (
-    fid int(10) NOT NULL auto_increment,
-    title varchar(255) default NULL,
-    name varchar(128) default NULL,
-    explanation TEXT default NULL,
-    category varchar(255) default NULL,
-    type varchar(128) default NULL,
-    weight tinyint(1) DEFAULT '0' NOT NULL,
-    overview tinyint(1) DEFAULT '0' NOT NULL,
-    options text,
-    KEY category (category),
-    UNIQUE KEY name (name),
-    PRIMARY KEY (fid)
-   );");
+  if ($GLOBALS['db_type'] == 'mysql') {
+    // Add profile module related tables:
+    $ret[] = update_sql("CREATE TABLE {profile_fields} (
+      fid int(10) NOT NULL auto_increment,
+      title varchar(255) default NULL,
+      name varchar(128) default NULL,
+      explanation TEXT default NULL,
+      category varchar(255) default NULL,
+      type varchar(128) default NULL,
+      weight tinyint(1) DEFAULT '0' NOT NULL,
+      overview tinyint(1) DEFAULT '0' NOT NULL,
+      options text,
+      KEY category (category),
+      UNIQUE KEY name (name),
+      PRIMARY KEY (fid)
+     );");
 
-  $ret[] = update_sql("CREATE TABLE {profile_values} (
-    fid int(11) unsigned default '0',
-    uid int(11) unsigned default '0',
-    value text,
-    KEY uid (uid),
-    KEY fid (fid)
-   );");
+    $ret[] = update_sql("CREATE TABLE {profile_values} (
+      fid int(11) unsigned default '0',
+      uid int(11) unsigned default '0',
+      value text,
+      KEY uid (uid),
+      KEY fid (fid)
+     );");
+    $ret[] = update_sql("ALTER TABLE {users} ADD picture varchar(255) NOT NULL DEFAULT ''");
+  }
+  else {
+
+    $ret[] = update_sql("CREATE TABLE profile_fields (
+      fid serial,
+      title varchar(255) default NULL,
+      name varchar(128) default NULL,
+      explanation TEXT default NULL,
+      category varchar(255) default NULL,
+      type varchar(128) default NULL,
+      weight smallint DEFAULT '0' NOT NULL,
+      overview smallint DEFAULT '0' NOT NULL,
+      options text,
+      UNIQUE (name),
+      PRIMARY KEY (fid)
+    )");
+    $ret[] = update_sql("CREATE INDEX profile_fields_category ON profile_fields (category)");
+
+    $ret[] = update_sql("CREATE TABLE profile_values (
+      fid integer default '0',
+      uid integer default '0',
+      value text
+    )");
+    $ret[] = update_sql("CREATE INDEX profile_values_uid ON profile_values (uid)");
+    $ret[] = update_sql("CREATE INDEX profile_values_fid ON profile_values (fid)");
+
+    $ret[] = update_sql("ALTER TABLE {users} ADD picture varchar(255)");
+    $ret[] = update_sql("ALTER TABLE {users} ALTER COLUMN picture SET DEFAULT ''");
+    $ret[] = update_sql("UPDATE {users} SET picture = ''");
+    $ret[] = update_sql("ALTER TABLE {users} ALTER COLUMN picture SET NOT NULL");
+
+  }
 
   // Migrate the old profile data to the new scheme:
   $fields = array(
@@ -882,7 +929,6 @@ function update_80() {
   foreach ($fields as $field) {
     db_query("INSERT INTO {profile_fields} (title, name, type, category, options, overview) VALUES ('%s', '%s', '%s', 'Personal information', '%s', %d)", $field[0], $field[1], $field[2], $field[3], $field[4]);
   }
-  db_query("ALTER TABLE {users} ADD picture varchar(255) NOT NULL DEFAULT ''");
 
   $result = db_query("SELECT uid FROM {users} WHERE uid > 0");
   while ($account = db_fetch_object($result)) {
@@ -965,7 +1011,7 @@ function update_83() {
   }
   else {
     $ret[] = update_sql("CREATE TABLE {menu} (
-  mid integer NOT NULL default '0',
+  mid serial,
   pid integer NOT NULL default '0',
   path varchar(255) NOT NULL default '',
   title varchar(255) NOT NULL default '',
@@ -1239,6 +1285,9 @@ function update_96() {
 }
 
 function update_97() {
+  /**
+   * Works for both PostgreSQL and MySQL
+   */
   $convert = array('node/view/' => 'node/', 'book/view/' => 'book/', 'user/view/' => 'user/');
   foreach ($convert as $from => $to) {
     $result = db_query("SELECT pid, src FROM {url_alias} WHERE src LIKE '%s%%'", $from);
@@ -1251,6 +1300,9 @@ function update_97() {
 }
 
 function update_98() {
+  /**
+   * Works for both PostgreSQL and MySQL
+   */
   $result = db_query("SELECT pid, src FROM {url_alias} WHERE src LIKE 'taxonomy/%%'", $from);
   while ($alias = db_fetch_object($result)) {
     list(, $page, $op, $terms) = explode('/', $alias->src);
@@ -1319,9 +1371,55 @@ function update_99() {
     $ret[] = update_sql("ALTER TABLE {page} DROP format");
   }
   else if ($GLOBALS['db_type'] == 'pgsql') {
-    // TODO: add pgsql equivalent. Whoever does this should pay attention that
-    // the keys/indices for the 'filters' table are correct. There was some
-    // inconsistency between the MySQL and PGSQL version before.
+    $result = db_query("SELECT * FROM {filters}");
+    if ($result) {
+      while ($obj = db_fetch_object($result)) {
+        $filters[] = $obj;
+      }
+    }
+
+    $ret[] = update_sql("DROP TABLE {filters}");
+
+    $ret[] = update_sql("CREATE TABLE {filters} (
+      format integer NOT NULL DEFAULT '0',
+      module varchar(64) NOT NULL DEFAULT '',
+      delta smallint NOT NULL DEFAULT 1,
+      weight smallint DEFAULT '0' NOT NULL
+    )");
+
+    $ret[] = update_sql("CREATE INDEX filters_module_idx ON filters(module)");
+    if (is_array($filters)) {
+      foreach ($filters as $filter) {
+        db_query("INSERT INTO {filters} VALUES (%d, '%s', %d, %d)", $filter->format ? $filter->format : 0, $filter->module, $filter->delta ? $filter->delta : 1, $filter->weight);
+      }
+    }
+
+    $ret[] = update_sql("CREATE TABLE {filter_formats} (
+      format SERIAL,
+      name varchar(255) NOT NULL default '',
+      roles varchar(255) NOT NULL default '',
+      cache smallint NOT NULL default '0',
+      PRIMARY KEY (format)
+    )");
+
+    $ret[] = update_sql("ALTER TABLE {boxes} RENAME type TO format");
+
+    $ret[] = update_sql("ALTER TABLE {comments} ADD format smallint");
+    $ret[] = update_sql("ALTER TABLE {comments} ALTER COLUMN format SET DEFAULT '0'");
+    $ret[] = update_sql("UPDATE {comments} SET format = '0'");
+    $ret[] = update_sql("ALTER TABLE {comments} ALTER COLUMN format SET NOT NULL");
+
+    $ret[] = update_sql("ALTER TABLE {node} ADD format smallint");
+    $ret[] = update_sql("ALTER TABLE {node} ALTER COLUMN format SET DEFAULT '0'");
+    $ret[] = update_sql("UPDATE {node} SET format = '0'");
+    $ret[] = update_sql("ALTER TABLE {node} ALTER COLUMN format SET NOT NULL");
+
+
+    /* Postgres usually can't drop columns
+    $ret[] = update_sql("ALTER TABLE {book} DROP format");
+    $ret[] = update_sql("ALTER TABLE {page} DROP format");
+    */
+
   }
 
   // Initialize all nodes and comments to the legacy format (see below)
@@ -1370,7 +1468,7 @@ function update_99() {
   }
   // Make sure the legacy format is accessible to all roles
   $all_roles = array_keys(user_roles());
-  $ret[] = update_sql("INSERT INTO {filter_formats} VALUES (1,'$default',',". implode(',', $all_roles) .",',1)");
+  $ret[] = update_sql("INSERT INTO {filter_formats} VALUES (". db_next_id("{filter_formats}_format") .",'$default',',". implode(',', $all_roles) .",',1)");
 
   // Determine which roles have the old 'create php content' permission.
   $res = db_query("SELECT rid FROM {permission} WHERE perm LIKE '%create php content%'");
@@ -1378,10 +1476,11 @@ function update_99() {
   while ($role = db_fetch_object($res)) {
     $php_roles[] = $role->rid;
   }
-  $ret[] = update_sql("INSERT INTO {filter_formats} VALUES (2,'PHP code','". implode(',', $php_roles) .",',0)");
+
+  $ret[] = update_sql("INSERT INTO {filter_formats} VALUES (". db_next_id("{filter_formats}_format") .",'PHP code','". implode(',', $php_roles) .",',0)");
 
   // This is a 'Full HTML' format which allows all HTML without restrictions.
-  $ret[] = update_sql("INSERT INTO {filter_formats} VALUES (3,'Full HTML','',1)");
+  $ret[] = update_sql("INSERT INTO {filter_formats} VALUES (". db_next_id("{filter_formats}_format") .",'Full HTML','',1)");
 
   // Set the default format to the legacy format
   variable_set('filter_default_format', 1);
@@ -1448,16 +1547,46 @@ function update_100() {
       KEY plid (plid),
       KEY plural (plural)
     )");
-    $ret[] = update_sql("INSERT INTO {locales_meta} (locale, name, enabled, isdefault) VALUES ('en', 'English', '1', '1')");
     $ret[] = update_sql("ALTER TABLE {users} CHANGE language language varchar(12) NOT NULL default ''");
   }
-  else { // TODO: pgsql support (see database.pgsql for suggestions)
+  else {
+    $ret[] = update_sql("CREATE TABLE {locales_target} (
+      lid int4 NOT NULL default '0',
+      translation text DEFAULT '' NOT NULL,
+      locale varchar(12) NOT NULL default '',
+      plid int4 NOT NULL default '0',
+      plural int4 NOT NULL default '0'
+    )");
+    $ret[] = update_sql("CREATE INDEX {locales_target}_lid ON {locales_target}(lid)");
+    $ret[] = update_sql("CREATE INDEX {locales_target}_locale ON {locales_target}(locale)");
+    $ret[] = update_sql("CREATE INDEX {locales_target}_plid ON {locales_target}(plid)");
+    $ret[] = update_sql("CREATE INDEX {locales_target}_plural ON {locales_target}(plural)");
+
+    $ret[] = update_sql("CREATE SEQUENCE {locales_source}_lid INCREMENT 1 START 0 MINVALUE 0");
+    $ret[] = update_sql("CREATE TABLE {locales_source} (
+      lid serial,
+      location varchar(128) NOT NULL default '',
+      source text NOT NULL,
+      PRIMARY KEY  (lid)
+    )");
+
+    $ret[] = update_sql("ALTER TABLE {users} rename language to lang_archive");
+    $ret[] = update_sql("ALTER TABLE {users} add language varchar(12)");
+    $ret[] = update_sql("ALTER TABLE {users} ALTER language SET DEFAULT ''");
+    $ret[] = update_sql("UPDATE {users} SET language = ''");
+    $ret[] = update_sql("ALTER TABLE {users} ALTER language SET NOT NULL");
+    $ret[] = update_sql("update {users} set language = lang_archive");
+
   }
+  $ret[] = update_sql("INSERT INTO {locales_meta} (locale, name, enabled, isdefault) VALUES ('en', 'English', '1', '1')");
 
   return $ret;
 }
 
 function update_101() {
+  /**
+   * Works for both PostgreSQL and MySQL
+   */
   include_once 'includes/locale.inc';
   // get the language columns
   $result = db_query('SELECT * FROM {locales} LIMIT 1');
@@ -1516,25 +1645,45 @@ function update_101() {
 }
 
 function update_102() {
+  /**
+   * Works for both PostgreSQL and MySQL
+   */
   return array(update_sql("INSERT INTO {system} (filename, name, type, description, status, throttle, bootstrap) VALUES ('modules/legacy.module', 'legacy', 'module', '', 1, 0, 0)"));
 }
 
 function update_103() {
   $ret = array();
-  $ret[] = update_sql("CREATE TABLE {files} (
-    fid int(10) unsigned NOT NULL default '0',
-    nid int(10) unsigned NOT NULL default '0',
-    filename varchar(255) NOT NULL default '',
-    filepath varchar(255) NOT NULL default '',
-    filemime varchar(255) NOT NULL default '',
-    filesize int(10) unsigned NOT NULL default '0',
-    list tinyint(1) unsigned NOT NULL default '0',
-    PRIMARY KEY  (fid)
-  )");
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql("CREATE TABLE {files} (
+      fid int(10) unsigned NOT NULL default '0',
+      nid int(10) unsigned NOT NULL default '0',
+      filename varchar(255) NOT NULL default '',
+      filepath varchar(255) NOT NULL default '',
+      filemime varchar(255) NOT NULL default '',
+      filesize int(10) unsigned NOT NULL default '0',
+      list tinyint(1) unsigned NOT NULL default '0',
+      PRIMARY KEY  (fid)
+    )");
+  }
+  else {
+    $ret[] = update_sql("CREATE TABLE {files} (
+      fid serial,
+      nid integer NOT NULL default '0',
+      filename varchar(255) NOT NULL default '',
+      filepath varchar(255) NOT NULL default '',
+      filemime varchar(255) NOT NULL default '',
+      filesize integer NOT NULL default '0',
+      list smallint NOT NULL default '0',
+      PRIMARY KEY  (fid)
+    )");
+  }
   return $ret;
 }
 
 function update_104() {
+  /**
+   * Works for both PostgreSQL and MySQL
+   */
   $ret = array();
   if (variable_get('theme_default', 'xtemplate') == 'chameleon') {
     $ret[] = update_sql("DELETE FROM {system} WHERE name = 'chameleon'");
@@ -1561,6 +1710,7 @@ function update_104() {
   }
   return $ret;
 }
+
 
 function update_sql($sql) {
   $edit = $_POST["edit"];
