@@ -10,7 +10,7 @@ function taxonomy_feed($taxonomy) {
   else {
     $result = taxonomy_select_nodes($taxonomy, 0);
     $term = taxonomy_get_term($taxonomy->tids[0]);
-    $channel["link"] = url("taxonomy/view/$taxonomy->operator/$taxonomy->str_tids");
+    $channel["link"] = url("taxonomy/view/$taxonomy->operator/$taxonomy->str_tids", NULL, NULL, TRUE);
     $channel["title"] = variable_get("site_name", "drupal") ." - ". $term->name;
     $channel["description"] = $term->description;
     node_feed($result, $channel);

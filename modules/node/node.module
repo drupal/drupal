@@ -994,8 +994,8 @@ function node_feed($nodes = 0, $channel = array()) {
   ** A generic function for generating RSS feeds from a set of nodes.
   **   - $nodes should be an object as returned by db_query() which contains
   **     the nid field.
-  **   - $channel is an associative array containing title, link, and
-  **     description keys.
+  **   - $channel is an associative array containing title, link,
+  **     description and other keys. The link should be an absolute URL.
   */
 
   if (!$nodes) {
@@ -1023,7 +1023,7 @@ function node_feed($nodes = 0, $channel = array()) {
 
   $output = "<?xml version=\"1.0\" encoding=\"utf-8\"?>\n";
   $output .= "<!DOCTYPE rss [<!ENTITY % HTMLlat1 PUBLIC \"-//W3C//ENTITIES Latin 1 for XHTML//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml-lat1.ent\">]>\n";
-  $output .= "<rss version=\"". $channel["version"] . "\" xml:base=\"". $channel["link"] . "\">\n";
+  $output .= "<rss version=\"". $channel["version"] . "\" xml:base=\"". $base_url ."\">\n";
   $output .= format_rss_channel($channel['title'], $channel['link'], $channel['description'], $items, $channel['language']);
   $output .= "</rss>\n";
 
