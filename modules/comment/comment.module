@@ -1594,7 +1594,7 @@ function theme_comment($comment, $links = 0) {
 
 function theme_comment_folded($comment) {
   $output  = "<div class=\"comment-folded\">\n";
-  $output .= ' <span class="subject">'. l($comment->subject, comment_node_url() .'/'. $comment->cid, NULL, NULL, "comment-$comment->cid") . ($comment->new ? ' '. theme('mark') : '') .'</span> ';
+  $output .= ' <span class="subject">'. l($comment->subject, comment_node_url() .'/view/'. $comment->cid, NULL, NULL, "comment-$comment->cid") . ($comment->new ? ' '. theme('mark') : '') .'</span> ';
   $output .= '<span class="credit">'. t('by') .' '. format_name($comment) ."</span>\n";
   $output .= "</div>\n";
   return $output;
