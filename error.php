@@ -20,7 +20,7 @@ function error_httpd() {
     case 401:
       $message = "401 error - authorization required";
       break;
-    case 401:
+    case 400:
       $message = "400 error - bad request";
       break;
     default:
