@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.426 2005/03/03 20:06:42 unconed Exp $ */
+/* $Id: common.inc,v 1.427 2005/03/03 20:08:02 unconed Exp $ */
 
 /**
  * @file
@@ -1640,7 +1640,6 @@ function drupal_xml_parser_create(&$data) {
   }
 
   // Unsupported encodings are converted here into UTF-8.
-  // Requires the iconv, GNU recode or mbstring PHP extension.
   $php_supported = array('utf-8', 'iso-8859-1', 'us-ascii');
   if (!in_array(strtolower($encoding), $php_supported)) {
     $out = drupal_convert_to_utf8($data, $encoding);
@@ -1661,6 +1660,8 @@ function drupal_xml_parser_create(&$data) {
 
 /**
  * Convert data to UTF-8
+ *
+ * Requires the iconv, GNU recode or mbstring PHP extension.
  *
  * @param $data
  *   The data to be converted.
