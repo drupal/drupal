@@ -128,6 +128,9 @@ function do_search($search_array) {
   $type = $search_array['type'];
   $select = $search_array['select'];
 
+  // Remove punctuation/special characters (same rule as update_index()).
+  $keys = preg_replace("'(!|%|,|:|;|\(|\)|\&|\"|\'|\.|-|\/|\?|\\\)'", '', $keys);
+
   // Replace wildcards with MySQL wildcards.
   $keys = str_replace('*', '%', $keys);
 
@@ -259,8 +262,8 @@ function update_index($search_array) {
       // Strip heaps of stuff out of it.
       $wordlist = preg_replace("'<[\/\!]*?[^<>]*?>'si", '', $wordlist);
 
-      // Remove punctuation/special characters.
-      $wordlist = preg_replace("'(\xBB|\xAB|!|\xA1|%|,|:|;|\(|\)|\&|\"|\'|\.|-|\/|\?|\\\)'", '', $wordlist);
+      // Remove punctuation/special characters (same rule as do_search()).
+      $keys = preg_replace("'(!|%|,|:|;|\(|\)|\&|\"|\'|\.|-|\/|\?|\\\)'", '', $keys);
 
       // Strip out (now mangled) http and tags.
       $wordlist = preg_replace("'http\w+'", '', $wordlist);
