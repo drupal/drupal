@@ -565,7 +565,7 @@ function comment_post($edit) {
         // Update the comment in the database.  Note that the update
         // query will fail if the comment isn't owned by the current
         // user.
-        db_query("UPDATE {comments} SET subject = '%s', comment = '%s' WHERE cid = %d AND uid = '$user->uid'", $edit['subject'], $edit['comment'], $edit["cid"]);
+        db_query("UPDATE {comments} SET subject = '%s', comment = '%s', format = '%s' WHERE cid = %d AND uid = '$user->uid'", $edit['subject'], $edit['format'], $edit['comment'], $edit["cid"]);
 
         _comment_update_node_statistics($edit['nid']);
 
@@ -682,7 +682,7 @@ function comment_post($edit) {
         }
 
 
-        db_query("INSERT INTO {comments} (cid, nid, pid, uid, subject, comment, hostname, timestamp, status, score, users, thread, name, mail, homepage) VALUES (%d, %d, %d, %d, '%s', '%s', '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s')", $edit["cid"], $edit["nid"], $edit["pid"], $edit['uid'], $edit['subject'], $edit['comment'], $_SERVER['REMOTE_ADDR'], $edit['timestamp'], $status, $score, $users, $thread, $edit["name"], $edit['mail'], $edit["homepage"]);
+        db_query("INSERT INTO {comments} (cid, nid, pid, uid, subject, comment, format, hostname, timestamp, status, score, users, thread, name, mail, homepage) VALUES (%d, %d, %d, %d, '%s', '%s', '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s')", $edit["cid"], $edit["nid"], $edit["pid"], $edit['uid'], $edit['subject'], $edit['comment'], $edit['format'], $_SERVER['REMOTE_ADDR'], $edit['timestamp'], $status, $score, $users, $thread, $edit["name"], $edit['mail'], $edit["homepage"]);
 
         _comment_update_node_statistics($edit['nid']);
 
@@ -980,6 +980,7 @@ function comment_admin_edit($cid) {
     $form .= form_item(t('Author'), format_name($comment));
     $form .= form_textfield(t('Subject'), 'subject', $comment->subject, 70, 128);
     $form .= form_textarea(t('Comment'), 'comment', $comment->comment, 70, 15, '');
+    $form .= filter_form('format', $comment->format);
     $form .= form_radios(t('Status'), 'status', $comment->status, array('published', 'not published'));
     $form .= form_hidden('cid', $cid);
     $form .= form_submit(t('Submit'));
@@ -1027,7 +1028,7 @@ function comment_delete($cid) {
 }
 
 function comment_save($id, $edit) {
-  db_query("UPDATE {comments} SET subject = '%s', comment = '%s', status = %d WHERE cid = %d", $edit['subject'], $edit['comment'], $edit['status'], $id);
+  db_query("UPDATE {comments} SET subject = '%s', comment = '%s', status = %d, format = '%s' WHERE cid = %d", $edit['subject'], $edit['comment'], $edit['status'], $edit['format'], $id);
   watchdog('special', t('Comment: modified %subject.', array('%subject' => '<em>'. $edit['subject'] .'</em>')));
   drupal_set_message(t('The comment has been saved.'));
 }
