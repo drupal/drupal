@@ -1,11 +1,11 @@
 <?
 
 class calendar {
-   var $date;
+  var $date;
 
-   function calendar($date) {
-     $this->date = $date;
-   }
+  function calendar($date) {
+    $this->date = $date;
+  }
 
   function display() {
     global $PHP_SELF;
@@ -28,7 +28,7 @@ class calendar {
     ### Generate calendar header:
     $output .= "<TABLE WIDTH=\"100%\" BORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"1\">";
     $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"7\"><A HREF=\"$PHP_SELF?date=$prev\">&lt;&lt;</A> &nbsp; ". date("F Y", $this->date) ." &nbsp; <A HREF=\"$PHP_SELF?date=$next\">&gt;&gt;</A></TH></TR>";
-    $output .= " <TR><TD>S</TD><TD>M</TD><TD>T</TD><TD>W</TD><TD>T</TD><TD>F</TD><TD>S</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"center\">S</TD><TD ALIGN=\"center\">M</TD><TD ALIGN=\"center\">T</TD><TD ALIGN=\"center\">W</TD><TD ALIGN=\"center\">T</TD><TD ALIGN=\"center\">F</TD><TD ALIGN=\"center\">S</TD></TR>\n";
  
     ### Initialize temporary variables:
     $nday = 1;
@@ -60,7 +60,7 @@ class calendar {
       $nday++;
     }
     
-    ### End the calendar:
+    ### Finish the calendar:
     if ($sday != 0) {
       $end = 7 - $sday;
       $output .= "<TD COLSPAN=\"$end\">&nbsp;</TD></TR>";
