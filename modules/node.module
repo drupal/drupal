@@ -352,7 +352,7 @@ function node_admin() {
         print node_setting();
         break;
       case "Reset to defaults":
-        print status(conf_default($edit));
+        print status(system_default($edit));
         print node_setting();
         break;
       case "Save node":
