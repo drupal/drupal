@@ -209,7 +209,7 @@
             print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"1\" WIDTH=\"100%\">";
             print "<TR><TD ALIGN=\"center\" BGCOLOR=\"$this->bgcolor2\"><FONT COLOR=\"$this->fgcolor1\"><IMG SRC=\"themes/" . $this->themename . "/images/null.gif\" WIDTH=\"2\" HEIGHT=\"2\"></FONT></TD></TR>";
             print "</TABLE>";
-            print "</TR></TD></TABLE>";
+            print "</TD></TR></TABLE>";
        ?></TD></TR>
       <TR>
        <TD COLSPAN="2">
