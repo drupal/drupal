@@ -538,7 +538,7 @@ CREATE SEQUENCE users_uid_seq INCREMENT 1 START 1;
 --
 
 CREATE TABLE variable (
-  name varchar(32) NOT NULL default '',
+  name varchar(48) NOT NULL default '',
   value text NOT NULL default '',
   PRIMARY KEY  (name)
 );

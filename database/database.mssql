@@ -376,7 +376,7 @@ CREATE TABLE [dbo].[users_uid_seq] (
 GO
 
 CREATE TABLE [dbo].[variable] (
-  [name] [varchar] (32) NOT NULL ,
+  [name] [varchar] (48) NOT NULL ,
   [value] [varchar] (8000) NOT NULL
 ) ON [PRIMARY]
 GO
