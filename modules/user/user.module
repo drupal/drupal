@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.227 2003/10/03 07:09:34 dries Exp $
+// $Id: user.module,v 1.228 2003/10/03 22:44:32 kjartan Exp $
 
 session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
 session_start();
@@ -324,33 +324,21 @@ function user_mail($mail, $subject, $message, $header) {
       $mail,
       user_mail_encode($subject),
       str_replace("\r", "", $message),
-      "MIME-version: 1.0\nContent-type: text/plain; charset=UTF-8; format=flowed\nContent-transfer-encoding: 8BIT\n" . $header
+      "MIME-Version: 1.0\nContent-type: text/plain; charset=UTF-8; format=flowed\nContent-transfer-encoding: 8Bit\n" . $header
     );
   }
 }
 
-// Original code by <gordon at kanazawa-gu dot ac dot jp>
-function user_mail_encode($string) {
-
-  // define start delimimter, end delimiter and spacer
-  $end    = "?=";
-  $start  = "=?UTF-8?B?";
-  $spacer = "{$end}\r\n{$start}";
-
-  // determine length of encoded text within
-  // chunks and ensure length is even
-  $length = 75 - strlen($start) - strlen($end);
-  $length = floor($length/2) * 2;
-
-  // encode the string and split it into chunks
-  // with spacers after each chunk
-  $string = base64_encode($string);
-  $string = chunk_split($string, $length, $spacer);
-
-  // remove trailing spacer and add start and end delimiters
-  $spacer = preg_quote($spacer);
-  $string = preg_replace("/{$spacer}$/", "", $string);
-  return ($start . $string . $end);
+function user_mail_encode($string, $charset = "UTF-8") {
+  /*
+  ** Used to encodes mail headers that contain non US- ASCII
+  ** characters.
+  ** http://www.rfc-editor.org/rfc/rfc2047.txt
+  */
+  $maxlen = 75 - 7 - strlen($charset);
+  $string = trim(chunk_split(base64_encode($string), $maxlen, "\n"));
+  $string = trim(preg_replace('/^(.*)$/m', " =?$charset?B?\\1?=", $string));
+  return $string;
 }
 
 function user_deny($type, $mask) {
