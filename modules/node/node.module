@@ -1271,7 +1271,7 @@ function node_add($type) {
   $edit = $_POST['edit'];
 
   // If a node type has been specified, validate its existence.
-  if ($type && node_access('create', $type)) {
+  if (in_array($type, node_list()) && node_access('create', $type)) {
     // Initialize settings:
     $node = array('uid' => $user->uid, 'name' => $user->name, 'type' => $type);
 
