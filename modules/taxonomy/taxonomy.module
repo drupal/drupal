@@ -734,6 +734,7 @@ function taxonomy_page() {
       // Build title:
       $sql = 'SELECT name FROM {term_data} WHERE tid IN (%s)';
       $result = db_query($sql, $taxonomy->str_tids);
+      $names = array();
       while ($term = db_fetch_object($result)) {
         $names[] = $term->name;
       }
