@@ -883,11 +883,11 @@ function user_pass($edit = array()) {
   global $base_url;
 
   if ($edit['name']) {
-    $account = db_fetch_object(db_query("SELECT uid, name, mail FROM {users} WHERE status = 1 AND LOWER(name) = '%s'", strtolower($edit['name'])));
+    $account = user_load(array('name' => $edit['name'], 'status' => 1));
     if (!$account) form_set_error('name', t('Sorry. The username "<i>%s</i>" is not recognized.', array('%s' => $edit['name'])));
   }
   else if ($edit['mail']) {
-    $account = db_fetch_object(db_query("SELECT uid, name, mail FROM {users} WHERE status = 1 AND LOWER(mail) = '%s'", strtolower($edit['mail'])));
+    $account = user_load(array('mail' => $edit['mail'], 'status' => 1));
     if (!$account) form_set_error('name', t('Sorry. The e-mail address "<i>%s</i>" is not recognized.', array('%s' => $edit['mail'])));
   }
   if ($account) {
@@ -896,7 +896,7 @@ function user_pass($edit = array()) {
       $pass = user_password();
 
       // Save new password:
-      user_save($account, array('pass' => $pass));
+      user_save($account, array_merge(object2array($account), array('pass' => $pass)));
 
       // Mail new password:
       $variables = array('%username' => $account->name, '%site' => variable_get('site_name', 'drupal'), '%password' => $pass, '%uri' => $base_url, '%uri_brief' => substr($base_url, strlen('http://')), '%mailto' => $account->mail, '%date' => format_date(time()), '%login_uri' => url('user/login', NULL, NULL, TRUE), '%edit_uri' => url('user/edit', NULL, NULL, TRUE));
