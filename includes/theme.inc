@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.222 2005/01/27 12:57:08 dries Exp $ */
+/* $Id: theme.inc,v 1.223 2005/01/30 09:53:19 dries Exp $ */
 
 /**
  * @file
@@ -10,6 +10,19 @@
  *
  * @see <a href="http://drupal.org/node/253">Theme system</a>
  * @see themeable
+ */
+
+ /**
+ * @name Content markers
+ * @{
+ * Markers used by theme_mark() and node_mark() to designate content.
+ * @see theme_mark(), node_mark()
+ */
+define('MARK_READ',    0);
+define('MARK_NEW',     1);
+define('MARK_UPDATED', 2);
+/**
+ * @} End of "Content markers".
  */
 
 /**
@@ -522,7 +535,7 @@ function theme_node($node, $teaser = FALSE, $page = FALSE) {
 function theme_form_element($title, $value, $description = NULL, $id = NULL, $required = FALSE, $error = FALSE) {
 
   $output  = "<div class=\"form-item\">\n";
-  $required = $required ? theme('mark', 'required') : '';
+  $required = $required ? '<span class="form-required">*</span>' : '';
 
   if ($title) {
     if ($id) {
@@ -695,16 +708,20 @@ function theme_block($block) {
 }
 
 /**
- * Return a themed marker, useful for marking new comments or required form
- * elements.
+ * Return a themed marker, useful for marking new or updated
+ * content.
  *
  * @param $type
- *   Type of marker to return: 'new' or 'required'
+ *   Number representing the marker type to display
+ * @see MARK_NEW, MARK_UPDATED, MARK_READ
  * @return
  *   A string containing the marker.
  */
-function theme_mark($type = 'new') {
-  return '<span class="marker">*</span>';
+function theme_mark($type = MARK_NEW) {
+  global $user;
+  if ($user->uid && $type != MARK_READ) {
+    return '<span class="marker">*</span>';
+  }
 }
 
 /**

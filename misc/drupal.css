@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.93 2005/01/25 20:27:09 dries Exp $ */
+/* $Id: drupal.css,v 1.94 2005/01/30 09:53:19 dries Exp $ */
 
 /*
 ** HTML elements
@@ -154,7 +154,7 @@ tr.light .form-item, tr.dark .form-item {
 .form-submit {
   margin: 0.5em 0;
 }
-.marker {
+.marker, .form-required {
   color: #f00;
 }
 .more-link {
