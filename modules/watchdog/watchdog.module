@@ -8,38 +8,38 @@ function watchdog_help($section = "admin/help#watchdog") {
     case 'admin/help#watchdog':
       $output .= t("
       <p>Watchdog module monitors your web site, capturing system events in a log to be reviewed by an authorized individual at a later time.  The watchdog log is simply a list of recorded events containing usage data, performance data, errors, warnings and operational information.  It is vital to <a href=\"%watchdog\">check the watchdog report</a> on a regular basis as it is often the only way to tell what is going on.</p>
-      <p>To ease administration, the watchdog will automatically discard old log entries, <a href=\"%log-entry\">as configured</a>. Needs \"cron.php\" to discard the entries.</p>", array("%watchdog" => url("admin/watchdog"), "%log-entry" => url("admin/system/modules/watchdog")));
+      <p>To ease administration, the watchdog will automatically discard old log entries, <a href=\"%log-entry\">as configured</a>. Needs \"cron.php\" to discard the entries.</p>", array("%watchdog" => url("admin/logs"), "%log-entry" => url("admin/system/modules/watchdog")));
       break;
-   case 'admin/watchdog':
-     $output = t("The watchdog module monitors your web site, captures system events in a log and records them to be reviewed by an authorized individual at a later time.  The watchdog log is simply a list of events recorded during operation and contains usage data, performance data, errors, warnings and operational information. It is vital to check the watchdog report on a regular basis as it is often the only way to tell what is going on.");
-     break;
-  case 'admin/watchdog/user':
-     $output = t("Watchdog events that have to do with users.");
-     break;
-  case 'admin/watchdog/regular':
-    $output = t("Watchdog events that are \"normal\" and have no other classification.");
-    break;
-  case 'admin/watchdog/httpd':
-    $output = t("Watchdog events that are from the web server.");
-    break;
-  case 'admin/watchdog/special':
-    $output = t("Watchdog events about adding, changing, and moderating nodes and comments.");
-    break;
-  case 'admin/watchdog/search':
-    $output = t("Watchdog events showing what users searched for.");
-    break;
-  case 'admin/watchdog/error':
-    $output = t("Watchdog events about PHP and database errors.");
-    break;
-  case 'admin/watchdog/warning':
-    $output = t("Watchdog warning events. These events don't stop Drupal from running, but are things you should know.");
-    break;
-  case 'admin/system/modules#description':
-    $output = t("Logs and records system events.");
-    break;
-  case 'admin/system/modules/watchdog':
-    $output = t("Watchdog logs your system events.  To see these events go to the <a href=\"%watchdog\">logs</a>. Since these logs can grow out of control if kept around forever, below set how long an item should be kept in the log.  Note that to discard entries as set below you must run \"cron.php\" regularly.", array("%watchdog" => url("admin/watchdog")));
-    break;
+    case 'admin/logs':
+      $output = t("The watchdog module monitors your web site, captures system events in a log and records them to be reviewed by an authorized individual at a later time.  The watchdog log is simply a list of events recorded during operation and contains usage data, performance data, errors, warnings and operational information. It is vital to check the watchdog report on a regular basis as it is often the only way to tell what is going on.");
+      break;
+    case 'admin/logs/user':
+       $output = t("Watchdog events that have to do with users.");
+       break;
+    case 'admin/logs/regular':
+      $output = t("Watchdog events that are \"normal\" and have no other classification.");
+      break;
+    case 'admin/logs/httpd':
+      $output = t("Watchdog events that are from the web server.");
+      break;
+    case 'admin/logs/special':
+      $output = t("Watchdog events about adding, changing, and moderating nodes and comments.");
+      break;
+    case 'admin/logs/search':
+      $output = t("Watchdog events showing what users searched for.");
+      break;
+    case 'admin/logs/error':
+      $output = t("Watchdog events about PHP and database errors.");
+      break;
+    case 'admin/logs/warning':
+      $output = t("Watchdog warning events. These events don't stop Drupal from running, but are things you should know.");
+      break;
+    case 'admin/system/modules#description':
+      $output = t("Logs and records system events.");
+      break;
+    case 'admin/system/modules/watchdog':
+      $output = t("Watchdog logs your system events.  To see these events go to the <a href=\"%watchdog\">logs</a>. Since these logs can grow out of control if kept around forever, below set how long an item should be kept in the log.  Note that to discard entries as set below you must run \"cron.php\" regularly.", array("%watchdog" => url("admin/logs")));
+      break;
   }
 
   return $output;
@@ -52,11 +52,10 @@ function watchdog_perm() {
 function watchdog_link($type) {
   if ($type == "system") {
     if (user_access("administer watchdog")) {
-      menu("admin/watchdog", t("logs"), "watchdog_admin", 7);
-      menu("admin/watchdog/view", t("view details"), "watchdog_admin", 0, MENU_HIDE, MENU_LOCKED);
-
+      menu("admin/logs", t("logs"), "watchdog_admin", 7);
+      menu("admin/logs/view", t("view details"), "watchdog_admin", 0, MENU_HIDE, MENU_LOCKED);
       foreach (_watchdog_get_message_types() as $type) {
-        menu("admin/watchdog/$type", t($type), "watchdog_admin");
+        menu("admin/logs/$type", t($type), "watchdog_admin");
       }
     }
   }
@@ -95,7 +94,7 @@ function watchdog_overview($type) {
       array("data" => truncate_utf8(strip_tags($watchdog->message), 64), "class" => "watchdog-$watchdog->type"),
       array("data" => format_name($watchdog), "class" => "watchdog-$watchdog->type"),
       array("data" => $watchdog->link, "class" => "watchdog-$watchdog->type"),
-      array("data" => l(t("view details"), "admin/watchdog/view/$watchdog->wid"), "class" => "watchdog-$watchdog->type")
+      array("data" => l(t("view details"), "admin/logs/view/$watchdog->wid"), "class" => "watchdog-$watchdog->type")
     );
   }
 
