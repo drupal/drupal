@@ -45,7 +45,6 @@ function story_form($edit = array()) {
   $form .= form_textarea(t("Abstract"), "abstract", $edit[abstract], 50, 10, t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
   $form .= form_textarea(t("Body"), "body", $edit[body], 50, 15, t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
 
-  // hidden fields:
   if ($edit[nid] > 0) {
     $form .= form_hidden("nid", $edit[nid]);
   }

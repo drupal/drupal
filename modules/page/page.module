@@ -71,7 +71,7 @@ function page_admin() {
     case "listing":
       print node_listing(page_query());
       break;
-   case t("Submit"):
+    case t("Submit"):
       print status(page_save($edit));
       // fall through:
     default:
