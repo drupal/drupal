@@ -3,10 +3,9 @@
 #
 # Database settings:
 #
-$db_host = "localhost";
-$db_user = "drop";      // username
-$db_pass = "drop";      // password
-$db_name = "database";  // database
+
+# $db_url = "pgsql://userer:password@hostname/database";
+# $db_url = "mysql://userer:password@hostname/database";
 
 #
 # Themes:

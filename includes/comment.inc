@@ -78,7 +78,7 @@ function comment_reply($pid, $id) {
   global $theme;
 
   if ($pid) {
-    $item = db_fetch_object(db_query("SELECT c.*, u.uid, u.name FROM comments c LEFT JOIN user u ON c.author = u.uid WHERE c.cid = '$pid'"));
+    $item = db_fetch_object(db_query("SELECT c.*, u.uid, u.name FROM comments c LEFT JOIN users u ON c.author = u.uid WHERE c.cid = '$pid'"));
     comment_view(new Comment($item->uid, $item->name, $item->subject, $item->comment, $item->timestamp, $item->url, $item->cid, $item->lid), t("reply to this comment"));
   }
   else {
@@ -150,7 +150,7 @@ function comment_moderation($comment) {
     $options .= " <option value=\"$key\"". ($moderate->score == $key ? " selected=\"selected\"" : "") .">$value</option>\n";
   }
 
-  $output .= "<select name=\"moderate[comment][$comment->cid]\">$options</select><br />". ($comment->score ? $comment->score : "--") ." / $comment->votes";
+ $output .= "<select name=\"moderate[comment][$comment->cid]\">$options</select><br />". ($comment->score ? $comment->score : "--") ." / $comment->votes";
 
   return $output;
 }
@@ -176,7 +176,7 @@ function comment_order($order) {
 
 function comment_query($lid, $order, $pid = -1) {
 
-  $query .= "SELECT u.*, c.*, SUM(m.score) / COUNT(m.cid) AS score, COUNT(m.cid) AS votes FROM comments c LEFT JOIN user u ON c.author = u.uid LEFT JOIN moderate m ON c.cid = m.cid WHERE c.lid = '$lid'";
+  $query .= "SELECT u.*, c.*, SUM(m.score) / COUNT(m.cid) AS score, COUNT(m.cid) AS votes FROM comments c LEFT JOIN users u ON c.author = u.uid LEFT JOIN moderate m ON c.cid = m.cid WHERE c.lid = '$lid'";
 
   if ($pid >= 0) {
     $query .= " AND pid = '$pid'";
@@ -235,7 +235,7 @@ function comment_view($comment, $folded = 0) {
 function comment_thread_min($cid, $threshold) {
   global $user;
 
-  $result = db_query("SELECT u.*, c.*, SUM(m.score) / COUNT(m.cid) AS score, COUNT(m.cid) AS votes FROM comments c LEFT JOIN user u ON c.author = u.uid LEFT JOIN moderate m ON c.cid = m.cid WHERE c.pid = '$cid' GROUP BY c.cid ORDER BY c.timestamp, c.cid");
+  $result = db_query("SELECT u.*, c.*, SUM(m.score) / COUNT(m.cid) AS score, COUNT(m.cid) AS votes FROM comments c LEFT JOIN users u ON c.author = u.uid LEFT JOIN moderate m ON c.cid = m.cid WHERE c.pid = '$cid' GROUP BY c.cid ORDER BY c.timestamp, c.cid");
 
   while ($comment = db_fetch_object($result)) {
     print "<ul>";
@@ -257,7 +257,7 @@ function comment_thread_max($cid, $mode, $threshold, $level = 0, $dummy = 0) {
   ** in terms of speed and size.
   */
 
-  $result = db_query("SELECT u.*, c.*, SUM(m.score) / COUNT(m.cid) AS score, COUNT(m.cid) AS votes FROM comments c LEFT JOIN user u ON c.author = u.uid LEFT JOIN moderate m ON c.cid = m.cid WHERE c.pid = '$cid' GROUP BY c.cid ORDER BY c.timestamp, c.cid");
+  $result = db_query("SELECT u.*, c.*, SUM(m.score) / COUNT(m.cid) AS score, COUNT(m.cid) AS votes FROM comments c LEFT JOIN users u ON c.author = u.uid LEFT JOIN moderate m ON c.cid = m.cid WHERE c.pid = '$cid' GROUP BY c.cid ORDER BY c.timestamp, c.cid");
 
   while ($comment = db_fetch_object($result)) {
     print "<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"100%\"><tr><td width=\"". ($level * 25) ."\">&nbsp;</td><td>\n";
@@ -307,7 +307,7 @@ function comment_render($lid, $cid) {
     $theme->box(t("Control panel"), $theme->comment_controls($threshold, $mode, $order));
 
     if ($cid > 0) {
-      $result = db_query("SELECT u.*, c.*, SUM(m.score) / COUNT(m.cid) AS score, COUNT(m.cid) AS votes  FROM comments c LEFT JOIN user u ON c.author = u.uid LEFT JOIN moderate m ON c.cid = m.cid WHERE c.cid = '$cid' GROUP BY c.cid");
+      $result = db_query("SELECT u.*, c.*, SUM(m.score) / COUNT(m.cid) AS score, COUNT(m.cid) AS votes  FROM comments c LEFT JOIN users u ON c.author = u.uid LEFT JOIN moderate m ON c.cid = m.cid WHERE c.cid = '$cid' GROUP BY c.cid");
       if ($comment = db_fetch_object($result)) {
         comment_view($comment, comment_links($comment));
       }

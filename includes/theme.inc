@@ -96,12 +96,13 @@ function theme_blocks($region, $theme) {
       }
       break;
     case "/index.php":
-      if ($user->uid) $result = db_query("SELECT * FROM blocks b LEFT JOIN layout l ON b.name = l.block WHERE (b.status = 2 OR (b.status = 1 AND l.user = '$user->uid'))". (($region == "left" || $region == "right") ? ($region == "left" ? " AND b.region = 0" : " AND b.region = 1") : "") ." ORDER BY weight");
+
+      if ($user->uid) $result = db_query("SELECT * FROM blocks b LEFT JOIN layout l ON b.name = l.block WHERE (b.status = 2 OR (b.status = 1 AND l.userid = '$user->uid'))". (($region == "left" || $region == "right") ? ($region == "left" ? " AND b.region = 0" : " AND b.region = 1") : "") ." ORDER BY weight");
       else $result = db_query("SELECT * FROM blocks WHERE status = 2". (($region == "left" || $region == "right") ? ($region == "left" ? " AND region = 0" : " AND region = 1") : "") ." ORDER BY weight");
-      while ($block = db_fetch_object($result)) {
+      while ($result && ($block = db_fetch_object($result))) {
         $blocks = module_invoke($block->module, "block");
         if ($blocks[$block->offset]["content"])
-          $theme->box(t($blocks[$block->offset]["subject"]), $blocks[$block->offset]["content"], $region);
+          $theme->box(t($blocks[$block->delta]["subject"]), $blocks[$block->delta]["content"], $region);
       }
       break;
   }

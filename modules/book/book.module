@@ -83,7 +83,7 @@ function book_view($node, $main = 0) {
 
 function book_search($keys) {
   global $PHP_SELF, $status;
-  $result = db_query("SELECT n.*, u.name FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid LEFT JOIN user u ON n.author = u.uid WHERE n.type = 'book' AND n.status = '$status[posted]' AND (n.title LIKE '%". check_input($keys) ."%' OR b.body LIKE '%". check_input($keys) ."%') ORDER BY n.timestamp DESC LIMIT 20");
+  $result = db_query("SELECT n.*, u.name FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid LEFT JOIN users u ON n.author = u.uid WHERE n.type = 'book' AND n.status = '$status[posted]' AND (n.title LIKE '%". check_input($keys) ."%' OR b.body LIKE '%". check_input($keys) ."%') ORDER BY n.timestamp DESC LIMIT 20");
   while ($node = db_fetch_object($result)) {
     $find[$i++] = array("title" => check_output($node->title), "link" => (strstr($PHP_SELF, "admin.php") ? "admin.php?mod=node&type=book&op=edit&id=$node->nid" : "node.php?id=$node->nid"), "user" => $node->name, "date" => $node->timestamp);
   }

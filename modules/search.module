@@ -29,6 +29,13 @@ function search_page() {
   if (user_access("search content")) {
 
     /*
+    ** Verify the user input:
+    */
+
+    $type = check_input($type);
+    $keys = check_input($keys);
+
+    /*
     ** Construct the search form:
     */
 

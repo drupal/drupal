@@ -114,7 +114,7 @@ function node_overview($query) {
   $color = array("#ffffff", "#e5e5e5");
   $query = node_query($query ? $query : 0);
 
-  $result = db_query("SELECT n.*, u.name, u.uid FROM node n LEFT JOIN user u ON n.author = u.uid  $query[1] LIMIT 50");
+  $result = db_query("SELECT n.*, u.name, u.uid FROM node n LEFT JOIN users u ON n.author = u.uid  $query[1] LIMIT 50");
 
   $output .= status($query[0]);
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
@@ -274,6 +274,21 @@ function node_admin_save($edit) {
   }
 }
 
+function node_module_find() {
+
+  foreach (module_list() as $name) {
+    if (module_hook($name, "user")) {
+      $options .= "<OPTION VALUE=\"$name\">$name</OPTION>\n";
+    }
+  }
+
+  $output .= " <input size=\"50\" value=\"". check_form($keys) ."\" name=\"keys\" type=\"text\">\n";
+  $output .= " <select name=\"type\">$options</select>\n";
+  $output .= " <input type=\"submit\" value=\"Search\">\n";
+
+  return form($output);
+}
+
 function node_edit($node) {
   $output .= form_item("Title", $node->title);
   $output .= form_item("Operations", implode("<br />", node_links($node->nid, $node->type)));
@@ -303,7 +318,8 @@ function node_admin() {
         print node_help();
         break;
       case "search":
-        print search_type($type, "admin.php?mod=node&op=search", $keys, 1);
+        print node_module_find($id);
+        print search_data($keys, $type);
         break;
       case "status":
         print node_edit_status($id);
@@ -336,7 +352,7 @@ function node_admin() {
         print node_setting();
         break;
       case "Reset to defaults":
-        print status(system_default($edit));
+        print status(conf_default($edit));
         print node_setting();
         break;
       case "Save node":
@@ -389,6 +405,7 @@ function node_feed() {
   }
 
   $output .= "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n";
+  $output .= "<!DOCTYPE rss [<!ENTITY % HTMLlat1 PUBLIC \"-//W3C//ENTITIES Latin 1 for XHTML//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml-lat1.ent\">\n";
   $output .= "<rss version=\"0.91\">\n";
   $output .= format_rss_channel(variable_get("site_name", "drupal"), path_uri() ."module.php?mod=node&op=feed", variable_get("site_slogan", ""), $items);
   $output .= "</rss>\n";
@@ -400,7 +417,7 @@ function node_feed() {
 }
 
 function node_page() {
-  global $op, $theme, $meta, $date;
+  global $op, $theme;
 
   if ($op == "feed") {
     node_feed();
