@@ -2,12 +2,13 @@ Drupal x.x.x, xxxx-xx-xx (to be released)
 ------------------------
 
 - added support for clean URLs.
+- added textarea hook and support for onload attributes: enables integration of WYSIWYG editors.
 - rewrote the RSS/RDF parser:
     * it will now use PHP's built-in XML parser to parse news feeds.
 - rewrote the administration pages:
-    * improved the navigational elements and added breadcrumb navigation
-    * improved the look and feel
-    * added context-sensitive help
+    * improved the navigational elements and added breadcrumb navigation.
+    * improved the look and feel.
+    * added context-sensitive help.
 - database backend:
     * fixed numereous SQL queries to make Drupal ANSI compliant.
     * added MSSQL database scheme.
