@@ -1,11 +1,10 @@
 <?php
-// $Id: chameleon.theme,v 1.16 2004/08/20 09:34:52 dries Exp $
+// $Id: chameleon.theme,v 1.17 2004/08/20 14:30:57 dries Exp $
 
 function chameleon_features() {
   return array(
        'logo',
        'toggle_name',
-       'toggle_search',
        'toggle_slogan',
        'toggle_primary_links',
        'toggle_secondary_links');
