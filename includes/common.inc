@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.309 2004/01/14 22:41:15 dries Exp $ */
+/* $Id: common.inc,v 1.310 2004/01/17 23:19:02 dries Exp $ */
 
 /**
  * @defgroup common Core functions
@@ -553,7 +553,7 @@ function valid_input_data($data) {
     */
 
     foreach ($data as $key => $value) {
-      if (!valid_input_data($value)) {
+      if (!valid_input_data($key) || !valid_input_data($value)) {
         return 0;
       }
     }
@@ -968,7 +968,7 @@ function drupal_get_normal_path($path) {
 
 function url($url = NULL, $query = NULL, $fragment = NULL) {
   global $base_url;
-  
+
   static $script;
 
   if (empty($script)) {
