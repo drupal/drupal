@@ -1,3 +1,3 @@
 #!/bin/sh
 
-tar -zcf drop.tgz *
+tar -zcf drupal.tgz *
