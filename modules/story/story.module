@@ -79,8 +79,6 @@ function story_form($edit = array()) {
     $output .= "<INPUT TYPE=\"hidden\" NAME=\"edit[nid]\" VALUE=\"$edit[nid]\">\n";
   }
 
-  $duplicate = db_result(db_query("SELECT COUNT(nid) FROM node WHERE title = '". check_input($title) ."' AND type = 'story'"));
-
   if (!$edit) {
     $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview") ."\">\n";
   }
@@ -90,10 +88,6 @@ function story_form($edit = array()) {
   }
   else if (!$edit[abstract]) {
     $output .= "<FONT COLOR=\"red\">". t("Warning: you did not supply an abstract.") ."</FONT><P>\n";
-    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview") ."\">\n";
-  }
-  else if (!$edit[nid] && $duplicate) {
-    $output .= "<FONT COLOR=\"red\">". t("Warning: there is already a story with that subject.") ."</FONT><P>\n";
     $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview") ."\">\n";
   }
   else {
