@@ -759,8 +759,12 @@ function form_hidden($name, $value) {
   return "<input type=\"hidden\" name=\"edit[$name]\" value=\"". check_form($value) ."\" />\n";
 }
 
+function form_button($value, $name = "op", $type = "submit", $attributes = 0) {
+  return "<input type=\"$type\" class=\"form-$type\" name=\"$name\" value=\"". check_form($value) ."\" ". drupal_attributes($attributes) ." />\n";
+}
+
 function form_submit($value, $name = "op", $attributes = 0) {
-  return "<input type=\"submit\" class=\"form-submit\" name=\"$name\" value=\"". check_form($value) ."\" />\n";
+  return form_button($value, $name, "submit", $attributes);
 }
 
 function form_weight($title = NULL, $name = "weight", $value = 0, $delta = 10, $description = 0, $extra = 0) {
