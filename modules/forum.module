@@ -30,7 +30,7 @@ function forum_conf_options() {
   foreach (taxonomy_get_vocabularies("forum") as $vid => $voc) {
     $vocs[$vid] = $voc->name;
   }
-  $output .= "<a name=\"image_nav_vocabulary\"></a>";
+  $output = "<a name=\"image_nav_vocabulary\"></a>";
   $output .= form_select("Forum vocabulary", "forum_nav_vocabulary", variable_get("forum_nav_vocabulary", ""), $vocs, t("The taxonomy vocabulary that will be used as the navigation tree."));
   $output .= _taxonomy_term_select("Containers", "forum_containers", variable_get("forum_containers", array()), variable_get("forum_nav_vocabulary", ""), t("You can choose forums which will not have topics, but will be just containers for other forums."), 1, t("<none>"));
 
@@ -124,7 +124,7 @@ function forum_block($op = "list", $delta = 0) {
   return $blocks;
 }
 
-function forum_link($type, $node) {
+function forum_link($type, $node = 0, $main = 0) {
   if ($type == "page" && user_access("access content")) {
     $links[] = lm(t("forum"), array("mod" => "forum"));
   }
@@ -134,7 +134,7 @@ function forum_link($type, $node) {
     #$links[] = lm(t("create forum topic"), array("mod" => "node", "op" => "add", "type" => "forum"), "", array("title" => t("Start a new forum topic.")));
   }
 
-  if ($type == "node" && $node->type == "forum") {
+  if (!$main && $type == "node" && $node->type == "forum") {
     // get previous and next topic
 
     $sql = "SELECT n.nid, title, body, GREATEST(n.created, MAX(c.timestamp)) AS date_sort, COUNT(c.nid) AS num_comments FROM node n, term_node t, forum f LEFT JOIN comments c ON c.nid = n.nid WHERE n.nid = t.nid AND n.nid = f.nid AND t.tid = '%d' AND f.shadow = 0 AND n.status = 1 GROUP BY n.nid ORDER BY ". _forum_get_topic_order(isset($user->sortby) ? $user->sortby : variable_get("forum_order",1));
@@ -181,14 +181,19 @@ function forum_view($node, $main = 0) {
   }
   $voc = taxonomy_get_vocabulary($term_data->vid);
 
+  /* TODO: find out what this code was ment to do and either use it or not.
+  
   $output .= "<p>"._forum_get_icon($node)." ".lm(check_output($voc->name), array("mod" => "forum"))." : ".lm(check_output($term_data->name), array("mod" => "forum", "tid" => $term_data->tid));
 
   $output .= " / <b>". check_output($node->title) ."</b><br>".t("%a by %b", array("%a" => format_date($node->created), "%b" => format_name($node)))."</p><p>". check_output($node->body, 1) ."</p>";
   $output .= "<p>". $theme->links(link_node($node, $main)) ."</p>";
 
   #$theme->box(t("Discussion forum"), $output);
+  */
 
-  $node->title = _forum_get_icon($node)." ".lm(check_output($voc->name), array("mod" => "forum"))." : ".lm(check_output($term_data->name), array("mod" => "forum", "tid" => $term_data->tid)) . " / <b>". check_output($node->title) ."</b>";
+  if (!$main) {
+    $node->title = _forum_get_icon($node)." ".lm(check_output($voc->name), array("mod" => "forum"))." : ".lm(check_output($term_data->name), array("mod" => "forum", "tid" => $term_data->tid)) . " / <b>". check_output($node->title) ."</b>";
+  }
 
   $theme->node($node, $main);
 }
@@ -198,14 +203,16 @@ function forum_form(&$node, &$help, &$error) {
   if ($node->nid) {
     if ($node->taxonomy) {
       $tid = $node->taxonomy;
-    } else {
+    }
+    else {
       // editing: load category from taxonomy
       $tid = implode(",", array_keys(taxonomy_node_get_terms($node->nid)));
     }
     //$output .= implode("<p>", taxonomy_node_form("forum", $node));
     $output .= "<input type=\"hidden\" name=\"edit[old_container]\" value=\"".implode(",", array_keys(taxonomy_node_get_terms($node->nid)))."\">";
     $output .= form_checkbox(t("Leave shadow?"), "shadow", 1, 1, t("If you move this topic, you can leave a link in the old forum to the new forum."));
-  } else {
+  }
+  else {
     if ($node->taxonomy) {
       $tid = $node->taxonomy;
     }
@@ -250,7 +257,8 @@ function forum_insert($node) {
   $node->icon = _forum_decode_icon($node);
   if (!$node->shadow) {
     db_query("INSERT INTO forum (nid, icon) VALUES ('%d', '%s')", $node->nid, $node->icon);
-  } else {
+  }
+  else {
     // we created a shadow, a link to a moved topic in a new forum
     db_query("INSERT INTO forum (nid, icon, shadow) VALUES ('%d', '%s', '%d')", $node->nid, $node->icon, $node->shadow);
   }
@@ -556,7 +564,8 @@ function forum_forum_list($forums, $parents, $tid) {
     foreach ($forums as $forum) {
       if ($forum->container) {
         $output .= " <tr><td colspan=\"5\">". lm(check_output($forum->name), array("mod" => "forum", "tid" => $forum->tid))."<br /><small>". ($forum->description ? check_output($forum->description, 1) : "") ."</small></td></tr>";
-      } else {
+      }
+      else {
         if ($user->uid) $new_topics = $forum->num_topics - $forum->old_topics;
         $icon = _forum_get_folder_icon($new_topics);
         $output .= " <tr><td>&nbsp;</td><td>$icon</td>";
