@@ -1,5 +1,5 @@
 <?php
-// $Id: conf.php,v 1.13 2002/02/19 19:37:56 dries Exp $
+// $Id: conf.php,v 1.14 2002/04/02 09:45:55 kjartan Exp $
 
 #
 # Database settings:
@@ -44,5 +44,14 @@ $themes = array("UnConeD" => array(
 #   but make sure your SQL table, called locales is updated
 #   appropriately.
 $languages = array("en" => "English");
+
+# Custom Navigation Links override the standard page links
+# offerred by most Drupal modules. Administrators may
+# add/remove/reorder nav links here. These links are typically
+# displayed in a row near the top of every page.
+# $custom_links = array(
+#  "<a href=\"\index.php\">home</a>",
+#  "<a href=\"\module.php?mod=user\">school</a>",
+#  "<a href=\"\module.php?mod=blog\">work</a>");
 
 ?>
