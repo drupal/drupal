@@ -23,14 +23,14 @@
      <html>
      <head>
       <title><?php print variable_get("site_name", "drupal") ." - ". variable_get("site_slogan", ""); ?></title>
+      <style type="text/css">
+       <!--
+        BODY { margin: 10px; font-size: 12pt; font-family: Verdana, Helvetica; }
+        SMALL { font-size: 10pt; }
+        FONT, P, TH, TD, TR, FORM, OL, UL, LI, INPUT, TEXTAREA, SELECT, A { font-size: 12pt; font-family: Verdana, Helvetica; }
+       -->
+      </style>
      </head>
-     <style type="text/css">
-      <!--
-       BODY { margin: 10px; font-size: 12pt; font-family: Verdana, Helvetica; }
-       SMALL { font-size: 10pt; }
-       FONT, P, TH, TD, TR, FORM, OL, UL, LI, INPUT, TEXTAREA, SELECT, A { font-size: 12pt; font-family: Verdana, Helvetica; }
-      -->
-     </style>
      <body text="#000000" bgcolor="#ffffff" alink="#cccccc" link="#665566" vlink="#665566">
       <table border="0" cellpadding="8" cellspacing="0">
        <tr>
@@ -59,7 +59,7 @@
      print " <tr><td nowrap=\"nowrap\"><font color=\"#7C7C7C\"><small>". strtr(t("Submitted by %a on %b"), array("%a" => format_name($node), "%b" => format_date($node->timestamp, "large"))); ?><?php print "</small></font></td><td align=\"right\" valign=\"top\" nowrap><small>". node_index($node) ."</small></td></tr>\n";
      print " <tr><td colspan=\"2\">&nbsp;</td></tr>\n";
      print " <tr><td colspan=\"2\"><p>". check_output($node->body, 1) ."</p></td></tr>\n";
-     print " <tr><td colspan=\"2\">&nbsp;</tr></tr>\n";
+     print " <tr><td colspan=\"2\">&nbsp;</td></tr>\n";
      if ($main) print " <tr><td colspan=\"2\">". $this->links(link_node($node)) ."</td></tr>\n";
      print "</table>\n";
      print "<br /><br />\n\n";
@@ -131,7 +131,7 @@
      print "<br />\n\n";
    }
 
-   function links($links, $delimiter = " &middot ") {
+   function links($links, $delimiter = " &middot; ") {
      return implode($delimiter, $links);
    }
 
@@ -143,7 +143,7 @@
           theme_account("all", $this);
           theme_blocks("all", $this);
          ?>
-       </tr>
+       </td>
       </tr>
       <tr>
        <td align="center" colspan="2">
