@@ -68,7 +68,7 @@ function queue_vote($node, $vote) {
       $node->taxonomy[] = $term->tid;
     }
 
-    if (variable_get("queue_threshold_post", 3) <= $node->score) {
+    if (variable_get("queue_threshold_post", 4) <= $node->score) {
       $node->moderate = 0;
       $node->promote = 1;
       node_save($node);
@@ -86,7 +86,7 @@ function queue_vote($node, $vote) {
         watchdog("special", "moderation: declined '$node->title'");
       }
     }
-    else if (variable_get("queue_threshold_expire", 6) <= $node->votes) {
+    else if (variable_get("queue_threshold_expire", 8) <= $node->votes) {
       if ($node->revisions) {
         node_revision_rollback($node, end(node_revision_list($node)));
         watchdog("special", "moderation: expired '$node->title' (rollback)");

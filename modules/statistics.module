@@ -395,7 +395,7 @@ function statistics_settings() {
 
   // count content views settings
   $group = form_radios(t("Count content views"), "statistics_count_content_views", variable_get("statistics_count_content_views", 0), array("1" => t("Enabled"), "0" => t("Disabled")), t("Increment a counter each time content is viewed."));
-  $group .= form_radios(t("Display counter values"), "statistics_display_counter", variable_get("statistics_display_counter", ""), array("1" => t("Enabled"), "0" => t("Disabled")), t("Display how many times given content has been viewed.  User must have the \"access statistics\" permissions to be able to view these counts."));
+  $group .= form_radios(t("Display counter values"), "statistics_display_counter", variable_get("statistics_display_counter", 0), array("1" => t("Enabled"), "0" => t("Disabled")), t("Display how many times given content has been viewed.  User must have the \"access statistics\" permissions to be able to view these counts."));
   $output .= form_group(t("Content viewing counter settings"), $group);
 
   // Popular content block settings
@@ -470,17 +470,17 @@ function statistics_block($op = "list", $delta = 0) {
       case 0:
         $content = array();
 
-        $daytop = variable_get("statistics_block_top_day_num", "");
+        $daytop = variable_get("statistics_block_top_day_num", 0);
         if ($daytop) {
           $content[] = node_title_list(statistics_title_list("daycount", $daytop), t("Today's:"));
         }
 
-        $alltimetop = variable_get("statistics_block_top_all_num", "");
+        $alltimetop = variable_get("statistics_block_top_all_num", 0);
         if ($alltimetop) {
           $content[] = node_title_list(statistics_title_list("totalcount", $alltimetop), t("All time:"));
         }
 
-        $lasttop = variable_get("statistics_block_top_last_num", "");
+        $lasttop = variable_get("statistics_block_top_last_num", 0);
         if ($lasttop) {
           $content[] = node_title_list(statistics_title_list("timestamp", $lasttop), t("Last viewed:"));
         }
@@ -501,7 +501,7 @@ function statistics_page() {
     $output = "";
 
     // build day's most popular content list if enabled
-    if ($displaycount = variable_get("statistics_userpage_day_cnt", 10)) {
+    if ($displaycount = variable_get("statistics_userpage_day_cnt", 0)) {
       $table = "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\" style=\"width: 100%;\">";
       $table .= statistics_summary("daycount", $displaycount);
       $table .= "</table>";
@@ -510,7 +510,7 @@ function statistics_page() {
     }
 
     // build all time most popular content list if enabled
-    if ($displaycount = variable_get("statistics_userpage_all_cnt", "10")) {
+    if ($displaycount = variable_get("statistics_userpage_all_cnt", 0)) {
       $table = "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\" style=\"width: 100%;\">";
       $table .= statistics_summary("totalcount", $displaycount);
       $table .= "</table>";
@@ -519,7 +519,7 @@ function statistics_page() {
     }
 
     // build last viewed content list if enabled
-    if ($displaycount = variable_get("statistics_userpage_last_cnt", "10")) {
+    if ($displaycount = variable_get("statistics_userpage_last_cnt", 0)) {
       $table = "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\" style=\"width: 100%;\">";
       $table .= statistics_summary("timestamp", $displaycount);
       $table .= "</table>";
