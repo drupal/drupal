@@ -1,6 +1,5 @@
 <?
  include "includes/common.inc";
- include "includes/section.inc";
 
  $theme->header();
 
@@ -35,7 +34,7 @@
  $output .= " </TR>\n";
  $output .= " <TR>\n";
  $output .= "  <TD>\n";
-   
+
  // Compose and perform query:
  $query = "SELECT s.id, s.subject, u.userid, s.timestamp, COUNT(c.cid) AS comments FROM stories s LEFT JOIN users u ON s.author = u.id LEFT JOIN comments c ON s.id = c.lid WHERE s.status = 2 ";
  $query .= ($author) ? "AND u.userid = '$author' " : "";
@@ -43,7 +42,7 @@
  $query .= ($section) ? "AND s.section = '$section' GROUP BY s.id " : "GROUP BY s.id ";
  $query .= ($order == 1) ? "ORDER BY s.timestamp ASC" : "ORDER BY s.timestamp DESC";
  $result = db_query($query);
- 
+
  // Display search results:
  $output .= "<HR>\n";
 
@@ -54,7 +53,7 @@
 
  if ($num == 0) $output .= "<P>Your search did <B>not</B> match any articles in our database: <UL><LI>Try using fewer words.</LI><LI>Try using more general keywords.</LI><LI>Try using different keywords.</LI></UL></P>\n";
  else $output .= "<P><B>$num</B> results matched your search query.</P>\n";
- 
+
  $output .= "  </TD>\n";
  $output .= " </TR>\n";
  $output .= "</TABLE>\n";
