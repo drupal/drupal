@@ -433,17 +433,6 @@ CREATE TABLE node_access (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'page'
---
-
-CREATE TABLE page (
-  nid int(10) unsigned NOT NULL default '0',
-  link varchar(128) NOT NULL default '',
-  description varchar(128) NOT NULL default '',
-  PRIMARY KEY  (nid)
-) TYPE=MyISAM;
-
---
 -- Table structure for table 'profile_fields'
 --
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.466 2005/02/19 22:24:24 unconed Exp $
+// $Id: node.module,v 1.467 2005/02/21 19:47:44 dries Exp $
 
 /**
  * @file
@@ -456,10 +456,6 @@ function node_save($node) {
         $s[] = "'%s'";
       }
     }
-
-    $keysfmt = implode(', ', $s);
-    // We need to quote the placeholders for the values.
-    $valsfmt = "'". implode("', '", $s) ."'";
 
     // Insert the node into the database:
     db_query("INSERT INTO {node} (". implode(", ", $k) .") VALUES(". implode(", ", $s) .")", $v);
