@@ -25,7 +25,7 @@ function sess_write($key, $value) {
   global $HTTP_SERVER_VARS;
 
   db_query("UPDATE users SET hostname = '". check_input($HTTP_SERVER_VARS[REMOTE_ADDR]) ."', session = '". check_query($value) ."', timestamp = '". time() ."' WHERE sid = '$key'");
-  
+
   return '';
 }
 
@@ -643,7 +643,7 @@ function user_login($edit = array()) {
 
       if ($edit["remember_me"]) {
         setcookie(session_name(), session_id(), time() + 3600 * 24 * 365);
-      } 
+      }
       else {
         setcookie(session_name(), session_id());
       }

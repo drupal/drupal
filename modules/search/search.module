@@ -7,7 +7,7 @@ function search_perm() {
 
 function search_link($type) {
   if ($type == "page" && user_access("search content")) {
-    $links[] = "<a href=\"module.php?mod=search\">". t("search") ."</a>";
+    $links[] = "<a href=\"module.php?mod=search\" title=\"". t("Search for older content.") ."\">". t("search") ."</a>";
   }
 
   return $links ? $links : array();

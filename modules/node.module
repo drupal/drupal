@@ -358,7 +358,7 @@ function node_link($type, $node = 0, $main = 0) {
   }
 
   if ($type == "page" && user_access("post content")) {
-    $links[] = "<a href=\"module.php?mod=node&op=add\" title=\"". t("Submit a contribution.") ."\">". t("submit") ."</a>";
+    $links[] = "<a href=\"module.php?mod=node&op=add\" title=\"". t("Submit or suggest new content.") ."\">". t("submit") ."</a>";
   }
 
   if ($type == "node") {
