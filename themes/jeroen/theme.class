@@ -1,5 +1,6 @@
 <?
 
+
  class Theme {
    ### color set #1:
    var $bgcolor1 = "#9370DB";   // background color
@@ -107,7 +108,7 @@
        ?>
       <TABLE BORDER="0" CELLPADDING="4" WIDTH="100%">
        <TR BGCOLOR="<? echo $this->bgcolor1; ?>"><TD><FONT COLOR="<? echo $this->bgcolor2; ?>"><B><? echo $subject; ?></B></FONT></TD></TR>
-       <TR BGCOLOR="<? echo $this->bgcolor2; ?>">
+       <TR BGCOLOR="<? echo $this->bgcolor1; ?>">
         <TD>
          <?
           if ($informant) {
