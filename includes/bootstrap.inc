@@ -1,4 +1,5 @@
 <?php
+/* $Id: bootstrap.inc,v 1.4 2003/12/13 14:10:23 dries Exp $ */
 
 function conf_init() {
 
@@ -106,7 +107,6 @@ function page_get_cache() {
 }
 
 function drupal_page_header() {
-
   if (variable_get("dev_timer", 0)) {
     timer_start();
   }
@@ -120,7 +120,13 @@ function drupal_page_header() {
 
       // Check http headers:
       $modified_since = isset($_SERVER["HTTP_IF_MODIFIED_SINCE"]) ? $_SERVER["HTTP_IF_MODIFIED_SINCE"] == $date : NULL;
-      $none_match = isset($_SERVER["HTTP_IF_NONE_MATCH"]) ? $_SERVER["HTTP_IF_NONE_MATCH"] == $etag : NULL;
+      if (!empty($_SERVER["HTTP_IF_MODIFIED_SINCE"]) && ($timestamp = strtotime($_SERVER["HTTP_IF_MODIFIED_SINCE"])) != -1) {
+        $modified_since = $cache->created <= $timestamp;
+      }
+      else {
+        $modified_since = NULL;
+      }
+      $none_match = !empty($_SERVER["HTTP_IF_NONE_MATCH"]) ? $_SERVER["HTTP_IF_NONE_MATCH"] == $etag : NULL;
 
       // The type checking here is very important, be careful when changing entries.
       if (($modified_since !== NULL || $none_match !== NULL) && $modified_since !== false && $none_match !== false) {
@@ -156,16 +162,12 @@ function bootstrap_hooks() {
 }
 
 function referer_uri() {
-
   if (isset($_SERVER["HTTP_REFERER"])) {
-    $uri = $_SERVER["HTTP_REFERER"];
-
-    return check_url($uri);
+    return check_url($_SERVER["HTTP_REFERER"]);
   }
 }
 
 function arg($index) {
-
   static $arguments;
 
   if (empty($arguments)) {
@@ -207,6 +209,7 @@ function request_uri() {
 
   return check_url($uri);
 }
+
 function timer_start() {
   global $timer;
   list($usec, $sec) = explode(" ", microtime());
@@ -215,7 +218,7 @@ function timer_start() {
 
 function watchdog($type, $message, $link = NULL) {
   global $user;
-  db_query("INSERT INTO {watchdog} (uid, type, message, link, location, hostname, timestamp) VALUES (%d, '%s', '%s', '%s', '%s', '%s', %d)", $user->uid, $type, $message, $link, request_uri(), getenv("REMOTE_ADDR"), time());
+  db_query("INSERT INTO {watchdog} (uid, type, message, link, location, hostname, timestamp) VALUES (%d, '%s', '%s', '%s', '%s', '%s', %d)", $user->uid, $type, $message, $link, request_uri(), $_ENV['REMOTE_ADDR'], time());
 }
 
 unset($conf);
