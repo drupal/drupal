@@ -422,6 +422,7 @@ CREATE TABLE system (
   type varchar(255) NOT NULL default '',
   description varchar(255) NOT NULL default '',
   status integer NOT NULL default '0',
+  bootstrap integer NOT NULL default '0',
   PRIMARY KEY  (filename)
 );
 

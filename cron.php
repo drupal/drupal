@@ -1,6 +1,7 @@
 <?php
-// $Id: cron.php,v 1.17 2003/09/14 18:33:16 dries Exp $
+// $Id: cron.php,v 1.18 2003/11/18 19:44:35 dries Exp $
 
+include_once "includes/bootstrap.inc";
 include_once "includes/common.inc";
 
 /*

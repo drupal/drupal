@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.107 2003/11/13 19:52:54 dries Exp $
+// $Id: system.module,v 1.108 2003/11/18 19:44:36 dries Exp $
 
 function system_help($section = "admin/help#system") {
   global $base_url;
@@ -57,7 +57,8 @@ function system_link($type) {
       menu("admin/system", t("configuration"), "system_admin", 3);
       menu("admin/system/themes", t("themes"), "system_admin", 2);
 
-      foreach (list_themes(1) as $theme) {
+      foreach (list_themes() as $theme) {
+        // TODO: reenable 'forced refresh' once we move the menu_build() later in the request. it added overhead with no benefit
         // NOTE: refresh the list because some themes might have been enabled/disabled.
         include_once "$theme->filename";
         $function = $theme->name ."_settings";
@@ -67,7 +68,8 @@ function system_link($type) {
       }
 
       menu("admin/system/modules", t("modules"), "system_admin", 3);
-      foreach (module_list(1) as $name) {
+      foreach (module_list() as $name) {
+        // TODO: reenable 'forced refresh' once we move the menu_build() later in the request.  it added overhead with no benefit
         // NOTE: refresh the list because some modules might have been enabled/disabled.
         if (module_hook($name, "settings")) {
           menu("admin/system/modules/$name", t($name), "system_admin");
@@ -103,32 +105,31 @@ function system_view_general() {
   global $conf;
 
   // general settings:
-  $output .= "<h3>". t("General settings") ."</h3>\n";
-  $output .= form_textfield(t("Name"), "site_name", variable_get("site_name", "drupal"), 70, 70, t("The name of this web site."));
-  $output .= form_textfield(t("E-mail address"), "site_mail", variable_get("site_mail", ini_get("sendmail_from")), 70, 128, t("A valid e-mail address for this website, used by the auto-mailer during registration, new password requests, notifications, etc."));
-  $output .= form_textfield(t("Slogan"), "site_slogan", variable_get("site_slogan", ""), 70, 128, t("The slogan of this website. Some themes display a slogan when available."));
-  $output .= form_textarea(t("Mission"), "site_mission", variable_get("site_mission", ""), 70, 5, t("Your site's mission statement or focus."));
-  $output .= form_textarea(t("Footer message"), "site_footer", variable_get("site_footer", ""), 70, 5, t("This text will be displayed at the bottom of each page.  Useful for adding a copyright notice to your pages."));
-  $output .= form_textfield(t("Anonymous user"), "anonymous", variable_get("anonymous", "Anonymous"), 70, 70, t("The name used to indicate anonymous users."));
-  $output .= form_textfield(t("Default front page"), "site_frontpage", variable_get("site_frontpage", "node"), 70, 70, t("The home page displays content from this relative URL.  If you are not using clean URLs, specify the part after '?q='.  If unsure, specify 'node'."));
-  $output .= form_radios(t("Clean URLs"), "clean_url", variable_get("clean_url", 0), array(t("Disabled"), t("Enabled")), t("Enable or disable clean URLs.  If enabled, you'll need <code>ModRewrite</code> support.  See also the <code>.htaccess</code> file in Drupal's top-level directory."));
-  $output .= "<hr />\n";
+  $group  = form_textfield(t("Name"), "site_name", variable_get("site_name", "drupal"), 70, 70, t("The name of this web site."));
+  $group .= form_textfield(t("E-mail address"), "site_mail", variable_get("site_mail", ini_get("sendmail_from")), 70, 128, t("A valid e-mail address for this website, used by the auto-mailer during registration, new password requests, notifications, etc."));
+  $group .= form_textfield(t("Slogan"), "site_slogan", variable_get("site_slogan", ""), 70, 128, t("The slogan of this website. Some themes display a slogan when available."));
+  $group .= form_textarea(t("Mission"), "site_mission", variable_get("site_mission", ""), 70, 5, t("Your site's mission statement or focus."));
+  $group .= form_textarea(t("Footer message"), "site_footer", variable_get("site_footer", ""), 70, 5, t("This text will be displayed at the bottom of each page.  Useful for adding a copyright notice to your pages."));
+  $group .= form_textfield(t("Anonymous user"), "anonymous", variable_get("anonymous", "Anonymous"), 70, 70, t("The name used to indicate anonymous users."));
+  $group .= form_textfield(t("Default front page"), "site_frontpage", variable_get("site_frontpage", "node"), 70, 70, t("The home page displays content from this relative URL.  If you are not using clean URLs, specify the part after '?q='.  If unsure, specify 'node'."));
+  $group .= form_radios(t("Clean URLs"), "clean_url", variable_get("clean_url", 0), array(t("Disabled"), t("Enabled")), t("Enable or disable clean URLs.  If enabled, you'll need <code>ModRewrite</code> support.  See also the <code>.htaccess</code> file in Drupal's top-level directory."));
+
+  $output = form_group(t("General settings"), $group);
 
   // caching:
-  $output .= "<h3>". t("Cache settings") ."</h3>\n";
-  $output .= form_radios(t("Cache support"), "cache", variable_get("cache", 0), array(t("Disabled"), t("Enabled")), t("Enable or disable the caching of rendered pages.  When caching is enabled, Drupal will flush the cache when required to make sure updates take effect immediately.  Check the %documentation for information on Drupal's cache system.", array("%documentation" => l(t("cache documentation"), "admin/system/help#cache"))));
-  $output .= "<hr />\n";
+  $group  = form_radios(t("Cache support"), "cache", variable_get("cache", 0), array(t("Disabled"), t("Enabled")), t("Enable or disable the caching of rendered pages.  When caching is enabled, Drupal will flush the cache when required to make sure updates take effect immediately.  Check the %documentation for information on Drupal's cache system.", array("%documentation" => l(t("cache documentation"), "admin/system/help#cache"))));
+
+  $output .= form_group(t("Cache settings"), $group);
 
 
   // submission settings:
-  $output .= "<h3>". t("Submission settings") ."</h3>\n";
   $rate = array(-10000 => t("Disabled"), 1 => t("Maximum 1 every second"), 5 => t("Maximum 1 every 5 seconds"), 15 => t("Maximum 1 every 15 seconds"), 30 => t("Maximum 1 every 30 seconds"), 60 => t("Maximum 1 every minute"), 300 => t("Maximum 1 every 5 minutes"), 900 => t("Maximum 1 every 15 minutes"), 1800 => t("Maximum 1 every 30 minutes"), 3600 => t("Maximum 1 every hour"), 21600 => t("Maximum 1 every 6 hours"), 43200 => t("Maximum 1 every 12 hours"));
-  $output .= form_select(t("Maximum node rate"), "max_node_rate", variable_get("max_node_rate", 900), $rate, t("The maximum submission rate for nodes.  Its purpose is to stop potential abuse or denial of service attacks."));
-  $output .= form_select(t("Maximum comment rate"), "max_comment_rate", variable_get("max_comment_rate", 120), $rate, t("The maximum submission rate for comments.  Its purpose is to stop potential abuse or denial of service attacks."));
-  $output .= "<hr />\n";
+  $group  = form_select(t("Maximum node rate"), "max_node_rate", variable_get("max_node_rate", 900), $rate, t("The maximum submission rate for nodes.  Its purpose is to stop potential abuse or denial of service attacks."));
+  $group .= form_select(t("Maximum comment rate"), "max_comment_rate", variable_get("max_comment_rate", 120), $rate, t("The maximum submission rate for comments.  Its purpose is to stop potential abuse or denial of service attacks."));
+
+  $output .= form_group(t("Submission settings"), $group);
 
   // date settings:
-  $output .= "<h3>". t("Date format settings") ."</h3>\n";
 
   // date settings: possible date formats
   $dateshort = array("m/d/Y - H:i", "d/m/Y - H:i", "Y/m/d - H:i",
@@ -153,17 +154,12 @@ function system_view_general() {
     $datelongchoices[$f] = format_date(time(), "custom", $f);
   }
 
-  $output .= form_select(t("Date format (short)"), "date_format_short", variable_get("date_format_short", $dateshort[0]), $dateshortchoices, t("The short format of date display."));
-  $output .= form_select(t("Date format (medium)"), "date_format_medium", variable_get("date_format_medium", $datemedium[0]), $datemediumchoices, t("The medium sized date display."));
-  $output .= form_select(t("Date format (long)"), "date_format_long", variable_get("date_format_long", $datelong[0]), $datelongchoices, t("Longer date format used for detailed display."));
+  $group  = form_select(t("Date format (short)"), "date_format_short", variable_get("date_format_short", $dateshort[0]), $dateshortchoices, t("The short format of date display."));
+  $group .= form_select(t("Date format (medium)"), "date_format_medium", variable_get("date_format_medium", $datemedium[0]), $datemediumchoices, t("The medium sized date display."));
+  $group .= form_select(t("Date format (long)"), "date_format_long", variable_get("date_format_long", $datelong[0]), $datelongchoices, t("Longer date format used for detailed display."));
 
-  return $output;
-}
+  $output .= form_group(t("Date format settings"), $group);
 
-function system_view_module($name) {
-  if (module_hook($name, "settings")) {
-      $output .= "<h3><a id=\"$name\">". ucfirst(t("$name")) ." ". t("settings") ."</a></h3>". module_invoke($name, "settings") ."<hr />\n";
-  }
   return $output;
 }
 
@@ -228,7 +224,7 @@ function system_view($type, $arg = "") {
       break;
     case "modules":
       if ($arg) {
-        $form = system_view_module($arg);
+        $form = module_invoke($arg, "settings");
       }
       else {
         $form = system_listing("module", "modules", $required);
@@ -299,6 +295,14 @@ function system_listing($type, $directory, $required = array()) {
     if ($type == "module") {
       $info->name = module_invoke($file->name, "help", "admin/system/modules#name") ? module_invoke($file->name, "help", "admin/system/modules#name") : module_invoke($file->name, "system", "name") ? module_invoke($file->name, "system", "name") : $file->name;
       $info->description = module_invoke($file->name, "help", "admin/system/modules#description") ? module_invoke($file->name, "help", "admin/system/modules#description") : module_invoke($file->name, "system", "description");
+      // log the critical hooks implemented by this module
+      $bootstrap = 0;
+      foreach (bootstrap_hooks() as $hook) {
+        if (module_hook($file->name, $hook)) {
+          $bootstrap = 1;
+          break;
+        }
+      }
     }
     elseif ($type == "theme") {
         $info->name = $file->name;
@@ -308,7 +312,7 @@ function system_listing($type, $directory, $required = array()) {
 
     // Update the contents of the system table:
     db_query("DELETE FROM {system} WHERE filename = '%s' AND type = '%s'", $filename, $type);
-    db_query("INSERT INTO {system} (name, description, type, filename, status) VALUES ('%s', '%s', '%s', '%s', %d)", $info->name, $info->description, $type, $filename, $file->status);
+    db_query("INSERT INTO {system} (name, description, type, filename, status, bootstrap) VALUES ('%s', '%s', '%s', '%s', %d, %d)", $info->name, $info->description, $type, $filename, $file->status, $bootstrap);
 
     $rows[] = array($info->name, $info->description, array("data" => (in_array($filename, $required) ? form_hidden("status][$filename", 1) . t("required") : form_checkbox("", "status][$filename", 1, $file->status)), "align" => "center"));
   }

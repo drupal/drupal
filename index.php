@@ -1,6 +1,8 @@
 <?php
-// $Id: index.php,v 1.71 2003/11/12 21:54:16 dries Exp $
+// $Id: index.php,v 1.72 2003/11/18 19:44:35 dries Exp $
 
+include_once "includes/bootstrap.inc";
+drupal_page_header();
 include_once "includes/common.inc";
 
 drupal_page_header();

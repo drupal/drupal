@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.46 2003/07/10 17:46:41 dries Exp $
+// $Id: module.inc,v 1.47 2003/11/18 19:44:36 dries Exp $
 
 // initialize modules:
 function module_init() {
@@ -40,8 +40,8 @@ function module_invoke_all($hook, $a1 = NULL, $a2 = NULL, $a3 = NULL, $a4 = NULL
   return $return;
 }
 
-// return array of module names (includes lazy module loading):
-function module_list($refresh = 0) {
+// return array of module names (includes lazy module loading if not in bootstrap mode)
+function module_list($refresh = 0, $bootstrap = 0) {
   static $list;
 
   if ($refresh) {
@@ -50,16 +50,20 @@ function module_list($refresh = 0) {
 
   if (!$list) {
     $list = array("admin" => "admin", "system" => "system", "user" => "user", "watchdog" => "watchdog");
-    $result = db_query("SELECT name, filename FROM {system} WHERE type = 'module' AND status = '1' ORDER BY name");
+    $result = db_query("SELECT name, filename, bootstrap FROM {system} WHERE type = 'module' AND status = '1' ORDER BY name");
     while ($module = db_fetch_object($result)) {
       if (file_exists($module->filename)) {
-        $list[$module->name] = $module->name;
-        include_once $module->filename;
+        if ($bootstrap) {
+          $list[$module->name] = array("name"=> $module->name, "bootstrap" => $module->bootstrap, "filename" => $module->filename);
+        }
+        else {
+          $list[$module->name] = $module->name;
+          include_once $module->filename;
+        }
       }
     }
     natcasesort($list);
   }
-
   return $list;
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.116 2003/10/27 21:25:55 dries Exp $
+// $Id: update.php,v 1.117 2003/11/18 19:44:35 dries Exp $
 /*
 ** USAGE:
 **
@@ -59,7 +59,8 @@ $mysql_updates = array(
   "2003-10-11" => "update_67",
   "2003-10-20" => "update_68",
   "2003-10-22" => "update_69",
-  "2003-10-27" => "update_70"
+  "2003-10-27" => "update_70",
+  "2003-11-17" => "update_71"
 );
 
 function update_32() {
@@ -547,6 +548,10 @@ function update_70() {
   update_sql("ALTER TABLE {variable} CHANGE name name varchar(48) NOT NULL");
 }
 
+function update_71() {
+  update_sql("ALTER TABLE {system} ADD bootstrap int(2)");
+}
+
 /*
 ** System functions
 */
@@ -603,8 +608,9 @@ function update_page() {
     case "Update":
       // make sure we have updates to run.
       print update_page_header("Drupal database update");
-      print "<b>&raquo; <a href=\"index.php\">main page</a></b><br />\n";
-      print "<b>&raquo; <a href=\"index.php?q=admin\">administration pages</a></b><br />\n";
+      $links[] = "<a href=\"index.php\">main page</a>";
+      $links[] = "<a href=\"index.php?q=admin\">administration pages</a>";
+      print theme("item_list", $links);
         // NOTE: we can't use l() here because the URL would point to 'update.php?q=admin'.
       if ($edit["start"] == -1) {
         print "No updates to perform.";
@@ -662,6 +668,7 @@ function update_info() {
 }
 
 if (isset($_GET["op"])) {
+  include_once "includes/bootstrap.inc";
   include_once "includes/common.inc";
 
   // Access check:

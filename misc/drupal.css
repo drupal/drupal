@@ -1,4 +1,4 @@
-/* $Id: drupal.css,v 1.38 2003/11/17 19:24:39 dries Exp $ */
+/* $Id: drupal.css,v 1.39 2003/11/18 19:44:36 dries Exp $ */
 
 form {
   margin: 0;
@@ -10,7 +10,7 @@ th {
   border-bottom: 1px solid #ccc;
 }
 fieldset {
-  display: inline;
+  margin-bottom: 1em;
 }
 #tracker table {
   border-collapse: collapse;

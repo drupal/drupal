@@ -1,6 +1,7 @@
 <?php
-// $Id: error.php,v 1.32 2003/06/02 20:04:40 dries Exp $
+// $Id: error.php,v 1.33 2003/11/18 19:44:35 dries Exp $
 
+include_once "includes/bootstrap.inc";
 include_once "includes/common.inc";
 
 $errors = array(

@@ -299,6 +299,7 @@ CREATE TABLE [dbo].[system] (
   [type] [varchar] (255) NOT NULL ,
   [description] [varchar] (255) NOT NULL ,
   [status] [int] NOT NULL
+  [bootstrap] [int] NOT NULL
 ) ON [PRIMARY]
 GO
 
