@@ -1485,7 +1485,11 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
       return array("comment");
     case "form admin":
       if (user_access("administer comments")) {
-        return form_select(t("Allow user comments"), "comment", isset($node->comment) ? $node->comment : variable_get("comment_$node->type", 2), array(t("Disabled"), t("Read only"), t("Read-write")));
+        $selected = isset($node->comment) ? $node->comment : variable_get("comment_$node->type", 2);
+        $output = form_radio(t("Disabled"), "comment", 0, ($selected == 0));
+        $output .= form_radio(t("Read only"), "comment", 1, ($selected == 1));
+        $output .= form_radio(t("Read/write"), "comment", 2, ($selected == 2));
+        return form_item(t("Allow user comments"), $output);
       }
       break;
     case "validate":
