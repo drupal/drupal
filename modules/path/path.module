@@ -266,7 +266,7 @@ function path_overview() {
 
   $destination = drupal_get_destination();
   while ($data = db_fetch_object($result)) {
-    $rows[] = array($data->dst, $data->src, l(t('edit'), "admin/path/edit/$data->pid", array(), $destination), l(t('delete'), "admin/path/delete/$data->pid"));
+    $rows[] = array($data->dst, $data->src, l(t('edit'), "admin/path/edit/$data->pid", array(), $destination), l(t('delete'), "admin/path/delete/$data->pid", array(), $destination));
   }
 
   if ($pager = theme('pager', NULL, 50, 0, tablesort_pager())) {
