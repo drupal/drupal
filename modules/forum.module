@@ -510,6 +510,8 @@ function forum_theme_list($forums, $parents, $tid) {
         $forum->num_topics = "";
         $forum->num_posts = "";
         $forum->last_post = "";
+        $new_topics = 0;
+        $links = array();
       }
       else {
         if ($user->uid) {
