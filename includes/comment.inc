@@ -47,8 +47,36 @@ function comment_settings($mode, $order, $threshold) {
   if ($user->id) $user = user_save($user, array("mode" => $mode, "sort" => $order, "threshold" => $threshold));
 }
 
+function comment_form($edit) {
+  global $REQUEST_URI, $user;
+
+  // Name field:
+  $form .= form_item(t("Your name"), format_username($user->userid));
+
+  // Subject field:
+  $form .= form_textfield(t("Subject"), "subject", check_input($edit[subject]), 50, 60);
+
+  // Comment field:
+  $form .= form_textarea(t("Comment"), "comment", check_input($edit[comment]), 50, 10, t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
+
+  // Preview button:
+  $form .= form_hidden("pid", check_input($edit[pid]));
+  $form .= form_hidden("id", check_input($edit[id]));
+
+  if (empty($edit[subject])) {
+    $form .= "<FONT COLOR=\"red\">". t("Warning: you did not supply a subject.") ."</FONT><P>\n";
+    $form .= form_submit(t("Preview comment"));
+  }
+  else {
+    $form .= form_submit(t("Preview comment"));
+    $form .= form_submit(t("Post comment"));
+  }
+  
+  return form($REQUEST_URL, $form);
+}
+
 function comment_reply($pid, $id) {
-  global $REQUEST_URI, $theme, $user;
+  global $theme;
 
   if ($pid) {
     $item = db_fetch_object(db_query("SELECT comments.*, users.userid FROM comments LEFT JOIN users ON comments.author = users.id WHERE comments.cid = '$pid'"));
@@ -59,79 +87,26 @@ function comment_reply($pid, $id) {
     $pid = 0;
   }
 
-  // Build reply form:
-  $output .= "<FORM ACTION=\"$REQUEST_URI\" METHOD=\"post\">\n";
-
-  // Name field:
-  $output .= "<B>". t("Your name") .":</B><BR>\n";
-  $output .= format_username($user->userid) ."<P>\n";
-
-  // Subject field:
-  $output .= "<B>". t("Subject") .":</B><BR>\n";
-  $output .= "<INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" MAXLENGTH=\"60\"><P>\n";
-
-  // Comment field:
-  $output .= "<B>".t("Comment") .":</B><BR>\n";
-  $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"comment\">". check_form($user->signature) ."</TEXTAREA><BR>\n";
-  $output .= "<SMALL><I>". t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")) .".</I></SMALL><P>\n";
-
-  // Preview button:
-  $output .= "<SMALL><I>". t("You must preview at least once before you can submit") .":</I></SMALL><BR>\n";
-  $output .= "<INPUT TYPE=\"hidden\" NAME=\"pid\" VALUE=\"$pid\">\n";
-  $output .= "<INPUT TYPE=\"hidden\" NAME=\"id\" VALUE=\"$id\">\n";
-  $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview comment") ."\"><BR>\n";
-
-  $output .= "</FORM>\n";
-
-  $theme->box(t("Reply"), $output);
+  $theme->box(t("Reply"), comment_form(array(pid=>$pid, id=>$id)));
 }
 
-function comment_preview($pid, $id, $subject, $comment) {
+function comment_preview($edit) {
   global $REQUEST_URI, $theme, $user;
 
   // Preview comment:
-  comment_view(new Comment($user->userid, check_preview($subject), check_preview($comment), time(), check_preview($user->url), check_preview($user->fake_email), 0, 0, 0, 0), t("reply to this comment"));
+  comment_view(new Comment($user->userid, check_preview($edit[subject]), check_preview($edit[comment]), time(), check_preview($user->url), check_preview($user->fake_email), 0, 0, 0, 0), t("reply to this comment"));
 
-  // Build reply form:
-  $output .= "<FORM ACTION=\"$REQUEST_URI\" METHOD=\"post\">\n";
-
-  // Name field:
-  $output .= "<B>". t("Your name") .":</B><BR>\n";
-  $output .= format_username($user->userid) ."<P>\n";
-
-  // Subject field:
-  $output .= "<B>". t("Subject") .":</B><BR>\n";
-  $output .= "<INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" MAXLENGTH=\"60\" VALUE=\"". check_form($subject) ."\"><P>\n";
-
-  // Comment field:
-  $output .= "<B>". t("Comment") .":</B><BR>\n";
-  $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"comment\">". check_form($comment) ."</TEXTAREA><BR>\n";
-  $output .= "<SMALL><I>". t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")) .".</I></SMALL><P>\n";
-
-  // Hidden fields:
-  $output .= "<INPUT TYPE=\"hidden\" NAME=\"pid\" VALUE=\"$pid\">\n";
-  $output .= "<INPUT TYPE=\"hidden\" NAME=\"id\" VALUE=\"$id\">\n";
-
-  if (empty($subject)) {
-    $output .= "<FONT COLOR=\"red\">". t("Warning: you did not supply a subject.") ."</FONT><P>\n";
-  }
-
-  // Preview and submit button:
-  $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Preview comment") ."\">\n";
-  $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"". t("Post comment") ."\">\n";
-  $output .= "</FORM>\n";
-
-  $theme->box(t("Reply"), $output);
+  $theme->box(t("Reply"), comment_form($edit));
 }
 
-function comment_post($pid, $id, $subject, $comment) {
+function comment_post($edit) {
   global $theme, $user;
 
   // check comment submission rate:
   throttle("post comment", variable_get(max_comment_rate, 60));
 
   // check for duplicate comments:
-  $duplicate = db_result(db_query("SELECT COUNT(cid) FROM comments WHERE pid = '$pid' AND lid = '$id' AND subject = '$subject' AND comment = '$comment'"), 0);
+  $duplicate = db_result(db_query("SELECT COUNT(cid) FROM comments WHERE pid = '". check_input($edit[pid]) ."' AND lid = '". check_input($edit[id]) ."' AND subject = '". check_input($edit[subject]) ."' AND comment = '". check_input($edit[comment]) ."'"), 0);
 
   if ($duplicate != 0) {
     watchdog("warning", "comment: duplicate '$subject'");
@@ -144,7 +119,7 @@ function comment_post($pid, $id, $subject, $comment) {
     watchdog("special", "comment: added '$subject'");
 
     // add comment to database:
-    db_query("INSERT INTO comments (lid, pid, author, subject, comment, hostname, timestamp, score) VALUES ('$id', '$pid', '$user->id', '$subject', '$comment', '". getenv("REMOTE_ADDR") ."', '". time() ."', '". ($user->userid ? 1 : 0) ."')");
+    db_query("INSERT INTO comments (lid, pid, author, subject, comment, hostname, timestamp, score) VALUES ('". check_input($edit[id]) ."', '". check_input($edit[pid]) ."', '$user->id', '". check_input($edit[subject]) ."', '". check_input($edit[comment]) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."', '". ($user->userid ? 1 : 0) ."')");
   }
 }
 
