@@ -488,7 +488,6 @@ function comment_post($edit) {
   global $user;
 
   if (user_access('post comments') && node_comment_mode($edit['nid']) == 2) {
-
     // Validate the comment's subject.  If not specified, extract
     // one from the comment's body.
     $edit['subject'] = strip_tags($edit['subject']);
@@ -500,17 +499,16 @@ function comment_post($edit) {
     if (!form_get_errors()) {
       // Check for duplicate comments.  Note that we have to use the
       // validated/filtered data to perform such check.
-
-      $duplicate = db_result(db_query("SELECT COUNT(cid) FROM {comments} WHERE pid = %d AND nid = %d AND subject = '%s' AND comment = '%s'", $edit["pid"], $edit["nid"], $edit['subject'], $edit['comment']), 0);
+      $duplicate = db_result(db_query("SELECT COUNT(cid) FROM {comments} WHERE pid = %d AND nid = %d AND subject = '%s' AND comment = '%s'", $edit['pid'], $edit['nid'], $edit['subject'], $edit['comment']), 0);
       if ($duplicate != 0) {
-        watchdog('warning', t('Comment: duplicate %subject.', array('%subject' => '<em>'. $edit["subject"] .'</em>')));
+        watchdog('warning', t('Comment: duplicate %subject.', array('%subject' => '<em>'. $edit['subject'] .'</em>')));
       }
 
-      if ($edit["cid"]) {
+      if ($edit['cid']) {
         // Update the comment in the database.  Note that the update
         // query will fail if the comment isn't owned by the current
         // user.
-        db_query("UPDATE {comments} SET subject = '%s', comment = '%s', format = '%s' WHERE cid = %d AND uid = '$user->uid'", $edit['subject'], $edit['comment'], $edit['format'], $edit["cid"]);
+        db_query("UPDATE {comments} SET subject = '%s', comment = '%s', format = '%s' WHERE cid = %d AND uid = %d", $edit['subject'], $edit['comment'], $edit['format'], $edit['cid'], $user->uid);
 
         _comment_update_node_statistics($edit['nid']);
 
@@ -532,30 +530,21 @@ function comment_post($edit) {
 
         $users = serialize(array(0 => $score));
 
-        /*
-        ** Here we are building the thread field.  See the comment
-        ** in comment_render().
-        */
-
+        // Here we are building the thread field.  See the comment
+        // in comment_render().
         if ($edit['pid'] == 0) {
-          /*
-          ** This is a comment with no parent comment (depth 0): we start
-          ** by retrieving the maximum thread level.
-          */
-
+          // This is a comment with no parent comment (depth 0): we start
+          // by retrieving the maximum thread level.
           $max = db_result(db_query('SELECT MAX(thread) FROM {comments} WHERE nid = %d', $edit['nid']));
 
           // Strip the "/" from the end of the thread.
           $max = rtrim($max, '/');
 
-          /*
-          ** Next, we increase this value by one.  Note that we can't
-          ** use 1, 2, 3, ... 9, 10, 11 because we order by string and
-          ** 10 would be right after 1.  We use 1, 2, 3, ..., 9, 91,
-          ** 92, 93, ... instead.  Ugly but fast.
-          */
-
-          $decimals = (string)substr($max, 0, strlen($max) - 1);
+          // Next, we increase this value by one.  Note that we can't
+          // use 1, 2, 3, ... 9, 10, 11 because we order by string and
+          // 10 would be right after 1.  We use 1, 2, 3, ..., 9, 91,
+          // 92, 93, ... instead.  Ugly but fast.
+          $decimals = (string) substr($max, 0, strlen($max) - 1);
           $units = substr($max, -1, 1);
           if ($units) {
             $units++;
@@ -569,26 +558,24 @@ function comment_post($edit) {
           }
 
           // Finally, build the thread field for this new comment.
-          $thread = "$decimals$units/";
+          $thread = $decimals . $units .'/';
         }
         else {
-          /*
-          ** This is comment with a parent comment: we increase
-          ** the part of the thread value at the proper depth.
-          */
+          // This is comment with a parent comment: we increase
+          // the part of the thread value at the proper depth.
 
           // Get the parent comment:
           $parent = db_fetch_object(db_query('SELECT * FROM {comments} WHERE cid = %d', $edit['pid']));
 
           // Strip the "/" from the end of the parent thread.
-          $parent->thread = (string)rtrim((string)$parent->thread, '/');
+          $parent->thread = (string) rtrim((string) $parent->thread, '/');
 
           // Get the max value in _this_ thread.
           $max = db_result(db_query("SELECT MAX(thread) FROM {comments} WHERE thread LIKE '%s.%%' AND nid = %d", $parent->thread, $edit['nid']));
 
           if ($max == '') {
             // First child of this parent.
-            $thread = "$parent->thread.1/";
+            $thread = $parent->thread .'.1/';
           }
           else {
             // Strip the "/" at the end of the thread.
@@ -599,13 +586,10 @@ function comment_post($edit) {
             $parent_depth = count(explode('.', $parent->thread));
             $last = $parts[$parent_depth];
 
-            /*
-            ** Next, we increase this value by one.  Note that we can't
-            ** use 1, 2, 3, ... 9, 10, 11 because we order by string and
-            ** 10 would be right after 1.  We use 1, 2, 3, ..., 9, 91,
-            ** 92, 93, ... instead.  Ugly but fast.
-            */
-
+            // Next, we increase this value by one.  Note that we can't
+            // use 1, 2, 3, ... 9, 10, 11 because we order by string and
+            // 10 would be right after 1.  We use 1, 2, 3, ..., 9, 91,
+            // 92, 93, ... instead.  Ugly but fast.
             $decimals = (string)substr($last, 0, strlen($last) - 1);
             $units = substr($last, -1, 1);
             $units++;
@@ -614,12 +598,12 @@ function comment_post($edit) {
             }
 
             // Finally, build the thread field for this new comment.
-            $thread = "$parent->thread.". $decimals.$units .'/';
+            $thread = $parent->thread .'.'. $decimals . $units .'/';
           }
         }
 
 
-        $edit["cid"] = db_next_id("{comments}_cid");
+        $edit['cid'] = db_next_id('{comments}_cid');
         $edit['timestamp'] = time();
 
         if ($edit['uid'] = $user->uid) {
@@ -627,7 +611,7 @@ function comment_post($edit) {
         }
 
 
-        db_query("INSERT INTO {comments} (cid, nid, pid, uid, subject, comment, format, hostname, timestamp, status, score, users, thread, name, mail, homepage) VALUES (%d, %d, %d, %d, '%s', '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s')", $edit["cid"], $edit["nid"], $edit["pid"], $edit['uid'], $edit['subject'], $edit['comment'], $edit['format'], $_SERVER['REMOTE_ADDR'], $edit['timestamp'], $status, $score, $users, $thread, $edit["name"], $edit['mail'], $edit["homepage"]);
+        db_query("INSERT INTO {comments} (cid, nid, pid, uid, subject, comment, format, hostname, timestamp, status, score, users, thread, name, mail, homepage) VALUES (%d, %d, %d, %d, '%s', '%s', %d, '%s', %d, %d, %d, '%s', '%s', '%s', '%s', '%s')", $edit['cid'], $edit['nid'], $edit['pid'], $edit['uid'], $edit['subject'], $edit['comment'], $edit['format'], $_SERVER['REMOTE_ADDR'], $edit['timestamp'], $status, $score, $users, $thread, $edit['name'], $edit['mail'], $edit['homepage']);
 
         _comment_update_node_statistics($edit['nid']);
 
