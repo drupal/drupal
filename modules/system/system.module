@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.24 2002/02/20 22:44:25 kjartan Exp $
+// $Id: system.module,v 1.25 2002/02/22 19:44:22 dries Exp $
 
 function system_help() {
   $output .= "<p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviors including visual and operational settings.</p>";
@@ -69,7 +69,6 @@ function system_view_options() {
   $output .= form_select("Default display mode", "default_comment_mode", $conf[default_comment_mode], $cmodes, "The default mode in which comments are displayed.");
   $output .= form_select("Default display order", "default_comment_order", $conf[default_comment_order], $corder, "The default order in which comments are displayed.");
   for ($count = -1; $count < 6; $count++) $threshold[$count] = "Filter - $count";
-  $output .= form_select("Default filter threshold", "default_comment_threshold", $conf[default_comment_threshold], $threshold, "The default threshold used to filter comments.");
   $output .= "<hr />\n";
 
   // layout settings:
