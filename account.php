@@ -28,7 +28,7 @@ function account_create($error = "") {
     watchdog("message", "failed to create account: $error.");
   }
   else {
-    $output .= "<P>". t("Registering allows you to comment on stories, to moderate comments and pending stories, to customize the look and feel of the site and generally helps you interact with the site more efficiently.") ."</P><P>". t("To create an account, simply fill out this form an click the 'Create account' button below.  An e-mail will then be sent to you with instructions on how to validate your account.") ."</P>\n";
+    $output .= "<P>". t("Registering allows you to comment, to moderate comments and pending submissions, to customize the look and feel of the site and generally helps you interact with the site more efficiently.") ."</P><P>". t("To create an account, simply fill out this form an click the 'Create account' button below.  An e-mail will then be sent to you with instructions on how to validate your account.") ."</P>\n";
   }
 
   $output .= "<FORM ACTION=\"account.php\" METHOD=\"post\">\n";
@@ -48,7 +48,7 @@ function account_session_start($userid, $passwd) {
   global $user;
   if ($userid && $passwd) $user = new User($userid, $passwd);
   if ($user->id) session_register("user");
-  watchdog("message", ($user->id ? "session opened for user '$user->userid'" : "failed login for user `$userid'"));
+  watchdog("message", ($user->id ? "session opened for user '$user->userid'" : "failed login for user '$userid'"));
 }
 
 function account_session_close() {
@@ -146,20 +146,20 @@ function account_site_edit() {
       $output .= "<I>". t("Selecting a different language will change the language the site.") ."</I><P>\n";
     }
 
-    $output .= "<B>". t("Maximum number of stories to display") .":</B><BR>\n";
-    for ($stories = 10; $stories <= 30; $stories += 5) $options4 .= "<OPTION VALUE=\"$stories\"". (($user->stories == $stories) ? " SELECTED" : "") .">$stories</OPTION>\n";
-    $output .= "<SELECT NAME=\"edit[stories]\">\n$options4</SELECT><BR>\n";
-    $output .= "<I>". t("The maximum number of stories that will be displayed on the main page.") ."</I><P>\n";
-    foreach ($cmodes as $key=>$value) $options5 .= "<OPTION VALUE=\"$key\"". ($user->mode == $key ? " SELECTED" : "") .">$value</OPTION>\n";
+    $output .= "<B>". t("Maximum number of items to display") .":</B><BR>\n";
+    for ($nodes = 10; $nodes <= 30; $nodes += 5) $options4 .= "<OPTION VALUE=\"$nodes\"". (($user->nodes == $nodes) ? " SELECTED" : "") .">$nodes</OPTION>\n";
+    $output .= "<SELECT NAME=\"edit[nodes]\">\n$options4</SELECT><BR>\n";
+    $output .= "<I>". t("The maximum number of nodes that will be displayed on the main page.") ."</I><P>\n";
 
+    foreach ($cmodes as $key=>$value) $options5 .= "<OPTION VALUE=\"$key\"". ($user->mode == $key ? " SELECTED" : "") .">$value</OPTION>\n";
     $output .= "<B>". t("Comment display mode") .":</B><BR>\n";
     $output .= "<SELECT NAME=\"edit[mode]\">$options5</SELECT><P>\n";
-    foreach ($corder as $key=>$value) $options6 .= "<OPTION VALUE=\"$key\"". ($user->sort == $key ? " SELECTED" : "") .">$value</OPTION>\n";
 
+    foreach ($corder as $key=>$value) $options6 .= "<OPTION VALUE=\"$key\"". ($user->sort == $key ? " SELECTED" : "") .">$value</OPTION>\n";
     $output .= "<B>". t("Comment sort order") .":</B><BR>\n";
     $output .= "<SELECT NAME=\"edit[sort]\">$options6</SELECT><P>\n";
-    for ($i = -1; $i < 6; $i++) $options7 .= " <OPTION VALUE=\"$i\"". ($user->threshold == $i ? " SELECTED" : "") .">Filter - $i</OPTION>";
 
+    for ($i = -1; $i < 6; $i++) $options7 .= " <OPTION VALUE=\"$i\"". ($user->threshold == $i ? " SELECTED" : "") .">Filter - $i</OPTION>";
     $output .= "<B>". t("Comment filter") .":</B><BR>\n";
     $output .= "<SELECT NAME=\"edit[threshold]\">$options7</SELECT><BR>\n";
     $output .= "<I>". t("Comments that scored less than this threshold setting will be ignored.  Anonymous comments start at 0, comments of people logged on start at 1 and moderators can add and subtract points.") ."</I><P>\n";
@@ -182,7 +182,7 @@ function account_site_edit() {
 function account_site_save($edit) {
   global $user;
   if ($user->id) {
-    $user = user_save($user, array("theme" => $edit[theme], "timezone" => $edit[timezone], "language" => $edit[language], "stories" => $edit[stories], "mode" => $edit[mode], "sort" => $edit[sort], "threshold" => $edit[threshold]));
+    $user = user_save($user, array("theme" => $edit[theme], "timezone" => $edit[timezone], "language" => $edit[language], "nodes" => $edit[nodes], "mode" => $edit[mode], "sort" => $edit[sort], "threshold" => $edit[threshold]));
   }
 }
 
@@ -228,7 +228,7 @@ function account_user($uname) {
 
   function module($name, $module, $username) {
     global $theme;
-    if ($module["user"] && $block = $module["user"]($username, "user", "view")) {
+    if ($module["account"] && $block = $module["account"]($username, "account", "view")) {
       if ($block["content"]) $theme->box($block["subject"], $block["content"]);
     }
   }
@@ -255,21 +255,23 @@ function account_user($uname) {
     $block1 .= " <TR><TD ALIGN=\"right\"><B>". t("Bio") .":</B></TD><TD>". check_output($account->bio) ."</TD></TR>\n";
     $block1 .= "</TABLE>\n";
 
-    $result = db_query("SELECT c.cid, c.pid, c.lid, c.subject, c.timestamp, s.subject AS story FROM comments c LEFT JOIN users u ON u.id = c.author LEFT JOIN stories s ON s.id = c.lid WHERE u.userid = '$uname' AND s.status = 2 AND c.link = 'story' AND s.timestamp > ". (time() - 1209600) ." ORDER BY cid DESC LIMIT 10");
+/*
+    $result = db_query("SELECT c.cid, c.pid, c.lid, c.subject, c.timestamp, n.title AS node FROM comments c LEFT JOIN users u ON u.id = c.author LEFT JOIN nodes ON n.id = c.lid WHERE u.userid = '$uname' AND n.status = 2 AND s.timestamp > ". (time() - 1209600) ." ORDER BY cid DESC LIMIT 10");
     while ($comment = db_fetch_object($result)) {
       $block2 .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
-      $block2 .= " <TR><TD ALIGN=\"right\"><B>". t("Comment") .":</B></TD><TD><A HREF=\"story.php?id=$comment->lid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A></TD></TR>\n";
+      $block2 .= " <TR><TD ALIGN=\"right\"><B>". t("Comment") .":</B></TD><TD><A HREF=\"node.php?id=$comment->lid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A></TD></TR>\n";
       $block2 .= " <TR><TD ALIGN=\"right\"><B>". t("Date") .":</B></TD><TD>". format_date($comment->timestamp) ."</TD></TR>\n";
-      $block2 .= " <TR><TD ALIGN=\"right\"><B>". t("Story") .":</B></TD><TD><A HREF=\"story.php?id=$comment->lid\">". check_output($comment->story) ."</A></TD></TR>\n";
+      $block2 .= " <TR><TD ALIGN=\"right\"><B>". t("Story") .":</B></TD><TD><A HREF=\"node.php?id=$comment->lid\">". check_output($comment->story) ."</A></TD></TR>\n";
       $block2 .= "</TABLE>\n";
       $block2 .= "<P>\n";
       $comments++;
     }
+*/
 
     // Display account information:
     $theme->header();
     if ($block1) $theme->box(strtr(t("%a's user information"), array("%a" => $uname)), $block1);
-    if ($block2) $theme->box(strtr(t("%a has posted %b recently"), array("%a" => $uname, "%b" => format_plural($comments, "comment", "comments"))), $block2);
+//    if ($block2) $theme->box(strtr(t("%a has posted %b recently"), array("%a" => $uname, "%b" => format_plural($comments, "comment", "comments"))), $block2);
     module_iterate("module", $uname);
     $theme->footer();
   }
@@ -406,15 +408,15 @@ function account_password($min_length=6) {
 function account_track_comments() {
   global $theme, $user;
 
-  $sresult = db_query("SELECT s.id, s.subject, COUNT(s.id) AS count FROM comments c LEFT JOIN stories s ON c.lid = s.id WHERE c.author = '$user->id' GROUP BY s.id DESC LIMIT 5");
+  $sresult = db_query("SELECT n.nid, n.title, COUNT(n.nid) AS count FROM comments c LEFT JOIN nodes n ON c.lid = n.nid WHERE c.author = '$user->id' GROUP BY n.nid DESC LIMIT 5");
 
-  while ($story = db_fetch_object($sresult)) {
-    $output .= "<LI>". format_plural($story->count, "comment", "comments") ." ". t("attached to story") ." `<A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A>`:</LI>\n";
+  while ($node = db_fetch_object($sresult)) {
+    $output .= "<LI>". format_plural($node->count, "comment", "comments") ." ". t("attached to node") ." `<A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A>`:</LI>\n";
     $output .= " <UL>\n";
 
-    $cresult = db_query("SELECT * FROM comments WHERE author = '$user->id' AND lid = '$story->id'");
+    $cresult = db_query("SELECT * FROM comments WHERE author = '$user->id' AND lid = '$node->nid'");
     while ($comment = db_fetch_object($cresult)) {
-      $output .= "  <LI><A HREF=\"story.php?id=$story->id&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A> - ". t("replies") .": ". comment_num_replies($comment->cid) ." - ". t("score") .": ". comment_score($comment) ."</LI>\n";
+      $output .= "  <LI><A HREF=\"node.php?id=$node->nid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A> - ". t("replies") .": ". comment_num_replies($comment->cid) ." - ". t("score") .": ". comment_score($comment) ."</LI>\n";
     }
     $output .= " </UL>\n";
   }
@@ -424,22 +426,22 @@ function account_track_comments() {
   $theme->footer();
 }
 
-function account_track_stories() {
+function account_track_nodes() {
   global $theme, $user;
 
-  $result = db_query("SELECT s.id, s.subject, s.timestamp, s.section, COUNT(c.cid) AS count FROM stories s LEFT JOIN comments c ON c.lid = s.id WHERE s.status = '2' AND s.author = '$user->id' GROUP BY s.id DESC");
+  $result = db_query("SELECT n.nid, n.type, n.title, n.timestamp, COUNT(c.cid) AS count FROM nodes n LEFT JOIN comments c ON c.lid = n.nid WHERE n.status = '2' AND n.author = '$user->id' GROUP BY n.nid DESC");
 
-  while ($story = db_fetch_object($result)) {
+  while ($node = db_fetch_object($result)) {
     $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>". t("Subject") .":</B></TD><TD><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A> (". format_plural($story->count, "comment", "comments") .")</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>". t("Section") .":</B></TD><TD><A HREF=\"search.php?section=". urlencode($story->section) ."\">". check_output($story->section) ."</A></TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>". t("Date") .":</B></TD><TD>". format_date($story->timestamp) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>". t("Subject") .":</B></TD><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A> (". format_plural($node->count, "comment", "comments") .")</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>". t("Type") .":</B></TD><TD>". check_output($node->type) ."</A></TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>". t("Date") .":</B></TD><TD>". format_date($node->timestamp) ."</TD></TR>\n";
     $output .= "</TABLE>\n";
     $output .= "<P>\n";
   }
 
   $theme->header();
-  $theme->box(t("Track your stories"), ($output ? $output : t("You have not posted any stories.")));
+  $theme->box(t("Track your nodes"), ($output ? $output : t("You have not posted any nodes.")));
   $theme->footer();
 }
 
@@ -448,20 +450,20 @@ function account_track_site() {
 
   $period = 259200; // 3 days
 
-  $sresult = db_query("SELECT s.subject, s.id, COUNT(c.lid) AS count FROM comments c LEFT JOIN stories s ON c.lid = s.id WHERE s.status = '2' AND c.link = 'story' AND ". time() ." - c.timestamp < $period GROUP BY c.lid ORDER BY s.timestamp DESC LIMIT 10");
-  while ($story = db_fetch_object($sresult)) {
-    $output .= "<LI>". format_plural($story->count, "comment", "comments") ." ". t("attached to story") ." '<A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A>':</LI>";
+  $sresult = db_query("SELECT n.title, n.nid, COUNT(c.lid) AS count FROM comments c LEFT JOIN nodes n ON c.lid = n.nid WHERE n.status = 2 AND ". time() ." - n.timestamp < $period GROUP BY c.lid ORDER BY n.timestamp DESC LIMIT 10");
+  while ($node = db_fetch_object($sresult)) {
+    $output .= "<LI>". format_plural($node->count, "comment", "comments") ." ". t("attached to node") ." '<A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A>':</LI>";
 
-    $cresult = db_query("SELECT c.subject, c.cid, c.pid, u.userid FROM comments c LEFT JOIN users u ON u.id = c.author WHERE c.lid = '$story->id' AND c.link = 'story' ORDER BY timestamp DESC LIMIT $story->count");
+    $cresult = db_query("SELECT c.subject, c.cid, c.pid, u.userid FROM comments c LEFT JOIN users u ON u.id = c.author WHERE c.lid = '$node->nid' ORDER BY c.timestamp DESC LIMIT $node->count");
     $output .= "<UL>\n";
     while ($comment = db_fetch_object($cresult)) {
-      $output .= " <LI>'<A HREF=\"story.php?id=$story->id&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A>' ". t("by") ." ". format_username($comment->userid) ."</LI>\n";
+      $output .= " <LI>'<A HREF=\"node.php?id=$node->nid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A>' ". t("by") ." ". format_username($comment->userid) ."</LI>\n";
     }
     $output .= "</UL>\n";
   }
 
   $theme->header();
-  $theme->box(strtr(t("Track %a"), array("%a" => $site_name)), ($output ? $output : t("No comments or stories posted recently.")));
+  $theme->box(strtr(t("Track %a"), array("%a" => $site_name)), ($output ? $output : t("No comments or nodes posted recently.")));
   $theme->footer();
 }
 
@@ -515,8 +517,8 @@ switch ($op) {
       case "site":
         account_track_site();
         break;
-      case "stories":
-        account_track_stories();
+      case "nodes":
+        account_track_nodes();
         break;
       default:
         account_track_comments();

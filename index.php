@@ -3,13 +3,13 @@
 include_once "includes/common.inc";
 
 // Initialize/pre-process variables:
-$number = ($user->stories) ? $user->stories : 10;
+$number = ($user->nodes) ? $user->nodes : 10;
 $date = ($date > 0) ? $date : time();
 
 // Perform query:
-$result = db_query("SELECT stories.*, users.userid, COUNT(comments.lid) AS comments FROM stories LEFT JOIN comments ON stories.id = comments.lid LEFT JOIN users ON stories.author = users.id WHERE stories.status = 2 ". ($section ? "AND section = '$section' " : "") ."AND stories.timestamp <= $date GROUP BY stories.id ORDER BY stories.timestamp DESC LIMIT $number");
+$result = db_query("SELECT n.*, s.*, u.userid, COUNT(c.lid) AS comments FROM nodes n LEFT JOIN story s ON n.nid = s.node LEFT JOIN comments c ON n.nid = c.lid LEFT JOIN users u ON n.author = u.id WHERE n.status = 2 AND n.type = 'story' ". ($section ? "AND s.section = '$section' " : "") ."AND n.timestamp <= $date GROUP BY n.nid ORDER BY n.timestamp DESC LIMIT $number");
 
-// Display stories:
+// Display nodes:
 $theme->header();
 while ($story = db_fetch_object($result)) $theme->story($story);
 $theme->footer();

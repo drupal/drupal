@@ -12,26 +12,22 @@ function theme_init() {
   return new Theme();
 }
 
+function theme_menu($name, $module) {
+  global $menu;
+  if ($module["menu"]) $menu = ($menu) ? array_merge($menu, $module["menu"]()) : $module["menu"]();
+}
+
 function theme_account($theme) {
   global $user, $site_name, $links, $menu;
 
   if ($user->id) {
 
-    function submission_number() {
-      $result = db_query("SELECT COUNT(id) FROM stories WHERE status = 1");
-      return ($result) ? db_result($result, 0) : 0;
-    }
 
-    function menu($name, $module) {
-      global $menu;
-      if ($module["menu"]) $menu = ($menu) ? array_merge($menu, $module["menu"]()) : $module["menu"]();
-    }
-
-    module_iterate("menu");
+    module_iterate("theme_menu");
 
     // Display account settings:
     $content .= "<LI><A HREF=\"account.php?op=track&topic=comments\">". t("track your comments") ."</A></LI>\n";
-    $content .= "<LI><A HREF=\"account.php?op=track&topic=stories\">". t("track your stories") ."</A></LI>\n";
+    $content .= "<LI><A HREF=\"account.php?op=track&topic=nodes\">". t("track your nodes") ."</A></LI>\n";
     $content .= "<LI><A HREF=\"account.php?op=track&topic=site\">". strtr(t("track %a"), array("%a" => $site_name)) ."</A></LI>\n";
     $content .= "<P>\n";
     $content .= "<LI><A HREF=\"account.php?op=edit&topic=user\">". t("edit your information") ."</A></LI>\n";
@@ -72,11 +68,11 @@ function theme_blocks($region, $theme) {
   global $id, $PHP_SELF, $user;
 
   switch (strrchr($PHP_SELF, "/")) {
-    case "/story.php":
+    case "/node.php":
       if ($region != "left") {
-        if ($user->id) $story = db_fetch_object(db_query("SELECT * FROM stories WHERE id = '$id'"));
-        if ($story->status == 1) theme_moderation_results($theme, $story);
-        else theme_new_headlines($theme);
+        if ($user->id) $node = db_fetch_object(db_query("SELECT * FROM nodes WHERE nid = '$id'"));
+        if ($node->status == 1) theme_moderation_results($theme, $node);
+        // else theme_new_headlines($theme);
       }
       break;
     case "/index.php":
@@ -90,59 +86,39 @@ function theme_blocks($region, $theme) {
   }
 }
 
-function theme_morelink($theme, $story) {
-  return ($story->article) ? "[ <A HREF=\"story.php?id=$story->id\"><FONT COLOR=\"$theme->link\"><B>". t("read more") ."</B></FONT></A> | ". sizeof(explode(" ", $story->article)) ." ". t("words") ." | <A HREF=\"story.php?id=$story->id\"><FONT COLOR=\"$theme->link\">". format_plural($story->comments, "comment", "comments") ."</FONT></A> ]" : "[ <A HREF=\"story.php?id=$story->id\"><FONT COLOR=\"$theme->link\">". format_plural($story->comments, "comment", "comments") ."</FONT></A> ]";
+function theme_morelink($theme, $node) {
+  return ($node->body) ? "[ <A HREF=\"node.php?id=$node->nid\"><FONT COLOR=\"$theme->link\"><B>". t("read more") ."</B></FONT></A> | ". sizeof(explode(" ", $node->body)) ." ". t("words") ." | <A HREF=\"node.php?id=$node->nid\"><FONT COLOR=\"$theme->link\">". format_plural($node->comments, "comment", "comments") ."</FONT></A> ]" : "[ <A HREF=\"node.php?id=$node->nid\"><FONT COLOR=\"$theme->link\">". format_plural($node->comments, "comment", "comments") ."</FONT></A> ]";
 }
 
-function theme_moderation_results($theme, $story) {
+function theme_moderation_results($theme, $node) {
   global $user;
 
-  if ($user->id && $story->id && ($user->id == $story->author || user_get($user, "history", "s$story->id"))) {
-    $result = db_query("SELECT * FROM users WHERE history LIKE '%s$story->id%'");
+  if ($user->id && $node->nid && ($user->id == $node->author || user_get($user, "history", "n$node->nid"))) {
+    $result = db_query("SELECT * FROM users WHERE history LIKE '%n$node->nid%'");
     while ($account = db_fetch_object($result)) {
-      $output .= format_username($account->userid) ." voted `". user_get($account, "history", "s$story->id") ."'.<BR>";
+      $output .= format_username($account->userid) ." voted '". user_get($account, "history", "n$node->nid") ."'.<BR>";
     }
 
     $theme->box(t("Moderation results"), ($output ? $output : t("This story has not been moderated yet.")));
   }
 }
 
-function theme_related_links($theme, $story) {
-  // Parse story for <A HREF="">-tags:
-  $text = stripslashes("$story->abstract $story->updates $story->article");
-  while ($text = stristr($text, "<A HREF=")) {
-    $link = substr($text, 0, strpos(strtolower($text), "</a>") + 4);
-    $text = stristr($text, "</A>");
-    if (!stristr($link, "mailto:")) $content .= "<LI>$link</LI>";
-  }
-
-  // Stories in the same section:
-  $content .= " <LI>". t("More about") ." <A HREF=\"index.php?section=". urlencode($story->section) ."\">$story->section</A>.</LI>";
-
-  $theme->box(t("Related links"), $content);
-}
-
 function theme_new_headlines($theme, $num = 10) {
-  global $user;
-
-  $content = "";
-  $result = db_query("SELECT id, subject FROM stories WHERE status = 2 ORDER BY id DESC LIMIT $num");
-  while ($story = db_fetch_object($result)) $content .= "<LI><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A></LI>\n";
+  $result = db_query("SELECT nid, title FROM nodes WHERE status = 2 AND type = 'story' ORDER BY nid DESC LIMIT $num");
+  while ($node = db_fetch_object($result)) $content .= "<LI><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></LI>\n";
   $theme->box(t("Latest headlines"), $content);
 }
 
 function theme_old_headlines($theme, $num = 10) {
   global $user;
 
-  if ($user->stories) $result = db_query("SELECT id, subject, timestamp FROM stories WHERE status = 2 ORDER BY timestamp DESC LIMIT $user->stories, $num");
-  else $result = db_query("SELECT id, subject, timestamp FROM stories WHERE status = 2 ORDER BY timestamp DESC LIMIT $num, $num");
-
-  while ($story = db_fetch_object($result)) {
-    if ($time != date("F jS", $story->timestamp)) {
-      $content .= "<P><B>". date("l, M jS", $story->timestamp) ."</B></P>\n";
-      $time = date("F jS", $story->timestamp);
+  $result = db_query("SELECT id, subject, timestamp FROM story WHERE status = 2 ORDER BY timestamp DESC LIMIT ". ($user->nodes ? $user->nodes : $num) .", $num");
+  while ($node = db_fetch_object($result)) {
+    if ($time != date("F jS", $node->timestamp)) {
+      $content .= "<P><B>". date("l, M jS", $node->timestamp) ."</B></P>\n";
+      $time = date("F jS", $node->timestamp);
     }
-    $content .= "<LI><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A></LI>\n";
+    $content .= "<LI><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></LI>\n";
   }
   $theme->box(t("Older headlines"), $content);
 }
