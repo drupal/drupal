@@ -17,6 +17,7 @@ function admin_page($mod) {
   <html>
    <head>
     <title><?php echo variable_get("site_name", "drupal") . " " . t("administration pages"); ?></title>
+    <link rel="stylesheet" type="text/css" media="print" href="misc/print.css" />
     <style type="text/css" title="layout" media="Screen">
       @import url("misc/admin.css");
     </style>
