@@ -9,7 +9,7 @@
 
   *********************************************************************/
 
-  class Theme {
+  class Theme extends BaseTheme {
     // General colorset that can be used for this theme 
     var $foreground = "#000000";
     var $background = "#FFFFFF";
@@ -30,7 +30,7 @@
               <TD ALIGN="right" COLSPAN="2">
 
 <?php
-               print theme_link(" | ");
+               print theme_link();
 ?>
 
               </TD>
@@ -50,7 +50,7 @@
 
     } // close header function
 
-    function node($node, $main = 0) {
+    function node($node, $main = 0, $links = 0) {
 ?>
 
               <TABLE BORDER="1" CELLSPACING="0" CELLPADDING="3" WIDTH="100%">
@@ -83,8 +83,7 @@
                  <TR>
                    <TD COLSPAN="2">
 <?php
-                     if ($main)
-                       echo theme_morelink($this, $node);
+                      if ($main || $links) echo $this->links($links, $main, $node);
 ?>
 
                    </TD>

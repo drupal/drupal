@@ -1,5 +1,17 @@
 <?php
 
+class BaseTheme {
+    function links($links = array(), $status = 0, $node = 0) {
+      if ($status == 1)
+        $links = array_merge(theme_morelink($node), $links);
+      foreach ($links as $link) {
+        $_links[] = count($link) == 2 ? "<A HREF=\"$link[0]\"><FONT COLOR=\"$theme->link\">". t($link[1]) ."</FONT></A>" : t($link[0]);
+      }
+      if ($status == 2) return ($_links ? implode(" | ", $_links) : "");
+      else return ($_links ? "[ ". implode(" | ", $_links) ." ]" : "");
+    }
+}
+
 function theme_init() {
   global $user, $themes;
 
@@ -12,21 +24,22 @@ function theme_init() {
   return new Theme();
 }
 
-function theme_link($separator = " | ") {
-  $links[] = "<A HREF=\"index.php\">". t("home") ."</A>";
-  $links[] = "<A HREF=\"search.php\">". t("search") ."</A>";
-  $links[] = "<A HREF=\"submit.php\">". t("submit") ."</A>";
-  $links[] = "<A HREF=\"account.php\">". t("account") ."</A>";
+function theme_link() {
+  global $theme;
+  $links[] = array("index.php",  t("home"));
+  $links[] = array("search.php",  t("search"));
+  $links[] = array("submit.php",  t("submit"));
+  $links[] = array("account.php",  t("account"));
 
   foreach (module_list() as $name) {
-    if (module_hook($name, "page")) $links[] = "<A HREF=\"module.php?mod=$name\">".t($name) ."</A>";
+    if (module_hook($name, "page")) $links[] = array("module.php?mod=$name", t($name));
   }
 
 //  if (module_exist("forum")) $links[] = "<A HREF=\"module.php?mod=forum\">".t("forum") ."</A>";
 //  if (module_exist("diary")) $links[] = "<A HREF=\"module.php?mod=diary\">". t("diary") ."</A>";
 //  if (module_exist("book")) $links[] = "<A HREF=\"module.php?mod=book\">". t("handbook") ."</A>";
 
-  return implode($separator, $links);
+  return $theme->links($links, 2);
 }
 
 
@@ -97,15 +110,15 @@ function theme_blocks($region, $theme) {
   }
 }
 
-function theme_morelink($theme, $node) {
+function theme_morelink(&$node) {
   if ($node->body) {
-    $link[] = "<A HREF=\"node.php?id=$node->nid\"><FONT COLOR=\"$theme->link\">". t("read more") ."</FONT></A>";
+    $links[] = array("node.php?id=$node->nid", t("read more"));
   }
   if ($node->comment) {
-    $link[] = "<A HREF=\"node.php?id=$node->nid\"><FONT COLOR=\"$theme->link\">". format_plural(node_get_comments($node->nid), "comment", "comments") ."</FONT></A>";
+    $links[] = array("node.php?id=$node->nid", format_plural(node_get_comments($node->nid), "comment", "comments"));
   }
 
-  return ($link ? "[ ". implode(" | ", $link) ." ]" : "");
+  return $links;
 }
 
 function theme_moderation_results($theme, $node) {
