@@ -1,5 +1,5 @@
 <?php
-// $Id: node.php,v 1.35 2001/11/03 18:38:27 dries Exp $
+// $Id: node.php,v 1.36 2001/11/04 15:57:41 dries Exp $
 
 include_once "includes/common.inc";
 
@@ -95,11 +95,10 @@ elseif ($number) {
 
   if (node_access("view", $node)) {
     if (isset($revision)) {
-      node_render($node->revisions[$revision]["node"]);
+      $node = $node->revisions[$revision]["node"];
     }
-    else {
-      node_render($node);
-    }
+
+    node_render($node);
   }
   else {
     node_failure();
