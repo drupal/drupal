@@ -69,7 +69,12 @@ function pager_query($query, $limit = 10, $element = 0, $count_query = NULL) {
   // Convert comma-separated $from to an array, used by other functions.
   $pager_from_array = explode(',', $from);
 
-  return db_query_range($query, $args, (int)$pager_from_array[$element], (int)$limit);
+  if (count($args)) {  
+    return db_query_range($query, $args, (int)$pager_from_array[$element], (int)$limit);  
+  }  
+  else {  
+    return db_query_range($query, (int)$pager_from_array[$element], (int)$limit);  
+  }
 }
 
 /**
