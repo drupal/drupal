@@ -53,7 +53,8 @@ $mysql_updates = array(
   "2002-08-26" => "update_38",
   "2002-09-15" => "update_39",
   "2002-09-17" => "update_40",
-  "2002-10-13" => "update_41"
+  "2002-10-13" => "update_41",
+  "2002-10-17" => "update_42"
 );
 
 // Update functions
@@ -608,6 +609,12 @@ function update_41() {
     uid int(10) UNSIGNED DEFAULT '0',
     timestamp int(11) UNSIGNED NOT NULL
   )");
+}
+
+function update_42() {
+  update_sql("DROP TABLE modules");
+  update_sql("DROP TABLE layout");
+  update_sql("DROP TABLE referrer");
 }
 
 function update_upgrade3() {

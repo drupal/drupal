@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.34 2002/09/30 08:55:45 kjartan Exp $
+// $Id: module.inc,v 1.35 2002/10/17 18:34:38 kjartan Exp $
 
 // initialize modules:
 function module_init() {
@@ -11,7 +11,9 @@ function module_init() {
 
 // apply function $function to every known module:
 function module_iterate($function, $argument = "") {
-  foreach (module_list() as $name) $function($name, $argument);
+  foreach (module_list() as $name) {
+    $function($name, $argument);
+  }
 }
 
 // invoke hook $hook of module $name with optional arguments:
@@ -45,8 +47,8 @@ function module_list() {
     $list = array("drupal" => "drupal", "system" => "system", "user" => "user", "watchdog" => "watchdog");
     $result = db_query("SELECT name, filename FROM system WHERE type = 'module' AND status = '1' ORDER BY name");
     while ($module = db_fetch_object($result)) {
-      $list[$module->name] = $module->name;
       if (file_exists("modules/$module->filename")) {
+        $list[$module->name] = $module->name;
         include_once "modules/$module->filename";
       }
     }
@@ -86,25 +88,6 @@ function module_rehash_blocks($name) {
   }
 
   db_query("DELETE FROM blocks WHERE module = '$name' AND remove = '1'");
-}
-
-// rehash a module:
-function module_rehash($name) {
-  if (module_exist($name)) {
-    $result = db_query("SELECT * FROM modules WHERE name = '$name'");
-
-    if (!$object = db_fetch_object($result)) {
-      db_query("INSERT INTO modules (name) VALUES ('$name')");
-    }
-
-    // rehash module-exported blocks (if necessary):
-    module_rehash_blocks($name);
-  }
-  else {
-    // remove all reference to module:
-    db_query("DELETE FROM modules WHERE name = '$name'");
-    db_query("DELETE FROM blocks WHERE module = '$name'");
-  }
 }
 
 ?>

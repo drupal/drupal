@@ -1,6 +1,12 @@
-#
-# Table structure for table 'access'
-#
+-- MySQL dump 8.22
+--
+-- Host: localhost    Database: drupal_devel
+---------------------------------------------------------
+-- Server version	3.23.52-nt
+
+--
+-- Table structure for table 'access'
+--
 
 CREATE TABLE access (
   aid tinyint(10) NOT NULL auto_increment,
@@ -11,9 +17,21 @@ CREATE TABLE access (
   UNIQUE KEY mask (mask)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'authmap'
-#
+--
+-- Table structure for table 'accesslog'
+--
+
+CREATE TABLE accesslog (
+  nid int(11) unsigned default '0',
+  url varchar(255) default NULL,
+  hostname varchar(128) default NULL,
+  uid int(10) unsigned default '0',
+  timestamp int(11) unsigned NOT NULL default '0'
+) TYPE=MyISAM;
+
+--
+-- Table structure for table 'authmap'
+--
 
 CREATE TABLE authmap (
   aid int(10) unsigned NOT NULL auto_increment,
@@ -24,9 +42,9 @@ CREATE TABLE authmap (
   UNIQUE KEY authname (authname)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'blocks'
-#
+--
+-- Table structure for table 'blocks'
+--
 
 CREATE TABLE blocks (
   name varchar(64) NOT NULL default '',
@@ -41,9 +59,9 @@ CREATE TABLE blocks (
   PRIMARY KEY  (name)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'book'
-#
+--
+-- Table structure for table 'book'
+--
 
 CREATE TABLE book (
   nid int(10) unsigned NOT NULL default '0',
@@ -55,9 +73,9 @@ CREATE TABLE book (
   KEY nid (nid)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'boxes'
-#
+--
+-- Table structure for table 'boxes'
+--
 
 CREATE TABLE boxes (
   bid tinyint(4) NOT NULL auto_increment,
@@ -66,13 +84,13 @@ CREATE TABLE boxes (
   info varchar(128) NOT NULL default '',
   type tinyint(2) NOT NULL default '0',
   PRIMARY KEY  (bid),
-  UNIQUE KEY info (info),
-  UNIQUE KEY subject (title)
+  UNIQUE KEY subject (title),
+  UNIQUE KEY info (info)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'bundle'
-#
+--
+-- Table structure for table 'bundle'
+--
 
 CREATE TABLE bundle (
   bid int(10) NOT NULL auto_increment,
@@ -82,9 +100,9 @@ CREATE TABLE bundle (
   UNIQUE KEY title (title)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'cache'
-#
+--
+-- Table structure for table 'cache'
+--
 
 CREATE TABLE cache (
   cid varchar(255) NOT NULL default '',
@@ -93,9 +111,9 @@ CREATE TABLE cache (
   PRIMARY KEY  (cid)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'comments'
-#
+--
+-- Table structure for table 'comments'
+--
 
 CREATE TABLE comments (
   cid int(10) NOT NULL auto_increment,
@@ -107,13 +125,16 @@ CREATE TABLE comments (
   hostname varchar(128) NOT NULL default '',
   timestamp int(11) NOT NULL default '0',
   link varchar(16) NOT NULL default '',
+  score mediumint(9) NOT NULL default '0',
+  status tinyint(3) unsigned NOT NULL default '0',
+  users mediumtext,
   PRIMARY KEY  (cid),
   KEY lid (nid)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'directory'
-#
+--
+-- Table structure for table 'directory'
+--
 
 CREATE TABLE directory (
   link varchar(255) NOT NULL default '',
@@ -125,27 +146,38 @@ CREATE TABLE directory (
   PRIMARY KEY  (link)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'feed'
-#
+--
+-- Table structure for table 'feed'
+--
 
 CREATE TABLE feed (
   fid int(10) NOT NULL auto_increment,
   title varchar(255) NOT NULL default '',
   url varchar(255) NOT NULL default '',
-  refresh int(11) NOT NULL default'0',
-  timestamp int(11) NOT NULL default'0',
+  refresh int(10) NOT NULL default '0',
+  timestamp int(10) NOT NULL default '0',
   attributes varchar(255) NOT NULL default '',
   link varchar(255) NOT NULL default '',
   description text NOT NULL,
   PRIMARY KEY  (fid),
-  UNIQUE KEY title (title),
-  UNIQUE KEY link (url)
+  UNIQUE KEY link (url),
+  UNIQUE KEY title (title)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'history'
-#
+--
+-- Table structure for table 'forum'
+--
+
+CREATE TABLE forum (
+  nid int(10) unsigned NOT NULL default '0',
+  icon varchar(255) NOT NULL default '',
+  shadow int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY  (nid)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table 'history'
+--
 
 CREATE TABLE history (
   uid int(10) NOT NULL default '0',
@@ -154,9 +186,9 @@ CREATE TABLE history (
   PRIMARY KEY  (uid,nid)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'item'
-#
+--
+-- Table structure for table 'item'
+--
 
 CREATE TABLE item (
   iid int(10) NOT NULL auto_increment,
@@ -170,18 +202,9 @@ CREATE TABLE item (
   PRIMARY KEY  (iid)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'layout'
-#
-
-CREATE TABLE layout (
-  uid int(11) NOT NULL default '0',
-  block varchar(64) NOT NULL default ''
-) TYPE=MyISAM;
-
-#
-# Table structure for table 'locales'
-#
+--
+-- Table structure for table 'locales'
+--
 
 CREATE TABLE locales (
   lid int(10) NOT NULL auto_increment,
@@ -198,32 +221,52 @@ CREATE TABLE locales (
   PRIMARY KEY  (lid)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'moderate'
-#
+--
+-- Table structure for table 'moderation_filters'
+--
 
-CREATE TABLE moderate (
-  cid int(10) NOT NULL default '0',
-  nid int(10) NOT NULL default '0',
-  uid int(10) NOT NULL default '0',
-  score int(2) NOT NULL default '0',
-  timestamp int(11) NOT NULL default '0',
-  KEY cid (cid),
-  KEY nid (nid)
+CREATE TABLE moderation_filters (
+  fid int(10) unsigned NOT NULL auto_increment,
+  filter varchar(255) NOT NULL default '',
+  minimum smallint(6) NOT NULL default '0',
+  PRIMARY KEY  (fid)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'modules'
-#
+--
+-- Table structure for table 'moderation_roles'
+--
+
+CREATE TABLE moderation_roles (
+  rid int(10) unsigned NOT NULL default '0',
+  mid int(10) unsigned NOT NULL default '0',
+  value tinyint(4) NOT NULL default '0',
+  KEY rid (rid),
+  KEY mid (mid)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table 'moderation_votes'
+--
+
+CREATE TABLE moderation_votes (
+  mid int(10) unsigned NOT NULL auto_increment,
+  vote varchar(255) default NULL,
+  weight tinyint(4) NOT NULL default '0',
+  PRIMARY KEY  (mid)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table 'modules'
+--
 
 CREATE TABLE modules (
   name varchar(64) NOT NULL default '',
   PRIMARY KEY  (name)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'node'
-#
+--
+-- Table structure for table 'node'
+--
 
 CREATE TABLE node (
   nid int(10) unsigned NOT NULL auto_increment,
@@ -252,9 +295,9 @@ CREATE TABLE node (
   KEY uid (uid)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'page'
-#
+--
+-- Table structure for table 'page'
+--
 
 CREATE TABLE page (
   nid int(10) unsigned NOT NULL default '0',
@@ -264,9 +307,9 @@ CREATE TABLE page (
   KEY nid (nid)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'permission'
-#
+--
+-- Table structure for table 'permission'
+--
 
 CREATE TABLE permission (
   rid int(10) unsigned NOT NULL default '0',
@@ -275,9 +318,9 @@ CREATE TABLE permission (
   KEY rid (rid)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'poll'
-#
+--
+-- Table structure for table 'poll'
+--
 
 CREATE TABLE poll (
   nid int(10) unsigned NOT NULL default '0',
@@ -287,9 +330,9 @@ CREATE TABLE poll (
   PRIMARY KEY  (nid)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'poll_choices'
-#
+--
+-- Table structure for table 'poll_choices'
+--
 
 CREATE TABLE poll_choices (
   chid int(10) unsigned NOT NULL auto_increment,
@@ -297,12 +340,13 @@ CREATE TABLE poll_choices (
   chtext varchar(128) NOT NULL default '',
   chvotes int(6) NOT NULL default '0',
   chorder int(2) NOT NULL default '0',
-  PRIMARY KEY  (chid)
+  PRIMARY KEY  (chid),
+  KEY nid (nid)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'rating'
-#
+--
+-- Table structure for table 'rating'
+--
 
 CREATE TABLE rating (
   uid int(10) NOT NULL default '0',
@@ -311,18 +355,9 @@ CREATE TABLE rating (
   PRIMARY KEY  (uid)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'referrer'
-#
-
-CREATE TABLE referrer (
-  url varchar(255) NOT NULL default '',
-  timestamp int(11) NOT NULL default '0'
-) TYPE=MyISAM;
-
-#
-# Table structure for table 'role'
-#
+--
+-- Table structure for table 'role'
+--
 
 CREATE TABLE role (
   rid int(10) unsigned NOT NULL auto_increment,
@@ -331,22 +366,32 @@ CREATE TABLE role (
   UNIQUE KEY name (name)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'search_index'
-#
+--
+-- Table structure for table 'search_index'
+--
 
 CREATE TABLE search_index (
- word varchar(50) NOT NULL,
- lno int(10) unsigned NOT NULL,
- type varchar(16) default NULL,
- count int(10) unsigned default NULL,
- KEY lno (lno),
- KEY word (word)
+  word varchar(50) NOT NULL default '',
+  lno int(10) unsigned NOT NULL default '0',
+  type varchar(16) default NULL,
+  count int(10) unsigned default NULL,
+  KEY lno (lno),
+  KEY word (word)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'site'
-#
+--
+-- Table structure for table 'sequences'
+--
+
+CREATE TABLE sequences (
+  name varchar(255) NOT NULL default '',
+  id int(10) unsigned NOT NULL default '0',
+  PRIMARY KEY  (name)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table 'site'
+--
 
 CREATE TABLE site (
   sid int(10) unsigned NOT NULL auto_increment,
@@ -358,13 +403,28 @@ CREATE TABLE site (
   refresh int(11) NOT NULL default '0',
   threshold int(11) NOT NULL default '0',
   PRIMARY KEY  (sid),
-  UNIQUE KEY title (name),
-  UNIQUE KEY url (link)
+  UNIQUE KEY url (link),
+  UNIQUE KEY title (name)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'system'
-#
+--
+-- Table structure for table 'statistics'
+--
+
+CREATE TABLE statistics (
+  nid int(11) NOT NULL default '0',
+  totalcount bigint(20) unsigned NOT NULL default '0',
+  daycount mediumint(8) unsigned NOT NULL default '0',
+  timestamp int(11) unsigned NOT NULL default '0',
+  PRIMARY KEY  (nid),
+  KEY totalcount (totalcount),
+  KEY daycount (daycount),
+  KEY timestamp (timestamp)
+) TYPE=MyISAM;
+
+--
+-- Table structure for table 'system'
+--
 
 CREATE TABLE system (
   filename varchar(255) NOT NULL default '',
@@ -375,18 +435,9 @@ CREATE TABLE system (
   PRIMARY KEY  (filename)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'sequences'
-#
-
-CREATE TABLE sequences (
-  name VARCHAR(255) NOT NULL PRIMARY KEY,
-  id INT UNSIGNED NOT NULL
-) TYPE=MyISAM;
-
-#
-# Table structure for table 'term_data'
-#
+--
+-- Table structure for table 'term_data'
+--
 
 CREATE TABLE term_data (
   tid int(10) unsigned NOT NULL auto_increment,
@@ -398,9 +449,9 @@ CREATE TABLE term_data (
   KEY vid (vid)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'term_hierarchy'
-#
+--
+-- Table structure for table 'term_hierarchy'
+--
 
 CREATE TABLE term_hierarchy (
   tid int(10) unsigned NOT NULL default '0',
@@ -409,9 +460,9 @@ CREATE TABLE term_hierarchy (
   KEY parent (parent)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'term_node'
-#
+--
+-- Table structure for table 'term_node'
+--
 
 CREATE TABLE term_node (
   nid int(10) unsigned NOT NULL default '0',
@@ -420,9 +471,9 @@ CREATE TABLE term_node (
   KEY tid (tid)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'term_relation'
-#
+--
+-- Table structure for table 'term_relation'
+--
 
 CREATE TABLE term_relation (
   tid1 int(10) unsigned NOT NULL default '0',
@@ -431,9 +482,9 @@ CREATE TABLE term_relation (
   KEY tid2 (tid2)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'term_synonym'
-#
+--
+-- Table structure for table 'term_synonym'
+--
 
 CREATE TABLE term_synonym (
   tid int(10) unsigned NOT NULL default '0',
@@ -442,9 +493,9 @@ CREATE TABLE term_synonym (
   KEY name (name(3))
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'users'
-#
+--
+-- Table structure for table 'users'
+--
 
 CREATE TABLE users (
   uid int(10) unsigned NOT NULL auto_increment,
@@ -469,12 +520,14 @@ CREATE TABLE users (
   data text,
   rid int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (uid),
-  UNIQUE KEY name (name)
+  UNIQUE KEY name (name),
+  KEY sid (sid(4)),
+  KEY timestamp (timestamp)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'variable'
-#
+--
+-- Table structure for table 'variable'
+--
 
 CREATE TABLE variable (
   name varchar(32) NOT NULL default '',
@@ -482,9 +535,9 @@ CREATE TABLE variable (
   PRIMARY KEY  (name)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'vocabulary'
-#
+--
+-- Table structure for table 'vocabulary'
+--
 
 CREATE TABLE vocabulary (
   vid int(10) unsigned NOT NULL auto_increment,
@@ -499,26 +552,25 @@ CREATE TABLE vocabulary (
   PRIMARY KEY  (vid)
 ) TYPE=MyISAM;
 
-#
-# Table structure for table 'watchdog'
-#
+--
+-- Table structure for table 'watchdog'
+--
 
 CREATE TABLE watchdog (
   wid int(5) NOT NULL auto_increment,
   uid int(10) NOT NULL default '0',
   type varchar(16) NOT NULL default '',
-  message text NOT NULL default '',
+  message text NOT NULL,
   location varchar(128) NOT NULL default '',
   hostname varchar(128) NOT NULL default '',
   timestamp int(11) NOT NULL default '0',
   PRIMARY KEY  (wid)
 ) TYPE=MyISAM;
 
-#
-# Insert some default values
-#
+--
+-- Insert some default values
+--
 
-INSERT INTO variable SET name='update_start', value='s:10:"2002-05-15"';
 INSERT INTO system VALUES ('archive.module','archive','module','',1);
 INSERT INTO system VALUES ('block.module','block','module','',1);
 INSERT INTO system VALUES ('blog.module','blog','module','',1);
@@ -542,7 +594,10 @@ INSERT INTO system VALUES ('themes/goofy/goofy.theme','goofy','theme','Internete
 INSERT INTO system VALUES ('themes/marvin/marvin.theme','marvin','theme','Internet explorer, Netscape, Opera',1);
 INSERT INTO system VALUES ('themes/unconed/unconed.theme','unconed','theme','Internet explorer, Netscape, Opera',1);
 INSERT INTO system VALUES ('tracker.module','tracker','module','',1);
-REPLACE variable SET value = 'marvin', name = 'theme_default';
+
+REPLACE variable SET name='update_start', value='s:10:"2002-10-17;"';
+REPLACE variable SET name='theme_default', value='s:6:"marvin";';
+
 REPLACE blocks SET name = 'User information', module = 'user', delta = '0', status = '1';
 REPLACE blocks SET name = 'Log in', module = 'user', delta = '1', status = '1';
 
