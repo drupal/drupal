@@ -7,14 +7,18 @@ function story_render($id, $cid) {
 
   // Compose story query:
   $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON s.author = u.id WHERE s.status != 0 AND s.id = $id");
-  $story = db_fetch_object($result);
-
+  
   // Display story:
-  if ($story->status == 1) $theme->article($story, "[ <A HREF=\"submission.php\"><FONT COLOR=\"$theme->hlcolor2\">submission queue</FONT></A> | <A HREF=\"story.php?op=reply&id=$story->id&pid=0\"><FONT COLOR=\"$theme->hlcolor2\">add a comment</FONT></A> ]");
-  else $theme->article($story, "[ <A HREF=\"\"><FONT COLOR=\"$theme->hlcolor2\">home</FONT></A> | <A HREF=\"story.php?op=reply&id=$story->id&pid=0\"><FONT COLOR=\"$theme->hlcolor2\">add a comment</FONT></A> ]");
+  if ($story = db_fetch_object($result)) {
+    if ($story->status == 1) $theme->article($story, "[ <A HREF=\"submission.php\"><FONT COLOR=\"$theme->hlcolor2\">submission queue</FONT></A> | <A HREF=\"story.php?op=reply&id=$story->id&pid=0\"><FONT COLOR=\"$theme->hlcolor2\">add a comment</FONT></A> ]");
+    else $theme->article($story, "[ <A HREF=\"\"><FONT COLOR=\"$theme->hlcolor2\">home</FONT></A> | <A HREF=\"story.php?op=reply&id=$story->id&pid=0\"><FONT COLOR=\"$theme->hlcolor2\">add a comment</FONT></A> ]");
 
-  // Display comments:
-  comment_render($id, $cid);
+    // Display comments:
+    comment_render($id, $cid);
+  }
+  else {
+    $theme->box("Warning message", "The story you requested is no longer available or does not exist.");
+  }
 }
 
 switch($op) {  
