@@ -1077,10 +1077,19 @@ function update_85() {
     $ret[] = update_sql("ALTER TABLE {bundle} RENAME TO {aggregator_category}");
     $ret[] = update_sql("ALTER TABLE {aggregator_category} DROP attributes");
     $ret[] = update_sql("ALTER TABLE {aggregator_category} RENAME bid TO cid");
+    $lastvalue = db_result(db_query('SELECT last_value from {bundle}_bid_seq'));
+    $ret[] = update_sql("CREATE SEQUENCE {aggregator_category}_cid_seq START $lastvalue MINVALUE 0");
+    $ret[] = update_sql("ALTER TABLE {aggregator_category} ALTER cid SET DEFAULT nextval('public.{aggregator_category}_cid_seq'::text)");
+
     $ret[] = update_sql("ALTER TABLE {aggregator_category} ADD description text");
     $ret[] = update_sql("UPDATE {aggregator_category} SET description = ''");
     $ret[] = update_sql("ALTER TABLE {aggregator_category} ALTER COLUMN description SET NOT NULL");
+
     $ret[] = update_sql("ALTER TABLE {feed} RENAME TO {aggregator_feed}");
+    $lastvalue = db_result(db_query('SELECT last_value from {feed}_fid_seq'));
+    $ret[] = update_sql("CREATE SEQUENCE {aggregator_feed}_fid_seq START $lastvalue MINVALUE 0");
+    $ret[] = update_sql("ALTER TABLE {aggregator_feed} ALTER fid SET DEFAULT nextval('public.{aggregator_feed}_fid_seq'::text)");
+
     $ret[] = update_sql("ALTER TABLE {aggregator_feed} DROP attributes");
     $ret[] = update_sql("ALTER TABLE {aggregator_feed} ADD block smallint");
     $ret[] = update_sql("UPDATE {aggregator_feed} SET block = 0");
@@ -1088,7 +1097,12 @@ function update_85() {
     $ret[] = update_sql("ALTER TABLE {aggregator_category} ADD block smallint");
     $ret[] = update_sql("UPDATE {aggregator_category} SET block = 0");
     $ret[] = update_sql("ALTER TABLE {aggregator_category} ALTER COLUMN block SET NOT NULL");
+
     $ret[] = update_sql("ALTER TABLE {item} RENAME TO {aggregator_item}");
+    $lastvalue = db_result(db_query('SELECT last_value from {item}_iid_seq'));
+    $ret[] = update_sql("CREATE SEQUENCE {aggregator_item}_iid_seq START $lastvalue MINVALUE 0");
+    $ret[] = update_sql("ALTER TABLE {aggregator_item} ALTER iid SET DEFAULT nextval('public.{aggregator_item}_iid_seq'::text)");
+
     $ret[] = update_sql("ALTER TABLE {aggregator_item} DROP attributes");
     $ret[] = update_sql("CREATE TABLE {aggregator_category_feed} (
       fid integer NOT NULL default '0',
@@ -1754,7 +1768,6 @@ function update_104() {
 }
 
 function update_105() {
-  // TODO: needs PGSQL equivalent
   $ret = array();
 
   $shadowupdates = db_query("SELECT nid,tid FROM {forum} WHERE shadow=0");
@@ -1762,33 +1775,63 @@ function update_105() {
     db_query("DELETE FROM {term_node} WHERE nid = %d AND tid <> %d", $shadowrecord->nid, $shadowrecord->tid);
   }
 
-  $ret[] = update_sql("ALTER TABLE {forum} DROP shadow");
-  $ret[] = update_sql('ALTER TABLE {node} ADD INDEX node_status_type (status, type, nid)');
+  if ($GLOBALS['db_type'] == 'mysql') {
+    $ret[] = update_sql("ALTER TABLE {forum} DROP shadow");
+    $ret[] = update_sql('ALTER TABLE {node} ADD INDEX node_status_type (status, type, nid)');
 
-  $ret[] = update_sql("CREATE TABLE {node_comment_statistics} (
-    nid int(10) unsigned NOT NULL auto_increment,
-    cid int(10) unsigned NOT NULL default '0',
-    last_comment_timestamp int(11) NOT NULL default '0',
-    last_comment_name varchar(60) default NULL,
-    last_comment_uid int(10) NOT NULL default '0',
-    comment_count int(10) unsigned NOT NULL default '0',
-    PRIMARY KEY (nid),
-    KEY node_comment_timestamp (last_comment_timestamp)
-    ) TYPE=MyISAM");
-  $ret[] = update_sql("INSERT INTO {node_comment_statistics} (nid, cid, last_comment_timestamp, last_comment_name, last_comment_uid, comment_count) SELECT n.nid, 0, n.created, NULL, n.uid, 0 FROM {node} n");
+    $ret[] = update_sql("CREATE TABLE {node_comment_statistics} (
+      nid int(10) unsigned NOT NULL auto_increment,
+      cid int(10) unsigned NOT NULL default '0',
+      last_comment_timestamp int(11) NOT NULL default '0',
+      last_comment_name varchar(60) default NULL,
+      last_comment_uid int(10) NOT NULL default '0',
+      comment_count int(10) unsigned NOT NULL default '0',
+      PRIMARY KEY (nid),
+      KEY node_comment_timestamp (last_comment_timestamp)
+      ) TYPE=MyISAM");
+    $ret[] = update_sql("INSERT INTO {node_comment_statistics} (nid, cid, last_comment_timestamp, last_comment_name, last_comment_uid, comment_count) SELECT n.nid, 0, n.created, NULL, n.uid, 0 FROM {node} n");
 
-  $ret[] = update_sql("CREATE TABLE {forum_conv_temp} (
-    nid int(10) unsigned NOT NULL default '0',
-    cid int(10) unsigned NOT NULL default '0',
-    comment_count int(10) unsigned NOT NULL default '0',
-    PRIMARY KEY (nid)
+    $ret[] = update_sql("CREATE TABLE {forum_conv_temp} (
+      nid int(10) unsigned NOT NULL default '0',
+      cid int(10) unsigned NOT NULL default '0',
+      comment_count int(10) unsigned NOT NULL default '0',
+      PRIMARY KEY (nid)
+      )");
+
+    $ret[] = update_sql('INSERT INTO {forum_conv_temp} SELECT f.nid, MAX(c.cid), COUNT(c.nid) FROM {forum} f INNER JOIN {comments} c ON f.nid = c.nid WHERE c.status = 0 GROUP BY f.nid');
+
+    /* This would be faster but only works with MySQL 4.0.4 or higher
+    $ret[] = update_sql('UPDATE {node_comment_statistics} n, {forum_conv_temp} t, {comments} c SET n.comment_count = t.comment_count, n.last_comment_timestamp = c.timestamp, n.last_comment_name = c.name, n.last_comment_uid = c.uid, n.cid = t.cid WHERE t.cid = c.cid AND n.nid = t.nid');
+    */
+  }
+  else {
+    // PostgreSQL is incapable of dropping columns in all but the latest versions.
+    $ret[] = update_sql("CREATE INDEX {node}_status_type_idx ON {node} (status, type, nid)");
+
+
+    $ret[] = update_sql("CREATE TABLE {node}_comment_statistics (
+      nid integer NOT NULL,
+      cid integer NOT NULL default '0',
+      last_comment_timestamp integer NOT NULL default '0',
+      last_comment_name varchar(60)  default NULL,
+      last_comment_uid integer NOT NULL default '0',
+      comment_count integer NOT NULL default '0',
+      PRIMARY KEY (nid)
     )");
 
-  $ret[] = update_sql('INSERT INTO {forum_conv_temp} SELECT f.nid, MAX(c.cid), COUNT(c.nid) FROM {forum} f INNER JOIN {comments} c ON f.nid = c.nid WHERE c.status = 0 GROUP BY f.nid');
+    $ret[] = update_sql("SELECT f.nid, MAX(c.cid) as cid, COUNT(c.nid) as comment_count INTO TEMPORARY {forum_conv_temp} FROM {forum} f INNER JOIN {comments} c ON f.nid = c.nid WHERE c.status = 0 GROUP BY f.nid");
 
-  /* This would be faster but only works with MySQL 4.0.4 or higher
-  $ret[] = update_sql('UPDATE {node_comment_statistics} n, {forum_conv_temp} t, {comments} c SET n.comment_count = t.comment_count, n.last_comment_timestamp = c.timestamp, n.last_comment_name = c.name, n.last_comment_uid = c.uid, n.cid = t.cid WHERE t.cid = c.cid AND n.nid = t.nid');
-  */
+    $ret[] = update_sql("CREATE FUNCTION \"if\"(integer, text, text) RETURNS text AS '
+      BEGIN
+        IF $1 THEN
+          RETURN $2;
+        END IF;
+        IF NOT $1 THEN
+          RETURN $3;
+        END IF;
+      END;
+      ' LANGUAGE 'plpgsql'");
+  }
 
   $commentupdates = db_query("SELECT t.nid, t.cid, t.comment_count, c.timestamp, c.name, c.uid FROM {forum_conv_temp} t INNER JOIN {comments} c ON t.cid = c.cid");
   while ($commentrecord = db_fetch_object($commentupdates)) {
@@ -1806,7 +1849,7 @@ function update_106() {
     $ret[] = update_sql('ALTER TABLE {cache} ADD INDEX expire (expire)');
   }
   else if ($GLOBALS['db_type'] == 'pgsql') {
-    // TODO: needs PGSQL equivalent.
+    $ret[] = update_sql('CREATE INDEX {cache}_expire_idx ON {cache}(expire)');
   }
 
   $ret[] = update_sql('DELETE FROM {cache}');

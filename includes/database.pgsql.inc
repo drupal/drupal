@@ -23,7 +23,8 @@
 function db_connect($url) {
   $url = parse_url($url);
 
-  $conn_string = ' user='. $url['user'] .' dbname='. substr($url['path'], 1) .' password='. $url['pass'];
+  $conn_string = ' user='. $url['user'] .' dbname='. substr($url['path'], 1) .' password='. $url['pass'] . ' host=' . $url['host'];
+  $conn_string .= ($url['port']) ? ' port=' . $url['port'] : '';
   $connection = pg_connect($conn_string) or die(pg_last_error());
 
   return $connection;
@@ -263,7 +264,7 @@ function db_query_range($query) {
  *  Encoded data.
  */
 function db_encode_blob($data) {
-  return pg_escape_bytea($data);
+  return addcslashes($data, "\0..\37\\");
 }
 
 /**

@@ -118,7 +118,11 @@ function variable_del($name) {
  */
 function cache_get($key) {
   $cache = db_fetch_object(db_query("SELECT data, created, headers FROM {cache} WHERE cid = '%s'", $key));
-  return isset($cache->data) ? $cache : 0;
+  if (isset($cache->data)) {
+    $cache->data = db_decode_blob($cache->data);
+    return $cache;
+  }
+  return 0;
 }
 
 /**
@@ -271,7 +275,7 @@ function drupal_page_header() {
         header($header);
       }
 
-      print db_decode_blob($cache->data);
+      print $cache->data;
 
       // Call all init() and exit() hooks without including all modules.
       // Only use those hooks for critical operations.
