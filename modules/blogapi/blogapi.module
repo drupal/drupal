@@ -1,5 +1,5 @@
 <?php
-// $Id: blogapi.module,v 1.8 2004/05/22 21:32:07 dries Exp $
+// $Id: blogapi.module,v 1.9 2004/06/02 18:46:04 dries Exp $
 
 /**
  * Implementation of hook_help().
@@ -263,7 +263,7 @@ function blogapi_get_category_list($req_params) {
   $categories = array();
   if ($vocabularies) {
     foreach ($vocabularies as $vocabulary) {
-      $terms = module_invoke('taxonomy', 'get_tree', $vocabulary->vid, 0, -1, 'tid');
+      $terms = module_invoke('taxonomy', 'get_tree', $vocabulary->vid, 0, -1);
       foreach ($terms as $term) {
         $term_name = $term->name;
         foreach (module_invoke('taxonomy', 'get_parents', $term->tid, 'tid') as $parent) {
