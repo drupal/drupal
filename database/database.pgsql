@@ -44,16 +44,13 @@ CREATE TABLE authmap (
 --
 
 CREATE TABLE blocks (
-  name varchar(64) NOT NULL default '',
   module varchar(64) NOT NULL default '',
   delta smallint NOT NULL default '0',
   status smallint NOT NULL default '0',
   weight smallint NOT NULL default '0',
   region smallint NOT NULL default '0',
-  remove smallint NOT NULL default '0',
   path varchar(255) NOT NULL default '',
   custom smallint NOT NULL default '0',
-  PRIMARY KEY  (name)
 );
 
 --

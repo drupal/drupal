@@ -47,16 +47,13 @@ CREATE TABLE authmap (
 --
 
 CREATE TABLE blocks (
-  name varchar(64) NOT NULL default '',
-  module varchar(64) NOT NULL default '',
-  delta tinyint(2) NOT NULL default '0',
-  status tinyint(2) NOT NULL default '0',
-  weight tinyint(1) NOT NULL default '0',
-  region tinyint(1) NOT NULL default '0',
-  remove tinyint(1) NOT NULL default '0',
-  path varchar(255) NOT NULL default '',
-  custom tinyint(2) NOT NULL default '0',
-  PRIMARY KEY  (name)
+  module varchar(64) DEFAULT '' NOT NULL,
+  delta tinyint(2) DEFAULT '0' NOT NULL,
+  status tinyint(2) DEFAULT '0' NOT NULL,
+  weight tinyint(1) DEFAULT '0' NOT NULL,
+  region tinyint(1) DEFAULT '0' NOT NULL,
+  path varchar(255) DEFAULT '' NOT NULL,
+  custom tinyint(2) DEFAULT '0' NOT NULL
 ) TYPE=MyISAM;
 
 --
