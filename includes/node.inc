@@ -213,23 +213,18 @@ function node_preview($node) {
 }
 
 
-function node_attributes_edit($edit) {
-  return index_collection_form("section", ($edit[section] ? $edit[section] : "section:". field_get($edit[attributes], "section") .";"));
+function node_attributes_edit($type, $edit) {
+  return meta_form($type, $edit);
 }
 
-function node_attributes_save($edit) {
-  if ($edit[nid] && $node = node_get_array(array("nid" => $edit[nid]))) {
-    return field_merge($node[attributes], $edit[section]);
-  }
-  else {
-    return $edit[section];
-  }
+function node_attributes_save($type, $edit) {
+  return meta_save($type, $edit);
 }
 
 function node_attributes_view($string) {
   foreach (explode(",", $string) as $data) {
     $entry = explode("=", $data);
-    if (in_array($entry[0], array("section"))) {
+    if ($entry[0] && $entry[1]) {
       $array[] = "<a href=\"?$entry[0]=$entry[1]\">$entry[1]</a>";
     }
   }

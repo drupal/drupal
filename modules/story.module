@@ -45,7 +45,7 @@ function story_form($edit = array()) {
   $form .= form_item(t("Your name"), format_username(($edit[userid] ? $edit[userid] : $user->userid)));
   $form .= form_hidden("userid", $edit[userid]);
   $form .= form_textfield(t("Subject"), "title", $edit[title], 50, 64);
-  $form .= node_attributes_edit($edit);
+  $form .= node_attributes_edit("story", $edit);
   $form .= form_textarea(t("Abstract"), "abstract", $edit[abstract], 70, 10, t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
   $form .= form_textarea(t("Body"), "body", $edit[body], 70, 20, t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
 
@@ -73,10 +73,10 @@ function story_save($edit) {
   global $status, $user;
 
   if (!$edit[nid]) {
-    node_save($edit, array(abstract, attributes => node_attributes_save($edit), author => $user->id, body, comment => variable_get("story_comment", 0), moderate => variable_get("story_moderate", ""), promote => variable_get("story_promote", 0), score => 0, status => variable_get("story_status", $status[queued]), timestamp => time(), title, type => "story", votes => 0));
+    node_save($edit, array(abstract, attributes => node_attributes_save("story", $edit), author => $user->id, body, comment => variable_get("story_comment", 0), moderate => variable_get("story_moderate", ""), promote => variable_get("story_promote", 0), score => 0, status => variable_get("story_status", $status[queued]), timestamp => time(), title, type => "story", votes => 0));
   }
   else if (user_access($user)) {
-    node_save($edit, array(abstract, attributes => node_attributes_save($edit), body, title, type => "story"));
+    node_save($edit, array(abstract, attributes => node_attributes_save("story", $edit), body, title, type => "story"));
   }
 }
 
