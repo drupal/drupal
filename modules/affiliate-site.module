@@ -55,8 +55,8 @@ function affiliate_block() {
   return $blocks;
 }
 
-function affiliate_admin_add($name, $link, $contact) {
-  db_query("INSERT INTO affiliates (name, link, contact) VALUES ('". check_input($name) ."', '". check_input($link) ."', '". check_input($contact) ."')");
+function affiliate_admin_add($name, $url, $contact) {
+  db_query("INSERT INTO affiliates (name, link, contact) VALUES ('". check_input($name) ."', '". check_input($url) ."', '". check_input($contact) ."')");
 }
 
 function affiliate_admin_del($id) {
@@ -74,7 +74,7 @@ function affiliate_admin_display() {
     $output .= " <TR><TD>$affiliate->name</TD><TD>". format_url($affiliate->link) ."</TD><TD>". format_email($affiliate->contact) ."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=affiliate-site&op=delete&id=$affiliate->id\">delete</A></TD></TR>\n";
   }
 
-  $output .= " <TR><TD><INPUT TYPE=\"text\" NAME=\"name\"></TD><TD><INPUT TYPE=\"text\" NAME=\"link\"></TD><TD><INPUT TYPE=\"text\" NAME=\"contact\"></TD><TD><INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"Add affiliate\"></TD></TR>\n";
+  $output .= " <TR><TD><INPUT TYPE=\"text\" NAME=\"name\"></TD><TD><INPUT TYPE=\"text\" NAME=\"url\"></TD><TD><INPUT TYPE=\"text\" NAME=\"contact\"></TD><TD><INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"Add affiliate site\"></TD></TR>\n";
   $output .= "</TABLE>\n";
   $output .= "</FORM>\n";
 
@@ -82,13 +82,13 @@ function affiliate_admin_display() {
 }
 
 function affiliate_admin() {
-  global $op, $id, $name, $link, $contact;
+  global $op, $id, $name, $url, $contact;
 
   print "<SMALL><A HREF=\"admin.php?mod=affiliate-site\">overview</A> | <A HREF=\"admin.php?mod=affiliate-site&op=help\">help</A></SMALL><HR>\n";
 
   switch($op) {
-    case "Add affiliate":
-      affiliate_admin_add($name, $link, $contact);
+    case "Add affiliate site":
+      affiliate_admin_add($name, $url, $contact);
       affiliate_admin_display();
       break;
     case "delete":

@@ -141,6 +141,14 @@ function account_display($order = "username") {
   print $output;
 }
 
+function account_blocks($id) {
+  $result = db_query("SELECT * FROM layout WHERE user = $id");
+  while ($layout = db_fetch_object($result)) {
+    $output .= "<LI>". check_output($layout->block) ."</LI>\n";
+  }
+  return $output;
+}
+
 function account_stories($id) {
   $result = db_query("SELECT * FROM stories WHERE author = $id ORDER BY timestamp DESC");
   while ($story = db_fetch_object($result)) {
@@ -199,6 +207,7 @@ function account_edit($name) {
     $output .= " <TR><TD ALIGN=\"right\"><B>Signature:</B></TD><TD><TEXTAREA NAME=\"edit[signature]\" COLS=\"35\" ROWS=\"5\" WRAP=\"virtual\">$account->signature</TEXTAREA></TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Theme:</B></TD><TD>". format_data($account->theme) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Timezone:</B></TD><TD>". format_data($account->timezone / 3600) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Selected blocks:</B></TD><TD>". format_data(account_blocks($account->id)) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Submitted stories:</B></TD><TD>". format_data(account_stories($account->id)) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Submitted comments:</B></TD><TD>". format_data(account_comments($account->id)) ."</TD></TR>\n";
     $output .= "</TABLE>\n";
@@ -231,6 +240,7 @@ function account_view($name) {
     $output .= " <TR><TD ALIGN=\"right\"><B>Signature:</B></TD><TD>". format_data($account->signature) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Theme:</B></TD><TD>". format_data($account->theme) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Timezone:</B></TD><TD>". format_data($account->timezone / 3600) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Selected blocks:</B></TD><TD>". format_data(account_blocks($account->id)) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Submitted stories:</B></TD><TD>". format_data(account_stories($account->id)) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Submitted comments:</B></TD><TD>". format_data(account_comments($account->id)) ."</TD></TR>\n";
     $output .= "</TABLE>\n";

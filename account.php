@@ -481,7 +481,7 @@ function account_track_site() {
     $output .= "</UL>\n";
   }
 
-  $theme->header();  
+  $theme->header();
   $theme->box("Track $site_name", $output);
   $theme->footer();
 }
