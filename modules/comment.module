@@ -327,7 +327,7 @@ function comment_update_index() {
 function comment_user($type, $edit, &$user, $category = NULL) {
   if ($type == 'form' && $category == 'account') {
     // when user tries to edit his own data
-    return array(array('title' => t('Comment settings'), 'data' => form_textarea(t('Signature'), 'signature', $user->signature, 64, 3, t('Your signature will be publicly displayed at the end of your comments.')), 'weight' => 2));
+    return array(array('title' => t('Comment settings'), 'data' => form_textarea(t('Signature'), 'signature', $edit['signature'], 64, 3, t('Your signature will be publicly displayed at the end of your comments.')), 'weight' => 2));
   }
   if ($type == 'validate') {
     // validate user data editing
