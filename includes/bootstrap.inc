@@ -230,6 +230,7 @@ function drupal_page_header() {
   if (variable_get('dev_timer', 0)) {
     timer_start();
   }
+  bootstrap_invoke_all('init');
 
   if (variable_get('cache', 0)) {
     if ($cache = page_get_cache()) {
@@ -276,22 +277,23 @@ function drupal_page_header() {
       }
 
       print $cache->data;
-
-      // Call all init() and exit() hooks without including all modules.
-      // Only use those hooks for critical operations.
-      foreach (bootstrap_hooks() as $hook) {
-        module_invoke_all($hook);
-      }
+      bootstrap_invoke_all('exit');
       exit();
     }
   }
 }
 
 /**
- * Define the critical hooks that force modules to always be loaded.
+ * Call all init or exit hooks without including all modules.
+ *
+ * @param $op
+ *   The name of the bootstrap hook we wish to invoke.
  */
-function bootstrap_hooks() {
-  return array('init', 'exit');
+function bootstrap_invoke_all($op) {
+  foreach (module_list(FALSE, TRUE) as $module) {
+    module_load($module);
+    module_invoke($module, $op);
+  }
 }
 
 /**
