@@ -140,7 +140,7 @@ function cloud_display() {
 
   $header = array(t("site"), t("last update"), array("data" => t("operations"), "colspan" => 2));
   while ($site = db_fetch_object($result)) {
-    $rows[] = array("<a href=\"$site->link\">$site->name</a>", ($site->changed ? format_interval(time() - $site->changed) ." ago" : "never"), l(t("edit site"), "admin/node/syndication/cloud/edit/$site->sid"), l(t("update site"), "admim/node/syndication/cloud/update/$site->sid"));
+    $rows[] = array("<a href=\"$site->link\">$site->name</a>", ($site->changed ? format_interval(time() - $site->changed) ." ago" : "never"), l(t("edit site"), "admin/node/syndication/cloud/edit/$site->sid"), l(t("update site"), "admin/node/syndication/cloud/update/$site->sid"));
   }
 
   return table($header, $rows);
