@@ -608,3 +608,16 @@ INSERT INTO blocks(name,module,delta,status) VALUES('User information', 'user', 
 DELETE FROM blocks WHERE name='Log in';
 INSERT INTO blocks(name,module,delta,status) VALUES('Log in', 'user', '1', '1');
 
+---
+--- Functions
+---
+
+CREATE FUNCTION "greatest"(integer, integer) RETURNS integer AS '
+BEGIN
+  IF $1 > $2 THEN
+    RETURN $1;
+  END IF;
+  RETURN $2;
+END;
+' LANGUAGE 'plpgsql';
+
