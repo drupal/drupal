@@ -5,11 +5,7 @@ $na = "<I>na</I>";
 function conf_init() {
   global $HTTP_HOST, $REQUEST_URI;
   $file = strtolower(strtr($HTTP_HOST ."". substr($REQUEST_URI, 0, strrpos($REQUEST_URI, "/")), "/:", ".."));
-  while ($file && !file_exists("includes/$file.conf")) {
-    $file = substr($file, 0, strrpos($file, "."));
-  }
-  if (empty($file) && file_exists("includes/default.conf")) $file = "default";
-  return $file;
+  return file_exists("includes/$file.php") ? $file : "setting";
 }
 
 function error_handler($errno, $message, $filename, $line, $variables) {
@@ -191,7 +187,7 @@ function form_submit($value) {
 
 $conf = conf_init();
 
-include_once "includes/$conf.conf";
+include_once "includes/$conf.php";
 include_once "includes/structure.inc";
 include_once "includes/database.inc";
 include_once "includes/variable.inc";

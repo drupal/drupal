@@ -1,7 +1,5 @@
 <?php
 
-$format = array(0 => HTML, 1 => PHP, 2 => text);
-
 function forum_status() {
   return array(dumped, posted);
 }
@@ -13,7 +11,7 @@ function forum_view($node) {
 }
 
 function forum_form($edit = array()) {
-  global $format, $REQUEST_URI;
+  global $REQUEST_URI;
 
   $form .= form_textfield(t("Subject"), "title", $edit[title], 50, 64);
   $form .= structure_form("forum", $edit);
