@@ -36,6 +36,7 @@ function update_data($start) {
     variable_set("update_start", $date);
     print "</pre>\n";
   }
+  db_query('DELETE FROM {cache}');
 }
 
 function update_page_header($title) {
