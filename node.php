@@ -25,16 +25,16 @@ function node_render($node) {
           break;
         case t("Add comment"):
           $theme->header();
-          comment_reply(check_input($cid), check_input($id));
+          comment_reply(check_query($cid), check_query($id));
           $theme->footer();
           break;
         case "reply":
           $theme->header();
-          comment_reply(check_input($pid), check_input($id));
+          comment_reply(check_query($pid), check_query($id));
           $theme->footer();
           break;
         case t("Update settings"):
-          comment_settings(check_input($mode), check_input($order), check_input($threshold));
+          comment_settings(check_query($mode), check_query($order), check_query($threshold));
           $theme->header();
           node_view($node);
           comment_render($id, $cid);
