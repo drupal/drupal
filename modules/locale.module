@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.77 2003/10/03 17:17:18 dries Exp $
+// $Id: locale.module,v 1.78 2003/10/05 17:23:51 dries Exp $
 
 function locale_help($section = "admin/locale/help") {
   $output = "";
@@ -224,7 +224,7 @@ function locale_seek() {
 
     $header = array(t("string"), (($query->status != 2 && strlen($query->language) == 2) ? t("translated string") : t("languages")), array("data" => t("operations"), "colspan" => "2"));
     while ($locale = db_fetch_object($result)) {
-      $rows[] = array("$locale->string<br /><small><i>$locale->location</i></small>", array("data" => (($query->status != 2 && strlen($query->language) == 2) ? $locale->$query->language : locale_languages($locale)), "align" => "center"), array("data" => l(t("edit locale"), "admin/locale/edit/$locale->lid"), "nowrap" => "nowrap"), array("data" => l(t("delete locale"), "admin/locale/delete/$locale->lid"), "nowrap" => "nowrap"));
+      $rows[] = array("$locale->string<br /><small><i>$locale->location</i></small>", array("data" => (($query->status != 2 && strlen($query->language) == 2) ? $locale->{$query->language} : locale_languages($locale)), "align" => "center"), array("data" => l(t("edit locale"), "admin/locale/edit/$locale->lid"), "nowrap" => "nowrap"), array("data" => l(t("delete locale"), "admin/locale/delete/$locale->lid"), "nowrap" => "nowrap"));
     }
 
     $request = array();
