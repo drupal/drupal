@@ -69,14 +69,13 @@ function node_cron() {
   db_query("UPDATE node SET status = '". node_status("dumped") ."', timestamp_hidden = '' WHERE timestamp_hidden > 0 AND timestamp_hidden < ". time());
 }
 
-function node_link($context) {
+function node_link($type, $node = 0) {
 
-  if ($context == "admin" && user_access("administer nodes")) {
+  if ($type == "admin" && user_access("administer nodes")) {
     $links[] = "<a href=\"admin.php?mod=node\">content</a>";
   }
 
-  if ($context[0] && $context[1]) {
-    $node = $context[1];
+  if ($type == "node") {
     if ($node->body) {
       $links[] = "<a href=\"node.php?id=". $node->nid ."\">". t("read more") ."</a>";
     }

@@ -22,86 +22,60 @@ function blog_perm() {
   return array("administer blogs", "access blogs", "post blogs");
 }
 
-function blog_page_all($num = 20) {
+function blog_status() {
+  return array(dumped, posted);
+}
+
+function blog_page_user($name = 0, $date = 0) {
+  global $theme, $user;
+
+  $name = check_input($name ? $name : $user->userid);
+  $date = check_input($date ? $date : time());
+
+  $result = db_query("SELECT n.nid, n.timestamp, b.body FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.id WHERE u.userid = '$name' AND n.timestamp > '". ($date - 2592000) ."' ORDER BY b.lid DESC LIMIT 30");
+
+  $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\">";
+  while ($blog = db_fetch_object($result)) {
+    if ($date != date("dny", $blog->timestamp)) {
+      $date = date("dny", $blog->timestamp);
+      if ($user->id && $user->userid == $name) {
+        $links = array("<a href=\"submit.php?mod=blog&op=edit&id=$blog->nid\">". t("edit") ."</a>");
+        $output .= "<tr><td><b>". format_date($blog->timestamp, custom, "d M Y") .":</b></td><td align=\"right\">". $theme->links($links) ."</td></tr>";
+      }
+      else {
+        $output .= "<tr><td colspan=\"2\"><b>". format_date($blog->timestamp, custom, "d M Y") .":</b></td></tr>";
+      }
+    }
+    $output .= "<tr><td colspan=\"2\" style=\"margin-left: 20px;\">". check_output($blog->body, 1) ."</td></tr>";
+  }
+  $output .= "</table>";
+
+
+  $theme->header();
+  $theme->box(strtr(t("%a's blog"), array("%a" => $name)), $output, "main");
+  $theme->footer();
+}
+
+function blog_page_view($num = 20) {
   global $theme, $user;
 
   $result = db_query("SELECT n.timestamp, n.title, u.userid, n.nid, b.body FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.id ORDER BY b.lid DESC LIMIT $num");
 
-  while ($blog = db_fetch_object($result))  {
-    $output .= blog_format_link($blog) ." ";
-    $output .= "<a href=\"module.php?mod=blog&name=". urlencode($blog->userid) ."\"><img src=\"misc/earth.gif\" border= \"0\" width=\"11\" height=\"11\" alt=\"". t("This blog") ."\" /></a> ";
-    $output .= format_username($blog->userid) .", ". format_date($blog->timestamp, "small") .":<br />";
-    $output .= "<blockquote><b>". check_input($blog->title) ."</b><br />" . check_output($blog->body, 1) ."</blockquote>\n";
-  }
-
-  $theme->header();
-  $theme->box(t("Latest blogs"), $output);
-  $theme->footer();
-}
-
-function blog_page_user($userid = 0, $date = 0) {
-  global $theme, $user;
-
-  $userid = $userid ? $userid : $user->userid;
-
-  $theme->header();
-
-  if ($date) {
-
-    /*
-    ** Displays today's blogs for this user:
-    */
-
-    blog_page_day($userid, $date);
-  }
-  else {
-
-    /*
-    ** Display the last blogs for this user:
-    */
-
-    $result = db_query("SELECT n.nid, n.timestamp FROM node n LEFT JOIN users u ON u.id = n.author WHERE n.type = 'blog' AND u.userid = '". check_input($userid) ."' AND n.timestamp > ". (time() - 2592000) ." ORDER BY n.timestamp DESC LIMIT 20");
-    while ($blog = db_fetch_object($result)) {
-      if ($date != date("ndy", $blog->timestamp)) {
-        $date = date("ndy", $blog->timestamp);
-        blog_page_day($userid, $blog->timestamp);
-      }
-    }
-  }
-
-  $theme->footer();
-}
-
-
-function blog_page_day($userid = 0, $date = 0) {
-  global $theme, $user;
-
-  $header .= "<table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n";
-  $header .= " <tr>\n";
-  $header .= "  <td><b><a href=\"module.php?mod=blog&op=view&name=". urlencode($userid) ."\">". check_output($userid) ."'s ". t("blog") ."</a></b></td>\n";
-  $header .= "  <td align=\"right\"><b><a href=\"module.php?mod=blog&op=view&name=". urlencode($userid) ."&date=$date\">". format_date($date, custom, "d-M-Y") ."</a></b></td>\n";
-  $header .= " </tr>\n";
-  $header .= "</table>\n";
-
-  $sdate = mktime(0, 0, 0, date("m", $date), date("d", $date), date("Y", $date));
-  $edate = mktime(23, 59, 59, date("m", $date), date("d", $date), date("Y", $date));
-
-  $result = db_query("SELECT b.body, n.timestamp, n.nid FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.id WHERE u.userid = '". check_input($userid) ."' AND n.timestamp > '$sdate' AND n.timestamp < '$edate' ORDER BY b.lid DESC LIMIT 50");
-
+  $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"4\">";
   while ($blog = db_fetch_object($result)) {
-    if (!$first) $first = $blog->nid;
-    $output .= "<p>". blog_format_link($blog) . check_output($blog->body, 1) ."</p>\n";
+    $links[] = "<a href=\"module.php?mod=blog&op=view&name=". urlencode($blog->userid) ."\">". strtr(t("%a's blog"), array("%a" => $blog->userid)) ."</a>";
+    $links[] = "<a href=\"submit.php?mod=blog&type=blog&id=$blog->nid\">". t("blog") ."</a>";
+    $links[] = "<a href=\"node.php?id=$blog->nid\">". t("discuss") ."</a>";
+
+    $output .= "<tr><td><b>$blog->title</b></td><td align=\"right\">". $theme->links($links) ."</td></tr>";
+    $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 20px; margin-bottom: 2px;\">$blog->body</div></td></tr>";
+    unset($links);
   }
+  $output .= "</table>";
 
-  if ($user->id && $user->userid == $userid) {
-    $output .= "<p>[ <a href=\"submit.php?mod=blog&op=edit&id=$first\">". t("edit") ."</a> ]</p>";
-  }
-
-  $theme->box($header, $output);
-}
-
-function blog_status() {
-  return array(dumped, posted);
+  $theme->header();
+  $theme->box(t("User blogs"), $output, "main");
+  $theme->footer();
 }
 
 function blog_remove($nid) {
@@ -124,20 +98,9 @@ function blog_format_link($blog) {
 }
 
 function blog_view($node, $main = 0) {
-  global $status, $theme;
+  global $theme;
 
-  $userid = urlencode($node->userid);
-
-  $header .= "<table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">";
-  $header .= " <tr>";
-  $header .= "  <td><b><a href=\"module.php?mod=blog&op=view&name=$userid\">". $node->userid ."'s ". t("blog") ."</a></b></td>";
-  $header .= "  <td align=\"right\"><b><a href=\"module.php?mod=blog&op=view&name=$userid&date=$node->timestamp\">". format_date($node->timestamp, custom, "d-M-Y") ."</a></b></td>";
-  $header .= " </tr>";
-  $header .= "</table>";
-
-  $output .= check_output($node->body, 1) ."<p>[ ". implode(" | ", link_node($node)) ." ]</p>";
-
-  $theme->box($header, $output);
+  $theme->node($node, $main);
 }
 
 function blog_form($edit = array()) {
@@ -151,12 +114,12 @@ function blog_form($edit = array()) {
     else if ($type == "blog") {
       $item = node_get_object(array(type => "blog", nid => $id));
       $edit["title"] = $item->title;
-      $edit["body"] = $item->body ." [<a href=\"module.php?mod=blog&name=". urlencode($item->userid) ."&date=$item->timestamp\">$item->userid</a>]";
+      $edit["body"] = "<i>". $item->body ."</i> [<a href=\"module.php?mod=blog&name=". urlencode($item->userid) ."&date=$item->timestamp\">$item->userid</a>]";
     }
     else if ($type == "import") {
       $item = db_fetch_object(db_query("SELECT i.*, f.title as ftitle, f.link as flink FROM item i, feed f WHERE i.iid = '". check_input($id) ."' AND i.fid = f.fid"));
       $edit["title"] = $item->title;
-      $edit["body"] = "<a href=\"$item->link\">$item->title</a> - ". check_output($item->description) ." [<a href=\"$item->flink\">$item->ftitle</a>]\n";
+      $edit["body"] = "<a href=\"$item->link\">$item->title</a> - <i>". check_output($item->description) ."</i> [<a href=\"$item->flink\">$item->ftitle</a>]\n";
     }
 
     if ($edit["title"]) {
@@ -237,7 +200,7 @@ function blog_page() {
       blog_page_user($name, $date);
     }
     else {
-      blog_page_all();
+      blog_page_view();
     }
   }
   else {
@@ -252,36 +215,40 @@ function blog_user() {
     switch ($op) {
       case "delete":
         blog_remove($id);
-        blog_page_day($user->userid, time());
+        blog_page_user($user->userid, time());
         break;
       case "edit":
-        $theme->box(t("Submit a blog"), blog_form(node_get_array(array("nid" => $id, "type" => "blog"))));
-        $theme->box(t("Older blogs"), blog_edit_history($id));
+        $theme->box(t("Submit a blog"), blog_form(node_get_array(array("nid" => $id, "type" => "blog"))), "main");
+        $theme->box(t("Older blogs"), blog_edit_history($id), "main");
         break;
       case t("Preview"):
-        $theme->box(t("Preview Blog"), blog_form($edit));
+        $theme->box(t("Preview Blog"), blog_form($edit), "main");
         break;
       case t("Submit"):
         blog_save($edit);
-        blog_page_day($user->userid, time());
+        blog_page_user($user->userid, time());
         break;
       default:
-        $theme->box(t("Submit a blog"), blog_form($edit));
+        $theme->box(t("Submit a blog"), blog_form($edit), "main");
     }
   }
 }
 
 
-function blog_link($type) {
+function blog_link($type, $node = 0) {
   global $user;
 
   if ($type == "page" && user_access("access blogs")) {
-    $links[] = "<a href=\"module.php?mod=blog\">". t("latest blogs") ."</a>";
+    $links[] = "<a href=\"module.php?mod=blog\">". t("user blogs") ."</a>";
   }
 
   if ($type == "menu" && user_access("post blogs")) {
     $links[] = "<a href=\"submit.php?mod=blog\">". t("add blog entry") ."</a>";
     $links[] = "<a href=\"module.php?mod=blog&op=view&name=". urlencode($user->userid) ."\">". t("view your blog") ."</a>";
+  }
+
+  if ($type == "node" && $node) {
+    $links[] = "<a href=\"module.php?mod=blog&op=view&name=". urlencode($node->userid) ."\">". strtr(t("%a's blog"), array("%a" => $node->userid)) ."</a>";
   }
 
   return $links ? $links : array();

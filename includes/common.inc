@@ -76,12 +76,18 @@ function check_query($text) {
 }
 
 function check_input($text) {
-  foreach (module_list() as $module) $text = module_invoke($module, "filter", $text);
+  foreach (module_list() as $name) {
+    if (module_hook($name, "filter")) $text = module_invoke($name, "filter", $text);
+  }
   return addslashes(stripslashes(substr($text, 0, variable_get("max_input_size", 10000))));
 }
 
 function check_output($text, $nl2br = 0) {
   return ($text) ? ($nl2br ? nl2br(stripslashes($text)) : stripslashes($text)) : message_na();
+}
+
+function format_info($body, $block) {
+  return "<table><tr><td><table align=\"right\" border=\"1\" width=\"180\"><tr><td>$block</td></tr></table>$body</td></tr></table>\n";
 }
 
 function format_plural($count, $singular, $plural) {
@@ -252,7 +258,13 @@ function link_page() {
 }
 
 function link_node($node) {
-  return module_invoke("node", "link", array("node", $node));
+  foreach (module_list() as $name) {
+    if (module_hook($name, "link")) {
+      $links = array_merge($links, module_invoke($name, "link", "node", $node));
+    }
+  }
+
+  return $links ? $links : array();
 }
 
 function timer_start() {
