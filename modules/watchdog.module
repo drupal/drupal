@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.82 2003/11/27 18:26:57 dries Exp $
+// $Id: watchdog.module,v 1.83 2003/12/03 15:00:02 dries Exp $
 
 function watchdog_help($section = "admin/help#watchdog") {
   $output = "";
@@ -72,7 +72,6 @@ function watchdog_cron() {
 }
 
 function watchdog_overview($type) {
-  $color = array("user" => "#FFEEAA", "message" => "#FFFFFF", "special" => "#A49FFF", "warning" => "#FFAA22", "httpd" => "#99DD99", "error" => "#EE4C4C");
   $query = array("user" => "WHERE type = 'user'", "regular" => "WHERE type = 'message'", "special" => "WHERE type = 'special'", "warning" => "WHERE type = 'warning'", "error" => "WHERE type = 'error'", "httpd" => "WHERE type = 'httpd'", "actions" => "WHERE link != ''");
 
   $header = array(
@@ -86,15 +85,13 @@ function watchdog_overview($type) {
   $result = pager_query($sql, 50);
 
   while ($watchdog = db_fetch_object($result)) {
-    if ($background = $color[$watchdog->type]) {
-      $rows[] = array(
-        array("data" => format_date($watchdog->timestamp, "small"), "style" => "background-color: $background"),
-        array("data" => substr(strip_tags($watchdog->message), 0, 64), "style" => "background-color: $background"),
-        array("data" => format_name($watchdog), "style" => "background-color: $background"),
-        array("data" => $watchdog->link, "style" => "background-color: $background"),
-        array("data" => l(t("view details"), "admin/watchdog/view/$watchdog->wid"), "style" => "background-color: $background")
-      );
-    }
+    $rows[] = array(
+      array("data" => format_date($watchdog->timestamp, "small"), "class" => "watchdog-$watchdog->type"),
+      array("data" => substr(strip_tags($watchdog->message), 0, 64), "class" => "watchdog-$watchdog->type"),
+      array("data" => format_name($watchdog), "class" => "watchdog-$watchdog->type"),
+      array("data" => $watchdog->link, "class" => "watchdog-$watchdog->type"),
+      array("data" => l(t("view details"), "admin/watchdog/view/$watchdog->wid"), "class" => "watchdog-$watchdog->type")
+    );
   }
 
   if (!$rows) {
