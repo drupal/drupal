@@ -350,7 +350,7 @@ function node_invoke_nodeapi(&$node, $op, $a3 = NULL, $a4 = NULL) {
       if (is_array($result)) {
         $return = array_merge($return, $result);
       }
-      else {
+      else if (isset($result)) {
         $return[] = $result;
       }
     }
