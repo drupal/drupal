@@ -1,0 +1,404 @@
+<?php
+
+class Blog {
+  function Blog($blog) {
+    global $user;
+
+    $this = new Node($blog);
+    $this->title = $blog[title];
+    $this->body = $blog[body];
+    $this->userid = $blog[userid] ? $blog[userid] : $user->userid;
+    $this->timestamp = $blog[timestamp];
+  }
+}
+
+function blog_help() {
+ ?>
+  <p>Drupal's blog module allows registered users to maintain an online blog or diary.  It provides easy-to-write and easy-to-read online diaries or journals that can be filled with daily thoughts, poetry, boneless blabber, spiritual theories, intimate details, valuable experiences, cynical rants, semi-coherent comments, writing experiments, artistic babblings, critics on current facts, fresh insights, diverse dreams, chronicles and mumbling madness available for public consumption.</p>
+  <p>TODO</p>:
+  <p>Add an entry on the account display for another user, linked to module.php?mod=blog&name=$userid</p>
+  <p>Provide links on other "Noded" module displays to allow the node to be blogged module.php?mod=blog&type=blog&id=$nid . Currently these are available on blogs and import displays.</p>
+  <p>Combine the calendar display class with the node calendar display class.</p>
+ <?php
+}
+
+function blog_perm() {
+  return array("administer blogs", "access blogs", "post blogs");
+}
+
+function blog_page_all($num = 20) {
+  global $theme, $user;
+
+  $result = db_query("SELECT n.timestamp, n.title, u.userid, n.nid, b.body FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.id ORDER BY b.lid DESC LIMIT $num");
+
+  while ($blog = db_fetch_object($result))  {
+    $output .= "<a href=\"submit.php?mod=blog&type=blog&id=$blog->nid\"><img src=\"misc/blog.gif\" border=\"0\" width=\"12\" height=\"16\" alt=\"". t("Blog this item") ."\" /></a> <a href=\"module.php?mod=blog&name=". urlencode($blog->userid) ."\"><img src=\"misc/earth.gif\" border= \"0\" width=\"11\" height=\"11\" alt=\"". t("This blog") ."\" /></a> ". format_username($blog->userid) ." ". t("on") ." ". format_date($blog->timestamp) .":<br />";
+    $output .= "<blockquote><b>". check_input($blog->title) ."</b><br />" . check_output($blog->body, 1) ."</blockquote>\n";
+  }
+
+  $theme->header();
+  $theme->box(t("Latest blogs"), $output);
+  $theme->footer();
+}
+
+function blog_page_user($userid = 0, $date = 0) {
+  global $theme, $user;
+
+  $userid = $userid ? $userid : $user->userid;
+
+  $theme->header();
+
+  if ($date) {
+
+    /*
+    ** Displays today's blogs for this user:
+    */
+
+    blog_page_day($userid, $date);
+  }
+  else {
+
+    /*
+    ** Display the last blogs for this user:
+    */
+
+    $result = db_query("SELECT n.nid, n.timestamp FROM node n LEFT JOIN users u ON u.id = n.author WHERE u.userid = '". check_input($userid) ."' AND n.timestamp > ". (time() - 2592000) ." LIMIT 15");
+    while ($blog = db_fetch_object($result)) {
+      if ($date != date("ndy", $blog->timestamp)) {
+        $date = date("ndy", $blog->timestamp);
+        blog_page_day($userid, $blog->timestamp);
+      }
+    }
+  }
+
+  $theme->footer();
+}
+
+
+function blog_page_day($userid = 0, $date = 0) {
+  global $theme, $user;
+
+  $header .= "<table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n";
+  $header .= " <tr>\n";
+  $header .= "  <td><b><a href=\"module.php?mod=blog&op=view&name=". urlencode($userid) ."\">". check_output($userid) ."'s ". t("blog") ."</a></b></td>\n";
+  $header .= "  <td align=\"right\"><b><a href=\"module.php?mod=blog&op=view&name=". urlencode($userid) ."&date=$date\">". format_date($date, custom, "d-M-Y") ."</a></b></td>\n";
+  $header .= " </tr>\n";
+  $header .= "</table>\n";
+
+  $sdate = mktime(0, 0, 0, date("m", $date), date("d", $date), date("Y", $date));
+  $edate = mktime(23, 59, 59, date("m", $date), date("d", $date), date("Y", $date));
+
+  $result = db_query("SELECT b.body, n.timestamp, n.nid FROM blog b LEFT JOIN node n ON b.nid = n.nid LEFT JOIN users u ON n.author = u.id WHERE u.userid = '". check_input($userid) ."' AND n.timestamp > '$sdate' AND n.timestamp < '$edate' ORDER BY b.lid DESC LIMIT 50");
+
+  while ($blog = db_fetch_object($result)) {
+    if (!$first) $first = $blog->nid;
+    $output .= "<p><a href=\"submit.php?mod=blog&type=blog&id=$blog->nid\"><img src=\"misc/blog.gif\" border=\"0\" width=\"12\" height=\"16\" alt=\"". t("Blog this item") ."\"></a> ". check_output($blog->body, 1) ."</p>\n";
+  }
+
+  if ($userid == $user->userid) {
+    $output .= "<p>[ <a href=\"submit.php?mod=blog&op=edit&id=$first\">". t("edit") ."</a> ]</p>";
+  }
+
+  $theme->box($header, $output);
+}
+
+function blog_status() {
+  return array(dumped, posted);
+}
+
+function blog_remove($nid) {
+  global $status, $user;
+
+  node_save(array(nid => $nid), array(status => $status[dumped]));
+  $blog = node_get_object(array(type => "blog", nid => "$nid"));
+  if ((user_access("administer blogs")) or ($blog->userid == $user->userid)) {
+    node_del(array(type => "blog", nid => $nid, lid => $blog->lid));
+  }
+}
+
+function blog_view($node) {
+  global $status, $theme;
+
+  $userid = urlencode($node->userid);
+
+  $header .= "<table cellspacing=\"0\" cellpadding=\"0\" width=\"100%\">\n";
+  $header .= " <tr>\n";
+  $header .= "  <td><b><a href=\"module.php?mod=blog&op=view&name=$userid\">". $node->userid ."'s ". t("blog") ."</a></b></td>\n";
+  $header .= "  <td align=\"right\"><b><a href=\"module.php?mod=blog&op=view&name=$userid&date=$node->timestamp\">". format_date($node->timestamp, custom, "d-M-Y") ."</a></b></td>\n";
+  $header .= " </tr>\n";
+  $header .= "</table>\n";
+
+  $output .= "<p>". check_output($node->body, 1) ."</p>\n";
+  $output .= "<p>[ ". implode(" | ", link_node($node)) ."]</p>\n";
+
+  $theme->box($header, $output);
+}
+
+function blog_form($edit = array()) {
+  global $REQUEST_URI, $id, $type, $user, $theme;
+
+  if ($edit[type] == "blog") {
+  }
+  else if ($type == "blog") {
+    $item = node_get_object(array(type => "blog", nid => $id));
+    $edit["title"] = $item->title;
+    $edit["body"] = $item->body ." [<a href=\"module.php?mod=blog&name=". urlencode($item->userid) ."&date=$item->timestamp\">$item->userid</a>]";
+  }
+  else if ($type == "import") {
+    $item = db_fetch_object(db_query("SELECT i.*, f.title as ftitle, f.link as flink FROM item i, feed f WHERE i.iid = '". check_input($id) ."' AND i.fid = f.fid"));
+    $edit["title"] = $item->title;
+    $edit["body"] = "<a href=\"$item->link\">$item->title</a> - ". check_output($item->description) ." [<a href=\"$item->flink\">$item->ftitle</a>]\n";
+  }
+
+  if ($edit[title]) {
+    $form .= blog_view(new Blog(node_preview($edit)));
+  }
+
+  $form .= form_textfield(t("Subject"), "title", $edit["title"], 50, 64);
+  $form .= form_textarea(t("Body"), "body", $edit["body"], 70, 15, t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
+
+  $form .= form_hidden("type", "blog");
+
+  if ($edit["nid"] > 0) {
+    $form .= form_hidden("nid", $edit["nid"]);
+  }
+
+  if ($edit && !$edit["title"]) {
+    $form .= "<font color=\"red\">". t("Warning: you did not supply a subject.") ."</font><p>\n";
+    $form .= form_submit(t("Preview"));
+  }
+  else if ($edit && !$edit["body"]) {
+    $form .= "<font color=\"red\">". t("Warning: you did not supply any text.") ."</font><p>\n";
+    $form .= form_submit(t("Preview"));
+  }
+  else {
+    $form .= form_submit(t("Preview"));
+    $form .= form_submit(t("Submit"));
+  }
+
+  $output .= form($REQUEST_URI, $form);
+
+  return $output;
+}
+
+function blog_save($edit) {
+  global $status, $user;
+
+  if (!$edit["nid"]) {
+    node_save($edit, array(author => $user->id, body, status => variable_get("blog_status", $status[posted]), timestamp => time(), title, type => "blog"));
+  }
+  else if (user_access("administer blogs")) {
+    node_save($edit, array(attributes => node_attributes_save("blog", $edit), body, title, type => "blog"));
+  }
+}
+
+function blog_edit_history($nid) {
+  global $user;
+
+  // DB: changed this to 15 older blog entries rather than today's entries
+  //     as there was no way to edit entries older than a day.  The notion
+  //     of a day can be quite annoying when bloging around midnight.  All
+  //     entries are accessible now.
+  //
+  //  $blog = node_get_object(array(nid => $nid, type => "blog"));
+  //  $sdate = mktime(0, 0, 0, date("m", $blog->timestamp), date("d", $blog->timestamp), date("Y", $blog->timestamp));
+  //  $edate = mktime(23, 59, 59, date("m", $blog->timestamp), date("d", $blog->timestamp), date("Y", $blog->timestamp));
+  //  $result = db_query("SELECT n.title, b.body, n.timestamp, n.nid FROM blog b LEFT JOIN node n ON b.nid = n.nid WHERE n.author = '$user->id' AND n.timestamp > '$sdate' AND n.timestamp < '$edate' ORDER BY b.lid DESC LIMIT 100");
+
+  $result = db_query("SELECT n.nid, n.title, n.timestamp, b.body FROM blog b LEFT JOIN node n ON b.nid = n.nid WHERE n.author = '". check_input($user->id) ."' AND n.nid < '". check_input($nid) ."' ORDER BY b.lid DESC LIMIT 15");
+
+  $output .= "<table cellpadding=\"3\" cellspacing=\"3\" border=\"0\" width=\"100%\">";
+  while ($blog = db_fetch_object($result)) {
+    $output .= "<tr><td><b>". check_output($blog->title) ."</b><br />". check_output($blog->body, 1) ."</td><td><a href=\"submit.php?mod=blog&op=edit&id=$blog->nid\">". t("edit") ."</a></td><td><a href=\"submit.php?mod=blog&op=delete&id=$blog->nid\">". t("delete") ."</a></td></tr>\n";
+  }
+  $output .= "</table>";
+
+  return $output;
+}
+
+function blog_page() {
+  global $op, $name, $date;
+
+  if (user_access("access blogs")) {
+    if ($name) {
+      blog_page_user($name, $date);
+    }
+    else {
+      blog_page_all();
+    }
+  }
+}
+
+function blog_user() {
+  global $op, $id, $name, $date, $edit, $theme, $user;
+
+  if (user_access("post blogs")) {
+    switch ($op) {
+      case "delete":
+        blog_remove($id);
+        blog_page_day($user->userid, time());
+        break;
+      case "edit":
+        $theme->box(t("Submit a blog"), blog_form(node_get_array(array("nid" => $id, "type" => "blog"))));
+        $theme->box(t("Older blogs"), blog_edit_history($id));
+        break;
+      case t("Preview"):
+        $theme->box(t("Preview Blog"), blog_form($edit));
+        break;
+      case t("Submit"):
+        blog_save($edit);
+        blog_page_day($user->userid, time());
+        break;
+      default:
+        $theme->box(t("Submit a blog"), blog_form($edit));
+    }
+  }
+}
+
+
+function blog_link($type) {
+  global $user;
+
+  if ($type == "page" && user_access("access blogs")) {
+    $links[] = "<a href=\"module.php?mod=blog\">". t("latest blogs") ."</a>";
+  }
+
+  if ($type == "menu" && user_access("post blogs")) {
+    $links[] = "<a href=\"module.php?mod=blog&op=view&name=". urlencode($user->userid) ."\">". t("your blog") ."</a>";
+  }
+
+  return $links ? $links : array();
+}
+
+
+function blog_block() {
+  global $name, $date, $user, $mod;
+
+  $result = db_query("SELECT u.userid, n.timestamp, n.title, n.nid FROM node n LEFT JOIN users u ON n.author = u.id WHERE n.type = 'blog' ORDER BY n.nid DESC LIMIT 10");
+  while ($node = db_fetch_object($result)) {
+    $output .= "<a href=\"module.php?mod=blog&op=view&name=". urlencode($node->userid) ."\">". check_output($node->title) ."<br />\n";
+  }
+
+  $block[0]["subject"] = "<a href=\"module.php?mod=blog\">". t("Latest blogs") ."</a>";
+  $block[0]["content"] = $output;
+  $block[0]["info"] = t("Latest blogs");
+  $block[0]["link"] = "module.php?mod=blog";
+
+  $date = $data ? $data : time();
+  $userid = $name ? $name : $user->userid;
+
+  if (($mod == "blog") || ($mod == "block")) {
+       // Only show this block on "blog pages" and in the admin block section.
+    $calendar = new BlogCalendar($userid, $date);
+    $block[1]["subject"] = "<a href=\"module.php?mod=blog&name=". urlencode($userid) ."\">" . t("Browse blog") . "</a>";
+    $block[1]["content"] = $calendar->display();
+    $block[1]["info"] = t("Calendar to browse blogs");
+  }
+
+  return $block;
+}
+
+
+function blog_search($keys) {
+  global $status, $user;
+  $result = db_query("SELECT n.*, b.* FROM blog b LEFT JOIN node n ON n.nid = b.nid AND n.lid = b.lid WHERE (n.title LIKE '%$keys%' OR b.body LIKE '%$keys%') ORDER BY n.timestamp DESC LIMIT 20");
+  while ($blog = db_fetch_object($result)) {
+    $find[$i++] = array("title" => check_output($blog->title), "link" => (user_access("administer nodes") ? "admin.php?mod=node&type=blog&op=edit&id=$blog->nid" : "node.php?id=$blog->nid"), "user" => $blog->userid, "date" => $blog->timestamp);
+  }
+  return $find;
+}
+
+
+class BlogCalendar {
+  var $date;
+  var $userid;
+
+  function BlogCalendar($userid, $date) {
+    $this->userid = urlencode($userid);
+
+    // Prevent future dates:
+    $today = mktime(23, 59, 59, date("n", time()), date("d", time()), date("Y", time()));
+    $this->date = (($date && $date <= $today) ? $date : $today);
+    $this->date = mktime(23, 59, 59, date("n", $this->date), date("d", $this->date), date("Y", $this->date));
+  }
+
+  function display() {
+    // Extract information from the given date:
+    $month  = date("n", $this->date);
+    $year = date("Y", $this->date);
+    $day = date("d", $this->date);
+
+    // Extract today's date:
+    $today = mktime(23, 59, 59, date("n", time()), date("d", time()), date("Y", time()));
+
+    // Extract the timestamp of the last day of today's month:
+    $thislast = mktime(23, 59, 59, date("n", time()), date("t", time()), date("Y", time()));
+
+    // Extract first day of the month:
+    $first = date("w", mktime(0, 0, 0, $month, 1, $year));
+
+    // Extract last day of the month:
+    $last = date("t", mktime(0, 0, 0, $month, 1, $year));
+
+    // Calculate previous and next months dates and check for shorter months (28/30 days)
+    $prevmonth = mktime(23, 59, 59, $month - 1, 1, $year);
+    $prev = mktime(23, 59, 59, $month - 1, min(date("t", $prevmonth), $day), $year);
+    $nextmonth = mktime(23, 59, 59, $month + 1, 1, $year);
+    $next = mktime(23, 59, 59, $month + 1, min(date("t", $nextmonth), $day), $year);
+
+    // Generate calendar header:
+    $output .= "\n<!-- calendar -->\n";
+    $output .= "<TABLE WIDTH=\"100%\" BORDER=\"0\" CELLSPACING=\"0\" CELLPADDING=\"1\">\n";
+    $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"7\"><B><A HREF=\"module.php?mod=blog&name=$this->userid&date=$prev\" STYLE=\"text-decoration: none;\">&lt;&lt;</A> &nbsp; ". date("F Y", $this->date) ." &nbsp; " . ($next <= $thislast ? "<A HREF=\"module.php?mod=blog&name=$this->userid&date=$next\" STYLE=\"text-decoration: none;\">&gt;&gt;</A>" : "&gt;&gt;") . "<B></TD></TR>\n";
+
+    // Generate the days of the week:
+    $output .= " <TR>";
+    $somesunday = mktime(0, 0, 0, 3, 20, 1994);
+    for ($i = 0; $i < 7; $i++) {
+      $output .= "<TD ALIGN=\"center\">" . substr(ucfirst(t(date("l", $somesunday + $i * 86400))), 0, 1) . "</TD>";
+    }
+    $output .= "</TR>\n";
+
+    // Initialize temporary variables:
+    $nday = 1;
+    $sday = $first;
+
+    // Loop through all the days of the month:
+    while ($nday <= $last) {
+      // Set up blank days for first week of the month:
+      if ($first) {
+        $output .= " <TR><TD COLSPAN=\"$first\">&nbsp</TD>\n";
+        $first = 0;
+      }
+
+      // Start every week on a new line:
+      if ($sday == 0) $output .=  " <TR>\n";
+
+      // Print one cell:
+      $date = mktime(23, 59, 59, $month, $nday, $year);
+      if ($date == $this->date) $output .= "  <TD ALIGN=\"center\" BGCOLOR=\"#CCCCCC\"><B>$nday</B></TD>\n";
+      else if ($date > $today) $output .= "  <TD ALIGN=\"center\">$nday</TD>\n";
+      else $output .= "  <TD ALIGN=\"center\"><A HREF=\"module.php?mod=blog&name=$this->userid&date=$date\" STYLE=\"text-decoration: none;\">$nday</A></TD>\n";
+
+      // Start every week on a new line:
+      if ($sday == 6) $output .=  " </TR>\n";
+
+      // Update temporary variables:
+      $sday++;
+      $sday = $sday % 7;
+      $nday++;
+    }
+
+    // Complete the calendar:
+    if ($sday) {
+      $end = 7 - $sday;
+      $output .= "  <TD COLSPAN=\"$end\">&nbsp;</TD>\n </TR>\n";
+    }
+    $output .= "</TABLE>\n\n";
+
+    // Return calendar:
+    return $output;
+  }
+}
+
+?>

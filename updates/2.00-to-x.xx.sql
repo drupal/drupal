@@ -317,3 +317,11 @@ CREATE TABLE site (
 ALTER TABLE feed CHANGE link url varchar(255) DEFAULT '' NOT NULL;
 ALTER TABLE feed ADD link varchar(255) DEFAULT '' NOT NULL;
 ALTER TABLE feed ADD description TEXT DEFAULT '' NOT NULL;
+
+# 12/06/01
+CREATE TABLE blog (
+   lid int(10) unsigned NOT NULL auto_increment,
+   nid int(10) unsigned NOT NULL,
+   body text NOT NULL,
+   PRIMARY KEY (lid)
+);
