@@ -371,14 +371,14 @@ function comment_reply($nid, $pid = NULL) {
   // are we posting or previewing a reply?
   if ($_POST['op'] == t('Post comment')) {
     $edit = $_POST['edit'];
-    comment_validate_form($edit);
+    $edit = comment_validate_form($edit);
     drupal_set_title(t('Post comment'));
     print theme('page', comment_post($edit));
     return;
   }
   else if ($_POST['op'] == t('Preview comment')) {
     $edit = $_POST['edit'];
-    comment_validate_form($edit);
+    $edit = comment_validate_form($edit);
     drupal_set_title(t('Preview comment'));
     print theme('page', comment_preview($edit));
     return;
@@ -422,25 +422,24 @@ function comment_reply($nid, $pid = NULL) {
 function comment_validate_form($edit) {
   global $user;
 
-  /*
-  ** Validate the comment's body.
-  */
+  // Validate the comment's subject.  If not specified, extract
+  // one from the comment's body.
+  $edit['subject'] = strip_tags($edit['subject']);
+  if ($edit['subject'] == '') {
+    $edit['subject'] = truncate_utf8(strip_tags($edit['comment']), 29, TRUE);
+  }
 
+  // Validate the comment's body.
   if ($edit['comment'] == '') {
     form_set_error('comment', t('The body of your comment is empty.'));
   }
 
-  /*
-  ** Validate filter format
-  */
+  // Validate filter format
   if (array_key_exists('format', $edit) && !filter_access($edit['format'])) {
     form_set_error('format', t('The supplied input format is invalid.'));
   }
 
-  /*
-  ** Check validity of name, mail and homepage (if given)
-  */
-
+  // Check validity of name, mail and homepage (if given)
   if (!$user->uid) {
     if (variable_get('comment_anonymous', 0) > 0) {
       if ($edit['name']) {
@@ -471,6 +470,8 @@ function comment_validate_form($edit) {
       }
     }
   }
+
+  return $edit;
 }
 
 function comment_preview($edit) {
@@ -510,14 +511,6 @@ function comment_post($edit) {
   global $user;
 
   if (user_access('post comments') && node_comment_mode($edit['nid']) == 2) {
-    // Validate the comment's subject.  If not specified, extract
-    // one from the comment's body.
-    $edit['subject'] = strip_tags($edit['subject']);
-
-    if ($edit['subject'] == '') {
-      $edit['subject'] = truncate_utf8(strip_tags($edit['comment']), 29, TRUE);
-    }
-
     if (!form_get_errors()) {
       // Check for duplicate comments.  Note that we have to use the
       // validated/filtered data to perform such check.
@@ -913,7 +906,6 @@ function comment_render($node, $cid = 0) {
  * Menu callback; edit a comment from the administrative interface.
  */
 function comment_admin_edit($cid) {
-
   // Comment edits need to be saved.
   if ($_POST['op'] == t('Submit')) {
     $edit = $_POST['edit'];
