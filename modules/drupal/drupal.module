@@ -32,7 +32,7 @@ function drupal_page() {
   $output .= " <LI>To subscribe to the <CODE>drupal-support@drop.org</CODE> mailing list, send an e-mail to <A HREF=\"mailto:drupal-support-request@drop.org\">drupal-support-request@drop.org</A> with no subject and put <B>subscribe</B> in the body of your message.</LI>\n";
   $output .= " <LI>To unsubscribe from the <CODE>drupal-support@drop.org</CODE> mailing list, send an e-mail to <A HREF=\"mailto:drupal-support-request@drop.org\">drupal-support-request@drop.org</A> and put <B>unsubscribe</B> in the body of your mail.\n";
   $theme->box("Support and development", $output);
- 
+
   $theme->footer();
 }
 
