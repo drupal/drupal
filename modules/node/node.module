@@ -274,7 +274,6 @@ function node_module_find() {
   return $output;
 }
 
-
 function node_edit($node) {
   $output .= form_item("Title", $node->title);
   $output .= form_item("Operations", implode("<br />", node_links($node->nid, $node->type)));
@@ -359,6 +358,46 @@ function node_admin() {
   }
   else {
     print message_access();
+  }
+}
+
+function node_block() {
+  global $theme;
+
+  $block[0][subject] = t("Syndicate");
+  $block[0][content] = "<div align=\"center\"><a href=\"module.php?mod=blog&op=feed\"><img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" border=\"0\" /></a></div>\n";
+  $block[0][info] = "Syndicate";
+
+  return $block;
+}
+
+function node_feed() {
+  $result = db_query("SELECT nid, type FROM node WHERE promote = '1' AND status = '". node_status("posted") ."' ORDER BY timestamp DESC LIMIT 15");
+
+  while ($node = db_fetch_object($result)) {
+    $item = node_get_object(array("nid" => $node->nid, "type" => $node->type));
+
+    $title = $item->title;
+    $link = path_uri() ."node.php?id=$item->nid";
+    $description = module_invoke($item->type, "summary", $item);
+
+    $items .= format_rss_item($title, $link, $description);
+  }
+
+  $output .= "<?xml version=\"1.0\" encoding=\"ISO-8859-1\" ?>\n";
+  $output .= "<rss version=\"0.91\">\n";
+  $output .= format_rss_channel(variable_get("site_name", "drupal"), path_uri() ."module.php?mod=node&op=feed", variable_get("site_slogan", ""), $items);
+  $output .= "</rss>\n";
+
+  print $output;
+
+}
+
+function node_page() {
+  global $op;
+
+  if ($op == "feed") {
+    node_feed();
   }
 }
 
