@@ -145,6 +145,19 @@ function _theme_table_cell($cell, $header = 0) {
   return $output;
 }
 
+/**
+  Returns themed table.
+
+  @param $title the form element's title
+  @param $value the form element's data
+  @param $description the form element's description or explanation
+
+  @return a string contraining the \a node output.
+**/
+
+function theme_form_element($title, $value, $description = 0) {
+  return "<div class=\"form-item\">". ($title ? "<label>$title:</label>" : "") . $value . ($description ? "<div class=\"description\">$description</div>" : "") ."</div>\n";
+}
 
 /**
   Returns themed table.

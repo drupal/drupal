@@ -113,7 +113,7 @@ fieldset {
 .form-item .description {
   font-size: 0.85em;
 }
-.form-item .title {
+.form-item label {
   font-weight: bold;
   margin-top: 1.1em;
   margin-bottom: 1px;
