@@ -963,7 +963,7 @@ else {
 // initialize installed modules:
 module_init();
 
-if (!user_access("bypass input data check")) {
+if ($_REQUEST && !user_access("bypass input data check")) {
   if (!valid_input_data($_REQUEST)) {
     die("terminated request because of suspicious input data");
   }
