@@ -2,7 +2,7 @@
 include "user.class.php";
 
 function display_morelink($theme, $story) {
-  return ($story->article) ? "[ ". format_story_link($story, "<FONT COLOR=\"$theme->hlcolor2\"><B>read more</B></FONT>") ." | ". strlen($story->article) ." bytes | ". format_story_link($story, "<FONT COLOR=\"$theme->hlcolor2\">". format_plural($story->comments, "comment", "comments") ."</FONT>") ." ]" : "[ ". format_story_link($story, "<FONT COLOR=\"$theme->hlcolor2\">". format_plural($story->comments, "comment", "comments") ."</FONT>") ." ]";
+  return ($story->article) ? "[ <A HREF=\"discussion.php?id=$story->id\"><FONT COLOR=\"$theme->hlcolor2\"><B>read more</B></FONT></A> | ". strlen($story->article) ." bytes | <A HREF=\"discussion.php?id=$story->id\"><FONT COLOR=\"$theme->hlcolor2\">". format_plural($story->comments, "comment", "comments") ."</FONT></A> ]" : "[ <A HREF=\"discussion.php?id=$story->id\"><FONT COLOR=\"$theme->hlcolor2\">". format_plural($story->comments, "comment", "comments") ."</FONT></A> ]";
 }
 
 function displayModerationResults($theme, $story) {

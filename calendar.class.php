@@ -28,7 +28,7 @@ class calendar {
     ### Generate calendar header:
     $output .= "\n<!-- calendar -->\n";
     $output .= "<TABLE WIDTH=\"100%\" BORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"1\">\n";
-    $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"7\"><SMALL><A HREF=\"$PHP_SELF?date=$prev\">&lt;&lt;</A> &nbsp; ". date("F Y", $this->date) ." &nbsp; <A HREF=\"$PHP_SELF?date=$next\">&gt;&gt;</A></SMALL></TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"7\"><SMALL><A HREF=\"$PHP_SELF?date=$prev\">&lt;</A> &nbsp; ". date("F Y", $this->date) ." &nbsp; <A HREF=\"$PHP_SELF?date=$next\">&gt;</A></SMALL></TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"center\"><SMALL>S</SMALL></TD><TD ALIGN=\"center\"><SMALL>M</SMALL></TD><TD ALIGN=\"center\"><SMALL>T</SMALL></TD><TD ALIGN=\"center\"><SMALL>W</SMALL></TD><TD ALIGN=\"center\"><SMALL>T</SMALL></TD><TD ALIGN=\"center\"><SMALL>F</SMALL></TD><TD ALIGN=\"center\"><SMALL>S</SMALL></TD></TR>\n";
  
     ### Initialize temporary variables:

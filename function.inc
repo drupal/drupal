@@ -21,15 +21,11 @@ function dbsave($dbase, $data, $id=0) {
   else { db_query("INSERT INTO $dbase SET $query") or die(mysql_error()); return mysql_insert_id(); }
 }
 
-function FixQuotes ($what = "") {
-  $what = ereg_replace("'","''",$what);
-  while (eregi("\\\\'", $what)) {
-    $what = ereg_replace("\\\\'","'",$what);
-  }
-  return $what;
+function check_input($message) {
+  return str_replace("\"", "&quot;", stripslashes($message));
 }
 
-function check($message) {
+function check_output($message) {
   include "config.inc";
   return nl2br(strip_tags(stripslashes($message), $allowed_html));
 }
