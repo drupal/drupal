@@ -1116,8 +1116,8 @@ function update_89() {
   $result = db_query("SELECT * FROM {variable} WHERE name LIKE 'node_static_%'");
   while ($variable = db_fetch_object($result)) {
     //get the node type name, place it into $name_arr. The name can be found with $name_arr[2]
-    $name_arr = explode("_",$variable->name);
-    $ret[] = update_sql("INSERT INTO {variable} (name,value) VALUES ('node_sticky_".$name_arr[2]."','".$variable->value."')");
+    $name_arr = explode("_", $variable->name, 3);
+    $ret[] = update_sql("INSERT INTO {variable} (name,value) VALUES ('node_sticky_". $name_arr[2] ."','". $variable->value. "')");
   }
   $ret[] = db_query("DELETE FROM {variable} WHERE name LIKE 'node_static_%'");
 
