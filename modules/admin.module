@@ -40,8 +40,9 @@ function admin_page() {
       <style type="text/css" title="layout" media="Screen">
         @import url("misc/admin.css");
       </style>
+      <?php print theme_head(); ?>
      </head>
-     <body>
+     <body<?php print theme_onload_attribute(); ?>>
       <?php
         // NOTE: we include a dummy "print.css" to remove the "flash of unstyled content" (FUOC) problems in IE.
 
@@ -87,6 +88,7 @@ function admin_page() {
         echo "<h1><a href=\"index.php\">". variable_get("site_name", "drupal") ."</a></h1>";
         print menu_tree("admin") ;
         print "</div>";
+  print theme_footer();
       ?>
     </body>
    </html>

@@ -65,7 +65,7 @@
        -->
       </STYLE>
      </HEAD>
-     <BODY TEXT="#000000" BGCOLOR="<?php print $this->clc0; ?>" ALINK="#000000" LINK="#404040" VLINK="#404040" MARGINHEIGHT="10" MARGINWIDTH="10">
+     <BODY TEXT="#000000" BGCOLOR="<?php print $this->clc0; ?>" ALINK="#000000" LINK="#404040" VLINK="#404040" MARGINHEIGHT="10" MARGINWIDTH="10"<?php print theme_onload_attribute(); ?>>
      <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" ALIGN="CENTER" WIDTH="100%">
      <TR><TD BGCOLOR="<?php print $this->cl00; ?>"><IMG SRC="<?php print $this->path; ?>/images/null.gif" WIDTH="10"></TD><TD BGCOLOR="<?php print $this->clc0; ?>"><IMG SRC="<?php print $this->path; ?>/images/null.gif" WIDTH="4"></TD>
      <TD BGCOLOR="<?php print $this->cl80; ?>">
@@ -218,6 +218,7 @@
      </TABLE>
     </TD><TD BGCOLOR="<?php print $this->clc0; ?>"><IMG SRC="<?php print $this->path; ?>/images/null.gif" WIDTH="4"></TD><TD BGCOLOR="<?php print $this->cl00; ?>"><IMG SRC="<?php print $this->path; ?>/images/null.gif" WIDTH="10"></TD></TR>
     </TABLE>
+    <?php print theme_footer(); ?>
     </BODY>
     </HTML>
     <?php

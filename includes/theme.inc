@@ -22,7 +22,7 @@ class BaseTheme {
     $output = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"DTD/xhtml1-transitional.dtd\">\n";
     $output .= "<html><head><title>". variable_get(site_name, "drupal") ."</title>";
     $output .= theme_head($main);
-    $output .= "</head><body bgcolor=\"$this->background\" text=\"$this->foreground\">";
+    $output .= "</head><body bgcolor=\"$this->background\" text=\"$this->foreground". theme_onload_attribute(). "\">";
     $output .= "<table border=\"0\" cellspacing=\"4\" cellpadding=\"4\"><tr><td valign=\"top\" width=\"170\">";
 
     print $output;
@@ -77,6 +77,7 @@ class BaseTheme {
 
   function footer() {
     $output = "</td></tr></table>";
+    $output .= theme_footer();
     $output .= "</body></html>";
     print $output;
   }
@@ -141,6 +142,15 @@ function theme_head($main = 0) {
   return implode($head, "\n");
 }
 
+/*
+ * Execute hook _footer() which is run at the end of the page right before
+ * the </body> tag
+ */
+function theme_footer($main = 0) {
+  $footer = module_invoke_all("footer", $main);
+  return implode($footer, "\n");
+}
+
 function theme_init() {
   global $user;
 
@@ -192,6 +202,23 @@ function theme() {
   else {
     return call_user_func_array($function, $args);
   }
+}
+
+/*
+ * Call _onload hook in all modules to enable modules to insert javascript
+ * that will get run once the page has been loaded by the browser
+ */
+function theme_onload_attribute($theme_onloads = array()) {
+  if (!is_array($theme_onloads)) {
+    $theme_onloads = array($theme_onloads);
+  }
+  // Merge theme onloads (javascript rollovers, image preloads, etc.)
+  // with module onloads (htmlarea, etc.)
+  $onloads = array_merge(module_invoke_all("onload"), $theme_onloads);
+  if (count($onloads)) {
+    return " onload=\"" . implode("; ", $onloads) . "\"";
+  }
+  return;
 }
 
 ?>

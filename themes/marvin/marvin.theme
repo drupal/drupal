@@ -64,7 +64,7 @@
        -->
       </style>
      </head>
-     <body text="#000000" bgcolor="#ffffff" alink="#cccccc" link="#665566" vlink="#665566">
+     <body text="#000000" bgcolor="#ffffff" alink="#cccccc" link="#665566" vlink="#665566"<?php print theme_onload_attribute(); ?>>
       <table border="0" cellpadding="8" cellspacing="0">
        <tr>
         <td><a href="index.php"><img src="<?php print $this->path; ?>/images/logo.png" alt="" border="0" /></a></td>
@@ -195,6 +195,7 @@
        </td>
       </tr>
      </table>
+     <?php print theme_footer(); ?>
     </body>
     </html>
     <?php
