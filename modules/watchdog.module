@@ -50,7 +50,7 @@ function watchdog_overview($type) {
 
   while ($watchdog = db_fetch_object($result)) {
     if ($background = $color[$watchdog->type]) {
-      $data .= " <tr bgcolor=\"$background\"><td nowrap=\"nowrap\">". format_date($watchdog->timestamp, "small") ."</td><td>". substr(strip_tags($watchdog->message), 0, 64) ."</td><td align=\"center\">". format_name($watchdog) ."</a></td><td align=\"center\">$watchdog->link</td><td align=\"center\">". l(t("view details"), "admin/watchdog/view/$watchdog->wid") ."</td></tr>";
+      $data .= " <tr bgcolor=\"$background\"><td nowrap=\"nowrap\">". format_date($watchdog->timestamp, "small") ."</td><td>". substr(strip_tags($watchdog->message), 0, 64) ."</td><td align=\"center\">". format_name($watchdog) ."</td><td align=\"center\">$watchdog->link</td><td align=\"center\">". l(t("view details"), "admin/watchdog/view/$watchdog->wid") ."</td></tr>";
     }
   }
 
