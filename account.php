@@ -2,7 +2,6 @@
 
 include "includes/theme.inc";
 
-
 function account_get_user($uname) {
   $result = db_query("SELECT * FROM users WHERE userid = '$uname'");
   return db_fetch_object($result);
