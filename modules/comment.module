@@ -1133,7 +1133,7 @@ function comment_controls($threshold = 1, $mode = 3, $order = 1, $nid, $page = 0
 
     $output .= " ". form_submit(t("Update settings"));
 
-    $output = form_item(t("Comment viewing options"), $output, t("Select your prefered way to display the comments and click 'Update settings' to submit your changes."));
+    $output = form_item(t("Comment viewing options"), $output, t("Select your preferred way to display the comments and click 'Update settings' to submit your changes."));
 
     if (($mode == 2 || $mode == 4) && $comment_num > $comments_per_page) {
       if ($page > 1) {

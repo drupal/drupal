@@ -810,7 +810,7 @@ function user_register($edit = array()) {
     $affiliates = implode(", ", $affiliates);
     $output .= "<p>" . t("Note: If you have an account with one of our affiliates (%s), you may ". lm("login now", array("mod" => "user", "op" => "login")) ." instead of registering.", array("%s" => $affiliates)) ."</p>";
   }
-  $output .= form_textfield(t("Username"), "name", $edit["name"], 30, 64, t("Your full name or your prefered username: only letters, numbers and spaces are allowed."));
+  $output .= form_textfield(t("Username"), "name", $edit["name"], 30, 64, t("Your full name or your preferred username: only letters, numbers and spaces are allowed."));
   $output .= form_textfield(t("E-mail address"), "mail", $edit["mail"], 30, 64, t("A password and instructions will be sent to this e-mail address, so make sure it is accurate."));
   foreach (module_list() as $module) {
     if (module_hook($module, "user")) {
@@ -924,7 +924,7 @@ function user_edit($edit = array()) {
       $edit = object2array($user);
     }
 
-    $output .= form_textfield(t("Username"), "name", $edit["name"], 30, 55, t("Your full name or your prefered username: only letters, numbers and spaces are allowed."));
+    $output .= form_textfield(t("Username"), "name", $edit["name"], 30, 55, t("Your full name or your preferred username: only letters, numbers and spaces are allowed."));
     $output .= form_textfield(t("E-mail address"), "mail", $edit["mail"], 30, 55, t("Insert a valid e-mail address.  All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail."));
 
     foreach (module_list() as $module) {
@@ -1418,7 +1418,7 @@ function user_admin_edit($edit = array()) {
   */
 
   $output .= form_item(t("User ID"), check_output($account->uid));
-  $output .= form_textfield(t("Username"), "name", $account->name, 30, 55, t("Your full name or your prefered username: only letters, numbers and spaces are allowed."));
+  $output .= form_textfield(t("Username"), "name", $account->name, 30, 55, t("Your full name or your preferred username: only letters, numbers and spaces are allowed."));
   $output .= form_textfield(t("E-mail address"), "mail", $account->mail, 30, 55, t("Insert a valid e-mail address.  All e-mails from the system will be sent to this address. The e-mail address is not made public and will only be used if you wish to receive a new password or wish to receive certain news or notifications by e-mail."));
 
   foreach (module_list() as $module) {
