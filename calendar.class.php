@@ -26,9 +26,10 @@ class calendar {
     $next = mktime(0, 0, 0, $month + 1, $day, $year);
 
     ### Generate calendar header:
+    $output .= "\n<!-- calendar -->\n";
     $output .= "<TABLE WIDTH=\"100%\" BORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"1\">\n";
-    $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"7\"><A HREF=\"$PHP_SELF?date=$prev\">&lt;&lt;</A> &nbsp; ". date("F Y", $this->date) ." &nbsp; <A HREF=\"$PHP_SELF?date=$next\">&gt;&gt;</A></TH></TR>\n";
-    $output .= " <TR><TD ALIGN=\"center\">S</TD><TD ALIGN=\"center\">M</TD><TD ALIGN=\"center\">T</TD><TD ALIGN=\"center\">W</TD><TD ALIGN=\"center\">T</TD><TD ALIGN=\"center\">F</TD><TD ALIGN=\"center\">S</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"center\" COLSPAN=\"7\"><SMALL><A HREF=\"$PHP_SELF?date=$prev\">&lt;&lt;</A> &nbsp; ". date("F Y", $this->date) ." &nbsp; <A HREF=\"$PHP_SELF?date=$next\">&gt;&gt;</A></SMALL></TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"center\"><SMALL>S</SMALL></TD><TD ALIGN=\"center\"><SMALL>M</SMALL></TD><TD ALIGN=\"center\"><SMALL>T</SMALL></TD><TD ALIGN=\"center\"><SMALL>W</SMALL></TD><TD ALIGN=\"center\"><SMALL>T</SMALL></TD><TD ALIGN=\"center\"><SMALL>F</SMALL></TD><TD ALIGN=\"center\"><SMALL>S</SMALL></TD></TR>\n";
  
     ### Initialize temporary variables:
     $nday = 1;
@@ -47,9 +48,9 @@ class calendar {
     
       ### Print one cell:
       $date = mktime(0, 0, 0, $month, $nday, $year);
-      if ($nday == $day) $output .= "  <TD ALIGN=\"center\"><B>$nday</B></TD>\n";
-      else if ($date > time()) $output .= "  <TD ALIGN=\"center\">$nday</TD>\n";
-      else $output .= "  <TD ALIGN=\"center\"><A HREF=\"$PHP_SELF?date=$date\" STYLE=\"text-decoration: none;\">$nday</A></TD>\n";
+      if ($nday == $day) $output .= "  <TD ALIGN=\"center\"><SMALL><B>$nday</B></SMALL></TD>\n";
+      else if ($date > time()) $output .= "  <TD ALIGN=\"center\"><SMALL>$nday</SMALL></TD>\n";
+      else $output .= "  <TD ALIGN=\"center\"><SMALL><A HREF=\"$PHP_SELF?date=$date\" STYLE=\"text-decoration: none;\">$nday</A></SMALL></TD>\n";
      
       ### Start every week on a new line:
       if ($sday == 6) $output .=  " </TR>\n";
@@ -65,7 +66,7 @@ class calendar {
       $end = 7 - $sday;
       $output .= "  <TD COLSPAN=\"$end\">&nbsp;</TD>\n </TR>\n";
     }
-    $output .= "</TABLE>\n";
+    $output .= "</TABLE>\n\n";
 
     ### Return calendar:
     return $output;
