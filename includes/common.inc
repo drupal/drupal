@@ -225,13 +225,10 @@ function format_name($object) {
   if ($object->uid && $object->name) {
     return "<a href=\"module.php?mod=user&op=view&id=$object->uid\">$object->name</a>";
   }
-  else if (!is_object($object)) {
-    watchdog("error", "format_name(): missing name ($object->name) or uid ($object->uid)");
-    return "<font color=\"red\">FIX ME</font>";
-  }
   else {
     return variable_get(anonymous, "Anonymous");
   }
+
 }
 
 function format_email($address) {
