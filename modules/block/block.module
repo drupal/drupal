@@ -192,7 +192,7 @@ function block_admin_display() {
 
   foreach ($blocks as $block) {
     if ($block['module'] == 'block') {
-      $operation = l(t('delete'), 'admin/block/delete/' . $block['delta']);
+      $operation = l(t('delete'), 'admin/block/delete/'. $block['delta']);
     }
     else {
       $operation = '';
@@ -306,12 +306,12 @@ function block_box_delete($bid = 0) {
   switch ($op) {
     case t('Delete'):
       db_query('DELETE FROM {boxes} WHERE bid = %d', $bid);
-      drupal_set_message(t('The block %name has been deleted.', array('%name' => '<em>' . $box['info'] . '</em>')));
+      drupal_set_message(t('The block %name has been deleted.', array('%name' => '<em>'. $box['info'] .'</em>')));
       cache_clear_all();
       drupal_goto('admin/block');
 
     default:
-      $form = '<p>' . t('Are you sure you want to delete the block %name?', array('%name' => '<em>' . $box['info'] . '</em>')) . "</p>\n";
+      $form = '<p>'. t('Are you sure you want to delete the block %name?', array('%name' => '<em>'. $box['info'] .'</em>')) ."</p>\n";
       $form .= form_submit(t('Delete'));
       $output = form($form);
   }
