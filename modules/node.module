@@ -1505,10 +1505,10 @@ function node_page_default() {
   }
   else {
     $output = t("
-      <p>Welcome to your new <a href=\"%drupal\">Drupal</a>-powered website. This welcome message will guide you through your first steps with Drupal, and will disappear once you've posted your first piece of content.</p>
-      <p>The first thing you'll need to do is <a href=\"%register\">create the first account</a>. This account will have full administration rights and will allow you to further configure your website. Once you are logged in, you can go to the <a href=\"%admin\">administration section</a> and <a href=\"%config\">set up your site's configuration</a>.</p>
-      <p>Drupal's functionality is contained in 'modules', each with a specific function. You should visit the <a href=\%modules\">module list</a> and enable those modules necessary for your particular website.</p>
-      <p>The presentation of your website is handled by '<a href=\"%themes\">themes</a>'. You can use one of the existing themes, modify them, or create your own from scratch.</p>
+      <p>Welcome to your new <a href=\"%drupal\">Drupal</a>-powered website. This message will guide you through your first steps with Drupal, and will disappear once you have posted your first piece of content.</p>
+      <p>The first thing you will need to do is <a href=\"%register\">create the first account</a>. This account will have full administration rights and will allow you to configure your website. Once logged in, you can visit the <a href=\"%admin\">administration section</a> and <a href=\"%config\">set up your site's configuration</a>.</p>
+      <p>Drupal comes with various modules, each of which contains a specific piece of functionality. You should visit the <a href=\"%modules\">module list</a> and enable those modules which suit your website's needs.</p>
+      <p><a href=\"%themes\">Themes</a> handle the presentation of your website. You can use one of the existing themes, modify them or create your own from scratch.</p>
       <p>We suggest you look around the administration section and explore the various options Drupal offers you. For more information, you can refer to the <a href=\"%handbook\">Drupal handbook online</a>.</p>", array('%drupal' => 'http://www.drupal.org/', '%register' => url('user/register'), '%admin' => url('admin'), '%config' => url('admin/system'), '%modules' => url('admin/system/modules'), '%themes' => url('admin/system/themes'), '%handbook' => 'http://www.drupal.org/handbook'));
   }
 
