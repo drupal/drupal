@@ -41,8 +41,7 @@ function forum_settings() {
     if ($voc) {
       $output .= form_textarea(t("Explanation or submission guidelines"), "forum_help", variable_get("forum_help", ""), 70, 5, t("This text will be displayed at the top of the forum submission form.  Useful for helping or instructing your users."));
       $output .= form_select(t("Forum vocabulary"), "forum_nav_vocabulary", variable_get("forum_nav_vocabulary", ""), $vocs, t("The taxonomy vocabulary that will be used as the navigation tree."));
-      $output .= form_textfield(t("Topic icons path"), "forum_topic_icon_path", variable_get("forum_topic_icon_path", ""), 30, 255, t("The path to the topic icons.  Leave blank to disable icons."));
-      $output .= form_textfield(t("Folder icons path"), "forum_folder_icon_path", variable_get("forum_folder_icon_path", ""), 30, 255,t( "The path to the <b>default</b>, <b>hot</b>, <b>new</b>, <b>hot & new</b>, and <b>closed</b> folder icons.  Leave blank to disable icons."));
+      $output .= form_textfield(t("Forum icon path"), "forum_icon_path", variable_get("forum_icon_path", ""), 30, 255, t("The path to the forum icons.  Leave blank to disable icons.  Don't add a trailing slash.  Default icons are available in the 'misc' directory."));
       $number = array(5 => 5, 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30, 35 => 35, 40 => 40, 50 => 50, 60 => 60, 80 => 80, 100 => 100, 10000=>10000);
       $output .= form_select(t("Hot topic threshold"), "forum_hot_topic", variable_get("forum_hot_topic", 15), $number, t("The number of posts a topic must have to be considered <b>hot</b>."));
       $number = array(10 => 10, 25 => 25, 50 => 50, 75 => 75, 100 => 100);
@@ -88,7 +87,7 @@ function forum_block($op = "list", $delta = 0) {
       $content .= node_title_list(db_query_range("SELECT n.nid, n.title, u.uid, u.name FROM {node} n INNER JOIN {forum} f ON n.nid = f.nid LEFT JOIN {users} u ON n.uid = u.uid WHERE n.type = 'forum' ORDER BY n.nid DESC", 0, variable_get("forum_block_num", "5")), t("New forum topics:"));
 
       if ($content) {
-        $content .= "<div id=\"forum_more\" style=\"text-align: right;\">". l(t("more"), "forum", array("title" => t("Read the latest forum topics."))) ."</div>";
+        $content .= "<div class=\"more-link\">". l(t("more"), "forum", array("title" => t("Read the latest forum topics."))) ."</div>";
       }
 
       $blocks["subject"] = t("Forum topics");
@@ -198,63 +197,17 @@ function forum_form(&$node, &$help, &$error) {
     $output .= form_checkbox(t("Leave shadow copy"), "shadow", 1, $node->shadow, t("If you move this topic, you can leave a link in the old forum to the new forum."));
   }
 
-  if ($icon_path = variable_get("forum_topic_icon_path", "")) {
-    if ($node->icon) {
-      // we are editing post
-      if ($dir = @opendir($icon_path)) {
-        $icon_num = 0;
-        while($icon = readdir($dir)) {
-          if ($icon == '.' || $icon == '..') {continue;}
-          if ($node->icon == $icon) {$checked = "checked";} else {$checked = "";}
-          $radio .= "<input type=\"radio\" name=\"edit[icon_num]\" value=\"$icon_num\" $checked /><img src=\"$icon_path$icon\" alt=\"\" title=\"\" /> \n";
-          $icon_num++;
-        }
-        closedir($dir);
-      }
-    }
-    else {
-      if ($dir = @opendir($icon_path)) {
-        $icon_num = 0;
-        while($icon = readdir($dir)) {
-          if ($icon == '.' || $icon == '..') {continue;}
-          if ($node->icon_num == $icon_num) {$checked = "checked";} else {$checked = "";}
-          $radio .= "<input type=\"radio\" name=\"edit[icon_num]\" value=\"$icon_num\" $checked /><img src=\"$icon_path$icon\" alt=\"\" title=\"\" /> \n";
-          $icon_num++;
-        }
-        closedir($dir);
-      }
-    }
-    $output .= form_item(t("Topic icon"), $radio);
-  }
   $output .= form_textarea(t("Body"), "body", $node->body, 60, 10);
 
   return $output;
 }
 
 function forum_insert($node) {
-  $node->icon = _forum_decode_icon($node);
-  db_query("INSERT INTO {forum} (nid, icon, shadow, tid) VALUES (%d, '%s', %d, %d)", $node->nid, $node->icon, $node->shadow, $node->tid[0]);
+  db_query("INSERT INTO {forum} (nid, shadow, tid) VALUES (%d, %d, %d)", $node->nid, $node->shadow, $node->tid[0]);
 }
 
 function forum_update($node) {
-  $node->icon = _forum_decode_icon($node);
-  db_query("UPDATE {forum} SET icon = '%s', shadow = %d, tid = %d WHERE nid = %d", $node->icon, $node->shadow, $node->tid[0], $node->nid);
-}
-
-function _forum_decode_icon($node) {
-  // to prevent malicious users
-  if ($icon_path = variable_get("forum_topic_icon_path", "")) {
-    if ($dir = @opendir($icon_path)) {
-      $icon_num = 0;
-      while($icon = readdir($dir)) {
-        if ($icon == '.' || $icon == '..') {continue;}
-        if ($icon_num == $node->icon_num) {$myicon = $icon;}
-        $icon_num++;
-      }
-      closedir($dir);
-    }
-  }
-  return $myicon;
+  db_query("UPDATE {forum} SET shadow = %d, tid = %d WHERE nid = %d", $node->shadow, $node->tid[0], $node->nid);
 }
 
 function forum_delete(&$node) {
@@ -374,7 +327,7 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
   $sql_sortby = _forum_get_topic_order($sortby);
 
   // show topics with the correct tid, or in the forum but with shadow = 1
-  $sql = "SELECT n.nid, n.title, u.name AS name, u.uid AS uid, n.created AS timestamp, GREATEST(n.created, MAX(c.timestamp)) AS date_sort, COUNT(c.nid) AS num_comments, f.icon, n.comment AS comment_mode, f.tid FROM {node} n INNER JOIN {term_node} r ON n.nid = r.nid LEFT JOIN {users} u ON n.uid = u.uid LEFT JOIN {comments} c ON n.nid = c.nid INNER JOIN {forum} f ON n.nid = f.nid WHERE n.nid = r.nid AND ((r.tid = '".check_query($tid)."' AND f.shadow = 1) OR f.tid = '".check_query($tid)."') AND n.status = 1 AND n.type = 'forum' GROUP BY n.nid, n.title, u.name, u.uid, n.created, n.comment, f.tid, f.icon ORDER BY $sql_sortby";
+  $sql = "SELECT n.nid, n.title, u.name AS name, u.uid AS uid, n.created AS timestamp, GREATEST(n.created, MAX(c.timestamp)) AS date_sort, COUNT(c.nid) AS num_comments, n.comment AS comment_mode, f.tid FROM {node} n INNER JOIN {term_node} r ON n.nid = r.nid LEFT JOIN {users} u ON n.uid = u.uid LEFT JOIN {comments} c ON n.nid = c.nid INNER JOIN {forum} f ON n.nid = f.nid WHERE n.nid = r.nid AND ((r.tid = '".check_query($tid)."' AND f.shadow = 1) OR f.tid = '".check_query($tid)."') AND n.status = 1 AND n.type = 'forum' GROUP BY n.nid, n.title, u.name, u.uid, n.created, n.comment, f.tid ORDER BY $sql_sortby";
 
   $sql_count = "SELECT COUNT(DISTINCT(n.nid)) FROM {node} n INNER JOIN {forum} f ON n.nid = f.nid INNER JOIN {term_node} r ON n.nid = r.nid WHERE n.nid = r.nid AND ( (r.tid = '".check_query($tid)."' AND f.shadow = 1) OR f.tid = '".check_query($tid)."') AND n.status = 1 AND n.type = 'forum'";
 
@@ -533,7 +486,7 @@ function forum_theme_list($forums, $parents, $tid) {
 
   if ($forums) {
 
-    $header = array(array("data" => t("Forum"), "colspan" => "2"), t("Topics"), t("Posts"), t("Last post"));
+    $header = array(t("Forum"), t("Topics"), t("Posts"), t("Last post"));
 
     foreach ($forums as $forum) {
       if ($user->uid) {
@@ -561,13 +514,11 @@ function forum_theme_list($forums, $parents, $tid) {
       }
       $description .="</div>\n";
 
-      //if ($icon = _forum_get_folder_icon($new_topics)) {
       $rows[] = array(
-        array("data" => $icon, "class" => "icon"),
         array("data" => $description, "class" => "description"),
         array("data" => $forum->num_topics . ($new_topics ? "<br />(".t("%a new", array("%a" => $new_topics)).")" : ""), "class" => "topics"),
         array("data" => $forum->num_posts, "class" => "posts"),
-        array("data" => _forum_format($forum->last_post), "class" => "last-post")
+        array("data" => _forum_format($forum->last_post), "class" => "last-reply")
        );
 
     }
@@ -610,35 +561,33 @@ function forum_theme_topic_list($tid, $topics, $sortby, $forum_per_page, $offset
 
   if ($topics) {
 
-    $header = array(array("data" => t("Topic"), "colspan" => "3"), t("Replies"), t("Posted"), t("Last post"));
+    $header = array(array("data" => t("Topic"), "colspan" => "2"), t("Replies"), t("Created"), t("Last reply"));
 
     foreach ($topics as $topic) {
       // folder is new if topic is new or there are new comments since last visit
       if ($topic->tid != $tid) {
         $rows[] = array(
-          array("data" => _forum_get_folder_icon($topic->new, $topic->num_comments, $topic->comment_mode), "class" => "icon"),
-          array("data" =>_forum_get_icon($topic), "class" => "icon"),
+          array("data" => _forum_icon($topic->new, $topic->num_comments, $topic->comment_mode), "class" => "icon"),
           array("data" => $topic->title, "class" => "title"),
-          array("data" => l(t("This topic has been moved"), "forum/$topic->tid"), "colspan" => 3)
+          array("data" => l(t("This topic has been moved"), "forum/$topic->tid"), "colspan" => "3")
         );
       }
       else {
         $rows[] = array(
-          array("data" => _forum_get_folder_icon($topic->new, $topic->num_comments, $topic->comment_mode), "class" => "icon"),
-          array("data" => _forum_get_icon($topic), "class" => "icon"),
+          array("data" => _forum_icon($topic->new, $topic->num_comments, $topic->comment_mode), "class" => "icon"),
           array("data" => l($topic->title, "node/view/$topic->nid"), "class" => "topic"),
           array("data" => $topic->num_comments . ($topic->new_replies ? "<br />(".t("%a new", array("%a" => $topic->new_replies)).")" : ""), "class" => "replies"),
-          array("data" => _forum_format($topic), "class" => "posted"),
-          array("data" => _forum_format($topic->last_reply), "class" => "last-post")
+          array("data" => _forum_format($topic), "class" => "created"),
+          array("data" => _forum_format($topic->last_reply), "class" => "last-reply")
         );
       }
     }
 
-    $rows[] = array(array("data" => t("%a topics, %b topics per page, page %c of %d", array("%a" => $pager_total[0], "%b" => $forum_per_page, "%c" => $offset, "%d" => ceil($pager_total[0]/$forum_per_page))), "colspan" => "6", "class" => "statistics"));
-    $rows[] = array(array("data" => theme("forum_theme_topic_browser", $sortby, $forum_per_page, $offset), "colspan" => "6", "class" => "settings"));
+    $rows[] = array(array("data" => t("%a topics, %b topics per page, page %c of %d", array("%a" => $pager_total[0], "%b" => $forum_per_page, "%c" => $offset, "%d" => ceil($pager_total[0]/$forum_per_page))), "colspan" => "5", "class" => "statistics"));
+    $rows[] = array(array("data" => theme("forum_theme_topic_browser", $sortby, $forum_per_page, $offset), "colspan" => "5", "class" => "settings"));
 
     if ($pager = pager_display(NULL, $forum_per_page, 0, "default")) {
-      $rows[] = array(array("data" => $pager, "colspan" => "6", "class" => "pager"));
+      $rows[] = array(array("data" => $pager, "colspan" => "5", "class" => "pager"));
     }
   }
 
@@ -647,29 +596,17 @@ function forum_theme_topic_list($tid, $topics, $sortby, $forum_per_page, $offset
     $output = l(t("create new forum topic"), "node/add/forum/$tid") ."<br /><br />";
   }
 
-  $output  .= table($header, $rows);
+  $output .= table($header, $rows);
 
   return $output;
 }
 
+function _forum_icon($new_posts, $num_posts = 0, $comment_mode = 0) {
 
-function _forum_get_icon($node) {
-  if (variable_get("forum_topic_icon_path", "") && $node->icon) {
-    return "<img src=\"". variable_get("forum_topic_icon_path", "") ."$node->icon\" />";
-  }
-  else {
-    return "&nbsp;";
-  }
-}
-
-function _forum_get_folder_icon($new_posts, $num_posts = 0, $comment_mode = 0) {
-  // "folder" icon because it's generally rendered as a folder
-
-
-  $base_path = variable_get("forum_folder_icon_path", "");
+  $base_path = variable_get("forum_icon_path", "");
   if ($base_path) {
     if ($num_posts > variable_get("forum_hot_topic", 15)) {
-      $icon = $new_posts ? "hot_new" : "hot";
+      $icon = $new_posts ? "hot-new" : "hot";
     }
     else {
       $icon = $new_posts ? "new" : "default";
@@ -680,7 +617,7 @@ function _forum_get_folder_icon($new_posts, $num_posts = 0, $comment_mode = 0) {
     }
 
     // default
-    $file = $base_path."/".$icon.".gif";
+    $file = $base_path."/forum-$icon.gif";
 
     return "<img src=\"$file\" alt=\"\" title=\"\" />";
   }
@@ -728,8 +665,8 @@ function forum_help($section = "admin/forum/help") {
       $output .= strtr("<p>The forum module uses taxonomy to organize itself. To create a forum you first have to create a %taxonomy. When doing this, choose a sensible name for it (such as \"fora\") and make sure under \"Types\" that \"forum\" is selected. Once you have done this, %taxo-terms to it. Each term will become a forum. If you fill in the description field, users will be given additonal information about the forum on the main forum page. For example: \"troubleshooting\" - \"Please ask your questions here.\"</p>", array("%taxonomy" => l(t("taxonomy vocabulary"), "admin/taxonomy/add/vocabulary"), "%taxo-terms" => l(t("add some terms"), "admin/taxonomy" ) ));
       $output .= strtr("<p>When you are happy with your vocabulary, go to ". l("site configuration &raquo; modules &raquo; forum","admin/system/modules/forum") ." and set <b>Forum vocabulary</b> to the one you have just created. There will now be fora active on the site. For users to access them they must have the \"access content\" %permission and to create a topic they must have the \"create forum topics\" %permission. These permissions can be set in the %permission pages.</p>", array("%forums" => l(t("site configutation &raquo; modules &raquo; forum"), "admin/system/modules/forum"), "%permission" => l(t("permission"), "admin/user/permission") ));
       $output .= "<h4>Icons</h4>";
-      $output .= strtr("<p>To disable icons, set the icon path as blank in %forums-icon.</p>",array("%forums-icon" => l(t("site configuration &raquo; modules &raquo; forums"), "admin/system/module/forum") ));
-      $output .= "<p>All files in the icon directory are assumed to be images. You may use images of whatever size you wish, but it is customary to use 15x15 or 16x16.</p>";
+      $output .= strtr("<p>To disable icons, set the icon path as blank in %forums-icon.</p>", array("%forums-icon" => l(t("site configuration &raquo; modules &raquo; forums"), "admin/system/module/forum") ));
+      $output .= "<p>All files in the icon directory are assumed to be images. You may use images of whatever size you wish, but it is recommended to use 15x15 or 16x16.</p>";
       break;
     case 'admin/system/modules':
       $output = "Enable threaded discussions about general topics.";
