@@ -772,9 +772,9 @@ INSERT INTO filter_formats (name, roles, cache) VALUES ('Filtered HTML',',1,2,',
 INSERT INTO filter_formats (name, roles, cache) VALUES ('PHP code','',0);
 INSERT INTO filter_formats (name, roles, cache) VALUES ('Full HTML','',1);
 INSERT INTO filters VALUES (1,'filter',0,0);
-INSERT INTO filters VALUES (1,'filter',3,1);
+INSERT INTO filters VALUES (1,'filter',2,1);
 INSERT INTO filters VALUES (2,'filter',1,0);
-INSERT INTO filters VALUES (3,'filter',3,0);
+INSERT INTO filters VALUES (3,'filter',2,0);
 INSERT INTO variable (name,value) VALUES ('filter_html_1','i:1;');
 
 INSERT INTO locales_meta(locale, name, enabled, isdefault) VALUES('en', 'English', '1', '1');
