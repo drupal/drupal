@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.53 2003/09/10 07:56:06 dries Exp $
+// $Id: search.module,v 1.54 2003/09/10 16:48:00 dries Exp $
 
 function search_help($section = "admin/search/help") {
   $output = "";
@@ -270,7 +270,8 @@ function update_index($search_array) {
       // Remove "noisewords"
       $noise = explode(",", variable_get("noisewords", ""));
       foreach ($noise as $word) {
-        $wordlist = str_replace(trim($word), " ", $wordlist);
+        $word = trim($word);
+        $wordlist = trim(preg_replace("' $word '", " ", " " .$wordlist. " "));
       }
 
       // Remove whitespace
