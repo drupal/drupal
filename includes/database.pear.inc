@@ -1,5 +1,5 @@
 <?php
-// $Id: database.pear.inc,v 1.15 2003/03/16 17:38:51 dries Exp $
+// $Id: database.pear.inc,v 1.16 2003/06/08 12:10:25 dries Exp $
 
 require_once 'DB.php';
 
@@ -71,7 +71,7 @@ function _db_query($query, $debug = 0) {
   }
 
   if (DB::isError($result)) {
-    watchdog("error", "database: ". $result->getMessage() ."\nquery: ". htmlspecialchars($query));
+    trigger_error($result->getMessage() ."\nquery: ". htmlspecialchars($query), E_USER_ERROR);
   }
   else {
     return $result;
