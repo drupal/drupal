@@ -1,5 +1,5 @@
 <?php
-/* $Id: updates.inc,v 1.15 2004/05/18 18:41:46 dries Exp $ */
+/* $Id: updates.inc,v 1.16 2004/05/22 21:28:51 dries Exp $ */
 
 // Define the various updates in an array("date : comment" => "function");
 $sql_updates = array(
@@ -974,7 +974,7 @@ function update_82() {
 function update_83() {
   $ret = array();
   if ($GLOBALS["db_type"] == "mysql") {
-    $ret[] = update_sql("CREATE TABLE menu (
+    $ret[] = update_sql("CREATE TABLE {menu} (
       mid int(10) unsigned NOT NULL default '0',
       pid int(10) unsigned NOT NULL default '0',
       path varchar(255) NOT NULL default '',
@@ -987,7 +987,7 @@ function update_83() {
     $ret[] = update_sql("INSERT INTO {sequences} (name, id) VALUES ('menu_mid', 1)");
   }
   else {
-    $ret[] = update_sql("CREATE TABLE menu (
+    $ret[] = update_sql("CREATE TABLE {menu} (
   mid integer NOT NULL default '0',
   pid integer NOT NULL default '0',
   path varchar(255) NOT NULL default '',
