@@ -1677,9 +1677,9 @@ function node_page() {
       print theme('page', node_preview($edit));
       break;
     case t('Submit'):
-      if (node_submit($edit)) {
+      if ($nid = node_submit($edit)) {
         if (node_access('view', $edit)) {
-          drupal_goto('node/'. $edit->nid);
+          drupal_goto('node/'. $nid);
         }
         else {
           drupal_goto();
