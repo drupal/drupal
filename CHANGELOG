@@ -6,6 +6,9 @@ Drupal x.x.x, xxxx-xx-xx (to be released)
     * added support for database table prefxing.
 - performance improvements:
     * optimized SQL queries.
+- comment module:
+    * changed the comment module to use the standard pager and rewrote the
+      comment housekeeping code to be much more efficient.
 - usability improvements:
     * added support for "mass node operations" to ease repetitive tasks.
 
