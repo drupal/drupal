@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.400 2004/09/16 07:17:55 dries Exp $
+// $Id: node.module,v 1.401 2004/09/20 12:05:31 dries Exp $
 
 /**
  * @file
@@ -963,6 +963,9 @@ function node_admin() {
       break;
     case 'delete':
       $output = node_delete(array('nid' => arg(3)));
+      break;
+    case t('Delete'):
+      $output = node_delete($edit);
       break;
     default:
       $output = node_admin_nodes();
