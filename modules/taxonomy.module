@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.161 2004/12/15 21:19:42 dries Exp $
+// $Id: taxonomy.module,v 1.162 2004/12/24 06:48:57 unconed Exp $
 
 /**
  * @file
@@ -905,6 +905,10 @@ function taxonomy_term_page($str_tids = '', $depth = 0, $op = 'page') {
     $names = array();
     while ($term = db_fetch_object($result)) {
       $names[] = $term->name;
+    }
+    if (count($names) == 0) {
+      drupal_not_found();
+      return;
     }
     drupal_set_title($title = implode(', ', $names));
 
