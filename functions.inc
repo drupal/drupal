@@ -1,7 +1,6 @@
 <?
 include("user.class.php");
 session_start();
-$user->theme = "Jeroen";
 
 include "config.inc";
 $functions = 1;
