@@ -12,9 +12,9 @@ function poll_access($op, $node) {
 }
 
 function poll_block() {
-  $timestamp = db_result(db_query("SELECT MAX(created) FROM node WHERE type='poll' AND status='1'"));
+  $timestamp = db_result(db_query("SELECT MAX(created) FROM node WHERE type='poll' AND status='1' AND moderate='0'"));
   if ($timestamp) {
-    $poll = node_load(array("type" => "poll", "created" => $timestamp, "status" => "1"));
+    $poll = node_load(array("type" => "poll", "created" => $timestamp, "moderate" => "0", "status" => "1"));
     if ($poll->nid) {
       // Poll_view dumps the output into $poll->body
       poll_view($poll, 1, 1);
