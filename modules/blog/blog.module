@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.104 2003/02/11 20:01:16 dries Exp $
+// $Id: blog.module,v 1.105 2003/02/12 21:37:56 kjartan Exp $
 
 function blog_system($field){
   $system["description"] = t("Enables keeping a blog or easily and regularly updated web page.");
@@ -149,7 +149,7 @@ function blog_page_user($uid = 0) {
   global $user, $theme;
 
   if ($uid) {
-    $account = user_load(array("uid" => $uid, "status" => 1));
+    $account = user_load(array((is_numeric($uid) ? "uid" : "name") => $uid, "status" => 1));
   }
   else {
     $account = $user;

@@ -1,4 +1,5 @@
 <?php
+// $Id: menu.inc,v 1.8 2003/02/12 21:37:56 kjartan Exp $
 
 function menu_trail() {
 
