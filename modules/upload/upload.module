@@ -6,6 +6,9 @@
  * File-handling and attaching files to nodes.
  */
 
+/**
+ * Implementation of hook_help().
+ */
 function upload_help($section) {
   switch ($section) {
     case 'admin/modules#description':
@@ -15,10 +18,38 @@ function upload_help($section) {
   }
 }
 
+/**
+ * Implementation of hook_perm().
+ */
 function upload_perm() {
   return array('upload files', 'view uploaded files');
 }
 
+/**
+ * Implementation of hook_link().
+ */
+function upload_link($type, $node = 0, $main = 0) {
+  $links = array();
+
+  // Display a link with the number of attachments
+  if ($main && $type == 'node' && $node->files && user_access('view uploaded files')) {
+    $num_files = 0;
+    foreach ($node->files as $file) {
+      if ($file->list) {
+        $num_files++;
+      }
+    }
+    if ($num_files) {
+      $links[] = l(format_plural($num_files, '1 attachment', '%count attachments'), "node/$node->nid", array('title' => t('Read full article to view attachments.')), NULL, 'attachments');
+    }
+  }
+
+  return $links;
+}
+
+/**
+ * Implementation of hook_menu().
+ */
 function upload_menu($may_cache) {
   $items = array();
 
@@ -92,6 +123,9 @@ function upload_file_download($file) {
   }
 }
 
+/**
+ * Implementation of hook_nodeapi().
+ */
 function upload_nodeapi(&$node, $op, $arg) {
   switch ($op) {
     case 'settings':
@@ -240,7 +274,7 @@ function upload_nodeapi(&$node, $op, $arg) {
         $teaser = $arg;
         // Add the attachments list
         if (count($rows) && !$teaser) {
-          $node->body .= theme('table', $header, $rows);
+          $node->body .= theme('table', $header, $rows, array('id' => 'attachments'));
         }
       }
       break;
