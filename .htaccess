@@ -19,8 +19,8 @@ ErrorDocument 404 /index.php
 #DirectoryIndex index.php
 
 # Overload PHP variables:
-#<IfModule mod_php4.c>
-<IfModule sapi_apache2.c>
+<IfModule mod_php4.c>
+#<IfModule sapi_apache2.c>
    # If you are using Apache 2, you have to use <IfModule sapi_apache2.c>
    # instead of <IfModule mod_php4.c>.
    php_value register_globals        0
