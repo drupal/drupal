@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.378 2004/08/11 11:26:20 dries Exp $
+// $Id: node.module,v 1.379 2004/08/12 05:44:11 dries Exp $
 
 define('NODE_NEW_LIMIT', time() - 30 * 24 * 60 * 60);
 
@@ -995,7 +995,7 @@ function node_block($op = 'list', $delta = 0) {
  */
 function node_feed($nodes = 0, $channel = array()) {
   global $base_url;
-  $languages = (function_exists('locale')) ? locale_supported_languages() : array();
+  $languages = (function_exists('locale')) ? locale_supported_languages() : array('name' => array());
 
   if (!$nodes) {
     $nodes = db_query_range('SELECT nid FROM {node} WHERE promote = 1 AND status = 1 ORDER BY created DESC', 0, 15);
