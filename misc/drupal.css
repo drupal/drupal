@@ -13,6 +13,9 @@ fieldset {
   margin-bottom: 1em;
   padding: .5em;
 }
+img {
+  border: 0;
+}
 #tracker table {
   border-collapse: collapse;
 }
@@ -141,9 +144,6 @@ fieldset {
   float: right;
   padding-left: 0.25em;
   clear: right;
-}
-.item-list .icon img {
-  border: 0;
 }
 .item-list .icon a {
   color: #000;
