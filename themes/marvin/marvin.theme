@@ -88,7 +88,7 @@
 
      if (function_exists("taxonomy_node_get_terms")) {
        foreach (taxonomy_node_get_terms($node->nid) as $term) {
-         $terms[] = l($term->name, array("or" => $term->tid), "index");
+         $terms[] = l($term->name, NULL, array(), "or=$term->tid");
        }
      }
 

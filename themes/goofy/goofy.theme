@@ -121,7 +121,7 @@ function c(subject,mod,author,date,body) {document.writeln("<table border=\"0\" 
         if ($terms = taxonomy_node_get_terms($node->nid)) {
           $taxlinks = array();
           foreach ($terms as $term) {
-            $taxlinks[] = l($term->name, array("or" => $term->tid), "index");
+            $taxlinks[] = l($term->name, NULL, NULL, "or=$term->tid");
           }
           $subright = $this->links($taxlinks);
         }

@@ -748,7 +748,20 @@ function drupal_parse_url($url = NULL) {
 }
 
 function url($url, $query = NULL) {
-  return "?q=$url". ($query ? "&$query" : "");
+
+  if ($url) {
+    if ($query) {
+      return "?q=$url&$query";
+    }
+    else {
+      return "?q=$url";
+    }
+  }
+  else {
+    if ($query) {
+      return "?$query";
+    }
+  }
 }
 
 function l($text, $url, $attributes = array(), $query = NULL) {
