@@ -33,13 +33,15 @@ function queue_perm() {
 }
 
 function queue_link($type) {
+  $links = array();
+
   if ($type == "system") {
     if (user_access("access submission queue")) {
       menu("queue", t("submission queue"), "queue_page", 1);
     }
   }
 
-  return $links ? $links : array();
+  return $links;
 }
 
 function queue_count() {

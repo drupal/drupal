@@ -137,13 +137,13 @@ function menu_in_active_trail($path) {
 function menu_tree($parent = "", $hidden = 0) {
   global $_list;
   static $trail;
+  $output = "";
 
   if (empty($trail)) {
     $trail = menu_get_trail($_GET["q"]);
   }
 
-  if ($_list[$parent]["children"]) {
-    $output = "";
+  if (isset($_list[$parent]) && $_list[$parent]["children"]) {
 
     usort($_list[$parent]["children"], "_menu_sort");
     foreach ($_list[$parent]["children"] as $item) {

@@ -777,6 +777,7 @@ function comment_perm() {
 }
 
 function comment_link($type, $node = 0, $main = 0) {
+  $links = array();
 
   if ($type == "node" && $node->comment) {
 
@@ -849,7 +850,7 @@ function comment_link($type, $node = 0, $main = 0) {
     menu("comment", t("comments"), "comment_page", 0, 1);
   }
 
-  return $links ? $links : array();
+  return $links;
 }
 
 function comment_page() {

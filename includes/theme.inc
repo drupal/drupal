@@ -403,7 +403,7 @@ function theme_mark() {
   @return a string containing the \a list output.
 **/
 function theme_item_list($items = array(), $title = NULL) {
-  $output .= "<div class=\"item-list\">";
+  $output = "<div class=\"item-list\">";
   if (isset($title)) {
     $output .= "<h3>$title</h3>";
   }

@@ -306,8 +306,11 @@ function user_block($op = "list", $delta = 0) {
      return $blocks;
   }
   else {
+    $block = array();
+
     switch ($delta) {
       case 0:
+
         if (!$user->uid) {
           /*
           ** For usability's sake, avoid showing two login forms on one
@@ -366,7 +369,6 @@ function user_block($op = "list", $delta = 0) {
            $block["subject"] = $user->uid ? $user->name : t("Navigation");
            $block["content"] = "<div class=\"menu\">". $menu ."</div>";
         }
-
         return $block;
       case 2:
         if (user_access("access content")) {
@@ -415,9 +417,9 @@ function user_block($op = "list", $delta = 0) {
               }
             }
           }
+          $block["subject"] = t("Who's online");
+          $block["content"] = $output;
         }
-        $block["subject"] = t("Who's online");
-        $block["content"] = $output;
         return $block;
     }
   }

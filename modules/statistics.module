@@ -85,7 +85,7 @@ function statistics_link($type, $node = 0, $main = 0) {
     }
 
     if (user_access("access content")) {
-      menu("statistics", t("view most popular content"), statistics_page, 0, 1);
+      menu("statistics", t("view most popular content"), "statistics_page", 0, 1);
     }
   }
 
