@@ -226,6 +226,8 @@ function headline_admin() {
 function headline_export_rdf() {
   global $status;
 
+  $uri = substr(path_uri(), 0, strlen(path_uri()) - strlen("export/"));
+
   header("Content-Type: text/plain");
 
   print "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
@@ -235,7 +237,7 @@ function headline_export_rdf() {
 
   print "<channel>\n";
   print " <title>". variable_get(site_name, "drupal") ."</title>\n";
-  print " <link>". path_uri() ."</link>\n";
+  print " <link>". $uri ."</link>\n";
   print " <description>". variable_get(site_name, "drupal") ."</description>\n";
   print "</channel>\n";
 
@@ -244,7 +246,7 @@ function headline_export_rdf() {
   while ($node = db_fetch_object($result)) {
     print "<item>\n";
     print " <title>". check_export($node->title) ."</title>\n";
-    print " <link>". path_uri() ."node.php?id=$node->nid</link>\n";
+    print " <link>". $uri ."node.php?id=$node->nid</link>\n";
     print "</item>\n";
   }
 
@@ -254,6 +256,8 @@ function headline_export_rdf() {
 function headline_export_rss() {
   global $status;
 
+  $uri = substr(path_uri(), 0, strlen(path_uri()) - strlen("export/"));
+
   header("Content-Type: text/plain");
 
   print "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
@@ -262,9 +266,9 @@ function headline_export_rss() {
   print "xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n";
   print "xmlns=\"http://purl.org/rss/1.0/\">\n\n";
 
-  print "<channel rdf:about=\"". path_uri() ."export/headlinesRSS10.rdf\">\n";
+  print "<channel rdf:about=\"". $uri ."export/headlinesRSS10.rdf\">\n";
   print "   <title>". variable_get(site_name, "drupal") ."</title>\n";
-  print "   <link>". path_uri() ."</link>\n";
+  print "   <link>". $uri ."</link>\n";
   print "   <description>". variable_get(site_name, "drupal") ."</description>\n";
 
   print "  <items>\n";
@@ -273,7 +277,7 @@ function headline_export_rss() {
   $result = db_query("SELECT * FROM node WHERE promote = '1' AND status = '$status[posted]' ORDER BY timestamp DESC LIMIT 10");
 
   while ($node = db_fetch_object($result)) {
-    print "      <rdf:li resource=\"". path_uri() ."node.php?id=$node->nid\" />\n";
+    print "      <rdf:li resource=\"". $uri ."node.php?id=$node->nid\" />\n";
   }
 
   print "    </rdf:Seq>\n";
@@ -283,9 +287,9 @@ function headline_export_rss() {
   $result = db_query("SELECT * FROM node WHERE promote = '1' AND status = '$status[posted]' ORDER BY timestamp DESC LIMIT 10");
 
   while ($node = db_fetch_object($result)) {
-    print "<item rdf:about=\"". path_uri() ."node.php?id=$node->nid\">\n";
+    print "<item rdf:about=\"". $uri ."node.php?id=$node->nid\">\n";
     print "  <title>". check_export($node->title) ."</title>\n";
-    print "  <link>". path_uri() ."node.php?id=$node->nid</link>\n";
+    print "  <link>". $uri ."node.php?id=$node->nid</link>\n";
 
     if ($node->abstract) print "  <description>". check_output($node->abstract, 1) ."</description>\n";
     if ($node->body) print "  <description>". check_output($node->body, 1) ."</description>\n";

@@ -40,7 +40,6 @@ function throttle($type, $rate) {
 
 function path_uri() {
   global $HTTP_HOST, $REQUEST_URI;
-  $REQUEST_URI = strstr("export/", $REQUEST_URI);
   return "http://". $HTTP_HOST . substr($REQUEST_URI, 0, strrpos($REQUEST_URI, "/")) ."/";
 }
 
