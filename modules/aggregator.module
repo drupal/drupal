@@ -152,7 +152,7 @@ function import_bundle_block($attributes) {
   }
 
   $output = "<div class=\"import-block\"><div class=\"bundle\">";
-  $output .= theme("theme_item_list", $items);
+  $output .= theme("item_list", $items);
   $output .= "</div></div>";
 
   return $output;
