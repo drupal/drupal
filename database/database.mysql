@@ -94,18 +94,6 @@ CREATE TABLE cache (
 ) TYPE=MyISAM;
 
 #
-# Table structure for table 'collection'
-#
-
-CREATE TABLE collection (
-  cid int(10) unsigned NOT NULL auto_increment,
-  name varchar(32) NOT NULL default '',
-  types varchar(128) NOT NULL default '',
-  PRIMARY KEY  (cid),
-  UNIQUE KEY name (name)
-) TYPE=MyISAM;
-
-#
 # Table structure for table 'comments'
 #
 
@@ -385,19 +373,14 @@ CREATE TABLE system (
   description varchar(255) NOT NULL default '',
   status int(2) NOT NULL default '0',
   PRIMARY KEY  (filename)
-) TYPE=MyISAM;
 
 #
-# Table structure for table 'tag'
+# Table structure for table 'sequences'
 #
 
-CREATE TABLE tag (
-  tid int(10) unsigned NOT NULL auto_increment,
-  name varchar(32) NOT NULL default '',
-  attributes varchar(255) NOT NULL default '',
-  collections varchar(32) NOT NULL default '',
-  PRIMARY KEY  (tid),
-  UNIQUE KEY name (name,collections)
+CREATE TABLE sequences (
+  name VARCHAR(255) NOT NULL PRIMARY KEY,
+  id INT UNSIGNED NOT NULL
 ) TYPE=MyISAM;
 
 #

@@ -100,4 +100,10 @@ function db_error($result) {
   return DB::isError($db_handle);
 }
 
+function db_next_id($name) {
+  global $db_handle;
+
+  return $db_handle->nextID($name);
+}
+
 ?>

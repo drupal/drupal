@@ -93,4 +93,19 @@ function db_error() {
   return mysql_errno();
 }
 
+function db_next_id($name) {
+
+  /*
+  ** Note that REPLACE query below correctly creates a new sequence
+  ** when needed
+  */
+
+  db_query("LOCK TABLES sequences WRITE");
+  $id = db_result(db_query("SELECT id FROM sequences WHERE name = '%s'", $name)) + 1;
+  db_query("REPLACE INTO sequences VALUES ('%s', '%d')", $name, $id);
+  db_query("UNLOCK TABLES");
+
+  return $id;
+}
+
 ?>
