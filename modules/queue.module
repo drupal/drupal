@@ -111,10 +111,10 @@ function queue_overview() {
 
   while ($node = db_fetch_object($sresult)) {
     if ($user->uid == $node->uid || field_get($node->users, $user->uid)) {
-      $rows[] = array(array("data" => l($node->title, "queue/$node->nid"), "class" => "title"), array("data" => format_name($node), "class" => "name"), array("data" => module_invoke($node->type, "node", "name"), "class" => "type"), array("data" => queue_score($node->nid), "class" => "score"));
+      $rows[] = array(array("data" => l($node->title, "queue/$node->nid"), "class" => "title"), array("data" => format_name($node), "class" => "name"), array("data" => module_invoke($node->type, "node_name", $node), "class" => "type"), array("data" => queue_score($node->nid), "class" => "score"));
     }
     else {
-      $rows[] = array(array("data" => l($node->title, "queue/$node->nid"), "class" => "title"), array("data" => format_name($node), "class" => "name"), array("data" => module_invoke($node->type, "node", "name"), "class" => "type"), array("data" => l(t("vote"), "queue/$node->nid"), "class" => "score"));
+      $rows[] = array(array("data" => l($node->title, "queue/$node->nid"), "class" => "title"), array("data" => format_name($node), "class" => "name"), array("data" => module_invoke($node->type, "node_name", $node), "class" => "type"), array("data" => l(t("vote"), "queue/$node->nid"), "class" => "score"));
     }
   }
 
@@ -149,43 +149,47 @@ function queue_view($nid) {
 
   $node = node_load(array("nid" => $nid, "moderate" => 1));
 
-  if ($user->uid != $node->uid && !field_get($node->users, $user->uid)) {
-    if ($op == t("Vote") && $votes[$edit["vote"]]) {
-      /*
-      ** If it is a valid vote, record it.
-      */
+  if ($node) {
+    if ($user->uid != $node->uid && !field_get($node->users, $user->uid)) {
+      if ($op == t("Vote") && $votes[$edit["vote"]]) {
+        /*
+        ** If it is a valid vote, record it.
+        */
 
-      queue_vote($node, $edit["vote"]);
+        queue_vote($node, $edit["vote"]);
 
-      $output = t("Your vote has been recorded.");
+        $output = t("Your vote has been recorded.");
+      }
+      else {
+        /*
+        ** Display some explanation or voting guidelines:
+        */
+
+        $output .= "<p>". t("When new content is submitted it goes into the submission queue.  Registered users with the appropriate permission can access this queue and vote whether they think the content should be approved or not.  When enough people vote to approve the content it is displayed on the front page.  On the other hand, if enough people vote to drop it, the content will disappear.") ."</p>";
+
+        /*
+        ** Display a voting form:
+        */
+
+        $output .= form_select(t("Your vote"), "vote", "", $votes);
+        $output .= form_hidden("id", $node->nid);
+        $output .= form_submit(t("Vote"));
+
+        $output = form($output);
+      }
     }
-    else {
-      /*
-      ** Display some explanation or voting guidelines:
-      */
 
-      $output .= "<p>". t("When new content is submitted it goes into the submission queue.  Registered users with the appropriate permission can access this queue and vote whether they think the content should be approved or not.  When enough people vote to approve the content it is displayed on the front page.  On the other hand, if enough people vote to drop it, the content will disappear.") ."</p>";
+    $output .= node_view($node);
+    $output = theme("box", t("Moderate"), $output);
 
-      /*
-      ** Display a voting form:
-      */
-
-      $output .= form_select(t("Your vote"), "vote", "", $votes);
-      $output .= form_hidden("id", $node->nid);
-      $output .= form_submit(t("Vote"));
-
-      $output = form($output);
+    if ($node->comment && variable_get("queue_show_comments", 1)) {
+      $output .= module_invoke("comment", "render", $node);
     }
+    print theme("page", $output);
   }
-
-  $output .= node_view($node);
-  if ($output) {
-    $output .= theme("box", t("Moderate"), $output);
+  else {
+    drupal_not_found();
   }
-  if ($node->comment && variable_get("queue_show_comments", 1)) {
-    $output .= module_invoke("comment", "render", $node);
-  }
-  print theme("page", $output);
 }
 
 function queue_page() {
