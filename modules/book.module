@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.249 2004/08/24 03:22:26 unconed Exp $
+// $Id: book.module,v 1.250 2004/09/07 21:55:23 dries Exp $
 
 /**
  * @file
@@ -160,11 +160,6 @@ function book_load($node) {
       $book->name = '';
     }
   }
-
-  // We set the revision field to indicate that we have to create
-  // a new revision when updating this book page.  We enable this
-  // always such that the "edit this page" links appear.
-  $book->revision = 1;
 
   return $book;
 }
