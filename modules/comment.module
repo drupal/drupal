@@ -1239,7 +1239,7 @@ function comment_admin() {
 function theme_comment_form($edit, $title) {
   global $user;
 
-  $form .= "<a id=\"comment\"></a>\n";
+  $form .= "<a id=\"comment-form\"></a>\n";
 
   // name field:
   $form .= form_item(t("Your name"), format_name($user));
