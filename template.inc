@@ -58,6 +58,26 @@ function displayOldHeadlines($theme, $num = 10) {
   $theme->box("Older headlines", $content);
 }
 
+function displayCommentModeration($id) {
+  global $user;
+  
+  print "VOTE: ";
+  if (($user) && !($vote = user_getHistory($user->history, "c$id"))) {
+
+     $output .= "         <SELECT NAME=\"meta:$cid\">";
+     $output .= "            <OPTION VALUE=\"-1\">Moderate</OPTION>\n";
+     foreach ($comments_meta_reasons as $key=>$value) {
+       $output .= "          <OPTION VALUE=\"$value\">$key</OPTION>\n";
+     }
+     $output .= "         </SELECT>";
+  }
+  else {
+    $output .= "voted";
+  }
+
+  print $output;
+}
+
 function displayNewDiaries($theme, $num = 20) {
   $result = db_query("SELECT u.userid, d.timestamp FROM diaries d LEFT JOIN users u ON d.author = u.id ORDER BY timestamp DESC LIMIT $num");
 

@@ -45,12 +45,8 @@ $notify_from    = "droppies@zind.net";
 
 #
 # Comment meta reasons:
-#   The comment meta reasons are the various meta reasons used to
-#   moderate comments.  The array should always be 'balanced': that
-#   the number of good reasons should equal the number of bad reason
-#   and those should be ordered from bad to good.
 #
-$comments_meta_reasons = array('Off topic', 'Redundant', 'Insightfull', 'As is', 'Interesting', 'Informative', 'Funny');
+$comments_votes = array("-1" => "-1", "0" => "0", "+1" => "+ 1", "+2" => "+ 2", "+3" => "+ 3", "+4" => "+ 4", "+5" => "+ 5");
 
 #
 # Categories:
@@ -60,7 +56,7 @@ $categories = array('Announcements', 'Arts & Humanities', 'Business & Economy', 
 # 
 # Allowed HTML tags:
 #
-$allowableHTML   = array('B','/B','I','/I','P .*','P','/P','A .*','/A','LI','OL','/OL','UL','/UL','EM','/EM','BR','STRONG','/STRONG','BLOCKQUOTE','/BLOCKQUOTE','HR','DIV .*','DIV','/DIV','TT','/TT');
+$allowed_html = "<A> <B> <BR> <DD> <DL> <DT> <EM> <I> <IL> <OL> <U> <UL>";
 
 #
 # Name of the 'anonymous' user account:

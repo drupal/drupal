@@ -1,5 +1,6 @@
 <?
 include "function.inc";
+include "config.inc";
 include "theme.inc";
 
 
@@ -65,7 +66,7 @@ function diary_display($username) {
 }
 
 function diary_add_enter() {
-  global $theme, $user;
+  global $theme, $user, $allowed_html;
   
   ### Submission form:
   $output .= "<FORM ACTION=\"diary.php\" METHOD=\"post\">\n";
@@ -73,7 +74,7 @@ function diary_add_enter() {
   $output .= "<P>\n"; 
   $output .= " <B>Enter new diary entry:</B><BR>\n";
   $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"text\" MAXLENGTH=\"20\"></TEXTAREA><BR>\n";
-  $output .= " <SMALL><I>HTML is nice and dandy, but double check those URLs and HTML tags!</I></SMALL>\n";
+  $output .= " <SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) ."</I></SMALL>\n";
   $output .= "</P>\n";
 
   $output .= "<P>\n";
@@ -88,19 +89,19 @@ function diary_add_enter() {
 }
 
 function diary_edit_enter($id) {
-  global $theme, $user;
+  global $theme, $user, $allowed_html;
 
   $result = db_query("SELECT * FROM diaries WHERE id = $id");
   $diary = db_fetch_object($result);
 
-  $output .= diary_entry($diary->timestamp, $diary->text);
+  $output .= diary_entry($diary->timestamp, check($diary->text));
 
   $output .= "<FORM ACTION=\"diary.php\" METHOD=\"post\">\n";
 
   $output .= "<P>\n";
   $output .= " <B>Edit diary entry:</B><BR>\n";
   $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"text\">". stripslashes($diary->text) ."</TEXTAREA><BR>\n";
-  $output .= " <SMALL><I>HTML is nice and dandy, but double check those URLs and HTML tags!</I></SMALL>\n";
+  $output .= " <SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) ."</I></SMALL>\n";
   $output .= "</P>\n";
 
   $output .= "<P>\n";
@@ -117,16 +118,16 @@ function diary_edit_enter($id) {
 }
 
 function diary_preview($text, $timestamp, $id = 0) {
-  global $theme, $user;
+  global $theme, $user, $allowed_html;
 
-  $output .= diary_entry($timestamp, $text);
+  $output .= diary_entry($timestamp, check($text));
 
   $output .= "<FORM ACTION=\"diary.php\" METHOD=\"post\">\n";
 
   $output .= "<P>\n";
   $output .= " <B>Preview diary entry:</B><BR>\n";
   $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"text\">". stripslashes($text) ."</TEXTAREA><BR>\n";
-  $output .= " <SMALL><I>HTML is nice and dandy, but double check those URLs and HTML tags!</I></SMALL>\n";
+  $output .= " <SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) ."</I></SMALL>\n";
   $output .= "</P>\n";
 
   $output .= "<P>\n";
@@ -145,11 +146,11 @@ function diary_submit($text, $id = 0) {
   global $user, $theme;
 
   if ($id) {
-    db_query("UPDATE diaries SET text =  '".addslashes($text) ."' WHERE id = $id");
+    db_query("UPDATE diaries SET text =  '". check(addslashes($text)) ."' WHERE id = $id");
     watchdog(1, "old diary entry updated");
   }
   else {
-    db_query("INSERT INTO diaries (author, text, timestamp) VALUES ('$user->id', '". addslashes($text) ."', '". time() ."')");
+    db_query("INSERT INTO diaries (author, text, timestamp) VALUES ('$user->id', '". check(addslashes($text)) ."', '". time() ."')");
     watchdog(1, "new diary entry added");
   }
   header("Location: diary.php?op=view&name=$user->userid");
