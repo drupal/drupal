@@ -92,7 +92,7 @@ function forum_block($op = "list", $delta = 0) {
         $content .= node_title_list(db_query_range("SELECT n.nid, n.title, u.uid, u.name FROM node n LEFT JOIN forum f ON n.nid = f.nid LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'forum' ORDER BY n.nid DESC", 0, variable_get("forum_block_num", "5")), t("New forum topics:"));
 
         if ($content) {
-          $content .= "<div id=\"forum_more\" align=\"right\">". l(t("more"), "forum") ."</div>";
+          $content .= "<div id=\"forum_more\" align=\"right\">". l(t("more"), "forum", array("title" => t("Read the latest forum topics."))) ."</div>";
         }
 
         cache_set("forum:block", $content, time() + variable_get("cache_clear", 120));
