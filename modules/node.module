@@ -125,28 +125,32 @@ function node_last_viewed($nid) {
 }
 
 /**
- * Determine whether the supplied timestamp is newer than the user's last view
- * of a given node.
+ * Decide on the type of marker to be displayed for a given node.
  *
  * @param $nid
  *   Node ID whose history supplies the "last viewed" timestamp.
  * @param $timestamp
  *   Time which is compared against node's "last viewed" timestamp.
+ * @return
+ *   One of the MARK constants.
  */
-function node_is_new($nid, $timestamp) {
+function node_mark($nid, $timestamp) {
   global $user;
   static $cache;
 
-  if (!isset($cache[$nid])) {
-    if ($user->uid) {
-      $cache[$nid] = node_last_viewed($nid);
-    }
-    else {
-      $cache[$nid] = time();
-    }
+  if (!$user->uid) {
+    return MARK_READ;
   }
-
-  return ($timestamp > $cache[$nid] && $timestamp > NODE_NEW_LIMIT);
+  if (!isset($cache[$nid])) {
+    $cache[$nid] = node_last_viewed($nid);
+  }
+  if ($cache[$nid] == 0 && $timestamp > NODE_NEW_LIMIT) {
+    return MARK_NEW;
+  }
+  elseif ($timestamp > $cache[$nid] && $timestamp > NODE_NEW_LIMIT) {
+    return MARK_UPDATED;
+  }
+  return MARK_READ;
 }
 
 /**
@@ -807,7 +811,7 @@ function node_admin_nodes() {
   $header = array(NULL, t('Title'), t('Type'), t('Author'), t('Status'), array('data' => t('Operations'), 'colspan' => '2'));
 
   while ($node = db_fetch_object($result)) {
-    $rows[] = array(form_checkbox(NULL, 'status]['. $node->nid, 1, 0), l($node->title, 'node/'. $node->nid) .' '. (node_is_new($node->nid, $node->changed) ? theme_mark() : ''), node_invoke($node, 'node_name'), format_name($node), ($node->status ? t('published') : t('not published')), l(t('edit'), 'node/'. $node->nid .'/edit'), l(t('delete'), 'admin/node/delete/'. $node->nid));
+    $rows[] = array(form_checkbox(NULL, 'status]['. $node->nid, 1, 0), l($node->title, 'node/'. $node->nid) .' '. theme('mark', node_mark($node->nid, $node->changed)), node_invoke($node, 'node_name'), format_name($node), ($node->status ? t('published') : t('not published')), l(t('edit'), 'node/'. $node->nid .'/edit'), l(t('delete'), 'admin/node/delete/'. $node->nid));
   }
 
   if ($pager = theme('pager', NULL, 50, 0)) {

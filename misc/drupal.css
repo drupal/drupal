@@ -154,7 +154,7 @@ tr.light .form-item, tr.dark .form-item {
 .form-submit {
   margin: 0.5em 0;
 }
-.marker {
+.marker, .form-required {
   color: #f00;
 }
 .more-link {
