@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.131 2002/11/17 06:42:51 dries Exp $
+// $Id: common.inc,v 1.132 2002/11/21 18:25:38 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST;
@@ -314,7 +314,9 @@ function drupal_goto($url) {
   ** is compiled with "--enable-trans-sid".
   */
 
-  $sid = session_name() . "=" . session_id();
+  if (ini_get("session.use_trans_sid")) {
+    $sid = session_name() . "=" . session_id();
+  }
 
   if (!session_id() || strstr($url, $sid)) {
     header("Location: $url");
