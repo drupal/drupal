@@ -213,12 +213,6 @@ function archive_menu() {
     'access' => user_access('access content'),
     'callback' => 'archive_page',
     'type' => MENU_SUGGESTED_ITEM);
-  $items[] = array('path' => 'archive/browse', 'title' => t('browse'),
-    'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
-  $items[] = array('path' => 'archive/configure', 'title' => t('configure'),
-    'access' => user_access('administer site configuration'),
-    'callback' => 'archive_configure',
-    'type' => MENU_LOCAL_TASK);
   return $items;
 }
 
@@ -260,16 +254,6 @@ function archive_page($year = 0, $month = 0, $day = 0) {
     }
   }
   print theme('page', $output);
-}
-
-function archive_configure() {
-  if ($_POST) {
-    system_settings_save();
-  }
-
-  $output = form_select(t('First day of week'), 'default_firstday', variable_get('default_firstday', 0), array(0 => t('Sunday'), 1 => t('Monday'), 2 => t('Tuesday'), 3 => t('Wednesday'), 4 => t('Thursday'), 5 => t('Friday'), 6 => t('Saturday')), t('The first day of the week.  By changing this value you choose how the calendar block is rendered.'));
-
-  print theme('page', system_settings_form($output));
 }
 
 ?>
