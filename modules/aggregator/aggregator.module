@@ -158,11 +158,7 @@ function import_bundle_block($attributes) {
     $items[] = theme("import_format_item", $item);
   }
 
-  $output = "<div class=\"import-block\"><div class=\"bundle\">";
-  $output .= theme("item_list", $items);
-  $output .= "</div></div>";
-
-  return $output;
+  return theme("item_list", $items);
 }
 
 function import_feed_block($feed) {
@@ -173,11 +169,7 @@ function import_feed_block($feed) {
     $items[] = theme("import_format_item", $item);
   }
 
-  $output = "<div class=\"import-block\"><div class=\"feed\">";
-  $output .= theme("item_list", $items);
-  $output .= "</div></div>";
-
-  return $output;
+  return theme("item_list", $items);
 }
 
 function import_block($op, $delta) {
