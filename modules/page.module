@@ -32,7 +32,12 @@ function page_save($op, $node) {
   }
 
   if ($op == "create") {
-    return array("body" => filter($node->body), "teaser" => filter($node->teaser), "format", "link", "description");
+    if ($node->format && user_access("administer nodes")) {  // do not filter PHP code
+      return array("format", "link", "description");
+    }
+    else {
+      return array("body" => filter($node->body), "teaser" => filter($node->teaser), "format" => 0, "link", "description");
+    }
   }
 
   if ($op == "decline") {
@@ -40,7 +45,12 @@ function page_save($op, $node) {
   }
 
   if ($op == "update") {
-    return array("body" => filter($node->body), "teaser" => filter($node->teaser), "format", "link", "description");
+    if ($node->format && user_access("administer nodes")) {  // do not filter PHP code
+      return array("format", "link", "description");
+    }
+    else {
+      return array("body" => filter($node->body), "teaser" => filter($node->teaser), "format" => 0, "link", "description");
+    }
   }
 }
 
@@ -152,8 +162,9 @@ function page_form(&$node, &$help, &$error) {
   $output .= form_textarea(t("Body"), "body", $node->body, 60, 20);
   $output .= form_textfield(t("Link name"), "link", $node->link, 60, 64, t("To make the page show up in the navigation links, enter the name of the link, otherwise leave blank."));
   $output .= form_textfield(t("Link description"), "description", $node->description, 60, 64, t("The description displayed when hovering over the page's link.  Leave blank when you don't want a description."));
-  $output .= form_select(t("Type"), "format", $node->format, array(0 => "HTML / text", 1 => "PHP"));
-
+  if (user_access("administer nodes")) {
+    $output .= form_select(t("Type"), "format", $node->format, array(0 => "HTML / text", 1 => "PHP"));
+  }
   return $output;
 }
 
