@@ -505,7 +505,6 @@ function update_31() {
 function update_32() {
   update_sql("ALTER TABLE users ADD index (sid(4))");
   update_sql("ALTER TABLE users ADD index (timestamp)");
-  update_sql("ALTER TABLE users ADD UNIQUE KEY name (name)");
 }
 
 function update_33() {
@@ -814,9 +813,8 @@ function update_page() {
   global $user, $mysql_updates;
 
   $edit = $_POST["edit"];
-
-  switch ($_POST["op"]) {
-    case "Update":
+  
+  if ($_POST["op"] == "Update") {
       // make sure we have updates to run.
       print update_page_header("Drupal database update");
       print "<b>&raquo; <a href=\"index.php\">main page</a></b><br />\n";
@@ -831,8 +829,9 @@ function update_page() {
       print "<br />Updates were attempted. If you see no failures above, you may proceed happily to the <a href=\"index.php?q=admin\">administration pages</a>.";
       print " Otherwise, you may need to update your database manually.";
       print update_page_footer();
-      break;
-    case "upgrade3":
+  } else {
+    switch ($_GET["op"]) {
+      case "upgrade3":
       // make sure we have updates to run.
       print update_page_header("Drupal upgrade");
       print "<b>&raquo; <a href=\"index.php\">home</a></b><br />\n";
@@ -849,7 +848,7 @@ function update_page() {
       print update_page_footer();
       break;
     case "upgrade4":
-      variable_set("update_start", "2002-05-15");
+      variable_set("update_start", "2002-11-20");
       // fall through:
     default:
       $start = variable_get("update_start", 0);
@@ -871,6 +870,7 @@ function update_page() {
       print form($form);
       print update_page_footer();
       break;
+    }
   }
 }
 
@@ -894,7 +894,7 @@ function update_info() {
   print "<li>Don't run this script twice as it may cause problems.</p></li>\n";
   print "<li>";
   print "Click the proper link below:<br />";
-  print "<p><b>&raquo; <a href=\"update.php?op=upgrade4\">Upgrade 4.0.x to 4.1.x</a></b></p>\n";
+  print "<p><b>&raquo; <a href=\"update.php?op=upgrade4\">Upgrade 4.1.x to 4.2.x</a></b></p>\n";
   print "<p><b>&raquo; <a href=\"update.php?op=update\">Upgrade to CVS</a></b></p>\n";
   print "<p><b>&raquo; <a href=\"update.php?op=upgrade3\">Upgrade 3.0.x to 4.0.0</a></b> (Warning: clicking this link will update your database without confirmation.)</p>\n";
   print "<p>If you are upgrading from <b>Drupal 3.0.x</b>, you'll want to run these queries manually <b>before proceeding to step 5</b>:</p>\n";
