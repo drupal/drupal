@@ -17,16 +17,17 @@ function watchdog_cron() {
   db_query("DELETE FROM watchdog WHERE ". time() ." - timestamp > ". variable_get("watchdog_clear", 604800));
 }
 
-function watchdog_overview() {
-  $colors = array(message => "#FFFFFF", special => "#836FFF", warning => "#FFAA22", httpd => "#77BB77", error => "#EE2C2C");
+function watchdog_overview($type) {
+  $color = array(account => "#FFEEAA", message => "#FFFFFF", special => "#A49FFF", warning => "#FFAA22", httpd => "#99DD99", error => "#EE4C4C");
+  $query = array(account => "WHERE type = 'account'", regular => "WHERE type = 'message'", special => "WHERE type = 'special'", warning => "WHERE type = 'warning'", error => "WHERE type = 'error'", httpd => "WHERE type = 'httpd'");
 
-  $result = db_query("SELECT w.*, u.userid FROM watchdog w LEFT JOIN users u ON w.user = u.id ORDER BY timestamp DESC LIMIT 1000");
+  $result = db_query("SELECT w.*, u.userid FROM watchdog w LEFT JOIN users u ON w.user = u.id ". ($type ? $query[$type] : "") ." ORDER BY timestamp DESC LIMIT 1000");
 
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR><TH>date</TH><TH>message</TH><TH>user</TH><TH>operations</TH></TR>\n";
   while ($watchdog = db_fetch_object($result)) {
-    if ($color = $colors[$watchdog->type]) {
-      $output .= " <TR BGCOLOR=\"$color\"><TD>". format_date($watchdog->timestamp) ."</TD><TD>". substr(check_output($watchdog->message), 0, 50) ."</TD><TD ALIGN=\"center\">". format_username($watchdog->userid) ."</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=watchdog&op=view&id=$watchdog->id\">details</A></TD></TR>\n";
+    if ($background = $color[$watchdog->type]) {
+      $output .= " <TR BGCOLOR=\"$background\"><TD>". format_date($watchdog->timestamp, "small") ."</TD><TD>". substr(check_output($watchdog->message), 0, 50) ."</TD><TD ALIGN=\"center\">". format_username($watchdog->userid) ."</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=watchdog&op=view&id=$watchdog->id\">details</A></TD></TR>\n";
     }
   }
   $output .= "</TABLE>\n";
@@ -52,9 +53,9 @@ function watchdog_view($id) {
 }
 
 function watchdog_admin() {
-  global $op, $id, $order;
+  global $op, $id, $type, $order;
 
-  print "<SMALL><A HREF=\"admin.php?mod=watchdog\">overview</A> | <A HREF=\"admin.php?mod=watchdog&op=help\">help</A></SMALL><HR>\n";
+  print "<SMALL><A HREF=\"admin.php?mod=watchdog&type=account\">account messages</A> | <A HREF=\"admin.php?mod=watchdog&type=message\">regular messages</A> | <A HREF=\"admin.php?mod=watchdog&type=special\">special messages</A> | <A HREF=\"admin.php?mod=watchdog&type=warning\">warning messages</A> | <A HREF=\"admin.php?mod=watchdog&type=error\">error messages</A> | <A HREF=\"admin.php?mod=watchdog&type=httpd\">httpd messages</A> | <A HREF=\"admin.php?mod=watchdog\">overview</A> | <A HREF=\"admin.php?mod=watchdog&op=help\">help</A></SMALL><HR>\n";
 
   switch ($op) {
     case "help":
@@ -64,7 +65,7 @@ function watchdog_admin() {
       print watchdog_view(check_input($id));
       break;
     default:
-      print watchdog_overview();
+      print watchdog_overview($type);
   }
 }
 

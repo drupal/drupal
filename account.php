@@ -27,7 +27,7 @@ function account_create($error = "") {
 
   if ($error) {
     $output .= "<P><FONT COLOR=\"red\">". t("Failed to create account") .": ". check_output($error) .".</FONT></P>\n";
-    watchdog("message", "failed to create account: $error.");
+    watchdog("account", "failed to create account: $error.");
   }
   else {
     $output .= "<P>". t("Registering allows you to comment, to moderate comments and pending submissions, to customize the look and feel of the site and generally helps you interact with the site more efficiently.") ."</P><P>". t("To create an account, simply fill out this form an click the 'Create account' button below.  An e-mail will then be sent to you with instructions on how to validate your account.") ."</P>\n";
@@ -52,22 +52,22 @@ function account_session_start($userid, $passwd) {
   if ($userid && $passwd) $user = new User($userid, $passwd);
   if ($user->id) {
     if ($rule = user_ban($user->userid, "username")) {
-      watchdog("message", "failed to login for '$user->userid': banned by $rule->type rule '$rule->mask'");
+      watchdog("account", "failed to login for '$user->userid': banned by $rule->type rule '$rule->mask'");
     }
     else if ($rule = user_ban($user->last_host, "hostname")) {
-      watchdog("message", "failed to login for '$user->userid': banned by $rule->type rule '$rule->mask'");
+      watchdog("account", "failed to login for '$user->userid': banned by $rule->type rule '$rule->mask'");
     }
     else {
       session_register("user");
-      watchdog("message", "session opened for '$user->userid'");
+      watchdog("account", "session opened for '$user->userid'");
     }
   }
-  else watchdog("message", "failed to login for '$userid': invalid username - password combination");
+  else watchdog("account", "failed to login for '$userid': invalid username - password combination");
 }
 
 function account_session_close() {
   global $user;
-  watchdog("message", "session closed for user '$user->userid'");
+  watchdog("account", "session closed for user '$user->userid'");
   session_unset();
   session_destroy();
   unset($user);
@@ -255,14 +255,14 @@ function account_email_submit($userid, $email) {
     $subject = strtr(t("Account details for %a"), array("%a" => variable_get(site_name, "drupal")));
     $message = strtr(t("%a,\n\n\nyou requested us to e-mail you a new password for your account at %b.  You will need to re-confirm your account or you will not be able to login.  To confirm your account updates visit the URL below:\n\n   %c\n\nOnce confirmed you can login using the following username and password:\n\n   username: %a\n   password: %d\n\n\n-- %b team"), array("%a" => $userid, "%b" => variable_get(site_name, "drupal"), "%c" => $link, "%d" => $passwd));
 
-    watchdog("message", "new password: `$userid' &lt;$email&gt;");
+    watchdog("account", "new password: `$userid' &lt;$email&gt;");
 
     mail($email, $subject, $message, "From: noreply");
 
     $output = t("Your password and further instructions have been sent to your e-mail address.");
   }
   else {
-    watchdog("warning", "new password: '$userid' and &lt;$email&gt; do not match");
+    watchdog("account", "new password: '$userid' and &lt;$email&gt; do not match");
     $output = t("Could not sent password: no match for the specified username and e-mail address.");
   }
 
@@ -292,7 +292,7 @@ function account_create_submit($userid, $email) {
     $subject = strtr(t("Account details for %a"), array("%a" => variable_get(site_name, "drupal")));
     $message = strtr(t("%a,\n\n\nsomeone signed up for a user account on %b and supplied this e-mail address as their contact.  If it wasn't you, don't get your panties in a knot and simply ignore this mail.  If this was you, you will have to confirm your account first or you will not be able to login.  To confirm your account visit the URL below:\n\n   %c\n\nOnce confirmed you can login using the following username and password:\n\n   username: %a\n   password: %d\n\n\n-- %b team\n"), array("%a" => $new[userid], "%b" => variable_get(site_name, "drupal"), "%c" => $link, "%d" => $new[passwd]));
 
-    watchdog("message", "new account: `$new[userid]' &lt;$new[real_email]&gt;");
+    watchdog("account", "new account: `$new[userid]' &lt;$new[real_email]&gt;");
 
     mail($new[real_email], $subject, $message, "From: noreply");
 
@@ -312,7 +312,7 @@ function account_create_confirm($name, $hash) {
       if ($account->hash == $hash) {
         db_query("UPDATE users SET status = '2', hash = '' WHERE userid = '$name'");
         $output = t("Your account has been successfully confirmed.");
-        watchdog("message", "$name: account confirmation successful");
+        watchdog("account", "$name: account confirmation successful");
       }
       else {
         $output = t("Confirmation failed: invalid confirmation hash.");

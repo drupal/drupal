@@ -152,7 +152,7 @@ function account_edit_save($name, $edit) {
     }
   }
 
-  watchdog("message", "account: modified user '$name'");
+  watchdog("account", "account: modified user '$name'");
 }
 
 function account_edit($name) {
