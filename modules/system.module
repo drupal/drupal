@@ -111,12 +111,12 @@ function system_view_general() {
   $output .= form_textarea(t("Footer message"), "site_footer", variable_get("site_footer", ""), 70, 5, t("This text will be displayed at the bottom of each page.  Useful for adding a copyright notice to your pages."));
   $output .= form_textfield(t("Anonymous user"), "anonymous", variable_get("anonymous", "Anonymous"), 70, 70, t("The name used to indicate anonymous users."));
   $output .= form_textfield(t("Default front page"), "site_frontpage", variable_get("site_frontpage", "node"), 70, 70, t("The home page displays content from this relative URL.  If you are not using clean URLs, specify the part after '?q='.  If unsure, specify 'node'."));
-  $output .= form_select(t("Clean URLs"), "clean_url", variable_get("clean_url", 0), array(t("Disabled"), t("Enabled")), t("Enable or disable clean URLs.  If enabled, you'll need <code>ModRewrite</code> support.  See also the <code>.htaccess</code> file in Drupal's top-level directory."));
+  $output .= form_radios(t("Clean URLs"), "clean_url", variable_get("clean_url", 0), array(t("Disabled"), t("Enabled")), t("Enable or disable clean URLs.  If enabled, you'll need <code>ModRewrite</code> support.  See also the <code>.htaccess</code> file in Drupal's top-level directory."));
   $output .= "<hr />\n";
 
   // caching:
   $output .= "<h3>". t("Cache settings") ."</h3>\n";
-  $output .= form_select(t("Cache support"), "cache", variable_get("cache", 0), array(t("Disabled"), t("Enabled")), t("Enable or disable the caching of rendered pages.  When caching is enabled, Drupal will flush the cache when required to make sure updates take effect immediately.  Check the %documentation for information on Drupal's cache system.", array("%documentation" => l(t("cache documentation"), "admin/system/help#cache"))));
+  $output .= form_radios(t("Cache support"), "cache", variable_get("cache", 0), array(t("Disabled"), t("Enabled")), t("Enable or disable the caching of rendered pages.  When caching is enabled, Drupal will flush the cache when required to make sure updates take effect immediately.  Check the %documentation for information on Drupal's cache system.", array("%documentation" => l(t("cache documentation"), "admin/system/help#cache"))));
   $output .= "<hr />\n";
 
 

@@ -39,7 +39,7 @@ function forum_settings() {
       $number = array(10 => 10, 25 => 25, 50 => 50, 75 => 75, 100 => 100);
       $output .= form_select(t("Topics per page"), "forum_per_page", variable_get("forum_per_page", 25), $number, t("The default number of topics displayed per page; links to browse older messages are automatically being displayed."));
       $forder = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"), 3 => t("Posts - most active first"), 4=> t("Posts - least active first"));
-      $output .= form_select(t("Default order"), "forum_order", variable_get("forum_order", 1), $forder, t("The default display order for topics."));
+      $output .= form_radios(t("Default order"), "forum_order", variable_get("forum_order", 1), $forder, t("The default display order for topics."));
       $output .= form_textfield(t("Number of topics in block"), "forum_block_num", variable_get("forum_block_num", "5"), 5, 5, t("The number of topics in the <b>Forum topics</b>-block.  To enable the block, click ". l("here", "admin/block") ."."));
     }
   }

@@ -554,12 +554,12 @@ function statistics_admin_userpage_config($edit) {
 /* Adds configure option to the main configure site admin page */
 function statistics_settings() {
   /* access log options */
-  $output = form_select(t("Enable access log"), "statistics_enable_access_log", variable_get("statistics_enable_access_log", 0), array("1" => t("Enabled"), "0" => t("Disabled")), t("Log each page access.  Required for referrer statistics."));
+  $output = form_radios(t("Enable access log"), "statistics_enable_access_log", variable_get("statistics_enable_access_log", 0), array("1" => t("Enabled"), "0" => t("Disabled")), t("Log each page access.  Required for referrer statistics."));
   $period = array(3600 => format_interval(3600), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200), 4838400 => format_interval(4838400), 9676800 => format_interval(9676800));
   $output .= form_select(t("Discard access logs older than"), "statistics_flush_accesslog_timer", variable_get("statistics_flush_accesslog_timer", 259200), $period, t("Older access log entries (including referrer statistics) will be automatically discarded.  Requires crontab."));
 
-  $output .= form_select(t("Enable node view counters"), "statistics_enable_node_counter", variable_get("statistics_enable_node_counter", 0), array("1" => t("Enabled"), "0" => t("Disabled")), t("Increment node view counter each time a node is viewed."));
-  $output .= form_select(t("Display node view counters"), "statistics_display_counter", variable_get("statistics_display_counter", ""), array("1" => t("Enabled"), "0" => t("Disabled")), t("Display how many times each node has been viewed.  User must have the 'access statistics' permissions."));
+  $output .= form_radios(t("Enable node view counters"), "statistics_enable_node_counter", variable_get("statistics_enable_node_counter", 0), array("1" => t("Enabled"), "0" => t("Disabled")), t("Increment node view counter each time a node is viewed."));
+  $output .= form_radios(t("Display node view counters"), "statistics_display_counter", variable_get("statistics_display_counter", ""), array("1" => t("Enabled"), "0" => t("Disabled")), t("Display how many times each node has been viewed.  User must have the 'access statistics' permissions."));
 
   return $output;
 }

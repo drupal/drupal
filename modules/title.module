@@ -75,7 +75,7 @@ function title_filter($text) {
 }
 
 function title_conf_filters() {
-  $output = form_select(t("Enable node link tags"), "title_filter_link", variable_get("title_filter_link", 0), array(t("Disabled"), t("Enabled")), t("Enable Wiki-like [node title|text] links. This will generate a link labeled 'text' to the node with the title 'node title'. If you omit '|text', the label becomes 'node title'. You may use a substring of a node title if desired. When multiple matching titles are found, a list of matching nodes will be displayed. If no matching titles are found, a full-text search is returned."));
+  $output = form_radios(t("Enable node link tags"), "title_filter_link", variable_get("title_filter_link", 0), array(t("Disabled"), t("Enabled")), t("Enable Wiki-like [node title|text] links. This will generate a link labeled 'text' to the node with the title 'node title'. If you omit '|text', the label becomes 'node title'. You may use a substring of a node title if desired. When multiple matching titles are found, a list of matching nodes will be displayed. If no matching titles are found, a full-text search is returned."));
   return $output;
 }
 

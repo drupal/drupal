@@ -111,8 +111,8 @@ function comment_help($section = "admin/help#comment") {
 
 function comment_settings() {
 
-  $output .= form_select(t("Default display mode"), "comment_default_mode", variable_get("comment_default_mode", 4), _comment_get_modes(), t("The default view for comments. Expanded views display the body of the comment. Threaded views keep replies together."));
-  $output .= form_select(t("Default display order"), "comment_default_order", variable_get("comment_default_order", 1), _comment_get_orders(), t("The default sorting for new users and anonymous users while viewing comments. These users may change their view using the comment control panel. For registered users, this change is remembered as a persistent user preference."));
+  $output .= form_radios(t("Default display mode"), "comment_default_mode", variable_get("comment_default_mode", 4), _comment_get_modes(), t("The default view for comments. Expanded views display the body of the comment. Threaded views keep replies together."));
+  $output .= form_radios(t("Default display order"), "comment_default_order", variable_get("comment_default_order", 1), _comment_get_orders(), t("The default sorting for new users and anonymous users while viewing comments. These users may change their view using the comment control panel. For registered users, this change is remembered as a persistent user preference."));
   $output .= form_textfield(t("Default comments per page"), "comment_default_per_page", variable_get("comment_default_per_page", "50"), 5, 5, t("Default number of comments for each page; more comments are distributed in several pages."));
 
   $result = db_query("SELECT fid, filter FROM {moderation_filters} ");
@@ -122,9 +122,9 @@ function comment_settings() {
 
   $output .= form_select(t("Default threshold"), "comment_default_threshold", variable_get("comment_default_threshold", 0), $thresholds, t("Thresholds are values below which comments are hidden. These thresholds are useful for busy sites which want to hide poor comments from most users."));
 
-  $output .= form_select(t("Preview comment"), "comment_preview", variable_get("comment_preview", 1), array(t("Optional"), t("Required")), t("Must users preview comments before submitting?"));
-  $output .= form_select(t("Location of comment submission form"), "comment_form_location", variable_get("comment_form_location", 0), array(t("Display below post or comments"), t("Display on separate page")), t("The location of the comment submission form."));
-  $output .= form_select(t("Comment controls"), "comment_controls", variable_get("comment_controls", 0), array(t("Display above the comments"), t("Display below the comments"), t("Display above and below the comments"), t("Do not display")), t("Position of the comment controls box."));
+  $output .= form_radios(t("Preview comment"), "comment_preview", variable_get("comment_preview", 1), array(t("Optional"), t("Required")), t("Must users preview comments before submitting?"));
+  $output .= form_radios(t("Location of comment submission form"), "comment_form_location", variable_get("comment_form_location", 0), array(t("Display below post or comments"), t("Display on separate page")), t("The location of the comment submission form."));
+  $output .= form_radios(t("Comment controls"), "comment_controls", variable_get("comment_controls", 0), array(t("Display above the comments"), t("Display below the comments"), t("Display above and below the comments"), t("Do not display")), t("Position of the comment controls box."));
 
   return $output;
 }
