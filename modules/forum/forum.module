@@ -127,9 +127,9 @@ function forum_block($op = 'list', $delta = 0, $edit = array()) {
 
     case 'view':
       if (user_access('access content')) {
-        $content  = node_title_list(db_query_range("SELECT n.nid, n.title, l.last_comment_timestamp FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid ". node_access_join_sql() ." WHERE n.status = 1 AND n.type='forum' AND ". node_access_where_sql() ." ORDER BY l.last_comment_timestamp DESC", 0, variable_get('forum_block_num', '5')), t('Active forum topics:'));
+        $content  = node_title_list(db_query_range("SELECT n.nid, n.title, l.last_comment_timestamp, l.comment_count FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid ". node_access_join_sql() ." WHERE n.status = 1 AND n.type='forum' AND ". node_access_where_sql() ." ORDER BY l.last_comment_timestamp DESC", 0, variable_get('forum_block_num', '5')), t('Active forum topics:'));
 
-        $content .= node_title_list(db_query_range("SELECT n.nid, n.title FROM {node} n ". node_access_join_sql() ." WHERE n.type = 'forum' AND n.status = 1 AND ". node_access_where_sql() ." ORDER BY n.nid DESC", 0, variable_get('forum_block_num', '5')), t('New forum topics:'));
+        $content .= node_title_list(db_query_range("SELECT n.nid, n.title, l.comment_count FROM {node} n INNER JOIN {node_comment_statistics} l ON n.nid = l.nid ". node_access_join_sql() ." WHERE n.type = 'forum' AND n.status = 1 AND ". node_access_where_sql() ." ORDER BY n.nid DESC", 0, variable_get('forum_block_num', '5')), t('New forum topics:'));
 
         if ($content) {
           $content .= '<div class="more-link">'. l(t('more'), 'forum', array('title' => t('Read the latest forum topics.'))) .'</div>';
