@@ -90,7 +90,7 @@ class Theme_xtemplate extends BaseTheme {
     }
 
     if (!arg(0)) {
-      $this->template->assign("message", variable_get("xtemplate_message", l("edit message", "admin/system/themes/settings")));
+      $this->template->assign("header_message", variable_get("xtemplate_message", l("edit message", "admin/system/themes/settings")));
       $this->template->parse("header.message");
     }
 
@@ -128,7 +128,8 @@ class Theme_xtemplate extends BaseTheme {
     theme_blocks("all");
     $this->template->assign( array(
       "blocks" => ob_get_contents(),
-      "footer" => variable_get("site_footer", "")
+      "footer_message" => variable_get("site_footer", ""),
+      "footer" => theme_footer()
     ));
     ob_end_clean();
 

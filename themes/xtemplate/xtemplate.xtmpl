@@ -39,7 +39,7 @@
   <tr>
     <td valign="top" width="100%">
       <!-- BEGIN: message -->
-        <div id="message">{message}</div>
+        <div id="message">{header_message}</div>
       <!-- END: message -->
       <div id="main">
 <!-- END: header -->
@@ -97,9 +97,9 @@
 </table>
 
 <div id="footer">
-  {footer}
+  {footer_message}
 </div>
-
+{footer}
 </body>
 </html>
 <!-- END: footer -->
