@@ -105,13 +105,12 @@ function forum_link($type, $node = 0, $main = 0) {
   if (!$main && $type == "node" && $node->type == "forum") {
     // get previous and next topic
 
-    $result = db_query("SELECT n.nid, n.title, n.body, GREATEST(n.created, MAX(c.timestamp)) AS date_sort, COUNT(c.nid) AS num_comments FROM {node} n INNER JOIN {forum} f ON n.nid = f.nid INNER JOIN {comments} c ON n.nid = c.nid WHERE n.nid = f.nid AND f.tid = %d AND n.status = 1 GROUP BY n.nid, n.title, n.body, n.created ORDER BY ". _forum_get_topic_order(isset($user->sortby) ? $user->sortby : variable_get("forum_order", 1)), $node->tid);
+    $result = db_query("SELECT n.nid, n.title, GREATEST(n.created, MAX(c.timestamp)) AS date_sort, COUNT(c.nid) AS num_comments FROM {node} n INNER JOIN {forum} f ON n.nid = f.nid INNER JOIN {comments} c ON n.nid = c.nid WHERE n.nid = f.nid AND f.tid = %d AND n.status = 1 GROUP BY n.nid, n.title, n.created ORDER BY ". _forum_get_topic_order(isset($user->sortby) ? $user->sortby : variable_get("forum_order", 1)), $node->tid);
 
     while ($topic = db_fetch_object($result)) {
       if ($stop == 1) {
         $next->nid = $topic->nid;
         $next->title = $topic->title;
-        $next->body = $topic->body;
         break;
       }
       if ($topic->nid == $node->nid) {
@@ -120,16 +119,15 @@ function forum_link($type, $node = 0, $main = 0) {
       else {
         $prev->nid = $topic->nid;
         $prev->title = $topic->title;
-        $prev->body = $topic->body;
       }
     }
 
     if ($prev) {
-      $links[] = l(t("previous forum topic"), "node/view/$prev->nid", array("title" => $prev->title .": ". substr(strip_tags($prev->body), 0, 100) ."..."));
+      $links[] = l(t("previous forum topic"), "node/view/$prev->nid", array("title" => $prev->title));
     }
 
     if ($next) {
-      $links[] = l(t("next forum topic"), "node/view/$next->nid", array("title" => $next->title .": ". substr(strip_tags($next->body), 0, 100) ."..."));
+      $links[] = l(t("next forum topic"), "node/view/$next->nid", array("title" => $next->title));
     }
   }
 
@@ -339,12 +337,13 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
 
   $term = taxonomy_get_term($tid);
   $voc = taxonomy_get_vocabulary($term->vid);
+  $check_tid = $tid ? "'". check_query($tid). "'" : "NULL";
 
   // show topics with the correct tid, or in the forum but with shadow = 1
-  $sql = "SELECT n.nid, n.title, u.name AS name, u.uid AS uid, n.created AS timestamp, GREATEST(n.created, MAX(c.timestamp)) AS date_sort, COUNT(c.nid) AS num_comments, n.comment AS comment_mode, f.tid FROM {node} n INNER JOIN {term_node} r ON n.nid = r.nid INNER JOIN {users} u ON n.uid = u.uid LEFT JOIN {comments} c ON n.nid = c.nid INNER JOIN {forum} f ON n.nid = f.nid WHERE n.nid = r.nid AND ((r.tid = '". check_query($tid) ."' AND f.shadow = 1) OR f.tid = '". check_query($tid) ."') AND n.status = 1 AND n.type = 'forum' GROUP BY n.nid, n.title, u.name, u.uid, n.created, n.comment, f.tid";
+  $sql = "SELECT n.nid, n.title, u.name AS name, u.uid AS uid, n.created AS timestamp, GREATEST(n.created, MAX(c.timestamp)) AS date_sort, COUNT(c.nid) AS num_comments, n.comment AS comment_mode, f.tid FROM {node} n INNER JOIN {term_node} r ON n.nid = r.nid INNER JOIN {users} u ON n.uid = u.uid LEFT JOIN {comments} c ON n.nid = c.nid INNER JOIN {forum} f ON n.nid = f.nid WHERE n.nid = r.nid AND ((r.tid = $check_tid AND f.shadow = 1) OR f.tid = $check_tid) AND n.status = 1 AND n.type = 'forum' GROUP BY n.nid, n.title, u.name, u.uid, n.created, n.comment, f.tid";
   $sql .= tablesort_sql($forum_topic_list_header);
 
-  $sql_count = "SELECT COUNT(DISTINCT(n.nid)) FROM {node} n INNER JOIN {forum} f ON n.nid = f.nid INNER JOIN {term_node} r ON n.nid = r.nid WHERE n.nid = r.nid AND ( (r.tid = '".check_query($tid)."' AND f.shadow = 1) OR f.tid = '".check_query($tid)."') AND n.status = 1 AND n.type = 'forum'";
+  $sql_count = "SELECT COUNT(DISTINCT(n.nid)) FROM {node} n INNER JOIN {forum} f ON n.nid = f.nid INNER JOIN {term_node} r ON n.nid = r.nid WHERE n.nid = r.nid AND ( (r.tid = $check_tid AND f.shadow = 1) OR f.tid = $check_tid) AND n.status = 1 AND n.type = 'forum'";
 
   $result = pager_query($sql, $forum_per_page, 0, $sql_count);
   $topic_num = db_num_rows($result);

@@ -113,7 +113,7 @@ GO
 CREATE TABLE [dbo].[forum] (
   [nid] [numeric](10, 0) NOT NULL ,
   [tid] [numeric](10, 0) NOT NULL ,
-  [icon] [varchar] (255) NOT NULL ,
+  [icon] [varchar] (255) NULL ,
   [shadow] [numeric](10, 0) NOT NULL
 ) ON [PRIMARY]
 GO
@@ -367,6 +367,12 @@ CREATE TABLE [dbo].[users] (
   [rid] [int] NOT NULL
 )
 --ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
+GO
+
+CREATE TABLE [dbo].[users_uid_seq] (
+  [id] [int] IDENTITY (1, 1) NOT NULL ,
+  [vapor] [int] NULL
+) ON [PRIMARY]
 GO
 
 CREATE TABLE [dbo].[variable] (

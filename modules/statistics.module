@@ -326,7 +326,7 @@ function statistics_admin_topnodes_table() {
     array("data" => t("last hit"), "field" => "s.timestamp"),
     array("data" => t("operations"))
   );
-  $sql = "SELECT s.nid, s.daycount, s.totalcount, s.timestamp, n.title FROM {statistics} s INNER JOIN {node} n USING (nid)";
+  $sql = "SELECT s.nid, s.daycount, s.totalcount, s.timestamp, n.title FROM {statistics} s INNER JOIN {node} n ON s.nid = n.nid";
   $sql .= tablesort_sql($header);
   $result = pager_query($sql, 20); // WHERE s.%s <> '0'
 
