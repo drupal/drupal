@@ -149,62 +149,81 @@ function locale_languages($translation) {
   return $output;
 }
 
+function locale_seek_query() {
+  $fields = array("string", "language", "status");
+  if (is_array($_REQUEST["edit"])) {
+    foreach ($_REQUEST["edit"] as $key => $value) {
+      if (!empty($value) && in_array($key, $fields)) {
+        $query->$key = $value;
+      }
+    }
+  }
+  else {
+    foreach ($_REQUEST as $key => $value) {
+      if (!empty($value) && in_array($key, $fields)) {
+        $query->$key = strpos(",", $value) ? explode(",", $value) : $value;
+      }
+    }
+  }
+  return $query;
+}
+
 function locale_seek() {
   global $id, $languages;
   $op = $_POST["op"];
-  $edit =& $_POST["edit"];
+  $query = locale_seek_query();
 
-  if ($op != 'overview' && !$edit && isset($_SESSION["locale_settings"])) {
-    $edit = $_SESSION["locale_settings"];
-  }
-  else {
-    $_SESSION["locale_settings"] = $edit;
-  }
+  if ($query) {
 
-  if (is_array($edit)) {
-
-    if ($edit["status"]) {
-      switch ($edit["language"]) {
+    if ($query->status) {
+      switch ($query->language) {
         case "all":
           foreach ($languages as $key=>$value) {
-            $tmp[] = $key . (check_query($edit["status"]) == 1 ? " !=" : " =") ." ''";
+            $tmp[] = $key . (check_query($query->status) == 1 ? " !=" : " =") ." ''";
           }
-          $query[] = implode(" AND ", $tmp);
+          $sql[] = implode(" AND ", $tmp);
           break;
         case "any":
           foreach ($languages as $key=>$value) {
-            $tmp[] = $key . (check_query($edit["status"]) == 1 ? " !=" : " =") ." ''";
+            $tmp[] = $key . (check_query($query->status) == 1 ? " !=" : " =") ." ''";
           }
-          $query[] = "(". implode(" || ", $tmp) .")";
+          $sql[] = "(". implode(" || ", $tmp) .")";
           break;
         default:
-          $query[] = check_query($edit["language"]) . (check_query($edit["status"]) == 1 ? " !=" : " =") ." ''";
+          $sql[] = check_query($query->language) . (check_query($query->status) == 1 ? " !=" : " =") ." ''";
       }
     }
 
-    if ($edit["string"]) {
-      $string_query[] = "string LIKE '%". check_query($edit["string"]) ."%'";
-      if ($edit["status"] != 2) {
-        if (strlen($edit["language"]) == 2) {
-          $string_query[] = check_query($edit["language"]) ." LIKE '%". check_query($edit["string"]) ."%'";
+    if ($query->string) {
+      $string_query[] = "string LIKE '%". check_query($query->string) ."%'";
+      if ($query->status != 2) {
+        if (strlen($query->language) == 2) {
+          $string_query[] = check_query($query->language) ." LIKE '%". check_query($query->string) ."%'";
         }
         else {
           foreach ($languages as $key=>$value) {
-            $string_query[] = check_query($key) ." LIKE '%". check_query($edit["string"]) ."%'";
+            $string_query[] = check_query($key) ." LIKE '%". check_query($query->string) ."%'";
           }
         }
       }
-      $query[] = "(". implode(" || ", $string_query) .")";
+      $sql[] = "(". implode(" || ", $string_query) .")";
     }
 
-    $result = pager_query("SELECT * FROM {locales} ". (count($query) ? " WHERE ". implode(" && ", $query) : "") ." ORDER BY string", 50);
+    $result = pager_query("SELECT * FROM {locales} ". (count($sql) ? " WHERE ". implode(" && ", $sql) : "") ." ORDER BY string", 50);
 
-    $header = array(t("string"), (($edit["status"] != 2 && strlen($edit["language"]) == 2) ? t("translated string") : t("languages")), array("data" => t("operations"), "colspan" => "2"));
+    $header = array(t("string"), (($query->status != 2 && strlen($query->language) == 2) ? t("translated string") : t("languages")), array("data" => t("operations"), "colspan" => "2"));
     while ($locale = db_fetch_object($result)) {
-      $rows[] = array("$locale->string<br /><small><i>$locale->location</i></small>", array("data" => (($edit["status"] != 2 && strlen($edit["language"]) == 2) ? $locale->$edit["language"] : locale_languages($locale)), "align" => "center"), array("data" => l(t("edit locale"), "admin/locale/edit/$locale->lid"), "nowrap" => "nowrap"), array("data" => l(t("delete locale"), "admin/locale/delete/$locale->lid"), "nowrap" => "nowrap"));
+      $rows[] = array("$locale->string<br /><small><i>$locale->location</i></small>", array("data" => (($query->status != 2 && strlen($query->language) == 2) ? $locale->$query->language : locale_languages($locale)), "align" => "center"), array("data" => l(t("edit locale"), "admin/locale/edit/$locale->lid"), "nowrap" => "nowrap"), array("data" => l(t("delete locale"), "admin/locale/delete/$locale->lid"), "nowrap" => "nowrap"));
     }
 
-    if ($pager = pager_display(NULL, 50, 0, "admin")) {
+    $request = array();
+    if (count($query)) {
+      foreach ($query as $key => $value) {
+        $request[$key] = (is_array($value)) ? implode(",", $value) : $value;
+      }
+    }
+
+    if ($pager = pager_display(NULL, 50, 0, "admin", $request)) {
       $rows[] = array(array("data" => "$pager", "colspan" => "5"));
     }
 
@@ -248,7 +267,10 @@ function locale_admin() {
         $output = locale_edit(check_query(arg(3)));
         break;
       case "search":
-        $output = locale_seek_form();
+        if (locale_seek_query()) {
+          $output = locale_seek();
+        }
+        $output .= locale_seek_form();
         break;
       case t("Search"):
         $output = locale_seek();

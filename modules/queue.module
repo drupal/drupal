@@ -252,18 +252,6 @@ function queue_nodeapi(&$node, $op, $arg = 0) {
         $node->votes = 0;
       }
       break;
-    case "insert":
-    case "update":
-      if ($node->moderate && user_access("access submission queue")) {
-        theme("box", t("Post queued"), t("The post is queued for approval.  You can check the votes in the <a href=\"%queue\">submission queue</a>.", array("%queue" => url("queue"))));
-      }
-      elseif ($node->moderate) {
-        theme("box", t("Post queued"), t("The post is queued for approval.  The editors will decide whether it should be published."));
-      }
-      else {
-        theme("box", t("Post published"), t("The post is published."));
-      }
-      break;
   }
 }
 ?>
