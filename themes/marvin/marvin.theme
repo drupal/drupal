@@ -1,5 +1,15 @@
 <?php
 
+  /*********************************************************************
+  
+   Theme: Marvin
+   Author: Dries Buytaert (Dries)
+   Email: dries@drop.org
+   Description: Classic theme, white, basic design with a fresh look.
+   Notes: Only supports blocks on the right.
+   
+  *********************************************************************/
+  
  class Theme {
    var $link = "#666699";
 

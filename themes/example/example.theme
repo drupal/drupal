@@ -1,5 +1,14 @@
 <?php
 
+  /*********************************************************************
+
+   Theme: Example
+   Author: Jeroen Bensch (Jeroen)
+   Email: jeroen@drop.org
+   Description: Very basic theme for demonstration purposes.
+
+  *********************************************************************/
+  
   class Theme {
 
     function header() {
