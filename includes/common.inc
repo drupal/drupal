@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.142 2002/12/30 08:33:02 dries Exp $
+// $Id: common.inc,v 1.143 2002/12/31 10:58:47 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST;
@@ -504,7 +504,7 @@ function format_rss_item($title, $link, $description, $args = array()) {
   $output .= "<item>\n";
   $output .= " <title>". htmlentities(strip_tags($title)) ."</title>\n";
   $output .= " <link>". htmlentities(strip_tags($link)) ."</link>\n";
-  $output .= " <description>". htmlentities($description) ."</description>\n";
+  $output .= " <description>". htmlentities(check_output($description)) ."</description>\n";
   foreach ($args as $key => $value) {
     $output .= "<$key>". htmlentities(strip_tags($value)) ."</$key>";
   }
