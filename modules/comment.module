@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.180 2003/10/22 13:03:31 dries Exp $
+// $Id: comment.module,v 1.181 2003/10/24 09:34:05 dries Exp $
 
 function comment_help($section = "admin/help#comment") {
   $output = "";
@@ -73,7 +73,7 @@ function comment_help($section = "admin/help#comment") {
       $output = t("Enables user to comment on content (nodes).");
       break;
     case 'admin/system/modules/comment':
-      $output = t("Comments can be attached to any node. Below are the settings for comments. The display comes in two types, a \"flat list\" where everything is flush to the left side, and comments come in cronological order, and a \"threaded list\" where comments to other comments are placed immediately below and slightly indented forming an outline. They also come in two styles: \"expanded\", where you see both the title and the contents, and \"collapsed\" where you only see the title. To set the default threshold you first have to set up thresholds in the %threshold area. Preview comment forces a user to look at their comment by clicking on a \"Preview\" button before they can actually add the comment. If \"New comment form\" is enabled then at the bottom of every comment page there will be a form too add a new comment.", array("%threshold" => l(t("comment management &raquo; comment moderation &raquo; thresholds"), "admin/comment/moderation/filters")));
+      $output = t("Comments can be attached to any node. Below are the settings for comments. The display comes in two types, a \"flat list\" where everything is flush to the left side, and comments come in cronological order, and a \"threaded list\" where comments to other comments are placed immediately below and slightly indented forming an outline. They also come in two styles: \"expanded\", where you see both the title and the contents, and \"collapsed\" where you only see the title. To set the default threshold you first have to set up thresholds in the %threshold area. Preview comment forces a user to look at their comment by clicking on a \"Preview\" button before they can actually add the comment. If \"New comment form\" is enabled then at the bottom of every comment page there will be a form too add a new comment.", array("%threshold" => l(t("administer") ." &raquo; ". t("comments") ." &raquo; ". t("moderation") ." &raquo; ". t("thresholds"), "admin/comment/moderation/filters")));
       break;
     case 'admin/comment':
       $output = t("Comments let users give feedback to content authors.  Here you may review/approve/deny recent comments, and configure moderation if desired.");
