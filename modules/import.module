@@ -79,8 +79,8 @@ function import_help($section = "admin/import/help") {
 function import_system($field){
   $output = "";
 
-  if ($field == "description") {$output = import_help("admin/system/modules"); }
-  else if ($field == "admin_help") {$output = import_help("admin/system/modules/import"); };
+  $system["description"] = import_help("admin/system/modules");
+  $system["admin_help"] = import_help("admin/system/modules/import");
 
   return $system[$field];
 }
