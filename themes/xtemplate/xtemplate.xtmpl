@@ -51,7 +51,7 @@
 <!-- END: header -->
 
 <!-- BEGIN: node -->
-  <div class="node">
+  <div class="{classes}">
     <!-- BEGIN: title -->
     <h2><a href="{link}">{title}</a></h2>
     <!-- END: title -->

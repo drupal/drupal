@@ -24,7 +24,7 @@ function xtemplate_help($section) {
 
   switch ($section) {
     case 'admin/system/themes#description':
-      $output = t("A template driven theme");
+      $output = t('A template driven theme');
       break;
   }
 
@@ -39,6 +39,7 @@ function xtemplate_node($node, $main = 0, $page = 0) {
         "title"     => ucfirst($node->title),
         "author"    => format_name($node),
         "date"      => format_date($node->created),
+        "classes"   => ($main && $node->static) ? 'node static-node' : 'node',
         "content"   => ($main && $node->teaser) ? $node->teaser : $node->body));
 
   if (module_exist("taxonomy") && ($taxonomy = taxonomy_link("taxonomy terms", $node))) {
