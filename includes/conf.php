@@ -1,5 +1,5 @@
 <?php
-// $Id: conf.php,v 1.20 2002/12/10 20:35:18 dries Exp $
+// $Id: conf.php,v 1.21 2002/12/20 22:08:17 dries Exp $
 
 #
 # Database settings:
@@ -44,9 +44,9 @@ $languages = array("en" => "English");
 # links here.  These links are typically displayed in a row near the
 # top of every page.
 // $custom_links = array(
-//  "<a href=\"\index.php\">home</a>",
-//  "<a href=\"\module.php?mod=user\">school</a>",
-//  "<a href=\"\module.php?mod=blog\">work</a>");
+//  "<a href=\"index.php\">home</a>",
+//  "<a href=\"module.php?mod=user\">school</a>",
+//  "<a href=\"module.php?mod=blog\">work</a>");
 
 
 ?>
