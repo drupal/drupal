@@ -7,7 +7,11 @@ Drupal x.x.x, xxxx-xx-xx
 - menu module:
     * made it possible to customize menus.
 - refactored 403 (forbidden) handling and added support for custom 403 pages.
-- added support for RSS ping-notifications of http://technorati.com/.
+- syndication:
+    * added support for RSS ping-notifications of http://technorati.com/.
+- database backend:
+    * added support for mutiple database connections.
+    * refactored the categorization of news items.
 - usability:
     * slightly reorganized navigation menus.
 
