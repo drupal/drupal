@@ -8,8 +8,8 @@
 
    ### color set #2:
    var $bgcolor2 = "#5F7F7F";
-   var $fgcolor2 = "#005500";
-   var $hlcolor2 = "#00FF00";
+   var $fgcolor2 = "#6C6C6C";
+   var $hlcolor2 = "#6C6C6C";
 
    ### color set #3:
 
@@ -34,11 +34,11 @@
         .NO-IN{margin-left:-25;}}
       -->
      </STYLE>
-     <BODY TEXT="#202020" BGCOLOR="#FEFEFE" ALINK="#005500" LINK="#005500" VLINK="#005500">
+     <BODY TEXT="#202020" BGCOLOR="#FEFEFE" ALINK="#000000" LINK="#000000" VLINK="#000000">
       <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="2">
        <TR>
         <TD COLSPAN="2"><IMG SRC="themes/UnConeD/images/logo.gif" ALT="drop.org logo"></TD>
-        <TD VALIGN="top" ALIGN="right">
+        <TD WIDTH="180" VALIGN="top" ALIGN="right">
          <?  
           $this->box("Status", "<TABLE WIDTH=\"100%\"><TR><TD ALIGN=\"left\" VALIGN=\"top\"><FONT SIZE=\"-2\">Username: Your Name<BR>E-mail: your.name@drop.org<BR>Status: Logged in<BR>Since: The beginning of time</FONT></TD></TR></TABLE>");
           ?>
@@ -67,51 +67,66 @@
      $timestamp = date("l, F d, Y - h:i:s A", $timestamp);
 
      include "config.inc";
-      ?>
-       <TABLE BORDER="0" CELLPADDING="4" WIDTH="100%">
-        <TR>
-         <TD COLSPAN="2">
-          <TABLE WIDTH="100%" BORDER="0" CELLPADDING="4" CELLSPACING="0" >
+     ?>
+          <TABLE WIDTH="100%" BORDER="0" CELLPADDING="0" CELLSPACING="0">
            <TR>
-            <TD WIDTH="30" ALIGN="left" BACKGROUND="themes/Jeroen/images/grad1.jpg">
-             &nbsp;
+            <TD ALIGN="right" VALIGN="center" WIDTH="20" HEIGHT="20"><? if (rand(0,1) == 0) $img = "news1.gif"; else $img = "news4.gif"; ?><IMG SRC="themes/Jeroen/images/<? echo $img; ?>" WIDTH="20" HEIGHT="20" ALT="">
             </TD>
-            <TD WIDTH="93%" ALIGN="center" BACKGROUND="themes/Jeroen/images/grad2.jpg">
-            BLAHBLAHBLAHBLAH
-            </TD>
-            <TD WIDTH="30" ALIGN="right" BACKGROUND="themes/Jeroen/images/grad3.jpg">
-             &nbsp;
-            </TD>
+            <TD COLSPAN="2" WIDTH="100%" ALIGN="center" VALIGN="center" HEIGHT="20" BACKGROUND="themes/Jeroen/images/newsmiddle.gif"><IMG SRC="themes/Jeroen/images/"WIDTH="1" HEIGHT="1" ALT=""><B><FONT COLOR="<? $this->fgcolor3; ?>"><? echo $subject; ?></FONT></B></TD>
+            <TD ALIGN="left" VALIGN="center" WIDTH="20" HEIGHT="20"><? if (rand(0,1) == 0) $img = "news3.gif"; else $img = "news2.gif"; ?><IMG SRC="themes/Jeroen/images/<? echo $img; ?>" width="20" height="20" alt=""></TD>
            </TR>
           </TABLE>
-         </TD>
-        </TR>
-        <TR BGCOLOR="<? echo $this->bgcolor3; ?>">
-         <TD>
-         <?
-          if ($informant) {
-            print "<FONT SIZE=\"-1\">Reported to us by <A HREF=\"account.php?op=userinfo&uname=$informant\">$informant</A> on $timestamp"; ?><? print "</FONT></TD><TD ALIGN=\"center\"><B><A HREF=\"search.php?category=$category\"><FONT COLOR=\"#2F4F4F\">$category</FONT></A></B>";
-          }
-          else {
-            print "<FONT SIZE=\"-1\">Posted by $anonymous on $timestamp"; ?><? print "</FONT></TD><TD ALIGN=\"center\" WIDTH=\"80\"><A HREF=\"search.php?category=$category\">$category</A>";
-          }
-         ?>
-        </TD>
-       </TR>
-       <TR BGCOLOR="<? echo $this->bgcolor3; ?>">
-        <TD COLSPAN="2">
-        <?
-         if ($comments) {
-           echo "<P>$abstract</P><P><FONT COLOR=\"$this->hlcolor1\">Editor's note by <A HREF=\"account.php?op=userinfo&uname=$editor\">$editor</A>:</FONT> $comments</P>";
-         }
-         else {
-           echo $abstract;
-         }        
-        ?>
-        </TD>
-       </TR>
-      <TR BGCOLOR="<? echo $this->bgcolor3; ?>"><TD ALIGN="right" COLSPAN="2"><? echo $link ?></TD></TR>
-     </TABLE><BR>
+        
+          <CENTER><TABLE WIDTH="91%" BORDER="0" CELLPADDING="3" CELLSPACING="0">
+           <TR  BACKGROUND="themes/Jeroen/images/menutitle.gif" HEIGHT="20">
+            <TD COLSPAN="2" ALIGN="left" bgcolor="#6C6C6C"><FONT COLOR="<? echo $this->fgcolor1; ?>">
+             <?
+	      switch (rand(0,9)) {
+               case 0: $how = "Yelled at us"; break;
+               case 1: $how = "Whispered"; break;
+               case 2: $how = "Reported"; break;
+               case 3: $how = "Posted"; break;
+               case 4: $how = "Beamed through"; break;
+               case 5: $how = "Faxed"; break;
+               case 6: $how = "Tossed at us"; break;
+               case 7: $how = "Morsed"; break;
+               case 8: $how = "Flagged"; break;
+               default: $how = "Sneaked through";
+              }
+                
+              if ($informant) {
+              print "<FONT SIZE=\"-1\">$how by <A HREF=\"account.php?op=userinfo&uname=$informant\">$informant</A> on $timestamp"; ?><? print "</FONT></TD><TD ALIGN=\"center\"><B><A HREF=\"search.php?category=$category\"><FONT COLOR=\"<? $this->fgcolor3; ?>\">$category</FONT></A></B>";
+              }
+              else {
+               print "<FONT SIZE=\"-1\">Reported to us by $anonymous on $timestamp"; ?><? print "</FONT></TD><TD ALIGN=\"center\" WIDTH=\"80\"><A HREF=\"search.php?category=$category\"><FONT COLOR=\"<? $this->fgcolor3; ?>\">$category</FONT></A>";
+              }
+             ?></FONT>
+            </TD>
+           </TR>
+           <TR>
+            <TD COLSPAN="3" VALIGN="top" width="100%" BGCOLOR="#E7E7E7" BACKGROUND="http://images.themes.org/templates/kde/sketch.gif">
+             <TABLE WIDTH="100%">
+              <TR>
+               <TD>
+                <?
+                 if ($comments) {
+		  echo "<P>$abstract</P><P><FONT COLOR=\"$this->hlcolor1\">Editor's note by <A HREF=\"account.php?op=userinfo&uname=$editor\">$editor</A>:</FONT>$comments</P>";
+                 }
+                 else {
+		  echo $abstract;
+                 }
+                ?>
+               </TD>
+              </TR>
+             </TABLE>
+            </TD>
+           </TR>
+           <TR BGCOLOR="<? echo $this->fgcolor1; ?>">
+            <TD ALIGN="right" COLSPAN="3">
+             <? echo $link ?>
+            </TD>
+           </TR>
+          </TABLE></CENTER><BR>
     <?	
    }
 
@@ -267,18 +282,18 @@
     ?>
     <TABLE width="100%" CELLPADDING=0 CELLSPACING=0 BORDER=0>
      <TR>
-      <TD ALIGN=right VALIGN=BOTTOM WIDTH="20" HEIGHT="20"><IMG SRC="themes/Jeroen/images/boxtopleft.gif" width="20" height="20" alt=""></TD>
-      <TD colspan=2 ALIGN=LEFT VALIGN=BOTTOM HEIGHT="20" BACKGROUND="themes/Jeroen/images/boxtop.gif"><img src="http://images.themes.org" width="1" height="1" alt=""></TD>
-      <TD ALIGN=left VALIGN=BOTTOM WIDTH="20" HEIGHT="20"><IMG SRC="themes/Jeroen/images/boxtopright.gif" width="20" height="20" alt=""></TD>
+      <TD ALIGN=right VALIGN="bottom" WIDTH="20" HEIGHT="20"><IMG SRC="themes/Jeroen/images/boxtopleft.gif" width="20" height="20" alt=""></TD>
+      <TD colspan="2" ALIGN="left" VALIGN="bottom" HEIGHT="20" BACKGROUND="themes/Jeroen/images/boxtop.gif"><img src="http://images.themes.org" width="1" height="1" alt=""></TD>
+      <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20"><IMG SRC="themes/Jeroen/images/boxtopright.gif" width="20" height="20" alt=""></TD>
      </TR>
      <TR>
-      <TD ALIGN=right VALIGN=BOTTOM WIDTH="20" HEIGHT=20 BACKGROUND="themes/Jeroen/images/boxtopleftside.gif"><IMG SRC="http://images.themes.org/templates/kde/moduletopleft.gif" width="20" height="20" alt=""></TD>
-      <TD COLSPAN=2 ALIGN=CENTER bgcolor="#6C6C6C" BACKGROUND="themes/Jeroen/images/menutitle.gif" HEIGHT=20><FONT COLOR="<? echo $this->fgcolor1; ?>"><?  echo $subject; ?></FONT></TD>
-      <TD ALIGN=left VALIGN=BOTTOM WIDTH="20" HEIGHT="20" BACKGROUND="themes/Jeroen/images/boxtoprightside.gif"><IMG SRC="http://images.themes.org/templates/kde/moduletopright.gif" width="20" height="20" alt=""></TD>
+      <TD ALIGN="right" VALIGN="bottom" WIDTH="20" HEIGHT="20" BACKGROUND="themes/Jeroen/images/boxtopleftside.gif"><IMG SRC="http://images.themes.org/templates/kde/moduletopleft.gif" WIDTH="20" HEIGHT="20" alt=""></TD>
+      <TD COLSPAN=2 ALIGN=CENTER BGCOLOR="#6C6C6C" BACKGROUND="themes/Jeroen/images/menutitle.gif" HEIGHT=20><FONT COLOR="<? echo $this->fgcolor1; ?>"><?  echo $subject; ?></FONT></TD>
+      <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20" BACKGROUND="themes/Jeroen/images/boxtoprightside.gif"><IMG SRC="http://images.themes.org/templates/kde/moduletopright.gif" width="20" height="20" alt=""></TD>
      </TR>
      <TR>
       <TD ALIGN=right BACKGROUND="themes/Jeroen/images/boxleft.gif" WIDTH="20">&nbsp;</TD>
-      <TD COLSPAN=2 VALIGN=TOP width="100%" bgcolor="#E7E7E7" background="http://images.themes.org/templates/kde/sketch.gif">
+      <TD COLSPAN=2 VALIGN=TOP WIDTH="100%" BGCOLOR="#E7E7E7" BACKGROUND="http://images.themes.org/templates/kde/sketch.gif">
        <TABLE WIDTH="100%"><TR><TD><? echo $content; ?></TD></TR></TABLE>
       </TD>
       <TD ALIGN=LEFT BACKGROUND="themes/Jeroen/images/boxright.gif" WIDTH="20">&nbsp;</TD>
@@ -302,7 +317,7 @@
          <?
          global $PHP_SELF; 
  
-	 $this->box("Drop where?", "<TABLE WIDTH=\"100%\"><TR><TD WIDTH=\"50%\" ALIGN=\"left\" VALIGN=\"top\"><A HREF=\"index.php\">home</A><BR><A HREF=\"faq.php\">faq</A><BR><A HREF=\"search.php\">search</A></TD><TD WIDTH=\"50%\" ALIGN=\"right\" VALIGN=\"top\"><A HREF=\"submit.php\">submit news</A><BR><A HREF=\"account.php\">user account</A><BR><A HREF=\"webboard.php\">webboard</A></TD></TR></TABLE>");
+	 $this->box("Drop where?", "<TABLE WIDTH=\"100%\"><TR><TD ALIGN=\"left\" VALIGN=\"top\"><A HREF=\"index.php\">home</A><BR><A HREF=\"faq.php\">faq</A><BR><A HREF=\"search.php\">search</A></TD><TD ALIGN=\"right\" VALIGN=\"top\"><A HREF=\"submit.php\">submit news</A><BR><A HREF=\"account.php\">user account</A><BR><A HREF=\"webboard.php\">webboard</A></TD></TR></TABLE>");
          
          if (strstr($PHP_SELF, "index.php")) {
            global $user;
