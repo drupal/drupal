@@ -55,7 +55,7 @@ function conf_url_rewrite(\$path, \$mode = 'incoming') {
  */
 function path_menu() {
   $items = array();
-  $items[] = array('path' => 'admin/path', 'title' => t('url aliasing'),
+  $items[] = array('path' => 'admin/path', 'title' => t('url aliases'),
     'callback' => 'path_admin',
     'access' => user_access('administer url aliases'));
   $items[] = array('path' => 'admin/path/edit', 'title' => t('edit alias'),
@@ -86,7 +86,7 @@ function path_admin() {
  */
 function path_admin_edit($pid = 0) {
   if ($_POST['op'] == t('Create new alias') || $_POST['op'] == t('Update alias')) {
-    $output = path_save($_POST['edit']);
+    path_save($_POST['edit']);
   }
   else {
     if ($pid) {
@@ -95,8 +95,9 @@ function path_admin_edit($pid = 0) {
     else {
       $output = path_form();
     }
+
+    print theme('page', $output);
   }
-  print theme('page', $output);
 }
 
 /**
@@ -319,8 +320,7 @@ function path_save($edit) {
     }
 
     drupal_set_message(t('the alias has been saved.'));
-
-    return  path_overview();
+    drupal_goto('admin/path');
   }
 }
 
