@@ -6,9 +6,7 @@
 <head>
   <title>{title}</title>
   {head}
-  <style type="text/css" media="all">
-    @import url({stylesheet});
-  </style>
+  <link type="text/css" rel="stylesheet" href="{stylesheet}" />
 </head>
 
 <body{onload_attributes}>
