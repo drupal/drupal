@@ -1,5 +1,5 @@
 <?php
-/* $Id: path.module,v 1.3 2003/10/03 14:10:05 dries Exp $ */
+/* $Id: path.module,v 1.4 2003/10/04 09:43:28 dries Exp $ */
 
 function path_system($field) {
   $system["description"] = path_help("admin/system/modules");
@@ -207,11 +207,11 @@ function path_overview() {
   }
 
   if ($pager = pager_display(NULL, 50, 0, "admin", tablesort_pager())) {
-    $rows[] = array(array("data" => $pager, "colspan" => 3));
+    $rows[] = array(array("data" => $pager, "colspan" => "4"));
   }
 
   if (!$rows) {
-    $rows[] = array(array("data" => t("No URL aliases available."), "colspan" => "3"));
+    $rows[] = array(array("data" => t("No URL aliases available."), "colspan" => "4"));
   }
 
   return table($header, $rows);
