@@ -1,14 +1,14 @@
 <?php
-// $Id: tablesort.inc,v 1.11 2003/11/25 19:26:20 dries Exp $
+// $Id: tablesort.inc,v 1.12 2004/01/25 10:07:24 dries Exp $
 
 function tablesort_init($header) {
   static $ts;
 
   if (empty($ts)) {
-    $ts["order"] = tablesort_get_order($header);
-    $ts["order_sql"] = tablesort_get_order_sql($header, $ts["order"]);
-    $ts["sort"] = tablesort_get_sort($header);
-    $ts["query_string"] = tablesort_get_querystring();
+    $ts['order'] = tablesort_get_order($header);
+    $ts['order_sql'] = tablesort_get_order_sql($header, $ts['order']);
+    $ts['sort'] = tablesort_get_sort($header);
+    $ts['query_string'] = tablesort_get_querystring();
   }
 
   return $ts;
@@ -16,38 +16,38 @@ function tablesort_init($header) {
 
 function tablesort_pager() {
   $cgi = $_SERVER['REQUEST_METHOD'] == 'GET' ? $_GET : $_POST;
-  unset($cgi["q"], $cgi["from"]);
+  unset($cgi['q'], $cgi["from"]);
   return $cgi;
 }
 
 function tablesort_sql($header) {
   $ts = tablesort_init($header);
-  return " ORDER BY ". $ts["order_sql"]. " ". strtoupper($ts["sort"]);
+  return " ORDER BY ". $ts['order_sql']. " ". strtoupper($ts['sort']);
 }
 
 function tablesort($cell, $header) {
   $ts = tablesort_init($header);
-  $title = t("sort by %s", array("%s" => $cell["data"]));
+  $title = t("sort by %s", array("%s" => $cell['data']));
 
   // special formatting for the currently sorted column header
-  if ($cell["data"] == $ts["order"]) {
-    $cell["class"] = "cell-highlight";
-    $image = "&nbsp;<img border=\"0\" src=\"". theme("image", "arrow-". $ts["sort"]. ".gif"). "\"></img>";
+  if ($cell['data'] == $ts['order']) {
+    $cell['class'] = 'cell-highlight';
+    $image = "&nbsp;<img border=\"0\" src=\"". theme('image', "arrow-". $ts['sort']. ".gif"). "\"></img>";
     $dir = array("asc" => "ascending", "desc" => "descending");
-    $title = t("sort ". $dir[$ts["sort"]]);
+    $title = t("sort ". $dir[$ts['sort']]);
   } else {
     // If the user clicks a different header, we want to sort ascending initially.
-    $ts["sort"] = "asc";
+    $ts['sort'] = "asc";
   }
 
-  $cell["data"] = l($cell["data"] . $image, $_GET["q"], array("title" => $title), "sort=". $ts["sort"]. "&order=". urlencode($cell["data"]). $ts["query_string"]);
+  $cell['data'] = l($cell['data'] . $image, $_GET['q'], array("title" => $title), "sort=". $ts['sort']. "&order=". urlencode($cell['data']). $ts['query_string']);
   return $cell;
 }
 
 function tablesort_get_querystring() {
   $cgi = $_SERVER['REQUEST_METHOD'] == 'GET' ? $_GET : $_POST;
   foreach ($cgi as $key => $val) {
-    if ($key != "order" && $key != "sort" && $key != "q") {
+    if ($key != 'order' && $key != 'sort' && $key != 'q') {
       $query_string .= "&" . $key . "=" . $val;
     }
   }
@@ -78,8 +78,8 @@ function tablesort_get_order($headers) {
 
 function tablesort_get_order_sql($header, $order) {
   foreach ($header as $cell) {
-    if ($cell["data"] == $order) {
-      return $cell["field"];
+    if ($cell['data'] == $order) {
+      return $cell['field'];
     }
   }
 }
@@ -91,8 +91,8 @@ function tablesort_get_sort($headers) {
   // user has not specified a sort.  check module for default and if none, use 'asc'
   else {
     foreach ($headers as $header) {
-      if (isset($header["sort"])) {
-        return $header["sort"];
+      if (isset($header['sort'])) {
+        return $header['sort'];
       }
     }
   }
