@@ -21,15 +21,15 @@ function forum_save($op, $node) {
   }
 
   if ($op == "create") {
-    return array("promote" => 0, "moderate" => 0, "status" => 1, "teaser" => $node->body);
+    return array("teaser" => $node->body);
+  }
+
+  if ($op == "decline") {
+    return array("status" => 0);
   }
 
   if ($op == "update") {
-    return array();
-  }
-
-  if ($op == "update") {
-    return array("status" => 0, "teaser" => $node->body);
+    return array("teaser" => $node->body);
   }
 }
 
