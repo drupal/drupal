@@ -90,7 +90,7 @@ function queue_overview() {
     }
 
     if ($node->teaser) {
-      $output .= " <tr><td colspan=\"4\"><div style=\"margin-left: 40px; margin-bottom: 20px; font-size: 10px;\">$node->teaser</div></td></tr>";
+      $output .= " <tr><td colspan=\"4\"><div style=\"margin-left: 40px; margin-bottom: 20px; font-size: 10px;\">". check_output($node->teaser, 1) ."</div></td></tr>";
     }
   }
   $output .= "</table>";
