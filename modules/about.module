@@ -1,0 +1,9 @@
+<?
+
+$module = array("admin" => "about_admin");
+
+function about_admin() {
+  print "under construction";
+}
+
+?>

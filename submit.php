@@ -4,7 +4,9 @@ function submit_enter() {
   global $anonymous, $categories, $allowed_html, $theme, $user;
   
   ### Guidlines:
-  $output .= droplet_get("submit_information");
+  $output .= "<P>Got some news or some thoughts you would like to share? Fill out this form and they will automatically get whisked away to our submission queue where our moderators will frown at it, poke at it and hopefully post it. Every registered user is automatically a moderator and can vote whether or not your sumbission should be carried to the front page for discussion.</P>\n"; 
+  $output .= "<P>Note that we do not revamp or extend your submission so it is up to you to make sure your submission is well-written: if you don't care enough to be clear and complete, your submission is likely to be moderated down by our army of moderators. Try to be complete, aim for clarity, organize and structure your text, and try to carry out your statements with examples. It is also encouraged to extend your submission with arguments that flow from your unique intellectual capability and experience: offer some insight or explanation as to why you think your submission is interesting. Make sure your submission has some meat on it!</P>\n";
+  $output .= "<P>However, if you have bugs to report, complaints, personal questions or anything besides a public submission, we would prefer you to mail us instead, or your message is likely to get lost.</P><BR>\n"; 
 
   ### Submission form:
   $output .= "<FORM ACTION=\"submit.php\" METHOD=\"post\">\n";
@@ -135,7 +137,7 @@ function submit_submit($subject, $abstract, $article, $category) {
   
   ### Display confirmation message:
   $theme->header(); 
-  $theme->box("Thank you for your submission.", droplet_get("submit_confirmation"));
+  $theme->box("Thank you for your submission.", "Thank you for your submission. Your submission has been whisked away to our submission queue where our registered users will frown at it, poke at it and hopefully carry it to the front page for discussion.");
   $theme->footer();
 }
 

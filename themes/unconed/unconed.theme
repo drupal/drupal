@@ -24,7 +24,7 @@
    var $fgcolor3 = "#000000";
    var $hlcolor3 = "yellow";
 
-   function header($title) {
+   function header() {
      global $site_name;
      srand((double)microtime()*1000000);
     ?>

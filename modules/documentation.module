@@ -1,10 +1,10 @@
 <?
 
-$module = array("page" => "documentation_page");
+$module = array("page"  => "documentation",
+                "admin" => "documentation");
 
-function documentation_page() {
+function documentation() {
   ?>
-  <H1>Documentation</H1>
   <SMALL><I>$Id$</I></SMALL>
  
   <H2>Chapter 1: installation guide</H2>

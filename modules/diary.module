@@ -249,9 +249,9 @@ function diary_admin_display($order = "date") {
   $result = db_query("SELECT d.*, u.userid FROM diaries d LEFT JOIN users u ON u.id = d.author ORDER BY d.$fields[$order] LIMIT 50");
    
   // Display stories:
-  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
+  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR>\n";
-  $output .= "  <TH ALIGN=\"right\" COLSPAN=\"5\">\n";
+  $output .= "  <TH ALIGN=\"right\" COLSPAN=\"3\">\n";
   $output .= "   <FORM ACTION=\"admin.php?mod=diary\" METHOD=\"post\">\n";
   $output .= "    <SELECT NAME=\"order\">\n";
   foreach ($fields as $key=>$value) {

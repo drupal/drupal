@@ -26,7 +26,7 @@ function ban_display($category = "") {
   $result = db_query("SELECT * FROM bans WHERE type = $category ORDER BY mask");
  
   // Generate output:
-  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
+  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR>\n";
   $output .= "  <TH COLSPAN=\"3\">\n";
   $output .= "   <FORM ACTION=\"admin.php?mod=ban\" METHOD=\"post\">\n";

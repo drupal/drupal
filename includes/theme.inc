@@ -45,13 +45,21 @@ function theme_account($theme) {
 
 
 function theme_main_blocks($theme) {
-  global $PHP_SELF, $user, $id;
+  global $id, $PHP_SELF, $user;
  
   switch (strtok($PHP_SELF, ".")) {
     case "/discussion":
       if ($user->id) $story = db_fetch_object(db_query("SELECT * FROM stories WHERE id = '$id'"));
       if ($story->status == 1) theme_moderation_results($theme, $story);
       else theme_new_headlines($theme);
+      break;
+    case "/index":
+      theme_account($theme);
+      $result = db_query("SELECT * FROM blocks WHERE status = 2");
+      while ($block = db_fetch_object($result)) {
+        $blocks = module_execute($block->module, "block");
+        $theme->box($blocks[$block->offset]["subject"], $blocks[$block->offset]["content"]);     
+      }
       break;
     default:
       theme_account($theme);
@@ -63,8 +71,8 @@ function theme_user_blocks($theme) {
   if ($user->id && strstr($PHP_SELF, "index.php")) {
     $result = db_query("SELECT * FROM layout l LEFT JOIN blocks b ON l.block = b.name WHERE l.user = '$user->id' AND l.weight > 0 AND b.status = '1' ORDER BY weight");
     while ($block = db_fetch_object($result)) {
-     $blocks = module_execute($block->module, "block");
-     $theme->box($blocks[$block->offset]["subject"], $blocks[$block->offset]["content"]);
+      $blocks = module_execute($block->module, "block");
+      $theme->box($blocks[$block->offset]["subject"], $blocks[$block->offset]["content"]);
     }
   }
 }

@@ -1,0 +1,122 @@
+<?
+
+$module = array("block" => "ab_block",
+                "admin" => "ab_admin");
+
+function ab_block() {
+  $result = db_query("SELECT * FROM admin_blocks");
+  $i = 0;
+  while ($block = db_fetch_object($result)) {
+    $blocks[$i]["subject"] = check_output($block->subject);
+    $blocks[$i]["content"] = check_output(eval($block->content)); 
+    $blocks[$i]["info"] = check_output($block->info);
+    $blocks[$i]["link"] = check_output($block->link);
+    $i++;
+  }
+
+  return $blocks;
+}
+
+function ab_admin_display() {
+  $result = db_query("SELECT * FROM admin_blocks");
+
+  while ($block = db_fetch_object($result)) {
+    $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
+    $output .= " <TR><TH>Subject:</TH><TD>". check_output($block->subject) ."</TD></TR>\n";
+    $output .= " <TR><TH>Content:</TH><TD>". nl2br(htmlentities($block->content)) ."</TD></TR>\n";
+    $output .= " <TR><TH>Information:</TH><TD><I>". check_output($block->info) ."</I></TD></TR>\n";
+    $output .= " <TR><TH>Link:</TH><TD>". format_url($block->link) ."</TD></TR>\n";
+    $output .= " <TR><TH>Operations:</TH><TD><A HREF=\"admin.php?mod=admin-block&op=edit&id=$block->id\">edit</A>, <A HREF=\"admin.php?mod=admin-block&op=delete&id=$block->id\">delete</A></TD></TR>\n";
+    $output .= "</TABLE>\n";
+    $output .= "<BR><BR>\n";
+  }
+
+  $output .= "<FORM ACTION=\"admin.php?mod=admin-block\" METHOD=\"post\">\n";
+  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
+  $output .= " <TR><TH>Subject:</TH><TD><INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"35\"></TD></TR>\n";
+  $output .= " <TR><TH>Content:</TH><TD><TEXTAREA NAME=\"content\" COLS=\"50\" ROWS=\"5\"></TEXTAREA></TD></TR>\n";
+  $output .= " <TR><TH>Information:</TH><TD><INPUT TYPE=\"text\" NAME=\"info\" SIZE=\"35\"></TD></TR>\n";
+  $output .= " <TR><TH>Link:</TH><TD><INPUT TYPE=\"text\" NAME=\"link\" SIZE=\"35\"></TD></TR>\n";
+  $output .= " <TR><TH>Operations:</TH><TD><INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Add admin block\"></TD></TR>\n";
+  $output .= "</TABLE>\n";
+  $output .= "</FORM>\n";
+
+  print $output;
+}
+
+function ab_admin_add($subject, $content, $info, $link) {
+  db_query("INSERT INTO admin_blocks (subject, content, info, link) VALUES ('". check_input($subject) ."', '". check_code($content) ."', '". check_input($info) ."', '". check_input($link) ."')"); 
+}
+
+function ab_admin_delete($id) {
+  db_query("DELETE FROM admin_blocks WHERE id = $id");
+}
+
+function ab_admin_rehash() {
+  global $repository;
+  module_rehash_blocks("admin-block", $repository["admin-block"]);
+}
+
+function ab_admin_edit($id) {
+  $result = db_query("SELECT * FROM admin_blocks WHERE id = $id");
+
+  if ($block = db_fetch_object($result)) {
+    $output .= "<FORM ACTION=\"admin.php?mod=admin-block\" METHOD=\"post\">\n";
+    
+    $output .= "<P>\n";
+    $output .= " <B>Subject:</B><BR>\n";
+    $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" VALUE=\"". check_field($block->subject) ."\">\n";
+    $output .= "</P>\n";
+    $output .= "<P>\n";
+    $output .= "<B>Content:</B><BR>\n";
+    $output .= "<TEXTAREA NAME=\"content\" COLS=\"50\" ROWS=\"5\">$block->content</TEXTAREA>\n";
+    $output .= "</P>\n";
+    $output .= "<B>Information:</B><BR>\n";
+    $output .= "<INPUT TYPE=\"text\" NAME=\"info\" VALUE=\"$block->info\">\n";
+    $output .= "</P>\n";
+    $output .= "<P>\n";
+    $output .= "<B>Link:</B><BR>\n";
+    $output .= "<INPUT TYPE=\"text\" NAME=\"link\" VALUE=\"$block->link\">\n";
+    $output .= "</P>\n";
+    $output .= "<P>\n";
+    $output .= "<INPUT TYPE=\"hidden\" NAME=\"id\" VALUE=\"$id\">\n";
+    $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save admin block\"><BR>\n";
+    $output .= "</P>\n";
+    $output .= "</FORM>\n";
+  }
+
+  print $output;
+}
+
+function ab_admin_save($id, $subject, $content, $info, $link) {
+  db_query("UPDATE admin_blocks SET subject = '". check_input($subject) ."', content = '". check_code($content) ."', info = '". check_input($info) ."', link = '". check_input($link) ."' WHERE id = '$id'");
+  watchdog("message", "modified admin block `$subject'");
+}
+
+function ab_admin() {
+  global $op, $id, $subject, $content, $info, $link;
+
+  switch ($op) {
+    case "Add admin block":
+      ab_admin_add($subject, $content, $info, $link);
+      ab_admin_display();
+      ab_admin_rehash();
+      break;
+    case "Save admin block":
+      ab_admin_save($id, $subject, $content, $info, $link);
+      ab_admin_display();
+      ab_admin_rehash();
+      break;
+    case "edit":
+      ab_admin_edit($id);
+      break;
+    case "delete":
+      ab_admin_delete($id);
+      ab_admin_rehash();
+       // fall through
+    default:
+      ab_admin_display();
+  }
+}
+
+?>
