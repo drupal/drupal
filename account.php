@@ -159,7 +159,7 @@ switch ($op) {
       }
     }
     break;
-  case "edituser":
+  case "user":
     if ($user && $user->valid()) {
       ### Generate output/content:
       $output .= "<FORM ACTION=\"account.php\" METHOD=post>\n";
@@ -180,7 +180,7 @@ switch ($op) {
       $output .= "<I>Optional. This biographical information is publicly displayed on your user page.</I><P>\n";
       $output .= "<B>User block:</B> (255 char limit)<BR>\n";
       $output .= "<TEXTAREA NAME=\"edit[ublock]\" COLS=35 ROWS=5 WRAP=virtual>$user->ublock</TEXTAREA><BR>\n";
-      $output .= "<INPUT NAME=\"edit[ublockon]\" TYPE=checkbox". ($user->ublockon == 1 ? " CHECKED" : "") .">Enable user block<BR>\n";
+      $output .= "<INPUT NAME=\"edit[ublockon]\" TYPE=checkbox". ($user->ublockon == 1 ? " CHECKED" : "") ."> Enable user block<BR>\n";
       $output .= "<I>Enable the checkbox and whatever you enter below will appear on your costum main page.</I><P>\n";
       $output .= "<B>Password:</B><BR>\n";
       $output .= "<INPUT TYPE=password NAME=\"edit[pass1]\" SIZE=10 MAXLENGTH=20> <INPUT TYPE=password NAME=edit[pass2] SIZE=10 MAXLENGTH=20><BR>\n";
@@ -201,7 +201,7 @@ switch ($op) {
       $theme->footer();
     }
     break;
-  case "editpage":
+  case "page":
     if ($user && $user->valid()) {
       ### Generate output/content:
       $output .= "<FORM ACTION=\"account.php\" METHOD=post>\n";

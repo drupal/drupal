@@ -1,7 +1,7 @@
 <?PHP
 
 function submit_enter() {
-  global $user, $theme;
+  global $user, $theme, $categories;
   
   ### Guidlines:
   $output .= "<P>Got some news or some thoughts you would like to share?  Fill out this form and they will automatically get whisked away to our submission queue where our moderators will frown at it, poke at it and hopefully post it.  Every registered user is automatically a moderator and can vote whether or not your sumbission should be carried to the front page for discussion.</P>\n";
@@ -56,7 +56,7 @@ function submit_enter() {
 }
 
 function submit_preview($subject, $abstract, $story, $category) {
-  global $user, $theme;
+  global $user, $theme, $categories;
 
   $output .= "<FORM ACTION=\"submit.php\" METHOD=\"post\">\n";
 

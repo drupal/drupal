@@ -50,9 +50,6 @@
 
            ### Display admin blocks:
            displayAdminblock($this);
-
-           ### Display referring sites:
-           displayReferrals($this);
           ?>
          </TD>
          <TD WIDTH="430" VALIGN="top" ALIGN="left">
@@ -308,7 +305,7 @@
            </TD>
           </TR>
       <?
-       $result = mysql_query("SELECT COUNT(tid) FROM comments WHERE sid = $sid AND score < $thold");
+       $result = mysql_query("SELECT COUNT(cid) FROM comments WHERE sid = $sid AND score < $thold");
        if ($result && $number = mysql_result($result, 0)) {
       ?>
           <TR>
@@ -326,12 +323,12 @@
    ######
    # Syntax.......: comment(...);
    # Description..: this function is used to theme user comments.
-   function comment($poster, $subject, $tid, $date, $url, $email, $score, $reason, $comment, $link, $thread = "") {
+   function comment($poster, $subject, $cid, $date, $url, $email, $score, $reason, $comment, $link, $thread = "") {
      include "config.inc";
 
      if (!eregi("[a-z0-9]",$poster)) $poster = $anonymous;
      if (!eregi("[a-z0-9]",$subject)) $subject = "[no subject]";
-     echo "<A NAME=\"$tid\">";
+     echo "<A NAME=\"$cid\">";
 
      ### Create comment header:
      echo "<TABLE BORDER=\"0\" CELLPADDING=\"4\" CELLSPACING=\"2\" WIDTH=\"100%\">";
@@ -350,7 +347,7 @@
 
      ### Moderation:
      echo "     <TD ALIGN=\"right\" ROWSPAN=\"3\" VALIGN=\"middle\" WIDTH=\"15%\">";
-     echo "      <SELECT NAME=\"meta:$tid\">";
+     echo "      <SELECT NAME=\"meta:$cid\">";
      echo "         <OPTION VALUE=\"-1\">Moderate</OPTION>\n";
      for ($i = 0; $i < sizeof($comments_meta_reasons); $i++) {
        echo "       <OPTION VALUE=\"$i\">$comments_meta_reasons[$i]</OPTION>\n";
@@ -503,43 +500,69 @@
          <?
          global $PHP_SELF; 
  
-	 $this->box("Drop where?", "<TD ALIGN=\"left\" VALIGN=\"top\"><A HREF=\"index.php\">home</A><BR><A HREF=\"faq.php\">faq</A><BR><A HREF=\"search.php\">search</A></TD><TD ALIGN=\"right\" VALIGN=\"top\"><A HREF=\"submit.php\">submit news</A><BR><A HREF=\"account.php\">your account</A><BR><A HREF=\"webboard.php\">webboard</A></TD>");
-         
-          if (strstr($PHP_SELF, "index.php")) {
-            global $user, $date;
+	 $this->box("Drop where?", "<TD ALIGN=\"left\" VALIGN=\"top\"><A HREF=\"index.php\">home</A><BR><A HREF=\"faq.php\">faq</A><BR><A HREF=\"search.php\">search</A></TD><TD ALIGN=\"right\" VALIGN=\"top\"><A HREF=\"submit.php\">submit news</A><BR><A HREF=\"account.php\">your account</A></TD>");
 
-            ### Display account:
+         if (strstr($PHP_SELF, "index.php")) {
+           global $user, $date;
+
+           ### Display account:
            displayAccount($this);
 
- 	   ### Display calendar:
+           ### Display calendar:
            displayCalendar($this, $date);
 
+           ### Display calendar:
+           displayOldHeadlines($this);
+ 
            ### Display voting poll:
            displayPoll($this);
-
-           ### Display old headlines:
-           displayOldHeadlines($this);
-          }
-          elseif (strstr($PHP_SELF, "account.php")) {
+         }
+         elseif (strstr($PHP_SELF, "account.php")) {
            ### Display account settings:
            displayAccountSettings($this);
-          }
-          elseif (strstr($PHP_SELF, "article.php")) {
-           global $sid; 
 
-            ### Display account:
+           ### Display account:
            displayAccount($this);
-
-           ### Display related links:
-           displayRelatedLinks($this, $sid);
+         }
+         elseif (strstr($PHP_SELF, "submit.php")) {
+           ### Display account:
+           displayAccount($this);
 
            ### Display new headlines:
            displayNewHeadlines($this);
-          }
-          else {
-            ### Display new headlines:
-            displayNewHeadlines($this);
-          }
+         }
+         elseif (strstr($PHP_SELF, "discussion.php")) {
+           global $id;
+           
+           if ($id && $story = id2story($id)) {
+             if ($story->status == 2) {
+               ### Display account:
+               displayAccount($this);
+      
+               ### Display related links:
+               displayRelatedLinks($this, $story);
+
+               ### Display new headlines:
+               displayNewHeadlines($this);
+             }
+             else {
+               ### Display results of moderation:
+               displayModerationResults($this, $story);
+             }
+           }
+           else {
+             ### Display account:
+             displayAccount($this);
+
+             ### Display new headlines:
+             displayNewHeadlines($this);
+           }
+         }
+         else {
+           ### Display new headlines:
+           displayNewHeadlines($this);
+         }
+         
          ?>
         </TD>
        </TR>
@@ -548,7 +571,7 @@
          <IMG SRC="themes/Jeroen/images/footerleft.gif" WIDTH="20" HEIGHT="20" ALT="">
         </TD>
         <TD WIDTH="100%" BACKGROUND="themes/Jeroen/images/footer.gif" ALIGN="center" VALIGN="center" HEIGHT="20">
-         <FONT COLOR="<? echo $this->hlcolor2; ?>" SIZE="2">[ <A HREF="">home</A> | <A HREF="/faq.php">faq</A> | <A HREF="/search.php">search</A> | <A HREF="/submit.php">submit news</A> | <A HREF="/account.php">your account</A> | <A HREF="/webboard.php">webboard</A> ] </FONT>
+         <FONT COLOR="<? echo $this->hlcolor2; ?>" SIZE="2">[ <A HREF="">home</A> | <A HREF="faq.php">faq</A> | <A HREF="search.php">search</A> | <A HREF="submit.php">submit news</A> | <A HREF="account.php">your account</A> ] </FONT>
         </TD>
         <TD WIDTH="160" ALIGN="left" VALIGN="bottom" HEIGHT="20">
          <IMG SRC="themes/Jeroen/images/footerright.gif" WIDTH="20" HEIGHT="20" ALT="">
