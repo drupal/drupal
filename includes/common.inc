@@ -631,9 +631,8 @@ function search_item($item, $type) {
     $output = module_invoke($type, "search_item", $item);
   }
   else {
-    $output = " <strong><u><a href=\"". $item["link"] ."\">". $item["title"] ."</a></u></strong><br />";
-    $output .= " <small>" . t($type) . ($item["user"] ? " - ". $item["user"] : "") ."". ($item["date"] ? " - ". format_date($item["date"], "small") : "") ."</small>";
-    $output .= "<br /><br />";
+    $output = " <dt class=\"title\"><a href=\"". $item["link"] ."\">". $item["title"] ."</a></dt>";
+    $output .= " <dd class=\"small\">" . t($type) . ($item["user"] ? " - ". $item["user"] : "") ."". ($item["date"] ? " - ". format_date($item["date"], "small") : "") ."</dd>";
   }
 
   return $output;
@@ -659,7 +658,7 @@ function search_form($action = NULL, $keys = NULL, $options = NULL) {
     $action = url("search");
   }
 
-  $output = " <br /><input type=\"text\" class=\"form-text\" size=\"50\" value=\"". check_form($keys) ."\" name=\"keys\" />";
+  $output = " <div class=\"search-form\"><br /><input type=\"text\" class=\"form-text\" size=\"50\" value=\"". check_form($keys) ."\" name=\"keys\" />";
   $output .= " <input type=\"submit\" class=\"form-submit\" value=\"". t("Search") ."\" />\n";
 
   if ($options) {
@@ -671,6 +670,7 @@ function search_form($action = NULL, $keys = NULL, $options = NULL) {
         $output .= " <input type=\"checkbox\" name=\"edit[type][$name]\" ". ($edit["type"][$name] ? " checked=\"checked\"" : "") ." /> ". t($name);
       }
     }
+    $output .= "</div>";
   }
 
   $form .= "<br />";
@@ -690,9 +690,11 @@ function search_data($keys = NULL) {
         list($title, $results) = module_invoke($name, "search", $keys);
         if ($results) {
           $output .= "<h2>$title</h2>";
+          $output .= "<dl class=\"search-results\">";
           foreach ($results as $entry) {
             $output .= search_item($entry, $name);
           }
+          $output .= "</dl>";
         }
       }
     }
