@@ -227,19 +227,12 @@ function node_admin_edit($node) {
   }
 
   /*
-  ** Edit comments:
+  ** Display the node form extensions:
   */
 
-  $output .= "<h3>". t("Edit comments") ."</h3>";
-
-  $result = db_query("SELECT c.cid, c.subject, u.uid, u.name FROM comments c LEFT JOIN users u ON u.uid = c.uid WHERE lid = '$node->nid' ORDER BY c.timestamp");
-
-  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
-  $output .= " <tr><th>title</th><th>author</th><th colspan=\"3\">operations</th></tr>";
-  while ($comment = db_fetch_object($result)) {
-    $output .= "<tr><td><a href=\"node.php?id=$node->nid&cid=$comment->cid#$comment->cid\">$comment->subject</a></td><td>". format_name($comment) ."</td><td><a href=\"node.php?id=$node->nid&cid=$comment->cid#$comment->cid\">". t("view comment") ."</a></td><td><a href=\"admin.php?mod=comment&op=edit&id=$comment->cid\">". t("edit comment") ."</a></td><td><a href=\"admin.php?mod=comment&op=delete&id=$comment->cid\">". t("delete comment") ."</a></td></tr>";
+  foreach (module_list() as $name) {
+    $output .= module_invoke($name, "node_link", $node);
   }
-  $output .= "</table>";
 
   return $output;
 
@@ -658,7 +651,12 @@ function node_form($edit) {
 function node_add($type) {
   global $user;
 
-  if ($type) {
+  /*
+  ** If a node type has been specified, validate it existence.  If no 
+  ** (valid) node type has been provied, display a node type overview.
+  */
+
+  if (module_hook($type, "node")) {
     $output = node_form(array("uid" => $user->uid, "name" => $user->name, "type" => $type));
   }
   else {

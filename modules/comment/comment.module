@@ -19,7 +19,7 @@ function comment_link($type, $node = 0, $main = 0) {
     $links[] = "<a href=\"admin.php?mod=comment\">comments</a>";
   }
 
-  if ($node->comment) {
+  if ($type == "node" && $node->comment) {
 
     if ($main) {
 
@@ -44,6 +44,25 @@ function comment_link($type, $node = 0, $main = 0) {
   }
 
   return $links ? $links : array();
+}
+
+function comment_node_link($node) {
+
+  /*
+  ** Edit comments:
+  */
+
+  $result = db_query("SELECT c.cid, c.subject, u.uid, u.name FROM comments c LEFT JOIN users u ON u.uid = c.uid WHERE lid = '$node->nid' ORDER BY c.timestamp");
+  $output .= "<h3>". t("Edit comments") ."</h3>";
+  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
+  $output .= " <tr><th>title</th><th>author</th><th colspan=\"3\">operations</th></tr>";
+  while ($comment = db_fetch_object($result)) {
+    $output .= "<tr><td><a href=\"node.php?id=$node->nid&cid=$comment->cid#$comment->cid\">$comment->subject</a></td><td>". format_name($comment) ."</td><td><a href=\"node.php?id=$node->nid&cid=$comment->cid#$comment->cid\">". t("view comment") ."</a></td><td><a href=\"admin.php?mod=comment&op=edit&id=$comment->cid\">". t("edit comment") ."</a></td><td><a href=\"admin.php?mod=comment&op=delete&id=$comment->cid\">". t("delete comment") ."</a></td></tr>";
+  }
+
+  $output .= "</table>";
+
+  return $output;
 }
 
 function comment_edit($id) {
