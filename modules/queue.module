@@ -1,5 +1,5 @@
 <?php
-// $Id: queue.module,v 1.58 2002/10/28 19:36:37 kjartan Exp $
+// $Id: queue.module,v 1.59 2002/11/27 18:43:49 dries Exp $
 
 function queue_system($field){
   $system["description"] = t("Enables content to be moderated by the community.");
@@ -198,14 +198,12 @@ function queue_block($op = "list", $delta = 0) {
           }
         }
 
-        $block[0]["subject"] = t("Moderation results");
-        $block[0]["content"] = $output ? $output : t("This node has not been moderated yet.");
-        $block[0]["info"] = t("Moderation results");
+        $block["subject"] = t("Moderation results");
+        $block["content"] = $output ? $output : t("This node has not been moderated yet.");
       }
     }
     elseif ((user_access("access submission queue") || user_access("administer blocks")) && (substr_count(request_uri(), drupal_url(array("mod" => "user"), "module")) || substr_count(request_uri(), drupal_url(array(), "admin")))) {
-      $block[0]["subject"] = t("Moderation results");
-      $block[0]["info"] = t("Moderation results");
+      $block["subject"] = t("Moderation results");
     }
 
     return $block;

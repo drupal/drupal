@@ -142,13 +142,16 @@ function throttle_display_throttle_block() {
 }
 
 /* Block hook */
-function throttle_block() {
-
-  $block[0]["subject"] = "Throttle status";
-  $block[0]["content"] = throttle_display_throttle_block();
-  $block[0]["info"] = "Throttle status";
-
-  return $block;
+function throttle_block($op = "list", $delta = 0) {
+  if ($op == "list") {
+    $blocks[0]["info"] = t("Throttle status");
+    return $blocks;
+  }
+  else {
+    $block["subject"] = t("Throttle status");
+    $block["content"] = throttle_display_throttle_block();
+    return $block;
+  }
 }
 
 ?>
