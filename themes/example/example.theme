@@ -8,11 +8,11 @@
 ?>
 
       <HTML>
-   
+
         <HEAD>
           <TITLE><? echo $site_name; ?></TITLE>
         </HEAD>
-  
+
         <BODY>
           <TABLE BORDER="1">
             <TR>
@@ -20,7 +20,7 @@
               </TD>
                 Logo? <!-- I left a TD to add a logo of some kind -->
               <TD>
-              </TD>  
+              </TD>
             </TR>
             <TR>
               <TD VALIGN="top">
@@ -43,7 +43,7 @@
               <TABLE BORDER="1">
                 <TR>
                   <TD COLSPAN="2">
-                    <?php echo check_output($story->subject); ?>
+                    <?php echo check_output($story->title); ?>
                   </TD>
                 </TR>
                 <TR>
@@ -58,7 +58,7 @@
                    <TD>
 
 <?php
-                     echo "<A HREF=\"search.php?category=". urlencode($story->section) ."\">$story->section</A>";
+                     echo "<A HREF=\"search.php?category=". urlencode($story->section) ."\">". check_output($story->section) ."</A>";
 
 ?>
 
@@ -68,12 +68,10 @@
                    <TD COLSPAN="2">
 
 <?php
- 
+
                         echo "<P>". check_output($story->abstract, 1) ."</P>";
-                        if ($story->updates)
-                          echo "<P>". t("Editor's note by <A HREF=\"account.php?op=userinfo&uname=$story->editor\">$story->editor</A>") .":". check_output($story->updates, 1) ."</P>";
                         if ($reply)
-                          echo "<P>". check_output($story->article, 1) ."</P>";                      
+                          echo "<P>". check_output($story->article, 1) ."</P>";
 
 ?>
                    </TD>
@@ -118,7 +116,7 @@
       echo "                <TR>";
       echo "                  <TD>";
       echo "                    <TABLE BORDER=\"1\">";
- 
+
       // Subject:
       echo "                      <TR>";
       echo "                        <TD>";
@@ -127,13 +125,13 @@
       echo "                            <TD >";
       echo "                          ". check_output($comment->subject);
       echo "                        </TD>";
- 
+
       // Moderation:
       echo "                        <TD>";
       echo                              comment_moderation($comment);
       echo "                        </TD>";
       echo "                      </TR>";
- 
+
       // Author:
       echo "                      <TR>";
       echo "                        <TD>". t("Author") .":</FONT></TD><TD>". format_username($comment->userid);
@@ -142,14 +140,14 @@
       echo "                          on ". format_date($comment->timestamp);
       echo "                        </TD>";
       echo "                      </TR>";
- 
+
       echo "                    </TABLE>";
       echo "                  </TD>";
       echo "                </TR>";
- 
+
       // Print body of comment:
                   if ($comment) echo " <TR><TD>" . check_output($comment->comment, 1) ."</TD></TR>";
- 
+
       // Print bottom link(s):
       echo "                <TR><TD>$link</TD></TR>";
       echo "              </TABLE>";
@@ -160,7 +158,7 @@
       echo "    </TR>";
       echo "  </TABLE>";
       echo "  <BR>";
- 
+
     } // close comment function
 
     function box($subject, $content, $options = "") {

@@ -1,14 +1,14 @@
 <?php
 
   /*********************************************************************
-  
+
    Theme: UnConeD
    Author: UnConeD
    Email: unconed@drop.org
    Description: Modern theme, gray and blue, high coolness factor.
-   
+
   *********************************************************************/
-  
+
  class Theme {
    var $link = "#000000";
    var $themename = "unconed";
@@ -86,7 +86,7 @@
         <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" BGCOLOR="<?php echo $this->brcolor1; ?>" WIDTH="100%">
         <TR><TD>
          <TABLE BORDER="0" CELLPADDING="4" CELLSPACING="1" WIDTH="100%">
-          <TR><TD COLSPAN="2" BGCOLOR="<?php echo $this->bgcolor1; ?>" WIDTH="100%"><table width="100%" cellpadding="0" cellspacing="0"><tr><td width="100%"><FONT COLOR="<?php echo $this->fgcolor1; ?>"><B><?php echo "". check_output($story->subject, 1) .""; ?></B></FONT></td><td valign="middle" align="center"><IMG SRC="themes/<?php print $this->themename; ?>/images/icon.gif" valign="middle"></td></tr></table></TD></TR>
+          <TR><TD COLSPAN="2" BGCOLOR="<?php echo $this->bgcolor1; ?>" WIDTH="100%"><table width="100%" cellpadding="0" cellspacing="0"><tr><td width="100%"><FONT COLOR="<?php echo $this->fgcolor1; ?>"><B><?php echo "". check_output($story->title) .""; ?></B></FONT></td><td valign="middle" align="center"><IMG SRC="themes/<?php print $this->themename; ?>/images/icon.gif" valign="middle"></td></tr></table></TD></TR>
           <TR BGCOLOR="<?php echo $this->bgcolor2; ?>">
            <?php
             if ($story->section) { print "<TD WIDTH=\"70%\" BGCOLOR=\"$this->bgcolor2\">"; }
@@ -94,7 +94,7 @@
             if ($story->userid) { print "<SMALL>Posted by " . format_username($story->userid) . " on $timestamp"; }
             else { print "<SMALL>Posted by $anonymous on $timestamp"; }
 
-            if ($story->section) { print "</TD><TD WIDTH=\"30%\" BGCOLOR=\"$this->bgcolor2\" ALIGN=\"center\"><B><A HREF=\"index.php?section=" . urlencode($story->section) . "\"><FONT COLOR=\"$this->sectioncolor\">$story->section</FONT></A></B>"; }
+            if ($story->section) { print "</TD><TD WIDTH=\"30%\" BGCOLOR=\"$this->bgcolor2\" ALIGN=\"center\"><B><A HREF=\"index.php?section=" . urlencode($story->section) . "\"><FONT COLOR=\"$this->sectioncolor\">". check_output($story->section) ."</FONT></A></B>"; }
            ?>
           </TD>
          </TR>
@@ -102,8 +102,6 @@
           <TD BGCOLOR="<?php echo $this->bgcolor2 ?>" COLSPAN="2">
           <?php
            echo "<P>". check_output($story->abstract, 1) ."</P>";
-           if ($story->updates)
-             echo "<P><FONT COLOR=\"$this->fgcolor3\">Editor's note by " . format_username($editor) . ":</FONT> ". check_output($story->updates, 1) ."</P>";
            if ($reply)
              if ($story->article) print "<P>". check_output($story->article, 1) ."</P>\n";
           ?>
