@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.129 2004/12/07 16:55:38 dries Exp $
+// $Id: page.module,v 1.130 2005/01/25 20:29:19 dries Exp $
 
 /**
  * @file
@@ -21,7 +21,7 @@ function page_help($section) {
     case 'admin/modules#description':
       return t('Enables the creation of pages that can be added to the navigation system.');
     case 'node/add#page':
-      return t('If you want to add a static page, like an a contact page or an about page, use a page.');
+      return t('If you want to add a static page, like a contact page or an about page, use a page.');
   }
 }
 
