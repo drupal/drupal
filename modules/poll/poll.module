@@ -242,10 +242,10 @@ function poll_view(&$node, $main = 0, $block = 0) {
     $votesmax = max($votesmax, 1);
 
     // Define CSS classes for the bars
-    $output .= "<style type=\"text/css\">\n";
-    $output .= "td.pollfg { background-color: ". $theme->foreground ."; font-size: 5pt; }\n";
-    $output .= "td.pollbg { background-color: ". $theme->background ."; font-size: 5pt; }\n";
-    $output .= "</style>\n";
+    $output .= "<style type=\"text/css\">";
+    $output .= "td.pollfg { background-color: ". $theme->foreground ."; font-size: 5pt; }";
+    $output .= "td.pollbg { background-color: ". $theme->background ."; font-size: 5pt; }";
+    $output .= "</style>";
 
     foreach ($node->choice as $key => $value) {
       if ($value != "") {
