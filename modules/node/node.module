@@ -1887,7 +1887,7 @@ function node_access($op, $node = NULL, $uid = NULL) {
  * @return
  *   An SQL join clause.
  */
-function node_access_join_sql($node_alias = 'n', $node_access_alias = 'na') {
+function _node_access_join_sql($node_alias = 'n', $node_access_alias = 'na') {
   if (user_access('administer nodes')) {
     return '';
   }
@@ -1906,7 +1906,7 @@ function node_access_join_sql($node_alias = 'n', $node_access_alias = 'na') {
  * @return
  *   An SQL where clause.
  */
-function node_access_where_sql($op = 'view', $node_access_alias = 'na', $uid = NULL) {
+function _node_access_where_sql($op = 'view', $node_access_alias = 'na', $uid = NULL) {
   if (user_access('administer nodes')) {
     return;
   }
@@ -1977,8 +1977,8 @@ function node_access_view_all_nodes() {
  */
 function node_db_rewrite_sql($query, $primary_table, $primary_field) {
   if ($primary_field == 'nid' && !node_access_view_all_nodes()) {
-    $return['join'] = node_access_join_sql();
-    $return['where'] = node_access_where_sql();
+    $return['join'] = _node_access_join_sql();
+    $return['where'] = _node_access_where_sql();
     $return['distinct'] = 1;
     return $return;
   }
