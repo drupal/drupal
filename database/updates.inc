@@ -1,5 +1,5 @@
 <?php
-/* $Id: updates.inc,v 1.13 2004/05/10 20:34:24 dries Exp $ */
+/* $Id: updates.inc,v 1.14 2004/05/13 18:19:29 dries Exp $ */
 
 // Define the various updates in an array("date : comment" => "function");
 $sql_updates = array(
@@ -1081,6 +1081,7 @@ function update_86() {
   $ret[] = update_sql("INSERT INTO {users_roles} (uid, rid) SELECT uid, rid FROM {users}");
   // TODO: should we verify the insert above worked before dropping rid?
   $ret[] = update_sql("ALTER TABLE {users} DROP rid");
+  return $ret;
 }
 
 function update_sql($sql) {
