@@ -100,7 +100,8 @@ $sql_updates = array(
   "2005-01-26" => "update_121",
   "2005-01-27" => "update_122",
   "2005-01-28" => "update_123",
-  "2005-02-11" => "update_124"
+  "2005-02-11" => "update_124",
+  "2005-02-23" => "update_125"
 );
 
 function update_32() {
@@ -1960,15 +1961,18 @@ function update_110() {
     #$ret[] = update_sql('ALTER TABLE {blocks} DROP path');
 
     $ret[] = update_sql('ALTER TABLE {blocks} ADD visibility smallint');
+    $ret[] = update_sql("ALTER TABLE {blocks} ALTER COLUMN type set default ''");
     $ret[] = update_sql('UPDATE {blocks} SET visibility = 0');
     $ret[] = update_sql('ALTER TABLE {blocks} ALTER COLUMN visibility SET NOT NULL');
     $ret[] = update_sql('ALTER TABLE {blocks} ADD pages text');
+    $ret[] = update_sql("ALTER TABLE {blocks} ALTER COLUMN pages set default ''");
     $ret[] = update_sql("UPDATE {blocks} SET pages = ''");
     $ret[] = update_sql('ALTER TABLE {blocks} ALTER COLUMN pages SET NOT NULL');
 
   }
 
   $ret[] = update_sql("DELETE FROM {variable} WHERE name = 'node_cron_last'");
+
   $ret[] = update_sql('UPDATE {blocks} SET status = 1, custom = 2 WHERE status = 0 AND custom = 1');
 
   return $ret;
@@ -2020,7 +2024,7 @@ function update_113() {
     $ret[] = update_sql("SELECT * INTO TEMPORARY {accesslog}_t FROM {accesslog}");
     $ret[] = update_sql("DROP TABLE {accesslog}");
     $ret[] = update_sql("CREATE TABLE {accesslog} (
-      sid serial,
+      aid serial,
       title varchar(255) default NULL,
       path varchar(255) default NULL,
       url varchar(255) default NULL,
@@ -2031,6 +2035,7 @@ function update_113() {
     $ret[] = update_sql("INSERT INTO accesslog (title, path, url, hostname, uid, timestamp) SELECT title, path, url, hostname, uid, timestamp FROM accesslog_t");
 
     $ret[] = update_sql("DROP TABLE {accesslog}_t");
+    $ret[] = update_sql("CREATE INDEX {accesslog}_timestamp_idx ON {accesslog} (timestamp);");
 
   }
 
@@ -2054,7 +2059,8 @@ function update_114() {
     $ret[] = update_sql("CREATE TABLE {queue} (
       nid integer NOT NULL default '0',
       uid integer NOT NULL default '0',
-      vote integer NOT NULL default '0'
+      vote integer NOT NULL default '0',
+      PRIMARY KEY (nid, uid)
     )");
     $ret[] = update_sql("CREATE INDEX {queue}_nid_idx ON queue(nid)");
     $ret[] = update_sql("CREATE INDEX {queue}_uid_idx ON queue(uid)");
@@ -2122,8 +2128,8 @@ function update_117() {
   else if ($GLOBALS['db_type'] == 'pgsql') {
     $ret[] = update_sql("CREATE TABLE {vocabulary_node_types} (
                          vid serial,
-                         type varchar(16) NOT NULL default '') ");
-    $ret[] = update_sql("ALTER TABLE {vocabulary_node_types} ADD UNIQUE(vid, type)");
+                         type varchar(16) NOT NULL default '',
+                          PRIMARY KEY (vid, type)) ");
   }
   return $ret;
 }
@@ -2261,6 +2267,9 @@ function update_124() {
       comment_count integer NOT NULL default '0',
       PRIMARY KEY (nid)
     )");
+
+    $ret[] = update_sql("CREATE INDEX {node_comment_statistics}_timestamp_idx ON {node_comment_statistics}(last_comment_timestamp);
+");
   }
 
   // initialize table
@@ -2276,6 +2285,24 @@ function update_124() {
   return $ret;
 }
 
+function update_125() {
+  // Postgres only update.
+  $ret = array();
+
+  if ($GLOBALS['db_type'] == 'pgsql') {
+
+    $ret[] = update_sql[] = ("CREATE FUNCTION "if"(boolean, anyelement, anyelement) RETURNS anyelement AS '
+          SELECT CASE WHEN $1 THEN $2 ELSE $3 END;
+        ' LANGUAGE 'sql'");
+
+    $ret[] = update_sql("CREATE FUNCTION greatest(integer, integer, integer) RETURNS integer AS '
+                          SELECT greatest($1, greatest($2, $3));
+                        ' LANGUAGE 'sql'");
+
+  }
+
+  return $ret;
+}
 function update_sql($sql) {
   $edit = $_POST["edit"];
   $result = db_query($sql);

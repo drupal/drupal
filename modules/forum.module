@@ -259,7 +259,7 @@ function _forum_get_vid() {
     // Check to see if a forum vocabulary exists
     $vid = db_result(db_query("SELECT vid FROM {vocabulary} WHERE module='%s'", 'forum'));
     if (!$vid) {
-      $vocabulary = taxonomy_save_vocabulary(array('name' => 'Forums', 'multiple' => '0', 'required' => '1', 'hierarchy' => '1', 'relations' => '0', 'module' => 'forum', 'nodes' => array('forum')));
+      $vocabulary = taxonomy_save_vocabulary(array('name' => 'Forums', 'multiple' => 0, 'required' => 1, 'hierarchy' => 1, 'relations' => 0, 'module' => 'forum', 'nodes' => array('forum')));
       $vid = $vocabulary['vid'];
     }
     variable_set('forum_nav_vocabulary', $vid);

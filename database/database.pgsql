@@ -29,67 +29,6 @@ CREATE TABLE accesslog (
   PRIMARY KEY (aid)
 );
 CREATE INDEX accesslog_timestamp_idx ON accesslog (timestamp);
-
---
--- Table structure for authmap
---
-
-CREATE TABLE authmap (
-  aid SERIAL,
-  uid integer NOT NULL default '0',
-  authname varchar(128) NOT NULL default '',
-  module varchar(128) NOT NULL default '',
-  PRIMARY KEY (aid),
-  UNIQUE (authname)
-);
-
---
--- Table structure for blocks
---
-
-CREATE TABLE blocks (
-  module varchar(64) NOT NULL default '',
-  delta varchar(32) NOT NULL default '0',
-  status smallint NOT NULL default '0',
-  weight smallint NOT NULL default '0',
-  region smallint NOT NULL default '0',
-  path varchar(255) NOT NULL default '',
-  custom smallint NOT NULL default '0',
-  throttle smallint NOT NULL default '0',
-  pages text default '',
-  types text default ''
-);
-
---
--- Table structure for book
---
-
-CREATE TABLE book (
-  nid integer NOT NULL default '0',
-  parent integer NOT NULL default '0',
-  weight smallint NOT NULL default '0',
-  format smallint default '0',
-  log text default '',
-  PRIMARY KEY (nid)
-);
-CREATE INDEX book_nid_idx ON book(nid);
-CREATE INDEX book_parent ON book(parent);
-
---
--- Table structure for boxes
---
-
-CREATE TABLE boxes (
-  bid SERIAL,
-  title varchar(64) NOT NULL default '',
-  body text default '',
-  info varchar(128) NOT NULL default '',
-  format smallint NOT NULL default '0',
-  PRIMARY KEY  (bid),
-  UNIQUE (info),
-  UNIQUE (title)
-);
-
 --
 -- Table structure for table 'aggregator_category'
 --
@@ -159,6 +98,64 @@ CREATE TABLE aggregator_item (
   PRIMARY KEY  (iid)
 );
 
+--
+-- Table structure for authmap
+--
+
+CREATE TABLE authmap (
+  aid SERIAL,
+  uid integer NOT NULL default '0',
+  authname varchar(128) NOT NULL default '',
+  module varchar(128) NOT NULL default '',
+  PRIMARY KEY (aid),
+  UNIQUE (authname)
+);
+
+--
+-- Table structure for blocks
+--
+
+CREATE TABLE blocks (
+  module varchar(64) NOT NULL default '',
+  delta varchar(32) NOT NULL default '0',
+  status smallint NOT NULL default '0',
+  weight smallint NOT NULL default '0',
+  region smallint NOT NULL default '0',
+  custom smallint NOT NULL default '0',
+  throttle smallint NOT NULL default '0',
+  visibility smallint NOT NULL default '0',
+  pages text NOT NULL default '',
+  types text NOT NULL default ''
+);
+
+--
+-- Table structure for book
+--
+
+CREATE TABLE book (
+  nid integer NOT NULL default '0',
+  parent integer NOT NULL default '0',
+  weight smallint NOT NULL default '0',
+  log text default '',
+  PRIMARY KEY (nid)
+);
+CREATE INDEX book_nid_idx ON book(nid);
+CREATE INDEX book_parent ON book(parent);
+
+--
+-- Table structure for boxes
+--
+
+CREATE TABLE boxes (
+  bid SERIAL,
+  title varchar(64) NOT NULL default '',
+  body text default '',
+  info varchar(128) NOT NULL default '',
+  format smallint NOT NULL default '0',
+  PRIMARY KEY  (bid),
+  UNIQUE (info),
+  UNIQUE (title)
+);
 
 --
 -- Table structure for cache
@@ -186,15 +183,14 @@ CREATE TABLE comments (
   subject varchar(64) NOT NULL default '',
   comment text NOT NULL default '',
   hostname varchar(128) NOT NULL default '',
-  format smallint NOT NULL default '0',
   timestamp integer NOT NULL default '0',
   score integer NOT NULL default '0',
   status smallint  NOT NULL default '0',
+  format smallint NOT NULL default '0',
   thread varchar(255) default '',
   users text default '',
   name varchar(60) default NULL,
   mail varchar(64) default NULL,
-  url varchar(255) default NULL,
   homepage varchar(255) default NULL,
   PRIMARY KEY  (cid)
 );
@@ -212,6 +208,7 @@ CREATE TABLE node_comment_statistics (
   comment_count integer NOT NULL default '0',
   PRIMARY KEY (nid)
 );
+CREATE INDEX node_comment_statistics_timestamp_idx ON node_comment_statistics(last_comment_timestamp);
 
 --
 -- Table structure for directory
@@ -232,7 +229,7 @@ CREATE TABLE directory (
 --
 
 CREATE TABLE files (
-  fid serial,
+  fid SERIAL,
   nid integer NOT NULL default '0',
   filename varchar(255) NOT NULL default '',
   filepath varchar(255) NOT NULL default '',
@@ -264,8 +261,8 @@ CREATE TABLE filters (
   delta smallint NOT NULL DEFAULT 1,
   weight smallint DEFAULT '0' NOT NULL
 );
-
 CREATE INDEX filters_module_idx ON filters(module);
+CREATE INDEX filters_weight_idx ON filters(weight);
 
 --
 -- Table structure for table 'flood'
@@ -320,8 +317,8 @@ CREATE TABLE locales_meta (
 
 
 CREATE TABLE locales_source (
-lid serial,
-  location text NOT NULL default '',
+  lid SERIAL,
+  location varchar(128) NOT NULL default '',
   source text NOT NULL,
   PRIMARY KEY  (lid)
 );
@@ -336,8 +333,12 @@ CREATE TABLE locales_target (
   locale varchar(12) NOT NULL default '',
   plid int4 NOT NULL default '0',
   plural int4 NOT NULL default '0',
-    UNIQUE  (lid)
+  UNIQUE  (lid)
 );
+CREATE INDEX locales_target_lid_idx ON locales_target(lid);
+CREATE INDEX locales_target_lang_idx ON locales_target(locale);
+CREATE INDEX locales_target_plid_idx ON locales_target(plid);
+CREATE INDEX locales_target_plural_idx ON locales_target(plural);
 
 --
 -- Table structure for table 'menu'
@@ -399,12 +400,12 @@ CREATE TABLE node (
   uid integer NOT NULL default '0',
   status integer NOT NULL default '1',
   created integer NOT NULL default '0',
+  changed integer NOT NULL default '0',
   comment integer NOT NULL default '0',
   promote integer NOT NULL default '0',
   moderate integer NOT NULL default '0',
   teaser text NOT NULL default '',
   body text NOT NULL default '',
-  changed integer NOT NULL default '0',
   revisions text NOT NULL default '',
   sticky integer NOT NULL default '0',
   format smallint NOT NULL default '0',
@@ -426,7 +427,7 @@ CREATE INDEX node_changed ON node(changed);
 CREATE TABLE node_access (
   nid SERIAL,
   gid integer NOT NULL default '0',
-  realm text NOT NULL default '',
+  realm varchar(255) NOT NULL default '',
   grant_view smallint NOT NULL default '0',
   grant_update smallint NOT NULL default '0',
   grant_delete smallint NOT NULL default '0',
@@ -465,7 +466,6 @@ CREATE TABLE profile_fields (
   required smallint DEFAULT '0' NOT NULL,
   register smallint DEFAULT '0' NOT NULL,
   visibility smallint DEFAULT '0' NOT NULL,
-  overview smallint DEFAULT '0' NOT NULL,
   options text,
   UNIQUE (name),
   PRIMARY KEY (fid)
@@ -486,8 +486,8 @@ CREATE INDEX profile_values_fid ON profile_values (fid);
 
 CREATE TABLE url_alias (
   pid serial,
-  dst varchar(128) NOT NULL default '',
   src varchar(128) NOT NULL default '',
+  dst varchar(128) NOT NULL default '',
   PRIMARY KEY  (pid)
 );
 CREATE INDEX url_alias_dst_idx ON url_alias(dst);
@@ -558,25 +558,39 @@ CREATE TABLE role (
 
 CREATE TABLE search_index (
   word varchar(50) NOT NULL default '',
-  lno integer NOT NULL default '0',
+  sid integer NOT NULL default '0',
   type varchar(16) default NULL,
+  fromsid integer NOT NULL default '0',
+  fromtype varchar(16) default NULL,
+  score integer default NULL
+);
+CREATE INDEX search_index_sid_idx ON search_index(sid);
+CREATE INDEX search_index_fromsid_idx ON search_index(fromsid);
+CREATE INDEX search_index_word_idx ON search_index(word);
+
+--
+-- Table structures for search_total
+--
+
+CREATE TABLE search_total (
+  word varchar(50) NOT NULL default '',
   count integer default NULL
 );
-CREATE INDEX search_index_lno_idx ON search_index(lno);
-CREATE INDEX search_index_word_idx ON search_index(word);
+CREATE INDEX search_total_word_idx ON search_total(word);
 
 --
 -- Table structure for sessions
 --
 
 CREATE TABLE sessions (
-  uid integer NOT NULL,
+  uid integer not null,
   sid varchar(32) NOT NULL default '',
   hostname varchar(128) NOT NULL default '',
   timestamp integer NOT NULL default '0',
   session text,
   PRIMARY KEY (sid)
 );
+ALTER TABLE {sessions} ADD UNIQUE(sid);
 
 --
 -- Table structure for sequences
@@ -724,6 +738,7 @@ CREATE TABLE vocabulary (
   hierarchy smallint NOT NULL default '0',
   multiple smallint NOT NULL default '0',
   required smallint NOT NULL default '0',
+  module varchar(255) NOT NULL default '',
   weight smallint NOT NULL default '0',
   PRIMARY KEY  (vid)
 );
@@ -778,14 +793,14 @@ INSERT INTO variable(name,value) VALUES('theme_default','s:10:"bluemarine";');
 INSERT INTO users(uid,name,mail) VALUES(0,'','');
 INSERT INTO users_roles(uid,rid) VALUES(0, 1);
 
-INSERT INTO role (name) VALUES ('anonymous user');
+INSERT INTO role (rid, name) VALUES (1, 'anonymous user');
 INSERT INTO permission VALUES (1,'access content',0);
 
-INSERT INTO role (name) VALUES ('authenticated user');
+INSERT INTO role (rid, name) VALUES (2, 'authenticated user');
 INSERT INTO permission VALUES (2,'access comments, access content, post comments, post comments without approval',0);
 
-INSERT INTO blocks(module,delta,status) VALUES('user', '0', '1');
-INSERT INTO blocks(module,delta,status) VALUES('user', '1', '1');
+INSERT INTO blocks(module,delta,status) VALUES('user', 0, 1);
+INSERT INTO blocks(module,delta,status) VALUES('user', 1, 1);
 
 INSERT INTO node_access VALUES (0, 0, 'all', 1, 0, 0);
 
@@ -822,6 +837,11 @@ BEGIN
 END;
 ' LANGUAGE 'plpgsql';
 
+CREATE FUNCTION greatest(integer, integer, integer) RETURNS integer AS '
+  SELECT greatest($1, greatest($2, $3));
+' LANGUAGE 'sql';
+
+
 CREATE FUNCTION "rand"() RETURNS float AS '
 BEGIN
   RETURN random();
@@ -834,14 +854,7 @@ BEGIN
 END;
 ' LANGUAGE 'plpgsql';
 
-CREATE FUNCTION "if"(integer, text, text) RETURNS text AS '
-BEGIN
-  IF $1 THEN
-    RETURN $2;
-  END IF;
-  IF NOT $1 THEN
-    RETURN $3;
-  END IF;
-END;
-' LANGUAGE 'plpgsql';
+CREATE FUNCTION "if"(boolean, anyelement, anyelement) RETURNS anyelement AS '
+  SELECT CASE WHEN $1 THEN $2 ELSE $3 END;
+' LANGUAGE 'sql';
 

@@ -803,7 +803,13 @@ function _taxonomy_prepare_insert($data, $stage) {
   }
   else {
     foreach (array_values($data) as $value) {
-      $q[] = "'". str_replace('%', '%%', db_escape_string($value)) ."'";
+      //Escape strings, but not integers
+      if (is_int($value)) {
+        $q[] = $value;
+      }
+      else {
+        $q[] = "'". str_replace('%', '%%', db_escape_string($value)) ."'";
+      }
     }
     $result = implode(', ', $q);
   }
