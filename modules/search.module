@@ -270,7 +270,8 @@ function update_index($search_array) {
       // Remove "noisewords"
       $noise = explode(",", variable_get("noisewords", ""));
       foreach ($noise as $word) {
-        $wordlist = str_replace(trim($word), " ", $wordlist);
+        $word = trim($word);
+        $wordlist = trim(preg_replace("' $word '", " ", " " .$wordlist. " "));
       }
 
       // Remove whitespace
