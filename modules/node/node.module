@@ -1422,7 +1422,7 @@ function node_submit($node) {
 
     if (node_access('update', $node)) {
       $node->nid = node_save($node);
-      watchdog('special', "$node->type: updated '$node->title'", l(t('view post'), "node/view/$node->nid"));
+      watchdog('special', t('%node-type: updated "%node-title"', array('%node-type' => t("$node->type"), '%node-title' => $node->title)), l(t('view post'), "node/view/$node->nid"));
       $msg = t('the %name was updated.', array ('%name' => node_invoke($node, 'node_name')));
     }
   }
@@ -1435,7 +1435,7 @@ function node_submit($node) {
 
     if (node_access('create', $node)) {
       $node->nid = node_save($node);
-      watchdog('special', "$node->type: added '$node->title'", l(t('view post'), "node/view/$node->nid"));
+      watchdog('special', t('%node-type: added "%node-title"', array('%node-type' => t("$node->type"), '%node->title' => $node->title)), l(t('view post'), "node/view/$node->nid"));
       $msg = t('your %name was created.', array ('%name' => node_invoke($node, 'node_name')));
     }
   }
@@ -1474,7 +1474,7 @@ function node_delete($edit) {
 
       cache_clear_all();
 
-      watchdog('special', "$node->type: deleted '$node->title'");
+      watchdog('special', t('%node-type: deleted "%node-title"', array('%node-type' => t("$node->type"), '%node-title' => $node->title)));
       $output = t('The node has been deleted.');
     }
     else {

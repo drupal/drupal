@@ -837,8 +837,8 @@ function book_admin_save($nid, $edit = array()) {
       }
     }
 
-    $message = t("updated book '%title'", array("%title" => $book->title));
-    watchdog("special", $message);
+    $message = t('updated book "%title"', array('%title' => $book->title));
+    watchdog('special', $message);
 
     return $message;
   }

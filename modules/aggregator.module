@@ -290,7 +290,7 @@ function aggregator_refresh($feed) {
       break;
     case 301:
       $feed['url'] = $result->redirect_url;
-      watchdog('special', "aggregator: updated URL for feed \"$feed[title]\" to $feed[url]");
+      watchdog('special', t('aggregator: updated URL for feed "%title" to %url', array('%title' => $feed[title], '%url' => $feed[url])));
     case 200:
     case 302:
     case 307:
@@ -328,14 +328,14 @@ function aggregator_refresh($feed) {
 
         cache_clear_all();
 
+        watchdog('regular', t('aggregator: syndicated content from "%site"', array('%site' => $feed[title])));
         $message = t('syndicated content from "%site".', array('%site' => $feed['title']));
-        watchdog('regular', "aggregator: $message");
         drupal_set_message($message);
       }
       break;
     default:
+      watchdog('error', t('aggregator: failed to parse RSS feed "%site": %error', array('%site' => $feed['title'], '%error' => $result->code .' '. $result->error)));
       $message = t('failed to parse RSS feed "%site": %error.', array('%site' => $feed['title'], '%error' => $result->code .' '. $result->error));
-      watchdog('error', "aggregator: $message");
       drupal_set_message($message);
   }
 }
@@ -355,8 +355,8 @@ function aggregator_parse_feed(&$data, $feed) {
   xml_set_character_data_handler($xml_parser, 'aggregator_element_data');
 
   if (!xml_parse($xml_parser, $data, 1)) {
+    watchdog('error', t('aggregator: failed to parse RSS feed "%site": %error at line %line.', array('%site' => $feed['title'], '%error' => xml_error_string(xml_get_error_code($xml_parser)), '%line' => xml_get_current_line_number($xml_parser))));
     $message = t('failed to parse RSS feed "%site": %error at line %line.', array('%site' => $feed['title'], '%error' => xml_error_string(xml_get_error_code($xml_parser)), '%line' => xml_get_current_line_number($xml_parser)));
-    watchdog('error', "aggregator: $message");
     drupal_set_message($message, 'error');
     return 0;
   }

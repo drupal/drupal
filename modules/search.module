@@ -342,7 +342,7 @@ function search_view($keys) {
     // Only perform search if there is non-whitespace search term:
     if (trim($keys)) {
       // Log the search keys:
-      watchdog("search", "search: '$keys'", l("view results", "search", NULL, "keys=". urlencode($keys)));
+      watchdog('search', t('search: "%keys"', array('%keys' => $keys)), l("view results", "search", NULL, "keys=". urlencode($keys)));
 
       // Collect the search results:
       $results = search_data($keys);

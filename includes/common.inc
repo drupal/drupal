@@ -4,7 +4,7 @@
 /**
  * @defgroup common Core functions
  */
- 
+
 /**
  * @name Page title
  * @ingroup common
@@ -263,7 +263,7 @@ function drupal_goto($url = NULL, $query = NULL, $fragment = NULL) {
  */
 function drupal_not_found() {
   header('HTTP/1.0 404 Not Found');
-  watchdog('httpd', '404 error: "'. check_query($_GET['q']) .'" not found');
+  watchdog('httpd', t('404 error: "%page" not found', array('%page' => check_query($_GET["q"]))));
 
   $path = drupal_get_normal_path(variable_get('site_404', ''));
   $status = MENU_FALLTHROUGH;
@@ -424,7 +424,7 @@ function error_handler($errno, $message, $filename, $line, $variables) {
   $entry = $types[$errno] .": $message in $filename on line $line.";
 
   if ($errno & E_ALL ^ E_NOTICE) {
-    watchdog("error", $types[$errno] .": $message in $filename on line $line.");
+    watchdog('error', t('%error: %message in %file on line %line.', array('%error' => $types[$errno], '%message' => $message, '%file' => $filename, '%line' => $line)));
     if (error_reporting()) {
       print "<pre>$entry</pre>";
     }
@@ -631,7 +631,7 @@ function valid_input_data($data) {
     $match += preg_match("/<\s*(applet|script|object|style|embed|form|blink|meta|html|frame|iframe|layer|ilayer|head|frameset|xml)/i", $data);
 
     if ($match) {
-      watchdog("warning", "terminated request because of suspicious input data: ". drupal_specialchars($data));
+      watchdog('warning', t('terminated request because of suspicious input data: %data', array('%data' => drupal_specialchars($data))));
       return 0;
     }
   }

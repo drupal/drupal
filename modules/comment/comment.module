@@ -332,7 +332,7 @@ function comment_post($edit) {
 
       $duplicate = db_result(db_query("SELECT COUNT(cid) FROM {comments} WHERE pid = %d AND nid = %d AND subject = '%s' AND comment = '%s'", $edit["pid"], $edit["nid"], $edit['subject'], $edit['comment']), 0);
       if ($duplicate != 0) {
-        watchdog("warning", "comment: duplicate '". $edit['subject'] ."'");
+        watchdog('warning', t('comment: duplicate "%comment-subject"', array('%comment-subject' => $edit["subject"])));
       }
 
       if ($edit["cid"]) {
@@ -354,7 +354,7 @@ function comment_post($edit) {
         ** Add entry to the watchdog log:
         */
 
-        watchdog("special", "comment: updated '". $edit['subject'] ."'", l(t("view comment"), "node/view/". $edit["nid"], NULL, NULL, "comment-". $edit["cid"]));
+        watchdog('special', t('comment: updated "%comment-subject"', array('%comment-subject' => $edit["subject"])), l(t("view comment"), "node/view/". $edit["nid"], NULL, NULL, "comment-". $edit["cid"]));
       }
       else {
         /*
@@ -472,7 +472,7 @@ function comment_post($edit) {
         ** Add entry to the watchdog log:
         */
 
-        watchdog("special", "comment: added '". $edit['subject'] ."'", l(t("view comment"), "node/view/". $edit["nid"], NULL, NULL, "comment-". $edit["cid"]));
+        watchdog('special', t('comment: added "%comment-subject"', array('%comment-subject' => $edit["subject"])), l(t("view comment"), "node/view/". $edit["nid"], NULL, NULL, "comment-". $edit["cid"]));
 
       }
 
@@ -500,7 +500,7 @@ function comment_post($edit) {
     }
   }
   else {
-    watchdog("error", "comment: unauthorized comment submitted or comment submitted to a closed node '". $edit['subject'] ."'");
+    watchdog('error', t('comment: unauthorized comment submitted or comment submitted to a closed node "%comment-subject"', array('%comment-subject' => $edit["subject"])));
   }
 }
 
@@ -947,7 +947,7 @@ function comment_admin_edit($id) {
 function _comment_delete_thread($comment) {
   // Delete the comment:
   db_query("DELETE FROM {comments} WHERE cid = %d", $comment->cid);
-  watchdog("special", "comment: deleted '$comment->subject'");
+  watchdog('special', t('comment: deleted "%comment-subject"', array('%comment-subject' => $comment->subject)));
 
   // Delete the comment's replies:
   $result = db_query("SELECT cid, subject FROM {comments} WHERE pid = %d", $comment->cid);
@@ -997,7 +997,7 @@ function comment_delete($cid, $confirmed = 0) {
 
 function comment_save($id, $edit) {
   db_query("UPDATE {comments} SET subject = '%s', comment = '%s', status = %d WHERE cid = %d", $edit['subject'], $edit['comment'], $edit['status'], $id);
-  watchdog("special", "comment: modified '". $edit['subject'] ."'");
+  watchdog('special', t('comment: modified "%comment-subject"', array('%comment-subject' => $edit["subject"])));
   drupal_set_message(t("the comment has been saved."));
 }
 

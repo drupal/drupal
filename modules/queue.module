@@ -73,30 +73,30 @@ function queue_vote($node, $vote) {
       $node->moderate = 0;
       $node->promote = 1;
       node_save($node);
-      watchdog("special", "moderation: approved '$node->title'");
+      watchdog('special', t('moderation: approved "%node-title"', array('%node-title' => $node->title)));
     }
     else if (variable_get("queue_threshold_dump", -2) >= $node->score) {
       if ($node->revisions) {
         node_revision_rollback($node, end(node_revision_list($node)));
-        watchdog("special", "moderation: declined '$node->title' (rollback)");
+        watchdog('special', t('moderation: declined "%node-title" (rollback)', array('%node-title' => $node->title)));
       }
       else {
         $node->moderate = 0;
         $node->status = 0;
         node_save($node);
-        watchdog("special", "moderation: declined '$node->title'");
+        watchdog('special', t('moderation: declined "%node-title"', array('%node-title' => $node->title)));
       }
     }
     else if (variable_get("queue_threshold_expire", 8) <= $node->votes) {
       if ($node->revisions) {
         node_revision_rollback($node, end(node_revision_list($node)));
-        watchdog("special", "moderation: expired '$node->title' (rollback)");
+        watchdog('special', t('moderation: expired "%node-title" (rollback)', array('%node-title' => $node->title)));
       }
       else {
         $node->moderate = 0;
         $node->status = 0;
         node_save($node);
-        watchdog("special", "moderation: expired '$node->title'");
+        watchdog('special', t('moderation: expired "%node-title"', array('%node-title' => $node->title)));
       }
     }
   }

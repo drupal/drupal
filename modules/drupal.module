@@ -90,7 +90,7 @@ function drupal_directory_ping($arguments) {
     db_query("DELETE FROM {directory} WHERE link = '%s' OR mail = '%s'", $link, $mail);
     db_query("INSERT INTO {directory} (link, name, mail, slogan, mission, timestamp) VALUES ('%s', '%s', '%s', '%s', '%s', %d)", $link, $name, $mail, $slogan, $mission, time());
 
-    watchdog('regular', "directory: ping from \"$name\" ($link)");
+    watchdog('regular', t('directory: ping from "%name" (%link)', array('%name' => $name, '%link' => $link)));
 
     return new xmlrpcresp(new xmlrpcval(1, 'int'));
   }
@@ -138,7 +138,7 @@ function drupal_notify($server) {
   $result = $client->send($message, 5);
 
   if (!$result || $result->faultCode()) {
-    watchdog('error', 'failed to notify "'. $url['host'] .'" at "'. $url['path'] .'": '. $result->faultString());
+    watchdog('error', t('failed to notify "%url" at "%path": %error', array('%url' => $url["host"], '%path' => $url["path"], '%error' => $result->faultString())));
   }
 
 }
