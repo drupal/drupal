@@ -56,7 +56,7 @@ function update_1() {
   update_sql("ALTER TABLE users ADD jabber varchar(128) DEFAULT '' NULL;");
   update_sql("ALTER TABLE users ADD drupal varchar(128) DEFAULT '' NULL;");
   update_sql("ALTER TABLE users ADD init varchar(64) DEFAULT '' NULL;");
-  update_sql("ALTER TABLE users CHANGE passwd pass varchar(24) DEFAULT '' NOT NULL;");
+  update_sql("ALTER TABLE users CHANGE passwd pass varchar(32) DEFAULT '' NOT NULL;");
   update_sql("ALTER TABLE users CHANGE real_email mail varchar(64) DEFAULT '' NULL;");
   update_sql("ALTER TABLE users CHANGE id uid int(10) unsigned DEFAULT '0' NOT NULL auto_increment;");
   update_sql("ALTER TABLE users CHANGE url homepage varchar(128) DEFAULT '' NOT NULL;");
@@ -422,21 +422,23 @@ function update_31() {
   include_once("modules/taxonomy.module");
 
   print "Wiping tables.<br />";
-  db_query("DELETE FROM vocabulary");
+  /*db_query("DELETE FROM vocabulary");
   db_query("DELETE FROM term_data");
   db_query("DELETE FROM term_node");
-  db_query("DELETE FROM term_hierarchy");
+  db_query("DELETE FROM term_hierarchy");**/
 
   print "Creating collections.<br />";
+  $offset = db_result(db_query("SELECT MAX(vid) AS high FROM vocabulary"), 0);
   $result = db_query("SELECT * FROM collection");
   while ($c = db_fetch_object($result)) {
-    $collections[$c->name] = count($collections) + 1;
-    db_query("INSERT INTO vocabulary SET vid = '". count($collections) ."', name = '$c->name', types = '". str_replace(" ", "", $c->types) ."'");
+    $offset++;
+    $collections[$c->name] = $offset;
+    db_query("INSERT INTO vocabulary SET vid = '$offset', name = '$c->name', types = '". str_replace(" ", "", $c->types) ."'");
   }
 
   print "Creating terms.<br />";
   $result = db_query("SELECT * FROM tag");
-  $i = 1;
+  $i = db_result(db_query("SELECT MAX(tid) AS high FROM term_data"), 0) + 1;
   while ($t = db_fetch_object($result)) {
     foreach (explode(", ", $t->collections) as $c) {
       if ($collections[$c]) {
@@ -469,9 +471,9 @@ function update_31() {
   }
 
   // Clean up meta tag system
-  update_sql("DROP TABLE collection");
+/*  update_sql("DROP TABLE collection");
   update_sql("DROP TABLE tag");
-  update_sql("ALTER TABLE node DROP attributes");
+  update_sql("ALTER TABLE node DROP attributes");*/
 }
 
 function update_upgrade3() {
@@ -601,7 +603,9 @@ function update_info() {
   print "<html><h1>Drupal update</h1>";
   print "<h2>Instructions</h2>\n";
   print "<ol>\n";
-  print "<li><p>Before doing anything backup your database. This process will change your database and its values.</p></li>\n";
+  print "<li><p>Before doing anything backup your database. This process will change your database and its values, and some things might get lost.</p></li>\n";
+  print "<li><p>Don't run this script twice as it will cause some serious problems!</p></li>\n";
+  print "<li><p><b>Backup your database.</b> If you haven't done it by now don't blame anyone if by some statistical anomaly things blow up and you loose all data.</p></li>\n";
   print "<li>These queries have to be run manually:<br />\n";
   print "<pre>\n";
   print "ALTER TABLE watchdog CHANGE user uid int(10) DEFAULT '0' NOT NULL;\n";
@@ -616,9 +620,9 @@ function update_info() {
   print "ALTER TABLE users ADD rid INT UNSIGNED NOT NULL;\n";
   print "</pre></li>\n";
   print "<li><p>You might have to by-pass the access check near the bottom of the file called update.php such that you can gain access to the updates: search for <i>user_access()</i>.</p></li>";
-  print "<li><p>Choose one of the links below to either upgrade from Drupal 3.x or update from a CVS checkout. The upgrade will by default enable the standard Drupal themes and modules as well as setting some default values. The update will require modules and themes enabled manually under <i>Administer | Site configuration | modules</i>.</p></li>";
+  print "<li><p>Choose one of the links below to either upgrade from Drupal 3.x or update from a CVS checkout.<br />&raquo; upgrading will by default enable the standard Drupal themes and modules as well as setting some default values.<br />&raquo; updating will require modules and themes enabled manually under <i>Administer | Site configuration | modules</i>.</p></li>";
   print "<li><p>Go through the various administration pages to change the existing and new settings to your liking.</p></li>\n";
-  print "<li><p>Remove or disable access to update.php so nobody else can possible tamper with the database.</p></li>\n";
+  print "<li><p>Remove or disable access to update.php so nobody else can tamper with the database.</p></li>\n";
   print "<li><p>Thanks for using Drupal!</p></li>\n";
   print "</ol>";
   print "<p><b>&raquo; <a href=\"update.php?op=upgrade3\">Upgrade 3.x to 4.0.0</a></b></p>\n";
