@@ -874,7 +874,7 @@ function user_register($edit = array()) {
 function user_delete() {
   global $user;
 
-  $edit = $_SERVER["edit"];
+  $edit = $_POST["edit"];
 
   if ($edit["confirm"]) {
     watchdog("user","$user->name deactivated her own account.");
