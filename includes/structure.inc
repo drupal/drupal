@@ -22,25 +22,35 @@ function category_save($edit) {
   foreach ($edit as $key=>$value) db_query("UPDATE category SET $key = '". check_input($value) ."' WHERE cid = '$edit[cid]'");
 }
 
+
 // delete category $cid:
 function category_del($cid) {
   db_query("DELETE FROM category WHERE cid = '". check_input($cid) ."'");
   db_query("UPDATE node SET cid = 0 WHERE cid = '". check_input($cid) ."'");
 }
 
+// return post threshold:
 function category_post_threshold($cid) {
   $category = db_fetch_object(db_query("SELECT post AS threshold FROM category WHERE cid = '". check_input($cid) ."'"));
   return $category->threshold;
 }
 
+// return dump threshold:
 function category_dump_threshold($cid) {
   $category = db_fetch_object(db_query("SELECT dump AS threshold FROM category WHERE cid = '". check_input($cid) ."'"));
   return $category->threshold;
 }
 
+// return expiration threshold:
 function category_expire_threshold($cid) {
   $category = db_fetch_object(db_query("SELECT expire AS threshold FROM category WHERE cid = '". check_input($cid) ."'"));
   return $category->threshold;
+}
+
+// return linked string with name of category $cid:
+function category_name($cid) {
+  $category = category_get_object("cid", $cid);
+  return ($category) ? "<A HREF=\"index.php?category=$category->cid\">$category->name</A>" : "";
 }
 
 function category_form_select($type, $edit = array(), $size = 1) {
@@ -87,6 +97,13 @@ function topic_tree($parent = 0, $name = "", $tree = array()) {
 function topic_del($tid) {
   db_query("DELETE FROM topic WHERE tid = '". check_input($tid) ."'");
   db_query("UPDATE node SET tid = 0 WHERE tid = '". check_input($tid) ."'");
+}
+
+// return linked string with name of topic $tid:
+function topic_name($tid, $name = 0) {
+  $topic = topic_get_object("tid", $tid);
+  $name = $name ? "<A HREF=\"index.php?topic=$topic->tid\">$topic->name</A> - $name" : "<A HREF=\"index.php?topic=$topic->tid\">$topic->name</A>";
+  return ($topic->pid) ? topic_name($topic->pid, $name) : $name;
 }
 
 // renders a HTML form to select one or more topics:

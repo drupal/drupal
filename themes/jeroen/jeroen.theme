@@ -103,9 +103,7 @@
                               <tr>
                                 <td align="left" background="themes/jeroen/images/menutitle.gif" nowrap>
                                   <FONT COLOR="#FEFEFE">
-
 <?php
-
                                     switch (rand(0,13)) {
                                       case 0: $how = "Yelled"; break;         case 1: $how = "Whispered"; break;
                                       case 2: $how = "Reported"; break;       case 3: $how = "Posted"; break;
@@ -116,14 +114,13 @@
                                       case 12: $how = "Forged"; break;
                                       default: $how = "Sneaked through";
                                     }
-                                    echo "<FONT SIZE=\"-1\">". strtr(t("$how by %a on %b"), array("%a" => format_username($story->userid), "%b" => format_date($story->timestamp), "large")) ."</FONT>
+                                    echo "<FONT SIZE=\"-1\">". strtr(t("$how by %a on %b"), array("%a" => format_username($story->userid), "%b" => format_date($story->timestamp), "large")) ."</FONT>";
+?>
                                   </FONT>
                                 </td>
-                                <td align=\"right\" background=\"themes/jeroen/images/menutitle.gif\" nowrap>
-                                  <b><a href=\"index.php?category=$story->cid\">". check_output($story->category) ."</a> / <a href=\"index.php?topic=$story->tid\">". check_output($story->topic) ."</a></b>";
-
+<?php
+                                echo "<td align=\"right\" background=\"themes/jeroen/images/menutitle.gif\" nowrap><b>". category_name($story->cid) ." / ". topic_name($story->tid) ."</b>";
 ?>
-
                                 </td>
                               </tr>
                               <tr>

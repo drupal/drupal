@@ -4,6 +4,14 @@ ALTER TABLE node ADD tid int(10) unsigned DEFAULT '0' NOT NULL;
 ALTER TABLE story DROP section;
 ALTER TABLE comments ADD KEY(lid);
 
+CREATE TABLE cvs (
+  user varchar(32) DEFAULT '' NOT NULL,
+  files text,
+  status int(2) DEFAULT '0' NOT NULL,
+  message text,
+  timestamp int(11) DEFAULT '0' NOT NULL
+);
+
 CREATE TABLE category (
   cid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
   name varchar(32) DEFAULT '' NOT NULL,
