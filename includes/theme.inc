@@ -3,7 +3,7 @@
 
 class BaseTheme {
 
-  function header() {
+  function header($title = "") {
     $output .= "<html><head><title>". variable_get(site_name, "drupal") ."</title></head><body>";
     $output .= "<table border=\"0\" cellspacing=\"4\" cellpadding=\"4\"><tr><td valign=\"top\" width=\"170\">";
 

@@ -17,12 +17,12 @@
     var $foreground = "#000000";
     var $background = "#FFFFFF";
 
-    function header() {
+    function header($title = "") {
 ?>
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
  <html>
   <head>
-   <title><?php echo variable_get(site_name, "drupal"); ?></title>
+   <title><?php echo ($title ? ($title . " - ") : "") . variable_get(site_name, "drupal"); ?></title>
    <style type="text/css">
    <!--
      body { background-color: #FFFFFF; font-size: 10pt; font-family: tahoma,helvetica,arial; }
