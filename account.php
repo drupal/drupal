@@ -45,21 +45,35 @@ function showUser($uname) {
 
     ### Display account information:
     $theme->header();
-    $theme->box("User information", $output);
+    $theme->box("Your user information", $output);
     $theme->footer();
   }
   elseif ($uname && $account = account_getUser($uname)) {
-    $output .= "<TABLE BORDER=0 CELLPADDING=2 CELLSPACING=2>\n";
-    $output .= " <TR><TD><B>User ID:</B></TD><TD>$account->userid</TD></TR>\n";
-    $output .= " <TR><TD><B>E-mail:</B></TD><TD><A HREF=\"mailto:$account->femail\">$account->femail</A></TD></TR>\n";
-    $output .= " <TR><TD><B>URL:</B></TD><TD><A HREF=\"$account->url\">$account->url</A></TD></TR>\n";
-    $output .= " <TR><TD><B>Bio:</B></TD><TD>$account->bio</TD></TR>\n";
-    $output .= " <TR><TD><B>Signature:</B></TD><TD>$account->signature</TD></TR>\n";
-    $output .= "</TABLE>\n";
+    $box1 .= "<TABLE BORDER=0 CELLPADDING=2 CELLSPACING=2>\n";
+    $box1 .= " <TR><TD ALIGN=\"right\"><B>Username:</B></TD><TD>$account->userid</TD></TR>\n";
+    $box1 .= " <TR><TD ALIGN=\"right\"><B>E-mail:</B></TD><TD><A HREF=\"mailto:$account->femail\">$account->femail</A></TD></TR>\n";
+    $box1 .= " <TR><TD ALIGN=\"right\"><B>URL:</B></TD><TD><A HREF=\"$account->url\">$account->url</A></TD></TR>\n";
+    $box1 .= " <TR><TD ALIGN=\"right\"><B>Bio:</B></TD><TD>$account->bio</TD></TR>\n";
+    $box1 .= "</TABLE>\n";
 
+    $result = db_query("SELECT c.cid, c.pid, c.sid, c.subject, c.timestamp, s.subject AS story FROM comments c LEFT JOIN users u ON u.id = c.author LEFT JOIN stories s ON s.id = c.sid WHERE u.userid = '$uname' AND c.timestamp > ". (time() - 1209600) ." ORDER BY cid DESC LIMIT 10");
+    
+    while ($comment = db_fetch_object($result)) {
+      $box2 .= "<LI><TABLE BORDER=\"0\"><TR><TD>subject: <A HREF=\"discussion.php?id=$comment->sid&cid=$comment->cid&pid=$comment->pid\">$comment->subject</A><BR>date: ". format_date($comment->timestamp) ."<BR>attached to story: <A HREF=\"discussion.php?id=$comment->sid\">$comment->story</A></TD></TR></TABLE></LI>\n";
+      $comments++;
+    }
+
+    $result = db_query("SELECT d.* FROM diaries d LEFT JOIN users u ON u.id = d.author WHERE u.userid = '$uname' AND d.timestamp > ". (time() - 1209600) ."  ORDER BY id DESC LIMIT 2");
+    while ($diary = db_fetch_object($result)) {
+      $box3 .= "<DL><DT><B>". date("l, F jS", $diary->timestamp) .":</B></DT><DD><P>". check($diary->text) ."</P><P>[ <A HREF=\"diary.php?op=view&name=$uname\">more</A> ]</P></DD></DL>\n";
+      $diaries++;
+    }
+    
     ### Display account information:
     $theme->header();
-    $theme->box("User information", $output);
+    if ($box1) $theme->box("User information for $uname", $box1);
+    if ($box2) $theme->box("$uname has posted ". format_plural($comments, "comment", "comments") ." recently", $box2);
+    if ($box3) $theme->box("$uname has posted ". format_plural($diaries, "diary entry", "diary entries") ." recently", $box3);
     $theme->footer();
   }
   else { 
