@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.144 2003/07/10 17:46:41 dries Exp $
+// $Id: theme.inc,v 1.145 2003/09/11 17:53:45 dries Exp $
 
 /**
 * Basic theme
@@ -39,6 +39,10 @@ class BaseTheme {
 
   function image($name) {
     return "misc/$name";
+  }
+
+  function path($path) {
+    print "<div class=\"path\">". implode($path, " &raquo; ") ."</div>";
   }
 
   function node($node, $main) {
