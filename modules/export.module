@@ -63,10 +63,6 @@ function export_export_rss() {
     print "<item rdf:about=\"". path_uri() ."node.php?id=$node->nid\">\n";
     print "  <title>". check_export($node->title) ."</title>\n";
     print "  <link>". path_uri() ."node.php?id=$node->nid</link>\n";
-
-    if ($node->abstract) print "  <description>". check_output($node->abstract, 1) ."</description>\n";
-    if ($node->body) print "  <description>". check_output($node->body, 1) ."</description>\n";
-
     print "</item>\n";
   }
 
