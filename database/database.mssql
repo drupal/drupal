@@ -25,7 +25,7 @@ GO
 
 CREATE TABLE [dbo].[blocks] (
   [module] [varchar] (64) NOT NULL ,
-  [delta] [smallint] NOT NULL ,
+  [delta] [varchar] (32) NOT NULL ,
   [status] [smallint] NOT NULL ,
   [weight] [smallint] NOT NULL ,
   [region] [smallint] NOT NULL ,

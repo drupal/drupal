@@ -62,7 +62,8 @@ $mysql_updates = array(
   "2002-12-29" => "update_47",
   "2003-01-03" => "update_48",
   "2003-01-05" => "update_49",
-  "2003-01-15" => "update_50"
+  "2003-01-15" => "update_50",
+  "2003-04-19" => "update_51"
 );
 
 // Update functions
@@ -677,6 +678,10 @@ function update_50() {
     db_queryd("UPDATE forum SET tid = '%d' WHERE nid = '%d'", $node->tid, $node->nid);
   }
   update_sql("ALTER TABLE forum ADD INDEX (tid)");
+}
+
+function update_51() {
+  update_sql("ALTER TABLE blocks CHANGE delta delta varchar(32) NOT NULL default '0'");
 }
 
 function update_upgrade3() {

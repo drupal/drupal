@@ -47,7 +47,7 @@ CREATE TABLE authmap (
 
 CREATE TABLE blocks (
   module varchar(64) DEFAULT '' NOT NULL,
-  delta tinyint(2) DEFAULT '0' NOT NULL,
+  delta varchar(32) NOT NULL default '0',
   status tinyint(2) DEFAULT '0' NOT NULL,
   weight tinyint(1) DEFAULT '0' NOT NULL,
   region tinyint(1) DEFAULT '0' NOT NULL,
