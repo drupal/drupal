@@ -79,7 +79,6 @@
    }
 
    function story($story, $main = 0) {
-       $timestamp = format_date($story->timestamp);
 
         print "\n<!-- story: \"$story->title\" -->\n";
         ?>
@@ -89,7 +88,7 @@
           <TR><TD COLSPAN="2" BGCOLOR="<?php echo $this->bgcolor1; ?>" WIDTH="100%"><table width="100%" cellpadding="0" cellspacing="0"><tr><td width="100%"><FONT COLOR="<?php echo $this->fgcolor1; ?>"><B><?php echo "". check_output($story->title) .""; ?></B></FONT></td><td valign="middle" align="center"><IMG SRC="themes/<?php print $this->themename; ?>/images/icon.gif" valign="middle"></td></tr></table></TD></TR>
           <TR BGCOLOR="<?php echo $this->bgcolor2; ?>">
            <?php
-            print "<TD WIDTH=\"70%\" BGCOLOR=\"$this->bgcolor2\"><SMALL>Posted by " . format_username($story->userid) . " on $timestamp</TD><TD WIDTH=\"30%\" BGCOLOR=\"$this->bgcolor2\" ALIGN=\"center\"><B>". category_name($story->cid) ." / ". topic_name($story->tid) ."</B>";
+            print "<TD WIDTH=\"70%\" BGCOLOR=\"$this->bgcolor2\"><SMALL>" . strtr(t("Submitted by %a on %b"), array("%a" => format_username($story->userid), "%b" => format_date($story->timestamp, "large"))) . "</TD><TD WIDTH=\"30%\" BGCOLOR=\"$this->bgcolor2\" ALIGN=\"center\"><B>". category_name($story->cid) ." / ". topic_name($story->tid) ."</B>";
            ?>
           </TD>
          </TR>
@@ -127,7 +126,7 @@
 
      // Subject:
      echo "    <TR>";
-     echo "     <TD ALIGN=\"right\" VALIGN=\"top\" WIDTH=\"5%\"><FONT COLOR=\"$this->hlcolor1\"><B>Subject:</B></FONT></TD><TD WIDTH=\"80%\">";
+     echo "     <TD ALIGN=\"right\" VALIGN=\"top\" WIDTH=\"5%\"><FONT COLOR=\"$this->hlcolor1\"><B>" . t("Subject") . ":</B></FONT></TD><TD WIDTH=\"80%\">";
      echo "      <B><FONT COLOR=\"$this->fgcolor1\">" . check_output($comment->subject) . "</FONT></B>";
      echo "     </TD>";
 
@@ -139,7 +138,7 @@
 
      // Author:
      echo "    <TR>";
-     echo "     <TD ALIGN=\"right\" VALIGN=\"top\">Author:</TD><TD><B>" . format_username($comment->userid) . "</B> ";
+     echo "     <TD ALIGN=\"right\" VALIGN=\"top\">" . t("Author") . ":</TD><TD><B>" . format_username($comment->userid) . "</B> ";
      if ($comment->userid) {
        // Display extra information line:
        if ($comment->fake_email) $info .= format_email($comment->fake_email);
@@ -150,7 +149,7 @@
      echo "    </TR>";
 
      // Date
-     echo "    <TR><TD ALIGN=\"right\">Date:</TD><TD>". format_date($comment->timestamp) ."</TD></TR>";
+     echo "    <TR><TD ALIGN=\"right\">" . t("Date") . ":</TD><TD>". format_date($comment->timestamp) ."</TD></TR>";
 
      echo "   </TABLE>";
      echo "  </TD>";
