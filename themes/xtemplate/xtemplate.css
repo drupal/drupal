@@ -50,8 +50,12 @@ img {
   padding: 0.5em 0.5em 0 0.5em;
 }
 .menu #logo {
-  vertical-align: bottom;
+  vertical-align: middle;
   border: 0;
+  margin-bottom: .8em;
+  font-weight: bold;
+  font-size: 1.9em;
+  color: #fff;
 }
 .menu #primary {
   font-size: 1.0em;

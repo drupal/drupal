@@ -7,7 +7,7 @@
   <title>{title}</title>
   {head}
   <style type="text/css" media="all">
-    @import "themes/xtemplate/xtemplate.css";
+    @import url({stylesheet});
   </style>
 </head>
 
@@ -15,7 +15,8 @@
 
 <table border="0" cellpadding="0" cellspacing="0" class="header">
   <tr>
-    <td class="menu" style="vertical-align: bottom;"><a href="./"><img src="themes/xtemplate/images/druplicon.gif" alt="" title="" /></a></td>
+    <td class="menu" style="vertical-align: bottom;">
+    <a href="./"><div id="logo">{logo}</div></a></td>
     <td class="menu" style="text-align: right; vertical-align: middle;">
       <div id="secondary">{secondary_links}</div>
       <div id="primary">{primary_links}</div>
