@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.322 2004/02/11 19:21:13 dries Exp $ */
+/* $Id: common.inc,v 1.323 2004/02/12 19:37:04 dries Exp $ */
 
 /**
  * @defgroup common Core functions
@@ -1155,6 +1155,33 @@ function drupal_page_footer() {
   */
 
   module_invoke_all("exit");
+}
+
+/**
+ * Walks through the provided array and constructs an associative
+ * array out of it. The keys of the resulting array will be the
+ * values of the passed array. The values will either be the same
+ * (if no function was specified), or the results of the function
+ * given the value.
+ *
+ * @param $array An array
+ * @param $function A name of a function to apply to all values
+ */
+function drupal_map_assoc($array, $function = NULL) {
+  if (!isset($function)) {
+    $result = array();
+    foreach ($array as $value) {
+      $result[$value] = $value;
+    }
+    return $result;
+  }
+  elseif (function_exists($function)) {
+    $result = array();
+    foreach($array as $value) {
+      $result[$value] = $function($value);
+    }
+    return $result;
+  }
 }
 
 /**

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.219 2004/02/11 19:21:14 dries Exp $
+// $Id: comment.module,v 1.220 2004/02/12 19:37:04 dries Exp $
 
 function comment_help($section = "admin/help#comment") {
   $output = "";
@@ -1687,7 +1687,7 @@ function _comment_get_orders() {
 }
 
 function _comment_per_page() {
-  return array(10 => 10, 30 => 30, 50 => 50, 70 => 70, 90 => 90);
+  return drupal_map_assoc(array(10, 30, 50, 70, 90));
 }
 
 ?>

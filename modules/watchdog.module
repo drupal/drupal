@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.92 2004/02/10 19:24:47 dries Exp $
+// $Id: watchdog.module,v 1.93 2004/02/12 19:37:04 dries Exp $
 
 function watchdog_help($section = "admin/help#watchdog") {
   $output = "";
@@ -65,7 +65,8 @@ function watchdog_link($type) {
 }
 
 function watchdog_settings() {
-  $period = array(3600 => format_interval(3600), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200), 1000000000 => t("Never"));
+  $period = drupal_map_assoc(array(3600, 10800, 21600, 32400, 43200, 86400, 172800, 259200, 604800, 1209600, 2419200), "format_interval");
+  $period[1000000000] = t('Never');
   $output .= form_select(t("Discard entries older than"), "watchdog_clear", variable_get("watchdog_clear", 604800), $period, t("The time watchdog entries should be kept.  Older entries will be automatically discarded.  Requires crontab."));
   return $output;
 }
