@@ -1,5 +1,5 @@
 <?php
-// $Id: settings.php,v 1.8 2005/02/28 16:36:58 dries Exp $
+// $Id: settings.php,v 1.9 2005/02/28 16:42:39 dries Exp $
 
 /**
  * @file
@@ -55,8 +55,8 @@
  *   prefixes are desired, set to empty string "".
  *
  *   Database URL format:
- *   $db_url = 'mysql://db_user:db_password@db_hostname/database_name';
- *   $db_url = 'pgsql://db_user:db_password@db_hostname/database_name';
+ *   $db_url = 'mysql://db_user:db_password@db_hostname/db_name';
+ *   $db_url = 'pgsql://db_user:db_password@db_hostname/db_name';
  */
 $db_url = 'mysql://drupal:drupal@localhost/drupal';
 $db_prefix = '';
