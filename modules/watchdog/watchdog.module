@@ -8,11 +8,11 @@ function watchdog_help() {
 }
 
 function watchdog_perm() {
-  return array("access watchdog");
+  return array("administer watchdog");
 }
 
 function watchdog_link($type) {
-  if ($type == "admin" && user_access("access watchdog")) {
+  if ($type == "admin" && user_access("administer watchdog")) {
     $links[] = "<a href=\"admin.php?mod=watchdog\">watchdog</a>";
   }
 
@@ -67,7 +67,7 @@ function watchdog_view($id) {
 function watchdog_admin() {
   global $op, $id, $type, $order;
 
-  if (user_access("access watchdog")) {
+  if (user_access("administer watchdog")) {
 
     print "<SMALL><A HREF=\"admin.php?mod=watchdog&type=account\">account messages</A> | <A HREF=\"admin.php?mod=watchdog&type=regular\">regular messages</A> | <A HREF=\"admin.php?mod=watchdog&type=special\">special messages</A> | <A HREF=\"admin.php?mod=watchdog&type=warning\">warning messages</A> | <A HREF=\"admin.php?mod=watchdog&type=error\">error messages</A> | <A HREF=\"admin.php?mod=watchdog&type=httpd\">httpd messages</A> | <A HREF=\"admin.php?mod=watchdog\">overview</A> | <A HREF=\"admin.php?mod=watchdog&op=help\">help</A></SMALL><HR>\n";
 

@@ -11,11 +11,11 @@ function statistics_cron() {
 }
 
 function statistics_perm() {
-  return array("access statistics");
+  return array("administer statistics");
 }
 
 function statistics_link($type) {
-  if ($type == "admin" && user_access("access statistics")) {
+  if ($type == "admin" && user_access("administer statistics")) {
     $links[] = "<a href=\"admin.php?mod=statistics\">statistics</a>";
   }
 
@@ -57,7 +57,7 @@ function statistics_referer() {
 function statistics_admin() {
   global $user;
 
-  if (user_access($user, "access statistics")) {
+  if (user_access($user, "administer statistics")) {
     print statistics_referer();
   }
 }

@@ -56,7 +56,7 @@
                 $this->box("Drop where?", "<td align=\"left\" valign=\"top\">
                                              <a href=\"index.php\">home</a><br />
                                              <a href=\"module.php?mod=book\">handbook</a><br />
-                                             <a href=\"search.php\">search</a>
+                                             <a href=\"module.php?mod=search\">search</a>
                                            </td>
                                            <td align=\"right\" valign=\"top\">
                                              <a href=\"module.php?mod=diary\">diary</a><br />

@@ -70,7 +70,7 @@ function node_render($node) {
 function node_failure() {
   global $theme;
   $theme->header();
-  $theme->box(t("Not found"), t("The node you are looking for does not exist yet or is no longer accessible:") ."<UL><LI><A HREF=\"search.php\">". t("search node") ."</A></LI><LI><A HREF=\"submit.php\">". t("add node") ."</A></LI></UL>\n");
+  $theme->box(t("Not found"), t("The node you are looking for does not exist yet or is no longer accessible.") ."\n");
   $theme->footer();
 }
 
