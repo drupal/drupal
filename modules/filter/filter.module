@@ -21,9 +21,6 @@ define('FILTER_STYLE_STRIP', 1);
  * Implementation of hook_help().
  */
 function filter_help($section) {
-  // Get rid of variable numbers in the URL
-  $section = preg_replace('/[0-9]+/', '#', $section);
-
   switch ($section) {
     case 'admin/modules#description':
       return t('Framework for handling filtering of content.');
@@ -34,16 +31,16 @@ function filter_help($section) {
 <p>Users can choose between the available input formats when submitting content.</p>
 <p>Below you can configure which input formats are available to which roles, as well as choose a default input format (used for imported content, for example).</p>');
 
-    case 'admin/filters/#':
+    case 'admin/filters/'. arg(2):
       return t('
 <p>Every <em>filter</em> performs one particular change on the user input, for example stripping out malicious HTML or making URLs clickable. Choose which filters you want to apply to text in this input format.</p>
 <p>If you notice some filters are causing conflicts in the output, you can <a href="%order">rearrange them</a>.</p>', array('%configure' => url('admin/filters/'. arg(2) .'/configure'), '%order' => url('admin/filters/'. arg(2) .'/order')));
 
-    case 'admin/filters/#/configure':
+    case 'admin/filters/'. arg(2) .'/configure':
       return t('
 <p>If you cannot find the settings for a certain filter, make sure you\'ve enabled it on the <a href="%url">list filters</a> tab first.</p>', array('%url' => url('admin/filters/'. arg(2) .'/list')));
 
-    case 'admin/filters/#/order':
+    case 'admin/filters/'. arg(2) .'/order':
       return t('
 <p>Because of the flexible filtering system, you might encounter a situation where one filter prevents another from doing its job. For example: a word in an URL gets converted into a glossary term, before the URL can be converted in a clickable link. When this happens, you will need to rearrange the order in which filters get executed.</p>
 <p>Filters are executed from top-to-bottom. You can use the weight column to rearrange them: heavier filters \'sink\' to the bottom.</p>');
