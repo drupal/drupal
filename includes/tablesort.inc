@@ -95,7 +95,7 @@ function tablesort_get_sort($headers) {
   // user has not specified a sort.  check module for default and if none, use 'asc'
   else {
     foreach ($headers as $header) {
-      if (isset($header['sort'])) {
+      if (is_array($header) && isset($header['sort'])) {
         return $header['sort'];
       }
     }
