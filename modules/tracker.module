@@ -40,10 +40,10 @@ function tracker_comments($id = 0) {
     $output .= format_plural($node->comments, "1 comment", "%count comments") ." ". t("attached to node") ." ". l($node->title, "node/view/$node->nid") .":\n";
 
     if ($id) {
-      $cresult = db_query("SELECT c.*, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.timestamp > $period AND c.uid = '%d' AND c.nid = '%d' ORDER BY cid DESC", $id, $node->nid);
+      $cresult = db_query("SELECT c.*, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.timestamp > %d AND c.uid = '%d' AND c.nid = '%d' AND c.status = 0 ORDER BY cid DESC", $period, $id, $node->nid);
     }
     else {
-      $cresult = db_query("SELECT c.*, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.timestamp > $period AND c.nid = '%d' ORDER BY cid DESC", $node->nid);
+      $cresult = db_query("SELECT c.*, u.name FROM comments c LEFT JOIN users u ON c.uid = u.uid WHERE c.timestamp > %d AND c.nid = '%d'AND c.status = 0 ORDER BY cid DESC", $period, $node->nid);
     }
 
     $output .= "<ul>";
