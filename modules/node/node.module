@@ -1044,8 +1044,11 @@ function node_validate($node) {
     }
   }
 
-  // By default, auto-generate the teaser.
-  $node->teaser = node_teaser($node->body);
+  // Auto-generate the teaser, but only if it hasn't been set (e.g. by a
+  // module-provided 'teaser' form item).
+  if (!isset($node->teaser)) {
+    $node->teaser = node_teaser($node->body);
+  }
 
   // Create a new revision when required.
   $node = node_revision_create($node);
