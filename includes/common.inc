@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.173 2003/03/04 15:10:37 dries Exp $
+// $Id: common.inc,v 1.174 2003/03/04 17:44:37 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST, $PHP_SELF;
@@ -138,7 +138,6 @@ function message_throttle() {
 
 function locale_init() {
   global $languages, $user;
-
   if ($user->uid && $languages[$user->language]) {
     return $user->language;
   }
@@ -931,9 +930,6 @@ if (!function_exists("xmlrpc_decode")) {
 // initialize configuration variables, using values from conf.php if available:
 $conf = variable_init(isset($conf) ? $conf : array());
 
-// initialize installed modules:
-module_init();
-
 // set error handler:
 set_error_handler("error_handler");
 
@@ -942,5 +938,8 @@ $locale = locale_init();
 
 // initialize theme:
 $theme = theme_init();
+
+// initialize installed modules:
+module_init();
 
 ?>
