@@ -235,20 +235,6 @@ function node_invoke(&$node, $hook, $arg = 0) {
   }
 }
 
-function node_invoke_all(&$node, $hook, $op, $arg = 0) {
-  $return = array();
-  foreach (module_list() as $name) {
-    if ((module_hook($name, "node") || module_hook($name, "nodeapi")) && module_hook($name, $hook)) {
-      $function = $name ."_". $hook;
-      $result = $function($node, $op, $arg);
-      if (isset($result)) {
-        $return = array_merge($return, $result);
-      }
-    }
-  }
-  return $return;
-}
-
 function node_load($conditions, $revision = -1) {
 
   /*
@@ -299,7 +285,7 @@ function node_save($node) {
   /*
   ** Fetch fields to save to node table:
   */
-  $fields = node_invoke_all($node, "nodeapi", "fields");
+  $fields = module_invoke_all("nodeapi", $node, "fields");
 
   /*
   ** Serialize the revisions field:
@@ -344,7 +330,7 @@ function node_save($node) {
 
     // Call the node specific callback (if any):
     node_invoke($node, "insert");
-    node_invoke_all($node, "nodeapi", "insert");
+    module_invoke_all("nodeapi", $node, "insert");
   }
   else {
 
@@ -368,7 +354,7 @@ function node_save($node) {
 
     // Call the node specific callback (if any):
     node_invoke($node, "update");
-    node_invoke_all($node, "nodeapi", "update");
+    module_invoke_all("nodeapi", $node, "update");
   }
 
   /*
@@ -738,12 +724,12 @@ function node_admin_settings($edit) {
     $output = status(t("the content settings have been reset to their default values."));
   }
 
-  $header = array_merge(array(t("type")), array_keys(node_invoke_all($node, "nodeapi", "settings")));
+  $header = array_merge(array(t("type")), array_keys(module_invoke_all("nodeapi", $node, "settings")));
   foreach (module_list() as $name) {
     if (module_hook($name, "node")) {
       $node->type = $name;
       $cols = array();
-      foreach (node_invoke_all($node, "nodeapi", "settings") as $setting) {
+      foreach (module_invoke_all("nodeapi", $node, "settings") as $setting) {
         $cols[] = array("data" => $setting, "align" => "center", "width" => 55);
       }
       $rows[] = array_merge(array(module_invoke($name, "node", "name")), $cols);
@@ -758,9 +744,9 @@ function node_admin_settings($edit) {
       $node->type = $name;
 
       // Create table() data:
-      $header = array_keys(node_invoke_all($node, "nodeapi", "settings"));
+      $header = array_keys(module_invoke_all("nodeapi", $node, "settings"));
       $cols = array();
-      foreach (node_invoke_all($node, "nodeapi", "settings") as $setting) {
+      foreach (module_invoke_all("nodeapi", $node, "settings") as $setting) {
         $cols[] = array("data" => $setting, "align" => "center", "width" => 75);
       }
 
@@ -1131,7 +1117,7 @@ function node_validate($node, &$error) {
   */
 
   $result = node_invoke($node, "validate");
-  $error = $error + (is_array($result) ? $result : array()) + node_invoke_all($node, "nodeapi", "validate");
+  $error = $error + (is_array($result) ? $result : array()) + module_invoke_all("nodeapi", $node, "validate");
 
   return $node;
 }
@@ -1191,7 +1177,7 @@ function node_form($edit, $error = NULL) {
   }
 
   // Prepend extra node form:
-  $form = implode("", node_invoke_all($edit, "nodeapi", "form pre", $error));
+  $form = implode("", module_invoke_all("nodeapi", $edit, "form pre", $error));
 
   /*
   ** Get the node specific bits:
@@ -1203,7 +1189,7 @@ function node_form($edit, $error = NULL) {
   }
 
   // Append extra node form:
-  $form .= implode("", node_invoke_all($edit, "nodeapi", "form post", $error));
+  $form .= implode("", module_invoke_all("nodeapi", $edit, "form post", $error));
 
   /*
   ** Add the help text:
@@ -1236,7 +1222,7 @@ function node_form($edit, $error = NULL) {
     $output .= form_item(t("Options"), $options);
     $output .= "</div>";
 
-    $extras .= implode("</div><div class=\"extra\">", node_invoke_all($edit, "nodeapi", "form admin"));
+    $extras .= implode("</div><div class=\"extra\">", module_invoke_all("nodeapi", $edit, "form admin"));
     $output .= $extras ? "<div class=\"extra\">$extras</div></div>" : "</div>";
   }
 
@@ -1544,7 +1530,7 @@ function node_delete($edit) {
       */
 
       node_invoke($node, "delete");
-      node_invoke_all($node, "nodeapi", "delete");
+      module_invoke_all("nodeapi", $node, "delete");
 
       /*
       ** Clear the cache so an anonymous poster can see the node being
