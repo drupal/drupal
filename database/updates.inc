@@ -65,6 +65,7 @@ $sql_updates = array(
   "2004-06-30" => "update_91",
   "2004-07-07" => "update_92",
   "2004-07-11" => "update_93",
+  "2004-07-22" => "update_94"
 );
 
 function update_32() {
@@ -1159,6 +1160,30 @@ function update_93() {
     $ret[] = update_sql('ALTER TABLE {url_alias} DROP INDEX src');
   }
   $ret[] = update_sql("INSERT INTO {url_alias} (src, dst) VALUES ('node/feed', 'rss.xml')");
+  return $ret;
+}
+
+function update_94() {
+  /**
+  * Postgres only update
+  */
+  $ret = array();
+  if ($GLOBALS['db_type'] == 'pgsql') {
+    $ret[] = update_sql('DROP FUNCTION "greatest"(integer, integer)');
+    $ret[] = update_sql("
+      CREATE FUNCTION greatest(integer, integer) RETURNS integer AS '
+        BEGIN
+          IF $2 IS NULL THEN
+            RETURN $1;
+          END IF;
+          IF $1 > $2 THEN
+            RETURN $1;
+          END IF;
+          RETURN $2;
+        END;
+      ' LANGUAGE 'plpgsql';
+    ");
+  }
   return $ret;
 }
 
