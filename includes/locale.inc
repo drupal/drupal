@@ -76,7 +76,7 @@ function _locale_admin_manage_add_screen() {
 
   $edit = &$_POST['edit'];
   $output .= '<h2>'. t('Custom language') .'</h2>';
-  $form = form_textfield(t('Language code'), 'langcode', $edit['langcode'], 70, 12, t("Commonly this is an <a href=\"%iso-codes\">ISO 639 language code</a> with an optional country code for regional variants. Examples include 'en', 'en-US' and 'zh-cn'.", array("%iso-codes" => "http://www.w3.org/WAI/ER/IG/ert/iso639.htm")));
+  $form = form_textfield(t('Language code'), 'langcode', $edit['langcode'], 70, 12, t("Commonly this is an <a href=\"%iso-codes\">ISO 639 language code</a> with an optional country code for regional variants. Examples include 'en', 'en-US' and 'zh-cn'.", array('%iso-codes' => 'http://www.w3.org/WAI/ER/IG/ert/iso639.htm')));
   $form .= form_textfield(t('Language name in English'), 'langname', $edit['langname'], 70, 64, t('Name of the language. Will be availabale for translation in all languages.'));
   $form .= form_submit(t('Add language'));
   $output .= form($form);
@@ -105,7 +105,7 @@ function _locale_admin_import_screen() {
 
   $form = form_file(t('Language file'), 'file', 50, t('A gettext Portable Object (.po) file.'));
   $form .= form_select(t('Import into'), 'langcode', '', $languages, t('Choose the language you want to add strings into. If you choose a language which is not yet set up, then it will be added.'));
-  $form .= form_radios(t('Mode'), 'mode', 'overwrite', array("overwrite" => t('Strings in the uploaded file replace existing ones, new ones are added'), "keep" => t('Existing strings are kept, only new strings are added')));
+  $form .= form_radios(t('Mode'), 'mode', 'overwrite', array('overwrite' => t('Strings in the uploaded file replace existing ones, new ones are added'), 'keep' => t('Existing strings are kept, only new strings are added')));
   $form .= form_submit(t('Import'));
   $output = form($form, 'POST', url('admin/locale/language/import'), array('enctype' => 'multipart/form-data'));
   return $output;
@@ -154,7 +154,7 @@ function _locale_import_po($file, $lang, $mode) {
     }
   }
   else {
-    drupal_set_message(t('Translation file broken: no header.'), 'error');
+    drupal_set_message(t('Translation file broken.'), 'error');
     return FALSE;
   }
 
@@ -737,15 +737,17 @@ function _locale_export_po($language) {
   // Build array out of the database results
   $parent = array();
   while ($child = db_fetch_object($result)) {
-    $parent[$child->lid]['comment'] = $child->location;
-    $parent[$child->lid]['msgid'] = $child->source;
-    if ($child->plid) {
-      $parent[$child->lid][$child->plid]['plural'] = $child->lid;
-      $parent[$child->lid][$child->plid]['translation'] = $child->translation;
-      $parent[$child->lid][$child->plid]['msgid'] = $child->source;
-    }
-    else {
-      $parent[$child->lid]['translation'] = $child->translation;
+    if ($child->source != '') {
+      $parent[$child->lid]['comment'] = $child->location;
+      $parent[$child->lid]['msgid'] = $child->source;
+      if ($child->plid) {
+        $parent[$child->lid][$child->plid]['plural'] = $child->lid;
+        $parent[$child->lid][$child->plid]['translation'] = $child->translation;
+        $parent[$child->lid][$child->plid]['msgid'] = $child->source;
+      }
+      else {
+        $parent[$child->lid]['translation'] = $child->translation;
+      }
     }
   }
 
