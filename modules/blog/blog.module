@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.119 2003/05/29 09:14:58 dries Exp $
+// $Id: blog.module,v 1.120 2003/06/02 18:11:54 dries Exp $
 
 function blog_system($field){
   $system["description"] = t("Enables keeping a blog or easily and regularly updated web page.");
@@ -137,7 +137,8 @@ function blog_page_last() {
 }
 
 function blog_form(&$node, &$help, &$error) {
-  global $nid, $iid;
+  global $nid;
+  $iid = $_GET["iid"];
   if (empty($node->body)) {
 
     /*
