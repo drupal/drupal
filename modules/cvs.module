@@ -6,7 +6,7 @@ function cvs_perm() {
 
 function cvs_link($type) {
   if ($type == "page" && user_access("access cvs messages")) {
-    $links[] = "<a href=\"module.php?mod=cvs\">cvs messages</a>";
+    $links[] = "<a href=\"module.php?mod=cvs\">" . t("cvs messages") . "</a>";
   }
 
   return $links ? $links : array();
