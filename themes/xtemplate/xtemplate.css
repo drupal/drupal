@@ -189,6 +189,9 @@ table {
 .calendar .day-today {
   background-color: #69c;
 }
+.calendar .day-today a {
+  color: #fff;
+}
 .calendar .day-selected {
   background-color: #369;
   color: #fff;

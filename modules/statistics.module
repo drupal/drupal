@@ -314,7 +314,7 @@ function statistics_admin_accesslog_table($type, $id) {
       $url = message_na();
     }
 
-    $rows[] = array(array("data" => format_date($log->timestamp, "small"), "nowrap" => "nowrap"), ($node->nid ? l($node->title, "statistics/log/$node->nid") : message_na()), format_name($user), $log->hostname ? $log->hostname : message_na(), $url, ($log->nid ? l("track node", "admin/statistics/log/node/$log->nid") : ""), ($user->uid ? l("track user", "admin/statistics/log/user/$user->uid") : ""), ($log->hostname ? l("track host", "admin/statistics/log/host/$log->hostname") : ""));
+    $rows[] = array(array("data" => format_date($log->timestamp, "small"), "nowrap" => "nowrap"), ($node->nid ? l($node->title, "node/view/$node->nid") : message_na()), format_name($user), $log->hostname ? $log->hostname : message_na(), $url, ($log->nid ? l("track node", "admin/statistics/log/node/$log->nid") : ""), ($user->uid ? l("track user", "admin/statistics/log/user/$user->uid") : ""), ($log->hostname ? l("track host", "admin/statistics/log/host/$log->hostname") : ""));
   }
 
   if ($pager = pager_display(NULL, 50, 0, "admin")) {

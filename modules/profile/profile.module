@@ -11,8 +11,9 @@ function _profile_init() {
   $GLOBALS["profile_fields"] = array(
     "address"       => array("textfield", t("Address"), "", 64, 64, t("Your address: street and number.")),
     "city"          => array("textfield", t("City"), "", 64, 64, t("Your city.")),
-    "state"         => array("textfield", t("State"), "", 4, 2, t("Your state as a two letter code.")),
-    "zip"           => array("textfield", t("Zip"), "", 7, 5, t("Your ZIP code.")),
+    "state"         => array("textfield", t("State / Province / Region"), "", 64, 64, ""),
+    "zip"           => array("textfield", t("Zip / Postal Code"), "", 7, 10, ""),
+    "country"       => array("textfield", t("Country"), "", 64, 64, t("Your country.")),
     "birthday"      => array("", t("Birthday"), ""),
     "gender"        => array("select", t("Gender"), "", array(0 => "-", "m" => t("male"), "f" => t("female")), "", 0, 0),
     "job"           => array("textfield", t("Job title"), "", 64, 64, t("Your job title or position.")),
@@ -24,7 +25,7 @@ function _profile_init() {
     "biography"     => array("textarea", t("Biography"), "", 64, 4, ""),
     "interests"     => array("textarea", t("Interests"), "", 64, 4, t("What you like.")),
     "publickey"     => array("textarea", t("Public key"), "", 64, 4, ""),
-    "avatar"        => array("", t("Avatar or picture"), t("Your virtual face or picture."))
+    "avatar"        => array("", t("Avatar or picture"), t(t("Your virtual face or picture. Maximum dimensions are ".variable_get("profile_avatar_dimensions", "85x85")." and max size is ".variable_get("profile_avatar_file_size", "30")."kb.")))
   );
 
   $GLOBALS["profile_days"][0] = t("day");
@@ -174,12 +175,14 @@ function _profile_user_view(&$user, $mode) {
   foreach (_profile_active_fields($mode) as $name) {
     $field = $profile_fields[$name];
     $t = "profile_".$name;
+
     if (!empty($user->$t)) {
       switch ($field[0]) {
         case "textfield":
         case "textarea":
         case "checkbox":
-          $output .= form_item($field[1], check_output($user->$t));
+          $value = ($t == "profile_homepage") ? "<a href=\"".check_output($user->$t)."\">".check_output($user->$t)."</a>" : check_output($user->$t);
+          $output .= form_item($field[1], $value);
           break;
         case "select":
           $output .= form_item($field[1], check_output($profile_fields[$name][3][$user->$t]));
@@ -197,7 +200,7 @@ function _profile_user_view(&$user, $mode) {
             if (isset($user->profile_birthday) && isset($user->profile_birthmonth) && isset($user->profile_birthyear)) {
               // this is very european-centric, can we use format_date?
               $time = mktime(0, 0, 0, $user->profile_birthmonth, $user->profile_birthday, $user->profile_birthyear);
-              $output .= form_item(t("Birthday"), format_date($time));
+              $output .= form_item(t("Birthday"), format_date($time, "custom", "F j, Y"));
             }
           }
       }

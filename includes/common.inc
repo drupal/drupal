@@ -104,11 +104,27 @@ function request_uri() {
   */
 
   if (isset($_SERVER["REQUEST_URI"])) {
-    return $_SERVER["REQUEST_URI"];
+    $uri = $_SERVER["REQUEST_URI"];
   }
   else {
-    return $_SERVER["PHP_SELF"] ."?". $_SERVER["QUERY_STRING"];
+    $uri = $_SERVER["PHP_SELF"] ."?". $_SERVER["QUERY_STRING"];
   }
+
+  /*
+  ** We pipe the request URI through htmlspecialchars() to prevent
+  ** XSS attacks.
+  */
+
+  $uri = htmlspecialchars($uri, ENT_QUOTES);
+
+  /*
+  ** We replace ( and ) with their entity equivalents to prevent XSS
+  ** attacks.
+  */
+
+  $uri = strtr($uri, array("(" => "&040;", ")" => "&041;"));
+
+  return $uri;
 }
 
 function message_access() {
@@ -776,7 +792,7 @@ function format_name($object) {
 function form($form, $method = "post", $action = 0, $options = 0) {
 
   if (!$action) {
-    $action = htmlentities(request_uri());
+    $action = request_uri();
   }
   return "<form action=\"$action\" method=\"$method\"". ($options ? " $options" : "") .">\n$form</form>\n";
 }
@@ -786,19 +802,19 @@ function form_item($title, $value, $description = 0) {
 }
 
 function form_radio($title, $name, $value = 1, $checked = 0, $description = 0) {
-  return form_item(0, "<input type=\"radio\" name=\"edit[$name]\" value=\"". $value ."\"". ($checked ? " checked=\"checked\"" : "") ." /> $title", $description);
+  return form_item(0, "<input type=\"radio\" class=\"form-radio\" name=\"edit[$name]\" value=\"". $value ."\"". ($checked ? " checked=\"checked\"" : "") ." /> $title", $description);
 }
 
 function form_checkbox($title, $name, $value = 1, $checked = 0, $description = 0) {
-  return form_hidden($name, 0) . form_item(0, "<input type=\"checkbox\" name=\"edit[$name]\" value=\"". $value ."\"". ($checked ? " checked=\"checked\"" : "") ." /> $title", $description);
+  return form_hidden($name, 0) . form_item(0, "<input type=\"checkbox\" class=\"form-checkbox\" name=\"edit[$name]\" value=\"". $value ."\"". ($checked ? " checked=\"checked\"" : "") ." /> $title", $description);
 }
 
 function form_textfield($title, $name, $value, $size, $maxlength, $description = 0) {
-  return form_item($title, "<input maxlength=\"$maxlength\" name=\"edit[$name]\" size=\"$size\" value=\"". check_form($value) ."\" />", $description);
+  return form_item($title, "<input maxlength=\"$maxlength\" class=\"form-text\" name=\"edit[$name]\" size=\"$size\" value=\"". check_form($value) ."\" />", $description);
 }
 
 function form_password($title, $name, $value, $size, $maxlength, $description = 0) {
-  return form_item($title, "<input type=\"password\" maxlength=\"$maxlength\" name=\"edit[$name]\" size=\"$size\" value=\"". check_form($value) ."\" />", $description);
+  return form_item($title, "<input type=\"password\" class=\"form-password\" maxlength=\"$maxlength\" name=\"edit[$name]\" size=\"$size\" value=\"". check_form($value) ."\" />", $description);
 }
 
 function form_textarea($title, $name, $value, $cols, $rows, $description = 0) {
@@ -816,7 +832,7 @@ function form_select($title, $name, $value, $options, $description = 0, $extra =
 }
 
 function form_file($title, $name, $size, $description = 0) {
-  return form_item($title, "<input type=\"file\" name=\"edit[$name]\" size=\"$size\" />\n", $description);
+  return form_item($title, "<input type=\"file\" class=\"form-file\" name=\"edit[$name]\" size=\"$size\" />\n", $description);
 }
 
 function form_hidden($name, $value) {
@@ -824,7 +840,7 @@ function form_hidden($name, $value) {
 }
 
 function form_submit($value) {
-  return "<input type=\"submit\" name=\"op\" value=\"". check_form($value) ."\" />\n";
+  return "<input type=\"submit\" class=\"form-submit\" name=\"op\" value=\"". check_form($value) ."\" />\n";
 }
 
 function form_weight($title = NULL, $name = "weight", $value = 0, $delta = 10, $description = 0, $extra = 0) {

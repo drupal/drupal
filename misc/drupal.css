@@ -6,6 +6,15 @@
 .item-list .icon a        { color: #000; text-decoration: none; }
 .item-list .icon a:hover  { color: #000; text-decoration: none; }
 
+tr.dark                   { background-color: #ddd; }
+tr.light                  { background-color: #eee; }
+
+#tracker table            { border-collapse: collapse; }
+#tracker th               { text-align: left; padding: 0.25em 1em; }
+#tracker td               { vertical-align: top; padding: 1em; }
+#tracker td ul            { margin-top: 0; margin-bottom: 0; }
+#tracker td ul a          { font-weight: normal; }
+
 .poll .bar                { height: 1em; }
 .poll .bar .foreground    { background-color: #000; float: left; height: 1em; }
 .poll .bar .background    { background-color: #ddd; float: left; height: 1em; }

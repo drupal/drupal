@@ -127,15 +127,13 @@ class Theme_xtemplate extends BaseTheme {
   }
 
   function box($title, $content, $region = "main") {
-    if ($title && $content) {
-      $this->template->assign(array(
-        "subject" => $title,
-        "content" => $content));
+    $this->template->assign(array(
+      "subject" => $title,
+      "content" => $content));
 
-      $this->template->parse("box");
-      print $this->template->text("box");
-      $this->template->reset("box");
-    }
+    $this->template->parse("box");
+    print $this->template->text("box");
+    $this->template->reset("box");
   }
 
   function footer() {
