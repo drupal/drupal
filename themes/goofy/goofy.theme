@@ -16,10 +16,12 @@
     function header() {
       global $site_name;
 ?>
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd"> 
  <html> 
   <head>
    <title><?php echo $site_name; ?></title>
     <style type="text/css">
+     body,p,ul,li,div,form,em,blockquote,quote { font-size: 10pt; font-family: tahoma,helvetica,arial; }
      td { font-family: tahoma,arial,helvetica; font-size: 10pt; }
      td.oru { background: url("themes/goofy/images/or-u.png"); width: 100%; } 
      td.ord { background: url("themes/goofy/images/or-d.png"); width: 100%; } 
@@ -32,10 +34,10 @@
      td.grr { background: url("themes/goofy/images/gr-r.png"); }
      td.grcnt { background: #C6C6C6; width: 100%; font-family: tahoma,arial,helvetica; font-size: 10pt; } 
      td.lgu { background: url("themes/goofy/images/lg-u.png"); width: 100%; } 
-     td.lgd { background: url("themes/goofy/images/lg-d.png"); width: 100%; } 
+     td.lgd { background: url("themes/goofy/images/lg-d.png"); width: 100%; margin: 0; } 
      td.lgl { background: url("themes/goofy/images/lg-l.png"); } 
      td.lgr { background: url("themes/goofy/images/lg-r.png"); }
-     td.lgcnt { background: #E4E4E4; width: 100%; font-family: tahoma,arial,helvetica; font-size: 10pt; }
+     td.lgcnt { background: #E4E4E4; width: 100%; font-family: tahoma,arial,helvetica; font-size: 10pt; white-space: normal; }
      
      small { font-size: 8pt; }
      big { font-size: 12pt; }
@@ -57,7 +59,7 @@
       </td>
      </tr>
      <tr>
-      <td valign="top" width="77%">
+      <td valign="top" width="100%">
 <?php
 
     } // close header function
@@ -112,19 +114,21 @@
         </tr>
         <tr>
          <td class="lgl"><img src="themes/goofy/images/null.gif"></td>
-         <td class="lgcnt" width="100%"><small><?php echo strtr(t("$how by %a on %b"), array("%a" => format_username($story->userid), "%b" => format_date($story->timestamp, "large"))); ?></small></td>
-         <td class="lgcnt" width="100%"><div align="right"><?php echo "<A HREF=\"search.php?category=". urlencode($story->section) ."\">$story->section</A>"; ?></div></td>
+         <td class="lgcnt"><small><?php echo strtr(t("$how by %a on %b"), array("%a" => format_username($story->userid), "%b" => format_date($story->timestamp, "large"))); ?></small></td>
+         <td class="lgcnt" nowrap><div align="right"><?php echo "<A HREF=\"search.php?category=". urlencode($story->section) ."\">$story->section</A>"; ?></div></td>
          <td class="lgr"><img src="themes/goofy/images/null.gif"></td>
         </tr>
         <tr>
          <td class="lgl"><img src="themes/goofy/images/null.gif"></td>
-         <td class="lgcnt" width="100%" colspan="2"><hr color="#404040" size="1"><?php
+         <td class="lgcnt" width="100%" colspan="2"><hr color="#404040" size="1">
+         <?php
           echo check_output($story->abstract, 1) ."<br><br>";
           if ($story->updates)
             echo t("Editor's note by <A HREF=\"account.php?op=userinfo&uname=$story->editor\">$story->editor</A>") .":". check_output($story->updates, 1) ."<br><br>";
           if ($reply)
             echo check_output($story->article, 1);
-         ?><hr><div align="right">
+         ?>
+         <hr color="#404040" size="1"><div align="right">
          <?php                                
           if (!$reply)
             echo theme_morelink($this, $story);
@@ -261,7 +265,7 @@
         </tr>
         <tr>
          <td><img src="themes/goofy/images/lg-dl.png"></td>
-         <td class="lgd" width="100%"><img src="themes/goofy/images/null.gif"></td>
+         <td class="lgd" width="100%"><img src="themes/goofy/images/null.gif" width="150" height="1"></td>
          <td><img src="themes/goofy/images/lg-dr.png"></td>
         </tr>
        </table><br>
@@ -273,14 +277,13 @@
     function footer() {
 ?>
               </td>
-              <td valign="top" width="23%">
+              <td valign="top">
 <?php
          global $PHP_SELF;
 
           theme_account($this);
           theme_blocks("all", $this);
-          print "<img src=\"themes/goofy/images/null.gif\" width=\"140\" height=\"1\">";          
-          
+         
 ?>    
      </td>
     </tr>   
@@ -289,6 +292,7 @@
   </body>
  </html>
 <?
+ exit;
     }
   }
 
