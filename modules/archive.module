@@ -190,7 +190,7 @@ function archive_link($type) {
 
   if ($type == "system") {
     if (user_access("access content")) {
-      menu("archive", t("archives"), "archive_page", 0, 1);
+      menu("archive", t("archives"), "archive_page", 0, MENU_HIDE);
     }
   }
 

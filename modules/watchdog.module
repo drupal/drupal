@@ -56,7 +56,7 @@ function watchdog_link($type) {
       menu("admin/watchdog/warning", t("warning"), "watchdog_admin");
       menu("admin/watchdog/error", t("error"), "watchdog_admin");
       menu("admin/watchdog/httpd", t("httpd"), "watchdog_admin");
-      menu("admin/watchdog/view", t("view details"), "watchdog_admin", 0, 1); // hidden menu
+      menu("admin/watchdog/view", t("view details"), "watchdog_admin", 0, MENU_HIDE);
     }
   }
 }

@@ -43,7 +43,7 @@ function search_link($type) {
   }
 
   if ($type == "system" && user_access("search content")) {
-    menu("search", t("search"), "search_page", 0, 1);
+    menu("search", t("search"), "search_page", 0, MENU_HIDE);
   }
 
   return $links;

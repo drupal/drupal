@@ -110,7 +110,7 @@ function import_link($type) {
       menu("admin/node/syndication/news/help", t("help"), "import_help_page", 9);
     }
     if (user_access("access news feeds")) {
-      menu("import", t("news feeds"), "import_page", 0, 1);
+      menu("import", t("news feeds"), "import_page", 0, MENU_HIDE);
     }
   }
 

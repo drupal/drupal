@@ -157,7 +157,7 @@ function drupal_auth($username, $password, $server) {
 
 function drupal_link($type) {
   if ($type == "system") {
-    menu("drupal", "Drupal", "drupal_page", 0, 1);
+    menu("drupal", "Drupal", "drupal_page", 0, MENU_HIDE);
   }
 }
 
