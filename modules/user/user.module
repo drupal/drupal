@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.284 2003/12/29 17:14:26 dries Exp $
+// $Id: user.module,v 1.285 2004/01/05 19:33:58 dries Exp $
 
 /*** Common functions ******************************************************/
 
@@ -682,6 +682,8 @@ function user_login($edit = array(), $msg = "") {
   }
   $output .= theme("item_list", $items);
 
+  $output  = form_group(t('User login'), $output);
+
   return form($output, "post", url("user"));
 }
 
@@ -768,7 +770,7 @@ function user_pass($edit = array()) {
       $items[] = l(t("Create new account"), "user/register");
     }
     $output .= theme("item_list", $items);
-
+    $output  = form_group(t('Request new password'), $output);
     return form($output, "post", url("user"));
   }
 }
@@ -897,6 +899,7 @@ function user_register($edit = array()) {
   $items[] = l(t("Request new password"), "user/password");
   $items[] = l(t("Log in"), "user/login");
   $output .= theme("item_list", $items);
+  $output  = form_group(t('Create new user account'), $output);
 
   return form($output);
 }
@@ -1032,11 +1035,11 @@ function user_view($uid = 0) {
     print theme("page", $output, $account->name);
   }
   else {
-    $output = theme("box", t("User login"), user_login());
+    $output = user_login();
     if (variable_get("user_register", 1)) {
-      $output .= theme("box", t("Create new user account"), user_register());
+      $output .= user_register();
     }
-    $output .= theme("box", t("Request new password"), user_pass());
+    $output .= user_pass();
 
     print theme("page", $output, t("User login"));
   }
