@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.330 2004/03/10 19:32:37 dries Exp $ */
+/* $Id: common.inc,v 1.331 2004/03/11 05:28:51 dries Exp $ */
 
 /**
  * @defgroup common Core functions
@@ -938,11 +938,11 @@ function format_name($object) {
  * @defgroup from Form generation
  * @{
  */
-function form($form, $method = "post", $action = 0, $options = 0) {
+function form($form, $method = "post", $action = NULL, $attributes = NULL) {
   if (!$action) {
     $action = request_uri();
   }
-  return "<form action=\"$action\" method=\"$method\"". drupal_attributes($options) .">\n$form\n</form>\n";
+  return "<form action=\"$action\" method=\"$method\"". drupal_attributes($attributes) .">\n$form\n</form>\n";
 }
 
 function form_item($title, $value, $description = NULL, $id = NULL) {
