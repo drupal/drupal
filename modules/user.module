@@ -348,14 +348,6 @@ function user_block($op = "list", $delta = 0) {
           $output .= form_hidden("destination", $edit["destination"]);
           $output .= form_textfield(t("Username"), 'name', $edit['name'], 15, 64);
           $output .= form_password(t("Password"), 'pass', $pass, 15, 64);
-
-          if (variable_get("user_remember", 0) == 0) {
-            $output .= form_checkbox(t("Remember me"), "remember_me");
-          }
-          elseif (variable_get("user_remember", 1) == 1) {
-            $output .= form_hidden("remember_me", 1);
-          }
-
           $output .= form_submit(t("Log in"));
           $output .= "</div>\n";
 
@@ -611,12 +603,7 @@ function user_login($edit = array(), $msg = "") {
       */
 
       $path = preg_replace("/.+\/\/[^\/]+(.*)/", "\$1/", $base_url);
-      if ($edit["remember_me"]) {
-        setcookie(session_name(), session_id(), time() + 3600 * 24 * 365, $path);
-      }
-      else {
-        setcookie(session_name(), session_id(), FALSE, $path);
-      }
+      setcookie(session_name(), session_id(), FALSE, $path);
 
       /*
       ** Redirect the user to the page he logged on from.
@@ -669,7 +656,6 @@ function user_login($edit = array(), $msg = "") {
     $output .= form_textfield(t("Username"), 'name', $edit['name'], 30, 64, t("Enter your %s username.", array("%s" => variable_get("site_name", "local"))));
   }
   $output .= form_password(t("Password"), 'pass', $pass, 30, 64, t("Enter the password that accompanies your username."));
-  $output .= form_checkbox(t("Remember me"), "remember_me");
   $output .= form_submit(t("Log in"));
   $items[] = l(t("Request new password"), "user/password");
   if (variable_get("user_register", 1)) {
@@ -1116,7 +1102,6 @@ function _user_mail_text($message) {
 function user_settings() {
   // user registration settings
   $group = form_radios(t("Public registrations"), "user_register", variable_get("user_register", 1), array(t("Only site administrators can create new user accounts."), t("Visitors can create accounts and no administrator approval is required."), t("Visitors can create accounts but administrator approval is required.")));
-  $group .= form_radios(t("Remember authenticated users"), "user_remember", variable_get("user_remember", 0), array(t("Let the user decide whether he should be logged out when leaving the site."), t("Authenticated users are not logged out upon leaving the site."), t("Authenticated users are logged out upon leaving the site.")));
   $group .= form_textarea(t("User registration guidelines"), "user_registration_help", variable_get("user_registration_help", ""), 70, 4, t("This text is displayed at the top of the user registration form.  It's useful for helping or instructing your users."));
   $output = form_group(t("User registration settings"), $group);
 
