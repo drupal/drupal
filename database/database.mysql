@@ -361,6 +361,22 @@ CREATE TABLE search_index (
 ) TYPE=MyISAM;
 
 --
+-- Table structure for table 'sessesions'
+--
+
+
+CREATE TABLE sessions (
+  uid int(10) unsigned NOT NULL,
+  sid varchar(32) NOT NULL default '',
+  hostname varchar(128) NOT NULL default '',
+  timestamp int(11) NOT NULL default '0',
+  session text,
+  KEY uid (uid),
+  KEY sid (sid(4)),
+  KEY timestamp (timestamp)
+) TYPE=MyISAM;
+
+--
 -- Table structure for table 'sequences'
 --
 
@@ -491,14 +507,11 @@ CREATE TABLE users (
   theme varchar(255) NOT NULL default '',
   signature varchar(255) NOT NULL default '',
   timestamp int(11) NOT NULL default '0',
-  hostname varchar(128) NOT NULL default '',
   status tinyint(4) NOT NULL default '0',
   timezone varchar(8) default NULL,
   rating decimal(8,2) default NULL,
   language char(2) NOT NULL default '',
-  sid varchar(32) NOT NULL default '',
   init varchar(64) default '',
-  session text,
   data text,
   rid int(10) unsigned NOT NULL default '0',
   PRIMARY KEY  (uid),

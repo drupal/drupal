@@ -361,6 +361,19 @@ CREATE INDEX search_index_lno_idx ON search_index(lno);
 CREATE INDEX search_index_word_idx ON search_index(word);
 
 --
+-- Table structure for sessions
+--
+
+CREATE TABLE sessions (
+  uid integer NOT NULL,
+  sid varchar(32) NOT NULL default '',
+  hostname varchar(128) NOT NULL default '',
+  timestamp integer NOT NULL default '0',
+  session text,
+  PRIMARY KEY (sid)
+);
+
+--
 -- Table structure for sequences
 -- This is only used under MySQL, co commented out
 --
@@ -494,14 +507,11 @@ CREATE TABLE users (
   theme varchar(255) NOT NULL default '',
   signature varchar(255) NOT NULL default '',
   timestamp integer NOT NULL default '0',
-  hostname varchar(128) NOT NULL default '',
   status smallint NOT NULL default '0',
   timezone varchar(8) default NULL,
   rating decimal(8,2) default NULL,
   language char(2) NOT NULL default '',
-  sid varchar(32) NOT NULL default '',
   init varchar(64) default '',
-  session text default '',
   data text default '',
   rid integer NOT NULL default '0',
   PRIMARY KEY  (uid),
