@@ -45,7 +45,7 @@ M: Moshe Weitzman <weitzman@tejasa.com>
 S: maintained
 
 POSTGRES PORT
-M: James Arthur <j_a_arthur@yahoo.com>
+M: Adrian Rossouw <adrian@obsidian.co.za>
 S: maintained
 
 STATISTICS MODULE
@@ -62,7 +62,7 @@ S: maintained
 
 DEBIAN PACKAGE
 M: Hugo Espuny <hec@debian.org>
-S: maintained
+S: fixes/patches
 
 THE REST:
 M: Dries <dries@drupal.org>

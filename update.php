@@ -46,7 +46,8 @@ $mysql_updates = array(
   "2003-08-20" => "update_61",
   "2003-08-27" => "update_62",
   "2003-09-09" => "update_63",
-  "2003-09-10" => "update_64"
+  "2003-09-10" => "update_64",
+  "2003-09-29" => "update_65"
 );
 
 function update_32() {
@@ -274,12 +275,23 @@ function update_57() {
 }
 
 function update_58() {
-  update_sql("ALTER TABLE node ADD path varchar(250) NULL default ''");
+  if ($GLOBALS["db_type"] == "pgsql") {
+    update_sql("ALTER TABLE {node} ADD path varchar(250) NULL");
+    update_sql("ALTER TABLE {node} ALTER COLUMN path SET DEFAULT ''");
+  }
+  else {
+    update_sql("ALTER TABLE {node} ADD path varchar(250) NULL default ''");
+  }
 }
 
 function update_59() {
-
-  update_sql("ALTER TABLE {comments} ADD thread VARCHAR(255) NOT NULL");
+  if ($GLOBALS["db_type"] == "pgsql") {
+    update_sql("ALTER TABLE {comments} ADD thread VARCHAR(255)");
+    update_sql("ALTER TABLE {comments} ALTER COLUMN thread SET NOT NULL");
+  }
+  else {
+    update_sql("ALTER TABLE {comments} ADD thread VARCHAR(255) NOT NULL");
+  }
 
   $result = db_query("SELECT DISTINCT(nid) FROM {comments} WHERE thread = ''");
 
@@ -337,34 +349,71 @@ function update_60() {
 }
 
 function update_61() {
-  update_sql("CREATE TABLE IF NOT EXISTS {sessions} (
-    uid int(10) unsigned NOT NULL,
-    sid varchar(32) NOT NULL default '',
-    hostname varchar(128) NOT NULL default '',
-    timestamp int(11) NOT NULL default '0',
-    session text,
-    KEY uid (uid),
-    KEY sid (sid(4)),
-    KEY timestamp (timestamp)
-  )");
+  if ($GLOBALS["db_type"] == "pgsql") {
+    /**
+    * Overkill.. the user cant get here without having this table
+    */
 
-  update_sql("ALTER TABLE {users} DROP session;");
-  update_sql("ALTER TABLE {users} DROP hostname;");
-  update_sql("ALTER TABLE {users} DROP sid;");
+    update_sql("CREATE TABLE {sessions} (
+      uid integer NOT NULL,
+      sid varchar(32) NOT NULL default '',
+      hostname varchar(128) NOT NULL default '',
+      timestamp integer NOT NULL default '0',
+      session text,
+      PRIMARY KEY (sid)
+     );");
+
+    update_sql("ALTER TABLE {users} DROP session;");
+    update_sql("ALTER TABLE {users} DROP hostname;");
+    update_sql("ALTER TABLE {users} DROP sid;");
+
+  }
+  else {
+    update_sql("CREATE TABLE IF NOT EXISTS {sessions} (
+      uid int(10) unsigned NOT NULL,
+      sid varchar(32) NOT NULL default '',
+      hostname varchar(128) NOT NULL default '',
+      timestamp int(11) NOT NULL default '0',
+      session text,
+      KEY uid (uid),
+      KEY sid (sid(4)),
+      KEY timestamp (timestamp)
+    )");
+
+    update_sql("ALTER TABLE {users} DROP session;");
+    update_sql("ALTER TABLE {users} DROP hostname;");
+    update_sql("ALTER TABLE {users} DROP sid;");
+  }
 }
 
 function update_62() {
-  update_sql("ALTER TABLE {accesslog} ADD INDEX accesslog_timestamp (timestamp)");
+  if ($GLOBALS["db_type"] == "pgsql") {
+    update_sql("CREATE INDEX accesslog_timestamp ON {accesslog} (timestamp)");
 
-  update_sql("ALTER TABLE {node} DROP INDEX type");
-  update_sql("ALTER TABLE {node} DROP INDEX title");
-  update_sql("ALTER TABLE {node} DROP INDEX promote");
+    update_sql("DROP INDEX node_type_idx");
+    update_sql("DROP INDEX node_title_idx");
+    update_sql("DROP INDEX node_promote_idx");
 
-  update_sql("ALTER TABLE {node} ADD INDEX node_type (type(4))");
-  update_sql("ALTER TABLE {node} ADD INDEX node_title_type (title,type(4))");
-  update_sql("ALTER TABLE {node} ADD INDEX node_moderate (moderate)");
-  update_sql("ALTER TABLE {node} ADD INDEX node_path (path(5))");
-  update_sql("ALTER TABLE {node} ADD INDEX node_promote_status (promote, status)");
+    update_sql("CREATE INDEX node_type ON {node} (type)");
+    update_sql("CREATE INDEX node_title_type ON {node} (title,type)");
+    update_sql("CREATE INDEX node_moderate ON {node} (moderate)");
+    update_sql("CREATE INDEX node_path ON {node} (path)");
+    update_sql("CREATE INDEX node_promote_status ON {node} (promote, status)");
+
+  }
+  else {
+    update_sql("ALTER TABLE {accesslog} ADD INDEX accesslog_timestamp (timestamp)");
+
+    update_sql("ALTER TABLE {node} DROP INDEX type");
+    update_sql("ALTER TABLE {node} DROP INDEX title");
+    update_sql("ALTER TABLE {node} DROP INDEX promote");
+
+    update_sql("ALTER TABLE {node} ADD INDEX node_type (type(4))");
+    update_sql("ALTER TABLE {node} ADD INDEX node_title_type (title,type(4))");
+    update_sql("ALTER TABLE {node} ADD INDEX node_moderate (moderate)");
+    update_sql("ALTER TABLE {node} ADD INDEX node_path (path(5))");
+    update_sql("ALTER TABLE {node} ADD INDEX node_promote_status (promote, status)");
+  }
 }
 
 function _update_next_thread($structure, $parent) {
@@ -383,14 +432,29 @@ function _update_next_thread($structure, $parent) {
 }
 
 function update_63() {
-  update_sql("ALTER TABLE {users} CHANGE uid uid int(10) unsigned NOT NULL default '0'");
-  update_sql("INSERT INTO {users} (uid, name, mail, timestamp) VALUES ('0', 'Anonymous', 'root@localhost', '". time() ."')");
-  $users = db_result(db_query("SELECT MAX(uid) FROM {users};"));
-  update_sql("INSERT INTO {sequences} (name, id) VALUES ('users_uid', '$users')");
+  if ($GLOBALS["db_type"] == "pgsql") {
+    update_sql("INSERT INTO {users} (uid, name, mail, timestamp) VALUES ('0', 'Anonymous', 'root@localhost', '". time() ."')");
+  }
+  else {
+    update_sql("ALTER TABLE {users} CHANGE uid uid int(10) unsigned NOT NULL default '0'");
+    update_sql("INSERT INTO {users} (uid, name, mail, timestamp) VALUES ('0', 'Anonymous', 'root@localhost', '". time() ."')");
+    $users = db_result(db_query("SELECT MAX(uid) FROM {users};"));
+    update_sql("INSERT INTO {sequences} (name, id) VALUES ('users_uid', '$users')");
+  }
 }
 
 function update_64() {
   update_sql("UPDATE {users} SET rid = 1 WHERE uid = 0");
+}
+
+function update_65() {
+  /* PG SQL ONLY UPDATE */
+  if ($GLOBALS["db_type"] == "pgsql") {
+    update_sql("CREATE FUNCTION \"rand\"() RETURNS float AS '
+      BEGIN
+        RETURN random();
+      END;' LANGUAGE 'plpgsql';");
+  }
 }
 
 /*
