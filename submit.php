@@ -80,7 +80,7 @@ function PreviewStory($name, $address, $subject, $abstract, $story, $category) {
 
   <P>
    <B>Subject:</B><BR>
-   <INPUT TYPE="text" NAME="subject" SIZE="50" VALUE="<? print $subject; ?>"><BR>
+   <INPUT TYPE="text" NAME="subject" SIZE="50" VALUE="<? print stripslashes($subject); ?>"><BR>
    <FONT SIZE="2"><I>Bad subjects are 'Check this out!' or 'An article'.  Be descriptive, clear and simple!</I></FONT>
   </P>
 
@@ -98,13 +98,13 @@ function PreviewStory($name, $address, $subject, $abstract, $story, $category) {
 
   <P> 
    <B>Abstract:</B></I><BR>
-   <TEXTAREA WRAP="virtual" COLS="50" ROWS="8" NAME="abstract"><? print $abstract; ?></TEXTAREA><BR>
+   <TEXTAREA WRAP="virtual" COLS="50" ROWS="8" NAME="abstract"><? print stripslashes($abstract); ?></TEXTAREA><BR>
    <FONT SIZE="2"><I>HTML is nice and dandy, but double check those URLs and HTML tags!</FONT>
   </P>
 
   <P> 
    <B>Extended story:</B></I><BR>
-   <TEXTAREA WRAP="virtual" COLS="50" ROWS="15" NAME="story"><? print $story; ?></TEXTAREA><BR>
+   <TEXTAREA WRAP="virtual" COLS="50" ROWS="15" NAME="story"><? print stripslashes($story); ?></TEXTAREA><BR>
    <FONT SIZE="2"><I>HTML is nice and dandy, but double check those URLs and HTML tags!</FONT>
   </P>
  
@@ -128,11 +128,10 @@ function submitStory($name, $address, $subject, $abstract, $article, $category) 
   ### Display confirmation message:
   include "theme.inc";
   $theme->header(); 
-  $theme->box("Thanks for your submission.", "Thanks for your submission.  The gnomes in our basement will frown at it, poke at it, and - if you are lucky - even post it!");
+  $theme->box("Thanks for your submission.", "Thanks for your submission.  The submission moderators in our basement will frown at it, poke at it, and vote for it!");
   $theme->footer();
 
   ### Add submission to queue:
-  dbconnect();
   if ($user) {
     $uid = $user->id;
     $name = $user->userid;
@@ -141,12 +140,8 @@ function submitStory($name, $address, $subject, $abstract, $article, $category) 
     $uid = -1;
     $name = $anonymous;
   }
-  
-  $subject = stripslashes(FixQuotes(check_html($subject, "nohtml")));
-  $abstract = stripslashes(FixQuotes(check_html($abstract)));
-  $article = stripslashes(FixQuotes(check_html($article)));
 
-  $result = mysql_query("INSERT INTO queue VALUES (NULL, '$uid', '$name', '$subject', '$article', '". time() ."', '$category', '$abstract', 0, 0)");
+  db_query("INSERT INTO submissions (uid, uname, subject, article, timestamp, category, abstract, score, votes) VALUES ('$uid', '$name', '$subject', '$article', '". time() ."', '$category', '$abstract', '0', '0')");
   
   ### Send notification mail (if required):
   if ($notify) {

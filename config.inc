@@ -21,6 +21,13 @@ $contact_email = "droppies@zind.net";
 $contact_signature = "Kind regards,\n\n-- the drop.org crew\nhttp://www.drop.org/";
 
 #
+# Notify:
+#   Set to '1' to receive an e-mail when news has been submitted
+#   through submit.php
+#
+$notify = 0;
+
+#
 # Notify information:
 #  The notify information will be used to send out automated mails
 #  for internal purpose.
@@ -44,12 +51,6 @@ $comments_meta_reasons = array('Off topic', 'Redundant', 'Insightfull', 'As is',
 #
 $categories = array('Announcements', 'Coding', 'Geeking', 'Drop.org', 'Gaming', 'Girls', 'Graphics', 'Hardware', 'Humor', 'Internet', 'Music', 'Movies', 'Politics', 'Science', 'Software', 'Space', 'Webdesign', 'Quickies');
 
-#
-# Notify:
-#   Set to '1' to receive an e-mail when news has been submitted
-#   through submit.php
-#
-$notify = 1;
 
 # 
 # Allowed HTML tags:
@@ -62,10 +63,27 @@ $allowableHTML   = array('B','/B','I','/I','P .*','P','/P','A .*','/A','LI','OL'
 $anonymous = "Anonymous Chicken";
 
 #
-# 
 # Default theme:
 #
 $cfg_theme = "default";
+
+#
+# Submission moderation votes:
+#
+// NOTE: changing $submission_votes will affect the integrity of your 
+//       database.  In short, the database field user.history will 
+//       become invalid, and will need to be reset! Please, do not 
+//       just change this setting unless you have an empty database 
+//       or unless you know what you are doing.
+$submission_votes = array("neutral (+0)" => "+ 0",
+                          "post it (+1)" => "+ 1",
+                          "dump it (-1)" => "- 1");
+
+#
+# Submission moderation thresholds:
+#
+$submission_post_threshold = "2";
+$submission_dump_threshold = "-2";
 
 # 
 # Debug flag:
@@ -73,13 +91,5 @@ $cfg_theme = "default";
 #   to send out mails and such.  When using Unix or Linux, set
 #   to '0'
 $system = 0;
-
-/*
-class config {
-  var $path = "/home/buytaert/public_html/projects/drop";
-}
-
-if (!$config) $config = new config();
-*/
 
 ?>

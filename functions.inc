@@ -7,6 +7,17 @@ session_start();
 include "config.inc";
 $functions = 1;
 
+function dbsave($dbase, $data, $id=0) {
+  foreach ($data as $key=>$value) {
+    if ($key == "passwd") { $query .= "$key=PASSWORD('". addslashes($value) ."'), "; }
+    else { $query .= "$key='". addslashes($value) ."', "; }
+  }
+  $query = substr($query, 0, -2);
+  dbconnect();
+  if (!empty($id)) { mysql_query("UPDATE $dbase SET $query WHERE id=$id") or die(mysql_error()); return $id; }
+  else { mysql_query("INSERT INTO $dbase SET $query") or die(mysql_error()); return mysql_insert_id(); }
+}
+
 function dbconnect() {
   include "config.inc";
   mysql_pconnect($dbhost, $dbuname, $dbpass) or die(mysql_Error());
@@ -191,7 +202,7 @@ function displayAccount($theme) {
 
   if ($user) {
     ### Display account settings:
-//    $content .= "<LI><A HREF=\"submission.php\">moderate submissions</A> (". submission_count() .")</LI>";
+    $content .= "<LI><A HREF=\"submission.php\">moderate submissions</A> (". submission_count() .")</LI>";
     $theme->box("$user->userid's account", "$content");
   }
 }
