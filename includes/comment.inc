@@ -35,7 +35,7 @@ function comment_moderate($moderate) {
         $id = check_input($id); $vote = check_input($vote);
         $comment = db_fetch_object(db_query("SELECT * FROM comments WHERE cid = '$id'"));
         if ($comment && !field_get($comment, "users", $user->userid)) {
-          $result = db_query("UPDATE comments SET score = score $vote, votes = votes + 1, users = '". field_set($comment, "users", $user->userid, $vote) ."' WHERE cid = '$id'");
+          $result = db_query("UPDATE comments SET score = score $vote, votes = votes + 1, users = '". field_set($comment->users, $user->userid, $vote) ."' WHERE cid = '$id'");
         }
       }
     }

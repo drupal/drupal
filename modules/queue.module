@@ -23,7 +23,7 @@ function queue_vote($id, $vote) {
     if (!field_get($node, "users", $user->userid)) {
 
       // Update submission's score- and votes-field:
-      db_query("UPDATE node SET score = score $vote, votes = votes + 1, users = '". field_set($node, "users", $user->userid, $vote) ."' WHERE nid = $id");
+      db_query("UPDATE node SET score = score $vote, votes = votes + 1, users = '". field_set($node->users, $user->userid, $vote) ."' WHERE nid = $id");
 
       if (variable_get("post_threshold", 4, $node) <= $node->score) {
         node_save(array(nid => $id, status => $status[posted]), array(status));
