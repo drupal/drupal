@@ -1470,7 +1470,7 @@ function comment_num_all($nid) {
   static $cache;
 
   if (!isset($cache[$nid])) {
-    $comment = db_fetch_object(db_query("SELECT COUNT(c.nid) AS number FROM {node} n INNER JOIN {comments} c ON n.nid = c.nid WHERE n.nid = %d AND c.status = 0 GROUP BY n.nid", $nid));
+    $comment = db_fetch_object(db_query("SELECT COUNT(nid) AS number FROM {comments} WHERE nid = %d AND status = 0 GROUP BY nid", $nid));
     $cache[$nid] = $comment->number ? $comment->number : 0;
   }
   return $cache[$nid];
