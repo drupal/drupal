@@ -1,52 +1,41 @@
 <?
+//////////////////////////////////////////////////
 // This code should go in the admin pages and is only a temporary
-// placeholder untill we are going to rewrite the admin pages.
+// placeholder untill we are going to rewrite the admin pages. If
+// you have the sudden urge to integrate it into admin.php or if 
+// you have some time to kill ... I won't stop you. A rewrite of
+// admin.php is sheduled for v0.20 anyway ... 
+// Like this the ban.php code I just queued it to be included into 
+// the new admin pages.  After proper integration, this file can 
+// be removed.
+//
+// -- Dries
+//////////////////////////////////////////////////
+
+include "database.inc";
+include "ban.inc";
 
 function ban_check($mask, $category) {
-  include "ban.class.php";
-
   $ban = ban_match($mask, $category);
 
   print "<H3>Status:</H3>\n";
   print "". ($ban ? "Matched ban '<B>$ban->mask</B>' with reason: <I>$ban->reason</I>.<P>\n" : "No matching bans for '$mask'.<P>\n") ."";
 }
 
-function ban_add($mask, $category, $reason) {
-  ### Connect to database and perform query:
-  include "database.inc";
-  db_connect();
+function ban_new($mask, $category, $reason) {
+  ban_add($mask, $category, $reason, &$message);
 
   print "<H3>Status:</H3>\n";
-  if (empty($mask)) {
-    print "Failed: empty banmasks are not allowed.<P>\n";
-  }
-  else if ($ban = db_fetch_object(db_query("SELECT * FROM bans WHERE type = $category AND '$mask' LIKE mask"))) {
-    print "Failed: ban is already matched by '$ban->mask'.<P>\n";
-  }
-  else {
-    $result = db_query("INSERT INTO bans (mask, type, reason, timestamp) VALUES ('$mask', '$category', '$reason', '". time() ."')");
-    print "Added new ban with mask `$mask'.<P>\n";
-  }
-}
-
-function ban_delete($id) {
-  ### Connect to database and perform query:
-  include "database.inc";
-  db_connect();
-  $result = db_query("DELETE FROM bans WHERE id = $id");
+  print "$message\n";  
 }
 
 function ban_display($category = "") {
-  global $PHP_SELF;
-
-  include "ban.class.php";
+  global $PHP_SELF, $type;
 
   ### initialize variable: 
   $category = $category ? $category : 1;
 
-  ### Connect to database and perform query:
-  include "database.inc";
-  db_connect();
+  ### Perform query:
   $result = db_query("SELECT * FROM bans WHERE type = $category ORDER BY mask");
  
   ### Generate output:
@@ -62,7 +51,7 @@ function ban_display($category = "") {
     print "     <OPTION VALUE=\"$cur\"". ($cur == $category ? " SELECTED" : "") .">". key($type) ."</OPTION>\n";
   }
   print "    </SELECT>\n";
-  print "    <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Display\">\n";
+  print "    <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Refresh\">\n";
   print "   </FORM>\n";
   print "  </TH>\n";
   print " </TR>\n";
@@ -111,12 +100,11 @@ function ban_display($category = "") {
 }
 
 include "admin.inc";
-
 admin_header();
 
 switch ($op) {
   case "Add ban":
-    ban_add($mask, $category, $reason);
+    ban_new($mask, $category, $reason);
     ban_display($category);
     break;
   case "Check ban":
@@ -125,7 +113,7 @@ switch ($op) {
     break;
   case "delete":
     ban_delete($id);
-    displayBans($category);
+    ban_display($category);
     break;
   default:
     ban_display($category);
