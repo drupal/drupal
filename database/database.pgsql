@@ -297,6 +297,7 @@ CREATE TABLE page (
   nid integer NOT NULL default '0',
   link varchar(128) NOT NULL default '',
   format smallint NOT NULL default '0',
+  description varchar(128) NOT NULL default '',  
   PRIMARY KEY  (nid)
 );
 CREATE INDEX page_nid_idx ON page(nid);
