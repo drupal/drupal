@@ -115,14 +115,14 @@ function comment_post($edit) {
     $duplicate = db_result(db_query("SELECT COUNT(cid) FROM comments WHERE pid = '". check_input($edit[pid]) ."' AND lid = '". check_input($edit[id]) ."' AND subject = '". check_input($edit[subject]) ."' AND comment = '". check_input($edit[comment]) ."'"), 0);
 
     if ($duplicate != 0) {
-      watchdog("warning", "comment: duplicate '$subject'");
+      watchdog("warning", "comment: duplicate '$edit[subject]'");
     }
     else {
       // validate subject:
-      $subject = ($subject) ? $subject : substr($comment, 0, 29);
+      $edit[subject] = $edit[subject] ? $edit[subject] : substr($edit[comment], 0, 29);
 
       // add watchdog entry:
-      watchdog("special", "comment: added '$subject'");
+      watchdog("special", "comment: added '$edit[subject]'");
 
       // add comment to database:
       db_query("INSERT INTO comments (lid, pid, author, subject, comment, hostname, timestamp, score) VALUES ('". check_input($edit[id]) ."', '". check_input($edit[pid]) ."', '$user->id', '". check_input($edit[subject]) ."', '". check_input($edit[comment]) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."', '". ($user->userid ? 1 : 0) ."')");
