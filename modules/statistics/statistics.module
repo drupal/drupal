@@ -28,12 +28,11 @@ function statistics_conf_options() {
   $output .= form_select(t("Discard referers older than"), "referer_clear", variable_get("referer_clear", 604800), $period, "The time referer entries should be kept.  Older entries will be automatically discarded.  Requires crontab.");  return $output;
 }
 
-function statistics_referer() {
-  $result = db_query("SELECT url, COUNT(url) AS count FROM referer WHERE url NOT LIKE '". path_uri() ."%' GROUP BY url ORDER BY count DESC");
+function statistics_referer_internal() {
+  $result = db_query("SELECT url, COUNT(url) AS count FROM referer WHERE url LIKE '". path_uri() ."%' GROUP BY url ORDER BY count DESC");
 
-  $output .= "<P>Referers of the last ". format_interval(variable_get("referer_clear", 604800)) .":</P>\n";
+  $output .= "<P>Internal referers of the last ". format_interval(variable_get("referer_clear", 604800)) .":</P>\n";
 
-  $output .= "<H3>External referers</H3>\n";
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
   $output .= " <TR><TH>URL</TH><TH>number</TH></TR>\n";
   while ($referer = db_fetch_object($result)) {
@@ -41,9 +40,14 @@ function statistics_referer() {
   }
   $output .= "</TABLE>\n";
 
-  $result = db_query("SELECT url, COUNT(url) AS count FROM referer WHERE url LIKE '". path_uri() ."%' GROUP BY url ORDER BY count DESC");
+  return $output;
+}
 
-  $output .= "<H3>Internal referers</H3>\n";
+function statistics_referer_external() {
+  $result = db_query("SELECT url, COUNT(url) AS count FROM referer WHERE url NOT LIKE '". path_uri() ."%' GROUP BY url ORDER BY count DESC");
+
+  $output .= "<P>External referers of the last ". format_interval(variable_get("referer_clear", 604800)) .":</P>\n";
+
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
   $output .= " <TR><TH>URL</TH><TH>number</TH></TR>\n";
   while ($referer = db_fetch_object($result)) {
@@ -55,10 +59,21 @@ function statistics_referer() {
 }
 
 function statistics_admin() {
-  global $user;
+  global $type;
 
-  if (user_access($user, "administer statistics")) {
-    print statistics_referer();
+  if (user_access("administer statistics")) {
+
+    print "<SMALL><A HREF=\"admin.php?mod=statistics&type=internal+referer\">internal referers</A> | <A HREF=\"admin.php?mod=statistics&type=external+referer\">external referers</A></SMALL><HR>\n";
+
+    switch ($type) {
+      case "internal referer":
+        print statistics_referer_internal();
+        break;
+      case "external referer":
+        // fall through:
+      default:
+        print statistics_referer_external();
+    }
   }
 }
 
