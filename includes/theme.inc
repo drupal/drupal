@@ -31,7 +31,6 @@ function theme_account($theme) {
       $content .= "<P>\n";
       $content .= "<LI><A HREF=\"admin.php\">administrate " . $site_name . "</A></LI>\n";
 		}
-		$content .= "
     $content .= "<P>\n";
     if (ksort($menu)) {
       foreach ($menu as $link=>$url) $content .= "<LI><A HREF=\"$url\">$link</A></LI>\n";
