@@ -118,7 +118,6 @@ function node_load($conditions) {
   }
 
   return $node;
-
 }
 
 function node_save($node, $filter) {

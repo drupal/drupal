@@ -25,18 +25,26 @@ function book_access($op, $node) {
   }
 
   if ($op == "create") {
-    return 1;
+    /*
+    ** Only registered users can create book pages.  Given the nature
+    ** of the book module this is considered to be a good/safe idea.
+    */
+
+    return $user->uid;
   }
 
   if ($op == "update") {
-
     /*
-    ** Everyone can upate a book page if there are no suggested updates
-    ** of that page waiting for approval and as long as the "create new
-    ** revision"-bit is set; that is, only updates that don't overwrite
-    ** the current or pending information are allowed.
+    ** Only registered users can update book pages.  Given the nature
+    ** of the book module this is considered to be a good/safe idea.
+    ** One can only upate a book page if there are no suggested updates
+    ** of that page waiting for approval, when it is not a PHP-page and
+    ** as long as the "create new revision"-bit is set.  That is, only
+    ** updates that don't overwrite the current or pending information
+    ** are allowed.
     */
-    return !$node->moderate && $node->revision;
+
+    return $user->uid && !$node->moderate && !$node->format && $node->revision;
   }
 }
 
@@ -48,7 +56,7 @@ function book_save($op, $node) {
   }
 
   if ($op == "create") {
-    return array("moderate" => 1, "parent", "promote" => 0, "status" => 1, "weight");
+    return array("format", "moderate" => 1, "parent", "promote" => 0, "status" => 1, "weight");
   }
 
   if ($op == "decline") {
@@ -60,10 +68,10 @@ function book_save($op, $node) {
       /*
       ** If a regular user updates a book page, we always create a new
       ** revision.  All new revisions have to be approved (moderation)
-      ** and are not promoted by derault.  See also: book_load().
+      ** and are not promoted by default.  See also: book_load().
       */
 
-      return array("created" => time(), "moderate" => 1, "parent", "promote" => 0, "score" => 0, "status" => 1, "users" => "", "revisions", "votes" => 0, "weight");
+      return array("created" => time(), "format", "moderate" => 1, "parent", "promote" => 0, "score" => 0, "status" => 1, "users" => "", "revisions", "votes" => 0, "weight");
     }
     else if (user_access("adminster nodes")) {
       /*
@@ -74,7 +82,7 @@ function book_save($op, $node) {
       ** regular user.
       */
 
-      return array("parent", "weight");
+      return array("format", "parent", "weight");
     }
   }
 
@@ -89,7 +97,7 @@ function book_link($type, $node = 0, $main = 0) {
     $links[] = "<a href=\"admin.php?mod=book\">". t("collaborative book") ."</a>";
   }
 
-  if ($main == 0 && $type == "node" && $node->type == "book") {
+  if ($type == "node" && $node->type == "book" && book_access("update", $node)) {
     $links[] = "<a href=\"module.php?mod=node&op=edit&id=$node->nid\">". t("update this book page") ."</a>";
   }
 
@@ -99,7 +107,7 @@ function book_link($type, $node = 0, $main = 0) {
 function book_load($node) {
   global $user, $REQUEST_URI;
 
-  $book = db_fetch_object(db_query("SELECT parent, weight FROM book WHERE nid = '$node->nid'"));
+  $book = db_fetch_object(db_query("SELECT format, parent, weight FROM book WHERE nid = '$node->nid'"));
 
   if (strstr($REQUEST_URI, "module.php?mod=node&op=edit")) {
 
@@ -118,41 +126,56 @@ function book_load($node) {
       $book->uid = 0;
       $book->name = "";
     }
-
-    /*
-    ** We set the revision field to indicate that we have to create
-    ** a new revision when updating this book page.
-    */
-
-    $book->revision = 1;
-
   }
+
+  /*
+  ** We set the revision field to indicate that we have to create
+  ** a new revision when updating this book page.  We enable this
+  ** always such that the "update this book page"-links appear.
+  */
+
+  $book->revision = 1;
 
   return $book;
 }
 
 function book_insert($node) {
-  db_query("INSERT INTO book (nid, parent, weight) VALUES ('$node->nid', '$node->parent', '$node->weight')");
+  if (!user_access("administer nodes")) {
+    $node->format = 0;
+    $node->weight = 0;
+  }
+
+  db_query("INSERT INTO book (nid, format, parent, weight) VALUES ('$node->nid', '$node->format', '$node->parent', '$node->weight')");
 }
 
 function book_update($node) {
-  db_query("UPDATE book SET parent = '$node->parent', weight = '$node->weight' WHERE nid = '$node->nid'");
+  if (!user_access("administer nodes")) {
+    $node->format = 0;
+    $node->weight = 0;
+  }
+
+  db_query("UPDATE book SET format = '$node->format', parent = '$node->parent', weight = '$node->weight' WHERE nid = '$node->nid'");
 }
 
 function book_delete(&$node) {
   db_query("DELETE FROM book WHERE nid = '$node->nid'");
 }
 
-
 function book_form(&$node, &$help, &$error) {
   global $user;
 
   $output .= form_select(t("Parent"), "parent", $node->parent, book_toc(), t("The parent subject or category the page belongs in."));
-  $output .= form_textarea(t("Content"), "body", $node->body, 60, 20, t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
+
+  if ($node->teaser && !$node->format) {
+    $output .= form_textarea(t("Teaser"), "teaser", $node->teaser, 60, 5, $error["teaser"]);
+  }
+
+  $output .= form_textarea(t("Body"), "body", $node->body, 60, 20, t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
   $output .= form_textarea(t("Log message"), "history", $node->history, 60, 5, t("An explanation of the additions or updates being made to help the group understand your motivations."));
 
   if (user_access("administer nodes")) {
-    $output .= form_select(t("Weight"), "weight", $node->weight, array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30), t("The heavier nodes will sink and the lighter nodes will be positioned nearer the top."));
+    $output .= form_select(t("Weight"), "weight", $node->weight, array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30), t("The heavier pages will sink and the lighter pages will be positioned nearer the top."));
+    $output .= form_select("Type", "format", $node->format, array(0 => "HTML / text", 1 => "PHP"));
   }
   else {
 
@@ -171,6 +194,57 @@ function book_form(&$node, &$help, &$error) {
   }
 
   return $output;
+}
+
+function book_node_link($node = 0) {
+  global $user, $op, $edit;
+
+  if ($node->type != "book") {
+
+    if ($edit["nid"]) {
+      $node = node_load(array("nid" => $edit["nid"]));
+    }
+
+    if ($op == t("Add to book outline")) {
+      db_query("INSERT INTO book (nid, parent, weight) VALUES ('$node->nid', '". check_query($edit["parent"]) ."', '". check_query($edit["weight"]) ."')");
+      $output .= status(t("added the node to the book."));
+    }
+
+    if ($op == t("Update book outline")) {
+      db_query("UPDATE book SET parent = '". check_query($edit["parent"]) ."', weight = '". check_query($edit["weight"]) ."' WHERE nid = '$node->nid'");
+      $output .= status(t("updated the book outline."));
+    }
+
+    if ($op == t("Remove from book outline")) {
+      db_query("DELETE FROM book WHERE nid = '$node->nid'");
+      $output .= status(t("removed the node form the book."));
+    }
+
+    $output .= "<h3>". t("Edit book outline") ."</h3>";
+
+    if ($edit["nid"]) {
+      $page = db_fetch_object(db_query("SELECT * FROM book WHERE nid = '$node->nid'"));
+
+      $output .= form_select(t("Parent"), "parent", $page->parent, book_toc(), t("The parent subject or category the page belongs in."));
+      $output .= form_select(t("Weight"), "weight", $page->weight, array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30), t("The heavier pages will sink and the lighter pages will be positioned nearer the top."));
+
+      if ($page->nid) {
+        $output .= form_submit(t("Update book outline"));
+        $output .= form_submit(t("Remove from book outline"));
+      }
+      else {
+        $output .= form_submit(t("Add to book outline"));
+      }
+
+    }
+    else {
+      $output .= form_submit(t("Edit book outline"));
+    }
+
+    $output .= form_hidden("nid", $node->nid);
+
+    return form($output, "post", "admin.php?mod=book&op=outline");
+  }
 }
 
 /*
@@ -221,18 +295,53 @@ function book_location($node, $nodes = array()) {
   return $nodes;
 }
 
+function book_body($node) {
+  global $theme, $op;
+
+  if ($node->format == 1) {
+    /*
+    ** Make sure only authorized users can preview PHP pages.
+    */
+
+    if ($op == t("Preview") && !user_access("adminster nodes")) {
+      return;
+    }
+
+    ob_start();
+    eval($node->body);
+    $output = ob_get_contents();
+    ob_end_clean();
+  }
+  else {
+    $output = check_output($node->body, 1);
+  }
+
+  return $output;
+}
+
 function book_view($node, $main = 0) {
   global $theme, $mod;
 
   /*
   ** Always display the most recently approved revision of a node
-  ** unless we have to display it in the context of the moderation
-  ** queue.
+  ** (if any) unless we have to display this page in the context of
+  ** the moderation queue.
   */
 
   if ($node->moderate && $mod != "queue") {
-    $node = book_revision_load($node, array("moderate" => 0, "status" => 1));
+    $revision = book_revision_load($node, array("moderate" => 0, "status" => 1));
+
+    if ($revision) {
+      $node = $revision;
+    }
   }
+
+  /*
+  ** Extract the page body.  If body is dynamic (using PHP code), the body
+  ** will be generated.
+  */
+
+  $node->body = book_body($node);
 
   /*
   ** Display the node.  If not displayed on the main page, we render
@@ -244,6 +353,10 @@ function book_view($node, $main = 0) {
     $theme->node($node, $main);
   }
   else {
+    /*
+    ** Construct the "next" and "previous" links:
+    */
+
     if ($node->nid && $node->parent) {
       $next = db_fetch_object(db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.status = 1 AND b.parent = '$node->parent' AND (b.weight > '$node->weight' OR (b.weight = '$node->weight' AND n.title > '". check_query($node->title) ."')) AND (n.moderate = 0 OR n.revisions != '') ORDER BY b.weight ASC, n.title ASC"));
       $prev = db_fetch_object(db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.status = 1 AND b.parent = '$node->parent' AND (b.weight < '$node->weight' OR (b.weight = '$node->weight' AND n.title < '". check_query($node->title) ."')) AND (n.moderate = 0 OR n.revisions != '') ORDER BY b.weight DESC, n.title DESC"));
@@ -263,7 +376,7 @@ function book_view($node, $main = 0) {
     }
 
     if ($node->body) {
-      $output .= " <tr><td colspan=\"3\"><br />". check_output($node->body, 1) ."</td></tr>";
+      $output .= " <tr><td colspan=\"3\"><br />$node->body</td></tr>";
     }
 
     if ($node->nid) {
@@ -287,7 +400,7 @@ function book_toc($parent = "", $indent = "", $toc = array()) {
   ** Select all child nodes:
   */
 
-  $result = db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.type = 'book' AND n.status = 1 AND b.parent = '$parent' AND (n.moderate = 0 OR n.revisions != '') ORDER BY b.weight");
+  $result = db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.status = 1 AND b.parent = '$parent' AND (n.moderate = 0 OR n.revisions != '') ORDER BY b.weight");
 
   /*
   ** If the user is an administrator, add the root node; only
@@ -318,7 +431,7 @@ function book_tree($parent = "", $depth = 0) {
     ** Select all child nodes and render them into a table of contents:
     */
 
-   $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.type = 'book' AND b.parent = '$parent' AND (n.moderate = 0 OR n.revisions != '') ORDER BY b.weight, n.title");
+   $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE b.parent = '$parent' AND (n.moderate = 0 OR n.revisions != '') ORDER BY b.weight, n.title");
 
      while ($page = db_fetch_object($result)) {
        // load the node:
@@ -361,7 +474,7 @@ function book_render() {
 
     if ($node) {
       // output the content:
-      $output .= "<dt><a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a></dt><dd>". check_output($node->body, 1) ."<br /><br /></dd>";
+      $output .= "<dt><a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a></dt><dd>". book_body($node) ."<br /><br /></dd>";
     }
   }
 
@@ -390,7 +503,7 @@ function book_page() {
 }
 
 function book_export_html($id = "", $depth = 1) {
-  $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.type = 'book' AND n.status = 1 AND n.nid = '". check_input($id) ." AND (n.moderate = 0 OR n.revisions != '')'");
+  $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.status = 1 AND n.nid = '". check_input($id) ." AND (n.moderate = 0 OR n.revisions != '')'");
 
   while ($page = db_fetch_object($result)) {
     // load the node:
@@ -406,7 +519,7 @@ function book_export_html($id = "", $depth = 1) {
       $output .= "<h$depth>". check_output($node->title) ."</h$depth>";
 
       if ($node->body) {
-        $output .= "<ul>". check_output($node->body, 1) ."</ul>";
+        $output .= "<ul>". book_body($node) ."</ul>";
       }
     }
   }
@@ -417,7 +530,7 @@ function book_export_html($id = "", $depth = 1) {
 }
 
 function book_export_html_recursive($parent = "", $depth = 1) {
-  $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.type = 'book' AND n.status = 1 AND b.parent = '$parent' AND (n.moderate = 0 OR n.revisions != '') ORDER BY b.weight");
+  $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.status = 1 AND b.parent = '$parent' AND (n.moderate = 0 OR n.revisions != '') ORDER BY b.weight");
 
   while ($page = db_fetch_object($result)) {
     // load the node:
@@ -433,7 +546,7 @@ function book_export_html_recursive($parent = "", $depth = 1) {
       $output .= "<h$depth>". check_output($node->title) ."</h$depth>";
 
       if ($node->body) {
-        $output .= "<blockquote>". check_output($node->body, 1) ."</blockquote>";
+        $output .= "<ul>". book_body($node) ."</ul>";
       }
 
       $output .= book_export_html_recursive($node->nid, $depth + 1);
@@ -473,7 +586,7 @@ function book_admin_view_line($node, $depth = 0) {
 function book_admin_view_book($nid, $depth = 1) {
   $weight = array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30);
 
-  $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.type = 'book' AND b.parent = '$nid' ORDER BY b.weight, n.title");
+  $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE b.parent = '$nid' ORDER BY b.weight, n.title");
 
   while ($node = db_fetch_object($result)) {
     $node = node_load(array("nid" => $node->nid));
@@ -543,6 +656,12 @@ function book_admin() {
     print "<small>". implode(" &middot; ", $links) ."</small><hr />";
 
     switch ($op) {
+      case t("Edit book outline"):
+      case t("Add to book outline"):
+      case t("Remove from book outline"):
+      case t("Update book outline"):
+        print book_node_link();
+        break;
       case "orphan":
         print book_admin_orphan();
         break;

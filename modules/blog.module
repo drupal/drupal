@@ -227,7 +227,6 @@ function blog_page_last() {
 function blog_form(&$node, &$help, &$error) {
   global $nid, $iid;
 
-
   if (isset($node->body)) {
 
     /*
@@ -258,6 +257,10 @@ function blog_form(&$node, &$help, &$error) {
     if ($iid && $item = db_fetch_object(db_query("SELECT i.*, f.title as ftitle, f.link as flink FROM item i, feed f WHERE i.iid = '". check_input($iid) ."' AND i.fid = f.fid"))) {
       $node->body = "<a href=\"$item->link\">$item->title</a> - <i>". check_output($item->description) ."</i> [<a href=\"$item->flink\">$item->ftitle</a>]\n";
     }
+  }
+
+  if ($node->teaser) {
+    $output .= form_textarea(t("Teaser"), "teaser", $node->teaser, 60, 5, $error["teaser"]);
   }
 
   $output = form_textarea(t("Body"), "body", $node->body, 60, 15, $error["body"] ? $error["body"] : t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
@@ -311,7 +314,12 @@ function blog_link($type, $node = 0) {
   }
 
   if ($type == "node" && $node->type == "blog") {
-    $links[] = "<a href=\"module.php?mod=blog&op=view&id=$node->uid\">". strtr(t("%a's blog"), array("%a" => $node->name)) ."</a>";
+    if (blog_access("update", $node)) {
+      $links[] = "<a href=\"module.php?mod=node&op=edit&id=$node->nid\">". t("update this blog") ."</a>";
+    }
+    else {
+      $links[] = "<a href=\"module.php?mod=blog&op=view&id=$node->uid\">". strtr(t("%a's blog"), array("%a" => $node->name)) ."</a>";
+    }
   }
 
   return $links ? $links : array();

@@ -1,8 +1,6 @@
 <?php
 // $Id$
 
-$GLOBALS["format"] = array(0 => "HTML", 1 => "PHP", 2 => "text");
-
 function page_node($field) {
   $info["name"] = t("static page");
   $info["description"] = t("If you just want to add a static page with a link in the menu to your site, this would be the best choice.  Unlike a story, a page by-passes the submission queue.");
@@ -17,6 +15,7 @@ function page_access($op, $node) {
 }
 
 function page_save($op, $node) {
+
   if ($op == "approve") {
     return array("status" => 1);
   }
@@ -48,6 +47,8 @@ function page_delete(&$node) {
 
 function page_load($node) {
   $page = db_fetch_object(db_query("SELECT format, link FROM page WHERE nid = '$node->nid'"));
+
+
   return $page;
 }
 
@@ -62,31 +63,59 @@ function page_link($type) {
   return $links ? $links : array();
 }
 
-function page_view($node, $main = 0) {
-  global $format, $theme;
+function page_body($node) {
+  global $theme, $op;
 
-  switch ($format[$node->format]) {
-    case "PHP":
-      print eval($node->body);
-      break;
-    case "text":
-      $theme->box($node->title, nl2br(htmlentities($node->body)));
-      break;
-    default:
-      $theme->box($node->title, check_output($node->body, 1));
+  if ($node->format) {
+    /*
+    ** Make sure only authorized users can preview PHP pages.
+    */
+
+    if ($op == t("Preview") && !user_access("adminster nodes")) {
+      return;
+    }
+
+    ob_start();
+    eval($node->body);
+    $output = ob_get_contents();
+    ob_end_clean();
   }
+  else {
+    $output = check_output($node->body, 1);
+  }
+
+  return $output;
+}
+
+function page_view($node, $main = 0) {
+  global $theme;
+
+  /*
+  ** Extract the page body.  If body is dynamic (using PHP code), the body
+  ** will be generated.
+  */
+
+  $theme->box($node->title, page_body($body));
 }
 
 function page_form(&$node, &$help, &$error) {
-  global $format, $op;
+  global $op;
 
-  if ($op != t("Preview") && $format[$node->format] == "PHP") {
-    $node->body = addslashes($node->body);
+  if ($node->teaser && !$node->format) {
+    $output .= form_textarea(t("Teaser"), "teaser", $node->teaser, 60, 5, $error["teaser"]);
   }
+
+  /*
+  ** Q: s this still required?
+  **
+  **   if ($op != t("Preview") && $node->format) {
+  **     $node->body = addslashes($node->body);
+  **   }
+  */
 
   $output .= form_textarea("Body", "body", $node->body, 60, 20);
   $output .= form_textfield("Link", "link", $node->link, 60, 64);
-  $output .= form_select("Type", "format", $node->format, $format);
+  $output .= form_select("Type", "format", $node->format, array(0 => "HTML / text", 1 => "PHP"));
 
   return $output;
 }

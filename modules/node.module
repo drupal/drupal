@@ -33,7 +33,14 @@ function node_access($op, $node = 0) {
     ** Construct a function:
     */
 
-    $function = $node->type ."_access";
+    if ($node->type) {
+      $type = $node->type;
+    }
+    else {
+      $type = $node;
+    }
+
+    $function = $type ."_access";
 
     if (function_exists($function)) {
       return $function($op, $node);
@@ -142,12 +149,8 @@ function node_link($type, $node = 0, $main = 0) {
       $links = $node->links;
     }
 
-    if ($main && $node->teaser != $node->body) {
+    if ($main == 1 && $node->teaser != $node->body) {
       $links[] = "<a href=\"node.php?id=$node->nid\">". t("read more") ."</a>";
-    }
-
-    if (module_invoke($node->type, "access", "update", $node)) {
-      $links[] = "<a href=\"module.php?mod=node&op=edit&id=$node->nid\">". t("edit") ."</a>";
     }
 
     if (user_access("administer nodes")) {
@@ -540,6 +543,14 @@ function node_form($edit) {
   $edit = node_validate($edit, $error);
 
   /*
+  ** Generate a teaser when necessary:
+  */
+
+  if ($edit->body && !$edit->teaser) {
+    $edit->teaser = node_teaser($edit->body);
+  }
+
+  /*
   ** Get the node specific bits:
   */
 
@@ -565,14 +576,6 @@ function node_form($edit) {
   */
 
   $output .= form_textfield(t("Title"), "title", $edit->title, 60, 64, $error["title"]);
-
-  if ($edit->body && !$edit->teaser) {
-    $edit->teaser = node_teaser($edit->body);
-  }
-
-  if ($edit->teaser) {
-    $output .= form_textarea(t("Teaser"), "teaser", $edit->teaser, 60, 5, $error["teaser"]);
-  }
 
   /*
   ** Add the node specific fields:
@@ -647,7 +650,7 @@ function node_add($type) {
   ** (valid) node type has been provied, display a node type overview.
   */
 
-  if (module_hook($type, "node")) {
+  if ($type && node_access("create", $type)) {
     $output = node_form(array("uid" => $user->uid, "name" => $user->name, "type" => $type));
   }
   else {
@@ -723,10 +726,10 @@ function node_preview($edit) {
   */
 
   foreach ($edit as $key => $value) {
-    $node->$key = check_output($value); 
+    $node->$key = check_output($value);
       /*
       ** NOTE: we can't do a check_query() or check_input() here as they
-      **       add slashes which results in breakage. 
+      **       add slashes which results in breakage.
       */
   }
 
@@ -740,7 +743,7 @@ function node_preview($edit) {
 }
 
 function node_submit($node) {
-  global $user;
+  global $theme, $user;
 
   if (user_access("post content")) {
 
@@ -792,7 +795,7 @@ function node_submit($node) {
           $fields = array("nid", "uid" => ($user->uid ? $user->uid : 0), "body", "teaser", "title", "type" => $node->type);
         }
 
-        node_save($node, array_merge($fields, module_invoke($node->type, "save", "update", $node)));
+        $nid = node_save($node, array_merge($fields, module_invoke($node->type, "save", "update", $node)));
 
         watchdog("special", "$node->type: updated '$node->title'");
         $output = t("The node has been updated.");
@@ -824,7 +827,7 @@ function node_submit($node) {
           $fields = array("uid" => ($user->uid ? $user->uid : 0), "body", "comment" => 1, "teaser", "title", "type" => $node->type);
         }
 
-        node_save($node, array_merge($fields, module_invoke($node->type, "save", "create", $node)));
+        $nid = node_save($node, array_merge($fields, module_invoke($node->type, "save", "create", $node)));
 
         watchdog("special", "$node->type: added '$node->title'");
         $output = t("Thanks for your submission.");
@@ -835,9 +838,30 @@ function node_submit($node) {
       }
     }
 
+    /*
+    ** Reload the node from the database:
+    */
+
+    $node = node_load(array("nid" => $nid));
+
+    /*
+    ** For usability's sake, make sure to present the user with some
+    ** useful links as where to go next.
+    */
+
     if ($referer = referer_load()) {
-      $output .= "<p><a href=\"$referer\">". t("return") ."</a></p>";
+      $links[] = "<a href=\"$referer\">". t("return") ."</a>";
     }
+
+    if ($nid && node_access("view", $node)) {
+      $links[] = "<a href=\"node.php?id=$nid\">". t("view") ."</a>";
+    }
+
+    if ($nid && node_access("update", $node)) {
+      $links[] = "<a href=\"module.php?mod=node&op=edit&id=$nid\">". t("edit") ."</a>";
+    }
+
+    $output .= "<p>". $theme->links($links) ."</p>";
   }
   else {
     $output = message_access();
