@@ -32,7 +32,7 @@ a:visited {
   color: #369;
 }
 a:hover {
-  color: #39C;
+  color: #39c;
   text-decoration: underline;
 }
 p {
@@ -110,6 +110,13 @@ img {
   background-color: #eee;
   padding: 1em 1em 1em 1em;
   font-size: 0.8em;
+}
+#forum td {
+  padding: 0.5em 0.5em 0.5em 0.5em;
+}
+#forum td.statistics, #forum td.settings, #forum td.pager {
+  height: 1.5em;
+  border: 1px solid #bbb;
 }
 table {
   font-size: 1em;

@@ -417,7 +417,7 @@ function book_view($node, $main = 0) {
     }
 
     $output .= "<div class=\"book\">";
-    $output .= "<div class=\"location\">". implode($trail, " &raquo; ") ."</div><hr />";
+    $output .= "<div class=\"path\">". implode($trail, " &raquo; ") ."</div>";
     $output .= "<div class=\"title\">$node->title</div>";
     $output .= "<div class=\"last-updated\">". t("Last updated by %u on %d", array("%u" => format_name($node), "%d" => format_date($node->changed))) ."</div>";
 

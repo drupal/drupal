@@ -41,8 +41,6 @@ function forum_settings() {
     if ($voc) {
       $output .= form_textarea(t("Explanation or submission guidelines"), "forum_help", variable_get("forum_help", ""), 70, 5, t("This text will be displayed at the top of the forum submission form.  Useful for helping or instructing your users."));
       $output .= form_select(t("Forum vocabulary"), "forum_nav_vocabulary", variable_get("forum_nav_vocabulary", ""), $vocs, t("The taxonomy vocabulary that will be used as the navigation tree."));
-      $output .= _taxonomy_term_select(t("Containers"), "forum_containers", variable_get("forum_containers", array()), variable_get("forum_nav_vocabulary", ""), t("You can choose forums which will not have topics, but will be just containers for other forums."), 1, t("<none>"));
-
       $output .= form_textfield(t("Topic icons path"), "forum_topic_icon_path", variable_get("forum_topic_icon_path", ""), 30, 255, t("The path to the topic icons.  Leave blank to disable icons."));
       $output .= form_textfield(t("Folder icons path"), "forum_folder_icon_path", variable_get("forum_folder_icon_path", ""), 30, 255,t( "The path to the <b>default</b>, <b>hot</b>, <b>new</b>, <b>hot & new</b>, and <b>closed</b> folder icons.  Leave blank to disable icons."));
       $number = array(5 => 5, 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30, 35 => 35, 40 => 40, 50 => 50, 60 => 60, 80 => 80, 100 => 100, 10000=>10000);
@@ -107,7 +105,7 @@ function forum_link($type, $node = 0, $main = 0) {
   $links = array();
 
   if ($type == "page" && user_access("access content")) {
-    $links[] = l(t("forum"), "forum");
+    $links[] = l(t("forums"), "forum");
   }
 
   if (!$main && $type == "node" && $node->type == "forum") {
@@ -157,7 +155,7 @@ function forum_view($node, $main = 0) {
   $voc = taxonomy_get_vocabulary($term_data->vid);
 
   if (!$main) {
-    $node->title = _forum_get_icon($node) ." ". l($voc->name, "forum") ." : ". l($term_data->name, "forum/$term_data->tid") ." / <b>$node->title</b>";
+    $node->title = l($voc->name, "forum") ." &raquo; ". l($term_data->name, "forum/$term_data->tid") ." &raquo; $node->title";
   }
 
   $node->teaser = check_output($node->teaser);
@@ -193,7 +191,7 @@ function forum_form(&$node, &$help, &$error) {
   // outputs the compose guidelines
   $help = variable_get("forum_help", "");
 
-  $output .= _taxonomy_term_select(t("Forum"), "tid", $tid, variable_get("forum_nav_vocabulary", ""), "", 0, "", variable_get("forum_containers", array()));
+  $output .= _taxonomy_term_select(t("Forum"), "tid", $tid, variable_get("forum_nav_vocabulary", ""), "", 0, "");
 
   if ($node->nid) {
     // if editing, give option to leave shadows
@@ -280,7 +278,7 @@ function _forum_last_reply($nid) {
 
 function _forum_format($topic) {
   if ($topic) {
-    return "<small>". t("%date<br />by %author", array("%date" => format_date($topic->timestamp, "small"), "%author" => format_name($topic))) ."</small>";
+    return t("%date<br />by %author", array("%date" => format_date($topic->timestamp, "small"), "%author" => format_name($topic)));
   }
   else {
     return message_na();
@@ -301,14 +299,9 @@ function forum_get_forums($tid = 0) {
     $_forums = taxonomy_get_tree(variable_get("forum_nav_vocabulary", ""), $tid);
     $n = 0;
     foreach ($_forums as $forum) {
-      if (in_array($forum->tid, variable_get("forum_containers", array()))) {
-        $forum->container = 1;
-      }
-      else {
-        $forum->num_topics = _forum_num_topics($forum->tid);
-        $forum->num_posts = _forum_num_replies($forum->tid) + $forum->num_topics;
-        $forum->last_post = _forum_last_post($forum->tid);
-      }
+      $forum->num_topics = _forum_num_topics($forum->tid);
+      $forum->num_posts = _forum_num_replies($forum->tid) + $forum->num_topics;
+      $forum->last_post = _forum_last_post($forum->tid);
       $forums[$forum->tid] = $forum;
       $n++;
     }
@@ -381,7 +374,7 @@ function forum_get_topics($tid, $sortby, $forum_per_page) {
   $sql_sortby = _forum_get_topic_order($sortby);
 
   // show topics with the correct tid, or in the forum but with shadow = 1
-  $sql = "SELECT n.nid, n.title, u.name AS name, u.uid AS uid, n.created AS timestamp, GREATEST(n.created, MAX(c.timestamp)) AS date_sort, COUNT(c.nid) AS num_comments, f.icon, n.comment AS comment_mode, f.tid FROM {node} n INNER JOIN {term_node} r ON n.nid = r.nid LEFT JOIN {users} u ON n.uid = u.uid INNER JOIN {comments} c ON n.nid = c.nid INNER JOIN {forum} f ON n.nid = f.nid WHERE n.nid = r.nid AND ((r.tid = '".check_query($tid)."' AND f.shadow = 1) OR f.tid = '".check_query($tid)."') AND n.status = 1 AND n.type = 'forum' GROUP BY n.nid, n.title, u.name, u.uid, n.created, n.comment, f.tid, f.icon ORDER BY $sql_sortby";
+  $sql = "SELECT n.nid, n.title, u.name AS name, u.uid AS uid, n.created AS timestamp, GREATEST(n.created, MAX(c.timestamp)) AS date_sort, COUNT(c.nid) AS num_comments, f.icon, n.comment AS comment_mode, f.tid FROM {node} n INNER JOIN {term_node} r ON n.nid = r.nid LEFT JOIN {users} u ON n.uid = u.uid LEFT JOIN {comments} c ON n.nid = c.nid INNER JOIN {forum} f ON n.nid = f.nid WHERE n.nid = r.nid AND ((r.tid = '".check_query($tid)."' AND f.shadow = 1) OR f.tid = '".check_query($tid)."') AND n.status = 1 AND n.type = 'forum' GROUP BY n.nid, n.title, u.name, u.uid, n.created, n.comment, f.tid, f.icon ORDER BY $sql_sortby";
 
   $sql_count = "SELECT COUNT(DISTINCT(n.nid)) FROM {node} n INNER JOIN {forum} f ON n.nid = f.nid INNER JOIN {term_node} r ON n.nid = r.nid WHERE n.nid = r.nid AND ( (r.tid = '".check_query($tid)."' AND f.shadow = 1) OR f.tid = '".check_query($tid)."') AND n.status = 1 AND n.type = 'forum'";
 
@@ -472,11 +465,8 @@ function forum_page() {
       $offset = ($from / $forum_per_page) + 1;
 
       $forums = forum_get_forums($tid);
-
       $parents = forum_get_parents($tid);
-      if ($tid && !in_array($tid, variable_get("forum_containers", array()))) {
-        $topics = forum_get_topics($tid, $sortby, $forum_per_page);
-      }
+      $topics = forum_get_topics($tid, $sortby, $forum_per_page);
 
       theme("forum_theme_display", $forums, $topics, $parents, $tid, $sortby, $forum_per_page, $offset);
     }
@@ -500,70 +490,90 @@ function forum_page() {
 function forum_theme_display($forums, $topics, $parents, $tid, $sortby, $forum_per_page, $offset) {
   // forum list, topics list, topic browser and "add new topic" link
 
+  theme("header");
 
+  /*
+  ** Breadcrumb navigation:
+  */
+
+  if ($tid) {
+    $trail[] = l(t("Forums"), "forum");
+  }
+  else {
+    $trail[] = t("Forums");
+  }
+
+  if ($parents) {
+    $parents = array_reverse($parents);
+    foreach ($parents as $p) {
+      if ($tid != $p->tid) {
+        $trail[] = l($p->name, "forum/$p->tid");
+      }
+      else {
+        $trail[] = $p->name;
+      }
+    }
+  }
+
+  $output  = "<div id=\"forum\">";
   $output .= theme("forum_theme_list", $forums, $parents, $tid);
-  if ($tid && !in_array($tid, variable_get("forum_containers", array()))) {
+
+  if ($tid) {
     $output .= theme("forum_theme_topic_list", $tid, $topics, $sortby, $forum_per_page, $offset);
   }
 
-  theme("header");
-  theme("box", t("Discussion forum"), $output);
-  if ($tid && !in_array($tid, variable_get("forum_containers", array()))) {
-    theme("box", t("Control panel"), theme("forum_theme_topic_browser", $sortby, $forum_per_page, $offset));
-  }
+  $output .= "</div>";
+
+  theme("box", implode($trail, " &raquo; "), $output);
   theme("footer");
 }
 
 function forum_theme_list($forums, $parents, $tid) {
   global $user;
-  if ($parents) {
-    foreach($parents as $p) {
-      if ($tid != $p->tid) {
-        $t[] = l($p->name, "forum/$p->tid");
-      }
-      else {
-        $t[] = $p->name;
-      }
-    }
-  }
-  $t[] = l(t("Discussion forum"), "forum");
 
-  $output .= "<table border=\"0\" cellpadding=\"5\">\n";
-  $output .= " <tr><th colspan=\"3\" style=\"text-align: left;\">".implode(" : ", array_reverse($t)) ."</th>";
   if ($forums) {
-    $output .= "<th>". t("topics") ."</th><th>". t("posts") ."</th><th>". t("last post") ."</th></tr>";
 
+    $header = array(array("data" => t("Forum"), "colspan" => "2"), t("Topics"), t("Posts"), t("Last post"));
 
     foreach ($forums as $forum) {
-      if ($forum->container) {
-        $output .= " <tr><td colspan=\"5\">". l($forum->name, "forum/$forum->tid") ."<br /><small>". ($forum->description ? check_output($forum->description) : "") ."</small></td></tr>";
+      if ($user->uid) {
+        $new_topics = $forum->num_topics - $forum->old_topics;
       }
-      else {
-        if ($user->uid) $new_topics = $forum->num_topics - $forum->old_topics;
-        $icon = _forum_get_folder_icon($new_topics);
-        $output .= " <tr><td>&nbsp;</td><td>$icon</td>";
-        $output .= "<td><table border=\"0\"><tr><td style=\"width: ". ($forum->depth * 20) ."px;\">&nbsp;</td><td>". l($forum->name, "forum/$forum->tid") ."<div style=\"padding-top: 5px;\">". check_output($forum->description);
 
-        $links = array();
-        if ($forum->last_post) {
-          $links[] = l(t("the most recent topic"), "node/view/". $forum->last_post->nid);
-        }
-        if ($new_topics) {
-          $links[] = l(t("the first new topic"), "forum/$forum->tid/new");
-        }
+      $links = array();
 
-        if ($links) {
-          $output .= "<br />". t("Jump to: %links", array("%links" => implode(", ", $links)));
-        }
-
-        $output .= "</div></td></tr></table></td>";
-        $output .= "<td style=\"text-align: center;\">".$forum->num_topics.($new_topics ? "<br />(".t("%a new", array("%a" => $new_topics)).")" : "")."</td><td style=\"text-align: center;\">".$forum->num_posts."</td><td style=\"text-align: center;\">"._forum_format($forum->last_post)."</td></tr>";
+      if ($forum->last_post) {
+        $links[] = l(t("the most recent topic"), "node/view/". $forum->last_post->nid);
       }
+
+      if ($new_topics) {
+        $links[] = l(t("the first new topic"), "forum/$forum->tid/new");
+      }
+
+      $description  = "<div class=\"forum\" style=\"margin-left: ". ($forum->depth * 30) ."px;\">\n";
+      $description .= " <div class=\"name\">". l($forum->name, "forum/$forum->tid") ."</div>\n";
+
+      if ($forum->description) {
+        $description .= " <div class=\"description\">$forum->description</div>\n";
+      }
+      if ($links) {
+        $description .= " <div class=\"navigation\">". t("Jump to: %links", array("%links" => implode(", ", $links))) .".</div>\n";
+      }
+      $description .="</div>\n";
+
+      //if ($icon = _forum_get_folder_icon($new_topics)) {
+      $rows[] = array(
+        array("data" => $icon, "class" => "icon"),
+        array("data" => $description, "class" => "description"),
+        array("data" => $forum->num_topics . ($new_topics ? "<br />(".t("%a new", array("%a" => $new_topics)).")" : ""), "class" => "topics"),
+        array("data" => $forum->num_posts, "class" => "posts"),
+        array("data" => _forum_format($forum->last_post), "class" => "last-post")
+       );
+
     }
   }
-  $output .= "</table>\n";
 
-  return $output;
+  return table($header, $rows);
 }
 
 function forum_theme_topic_browser() {
@@ -592,51 +602,52 @@ function forum_theme_topic_browser() {
   $output .= "\n<select name=\"sortby\">$options</select>\n";
   $output .= form_hidden("tid", $tid);
   $output .= form_submit(t("Update settings"));
-  return form(form_item(t("Topic viewing options"), $output, t("Select your preferred way to display the topics and click 'Update settings'.")));
+  return form($output);
 }
 
 function forum_theme_topic_list($tid, $topics, $sortby, $forum_per_page, $offset) {
   global $id, $status, $user, $pager_total;
 
   if ($topics) {
-    $output .= "<table border=\"0\" cellpadding=\"5\" cellspacing=\"5\">\n";
-    $output .= " <tr><th>&nbsp;</th><th>&nbsp;</th><th>". t("topic") ."</th><th>". t("replies") ."</th><th>". t("posted") ."</th><th>". t("last reply") ."</th></tr>";
+
+    $header = array(array("data" => t("Topic"), "colspan" => "3"), t("Replies"), t("Posted"), t("Last post"));
 
     foreach ($topics as $topic) {
       // folder is new if topic is new or there are new comments since last visit
       if ($topic->tid != $tid) {
-        $output .= "
-          <tr>
-            <td>"._forum_get_folder_icon($topic->new, $topic->num_comments, $topic->comment_mode)."</td>
-            <td>"._forum_get_icon($topic)."</td>
-            <td style=\"vertical-align: top;\">$topic->title</td>
-            <td style=\"text-align: center; vertical-align: top;\" colspan=\"3\">". l(t("This topic has been moved"), "forum/$topic->tid")."</td>
-          </tr>";
+        $rows[] = array(
+          array("data" => _forum_get_folder_icon($topic->new, $topic->num_comments, $topic->comment_mode), "class" => "icon"),
+          array("data" =>_forum_get_icon($topic), "class" => "icon"),
+          array("data" => $topic->title, "class" => "title"),
+          array("data" => l(t("This topic has been moved"), "forum/$topic->tid"), "colspan" => 3)
+        );
       }
       else {
-        $output .= "
-          <tr>
-            <td>"._forum_get_folder_icon($topic->new, $topic->num_comments, $topic->comment_mode)."</td>
-            <td>"._forum_get_icon($topic)."</td>
-            <td style=\"vertical-align: top;\">". l($topic->title, "node/view/$topic->nid") ."</td>
-            <td style=\"text-align: center; vertical-align: top;\">".$topic->num_comments.($topic->new_replies ? " (".t("%a new", array("%a" => $topic->new_replies)).")" : "")."</td>
-            <td style=\"text-align: center;\">"._forum_format($topic)."</td>
-            <td style=\"text-align: center;\">"._forum_format($topic->last_reply)."</td>
-          </tr>";
+        $rows[] = array(
+          array("data" => _forum_get_folder_icon($topic->new, $topic->num_comments, $topic->comment_mode), "class" => "icon"),
+          array("data" => _forum_get_icon($topic), "class" => "icon"),
+          array("data" => l($topic->title, "node/view/$topic->nid"), "class" => "topic"),
+          array("data" => $topic->num_comments . ($topic->new_replies ? "<br />(".t("%a new", array("%a" => $topic->new_replies)).")" : ""), "class" => "replies"),
+          array("data" => _forum_format($topic), "class" => "posted"),
+          array("data" => _forum_format($topic->last_reply), "class" => "last-post")
+        );
       }
     }
 
-    $output .= "</table></blockquote>\n";
+    $rows[] = array(array("data" => t("%a topics, %b topics per page, page %c of %d", array("%a" => $pager_total[0], "%b" => $forum_per_page, "%c" => $offset, "%d" => ceil($pager_total[0]/$forum_per_page))), "colspan" => "6", "class" => "statistics"));
+    $rows[] = array(array("data" => theme("forum_theme_topic_browser", $sortby, $forum_per_page, $offset), "colspan" => "6", "class" => "settings"));
+
+    if ($pager = pager_display(NULL, $forum_per_page, 0, "default")) {
+      $rows[] = array(array("data" => $pager, "colspan" => "6", "class" => "pager"));
+    }
   }
-  $output .= "<hr />";
 
-  $output .= "<div style=\"text-align: center;\">" .t("%a topics, %b topics per page, page %c of %d", array("%a" => $pager_total[0], "%b" => $forum_per_page, "%c" => $offset, "%d" => ceil($pager_total[0]/$forum_per_page))) ."</div>";
-
-  $output .= (($pager = pager_display(NULL, $forum_per_page, 0, "default")) ? "$pager" : "");
 
   if (user_access("create forum topics")) {
-    $output .= "<div style=\"text-align: center; font-style: bold;\">". l(t("create new forum topic"), "node/add/forum/$tid") ."</div>";
+    $output = l(t("create new forum topic"), "node/add/forum/$tid") ."<br /><br />";
   }
+
+  $output  .= table($header, $rows);
 
   return $output;
 }
@@ -716,9 +727,6 @@ function forum_help($section = "admin/forum/help") {
       $output .= "<h3>Creating a forum</h3>";
       $output .= strtr("<p>The forum module uses taxonomy to organize itself. To create a forum you first have to create a %taxonomy. When doing this, choose a sensible name for it (such as \"fora\") and make sure under \"Types\" that \"forum\" is selected. Once you have done this, %taxo-terms to it. Each term will become a forum. If you fill in the description field, users will be given additonal information about the forum on the main forum page. For example: \"troubleshooting\" - \"Please ask your questions here.\"</p>", array("%taxonomy" => l(t("taxonomy vocabulary"), "admin/taxonomy/add/vocabulary"), "%taxo-terms" => l(t("add some terms"), "admin/taxonomy" ) ));
       $output .= strtr("<p>When you are happy with your vocabulary, go to ". l("site configuration &raquo; modules &raquo; forum","admin/system/modules/forum") ." and set <b>Forum vocabulary</b> to the one you have just created. There will now be fora active on the site. For users to access them they must have the \"access content\" %permission and to create a topic they must have the \"create forum topics\" %permission. These permissions can be set in the %permission pages.</p>", array("%forums" => l(t("site configutation &raquo; modules &raquo; forum"), "admin/system/modules/forum"), "%permission" => l(t("permission"), "admin/user/permission") ));
-      $output .= "<h3>Containers</h3><p>If you designate a forum as a <i>container</i>, users will not be able to post to it. The forum will be visible on the forum listing page, so it acts as a section delimiter if you will. This is useful if you have a lots of forums which are nested. For example,</p>";
-      $output .= "<p>Marketing<br />-- Market research<br />-- Brand management<br /><br />Sales<br />-- Closing the deal<br />-- Avoiding ear and throat pain</p>";
-      $output .= "<p>If you don't want people posting into the Marketing or Sales folders, you designate them as Containers.</p>";
       $output .= "<h4>Icons</h4>";
       $output .= strtr("<p>To disable icons, set the icon path as blank in %forums-icon.</p>",array("%forums-icon" => l(t("site configuration &raquo; modules &raquo; forums"), "admin/system/module/forum") ));
       $output .= "<p>All files in the icon directory are assumed to be images. You may use images of whatever size you wish, but it is customary to use 15x15 or 16x16.</p>";
