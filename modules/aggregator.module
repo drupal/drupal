@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.129 2003/10/24 09:25:46 dries Exp $
+// $Id: aggregator.module,v 1.130 2003/10/31 19:34:02 dries Exp $
 
 
 function import_help($section = "admin/help#import") {
@@ -748,7 +748,7 @@ function import_page_sources() {
     $output .= "<div style=\"margin-left: 20px;\">$feed->description</div><br />";
   }
 
-  $output .= "<div style=\"text-align: right\">". l("<img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" />", "import/fd", array("title" => t("View the list of syndicated web sites in XML format."))) ."</div><br />";
+  $output .= "<div style=\"xml-icon\">". l("<img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" />", "import/fd", array("title" => t("View the list of syndicated web sites in XML format."))) ."</div><br />";
 
   theme("header");
   theme("box", t("News feeds"), import_page_info());

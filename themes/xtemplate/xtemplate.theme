@@ -1,5 +1,5 @@
 <?php
-// $Id: xtemplate.theme,v 1.29 2003/09/30 17:01:34 dries Exp $
+// $Id: xtemplate.theme,v 1.30 2003/10/31 19:34:03 dries Exp $
 
 function xtemplate_settings() {
   $output  = form_select(t("Sidebar placement"), "xtemplate_sidebar", variable_get("xtemplate_sidebar", "left"), array("none" => t("No sidebars"), "left" => t("Sidebar on the left"), "right" => t("Sidebar on the right"), "both" => t("Sidebar on the left and the right")));
@@ -126,12 +126,11 @@ class Theme_xtemplate extends BaseTheme {
     print $this->template->text("header");
   }
 
-  function block($title, $content, $region = "main") {
-    $this->template->assign(array(
-      "subject" => $title,
-      "content" => $content
-    ));
-
+  function block(&$block) {
+    // create template variables for all block variables (module, delta, region, subject, content, ...)
+    foreach ($block as $key => $value) {
+      $this->template->assign($key, $value);
+    }
     $this->template->parse("block");
     print $this->template->text("block");
     $this->template->reset("block");

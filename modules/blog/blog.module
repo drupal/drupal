@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.143 2003/10/09 18:53:21 dries Exp $
+// $Id: blog.module,v 1.144 2003/10/31 19:34:02 dries Exp $
 
 function blog_settings() {
   $output = form_textarea(t("Explanation or submission guidelines"), "blog_help", variable_get("blog_help", ""), 70, 4, t("This text is displayed at the top of the blog submission form.  It's useful for helping or instructing your users."));
@@ -126,7 +126,7 @@ function blog_page_user($uid) {
     node_view(node_load(array("nid" => $node->nid)), 1);
   }
   print pager_display(NULL, variable_get("default_nodes_main", 10));
-  print "<div style=\"text-align: right\">" . l("<img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" alt=\"\" title=\"\" />", "blog/feed/$account->uid", array("title" => t("View the XML version of %username's blog", array("%username" => $account->name)))) . "</div>";
+  print "<div class=\"xml-icon\">" . l("<img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" alt=\"\" title=\"\" />", "blog/feed/$account->uid", array("title" => t("View the XML version of %username's blog", array("%username" => $account->name)))) . "</div>";
 }
 
 function blog_page_last() {
@@ -143,7 +143,7 @@ function blog_page_last() {
     node_view(node_load(array("nid" => $node->nid)), 1);
   }
   print pager_display(NULL, variable_get("default_nodes_main", 10));
-  print "<div style=\"text-align: right;\">". l("<img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" alt=\"\" title=\"\" />", "blog/feed", array("title" => t("Read the XML version of all blogs."))) ."</div>";
+  print "<div class=\"xml-icon\">". l("<img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" alt=\"\" title=\"\" />", "blog/feed", array("title" => t("Read the XML version of all blogs."))) ."</div>";
 }
 
 function blog_validate(&$node) {

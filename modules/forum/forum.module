@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.129 2003/10/20 17:32:48 dries Exp $
+// $Id: forum.module,v 1.130 2003/10/31 19:34:02 dries Exp $
 
 function forum_node($field) {
   $info["name"] = t("forum topic");
@@ -415,9 +415,6 @@ function forum_page() {
   if (user_access("access content")) {
     if (module_exist("taxonomy")) {
       $tid = arg(1);
-      if ($op == t("Update settings") && $user->uid) {
-        $user = user_save($user, array("sortby" => $sortby, "forum_per_page" => $forum_per_page));
-      }
 
       if (arg(2) == "new") {
         if ($nid = _forum_new($tid)) {

@@ -1,11 +1,11 @@
 <?php
-// $Id: index.php,v 1.68 2003/09/30 17:00:49 dries Exp $
+// $Id: index.php,v 1.69 2003/10/31 19:34:01 dries Exp $
 
 include_once "includes/common.inc";
 
 drupal_page_header();
 
-check_php_setting("magic_quotes_gpc", 0);
+fix_gpc_magic();
 
 menu_build("system");
 

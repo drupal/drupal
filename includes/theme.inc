@@ -1,11 +1,11 @@
 <?php
-// $Id: theme.inc,v 1.149 2003/10/19 20:38:58 dries Exp $
+// $Id: theme.inc,v 1.150 2003/10/31 19:34:01 dries Exp $
 
 /**
-* Basic theme
-*
-* @package theme system
-*/
+ * Basic theme
+ *
+ * @package theme system
+ */
 class BaseTheme {
   var $background = "#ffffff";
   var $foreground = "#000000";
@@ -76,10 +76,26 @@ class BaseTheme {
     print $output;
   }
 
-  function block($subject, $content, $region = "main") {
-    global $theme;
-
-    $theme->box($subject, $content, $region);
+  /**
+   * Render a block.
+   *
+   * You can style your blocks by defining .block (all blocks),
+   * .block-<i>module</i> (all blocks of module <i>module</i>),
+   * and \#block-<i>module</i>-<i>delta</i> (specific block of
+   * module <i>module</i> with delta <i>delta</i>) in your
+   * theme's CSS.
+   *
+   * @param   $block  object "indexed with" fields from database
+   *   table 'blocks' ($block->module, $block->delta, $block->region,
+   *   ...) and fields returned by <i>module</i>_block("view")
+   *   ($block->subject, $block->content, ...).
+   */
+  function block($block) {
+    $output  = "<div class=\"block block-$block->module\" id=\"block-$block->module-$block->delta\">";
+    $output .= " <div class=\"subject\">$block->subject</div>";
+    $output .= " <div class=\"content\">$block->content</div>";
+    $output .= "</div>";
+    print $output;
   }
 
   function footer() {
@@ -91,18 +107,18 @@ class BaseTheme {
 
 }  // End of BaseTheme class //
 
+/**
+ * Return a marker.  Used to indicate new comments or required form
+ * fields.
+ */
 function theme_mark() {
-  /*
-  ** Return a marker.  Used to indicate new comments or required form
-  ** fields.
-  */
   return "<span class=\"marker\">*</span>";
 }
 
+/**
+ * Return a formatted array of items.
+ */
 function theme_item_list($items = array(), $title = NULL) {
-  /*
-  ** Return a formatted array of items.
-  */
   $output .= "<div class=\"item-list\">";
   if (isset($title)) {
     $output .= "<div class=\"title\">$title</div>";
@@ -119,10 +135,10 @@ function theme_item_list($items = array(), $title = NULL) {
   return $output;
 }
 
+/**
+ * Return an error message.
+ */
 function theme_error($message) {
-  /*
-  ** Return an error message.
-  */
   return "<div class=\"error\">$message</div>";
 }
 
@@ -158,9 +174,9 @@ function theme_head($main = 0) {
   return $output;
 }
 
-/*
- * Execute hook _footer() which is run at the end of the page right before
- * the </body> tag
+/**
+ * Execute hook _footer() which is run at the end of the page right
+ * before the </body> tag
  */
 function theme_footer($main = 0) {
   $footer = module_invoke_all("footer", $main);
@@ -187,20 +203,20 @@ function theme_init() {
 }
 
 /**
- * Render blocks available for $user and $region calling $theme->block($region).
+ * Render blocks available for (global) $user and $region calling $theme->block($block).
  *
- * @param   string  $region   main|left|right
+ * @param   $region   main|left|right
  */
 function theme_blocks($region) {
   global $user;
 
   $result = db_query("SELECT * FROM {blocks} WHERE (status = '1' OR custom = '1') ". ($region != "all" ? "AND region = %d " : "") ."ORDER BY weight, module", $region == "left" ? 0 : 1);
 
-  while ($result && ($block = db_fetch_object($result))) {
-    if ((($block->status && (!$user->uid || !$block->custom)) || ($block->custom && $user->block[$block->module][$block->delta])) && (!$block->path || preg_match($block->path, str_replace("?q=", "", request_uri())))) {
-      $block_data = module_invoke($block->module, "block", "view", $block->delta);
-      if ($block_data["content"]) {
-        theme("block", $block_data["subject"], $block_data["content"], $region);
+  while ($result && ($block = db_fetch_array($result))) {
+    if ((($block['status'] && (!$user->uid || !$block['custom'])) || ($block['custom'] && $user->block[$block['module']][$block['delta']])) && (!$block['path'] || preg_match($block['path'], str_replace("?q=", "", request_uri())))) {
+      $block = array_merge($block, module_invoke($block['module'], 'block', 'view', $block['delta']));
+      if ($block['content']) {
+        theme('block', (object) $block);
       }
     }
   }
@@ -220,7 +236,7 @@ function theme() {
   }
 }
 
-/*
+/**
  * Call _onload hook in all modules to enable modules to insert javascript
  * that will get run once the page has been loaded by the browser
  */
