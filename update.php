@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.112 2003/10/20 19:21:17 dries Exp $
+// $Id: update.php,v 1.113 2003/10/21 07:59:04 dries Exp $
 /*
 ** USAGE:
 **
@@ -610,13 +610,12 @@ function update_info() {
   print "<ol>\n";
   print "<li>Use this script to <b>upgrade an existing Drupal installation</b>.  You don't need this script when installing Drupal from scratch.</li>";
   print "<li>Before doing anything, backup your database. This process will change your database and its values, and some things might get lost.</li>\n";
-  print "<li>Don't run this script twice as it may cause problems.</p></li>\n";
-  print "<li><a href=\"update.php?op=update\">Upgrade to the latest version.</a></li>\n";
+  print "<li>Update your Drupal sources, check the notes below and <a href=\"update.php?op=update\">run the database upgrade script</a>.  Don't upgrade your database twice as it may cause problems.</p></li>\n";
   print "<li>Go through the various administration pages to change the existing and new settings to your liking.</li>\n";
   print "</ol>";
   print "Notes:";
   print "<ol>";
-  print " <li>If you upgrade from Drupal 4.2.0, you have to create the <code>sessions</code> table manually before upgrading.  After you created the table, you'll want to log in and immediately continue the upgrade.  To create the <code>sessions</code> table, issue the following SQL command:<pre>CREATE TABLE sessions (
+  print " <li>If you upgrade from Drupal 4.2.0, you have to create the <code>sessions</code> table manually before upgrading.  After you created the table, you'll want to log in and immediately continue the upgrade.  To create the <code>sessions</code> table, issue the following SQL command (MySQL specific example):<pre>CREATE TABLE sessions (
   uid int(10) unsigned NOT NULL,
   sid varchar(32) NOT NULL default '',
   hostname varchar(128) NOT NULL default '',
