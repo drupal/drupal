@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.149 2003/12/28 10:47:33 dries Exp $
+// $Id: forum.module,v 1.150 2003/12/29 17:14:26 dries Exp $
 
 function forum_node($field) {
   $info["name"] = t("forum topic");
@@ -38,7 +38,7 @@ function forum_settings() {
       $group  = form_textarea(t("Explanation or submission guidelines"), "forum_help", variable_get("forum_help", ""), 70, 5, t("This text will be displayed at the top of the forum submission form.  Useful for helping or instructing your users."));
       $group .= form_textfield(t("Forum icon path"), "forum_icon_path", variable_get("forum_icon_path", ""), 30, 255, t("The path to the forum icons.  Leave blank to disable icons.  Don't add a trailing slash.  Default icons are available in the 'misc' directory."));
       $number = array(5 => 5, 10 => 10, 15 => 15, 20 => 20, 25 => 25, 30 => 30, 35 => 35, 40 => 40, 50 => 50, 60 => 60, 80 => 80, 100 => 100, 10000 => 10000);
-      $group .= form_select(t("Hot topic threshold"), "forum_hot_topic", variable_get("forum_hot_topic", 15), $number, t("The number of posts a topic must have to be considered <b>hot</b>."));
+      $group .= form_select(t("Hot topic threshold"), "forum_hot_topic", variable_get("forum_hot_topic", 15), $number, t("The number of posts a topic must have to be considered <strong>hot</strong>."));
       $number = array(10 => 10, 25 => 25, 50 => 50, 75 => 75, 100 => 100);
       $group .= form_select(t("Topics per page"), "forum_per_page", variable_get("forum_per_page", 25), $number, t("The default number of topics displayed per page; links to browse older messages are automatically being displayed."));
       $forder = array(1 => t("Date - newest first"), 2 => t("Date - oldest first"), 3 => t("Posts - most active first"), 4=> t("Posts - least active first"));
@@ -683,7 +683,7 @@ function forum_help($section = "admin/help#forum") {
     case 'admin/help#forum':
       $output .= "<h3>Creating a forum</h3>";
       $output .= "<p>The forum module uses taxonomy to organize itself. To create a forum you first have to create a %taxonomy. When doing this, choose a sensible name for it (such as \"fora\") and make sure under \"Types\" that \"forum\" is selected. Once you have done this, %taxo-terms to it. Each term will become a forum. If you fill in the description field, users will be given additonal information about the forum on the main forum page. For example: \"troubleshooting\" - \"Please ask your questions here.\"</p>";
-      $output .= "<p>When you are happy with your vocabulary, go to %forums and set <b>Forum vocabulary</b> to the one you have just created. There will now be fora active on the site. For users to access them they must have the \"access content\" %permission and to create a topic they must have the \"create forum topics\" %permission. These permissions can be set in the %permission pages.</p>";
+      $output .= "<p>When you are happy with your vocabulary, go to %forums and set <strong>Forum vocabulary</strong> to the one you have just created. There will now be fora active on the site. For users to access them they must have the \"access content\" %permission and to create a topic they must have the \"create forum topics\" %permission. These permissions can be set in the %permission pages.</p>";
       $output .= "<h4>Icons</h4>";
       $output .= "<p>To disable icons, set the icon path as blank in %forums.</p>";
       $output .= "<p>All files in the icon directory are assumed to be images. You may use images of whatever size you wish, but it is recommended to use 15x15 or 16x16.</p>";

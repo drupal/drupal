@@ -1,5 +1,5 @@
 <?php
-// $Id: marvin.theme,v 1.120 2003/12/24 12:15:20 dries Exp $
+// $Id: marvin.theme,v 1.121 2003/12/29 17:14:27 dries Exp $
 
 function marvin_help($section) {
 
@@ -62,11 +62,11 @@ function marvin_header() {
   }
 
   if ($help = menu_get_active_help()) {
-    $output .= "<div id=\"help\">$help</div>";
+    $output .= "<small>$help</small><hr />";
   }
 
   if ($message = drupal_get_message()) {
-    $output .= "<div class=\"message\"><strong>". t('Status') ."</strong>: $message->message</div>";
+    $output .= "<strong>". t("Status") ."</strong>: ". $message->message ."<hr />";
   }
 
   return $output;
@@ -118,8 +118,8 @@ function marvin_comment($comment, $link = "") {
   $output .= "       <tr>\n";
 
   // Subject:
-  $output .= "        <td style=\"text-align: right; width: 5%;\"><b>". t("Subject") .":</b></td>\n";
-  $output .= "        <td style=\"width: 80%;\"><b><div style=\"color: #666699;\">$comment->subject</div></b></td>\n";
+  $output .= "        <td style=\"text-align: right; width: 5%;\"><strong>". t("Subject") .":</strong></td>\n";
+  $output .= "        <td style=\"width: 80%;\"><strong><div style=\"color: #666699;\">$comment->subject</div></strong></td>\n";
 
   $output .= "       </tr>\n";
 

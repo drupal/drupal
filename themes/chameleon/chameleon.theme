@@ -1,6 +1,6 @@
 <?php
 
-// $Id: chameleon.theme,v 1.2 2003/12/29 11:14:01 dries Exp $
+// $Id: chameleon.theme,v 1.3 2003/12/29 17:14:27 dries Exp $
 
 function chameleon_help($section) {
 
@@ -67,7 +67,7 @@ function chameleon_header($title = "") {
   }
 
   if ($message = drupal_get_message()) {
-    $output .= "<b>". t("Status") ."</b>: ". $message->message ."<hr />";
+    $output .= "<strong>". t("Status") ."</strong>: ". $message->message ."<hr />";
   }
 
   return $output;

@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.132 2003/12/17 22:27:23 dries Exp $
+// $Id: statistics.module,v 1.133 2003/12/29 17:14:26 dries Exp $
 
 // Exit hook, runs at the end of every page request
 function statistics_exit() {
@@ -99,7 +99,7 @@ function statistics_help($section = "admin/help#statistics") {
   switch ($section) {
     case 'admin/help#statistics':
       $output .= "<h3>Introduction</h3>";
-      $output .= "<p>The statistics module keeps track of numerous statistics for your site but be warned, statistical collection does cause a little overhead, thus everything comes <b>disabled</b> by default.<p>";
+      $output .= "<p>The statistics module keeps track of numerous statistics for your site but be warned, statistical collection does cause a little overhead, thus everything comes <strong>disabled</strong> by default.<p>";
       $output .= "<p>The module counts how many times, and from where -- using HTTP referrer -- each of your posts is viewed. Once we have that count the module can do the following with it:";
       $output .= "<ul>";
       $output .= "<li>The count can be displayed in the node's link section next to \"# comments\".</li>";
@@ -538,7 +538,7 @@ function statistics_summary($dbfield, $dbrows) {
     $content = node_load(array("nid" => $nid["nid"]));
     $links = link_node($content, 1);
 
-    $output .= "<tr><td><b>". l($nid["title"], "node/view/". $nid["nid"], array("title" => t("View this posting."))) ."</b></td><td style=\"text-align: right;\"><small>". t("Submitted by %a on %b", array("%a" => format_name($content), "%b" => format_date($content->created, "large"))) ."</small></td></tr>";
+    $output .= "<tr><td><strong>". l($nid["title"], "node/view/". $nid["nid"], array("title" => t("View this posting."))) ."</strong></td><td style=\"text-align: right;\"><small>". t("Submitted by %a on %b", array("%a" => format_name($content), "%b" => format_date($content->created, "large"))) ."</small></td></tr>";
     $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 20px;\">". check_output($content->teaser) ."</div></td></tr>";
     $output .= "<tr><td style=\"text-align: right;\" colspan=\"2\">[ ". theme("links", $links) ." ]<br /><br /></td></tr>";
   }

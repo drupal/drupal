@@ -1,7 +1,7 @@
-<?php          // -*-c++-*-
+﻿<?php          // -*-c++-*-
 // by Edd Dumbill (C) 1999-2001
 // <edd@usefulinc.com>
-// $Id: xmlrpc.inc,v 1.9 2003/07/10 17:46:41 dries Exp $
+// $Id: xmlrpc.inc,v 1.10 2003/12/29 17:14:26 dries Exp $
 
 
 // Copyright (c) 1999,2000,2001 Edd Dumbill.
@@ -753,12 +753,12 @@ class xmlrpcval {
     global $xmlrpcTypes, $xmlrpcBoolean;
 
     if ($this->mytype==1) {
-      echo "<b>xmlrpcval</b>: scalar can have only one value<br />";
+      echo "<strong>xmlrpcval</strong>: scalar can have only one value<br />";
       return 0;
     }
     $typeof=$xmlrpcTypes[$type];
     if ($typeof!=1) {
-      echo "<b>xmlrpcval</b>: not a scalar type (${typeof})<br />";
+      echo "<strong>xmlrpcval</strong>: not a scalar type (${typeof})<br />";
       return 0;
     }
 
@@ -788,7 +788,7 @@ class xmlrpcval {
   function addArray($vals) {
     global $xmlrpcTypes;
     if ($this->mytype!=0) {
-      echo "<b>xmlrpcval</b>: already initialized as a [" .
+      echo "<strong>xmlrpcval</strong>: already initialized as a [" .
         $this->kindOf() . "]<br />";
       return 0;
     }
@@ -801,7 +801,7 @@ class xmlrpcval {
   function addStruct($vals) {
   global $xmlrpcTypes;
   if ($this->mytype!=0) {
-    echo "<b>xmlrpcval</b>: already initialized as a [" .
+    echo "<strong>xmlrpcval</strong>: already initialized as a [" .
     $this->kindOf() . "]<br />";
     return 0;
   }

@@ -1,5 +1,5 @@
 <?php
-// $Id: import.module,v 1.141 2003/12/26 19:01:11 dries Exp $
+// $Id: import.module,v 1.142 2003/12/29 17:14:26 dries Exp $
 
 
 function import_help($section = "admin/help#import") {
@@ -19,23 +19,23 @@ function import_help($section = "admin/help#import") {
       $output .= "<p>To subscribe to an RSS feed on another site, use the %admin-news shortcut at the top of the news aggregation page. The link leads directly to the news aggregation configuration section of Drupal site administration.</p>";
       $output .= "<p>Once there, select %new-feed from the left hand menu. Drupal will then ask for the following:</p>";
       $output .= "<ul>";
-      $output .= "<li><b>Title</b> -- The text entered here will be used in your news aggregator, within the administration configuration section, and as title for the news feed block. As a general rule, use the web site name from which the feed originates.</li>";
-      $output .= " <li><b>URL</b> -- Here you'll enter the fully-qualified URL for the feed for the site you want to subscribe to.</li>";
-      $output .= "<li><b>Attributes</b> -- Attributes are keywords which can be used to collect feeds into <i>bundles</i> (see below). Think of these as the means of classifying your feeds. Separate multiple attributes with commas. If you do not plan on using the specific feed in a bundle, this input field can be left blank.</li>";
-      $output .= "<li><b>Update interval</b> -- The update interval is how often Drupal will automatically access the RSS URL for the site for fresh content. The 1 hour default is typically the minimum you will want to use. Accessing another site's RSS page more frequently can be considered impolite. After all, it does require the other site's server handle your requests. To use this feature cron.php must be called regularly, otherwise, you'll have to manually update feeds one at a time within the news aggregation administration section by using %update-items.</li>";
+      $output .= "<li><strong>Title</strong> -- The text entered here will be used in your news aggregator, within the administration configuration section, and as title for the news feed block. As a general rule, use the web site name from which the feed originates.</li>";
+      $output .= " <li><strong>URL</strong> -- Here you'll enter the fully-qualified URL for the feed for the site you want to subscribe to.</li>";
+      $output .= "<li><strong>Attributes</strong> -- Attributes are keywords which can be used to collect feeds into <i>bundles</i> (see below). Think of these as the means of classifying your feeds. Separate multiple attributes with commas. If you do not plan on using the specific feed in a bundle, this input field can be left blank.</li>";
+      $output .= "<li><strong>Update interval</strong> -- The update interval is how often Drupal will automatically access the RSS URL for the site for fresh content. The 1 hour default is typically the minimum you will want to use. Accessing another site's RSS page more frequently can be considered impolite. After all, it does require the other site's server handle your requests. To use this feature cron.php must be called regularly, otherwise, you'll have to manually update feeds one at a time within the news aggregation administration section by using %update-items.</li>";
       $output .= "</ul>";
       $output .= "<p>Once you submit your new feed, check to see if it is working properly. Select %update-items on the %admin-news page. If you do not see any items listed for that feed, edit the feed and make sure that the URL was entered correctly.</p>";
       $output .= "<h3>Adding bundles</h3>";
       $output .= "<p>You may want to follow some feeds more closely than others. Or perhaps you'd like to display a select list of the titles for some feeds as a block for users.  Bundles are a way of grouping your feeds into categories. Bundles look for feeds that contain at least one of the keywords, or attributes, associated with the bundle and display those feeds together.</p>";
       $output .= "<p>When adding a bundle, Drupal will ask for:</p>";
       $output .= "<ul>";
-      $output .= " <li><b>Title</b> -- The title will be used in the <i>news by topics</i> listing in your news aggregator and with the customized block created for the bundle.</li>";
-      $output .= " <li><b>Attributes</b> -- Enter one or more of the attributes used to categorize the news feeds already created. Separate multiple attributes with commas.  Be careful to use the same spelling. Don't have any feeds with attributes for the bundle? After creating the bundle, edit existing feeds or create new ones and tag them with the attribute.</li>";
+      $output .= " <li><strong>Title</strong> -- The title will be used in the <i>news by topics</i> listing in your news aggregator and with the customized block created for the bundle.</li>";
+      $output .= " <li><strong>Attributes</strong> -- Enter one or more of the attributes used to categorize the news feeds already created. Separate multiple attributes with commas.  Be careful to use the same spelling. Don't have any feeds with attributes for the bundle? After creating the bundle, edit existing feeds or create new ones and tag them with the attribute.</li>";
       $output .= "</ul>";
       $output .= "<h3>Using the news aggregator</h3>";
       $output .= "<p>The news aggregator has a number of ways that it displays your subscribed content:</p>";
       $output .= "<ul>";
-      $output .= " <li><b>Latest news</b> -- Displays all incoming content in the order received with:";
+      $output .= " <li><strong>Latest news</strong> -- Displays all incoming content in the order received with:";
       $output .= "  <ul>";
       $output .= "   <li>The title of the original post.</li>";
       $output .= "   <li>The name of the source, which acts as a link to an individual feed page, listing information about that feed and incoming content for that feed only.</li>";
@@ -44,9 +44,9 @@ function import_help($section = "admin/help#import") {
       $output .= "   <li>A <i>feed</i> link, which acts as a link to an individual feed page, listing information about that feed and incoming content for that feed only.</li>";
       $output .= "  </ul>";
       $output .= " </li>";
-      $output .= " <li><b>News by source</b> -- Organizes incoming content by feed, displaying titles which link to the originating post. Also has an icon which acts as blog it link.</li>";
-      $output .= " <li><b>News by topic</b> -- Organizes incoming content by bundles, displaying titles which link to the originating post. Also has an icon which acts as blog it link.</li>";
-      $output .= " <li><b>News sources</b> -- Displays an alphabetical listing of all subscribed feeds and a description. The title acts as a link to an individual feed page, listing information about that feed and incoming content for that feed only.</li>";
+      $output .= " <li><strong>News by source</strong> -- Organizes incoming content by feed, displaying titles which link to the originating post. Also has an icon which acts as blog it link.</li>";
+      $output .= " <li><strong>News by topic</strong> -- Organizes incoming content by bundles, displaying titles which link to the originating post. Also has an icon which acts as blog it link.</li>";
+      $output .= " <li><strong>News sources</strong> -- Displays an alphabetical listing of all subscribed feeds and a description. The title acts as a link to an individual feed page, listing information about that feed and incoming content for that feed only.</li>";
       $output .= "</ul>";
       $output .= "<h3>RSS feed blocks</h3>";
       $output .= "<p>In addition to providing subscribed content through the news aggregator, Drupal automatically creates a block for each subscribed feed and every bundle created.  Beside each headline in each block, Drupal includes an icon which acts a blog it link. Enable any or all of the blocks using block management.</p>";
@@ -59,7 +59,7 @@ function import_help($section = "admin/help#import") {
       $output = t("Drupal's news aggregator controls how many RSS/RDF items from a single source are displayed in a \"Block\", and on the page that goes with that block.");
       break;
     case 'admin/node/syndication/news':
-      $output = t("Several web sites, especially news related sites, syndicate parts of their site's content for other web sites to display. Usually, the syndicated content includes the latest headlines with a direct link to that story on the remote site. Some syndicated content also includes a description of the headline. The standard method of syndication is using the XML based Rich Site Summary (RSS). To get a feed to work you <b>must</b> run \"cron.php\". To display the feed in a block you must turn on the %block. <br /><ul><li>To delete a feed choose \"edit feed\"</li><li>To clear all of the entries from a feed choose \"Remove items\"</li><li>To check whether a feed is working, and to get new items <b>now</b> click on \"update items\"</li></ul><ul><li>To delete a bundle choose \"edit bundle\".</li></ul>", array("%block" => l(t("feed's block"), "admin/system/block")));
+      $output = t("Several web sites, especially news related sites, syndicate parts of their site's content for other web sites to display. Usually, the syndicated content includes the latest headlines with a direct link to that story on the remote site. Some syndicated content also includes a description of the headline. The standard method of syndication is using the XML based Rich Site Summary (RSS). To get a feed to work you <strong>must</strong> run \"cron.php\". To display the feed in a block you must turn on the %block. <br /><ul><li>To delete a feed choose \"edit feed\"</li><li>To clear all of the entries from a feed choose \"Remove items\"</li><li>To check whether a feed is working, and to get new items <strong>now</strong> click on \"update items\"</li></ul><ul><li>To delete a bundle choose \"edit bundle\".</li></ul>", array("%block" => l(t("feed's block"), "admin/system/block")));
       break;
     case 'admin/node/syndication/news/add/feed':
       $output = t("Add a site that has an RSS/RDF feed. The URL is the full path to the RSS feed file. For the feed to update automatically you must run \"cron.php\". The \"Attributes\" are used to bundle this feed with other feeds (See %bundle), and to tag articles from this feed.<br />Note: If you already have a feed with the URL you are planning to use, the system will not accept another feed with the same URL.", array("%bundle" => l(t("add new bundle"), "admin/node/syndication/news/add/bundle")));
@@ -651,9 +651,9 @@ function import_page_feed($fid) {
 
   $feed = db_fetch_object(db_query("SELECT * FROM {feed} WHERE fid = %d", $fid));
 
-  $header .= "<p><b>". t("Website") .":</b><div style=\"margin-left: 20px;\"><a href=\"$feed->link\">$feed->link</a></div></p>";
-  $header .= "<p><b>". t("Description") .":</b><div style=\"margin-left: 20px;\">$feed->description</div></p>";
-  $header .= "<p><b>". t("Last update") .":</b><div style=\"margin-left: 20px; text-align: right;\">". t("%time ago", array("%time" => format_interval(time() - $feed->timestamp))) ." <a href=\"$feed->url\"><img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" alt=\"\" title=\"\" /></a><br /><br /></div></p>\n";
+  $header .= "<p><strong>". t("Website") .":</strong><div style=\"margin-left: 20px;\"><a href=\"$feed->link\">$feed->link</a></div></p>";
+  $header .= "<p><strong>". t("Description") .":</strong><div style=\"margin-left: 20px;\">$feed->description</div></p>";
+  $header .= "<p><strong>". t("Last update") .":</strong><div style=\"margin-left: 20px; text-align: right;\">". t("%time ago", array("%time" => format_interval(time() - $feed->timestamp))) ." <a href=\"$feed->url\"><img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" style=\"border: 0px;\" alt=\"\" title=\"\" /></a><br /><br /></div></p>\n";
 
   $result = db_query_range("SELECT * FROM {item} WHERE fid = %d ORDER BY iid DESC", $fid, 0, variable_get("import_page_limit", 75));
 
@@ -686,8 +686,8 @@ function import_page_bundle($bid) {
 
   $bundle = db_fetch_object(db_query("SELECT * FROM {bundle} WHERE bid = %d", $bid));
 
-  $header .= "<p><b>". t("Website") .":</b><div style=\"margin-left: 20px;\">". l($bundle->title, "import/bundle/$bundle->bid") ."</div></p>";
-  $header .= "<p><b>". t("Description") .":</b><div style=\"margin-left: 20px;\">". t("A composite news feed about") ." $bundle->attributes.</div></p>";
+  $header .= "<p><strong>". t("Website") .":</strong><div style=\"margin-left: 20px;\">". l($bundle->title, "import/bundle/$bundle->bid") ."</div></p>";
+  $header .= "<p><strong>". t("Description") .":</strong><div style=\"margin-left: 20px;\">". t("A composite news feed about") ." $bundle->attributes.</div></p>";
 
   $keys = explode(",", $bundle->attributes);
   foreach ($keys as $key) $where[] = "i.attributes LIKE '%". trim($key) ."%'";

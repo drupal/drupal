@@ -1,5 +1,5 @@
 <?php
-/* $Id: path.module,v 1.22 2003/12/28 10:47:33 dries Exp $ */
+/* $Id: path.module,v 1.23 2003/12/29 17:14:26 dries Exp $ */
 
 function path_admin() {
   $op = $_POST["op"];
@@ -118,7 +118,7 @@ function path_help($section = "admin/help#path") {
     case "admin/help#path":
       $output .= "<h3>Background</h3><p>A very powerful feature of Drupal is the ability to have control over all paths. The path module is the tool that provides this functionality and is part of the basic Drupal installation, although it is not enabled by default. Some examples of re-mapping paths are:<pre>user/login => login\n\nimage/tid/16 => store\n\ntaxonomy/page/or/7,19,20,21 => store/products/whirlygigs\n\nnode/view/3 => contact</pre></p>";
       $output .= "<p>This functionality integrates seamlessly into node forms and also provides the administrator an interface to view all aliases that have been created.</p><p>Aliases have a 1 to 1 relationship with their original Drupal URLs. In other words you cannot have an alias map to more than one path. Likewise, a Drupal URL can't be mapped to more than one alias.</p>";
-      $output .= "<h3>Permissions</h3><p>Two new permissions are introduced for aliasing URLs: <i>create url aliases</i> and <i>administer url aliases</i>.</p><ol><li><b>create url aliases</b> - Allows users to create aliases for nodes. Enabling this permission will display a new path field to the user in any node form, allowing them to enter an alias for that node. They will be able to edit/delete the alias after it is created using the same form.</li><li><b>administer url aliases</b> - Allows users to access the alias administration interface.  They must also have the <i>access administration pages</i> permission set as well. This interface displays all aliases and provides a way to create and modify them. This is also the location to build aliases for things other than nodes.  For example, you can create an alias for a taxonomy URL or even re-map the admin path (although the original admin path will still be accessible since aliases do not cancel out original paths).</li></ol>";
+      $output .= "<h3>Permissions</h3><p>Two new permissions are introduced for aliasing URLs: <i>create url aliases</i> and <i>administer url aliases</i>.</p><ol><li><strong>create url aliases</strong> - Allows users to create aliases for nodes. Enabling this permission will display a new path field to the user in any node form, allowing them to enter an alias for that node. They will be able to edit/delete the alias after it is created using the same form.</li><li><strong>administer url aliases</strong> - Allows users to access the alias administration interface.  They must also have the <i>access administration pages</i> permission set as well. This interface displays all aliases and provides a way to create and modify them. This is also the location to build aliases for things other than nodes.  For example, you can create an alias for a taxonomy URL or even re-map the admin path (although the original admin path will still be accessible since aliases do not cancel out original paths).</li></ol>";
       $output = t($output);
       break;
   }
