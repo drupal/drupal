@@ -35,65 +35,6 @@ function db_connect($url) {
 }
 
 /**
- * Runs a basic query in the active database.
- *
- * User-supplied arguments to the query should be passed in as separate parameters
- * so that they can be properly escaped to avoid SQL injection attacks.
- *
- * @param $query
- *   A string containing an SQL query.
- * @param ...
- *   A variable number of arguments which are substituted into the query using
- *   printf() syntax.
- * @return
- *   A database query result resource, or FALSE if the query was not executed
- *   correctly.
- */
-function db_query($query) {
-  $args = func_get_args();
-
-  $query = db_prefix_tables($query);
-  if (count($args) > 1) {
-    if(is_array($args[1])){
-      $args1 = array_map('db_escape_string', $args[1]);
-      $nargs = array_merge(array($query), $args1);
-    }
-    else {
-      $nargs = array_map('db_escape_string', $args);
-      $nargs[0] = $query;
-    }
-    return _db_query(call_user_func_array('sprintf', $nargs));
-  }
-  else {
-    return _db_query($query);
-  }
-}
-
-/**
- * Debugging version of db_query().
- *
- * Echoes the query to the browser.
- */
-function db_queryd($query) {
-  $args = func_get_args();
-  $query = db_prefix_tables($query);
-  if (count($args) > 1) {
-    if(is_array($args[1])){
-      $args1 = array_map('db_escape_string', $args[1]);
-      $nargs = array_merge(array($query), $args1);
-    }
-    else {
-      $nargs = array_map('db_escape_string', $args);
-      $nargs[0] = $query;
-    }
-    return _db_query(call_user_func_array('sprintf', $nargs), 1);
-  }
-  else {
-    return _db_query($query, 1);
-  }
-}
-
-/**
  * Helper function for db_query().
  */
 function _db_query($query, $debug = 0) {
@@ -234,7 +175,8 @@ function db_affected_rows() {
  *   A string containing an SQL query.
  * @param ...
  *   A variable number of arguments which are substituted into the query using
- *   printf() syntax.
+ *   printf() syntax. Instead of a variable number of query arguments, you may
+ *   also pass a single array containing the query arguments.
  * @param $from
  *   The first result row to return.
  * @param $count
@@ -247,15 +189,16 @@ function db_query_range($query) {
   $args = func_get_args();
   $count = array_pop($args);
   $from = array_pop($args);
+
+  $query = db_prefix_tables($query);
   if (count(func_get_args()) > 3) {
+    // Check for array (alternative syntax).
+    if (is_array($args[1])) {
+      $args = array_merge(array($query), $args[1]);
+    }
     $args = array_map('db_escape_string', $args);
-    $query = db_prefix_tables($query);
     $args[0] = $query;
     $query = call_user_func_array('sprintf', $args);
-  }
-  else {
-    $query = func_get_arg(0);
-    $query = db_prefix_tables($query);
   }
   $query .= ' LIMIT '. $from .', '. $count;
   return _db_query($query);

@@ -467,20 +467,20 @@ function filter_formats() {
   if (!isset($formats)) {
     $formats = array();
 
-    $query = array('SELECT * FROM {filter_formats}');
+    $query = 'SELECT * FROM {filter_formats}';
 
     // Build query for selecting the format(s) based on the user's roles.
     if (!$all) {
       $where = array();
       foreach ($user->roles as $rid => $role) {
         $where[] = "roles LIKE '%%,%d,%%'";
-        $query[] = $rid;
+        $args[] = $rid;
       }
-      $query[0] .= ' WHERE '. implode(' OR ', $where) . ' OR format = %d';
-      $query[] = variable_get('filter_default_format', 1);
+      $query .= ' WHERE '. implode(' OR ', $where) . ' OR format = %d';
+      $args[] = variable_get('filter_default_format', 1);
     }
 
-    $result = call_user_func_array('db_query', $query);
+    $result = db_query($query, $args);
     while ($format = db_fetch_object($result)) {
       $formats[$format->format] = $format;
     }

@@ -454,8 +454,7 @@ function do_search($keys, $type, $join = '', $where = '1') {
 
   // Do pager query
   $query = "SELECT i.type, i.sid, i.word, SUM(i.score/t.count) AS score FROM {search_index} i $join INNER JOIN {search_total} t ON i.word = t.word WHERE $where GROUP BY i.type, i.sid ORDER BY score DESC";
-  $arguments = array_merge(array($query, 15, 0, $count_query), $arguments);
-  $result = call_user_func_array('pager_query', $arguments);
+  $result = pager_query($query, 15, 0, $count_query, $arguments);
 
   $results = array();
   while ($item = db_fetch_object($result)) {

@@ -61,10 +61,7 @@ function user_load($array = array()) {
       $params[] = strtolower($value);
     }
   }
-  array_unshift($params, "SELECT u.* FROM {users} u WHERE $query u.status < 3");
-  $params[] = 0;
-  $params[] = 1;
-  $result = call_user_func_array('db_query_range', $params);
+  $result = db_query_range("SELECT u.* FROM {users} u WHERE $query u.status < 3", $params, 0, 1);
 
   if (db_num_rows($result)) {
     $user = db_fetch_object($result);
