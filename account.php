@@ -8,35 +8,37 @@ function account_get_user($uname) {
   return db_fetch_object($result);
 }
 
-function account_login($userid = "") {
+function account_login() {
   $output .= "<FORM ACTION=\"account.php\" METHOD=\"post\">\n";
   $output .= " <TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= "  <TR><TH>User ID:</TH><TD><INPUT NAME=\"userid\" VALUE=\"$userid\"></TD></TR>\n";
-  $output .= "  <TR><TH>Password:</TH><TD><INPUT NAME=\"passwd\" TYPE=\"password\"></TD></TR>\n";
-  $output .= "  <TR><TD ALIGN=\"center\"><INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"Login\"></TD></TR>\n";
-  $output .= "  <TR><TD ALIGN=\"center\"><A HREF=\"account.php?op=new\">Register</A> as new user.</A></TD></TR>\n";
-  $output .= "  <TR><TD COLSPAN=\"2\">$user->ublock</TD></TR>\n";
+  $output .= "  <TR><TH ALIGN=\"right\">Username:</TH><TD><INPUT NAME=\"userid\"></TD></TR>\n";
+  $output .= "  <TR><TH ALIGN=\"right\">Password:</TH><TD><INPUT NAME=\"passwd\" TYPE=\"password\"></TD></TR>\n";
+  $output .= "  <TR><TD ALIGN=\"right\" COLSPAN=\"2\"><INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"Login\"></TD></TR>\n";
   $output .= " </TABLE>\n";
   $output .= "</FORM>\n";
+  $output .= "You don't have an account yet?  <A HREF=\"account.php?op=register\">Register</A> as new user.\n";
+
   return $output;
 }
 
 function account_session_start($userid, $passwd) {
   global $user;
-  session_start();
+
   $user = new User($userid, $passwd);
-  if ($user && user_valid()) {
+
+  if ($user->id) {
+    session_start();
     session_register("user");
-    watchdog(1, "session opened for user `$user->userid'.");
+    watchdog(1, "session opened for user `$user->userid'");
   }
   else {
-    watchdog(2, "failed login for user `$userid'.");
+    watchdog(2, "failed login for user `$userid'");
   }
 }
 
 function account_session_close() {
   global $user;  
-  watchdog(1, "session closed for user `$user->userid'.");
+  watchdog(1, "$user->userid: sucessful attempt to logout");
   session_unset();
   session_destroy();
   unset($user);
@@ -45,18 +47,21 @@ function account_session_close() {
 function account_user_edit() {
   global $theme, $user;
 
-  if ($user->id && user_valid()) {
+  if ($user->id) {
     ### Generate output/content:
     $output .= "<FORM ACTION=\"account.php\" METHOD=\"post\">\n";
+    $output .= "<B>Username:</B><BR>\n";
+    $output .= "&nbsp; $user->userid<P>\n";
+    $output .= "<I>Required, unique, and can not be changed.</I><P>\n";
     $output .= "<B>Real name:</B><BR>\n";
     $output .= "<INPUT NAME=\"edit[name]\" MAXLENGTH=\"55\" SIZE=\"30\" VALUE=\"$user->name\"><BR>\n";
     $output .= "<I>Optional.</I><P>\n";
     $output .= "<B>Real e-mail address:</B><BR>\n";
-    $output .= "<INPUT NAME=\"edit[email]\" MAXLENGTH=\"55\" SIZE=\"30\" VALUE=\"$user->email\"><BR>\n";
-    $output .= "<I>Required, but never displayed publicly: needed in case you lose your password.</I><P>\n";
+    $output .= "&nbsp; $user->real_email<P>\n";
+    $output .= "<I>Required, unique, can not be changed and is never displayed publicly: only needed in case you lose your password.</I><P>\n";
     $output .= "<B>Fake e-mail address:</B><BR>\n";
-    $output .= "<INPUT NAME=\"edit[femail]\" MAXLENGTH=\"55\" SIZE=\"30\" VALUE=\"$user->femail\"><BR>\n";
-    $output .= "<I>Optional, and displayed publicly by your comments. You may spam proof it if you want.</I><P>\n";
+    $output .= "<INPUT NAME=\"edit[fake_email]\" MAXLENGTH=\"55\" SIZE=\"30\" VALUE=\"$user->fake_email\"><BR>\n";
+    $output .= "<I>Optional, and displayed publicly. You may spam proof your real e-mail address if you want.</I><P>\n";
     $output .= "<B>URL of homepage:</B><BR>\n";
     $output .= "<INPUT NAME=\"edit[url]\" MAXLENGTH=\"55\" SIZE=\"30\" VALUE=\"$user->url\"><BR>\n";
     $output .= "<I>Optional, but make sure you enter fully qualified URLs only. That is, remember to include \"http://\".</I><P>\n";
@@ -67,7 +72,7 @@ function account_user_edit() {
     $output .= "<TEXTAREA NAME=\"edit[signature]\" COLS=\"35\" ROWS=\"5\" WRAP=\"virtual\">$user->signature</TEXTAREA><BR>\n";
     $output .= "<I>Optional. This information will be publicly displayed at the end of your comments. </I><P>\n";
     $output .= "<B>Password:</B><BR>\n";
-    $output .= "<INPUT TYPE=\"password\" NAME=\"edit[pass1]\" SIZE=\"10\" MAXLENGTH=\"20\"><INPUT TYPE=\"password\" NAME=\"edit[pass2]\" SIZE=\"10\" MAXLENGTH=\"20\"><BR>\n";
+    $output .= "<INPUT TYPE=\"password\" NAME=\"edit[pass1]\" SIZE=\"10\" MAXLENGTH=\"20\"> <INPUT TYPE=\"password\" NAME=\"edit[pass2]\" SIZE=\"10\" MAXLENGTH=\"20\"><BR>\n";
     $output .= "<I>Enter your new password twice if you want to change your current password or leave it blank if you are happy with your current password.</I><P>\n";
     $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save user information\"><BR>\n";
     $output .= "</FORM>\n";
@@ -79,30 +84,30 @@ function account_user_edit() {
   }
   else {
     $theme->header();
-    $theme->box("Login", account_login($userid)); 
+    $theme->box("Login", account_login()); 
     $theme->footer();
   }
 }
 
 function account_user_save($edit) {
   global $user;
-  if ($user && user_valid()) {
+  if ($user->id) {
     $data[name] = $edit[name];
-    $data[email] = $edit[email];
-    $data[femail] = $edit[femail];
+    $data[fake_email] = $edit[fake_email];
     $data[url] = $edit[url];
     $data[bio] = $edit[bio];
     $data[signature] = $edit[signature];
-    if ($edit[pass1] == $edit[pass2] && !empty($edit[pass1])) { $data[passwd] = $edit[pass1]; }
-    dbsave("users", $data, $user->id);
-    user_rehash();
+
+    if ($edit[pass1] && $edit[pass1] == $edit[pass2]) $data[passwd] = $edit[pass1];
+
+    user_save($data, $user->id);
   }
 }
 
 function account_page_edit() {
   global $theme, $themes, $user;
 
-  if ($user && user_valid()) {
+  if ($user->id) {
     ### Generate output/content:
     $output .= "<FORM ACTION=\"account.php\" METHOD=\"post\">\n";
     $output .= "<B>Theme:</B><BR>\n";
@@ -115,27 +120,27 @@ function account_page_edit() {
     $output .= "<SELECT NAME=\"edit[theme]\">$options</SELECT><BR>\n";
     $output .= "<I>Selecting a different theme will change the look and feel of the site.</I><P>\n";
     $output .= "<B>Maximum number of stories:</B><BR>\n";
-    $output .= "<INPUT NAME=\"edit[storynum]\" MAXLENGTH=\"3\" SIZE=\"3\" VALUE=\"$user->storynum\"><P>\n";
+    $output .= "<INPUT NAME=\"edit[stories]\" MAXLENGTH=\"3\" SIZE=\"3\" VALUE=\"$user->stories\"><P>\n";
     $output .= "<I>The maximum number of stories that will be displayed on the main page.</I><P>\n";
-    $options  = "<OPTION VALUE=\"nested\"". ($user->umode == "nested" ? " SELECTED" : "") .">Nested</OPTION>";
-    $options .= "<OPTION VALUE=\"flat\"". ($user->umode == "flat" ? " SELECTED" : "") .">Flat</OPTION>";
-    $options .= "<OPTION VALUE=\"threaded\"". ($user->umode == "threaded" ? " SELECTED" : "") .">Threaded</OPTION>";
+    $options  = "<OPTION VALUE=\"nested\"". ($user->mode == "nested" ? " SELECTED" : "") .">Nested</OPTION>";
+    $options .= "<OPTION VALUE=\"flat\"". ($user->mode == "flat" ? " SELECTED" : "") .">Flat</OPTION>";
+    $options .= "<OPTION VALUE=\"threaded\"". ($user->mode == "threaded" ? " SELECTED" : "") .">Threaded</OPTION>";
     $output .= "<B>Comment display mode:</B><BR>\n";
-    $output .= "<SELECT NAME=\"edit[umode]\">$options</SELECT><P>\n";
-    $options  = "<OPTION VALUE=\"0\"". ($user->uorder == 0 ? " SELECTED" : "") .">Oldest first</OPTION>";
-    $options .= "<OPTION VALUE=\"1\"". ($user->uorder == 1 ? " SELECTED" : "") .">Newest first</OPTION>";
-    $options .= "<OPTION VALUE=\"2\"". ($user->uorder == 2 ? " SELECTED" : "") .">Highest scoring first</OPTION>";
+    $output .= "<SELECT NAME=\"edit[mode]\">$options</SELECT><P>\n";
+    $options  = "<OPTION VALUE=\"0\"". ($user->sort == 0 ? " SELECTED" : "") .">Oldest first</OPTION>";
+    $options .= "<OPTION VALUE=\"1\"". ($user->sort == 1 ? " SELECTED" : "") .">Newest first</OPTION>";
+    $options .= "<OPTION VALUE=\"2\"". ($user->sort == 2 ? " SELECTED" : "") .">Highest scoring first</OPTION>";
     $output .= "<B>Comment sort order:</B><BR>\n";
-    $output .= "<SELECT NAME=\"edit[uorder]\">$options</SELECT><P>\n";
-    $options  = "<OPTION VALUE=\"-1\"". ($user->thold == -1 ? " SELECTED" : "") .">-1: Display uncut and raw comments.</OPTION>";
-    $options .= "<OPTION VALUE=\"0\"". ($user->thold == 0 ? " SELECTED" : "") .">0: Display almost all comments.</OPTION>";
-    $options .= "<OPTION VALUE=\"1\"". ($user->thold == 1 ? " SELECTED" : "") .">1: Display almost no anonymous comments.</OPTION>";
-    $options .= "<OPTION VALUE=\"2\"". ($user->thold == 2 ? " SELECTED" : "") .">2: Display comments with score +2 only.</OPTION>";
-    $options .= "<OPTION VALUE=\"3\"". ($user->thold == 3 ? " SELECTED" : "") .">3: Display comments with score +3 only.</OPTION>";
-    $options .= "<OPTION VALUE=\"4\"". ($user->thold == 4 ? " SELECTED" : "") .">4: Display comments with score +4 only.</OPTION>";
-    $options .= "<OPTION VALUE=\"5\"". ($user->thold == 5 ? " SELECTED" : "") .">5: Display comments with score +5 only.</OPTION>";
+    $output .= "<SELECT NAME=\"edit[sort]\">$options</SELECT><P>\n";
+    $options  = "<OPTION VALUE=\"-1\"". ($user->threshold == -1 ? " SELECTED" : "") .">-1: Display uncut and raw comments.</OPTION>";
+    $options .= "<OPTION VALUE=\"0\"". ($user->threshold == 0 ? " SELECTED" : "") .">0: Display almost all comments.</OPTION>";
+    $options .= "<OPTION VALUE=\"1\"". ($user->threshold == 1 ? " SELECTED" : "") .">1: Display almost no anonymous comments.</OPTION>";
+    $options .= "<OPTION VALUE=\"2\"". ($user->threshold == 2 ? " SELECTED" : "") .">2: Display comments with score +2 only.</OPTION>";
+    $options .= "<OPTION VALUE=\"3\"". ($user->threshold == 3 ? " SELECTED" : "") .">3: Display comments with score +3 only.</OPTION>";
+    $options .= "<OPTION VALUE=\"4\"". ($user->threshold == 4 ? " SELECTED" : "") .">4: Display comments with score +4 only.</OPTION>";
+    $options .= "<OPTION VALUE=\"5\"". ($user->threshold == 5 ? " SELECTED" : "") .">5: Display comments with score +5 only.</OPTION>";
     $output .= "<B>Comment threshold:</B><BR>\n";
-    $output .= "<SELECT NAME=\"edit[thold]\">$options</SELECT><BR>\n";
+    $output .= "<SELECT NAME=\"edit[threshold]\">$options</SELECT><BR>\n";
     $output .= "<I>Comments that scored less than this setting will be ignored. Anonymous comments start at 0, comments of people logged on start at 1 and moderators can add and subtract points.</I><P>\n";
     $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save page settings\"><BR>\n";
     $output .= "</FORM>\n";
@@ -147,33 +152,32 @@ function account_page_edit() {
   }
   else {
     $theme->header();
-    $theme->box("Login", account_login($userid)); 
+    $theme->box("Login", account_login()); 
     $theme->footer();
   }
 }
 
 function account_page_save($edit) {
   global $user;
-  if ($user && user_valid()) {
+  if ($user->id) {
     $data[theme] = $edit[theme];
-    $data[storynum] = $edit[storynum];
-    $data[umode] = $edit[umode];
-    $data[uorder] = $edit[uorder];
-    $data[thold] = $edit[thold];
-    dbsave("users", $data, $user->id);
-    user_rehash();
+    $data[stories] = $edit[stories];
+    $data[mode] = $edit[mode];
+    $data[sort] = $edit[sort];
+    $data[threshold] = $edit[threshold];
+    user_save($data, $user->id);
   }
 }
 
 function account_user($uname) {
   global $user, $theme;
   
-  if ($user && $uname && $user->userid == $uname) {
+  if ($user->id && $user->userid == $uname) {
     $output .= "<P>Welcome $user->userid! This is <B>your</B> user info page. There are many more, but this one is yours. You are probably most interested in editing something, but if you need to kill some time, this place is as good as any other place.</P>\n";
     $output .= "<TABLE BORDER=\"0\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>User ID:</B></TD><TD>$user->userid</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Name:</B></TD><TD>". format_data($user->name) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>E-mail:</B></TD><TD>". format_email_address($user->femail) ."</A></TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>E-mail:</B></TD><TD>". format_email_address($user->fake_email) ."</A></TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>URL:</B></TD><TD>". format_url($user->url) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Bio:</B></TD><TD>". format_data($user->bio) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Signature:</B></TD><TD>". format_data($user->signature) ."</TD></TR>\n";
@@ -187,7 +191,7 @@ function account_user($uname) {
   elseif ($uname && $account = account_get_user($uname)) {
     $box1 .= "<TABLE BORDER=\"0\" CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
     $box1 .= " <TR><TD ALIGN=\"right\"><B>Username:</B></TD><TD>$account->userid</TD></TR>\n";
-    $box1 .= " <TR><TD ALIGN=\"right\"><B>E-mail:</B></TD><TD>". format_email_address($account->femail) ."</TD></TR>\n";
+    $box1 .= " <TR><TD ALIGN=\"right\"><B>E-mail:</B></TD><TD>". format_email_address($account->fake_email) ."</TD></TR>\n";
     $box1 .= " <TR><TD ALIGN=\"right\"><B>URL:</B></TD><TD>". format_url($account->url) ."</TD></TR>\n";
     $box1 .= " <TR><TD ALIGN=\"right\"><B>Bio:</B></TD><TD>". format_data($account->bio) ."</TD></TR>\n";
     $box1 .= "</TABLE>\n";
@@ -219,55 +223,9 @@ function account_user($uname) {
   else { 
     ### Display login form:
     $theme->header();
-    $theme->box("Login", account_login($userid)); 
+    $theme->box("Login", account_login()); 
     $theme->footer();
   }
-}
-
-function account_register() {
-  if ($rval = account_validate($new)) { 
-    account_new($new, "<B>Error: $rval</B>");
-  }
-  else {
-    ### Generate new password:
-    $new[passwd] = account_password();
-    dbsave("users", $new);
-
-    if ($mail == 1) {
-      ### Display account information:
-      $theme->header();
-      $theme->box("Account details", "Your password is: <B>$new[passwd]</B><BR><A HREF=\"account.php?op=Login&userid=$new[userid]&passwd=$new[passwd]\">Login</A> to change your personal settings.");
-      $theme->footer();
-    } 
-    else {
-      ### Send e-mail with account details:
-      mail($new[email], "Account details for $sitename", "$new[userid],\n\nyour $sitename member account has been created succesfully.  To be able to use it, you must login using the information below.  Please save this mail for further reference.\n\n   username: $new[userid]\n     e-mail: $new[email]\n   password: $new[passwd]\n\nThis password is generated by a randomizer.  It is recommended that you change this password immediately.\n\n$contact_signature", "From: $contact_email\nX-Mailer: PHP/" . phpversion());
-
-      ### Display account information:
-      $theme->header();
-      $theme->box("Account details", "Your member account has been created and the details necessary to login have been sent to your e-mail account <B>$new[email]</B>.  Once you received the account confirmation, hit <A HREF=\"account.php\">this link</A> to login.");
-      $theme->footer();
-    }
-    watchdog(1, "new user `$new[userid]' registered with e-mail address `$new[email]'");
-  }
-}
-
-function account_new($user = "", $error = "") {
-  global $theme;
-
-  $output .= "<FORM ACTION=\"account.php\" METHOD=post>\n";
-  $output .= "<TABLE BORDER=0 CELLPADDING=2 CELLSPACING=2>\n";
-  if (!empty($error)) $output .= "<TR><TD COLSPAN=2>$error</TD></TR>\n";
-  $output .= "<TR><TH>Name:</TH><TD><INPUT NAME=\"new[name]\" VALUE=\"$new[name]\"></TD></TR>\n";
-  $output .= "<TR><TH>User ID:</TR><TD><INPUT NAME=\"new[userid]\" VALUE=\"$new[userid]\"></TD></TR>\n";
-  $output .= "<TR><TH>E-mail:</TH><TD><INPUT NAME=\"new[email]\" VALUE=\"$new[email]\"></TD></TR>\n";
-  $output .= "<TR><TD ALIGN=right COLSPAN=2><INPUT NAME=op TYPE=submit VALUE=\"Register\"></TD></TR>\n";
-  $output .= "</TABLE>\n";
-  $output .= "</FORM>\n";
-
-  $theme->header();
-  $theme->box("Register as new user", $output);
-  $theme->footer();
 }
 
 function account_validate($user) {
@@ -275,19 +233,104 @@ function account_validate($user) {
 
   ### Verify username and e-mail address:
   $user[userid] = trim($user[userid]);
-  if (empty($user[email]) || (!eregi("^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3}$", $user[email]))) $rval = "the specified e-mail address is not valid.<BR>";
-  if (empty($user[userid]) || (ereg("[^a-zA-Z0-9_-]", $user[userid]))) $rval = "the specified username '$new[userid]' is not valid.<BR>";
-  if (strlen($user[userid]) > 15) $rval = "the specified username is too long: it must be less than 15 characters.";
+  if (empty($user[real_email]) || (!eregi("^[_\.0-9a-z-]+@([0-9a-z][0-9a-z-]+\.)+[a-z]{2,3}$", $user[real_email]))) $error .= "<LI>the specified e-mail address is not valid.</LI>\n";
+  if (empty($user[userid]) || (ereg("[^a-zA-Z0-9_-]", $user[userid]))) $error .= "<LI>the specified username is not valid.</LI>\n";
+  if (strlen($user[userid]) > 15) $error .= "<LI>the specified username is too long: it must be less than 15 characters.</LI>\n";
 
   ### Check to see whether the username or e-mail address are banned:
-  if ($ban = ban_match($user[userid], $type2index[usernames])) $rval = "the specified username is banned  for the following reason: <I>$ban->reason</I>.";
-  if ($ban = ban_match($user[email], $type2index[addresses])) $rval = "the specified e-mail address is banned for the following reason: <I>$ban->reason</I>.";
+  if ($ban = ban_match($user[userid], $type2index[usernames])) $error .= "<LI>the specified username is banned  for the following reason: <I>$ban->reason</I>.</LI>\n";
+  if ($ban = ban_match($user[real_email], $type2index[addresses])) $error .= "<LI>the specified e-mail address is banned for the following reason: <I>$ban->reason</I>.</LI>\n";
 
   ### Verify whether username and e-mail address are unique:
-  if (db_num_rows(db_query("SELECT userid FROM users WHERE LOWER(userid)=LOWER('$user[userid]')")) > 0) $rval = "the specified username is already taken.";
-  if (db_num_rows(db_query("SELECT email FROM users WHERE LOWER(email)=LOWER('$user[email]')")) > 0) $rval = "the specified e-mail address is already registered.";
+  if (db_num_rows(db_query("SELECT userid FROM users WHERE LOWER(userid) = LOWER('$user[userid]')")) > 0) $error .= "<LI>the specified username is already taken.</LI>\n";
+  if (db_num_rows(db_query("SELECT real_email FROM users WHERE LOWER(real_email)=LOWER('$user[real_email]')")) > 0) $error .= "<LI>the specified e-mail address is already registered.</LI>\n";
 
-  return($rval);
+  return $error;
+}
+
+function account_register_enter($user = "", $error = "") {
+  global $theme;
+
+  if ($error) $output .= "<B><FONT COLOR=\"red\">Failed to register.</FONT>$error</B>\n";
+  else $output .= "<P>Registering allows you to comment on stories, to moderate comments and pending stories, to maintain an online diary, to customize the look and feel of the site and generally helps you interact with the site more efficiently.</P><P>To create an account, simply fill out this form an click the `Register' button below.  An e-mail will then be sent to you with instructions on how to validate your account.</P>\n";
+
+  $output .= "<FORM ACTION=\"account.php\" METHOD=\"post\">\n";
+  $output .= "<P>\n";
+  $output .= " <B>Username:</B><BR>\n";
+  $output .= " <INPUT NAME=\"new[userid]\" VALUE=\"$new[userid]\"><BR>\n";
+  $output .= " <SMALL><I>Enter your desired username: only letters, numbers and some special characters are allowed.</I></SMALL><BR>\n";
+  $output .= "</P>\n";
+  $output .= "<P>\n";
+  $output .= " <B>E-mail address:</B><BR>\n";
+  $output .= " <INPUT NAME=\"new[real_email]\" VALUE=\"$new[real_email]\"><BR>\n";
+  $output .= " <SMALL><I>You will be sent instructions on how to validate your account via this e-mail address - please make sure it is accurate.</I></SMALL><BR>\n";
+  $output .= "</P>\n";
+  $output .= "<P>\n";
+  $output .= " <INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"Register\">\n";
+  $output .= "</P>\n";
+  $output .= "</FORM>\n";
+
+  $theme->header();
+  $theme->box("Register as new user", $output);
+  $theme->footer();
+}
+
+function account_register_submit($new) {
+  global $theme, $mail, $sitename;
+
+  if ($rval = account_validate($new)) { 
+    account_register_enter($new, "$rval");
+  }
+  else {
+    $new[passwd] = account_password();
+    $new[status] = 1;
+    $new[hash] = substr(md5("$new[userid]. ". time() .""), 0, 12);
+
+    user_save($new);
+
+    $link = "http://". getenv("HOSTNAME") ."/account.php?op=confirm&name=$new[userid]&hash=$new[hash]";
+    $message = "$new[userid],\n\n\nsomeone signed up for a user account on $sitename and supplied this email address as their contact.  If it wasn't you, don't get your panties in a knot and simply ignore this mail.\n\nIf this was you, you have to activate your account first before you can login.  You can activate your account by visiting the URL below:\n\n    $link\n\nVisiting this URL will automatically activate your account.  Once activated you can login using the following information:\n\n    username: $new[userid]\n    password: $new[passwd]\n\n\n-- $sitename crew\n";
+    // mail($new[real_email], "Account details for $sitename", $message, "From: noreply@$sitename");
+    print "<PRE>$message</PRE>\n";
+
+    watchdog(1, "new user `$new[userid]' &lt;$new[real_email]&gt;");
+
+    $theme->header();
+    $theme->box("Account details", "Congratulations!  Your member account has been sucessfully created and further instructions on how to activate your account have been sent to your e-mail address.");
+    $theme->footer();
+  }
+}
+
+function account_register_confirm($name, $hash) {
+  global $theme;
+
+  $result = db_query("SELECT userid, hash, status FROM users WHERE userid = '$name'");
+
+  if ($account = db_fetch_object($result)) {
+    if ($account->status == 1) {
+      if ($account->hash == $hash) {
+        db_query("UPDATE users SET status = 2, hash = '' WHERE userid = '$name'");
+        $output .= "Your account has been sucessfully confirmed.  You can click <A HREF=\"account.php?op=login\">here</A> to login.\n";
+        watchdog(1, "$name: account confirmation sucessful");
+      }
+      else {
+        $output .= "Confirmation failed: invalid confirmation hash.\n";
+        watchdog(3, "$name: invalid confirmation hash");
+      }
+    }
+    else {
+      $output .= "Confirmation failed: your account has already been confirmed.  You can click <A HREF=\"account.php?op=login\">here</A> to login.\n";
+      watchdog(3, "$name: attempt to re-confirm account");
+    }
+  }
+  else {
+    $output .= "Confirmation failed: no such account found.<BR>";
+    watchdog(3, "$name: attempt to confirm non-existing account");
+  }
+
+  $theme->header();
+  $theme->box("Account confirmation", $output);
+  $theme->footer();
 }
 
 function account_password($min_length=6) {
@@ -300,9 +343,8 @@ function account_password($min_length=6) {
 function account_comments() {
   global $theme, $user;
 
-  $output .= "<P>This page might be helpful in case you want to keep track of your most recent comments in any of the discussions.  You are given an overview of your comments in each of the stories you participates in along with the number of replies each comment got.\n<P>\n"; 
+  $info = "<P>This page might be helpful in case you want to keep track of your most recent comments in any of the discussions.  You are given an overview of your comments in each of the stories you participates in along with the number of replies each comment got.\n<P>\n"; 
 
-  ### Perform query:
   $sresult = db_query("SELECT s.id, s.subject, COUNT(s.id) as count FROM comments c LEFT JOIN stories s ON c.sid = s.id WHERE c.author = $user->id GROUP BY s.id DESC LIMIT 5");
   
   while ($story = db_fetch_object($sresult)) {
@@ -315,7 +357,9 @@ function account_comments() {
     }
     $output .= " </UL>\n";
   }
-     
+
+  $output = ($output) ? "$info $output" : "$info <CENTER><B>You have not posted any comments recently.</B></CENTER>\n";
+
   $theme->header();
   $theme->box("Track your comments", $output);
   $theme->footer();
@@ -326,8 +370,14 @@ switch ($op) {
     account_session_start($userid, $passwd);
     header("Location: account.php?op=info");
     break;
-  case "new":
-    account_new();
+  case "register":
+    account_register_enter();
+    break;
+  case "confirm":
+    account_register_confirm($name, $hash);
+    break;
+  case "Register":
+    account_register_submit($new);
     break;
   case "view":
     account_user($name);
@@ -343,7 +393,7 @@ switch ($op) {
     header("Location: account.php");
     break;
   case "Register":
-    account_register($new);
+    account_register_submit($new);
     break;
   case "user":
     account_user_edit();

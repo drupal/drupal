@@ -43,7 +43,7 @@ function display_related_links($theme, $story) {
 function display_old_headlines($theme, $num = 10) {
   global $user;
   
-  if ($user->storynum) $result = db_query("SELECT id, subject, timestamp FROM stories WHERE status = 2 ORDER BY timestamp DESC LIMIT $user->storynum, $num");
+  if ($user->stories) $result = db_query("SELECT id, subject, timestamp FROM stories WHERE status = 2 ORDER BY timestamp DESC LIMIT $user->stories, $num");
   else $result = db_query("SELECT id, subject, timestamp FROM stories WHERE status = 2 ORDER BY timestamp DESC LIMIT $num, $num");
 
   while ($story = db_fetch_object($result)) {    
@@ -51,7 +51,7 @@ function display_old_headlines($theme, $num = 10) {
       $content .= "<P><B>". date("l, M jS", $story->timestamp) ."</B></P>\n";
       $time = date("F jS", $story->timestamp);
     }
-    $content .= "<LI>". format_story_link($story) ."</LI>\n";
+    $content .= "<LI><A HREF=\"discussion.php?id=$story->id\">$story->subject</A></LI>\n";
   }
   $content .= "<P ALIGN=\"right\">[ <A HREF=\"search.php\"><FONT COLOR=\"$theme->hlcolor2\">more</FONT></A> ]</P>";
 
@@ -92,7 +92,7 @@ function display_new_headlines($theme, $num = 10) {
 
   $content = "";
   $result = db_query("SELECT id, subject FROM stories WHERE status = 2 ORDER BY id DESC LIMIT $num");
-  while ($story = db_fetch_object($result)) $content .= "<LI>". format_story_link($story) ."</LI>\n";
+  while ($story = db_fetch_object($result)) $content .= "<LI><A HREF=\"discussion.php?id=$story->id\">$story->subject</A></LI>\n";
   $content .= "<P ALIGN=\"right\">[ <A HREF=\"search.php\"><FONT COLOR=\"$theme->hlcolor2\">more</FONT></A> ]</P>";
   $theme->box("Latest headlines", $content);
 }
@@ -109,7 +109,7 @@ function display_account($theme) {
   if ($user && $user->userid) { 
     function submission_number() {
       $result = db_query("SELECT COUNT(id) FROM stories WHERE status = 1");
-      return ($result) ? mysql_result($result, 0) : 0;
+      return ($result) ? db_result($result, 0) : 0;
     }
 
     ### Display account settings:

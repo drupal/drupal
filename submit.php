@@ -138,7 +138,7 @@ function submit_submit($subject, $abstract, $article, $category) {
 
   ### Send e-mail notification (if enabled):
   if ($notify) {
-    $message = "New submission:\n\nsubject...: $subject\nauthor....: $user->userid <$user->email>\ncategory..: $category\nabstract..:\n$abstract\n\narticle...:\n$article";
+    $message = "New submission:\n\nsubject...: $subject\nauthor....: $user->userid <$user->real_email>\ncategory..: $category\nabstract..:\n$abstract\n\narticle...:\n$article";
     mail($notify_email, "$notify_subject $subject", $message, "From: $notify_from\nX-Mailer: PHP/" . phpversion());
   }
 

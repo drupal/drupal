@@ -1,23 +1,12 @@
 <?
 
 include "includes/database.inc";
-include "includes/log.inc";
+include "includes/watchdog.inc";
 
 function id2story($id) {
   ### Perform query:
   $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON s.author = u.id WHERE s.id = $id");
   return db_fetch_object($result);
-}
-
-function dbsave($dbase, $data, $id=0) {
-  foreach ($data as $key=>$value) {
-    if ($key == "passwd") { $query .= "$key=PASSWORD('". addslashes($value) ."'), "; }
-    else { $query .= "$key='". addslashes($value) ."', "; }
-  }
-  $query = substr($query, 0, -2);
-  
-  if (!empty($id)) { db_query("UPDATE $dbase SET $query WHERE id=$id") or die(mysql_error()); return $id; }
-  else { db_query("INSERT INTO $dbase SET $query") or die(mysql_error()); return mysql_insert_id(); }
 }
 
 function load_theme() {
@@ -44,7 +33,7 @@ function check_output($message) {
 
 function discussion_num_replies($id, $count = 0) {
   $result = db_query("SELECT COUNT(cid) FROM comments WHERE pid = $id");
-  return ($result) ? mysql_result($result, 0) : 0;
+  return ($result) ? db_result($result, 0) : 0;
 }
 
 function format_plural($count, $one, $more) {
@@ -91,16 +80,6 @@ function format_url($address, $description = "") {
    //   3. remove any parameters in the URI.
   $description = ($description) ? $description : $address;
   return ($address) ? "<A HREF=\"$address\">$description</A>" : format_data($address);
-}
-
-function format_story_link($story, $subject = "") {
-  global $user;
-  $output .= "<A HREF=\"discussion.php?id=$story->id";
-  $output .= ($user->umode) ? "&mode=$user->umode" : "&mode=threaded";
-  $output .= ($user->uorder) ? "&order=$user->uorder" : "&order=0";
-  $output .= ($user->thold) ? "&thold=$user->thold" : "&thold=0";
-  $output .= ($subject) ? "\">$subject</A>" : "\">$story->subject</A>";
-  return $output;
 }
 
 ?>

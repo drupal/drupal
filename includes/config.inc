@@ -9,7 +9,7 @@ $dbuname = "dries";
 $dbpass = "Abc123";
 $dbname = "dries";
 
-#$dbhost = "localhost";
+#$dbhost = "";
 #$dbuname = "dries";
 #$dbpass = "oakley";
 #$dbname = "dries";
@@ -24,7 +24,6 @@ $sitename = "drop.org";
 #  The contact information will be used to send out automated mails
 #  to users, account holders or visitors.
 $contact_email = "droppies@zind.net";
-$contact_signature = "Kind regards,\n\n-- the drop.org crew\nhttp://beta.drop.org/";
 
 #
 # Notify:
@@ -80,13 +79,13 @@ $anonymous = "Anonymous Chicken";
 #
 $themes = array("Marvin" => array(
                    "themes/marvin/marvin.theme", 
-                   "white, simple"),
+                   "classic theme, white, basic design with a fresh look"),
                 "Zaphod" => array(
                    "themes/zaphod/zaphod.theme", 
-                   "yellow, simple"),
+                   "classis theme, yellow, structured, advanced navigation"),
 		"UnConeD" => array(
 		   "themes/unconed/unconed.theme",
-		   "gray, flashy"));
+		   "modern theme, gray and blue, high coolness factor"));
 
 #
 # Submission moderation votes:
@@ -104,12 +103,5 @@ $submission_votes = array("neutral (+0)" => "+ 0",
 #
 $submission_post_threshold = "2";
 $submission_dump_threshold = "-2";
-
-# 
-# Debug flag:
-#   Set to '1' if you are using Windows so the engine won't try
-#   to send out mails and such.  When using Unix or Linux, set
-#   to '0'
-$mail = 0;
 
 ?>

@@ -1,41 +1,36 @@
 <?
 
-$access = array("Administrator"	=> 0x00000001,
+$permissions = array("Administrator"	=> 0x00000001,
 		"User manager"	=> 0x00000002,
 		"News manager"	=> 0x00000004);
 
 class User {
-  function User($userid, $passwd="") {
-    $result = db_query("SELECT * FROM users WHERE LOWER(userid) = LOWER('$userid') && passwd = PASSWORD('$passwd') && STATUS = 0");
+  function User($userid, $passwd = "") {
+    $result = db_query("SELECT * FROM users WHERE LOWER(userid) = LOWER('$userid') && passwd = PASSWORD('$passwd') && STATUS = 2");
     if (db_num_rows($result) == 1) {
       foreach (db_fetch_row($result) as $key=>$value) { $field = mysql_field_name($result, $key); $this->$field = stripslashes($value); $this->field[] = $field; }
+      db_query("UPDATE users SET last_access = '". time() ."', last_host = '$GLOBALS[REMOTE_HOST]' WHERE id = $this->id");
     }
   }
 }
 
-function user_save() {
+function user_save($data, $id = 0) {
   global $user;
-  ### Compose query to update user record:
-}
-
-function user_rehash() {
-  global $user;
-  $result = db_query("SELECT * FROM users WHERE id=$user->id");
-  if (db_num_rows($result) == 1) {
-    foreach (db_fetch_array($result) as $key=>$value) { $user->$key = stripslashes($value); }
+  
+  foreach ($data as $key=>$value) {
+    if ($key == "passwd") $query .= "$key = PASSWORD('". addslashes($value) ."'), ";
+    else $query .= "$key='". addslashes($value) ."', ";
   }
-}
-
-function user_valid($access = 0) {
-  global $user;
-  if ($user->userid) {
-    user_rehash();  // synchronisation purpose
-    $user->last_access = time();
-    $user->last_host = ($GLOBALS[REMOTE_HOST]) ? $GLOBALS[REMOTE_HOST] : $GLOBALS[REMOTE_ADDR];
-    db_query("UPDATE users SET last_access = '$user->last_access', last_host = '$user->last_host' WHERE id = $user->id");
-    if ($user->access & $access || $access == 0) return 1;
+  
+  if (empty($id)) {
+    db_query("INSERT INTO users SET $query last_access = '". time() ."', last_host = '$GLOBALS[REMOTE_HOST]'");
   }
-  return 0;
+  else {
+    db_query("UPDATE users SET $query last_access = '". time() ."', last_host = '$GLOBALS[REMOTE_HOST]' WHERE id = $id");
+    $result = db_query("SELECT * FROM users WHERE id = $id AND status = 2");
+    if (db_num_rows($result) == 1) foreach (db_fetch_array($result) as $key=>$value) { $user->$key = stripslashes($value); }
+    else $user = 0;
+  }
 }
 
 function user_getHistory($history, $field) {

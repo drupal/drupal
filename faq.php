@@ -51,6 +51,20 @@ $output = "
    <DT><B>Is the source code of this site available?</B></DT>
    <DD>This site is powered by <A HREF=\"http://www.fsf.org/\">Free Software</A>; including <A HREF=\"http://www.apache.org/\">Apache</A>, <A HREF=\"http://www.php.net/\">PHP</A>, <A HREF=\"http://www.mysql.com/\">MySQL</A> and <A HREF=\"http://www.linux.com/\">Linux</A>, and is inspired by several <A HREF=\"http://www.fsf.org/\">Free Software</A> projects.  Therefor we have decided to make the software engine of this site available under terms of GPL.<P>However, the sources are <B>not</B> available yet at this time, but will be released as soon we have a first, well-rounded source tree that has proven to be stable.  If you can't wait or in case you have big plans (like `total domination') with the engine, don't hesitate to contact us and we might grant you CVS access.<P></DD>
 
+   <DT><B>What features does the engine have?</B></DT>
+   <DD>
+    <LI>a theme system: the entire website is fully themable in terms of colors, layout, look-and-feel and markup.</LI>
+    <LI>a user account system with session management, secure authentication, human-readable password generator, user and page preferences, comment tracker and so on.</LI>
+    <LI>a discussion system: supports different display (<I>threaded</I>, <I>flat</I>, <I>netsted</I>) and order (<I>newest first</I>, <I>oldest first</I>, <I>highest scorings first</I>), comment moderation, customable HTML-support, etc.</LI>
+    <LI>a database abstraction layer: allows the website to run on top of different database systems.</LI>
+    <LI>anonymous reader/poster support across the entire site in case visitors prefers to remain anonymous or in case cookies are disabled.</LI>
+    <LI>a submission queue and submission moderation.</LI>
+    <LI>an embedded diary system.</LI>
+    <LI>an administrator section which is considered the control center of the website.</LI>
+    <LI>a RDF/RSS backend which allows third party websites to become <I>channels</I> in your website with a minimum of extra work.</LI>
+    <P>
+   </DD>
+
    <DT><B>What is your privacy policy?</B></DT>
    <DD>--- under construction ---<P></DD>
 

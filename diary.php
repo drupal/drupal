@@ -66,7 +66,6 @@ function diary_display($username) {
 function diary_add() {
   global $theme, $user, $allowed_html;
   
-  ### Submission form:
   $output .= "<FORM ACTION=\"diary.php\" METHOD=\"post\">\n";
 
   $output .= "<P>\n"; 

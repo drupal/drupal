@@ -8,7 +8,7 @@ if ($user->userid != "Dries") exit();
  */
 
 function account_display($order = "username") {
-  $sort = array("ID" => "id", "fake e-mail address" => "femail", "homepage" => "url", "hostname" => "last_host", "last access date" => "last_access", "real e-mail address" => "email", "real name" => "name", "status" => "status", "theme" => "theme", "username" => "userid");
+  $sort = array("ID" => "id", "fake e-mail address" => "fake_email", "homepage" => "url", "hostname" => "last_host", "last access date" => "last_access", "real e-mail address" => "real_email", "real name" => "name", "status" => "status", "theme" => "theme", "username" => "userid");
   $show = array("ID" => "id", "username" => "userid", "$order" => "$sort[$order]", "status" => "status");
 
   ### Perform query:
@@ -39,7 +39,7 @@ function account_display($order = "username") {
     $output .= " <TR>\n";
     foreach ($show as $key=>$value) {
       switch($value) {
-	case "email":
+	case "real_email":
           $output .= "  <TD>". format_email_address($account[$value]) ."</TD>\n";
           break;
         case "last_access":
@@ -91,8 +91,8 @@ function account_view($name) {
     $output .= " <TR><TD ALIGN=\"right\"><B>ID:</B></TD><TD>$account->id</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Username:</B></TD><TD>$account->userid</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Real name:</B></TD><TD>". format_data($account->name) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Real e-mail address:</B></TD><TD>". format_email_address($account->email) ."</TD></TR>\n";
-    $output .= " <TR><TD ALIGN=\"right\"><B>Fake e-mail address:</B></TD><TD>". format_data($account->femail) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Real e-mail address:</B></TD><TD>". format_email_address($account->real_email) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Fake e-mail address:</B></TD><TD>". format_data($account->fake_email) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>URL of homepage:</B></TD><TD>". format_url($account->url) ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Last access:</B></TD><TD>". format_date($account->last_access) ." from $account->last_host</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Bio information:</B></TD><TD>". format_data($account->bio) ."</TD></TR>\n";
@@ -110,10 +110,10 @@ function account_view($name) {
  */
 function log_display($order = "date") {
   $colors = array("#FFFFFF", "#FFFFFF", "#90EE90", "#CD5C5C");
-  $fields = array("date" => "id DESC", "username" => "user", "message" => "message DESC", "level" => "level DESC");
+  $fields = array("date" => "id DESC", "username" => "user", "location" => "location", "message" => "message DESC", "level" => "level DESC");
 
   ### Perform query:
-  $result = db_query("SELECT l.*, u.userid FROM logs l LEFT JOIN users u ON l.user = u.id ORDER BY l.$fields[$order]");
+  $result = db_query("SELECT l.*, u.userid FROM watchdog l LEFT JOIN users u ON l.user = u.id ORDER BY l.$fields[$order]");
  
   ### Generate output:
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
@@ -146,13 +146,14 @@ function log_display($order = "date") {
 }
 
 function log_view($id) {
-  $result = db_query("SELECT l.*, u.userid FROM logs l LEFT JOIN users u ON l.user = u.id WHERE l.id = $id");
+  $result = db_query("SELECT l.*, u.userid FROM watchdog l LEFT JOIN users u ON l.user = u.id WHERE l.id = $id");
 
   if ($log = db_fetch_object($result)) {
     $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Level:</B></TD><TD>$log->level</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Date:</B></TD><TD>". format_date($log->timestamp, "extra large") ."</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>User:</B></TD><TD>". format_username($log->userid, 1) ."</TD></TR>\n";
+    $output .= " <TR><TD ALIGN=\"right\"><B>Location:</B></TD><TD>$log->location</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Message:</B></TD><TD>$log->message</TD></TR>\n";
     $output .= " <TR><TD ALIGN=\"right\"><B>Hostname:</B></TD><TD>$log->hostname</TD></TR>\n";
     $output .= "</TABLE>\n";
@@ -557,7 +558,6 @@ function info_display() {
 
   $output .= "sitename: $sitename<BR>\n";
   $output .= "e-mail address: $contact_email<BR>\n";
-  $output .= "signature: $contact_signature<BR>\n";
   $output .= "send e-mail notifications: $notify<BR>\n";
   $output .= "allowed HTML tags: <I>". htmlspecialchars($allowed_html) ."</I><BR>\n";
   $output .= "anonymous user: $anonymous<BR>\n";

@@ -111,13 +111,13 @@
    ######
    # Syntax.......: commentControl(...);
    # Description..: this function is used to theme the comment control box.
-   function commentControl($sid, $title, $thold, $mode, $order) {
+   function commentControl($sid, $title, $threshold, $mode, $order) {
      global $user;
   
      $query = db_query("SELECT sid FROM comments WHERE sid = $sid");
 
      if (!$query) $count = 0; else $count = db_num_rows($query);
-     if (!isset($thold)) $thold = 0; 
+     if (!isset($threshold)) $threshold = 0; 
      ?> 
      <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" BGCOLOR="#000000" WIDTH="100%">
       <TR>
@@ -131,14 +131,14 @@
            <FORM METHOD="post" ACTION="discussion.php">
             <SMALL> 
             <INPUT TYPE="hidden" NAME="id" VALUE="<? echo "$sid"; ?>"> 
-            <SELECT NAME="thold">
-             <OPTION VALUE="-1" <? if ($thold == -1) { echo "SELECTED"; } ?>>Threshold: -1
-             <OPTION VALUE="0" <? if ($thold == 0) { echo "SELECTED"; } ?>>Threshold: 0
-             <OPTION VALUE="1" <? if ($thold == 1) { echo "SELECTED"; } ?>>Threshold: 1
-             <OPTION VALUE="2" <? if ($thold == 2) { echo "SELECTED"; } ?>>Threshold: 2
-             <OPTION VALUE="3" <? if ($thold == 3) { echo "SELECTED"; } ?>>Threshold: 3
-             <OPTION VALUE="4" <? if ($thold == 4) { echo "SELECTED"; } ?>>Threshold: 4
-             <OPTION VALUE="5" <? if ($thold == 5) { echo "SELECTED"; } ?>>Threshold: 5
+            <SELECT NAME="threshold">
+             <OPTION VALUE="-1" <? if ($threshold == -1) { echo "SELECTED"; } ?>>Threshold: -1
+             <OPTION VALUE="0" <? if ($threshold == 0) { echo "SELECTED"; } ?>>Threshold: 0
+             <OPTION VALUE="1" <? if ($threshold == 1) { echo "SELECTED"; } ?>>Threshold: 1
+             <OPTION VALUE="2" <? if ($threshold == 2) { echo "SELECTED"; } ?>>Threshold: 2
+             <OPTION VALUE="3" <? if ($threshold == 3) { echo "SELECTED"; } ?>>Threshold: 3
+             <OPTION VALUE="4" <? if ($threshold == 4) { echo "SELECTED"; } ?>>Threshold: 4
+             <OPTION VALUE="5" <? if ($threshold == 5) { echo "SELECTED"; } ?>>Threshold: 5
             </SELECT> 
             <SELECT NAME="mode">
              <OPTION VALUE="nested" <? if ($mode == "nested") { echo "SELECTED"; } ?>>Nested
@@ -156,7 +156,7 @@
           </TD>
          </TR>
          <?
-          $result = db_query("SELECT COUNT(cid) FROM comments WHERE sid = $sid AND score < $thold");
+          $result = db_query("SELECT COUNT(cid) FROM comments WHERE sid = $sid AND score < $threshold");
           if ($result && $number = db_result($result, 0)) {
          ?>
          <TR>
