@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.355 2004/06/18 15:04:35 dries Exp $
+// $Id: node.module,v 1.356 2004/06/19 10:10:11 dries Exp $
 
 define('NODE_NEW_LIMIT', time() - 30 * 24 * 60 * 60);
 
@@ -1479,7 +1479,7 @@ function node_submit($node) {
 
     if (node_access('create', $node)) {
       $node->nid = node_save($node);
-      watchdog('special', t('%node-type: added "%node-title"', array('%node-type' => t("$node->type"), '%node->title' => $node->title)), l(t('view post'), "node/$node->nid"));
+      watchdog('special', t('%node-type: added "%node-title"', array('%node-type' => t("$node->type"), '%node-title' => $node->title)), l(t('view post'), "node/$node->nid"));
       $msg = t('your %name was created.', array ('%name' => node_invoke($node, 'node_name')));
     }
   }
