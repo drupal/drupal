@@ -635,7 +635,7 @@ function node_admin_nodes() {
     array(t("Promote the selected posts"), "UPDATE {node} SET status = 1, promote = 1 WHERE nid = %d"),
     array(t("Make the selected posts static"), "UPDATE {node} SET status = 1, static = 1 WHERE nid = %d"),
     array(t("Demote the selected posts"), "UPDATE {node} SET promote = 0 WHERE nid = %d"),
-    array(t("Unpublish the selected posts"), "UPDATE {node} SET status = 1 WHERE nid = %d")
+    array(t("Unpublish the selected posts"), "UPDATE {node} SET status = 0 WHERE nid = %d")
   );
 
   /*
@@ -698,10 +698,10 @@ function node_admin_nodes() {
   */
 
   $result = pager_query("SELECT n.*, u.name, u.uid FROM {node} n LEFT JOIN {users} u ON n.uid = u.uid ". $filters[$filter][1], 50);
-  $header = array(t("title"), t("type"), t("author"), t("status"), array ("data" => t("operations"), "colspan" => 2));
+  $header = array(NULL, t("title"), t("type"), t("author"), t("status"), array ("data" => t("operations"), "colspan" => 2));
 
   while ($node = db_fetch_object($result)) {
-    $rows[] = array(l($node->title, node_url($node)) ." ". (node_is_new($node->nid, $node->changed) ? theme_mark() : ""), module_invoke($node->type, "node", "name"), format_name($node), ($node->status ? t("published") : t("not published")), l(t("edit node"), "admin/node/edit/$node->nid"), l(t("delete node"), "admin/node/delete/$node->nid"));
+    $rows[] = array(form_checkbox(NULL, "status][$node->nid", 1, 0), l($node->title, node_url($node)) ." ". (node_is_new($node->nid, $node->changed) ? theme_mark() : ""), module_invoke($node->type, "node", "name"), format_name($node), ($node->status ? t("published") : t("not published")), l(t("edit node"), "admin/node/edit/$node->nid"), l(t("delete node"), "admin/node/delete/$node->nid"));
   }
 
   if ($pager = pager_display(NULL, 50, 0, "admin")) {
