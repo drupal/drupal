@@ -56,7 +56,8 @@ $mysql_updates = array(
   "2003-09-10" => "update_64",
   "2003-09-29" => "update_65",
   "2003-09-30" => "update_66",
-  "2003-10-11" => "update_67"
+  "2003-10-11" => "update_67",
+  "2003-10-20" => "update_68"
 );
 
 function update_32() {
@@ -505,6 +506,12 @@ function update_66() {
 
 function update_67() {
   update_sql("ALTER TABLE users DROP homepage");
+}
+
+function update_68() {
+  $max = db_result(db_query("SELECT MAX(aid) FROM {access};"));
+  update_sql("INSERT INTO {sequences} (name, id) VALUES ('access_aid', '$max')");
+  update_sql("ALTER TABLE access CHANGE aid aid tinyint(10) NOT NULL ");
 }
 
 /*
