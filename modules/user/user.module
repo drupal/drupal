@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.348 2004/06/30 20:43:07 dries Exp $
+// $Id: user.module,v 1.349 2004/07/02 18:13:45 dries Exp $
 
 /**
  * Invokes hook_user() in every module.
@@ -571,7 +571,7 @@ function theme_user_picture($account) {
     if ($picture) {
       $picture = "<img src=\"$picture\" alt=\"" . t('%user\'s picture', array('%user' => $account->name ? $account->name : t(variable_get('anonymous', 'Anonymous')))) . '" />';
       if ($account->uid) {
-        $picture = l($picture, "user/view/$account->uid", array('title' => t('View user profile.')));
+        $picture = l($picture, "user/$account->uid", array('title' => t('View user profile.')));
       }
 
       return "<div class=\"picture\">$picture</div>";
