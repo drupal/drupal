@@ -1,5 +1,5 @@
 <?php
-/* $Id: updates.inc,v 1.70 2004/11/03 16:46:57 dries Exp $ */
+/* $Id: updates.inc,v 1.71 2004/11/04 06:47:03 dries Exp $ */
 
 /**
  * @file
@@ -1940,6 +1940,7 @@ function update_110() {
       fromtype varchar(16) default NULL,
       score int(10) unsigned default NULL,
       KEY sid (sid),
+      KEY fromsid (fromsid),
       KEY word (word)
       ) TYPE=MyISAM");
 
