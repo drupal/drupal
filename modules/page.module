@@ -76,7 +76,7 @@ function page_insert($node) {
 }
 
 function page_update($node) {
-db_query("UPDATE page SET format = '%d', link = '%s', description = '%s' WHERE nid = '%d'", $node->format, $node->link, $node->description, $node->nide);
+db_query("UPDATE page SET format = '%d', link = '%s', description = '%s' WHERE nid = '%d'", $node->format, $node->link, $node->description, $node->nid);
   }
 
 function page_delete(&$node) {
