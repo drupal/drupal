@@ -1,3 +1,13 @@
+# 03/03/2001: FAQ module
+CREATE TABLE faqs (
+  id int(11) DEFAULT '0' NOT NULL auto_increment,
+  question varchar(255) DEFAULT '' NOT NULL,
+  answer text NOT NULL,
+  weight tinyint(3) DEFAULT '0' NOT NULL,
+  UNIQUE question (question),
+  PRIMARY KEY (id)
+);
+
 # 26/02/2001: performance optimization
 ALTER TABLE comments ADD INDEX lid_link (lid, link);
 
