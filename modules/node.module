@@ -1556,7 +1556,7 @@ function node_update_index() {
     // cannot be indexed (PHP nodes which call drupal_goto, for example).
     // In rare cases this can mean a node is only partially indexed, but the
     // chances of this happening are very small.
-    variable_set('node_cron_last', max($last_comment, max($node->changed, $node->created)));
+    variable_set('node_cron_last', max($last_comment, $node->changed, $node->created));
 
     if (node_hook($node, 'view')) {
       node_invoke($node, 'view', false, false);

@@ -127,7 +127,7 @@ function search_admin() {
   $output = form_group(t('Indexing settings'), $group);
 
   // Collect some stats
-  $estimate = db_result(db_query('SELECT COUNT(DISTINCT sid) FROM {search_index}'));
+  $estimate = variable_get('search_indexed', 0);
   $nodes = max(1, db_result(db_query('SELECT COUNT(*) FROM {node}')));
   $percentage = ((int)min(100, 100 * $estimate / $nodes)) . '%';
   $status = '<p>'. t('Approximately %percentage of the site has been indexed.', array('%percentage' => $percentage)) .'</p>';
@@ -200,6 +200,10 @@ function search_cron() {
   while ($word = db_fetch_object($result)) {
     db_query("DELETE FROM {search_total} WHERE word = '%s'", $word->realword);
   }
+
+  // Count indexed items (for administration screen)
+  $indexed = db_result(db_query('SELECT COUNT(DISTINCT sid) FROM {search_index}'));
+  variable_set('search_indexed', $indexed);
 }
 
 /**
