@@ -381,7 +381,7 @@ function cache_get($key) {
 
 function cache_set($cid, $data, $expire = 0) {
   if (db_fetch_object(db_query("SELECT cid FROM cache WHERE cid = '". check_query($cid) ."'"))) {
-    db_query("UPDATE cache SET data = '". check_query($data) ."' WHERE cic = '". check_query($cid) ."'");
+    db_query("UPDATE cache SET data = '". check_query($data) ."' WHERE cid = '". check_query($cid) ."'");
   }
   else {
     db_query("INSERT INTO cache (cid, data, expire) VALUES('". check_query($cid) ."', '". check_query($data) ."', '". check_query($expire) ."')");
