@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.98 2004/01/11 20:31:25 dries Exp $
+// $Id: block.module,v 1.99 2004/01/17 11:33:58 dries Exp $
 
 function block_help($section = "admin/help#block") {
   $output = "";
@@ -376,7 +376,7 @@ function block_list($region) {
     $result = db_query("SELECT * FROM {blocks} WHERE (status = '1' OR custom = '1') ". ($region != "all" ? "AND region = %d " : "") ."ORDER BY weight, module", $region == "left" ? 0 : 1);
 
     while ($result && ($block = db_fetch_array($result))) {
-      if ((($block['status'] && (!$user->uid || !$block['custom'])) || ($block['custom'] && $user->block[$block['module']][$block['delta']])) && (!$block['path'] || preg_match($block['path'], str_replace("?q=", "", request_uri())))) {
+      if ((($block['status'] && (!$user->uid || !$block['custom'])) || ($block['custom'] && $user->block[$block['module']][$block['delta']])) && (!$block['path'] || preg_match($block['path'], "/" . $_GET["q"]))) {
 
         /*
         ** Check the current throttle status and see if block should be displayed
