@@ -438,7 +438,7 @@ function profile_admin_add($type) {
     // Validate the form:
     profile_validate_form($data);
 
-    if (db_result(db_query("SELECT fid FROM {profile_fields} WHERE title = '%s'", $data['title']))) {
+    if (db_result(db_query("SELECT fid FROM {profile_fields} WHERE title = '%s' AND category = '%s'", $data['title'], $data['category']))) {
       form_set_error('title', t('The specified title is already in use.'));
     }
 
