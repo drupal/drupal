@@ -92,10 +92,10 @@ function format_info($body, $block) {
 
 function format_rss_channel($title, $link, $description, $items, $language = "en") {
   $output .= "<channel>\n";
-  $output .= " <title>". strip_tags($title) ."</title>\n";
-  $output .= " <link>". strip_tags($link) ."</link>\n";
+  $output .= " <title>". htmlentities(strip_tags($title)) ."</title>\n";
+  $output .= " <link>". htmlentities(strip_tags($link)) ."</link>\n";
   $output .= " <description>". htmlentities($description) ."</description>\n";
-  $output .= " <language>$language</language>\n";
+  $output .= " <language>". htmlentities(strip_tags($language)) ."</language>\n";
   $output .= $items;
   $output .= "</channel>\n";
 
@@ -104,8 +104,8 @@ function format_rss_channel($title, $link, $description, $items, $language = "en
 
 function format_rss_item($title, $link, $description) {
   $output .= "<item>\n";
-  $output .= " <title>". strip_tags($title) ."</title>\n";
-  $output .= " <link>". strip_tags($link) ."</link>\n";
+  $output .= " <title>". htmlentities(strip_tags($title)) ."</title>\n";
+  $output .= " <link>". htmlentities(strip_tags($link)) ."</link>\n";
   $output .= " <description>". htmlentities($description) ."</description>\n";
   $output .= "</item>\n";
 
