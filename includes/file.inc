@@ -14,7 +14,7 @@
  *
  *     function module_insert($node) {
  *       if ($node->file) {
- *         file_save($node->file);
+ *         file_save_upload($node->file);
  *       }
  *     }
  *   @endcode
@@ -29,13 +29,12 @@ define('FILE_SEPARATOR', PHP_OS == 'WINNT' ? '\\' : '/');
  * Create the download path to a file.
  */
 function file_create_url($path) {
+  if (strpos($path, variable_get('file_directory_path', 'files')) !== false) {
+    $path = trim(substr($path, strlen(variable_get('file_directory_path', 'files'))), '\\/');
+  }
   switch (variable_get('file_downloads', FILE_DOWNLOADS_PRIVATE)) {
     case FILE_DOWNLOADS_PUBLIC:
-    case FILE_DOWNLOADS_PRIVATE:
       global $base_url;
-      if (strpos($path, variable_get('file_directory_path', 'files')) !== false) {
-        $path = trim(substr($path, strlen(variable_get('file_directory_path', 'files'))), '\\/');
-      }
       return $base_url .'/'. variable_get('file_directory_path', 'files') .'/'. str_replace('\\', '/', $path);
     case FILE_DOWNLOADS_PRIVATE:
       return url('system/files', 'file='. $path);
@@ -324,7 +323,7 @@ function file_download() {
       }
     }
   }
-  //drupal_not_found();
+  drupal_not_found();
 }
 
 /**
