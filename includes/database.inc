@@ -27,7 +27,7 @@ function db_fetch_row($qid) {
 }
 
 function db_fetch_array($qid) {
-  if ($qid) return mysql_fetch_array($qid);
+  if ($qid) return mysql_fetch_array($qid, MYSQL_ASSOC);
 }
 
 function db_result($qid, $field = 0) {
