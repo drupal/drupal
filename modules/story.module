@@ -1,5 +1,5 @@
 <?php
-// $Id: story.module,v 1.133 2003/11/08 09:56:22 dries Exp $
+// $Id: story.module,v 1.134 2003/11/09 17:03:49 dries Exp $
 
 function story_help($section = "admin/help#story") {
   $output = "";
@@ -67,7 +67,6 @@ function story_validate(&$node) {
   */
 
   if (isset($node->body) && count(explode(" ", $node->body)) < variable_get("minimum_story_size", 0)) {
-print "body : $node->body";
     $error["body"] = "<div class=\"error\">". t("The body of your story is too short.") ."</div>";
   }
 
