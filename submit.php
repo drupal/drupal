@@ -12,13 +12,12 @@ if (user_access("post content")) {
   }
   else {
     foreach (module_list() as $name) {
-      if (module_hook($name, "user")) $options .= "<OPTION VALUE=\"$name\">$name</OPTION>";
+      if (module_hook($name, "user")) $options .= "<option value=\"$name\">$name</option>";
     }
 
-    $form .= form_item(t("Type"), "<SELECT NAME=\"mod\">$options</SELECT>");
+    $form .= form_item(t("Submission type"), "<SELECT NAME=\"mod\">$options</SELECT>");
     $form .= form_submit(t("Next step"));
 
-    $output .= "<P>". t("If you have written something or if you have some news or thoughts that you would like to share, then this is the place where you can submit new content.  Fill out this form and your contribution will automatically get whisked away to our submission queue where our moderators will frown at it, poke at it and hopefully post it.") ."</P>";
     $output .= form("submit.php", $form, "get");
 
     $theme->box("Submit", $output);
