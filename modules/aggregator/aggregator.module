@@ -105,27 +105,30 @@ function import_block($op, $delta) {
   if ($op == "list") {
     $result = db_query("SELECT * FROM bundle ORDER BY title");
     while ($bundle = db_fetch_object($result)) {
-      $block[$bundle->bid]["info"] = "$bundle->title bundle";
+      $block["bundle:$bundle->bid"]["info"] = "$bundle->title bundle";
     }
 
     $result = db_query("SELECT * FROM feed ORDER BY fid");
     while ($feed = db_fetch_object($result)) {
-      $block[$feed->fid]["info"] = "$feed->title feed";
+      $block["feed:$feed->fid"]["info"] = "$feed->title feed";
     }
 
     return $block;
   }
   else {
-    $feed = db_fetch_object(db_query("SELECT * FROM feed WHERE fid = '%d'", $delta));
-    if ($feed) {
-      $block["subject"] = $feed->title;
-      $block["content"] = import_feed_block($feed) ."<div align=\"right\">". l(t("more"), "import/feed/$feed->fid", array("title" => t("View this feed's recent news."))) ."</div>";
-    }
-    else {
-      // it was a bundle. this is NOT elegant
-      $bundle = db_fetch_object(db_query("SELECT * FROM bundle WHERE bid = '%d'", $delta));
-      $block["subject"] = $bundle->title;
-      $block["content"] = import_bundle_block($bundle->attributes) ."<div align=\"right\">". l(t("more"), "import/bundle/$bundle->bid", array("title" => t("View this bundle's recent news."))) ."</div>";
+    list($type, $id) = split(":", $delta);
+    switch ($type) {
+      case "feed":
+        $feed = db_fetch_object(db_query("SELECT * FROM feed WHERE fid = '%d'", $id));
+        $block["subject"] = $feed->title;
+        $block["content"] .= import_feed_block($feed) ."<div align=\"right\">".  l(t("more"), "import/feed/$feed->fid", array("title" => t("View this feed's recent news."))) ."</div>";
+        break;
+
+      case "bundle":
+        $bundle = db_fetch_object(db_query("SELECT * FROM bundle WHERE bid = '%d'", $id));
+        $block["subject"] = $bundle->title;
+        $block["content"] .= import_bundle_block($bundle->attributes) ."<div align=\"right\">". l(t("more"), "import/bundle/$bundle->bid", array("title" => t("View this bundle's recent news."))) ."</div>";
+        break;
     }
 
     return $block;
@@ -138,9 +141,11 @@ function import_get_bundles($attributes = 0) {
 
   $result = db_query("SELECT * FROM bundle ORDER BY title");
   while ($bundle = db_fetch_object($result)) {
-    $block[$bundle->bid]["subject"] = $bundle->title;
-    $block[$bundle->bid]["content"] = import_bundle_block($bundle->attributes) ."<div align=\"right\">". l(t("more"), "import/bundle/$bundle->bid", array("title" => t("View this bundle's recent news."))) ."</div>";
-    $block[$bundle->bid]["info"] = "$bundle->title bundle";
+    $block["bundle:$bundle->bid"]["subject"] = $bundle->title;
+    $block["bundle:$bundle->bid"]["content"] = import_bundle_block($bundle->attributes) ."<div align=\"right\">".
+                                                l(t("more"), "import/bundle/$bundle->bid", array("title" => t("View this bundle's recent news.")))
+                                                ."</div>";
+    $block["bundle:$bundle->bid"]["info"] = "$bundle->title bundle";
   }
 
   return $block;
@@ -152,9 +157,11 @@ function import_get_feeds($attributes = 0) {
 
   $result = db_query("SELECT * FROM feed ORDER BY fid");
   while ($feed = db_fetch_object($result)) {
-    $block[$feed->fid]["subject"] = $feed->title;
-    $block[$feed->fid]["content"] = import_feed_block($feed) ."<div align=\"right\">". l(t("more"), "import/feed/$feed->fid", array("title" => t("View this feed's recent news."))) ."</div>";
-    $block[$feed->fid]["info"] = "$feed->title feed";
+    $block["feed:$feed->fid"]["subject"] = $feed->title;
+    $block["feed:$feed->fid"]["content"] = import_feed_block($feed) ."<div align=\"right\">".
+                                            l(t("more"), "import/feed/$feed->fid", array("title" => t("View this feed's recent news.")))
+                                            ."</div>";
+    $block["feed:$feed->fid"]["info"] = "$feed->title feed";
   }
 
   return $block;

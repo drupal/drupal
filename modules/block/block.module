@@ -77,7 +77,8 @@ function block_block($op = "list", $delta = 0) {
 function block_admin_save($edit) {
   foreach ($edit as $module => $blocks) {
     foreach ($blocks as $delta => $block) {
-      db_query("UPDATE blocks SET region = '%s', status = '%d', custom = '%d', path = '%s', weight = '%d' WHERE module = '%s' AND delta = '%d'", $block["region"], $block["status"], $block["custom"], $block["path"], $block["weight"], $module, $delta);
+      db_query("UPDATE blocks SET region = '%s', status = '%d', custom = '%d', path = '%s', weight = '%d' WHERE module = '%s' AND delta = '%s'",
+                $block["region"], $block["status"], $block["custom"], $block["path"], $block["weight"], $module, $delta);
     }
   }
 
@@ -118,7 +119,8 @@ function _block_rehash($order_by = array("weight")) {
         }
 
         // reinsert blocks into table
-        db_query("INSERT INTO blocks (module, delta, status, weight, region, path, custom) VALUES ('%s', '%d', '%d', '%d', '%d', '%s', '%d')", $block["module"], $block["delta"], $block["status"], $block["weight"], $block["region"], $block["path"], $block["custom"]);
+        db_query("INSERT INTO blocks (module, delta, status, weight, region, path, custom) VALUES ('%s', '%s', '%d', '%d', '%d', '%s', '%d')",
+                  $block["module"], $block["delta"], $block["status"], $block["weight"], $block["region"], $block["path"], $block["custom"]);
 
         $blocks[] = $block;
 
