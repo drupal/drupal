@@ -366,9 +366,7 @@ function jabber_auth($username, $password, $server, $port = 5222) {
     ** Hash the password:
     */
 
-    $digest = mhash(MHASH_SHA1, $password);
-
-    jabber_send($session, "<iq type='set' id='". $jabber["jid"] ."'><query xmlns='jabber:iq:auth'><username>$username</username><digest>$digest</digest><resource>drupal</resource></query></iq>");
+    jabber_send($session, "<iq type='set' id='". $jabber["jid"] ."'><query xmlns='jabber:iq:auth'><username>$username</username><password>$password</password><resource>drupal</resource></query></iq>");
 
     $data = jabber_recv($session);
 
