@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.405 2004/10/04 20:34:23 unconed Exp $
+// $Id: node.module,v 1.406 2004/10/04 22:04:07 dries Exp $
 
 /**
  * @file
@@ -109,7 +109,7 @@ function node_tag_new($nid) {
       db_query('UPDATE {history} SET timestamp = %d WHERE uid = %d AND nid = %d', time(), $user->uid, $nid);
     }
     else {
-      db_query('INSERT INTO {history} (uid, nid, timestamp) VALUES (%d, %d, %d)', $user->uid, $nid, time());
+      @db_query('INSERT INTO {history} (uid, nid, timestamp) VALUES (%d, %d, %d)', $user->uid, $nid, time());
     }
   }
 }
