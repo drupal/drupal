@@ -331,7 +331,7 @@ function node_invoke(&$node, $hook, $a2 = NULL, $a3 = NULL, $a4 = NULL) {
  * Invoke a hook_nodeapi() operation in all modules.
  *
  * @param &$node
- *   Either a node object, node array, or a string containing the node type.
+ *   A node object.
  * @param $op
  *   A string containing the name of the nodeapi operation.
  * @param $a3, $a4
@@ -959,10 +959,12 @@ function node_types_configure($type = NULL) {
     }
     system_settings_save();
 
+    $node = new stdClass();
+    $node->type = $type;
     $group = form_textarea(t('Explanation or submission guidelines'), $type .'_help', variable_get($type .'_help', ''), 70, 5, t('This text will be displayed at the top of the %type submission form. It is useful for helping or instructing your users.', array('%type' => node_invoke($type, 'node_name'))));
     $group .= form_select(t('Minimum number of words'), 'minimum_'. $type .'_size', variable_get('minimum_'. $type .'_size', 0), drupal_map_assoc(array(0, 10, 25, 50, 75, 100, 125, 150, 175, 200)), t('The minimum number of words a %type must be to be considered valid. This can be useful to rule out submissions that do not meet the site\'s standards, such as short test posts.', array('%type' => node_invoke($type, 'node_name'))));
     $output = form_group(t('Submission form'), $group);
-    $output .= form_group(t('Workflow'), implode('', node_invoke_nodeapi($type, 'settings')));
+    $output .= form_group(t('Workflow'), implode('', node_invoke_nodeapi($node, 'settings')));
 
     print theme('page', system_settings_form($output));
   }
@@ -1778,7 +1780,7 @@ function node_nodeapi(&$node, $op, $arg = 0) {
   switch ($op) {
     case 'settings':
       // $node contains the type name in this operation
-      return form_checkboxes(t('Default options'), 'node_options_'. $node, variable_get('node_options_'. $node, array('status', 'promote')), array('status' => t('Published'), 'moderate' => t('In moderation queue'), 'promote' => t('Promoted to front page'), 'sticky' => t('Sticky at top of lists'), 'revision' => t('Create new revision')), t('Users with the <em>administer nodes</em> permission will be able to override these options.'));
+      return form_checkboxes(t('Default options'), 'node_options_'. $node->type, variable_get('node_options_'. $node->type, array('status', 'promote')), array('status' => t('Published'), 'moderate' => t('In moderation queue'), 'promote' => t('Promoted to front page'), 'sticky' => t('Sticky at top of lists'), 'revision' => t('Create new revision')), t('Users with the <em>administer nodes</em> permission will be able to override these options.'));
 
     case 'fields':
       return array('nid', 'uid', 'type', 'title', 'teaser', 'body', 'revisions', 'status', 'promote', 'moderate', 'sticky', 'created', 'changed', 'format');
