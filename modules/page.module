@@ -44,7 +44,7 @@ function page_status() {
 function page_form($edit = array()) {
   global $REQUEST_URI, $format, $op;
 
-  if ($op != "Preview" && $format[$edit[format]] == "PHP") {
+  if ($op != t("Preview") && $format[$edit[format]] == "PHP") {
     $edit[body] = addslashes($edit[body]);
   }
 
@@ -60,11 +60,11 @@ function page_form($edit = array()) {
   $form .= form_hidden("nid", $edit[nid]);
 
   if ($edit[title]) {
-    $form .= form_submit("Preview");
-    $form .= form_submit("Submit");
+    $form .= form_submit(t("Preview"));
+    $form .= form_submit(t("Submit"));
   }
   else {
-    $form .= form_submit("Preview");
+    $form .= form_submit(t("Preview"));
   }
 
   return form($REQUEST_URI, $form);
