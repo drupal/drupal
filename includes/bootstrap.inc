@@ -1,9 +1,8 @@
 <?php
-/* $Id: bootstrap.inc,v 1.18 2004/07/13 07:21:14 dries Exp $ */
+/* $Id: bootstrap.inc,v 1.19 2004/07/22 16:06:54 unconed Exp $ */
 
 /**
  * @file
- *
  * Functions that need to be loaded on every Drupal request.
  */
 

@@ -1,5 +1,10 @@
 <?php
-// $Id: module.inc,v 1.53 2004/07/14 20:42:20 dries Exp $
+// $Id: module.inc,v 1.54 2004/07/22 16:06:54 unconed Exp $
+
+/**
+ * @file
+ * API for loading and interacting with Drupal modules.
+ */
 
 /**
  * Initialize all modules.

@@ -1,9 +1,8 @@
 <?php
-/* $Id: common.inc,v 1.369 2004/07/21 15:30:35 unconed Exp $ */
+/* $Id: common.inc,v 1.370 2004/07/22 16:06:54 unconed Exp $ */
 
 /**
  * @file
- *
  * Common functions that many Drupal modules will need to reference.
  *
  * The functions that are critical and need to be available even when serving
@@ -760,7 +759,10 @@ function search_type($type, $action = NULL, $keys = NULL, $options = NULL) {
 
   return search_form($action, $keys, $options) . '<br />'. search_data($keys);
 }
-/* @} */
+
+/**
+ * @} end of defgroup search
+ */
 
 function check_form($text) {
   return drupal_specialchars($text, ENT_QUOTES);
@@ -1004,6 +1006,8 @@ function format_name($object) {
 /**
  * @defgroup form Form generation
  * @{
+ *
+ *
  */
 
 /**
@@ -1446,7 +1450,10 @@ function form_weight($title = NULL, $name = 'weight', $value = 0, $delta = 10, $
 
   return form_select($title, $name, $value, $weights, $description, $extra);
 }
-/* @} */
+
+/**
+ * @} end of defgroup form
+ */
 
 /**
  * Generate an internal Drupal URL.
