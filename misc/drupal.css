@@ -1,10 +1,17 @@
 form                      { margin: 0; padding: 0;}
 
+th {
+  text-align: left;
+  padding-right: 1em;
+  border-bottom: 1px solid #ccc;
+}
+        
+
 #tracker table            { border-collapse: collapse; }
 #tracker td               { vertical-align: top; padding: 1em; }
 #tracker td ul            { margin-top: 0; margin-bottom: 0; }
 #tracker td ul a          { font-weight: normal; }
-#tracker th               { text-align: left; padding: 0.25em 1em; }
+#tracker th               { text-align: left; padding: 0.25em 1em 0.25em 0em; }
 
 #pager                    { text-align: center; }
 #pager div                { padding: 0.5em; }
@@ -31,9 +38,9 @@ form                      { margin: 0; padding: 0;}
 .item-list ul             { margin: 0 0 0.75em 0; padding: 0; }
 .item-list ul li          { margin: 0 0 0.25em 1.5em; padding: 0; list-style: disc; }
 
-.poll .bar                { height: 1em; }
-.poll .bar .background    { background-color: #ddd; float: left; height: 1em; }
-.poll .bar .foreground    { background-color: #000; float: left; height: 1em; }
+.poll .bar                { height: 1em; margin: 1px 0; }
+.poll .bar .background    { background-color: #ddd; float: left; height: 1em; margin-left: -1px; }
+.poll .bar .foreground    { background-color: #000; float: left; height: 1em; margin-right: -1px; }
 .poll .links              { text-align: center; }
 .poll .percent            { text-align: right; }
 .poll .total              { text-align: center; }
@@ -41,8 +48,8 @@ form                      { margin: 0; padding: 0;}
 
 .poll .vote-form .choices { text-align: left; margin: 0 auto; display: table; }
 
-.node-form .admin         { float: right; width: 14em; margin-top: -1.1em; }
-.node-form .standard      { margin-right: 14em; }
+.node-form .admin         { float: right; width: 15em; margin-top: -1.1em; }
+.node-form .standard      { margin-right: 15em; }
 .node-form .form-text     { width: 95%; }
 .node-form textarea       { width: 95%; }
 
