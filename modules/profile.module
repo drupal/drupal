@@ -443,6 +443,8 @@ function profile_admin_add($type) {
     if (!form_get_errors()) {
       db_query("INSERT INTO {profile_fields} (title, name, explanation, category, type, weight, required, register, visibility, options, page) VALUES ('%s', '%s', '%s', '%s', '%s', %d, %d, %d, %d, '%s', '%s')", $data['title'], $data['name'], $data['explanation'], $data['category'], $type, $data['weight'], $data['required'], $data['register'], $data['visibility'], $data['options'], $data['page']);
 
+      cache_clear_all();
+
       drupal_set_message(t('The field has been created.'));
       drupal_goto('admin/user/configure/profile');
     }
@@ -468,6 +470,8 @@ function profile_admin_edit($fid) {
     if (!form_get_errors()) {
       db_query("UPDATE {profile_fields} SET title = '%s', name = '%s', explanation = '%s', category = '%s', weight = %d, required = %d, register = %d, visibility = %d, options = '%s', page = '%s' WHERE fid = %d", $data['title'], $data['name'], $data['explanation'], $data['category'], $data['weight'], $data['required'], $data['register'], $data['visibility'], $data['options'], $data['page'], $fid);
 
+      cache_clear_all();
+
       drupal_set_message(t('The field has been updated.'));
       drupal_goto('admin/user/configure/profile');
     }
@@ -484,6 +488,9 @@ function profile_admin_edit($fid) {
  */
 function profile_admin_delete($fid) {
   db_query('DELETE FROM {profile_fields} WHERE fid = %d', $fid);
+
+  cache_clear_all();
+
   drupal_set_message(t('The field has been deleted.'));
   drupal_goto('admin/user/configure/profile');
 }
