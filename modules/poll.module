@@ -369,7 +369,7 @@ function poll_update($node) {
   db_query("UPDATE {poll} SET runtime = %d, active = %d WHERE nid = %d", $node->runtime, $node->active, $node->nid);
 
   db_query("DELETE FROM {poll_choices} WHERE nid = %d", $node->nid);
-  for ($i = 0; $i < $node->choices; $i++) {
+  for ($i = 0; $i < count($node->choice); $i++) {
     $choice->chtext = $node->choice[$i];
     $choice->chvotes = (int)$node->chvotes[$i];
     $choice->chorder = $i;
