@@ -826,7 +826,7 @@ function node_admin_nodes() {
                         'options' => $terms, 'join' => 'INNER JOIN {term_node} tn ON n.nid = tn.nid'));
 
   // Initialize/reset filters
-  if (!isset($_SESSION['node_overview_filter']) || $op == t('Reset')) {
+  if (!isset($_SESSION['node_overview_filter']) || !is_array($_SESSION['node_overview_filter']) || $op == t('Reset')) {
     $_SESSION['node_overview_filter'] = array();
   }
   $session = &$_SESSION['node_overview_filter'];
