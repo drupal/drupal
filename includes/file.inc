@@ -1,6 +1,6 @@
 <?php
 /** @file
- * $Id: file.inc,v 1.2 2003/12/27 14:28:22 kjartan Exp $
+ * $Id: file.inc,v 1.3 2003/12/27 19:21:48 kjartan Exp $
  *
  * Common file handling functions
  *
@@ -14,7 +14,7 @@
  *
  *     function module_insert($node) {
  *       if ($node->file) {
- *         file_save_upload($node->file);
+ *         $file = file_save_upload($node->file);
  *       }
  *     }
  *   @endcode
@@ -97,12 +97,18 @@ function file_check_path(&$path) {
  * @param $source
  */
 function file_check_upload($source) {
-  if ($_FILES["edit"]["name"][$source] && is_uploaded_file($_FILES["edit"]["tmp_name"][$source])) {
+  if (is_object($source)) {
+    if (is_file($source->path)) {
+      return $source;
+    }
+  }
+  elseif ($_FILES["edit"]["name"][$source] && is_uploaded_file($_FILES["edit"]["tmp_name"][$source])) {
     $file->name = trim(basename($_FILES["edit"]["name"][$source]), '.');
     $file->type = $_FILES["edit"]["type"][$source];
     $file->path = $_FILES["edit"]["tmp_name"][$source];
     $file->error = $_FILES["edit"]["error"][$source];
     $file->size = $_FILES["edit"]["size"][$source];
+    $file->source = $_FILES["edit"]["size"][$source];
     return $file;
   }
 }
@@ -216,8 +222,10 @@ function file_move(&$source, $dest = 0, $replace = 0) {
   return 0;
 }
 
-function file_delete($source) {
-  unlink(file_create_path($source));
+function file_delete($path) {
+  if (is_file($path)) {
+    unlink($path);
+  }
 }
 
 /**
@@ -236,10 +244,10 @@ function file_delete($source) {
 function file_save_upload($source, $dest = 0, $replace = 0) {
   // Make sure $source exists in $_FILES.
   if ($file = file_check_upload($source)) {
-    if ($dest === 0) {
-      $dest = variable_get('file_directory_temp', ini_get('upload_tmp_dir'));
+    if (!$dest) {
+      $dest = variable_get('file_directory_temp', (PHP_OS == 'WINNT' ? 'c:\\windows\\temp' : '/tmp'));
       $temporary = 1;
-      if (file_exists($_SESSION['file_uploads'][$source]->path)) {
+      if (is_file($_SESSION['file_uploads'][$source]->path)) {
         // If this file was uploaded by this user before replace the temporary copy.
         $replace = 1;
       }
@@ -263,7 +271,7 @@ function file_save_upload($source, $dest = 0, $replace = 0) {
         return 0;
     }
 
-    unset($_SESSION['file_uploads'][$source]);
+    unset($_SESSION['file_uploads'][is_object($source) ? $source->source : $source]);
     if (file_move($file, $dest, $replace)) {
       if ($temporary) {
         $_SESSION['file_uploads'][$source] = $file;
@@ -273,7 +281,7 @@ function file_save_upload($source, $dest = 0, $replace = 0) {
     return 0;
   }
   else {
-    // In case if previews return previous file object.
+    // In case of previews return previous file object.
     if (file_exists($_SESSION['file_uploads'][$source]->path)) {
       return $_SESSION['file_uploads'][$source];
     }
