@@ -1,8 +1,8 @@
 <?php
-// $Id: weblogs.module,v 1.12 2002/06/04 11:44:23 unconed Exp $
+// $Id: weblogs.module,v 1.13 2002/06/08 10:18:59 dries Exp $
 
 function weblogs_conf_options() {
-  $output .= form_select("Weblogs ping", "weblogs_ping", variable_get("weblogs_ping", 0), array("Disabled", "Enabled"), "Enabling Weblogs ping will inform <a href=\"http://www.weblogs.com/\">Weblogs.com</a> when your site updates.");
+  $output .= form_select("Weblogs ping", "weblogs_ping", variable_get("weblogs_ping", 0), array("Disabled", "Enabled"), "Enabling Weblogs ping will inform <a href=\"http://www.weblogs.com/\">Weblogs.com</a> when your site updates.  Requires crontab.");
 
   return $output;
 }
