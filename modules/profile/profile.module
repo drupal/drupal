@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.80 2004/10/13 20:35:46 unconed Exp $
+// $Id: profile.module,v 1.81 2004/10/16 16:59:59 dries Exp $
 
 /**
  * @file
@@ -162,7 +162,8 @@ function profile_save_profile(&$edit, &$user, $category) {
     }
     db_query("DELETE FROM {profile_values} WHERE fid = %d AND uid = %d", $field->fid, $user->uid);
     db_query("INSERT INTO {profile_values} (fid, uid, value) VALUES (%d, %d, '%s')", $field->fid, $user->uid, $edit[$field->name]);
-    unset($edit[$field->name], $user->{$field->name});
+    // Mark field as handled (prevents saving to user->data).
+    $edit[$field->name] = null;
   }
 }
 
