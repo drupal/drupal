@@ -160,14 +160,15 @@ function node_teaser($body) {
 
   $size = variable_get('teaser_length', 600);
 
-  // If the size is zero, teasers are disabled so we return the entire body.
-  if ($size == 0) {
+  // find where the delimiter is in the body
+  $delimiter = strpos($body, '<!--break-->');
+
+  // If the size is zero, and there is no delimiter, we return the entire body.
+  if ($size == 0 && $delimiter == 0) {
     return $body;
   }
 
   // If a valid delimiter has been specified, use it to chop of the teaser.
-  // The delimiter can be outside the allowed range by no more than a factor of two.
-  $delimiter = strpos($body, '<!--break-->');
   if ($delimiter > 0) {
     return substr($body, 0, $delimiter);
   }
