@@ -85,7 +85,7 @@ function forum_admin() {
       break;
     case t('Delete'):
       if (!$edit['confirm']) {
-        $output = _forum_confirm_del($edit['tid']);
+        $output = _forum_confirm_delete($edit['tid']);
         break;
       }
       else {
@@ -125,7 +125,7 @@ function forum_taxonomy($op, $type, $object) {
  *
  * @param $tid ID of the term to be deleted
  */
-function _forum_confirm_del($tid) {
+function _forum_confirm_delete($tid) {
   $term = taxonomy_get_term($tid);
 
   $extra = form_hidden('tid', $tid);
@@ -136,7 +136,7 @@ function _forum_confirm_del($tid) {
                   t('Delete'),
                   t('Cancel'),
                   $extra);
-  print theme('page', $output);
+  return $output;
 }
 
 /**
