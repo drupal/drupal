@@ -90,7 +90,7 @@
           <TR><TD COLSPAN="2" BGCOLOR="<?php echo $this->bgcolor1; ?>" WIDTH="100%"><table width="100%" cellpadding="0" cellspacing="0"><tr><td width="100%"><FONT COLOR="<?php echo $this->fgcolor1; ?>"><B><?php echo "". check_output($node->title) .""; ?></B></FONT></td><td valign="middle" align="center"><IMG SRC="themes/<?php print $this->themename; ?>/images/icon.gif" valign="middle"></td></tr></table></TD></TR>
           <TR BGCOLOR="<?php echo $this->bgcolor2; ?>">
            <?php
-            print "<TD WIDTH=\"70%\" BGCOLOR=\"$this->bgcolor2\"><SMALL>" . strtr(t("Submitted by %a on %b"), array("%a" => format_username($node->userid, $node->name), "%b" => format_date($node->timestamp, "large"))) . "</TD><TD WIDTH=\"30%\" BGCOLOR=\"$this->bgcolor2\" ALIGN=\"center\" NOWRAP><B>". node_index($node) ."</B>";
+            print "<TD WIDTH=\"70%\" BGCOLOR=\"$this->bgcolor2\"><SMALL>" . strtr(t("Submitted by %a on %b"), array("%a" => format_name($node->name), "%b" => format_date($node->timestamp, "large"))) . "</TD><TD WIDTH=\"30%\" BGCOLOR=\"$this->bgcolor2\" ALIGN=\"center\" NOWRAP><B>". node_index($node) ."</B>";
            ?>
           </TD>
          </TR>
@@ -112,7 +112,7 @@
    function comment($comment, $link) {
      print "<A NAME=\"$comment->cid\"></A>\n";
 
-     print "\n<!-- Comment: \"$comment->subject\" by $comment->userid -->\n";
+     print "\n<!-- Comment: \"$comment->subject\" by $comment->name -->\n";
 
      ?>
       <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" BGCOLOR="<?php echo $this->brcolor1; ?>" WIDTH="100%">
@@ -139,8 +139,8 @@
 
      // Author:
      echo "    <TR>";
-     echo "     <TD ALIGN=\"right\" VALIGN=\"top\">" . t("Author") . ":</TD><TD><B>" . format_username($comment->userid, $node->name) . "</B> ";
-     if ($comment->userid) {
+     echo "     <TD ALIGN=\"right\" VALIGN=\"top\">" . t("Author") . ":</TD><TD><B>" . format_name($node->name) . "</B> ";
+     if ($comment->name) {
        // Display extra information line:
        if ($comment->fake_email) $info .= format_email($comment->fake_email);
        if (eregi("http://",$comment->url)) $info .= ($info?" | ":"") . format_url($comment->url);

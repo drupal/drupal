@@ -8,7 +8,7 @@ class BaseTheme {
   function image($name) {
     return "misc/$name";
   }
-  
+
   function comment_controls($threshold = 1, $mode = 3, $order = 1) {
     global $REQUEST_URI, $user;
     $output .= "<DIV ALIGN=\"CENTER\">\n";
@@ -67,7 +67,7 @@ function theme_account($region, $theme) {
     $content .= "<a href=\"account.php?op=logout\">". t("logout") ."</a>\n";
     $content .= "</td></tr></table>\n";
 
-    $theme->box($user->userid, $content, $region);
+    $theme->box($user->name, $content, $region);
   }
   else {
     $output .= "<div align=\"center\">\n";
@@ -109,7 +109,8 @@ function theme_moderation_results($theme, $node, $region) {
   foreach (explode(",", $node->users) as $vote) {
     if ($vote) {
       $data = explode("=", $vote);
-      $output .= format_username($data[0]) ." voted '$data[1]'.<br />";
+      $account = user_get($data[0]);
+      $output .= format_name($account->name) ." voted '$data[1]'.<br />";
     }
   }
 

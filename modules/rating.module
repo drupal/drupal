@@ -79,12 +79,12 @@ function rating_gravity($id) {
 }
 
 function rating_list($limit) {
-  $result = db_query("SELECT u.userid, u.rating, u.name, r.* FROM users u LEFT JOIN rating r ON u.id = r.user ORDER BY u.rating DESC LIMIT $limit");
+  $result = db_query("SELECT u.rating, u.name, r.* FROM users u LEFT JOIN rating r ON u.id = r.user ORDER BY u.rating DESC LIMIT $limit");
 
   $output .= "<TABLE CELLPADDING=\"1\" CELLSPACING=\"1\">\n";
   while ($account = db_fetch_object($result)) {
     $ranking = $account->old - $account->new;
-    $output .= "<TR><TD ALIGN=\"right\">". ++$i .".</TD><TD>". format_username($account->userid, $account->name) ."</TD><TD ALIGN=\"right\">". check_output($account->rating) ."</TD><TD>(". ($ranking < 0 ? "" : "+") ."$ranking)</TD></TR>";
+    $output .= "<TR><TD ALIGN=\"right\">". ++$i .".</TD><TD>". format_name($account->name) ."</TD><TD ALIGN=\"right\">". check_output($account->rating) ."</TD><TD>(". ($ranking < 0 ? "" : "+") ."$ranking)</TD></TR>";
   }
   $output .= "</TABLE>\n";
   return $output;

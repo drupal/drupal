@@ -3,7 +3,7 @@
 class Node {
   function Node($node) {
     global $user;
-    $this->userid = $node[userid] ? $node[userid] : $user->userid;
+    $this->name = $node[name] ? $node[name] : $user->name;
     $this->title = $node[title];
     $this->attributes = $node[attributes];
     $this->timestamp = $node[timestamp] ? $node[timestamp] : time();
@@ -108,7 +108,7 @@ function node_overview($query) {
   $color = array("#ffffff", "#e5e5e5");
   $query = node_query($query ? $query : 0);
 
-  $result = db_query("SELECT n.*, u.userid FROM node n LEFT JOIN users u ON n.author = u.id $query[1] LIMIT 50");
+  $result = db_query("SELECT n.* FROM node n $query[1] LIMIT 50");
 
   $output .= status($query[0]);
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
@@ -117,7 +117,7 @@ function node_overview($query) {
   while ($node = db_fetch_object($result)) {
     $bg = $color[$i++ % sizeof($color)];
 
-    $output .= " <TR BGCOLOR=\"$bg\"><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">$node->type</TD><TD>". node_status($node->status) ."</TD><TD>". check_output($node->attributes) ."</TD><TD>". format_username($node->userid) ."</TD><TD>". format_date($node->timestamp, "small") ."</TD></TR>\n";
+    $output .= " <TR BGCOLOR=\"$bg\"><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">$node->type</TD><TD>". node_status($node->status) ."</TD><TD>". check_output($node->attributes) ."</TD><TD>". format_name($node->name) ."</TD><TD>". format_date($node->timestamp, "small") ."</TD></TR>\n";
     $output .= " <TR BGCOLOR=\"$bg\"><TD ALIGN=\"right\" COLSPAN=\"6\"><SMALL>". implode(", ", node_links($node->nid, $node->type)) ."</SMALL></TD>\n";
   }
   $output .= "</TABLE>\n";
@@ -134,7 +134,6 @@ function node_edit_option($id) {
   $form .= form_item("Operations", implode("<br />", node_links($node->nid, $node->type)));
   $form .= form_select("Comment", "comment", $node->comment, node_comment_status(), "Allow users to post comments to this node.");
   $form .= form_select("Promote", "promote", $node->promote, node_promote_status(), "Promote this node on the main page.");
-  $form .= form_textfield("Moderate", "moderate", $node->moderate, 35, 255, t("A comma-seperated list of the moderators their usernames."));
   $form .= form_hidden("nid", $node->nid);
   $form .= form_submit("Save node");
 
@@ -187,25 +186,25 @@ function node_delete($id) {
 }
 
 function node_query($type = -1) {
-  $queries[] = array("all nodes: recent additions", "ORDER BY n.timestamp DESC");
-  $queries[] = array("all nodes: status set to 'posted'", "WHERE n.status = ". node_status("posted") ." ORDER BY n.timestamp DESC");
-  $queries[] = array("all nodes: status set to 'queued'", "WHERE n.status = ". node_status("queued") ." ORDER BY n.timestamp DESC");
-  $queries[] = array("all nodes: status set to 'dumped'", "WHERE n.status = ". node_status("dumped") ." ORDER BY n.timestamp DESC");
-  $queries[] = array("all nodes: scheduled to be posted", "WHERE n.timestamp_posted > 0 ORDER BY n.timestamp DESC");
-  $queries[] = array("all nodes: scheduled to be queued", "WHERE n.timestamp_queued > 0 ORDER BY n.timestamp DESC");
-  $queries[] = array("all nodes: scheduled to be hidden", "WHERE n.timestamp_hidden > 0 ORDER BY n.timestamp DESC");
+  $queries[] = array("all nodes: recent additions", "ORDER BY timestamp DESC");
+  $queries[] = array("all nodes: status set to 'posted'", "WHERE status = ". node_status("posted") ." ORDER BY timestamp DESC");
+  $queries[] = array("all nodes: status set to 'queued'", "WHERE status = ". node_status("queued") ." ORDER BY timestamp DESC");
+  $queries[] = array("all nodes: status set to 'dumped'", "WHERE status = ". node_status("dumped") ." ORDER BY timestamp DESC");
+  $queries[] = array("all nodes: scheduled to be posted", "WHERE timestamp_posted > 0 ORDER BY timestamp DESC");
+  $queries[] = array("all nodes: scheduled to be queued", "WHERE timestamp_queued > 0 ORDER BY timestamp DESC");
+  $queries[] = array("all nodes: scheduled to be hidden", "WHERE timestamp_hidden > 0 ORDER BY timestamp DESC");
 
   foreach (module_list() as $name) {
     if (module_hook($name, "status")) {
-      $queries[] = array("$name: recent additions", "WHERE n.type = '$name' ORDER BY n.timestamp DESC");
+      $queries[] = array("$name: recent additions", "WHERE type = '$name' ORDER BY timestamp DESC");
       $statuses = module_invoke($name, "status");
       if (is_array($statuses)) {
         foreach (array_reverse($statuses) as $key=>$status) {
-          $queries[] = array("$name: status set to '$status'", "WHERE n.type = '$name' AND n.status = '". node_status($status) ."' ORDER BY n.timestamp DESC");
+          $queries[] = array("$name: status set to '$status'", "WHERE type = '$name' AND status = '". node_status($status) ."' ORDER BY timestamp DESC");
         }
-        $queries[] = array("$name: scheduled to be posted", "WHERE n.type = '$name' AND n.timestamp_posted > 0 ORDER BY n.timestamp DESC");
-        $queries[] = array("$name: scheduled to be queued", "WHERE n.type = '$name' AND n.timestamp_queued > 0 ORDER BY n.timestamp DESC");
-        $queries[] = array("$name: scheduled to be hidden", "WHERE n.type = '$name' AND n.timestamp_hidden > 0 ORDER BY n.timestamp DESC");
+        $queries[] = array("$name: scheduled to be posted", "WHERE type = '$name' AND timestamp_posted > 0 ORDER BY timestamp DESC");
+        $queries[] = array("$name: scheduled to be queued", "WHERE type = '$name' AND timestamp_queued > 0 ORDER BY timestamp DESC");
+        $queries[] = array("$name: scheduled to be hidden", "WHERE type = '$name' AND timestamp_hidden > 0 ORDER BY timestamp DESC");
       }
     }
   }
@@ -237,7 +236,6 @@ function node_setting() {
       $form .= form_select(t("Post threshold"), $name ."_post", variable_get($name ."_post", 4), $threshold_post, "If new submissions are subject to moderation, select a post threshold.");
       $form .= form_select(t("Dump threshold"), $name ."_dump", variable_get($name ."_dump", -2), $threshold_dump, "If new submissions are subject to moderation, select a dump threshold.");
       $form .= form_select(t("Expiration threshold"), $name ."_expire", variable_get($name ."_expire", 8), $threshold_expire, "If new submissions are subject to moderation, select a expiration threshold.");
-      $form .= form_textfield("Moderate", $name ."_moderate", variable_get($name ."_moderate", ""), 35, 255, "A comma-seperated list of the moderators' usernames.");
     }
   }
 
@@ -258,7 +256,7 @@ function node_admin_save($edit) {
     node_save($edit, array(attributes));
   }
   else {
-    node_save($edit, array(comment, moderate, promote));
+    node_save($edit, array(comment, promote));
   }
 }
 

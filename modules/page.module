@@ -17,7 +17,7 @@ function page_link($type) {
       $links[] = "<a href=\"node.php?id=$page->nid\">$page->link</a>";
     }
   }
-  
+
   return $links ? $links : array();
 }
 

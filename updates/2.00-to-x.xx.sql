@@ -334,3 +334,9 @@ ALTER TABLE site ADD feed varchar(255) DEFAULT '' NOT NULL;
 
 #17/06/01
 ALTER TABLE page ADD link varchar(128) DEFAULT '' NOT NULL AFTER nid;
+
+#09/08/01
+ALTER TABLE users ADD UNIQUE name (name);
+ALTER TABLE users ADD UNIQUE userid (userid);
+ALTER TABLE users ADD UNIQUE real_email (real_email);
+UPDATE users SET name = userid WHERE name = '';

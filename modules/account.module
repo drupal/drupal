@@ -50,9 +50,9 @@ function account_conf_options() {
 }
 
 function account_search($keys) {
-  $result = db_query("SELECT * FROM users WHERE userid LIKE '%$keys%' LIMIT 20");
+  $result = db_query("SELECT * FROM users WHERE name LIKE '%$keys%' LIMIT 20");
   while ($account = db_fetch_object($result)) {
-    $find[$i++] = array("title" => $account->userid, "link" => (user_access("administer users") ? "admin.php?mod=account&op=view&name=". urlencode($account->userid) : "account.php?op=view&name=". urlencode($account->userid)), "user" => $account->userid);
+    $find[$i++] = array("title" => $account->name, "link" => (user_access("administer users") ? "admin.php?mod=account&op=view&name=". urlencode($account->name) : "account.php?op=view&name=". urlencode($account->name)), "user" => $account->name);
   }
   return $find;
 }
@@ -97,13 +97,13 @@ function account_ac() {
 
 function account_overview($query = array()) {
 
-  $result = db_query("SELECT id, userid, last_access FROM users $query[1] LIMIT 50");
+  $result = db_query("SELECT id, name, last_access FROM users $query[1] LIMIT 50");
 
   $output .= status($query[0]);
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR><TH>username</TH><TH>last access</TH><TH COLSPAN=\"2\">operations</TH></TR>\n";
   while ($account = db_fetch_object($result)) {
-    $output .= " <TR><TD>". format_username($account->userid) ."</TD><TD>". format_date($account->last_access) ."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=account&op=view&name=". urlencode($account->userid) ."\">view account</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=account&op=edit&name=". urlencode($account->userid) ."\">edit account</A></TD></TR>\n";
+    $output .= " <TR><TD>". format_name($account->name) ."</TD><TD>". format_date($account->last_access) ."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=account&op=view&name=". urlencode($account->name) ."\">view account</A></TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=account&op=edit&name=". urlencode($account->name) ."\">edit account</A></TD></TR>\n";
   }
   $output .= "</TABLE>\n";
 
@@ -135,12 +135,12 @@ function account_comments($id) {
 }
 
 function account_delete($name) {
-  $result = db_query("SELECT * FROM users WHERE userid = '$name' AND status = 0 AND id > 1");
+  $result = db_query("SELECT * FROM users WHERE name = '$name' AND status = 0 AND id > 1");
   if ($account = db_fetch_object($result)) {
     db_query("DELETE FROM users WHERE id = '$account->id'");
   }
   else {
-    return "failed to delete account '". format_username($name) ."': the account must be blocked first.";
+    return "failed to delete account '". format_name($name) ."': the account must be blocked first.";
   }
 }
 
@@ -171,15 +171,11 @@ function account_save($edit) {
         $query[] = "$key = '". addslashes($value) ."'";
     }
     db_query("UPDATE users SET ". implode(", ", $query) ." WHERE id = $edit[id]");
-    watchdog("account", "account: modified user '$edit[userid]'");
-    return $edit[userid];
+    watchdog("account", "account: modified user '$edit[name]'");
+    return $edit[name];
   }
   else {
-    // Adding new account
-    $edit[userid] = $edit[userid];
-    $edit[real_email] = $edit[real_email];
-
-    if ($error = user_validate($edit)) {
+    if ($error = account_validate($edit)) {
       print status($error);
       return 0;
     }
@@ -187,7 +183,7 @@ function account_save($edit) {
       $edit[passwd] = user_password();
       $edit[hash] = substr(md5("$edit[userid]. ". time()), 0, 12);
 
-      $user = user_save("", array("userid" => $edit[userid], "role" => $edit[role], "real_email" => $edit[real_email], "passwd" => $edit[passwd], "status" => $edit[status], "hash" => $edit[hash]));
+      $user = user_save("", array("name" => $edit[userid], "userid" => $edit[userid], "role" => $edit[role], "real_email" => $edit[real_email], "passwd" => $edit[passwd], "status" => $edit[status], "hash" => $edit[hash]));
 
       $link = path_uri() ."account.php?op=confirm&name=". urlencode($edit[userid]) ."&hash=$edit[hash]";
       $subject = strtr(t("Account details for %a"), array("%a" => variable_get(site_name, "drupal")));
@@ -217,16 +213,16 @@ function account_add() {
 function account_view($name) {
   $status = array(0 => "blocked", 1 => "not confirmed", 2 => "open");
 
-  $result = db_query("SELECT * FROM users WHERE userid = '$name'");
+  $result = db_query("SELECT * FROM users WHERE name = '$name'");
 
   if ($account = db_fetch_object($result)) {
-    $form .= form_hidden("name", $account->userid);
+    $form .= form_hidden("name", $account->name);
     $form .= form_submit("Edit account");
     $form .= form_submit("Delete account");
 
     $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
     $output .= " <TR><TH>ID:</TH><TD>$account->id</TD></TR>\n";
-    $output .= " <TR><TH>Username:</TH><TD>$account->userid</TD></TR>\n";
+    $output .= " <TR><TH>Name:</TH><TD>$account->name</TD></TR>\n";
     $output .= " <TR><TH>Status:</TH><TD>". $status[$account->status] ."</TD></TR>\n";
     $output .= " <TR><TH>Role:</TH><TD>". check_output($account->role) ."</TD></TR>\n";
     $output .= " <TR><TH>Real name:</TH><TD>". check_output($account->name) ."</TD></TR>\n";
@@ -253,6 +249,22 @@ function account_query($type = "") {
   $queries = array(array("users recently visiting", "ORDER BY last_access DESC"), array("users recently joining", "ORDER BY id DESC"), array("users with pending accounts", "WHERE status = 1 ORDER BY last_access DESC"), array("users with blocked accounts", "WHERE status = 0 ORDER BY last_access DESC"));
   return ($queries[$type] ? $queries[$type] : $queries);
 }
+
+function account_validate($user) {
+  if ($error = user_validate_name($user[userid])) return $error;
+
+  // Verify e-mail address:
+  if ($error = user_validate_mail($user[real_email])) return $error;
+
+  // Check to see whether the username or e-mail address are banned:
+  if ($ban = user_ban($user[userid], "username")) return t("the username '$user[userid]' is banned") .": <I>$ban->reason</I>.";
+  if ($ban = user_ban($user[real_email], "e-mail address")) return t("the e-mail address '$user[real_email]' is banned") .": <I>$ban->reason</I>.";
+
+  // Verify whether username and e-mail address are unique:
+  if (db_num_rows(db_query("SELECT userid FROM users WHERE LOWER(userid) = LOWER('$user[userid]')")) > 0) return t("the username '$user[userid]' is already taken.");
+  if (db_num_rows(db_query("SELECT real_email FROM users WHERE LOWER(real_email) = LOWER('$user[real_email]')")) > 0) return t("the e-mail address '$user[real_email]' is already in use by another account.");
+}
+
 
 function account_admin() {
   global $op, $edit, $id, $mod, $keys, $order, $name, $query;
