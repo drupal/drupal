@@ -31,6 +31,6 @@ tr.light                  { background-color: #eee; }
 
 .form-item .title         { font-weight: bold; margin-top: 1.1em; margin-bottom: 1px; }
 .form-item .description   { font-size: 0.85em; }
-.form-submit              { padding-top: 0.5em; }
+.form-submit              { margin-top: 1em; }
 
 .container-inline div     { display: inline; }
