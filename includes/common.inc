@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.342 2004/04/24 16:25:31 dries Exp $ */
+/* $Id: common.inc,v 1.343 2004/04/26 21:57:02 dries Exp $ */
 
 /**
  * @defgroup common Core functions
@@ -83,6 +83,31 @@ function drupal_get_breadcrumb() {
   }
 
   return $breadcrumb;
+}
+/* @} */
+
+/**
+ * @name Page tabs
+ * @ingroup common
+ *
+ * Functions to get and set the tabs of the current page.
+ * @{
+ */
+
+/**
+ * @param $tab Array of links to use for tabs
+ */
+function drupal_set_tab($tab = NULL) {
+  static $stored_tab = array();
+
+  if (!is_null($tab)) {
+    $stored_tab[] =  $tab;
+  }
+  return $stored_tab;
+}
+
+function drupal_get_tab() {
+  return drupal_set_tab();
 }
 /* @} */
 
@@ -995,7 +1020,7 @@ function form_radios($title, $name, $value, $options, $description = NULL, $requ
     foreach ($options as $key => $choice) {
       $choices .= "<label class=\"option\"><input type=\"radio\" class=\"form-radio\" name=\"edit[$name]\" value=\"$key\"". ($key == $value ? " checked=\"checked\"" : "") ." /> $choice</label><br />";
     }
-    return theme('form_element', $title, $choices, $description, $required = FALSE);
+    return theme('form_element', $title, $choices, $description, $required);
   }
 }
 
