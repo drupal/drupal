@@ -29,7 +29,7 @@ function import_link($type) {
   }
 
   if ($type == "page" && user_access("access news feeds")) {
-    $links[] = lm(t("news feeds"), array("mod" => "import"), t("Read the latest news from syndicated websites."));
+    $links[] = lm(t("news feeds"), array("mod" => "import"), "", array("title" => t("Read the latest news from syndicated websites.")));
   }
 
   return $links ? $links : array();
@@ -53,7 +53,7 @@ function import_format_item($item, $feed = 0) {
   global $theme, $user;
 
   if ($user->uid && user_access("post blogs")) {
-    $output .= lm("<img src=\"". $theme->image("blog.gif") ."\" border=\"0\" width=\"12\" height=\"16\" alt=\"". t("Blog this item") ."\" />", array("mod" => "node", "op" => "add", "type" => "blog", "iid" => $item->iid), t("Comment on this news item in your personal blog."));
+    $output .= lm("<img src=\"". $theme->image("blog.gif") ."\" border=\"0\" width=\"12\" height=\"16\" alt=\"". t("Blog this item") ."\" />", array("mod" => "node", "op" => "add", "type" => "blog", "iid" => $item->iid), "", array("title" => t("Comment on this news item in your personal blog.")));
   }
 
   // external link
@@ -98,7 +98,7 @@ function import_get_bundles($attributes = 0) {
   $i = 0;
   while ($bundle = db_fetch_object($result)) {
     $block[$i]["subject"] = $bundle->title;
-    $block[$i]["content"] = import_bundle_block($bundle->attributes) ."<p><div align=\"right\">". lm(t("more"), array("mod" => "import", "op" => "bundle", "id" => $bundle->bid), t("View this bundle's recent news.")) ."</div></p>";
+    $block[$i]["content"] = import_bundle_block($bundle->attributes) ."<p><div align=\"right\">". lm(t("more"), array("mod" => "import", "op" => "bundle", "id" => $bundle->bid), "", array("title" => t("View this bundle's recent news."))) ."</div></p>";
     $block[$i]["info"] = "$bundle->title bundle";
 
     $i++;
@@ -113,7 +113,7 @@ function import_get_feeds($attributes = 0) {
   $i = 0;
   while ($feed = db_fetch_object($result)) {
     $block[$i]["subject"] = $feed->title;
-    $block[$i]["content"] = import_feed_block($feed) ."<p><div align=\"right\">". lm(t("more"), array("mod" => "import", "op" => "feed", "id" => $feed->fid), t("View this feed's recent news.")) ."</div></p>";
+    $block[$i]["content"] = import_feed_block($feed) ."<p><div align=\"right\">". lm(t("more"), array("mod" => "import", "op" => "feed", "id" => $feed->fid), "", array("title" => t("View this feed's recent news."))) ."</div></p>";
     $block[$i]["info"] = "$feed->title feed";
 
     $i++;
@@ -522,10 +522,10 @@ function import_admin() {
 function import_page_info() {
   global $theme;
 
-  $links[] = lm(t("latest news"), array("mod" => "import"), t("Read the latest news from syndicated websites."));
-  $links[] = lm(t("news by source"), array("mod" => "import", "op" => "feeds"), t("View the latest headlines sorted by source."));
-  $links[] = lm(t("news by topic"), array("mod" => "import", "op" => "bundles"), t("View the latest headlines sorted by topic."));
-  $links[] = lm(t("news sources"), array("mod" => "import", "op" => "sources"), t("View a list of all the websites we syndicate from."));
+  $links[] = lm(t("latest news"), array("mod" => "import"), "", array("title" => t("Read the latest news from syndicated websites.")));
+  $links[] = lm(t("news by source"), array("mod" => "import", "op" => "feeds"), "", array("title" => t("View the latest headlines sorted by source.")));
+  $links[] = lm(t("news by topic"), array("mod" => "import", "op" => "bundles"), "", array("title" => t("View the latest headlines sorted by topic.")));
+  $links[] = lm(t("news sources"), array("mod" => "import", "op" => "sources"), "", array("title" => t("View a list of all the websites we syndicate from.")));
 
   return "<div align=\"center\">". $theme->links($links) ."</div>";
 }
@@ -537,11 +537,11 @@ function import_page_last() {
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"2\">";
   while ($item = db_fetch_object($result)) {
-    $links[] = lm(t("blog it"), array("mod" => "node", "op" => "add", "type" => "blog", "iid" => $item->iid), t("Comment on this news item in your personal blog."));
-    $links[] = lm(t("feed"), array("mod" => "import", "op" => "feed", "id" => $item->fid), t("Read more syndicated news from this feed."));
+    $links[] = lm(t("blog it"), array("mod" => "node", "op" => "add", "type" => "blog", "iid" => $item->iid), "", array("title" => t("Comment on this news item in your personal blog.")));
+    $links[] = lm(t("feed"), array("mod" => "import", "op" => "feed", "id" => $item->fid), "", array("title" => t("Read more syndicated news from this feed.")));
 
     if ($item->link) {
-      $output .= "<tr><td>". format_url($item->link, $item->title) ." &middot; ". lm($item->ftitle, array("mod" => "import", "op" => "feed", "id" => $item->fid), t("View more information about this feed.")) ."</td><td align=\"right\" nowrap=\"nowrap\" valign=\"top\">". $theme->links($links) ."</td></tr>\n";
+      $output .= "<tr><td><a href=\"$item->link\">$item->title</a> &middot; ". lm($item->ftitle, array("mod" => "import", "op" => "feed", "id" => $item->fid), "", array("title" => t("View more information about this feed."))) ."</td><td align=\"right\" nowrap=\"nowrap\" valign=\"top\">". $theme->links($links) ."</td></tr>\n";
     }
 
     if ($item->description) {
@@ -563,7 +563,7 @@ function import_page_feed($fid) {
 
   $feed = db_fetch_object(db_query("SELECT * FROM feed WHERE fid = '%s'", $fid));
 
-  $header .= "<p><b>". t("Website") .":</b><div style=\"margin-left: 20px;\">". format_url($feed->link) ."</div></p>";
+  $header .= "<p><b>". t("Website") .":</b><div style=\"margin-left: 20px;\"><a href=\"$feed->link\">$feed->link</a></div></p>";
   $header .= "<p><b>". t("Description") .":</b><div style=\"margin-left: 20px;\">". check_output($feed->description, 1) ."</div></p>";
   $header .= "<p><b>". t("Last update") .":</b><div style=\"margin-left: 20px;\">". format_interval(time() - $feed->timestamp) ." ". t("ago") ."<a href=\"$feed->url\"><img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" /></a><br /><br /></div></p>\n";
 
@@ -571,11 +571,11 @@ function import_page_feed($fid) {
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"2\">";
   while ($item = db_fetch_object($result)) {
-    $links[] = lm(t("blog it"), array("mod" => "node", "op" => "add", "type" => "blog", "iid" => $item->iid), t("Comment on this news item in your personal blog."));
+    $links[] = lm(t("blog it"), array("mod" => "node", "op" => "add", "type" => "blog", "iid" => $item->iid), "", array("title" => t("Comment on this news item in your personal blog.")));
     $links[] = "<a href=\"$item->link\">". t("visit") ."</a>";
 
     if ($item->link) {
-      $output .= "<tr><td>". format_url($item->link, $item->title) ."</td><td align=\"right\" nowrap=\"nowrap\" valign=\"top\">". $theme->links($links) ."</td></tr>\n";
+      $output .= "<tr><td><a href=\"$item->link\">$item->title</a></td><td align=\"right\" nowrap=\"nowrap\" valign=\"top\">". $theme->links($links) ."</td></tr>\n";
     }
     if ($item->description) {
       $output .= "<tr><td colspan=\"2\"><div style=\"margin-left: 20px;\">". check_output($item->description, 1) ."</div><br /></td></tr>";
@@ -596,7 +596,7 @@ function import_page_bundle($bid) {
 
   $bundle = db_fetch_object(db_query("SELECT * FROM bundle WHERE bid = '%s'", $bid));
 
-  $header .= "<p><b>". t("Website") .":</b><div style=\"margin-left: 20px;\">". format_url(drupal_url(array("mod" => "import", "op" => "bundle", "id" => $bundle->bid), "module")) ."</div></p>";
+  $header .= "<p><b>". t("Website") .":</b><div style=\"margin-left: 20px;\">". lm("", array("mod" => "import", "op" => "bundle", "id" => $bundle->bid)) ."</div></p>";
   $header .= "<p><b>". t("Description") .":</b><div style=\"margin-left: 20px;\">". t("A composite news feed about") ." ". check_output($bundle->attributes) .".</div></p>";
 
   $keys = explode(",", $bundle->attributes);
@@ -605,12 +605,12 @@ function import_page_bundle($bid) {
 
   $output .= "<table border=\"0\" cellpadding=\"4\" cellspacing=\"2\">";
   while ($item = db_fetch_object($result)) {
-    $links[] = lm(t("blog it"), array("mod" => "node", "op" => "add", "type" => "blog", "iid" => $item->iid), t("Comment on this news item in your personal blog."));
-    $links[] = lm(t("feed"), array("mod" => "import", "op" => "feed", "id" => $item->fid), t("Read more syndicated news from this feed."));
+    $links[] = lm(t("blog it"), array("mod" => "node", "op" => "add", "type" => "blog", "iid" => $item->iid), "", array("title" => t("Comment on this news item in your personal blog.")));
+    $links[] = lm(t("feed"), array("mod" => "import", "op" => "feed", "id" => $item->fid), "", array("title" => t("Read more syndicated news from this feed.")));
     $links[] = "<a href=\"$item->link\">". t("visit") ."</a>";
 
     if ($item->link) {
-      $output .= "<tr><td>". format_url($item->link, $item->title) ." &middot; ". lm($item->ftitle, array("mod" => "import", "op" => "feed", "id" => $item->fid), t("View more information about this feed.")) ."</td><td align=\"right\" nowrap=\"nowrap\" valign=\"top\">". $theme->links($links) ."</td></tr>\n";
+      $output .= "<tr><td><a href=\"$item->link\">$item->title</a> &middot; ". lm($item->ftitle, array("mod" => "import", "op" => "feed", "id" => $item->fid), "", array("title" => t("View more information about this feed."))) ."</td><td align=\"right\" nowrap=\"nowrap\" valign=\"top\">". $theme->links($links) ."</td></tr>\n";
     }
 
     if ($item->description) {
@@ -634,11 +634,11 @@ function import_page_sources() {
   $result = db_query("SELECT * FROM feed ORDER BY title");
 
   while ($feed = db_fetch_object($result)) {
-    $output .= format_url(drupal_url(array("mod" => "import", "op" => "feed", "id" => $feed->fid), "module"), $feed->title);
+    $output .= lm("", array("mod" => "import", "op" => "feed", "id" => $feed->fid)));
     $output .= "<div style=\"margin-left: 20px;\">". check_output($feed->description, 1) ."</div><br />";
   }
 
-  $output .= lm("<img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" />", array("mod" => "import", "op" => "fd"), t("View the list of syndicated websites in XML format.")) ."<br />\n";
+  $output .= lm("<img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" />", array("mod" => "import", "op" => "fd"), "", array("title" => t("View the list of syndicated websites in XML format."))) ."<br />\n";
 
   $theme->header();
   $theme->box(t("News feeds"), import_page_info());

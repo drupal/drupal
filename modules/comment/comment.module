@@ -381,7 +381,7 @@ function comment_links($comment, $return = 1) {
   $links = array();
 
   if ($return) {
-    $links[] = l("<span style=\"color: $theme->type;\">". t("return") ."</span>", array("id" => $comment->nid ."#". $comment->cid));
+    $links[] = l("<span style=\"color: $theme->type;\">". t("return") ."</span>", array("id" => $comment->nid), "node", $comment->cid);
   }
 
   if (user_access("administer comments")) {
@@ -398,10 +398,10 @@ function comment_links($comment, $return = 1) {
   //if (node_comment_mode($comment->nid)) {
   if (user_access("post comments")) {
     if (comment_access("edit", $comment)) {
-      $links[] = lm("<span style=\"color: $theme->type\">". t("edit your comment") ."</span>", array("mod" => "comment", "op" => "edit", "id" => $comment->cid), t("Make changes to your comment."));
+      $links[] = lm("<span style=\"color: $theme->type\">". t("edit your comment") ."</span>", array("mod" => "comment", "op" => "edit", "id" => $comment->cid), "", array("title" => t("Make changes to your comment.")));
     }
     else {
-      $links[] = lm("<span style=\"color: $theme->type;\">". t("reply to this comment") ."</span>", array("mod" => "comment", "op" => "reply", "id" => $comment->nid, "pid" => $comment->cid), t("Reply to this comment."));
+      $links[] = lm("<span style=\"color: $theme->type;\">". t("reply to this comment") ."</span>", array("mod" => "comment", "op" => "reply", "id" => $comment->nid, "pid" => $comment->cid), "", array("title" => t("Reply to this comment.")));
     }
   }
   //}
@@ -420,7 +420,7 @@ function comment_view($comment, $folded = 0) {
     $theme->comment($comment, $folded);
   }
   else {
-    print l(check_output($comment->subject), array("id" => $comment->nid, "cid" => $comment->cid ."#". $comment->cid)) ." by ". format_name($comment) ."</small><p />";
+    print l(check_output($comment->subject), array("id" => $comment->nid, "cid" => $comment->cid), "node", $comment->cid) ." by ". format_name($comment) ."</small><p />";
   }
 }
 
@@ -521,7 +521,7 @@ function comment_render($nid, $cid) {
         print " <tr><th>Subject</th><th>Author</th><th>Date</th><th>Score</th></tr>\n";
         while ($comment = db_fetch_object($result)) {
           if (comment_visible($comment, $threshold)) {
-            print " <tr><td>". l(check_output($comment->subject), array("id" => $comment->nid, "cid" => $comment->cid ."#". $comment->cid)) ."</td><td>". format_name($comment) ."</td><td>". format_date($comment->timestamp, "small") ."</td><td>$comment->score</td></tr>\n";
+            print " <tr><td>". l(check_output($comment->subject), array("id" => $comment->nid, "cid" => $comment->cid), "node", $comment->cid) ."</td><td>". format_name($comment) ."</td><td>". format_date($comment->timestamp, "small") ."</td><td>$comment->score</td></tr>\n";
           }
         }
         print "</table>\n";
@@ -624,7 +624,7 @@ function comment_link($type, $node = 0, $main = 0) {
         $all = comment_num_all($node->nid);
         $new = comment_num_new($node->nid);
 
-        $links[] = l(format_plural($all, "comment", "comments") . ($new ? ", $new ". t("new") : ""), array("id" => $node->nid ."#comment"), t("View this posting and all of its comments."));
+        $links[] = l(format_plural($all, "comment", "comments") . ($new ? ", $new ". t("new") : ""), array("id" => $node->nid), "node", "comment", array("title" => t("View this posting and all of its comments.")));
       }
     }
     else {
@@ -635,7 +635,7 @@ function comment_link($type, $node = 0, $main = 0) {
 
       if (user_access("post comments")) {
         if ($node->comment == 2) {
-          $links[] = lm(t("add new comment"), array("mod" => "comment", "op" => "reply", "id" => $node->nid ."#comment"), t("Share your thoughts and opinions related to this posting."));
+          $links[] = lm(t("add new comment"), array("mod" => "comment", "op" => "reply", "id" => $node->nid), "comment", array("title" => t("Share your thoughts and opinions related to this posting.")));
         }
         else {
           $links[] = t("This discussion is closed: you can't post new comments.");
@@ -662,7 +662,7 @@ function comment_node_link($node) {
     $output .= " <tr><th>title</th><th>author</th><th colspan=\"3\">operations</th></tr>";
 
     while ($comment = db_fetch_object($result)) {
-      $output .= "<tr><td>". l($comment->subject, array("id" => $node->nid, "cid" => $comment->cid ."#". $comment->cid)) ."</td><td>". format_name($comment) ."</td><td>". l(t("view comment"), array("id" => $node->nid, "cid" => $comment->cid ."#". $comment->cid)) ."</td><td>". la(t("edit comment"), array("mod" => "comment", "op" => "edit", "id" => $comment->cid)) ."</td><td>". la(t("delete comment"), array("mod" => "comment", "op" => "delete", "id" => $comment->cid)) ."</td></tr>";
+      $output .= "<tr><td>". l($comment->subject, array("id" => $node->nid, "cid" => $comment->cid), "node", $comment->cid) ."</td><td>". format_name($comment) ."</td><td>". l(t("view comment"), array("id" => $node->nid, "cid" => $comment->cid ."#". $comment->cid)) ."</td><td>". la(t("edit comment"), array("mod" => "comment", "op" => "edit", "id" => $comment->cid)) ."</td><td>". la(t("delete comment"), array("mod" => "comment", "op" => "delete", "id" => $comment->cid)) ."</td></tr>";
     }
 
     $output .= "</table>";
@@ -729,7 +729,7 @@ function comment_admin_overview() {
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
   $output .= " <tr><th>subject</th><th>author</th><th>date</th><th colspan=\"2\">operations</th></tr>\n";
   while ($comment = db_fetch_object($result)) {
-    $output .= " <tr><td>". l(check_output($comment->subject), array("id" => $comment->nid, "cid" => $comment->cid, "pid" => $comment->pid ."#". $comment->cid)) ."</td><td>". format_name($comment) ."</td><td>". format_date($comment->timestamp, "small") ."</td><td>". la(t("edit comment"), array("mod" => comment, "op" => edit, "id" => $comment->cid)) ."</td><td>". la(t("delete comment"), array("mod" => "comment", "op" => "delete", "id" => $comment->cid)) ."</td></tr>\n";
+    $output .= " <tr><td>". l(check_output($comment->subject), array("id" => $comment->nid, "cid" => $comment->cid, "pid" => $comment->pid), "node", $comment->cid) ."</td><td>". format_name($comment) ."</td><td>". format_date($comment->timestamp, "small") ."</td><td>". la(t("edit comment"), array("mod" => comment, "op" => edit, "id" => $comment->cid)) ."</td><td>". la(t("delete comment"), array("mod" => "comment", "op" => "delete", "id" => $comment->cid)) ."</td></tr>\n";
   }
   $output .= "</table>\n";
 

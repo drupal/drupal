@@ -109,7 +109,7 @@ function archive_block() {
 
 function archive_link($type) {
   if ($type == "page" && user_access("access content")) {
-    $links[] = lm(t("archives"), array("mod" => "archive"), t("Read the older content in our archive."));
+    $links[] = lm(t("archives"), array("mod" => "archive"), "", array("title" => t("Read the older content in our archive.")));
   }
 
   return $links ? $links : array();

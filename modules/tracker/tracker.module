@@ -9,7 +9,7 @@ function tracker_help() {
 function tracker_link($type) {
 
   if ($type == "menu.view") {
-    $links[] = lm(t("view new comments"), array("mod" => "tracker"), t("Display an overview of the recent comments."));
+    $links[] = lm(t("view new comments"), array("mod" => "tracker"), "", array("title" => t("Display an overview of the recent comments.")));
   }
 
   return $links ? $links : array();
@@ -39,7 +39,7 @@ function tracker_comments($id = 0) {
 
     $output .= "<ul>";
     while ($comment = db_fetch_object($cresult)) {
-      $output .= " <li>". l(check_output($comment->subject), array("id" => $node->nid, "cid" => $comment->cid, "pid" => $comment->pid ."#". $comment->cid)) ." by ". lm(check_output($comment->name), array("mod" => "user", "op" => "view", "id" => $comment->uid)) ." (". t("replies") .": ". comment_num_replies($comment->cid) .") ". (comment_is_new($comment) ? "<span style=\"color: red;\">*</span>" : "") ."</li>\n";
+      $output .= " <li>". l(check_output($comment->subject), array("id" => $node->nid, "cid" => $comment->cid, "pid" => $comment->pid), $comment->cid) ." by ". lm(check_output($comment->name), array("mod" => "user", "op" => "view", "id" => $comment->uid)) ." (". t("replies") .": ". comment_num_replies($comment->cid) .") ". (comment_is_new($comment) ? "<span style=\"color: red;\">*</span>" : "") ."</li>\n";
     }
     $output .= " </ul>\n";
   }
@@ -50,8 +50,8 @@ function tracker_comments($id = 0) {
 function tracker_menu() {
   global $user;
 
-  $links[] = lm(t("your recent comments"), array("mod" => "tracker", "id" => $user->uid), t("Display an overview of your recent comments."));
-  $links[] = lm(t("all recent comments"), array("mod" => "tracker"), t("Display an overview of all the recent comments."));
+  $links[] = lm(t("your recent comments"), array("mod" => "tracker", "id" => $user->uid), "", array("title" => t("Display an overview of your recent comments.")));
+  $links[] = lm(t("all recent comments"), array("mod" => "tracker"), "", array("title" => t("Display an overview of all the recent comments.")));
 
   return "<div align=\"center\">". implode(" &middot; ", $links) ."</div>";
 }

@@ -168,12 +168,12 @@ function blog_page_user($uid = 0, $date = 0, $all = 0) {
   }
 
   $output .= "</table>";
-  $output .= lm("<img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" />", array("mod" => "blog", "op" => "feed", "id" => $account->uid), t("Read the XML version of this page."))."\n";
+  $output .= lm("<img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" />", array("mod" => "blog", "op" => "feed", "id" => $account->uid), "", array("title" => t("Read the XML version of this page."))) ."\n";
   if (!$all) {
-    $output .= lm(t("show all blogs"), array("mod" => "blog", "op" => "view", "id" => $account->uid, "all" => 1), t("Show all blogs by this user"));
+    $output .= lm(t("show all blogs"), array("mod" => "blog", "op" => "view", "id" => $account->uid, "all" => 1), "", array("title" => t("Show all blogs by this user")));
   }
   else {
-    $output .= lm(t("show recent blogs"), array("mod" => "blog", "op" => "view", "id" => $account->uid), t("Show recent blogs by this user"));
+    $output .= lm(t("show recent blogs"), array("mod" => "blog", "op" => "view", "id" => $account->uid), "", array("title" => t("Show recent blogs by this user")));
   }
 
   $theme->box(t("%u's blog", array("%u" => $account->name)), $output);
@@ -197,7 +197,7 @@ function blog_page_last() {
   }
 
   $output .= "</table>";
-  $output .= lm("<img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" />", array("mod" => "blog", "op" => "feed"), t("Read the XML version of this page."))."\n";
+  $output .= lm("<img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" />", array("mod" => "blog", "op" => "feed"), "", array("title" => t("Read the XML version of this page."))) ."\n";
 
   $theme->box(t("User blogs"), $output, "main");
 }
@@ -289,24 +289,24 @@ function blog_link($type, $node = 0, $main) {
   global $user;
 
   if ($type == "page" && user_access("access content")) {
-    $links[] = lm(t("user blogs"), array("mod" => "blog"), t("Read the latest blog entries."));
+    $links[] = lm(t("user blogs"), array("mod" => "blog"), "", array("title" => t("Read the latest blog entries.")));
   }
 
   if ($type == "menu.create" && user_access("post content")) {
-    $links[] = lm(t("create blog entry"), array("mod" => "node", "op" => "add", "type" => "blog"), t("Add a new personal blog entry."));
+    $links[] = lm(t("create blog entry"), array("mod" => "node", "op" => "add", "type" => "blog"), "", array("title" => t("Add a new personal blog entry.")));
   }
 
   if ($type == "menu.view" && user_access("access content")) {
-    $links[] = lm(t("view personal blog"), array("mod" => "blog", "op" => "view", "id" => $user->uid), t("Read your latest blog entries."));
+    $links[] = lm(t("view personal blog"), array("mod" => "blog", "op" => "view", "id" => $user->uid), "", array("title" => t("Read your latest blog entries.")));
   }
 
   if ($type == "node" && $node->type == "blog") {
     global $op;
     if (blog_access("update", $node)) {
-      $links[] = lm(t("edit this blog"), array("mod" => "node", "op" => "edit", "id" => $node->nid), t("Edit this blog entry."));
+      $links[] = lm(t("edit this blog"), array("mod" => "node", "op" => "edit", "id" => $node->nid), "", array("title" => t("Edit this blog entry.")));
     }
     else {
-      $links[] = lm(t("%u's blog", array("%u" => $node->name)), array("mod" => "blog", "op" => "view", "id" => $node->uid), t("Read %u's latest blog entries.", array("%u" => $node->name)));
+      $links[] = lm(t("%u's blog", array("%u" => $node->name)), array("mod" => "blog", "op" => "view", "id" => $node->uid), "", array("title" => t("Read %u's latest blog entries.", array("%u" => $node->name))));
     }
   }
 
@@ -319,7 +319,7 @@ function blog_block() {
   $result = db_query("SELECT u.uid, u.name, n.created, n.title, n.nid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.type = 'blog' ORDER BY n.nid DESC LIMIT 10");
 
   while ($node = db_fetch_object($result)) {
-    $output .= l(check_output($node->title), array("id" => $node->nid))."<br />\n";
+    $output .= l(check_output($node->title), array("id" => $node->nid)) ."<br />\n";
   }
 
   $output .= "<br /><div align=\"right\">".lm(t("more"), array("mod" => "blog"), t("Read the latest blog entries."))."</div>";

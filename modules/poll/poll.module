@@ -116,7 +116,7 @@ function poll_insert($node) {
 
 function poll_link($type) {
   if ($type == "menu.create" && user_access("post content")) {
-    $links[] = lm(t("create poll"), array("mod" => "node", "op" => "add", "type" => "poll"), t("Add a new poll."));
+    $links[] = lm(t("create poll"), array("mod" => "node", "op" => "add", "type" => "poll"), "", array("title", t("Add a new poll.")));
   }
 
   return $links ? $links : array();
@@ -214,7 +214,7 @@ function poll_view(&$node, $main = 0, $block = 0) {
 
   if ($allowvotes) {
     // Display the vote form
-    $url = request_uri() . (strstr(request_uri(), "?") ? "&" : "?") ."pollid=". $pollidcount;
+    $url = request_uri() . (strstr(request_uri(), "?") ? "&amp;" : "?") ."pollid=". $pollidcount;
     $output .= "<form action=\"$url\" method=\"post\">";
     $output .= "<table border=\"0\" align=\"center\"><tr><td>";
 
@@ -225,7 +225,8 @@ function poll_view(&$node, $main = 0, $block = 0) {
     }
     if ($block) {
       $output .= "</td></tr><tr><td><div align=\"center\">". form_submit(t("Vote")) ."</div></td></tr></table>";
-    } else {
+    }
+    else {
       $output .= "</td><td valign=\"middle\"><div align=\"right\">&nbsp;&nbsp;&nbsp;". form_submit(t("Vote")) ."</div></td></tr></table>";
     }
     $output .= "</form>";
@@ -241,10 +242,10 @@ function poll_view(&$node, $main = 0, $block = 0) {
     $votesmax = max($votesmax, 1);
 
     // Define CSS classes for the bars
-    $output .= "<style type=\"text/css\">";
-    $output .= "td.pollfg { background-color: ". $theme->foreground ."; font-size: 5pt; }";
-    $output .= "td.pollbg { background-color: ". $theme->background ."; font-size: 5pt; }";
-    $output .= "</style>";
+    $output .= "<style type=\"text/css\">\n";
+    $output .= "td.pollfg { background-color: ". $theme->foreground ."; font-size: 5pt; }\n";
+    $output .= "td.pollbg { background-color: ". $theme->background ."; font-size: 5pt; }\n";
+    $output .= "</style>\n";
 
     foreach ($node->choice as $key => $value) {
       if ($value != "") {

@@ -92,11 +92,11 @@ function book_save($op, $node) {
 
 function book_link($type, $node = 0, $main = 0) {
   if ($type == "page" && user_access("access content")) {
-    $links[] = lm(t("collaborative book"), array("mod" => "book"), t("Read and contribute to the collaborative books."));
+    $links[] = lm(t("collaborative book"), array("mod" => "book"), "", array("title" => t("Read and contribute to the collaborative books.")));
   }
 
   if ($type == "menu.create" && user_access("post content")) {
-    $links[] = lm(t("create book page"), array("mod" => "node", "op" => "add", "type" => "book"), t("Add a new book page."));
+    $links[] = lm(t("create book page"), array("mod" => "node", "op" => "add", "type" => "book"), "", array("title" => t("Add a new book page.")));
   }
 
   if ($type == "admin" && user_access("administer nodes")) {
@@ -104,7 +104,7 @@ function book_link($type, $node = 0, $main = 0) {
   }
 
   if ($type == "node" && $node->type == "book" && book_access("update", $node)) {
-    $links[] = lm(t("edit this page"), array("mod" => "node", "op" => "edit", "id" => $node->nid), t("Suggest an update for this book page."));
+    $links[] = lm(t("edit this page"), array("mod" => "node", "op" => "edit", "id" => $node->nid), "", array("title" => t("Suggest an update for this book page.")));
   }
 
   return $links ? $links : array();
@@ -406,8 +406,8 @@ function book_view($node, $main = 0) {
     }
 
     $output .= " <tr><td colspan=\"3\"><hr /></td></tr>";
-    $output .= " <tr><td align=\"left\" width=\"33%\">". ($prev ? l(t("previous"), array("id" => $prev->nid), t("View the previous page in this book.")) : t("previous")) ."</td><td align=\"center\" width=\"34%\">". lm(t("index"), array("mod" => "book"), t("View this book's table of contents.")) ."</td><td align=\"right\" width=\"33%\">". ($next ? l(t("next"), array("id" => $next->nid), t("View the next page in this book.")) : t("next")) ."</td></tr>";
-    $output .= " <tr><td align=\"left\" width=\"33%\">". ($prev ? "<small>". check_output($prev->title) ."</small>" : "&nbsp;") ."</td><td align=\"center\" width=\"34%\">". ($node->parent ? l(t("up"), array("id" => $node->parent), t("View this page's parent section.")) : t("up")) ."</td><td align=\"right\" width=\"33%\">". ($next ? "<small>". check_output($next->title) ."</small>" : "&nbsp;") ."</td></tr>";
+    $output .= " <tr><td align=\"left\" width=\"33%\">". ($prev ? l(t("previous"), array("id" => $prev->nid), "", array("title" => t("View the previous page in this book."))) : t("previous")) ."</td><td align=\"center\" width=\"34%\">". lm(t("index"), array("mod" => "book"), t("View this book's table of contents.")) ."</td><td align=\"right\" width=\"33%\">". ($next ? l(t("next"), array("id" => $next->nid), "", array("title" => t("View the next page in this book."))) : t("next")) ."</td></tr>";
+    $output .= " <tr><td align=\"left\" width=\"33%\">". ($prev ? "<small>". check_output($prev->title) ."</small>" : "&nbsp;") ."</td><td align=\"center\" width=\"34%\">". ($node->parent ? l(t("up"), array("id" => $node->parent), "", array("title" => t("View this page's parent section."))) : t("up")) ."</td><td align=\"right\" width=\"33%\">". ($next ? "<small>". check_output($next->title) ."</small>" : "&nbsp;") ."</td></tr>";
     $output .= " <tr><td colspan=\"3\"><hr /></td></tr>";
     $output .= " <tr><td colspan=\"3\" align=\"right\"><div style=\"margin: 10 10 10 10;\">". $theme->links(link_node($node, $main)) ."</div></td></tr>";
     $output .= "</table>";
@@ -675,7 +675,7 @@ function book_admin_links() {
     $links[] = la(t("book") .": <i>". check_output($book->title) ."</i>", array("mod" => "book", "op" => "view", "id" => $book->nid));
   }
   $links[] = la(t("orphan pages"), array("mod" => "book", "op" => "orphan"));
-  $links[] = lm(t("export to HTML"), array("mod" => "book", "op" => "feed"), t("display all books in a single HTML page"));
+  $links[] = lm(t("export to HTML"), array("mod" => "book", "op" => "feed"), "", array("title" => t("display all books in a single HTML page")));
   $links[] = la(t("help"), array("mod" => "book", "op" => "help"));
   return $links;
 }

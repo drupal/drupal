@@ -31,7 +31,7 @@ function cloud_perm() {
 
 function cloud_link($type) {
   if ($type == "page" && user_access("access site cloud")) {
-    $links[] = lm(t("site cloud"), array("mod" => "cloud"), t("Monitor other sites in the cloud."));;
+    $links[] = lm(t("site cloud"), array("mod" => "cloud"), "", array("title" => t("Monitor other sites in the cloud.")));
   }
 
   if ($type == "admin" && user_access("administer site cloud")) {
@@ -147,7 +147,7 @@ function cloud_list($limit = 10) {
         $list = 0;
       }
     }
-    $output .= "<div style=\"padding-left: 10px;\">". format_url($site->link, $site->name) ."</div>";
+    $output .= "<div style=\"padding-left: 10px;\"><a href=\"$site->link\">$site->name</a></div>";
   }
   return $output;
 }
@@ -164,7 +164,7 @@ function cloud_page() {
 
 function cloud_block() {
   $block[0]["subject"] = t("Site cloud");
-  $block[0]["content"] = cloud_list(20) ."<br /><div align=\"right\">". lm(t("more"), array("mod" => "cloud"), t("Monitor other sites in the cloud.")) ."</div>";
+  $block[0]["content"] = cloud_list(20) ."<br /><div align=\"right\">". lm(t("more"), array("mod" => "cloud"), "", array("title", t("Monitor other sites in the cloud."))) ."</div>";
   $block[0]["info"] = t("Site cloud");
   return $block;
 }

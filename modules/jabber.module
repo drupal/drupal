@@ -166,7 +166,7 @@ function jabber_user($type, $edit, $user) {
       return $output;
     case "edit_form":
       $result = user_get_authname($user, $module);
-      $output .= form_textfield("$name ID", "authname_" . $module, $result, 30, 55, t("You may login to %s using a valid %id.", array("%s" => variable_get("site_name", "this web site"), "%id" => lm("$name ID", array("mod" => "user", "op" => "help#".$module)))));
+      $output .= form_textfield("$name ID", "authname_" . $module, $result, 30, 55, t("You may login to %s using a valid %id.", array("%s" => variable_get("site_name", "this web site"), "%id" => lm("$name ID", array("mod" => "user", "op" => "help"), $module))));
       return $output;
     case "edit_validate":
       return user_validate_authmap($user, $edit["authname_$module"], $module);

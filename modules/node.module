@@ -378,7 +378,7 @@ function node_link($type, $node = 0, $main = 0) {
   }
 
   if ($type == "page" && user_access("post content")) {
-    $links[] = lm(t("submit"), array("mod" => "node", "op" => "add"), t("Submit or suggest new content."));
+    $links[] = lm(t("submit"), array("mod" => "node", "op" => "add"), "", array("title" => t("Submit or suggest new content.")));
   }
 
   if ($type == "node") {
@@ -387,11 +387,11 @@ function node_link($type, $node = 0, $main = 0) {
     }
 
     if ($main == 1 && $node->teaser != $node->body) {
-      $links[] = l(t("read more"), array("id" => $node->nid), t("Read the rest of this posting."));
+      $links[] = l(t("read more"), array("id" => $node->nid), "node", "", array("title" => t("Read the rest of this posting.")));
     }
 
     if (user_access("administer nodes")) {
-       $links[] = la(t("administer"), array("mod" => "node", "op" => "edit", "id" => $node->nid), t("Administer this node."));
+       $links[] = la(t("administer"), array("mod" => "node", "op" => "edit", "id" => $node->nid), "", array("title" => t("Administer this node.")));
     }
   }
 
@@ -664,7 +664,7 @@ function node_block() {
   global $theme;
 
   $block[0][subject] = t("Syndicate");
-  $block[0][content] = "<div align=\"center\">". lm("<img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" border=\"0\" alt=\"XML\" />", array("mod" => "node", "op" => "feed"), t("Read the XML version of this page.")) ."</div>\n";
+  $block[0][content] = "<div align=\"center\">". lm("<img src=\"". $theme->image("xml.gif") ."\" width=\"36\" height=\"14\" border=\"0\" alt=\"XML\" />", array("mod" => "node", "op" => "feed"), "", array("title" => t("Read the XML version of this page."))) ."</div>\n";
   $block[0][info] = "Syndicate";
 
   return $block;
@@ -900,7 +900,7 @@ function node_add($type) {
     foreach (module_list() as $name) {
       if (module_hook($name, "node") && node_access("create", array("type" => $name))) {
         $output .= "<li>";
-        $output .= " ". lm(module_invoke($name, "node", "name"), array("mod" => "node", "op" => "add", "type" => $name), t("Add a new %s.", array("%s" => module_invoke($name, "node", "name"))));
+        $output .= " ". lm(module_invoke($name, "node", "name"), array("mod" => "node", "op" => "add", "type" => $name), "", array("title" => t("Add a new %s.", array("%s" => module_invoke($name, "node", "name")))));
         $output .= " <div style=\"margin-left: 20px;\">". module_invoke($name, "node", "description") ."</div>";
         $output .= "</li>";
       }

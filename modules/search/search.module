@@ -29,7 +29,7 @@ function search_perm() {
  */
 function search_link($type) {
   if ($type == "page" && user_access("search content")) {
-    $links[] = lm(t("search"), array("mod" => "search"), t("Search for older content."));
+    $links[] = lm(t("search"), array("mod" => "search"), "", array("title" => t("Search for older content.")));
   }
 
   if ($type == "admin" && user_access("administer search")) {

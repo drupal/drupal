@@ -35,11 +35,11 @@ function forum_save($op, $node) {
 
 function forum_link($type) {
   if ($type == "page" && user_access("access content")) {
-    $links[] = lm(t("forum"), array("mod" => "forum"), t("Read and participate in the discussion forums."));
+    $links[] = lm(t("forum"), array("mod" => "forum"), "", array("title" => t("Read and participate in the discussion forums.")));
   }
 
   if ($type == "menu.create" && user_access("administer nodes")) {
-    $links[] = lm(t("create forum"), array("mod" => "node", "op" => "add", "type" => "forum"), t("Add a new discussion forum."));
+    $links[] = lm(t("create forum"), array("mod" => "node", "op" => "add", "type" => "forum"), "", array("title" => t("Add a new discussion forum.")));
   }
 
   return $links ? $links : array();

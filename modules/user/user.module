@@ -481,9 +481,9 @@ function user_block() {
     $output .= "<input name=\"edit[op]\" type=\"submit\" value=\"". t("Log in") ."\" /><br />\n";
     $output .= "</form></div>\n";
     if (variable_get("user_register", 1)) {
-      $output .= "&#187; ". lm(t("Register"), array("mod" => "user", "op" => "register"), t("Create a new user account.")) ."\n";
+      $output .= "&#187; ". lm(t("Register"), array("mod" => "user", "op" => "register"), "", array("title" => t("Create a new user account."))) ."\n";
     }
-    $output .= "<br />&#187; ". lm(t("New password"), array("mod" => "user", "op" => "password"), t("Request new password via e-mail")) ."<br />";
+    $output .= "<br />&#187; ". lm(t("New password"), array("mod" => "user", "op" => "password"), "", array("title" => t("Request new password via e-mail"))) ."<br />";
 
     $block[1]["content"] = $output;
   }
@@ -527,11 +527,11 @@ function user_new_users() {
 
 function user_link($type) {
   if ($type == "page") {
-    $links[] = lm(t("user account"), array("mod" => "user"), t("Create a user account, request a new password or edit your account settings."));
+    $links[] = lm(t("user account"), array("mod" => "user"), "", array("title" => t("Create a user account, request a new password or edit your account settings.")));
   }
 
   if ($type == "menu.settings") {
-    $links[] = lm(t("edit account"), array("mod" => "user", "op" => "edit"), t("View and edit your account information."));
+    $links[] = lm(t("edit account"), array("mod" => "user", "op" => "edit"), "", array("title" => t("View and edit your account information.")));
   }
 
   if ($type == "menu.misc") {
@@ -539,7 +539,7 @@ function user_link($type) {
       $links[] = la(t("administer %a", array("%a" => variable_get("site_name", "drupal"))));
     }
 
-    $links[] = lm(t("logout"), array("mod" => "user", "op" => "logout"), t("Logout."));
+    $links[] = lm(t("logout"), array("mod" => "user", "op" => "logout"), "", array("title" => t("Logout.")));
   }
 
   if ($type == "admin" && user_access("administer users")) {
@@ -662,7 +662,7 @@ function user_help_da() {
 function user_auth_help_links() {
   foreach (module_list() as $module) {
     if (module_hook($module, "auth_help")) {
-      $links[] = lm(module_invoke($module, "info", "name"), array("mod" => "user", "op" => "help#$module"));
+      $links[] = lm(module_invoke($module, "info", "name"), array("mod" => "user", "op" => "help"), $module);
     }
   }
   return $links;
@@ -1145,7 +1145,7 @@ function user_view($uid = 0) {
       }
     }
 
-    $output .= form_item(t("Homepage"), format_url($user->homepage));
+    $output .= form_item(t("Homepage"), "<a href=\"$user->homepage\">$user->homepage</a>");
     $output .= form_item(t("Signature"), check_output($user->signature, 1));
 
     $theme->header();
@@ -1155,7 +1155,7 @@ function user_view($uid = 0) {
   }
   else if ($uid && $account = user_load(array("uid" => $uid, "status" => 1))) {
     $output .= form_item(t("Name"), check_output($account->name));
-    $output .= form_item(t("Homepage"), format_url($account->homepage));
+    $output .= form_item(t("Homepage"), "<a href=\"$account->homepage\">$account->homepage</a>");
 
     foreach (module_list() as $module) {
       if (module_hook($module, "user")) {
@@ -1617,12 +1617,12 @@ function user_admin_edit($edit = array()) {
 function user_admin_account() {
   global $query;
 
-  $queries = array(array("ORDER BY timestamp DESC", "active users"), array("ORDER BY uid DESC", "new users"), array("WHERE status = 0 ORDER BY uid DESC", "blocked users"));
+  $queries = array(array("ORDER BY timestamp DESC", "active users"), array("ORDER BY u.uid DESC", "new users"), array("WHERE status = 0 ORDER BY u.uid DESC", "blocked users"));
   foreach (user_roles(1) as $key => $value) {
-    $queries[] = array("WHERE role = '$value' ORDER BY uid DESC", $value . "s");
+    $queries[] = array("WHERE r.name = '$value' ORDER BY u.uid DESC", $value . "s");
   }
 
-  $result = db_query("SELECT uid, name, timestamp FROM users ". $queries[$query ? $query : 0][0] ." LIMIT 50");
+  $result = db_query("SELECT u.uid, u.name, u.timestamp FROM users u LEFT JOIN role r ON u.rid = r.rid ". $queries[$query ? $query : 0][0] ." LIMIT 50");
 
   foreach ($queries as $key => $value) {
     $links[] = la($value[1], array("mod" => "user", "op" => "account", "query" => $key));
@@ -1633,7 +1633,7 @@ function user_admin_account() {
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
   $output .= " <tr><th>username</th><th>last access</th><th>operations</th></tr>";
   while ($account = db_fetch_object($result)) {
-    $output .= " <tr><td>". format_name($account) ."</td><td>". format_date($account->timestamp, "small") ."</td><td align=\"center\">". la(t("edit account"), array("mod" => "user", "op" => "edit", "id" =>$account->uid)) ."</td></tr>";
+    $output .= " <tr><td>". format_name($account) ."</td><td>". format_date($account->timestamp, "small") ."</td><td align=\"center\">". la(t("edit account"), array("mod" => "user", "op" => "edit", "id" => $account->uid)) ."</td></tr>";
   }
   $output .= "</table>";
 

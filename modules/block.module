@@ -77,9 +77,9 @@ function block_admin_display() {
     $weights = array(0 => 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10);
 
     $output .= '<tr>';
-    //$output .= '<td>'. la($block->name, array("mod" => "block", "op" => "view", "id" => $block->delta), t("View the block details")) .'</td>';
+    //$output .= '<td>'. la($block->name, array("mod" => "block", "op" => "view", "id" => $block->delta), "", array("title" => t("View the block details"))) .'</td>';
     $output .= "<td>$block->name</td>";
-    $output .= '<td>'. (module_hook($block->module, "admin") ? la($block->module, array("mod" => $block->module), "Administer module") : $block->module) .'</td>';
+    $output .= '<td>'. (module_hook($block->module, "admin") ? la($block->module, array("mod" => $block->module), "", array("title" => t("Administer module"))) : $block->module) .'</td>';
     $output .= '<td align="center">'. form_checkbox(NULL, "$block->name][status", 1, $block->status) .'</td>';
     $output .= '<td align="center">'. form_checkbox(NULL, "$block->name][custom", 1, $block->custom) .'</td>';
     $output .= '<td>'. form_select(NULL, "$block->name][weight", $block->weight, $weights) .'</td>';
@@ -259,13 +259,17 @@ function block_user($type, &$edit, &$user) {
     case "edit_form":
       $result = db_query("SELECT * FROM blocks WHERE custom = '%d' ORDER BY name", 1);
 
-      $form = '<table border="0" cellpadding="2" cellspacing="2">';
       while ($block = db_fetch_object($result)) {
-        $form .= "<tr><td>$block->name</td><td>". form_checkbox(NULL, "block][$block->name", 1, $user->block[$block->name]) ."</td></tr>\n";
+        $data = module_invoke($block->module, "block");
+        if ($data[$block->delta]["subject"]) {
+          $form .= "<tr><td>$block->name</td><td>". form_checkbox(NULL, "block][$block->name", 1, $user->block[$block->name]) ."</td></tr>\n";
+        }
       }
-      $form .= '</table>';
 
-      return form_item(t("Block configuration"), $form, "Enable the blocks you would like to see displayed in the side bars.");
+      if (isset($form)) {
+        return form_item(t("Block configuration"), '<table border="0" cellpadding="2" cellspacing="2">'. $form .'</table>', "Enable the blocks you would like to see displayed in the side bars.");
+      }
+
   }
 }
 

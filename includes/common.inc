@@ -35,7 +35,7 @@ function error_handler($errno, $message, $filename, $line, $variables) {
 
 function watchdog($type, $message) {
   global $user;
-  db_query("INSERT INTO watchdog (uid, type, message, location, hostname, timestamp) VALUES ('$user->uid', '%s', '%s', '%s', '%s', '%s')", $type, $message, getenv("PATH_INFO"), getenv("REMOTE_ADDR"), time());
+  db_query("INSERT INTO watchdog (uid, type, message, location, hostname, timestamp) VALUES ('$user->uid', '%s', '%s', '%s', '%s', '%s')", $type, $message, request_urih(), getenv("REMOTE_ADDR"), time());
 }
 
 function throttle($type, $rate) {
@@ -98,11 +98,6 @@ function request_uri() {
   else {
     return $PATH_INFO ."?". $QUERY_STRING;
   }
-}
-
-function path_img() {
-  // use "http://your-image-server.com/ if you want to host images on a seperate server.
-  return "./images/";
 }
 
 function message_access() {
@@ -407,10 +402,6 @@ function check_file($filename) {
   }
 }
 
-function format_info($body, $block) {
-  return "<table><tr><td><table align=\"right\" border=\"1\" width=\"180\"><tr><td>$block</td></tr></table>$body</td></tr></table>\n";
-}
-
 function format_rss_channel($title, $link, $description, $items, $language = "en", $args = array()) {
   // arbitrary elements may be added using the $args associative array
 
@@ -509,7 +500,7 @@ function page_get_cache() {
 
 function format_interval($timestamp) {
   $units = array("year|years" => 31536000, "week|weeks" => 604800, "day|days" => 86400, "hour|hours" => 3600, "min|min" => 60, "sec|sec" => 1);
-  foreach ($units as $key => $value) {
+  foreach ($units as $key=>$value) {
     $key = explode("|", $key);
     if ($timestamp >= $value) {
       $output .= ($output ? " " : "") . format_plural(floor($timestamp / $value), $key[0], $key[1]);
@@ -543,7 +534,7 @@ function format_date($timestamp, $type = "medium", $format = "") {
           $date = date($c, $timestamp).$date;
         }
         else {
-          $date = $c . $date;
+          $date = $c.$date;
         }
       }
       break;
@@ -569,15 +560,6 @@ function format_name($object) {
   }
 
   return $output;
-}
-
-function format_email($address) {
-  return ($address) ? "<a href=\"mailto:$address\">$address</A>" : message_na();
-}
-
-function format_url($address, $description = 0) {
-  $description = ($description) ? $description : $address;
-  return ($address) ? "<a href=\"$address\">". check_output($description) ."</a>" : message_na();
 }
 
 function format_tag($link, $text) {
@@ -610,7 +592,7 @@ function form_textarea($title, $name, $value, $cols, $rows, $description = 0) {
 
 function form_select($title, $name, $value, $options, $description = 0, $extra = 0, $multiple = 0) {
   if (count($options) > 0) {
-    foreach ($options as $key => $choice) {
+    foreach ($options as $key=>$choice) {
       $select .= "<option value=\"$key\"". (is_array($value) ? (in_array($key, $value) ? " selected=\"selected\"" : "") : ($key == $value ? " selected=\"selected\"" : "")) .">". check_form($choice) ."</option>";
     }
     return form_item($title, "<select name=\"edit[$name]". ($multiple ? "[]" : "") ."\"". ($multiple ? " multiple " : "") . ($extra ? " $extra" : "") .">$select</select>", $description);
@@ -635,13 +617,14 @@ function form_submit($value) {
  *
  * @param $args    dictionary of arguments to be passed to the script
  * @param $script  script to be invoked; optional, defaults to node
+ * @param $anchor  optional, anchor name
  */
-function drupal_url($args = array(), $script = "node") {
+function drupal_url($args = array(), $script = "node", $anchor = "") {
   $t = array();
   foreach ($args as $key => $value) {
     $t[] = "$key=". urlencode($value);
   }
-  return "$script.php?". implode("&", $t);
+  return "$script.php?". implode("&amp;", $t) . ($anchor != "" ? "#". $anchor : "");
 }
 
 /**
@@ -650,34 +633,34 @@ function drupal_url($args = array(), $script = "node") {
  *
  * @param $args        dictionary of arguments to be passed to the script
  * @param $text        text of the link
- * @param $title       optional, popup title
+ * @param $anchor      optional, anchor name
  * @param $script      script to be invoked; optional, defaults to node
  * @param $attributes  optional, dictionary of attributes for the <a> tag such as 'target', 'name', 'class', etc.
  */
-function l($text, $args = array(), $title = "", $script = "node", $attributes = array()) {
+function l($text, $args = array(), $script = "node", $anchor = "", $attributes = array()) {
   $t = array();
   foreach ($attributes as $key => $value) {
     $t[] = "$key=\"$value\"";
   }
-  return "<a href=\"". drupal_url($args, $script) ."\" title=\"$title\" ". implode($t, " ")  .">$text</a>";
+  return "<a href=\"". drupal_url($args, $script, $anchor) ."\" ". implode($t, " ")  .">$text</a>";
 }
 
-function la($text, $args = array(), $title = "", $attributes = array()) {
+function la($text, $args = array(), $anchor = "", $attributes = array()) {
   // we don't call l() to avoid another duplication of the array
   $t = array();
   foreach ($attributes as $key => $value) {
     $t[] = "$key=\"$value\"";
   }
-  return "<a href=\"". drupal_url($args, "admin") ."\" title=\"$title\" ". implode($t, " ")  .">$text</a>";
+  return "<a href=\"". drupal_url($args, "admin", $anchor) ."\" ". implode($t, " ")  .">$text</a>";
 }
 
-function lm($text, $args = array(), $title = "", $attributes = array()) {
+function lm($text, $args = array(), $anchor = "", $attributes = array()) {
   // we don't call l() to avoid another duplication of the array
   $t = array();
   foreach ($attributes as $key => $value) {
     $t[] = "$key=\"$value\"";
   }
-  return "<a href=\"". drupal_url($args, "module") ."\" title=\"$title\" ". implode($t, " ")  .">$text</a>";
+  return "<a href=\"". drupal_url($args, "module", $anchor) ."\" ". implode($t, " ")  .">$text</a>";
 }
 
 function field_get($string, $name) {
@@ -691,14 +674,6 @@ function field_set($string, $name, $value) {
     $rval .= ($rval == "," ? "" : ",") ."$name=$value";
   }
   return substr($rval, 1);
-}
-
-function field_merge($a, $b) {
-  foreach (explode(",", $b) as $data) {
-    $entry = explode("=", $data);
-    $a = field_set($a, $entry[0], $entry[1]);
-  }
-  return $a;
 }
 
 function link_page() {
