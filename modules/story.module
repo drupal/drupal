@@ -48,7 +48,7 @@ function story_save($op, $node) {
 
   if ($op == "create") {
     if (user_access("administer nodes")) {
-      return array();
+      return array("body" => filter($node->body), "teaser" => filter($node->teaser));
     }
     else {
       return array("moderate" => 1);
@@ -60,7 +60,7 @@ function story_save($op, $node) {
   }
 
   if ($op == "update") {
-    return array();
+    return array("body" => filter($node->body), "teaser" => filter($node->teaser));
   }
 }
 

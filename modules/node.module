@@ -1032,9 +1032,6 @@ function node_preview($node, $error = NULL) {
     ** Display a prenode of the node:
     */
 
-    $view->body = filter($view->body);
-    $view->teaser = filter($view->teaser);
-
     if ($view->teaser && $view->teaser != $view->body) {
       print "<h3>". t("Preview trimmed version") ."</h3>";
       node_view($view, 1);
@@ -1076,8 +1073,6 @@ function node_submit($node) {
   /*
   ** Prepare the node's body:
   */
-
-  $node->body = filter($node->body);
 
   if ($node->nid) {
 

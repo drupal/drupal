@@ -49,7 +49,12 @@ function page_save($op, $node) {
   }
 
   if ($op == "create") {
-    return array("teaser" => $node->body, "format", "link", "description");
+    if ($node->format) {  // do not filter PHP code, do not auto-extract a teaser
+      return array("teaser" => $node->body, "format", "link", "description");
+    }
+    else {
+      return array("body" => filter($node->body), "teaser" => filter($node->teaser), "format", "link", "description");
+    }
   }
 
   if ($op == "decline") {
@@ -57,7 +62,12 @@ function page_save($op, $node) {
   }
 
   if ($op == "update") {
-    return array("teaser" => $node->body, "format", "link", "description");
+    if ($node->format) {  // do not filter PHP code, do not auto-extract a teaser
+      return array("teaser" => $node->body, "format", "link", "description");
+    }
+    else {
+      return array("body" => filter($node->body), "teaser" => filter($node->teaser), "format", "link", "description");
+    }
   }
 }
 

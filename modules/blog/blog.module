@@ -79,10 +79,10 @@ function blog_save($op, $node) {
       ** pages, they will not be changed unless explicitly specified.
       */
 
-      return array();
+      return array("body" => filter($node->body), "teaser" => filter($node->teaser));
     }
     else {
-      return array("promote" => 0, "moderate" => 1, "status" => 1);
+      return array("body" => filter($node->body), "teaser" => filter($node->teaser), "promote" => 0, "moderate" => 1, "status" => 1);
     }
   }
 
@@ -97,7 +97,7 @@ function blog_save($op, $node) {
       ** pages, they will not be changed unless explicitly specified.
       */
 
-      return array();
+      return array("body" => filter($node->body), "teaser" => filter($node->teaser));
     }
     else {
       /*
@@ -105,7 +105,7 @@ function blog_save($op, $node) {
       ** and will queue it in the moderation queue for promotion.
       */
 
-      return array("promote" => 0, "moderate" => 1, "score" => 0, "votes" => 0, "users" => 0);
+      return array("body" => filter($node->body), "teaser" => filter($node->teaser), "promote" => 0, "moderate" => 1, "score" => 0, "votes" => 0, "users" => 0);
     }
   }
 

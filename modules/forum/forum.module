@@ -74,7 +74,7 @@ function forum_save($op, $node) {
   }
 
   if ($op == "create") {
-    return array("body" => filter($node->body), "moderate" => 0, "status" => 1, "tid", "icon_num", "shadow" => 0);
+    return array("body" => filter($node->body), "teaser" => filter($node->teaser), "moderate" => 0, "status" => 1, "tid", "icon_num", "shadow" => 0);
   }
 
   if ($op == "decline") {
@@ -82,7 +82,7 @@ function forum_save($op, $node) {
   }
 
   if ($op == "update") {
-    return array("body" => filter($node->body), "tid", "icon_num", "shadow");
+    return array("body" => filter($node->body), "teaser" => filter($node->teaser), "tid", "icon_num", "shadow");
   }
 }
 
