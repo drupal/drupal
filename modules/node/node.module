@@ -34,7 +34,11 @@ function node_title_list($result, $title = NULL) {
     $items[] = l($node->title, "node/view/$node->nid", array("title" => t("Comments: %number", array("%number" => $number))));
   }
 
-  return theme("theme_item_list", $items, $title);
+  return theme("theme_node_list", $items, $title);
+}
+
+function theme_node_list($items, $title) {
+  return theme("theme_item_list",$items,$title);
 }
 
 // Update the 'last viewed' timestamp of the specified node for current user.

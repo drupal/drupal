@@ -351,10 +351,10 @@ function user_block($op = "list", $delta = 0) {
         break;
       case 1:
         if ($user->uid) {
-          $content[] = theme("theme_item_list", module_invoke_all("link", "menu.create"));
-          $content[] = theme("theme_item_list", module_invoke_all("link", "menu.view"));
-          $content[] = theme("theme_item_list", module_invoke_all("link", "menu.settings"));
-          $content[] = theme("theme_item_list", module_invoke_all("link", "menu.misc"));
+          $content[] = theme("theme_menu_list", module_invoke_all("link", "menu.create"));
+          $content[] = theme("theme_menu_list", module_invoke_all("link", "menu.view"));
+          $content[] = theme("theme_menu_list", module_invoke_all("link", "menu.settings"));
+          $content[] = theme("theme_menu_list", module_invoke_all("link", "menu.misc"));
 
           $output = implode($content, "<br />");
 
@@ -370,13 +370,21 @@ function user_block($op = "list", $delta = 0) {
           $items[] = l((strlen($account->name) > 15 ? substr($account->name, 0, 15) . '...' : $account->name), "user/view/$account->uid");
         }
 
-        $output = theme("theme_item_list", $items);
+        $output = theme("theme_user_list", $items);
 
         $block["subject"] = t("Who's new");
         $block["content"] = $output;
         return $block;
     }
   }
+}
+
+function theme_user_list($items, $title = '') {
+  return theme("theme_item_list",$items, $title);
+}
+
+function theme_menu_list($items, $title = '') {
+  return theme("theme_item_list",$items, $title);
 }
 
 function user_link($type) {
