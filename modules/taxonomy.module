@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.76 2003/11/13 19:52:54 dries Exp $
+// $Id: taxonomy.module,v 1.77 2003/11/13 23:00:53 dries Exp $
 
 function taxonomy_feed($taxonomy) {
   global $id, $type;
@@ -685,7 +685,7 @@ function taxonomy_render_nodes($result) {
   while ($node = db_fetch_object($result)) {
     node_view(node_load(array("nid" => $node->nid, "type" => $node->type)), 1);
   }
-  print pager_display_default(NULL, variable_get("default_nodes_main", 10), 0);
+  print pager_display(NULL, variable_get("default_nodes_main", 10), 0);
 }
 
 function taxonomy_nodeapi($node, $op, $arg = 0) {
