@@ -1,6 +1,5 @@
 <!-- BEGIN: header -->
 <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-strict.dtd">
-
 <html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en">
 
 <head>
@@ -34,66 +33,62 @@
 <table border="0" cellpadding="0" cellspacing="0" id="content">
   <tr>
     <!-- BEGIN: blocks -->
-      <td id="sidebar-left">
-        {blocks}
-      </td>
+    <td id="sidebar-left">
+      {blocks}
+    </td>
     <!-- END: blocks -->
     <td valign="top">
       <!-- BEGIN: mission -->
-       <div id="mission">{mission}</div>
+      <div id="mission">{mission}</div>
       <!-- END: mission -->
-     <div id="main">
-       {breadcrumb}
-       <h1>{body_title}</h1>
-       <!-- BEGIN: help -->
+      <div id="main">
+        {breadcrumb}
+        <h1 class="title">{body_title}</h1>
+        <!-- BEGIN: help -->
         <div id="help">{help}</div>
-       <!-- END: help -->
-       <!-- BEGIN: message -->
-        <div class="{class}">{message}</div>
-       <!-- END: message -->
+        <!-- END: help -->
+        <!-- BEGIN: message -->
+        <div class="message {type}">{message}</div>
+        <!-- END: message -->
 <!-- END: header -->
 
 <!-- BEGIN: node -->
-  <div class="{classes}">
+  <div class="node {static}">
     <!-- BEGIN: title -->
-    <h2><a href="{link}">{title}</a></h2>
+    <h2 class="title"><a href="{link}">{title}</a></h2>
     <!-- END: title -->
-    <span class="author">Submitted by {author} on {date}.</span>
+    <span class="submitted">Submitted by {author} on {date}.</span>
+    <!-- BEGIN: taxonomy -->
     <span class="taxonomy">{taxonomy}</span>
+    <!-- END: taxonomy -->
     <div class="content">{content}</div>
+    <!-- BEGIN: links -->
     <div class="links">&raquo; {links}</div>
+    <!-- END: links -->
   </div>
 <!-- END: node -->
 
-<!-- BEGIN: comment_new -->
+<!-- BEGIN: comment -->
   <div class="comment">
-    <h3>{title}</h3>
-    <span class="new">new</span>
-    <div class="author">Posted by {author} on {date}.</div>
+    <h3 class="title">{title}</h3><!-- BEGIN: new --><span class="new">new</span><!-- END: new -->
+    <div class="submitted">Submitted by {author} on {date}.</div>
     <div class="content">{content}</div>
+    <!-- BEGIN: links -->
     <div class="links">&raquo; {links}</div>
+    <!-- END: links -->
   </div>
-<!-- END: comment_new -->
-
-<!-- BEGIN: comment_old -->
-  <div class="comment">
-    <h3>{title}</h3>
-    <div class="author">Posted by {author} on {date}.</div>
-    <div class="content">{content}</div>
-    <div class="links">&raquo; {links}</div>
-  </div>
-<!-- END: comment_old -->
+<!-- END: comment -->
 
 <!-- BEGIN: box -->
   <div class="box">
-    <h2>{subject}</h2>
+    <h2 class="title">{title}</h2>
     <div class="content">{content}</div>
  </div>
 <!-- END: box -->
 
 <!-- BEGIN: block -->
   <div class="block block-{module}" id="block-{module}-{delta}">
-    <h2>{subject}</h2>
+    <h2 class="title">{title}</h2>
     <div class="content">{content}</div>
  </div>
 <!-- END: block -->
