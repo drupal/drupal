@@ -218,7 +218,10 @@ function locale_admin() {
         print locale_edit(check_query(arg(3)));
         break;
       case "search":
+        print locale_seek_form();
+        break;
       case t("Search"):
+        print locale_seek();
         print locale_seek_form();
         break;
       case t("Save translations"):
