@@ -14,7 +14,7 @@ function error_httpd() {
       $message = "500 error - internal server error";
       break;
     case 404:
-      $message = "404 error - document not found";
+      $message = "404 error - `$REDIRECT_URL' not found";
       break;
     case 403:
       $message = "403 error - access denied - forbidden";

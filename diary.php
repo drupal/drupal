@@ -103,7 +103,7 @@ function diary_edit($id) {
 
   $output .= "<P>\n";
   $output .= " <INPUT TYPE=\"hidden\" NAME=\"id\" VALUE=\"$diary->id\">\n";
-  $output .= " <INPUT TYPE=\"hidden\" NAME=\"timesamp\" VALUE=\"$diary->timestamp\">\n";
+  $output .= " <INPUT TYPE=\"hidden\" NAME=\"timestamp\" VALUE=\"$diary->timestamp\">\n";
   $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Preview diary entry\"> <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Submit diary entry\">\n";
   $output .= "</P>\n";
 

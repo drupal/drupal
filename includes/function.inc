@@ -10,10 +10,10 @@ function load_theme() {
   global $user, $themes;
 
   if ($user->theme && file_exists($themes[$user->theme][0])) {
-    include $themes[$user->theme][0];     
+    include_once $themes[$user->theme][0];     
   }
   else {
-    include $themes[key($themes)][0];
+    include_once $themes[key($themes)][0];
   }
   return new Theme();
 }
@@ -90,7 +90,7 @@ function format_data($field, $replacement = "<I>na</I>") {
 }
 
 function format_username($username, $admin = 0) {
-  if ($username) return ($admin) ? "<A HREF=\"admin.php?section=accounts&op=view&name=$username\">$username</A>" : "<A HREF=\"account.php?op=view&name=$username\">$username</A>";
+  if ($username) return ($admin) ? "<A HREF=\"admin.php?mod=account&op=view&name=$username\">$username</A>" : "<A HREF=\"account.php?op=view&name=$username\">$username</A>";
   else { global $anonymous; return $anonymous; }
 }
 

@@ -260,7 +260,7 @@
            display_old_headlines($this);
 
            ### Display calendar:
-           display_calendar($this, $date);
+           $this->box("Browse archives", droplet_get("calendar"));
 
            ### Display new diary entries:
            display_new_diaries($this);           
