@@ -81,11 +81,7 @@ function block_admin_save($edit) {
     }
   }
 
-  /*
-  ** Clear the cache so the changes take effect for anonymous users.
-  */
-
-  cache_clear_all();
+  return t("the block settings have been updated.");
 }
 
 /**
@@ -139,29 +135,21 @@ function _block_rehash($order_by = array("weight")) {
 }
 
 function block_admin_display() {
-  // Generate output:
-  $output = "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  $output .= "<tr><th>block</th><th>module</th><th>enabled</th><th>custom</th><th>weight</th><th>region</th><th>path</th><th colspan=\"2\">operations</th></tr>\n";
 
   $blocks = _block_rehash();
 
+  $header = array(t("block"), t("enabled"), t("custom"), t("weight"), t("region"), t("path"), array("data" => "operations", "colspan" => 2));
+
   foreach ($blocks as $block) {
-    $output .= "<tr>";
-    $output .= "<td>".$block["info"]."</td>";
-    $output .= "<td align=\"center\">". (module_hook($block["module"], "admin") ? la($block["module"], array("mod" => $block["module"]), "", array("title" => t("Administer module"))) : $block["module"]) ."</td>";
-    $output .= "<td align=\"center\">". form_checkbox(NULL, $block["module"]."][".$block["delta"]."][status", 1, $block["status"]) ."</td>";
-    $output .= "<td align=\"center\">". form_checkbox(NULL, $block["module"]."][".$block["delta"]."][custom", 1, $block["custom"]) ."</td>";
-    $output .= "<td>". form_weight(NULL, $block["module"]."][".$block["delta"]."][weight", $block["weight"]) ."</td>";
-    $output .= "<td>". form_select(NULL, $block["module"]."][".$block["delta"]."][region", $block["region"], array("left", "right")) ."</td>";
-    $output .= "<td>". form_textfield(NULL, $block["module"]."][".$block["delta"]."][path", $block["path"], 10, 255) ."</td>";
-    if ($block["module"] == 'block') {
-      $output .= "<td>". la(t("edit"), array("mod" => "block", "op" => "edit", "id" => $block["delta"])) ."</td>";
-      $output .= "<td>". la(t("delete"), array("mod" => "block", "op" => "delete", "id" => $block["delta"])) ."</td>";
+    if ($block["module"] == "block") {
+      $edit = la(t("edit"), array("mod" => "block", "op" => "edit", "id" => $block["delta"]));
+      $delete = la(t("delete"), array("mod" => "block", "op" => "delete", "id" => $block["delta"]));
     }
-    $output .= "</tr>\n";
+
+    $rows[] = array($block["info"], array("data" => form_checkbox(NULL, $block["module"]."][".$block["delta"]."][status", 1, $block["status"]), "align" => "center"), array("data" => form_checkbox(NULL, $block["module"]."][".$block["delta"]."][custom", 1, $block["custom"]), "align" => "center"), form_weight(NULL, $block["module"]."][".$block["delta"]."][weight", $block["weight"]), form_select(NULL, $block["module"]."][".$block["delta"]."][region", $block["region"], array("left", "right")), form_textfield(NULL, $block["module"]."][".$block["delta"]."][path", $block["path"], 10, 255), $edit, $delete);
   }
 
-  $output .= "</table>\n";
+  $output = table($header, $rows);
   $output .= form_submit("Save blocks");
 
   print form($output);
@@ -250,18 +238,18 @@ function block_box_save($edit) {
 
   if ($edit["bid"]) {
     db_query("UPDATE boxes SET title = '%s', body = '%s', info = '%s', type = '%s' WHERE bid = '%s'", $edit["title"], $edit["body"], $edit["info"], $edit["type"], $edit["bid"]);
-    return "block updated.";
+    return t("the block has been updated.");
   }
   else {
     db_query("INSERT INTO boxes (title, body, info, type) VALUES  ('%s', '%s', '%s', '%s')", $edit["title"], $edit["body"], $edit["info"], $edit["type"]);
-    return "block added.";
+    return t("the new block has been added.");
   }
 }
 
 function block_box_delete($bid) {
   if ($bid) {
     db_query("DELETE FROM boxes WHERE bid = '%s'", $bid);
-    return "block deleted.";
+    return t("the block has been deleted.");
   }
 }
 
@@ -287,14 +275,17 @@ function block_admin() {
       case "delete":
         global $id;
         print status(block_box_delete($id));
+        cache_clear_all();
         block_admin_display();
         break;
       case "Save block":
         print status(block_box_save($edit));
+        cache_clear_all();
         block_admin_display();
         break;
       case "Save blocks":
-        block_admin_save($edit);
+        print status(block_admin_save($edit));
+        cache_clear_all();
         // fall through
       default:
         block_admin_display();
