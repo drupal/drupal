@@ -380,6 +380,9 @@ function comment_edit($cid) {
 }
 
 function comment_reply($nid, $pid = NULL) {
+  // set the breadcrumb trail
+  $node = node_load(array('nid' => $nid));
+  menu_set_location(array(array('path' => "node/$nid", 'title' => $node->title), array('path' => "comment/reply/$nid")));
 
   $output = '';
 
@@ -409,7 +412,7 @@ function comment_reply($nid, $pid = NULL) {
       $output .= theme('comment_view', $comment);
     }
     else if (user_access('access content')) {
-      $output .= node_view(node_load(array('nid' => $nid)));
+      $output .= node_view($node);
       $pid = 0;
     }
 
@@ -1689,7 +1692,7 @@ function _comment_per_page() {
  * - last_comment_timestamp: the timestamp of the last comment for this node or the node create stamp if no comments exist for the node.
  * - last_comment_name: the name of the anonymous poster for the last comment
  * - last_comment_uid: the uid of the poster for the last comment for this node or the node authors uid if no comments exists for the node.
- * - comment_count: the total number of comments on this node.
+ * - comment_count: the total number of approved/published comments on this node.
  */
 function _comment_update_node_statistics($nid) {
   $count = db_result(db_query('SELECT COUNT(cid) FROM {comments} WHERE nid = %d AND status = 0', $nid));
