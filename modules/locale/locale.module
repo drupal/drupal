@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.81 2003/10/09 19:19:07 dries Exp $
+// $Id: locale.module,v 1.82 2003/11/05 17:40:41 dries Exp $
 
 function locale_help($section = "admin/help#locale") {
   $output = "";
@@ -189,7 +189,7 @@ function locale_seek() {
           foreach ($languages as $key=>$value) {
             $tmp[] = $key . (check_query($query->status) == 1 ? " !=" : " =") ." ''";
           }
-          $sql[] = "(". implode(" || ", $tmp) .")";
+          $sql[] = "(". implode(" OR ", $tmp) .")";
           break;
         default:
           $sql[] = check_query($query->language) . (check_query($query->status) == 1 ? " !=" : " =") ." ''";
@@ -208,10 +208,10 @@ function locale_seek() {
           }
         }
       }
-      $sql[] = "(". implode(" || ", $string_query) .")";
+      $sql[] = "(". implode(" OR ", $string_query) .")";
     }
 
-    $result = pager_query("SELECT * FROM {locales} ". (count($sql) ? " WHERE ". implode(" && ", $sql) : "") ." ORDER BY string", 50);
+    $result = pager_query("SELECT * FROM {locales} ". (count($sql) ? " WHERE ". implode(" AND ", $sql) : "") ." ORDER BY string", 50);
 
     $header = array(t("string"), (($query->status != 2 && strlen($query->language) == 2) ? t("translated string") : t("languages")), array("data" => t("operations"), "colspan" => "2"));
     while ($locale = db_fetch_object($result)) {
