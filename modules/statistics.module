@@ -204,35 +204,35 @@ function statistics_admin_displaylog($type = 'all', $id = 0) {
       if ($id) {
         // retrieve recent access logs for specific user $id
         $user = user_load(array('uid' => $id));
-        $page_title = t('Recent access logs for "%username"', array('%username' => $user->name));
+        $page_title = t('Recent hits for "%username"', array('%username' => $user->name));
         $sql = 'SELECT title, path, url, hostname, uid, timestamp FROM {accesslog} WHERE uid = \''. check_query($id) ."'";
       }
       else {
         // retrieve recent access logs for all users (not guests)
-        $page_title = t('Recent access logs for all users');
+        $page_title = t('Recent hits for all users');
         $sql = 'SELECT title, path, url, hostname, uid, MAX(timestamp) AS timestamp FROM {accesslog} WHERE uid <> 0 GROUP BY uid, title, path, url, hostname';
       }
       break;
     case 'page':
       // retrieve recent access logs for title $id
-      $page_title = t('Recent access logs for "%title"', array('%title' => $id));
+      $page_title = t('Recent hits for "%title"', array('%title' => $id));
       $sql = 'SELECT title, path, url, hostname, uid, timestamp FROM {accesslog} WHERE title = \''. check_query($id) ."'";
       break;
     case 'host':
       // retrieve recent access logs for hostname $id
-      $page_title = t('Recent access logs for "%hostname"', array('%hostname' => $id));
+      $page_title = t('Recent hits for "%hostname"', array('%hostname' => $id));
       $sql = 'SELECT title, path, url, hostname, uid, timestamp, title FROM {accesslog} WHERE hostname = \''. check_query($id) ."'";
       break;
     case 'all':
     default:
       // retrieve all recent access logs
-      $page_title = t('Recent access logs');
+      $page_title = t('Recent hits');
       $sql = 'SELECT title, path, url, hostname, uid, timestamp FROM {accesslog}';
   }
 
   $header = array(
     array('data' => t('Timestamp'), 'field' => 'timestamp', 'sort' => 'desc'),
-    array('data' => t('Post'), 'field' => 'title'),
+    array('data' => t('Page'), 'field' => 'title'),
     array('data' => t('User'), 'field' => 'uid'),
     array('data' => t('Hostname'), 'field' => 'hostname'),
     array('data' => t('Referrer'), 'field' => 'url'),
@@ -279,7 +279,7 @@ function statistics_top_titles() {
   $page_title = strtr($describe, array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200))));
 
   $header = array(
-    array('data' => t('Post'), 'field' => 'title'),
+    array('data' => t('Page'), 'field' => 'title'),
     array('data' => t('Last path'), 'field' => 'path'),
     array('data' => t('Hits'), 'field' => 'hits', 'sort' => 'desc'),
     array('data' => t('Last hit'), 'field' => 'last_hit'),
@@ -292,7 +292,7 @@ function statistics_top_titles() {
     $rows[] = array(l(_statistics_column_width($title->title, '_title', 56), $title->path), _statistics_column_width($title->path, '_title', 56), $title->hits, format_date($title->last_hit, 'small'), ($title->title ? l(t('track title'), 'admin/logs/hits/page/'. urlencode($title->title)) : ''));
   }
   if ($pager = theme('pager', NULL, 50, 0, tablesort_pager())) {
-    $rows[] = array(array('data' => $pager, 'colspan' => 3));
+    $rows[] = array(array('data' => $pager, 'colspan' => 5));
   }
 
   $output = theme('table', $header, $rows);
@@ -324,7 +324,7 @@ function statistics_top_users() {
     $rows[] = array(format_name($user), $u->hostname, $u->hits, format_date($u->last_hit, 'small'), ($u->uid ? l(t('track user'), "admin/logs/hits/user/$user->uid") : ''), ($u->hostname ? l(t('track host'), "admin/logs/hits/host/$u->hostname") : ''));
   }
   if ($pager = theme('pager', NULL, 50, 0, tablesort_pager())) {
-    $rows[] = array(array('data' => $pager, 'colspan' => 3));
+    $rows[] = array(array('data' => $pager, 'colspan' => 6));
   }
 
   $output = theme('table', $header, $rows);
