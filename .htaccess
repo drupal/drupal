@@ -1,56 +1,56 @@
 #
-# Apache/PHP/site settings:
+# Apache/PHP/Drupal settings:
 #
 
-# Protect files and directories from prying eyes:
-<Files ~ "(\.(conf|inc|module|pl|sh|sql|theme|engine|xtmpl)|Entries|Repositories|Root|scripts|updates)$">
-  order deny,allow
-  deny from all
+# Protect files and directories from prying eyes.
+<Files ~ "(\.(inc|module|pl|sh|sql|theme|engine|xtmpl)|Entries|Repositories|Root|scripts|updates)$">
+  Order deny,allow
+  Deny from all
 </Files>
 
-# Set some options
+# Set some options.
 Options -Indexes
 Options +FollowSymLinks
 
-# Customized server error messages:
+# Customized error messages.
 ErrorDocument 404 /index.php
 
-# Set the default handler to index.php:
+# Set the default handler.
 DirectoryIndex index.php
 
-# Overload PHP variables:
+# Override PHP settings. More overrides exist in
+# sites/default/settings.php, but the following cannot be changed at 
+# runtime. The first IfModule is for Apache 1.3, the second for 
+# Apache 2.
 <IfModule mod_php4.c>
-#<IfModule sapi_apache2.c>
-   # If you are using Apache 2, you have to use <IfModule sapi_apache2.c>
-   # instead of <IfModule mod_php4.c>.
-   php_value register_globals        0
-   php_value track_vars              1
-   php_value short_open_tag          1
-   php_value magic_quotes_gpc        0
-   php_value magic_quotes_runtime    0
-   php_value magic_quotes_sybase     0
-   php_value arg_separator.output    "&amp;"
-   php_value session.auto_start      0
-   php_value allow_call_time_pass_reference  On
-   # Session and site-specific PHP settings are applied
-   # in /sites/default/settings.php
+   php_value allow_call_time_pass_reference  1
+   php_value magic_quotes_gpc                0
+   php_value register_globals                0
+   php_value short_open_tag                  1
 </IfModule>
 
-# Overload mod_expires variables.
+<IfModule sapi_apache2.c>
+   php_value allow_call_time_pass_reference  1
+   php_value magic_quotes_gpc                0
+   php_value register_globals                0
+   php_value short_open_tag                  1
+</IfModule>
+
+# Override mod_expires by reducing the time dynamically generated pages
+# are cache-able.
 <IfModule mod_expires.c>
-  # Reduce the time dynamically generated HTML pages are cache-able.
   ExpiresByType text/html A1
 </IfModule>
 
-# Various rewrite rules
+# Various rewrite rules.
 <IfModule mod_rewrite.c>
   RewriteEngine on
 
-  # Modify the RewriteBase if you are using Drupal in a subdirectory and the
-  # rewrite rules are not working properly:
+  # Modify the RewriteBase if you are using Drupal in a subdirectory and 
+  # the rewrite rules are not working properly.
   #RewriteBase /drupal
 
-  # Rewrite old-style URLS of the form 'node.php?id=x':
+  # Rewrite old-style URLS of the form 'node.php?id=x'.
   #RewriteCond %{REQUEST_FILENAME} !-f
   #RewriteCond %{REQUEST_FILENAME} !-d
   #RewriteCond %{QUERY_STRING} ^id=([^&]+)$
@@ -62,7 +62,7 @@ DirectoryIndex index.php
   #RewriteCond %{QUERY_STRING} ^mod=([^&]+)$
   #RewriteRule module.php index.php?q=%1 [L]
 
-  # Rewrite URLs of the form 'index.php?q=x':
+  # Rewrite current-style URLs of the form 'index.php?q=x':
   RewriteCond %{REQUEST_FILENAME} !-f
   RewriteCond %{REQUEST_FILENAME} !-d
   RewriteRule ^(.*)$ index.php?q=$1 [L,QSA]
