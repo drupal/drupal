@@ -1,5 +1,5 @@
 <?php
-// $Id: tablesort.inc,v 1.14 2004/02/01 10:39:23 dries Exp $
+// $Id: tablesort.inc,v 1.15 2004/02/05 22:58:59 dries Exp $
 
 function tablesort_init($header) {
   static $ts;
@@ -33,8 +33,7 @@ function tablesort($cell, $header) {
   if ($cell['data'] == $ts['order']) {
     $cell['class'] = 'cell-highlight';
     $image = '&nbsp;<img src="' . theme('image', 'arrow-' . $ts['sort'] . '.gif"') . ' alt="'. t('sort icon') .'" />';
-    $dir = array("asc" => "ascending", "desc" => "descending");
-    $title = t("sort ". $dir[$ts['sort']]);
+    $title = ($ts['sort'] == 'asc' ? t("sort ascending") : t("sort descending"));
   } else {
     // If the user clicks a different header, we want to sort ascending initially.
     $ts['sort'] = "asc";

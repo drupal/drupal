@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.318 2004/02/01 19:07:36 dries Exp $ */
+/* $Id: common.inc,v 1.319 2004/02/05 22:58:59 dries Exp $ */
 
 /**
  * @defgroup common Core functions
@@ -803,10 +803,10 @@ function format_date($timestamp, $type = "medium", $format = "") {
   }
 
   for ($i = strlen($format); $i >= 0; $c = $format[--$i]) {
-    if (strstr("DFlMSw", $c)) {
+    if (strstr("AaDFlM", $c)) {
       $date = t(date($c, $timestamp)) . $date;
     }
-    else if (strstr("AaBdgGhHiIjLmnOrstTUWYyZz", $c)) {
+    else if (strstr("BdgGhHiIjLmnOrsStTUwWYyZz", $c)) {
       $date = date($c, $timestamp) . $date;
     }
     else {
