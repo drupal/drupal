@@ -1,22 +1,21 @@
 <?
 
-
  class Theme {
    ### color set #1:
-   var $bgcolor1 = "#9370DB";   // background color
+   var $bgcolor1 = "#7AC5CD";   // background color
    var $fgcolor1 = "#FEFEFE";   // table body color
-   var $hlcolor1 = "#FF00FF";   // high-light color
+   var $hlcolor1 = "#";   // high-light color
 
    ### color set #2:
-   var $bgcolor2 = "#836FFF";
-   var $fgcolor2 = "#FEFEFE";
-   var $hlcolor2 = "#666699";
+   var $bgcolor2 = "#5F7F7F";
+   var $fgcolor2 = "#005500";
+   var $hlcolor2 = "#00FF00";
 
    ### color set #3:
 
-   var $bgcolor3 = "#FEFEFE";
-   var $fgcolor3 = "yellow";
-   var $hlcolor3 = "yellow";
+   var $bgcolor3 = "#5F7F7F";
+   var $fgcolor3 = "#000000";
+   var $hlcolor3 = "#";
 
    ######
    # Syntax.......: header($title);
@@ -31,15 +30,19 @@
      </HEAD>
      <STYLE type="text/css"> 
       <!--
-       BODY,TD,P,UL,LI,DIV,FORM,EM,BLOCKQUOTE { font-size: 8pt; font-family: verdana,helvetica,arial; }
+        BODY,P,DIV,LI,UL,TD,EM,FONT,BLOCKQUOTE,FORM{font-family:Helvetica,Lucida,sans-serif;}
+        .NO-IN{margin-left:-25;}}
       -->
      </STYLE>
-     <BODY TEXT="#000000" BGCOLOR="#FFFFFF" ALINK="#CCCCCC" LINK="#444444" VLINK="#666666">
+     <BODY TEXT="#202020" BGCOLOR="#FEFEFE" ALINK="#005500" LINK="#005500" VLINK="#005500">
       <TABLE BORDER="0" CELLPADDING="2" CELLSPACING="2">
        <TR>
-        <TD COLSPAN="3"><IMG SRC="/themes/default/images/logo.gif" ALT="drop.org logo"></TD>
-       </TR>
-       <TR><TD ALIGN="right" COLSPAN="3"><FONT SIZE="2"><A HREF="">home</A> | <A HREF="/faq.php">faq</A> | <A HREF="/search.php">search</A> | <A HREF="/submit.php">submit news</A> | <A HREF="/account.php">user account</A> | <A HREF="/webboard.php">webboard</A></FONT><HR></TD></TR>
+        <TD COLSPAN="2"><IMG SRC="themes/UnConeD/images/logo.gif" ALT="drop.org logo"></TD>
+        <TD VALIGN="top" ALIGN="right">
+         <?  
+          $this->box("Status", "<TABLE WIDTH=\"100%\"><TR><TD ALIGN=\"left\" VALIGN=\"top\"><FONT SIZE=\"-2\">Username: Your Name<BR>E-mail: your.name@drop.org<BR>Status: Logged in<BR>Since: The beginning of time</FONT></TD></TR></TABLE>");
+          ?>
+        </TD>
        <TR>
         <TD VALIGN="top" WIDTH="120">
          <?
@@ -66,15 +69,31 @@
      include "config.inc";
       ?>
        <TABLE BORDER="0" CELLPADDING="4" WIDTH="100%">
-        <TR BGCOLOR="<? echo $this->bgcolor1; ?>"><TD COLSPAN="2"><FONT COLOR="<? echo $this->bgcolor2; ?>"><B><? echo $subject; ?></B></FONT></TD></TR>
-        <TR BGCOLOR="<? echo $this->bgcolor1; ?>">
+        <TR>
+         <TD COLSPAN="2">
+          <TABLE WIDTH="100%" BORDER="0" CELLPADDING="4" CELLSPACING="0" >
+           <TR>
+            <TD WIDTH="30" ALIGN="left" BACKGROUND="themes/Jeroen/images/grad1.jpg">
+             &nbsp;
+            </TD>
+            <TD WIDTH="93%" ALIGN="center" BACKGROUND="themes/Jeroen/images/grad2.jpg">
+            BLAHBLAHBLAHBLAH
+            </TD>
+            <TD WIDTH="30" ALIGN="right" BACKGROUND="themes/Jeroen/images/grad3.jpg">
+             &nbsp;
+            </TD>
+           </TR>
+          </TABLE>
+         </TD>
+        </TR>
+        <TR BGCOLOR="<? echo $this->bgcolor3; ?>">
          <TD>
          <?
           if ($informant) {
-            print "<FONT SIZE=\"-1\">Posted by <A HREF=\"account.php?op=userinfo&uname=$informant\">$informant</A> on $timestamp"; ?><? if ($department) echo "<BR>from the $department dept."; ?><? print "</FONT></TD><TD ALIGN=\"center\" WIDTH=\"80\"><B><A HREF=\"search.php?category=$category\"><FONT COLOR=\"#83997A\">$category</FONT></A></B>";
+            print "<FONT SIZE=\"-1\">Reported to us by <A HREF=\"account.php?op=userinfo&uname=$informant\">$informant</A> on $timestamp"; ?><? print "</FONT></TD><TD ALIGN=\"center\"><B><A HREF=\"search.php?category=$category\"><FONT COLOR=\"#2F4F4F\">$category</FONT></A></B>";
           }
           else {
-            print "<FONT SIZE=\"-1\">Posted by $anonymous on $timestamp"; ?><? if ($department) echo "<BR>from the $department dept."; ?><? print "</FONT></TD><TD ALIGN=\"center\" WIDTH=\"80\"><A HREF=\"search.php?category=$category\">$category</A>";
+            print "<FONT SIZE=\"-1\">Posted by $anonymous on $timestamp"; ?><? print "</FONT></TD><TD ALIGN=\"center\" WIDTH=\"80\"><A HREF=\"search.php?category=$category\">$category</A>";
           }
          ?>
         </TD>
@@ -83,7 +102,7 @@
         <TD COLSPAN="2">
         <?
          if ($comments) {
-           echo "<P>$abstract</P><P><FONT COLOR=\"$this->bgcolor1\">Editor's note by <A HREF=\"account.php?op=userinfo&uname=$editor\">$editor</A>:</FONT> $comments</P>";
+           echo "<P>$abstract</P><P><FONT COLOR=\"$this->hlcolor1\">Editor's note by <A HREF=\"account.php?op=userinfo&uname=$editor\">$editor</A>:</FONT> $comments</P>";
          }
          else {
            echo $abstract;
@@ -91,7 +110,7 @@
         ?>
         </TD>
        </TR>
-      <TR BGCOLOR="<? echo $this->bgcolor2; ?>"><TD ALIGN="right" COLSPAN="2"><? echo $link ?></TD></TR>
+      <TR BGCOLOR="<? echo $this->bgcolor3; ?>"><TD ALIGN="right" COLSPAN="2"><? echo $link ?></TD></TR>
      </TABLE><BR>
     <?	
    }
@@ -243,10 +262,34 @@
    # Description..: a function to draw a box/block.
    function box($subject, $content) { 
      include "config.inc";
-     print "<TABLE BORDER=\"0\" CELLPADDING=\"3\" CELLSPACING=\"3\" WIDTH=\"100%\">";
-     print " <TR><TD ALIGN=\"center\" BGCOLOR=\"$this->bgcolor1\" WIDTH=\"100%\"><FONT COLOR=\"$this->fgcolor1\"><B>$subject</B></FONT></TD></TR>";
-     print " <TR><TD BGCOLOR=\"$this->bgcolor2\">$content</TD></TR>";
-     print "</TABLE><BR>";
+     if (rand(0,20) == 10) $img = "boxbottomright1.gif";
+     else $img = "boxbottomright2.gif";
+    ?>
+    <TABLE width="100%" CELLPADDING=0 CELLSPACING=0 BORDER=0>
+     <TR>
+      <TD ALIGN=right VALIGN=BOTTOM WIDTH="20" HEIGHT="20"><IMG SRC="themes/Jeroen/images/boxtopleft.gif" width="20" height="20" alt=""></TD>
+      <TD colspan=2 ALIGN=LEFT VALIGN=BOTTOM HEIGHT="20" BACKGROUND="themes/Jeroen/images/boxtop.gif"><img src="http://images.themes.org" width="1" height="1" alt=""></TD>
+      <TD ALIGN=left VALIGN=BOTTOM WIDTH="20" HEIGHT="20"><IMG SRC="themes/Jeroen/images/boxtopright.gif" width="20" height="20" alt=""></TD>
+     </TR>
+     <TR>
+      <TD ALIGN=right VALIGN=BOTTOM WIDTH="20" HEIGHT=20 BACKGROUND="themes/Jeroen/images/boxtopleftside.gif"><IMG SRC="http://images.themes.org/templates/kde/moduletopleft.gif" width="20" height="20" alt=""></TD>
+      <TD COLSPAN=2 ALIGN=CENTER bgcolor="#6C6C6C" BACKGROUND="themes/Jeroen/images/menutitle.gif" HEIGHT=20><FONT COLOR="<? echo $this->fgcolor1; ?>"><?  echo $subject; ?></FONT></TD>
+      <TD ALIGN=left VALIGN=BOTTOM WIDTH="20" HEIGHT="20" BACKGROUND="themes/Jeroen/images/boxtoprightside.gif"><IMG SRC="http://images.themes.org/templates/kde/moduletopright.gif" width="20" height="20" alt=""></TD>
+     </TR>
+     <TR>
+      <TD ALIGN=right BACKGROUND="themes/Jeroen/images/boxleft.gif" WIDTH="20">&nbsp;</TD>
+      <TD COLSPAN=2 VALIGN=TOP width="100%" bgcolor="#E7E7E7" background="http://images.themes.org/templates/kde/sketch.gif">
+       <TABLE WIDTH="100%"><TR><TD><? echo $content; ?></TD></TR></TABLE>
+      </TD>
+      <TD ALIGN=LEFT BACKGROUND="themes/Jeroen/images/boxright.gif" WIDTH="20">&nbsp;</TD>
+     </TR>
+     <TR>
+      <TD ALIGN=right VALIGN=TOP WIDTH="20" HEIGHT="20"><IMG SRC="themes/Jeroen/images/boxbottomleft.gif" width="20" height="20" alt=""></TD>
+      <TD COLSPAN=2 ALIGN=MIDDLE HEIGHT="20" VALIGN=TOP BACKGROUND="themes/Jeroen/images/boxbottom.gif">&nbsp;</TD>
+      <TD ALIGN=left VALIGN=TOP WIDTH="20" HEIGHT="20"><IMG SRC="themes/Jeroen/images/<? echo $img; ?>" width="20" height="20" alt=""></TD>
+     </TR>
+    </TABLE><BR>
+    <?
    }
 
    ######
@@ -257,8 +300,10 @@
        </TD>
        <TD VALIGN="top" WIDTH="150">
          <?
-         global $PHP_SELF;  
-
+         global $PHP_SELF; 
+ 
+	 $this->box("Drop where?", "<TABLE WIDTH=\"100%\"><TR><TD WIDTH=\"50%\" ALIGN=\"left\" VALIGN=\"top\"><A HREF=\"index.php\">home</A><BR><A HREF=\"faq.php\">faq</A><BR><A HREF=\"search.php\">search</A></TD><TD WIDTH=\"50%\" ALIGN=\"right\" VALIGN=\"top\"><A HREF=\"submit.php\">submit news</A><BR><A HREF=\"account.php\">user account</A><BR><A HREF=\"webboard.php\">webboard</A></TD></TR></TABLE>");
+         
          if (strstr($PHP_SELF, "index.php")) {
            global $user;
 
