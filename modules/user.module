@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.299 2004/02/08 18:38:15 dries Exp $
+// $Id: user.module,v 1.300 2004/02/09 05:38:32 unconed Exp $
 
 /*** Common functions ******************************************************/
 
@@ -788,6 +788,9 @@ function user_register($edit = array()) {
     }
     else if (variable_get("user_register", 1) == 0) {
       $error = t("Public registrations have been disabled by the site administrator.");
+    }
+    else {
+      $success = true;
     }
   }
 
