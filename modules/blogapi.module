@@ -36,6 +36,11 @@ function blogapi_xmlrpc() {
 
 function blogapi_get_users_blogs($req_params) {
   $params = blogapi_convert($req_params);
+  // Remove unused appkey from bloggerAPI.
+  if (count($params) == 6) {
+    $params = array_slice($params, 1);
+  }
+
   $user = blogapi_validate_user($params[1], $params[2]);
   if ($user->uid) {
     $struct = new xmlrpcval(array('url' => new xmlrpcval(url('blog/' . $user->uid)),
