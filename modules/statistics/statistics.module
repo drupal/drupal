@@ -301,23 +301,24 @@ function statistics_top_users() {
  * Menu callback; presents the "Top referrers" page.
  */
 function statistics_top_referrers() {
-  $query = "SELECT url, COUNT(url) AS hits FROM {accesslog} WHERE url NOT LIKE '%". db_escape_string($_SERVER['HTTP_HOST']) ."%' AND url <> '' GROUP BY url";
+  $query = "SELECT url, COUNT(url) AS hits, MAX(timestamp) AS last FROM {accesslog} WHERE url NOT LIKE '%". db_escape_string($_SERVER['HTTP_HOST']) ."%' AND url <> '' GROUP BY url";
   $query_cnt = "SELECT COUNT(DISTINCT(url)) FROM {accesslog} WHERE url <> '' AND url NOT LIKE '%". db_escape_string($_SERVER['HTTP_HOST']) ."%'";
   $title = t('Top referrers in the past %interval', array('%interval' => format_interval(variable_get('statistics_flush_accesslog_timer', 259200))));
 
   $header = array(
     array('data' => t('Hits'), 'field' => 'hits', 'sort' => 'desc'),
-    array('data' => t('Url'), 'field' => 'url')
+    array('data' => t('Url'), 'field' => 'url'),
+    array('data' => t('Last visit'), 'field' => 'last'),
   );
 
   $query .= tablesort_sql($header);
   $result = pager_query($query, 30, 0, $query_cnt);
 
   while ($referrer = db_fetch_object($result)) {
-    $rows[] = array($referrer->hits, '<a href="'. $referrer->url .'">'. _statistics_column_width($referrer->url, '_refer', 75) .'</a>');
+    $rows[] = array($referrer->hits, '<a href="'. $referrer->url .'">'. _statistics_column_width($referrer->url, '_refer', 65) .'</a>', t('%time ago', array('%time' => format_interval(time() - $referrer->last))));
   }
   if ($pager = theme('pager', NULL, 30, 0, tablesort_pager())) {
-    $rows[] = array(array('data' => $pager, 'colspan' => '2'));
+    $rows[] = array(array('data' => $pager, 'colspan' => '3'));
   }
 
   print theme('page', theme('table', $header, $rows), $title);
