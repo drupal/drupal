@@ -1,9 +1,9 @@
 <?
 
-function module_iterate($function) {
+function module_iterate($function, $argument = "") {
   global $repository;
   foreach ($repository as $name=>$module) {
-    $function($name, $module);
+    $function($name, $module, $argument);
   }
 }
 
@@ -25,8 +25,8 @@ function module_rehash_crons($name, $module) {
 
 function module_rehash_blocks($name, $module) {
   db_query("DELETE FROM blocks WHERE module = '$name'");  
-  if ($module["block"]) {
-    foreach ($blocks = $module["block"]() as $offset=>$block) {
+  if ($module["block"] && $blocks = $module["block"]()) {
+    foreach ($blocks as $offset=>$block) {
       db_query("INSERT INTO blocks (name, module, offset) VALUES ('". check_input($block["info"]) ."', '". check_input($name) ."', '". check_input($offset) ."')");
     }
   }

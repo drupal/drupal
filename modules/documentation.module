@@ -22,20 +22,22 @@ function documentation() {
 
   <H2>System requirements</H2>
 
-  MySQL<BLOCKQUOTE><A HREF="http://mysql.com/">http://mysql.com/</A><BR>(development with version 3.22.32)</BLOCKQUOTE>
-  PHP4<BLOCKQUOTE><A HREF="http://php.net/">http://php.net/</A><BR>(development with version 4.0.0 and 4.0.4)</BLOCKQUOTE>
-  Apache<BLOCKQUOTE><A HREF="http://apache.org/">http://apache.org/</A><BR>(development with version 1.3.14)</BLOCKQUOTE>
+  MySQL:<BLOCKQUOTE><A HREF="http://mysql.com/">http://mysql.com/</A><BR>(development with version 3.22.32)</BLOCKQUOTE>
+  PHP4:<BLOCKQUOTE><A HREF="http://php.net/">http://php.net/</A><BR>(development with version 4.0.0 and 4.0.4)</BLOCKQUOTE>
+  Apache:<BLOCKQUOTE><A HREF="http://apache.org/">http://apache.org/</A><BR>(development with version 1.3.14)</BLOCKQUOTE>
 
   <H2>Installation process</H2>
 
-  <P>1. We assume that you have some working experience with Apache, MySQL and PHP.  If you still need to install Apache, MySQL or PHP, please install them now.  The installation of these required packages is beyond the scope of this document but make sure your Apache is setup to allow <CODE>.htaccess</CODE> files so that drupal can override Apache options from within the drupal directories.</P>
-  <P>2. Unzip the distribution tarball into the directory you want to serve web files from:</P>
+  <P>1. Download the distribution tarball and unzip it into the directory you want to serve web files from:</P>
   <BLOCKQUOTE>$ tar -zxvf drupal-x.x.x.tar.gz</BLOCKQUOTE>
+  <P>2. We assume that you have some working experience with Apache, MySQL and PHP.  In order to set up your drupal site correctly, you'll first have to get Apache, MySQL and PHP working together.  So if you still need to install Apache, MySQL or PHP, please install them now.  Otherwise, head on to point 3.  The installation of these required packages is beyond the scope of this document but what follows are some brief guidelines to get you started.</P>
+  <P>Installing MySQL shouldn't be too much of a burden, when using a Linux distribution that can handle RPMs.  All you have to do is grab the RMPs from the MySQL website.  Please do note that you'll also need the MySQL client RPM, not only the MySQL server one.  Once MySQL has been installed, download Apache and PHP, and unpack them in the same directory.  To install Apache together with PHP and MySQL, follow the "quick install"-instructions in the <CODE>INSTALL</CODE>-file located in your PHP directory.  When configuring PHP do not forget to replace '<I>apache_1.3.x</I>' with your version of Apache.  This may sound silly but it got me twice.</P>
+  <P>After the compilation process you have to set the <CODE>DocumentRoot</CODE> in Apache's <CODE>httpd.conf</CODE> to the path of your <CODE>drupal</CODE>-directory.  Make sure your Apache is setup to allow <CODE>.htaccess</CODE> files so drupal can override Apache options from within the drupal directories.  Therefore, set <CODE>AllowOverride</CODE> to "All" instead of "None".  Somewhat down <CODE>httpd.conf</CODE> they ask you to set <CODE>Directory</CODE> to whatever you set <CODE>DocumentRoot</CODE> to. The last thing to do is to add <CODE>index.php</CODE> in <CODE>IfModule mod_dir.c</CODE> behind <CODE>DirectoryIndex</CODE>.  Apache will then look for <CODE>index.php</CODE> in the <CODE>DocumentRoot</CODE> and will display it as its main page.</P>
   <P>3. Create a MySQL database for your drupal site (if you haven't already):</P>
-  <BLOCKQUOTE>$ mysqladmin create &lt;database&gt;</BLOCKQUOTE>
+  <BLOCKQUOTE>$ mysqladmin create <I>&lt;database&gt;</I></BLOCKQUOTE>
   <P>Make sure to consult the MySQL documentation on how to setup the correct access rights and permissions in your MySQL grant tables.</P>
   <P>4. Once you have a proper database, dump the required tables into your database:</P>
-  <BLOCKQUOTE>$ mysql -h &lt;hostname&gt; -u &lt;username&gt; -p&lt;password&gt; &lt;database&gt; < database/database.mysql </BLOCKQUOTE>
+  <BLOCKQUOTE>$ mysql -h <I>&lt;hostname&gt;</I> -u <I>&lt;username&gt;</I> -p<I>&lt;password&gt; &lt;database&gt;</I> < database/database.mysql</BLOCKQUOTE>
   <P>5. Copy the file <CODE>includes/hostname.conf</CODE> to match your server's hostname:</P>
   <BLOCKQUOTE>$ cp includes/hostname.conf includes/www.yourdomain.com.conf</BLOCKQUOTE>
   <P>6. Edit your configuration file to set the required settings such as the database options and to customize your site to your likings.</P>
@@ -167,6 +169,10 @@ function documentation() {
    <TR>
     <TD VALIGN="top"><CODE>page</CODE></TD>
     <TD VALIGN="top">If a module requires its own page it should provide a function named <CODE>module_page</CODE>.  The page can then be publicly accessed via <CODE>http://yourdomain.com/module.php?mod=module</CODE> which will cause the engine to invoke <CODE>module_page</CODE> in order to generate the module's page.</TD>
+   </TR>
+   <TR>
+    <TD VALIGN="top"><CODE>user</CODE></TD>
+    <TD VALIGN="top"></TD>
    </TR>
   </TABLE>
   <P>Even though we aim towards modularity, a basic rule is to avoid defined interfaces.  We are exceptionally careful when it comes down to adding hooks because once you give a hook to developers they will start coding to it and once somebody's using it, you are stuck with it.</P>
