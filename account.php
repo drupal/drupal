@@ -315,8 +315,6 @@ function account_email_submit($userid, $email) {
     $subject = strtr(t("Account details for %a"), array("%a" => $site_name));
     $message = strtr(t("%a,\n\n\nyou requested us to e-mail you a new password for your account at %b.  You will need to re-confirm your account or you will not be able to login.  To confirm your account updates visit the URL below:\n\n   %c\n\nOnce confirmed you can login using the following username and password:\n\n   username: %a\n   password: %d\n\n\n-- %b team"), array("%a" => $userid, "%b" => $site_name, "%c" => $link, "%d" => $passwd));
 
-    print "<PRE>$subject<BR>$message</PRE>";
-
     watchdog("message", "new password: `$userid' &lt;$email&gt;");
 
     mail($email, $subject, $message, "From: noreply");

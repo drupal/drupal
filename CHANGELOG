@@ -14,13 +14,20 @@ drupal 1.xx, xx/xx/2001
     * improved search page and integrated search functionality in the administration pages.
 - added translation / localization / internationalization support:
     * because many people love see their website showing a lot less of English, and far more of their own language, drupal provides a framework to setup a multi-lingual website or to overwrite the default English text in English.
+- added fine-grained user permssion (or group) system
 - changed the "open submission queue" into a (optional) module
 - various updates:
+    * improved account module:
+        + user accounts can be deleted, permissions
     * improved block module
     * improved cron module
-    * improved diary module
-    * improved headline module
+    * improved diary module:
+        + diary can be deleted
+    * improved headline module:
+        + improved parser to support RDF/RSS/XML backend
     * improved module module
+    * improved watchdog module
+    * added CREDITS file
 - revised documentation
 
 drupal 1.00, 15/01/2001
