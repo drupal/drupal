@@ -57,7 +57,8 @@ $mysql_updates = array(
   "2002-10-17" => "update_42",
   "2002-10-26" => "update_43",
   "2002-11-08" => "update_44",
-  "2002-11-20" => "update_45"
+  "2002-11-20" => "update_45",
+  "2002-12-10" => "update_46"
 );
 
 // Update functions
@@ -634,6 +635,10 @@ function update_44() {
 
 function update_45() {
   update_sql("ALTER TABLE page ADD description varchar(128) NOT NULL default ''");
+}
+
+function update_46() {
+  update_sql("ALTER TABLE cache ADD created int(11) NOT NULL default '0'");
 }
 
 function update_upgrade3() {

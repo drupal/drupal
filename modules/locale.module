@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.45 2002/10/29 19:39:19 dries Exp $
+// $Id: locale.module,v 1.46 2002/12/11 22:00:04 dries Exp $
 
 function locale_help() {
  ?>
@@ -282,7 +282,10 @@ function locale($string) {
   static $locale_t;
 
   if (!isset($locale_t)) {
-    $locale_t = unserialize(cache_get("locale:$locale"));
+    $cache = cache_get("locale:$locale");
+    if ($cache) {
+      $locale_t = unserialize($cache->data);
+    }
   }
 
   if ($locale_t[$string] != "") {

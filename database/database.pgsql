@@ -102,6 +102,7 @@ CREATE TABLE cache (
   cid varchar(255) NOT NULL default '',
   data text default '',
   expire integer NOT NULL default '0',
+  created integer NOT NULL default '0',
   PRIMARY KEY  (cid)
 );
 
