@@ -1,5 +1,5 @@
 <?php
-// $Id: admin.php,v 1.53 2002/08/26 18:22:16 dries Exp $
+// $Id: admin.php,v 1.54 2002/10/29 19:39:19 dries Exp $
 
 include_once "includes/common.inc";
 
@@ -16,7 +16,7 @@ function admin_page($mod) {
   <!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "DTD/xhtml1-transitional.dtd">
   <html>
    <head>
-    <title><?php echo variable_get("site_name", "drupal"); ?> administration pages</title>
+    <title><?php echo variable_get("site_name", "drupal") . " " . t("administration pages"); ?></title>
    </head>
    <style>
     body { font-family: helvetica, arial; font-size: 12pt; }
@@ -27,10 +27,10 @@ function admin_page($mod) {
     td   { font-family: helvetica, arial; font-size: 12pt; }
    </style>
    <body bgcolor="#FFFFFF" link="#005599" vlink="#004499" alink="#FF0000">
-    <h1>Administration</h1>
+    <h1><?php echo t("Administration"); ?></h1>
     <?php
 
-      $links[] = "<a href=\"index.php\">home</a>";
+      $links[] = "<a href=\"index.php\">" . t("home") . "</a>";
       foreach (module_list() as $name) {
         if (module_hook($name, "link")) {
           $links = array_merge($links, module_invoke($name, "link", "admin"));
