@@ -736,7 +736,7 @@ function cache_clear_all($cid = NULL) {
     db_query("DELETE FROM {cache} WHERE expire <> 0");
   }
   else {
-    db_query("DELETE FROM {cache} WHERE cid = %d", $cid);
+    db_query("DELETE FROM {cache} WHERE cid = '%s'", $cid);
   }
 }
 
