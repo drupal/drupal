@@ -81,7 +81,7 @@
    function story($story, $reply = 0) {
        $timestamp = format_date($story->timestamp);
 
-        print "\n<!-- story: \"$story->subject\" -->\n";
+        print "\n<!-- story: \"$story->title\" -->\n";
         ?>
         <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" BGCOLOR="<?php echo $this->brcolor1; ?>" WIDTH="100%">
         <TR><TD>
