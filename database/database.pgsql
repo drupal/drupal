@@ -124,7 +124,7 @@ CREATE TABLE comments (
   link varchar(16) NOT NULL default '',
   score integer NOT NULL default '0',
   status smallint  NOT NULL default '0',
-  thread varchar(255) NOT NULL,
+  thread varchar(255) default '',
   users text default '',
   PRIMARY KEY  (cid)
 );
@@ -521,6 +521,8 @@ CREATE TABLE users (
 );
 CREATE INDEX users_timestamp_idx ON users(timestamp);
 
+CREATE SEQUENCE users_uid_seq INCREMENT 1 START 1;
+
 --
 -- Table structure for variable
 --
@@ -578,7 +580,7 @@ INSERT INTO system VALUES ('modules/story.module','story','module','',1);
 INSERT INTO system VALUES ('modules/taxonomy.module','taxonomy','module','',1);
 INSERT INTO system VALUES ('themes/marvin/marvin.theme','marvin','theme','Internet explorer, Netscape, Opera',1);
 
-INSERT INTO variable(name,value) VALUES('update_start', 's:10:"2003-04-19";');
+INSERT INTO variable(name,value) VALUES('update_start', 's:10:"2003-09-29";');
 INSERT INTO variable(name,value) VALUES('theme_default','s:6:"marvin";');
 INSERT INTO users(uid,name,mail,rid) VALUES(0,'Anonymous','root@localhost', '1');
 
@@ -598,3 +600,8 @@ BEGIN
 END;
 ' LANGUAGE 'plpgsql';
 
+CREATE FUNCTION "rand"() RETURNS float AS '
+BEGIN
+  RETURN random();
+END;
+' LANGUAGE 'plpgsql';

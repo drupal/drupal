@@ -580,7 +580,7 @@ INSERT INTO system VALUES ('modules/taxonomy.module','taxonomy','module','',1);
 INSERT INTO system VALUES ('themes/marvin/marvin.theme','marvin','theme','Internet explorer, Netscape, Opera',1);
 INSERT INTO users (uid, name, mail, rid) VALUES ('0', 'Anonymous', 'root@localhost', '1');
 
-REPLACE variable SET name='update_start', value='s:10:"2003-04-19;"';
+REPLACE variable SET name='update_start', value='s:10:"2003-09-29;"';
 REPLACE variable SET name='theme_default', value='s:6:"marvin";';
 
 REPLACE blocks SET module = 'user', delta = '0', status = '1';
