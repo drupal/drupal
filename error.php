@@ -10,6 +10,11 @@ $errors = array(500 => "500 error: internal server error",
 
 watchdog("httpd", $errors[$REDIRECT_STATUS]);
 
-header("Location: index.php");
+if (strstr($REDIRECT_URL, "index.php")) {
+  header("Location: ../index.php");
+}
+else {
+  header("Location: index.php");
+}
 
 ?>
