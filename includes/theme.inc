@@ -65,7 +65,7 @@ class BaseTheme {
   }
 
   function box($subject, $content, $region = "main") {
-    $output = "<b>$subject</b><br />$content<p />";
+    $output = "<p><b>$subject</b><br />$content</p>";
     print $output;
   }
 

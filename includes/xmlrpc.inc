@@ -644,8 +644,8 @@ class xmlrpcmsg {
   $xmlrpc_value=new xmlrpcval;
 
   if ($this->debug)
-    print "<PRE>---GOT---\n" . htmlspecialchars($data) .
-    "\n---END---\n</PRE>";
+    print "<pre>---GOT---\n" . htmlspecialchars($data) .
+    "\n---END---\n</pre>";
   if ($data=="") {
     error_log("No response received from server.");
     $r=new xmlrpcresp(0, $xmlrpcerr["no_data"],
@@ -701,9 +701,9 @@ class xmlrpcmsg {
   }
   xml_parser_free($parser);
   if ($this->debug) {
-    print "<PRE>---EVALING---[" .
+    print "<pre>---EVALING---[" .
     strlen($_xh[$parser]['st']) . " chars]---\n" .
-    htmlspecialchars($_xh[$parser]['st']) . ";\n---END---</PRE>";
+    htmlspecialchars($_xh[$parser]['st']) . ";\n---END---</pre>";
   }
   if (strlen($_xh[$parser]['st'])==0) {
     // then something odd has happened
@@ -752,12 +752,12 @@ class xmlrpcval {
     global $xmlrpcTypes, $xmlrpcBoolean;
 
     if ($this->mytype==1) {
-      echo "<B>xmlrpcval</B>: scalar can have only one value<BR>";
+      echo "<b>xmlrpcval</b>: scalar can have only one value<br />";
       return 0;
     }
     $typeof=$xmlrpcTypes[$type];
     if ($typeof!=1) {
-      echo "<B>xmlrpcval</B>: not a scalar type (${typeof})<BR>";
+      echo "<b>xmlrpcval</b>: not a scalar type (${typeof})<br />";
       return 0;
     }
 
@@ -787,8 +787,8 @@ class xmlrpcval {
   function addArray($vals) {
     global $xmlrpcTypes;
     if ($this->mytype!=0) {
-      echo "<B>xmlrpcval</B>: already initialized as a [" .
-        $this->kindOf() . "]<BR>";
+      echo "<b>xmlrpcval</b>: already initialized as a [" .
+        $this->kindOf() . "]<br />";
       return 0;
     }
 
@@ -800,8 +800,8 @@ class xmlrpcval {
   function addStruct($vals) {
   global $xmlrpcTypes;
   if ($this->mytype!=0) {
-    echo "<B>xmlrpcval</B>: already initialized as a [" .
-    $this->kindOf() . "]<BR>";
+    echo "<b>xmlrpcval</b>: already initialized as a [" .
+    $this->kindOf() . "]<br />";
     return 0;
   }
   $this->mytype=$xmlrpcTypes["struct"];
@@ -812,10 +812,10 @@ class xmlrpcval {
   function dump($ar) {
   reset($ar);
   while ( list( $key, $val ) = each( $ar ) ) {
-    echo "$key => $val<br>";
+    echo "$key => $val<br />";
     if ($key == 'array')
     while ( list( $key2, $val2 ) = each( $val ) ) {
-      echo "-- $key2 => $val2<br>";
+      echo "-- $key2 => $val2<br />";
     }
   }
   }

@@ -58,7 +58,7 @@ function _db_query($query, $debug = 0) {
   $result = $db_handle->query($query);
 
   if ($debug) {
-    print "<p>query: $query<br />";
+    print "<p>query: $query</p>";
   }
 
   if (DB::isError($result)) {
