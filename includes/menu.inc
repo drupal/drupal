@@ -1,127 +1,120 @@
 <?php
-// $Id: menu.inc,v 1.19 2003/09/26 10:04:07 dries Exp $
+// $Id: menu.inc,v 1.20 2003/09/28 10:51:34 dries Exp $
 
+/**
+ * Register a menu item to the menu system.
+ */
 function menu($path, $title, $callback = NULL, $help = NULL, $weight = 0, $hidden = 0) {
-  global $_gmenu;
+  global $_list;
 
-  if (empty($_gmenu[$path])) {
-    // add the menu to the flat list of menu items:
-    $_gmenu[$path] = array("title" => $title, "callback" => $callback, "help" => $help, "weight" => $weight, "hidden" => $hidden, "children" => array());
+  // add the menu to the flat list of menu items:
+  $_list[$path] = array("title" => $title, "callback" => $callback, "help" => $help, "weight" => $weight, "hidden" => $hidden);
+}
 
-    // find the best matching parent item:
-    $parent = substr($path, 0, strrpos($path, "/"));
-    while ($parent && !$_gmenu[$parent]) {
-      $parent = substr($parent, 0, strrpos($parent, "/"));
+/**
+ * Returns the path of the active menu item.
+ */
+function menu_get_active() {
+  global $_list;
+  static $path;
+
+  if (empty($path)) {
+    $path = $_GET["q"];
+
+    while ($path && !$_list[$path]) {
+      $path = substr($path, 0, strrpos($path, "/"));
     }
-
-    // check if any items need to be lowered:
-    if ($parent) {
-      foreach ($_gmenu[$parent]["children"] as $key => $item) {
-        if (strstr($item, $path)) {
-          // remove the item from its parent:
-          unset($_gmenu[$parent]["children"][$key]);
-
-          // add the item to its new parent:
-          $_gmenu[$path]["children"][] = $item;
-        }
-      }
-    }
-
-    // add the menu to the best matching parent:
-    $_gmenu[$parent]["children"][] = $path;
-  }
-}
-
-function menu_item($in_path) {
-  global $_gmenu;
-  /*
-  ** If you want to theme your links, or if you want to replace them
-  ** by an image, this would be the function to customize.
-  */
-  $trail = menu_trail();
-  if (end($trail) == $in_path) {
-    $css = " class=\"current\"";
   }
 
-  return "<a href=\"". url($in_path) ."\"$css>". t($_gmenu[$in_path]["title"]) ."</a>";
+  return $path;
 }
 
-function menu_title($in_path = null) {
-  global $_gmenu;
-
-  if ($in_path == null) {
-    $trail = menu_trail();
-    $in_path = array_pop($trail);
-  }
-
-  return ucfirst($_gmenu[$in_path]["title"]);
-}
-
-function menu_trail() {
-  global $_gmenu;
+function menu_get_path($path) {
+  global $_list;
   static $trail; // cache
 
   if (empty($trail)) {
     $trail = array();
-    $path = $_GET["q"];
 
     while ($path) {
-      if ($_gmenu[$path]) {
-        $trail[] = $path;
+      if ($_list[$path]) {
+        array_unshift($trail, $path);
       }
 
       $path = substr($path, 0, strrpos($path, "/"));
     }
-
-    $trail = array_reverse($trail);
   }
 
   return $trail;
 }
 
-function menu_path() {
+function menu_get_active_title() {
+  global $_list;
 
-  $trail = menu_trail();
+  if ($path = menu_get_active()) {
+    return ucfirst($_list[$path]["title"]);
+  }
+}
+
+function menu_get_active_help() {
+  global $_list;
+
+  if ($path = menu_get_active()) {
+    return $_list[$path]["help"];
+  }
+}
+
+function menu_is_active($path) {
+
+}
+
+function menu_render_item($path) {
+  global $_list;
+
+  if ($path == $_GET["q"]) {
+    $css = " class=\"active\"";
+  }
+
+  return "<a href=\"". url($path) ."\"$css>". t($_list[$path]["title"]) ."</a>";
+}
+
+function menu_active_breadcrumb() {
 
   $links[] = l(t("Home"), "");
 
+  $trail = menu_get_path($_GET["q"]);
   foreach ($trail as $item) {
-    $links[] = menu_item($item);
+    $links[] = menu_render_item($item);
   }
 
   return $links;
 }
 
-function menu_help() {
-  global $_gmenu;
-  $path = menu_trail();
-  if ($path) {
-    $item = array_pop($path);
-    $output = $_gmenu[$item]["help"];
-  }
-
-  return @$output;
-}
-
 function _menu_sort($a, $b) {
-  global $_gmenu;
-  $a = &$_gmenu[$a];
-  $b = &$_gmenu[$b];
+  global $_list;
+
+  $a = &$_list[$a];
+  $b = &$_list[$b];
+
   return $a["weight"] < $b["weight"] ? -1 : ($a["weight"] > $b["weight"] ? 1 : ($a["title"] < $b["title"] ? -1 : 1));
 }
 
 function menu_tree($parent = "") {
-  global $_gmenu;
+  global $_list;
+  static $trail;
 
-  if ($_gmenu[$parent]["children"]) {
+  if (empty($tail)) {
+    $trail = menu_get_path($_GET["q"]);
+  }
+
+  if ($_list[$parent]["children"]) {
     $output = "\n<ul>\n";
-    usort($_gmenu[$parent]["children"], "_menu_sort");
-    foreach ($_gmenu[$parent]["children"] as $item) {
-      if ($_gmenu[$item]["hidden"] == 0) {
-        $trail = menu_trail($item);
-        $style = ($_gmenu[$item]["children"] ? (in_array($item, $trail)  ? "expanded" : "collapsed") : "leaf");
+    usort($_list[$parent]["children"], "_menu_sort");
+    foreach ($_list[$parent]["children"] as $item) {
+      if ($_list[$item]["hidden"] == 0) {
+        $style = ($_list[$item]["children"] ? (in_array($item, $trail)  ? "expanded" : "collapsed") : "leaf");
         $output .= "<li class=\"$style\">";
-        $output .= menu_item($item);
+        $output .= menu_render_item($item);
         if (in_array($item, $trail)) {
           $output .= menu_tree($item);
         }
@@ -134,47 +127,52 @@ function menu_tree($parent = "") {
   return $output;
 }
 
-function menu_map($parent = "") {
-  global $_gmenu;
-
-  $output = "<ul>";
-  usort($_gmenu[$parent]["children"], "_menu_sort");
-  foreach ($_gmenu[$parent]["children"] as $item) {
-    if ($_gmenu[$item]["hidden"] == 0) {
-      $output .= "<li>";
-      $output .= menu_item($item);
-      $output .= menu_map($item);
-      $output .= "</li>";
-    }
-  }
-  $output .= "</ul>";
-
-  return $output;
-}
 
 function menu_execute_action() {
-  global $_gmenu;
-  $trail = menu_trail();
-  $selected_menu = array_pop($trail);
+  global $_list;
 
-  if ($_gmenu[$selected_menu]["callback"]) {
-    $arg = substr($_GET["q"], strlen($selected_menu) + 1);
+  $path = menu_get_active();
+
+  if ($_list[$path]["callback"]) {
+    $arg = substr($_GET["q"], strlen($path) + 1);
     if (empty($arg)) {
-      return call_user_func($_gmenu[$selected_menu]["callback"]);
+      return call_user_func($_list[$path]["callback"]);
     }
     else {
-      return call_user_func_array($_gmenu[$selected_menu]["callback"], explode("/", $arg));
+      return call_user_func_array($_list[$path]["callback"], explode("/", $arg));
     }
   }
 }
 
 function menu_build($type) {
+  /*
+  ** Build a sequential list of all menus items.
+  */
 
-  // Empty the existing menu tree (if any):
-  unset($GLOBALS["_gmenu"]);
-
-  // Build the menu tree:
   module_invoke_all("link", $type);
+
+  /*
+  ** Tree-ify the sequential list of menu items by adding each
+  ** menu item to the 'children' array of their direct parent.
+  */
+
+  global $_list;
+
+  foreach ($_list as $path => $data) {
+
+    /*
+    ** Find $path's direct parent:
+    */
+    $parent = $path;
+    do {
+      $parent = substr($parent, 0, strrpos($parent, "/"));
+    }
+    while ($parent && !$_list[$parent]);
+
+    if ($path) {
+      $_list[$parent]["children"][] = $path;
+    }
+  }
 }
 
 ?>

@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.180 2003/09/27 06:00:43 dries Exp $
+// $Id: book.module,v 1.181 2003/09/28 10:51:40 dries Exp $
 
 function book_system($field){
   $output = "";
@@ -79,10 +79,10 @@ function book_link($type, $node = 0, $main = 0) {
 
   if ($type == "system") {
     if (user_access("maintain books")) {
-      menu("node/add/book",t("book page"), NULL, NULL,0);
-      menu("admin/node/book", "books", NULL, NULL, 4);
-      menu("admin/node/book/orphan", "orphan pages", NULL, NULL, 8);
-      menu("admin/node/book/help", "help", NULL, NULL, 9);
+      menu("node/add/book", t("book page"), NULL, NULL,0);
+      menu("admin/node/book", t("books"), NULL, NULL, 4);
+      menu("admin/node/book/orphan", t("orphan pages"), NULL, NULL, 8);
+      menu("admin/node/book/help", t("help"), NULL, NULL, 9);
 
       $result = db_query("SELECT n.nid, n.title FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = 0 ORDER BY b.weight, n.title");
       while ($book = db_fetch_object($result)) {

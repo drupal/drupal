@@ -1,5 +1,5 @@
 <?php
-// $Id: admin.module,v 1.26 2003/09/26 23:05:14 dries Exp $
+// $Id: admin.module,v 1.27 2003/09/28 10:51:40 dries Exp $
 
 include_once "includes/common.inc";
 
@@ -37,26 +37,13 @@ function admin_system($field){
 
 function admin_link($type) {
   if ($type == "system" && user_access("access administration pages")) {
-    menu("admin", t("administer %a", array("%a" => variable_get("site_name", "drupal"))) , NULL, NULL, 9);
-    menu("admin/overview", "sitemap", "overview_callback", admin_help("admin/overview"), 8);
+    menu("admin", t("administer"), NULL, NULL, 9);
   }
 }
 
-function overview_callback() {
-  return menu_map();
-}
-
-function admin_admin() {
-  return menu_map();
-}
-
-
 function admin_page() {
   if (user_access("access administration pages")) {
-    if (!isset($GLOBALS["_gmenu"])) {
-      menu_build("system");
-    }
-    if ($help = menu_help()) {
+    if ($help = menu_get_active_help()) {
       $contents = "<small>$help</small><hr />";
     }
     if (arg(1)) {
@@ -67,9 +54,9 @@ function admin_page() {
       $title = t("System messages");
     }
 
-    $breadcrumb = menu_path();
+    $breadcrumb = menu_active_breadcrumb();
     array_pop($breadcrumb);
-    $title = menu_title();
+    $title = menu_get_active_title();
 
     theme("header");
     theme("breadcrumb", $breadcrumb);
