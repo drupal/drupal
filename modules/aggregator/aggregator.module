@@ -1,5 +1,5 @@
 <?php
-// $Id: aggregator.module,v 1.128 2003/10/22 13:03:31 dries Exp $
+// $Id: aggregator.module,v 1.129 2003/10/24 09:25:46 dries Exp $
 
 
 function import_help($section = "admin/help#import") {
@@ -11,10 +11,10 @@ function import_help($section = "admin/help#import") {
       $output .= "<p>Drupal also has a news aggregator built in as a standard feature. With it, you can subscribe to feeds from other sites and display their content for your site users. Simply enable the import module in site administration and enter the feeds that you choose.</p>";
       $output .= "<h3>What do I need to subscribe to a feed?</h3>";
       $output .= "<p>The standard method of syndication is using the XML-based %rss (RSS). To syndicate a site's content, obtain the full URL of the RSS page providing syndication. Common file tags for RSS pages are .rss, .xml and .rdf. Example: %slashdot-rss.</p>";
-      $output .= "<p>Most weblog sites that offer syndication will have an obvious link on the main page. Often you need only look for an xml syndication button, such as the one Drupal uses for site syndication.</p>";
+      $output .= "<p>Most weblog sites that offer syndication will have an obvious link on the main page. Often you need only look for an XML syndication button, such as the one Drupal uses for site syndication.</p>";
       $output .= "<p>But some sites do not make their RSS feeds as easy to find. Or maybe you want to find a number of feeds on a given topic, without extensively searching the web. In that case, try an RSS syndication directory such as %syndic8.</p>";
       $output .= "<p>To learn much more about RSS, read Mark Pilgrim's %rss-what and WebReference.com's %rss-evolution.</p>";
-      $output .= "<p>NOTE: Enable your site's xml syndication button by turning on the Syndicate block in block management.</p>";
+      $output .= "<p>NOTE: Enable your site's XML syndication button by turning on the Syndicate block in block management.</p>";
       $output .= "<h3>Configuring news feeds</h3>";
       $output .= "<p>To subscribe to an RSS feed on another site, use the %admin-news shortcut at the top of the news aggregation page. The link leads directly to the news aggregation configuration section of Drupal site administration.</p>";
       $output .= "<p>Once there, select %new-feed from the left hand menu. Drupal will then ask for the following:</p>";
