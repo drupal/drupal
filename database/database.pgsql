@@ -389,7 +389,7 @@ CREATE TABLE users (
   language char(2) NOT NULL default '',
   sid varchar(32) NOT NULL default '',
   init varchar(64) default '',
-  session varchar(32) NOT NULL default '',
+  session text,
   data text,
   rid integer NOT NULL default '0',
   PRIMARY KEY  (uid),
