@@ -73,9 +73,9 @@ function cloud_update($site) {
 function cloud_form($edit = array()) {
   global $REQUEST_URI;
 
-  $form .= form_textfield("Site name", "name", $edit["name"], 50, 64, "The name of the website you want to monitor for updates.");
-  $form .= form_textfield("Site URL", "link", $edit["link"], 50, 64, "The URL of the website you want to monitor for updates.");
-  $form .= form_textfield("URL to monitor", "feed", $edit["feed"], 50, 64, "The URL of the page you want to monitor for updates.  Likely to be same as the site's URL but useful to monitor framed pages and more accurate when pointed to a XML/RSS/RDF feed.");
+  $form .= form_textfield("Site name", "name", $edit["name"], 50, 128, "The name of the website you want to monitor for updates.");
+  $form .= form_textfield("Site URL", "link", $edit["link"], 50, 255, "The URL of the website you want to monitor for updates.");
+  $form .= form_textfield("URL to monitor", "feed", $edit["feed"], 50, 255, "The URL of the page you want to monitor for updates.  Likely to be same as the site's URL but useful to monitor framed pages and more accurate when pointed to a XML/RSS/RDF feed.");
 
   $form .= form_submit("Submit");
 
