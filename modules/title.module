@@ -1,5 +1,5 @@
 <?php
-// $Id: title.module,v 1.21 2003/11/25 19:26:21 dries Exp $
+// $Id: title.module,v 1.22 2003/12/07 10:28:20 dries Exp $
 
 function title_help($section) {
   $output = "";
@@ -40,7 +40,7 @@ function title_page() {
     else if (db_num_rows($result) == 1) {
       $node = db_fetch_object($result);
       $node = node_load(array("nid" => $node->nid));
-      print theme("page", node_show($node, NULL));
+      print theme("page", node_show($node, NULL), $node->title);
     }
     else {
       $header = array(t("Type"), t("Title"), t("Author"));
