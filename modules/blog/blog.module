@@ -157,7 +157,7 @@ function blog_page_user($uid = 0) {
   $links[] = lm(t("view recent blog entries"), array("mod" => "blog", "op" => "view"), "", array("title" => t("View all recent blog entries.")));
   $theme->box(t("%username's blog", array ("%username" => $account->name)), "<center>". $theme->links($links). "</center>");
 
-  $result = db_query_pager("SELECT nid FROM node WHERE type = 'blog' AND uid = '$account->uid' AND status = 1 ORDER BY nid DESC", $user->nodes ? $user->nodes : variable_get("default_nodes_main", 10));
+  $result = pager_query("SELECT nid FROM node WHERE type = 'blog' AND uid = '$account->uid' AND status = 1 ORDER BY nid DESC", $user->nodes ? $user->nodes : variable_get("default_nodes_main", 10));
   while ($node = db_fetch_object($result)) {
     node_view(node_load(array("nid" => $node->nid)), 1);
   }
@@ -168,7 +168,7 @@ function blog_page_user($uid = 0) {
 function blog_page_last() {
   global $user, $theme;
 
-  $result = db_query_pager("SELECT nid FROM node WHERE type = 'blog' AND status = 1 ORDER BY nid DESC", $user->nodes ? $user->nodes : variable_get("default_nodes_main", 10));
+  $result = pager_query("SELECT nid FROM node WHERE type = 'blog' AND status = 1 ORDER BY nid DESC", $user->nodes ? $user->nodes : variable_get("default_nodes_main", 10));
 
   while ($node = db_fetch_object($result)) {
     $output = node_view(node_load(array("nid" => $node->nid)), 1);

@@ -369,19 +369,11 @@ function check_form($text) {
   return htmlspecialchars(stripslashes($text));
 }
 
-function check_export($text) {
-  return htmlspecialchars(stripslashes($text));
-}
-
-function check_code($text) {
-  return $text;
-}
-
-function check_preview($text) {
-  return check_output(check_input($text));
-}
-
 function check_query($text) {
+  return addslashes(stripslashes($text));
+}
+
+function check_input($text) {
   return addslashes(stripslashes($text));
 }
 
@@ -395,12 +387,19 @@ function filter($text) {
   return $text;
 }
 
-function check_input($text) {
-  return check_query($text);
-}
-
 function check_output($text, $nl2br = 0) {
-  return ($text) ? ($nl2br ? str_replace("\r", "", str_replace("\n", "<br />", stripslashes($text))) : stripslashes($text)) : message_na();
+  if ($text) {
+    $text = stripslashes($text);
+
+    if (strip_tags($text, "<a><i><b><u><tt><code><cite><strong>") == $text) {
+      $text = nl2br($text);
+    }
+  }
+  else {
+    $text = message_na();
+  }
+
+  return $text;
 }
 
 function check_file($filename) {
@@ -641,6 +640,34 @@ function form_weight($title = NULL, $name = "weight", $value = 0, $delta = 10, $
 }
 
 /**
+ * Parse an URL; this function must be follow the changes of a clean url implementation
+ *
+ * @param   string  $url     optional, url to parse; default to request_uri()
+ * @return  array   $result  associative array:
+ *                             script => index/node/module/admin
+ *                             query => GET variables
+ *
+ */
+function drupal_parse_url($url = NULL) {
+  global $PHP_SELF;
+  static $cache;
+
+  if ($url == NULL) {
+    $url = $PHP_SELF ."?". getenv("QUERY_STRING");
+  }
+
+  if (!$cache[$url]) {
+    $parts = parse_url($url);
+    preg_match("/(\w+?)\.php/", $parts["path"], $found);
+    $cache[$url]["script"] = $found[1];
+    parse_str($parts["query"], $cache[$url]["query"]);
+    $cache[$url]["anchor"] = $parts["fragment"];
+  }
+
+  return $cache[$url];
+}
+
+/**
  * Build an URL; use this functions when you must write an URL
  * for example in a form or a redirect.
  *
@@ -649,9 +676,20 @@ function form_weight($title = NULL, $name = "weight", $value = 0, $delta = 10, $
  * @param $anchor  optional, anchor name
  */
 function drupal_url($args = array(), $script = "node", $anchor = 0) {
+  static $search, $replace;
+
+  if (!$search) {
+    /*
+      According to RFC 1738 [3] the special characters "$-_.+!*'()," and the
+      reserved characters "/:@#?&=" can be used unencoded within an URL
+    */
+    $search = array("%24", "%2B", "%21", "%2A", "%27", "%28", "%29", "%2C", "%2F", "%3A", "%40", "%23", "%3F", "%26", "%3D");
+    $replace = array("$", "+", "!", "*", "'", "(", ")", ",", "/", ":", "@", "#", "?", "&", "=");
+  }
+
   $t = array();
   foreach ($args as $key => $value) {
-    $t[] = "$key=". urlencode($value);
+    $t[] = "$key=". str_replace($search, $replace, urlencode($value));
   }
   if (count($t)) {
     return "$script.php?". implode("&amp;", $t) . ($anchor ? "#$anchor" : "");

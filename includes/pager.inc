@@ -5,7 +5,7 @@ function pager_help() {
   ?>
   <h3>Implementation note: making queries pagable</h3>
   <p>The pager uses <code>LIMIT</code>-based queries to fetch only the records required to render a certain page.  However, it has to learn the total number of records returned by the query to (among others) compute the number of pages (= number of all records / number of records per page). This is done by inserting <code>COUNT(*)</code> in the original query, ie. by rewriting the original query <pre>SELECT nid, type FROM node WHERE status = '1' ORDER BY static DESC, created DESC</pre> to read <pre>SELECT COUNT(*) FROM node WHERE status = '1' ORDER BY static DESC, created DESC</pre>Rewriting the query is accomplished using a regular expression; <code>preg_replace("/SELECT.*FROM/i", "SELECT COUNT(*) FROM", $query)</code>.</p>
-  <p>Unfortunately, the call to <code>preg_replace()</code> does not work as intended for queries that already have a <code>COUNT()</code> clause; the original <code>COUNT()</code> will be removed from the query, possibly making the remainder of the query fail (eg. when the use of <code>HAVING</code> or <code>ORDER</code> depends on the value returned by <code>COUNT()</code>).  In practice, for queries to be <code>db_query_pager()</code>-able, they shold be reformulated not to use <code>COUNT()</code>.</p>
+  <p>Unfortunately, the call to <code>preg_replace()</code> does not work as intended for queries that already have a <code>COUNT()</code> clause; the original <code>COUNT()</code> will be removed from the query, possibly making the remainder of the query fail (eg. when the use of <code>HAVING</code> or <code>ORDER</code> depends on the value returned by <code>COUNT()</code>).  In practice, for queries to be <code>pager_query()</code>-able, they shold be reformulated not to use <code>COUNT()</code>.</p>
  <?php
 }
 
@@ -24,8 +24,8 @@ function pager_help() {
  *
  * @return  string  html of pager
  */
-function pager_display($tags = "", $limit = 10, $element = 0, $type = "default") {
-  return theme_invoke("pager_display_". $type, $tags, $limit, $element);
+function pager_display($tags = "", $limit = 10, $element = 0, $type = "default", $attributes = array()) {
+  return theme_invoke("pager_display_". $type, $tags, $limit, $element, $attributes = array());
 }
 
 /**
@@ -36,13 +36,13 @@ function pager_display($tags = "", $limit = 10, $element = 0, $type = "default")
  *
  * @see pager_display
  */
-function pager_display_default($tags = "", $limit = 10, $element = 0) {
+function pager_display_default($tags = "", $limit = 10, $element = 0, $attributes = array()) {
   $output .= "<center><table cellpadding=\"10\"><tbody><tr>";
-  $output .= "<td align=\"center\">". pager_first(($tags[0] ? $tags[0] : t("first page")), $limit, $element) ."</td>";
-  $output .= "<td align=\"center\">". pager_previous(($tags[1] ? $tags[1] : t("previous page")), $limit, $element) ."</td>";
-  $output .= "<td align=\"center\">". pager_list($limit, $element, ($tags[2] ? $tags[2] : 9 )) ."</td>";
-  $output .= "<td align=\"center\">". pager_next(($tags[3] ? $tags[3] : t("next page")), $limit, $element) ."</td>";
-  $output .= "<td align=\"center\">". pager_last(($tags[4] ? $tags[4] : t("last page")), $limit, $element) ."</td>";
+  $output .= "<td align=\"center\">". pager_first(($tags[0] ? $tags[0] : t("first page")), $limit, $element, $attributes) ."</td>";
+  $output .= "<td align=\"center\">". pager_previous(($tags[1] ? $tags[1] : t("previous page")), $limit, $element, 1, $attributes) ."</td>";
+  $output .= "<td align=\"center\">". pager_list($limit, $element, ($tags[2] ? $tags[2] : 9 ), "", $attributes) ."</td>";
+  $output .= "<td align=\"center\">". pager_next(($tags[3] ? $tags[3] : t("next page")), $limit, $element, 1, $attributes) ."</td>";
+  $output .= "<td align=\"center\">". pager_last(($tags[4] ? $tags[4] : t("last page")), $limit, $element, $attributes) ."</td>";
   $output .= "</tr></tbody></table></center>";
 
   return "$output";
@@ -56,13 +56,13 @@ function pager_display_default($tags = "", $limit = 10, $element = 0) {
  *
  * @see pager_display
  */
-function pager_display_simple($tags = "", $limit = 10, $element = 0) {
+function pager_display_simple($tags = "", $limit = 10, $element = 0, $attributes = array()) {
   /*
   ** It's left as an exercise to theme writers to create an alternative
   ** pager for pager_display_simple().  if your theme does not offer a
   ** replacement, the theme.inc pager_display_default() is used.
   */
-  return pager_display_default($tags, $limit, $element);
+  return pager_display_default($tags, $limit, $element, $attributes);
 }
 
 /**
@@ -73,13 +73,13 @@ function pager_display_simple($tags = "", $limit = 10, $element = 0) {
  *
  * @see pager_display
  */
-function pager_display_admin($tags = "", $limit = 10, $element = 0) {
+function pager_display_admin($tags = "", $limit = 10, $element = 0, $attributes = array()) {
   /*
   ** It's left as an exercise to theme writers to create an alternative
   ** pager for pager_display_admin().  if your theme does not offer a
   ** replacement, the pager.inc pager_display_default() is used.
   */
-  return pager_display_default($tags, $limit, $element);
+  return pager_display_default($tags, $limit, $element, $attributes);
 }
 
 /* *******************************************************************
@@ -94,11 +94,11 @@ function pager_display_admin($tags = "", $limit = 10, $element = 0) {
  *
  * @see pager_previous
  */
-function pager_first($text, $limit, $element = 0) {
-  global $from_array;
+function pager_first($text, $limit, $element = 0, $attributes = array()) {
+  global $pager_from_array;
 
-  if ($from_array[$element]) {
-    return "<a href=\"". pager_link(pager_load_array(0, $element, $from_array)) ."\">$text</a>";
+  if ($pager_from_array[$element]) {
+    return "<a href=\"". pager_link(pager_load_array(0, $element, $pager_from_array), $attributes) ."\">$text</a>";
   }
   else {
     // we are already at the first page, return nothing
@@ -116,13 +116,13 @@ function pager_first($text, $limit, $element = 0) {
  *
  * @return  string  html of this pager piece
  */
-function pager_previous($text, $limit, $element = 0, $n = 1) {
-  global $from_array;
-  $from_new = pager_load_array(((int)$from_array[$element] - ((int)$limit * (int)$n)), $element, $from_array);
+function pager_previous($text, $limit, $element = 0, $n = 1, $attributes = array()) {
+  global $pager_from_array;
+  $from_new = pager_load_array(((int)$pager_from_array[$element] - ((int)$limit * (int)$n)), $element, $pager_from_array);
   if ($from_new[$element] < 1) {
-    return pager_first($text, $limit, $element);
+    return pager_first($text, $limit, $element, $attributes);
   }
-  return "<a href=\"". pager_link($from_new) ."\">$text</a>";
+  return "<a href=\"". pager_link($from_new, $attributes) ."\">$text</a>";
 }
 
 /**
@@ -130,11 +130,11 @@ function pager_previous($text, $limit, $element = 0, $n = 1) {
  *
  * @see pager_previous
  */
-function pager_next($text, $limit, $element = 0, $n = 1) {
-  global $from_array, $pager_total;
-  $from_new = pager_load_array(((int)$from_array[$element] + ((int)$limit * (int)$n)), $element, $from_array);
+function pager_next($text, $limit, $element = 0, $n = 1, $attributes = array()) {
+  global $pager_from_array, $pager_total;
+  $from_new = pager_load_array(((int)$pager_from_array[$element] + ((int)$limit * (int)$n)), $element, $pager_from_array);
   if ($from_new[$element] < $pager_total[$element]) {
-    return "<a href=\"". pager_link($from_new) ."\">$text</a>";
+    return "<a href=\"". pager_link($from_new, $attributes) ."\">$text</a>";
   }
   return " ";
 }
@@ -144,15 +144,15 @@ function pager_next($text, $limit, $element = 0, $n = 1) {
  *
  * @see pager_previous
  */
-function pager_last($text, $limit, $element = 0) {
-  global $from_array, $pager_total;
+function pager_last($text, $limit, $element = 0, $attributes = array()) {
+  global $pager_from_array, $pager_total;
 
-  $from_new = pager_load_array(($pager_total[$element] - $limit), $element, $from_array);
-  if ($from_new[$element] < ($from_array[$element] + $limit)) {
-    return pager_next($text, $limit, $element);
+  $from_new = pager_load_array(($pager_total[$element] - $limit), $element, $pager_from_array);
+  if ($from_new[$element] < ($pager_from_array[$element] + $limit)) {
+    return pager_next($text, $limit, $element, 1, $attributes);
   }
-  if (($from_new[$element] > $from_array[$element]) && ($from_new[$element] > 0) && $from_new[$element] < $pager_total[$element]) {
-    return "<a href=\"". pager_link($from_new) ."\">$text</a>";
+  if (($from_new[$element] > $pager_from_array[$element]) && ($from_new[$element] > 0) && $from_new[$element] < $pager_total[$element]) {
+    return "<a href=\"". pager_link($from_new, $attributes) ."\">$text</a>";
   }
   return " ";
 }
@@ -164,10 +164,10 @@ function pager_last($text, $limit, $element = 0) {
  * @see pager_previous
  */
 function pager_detail($limit, $element = 0, $format = "%d through %d of %d.") {
-  global $from_array, $pager_total;
+  global $pager_from_array, $pager_total;
 
-  if ($pager_total[$element] > (int)$from_array[$element] + 1) {
-    $output = sprintf($format, (int)$from_array[$element] + 1, ((int)$from_array[$element] + $limit <= $pager_total[$element] ? (int)$from_array[$element] + $limit : $pager_total[$element]), $pager_total[$element]);
+  if ($pager_total[$element] > (int)$pager_from_array[$element] + 1) {
+    $output = sprintf($format, (int)$pager_from_array[$element] + 1, ((int)$pager_from_array[$element] + $limit <= $pager_total[$element] ? (int)$pager_from_array[$element] + $limit : $pager_total[$element]), $pager_total[$element]);
   }
 
   return $output;
@@ -180,16 +180,16 @@ function pager_detail($limit, $element = 0, $format = "%d through %d of %d.") {
  * @param   string  $text       optional text to display before the page list
  * @see pager_previous
  */
-function pager_list($limit, $element = 0, $quantity = 5, $text = "") {
-  global $from_array, $pager_total;
+function pager_list($limit, $element = 0, $quantity = 5, $text = "", $attributes = array()) {
+  global $pager_from_array, $pager_total;
 
   // calculate various markers within this pager piece:
   // middle used to "center" pages around current page
   $pager_middle = ceil((int)$quantity / 2);
   // offset adds "offset" second page
-  $pager_offset = (int)$from_array[$element] % (int)$limit;
+  $pager_offset = (int)$pager_from_array[$element] % (int)$limit;
   // current is the page we are currently paged to
-  if (($pager_current = (ceil(($from_array[$element] + 1) / $limit))) < 1) {
+  if (($pager_current = (ceil(($pager_from_array[$element] + 1) / $limit))) < 1) {
     $pager_current = 1;
   }
   // first is the first page listed by this pager piece (re quantity)
@@ -231,13 +231,13 @@ function pager_list($limit, $element = 0, $quantity = 5, $text = "") {
     // finally we're ready to generate the actual pager piece
     for (; $i <= $pager_last && $i <= $pager_max; $i++) {
       if ($i < $pager_current) {
-        $output .= pager_previous($i, $limit, $element, ($pager_current - $i)) ." ";
+        $output .= pager_previous($i, $limit, $element, ($pager_current - $i), $attributes) ." ";
       }
       if ($i == $pager_current) {
         $output .= "<b>$i</b> ";
       }
       if ($i > $pager_current) {
-        $output .= pager_next($i, $limit, $element, ($i - $pager_current)) ." ";
+        $output .= pager_next($i, $limit, $element, ($i - $pager_current), $attributes) ." ";
       }
     }
 
@@ -259,9 +259,6 @@ function pager_list($limit, $element = 0, $quantity = 5, $text = "") {
  * Use this function when doing select queries you wish to be able to page.
  *
  * TODO:
- * - remove database dependency ($db_type) piece
- *   . use db_query_range from
- *   . rename db_query_pager() to pager_query()
  * - examine a better solution for the "no COUNT in $query" requirement (see (output of) {@link pager_help()})
  *
  * @param   string  $query    the database query *without* "LIMIT" in it. examples:<pre>
@@ -272,57 +269,33 @@ function pager_list($limit, $element = 0, $quantity = 5, $text = "") {
  *
  * @return  resource  MySQL query result
  */
-function db_query_pager($query, $limit = 10, $element = 0) {
-  global $from, $from_array, $db_type, $pager_total;
+function pager_query($query, $limit = 10, $element = 0) {
+  global $from, $pager_from_array, $db_type, $pager_total;
 
   // count the total number of records in this query:
-  $array = db_fetch_array(db_query(preg_replace("/SELECT.*FROM/i", "SELECT COUNT(*) FROM", $query)));
-  if ($array) {
-    $pager_total[$element] = array_pop($array);
-  }
-  else {
-    $pager_total[$element] = 0;
-  }
+  $pager_total[$element] = db_result(db_query(preg_replace("/SELECT.*FROM/i", "SELECT COUNT(*) FROM", $query)));
 
   // convert comma separated $from to an array, used by other functions:
-  $from_array = explode(",", $from);
+  $pager_from_array = explode(",", $from);
 
-  if ((int)$from_array[$element]) {
-    if ($db_type == "mysql") {
-      // MySQL formatted limit query with offset:
-      $limit_query = $query . " LIMIT " . (int)$from_array[$element] . ", $limit";
-    }
-    else {
-      // pear formatted limit query with offset:
-      $limit_query = $query . " LIMIT $limit OFFSET " . (int)$from_array[$element];
-    }
-  }
-  else {
-    // standard limit query without offset:
-    $limit_query = $query . " LIMIT $limit";
-  }
-  return db_query($limit_query);
+  return db_query_range($query, (int)$pager_from_array[$element], (int)$limit);
 }
 
-function pager_link($from_new) {
-  $from_list = @implode(",", $from_new);
-  if ("$from_list" == "0") {
-    // single pager at zero, so remove the $from
-    return preg_replace(array("/from=*[^&]*/", "/[&]$/", "/[?]$/"), "", request_uri());
-  }
-  if (preg_match("/from=/", request_uri())) {
-    // replace existing from=
-    return preg_replace("/from=*[^&]*/", "from=$from_list", request_uri());
-  }
-  if (preg_match("/[?]/", request_uri())) {
-    // append &from=
-    $href = request_uri() . "&from=$from_list";
+function pager_link($from_new, $attributes = array()) {
+  $url = drupal_parse_url();
+
+  if (count($from_new) == 0 || (count($from_new) == 1 && $from_new[0] == 0)) {
+    unset($url["query"]["from"]);
   }
   else {
-    // append ?from=
-    $href = request_uri() . "?from=$from_list";
+    $url["query"]["from"] = implode(",", $from_new);
   }
-  return $href;
+
+  if (count($attributes)) {
+    $url["query"] = array_merge($url["query"], $attributes);
+  }
+
+  return drupal_url($url["query"], $url["script"]);
 }
 
 function pager_load_array($value, $element, $old_array) {
