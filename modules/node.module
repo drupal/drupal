@@ -455,8 +455,8 @@ function node_link($type, $node = 0, $main = 0) {
 
     menu_add("content management", url("admin/node"), "Content management.", NULL, NULL);
      menu_add("submit new content", url("node/add"), "Submit new content.", NULL, "content management", -1, 1);
-     menu_add("new or updated posts", url("admin/node/nodes&query=0"), "Display all new or updated posts.", NULL, "content management", 0, 1);
-     menu_add("posts that await approval", url("admin/node/nodes&query=1"), "Display posts that await approval.", NULL, "content management", 0, 1);
+     menu_add("new or updated posts", url("admin/node/nodes/0"), "Display all new or updated posts.", NULL, "content management", 0, 1);
+     menu_add("posts that await approval", url("admin/node/nodes/1"), "Display posts that await approval.", NULL, "content management", 0, 1);
      menu_add("search content", url("admin/node/search"), "Search a post.", $search, "content management", 5);
      menu_add("help", url("admin/node/help"), "More information about content management.", NULL, "content management", 7);
   }
@@ -505,8 +505,8 @@ function node_admin_edit($node) {
 }
 
 function node_admin_nodes() {
-  global $query;
 
+  $query = arg(3);
   $queries = array("ORDER BY n.changed DESC", "WHERE n.status = 0 OR n.moderate = 1 ORDER BY n.changed DESC");
 
   $result = pager_query("SELECT n.*, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid ". $queries[$query ? $query : 0], 50);
