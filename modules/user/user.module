@@ -484,7 +484,7 @@ function user_block() {
 
   // Who's online block
   $time = 60 * 60; // minutes * seconds
-  $limit = 0; // List the X most recent people
+  $limit = 5; // List the X most recent people
 
   $result = db_query("SELECT uid, name FROM users WHERE timestamp > unix_timestamp() - ($time) ORDER BY timestamp DESC LIMIT $limit");
 
