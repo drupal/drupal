@@ -8,7 +8,6 @@
  dbconnect();
  $terms = stripslashes($terms);
 
-
  $output .= "<TABLE WIDTH=\"100%\" BORDER=\"0\">";
  $output .= " <TR VALIGN=\"center\">";
  $output .= "  <TD COLSPAN=3>";

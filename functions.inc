@@ -24,8 +24,30 @@ function dbconnect() {
   mysql_select_db("$dbname") or die ("Unable to select database");
 }
 
-function counter() {
-  db_query("UPDATE vars SET value=value+1 where name='totalhits'");
+function morelink_bytes($theme, $story) {
+  ### Compose more-link:
+  $morelink = "[ ";
+  if ($story->article) {
+    $morelink .= "<A HREF=\"article.php?id=$story->id";
+    if (isset($user->umode)) { $morelink .= "&mode=$user->umode"; } else { $morelink .= "&mode=threaded"; }
+    if (isset($user->uorder)) { $morelink .= "&order=$user->uorder"; } else { $morelink .= "&order=0"; }    $bytes = strlen($story->article);
+    $morelink .= "\"><FONT COLOR=\"$theme->hlcolor2\"><B>read more</B></FONT></A> | $bytes bytes in body | "; 
+  }
+  $morelink .= "<A HREF=\"article.php?id=$story->id";
+  if (isset($user->umode)) { $morelink .= "&mode=$user->umode"; } else { $morelink .= "&mode=threaded"; }
+  if (isset($user->uorder)) { $morelink .= "&order=$user->uorder"; } else { $morelink .= "&order=0"; }
+  if (isset($user->thold)) { $morelink .= "&thold=$user->thold"; } else { $morelink .= "&thold=0"; }
+  $morelink .= "\"><FONT COLOR=\"$theme->hlcolor2\">$story->comments comments</FONT></A> ]";
+
+  return $morelink;
+}
+
+function morelink_words($theme, $story) {
+  // todo
+}
+
+function morelink_lines($theme, $story) {
+  // todo
 }
 
 function FixQuotes ($what = "") {
@@ -71,48 +93,43 @@ function addRefer($url) {
   }
 }
 
-function displayRelatedLinks($theme, $sid = 0) {
-  $result = db_query("SELECT * FROM stories WHERE sid = $sid");
-
-  if ($story = db_fetch_object($result)) {
-    ### parse story for A HREF-tags:
-    $text = "$story->abstract $story->comments $story->article";
-    while ($text = stristr($text, "<A HREF=")) {
-      $link = substr($text, 0, strpos(strtolower($text), "</a>") + 4);
-      $text = stristr($text, "</A>");
-      if (!stristr($link, "mailto:")) $content .= "<LI>$link</LI>";
-    }
-
-    ### default related links: 
-    $content .= " <LI>More about <A HREF=\"search.php?category=$story->category\">$story->category</A>.</LI>";
-    $content .= " <LI>Also by <A HREF=\"search.php?author=$story->aid\">$story->aid</A>.</LI>";
-
-    $theme->box("Related links", $content);
+function displayRelatedLinks($theme, $story) {
+  ### Parse story for <A HREF="">-tags:
+  $text = "$story->abstract $story->editorial $story->article";
+  while ($text = stristr($text, "<A HREF=")) {
+    $link = substr($text, 0, strpos(strtolower($text), "</a>") + 4);
+    $text = stristr($text, "</A>");
+    if (!stristr($link, "mailto:")) $content .= "<LI>$link</LI>";
   }
+
+  ### Default related links: 
+  $content .= " <LI>More about <A HREF=\"search.php?category=$story->category\">$story->category</A>.</LI>";
+  $content .= " <LI>Also by <A HREF=\"search.php?author=$story->aid\">$story->userid</A>.</LI>";
+
+  $theme->box("Related links", $content);
 }
 
 function displayOldHeadlines($theme, $num = 10) {
   global $user;
   
-  if ($user->storynum) $result = db_query("SELECT sid, subject, time FROM stories WHERE status = 1 ORDER BY time DESC LIMIT $user->storynum, $num");
-  else $result = db_query("SELECT sid, subject, time FROM stories WHERE status = 1 ORDER BY time DESC LIMIT $num, $num");
+  if ($user->storynum) $result = db_query("SELECT id, subject, timestamp FROM stories WHERE status = 2 ORDER BY timestamp DESC LIMIT $user->storynum, $num");
+  else $result = db_query("SELECT id, subject, timestamp FROM stories WHERE status = 2 ORDER BY timestamp DESC LIMIT $num, $num");
 
-  while ($story = db_fetch_object($result)) {        
-    
-    if ($time != date("F jS", $story->time)) {
-      $content .= "<P><B>". date("l, F jS", $story->time) ."</B></P>";
-      $time = date("F jS", $story->time);
+  while ($story = db_fetch_object($result)) {    
+    if ($time != date("F jS", $story->timestamp)) {
+      $content .= "<P><B>". date("l, F jS", $story->timestamp) ."</B></P>";
+      $time = date("F jS", $story->timestamp);
     }
 
     if ($user) {
-      $content .= "<LI><A HREF=\"article.php?sid=$story->sid";
+      $content .= "<LI><A HREF=\"article.php?id=$story->id";
       if (isset($user->umode)) { $content .= "&mode=$user->umode"; } else { $content .= "&mode=threaded"; }
       if (isset($user->uorder)) { $content .= "&order=$user->uorder"; } else { $content .= "&order=0"; }    
       if (isset($user->thold)) { $content .= "&thold=$user->thold"; } else { $content .= "&thold=0"; }
       $content .= "\">$story->subject</A></LI>";
     }
     else {
-      $content .= "<LI><A HREF=\"article.php?sid=$story->sid&mode=threaded&order=1&thold=0\">$story->subject</A></LI>";
+      $content .= "<LI><A HREF=\"article.php?id=$story->id&mode=threaded&order=1&thold=0\">$story->subject</A></LI>";
     }
   }
   $content .= "<P ALIGN=\"right\">[ <A HREF=\"search.php\"><FONT COLOR=\"$theme->hlcolor2\">more</FONT></A> ]</P>";
@@ -124,17 +141,17 @@ function displayNewHeadlines($theme, $num = 10) {
   global $user;
 
   $content = "";
-  $result = db_query("SELECT sid, subject FROM stories WHERE status = 1 ORDER BY sid DESC LIMIT $num");
-  while(list($sid, $subject) = mysql_fetch_row($result)) {
+  $result = db_query("SELECT id, subject FROM stories WHERE status = 2 ORDER BY id DESC LIMIT $num");
+  while ($story = db_fetch_object($result)) {    
     if ($user) {
-      $content .= "<LI><A HREF=\"article.php?sid=$sid";
+      $content .= "<LI><A HREF=\"article.php?id=$story->id";
       if (isset($user->umode)) { $content .= "&mode=$user->umode"; } else { $content .= "&mode=threaded"; }
-      if (isset($user->uorder)) { $content .= "&order=$user->uorder"; } else { $content .= "&order=0"; }    
+      if (isset($user->uorder)) { $content .= "&order=$user->uorder"; } else { $content .= "&order=0"; }
       if (isset($user->thold)) { $content .= "&thold=$user->thold"; } else { $content .= "&thold=0"; }
-      $content .= "\">$subject</A></LI>";
+      $content .= "\">$story->subject</A></LI>";
     }
     else {
-      $content .= "<LI><A HREF=\"article.php?sid=$sid&mode=threaded&order=1&thold=0\">$subject</A></LI>";
+      $content .= "<LI><A HREF=\"article.php?id=$story->id&mode=threaded&order=1&thold=0\">$story->subject</A></LI>";
     }
   }
   $content .= "<P ALIGN=\"right\">[ <A HREF=\"search.php\"><FONT COLOR=\"$theme->hlcolor2\">more</FONT></A> ]</P>";
