@@ -47,7 +47,7 @@ function user_load($array = array()) {
       $query .= "LOWER(u.$key) = '". strtolower(check_query($value)) ."' AND ";
     }
   }
-  $result = db_query_range('SELECT u.* FROM {users} u WHERE $query u.status < 3', 0, 1);
+  $result = db_query_range("SELECT u.* FROM {users} u WHERE $query u.status < 3", 0, 1);
 
   $user = db_fetch_object($result);
   $user = drupal_unpack($user);
