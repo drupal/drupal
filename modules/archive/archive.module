@@ -98,7 +98,7 @@ function archive_calendar($original = 0) {
   $days = array(t('Su'), t('Mo'), t('Tu'), t('We'), t('Th'), t('Fr'), t('Sa'));
   for ($i = 0; $i < 7; $i++) {
     $output .= "<td>". $days[$cday] . "</td>";
-    $cday = ($cday < 6 : $cday+1 : 0);
+    $cday = ($cday < 6 ? $cday+1 : 0);
   }
   $output .= "</tr>\n";
 
