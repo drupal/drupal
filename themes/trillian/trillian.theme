@@ -1,0 +1,89 @@
+<?php
+
+  class Theme extends BaseTheme {
+    // General colorset that can be used for this theme
+    var $foreground = "#000000";
+    var $background = "#FFFFFF";
+
+    function header() {
+?>
+      <!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Strict//EN" "DTD/xhtml1-strict.dtd">
+      <html>
+       <head>
+        <title><? echo variable_get(site_name, "drupal"); ?></title>
+         <style type="text/css">
+          <!--
+           body, td, p { margin: 10px; font-size: 12pt; font-family: Verdana, Helvetica; }
+          -->
+         </style>
+        </head>
+      <body bgcolor="#ffffff" alink="#336699" vlink="#800080" link="#0000bb">
+       <div style="background: #336699; color: #ffffff; border-top: 2px solid; border-bottom: 2px solid;">
+         <table border="0" cellspacing="0" cellpadding="0">
+          <tr>
+           <td align="left" valign="top"><a href="<?php echo path_uri(); ?>"><img src="themes/trillian/images/logo.png" alt="" border="0" /></a></td>
+           <td align="left" valign="middle"><div style="font-size: 200%; font-weight: bold;"><?php echo variable_get("site_name", "Drupal"); ?></div><i><?php echo variable_get("site_slogan", ""); ?></i></td>
+          </tr>
+         </table>
+       </div>
+       <table border="0" cellspacing="5" cellpadding="1" width="100%">
+        <tr><td valign="top" width="150"><div style="border: 1px solid; padding: 10px; border-color: green; background: #eaeaea;"><?php echo $this->box(t("Navigation"), implode("<br />", link_page()) . $this->user("all", $this)); ?></div><br /><div style="border: 1px solid; padding: 10px; border-color: green; background: #eaeaea;"><?php theme_blocks("all", $this); ?></div></td>
+      <td valign="top">
+<?php
+    }
+
+    function links($links, $delimiter = " &middot; ") {
+      return implode($delimiter, $links);
+    }
+
+    function node($node, $main = 0) {
+      static $date;
+
+      if ($main == 1) {
+        if ($date != date("dny", $node->timestamp)) {
+          $date = date("dny", $node->timestamp);
+
+          print "<br />";
+          print "<table width=\"100%\" cellspacing=\"1\" cellpadding=\"0\" border=\"0\">";
+          print "<tr><td align=\"left\"> &nbsp; <div style=\"font-weight: bold;\">". format_date($node->timestamp, "custom", "l, F d, Y") ."</div></td><td align=\"right\"><img src=\"themes/trillian/images/icon.gif\" alt=\"\" /></td><tr>";
+          print " <tr valign=\"bottom\"><td colspan=\"2\" bgcolor=\"#000000\" width=\"100%\"><spacer type=\"block\" height=\"100\" /></td></tr>\n";
+          print "</table>";
+          print "<br />";
+        }
+?>
+        <div style="margin-left: 10px; padding-bottom: 5px; text-transform: capitalize;"><?php echo "<a href=\"node.php?id=$node->nid\" style=\"color: #000000; font-size: 105%; font-weight: bold;\">". check_output($node->title) ."</a>"; ?></div>
+        <div style="margin-left: 25px;"><?php echo check_output($node->body, 1); ?></div>
+        <div style="margin-left: 20px; padding-top: 5px; padding-bottom: 12px; color: #7c7c7c;">&gt;&gt;&gt;
+        <?php
+          $links = link_node($node);
+          array_unshift($links, t("posted by") ." ". format_name($node));
+          echo $this->links($links);
+         ?>
+        </div>
+       <?php
+      }
+      else {
+       ?>
+        <div style="text-transform: capitalize; font-size: 120%; font-weight: bold;"><?php echo check_output($node->title); ?></div>
+        <div style="padding-left: 20px; padding-top: 10px; padding-bottom: 10px;"><?php echo sprintf(t("by %s on %s"), format_name($node), format_date($node->timestamp)); ?></div>
+        <div style="margin-left: 10px;"><?php echo check_output($node->body, 1); ?></div>
+        <?php
+      }
+    }
+
+    function box($subject, $content, $region = "main") {
+      print "<div align=\"center\" style=\"{ border: 1px solid; border-color: #000000; font-variant: small-caps; font-weight: bold; font-size: 120%; background: #336699; color: #ffffff; }\">". check_output($subject) ."</div>". check_output($content) ."<br />";
+    }
+
+    function footer() {
+?>
+       </td>
+      </tr>
+     </table>
+    </body>
+   </html>
+<?php
+    }
+  }
+
+?>
