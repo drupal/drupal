@@ -75,7 +75,7 @@ function format_interval($timestamp) {
     $timestamp = $timestamp % 60;
   }
   if ($timestamp > 0) {
-    $output .= floor($timestamp / 86400) ." sec";
+    $output .= "$timestamp sec";
   }
   return $output;
 }
