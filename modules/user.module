@@ -18,7 +18,7 @@ function sess_read($key) {
   global $user;
   $user = user_load(array("sid" => $key, "status" => 1));
 
-  return $user->session ? $user->session : '';
+  return $user->sid ? $user->sid : '';
 }
 
 function sess_write($key, $value) {
