@@ -74,7 +74,7 @@ function book_view($node, $page = 1) {
   $output .= "</TABLE>\n";
 
   if ($page) $theme->header();
-  $theme->box(t("Handbook"), $output);
+  $theme->box(t("Book"), $output);
   if ($page) $theme->footer();
 }
 
@@ -165,19 +165,20 @@ function book_save($edit) {
   node_save(array_diff(array_merge($edit, array(nid => $edit[nid], type => "book")), array(userid => $edit[userid])));
 }
 
-function book_tree($parent = "") {
+function book_tree($parent = "", $depth = 0) {
   global $PHP_SELF, $status;
 
-  $result = db_query("SELECT n.*, b.* FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE n.type = 'book' AND n.status = '$status[posted]' AND b.parent = '$parent' ORDER BY b.weight");
-
-  $output .= "<UL>";
-  while ($node = db_fetch_object($result)) {
-    $output .= "<LI><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A>";
-    if ($PHP_SELF == "/admin.php") $output .= " <SMALL>(weight: $node->weight/$node->parent, status: $node->status) (<A HREF=\"admin.php?mod=book&op=edit&id=$node->nid\">edit</A>)</SMALL>\n";
-    if ($node->pid) $output .= book_tree($node->pid);
-    $output .= book_tree($node->nid);
+  if (($depth < 3) || ($PHP_SELF == "/admin.php")) {
+    $result = db_query("SELECT n.*, b.* FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE n.type = 'book' AND n.status = '$status[posted]' AND b.parent = '$parent' ORDER BY b.weight");
+    $output .= "<UL>";
+    while ($node = db_fetch_object($result)) {
+      $output .= "<LI><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A>";
+      if ($PHP_SELF == "/admin.php") $output .= " <SMALL>(weight: $node->weight/$node->parent, status: $node->status) (<A HREF=\"admin.php?mod=book&op=edit&id=$node->nid\">edit</A>)</SMALL>\n";
+      if ($node->pid) $output .= book_tree($node->pid, $depth + 1);
+      $output .= book_tree($node->nid, $depth + 1);
+    }
+    $output .= "</UL>";
   }
-  $output .= "</UL>";
   return $output;
 }
 
@@ -217,9 +218,18 @@ function book_admin() {
   }
 }
 
-function book_page($id = 0) {
-  global $theme;
-  book_view(node_get_object("nid", $nid));
+function book_page() {
+  global $status, $theme;
+
+  $result = db_query("SELECT n.*, b.* FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE b.parent = 0 AND n.status = $status[posted]");
+
+  while ($node = db_fetch_object($result)) {
+    $output .= "<DT><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></DT><DD>". check_output($node->body, 1) ."</DD>";
+  }
+
+  $theme->header();
+  $theme->box(t("Book"), "<DL>$output</DL>");
+  $theme->footer();
 }
 
 function book_update($id) {
