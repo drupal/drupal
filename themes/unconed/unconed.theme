@@ -113,7 +113,7 @@
       <TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" BGCOLOR="<? echo $this->brcolor1; ?>" WIDTH="100%">
       <TR><TD>
        <TABLE BORDER="0" CELLPADDING="4" CELLSPACING="1" WIDTH="100%">
-       <TR><TD COLSPAN="2" BGCOLOR="<? echo $this->bgcolor1; ?>"><FONT COLOR="<? echo $this->fgcolor1; ?>"><B><? echo $story->subject; ?></B></FONT></TD></TR>
+       <TR><TD COLSPAN="2" BGCOLOR="<? echo $this->bgcolor1; ?>"><FONT COLOR="<? echo $this->fgcolor1; ?>"><B><? echo check_output($story->subject, 1); ?></B></FONT></TD></TR>
        <TR BGCOLOR="<? echo $this->bgcolor3; ?>">
          <?
           if ($story->category) { print "<TD BGCOLOR=\"$this->bgcolor3\">"; }
