@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.180 2004/06/30 07:26:02 dries Exp $
+// $Id: blog.module,v 1.181 2004/07/04 10:30:42 dries Exp $
 
 /**
  * Implementation of hook_settings().
@@ -254,10 +254,7 @@ function blog_link($type, $node = 0, $main) {
   }
 
   if ($type == 'node' && $node->type == 'blog') {
-    if (blog_access('update', $node)) {
-      $links[] = l(t('edit this blog entry'), "node/$node->nid/edit", array('title' => t('Edit this blog entry.')));
-    }
-    elseif (arg(0) != 'blog' && arg(1) != $node->uid) {
+    if (arg(0) != 'blog' && arg(1) != $node->uid) {
       $links[] = l(t("%username's blog", array('%username' => $node->name)), "blog/$node->uid", array('title' => t("Read %username's latest blog entries.", array('%username' => $node->name))));
     }
   }
