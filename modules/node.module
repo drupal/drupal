@@ -939,7 +939,7 @@ function node_admin_nodes() {
   }
 
   if (!$rows) {
-    $rows[] = array(array('data' => t('No posts available.'), 'colspan' => '7'));
+    $rows[] = array(array('data' => t('No posts available.'), 'colspan' => '6'));
   }
 
   $output .= theme('table', $header, $rows);
