@@ -21,13 +21,25 @@ function statistics_conf_options() {
 }
 
 function statistics_referer() {
-  $result = db_query("SELECT url, COUNT(url) AS count FROM referer GROUP BY url ORDER BY count");
+  $result = db_query("SELECT url, COUNT(url) AS count FROM referer WHERE url NOT LIKE '". path_uri() ."%' GROUP BY url ORDER BY count DESC");
+
+  $output .= "<P>Referers of the last ". format_interval(variable_get("referer_clear", 604800)) .":</P>\n";
+
+  $output .= "<H3>External referers</H3>\n";
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
   $output .= " <TR><TH>URL</TH><TH>number</TH></TR>\n";
   while ($referer = db_fetch_object($result)) {
-    if (!ereg("^http://", $referer->url)) {
-      $output .= "<TR><TD><A HREF=\"". check_output($referer->url) ."\">". check_output($referer->url) ."</A></TD><TD>". check_output($referer->count) ."</TD></TR>";
-    }
+    $output .= "<TR><TD><A HREF=\"". check_output($referer->url) ."\">". check_output($referer->url) ."</A></TD><TD>". check_output($referer->count) ."</TD></TR>";
+  }
+  $output .= "</TABLE>\n";
+
+  $result = db_query("SELECT url, COUNT(url) AS count FROM referer WHERE url LIKE '". path_uri() ."%' GROUP BY url ORDER BY count DESC");
+
+  $output .= "<H3>Internal referers</H3>\n";
+  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"3\" CELLSPACING=\"0\">\n";
+  $output .= " <TR><TH>URL</TH><TH>number</TH></TR>\n";
+  while ($referer = db_fetch_object($result)) {
+    $output .= "<TR><TD><A HREF=\"". check_output($referer->url) ."\">". check_output($referer->url) ."</A></TD><TD>". check_output($referer->count) ."</TD></TR>";
   }
   $output .= "</TABLE>\n";
 

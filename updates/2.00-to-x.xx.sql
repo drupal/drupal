@@ -284,6 +284,6 @@ ALTER TABLE users CHANGE userid userid VARCHAR(32) DEFAULT '' NOT NULL;
 
 # 24/06/01
 CREATE TABLE referer (
-  url varchar(32) DEFAULT '' NOT NULL,
+  url varchar(255) DEFAULT '' NOT NULL,
   timestamp int(11) NOT NULL
 );
