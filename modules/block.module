@@ -227,7 +227,7 @@ function block_box_form($edit = array()) {
   $form = form_textfield("Title", "title", $edit["title"], 50, 64);
   $form .= form_textfield("Description", "info", $edit["info"], 50, 64);
   $form .= form_textarea("Body", "body", $edit["body"], 70, 10);
-  if (user_access("create PHP content")) {
+  if (user_access("create php content")) {
     $form .= form_select("Type", "type", $edit["type"], $type);
   }
 
