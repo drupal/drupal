@@ -9,11 +9,10 @@
 /**
  * Initialize all modules.
  *
- * To change the required set of modules, change this function as well as
- * system_listing() and module_list().
  */
 function module_init() {
   module_load_all();
+  module_invoke_all('init');
 }
 
 /**
