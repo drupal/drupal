@@ -214,7 +214,7 @@ class xmlrpc_server {
 
 
   if ($data=="") {
-    $data=$_SERVER["HTTP_RAW_POST_DATA"];
+    $data=$GLOBALS["HTTP_RAW_POST_DATA"];
   }
   $parser = xml_parser_create($xmlrpc_defencoding);
 
@@ -295,7 +295,7 @@ class xmlrpc_server {
   // packet as a string value
 
   $r=new xmlrpcresp;
-  $r->xv=new xmlrpcval( "'Aha said I: '" . $_SERVER["HTTP_RAW_POST_DATA"], "string");
+  $r->xv=new xmlrpcval( "'Aha said I: '" . $GLOBALS["HTTP_RAW_POST_DATA"], "string");
   print $r->serialize();
   }
 }
