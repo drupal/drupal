@@ -55,9 +55,9 @@ function locale_help($section = "admin/locale/help") {
 }
 
 function locale_system($field){
-  $output;
+  $output = "";
 
-  if ($field == "description") {locale_help($output = "admin/system/module");};
+  if ($field == "description") { $output = locale_help("admin/system/modules"); }
 
   return $output;
 }
