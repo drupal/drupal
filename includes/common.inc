@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.423 2005/02/01 19:45:58 dries Exp $ */
+/* $Id: common.inc,v 1.424 2005/02/04 20:14:05 unconed Exp $ */
 
 /**
  * @file
@@ -1835,6 +1835,17 @@ function drupal_eval($code) {
  */
 function drupal_get_path($type, $name) {
   return dirname(drupal_get_filename($type, $name));
+}
+
+/**
+ * Provide a substitute clone() function for PHP4.
+ */
+if (version_compare(phpversion(), '5.0') < 0) {
+  eval('
+    function clone($object) {
+      return $object;
+    }
+  ');
 }
 
 include_once 'includes/theme.inc';
