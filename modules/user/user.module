@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.160 2003/06/03 20:02:32 dries Exp $
+// $Id: user.module,v 1.161 2003/06/06 17:30:09 dries Exp $
 
 session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
 session_start();
@@ -320,7 +320,7 @@ function user_block($op = "list", $delta = 0) {
           */
 
           if (empty($edit)) {
-            $edit["destination"] = request_uri();
+            $edit["destination"] = url($_GET["q"]);
           }
           // NOTE: special care needs to be taken because on pages with forms, such as node and comment submission pages, the $edit variable might already be set.
 
@@ -634,7 +634,7 @@ function user_login($edit = array(), $msg = "") {
   */
 
   if (empty($edit)) {
-    $edit["destination"] = request_uri();
+    $edit["destination"] = url($_GET["q"]);
   }
   $output .= form_hidden("destination", $edit["destination"]);
 
@@ -685,7 +685,7 @@ function user_logout() {
   ** Redirect the user to his personal information page:
   */
 
-  drupal_goto("index.php");
+  drupal_goto(url());
 
 }
 
