@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.269 2003/11/24 22:46:03 dries Exp $
+// $Id: common.inc,v 1.270 2003/11/25 19:26:20 dries Exp $
 
 /**
  * @name drupal_title
@@ -10,7 +10,7 @@ function drupal_set_title($title = NULL) {
   static $stored_title;
 
   if (isset($title)) {
-    $stored_title = $title;
+    $stored_title = ucfirst($title);
   }
   return $stored_title;
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: queue.module,v 1.96 2003/11/23 14:02:35 dries Exp $
+// $Id: queue.module,v 1.97 2003/11/25 19:26:21 dries Exp $
 
 function queue_help($section) {
   $output = "";
@@ -117,9 +117,7 @@ function queue_overview() {
   $output .= "</table>";
 
   drupal_set_title(t("Submission queue"));
-  print theme("header");
-  print $output;
-  print theme("footer");
+  print theme("page", $output);
 }
 
 function queue_view($nid) {
@@ -170,12 +168,12 @@ function queue_view($nid) {
   }
 
   print theme("header");
-  node_view($node);
+  print node_view($node);
   if ($output) {
     print theme("box", t("Moderate"), $output);
   }
   if ($node->comment && variable_get("queue_show_comments", 1)) {
-    module_invoke("comment", "render", $node);
+    print module_invoke("comment", "render", $node);
   }
   print theme("footer");
 }
@@ -192,9 +190,7 @@ function queue_page() {
     }
   }
   else {
-    print theme("header");
-    print message_access();
-    print theme("footer");
+    print theme("page", message_access());
   }
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.65 2003/11/24 22:46:03 dries Exp $
+// $Id: search.module,v 1.66 2003/11/25 19:26:21 dries Exp $
 
 function search_help($section = "admin/help#search") {
   $output = "";
@@ -50,6 +50,10 @@ function search_link($type) {
     menu("search", t("search"), "search_page", 0, 1);
   }
 
+  if ($type == "system" && user_access("search content")) {
+    menu("search", t("search"), "search_page", 0, 1);
+  }
+
   return $links;
 }
 
@@ -75,15 +79,11 @@ function search_admin() {
       $output = t("index invalidated") ."<br />\n";
       search_cron();
       $output .= t("index recreated") ."<br /><hr />\n";
-      print theme("header");
-      print $output;
-      print theme("footer");
+      print theme("page", $output);
     }
   }
   else {
-    print theme("header");
-    print message_access();
-    print theme("footer");
+    print theme("page", message_access());
   }
 }
 
@@ -353,48 +353,40 @@ function search_view($keys) {
 
   if (user_access("search content")) {
     // Construct the search form:
-    $form = search_form(NULL, $keys, TRUE);
-
-    // Collect the search results:
-    $output = search_data($keys);
+    $output = search_form(NULL, $keys, TRUE);
 
     // Display form and search results:
     $help_link = l(t("search help"), "search/help");
     switch (variable_get("help_pos", 1)) {
       case "1":
-        $form = search_help(). $form ."<br />";
+        $output = search_help(). $output ."<br />";
         break;
       case "2":
-        $form .= search_help() ."<br />";
+        $output .= search_help() ."<br />";
         break;
       case "3":
-        $form = $help_link. "<br />". $form ."<br />";
+        $output = $help_link. "<br />". $output ."<br />";
         break;
       case "4":
-        $form .= "<br />". $help_link ."<br />";
+        $output .= "<br />". $help_link ."<br />";
     }
 
-    drupal_set_title(t("Search"));
-    print theme("header");
-
-    print $form;
+    // Collect the search results:
+    $results = search_data($keys);
 
     if ($keys) {
-      if ($output) {
-        print theme("box", t("Search Results"), $output);
+      if ($results) {
+        $output .= theme("box", t("Search Results"), $results);
       }
       else {
-        print theme("box", t("Search Results"), t("Your search yielded no results."));
+        $output .= theme("box", t("Search Results"), t("Your search yielded no results."));
       }
     }
 
-    print theme("footer");
+    print theme("page", $output, t("Search"));
   }
   else {
-    drupal_set_title(t("Access denied"));
-    print theme("header");
-    print message_access();
-    print theme("footer");
+    print theme("page", message_access());
   }
 
 }
@@ -404,10 +396,7 @@ function search_page() {
 
   switch (arg(1)) {
     case "help":
-      drupal_set_title(t("Search Help"));
-      print theme("header");
-      print search_help();
-      print theme("footer");
+      print theme("page", search_help(), t("Search Help"));
       break;
     default:
       search_view($keys);

@@ -1,5 +1,5 @@
 <?php
-// $Id: xtemplate.theme,v 1.36 2003/11/23 10:41:04 dries Exp $
+// $Id: xtemplate.theme,v 1.37 2003/11/25 19:26:21 dries Exp $
 
 if (!class_exists("XTemplate")) {
   include_once("themes/xtemplate/xtemplate.inc");
@@ -31,7 +31,7 @@ function xtemplate_help($section) {
   return $output;
 }
 
-function xtemplate_node($node, $main = 0) {
+function xtemplate_node($node, $main = 0, $page = 0) {
   global $xtemplate;
 
   $xtemplate->template->assign(array(
@@ -53,6 +53,10 @@ function xtemplate_node($node, $main = 0) {
   }
   else {
     $xtemplate->template->assign("links", "");
+  }
+
+  if ($page == 0) {
+    $xtemplate->template->parse("node.title");
   }
 
   $xtemplate->template->parse("node");

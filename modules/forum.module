@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.137 2003/11/23 10:41:03 dries Exp $
+// $Id: forum.module,v 1.138 2003/11/25 19:26:21 dries Exp $
 
 function forum_node($field) {
   $info["name"] = t("forum topic");
@@ -140,9 +140,9 @@ function forum_content($node) {
   return $node;
 }
 
-function forum_view($node, $main = 0) {
+function forum_view($node, $main = 0, $page = 0) {
 
-  if ($main == 0) {
+  if ($page) {
     $term_data = array_shift(taxonomy_node_get_terms($node->nid));
     if (!$term_data) {
       // we are previewing
@@ -151,15 +151,17 @@ function forum_view($node, $main = 0) {
     $voc = taxonomy_get_vocabulary($term_data->vid);
     // Breadcrumb navigation
     $breadcrumb[] = l(t("Home"), NULL);
-    $breadcrumb[] = l(t("Forums"), "forum");
+    $breadcrumb[] = l(t("forums"), "forum");
     $breadcrumb[] = l($term_data->name, "forum/$term_data->tid");
     // print the breadcrumb
-    print theme("breadcrumb", $breadcrumb);
+    drupal_set_breadcrumb($breadcrumb);
   }
-  // prepair the node content
+  // prepare the node content
   $node = forum_content($node);
   // print the node
-  print theme("node", $node, $main);
+  $output .= theme("node", $node, $main, $page);
+
+  return $output;
 }
 
 function forum_validate(&$node) {
@@ -442,17 +444,11 @@ function forum_page() {
       print theme("forum_display", $forums, $topics, $parents, $tid, $sortby, $forum_per_page, $offset);
     }
     else {
-      drupal_set_title(t("Warning"));
-      print theme("header");
-      print _forum_message_taxonomy();
-      print theme("footer");
+      print theme("page", _forum_message_taxonomy(), t("Warning"));
     }
   }
   else {
-    drupal_set_title(t("Access denied"));
-    print theme("header");
-    print message_access();
-    print theme("footer");
+    print theme("page", message_access());
   }
 }
 
@@ -479,13 +475,15 @@ function forum_page() {
 function theme_forum_display($forums, $topics, $parents, $tid, $sortby, $forum_per_page, $offset) {
   // forum list, topics list, topic browser and "add new topic" link
 
-  $title = t("Forums");
+  $title = t("forums");
 
   /*
   ** Breadcrumb navigation:
   */
   $breadcrumb[] = l(t("Home"), "");
-  $breadcrumb[] = l($title, "forum");
+  if ($tid) {
+    $breadcrumb[] = l($title, "forum");
+  }
 
   if ($parents) {
     $parents = array_reverse($parents);
@@ -513,11 +511,7 @@ function theme_forum_display($forums, $topics, $parents, $tid, $sortby, $forum_p
     $output = '';
   }
 
-  drupal_set_title($title);
-  drupal_set_breadcrumb($breadcrumb);
-  print theme("header");
-  print $output;
-  print theme("footer");
+  print theme("page", $output, $title, $breadcrumb);
 }
 
 /**

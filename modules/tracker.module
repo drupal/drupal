@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.69 2003/11/23 10:41:04 dries Exp $
+// $Id: tracker.module,v 1.70 2003/11/25 19:26:21 dries Exp $
 
 function tracker_help($section = "admin/help#tracker") {
   $output = "";
@@ -104,15 +104,10 @@ function tracker_page() {
   global $user;
 
   if (user_access("access content")) {
-    drupal_set_title(t("Recent posts"));
-    print theme("header");
-    print tracker_posts(arg(1));
-    print theme("footer");
+    print theme("page", tracker_posts(arg(1)), t("Recent posts"));
   }
   else {
-    print theme("header");
-    print message_access();
-    print theme("footer");
+    print theme("page", message_access());
   }
 }
 

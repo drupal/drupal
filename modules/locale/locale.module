@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.85 2003/11/20 21:51:23 dries Exp $
+// $Id: locale.module,v 1.86 2003/11/25 19:26:21 dries Exp $
 
 function locale_help($section = "admin/help#locale") {
   $output = "";
@@ -55,9 +55,7 @@ function locale_help($section = "admin/help#locale") {
 }
 
 function locale_help_page() {
-  print theme("header");
-  print locale_help();
-  print theme("footer");
+  print theme("page", locale_help());
 }
 
 function locale_perm() {
@@ -300,14 +298,10 @@ function locale_admin() {
         $output = locale_seek();
         $output .= locale_seek_form();
     }
-    print theme("header");
-    print $output;
-    print theme("footer");
+    print theme("page", $output);
   }
   else {
-    print theme("header");
-    print message_access();
-    print theme("footer");
+    print theme("page", message_access());
   }
 }
 

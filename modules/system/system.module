@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.112 2003/11/23 20:03:20 dries Exp $
+// $Id: system.module,v 1.113 2003/11/25 19:26:21 dries Exp $
 
 function system_help($section = "admin/help#system") {
   global $base_url;
@@ -47,9 +47,7 @@ function system_help($section = "admin/help#system") {
 }
 
 function system_help_page() {
-  print theme("header");
-  print system_help();
-  print theme("footer");
+  print theme("page", system_help());
 }
 
 function system_perm() {
@@ -358,14 +356,10 @@ function system_admin() {
     }
 
     $output .= system_view(arg(2), arg(3));
-    print theme("header");
-    print $output;
-    print theme("footer");
+    print theme("page", $output);
   }
   else {
-    print theme("header");
-    print message_access();
-    print theme("footer");
+    print theme("page", message_access());
   }
 }
 

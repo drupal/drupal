@@ -1,5 +1,5 @@
 <?php
-// $Id: help.module,v 1.27 2003/11/20 21:51:23 dries Exp $
+// $Id: help.module,v 1.28 2003/11/25 19:26:21 dries Exp $
 
 function help_link($type) {
   if ($type == "system" && user_access("access administration pages")) {
@@ -28,9 +28,7 @@ function help_glossary() {
   $output .= "</dl>";
   $output = t($output, array("%taxonomy" => l(t("taxonomy help"), "admin/taxonomy/help")));
 
-  print theme("header");
-  print $output;
-  print theme("footer");
+  print theme("page", $output);
 }
 
 function help_help($section = "admin/help#help") {
@@ -62,9 +60,7 @@ function help_help($section = "admin/help#help") {
 }
 
 function help_help_page() {
-  print theme("header");
-  print help_help();
-  print theme("footer");
+  print theme("page", help_help());
 }
 
 ?>

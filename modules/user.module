@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.258 2003/11/23 14:02:35 dries Exp $
+// $Id: user.module,v 1.259 2003/11/25 19:26:21 dries Exp $
 
 /*** Common functions ******************************************************/
 
@@ -963,10 +963,7 @@ function user_view($uid = 0) {
 
     $output .= implode("\n", module_invoke_all("user", "view_private", "", $user));
 
-    drupal_set_title($user->name);
-    print theme("header");
-    print $output;
-    print theme("footer");
+    print theme("page", $output, $user->name);
   }
   else if ($uid && $account = user_load(array("uid" => $uid, "status" => 1))) {
     $output = form_item(t("Name"), $account->name);
@@ -977,21 +974,16 @@ function user_view($uid = 0) {
       $output .= form_item(t("Administration"), l(t("edit account"), "admin/user/edit/$account->uid"));
     }
 
-    drupal_set_title($account->name);
-    print theme("header");
-    print $output;
-    print theme("footer");
+    print theme("page", $output, $account->name);
   }
   else {
-    $output = user_login();
-    drupal_set_title(t("User login"));
-    print theme("header");
-    print theme("box", t("User login"), $output);
+    $output = theme("box", t("User login"), user_login());
     if (variable_get("user_register", 1)) {
-      print theme("box", t("Create new user account"), user_register());
+      $output .= theme("box", t("Create new user account"), user_register());
     }
-    print theme("box", t("Request new password"), user_pass());
-    print theme("footer");
+    $output .= theme("box", t("Request new password"), user_pass());
+
+    print theme("page", $output, t("User login"));
   }
 }
 
@@ -1007,40 +999,28 @@ function user_page() {
   switch ($op) {
     case t("E-mail new password"):
     case "password":
-      drupal_set_title(t("E-mail new password"));
-      print theme("header");
-      print user_pass($edit);
-      print theme("footer");
+      print theme("page", user_pass($edit), t("E-mail new password"));
       break;
     case t("Create new account"):
     case "register":
       $output = user_register($edit);
-      drupal_set_title(t("Create new account"));
-      print theme("header");
       if (variable_get("user_register", 1)) {
-        print $output;
+        print theme("page", $output, t("Create new account"));
       }
       else {
-        print message_access();
+        print theme("page", message_access());
       }
-      print theme("footer");
       break;
     case t("Log in"):
     case "login":
       $output = user_login($edit);
-      drupal_set_title(t("Log in"));
-      print theme("header");
-      print $output;
-      print theme("footer");
+      print theme("page", $output, t("Log in"));
       break;
     case t("Save user information"):
     case "edit":
       $output = user_edit($edit);
       $GLOBALS["theme"] = init_theme();
-      drupal_set_title(t("Edit account"));
-      print theme("header");
-      print $output;
-      print theme("footer");
+      print theme("page", $output, t("Edit account"));
       break;
     case "view":
       user_view(arg(2));
@@ -1050,10 +1030,7 @@ function user_page() {
       print user_logout();
       break;
     case "help":
-      drupal_set_title(t("Distributed authentication"));
-      print theme("header");
-      print user_help("user/help#user");
-      print theme("footer");
+      print theme("page", user_help("user/help#user"), t("Distributed authentication"));
       break;
     default:
       print user_view();
@@ -1524,14 +1501,10 @@ function user_admin() {
           $output = user_admin_account();
         }
     }
-    print theme("header");
-    print $output;
-    print theme("footer");
+    print theme("page", $output);
   }
   else {
-    print theme("header");
-    print message_access();
-    print theme("footer");
+    print theme("page", message_access());
   }
 }
 // the following functions comprise help for admins and developers
@@ -1753,9 +1726,7 @@ function julia_user(\$type, \$edit, &\$user) {
 }
 
 function user_help_page() {
-  print theme("header");
-  print user_help();
-  print theme("footer");
+  print theme("page", user_help());
 }
 
 ?>

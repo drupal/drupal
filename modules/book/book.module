@@ -1,5 +1,5 @@
 <?php
-// $Id: book.module,v 1.200 2003/11/23 12:13:08 dries Exp $
+// $Id: book.module,v 1.201 2003/11/25 19:26:21 dries Exp $
 
 function book_node($field) {
   global $user;
@@ -383,7 +383,7 @@ function book_content($node) {
   return $node;
 }
 
-function book_view($node, $main = 0) {
+function book_view($node, $main = 0, $page = 0) {
   $node = book_content($node);
   /*
   ** Display the node.  If not displayed on the main page, we render
@@ -391,30 +391,35 @@ function book_view($node, $main = 0) {
   ** and the next page.
   */
 
+  $output = "";
+
   if ($main) {
-    print theme("node", $node, $main);
+    $output .= theme("node", $node, $main, $page);
   }
   else {
     if ($node->moderate) {
       $node->body = $node->body . "<div class=\"log\"><div class=\"title\">". t("Log") .":</div>$node->log</div>";
     }
     // Add the navigation and the breadcrumb if we view a page
-    if (arg(1) == "view") {
+    if ($page) {
       $node = book_navigation($node);
       // Print the breadcrumb
-      print theme("breadcrumb", $node->breadcrumb);
+      drupal_set_breadcrumb($node->breadcrumb);
     }
     // Print the node
-    print theme("node", $node, $main);
+    $output .= theme("node", $node, $main, $page);
   }
+
+  return $output;
 }
 
 function book_show($node, $cid) {
+  $output = "";
 
   if (node_access("view", $node)) {
 
     if ($node->type == "book") {
-      book_view($node, 0);
+      $output .= book_view($node, 0, 1);
     }
     else {
 
@@ -443,8 +448,8 @@ function book_show($node, $cid) {
         /*
         ** View the node
         */
-        print theme("breadcrumb", $node->breadcrumb);
-        print theme("node", $node, 0);
+        drupal_set_breadcrumb($node->breadcrumb);
+        $output .= theme("node", $node, 0, 1);
       }
       else {
 
@@ -452,11 +457,11 @@ function book_show($node, $cid) {
         ** We can't get the content of the node and just view the node.
         ** We don't add breadcrums or links.
         */
-        node_view($node, 0);
+        $output .= node_view($node, 0, 1);
       }
     }
     if (function_exists("comment_render") && $node->comment) {
-      comment_render($node, $cid);
+      $output .= comment_render($node, $cid);
     }
 
     /*
@@ -464,6 +469,10 @@ function book_show($node, $cid) {
     */
     node_tag_new($node->nid);
   }
+  else {
+    $output .= message_access();
+  }
+  return $output;
 }
 
 function book_navigation($node) {
@@ -476,7 +485,7 @@ function book_navigation($node) {
 
     $node->breadcrumb = ""; // Overwrite the trail with a book trail.
     $node->breadcrumb[] = l(t("Home"), "");
-    $node->breadcrumb[] = l(t("Books"), "book");
+    $node->breadcrumb[] = l(t("books"), "book");
     foreach ($path as $level) {
       $node->breadcrumb[] = l($level->title, "book/view/$level->nid");
     }
@@ -625,9 +634,7 @@ function book_render() {
   }
 
   drupal_set_title(t("Books"));
-  print theme("header");
-  print $output;
-  print theme("footer");
+  print theme("page", $output);
 }
 
 function book_page() {
@@ -636,9 +643,8 @@ function book_page() {
     switch (arg(1)) {
       case "view":
         $node = node_load(array("nid" => arg(2)));
-        print theme("header");
-        book_show($node, arg(3));
-        print theme("footer");
+        $output = book_show($node, arg(3));
+        print theme("page", $output, $node->title);
         break;
       case "print":
         print book_print(arg(2), $depth = 1);
@@ -648,10 +654,7 @@ function book_page() {
     }
   }
   else {
-    drupal_set_title(t("Access denied"));
-    print theme("header");
-    print message_access();
-    print theme("footer");
+    print theme("page", message_access());
   }
 }
 
@@ -805,9 +808,7 @@ function book_admin_orphan() {
     $output .= theme("table", $header, $rows);
   }
 
-  print theme("header");
-  print $output;
-  print theme("footer");
+  print theme("page", $output);
 }
 
 function book_admin_links() {
@@ -839,14 +840,10 @@ function book_admin() {
         $output .= book_admin_view(arg(3));
         break;
     }
-    print theme("header");
-    print $output;
-    print theme("footer");
+    print theme("page", $output);
   }
   else {
-    print theme("header");
-    print message_access();
-    print theme("footer");
+    print theme("page", message_access());
   }
 }
 
@@ -883,8 +880,6 @@ function book_help($section = "admin/help#book") {
 }
 
 function book_help_page() {
-  print theme("header");
-  print book_help();
-  print theme("footer");
+  print theme("page", book_help());
 }
 ?>

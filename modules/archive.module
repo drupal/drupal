@@ -1,5 +1,5 @@
 <?php
-// $Id: archive.module,v 1.40 2003/11/23 10:41:03 dries Exp $
+// $Id: archive.module,v 1.41 2003/11/25 19:26:21 dries Exp $
 
 function archive_help($section) {
   $output = "";
@@ -200,6 +200,12 @@ function archive_link($type) {
     }
   }
 
+  if ($type == "system") {
+    if (user_access("access content")) {
+      menu("archive", t("archives"), "archive_page", 0, 1);
+    }
+  }
+
   return $links;
 }
 
@@ -209,7 +215,7 @@ function archive_page() {
   $op = $_POST["op"];
   $edit = $_POST["edit"];
 
-  print theme("header");
+  $output = "";
 
   if (user_access("access content")) {
     if ($op == t("Show")) {
@@ -236,7 +242,7 @@ function archive_page() {
     $start = "<div class=\"container-inline\">";
     $start .= form_select("", "year", ($year ? $year : date("Y")), $years). form_select("", "month", ($month ? $month : date("m")), $months) . form_select("", "day", ($day ? $day : date("d")), $days) . form_submit(t("Show"));
     $start .= "</div>";
-    print form($start);
+    $output .= form($start);
 
     /*
     ** Fetch nodes for the selected date, or current date if none
@@ -247,15 +253,14 @@ function archive_page() {
       $result = db_query_range("SELECT nid FROM {node} WHERE status = '1' AND created > %d ORDER BY created", $date, 0, 20);
 
       while ($nid = db_fetch_object($result)) {
-        node_view(node_load(array("nid" => $nid->nid)), 1);
+        $output .= node_view(node_load(array("nid" => $nid->nid)), 1);
       }
     }
+    print theme("page", $output);
   }
   else {
-    message_access();
+    print theme("page", message_access());
   }
-
-  print theme("footer");
 }
 
 function archive_settings() {

@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.294 2003/11/23 10:41:03 dries Exp $
+// $Id: node.module,v 1.295 2003/11/25 19:26:21 dries Exp $
 
 function node_help($section = "admin/help#node") {
   global $mod;
@@ -64,9 +64,7 @@ function node_help($section = "admin/help#node") {
 }
 
 function node_help_page() {
-  print theme("header");
-  print node_help();
-  print theme("footer");
+  print theme("page", node_help());
 }
 
 
@@ -386,7 +384,7 @@ function node_save($node) {
 
 }
 
-function node_view($node, $main = 0) {
+function node_view($node, $main = 0, $page = 0) {
 
   $node = array2object($node);
 
@@ -403,7 +401,7 @@ function node_view($node, $main = 0) {
   */
 
   if (module_hook($node->type, "view")) {
-    node_invoke($node, "view", $main);
+    return node_invoke($node, "view", $main, $page);
   }
   else {
 
@@ -414,7 +412,7 @@ function node_view($node, $main = 0) {
     $node->teaser = check_output($node->teaser);
     $node->body = check_output($node->body);
 
-    print theme("node", $node, $main);
+    return theme("node", $node, $main, $page);
   }
 }
 
@@ -422,10 +420,10 @@ function node_show($node, $cid) {
 
   if (node_access("view", $node)) {
 
-    node_view($node);
+    $output = node_view($node, 0, 1);
 
     if (function_exists("comment_render") && $node->comment) {
-      comment_render($node, $cid);
+      $output .= comment_render($node, $cid);
     }
 
     /*
@@ -433,6 +431,8 @@ function node_show($node, $cid) {
     */
 
     node_tag_new($node->nid);
+
+    return $output;
   }
 }
 
@@ -931,14 +931,10 @@ function node_admin() {
       default:
         $output = node_admin_nodes();
     }
-    print theme("header");
-    print $output;
-    print theme("footer");
+    print theme("page", $output);
   }
   else {
-    print theme("header");
-    print message_access();
-    print theme("footer");
+    print theme("page", message_access());
   }
 }
 
@@ -1348,17 +1344,18 @@ function node_preview($node, $error = NULL) {
     */
 
     if ($view->teaser && $view->teaser != $view->body) {
-      print "<h3>". t("Preview trimmed version") ."</h3>";
-      node_view($view, 1);
-      print "<p><i>". t("The trimmed version of your post shows how your post looks like when promoted to the main page or when exported for syndication.  You can insert a delimiter '&lt;!--break--&gt' (without the quotes) to fine-tune where your post gets split.") ."</i></p>";
-      print "<h3>". t("Preview full version") ."</h3>";
-      node_view($view, 0);
+      $output = "<h3>". t("Preview trimmed version") ."</h3>";
+      $output .= node_view($view, 1);
+      $output .= "<p><i>". t("The trimmed version of your post shows how your post looks like when promoted to the main page or when exported for syndication.  You can insert a delimiter '&lt;!--break--&gt' (without the quotes) to fine-tune where your post gets split.") ."</i></p>";
+      $output .= "<h3>". t("Preview full version") ."</h3>";
+      $output .= node_view($view, 0);
     }
     else {
-      node_view($view, 0);
+      $output .= node_view($view, 0);
     }
 
-    return node_form($node, $error);
+    $output .= node_form($node, $error);
+    return $output;
   }
 }
 
@@ -1509,81 +1506,50 @@ function node_page() {
 
     switch ($op) {
       case "add":
-        drupal_set_title(t("Submit %name", array("%name" => $name)));
-        print theme("header");
-        print node_add(arg(2));
-        print theme("footer");
+        print theme("page", node_add(arg(2)), t("Submit %name", array("%name" => $name)));
         break;
       case "edit":
-        drupal_set_title(t("Edit %name", array("%name" => $name)));
-        print theme("header");
-        print node_edit(arg(2));
-        print theme("footer");
+        print theme("page", node_edit(arg(2)), t("Edit %name", array("%name" => $name)));
         break;
       case "view":
-        drupal_set_title($node->title);
-        print theme("header");
-        print node_show($node, arg(3));
-        print theme("footer");
+        print theme("page", node_show($node, arg(3)), $node->title);
         break;
       case "revisions":
-        drupal_set_title(t("Revisions"));
-        print theme("header");
-        print node_revision_overview(arg(2));
-        print theme("footer");
+        print theme("page", node_revision_overview(arg(2)), t("Revisions"));
         break;
       case "rollback-revision":
         $output  = node_revision_rollback(arg(2), arg(3));
         $output .= node_revision_overview(arg(2));
-        drupal_set_title(t("Revisions"));
-        print theme("header");
-        print $output;
-        print theme("footer");
+        print theme("page", $output, t("Revisions"));
         break;
       case "delete-revision":
         $output  = node_revision_delete(arg(2), arg(3));
         $output .= node_revision_overview(arg(2));
-        drupal_set_title(t("Revisions"));
-        print theme("header");
-        print $output;
-        print theme("footer");
+        print theme("page", $output, t("Revisions"));
         break;
       case t("Preview"):
         $edit = node_validate($edit, $error);
-        drupal_set_title(t("Preview %name", array("%name" => $name)));
-        print theme("header");
-        print node_preview($edit, $error);
-        print theme("footer");
+        print theme("page", node_preview($edit, $error), t("Preview %name", array("%name" => $name)));
         break;
       case t("Submit"):
-        drupal_set_title(t("Submit %name", array("%name" => $name)));
-        print theme("header");
-        print node_submit($edit);
-        print theme("footer");
+        print theme("page", node_submit($edit), t("Submit %name", array("%name" => $name)));
         break;
       case t("Delete"):
-        drupal_set_title(t("Delete %name", array("%name" => $name)));
-        print theme("header");
-        print node_delete($edit);
-        print theme("footer");
+        print theme("page", node_delete($edit), t("Delete %name", array("%name" => $name)));
         break;
       default:
-        drupal_set_title("");
-        print theme("header");
+        $output = "";
         $result = pager_query("SELECT nid, type FROM {node} WHERE promote = '1' AND status = '1' ORDER BY static DESC, created DESC", variable_get("default_nodes_main", 10));
 
         while ($node = db_fetch_object($result)) {
-          node_view(node_load(array("nid" => $node->nid, "type" => $node->type)), 1);
+          $output .= node_view(node_load(array("nid" => $node->nid, "type" => $node->type)), 1);
         }
-        print pager_display(NULL, variable_get("default_nodes_main", 10));
-        print theme("footer");
+        $output .= pager_display(NULL, variable_get("default_nodes_main", 10));
+        print theme("page", $output, "");
     }
   }
   else {
-    drupal_set_title(t("Access denied"));
-    print theme("header");
-    print message_access();
-    print theme("footer");
+    print theme("page", message_access());
   }
 
 }

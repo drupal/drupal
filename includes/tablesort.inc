@@ -1,5 +1,5 @@
 <?php
-// $Id: tablesort.inc,v 1.10 2003/10/27 21:50:16 kjartan Exp $
+// $Id: tablesort.inc,v 1.11 2003/11/25 19:26:20 dries Exp $
 
 function tablesort_init($header) {
   static $ts;
