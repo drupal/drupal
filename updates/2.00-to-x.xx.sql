@@ -277,4 +277,4 @@ CREATE TABLE role (
 
 ALTER TABLE users ADD role varchar(32) DEFAULT '' NOT NULL;
 ALTER TABLE users DROP access;
-UPDATE users SET role = 'registered user';
+UPDATE users SET role = 'authenticated user';
