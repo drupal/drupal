@@ -88,7 +88,7 @@ function format_email($address) {
 function format_url($address, $description = "") {
   global $na;
   $description = ($description) ? $description : $address;
-  return ($address) ? "<A HREF=\"$address\">$description</A>" : $na;
+  return ($address) ? "<A HREF=\"$address\">". check_output($description) ."</A>" : $na;
 }
 
 ?>

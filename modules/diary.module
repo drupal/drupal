@@ -143,9 +143,6 @@ function diary_page_edit($id) {
 function diary_page_preview($text, $timestamp, $id = 0) {
   global $theme, $user, $allowed_html;
 
-  $text = ($text) ? check_output($text) : "";
-  $timestamp = ($timestamp) ? check_output($timestamp) : "";
-
   $output .= diary_page_entry($timestamp, $text);
 
   $output .= "<FORM ACTION=\"module.php?mod=diary\" METHOD=\"post\">\n";
@@ -205,8 +202,8 @@ function diary_page() {
       diary_page_display(check_input($name));
       break;
     case "Preview diary entry":
-      if ($id) diary_page_preview(check_input($text), check_input($timestamp), check_input($id));
-      else diary_page_preview(check_input($text), time());
+      if ($id) diary_page_preview(($text ? check_output($text) : ""), check_input($timestamp), check_input($id));
+      else diary_page_preview(($text ? check_output($text) : ""), time());
       break;
     case "Submit diary entry":
       if ($id) diary_page_submit(check_input($text), check_input($id));
