@@ -510,13 +510,13 @@ switch ($op) {
   case "page":
   case "Update":
     include_once "includes/common.inc";
-		if (user_access(NULL)) {
-		  update_page();
-		}
-		else {
-		  print message_access();
-		}
-		break;
+    if (user_access(NULL)) {
+      update_page();
+    }
+    else {
+      print message_access();
+    }
+    break;
   default:
     update_info();
 }
