@@ -10,7 +10,7 @@ function display_account($theme) {
       return ($result) ? db_result($result, 0) : 0;
     }
 
-    ### Display account settings:
+    // Display account settings:
     $content .= "<LI><A HREF=\"account.php?op=track&topic=comments\">track your comments</A></LI>\n";
     $content .= "<LI><A HREF=\"account.php?op=track&topic=stories\">track your stories</A></LI>\n";
     $content .= "<LI><A HREF=\"account.php?op=track&topic=site\">track $site_name</A></LI>\n";
@@ -91,7 +91,7 @@ function display_moderation_results($theme, $story) {
 }
 
 function display_related_links($theme, $story) {
-  ### Parse story for <A HREF="">-tags:
+  // Parse story for <A HREF="">-tags:
   $text = stripslashes("$story->abstract $story->updates $story->article");
   while ($text = stristr($text, "<A HREF=")) {
     $link = substr($text, 0, strpos(strtolower($text), "</a>") + 4);
@@ -99,10 +99,10 @@ function display_related_links($theme, $story) {
     if (!stristr($link, "mailto:")) $content .= "<LI>$link</LI>";
   }
 
-  ### Stories in the same category: 
+  // Stories in the same category: 
   $content .= " <LI>More about <A HREF=\"search.php?category=". urlencode($story->category) ."\">$story->category</A>.</LI>";
 
-  ### Stories from the same author:
+  // Stories from the same author:
   if ($story->userid) $content .= " <LI>Also by <A HREF=\"search.php?author=". urlencode($story->userid) ."\">$story->userid</A>.</LI>";
 
   $theme->box("Related links", $content);

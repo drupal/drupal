@@ -90,14 +90,14 @@ function story_save($id, $subject, $abstract, $updates, $article, $category, $st
 }
 
 function story_display($order = "date") {
-  ### Initialize variables:
+  // Initialize variables:
   $status = array("deleted", "pending", "public");
   $fields = array("author" => "author", "category" => "category", "date" => "timestamp DESC", "status" => "status DESC");
 
-  ### Perform SQL query:
+  // Perform SQL query:
   $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON u.id = s.author ORDER BY s.$fields[$order]");
   
-  ### Display stories:
+  // Display stories:
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR>\n";
   $output .= "  <TH ALIGN=\"right\" COLSPAN=\"5\">\n";

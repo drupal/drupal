@@ -41,7 +41,7 @@ function db_fetch_array($qid) {
   if ($qid) return mysql_fetch_array($qid);
 }
 
-function db_result($qid, $field) {
+function db_result($qid, $field = 0) {
   if ($qid) return mysql_result($qid, $field);
 }
 

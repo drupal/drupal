@@ -8,7 +8,7 @@ include_once "includes/module.inc";
 include_once "includes/theme.inc";
 include_once "includes/user.inc";
 
-global $user;
+session_start();
 
 $theme = load_theme();
 

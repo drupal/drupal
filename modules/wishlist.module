@@ -1,11 +1,12 @@
 <?
 
-$module = array("page" => "wishlist_page");
+$module = array("page" => "wishlist_page",
+                "help" => "wishlist_help");
 
 function wishlist_page() {
  ?>
   <H1>Whislist</H1>
-  <SMALL><I>$Id: wishlist.module,v 1.7 2000/12/29 11:00:55 dries Exp $</I></SMALL>
+  <SMALL><I>$Id: wishlist.module,v 1.8 2000/12/30 11:58:14 dries Exp $</I></SMALL>
 
    <H3>Users</H3>
     <UL>
@@ -71,6 +72,10 @@ function wishlist_page() {
      <LI>try to get existing themes HTML validated</LI>
     </UL>
  <?
+}
+
+function wishlist_help() {
+  print "Check the <A HREF=\"module.php?mod=wishlist\">feature wishlist</A>.";
 }
 
 ?>

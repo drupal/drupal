@@ -1,11 +1,5 @@
 <?
 
-function id2story($id) {
-  ### Perform query:
-  $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON s.author = u.id WHERE s.id = $id");
-  return db_fetch_object($result);
-}
-
 function load_theme() {
   global $user, $themes;
 

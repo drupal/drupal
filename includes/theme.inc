@@ -10,7 +10,7 @@ function theme_account($theme) {
       return ($result) ? db_result($result, 0) : 0;
     }
 
-    ### Display account settings:
+    // Display account settings:
     $content .= "<LI><A HREF=\"account.php?op=track&topic=comments\">track your comments</A></LI>\n";
     $content .= "<LI><A HREF=\"account.php?op=track&topic=stories\">track your stories</A></LI>\n";
     $content .= "<LI><A HREF=\"account.php?op=track&topic=site\">track $site_name</A></LI>\n";
@@ -99,7 +99,7 @@ function theme_moderation_results($theme, $story) {
 }
 
 function theme_related_links($theme, $story) {
-  ### Parse story for <A HREF="">-tags:
+  // Parse story for <A HREF="">-tags:
   $text = stripslashes("$story->abstract $story->updates $story->article");
   while ($text = stristr($text, "<A HREF=")) {
     $link = substr($text, 0, strpos(strtolower($text), "</a>") + 4);
@@ -107,31 +107,13 @@ function theme_related_links($theme, $story) {
     if (!stristr($link, "mailto:")) $content .= "<LI>$link</LI>";
   }
 
-  ### Stories in the same category: 
+  // Stories in the same category: 
   $content .= " <LI>More about <A HREF=\"search.php?category=". urlencode($story->category) ."\">$story->category</A>.</LI>";
 
-  ### Stories from the same author:
+  // Stories from the same author:
   if ($story->userid) $content .= " <LI>Also by <A HREF=\"search.php?author=". urlencode($story->userid) ."\">$story->userid</A>.</LI>";
 
   $theme->box("Related links", $content);
-}
-
-function theme_old_headlines($theme, $num = 10) {
-  global $user;
-  
-  if ($user->stories) $result = db_query("SELECT id, subject, timestamp FROM stories WHERE status = 2 ORDER BY timestamp DESC LIMIT $user->stories, $num");
-  else $result = db_query("SELECT id, subject, timestamp FROM stories WHERE status = 2 ORDER BY timestamp DESC LIMIT $num, $num");
-
-  while ($story = db_fetch_object($result)) {    
-    if ($time != date("F jS", $story->timestamp)) {
-      $content .= "<P><B>". date("l, M jS", $story->timestamp) ."</B></P>\n";
-      $time = date("F jS", $story->timestamp);
-    }
-    $content .= "<LI><A HREF=\"discussion.php?id=$story->id\">$story->subject</A></LI>\n";
-  }
-  $content .= "<P ALIGN=\"right\">[ <A HREF=\"search.php\"><FONT COLOR=\"$theme->hlcolor2\">more</FONT></A> ]</P>";
-
-  $theme->box("Older headlines", $content);
 }
 
 function theme_comment_moderation($id, $author, $score, $votes) {
@@ -154,9 +136,28 @@ function theme_new_headlines($theme, $num = 10) {
 
   $content = "";
   $result = db_query("SELECT id, subject FROM stories WHERE status = 2 ORDER BY id DESC LIMIT $num");
-  while ($story = db_fetch_object($result)) $content .= "<LI><A HREF=\"discussion.php?id=$story->id\">$story->subject</A></LI>\n";
+  while ($story = db_fetch_object($result)) $content .= "<LI><A HREF=\"discussion.php?id=$story->id\">". check_output($story->subject) ."</A></LI>\n";
   $content .= "<P ALIGN=\"right\">[ <A HREF=\"search.php\"><FONT COLOR=\"$theme->hlcolor2\">more</FONT></A> ]</P>";
   $theme->box("Latest headlines", $content);
 }
+
+function theme_old_headlines($theme, $num = 10) {
+  global $user;
+  
+  if ($user->stories) $result = db_query("SELECT id, subject, timestamp FROM stories WHERE status = 2 ORDER BY timestamp DESC LIMIT $user->stories, $num");
+  else $result = db_query("SELECT id, subject, timestamp FROM stories WHERE status = 2 ORDER BY timestamp DESC LIMIT $num, $num");
+
+  while ($story = db_fetch_object($result)) {    
+    if ($time != date("F jS", $story->timestamp)) {
+      $content .= "<P><B>". date("l, M jS", $story->timestamp) ."</B></P>\n";
+      $time = date("F jS", $story->timestamp);
+    }
+    $content .= "<LI><A HREF=\"discussion.php?id=$story->id\">". check_output($story->subject) ."</A></LI>\n";
+  }
+  $content .= "<P ALIGN=\"right\">[ <A HREF=\"search.php\"><FONT COLOR=\"$theme->hlcolor2\">more</FONT></A> ]</P>";
+
+  $theme->box("Older headlines", $content);
+}
+
 
 ?>

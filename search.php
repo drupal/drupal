@@ -11,7 +11,7 @@
  $output .= "   <FORM ACTION=\"search.php\" METHOD=\"POST\">\n";
  $output .= "    <INPUT SIZE=\"50\" VALUE=\"$terms\" NAME=\"terms\" TYPE=\"text\"><BR>\n";
 
- ### category:
+ // category:
  $output .= "<SELECT NAME=\"category\">\n";
  if ($category) $output .= " <OPTION VALUE=\"$category\">$category</OPTION>\n";
  $output .= " <OPTION VALUE=\"\">All categories</OPTION>\n";
@@ -20,7 +20,7 @@
  }
  $output .= "</SELECT>\n";
 
- ### order:
+ // order:
  $output .= "<SELECT NAME=\"order\">\n";
  if ($order == "Oldest first") {
    $output .= " <OPTION VALUE=\"Oldest first\">Oldest first</OPTION>\n";
@@ -38,7 +38,7 @@
  $output .= " <TR>\n";
  $output .= "  <TD>\n";
    
- ### Compose and perform query:
+ // Compose and perform query:
  $query = "SELECT s.id, s.subject, u.userid, s.timestamp, COUNT(c.cid) AS comments FROM stories s LEFT JOIN users u ON s.author = u.id LEFT JOIN comments c ON s.id = c.sid WHERE s.status = 2 ";
  $query .= ($author) ? "AND u.userid = '$author' " : "";
  $query .= ($terms) ? "AND (s.subject LIKE '%$terms%' OR s.abstract LIKE '%$terms%' OR s.updates LIKE '%$terms%') " : "";
@@ -46,7 +46,7 @@
  $query .= ($order == "Oldest first") ? "ORDER BY s.timestamp ASC" : "ORDER BY s.timestamp DESC";
  $result = db_query("$query");
  
- ### Display search results:
+ // Display search results:
  $output .= "<HR>\n";
 
  while ($entry = db_fetch_object($result)) {

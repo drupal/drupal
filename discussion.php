@@ -8,10 +8,10 @@ function discussion_moderate($moderate) {
 
     foreach ($moderate as $id=>$vote) {
       if ($vote != $comment_votes[$none] && !user_getHistory($user->history, "c$id")) {
-        ### Update the comment's score:
+        // Update the comment's score:
         $result = db_query("UPDATE comments SET score = score $vote, votes = votes + 1 WHERE cid = $id");
 
-        ### Update the user's history:
+        // Update the user's history:
         user_setHistory($user, "c$id", $vote);
       }
     }
@@ -52,7 +52,7 @@ function discussion_kids($cid, $mode, $threshold, $level = 0, $dummy = 0) {
 function discussion_childs($cid, $threshold, $level = 0, $thread) {
   global $theme, $user;
 
-  ### Perform SQL query:
+  // Perform SQL query:
   $result = db_query("SELECT c.*, u.* FROM comments c LEFT JOIN users u ON c.author = u.id WHERE c.pid = $cid AND (c.votes = 0 OR c.score / c.votes >= $threshold) ORDER BY c.timestamp, c.cid");
   
   if ($level == 0) $thread = "";
@@ -64,10 +64,10 @@ function discussion_childs($cid, $threshold, $level = 0, $thread) {
   
     $comments++;
 
-    ### Compose link:
+    // Compose link:
     $thread .= "<LI><A HREF=\"discussion.php?id=$comment->sid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A> by ". format_username($comment->userid) ." <SMALL>(". discussion_score($comment) .")<SMALL></LI>";
 
-    ### Recursive:
+    // Recursive:
     discussion_childs($comment->cid, $threshold, $level + 1, &$thread);
   } 
 
@@ -93,25 +93,25 @@ function discussion_settings($mode, $order, $threshold) {
 function discussion_display($sid, $pid, $cid, $level = 0) {
   global $user, $theme;
 
-  ### Pre-process variables:
+  // Pre-process variables:
   $pid = (empty($pid)) ? 0 : $pid;
   $cid = (empty($cid)) ? 0 : $cid;
   $mode  = ($user->id) ? $user->mode  : "threaded";
   $order = ($user->id) ? $user->sort : "1";
   $threshold = ($user->id) ? $user->threshold  : "0";
 
-  ### Compose story-query:
+  // Compose story-query:
   $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON s.author = u.id WHERE s.status != 0 AND s.id = $sid");
   $story = db_fetch_object($result);
 
-  ### Display story:
+  // Display story:
   if ($story->status == 1) $theme->article($story, "[ <A HREF=\"submission.php\"><FONT COLOR=\"$theme->hlcolor2\">submission queue</FONT></A> | <A HREF=\"discussion.php?op=reply&sid=$story->id&pid=0\"><FONT COLOR=\"$theme->hlcolor2\">add a comment</FONT></A> ]");
   else $theme->article($story, "[ <A HREF=\"\"><FONT COLOR=\"$theme->hlcolor2\">home</FONT></A> | <A HREF=\"discussion.php?op=reply&sid=$story->id&pid=0\"><FONT COLOR=\"$theme->hlcolor2\">add a comment</FONT></A> ]");
 
-  ### Display `comment control'-box:
+  // Display `comment control'-box:
   if ($user->id) $theme->commentControl($sid, $title, $threshold, $mode, $order);
 
-  ### Compose query:
+  // Compose query:
   $query .= "SELECT c.*, u.* FROM comments c LEFT JOIN users u ON c.author = u.id WHERE c.sid = $sid AND c.pid = $pid AND (c.votes = 0 OR c.score / c.votes >= $threshold)";
   if ($order == 1) $query .= " ORDER BY c.timestamp DESC";
   if ($order == 2) $query .= " ORDER BY c.score DESC";
@@ -119,9 +119,9 @@ function discussion_display($sid, $pid, $cid, $level = 0) {
 
   print "<FORM METHOD=\"post\" ACTION=\"discussion.php\">\n";
 
-  ### Display the comments:  
+  // Display the comments:  
   while ($comment = db_fetch_object($result)) {
-    ### Dynamically compose the `reply'-link:
+    // Dynamically compose the `reply'-link:
     if ($pid != 0) {
       list($pid) = db_fetch_row(db_query("SELECT pid FROM comments WHERE cid = $comment->pid"));
       $link = "<A HREF=\"discussion.php?id=$comment->sid&pid=$pid#$pid\"><FONT COLOR=\"$theme->hlcolor2\">return to parent</FONT></A> | <A HREF=\"discussion.php?op=reply&sid=$comment->sid&pid=$comment->cid\"><FONT COLOR=\"$theme->hlcolor2\">reply to this comment</FONT></A>";
@@ -130,7 +130,7 @@ function discussion_display($sid, $pid, $cid, $level = 0) {
       $link = "<A HREF=\"discussion.php?op=reply&sid=$comment->sid&pid=$comment->cid\"><FONT COLOR=\"$theme->hlcolor2\">reply to this comment</FONT></A> ";
     }
 
-    ### Display the comments:
+    // Display the comments:
     if (empty($mode) || $mode == "threaded") {
       $thread = discussion_childs($comment->cid, $threshold);
       $theme->comment(new Comment($comment->userid, $comment->subject, $comment->comment, $comment->timestamp, $comment->url, $comment->fake_email, discussion_score($comment), $comment->votes, $comment->cid), $link, $thread);
@@ -149,7 +149,7 @@ function discussion_display($sid, $pid, $cid, $level = 0) {
 function discussion_reply($pid, $sid) {
   global $user, $theme, $allowed_html;
 
-  ### Extract parent-information/data:
+  // Extract parent-information/data:
   if ($pid) {
     $item = db_fetch_object(db_query("SELECT comments.*, users.userid FROM comments LEFT JOIN users ON comments.author = users.id WHERE comments.cid = $pid"));
     $theme->comment(new Comment($item->userid, $item->subject, $item->comment, $item->timestamp, $item->url, $item->fake_email, discussion_score($comment), $comment->votes, $item->cid), "reply to this comment");
@@ -159,33 +159,33 @@ function discussion_reply($pid, $sid) {
     $theme->article($item, "");
   }
 
-  ### Build reply form:
+  // Build reply form:
   $output .= "<FORM ACTION=\"discussion.php\" METHOD=\"post\">\n";
 
-  ### Name field:
+  // Name field:
   $output .= "<P>\n";
   $output .= " <B>Your name:</B><BR>\n";
   $output .= format_username($user->userid);
   $output .= "</P>\n";
 
-  ### Subject field:
+  // Subject field:
   $output .= "<P>\n";
   $output .= " <B>Subject:</B><BR>\n";
   $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" MAXLENGTH=\"60\">\n";
   $output .= "</P>\n";
 
-  ### Comment field:
+  // Comment field:
   $output .= "<P>\n";
   $output .= " <B>Comment:</B><BR>\n";
   $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"comment\">". check_output(check_field($user->signature)) ."</TEXTAREA><BR>\n";
   $output .= " <SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL>\n";
   $output .= "</P>\n";
  
-  ### Hidden fields:
+  // Hidden fields:
   $output .= "<INPUT TYPE=\"hidden\" NAME=\"pid\" VALUE=\"$pid\">\n";
   $output .= "<INPUT TYPE=\"hidden\" NAME=\"sid\" VALUE=\"$sid\">\n";
 
-  ### Preview button:
+  // Preview button:
   $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Preview comment\"> (You must preview at least once before you can submit.)\n";
   $output .= "</FORM>\n";
 
@@ -195,32 +195,32 @@ function discussion_reply($pid, $sid) {
 function comment_preview($pid, $sid, $subject, $comment) {
   global $user, $theme, $allowed_html;
 
-  ### Preview comment:
+  // Preview comment:
   $theme->comment(new Comment($user->userid, $subject, $comment, time(), $user->url, $user->fake_email, "", "", ""), "reply to this comment");
 
-  ### Build reply form:
+  // Build reply form:
   $output .= "<FORM ACTION=\"discussion.php\" METHOD=\"post\">\n";
 
-  ### Name field:
+  // Name field:
   $output .= "<P>\n";
   $output .= " <B>Your name:</B><BR>\n";
   $output .= format_username($user->userid);
   $output .= "</P>\n";
 
-  ### Subject field:
+  // Subject field:
   $output .= "<P>\n";
   $output .= " <B>Subject:</B><BR>\n";
   $output .= " <INPUT TYPE=\"text\" NAME=\"subject\" SIZE=\"50\" MAXLENGTH=\"60\" VALUE=\"". check_output(check_field($subject)) ."\">\n";
   $output .= "</P>\n";
 
-  ### Comment field:
+  // Comment field:
   $output .= "<P>\n";
   $output .= " <B>Comment:</B><BR>\n";
   $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"comment\">". check_output(check_field($comment)) ."</TEXTAREA><BR>\n";
   $output .= " <SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL>\n";
   $output .= "</P>\n";
   
-  ### Hidden fields:
+  // Hidden fields:
   $output .= "<INPUT TYPE=\"hidden\" NAME=\"pid\" VALUE=\"$pid\">\n";
   $output .= "<INPUT TYPE=\"hidden\" NAME=\"sid\" VALUE=\"$sid\">\n";
 
@@ -230,7 +230,7 @@ function comment_preview($pid, $sid, $subject, $comment) {
     $outout .= "</P>\n";
   }
 
-  ### Preview and submit button:
+  // Preview and submit button:
   $output .= "<P>\n";
   $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Preview comment\">\n";
   $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Post comment\">\n";
@@ -243,10 +243,10 @@ function comment_preview($pid, $sid, $subject, $comment) {
 function comment_post($pid, $sid, $subject, $comment) {
   global $user, $theme;
 
-  ### Check for fake threads:
+  // Check for fake threads:
   $fake = db_result(db_query("SELECT COUNT(id) FROM stories WHERE id = $sid"), 0);
 
-  ### Check for duplicate comments:
+  // Check for duplicate comments:
   $duplicate = db_result(db_query("SELECT COUNT(cid) FROM comments WHERE pid = '$pid' AND sid = '$sid' AND subject = '". check_input($subject) ."' AND comment = '". check_input($comment) ."'"), 0);
 
   if ($fake != 1) {
@@ -258,16 +258,16 @@ function comment_post($pid, $sid, $subject, $comment) {
     $theme->box("duplicate comment", "duplicate comment: $duplicate");
   }
   else { 
-    ### Validate subject:
+    // Validate subject:
     $subject = ($subject) ? $subject : substr($comment, 0, 29);
 
-    ### Add watchdog entry:
+    // Add watchdog entry:
     watchdog("comment", "discussion: added comment with subject '$subject'");
 
-    ### Add comment to database:
+    // Add comment to database:
     db_query("INSERT INTO comments (pid, sid, author, subject, comment, hostname, timestamp) VALUES ($pid, $sid, '$user->id', '". check_input($subject) ."', '". check_input($comment) ."', '". getenv("REMOTE_ADDR") ."', '". time() ."')");
     
-    ### Compose header:
+    // Compose header:
     header("Location: discussion.php?id=$sid");
   }
 }
@@ -275,7 +275,7 @@ function comment_post($pid, $sid, $subject, $comment) {
 include "includes/common.inc";
 include "includes/comment.inc";
 
-### Security check:
+// Security check:
 if (strstr($id, " ") || strstr($pid, " ") || strstr($sid, " ") || strstr($mode, " ") || strstr($order, " ") || strstr($threshold, " ")) {
   watchdog("error", "discussion: attempt to provide malicious input through URI");
   exit();

@@ -11,10 +11,10 @@ function watchdog_display($order = "date") {
   $colors = array("#D8BFD8", "#6495ED", "#6A5ADF", "#FFFFFF", "#FFA500", "#FF3C3C");
   $fields = array("date" => "id DESC", "username" => "user", "location" => "location", "message" => "message DESC", "level" => "level DESC");
 
-  ### Perform query:
+  // Perform query:
   $result = db_query("SELECT l.*, u.userid FROM watchdog l LEFT JOIN users u ON l.user = u.id ORDER BY l.$fields[$order]");
  
-  ### Generate output:
+  // Generate output:
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
   $output .= " <TR>\n";
   $output .= "  <TH ALIGN=\"right\" COLSPAN=\"4\">\n";

@@ -12,10 +12,10 @@ $index2type = array(0x01 => "addresses",
 
 
 function ban_match($mask, $category) {
-  ### Perform query:
+  // Perform query:
   $result = db_query("SELECT * FROM bans WHERE type = $category AND LOWER('$mask') LIKE LOWER(mask)");
   
-  ### Return result:
+  // Return result:
   return db_fetch_object($result);
 }
 
@@ -32,7 +32,7 @@ function ban_add($mask, $category, $reason, $message = "") {
     $result = db_query("INSERT INTO bans (mask, type, reason, timestamp) VALUES ('$mask', '$category', '$reason', '". time() ."')");
     $message = "added new ban with mask `$mask'.<P>\n";
 
-    ### Add log entry:
+    // Add log entry:
     watchdog("message", "added new ban `$mask' to category `". $index2type[$category] ."' with reason `$reason'.");
   }
 }
@@ -43,10 +43,10 @@ function ban_delete($id) {
   $result = db_query("SELECT * FROM bans WHERE id = $id");
 
   if ($ban = db_fetch_object($result)) {
-    ### Perform query:
+    // Perform query:
     $result = db_query("DELETE FROM bans WHERE id = $id");
 
-    ### Deleted log entry:
+    // Deleted log entry:
     watchdog("message", "removed ban `$ban->mask' from category `". $index2type[$ban->type] ."'.");
   }
 }

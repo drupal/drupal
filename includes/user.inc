@@ -42,7 +42,7 @@ function user_setHistory(&$user, $field, $value) {
 
   $history = $user->history;
   if (!$value) {
-    ### remove entry:
+    // remove entry:
     $data = explode(";", $history);
     for (reset($data); current($data); next($data)) {
       $entry = explode(":", current($data));
@@ -50,7 +50,7 @@ function user_setHistory(&$user, $field, $value) {
     }
   }
   else if (strstr($history, "$field:")) {
-    ### found: update exsisting entry:
+    // found: update exsisting entry:
     $data = explode(";", $history);
     for (reset($data); current($data); next($data)) {
       $entry = explode(":", current($data));
@@ -59,12 +59,12 @@ function user_setHistory(&$user, $field, $value) {
     } 
   }
   else {
-    ### not found: add new entry:
+    // not found: add new entry:
     $rval = "$history$field:$value;";
   }
   $user->history = $rval;
 
-  ### save new history:
+  // save new history:
   $query .= "UPDATE users SET ";
   foreach ($user->field as $key=>$field) { $value = $user->$field; $query .= "$field = '". addslashes($value) ."', "; }
   $query .= " id = $user->id WHERE id = $user->id";
