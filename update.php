@@ -621,8 +621,8 @@ function update_42() {
 function update_43() {
   update_sql("ALTER TABLE blocks DROP remove");
   update_sql("ALTER TABLE blocks DROP name");
-  update_sql("UPDATE blocks SET type = 0 WHERE type = 1");
-  update_sql("UPDATE blocks SET type = 1 WHERE type = 2");
+  update_sql("UPDATE boxes SET type = 0 WHERE type = 1");
+  update_sql("UPDATE boxes SET type = 1 WHERE type = 2");
 }
 
 function update_upgrade3() {
