@@ -50,16 +50,4 @@ $base_url = "http://localhost";
 # If required, update PHP's include path to include your PEAR directory:
 // ini_set("include_path", ".:/path/to/pear");
 
-#
-# Custom navigation links:
-#
-# Custom navigation links override the standard page links offered
-# by most Drupal modules. Administrators may add/remove/reorder all
-# links here.  These links are typically displayed in a row near the
-# top of every page.
-// $custom_links = array(
-//  "<a href=\"index.php\">home</a>",
-//  "<a href=\"blog\">journal</a>",
-//  "<a href=\"story\">articles</a>");
-
 ?>
