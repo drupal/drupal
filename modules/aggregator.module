@@ -92,7 +92,7 @@ function aggregator_link($type) {
 
   if ($type == 'system') {
     if (user_access('administer news feeds')) {
-      menu('admin/syndication', t('syndication'), NULL, 5);
+      menu('admin/syndication', t('syndication'), 'aggregator_help_page', 5);
       menu('admin/syndication/news', t('RSS/RDF'), 'aggregator_admin');
       menu('admin/syndication/news/add/feed', t('new feed'), 'aggregator_admin', 2);
       menu('admin/syndication/news/add/bundle', t('new bundle'), 'aggregator_admin', 3);

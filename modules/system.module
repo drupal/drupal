@@ -111,7 +111,7 @@ function system_view_general() {
   $group .= form_textarea(t("Footer message"), "site_footer", variable_get("site_footer", ""), 70, 5, t("This text will be displayed at the bottom of each page.  Useful for adding a copyright notice to your pages."));
   $group .= form_textfield(t("Anonymous user"), "anonymous", variable_get("anonymous", "Anonymous"), 70, 70, t("The name used to indicate anonymous users."));
   $group .= form_textfield(t("Default front page"), "site_frontpage", variable_get("site_frontpage", "node"), 70, 70, t("The home page displays content from this relative URL.  If you are not using clean URLs, specify the part after '?q='.  If unsure, specify 'node'."));
-  $group .= form_textfield(t("Default 404 (not found) page"), "site_404", variable_get("site_404", ""), 70, 70, t("This page is displayed when no other content matches the requested document.  If you are not using clean URLs, specify the part after '?q='.  If unsure, specify 'node'."));
+  $group .= form_textfield(t("Default 404 (not found) page"), "site_404", variable_get("site_404", ""), 70, 70, t("This page is displayed when no other content matches the requested document.  If you are not using clean URLs, specify the part after '?q='.  If unsure, specify nothing."));
   $group .= form_radios(t("Clean URLs"), "clean_url", variable_get("clean_url", 0), array(t("Disabled"), t("Enabled")), t("Enable or disable clean URLs.  If enabled, you'll need <code>ModRewrite</code> support.  See also the <code>.htaccess</code> file in Drupal's top-level directory."));
 
   $output = form_group(t("General settings"), $group);
