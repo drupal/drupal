@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.181 2004/10/14 02:38:33 unconed Exp $
+// $Id: system.module,v 1.182 2004/10/16 07:35:29 dries Exp $
 
 /**
  * @file
@@ -530,21 +530,24 @@ function system_settings_save() {
   $edit = $_POST['edit'];
 
   if ($op == t('Reset to defaults')) {
-    foreach ($edit as $name => $value) {
-      variable_del($name);
+    if (is_array($edit)) {
+      foreach ($edit as $name => $value) {
+        variable_del($name);
+      }
     }
     drupal_set_message(t('The configuration options have been reset to their default values.'));
   }
   if ($op == t('Save configuration')) {
-    foreach ($edit as $name => $value) {
-      variable_set($name, $value);
+    if (is_array($edit)) {
+      foreach ($edit as $name => $value) {
+        variable_set($name, $value);
+      }
     }
     drupal_set_message(t('The configuration options have been saved.'));
   }
   else {
     return;
   }
-
   cache_clear_all();
   menu_rebuild();
   drupal_goto($_GET['q']);
