@@ -86,16 +86,74 @@ CREATE TABLE boxes (
 );
 
 --
--- Table structure for bundle
+-- Table structure for table 'aggregator_category'
 --
 
-CREATE TABLE bundle (
-  bid SERIAL,
+CREATE TABLE aggregator_category (
+  cid serial,
   title varchar(255) NOT NULL default '',
-  attributes varchar(255) NOT NULL default '',
-  PRIMARY KEY  (bid),
+  description text NOT NULL,
+  block smallint NOT NULL default '0',
+  PRIMARY KEY  (cid),
   UNIQUE (title)
 );
+
+--
+-- Table structure for table 'aggregator_category_feed'
+--
+
+CREATE TABLE aggregator_category_feed (
+  fid integer NOT NULL default '0',
+  cid integer NOT NULL default '0',
+  PRIMARY KEY  (fid,cid)
+);
+
+--
+-- Table structure for table 'aggregator_category_item'
+--
+
+CREATE TABLE aggregator_category_item (
+  iid integer NOT NULL default '0',
+  cid integer NOT NULL default '0',
+  PRIMARY KEY  (iid,cid)
+);
+
+--
+-- Table structure for table 'aggregator_feed'
+--
+
+CREATE TABLE aggregator_feed (
+  fid serial,
+  title varchar(255) NOT NULL default '',
+  url varchar(255) NOT NULL default '',
+  refresh integer NOT NULL default '0',
+  checked integer NOT NULL default '0',
+  link varchar(255) NOT NULL default '',
+  description text NOT NULL,
+  image text NOT NULL,
+  etag varchar(255) NOT NULL default '',
+  modified integer NOT NULL default '0',
+  block smallint NOT NULL default '0',
+  PRIMARY KEY  (fid),
+  UNIQUE (url),
+  UNIQUE (title)
+);
+
+--
+-- Table structure for table 'aggregator_item'
+--
+
+CREATE TABLE aggregator_item (
+  iid integer NOT NULL auto_increment,
+  fid integer NOT NULL default '0',
+  title varchar(255) NOT NULL default '',
+  link varchar(255) NOT NULL default '',
+  author varchar(255) NOT NULL default '',
+  description text NOT NULL,
+  timestamp integer default NULL,
+  PRIMARY KEY  (iid)
+);
+
 
 --
 -- Table structure for cache
@@ -146,27 +204,6 @@ CREATE TABLE directory (
 );
 
 --
--- Table structure for feed
---
-
-CREATE TABLE feed (
-  fid SERIAL,
-  title varchar(255) NOT NULL default '',
-  url varchar(255) NOT NULL default '',
-  refresh integer NOT NULL default '0',
-  checked integer NOT NULL default '0',
-  attributes varchar(255) NOT NULL default '',
-  link varchar(255) NOT NULL default '',
-  description text NOT NULL default '',
-  image text NOT NULL default '',
-  etag varchar(255) NOT NULL default '',
-  modified integer NOT NULL default '0',
-  PRIMARY KEY  (fid),
-  UNIQUE (title),
-  UNIQUE (url)
-);
-
---
 -- Table structure for table 'filters'
 --
 
@@ -200,22 +237,6 @@ CREATE TABLE history (
 );
 
 --
--- Table structure for item
---
-
-CREATE TABLE item (
-  iid SERIAL,
-  fid integer NOT NULL default '0',
-  title varchar(255) NOT NULL default '',
-  link varchar(255) NOT NULL default '',
-  author varchar(255) NOT NULL default '',
-  description text NOT NULL default '',
-  timestamp integer NOT NULL default '0',
-  attributes varchar(255) NOT NULL default '',
-  PRIMARY KEY  (iid)
-);
-
---
 -- Table structure for locales
 --
 
@@ -232,6 +253,21 @@ CREATE TABLE locales (
   no text NOT NULL default '',
   sw text NOT NULL default '',
   PRIMARY KEY  (lid)
+);
+
+--
+-- Table structure for table 'menu'
+--
+
+CREATE TABLE menu (
+  mid integer NOT NULL default '0',
+  pid integer NOT NULL default '0',
+  path varchar(255) NOT NULL default '',
+  title varchar(255) NOT NULL default '',
+  weight smallint NOT NULL default '0',
+  visibility smallint NOT NULL default '0',
+  status smallint NOT NULL default '0',
+  PRIMARY KEY  (mid)
 );
 
 --
@@ -330,6 +366,35 @@ CREATE INDEX page_nid_idx ON page(nid);
 --
 -- Table structure for table 'url_alias'
 --
+
+CREATE TABLE profile_fields (
+  fid serial,
+  title varchar(255) default NULL,
+  name varchar(128) default NULL,
+  explanation TEXT default NULL,
+  category varchar(255) default NULL,
+  page varchar(255) default NULL,
+  type varchar(128) default NULL,
+  weight smallint DEFAULT '0' NOT NULL,
+  required smallint DEFAULT '0' NOT NULL,
+  overview smallint DEFAULT '0' NOT NULL,
+  options text,
+  UNIQUE (name),
+  PRIMARY KEY (fid)
+);
+CREATE INDEX profile_fields_category ON profile_fields (category);
+
+--
+-- Table structure for table 'profile_values'
+--
+
+CREATE TABLE profile_values (
+  fid integer default '0',
+  uid integer default '0',
+  value text
+);
+CREATE INDEX profile_values_uid ON profile_values (uid);
+CREATE INDEX profile_values_fid ON profile_values (fid);
 
 CREATE TABLE url_alias (
   pid serial,
