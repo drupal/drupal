@@ -57,10 +57,10 @@ function statistics_exit() {
     $hostname = getenv("REMOTE_ADDR");
     // log this page access
     if ((arg(0) == "node") && (arg(1) == "view") && arg(2)) {
-      db_query("INSERT INTO accesslog (nid, url, hostname, uid, timestamp) values('%s', '%s', '%s', '%s', '%s')", arg(2), $referrer, $hostname, $user->uid, time());
+      db_query("INSERT INTO accesslog (nid, url, hostname, uid, timestamp) values('%s', '%s', '%s', '%d', '%s')", arg(2), $referrer, $hostname, $user->uid, time());
     }
     else {
-      db_query("INSERT INTO accesslog (url, hostname, uid, timestamp) values('%s', '%s', '%s', '%s')", $referrer, $hostname, $user->uid, time());
+      db_query("INSERT INTO accesslog (url, hostname, uid, timestamp) values('%s', '%s', '%d', '%s')", $referrer, $hostname, $user->uid, time());
     }
   }
 }
