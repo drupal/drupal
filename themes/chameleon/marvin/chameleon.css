@@ -1,6 +1,6 @@
-/* $Id: chameleon.css,v 1.1 2004/02/15 14:21:37 dries Exp $ */
+/* $Id: chameleon.css,v 1.2 2004/02/19 18:49:16 kjartan Exp $ */
 body {
-  background: #fff url(images/druplicon-watermark.png) no-repeat top right;
+  background: #fff url(druplicon-watermark.png) no-repeat top right;
 }
 a:link {
   color: #656
