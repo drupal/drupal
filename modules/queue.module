@@ -1,5 +1,5 @@
 <?php
-// $Id: queue.module,v 1.94 2003/11/20 21:51:23 dries Exp $
+// $Id: queue.module,v 1.95 2003/11/23 10:41:03 dries Exp $
 
 function queue_help($section) {
   $output = "";
@@ -116,8 +116,9 @@ function queue_overview() {
   }
   $output .= "</table>";
 
+  drupal_set_title(t("Moderation queue"));
   print theme("header");
-  print theme("box", t("Moderation queue"), $output);
+  print $output;
   print theme("footer");
 }
 
@@ -192,7 +193,7 @@ function queue_page() {
   }
   else {
     print theme("header");
-    print theme("box", t("Moderation queue"), message_access());
+    print message_access();
     print theme("footer");
   }
 }

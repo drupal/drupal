@@ -11,7 +11,7 @@
   @{
 **/
 
-/* $Id: theme.inc,v 1.160 2003/11/19 16:13:06 dries Exp $ */
+/* $Id: theme.inc,v 1.161 2003/11/23 10:41:03 dries Exp $ */
 
 /**
   Returns the theme header.
@@ -39,6 +39,12 @@ function theme_header($title = "") {
   $output .= theme("box", t("Navigation"), @implode("<br />", link_page()));
   $output .= theme("blocks", "all");
   $output .= "</td><td style=\"vertical-align: top;\">";
+
+  $output .= theme("breadcrumb", drupal_get_breadcrumb());
+  $output .= "<h1>" . drupal_get_title() . "</h1>";
+  if ($help = menu_get_active_help()) {
+    $output .= "<small>$help</small><hr />";
+  }
 
   return $output;
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.190 2003/11/20 21:51:23 dries Exp $
+// $Id: comment.module,v 1.191 2003/11/23 10:41:03 dries Exp $
 
 function comment_help($section = "admin/help#comment") {
   $output = "";
@@ -883,8 +883,9 @@ function comment_page() {
     case t("Post comment"):
       list($error_title, $error_body) = comment_post($edit);
       if ($error_body) {
+        drupal_set_title($error_title);
         print theme("header");
-        print theme("box", $error_title, $error_body);
+        print $error_body;
         print theme("footer");
       }
       else {

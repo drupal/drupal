@@ -1,5 +1,5 @@
 <?php
-// $Id: title.module,v 1.19 2003/11/20 21:51:23 dries Exp $
+// $Id: title.module,v 1.20 2003/11/23 10:41:04 dries Exp $
 
 function title_help($section) {
   $output = "";
@@ -57,14 +57,16 @@ function title_page() {
       $output .= theme("table", $header, $rows);
       $output .= "</div>";
 
+      drupal_set_title(t("Matching Posts"));
       print theme("header");
-      print theme("box", t("Matching Posts"), $output);
+      print $output;
       print theme("footer");
     }
   }
   else {
+    drupal_set_title(t("Access denied"));
     print theme("header");
-    print theme("box", t("Access denied"), message_access());
+    print message_access();
     print theme("footer");
   }
 }

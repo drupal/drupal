@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.63 2003/11/20 21:51:23 dries Exp $
+// $Id: search.module,v 1.64 2003/11/23 10:41:03 dries Exp $
 
 function search_help($section = "admin/help#search") {
   $output = "";
@@ -40,6 +40,10 @@ function search_link($type) {
 
   if ($type == "page" && user_access("search content")) {
     $links[] = l(t("search"), "search", array("title" => t("Search for older content.")));
+  }
+
+  if ($type == "system" && user_access("search content")) {
+    menu("search", t("search"), "search_page", 0, 1);
   }
 
   if ($type == "system" && user_access("search content")) {
@@ -361,23 +365,22 @@ function search_view($keys) {
     $help_link = l(t("search help"), "search/help");
     switch (variable_get("help_pos", 1)) {
       case "1":
-        $form = search_help(). $form;
+        $form = search_help(). $form ."<br />";
         break;
       case "2":
-        $form .= search_help();
+        $form .= search_help() ."<br />";
         break;
       case "3":
-        $form = $help_link. "<br />". $form;
+        $form = $help_link. "<br />". $form ."<br />";
         break;
       case "4":
-        $form .= "<br />". $help_link;
+        $form .= "<br />". $help_link ."<br />";
     }
 
-    print theme("header", t("Search"));
+    drupal_set_title(t("Search"));
+    print theme("header");
 
-    if ($form) {
-      print theme("box", t("Search"), $form);
-    }
+    print $form;
 
     if ($keys) {
       if ($output) {
@@ -391,8 +394,9 @@ function search_view($keys) {
     print theme("footer");
   }
   else {
-    print theme("header", t("Access denied"));
-    print theme("box", t("Access denied"), message_access());
+    drupal_set_title(t("Access denied"));
+    print theme("header");
+    print message_access();
     print theme("footer");
   }
 
@@ -403,8 +407,9 @@ function search_page() {
 
   switch (arg(1)) {
     case "help":
+      drupal_set_title(t("Search Help"));
       print theme("header");
-      print theme("box", t("Search Help"), search_help());
+      print search_help();
       print theme("footer");
       break;
     default:

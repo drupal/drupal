@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.293 2003/11/20 21:51:23 dries Exp $
+// $Id: node.module,v 1.294 2003/11/23 10:41:03 dries Exp $
 
 function node_help($section = "admin/help#node") {
   global $mod;
@@ -1505,57 +1505,84 @@ function node_page() {
       $node = node_load(array("nid" => arg(2), "status" => 1), $_GET["revision"]);
     }
 
-    print theme("header", $node->title);
-
     $name = module_invoke(arg(2), "node", "name");
 
     switch ($op) {
       case "add":
-        print theme("box", t("Submit %name", array("%name" => $name)), node_add(arg(2)));
+        drupal_set_title(t("Submit %name", array("%name" => $name)));
+        print theme("header");
+        print node_add(arg(2));
+        print theme("footer");
         break;
       case "edit":
-        print theme("box", t("Edit %name", array("%name" => $name)), node_edit(arg(2)));
+        drupal_set_title(t("Edit %name", array("%name" => $name)));
+        print theme("header");
+        print node_edit(arg(2));
+        print theme("footer");
         break;
       case "view":
+        drupal_set_title($node->title);
+        print theme("header");
         print node_show($node, arg(3));
+        print theme("footer");
         break;
       case "revisions":
-        theme("box", t("Revisions"), node_revision_overview((arg(2))));
+        drupal_set_title(t("Revisions"));
+        print theme("header");
+        print node_revision_overview(arg(2));
+        print theme("footer");
         break;
       case "rollback-revision":
         $output  = node_revision_rollback(arg(2), arg(3));
         $output .= node_revision_overview(arg(2));
-        theme("box", t("Revisions"), $output);
+        drupal_set_title(t("Revisions"));
+        print theme("header");
+        print $output;
+        print theme("footer");
         break;
       case "delete-revision":
         $output  = node_revision_delete(arg(2), arg(3));
         $output .= node_revision_overview(arg(2));
-        theme("box", t("Revisions"), $output);
+        drupal_set_title(t("Revisions"));
+        print theme("header");
+        print $output;
+        print theme("footer");
         break;
       case t("Preview"):
         $edit = node_validate($edit, $error);
-        print theme("box", t("Preview %name", array("%name" => $name)), node_preview($edit, $error));
+        drupal_set_title(t("Preview %name", array("%name" => $name)));
+        print theme("header");
+        print node_preview($edit, $error);
+        print theme("footer");
         break;
       case t("Submit"):
-        print theme("box", t("Submit %name", array("%name" => $name)), node_submit($edit));
+        drupal_set_title(t("Submit %name", array("%name" => $name)));
+        print theme("header");
+        print node_submit($edit);
+        print theme("footer");
         break;
       case t("Delete"):
-        print theme("box", t("Delete %name", array("%name" => $name)), node_delete($edit));
+        drupal_set_title(t("Delete %name", array("%name" => $name)));
+        print theme("header");
+        print node_delete($edit);
+        print theme("footer");
         break;
       default:
+        drupal_set_title("");
+        print theme("header");
         $result = pager_query("SELECT nid, type FROM {node} WHERE promote = '1' AND status = '1' ORDER BY static DESC, created DESC", variable_get("default_nodes_main", 10));
 
         while ($node = db_fetch_object($result)) {
           node_view(node_load(array("nid" => $node->nid, "type" => $node->type)), 1);
         }
         print pager_display(NULL, variable_get("default_nodes_main", 10));
+        print theme("footer");
     }
-
-    print theme("footer");
   }
   else {
+    drupal_set_title(t("Access denied"));
     print theme("header");
-    print theme("box", t("Access denied"), message_access());
+    print message_access();
     print theme("footer");
   }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: statistics.module,v 1.118 2003/11/20 21:51:23 dries Exp $
+// $Id: statistics.module,v 1.119 2003/11/23 10:41:03 dries Exp $
 
 function statistics_init() {
   global $recent_activity;
@@ -783,8 +783,9 @@ function statistics_page() {
     print theme("footer");
   }
   else {
+    drupal_set_title(t("Access denied"));
     print theme("header");
-    print theme("box", t("Access denied"), message_access());
+    print message_access();
     print theme("footer");
   }
 }

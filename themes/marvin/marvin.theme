@@ -1,5 +1,5 @@
 <?php
-// $Id: marvin.theme,v 1.114 2003/11/19 16:13:06 dries Exp $
+// $Id: marvin.theme,v 1.115 2003/11/23 10:41:04 dries Exp $
 
 function marvin_help($section) {
 
@@ -14,7 +14,7 @@ function marvin_help($section) {
   return $output;
 }
 
-function marvin_header($title = "") {
+function marvin_header() {
 
   $output  = "<!DOCTYPE html PUBLIC \"-//W3C//DTD XHTML 1.0 Transitional//EN\" \"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd\">\n";
   $output .= "<html>\n";
@@ -22,11 +22,12 @@ function marvin_header($title = "") {
   $output .= theme_head($main);
   $output .= "<title>";
 
-  if ($title) {
-    $output .= $title ." - ". variable_get("site_name", "drupal");
+  if (drupal_get_title()) {
+    $output .= drupal_get_title() ." - ". variable_get("site_name", "drupal");
   }
   else {
-    $output .= variable_get("site_name", "drupal") . ($slogan = variable_get("site_slogan", "")) ? " - $slogan" : "";
+    $output .= variable_get("site_name", "drupal");
+    $output .= ($slogan = variable_get("site_slogan", "")) ? " - $slogan" : "";
   }
 
   $output .= "</title>\n";
@@ -54,6 +55,12 @@ function marvin_header($title = "") {
     $output .= "    </td>\n";
   }
   $output .= "    <td style=\"vertical-align: top; width: 85%;\">\n";
+
+  $output .= theme("breadcrumb", drupal_get_breadcrumb());
+  $output .= "<h1>" . drupal_get_title() . "</h1>";
+  if ($help = menu_get_active_help()) {
+    $output .= "<small>$help</small><hr />";
+  }
 
   return $output;
 }

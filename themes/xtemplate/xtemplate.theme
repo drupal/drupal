@@ -1,5 +1,5 @@
 <?php
-// $Id: xtemplate.theme,v 1.35 2003/11/19 16:13:07 dries Exp $
+// $Id: xtemplate.theme,v 1.36 2003/11/23 10:41:04 dries Exp $
 
 if (!class_exists("XTemplate")) {
   include_once("themes/xtemplate/xtemplate.inc");
@@ -84,18 +84,26 @@ function xtemplate_comment($comment, $link = 0) {
   return $output;
 }
 
-function xtemplate_header($title = "") {
+function xtemplate_header() {
   global $xtemplate;
 
   $xtemplate->template->assign(array(
-        "title" => ($title ? $title." | ". variable_get("site_name", "drupal") : variable_get("site_name", "drupal") ." | ". variable_get("site_slogan", "")),
+        "head_title" => (drupal_get_title() ? drupal_get_title() ." | ". variable_get("site_name", "drupal") : variable_get("site_name", "drupal") ." | ". variable_get("site_slogan", "")),
+        "body_title" => drupal_get_title(),
+        "site" => variable_get("site_name", "drupal"),
         "head" => theme_head(),
         "stylesheet" => variable_get("xtemplate_stylesheet", "themes/xtemplate/xtemplate.css"),
         "onload_attributes" => theme_onload_attribute(),
         "logo" => variable_get("xtemplate_logo", "<img src=\"themes/xtemplate/images/druplicon.gif\" />"),
         "primary_links" => variable_get("xtemplate_primary_links", l("edit primary links", "admin/system/themes/xtemplate")),
-        "secondary_links" => variable_get("xtemplate_secondary_links", l("edit secondary links", "admin/system/themes/xtemplate"))
+        "secondary_links" => variable_get("xtemplate_secondary_links", l("edit secondary links", "admin/system/themes/xtemplate")),
+        "breadcrumb" => theme("breadcrumb", drupal_get_breadcrumb())
         ));
+
+  if (menu_get_active_help()) {
+    $xtemplate->template->assign("help", menu_get_active_help());
+    $xtemplate->template->parse("header.help");
+  }
 
   if (variable_get("xtemplate_search_box", 1)) {
     $xtemplate->template->assign(array(
