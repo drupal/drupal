@@ -1076,7 +1076,9 @@ function form_allowed_tags_text() {
 function get_url_alias($path) {
   $map = get_url_map();
 
-  return array_search($path, $map);
+  if ($map) {
+    return array_search($path, $map);
+  }
 }
 
 /**

@@ -47,7 +47,8 @@ $mysql_updates = array(
   "2003-08-27" => "update_62",
   "2003-09-09" => "update_63",
   "2003-09-10" => "update_64",
-  "2003-09-29" => "update_65"
+  "2003-09-29" => "update_65",
+  "2003-09-30" => "update_66"
 );
 
 function update_32() {
@@ -456,6 +457,25 @@ function update_65() {
       END;' LANGUAGE 'plpgsql';");
   }
 }
+
+function update_66() {
+  update_sql("CREATE TABLE path (
+    pid int(10) unsigned NOT NULL auto_increment,
+    old varchar(128) NOT NULL default '',
+    new varchar(128) NOT NULL default '',
+    PRIMARY KEY  (pid),
+    UNIQUE KEY old (old),
+    UNIQUE KEY new (new)
+  )");
+
+  // Migrate the existing paths:
+  $result = db_query("SELECT nid, path FROM {node} WHERE path != ''");
+  while ($node = db_fetch_object($result)) {
+    update_sql("INSERT INTO {path} (old, new) VALUES ('node/view/$node->nid', '". check_query($node->path) ."')");
+  }
+
+  update_sql("ALTER TABLE {node} DROP path");
+ }
 
 /*
 ** System functions
