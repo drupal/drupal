@@ -3,7 +3,7 @@
 
 include_once "includes/common.inc";
 
-if ($q) {
+if (isset($q)) {
   $mod = arg(0);
 }
 
