@@ -39,6 +39,7 @@ include_once "includes/comment.inc";
 include_once "includes/module.inc";
 include_once "includes/locale.inc";
 include_once "includes/search.inc";
+include_once "includes/timer.inc";
 include_once "includes/theme.inc";
 include_once "includes/user.inc";
 include_once "includes/node.inc";

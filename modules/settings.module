@@ -28,18 +28,18 @@ function settings_conf() {
   $output .= "<H3>Comment settings</H3>\n";
 
   $output .= "<B>Default display mode:</B><BR>\n";
-  foreach ($cmodes as $key=>$value) $options2 .= "<OPTION VALUE=\"$key\"". ($conf[default_comment_mode] == $key ? " SELECTED" : "") .">$value</OPTION>\n";
-  $output .= "<SELECT NAME=\"edit[default_comment_mode]\">$options2</SELECT><BR>\n";
+  foreach ($cmodes as $key=>$value) $options1 .= "<OPTION VALUE=\"$key\"". ($conf[default_comment_mode] == $key ? " SELECTED" : "") .">$value</OPTION>\n";
+  $output .= "<SELECT NAME=\"edit[default_comment_mode]\">$options1</SELECT><BR>\n";
   $output .= "<I><SMALL>The default mode in which comments are displayed.</SMALL></I><P>\n";
 
-  $output .= "<B>Default display mode:</B><BR>\n";
-  foreach ($corder as $key=>$value) $options3 .= "<OPTION VALUE=\"$key\"". ($conf[default_comment_order] == $key ? " SELECTED" : "") .">$value</OPTION>\n";
-  $output .= "<SELECT NAME=\"edit[default_comment_order]\">$options3</SELECT><BR>\n";
-  $output .= "<I><SMALL>The default mode in which comments are displayed.</SMALL></I><P>\n";
+  $output .= "<B>Default display order:</B><BR>\n";
+  foreach ($corder as $key=>$value) $options2 .= "<OPTION VALUE=\"$key\"". ($conf[default_comment_order] == $key ? " SELECTED" : "") .">$value</OPTION>\n";
+  $output .= "<SELECT NAME=\"edit[default_comment_order]\">$options2</SELECT><BR>\n";
+  $output .= "<I><SMALL>The default order in which comments are displayed.</SMALL></I><P>\n";
 
   $output .= "<B>Default threshold:</B><BR>\n";
-  for ($i = -1; $i < 6; $i++) $options4 .= " <OPTION VALUE=\"$i\"". ($conf[default_comment_threshold] == $i ? " SELECTED" : "") .">Filter - $i</OPTION>";
-  $output .= "<SELECT NAME=\"edit[default_comment_threshold]\">$options4</SELECT><BR>\n";
+  for ($i = -1; $i < 6; $i++) $options3 .= " <OPTION VALUE=\"$i\"". ($conf[default_comment_threshold] == $i ? " SELECTED" : "") .">Filter - $i</OPTION>";
+  $output .= "<SELECT NAME=\"edit[default_comment_threshold]\">$options3</SELECT><BR>\n";
   $output .= "<I><SMALL>The default threshold used to filter comments.</SMALL></I><P>\n";
 
   $output .= "<HR>\n";
@@ -48,33 +48,42 @@ function settings_conf() {
   $size = array(1000 => "1.000 characters", 5000 => "5.000 characters", 10000 => "10.000 characters", 15000 => "15.000 characters", 30.000 => "30.000 characters", 50000 => "50.000 characters", 100000 => "100.000 characters");
 
   $output .= "<B>Maximum submission size:</B><BR>\n";
-  foreach ($size as $key=>$value) $options5 .= " <OPTION VALUE=\"$key\"". ((variable_get(max_input_size, 10000) == $key) ? " SELECTED" : "") .">$value</OPTION>\n";
-  $output .= "<SELECT NAME=\"edit[max_input_size]\">$options5</SELECT><BR>\n";
+  foreach ($size as $key=>$value) $options4 .= " <OPTION VALUE=\"$key\"". ((variable_get(max_input_size, 10000) == $key) ? " SELECTED" : "") .">$value</OPTION>\n";
+  $output .= "<SELECT NAME=\"edit[max_input_size]\">$options4</SELECT><BR>\n";
   $output .= "<I><SMALL>The maximum number of characters someone can enter in a form.</SMALL></I><P>\n";
 
-  $rate = array(1 => "maximum 1 every second", 5 => "maximum 1 every 5 seconds", 15 => "maximum 1 every 15 seconds", 30 => "maximum 1 every 30 seconds", 60 => "maximum 1 every minute", 300 => "maximum 1 every 5 minutes", 900 => "maximum 1 every 15 minutes", 1800 => "maximum 1 every 30 minutes", 3600 => "maximum 1 every hour", 21600 => "maximum 1 every 6 hour", 43200 => "maximum 1 every 12 hour");
+  $rate = array(1 => "Maximum 1 every second", 5 => "Maximum 1 every 5 seconds", 15 => "Maximum 1 every 15 seconds", 30 => "Maximum 1 every 30 seconds", 60 => "Maximum 1 every minute", 300 => "Maximum 1 every 5 minutes", 900 => "Maximum 1 every 15 minutes", 1800 => "Maximum 1 every 30 minutes", 3600 => "Maximum 1 every hour", 21600 => "Maximum 1 every 6 hour", 43200 => "Maximum 1 every 12 hour");
 
   $output .= "<B>Maximum node rate:</B><BR>\n";
-  foreach ($rate as $key=>$value) $options6 .= " <OPTION VALUE=\"$key\"". ((variable_get(max_node_rate, 900) == $key) ? " SELECTED" : "") .">$value</OPTION>\n";
-  $output .= "<SELECT NAME=\"edit[max_node_rate]\">$options6</SELECT><BR>\n";
+  foreach ($rate as $key=>$value) $options5 .= " <OPTION VALUE=\"$key\"". ((variable_get(max_node_rate, 900) == $key) ? " SELECTED" : "") .">$value</OPTION>\n";
+  $output .= "<SELECT NAME=\"edit[max_node_rate]\">$options5</SELECT><BR>\n";
   $output .= "<I><SMALL>The maximum submission rate for nodes.  Its purpose is to stop potential abuse or denial of service attacks.</SMALL></I><P>\n";
 
   $output .= "<B>Maximum comment rate:</B><BR>\n";
-  foreach ($rate as $key=>$value) $options7 .= " <OPTION VALUE=\"$key\"". ((variable_get(max_comment_rate, 120) == $key) ? " SELECTED" : "") .">$value</OPTION>\n";
-  $output .= "<SELECT NAME=\"edit[max_comment_rate]\"$options7</SELECT><BR>\n";
+  foreach ($rate as $key=>$value) $options6 .= " <OPTION VALUE=\"$key\"". ((variable_get(max_comment_rate, 120) == $key) ? " SELECTED" : "") .">$value</OPTION>\n";
+  $output .= "<SELECT NAME=\"edit[max_comment_rate]\"$options6</SELECT><BR>\n";
   $output .= "<I><SMALL>The maximum submission rate for comments.  Its purpose is to stop potential abuse or denial of service attacks.</SMALL></I><P>\n";
 
   $output .= "<HR>\n";
   $output .= "<H3>Theme settings</H3>\n";
 
   $output .= "<B>Default theme:</B><BR>\n";
-  foreach ($themes as $key=>$value) $options1 .= "<OPTION VALUE=\"$key\"". (variable_get(theme_default, key($themes)) == $key ? " SELECTED" : "") .">$key</OPTION>\n";
-  $output .= "<SELECT NAME=\"edit[theme_default]\">$options1</SELECT><BR>\n";
+  foreach ($themes as $key=>$value) $options7 .= "<OPTION VALUE=\"$key\"". (variable_get(theme_default, key($themes)) == $key ? " SELECTED" : "") .">$key</OPTION>\n";
+  $output .= "<SELECT NAME=\"edit[theme_default]\">$options7</SELECT><BR>\n";
   $output .= "<I><SMALL>The default theme displayed for anonymous users.</SMALL></I><P>\n";
 
   $output .= "<B>Footer message:</B><BR>\n";
-  $output .= "<TEXTAREA NAME=\"edit[theme_footer]\" COLS=\"35\" ROWS=\"5\" WRAP=\"virtual\">". variable_get(theme_footer, "") ."</TEXTAREA><BR>\n";
+  $output .= "<TEXTAREA NAME=\"edit[theme_footer]\" COLS=\"55\" ROWS=\"3\" WRAP=\"virtual\">". variable_get(theme_footer, "") ."</TEXTAREA><BR>\n";
   $output .= "<I><SMALL>This text will be displayed at the bottom of each page.  Useful to add a copyright notice to your pages.</SMALL></I><P>\n";
+
+  $output .= "<HR>\n";
+
+  $output .= "<H3>Development settings</H3>\n";
+
+  $output .= "<B>Display timings:</B><BR>\n";
+  foreach (array("Disabled", "Enabled") as $key=>$value) $options8 .= "<OPTION VALUE=\"$key\"". (variable_get(dev_timing, 0) == $key ? " SELECTED" : "") .">$value</OPTION>\n";
+  $output .= "<SELECT NAME=\"edit[dev_timing]\">$options8</SELECT><BR>\n";
+  $output .= "<I><SMALL>Display the time it took to generate a page: for drupal development only.</SMALL></I><P>\n";
 
   $output .= "<HR>\n";
 
@@ -89,6 +98,11 @@ function settings_save($edit) {
   }
   $conf = variable_init();
   return "all settings have been saved.";
+}
+
+function settings_default() {
+  db_query("DELETE FROM variable");
+  return "all settings have been reset.";
 }
 
 function settings_module($name, $module) {
@@ -110,6 +124,7 @@ function settings_overview() {
   $output .= settings_conf();
   $output .= $settings;
   $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save settings\">\n";
+  $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Reset to defaults\">\n";
   $output .= "</FORM>\n";
 
   return $output;
@@ -119,12 +134,14 @@ function settings_admin() {
   global $edit, $op;
 
   switch ($op) {
+    case "Reset to defaults":
+      print status(settings_default($edit));
+      break;
     case "Save settings":
       print status(settings_save($edit));
-      // fall through:
-    default;
-      print settings_overview();
+      break;
   }
+  print settings_overview();
 }
 
 ?>
