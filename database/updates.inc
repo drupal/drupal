@@ -67,7 +67,8 @@ $sql_updates = array(
   "2004-07-11" => "update_93",
   "2004-07-22" => "update_94",
   "2004-07-30" => "update_95",
-  "2004-08-04" => "update_96"
+  "2004-08-04" => "update_96",
+  "2004-08-06" => "update_97"
 );
 
 function update_32() {
@@ -1267,6 +1268,18 @@ function update_96() {
   }
 
   return $ret;
+}
+
+function update_97() {
+  $convert = array('node/view/' => 'node/', 'book/view/' => 'book/', 'user/view/' => 'user/');
+  foreach ($convert as $from => $to) {
+    $result = db_query("SELECT pid, src FROM {url_alias} WHERE src LIKE '%s%%'", $from);
+    while ($alias = db_fetch_object($result)) {
+      db_query("UPDATE {url_alias} SET src = '%s' WHERE pid = '%s'", str_replace($from, $to, $alias->src), $alias->pid);
+    }
+  }
+
+  return array();
 }
 
 function update_sql($sql) {
