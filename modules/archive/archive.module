@@ -1,5 +1,5 @@
 <?php
-// $Id: archive.module,v 1.47 2004/02/08 17:07:07 dries Exp $
+// $Id: archive.module,v 1.48 2004/02/08 17:09:17 dries Exp $
 
 function archive_help($section) {
   $output = "";
@@ -98,7 +98,7 @@ function archive_calendar($original = 0) {
   $days = array(t('Su'), t('Mo'), t('Tu'), t('We'), t('Th'), t('Fr'), t('Sa'));
   for ($i = 0; $i < 7; $i++) {
     $output .= "<td>". $days[$cday] . "</td>";
-    $cday = ($cday < 6 : $cday+1 : 0);
+    $cday = ($cday < 6 ? $cday+1 : 0);
   }
   $output .= "</tr>\n";
 
