@@ -44,7 +44,7 @@ function submit_enter() {
   $output .= "</P>\n";
  
   $output .= "<P>\n";
-  $output .= " You must preview at least once before you can submit:<BR>\n";
+  $output .= " <SMALL><I>You must preview at least once before you can submit:</I></SMALL><BR>\n";
   $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Preview submission\">\n";
   $output .= "</P>\n";
  

@@ -96,9 +96,9 @@ function discussion_display($sid, $pid, $cid, $level = 0) {
   // Pre-process variables:
   $pid = (empty($pid)) ? 0 : $pid;
   $cid = (empty($cid)) ? 0 : $cid;
-  $mode  = ($user->id) ? $user->mode  : "threaded";
+  $mode  = ($user->id) ? $user->mode : "threaded";
   $order = ($user->id) ? $user->sort : "1";
-  $threshold = ($user->id) ? $user->threshold  : "0";
+  $threshold = ($user->id) ? $user->threshold : "0";
 
   // Compose story-query:
   $result = db_query("SELECT s.*, u.userid FROM stories s LEFT JOIN users u ON s.author = u.id WHERE s.status != 0 AND s.id = $sid");
@@ -122,7 +122,7 @@ function discussion_display($sid, $pid, $cid, $level = 0) {
   // Display the comments:  
   while ($comment = db_fetch_object($result)) {
     // Dynamically compose the `reply'-link:
-    if ($pid != 0) {
+    if ($comment->pid != 0) {
       list($pid) = db_fetch_row(db_query("SELECT pid FROM comments WHERE cid = $comment->pid"));
       $link = "<A HREF=\"discussion.php?id=$comment->sid&pid=$pid#$pid\"><FONT COLOR=\"$theme->hlcolor2\">return to parent</FONT></A> | <A HREF=\"discussion.php?op=reply&sid=$comment->sid&pid=$comment->cid\"><FONT COLOR=\"$theme->hlcolor2\">reply to this comment</FONT></A>";
     }
@@ -180,13 +180,15 @@ function discussion_reply($pid, $sid) {
   $output .= " <TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"10\" NAME=\"comment\">". check_textarea($user->signature) ."</TEXTAREA><BR>\n";
   $output .= " <SMALL><I>Allowed HTML tags: ". htmlspecialchars($allowed_html) .".</I></SMALL>\n";
   $output .= "</P>\n";
- 
-  // Hidden fields:
-  $output .= "<INPUT TYPE=\"hidden\" NAME=\"pid\" VALUE=\"$pid\">\n";
-  $output .= "<INPUT TYPE=\"hidden\" NAME=\"sid\" VALUE=\"$sid\">\n";
 
-  // Preview button:
-  $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Preview comment\"> (You must preview at least once before you can submit.)\n";
+  // Preview button: 
+  $output .= "<P>\n";  
+  $output .= " <SMALL><I>You must preview at least once before you can submit:</I></SMALL><BR>\n";
+  $output .= " <INPUT TYPE=\"hidden\" NAME=\"pid\" VALUE=\"$pid\">\n";
+  $output .= " <INPUT TYPE=\"hidden\" NAME=\"sid\" VALUE=\"$sid\">\n";
+  $output .= " <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Preview comment\"><BR>\n";
+  $output .= "</P>\n";
+
   $output .= "</FORM>\n";
 
   $theme->box("Reply", $output); 
