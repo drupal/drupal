@@ -65,6 +65,9 @@ function book_link($type, $node = 0, $main = 0) {
 
   if ($type == 'node' && $node->type == 'book') {
     if (!$main) {
+      if (book_access('create', $node)) {
+        $links[] = l(t('add child page'), "node/add/book/parent/$node->nid");
+      }
       $links[] = l(t('printer-friendly version'), 'book/print/'. $node->nid, array('title' => t('Show a printer-friendly version of this book page and its sub-pages.')));
     }
   }
@@ -223,7 +226,8 @@ function book_form(&$node) {
   global $user;
 
   $op = $_POST['op'];
-  $output = form_select(t('Parent'), 'parent', $node->parent, book_toc($node->nid), t('The parent that this page belongs in. Note that pages whose parent is &lt;top-level&gt; are regarded as independent, top-level books.'));
+    
+  $output = form_select(t('Parent'), 'parent', ($node->parent ? $node->parent : arg(4)), book_toc($node->nid), t('The parent that this page belongs in. Note that pages whose parent is &lt;top-level&gt; are regarded as independent, top-level books.'));
 
   if (function_exists('taxonomy_node_form')) {
     $output .= implode('', taxonomy_node_form('book', $node));
