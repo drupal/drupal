@@ -120,7 +120,6 @@ function theme_init() {
     return $obj;
   }
 
-  watchdog("warning", "No valid themes enabled.");
   @$obj =& new BaseTheme;
   return $obj;
 }
