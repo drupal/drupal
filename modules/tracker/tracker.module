@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.20 2002/05/12 19:31:50 kjartan Exp $
+// $Id: tracker.module,v 1.21 2002/05/12 20:31:48 kjartan Exp $
 
 function tracker_help() {
   $output .= "The tracker module is a handy module for displaying the most recent comments happenning all over your web site.  By following the <i>view new comments</i> link in the user block, a user may quickly review all recent comments.  When a user first arrives at the main tracker page, she sees all recent comments in reverse chronological order, grouped by post.  In addition, a self-centered user may choose to display only his own comments.</p>";
@@ -16,7 +16,7 @@ function tracker_link($type) {
 }
 
 function tracker_comments($id = 0) {
-  $period = time() - 259200;  // all comments of the past 3 days
+  $period = time() - 259200 *20;  // all comments of the past 3 days
 
   if ($id) {
     $sresult = db_query("SELECT n.nid, n.title, COUNT(n.nid) AS comments, MAX(c.timestamp) AS last_comment FROM comments c LEFT JOIN node n ON c.nid = n.nid WHERE c.timestamp > $period AND c.uid = '%s' GROUP BY n.nid, n.title DESC ORDER BY last_comment DESC LIMIT 10", $id);
@@ -37,7 +37,7 @@ function tracker_comments($id = 0) {
 
     $output .= "<ul>";
     while ($comment = db_fetch_object($cresult)) {
-      $output .= " <li>". l(check_output($comment->subject), array("id" => $node->nid, "cid" => $comment->cid, "pid" => $comment->pid), "node", $comment->cid) ." by ". lm(check_output($comment->name), array("mod" => "user", "op" => "view", "id" => $comment->uid)) ." (". t("replies") .": ". comment_num_replies($comment->cid) .") ". (comment_is_new($comment) ? "<span style=\"color: red;\">*</span>" : "") ."</li>\n";
+      $output .= " <li>". l(check_output($comment->subject), array("id" => $node->nid, "cid" => $comment->cid, "pid" => $comment->pid), "node", $comment->cid) ." by ". format_name($comment->name) ." (". t("replies") .": ". comment_num_replies($comment->cid) .") ". (comment_is_new($comment) ? "<span style=\"color: red;\">*</span>" : "") ."</li>\n";
     }
     $output .= " </ul>\n";
   }
