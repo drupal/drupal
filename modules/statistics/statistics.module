@@ -116,16 +116,16 @@ function statistics_help($section = "admin/help#statistics") {
       </ul>
       <p>As with any new module, the statistics module needs to be <a href=\"%modules\">enabled</a> before you can use it.  Also refer to the <a href=\"%permissions\">permissions section</a>, as this module supports four separate permissions.</p>
       <h3><a href=\"%referers\">referrers log</a></h3>
-      <p>This admin page shows you site-wide referrer statistics.  You can see '<i>all</i>' statistics, '<i>external</i>' statistics or '<i>internal</i>' statistics.  Default is 'all'.</p>
+      <p>This admin page shows you site-wide referrer statistics.  You can see <em>'all'</em> statistics, <em>'external'</em> statistics or <em>'internal'</em> statistics.  Default is 'all'.</p>
       <h3><a href=\"%access\">access log</a></h3>
       <p>This admin page gives you an at-a-glance look at your most popular content.  It is useful for understanding what content on your Drupal site is the most popular.  Also on this page are links to the referrer statistics for each listed node.</p>
       <h3>Configuring the statistics module</h3>
       <p>There are some configuration options added to the main <a href=\"%configuration\">administer &raquo; configuration</a> section:</p>
       <ul>
-      <li><i>enable access log</i> -- allows you to turn the access log on and off.  This log is used to store data about every page accessed, such as the remote host's IP address, where they came from (referrer), what node theyve viewed, and their user name.  Enabling the log adds one database call per page displayed by Drupal.</li>
-      <li><i>discard access logs older than</i> -- allows you to configure how long an access log entry is saved, after which time it is deleted from the database table. To use this you need to run \"cron.php\"</li>
-      <li><i>enable node view counter</i> -- allows you to turn on and off the node-counting functionality of this module.  If it is turned on, an extra database query is added for each node displayed, which increments a counter.</li>
-      <li><i>display node view counters</i> -- allows you to globally disable the displaying of node view counters.  Additionally, a user group must have 'access statistics' permissions to view the counters.</li>
+      <li><em>enable access log</em> -- allows you to turn the access log on and off.  This log is used to store data about every page accessed, such as the remote host's IP address, where they came from (referrer), what node theyve viewed, and their user name.  Enabling the log adds one database call per page displayed by Drupal.</li>
+      <li><em>discard access logs older than</em> -- allows you to configure how long an access log entry is saved, after which time it is deleted from the database table. To use this you need to run \"cron.php\"</li>
+      <li><em>enable node view counter</em> -- allows you to turn on and off the node-counting functionality of this module.  If it is turned on, an extra database query is added for each node displayed, which increments a counter.</li>
+      <li><em>display node view counters</em> -- allows you to globally disable the displaying of node view counters.  Additionally, a user group must have 'access statistics' permissions to view the counters.</li>
       </ul>
       <h3>Popular content block</h3>
       <p>This module creates a block that can display the day's top viewed content, the all time top viewed content, and the last content viewed.  Each of these links can be enabled or disabled individually, and the number of posts displayed for each can be configured with a drop down menu.  If you disable all sections of this block, it will not appear.</p>
@@ -134,23 +134,23 @@ function statistics_help($section = "admin/help#statistics") {
       <p>This module creates a user page that can display summaries of the day's most popular viewed content, the all time most popular content, and the last content viewed.  Each of these summaries can be enabled or disabled individually, and the number of posts displayed for each can be configured with a drop down menu.  You can also assign a name for the automatically generated link to the user page.  If no name is set, the link will not be displayed.</p>
       <h3>Permissions</h3><p>This module has four permissions that need to be configured in the <a href=\"%permissions\">permissions section</a>.</p>
       <ul>
-      <li><i>access statistics</i> - enable for user roles that get to see view counts for individual content.  (This does not define access to the block)</li>
-      <li><i>administer statistics module</i> - enable for user roles that get to configure the statistics module.</li><li><i>administer statistics</i> - enable for user roles that get to view the referrer statistics.</li>
+      <li><em>access statistics</em> - enable for user roles that get to see view counts for individual content.  (This does not define access to the block)</li>
+      <li><em>administer statistics module</em> - enable for user roles that get to configure the statistics module.</li><li><em>administer statistics</em> - enable for user roles that get to view the referrer statistics.</li>
       </ul>
-      <p>If '<i>administer statistics</i>' and '<i>access statistics</i>' are both enabled, the user will see a link from each node to that node's referrer statistics (if enabled).</p>
-      <h2>Statistics module (for developers)</h2><h3>Accessing statistics</h3><p>To get a node's \"view statistics\" make a call to the function <i>statistics_get(\$nid)</i>.  When you pass in a Node ID (\$nid), the function returns an array with three entires:  [0]=totalcount, [1]=daycount, [2]=timestamp.  For example, you could use this function call to add node view counts to your theme.</p>
+      <p>If '<em>administer statistics</em>' and '<em>access statistics</em>' are both enabled, the user will see a link from each node to that node's referrer statistics (if enabled).</p>
+      <h2>Statistics module (for developers)</h2><h3>Accessing statistics</h3><p>To get a node's \"view statistics\" make a call to the function <em>statistics_get(\$nid)</em>.  When you pass in a Node ID (\$nid), the function returns an array with three entires:  [0]=totalcount, [1]=daycount, [2]=timestamp.  For example, you could use this function call to add node view counts to your theme.</p>
       <ul>
-      <li>The <i>totalcount</i> is a count of the total number of times that node has been viewed.</li>
-      <li>The <i>daycount</i> is a count of the total number of times that node has been viewed \"today\".  For the daycount to be reset, cron must be enabled.</li>
-      <li>The <i>timestamp</i> is a timestamp of when that node was last viewed.</li>
+      <li>The <em>totalcount</em> is a count of the total number of times that node has been viewed.</li>
+      <li>The <em>daycount</em> is a count of the total number of times that node has been viewed \"today\".  For the daycount to be reset, cron must be enabled.</li>
+      <li>The <em>timestamp</em> is a timestamp of when that node was last viewed.</li>
       </ul>
       <p>The module automatically adds '# reads' to each node's link section (if enabled).</p>
       <h3>Most popular content</h3>
-      <p>The statistics module provides a function '<i>statistics_title_list(\$dbfield, \$dbrows)</i>' to return an array of links to any of the following: the top viewed content of all time, the top viewed content of today, and the last viewed content.  You can pass in:</p>
+      <p>The statistics module provides a function '<em>statistics_title_list(\$dbfield, \$dbrows)</em>' to return an array of links to any of the following: the top viewed content of all time, the top viewed content of today, and the last viewed content.  You can pass in:</p>
       <ul>
-      <li><i>totalcount</i> - This will return an array with links to the top viewed content of all time.<br />Example:  <code>statistics_title_list(\"totalcount\", \"5\");</code><br /><br /></li>
-      <li><i>daycount</i> - This will return an array with links to the top viewed content for today.<br />Example:  <code>statistics_title_list(\"daycount\",\"5\");</code><br /><br /></li>
-      <li><i>timestamp</i> - This will return a array with links to the last viewed node.<br />Example:  <code>statistics_title_list(\"timestamp\",\"5\");</code></li>
+      <li><em>totalcount</em> - This will return an array with links to the top viewed content of all time.<br />Example:  <code>statistics_title_list(\"totalcount\", \"5\");</code><br /><br /></li>
+      <li><em>daycount</em> - This will return an array with links to the top viewed content for today.<br />Example:  <code>statistics_title_list(\"daycount\",\"5\");</code><br /><br /></li>
+      <li><em>timestamp</em> - This will return a array with links to the last viewed node.<br />Example:  <code>statistics_title_list(\"timestamp\",\"5\");</code></li>
       </ul>
       <p>\$dbrows is the number or rows you want returned in your array.</p>", array("%modules" => url("admin/system/modules"), "%permissions" => url("admin/user/permission"), "%referers" => url("admin/statistics/referrers"), "%access" => url("admin/statistics/log"), "%configuration" => url("admin/system/modules/statistics"), "%block" => url("admin/system/block")));
       break;
@@ -176,7 +176,7 @@ function statistics_help($section = "admin/help#statistics") {
     case 'admin/statistics/log/node':
     case 'admin/statistics/log/user':
     case 'admin/statistics/log/host':
-      $output = t("This pages shows you who is accessing your web site.  You can see the hostnames, referrers.  In particular, it is easy to inspect a user's navigation history/trail by clicking on <i>track user</i>.");
+      $output = t("This pages shows you who is accessing your web site.  You can see the hostnames, referrers.  In particular, it is easy to inspect a user's navigation history/trail by clicking on <em>track user</em>.");
       break;
   }
   return $output;

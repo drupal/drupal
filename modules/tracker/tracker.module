@@ -4,7 +4,7 @@
 function tracker_help($section = 'admin/help#tracker') {
   switch ($section) {
     case 'admin/help#tracker':
-      return t('<p>The tracker module is a handy module for displaying the most recent posts.  By following the <i>recent posts</i> link in the user block, a user may quickly review all recent postings.</p>');
+      return t('<p>The tracker module is a handy module for displaying the most recent posts.  By following the <em>recent posts</em> link in the user block, a user may quickly review all recent postings.</p>');
     case 'admin/system/modules#description':
       return t('Enables tracking of recent posts for users.');
   }
