@@ -33,7 +33,7 @@ class XTemplate {
   along with this program; if not, write to the Free Software
   Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA  02111-1307, USA.
 
-  $Id: xtemplate.inc,v 1.4 2003/12/04 20:53:19 dries Exp $
+  $Id: xtemplate.inc,v 1.5 2003/12/15 20:27:56 dries Exp $
 
 */
 
@@ -171,7 +171,7 @@ function parse ($bname) {
         }
       } else {
         $var=trim($var);
-        $copy=preg_replace("/\{".$v."\}/","$var",$copy);
+        $copy=str_replace("\{$v}","$var",$copy);
       }
     } else {
       $var=$this->VARS;
