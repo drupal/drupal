@@ -1,6 +1,7 @@
 <?php
 
 $module = array("find" => "book_find",
+                "type" => "book_type",
                 "page" => "book_page",
                 "user" => "book_user",
                 "admin" => "book_admin",
@@ -41,6 +42,10 @@ function book_location($node, $nodes = array()) {
     array_push($nodes, $parent);
   }
   return $nodes;
+}
+
+function book_type() {
+  return array("book", t("book page"));
 }
 
 function book_view($node, $page = 1) {

@@ -1,9 +1,14 @@
 <?php
 
-$module = array("page" => "page_page",
+$module = array("type" => "page_type",
+                "page" => "page_page",
                 "admin" => "page_admin");
 
 $format = array(0 => HTML, 1 => PHP, 2 => text);
+
+function page_type() {
+  return array("page", "static page");
+}
 
 function page_view($node) {
   global $format, $theme;

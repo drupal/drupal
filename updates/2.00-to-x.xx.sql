@@ -1,3 +1,17 @@
+# 14/04/2001:
+CREATE TABLE section (
+  sid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
+  pid int(10) unsigned DEFAULT '0' NOT NULL,
+  name varchar(32) DEFAULT '' NOT NULL,
+  PRIMARY KEY (sid)
+);
+
+CREATE TABLE section_type (
+  sid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
+  type varchar(16) DEFAULT '' NOT NULL,
+  PRIMARY KEY (sid, type)
+);
+
 # 07/04/2001:
 CREATE TABLE page (
   lid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
