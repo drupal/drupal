@@ -26,6 +26,13 @@ Drupal x.x.x, xxxx-xx-xx
     * improved the accessibility of the archive module's calendar.
     * improved form handling.
 
+
+Drupal 4.4.2, 2004-07-04
+------------------------
+
+- fixed bugs: no critical bugs were identified.
+
+
 Drupal 4.4.1, 2004-04-01
 ------------------------
 
