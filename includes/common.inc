@@ -536,10 +536,10 @@ function format_date($timestamp, $type = "medium", $format = "") {
     case "custom":
       for ($i = strlen($format); $i >= 0; $c = $format[--$i]) {
         if (strstr("DFlMSw", $c)) {
-          $date = t(date($c, $timestamp)).$date;
+          $date = t(date($c, $timestamp)) . $date;
         }
-        else if (strstr("AaBdgGhHiIjLmnrstTUYyZz", $c)) {
-          $date = date($c, $timestamp).$date;
+        else if (strstr("AaBdgGhHiIjLmnrstTUWYyZz", $c)) {
+          $date = date($c, $timestamp) . $date;
         }
         else {
           $date = $c.$date;
