@@ -1,4 +1,4 @@
-/* $Id: style.css,v 1.4 2004/11/14 19:34:09 dries Exp $ */
+/* $Id: style.css,v 1.5 2004/11/27 11:23:42 dries Exp $ */
 
 /*
 ** HTML elements
@@ -14,7 +14,7 @@ tr.dark td, tr.light td {
   padding: 0.3em;
 }
 h1, h2, h3, h4, h5, h6 {
-  margin: 0.5;
+  margin: 0.5em;
 }
 h1 {
   font-size: 1.3em;
