@@ -20,9 +20,9 @@ function poll_block() {
       poll_view($poll, 0, 1);
     }
   }
-  $blocks[0][subject] = "Latest poll";
+  $blocks[0][subject] = strtr(t("Latest poll: %t"), array("%t" => $poll->title));
   $blocks[0][content] = $poll->body;
-  $blocks[0][info] = "Most recent poll";
+  $blocks[0][info] = t("Most recent poll");
   return $blocks;
 }
 

@@ -57,10 +57,10 @@ function book_save($op, $node) {
 
   if ($op == "create") {
     if (user_access("administer nodes")) {
-      return array("format", "parent", "weight");
+      return array("format", "parent", "weight", "log");
     }
     else {
-      return array("format", "moderate" => 1, "parent", "promote" => 0, "status" => 1, "weight");
+      return array("format", "moderate" => 1, "parent", "promote" => 0, "status" => 1, "weight", "log");
     }
   }
 
@@ -75,7 +75,7 @@ function book_save($op, $node) {
       ** new revision unless we are explicitly instructed to.
       */
 
-      return array("format", "parent", "weight");
+      return array("format", "parent", "weight", "log");
     }
     else {
       /*
@@ -84,7 +84,7 @@ function book_save($op, $node) {
       ** and are not promoted by default.  See also: book_load().
       */
 
-      return array("created" => time(), "format", "moderate" => 1, "parent", "promote" => 0, "score" => 0, "status" => 1, "users" => "", "revisions", "votes" => 0, "weight");
+      return array("created" => time(), "format", "moderate" => 1, "parent", "promote" => 0, "score" => 0, "status" => 1, "users" => "", "revisions", "votes" => 0, "weight", "log");
     }
   }
 
@@ -113,7 +113,7 @@ function book_link($type, $node = 0, $main = 0) {
 function book_load($node) {
   global $user, $REQUEST_URI;
 
-  $book = db_fetch_object(db_query("SELECT format, parent, weight FROM book WHERE nid = '$node->nid'"));
+  $book = db_fetch_object(db_query("SELECT format, parent, weight, log FROM book WHERE nid = '$node->nid'"));
 
   if (strstr($REQUEST_URI, "module.php?mod=node&op=edit")) {
 
@@ -151,7 +151,7 @@ function book_insert($node) {
     $node->weight = 0;
   }
 
-  db_query("INSERT INTO book (nid, format, parent, weight) VALUES ('$node->nid', '$node->format', '$node->parent', '$node->weight')");
+  db_query("INSERT INTO book (nid, format, parent, weight, log) VALUES ('$node->nid', '$node->format', '$node->parent', '$node->weight', '$node->log')");
 }
 
 function book_update($node) {
@@ -160,7 +160,7 @@ function book_update($node) {
     $node->weight = 0;
   }
 
-  db_query("UPDATE book SET format = '$node->format', parent = '$node->parent', weight = '$node->weight' WHERE nid = '$node->nid'");
+  db_query("UPDATE book SET format = '$node->format', parent = '$node->parent', weight = '$node->weight', log = '$node->log' WHERE nid = '$node->nid'");
 }
 
 function book_delete(&$node) {
@@ -184,7 +184,7 @@ function book_form(&$node, &$help, &$error) {
   }
 
   $output .= form_textarea(t("Body"), "body", $node->body, 60, 20, t("Allowed HTML tags") .": ". htmlspecialchars(variable_get("allowed_html", "")));
-  $output .= form_textarea(t("Log message"), "history", $node->history, 60, 5, t("An explanation of the additions or updates being made to help the group understand your motivations."));
+  $output .= form_textarea(t("Log message"), "log", $node->log, 60, 5, t("An explanation of the additions or updates being made to help the group understand your motivations."));
 
   if (user_access("administer nodes")) {
     $output .= form_select(t("Weight"), "weight", $node->weight, array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30), t("The heavier pages will sink and the lighter pages will be positioned nearer the top."));
@@ -395,6 +395,10 @@ function book_view($node, $main = 0) {
 
     if ($node->body) {
       $output .= " <tr><td colspan=\"3\"><br />$node->body</td></tr>";
+    }
+
+    if ($node->moderate) {
+      $output .= " <tr><td colspan=\"3\"><hr /><b>". t("Log") .":</b><br />$node->log</td></tr>";
     }
 
     if ($node->nid) {

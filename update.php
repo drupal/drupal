@@ -50,7 +50,8 @@ $mysql_updates = array(
   "2002-03-05" => "update_23",
   "2002-04-08" => "update_24",
   "2002-04-14 : modules/themes web config" => "update_25",
-  "2002-04-14 : new taxonomy system" => "update_26"
+  "2002-04-14 : new taxonomy system" => "update_26",
+  "2002-04-16" => "update_27"
 );
 
 // Update functions
@@ -404,6 +405,10 @@ function update_26() {
   update_sql("ALTER TABLE term_synonym ADD INDEX (name(3));");
   update_sql("ALTER TABLE term_node ADD INDEX (nid);");
   update_sql("ALTER TABLE term_node ADD INDEX (tid);");
+}
+
+function update_27() {
+  update_sql("ALTER TABLE book ADD log TEXT;");
 }
 
 /*
