@@ -231,7 +231,7 @@ function account_block_edit() {
       $output .= "$block->name<BR>";
     } 
  
-    $output .= "<I>You can more or less position your blocks by assigning them weights.  The heavy blocks sink down whereas the light blocks will be positioned on top.</I><P>\n";
+    $output .= "<I>You can more or less position your blocks by assigning them weights.  The heavy blocks will sink down whereas the light blocks will be positioned at the top of the page.</I><P>\n";
     $output .= "<INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Save block settings\"><BR>\n";
     $output .= "</FORM>\n";
 
