@@ -6,7 +6,7 @@ function node_help() {
 
   if ($mod == "node") {
     foreach (module_list() as $name) {
-      if (module_hook($name, "status") && $name != "node") {
+      if (module_hook($name, "node") && $name != "node") {
         print "<h3>". ucfirst($name) ." type</h3>";
         print module_invoke($name, "help");
       }
@@ -273,16 +273,16 @@ function node_search($keys) {
   // index.
   //
   // "select"'s value is used to relate the data from the specific nodes
-  // table to the data that the search_index table has in it, and the the 
+  // table to the data that the search_index table has in it, and the the
   // do_search functino will rank it.
   //
-  // The select must always provide the following fields - lno, title, 
+  // The select must always provide the following fields - lno, title,
   // created, uid, name, count
   //
   $find = do_search(array("keys" => $keys,
                           "type" => "node",
                           "select" => "select s.lno as lno, n.title as title, n.created as created, u.uid as uid, u.name as name, s.count as count FROM search_index s, node n LEFT JOIN users u ON n.uid = u.uid WHERE s.lno = n.nid AND s.type = 'node' AND s.word like '%' AND n.status = 1"));
-  
+
   return $find;
 }
 
@@ -1198,18 +1198,18 @@ function node_update_index() {
   // Return an array of values to dictate how to update the search index
   // for this particular type of node.
   //
-  // "last_update"'s value is used with variable_set to set the 
+  // "last_update"'s value is used with variable_set to set the
   // last time this node type had an index update run.
   //
   // "node_type"'s value is used to identify the node type in the search
   // index.
   //
   // "select"'s value is used to select the node id and text fields from
-  // the table we are indexing. In this case, we also check against the 
+  // the table we are indexing. In this case, we also check against the
   // last run date for the nodes update.
   return array("last_update" => "node_cron_last",
-			   "node_type" => "node",
-			   "select" => "SELECT n.nid as lno, n.title as text1, n.body as text2 FROM node n WHERE n.status = 1 AND moderate = 0 and (created > " . variable_get("node_cron_last", 1) . " or changed > " . variable_get("node_cron_last", 1) . ")");
+         "node_type" => "node",
+         "select" => "SELECT n.nid as lno, n.title as text1, n.body as text2 FROM node n WHERE n.status = 1 AND moderate = 0 and (created > " . variable_get("node_cron_last", 1) . " or changed > " . variable_get("node_cron_last", 1) . ")");
 }
 
 ?>
