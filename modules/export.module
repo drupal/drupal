@@ -39,7 +39,7 @@ function export_export_rss() {
   print "xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n";
   print "xmlns=\"http://purl.org/rss/1.0/\">\n\n";
 
-  print "<channel rdf:about=\"". path_uri() ."export/exportsRSS10.rdf\">\n";
+  print "<channel rdf:about=\"". path_uri() ."export.php?headlines.rss\">\n";
   print "   <title>". variable_get(site_name, "drupal") ."</title>\n";
   print "   <link>". path_uri() ."</link>\n";
   print "   <description>". variable_get(site_name, "drupal") ."</description>\n";
