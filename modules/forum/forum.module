@@ -1,5 +1,5 @@
 <?php
-// $Id: forum.module,v 1.89 2003/05/07 21:00:36 dries Exp $
+// $Id: forum.module,v 1.90 2003/05/13 18:36:35 dries Exp $
 
 function forum_system($field){
   $system["description"] = t("Enable threaded discussions about general topics.");
@@ -449,7 +449,8 @@ function _forum_message_taxonomy() {
 }
 
 function forum_page() {
-  global $sortby, $forum_per_page, $from, $op, $user;
+  global $sortby, $forum_per_page, $from, $user;
+  $op = $_POST["op"];
 
   if (user_access("access content")) {
     if (module_exist("taxonomy")) {

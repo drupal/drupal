@@ -1,5 +1,5 @@
 <?php
-// $Id: pager.inc,v 1.12 2003/03/16 07:02:16 dries Exp $
+// $Id: pager.inc,v 1.13 2003/05/13 18:36:33 dries Exp $
 
 /* ***************************************************
  *            external functions (API)
@@ -301,7 +301,7 @@ function pager_query($query, $limit = 10, $element = 0, $count_query = "") {
 }
 
 function pager_link($from_new, $attributes = array()) {
-  global $q;
+  $q = $_GET["q"];
 
   foreach($attributes as $key => $value) {
     $query[] = "$key=$value";

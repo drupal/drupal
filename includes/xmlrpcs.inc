@@ -1,7 +1,7 @@
 <?php
 // by Edd Dumbill (C) 1999-2001
 // <edd@usefulinc.com>
-// $Id: xmlrpcs.inc,v 1.4 2001/12/05 18:37:44 dries Exp $
+// $Id: xmlrpcs.inc,v 1.5 2003/05/13 18:36:33 dries Exp $
 
 // Copyright (c) 1999,2000,2001 Edd Dumbill.
 // All rights reserved.
@@ -148,7 +148,6 @@ class xmlrpc_server {
   var $dmap=array();
 
   function xmlrpc_server($dispMap, $serviceNow=1) {
-    global $HTTP_RAW_POST_DATA;
     // dispMap is a despatch array of methods
     // mapped to function names and signatures
     // if a method
@@ -208,14 +207,14 @@ class xmlrpc_server {
   }
 
   function parseRequest($data="") {
-  global $_xh,$HTTP_RAW_POST_DATA;
+  global $_xh;
   global $xmlrpcerr, $xmlrpcstr, $xmlrpcerrxml, $xmlrpc_defencoding,
     $_xmlrpcs_dmap;
 
 
 
   if ($data=="") {
-    $data=$HTTP_RAW_POST_DATA;
+    $data=$_SERVER["HTTP_RAW_POST_DATA"];
   }
   $parser = xml_parser_create($xmlrpc_defencoding);
 
@@ -291,13 +290,12 @@ class xmlrpc_server {
   }
 
   function echoInput() {
-  global $HTTP_RAW_POST_DATA;
 
   // a debugging routine: just echos back the input
   // packet as a string value
 
   $r=new xmlrpcresp;
-  $r->xv=new xmlrpcval( "'Aha said I: '" . $HTTP_RAW_POST_DATA, "string");
+  $r->xv=new xmlrpcval( "'Aha said I: '" . $_SERVER["HTTP_RAW_POST_DATA"], "string");
   print $r->serialize();
   }
 }

@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.57 2003/05/07 21:00:36 dries Exp $
+// $Id: block.module,v 1.58 2003/05/13 18:36:34 dries Exp $
 
 function block_help() {
  ?>
@@ -260,7 +260,8 @@ function block_box_delete($bid) {
 }
 
 function block_admin() {
-  global $edit, $op;
+  $op = $_POST["op"];
+  $edit = $_POST["edit"];
 
   if (user_access("administer blocks")) {
 

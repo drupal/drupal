@@ -1,5 +1,5 @@
 <?php
-// $Id: menu.inc,v 1.16 2003/04/21 12:31:51 dries Exp $
+// $Id: menu.inc,v 1.17 2003/05/13 18:36:33 dries Exp $
 
 function menu($path, $title, $callback = NULL, $help = NULL, $weight = 0, $hidden = 0) {
   global $_gmenu;
@@ -47,12 +47,12 @@ function menu_item($in_path) {
 }
 
 function menu_trail() {
-  global $_gmenu, $q;
+  global $_gmenu;
   static $trail; // cache
 
   if (empty($trail)) {
     $trail = array();
-    $path = $q;
+    $path = $_GET["q"];
 
     while ($path) {
       if ($_gmenu[$path]) {
@@ -142,12 +142,12 @@ function menu_map($parent = "") {
 }
 
 function menu_execute_action() {
-  global $_gmenu, $q;
+  global $_gmenu;
   $trail = menu_trail();
   $selected_menu = array_pop($trail);
 
   if ($_gmenu[$selected_menu]["callback"]) {
-    $arg = substr($q, strlen($selected_menu) + 1);
+    $arg = substr($_GET["q"], strlen($selected_menu) + 1);
     if (empty($arg)) {
       return call_user_func($_gmenu[$selected_menu]["callback"]);
     }

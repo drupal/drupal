@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.49 2003/05/10 15:22:38 dries Exp $
+// $Id: taxonomy.module,v 1.50 2003/05/13 18:36:35 dries Exp $
 
 function taxonomy_system($field){
   $system["description"] = t("Enables the organization of content into categories.");
@@ -730,7 +730,8 @@ function taxonomy_page() {
 */
 
 function taxonomy_admin() {
-  global $op, $edit;
+  $op = $_POST["op"];
+  $edit = $_POST["edit"];
 
   if (user_access("administer taxonomy")) {
     if (empty($op)) {

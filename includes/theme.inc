@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.132 2003/05/07 21:00:36 dries Exp $
+// $Id: theme.inc,v 1.133 2003/05/13 18:36:33 dries Exp $
 
 /**
 * Basic theme
@@ -179,7 +179,7 @@ function theme_init() {
  * @param   string  $region   main|left|right
  */
 function theme_blocks($region) {
-  global $user, $REQUEST_URI;
+  global $user;
 
   $result = db_query("SELECT * FROM blocks WHERE (status = '1' OR custom = '1') ". ($region != "all" ? "AND region = %d " : "") ."ORDER BY weight, module", $region == "left" ? 0 : 1);
 

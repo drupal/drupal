@@ -1,5 +1,5 @@
 <?php
-// $Id: archive.module,v 1.16 2003/04/21 14:55:02 dries Exp $
+// $Id: archive.module,v 1.17 2003/05/13 18:36:34 dries Exp $
 
 function archive_system($field){
   $system["description"] = t("Displays a calendar to navigation old content.");
@@ -140,7 +140,10 @@ function archive_link($type) {
 }
 
 function archive_page() {
-  global $date, $edit, $op, $month, $year, $meta;
+  global $date, $month, $year, $meta;
+
+  $op = $_POST["op"];
+  $edit = $_POST["edit"];
 
   theme("header");
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: import.module,v 1.91 2003/05/07 21:00:36 dries Exp $
+// $Id: import.module,v 1.92 2003/05/13 18:36:35 dries Exp $
 
 function import_help() {
  ?>
@@ -488,7 +488,8 @@ function import_tag() {
 }
 
 function import_admin() {
-  global $op, $edit;
+  $op = $_POST["op"];
+  $edit = $_POST["edit"];
 
   if (user_access("administer news feeds")) {
 
