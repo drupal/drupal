@@ -766,13 +766,18 @@ function format_size($size) {
   return t("%size %suffix", array("%size" => $size, "%suffix" => $suffix));
 }
 
-function format_interval($timestamp) {
+function format_interval($timestamp, $granularity = 2) {
   $units = array("1 year|%count years" => 31536000, "1 week|%count weeks" => 604800, "1 day|%count days" => 86400, "1 hour|%count hours" => 3600, "1 min|%count min" => 60, "1 sec|%count sec" => 1);
   foreach ($units as $key => $value) {
     $key = explode("|", $key);
     if ($timestamp >= $value) {
       $output .= ($output ? " " : "") . format_plural(floor($timestamp / $value), $key[0], $key[1]);
       $timestamp %= $value;
+      $granularity--;
+    }
+
+    if ($granularity == 0) {
+      break;
     }
   }
   return ($output) ? $output : t("0 sec");
@@ -827,7 +832,7 @@ function format_name($object) {
       $name = $object->name;
     }
 
-    if (arg(0) == "admin") {
+    if (arg(0) == "admin" and user_access("administer users")) {
       $output = l($name, "admin/user/edit/$object->uid", array("title" => t("Administer user profile.")));
     }
     else {
