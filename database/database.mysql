@@ -552,5 +552,5 @@ CREATE TABLE watchdog (
 #
 
 INSERT INTO variable SET name='update_start', value='2002-04-23';
-INSERT INTO blocks SET name='User information', module='user', delta='0', status='1', weight='0', region='1', remove='0', path='', custom='0';
-INSERT INTO blocks SET name='Log in', module='user', delta='1', status='1', weight='0', region='1', remove='0', path='', custom='0';
+INSERT INTO blocks SET name='User information', module='user', delta='0', status='2', weight='0', region='1', remove='0', path='';
+INSERT INTO blocks SET name='Log in', module='user', delta='1', status='2', weight='0', region='1', remove='0', path='';
