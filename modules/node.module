@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.385 2004/08/16 18:31:44 dries Exp $
+// $Id: node.module,v 1.386 2004/08/17 21:35:26 dries Exp $
 
 define('NODE_NEW_LIMIT', time() - 30 * 24 * 60 * 60);
 
@@ -1126,6 +1126,9 @@ function node_form($edit) {
   $form .= implode('', node_invoke_nodeapi($edit, 'form post'));
 
   $output .= '<div class="node-form">';
+
+  // Add hidden 'op' variable, which specifies the default operation (Preview).
+  $output .= '<input type="hidden" name="op" value="'. check_form(t('Preview')) ."\" />\n";
 
   // Add the admin-specific parts/
 

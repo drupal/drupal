@@ -209,6 +209,21 @@ CREATE TABLE directory (
 );
 
 --
+-- Table structure for table 'files'
+--
+
+CREATE TABLE files (
+  fid int(10) unsigned NOT NULL default '0',
+  nid int(10) unsigned NOT NULL default '0',
+  filename varchar(255) NOT NULL default '',
+  filepath varchar(255) NOT NULL default '',
+  filemime varchar(255) NOT NULL default '',
+  filesize int(10) unsigned NOT NULL default '0',
+  list tinyint(1) unsigned NOT NULL default '0',
+  PRIMARY KEY  (fid)
+);
+
+--
 -- Table structure for table 'filters'
 --
 

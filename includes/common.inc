@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.379 2004/08/17 18:40:59 dries Exp $ */
+/* $Id: common.inc,v 1.380 2004/08/17 21:35:25 dries Exp $ */
 
 /**
  * @file
@@ -1792,6 +1792,34 @@ function truncate_utf8($string, $len) {
   }
   while (ord($string[--$len]) < 0xC0) {};
   return substr($string, 0, $len);
+}
+
+/**
+ * Encodes MIME/HTTP header values that contain non US-ASCII
+ * characters.
+ *
+ * Example: mime_header_encode('tÃ©st.txt') returns '=?UTF-8?B?dMOpc3QudHh0?='
+ *
+ * For more info: http://www.rfc-editor.org/rfc/rfc2047.txt
+ *
+ */
+function mime_header_encode($string, $charset = 'UTF-8') {
+  // Notes:
+  //   - Only encode strings that contain non-ASCII characters.
+  //   - The chunks come in groupings of 4 bytes when using base64
+  //     encoded.
+  //   - trim() is used to ensure that no extra spacing is added by
+  //     chunk_split() or preg_replace().
+  //   - Using \n as the chunk separator may cause problems on some
+  //     systems and may have to be changed to \r\n or \r.
+
+  if (!preg_match('/^[\x20-\x7E]*$/', $string)) {
+    $chunk_size = 75 - 7 - strlen($charset);
+    $chunk_size -= $chunk_size % 4;
+    $string = trim(chunk_split(base64_encode($string), $chunk_size, "\n"));
+    $string = trim(preg_replace('/^(.*)$/m', " =?$charset?B?\\1?=", $string));
+  }
+  return $string;
 }
 
 /**
