@@ -162,7 +162,7 @@ function displayAccount($theme) {
     $content  = "<CENTER><FORM METHOD=\"post\" ACTION=\"account.php\">\n";
     $content .= "<P>Username:<BR><INPUT NAME=userid MAXLENGTH=50 SIZE=12></P>\n";
     $content .= "<P>Password:<BR> <INPUT TYPE=password NAME=passwd MAXLENGTH=25 SIZE=12></P>\n";
-    $content .= "<INPUT TYPE=submit NAME=act VALUE=\"Login\">\n";
+    $content .= "<INPUT TYPE=submit NAME=op VALUE=\"Login\">\n";
     $content .= "</FORM>\n";
     $content .= "<P><A HREF=\"account.php?op=new\">Register</A> as new user.<BR><A HREF=\"account.php?op=forgot\">Forgot</A> your password?</P></CENTER>";
     $theme->box("Login", $content);
