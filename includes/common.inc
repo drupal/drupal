@@ -388,6 +388,8 @@ function search_item($item, $type) {
  */
 function search_form($action = NULL, $keys = NULL, $options = NULL) {
 
+  $edit = $_POST["edit"];
+
   if (!$action) {
     $action = url("search");
   }
