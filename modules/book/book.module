@@ -224,7 +224,7 @@ function book_page() {
   $result = db_query("SELECT n.*, b.* FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE b.parent = 0 AND n.status = $status[posted]");
 
   while ($node = db_fetch_object($result)) {
-    $output .= "<DT><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></DT><DD>". check_output($node->body, 1) ."</DD>";
+    $output .= "<DT><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></DT><DD>". check_output($node->body, 1) ."<BR><BR></DD>";
   }
 
   $theme->header();
