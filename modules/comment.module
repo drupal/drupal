@@ -565,7 +565,7 @@ function comment_post($edit) {
         // Update the comment in the database.  Note that the update
         // query will fail if the comment isn't owned by the current
         // user.
-        db_query("UPDATE {comments} SET subject = '%s', comment = '%s', format = '%s' WHERE cid = %d AND uid = '$user->uid'", $edit['subject'], $edit['format'], $edit['comment'], $edit["cid"]);
+        db_query("UPDATE {comments} SET subject = '%s', comment = '%s', format = '%s' WHERE cid = %d AND uid = '$user->uid'", $edit['subject'], $edit['comment'], $edit['format'], $edit["cid"]);
 
         _comment_update_node_statistics($edit['nid']);
 
@@ -791,7 +791,7 @@ function comment_render($node, $cid = 0) {
       $output .= '<form method="post" action="'. url('comment') ."\"><div>\n";
       $output .= form_hidden('nid', $nid);
 
-      $result = db_query('SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, c.name, c.mail, c.homepage, u.uid, u.name AS registered_name, u.picture, u.data, c.score, c.users FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0 GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, c.name, c.mail, u.picture, c.homepage, u.uid, u.name, u.picture, u.data, c.score, c.users', $cid);
+      $result = db_query('SELECT c.cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, c.homepage, u.uid, u.name AS registered_name, u.picture, u.data, c.score, c.users FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.cid = %d AND c.status = 0 GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, c.name, c.mail, u.picture, c.homepage, u.uid, u.name, u.picture, u.data, c.score, c.users', $cid);
 
       if ($comment = db_fetch_object($result)) {
         $comment->name = $comment->registered_name ? $comment->registered_name : $comment->name;
@@ -806,9 +806,9 @@ function comment_render($node, $cid = 0) {
     else {
       // Multiple comment view
 
-      $query .= "SELECT c.cid as cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, c.name , c.mail, c.homepage, u.uid, u.name AS registered_name, u.picture, u.data, c.score, c.users, c.thread FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.nid = '". check_query($nid) ."' AND c.status = 0";
+      $query .= "SELECT c.cid as cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name , c.mail, c.homepage, u.uid, u.name AS registered_name, u.picture, u.data, c.score, c.users, c.thread FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.nid = '". check_query($nid) ."' AND c.status = 0";
 
-      $query .= ' GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.timestamp, c.name, c.mail, u.picture, c.homepage, u.uid, u.name, u.picture, u.data, c.score, c.users, c.thread';
+      $query .= ' GROUP BY c.cid, c.pid, c.nid, c.subject, c.comment, c.format, c.timestamp, c.name, c.mail, u.picture, c.homepage, u.uid, u.name, u.picture, u.data, c.score, c.users, c.thread';
 
       /*
       ** We want to use the standard pager, but threads would need every
