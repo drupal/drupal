@@ -37,14 +37,14 @@ th {
 th.active img {
   display: inline;
 }
-tr.dark td, tr.light td {
+tr.dark, tr.light {
   background-color: #eee;
   border-bottom: 1px solid #ccc;
 }
-tr.dark td, tr.light td {
+tr.dark, tr.light {
   padding: 0.1em 0.6em;
 }
-tr td.active {
+td.active {
   background-color: #ddd;
 }
 
@@ -390,34 +390,34 @@ img.screenshot {
   font-size: 0.85em;
   text-align: right;
 }
-tr td.watchdog-user {
+tr.watchdog-user {
   background: #ffd;
 }
-tr td.watchdog-user.active {
+tr.watchdog-user .active {
   background: #eed;
 }
-tr td.watchdog-special {
+tr.watchdog-special {
   background: #ddf;
 }
-tr td.watchdog-special.active {
+tr.watchdog-special .active {
   background: #cce;
 }
-tr td.watchdog-warning {
+tr.watchdog-warning {
   background: #fda;
 }
-tr td.watchdog-warning.active {
+tr.watchdog-warning .active {
   background: #ec9;
 }
-tr td.watchdog-httpd {
+tr.watchdog-httpd {
   background: #dfd;
 }
-tr td.watchdog-httpd.active {
+tr.watchdog-httpd .active {
   background: #cec;
 }
-tr td.watchdog-error {
+tr.watchdog-error {
   background: #ffc9c9;
 }
-tr td.watchdog-error.active {
+tr.watchdog-error .active {
   background: #eeb9b9;
 }
 

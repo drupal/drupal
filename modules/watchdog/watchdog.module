@@ -95,12 +95,17 @@ function watchdog_overview($type = '') {
   $result = pager_query($sql, 50);
 
   while ($watchdog = db_fetch_object($result)) {
-    $rows[] = array(
-      array('data' => format_date($watchdog->timestamp, 'small'), 'class' => "watchdog-$watchdog->type"),
-      array('data' => truncate_utf8(strip_tags($watchdog->message), 64), 'class' => "watchdog-$watchdog->type"),
-      array('data' => format_name($watchdog), 'class' => "watchdog-$watchdog->type"),
-      array('data' => $watchdog->link, 'class' => "watchdog-$watchdog->type"),
-      array('data' => l(t('details'), "admin/logs/view/$watchdog->wid"), 'class' => "watchdog-$watchdog->type")
+    $rows[] = array('data' =>
+      array(
+        // Cells
+        format_date($watchdog->timestamp, 'small'),
+        truncate_utf8(strip_tags($watchdog->message), 64),
+        format_name($watchdog),
+        $watchdog->link,
+        l(t('details'), "admin/logs/view/$watchdog->wid")
+      ),
+      // Attributes for tr
+      'class' => "watchdog-$watchdog->type"      
     );
   }
 

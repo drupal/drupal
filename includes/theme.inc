@@ -581,10 +581,29 @@ function theme_submenu($links) {
  *   - "sort": A default sort order for this column ("asc" or "desc").
  *   - Any HTML attributes, such as "colspan", to apply to the column header cell.
  * @param $rows
- *   An array of arrays containing the table cells. Each cell can be either a
- *   string or and associative array with the following keys:
+ *   An array of table rows. Every row is an array of cells, or an associative
+ *   array with the following keys:
+ *   - "data": an array of cells
+ *   - Any HTML attributes, such as "class", to apply to the table row.
+ *
+ *   Each cell can be either a string or an associative array with the following keys:
  *   - "data": The string to display in the table cell.
  *   - Any HTML attributes, such as "colspan", to apply to the table cell.
+ *
+ *   Here's an example for $rows:
+ *   @verbatim
+ *   $rows = array(
+ *     // Simple row
+ *     array(
+ *       'Cell 1', 'Cell 2', 'Cell 3'
+ *     ),
+ *     // Row with attributes on the row and some of its cells.
+ *     array(
+ *       'data' => array('Cell 1', array('data' => 'Cell 2', 'colspan' => 2)), 'class' => 'funky'
+ *     )
+ *   );
+ *   @endverbatim
+ *
  * @param $attributes
  *   An array of HTML attributes to apply to the table tag.
  * @return
@@ -608,18 +627,38 @@ function theme_table($header, $rows, $attributes = NULL) {
   // Format the table rows:
   if (is_array($rows)) {
     foreach ($rows as $number => $row) {
-      if ($number % 2 == 1) {
-        $output .= ' <tr class="light">';
+      $attributes = array();
+
+      // Check if we're dealing with a simple or complex row
+      if (isset($row['data'])) {
+        foreach ($row as $key => $value) {
+          if ($key == 'data') {
+            $cells = $value;
+          }
+          else {
+            $attributes[$key] = $value;
+          }
+        }
       }
       else {
-        $output .= ' <tr class="dark">';
+        $cells = $row;
       }
 
+      // Add light/dark class
+      $class = ($number % 2 == 1) ? 'light': 'dark';
+      if (isset($attributes['class'])) {
+        $attributes['class'] .= ' '. $class;
+      }
+      else {
+        $attributes['class'] = $class;
+      }
+
+      // Build row
+      $output .= ' <tr'. drupal_attributes($attributes) .'>';
       $i = 0;
-      foreach ($row as $cell) {
-        $cell = tablesort_cell($cell, $header, $ts, $i);
+      foreach ($cells as $cell) {
+        $cell = tablesort_cell($cell, $header, $ts, $i++);
         $output .= _theme_table_cell($cell, 0);
-        $i++;
       }
       $output .= " </tr>\n";
     }
