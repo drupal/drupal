@@ -1,11 +1,5 @@
 <?php
-// $Id: comment.inc,v 1.64 2001/11/01 11:00:47 dries Exp $
-
-// Security check:
-if (strstr($id, " ") || strstr($pid, " ") || strstr($lid, " ") || strstr($mode, " ") || strstr($order, " ") || strstr($threshold, " ")) {
-  watchdog("error", "comment: attempt to provide malicious input through URI");
-  exit();
-}
+// $Id: comment.inc,v 1.65 2001/11/03 18:38:28 dries Exp $
 
 $cmodes = array(1 => "List - min", 2 => "List - max", 3 => "Threaded - min", 4 => "Threaded - max");
 $corder = array(1 => "Date - new", 2 => "Date - old", 3 => "Rate - high", 4 => "Rate - low");

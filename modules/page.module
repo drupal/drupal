@@ -1,5 +1,5 @@
 <?php
-// $Id: page.module,v 1.37 2001/11/01 22:54:16 dries Exp $
+// $Id: page.module,v 1.38 2001/11/03 18:38:29 dries Exp $
 
 $GLOBALS["format"] = array(0 => "HTML", 1 => "PHP", 2 => "text");
 
@@ -10,12 +10,9 @@ function page_node($field) {
 }
 
 function page_access($op, $node) {
-
   if ($op == "view") {
-    return $node->nid && $node->status && !$node->moderate;
+    return ($node->nid && $node->status && !$node->moderate);
   }
-
-  return user_access("administer nodes");
 }
 
 function page_insert($node) {
@@ -30,20 +27,20 @@ function page_delete($node) {
   db_query("DELETE FROM page WHERE nid = '$node->nid'");
 }
 
+function page_load($node) {
+  $page = db_fetch_object(db_query("SELECT format, link FROM page WHERE nid = '$node->nid'"));
+  return $page;
+}
+
 function page_link($type) {
   if ($type == "page") {
-    $result = db_query("SELECT nid,link FROM page WHERE link != '' ORDER BY link");
+    $result = db_query("SELECT nid, link FROM page WHERE link != '' ORDER BY link");
     while ($page = db_fetch_object($result)) {
       $links[] = "<a href=\"node.php?id=$page->nid\">$page->link</a>";
     }
   }
 
   return $links ? $links : array();
-}
-
-function page_load($node) {
-  $page = db_fetch_object(db_query("SELECT format, link FROM page WHERE nid = '$node->nid'"));
-  return $page;
 }
 
 function page_view($node, $main = 0) {
@@ -59,10 +56,9 @@ function page_view($node, $main = 0) {
     default:
       $theme->box($node->title, check_output($node->body, 1));
   }
-
 }
 
-function page_form($node, $error) {
+function page_form($node, $help, $error) {
   global $format, $op;
 
   if ($op != t("Preview") && $format[$node->format] == "PHP") {
@@ -77,14 +73,12 @@ function page_form($node, $error) {
 }
 
 function page_save() {
-
   if ($node->nid) {
     return array("format", "link");
   }
   else {
     return array("format", "link", "promote" => 0, "moderate" => 0, "status" => 1);
   }
-
 }
 
 

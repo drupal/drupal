@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.82 2001/11/01 11:00:47 dries Exp $
+// $Id: common.inc,v 1.83 2001/11/03 18:38:28 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST, $REQUEST_URI;
@@ -279,7 +279,11 @@ function form($form, $method = "post", $action = 0, $options = 0) {
 }
 
 function form_item($title, $value, $description = 0) {
-  return ($description) ? "<b>$title:</b><br />$value<br /><small><i>$description</i></small><p />\n" : "<b>$title:</b><br />$value<p />\n";
+  return ($title ? "<b>$title:</b><br />" : "") . $value . ($description ? "<br /><small><i>$description</i></small>" : "") ."<p />\n";
+}
+
+function form_checkbox($title, $name, $value, $description = 0) {
+  return form_item(0, "<input type=\"checkbox\" name=\"edit[$name]\" ". ($value ? " checked=\"checked\"" : "") ." /> $title", $description);
 }
 
 function form_textfield($title, $name, $value, $size, $maxlength, $description = 0) {

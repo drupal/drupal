@@ -1,5 +1,5 @@
 <?php
-// $Id: node.php,v 1.34 2001/11/01 17:04:20 dries Exp $
+// $Id: node.php,v 1.35 2001/11/03 18:38:27 dries Exp $
 
 include_once "includes/common.inc";
 
@@ -77,7 +77,6 @@ function node_failure() {
 
 $number = ($title ? db_num_rows(db_query("SELECT nid FROM node WHERE title = '$title' AND status = 1")) : 1);
 
-// TODO: this is dead code
 if ($number > 1) {
   $result = db_query("SELECT n.*, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.title = '$title' AND n.status = 1 ORDER BY created DESC");
 
@@ -93,12 +92,19 @@ if ($number > 1) {
 }
 elseif ($number) {
   $node = ($title ? node_load(array("title" => $title, "status" => 1)) : node_load(array("nid" => ($edit[id] ? $edit[id] : $id))));
+
   if (node_access("view", $node)) {
-    node_render($node);
+    if (isset($revision)) {
+      node_render($node->revisions[$revision]["node"]);
+    }
+    else {
+      node_render($node);
+    }
   }
   else {
     node_failure();
   }
+
 }
 else {
   node_failure();

@@ -134,14 +134,15 @@ ALTER TABLE node CHANGE moderate moderate int(2) DEFAULT '0' NOT NULL;
 ALTER TABLE node DROP timestamp_posted;
 ALTER TABLE node DROP timestamp_queued;
 ALTER TABLE node DROP timestamp_hidden;
-
 UPDATE node SET status = 1 WHERE status = 3;
 
 ALTER TABLE book DROP section;
-
-# change
 ALTER TABLE users CHANGE session sid varchar(32) DEFAULT '' NOT NULL;
 
+# 02/11/01:
+ALTER TABLE node ADD revisions TEXT DEFAULT '' NOT NULL;
+
+## work in progress
 
 # ALTER TABLE users ADD session TEXT DEFAULT '' NOT NULL;
 # ALTER TABLE users ADD data TEXT DEFAULT '' NOT NULL;
