@@ -15,7 +15,7 @@ function node_render($node) {
     node_view($node);
 
     if (function_exists("comment_render") && $node->comment) {
-      comment_render($id, $cid);
+      comment_render($node, $cid);
     }
 
     $theme->footer();
