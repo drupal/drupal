@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.200 2003/03/16 21:47:15 dries Exp $
+// $Id: node.module,v 1.201 2003/03/29 16:30:40 dries Exp $
 
 function node_help() {
   global $mod;
@@ -472,7 +472,7 @@ function node_filter_link($text) {
 function node_comment_mode($nid) {
   static $comment_mode;
   if (!isset($comment_mode[$nid])) {
-    $comment_mode[$nid] = db_result(db_query("SELECT comment FROM node WHERE nid = '%s'", $nid));
+    $comment_mode[$nid] = db_result(db_query("SELECT comment FROM node WHERE nid = '%d'", $nid));
   }
   return $comment_mode[$nid];
 }

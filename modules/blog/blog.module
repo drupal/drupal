@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.113 2003/03/25 20:16:28 dries Exp $
+// $Id: blog.module,v 1.114 2003/03/29 16:30:40 dries Exp $
 
 function blog_system($field){
   $system["description"] = t("Enables keeping a blog or easily and regularly updated web page.");
@@ -151,7 +151,7 @@ function blog_form(&$node, &$help, &$error) {
       $node->body = "<i>". $blog->body ."</i> [". l($blog->name, "node/view/$nid") ."]";
     }
 
-    if ($iid && $item = db_fetch_object(db_query("SELECT i.*, f.title as ftitle, f.link as flink FROM item i, feed f WHERE i.iid = '%s' AND i.fid = f.fid", $iid))) {
+    if ($iid && $item = db_fetch_object(db_query("SELECT i.*, f.title as ftitle, f.link as flink FROM item i, feed f WHERE i.iid = '%d' AND i.fid = f.fid", $iid))) {
       $node->title = $item->title;
       $node->body = "<a href=\"$item->link\">$item->title</a> - <i>". check_output($item->description) ."</i> [<a href=\"$item->flink\">$item->ftitle</a>]\n";
     }
