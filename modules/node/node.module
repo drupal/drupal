@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.322 2004/01/31 10:39:35 dries Exp $
+// $Id: node.module,v 1.323 2004/02/01 21:51:28 dries Exp $
 
 define('NODE_NEW_LIMIT', time() - 30 * 24 * 60 * 60);
 
@@ -1541,7 +1541,7 @@ function node_page() {
           $output .= node_view(node_load(array("nid" => $node->nid, "type" => $node->type)), 1);
         }
         $output .= theme('pager', NULL, variable_get("default_nodes_main", 10));
-        drupal_set_html_head('<link rel="alternate" type="application/rss+xml" title="RSS" href="'. url('node/feed') .'">');
+        drupal_set_html_head('<link rel="alternate" type="application/rss+xml" title="RSS" href="'. url('node/feed') .'" />');
         print theme("page", $output, "");
     }
   }
