@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.433 2005/03/31 09:25:33 unconed Exp $ */
+/* $Id: common.inc,v 1.434 2005/04/06 07:43:10 dries Exp $ */
 
 /**
  * @file
@@ -1256,25 +1256,18 @@ function form_password($title, $name, $value, $size, $maxlength, $description = 
  */
 function form_textarea($title, $name, $value, $cols, $rows, $description = NULL, $attributes = NULL, $required = FALSE) {
   $cols = $cols ? ' cols="'. $cols .'"' : '';
-  $output = '';
+  $pre = '';
+  $post = '';
 
-  // e.g. optionally plug in a WYSIWYG editor
+  // optionally plug in a WYSIWYG editor
   foreach (module_list() as $module_name) {
     if (module_hook($module_name, 'textarea')) {
-      $output .= module_invoke($module_name, 'textarea', 'pre', $name);
+      $pre  .= module_invoke($module_name, 'textarea', 'pre', $name);
+      $post .= module_invoke($module_name, 'textarea', 'post', $name);
     }
   }
 
-  $output .= theme('form_element', $title, '<textarea wrap="virtual"'. $cols .' rows="'. $rows .'" name="edit['. $name .']" id="edit-'. $name .'" class="'. _form_get_class('textarea', $required, _form_get_error($name)) .'"'. drupal_attributes($attributes) .'>'. check_plain($value) .'</textarea>', $description, 'edit-'. $name, $required, _form_get_error($name));
-
-  // e.g. optionally plug in a WYSIWYG editor
-  foreach (module_list() as $module_name) {
-    if (module_hook($module_name, 'textarea')) {
-      $output .= module_invoke($module_name, 'textarea', 'post', $name);
-    }
-  }
-
-  return $output;
+  return theme('form_element', $title, $pre .'<textarea wrap="virtual"'. $cols .' rows="'. $rows .'" name="edit['. $name .']" id="edit-'. $name .'" class="'. _form_get_class('textarea', $required, _form_get_error($name)) .'"'. drupal_attributes($attributes) .'>'. check_plain($value) .'</textarea>'. $post, $description, 'edit-'. $name, $required, _form_get_error($name));
 }
 
 /**
