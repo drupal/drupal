@@ -45,6 +45,10 @@ Drupal x.x.x, xxxx-xx-xx
     * added support for using multiple input formats on the site
     * expanded the embedded PHP-code feature so it can be used everywhere
     * added support for role-dependant filtering, through input formats
+- UI translation:
+    * managing translations is now completely done through the administration
+      interface
+    * added support for importing/exporting gettext .po files
 
 Drupal 4.4.2, 2004-07-04
 ------------------------
