@@ -216,7 +216,7 @@ function table_cell($cell, $header = 0) {
 
 function table($header, $rows) {
 
-  $output .= "<table>\n";
+  $output = "<table>\n";
 
   /*
   ** Emit the table header:

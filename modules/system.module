@@ -318,7 +318,7 @@ function system_init() {
 }
 
 function system_admin() {
-  global $HTTP_POST_VARS, $system_init_status;
+  global $system_init_status;
 
   if (user_access("administer site configuration")) {
     session_register("system_init_status");

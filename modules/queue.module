@@ -221,7 +221,7 @@ function queue_block($op = "list", $delta = 0) {
 
 function queue_nodeapi(&$node, $op, $arg = 0) {
   switch ($op) {
-    case "conf":
+    case "settings":
       $output[t("Queue")] = form_checkbox("", "queue_$node->type", 1, variable_get("queue_$node->type", 0));
       return $output;
     case "fields":

@@ -548,22 +548,38 @@ function node_admin_settings($edit) {
     }
   }
 
-  $output = "<h3>" . t("Content settings") . "</h3>\n";
-  
-  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  $output .= "<tr><th>". t("Node") ."</th><th>\n";
-  $output .= implode("</th><th>", array_keys(node_invoke_all($node, "nodeapi", "conf")));
-  $output .= "</th></tr>\n";
-
+  $header = array_merge(array(t("Node")), array_keys(node_invoke_all($node, "nodeapi", "settings")));
   foreach (module_list() as $name) {
     if (module_hook($name, "node")) {
       $node->type = $name;
-      $output .= "<tr><td><p>$name</p></td><td align=\"center\">";
-      $output .= implode("</td><td align=\"center\">", node_invoke_all($node, "nodeapi", "conf"));
-      $output .= "</td></tr>\n";
+      $cols = array();
+      foreach (node_invoke_all($node, "nodeapi", "settings") as $setting) {
+        $cols[] = array("data" => $setting, "align" => "center", "width" => 55);
+      }
+      $rows[] = array_merge(array(module_invoke($name, "node", "name")), $cols);
     }
   }
-  $output .= "</table><br />";
+  
+  $output = table($header, $rows);
+
+  /* This is an idea for the future.
+  foreach (module_list() as $name) {
+    if (module_hook($name, "node")) {
+      $node->type = $name;
+      
+      // Create table() data:
+      $header = array_keys(node_invoke_all($node, "nodeapi", "settings"));
+      $cols = array();
+      foreach (node_invoke_all($node, "nodeapi", "settings") as $setting) {
+        $cols[] = array("data" => $setting, "align" => "center", "width" => 75);
+      }
+
+      $output .= "<h2>". module_invoke($name, "node", "name") ."</h2>";
+      $output .= table($header, array($cols));
+      $output .= "<br /><br />";
+    }
+  }
+  */
 
   $output .= form_submit(t("Save configuration"));
   $output .= form_submit(t("Reset to defaults"));
@@ -1346,7 +1362,7 @@ function node_update_index() {
 
 function node_nodeapi(&$node, $op, $arg = 0) {
   switch ($op) {
-    case "conf":
+    case "settings":
       $output[t("Publish")] = form_checkbox("", "node_status_$node->type", 1, variable_get("node_status_$node->type", 1));
       $output[t("Promote")] = form_checkbox("", "node_promote_$node->type", 1, variable_get("node_promote_$node->type", 1));
       $output[t("Static")] = form_checkbox("", "node_static_$node->type", 1, variable_get("node_static_$node->type", 0));
