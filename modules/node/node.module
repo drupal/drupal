@@ -450,7 +450,7 @@ function node_link($type, $node = 0, $main = 0) {
     }
   }
 
-  if ($type = "admin" && user_access("administer nodes")) {
+  if ($type == "admin" && user_access("administer nodes")) {
     $search = "On this page you can search for a post.  For example, one may search for 'br' and Drupal might return 'bread brakers', 'our daily bread' and 'brenda'.";
 
     menu_add("content management", url("admin/node"), "Content management.", NULL, NULL);
