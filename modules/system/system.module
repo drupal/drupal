@@ -395,11 +395,13 @@ function system_theme_data() {
  *   sites/somesite/modules/.
  * @param $key
  *   The key to be passed to file_scan_directory().
+ * @param $min_depth
+ *   Minimum depth of directories to return files from.
  *
  * @return
  *   An array of file objects of the specified type.
  */
-function system_listing($mask, $directory, $key = 'name') {
+function system_listing($mask, $directory, $key = 'name', $min_depth = 1) {
   $config = conf_init();
   $searchdir = array($directory);
   $files = array();
@@ -410,7 +412,7 @@ function system_listing($mask, $directory, $key = 'name') {
 
   // Get current list of items
   foreach ($searchdir as $dir) {
-    $files = array_merge($files, file_scan_directory($dir, $mask, array('.', '..', 'CVS'), 0, TRUE, $key));
+    $files = array_merge($files, file_scan_directory($dir, $mask, array('.', '..', 'CVS'), 0, TRUE, $key, $min_depth));
   }
 
   return $files;
@@ -456,7 +458,7 @@ function system_theme_listing() {
  */
 function system_module_listing() {
   // Get current list of modules
-  $files = system_listing('\.module$', 'modules');
+  $files = system_listing('\.module$', 'modules', 'name', 0);
 
   // Extract current files from database.
   system_get_files_database($files, 'module');
