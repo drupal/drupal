@@ -44,7 +44,10 @@ function backend_page() {
 }
 
 function backend_cron() {
-  // update backends
+  $result = db_query("SELECT * FROM channel");
+  while ($channel = db_fetch_object($result)) {
+    $backend = new Backend($channel->id);
+  }
 }
 
 function backend_admin_main() {

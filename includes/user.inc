@@ -15,7 +15,7 @@ function user_save($data, $id = 0) {
   
   foreach ($data as $key=>$value) {
     if ($key == "passwd") $query .= "$key = PASSWORD('". addslashes($value) ."'), ";
-    else $query .= "$key='". addslashes($value) ."', ";
+    else $query .= "$key = '". addslashes($value) ."', ";
   }
   
   if (empty($id)) {

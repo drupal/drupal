@@ -9,26 +9,42 @@ function cron_reset($name) {
   cron_delete($name);
 }
 
+function cron_save($edit) {
+  foreach ($edit as $key=>$value) {
+    db_query("UPDATE cron SET scheduled = '$value' WHERE module = '$key'");
+  }
+}
+
 function cron_display() {
+  $intervals = array(300, 900, 1800, 3600, 7200, 10800, 21600, 43200, 86400, 172800, 259200, 604800, 1209600, 2419200);
+
   // Perform query:
   $result = db_query("SELECT * FROM cron");
  
   // Generate output:
+  $output .= "<FORM ACTION=\"admin.php?mod=cron\" METHOD=\"post\">\n";
   $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
-  $output .= " <TR><TH>module</TH><TH>interval</TH><TH>last exection</TH><TH COLSPAN=\"2\">operations</TH></TR>\n";
+  $output .= " <TR><TH>module</TH><TH>period</TH><TH>last execution</TH><TH COLSPAN=\"2\">operations</TH></TR>\n";
   while ($cron = db_fetch_object($result)) {
-    $output .= " <TR><TD>". check_output($cron->module) ."</TD><TD>every ". format_interval($cron->scheduled) ."</TD><TD>". format_interval(time() - $cron->timestamp) ." ago</TD><TD ALIGN=\"center\"><A HREF=\"cron.php\">execute</A></TD><TD><A HREF=\"admin.php?mod=cron&op=reset&name=$cron->module\">reset</A></TD></TR>\n";
+    foreach ($intervals as $value) $period .= "<OPTION VALUE=\"$value\"". (($cron->scheduled == $value) ? " SELECTED" : "") .">every ". format_interval($value) ."</OPTION>\n";
+    $output .= " <TR><TD>". check_output($cron->module) ."</TD><TD><SELECT NAME=\"edit[$cron->module]\">$period</SELECT></TD><TD>". format_interval(time() - $cron->timestamp) ." ago</TD><TD ALIGN=\"center\"><A HREF=\"cron.php\">execute</A></TD><TD><A HREF=\"admin.php?mod=cron&op=reset&name=$cron->module\">reset</A></TD></TR>\n";
+    unset($period);
   }
   $output .= "</TABLE>\n";
+  $output .= "<INPUT NAME=\"op\" TYPE=\"submit\" VALUE=\"Save crons\">\n";
+  $output .= "</FORM>\n";
   print $output;
 }
 
 function cron_admin() {
-  global $op, $name;
+  global $op, $edit, $name;
 
   switch($op) {
     case "reset":
       cron_reset($name);
+      break;
+    case "Save crons":
+      cron_save($edit);
       break;
   }
   

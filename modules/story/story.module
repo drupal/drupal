@@ -63,7 +63,7 @@ function story_edit($id) {
 
 function story_save($id, $subject, $abstract, $updates, $article, $category, $status) {
   db_query("UPDATE stories SET subject = '". check_input($subject) ."', abstract = '". check_input($abstract) ."', updates = '". check_input($updates) ."', article = '". check_input($article) ."', category = '". check_input($category) ."', status = '$status' WHERE id = $id");
-  watchdog("message", "modified story `$subject'.");
+  watchdog("message", "story: modified `$subject'");
 }
 
 function story_display($order = "date") {

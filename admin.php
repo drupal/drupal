@@ -1,7 +1,7 @@
 <?
 
 // temporary permission solution:
-if (!$user->id || $user->id > 4) exit();
+if (!$user->id || ($user->permissions != 1 && $user->id > 1)) exit();
 
 include "includes/admin.inc";
 include "includes/cron.inc";

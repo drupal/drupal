@@ -62,15 +62,15 @@ function format_plural($count, $singular, $plural) {
 }
 
 function format_interval($timestamp) {
-  if ($timestamp > 86400) {
+  if ($timestamp >= 86400) {
     $output .= format_plural(floor($timestamp / 86400), "day ", "days ");
     $timestamp = $timestamp % 86400;
   }
-  if ($timestamp > 3600) {
+  if ($timestamp >= 3600) {
     $output .= format_plural(floor($timestamp / 3600), "hour ", "hours ");
     $timestamp = $timestamp % 3600;
   }
-  if ($timestamp > 60) {
+  if ($timestamp >= 60) {
     $output .= floor($timestamp / 60) ." min ";
     $timestamp = $timestamp % 60;
   }

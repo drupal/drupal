@@ -32,7 +32,7 @@ function ban_display($category = "") {
   $output .= "   <FORM ACTION=\"admin.php?mod=ban\" METHOD=\"post\">\n";
   $output .= "    <SELECT NAME=\"category\">\n";
   for (reset($type2index); $cur = current($type2index); next($type2index)) {
-    $output .= "     <OPTION VALUE=\"$cur\"". ($cur == $category ? " SELECTED" : "") .">Sort by ". key($type2index) ."</OPTION>\n";
+    $output .= "     <OPTION VALUE=\"$cur\"". ($cur == $category ? " SELECTED" : "") .">Bans by ". key($type2index) ."</OPTION>\n";
   }
   $output .= "    </SELECT>\n";
   $output .= "    <INPUT TYPE=\"submit\" NAME=\"op\" VALUE=\"Update\">\n";

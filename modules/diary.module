@@ -218,7 +218,7 @@ function diary_admin_edit($id) {
 
 function diary_admin_save($id, $text) {
   db_query("UPDATE diaries SET text = '". check_input($text) ."' WHERE id = $id");
-  watchdog("message", "modified diary entry #$id.");
+  watchdog("message", "diary: modified entry #$id.");
 }
 
 function diary_admin_display($order = "date") {
