@@ -159,11 +159,11 @@ function node_admin() {
       break;
     case "Save settings":
       print status(conf_save($edit));
-      print node_default();
+      print node_setting();
       break;
     case "Reset to defaults":
       print status(conf_default($edit));
-      print node_default();
+      print node_setting();
       break;
     case "Save node":
       node_save($edit, array(author, comment, moderate, promote, status, timestamp));
