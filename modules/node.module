@@ -928,7 +928,13 @@ function node_add($type) {
 
   if ($type && node_access("create", $type)) {
     // Initialize settings
-    $output = node_form(array("uid" => $user->uid, "name" => $user->name, "type" => $type, "status" => 1, "promote" => !module_exist("queue"), "moderate" => module_exist("queue"), "comment" => module_exist("queue") ? 2 : 0, "title" => check_input($edit["title"]), "body" => check_input($edit["body"])));
+    $node = array("uid" => $user->uid, "name" => $user->name, "type" => $type, "status" => 1, "promote" => !module_exist("queue"), "moderate" => module_exist("queue"), "comment" => module_exist("queue") ? 2 : 0);
+    foreach (array("title", "teaser", "body") as $field) {
+      if ($edit[$field]) {
+        $node[$field] = check_input($edit[$field]);
+      }
+    }     
+    $output = node_form($node);
   }
   else {
 
