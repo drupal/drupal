@@ -1,5 +1,5 @@
 <?php
-/* $Id: menu.inc,v 1.40 2004/04/27 19:35:10 dries Exp $ */
+/* $Id: menu.inc,v 1.41 2004/05/05 21:12:13 dries Exp $ */
 
 /**
  * @defgroup menu Menu system
@@ -50,6 +50,7 @@ function menu($path, $title, $callback = MENU_FALLTHROUGH, $weight = 0, $visibil
 /**
  * Return the menu data structure.
  *
+ * @ingroup menu
  * The returned structure contains much information that is useful only
  * internally in the menu system. External modules are likely to need only
  * the ['visible'] element of the returned array. All menu items that are
@@ -207,7 +208,7 @@ function menu_execute_active_handler() {
 
   if (is_string($menu['items'][$mid]['callback'])) {
     $arg = substr($_GET['q'], strlen($menu['items'][$mid]['path']) + 1);
-    if (isset($arg)) {
+    if (strlen($arg)) {
       call_user_func_array($menu['items'][$mid]['callback'], explode('/', $arg));
     }
     else {
@@ -412,6 +413,7 @@ function menu_build_visible_tree($pid = 0) {
 /**
  * Populate the database representation of the menu.
  *
+ * @ingroup menu
  * This need only be called at the start of pages that modify the menu.
  */
 function menu_rebuild() {
