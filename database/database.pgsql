@@ -25,6 +25,7 @@ CREATE TABLE accesslog (
   uid integer default '0',
   timestamp integer NOT NULL default '0'
 );
+CREATE INDEX accesslog_timestamp_idx ON accesslog (timestamp);
 
 --
 -- Table structure for authmap
@@ -280,11 +281,13 @@ CREATE TABLE node (
   static integer NOT NULL default '0',
   PRIMARY KEY  (nid)
 );
-CREATE INDEX node_type_idx ON node(type);
-CREATE INDEX node_title_idx ON node(title,type);
-CREATE INDEX node_promote_idx ON node(promote);
+CREATE INDEX node_type_idx ON node(type(4));
+CREATE INDEX node_title_idx ON node(title,type(4));
 CREATE INDEX node_status_idx ON node(status);
 CREATE INDEX node_uid_idx ON node(uid);
+CREATE INDEX node_moderate_idx ON node (moderate);
+CREATE INDEX node_path_idx ON node (path(8));
+CREATE INDEX node_promote_status_idx ON node (promote, status);
 
 --
 -- Table structure for page

@@ -25,7 +25,8 @@ CREATE TABLE accesslog (
   url varchar(255) default NULL,
   hostname varchar(128) default NULL,
   uid int(10) unsigned default '0',
-  timestamp int(11) unsigned NOT NULL default '0'
+  timestamp int(11) unsigned NOT NULL default '0',
+  KEY accesslog_timestamp (timestamp)
 ) TYPE=MyISAM;
 
 --
@@ -280,11 +281,13 @@ CREATE TABLE node (
   revisions text NOT NULL,
   static int(2) NOT NULL default '0',
   PRIMARY KEY  (nid),
-  KEY type (type),
-  KEY title (title,type),
-  KEY promote (promote),
+  KEY node_type (type(4)),
+  KEY node_title_type (title,type(4)),
   KEY status (status),
   KEY uid (uid)
+  KEY node_moderate (moderate);
+  KEY node_path (path(5));
+  KEY node_promote_status (promote, status);
 ) TYPE=MyISAM;
 
 --

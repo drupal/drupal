@@ -42,7 +42,8 @@ $mysql_updates = array(
   "2003-06-08: first update since Drupal 4.2.0 release" => "update_58",
   "2003-08-05" => "update_59",
   "2003-08-15" => "update_60",
-  "2003-08-20" => "update_61"
+  "2003-08-20" => "update_61",
+  "2003-08-27" => "update_62"
 );
 
 function update_32() {
@@ -349,6 +350,21 @@ function update_61() {
   update_sql("ALTER TABLE {users} DROP sid;");
 }
 
+function update_62() {
+  update_sql("ALTER TABLE accesslog ADD INDEX accesslog_timestamp (timestamp)");
+
+  update_sql("ALTER TABLE node DROP INDEX type");
+  update_sql("ALTER TABLE node DROP INDEX title");
+  update_sql("ALTER TABLE node DROP INDEX promote");
+  update_sql("ALTER TABLE node DROP INDEX type");
+
+  update_sql("ALTER TABLE node ADD INDEX node_type (type(4))");
+  update_sql("ALTER TABLE node ADD INDEX node_title_type (title,type(4))");
+  update_sql("ALTER TABLE node ADD INDEX node_moderate (moderate)");
+  update_sql("ALTER TABLE node ADD INDEX node_path (path(5))");
+  update_sql("ALTER TABLE node ADD INDEX node_promote_status (promote, status)");
+}
+
 function _update_next_thread($structure, $parent) {
   do {
     $val++;
@@ -378,9 +394,6 @@ function update_sql($sql) {
   }
   else {
     print "<div style=\"color: red;\">FAILED</div>\n";
-    if ($edit["bail"]) {
-      die("Fatal error. Bailing");
-    }
     return 0;
   }
 }
@@ -450,7 +463,6 @@ function update_page() {
 
       // make update form and output it.
       $form .= form_select("Perform updates from", "start", (isset($selected) ? $selected : -1), $dates, "This defaults to the first available update since the last update you peformed.");
-      $form .= form_select("Stop on errors", "bail", 0, array("Disabled", "Enabled"), "Don't forget to backup your database before performing an update.");
       $form .= form_submit("Update");
       print update_page_header("Drupal database update");
       print form($form);
@@ -465,7 +477,7 @@ function update_info() {
   print "<li>Use this script to <b>upgrade an existing Drupal installation</b>.  You don't need this script when installing Drupal from scratch.</li>";
   print "<li>Before doing anything, backup your database. This process will change your database and its values, and some things might get lost.</li>\n";
   print "<li>Don't run this script twice as it may cause problems.</p></li>\n";
-  print "<li><a href=\"update.php?op=update\">Upgrade to CVS</a></li>\n";
+  print "<li><a href=\"update.php?op=update\">Upgrade to the latest version.</a></li>\n";
   print "<li>Go through the various administration pages to change the existing and new settings to your liking.</li>\n";
   print "</ol>";
   print update_page_footer();

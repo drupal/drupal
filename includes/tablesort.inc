@@ -14,7 +14,9 @@ function tablesort_init($header) {
 }
 
 function tablesort_pager() {
-  return array ("order" => $_GET['order'], "sort" => $_GET['sort']);
+  $cgi = $_SERVER['REQUEST_METHOD'] == 'GET' ? $_GET : $_POST;
+  unset($cgi["q"], $cgi["from"]);
+  return $cgi;
 }
 
 function tablesort_sql($header) {
@@ -26,19 +28,22 @@ function tablesort($cell, $header) {
   global $theme;
 
   $ts = tablesort_init($header);
+  $title = t("sort by %s", array("%s" => $cell["data"]));
 
   // special formatting for the currently sorted column header
   if ($cell["data"] == $ts["order"]) {
     $cell["class"] = "cell-highlight";
-    $image = "&nbsp;<img src=\"". $theme->image("arrow-". $ts["sort"]. ".gif"). "\"></img>";
+    $image = "&nbsp;<img border=\"0\" src=\"". $theme->image("arrow-". $ts["sort"]. ".gif"). "\"></img>";
+    $dir = array("asc" => "ascending", "desc" => "descending");
+    $title = t("sort ". $dir[$ts["sort"]]);
   }
-  $cell["data"] = l($cell["data"] . $image, $_GET["q"], array(), "sort=". $ts["sort"]. "&order=". urlencode($cell["data"]). $ts["query_string"]);
+
+  $cell["data"] = l($cell["data"] . $image, $_GET["q"], array("title" => $title), "sort=". $ts["sort"]. "&order=". urlencode($cell["data"]). $ts["query_string"]);
   return $cell;
 }
 
 function tablesort_get_querystring() {
   $cgi = $_SERVER['REQUEST_METHOD'] == 'GET' ? $_GET : $_POST;
-  // reset ($cgi);
   foreach ($cgi as $key => $val) {
     if ($key != "order" && $key != "sort" && $key != "q") {
       $query_string .= "&" . $key . "=" . $val;
