@@ -1,0 +1,15 @@
+#
+# drop.org apache configuration
+#
+
+# Archive feature:
+#<Files archive>
+#  ForceType application/x-httpd-php
+#</Files>
+
+# Customized server error messages:
+ErrorDocument 400 /error.php
+ErrorDocument 402 /error.php
+ErrorDocument 403 /error.php
+ErrorDocument 404 /error.php
+ErrorDocument 500 /error.php
