@@ -25,21 +25,20 @@ class calendar {
     $next = mktime(0, 0, 0, $month + 1, 1, $year);
 
     ### Generate calendar header:
-    print "<TABLE WIDTH=\"160\" BORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"2\">";
+    print "<TABLE WIDTH=\"150\" BORDER=\"1\" CELLSPACING=\"0\" CELLPADDING=\"2\">";
     print " <TR><TH COLSPAN=\"7\"><A HREF=\"$PHP_SELF?date=$prev\">&lt;&lt;</A> &nbsp; ". date("F Y", $this->date) ." &nbsp; <A HREF=\"$PHP_SELF?date=$next\">&gt;&gt;</A></TH></TR>";
     print " <TR><TH>S</TH><TH>M</TH><TH>T</TH><TH>W</TH><TH>T</TH><TH>F</TH><TH>S</TH></TR>\n";
  
     ### Initialize temporary variables:
     $day = 1;
     $weekday = $first;
-    $state = 1;
    
     ### Loop through all the days of the month:
     while ($day <= $last) {
       ### Set up blank days for first week of the month:
-      if ($state == 1) {
+      if ($first) {
         print "<TR><TD COLSPAN=\"$first\">&nbsp</TD>";
-        $state = 2;
+        $first = 0;
       }
         
       ### Start every week on a new line:
@@ -48,7 +47,7 @@ class calendar {
       ### Print one cell:
       $date = mktime(0, 0, 0, $month, $day, $year);
       if ($day == date("d", $this->date)) {
-        print "<TD ALIGN=\"center\"><B><A HREF=\"$PHP_SELF?date=$date\">$day</A></B></TD>";
+        print "<TD ALIGN=\"center\"><B>$day</B></TD>";
       }
       else {
         print "<TD ALIGN=\"center\"><A HREF=\"$PHP_SELF?date=$date\">$day</A></TD>";
@@ -81,8 +80,8 @@ class calendar {
 print "<H1>CALENDAR TEST</H1>";
 
 // Code to initialize and display a calendar:
-if ($date) $calendar = new calendar($date);
-else $calendar = new calendar(time());
+if (!$date) $date = time();
+$calendar = new calendar($date);
 $calendar->display();
 
 // Debug output:
