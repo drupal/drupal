@@ -263,7 +263,7 @@ function poll_admin() {
       print poll_overview(poll_query($type));
       break;
     case "edit":
-      print poll_form(poll_get_choices_array(node_get_array(array("nid" => check_input($id)))));
+      print poll_form(poll_get_choices_array(node_get_array(array("nid" => $id))));
       break;
     case "help":
       poll_help();

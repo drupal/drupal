@@ -10,7 +10,7 @@ function search_form($keys) {
 }
 
 function search_data($keys, $type) {
-  if ($keys && $type && $result = module_invoke($type, "search", check_input($keys))) {
+  if ($keys && $type && $result = module_invoke($type, "search", check_query($keys))) {
     foreach ($result as $entry) {
       $output .= "<P>\n";
       $output .= " <B><U><A HREF=\"$entry[link]\">$entry[title]</A></U></B><BR>";
