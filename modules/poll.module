@@ -130,9 +130,8 @@ function poll_form(&$node, &$help, &$error) {
 }
 
 function poll_help() {
- ?>
-  <p>Drupal's poll module allows users with at least content posting privileges to submit multiple-choice questions that others can vote on.  Any user with sufficient privileges can vote.  Please note that this is fully controlled by Drupal's access control features.  For example, users might be required to login before voting (or even seeing the page where the voting occurs) or it could be open to the world.</p>
- <?php
+  $output .= "<p>Drupal's poll module allows users to vote on polls create by administrators, or even other users. Access to, voting on, and creation of polls is completely controlled by the Drupal ". l("access system","admin/user/permission") ."</p><ul><li> To create a poll a users needs the \"create polls\" permission.</li><li>To vote on a poll question a user must have the \"vote on polls\" permission.</li><li>To view the results one needs the \"access content\" permission.</li><li>To administer a vote you need the \"administer nodes\" permission.</li></ul><p>Creating a vote can be done with \"create poll\". The title of the poll should be the question, then enter the answers and the \"base\" vote counts. Finally the time span the vote will run.</p><p>". l("Poll", "poll") ." on the menu bar will take you to a page where you can see all the current polls, vote on them -- if you haven't already --, and view the results. To edit the node, and its vote counts, go to node administration.</p>";
+  return t($output);
 }
 
 function poll_insert($node) {

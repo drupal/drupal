@@ -3,6 +3,7 @@
 
 function archive_system($field){
   $system["description"] = t("Displays a calendar to navigate old content.");
+  $system["admin_help"] = t("Choose the starting \"day of the week\" for the displayed calendar block.");
   return $system[$field];
 }
 

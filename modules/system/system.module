@@ -2,10 +2,10 @@
 // $Id$
 
 function system_help() {
-  $output .= "<p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviors including visual and operational settings.</p>";
+  $output .= "<p>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviours including visual and operational settings.</p>";
   $output .= "<h3><a name=\"cron\">Cron</a></h3>". system_help_cron();
   $output .= "<h3><a name=\"cache\">Cache</a></h3>". system_help_cache();
-  return $output;
+  return t("$output");
 }
 
 function system_system($field) {
@@ -14,18 +14,19 @@ function system_system($field) {
 }
 
 function system_help_cache() {
-  $output .= "<p>Drupal has a caching mechanism that stores dynamically generated pages in a database.  By caching a page, Drupal does not have to generate the page each time it is requested.  Only pages requested by anonymous users are being cached.  When a cached page is accessed, Drupal will retrieve that page with minimal overhead using one SQL query only, thus reducing both the server load and the response time.</p>";
+  $output .= "<p>Drupal has a caching mechanism which stores dynamically generated web pages in a database.  By caching a web page, Drupal does not have to create the page each time someone wants to view it, instead it takes only one SQL query to display it, reducing response time and the server's load.  Only pages requested by \"anonymous\" users are cached.</p>";
   return $output;
 }
 
 function system_help_cron() {
   global $base_url;
 
-  $output .= "<p>Some settings require a <i>cron</i> or <i>crontab</i>.  Cron, which stands for chronograph, is a periodic command scheduler: it executes commands at intervals specified in seconds.  It can be used to control the execution of daily, weekly and monthly jobs (or anything with a period of <i>n</i> seconds).   Automating tasks is one of the best ways to keep a system running smoothly, and if most of your administration does not require your direct involvement, cron is an ideal solution.</p>";
-  $output .= "<p>Whenever <a href=\"$base_url/cron.php\">$base_url/cron.php</a> is accessed, cron will run: it checks for the jobs cron controls, and their periods in seconds.  If a certain task wasn't executed in the last n seconds, where n is the period of that job, it will be executed.  When all the executed commands terminate, cron is done.</p>";
-  $output .= "<p>The recommended way to setup your cron system is to setup a Unix/Linux crontab that frequently visits <a href=\"$base_url/cron.php\">$base_url/cron.php</a>.  Note that cron does not guarantee the commands will be executed at the specified interval.  However, Drupal will try his best and run the crons as close to the specified intervals as possible.  The more you visit cron.php, the more accurate cron will be.</p>";
-  $output .= "<p>If your hosting company does not allow you to setup crontabs, you can always ask someone else to setup a crontab for you. After all, virtually any Unix/Linux machine with access to the internet can setup a crontab to frequently visit <a href=\"$base_url/cron.php\">$base_url/cron.php</a>.</p>";
-  $output .= "<p>For the Unix/Linux crontab itself, use a browser like <i>lynx</i> or <i>wget</i> but make sure the process terminates: either use <code>/usr/bin/lynx -source $base_url/cron.php</code> or <code>/usr/bin/wget -O /dev/null $base_url/cron.php</code>.  Take a look at the example scripts in the <code>scripts</code>-directory and make sure to adjust them to your needs.  A good crontab-line to run the cron-script once every hour would be: <pre>     00 * * * * /home/www/drupal/scripts/cron-lynx.sh</pre>Note that it is essential to access <code>cron.php</code> using a browser; don't run it using command line PHP and avoid using <code>localhost</code> or <code>127.0.0.1</code>, or some features won't work as expected.  For all the environment variables to be correct; use a browser to access <code>cron.php</code> on a publicly accessible domain.</p>";
+  $output .= "<p>Some modules require regularly scheduled actions, such as cleaning up logfiles.  Cron, which stands for chronograph, is a periodic command scheduler executing commands at intervals specified in seconds.  It can be used to control the execution of daily, weekly and monthly jobs (or anything with a period measured in seconds).   Automating tasks is one of the best ways to keep a system running smoothly, and if most of your administration does not require your direct involvement, cron is an ideal solution.</p>";
+  $output .= "<p>Whenever <a href=\"$base_url/cron.php\">$base_url/cron.php</a> is accessed, cron will run: it calls the _cron hook in each module allowing the module to run tasks if they have not been executed in the last <i>n</i> seconds, where n is the period of that task.  When all the tasks are finished, cron is done.</p>";
+  $output .= "<p>The recommended way to set up your cron system is to set up a Unix/Linux crontab entry (see \"man crontab\") that frequently visits <a href=\"$base_url/cron.php\">$base_url/cron.php</a>.  Note that cron does not guarantee the commands will be executed at the specified interval.  However, Drupal will try its best to run the tasks as close to the specified intervals as possible.  The more you visit cron.php, the more accurate cron will be.</p>";
+  $output .= "<p>If your hosting company does not allow you to set up crontab entries, you can always ask someone else to set up an entry for you. After all, virtually any Unix/Linux machine with access to the internet can set up a crontab entry to frequently visit <a href=\"$base_url/cron.php\">$base_url/cron.php</a>.</p>";
+  $output .= "<p>For the Unix/Linux crontab itself, use a browser like <i>lynx</i> or <i>wget</i> but make sure the process terminates: either use <code>/usr/bin/lynx -source $base_url/cron.php</code> or <code>/usr/bin/wget -o /dev/null -O /dev/null $base_url/cron.php</code>.  Take a look at the example scripts in the <code>scripts</code>-directory. Make sure to adjust them to fit your needs.  A good crontab line to run the cron script once every hour would be: <pre>     00 * * * * /home/www/drupal/scripts/cron-lynx.sh</pre>Note that it is essential to access <code>cron.php</code> using a browser on the web site's domain; do not run it using command line PHP and avoid using <code>localhost</code> or <code>127.0.0.1</code> or some of the environment varibles will not be set correctly and features may not work as expected.</p>";
+
   return $output;
 }
 
@@ -37,7 +38,7 @@ function system_link($type) {
   if ($type == "admin" && user_access("administer site configuration")) {
     $help["general"] = t("General configuration options for your site. Set up the name of the site, e-mail address used in mail-outs, clean URL options, caching, etc.");
     $help["themes"] = t("Select which themes are available to your users and specify the default theme.");
-    $help["modules"] = t("Modules are plugins for Drupal that extend its core functionality. Here you can select which modules are enabled.");
+    $help["modules"] = t("Modules are plugins for Drupal that extend its core functionality. Here you can select which modules are enabled. On the left hand side click on the name of the module for their individual configurations.");
     $help["filters"] = t("Filters fit between the raw text in a node and the HTML output. They allow you to replace text selectively. Uses include automatic conversion of emoticons into graphics and filtering HTML content from users' submissions.");
 
     menu("admin/system", "site configuration", "system_admin", $help["general"], 3);
@@ -56,7 +57,7 @@ function system_link($type) {
     foreach (module_list(1) as $name) {
       // NOTE: refresh the list because some modules might have been enabled/disabled.
       if (module_hook($name, "settings")) {
-        menu("admin/system/modules/$name", $name, "system_admin", module_invoke($name, "system", "description"));
+        menu("admin/system/modules/$name", $name, "system_admin", module_invoke($name, "system", "admin_help"));
       }
     }
     menu("admin/system/filters", "filters", "system_admin", $help["filters"], 4);
@@ -69,7 +70,7 @@ function system_view_general() {
 
   // general settings:
   $output .= "<h3>". t("General settings") ."</h3>\n";
-  $output .= form_textfield(t("Name"), "site_name", variable_get("site_name", "drupal"), 70, 70, t("The name of this website."));
+  $output .= form_textfield(t("Name"), "site_name", variable_get("site_name", "drupal"), 70, 70, t("The name of this web site."));
   $output .= form_textfield(t("E-mail address"), "site_mail", variable_get("site_mail", ini_get("sendmail_from")), 70, 128, t("A valid e-mail address for this website, used by the auto-mailer during registration, new password requests, notifications, etc."));
   $output .= form_textfield(t("Slogan"), "site_slogan", variable_get("site_slogan", ""), 70, 128, t("The slogan of this website. Some themes display a slogan when available."));
   $output .= form_textarea(t("Mission"), "site_mission", variable_get("site_mission", ""), 70, 5, t("Your site's mission statement or focus."));
@@ -82,7 +83,7 @@ function system_view_general() {
 
   // cron:
   $output .= "<h3>". t("Cron settings") ."</h3>\n";
-  $output .= form_select(t("Cron support"), "cron", variable_get("cron", 1), array(t("Disabled"), t("Enabled")), t("Enable or disable cron support.  Enable this setting if you have setup a cron job.  Check the ". l("cron documentation", "admin/system/help#cron") ." for information on setting up a cron job."));
+  $output .= form_select(t("Cron support"), "cron", variable_get("cron", 1), array(t("Disabled"), t("Enabled")), t("Enable or disable cron support.  Enable this setting if you have set up a cron job.  Check the ". l("cron documentation", "admin/system/help#cron") ." for information on setting up a cron job."));
   $output .= "<hr />\n";
 
   // caching:

@@ -3,6 +3,7 @@
 
 function blog_system($field){
   $system["description"] = t("Enables keeping a blog or easily and regularly updated web page.");
+  $system["admin_help"] = t("A weBLOG is a running journal of a users ideas. Enter the minimum word count for a single entry, and the text displayed on the entry submission form");
   return $system[$field];
 }
 
@@ -70,12 +71,13 @@ function blog_user($type, &$edit, &$user) {
 }
 
 function blog_help() {
- ?>
-  <p>Drupal's blog module allows registered users to maintain an online blog, often referred to as an online journal or diary.  They can be filled with daily thoughts, poetry, boneless blabber, spiritual theories, intimate details, valuable experiences, cynical rants, semi-coherent comments, writing experiments, artistic babblings, critics on current facts, fresh insights, diverse dreams, chronicles and mumbling madness available for public consumption.  It is made up of individual entries that are timestamped and are typically viewed by day as you would a diary.  Blogs often contain links to things you've seen, or agree/disagree with.  A typical example of a long term blog can be seen at <a href="http://www.scripting.com/">http://www.scripting.com/</a>.</p>
-  <p>The blog module adds a couple of menu options.  Everyone gets to see the "latest blogs", a page that displays the most recent blog entries from every participant.  If you are logged in, your personal menu also has "submit a blog" link which will lead you to a submission form.  You are also presented a "view personal blog" menu option that displays your blog entries as other people will see it.  For you only, there is an edit link at the bottom left of a page that lets you edit or delete old entries.</p>
-  <p>Both in the import module (news aggregator) and the blog module displays glyphs that looks like a pinboard stickit note.  Click on this and you are taken to the blog submission form.  The system helpfully copies the title, a link to the item, and a link to the source into the body text ready for you to add your explanation.  This actively encourages people to add blog entries about things they see and hear elsewhere in the Drupal site.</p>
-  <p>For Drupal administrators a blog entry is just another node that can be administered from the "content management" page in the administration pages.</p>
- <?php
+  $output .= "<p>Drupal's blog module allows registered users to maintain an online weblog (commonly known as a blog), often referred to as an online journal or diary.  They can be filled with daily thoughts, poetry, boneless blabber, spiritual theories, intimate details, valuable experiences, cynical rants, semi-coherent comments, writing experiments, artistic babblings, critics on current facts, fresh insights, diverse dreams, chronicles and mumbling madness available for public consumption.";
+  $output .= " Blogs made up of individual entries, nodes, that are timestamped and are typically viewed by day as you would a diary.  Blogs often contain links to things you've seen, or agree/disagree with.  A typical example of a long term blog can be seen at <a href=\"http://www.scripting.com/\">http://www.scripting.com/</a>.</p>";
+  $output .= "<p>The blog module adds a couple of menu options.  \"user blogs\", a page that everyone gets to see that displays the most recent blog entries from every participant. Your personal menu adds a \"create a blog entry\" link which takes you to a submission form, a \"view personal blog\" link which displays your blog entries as <i>other</i> people will see them.  And, on the bottom of each of your blog entry, there is an \"edit this blog entry\" link that lets you edit or delete old entries.</p>";
+  $output .= "<p>In the import module (news aggregator) a glyph that looks like a pinboard stickit note is displayed.  Click on this and you are taken to the blog submission form.  The system helpfully copies the title, a link to the item, and a link to the source into the body text ready for you to add your explanation.  This actively encourages people to add blog entries about things they see and hear elsewhere in the Drupal site.</p>";
+
+  return t($output);
+
 }
 
 function blog_feed_user($uid = 0) {

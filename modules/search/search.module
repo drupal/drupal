@@ -3,7 +3,7 @@
 
 function search_help() {
   $output = "<b>". t("Search guidelines") ."</b>";
-  $output .= "<p>". t("The search page allows you to search the website's content.  You can specify multiple words, and they will all be searched for.  You can also use wildcards, so 'walk*' will match 'walk', 'walking', 'walker', 'walkable' and so on.  Furthermore, searches are not case sensitive so searching for 'walk', 'Walk' or 'WALK' will yield exactly the same results.") ."</p>";
+  $output .= "<p>". t("The search page allows you to search the web site's content.  You can specify multiple words, and they will all be searched for.  You can also use wildcards, so 'walk*' will match 'walk', 'walking', 'walker', 'walkable' and so on.  Furthermore, searches are not case sensitive so searching for 'walk', 'Walk' or 'WALK' will yield exactly the same results.") ."</p>";
   $output .= "<b>". t("Words excluded from the search") ."</b>";
   $output .= "<p>". t("Words that frequently occur, typically called 'noise words', are ignored.  Example words are 'a', 'at', 'and', 'are', 'as', 'how', 'where', etc.  Words shorter than %number letters are also being filtered.", array("%number" => variable_get("minimum_word_size", 2))) ."</p>";
   return $output;
@@ -11,6 +11,7 @@ function search_help() {
 
 function search_system($field){
   $system["description"] = t("Enables site wide keyword searching.");
+  $system["admin_help"] = t("The search engine works by keeping an index of \"interesting\" words. To make sure we only get \"interesting\" words you need to set the following.");
   return $system[$field];
 }
 

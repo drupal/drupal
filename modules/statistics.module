@@ -68,6 +68,7 @@ function statistics_exit() {
 /* System hook, sets description of module in admin page */
 function statistics_system($field) {
   $system["description"] = t("Logs access statistics for your site.");
+  $system["admin_help"] = t("Settings for the statistical information that Drupal will keep about the site. See <a href=\"%statistics\">site statistics</a> for the actual information.", array("%statistics" => url("admin/statistics")));
   return $system[$field];
 }
 
@@ -111,18 +112,20 @@ function statistics_link($type, $node = 0, $main = 0) {
   }
 
   if ($type == "admin" && (user_access("administer statistics module") || (user_access("administer statistics")))) {
-    $help["statistics"] = "This page gives you an at-a-glance look at your top nodes.  It is useful for understanding what content on your site is the most popular.";
-    $help["referrers"] = "This page shows you site-wide referrer statistics.  You can see 'all referrers', 'external referrers' or 'internal referrers'.  Defaults to 'external'.";
-    $help["access"] = "This pages shows you who is accessing your website.  You can see the hostnames, referrers.  In particular, it is easy to inspect a user's navigation history/trail by clicking the username.";
-    $help["top nodes page"] = "The statistics module creates a user page that can display summaries of the day's top viewed nodes, the all time top nodes and the last nodes viewed.  Each of these summaries can be enabled or disabled individually, and the number of nodes displayed for each can be configured with a drop down menu.";
-    $help["top nodes block"] = "The statistics module exports a block that can display the day's top viewed nodes, the all time top viewed nodes and the last nodes viewed.  Each of these links can be enabled or disabled individually, and the number of nodes displayed for each can be configured with a drop down menu. If you disable all sections of this block, it will not appear.";
-    $help["who is online block"] = "This statistics module exports a block that can display how many user's and guests are currently online.  You can configure the name of the block, the name of a sub-block for displaying names of user's currently online, how recently a user must have been active to be considered online, the maximum characters to display from a user's name and the maximum number of user names to display.";
+    $help["statistics"] = t("This page gives you an at-a-glance look at your top nodes.  It is useful for understanding what content on your site is the most popular.");
+    $help["referrers"] = t("This page shows you site-wide referrer statistics.  You can see 'all referrers', 'external referrers' or 'internal referrers'.  Defaults to 'external'. Referrers are web sites, both your site, and other peoples, that point to your web site.");
+    $help["referrers-internal"] = t("This page shows you only 'internal referrers'. Links pointing to your web site, from within your web site.");
+    $help["referrers-external"] = t("This page shows you only 'external referrers'. Links pointing to your web site from outside your web site.");
+    $help["access"] = t("This pages shows you who is accessing your web site.  You can see the hostnames, referrers.  In particular, it is easy to inspect a user's navigation history/trail by clicking the username.");
+    $help["top nodes page"] = t("The statistics module creates a user page that can display summaries of the day's top viewed nodes, the all time top nodes and the last nodes viewed.  Each of these summaries can be enabled or disabled individually, and the number of nodes displayed for each can be configured with a drop down menu.");
+    $help["top nodes block"] = t("The statistics module exports a block that can display the top viewed nodes of the day, the all time top viewed nodes and the last nodes viewed.  Each of these links can be enabled or disabled individually, and the number of nodes displayed for each can be configured with a drop down menu. If you disable all sections of this block, it will not appear.");
+    $help["who is online block"] = t("The statistics module exports a block that can display how many user's and guests are currently online.  You can configure the name of the block, the name of a sub-block for displaying names of user's currently online, how recently a user must have been active to be considered online, the maximum characters to display from a user's name and the maximum number of user names to display.");
 
     menu("admin/statistics", "site statistics", "statistics_admin", $help["statistics"], 6);
     menu("admin/statistics/statistics", "most popular posts", "statistics_admin", $help["statistics"]);
     menu("admin/statistics/referrers", "referrer log", "statistics_admin", $help["referrers"]);
-    menu("admin/statistics/referrers/internal", "internal referrers only", "statistics_admin", $help["referrers"]);
-    menu("admin/statistics/referrers/external", "external referrers only", "statistics_admin", $help["referrers"]);
+    menu("admin/statistics/referrers/internal", "internal referrers only", "statistics_admin", $help["referrers-internal"]);
+    menu("admin/statistics/referrers/external", "external referrers only", "statistics_admin", $help["referrers-external"]);
     menu("admin/statistics/log", "access log", "statistics_admin", $help["access"]);
     menu("admin/statistics/log/node", "track node", "statistics_admin", $help["access"], 0, 1);
     menu("admin/statistics/log/user", "track user", "statistics_admin", $help["access"], 0, 1);
@@ -141,119 +144,48 @@ function statistics_link($type, $node = 0, $main = 0) {
 
 /* Administrative help page */
 function statistics_help() {
-  ?>
-  <h3>Introduction</h3>
+  $output .= "<h3>Introduction</h3><p>The statistics.module keeps track of numerous statistics for your site but be warned, statistical collection does cause a little overhead, thus everything comes disabled by default.<p>";
+  $output .= "<p>The module counts how many times, and from where -- using HTTP referrer --, each of your nodes is viewed. Once we have that count the module can do the following with it:<ul><li> The count can be displayed in the node's link section next to \"# comments\".</li><li>A configurable block can be added which can display the day's top stories, the all time top stories, and the last stories read. Each section in the block has a title, which you can change, as well as being able to change how many node titles will be displayed</li><li>A configurable user page can be added, which can display the day's top stories, the all time top stories, and the last stories read.  Each section in the page has a title, which you can change, as well as being able to change the number of stories to be displayed.</li><li>A configurable block can be added that displays the count of how many users, as well as a list of their names, and guests are currently accessing your site.</li><li>An auto-throttle, congestion controling mechanism can be used on your site if you have enabled the ". l("throttle.module", "admin/system/modules") .".</ul>";
+  $output .= "<p>Notes on using the statistics:</p><ul><li>If you enable the node view counters, this adds 1 database query for each node that is viewed (2 queries if it's the first time the node has ever been viewed).</li><li>If you enable the access log, this adds 1 database query for each page that Drupal displays.  Logged information includes:  HTTP referrer (if any), node being accessed (if any), user ID (if any), the IP address of the user, and the time the page was viewed.</li></ul>";
+  $output .= "<p>As with any new module, the <i>statistics.module</i> needs to be ". l("enabled", "admin/system/modules") ." before you can use it.  Also refer to the ". l("permissions section", "admin/user/permission") .", as this module supports four separate permissions.</p>";
+  $output .= l("<h3>referrers log</h3>", "admin/statistics/referrers")."<p>This admin page shows you site-wide referrer statistics.  You can see '<i>all</i>' statistics, '<i>external</i>' statistics or '<i>internal</i>' statistics.  Default is 'external'.</p>";
+  $output .= l("<h3>access log</h3>", "admin/statistics/log") ."<p>This admin page gives you an at-a-glance look at your top nodes.  It is useful for understanding what content on your Drupal site is the most popular.  Also on this page are links to the referrer statistics for each listed node.</p>";
+  $output .= "<h3>Configuring the statistics module</h3><p>There are some configuration options added to the main ". l("site configuration", "admin/system/modules/statistics") ." section:</p>";
+  $output .= "<ul><li><i>enable access log</i> -- allows you to turn the access log on and off.  This log is used to store things like referrers and who's online.  Enabling the log adds one database call per page displayed by Drupal.</li>";
+  $output .= "<li><i>discard access logs older than</i> -- allows you to configure how long an access log entry is saved, after which time it is deleted from the database table. To use this you need to run \"cron.php\"</li>";
+  $output .= "<li><i>enable node view counter</i> -- allows you to turn on and off the node-counting functionality of this module.  If it is turned on, an extra database query is added for each node displayed, which increments a counter.</li>";
+  $output .= "<li><i>display node view counters</i> -- allows you to globally disable the displaying of node view counters.  Additionally, a user group must have 'access statistics' permissions to view the counters.</li></ul>";
+  $output .= "<h3>Top nodes block</h3><p>This module creates a block that can display the day's top viewed nodes, the all time top viewed nodes and the last nodes viewed.  Each of these links can be enabled or disabled individually, and the number of nodes displayed for each can be configured with a drop down menu.  If you disable all sections of this block, it will not appear.</p>";
+  $output .= "<p>The administrative \"top nodes block\" screen also allows you to assign a name to the block.</p>";
+  $output .= "<p>Don't forget to enable the block ". l("here", "admin/block") .".</p>";
 
-  <p>This Drupal module keeps track of numerous statistics for your site.  Be warned, statistical collection does cause a little overhead, thus everything is disabled by default when this module is first installed.</p>
-
-  <p>The statistics module counts how many times each of your nodes is viewed, also tracking where each link to the node came from (HTTP referrer).  The number of times a node has been viewed can be displayed in the node's link section (next to "# comments" etc).</p>
-
-  <p>This module also adds a configurable block that can display the day's top stories, the all time top stories, and the last stories read.  Each of these supports a configurable header and number of stories.</p>
-
-  <p>This module also adds a configurable user page that can display the day's top stories, the all time top stories, and the last stories read.  Each of these supports a configurable header and number of stories.</p>
-
-  <p>This module also adds a configurable block that displays counts of how many users and guests are currently accessing your site, as well as a list of the names of the users currently accessing your site.</p>
-
-  <p>If you enable the node view counters, this adds 1 database query for each node that is viewed (2 queries if it's the first time the node has ever been viewed).</p>
-
-  <p>Finally, the statistics.module allows for a congestion controlling auto-throttle mechanism.  If you have enabled the throttle.module, you can read more about this mechanism <?php print l("here", "admin/help#throttle"); ?>.</p>
-
-  <p>If you enable the access log, this adds 1 database query for each page that Drupal displays.  Logged information includes:  HTTP referrer (if any), node being accessed (if any), user ID (if any), the IP address of the user, and the time the page was viewed.</p>
-
-  <p>As with any new module, <i>statistics.module</i> needs to be enabled <?php print l("here", "admin/system/modules"); ?> before you can use it.  Also refer to the permissions section below, as this module supports four separate permissions.</p>
-
-  <h3>View statistics</h3>
-
-  <p>This admin page gives you an at-a-glance look at your top nodes.  It is useful for understanding what content on your Drupal site is the most popular.  Also on this page are links to the referrer statistics for each listed node.</p>
-
-  <h3>View referrers</h3>
-
-  <p>This admin page shows you site-wide referrer statistics.  You can see '<i>all</i>' statistics, '<i>external</i>' statistics or '<i>internal</i>' statistics.  Default is 'external'.</p>
-
-  <h3>Configuring the statistics module</h3>
-
-  <p>There are a couple of configuration options added to the main <?php print l("site configuration", "admin/system"); ?> admin page.</p>
-
-  <p>The first option, <i>enable access log</i>, allows you to turn the access log on and off.  This log is used to store things like referrers and who's online.  Enabling the log adds one database call per page displayed by Drupal.</p>
-
-  <p>The second option, <i>discard access logs older than</i>, allows you to configure how long an access log entry is saved, after which time it is deleted from the database table.</p>
-
-  <p>The next option, <i>enable node view counter</i>, allows you to turn on and off the node-counting functionality of this module.  If it is turned on, an extra database query is added for each node displayed, as a counter is incremented with each node view.</p>
-
-  <p>The next option, <i>display node view counters</i>, allows you to globally disable the displaying of node view counters.  Additionally, a user group must have 'access statistics' permissions to view the counters.</p>
-
-  <p>The final option is to <i>reset the day counter</i>.  Every twenty four hours, all the day's totals are automatically reset to 0, and started again.  Whatever time you click this link is the time each day that the day's totals will be reset.  This requires cron.  Note that clicking this link will reload the site configuration page <i>without</i> saving any other changes you might have made.</p>
-
-  <h3>Top nodes block</h3>
-
-  <p>This module creates a block that can display the day's top viewed nodes, the all time top viewed nodes and the last nodes viewed.  Each of these links can be enabled or disabled individually, and the number of nodes displayed for each can be configured with a drop down menu.  If you disable all sections of this block, it will not appear.</p>
-
-  <p>The administrative "top nodes block" screen also allows you to assign a name to the block.</p>
-
-  <p>Don't forget to enable the block <?php print l("here", "admin/block"); ?>.</p>
-
-  <h3>Top nodes page</h3>
-
-  <p>This module creates a user page that can display summaries of the day's top viewed nodes, the all time top nodes and the last nodes viewed.  Each of these summaries can be enabled or disabled individually, and the number of nodes displayed for each can be configured with a drop down menu.</p>
-
-  <p>The administrative "top nodes page" screen also allows you to assign a name for the automatically generated link to the user page.  If no name is set, the link will not be displayed.</p>
-
-  <h3>Who's online block</h3>
-
-  <p>This module creates a block that can display how many user's and guests are currently online.  You are able to configure the name of the block, the name of a sub-block for displaying names of user's currently online, how recently a user must have been active to be considered online, the maximum characters to display from a user's name and the maximum number of user names to display.</p>
-
-  <p>Don't forget to enable the block <?php print l("here", "admin/block"); ?>.</p>
-
-<h3>Permissions</h3>
-<p>This module has four permissions that need to be configured in
-<?php print l("user permissions", "admin/user/permission"); ?>.</p>
-<ul>
-  <li><i>access statistics</i> - enable for user roles that get to see individual node counts.  (This does not define access to the block)</li>
-  <li><i>access userlist</i> - enable for user roles that get to see the list of user's that are currently online within the "Who's online" block.</li>
-  <li><i>administer statistics module</i> - enable for user roles that get to configure the statistics module.</li>
-  <li><i>administer statistics</i> - enable for user roles that get to view the referrer statistics.</li>
-</ul>
-<p>If '<i>administer statistics</i>' and '<i>access statistics</i>' are both enabled, the user will see a link from each node to that node's referrer statistics (if enabled).</p>
-
-<h2>Statistics module (for developers)</h2>
-
-<h3>Accessing statistics</h3>
-<p>To get a node's view statistics make a call to the function <i>statistics_get($nid)</i>.  When you pass in a $nid, the function returns an array with three entires:  [0]=totalcount, [1]=daycount, [2]=timestamp.  For example, you could use this function call to add node view counts to your theme.</p>
-<ul>
-  <li>The <i>totalcount</i> is a count of the total number of times that node has been viewed.</li>
-  <li>The <i>daycount</i> is a count of the total number of times that node has been viewed "today".  For the daycount to be reset, cron must be enabled.</li>
-  <li>The <i>timestamp</i> is a timestamp of when that node was last viewed.</li>
-</ul>
-<p>The module automatically adds '# reads' to each node's link section (if enabled).</p>
-
-<h3>Top stories</h3>
-<p>The statistics.module provides a function '<i>statistics_title_list($type)</i>' to return an array of links to any of the following: the top viewed nodes of all time, the top viewed nodes of today, the last viewed nodes.  You can pass in:</p>
-<ul>
-  <li><i>totalcount</i> - This will return an array with links to the top viewed nodes of all time.<br />
-  Example:  <code>statistics_title_list("totalcount");</code><br /><br /></li>
-  <li><i>daycount</i> - This will return an array with links to the top viewed nodes for today.<br />
-  Example:  <code>statistics_title_list("daycount");</code><br /><br /></li>
-  <li><i>timestamp</i> - This will return a array with links to the last viewed node.<br />
-  Example:  <code>statistics_title_list("timestamp");</code></li>
-</ul>
-
-<h3>Throttle</h3>
-<p>The function <code>throttle_status()</code> will return a number from 0 to 5.  0 means that there is no throttle enabled at this time.  Each number above that is a progressively more throttled system...  To disable a feature when a site first begins to get busy, disable it at a throttle of 2 or 3.  To hold on to the bitter end, wait until 4 or 5.</p>
-<p>To implement the throttle, you should do something like this:
-<pre>       $throttle = 0;
+  $output .= "<h3>Top nodes page</h3><p>This module creates a user page that can display summaries of the day's top viewed nodes, the all time top nodes and the last nodes viewed.  Each of these summaries can be enabled or disabled individually, and the number of nodes displayed for each can be configured with a drop down menu.</p>";
+  $output .= "<p>The administrative \"top nodes page\" screen also allows you to assign a name for the automatically generated link to the user page.  If no name is set, the link will not be displayed.</p>";
+  $output .= "<h3>Who's online block</h3><p>This module creates a block that can display how many user's and guests are currently online.  You are able to configure the name of the block, the name of a sub-block for displaying names of user's currently online, how recently a user must have been active to be considered online, the maximum characters to display from a user's name and the maximum number of user names to display.</p>";
+  $output .= "<p>Don't forget to enable the block ". l("here", "admin/block") .".</p>";
+  $output .= "<h3>Permissions</h3><p>This module has four permissions that need to be configured in ". l("user permissions", "admin/user/permission") .".</p>";
+  $output .= "<ul><li><i>access statistics</i> - enable for user roles that get to see individual node counts.  (This does not define access to the block)</li><li><i>access userlist</i> - enable for user roles that get to see the list of user's that are currently online within the \"Who's online\" block.</li><li><i>administer statistics module</i> - enable for user roles that get to configure the statistics module.</li><li><i>administer statistics</i> - enable for user roles that get to view the referrer statistics.</li></ul>";
+  $output .= "<p>If '<i>administer statistics</i>' and '<i>access statistics</i>' are both enabled, the user will see a link from each node to that node's referrer statistics (if enabled).</p>";
+  $output .= "<h2>Statistics module (for developers)</h2><h3>Accessing statistics</h3><p>To get a node's \"view statistics\" make a call to the function <i>statistics_get(\$nid)</i>.  When you pass in a Node ID (\$nid), the function returns an array with three entires:  [0]=totalcount, [1]=daycount, [2]=timestamp.  For example, you could use this function call to add node view counts to your theme.</p>";
+  $output .= "<ul><li>The <i>totalcount</i> is a count of the total number of times that node has been viewed.</li><li>The <i>daycount</i> is a count of the total number of times that node has been viewed \"today\".  For the daycount to be reset, cron must be enabled.</li><li>The <i>timestamp</i> is a timestamp of when that node was last viewed.</li></ul>";
+  $output .= "<p>The module automatically adds '# reads' to each node's link section (if enabled).</p>";
+  $output .= "<h3>Top stories</h3><p>The statistics.module provides a function '<i>statistics_title_list(\$dbfield, \$dbrows)</i>' to return an array of links to any of the following: the top viewed nodes of all time, the top viewed nodes of today, the last viewed nodes.  You can pass in:</p>";
+  $output .= "<ul><li><i>totalcount</i> - This will return an array with links to the top viewed nodes of all time.<br />Example:  <code>statistics_title_list(\"totalcount\", \"5\");</code><br /><br /></li><li><i>daycount</i> - This will return an array with links to the top viewed nodes for today.<br />Example:  <code>statistics_title_list(\"daycount\",\"5\");</code><br /><br /></li><li><i>timestamp</i> - This will return a array with links to the last viewed node.<br />Example:  <code>statistics_title_list(\"timestamp\",\"5\");</code></li></ul><p>\$dbrows is the number or rows you want returned in your array.</p>";
+  $output .= "<h3>Throttle</h3><p>The function <code>throttle_status()</code> will return a number from 0 to 5.  0 means that there is no throttle enabled at this time.  Each number above that is a progressively more throttled system...  To disable a feature when a site first begins to get busy, disable it at a throttle of 2 or 3.  To hold on to the bitter end, wait until 4 or 5.</p>";
+  $output .= "<p>To implement the throttle, you should do something like this:<pre>       \$throttle = 0;
        /* verify that the statitistics module is installed */
        if (function_exists(throttle_status) {
-         $throttle = throttle_status()
+         \$throttle = throttle_status()
        }
-       if ($throttle >= $my_throttle_value) {
+       if (\$throttle >= \$my_throttle_value) {
          // throttle limit reached, disable stuff
        }
        else {
          // throttle limit not reached, execute normally
-       }</pre></p>
-<p>Note:  Even though the configuration for the throttle is handled by the 'throttle.module', the throttle logic itself is part of the 'statistics.module'.  The configuration has been separated in order to make things easier for the average site that will not be utilizing the throttling mechanism.  More information about how the throttle works can be found on the throttle.module help page.  Find the throttle help page <?php print l("here", "admin/help#throttle"); ?> if you have enabled the throttle.module).</p>
+       }</pre></p>";
+  $output .= "<p>Note:  Even though the configuration for the throttle is handled by the 'throttle.module', the throttle logic itself is part of the 'statistics.module'.  The configuration has been separated in order to make things easier for the average site that will not be utilizing the throttling mechanism.  More information about how the throttle works can be found on the throttle.module help page.  (Find the throttle help page ". l("here", "admin/help#throttle") ." if you have enabled the throttle.module).</p>";
+  return t($output);
 
-  <?php
 }
 
 

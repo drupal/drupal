@@ -3,13 +3,13 @@
 
 function cloud_help($type = "administrator") {
   if ($type == "user") {
-    $output .= "<p>". t("The cloud monitor tracks or crawls other interesting websites and displays their latest modification dates.  It acts as a link watcher such that you can keep an eye on the other sites in our cloud.") ."</p>";
+    $output .= "<p>". t("The cloud monitor tracks or crawls other interesting web sites and displays their latest modification dates.  It acts as a link watcher such that you can keep an eye on the other sites in our cloud.") ."</p>";
   }
   else {
-    $output .= "The cloud monitor tracks or crawls other interesting websites and displays their last modification dates.  Visitors to the host site learn about relevant sites and can easily see if there is new content.  Here is how it works:";
+    $output .= "The cloud monitor tracks or crawls other interesting web sites and displays their last modification dates.  Visitors to the host site learn about relevant sites and can easily see if there is new content.  Here is how it works:";
     $output .= "<ul>";
     $output .= " <li>The site administrator enters names and URLs of the relevant pages on the cloud monitor administration page.</li>";
-    $output .= " <li>Drupal's cron function, triggers the cloud module to check all the registered websites for recent changes or updates.  (A page is updated when there is a <i>x</i>-byte difference since the last time it checked, where <i>x</i> is a configuration option.)</li>";
+    $output .= " <li>Drupal's cron function, triggers the cloud module to check all the registered web sites for recent changes or updates.  (A page is updated when there is a <i>x</i>-byte difference since the last time it checked, where <i>x</i> is a configuration option.)</li>";
     $output .= " <li>The module exports both a page and a block that display the registered sites ordered by their last modification date.</li>";
     $output .= "</ul>";
   }
@@ -42,11 +42,12 @@ function cloud_link($type) {
   }
 
   if ($type == "admin" && user_access("administer site cloud")) {
-    $help["general"] = "The cloud monitor tracks or crawls other interesting websites and displays their last modification dates. Visitors to the host site learn about relevant sites and can easily see if there is new content.";
+    $help["general"] = t("The cloud monitor tracks or crawls other interesting web sites and displays their last modification dates. Visitors to the host site learn about relevant sites and can easily see if there is new content. To get the blogroll to work you <b>must</b> setup cron support. To get the blogroll block to display you must turn on the <a href=\"%block\">Site cloud block</a>. To go to a monitored site, click on the site name, to load and/or update the blogroll for that site immediately click on \"update site\", to delete the site go to \"edit site\". ", array("%block" => url("admin/block")));
+    $help["add"] = t("Add a site too the blogroll. Don't forget the \"http://\" for your URLs.");
 
     menu("admin/syndication", "content syndication", NULL, NULL, 5);
     menu("admin/syndication/cloud", "blogrolling", "cloud_admin", $help["general"]);
-    menu("admin/syndication/cloud/add", "add new site", "cloud_admin", $help["general"]);
+    menu("admin/syndication/cloud/add", "add new site", "cloud_admin", $help["add"]);
     menu("admin/syndication/cloud/help", "help", "cloud_help", NULL, 9);
   }
 
@@ -92,8 +93,8 @@ function cloud_form($edit = array()) {
   $period = array(900 => format_interval(900), 1800 => format_interval(1800), 3600 => format_interval(3600), 7200 => format_interval(7200), 10800 => format_interval(10800), 21600 => format_interval(21600), 32400 => format_interval(32400), 43200 => format_interval(43200), 64800 => format_interval(64800), 86400 => format_interval(86400), 172800 => format_interval(172800), 259200 => format_interval(259200), 604800 => format_interval(604800), 1209600 => format_interval(1209600), 2419200 => format_interval(2419200));
   $threshold = array(1 => "1 byte", 10 => "10 bytes", 20 => "20 bytes", 40 => "40 bytes", 60 => "60 bytes", 80 => "80 bytes", 100 => "100 bytes", 120 => "120 bytes", 140 => "140 bytes", 160 => "160 bytes", 320 => "320 bytes", 640 => "640 bytes");
 
-  $form .= form_textfield("Site name", "name", $edit["name"], 50, 128, "The name of the website you want to monitor for updates.");
-  $form .= form_textfield("Site URL", "link", $edit["link"], 50, 255, "The URL of the website you want to monitor for updates.");
+  $form .= form_textfield("Site name", "name", $edit["name"], 50, 128, "The name of the web site you want to monitor for updates.");
+  $form .= form_textfield("Site URL", "link", $edit["link"], 50, 255, "The URL of the web site you want to monitor for updates.");
   $form .= form_textfield("URL to monitor", "feed", $edit["feed"], 50, 255, "The URL of the page you want to monitor for updates.  Likely to be same as the site's URL but useful to monitor framed pages and more accurate when pointed to a XML/RSS/RDF feed.");
   $form .= form_select("Update interval", "refresh", ($edit["refresh"] ? $edit["refresh"] : 3600), $period, "The refresh interval indicating how often you want to check this site for updates.  Requires crontab.");
   $form .= form_select("Change threshold", "threshold", ($edit["threshold"] ? $edit["threshold"] : 40), $threshold, "The number of bytes the site must have been modified before considered changed.");

@@ -3,12 +3,13 @@
 
 function story_help() {
   $output .= "<p>The story module enables to users to submit thoughful, cohesive posts for consideration by the rest of the community.  Stories usually follow a specific content flow: <i>submit -&gt; moderate -&gt; post to home page -&gt; comment</i>.  Administrators are able to shortcut this flow as desired.</p>";
-  $output .= "<p>Administrators may \"pin\" an important story or announcement to the front page using the <i>static on front page</i> setting while creating or editing a story (this is true for other nodes as well). In addition, administrators may provide helpful introductory text for story authors in the <i>settings</i> page.  There, administrators might also choose to set a floor on the number of words which may be included in a story.  This is designed to help discourage the submission of trvially short stories.</p>";
+  $output .= "In ". l("site configuration &gt;&gt; modules &gt;&gt; story", "admin/system/modules/story") ." you can setup an introductory text for story authors, and a floor on the number of words which may be included in a story. This is designed to help discourage the submission of trvially short stories.";
   return $output;
 }
 
 function story_system($field){
   $system["description"] = t("Enables users to submit stories, articles or similar content.");
+  $system["admin_help"] = t("**REWRITE** Stories are nodes with a complete thought. Think of newspaper stories. Stories follow the flow \"submit -&gt; moderate -&gt; post to the main page -&gt; comment on story\". Below enter the minimum word count for a story, and the small block which will be displayed to users wanting to enter a story.");
   return $system[$field];
 }
 

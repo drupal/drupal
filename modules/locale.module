@@ -2,37 +2,31 @@
 // $Id$
 
 function locale_help() {
- ?>
-  <p>Normally programs are written and documented in English, and use English to interact with users.  This is true for a great deal of websites.  However, most people are less comfortable with English than with their own native language, and would prefer to use their mother tongue as much as possible.  Many people love see their website showing a lot less of English, and far more of their own language.</p>
-  <p>Therefore Drupal provides a framework to setup a multi-lingual website, or to overwrite the default texts in English.  We explored the various alternatives to support internationalization and decided to design the framework in such a way that the impact of internationalization on drupal's sources is minimized, modular and that it doesn't require a HTML or PHP wizard to maintain translations.  Maintaining translations had to be simple so it became as easy as filling out forms on the administration page.</p>
+  $output .= "<p>Normally programs are written and documented in English, and use English to interact with users.  This is true for a great deal of web sites.  However, most people are less comfortable with English than with their own native language, and would prefer to use their mother tongue as much as possible.  Many people love see their web site showing a lot less of English, and far more of their own language.</p>";
+  $output .= "<p>Therefore Drupal provides a framework to setup a multi-lingual web site, or to overwrite the default texts in English.  We explored the various alternatives to support internationalization and decided to design the framework in such a way that the impact of internationalization on drupal's sources is minimized, modular and that it doesn't require a HTML or PHP wizard to maintain translations.  Maintaining translations had to be simple so it became as easy as filling out forms on the administration page.</p>";
+  $output .= "<h3>How to translate texts</h3><p>The actual translation starts at the ". l("overview","admin/locale") ." of the locale section of the administration pages. In the \"localization\" section you will see a list of the languages you have configured. Click on the name of the language to start translating. Looking at a page full of all the strings in the site can be a bit overwhelming, so Drupal allows you to limit the strings you are working on. If you want to limit based on translated strings click \"translated strings\", if you want to limit the string based on the untranslated strings click \"untranslated strings\". Both will take you to the same page. Once there enter the string pattern to limit on, choose the language to search for, and the status, weather translated, untranslated or both, finally where you want to look, modules, specific modules, or pages.</p>";
+  $output .= "<p>At the locale page, users with the proper access rights will see the various texts that need translation on the left column of the table.</p>";
+  $output .= "<p>Below the text you can see an URI where this text shows up one your site.  Changes are most of these texts will be used and displayed on more than one page, though only one example URI is presented.</p>";
+  $output .= "<p>The second column displays the supported languages as defined in the configuration file.  See below for more information on how to support new languages.  If the symbol for a language is seen like <strike>this</strike>, it means that this entry still needs to be translated into that language.  If not, it has been translated already.</p>";
+  $output .= "<p>To add or change a translation click the \"edit locale\" link in the third column, the \"operations\" column.  You'll be presented the original text and fields for translation in the supported languages.  Enter the translations and confirm by clicking the \"Save translations\" button.  The translations need not be accurate; they are for your site so you can choose what to show to your users.</p>";
+  $output .= "<p>To delete a translation, click the \"delete locale\" link at the overview page and the translation will be immediately deleted without confirmation.  Deleting translations is convenient for removing texts that belonged to an obsolete module.</p>";
+  $output .= "<p>In some texts special strings such as \"%a\" and \"%b\" show up.  Those get replaced by some string at run-time when Drupal dynamically generate pages.  You can find out which string this is by looking at the page where the text appears.  This is where the above mentioned URI can come in handy.</p>";
+  $output .= "<h3>How to add new languages</h3><p>Adding a new language requires you to edit your configuration file and to edit your SQL database.  Assuming you want to support Dutch (ISO 639 code: \"nl\") and French (ISO 639 code: \"fr\"), you add the following line to your configuration file's <code>\$languages</code>-variable:</p>";
+  $output .= "<pre>
+    \$languages = array(\"nl\" => \"Dutch / Nederlands\", \"fr\" => \"French / Francais\");
+  </pre>";
 
-  <h3>How to translate texts</h3>
-
-  <p>The actual translation starts at the "overview" of the locale page of the administration pages.  To allow a user to maintain the translations, he obviously needs access to the locale module.  See the account documentation for more information on roles and permissions.</p>
-  <p>At the locale page, users with the proper access rights will see the various texts that need translation on the left column of the table.</p>
-  <p>Below the text you can see an URI where this text shows up one your site.  Changes are most of these texts will be used and displayed on more than one page, though only one example URI is presented.</p>
-  <p>The second column displays the supported languages as defined in the configuration file.  See below for more information on how to support new languages.  If the symbol for a language is seen like <strike>this</strike>, it means that this entry still needs to be translated into that language.  If not, it has been translated already.</p>
-  <p>To add or change a translation click the "edit locale" link in the third column, the "operations" column.  You'll be presented the original text and fields for translation in the supported languages.  Enter the translations and confirm by clicking the "Save translations" button.  The translations need not be accurate; they are for your site so you can choose what to show to your users.</p>
-  <p>To delete a translation, click the "delete locale" link at the overview page and the translation will be immediately deleted without confirmation.  Deleting translations is convenient for removing texts that belonged to an obsolete module.</p>
-  <p>In some texts special strings such as "%a" and "%b" show up.  Those get replaced by some string at run-time when Drupal dynamically generate pages.  You can find out which string this is by looking at the page where the text appears.  This is where the above mentioned URI can come in handy.</p>
-
-  <h3>How to add new languages</h3>
-
-  <p>Adding a new language requires you to edit your configuration file and to edit your SQL database.  Assuming you want to support Dutch (ISO 639 code: "nl") and French (ISO 639 code: "fr"), you add the following line to your configuration file's <code>$languages</code>-variable:</p>
-  <pre>
-    $languages = array("nl" => "Dutch / Nederlands", "fr" => "French / Francais");
-  </pre>
-  <p>Note that the default language must come first and that if you want to overwrite the default text you can add an entry for English (ISO 639 code: "en"):</p>
-  <pre>
-    $languages = array("en" => "English", "nl" => "Dutch / Nederlands", "fr" => "French / Francais");
-  </pre>
-  <p>After having edited your configuration file, make sure your SQL table "locales" has the required database fields setup to host your new translations.  You can add the required rows to your "locales" table from the MySQL prompt:</p>
-  <pre>
+  $output .= "<p>Note that the default language must come first and that if you want to overwrite the default text you can add an entry for English (ISO 639 code: \"en\"):</p>";
+  $output .= "<pre>
+    \$languages = array(\"en\" => \"English\", \"nl\" => \"Dutch / Nederlands\", \"fr\" => \"French / Francais\");
+  </pre>";
+  $output .= "<p>After having edited your configuration file, make sure your SQL table \"locales\" has the required database fields setup to host your new translations.  You can add the required rows to your \"locales\" table from the MySQL prompt:</p>";
+  $output .= "<pre>
     mysql> ALTER TABLE locales ADD en TEXT DEFAULT '' NOT NULL;
     mysql> ALTER TABLE locales ADD nl TEXT DEFAULT '' NOT NULL;
     mysql> ALTER TABLE locales ADD fr TEXT DEFAULT '' NOT NULL;
-  </pre>
- <?php
+  </pre>";
+  return t($output);
 }
 
 function locale_system($field){
@@ -48,18 +42,21 @@ function locale_link($type) {
   global $languages;
 
   if ($type == "admin" && user_access("administer locales")) {
-    $help["general"] = "The locale module handles translations into new languages.  It also enables you to add jargon, slang or other special language as fits the website.  For each language you want to support, a line needs to be added to your configuration file.";
+    $help["general"] = t("The locale module handles translations into new languages.  It also enables you to add jargon, slang or other special language as fits the web site.  For each language you want to support, a line needs to be added to your configuration file.");
+    $help["search"] = t("Search the localization database. ('*' can be used as a wildcard)");
+    $help["translated"] = t("Start by searching the translated strings.");
+    $help["untranslated"] = t("Start by searching the untranslated strings.");
 
     menu("admin/locale", "localization", NULL, $help["general"], 5);
-    menu("admin/locale/search", "search string", "locale_admin", NULL, 8);
+    menu("admin/locale/search", "search string", "locale_admin", $help["search"], 8);
     menu("admin/locale/help", "help", "locale_help", NULL, 9);
     menu("admin/locale/edit", "edit string", "locale_admin", NULL, 0, 1); // hidden menu
     menu("admin/locale/delete", "delete string", "locale_admin", NULL, 0, 1); // hidden menu
 
     foreach ($languages as $key => $value) {
       menu("admin/locale/$key", "$value", NULL, $help["general"]);
-      menu("admin/locale/$key/translated", "translated strings", "locale_admin");
-      menu("admin/locale/$key/untranslated", "untranslated strings", "locale_admin");
+      menu("admin/locale/$key/translated", "translated strings", "locale_admin", $help["translated"]);
+      menu("admin/locale/$key/untranslated", "untranslated strings", "locale_admin", $help["untranslated"]);
     }
   }
 }

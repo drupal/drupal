@@ -4,18 +4,29 @@
 function node_help() {
   global $mod;
 
-  if ($mod == "node") {
+  $output .= "<h3>Nodes</h3>The core of the Drupal system is the node. All of the contents of the system are placed in nodes, or extensions of nodes.";
+  $output .= "A base node contains:<ul><li>A Title - Up to 128 characters of text that titles the node.</li><li>A Teaser - A small block of text that is ment to get you interested in the rest of node. Drupal automatically pulls a small amount of the body of the node to make the teaser (To configure how long the teaser will be ". l("click here","admin/system/modules/node") ."). The teaser can be changed if you don't like what Drupal grabs</li><li>The Body - This is it, the heart of the matter. Your text, what we want to read.</li><li>A Type - What kind of node is this? Blog, book, forum, comment, unextended, etc.</li><li>An Author - The author's name. It will either be \"anonymous\" or a valid user. You <i>cannot</i> set it to an arbitrary value.</li>";
+  $output .= "<li>Authored on - The date it was written on.</li><li>Changed - The last time this node was changed</li><li>Static on front page - The front page is configured to show the teaser's from only a few of the total nodes you have on your site (To configure how many teaser ". l("click here","admin/system/modules/node") ."), but if you think a node is important enough that you want it to stay on the front page enable this.</li><li>Allow user comments - A node can have comments, which are other nodes. These comments can be written by other users (Read-write), or only by admins (Read-only).</li>";
+  $output .= "<li>Attributes - A way to sort nodes.</li><li>revisions - Drupal has a revision system so that you can \"roll back\" to an older version of a node if the new version is not what you want.</li><li>Promote to front page - To get people to look at the new stuff on your site you want to move it to the front page. So promote it too the front page.</li>";
+  $output .= "<li>Moderation Status - Drupal has a moderation system. If it is active, a node is in one of three states. Approved and Published, Approved and UnPublished, and Awaiting Approval. If you are <b>not</b> moderating a node it should be Approved</li><li>votes - If you are moderating a node this counts how many votes the node has gotten. Once a node gets a certain number of vote if will either be Approved, or Dropped (To setup the number of votes needed and the promote and dump scores ". l("click here","admin/system/modules/queue") .".)</a>.</li><li>score - The score of the node is gotten by the votes it is given.</li>";
+  $output .= "<li>users - The list of users who have voted on a moderated node.</li><li>Public/Published - When using Drupal's moderation system a node remains UnPublished -- unavaliable to non-moderators -- until it is marked Public/Published.</li></ul>";
+  $output .= "Now that you know what is in a node, here are some of the types of nodes avalible:";
+
+  if ($mod == "admin") {
     foreach (module_list() as $name) {
       if (module_hook($name, "node") && $name != "node") {
-        print "<h3>". t("%module type", array("%module" => ucfirst(module_invoke($name, "node", "name")))). "</h3>";
-        print module_invoke($name, "help");
+        $output .= "<h3>". t("%module type", array("%module" => ucfirst(module_invoke($name, "node", "name")))). "</h3>";
+        $output .= module_invoke($name, "help");
+
       }
     }
   }
+  return t($output);
 }
 
 function node_system($field){
   $system["description"] = t("The core that allows content to be submitted to the site.");
+  $system["admin_help"] = t("Settings for the core of Drupal. Almost everything is a node so these settings will affect most of the site.");
   return $system[$field];
 }
 
@@ -522,16 +533,21 @@ function node_link($type, $node = 0, $main = 0) {
   }
 
   if ($type == "admin" && user_access("administer nodes")) {
-    $help["search"] = "On this page you can search for a post.  For example, one may search for 'br' and Drupal might return 'bread brakers', 'our daily bread' and 'brenda'.";
+-    $help["overview"] = t("Below is a list of all of the nodes in your site. Other content, such as ". l("comments", "admin/comment") .", are delt with in other areas.<br />Click on a node title to view the node, the author name to edit the author's user information.<br />Other work with nodes can be done with the menu on the left.");
+-    $help["post-overview"] = t("Click on <a href=\"%nup\">new or updated posts</a> to see your latest nodes, or <a href=\"%queue\">approval queue</a> to approve new messages.", array("%nup" => url("admin/nodes/0"), "%queue" => url("admin/nodes/1")));
+-    $help["new-update"] = t("Below is a list of the latest nodes in your site. Click on a node title to see the node, the author name to edit the author's user information , \"edit node\" to edit the node, and \"delete node\" to remove the node.");
+-    $help["queue"] = t("Below is a list of the node in your site that need <b>approval</b>. To approve a node click on <b>\"edit node\"</b> and then change it's <b>moderation status</b> to Approved.<br />Click on a node title to see the node, the author name to edit the author's user information, \"edit node\" to edit the node, and \"delete node\" to remove the node.");
+-    $help["search"] = t("Enter a simple pattern ( '*' maybe used as a wildcard match) to search for a post.  For example, one may search for 'br' and Drupal might return 'bread brakers', 'our daily bread' and 'brenda'.");
+-    $help["setting"] = t("The default settings for the different node types.<br /><b>content type</b> - the node type. <b>comment</b> - What kind of comments are associated with the node. <b>publish</b> - is this node publicly viewable, has it been published. <b>promote</b> - Is this node to be promoted to the front page. <b>moderate</b> - Does this node need approval before it can be viewed. <b>static</b> - Is this node to stay on the front page. <b>revision</b> - Will this node go into the revision system allowing multiple versions to be saved.");
 
-    menu("admin/node", "content management", "node_admin");
-    menu("admin/node/nodes", "post overview");
-    menu("admin/node/nodes/0", "new or updated posts", "node_admin", NULL, 0);
-    menu("admin/node/nodes/1", "approval queue", "node_admin", NULL, 1);
+    menu("admin/node", "content management", "node_admin", $help["overview"]);
+    menu("admin/node/nodes", "post overview", NULL, $help["post-overview"]);
+    menu("admin/node/nodes/0", "new or updated posts", "node_admin", $help["new-update"], 0);
+    menu("admin/node/nodes/1", "approval queue", "node_admin", $help["queue"], 1);
     menu("admin/node/search", "search posts", "node_admin", $help["search"], 8);
     menu("admin/node/help", "help", "node_help", NULL, 9);
     menu("admin/node/edit", "edit node", "node_admin", NULL, 0, 1);
-    menu("admin/node/settings", "content settings", "node_admin", NULL, 8);
+    menu("admin/node/settings", "content settings", "node_admin", $help["setting"], 8);
   }
 
   return $links;

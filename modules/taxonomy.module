@@ -28,8 +28,8 @@ function taxonomy_perm() {
 
 function taxonomy_link($type, $node = NULL) {
   if ($type == "admin" && user_access("administer taxonomy")) {
-    $help["taxonomy"] = "The taxonomy module allows you to classify posts into categories and subcategories; it allows multiple lists of categories for classification (controlled vocabularies) and offers the possibility of creating thesauri (controlled vocabularies that indicate the relationship of terms) and taxonomies (controlled vocabularies where relationships are indicated hierarchically).";
-    $help["vocabulary"] = "When you create a controlled vocabulary you are creating a set of terms to use for describing content (known as descriptors in indexing lingo).  Drupal allows you to describe each node of content (blog, story, etc.) using one or many of these terms. For simple implementations, you might create a set of categories without subcategories, similar to Slashdot.org's or Kuro5hin.org's sections. For more complex implementations, you might create a hierarchical list of categories.";
+    $help["taxonomy"] = t("The taxonomy module allows you to classify content into categories and subcategories; it allows multiple lists of categories for classification (controlled vocabularies) and offers the possibility of creating thesauri (controlled vocabularies that indicate the relationship of terms) and taxonomies (controlled vocabularies where relationships are indicated hierarchically). To delete a term choose \"edit term\". To delete a vocabulary, and all its terms, choose \"edit vocabulary\".");
+    $help["vocabulary"] = t("When you create a controlled vocabulary you are creating a set of terms to use for describing content (known as descriptors in indexing lingo).  Drupal allows you to describe each node type (blog, story, etc.) using one or many of these terms. For simple implementations, you might create a set of categories without subcategories, similar to Slashdot.org's or Kuro5hin.org's sections. For more complex implementations, you might create a hierarchical list of categories.");
 
     menu("admin/taxonomy", "taxonomy", "taxonomy_admin", $help["taxonomy"], 3);
     menu("admin/taxonomy/add/vocabulary", "create new vocabulary", "taxonomy_admin", $help["vocabulary"]);
@@ -797,62 +797,17 @@ function taxonomy_admin() {
 }
 
 function taxonomy_help() {
-?>
-  <h3>Background</h3>
-  <p>Classifying nodes allows for the organization of content into categories and subcategories of description. These categories can be used to organize and retrieve similarly described content. Drupal's <i>taxonomy.module</i> is an extremely flexible classification system that allows for multiple lists of categories for classification (controlled vocabularies) and offers the possibility of creating thesauri (controlled vocabularies that indicate the relationship of terms) and taxonomies (controlled vocabularies where relationships are indicated hierarchically). For details about <a href="http://www.eleganthack.com/archives/002165.html#002165">classification types</a> and insight into the development of <i>taxonomy.module</i>, see this <a href="http://www.drupal.org/node/view/55">drupal.org discussion</a>.</p>
 
-  <h3>An example taxonomy: food</h3>
-  <p>Dairy<br />
-  --Milk<br />
-  Drink<br />
-  --Alchohol<br />
-  --Pop<br />
-  --Milk<br />
-  Meat<br />
-  --Beef<br />
-  --Chicken<br />
-  --Lamb<br />
-  Spices<br />
-  --Sugar</p>
-  <p><b>Notes</b></p>
-   <ul>
-   <li>The term <i>Milk</i> appears within both <i>Dairy</i> and <i>Drink</i>.  This is an example of <i>nmultiple parents</i> for a term.</li>
-   <li>The order of siblings (e.g. <i>Beef</i>, <i>Chicken</i>, <i>Lamb</i>) in the taxonomy may be controlled with the <i>weight</i> parameter. </li>
-  </ul>
-
-  <h3>Vocabularies</h3>
-  <p>When you create a controlled vocabulary you are creating a set of terms to use for describing content (known as descriptors in indexing lingo). Drupal allows you to describe each node of content (blog, story, etc.) using one or many of these terms. For simple implementations, you might create a set of categories without subcategories, similar to <a href="http://www.slashdot.com/">Slashdot's</a> sections.  For more complex implementations, you might create a hierarchical list of categories such as the example <i>Food</i> taxonomy above.</p>
-
-  <h4>Setting up a vocabulary</h4>
-  <p>When you set up a controlled vocabulary, you will be asked to enter some descriptive data and define the attributes of this vocabulary. For example, if you select the <i>hierarchy</i> option, you will be defining a taxonomy or a thesaurus. If you select <i>related terms</i> option, you are allowing the definition of related terms as in a thesaurus. Selecting <i>multiple select</i> will allow you to describe a node using more than one term. That node will then appear in each term's page, thus increasing the chance that a user will find it.</p>
-
-  <p><i>Vocabulary name</i><br />Required. The name for this vocabulary. Example: <i>Dairy</i>.<br />
-  <br />
-  <i>Description</i><br />Optional. Description of the vocabulary, can be used by modules and feeds.<br />
-  <br />
-  <i>Types</i><br />Required. The list of node types you want to associate this vocabulary with. Some available types are: blog, book, forum, page, story.<br />
-  <br />
-  <i><a name="relatedterms"></a>Related terms</i><br />Allows relationships between terms within this vocabulary. Think of these as <i>see also</i>-references.<br />
-  <br />
-  <i><a name="hierarchy"></a>Hierarchy</i><br />Allows a tree-like taxonomy, as in our <i>Foods</i> example above<br />
-  <br />
-  <i>Multiple select</i><br />Allows nodes to be described using more than one term. Nodes may then appear on multiple taxonomy pages.</p>
-
-  <h4>Adding terms to a vocabulary</h4>
-<p>The options you see when adding a term to a vocabulary will depend on what you selected for <i>related terms</i>, <i>hierarchy </i>and <i>multiple select</i> when you created the corrosponding vocabulary.</p>
-
-  <p><i>Term name</i><br />Required. The name for this term. Example: <i>Milk</i><br />
-  <br />
-  <i>Description</i><br />Optional. Description of the term that may be used by modules and RSS feeds.  This is synonymous with a 'scope note'.<br />
-  <br />
-  <i><a name="parent"></a>Parent</i><br />Required. Select the term under which this term is a subset -- the branch of the hierarchy that this term belongs under. This is also known as the "Broader term" indicator used in thesauri.<br />
-  <br />
-  <i><a name="synonyms"></a>Synonyms</i><br />Optional. Enter synonyms for this term, one synonym per line. Synonyms can be used for variant spellings, acronyms, and other terms that have the same meaning as the added term, but which are not explicitly listed in this thesaurus (i.e. <i>unauthorized terms</i>).</p>
-  <h3>Displaying nodes organized by term(s)</h3>
-  <p>In order to view the nodes associated with a term or a collection of terms, you should browse to a properly formed URL. For example, see <a href="<?php print url("taxonomy/page/or/1,2"); ?>"><?php print url("taxonomy/page/or/1,2"); ?></a>.  Taxonomy URLs always contain  a term ID or list of term IDs at the end of the URL (aka <i>querystring</i>). You may learn the term ID for a given term by hovering over that term in the <?php echo l("taxonomy overview", "admin/taxonomy") ?> page in the Admin and noting the number after the querystring parameter called <i>tid</i>.  If you wish to see nodes from a collection of term IDs, separate each term ID with a comma.  Also, the name of the querystring parameter may be <i>or</i> or <i>and</i>: <i>or</i> shows nodes which appear in <b>any</b> of the term IDs while <i>and</i> shows nodes in <b>all</b> the specified term IDs.  Thus, <i>or</i> is less specific than <i>and</i>.</p>
-
-  <h3>RSS feeds</h3>
-  <p>Every term, or collection of terms, provides an <a href="http://backend.userland.com/stories/rss091">RSS</a> feed to which interested users may subscribe. The URL format for an sample RSS feed is <a href="<?php print url("node/feed/or/1,2"); ?>"><?php print url("node/feed/or/1,2"); ?></a>.</p>
- <?php
+  $output .= "<h3>Background</h3><p>Taxonomy is the science of classification, acording to a predetermined system, where the results are used for analysis, discussion, or information retreival. In Drupal the taxonomy.module allows you to define a taxonomy which is then used to classify the Drupal nodes. The module can create classification that can include multiple lists of categories (controlled vocabularies), as well as thesauri (controlled vocabularies that indicated the relationships of terms) and taxonomies (controlled vocabularies  where relationships arehierarchical). For more details about <a href=\"www.eleganthack.com/archives/002165.html#002165\">classification types</a> and insight into the development of the <i>taxonomy.module</i>, see this <a href=\"http://www.drupal.org/node/view/55\">drupal.org discussion</a>.</p>";
+  $output .= "<h3>An example taxonomy: food</h3><p>Dairy<br />--Milk<br />Drink<br />--Alchohol<br />--Pop<br />--Milk<br />Meat<br />--Beef<br />--Chicken<br />--Lamb<br />Spices<br />--Sugar</p>";
+  $output .= "<p><b>Notes</b></p><ul><li>The term <i>Milk</i> appears within both <i>Dairy</i> and <i>Drink</i>.  This is an example of <i>multiple parents</i> for a term.</li><li>In Drupal the order of siblings (e.g. <i>Beef</i>, <i>Chicken</i>, <i>Lamb</i>) in a taxonomy may be controlled with the <i>weight</i> parameter.</li></ul>";
+  $output .= "<h3>Vocabularies</h3><p>When you create a controlled vocabulary you are creating a set of terms to use for describing content (known as descriptors in indexing lingo). Drupal allows you to describe each node of content (blog, story, etc.) using one or many of these terms. For simple implementations, you might create a set of categories without subcategories, similar to <a href=\"http://www.slashdot.com/\">Slashdot's</a> sections.  For more complex implementations, you might create a hierarchical list of categories such as <i>Food</i> taxonomy shown above.</p>";
+  $output .= "<h4>Setting up a vocabulary</h4><p>When setting up a controlled vocabulary, if you select the <i>hierarchy</i> option, you will be defining a taxonomy or a thesaurus. If you select the <i>related terms</i> option, you are allowing the definition of related terms, think <i>see also</i>, as in a thesaurus. Selecting <i>multiple select</i> will allow you to describe a node using more than one term. That node will then appear in each term's page, thus increasing the chance that a user will find it.</p>";
+  $output .= "<p>When setting up a controlled vocabulary you are asked for: <ul><li><b>Vocabulary name</b> (Required) -- The name for this vocabulary. Example: <i>Dairy</i>.</li><li><b>Description</b> (Optional) -- Description of the vocabulary, this can be used by modules and feeds.</li><li><b>Types</b> (Required) -- The list of node types you want to associate this vocabulary with. Some available types are: blog, book, forum, page, story.</li><li><a name=\"relatedterms\"></a><b>Related terms</b> -- Allows relationships between terms within this vocabulary. Think of these as <i>see also</i>-references.</li><li><a name=\"hierarchy\"></a><b>Hierarchy</b> -- Allows a tree-like taxonomy, as in our <i>Foods</i> example above</li><li><b>Multiple select</b> -- Allows nodes to be described using more than one term. Nodes may then appear on multiple taxonomy pages.</li><li><b>Required</b> -- Each node has to have a term in this vacabulary associated with it.</li><li><b>Weight</b> -- The over all weight for this vocaulary in listings with multiple vacabularies.</ul></p>";
+  $output .= "<h4>Adding terms to a vocabulary</h4><p>Once done defining the vocabulary, you have to add terms to it to make it useful. The options you see when adding a term to a vocabulary will depend on what you selected for <i>related terms</i>, <i>hierarchy </i>and <i>multiple select</i>. These options are:</p>";
+  $output .= "<p><ul><li><b>Term name</b> (Required) -- The name for this term. Example: <i>Milk</i></li><li><b>Description</b> (Optional) -- Description of the term that may be used by modules and feeds.  This is synonymous with a 'scope note'.</li><li><b><a name=\"parent\"></a>Parent</b> (Required) -- Select the term under which this term is a subset -- the branch of the hierarchy that this term belongs under. This is also known as the \"Broader term\" indicator used in thesauri.</li><li><b><a name=\"synonyms\"></a>Synonyms</b> (Optional) -- Enter synonyms for this term, one synonym per line. Synonyms can be used for variant spellings, acronyms, and other terms that have the same meaning as the added term, but which are not explicitly listed in this thesaurus (i.e. <i>unauthorized terms</i>)</li><li><b>Weight</b> (Optional) -- The weight is used to sort the terms of this vocabulary.</li></ul></p>";
+  $output .= "<h3><a name=\"taxonomyURL\"></a>Displaying nodes organized by term(s)</h3><p>In order to view the nodes associated with a term or a collection of terms, you should browse to a properly formed Taxonomy URL. For example, ". l("taxonomy/page/or/1,2","taxonomy/pages/or/1,2") .".  Taxonomy URLs always contain one or more term IDs (tid) at the end of the URL (a.k.a the <i>querystring</i>). You may learn the term ID for a given term by hovering over that term in the ". l("taxonomy overview", "admin/taxonomy") ." page and noting the number at the end or the URL.  To build a Taxonomy URL start with \"taxonomy/page\". Now add the querystring parameter, either <i>or</i>, which chooses nodes tagged with <b>any</b> of the given term IDs, or <i>and</i>, which chooses nodes tagged with <b>all</b> of the given Term IDs. Thus <i>or</i> is less specific than <i>and</i>. Finally add a comma seperated list of term IDs.</p>";
+  $output .= "<h3>RSS feeds</h3><p>Every term, or collection of terms, provides an <a href=\"http://backend.userland.com/stories/rss\">RSS</a> feed to which interested users may subscribe. The URL format for an sample RSS feed is ". l("node/feed/or/1,2","node/feed/or/1,2") .". Built like a Taxonomy URL, ". l("see above", "admin/taxonomy/help#taxonomyURL") ." it starts with \"node/feed\", then has the querystring parameter, and finally the Term IDs.</p>";
+  return t($output);
 }
 ?>

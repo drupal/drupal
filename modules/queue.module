@@ -3,6 +3,7 @@
 
 function queue_system($field){
   $system["description"] = t("Enables content to be moderated by the community.");
+  $system["admin_help"] = t("** REWRITE **These are the settings for the moderation system. When the moderation value of a node is the same as or greater than the <b>Post threshold</b> then the node will be promoted to the front page. If the moderation value of a node falls below the <b>Dump threshold</b> then the node will be changed to an \"unpublished/private\" node. If the number of votes a node has recieved is the same as or higher than the <b>Expiration threshold</b>, and the node has not been promoted to the front page or dumped, then the node will be changed to an \"unpublished/private\" node. In all of three cases the moderation of the node will be marked as \"Approved\".<br /> If \"Show comments\" is enabled then the comments on this node will be shown in the moderation form.");
   return $system[$field];
 }
 

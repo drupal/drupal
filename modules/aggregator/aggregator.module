@@ -2,17 +2,17 @@
 // $Id$
 
 function import_help() {
- ?>
-  <p>In Drupal you have <i>feeds</i> and <i>bundles</i>.   Feeds define news sources and bundles categorize syndicated content by source, topic or any other heuristic.   Bundles provide a generalized way of creating composite feeds.  They allow you, for example, to combine various sport-related feeds into one bundle called "Sport".</p>
-  <p>You can have several providers of news feeds.  You can add a feed by clicking the "add feed" link on the import administration pages.  Give the feed a name, supply the URI and a comma-separated list of attributes that you want to associate the feed with.  The update interval defines how often Drupal should go out to try and grab fresh content.  The expiration time defines how long syndicated content is kept in the database.  So set the update and expiration time and save your settings.  You have just defined your first feed.  If you have more feeds repeat as necessary.</p>
-  <p>To verify whether your feed works, press "update items" at the overview page.  The number of news items that have been sucessfully fetched, should then become visible in the third column of the feed overview.</p>
-  <p>Now you have to define some bundles.  Bundles look for feeds that contain one of the keywords associated with the bundle and display those feeds together.  To define a bundle you have to give it a name and a comma-separated list of keywords just like this is the case for feeds.</p>
-  <p>Your newly created bundle will now show up in the list of blocks that you can see at the block related administration pages.  There you can customize where and when your bundles will be displayed.</p>
- <?php
+  $output .= "<p>**REWRITE** In Drupal you have <i>feeds</i> and <i>bundles</i>.   Feeds define news sources and bundles categorize syndicated content by source, topic or any other heuristic.   Bundles provide a generalized way of creating composite feeds.  They allow you, for example, to combine various sport-related feeds into one bundle called \"Sport\".</p>";
+  $output .= "<p>You can have several providers of news feeds.  You can add a feed by clicking the \"add feed\" link on the import administration pages.  Give the feed a name, supply the URI and a comma-separated list of attributes that you want to associate the feed with.  The update interval defines how often Drupal should go out to try and grab fresh content.  The expiration time defines how long syndicated content is kept in the database.  So set the update and expiration time and save your settings.  You have just defined your first feed.  If you have more feeds repeat as necessary.</p>";
+  $output .= "<p>To verify whether your feed works, press \"update items\" at the overview page.  The number of news items that have been sucessfully fetched, should then become visible in the third column of the feed overview.</p>";
+  $output .= "<p>Now you have to define some bundles.  Bundles look for feeds that contain one of the keywords associated with the bundle and display those feeds together.  To define a bundle you have to give it a name and a comma-separated list of keywords just like this is the case for feeds.</p>";
+  $output .= "<p>Your newly created bundle will now show up in the list of blocks that you can see at the block related administration pages.  There you can customize where and when your bundles will be displayed.</p>";
+  return t($output);
 }
 
 function import_system($field){
   $system["description"] = t("Used to aggregate syndicated content (RSS and RDF).");
+  $system["admin_help"] = t("Drupal's news aggregator controls how many RSS/RDF items from a single source are displayed in a \"Block\", and on the page that goes with that block.");
   return $system[$field];
 }
 
@@ -33,17 +33,20 @@ function import_link($type) {
   $links = array();
 
   if ($type == "page" && user_access("access news feeds")) {
-    $links[] = l(t("news feeds"), "import", array("title" => t("Read the latest news from syndicated websites.")));
+    $links[] = l(t("news feeds"), "import", array("title" => t("Read the latest news from syndicated web sites.")));
   }
 
   if ($type == "admin" && user_access("administer news feeds")) {
-    $help["general"] = "Several websites, especially news related sites, syndicate parts of their site content for other web sites to display. Usually, the syndicated content includes the latest headlines with a direct link to that story on the remote site. Some syndicated content also includes a description of the headline. The standard method of syndication is using the XML based Rich Site Summary (RSS).";
-    $help["bundles"] = "Bundles provide a generalized way of creating composite feeds. They allow you, for example, to combine various sport-related feeds into one bundle called <i>Sport</i>.";
+    $help["general"] = t("Several web sites, especially news related sites, syndicate parts of their site's content for other web sites to display. Usually, the syndicated content includes the latest headlines with a direct link to that story on the remote site. Some syndicated content also includes a description of the headline. The standard method of syndication is using the XML based Rich Site Summary (RSS). To get a feed to work you <b>must</b> run \"cron.php\". To display the feed in a block you must turn on the <a href=\"%block\">feed's block</a>. <br /><ul><li>To delete a feed choose \"edit feed\"</li><li>To clear all of the entries from a feed choose \"Remove items\"</li><li>To check whether a feed is working, and to get new items <b>now</b> click on \"update items\"</li></ul><ul><li>To delete a bundle choose \"edit bundle\".</li></ul>", array("%block" => url("admin/block")));
+    $help["addfeed"] = t("Add a site to that has an RSS/RDF feed. The URL is the full path to the RSS feed file. For the feed to update you must run \"cron.php\". The \"Attributes\" are used to bundle this feed with other feeds (See <a href=\"%bundle\">add new bundle</a>, and to tag articles from this feed.<br />Note: If you already have another feed with the URL you are planning to use, the system will not accept your entry.", array("%bundle" => url("admin/syndication/news/add/bundle")));
+    $help["bundles"] = t("Bundles provide a generalized way of creating composite feeds. They allow you, for example, to combine various sport-related feeds into one bundle called <i>Sport</i>. If an article from a feed has been \"tag\"-ged (See <a href=\"%tag\">tag news item</a> too look at and change tags.) with a matching \"Attribute\" then it will be added to the bundle.", array("%tag" => url("admin/syndication/news/tag")));
+    $help["tag"] = t("This allows you to see and change an news item's \"tag\". All articles are originally tagged with the \"Attributes\" of their feed.");
+
     menu("admin/syndication", "content syndication", NULL, NULL, 5);
     menu("admin/syndication/news", "news aggregation", "import_admin", $help["general"]);
-    menu("admin/syndication/news/add/feed", "add new feed", "import_admin", NULL, 2);
+    menu("admin/syndication/news/add/feed", "add new feed", "import_admin", $help["addfeed"], 2);
     menu("admin/syndication/news/add/bundle", "add new bundle", "import_admin", $help["bundles"], 3);
-    menu("admin/syndication/news/tag", "tag news items", "import_admin", NULL, 4);
+    menu("admin/syndication/news/tag", "tag news items", "import_admin", $help["tag"], 4);
     menu("admin/syndication/news/help", "help", "import_help", NULL, 9);
   }
 
@@ -400,7 +403,7 @@ function import_form_feed($edit = array()) {
     $edit["refresh"] = 3600;
   }
 
-  $form .= form_textfield("Title", "title", $edit["title"], 50, 64, "The name of the feed; typically the name of the website you syndicate content from.");
+  $form .= form_textfield("Title", "title", $edit["title"], 50, 64, "The name of the feed; typically the name of the web site you syndicate content from.");
   $form .= form_textfield("Url", "url", $edit["url"], 50, 128, "The fully-qualified URL of the feed.");
   $form .= form_textfield("Attributes", "attributes", $edit["attributes"], 50, 128, "A comma-separated list of keywords describing the feed.");
   $form .= form_select("Update interval", "refresh", $edit["refresh"], $period, "The refresh interval indicating how often you want to update this feed.  Requires crontab.");
@@ -552,10 +555,10 @@ function import_admin() {
 function import_page_info() {
 
 
-  $links[] = l(t("latest news"), "import", array("title" => t("Read the latest news from syndicated websites.")));
+  $links[] = l(t("latest news"), "import", array("title" => t("Read the latest news from syndicated web sites.")));
   $links[] = l(t("news by source"), "import/feeds", array("title" => t("View the latest headlines sorted by source.")));
   $links[] = l(t("news by topic"), "import/bundles", array("title" => t("View the latest headlines sorted by topic.")));
-  $links[] = l(t("news sources"), "import/sources", array("title" => t("View a list of all the websites we syndicate from.")));
+  $links[] = l(t("news sources"), "import/sources", array("title" => t("View a list of all the web sites we syndicate from.")));
 
   if (user_access("administer news feeds")) {
     $links[] = l(t("administer news feeds"), "admin/syndication/news", array("title" => t("View the news feed administrative pages.")));
@@ -680,7 +683,7 @@ function import_page_sources() {
     $output .= "<div style=\"margin-left: 20px;\">$feed->description</div><br />";
   }
 
-  $output .= l("<img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" />", "import/fd", array("title" => t("View the list of syndicated websites in XML format."))) ."<br />";
+  $output .= l("<img src=\"". theme("image", "xml.gif") ."\" width=\"36\" height=\"14\" align=\"right\" border=\"0\" />", "import/fd", array("title" => t("View the list of syndicated web sites in XML format."))) ."<br />";
 
   theme("header");
   theme("box", t("News feeds"), import_page_info());

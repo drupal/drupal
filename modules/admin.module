@@ -9,14 +9,21 @@ function status($message) {
   }
 }
 
+function admin_system($field){
+  $system["description"] = t("Handles the administration pages.");
+  return $system[$field];
+}
+
 function admin_link($type) {
   if ($type == "admin") {
-    menu("admin", "Administration", NULL);
-    menu("admin/sitemap", "sitemap", "sitemap_callback", NULL, 8);
+    $help["admin"] = t("Welcome to the administration page. Below are the most recent system events.  To get started please choose an item in the left column. If there is an arrow it will expand into a submenu. To jump up a level use the link above this block of text. To return to the home page click on the site name, and to go to Drupal's home page click on Druplicon, the drop on to the right.", array("%sitemonitor" => url("admin/watchdog")));
+    $help["overview"] = t("This is a complete overview of the site administration page.");
+    menu("admin", "Administration", NULL, $help["admin"]);
+    menu("admin/overview", "Administration overview", "overview_callback", $help["overview"], 8);
   }
 }
 
-function sitemap_callback() {
+function overview_callback() {
   return menu_map("admin");
 }
 

@@ -3,6 +3,7 @@
 
 function forum_system($field){
   $system["description"] = t("Enable threaded discussions about general topics.");
+  $system["admin_help"] = t("Forums are threaded discussions based on the taxonomy system so you must first define a <a href=\"%taxonomy-create\">taxonomy</a> of type \"forum\" to place the forum tree in. Then <a href=\"%taxonomy\">add terms</a> to this taxonomy. Each term becomes the name of a forum. If you define a term as a \"Container\" (See below) the term is not a forum itself, but rather holds forms. This lets you group your forums.", array("%taxonomy-create" => url("admin/taxonomy/add/vocabulary"), "%taxonomy" => url("admin/taxonomy")));
   return $system[$field];
 }
 
@@ -710,24 +711,15 @@ function _forum_get_topic_order($sortby) {
 }
 
 function forum_help() {
-  ?>
-  <h3>Creating a forum</h3>
-  <p>Drupal lets you setup a countless number of forums by using the powerful taxonomy module. Therefore to create a forum you first have to create a taxonomy vocuabulary and add some terms to it, each term will be a forum. Creating a vocabulary is done by going the <b>taxonomy</b> page of the administration pages, then selecting the <b>add new vocabulary</b> link. Choose a name for the vocabulary (example: forum, message boards, or debates), and make sure under Types that forum is selected. Nothing else needs to be configured, so unless you have more advanced needs save the vocabulary. Now add a term to the vocabulary just added to create a forum. In the <b>add term</b> window enter the name of the forum (example: general, off topic, support), a description to make it clear to the users what the forum is about, and then save the term. You can now add a new forum by entering another term, repeat until all the forums are entered.</p>
-  <p>Once a vocabulary is entered go to <b>site configuration</b> in the administration pages and set the <b>Forum vocabulary</b>, don't forget to save! There will now be forums active on the site. For users to access them the proper user permissions must be given in the <b>user management</b> pages.</p>
-  <h3>Containers</h3>
-  <p>By designating a forum as a Container, users are not allowed to post into that forum. The forum will be visible on the forum listing page, so it acts as a section delimiter if you will. This is useful if you have a lots of forums which are nested. For example,</p>
-<p>  Marketing<br />
-  -- Market research<br />
-  -- Brand management<br />
-  <br />
-  Sales<br />
-  -- Closing the deal<br />
-  -- Avoiding ear and throat pain</p>
-  <p>If you don't want people posting into the Marketing or Sales folders, you designate them as Containers.</p>
-  <h4>Icons</h4>
-  <p>To disable icons, set the icon paths as blank in Admin -> Site Configuration -> Forum</p>
-  <p>All files in the icon directory are assumed to be images. Usually it is best to use GIF or JPG files as icons. You may use images of whatever size you wish, but it is customary to use 15x15 or 16x16.</p>
-    <?php
+  $output .= "<h3>Creating a forum</h3><p>Drupal lets you set up a countless number of forums by using the powerful taxonomy module. Therefore to create a forum you first have to create a ". l("taxonomy vocuabulary", "admin/taxonomy/add/vocabulary") ." and ". l("add some terms", "admin/taxonomy") ." to it; each term will become a forum. Choose a name for the vocabulary (examples: forum, message boards, or debates), and make sure under \"Types\" that forum is selected. Nothing else needs to be configured, so unless you have more advanced needs save the vocabulary. Now ". l("add a term", "admin/taxonomy") ." to the vocabulary just created (examples: general, off topic, support), and a description to make it clear to the users what the forum is about. Each term become a forum. Continue creating fora by adding terms until you are satisfied.";
+  $output .= "<p>Once a vocabulary is entered go to ". l("site configuration &raquo; modules &raquo; forum","admin/system/modules/forum") ." and set the <b>Forum vocabulary</b> (don't forget to save). There will now be fora active on the site. For users to access them they must have the \"access content\" permission and to create a topic they must have \"create forum topics\" permission. The permissions can be set in the ". l("user management", "admin/user/permission") ." pages.</p>";
+  $output .= "<h3>Containers</h3><p>By designating a forum as a <i>container</i>, users are not allowed to post into that forum. The forum will be visible on the forum listing page, so it acts as a section delimiter if you will. This is useful if you have a lots of forums which are nested. For example,</p>";
+  $output .= "<p>Marketing<br />-- Market research<br />-- Brand management<br /><br />Sales<br />-- Closing the deal<br />-- Avoiding ear and throat pain</p>";
+  $output .= "<p>If you don't want people posting into the Marketing or Sales folders, you designate them as Containers.</p>";
+  $output .= "<h4>Icons</h4><p>To disable icons, set the icon path as blank in ". l("site configuration &raquo; modules &raquo; forums","admin/system/module/forum") ."</p>";
+  $output .= "<p>All files in the icon directory are assumed to be images. You may use images of whatever size you wish, but it is customary to use 15x15 or 16x16.</p>";
+  return t($output);
+
 }
 
 ?>
