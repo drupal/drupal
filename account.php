@@ -272,7 +272,7 @@ function account_email_submit($userid, $email) {
 }
 
 function account_create_submit($userid, $email) {
-  global $theme;
+  global $theme, $HTTP_HOST, $REQUEST_URI;
 
   $new[userid] = trim($userid);
   $new[real_email] = trim($email);
@@ -288,7 +288,7 @@ function account_create_submit($userid, $email) {
 
     $user = user_save("", array("userid" => $new[userid], "real_email" => $new[real_email], "passwd" => $new[passwd], "status" => 1, "hash" => $new[hash]));
 
-    $link = variable_get(site_url, "http://drupal/") ."account.php?op=confirm&name=$new[userid]&hash=$new[hash]";
+    $link = variable_get(site_url, "http://" . $HTTP_HOST . substr($REQUEST_URI,0,strrpos($REQUEST_URI,"/")) . "/") ."account.php?op=confirm&name=$new[userid]&hash=$new[hash]";
     $subject = strtr(t("Account details for %a"), array("%a" => variable_get(site_name, "drupal")));
     $message = strtr(t("%a,\n\n\nsomeone signed up for a user account on %b and supplied this e-mail address as their contact.  If it wasn't you, don't get your panties in a knot and simply ignore this mail.  If this was you, you will have to confirm your account first or you will not be able to login.  To confirm your account visit the URL below:\n\n   %c\n\nOnce confirmed you can login using the following username and password:\n\n   username: %a\n   password: %d\n\n\n-- %b team\n"), array("%a" => $new[userid], "%b" => variable_get(site_name, "drupal"), "%c" => $link, "%d" => $new[passwd]));
 
