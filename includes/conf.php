@@ -21,7 +21,6 @@ $db_url = "mysql://drupal:drupal@localhost/drupal";
 # If required, update PHP's include path to include your PEAR directory:
 // ini_set("include_path", ".:/path/to/pear");
 
-
 #
 # Themes:
 #
@@ -36,9 +35,6 @@ $themes = array("UnConeD" => array(
                   "Internet explorer, Netscape, Opera, Lynx"),
                 "Goofy"  => array(
                   "themes/goofy/goofy.theme",
-                  "Internet explorer, Netscape, Opera"),
-                "Trillian"  => array(
-                  "themes/trillian/trillian.theme",
                   "Internet explorer, Netscape, Opera"));
 
 #
