@@ -39,7 +39,7 @@ function box_block() {
   $i = 0;
   while ($block = db_fetch_object($result)) {
     $blocks[$i]["subject"] = check_output($block->subject);
-    $blocks[$i]["content"] = ($block->type == 2) ? eval($block->content) : check_output($block->content, ($block->type == 1) ? 0 : 1);
+    $blocks[$i]["content"] = ($block->type == 2) ? eval($block->content) : $block->content;
     $blocks[$i]["info"] = check_output($block->info);
     $blocks[$i]["link"] = check_output($block->link);
     $i++;
