@@ -7,8 +7,8 @@
 #   represent the mathematical calculation to be performed to
 #   update a comment's value.
 $queue_votes = array("neutral (+0)" => "+ 0",
-                          "post it (+1)" => "+ 1",
-                          "dump it (-1)" => "- 1");
+                     "post it (+1)" => "+ 1",
+                     "dump it (-1)" => "- 1");
 
 function queue_menu() {
   return array("<A HREF=\"module.php?mod=queue\">". t("moderation queue") ."</A> (<FONT COLOR=\"red\">". queue_count() ."</FONT>)");

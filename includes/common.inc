@@ -12,6 +12,15 @@ function conf_init() {
   return $file;
 }
 
+function error_handler($errno, $message, $filename, $line, $variables) {
+  $types = array(1 => "error", 2 => "warning", 4 => "parse error", 8 => "notice", 16 => "core error", 32 => "core warning", 64 => "compile error", 128 => "compile warning", 256 => "user error", 512 => "user warning", 1024 => "user notice");
+  $entry = $types[$errno] .": $message in $filename on line $line.";
+  if ($errno == 1 || $errno == 2 || $errno == 4) {
+    watchdog("error", $types[$errno] .": $message in $filename on line $line.");
+    print $entry;
+  }
+}
+
 function watchdog($type, $message) {
   global $user, $watchdog, $PHP_SELF;
   $link = ($mod) ? $mod : substr(strrchr($PHP_SELF, "/"), 1, strrchr($PHP_SELF, "/") - 4);
@@ -195,10 +204,22 @@ include_once "includes/theme.inc";
 include_once "includes/user.inc";
 include_once "includes/node.inc";
 
+// initialize user session:
 user_init();
+
+// initialize installed modules:
 module_init();
+
+// initialize localization system:
 $locale = locale_init();
+
+// initialize configuration variables:
 $conf = variable_init();
+
+// initialize theme:
 $theme = theme_init();
+
+// set error handler:
+set_error_handler("error_handler");
 
 ?>
