@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.275 2003/12/09 23:38:32 kjartan Exp $
+// $Id: common.inc,v 1.276 2003/12/10 23:09:31 dries Exp $
 
 /**
  * @name drupal_title
@@ -116,11 +116,6 @@ function error_handler($errno, $message, $filename, $line, $variables) {
     watchdog("error", $types[$errno] .": $message in $filename on line $line.");
     print "<pre>$entry</pre>";
   }
-}
-
-function watchdog($type, $message, $link = NULL) {
-  global $user;
-  db_query("INSERT INTO {watchdog} (uid, type, message, link, location, hostname, timestamp) VALUES (%d, '%s', '%s', '%s', '%s', '%s', %d)", $user->uid, $type, $message, $link, request_uri(), getenv("REMOTE_ADDR"), time());
 }
 
 function throttle($type, $rate) {
@@ -555,8 +550,11 @@ function check_output($text) {
     // filter content on output:
     $text = filter($text);
 
-    // get the line breaks right:
-    if (strip_tags($text, "<a><i><b><u><tt><code><cite><strong><img>") == $text) {
+    /*
+    ** If only inline elements are used and no block level elements, we
+    ** replace all newlines with HTML line breaks.
+    */
+    if (strip_tags($text, '<a><br><span><bdo><map><object><img><tt><i><b><big><small><em><strong><dfn><code><q><samp><kbd><var><cite><abbr><acronym><sub><sup><input><select><textarea><label><button><ins><del><script>') == $text) {
       $text = nl2br($text);
     }
   }
