@@ -1,5 +1,5 @@
 <?php
-/* $Id: menu.inc,v 1.39 2004/04/21 13:56:37 dries Exp $ */
+/* $Id: menu.inc,v 1.40 2004/04/27 19:35:10 dries Exp $ */
 
 /**
  * @defgroup menu Menu system
@@ -75,15 +75,9 @@ function menu_get_menu() {
   global $user;
 
   if (!isset($_menu['items'])) {
-    $cache = cache_get('menu:'. $user->uid);
-    if ($cache) {
-      $_menu = unserialize($cache->data);
-    }
-    else {
-      menu_build();
-      cache_set('menu:'. $user->uid, serialize($_menu), 1);
-    }
+    menu_build();
   }
+
   return $_menu;
 }
 
