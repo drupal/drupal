@@ -113,7 +113,7 @@ function c(subject,mod,author,date,body) {document.writeln("<table border=\"0\" 
       if ($comment->userid) {
         if ($comment->fake_email) $info[] = format_email($comment->fake_email);
         if (eregi("http://",$comment->url)) $info[] = format_url($comment->url);
-        if ($info) $author .= "<br>[ ". implode(" | ",$info) . "]";
+        if ($info) $author .= "<br>[ ". implode(" | ",$info) . " ]";
       }
       $body = check_output($comment->comment, 1) . "<br><hr color=\"#404040\" size=\"1\"><div align=\"right\">[ $link ]</div>";
 
