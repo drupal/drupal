@@ -46,10 +46,6 @@ function submit_preview($subject, $abstract, $article, $section) {
 
   include "includes/story.inc";
 
-  $subject = ($subject) ? check_output($subject) : "";
-  $article = ($article) ? check_output($article) : "";
-  $abstract = ($abstract) ? check_output($abstract) : "";
-
   $output .= "<FORM ACTION=\"submit.php\" METHOD=\"post\">\n";
 
   $output .= "<B>". t("Your name") .":</B><BR>\n";
@@ -91,7 +87,7 @@ function submit_preview($subject, $abstract, $article, $section) {
   $output .= "</FORM>\n";
 
   $theme->header();
-  $theme->story(new Story($user->userid, $subject, $abstract, $article, $section, time()));
+  $theme->story(new Story($user->userid, $subject, $abstract, $article, $section, time()), "[ ". t("reply to this story") ." ]");
   $theme->box(t("Submit a story"), $output);
   $theme->footer();
 }
@@ -113,7 +109,7 @@ function submit_submit($subject, $abstract, $article, $section) {
 
 switch($op) {
   case t("Preview submission"):
-    submit_preview(check_input($subject), check_input($abstract), check_input($article), check_input($section));
+    submit_preview(($subject ? check_output($subject) : ""), ($abstract ? check_output($abstract) : ""), ($article ? check_output($article) : ""), check_output($section));
     break;
   case t("Submit submission"):
     submit_submit(check_input($subject), check_input($abstract), check_input($article), check_input($section));

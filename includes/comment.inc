@@ -59,7 +59,7 @@ function comment_reply($pid, $id) {
     $pid = 0;
     if ($link == "story") {
       $item = db_fetch_object(db_query("SELECT stories.*, users.userid FROM stories LEFT JOIN users ON stories.author = users.id WHERE stories.status != 0 AND stories.id = '$id'"));
-      $theme->story($item, "");
+      $theme->story($item, "[ ". t("reply to this story") ." ]");
     }
   }
 
@@ -92,9 +92,6 @@ function comment_reply($pid, $id) {
 
 function comment_preview($pid, $id, $subject, $comment) {
   global $allowed_html, $link, $REQUEST_URI, $theme, $user;
-
-  $subject = check_output($subject);
-  $comment = check_output($comment);
 
   // Preview comment:
   comment_view(new Comment($user->userid, $subject, $comment, time(), $user->url, $user->fake_email, 0, 0, 0, 0), t("reply to this comment"));

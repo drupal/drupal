@@ -20,7 +20,7 @@ function story_render($id, $cid) {
 switch($op) {
   case t("Preview comment"):
     $theme->header();
-    comment_preview(check_input($pid), check_input($id), check_input($subject), check_input($comment));
+    comment_preview(check_input($pid), check_input($id), ($subject ? check_output($subject) : ""), ($comment ? check_output($comment) : ""));
     $theme->footer();
     break;
   case t("Post comment"):
