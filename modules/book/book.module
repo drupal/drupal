@@ -82,9 +82,15 @@ function book_parent_query($parent) {
 }
 
 function book_toc($parent = "", $indent = "", $toc = array()) {
-  global $status;
+  global $status, $user;
+
   // select all child nodes:
   $result = db_query("SELECT n.*, b.* FROM node n LEFT JOIN book b ON n.nid = b.nid AND n.lid = b.lid WHERE n.type = 'book' AND n.status = '$status[posted]' AND ". book_parent_query($parent) ." ORDER BY b.weight");
+
+  // add root node:
+  if (user_access($user, "book")) {
+    $toc[0] = "&nbsp;";
+  }
 
   // build table of contents:
   while ($node = db_fetch_object($result)) {
@@ -109,7 +115,7 @@ function book_form($edit = array()) {
     $form .= form_hidden("parent", $edit[parent]);
   }
   else {
-    $form .= form_select(t("Parent"), "parent", $edit[parent], user_access($user, "book") ? array_merge(array(0 => "&nbsp;"), book_toc()) : book_toc(), t("The parent subject or category the page belongs in."));
+    $form .= form_select(t("Parent"), "parent", $edit[parent], book_toc(), t("The parent subject or category the page belongs in."));
   }
 
   $form .= form_textarea(t("Content"), "body", $edit[body], 50, 10, t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html));
