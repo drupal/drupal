@@ -1,4 +1,4 @@
-/* $Id: xtemplate.css,v 1.45 2004/01/10 15:31:26 dries Exp $ */
+/* $Id: xtemplate.css,v 1.46 2004/01/10 16:17:23 dries Exp $ */
 
 /*
 ** HTML elements
@@ -254,7 +254,7 @@ table {
   font-size: 0.9em;
 }
 #aggregator .title {
-  font-size: 0.5em;
+  font-size: 1em;
 }
 #aggregator h3 {
   margin-top: 1em;
