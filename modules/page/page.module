@@ -10,7 +10,7 @@ function page_type() {
   return array("page", "static page");
 }
 
-function page_view($node) {
+function page_view($node, $main = 0) {
   global $format, $theme;
 
   switch ($format[$node->format]) {

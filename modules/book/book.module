@@ -36,7 +36,7 @@ function book_type() {
   return array("book", t("book page"));
 }
 
-function book_view($node, $page = 1) {
+function book_view($node, $main = 0) {
   global $theme;
 
   if ($node->nid && $node->parent) {
@@ -67,9 +67,7 @@ function book_view($node, $page = 1) {
   $output .= " <TR><TD ALIGN=\"left\" WIDTH=\"33%\">". ($prev ? "<SMALL>". check_output($prev->title) ."</SMALL>" : "&nbsp;") ."</TD><TD ALIGN=\"center\" WIDTH=\"34%\">". ($node->parent ? "<A HREF=\"node.php?id=$node->parent\">". t("up") ."</A>" : t("up")) ."</TD><TD ALIGN=\"right\" WIDTH=\"33%\">". ($next ? "<SMALL>". check_output($next->title) ."</SMALL>" : "&nbsp;") ."</TD></TR>\n";
   $output .= "</TABLE>\n";
 
-  if ($page) $theme->header();
-  $theme->box(t("Book"), $output);
-  if ($page) $theme->footer();
+  $theme->box(t("Handbook"), $output);
 }
 
 function book_find($keys) {
@@ -211,7 +209,7 @@ function book_admin() {
       print book_tree();
       break;
     case t("Preview"):
-      book_view(new Book(($edit[nid] ? $edit[nid] : -1), ($edit[userid] ? $edit[userid] : $user->userid), $edit[title], $edit[body], $edit[parent], $edit[weight], ($edit[timestamp] ? $edit[timestamp] : time())), 0);
+      book_view(new Book(($edit[nid] ? $edit[nid] : -1), ($edit[userid] ? $edit[userid] : $user->userid), $edit[title], $edit[body], $edit[parent], $edit[weight], ($edit[timestamp] ? $edit[timestamp] : time())));
       print book_form($edit);
       break;
     case t("Submit"):
@@ -232,7 +230,7 @@ function book_page() {
   }
 
   $theme->header();
-  $theme->box(t("Book"), "<DL>$output</DL>");
+  $theme->box(t("Handbook"), "<DL>$output</DL>");
   $theme->footer();
 }
 
@@ -262,7 +260,7 @@ function book_user() {
       $theme->box($title, book_update($id));
       break;
     case t("Preview"):
-      book_view(new Book(($edit[nid] ? $edit[nid] : -1), $user->userid, $edit[title], $edit[body], $edit[parent], $edit[weight], ($edit[timestamp] ? $edit[timestamp] : time())), 0);
+      book_view(new Book(($edit[nid] ? $edit[nid] : -1), $user->userid, $edit[title], $edit[body], $edit[parent], $edit[weight], ($edit[timestamp] ? $edit[timestamp] : time())));
       $theme->box($title, book_form($edit));
       break;
     case t("Submit"):

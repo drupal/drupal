@@ -6,7 +6,7 @@ $rstatus = array(0 => dumped, 1 => expired, 2 => queued, 3 => posted);
 function _node_get($field, $value) {
   $result = db_query("SELECT lid, type FROM node WHERE $field = '$value'");
   if ($node = db_fetch_object($result)) {
-    return db_query("SELECT n.*, l.*, c.name AS category, t.name AS topic, u.userid FROM node n LEFT JOIN $node->type l ON n.lid = l.lid AND n.nid = l.nid LEFT JOIN users u ON n.author = u.id LEFT JOIN category c ON n.cid = c.cid LEFT JOIN topic t ON n.tid = t.tid WHERE n.$field = '$value' ORDER BY n.timestamp DESC");
+    return db_query("SELECT n.*, l.*, c.name AS category, c.comment, t.name AS topic, u.userid FROM node n LEFT JOIN $node->type l ON n.lid = l.lid AND n.nid = l.nid LEFT JOIN users u ON n.author = u.id LEFT JOIN category c ON n.cid = c.cid LEFT JOIN topic t ON n.tid = t.tid WHERE n.$field = '$value' ORDER BY n.timestamp DESC");
   }
 }
 
@@ -131,11 +131,11 @@ function node_save($node) {
 function node_invoke($node, $name, $arg = 0) {
   if ($node[type]) $function = $node[type] ."_$name";
   if ($node->type) $function = $node->type ."_$name";
-  if ($function) return ($arg ? $function($node) : $function($node, $arg));
+  if ($function) return ($arg ? $function($node, $arg) : $function($node));
 }
 
-function node_view($node, $page = 0) {
-  return node_invoke($node, "view", $page);
+function node_view($node, $main = 0) {
+  return node_invoke($node, "view", $main);
 }
 
 function node_form($node) {

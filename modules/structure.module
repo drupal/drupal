@@ -2,7 +2,7 @@
 
 $module = array("admin" => "structure_admin");
 
-$cstatus = array("disabled", "enabled: incl. anonymous", "enabled: excl. anonymous");
+$cstatus = array("disabled", "enabled");
 $mstatus = array("post new submissions", "moderate new submissions");
 
 function content_types($name, $module) {

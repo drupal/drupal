@@ -78,7 +78,7 @@
     <?php
    }
 
-   function story($story, $reply = 0) {
+   function story($story, $main = 0) {
        $timestamp = format_date($story->timestamp);
 
         print "\n<!-- story: \"$story->title\" -->\n";
@@ -89,10 +89,7 @@
           <TR><TD COLSPAN="2" BGCOLOR="<?php echo $this->bgcolor1; ?>" WIDTH="100%"><table width="100%" cellpadding="0" cellspacing="0"><tr><td width="100%"><FONT COLOR="<?php echo $this->fgcolor1; ?>"><B><?php echo "". check_output($story->title) .""; ?></B></FONT></td><td valign="middle" align="center"><IMG SRC="themes/<?php print $this->themename; ?>/images/icon.gif" valign="middle"></td></tr></table></TD></TR>
           <TR BGCOLOR="<?php echo $this->bgcolor2; ?>">
            <?php
-            if ($story->section) { print "<TD WIDTH=\"70%\" BGCOLOR=\"$this->bgcolor2\">"; }
-            else { print "<TD COLSPAN=\"2\" BGCOLOR=\"$this->bgcolor2\">"; }
-            print "<SMALL>Posted by " . format_username($story->userid) . " on $timestamp";
-            if ($story->section) { print "</TD><TD WIDTH=\"30%\" BGCOLOR=\"$this->bgcolor2\" ALIGN=\"center\"><B><A HREF=\"index.php?section=" . urlencode($story->section) . "\"><FONT COLOR=\"$this->sectioncolor\">". check_output($story->section) ."</FONT></A></B>"; }
+            print "<TD WIDTH=\"70%\" BGCOLOR=\"$this->bgcolor2\"><SMALL>Posted by " . format_username($story->userid) . " on $timestamp</TD><TD WIDTH=\"30%\" BGCOLOR=\"$this->bgcolor2\" ALIGN=\"center\"><B><A HREF=\"index.php?category=$story->cid\"><FONT COLOR=\"$this->sectioncolor\">". check_output($story->category) ."</FONT></A> / <A HREF=\"index.php?topic=$story->tid\"><FONT COLOR=\"$this->sectioncolor\">". check_output($story->topic) ."</FONT></A></B>";
            ?>
           </TD>
          </TR>
@@ -100,16 +97,13 @@
           <TD BGCOLOR="<?php echo $this->bgcolor2 ?>" COLSPAN="2">
           <?php
            echo "<P>". check_output($story->abstract, 1) ."</P>";
-           if ($reply)
-             if ($story->body) print "<P>". check_output($story->body, 1) ."</P>\n";
+           if (!$main && $story->body) print "<P>". check_output($story->body, 1) ."</P>\n";
           ?>
           </TD>
          </TR>
          <?php
-           if (!$reply)
+           if ($main)
              echo "<TR BGCOLOR=\"". $this->bgcolor3 ."\"><TD BGCOLOR=\"". $this->bgcolor3 ."\" ALIGN=\"right\" COLSPAN=\"2\">". theme_morelink($this, $story) ."</TD></TR>";
-           else
-             echo "<TR BGCOLOR=\"". $this->bgcolor3 ."\"><TD COLSPAN=\"2\" BGCOLOR=\"". $this->bgcolor3 ."\" ALIGN=\"right\">". $reply ."</TD></TR>";
          ?>
        </TABLE></TD></TR></TABLE><BR>
       <?php

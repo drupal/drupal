@@ -99,7 +99,7 @@ function moderation_node($id) {
     $output .= "</FORM>\n";
 
     $theme->header();
-    node_view($node, 0);
+    node_view($node);
     $theme->box(t("Moderate"), $output);
     $theme->footer();
   }
