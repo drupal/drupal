@@ -47,7 +47,7 @@ img {
 }
 .header .menu {
   background-color: #69c;
-  padding: 5px 5px 0 5px;
+  padding: 0.5em 0.5em 0 0.5em;
 }
 .menu #logo {
   vertical-align: bottom;
@@ -71,27 +71,23 @@ img {
   font-weight: bold;
   color: #9cf;
 }
-.menu .search-form {
+#search .form-text, #search .form-submit {
+  border: 1px solid #369;
+  font-size: 1.1em;
+}
+#search .form-text {
+  width: 8em;
+  height: 1.4em;
+  margin-left: 1em;
   padding: 0 0.5em 0 0.5em;
   margin: 0 0 0.5em 0;
 }
-.menu .search-form input {
-  border: 1px solid #369;
+#search .form-submit {
   height: 1.5em;
-}
-#secondary form {
-  display: inline;
-}
-#secondary form .keys {
-  width: 12em;
-  margin-left: 1em;
-}
-#secondary input {
-  font-size: 1.1em;
 }
 #message {
   background-color: #369;
-  padding: 20px 20px 20px 25px;
+  padding: 1.5em 2em;
   color: #fff;
 }
 #message a, #message a:visited {
@@ -99,31 +95,34 @@ img {
   font-weight: bold;
 }
 #main {
-  padding: 10px;
+  padding: 1em;
+}
+#message, #main .node .content {
+  line-height: 1.4;
 }
 #sidebar {
   background-color: #ddd;
-  width: 200px;
-  padding: 10px;
+  width: 16em;
+  padding: 1em;
 }
 #footer {
   background-color: #eee;
-  padding: 15px 10px 5px 10px;
-  font-size: .7em;
+  padding: 1em 1em 1em 1em;
+  font-size: 0.8em;
 }
 table {
   font-size: 1em;
 }
 .node, .block, .box {
-  padding: 0 0 20px 0;
+  padding: 0 0 1.5em 0;
 }
 .comment {
   border: 1px solid #ccc;
-  padding: 15px 15px 15px 15px;
-  margin: 5px 0 5px 0;
+  padding: 1.5em 1.5em 1.5em 1.5em;
+  margin: 0.5em 0 0.5em 0;
 }
 .node .title, .block .title, .box .title, .node .title a, .box .title a {
-  padding-bottom: 5px;
+  padding-bottom: 0.5em;
   font-weight: bold;
   font-size: 1.3em;
   color: #777;
@@ -139,26 +138,22 @@ table {
 .node .author, .comment .author {
   color: #999;
   font-size: 0.8em;
-  padding-bottom: 10px;
+  padding-bottom: 1em;
 }
 .node .taxonomy {
   color: #999;
   font-size: 0.8em;
-  padding: 15px;
-}
-.node .taxonomy a {
-  color: #369;
+  padding: 1.5em;
 }
 .node .content, .comment .content {
-  padding-top: 5px;
+  padding-top: 0.5em;
 }
 .node .links, .comment .links {
-  padding-top: 10px;
+  padding-top: 1em;
   color: #999;
 }
 .node .links a, .comment .links a {
   font-weight: bold;
-  color: #369;
 }
 .comment .title {
   font-weight: bold;
@@ -184,7 +179,7 @@ table {
 }
 #tracker td {
   vertical-align: top;
-  padding: 10px 10px 10px 0;
+  padding: 1em 1em 1em 0;
   border-bottom: 1px solid #ddd;
 }
 .calendar td {
@@ -215,4 +210,10 @@ table {
 }
 .calendar .row-week td a:hover {
   background-color: #fff; color: #000;
+}
+pre {
+  background-color: #eee;
+  padding: 0.75em 1.5em;
+  font-size: 11px;
+  border: 1px solid #ddd;
 }
