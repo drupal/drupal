@@ -14,7 +14,7 @@ if (user_access("access content")) {
   }
 }
 else {
-  $theme->box("Access denied", message_access());
+  $theme->box(t("Access denied"), message_access());
 }
 
 $theme->footer();

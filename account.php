@@ -333,16 +333,16 @@ function account_create_submit($edit) {
       $theme->box(t("Create user account"), account_create_form($edit, $error));
     }
     else if ($ban = user_ban($edit[login], "username")) {
-      $theme->box(t("Create user account"), account_create_form($edit, t("the username '$edit[login]' is banned") .": <i>$ban->reason</i>."));
+      $theme->box(t("Create user account"), account_create_form($edit, strtr(t("the username '%a' is banned"), array("%a" => $edit[login])) .": <i>$ban->reason</i>."));
     }
     else if ($ban = user_ban($edit[real_email], "e-mail address")) {
-      $theme->box(t("Create user account"), account_create_form($edit, t("the username '$edit[email]' is banned") .": <i>$ban->reason</i>."));
+      $theme->box(t("Create user account"), account_create_form($edit, strtr(t("the e-mail '%a' is banned"), array("%a" => $edit[email])) .": <i>$ban->reason</i>."));
     }
     else if (db_num_rows(db_query("SELECT userid FROM users WHERE (LOWER(userid) = LOWER('$edit[login]') OR LOWER(name) = LOWER('$edit[login]'))")) > 0) {
-      $theme->box(t("Create user account"), account_create_form($edit, t("the username '$edit[login]' is already taken.")));
+      $theme->box(t("Create user account"), account_create_form($edit, strtr(t("the username '%a' is already taken."), array("%a" => $edit[login]))));
     }
     else if (db_num_rows(db_query("SELECT real_email FROM users WHERE LOWER(real_email) = LOWER('$edit[email]')")) > 0) {
-      $theme->box(t("Create user account"), account_create_form($edit, t("the e-mail address '$edit[email]' is already in use by another account.")));
+      $theme->box(t("Create user account"), account_create_form($edit, strtr(t("the e-mail address '%a' is already in use by another account."),array("%a" => $edit[email]))));
     }
     else {
 
@@ -517,7 +517,12 @@ switch ($op) {
     break;
   case "login":
     account_session_start(check_input($userid), check_input($passwd));
-    header("Location: account.php?op=info");
+    if($HTTP_REFERER <> "") { 
+      header("Location: $HTTP_REFERER");
+    }
+    else { 
+      header("Location: account.php?op=info"); 
+    }
     break;
   case "logout":
     account_session_close();
