@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.376 2004/08/19 15:41:56 dries Exp $
+// $Id: user.module,v 1.377 2004/08/20 00:41:56 unconed Exp $
 
 /**
  * Invokes hook_user() in every module.
@@ -751,7 +751,7 @@ function user_login($edit = array(), $msg = '') {
       if (!$error) {
         $error = t('Sorry.  Unrecognized username or password.') .' '. l(t('Have you forgotten your password?'), 'user/password');
       }
-      watchdog('user', t('Login attempt failed for %name: %error.', array('%user' => '<em>'. $server ? ($name .'@'. $server) : $name .'</em>', '%error' => "<em>$error</em>")));
+      watchdog('user', t('Login attempt failed for %user: %error.', array('%user' => '<em>'. $server ? ($name .'@'. $server) : $name .'</em>', '%error' => "<em>$error</em>")));
     }
   }
 
