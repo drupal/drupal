@@ -120,7 +120,7 @@ function submit_preview($subject, $abstract, $article, $category) {
   $output .= "</FORM>\n";
   
   $theme->header();
-  $theme->preview($user->userid, stripslashes($subject), stripslashes($abstract), "", stripslashes($article), date("l, F d, Y - H:i A", time()), stripslashes($category), "we-hate-typoes");
+  $theme->preview($user->userid, check(stripslashes($subject)), check(stripslashes($abstract)), "", check(stripslashes($article)), date("l, F d, Y - H:i A", time()), check(stripslashes($category)), "we-hate-typoes");
   $theme->box("Submit a story", $output);
   $theme->footer();
 }
@@ -129,7 +129,7 @@ function submit_submit($subject, $abstract, $article, $category) {
   global $user, $theme;
 
   ### Add submission to SQL table:
-  db_query("INSERT INTO stories (author, subject, abstract, article, category, timestamp) VALUES ('$user->id', '". addslashes($subject) ."', '". addslashes($abstract) ."', '". addslashes($article) ."', '". addslashes($category) ."', '". time() ."')");
+  db_query("INSERT INTO stories (author, subject, abstract, article, category, timestamp) VALUES ('$user->id', '". check(addslashes($subject)) ."', '". check(addslashes($abstract)) ."', '". check(addslashes($article)) ."', '". check(addslashes($category)) ."', '". time() ."')");
   
   ### Display confirmation message:
   $theme->header(); 

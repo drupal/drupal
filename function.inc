@@ -29,14 +29,9 @@ function FixQuotes ($what = "") {
   return $what;
 }
 
-function check_html($message) {
-  ## TODO
-  return $message;
-}
-
-function filter_text($message, $strip="") {
-  ### TODO
-  return check_html($text, $strip);
+function check($message) {
+  include "config.inc";
+  return strip_tags(nl2br($message), $allowed_html);
 }
 
 function discussion_num_replies($id, $count = 0) {
