@@ -381,12 +381,14 @@ function account_track_site() {
 
   $result = db_query("SELECT n.title, n.nid, n.type, n.status, u.userid FROM node n LEFT JOIN users u ON n.author = u.id WHERE ". time() ." - n.timestamp < $period ORDER BY n.timestamp DESC LIMIT 10");
 
-  $output .= "<TABLE BORDER=\"0\" CELLSPACING=\"4\" CELLPADDING=\"4\">\n";
-  $output .= " <TR><TH>". t("Subject") ."</TH><TH>". t("Author") ."</TH><TH>". t("Type") ."</TH><TH>". t("Status") ."</TH></TR>\n";
-  while ($node = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">". format_username($node->userid) ."</TD><TD ALIGN=\"center\">$node->type</TD><TD>". node_status($node->status) ."</TD></TR>";
+  if (db_num_rows($result)) {
+    $output .= "<TABLE BORDER=\"0\" CELLSPACING=\"4\" CELLPADDING=\"4\">\n";
+    $output .= " <TR><TH>". t("Subject") ."</TH><TH>". t("Author") ."</TH><TH>". t("Type") ."</TH><TH>". t("Status") ."</TH></TR>\n";
+    while ($node = db_fetch_object($result)) {
+      $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">". format_username($node->userid) ."</TD><TD ALIGN=\"center\">$node->type</TD><TD>". node_status($node->status) ."</TD></TR>";
+    }
+    $output .= "</TABLE>";
   }
-  $output .= "</TABLE>";
 
   $theme->box(t("Recent nodes"), ($output ? $output : t("No nodes recently.")));
 
