@@ -74,7 +74,7 @@ function search_menu($may_cache) {
   $items = array();
 
   if ($may_cache) {
-    $items[] = array('path' => 'search', 'title' => t('search for'),
+    $items[] = array('path' => 'search', 'title' => t('search'),
       'callback' => 'search_view',
       'access' => user_access('search content'),
       'type' => MENU_SUGGESTED_ITEM);
