@@ -118,18 +118,26 @@ function db_affected_rows() {
 }
 
 /**
- * Generates a limited query
+ * Runs a LIMIT query in the database.
  *
- * @param string  $query query
- * @param integer $from  the row to start to fetching
- * @param integer $count the numbers of rows to fetch
- *
- * @access public
+ * @param   mixed     $query  SQL query, followed by a variable number of arguments which are substituted into query by sprintf, followed by 'from' and 'count'  parameters.  'from' is the row to start fetching, 'count' the numbers of rows to fetch.
+ * @return  resource  a MySQL result or FALSE if the query was not executed correctly.
+ * @access  public
  */
-function db_query_range($query, $from, $count) {
+function db_query_range($query) {
+  $args = func_get_args();
+  $count = array_pop($args);
+  $from = array_pop($args);
+  if (count(func_get_args()) > 3) {
+    $args = array_map("check_query", $args);
+    $args[0] = $query;
+    $query = call_user_func_array("sprintf", $args);
+  }
+  else {
+    $query = func_get_arg(0);
+  }
   $query .= " LIMIT $from, $count";
-  // TODO: debug version
-  return db_query($query);
+  return _db_query($query);
 }
 
 ?>
