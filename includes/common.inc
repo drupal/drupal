@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.103 2002/04/22 09:05:35 kjartan Exp $
+// $Id: common.inc,v 1.104 2002/04/24 20:55:19 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST;
@@ -115,6 +115,9 @@ function locale_init() {
 
 function t($string, $args = 0) {
   global $languages;
+
+  $string = ($languages && function_exists("locale") ? locale($string) : $string);
+
   if (!$args) {
     return $string;
   }
