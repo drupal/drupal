@@ -69,6 +69,7 @@ function admin_page($mod) {
           print module_invoke(arg(1), "admin");
         }
         else {
+          print "<h2>". t("System messages") ."</h2>";
           print watchdog_overview("actions");
         }
 
