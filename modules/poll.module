@@ -205,7 +205,7 @@ function poll_link($type, $node = 0, $main) {
         // Disable
         $url = eregi_replace("pollresults\[$node->nid\]=1", "pollresults[$node->nid]=0", request_uri());
 
-        $links[] = "<a href=\"". htmlentities($url) ."\">". t("voting form") . "</a>";
+        $links[] = "<a href=\"". $url ."\">". t("voting form") . "</a>";
       }
       else {
         // Enable
@@ -216,7 +216,7 @@ function poll_link($type, $node = 0, $main) {
           $url = request_uri() . (strstr(request_uri(), "?") ? "&amp;" : "?") ."pollresults[$node->nid]=1";
         }
 
-        $links[] = "<a href=\"". htmlentities($url) ."\">". t("view results") . "</a>";
+        $links[] = "<a href=\"". $url ."\">". t("view results") . "</a>";
       }
     }
   }
