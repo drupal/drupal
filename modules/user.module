@@ -426,7 +426,7 @@ function user_block($op = "list", $delta = 0) {
         return $block;
       case 1:
         $block["subject"] = $user->uid ? $user->name : t("Navigation");
-        $block["content"] = "<div id=\"menu\">". menu_tree() ."</div>";
+        $block["content"] = "<div class=\"menu\">". menu_tree() ."</div>";
         return $block;
       case 2:
         if (user_access("access content")) {
@@ -1643,6 +1643,7 @@ function user_admin() {
         $output = user_admin_perm($edit);
         break;
       case t("Create account"):
+      case "create":
         $output = user_admin_create($edit);
         break;
       case t("Add role"):
@@ -1659,7 +1660,8 @@ function user_admin() {
       default:
         if ($op == "account" && arg(3) == "create") {
           $output = user_admin_create($edit);
-        } else {
+        }
+        else {
           $output = user_admin_account();
         }
     }
