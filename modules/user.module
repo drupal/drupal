@@ -211,7 +211,7 @@ function user_help() {
  <?php
 }
 
-function account_perm() {
+function user_perm() {
   return array("administer users");
 }
 
