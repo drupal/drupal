@@ -124,7 +124,7 @@ function cloud_save($edit) {
 function cloud_display() {
   $result = db_query("SELECT * FROM site ORDER BY name");
 
-  $header = array(t("site"), t("last update"), t("operations"));
+  $header = array(t("site"), t("last update"), array("data" => t("operations"), "colspan" => 2));
   while ($site = db_fetch_object($result)) {
     $rows[] = array("<a href=\"$site->link\">$site->name</a>", ($site->timestamp ? format_interval(time() - $site->timestamp) ." ago" : "never"), la(t("edit site"), array("mod" => "cloud", "op" => "edit", "id" => $site->sid)), la(t("update site"), array("mod" => "cloud", "op" => "update", "id" => $site->sid)));
   }
