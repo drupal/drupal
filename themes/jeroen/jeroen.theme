@@ -117,7 +117,7 @@
                                       case 12: $how = "Forged"; break;
                                       default: $how = "Sneaked through";
                                     }
-                                    echo "<FONT SIZE=\"-1\">". strtr(t("$how by %a on %b"), array("%a" => format_username($node->userid), "%b" => format_date($node->timestamp), "large")) ."</FONT>";
+                                    echo "<FONT SIZE=\"-1\">". strtr(t("$how by %a on %b"), array("%a" => format_username($node->userid, $node->name), "%b" => format_date($node->timestamp), "large")) ."</FONT>";
 ?>
                                   </FONT>
                                 </td>
@@ -192,7 +192,7 @@
 
       // Author:
       echo "                        <tr>";
-      echo "                          <td align=\"right\"><FONT COLOR=\"#FEFEFE\">". t("Author") .":</FONT></td><td><B>". format_username($comment->userid) ."</B> ";
+      echo "                          <td align=\"right\"><FONT COLOR=\"#FEFEFE\">". t("Author") .":</FONT></td><td><B>". format_username($comment->userid, $comment->name) ."</B> ";
                                         if ($comment->userid) {
       // Display extra information line:
                                           if ($comment->fake_email) $info .= format_email($comment->fake_email);

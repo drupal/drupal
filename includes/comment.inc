@@ -52,7 +52,7 @@ function comment_form($edit) {
   global $REQUEST_URI, $user;
 
   // name field:
-  $form .= form_item(t("Your name"), format_username($user->userid));
+  $form .= form_item(t("Your name"), format_username($user->userid, $user->name));
 
   // subject field:
   $form .= form_textfield(t("Subject"), "subject", $edit[subject], 50, 64);
@@ -216,7 +216,7 @@ function comment_view($comment, $folded = 0) {
 
   // display comment:
   if ($folded) $theme->comment($comment, $folded);
-  else print "<A HREF=\"". comment_uri("id=$comment->lid&cid=$comment->cid#$comment->cid") ."\">". check_output($comment->subject) ."</A> by ". format_username($comment->userid) ." <SMALL>($comment->score)</SMALL><P>";
+  else print "<A HREF=\"". comment_uri("id=$comment->lid&cid=$comment->cid#$comment->cid") ."\">". check_output($comment->subject) ."</A> by ". format_username($comment->userid, $comment->name) ." <SMALL>($comment->score)</SMALL><P>";
 }
 
 function comment_thread_min($cid, $threshold) {
@@ -278,7 +278,7 @@ function comment_render($lid, $cid) {
         print " <TR><TH>Subject</TH><TH>Author</TH><TH>Date</TH><TH>Score</TH></TR>\n";
         while ($comment = db_fetch_object($result)) {
           if (comment_visible($comment, $threshold)) {
-            print " <TR><TD><A HREF=\"". comment_uri("id=$comment->lid&cid=$comment->cid#$comment->cid") ."\">". check_output($comment->subject) ."</A></TD><TD>". format_username($comment->userid) ."</TD><TD>". format_date($comment->timestamp, "small") ."</TD><TD>". comment_score($comment) ."</TD></TR>\n";
+            print " <TR><TD><A HREF=\"". comment_uri("id=$comment->lid&cid=$comment->cid#$comment->cid") ."\">". check_output($comment->subject) ."</A></TD><TD>". format_username($comment->userid, $comment->name) ."</TD><TD>". format_date($comment->timestamp, "small") ."</TD><TD>". comment_score($comment) ."</TD></TR>\n";
           }
         }
         print "</TABLE>\n";

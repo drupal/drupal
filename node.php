@@ -77,7 +77,7 @@ function node_failure() {
 function node_history($node) {
   global $status;
   if ($node->status == $status[expired] || $node->status == $status[posted]) {
-    $output .= "<DT><B>". format_date($node->timestamp) ." by ". format_username($node->userid) .":</B></DT><DD>". check_output($node->log, 1) ."<P></DD>";
+    $output .= "<DT><B>". format_date($node->timestamp) ." by ". format_username($node->userid, $node->name) .":</B></DT><DD>". check_output($node->log, 1) ."<P></DD>";
   }
   if ($node->pid) {
     $output .= node_history(node_get_object(array("nid" => $node->pid)));
@@ -88,11 +88,11 @@ function node_history($node) {
 $number = ($title ? db_result(db_query("SELECT COUNT(nid) FROM node WHERE title = '$title' AND status = $status[posted]")) : 1);
 
 if ($number > 1) {
-  $result = db_query("SELECT n.*, u.userid FROM node n LEFT JOIN users u ON n.author = u.id WHERE n.title = '$title'");
+  $result = db_query("SELECT n.*, u.userid, u.name FROM node n LEFT JOIN users u ON n.author = u.id WHERE n.title = '$title'");
 
   while ($node = db_fetch_object($result)) {
     if (node_access($node)) {
-      $output .= "<P><B><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></B><BR><SMALL>$node->type - ". format_username($node->userid) ." - ". format_date($node->timestamp, "small") ."</SMALL></P>";
+      $output .= "<P><B><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></B><BR><SMALL>$node->type - ". format_username($node->userid, $node->name) ." - ". format_date($node->timestamp, "small") ."</SMALL></P>";
     }
   }
 
