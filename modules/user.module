@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.347 2004/06/30 05:44:59 dries Exp $
+// $Id: user.module,v 1.348 2004/06/30 20:43:07 dries Exp $
 
 /**
  * Invokes hook_user() in every module.
@@ -1186,7 +1186,7 @@ function user_page() {
       break;
     case t('Log in'):
     case 'login':
-      $outpute= user_login($edit);
+      $output = user_login($edit);
       print theme('page', $output, t('Log in'));
       break;
     case 'logout':
