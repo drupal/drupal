@@ -37,11 +37,18 @@ function search_link($type) {
     $links[] = lm(t("search"), array("mod" => "search"), "", array("title" => t("Search for older content.")));
   }
 
-  if ($type == "admin" && user_access("administer search")) {
-    $links[] = la(t("search"), array("mod" => "search"));
-  }
-
   return $links ? $links : array();
+}
+
+function search_conf_options() {
+  $output = form_textfield(t("Minimum word length to index"), "minimum_word_size", variable_get("minimum_word_size", 2), 10, 10, t("The number of characters a word has to be to be indexed.  Words shorter than this will not be searchable."));
+  $output .= form_textfield(t("Minimum word length to search for"), "remove_short", variable_get("remove_short", 0), 10, 10, t("The number of characters a word has to be to be searched for."));
+  $output .= form_textarea(t("Noise words"), "noisewords", variable_get("noisewords", ""), 70, 10, t("These words will not be indexed, enter comma separated list, linebreaks and whitespace do not matter.  Example: and, or, not, a, to, I, it, ..."));
+  $output .= form_select(t("Help text position"), "help_pos", variable_get("help_pos", 1), array("1" => t("Above search output"), "2" => t("Below search output"), "3" => t("Link from above search output"), "4" => t("Link from below search output")), t("Where to show the help text for users on the search page."));
+
+  // $output .= form_item(t("Create search index"), la(t("reindex all"), array("mod" => "search", "op" => "reindex")));
+
+  return $output;
 }
 
 /**
@@ -49,24 +56,17 @@ function search_link($type) {
  *
  */
 function search_admin() {
-  global $op, $id, $edit;
+  global $op;
 
   // Only allow people with sufficient access.
   if (user_access("administer search")) {
-    switch ($op) {
-    case "Submit":
-      print status(search_save($edit));
-      break;
-    case "reindex":
+    if ($op == "reindex") {
       search_invalidate();
       print t("index invalidated") ."<br />\n";
       search_cron();
       print t("index recreated") ."<br /><hr />\n";
-      break;
     }
-    print search_display(array("noisewords" => variable_get("noisewords", ""), "minimum_word_size" => variable_get("minimum_word_size", 2), "help_pos" => variable_get("help_pos", 1), "remove_short" => variable_get("remove_short", "0")));
   }
-  return;
 }
 
 /**
@@ -168,11 +168,11 @@ function do_search($search_array) {
           }
         }
         else {
-	  /*
-	  ** Different word, but existing "lno", increase the count of
+    /*
+    ** Different word, but existing "lno", increase the count of
            ** matches against this "lno" by the number of times this
-	  ** word appears in the text
-	  */
+    ** word appears in the text
+    */
           $results[$lno]["count"] = $results[$lno]["count"] + $count;
 
           // Another match on the a required word, increase valid
@@ -319,28 +319,6 @@ function update_index($search_array) {
   return true;
 }
 
-/**
- * Display the current search parameters for the administrator to be able
- * to modify
- *
- * @param $edit  An array of fields as setup via calling form_textfield,
- *               form_textarea etc
- */
-function search_display($edit) {
-  $form = form_textfield(t("Minimum word length to index"), "minimum_word_size", $edit["minimum_word_size"], 10, 10, t("The number of characters a word has to be to be indexed.  Words shorter than this will not be searchable."));
-  $form .= form_textfield(t("Minimum word length to search for"), "remove_short", $edit["remove_short"], 10, 10, t("The number of characters a word has to be to be searched for."));
-  $form .= form_textarea(t("Noise words"), "noisewords", $edit["noisewords"], 70, 10, t("These words will not be indexed, enter comma separated list, linebreaks and whitespace do not matter.  Example: and, or, not, a, to, I, it, ..."));
-  $form .= form_select(t("Help text position"), "help_pos", $edit["help_pos"], array("1" => t("Above search form"), "2" => t("Below search form"), "3" => t("Link from above search form"), "4" => t("Link from below search form")), t("Where to show the help text for users on the search page."));
-  $form .= form_submit("Submit");
-
-  $links[] = la(t("reindex all"), array("mod" => "search", "op" => "reindex"));
-
-  $output = "<small>". implode(" &middot; ", $links) ."</small><hr />";
-
-  $output .= form($form);
-
-  return $output;
-}
 
 function search_invalidate() {
   foreach (module_list() as $module) {
@@ -361,7 +339,7 @@ function search_invalidate() {
  */
 function search_save($edit) {
   variable_set("minimum_word_size", $edit["minimum_word_size"]);
-  
+
   $data = strtr($edit["noisewords"], "\n\r\t", "   ");
   $data = str_replace(" ", "", $data);
   variable_set("noisewords", $data);
