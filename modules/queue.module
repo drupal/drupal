@@ -1,5 +1,5 @@
 <?php
-// $Id: queue.module,v 1.70 2003/03/09 17:19:50 kjartan Exp $
+// $Id: queue.module,v 1.71 2003/03/10 12:01:26 kjartan Exp $
 
 function queue_system($field){
   $system["description"] = t("Enables content to be moderated by the community.");
@@ -220,7 +220,6 @@ function queue_nodeapi(&$node, $op, $arg = 0) {
     case "fields":
       return array("score", "users", "votes");
     case "validate":
-      $node->promote = $node->moderate ? 0 : 1;
       if ($node->nid && $node->moderate) {
         // Reset votes when node is updated:
         $node->score = 0;
