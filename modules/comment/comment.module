@@ -1400,7 +1400,10 @@ function theme_comment_form($edit, $title) {
 
   $form .= form_submit(t('Preview comment'));
 
-  if (!variable_get('comment_preview', 1) || ($_POST['op'] == t('Preview comment') && !form_get_errors())) {
+  // Only show post button if preview is optional or if we are in preview mode.
+  // We show the post button in preview mode even if there are form errors so that
+  // optional form elements (e.g., captcha) can be updated in preview mode.
+  if (!variable_get('comment_preview', 1) || ($_POST['op'] == t('Preview comment')) || ($_POST['op'] == t('Post comment'))) {
     $form .= form_submit(t('Post comment'));
   }
 
