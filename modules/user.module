@@ -502,7 +502,7 @@ function user_link($type) {
     if (user_access("administer users")) {
       menu("admin/user", t("accounts"), "user_admin", 2);
       menu("admin/user/create", t("new user"), "user_admin", 1);
-      menu("admin/user/access", t("access rules"), NULL, 3);
+      menu("admin/user/access", t("access rules"), "user_admin", 3);
       menu("admin/user/access/mail", t("e-mail rules"), "user_admin");
       menu("admin/user/access/user", t("name rules"), "user_admin");
       menu("admin/user/role", t("roles"), "user_admin", 4);
