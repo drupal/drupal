@@ -260,7 +260,7 @@ function poll_block() {
   }
   $blocks[0][subject] = "Latest poll";
   $blocks[0][content] = $output ? $output : "No active polls.";
-  $blocks[0][info] = "Latest active poll.";
+  $blocks[0][info] = "Most recent poll";
   $blocks[0][link] = "index.php";
   return $blocks;
 }

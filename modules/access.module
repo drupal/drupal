@@ -116,7 +116,7 @@ function access_perm_save($edit) {
   return "permissions have been saved.";
 }
 
-function access_default() {
+function access_init() {
   $role = db_fetch_object(db_query("SELECT * FROM role WHERE name = 'anonymous user'"));
   if (!$role) db_query("INSERT INTO role (name) VALUES ('anonymous user')");
 
@@ -131,7 +131,7 @@ function access_admin() {
 
     print "<SMALL><A HREF=\"admin.php?mod=access&op=add\">add new role</A> | <A HREF=\"admin.php?mod=access&op=role\">role overview</A> | <A HREF=\"admin.php?mod=access&op=perm\">permission overview</A> | <A HREF=\"admin.php?mod=access&op=help\">help</A></SMALL><HR>\n";
 
-    access_default();
+    access_init();
 
     switch ($op) {
       case "add":

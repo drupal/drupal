@@ -1,0 +1,145 @@
+<?php
+
+function system_help() {
+ ?>
+  <P>Drupal comes with system-wide defaults but the setting-module provides control over many Drupal preferences, behaviors including visual and operational settings.</P>
+  <H3>Cron</H3>
+  <P>Some settings require a <I>cron</I> or <I>crontab</I>.  Cron (which stands for chronograph) is a periodic command scheduler: it executes commands at intervals specified in seconds.  It can be used to control the execution of daily, weekly and monthly jobs (or anything with a period of <i>n</i> seconds).   Automating tasks is one of the best ways to keep a system running smoothly, and if most of your administration does not require your direct involvement, cron is an ideal solution.</P>
+  <P>Whenever <A HREF="<?php echo path_uri(); ?>cron.php"><?php echo path_uri(); ?>cron.php</A> is accessed, cron will run: it checks for the jobs cron controls, and their periods in seconds.  If a certain task wasn't executed in the last n seconds, where n is the period of that job, it will be executed.  When all the executed commands terminate, cron is done.</P>
+  <P>The recommended way to setup your cron system is to setup a Unix/Linux crontab that frequently visits <A HREF="<?php echo path_uri(); ?>cron.php"><?php echo path_uri(); ?>cron.php</A>. Note that cron does not guarantee the commands will be executed at the specified interval.  However, Drupal will try his best and run the crons as close to the specified intervals as possible.  The more you visit cron.php, the more accurate cron will be.</P>
+  <P>If your hosting company does not allow you to setup crontabs, you can always ask someone else to setup a crontab for you. After all, virtually any Unix/Linux machine with access to the internet can setup a crontab to frequently visit <A HREF="<?php echo path_uri(); ?>cron.php"><?php echo path_uri(); ?>cron.php</A>.</P>
+  <P>For the Unix/Linux crontab itself, use a browser like <I>lynx</I> or <I>wget</I> but make sure the process terminates: either use <CODE>/usr/bin/lynx -source <?php echo path_uri(); ?>cron.php</CODE> or <CODE>/usr/bin/wget -O /dev/null <?php echo path_uri(); ?>cron.php</CODE>.  Take a look at the example scripts in the <CODE>scripts</CODE>-directory and make sure to adjust them to your needs.  A good crontab-line to run the cron-script once every hour would be: <CODE>00 * * * * /home/www/drupal/scripts/cron-lynx</CODE>.</P>
+ <?php
+}
+
+function system_perm() {
+  return array("edit configuration options");
+}
+
+function system_view_options() {
+  global $conf, $cmodes, $corder, $themes;
+
+  // general settings:
+  $output .= "<H3>General settings</H3>\n";
+  $output .= form_textfield(t("Name"), "site_name", variable_get("site_name", "drupal"), 30, 55, t("The name of this website."));
+  $output .= form_textfield(t("Slogan"), "site_slogan", variable_get("site_slogan", ""), 30, 55, t("The slogan of this website"));
+  $output .= form_textfield(t("E-mail address"), "site_mail", variable_get("site_mail", "root@localhost"), 30, 55, t("A valid e-mail address for this website, used by the auto-mailer to create new user accounts."));
+  $output .= form_textarea(t("Footer message"), "site_footer", variable_get("site_footer", ""), 55, 3, t("This text will be displayed at the bottom of each page.  Useful for adding a copyright notice to your pages."));
+  $output .= form_textfield(t("Anonymous user"), "anonymous", variable_get("anonymous", "Anonymous"), 30, 55, t("The name used to indicate anonymous users."));
+  $output .= "<HR>\n";
+
+  // submission settings:
+  $output .= "<H3>Submission settings</H3>\n";
+  $size = array(1000 => "1.000 characters", 5000 => "5.000 characters", 10000 => "10.000 characters", 15000 => "15.000 characters", 30.000 => "30.000 characters", 50000 => "50.000 characters", 100000 => "100.000 characters");
+  $output .= form_select(t("Maximum submission size"), "max_input_size", variable_get("max_input_size", 10000), $size, t("The maximum number of characters someone can enter in a form."));
+  $rate = array(1 => "Maximum 1 every second", 5 => "Maximum 1 every 5 seconds", 15 => "Maximum 1 every 15 seconds", 30 => "Maximum 1 every 30 seconds", 60 => "Maximum 1 every minute", 300 => "Maximum 1 every 5 minutes", 900 => "Maximum 1 every 15 minutes", 1800 => "Maximum 1 every 30 minutes", 3600 => "Maximum 1 every hour", 21600 => "Maximum 1 every 6 hour", 43200 => "Maximum 1 every 12 hour");
+  $output .= form_select(t("Maximum node rate"), "max_node_rate", variable_get("max_node_rate", 900), $rate, t("The maximum submission rate for nodes.  Its purpose is to stop potential abuse or denial of service attacks."));
+  $output .= form_select(t("Maximum comment rate"), "max_comment_rate", variable_get("max_comment_rate", 120), $rate, t("The maximum submission rate for comments.  Its purpose is to stop potential abuse or denial of service attacks."));
+  $output .= "<HR>\n";
+
+  // comment settings:
+  $output .= "<H3>Comment settings</H3>\n";
+  $output .= form_select(t("Default display mode"), "default_comment_mode", $conf[default_comment_mode], $cmodes, t("The default mode in which comments are displayed."));
+  $output .= form_select(t("Default display order"), "default_comment_order", $conf[default_comment_order], $corder, t("The default order in which comments are displayed."));
+  for ($count = -1; $count < 6; $count++) $threshold[$count] = t("Filter") ." - $count";
+  $output .= form_select(t("Default filter threshold"), "default_comment_threshold", $conf[default_comment_threshold], $threshold, t("The default threshold used to filter comments."));
+  $output .= "<HR>\n";
+
+  // layout settings:
+  $output .= "<H3>Layout settings</H3>\n";
+  foreach ($themes as $key=>$value) $options .= "<OPTION VALUE=\"$key\"". (variable_get("theme_default", key($themes)) == $key ? " SELECTED" : "") .">$key</OPTION>\n";
+  $output .= form_item(t("Default theme"), "<SELECT NAME=\"edit[theme_default]\">$options</SELECT>", t("The default theme as seen by new visitors and anonymous users."));
+  $output .= "<HR>\n";
+
+  // development settings:
+  $output .= "<H3>Development settings</H3>\n";
+  $output .= form_select(t("Display timer information"), "dev_timer", variable_get("dev_timer", 0), array("Disabled", "Enabled"), t("Display the time it took to generate a page.  For Drupal development only."));
+  $output .= "<HR>\n";
+
+  foreach (module_list() as $name) {
+    if (module_hook($name, "conf_options")) {
+      $output .= "<H3>". ucfirst($name) ." settings</H3>". module_invoke($name, "conf_options") ."<HR>\n";
+    }
+  }
+  return $output;
+}
+
+function system_view_filters() {
+  foreach (module_list() as $name) {
+    if (module_hook($name, "conf_filters")) {
+      $output .= module_invoke($name, "conf_filters");
+    }
+  }
+  return $output;
+}
+
+function system_save($edit = array()) {
+  foreach ($edit as $name=>$value) variable_set($name, $value);
+  return "the configuration options have been saved.";
+}
+
+function system_default($edit = array()) {
+  foreach ($edit as $name=>$value) variable_del($name);
+  return "the configuration options have been reset to their default values.";
+}
+
+function system_view($type) {
+  global $REQUEST_URI;
+
+  switch ($type) {
+    case "filter":
+      $form = system_view_filters();
+      break;
+    default:
+      $form = system_view_options();
+  }
+
+  $form .= form_submit("Save configuration");
+  $form .= form_submit("Reset to defaults");
+
+  return form($REQUEST_URI, $form);
+}
+
+function system_modules() {
+  $output .= "<TABLE BORDER=\"1\" CELLPADDING=\"2\" CELLSPACING=\"2\">\n";
+  $output .= " <TR><TH>module</TH><TH COLSPAN=\"2\">operations</TH></TR>\n";
+  foreach (module_list() as $name) {
+    $output .= " <TR><TD>$name</TD><TD>". (module_hook($name, "page") ? "<A HREF=\"module.php?mod=$name\">view</A>" : "&nbsp;") ."</TD><TD>". (module_hook($name, "admin") ? "<A HREF=\"admin.php?mod=$name\">admin</A>" : "&nbsp;") ."</TD></TR>\n";
+  }
+  $output .= "</TABLE>\n";
+
+  return $output;
+}
+
+function system_admin() {
+  global $user, $edit, $op, $type;
+
+  if (user_access($user, "edit configuration options")) {
+
+    print "<SMALL><A HREF=\"admin.php?mod=system&type=options\">site settings</A> | <A HREF=\"admin.php?mod=system&type=filter\">content filters</A> | <A HREF=\"admin.php?mod=system&op=modules\">modules</A> | <A HREF=\"admin.php?mod=system&op=help\">help</A></SMALL><HR>\n";
+
+    switch ($op) {
+      case "help":
+        system_help();
+        break;
+      case "modules":
+        print system_modules();
+        break;
+      case "Reset to defaults":
+        print status(system_default($edit));
+        print system_view($type);
+        break;
+      case "Save configuration":
+        print status(system_save($edit));
+        print system_view($type);
+        break;
+      default:
+        print system_view($type);
+    }
+  }
+  else {
+    print message_access();
+  }
+}
+
+?>
