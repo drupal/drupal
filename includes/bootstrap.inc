@@ -218,7 +218,7 @@ function timer_start() {
 
 function watchdog($type, $message, $link = NULL) {
   global $user;
-  db_query("INSERT INTO {watchdog} (uid, type, message, link, location, hostname, timestamp) VALUES (%d, '%s', '%s', '%s', '%s', '%s', %d)", $user->uid, $type, $message, $link, request_uri(), $_ENV['REMOTE_ADDR'], time());
+  db_query("INSERT INTO {watchdog} (uid, type, message, link, location, hostname, timestamp) VALUES (%d, '%s', '%s', '%s', '%s', '%s', %d)", $user->uid, $type, $message, $link, request_uri(), $_SERVER['REMOTE_ADDR'], time());
 }
 
 unset($conf);

@@ -135,8 +135,8 @@ function error_handler($errno, $message, $filename, $line, $variables) {
 
 function throttle($type, $rate) {
   if (!user_access("access administration pages")) {
-    if ($throttle = db_fetch_object(db_query("SELECT * FROM {watchdog} WHERE type = '%s' AND hostname = '%s' AND %d - timestamp < %d", $type, $_ENV['REMOTE_ADDR'], time(), $rate))) {
-      watchdog("warning", "throttle: '". $_ENV['REMOTE_ADDR'] ."' exceeded submission rate - $throttle->type");
+    if ($throttle = db_fetch_object(db_query("SELECT * FROM {watchdog} WHERE type = '%s' AND hostname = '%s' AND %d - timestamp < %d", $type, $_SERVER['REMOTE_ADDR'], time(), $rate))) {
+      watchdog("warning", "throttle: '". $_SERVER['REMOTE_ADDR'] ."' exceeded submission rate - $throttle->type");
       die(message_throttle());
     }
   }
