@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.191 2005/01/14 15:21:38 dries Exp $
+// $Id: system.module,v 1.192 2005/01/24 21:20:16 dries Exp $
 
 /**
  * @file
@@ -539,7 +539,7 @@ function system_settings_save() {
     }
     drupal_set_message(t('The configuration options have been reset to their default values.'));
   }
-  if ($op == t('Save configuration')) {
+  else if ($op == t('Save configuration')) {
     if (is_array($edit)) {
       foreach ($edit as $name => $value) {
         variable_set($name, $value);

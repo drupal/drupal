@@ -1,5 +1,5 @@
 <?php
-/* $Id: file.inc,v 1.34 2005/01/09 09:22:38 dries Exp $ */
+/* $Id: file.inc,v 1.35 2005/01/24 21:20:15 dries Exp $ */
 
 /**
  * @file
@@ -133,7 +133,7 @@ function file_check_upload($source) {
     }
   }
   elseif ($_FILES["edit"]["name"][$source] && is_uploaded_file($_FILES["edit"]["tmp_name"][$source])) {
-    $file = new stdClass();
+    $file = new StdClass();
     $file->filename = trim(basename($_FILES["edit"]["name"][$source]), '.');
     $file->filemime = $_FILES["edit"]["type"][$source];
     $file->filepath = $_FILES["edit"]["tmp_name"][$source];
