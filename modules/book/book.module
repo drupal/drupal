@@ -82,6 +82,10 @@ function book_link($type) {
     $links[] = "<a href=\"module.php?mod=book\">". t("collaborative book") ."</a>";
   }
 
+  if ($type == "admin" && user_access("administer nodes")) {
+    $links[] = "<a href=\"admin.php?mod=book\">". t("collaborative book") ."</a>";
+  }
+
   return $links ? $links : array();
 }
 
@@ -239,25 +243,26 @@ function book_tree($parent = "", $depth = 0) {
     ** Select all child nodes and render them into a table of contents:
     */
 
-    $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.type = 'book' AND b.parent = '$parent' ORDER BY b.weight, n.title");
+   $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.type = 'book' AND b.parent = '$parent' ORDER BY b.weight, n.title");
 
-    while ($page = db_fetch_object($result)) {
-      // load the node:
-      $node = node_load(array("nid" => $page->nid));
+     while ($page = db_fetch_object($result)) {
+       // load the node:
+       $node = node_load(array("nid" => $page->nid));
 
-      // take the most recent approved revision:
-      if ($node->moderate) {
-        $node = node_revision_load($node, end(node_revision_list($node)));
-      }
+       // take the most recent approved revision:
+       if ($node->moderate) {
+         $node = node_revision_load($node, end(node_revision_list($node)));
+       }
 
-      // output the content:
-      $output .= "<li><a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a></li>";
+       // output the content:
+       $output .= "<li><a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a></li>";
 
-      // build the sub-tree of each child:
-      $output .= book_tree($node->nid, $depth + 1);
-    }
+       // build the sub-tree of each child:
+       $output .= book_tree($node->nid, $depth + 1);
+     }
 
-    $output = "<ul>$output</ul>";
+     $output = "<ul>$output</ul>";
+
   }
 
   return $output;
@@ -353,6 +358,95 @@ function book_export_html_recursive($parent = "", $depth = 1) {
   }
 
   return $output;
+}
+
+function book_admin_page($nid, $depth = 0) {
+  $weight = array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30);
+
+  $result = db_query("SELECT n.nid FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.type = 'book' AND b.parent = '$nid' ORDER BY b.weight, n.title");
+
+  while ($node = db_fetch_object($result)) {
+    $node = node_load(array("nid" => $node->nid));
+
+    $output .= "<tr>";
+    $output .= " <td><div style=\"padding-left: ". (25 * $depth) ."px;\">$node->title</div></td>";
+    $output .= " <td align=\"center\">". ($rev = end(node_revision_list($node)) ? $rev : 0) ."</td>";
+    $output .= " <td><a href=\"admin.php?mod=node&op=edit&id=$node->nid\">". t("edit page") ."</td>";
+    $output .= " <td><a href=\"admin.php?mod=node&op=delete&id=$node->nid\">". t("delete page") ."</td>";
+    $output .= "</tr>";
+    $output .= book_admin_page($node->nid, $depth + 1);
+  }
+
+  return $output;
+}
+
+function book_admin_view($nid, $depth = 0) {
+
+  $node = node_load(array("nid" => $nid));
+
+  $output .= "<h3>". check_output($node->title) ."</h3>";
+  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
+  $output .= " <tr><th>title</th><th>rev</th><th colspan=\"2\">operations</th></tr>";
+  $output .= book_admin_page($nid);
+  $output .= "</table>";
+
+  return $output;
+}
+
+function book_admin_orphan() {
+
+  $result = db_query("SELECT n.nid, n.title, b.parent FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE n.type = 'book'");
+
+  while ($page = db_fetch_object($result)) {
+    $pages[$page->nid] = $page;
+  }
+
+  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">";
+  $output .= " <tr><th>title</th><th colspan=\"2\">operations</th></tr>";
+  foreach ($pages as $nid => $node) {
+    if ($node->parent && empty($pages[$node->parent])) {
+      $output .= "<tr><td><a href=\"node.php?id=$node->nid\">". check_output($node->title) ."</a></td><td><a href=\"admin.php?mod=node&op=edit&id=$node->nid\">". t("edit page") ."</td><td><a href=\"admin.php?mod=node&op=delete&id=$node->nid\">". t("delete page") ."</td>";
+    }
+  }
+  $output .= "</table>";
+
+  return $output;
+}
+
+function book_admin_links() {
+  $result = db_query("SELECT n.nid, n.title FROM node n LEFT JOIN book b ON n.nid = b.nid WHERE b.parent = 0 ORDER BY b.weight, n.title");
+
+  while ($book = db_fetch_object($result)) {
+    $links[] = "<a href=\"admin.php?mod=book&op=view&id=$book->nid\">". t("book") .": <i>". check_output($book->title) ."</i></a>";
+  }
+
+  return $links;
+}
+
+function book_admin() {
+  global $id, $op;
+
+  if (user_access("administer nodes")) {
+
+    /*
+    ** Compile a list of the administrative links:
+    */
+
+    $links = book_admin_links();
+    $links[] = "<a href=\"admin.php?mod=book&op=orphan\">". t("orphan pages") ."</a>";
+
+    print "<small>". implode(" &middot; ", $links) ."</small><hr />";
+
+    switch ($op) {
+      case "orphan":
+        print book_admin_orphan();
+        break;
+      case "view":
+        print book_admin_view($id);
+        break;
+      default:
+    }
+  }
 }
 
 ?>
