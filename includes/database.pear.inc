@@ -18,9 +18,8 @@ function db_connect($url) {
 /**
  * Runs a query in the database.
  *
- * @param  $query SQL query
- * @param  $type  module type of this item
- * @return sql    result resource
+ * @param   $query  SQL query, followed by a variable number of arguments which are substituted into query by sprintf.
+ * @return  a DB_Result object or a DB_Error
  */
 function db_query($query) {
 
@@ -146,9 +145,8 @@ function db_affected_rows() {
 /**
  * Runs a LIMIT query in the database.
  *
- * @param   mixed   $query  SQL query followed by a variable number of arguments which are substituted into query by sprintf, followed by 'from' and 'count' parameters. 'from' is the row to start fetching, 'count' the numbers of rows to fetch.
- * @return  mixed   a DB_Result object or a DB_Error
- * @access public
+ * @param   $query  SQL query followed by a variable number of arguments which are substituted into query by sprintf, followed by 'from' and 'count' parameters. 'from' is the row to start fetching, 'count' the numbers of rows to fetch.
+ * @return  a DB_Result object or a DB_Error
  */
 function db_query_range($query) {
   global $db_handle, $queries;

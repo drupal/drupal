@@ -21,6 +21,12 @@ function db_connect($url) {
   */
 }
 
+/**
+ * Runs a query in the database.
+ *
+ * @param   $query  SQL query, followed by a variable number of arguments which are substituted into query by sprintf.
+ * @return  a MySQL result or FALSE if the query was not executed correctly.
+ */
 function db_query($query) {
   $args = func_get_args();
 
@@ -142,9 +148,8 @@ function db_affected_rows() {
 /**
  * Runs a LIMIT query in the database.
  *
- * @param   mixed     $query  SQL query, followed by a variable number of arguments which are substituted into query by sprintf, followed by 'from' and 'count'  parameters.  'from' is the row to start fetching, 'count' the numbers of rows to fetch.
- * @return  resource  a MySQL result or FALSE if the query was not executed correctly.
- * @access  public
+ * @param   $query  SQL query, followed by a variable number of arguments which are substituted into query by sprintf, followed by 'from' and 'count'  parameters.  'from' is the row to start fetching, 'count' the numbers of rows to fetch.
+ * @return  a MySQL result or FALSE if the query was not executed correctly.
  */
 function db_query_range($query) {
   $args = func_get_args();
