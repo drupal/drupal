@@ -715,8 +715,8 @@ function search_form($action = NULL, $keys = NULL, $options = NULL) {
         $output .= ' <input type="checkbox" name="edit[type]['. $name .']" '. ($edit['type'][$name] ? ' checked="checked"' : '') .' /> '. t($name);
       }
     }
-    $output .= '</div>';
   }
+  $output .= '</div>';
 
   return form($output, 'post', $action);
 }
