@@ -1,4 +1,5 @@
 <?php
+// $Id$
 
 function xtemplate_settings() {
   $output  = form_select("Sidebar placement", "xtemplate_sidebar", variable_get("xtemplate_sidebar", "right"), array("none" => t("No sidebars"), "left" => t("Sidebar on the left"), "right" => t("Sidebar on the right"), "both" => t("Sidebar on the left and the right")));
@@ -89,8 +90,9 @@ class Theme_xtemplate extends BaseTheme {
       $this->template->parse("header.search_box");
     }
 
-    if ($_GET["q"] == variable_get("site_frontpage", "node")) {
-      $this->template->assign("header_message", variable_get("xtemplate_message", l("edit message", "admin/system/themes/xtemplate")));
+    // only parse the message block if we are on the frontpage ...
+    if ($_GET["q"] == variable_get("site_frontpage", "node") && ($message = variable_get("xtemplate_message", "edit message"))) {
+      $this->template->assign("header_message", $message);
       $this->template->parse("header.message");
     }
 
@@ -112,8 +114,6 @@ class Theme_xtemplate extends BaseTheme {
 
     $this->template->parse("header");
     print $this->template->text("header");
-
-
   }
 
   function block($title, $content, $region = "main") {
@@ -155,12 +155,15 @@ class Theme_xtemplate extends BaseTheme {
 
     ob_end_clean();
 
-    $this->template->assign( array(
-      "footer_message" => variable_get("site_footer", ""),
-      "footer" => theme_footer()
-    ));
+    // only parse the footer block if site_footer is set
+    if ($footer_message = variable_get("site_footer", FALSE)) {
+      $this->template->assign("footer_message", $footer_message);
+      $this->template->parse("footer.message");
+    }
 
+    $this->template->assign("footer", theme_footer());
     $this->template->parse("footer");
+
     print $this->template->text("footer");
   }
 }
