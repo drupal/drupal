@@ -493,15 +493,14 @@ function node_admin_nodes() {
 
   $result = pager_query("SELECT n.*, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid ". $queries[$query ? $query : 0], 50);
 
-  $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
-  $output .= " <tr><th>". t("title") ."</th><th>". t("type") ."</th><th>". t("author") ."</th><th>". t("status") ."</th><th colspan=\"2\">". t("operations") ."</th></tr>\n";
+  $header = array(t("title"), t("type"), t("author"), t("status"), array("data" => t("operations"), "colspan" => 2));
+
   while ($node = db_fetch_object($result)) {
-    $output .= "<tr><td>". l(check_output($node->title), array("id" => $node->nid)) ."</td><td>". module_invoke($node->type, "node", "name") ."</td><td nowrap=\"nowrap\">". format_name($node) ."</td><td>". ($node->status ? t("published") : t("not published")) ."</td><td nowrap=\"nowrap\">". la(t("edit node"), array("mod" => "node", "op" => "edit", "id" => $node->nid)) ."</td><td nowrap=\"nowrap\">". la(t("delete node"), array("mod" => "node", "op" => "delete", "id" => $node->nid)) ."</td></tr>";
+    $rows[] = array(l(check_output($node->title), array("id" => $node->nid)), module_invoke($node->type, "node", "name"), format_name($node), ($node->status ? t("published") : t("not published")), la(t("edit node"), array("mod" => "node", "op" => "edit", "id" => $node->nid)), la(t("delete node"), array("mod" => "node", "op" => "delete", "id" => $node->nid)));
   }
-  $output .= "<tr><td colspan=\"6\">". pager_display(NULL, 50, 0, "admin") ."</td></tr></table>";
+//  $output .= "<tr><td colspan=\"6\">". pager_display(NULL, 50, 0, "admin") ."</td></tr></table>";
 
-
-  return $output;
+  return table($header, $rows);
 }
 
 /*
