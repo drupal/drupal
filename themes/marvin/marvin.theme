@@ -1,5 +1,5 @@
 <?php
-// $Id: marvin.theme,v 1.93 2003/01/29 23:29:01 dries Exp $
+// $Id: marvin.theme,v 1.94 2003/02/09 17:39:37 dries Exp $
 
   /*********************************************************************
 
@@ -84,12 +84,9 @@
    }
 
    function node($node, $main = 0) {
-     $terms = array();
 
-     if (function_exists("taxonomy_node_get_terms")) {
-       foreach (taxonomy_node_get_terms($node->nid) as $term) {
-         $terms[] = l($term->name, NULL, array(), "or=$term->tid");
-       }
+     if (module_exist("taxonomy")) {
+      $terms = taxonomy_link("taxonomy terms", $node);
      }
 
      print "\n<!-- node: \"$node->title\" -->\n";

@@ -17,21 +17,18 @@ class Theme_xtemplate extends BaseTheme {
   }
 
   function node($node, $main) {
-    $terms = array();
-    if (function_exists("taxonomy_node_get_terms")) {
-      foreach (taxonomy_node_get_terms($node->nid) as $term) {
-        $terms[] = l($term->name, NULL, array(), "or=$term->tid");
-      }
-    }
 
     $this->template->assign(array (
        "title"     => ucfirst($node->title),
-       "taxonomy"  => $this->links($terms),
        "author"    => format_name($node),
        "date"      => format_date($node->created),
        "content"   => ($main && $node->teaser) ?
                       check_output($node->teaser) :
                       check_output($node->body)));
+
+    if ($taxonomy = taxonomy_link("taxonomy terms", $node)) {
+      $this->template->assign("taxonomy", $this->links($taxonomy));
+    }
 
     if ($links = link_node($node, $main)) {
       $this->template->assign("links", $this->links($links));
