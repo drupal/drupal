@@ -183,7 +183,7 @@ function variable_del($name) {
 }
 
 function table_cell($cell, $header = 0) {
-  if (is_array($cell)) {  
+  if (is_array($cell)) {
     $data = $cell["data"];
     foreach ($cell as $key => $value) {
       if ($key != "data")  {
@@ -213,28 +213,32 @@ function table($header, $rows) {
   ** Emit the table header:
   */
 
-  $output .= " <tr>";
-  foreach ($header as $cell) {
-   $output .= table_cell($cell, 1);
+  if (is_array($header)) {
+    $output .= " <tr>";
+    foreach ($header as $cell) {
+      $output .= table_cell($cell, 1);
+    }
+    $output .= " </tr>";
   }
-  $output .= " </tr>";
 
   /*
   ** Emit the table rows:
   */
 
-  foreach ($rows as $number => $row) {
-    if ($number % 2 == 1) {
-      $output .= " <tr class=\"light\">";
-    }
-    else {
-      $output .= " <tr class=\"dark\">";
-    }
+  if (is_array($rows)) {
+    foreach ($rows as $number => $row) {
+      if ($number % 2 == 1) {
+        $output .= " <tr class=\"light\">";
+      }
+      else {
+        $output .= " <tr class=\"dark\">";
+      }
 
-    foreach ($row as $cell) {
-      $output .= table_cell($cell, 0);
+      foreach ($row as $cell) {
+        $output .= table_cell($cell, 0);
+      }
+      $output .= " </tr>";
     }
-    $output .= " </tr>";
   }
 
   $output .= "</table>";
