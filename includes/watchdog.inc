@@ -22,7 +22,7 @@ function watchdog($id, $message) {
   }
 
   // perform query to add new watchdog entry:
-  db_query("INSERT INTO watchdog (level, timestamp, user, message, location, hostname) VALUES ('". $watchdog[$id][0] ."', '". time() ."', '". check_input($user->id) ."', '". check_input($message) ."', '". check_input(getenv("REQUEST_URI")) ."', '". check_input(getenv("REMOTE_ADDR")) ."')");
+  db_query("INSERT INTO watchdog (level, timestamp, user, message, location, hostname) VALUES ('". $watchdog[$id][0] ."', '". time() ."', '". check_input($user->id) ."', '". check_input(check_output($message)) ."', '". check_input(getenv("REQUEST_URI")) ."', '". check_input(getenv("REMOTE_ADDR")) ."')");
 }
 
 function watchdog_clean($history = 302400) {
