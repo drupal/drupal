@@ -347,8 +347,8 @@ function book_next($node) {
   }
 
   // no direct child: get next for this level or any parent in this book
-  array_push($path = book_location($node), $node); // path to root node including this one
-  // loop through nodes to book root, starting with this node
+  array_push($path = book_location($node), $node); // path to top-level node including this one
+
   while (($leaf = array_pop($path)) && count($path)) {
     $next = db_fetch_object(db_query("SELECT n.nid, n.title FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE b.parent = %d AND n.status = 1 AND (n.moderate = 0 OR n.revisions != '') AND (b.weight > %d OR (b.weight = %d AND n.title > '%s')) ORDER BY b.weight ASC, n.title ASC", $leaf->parent, $leaf->weight, $leaf->weight, $leaf->title));
     if ($next) {
@@ -570,17 +570,13 @@ function book_toc($parent = 0, $indent = "", $toc = array()) {
   }
 
   /*
-  ** If the user is an administrator, add the root node; only
-  ** administrators can start new books.
+  ** If the user is an administrator, add the top-level book page;
+  ** only administrators can start new books.
   */
 
   if (user_access("administer nodes")) {
-    $toc[0] = "<". t("root") .">";
+    $toc[0] = "<". t("top-level") .">";
   }
-
-  /*
-  ** Iterate root book nodes:
-  */
 
   $toc = book_toc_recurse($parent, $indent, $toc, $children);
 
@@ -872,11 +868,11 @@ function book_help($section = "admin/help#book") {
       <p>The book organises content into a nested hierarchical structure. It is particularly good for manuals, Frequently Asked Questions (FAQs) and the like, allowing you to have chapters, sections, etc.</p>
       <p>A book is simply a collection of nodes that have been linked together. These nodes are usually of type <em>book page</em>, but you can insert nodes of any type into a book outline. Every node in the book has a <em>parent</em> node which  \"contains\" it. This is how book.module establishes its hierarchy. At any given level in the hierarchy, a book can contain many nodes. All these sibling nodes are sorted according to the <em>weight</em> that you give them.</p>
       <p>A book page is a special node type that allows you to embed PHP within the body of the page. This capability is only offerred to administrators, since malicious users could abuse this power. In addiiton, book pages contain a <em>log message</em> field which helps your users understand the motivation behind an edit of a book page. Each edited version of a book page is stored as a new revision of a node. This capability makes it easy to revert to an old version of a page, should that be desirable.</p>
-      <p>Like other node types, book submissions and edits may be subject to moderation, depending on your configuration.  Similarly, books use <a href=\"%permissions\">permissions</a> to determine who may read and write to them. Only administrators are allowed to create new books, which are really just nodes whose parent is <em>&lt;root&gt;</em>. To include an existing node in your book, click on the \"administer\"-link in that node.  At the bottom of this administration page, click on the <em>edit book outline</em> button. This enables you to place the node wherever you'd like within the book hierarchy. To add a new node into your book, use the <a href=\"%create\">submit content &raquo; book page</a> link.</p>
+      <p>Like other node types, book submissions and edits may be subject to moderation, depending on your configuration.  Similarly, books use <a href=\"%permissions\">permissions</a> to determine who may read and write to them. Only administrators are allowed to create new books, which are really just nodes whose parent is <em>&lt;top-level&gt;</em>. To include an existing node in your book, click on the \"administer\"-link in that node.  At the bottom of this administration page, click on the <em>edit book outline</em> button. This enables you to place the node wherever you'd like within the book hierarchy. To add a new node into your book, use the <a href=\"%create\">submit content &raquo; book page</a> link.</p>
       <p>Administrators may review the hierarchy of their books by clicking on the <a href=\"%collaborative-book\">collaborative book</a> link in the adminstration pages. There, nodes may be edited, reorganized, removed from book, and deleted. This behavior may change in the future. When a parent node is deleted, it may leave behind child nodes.  These nodes are now <em>orphans</em>. Administrators should periodically <a href=\"%orphans-book\">review their books for orphans</a> and reaffiliate those pages as desired. Finally, administrators may also <a href=\"%export-book\">export their books</a> to a single, flat HTML page which is suitable for printing.</p>
       <h3>Maintaining a FAQ using a collaborative book</h3>
       <p>Collaborative books let you easily set up a Frequently Asked Questions (FAQ) section on your web site. The main benefit is that you don't have to write all the questions/answers by yourself - let the community do it for you!</p>
-      <p>In order to set up the FAQ, you have to create a new book which will hold all your content. To do so, click on the <a href=\"%create\">submit content &raquo; book page</a> link. Give it a thoughtful title, and body. A title like \"Estonia Travel - FAQ\" is nice. You may always edit these fields later. You will probably want to designate <em>&lt;root&gt;</em> as the parent of this page. Leave the <em>log message</em> and <em>type</em> fields blank for now. After you have submitted this book page, you are ready to begin filling up your book with questions that are frequently asked.</p>
+      <p>In order to set up the FAQ, you have to create a new book which will hold all your content. To do so, click on the <a href=\"%create\">submit content &raquo; book page</a> link. Give it a thoughtful title, and body. A title like \"Estonia Travel - FAQ\" is nice. You may always edit these fields later. You will probably want to designate <em>&lt;top-level&gt;</em> as the parent of this page. Leave the <em>log message</em> and <em>type</em> fields blank for now. After you have submitted this book page, you are ready to begin filling up your book with questions that are frequently asked.</p>
       <p>Whenever you come across a post which you want to include in your FAQ, click on the <em>administer</em> link. Then click on the <em>edit book outline</em> button at the bottom of the page. Then place the relevant post wherever is most appropriate in your book by selecting a <em>parent</em>. Books are quite flexible. They can have sections like <em>Flying to Estonia</em>, <em>Eating in Estonia</em> and so on. As you get more experienced with the book module, you can reorganize posts in your book so that it stays organized.</p>
       <p>Notes:</p><ul><li>Any comments attached to those relevant posts which you designate as book pages will also be transported into your book. This is a great feature, since much wisdom is shared via comments. Remember that all future comments and edits will automatically be reflected in your book.</li><li>You may wish to edit the title of posts when adding them to your FAQ. This is done on the same page as the <em>Edit book outline</em> button. Clear titles improve navigability enormously.</li><li>Book pages may come from any content type (blog, story, page, etc.). If you are creating a post solely for inclusion in your book, then use the <a href=\"%create\">submit content &raquo; book page</a> link.</li><li>If you don't see the <em>administer</em> link, then you probably have insufficient <a href=\"%permissions\">permissions</a>.</li><li>If you want to get really fancy, note that books are one of the few content types which allow raw PHP in their <em>body</em>. So you've got lots of geeky possibilities there.</li></ul>", array("%permissions" => url("admin/user/permission"), "%create" => url("node/add/book"), "%collaborative-book" => url("admin/node/book"), "%orphans-book" => url("admin/node/book/orphan"), "%export-book" => url("book/print")));
       break;
