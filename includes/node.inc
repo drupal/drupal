@@ -192,7 +192,7 @@ function node_control($node) {
 
 function node_preview($node) {
   foreach ($node as $key=>$value) {
-    if ($node[$key]) $node[$key] = check_preview($value);
+    if ($value) $node[$key] = is_array($value) ? node_preview($value) : check_preview($value);
   }
   return $node;
 }
