@@ -404,7 +404,7 @@ function drupal_goto($url) {
   ** Translate &amp; to simply &
   */
 
-  $url = str_replace("&amp;", "&amp;", $url);
+  $url = str_replace("&amp;", "&", $url);
 
   /*
   ** It is advised to use "drupal_goto()" instead of PHP's "header()" as
