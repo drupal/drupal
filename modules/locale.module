@@ -52,10 +52,6 @@ function locale_link($type) {
   return $links ? $links : array();
 }
 
-function locale_conf_options() {
-  return form_select("Locale support", "locale", variable_get("locale", 0), array("Disabled", "Enabled"), "Disable locale support if your site does not require translation or internationalization support.");
-}
-
 function locale_delete($lid) {
   db_query("DELETE FROM locales WHERE lid = '$lid'");
   locale_refresh_cache();
@@ -217,10 +213,7 @@ function locale_seek() {
 function locale_admin() {
   global $id, $edit, $op, $language;
 
-  if (!variable_get("locale", 0)) {
-    print status("locale disabled.");
-  }
-  else if (user_access("administer locales")) {
+  if (user_access("administer locales")) {
     locale_admin_initialize();
 
     print "<small>". locale_links(1) . locale_links(0) . la(t("search"), array("mod" => "locale", "op" => "Search")) ." | ". la(t("overview"), array("mod" => "locale", "op" => "overview")) ." | ". la(t("help"), array("mod" => "locale", "op" => "help")) ."</small><hr />\n";
@@ -287,19 +280,17 @@ function locale($string) {
   global $locale;
   static $locale_t;
 
-  if (variable_get("locale", 0)) {
-    if (!isset($locale_t)) {
-      $locale_t = unserialize(cache_get("locale:$locale"));
-    }
+  if (!isset($locale_t)) {
+    $locale_t = unserialize(cache_get("locale:$locale"));
+  }
 
-    if ($locale_t[$string] != "") {
-      $string = check_output($locale_t[$string]);
-    }
-    else {
-      $result = db_query("SELECT lid, $locale FROM locales WHERE string = '%s'", $string);
-      if (!db_fetch_object($result)) {
-        db_query("INSERT INTO locales (string, location) VALUES ('%s', '%s')", $string, getenv("PATH_INFO"));
-      }
+  if ($locale_t[$string] != "") {
+    $string = check_output($locale_t[$string]);
+  }
+  else {
+    $result = db_query("SELECT lid, $locale FROM locales WHERE string = '%s'", $string);
+    if (!db_fetch_object($result)) {
+      db_query("INSERT INTO locales (string, location) VALUES ('%s', '%s')", $string, getenv("PATH_INFO"));
     }
   }
 
