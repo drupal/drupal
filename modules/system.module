@@ -63,7 +63,7 @@ function system_view_options() {
   // layout settings:
   $output .= "<H3>Layout settings</H3>\n";
   foreach ($themes as $key=>$value) $options .= "<OPTION VALUE=\"$key\"". (variable_get("theme_default", key($themes)) == $key ? " SELECTED" : "") .">$key</OPTION>\n";
-  $output .= form_item(t("Default theme"), "<SELECT NAME=\"edit[theme_default]\">$options</SELECT>", t("The default theme as seen by new visitors and anonymous users."));
+  $output .= form_item(t("Default theme"), "<SELECT NAME=\"edit[theme_default]\">$options</SELECT>", t("The default theme as seen by visitors or anonymous users."));
   $output .= "<HR>\n";
 
   // development settings:
