@@ -760,49 +760,8 @@ function user_login($edit = array(), $msg = '') {
   }
   else if ($edit['name'] && $edit['pass']) {
 
-    // Try to log in the user locally:
     if (!$user->uid) {
-      $name = $edit['name'];
-      $pass = $edit['pass'];
-      $user = user_load(array('name' => $name, 'pass' => $pass, 'status' => 1));
-    }
-
-    // Strip name and server from ID:
-    if ($server = strrchr($edit['name'], '@')) {
-      $name = substr($edit['name'], 0, strlen($edit['name']) - strlen($server));
-      $server = substr($server, 1);
-      $pass = $edit['pass'];
-    }
-
-    // When possible, determine corresponding external auth source. Invoke
-    // source, and log in user if successful:
-    if (!$user->uid && $server && $result = user_get_authmaps("$name@$server")) {
-      if (module_invoke(key($result), 'auth', $name, $pass, $server)) {
-        $user = user_external_load("$name@$server");
-        watchdog('user', t('external load by %user using module "%module".', array('%user' => $name .'@'. $server, '%module' => key($result))));
-      }
-      else {
-        $error = t('Invalid password for %s.', array('%s' => "<em>$name@$server</em>"));
-      }
-    }
-
-    // Try each external authentication source in series. Register user if
-    // successful.
-    else if (!$user->uid && $server) {
-      foreach (module_list() as $module) {
-        if (module_hook($module, 'auth')) {
-          if (module_invoke($module, 'auth', $name, $pass, $server)) {
-            if (variable_get('user_register', 1) == 1) {
-              $account = user_load(array('name' => "$name@$server"));
-              if (!$account->uid) { // Register this new user.
-                $user = user_save('', array('name' => "$name@$server", 'pass' => user_password(), 'init' => "$name@$server", 'status' => 1, "authname_$module" => "$name@$server", 'roles' => array(_user_authenticated_id())));
-                watchdog('user', t('new external user: %user using module "%module".', array('%user' => $name .'@'. $server, '%module' => $module)), l(t('edit'), 'user/'. $user->uid .'/edit'));
-                break;
-              }
-            }
-          }
-        }
-      }
+      $user = user_authenticate($edit['name'], $edit['pass']);
     }
 
     if ($user->uid) {
@@ -862,6 +821,52 @@ function user_login($edit = array(), $msg = '') {
   $output  = form_group(t('User login'), $output);
 
   return form($output, 'post', url('user/login'));
+}
+
+function user_authenticate($name, $pass) {
+  global $user;
+
+  // Try to log in the user locally:
+  $user = user_load(array('name' => $name, 'pass' => $pass, 'status' => 1));
+
+  // Strip name and server from ID:
+  if ($server = strrchr($name, '@')) {
+    $name = substr($name, 0, strlen($name) - strlen($server));
+    $server = substr($server, 1);
+  }
+
+  // When possible, determine corresponding external auth source. Invoke
+  // source, and log in user if successful:
+  if (!$user->uid && $server && $result = user_get_authmaps("$name@$server")) {
+    if (module_invoke(key($result), 'auth', $name, $pass, $server)) {
+      $user = user_external_load("$name@$server");
+      watchdog('user', t('external load by %user using module "%module".', array('%user' => $name .'@'. $server, '%module' => key($result))));
+    }
+    else {
+      $error = t('Invalid password for %s.', array('%s' => "<em>$name@$server</em>"));
+    }
+  }
+
+  // Try each external authentication source in series. Register user if
+  // successful.
+  else if (!$user->uid && $server) {
+    foreach (module_list() as $module) {
+      if (module_hook($module, 'auth')) {
+        if (module_invoke($module, 'auth', $name, $pass, $server)) {
+          if (variable_get('user_register', 1) == 1) {
+            $account = user_load(array('name' => "$name@$server"));
+            if (!$account->uid) { // Register this new user.
+              print "gonna register using $module and $name";
+              $user = user_save('', array('name' => "$name@$server", 'pass' => user_password(), 'init' => "$name@$server", 'status' => 1, "authname_$module" => "$name@$server", 'roles' => array(_user_authenticated_id())));
+              watchdog('user', t('new external user: %user using module "%module".', array('%user' => $name .'@'. $server, '%module' => $module)), l(t('edit'), 'user/'. $user->uid .'/edit'));
+              break;
+            }
+          }
+        }
+      }
+    }
+  }
+  return $user;
 }
 
 function _user_authenticated_id() {

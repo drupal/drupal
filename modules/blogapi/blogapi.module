@@ -422,7 +422,7 @@ function blogapi_error($message) {
 function blogapi_validate_user($username, $password) {
   global $user;
 
-  $user = user_load(array('name' => $username, 'pass' => $password, 'status' => 1));
+  $user = user_authenticate($username, $password);
 
   if ($user->uid) {
     if (user_access('edit own blog')) {
