@@ -1,20 +1,35 @@
 <?php
 // $Id$
 
-function ping_help() {
-  $output = "<p>Drupal can pings sites automatically to notify them that your site has changed. It can ping the following sites :</p>";
-  $output .= "<p><a href=\"http://www.weblogs.com/\">Weblogs.com</a>, a web site that tracks and displays links to changed weblogs and news-oriented web sites. To get your Drupal site listed, weblogs.com must be informed about your site's updates.  This is the job of the ping module and when installed, the administrator doesn't have to do anything to participate in the <a href=\"http://www.weblogs.com/\">weblogs.com system</a>. The weblog module automatically notifies weblogs.com when your site is updated.  To do so, Drupal implements the <a href=\"http://www.xmlrpc.com/weblogsCom/\">XML-RPC interface of weblogs.com</a>.</p>";
-  $output .= "<p><a href=\"http://www.xmlrpc.com/weblogsComForRss\">Weblogs.Com for RSS</a>, a web site that tracks and displays links to recently changed RSS feeds in XML format. To get your Drupal site listed, weblogs.com for RSS must be informed about updates to your RSS feed.  This is the job of the ping module and when installed, the administrator doesn't have to do anything to participate in the <a href=\"http://www.weblogs.com/rssUpdates/changes.xml\">weblogs.com for RSS system</a>. The ping module automatically notifies weblogs.com for RSS when your site is updated.</p>";
-  $output .= "<p><a href=\"http://blo.gs/\">blo.gs</a>, a directory of recently updated weblogs and tools for tracking interesting weblogs, in the spirit of services like <a href=\"http://www.weblogs.com/\">weblogs.com</a>, <a href=\"http://www.dansanderson.com/blogtracker/\">blogtracker</a> and <a href=\"http://www.blogrolling.com/\">blogrolling.com</a>. To get your Drupal site listed, blo.gs must be informed about your site's updates.  This is the job of the ping module and when installed, the administrator doesn't have to do anything to participate in the <a href=\"http://blo.gs/\">blo.gs system</a>. The ping module automatically notifies blo.gs when your site is updated.  To do so, Drupal implements the <a href=\"http://blo.gs/ping.php\">XML-RPC interface of blo.gs</a>.</p>";
-  // for optional modules that ping other sites
-  // $output .= module_invoke_all("ping_help");
-  $output .= "<p>The ping feature requires crontab.</p>";
+function ping_help($section = "admin/ping/help") {
+  $output = "";
+
+  switch($section) {
+    case 'admin/help':
+    case 'admin/ping/help':
+      $output .= "<p>Drupal can pings sites automatically to notify them that your site has changed. It can ping the following sites:</p>";
+      $output .= strtr("<p>%weblogs, a web site that tracks and displays links to changed weblogs and news-oriented web sites. To get your Drupal site listed, weblogs.com must be informed about your site's updates.  This is the job of the ping module and when installed, the administrator doesn't have to do anything to participate in the %weblogs system. The ping module automatically notifies weblogs.com when your site is updated.  To do so, Drupal implements the %weblogs-XML.</p>", array("%weblogs" => "<a href=\"http://www.weblogs.com/\">". t("Weblogs.com") ."</a>", "%weblogs-XML" => "<a href=\"http://www.xmlrpc.com/weblogsCom/\">". t("XML-RPC interface of weblogs.com") ."</a>"));
+      $output .= strtr("<p>%weblogs-RSS, a web site that tracks and displays links to recently changed RSS feeds in XML format. To get your Drupal site listed, %weblogs-RSS must be informed about updates to your RSS feed.  This is the job of the ping module and when installed, the administrator doesn't have to do anything to participate in the %weblogs-RSS-changes system. The ping module automatically notifies %weblogs-RSS when your site is updated.</p>", array("%weblogs-RSS" => "<a href=\"http://www.xmlrpc.com/weblogsComForRSS\">". t("Weblogs.Com for RSS") ."</a>", "%weblogs-RSS-changes" => "<a href=\"http://www.weblogs.com/rssUpdates/changes.xml\">". t("the weblogs.com for RSS") ."</a>"));
+      $output .= strtr("<p>%blo-gs, a directory of recently updated weblogs and tools for tracking interesting weblogs, in the spirit of services like %weblogs, %blogtracker and %blogrolling. To get your Drupal site listed, %blo-gs must be informed about your site's updates.  This is the job of the ping module and when installed, the administrator doesn't have to do anything to participate in the %blo-gs system. The ping module automatically notifies blo.gs when your site is updated.  To do so, Drupal implements the %blo-gs-XML.</p>", array("%blo-gs" => "<a href=\"http://blo.gs/\">". t("blo.gs") ."</a>", "%weblogs" => "<a href=\"http://www.weblogs.com/\">". t("weblogs.com") ."</a>", "%blogtracker" => "<a href=\"http://www.dansanderson.com/blogtracker\">". t("blogtracker") ."</a>", "%blogrolling" => "<a href=\"http://www.blogrolling.com\">". t("blogtolling.com") ."</a>", "%blo-gs-XML" => "<a href=\"http://blo.gs/ping.php\">". t("XML-RPC interface of blo.gs") ."</a>" ));
+      // for optional modules that ping other sites
+      // $output .= module_invoke_all("ping_help");
+      $output .= "<p>The ping feature requires crontab.</p>";
+      break;
+
+    case 'admin/system/modules':
+      $output = "Alerts other site(s) that your site has been updated.";
+      break;
+  }
+
   return t($output);
 }
 
 function ping_system($field){
-  $system["description"] = t("Alerts other site(s) that your site has been updated.");
-  return $system[$field];
+  $output = "";
+
+  if ($field == "description") { $output = ping_help("admin/system/modules"); };
+
+  return $output;
 }
 
 function ping_cron() {
