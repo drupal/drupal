@@ -1,5 +1,5 @@
 <?php
-// $Id: module.inc,v 1.66 2005/03/01 20:23:35 dries Exp $
+// $Id: module.inc,v 1.67 2005/04/03 08:03:18 dries Exp $
 
 /**
  * @file
@@ -25,19 +25,20 @@ function module_iterate($function, $argument = '') {
 }
 
 /**
- * Collect a list of all installed and enabled modules.
+ * Collect a list of all loaded modules. During the bootstrap, return only
+ * vital modules. See bootstrap.inc
  *
  * @param $refresh
  *   Whether to force the module list to be regenerated (such as after the
  *   administrator has changed the system settings).
  * @param $bootstrap
- *   Whether to return the reduced set of modules loaded in "bootstrap mode" for
- *   cached pages. See bootstrap.inc.
+ *   Whether to return the reduced set of modules loaded in "bootstrap mode"
+ *   for cached pages. See bootstrap.inc.
  * @return
  *   An associative array whose keys and values are the names of all loaded
  *   modules.
  */
-function module_list($refresh = FALSE, $bootstrap = FALSE) {
+function module_list($refresh = FALSE, $bootstrap = TRUE) {
   static $list;
 
   if ($refresh) {
