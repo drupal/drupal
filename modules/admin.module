@@ -1,11 +1,5 @@
 <?php
-// $Id: admin.module,v 1.41 2003/11/25 19:26:21 dries Exp $
-
-function status($message) {
-  if ($message) {
-    return "<strong>Status:</strong> $message<hr />\n";
-  }
-}
+// $Id: admin.module,v 1.42 2003/12/01 13:45:32 dries Exp $
 
 function admin_help($section) {
   switch ($section) {

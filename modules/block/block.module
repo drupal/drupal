@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.91 2003/11/29 06:53:03 dries Exp $
+// $Id: block.module,v 1.92 2003/12/01 13:45:32 dries Exp $
 
 function block_help($section = "admin/help#block") {
   $output = "";
@@ -295,17 +295,17 @@ function block_admin() {
         $output = block_box_form(block_box_get(arg(4)));
         break;
       case "delete":
-        $output = status(block_box_delete(arg(4)));
+        drupal_set_message(block_box_delete(arg(4)));
         cache_clear_all();
         $output .= block_admin_display();
         break;
       case t("Save block"):
-        $output = status(block_box_save($edit));
+        drupal_set_message(block_box_save($edit));
         cache_clear_all();
         $output .= block_admin_display();
         break;
       case t("Save blocks"):
-        $output = status(block_admin_save($edit));
+        drupal_set_message(block_admin_save($edit));
         cache_clear_all();
         // fall through
       default:

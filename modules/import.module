@@ -1,5 +1,5 @@
 <?php
-// $Id: import.module,v 1.135 2003/11/25 19:26:21 dries Exp $
+// $Id: import.module,v 1.136 2003/12/01 13:45:32 dries Exp $
 
 
 function import_help($section = "admin/help#import") {
@@ -588,18 +588,18 @@ function import_admin() {
         }
         break;
       case "remove":
-        $output = status(import_remove(import_get_feed(arg(5))));
+        drupal_set_message(import_remove(import_get_feed(arg(5))));
         $output .= import_view();
         break;
       case "update":
-        $output = status(import_refresh(import_get_feed(arg(5))));
+        drupal_set_message(import_refresh(import_get_feed(arg(5))));
         $output .= import_view();
         break;
       case "tag":
         $output = import_tag();
         break;
       case t("Save attributes"):
-        $output = status(import_save_attributes($edit));
+        drupal_set_message(import_save_attributes($edit));
         $output .= import_tag();
         break;
       case t("Delete"):
@@ -607,10 +607,10 @@ function import_admin() {
         // fall through:
       case t("Submit"):
         if (arg(5) == "bundle") {
-          $output = status(import_save_bundle($edit));
+          drupal_set_message(import_save_bundle($edit));
         }
         else {
-          $output = status(import_save_feed($edit));
+          drupal_set_message(import_save_feed($edit));
         }
         // fall through:
       default:

@@ -1,5 +1,5 @@
 <?php
-// $Id: unconed.theme,v 1.107 2003/11/25 19:26:21 dries Exp $
+// $Id: unconed.theme,v 1.108 2003/12/01 13:45:33 dries Exp $
 
 function unconed_help($section) {
 
@@ -77,8 +77,13 @@ function unconed_header() {
   <?php
   print theme("breadcrumb", drupal_get_breadcrumb());
   print "<h1>" . drupal_get_title() . "</h1>";
+
   if ($help = menu_get_active_help()) {
     print "<small>$help</small><hr />";
+  }
+
+  if ($message = drupal_get_message()) {
+    $output .= "<b>". t("Status") ."</b>: ". $message->message ."<hr />";
   }
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: locale.module,v 1.86 2003/11/25 19:26:21 dries Exp $
+// $Id: locale.module,v 1.87 2003/12/01 13:45:32 dries Exp $
 
 function locale_help($section = "admin/help#locale") {
   $output = "";
@@ -266,7 +266,7 @@ function locale_admin() {
 
     switch ($op) {
       case "delete":
-        $output = status(locale_delete(check_query(arg(3))));
+        drupal_set_message(locale_delete(check_query(arg(3))));
         $output .= locale_seek();
         break;
       case "edit":
@@ -283,7 +283,7 @@ function locale_admin() {
         $output .= locale_seek_form();
         break;
       case t("Save translations"):
-        $output = status(locale_save(check_query(arg(3))));
+        drupal_set_message(locale_save(check_query(arg(3))));
         $output .= locale_seek();
         break;
       default:

@@ -1,5 +1,5 @@
 <?php
-// $Id: marvin.theme,v 1.116 2003/11/25 19:26:21 dries Exp $
+// $Id: marvin.theme,v 1.117 2003/12/01 13:45:33 dries Exp $
 
 function marvin_help($section) {
 
@@ -60,6 +60,10 @@ function marvin_header() {
   $output .= "<h1>" . drupal_get_title() . "</h1>";
   if ($help = menu_get_active_help()) {
     $output .= "<small>$help</small><hr />";
+  }
+
+  if ($message = drupal_get_message()) {
+    $output .= "<b>". t("Status") ."</b>: ". $message->message ."<hr />";
   }
 
   return $output;

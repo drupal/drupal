@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.271 2003/11/26 16:17:13 dries Exp $
+// $Id: common.inc,v 1.272 2003/12/01 13:45:31 dries Exp $
 
 /**
   @name drupal_title
@@ -24,6 +24,28 @@ function drupal_get_title() {
   }
 
   return $title;
+}
+// @}
+
+/**
+  @name drupal_message
+
+  Functions to get and set the message of the current page.
+  @{
+**/
+function drupal_set_message($message = NULL, $type = "status") {
+  static $stored_message;
+
+  if (isset($message)) {
+    $stored_message->message = $message;
+    $stored_message->type = $type;
+  }
+
+  return $stored_message;
+}
+
+function drupal_get_message() {
+  return drupal_set_message();
 }
 // @}
 
