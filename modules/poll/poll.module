@@ -56,7 +56,7 @@ function poll_block($op = "list", $delta = 0) {
         poll_view($poll, 1, 1);
       }
     }
-    $block["subject"] = t("Latest poll: %t", array("%t" => $poll->title));
+    $block["subject"] = t("Poll: %t", array("%t" => $poll->title));
     $block["content"] = $poll->body;
     return $block;
   }
@@ -239,9 +239,11 @@ function poll_system($field){
 
 function poll_teaser($node) {
   // Create a simple teaser that lists all the choices
-  foreach ($node->choice as $k => $v) {
-    if ($v != "") {
-      $teaser .= "* $v\n";
+  if (is_array($node->choice)) {
+    foreach ($node->choice as $k => $v) {
+      if ($v != "") {
+        $teaser .= "* $v\n";
+      }
     }
   }
   return $teaser;
