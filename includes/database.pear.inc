@@ -27,8 +27,9 @@ function db_query($query, $debug = 0) {
   if (DB::isError($result)) {
     watchdog("error", "database: ". $result->getMessage() ."\nquery: ". htmlspecialchars($query));
   }
-
-  return $result;
+  else {
+    return $result;
+  }
 }
 
 function db_fetch_object($result) {
