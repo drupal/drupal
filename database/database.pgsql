@@ -277,7 +277,6 @@ CREATE TABLE node (
   promote integer NOT NULL default '0',
   moderate integer NOT NULL default '0',
   users text NOT NULL default '',
-  attributes varchar(255) NOT NULL default '',
   teaser text NOT NULL default '',
   body text NOT NULL default '',
   changed integer NOT NULL default '0',

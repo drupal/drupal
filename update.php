@@ -67,7 +67,8 @@ $mysql_updates = array(
   "2004-01-06" => "update_75",
   "2004-01-11" => "update_76",
   "2004-01-13" => "update_77",
-  "2004-02-03" => "update_78"
+  "2004-02-03" => "update_78",
+  "2004-02-21" => "update_79"
 );
 
 function update_32() {
@@ -517,7 +518,7 @@ function update_67() {
     // Taking no action.  PostgreSQL is not always capable of dropping columns.
   }
   else {
-    update_sql("ALTER TABLE users DROP homepage");
+    update_sql("ALTER TABLE {users} DROP homepage");
   }
 }
 
@@ -528,7 +529,7 @@ function update_68() {
   else {
     $max = db_result(db_query("SELECT MAX(aid) FROM {access};"));
     update_sql("INSERT INTO {sequences} (name, id) VALUES ('access_aid', '$max')");
-    update_sql("ALTER TABLE access CHANGE aid aid tinyint(10) NOT NULL ");
+    update_sql("ALTER TABLE {access} CHANGE aid aid tinyint(10) NOT NULL ");
   }
 }
 
@@ -668,6 +669,15 @@ function update_78() {
   }
   else {
     /* Needs PGSQL/MSSQL equivalent */
+  }
+}
+
+function update_79() {
+  if ($GLOBALS["db_type"] == "pgsql") {
+    // Taking no action.  PostgreSQL is not always capable of dropping columns.
+  }
+  else {
+    update_sql("ALTER TABLE {node} DROP attributes");
   }
 }
 

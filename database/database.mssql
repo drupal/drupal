@@ -202,7 +202,6 @@ CREATE TABLE [dbo].[node] (
   [promote] [int] NOT NULL ,
   [moderate] [int] NOT NULL ,
   [users] [text] NULL ,
-  [attributes] [varchar] (255) NULL ,
   [teaser] [text] NOT NULL ,
   [body] [text] NOT NULL ,
   [changed] [int] NOT NULL ,

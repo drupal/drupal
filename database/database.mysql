@@ -288,7 +288,6 @@ CREATE TABLE node (
   promote int(2) NOT NULL default '0',
   moderate int(2) NOT NULL default '0',
   users longtext NOT NULL,
-  attributes varchar(255) NOT NULL default '',
   teaser longtext NOT NULL,
   body longtext NOT NULL,
   changed int(11) NOT NULL default '0',
