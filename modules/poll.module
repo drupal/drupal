@@ -105,7 +105,7 @@ function poll_form(&$node, &$help, &$error) {
   for ($c = 2; $c <= 20; $c++) {
     $opts[$c] = $c;
   }
-  $output .= form_select(t("Number of choices"), "choices", $node->choices, $opts, t("This item only specifies the number of boxes in this form, but it doesn't have to equal the actual amount of options: you can leave the extra boxes empty."));
+  $output .= form_select(t("Number of choices"), "choices", $node->choices, $opts, t("This item sets the number of multiple choice options in the poll, but it doesn't have to equal the actual amount of options; you can leave the extra boxes empty."));
   $output .= form_submit(t("Preview")) ."<br /><br /><br />";
 
   for ($a = 0; $a < $node->choices; $a++) {
@@ -119,13 +119,13 @@ function poll_form(&$node, &$help, &$error) {
     $output .= form_select(t("Poll status"), "active", isset($node->active) ? $node->active : 1, $_active);
   }
 
-  $output .= form_select(t("Poll duration"), "runtime", $node->runtime ? $node->runtime : 0, $_duration, t("After this period, the poll will automatically be closed."));
+  $output .= form_select(t("Poll duration"), "runtime", $node->runtime ? $node->runtime : 0, $_duration, t("After this period, the poll will be closed automatically."));
 
   return $output;
 }
 
 function poll_help() {
- ?><p>Drupal's poll module allows users to submit multiple-choice questions that others can vote on.</p>
+ ?><p>Drupal's poll module allows users with at least content posting privileges to submit multiple-choice questions that others can vote on.  Any user with sufficient privileges can vote.  Please note that this is fully controlled by Drupal's access control features.  For example, users might be required to login before voting (or even seeing the page where the voting occurs) or it could be open to the world.</p>
  <?php
 }
 
@@ -209,7 +209,6 @@ function poll_load($node) {
 function poll_node($field) {
   $info["name"] = t("poll");
   $info["description"] = t("A poll is a multiple-choice question which visitors can vote on.");
-
   return $info[$field];
 }
 
@@ -253,7 +252,7 @@ function poll_save($op, $node) {
 }
 
 function poll_system($field){
-  $system["description"] = t("Allows users to submit multiple choice questions for voting.");
+  $system["description"] = t("Enables your site to capture votes on different topics in the form of multiple choice questions.");
   return $system[$field];
 }
 
