@@ -377,7 +377,7 @@ CREATE TABLE search_index (
 ) TYPE=MyISAM;
 
 --
--- Table structure for table 'sessesions'
+-- Table structure for table 'sessions'
 --
 
 
