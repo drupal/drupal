@@ -56,7 +56,7 @@ function story_save($op, $node) {
 }
 
 function story_link($type) {
-  if ($type == "menu.create") {
+  if ($type == "menu.create" && user_access("post content")) {
     $links[] = "<a href=\"module.php?mod=node&op=add&type=story\" title=\"". t("Add a new story.") ."\">". t("create story") ."</a>";
   }
 
