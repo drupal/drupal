@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.148 2003/01/06 20:58:31 dries Exp $
+// $Id: common.inc,v 1.149 2003/01/06 21:24:19 dries Exp $
 
 function conf_init() {
   global $HTTP_HOST, $PHP_SELF;
@@ -748,7 +748,20 @@ function drupal_parse_url($url = NULL) {
 }
 
 function url($url, $query = NULL) {
-  return "?q=$url". ($query ? "&$query" : "");
+
+  if ($url) {
+    if ($query) {
+      return "?q=$url&$query";
+    }
+    else {
+      return "?q=$url";
+    }
+  }
+  else {
+    if ($query) {
+      return "?$query";
+    }
+  }
 }
 
 function l($text, $url, $attributes = array(), $query = NULL) {

@@ -1,5 +1,5 @@
 <?php
-// $Id: goofy.theme,v 1.54 2002/12/31 12:34:01 dries Exp $
+// $Id: goofy.theme,v 1.55 2003/01/06 21:24:20 dries Exp $
 
   /*********************************************************************
 
@@ -121,7 +121,7 @@ function c(subject,mod,author,date,body) {document.writeln("<table border=\"0\" 
         if ($terms = taxonomy_node_get_terms($node->nid)) {
           $taxlinks = array();
           foreach ($terms as $term) {
-            $taxlinks[] = l($term->name, array("or" => $term->tid), "index");
+            $taxlinks[] = l($term->name, NULL, NULL, "or=$term->tid");
           }
           $subright = $this->links($taxlinks);
         }

@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.120 2002/12/31 12:33:53 dries Exp $
+// $Id: theme.inc,v 1.121 2003/01/06 21:24:19 dries Exp $
 
 /**
 * Basic theme
@@ -42,7 +42,7 @@ class BaseTheme {
   function node($node, $main) {
     if (function_exists("taxonomy_node_get_terms")) {
       foreach (taxonomy_node_get_terms($node->nid) as $term) {
-        $terms[] = l($term->name, array("or" => $term->tid), "index");
+        $terms[] = l($term->name, NULL, NULL, "or=$term->tid");
       }
     }
 
