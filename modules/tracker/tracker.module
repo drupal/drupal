@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.72 2003/12/14 19:23:11 dries Exp $
+// $Id: tracker.module,v 1.73 2004/01/31 21:32:06 dries Exp $
 
 function tracker_help($section = "admin/help#tracker") {
   $output = "";
@@ -60,7 +60,7 @@ function tracker_posts($id = 0) {
       $cresult = db_query("SELECT c.*, u.name FROM {comments} c INNER JOIN {users} u ON c.uid = u.uid WHERE c.nid = %d AND c.status = 0 ORDER BY c.cid DESC", $node->nid);
     }
 
-    $type = ucfirst(module_invoke($node->type, "node", "name"));
+    $type = ucfirst(node_invoke($node->type, "node_name"));
     $title = l($node->title, "node/view/$node->nid") ." ". (node_is_new($node->nid, $node->changed) ? theme("mark") : "");
     $author = format_name($node);
 
