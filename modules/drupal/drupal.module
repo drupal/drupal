@@ -13,20 +13,22 @@ function drupal_page() {
 
   $theme->header();
 
-  $output  = " <P>Drupal is the English pronunciation for the Dutch word 'druppel' which stands for 'drop'.  Drupal is a full-featured <I>content management/discussion engine</I> suitable to setup a news-driven community or portal site.  Drupal aims towards easy installation, excessive configuration and fine-grained maintenance capabilities.  Due to its modular design Drupal is flexible and easy to adapt or extend.</P>\n";
+  $output  = " <P>Drupal is the English pronunciation for the Dutch word '<A HREF=\"http://www.drupal.org/\">druppel</A>' which stands for '<A HREF=\"http://www.drop.org/\">drop</A>'.  Drupal is a full-featured <I>content management/discussion engine</I> suitable to setup a news-driven community or portal site.  Drupal aims towards easy installation, excessive configuration and fine-grained maintenance capabilities.  Due to its modular design Drupal is flexible and easy to adapt or extend.</P>\n";
   $output .= " <P>Drupal is primarily written by Dries Buytaert (dries&#64;drop.org) and built after <A HREF=\"http://slashcode.com/\">Slash</A> and <A HREF=\"http://scoop.kuro5hin.org/\">Scoop</A>.  Drupal uses <A HREF=\"http://www.php.net/\">PHP</A> and <A HREF=\"http://www.mysql.com/\">MySQL</A> and is a valuable alternative for <A HREF=\"http://phpnuke.org/\">PHP-Nuke</A>, <A HREF=\"http://thatware.org/\">ThatWare</A>, <A HREF=\"http://geeklog.org/\">GeekLog</A> and so on.  The source code is available under terms of GNU General Public License (GPL).</P>\n";
-  $output .= " <P>We don't have a real demo site yet but Drupal is used by (and created for) <A HREF=\"http://drop.org/\">http://drop.org/</A>.  Create an account, play with it for a bit, read the <A HREF=\"node.php?title=drupal+handbook\">documentation</A> and spend some time getting used to it.</P>\n";
+  $output .= " <P>We don't have a real demo site yet but Drupal is used by (and created for) <A HREF=\"http://www.drop.org/\">http://www.drop.org/</A>.  Create an account, play with it for a bit, read the <A HREF=\"node.php?title=drupal+handbook\">documentation</A> and spend some time getting used to it.</P>\n";
   $theme->box("Drupal", $output);
 
   $output  = "<H3>Download Drupal</H3>\n";
-  $output .= " <LI><A HREF=\"drupal/drupal-2.00.tgz\">Drupal 2.00</A> (2001/03/15 - latest version)</LI>\n";
+  $output .= " <LI><A HREF=\"http://www.drupal.org/drupal/drupal-2.00.tgz\">Drupal 2.00</A> (2001/03/15 - latest version)</LI>\n";
   $output .= " <LI>Drupal 1.00 (2001/01/15)</LI>\n";
+  $output .= "<H3>Drupal website</H3>\n";
+  $output .= " <LI><A HREF=\"http://www.drupal.org/\">http://www.drupal.org/</A></LI>\n";
   $output .= "<H3>Drupal documentation</H3>\n";
-  $output .= " <LI><A HREF=\"node.php?title=drupal+handbook\">Drupal handbook</A></LI>\n";
+  $output .= " <LI><A HREF=\"http://www.drupal.org/node.php?title=drupal+handbook\">Drupal handbook</A></LI>\n";
   $output .= "<H3>Drupal mailing lists</H3>\n";
-  $output .= " <LI><A HREF=\"node.php?title=mailing+lists\">Mailing list information</A></LI>";
+  $output .= " <LI><A HREF=\"http://www.drupal.org/node.php?title=mailing+lists\">Mailing list information</A></LI>";
   $output .= "<H3>Drupal development</H3>\n";
-  $output .= " <LI><A HREF=\"node.php?title=development\">Development information</A>, <A HREF=\"node.php?title=CVS\">CVS instructions</A>, <A HREF=\"module.php?mod=cvs\">CVS log messages</A></LI>\n";
+  $output .= " <LI><A HREF=\"http://www.drupal.org/node.php?title=development\">Development information</A>, <A HREF=\"http://www.drupal.org/node.php?title=CVS\">CVS instructions</A>, <A HREF=\"http://www.drupal.org/module.php?mod=cvs\">CVS log messages</A></LI>\n";
   $theme->box("Drupal support and development", $output);
 
   $theme->footer();
