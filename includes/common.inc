@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.400 2004/11/18 19:57:39 dries Exp $ */
+/* $Id: common.inc,v 1.401 2004/11/21 08:25:17 dries Exp $ */
 
 /**
  * @file
@@ -228,7 +228,7 @@ function drupal_goto($path = '', $query = NULL, $fragment = NULL) {
  */
 function drupal_not_found() {
   header('HTTP/1.0 404 Not Found');
-  watchdog('httpd', t('404 error: %page not found.', array('%page' => '<em>'. check_query($_GET['q']) .'</em>')));
+  watchdog('httpd', t('404 error: %page not found.', array('%page' => '<em>'. db_escape_string($_GET['q']) .'</em>')));
 
   $path = drupal_get_normal_path(variable_get('site_404', ''));
   $status = MENU_NOT_FOUND;

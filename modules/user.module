@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.415 2004/11/15 11:16:39 dries Exp $
+// $Id: user.module,v 1.416 2004/11/21 08:25:17 dries Exp $
 
 /**
  * @file
@@ -152,13 +152,13 @@ function user_save($account, $array = array(), $category = 'account') {
     // because we don't have a fully initialized user object yet.
     foreach ($array as $key => $value) {
       if ($key == 'pass') {
-        $fields[] = check_query($key);
+        $fields[] = db_escape_string($key);
         $values[] = md5($value);
         $s[] = "'%s'";
       }
       else if (substr($key, 0, 4) !== 'auth') {
         if (in_array($key, $user_fields)) {
-          $fields[] = check_query($key);
+          $fields[] = db_escape_string($key);
           $values[] = $value;
           $s[] = "'%s'";
         }

@@ -1,5 +1,5 @@
 <?php
-// $Id: profile.module,v 1.81 2004/10/16 16:59:59 dries Exp $
+// $Id: profile.module,v 1.82 2004/11/21 08:25:17 dries Exp $
 
 /**
  * @file
@@ -86,10 +86,10 @@ function profile_browse() {
         $query = 'v.value = 1';
         break;
       case 'selection':
-        $query = "v.value = '". check_query($value) ."'";
+        $query = "v.value = '". db_escape_string($value) ."'";
         break;
       case 'list':
-        $query = "v.value LIKE '%%". check_query($value) ."%%'";
+        $query = "v.value LIKE '%%". db_escape_string($value) ."%%'";
         break;
       default:
         drupal_not_found();

@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.156 2004/11/15 11:16:39 dries Exp $
+// $Id: taxonomy.module,v 1.157 2004/11/21 08:25:17 dries Exp $
 
 /**
  * @file
@@ -773,7 +773,7 @@ function _taxonomy_depth($depth, $graphic = '--') {
 
 function _taxonomy_prepare_update($data) {
   foreach ($data as $key => $value) {
-    $q[] = "$key = '". str_replace('%', '%%', check_query($value)) ."'";
+    $q[] = "$key = '". str_replace('%', '%%', db_escape_string($value)) ."'";
   }
   $result = implode(', ', $q);
   return $result;
@@ -785,7 +785,7 @@ function _taxonomy_prepare_insert($data, $stage) {
   }
   else {
     foreach (array_values($data) as $value) {
-      $q[] = "'". str_replace('%', '%%', check_query($value)) ."'";
+      $q[] = "'". str_replace('%', '%%', db_escape_string($value)) ."'";
     }
     $result = implode(', ', $q);
   }

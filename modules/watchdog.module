@@ -1,5 +1,5 @@
 <?php
-// $Id: watchdog.module,v 1.113 2004/11/15 21:17:25 dries Exp $
+// $Id: watchdog.module,v 1.114 2004/11/21 08:25:17 dries Exp $
 
 /**
  * @file
@@ -83,7 +83,7 @@ function watchdog_cron() {
  */
 function watchdog_overview($type = '') {
   foreach (_watchdog_get_message_types() as $key) {
-    $query[$key] = "WHERE type = '". check_query($key) ."'";
+    $query[$key] = "WHERE type = '". db_escape_string($key) ."'";
   }
 
   $header = array(

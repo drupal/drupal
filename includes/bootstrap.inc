@@ -1,5 +1,5 @@
 <?php
-// $Id: bootstrap.inc,v 1.32 2004/10/18 18:35:19 dries Exp $
+// $Id: bootstrap.inc,v 1.33 2004/11/21 08:25:17 dries Exp $
 
 /**
  * @file
@@ -343,13 +343,6 @@ function arg($index) {
   if (array_key_exists($index, $arguments)) {
     return $arguments[$index];
   }
-}
-
-/**
- * Prepare user input for use in a database query, preventing SQL injection attacks.
- */
-function check_query($text) {
-  return addslashes($text);
 }
 
 /**
