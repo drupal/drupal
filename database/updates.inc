@@ -83,7 +83,8 @@ $sql_updates = array(
   "2004-08-19" => "update_104",
   "2004-09-14" => "update_105",
   "2004-09-15" => "update_106",
-  "2004-09-17" => "update_107"
+  "2004-09-17" => "update_107",
+  "2004-10-16" => "update_108"
 );
 
 function update_32() {
@@ -946,14 +947,16 @@ function update_80() {
       if ($account->$old) {
         $edit[$new] = $account->$old;
       }
-      unset($account->$old);
+      // Force deletion of old field
+      $edit[$old] = NULL;
     }
 
     // Birthday format change:
     if ($edit['birthday']) {
       $edit['birthday'] = array('day' => $edit['birthday'], 'month' => $account->profile_birthmonth, 'year' => $account->profile_birthyear);
-      unset($account->profile_birthmonth);
-      unset($account->profile_birthyear);
+      // Force deletion of old field
+      $edit['profile_birthmonth'] = NULL;
+      $edit['profile_birthyear'] = NULL;
     }
 
     // Gender specific changes:
@@ -963,12 +966,17 @@ function update_80() {
     // Avatar specific changes:
     if ($account->profile_avatar) {
       $edit['picture'] = $account->profile_avatar;
+      // Force deletion of old field
+      $edit['profile_avatar'] = NULL;
     }
-    unset($account->profile_avatar);
 
     // Save the update record:
     user_save($account, $edit, 'Personal information');
   }
+
+  // This variable is needed to distinguish betweene 4.5-RC sites which ran a faulty
+  // update_80() and 4.5-final sites. See update_108.
+  variable_set('update_80_fix', true);
 
   return $ret;
 }
@@ -1871,6 +1879,26 @@ function update_107() {
   }
 
   return $ret;
+}
+
+function update_108() {
+  // This update is needed for 4.5-RC sites, where profile data was not being
+  // wiped from the user->data column correctly because update_80() was faulty.
+  if (!variable_get('update_80_fix', false)) {
+    // The data field needs to be cleared of profile fields.
+    $result = db_query("SELECT uid FROM {users} WHERE data LIKE '%profile%'");
+    while ($uid = db_fetch_object($result)) {
+      $user = user_load(array('uid' => $uid->uid));
+      $unset = array();
+      foreach ($user as $key => $value) {
+        if (substr($key, 0, 8) == 'profile_') {
+          // Fields with a NULL value are wiped from the data column.
+          $unset[$key] = NULL;
+        }
+      }
+      user_save($user, $unset);
+    }
+  }
 }
 
 function update_sql($sql) {

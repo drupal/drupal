@@ -9,13 +9,15 @@
 /**
  * Invokes hook_user() in every module.
  *
- * We cannot use module_invoke() for this, becuse the arguments need to
+ * We cannot use module_invoke() for this, because the arguments need to
  * be passed by reference.
  */
 function user_module_invoke($type, &$array, &$user, $category = NULL) {
   foreach (module_list() as $module) {
     $function = $module .'_user';
-    if (function_exists($function)) $function($type, $array, $user, $category);
+    if (function_exists($function)) {
+      $function($type, $array, $user, $category);
+    }
   }
 }
 
@@ -82,6 +84,18 @@ function user_load($array = array()) {
   return $user;
 }
 
+/**
+ * Save changes to a user account.
+ *
+ * @param $account
+ *   The $user object for the user to modify.
+ *
+ * @param $array
+ *   An array of fields and values to save. For example array('name' => 'My name');
+ *
+ * @param $category
+ *   (optional) The category for storing profile information in.
+ */
 function user_save($account, $array = array(), $category = 'account') {
   // Dynamically compose a SQL query:
   $user_fields = user_fields();
@@ -96,13 +110,18 @@ function user_save($account, $array = array(), $category = 'account') {
       }
       else if (substr($key, 0, 4) !== 'auth') {
         if (in_array($key, $user_fields)) {
-          // escape '%'s:
-          $value = str_replace('%', '%%', $value);
+          // Save standard fields
           $query .= "$key = '%s', ";
           $v[] = $value;
         }
         else {
-          $data[$key] = $value;
+          if ($value === null) {
+            // Setting a field to null deletes it from the data column.
+            unset($data[$key]);
+          }
+          else {
+            $data[$key] = $value;
+          }
         }
       }
     }
@@ -111,7 +130,7 @@ function user_save($account, $array = array(), $category = 'account') {
 
     db_query("UPDATE {users} SET $query changed = %d WHERE uid = %d", array_merge($v, array(time(), $account->uid)));
 
-    // reload user roles if provided
+    // Reload user roles if provided
     if (is_array($array['roles'])) {
       db_query('DELETE FROM {users_roles} WHERE uid = %d', $account->uid);
 
@@ -120,6 +139,7 @@ function user_save($account, $array = array(), $category = 'account') {
       }
     }
 
+    // Refresh user object
     $user = user_load(array('uid' => $account->uid));
   }
   else {
@@ -127,6 +147,9 @@ function user_save($account, $array = array(), $category = 'account') {
     $array['changed'] = time();
     $array['uid'] = db_next_id('{users}_uid');
 
+    // Note, we wait with saving the data column to prevent module-handled
+    // fields from being saved there. We cannot invoke hook_user('insert') here
+    // because we don't have a fully initialized user object yet.
     foreach ($array as $key => $value) {
       if ($key == 'pass') {
         $fields[] = check_query($key);
@@ -139,36 +162,40 @@ function user_save($account, $array = array(), $category = 'account') {
           $values[] = $value;
           $s[] = "'%s'";
         }
-        else {
-          $data[$key] = $value;
-        }
       }
     }
-
-    $fields[] = 'data';
-    $values[] = serialize($data);
-    $s[] = "'%s'";
-
     db_query('INSERT INTO {users} ('. implode(', ', $fields) .') VALUES ('. implode(', ', $s) .')', $values);
 
     // Reload user roles (delete just to be safe).
     db_query('DELETE FROM {users_roles} WHERE uid = %d', $array['uid']);
-
     foreach ($array['roles'] as $rid) {
       db_query('INSERT INTO {users_roles} (uid, rid) VALUES (%d, %d)', $array['uid'], $rid);
     }
 
-    $user = user_load(array('name' => $array['name']));
+    // Build the initial user object.
+    $user = user_load(array('uid' => $array['uid']));
 
-    module_invoke_all('user', 'insert', $array, $user, $category);
+    user_module_invoke('insert', $array, $user, $category);
+
+    // Build and save the serialized data field now
+    $data = array();
+    foreach ($array as $key => $value) {
+      if ((substr($key, 0, 4) !== 'auth') && (!in_array($key, $user_fields)) && ($value !== null)) {
+        $data[$key] = $value;
+      }
+    }
+    db_query("UPDATE {users} SET data = '%s' WHERE uid = %d", serialize($data), $user->uid);
+
+    // Build the finished user object.
+    $user = user_load(array('uid' => $array['uid']));
   }
 
+  // Save distributed authentication mappings
   foreach ($array as $key => $value) {
     if (substr($key, 0, 4) == 'auth') {
       $authmaps[$key] = $value;
     }
   }
-
   if ($authmaps) {
     user_set_authmaps($user, $authmaps);
   }
