@@ -57,7 +57,8 @@ CREATE TABLE channel (
 CREATE TABLE comments (
   cid int(6) DEFAULT '0' NOT NULL auto_increment,
   pid int(6) DEFAULT '0' NOT NULL,
-  sid int(6) DEFAULT '0' NOT NULL,
+  lid int(6) DEFAULT '0' NOT NULL,
+  link varchar(16) DEFAULT '' NOT NULL;
   author int(6) DEFAULT '0' NOT NULL,
   subject varchar(64) DEFAULT '' NOT NULL,
   comment text NOT NULL,
@@ -137,7 +138,7 @@ CREATE TABLE users (
   fake_email varchar(60) DEFAULT '' NOT NULL,
   url varchar(100) DEFAULT '' NOT NULL,
   stories tinyint(2) DEFAULT '10',
-  mode varchar(10) DEFAULT '',
+  mode tinyint(1) DEFAULT '0',
   sort tinyint(1) DEFAULT '0',
   threshold tinyint(1) DEFAULT '0',
   bio tinytext NOT NULL,

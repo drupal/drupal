@@ -66,7 +66,7 @@ function comment_display($order = "date") {
   $output .= " </TR>\n";
 
   while ($comment = db_fetch_object($result)) {
-    $output .= " <TR><TD><A HREF=\"discussion.php?id=$comment->sid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A></TD><TD>". format_username($comment->userid, 1) ."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=comment&op=edit&id=$comment->cid\">edit</A></TD></TR>\n";
+    $output .= " <TR><TD>". ($comment->link == "story" ? "<A HREF=\"story.php?id=$comment->lid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A>" : check_output($comment->subject)) ."</TD><TD>". format_username($comment->userid, 1) ."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=comment&op=edit&id=$comment->cid\">edit</A></TD></TR>\n";
   }
 
   $output .= "</TABLE>\n";

@@ -79,7 +79,7 @@ function theme_blocks($region, $theme) {
 }
 
 function theme_morelink($theme, $story) {
-  return ($story->article) ? "[ <A HREF=\"discussion.php?id=$story->id\"><FONT COLOR=\"$theme->hlcolor2\"><B>read more</B></FONT></A> | ". strlen($story->article) ." bytes | <A HREF=\"discussion.php?id=$story->id\"><FONT COLOR=\"$theme->hlcolor2\">". format_plural($story->comments, "comment", "comments") ."</FONT></A> ]" : "[ <A HREF=\"discussion.php?id=$story->id\"><FONT COLOR=\"$theme->hlcolor2\">". format_plural($story->comments, "comment", "comments") ."</FONT></A> ]";
+  return ($story->article) ? "[ <A HREF=\"story.php?id=$story->id\"><FONT COLOR=\"$theme->hlcolor2\"><B>read more</B></FONT></A> | ". strlen($story->article) ." bytes | <A HREF=\"story.php?id=$story->id\"><FONT COLOR=\"$theme->hlcolor2\">". format_plural($story->comments, "comment", "comments") ."</FONT></A> ]" : "[ <A HREF=\"story.php?id=$story->id\"><FONT COLOR=\"$theme->hlcolor2\">". format_plural($story->comments, "comment", "comments") ."</FONT></A> ]";
 }
 
 function theme_moderation_results($theme, $story) {
@@ -113,27 +113,12 @@ function theme_related_links($theme, $story) {
   $theme->box("Related links", $content);
 }
 
-function theme_comment_moderation($comment) {
-  global $user, $comment_votes;
-  
-  if ($user->id && $user->userid != $comment->userid && !user_getHistory($user->history, "c$comment->cid")) {
-    $output .= "<SELECT NAME=\"moderate[$comment->cid]\">\n";
-    foreach ($comment_votes as $key=>$value) $output .= " <OPTION VALUE=\"$value\">$key</OPTION>\n";
-    $output .= "</SELECT>\n";
-  }
-  else {
-    $output .= "<TABLE BORDER=\"0\" CELLSPACING=\"1\" CELLPADDING=\"1\"><TR><TD>score:</TD><TD>". format_data($comment->score) ."</TD></TR><TR><TD>votes:</TD><TD>". format_data($comment->votes) ."</TR></TABLE>";
-  }
-
-  return $output;
-}
-
 function theme_new_headlines($theme, $num = 10) {
   global $user;
 
   $content = "";
   $result = db_query("SELECT id, subject FROM stories WHERE status = 2 ORDER BY id DESC LIMIT $num");
-  while ($story = db_fetch_object($result)) $content .= "<LI><A HREF=\"discussion.php?id=$story->id\">". check_output($story->subject) ."</A></LI>\n";
+  while ($story = db_fetch_object($result)) $content .= "<LI><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A></LI>\n";
   $content .= "<P ALIGN=\"right\">[ <A HREF=\"search.php\"><FONT COLOR=\"$theme->hlcolor2\">more</FONT></A> ]</P>";
   $theme->box("Latest headlines", $content);
 }
@@ -149,12 +134,11 @@ function theme_old_headlines($theme, $num = 10) {
       $content .= "<P><B>". date("l, M jS", $story->timestamp) ."</B></P>\n";
       $time = date("F jS", $story->timestamp);
     }
-    $content .= "<LI><A HREF=\"discussion.php?id=$story->id\">". check_output($story->subject) ."</A></LI>\n";
+    $content .= "<LI><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A></LI>\n";
   }
   $content .= "<P ALIGN=\"right\">[ <A HREF=\"search.php\"><FONT COLOR=\"$theme->hlcolor2\">more</FONT></A> ]</P>";
 
   $theme->box("Older headlines", $content);
 }
-
 
 ?>
