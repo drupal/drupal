@@ -106,7 +106,7 @@ function system_user($type, $edit, &$user, $category = NULL) {
 
     if (variable_get('configurable_timezones', 1)) {
       $zones = _system_zonelist();
-      $data[] = array('title' => t('Locale settings'), 'data' => form_select(t('Time zone'), 'timezone', $edit['timezone'], $zones, t('Select what time you currently have and your time zone settings will be set appropriately.')), 'weight' => 2);
+      $data[] = array('title' => t('Locale settings'), 'data' => form_select(t('Time zone'), 'timezone', isset($edit['timezone']) ? $edit['timezone'] : variable_get('date_default_timezone', 0), $zones, t('Select your current local time. Dates and times throughout this site will be displayed using this time zone.')), 'weight' => 2);
     }
     return $data;
   }
