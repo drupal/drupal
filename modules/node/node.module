@@ -964,6 +964,9 @@ function node_admin() {
     case 'delete':
       $output = node_delete(array('nid' => arg(3)));
       break;
+    case t('Delete'):
+      $output = node_delete($edit);
+      break;
     default:
       $output = node_admin_nodes();
   }
