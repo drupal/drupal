@@ -202,7 +202,7 @@ function poll_form($edit = array(), $nocheck = 0) {
 
   $form .= form_select(t("Poll duration"), "runtime", $edit[runtime] ? $edit[runtime] : t("1 week"), $duration, t("After this period, the poll will automatically be closed."));
   if ($admin) $form .= form_select(t("Poll status"), "active", $edit[active], $active);
-  $form .= node_attributes_edit($edit);
+  $form .= node_attributes_edit("poll", $edit);
 
   // hidden fields:
   if ($edit[nid] > 0) {
@@ -232,10 +232,10 @@ function poll_save($edit) {
   global $status, $user;
 
   if (!$edit[nid]) {
-    $nid = node_save($edit, array(active => 1, attributes => node_attributes_save($edit), author => $user->id, cid, comment => variable_get("poll_comment", 0), moderate => variable_get("poll_moderate", ""), promote => variable_get("poll_promote", 0), runtime, score => 0, status => variable_get("poll_status", $status[queued]), tid, timestamp => time(), title, type => "poll", votes => 0, voters => ""));
+    $nid = node_save($edit, array(active => 1, attributes => node_attributes_save("poll", $edit), author => $user->id, cid, comment => variable_get("poll_comment", 0), moderate => variable_get("poll_moderate", ""), promote => variable_get("poll_promote", 0), runtime, score => 0, status => variable_get("poll_status", $status[queued]), tid, timestamp => time(), title, type => "poll", votes => 0, voters => ""));
   }
   else if (user_access($user)) {
-    $nid = node_save($edit, array(active, attributes => node_attributes_save($edit), cid, tid, runtime, title, type => "poll"));
+    $nid = node_save($edit, array(active, attributes => node_attributes_save("poll", $edit), cid, tid, runtime, title, type => "poll"));
     db_query("DELETE FROM poll_choices WHERE nid='" . $nid . "'");
   }
   if ($nid) {

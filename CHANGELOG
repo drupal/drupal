@@ -12,7 +12,8 @@ drupal x.xx, xx/xx/xxxx (CVS, unstable)
 - rewrote section code and renamed it to structure.module:
     * supports both "categories" and "topics" (cfr. Scoop, SlashCode).  Topics can be nested to create a multi-level hierarchy.
     * added "auto-post new submissions" feature versus "moderate new submissions".
-- renamed hostname.conf to conf.php for security's sake.
+- rewrote configuration file resolving:
+    * Drupal tries to locate a configuration file that matches your domainname or uses conf.php if the former failed.  Note also that the configuration files got renamed from .conf to .php for security's sake on mal-configured Drupal sites.
 - added poll.module.
 - added conf.module:
     * moved most of the configuration options from hostname.conf to the new administration section.

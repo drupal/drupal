@@ -240,3 +240,33 @@ ALTER TABLE item CHANGE attribute attributes varchar(255) DEFAULT '' NOT NULL;
 
 # 12/06/01
 ALTER TABLE watchdog DROP link;
+
+# 15/06/01
+CREATE TABLE tag (
+  tid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
+  name varchar(32) DEFAULT '' NOT NULL,
+  attributes varchar(255) DEFAULT '' NOT NULL,
+  collections varchar(32) DEFAULT '' NOT NULL,
+  UNIQUE name (name, collections),
+  PRIMARY KEY (tid)
+);
+
+CREATE TABLE collection (
+  cid int(10) unsigned DEFAULT '0' NOT NULL auto_increment,
+  name varchar(32) DEFAULT '' NOT NULL,
+  types varchar(128) DEFAULT '' NOT NULL,
+  UNIQUE name (name),
+  PRIMARY KEY (cid)
+);
+
+// test data:
+
+INSERT INTO collection (name, types) VALUES ('Software', 'story, book, poll');
+INSERT INTO collection (name, types) VALUES ('Hardware', 'story');
+
+INSERT INTO tag (collections, name) VALUES ('Software', 'ThatWare');
+INSERT INTO tag (collections, name) VALUES ('Software', 'phpWeblog');
+INSERT INTO tag (collections, name) VALUES ('Software', 'PHP-Nuke');
+INSERT INTO tag (collections, name) VALUES ('Software', 'Drupal');
+INSERT INTO tag (collections, name) VALUES ('Hardware', 'ARM CPU');
+INSERT INTO tag (collections, name) VALUES ('Hardware', 'x86 CPU');
