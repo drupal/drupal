@@ -1,7 +1,7 @@
 <?
 
 function theme_account($theme) {
-  global $user, $site_name;
+  global $user, $site_name, $links, $menu;
   
   if ($user->id) { 
 
@@ -10,6 +10,13 @@ function theme_account($theme) {
       return ($result) ? db_result($result, 0) : 0;
     }
 
+    function menu($name, $module) {
+      global $menu;
+      if ($module["menu"]) $menu = array_merge($menu, $module["menu"]());
+    }
+
+    module_iterate("menu");
+
     // Display account settings:
     $content .= "<LI><A HREF=\"account.php?op=track&topic=comments\">track your comments</A></LI>\n";
     $content .= "<LI><A HREF=\"account.php?op=track&topic=stories\">track your stories</A></LI>\n";
@@ -17,14 +24,14 @@ function theme_account($theme) {
     $content .= "<P>\n";
     $content .= "<LI><A HREF=\"submission.php\">submission queue</A> (<FONT COLOR=\"red\">". submission_number() ."</FONT>)</LI>\n";
     $content .= "<P>\n";
-    $content .= "<LI><A HREF=\"account.php?op=edit&topic=diary\">edit your diary</A></LI>\n";
     $content .= "<LI><A HREF=\"account.php?op=edit&topic=user\">edit your information</A></LI>\n";
     $content .= "<LI><A HREF=\"account.php?op=edit&topic=site\">edit your preferences</A></LI>\n";
     $content .= "<LI><A HREF=\"account.php?op=edit&topic=content\">edit site content</A></LI>\n";
     $content .= "<P>\n";
-    $content .= "<LI><A HREF=\"account.php?op=view&topic=diary\">view your diary</A></LI>\n";
-    $content .= "<LI><A HREF=\"account.php?op=view&topic=info\">view user settings</A></LI>\n";
-    $content .= "<P>\n";
+    if (ksort($menu)) {
+      foreach ($menu as $link=>$url) $content .= "<LI><A HREF=\"$url\">$link</A></LI>\n";
+      $content .= "<P>\n";
+    }
     $content .= "<LI><A HREF=\"account.php?op=logout\">logout</A></LI>\n";
 
     $theme->box("$user->userid's configuration", "$content");

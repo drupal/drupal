@@ -529,7 +529,6 @@ function account_track_site() {
   $block2 .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Users:</B></TD><TD>$users_total users</TD></TR>\n";
   $block2 .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Stories:</B></TD><TD>$stories_posted posted, $stories_queued queued, $stories_dumped dumped<BR><I>[most frequent posters: $stories_posters ...]</I></TD></TR>\n";
   $block2 .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Comments:</B></TD><TD>$comments_total comments with an average score of $comments_score<BR><I>[most frequent posters: $comments_posters ...]</I></TD></TR>\n";
-  $block2 .= " <TR><TD ALIGN=\"right\" VALIGN=\"top\"><B>Diaries:</B></TD><TD>$diaries_total diary entries<BR><I>[most frequent posters: $diaries_posters ...]</I></TD></TR>\n";
   $block2 .= "</TABLE>\n";
 
   $theme->header();
@@ -579,9 +578,6 @@ switch ($op) {
       case "info":
         account_user($user->userid);
         break;
-      case "diary":
-        header("Location: module.php?mod=diary&op=view&name=$user->userid");
-        break;        
       default:
         account_user($name);
     }
@@ -600,17 +596,14 @@ switch ($op) {
     break;
   case "edit":
     switch ($topic) {
-      case "user":
-        account_user_edit();
+      case "content":
+        account_content_edit();
         break;
       case "site":
         account_site_edit();
         break;
-      case "content":
-        account_content_edit();
-        break;
       default:
-        header("Location: module.php?mod=diary&op=add&name=$user->userid");
+        account_user_edit();
     }
     break;
   default: 

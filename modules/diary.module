@@ -4,6 +4,7 @@ $module = array("page"  => "diary_page",
                 "block" => "diary_block",
                 "help" => "diary_help",
                 "user" => "diary_user",
+                "menu" => "diary_menu",
                 "admin" => "diary_admin",
                 "export" => "diary_export");
 
@@ -54,6 +55,8 @@ function diary_page_entry($timestamp, $text, $id = 0) {
 function diary_page_display($username) {
   global $theme, $user;
 
+  $username = empty($username) ? $user->userid : $username;
+ 
   $result = db_query("SELECT d.*, u.userid FROM diaries d LEFT JOIN users u ON d.author = u.id WHERE u.userid = '$username' ORDER BY timestamp DESC");
 
   if ($username == $user->userid) {
@@ -215,8 +218,13 @@ function diary_user($username, $section, $operation) {
   }
 }
 
+function diary_menu() {
+  global $user;
+  return array("edit your diary" => "module.php?mod=diary&op=edit", "view your diary" => "module.php?mod=diary&op=view");
+}
+
 function diary_block() {
-  $result = db_query("SELECT u.userid, d.timestamp FROM diaries d LEFT JOIN users u ON d.author = u.id ORDER BY timestamp DESC LIMIT 20");
+  $result = db_query("SELECT u.userid, d.timestamp FROM diaries d LEFT JOIN users u ON d.author = u.id ORDER BY timestamp DESC LIMIT 10");
 
   while ($diary = db_fetch_object($result)) {
     if ($time != date("F jS", $diary->timestamp)) {
