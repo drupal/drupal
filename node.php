@@ -35,10 +35,10 @@ function node_failure() {
   $theme->footer();
 }
 
-$number = ($title ? db_num_rows(db_query("SELECT nid FROM node WHERE title = '$title' AND status = 1")) : 1);
+$number = ($title ? db_num_rows(db_queryd("SELECT nid FROM node WHERE title = '%s' AND status = 1", $title)) : 1);
 
 if ($number > 1) {
-  $result = db_query("SELECT n.*, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.title = '$title' AND n.status = 1 ORDER BY created DESC");
+  $result = db_query("SELECT n.*, u.name, u.uid FROM node n LEFT JOIN users u ON n.uid = u.uid WHERE n.title = '%s' AND n.status = 1 ORDER BY created DESC", $title);
 
   while ($node = db_fetch_object($result)) {
     if (node_access("view", $node)) {
