@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.88 2001/11/01 11:00:47 dries Exp $
+// $Id: theme.inc,v 1.89 2001/11/23 17:10:44 kjartan Exp $
 
 class BaseTheme {
 
@@ -69,8 +69,8 @@ class BaseTheme {
     else {
       $output .= check_output($node->body, 1);
     }
-    if ($main) {
-      $output .= "<br />[ ". $this->links(link_node($node)) ." ]";
+    if ($links = link_node($node, $main)) {
+      $output .= "<br />[ ". $this->links($links) ." ]";
     }
     $output .= "<hr />";
 

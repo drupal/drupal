@@ -1,5 +1,5 @@
 <?php
-// $Id: marvin.theme,v 1.74 2001/11/01 11:00:49 dries Exp $
+// $Id: marvin.theme,v 1.75 2001/11/23 17:10:45 kjartan Exp $
 
   /*********************************************************************
 
@@ -69,8 +69,8 @@
 
      print " <tr><td colspan=\"2\">&nbsp;</td></tr>\n";
 
-     if ($main) {
-       print " <tr><td colspan=\"2\">". $this->links(link_node($node)) ."</td></tr>\n";
+     if ($links = link_node($node, $main)) {
+       print " <tr><td colspan=\"2\">". $this->links($links) ."</td></tr>\n";
      }
 
      print "</table>\n";

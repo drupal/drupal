@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.84 2001/11/12 22:17:16 dries Exp $
+// $Id: common.inc,v 1.85 2001/11/23 17:10:44 kjartan Exp $
 
 function conf_init() {
   global $HTTP_HOST, $REQUEST_URI;
@@ -350,10 +350,10 @@ function link_page() {
   return $links;
 }
 
-function link_node($node) {
+function link_node($node, $main = 0) {
   foreach (module_list() as $name) {
     if (module_hook($name, "link")) {
-      $links = array_merge($links, module_invoke($name, "link", "node", $node));
+      $links = array_merge($links, module_invoke($name, "link", "node", $node, $main));
     }
   }
 
