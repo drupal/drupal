@@ -7,9 +7,8 @@ $module = array("page"  => "headline_page",
                 "admin" => "headline_admin",
                 "export" => "headline_export");
 
-include "includes/common.inc";
-include "modules/backend.class";
-
+include_once "includes/common.inc";
+include_once "modules/backend.class";
 
 function headline_blocks() {
   global $theme;
@@ -37,7 +36,7 @@ function headline_blocks() {
     }
 
     // Print backend box to screen:
-    $theme->box($backend->site, "$content<P ALIGN=\"right\">[ <A HREF=\"$backend->url\">more</A> ]\n");
+    $theme->box($backend->site, $content);
     print " </TD>\n";
 
     if ($state % 3 == 2) print " </TR>\n";
@@ -185,8 +184,7 @@ function headline_admin() {
 function headline_export($uri) {
   global $site_name, $site_url, $HTTP_REFERER, $HTTP_USER_AGENT;
 
-  if ($uri[2] == "headlines.rdf") {
-
+  if ($uri[1] == "headlines.rdf") {
     watchdog("message", "grabbed 'headlines.rdf' - referring url: $HTTP_REFERER - user agent: $HTTP_USER_AGENT");
 
     header("Content-Type: text/plain");

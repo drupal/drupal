@@ -1,6 +1,6 @@
 <?
 
-include "includes/common.inc";
+include_once "includes/common.inc";
 
 function account_get_user($uname) {
   $result = db_query("SELECT * FROM users WHERE userid = '$uname'");
@@ -56,7 +56,6 @@ function account_session_start($userid, $passwd) {
 
   $user = new User($userid, $passwd);
   if ($user->id) {
-    session_start();
     session_register("user");
     watchdog("message", "session opened for user `$user->userid'");
   }

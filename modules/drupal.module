@@ -50,6 +50,9 @@ function drupal_page() {
       break;
     case "Post comment":
       comment_post($pid, $id, $subject, $comment);
+      $theme->header();
+      drupal_render($id, $cid);
+      $theme->footer();
       break;
     case "reply":
       $theme->header();

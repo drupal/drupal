@@ -1,5 +1,5 @@
 <?
- include "includes/common.inc";
+ include_once "includes/common.inc";
 
  $theme->header();
 

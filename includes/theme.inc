@@ -41,7 +41,7 @@ function theme_account($theme) {
     $content .= "<LI><A HREF=\"account.php?op=edit&topic=content\">edit site content</A></LI>\n";
     $content .= "<P>\n";
 
-    if (($user->id) && ($user->permissions == 1 || $user->id == 1)) {
+    if (user_permission($user)) {
       $content .= "<LI><A HREF=\"admin.php\">administer ". $site_name ."</A></LI>\n";
       $content .= "<P>\n";
     }
@@ -91,16 +91,16 @@ function theme_blocks($region, $theme) {
 }
 
 function theme_morelink($theme, $story) {
-  return ($story->article) ? "[ <A HREF=\"story.php?id=$story->id\"><FONT COLOR=\"$theme->hlcolor2\"><B>read more</B></FONT></A> | ". strlen($story->article) ." bytes | <A HREF=\"story.php?id=$story->id\"><FONT COLOR=\"$theme->hlcolor2\">". format_plural($story->comments, "comment", "comments") ."</FONT></A> ]" : "[ <A HREF=\"story.php?id=$story->id\"><FONT COLOR=\"$theme->hlcolor2\">". format_plural($story->comments, "comment", "comments") ."</FONT></A> ]";
+  return ($story->article) ? "[ <A HREF=\"story.php?id=$story->id\"><FONT COLOR=\"$theme->link\"><B>read more</B></FONT></A> | ". strlen($story->article) ." bytes | <A HREF=\"story.php?id=$story->id\"><FONT COLOR=\"$theme->link\">". format_plural($story->comments, "comment", "comments") ."</FONT></A> ]" : "[ <A HREF=\"story.php?id=$story->id\"><FONT COLOR=\"$theme->link\">". format_plural($story->comments, "comment", "comments") ."</FONT></A> ]";
 }
 
 function theme_moderation_results($theme, $story) {
   global $user;
 
-  if ($user->id && $story->id && ($user->id == $story->author || user_getHistory($user->history, "s$story->id"))) {
+  if ($user->id && $story->id && ($user->id == $story->author || user_get_history($user->history, "s$story->id"))) {
     $result = db_query("SELECT * FROM users WHERE history LIKE '%s$story->id%'");
     while ($account = db_fetch_object($result)) {
-      $output .= format_username($account->userid) ." voted `". user_getHistory($account->history, "s$story->id") ."'.<BR>";
+      $output .= format_username($account->userid) ." voted `". user_get_history($account->history, "s$story->id") ."'.<BR>";
     }
 
     $theme->box("Moderation results", ($output ? $output : "This story has not been moderated yet."));
@@ -131,7 +131,6 @@ function theme_new_headlines($theme, $num = 10) {
   $content = "";
   $result = db_query("SELECT id, subject FROM stories WHERE status = 2 ORDER BY id DESC LIMIT $num");
   while ($story = db_fetch_object($result)) $content .= "<LI><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A></LI>\n";
-  $content .= "<P ALIGN=\"right\">[ <A HREF=\"search.php\"><FONT COLOR=\"$theme->hlcolor2\">more</FONT></A> ]</P>";
   $theme->box("Latest headlines", $content);
 }
 
@@ -148,8 +147,6 @@ function theme_old_headlines($theme, $num = 10) {
     }
     $content .= "<LI><A HREF=\"story.php?id=$story->id\">". check_output($story->subject) ."</A></LI>\n";
   }
-  $content .= "<P ALIGN=\"right\">[ <A HREF=\"search.php\"><FONT COLOR=\"$theme->hlcolor2\">more</FONT></A> ]</P>";
-
   $theme->box("Older headlines", $content);
 }
 

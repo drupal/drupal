@@ -2,7 +2,7 @@
 
 $module = array("page" => "faq_page");
 
-include "includes/common.inc";
+include_once "includes/common.inc";
 
 function faq_page() {
   global $theme, $site_name, $site_email;

@@ -3,7 +3,7 @@
 $module = array("help" => "ban_help",
                 "admin" => "ban_admin");
 
-include "includes/ban.inc";
+include_once "includes/ban.inc";
 
 
 function ban_help() {

@@ -17,6 +17,13 @@ function cron_save($edit) {
   }
 }
 
+function cron_execute($name) {
+  global $repository;
+  watchdog("message", "cron: executed '". $name ."_cron()'");
+  $repository[$name]["cron"]();
+  db_query("UPDATE crons SET timestamp = ". time() ." WHERE module = '$name'");
+}
+
 function cron_display() {
   $intervals = array(300, 900, 1800, 3600, 7200, 10800, 21600, 43200, 86400, 172800, 259200, 604800, 1209600, 2419200);
 
@@ -29,7 +36,7 @@ function cron_display() {
   $output .= " <TR><TH>module</TH><TH>period</TH><TH>last execution</TH><TH>operations</TH></TR>\n";
   while ($cron = db_fetch_object($result)) {
     foreach ($intervals as $value) $period .= "<OPTION VALUE=\"$value\"". (($cron->scheduled == $value) ? " SELECTED" : "") .">every ". format_interval($value) ."</OPTION>\n";
-    $output .= " <TR><TD>". check_output($cron->module) ."</TD><TD><SELECT NAME=\"edit[$cron->module]\">$period</SELECT></TD><TD>". format_interval(time() - $cron->timestamp) ." ago</TD><TD ALIGN=\"center\"><A HREF=\"cron.php\">execute</A></TD></TR>\n";
+    $output .= " <TR><TD>". check_output($cron->module) ."</TD><TD><SELECT NAME=\"edit[$cron->module]\">$period</SELECT></TD><TD ALIGN=\"center\">". ($cron->timestamp ? format_interval(time() - $cron->timestamp) ." ago" : "never" )."</TD><TD ALIGN=\"center\"><A HREF=\"admin.php?mod=cron&op=execute&name=$cron->module\">execute</A></TD></TR>\n";
     unset($period);
   }
   $output .= "</TABLE>\n";
@@ -46,6 +53,10 @@ function cron_admin() {
   switch($op) {
     case "help":
       cron_help();
+      break;
+    case "execute":
+      cron_execute($name);
+      cron_display();
       break;
     case "Save crons":
       cron_save($edit);

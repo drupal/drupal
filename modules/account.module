@@ -51,13 +51,13 @@ function account_display($order = "username") {
     $output .= " <TR>\n";
     foreach ($show as $key=>$value) {
       switch($value = strtok($value, " ")) {
-  case "real_email":
+        case "real_email":
           $output .= "  <TD>". format_email($account[$value]) ."</TD>\n";
           break;
         case "last_access":
           $output .= "  <TD>". format_interval(time() - $account[$value]) ." ago</TD>\n";
           break;
-  case "status":
+        case "status":
           $output .= "  <TD ALIGN=\"center\">". $stat[$account[$value]] ."</TD>\n";
           break;
         case "permissions":
@@ -69,7 +69,7 @@ function account_display($order = "username") {
         case "url":
           $output .= "  <TD>". format_url($account[$value]) ."</TD>\n";
           break;
-  case "userid":
+        case "userid":
           $output .= "  <TD>". format_username($account[$value], 1) ."</TD>\n";
           break;
         default:
@@ -100,7 +100,7 @@ function account_comments($id) {
   return $output;
 }
 
-function account_save($name, $edit) {
+function account_edit_save($name, $edit) {
   foreach ($edit as $key=>$value) {
     $query .= "$key = '". addslashes($value) ."', ";
   }
@@ -195,7 +195,7 @@ function account_admin() {
       account_view($name);
       break;
     case "Save account":
-      account_save($name, $edit);
+      account_edit_save($name, $edit);
       account_view($name);
       break;
     case "Update":

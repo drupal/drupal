@@ -1,9 +1,9 @@
 <?
 
-include "includes/common.inc";
+include_once "includes/common.inc";
 
 // validate user permission:
-if (!($user->permissions == 1 || $user->id == 1)) exit();
+if (!user_permission($user)) exit();
 
 function admin_page($mod) {
   global $repository, $site_name, $menu, $modules;

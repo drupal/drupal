@@ -13,7 +13,7 @@ function submission_score($id) {
 function submission_vote($id, $vote, $comment) {
   global $user;
 
-  if (!user_getHistory($user->history, "s$id")) {
+  if (!user_get_history($user->history, "s$id")) {
     // Update submission's score- and votes-field:
     db_query("UPDATE stories SET score = score $vote, votes = votes + 1 WHERE id = $id");
 
@@ -24,7 +24,7 @@ function submission_vote($id, $vote, $comment) {
     }
 
     // Update user's history record:
-    user_setHistory($user, "s$id", $vote);
+    user_set_history("s$id", $vote);
 
     // Update story table (if required):
     $result = db_query("SELECT * FROM stories WHERE id = $id");

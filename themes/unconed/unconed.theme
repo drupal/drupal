@@ -1,6 +1,7 @@
 <?
 
  class Theme {
+   var $link = "#000000";
    var $themename = "unconed";
 
    var $cl80 = "#8B8E95";

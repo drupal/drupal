@@ -24,12 +24,18 @@ function module_rehash_crons($name, $module) {
 }
 
 function module_rehash_blocks($name, $module) {
-  db_query("DELETE FROM blocks WHERE module = '$name'");
+  db_query("UPDATE blocks SET remove = '1' WHERE module = '$name'");
   if ($module["block"] && $blocks = $module["block"]()) {
     foreach ($blocks as $offset=>$block) {
-      db_query("INSERT INTO blocks (name, module, offset) VALUES ('". check_input($block["info"]) ."', '". check_input($name) ."', '". check_input($offset) ."')");
+      if (!db_fetch_object(db_query("SELECT * FROM blocks WHERE module = '$name' AND name = '". check_input($block["info"]) ."'"))) {
+        db_query("INSERT INTO blocks (name, module, offset) VALUES ('". check_input($block["info"]) ."', '". check_input($name) ."', '". check_input($offset) ."')");
+      }
+      else {
+        db_query("UPDATE blocks SET offset = '". check_input($offset) ."', remove = '0' WHERE module = '$name' AND name = '". check_input($block["info"]) ."'");
+      }
     }
   }
+  db_query("DELETE FROM blocks WHERE module = '$name' AND remove = '1'");
 }
 
 function module_rehash($name) {

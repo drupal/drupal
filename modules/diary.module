@@ -8,7 +8,7 @@ $module = array("page"  => "diary_page",
                 "admin" => "diary_admin",
                 "export" => "diary_export");
 
-include "includes/common.inc";
+include_once "includes/common.inc";
 
 function diary_page_overview($num = 20) {
   global $theme, $user;

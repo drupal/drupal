@@ -1,10 +1,10 @@
 <?
 
-include "includes/common.inc";
+include_once "includes/common.inc";
 
 function export($name, $module) {
   global $REQUEST_URI;
-  module_execute($name, "export", explode("/", $REQUEST_URI));
+  module_execute($name, "export", explode("/", strrchr($REQUEST_URI, "/export")));
 }
 
 module_iterate("export");
