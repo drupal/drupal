@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.218 2004/02/10 19:41:57 dries Exp $
+// $Id: comment.module,v 1.219 2004/02/11 19:21:14 dries Exp $
 
 function comment_help($section = "admin/help#comment") {
   $output = "";
@@ -837,7 +837,7 @@ function comment_page() {
     case t("Moderate comments"):
     case t("Moderate comment"):
       comment_moderate($edit);
-      drupal_goto(url(comment_referer_load()));
+      drupal_goto(comment_referer_load());
       break;
     case "reply":
       print theme("page", comment_reply(check_query(arg(3)), check_query(arg(2))), t("Add new comment"));
@@ -851,7 +851,7 @@ function comment_page() {
         print theme("page", $error_body, $error_title);
       }
       else {
-        drupal_goto(url(comment_referer_load()));
+        drupal_goto(comment_referer_load());
       }
       break;
     case t("Save settings"):
@@ -861,7 +861,7 @@ function comment_page() {
       $comments_per_page = $_POST["comments_per_page"];
 
       comment_save_settings(check_query($mode), check_query($order), check_query($threshold), check_query($comments_per_page));
-      drupal_goto(url(comment_referer_load()));
+      drupal_goto(comment_referer_load());
       break;
   }
 }

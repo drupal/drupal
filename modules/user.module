@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.300 2004/02/09 05:38:32 unconed Exp $
+// $Id: user.module,v 1.301 2004/02/11 19:21:14 dries Exp $
 
 /*** Common functions ******************************************************/
 
@@ -341,7 +341,7 @@ function user_block($op = "list", $delta = 0) {
           */
 
           if (empty($edit)) {
-            $edit["destination"] = url($_GET["q"]);
+            $edit["destination"] = $_GET["q"];
           }
           // NOTE: special care needs to be taken because on pages with forms, such as node and comment submission pages, the $edit variable might already be set.
 
@@ -527,7 +527,7 @@ function user_login($edit = array(), $msg = "") {
   */
 
   if ($user->uid) {
-    drupal_goto(url('user'));
+    drupal_goto('user');
   }
 
   if (user_deny('user', $edit['name'])) {
@@ -638,7 +638,7 @@ function user_login($edit = array(), $msg = "") {
   */
 
   if (empty($edit)) {
-    $edit["destination"] = url($_GET["q"]);
+    $edit["destination"] = $_GET["q"];
   }
   $output .= form_hidden("destination", $edit["destination"]);
 
@@ -687,7 +687,7 @@ function user_logout() {
     unset($user);
   }
 
-  drupal_goto(url());
+  drupal_goto();
 }
 
 function user_pass($edit = array()) {
@@ -716,7 +716,7 @@ function user_pass($edit = array()) {
       ** Mail new password:
       */
 
-      $variables = array("%username" => $account->name, "%site" => variable_get("site_name", "drupal"), "%password" => $pass, "%uri" => $base_url, "%uri_brief" => substr($base_url, strlen("http://")), "%mailto" => $account->mail, "%date" => format_date(time()), '%login_uri' => url('user/login'), '%edit_uri' => url('user/edit'));
+      $variables = array("%username" => $account->name, "%site" => variable_get("site_name", "drupal"), "%password" => $pass, "%uri" => $base_url, "%uri_brief" => substr($base_url, strlen("http://")), "%mailto" => $account->mail, "%date" => format_date(time()), '%login_uri' => url('user/login', NULL, NULL, TRUE), '%edit_uri' => url('user/edit', NULL, NULL, TRUE));
       $subject = _user_mail_text("pass_subject", $variables);
       $body = _user_mail_text("pass_body", $variables);
       $headers = "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from";
@@ -764,7 +764,7 @@ function user_register($edit = array()) {
   */
 
   if ($user->uid) {
-    drupal_goto(url("user/edit"));
+    drupal_goto("user/edit");
   }
 
   if (!(is_null($edit['name']) && is_null($edit['mail']))) {
@@ -804,14 +804,14 @@ function user_register($edit = array()) {
     $account = user_save("", array_merge(array('name' => $edit['name'], 'pass' => $pass, "init" => $edit['mail'], "mail" => $edit['mail'], "rid" => _user_authenticated_id(), "status" => (variable_get("user_register", 1) == 1 ? 1 : 0)), $data));
     watchdog('user', "new user: '". $edit['name'] ."' &lt;". $edit['mail'] ."&gt;", l(t("edit user"), "admin/user/edit/$account->uid"));
 
-    $variables = array("%username" => $edit['name'], "%site" => variable_get("site_name", "drupal"), "%password" => $pass, "%uri" => $base_url, "%uri_brief" => substr($base_url, strlen("http://")), "%mailto" => $edit['mail'], "%date" => format_date(time()), "%login_uri" => url('user/login'), "%edit_uri" => url("user/edit"));
+    $variables = array("%username" => $edit['name'], "%site" => variable_get("site_name", "drupal"), "%password" => $pass, "%uri" => $base_url, "%uri_brief" => substr($base_url, strlen("http://")), "%mailto" => $edit['mail'], "%date" => format_date(time()), "%login_uri" => url('user/login', NULL, NULL, TRUE), "%edit_uri" => url("user/edit", NULL, NULL, TRUE));
 
     //the first user may login immediately, and receives a customized welcome e-mail.
     if ($account->uid == 1) {
       user_mail($edit['mail'], t("drupal user account details for %s", array("%s" => $edit['name'])), strtr(t("%username,\n\nYou may now login to %uri using the following username and password:\n\n  username: %username\n  password: %password\n\n%edit_uri\n\n--drupal"), $variables), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
       // This should not be t()'ed. No point as its only shown once in the sites lifetime, and it would be bad to store the password
       $output .= "<p>Welcome to Drupal. You are user #1, which gives you full and immediate access.  All future registrants will receive their passwords via e-mail, so please configure your e-mail settings using the Administration pages.</p><p> Your password is <strong>$pass</strong>. You may change your password on the next page.</p><p>Please login below.</p>";
-      $output .= form_hidden("destination", url("user/edit"));
+      $output .= form_hidden("destination", "user/edit");
       $output .= form_hidden('name', $account->name);
       $output .= form_hidden('pass', $pass);
       $output .= form_submit(t("Log in"));
@@ -836,7 +836,7 @@ function user_register($edit = array()) {
         $body = _user_mail_text("approval_body", $variables);
 
         user_mail($edit['mail'], $subject, $body, "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
-        user_mail(variable_get("site_mail", ini_get("sendmail_from")), $subject, t("%u has applied for an account.\n\n%uri", array("%u" => $account->name, "%uri" => url("admin/user/edit/$account->uid"))), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
+        user_mail(variable_get("site_mail", ini_get("sendmail_from")), $subject, t("%u has applied for an account.\n\n%uri", array("%u" => $account->name, "%uri" => url("admin/user/edit/$account->uid", NULL, NULL, TRUE))), "From: $from\nReply-to: $from\nX-Mailer: Drupal\nReturn-path: $from\nErrors-to: $from");
         return t("Thank you for applying for an account. Your account is currently pending approval by the site administrator.<br />In the meantime, your password and further instructions have been sent to your e-mail address.");
       }
     }
@@ -1710,7 +1710,7 @@ function user_help($section = "admin/help#user") {
             return user_save(\$user, array(\"julia_favingredient\" => \$edit[\"julia_favingredient\"]));
         }
       }
-    </pre>", array("%user-role" => url("admin/user/role"), "%user-permission" => url("admin/user/permission"), "%jabber" => "http://www.jabber.org", "%delphiforums" => "http://www.delphiforums.com", "%drupal" => "http://www.drupal.org", "%da-auth" => url("user/help#da"), "%php-sess" => "http://www.php.net/manual/en/ref.session.php", "%user-prefs" => url("user/edit"), "%admin-user" => url("admin/user"), "%da-devel" => "http://www.drupal.org/node/view/316", "%xml" => "http://www.xmlrpc.org", "%http-post" => "http://www.w3.org/Protocols/", "%soap" => "http://www.soapware.org", "%dis-module" => url("admin/system/modules"), "%blogger" => "http://www.blogger.com", "%blogger-source" => "http://cvs.drupal.org/viewcvs.cgi/contributions/modules/authentication/Bloggar/?cvsroot=contrib", "%contrib-cvs" => "http://cvs.drupal.org/viewcvs/contributions/?cvsroot=contrib", "%blogger-api" => "http://plant.blogger.com/API", "%cvs" => "http://cvs.drupal.org/viewcvs.cgi/contributions/README?rev=HEAD&amp;cvsroot=contrib&amp;content-type=text/vnd.viewcvs-markup", "%drupal-lists" => "http://drupal.org/mailing-lists", "%drupal-org" => "http://www.drupal.org", "%registration" => url("user/register"), "%user-acct" => url('user'), "%user-admin" => url("admin/user"), "%profile-module" => "http://cvs.drupal.org/viewcvs/drupal/modules/profile.module"));
+    </pre>", array("%user-role" => url("admin/user/role"), "%user-permission" => url("admin/user/permission"), "%jabber" => "http://www.jabber.org", "%delphiforums" => "http://www.delphiforums.com", "%drupal" => "http://www.drupal.org", "%da-auth" => url("user/help", NULL, 'da'), "%php-sess" => "http://www.php.net/manual/en/ref.session.php", "%user-prefs" => url("user/edit"), "%admin-user" => url("admin/user"), "%da-devel" => "http://www.drupal.org/node/view/316", "%xml" => "http://www.xmlrpc.org", "%http-post" => "http://www.w3.org/Protocols/", "%soap" => "http://www.soapware.org", "%dis-module" => url("admin/system/modules"), "%blogger" => "http://www.blogger.com", "%blogger-source" => "http://cvs.drupal.org/viewcvs.cgi/contributions/modules/authentication/Bloggar/?cvsroot=contrib", "%contrib-cvs" => "http://cvs.drupal.org/viewcvs/contributions/?cvsroot=contrib", "%blogger-api" => "http://plant.blogger.com/API", "%cvs" => "http://cvs.drupal.org/viewcvs.cgi/contributions/README?rev=HEAD&amp;cvsroot=contrib&amp;content-type=text/vnd.viewcvs-markup", "%drupal-lists" => "http://drupal.org/mailing-lists", "%drupal-org" => "http://www.drupal.org", "%registration" => url("user/register"), "%user-acct" => url('user'), "%user-admin" => url("admin/user"), "%profile-module" => "http://cvs.drupal.org/viewcvs/drupal/modules/profile.module"));
 
       foreach (module_list() as $module) {
         if (module_hook($module, "auth")) {

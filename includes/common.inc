@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.321 2004/02/08 21:42:58 kjartan Exp $ */
+/* $Id: common.inc,v 1.322 2004/02/11 19:21:13 dries Exp $ */
 
 /**
  * @defgroup common Core functions
@@ -209,15 +209,17 @@ function drupal_get_headers() {
  *
  * @note This function ends the request.
  *
- * @param $url A string containing a fully qualified URI.
+ * @param $url A Drupal URL
+ * @param $query Query string component
+ * @param $fragment Fragment identifier
  */
-function drupal_goto($url) {
+function drupal_goto($url = NULL, $query = NULL, $fragment = NULL) {
 
   /*
-  ** Translate &amp; to simply &
+  ** Translate &amp; to simply & in the absolute URL
   */
 
-  $url = str_replace("&amp;", "&", $url);
+  $url = str_replace("&amp;", "&", url($url, $query, $fragment, TRUE));
 
   /*
   ** It is advised to use "drupal_goto()" instead of PHP's "header()" as
@@ -1028,7 +1030,7 @@ function form_weight($title = NULL, $name = "weight", $value = 0, $delta = 10, $
 }
 /* @} */
 
-function url($url = NULL, $query = NULL, $fragment = NULL) {
+function url($url = NULL, $query = NULL, $fragment = NULL, $absolute = NULL) {
   global $base_url;
 
   static $script;
@@ -1050,39 +1052,41 @@ function url($url = NULL, $query = NULL, $fragment = NULL) {
     $fragment = "#$fragment";
   }
 
+  $base = ($absolute ? $base_url . '/' : '');
+
   if (variable_get("clean_url", "0") == "0") {
     if (isset($url)) {
       if (isset($query)) {
-        return "$base_url/$script?q=$url&amp;$query$fragment";
+        return "$base$script?q=$url&amp;$query$fragment";
       }
       else {
-        return "$base_url/$script?q=$url$fragment";
+        return "$base$script?q=$url$fragment";
       }
     }
     else {
       if (isset($query)) {
-        return "$base_url/$script?$query$fragment";
+        return "$base$script?$query$fragment";
       }
       else {
-        return "$base_url/$fragment";
+        return "$base$fragment";
       }
     }
   }
   else {
     if (isset($url)) {
       if (isset($query)) {
-        return "$base_url/$url?$query$fragment";
+        return "$base$url?$query$fragment";
       }
       else {
-        return "$base_url/$url$fragment";
+        return "$base$url$fragment";
       }
     }
     else {
       if (isset($query)) {
-        return "$base_url/$script?$query$fragment";
+        return "$base$script?$query$fragment";
       }
       else {
-        return "$base_url/$fragment";
+        return "$base$fragment";
       }
     }
   }
@@ -1098,7 +1102,7 @@ function drupal_attributes($attributes = NULL) {
   }
 }
 
-function l($text, $url, $attributes = array(), $query = NULL, $fragment = NULL) {
+function l($text, $url, $attributes = array(), $query = NULL, $fragment = NULL, $absolute = NULL) {
   if ($url == $_GET['q']) {
     if (isset($attributes['class'])) {
       $attributes['class'] .= ' active';
@@ -1107,7 +1111,7 @@ function l($text, $url, $attributes = array(), $query = NULL, $fragment = NULL) 
       $attributes['class'] = 'active';
     }
   }
-  return "<a href=\"". url($url, $query, $fragment) ."\"". drupal_attributes($attributes) .">$text</a>";
+  return "<a href=\"". url($url, $query, $fragment, $absolute) ."\"". drupal_attributes($attributes) .">$text</a>";
 }
 
 function field_get($string, $name) {
