@@ -74,8 +74,6 @@ function comment_help($section = "admin/help#comment") {
       return t("Use these forms to setup the name and minimum \"cut off\" score to help your users hide comments they don't want to see. These thresholds appear in the user's comment control panel. Click \"edit threshold\" to modify the values of an already existing configuration. To delete a setting, \"edit\" it first, and then choose \"delete threshold\".");
     case 'admin/comment/configure/votes':
       return t("Create and control the possible comment moderation votes here. \"Weight\" lets you set the order of the drop down menu. Click \"edit\" to edit a current vote weight. To delete a name/weight combination go to the \"edit\" area. To delete a setting, \"edit\" it first, and then choose \"delete vote\".");
-    case 'admin/comment/search':
-      return t("Enter a simple pattern ('*' may be used as a wildcard match) to search for a comment.  For example, one may search for 'br' and Drupal might return 'bread brakers', 'our daily bread' and 'brenda'.");
     case 'admin/modules#description':
       return t('Enables user to comment on published content.');
    }
@@ -101,10 +99,6 @@ function comment_menu($may_cache) {
       'type' => MENU_DEFAULT_LOCAL_TASK, 'weight' => -10);
     $items[] = array('path' => 'admin/comment/configure', 'title' => t('configure'),
       'callback' => 'comment_configure', 'access' => $access, 'type' => MENU_LOCAL_TASK);
-    if (module_exist('search')) {
-      $items[] = array('path' => 'admin/comment/search', 'title' => t('search'),
-        'callback' => 'comment_search', 'access' => $access, 'type' => MENU_LOCAL_TASK);
-    }
 
     // Subtabs:
     $items[] = array('path' => 'admin/comment/list/new', 'title' => t('new comments'),
@@ -265,37 +259,6 @@ function comment_nodeapi(&$node, $op, $arg = 0) {
       db_query('DELETE FROM {node_comment_statistics} WHERE nid = %d', $node->nid);
       break;
   }
-}
-
-/**
- * Implementation of hook_search().
- *
- * This search function uses search.module's built-in content index by
- * calling do_search(). The "nid" identifier in the select is used to
- * present search results in the context of their associated node.
- *
- * This function doubles as a menu callback for the administrative comment search.
- */
-function comment_search($keys = NULL) {
-  if (!$keys) {
-    // if there are no keys, we've been called from our menu callback,
-    // so we hook into the search.module to pass the $keys back to us.
-    print theme('page', search_type('comment', url('admin/comment/search'), $_POST['keys']));
-  }
-  else if ($keys) {
-    $find = do_search(array('keys' => $keys, 'type' => 'comment', 'select' => 'SELECT s.lno AS lno, c.nid AS nid, c.subject AS title, c.timestamp AS created, u.uid AS uid, u.name AS name, s.count AS count FROM {search_index} s, {comments} c INNER JOIN {users} u ON c.uid = u.uid '. node_access_join_sql('c') .' WHERE '. node_access_where_sql() ." AND s.lno = c.cid AND s.type = 'comment' AND c.status = 0 AND s.word like '%'"));
-    return array(t('Matching comments ranked in order of relevance'), $find);
-  }
-}
-
-/**
- * Implementation of hook_update_index().
- *
- * The SQL statement returned checks for the last time the index was updated
- * so as not to cause redundant work for the indexer.
- */
-function comment_update_index() {
-  return array('last_update' => 'comment_cron_last', 'node_type' => 'comment', 'select' => 'SELECT c.cid as lno, c.subject as text1, c.comment as text2 FROM {comments} c WHERE c.status = 0 AND timestamp > '. variable_get('comment_cron_last', 1));
 }
 
 /**
@@ -1250,7 +1213,7 @@ function comment_threshold_settings($fid = 0) {
 }
 
 /**
-*** misc functions: helpers, privates, history, search
+*** misc functions: helpers, privates, history
 **/
 
 

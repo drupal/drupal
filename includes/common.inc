@@ -668,134 +668,6 @@ function valid_input_data($data) {
  * @} End of "defgroup validation".
  */
 
-/**
- * @defgroup search Search interface
- * @{
- * The Drupal search interface manages a global search mechanism.
- *
- * Modules may plug into this system to provide searches of different types of
- * data. Most of the system is handled by search.module, so this must be enabled
- * for all of the search features to work.
- */
-
-/**
- * Format a single result entry of a search query.
- *
- * Modules may implement hook_search_item() in order to override this default
- * function to display search results.
- *
- * @param $item
- *   A single search result as returned by hook_search(). The result should be
- *   an array with keys "count", "link", "title", "user", "date", and "keywords".
- * @param $type
- *   The type of item found, such as "user" or "comment".
- */
-function search_item($item, $type) {
-  if (module_hook($type, 'search_item')) {
-    $output = module_invoke($type, 'search_item', $item);
-  }
-  else {
-    $output = ' <dt class="title"><a href="'. $item['link'] .'">'. $item['title'] .'</a></dt>';
-    $output .= ' <dd class="small">' . t($type) . ($item['user'] ? ' - '. $item['user'] : '') .''. ($item['date'] ? ' - '. format_date($item['date'], 'small') : '') .'</dd>';
-  }
-
-  return $output;
-}
-
-/**
- * Render a generic search form.
- *
- * This form must be usable not only within "http://example.com/search", but also
- * as a simple search box (without "Restrict search to", help text, etc.), in the
- * theme's header, and so forth. This means we must provide options to
- * conditionally render certain parts of this form.
- *
- * @param $action
- *   Form action. Defaults to "search".
- * @param $keys
- *   The search string entered by the user, containing keywords for the search.
- * @param $options
- *   Whether to render the optional form fields and text ("Restrict search
- *   to", help text, etc.).
- * @return
- *   An HTML string containing the search form.
- */
-function search_form($action = '', $keys = '', $options = FALSE) {
-  $edit = $_POST['edit'];
-
-  if (!$action) {
-    $action = url('search');
-  }
-
-  $output = ' <div class="search-form"><br /><input type="text" class="form-text" size="50" value="'. check_form($keys) .'" name="keys" />';
-  $output .= ' <input type="submit" class="form-submit" value="'. t('Search') ."\" />\n";
-
-  if ($options) {
-    $output .= '<br />';
-    $output .= t('Restrict search to') .': ';
-
-    foreach (module_list() as $name) {
-      if (module_hook($name, 'search')) {
-        $output .= ' <input type="checkbox" name="edit[type]['. $name .']" '. ($edit['type'][$name] ? ' checked="checked"' : '') .' /> '. t($name);
-      }
-    }
-  }
-  $output .= '</div>';
-
-  return form($output, 'post', $action);
-}
-
-/**
- * Perform a global search on the given keys, and return the formatted results.
- */
-function search_data($keys = NULL) {
-  $edit = $_POST['edit'];
-  $output = '';
-
-  if (isset($keys)) {
-    foreach (module_list() as $name) {
-      if (module_hook($name, 'search') && (!$edit['type'] || $edit['type'][$name])) {
-        list($title, $results) = module_invoke($name, 'search', $keys);
-        if ($results) {
-          $output .= '<h2>'. $title .'</h2>';
-          $output .= '<dl class="search-results">';
-          foreach ($results as $entry) {
-            $output .= search_item($entry, $name);
-          }
-          $output .= '</dl>';
-        }
-      }
-    }
-  }
-
-  return $output;
-}
-
-/**
- * Display a search form for a particular type of data.
- *
- * @param $type
- *   The type of content to search within.
- * @param $action
- *   Form action. Defaults to "search".
- * @param $keys
- *   The search string entered by the user, containing keywords for the search.
- * @param $options
- *   Whether to render the optional form fields and text ("Restrict search
- *   to", help text, etc.).
- * @return
- *   An HTML string containing the search form and results.
- */
-function search_type($type, $action = '', $keys = '', $options = FALSE) {
-  $_POST['edit']['type'][$type] = 'on';
-
-  return search_form($action, $keys, $options) . '<br />'. search_data($keys);
-}
-
-/**
- * @} End of "defgroup search".
- */
-
 function check_form($text) {
   return drupal_specialchars($text, ENT_QUOTES);
 }
@@ -1840,7 +1712,7 @@ function truncate_utf8($string, $len) {
 /**
  * Encodes MIME/HTTP header values that contain non US-ASCII characters.
  *
- * For example, mime_header_encode('tÃ©st.txt') returns "=?UTF-8?B?dMOpc3QudHh0?=".
+ * For example, mime_header_encode('tést.txt') returns "=?UTF-8?B?dMOpc3QudHh0?=".
  *
  * See http://www.rfc-editor.org/rfc/rfc2047.txt for more information.
  *
@@ -1860,6 +1732,59 @@ function mime_header_encode($string, $charset = 'UTF-8') {
     $string = trim(preg_replace('/^(.*)$/m', " =?$charset?B?\\1?=", $string));
   }
   return $string;
+}
+
+/**
+ * Decode all HTML entities (including numerical ones) to regular UTF-8 bytes.
+ */
+function decode_entities($text) {
+  static $table;
+  // We store named entities in a table for quick processing.
+  if (!isset($table)) {
+    // Get all named HTML entities.
+    $table = array_flip(get_html_translation_table(HTML_ENTITIES, $special));
+    // PHP gives us Windows-1252/ISO-8859-1 data, we need UTF-8.
+    $table = array_map('utf8_encode', $table);
+  }
+  $text = strtr($text, $table);
+
+  // Any remaining entities are numerical. Use a regexp to replace them.
+  return preg_replace('/&#(x?)([A-Za-z0-9]+);/e', '_decode_entities("$1", "$2")', $text);
+}
+
+/**
+ * Helper function for decode_entities
+ */
+function _decode_entities($hex, $codepoint) {
+  if ($hex != '') {
+    $codepoint = base_convert($codepoint, 16, 10);
+  }
+  if ($codepoint < 0x80) {
+    return chr($codepoint);
+  }
+  else if ($codepoint < 0x800) {
+    return chr(0xC0 | ($codepoint >> 6))
+         . chr(0x80 | ($codepoint & 0x3F));
+  }
+  else if ($codepoint < 0x10000) {
+    return chr(0xE0 | ( $codepoint >> 12))
+         . chr(0x80 | (($codepoint >> 6) & 0x3F))
+         . chr(0x80 | ( $codepoint       & 0x3F));
+  }
+  else if ($codepoint < 0x200000) {
+    return chr(0xF0 | ( $codepoint >> 18))
+         . chr(0x80 | (($codepoint >> 12) & 0x3F))
+         . chr(0x80 | (($codepoint >> 6)  & 0x3F))
+         . chr(0x80 | ( $codepoint        & 0x3F));
+  }
+}
+
+/**
+ * Count the amount of characters in a UTF-8 string. This is less than or
+ * equal to the byte count.
+ */
+function string_length(&$text) {
+  return strlen(preg_replace("/[\x80-\xBF]/", '', $text));
 }
 
 /**

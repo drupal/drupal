@@ -431,17 +431,20 @@ function user_file_download($file) {
 /**
  * Implementation of hook_search().
  */
-function user_search($keys) {
-  $find = array();
-
-  // Replace wildcards with MySQL/PostgreSQL wildcards.
-  $keys = str_replace('*', '%', $keys);
-
-  $result = db_query_range("SELECT * FROM {users} WHERE LOWER(name) LIKE '%%%s%%'", strtolower($keys), 0, 20);
-  while ($account = db_fetch_object($result)) {
-    $find[] = array('title' => $account->name, 'link' => url("user/$account->uid/view"), 'user' => $account->name);
+function user_search($op = 'search', $keys = null) {
+  switch ($op) {
+    case 'name':
+      return t('users');
+    case 'search':
+      $find = array();
+      // Replace wildcards with MySQL/PostgreSQL wildcards.
+      $keys = str_replace('*', '%', $keys);
+      $result = db_query_range("SELECT * FROM {users} WHERE LOWER(name) LIKE '%%%s%%'", strtolower($keys), 0, 20);
+      while ($account = db_fetch_object($result)) {
+        $find[] = array('title' => $account->name, 'link' => url("user/$account->uid/view"));
+      }
+      return $find;
   }
-  return array(t('Matching users'), $find);
 }
 
 /**
@@ -1595,7 +1598,8 @@ function user_admin() {
 
   switch ($op) {
     case 'search':
-      $output = search_type('user', url('admin/user/search'), $_POST['keys']);
+    case t('Search'):
+      $output = search_form(url('admin/user/search'), $_POST['edit']['keys'], 'user') . search_data($_POST['edit']['keys'], 'user');
       break;
     case t('Create account'):
     case 'create':

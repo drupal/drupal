@@ -553,29 +553,27 @@ function node_perm() {
 
 /**
  * Implementation of hook_search().
- *
- * Return the results of performing a search using the indexed search
- * for this particular type of node.
- *
- * Pass an array to the 'do_search' function which dictates what it
- * will search through, and what it will search for
- *
- * "keys"'s value is the keywords entered by the user
- *
- * "type"'s value is used to identify the node type in the search
- * index.
- *
- * "select"'s value is used to relate the data from the specific nodes
- * table to the data that the search_index table has in it, and the the
- * do_search function will rank it.
- *
- * The select must always provide the following fields: lno, title,
- * created, uid, name, and count.
  */
-function node_search($keys) {
-  $find = do_search(array('keys' => $keys, 'type' => 'node', 'select' => "SELECT DISTINCT s.lno as lno, n.title as title, n.created as created, u.uid as uid, u.name as name, s.count as count FROM {search_index} s, {node} n ". node_access_join_sql() ." INNER JOIN {users} u ON n.uid = u.uid WHERE s.lno = n.nid AND s.type = 'node' AND s.word like '%' AND n.status = 1 AND ". node_access_where_sql()));
-
-  return array(t('Matching nodes ranked in order of relevance'), $find);
+function node_search($op = 'search', $keys = null) {
+  switch ($op) {
+    case 'name':
+      return t('content');
+    case 'search':
+      $find = do_search($keys, 'node', 'INNER JOIN {node} n ON n.nid = i.sid '. node_access_join_sql() .' INNER JOIN {users} u ON n.uid = u.uid', 'n.status = 1 AND '. node_access_where_sql());
+      $results = array();
+      foreach ($find as $item) {
+        $node = node_load(array('nid' => $item));
+        $comments = db_result(db_query('SELECT comment_count FROM {node_comment_statistics} WHERE nid = %d', $item));
+        $results[] = array('link' => url('node/'. $item),
+                           'type' => node_invoke($node, 'node_name'),
+                           'title' => $node->title,
+                           'user' => format_name($node),
+                           'date' => $node->changed,
+                           'extra' => format_plural($comments, '1 comment', '%count comments'),
+                           'snippet' => search_excerpt($keys, check_output($node->body, $node->format)));
+      }
+      return $results;
+  }
 }
 
 /**
@@ -947,7 +945,8 @@ function node_admin() {
   // Compile a list of the administrative links:
   switch ($op) {
     case 'search':
-      $output = search_type('node', url('admin/node/search'), $_POST['keys']);
+    case t('Search'):
+      $output = search_form(url('admin/node/search'), $_POST['edit']['keys'], 'node') . search_data($_POST['edit']['keys'], 'node');
       break;
     case 'delete':
       $output = node_delete(array('nid' => arg(3)));
@@ -1508,24 +1507,42 @@ function node_page() {
 
 /**
  * Implementation of hook_update_index().
- *
- * Returns an array of values to dictate how to update the search index
- * for this particular type of node.
- *
- * "last_update"'s value is used with variable_set to set the
- * last time this node type had an index update run.
- *
- * "node_type"'s value is used to identify the node type in the search
- * index.
- *
- * "select"'s value is used to select the node id and text fields from
- * the table we are indexing. In this case, we also check against the
- * last run date for the nodes update.
  */
 function node_update_index() {
-  return array('last_update' => 'node_cron_last',
-         'node_type' => 'node',
-         'select' => "SELECT n.nid as lno, n.title as text1, n.body as text2 FROM {node} n WHERE n.status = 1 AND moderate = 0 and (created > " . variable_get('node_cron_last', 1) . " or changed > " . variable_get('node_cron_last', 1) . ")");
+  $last = variable_get('node_cron_last', 0);
+  $limit = (int)variable_get('search_cron_limit', 100);
+
+  $result = db_query_range('SELECT nid FROM {node} n WHERE n.status = 1 AND moderate = 0 AND (created > %d OR changed > %d) ORDER BY GREATEST(created, changed) ASC', $last, $last, 0, $limit);
+
+  while ($node = db_fetch_object($result)) {
+    $node = node_load(array('nid' => $node->nid));
+
+    // We update this variable per node in case cron times out, or if the node
+    // cannot be indexed (PHP nodes which call drupal_goto, for example).
+    // In rare cases this can mean a node is only partially indexed, but the
+    // chances of this happening are very small.
+    variable_set('node_cron_last', max($node->changed, $node->created));
+
+    if (node_hook($node, 'view')) {
+      node_invoke($node, 'view', false, true);
+    }
+    else {
+      $node = node_prepare($node, false);
+    }
+
+    $text = '<h1>'. drupal_specialchars($node->title) .'</h1>'. $node->body;
+
+    // Fetch comments
+    if (module_exist('comment')) {
+      $comments = db_query('SELECT subject, comment, format FROM {comments} WHERE nid = %d AND status = 0', $node->nid);
+      while ($comment = db_fetch_object($comments)) {
+        $text .= '<h2>'. $comment->subject .'</h2>'. check_output($comment->comment, $comment->format);
+      }
+    }
+
+    // Update index
+    search_index($node->nid, 'node', $text);
+  }
 }
 
 /**

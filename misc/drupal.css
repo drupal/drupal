@@ -383,6 +383,31 @@ img.screenshot {
   display: block;
   margin: 2px;
 }
+.search-form {
+  margin-bottom: 1em;
+}
+.search-form p {
+  margin-top: 0;
+  margin-bottom: 0.2em;
+  padding-top: 0;
+  padding-bottom: 0;
+}
+.search-form input {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+.search-results p {
+  margin-top: 0;
+}
+.search-results dt {
+  font-size: 1.1em;
+}
+.search-results dd {
+  margin-bottom: 1em;
+}
+.search-results .search-info {
+  font-size: 0.85em;
+}
 #tracker td.replies {
   text-align: center;
 }
