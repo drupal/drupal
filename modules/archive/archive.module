@@ -1,5 +1,5 @@
 <?php
-// $Id: archive.module,v 1.45 2003/12/29 12:41:58 dries Exp $
+// $Id: archive.module,v 1.46 2004/01/06 18:30:10 dries Exp $
 
 function archive_help($section) {
   $output = "";
@@ -58,7 +58,7 @@ function archive_calendar($original = 0) {
 
   $end_of_month = mktime(23, 59, 59, $month, $last, $year);
 
-  $cache = cache_get("archive:calendar:$start_of_month");
+  $cache = cache_get("archive:calendar:$day-$month-$year");
 
   if (!empty($cache)) {
     return $cache->data;
@@ -159,7 +159,7 @@ function archive_calendar($original = 0) {
 
   $output .= "</table></div>\n\n";
 
-  cache_set("archive:calendar:$start_of_month", $output, 1);
+  cache_set("archive:calendar:$day-$month-$year", $output, 1);
 
   return $output;
 }
