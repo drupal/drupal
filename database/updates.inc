@@ -68,7 +68,8 @@ $sql_updates = array(
   "2004-07-22" => "update_94",
   "2004-07-30" => "update_95",
   "2004-08-04" => "update_96",
-  "2004-08-06" => "update_97"
+  "2004-08-06" => "update_97",
+  "2004-08-07" => "update_98"
 );
 
 function update_32() {
@@ -1276,6 +1277,31 @@ function update_97() {
     $result = db_query("SELECT pid, src FROM {url_alias} WHERE src LIKE '%s%%'", $from);
     while ($alias = db_fetch_object($result)) {
       db_query("UPDATE {url_alias} SET src = '%s' WHERE pid = '%s'", str_replace($from, $to, $alias->src), $alias->pid);
+    }
+  }
+
+  return array();
+}
+
+function update_98() {
+  $result = db_query("SELECT pid, src FROM {url_alias} WHERE src LIKE 'taxonomy/%%'", $from);
+  while ($alias = db_fetch_object($result)) {
+    list(, $page, $op, $terms) = explode('/', $alias->src);
+    if ($page == 'feed' || $page == 'page') {
+      switch ($op) {
+        case 'or':
+          $new = 'taxonomy/terms/'. str_replace(',', '+', $terms);
+          break;
+        case 'and':
+          $new = 'taxonomy/terms/'. $terms;
+          break;
+      }
+      if ($new) {
+        if ($page == 'feed') {
+          $new .= '/0/feed';
+        }
+        db_query("UPDATE {url_alias} SET src = '%s' WHERE pid = '%s'", $new, $alias->pid);
+      }
     }
   }
 
