@@ -29,34 +29,6 @@ function drupal_get_title() {
 /* @} */
 
 /**
- * @name Page messages
- * @ingroup common
- *
- * Functions to get and set the message of the current page.
- * @{
- */
-function drupal_set_message($message = NULL, $type = "status") {
-  if (!isset($_SESSION['messages'])) {
-    $_SESSION['messages'] = array();
-  }
-
-  if (isset($message)) {
-    $_SESSION['messages'][] = array($message, $type);
-  }
-
-  return $_SESSION['messages'];
-}
-
-function drupal_get_messages() {
-  $messages = drupal_set_message();
-  $_SESSION['messages'] = array();
-
-  return $messages;
-}
-
-/* @} */
-
-/**
  * @name Page breadcrumbs
  * @ingroup common
  *

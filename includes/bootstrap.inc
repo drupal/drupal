@@ -9,24 +9,24 @@ function conf_init() {
   ** default value 'conf'.
   */
 
-  $uri = $_SERVER["PHP_SELF"];
+  $uri = $_SERVER['PHP_SELF'];
 
-  $file = strtolower(strtr($_SERVER["HTTP_HOST"] . substr($uri, 0, strrpos($uri, "/")), "/:", ".."));
+  $file = strtolower(strtr($_SERVER['HTTP_HOST'] . substr($uri, 0, strrpos($uri, '/')), '/:', '..'));
 
   while (strlen($file) > 4) {
     if (file_exists("includes/$file.php")) {
       return $file;
     }
     else {
-      $file = substr($file, strpos($file, ".") + 1);
+      $file = substr($file, strpos($file, '.') + 1);
     }
   }
 
-  return "conf";
+  return 'conf';
 }
 
 function variable_init($conf = array()) {
-  $result = db_query("SELECT * FROM {variable} ");
+  $result = db_query('SELECT * FROM {variable} ');
   while ($variable = db_fetch_object($result)) {
     if (!isset($conf[$variable->name])) {
       $conf[$variable->name] = unserialize($variable->value);
@@ -83,7 +83,8 @@ function cache_clear_all($cid = NULL) {
 function page_set_cache() {
   global $user;
 
-  if (!$user->uid && $_SERVER["REQUEST_METHOD"] == "GET") {
+  if (!$user->uid && $_SERVER['REQUEST_METHOD'] == 'GET') {
+    // This will fail in some cases, see page_get_cache() for the explanation.
     if ($data = ob_get_contents()) {
       cache_set(request_uri(), $data, 1, drupal_get_headers());
     }
@@ -94,8 +95,14 @@ function page_get_cache() {
   global $user;
 
   $cache = NULL;
-
-  if (!$user->uid && $_SERVER["REQUEST_METHOD"] == "GET") {
+  
+  /*
+   * Note, we do not serve cached pages when status messages are waiting (from
+   * a redirected form submission which was completed).
+   * Because the output handler is not activated, the resulting page will not
+   * get cached either.
+   */
+  if (!$user->uid && $_SERVER['REQUEST_METHOD'] == 'GET' && count(drupal_set_message()) == 0) {
     $cache = cache_get(request_uri());
 
     if (empty($cache)) {
@@ -107,30 +114,30 @@ function page_get_cache() {
 }
 
 function drupal_page_header() {
-  if (variable_get("dev_timer", 0)) {
+  if (variable_get('dev_timer', 0)) {
     timer_start();
   }
 
-  if (variable_get("cache", 0)) {
+  if (variable_get('cache', 0)) {
     if ($cache = page_get_cache()) {
 
       // Set default values:
-      $date = gmdate("D, d M Y H:i:s", $cache->created) ." GMT";
+      $date = gmdate('D, d M Y H:i:s', $cache->created) .' GMT';
       $etag = '"'. md5($date) .'"';
 
       // Check http headers:
-      $modified_since = isset($_SERVER["HTTP_IF_MODIFIED_SINCE"]) ? $_SERVER["HTTP_IF_MODIFIED_SINCE"] == $date : NULL;
-      if (!empty($_SERVER["HTTP_IF_MODIFIED_SINCE"]) && ($timestamp = strtotime($_SERVER["HTTP_IF_MODIFIED_SINCE"])) != -1) {
+      $modified_since = isset($_SERVER['HTTP_IF_MODIFIED_SINCE']) ? $_SERVER['HTTP_IF_MODIFIED_SINCE'] == $date : NULL;
+      if (!empty($_SERVER['HTTP_IF_MODIFIED_SINCE']) && ($timestamp = strtotime($_SERVER['HTTP_IF_MODIFIED_SINCE'])) != -1) {
         $modified_since = $cache->created <= $timestamp;
       }
       else {
         $modified_since = NULL;
       }
-      $none_match = !empty($_SERVER["HTTP_IF_NONE_MATCH"]) ? $_SERVER["HTTP_IF_NONE_MATCH"] == $etag : NULL;
+      $none_match = !empty($_SERVER['HTTP_IF_NONE_MATCH']) ? $_SERVER['HTTP_IF_NONE_MATCH'] == $etag : NULL;
 
       // The type checking here is very important, be careful when changing entries.
       if (($modified_since !== NULL || $none_match !== NULL) && $modified_since !== false && $none_match !== false) {
-        header("HTTP/1.0 304 Not Modified");
+        header('HTTP/1.0 304 Not Modified');
         exit();
       }
 
@@ -185,8 +192,8 @@ function drupal_unpack($obj, $field = 'data') {
 }
 
 function referer_uri() {
-  if (isset($_SERVER["HTTP_REFERER"])) {
-    return check_url($_SERVER["HTTP_REFERER"]);
+  if (isset($_SERVER['HTTP_REFERER'])) {
+    return check_url($_SERVER['HTTP_REFERER']);
   }
 }
 
@@ -212,7 +219,7 @@ function check_url($uri) {
   ** attacks.
   */
 
-  $uri = strtr($uri, array("(" => "&040;", ")" => "&041;"));
+  $uri = strtr($uri, array('(' => '&040;', ')' => '&041;'));
 
   return $uri;
 }
@@ -223,11 +230,11 @@ function request_uri() {
   ** equivalent using other environment vars.
   */
 
-  if (isset($_SERVER["REQUEST_URI"])) {
-    $uri = $_SERVER["REQUEST_URI"];
+  if (isset($_SERVER['REQUEST_URI'])) {
+    $uri = $_SERVER['REQUEST_URI'];
   }
   else {
-    $uri = $_SERVER["PHP_SELF"] ."?". $_SERVER["argv"][0];
+    $uri = $_SERVER['PHP_SELF'] .'?'. $_SERVER['argv'][0];
   }
 
   return check_url($uri);
@@ -244,13 +251,41 @@ function watchdog($type, $message, $link = NULL) {
   db_query("INSERT INTO {watchdog} (uid, type, message, link, location, hostname, timestamp) VALUES (%d, '%s', '%s', '%s', '%s', '%s', %d)", $user->uid, $type, $message, $link, request_uri(), $_SERVER['REMOTE_ADDR'], time());
 }
 
+/**
+ * @name Page messages
+ * @ingroup common
+ *
+ * Functions to get and set the message of the current page.
+ * @{
+ */
+function drupal_set_message($message = NULL, $type = "status") {
+  if (!isset($_SESSION['messages'])) {
+    $_SESSION['messages'] = array();
+  }
+
+  if (isset($message)) {
+    $_SESSION['messages'][] = array($message, $type);
+  }
+
+  return $_SESSION['messages'];
+}
+
+function drupal_get_messages() {
+  $messages = drupal_set_message();
+  $_SESSION['messages'] = array();
+
+  return $messages;
+}
+
+/* @} */
+
 unset($conf);
 $config = conf_init();
 
 include_once "includes/$config.php";
-include_once "includes/database.inc";
-include_once "includes/session.inc";
-include_once "includes/module.inc";
+include_once 'includes/database.inc';
+include_once 'includes/session.inc';
+include_once 'includes/module.inc';
 
 // initialize configuration variables, using values from conf.php if available:
 $conf = variable_init(isset($conf) ? $conf : array());
