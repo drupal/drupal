@@ -502,7 +502,6 @@ function update_upgrade3() {
   update_sql("INSERT INTO system VALUES ('themes/example/example.theme','example','theme','Internet explorer, Netscape, Opera, Lynx',1);");
   update_sql("INSERT INTO system VALUES ('themes/goofy/goofy.theme','goofy','theme','Internetexplorer, Netscape, Opera',1);");
   update_sql("INSERT INTO system VALUES ('themes/marvin/marvin.theme','marvin','theme','Internet explorer, Netscape, Opera',1);");
-  update_sql("INSERT INTO system VALUES ('themes/sosim/sosim.theme','sosim','theme','MSIE/NN/Opera',1);");
   update_sql("INSERT INTO system VALUES ('themes/unconed/unconed.theme','unconed','theme','Internet explorer, Netscape, Opera',1);");
   update_sql("INSERT INTO system VALUES ('tracker.module','tracker','module','',1);");
   update_sql("INSERT INTO system VALUES ('weblogs.module','weblogs','module','',1);");
