@@ -767,7 +767,7 @@ function user_login($edit = array(), $msg = '') {
     if (!$user->uid && $server && $result = user_get_authmaps("$name@$server")) {
       if (module_invoke(key($result), 'auth', $name, $pass, $server)) {
         $user = user_external_load("$name@$server");
-        watchdog('user', "external load: $name@$server, module: ". key($result));
+        watchdog('user', t('external load by %user using module "%module".', array('%user' => $name .'@'. $server, '%module' => key($result))));
       }
       else {
         $error = t('Invalid password for %s.', array('%s' => "<i>$name@$server</i>"));
@@ -784,7 +784,7 @@ function user_login($edit = array(), $msg = '') {
               $account = user_load(array('name' => "$name@$server"));
               if (!$account->uid) { // Register this new user.
                 $user = user_save('', array('name' => "$name@$server", 'pass' => user_password(), 'init' => "$name@$server", 'status' => 1, "authname_$module" => "$name@$server", 'roles' => array(_user_authenticated_id())));
-                watchdog('user', "new user: $name@$server ($module ID)", l(t('edit'), "user/$user->uid/edit"));
+                watchdog('user', t('new external user: %user using module "%module".', array('%user' => $name .'@'. $server, '%module' => $module)), l(t('edit'), 'user/'. $user->uid .'/edit'));
                 break;
               }
             }
@@ -794,7 +794,7 @@ function user_login($edit = array(), $msg = '') {
     }
 
     if ($user->uid) {
-      watchdog('user', 'session opened for "'. $user->name .'"');
+      watchdog('user', t('session opened for "%user".', array('%user' => $user->name)));
 
       // Update the user table timestamp noting user has logged in.
       db_query("UPDATE {users} SET changed = '%d' WHERE uid = '%s'", time(), $user->uid);
@@ -813,12 +813,7 @@ function user_login($edit = array(), $msg = '') {
       if (!$error) {
         $error = t('Sorry.  Unrecognized username or password.') .' '. l(t('Have you forgotten your password?'), 'user/password');
       }
-      if ($server) {
-        watchdog('user', "failed login for '$name@$server': $error");
-      }
-      else {
-        watchdog('user', "failed login for '$name': $error");
-      }
+      watchdog('user', t('login attempt failed for %user: "%error"', array('%user' => $server ? ($name .'@'. $server) : $name, '%error' => $error)));
     }
   }
 
@@ -868,7 +863,7 @@ function user_logout() {
   global $user;
 
   if ($user->uid) {
-    watchdog('user', 'session closed for "'. $user->name .'"');
+    watchdog('user', t('session closed for %user.', array('%user' => $user->name)));
 
     // Destroy the current session:
     session_destroy();
@@ -906,11 +901,11 @@ function user_pass($edit = array()) {
       $mail_success = user_mail($account->mail, $subject, $body, $headers);
 
       if ($mail_success) {
-        watchdog('user', 'mail password: "'. $account->name .'" &lt;'. $account->mail .'&gt;');
+        watchdog('user', t('password mailed to %user at %address.', array('%user' => $account->name, '%address' => $account->mail)));
         return t('Your password and further instructions have been sent to your e-mail address.');
       }
       else {
-        watchdog('error', 'error mailing new password: "'. $account->name .'" &lt;'. $account->mail .'&gt;');
+        watchdog('error', t('error mailing password to %user at %address.', array('%user' => $account->name, '%address' => $account->mail)));
         return t('Unable to send mail. Please contact the site admin.');
       }
     }
@@ -949,7 +944,7 @@ function user_register($edit = array()) {
       // TODO: Is this necessary? Won't session_write() replicate this?
       unset($edit['session']);
       $account = user_save('', array('name' => $edit['name'], 'pass' => $pass, 'init' => $edit['mail'], 'mail' => $edit['mail'], 'roles' => array(_user_authenticated_id()), 'status' => (variable_get('user_register', 1) == 1 ? 1 : 0)));
-      watchdog('user', 'new user: "'. $edit['name'] .'" &lt;'. $edit['mail'] .'&gt;', l(t('edit'), "user/$account->uid/edit"));
+      watchdog('user', t('new user: "%user" &lt;%address&gt;.', array('%user' => $edit['name'], '%address' => $edit['mail'])), l(t('edit'), 'user/'. $account->uid .'/edit'));
 
       $variables = array('%username' => $edit['name'], '%site' => variable_get('site_name', 'drupal'), '%password' => $pass, '%uri' => $base_url, '%uri_brief' => substr($base_url, strlen('http://')), '%mailto' => $edit['mail'], '%date' => format_date(time()), '%login_uri' => url('user/login', NULL, NULL, TRUE), '%edit_uri' => url('user/edit', NULL, NULL, TRUE));
 
@@ -1084,7 +1079,7 @@ function user_edit($category = 'account') {
     if (!form_get_errors()) {
       // Validate input to ensure that non-privileged users can't alter protected data.
       if (!user_access('administer users') && array_intersect(array_keys($edit), array('uid', 'roles', 'init', 'session'))) {
-        watchdog('warning', 'detected malicious attempt to alter a protected database field');
+        watchdog('warning', t('detected malicious attempt to alter a protected database field.'));
       }
       else {
         user_save($account, $edit, $category);
@@ -1272,7 +1267,7 @@ function user_admin_create($edit = array()) {
     user_module_invoke('validate', $edit, $edit, 'account');
 
     if (!form_get_errors()) {
-      watchdog('user', 'new user: "'. $edit['name'] .'" &lt;'. $edit['mail'] .'&gt;');
+      watchdog('user', t('new user: "%user" &lt;%address&gt;.', array('%user' => $edit['name'], '%address' => $edit['mail'])));
 
       user_save('', array('name' => $edit['name'], 'pass' => $edit['pass'], 'init' => $edit['mail'], 'mail' => $edit['mail'], 'roles' => array(_user_authenticated_id()), 'status' => 1));
 
