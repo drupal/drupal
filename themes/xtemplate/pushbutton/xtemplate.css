@@ -33,18 +33,18 @@ tr.light {
 tr.dark td, tr.light td {
   padding: 0.3em;
 }
-a {
+a:link {
   text-decoration: none;
   font-weight: bold;
   color: #ff8c00;
 }
-a:link {
-  color: #ff8c00;
-}
 a:visited {
+  text-decoration: none;
+  font-weight: bold;
   color: #c96;
 }
-a:hover {
+a:hover, a:active {
+  font-weight: bold;
   color: #ff4500;
   text-decoration: underline;
 }
@@ -85,10 +85,10 @@ pre {
 /*
 ** Page layout blocks / IDs
 */
-table#primary-links-table  {
+#primary-menu  {
   background-color: #e0edfb;
 }
-table#primary-links-table tr {
+#primary-menu tr {
   background: transparent url(header-a.jpg) left bottom repeat;
 }
 td#home {
@@ -104,34 +104,34 @@ td#home a:hover img {
   width: 144px;
   height: 63px;
 }
-#primary-links   {
-  background: transparent url(header-b.jpg) left top no-repeat;
-  font-size: 0.85em;
-}
-#primary-links h1, #primary-links h2, #primary-links h3 {
-  font-size: 1.7em;
-}
-#primary-links a  {
+.primary-links, .primary-links a:link, .primary-links a:visited {
   color: #369;
 }
-#primary-links a:hover {
+.primary-links a:hover {
   color: #000;
 }
-table#secondary-links-table   {
+#primary-menu .primary-links   {
+  background: transparent url(header-b.jpg) left top no-repeat;
+  font-size: 0.79em;
+}
+#primary-menu .primary-links h1, #primary-menu .primary-links h2, #primary-menu .primary-links h3 {
+  font-size: 2.3em;
+  color: #369;
+}
+#secondary-menu {
   background-color: #369;
   border-top: 3px solid #69c;
   border-bottom: 3px solid #69c;
-  font-size: 0.85em;
 }
-td#secondary-links {
+.secondary-links, .secondary-links a:link, .secondary-links a:visited  {
   color: #e4e9eb;
 }
-#secondary-links a  {
-  color: #e4e9eb;
-}
-#secondary-links a:hover {
+.secondary-links a:hover {
   color: #fff;
   text-decoration: underline;
+}
+#secondary-menu .secondary-links {
+  font-size: 0.85em;
 }
 #content {
   background-color: #fff;
@@ -146,7 +146,7 @@ td#secondary-links {
 }
 #search .form-text, #search .form-submit {
   border: 1px solid #369;
-  font-size: 1.1em;
+  font-size: 0.85em;
 }
 #search .form-text {
   width: 8em;
@@ -229,31 +229,27 @@ td#secondary-links {
   text-align: center;
   color: #aaa;
 }
-table#footer-links {
+table#footer-menu {
   border-top: 3px solid #6699cc;
   border-bottom: 3px solid #6699cc;
   background-color: #369;
   color: #e4e9eb;
 }
-#footer-links td {
+#footer-menu td {
   padding: 5px;
-  font-size: 0.85em;
+  font-size: 0.75em;
 }
-#footer-links td h1 {
-  color: #e4e9eb;
-  font-size: 1.15em;
-  font-weight: bold;
-  padding: 0;
-  margin: 0;
-}
-#footer-links a  {
+#footer-menu .primary-links, #footer-menu a:link, #footer-menu a:visited  {
   color: #e4e9eb;
 }
-#footer-links a:hover  {
+#footer-menu a:hover  {
   color: #fff;
   text-decoration: underline;
 }
-
+#footer-menu .primary-links h1, #footer-menu .primary-links h2, #footer-menu .primary-links h3 {
+  font-size: 1.3em;
+  color: #e4e9eb;
+}
 /*
 ** Common declarations for child classes of node, comment, block, box, etc.
 ** If you want any of them styled differently for a specific parent, add
