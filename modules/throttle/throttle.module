@@ -166,14 +166,16 @@ function _throttle_update($hits) {
     }
   }
 
+  $type = $throttle_new > 2 ? 'warning' : 'regular';
+
   // log the change
   if ($throttle_new < $throttle) {
     variable_set('throttle_level', $throttle - 1);
-    watchdog('regular', "message: '$hits' hits in past minute; throttle decreased to level ". ($throttle - 1));
+    watchdog($type, "throttle: '$hits' hits in past minute; throttle decreased to level ". ($throttle - 1));
   }
   if ($throttle_new > $throttle) {
     variable_set('throttle_level', $throttle + 1);
-    watchdog('warning', "warning: '$hits' hits in past minute; throttle increased to level ". ($throttle + 1));
+    watchdog($type, "throttle: '$hits' hits in past minute; throttle increased to level ". ($throttle + 1));
   }
 }
 
