@@ -357,20 +357,22 @@ function block_admin() {
  * Allow users to decide which custom blocks to display when they visit
  * the site.
  */
-function block_user($type, $edit, &$user) {
+function block_user($type, $edit, &$user, $category = NULL) {
   switch ($type) {
     case 'form':
-      $result = db_query('SELECT * FROM {blocks} WHERE custom = %d ORDER BY module, delta', 1);
+      if ($category == 'account') {
+        $result = db_query('SELECT * FROM {blocks} WHERE custom = %d ORDER BY module, delta', 1);
 
-      while ($block = db_fetch_object($result)) {
-        $data = module_invoke($block->module, 'block', 'list');
-        if ($data[$block->delta]['info']) {
-          $form .= form_checkbox($data[$block->delta]['info'], "block][$block->module][$block->delta", 1, isset($user->block[$block->module][$block->delta]) ? $user->block[$block->module][$block->delta] : $block->status);
+        while ($block = db_fetch_object($result)) {
+          $data = module_invoke($block->module, 'block', 'list');
+          if ($data[$block->delta]['info']) {
+            $form .= form_checkbox($data[$block->delta]['info'], "block][$block->module][$block->delta", 1, isset($user->block[$block->module][$block->delta]) ? $user->block[$block->module][$block->delta] : $block->status);
+          }
         }
-      }
 
-      if (isset($form)) {
-        return array(t('Block configuration') => $form);
+        if (isset($form)) {
+          return array(array('title' => t('Block configuration'), 'data' => $form, 'weight' => 2));
+        }
       }
 
       break;

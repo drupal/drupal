@@ -92,10 +92,13 @@ function locale_menu() {
 /**
  * Implementation of hook_user(). Allows each user to select an interface language.
  */
-function locale_user($type, &$edit, &$user) {
+function locale_user($type, &$edit, &$user, $category = NULL) {
   global $languages;
-  if ($type == 'form' && count($languages) > 1) {
-    return array(t('Locale settings') => form_radios(t('Language'), 'language', $user->language, $languages, t('Selecting a different language will change the language of the site.')));
+  if ($type == 'form' && count($languages) > 1 && $category == 'account') {
+    return array(array(
+      'title' => t('Locale settings'),
+      'data' => form_radios(t('Language'), 'language', $user->language, $languages, t('Selecting a different language will change the language of the site.')),
+      'weight' => 2));
   }
 }
 

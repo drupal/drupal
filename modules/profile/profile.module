@@ -4,6 +4,13 @@
 // TODO: add a 'date' field so we can migrate the birthday information.
 
 /**
+ * Flags to define the visibility of a profile field.
+ */
+define('PROFILE_PRIVATE', 1);
+define('PROFILE_PUBLIC', 2);
+define('PROFILE_PUBLIC_LISTINGS', 3);
+
+/**
  * Implementation of hook_help().
  */
 function profile_help($section) {
@@ -17,6 +24,8 @@ function profile_help($section) {
  * Implementation of hook_menu().
  */
 function profile_menu() {
+  global $user;
+
   $items = array();
   $items[] = array('path' => 'profile', 'title' => t('browse'),
     'callback' => 'profile_browse',
@@ -38,6 +47,7 @@ function profile_menu() {
     'callback' => 'profile_admin_delete',
     'access' => user_access('administer users'),
     'type' => MENU_CALLBACK);
+
   return $items;
 }
 
@@ -54,7 +64,7 @@ function profile_browse() {
   if ($field->fid) {
     // Compile a list of fields to show
     $fields = array();
-    $result = db_query('SELECT name, title, type FROM {profile_fields} WHERE fid != %d AND overview = 1', $field->fid);
+    $result = db_query('SELECT name, title, type FROM {profile_fields} WHERE fid != %d AND visibility = %d', $field->fid, PROFILE_PUBLIC_LISTINGS);
     while ($record = db_fetch_object($result)) {
       $fields[] = $record;
     }
@@ -105,14 +115,12 @@ function profile_load_profile(&$user) {
   }
 }
 
-function profile_save_profile(&$edit, &$user) {
-  db_query('DELETE FROM {profile_values} WHERE uid = %d', $user->uid);
-  $result = db_query('SELECT fid, name FROM {profile_fields}');
+function profile_save_profile(&$edit, &$user, $category) {
+  $result = db_query("SELECT fid, name FROM {profile_fields} WHERE LOWER(category) = '%s'", strtolower($category));
   while ($field = db_fetch_object($result)) {
-    if ($edit[$field->name]) {
-      db_query("INSERT INTO {profile_values} (fid, uid, value) VALUES (%d, %d, '%s')", $field->fid, $user->uid, $edit[$field->name]);
-      unset($edit[$field->name], $user->{$field->name});
-    }
+    db_query("DELETE FROM {profile_values} WHERE fid = %d AND uid = %d", $field->fid, $user->uid);
+    db_query("INSERT INTO {profile_values} (fid, uid, value) VALUES (%d, %d, '%s')", $field->fid, $user->uid, $edit[$field->name]);
+    unset($edit[$field->name], $user->{$field->name});
   }
 }
 
@@ -127,7 +135,8 @@ function profile_view_field($user, $field) {
       case 'checkbox':
         return l($field->title, "profile/$field->name");
       case 'url':
-        return '<a href="'. check_url(strip_tags($value)) .'">'. strip_tags($value) .'</a>';      case 'list':
+        return '<a href="'. check_url(strip_tags($value)) .'">'. strip_tags($value) .'</a>';
+      case 'list':
         $values = split("[\n\r]", $value);
         $fields = array();
         foreach ($values as $value) {
@@ -144,7 +153,7 @@ function profile_view_profile($user) {
 
   profile_load_profile($user);
 
-  $result = db_query('SELECT * FROM {profile_fields} ORDER BY category, weight');
+  $result = db_query('SELECT * FROM {profile_fields} WHERE visibility != %d ORDER BY category, weight', PROFILE_PRIVATE);
   while ($field = db_fetch_object($result)) {
     if ($value = profile_view_field($user, $field)) {
       if ($field->type == 'checkbox') {
@@ -159,24 +168,42 @@ function profile_view_profile($user) {
   return $fields;
 }
 
-function profile_edit_profile($edit, $user) {
+function _profile_form_explanation($field) {
+  $output = $field->explanation;
 
-  $result = db_query('SELECT * FROM {profile_fields} ORDER BY category, weight');
+  if ($field->type == 'list') {
+    $output .= ' '. t('Put each item on a separate line.  No HTML allowed.');
+  }
+
+  if ($field->required) {
+    $output .= ' '. t('This is a required field.');
+  }
+
+  if ($field->visibility == PROFILE_PRIVATE) {
+    $output .= ' '. t('The content of this field is kept private and will not be shown publicly.');
+  }
+
+  return $output;
+}
+
+function profile_form_profile($edit, $user, $category) {
+
+  $result = db_query("SELECT * FROM {profile_fields} WHERE LOWER(category) = '%s' ORDER BY weight", strtolower($category));
 
   while ($field = db_fetch_object($result)) {
     switch ($field->type) {
       case 'textfield':
       case 'url':
-        $fields[$field->category] .= form_textfield($field->title, $field->name, $edit[$field->name], 70, 255, $field->explanation, NULL, $field->required);
+        $output .= form_textfield($field->title, $field->name, $edit[$field->name], 70, 255, _profile_form_explanation($field), NULL, $field->required);
         break;
       case 'textarea':
-        $fields[$field->category] .= form_textarea($field->title, $field->name, $edit[$field->name], 60, 5, $field->explanation, NULL, $field->required);
+        $output .= form_textarea($field->title, $field->name, $edit[$field->name], 60, 5, _profile_form_explanation($field), NULL, $field->required);
         break;
       case 'list':
-        $fields[$field->category] .= form_textarea($field->title, $field->name, $edit[$field->name], 60, 5, $field->explanation .' '. t('Put each item on a separate line.  No HTML allowed.'), NULL, $field->required);
+        $output .= form_textarea($field->title, $field->name, $edit[$field->name], 60, 5, _profile_form_explanation($field), NULL, $field->required);
         break;
       case 'checkbox':
-        $fields[$field->category] .= form_checkbox($field->title, $field->name, 1, $edit[$field->name], $field->explanation, NULL, $field->required);
+        $output .= form_checkbox($field->title, $field->name, 1, $edit[$field->name], _profile_form_explanation($field), NULL, $field->required);
         break;
       case 'selection':
         $options = array('--');
@@ -187,16 +214,18 @@ function profile_edit_profile($edit, $user) {
           }
         }
 
-        $fields[$field->category] .= form_select($field->title, $field->name, $edit[$field->name], $options, $field->explanation, 0, 0, $field->required);
+        $output .= form_select($field->title, $field->name, $edit[$field->name], $options, _profile_form_explanation($field), 0, 0, $field->required);
         break;
     }
   }
 
-  return $fields;
+  if ($output) {
+    return array(array('title' => $category, 'data' => $output));
+  }
 }
 
-function profile_validate_profile($edit) {
-  $result = db_query('SELECT * FROM {profile_fields} ORDER BY category, weight');
+function profile_validate_profile($edit, $category) {
+  $result = db_query("SELECT * FROM {profile_fields} WHERE LOWER(category) = '%s' ORDER BY weight", strtolower($category));
 
   while ($field = db_fetch_object($result)) {
     if ($edit[$field->name]) {
@@ -204,7 +233,7 @@ function profile_validate_profile($edit) {
         form_set_error($field->name, t('The value provided for "%field" is not a valid URL.', array('%field' => $field->title)));
       }
     }
-    else if ($field->required) {
+    else if ($field->required && !user_access('administer users')) {
       form_set_error($field->name, t('The field "%field" is required.', array('%field' => $field->title)));
     }
   }
@@ -212,22 +241,32 @@ function profile_validate_profile($edit) {
   return $edit;
 }
 
+function profile_categories() {
+  $result = db_query("SELECT DISTINCT(category) FROM {profile_fields}");
+  while ($category = db_fetch_object($result)) {
+    $data[] = array('name' => htmlentities(strtolower($category->category)), 'title' => strtolower($category->category), 'weight' => 3);
+  }
+  return $data;
+}
+
 /**
  * Implementation of hook_user().
  */
-function profile_user($type, &$edit, &$user) {
+function profile_user($type, &$edit, &$user, $category = NULL) {
   switch ($type) {
     case 'load':
       return profile_load_profile($user);
     case 'update':
     case 'insert':
-      return profile_save_profile($edit, $user);
+      return profile_save_profile($edit, $user, $category);
     case 'view':
       return profile_view_profile($user);
     case 'form':
-      return profile_edit_profile($edit, $user);
+      return profile_form_profile($edit, $user, $category);
     case 'validate':
-      return profile_validate_profile($edit);
+      return profile_validate_profile($edit, $category);
+    case 'categories':
+      return profile_categories();
   }
 }
 
@@ -277,7 +316,7 @@ function profile_admin_add($type) {
     }
 
     if (!form_has_errors()) {
-      db_query("INSERT INTO {profile_fields} (title, name, explanation, category, type, weight, required, overview, options, page) VALUES ('%s', '%s', '%s', '%s', '%s', %d, %d, %d, '%s', '%s')", $data['title'], $data['name'], $data['explanation'], $data['category'], $type, $data['weight'], $data['required'], $data['overview'], $data['options'], $data['page']);
+      db_query("INSERT INTO {profile_fields} (title, name, explanation, category, type, weight, required, visibility, options, page) VALUES ('%s', '%s', '%s', '%s', '%s', %d, %d, %d, '%s', '%s')", $data['title'], $data['name'], $data['explanation'], $data['category'], $type, $data['weight'], $data['required'], $data['visibility'], $data['options'], $data['page']);
 
       drupal_set_message(t('the field has been created.'));
       drupal_goto('admin/user/configure/profile');
@@ -302,7 +341,7 @@ function profile_admin_edit($fid) {
     profile_validate_form($data);
 
     if (!form_has_errors()) {
-      db_query("UPDATE {profile_fields} SET title = '%s', name = '%s', explanation = '%s', category = '%s', weight = %d, required = %d, overview = %d, options = '%s', page = '%s' WHERE fid = %d", $data['title'], $data['name'], $data['explanation'], $data['category'], $data['weight'], $data['required'], $data['overview'], $data['options'], $data['page'], $fid);
+      db_query("UPDATE {profile_fields} SET title = '%s', name = '%s', explanation = '%s', category = '%s', weight = %d, required = %d, visibility = %d, options = '%s', page = '%s' WHERE fid = %d", $data['title'], $data['name'], $data['explanation'], $data['category'], $data['weight'], $data['required'], $data['visibility'], $data['options'], $data['page'], $fid);
 
       drupal_set_message(t('the field has been updated.'));
       drupal_goto('admin/user/configure/profile');
@@ -335,19 +374,16 @@ Unless you know what you are doing, it is highly recommended that you prefix the
     $group .= form_textarea(t('Selection options'), 'options', $edit['options'], 70, 8, t('A list of all options.  Put each option on a separate line.  Example options are "red", "blue", "green", etc.'));
   }
   $group .= form_weight(t('Weight'), 'weight', $edit['weight'], 5, t('The weights define the order in which the form fields are shown.  Lighter fields "float up" towards the top of the category.'));
-  $group .= form_checkbox(t('Required field.'), 'required', 1, $edit['required']);
-  $output = form_group(t('Field settings'), $group);
-
-  $group = '';
+  $group .= form_radios(t('Visibility'), 'visibility', $edit['visibility'], array(PROFILE_PRIVATE => t('Private field, content only available to privileged users.'), PROFILE_PUBLIC => t('Public field, content shown on profile page but not used on member list pages.'), PROFILE_PUBLIC_LISTINGS => t('Public field, content shown on profile page and on member list pages.')));
   if ($type == 'selection' || $type == 'list') {
-    $group .= form_textfield(t('Page title'), 'page', $edit['page'], 70, 128, t('The title of the page showing all users with the specified field.  The word <code>%value</code> will be substituted with the corresponding value.  An example page title is "People whose favorite color is %value".'));
+    $group .= form_textfield(t('Page title'), 'page', $edit['page'], 70, 128, t('The title of the page showing all users with the specified field.  The word <code>%value</code> will be substituted with the corresponding value.  An example page title is "People whose favorite color is %value".  Only applicable if the field is configured to be shown on member list pages.'));
   }
   else {
-    $group .= form_textfield(t('Page title'), 'page', $edit['page'], 70, 128, t('The title of the page showing all users with the specified field.'));
+    $group .= form_textfield(t('Page title'), 'page', $edit['page'], 70, 128, t('The title of the page showing all users with the specified field.  Only applicable if the field is configured to be shown on member listings.'));
   }
-  $group .= form_checkbox(t('Should this field be shown on the member listing pages.'), 'overview', 1, $edit['overview']);
+  $group .= form_checkbox(t('Required field.'), 'required', 1, $edit['required']);
 
-  $output .= form_group(t('Browsability'), $group);
+  $output  = form_group(t('Field settings'), $group);
   $output .= form_submit(t('Save field'));
 
   return form($output);

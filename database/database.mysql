@@ -151,7 +151,7 @@ CREATE TABLE boxes (
   info varchar(128) NOT NULL default '',
   type tinyint(2) NOT NULL default '0',
   PRIMARY KEY  (bid),
-  UNIQUE KEY subject (title),
+  UNIQUE KEY title (title),
   UNIQUE KEY info (info)
 ) TYPE=MyISAM;
 
@@ -363,7 +363,7 @@ CREATE TABLE profile_fields (
   type varchar(128) default NULL,
   weight tinyint(1) DEFAULT '0' NOT NULL,
   required tinyint(1) DEFAULT '0' NOT NULL,
-  overview tinyint(1) DEFAULT '0' NOT NULL,
+  visibility tinyint(1) DEFAULT '0' NOT NULL,
   options text,
   KEY category (category),
   UNIQUE KEY name (name),
