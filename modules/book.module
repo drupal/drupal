@@ -619,7 +619,7 @@ function book_render() {
  */
 function book_print($nid = 0, $depth = 1) {
   global $base_url;
-  $result = db_query(db_rewrite_sql('SELECT DISTINCT(n.nid), n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE n.status = 1 AND n.nid = %d AND n.moderate = 0 ORDER BY b.weight, n.title'), $nid);
+  $result = db_query(db_rewrite_sql('SELECT n.nid, n.title, b.weight FROM {node} n INNER JOIN {book} b ON n.nid = b.nid WHERE n.status = 1 AND n.nid = %d AND n.moderate = 0 ORDER BY b.weight, n.title'), $nid);
 
   while ($page = db_fetch_object($result)) {
     // load the node:
