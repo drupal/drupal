@@ -51,7 +51,7 @@
      print " <TR VALIGN=\"bottom\"><TD COLSPAN=\"2\" BGCOLOR=\"#000000\" WIDTH=\"100%\"><IMG SRC=\"themes/marvin/images/pixel.gif\" WIDTH=\"1\" HEIGHT=\"0\" ALT=\"\"></TD></TR>\n";
      print " <TR>\n";
      print "  <TD>\n";
-     print "   <FONT COLOR=\"#7C7C7C\"><SMALL>". strtr(t("Submitted by %a on %b"), array("%a" => format_username($story->userid), "%b" => format_date($story->timestamp, "large"))); ?><?php print "</SMALL></FONT></TD><TD ALIGN=\"right\" VALIGN=\"top\" NOWRAP><SMALL><A HREF=\"index.php?category=$story->cid\"><FONT COLOR=\"#83997A\">". check_output($story->category) ."</FONT></A> / <A HREF=\"index.php?topic=$story->tid\"><FONT COLOR=\"#83997A\">". check_output($story->topic) ."</FONT></A></SMALL>\n";
+     print "   <FONT COLOR=\"#7C7C7C\"><SMALL>". strtr(t("Submitted by %a on %b"), array("%a" => format_username($story->userid), "%b" => format_date($story->timestamp, "large"))); ?><?php print "</SMALL></FONT></TD><TD ALIGN=\"right\" VALIGN=\"top\" NOWRAP><SMALL>". category_name($story->cid) ." / ". topic_name($story->tid) ."</SMALL>\n";
      print "  </TD>\n";
      print " </TR>\n";
      print " <TR><TD COLSPAN=\"2\">&nbsp;</TD></TR>\n";

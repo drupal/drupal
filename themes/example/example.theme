@@ -60,15 +60,13 @@
                   <TD>
 
 <?php
-
                      echo strtr(t("by %a on %b"), array("%a" => format_username($story->userid), "%b" => format_date($story->timestamp, "small")));
 ?>
 
                    </TD>
                    <TD ALIGN="right">
 <?php
-                     echo "<A HREF=\"index.php?category=$story->cid\">". check_output($story->category) ."</A> / <A HREF=\"index.php?topic=$story->tid\">". check_output($story->topic) ."</A>";
-
+                     echo category_name($story->cid) ." / ". topic_name($story->tid);
 ?>
                    </TD>
                  </TR>
