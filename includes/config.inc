@@ -11,16 +11,16 @@
 #$dbname = "droporg";
 
 ### http://beta.drop.org/:
-$dbhost = "zind.net";
-$dbuname = "dries";
-$dbpass = "Abc123";
-$dbname = "dries";
+#$dbhost = "zind.net";
+#$dbuname = "dries";
+#$dbpass = "Abc123";
+#$dbname = "dries";
 
 ### http://dione/:
-#$dbhost = "";
-#$dbuname = "dries";
-#$dbpass = "oakley";
-#$dbname = "dries";
+$dbhost = "";
+$dbuname = "dries";
+$dbpass = "oakley";
+$dbname = "dries";
 
 #
 # Name of the site
@@ -118,7 +118,7 @@ $submission_votes = array("neutral (+0)" => "+ 0",
 #
 # Submission moderation thresholds:
 #
-$submission_post_threshold = "2";
+$submission_post_threshold = "3";
 $submission_dump_threshold = "-2";
 
 ?>

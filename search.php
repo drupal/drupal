@@ -40,10 +40,10 @@
  $output .= "  <TD>\n";
    
  ### Compose and perform query:
- $query = "SELECT DISTINCT s.id, s.subject, u.userid, s.timestamp, COUNT(c.cid) AS comments FROM comments c, stories s LEFT JOIN users u ON s.author = u.id WHERE s.status = 2 AND s.id = c.sid ";
+ $query = "SELECT s.id, s.subject, u.userid, s.timestamp, COUNT(c.cid) AS comments FROM stories s LEFT JOIN users u ON s.author = u.id LEFT JOIN comments c ON s.id = c.sid WHERE s.status = 2 ";
  $query .= ($author) ? "AND u.userid = '$author' " : "";
  $query .= ($terms) ? "AND (s.subject LIKE '%$terms%' OR s.abstract LIKE '%$terms%' OR s.updates LIKE '%$terms%') " : "";
- $query .= ($category) ? "AND s.category = '$category' GROUP BY c.sid " : "GROUP BY c.sid ";
+ $query .= ($category) ? "AND s.category = '$category' GROUP BY s.id " : "GROUP BY s.id ";
  $query .= ($order == "Oldest first") ? "ORDER BY s.timestamp ASC" : "ORDER BY s.timestamp DESC";
  $result = db_query("$query");
  

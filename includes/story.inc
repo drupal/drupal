@@ -1,7 +1,7 @@
 <?
 
 class Story {
-  function story($userid, $subject, $abstract, $article, $category, $timestamp) {
+  function Story($userid, $subject, $abstract, $article, $category, $timestamp) {
     $this->userid = $userid;
     $this->subject = $subject;
     $this->abstract = $abstract;
