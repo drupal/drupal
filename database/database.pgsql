@@ -186,15 +186,15 @@ CREATE TABLE layout (
 CREATE TABLE locales (
   lid SERIAL,
   location varchar(128) NOT NULL default '',
-  string text NOT NULL,
-  da text NOT NULL,
-  fi text NOT NULL,
-  fr text NOT NULL,
-  en text NOT NULL,
-  es text NOT NULL,
-  nl text NOT NULL,
-  no text NOT NULL,
-  sw text NOT NULL,
+  string text NOT NULL default '',
+  da text NOT NULL default '',
+  fi text NOT NULL default '',
+  fr text NOT NULL default '',
+  en text NOT NULL default '',
+  es text NOT NULL default '',
+  nl text NOT NULL default '',
+  no text NOT NULL default '',
+  sw text NOT NULL default '',
   PRIMARY KEY  (lid)
 );
 
@@ -239,10 +239,10 @@ CREATE TABLE node (
   moderate integer NOT NULL default '0',
   users text NOT NULL default '',
   attributes varchar(255) NOT NULL default '',
-  teaser text NOT NULL,
-  body text NOT NULL,
+  teaser text NOT NULL default '',
+  body text NOT NULL default '',
   changed integer NOT NULL default '0',
-  revisions text NOT NULL,
+  revisions text NOT NULL default '',
   static integer NOT NULL default '0',
   PRIMARY KEY  (nid)
 );
