@@ -178,7 +178,7 @@ function _locale_import_po($file, $lang, $mode) {
         }
         else {
           db_query("INSERT INTO {locales_source} (location, source) VALUES ('%s', '%s')", $comments, $english[$key]);
-          $lid = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE location = '%s' AND source = '%s'", $comments, $english[$key]));
+          $lid = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE source = '%s'", $english[$key]));
           $lid = $lid->lid;
         }
         if ($key == 0) {
@@ -207,7 +207,7 @@ function _locale_import_po($file, $lang, $mode) {
       }
       else {
         db_query("INSERT INTO {locales_source} (location, source) VALUES ('%s', '%s')", $comments, $english);
-        $loc = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE location = '%s' AND source = '%s'", $comments, $english));
+        $loc = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE source = '%s'", $english));
         $lid = $loc->lid;
       }
       if ($loc->translation && $mode == 'overwrite') {

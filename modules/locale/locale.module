@@ -179,7 +179,7 @@ function locale($string) {
       else {
         db_query("INSERT INTO {locales_source} (location, source) VALUES ('%s', '%s')", request_uri(), $string);
         if ($locale) {
-          $lid = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE location = '%s' AND source = '%s'", request_uri(), $string));
+          $lid = db_fetch_object(db_query("SELECT lid FROM {locales_source} WHERE source = '%s'", $string));
           db_query("INSERT INTO {locales_target} (lid, locale) VALUES (%d, '%s')", $lid->lid, $locale);
         }
       }
