@@ -1,5 +1,5 @@
 <?php
-// $Id: theme.inc,v 1.96 2002/02/17 13:04:48 kjartan Exp $
+// $Id: theme.inc,v 1.97 2002/02/19 22:58:33 kjartan Exp $
 
 class BaseTheme {
 
@@ -8,13 +8,13 @@ class BaseTheme {
     $output .= "<table border=\"0\" cellspacing=\"4\" cellpadding=\"4\"><tr><td valign=\"top\" width=\"170\">";
 
     print $output;
-    $this->box(t("Navigation"), implode("<br />", link_page())); theme_blocks("all", $this);
+    $this->box(t("Navigation"), @implode("<br />", link_page())); theme_blocks("all", $this);
     print "</td><td valign=\"top\">";
 
   }
 
   function links($links, $delimiter = " | ") {
-    return implode($delimiter, $links);
+    return @implode($delimiter, $links);
   }
 
   function image($name) {
