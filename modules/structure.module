@@ -5,9 +5,6 @@ $module = array("admin" => "structure_admin");
 $cstatus = array("disabled", "enabled: incl. anonymous", "enabled: excl. anonymous");
 $mstatus = array("post new submissions", "moderate new submissions");
 
-include "includes/structure.inc";
-
-
 function content_types($name, $module) {
   global $types;
   if ($module[type]) $types[$name] = $name;
