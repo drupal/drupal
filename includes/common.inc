@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.237 2003/08/13 20:44:11 dries Exp $
+// $Id: common.inc,v 1.238 2003/08/20 19:19:09 dries Exp $
 
 function conf_init() {
 
@@ -248,6 +248,9 @@ function table($header, $rows) {
   if (is_array($header)) {
     $output .= " <tr>";
     foreach ($header as $cell) {
+      if (is_array($cell) && $cell["field"]) {
+        $cell = tablesort($cell, $header);
+      }
       $output .= table_cell($cell, 1);
     }
     $output .= " </tr>\n";
@@ -1096,6 +1099,7 @@ include_once "includes/theme.inc";
 include_once "includes/pager.inc";
 include_once "includes/menu.inc";
 include_once "includes/xmlrpc.inc";
+include_once "includes/tablesort.inc";
 
 // initialize configuration variables, using values from conf.php if available:
 $conf = variable_init(isset($conf) ? $conf : array());

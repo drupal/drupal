@@ -41,7 +41,8 @@ $mysql_updates = array(
   "2003-06-08" => "update_57",
   "2003-06-08: first update since Drupal 4.2.0 release" => "update_58",
   "2003-08-05" => "update_59",
-  "2003-08-15" => "update_60"
+  "2003-08-15" => "update_60",
+  "2003-08-20" => "update_61"
 );
 
 function update_32() {
@@ -329,6 +330,23 @@ function _update_thread_structure($comments, $pid, $depth, $structure) {
 
 function update_60() {
   update_sql("ALTER TABLE forum DROP icon");
+}
+
+function update_61() {
+  update_sql("CREATE TABLE IF NOT EXISTS sessions (
+    uid int(10) unsigned NOT NULL,
+    sid varchar(32) NOT NULL default '',
+    hostname varchar(128) NOT NULL default '',
+    timestamp int(11) NOT NULL default '0',
+    session text,
+    KEY uid (uid),
+    KEY sid (sid(4)),
+    KEY timestamp (timestamp)
+  )");
+
+  update_sql("ALTER TABLE users DROP session;");
+  update_sql("ALTER TABLE users DROP hostname;");
+  update_sql("ALTER TABLE users DROP sid;");
 }
 
 function _update_next_thread($structure, $parent) {

@@ -252,6 +252,16 @@ CREATE TABLE [dbo].[search_index] (
 ) ON [PRIMARY]
 GO
 
+CREATE TABLE sessions (
+  [sid] [varchar] (32) NOT NULL,
+  [uid] [int] NOT NULL,
+  [hostname] [varchar] (128) NOT NULL,
+  [timestamp] [integer] NOT NULL,
+  [session] [text],
+) ON [PRIMARY]
+GO
+
+
 CREATE TABLE [dbo].[sequences] (
   [name] [varchar] (255) NOT NULL ,
   [id] [numeric](10, 0) NOT NULL
@@ -333,14 +343,11 @@ CREATE TABLE [dbo].[users] (
   [theme] [varchar] (255) NULL ,
   [signature] [varchar] (255) NULL ,
   [timestamp] [float] NOT NULL ,
-  [hostname] [varchar] (128) NULL ,
   [status] [smallint] NOT NULL ,
   [timezone] [varchar] (8) NULL ,
   [rating] [float] NULL ,
   [language] [char] (2) NULL ,
-  [sid] [varchar] (128) NULL ,
   [init] [varchar] (128) NULL ,
-  [session] [text] NULL ,
   [data] [varchar] (8000) NULL ,
   [rid] [int] NOT NULL
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
