@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.404 2004/09/28 19:13:03 unconed Exp $
+// $Id: node.module,v 1.405 2004/10/04 20:34:23 unconed Exp $
 
 /**
  * @file
@@ -1330,8 +1330,11 @@ function node_preview($node) {
     }
     $node->changed = time();
 
-    // Extract a teaser:
-    $node->teaser = node_teaser($node->body);
+    // Extract a teaser, if it hasn't been set (e.g. by a module-provided
+    // 'teaser' form item).
+    if (!isset($node->teaser)) {
+      $node->teaser = node_teaser($node->body);
+    }
 
     // Display a preview of the node:
     if ($node->teaser && $node->teaser != $node->body) {
