@@ -1,0 +1,7 @@
+#!/bin/sh
+
+username="dries"
+database="dries"
+hostname="dione"
+
+mysqldump -h $hostname -u $username -p $database > mysql-backup

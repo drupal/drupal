@@ -20,10 +20,11 @@
    # Syntax.......: header($title);
    # Description..: a function to draw the page header.
    function header($title) {
+     global $sitename;
     ?>
      <HTML>
      <HEAD>
-      <TITLE><? include "config.inc"; print $sitename; ?></TITLE>
+      <TITLE><? print $sitename; ?></TITLE>
       <META NAME="description" CONTENT="drop.org">
       <META NAME="keywords" CONTENT="drop, weblog, portal, community, news, article, announcements, stories, story, computer, science, space, hype, cult, geek, nerd, foo, bar">
      </HEAD>
@@ -52,8 +53,6 @@
    # Description..: a function to draw an abstract story box, that is the
    #                boxes displayed on the main page.
    function abstract($story) {
-     include "config.inc";
-
      $story->timestamp = date("l, F d, Y - h:i:s A", $story->timestamp);
 
      print "\n<!-- story: \"$story->subject\" -->\n";     
@@ -84,8 +83,6 @@
    #                comments).  It's what you get when you followed for
    #                instance one of read-more links on the main page.
    function article($story, $reply) {
-     include "config.inc";
-
      $story->timestamp = date("l, F d, Y - h:i:s A", $story->timestamp);
 
      print "\n<!-- story: \"$story->subject\" -->\n";     
@@ -179,9 +176,7 @@
    ######
    # Syntax.......: comment(...);
    # Description..: this function is used to theme user comments.
-   function comment($poster, $subject, $comment, $timestamp, $url, $email, $score, $cid, $link, $thread = "") {
-     include "config.inc";
-
+   function comment($poster, $subject, $comment, $timestamp, $url, $email, $score, $votes, $cid, $link, $thread = "") {
      print "\n<!-- Comment: \"$subject\" by $poster -->\n";
      print "<A NAME=\"$cid\">\n";
 
@@ -201,7 +196,7 @@
 
      ### Moderation:
      print "        <TD ALIGN=\"right\" ROWSPAN=\"3\" VALIGN=\"middle\" WIDTH=\"15%\">\n";
-     displayCommentModeration($cid);
+     display_comment_moderation($cid, $poster, $score, $votes);
      print "        </TD>\n";
      print "       </TR>\n";
 
@@ -241,8 +236,6 @@
    #                news, when an editor wants to post news, when people
    #                check the entries in the sumbission queue, etc.
    function preview($author, $subject, $abstract, $updates, $article, $timestamp, $category, $department) {
-     include "config.inc";
-
      print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"2\" WIDTH=\"100%\">";
      print " <TR><TD COLSPAN=\"2\"><B>$subject</B></TD></TR>";
      print " <TR VALIGN=\"bottom\"><TD COLSPAN=\"2\" BGCOLOR=\"#000000\" WIDTH=\"100%\"><IMG SRC=\"themes/marvin/images/pixel.gif\" WIDTH=\"1\" HEIGHT=\"0\" ALT=\"\"></TD></TR>";
@@ -269,7 +262,6 @@
    # Syntax.......: box($subject, $body);
    # Description..: a function to draw a box/block.
    function box($subject, $content) { 
-     include "config.inc";
      print "\n<!-- box: \"$subject\" -->\n";
      print "<TABLE BORDER=\"0\" CELLPADDING=\"0\" CELLSPACING=\"0\" BGCOLOR=\"#000000\" WIDTH=\"100%\">\n";
      print " <TR>\n";
@@ -298,35 +290,35 @@
            global $user, $date;
 
            ### Display account:
-           displayAccount($this);
+           display_account($this);
 
            ### Display calendar:
-           displayOldHeadlines($this);
+           display_old_headlines($this);
 
            ### Display calendar:
-           displayCalendar($this, $date);
+           display_calendar($this, $date);
 
            ### Display new diary entries:
-           displayNewDiaries($this);           
+           display_new_diaries($this);           
          }
          elseif (strstr($PHP_SELF, "account.php")) {
            ### Display account:
-           displayAccount($this);
+           display_account($this);
          }
          elseif (strstr($PHP_SELF, "diary.php")) {
            ### Display account:
-           displayAccount($this);
+           display_account($this);
  
            ### Display new diary entries:
-           displayNewDiaries($this);
+           display_new_diaries($this);
          }
          elseif (strstr($PHP_SELF, "submission.php")) {
            ### Display account:
-           displayAccount($this);
+           display_account($this);
          }
          elseif (strstr($PHP_SELF, "submit.php")) {
            ### Display new headlines:
-           displayNewHeadlines($this);
+           display_new_headlines($this);
          }
          elseif (strstr($PHP_SELF, "discussion.php")) {
            global $id;
@@ -334,24 +326,24 @@
            if ($id && $story = id2story($id)) {
              if ($story->status == 2) {
                ### Display new headlines:
-               displayNewHeadlines($this);
+               display_new_headlines($this);
              }
              else {
                ### Display results of moderation:
-               displayModerationResults($this, $story);
+               display_moderation_results($this, $story);
              }
            }
            else {
              ### Display account:
-             displayAccount($this);
+             display_account($this);
 
              ### Display new headlines:
-             displayNewHeadlines($this);
+             display_new_headlines($this);
            }
          }
          else {
            ### Display new headlines:
-           displayNewHeadlines($this);
+           display_new_headlines($this);
          }
         ?>
        </TD>

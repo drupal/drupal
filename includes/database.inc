@@ -8,9 +8,9 @@
  */
 
 function db_connect() {
-  include "config.inc";
+  global $dbhost, $dbuname, $dbpass, $dbname;
   mysql_pconnect($dbhost, $dbuname, $dbpass) or die(mysql_Error());
-  mysql_select_db("$dbname") or die ("Unable to select database");
+  mysql_select_db($dbname) or die ("Unable to select database");
    // NOTE: we are using a persistent connection!
 }
 

@@ -1,11 +1,11 @@
 <?
-include "user.class.php";
+include "includes/user.inc";
 
 function display_morelink($theme, $story) {
   return ($story->article) ? "[ <A HREF=\"discussion.php?id=$story->id\"><FONT COLOR=\"$theme->hlcolor2\"><B>read more</B></FONT></A> | ". strlen($story->article) ." bytes | <A HREF=\"discussion.php?id=$story->id\"><FONT COLOR=\"$theme->hlcolor2\">". format_plural($story->comments, "comment", "comments") ."</FONT></A> ]" : "[ <A HREF=\"discussion.php?id=$story->id\"><FONT COLOR=\"$theme->hlcolor2\">". format_plural($story->comments, "comment", "comments") ."</FONT></A> ]";
 }
 
-function displayModerationResults($theme, $story) {
+function display_moderation_results($theme, $story) {
   global $user;
 
   if ($user->id && $story->id && $vote = user_getHistory($user->history, "s$story->id")) {
@@ -22,7 +22,7 @@ function displayModerationResults($theme, $story) {
   }
 }
 
-function displayRelatedLinks($theme, $story) {
+function display_related_links($theme, $story) {
   ### Parse story for <A HREF="">-tags:
   $text = stripslashes("$story->abstract $story->updates $story->article");
   while ($text = stristr($text, "<A HREF=")) {
@@ -40,7 +40,7 @@ function displayRelatedLinks($theme, $story) {
   $theme->box("Related links", $content);
 }
 
-function displayOldHeadlines($theme, $num = 10) {
+function display_old_headlines($theme, $num = 10) {
   global $user;
   
   if ($user->storynum) $result = db_query("SELECT id, subject, timestamp FROM stories WHERE status = 2 ORDER BY timestamp DESC LIMIT $user->storynum, $num");
@@ -58,19 +58,22 @@ function displayOldHeadlines($theme, $num = 10) {
   $theme->box("Older headlines", $content);
 }
 
-function displayCommentModeration($id) {
+function display_comment_moderation($id, $author, $score, $votes) {
   global $user, $comment_votes;
   
-  if ($user && !user_getHistory($user->history, "c$id")) {
+  if ($user && $user->userid != $author && !user_getHistory($user->history, "c$id")) {
     $output .= "<SELECT NAME=\"moderate[$id]\">\n";
     foreach ($comment_votes as $key=>$value) $output .= " <OPTION VALUE=\"$value\">$key</OPTION>\n";
     $output .= "</SELECT>\n";
+  }
+  else {
+    $output .= "<TABLE BORDER=\"0\" CELLSPACING=\"1\" CELLPADDING=\"0\"><TR><TD>score:</TD><TD>$score</TD></TR><TR><TD>votes:</TD><TD>$votes</TR></TABLE>";
   }
 
   print $output;
 }
 
-function displayNewDiaries($theme, $num = 20) {
+function display_new_diaries($theme, $num = 20) {
   $result = db_query("SELECT u.userid, d.timestamp FROM diaries d LEFT JOIN users u ON d.author = u.id ORDER BY timestamp DESC LIMIT $num");
 
   while ($diary = db_fetch_object($result)) {
@@ -84,7 +87,7 @@ function displayNewDiaries($theme, $num = 20) {
   $theme->box("Recent diary entries", $content);
 }
 
-function displayNewHeadlines($theme, $num = 10) {
+function display_new_headlines($theme, $num = 10) {
   global $user;
 
   $content = "";
@@ -94,51 +97,16 @@ function displayNewHeadlines($theme, $num = 10) {
   $theme->box("Latest headlines", $content);
 }
 
-function displayAdminblock($theme) {
-  $result = db_query("SELECT title, content FROM blocks");
-  while (list($title, $content) = mysql_fetch_array($result)) {
-    $theme->box($title, nl2br($content));
-  }
-}
-
-function displayUserblock($theme) {
-  global $user;
-
-  if ($user && $user->ublockon) {
-    $content .= "<P ALIGN=\"right\">[ <A HREF=\"account.php?op=edithome\"><FONT COLOR=\"$theme->hlcolor2\">edit</FONT></A> | <A HREF=\"account.php?op=discussion\"><FONT COLOR=\"$theme->hlcolor2\">Track comments</FONT></A> | <A HREF=\"account.php?op=logout\"><FONT COLOR=\"$theme->hlcolor2\">logout</FONT></A>]</P>";
-    $theme->box("$user->userid's box", $user->content);
-  }
-}
-
-function displayLogin($theme) {
-  global $user;
-  
-  if ($user && $user->userid) { 
-    ### Display userblock if any:
-    displayUserblock();
-  }
-  else {
-    $content  = "<CENTER><FORM METHOD=\"post\" ACTION=\"account.php\">\n";
-    $content .= "<P>Username:<BR><INPUT NAME=userid MAXLENGTH=50 SIZE=12></P>\n";
-    $content .= "<P>Password:<BR> <INPUT TYPE=password NAME=passwd MAXLENGTH=25 SIZE=12></P>\n";
-    $content .= "<INPUT TYPE=submit NAME=op VALUE=\"Login\">\n";
-    $content .= "</FORM>\n";
-    $content .= "<P><A HREF=\"account.php?op=new\">Register</A> as new user.<BR><A HREF=\"account.php?op=forgot\">Forgot</A> your password?</P></CENTER>";
-    $theme->box("Login", $content);
-  }
-}
-
-function displayCalendar($theme, $date) {
-  include "calendar.class.php";
+function display_calendar($theme, $date) {
+  include "includes/calendar.inc";
   $calendar = new calendar($date);
   $theme->box("Browse archives", $calendar->display());
 }
 
-function displayAccount($theme) {
+function display_account($theme) {
   global $user;
   
   if ($user && $user->userid) { 
-
     function submission_number() {
       $result = db_query("SELECT COUNT(id) FROM stories WHERE status = 1");
       return ($result) ? mysql_result($result, 0) : 0;
@@ -157,10 +125,4 @@ function displayAccount($theme) {
   }
 }
 
-function displayPoll($theme) {
-  global $answer, $answer1, $answer2, $answer3, $answer4, $answer5, $answer6, $id, $method, $section, $poll, $question;
-    // Pass the URI and FORM parameters along to poll.php.
-  $box = 1;
-  include "poll.php";
-}
 ?>

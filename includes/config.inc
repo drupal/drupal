@@ -9,7 +9,7 @@ $dbuname = "dries";
 $dbpass = "Abc123";
 $dbname = "dries";
 
-#$dbhost = "";
+#$dbhost = "localhost";
 #$dbuname = "dries";
 #$dbpass = "oakley";
 #$dbname = "dries";
@@ -85,7 +85,7 @@ $themes = array("Marvin" => array(
                    "themes/zaphod/zaphod.theme", 
                    "yellow, simple"),
 		"UnConeD" => array(
-		   "themes/UnConeD/theme.class.php",
+		   "themes/unconed/unconed.theme",
 		   "gray, flashy"));
 
 #
@@ -110,6 +110,6 @@ $submission_dump_threshold = "-2";
 #   Set to '1' if you are using Windows so the engine won't try
 #   to send out mails and such.  When using Unix or Linux, set
 #   to '0'
-$system = 0;
+$mail = 0;
 
 ?>

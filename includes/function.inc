@@ -1,7 +1,7 @@
 <?
 
-include "database.inc";
-include "log.inc";
+include "includes/database.inc";
+include "includes/log.inc";
 
 function id2story($id) {
   ### Perform query:
@@ -38,7 +38,7 @@ function check_input($message) {
 }
 
 function check_output($message) {
-  include "config.inc";
+  global $allowed_html;
   return nl2br(strip_tags(stripslashes($message), $allowed_html));
 }
 
@@ -77,7 +77,7 @@ function format_data($field, $replacement = "<I>n/a</I>") {
 
 function format_username($username, $admin = 0) {
   if ($username) return ($admin) ? "<A HREF=\"admin.php?section=accounts&op=view&name=$username\">$username</A>" : "<A HREF=\"account.php?op=view&name=$username\">$username</A>";
-  else { include "config.inc"; return $anonymous; }
+  else { global $anonymous; return $anonymous; }
 }
 
 function format_email_address($address) {

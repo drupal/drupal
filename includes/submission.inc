@@ -11,9 +11,7 @@ function submission_score($id) {
 }
 
 function submission_vote($id, $vote, $comment) {
-  global $user;
-  
-  include "config.inc";
+  global $user, $submission_post_threshold, $submission_dump_threshold;
   
   if (!user_getHistory($user->history, "s$id")) {
     ### Update submission's score- and votes-field:
