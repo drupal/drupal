@@ -837,7 +837,7 @@ function taxonomy_select_nodes($tids = array(), $operator = 'or', $depth = 0, $p
 
     if ($operator == 'or') {
       $str_tids = implode(',', call_user_func_array('array_merge', $descendant_tids));
-      $sql = 'SELECT n.nid, n.sticky, n.created FROM {node} n INNER JOIN {term_node} tn ON n.nid = tn.nid WHERE tn.tid IN ('. $str_tids .') AND n.status = 1 ORDER BY n.sticky DESC, n.created DESC';
+      $sql = 'SELECT n.nid, n.sticky, n.title, n.created FROM {node} n INNER JOIN {term_node} tn ON n.nid = tn.nid WHERE tn.tid IN ('. $str_tids .') AND n.status = 1 ORDER BY n.sticky DESC, n.created DESC';
       $sql_count = 'SELECT COUNT(n.nid) FROM {node} n INNER JOIN {term_node} tn ON n.nid = tn.nid WHERE tn.tid IN ('. $str_tids .') AND n.status = 1';
     }
     else {
@@ -847,7 +847,7 @@ function taxonomy_select_nodes($tids = array(), $operator = 'or', $depth = 0, $p
         $joins .= ' INNER JOIN {term_node} tn'. $index .' ON n.nid = tn'. $index .'.nid';
         $wheres .= ' AND tn'. $index .'.tid IN ('. implode(',', $tids) .')';
       }
-      $sql = 'SELECT n.nid, n.sticky, n.created FROM {node} n '. $joins .' WHERE n.status = 1 '. $wheres .' ORDER BY n.sticky DESC, n.created DESC';
+      $sql = 'SELECT n.nid, n.sticky, n.title, n.created FROM {node} n '. $joins .' WHERE n.status = 1 '. $wheres .' ORDER BY n.sticky DESC, n.created DESC';
       $sql_count = 'SELECT COUNT(n.nid) FROM {node} n '. $joins .' WHERE n.status = 1 ' . $wheres;
     }
     $sql = db_rewrite_sql($sql);
