@@ -33,23 +33,39 @@ function cloud_link($type) {
 }
 
 function cloud_update($site) {
-  // open socket:
-  $url = parse_url($site[url]);
-  $fp = fsockopen($url[host], ($url[port] ? $url[port] : 80), $errno, $errstr, 15);
+
+  /*
+  ** Check whether the site is properly configured:
+  */
+
+  if (!ereg("^http://|ftp://", $site[link])) {
+    watchdog("warning", "cloud: invalid or missing URL for '$site[name]'");
+  }
+
+  if (!ereg("^http://|ftp://", $site[feed])) {
+    watchdog("warning", "cloud: invalid or missing URL to monitor for '$site[name]'");
+  }
+
+  /*
+  ** Grab the page and update the database if required:
+  */
+
+  $link = parse_url($site[feed]);
+  $fp = fsockopen($link[host], ($link[port] ? $link[port] : 80), &$errno, &$errstr, 15);
 
   if ($fp) {
     // fetch data:
-    fputs($fp, "GET $url[path]?$url[query] HTTP/1.0\nUser-Agent: ". variable_get(site_name, "drupal") ."\nHost: $url[host]\nAccept: */*\n\n");
+    fputs($fp, "GET $link[path]?$link[query] HTTP/1.0\nUser-Agent: ". variable_get(site_name, "drupal") ."\nHost: $link[host]\nAccept: */*\n\n");
     while(!feof($fp)) $data .= fgets($fp, 128);
 
     if (strstr($data, "200 OK")) {
       if (abs($site[size] - strlen($data)) > 50) {
-        db_query("UPDATE site SET size = '". strlen($data) ."', timestamp = '". time() ."' WHERE url = '". check_input($site[url]) ."'");
+        db_query("UPDATE site SET size = '". strlen($data) ."', timestamp = '". time() ."' WHERE link = '". check_input($site[link]) ."'");
       }
     }
   }
   else {
-    watchdog("error", "cloud: failed to syndicate from '$site[title]'");
+    watchdog("warning", "cloud: failed to syndicate from '$site[name]'". ($errstr ? ": $errstr" : ""));
   }
 }
 
@@ -57,8 +73,9 @@ function cloud_update($site) {
 function cloud_form($edit = array()) {
   global $REQUEST_URI;
 
-  $form .= form_textfield("Title", "title", $edit["title"], 50, 64);
-  $form .= form_textfield("URL", "url", $edit["url"], 50, 64);
+  $form .= form_textfield("Site name", "name", $edit["name"], 50, 64, "The name of the website you want to monitor for updates.");
+  $form .= form_textfield("Site URL", "link", $edit["link"], 50, 64, "The URL of the website you want to monitor for updates.");
+  $form .= form_textfield("URL to monitor", "feed", $edit["feed"], 50, 64, "The URL of the page you want to monitor for updates.  Likely to be same as the site's URL but useful to monitor framed pages and more accurate when pointed to a XML/RSS/RDF feed.");
 
   $form .= form_submit("Submit");
 
@@ -75,24 +92,24 @@ function cloud_get_site($sid) {
 }
 
 function cloud_save($edit) {
-  if ($edit["sid"] && $edit["title"]) {
-    db_query("UPDATE site SET title = '". check_input($edit["title"]) ."', url = '". check_input($edit["url"]) ."' WHERE sid = '". check_input($edit["sid"]) ."'");
+  if ($edit["sid"] && $edit["name"]) {
+    db_query("UPDATE site SET name = '". check_input($edit["name"]) ."', link = '". check_input($edit["link"]) ."', feed = '". check_input($edit["feed"]) ."' WHERE sid = '". check_input($edit["sid"]) ."'");
   }
   else if ($edit["sid"]) {
     db_query("DELETE FROM site WHERE sid = '". check_input($edit["sid"]) ."'");
   }
   else {
-    db_query("INSERT INTO site (title, url) VALUES  ('". check_input($edit["title"]) ."', '". check_input($edit["url"]) ."')");
+    db_query("INSERT INTO site (name, link, feed) VALUES  ('". check_input($edit["name"]) ."', '". check_input($edit["link"]) ."', '". check_input($edit["feed"]) ."')");
   }
 }
 
 function cloud_display() {
-  $result = db_query("SELECT * FROM site ORDER BY title");
+  $result = db_query("SELECT * FROM site ORDER BY name");
 
   $output .= "<table border=\"1\" cellpadding=\"2\" cellspacing=\"2\">\n";
   $output .= " <tr><th>site</th><th>last update</th><th colspan=\"2\">operations</th></tr>\n";
   while ($site = db_fetch_object($result)) {
-    $output .= " <tr><td><a href=\"". check_output($site->url) ."\">". check_output($site->title) ."</a></td><td>". ($site->timestamp ? format_interval(time() - $site->timestamp) ." ago" : "never") ."</td><td><a href=\"admin.php?mod=cloud&op=edit&id=$site->sid\">edit site</a></td><td><a href=\"admin.php?mod=cloud&op=update&id=$site->sid\">update site</a></td></tr>\n";
+    $output .= " <tr><td><a href=\"". check_output($site->link) ."\">". check_output($site->name) ."</a></td><td>". ($site->timestamp ? format_interval(time() - $site->timestamp) ." ago" : "never") ."</td><td><a href=\"admin.php?mod=cloud&op=edit&id=$site->sid\">edit site</a></td><td><a href=\"admin.php?mod=cloud&op=update&id=$site->sid\">update site</a></td></tr>\n";
   }
   $output .= "</table>\n";
 
@@ -100,7 +117,7 @@ function cloud_display() {
 }
 
 function cloud_list($limit = 10) {
-  $result = db_query("SELECT * FROM site ORDER BY timestamp DESC LIMIT $limit");
+  $result = db_query("SELECT * FROM site WHERE timestamp > ". (time() - 604800) ." ORDER BY timestamp DESC LIMIT $limit");
 
   $hour = -1;
   while ($site = db_fetch_object($result)) {
@@ -108,7 +125,7 @@ function cloud_list($limit = 10) {
       $hour = floor((time() - $site->timestamp) / 3600);
       $output .= "<p />Updated ". format_plural($hour, "hour", "hours") ." ago:";
     }
-    $output .= "<br /> &nbsp; ". format_url($site->url, $site->title);
+    $output .= "<br /> &nbsp; ". format_url($site->link, $site->name);
   }
   return $output;
 }
@@ -151,7 +168,7 @@ function cloud_admin() {
         cloud_help();
         break;
       case "Delete":
-        $edit[title] = 0;
+        $edit[name] = 0;
         // fall through:
       case "Submit":
         print status(cloud_save($edit));
