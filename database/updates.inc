@@ -1,5 +1,5 @@
 <?php
-/* $Id: updates.inc,v 1.39 2004/08/12 15:12:25 unconed Exp $ */
+/* $Id: updates.inc,v 1.40 2004/08/12 15:16:15 unconed Exp $ */
 
 // Define the various updates in an array("date : comment" => "function");
 $sql_updates = array(
@@ -1547,7 +1547,7 @@ function update_101() {
 }
 
 function update_102() {
-  INSERT INTO {system} (filename, name, type, description, status, throttle, bootstrap) VALUES ('modules/legacy.module', 'legacy', 'module', '', 1, 0, 0);
+  return array(update_sql("INSERT INTO {system} (filename, name, type, description, status, throttle, bootstrap) VALUES ('modules/legacy.module', 'legacy', 'module', '', 1, 0, 0)"));
 }
 
 function update_sql($sql) {
