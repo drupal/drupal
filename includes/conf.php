@@ -1,5 +1,5 @@
 <?php
-// $Id: conf.php,v 1.9 2001/10/20 18:57:07 kjartan Exp $
+// $Id: conf.php,v 1.10 2001/10/23 20:26:02 dries Exp $
 
 #
 # Database settings:
@@ -7,6 +7,18 @@
 
 # $db_url = "pgsql://userer:password@hostname/database";
 # $db_url = "mysql://userer:password@hostname/database";
+
+#
+# PHP settings:
+#
+
+# Avoid "page has expired" problems when browsing from your cache or history
+# after having filled out a form:
+// ini_set("session.cache_limiter", "");
+
+# If required, update PHP's include path to include your PEAR directory:
+// ini_set("include_path", ".:/path/to/pear");
+
 
 #
 # Themes:
