@@ -107,10 +107,10 @@ function locale_links($translation) {
 
   foreach ($languages as $key=>$value) {
     if ($translation) {
-      $output .= la(t("translated '$key' strings"), array("mod" => "locale", "op" => "translated", "language" => $key)) ." | ";
+      $output .= la(t("translated '%langcode' strings", array("%langcode" => $key)), array("mod" => "locale", "op" => "translated", "language" => $key)) ." | ";
     }
     else {
-      $output .= la(t("untranslated '$key' strings"), array("mod" => "locale", "op" => "untranslated", "language" => $key)) ." | ";
+      $output .= la(t("untranslated '%langcode' strings", array("%langcode" => $key)), array("mod" => "locale", "op" => "untranslated", "language" => $key)) ." | ";
     }
   }
 
@@ -290,7 +290,7 @@ function locale($string) {
   else {
     $result = db_query("SELECT lid, $locale FROM locales WHERE string = '%s'", $string);
     if (!db_fetch_object($result)) {
-      db_query("INSERT INTO locales (string, location) VALUES ('%s', '%s')", $string, getenv("PATH_INFO"));
+      db_query("INSERT INTO locales (string, location) VALUES ('%s', '%s')", $string, request_uri());
     }
   }
 
