@@ -93,16 +93,16 @@ function rating_list($limit) {
 function rating_page() {
   global $user, $theme;
 
-  if (user_access($user, "access user ratings")) {
-    $theme->header();
+  $theme->header();
+
+  if (user_access("access user ratings")) {
     $theme->box(t("Top 100 users"), rating_list(100));
-    $theme->footer();
   }
   else {
-    $theme->header();
     $theme->box(t("Access denied"), message_access());
-    $theme->footer();
   }
+
+  $theme->footer();
 }
 
 function rating_block() {
