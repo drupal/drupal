@@ -3,6 +3,10 @@
 class Node {
   function Node($node) {
     global $user;
+    $this->uid = $node[uid] ? $node[uid] : $user->uid;
+    $this->nid = $node[nid];
+    $this->type = $node[type];
+    $this->comment = $node[comment] ? $node[comment] :
     $this->name = $node[name] ? $node[name] : $user->name;
     $this->title = $node[title];
     $this->attributes = $node[attributes];

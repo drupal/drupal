@@ -67,7 +67,7 @@ function meta_form_collection($edit = array()) {
   $form .= form_submit("Submit");
 
   if ($edit[cid]) {
-    $form .= form_submit(t("Delete"));
+    $form .= form_submit("Delete");
     $form .= form_hidden("cid", $edit[cid]);
   }
 
@@ -83,7 +83,7 @@ function meta_form_tag($edit = array()) {
   $form .= form_submit("Submit");
 
   if ($edit[tid]) {
-    $form .= form_submit(t("Delete"));
+    $form .= form_submit("Delete");
     $form .= form_hidden("tid", $edit[tid]);
   }
 
