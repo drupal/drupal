@@ -6,21 +6,21 @@
 
 ### host: "http://www.drop.org/":
 #$db_host = "zind.net";
-#$db_uname = "droporg";
+#$db_name = "droporg";
 #$db_pass = "DropIes";
 #$db_name = "droporg";
 
 ### host: "http://beta.drop.org/":
-$db_host = "zind.net";
-$db_uname = "dries";
-$db_pass = "Abc123";
-$db_name = "dries";
+#$db_host = "zind.net";
+#$db_name = "dries";
+#$db_pass = "Abc123";
+#$db_name = "dries";
 
 ### host: "http://localhost/":
-#$db_host = "";
-#$db_uname = "dries";
-#$db_pass = "oakley";
-#$db_name = "dries";
+$db_host = "localhost";
+$db_name = "drop";
+$db_pass = "drop";
+$db_name = "drop";
 
 #
 # Administrative information
@@ -84,6 +84,9 @@ $themes = array("Marvin"  => array(
                 "Zaphod"  => array(
                    "themes/zaphod/zaphod.theme", 
                    "classic theme, yellow, structured, advanced navigation"),
+                "Trillian"  => array(
+                   "themes/trillian/trillian.theme", 
+                   "simple, easy, black background"),
 		"UnConeD" => array(
 		   "themes/unconed/unconed.theme",
 		   "modern theme, gray and blue, high coolness factor"));

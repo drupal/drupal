@@ -151,6 +151,7 @@ function diary_submit($text, $id = 0) {
     watchdog("diary", "new diary entry added");
     db_query("INSERT INTO diaries (author, text, timestamp) VALUES ('$user->id', '". check_input($text) ."', '". time() ."')");
   }
+
   header("Location: diary.php?op=view&name=$user->userid");
 }
 

@@ -8,8 +8,8 @@
  */
 
 function db_connect() {
-  global $db_host, $db_uname, $db_pass, $db_name;
-  mysql_pconnect($db_host, $db_uname, $db_pass) or die(mysql_Error());
+  global $db_host, $db_name, $db_pass, $db_name;
+  mysql_pconnect($db_host, $db_name, $db_pass) or die(mysql_Error());
   mysql_select_db($db_name) or die ("Unable to select database");
    // NOTE: we are using a persistent connection!
 }
