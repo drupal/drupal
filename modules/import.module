@@ -105,7 +105,7 @@ function import_feed_block($feed) {
 }
 
 function import_block() {
-  return import_get_bundles();
+  return array_merge(import_get_bundles(), import_get_feeds());
 }
 
 function import_get_bundles($attributes = 0) {
