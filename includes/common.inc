@@ -361,21 +361,17 @@ function drupal_http_request($url, $headers = array(), $method = 'GET', $data = 
   fclose($fp);
 
   // Parse response.
-  $response = preg_split("/\r\n|\n|\r/", $response);
-  list($protocol, $code, $text) = explode(' ', trim(array_shift($response)), 3);
+  list($headers, $result->data) = explode("\r\n\r\n", $response, 2);
+  $headers = preg_split("/\r\n|\n|\r/", $headers);
+
+  list($protocol, $code, $text) = explode(' ', trim(array_shift($headers)), 3);
   $result->headers = array();
-  $result->data = '';
 
   // Parse headers.
-  while ($line = trim(array_shift($response))) {
-    if ($line == '') {
-      break;
-    }
+  while ($line = trim(array_shift($headers))) {
     list($header, $value) = explode(':', $line, 2);
     $result->headers[$header] = trim($value);
   }
-
-  $result->data = implode('', $response);
 
   $responses = array(
     100 => 'Continue', 101 => 'Switching Protocols',
