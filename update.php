@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.114 2003/10/22 20:20:32 dries Exp $
+// $Id: update.php,v 1.115 2003/10/23 15:31:08 dries Exp $
 /*
 ** USAGE:
 **
@@ -440,11 +440,11 @@ function _update_next_thread($structure, $parent) {
 
 function update_63() {
   if ($GLOBALS["db_type"] == "pgsql") {
-    update_sql("INSERT INTO {users} (uid, name, mail, timestamp) VALUES ('0', 'Anonymous', 'root@localhost', '". time() ."')");
+    update_sql("INSERT INTO {users} (uid, name, mail, timestamp) VALUES ('0', '', '', '". time() ."')");
   }
   else {
     update_sql("ALTER TABLE {users} CHANGE uid uid int(10) unsigned NOT NULL default '0'");
-    update_sql("INSERT INTO {users} (uid, name, mail, timestamp) VALUES ('0', 'Anonymous', 'root@localhost', '". time() ."')");
+    update_sql("INSERT INTO {users} (uid, name, mail, timestamp) VALUES ('0', '', '', '". time() ."')");
     $users = db_result(db_query("SELECT MAX(uid) FROM {users};"));
     update_sql("INSERT INTO {sequences} (name, id) VALUES ('users_uid', '$users')");
   }
@@ -536,8 +536,10 @@ function update_69() {
   else {
     update_sql("ALTER TABLE {statistics} RENAME TO {node_counter}");
     update_sql("ALTER TABLE {path} RENAME TO {url_alias}");
-    update_sql("UPDATE {sequences} set name = '{url_alias}_pid' where name = '{path}_pid'");
+    update_sql("UPDATE {sequences} SET name = '{url_alias}_pid' WHERE name = '{path}_pid'");
   }
+
+  update_sql("UPDATE {users} SET name = '' WHERE uid = 0;");
 }
 
 /*
