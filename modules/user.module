@@ -1,5 +1,5 @@
 <?php
-// $Id: user.module,v 1.129 2003/02/25 19:52:32 dries Exp $
+// $Id: user.module,v 1.130 2003/03/02 20:33:20 dries Exp $
 
 session_set_save_handler("sess_open", "sess_close", "sess_read", "sess_write", "sess_destroy", "sess_gc");
 session_start();
@@ -407,7 +407,7 @@ function user_link($type) {
   }
 
   if ($type == "admin" && user_access("administer users")) {
-    $help["user"] = "Drupal allows users to register, login, logout, maintain user profiles, etc.  No participant can use his own name to post content until he signs up for a user account.  There is several configuration pages that help administrators manage user accounts.";
+    $help["user"] = "Drupal allows users to register, login, logout, maintain user profiles, etc.  No participant can use his own name to post content until he signs up for a user account.  There are several configuration pages that help administrators manage user accounts.";
     $help["create"] = "If your site is completely private, and doesn't allow public registration, then you can add new users manually.  This web page allows administrator to register a new users.";
     $help["view"] = "This page allows you to review and edit any user's profile.";
     $help["access"] = "Access rules enable administrators to filter out usernames and e-mail addresses which are not allowed in Drupal.  An administrator creates a 'mask' against which each new registration is checked. Disallowed names and e-mail addresses are denied access to the site.";
