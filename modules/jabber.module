@@ -1,5 +1,5 @@
 <?php
-// $Id: jabber.module,v 1.15 2003/01/06 19:51:00 dries Exp $
+// $Id: jabber.module,v 1.16 2003/02/15 11:39:56 dries Exp $
 
 function jabber_system($field){
   $system["description"] = t("Enables login with Jabber ID and password.");
@@ -145,11 +145,11 @@ function jabber_auth($username, $password, $server) {
 }
 
 function jabber_page() {
-  global $theme;
 
-  $theme->header();
-  $theme->box("Jabber", jabber_auth_help());
-  $theme->footer();
+
+  theme("header");
+  theme("box", "Jabber", jabber_auth_help());
+  theme("footer");
 }
 
 function jabber_auth_help() {

@@ -1,5 +1,5 @@
 <?php
-// $Id: drupal.module,v 1.47 2003/02/11 20:01:16 dries Exp $
+// $Id: drupal.module,v 1.48 2003/02/15 11:39:56 dries Exp $
 
 function drupal_help_directory() {
  ?>
@@ -143,10 +143,10 @@ function drupal_auth($username, $password, $server) {
 }
 
 function drupal_page() {
-  global $theme;
-  $theme->header();
-  $theme->box("Drupal", drupal_auth_help());
-  $theme->footer();
+
+  theme("header");
+  theme("box", "Drupal", drupal_auth_help());
+  theme("footer");
 }
 
 function drupal_login($arguments) {

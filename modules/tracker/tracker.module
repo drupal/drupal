@@ -1,5 +1,5 @@
 <?php
-// $Id: tracker.module,v 1.35 2003/02/11 20:01:17 dries Exp $
+// $Id: tracker.module,v 1.36 2003/02/15 11:39:56 dries Exp $
 
 function tracker_help() {
   $output .= "<p>The tracker module is a handy module for displaying the most recent comments happenning all over your web site.  By following the <i>view new comments</i> link in the user block, a user may quickly review all recent comments.  When a user first arrives at the main tracker page, she sees all recent comments in reverse chronological order, grouped by post.  In addition, a self-centered user may choose to display only his own comments.</p>";
@@ -67,27 +67,27 @@ function tracker_menu() {
 
 
 function tracker_page() {
-  global $theme, $user;
+  global $user;
 
   if (user_access("access comments")) {
     if (arg(1) == $user->uid) {
-      $theme->header(t("Your recent comments"));
-      $theme->box(t("Tracker"), tracker_menu());
-      $theme->box(t("Your recent comments"), tracker_comments(arg(1)));
-      $theme->footer();
+      theme("header", t("Your recent comments"));
+      theme("box", t("Tracker"), tracker_menu());
+      theme("box", t("Your recent comments"), tracker_comments(arg(1)));
+      theme("footer");
     }
     else if (arg(1)) {
       $account = user_load(array("uid" => arg(1)));
-      $theme->header(t("%u's recent comments", array("%u" => $account->name)));
-      $theme->box(t("Tracker"), tracker_menu());
-      $theme->box(t("%u's recent comments", array("%u" => $account->name)), tracker_comments(arg(1)));
-      $theme->footer();
+      theme("header", t("%u's recent comments", array("%u" => $account->name)));
+      theme("box", t("Tracker"), tracker_menu());
+      theme("box", t("%u's recent comments", array("%u" => $account->name)), tracker_comments(arg(1)));
+      theme("footer");
     }
     else {
-      $theme->header(t("All recent comments"));
-      $theme->box(t("Tracker"), tracker_menu());
-      $theme->box(t("All recent comments"), tracker_comments());
-      $theme->footer();
+      theme("header", t("All recent comments"));
+      theme("box", t("Tracker"), tracker_menu());
+      theme("box", t("All recent comments"), tracker_comments());
+      theme("footer");
     }
   }
 }

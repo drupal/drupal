@@ -1,5 +1,5 @@
 <?php
-// $Id: index.php,v 1.57 2003/01/06 19:50:58 dries Exp $
+// $Id: index.php,v 1.58 2003/02/15 11:39:55 dries Exp $
 
 include_once "includes/common.inc";
 
@@ -26,8 +26,8 @@ else {
     module_invoke(variable_get("site_frontpage", "node"), "page");
   }
   else {
-    $theme->header();
-    $theme->footer();
+    theme("header");
+    theme("footer");
   }
 
   page_footer();
