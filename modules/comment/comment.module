@@ -14,9 +14,33 @@ function comment_perm() {
   return array("access comments", "post comments", "administer comments");
 }
 
-function comment_link($type) {
+function comment_link($type, $node = 0, $main = 0) {
   if ($type == "admin" and user_access("administer comments")) {
     $links[] = "<a href=\"admin.php?mod=comment\">comments</a>";
+  }
+
+  if ($node->comment) {
+
+    if ($main) {
+
+      /*
+      ** Main page: display the number of comments that have been posted.
+      */
+
+      if (user_access("access comments")) {
+        $links[] = "<a href=\"node.php?id=$node->nid#comment\">". format_plural(node_get_comments($node->nid), "comment", "comments") ."</a>";
+      }
+    }
+    else {
+      /*
+      ** Node page: add a "post comment" link if the user is allowed to
+      ** post comments.
+      */
+
+      if (user_access("post comments")) {
+        $links[] = "<a href=\"node.php?id=$node->nid&op=comment#comment\">". t("add new comment") ."</a>";
+      }
+    }
   }
 
   return $links ? $links : array();

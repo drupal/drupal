@@ -24,7 +24,7 @@ function node_render($node) {
           comment_render($edit[id], $cid);
           $theme->footer();
           break;
-        case t("Add comment"):
+        case "comment":
           $theme->header();
           comment_reply(check_query($cid), check_query($id));
           $theme->footer();

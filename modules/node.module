@@ -143,16 +143,16 @@ function node_link($type, $node = 0, $main = 0) {
       $links = $node->links;
     }
 
-    if ($node->teaser != $node->body && $main) {
-      $links[] = "<a href=\"node.php?id=". $node->nid ."\">". t("read more") ."</a>";
+    if ($main && $node->teaser != $node->body) {
+      $links[] = "<a href=\"node.php?id=$node->nid\">". t("read more") ."</a>";
     }
 
-    if ($node->comment) {
-      $links[] = "<a href=\"node.php?id=". $node->nid ."\">". format_plural(node_get_comments($node->nid), "comment", "comments") ."</a>";
+    if (module_invoke($node->type, "access", "update", $node)) {
+      $links[] = "<a href=\"module.php?mod=node&op=edit&id=$node->nid\">". t("edit") ."</a>";
     }
-
+    
     if (user_access("administer nodes")) {
-      $links[] = "<a href=\"admin.php?mod=node&op=edit&id=". $node->nid ."\">". t("edit") ."</a>";
+       $links[] = "<a href=\"admin.php?mod=node&op=edit&id=$node->nid\">". t("administer") ."</a>";
     }
   }
 

@@ -45,6 +45,8 @@ function comment_settings($mode, $order, $threshold) {
 function comment_form($edit) {
   global $user;
 
+  $form .= "<a name=\"comment\"></a>\n";
+
   // name field:
   $form .= form_item(t("Your name"), format_name($user));
 
@@ -293,6 +295,7 @@ function comment_render($lid, $cid) {
       $threshold = $user->uid ? $user->threshold : variable_get(default_comment_threshold, 3);
     }
 
+    print "<a name=\"comment\"></a>\n";
     print "<form method=\"post\" action=\"$REQUEST_URI\">\n";
 
     /*

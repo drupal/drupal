@@ -79,15 +79,7 @@ class BaseTheme {
 
 
   function comment_controls($threshold = 1, $mode = 3, $order = 1) {
-    global $user, $id;
-
-    $output .= form_item(t("Comment viewing options"), comment_mode($mode) . comment_order($order) . comment_threshold($threshold) ." <input type=\"submit\" name=\"op\" value=\"". t("Update settings") ."\" />", t("Select your prefered way to display the comments and click 'Update settings' to active your changes."));
-
-    if (user_access("post comment")) {
-      $output .= form_item(t("Add a comment"), "<input type=\"submit\" name=\"op\" value=\"". t("Add comment") ."\" />", t("Click 'Add comment' to start a new thread in the discussion."));
-    }
-
-    return $output;
+    return form_item(t("Comment viewing options"), comment_mode($mode) . comment_order($order) . comment_threshold($threshold) ." <input type=\"submit\" name=\"op\" value=\"". t("Update settings") ."\" />", t("Select your prefered way to display the comments and click 'Update settings' to active your changes."));
   }
 
   function comment($comment, $link = 0) {
