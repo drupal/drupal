@@ -285,7 +285,7 @@ function search_preprocess(&$text) {
 
 
 /**
- * Update the search index for a particular item.
+ * Update the full-text search index for a particular item.
  *
  * @param $sid
  *   A number identifying this particular item (e.g. node id).
@@ -407,10 +407,10 @@ function search_index($sid, $type, $text) {
 }
 
 /**
- * Perform a search on a word or words.
+ * Do a query on the full-text search index for a word or words.
  *
- * This function is called by each module that supports the indexed search
- * (and thus, implements hook_update_index()).
+ * This function is normally only called by each module that support the
+ * indexed search (and thus, implements hook_update_index()).
  *
  * The final query is an SQL select on the search_index table. As a guide for
  * writing the optional extra SQL fragments (see below), use this query:
@@ -602,7 +602,7 @@ function search_form($action = '', $keys = '', $type = null) {
 }
 
 /**
- * Perform a search on the given keys, and return the formatted results.
+ * Perform a standard search on the given keys, and return the formatted results.
  */
 function search_data($keys = NULL, $type = 'node') {
   $output = '';
