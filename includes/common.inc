@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.116 2002/05/12 16:51:49 kjartan Exp $
+// $Id: common.inc,v 1.117 2002/05/13 18:59:53 kjartan Exp $
 
 function conf_init() {
   global $HTTP_HOST;
@@ -513,7 +513,7 @@ function format_interval($timestamp) {
 function format_date($timestamp, $type = "medium", $format = "") {
   global $user;
 
-  // $timestamp += ($user->timezone) ? $user->timezone - date("Z") : 0;
+  $timestamp += ($user->timezone) ? $user->timezone - date("Z") : 0;
 
   switch ($type) {
     case "small":
