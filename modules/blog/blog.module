@@ -1,5 +1,5 @@
 <?php
-// $Id: blog.module,v 1.122 2003/06/13 17:34:16 dries Exp $
+// $Id: blog.module,v 1.123 2003/06/15 06:45:53 dries Exp $
 
 function blog_system($field){
   $system["description"] = t("Enables keeping a blog or easily and regularly updated web page.");
@@ -54,9 +54,8 @@ function blog_head($main = 0) {
 
   $output = array();
 
-  if ($mod == "blog" && $id) {
-    $account = user_load(array("uid" => $id));
-    $output[] = "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"RSS - ". $account->name. "'s blog\" href=\"". url("blog/view/$id") ."\" />";
+  if ($mod == "blog") {
+    $output[] = "<link rel=\"alternate\" type=\"application/rss+xml\" title=\"RSS feed\" href=\"". url("blog/feed/$id") ."\" />";
   }
 
   return $output;
