@@ -1127,6 +1127,7 @@ function node_form($edit) {
   // Get the node-specific bits.
   // We can't use node_invoke() because $param must be passed by reference.
   $function = node_get_module_name($edit) .'_form';
+  $param = array();
   if (function_exists($function)) {
     $form .= $function($edit, $param);
   }
@@ -1139,7 +1140,7 @@ function node_form($edit) {
   // Add hidden 'op' variable, which specifies the default operation (Preview).
   $output .= '<input type="hidden" name="op" value="'. check_form(t('Preview')) ."\" />\n";
 
-  // Add the admin-specific parts/
+  // Add the admin-specific parts.
 
   if (user_access('administer nodes')) {
     $output .= '<div class="admin">';
@@ -1218,7 +1219,12 @@ function node_form($edit) {
   $extra = node_invoke_nodeapi($edit, 'form param');
   foreach ($extra as $key => $value) {
     if (is_array($value)) {
-      $param[$key] = array_merge($param[$key], $value);
+      if (isset($param[$key])) {
+        $param[$key] = array_merge($param[$key], $value);
+      }
+      else {
+        $param[$key] = $value;
+      }
     }
     else {
       $param[$key] = $value;
