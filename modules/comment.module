@@ -1,5 +1,5 @@
 <?php
-// $Id: comment.module,v 1.60 2002/04/25 20:59:50 unconed Exp $
+// $Id: comment.module,v 1.61 2002/05/03 12:56:57 kjartan Exp $
 
 $GLOBALS["cmodes"] = array(1 => "Flat list - collapsed", 2 => "Flat list - expanded", 3 => "Threaded list - collapsed", 4 => "Threaded list - expanded");
 $GLOBALS["corder"] = array(1 => "Date - newest first", 2 => "Date - oldest first");
@@ -494,7 +494,8 @@ function comment_render($nid, $cid) {
     }
 
     print "<a name=\"comment\"></a>\n";
-    print "<form method=\"post\" action=\"". request_uri() ."\">\n";
+    print "<form method=\"post\" action=\"". drupal_url(array("mod" => "comment"), "module") ."\">\n";
+    print form_hidden("nid", $nid);
 
     /*
     ** Render control panel:
@@ -685,7 +686,9 @@ function comment_page() {
       comment_post($edit);
       break;
     case t("Update settings"):
+      global $mode, $order, $threshold;
       comment_settings(check_query($mode), check_query($order), check_query($threshold));
+      drupal_goto(drupal_url(array("id" => $edit["nid"]), "node"));
       break;
     default:
   }
