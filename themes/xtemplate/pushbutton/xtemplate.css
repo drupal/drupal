@@ -24,12 +24,6 @@ img {
   display: block;
   border: 0;
 }
-tr.dark {
-  background-color: #ddd;
-}
-tr.light {
-  background-color: #eee;
-}
 tr.dark td, tr.light td {
   padding: 0.3em;
 }

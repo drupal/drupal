@@ -31,17 +31,18 @@ th {
   border-bottom: 3px solid #ccc;
   white-space: nowrap;
 }
-tr.dark {
-  background-color: #ddd;
+th.active img {
+  display: inline;
 }
-tr.light {
+tr.dark, tr.light {
   background-color: #eee;
+  border-bottom: 1px solid #ccc;
 }
 tr.dark td, tr.light td {
   padding: 0.1em 0.6em;
 }
-th.active img {
-  display: inline;
+td.active {
+  background-color: #ddd;
 }
 
 /*

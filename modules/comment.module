@@ -1017,7 +1017,14 @@ function comment_admin_overview($status = 0) {
 
   while ($comment = db_fetch_object($result)) {
     $comment->name = $comment->registered_name ? $comment->registered_name : $comment->name;
-    $rows[] = array(l($comment->subject, "node/view/$comment->nid/$comment->cid", array("title" => htmlspecialchars(truncate_utf8($comment->comment, 128))), NULL, "comment-$comment->cid") ." ". (node_is_new($comment->nid, $comment->timestamp) ? theme("mark") : ""), format_name($comment), ($comment->status == 0 ? t("published") : t("not published")) ."</td><td>". format_date($comment->timestamp, "small") ."</td><td>". l(t("edit comment"), "admin/comment/edit/$comment->cid"), l(t("delete comment"), "admin/comment/delete/$comment->cid"));
+    $rows[] = array(
+        l($comment->subject, "node/view/$comment->nid/$comment->cid", array("title" => htmlspecialchars(truncate_utf8($comment->comment, 128))), NULL, "comment-$comment->cid") ." ". (node_is_new($comment->nid, $comment->timestamp) ? theme("mark") : ""),
+        format_name($comment),
+        ($comment->status == 0 ? t("published") : t("not published")),
+        format_date($comment->timestamp, "small"),
+        l(t("edit comment"), "admin/comment/edit/$comment->cid"),
+        l(t("delete comment"), "admin/comment/delete/$comment->cid")
+      );
   }
 
   if ($pager = theme("pager", NULL, 50, 0, tablesort_pager())) {
