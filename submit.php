@@ -66,7 +66,7 @@ function submit_preview($subject, $abstract, $article, $section) {
   $output .= "<TEXTAREA WRAP=\"virtual\" COLS=\"50\" ROWS=\"15\" NAME=\"article\">". check_textarea($article) ."</TEXTAREA><BR>\n";
   $output .= "<SMALL><I>". t("Allowed HTML tags") .": ". htmlspecialchars($allowed_html) .".</I></SMALL><P>\n";
 
-  $duplicate = db_result(db_query("SELECT COUNT(id) FROM stories WHERE subject = '$subject'"));
+  $duplicate = db_result(db_query("SELECT COUNT(id) FROM stories WHERE subject = '". check_input($subject) ."'"));
 
   if (empty($subject)) {
     $output .= "<FONT COLOR=\"red\">". t("Warning: you did not supply a subject.") ."</FONT><P>\n";
