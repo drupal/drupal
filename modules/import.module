@@ -240,7 +240,7 @@ function import_form_bundle($edit = array()) {
   $form .= form_submit("Submit");
 
   if ($edit[bid]) {
-    $form .= form_submit(t("Delete"));
+    $form .= form_submit("Delete");
     $form .= form_hidden("bid", $edit[bid]);
   }
 
@@ -278,7 +278,7 @@ function import_form_feed($edit = array()) {
   $form .= form_submit("Submit");
 
   if ($edit[fid]) {
-    $form .= form_submit(t("Delete"));
+    $form .= form_submit("Delete");
     $form .= form_hidden("fid", $edit[fid]);
   }
 
