@@ -212,18 +212,13 @@ li a.active {
 .poll .bar {
   height: 1em;
   margin: 1px 0;
-}
-.poll .bar .background {
   background-color: #ddd;
-  float: left;
-  height: 1em;
-  margin-left: -1px;
 }
 .poll .bar .foreground {
   background-color: #000;
-  float: left;
   height: 1em;
-  margin-right: -1px;
+  clear: left;
+  float: left;
 }
 .poll .links {
   text-align: center;
@@ -241,6 +236,9 @@ li a.active {
   text-align: left;
   margin: 0 auto;
   display: table;
+}
+.node-form .poll-form fieldset {
+  display: block;
 }
 .more-link {
   text-align: right;
