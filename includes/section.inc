@@ -1,4 +1,4 @@
-<?
+<?php
 
 function section_get() {
   $array = array();

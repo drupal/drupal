@@ -1,4 +1,4 @@
-<?
+<?php
 
 $type2index = array("addresses" => 0x01,
                     "profanity" => 0x02,

@@ -1,4 +1,4 @@
-<?
+<?php
 
 $module = array("help" => "box_help",
                 "block" => "box_block",
@@ -31,7 +31,7 @@ function box_help() {
    }
   </PRE>
   <P>For more in-depth examples, we recommend that you check the existing boxes and use them as a starting point.</P>
- <?
+ <?php
 }
 
 function box_block() {

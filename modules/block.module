@@ -1,4 +1,4 @@
-<?
+<?php
 
 $module = array("page" => "block_page",
                 "help" => "block_help",
@@ -10,7 +10,7 @@ function block_help() {
   <P>The placement of blocks is delegated to the administrator. In most cases (i.e., the "custom" blocks), the user has complete control -- using preferences -- over whether or not they are enabled.</P>
   <P>An administrator can lay out and arrange the available blocks to fit in two regions: "left" and "right".  Regions simply contain blocks.  In addition, an administrator can assign each block (within a region) a weight to sort them vertically.  The heavier blocks will sink and the lighter blocks will be positioned nearer the top.</P>
   <P>As mentioned, blocks may be arranged to fit in two regions: left and right.  For theme builders, each region is identified by a corresponding constant: "left" and "right".</P>
- <?
+ <?php
 }
 
 function block_page() {

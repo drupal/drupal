@@ -1,4 +1,4 @@
-<?
+<?php
 
 $module = array("page"  => "headline_page",
                 "cron"  => "headline_cron",
@@ -73,7 +73,7 @@ function headline_help() {
   <P>A lot of news-oriented websites are now publishing news (headlines) and making their content available through XML, RSS and RDF backend files.  They syndicate free content and allow retrieval and further transmission, aggregation, and online publication. In its current state, drupal's headline module supports RDF and RSS backends.</P>
   <P>RSS was originally developed by Netscape to allow adding news channels to "My Netscape" sites, but it has since become adopted as the <I>de facto</I> net standard for distributing headlines and brief dynamic texts.</P>
   <P>The headline module goes out to a list of configured news sites once an hour or so (driven by cron), downloads new RSS/RDF data and makes it available to your visitors.  In addition, your headlines are exported as well and can be retrieved by other sites from <CODE>http://yourdomain.com/export/headlines.rdf</CODE>.</P>
- <?
+ <?php
 }
 
 function headline_block() {
@@ -189,7 +189,7 @@ function headline_export($uri) {
 
     header("Content-Type: text/plain");
 
-    print "<?xml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
+    print "<?phpxml version=\"1.0\" encoding=\"ISO-8859-1\"?>\n";
     print "<rdf:RDF\n";
     print " xmlns:rdf=\"http://www.w3.org/1999/02/22-rdf-syntax-ns#\"\n";
     print " xmlns=\"http://my.netscape.com/rdf/simple/0.9/\">\n";

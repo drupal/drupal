@@ -1,4 +1,4 @@
-<?PHP
+<?php
 
  class Theme {
    var $link = "#000000";

@@ -1,4 +1,4 @@
-<?
+<?php
 
 $module = array("find" => "comment_find",
                 "admin" => "comment_admin");

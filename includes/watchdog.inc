@@ -1,4 +1,4 @@
-<?
+<?php
 
 $watchdog = array("comment" => array("0", $submission_rate["comment"]),
                   "diary"   => array("1", $submission_rate["diary"]),

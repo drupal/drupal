@@ -1,4 +1,4 @@
-<?
+<?php
 
 function module_iterate($function, $argument = "") {
   global $repository;

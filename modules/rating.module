@@ -1,4 +1,4 @@
-<?
+<?php
 
 $module = array("cron" => "rating_cron",
                 "help" => "rating_help",
@@ -46,7 +46,7 @@ function rating_help() {
   <P>The idea of (1) is that it favors comments that more people voted on, and thus whose rating is more likely to be accurate or justified.</P>
   <P>The latter (2) makes the user rating that comes out of the calulations temporary, based on users' most recent activity and responsive to their current state.  This is accomplished by taking each user's last 30 comments, or however many he or she posted in the last 60 days - whatever comes first.</P>
   <P>Additionally, users that posted one or more succesful stories in the last 60 days gain extra bonus points which will boost up their overall rating.</P>
- <?
+ <?php
 }
 
 function rating_list($limit) {

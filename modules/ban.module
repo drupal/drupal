@@ -1,4 +1,4 @@
-<?
+<?php
 
 $module = array("help" => "ban_help",
                 "admin" => "ban_admin");
@@ -25,7 +25,7 @@ function ban_help() {
    <LI>Email address bans <CODE>%@hotmail.com</CODE>, <CODE>%@altavista.%</CODE>, <CODE>%@usa.net</CODE>, etc.  Used to prevent users from using free email accounts, which might be used to cause trouble.</LI>
    <LI>Username bans <CODE>root</CODE>, <CODE>webmaster</CODE>, <CODE>admin%</CODE>, etc.  Used to prevent administrator impersonators.</LI>
   </UL>
- <?
+ <?php
 }
 
 function ban_admin_new($mask, $category, $reason) {

@@ -1,4 +1,4 @@
-<?
+<?php
 
 $module = array("help" => "affiliate_help",
                 "block" => "affiliate_block",
@@ -7,7 +7,7 @@ $module = array("help" => "affiliate_help",
 function affiliate_help() {
  ?>
   <P>This is a small module to manage related and/or affiliate sites.  The module exports two different blocks with links to the affiliate sites.</P>
- <?
+ <?php
 }
 
 function affiliate_block() {

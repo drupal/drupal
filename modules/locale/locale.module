@@ -1,4 +1,4 @@
-<?
+<?php
 
 $module = array("help" => "locale_help",
                 "admin" => "locale_admin",
@@ -25,7 +25,7 @@ function locale_help() {
     mysql> ALTER TABLE locales ADD nl TEXT DEFAULT '' NOT NULL;
     mysql> ALTER TABLE locales ADD fr TEXT DEFAULT '' NOT NULL;
   </PRE>
- <?
+ <?php
 }
 
 function locale_delete($id) {

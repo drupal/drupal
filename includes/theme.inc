@@ -1,4 +1,4 @@
-<?
+<?php
 
 function theme_init() {
   global $user, $themes;

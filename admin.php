@@ -1,4 +1,4 @@
-<?
+<?php
 
 include_once "includes/common.inc";
 
@@ -17,7 +17,7 @@ function admin_page($mod) {
  ?>
   <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
   <HTML>
-   <HEAD><TITLE><? echo $site_name; ?> administration</TITLE></HEAD>
+   <HEAD><TITLE><?php echo $site_name; ?> administration</TITLE></HEAD>
    <STYLE>
     body { font-family: helvetica, arial; }
     h1   { font-size: 18pt; font-weight: bold; color: #990000; }
@@ -28,21 +28,21 @@ function admin_page($mod) {
    </STYLE>
    <BODY BGCOLOR="#FFFFFF" LINK="#005599" VLINK="#004499" ALINK="#FF0000">
     <H1>Administration</H1>
- <?
+ <?php
 
   ksort($repository);
   module_iterate("module");
 
  ?>
-    <HR><? echo $menu; ?><A HREF="">home</A><HR>
- <?
+    <HR><?php echo $menu; ?><A HREF="">home</A><HR>
+ <?php
 
   if (user_access($user, $mod)) module_execute($mod, "admin");
 
  ?>
   </BODY>
  </HTML>
- <?
+ <?php
 }
 
 admin_page($mod);

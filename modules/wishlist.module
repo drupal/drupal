@@ -1,4 +1,4 @@
-<?
+<?php
 
 $module = array("page" => "wishlist_page",
                 "help" => "wishlist_help");
@@ -6,7 +6,7 @@ $module = array("page" => "wishlist_page",
 function wishlist_page() {
  ?>
   <H1>Wishlist</H1>
-  <SMALL><I>$Id: wishlist.module,v 1.13 2001/01/26 13:38:45 dries Exp $</I></SMALL>
+  <SMALL><I>$Id: wishlist.module,v 1.14 2001/03/10 11:07:51 dries Exp $</I></SMALL>
 
    <H3>Users</H3>
     <UL>
@@ -60,7 +60,7 @@ function wishlist_page() {
      <LI>create a theme with black background - darker theme</LI>
      <LI>try to get existing themes HTML validated</LI>
     </UL>
- <?
+ <?php
 }
 
 function wishlist_help() {

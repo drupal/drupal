@@ -1,4 +1,4 @@
-<?
+<?php
 
 $module = array("page" => "faq_page",
                 "admin" => "faq_admin");

@@ -1,4 +1,4 @@
-<?
+<?php
 
 $module = array("block" => "drupal_block",
                 "admin" => "drupal_admin");
