@@ -101,4 +101,65 @@ function calendar_block() {
   return $block;
 }
 
+function calendar_link($type) {
+  if ($type == "page" && user_access("access content")) {
+    $links[] = "<a href=\"module.php?mod=calendar\">archives</a>";
+  }
+
+  return $links ? $links : array();
+}
+
+function calendar_page() {
+  global $date, $theme, $op, $month, $year, $meta;
+
+  $theme->header();
+  
+  switch ($op) {
+    case t("Show"):
+      global $edit;
+      $date = mktime(0, 0, 0, $edit[month], $edit[day], $edit[year]);
+      // Fall though
+    default:
+      global $edit;
+      $years = array(2001 => 2001, 2002 => 2002, 2003 => 2003, 2004 => 2004, 2005 => 2005);
+      $months = array("-", t("January"), t("February"), t("March"), t("April"), t("May"), t("June"), t("July"), t("August"), t("September"), t("October"), t("November"), t("December"));
+      for ($i = 1; $i <= 31; $i++) $days[$i] = $i;
+      for ($i = 0; $i <= 23; $i++) $hours[$i] = $i < 10 ? "0$i" : $i;
+      for ($i = 0; $i <= 59; $i++) $minutes[$i] = $i < 10 ? "0$i" : $i;
+      
+      if ($edit[start]) {
+        $edit[year] = date("Y", $edit[start]);
+        $edit[month] = date("m", $edit[start]);
+        $edit[day] = date("d", $edit[start]);
+      };
+      
+      $start = str_replace("<b>:</b><br />", " ", form_select("", "year", ($edit[year] ? $edit[year] : date("Y")), $years) . form_select("", "month", ($edit[month] ? $edit[month] : date("m")), $months) . form_select("", "day", ($edit[day] ? $edit[day] : date("d")), $days) . form_submit(t("Show")));
+      $start = str_replace("<p>", "", $start);
+      $start = str_replace("</p>\n", " ", $start);
+      $start = str_replace("<option value=\"0\">-</option>", "", $start);
+
+      $form = $start;
+
+      $theme->box(t("Archives"), form($form));
+      
+      if (user_access("access content")) {
+        // Fetch event nodes for the selected date, or current date if none selected.
+        $result = db_query("SELECT nid FROM node WHERE status = '1' AND created > ". ($date > 0 ? check_input($date) : time()) ." ORDER BY created LIMIT 30");
+        if($result){
+          while ($nid = db_fetch_object($result)) {
+            node_view(node_load(array("nid" => $nid->nid)), 1);
+          }
+        }
+        else {
+          $output .= t("Your search yielded no result.");
+        }
+      }
+      else {
+        $theme->box(t("Access denied"), message_access());
+      }
+  }
+
+  $theme->footer();
+}
+
 ?>

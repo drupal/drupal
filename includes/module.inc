@@ -29,8 +29,8 @@ function module_list() {
       while ($file = readdir($handle)) {
         if (".module" == substr($file, -7)) {
           $filename = substr($file, 0, -7);
-          include "modules/$filename.module";
           $list[$filename] = $filename;
+          include "modules/$filename.module";
         }
       }
       closedir($handle);
