@@ -14,9 +14,12 @@ Drupal x.x.x, xxxx-xx-xx
 - usability:
     * added breadcrumb navigation to all pages.
     * made it possible to add context-sensitive help to all pages.
-    * grouped form elements using '<fieldset>' and '<legend>' tags.
     * replaced drop-down menus by radio buttons where appropriate.
     * removed the 'magic_quotes_gpc = 0' requirement.
+- accessibility:
+    * made themes degrade gracefully in absence of CSS.
+    * grouped form elements using '<fieldset>' and '<legend>' tags.
+    * added '<label>' tags to form elements.
 - documentation:
     * added PHPDoc/Doxygen comments.
 

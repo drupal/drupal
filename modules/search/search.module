@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.64 2003/11/23 10:41:03 dries Exp $
+// $Id: search.module,v 1.65 2003/11/24 22:46:03 dries Exp $
 
 function search_help($section = "admin/help#search") {
   $output = "";
@@ -64,7 +64,6 @@ function search_settings() {
 
 /**
  * search engine administration actions
- *
  */
 function search_admin() {
   $op = $_POST["op"];
@@ -90,8 +89,7 @@ function search_admin() {
 
 /**
  * perform a regularly run action across all modules that have the
- * <module>_update_index function in them.
- *
+ * <i>module</i>_update_index function in them.
  */
 function search_cron() {
   foreach (module_list() as $module) {
@@ -105,15 +103,16 @@ function search_cron() {
 }
 
 /**
- * Perform a search on a word(s)
+ * Perform a search on a word(s).
  *
- * Search function called by each node that supports the indexed search
+ * Search function called by each node that supports the indexed search.
  *
- * @param $search_array  an array as returned from <module>_search
- *                       of type array("keys" => ...,
- *                       "type" => ..., "select" => ...)
- *                       see node_search in node.module for an
- *                       explanation of array items
+ * @param $search_array  an array as returned from <i>module</i>_search
+ *   of type array("keys" => ..., "type" => ..., "select" => ...)
+ * @see   node_search for an explanation of array items
+ *
+ * @return  array of search results, each element being an array indexed with
+ *   "count", "title", "link", "user" (name), "date", "keywords"
  */
 function do_search($search_array) {
 
@@ -225,11 +224,9 @@ function do_search($search_array) {
 /**
  * Update the search_index table
  *
- * @param $search_array  an array as returned from <module>_update_index
- *                       of type array("last_update" => ...,
- *                       "node_type" => ..., "select" => ...)
- *                       see node_update_index in node.module for an
- *                       explanation of array items
+ * @param $search_array  an array as returned from <i>module</i>_update_index
+ *   of type array("last_update" => ..., "node_type" => ..., "select" => ...)
+ * @see   node_update_index for an explanation of array items
  */
 function update_index($search_array) {
   $last_update = variable_get($search_array["last_update"], 1);

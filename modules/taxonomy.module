@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.78 2003/11/20 21:51:23 dries Exp $
+// $Id: taxonomy.module,v 1.79 2003/11/24 22:46:03 dries Exp $
 
 function taxonomy_feed($taxonomy) {
   global $id, $type;
@@ -538,12 +538,12 @@ function _taxonomy_term_children($tid) {
 }
 
 /**
- * Try to map a string to existing vocabularies
+ * Try to map a string to existing vocabularies.
  * Provide case insensitive and trimmed map so as to
  * maximize likelihood of successful mapping.
  *
- * @param   string  $name  Name of the vocabulary to search
- * @return  array   array of matching vocabularies, as objects
+ * @param   $name  Name of the vocabulary to search
+ * @return  array of matching vocabularies, as objects
  */
 function taxonomy_get_vocabulary_by_name($name) {
   // LOWER is ANSI SQL-92
@@ -561,8 +561,8 @@ function taxonomy_get_vocabulary_by_name($name) {
  * Provide case insensitive and trimmed map so as to
  * maximize likelihood of successful mapping.
  *
- * @param   string  $name  Name of the term to search
- * @return  array   array of matching terms, as objects
+ * @param   name  Name of the term to search
+ * @return  rray of matching terms, as objects
  */
 function taxonomy_get_term_by_name($name) {
   // LOWER is ANSI SQL-92

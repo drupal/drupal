@@ -1,5 +1,5 @@
 <?php
-// $Id: block.module,v 1.86 2003/11/20 21:51:23 dries Exp $
+// $Id: block.module,v 1.87 2003/11/24 22:46:03 dries Exp $
 
 function block_help($section = "admin/help#block") {
   $output = "";
@@ -103,9 +103,9 @@ function block_admin_save($edit) {
 /**
  * update blocks db table with blocks currently exported by modules
  *
- * @param   array   $order_by   php array_multisort() style sort ordering, eg. "weight", SORT_ASC, SORT_STRING. see {@link http://www.php.net/manual/en/function.array-multisort.php}
- * @return  array   blocks currently exported by modules, sorted by $order_by
- * @access  private
+ * @param   $order_by   php <a href="http://www.php.net/manual/en/function.array-multisort.php">array_multisort()</a> style sort ordering, eg. "weight", SORT_ASC, SORT_STRING.
+ *
+ * @return  blocks currently exported by modules, sorted by $order_by
  */
 function _block_rehash($order_by = array("weight")) {
   $result = db_query("SELECT * FROM {blocks} ");

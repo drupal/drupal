@@ -11,7 +11,7 @@
   @{
 **/
 
-/* $Id: theme.inc,v 1.162 2003/11/24 22:39:48 dries Exp $ */
+/* $Id: theme.inc,v 1.163 2003/11/24 22:46:03 dries Exp $ */
 
 /**
   Returns the theme header.
@@ -124,29 +124,6 @@ function theme_node($node, $main) {
     $output .= "<br />[ ". print theme("links", $links) ." ]";
   }
   $output .= "<hr />";
-
-  return $output;
-}
-
-function _theme_table_cell($cell, $header = 0) {
-  if (is_array($cell)) {
-    $data = $cell["data"];
-    foreach ($cell as $key => $value) {
-      if ($key != "data")  {
-        $attributes .= " $key=\"$value\"";
-      }
-    }
-  }
-  else {
-    $data = $cell;
-  }
-
-  if ($header) {
-    $output = "<th$attributes>$data</th>";
-  }
-  else {
-    $output = "<td$attributes>$data</td>";
-  }
 
   return $output;
 }
@@ -331,7 +308,7 @@ function theme_head($main = 0) {
 
 /**
   Execute hook _footer() which is run at the end of the page right
-  before the </body> tag.
+  before the \</body> tag.
 
   @param $main (optional)
 
@@ -381,109 +358,28 @@ function theme_blocks($region) {
   }
   return $output;
 }
+/**  @} End of defgroup themeable **/
 
-/**
-  Hook Help - returns theme specific help and information.
-
-  @param section defines the \a section of the help to be returned.
-
-  @return a string containing the help output.
-**/
-function theme_help($section) {
-  $ouptout = "";
-
-  switch ($section) {
-    case 'admin/system/themes#description':
-      $output = t("The base theme");
-      break;
-  }
-  return $output;
-}
-
-/**
-  Provides a list of currently available themes.
-
-  @param $refresh
-
-  @return an array of the currently available themes.
-**/
-function list_themes($refresh = 0) {
-  static $list;
-
-  if ($refresh) {
-    unset($list);
-  }
-
-  if (!$list) {
-    $list = array();
-    $result = db_query("SELECT * FROM {system} where type = 'theme' AND status = '1' ORDER BY name");
-    while ($theme = db_fetch_object($result)) {
-      if (file_exists($theme->filename)) {
-        $list[$theme->name] = $theme;
+function _theme_table_cell($cell, $header = 0) {
+  if (is_array($cell)) {
+    $data = $cell["data"];
+    foreach ($cell as $key => $value) {
+      if ($key != "data")  {
+        $attributes .= " $key=\"$value\"";
       }
     }
   }
-
-  return $list;
-}
-
-/**
-  Initialized the theme system.
-
-  @return the name of the currently selected theme.
-**/
-function init_theme() {
-  global $user;
-
-  $themes = list_themes();
-  $name = $user->theme ? $user->theme : variable_get("theme_default", 0);
-
-  $theme->path = "";
-  $theme->name = "";
-
-  if (is_object($themes[$name])) {
-    include_once($themes[$name]->filename);
-    $theme->path = dirname($themes[$name]->filename);
-    $theme->name = $name;
+  else {
+    $data = $cell;
   }
 
-  return $theme;
-}
-
-/**
-  Returns the path to the currently selected theme.
-
-  @return the path to the the currently selected theme.
-**/
-function path_to_theme() {
-  global $theme;
-  return $theme->path;
-}
-
-/**
-  External interface of the theme system to all other modules, and core files.
-
-  All requests for themed functions must go through this function. It examines
-  the request and routes it to the appropriate theme function. If the current
-  theme does not implement the requested function, then the base theme function
-  is called.
-  Example: \verbatim $header_text = theme("header"); \endverbatim
-
-  @return the path to the the currently selected theme.
-**/
-function theme() {
-  global $theme;
-
-  $args = func_get_args();
-  $function = array_shift($args);
-
-  if (($theme->name != "") && (function_exists($theme->name ."_". $function))) {
-    return call_user_func_array($theme->name ."_". $function, $args);
+  if ($header) {
+    $output = "<th$attributes>$data</th>";
   }
-  elseif (function_exists("theme_". $function)){
-    return call_user_func_array("theme_". $function, $args);
+  else {
+    $output = "<td$attributes>$data</td>";
   }
-}
 
-/**  @} End of defgroup theme_system **/
+  return $output;
+}
 ?>

@@ -1,8 +1,10 @@
 <?php
-// $Id: common.inc,v 1.268 2003/11/23 10:41:03 dries Exp $
+// $Id: common.inc,v 1.269 2003/11/24 22:46:03 dries Exp $
 
 /**
+ * @name drupal_title
  * Functions to get and set the title of the current page.
+ * @{
  */
 function drupal_set_title($title = NULL) {
   static $stored_title;
@@ -22,12 +24,14 @@ function drupal_get_title() {
 
   return $title;
 }
-
+// @}
 
 /**
+ * @name drupal_breadcrumb
  * Functions to get and set the breadcrumb trail of the current page. The
  * breadcrumb trail is represented as an array of links, starting with
  * "home" and proceeding up to but not including the current page.
+ * @{
  */
 function drupal_set_breadcrumb($breadcrumb = NULL) {
   static $stored_breadcrumb;
@@ -48,7 +52,7 @@ function drupal_get_breadcrumb() {
 
   return $breadcrumb;
 }
-
+// @}
 
 /**
  * Build the alias/path array
@@ -249,9 +253,9 @@ function valid_url($url) {
 /**
  * Format a single result entry of a search query:
  *
- * @param $item  a single search result as returned by <module>_search of type
- *               array("count" => ..., "link" => ..., "title" => ...,
- *               "user" => ..., "date" => ..., "keywords" => ...)
+ * @param $item  a single search result as returned by <i>module</i>_search of
+ *   type array("count" => ..., "link" => ..., "title" => ..., "user" => ...,
+ *              "date" => ..., "keywords" => ...)
  * @param $type  module type of this item
  */
 function search_item($item, $type) {
@@ -344,7 +348,7 @@ function search_data($keys = NULL) {
  * @param $type    If set, search only nodes of this type.
  *                 Otherwise, search all types.
  * @param $action  Form action. Defaults to 'site.com/search'.
- * @param $query   Query string. Defaults to global $keys.
+ * @param $keys    Query string. Defaults to global $keys.
  * @param $options != 0: Render additional form fields/text
  *                 ("Restrict search to", help text, etc).
  */
