@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.281 2003/10/22 13:03:32 dries Exp $
+// $Id: node.module,v 1.282 2003/10/22 20:20:35 dries Exp $
 
 function node_help($section = "admin/help#node") {
   global $mod;
@@ -627,12 +627,12 @@ function node_admin_nodes() {
   ** Handle operations:
   */
 
-  if (empty($_SESSION["node-overview-filter"])) {
-    $_SESSION["node-overview-filter"] = 0;
+  if (empty($_SESSION["node_overview_filter"])) {
+    $_SESSION["node_overview_filter"] = 0;
   }
 
   if (isset($_POST["edit"]["filter"])) {
-    $_SESSION["node-overview-filter"] = $_POST["edit"]["filter"];
+    $_SESSION["node_overview_filter"] = $_POST["edit"]["filter"];
   }
 
   if (isset($_POST["edit"]["operation"])) {
@@ -646,7 +646,7 @@ function node_admin_nodes() {
     $output = status(t("the update has been performed."));
   }
 
-  $filter = $_SESSION["node-overview-filter"];
+  $filter = $_SESSION["node_overview_filter"];
 
   /*
   ** Render filter form:

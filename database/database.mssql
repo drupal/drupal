@@ -214,21 +214,21 @@ CREATE TABLE [dbo].[page] (
 ) ON [PRIMARY]
 GO
 
-CREATE TABLE [dbo].[path] (
+CREATE TABLE [dbo].[url_alias] (
   [pid] numeric (10, 0) NOT NULL,
   [dst] [varchar] (128) NOT NULL,
   [src] [varchar] (128) NOT NULL
 ) ON [PRIMARY]
 GO
 
-ALTER TABLE [dbo].[path] WITH NOCHECK ADD
-  CONSTRAINT [DF_[path_pid] DEFAULT (0) FOR [pid],
-  CONSTRAINT [DF_path_dst] DEFAULT ('') FOR [dst],
-  CONSTRAINT [DF_path_src] DEFAULT ('') FOR [src]
+ALTER TABLE [dbo].[url_alias] WITH NOCHECK ADD
+  CONSTRAINT [DF_[url_alias_pid] DEFAULT (0) FOR [pid],
+  CONSTRAINT [DF_url_alias_dst] DEFAULT ('') FOR [dst],
+  CONSTRAINT [DF_url_alias_src] DEFAULT ('') FOR [src]
 GO
 
-CREATE INDEX [path_src_idx] ON [dbo].[path]([src]) ON [PRIMARY]
-CREATE INDEX path_dst_idx ON path(dst);
+CREATE INDEX [url_alias_src_idx] ON [dbo].[url_alias]([src]) ON [PRIMARY]
+CREATE INDEX url_alias_dst_idx ON url_alias(dst);
 GO
 
 CREATE TABLE [dbo].[permission] (
@@ -298,7 +298,7 @@ CREATE TABLE [dbo].[site] (
 ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
 GO
 
-CREATE TABLE [dbo].[statistics] (
+CREATE TABLE [dbo].[node_counter] (
   [nid] [int] NOT NULL ,
   [totalcount] [numeric](20, 0) NOT NULL ,
   [daycount] [numeric](4, 0) NOT NULL ,
@@ -500,7 +500,7 @@ INSERT INTO system VALUES ('modules/story.module','story','module','',1);
 INSERT INTO system VALUES ('modules/taxonomy.module','taxonomy','module','',1);
 INSERT INTO system VALUES ('themes/marvin/marvin.theme','marvin','theme','Internet explorer, Netscape, Opera',1);
 
-INSERT INTO variable(name,value) VALUES('update_start', 's:10:"2002-05-15";');
+INSERT INTO variable(name,value) VALUES('update_start', 's:10:"2003-10-22";');
 INSERT INTO variable(name,value) VALUES('theme_default','s:6:"marvin";');
 
 INSERT INTO users(uid,name,mail,rid) VALUES(0,'Anonymous','root@localhost','1');

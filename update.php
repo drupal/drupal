@@ -1,5 +1,5 @@
 <?php
-// $Id: update.php,v 1.113 2003/10/21 07:59:04 dries Exp $
+// $Id: update.php,v 1.114 2003/10/22 20:20:32 dries Exp $
 /*
 ** USAGE:
 **
@@ -57,7 +57,8 @@ $mysql_updates = array(
   "2003-09-29" => "update_65",
   "2003-09-30" => "update_66",
   "2003-10-11" => "update_67",
-  "2003-10-20" => "update_68"
+  "2003-10-20" => "update_68",
+  "2003-10-22" => "update_69"
 );
 
 function update_32() {
@@ -360,10 +361,6 @@ function update_60() {
 
 function update_61() {
   if ($GLOBALS["db_type"] == "pgsql") {
-    /**
-    * Overkill.. the user cant get here without having this table
-    */
-
     update_sql("CREATE TABLE {sessions} (
       uid integer NOT NULL,
       sid varchar(32) NOT NULL default '',
@@ -458,7 +455,7 @@ function update_64() {
 }
 
 function update_65() {
-  /* PG SQL ONLY UPDATE */
+  // PostgreSQL-only update.
   if ($GLOBALS["db_type"] == "pgsql") {
     update_sql("CREATE FUNCTION \"rand\"() RETURNS float AS '
       BEGIN
@@ -470,7 +467,7 @@ function update_65() {
 function update_66() {
   if ($GLOBALS["db_type"] == "pgsql") {
     update_sql("CREATE TABLE {path} (
-      pid integer NOT NULL default '0',
+      pid serial,
       src varchar(128) NOT NULL default '',
       dst varchar(128) NOT NULL default '',
       PRIMARY KEY  (pid)
@@ -481,9 +478,6 @@ function update_66() {
     while ($node = db_fetch_object($result)) {
       update_sql("INSERT INTO {path} (src, dst) VALUES ('node/view/$node->nid', '". check_query($node->path) ."')");
     }
-
-    /* most versions of pgsql are incapable of dropping columns */
-
   }
   else {
     update_sql("CREATE TABLE {path} (
@@ -505,13 +499,45 @@ function update_66() {
 }
 
 function update_67() {
-  update_sql("ALTER TABLE users DROP homepage");
+  if ($GLOBALS["db_type"] == "pgsql") {
+    // Taking no action.  PostgreSQL is not always capable of dropping columns.
+  }
+  else {
+    update_sql("ALTER TABLE users DROP homepage");
+  }
 }
 
 function update_68() {
-  $max = db_result(db_query("SELECT MAX(aid) FROM {access};"));
-  update_sql("INSERT INTO {sequences} (name, id) VALUES ('access_aid', '$max')");
-  update_sql("ALTER TABLE access CHANGE aid aid tinyint(10) NOT NULL ");
+  if ($GLOBALS["db_type"] == "pgsql") {
+    // Unneccesary. The PostgreSQL port was already using a sequence.
+  }
+  else {
+    $max = db_result(db_query("SELECT MAX(aid) FROM {access};"));
+    update_sql("INSERT INTO {sequences} (name, id) VALUES ('access_aid', '$max')");
+    update_sql("ALTER TABLE access CHANGE aid aid tinyint(10) NOT NULL ");
+  }
+}
+
+function update_69() {
+  if ($GLOBALS["db_type"] == "pgsql") {
+    /* Rename the statistics table to node_counter */
+    update_sql("ALTER TABLE {statistics} RENAME TO {node_counter}");
+    update_sql("DROP INDEX  {statistics}_totalcount_idx");
+    update_sql("DROP INDEX  {statistics}_daycount_idx");
+    update_sql("DROP INDEX  {statistics}_timestamp_idx");
+    update_sql("CREATE INDEX {node_counter}_totalcount_idx ON {node_counter}(totalcount)");
+    update_sql("CREATE INDEX {node_counter}_daycount_idx ON {node_counter}(daycount)");
+    update_sql("CREATE INDEX {node_counter}_timestamp_idx ON {node_counter}(timestamp)");
+
+    /* Rename the path table to url_alias */
+    update_sql("ALTER TABLE {path} RENAME TO {url_alias}");
+    update_sql("ALTER TABLE {path}_pid_seq RENAME TO {url_alias}_pid_seq");
+  }
+  else {
+    update_sql("ALTER TABLE {statistics} RENAME TO {node_counter}");
+    update_sql("ALTER TABLE {path} RENAME TO {url_alias}");
+    update_sql("UPDATE {sequences} set name = '{url_alias}_pid' where name = '{path}_pid'");
+  }
 }
 
 /*

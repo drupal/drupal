@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.259 2003/10/20 07:47:18 dries Exp $
+// $Id: common.inc,v 1.260 2003/10/22 20:20:34 dries Exp $
 
 function conf_init() {
 
@@ -39,7 +39,7 @@ function drupal_get_path_map($action = "") {
   }
 
   if (!$cache) {
-    $result = db_query("SELECT * FROM {path}");
+    $result = db_query("SELECT * FROM {url_alias}");
     while ($data = db_fetch_object($result)) {
       $map[$data->dst] = $data->src;
     }
