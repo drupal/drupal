@@ -227,20 +227,19 @@ function user_validate_picture($file, &$edit, $user) {
 
   // Check that uploaded file is an image, with a maximum file size
   // and maximum height/width.
-  $extension = strtolower(strrchr($file->filename, '.'));
-  $size = @getimagesize($file->filepath);
+  $info = image_get_info($file->filepath);
   list($maxwidth, $maxheight) = explode('x', variable_get('user_picture_dimensions', '85x85'));
 
-  if ((!in_array($size[2], array(1, 2, 3))) || (!in_array($extension, array('.gif', '.jpg', '.png', '.jpeg')))) {
+  if (!$info || !$info['extension']) {
     form_set_error('picture', t('The uploaded file was not an image.'));
   }
-  else if ($file->size > (variable_get('user_picture_file_size', '30') * 1000)) {
-    form_set_error('picture', t('The uploaded image is too large; the maximum file size is %size kB.', array('%size' => variable_get('user_picture_file_size', '30'))));
-  }
-  else if ($size[0] > $maxwidth || $size[1] > $maxheight) {
+  else if (!image_scale($file->filepath, $file->filepath, $maxwidth, $maxheight)) {
     form_set_error('picture', t('The uploaded image is too large; the maximum dimensions are %dimensions pixels.', array('%dimensions' => variable_get('user_picture_dimensions', '85x85'))));
   }
-  else if ($file = file_save_upload('picture', variable_get('user_picture_path', 'pictures') .'/picture-'. $user->uid . $extension, 1)) {
+  else if (filesize($file->filepath) > (variable_get('user_picture_file_size', '30') * 1000)) {
+    form_set_error('picture', t('The uploaded image is too large; the maximum file size is %size kB.', array('%size' => variable_get('user_picture_file_size', '30'))));
+  }
+  else if ($file = file_save_upload('picture', variable_get('user_picture_path', 'pictures') .'/picture-'. $user->uid . '.' . $info['extension'], 1)) {
     $edit['picture'] = $file->filepath;
   }
   else {
@@ -403,26 +402,8 @@ function user_perm() {
  */
 function user_file_download($file) {
   if (strpos($file, variable_get('user_picture_path', 'pictures') .'/picture-') === 0) {
-    list($width, $height, $type, $attr) = @getimagesize(file_create_path($file));
-    $types = array(
-      IMAGETYPE_GIF => 'image/gif',
-      IMAGETYPE_JPEG => 'image/jpeg',
-      IMAGETYPE_PNG => 'image/png',
-      IMAGETYPE_SWF => 'application/x-shockwave-flash',
-      IMAGETYPE_PSD => 'image/psd',
-      IMAGETYPE_BMP => 'image/bmp',
-      IMAGETYPE_TIFF_II => 'image/tiff',
-      IMAGETYPE_TIFF_MM  => 'image/tiff',
-      IMAGETYPE_JPC => 'application/octet-stream',
-      IMAGETYPE_JP2 => 'image/jp2',
-      IMAGETYPE_JPX => 'application/octet-stream',
-      IMAGETYPE_JB2 => 'application/octet-stream',
-      IMAGETYPE_SWC => 'application/x-shockwave-flash',
-      IMAGETYPE_IFF => 'image/iff',
-      IMAGETYPE_WBMP => 'image/vnd.wap.wbmp',
-      IMAGETYPE_XBM => 'image/xbm'
-    );
-    return array('Content-type: '. $types[$type]);
+    $info = image_get_info(file_create_path($file));
+    return array('Content-type: '. $info['mime_type']);
   }
 }
 

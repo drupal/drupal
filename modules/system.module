@@ -239,6 +239,17 @@ function system_view_general() {
   $group .= form_radios(t('Download method'), 'file_downloads', variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC), array(FILE_DOWNLOADS_PUBLIC => t('Public - files are available using http directly.'), FILE_DOWNLOADS_PRIVATE => t('Private - files are transferred by Drupal.')), t('If you want any sort of access control on the downloading of files, this needs to be set to <em>private</em>. You can change this at any time, however all download URLs will change and there may be unexpected problems so it is not recommended.'));
   $output .= form_group(t('File system settings'), $group);
 
+  // image handling:
+  $group = '';
+  $toolkits_available = image_get_available_toolkits();
+  if (count($toolkits_available) > 1) {
+    $group .= form_radios(t('Select an image processing toolkit'), 'image_toolkit', variable_get('image_toolkit', image_get_toolkit()), $toolkits_available);
+  }
+  $group .= image_toolkit_invoke('settings');
+  if ($group) {
+    $output .= form_group(t('Image handling'), $group);
+  }
+
   // date settings:
   $zones = _system_zonelist();
 
@@ -612,7 +623,7 @@ function system_theme_settings() {
 
   // Check for a new uploaded logo, and use that instead.
   if ($file = file_check_upload('logo_upload')) {
-    if (in_array($file->filemime, array('image/jpeg', 'image/gif', 'image/png'))) {
+    if ($info = image_get_info($file->filepath)) {
       $parts = pathinfo($file->filename);
       $filename = ($key) ? str_replace('/', '_', $key) . '_logo.' . $parts['extension'] : 'logo.' . $parts['extension'];
 

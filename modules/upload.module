@@ -63,7 +63,8 @@ function upload_menu($may_cache) {
 function upload_admin() {
   system_settings_save();
 
-  $group .= form_textfield(t('Maximum total file size'), 'upload_maxsize_total', variable_get('upload_maxsize_total', 0), 5, 5, t('The maximum size of a file a user can upload in megabytes. Enter 0 for unlimited.'));
+  $group .= form_textfield(t('Maximum total file size'), 'upload_maxsize_total', variable_get('upload_maxsize_total', 0), 10, 10, t('The maximum size of a file a user can upload in megabytes. Enter 0 for unlimited.'));
+  $group .= form_textfield(t('Maximum resolution for uploaded images'), 'upload_max_resolution', variable_get('upload_max_resolution', 0), 10, 10, t('The maximum allowed image size expressed as WIDTHxHEIGHT (e.g. 640x480). Set to 0 for no restriction.'));
 
   $output = form_group(t('General settings'), $group);
 
@@ -138,7 +139,9 @@ function upload_nodeapi(&$node, $op, $arg) {
       if (($file = file_check_upload('upload')) && user_access('upload files')) {
         global $user;
 
-        $max_size = variable_get("upload_maxsize_total", 0);
+        $file = _upload_image($file);
+
+        $maxsize = variable_get("upload_maxsize_total", 0);
         $total_size = upload_count_size() + $filesize;
         $total_usersize = upload_count_size($user->uid) + $filesize;
 
@@ -369,6 +372,27 @@ function upload_load($node) {
   }
 
   return $files;
+}
+
+/**
+ * Check an upload, if it is an image, make sure it fits within the
+ * maximum dimensions allowed.
+ */
+function _upload_image($file) {
+  $info = image_get_info($file->filepath);
+
+  if ($info) {
+    list($width, $height) = explode('x', variable_get('upload_max_resolution', 0));
+    if ($width && $height) {
+      $result = image_scale($file->filepath, $file->filepath, $width, $height);
+      if ($result) {
+        $file->filesize = filesize($file->filepath);
+        drupal_set_message(t('Your image was resized to fit within the maximum allowed resolution of %resolution pixels.', array('%resolution' => variable_get('upload_max_resolution', 0))));
+      }
+    }
+  }
+
+  return $file;
 }
 
 ?>
