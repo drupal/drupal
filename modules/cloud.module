@@ -99,9 +99,10 @@ function cloud_display() {
   return $output;
 }
 
-function cloud_list() {
-  $result = db_query("SELECT * FROM site ORDER BY timestamp DESC LIMIT 100");
+function cloud_list($limit = 10) {
+  $result = db_query("SELECT * FROM site ORDER BY timestamp DESC LIMIT $limit");
 
+  $hour = -1;
   while ($site = db_fetch_object($result)) {
     if ($hour != floor((time() - $site->timestamp) / 3600)) {
       $hour = floor((time() - $site->timestamp) / 3600);
@@ -117,14 +118,14 @@ function cloud_page() {
 
   if (user_access("access site cloud")) {
     $theme->header();
-    $theme->box(t("Updated sites"), cloud_list());
+    $theme->box(t("Updated sites"), cloud_list(100));
     $theme->footer();
   }
 }
 
 function cloud_block() {
   $block[0]["subject"] = t("Sites");
-  $block[0]["content"] = cloud_list();
+  $block[0]["content"] = cloud_list(20);
   $block[0]["info"] = t("Sites");
   return $block;
 }
