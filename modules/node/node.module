@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.362 2004/06/22 20:24:27 dries Exp $
+// $Id: node.module,v 1.363 2004/07/02 18:46:42 dries Exp $
 
 define('NODE_NEW_LIMIT', time() - 30 * 24 * 60 * 60);
 
@@ -620,7 +620,7 @@ function node_link($type, $node = 0, $main = 0) {
   $links = array();
 
   if ($type == 'node') {
-    if ($node->links) {
+    if (array_key_exists('links', $node)) {
       $links = $node->links;
     }
 

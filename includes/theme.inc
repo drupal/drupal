@@ -1,5 +1,5 @@
 <?php
-/* $Id: theme.inc,v 1.199 2004/06/21 20:05:37 dries Exp $ */
+/* $Id: theme.inc,v 1.200 2004/07/02 18:46:40 dries Exp $ */
 
 /**
  * @file
@@ -46,7 +46,7 @@ function init_theme() {
   ** list of enabled themes.
   */
 
-  $theme = $themes[$user->theme] ? $user->theme : variable_get("theme_default", 0);
+  $theme = $user->theme && $themes[$user->theme] ? $user->theme : variable_get("theme_default", 0);
 
   include_once($themes[$theme]->filename);
 
@@ -519,6 +519,8 @@ function theme_blocks($region) {
 /* @} */
 
 function _theme_table_cell($cell, $header = 0) {
+  $attributes = '';
+
   if (is_array($cell)) {
     $data = $cell['data'];
     foreach ($cell as $key => $value) {

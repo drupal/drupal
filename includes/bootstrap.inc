@@ -1,5 +1,5 @@
 <?php
-/* $Id: bootstrap.inc,v 1.14 2004/06/30 07:26:02 dries Exp $ */
+/* $Id: bootstrap.inc,v 1.15 2004/07/02 18:46:40 dries Exp $ */
 
 function conf_init() {
 
@@ -204,7 +204,9 @@ function arg($index) {
     $arguments = explode('/', $_GET['q']);
   }
 
-  return $arguments[$index];
+  if (array_key_exists($index, $arguments)) {
+    return $arguments[$index];
+  }
 }
 
 function check_query($text) {

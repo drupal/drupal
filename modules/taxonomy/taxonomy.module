@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.124 2004/06/23 20:52:46 dries Exp $
+// $Id: taxonomy.module,v 1.125 2004/07/02 18:46:42 dries Exp $
 
 function taxonomy_feed($taxonomy) {
   global $id, $type;
@@ -38,7 +38,7 @@ function taxonomy_perm() {
 function taxonomy_link($type, $node = NULL) {
   if ($type == 'taxonomy terms' && $node != NULL) {
     $links = array();
-    if ($node->taxonomy) {
+    if (array_key_exists('taxonomy', $node)) {
       foreach ($node->taxonomy as $tid) {
         $term = taxonomy_get_term($tid);
         $links[] = l($term->name, "taxonomy/page/or/$term->tid", $term->description ? array ('title' => $term->description) : array());

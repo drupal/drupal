@@ -1,5 +1,5 @@
 <?php
-// $Id: help.module,v 1.33 2004/06/18 15:04:35 dries Exp $
+// $Id: help.module,v 1.34 2004/07/02 18:46:42 dries Exp $
 
 /**
  * Implementation of hook_menu().
@@ -47,10 +47,8 @@ function help_glossary() {
 function help_help($section) {
   switch ($section) {
     case 'admin/modules#description':
-      $output = t('Manages displaying online help.');
-      break;
+      return t('Manages displaying online help.');
   }
-  return $output;
 }
 
 /**
