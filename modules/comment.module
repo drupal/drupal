@@ -1319,7 +1319,7 @@ function comment_save_settings($mode, $order, $threshold, $comments_per_page) {
 function comment_num_all($nid) {
   static $cache;
 
-  if (empty($cache[$nid])) {
+  if (!isset($cache[$nid])) {
     $comment = db_fetch_object(db_query("SELECT COUNT(c.nid) AS number FROM node n LEFT JOIN comments c ON n.nid = c.nid WHERE n.nid = '%d' AND c.status = 0 GROUP BY n.nid", $nid));
     $cache[$nid] = $comment->number ? $comment->number : 0;
   }
@@ -1329,7 +1329,7 @@ function comment_num_all($nid) {
 function comment_num_replies($id) {
   static $cache;
 
-  if (empty($cache[$nid])) {
+  if (!isset($cache[$nid])) {
     $result = db_query("SELECT COUNT(cid) FROM comments WHERE pid = '%d' AND status = 0", $id);
     $cache[$nid] = $result ? db_result($result, 0) : 0;
   }
