@@ -29,15 +29,15 @@ function submission_vote($id, $vote, $comment) {
     // Update story table (if required):
     $result = db_query("SELECT * FROM stories WHERE id = $id");  
     if ($submission = db_fetch_object($result)) {
-      if ($submission->score >= section_post_threshold($submission->section)) {
+      if (section_post_threshold($submission->section) <= $submission->score) {
         db_query("UPDATE stories SET status = 2, timestamp = '". time() ."' WHERE id = $id");
         watchdog("message", "posted story '$submission->subject'");
       }
-      else if ($submission->score <= section_dump_threshold($submission->section)) {
+      else if (section_dump_threshold($submission->section) >= $submission->score) {
         db_query("UPDATE stories SET status = 0, timestamp = '". time() ."' WHERE id = $id");
         watchdog("message", "dumped story '$submission->subject'");
       }
-      else if ($submission->votes >= section_timout_threshold($submission->section)) {
+      else if (section_timout_threshold($submission->section) <= $submission->votes) {
         db_query("UPDATE stories SET status = 0, timestamp = '". time() ."' WHERE id = $id");
         watchdog("message", "expired story '$submission->subject'");
       }
