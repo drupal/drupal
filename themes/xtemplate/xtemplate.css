@@ -72,6 +72,10 @@ img {
   padding: 10px 10px 10px 10px;
   color: #fff;
 }
+#message a, #message a:visited {
+  color: #9cf;
+  font-weight:bold;
+}
 #main {
   margin: 10px 10px 10px 10px;
   padding: 15px 15px 0px 15px;
