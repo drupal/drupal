@@ -138,7 +138,7 @@ function locale_untranslated($language) {
   return $output;
 }
 
-function locale_filter() {
+function locale_seek() {
   global $edit, $languages, $REQUEST_URI;
   if (is_array($edit)) {
     if ($edit[status]) {
@@ -212,7 +212,7 @@ function locale_admin() {
         break;
       case "Search":
       case "search":
-        print locale_filter();
+        print locale_seek();
         break;
       case "Save translations":
         print locale_save(check_input($id), $edit);
