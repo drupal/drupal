@@ -1037,7 +1037,7 @@ function user_page() {
     case "edit":
       $output = user_edit($edit);
       $GLOBALS["theme"] = init_theme();
-      drupal_set_title(t("Edit user information"));
+      drupal_set_title(t("Edit account"));
       print theme("header");
       print $output;
       print theme("footer");

@@ -35,7 +35,7 @@ function queue_perm() {
 function queue_link($type) {
   if ($type == "system") {
     if (user_access("access submission queue")) {
-      menu("queue", t("view submissions"), "queue_page", 1);
+      menu("queue", t("submission queue"), "queue_page", 1);
     }
   }
 
@@ -116,7 +116,7 @@ function queue_overview() {
   }
   $output .= "</table>";
 
-  drupal_set_title(t("Moderation queue"));
+  drupal_set_title(t("Submission queue"));
   print theme("header");
   print $output;
   print theme("footer");
