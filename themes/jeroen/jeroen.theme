@@ -32,20 +32,36 @@
       </HEAD>
 
       <BODY TEXT="#202020" BGCOLOR="#FEFEFE" BACKGROUND="themes/jeroen/images/background.gif" ALINK="#000000" LINK="#000000" VLINK="#000000">
-        <TABLE WIDTH="770" ALIGN="left" BORDER="0" CELLPADDING="0" CELLSPACING="6">
+        <TABLE ALIGN="left" BORDER="0" CELLPADDING="0" CELLSPACING="6">
           <TR>
             <TD COLSPAN="2">
               <? if (rand(0,150) == 75) $img = "logo2.gif"; else $img = "logo.gif"; ?>
         <IMG SRC="themes/jeroen/images/<? echo $img; ?>" ALT="drop.org logo"><BR><BR>
             </TD>
+            <TD>
+<?
+              $this->box("Drop where?", "<TR>
+                                           <TD ALIGN=\"left\" VALIGN=\"top\">
+                                             <A HREF=\"index.php\">home</A><BR>
+                                             <A HREF=\"module.php?mod=faq\">faq</A><BR>
+                                             <A HREF=\"search.php\">search</A>
+                                           </TD>
+                                           <TD ALIGN=\"right\" VALIGN=\"top\">
+                                             <A HREF=\"module.php?mod=diary\">diary</A><BR>
+                                             <A HREF=\"submit.php\">submit news</A>
+                                             <A HREF=\"account.php\">account</A>
+                                          </TD>
+                                       </TR>");
+?>         
+            </TD>
           </TR>
           <TR>
-            <TD WIDTH="160" VALIGN="top" ALIGN="right">
+            <TD VALIGN="top" ALIGN="right">
               <?
                 theme_blocks("all", $this);
               ?>
             </TD>
-            <TD WIDTH="430" VALIGN="top" ALIGN="left">
+            <TD VALIGN="top" ALIGN="left">
 
 <?
     }
@@ -56,61 +72,45 @@
 
               <TABLE WIDTH="100%" CELLPADDING="0" CELLSPACING="0" BORDER="0">
                 <TR>
-                  <TD ALIGN="left" VALIGN="bottom" HEIGHT="20">
-                    <? if (rand(0,1) == 0) $img = "news1.gif"; else $img = "news3.gif"; ?>
-                    <IMG SRC="themes/jeroen/images/<? echo $img; ?>" WIDTH="20" HEIGHT="20" ALT="">
-                  </TD>
-                  <TD COLSPAN="3" ALIGN="center" VALIGN="center" HEIGHT="20" BACKGROUND="themes/jeroen/images/newsmiddle.gif">
+                  <TD ALIGN="left" VALIGN="bottom" HEIGHT="20" BACKGROUND="themes/jeroen/images/<? echo (rand(0, 1) ? "news1.gif" : "news3.gif"); ?>" WIDTH="20" HEIGHT="20" NOWRAP>&nbsp;</TD>
+                  <TD COLSPAN="2" ALIGN="center" VALIGN="top" HEIGHT="20" BACKGROUND="themes/jeroen/images/newsmiddle.gif" NOWRAP>
                     <B><? echo "". check_output($story->subject) .""; ?></B>
                   </TD>
-                  <TD ALIGN="right" VALIGN="bottom" HEIGHT="20">
-                    <? if (rand(0,1) == 0) $img = "news2.gif"; else $img = "news4.gif"; if (rand(0,100) == 50) $img = "news5.gif"; ?>
-                    <IMG SRC="themes/jeroen/images/<? echo $img; ?>" WIDTH="20" HEIGHT="20" ALT="">
-                  </TD>
+                  <? if (rand(0,1) == 0) $img = "news2.gif"; else $img = "news4.gif"; if (rand(0,100) == 50) $img = "news5.gif"; ?>
+                  <TD ALIGN="right" VALIGN="bottom" BACKGROUND="themes/jeroen/images/<? echo $img; ?>" WIDTH="20" HEIGHT="20" NOWRAP>&nbsp;</TD>
                 </TR>
                 <TR>
-                  <TD ALIGN="left" VALIGN="bottom" HEIGHT="20" BACKGROUND="themes/jeroen/images/newsboxleft.gif">
-                    &nbsp;
-                   </TD>
-                  <TD COLSPAN="2" ALIGN="left" WIDTH="100%" HEIGHT="20" BACKGROUND="themes/jeroen/images/menutitle.gif">
+                  <TD ALIGN="left" VALIGN="bottom" HEIGHT="20" BACKGROUND="themes/jeroen/images/newsboxleft.gif">&nbsp;</TD>
+                  <TD ALIGN="left" BACKGROUND="themes/jeroen/images/menutitle.gif" NOWRAP>
                     &nbsp;
                     <FONT COLOR="<? echo $this->fgc2; ?>">
 <?
-                    switch (rand(0,12)) {
-          case 0: $how = "Yelled at us"; break;   case 1: $how = "Whispered"; break;
-          case 2: $how = "Reported"; break;       case 3: $how = "Posted"; break;
-          case 4: $how = "Beamed through"; break; case 5: $how = "Faxed"; break;
-          case 6: $how = "Tossed at us"; break;   case 7: $how = "Morsed"; break;
-          case 8: $how = "Flagged"; break;        case 9: $how = "Written to us"; break;
-          case 10: $how = "Made up"; break;       case 11: $how = "Uploaded"; break;
-          default: $how = "Sneaked through";
+                    switch (rand(0,13)) {
+		      case 0: $how = "Yelled at us"; break;   case 1: $how = "Whispered"; break;
+		      case 2: $how = "Reported"; break;       case 3: $how = "Posted"; break;
+		      case 4: $how = "Beamed through"; break; case 5: $how = "Faxed"; break;
+		      case 6: $how = "Tossed at us"; break;   case 7: $how = "Morsed"; break;
+		      case 8: $how = "Flagged"; break;        case 9: $how = "Written to us"; break;
+		      case 10: $how = "Made up"; break;       case 11: $how = "Uploaded"; break;
+		      case 12: $how = "Forged"; break;
+                      default: $how = "Sneaked through";
+
                     }
 
-                    if ($story->userid) {
-                      print "<FONT SIZE=\"-1\">$how by " . format_username($story->userid) . " on $timestamp</FONT>;
-
+                    print "<FONT SIZE=\"-1\">$how by " . format_username($story->userid) . " on $timestamp</FONT>
                   </TD>
                   <TD ALIGN=\"right\" BGCOLOR=\"#6C6C6C\" BACKGROUND=\"themes/jeroen/images/menutitle.gif\">
-                    <B><A HREF=\"search.php?category=$story->category\"><FONT COLOR=\"<? $this->fgc3; ?>\">$story->category</FONT></A></B>&nbsp;";
-                    }
-                    else {
-                      print "<FONT SIZE=\"-1\">Reported to us by $anonymous on $timestamp"; ?><? print "</FONT>
-                  </TD>
-                  <TD ALIGN=\"right\" WIDTH=\"65\"><A HREF=\"search.php?category=$story->category\">
-                    <FONT COLOR=\"<? $this->fgc3; ?>\">$story->category</FONT></A>";
-                    }
+                    <B><A HREF=\"search.php?category=". urlencode($story->category) ."\"><FONT COLOR=\"<? $this->fgc3; ?>\">$story->category</FONT></A></B>&nbsp;";
 ?>
                     </FONT>
                   </TD>
-                  <TD ALIGN="right" VALIGN="bottom" WIDTH="20" HEIGHT="20" BACKGROUND="themes/jeroen/images/newsboxright.gif">
-                    &nbsp;
-                  </TD>
+                  <TD ALIGN="right" VALIGN="bottom" BACKGROUND="themes/jeroen/images/newsboxright.gif" NOWRAP>&nbsp;</TD>
                 </TR>
                 <TR>
                   <TD ALIGN="left" BACKGROUND="themes/jeroen/images/newsboxleft.gif" WIDTH="20">
                     &nbsp;
                   </TD>
-                  <TD COLSPAN="3" ALIGN="center" VALIGN="top" WIDTH="100%" BGCOLOR="#E7E7E7" BACKGROUND="themes/jeroen/images/sketch.gif">
+                  <TD COLSPAN="2" ALIGN="center" VALIGN="top" WIDTH="100%" BGCOLOR="#E7E7E7" BACKGROUND="themes/jeroen/images/sketch.gif">
                     <TABLE WIDTH="100%">
                       <TR>
                         <TD>
@@ -137,7 +137,7 @@
                 </TR>
                 <TR>
                   <TD ALIGN="left" VALIGN="top" WIDTH="20" HEIGHT="20" BACKGROUND="themes/jeroen/images/newsboxbottomleft.gif">&nbsp;</TD>
-                  <TD WIDTH="100%" COLSPAN="3" ALIGN="center" HEIGHT="20" VALIGN="top" BACKGROUND="themes/jeroen/images/newsboxbottom.gif">&nbsp;</TD>
+                  <TD WIDTH="100%" COLSPAN="2" ALIGN="center" HEIGHT="20" VALIGN="top" BACKGROUND="themes/jeroen/images/newsboxbottom.gif">&nbsp;</TD>
                   <TD ALIGN="right" VALIGN="top" WIDTH="20" HEIGHT="20" BACKGROUND="themes/jeroen/images/newsboxbottomright.gif">&nbsp;</TD>
                 </TR>
               </TABLE>
@@ -156,7 +156,7 @@
                     <IMG SRC="themes/jeroen/images/<? echo $img; ?>" WIDTH="20" HEIGHT="20" ALT="">
                   </TD>
                   <TD colspan="3" ALIGN="center" VALIGN="center" HEIGHT="20" BACKGROUND="themes/jeroen/images/newsmiddle.gif">
-                    <IMG SRC="themes/jeroen/images/newsmiddle.gif" width="1" height="1" alt=""><B><? echo $story->subject; ?></B>
+                    <IMG SRC="themes/jeroen/images/newsmiddle.gif" width="1" height="1" alt=""><B><? echo check_output($story->subject); ?></B>
                   </TD>
                   <TD ALIGN="left" VALIGN="bottom" WIDTH="20" HEIGHT="20">
                     <? if (rand(0,1) == 0) $img = "news2.gif"; else $img = "news4.gif"; ?>
@@ -171,18 +171,20 @@
                     &nbsp;
                     <FONT COLOR="<? echo $this->fgc2; ?>">
 <?
-                    switch (rand(0,12)) {
-                case 0: $how = "Yelled at us"; break;   case 1: $how = "Whispered"; break;
-                case 2: $how = "Reported"; break;       case 3: $how = "Posted"; break;
-                case 4: $how = "Beamed through"; break; case 5: $how = "Faxed"; break;
-                case 6: $how = "Tossed at us"; break;   case 7: $how = "Morsed"; break;
-                case 8: $how = "Flagged"; break;        case 9: $how = "Written to us"; break;
-                case 10: $how = "Made up"; break;       case 11: $how = "Uploaded"; break;
-                default: $how = "Sneaked through";
+                   switch (rand(0,13)) {
+	              case 0: $how = "Yelled at us"; break;   case 1: $how = "Whispered"; break;
+	              case 2: $how = "Reported"; break;       case 3: $how = "Posted"; break;
+	              case 4: $how = "Beamed through"; break; case 5: $how = "Faxed"; break;
+	              case 6: $how = "Tossed at us"; break;   case 7: $how = "Morsed"; break;
+	              case 8: $how = "Flagged"; break;        case 9: $how = "Written to us"; break;
+	              case 10: $how = "Made up"; break;       case 11: $how = "Uploaded"; break;
+                      case 12: $how = "Forged"; break;
+	              default: $how = "Sneaked through";
+
                     }
 
                     if ($story->userid) {
-                      print "<FONT SIZE=\"-1\">$how by <A HREF=\"account.php?op=userinfo&uname=$story->userid\">$story->userid</A> on $story->timestamp"; ?><? print "</FONT>
+                      print "<FONT SIZE=\"-1\">$how by <A HREF=\"account.php?op=userinfo&uname=$story->userid\">$story->userid</A> on $timestamp"; ?><? print "</FONT>
                   </TD>
                   <TD ALIGN=\"right\" WIDTH=\"80\" BGOLOR=\"6C6C6C\" BACKGROUND=\"themes/jeroen/images/menutitle.gif\">
                     <B><A HREF=\"search.php?category=$story->category\"><FONT COLOR=\"<? $this->fgc3; ?>\">$story->category</FONT></A></B>&nbsp;";
@@ -191,8 +193,9 @@
                       print "<FONT SIZE=\"-1\">Reported to us by $anonymous on $story->timestamp"; ?><? print "</FONT>
                   </TD>
                   <TD ALIGN=\"center\" WIDTH=\"80\" BGOLOR=\"6C6C6C\" BACKGROUND=\"themes/jeroen/images/menutitle.gif\">
-                    <A HREF=\"search.php?category=$category\"><FONT COLOR=\"<? $this->fgcolor3; ?>\">$story->category</FONT></A>";
-                    }
+                    <A HREF=\"search.php?category=$category\"><FONT COLOR=\"<? $this->fgc3; ?>\">$story->category</FONT></A>";
+                    } 
+
 ?>
                     </FONT>
                   </TD>
@@ -210,13 +213,14 @@
                         <TD>
 <?
                           if ($story->updates) {
-                            echo "<P>$story->abstract</P><P><FONT COLOR=\"$this->hlcolor1\">Editor's note by <A HREF=\"account.php?op=userinfo&uname=$story->editor\">$story->editor</A>:</FONT>$story->updates</P>";
+                            echo "<P>check_output($story->abstract, 1)</P><P><FONT COLOR=\"$this->hlc1\">Editor's note by <A HREF=\"account.php?op=userinfo&uname=$story->editor\">$story->editor</A>:</FONT>$story->updates</P>";
                           }
                           else {
-                            echo $story->abstract;
+                            echo check_output($story->abstract, 1);
                           }
-                    if ($story->article)
-                            echo "<P>". check_output($story->article) ."</P>";
+	                  if ($story->article) 
+                            echo "<P>". check_output($story->article, 1) ."</P>";
+
 ?>
                         </TD>
                       </TR>
@@ -241,7 +245,7 @@
 <?
     }
 
-    function control() {
+    function controls() {
       print comment_controls();
     }
 
@@ -304,43 +308,37 @@
 ?>
               <TABLE WIDTH="100%" ALIGN="center" CELLPADDING="0" CELLSPACING="0" BORDER="0">
                 <TR>
-                  <TD HEIGHT="20" WIDTH="20"><IMG SRC="themes/jeroen/images/boxtopleft.gif"></TD>
-                  <TD HEIGHT="20" WIDTH="<? echo $width; ?>" BACKGROUND="themes/jeroen/images/boxtop.gif">&nbsp;</TD>
-                  <TD HEIGHT="20" WIDTH="20" BACKGROUND="themes/jeroen/images/boxtopmiddle.gif">&nbsp;</TD>
-                  <TD HEIGHT="20" BACKGROUND="themes/jeroen/images/boxtop.gif">&nbsp;</TD>
-                  <TD HEIGHT="20" WIDTH="20" BACKGROUND="themes/jeroen/images/boxtopright.gif">&nbsp;</TD>
+                  <TD BACKGROUND="themes/jeroen/images/boxtopleft.gif" WIDTH="20" HEIGHT="20" NOWRAP>&nbsp;</TD>
+                  <TD WIDTH="<? echo $width; ?>" BACKGROUND="themes/jeroen/images/boxtop.gif">&nbsp;</TD>
+                  <TD BACKGROUND="themes/jeroen/images/boxtopmiddle.gif">&nbsp;</TD>
+                  <TD BACKGROUND="themes/jeroen/images/boxtop.gif">&nbsp;</TD>
+                  <TD BACKGROUND="themes/jeroen/images/boxtopright.gif" WIDTH="20" NOWRAP>&nbsp;</TD>
                 </TR>
                 <TR>
-                  <TD WIDTH="20" HEIGHT="20" BACKGROUND="themes/jeroen/images/<? echo $img2;?>">&nbsp;</TD>
-                  <TD COLSPAN="3" BGCOLOR="#6C6C6C" HEIGHT="20" BACKGROUND="themes/jeroen/images/menutitle.gif">
-                    <FONT COLOR="<? echo $this->fgc2; ?>"><?  echo $subject; ?></FONT>
+                  <TD BACKGROUND="themes/jeroen/images/<? echo $img2; ?>" HEIGHT="20">&nbsp;</TD>
+                  <TD ALIGN="center" COLSPAN="3" BACKGROUND="themes/jeroen/images/menutitle.gif" NOWRAP>
+                    <FONT COLOR="<? echo $this->fgc2; ?>"><? echo $subject; ?></FONT>
                   </TD>
-                  <TD WIDTH="20" HEIGHT="20" BACKGROUND="themes/jeroen/images/boxtoprightside.gif">&nbsp;</TD>
+                  <TD BACKGROUND="themes/jeroen/images/boxtoprightside.gif">&nbsp;</TD>
                 </TR>
                 <TR>
-                  <TD BACKGROUND="themes/jeroen/images/boxleft.gif" WIDTH="20">&nbsp;</TD>
-                  <TD COLSPAN="3" WIDTH="100%" BGCOLOR="#E7E7E7" BACKGROUND="themes/jeroen/images/sketch.gif">
-                    <TABLE WIDTH="100%">
-                       <TR>
-                         <TD>
-                           <? echo $content; ?>
-                         </TD>
-                       </TR>
-                     </TABLE>
-                   </TD>
-                   <TD BACKGROUND="themes/jeroen/images/boxright.gif" WIDTH="20">&nbsp;</TD>
-                 </TR>
-                 <TR>
-                   <TD WIDTH="20" HEIGHT="20" BACKGROUND="themes/jeroen/images/boxbottomleft.gif">
-                      &nbsp;
-                   </TD>
-                   <TD COLSPAN="3" ALIGN="center" HEIGHT="20" VALIGN="top" BACKGROUND="themes/jeroen/images/boxbottom.gif">
-                     &nbsp;
-                   </TD>
-                   <TD ALIGN="right" VALIGN="top" WIDTH="20" HEIGHT="20">
-                     <IMG SRC="themes/jeroen/images/<? echo $img; ?>" ALT="">
-                   </TD>
-                 </TR>
+                  <TD BACKGROUND="themes/jeroen/images/boxleft.gif">&nbsp;</TD>
+                  <TD COLSPAN="3" BGCOLOR="#E7E7E7"  ALIGN="center" BACKGROUND="themes/jeroen/images/sketch.gif">
+                    <TABLE>
+                      <TR>
+                        <TD>
+                          <? echo $content; ?>
+                        </TD>
+                      </TR>
+                    </TABLE>
+                  </TD>
+                  <TD BACKGROUND="themes/jeroen/images/boxright.gif">&nbsp;</TD>
+                </TR>
+                <TR>
+                  <TD BACKGROUND="themes/jeroen/images/boxbottomleft.gif" HEIGHT="20">&nbsp;</TD>
+                  <TD COLSPAN="3" BACKGROUND="themes/jeroen/images/boxbottom.gif">&nbsp;</TD>
+                  <TD BACKGROUND="themes/jeroen/images/<? echo $img; ?>">&nbsp;</TD>
+                </TR>
               </TABLE>
               <BR>
 
@@ -351,26 +349,30 @@
 ?>
 
             </TD>
-            <TD WIDTH="180" VALIGN="top" ALIGN="right">
+            <TD VALIGN="top" ALIGN="right">
 <?
-         global $PHP_SELF;
-
-   $this->box("Drop where?", "<TD ALIGN=\"left\" VALIGN=\"top\"><A HREF=\"index.php\">home</A><BR><A HREF=\"faq.php\">faq</A><BR><A HREF=\"search.php\">search</A></TD><TD ALIGN=\"right\" VALIGN=\"top\"><A HREF=\"submit.php\">submit news</A><BR><A HREF=\"account.php\">your account</A></TD>");
+         global $PHP_SELF; 
+ 
+	 
 
            theme_account($this);
 ?>
             </TD>
           </TR>
           <TR>
-            <TD WIDTH="160 ALIGN="right" VALIGN="bottom" HEIGHT="20">
-              <IMG SRC="themes/jeroen/images/footerleft.gif" WIDTH="20" HEIGHT="20" ALT="">
+            <TD></TD>
+            <TD>
+              <TABLE CELLSPACING="0" CELLPADDING="0">
+                <TR>
+                  <TD WIDTH="20" HEIGHT="20" BACKGROUND="themes/jeroen/images/footerleft.gif" NOWRAP>&nbsp;</TD>
+                  <TD WIDTH="100%" BACKGROUND="themes/jeroen/images/footer.gif" ALIGN="center" VALIGN="middle">
+                    <FONT COLOR="<? echo $this->hlc2; ?>" SIZE="2">[ <A HREF="">Home</A> | <A HREF="module.php?mod=faq">Faq</A> | <A HREF="search.php">Search</A> | <A HREF="module.php?mod=diary">Diary</A>| <A HREF="submit.php">Submit news</A> | <A HREF="account.php">Account</A> ] </FONT>
+                  </TD>
+                  <TD WIDTH="20" BACKGROUND="themes/jeroen/images/footerright.gif" NOWRAP>&nbsp;</TD>
+                </TR>
+              </TABLE>
             </TD>
-            <TD WIDTH="100%" BACKGROUND="themes/jeroen/images/footer.gif" ALIGN="center" VALIGN="center" HEIGHT="20">
-              <FONT COLOR="<? echo $this->hlc2; ?>" SIZE="2">[ <A HREF="">home</A> | <A HREF="faq.php">faq</A> | <A HREF="search.php">search</A> | <A HREF="submit.php">submit news</A> | <A HREF="account.php">your account</A> ] </FONT>
-            </TD>
-            <TD WIDTH="160" ALIGN="left" VALIGN="bottom" HEIGHT="20">
-              <IMG SRC="themes/jeroen/images/footerright.gif" WIDTH="20" HEIGHT="20" ALT="">
-            </TD>
+            <TD></TD>
           </TR>
         </TABLE>
       </BODY>
