@@ -93,7 +93,10 @@ switch ($act) {
   case "new":
     newUser();
     break;
-  case "forgot":
+  case "logout":
+    session_start();
+    session_destroy();
+    unset $user;
     break;
   case "Register":
     if ($rval = validateUser($new)) { newUser($new, "<B>Error: $rval</B>"); }
