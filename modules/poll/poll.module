@@ -233,6 +233,7 @@ function poll_view(&$node, $main = 0, $block = 0) {
     else {
       $output .= "</td><td valign=\"middle\"><div align=\"right\">&nbsp;&nbsp;&nbsp;". form_submit(t("Vote")) ."</div></td></tr></table>";
     }
+    $output .= $block ? "<div align=\"center\">". $theme->links(link_node($node, $main)) ."</div>" : "";
     $output .= "</form>";
   }
   else {
