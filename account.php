@@ -404,10 +404,10 @@ function account_track_site() {
   while ($node = db_fetch_object($nresult)) {
     $output .= "<LI>". format_plural($node->count, "comment", "comments") ." ". t("attached to") ." '<A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A>':</LI>";
 
-    $cresult = db_query("SELECT c.subject, c.cid, c.pid, u.userid FROM comments c LEFT JOIN users u ON u.id = c.author WHERE c.lid = $node->nid ORDER BY c.timestamp DESC LIMIT $node->count");
+    $cresult = db_query("SELECT c.subject, c.cid, c.pid, u.userid, u.name FROM comments c LEFT JOIN users u ON u.id = c.author WHERE c.lid = $node->nid ORDER BY c.timestamp DESC LIMIT $node->count");
     $output .= "<UL>\n";
     while ($comment = db_fetch_object($cresult)) {
-      $output .= " <LI>'<A HREF=\"node.php?id=$node->nid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A>' ". t("by") ." ". format_username($comment->userid) ."</LI>\n";
+      $output .= " <LI>'<A HREF=\"node.php?id=$node->nid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A>' ". t("by") ." ". format_username($comment->userid, $comment->name) ."</LI>\n";
     }
     $output .= "</UL>\n";
   }
@@ -416,13 +416,13 @@ function account_track_site() {
 
   unset($output);
 
-  $result = db_query("SELECT n.title, n.nid, n.type, n.status, u.userid FROM node n LEFT JOIN users u ON n.author = u.id WHERE ". time() ." - n.timestamp < $period ORDER BY n.timestamp DESC LIMIT 10");
+  $result = db_query("SELECT n.title, n.nid, n.type, n.status, u.userid, u.name FROM node n LEFT JOIN users u ON n.author = u.id WHERE ". time() ." - n.timestamp < $period ORDER BY n.timestamp DESC LIMIT 10");
 
   if (db_num_rows($result)) {
     $output .= "<TABLE BORDER=\"0\" CELLSPACING=\"4\" CELLPADDING=\"4\">\n";
     $output .= " <TR><TH>". t("Subject") ."</TH><TH>". t("Author") ."</TH><TH>". t("Type") ."</TH><TH>". t("Status") ."</TH></TR>\n";
     while ($node = db_fetch_object($result)) {
-      $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">". format_username($node->userid) ."</TD><TD ALIGN=\"center\">$node->type</TD><TD>". node_status($node->status) ."</TD></TR>";
+      $output .= " <TR><TD><A HREF=\"node.php?id=$node->nid\">". check_output($node->title) ."</A></TD><TD ALIGN=\"center\">". format_username($node->userid, $node->name) ."</TD><TD ALIGN=\"center\">$node->type</TD><TD>". node_status($node->status) ."</TD></TR>";
     }
     $output .= "</TABLE>";
   }
