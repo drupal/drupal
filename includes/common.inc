@@ -1,5 +1,5 @@
 <?php
-// $Id: common.inc,v 1.110 2002/05/04 18:56:41 kjartan Exp $
+// $Id: common.inc,v 1.111 2002/05/04 18:58:32 kjartan Exp $
 
 function conf_init() {
   global $HTTP_HOST;
@@ -641,7 +641,7 @@ function drupal_url($args = array(), $script = "node") {
   foreach ($args as $key => $value) {
     $t[] = "$key=". urlencode($value);
   }
-  return htmlentities("$script.php?". implode("&", $t));
+  return "$script.php?". implode("&amp;", $t);
 }
 
 /**
