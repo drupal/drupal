@@ -328,16 +328,15 @@ table#footer-links {
   background: transparent url(icon-comment.gif) left center no-repeat;
 }
 .comment .new {
-  text-align: right;
   font-weight: bold;
-  font-size: 0.85em;
-  float: right;
+  font-size: 1em;
+  margin-left: 2px;
   color: red;
 }
 .comment .picture {
   border: 1px solid #fff;
   float: right;
-  margin: 0.5em;
+  margin: 10px;
 }
 .links {
   font-size: 0.75em;

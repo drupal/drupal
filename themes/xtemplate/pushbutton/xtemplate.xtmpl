@@ -79,10 +79,10 @@
 <!-- BEGIN: comment -->
   <div class="comment">
     <!-- BEGIN: picture -->
-    <div class="picture">{picture}</div>
+    {picture}
     <!-- END: picture -->
-    <h3 class="title">{title}</h3><!-- BEGIN: new --><span class="new">{new}</span><!-- END: new -->
-    <div class="submitted">{submitted}</div>
+    <h3 class="title">{title}</h3>
+    <div class="submitted">{submitted}<!-- BEGIN: new --><span class="new"> *{new}</span><!-- END: new --></div>
     <div class="content">{content}</div>
     <!-- BEGIN: links -->
     <div class="links">&raquo; {links}</div>
