@@ -1,5 +1,5 @@
 <?php
-// $Id: taxonomy.module,v 1.99 2004/02/01 21:51:28 dries Exp $
+// $Id: taxonomy.module,v 1.100 2004/02/07 10:39:54 dries Exp $
 
 function taxonomy_feed($taxonomy) {
   global $id, $type;
@@ -719,18 +719,17 @@ function taxonomy_nodeapi($node, $op, $arg = 0) {
 
 function taxonomy_page() {
 
-
-  // taxonomy querystring always parsed here
-  // TODO: support term *names* in URL (e.g. taxonomy/view/or/milk,beer,red+wine)
   $taxonomy->operator = arg(2);
   $taxonomy->str_tids = check_query(arg(3));
   $taxonomy->tids = explode(",", $taxonomy->str_tids);
 
-  switch (arg(1)) {
-    case "feed":
-      taxonomy_feed($taxonomy);
+  if (ereg("^[0-9,]+[^,]$", $taxonomy->str_tids)) {
+
+    switch (arg(1)) {
+      case "feed":
+        taxonomy_feed($taxonomy);
       break;
-    default:
+      default:
       // Build title:
       $sql = 'SELECT name FROM {term_data} WHERE tid IN (%s)';
       $result = db_query($sql, $taxonomy->str_tids);
@@ -752,6 +751,10 @@ function taxonomy_page() {
       $output = taxonomy_render_nodes(taxonomy_select_nodes($taxonomy));
       print theme("page", $output, implode(', ', $names), $breadcrumbs);
       break;
+    }
+  }
+  else {
+    drupal_not_found();
   }
 }
 
