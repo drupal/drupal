@@ -28,3 +28,41 @@ table {
 a:link { color: #404040 }
 a:visited { color: #404040 }
 a:active { color: #000000 }
+
+.calendar a {
+  text-decoration: none;
+}
+.calendar td {
+  padding: 0;
+  border-color: #aaa;
+}
+.calendar td div {
+  padding: 0.4em 0;
+}
+.calendar .row-week td a {
+  padding: 0.4em 0;
+  background-color: #b5bece;
+}
+.calendar .day-today {
+  background-color: #000;
+  color: #fff;
+}
+.calendar .day-today a {
+  color: #fff;
+}
+.calendar .day-selected {
+  background-color: #369;
+  color: #fff;
+}
+.calendar .header-month {
+  background-color: #bbb;
+}
+.calendar .header-week {
+  background-color: #ccc;
+}
+.calendar .day-blank {
+  background-color: #ddd;
+}
+.calendar .row-week td a:hover {
+  background-color: #fff; color: #000;
+}
