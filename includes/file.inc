@@ -18,7 +18,7 @@ function file_create_url($path) {
   if (strpos($path, variable_get('file_directory_path', 'files')) !== false) {
     $path = trim(substr($path, strlen(variable_get('file_directory_path', 'files'))), '\\/');
   }
-  switch (variable_get('file_downloads', FILE_DOWNLOADS_PRIVATE)) {
+  switch (variable_get('file_downloads', FILE_DOWNLOADS_PUBLIC)) {
     case FILE_DOWNLOADS_PUBLIC:
       global $base_url;
       return $base_url .'/'. variable_get('file_directory_path', 'files') .'/'. str_replace('\\', '/', $path);
