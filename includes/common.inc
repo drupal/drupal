@@ -1,5 +1,5 @@
 <?php
-/* $Id: common.inc,v 1.374 2004/08/06 20:18:25 dries Exp $ */
+/* $Id: common.inc,v 1.375 2004/08/10 01:30:09 unconed Exp $ */
 
 /**
  * @file
@@ -915,7 +915,12 @@ function format_interval($timestamp, $granularity = 2) {
 function format_date($timestamp, $type = 'medium', $format = '', $timezone = NULL) {
   if ($timezone === NULL) {
     global $user;
-    $timezone = $user->uid ? $user->timezone : variable_get('date_default_timezone', 0);
+    if (variable_get('configurable_timezones', 1) && $user->uid && strlen($user->timezone)) {
+      $timezone = $user->timezone;
+    }
+    else {
+      $timezone = variable_get('date_default_timezone', 0);
+    }
   }
 
   $timestamp += $timezone;
