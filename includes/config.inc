@@ -45,7 +45,7 @@ $notify_from    = "droppies@zind.net";
 #
 # Comment meta reasons:
 #
-$comment_votes = array("none" => "none", "-1" => "-1", "0" => "0", "+1" => "+ 1", "+2" => "+ 2", "+3" => "+ 3", "+4" => "+ 4", "+5" => "+ 5");
+$comment_votes = array("none" => "none", "-1" => "- 1", "0" => "+ 0", "+1" => "+ 1", "+2" => "+ 2", "+3" => "+ 3", "+4" => "+ 4", "+5" => "+ 5");
 
 #
 # Categories:
