@@ -1,5 +1,5 @@
 <?php
-// $Id: node.module,v 1.321 2004/01/29 22:00:31 kjartan Exp $
+// $Id: node.module,v 1.322 2004/01/31 10:39:35 dries Exp $
 
 define('NODE_NEW_LIMIT', time() - 30 * 24 * 60 * 60);
 
@@ -1270,6 +1270,7 @@ function node_add($type) {
       }
     }
     $output = node_form($node);
+    drupal_set_title(t("Submit %name", array("%name" => node_invoke($node, 'node_name'))));
     drupal_set_breadcrumb(array(l(t("Home"), NULL), l(t("create content"), "node/add")));
   }
   else {
@@ -1298,6 +1299,8 @@ function node_edit($id) {
   global $user;
 
   $node = node_load(array("nid" => $id));
+
+  drupal_set_title(t("Edit %name", array("%name" => node_invoke($node, "node_name"))));
 
   if (node_access("update", $node)) {
     $output = node_form($node);
@@ -1486,40 +1489,27 @@ function node_delete($edit) {
 }
 
 function node_page() {
-  $op = $_POST["op"];
-  $edit = $_POST["edit"];
-
   if (user_access("access content")) {
-    if (empty($op)) {
-      $op = arg(1);
-    }
-
-    if ($op == "feed") {
-      node_feed();
-      return;
-    }
-
-    if ($op == "view") {
-      $node = node_load(array("nid" => arg(2), "status" => 1), $_GET["revision"]);
-    }
-
-    if ($op == "add" && arg(3)) {
-      $type = arg(2) . "/" . arg(3);
-    }
-    else {
-      $type = arg(2);
-    }
-    $name = node_invoke($type, "node_name");
+    $op = $_POST['op'] ? $_POST['op'] : arg(1);
+    $edit = $_POST['edit'];
 
     switch ($op) {
+      case 'feed':
+        node_feed();
+        return;
       case "add":
-        print theme("page", node_add($type), arg(2) ? t("Submit %name", array("%name" => $name)) : t("create content"));
+        print theme("page", node_add(arg(2)));
         break;
       case "edit":
-        print theme("page", node_edit(arg(2)), t("Edit %name", array("%name" => $name)));
+        print theme("page", node_edit(arg(2)));
         break;
       case "view":
-        print theme("page", node_show($node, arg(3)), $node->title);
+        if ($node = node_load(array('nid' => arg(2)), $_GET["revision"])) {
+          print theme("page", node_show($node, arg(3)), $node->title);
+        }
+        else {
+          drupal_not_found();
+        }
         break;
       case "revisions":
         print theme("page", node_revision_overview(arg(2)), t("Revisions"));
