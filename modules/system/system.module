@@ -1,5 +1,5 @@
 <?php
-// $Id: system.module,v 1.128 2004/02/10 18:10:08 unconed Exp $
+// $Id: system.module,v 1.129 2004/02/15 20:09:46 dries Exp $
 
 function system_help($section = "admin/help#system") {
   global $base_url;
@@ -361,13 +361,8 @@ function system_settings_save() {
 }
 
 function system_admin() {
-  if (user_access("administer site configuration")) {
-    $output = system_view(arg(2), arg(3));
-    print theme("page", $output);
-  }
-  else {
-    print theme("page", message_access());
-  }
+  $output = system_view(arg(2), arg(3));
+  print theme("page", $output);
 }
 
 ?>

@@ -1,5 +1,5 @@
 <?php
-// $Id: admin.module,v 1.42 2003/12/01 13:45:32 dries Exp $
+// $Id: admin.module,v 1.43 2004/02/15 20:09:46 dries Exp $
 
 function admin_help($section) {
   switch ($section) {
@@ -19,12 +19,7 @@ function admin_link($type) {
 }
 
 function admin_admin() {
-  if (user_access("access administration pages")) {
-    print theme("page", watchdog_overview("actions"));
-  }
-  else {
-    print theme("page", message_access());
-  }
+  print theme("page", watchdog_overview("actions"));
 }
 
 ?>

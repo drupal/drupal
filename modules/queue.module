@@ -1,5 +1,5 @@
 <?php
-// $Id: queue.module,v 1.105 2004/02/15 16:33:33 dries Exp $
+// $Id: queue.module,v 1.106 2004/02/15 20:09:46 dries Exp $
 
 function queue_help($section) {
   $output = "";
@@ -190,16 +190,11 @@ function queue_view($nid) {
 function queue_page() {
   global $user, $vote;
 
-  if ($user->uid && user_access("access submission queue")) {
-    if (arg(1)) {
-      queue_view(arg(1));
-    }
-    else {
-      queue_overview();
-    }
+  if (arg(1)) {
+    queue_view(arg(1));
   }
   else {
-    print theme("page", message_access());
+    queue_overview();
   }
 }
 

@@ -1,5 +1,5 @@
 <?php
-// $Id: search.module,v 1.73 2004/01/23 18:42:43 dries Exp $
+// $Id: search.module,v 1.74 2004/02/15 20:09:46 dries Exp $
 
 function search_help($section = "admin/help#search") {
   $output = "";
@@ -56,27 +56,6 @@ function search_settings() {
   $output .= form_radios(t("Help text position"), "help_pos", variable_get("help_pos", 1), array("1" => t("Above search output"), "2" => t("Below search output"), "3" => t("Link from above search output"), "4" => t("Link from below search output")), t("Where to show the help text for users on the search page."));
 
   return $output;
-}
-
-/**
- * search engine administration actions
- */
-function search_admin() {
-  $op = $_POST["op"];
-
-  // Only allow people with sufficient access.
-  if (user_access("administer search")) {
-    if ($op == "reindex") {
-      search_invalidate();
-      $output = t("index invalidated") ."<br />\n";
-      search_cron();
-      $output .= t("index recreated") ."<br /><hr />\n";
-      print theme("page", $output);
-    }
-  }
-  else {
-    print theme("page", message_access());
-  }
 }
 
 /**
