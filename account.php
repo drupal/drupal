@@ -414,7 +414,7 @@ function account_track_comments() {
 
     $cresult = db_query("SELECT * FROM comments WHERE author = '$user->id' AND lid = '$node->nid'");
     while ($comment = db_fetch_object($cresult)) {
-      $output .= "  <LI><A HREF=\"node.php?id=$node->nid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A> - ". t("replies") .": ". comment_num_replies($comment->cid) ." - ". t("score") .": ". comment_score($comment) ."</LI>\n";
+      $output .= "  <LI><A HREF=\"node.php?id=$node->nid&cid=$comment->cid&pid=$comment->pid#$comment->cid\">". check_output($comment->subject) ."</A> (". t("replies") .": ". comment_num_replies($comment->cid) .", ". t("votes") .": $comment->votes, ". t("score") .": ". comment_score($comment) .")</LI>\n";
     }
     $output .= " </UL>\n";
   }
