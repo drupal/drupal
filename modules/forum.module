@@ -249,7 +249,7 @@ function forum_form(&$node, &$help, &$error) {
 
 function forum_insert($node) {
   $node->icon = _forum_decode_icon($node);
-  db_query("INSERT INTO forum (nid, icon, shadow, tid) VALUES ('%d', '%s', '%d', '%d')", $node->nid, $node->icon, $node->shadow, $node->tid);
+  db_query("INSERT INTO forum (nid, icon, shadow, tid) VALUES ('%d', '%s', '%d', '%d')", $node->nid, $node->icon, $node->shadow, $node->tid[0]);
 }
 
 function forum_update($node) {
