@@ -15,7 +15,7 @@ function submission_vote($id, $vote) {
 
   include "config.inc";
 
-  if (!$user->getHistory("s$id")) {
+  if (empty(getHistory($user->history, "s$id"))) {
     ### Update submission's score- and votes-field:
     db_query("UPDATE stories SET score = score $vote, votes = votes + 1 WHERE id = $id");
 
