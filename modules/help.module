@@ -1,0 +1,15 @@
+<?php
+
+$module = array("admin" => "help_admin");
+
+function help_module($name, $module) {
+  print "<H2><A NAME=\"$name\">". ucfirst($name) ." module</A></H2>";
+  if ($module["help"]) $module["help"]();
+  else print "<I>No documentation available for module '$name'.</I>";
+}
+
+function help_admin() {
+   module_iterate("help_module");
+}
+
+?>
